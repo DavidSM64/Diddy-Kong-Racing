@@ -1,0 +1,10 @@
+# Baseroms is where the user will place their ROM files.
+baseroms/*
+
+# Automatically generated folders should be ignored
+build/
+assets/
+!asm/assets/
+
+# Linker file is automatically generated, so it should be ignored
+dkr.ld

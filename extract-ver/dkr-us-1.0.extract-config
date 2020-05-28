@@ -1,0 +1,129 @@
+# -------------------------------------------------------------------------- #
+
+# Name of this configuration
+config-name: "Diddy Kong Racing (USA v1.0)"
+
+# Instead of providing a specific baserom name, the rom gets detected by it's 
+# md5 checksum.  As long as there is a vanilla USA v1.0 DKR ROM in the
+# /baseroms/ directory, then it should be detected automatically.
+checksum-md5: "4f0e07f0eeac7e5d7ce3a75461888d03"
+
+# Sub-folder within EXTRACT_LOCATION to seperate versions
+subfolder: "us_1.0"
+
+# -------------------------------------------------------------------------- #
+
+# General format: [SIZE]: TYPE, NAME, EXTRACT_LOCATION
+# Valid types (not case-sensitive): "NoExtract" or "Binary"
+# NAME & EXTRACT_LOCATION are not needed for "NoExtract" type.
+
+# All of the sizes must add up to the total ROM size!
+
+# [0x000000, 0x000040] = ROM Header, not extracted
+[0x40]: "NoExtract"
+
+# [0x000040, 0x001000] = ROM boot code
+[0xFC0]: "Binary", "boot", "bin"
+
+# [0x001000, 0x0D8200] = Game code, not extracted
+[0xD7200]: "NoExtract"
+
+# [0x0D8200, 0x0D90C0] = Unknown
+[0xEC0]: "Binary", "unknown", "bin"
+
+
+# ---------------------- Microcode ---------------------- #
+
+# [0x0D90C0, 0x0D9190] = Microcode boot code
+[0xD0]: "Binary", "ucode_boot", "ucode" 
+
+# F3DDKR is a modified version of Fast3D
+# TODO: Audio microcode
+
+# [0x0D9190, 0x0DA390] = DRAM Dump version of F3DDKR
+[0x1200]: "Binary", "f3ddkr_dram", "ucode" 
+
+# [0x0DA390, 0x0DB570] = FIFO version of F3DDKR
+[0x11E0]: "Binary", "f3ddkr_fifo", "ucode" 
+
+# [0x0DB570, 0x0DC770] = XBUS version of F3DDKR
+[0x1200]: "Binary", "f3ddkr_xbus", "ucode" 
+
+# [0x0DC770, 0x0EA7A0] = Unknown
+[0xE030]: "Binary", "unknown", "ucode" 
+
+# [0x0EA7A0, 0x0EAFA0] = Data section of F3DDKR-DRAM
+[0x800]: "Binary", "f3ddkr_dram_data", "ucode" 
+
+# [0x0EAFA0, 0x0EB7A0] = Data section of F3DDKR-FIFO
+[0x800]: "Binary", "f3ddkr_fifo_data", "ucode" 
+
+# [0x0EB7A0, 0x0EBFA0] = Data section of F3DDKR-XBUS
+[0x800]: "Binary", "f3ddkr_xbus_data", "ucode" 
+
+# ------------------------------------------------------- #
+
+
+# [0x0EBFA0, 0x37E030] = Unknown
+[0x292090]: "Binary", "unknown", "bin"
+
+
+# ---------------------- Menu Text ---------------------- #
+
+# [0x37E030, 0x37ED10] = English menu text
+[0xCE0]: "Binary", "menu_text_english", "text"
+
+# [0x37ED10, 0x37FB30] = French menu text
+[0xE20]: "Binary", "menu_text_french", "text"
+
+# [0x37FB30, 0x3808C8] = German menu text
+# [0x3808C8, 0x380BB0] is 0xFF Padding
+[0x1080]: "Binary", "menu_text_german", "text"
+
+# ------------------------------------------------------- #
+
+
+# [0x380BB0, 0x3A1440] = Unknown
+[0x20890]: "Binary", "unknown", "bin"
+
+
+# ----------------- Level & Object Data ----------------- #
+
+# [0x3A1440, 0x3A4820] = Level Headers
+[0x33E0]: "Binary", "level_headers", "level"
+
+# [0x3A4820, 0x3A5670] = Level names in each language
+[0xE50]: "Binary", "level_names", "level"
+
+# [0x3A5670, 0x54F4B0] = Unknown level data?
+[0x1A9E40]: "Binary", "level_unknown1", "level"
+
+# [0x54F4B0, 0x61FD80] = Unknown level data?
+[0xD08D0]: "Binary", "level_unknown2", "level"
+
+# [0x61FD80, 0x6C0050] = Unknown level data?
+[0xA02D0]: "Binary", "level_unknown3", "level"
+
+# [0x6C0050, 0x6CC1F0] = Object Headers?
+[0xC1A0]: "Binary", "object_headers", "object"
+
+# ------------------------------------------------------- #
+
+
+# [0x6CC1F0, 0xAC9630] = Unknown
+[0x3FD440]: "Binary", "unknown", "bin"
+
+# [0xAC9630, 0xC00000] = 0xFF padding
+[0x1369D0]: "NoExtract"
+
+
+# -------------------------------------------------------------------------- #
+
+
+
+
+
+
+
+
+

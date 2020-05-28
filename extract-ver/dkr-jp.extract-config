@@ -1,0 +1,19 @@
+# -------------------------------------------------------------------------- #
+
+# Name of this configuration
+config-name: "Diddy Kong Racing (Japan)"
+
+# Instead of providing a specific baserom name, the rom gets detected by it's 
+# md5 checksum.  As long as there is a vanilla Japanese DKR ROM in the
+# /baseroms/ directory, then it should be detected automatically.
+checksum-md5: "10747662a55241b9234cd114c940504f"
+
+# Sub-folder to place extracted assets in
+subfolder: "jp"
+
+# -------------------------------------------------------------------------- #
+
+# This decomp currently doesn't support Japanese at the moment
+not-supported: "true"
+
+# -------------------------------------------------------------------------- #

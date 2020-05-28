@@ -1,0 +1,19 @@
+# -------------------------------------------------------------------------- #
+
+# Name of this configuration
+config-name: "Diddy Kong Racing (Europe v1.1)"
+
+# Instead of providing a specific baserom name, the rom gets detected by it's 
+# md5 checksum.  As long as there is a vanilla Europe v1.1 DKR ROM in the
+# /baseroms/ directory, then it should be detected automatically.
+checksum-md5: "6b2bafe540e0af052a78e85b992be999"
+
+# Sub-folder to place extracted assets in
+subfolder: "eu_1.1"
+
+# -------------------------------------------------------------------------- #
+
+# This decomp currently doesn't support Europe v1.1 at the moment
+not-supported: "true"
+
+# -------------------------------------------------------------------------- #
