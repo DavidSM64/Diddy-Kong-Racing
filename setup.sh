@@ -8,11 +8,25 @@ if [ -d "$ASSETS_DIR" ]; then
     exit 1
 fi
 
+# Check if gcc is installed
+# TODO: Automatically install gcc
+if ! command -v gcc > /dev/null; then
+    echo 'gcc is not installed!' 
+    exit 2
+fi
+
+# Check if make is installed
+# TODO: Automatically install make
+if ! command -v make > /dev/null; then
+    echo 'make is not installed!' 
+    exit 3
+fi
+
 # Check if python3 is installed
 # TODO: Automatically install python3
 if ! command -v python3 > /dev/null; then
     echo 'python3 is not installed!' 
-    exit 3
+    exit 4
 fi
 
 # Check if binutils is installed
@@ -24,7 +38,7 @@ if ! command -v mips-linux-gnu-ld > /dev/null; then
             echo 'Arch users should install: `mips64-elf-binutils`'
             echo 'Ubuntu/Debian should install: `binutils-mips-linux-gnu`'
             echo 'RHEL/CentOS/Fedora should install: `gcc-mips64-linux-gnu`'
-            exit 4
+            exit 5
         fi
     fi
 fi
