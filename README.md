@@ -31,22 +31,30 @@ To build the ROM, you just simply type in `make` in the main directory. You shou
 
 This repo provides some useful scripts that should be kept in mind when working on this repo.
 
+---
+
 #### `./generate_ld.sh`
 
 This script will generate the linker file `dkr.ld`, which is used for building. You will need to call this when you add or remove files from the `/asm/` directory.
+
+---
 
 #### `./extract.sh`
 
 This script will extract all the assets from the DKR ROM and place them into `/assets/` folder according to the extract-config file within the `/extract-ver/` folder. You will need to run this every time you update one of the `.extract-config` files.
 
-Note 1: You do not need to call `./generate_ld.sh`, since that is done automatically from this script.
-Note 2: The `/assets/` folder will get deleted if it already exists, so don't put anything important in there!
+Note 1: You do not need to call `./generate_ld.sh`, since that is done automatically from this script.  
+Note 2: The `/assets/` folder will get deleted if it already exists, so don't put anything important in there! 
+
+---
 
 #### `./rename_symbol.sh <old_symbol> <new_symbol>`
 
 This script will rename an existing symbol within `undefined_syms.txt` and all the `.s` files within the `/asm/` directory.
 
 Example: `./rename_symbol.sh D_A4001000 SP_IMEM`
+
+---
 
 #### `./get_symbol.sh <ram_address>`
 
@@ -57,6 +65,8 @@ Example:
 ./get_symbol.sh 0xA4001000
 0xA4001000 = SP_IMEM
 ```
+
+---
 
 ## TODO list
 
