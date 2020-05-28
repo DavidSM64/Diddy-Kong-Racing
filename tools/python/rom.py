@@ -31,7 +31,7 @@ class ROM:
         
         # Convert mixed/little endian to big endian.
         # This is kinda slow, and should be avoided if possible.
-        if self.endianness is 'mixed':
+        if self.endianness == 'mixed':
             print('Converting mixed-endian (byte-swapped) to big-endian...')
             for i in range(0, len(self.bytes), 2):
                 temp = self.bytes[i]
@@ -41,7 +41,7 @@ class ROM:
             self.endianness = 'big'
             self.fixedRomEndianess = True
             pass
-        elif self.endianness is 'little':
+        elif self.endianness == 'little':
             print('Converting little-endian to big-endian...')
             temp = [0, 0, 0, 0]
             for i in range(0, len(self.bytes), 4):
