@@ -25,11 +25,11 @@ If you see the message `Setup complete!`, then you are ready to build.
 
 ## Build
 
-To build the ROM, you just simply type in `make` in the main directory. You should see an `OK` at the end of the build if it worked correctly. The generated ROM file should appear in the generated `/build/` folder. 
+To build the ROM, you just simply type in `make` in the main directory. You should see an `OK` at the end of the build if it worked correctly. The generated ROM file should appear in the `/build/` folder. 
 
 ## Scripts
 
-This repo provides some useful scripts that should be kept in mind when working on this repo.
+There are some useful scripts that should be kept in mind when working on this repo.
 
 ---
 
@@ -43,7 +43,7 @@ This script will generate the linker file `dkr.ld`, which is used for building. 
 
 This script will extract all the assets from the DKR ROM and place them into `/assets/` folder according to the extract-config file within the `/extract-ver/` folder. You will need to run this every time you update one of the `.extract-config` files.
 
-Note 1: You do not need to call `./generate_ld.sh`, since that is done automatically from this script.
+Note 1: You do not need to call `./generate_ld.sh`, since that is done automatically from this script.  
 Note 2: The `/assets/` folder will get deleted if it already exists, so don't put anything important in there! 
 
 ---
