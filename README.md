@@ -6,17 +6,24 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 
 ---
 
-## Setup
+## Dependencies
 
+* `gcc`
+* `make`
+* `python3 (latest version)`
+* `binutils-mips`
+
+#### Debian / Ubuntu
+
+`sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3`
+
+
+## Setup
 1. Place the ROM file within the `baseroms` directory.  
     **a.** Any DKR ROM should work as long as it is US 1.0.  
     **b.** The name of the ROM file does not matter. It will be detected automatically from an md5 checksum.  
     **c.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
-2. Install the latest version of python 3 and binutils.  
-    **a.** Arch users should install: `mips64-elf-binutils`  
-    **b.** Ubuntu/Debian users should install: `binutils-mips-linux-gnu`  
-    **c.** RHEL/CentOS/Fedora users should install: `gcc-mips64-linux-gnu`  
-3. Finally, run `./setup.sh` in the main directory.  
+2. Run `./setup.sh` in the main directory.  
     **a.** All of the tools within `/tools/` will be built.  
     **b.** Assets from the original DKR rom will be extracted into the generated `/assets/` folder.  
     **c.** Lastly, the linker file `dkr.ld` will be generated  
