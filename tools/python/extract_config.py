@@ -13,23 +13,25 @@ class ConfigRange:
         return "{:06x}".format(self.size) + ', ' + self.type + ', ' + str(self.properties)
 
 class Config:
-    def __init__(self, text):
-        self.text = text
-        self.ranges = []
-        self.name = ''
-        self.md5 = ''
-        self.subfolder = ''
-        self.notSupported = False
-        if not self._parse():
-            raise Exception('Error: ' + self.parseError)
-        #print(self.name)
-        #print(self.md5)
-        #print(str(self.ranges))
+    def __init__(self, directory, filename):
+        with open(directory + '/' + filename, 'r') as configFile:
+            self.text = configFile.read()
+            self.directory = directory
+            self.ranges = []
+            self.name = ''
+            self.md5 = ''
+            self.subfolder = ''
+            self.notSupported = False
+            if not self._parse(self.text):
+                raise Exception('Error: ' + self.parseError)
+            #print(self.name)
+            #print(self.md5)
+            #print(str(self.ranges))
         
-    def _parse(self):
+    def _parse(self, text):
         regex_property = r'^\s*([0-9a-zA-Z\-]+)\s*:\s*["]([^"]*)["]\s*$'
         regex_range = r'^\s*\[\s*(0x[0-9a-fA-F]+)\s*\]\s*:\s*(.*)$'
-        for line in self.text.split('\n'):
+        for line in text.split('\n'):
             line = line.strip() # remove leading and trailing whitespace
             line = line.partition('#')[0] # remove comments
             if len(line) > 0:
@@ -57,6 +59,9 @@ class Config:
             self.md5 = propertyValue
         elif propertyName == 'not-supported':
             self.notSupported = (propertyValue.lower() == 'true')
+        elif propertyName == 'include':
+            with open(self.directory + '/' + propertyValue, 'r') as includeFile:
+                self._parse(includeFile.read())
         else:
             print('Unknown property "' + propertyName + '" with value "' + propertyValue + '"')
             

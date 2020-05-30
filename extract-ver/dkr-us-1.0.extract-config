@@ -63,12 +63,26 @@ subfolder: "us_1.0"
 
 # ------------------------------------------------------- #
 
+# [0x0EBFA0, 0x0ECD50] = Unknown
+[0xDB0]: "Binary", "unknown", "bin"
 
-# [0x0EBFA0, 0x37E030] = Unknown
-[0x292090]: "Binary", "unknown", "bin"
+
+# ---------------------- Textures ----------------------- #
+
+# [0x0ECD50, 0x296CA0] = Textures
+include: "extract-textures/textures-us-1.0.extract-config"
+
+# [0x296CA0, 0x298290] = Textures look-up table
+[0x15F0]: "Binary", "textures_lut", "bin"
+
+# ------------------------------------------------------- #
+
+# [0x298290, 0x37E030] = Unknown
+[0xE5DA0]: "Binary", "unknown", "bin"
 
 
 # ---------------------- Menu Text ---------------------- #
+
 
 # [0x37E030, 0x37ED10] = English menu text
 [0xCE0]: "Binary", "menu_text_english", "text"
@@ -80,6 +94,7 @@ subfolder: "us_1.0"
 # [0x3808C8, 0x380BB0] is 0xFF Padding
 [0x1080]: "Binary", "menu_text_german", "text"
 
+
 # ------------------------------------------------------- #
 
 
@@ -87,25 +102,45 @@ subfolder: "us_1.0"
 [0x20890]: "Binary", "unknown", "bin"
 
 
-# ----------------- Level & Object Data ----------------- #
+# ------------------------------------------------------- #
 
-# [0x3A1440, 0x3A4820] = Level Headers
-[0x33E0]: "Binary", "level_headers", "level"
 
-# [0x3A4820, 0x3A5670] = Level names in each language
-[0xE50]: "Binary", "level_names", "level"
+# [0x3A1440, 0x3A1550] = Level headers table
+[0x110]: "Binary", "level_headers_table", "level"
 
-# [0x3A5670, 0x54F4B0] = Unknown level data?
-[0x1A9E40]: "Binary", "level_unknown1", "level"
+# [0x3A1550, 0x3A4820] = Level headers
+[0x32D0]: "Binary", "level_headers", "level"
 
-# [0x54F4B0, 0x61FD80] = Unknown level data?
-[0xD08D0]: "Binary", "level_unknown2", "level"
+# [0x3A4820, 0x3A4930] = Level names table
+[0x110]: "Binary", "level_names_table", "level"
 
-# [0x61FD80, 0x6C0050] = Unknown level data?
-[0xA02D0]: "Binary", "level_unknown3", "level"
+# [0x3A4930, 0x3A5670] = Level names in each language
+[0xD40]: "Binary", "level_names", "level"
 
-# [0x6C0050, 0x6CC1F0] = Object Headers?
-[0xC1A0]: "Binary", "object_headers", "object"
+# [0x3A5670, 0x3A5760] = Unknown compressed data table
+[0xF0]: "Binary", "compressed_unknown1_table", "bin"
+
+# [0x3A5760, 0x54F4B0] = Unknown compressed data
+[0x1A9D50]: "Binary", "compressed_unknown1", "bin"
+
+# [0x54F4B0, 0x54FAD0] = Unknown level data table
+[0x620]: "Binary", "compressed_unknown2_table", "bin"
+
+# [0x54FAD0, 0x61FD80] = Unknown level data
+[0xD02B0]: "Binary", "compressed_unknown2", "bin"
+
+# [0x61FD80, 0x6204E0] = Unknown level data table
+[0x760]: "Binary", "compressed_unknown3_table", "bin"
+
+# [0x6204E0, 0x6C0050] = Unknown level data
+[0x9FB70]: "Binary", "compressed_unknown3", "bin"
+
+# [0x6C0050, 0x6C0520] = Object headers table
+[0x4D0]: "Binary", "object_headers_table", "object"
+
+# [0x6C0520, 0x6CC1F0] = Object headers
+[0xBCD0]: "Binary", "object_headers", "object"
+
 
 # ------------------------------------------------------- #
 

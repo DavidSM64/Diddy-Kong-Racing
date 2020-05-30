@@ -52,8 +52,7 @@ def get_configs():
     global configs
     configsFilenames = FileUtil.get_filenames_from_directory(CONFIGS_DIRECTORY)
     for configFilename in configsFilenames:
-        with open(CONFIGS_DIRECTORY + '/' + configFilename, 'r') as configFile:
-            configs.append(Config(configFile.read()))
+        configs.append(Config(CONFIGS_DIRECTORY, configFilename))
     if(len(configs) > 0):
         print('Configs loaded!')
     
