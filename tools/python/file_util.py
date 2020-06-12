@@ -1,7 +1,29 @@
 from os import listdir, remove
-from os.path import isfile, join
+from os.path import isfile, isdir, join
 
 class FileUtil:
+    @staticmethod
+    def getListOfFiles(dirName, extensions=None):
+        # create a list of file and sub directories 
+        # names in the given directory 
+        listOfFile = listdir(dirName)
+        allFiles = list()
+        # Iterate over all the entries
+        for entry in listOfFile:
+            # Create full path
+            fullPath = join(dirName, entry)
+            # If entry is a directory then get the list of files in this directory 
+            if isdir(fullPath):
+                allFiles = allFiles + FileUtil.getListOfFiles(fullPath)
+            else:
+                if extensions is None:
+                    allFiles.append(fullPath)
+                else:
+                    if fullPath.endswith(extensions):
+                        allFiles.append(fullPath)
+                    
+        return allFiles
+
     @staticmethod
     def get_filenames_from_directory(directory, extensions=None):
         if extensions is None:

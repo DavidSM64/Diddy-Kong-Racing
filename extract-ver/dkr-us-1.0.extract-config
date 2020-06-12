@@ -31,7 +31,6 @@ subfolder: "us_1.0"
 # [0x0D8200, 0x0D90C0] = Unknown
 [0xEC0]: "Binary", "unknown", "bin"
 
-
 # ---------------------- Microcode ---------------------- #
 
 # [0x0D90C0, 0x0D9190] = Microcode boot code
@@ -50,7 +49,7 @@ subfolder: "us_1.0"
 [0x1200]: "Binary", "f3ddkr_xbus", "ucode" 
 
 # [0x0DC770, 0x0EA7A0] = Unknown
-[0xE030]: "Binary", "unknown", "ucode" 
+[0xE030]: "Binary", "unknown", "bin" 
 
 # [0x0EA7A0, 0x0EAFA0] = Data section of F3DDKR-DRAM
 [0x800]: "Binary", "f3ddkr_dram_data", "ucode" 
@@ -66,23 +65,24 @@ subfolder: "us_1.0"
 # [0x0EBFA0, 0x0ECD50] = Unknown
 [0xDB0]: "Binary", "unknown", "bin"
 
-
 # ---------------------- Textures ----------------------- #
 
 # [0x0ECD50, 0x296CA0] = Textures
 include: "extract-textures/textures-us-1.0.extract-config"
 
 # [0x296CA0, 0x298290] = Textures look-up table
-[0x15F0]: "Binary", "textures_lut", "bin"
+[0x15F0]: "Binary", "textures_lut", "textures"
 
-# ------------------------------------------------------- #
+# [0x298290, 0x375D70] = Textures (Most for HUD & billboarding)
+include: "extract-textures/textures_2-us-1.0.extract-config"
 
-# [0x298290, 0x37E030] = Unknown
-[0xE5DA0]: "Binary", "unknown", "bin"
+# [0x375D70, 0x376BA0] = Textures look-up table
+[0xE30]: "Binary", "textures_lut", "textures"
 
+# ------------------------ Text ------------------------- #
 
-# ---------------------- Menu Text ---------------------- #
-
+# [0x376BA0, 0x37E030] = Game Text (English, French, German)
+[0x7490]: "Binary", "game_text", "text"
 
 # [0x37E030, 0x37ED10] = English menu text
 [0xCE0]: "Binary", "menu_text_english", "text"
@@ -94,63 +94,65 @@ include: "extract-textures/textures-us-1.0.extract-config"
 # [0x3808C8, 0x380BB0] is 0xFF Padding
 [0x1080]: "Binary", "menu_text_german", "text"
 
+# ------------------------------------------------------- #
+
+# [0x380BB0, 0x383AA0] = Unknown
+[0x2EF0]: "Binary", "unknown", "bin"
 
 # ------------------------------------------------------- #
 
+# [0x383AA0, 0x383CD0] = Object placements map lut
+[0x230]: "Binary", "level_object_maps_lut", "levels"
 
-# [0x380BB0, 0x3A1440] = Unknown
-[0x20890]: "Binary", "unknown", "bin"
-
-
-# ------------------------------------------------------- #
-
+# [0x383CD0, 0x3A1440] = Object placements map
+include: "extract-levels/object-maps-us-1.0.extract-config"
 
 # [0x3A1440, 0x3A1550] = Level headers table
-[0x110]: "Binary", "level_headers_table", "level"
+[0x110]: "Binary", "level_headers_lut", "levels"
 
 # [0x3A1550, 0x3A4820] = Level headers
-[0x32D0]: "Binary", "level_headers", "level"
+include: "extract-levels/level_headers-us-1.0.extract-config"
 
 # [0x3A4820, 0x3A4930] = Level names table
-[0x110]: "Binary", "level_names_table", "level"
+[0x110]: "Binary", "level_names_lut", "levels"
 
 # [0x3A4930, 0x3A5670] = Level names in each language
-[0xD40]: "Binary", "level_names", "level"
+include: "extract-levels/level_names-us-1.0.extract-config"
 
-# [0x3A5670, 0x3A5760] = Unknown compressed data table
-[0xF0]: "Binary", "compressed_unknown1_table", "bin"
+# [0x3A5670, 0x3A5760] = Levels Look-up table
+[0xF0]: "Binary", "levels_lut", "levels"
 
-# [0x3A5760, 0x54F4B0] = Unknown compressed data
-[0x1A9D50]: "Binary", "compressed_unknown1", "bin"
+# [0x3A5760, 0x54F4B0] = Levels
+include: "extract-levels/levels-us-1.0.extract-config"
 
-# [0x54F4B0, 0x54FAD0] = Unknown level data table
-[0x620]: "Binary", "compressed_unknown2_table", "bin"
+# [0x54F4B0, 0x54FAD0] = Objects Look-up table
+[0x620]: "Binary", "objects_lut", "objects"
 
-# [0x54FAD0, 0x61FD80] = Unknown level data
-[0xD02B0]: "Binary", "compressed_unknown2", "bin"
+# [0x54FAD0, 0x61FA70] = Objects data
+include: "extract-objects/objects-us-1.0.extract-config"
 
-# [0x61FD80, 0x6204E0] = Unknown level data table
-[0x760]: "Binary", "compressed_unknown3_table", "bin"
+# [0x61FA70, 0x61FD80] = Unknown
+[0x310]: "Binary", "unknown", "bin"
 
-# [0x6204E0, 0x6C0050] = Unknown level data
-[0x9FB70]: "Binary", "compressed_unknown3", "bin"
+# [0x61FD80, 0x6204E0] = Animations look-up table
+[0x760]: "Binary", "animations_lut", "animations"
+
+# [0x6204E0, 0x6C0050] = Animations
+include: "extract-animations/animations-us-1.0.extract-config"
 
 # [0x6C0050, 0x6C0520] = Object headers table
-[0x4D0]: "Binary", "object_headers_table", "object"
+[0x4D0]: "Binary", "object_headers_table", "objects"
 
-# [0x6C0520, 0x6CC1F0] = Object headers
-[0xBCD0]: "Binary", "object_headers", "object"
-
+# [0x6C0520, 0x6CBDE0] = Object headers
+include: "extract-objects/object_headers-us-1.0.extract-config"
 
 # ------------------------------------------------------- #
 
-
-# [0x6CC1F0, 0xAC9630] = Unknown
-[0x3FD440]: "Binary", "unknown", "bin"
+# [0x6CBDE0, 0xAC9630] = Unknown. Audio related
+[0x3FD850]: "Binary", "unknown", "bin"
 
 # [0xAC9630, 0xC00000] = 0xFF padding
 [0x1369D0]: "NoExtract"
-
 
 # -------------------------------------------------------------------------- #
 

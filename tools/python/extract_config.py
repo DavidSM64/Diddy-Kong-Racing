@@ -5,9 +5,10 @@ class ConfigRange:
         self.size = size
         self.type = type.lower()
         self.properties = properties
+        self.start = -1
         
-    def get_range_string(self, start):
-        return "{:06x}".format(start) + '-' + "{:06x}".format(start + self.size)
+    def get_range_string(self):
+        return "{:06x}".format(self.start) + '-' + "{:06x}".format(self.start + self.size)
     
     def __repr__(self):
         return "{:06x}".format(self.size) + ', ' + self.type + ', ' + str(self.properties)

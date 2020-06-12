@@ -1,4 +1,4 @@
-from os import makedirs
+from os import makedirs, system
 import shutil
 
 from file_util import FileUtil
@@ -101,27 +101,45 @@ def extract_assets_from_rom(config, rom):
             rangeSize = romRange.size
             rangeStart = romOffset
             rangeEnd = romOffset + rangeSize
+            romRange.start = rangeStart
             # TODO: Add more types
             if romRange.type == 'binary':
-                binaryName = romRange.properties[0]
-                binaryExtractLocation = romRange.properties[1]
-                outputFilename = binaryName + '.' + "{:06x}".format(rangeStart) + '.bin'
-                outputDirectory = ASSETS_DIRECTORY + '/'
-                if len(config.subfolder) > 0:
-                    outputDirectory += config.subfolder + '/'
-                outputDirectory += binaryExtractLocation + '/'
-                data = rom.get_bytes_from_range(rangeStart, rangeEnd)
-                write_data_to_file(romRange, rangeStart, outputDirectory, outputFilename, 'wb', data)
-                if rangeStart > 0x1000: # Exclude boot.000040.bin from assets.s
-                    assetsImportText += '.incbin "' + outputDirectory + outputFilename + '"\n'
+                outFilename = extractBinary(config, rom, romRange, rangeStart, rangeEnd)
+            elif romRange.type == 'compressed':
+                outFilename = extractCompressed(config, rom, romRange, rangeStart, rangeEnd)
+            elif romRange.type == 'texture':
+                outFilename = extractTexture(config, rom, romRange, rangeStart, rangeEnd)
             elif romRange.type == 'noextract':
                 pass
             else:
                 raise Exception('Invalid range type: "' + romRange.type + '"')
             romOffset += rangeSize
         assetsImportFile.write(assetsImportText)
+        
+def extractBinary(config, rom, romRange, rangeStart, rangeEnd):
+    binaryName = romRange.properties[0]
+    binaryExtractLocation = romRange.properties[1]
+    outputFilename = binaryName + '.' + "{:06x}".format(romRange.start) + '.bin'
+    outputDirectory = ASSETS_DIRECTORY + '/'
+    if len(config.subfolder) > 0:
+        outputDirectory += config.subfolder + '/'
+    outputDirectory += binaryExtractLocation + '/'
+    data = rom.get_bytes_from_range(rangeStart, rangeEnd)
+    write_data_to_file(romRange, outputDirectory, outputFilename, 'wb', data)
+    return outputDirectory + outputFilename
+        
+def extractCompressed(config, rom, romRange, rangeStart, rangeEnd):
+    outFilename = extractBinary(config, rom, romRange, rangeStart, rangeEnd)
+    system('./tools/dkr_decompressor -d "' + outFilename + '" "' + outFilename + '"')
+    return outFilename
+    
+def extractTexture(config, rom, romRange, rangeStart, rangeEnd):
+    if rom.bytes[rangeStart + 0x1D] == 0x01:
+        return extractCompressed(config, rom, romRange, rangeStart + 0x20, rangeEnd)
+    else:
+        return extractBinary(config, rom, romRange, rangeStart, rangeEnd)
 
-def write_data_to_file(range, rangeStart, directory, filename, flags, data):
+def write_data_to_file(range, directory, filename, flags, data):
     try: 
         makedirs(directory)
     except OSError as error: 
@@ -131,7 +149,7 @@ def write_data_to_file(range, rangeStart, directory, filename, flags, data):
             outFile.write(bytearray(data))
         elif  flags == 'w':
             outFile.write(data)
-        print('Extracted ' + range.get_range_string(rangeStart) + ' to ' + directory + filename)
+        print('Extracted ' + range.get_range_string() + ' to ' + directory + filename)
         
 
 def _bytes_to_int32(arr, offset):
