@@ -54,6 +54,7 @@ FixPath = $(subst /,,$1)
 
 N64CRC = $(TOOLS_DIR)/n64crc
 TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
+COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 
 ASM_DIRS := asm asm/boot asm/assets
 SRC_DIRS := src
@@ -95,18 +96,21 @@ BINS_BUILT := $(patsubst $(BINS_IN_DIR)/%.bin,$(BINS_OUT_DIR)/%.bin,$(BINS))
 
 ANIMATIONS_IN_DIR = $(ASSETS_DIR)/animations
 ANIMATIONS_OUT_DIR = $(BUILD_DIR)/animations
-ANIMATIONS = $(wildcard $(ANIMATIONS_IN_DIR)/*.bin)
-ANIMATIONS_BUILT := $(patsubst $(ANIMATIONS_IN_DIR)/%.bin,$(ANIMATIONS_OUT_DIR)/%.bin,$(ANIMATIONS))
+ANIMATIONS = $(wildcard $(ANIMATIONS_IN_DIR)/*.bin $(ANIMATIONS_IN_DIR)/*.cbin)
+ANIMATIONS_BUILT = $(patsubst $(ANIMATIONS_IN_DIR)/%.bin,$(ANIMATIONS_OUT_DIR)/%.bin,$(ANIMATIONS))
+ANIMATIONS_BUILT += $(patsubst $(ANIMATIONS_IN_DIR)/%.cbin,$(ANIMATIONS_OUT_DIR)/%.cbin,$(ANIMATIONS))
 
 LEVELS_IN_DIR = $(ASSETS_DIR)/levels
 LEVELS_OUT_DIR = $(BUILD_DIR)/levels
-LEVELS = $(wildcard $(LEVELS_IN_DIR)/*.bin)
-LEVELS_BUILT := $(patsubst $(LEVELS_IN_DIR)/%.bin,$(LEVELS_OUT_DIR)/%.bin,$(LEVELS))
+LEVELS = $(wildcard $(LEVELS_IN_DIR)/*.bin $(LEVELS_IN_DIR)/*.cbin)
+LEVELS_BUILT = $(patsubst $(LEVELS_IN_DIR)/%.bin,$(LEVELS_OUT_DIR)/%.bin,$(LEVELS))
+LEVELS_BUILT += $(patsubst $(LEVELS_IN_DIR)/%.cbin,$(LEVELS_OUT_DIR)/%.cbin,$(LEVELS))
 
 OBJECTS_IN_DIR = $(ASSETS_DIR)/objects
 OBJECTS_OUT_DIR = $(BUILD_DIR)/objects
-OBJECTS = $(wildcard $(OBJECTS_IN_DIR)/*.bin)
-OBJECTS_BUILT := $(patsubst $(OBJECTS_IN_DIR)/%.bin,$(OBJECTS_OUT_DIR)/%.bin,$(OBJECTS))
+OBJECTS = $(wildcard $(OBJECTS_IN_DIR)/*.bin $(OBJECTS_IN_DIR)/*.cbin)
+OBJECTS_BUILT = $(patsubst $(OBJECTS_IN_DIR)/%.bin,$(OBJECTS_OUT_DIR)/%.bin,$(OBJECTS))
+OBJECTS_BUILT += $(patsubst $(OBJECTS_IN_DIR)/%.cbin,$(OBJECTS_OUT_DIR)/%.cbin,$(OBJECTS))
 
 TEXT_IN_DIR = $(ASSETS_DIR)/text
 TEXT_OUT_DIR = $(BUILD_DIR)/text
@@ -144,14 +148,23 @@ dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 $(ANIMATIONS_OUT_DIR)/%.bin: $(ANIMATIONS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@
 
+$(ANIMATIONS_OUT_DIR)/%.cbin: $(ANIMATIONS_IN_DIR)/%.cbin 
+	$(COMPRESS) $^ $@
+
 $(BINS_OUT_DIR)/%.bin: $(BINS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@
     
 $(LEVELS_OUT_DIR)/%.bin: $(LEVELS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@
+
+$(LEVELS_OUT_DIR)/%.cbin: $(LEVELS_IN_DIR)/%.cbin 
+	$(COMPRESS) $^ $@
     
 $(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@
+
+$(OBJECTS_OUT_DIR)/%.cbin: $(OBJECTS_IN_DIR)/%.cbin 
+	$(COMPRESS) $^ $@
 
 $(TEXTURES_OUT_DIR)/%.bin: $(TEXTURES_IN_DIR)/%.png 
 	$(call build_texture,$^)

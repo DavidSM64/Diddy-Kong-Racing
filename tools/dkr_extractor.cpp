@@ -70,7 +70,7 @@ void write_binary_file(std::vector<uint8_t>& data, std::string& filename) {
     wf.close();
 }
 
-void extract_binary(std::vector<uint8_t>& data, int startOffset, int endOffset, std::string& name, std::string& subfolder, std::string& outFolder) {
+void extract_binary(std::vector<uint8_t>& data, int startOffset, int endOffset, std::string& name, const char* extension, std::string& subfolder, std::string& outFolder) {
     // std::cout << "Extracting Binary! " << startHex << std::endl;
     std::stringstream hexStream, rangeStream, filenameStream;
     
@@ -87,13 +87,15 @@ void extract_binary(std::vector<uint8_t>& data, int startOffset, int endOffset, 
         fs::create_directories(outputDirectory);
     }
     
-    filenameStream << outputDirectory << "/" << name << "." << startHex << ".bin";
+    filenameStream << outputDirectory << "/" << name << "." << startHex << extension;
     std::string filename = filenameStream.str();
     
     // Make sure the file is 16-byte aligned.
+    /*
     while(data.size() % 16 != 0) {
         data.push_back(0);
     }
+    */
     
     write_binary_file(data, filename);
     
@@ -109,7 +111,7 @@ void extract_compressed(std::vector<uint8_t>& data, int startOffset, int endOffs
         data.push_back(0);
     }
     data = compression.decompressBuffer(data);
-    extract_binary(data, startOffset, endOffset, name, subfolder, outFolder);
+    extract_binary(data, startOffset, endOffset, name, ".cbin", subfolder, outFolder);
 }
 
 int get_texture_size(int width, int height, int textureFormat) {
@@ -366,7 +368,7 @@ void extract_range(std::string subfolder, ConfigRange& range, ROM& rom) {
         case ConfigRangeType::BINARY:
         {
             std::vector<uint8_t> data = rom.get_bytes_from_range(startOffset, range.get_size());
-            extract_binary(data, startOffset, endOffset, name, subfolder, outFolder);
+            extract_binary(data, startOffset, endOffset, name, ".bin", subfolder, outFolder);
             numberOfFilesExtracted++;
             break;
         }
