@@ -12,10 +12,11 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 * `make`
 * `python3 (latest version)`
 * `binutils-mips`
+* `libssl-dev`
 
 #### Debian / Ubuntu
 
-`sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3`
+`sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 libssl-dev`
 
 
 ## Setup
@@ -91,7 +92,6 @@ What should be focused on.
 What can be done, but not essential.
 
 * Split the asm files into smaller ones. This has been partially done, but nowhere near complete.
-* Determine the compression format used for levels and objects.
 
 ### Future
 
