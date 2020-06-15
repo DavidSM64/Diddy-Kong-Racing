@@ -3,16 +3,16 @@ CXX := g++
 CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 -O2 -s
 LDFLAGS := -lm
 PROGRAMS := n64crc 
-CXX_PROGRAMS := dkr_decompressor dkr_encryptor dkr_extractor dkr_texbuilder
+CXX_PROGRAMS := dkr_cheats_encryptor dkr_decompressor dkr_extractor dkr_texbuilder
 
 default: all
 
 n64crc_SOURCES := n64crc.c
 
+dkr_cheats_encryptor_SOURCES := dkr_cheats_encryptor.cpp
+
 dkr_decompressor_SOURCES := dkr_decompressor.cpp $(wildcard dkr_decompressor_src/*.cpp dkr_decompressor_src/*.c)
 dkr_decompressor_CXXFLAGS := -lstdc++fs -lcrypto -lssl
-
-dkr_encryptor_SOURCES := dkr_encryptor.cpp
 
 dkr_extractor_SOURCES := dkr_extractor.cpp $(wildcard dkr_decompressor_src/*.cpp dkr_decompressor_src/*.c dkr_extractor_classes/*.cpp n64graphics/*.c)
 dkr_extractor_CXXFLAGS := -lstdc++fs -lcrypto -lssl

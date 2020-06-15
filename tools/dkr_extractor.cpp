@@ -70,15 +70,21 @@ void write_binary_file(std::vector<uint8_t>& data, std::string& filename) {
     wf.close();
 }
 
-void extract_binary(std::vector<uint8_t>& data, int startOffset, int endOffset, std::string& name, const char* extension, std::string& subfolder, std::string& outFolder) {
-    // std::cout << "Extracting Binary! " << startHex << std::endl;
+void write_text_file(std::string& text, std::string& filename) {
+    std::ofstream myfile;
+    myfile.open(filename);
+    myfile << text;
+    myfile.close();
+}
+
+void get_filename(std::string& rangeHex, std::string& startHex, std::string& filename, int startOffset, int endOffset, std::string& name, const char* extension, std::string& subfolder, std::string& outFolder) {
     std::stringstream hexStream, rangeStream, filenameStream;
     
     hexStream << std::setfill('0') << std::setw(6) << std::hex << std::uppercase << startOffset;
-    std::string startHex = hexStream.str();
+    startHex = hexStream.str();
     
     rangeStream << startHex << "-" << std::setfill('0') << std::setw(6) << std::hex << std::uppercase << endOffset;
-    std::string rangeHex = rangeStream.str();
+    rangeHex = rangeStream.str();
     
     to_lowercase(startHex);
     
@@ -88,15 +94,13 @@ void extract_binary(std::vector<uint8_t>& data, int startOffset, int endOffset, 
     }
     
     filenameStream << outputDirectory << "/" << name << "." << startHex << extension;
-    std::string filename = filenameStream.str();
+    filename = filenameStream.str();
+}
+
+void extract_binary(std::vector<uint8_t>& data, int startOffset, int endOffset, std::string& name, const char* extension, std::string& subfolder, std::string& outFolder) {
+    std::string rangeHex, startHex, filename;
     
-    // Make sure the file is 16-byte aligned.
-    /*
-    while(data.size() % 16 != 0) {
-        data.push_back(0);
-    }
-    */
-    
+    get_filename(rangeHex, startHex, filename, startOffset, endOffset, name, extension, subfolder, outFolder);
     write_binary_file(data, filename);
     
     std::cout << "Extracted " << rangeHex << " as /" << outFolder << "/" << name << "." << startHex << ".bin" << std::endl;
@@ -154,9 +158,31 @@ void decrypt_data(std::vector<uint8_t>& data) {
     }
 }
 
-void extract_encrypted(std::vector<uint8_t>& data, int startOffset, int endOffset, std::string& name, std::string& subfolder, std::string& outFolder) {
+#define get_u16(data, offset) (uint16_t)((data[offset] << 8) | data[offset + 1])
+
+void extract_cheats(std::vector<uint8_t>& data, int startOffset, int endOffset, std::string& name, std::string& subfolder, std::string& outFolder) {
     decrypt_data(data);
-    extract_binary(data, startOffset, endOffset, name, ".ebin", subfolder, outFolder);
+    
+    std::string rangeHex, startHex, filename;
+    
+    get_filename(rangeHex, startHex, filename, startOffset, endOffset, name, ".cheats", subfolder, outFolder);
+    
+    std::stringstream outFile;
+    
+    uint16_t numOfCheats = get_u16(data, 0);
+    
+    for(int i = 0; i < numOfCheats; i++) {
+        uint16_t codeWordOffset = get_u16(data, 2 + (i * 4));
+        uint16_t codeDescriptionOffset = get_u16(data, 2 + (i * 4) + 2);
+        char* codeWord = (char*)&data[codeWordOffset];
+        char* codeDescription = (char*)&data[codeDescriptionOffset];
+        outFile << "\"" << codeWord << "\", \"" << codeDescription << "\"" << std::endl;
+    }
+    
+    std::string outText = outFile.str();
+    
+    write_text_file(outText, filename);
+    std::cout << "Extracted " << rangeHex << " as /" << outFolder << "/" << name << "." << startHex << ".cheats" << std::endl;
 }
 
 int get_texture_size(int width, int height, int textureFormat) {
@@ -424,10 +450,10 @@ void extract_range(std::string subfolder, ConfigRange& range, ROM& rom) {
             numberOfFilesExtracted++;
             break;
         }
-        case ConfigRangeType::ENCRYPTED:
+        case ConfigRangeType::CHEATS:
         {
             std::vector<uint8_t> data = rom.get_bytes_from_range(startOffset, range.get_size());
-            extract_encrypted(data, startOffset, endOffset, name, subfolder, outFolder);
+            extract_cheats(data, startOffset, endOffset, name, subfolder, outFolder);
             numberOfFilesExtracted++;
             break;
         }

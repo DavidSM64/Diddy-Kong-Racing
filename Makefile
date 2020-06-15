@@ -55,7 +55,7 @@ FixPath = $(subst /,,$1)
 N64CRC = $(TOOLS_DIR)/n64crc
 TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
-ENCRYPT = $(TOOLS_DIR)/dkr_encryptor
+CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 
 ASM_DIRS := asm asm/boot asm/assets
 SRC_DIRS := src
@@ -125,8 +125,8 @@ UCODE_BUILT := $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
 
 CHEATS_IN_DIR = $(ASSETS_DIR)/cheats
 CHEATS_OUT_DIR = $(BUILD_DIR)/cheats
-CHEATS = $(wildcard $(CHEATS_IN_DIR)/*.ebin)
-CHEATS_BUILT := $(patsubst $(CHEATS_IN_DIR)/%.ebin,$(CHEATS_OUT_DIR)/%.ebin,$(CHEATS))
+CHEATS = $(wildcard $(CHEATS_IN_DIR)/*.cheats)
+CHEATS_BUILT := $(patsubst %.cheats,%.bin,$(patsubst $(CHEATS_IN_DIR)/%.cheats,$(CHEATS_OUT_DIR)/%.cheats,$(CHEATS)))
 
 ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(TEXTURES_BIN_BUILT) $(TEXT_BUILT) $(UCODE_BUILT)
 
@@ -160,8 +160,8 @@ $(ANIMATIONS_OUT_DIR)/%.cbin: $(ANIMATIONS_IN_DIR)/%.cbin
 $(BINS_OUT_DIR)/%.bin: $(BINS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@
     
-$(CHEATS_OUT_DIR)/%.ebin: $(CHEATS_IN_DIR)/%.ebin 
-	$(ENCRYPT) $^ $@
+$(CHEATS_OUT_DIR)/%.bin: $(CHEATS_IN_DIR)/%.cheats
+	$(CHEAT_ENCRYPTOR) $^ $@
     
 $(LEVELS_OUT_DIR)/%.bin: $(LEVELS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@

@@ -16,7 +16,7 @@ enum ConfigRangeType {
     BINARY,
     NOEXTRACT,
     COMPRESSED,
-    ENCRYPTED,
+    CHEATS,
     TEXTURE
 };
 

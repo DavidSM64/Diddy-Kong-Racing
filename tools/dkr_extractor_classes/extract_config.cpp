@@ -137,7 +137,7 @@ ConfigRangeType Config::get_range_type(std::string typeString) {
     if(type == "binary")     return ConfigRangeType::BINARY;
     if(type == "noextract")  return ConfigRangeType::NOEXTRACT;
     if(type == "compressed") return ConfigRangeType::COMPRESSED;
-    if(type == "encrypted")  return ConfigRangeType::ENCRYPTED;
+    if(type == "cheats")  return ConfigRangeType::CHEATS;
     if(type == "texture")    return ConfigRangeType::TEXTURE;
     
     std::cout << "Unknown extraction type: " << type << std::endl;
