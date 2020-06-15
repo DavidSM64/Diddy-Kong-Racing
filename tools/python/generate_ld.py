@@ -151,7 +151,10 @@ class LD:
             if fileExtension == '.png' and int(fileProperties[1]) != 0:
                 continue
             ramAddress = fileProperties[0]
-            outFileExtension = '.cbin' if fileExtension == '.cbin' else '.bin'
+            if fileExtension == '.cbin' or fileExtension == '.ebin':
+                outFileExtension = fileExtension
+            else:
+                outFileExtension = '.bin'
             outFilename = 'build/' + matchedGroups[0] + '.' + matchedGroups[1] + outFileExtension
             if int(ramAddress, 16) >= ASSETS_START:
                 assetFiles.append((outFilename, ramAddress, fileExtension))

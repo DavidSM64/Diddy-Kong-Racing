@@ -96,8 +96,14 @@ include: "extract-textures/textures_2-us-1.0.extract-config"
 
 # ------------------------------------------------------- #
 
-# [0x380BB0, 0x383AA0] = Unknown
-[0x2EF0]: "Binary", "unknown", "bin"
+# [0x380BB0, 0x3833A0] = Unknown
+[0x27F0]: "Binary", "unknown", "bin"
+
+# [0x3833A0, 0x383760] = Unknown
+[0x3C0]: "Encrypted", "magic_codes", "cheats"
+
+# [0x383760, 0x383AA0] = Unknown
+[0x340]: "Binary", "unknown", "bin"
 
 # ------------------------------------------------------- #
 

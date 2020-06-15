@@ -114,6 +114,51 @@ void extract_compressed(std::vector<uint8_t>& data, int startOffset, int endOffs
     extract_binary(data, startOffset, endOffset, name, ".cbin", subfolder, outFolder);
 }
 
+// Only used for the magic codes.
+void decrypt_data(std::vector<uint8_t>& data) {
+    int numWords = data.size() / 4;
+    int a, b, c, d, sp0, sp1, sp2, sp3;
+    for(int i = 0; i < numWords; i++) {
+        a = (data[(i * 4) + 3] & 0xC0) >> 6;
+        b = (data[(i * 4) + 0] & 0xC0);
+        c = (data[(i * 4) + 1] & 0xC0) >> 2;
+        d = (data[(i * 4) + 2] & 0xC0) >> 4;
+        sp0 = a | b | c | d;
+        a = (data[(i * 4) + 3] & 0x30) >> 4;
+        b = (data[(i * 4) + 0] & 0x30) << 2;
+        c = (data[(i * 4) + 1] & 0x30);
+        d = (data[(i * 4) + 2] & 0x30) >> 2;
+        sp1 = a | b | c | d;
+        a = (data[(i * 4) + 3] & 0x0C) >> 2;
+        b = (data[(i * 4) + 0] & 0x0C) << 4;
+        c = (data[(i * 4) + 1] & 0x0C) << 2;
+        d = (data[(i * 4) + 2] & 0x0C);
+        sp2 = a | b | c | d;
+        a = (data[(i * 4) + 3] & 0x03);
+        b = (data[(i * 4) + 0]       ) << 6;
+        c = (data[(i * 4) + 1] & 0x03) << 4;
+        d = (data[(i * 4) + 2] & 0x03) << 2;
+        sp3 = a | b | c | d;
+        a = (sp0 & 0xAA) >> 1;
+        b = (sp0 & 0x55) << 1;
+        data[(i * 4) + 0] = a | b;
+        a = (sp1 & 0xAA) >> 1;
+        b = (sp1 & 0x55) << 1;
+        data[(i * 4) + 1] = a | b;
+        a = (sp2 & 0xAA) >> 1;
+        b = (sp2 & 0x55) << 1;
+        data[(i * 4) + 2] = a | b;
+        a = (sp3 & 0xAA) >> 1;
+        b = (sp3 & 0x55) << 1;
+        data[(i * 4) + 3] = a | b;
+    }
+}
+
+void extract_encrypted(std::vector<uint8_t>& data, int startOffset, int endOffset, std::string& name, std::string& subfolder, std::string& outFolder) {
+    decrypt_data(data);
+    extract_binary(data, startOffset, endOffset, name, ".ebin", subfolder, outFolder);
+}
+
 int get_texture_size(int width, int height, int textureFormat) {
     switch(textureFormat) {
         case TEX_FORMAT_RGBA32:
@@ -376,6 +421,13 @@ void extract_range(std::string subfolder, ConfigRange& range, ROM& rom) {
         {
             std::vector<uint8_t> data = rom.get_bytes_from_range(startOffset, range.get_size());
             extract_compressed(data, startOffset, endOffset, name, subfolder, outFolder);
+            numberOfFilesExtracted++;
+            break;
+        }
+        case ConfigRangeType::ENCRYPTED:
+        {
+            std::vector<uint8_t> data = rom.get_bytes_from_range(startOffset, range.get_size());
+            extract_encrypted(data, startOffset, endOffset, name, subfolder, outFolder);
             numberOfFilesExtracted++;
             break;
         }

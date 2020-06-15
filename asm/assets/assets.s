@@ -4631,6 +4631,8 @@
 .incbin "./build/text/menu_text_french.37ed10.bin"
 .incbin "./build/text/menu_text_german.37fb30.bin"
 .incbin "./build/bin/unknown.380bb0.bin"
+.incbin "./build/cheats/magic_codes.3833a0.ebin"
+.incbin "./build/bin/unknown.383760.bin"
 .balign 16
 .incbin "./build/levels/level_object_maps_lut.383aa0.bin"
 .incbin "./build/levels/level_object_map.383cd0.cbin"
