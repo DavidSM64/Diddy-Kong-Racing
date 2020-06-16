@@ -7182,3 +7182,5 @@
 .incbin "./build/objects/objHeader12E_LevelName.6cbce0.bin"
 .incbin "./build/objects/objHeader12F_Midichset.6cbd60.bin"
 .incbin "./build/bin/unknown.6cbde0.bin"
+.incbin "./build/bin/unknown_4bpp_font_192x732.aaab10.bin"
+.incbin "./build/bin/unknown.abbda0.bin"

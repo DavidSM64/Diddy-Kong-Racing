@@ -154,8 +154,14 @@ include: "extract-objects/object_headers-us-1.0.extract-config"
 
 # ------------------------------------------------------- #
 
-# [0x6CBDE0, 0xAC9630] = Unknown. Audio related
-[0x3FD850]: "Binary", "unknown", "bin"
+# [0x6CBDE0, 0xAAAB10] = Unknown. Audio related
+[0x3DED30]: "Binary", "unknown", "bin"
+
+# [0xAAAB10, 0xABBDA0] = Unused font?
+[0x11290]: "Binary", "unknown_4bpp_font_192x732", "bin"
+
+# [0xABBDA0, 0xAC9630] = Unknown.
+[0xD890]: "Binary", "unknown", "bin"
 
 # [0xAC9630, 0xC00000] = 0xFF padding
 [0x1369D0]: "NoExtract"
