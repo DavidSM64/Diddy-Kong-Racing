@@ -1,239 +1,196 @@
 # Part of the "Diddy Kong Racing (USA v1.0)" config
 # Exports all the textures that the game uses.
 
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
-[0x10]: "Binary", "billboard", "billboards"
+[0x0010]: "Binary", "billboard00", "billboards" # 0x380be0
+[0x0010]: "Binary", "billboard01", "billboards" # 0x380bf0
+[0x0010]: "Binary", "billboard02", "billboards" # 0x380c00
+[0x0010]: "Binary", "billboard03", "billboards" # 0x380c10
+[0x0010]: "Binary", "billboard04", "billboards" # 0x380c20
+[0x0010]: "Binary", "billboard05", "billboards" # 0x380c30
+[0x0010]: "Binary", "billboard06", "billboards" # 0x380c40
+[0x0010]: "Binary", "billboard07", "billboards" # 0x380c50
+[0x0010]: "Binary", "billboard08", "billboards" # 0x380c60
+[0x0010]: "Binary", "billboard09", "billboards" # 0x380c70
+[0x0010]: "Binary", "billboard0a", "billboards" # 0x380c80
+[0x0010]: "Binary", "billboard0b", "billboards" # 0x380c90
+[0x0010]: "Binary", "billboard0c", "billboards" # 0x380ca0
+[0x0010]: "Binary", "billboard0d", "billboards" # 0x380cb0
+[0x0010]: "Binary", "billboard0e", "billboards" # 0x380cc0
+[0x0010]: "Binary", "billboard0f", "billboards" # 0x380cd0
+[0x0010]: "Binary", "billboard10", "billboards" # 0x380ce0
+[0x0010]: "Binary", "billboard11", "billboards" # 0x380cf0
+[0x0010]: "Binary", "billboard12", "billboards" # 0x380d00
+[0x0010]: "Binary", "billboard13", "billboards" # 0x380d10
+[0x0010]: "Binary", "billboard14", "billboards" # 0x380d20
+[0x0010]: "Binary", "billboard15", "billboards" # 0x380d30
+[0x0010]: "Binary", "billboard16", "billboards" # 0x380d40
+[0x0010]: "Binary", "billboard17", "billboards" # 0x380d50
+[0x0010]: "Binary", "billboard18", "billboards" # 0x380d60
+[0x0010]: "Binary", "billboard19", "billboards" # 0x380d70
+[0x0010]: "Binary", "billboard1a", "billboards" # 0x380d80
+[0x0010]: "Binary", "billboard1b", "billboards" # 0x380d90
+[0x0010]: "Binary", "billboard1c", "billboards" # 0x380da0
+[0x0010]: "Binary", "billboard1d", "billboards" # 0x380db0
+[0x0010]: "Binary", "billboard1e", "billboards" # 0x380dc0
+[0x0010]: "Binary", "billboard1f", "billboards" # 0x380dd0
+[0x0010]: "Binary", "billboard20", "billboards" # 0x380de0
+[0x0010]: "Binary", "billboard21", "billboards" # 0x380df0
+[0x0020]: "Binary", "billboard22", "billboards" # 0x380e00
+[0x0010]: "Binary", "billboard23", "billboards" # 0x380e20
+[0x0010]: "Binary", "billboard24", "billboards" # 0x380e30
+[0x0010]: "Binary", "billboard25", "billboards" # 0x380e40
+[0x0010]: "Binary", "billboard26", "billboards" # 0x380e50
+[0x0010]: "Binary", "billboard27", "billboards" # 0x380e60
+[0x0010]: "Binary", "billboard28", "billboards" # 0x380e70
+[0x0020]: "Binary", "billboard29", "billboards" # 0x380e80
+[0x0010]: "Binary", "billboard2a", "billboards" # 0x380ea0
+[0x0010]: "Binary", "billboard2b", "billboards" # 0x380eb0
+[0x0020]: "Binary", "billboard2c", "billboards" # 0x380ec0
+[0x0020]: "Binary", "billboard2d", "billboards" # 0x380ee0
+[0x0010]: "Binary", "billboard2e", "billboards" # 0x380f00
+[0x0010]: "Binary", "billboard2f", "billboards" # 0x380f10
+[0x0010]: "Binary", "billboard30", "billboards" # 0x380f20
+[0x0010]: "Binary", "billboard31", "billboards" # 0x380f30
+[0x0010]: "Binary", "billboard32", "billboards" # 0x380f40
+[0x0010]: "Binary", "billboard33", "billboards" # 0x380f50
+[0x0010]: "Binary", "billboard34", "billboards" # 0x380f60
+[0x0010]: "Binary", "billboard35", "billboards" # 0x380f70
+[0x0010]: "Binary", "billboard36", "billboards" # 0x380f80
+[0x0010]: "Binary", "billboard37", "billboards" # 0x380f90
+[0x0010]: "Binary", "billboard38", "billboards" # 0x380fa0
+[0x0010]: "Binary", "billboard39", "billboards" # 0x380fb0
+[0x0010]: "Binary", "billboard3a", "billboards" # 0x380fc0
+[0x0010]: "Binary", "billboard3b", "billboards" # 0x380fd0
+[0x0010]: "Binary", "billboard3c", "billboards" # 0x380fe0
+[0x0010]: "Binary", "billboard3d", "billboards" # 0x380ff0
+[0x0010]: "Binary", "billboard3e", "billboards" # 0x381000
+[0x0010]: "Binary", "billboard3f", "billboards" # 0x381010
+[0x0010]: "Binary", "billboard40", "billboards" # 0x381020
+[0x0010]: "Binary", "billboard41", "billboards" # 0x381030
+[0x0010]: "Binary", "billboard42", "billboards" # 0x381040
+[0x0010]: "Binary", "billboard43", "billboards" # 0x381050
+[0x0020]: "Binary", "billboard44", "billboards" # 0x381060
+[0x0020]: "Binary", "billboard45", "billboards" # 0x381080
+[0x0010]: "Binary", "billboard46", "billboards" # 0x3810a0
+[0x0020]: "Binary", "billboard47", "billboards" # 0x3810b0
+[0x0010]: "Binary", "billboard48", "billboards" # 0x3810d0
+[0x0010]: "Binary", "billboard49", "billboards" # 0x3810e0
+[0x0010]: "Binary", "billboard4a", "billboards" # 0x3810f0
+[0x0010]: "Binary", "billboard4b", "billboards" # 0x381100
+[0x0010]: "Binary", "billboard4c", "billboards" # 0x381110
+[0x0010]: "Binary", "billboard4d", "billboards" # 0x381120
+[0x0010]: "Binary", "billboard4e", "billboards" # 0x381130
+[0x0010]: "Binary", "billboard4f", "billboards" # 0x381140
+[0x0010]: "Binary", "billboard50", "billboards" # 0x381150
+[0x0010]: "Binary", "billboard51", "billboards" # 0x381160
+[0x0010]: "Binary", "billboard52", "billboards" # 0x381170
+[0x0010]: "Binary", "billboard53", "billboards" # 0x381180
+[0x0010]: "Binary", "billboard54", "billboards" # 0x381190
+[0x0010]: "Binary", "billboard55", "billboards" # 0x3811a0
+[0x0020]: "Binary", "billboard56", "billboards" # 0x3811b0
+[0x0020]: "Binary", "billboard57", "billboards" # 0x3811d0
+[0x0020]: "Binary", "billboard58", "billboards" # 0x3811f0
+[0x0020]: "Binary", "billboard59", "billboards" # 0x381210
+[0x0010]: "Binary", "billboard5a", "billboards" # 0x381230
+[0x0010]: "Binary", "billboard5b", "billboards" # 0x381240
+[0x0010]: "Binary", "billboard5c", "billboards" # 0x381250
+[0x0010]: "Binary", "billboard5d", "billboards" # 0x381260
+[0x0010]: "Binary", "billboard5e", "billboards" # 0x381270
+[0x0010]: "Binary", "billboard5f", "billboards" # 0x381280
+[0x0010]: "Binary", "billboard60", "billboards" # 0x381290
+[0x0010]: "Binary", "billboard61", "billboards" # 0x3812a0
+[0x0010]: "Binary", "billboard62", "billboards" # 0x3812b0
+[0x0030]: "Binary", "billboard63", "billboards" # 0x3812c0
+[0x0020]: "Binary", "billboard64", "billboards" # 0x3812f0
+[0x0020]: "Binary", "billboard65", "billboards" # 0x381310
+[0x0020]: "Binary", "billboard66", "billboards" # 0x381330
+[0x0010]: "Binary", "billboard67", "billboards" # 0x381350
+[0x0010]: "Binary", "billboard68", "billboards" # 0x381360
+[0x0020]: "Binary", "billboard69", "billboards" # 0x381370
+[0x0010]: "Binary", "billboard6a", "billboards" # 0x381390
+[0x0010]: "Binary", "billboard6b", "billboards" # 0x3813a0
+[0x0010]: "Binary", "billboard6c", "billboards" # 0x3813b0
+[0x0010]: "Binary", "billboard6d", "billboards" # 0x3813c0
+[0x0010]: "Binary", "billboard6e", "billboards" # 0x3813d0
+[0x0010]: "Binary", "billboard6f", "billboards" # 0x3813e0
+[0x0010]: "Binary", "billboard70", "billboards" # 0x3813f0
+[0x0010]: "Binary", "billboard71", "billboards" # 0x381400
+[0x0010]: "Binary", "billboard72", "billboards" # 0x381410
+[0x0010]: "Binary", "billboard73", "billboards" # 0x381420
+[0x0010]: "Binary", "billboard74", "billboards" # 0x381430
+[0x0010]: "Binary", "billboard75", "billboards" # 0x381440
+[0x0010]: "Binary", "billboard76", "billboards" # 0x381450
+[0x0010]: "Binary", "billboard77", "billboards" # 0x381460
+[0x0010]: "Binary", "billboard78", "billboards" # 0x381470
+[0x0010]: "Binary", "billboard79", "billboards" # 0x381480
+[0x0010]: "Binary", "billboard7a", "billboards" # 0x381490
+[0x0010]: "Binary", "billboard7b", "billboards" # 0x3814a0
+[0x0010]: "Binary", "billboard7c", "billboards" # 0x3814b0
+[0x0010]: "Binary", "billboard7d", "billboards" # 0x3814c0
+[0x0010]: "Binary", "billboard7e", "billboards" # 0x3814d0
+[0x0010]: "Binary", "billboard7f", "billboards" # 0x3814e0
+[0x0010]: "Binary", "billboard80", "billboards" # 0x3814f0
+[0x0010]: "Binary", "billboard81", "billboards" # 0x381500
+[0x0010]: "Binary", "billboard82", "billboards" # 0x381510
+[0x0010]: "Binary", "billboard83", "billboards" # 0x381520
+[0x0010]: "Binary", "billboard84", "billboards" # 0x381530
+[0x0010]: "Binary", "billboard85", "billboards" # 0x381540
+[0x0010]: "Binary", "billboard86", "billboards" # 0x381550
+[0x0010]: "Binary", "billboard87", "billboards" # 0x381560
+[0x0010]: "Binary", "billboard88", "billboards" # 0x381570
+[0x0010]: "Binary", "billboard89", "billboards" # 0x381580
+[0x0010]: "Binary", "billboard8a", "billboards" # 0x381590
+[0x0010]: "Binary", "billboard8b", "billboards" # 0x3815a0
+[0x0010]: "Binary", "billboard8c", "billboards" # 0x3815b0
+[0x0010]: "Binary", "billboard8d", "billboards" # 0x3815c0
+[0x0010]: "Binary", "billboard8e", "billboards" # 0x3815d0
+[0x0010]: "Binary", "billboard8f", "billboards" # 0x3815e0
+[0x0010]: "Binary", "billboard90", "billboards" # 0x3815f0
+[0x0010]: "Binary", "billboard91", "billboards" # 0x381600
+[0x0010]: "Binary", "billboard92", "billboards" # 0x381610
+[0x0010]: "Binary", "billboard93", "billboards" # 0x381620
+[0x0010]: "Binary", "billboard94", "billboards" # 0x381630
+[0x0010]: "Binary", "billboard95", "billboards" # 0x381640
+[0x0010]: "Binary", "billboard96", "billboards" # 0x381650
+[0x0010]: "Binary", "billboard97", "billboards" # 0x381660
+[0x0010]: "Binary", "billboard98", "billboards" # 0x381670
+[0x0010]: "Binary", "billboard99", "billboards" # 0x381680
+[0x0010]: "Binary", "billboard9a", "billboards" # 0x381690
+[0x0010]: "Binary", "billboard9b", "billboards" # 0x3816a0
+[0x0020]: "Binary", "billboard9c", "billboards" # 0x3816b0
+[0x0020]: "Binary", "billboard9d", "billboards" # 0x3816d0
+[0x0020]: "Binary", "billboard9e", "billboards" # 0x3816f0
+[0x0020]: "Binary", "billboard9f", "billboards" # 0x381710
+[0x0010]: "Binary", "billboarda0", "billboards" # 0x381730
+[0x0010]: "Binary", "billboarda1", "billboards" # 0x381740
+[0x0020]: "Binary", "billboarda2", "billboards" # 0x381750
+[0x0020]: "Binary", "billboarda3", "billboards" # 0x381770
+[0x0020]: "Binary", "billboarda4", "billboards" # 0x381790
+[0x0010]: "Binary", "billboarda5", "billboards" # 0x3817b0
+[0x0010]: "Binary", "billboarda6", "billboards" # 0x3817c0
+[0x0010]: "Binary", "billboarda7", "billboards" # 0x3817d0
+[0x0010]: "Binary", "billboarda8", "billboards" # 0x3817e0
+[0x0010]: "Binary", "billboarda9", "billboards" # 0x3817f0
+[0x0020]: "Binary", "billboardaa", "billboards" # 0x381800
+[0x0020]: "Binary", "billboardab", "billboards" # 0x381820
+[0x0020]: "Binary", "billboardac", "billboards" # 0x381840
+[0x0020]: "Binary", "billboardad", "billboards" # 0x381860
+[0x0020]: "Binary", "billboardae", "billboards" # 0x381880
+[0x0020]: "Binary", "billboardaf", "billboards" # 0x3818a0
+[0x0020]: "Binary", "billboardb0", "billboards" # 0x3818c0
+[0x0020]: "Binary", "billboardb1", "billboards" # 0x3818e0
+[0x0020]: "Binary", "billboardb2", "billboards" # 0x381900
+[0x0020]: "Binary", "billboardb3", "billboards" # 0x381920
+[0x0020]: "Binary", "billboardb4", "billboards" # 0x381940
+[0x0020]: "Binary", "billboardb5", "billboards" # 0x381960
+[0x0020]: "Binary", "billboardb6", "billboards" # 0x381980
+[0x0020]: "Binary", "billboardb7", "billboards" # 0x3819a0
+[0x0020]: "Binary", "billboardb8", "billboards" # 0x3819c0
+[0x0020]: "Binary", "billboardb9", "billboards" # 0x3819e0
+[0x0020]: "Binary", "billboardba", "billboards" # 0x381a00
+[0x0010]: "Binary", "billboardbb", "billboards" # 0x381a20
+[0x0010]: "Binary", "billboardbc", "billboards" # 0x381a30
+[0x0010]: "Binary", "billboardbd", "billboards" # 0x381a40
+[0x0010]: "Binary", "billboardbe", "billboards" # 0x381a50
+[0x0020]: "Binary", "billboardbf", "billboards" # 0x381a60
+[0x0020]: "Binary", "billboardc0", "billboards" # 0x381a80
