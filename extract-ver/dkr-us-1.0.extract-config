@@ -96,8 +96,17 @@ include: "extract-textures/textures_2-us-1.0.extract-config"
 
 # ------------------------------------------------------- #
 
-# [0x380BB0, 0x3833A0] = Unknown
-[0x27F0]: "Binary", "unknown", "bin"
+# [0x380BB0, 0x380BE0] = Unknown
+[0x30]: "Binary", "unknown", "bin"
+
+# [0x380BE0, 0x381AA0] = Billboards
+include: "extract-billboards/billboards-us-1.0.extract-config"
+
+# [0x381AA0, 0x381DB0] = Unknown
+[0x310]: "Binary", "billboards_lut", "billboards"
+
+# [0x381DB0, 0x3833A0] = Unknown
+[0x15F0]: "Binary", "unknown", "bin"
 
 # [0x3833A0, 0x383760] = Unknown
 [0x3C0]: "Cheats", "magic_codes", "cheats"
@@ -132,7 +141,7 @@ include: "extract-levels/level_names-us-1.0.extract-config"
 include: "extract-levels/levels-us-1.0.extract-config"
 
 # [0x54F4B0, 0x54FAD0] = Objects Look-up table
-[0x620]: "Binary", "objects_lut", "objects"
+[0x620]: "Binary", "object_models_lut", "objects"
 
 # [0x54FAD0, 0x61FA70] = Objects data
 include: "extract-objects/objects-us-1.0.extract-config"
@@ -147,15 +156,18 @@ include: "extract-objects/objects-us-1.0.extract-config"
 include: "extract-animations/animations-us-1.0.extract-config"
 
 # [0x6C0050, 0x6C0520] = Object headers table
-[0x4D0]: "Binary", "object_headers_table", "objects"
+[0x4D0]: "Binary", "object_headers_lut", "objects"
 
 # [0x6C0520, 0x6CBDE0] = Object headers
 include: "extract-objects/object_headers-us-1.0.extract-config"
 
+# [0x6CBDE0, 0x6CC1E0] = Level Object Map Id to Object Header Id translatation table.
+[0x400]: "Binary", "level_object_translate_table", "objects"
+
 # ------------------------------------------------------- #
 
-# [0x6CBDE0, 0xAAAB10] = Unknown. Audio related
-[0x3DED30]: "Binary", "unknown", "bin"
+# [0x6CC1E0, 0xAAAB10] = Unknown. Audio related
+[0x3DE930]: "Binary", "unknown", "bin"
 
 # [0xAAAB10, 0xABBDA0] = Unused font?
 [0x11290]: "Binary", "unknown_4bpp_font_192x732", "bin"
