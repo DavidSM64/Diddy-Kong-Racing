@@ -59,7 +59,7 @@ CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 
 ASM_DIRS := asm asm/boot asm/assets
 SRC_DIRS := src
-ASSETS_DIRS := animations billboards bin cheats levels objects text textures ucode 
+ASSETS_DIRS := animations billboards bin cheats levels objects text textures textures/2d textures/3d ucode 
 
 S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
 
@@ -76,19 +76,20 @@ ASSETS_DIR = assets/us_1.0
 ASSETS_OBJCOPY = $(CROSS)objcopy --input-target=binary --output-target=binary
 
 TEXTURES_IN_DIR = $(ASSETS_DIR)/textures
+TEXTURES_2D_IN_DIR = $(ASSETS_DIR)/textures/2d
+TEXTURES_3D_IN_DIR = $(ASSETS_DIR)/textures/3d
 TEXTURES_OUT_DIR = $(BUILD_DIR)/textures
-TEXTURES = $(wildcard $(TEXTURES_IN_DIR)/*.png $(TEXTURES_IN_DIR)/*.bin)
-TEXTURES_BUILT := $(patsubst $(TEXTURES_IN_DIR)/%.png,$(TEXTURES_OUT_DIR)/%.bin,$(TEXTURES))
-TEXTURES_BIN_BUILT := $(patsubst $(TEXTURES_IN_DIR)/%.bin,$(TEXTURES_OUT_DIR)/%.bin,$(TEXTURES))
+TEXTURES_2D_OUT_DIR = $(BUILD_DIR)/textures/2d
+TEXTURES_3D_OUT_DIR = $(BUILD_DIR)/textures/3d
+TEXTURES_BIN = $(wildcard $(TEXTURES_IN_DIR)/*.bin)
+TEXTURES_2D = $(wildcard $(TEXTURES_2D_IN_DIR)/*.png)
+TEXTURES_3D = $(wildcard $(TEXTURES_3D_IN_DIR)/*.png)
+TEXTURES_BUILT = $(patsubst $(TEXTURES_IN_DIR)/%.bin,$(TEXTURES_OUT_DIR)/%.bin,$(TEXTURES_BIN))
+TEXTURES_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.png,$(TEXTURES_2D_OUT_DIR)/%.bin,$(TEXTURES_2D))
+TEXTURES_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.png,$(TEXTURES_3D_OUT_DIR)/%.bin,$(TEXTURES_3D))
+#TEXTURES_BUILT = $(TEXTURES_BIN_BUILT) $(TEXTURES_2D_BUILT) $(TEXTURES_3D_BUILT)
 
-REGEX_TEXTURE_NAME := $(TEXTURES_IN_DIR)[/](([^.]*[.][^.]*)[.]0[.][^.]*[.][^.]*[.][^.]*)[.]png
-define build_texture
-	$(shell \
-        if [[ $1 =~ $(REGEX_TEXTURE_NAME) ]] ; then \
-            $(TEXBUILDER) $(TEXTURES_IN_DIR) $(TEXTURES_OUT_DIR) $${BASH_REMATCH[2]} $${BASH_REMATCH[1]} ; \
-        fi \
-    )
-endef
+#$(info TEXTURES_BUILT is $(TEXTURES_BUILT))
 
 BINS_IN_DIR = $(ASSETS_DIR)/bin
 BINS_OUT_DIR = $(BUILD_DIR)/bin
@@ -133,7 +134,7 @@ CHEATS_OUT_DIR = $(BUILD_DIR)/cheats
 CHEATS = $(wildcard $(CHEATS_IN_DIR)/*.cheats)
 CHEATS_BUILT := $(patsubst %.cheats,%.bin,$(patsubst $(CHEATS_IN_DIR)/%.cheats,$(CHEATS_OUT_DIR)/%.cheats,$(CHEATS)))
 
-ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(TEXTURES_BIN_BUILT) $(TEXT_BUILT) $(UCODE_BUILT)
+ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(TEXT_BUILT) $(UCODE_BUILT)
 
 
 ######################## Targets #############################
@@ -183,9 +184,11 @@ $(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin
 $(OBJECTS_OUT_DIR)/%.cbin: $(OBJECTS_IN_DIR)/%.cbin 
 	$(COMPRESS) $^ $@
 
-$(TEXTURES_OUT_DIR)/%.bin: $(TEXTURES_IN_DIR)/%.png 
-	$(call build_texture,$^)
-	@echo $@
+$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png 
+	$(TEXBUILDER) $^ $@ 
+
+$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png 
+	$(TEXBUILDER) $^ $@ 
 
 $(TEXTURES_OUT_DIR)/%.bin: $(TEXTURES_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@

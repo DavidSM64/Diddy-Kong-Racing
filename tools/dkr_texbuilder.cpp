@@ -19,36 +19,16 @@
 
 #define TEX_HEADER_SIZE 0x20
 
-// C++17
-#include <experimental/filesystem> 
-namespace fs = std::experimental::filesystem;
-
 const std::string PNG_EXTENSION = ".png";
 
 /*********************************************/
 
 void show_help() {
-    std::cout << "Usage: ./dkr_texbuilder <input_directory> <output_filepath> <texture_name> <out_texture_name>" << std::endl;
+    std::cout << "Usage: ./dkr_texbuilder <input_png_file> <output_compressed_file>" << std::endl;
 }
 
 bool starts_with(std::string filename, std::string pattern) {
     return std::equal(pattern.begin(), pattern.end(), filename.begin());
-}
-
-std::vector<std::tuple<std::string, std::string, int>> get_filenames_from_directory(std::string directory, std::string name) {
-    std::vector<std::tuple<std::string, std::string, int>> filenames;
-    int start, end;
-    std::string indexString;
-    for (const auto & entry : fs::directory_iterator(directory)){
-        std::string filename = entry.path().filename();
-        if(starts_with(filename, name)) {
-            start = filename.find('.');
-            start = filename.find('.', start + 1) + 1;
-            end = filename.find('.', start);
-            filenames.push_back(std::make_tuple(filename, entry.path().string(), std::stoi(filename.substr(start, end - start))));
-        }
-    }
-    return filenames;
 }
 
 void write_binary_file(std::vector<uint8_t>& data, std::string& filename) {
@@ -199,7 +179,7 @@ int get_texture_size(int width, int height, int textureFormat) {
 }
 
 void generate_texture_header(std::vector<uint8_t>& outData, int width, int height, int textureFormat, 
-    int numberOfTextures, std::string flags, std::string headerBytes, bool& forceAlignment) {
+    int numTextures, std::string flags, std::string headerBytes, bool& forceAlignment) {
     // I currently do not know what these are for.
     int A = std::stoi(headerBytes.substr(0, 1), 0, 16);
     int B = std::stoi(headerBytes.substr(1, 2), 0, 16);
@@ -230,12 +210,12 @@ void generate_texture_header(std::vector<uint8_t>& outData, int width, int heigh
                outData.push_back(0);
     /* 0x10 */ outData.push_back(0);
     /* 0x11 */ outData.push_back(0);
-    /* 0x12 */ outData.push_back(numberOfTextures);
+    /* 0x12 */ outData.push_back(numTextures);
     /* 0x13 */ outData.push_back(0);
     /* 0x14 */ outData.push_back(0);
     /* 0x15 */ outData.push_back(E);
     if(dontComputeSize) {
-    /* 0x16 */ outData.push_back(0); // Keep it zero, Not sure why though.
+    /* 0x16 */ outData.push_back(0); // Keep it zero, Not sure why this is neccessary though.
                outData.push_back(0);
                forceAlignment = true;
     } else {
@@ -272,24 +252,14 @@ int get_bitdepth_from_format(int textureFormat){
     throw 1;
 }
 
-// std::get<0>(file) = filename, std::get<1>(file) = filepath
-std::vector<uint8_t> get_texture_binary(std::tuple<std::string, std::string, int> file, int numberOfTextures) {
+std::vector<uint8_t> get_texture_data(std::vector<uint8_t> pngData, int width, int height, int textureFormat, int numTextures, 
+std::string flags, std::string headerBytes) {
     std::vector<uint8_t> outData;
     
-    std::vector<std::string> elems = split(std::get<0>(file), '.');
-    std::string flags = elems[3];
-    std::string headerBytes = elems[4];
-    int textureFormat = get_texture_type(elems[5]);
-    //std::cout << "format = " << textureFormat << std::endl;
-    bool flipVertically = (flags.at(1) == 'F');
-    
-    int width, height;
-    
-    std::vector<uint8_t> pngData = load_texture_from_png(std::get<1>(file), textureFormat, &width, &height);
-    
     bool forceAlignment;
-    generate_texture_header(outData, width, height, textureFormat, numberOfTextures, flags, headerBytes, forceAlignment);
+    generate_texture_header(outData, width, height, textureFormat, numTextures, flags, headerBytes, forceAlignment);
     
+    bool flipVertically = (flags.at(1) == 'F');
     bool interlace = ((outData[0x06] & 0x4) == 0x04);
     
     switch(textureFormat) {
@@ -405,48 +375,84 @@ std::vector<uint8_t> get_texture_binary(std::tuple<std::string, std::string, int
     return outData;
 }
 
+std::vector<uint8_t> get_texture_binary(std::string inputFilename, std::string inputFilepath, std::string& flags) {
+    std::vector<uint8_t> out;
+    std::vector<std::string> elems = split(inputFilename, '.');
+    
+    int numElements = elems.size();
+    
+    int numTextures, textureFormat;
+    std::string headerBytes;
+    
+    if(numElements == 6) {
+        numTextures = 1;
+        flags = elems[2];
+        headerBytes = elems[3];
+        textureFormat = get_texture_type(elems[4]);
+    } else if(numElements == 7) {
+        numTextures = stoi(elems[2], 0, 10);
+        flags = elems[3];
+        headerBytes = elems[4];
+        textureFormat = get_texture_type(elems[5]);
+    } else {
+        std::cout << "Invalid texture name" << std::endl;
+        throw 1;
+    }
+    
+    int width, totalHeight;
+    
+    std::vector<uint8_t> combinedPngData = load_texture_from_png(inputFilepath, textureFormat, &width, &totalHeight);
+    
+    int height = totalHeight / numTextures;
+    int pngSize;
+    
+    if(textureFormat == TEX_FORMAT_RGBA32 || textureFormat == TEX_FORMAT_RGBA16) {
+        pngSize = width * height * 4;
+    } else {
+        pngSize = width * height * 2;
+    }
+    
+    for(int i = 0; i < numTextures; i++) {
+        int pngSectionStart = i * pngSize;
+        int pngSectionEnd = (i + 1) * pngSize;
+        std::vector<uint8_t> pngData(combinedPngData.begin() + pngSectionStart, combinedPngData.begin() + pngSectionEnd);
+        std::vector<uint8_t> textureData = get_texture_data(pngData, width, height, textureFormat, numTextures, flags, headerBytes);
+        out.insert(out.end(), textureData.begin(), textureData.end());
+    }
+    
+    return out;
+}
+
 /*********************************************/
 
 int main(int argc, char* argv[]) {
-    if(argc != 5) {
+    if(argc != 3) {
         show_help();
         return 1;
     }
     
-    std::string input_directory = argv[1];
-    std::string output_filepath = argv[2];
-    std::string texture_name = argv[3];
-    std::string out_texture_name = argv[4];
-    std::string outFilename;
+    std::string inputFilepath = argv[1];
+    std::string outputFilename = argv[2];
+    std::string inputFilename;
     
-    std::vector<std::tuple<std::string, std::string, int>> files = get_filenames_from_directory(input_directory, texture_name);
-    
-    int numberOfTextures = files.size();
-    
-    std::vector<uint8_t> binaries[numberOfTextures];
-    
-    //std::cout << "Number of textures: " << numberOfTextures << std::endl;
-    for(int i = 0; i < numberOfTextures; i++) {
-        // std::cout << '#' << std::get<0>(files[i]) << std::endl;
-        binaries[std::get<2>(files[i])] = get_texture_binary(files[i], numberOfTextures);
+    std::size_t lastSlash = inputFilepath.rfind('/');
+    if(lastSlash == std::string::npos) {
+        inputFilename = inputFilepath;
+    } else {
+        inputFilename = inputFilepath.substr(lastSlash + 1, inputFilepath.length() - lastSlash - 1);
     }
     
-    std::vector<uint8_t> uncompressed;
-    for(int i = 0; i < numberOfTextures; i++) {
-        uncompressed.insert(uncompressed.end(), binaries[i].begin(), binaries[i].end());
-    }
+    std::string flags;
+    std::vector<uint8_t> uncompressed = get_texture_binary(inputFilename, inputFilepath, flags);
     
     // DEBUG
-    // outFilename = output_filepath + "/" + texture_name + ".uncmp.bin";
+    // std::string outFilename = outputFilename + ".uncmp.bin";
     // write_binary_file(uncompressed, outFilename);
     
-    std::vector<uint8_t> compressedHeader;
-    compressedHeader.insert(compressedHeader.end(), uncompressed.begin(), uncompressed.begin() + 0x20);
-    
-    outFilename = output_filepath + "/" + out_texture_name + ".bin";
-        
-    std::string flags = split(std::get<0>(files[0]), '.')[3];
     if(flags.at(0) == 'C') {
+        std::vector<uint8_t> compressedHeader;
+        compressedHeader.insert(compressedHeader.end(), uncompressed.begin(), uncompressed.begin() + TEX_HEADER_SIZE);
+        
         compressedHeader[0x1D] = 0x01;
     
         DKRCompression compression;
@@ -456,9 +462,9 @@ int main(int argc, char* argv[]) {
         
         compressed.insert(compressed.begin(), compressedHeader.begin(), compressedHeader.end());
         
-        write_binary_file(compressed, outFilename);
+        write_binary_file(compressed, outputFilename);
     } else {
-        write_binary_file(uncompressed, outFilename);
+        write_binary_file(uncompressed, outputFilename);
     }
     
     return 0;

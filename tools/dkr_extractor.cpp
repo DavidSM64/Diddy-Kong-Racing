@@ -271,8 +271,45 @@ void flip_vertically(std::vector<uint8_t>& data, int width, int height, int bitD
     }
 }
 
-void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& data, int index, int startOffset, int endOffset, 
-    std::string& name, std::string& subfolder, std::string& outFolder, bool isCompressed, bool shouldFlip) {
+void process_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& data, bool shouldFlip) {
+    int width = header[0];
+    int height = header[1];
+    int textureFormat = header[0x02] & 0xF;
+    bool isInterlaced = ((header[0x06] & 0x04) == 0x04);
+    
+    switch(textureFormat) {
+        case TEX_FORMAT_RGBA32:
+        {
+            if(isInterlaced) deinterlace(data, width, height, 32, 8);
+            if(shouldFlip) flip_vertically(data, width, height, 32);
+            break;
+        }
+        case TEX_FORMAT_RGBA16:
+        case TEX_FORMAT_IA16:
+        {
+            if(isInterlaced) deinterlace(data, width, height, 16, 4);
+            if(shouldFlip) flip_vertically(data, width, height, 16);
+            break;
+        }
+        case TEX_FORMAT_I8:
+        case TEX_FORMAT_IA8:
+        {
+            if(isInterlaced) deinterlace(data, width, height, 8, 4);
+            if(shouldFlip) flip_vertically(data, width, height, 8);
+            break;
+        }
+        case TEX_FORMAT_I4:
+        case TEX_FORMAT_IA4:
+        {
+            if(isInterlaced) deinterlace(data, width, height, 4, 4);
+            if(shouldFlip) flip_vertically(data, width, height, 4);
+            break;
+        }
+    }
+}
+
+void output_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& data, int startOffset, int endOffset, 
+    std::string& name, std::string& subfolder, std::string& outFolder, bool isCompressed, bool shouldFlip, int totalHeight) {
     std::stringstream hexStream, rangeStream, filenameStream;
     
     hexStream << std::setfill('0') << std::setw(6) << std::hex << std::uppercase << startOffset;
@@ -289,19 +326,21 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
     }
     
     int width = header[0];
-    int height = header[1];
-    bool isInterlaced = ((header[0x06] & 0x04) == 0x04);
+    int height = totalHeight;
+    int numTextures = header[0x12];
     bool computeSizeInHeader = !(header[0x16] == 0x00 && header[0x17] == 0x00);
     int textureFormat = header[0x02] & 0xF;
     
     int textureSize = get_texture_size(width, height, textureFormat);
     
-    filenameStream << name << '.' << startHex 
-        << "." << index << "." 
-        << (isCompressed ? "C" : "U") 
-        << (shouldFlip ? "F" : "N") 
-        << (computeSizeInHeader ? "S" : "Z")
-        << "." << get_header_string(header);
+    filenameStream << name << '.' << startHex << ".";
+    if(numTextures > 1) {
+        filenameStream << numTextures << ".";
+    }
+    filenameStream << (isCompressed ? "C" : "U") 
+                   << (shouldFlip ? "F" : "N") 
+                   << (computeSizeInHeader ? "S" : "Z")
+                   << "." << get_header_string(header);
     
     std::string filename;
     
@@ -310,8 +349,6 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
         {
             filenameStream << ".rgba32.png";
             filename = filenameStream.str();
-            if(isInterlaced) deinterlace(data, width, height, 32, 8);
-            if(shouldFlip) flip_vertically(data, width, height, 32);
             rgba2png((outputDirectory + "/" + filename).c_str(), (const rgba*)&data[0], width, height);
             break;
         }
@@ -319,8 +356,6 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
         {
             filenameStream << ".rgba16.png";
             filename = filenameStream.str();
-            if(isInterlaced) deinterlace(data, width, height, 16, 4);
-            if(shouldFlip) flip_vertically(data, width, height, 16);
             rgba* outTex = raw2rgba(&data[0], width, height, 16);
             rgba2png((outputDirectory + "/" + filename).c_str(), outTex, width, height);
             break;
@@ -329,8 +364,6 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
         {
             filenameStream << ".i8.png";
             filename = filenameStream.str();
-            if(isInterlaced) deinterlace(data, width, height, 8, 4);
-            if(shouldFlip) flip_vertically(data, width, height, 8);
             ia* outTex = raw2i(&data[0], width, height, 8);
             ia2png((outputDirectory + "/" + filename).c_str(), outTex, width, height);
             break;
@@ -339,8 +372,6 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
         {
             filenameStream << ".i4.png";
             filename = filenameStream.str();
-            if(isInterlaced) deinterlace(data, width, height, 4, 4);
-            if(shouldFlip) flip_vertically(data, width, height, 4);
             ia* outTex = raw2i(&data[0], width, height, 4);
             ia2png((outputDirectory + "/" + filename).c_str(), outTex, width, height);
             break;
@@ -349,8 +380,6 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
         {
             filenameStream << ".ia16.png";
             filename = filenameStream.str();
-            if(isInterlaced) deinterlace(data, width, height, 16, 4);
-            if(shouldFlip) flip_vertically(data, width, height, 16);
             ia* outTex = raw2ia(&data[0], width, height, 16);
             ia2png((outputDirectory + "/" + filename).c_str(), outTex, width, height);
             break;
@@ -359,8 +388,6 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
         {
             filenameStream << ".ia8.png";
             filename = filenameStream.str();
-            if(isInterlaced) deinterlace(data, width, height, 8, 4);
-            if(shouldFlip) flip_vertically(data, width, height, 8);
             ia* outTex = raw2ia(&data[0], width, height, 8);
             ia2png((outputDirectory + "/" + filename).c_str(), outTex, width, height);
             break;
@@ -369,8 +396,6 @@ void extract_single_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& 
         {
             filenameStream << ".ia4.png";
             filename = filenameStream.str();
-            if(isInterlaced) deinterlace(data, width, height, 4, 4);
-            if(shouldFlip) flip_vertically(data, width, height, 4);
             ia* outTex = raw2ia(&data[0], width, height, 4);
             ia2png((outputDirectory + "/" + filename).c_str(), outTex, width, height);
             break;
@@ -414,6 +439,10 @@ void extract_texture(ROM& rom, int startOffset, int endOffset, std::string& name
     int numTextures = header[0x12];
     int dataOffset = 0;
     
+    std::vector<uint8_t> firstHeader(data.begin(), data.begin() + TEX_HEADER_SIZE);
+    std::vector<uint8_t> combinedTexturesData;
+    
+    int totalHeight = 0;
     for(int i = 0; i < numTextures; i++){
         int width = data[dataOffset + 0x00];
         int height = data[dataOffset + 0x01];
@@ -423,9 +452,14 @@ void extract_texture(ROM& rom, int startOffset, int endOffset, std::string& name
         std::vector<uint8_t> texHeader(data.begin() + dataOffset, data.begin() + dataOffset + TEX_HEADER_SIZE);
         std::vector<uint8_t> texData(data.begin() + dataOffset + TEX_HEADER_SIZE, data.begin() + dataOffset + textureSize);
         
-        extract_single_texture(texHeader, texData, i, startOffset, endOffset, name, subfolder, outFolder, isCompressed, shouldFlip);
+        process_texture(texHeader, texData, shouldFlip);
+        combinedTexturesData.insert(combinedTexturesData.end(), texData.begin(), texData.end());
+        
         dataOffset += textureSize;
+        totalHeight += texHeader[1];
     }
+    
+    output_texture(firstHeader, combinedTexturesData, startOffset, endOffset, name, subfolder, outFolder, isCompressed, shouldFlip, totalHeight);
 }
 
 void extract_range(std::string subfolder, ConfigRange& range, ROM& rom) {

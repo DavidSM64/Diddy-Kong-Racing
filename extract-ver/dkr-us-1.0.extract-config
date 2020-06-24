@@ -67,17 +67,17 @@ subfolder: "us_1.0"
 
 # ---------------------- Textures ----------------------- #
 
-# [0x0ECD50, 0x296CA0] = Textures
-include: "extract-textures/textures-us-1.0.extract-config"
+# [0x0ECD50, 0x296CA0] = Textures for 3D models
+include: "extract-textures/textures_3d-us-1.0.extract-config"
 
-# [0x296CA0, 0x298290] = Textures look-up table
-[0x15F0]: "Binary", "textures_lut", "textures"
+# [0x296CA0, 0x298290] = 3D Textures look-up table
+[0x15F0]: "Binary", "textures_3d_lut", "textures"
 
-# [0x298290, 0x375D70] = Textures (Most for HUD & billboarding)
-include: "extract-textures/textures_2-us-1.0.extract-config"
+# [0x298290, 0x375D70] = Textures for HUD & billboards
+include: "extract-textures/textures_2d-us-1.0.extract-config"
 
-# [0x375D70, 0x376BA0] = Textures look-up table
-[0xE30]: "Binary", "textures_lut", "textures"
+# [0x375D70, 0x376BA0] = 2D Textures look-up table
+[0xE30]: "Binary", "textures_2d_lut", "textures"
 
 # ------------------------ Text ------------------------- #
 
