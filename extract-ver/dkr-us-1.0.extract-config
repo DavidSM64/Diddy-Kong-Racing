@@ -48,8 +48,11 @@ subfolder: "us_1.0"
 # [0x0DB570, 0x0DC770] = XBUS version of F3DDKR
 [0x1200]: "Binary", "f3ddkr_xbus", "ucode" 
 
-# [0x0DC770, 0x0EA7A0] = Unknown
-[0xE030]: "Binary", "unknown", "bin" 
+# [0x0DC770, 0x0DD230] = Unknown microcode (Probably audio)
+[0xAC0]: "Binary", "unknown_ucode", "ucode" 
+
+# [0x0DD230, 0x0EA7A0] = Unknown
+[0xD570]: "Binary", "unknown", "bin" 
 
 # [0x0EA7A0, 0x0EAFA0] = Data section of F3DDKR-DRAM
 [0x800]: "Binary", "f3ddkr_dram_data", "ucode" 
