@@ -195,8 +195,11 @@ include: "extract-particles/particle_behaviors-us-1.0.extract-config"
 # [0xAAAB10, 0xABBDA0] = Unused font?
 [0x11290]: "Binary", "unknown_4bpp_font_192x732", "bin"
 
-# [0xABBDA0, 0xAC9630] = Unknown.
-[0xD890]: "Binary", "unknown", "bin"
+# [0xABBDA0, 0xABBDC0] = Unknown.
+[0x20]: "Binary", "unknown", "bin"
+
+# [0xABBDC0, 0xAC9630] = T.T. Ghosts
+include: "extract-tt_ghosts/tt_ghosts-us-1.0.extract-config"
 
 # [0xAC9630, 0xC00000] = 0xFF padding
 [0x1369D0]: "NoExtract"

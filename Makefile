@@ -59,7 +59,7 @@ CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 
 ASM_DIRS := asm asm/boot asm/assets
 SRC_DIRS := src
-ASSETS_DIRS := animations audio billboards bin cheats levels objects particles text textures textures/2d textures/3d ucode 
+ASSETS_DIRS := animations audio billboards bin cheats levels objects particles text textures textures/2d textures/3d tt_ghosts ucode 
 
 S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
 
@@ -75,21 +75,11 @@ ASSETS_DIR = assets/us_1.0
 
 ASSETS_OBJCOPY = $(CROSS)objcopy --input-target=binary --output-target=binary
 
-TEXTURES_IN_DIR = $(ASSETS_DIR)/textures
-TEXTURES_2D_IN_DIR = $(ASSETS_DIR)/textures/2d
-TEXTURES_3D_IN_DIR = $(ASSETS_DIR)/textures/3d
-TEXTURES_OUT_DIR = $(BUILD_DIR)/textures
-TEXTURES_2D_OUT_DIR = $(BUILD_DIR)/textures/2d
-TEXTURES_3D_OUT_DIR = $(BUILD_DIR)/textures/3d
-TEXTURES_BIN = $(wildcard $(TEXTURES_IN_DIR)/*.bin)
-TEXTURES_2D = $(wildcard $(TEXTURES_2D_IN_DIR)/*.png)
-TEXTURES_3D = $(wildcard $(TEXTURES_3D_IN_DIR)/*.png)
-TEXTURES_BUILT = $(patsubst $(TEXTURES_IN_DIR)/%.bin,$(TEXTURES_OUT_DIR)/%.bin,$(TEXTURES_BIN))
-TEXTURES_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.png,$(TEXTURES_2D_OUT_DIR)/%.bin,$(TEXTURES_2D))
-TEXTURES_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.png,$(TEXTURES_3D_OUT_DIR)/%.bin,$(TEXTURES_3D))
-#TEXTURES_BUILT = $(TEXTURES_BIN_BUILT) $(TEXTURES_2D_BUILT) $(TEXTURES_3D_BUILT)
-
-#$(info TEXTURES_BUILT is $(TEXTURES_BUILT))
+ANIMATIONS_IN_DIR = $(ASSETS_DIR)/animations
+ANIMATIONS_OUT_DIR = $(BUILD_DIR)/animations
+ANIMATIONS = $(wildcard $(ANIMATIONS_IN_DIR)/*.bin $(ANIMATIONS_IN_DIR)/*.cbin)
+ANIMATIONS_BUILT = $(patsubst $(ANIMATIONS_IN_DIR)/%.bin,$(ANIMATIONS_OUT_DIR)/%.bin,$(ANIMATIONS))
+ANIMATIONS_BUILT += $(patsubst $(ANIMATIONS_IN_DIR)/%.cbin,$(ANIMATIONS_OUT_DIR)/%.cbin,$(ANIMATIONS))
 
 AUDIO_IN_DIR = $(ASSETS_DIR)/audio
 AUDIO_OUT_DIR = $(BUILD_DIR)/audio
@@ -106,11 +96,10 @@ BILLBOARDS_OUT_DIR = $(BUILD_DIR)/billboards
 BILLBOARDS = $(wildcard $(BILLBOARDS_IN_DIR)/*.bin)
 BILLBOARDS_BUILT := $(patsubst $(BILLBOARDS_IN_DIR)/%.bin,$(BILLBOARDS_OUT_DIR)/%.bin,$(BILLBOARDS))
 
-ANIMATIONS_IN_DIR = $(ASSETS_DIR)/animations
-ANIMATIONS_OUT_DIR = $(BUILD_DIR)/animations
-ANIMATIONS = $(wildcard $(ANIMATIONS_IN_DIR)/*.bin $(ANIMATIONS_IN_DIR)/*.cbin)
-ANIMATIONS_BUILT = $(patsubst $(ANIMATIONS_IN_DIR)/%.bin,$(ANIMATIONS_OUT_DIR)/%.bin,$(ANIMATIONS))
-ANIMATIONS_BUILT += $(patsubst $(ANIMATIONS_IN_DIR)/%.cbin,$(ANIMATIONS_OUT_DIR)/%.cbin,$(ANIMATIONS))
+CHEATS_IN_DIR = $(ASSETS_DIR)/cheats
+CHEATS_OUT_DIR = $(BUILD_DIR)/cheats
+CHEATS = $(wildcard $(CHEATS_IN_DIR)/*.cheats)
+CHEATS_BUILT := $(patsubst %.cheats,%.bin,$(patsubst $(CHEATS_IN_DIR)/%.cheats,$(CHEATS_OUT_DIR)/%.cheats,$(CHEATS)))
 
 LEVELS_IN_DIR = $(ASSETS_DIR)/levels
 LEVELS_OUT_DIR = $(BUILD_DIR)/levels
@@ -134,17 +123,30 @@ TEXT_OUT_DIR = $(BUILD_DIR)/text
 TEXT = $(wildcard $(TEXT_IN_DIR)/*.bin)
 TEXT_BUILT := $(patsubst $(TEXT_IN_DIR)/%.bin,$(TEXT_OUT_DIR)/%.bin,$(TEXT))
 
+TEXTURES_IN_DIR = $(ASSETS_DIR)/textures
+TEXTURES_2D_IN_DIR = $(ASSETS_DIR)/textures/2d
+TEXTURES_3D_IN_DIR = $(ASSETS_DIR)/textures/3d
+TEXTURES_OUT_DIR = $(BUILD_DIR)/textures
+TEXTURES_2D_OUT_DIR = $(BUILD_DIR)/textures/2d
+TEXTURES_3D_OUT_DIR = $(BUILD_DIR)/textures/3d
+TEXTURES_BIN = $(wildcard $(TEXTURES_IN_DIR)/*.bin)
+TEXTURES_2D = $(wildcard $(TEXTURES_2D_IN_DIR)/*.png)
+TEXTURES_3D = $(wildcard $(TEXTURES_3D_IN_DIR)/*.png)
+TEXTURES_BUILT = $(patsubst $(TEXTURES_IN_DIR)/%.bin,$(TEXTURES_OUT_DIR)/%.bin,$(TEXTURES_BIN))
+TEXTURES_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.png,$(TEXTURES_2D_OUT_DIR)/%.bin,$(TEXTURES_2D))
+TEXTURES_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.png,$(TEXTURES_3D_OUT_DIR)/%.bin,$(TEXTURES_3D))
+
+TT_GHOSTS_IN_DIR = $(ASSETS_DIR)/tt_ghosts
+TT_GHOSTS_OUT_DIR = $(BUILD_DIR)/tt_ghosts
+TT_GHOSTS = $(wildcard $(TT_GHOSTS_IN_DIR)/*.bin)
+TT_GHOSTS_BUILT := $(patsubst $(TT_GHOSTS_IN_DIR)/%.bin,$(TT_GHOSTS_OUT_DIR)/%.bin,$(TT_GHOSTS))
+
 UCODE_IN_DIR = $(ASSETS_DIR)/ucode
 UCODE_OUT_DIR = $(BUILD_DIR)/ucode
 UCODE = $(wildcard $(UCODE_IN_DIR)/*.bin)
 UCODE_BUILT := $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
 
-CHEATS_IN_DIR = $(ASSETS_DIR)/cheats
-CHEATS_OUT_DIR = $(BUILD_DIR)/cheats
-CHEATS = $(wildcard $(CHEATS_IN_DIR)/*.cheats)
-CHEATS_BUILT := $(patsubst %.cheats,%.bin,$(patsubst $(CHEATS_IN_DIR)/%.cheats,$(CHEATS_OUT_DIR)/%.cheats,$(CHEATS)))
-
-ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(UCODE_BUILT)
+ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT)
 
 
 ######################## Targets #############################
@@ -210,6 +212,9 @@ $(PARTICLES_OUT_DIR)/%.bin: $(PARTICLES_IN_DIR)/%.bin
 	$(ASSETS_OBJCOPY) $^ $@
 
 $(TEXT_OUT_DIR)/%.bin: $(TEXT_IN_DIR)/%.bin 
+	$(ASSETS_OBJCOPY) $^ $@
+
+$(TT_GHOSTS_OUT_DIR)/%.bin: $(TT_GHOSTS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@
     
 $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin 
