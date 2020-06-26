@@ -186,14 +186,13 @@ include: "extract-particles/particles-us-1.0.extract-config"
 [0x140]: "Binary", "particle_behaviors_lut", "particles"
 
 # [0xAA6C20, 0xAA9B00] = Unknown.
-# [0x2EE0]: "Binary", "particle_behaviors", "particles"
 include: "extract-particles/particle_behaviors-us-1.0.extract-config"
 
-# [0xAA9B00, 0xAAAB10] = Unknown.
-[0x1010]: "Binary", "unknown", "bin"
+# [0xAA9B00, 0xAAAB00] = Unknown.
+include: "extract-fonts/fonts-us-1.0.extract-config"
 
-# [0xAAAB10, 0xABBDA0] = Unused font?
-[0x11290]: "Binary", "unknown_4bpp_font_192x732", "bin"
+# [0xAAAB00, 0xABBDA0] = Unused fontsheet?
+[0x112A0]: "Binary", "unknown_4bpp_fontsheet_192x732", "fonts"
 
 # [0xABBDA0, 0xABBDC0] = Unknown.
 [0x20]: "Binary", "unknown", "bin"

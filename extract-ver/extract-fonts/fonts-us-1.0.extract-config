@@ -1,0 +1,6 @@
+# Part of the "Diddy Kong Racing (USA v1.0)" config
+
+[0x400]: "Binary", "FunFont", "fonts"
+[0x400]: "Binary", "SmallFont", "fonts"
+[0x400]: "Binary", "BigFont", "fonts"
+[0x400]: "Binary", "SubtitleFont", "fonts"
