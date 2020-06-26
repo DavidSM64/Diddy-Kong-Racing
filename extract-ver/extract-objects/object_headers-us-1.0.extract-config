@@ -1,5 +1,4 @@
 # Part of the "Diddy Kong Racing (USA v1.0)" config
-# Exports all the textures that the game uses.
 
 [0x00158]: "Binary", "objHeader000_DiddyCar", "objects"
 [0x00158]: "Binary", "objHeader001_TTCar", "objects"

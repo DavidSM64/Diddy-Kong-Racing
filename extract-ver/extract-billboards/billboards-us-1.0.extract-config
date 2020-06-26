@@ -1,5 +1,4 @@
 # Part of the "Diddy Kong Racing (USA v1.0)" config
-# Exports all the textures that the game uses.
 
 [0x0010]: "Binary", "billboard00", "billboards" # 0x380be0
 [0x0010]: "Binary", "billboard01", "billboards" # 0x380bf0

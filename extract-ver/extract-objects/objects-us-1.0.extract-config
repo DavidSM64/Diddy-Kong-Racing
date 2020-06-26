@@ -1,5 +1,4 @@
 # Part of the "Diddy Kong Racing (USA v1.0)" config
-# Exports all the textures that the game uses.
 
 [0x0400]: "Compressed", "objModel000_Dome", "objects" # 0x54fad0
 [0x02d0]: "Compressed", "objModel001_Dome1", "objects" # 0x54fed0

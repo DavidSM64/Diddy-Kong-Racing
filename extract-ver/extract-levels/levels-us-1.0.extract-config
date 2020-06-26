@@ -1,5 +1,4 @@
 # Part of the "Diddy Kong Racing (USA v1.0)" config
-# Exports all the textures that the game uses.
 
 [0x105f0]: "Compressed", "levelModel00_CentralAreaHub", "levels"
 [0x13390]: "Compressed", "levelModel01_Bluey", "levels"

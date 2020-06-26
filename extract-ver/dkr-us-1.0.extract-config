@@ -166,8 +166,14 @@ include: "extract-objects/object_headers-us-1.0.extract-config"
 
 # ------------------------------------------------------- #
 
+# [0x6CC1E0, 0x6CC1F0] = Unknown.
+[0x10]: "Binary", "unknown", "bin"
+
+# [0x6CC1F0, 0x6CC1F0] = Unknown.
+[0x40]: "Binary", "audio_header", "audio"
+
 # [0x6CC1E0, 0xAA6330] = Unknown.
-[0x3DA150]: "Binary", "unknown", "bin"
+[0x3DA100]: "Binary", "audio", "audio"
 
 # [0xAA6330, 0xAA6450] = Unknown.
 [0x120]: "Binary", "particles_lut", "particles"

@@ -1,5 +1,4 @@
 # Part of the "Diddy Kong Racing (USA v1.0)" config
-# Exports all the textures that the game uses.
 
 [0x000c8]: "Binary", "levelHeader00_CentralAreaHub", "levels"
 [0x000c8]: "Binary", "levelHeader01_Bluey1", "levels"
