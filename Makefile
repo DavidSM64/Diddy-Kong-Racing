@@ -4,6 +4,12 @@
 
 SHELL := /bin/bash
 
+######################### Setup Check ########################
+
+ifeq ($(wildcard ./assets/.*),)
+    $(error Error, /assets/ folder was not found. Did you run the ./setup.sh script?)
+endif
+
 ################ Target Executable and Sources ###############
 
 # BUILD_DIR is location where all build artifacts are placed
@@ -166,7 +172,7 @@ all: $(BUILD_DIR)/$(TARGET).z64
 
 clean: 
 	rm -r $(BUILD_DIR)
-
+    
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
 

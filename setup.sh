@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Check if the baseroms directory exists.
+BASEROMS_DIR="./baseroms/"
+if [ ! -d "$BASEROMS_DIR" ]; then
+    echo "/baseroms/ directory was not found. Was it deleted?"
+    exit 1
+fi
+
 # If the assets directory already exists, then the repo is already setup
 # TODO: add a `--force` option
 ASSETS_DIR="./assets/"
@@ -51,13 +58,13 @@ echo 'Tools built!'
 cd ..
 
 # Extract assets into the /assets/ directory
-./extract.sh 
+if ./extract.sh; then 
+    echo 'Setup complete!'
 
-echo 'Setup complete!'
-
-echo '---------------------------------------'
-echo '             Hello there!              '
-echo '     I am the genie of the decomp.     '
-echo '        I am here to help you.         '
-echo '              Good luck!               '
-echo '---------------------------------------'
+    echo '---------------------------------------'
+    echo '             Hello there!              '
+    echo '     I am the genie of the decomp.     '
+    echo '        I am here to help you.         '
+    echo '              Good luck!               '
+    echo '---------------------------------------'
+fi

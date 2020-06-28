@@ -548,6 +548,8 @@ int main(int argc, char* argv[]) {
         }
     }
     
+    bool completedAnExtraction = false;
+    
     for(auto& config : configs) {
         if(config.is_supported()) {
             for(auto& rom : roms) {
@@ -555,12 +557,18 @@ int main(int argc, char* argv[]) {
                     std::cout << "Found ROM file for config \"" << config.get_name() << "\"" << std::endl;
                     extract_assets_from_rom(config, rom);
                     std::cout << "Finished extracting " << numberOfFilesExtracted << " files." << std::endl;
+                    completedAnExtraction = true;
                     break;
                 }
             }
         } else {
-            std::cout << "This version of the game is currently not supported." << std::endl;
+            std::cout << "The config for \"" << config.get_name() << "\" is currently not supported." << std::endl;
         }
+    }
+    
+    if(!completedAnExtraction) {
+        std::cout << "No compatible ROMs were found within the /baseroms/ directory" << std::endl;
+        return 1;
     }
     
     return 0;
