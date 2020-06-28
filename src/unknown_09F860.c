@@ -4,7 +4,7 @@
 #include "types.h"
 
 extern s32 D_800DF494;
-extern s32 D_800DFD98;
+extern s32 gActiveMagicCodes;
 extern s32 D_800DF4C0;
 
 s32 func_8009EC70(void) {
@@ -19,9 +19,9 @@ s32 func_8009EC80(void) {
 }
 
 s32 func_8009ECB8(void) {
-    return D_800DFD98 & 1;
+    return gActiveMagicCodes & 1;
 }
 
 s32 func_8009ECD0(void) {
-    return D_800DFD98 & 2;
+    return gActiveMagicCodes & 2;
 }
