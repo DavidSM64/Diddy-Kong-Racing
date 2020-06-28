@@ -1,6 +1,9 @@
 # Baseroms is where the user will place their ROM files.
 baseroms/*
 
+# Ignore pycache
+__pycache__
+
 # Automatically generated folders should be ignored
 build/
 assets/

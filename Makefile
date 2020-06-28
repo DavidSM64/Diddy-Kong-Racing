@@ -10,7 +10,7 @@ SHELL := /bin/bash
 BUILD_DIR = build
 
 ##################### Compiler Options #######################
-#IRIX_ROOT := tools/ido5.3_compiler
+IRIX_ROOT := tools/ido5.3_compiler
 
 ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips-linux-gnu-
@@ -21,24 +21,22 @@ else
 endif
 
 # check that either QEMU_IRIX is set or qemu-irix package installed
-#ifndef QEMU_IRIX
-#  QEMU_IRIX := $(shell which qemu-irix 2>/dev/null)
-#  ifeq (, $(QEMU_IRIX))
-#    $(error Please install qemu-irix package or set QEMU_IRIX env var to the full qemu-irix binary path)
-#  endif
-#endif
+ifndef QEMU_IRIX
+  QEMU_IRIX := $(shell which qemu-irix 2>/dev/null)
+  ifeq (, $(QEMU_IRIX))
+    $(error Please install qemu-irix package or set QEMU_IRIX env var to the full qemu-irix binary path)
+  endif
+endif
 
 AS = $(CROSS)as
-#CC = $(CROSS)gcc
 CC := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
 CPP := cpp -P -Wno-trigraphs
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
 
-INCLUDE_FLAGS := -I$(BUILD_DIR)
 ASFLAGS = -mtune=vr4300 -march=vr4300 $(INCLUDE_FLAGS)
-CFLAGS  = -Wall -O2 -mtune=vr4300 -march=vr4300 -G 0 -c
+CFLAGS  = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -O2 -mips1
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -61,12 +59,15 @@ ASM_DIRS := asm asm/boot asm/assets
 SRC_DIRS := src
 ASSETS_DIRS := animations audio billboards bin cheats fonts levels objects particles text textures textures/2d textures/3d tt_ghosts ucode 
 
-S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
+GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*/*.c)
+GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
-BUILD_ASM_DIRS := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/**/))
+S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
+C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
 
 # Object files
-O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o))
+O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
+            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 
 ####################### ASSETS #########################
@@ -167,7 +168,7 @@ clean:
 	rm -r $(BUILD_DIR)
 
 $(BUILD_DIR):
-	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(ASM_DIRS) $(ASSETS_DIRS))
+	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
 
 # This is here to prevent make from deleting all the asset files after the build completes/fails.
 dont_remove_asset_files: $(ALL_ASSETS_BUILT)
@@ -233,6 +234,9 @@ $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 $(BUILD_DIR)/%.o: %.s Makefile $(MAKEFILE_SPLIT) | $(BUILD_DIR) $(ALL_ASSETS_BUILT)
 	$(AS) $(ASFLAGS) -o $@ $<
 
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -o $@ $<
+
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
 	$(CPP) $(VERSION_CFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
 
@@ -253,6 +257,8 @@ $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
 
 $(BUILD_DIR)/$(TARGET).objdump: $(BUILD_DIR)/$(TARGET).elf
 	$(OBJDUMP) -D $< > $@
+    
+$(GLOBAL_ASM_O_FILES): CC := $(PYTHON) tools/asm_processor/build.py $(CC) -- $(AS) $(ASFLAGS) --
 
 test: $(BUILD_DIR)/$(TARGET).z64
 	$(EMULATOR) $(EMU_FLAGS) $<
