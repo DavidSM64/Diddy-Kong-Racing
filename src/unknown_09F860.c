@@ -18,10 +18,10 @@ s32 func_8009EC80(void) {
     return D_800DF4C0;
 }
 
-s32 func_8009ECB8(void) {
+s32 is_tt_unlocked(void) {
     return gActiveMagicCodes & 1;
 }
 
-s32 func_8009ECD0(void) {
+s32 is_drumstick_unlocked(void) {
     return gActiveMagicCodes & 2;
 }
