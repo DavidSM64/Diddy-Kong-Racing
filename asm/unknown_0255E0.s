@@ -6,11 +6,11 @@
 .set noreorder # dont insert nops after branches
 .set gp=64     # 64-bit instructions are used
 
-glabel func_800249E0
-/* 0255E0 800249E0 3C018012 */  lui   $at, %hi(D_8011D37C) # $at, 0x8012
-/* 0255E4 800249E4 AC24D37C */  sw    $a0, %lo(D_8011D37C)($at)
-/* 0255E8 800249E8 03E00008 */  jr    $ra
-/* 0255EC 800249EC 00001025 */   move  $v0, $zero
+#glabel func_800249E0
+#/* 0255E0 800249E0 3C018012 */  lui   $at, %hi(D_8011D37C) # $at, 0x8012
+#/* 0255E4 800249E4 AC24D37C */  sw    $a0, %lo(D_8011D37C)($at)
+#/* 0255E8 800249E8 03E00008 */  jr    $ra
+#/* 0255EC 800249EC 00001025 */   move  $v0, $zero
 
 glabel func_800249F0
 /* 0255F0 800249F0 27BDFFD8 */  addiu $sp, $sp, -0x28
