@@ -6,6 +6,13 @@
 
 extern s16 D_800DD050;
 
+extern s32* D_80065D98;
+extern s32* D_8006C330;
+extern s32* D_8011D750;
+extern s32* D_8011F758;
+extern s32* D_8011F760;
+extern s32* D_8011F910;
+
 void func_80065BD0(s32 arg0) {
     D_800DD050 = arg0;
 }
@@ -29,4 +36,14 @@ s32 func_80065BEC(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/func_80065C38.s")
+
+void func_80065D40(void) {
+    func_800CC5A0();
+    osCreateThread(&D_8011F760, 1, &D_80065D98, 0, &D_8011D750, 0);
+    osStartThread(&D_8011F760);
+}
+
+GLOBAL_ASM("asm/non_matchings/func_80065D98.s")
+GLOBAL_ASM("asm/non_matchings/func_80065E30.s")
+
 
