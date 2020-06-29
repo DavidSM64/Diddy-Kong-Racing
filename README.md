@@ -1,6 +1,6 @@
 # Diddy Kong Racing
 
-This repo contains a work-in-progress decompilation of Diddy Kong Racing for the N64. You will need to have a original copy of the ROM.
+This repo contains a work-in-progress decompilation of Diddy Kong Racing for the N64. You will need to have a original copy of the ROM to extract the game's assets.
 
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
@@ -18,7 +18,6 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 
 `sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 libssl-dev`
 
-
 ## Setup
 1. Place the ROM file within the `baseroms` directory.  
     **a.** Any DKR ROM should work as long as it is US 1.0.  
@@ -34,6 +33,10 @@ If you see the message `Setup complete!`, then you are ready to build.
 ## Build
 
 To build the ROM, you just simply type in `make` in the main directory. You should see an `OK` at the end of the build if it worked correctly. The generated ROM file should appear in the `/build/` folder. 
+
+## Assets
+
+See the [ASSETS_README.md](ASSETS_README.md) file for more information on the assets within this decompilation.
 
 ## Scripts
 
@@ -56,11 +59,11 @@ Note 2: The `/assets/` folder will get deleted if it already exists, so don't pu
 
 ---
 
-#### `./rename_symbol.sh <old_symbol> <new_symbol>`
+#### `./rename_sym.sh <old_symbol> <new_symbol>`
 
-This script will rename an existing symbol within `undefined_syms.txt` and all the `.s` files within the `/asm/` directory.
+This script will rename an existing symbol within the repo with a new one.
 
-Example: `./rename_symbol.sh D_A4001000 SP_IMEM`
+Example: `./rename_sym.sh D_A4001000 SP_IMEM`
 
 ---
 
@@ -84,14 +87,15 @@ TODO: Add more things to the TODO list.
 
 What should be focused on.
 
-* Determine and integrate the compiler used for the game.
-* Determine all of the assets used, instead of just having unknown `.bin` files.
+* Decompiling the asm files into matching c files.
+* Split the asm files into smaller ones. This has been partially done, but nowhere near complete.
 
 ### Minor
 
 What can be done, but not essential.
 
-* Split the asm files into smaller ones. This has been partially done, but nowhere near complete.
+* Create file formats for all the assets files, instead of just having .bin files.
+* Figuring out the unknown .bin files within the /assets/bin/ directory.
 
 ### Future
 

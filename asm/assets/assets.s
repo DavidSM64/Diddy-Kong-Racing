@@ -4020,7 +4020,7 @@
 .incbin "./build/objects/objHeader12D_MidiFadePoint.6cbc60.bin"
 .incbin "./build/objects/objHeader12E_LevelName.6cbce0.bin"
 .incbin "./build/objects/objHeader12F_Midichset.6cbd60.bin"
-.incbin "./build/objects/level_object_translate_table.6cbde0.bin"
+.incbin "./build/levels/level_object_translate_table.6cbde0.bin"
 .incbin "./build/bin/unknown.6cc1e0.bin"
 .incbin "./build/audio/audio_header.6cc1f0.bin"
 .incbin "./build/audio/audio.6cc230.bin"
