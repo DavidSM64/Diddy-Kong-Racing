@@ -42,7 +42,8 @@ OBJDUMP = $(CROSS)objdump
 OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
 
 ASFLAGS = -mtune=vr4300 -march=vr4300 $(INCLUDE_FLAGS)
-CFLAGS  = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -O2 -mips1
+INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
+CFLAGS  = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -O2 $(INCLUDE_CFLAGS) -mips1
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -171,7 +172,11 @@ LD_SCRIPT = $(TARGET).ld
 all: $(BUILD_DIR)/$(TARGET).z64
 
 clean: 
+ifneq ($(wildcard ./build/.*),) 
 	rm -r $(BUILD_DIR)
+else 
+	@echo "/build/ directory has already been deleted." 
+endif 
     
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
