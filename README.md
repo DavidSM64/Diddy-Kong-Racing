@@ -46,7 +46,7 @@ There are some useful scripts that should be kept in mind when working on this r
 
 #### `./generate_ld.sh`
 
-This script will generate the linker file `dkr.ld`, which is used for building. You will need to call this when you add or remove files from the `/asm/` directory.
+This script will generate the linker file `dkr.ld`, which is used for building. You will need to call this when you add or remove files from the `/asm/` or `/src/` directories.
 
 ---
 
