@@ -108,5 +108,3 @@ void func_800AE490(void) {
         D_800E2CFC = NULL;
     }
 }
-
-
