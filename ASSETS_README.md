@@ -145,10 +145,10 @@ There are 5 kinds of files (exluding the lookup tables):
 
 The level headers contain information to how the level is setup. It connects the level model, object maps, backgrounds, music, camera settings, etc. You can find some information about the header in [this old JUL post from 2011](https://jul.rustedlogic.net/thread.php?pid=357838#357838).
 
-The level models contain information to the 3D geometry and collision. 
+The level models contain information to the 3D geometry and collision.  
 TODO: Link to more detailed documentation.
 
-A level object map contains a list of objects used in the level. The first 0x10 bytes is the header, and each object has a variable number of bytes determined by it's second byte AND'd by 0x7F. The ID of the object is determined by first byte OR'd with the highest bit within the second byte shifted left by 8.
+A level object map contains a list of objects used in the level. The first 0x10 bytes is the header, and each object has a variable number of bytes determined by it's second byte AND'd by 0x7F. The ID of the object is determined by first byte OR'd with the highest bit within the second byte shifted left by 8.  
 TODO: Link to more detailed documentation.
 
 The level object id translation table (`level_object_translate_table.6cbde0.bin`) contains 512 u16 values. It is used to convert the 9-bit id number from the level object map into an object header ID.
