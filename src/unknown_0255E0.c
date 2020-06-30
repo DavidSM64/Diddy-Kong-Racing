@@ -2,6 +2,7 @@
 /* RAM_POS: 0x800249E0 */
 
 #include "types.h"
+#include "macros.h"
 
 extern s32 D_8011D37C;
 

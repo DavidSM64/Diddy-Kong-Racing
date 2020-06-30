@@ -1,0 +1,44 @@
+glabel func_800B2260
+/* 0B2E60 800B2260 27BDFFE8 */  addiu $sp, $sp, -0x18
+/* 0B2E64 800B2264 AFBF0014 */  sw    $ra, 0x14($sp)
+/* 0B2E68 800B2268 848E0004 */  lh    $t6, 4($a0)
+/* 0B2E6C 800B226C 00802825 */  move  $a1, $a0
+/* 0B2E70 800B2270 31CF0400 */  andi  $t7, $t6, 0x400
+/* 0B2E74 800B2274 11E0001E */  beqz  $t7, .L800B22F0
+/* 0B2E78 800B2278 8FBF0014 */   lw    $ra, 0x14($sp)
+/* 0B2E7C 800B227C 8C84000C */  lw    $a0, 0xc($a0)
+/* 0B2E80 800B2280 00000000 */  nop   
+/* 0B2E84 800B2284 1080001A */  beqz  $a0, .L800B22F0
+/* 0B2E88 800B2288 8FBF0014 */   lw    $ra, 0x14($sp)
+/* 0B2E8C 800B228C 90B80006 */  lbu   $t8, 6($a1)
+/* 0B2E90 800B2290 00001825 */  move  $v1, $zero
+/* 0B2E94 800B2294 1B000010 */  blez  $t8, .L800B22D8
+/* 0B2E98 800B2298 00000000 */   nop   
+/* 0B2E9C 800B229C 00002025 */  move  $a0, $zero
+.L800B22A0:
+/* 0B2EA0 800B22A0 8CB9000C */  lw    $t9, 0xc($a1)
+/* 0B2EA4 800B22A4 24630001 */  addiu $v1, $v1, 1
+/* 0B2EA8 800B22A8 03244021 */  addu  $t0, $t9, $a0
+/* 0B2EAC 800B22AC 8D020000 */  lw    $v0, ($t0)
+/* 0B2EB0 800B22B0 24840004 */  addiu $a0, $a0, 4
+/* 0B2EB4 800B22B4 A440003A */  sh    $zero, 0x3a($v0)
+/* 0B2EB8 800B22B8 AC400070 */  sw    $zero, 0x70($v0)
+/* 0B2EBC 800B22BC 90A90006 */  lbu   $t1, 6($a1)
+/* 0B2EC0 800B22C0 00000000 */  nop   
+/* 0B2EC4 800B22C4 0069082A */  slt   $at, $v1, $t1
+/* 0B2EC8 800B22C8 1420FFF5 */  bnez  $at, .L800B22A0
+/* 0B2ECC 800B22CC 00000000 */   nop   
+/* 0B2ED0 800B22D0 8CA4000C */  lw    $a0, 0xc($a1)
+/* 0B2ED4 800B22D4 00000000 */  nop   
+.L800B22D8:
+/* 0B2ED8 800B22D8 0C01C450 */  jal   func_80071140
+/* 0B2EDC 800B22DC AFA50018 */   sw    $a1, 0x18($sp)
+/* 0B2EE0 800B22E0 8FA50018 */  lw    $a1, 0x18($sp)
+/* 0B2EE4 800B22E4 00000000 */  nop   
+/* 0B2EE8 800B22E8 ACA0000C */  sw    $zero, 0xc($a1)
+/* 0B2EEC 800B22EC 8FBF0014 */  lw    $ra, 0x14($sp)
+.L800B22F0:
+/* 0B2EF0 800B22F0 27BD0018 */  addiu $sp, $sp, 0x18
+/* 0B2EF4 800B22F4 03E00008 */  jr    $ra
+/* 0B2EF8 800B22F8 00000000 */   nop   
+

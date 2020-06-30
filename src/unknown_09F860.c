@@ -2,6 +2,7 @@
 /* RAM_POS: 0x8009EC70 */
 
 #include "types.h"
+#include "macros.h"
 
 extern s32 D_800DF494;
 extern s32 gActiveMagicCodes;
