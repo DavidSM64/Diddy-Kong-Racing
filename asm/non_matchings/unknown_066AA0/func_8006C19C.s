@@ -1,0 +1,6 @@
+glabel func_8006C19C
+/* 06CD9C 8006C19C 3C02800E */  lui   $v0, %hi(D_800DD318) # $v0, 0x800e
+/* 06CDA0 8006C1A0 8042D318 */  lb    $v0, %lo(D_800DD318)($v0)
+/* 06CDA4 8006C1A4 03E00008 */  jr    $ra
+/* 06CDA8 8006C1A8 00000000 */   nop   
+
