@@ -1,0 +1,19 @@
+glabel func_8006A59C
+/* 06B19C 8006A59C 3C0E8012 */  lui   $t6, 0x8012
+/* 06B1A0 8006A5A0 01C47021 */  addu  $t6, $t6, $a0
+/* 06B1A4 8006A5A4 91CE1150 */  lbu   $t6, 0x1150($t6)
+/* 06B1A8 8006A5A8 3C048012 */  lui   $a0, 0x8012
+/* 06B1AC 8006A5AC 000E7880 */  sll   $t7, $t6, 2
+/* 06B1B0 8006A5B0 01EE7823 */  subu  $t7, $t7, $t6
+/* 06B1B4 8006A5B4 000F7840 */  sll   $t7, $t7, 1
+/* 06B1B8 8006A5B8 27BDFFE8 */  addiu $sp, $sp, -0x18
+/* 06B1BC 8006A5BC 008F2021 */  addu  $a0, $a0, $t7
+/* 06B1C0 8006A5C0 AFBF0014 */  sw    $ra, 0x14($sp)
+/* 06B1C4 8006A5C4 80841112 */  lb    $a0, 0x1112($a0)
+/* 06B1C8 8006A5C8 0C01A989 */  jal   func_8006A624
+/* 06B1CC 8006A5CC 00000000 */   nop   
+/* 06B1D0 8006A5D0 8FBF0014 */  lw    $ra, 0x14($sp)
+/* 06B1D4 8006A5D4 27BD0018 */  addiu $sp, $sp, 0x18
+/* 06B1D8 8006A5D8 03E00008 */  jr    $ra
+/* 06B1DC 8006A5DC 00000000 */   nop   
+

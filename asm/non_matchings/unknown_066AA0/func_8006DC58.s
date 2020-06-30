@@ -1,0 +1,43 @@
+glabel func_8006DC58
+/* 06E858 8006DC58 27BDFFE0 */  addiu $sp, $sp, -0x20
+/* 06E85C 8006DC5C AFBF001C */  sw    $ra, 0x1c($sp)
+/* 06E860 8006DC60 0C031CF8 */  jal   func_800C73E0
+/* 06E864 8006DC64 AFA40020 */   sw    $a0, 0x20($sp)
+/* 06E868 8006DC68 14400020 */  bnez  $v0, .L8006DCEC
+/* 06E86C 8006DC6C 8FBF001C */   lw    $ra, 0x1c($sp)
+/* 06E870 8006DC70 8FA40020 */  lw    $a0, 0x20($sp)
+/* 06E874 8006DC74 0C004265 */  jal   func_80010994
+/* 06E878 8006DC78 00000000 */   nop   
+/* 06E87C 8006DC7C 0C004013 */  jal   func_8001004C
+/* 06E880 8006DC80 00000000 */   nop   
+/* 06E884 8006DC84 0C006FC8 */  jal   func_8001BF20
+/* 06E888 8006DC88 00000000 */   nop   
+/* 06E88C 8006DC8C 8FAE0020 */  lw    $t6, 0x20($sp)
+/* 06E890 8006DC90 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
+/* 06E894 8006DC94 3C058012 */  lui   $a1, %hi(D_80121208) # $a1, 0x8012
+/* 06E898 8006DC98 3C068012 */  lui   $a2, %hi(D_80121218) # $a2, 0x8012
+/* 06E89C 8006DC9C 3C078012 */  lui   $a3, %hi(D_80121228) # $a3, 0x8012
+/* 06E8A0 8006DCA0 24E71228 */  addiu $a3, %lo(D_80121228) # addiu $a3, $a3, 0x1228
+/* 06E8A4 8006DCA4 24C61218 */  addiu $a2, %lo(D_80121218) # addiu $a2, $a2, 0x1218
+/* 06E8A8 8006DCA8 24A51208 */  addiu $a1, %lo(D_80121208) # addiu $a1, $a1, 0x1208
+/* 06E8AC 8006DCAC 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
+/* 06E8B0 8006DCB0 0C009355 */  jal   D_80024D54
+/* 06E8B4 8006DCB4 AFAE0010 */   sw    $t6, 0x10($sp)
+/* 06E8B8 8006DCB8 8FA40020 */  lw    $a0, 0x20($sp)
+/* 06E8BC 8006DCBC 0C030D10 */  jal   func_800C3440
+/* 06E8C0 8006DCC0 00000000 */   nop   
+/* 06E8C4 8006DCC4 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
+/* 06E8C8 8006DCC8 0C01E015 */  jal   func_80078054
+/* 06E8CC 8006DCCC 248411F8 */   addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
+/* 06E8D0 8006DCD0 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
+/* 06E8D4 8006DCD4 0C01DC14 */  jal   func_80077050
+/* 06E8D8 8006DCD8 248411F8 */   addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
+/* 06E8DC 8006DCDC 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
+/* 06E8E0 8006DCE0 0C01DC9A */  jal   func_80077268
+/* 06E8E4 8006DCE4 248411F8 */   addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
+/* 06E8E8 8006DCE8 8FBF001C */  lw    $ra, 0x1c($sp)
+.L8006DCEC:
+/* 06E8EC 8006DCEC 27BD0020 */  addiu $sp, $sp, 0x20
+/* 06E8F0 8006DCF0 03E00008 */  jr    $ra
+/* 06E8F4 8006DCF4 00000000 */   nop   
+
