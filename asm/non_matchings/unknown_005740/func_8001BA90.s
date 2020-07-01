@@ -1,0 +1,9 @@
+glabel func_8001BA90
+/* 01C690 8001BA90 3C0E8012 */  lui   $t6, %hi(D_8011AEF0) # $t6, 0x8012
+/* 01C694 8001BA94 8DCEAEF0 */  lw    $t6, %lo(D_8011AEF0)($t6)
+/* 01C698 8001BA98 3C028012 */  lui   $v0, %hi(D_8011AEEC) # $v0, 0x8012
+/* 01C69C 8001BA9C AC8E0000 */  sw    $t6, ($a0)
+/* 01C6A0 8001BAA0 8C42AEEC */  lw    $v0, %lo(D_8011AEEC)($v0)
+/* 01C6A4 8001BAA4 03E00008 */  jr    $ra
+/* 01C6A8 8001BAA8 00000000 */   nop   
+

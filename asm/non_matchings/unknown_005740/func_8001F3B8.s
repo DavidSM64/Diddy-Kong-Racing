@@ -1,0 +1,6 @@
+glabel func_8001F3B8
+/* 01FFB8 8001F3B8 3C028012 */  lui   $v0, %hi(D_8011ADD4) # $v0, 0x8012
+/* 01FFBC 8001F3BC 8042ADD4 */  lb    $v0, %lo(D_8011ADD4)($v0)
+/* 01FFC0 8001F3C0 03E00008 */  jr    $ra
+/* 01FFC4 8001F3C4 00000000 */   nop   
+

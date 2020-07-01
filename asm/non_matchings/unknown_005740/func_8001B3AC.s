@@ -1,0 +1,8 @@
+glabel func_8001B3AC
+/* 01BFAC 8001B3AC 3C0E800E */  lui   $t6, %hi(D_800DC718) # $t6, 0x800e
+/* 01BFB0 8001B3B0 8DCEC718 */  lw    $t6, %lo(D_800DC718)($t6)
+/* 01BFB4 8001B3B4 00000000 */  nop   
+/* 01BFB8 8001B3B8 008E1026 */  xor   $v0, $a0, $t6
+/* 01BFBC 8001B3BC 03E00008 */  jr    $ra
+/* 01BFC0 8001B3C0 2C420001 */   sltiu $v0, $v0, 1
+
