@@ -1,0 +1,15 @@
+glabel func_8002ACD4
+/* 02B8D4 8002ACD4 3C018012 */  lui   $at, %hi(D_8011B0E4) # $at, 0x8012
+/* 02B8D8 8002ACD8 C424B0E4 */  lwc1  $f4, %lo(D_8011B0E4)($at)
+/* 02B8DC 8002ACDC 3C018012 */  lui   $at, %hi(D_8011B0E8) # $at, 0x8012
+/* 02B8E0 8002ACE0 E4840000 */  swc1  $f4, ($a0)
+/* 02B8E4 8002ACE4 C426B0E8 */  lwc1  $f6, %lo(D_8011B0E8)($at)
+/* 02B8E8 8002ACE8 3C018012 */  lui   $at, %hi(D_8011B0EC) # $at, 0x8012
+/* 02B8EC 8002ACEC E4A60000 */  swc1  $f6, ($a1)
+/* 02B8F0 8002ACF0 C428B0EC */  lwc1  $f8, %lo(D_8011B0EC)($at)
+/* 02B8F4 8002ACF4 3C028012 */  lui   $v0, %hi(D_8011B0F0) # $v0, 0x8012
+/* 02B8F8 8002ACF8 E4C80000 */  swc1  $f8, ($a2)
+/* 02B8FC 8002ACFC 8C42B0F0 */  lw    $v0, %lo(D_8011B0F0)($v0)
+/* 02B900 8002AD00 03E00008 */  jr    $ra
+/* 02B904 8002AD04 00000000 */   nop   
+
