@@ -5,9 +5,12 @@
 #include "macros.h"
 
 extern u32 D_80000300;
+extern s32 D_800DD434;
+extern s32 D_800DD438;
 extern s32 D_80120CE0;
 extern s32 D_80120CE4;
 extern f32 D_80120D10;
+extern u8  D_80120D14;
 extern u8  D_80120D15;
 extern s32 D_80120D18;
 extern s32 D_801210A0;
@@ -54,14 +57,40 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066230.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066348.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_800663DC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066488.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066510.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066520.s")
+
+s8 func_80066510(void) {
+    return D_80120D14;
+}
+
+void func_80066520(void) {
+    D_80120D14 = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006652C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_800665E8.s")
+
+void func_800665E8(s32 arg0) {
+    if (arg0 >= 0 && arg0 < 4) {
+        D_80120CE4 = arg0;
+    } else {
+        D_80120CE4 = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066610.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066818.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066894.s")
+
+
+/*
+// Close to matching
+extern s32 D_800DD094[48];
+s32 func_80066910(s32 arg0) {
+    s32 index = arg0 * 13;
+    return D_800DD094[index] & 0x1;
+}
+*/
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066910.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066940.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066AA8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066BA8.s")
@@ -190,9 +219,22 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F64C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F6EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F768.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F870.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F90C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F918.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F92C.s")
+
+void func_8006F90C(s32 arg0) {
+    D_800DD434 = arg0;
+}
+
+void func_8006F918(s32 arg0) {
+    arg0 = D_800DD434;
+    D_800DD438 = arg0;
+}
+
+void func_8006F92C(s32 arg0) {
+    arg0 = D_800DD438;
+    D_800DD434 = arg0;
+}
+
+GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F940.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F94C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F9B8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006FB60.s")
