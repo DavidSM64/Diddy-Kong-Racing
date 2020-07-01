@@ -1,6 +1,0 @@
-glabel func_8003ACAC
-/* 03B8AC 8003ACAC 3C018012 */  lui   $at, %hi(D_8011D4D0) # $at, 0x8012
-/* 03B8B0 8003ACB0 C420D4D0 */  lwc1  $f0, %lo(D_8011D4D0)($at)
-/* 03B8B4 8003ACB4 03E00008 */  jr    $ra
-/* 03B8B8 8003ACB8 00000000 */   nop   
-
