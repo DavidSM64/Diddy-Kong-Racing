@@ -1,0 +1,19 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800CE730 */
+
+#include "types.h"
+#include "macros.h"
+
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/func_800CE730.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/func_800CE83C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/__ull_rshift.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/__ull_rem.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/__ull_div.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/__ll_lshift.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/__ll_div.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/__ll_mul.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/__ull_divremi.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/func_800CED20.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/func_800CEDD4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/func_800CEEE0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0CF330/func_800CEFDC.s")

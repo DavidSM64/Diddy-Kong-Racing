@@ -1,0 +1,14 @@
+glabel strlen
+/* 0CED9C 800CE19C 908E0000 */  lbu   $t6, ($a0)
+/* 0CEDA0 800CE1A0 00801825 */  move  $v1, $a0
+/* 0CEDA4 800CE1A4 11C00005 */  beqz  $t6, .L800CE1BC
+/* 0CEDA8 800CE1A8 00000000 */   nop   
+/* 0CEDAC 800CE1AC 906F0001 */  lbu   $t7, 1($v1)
+.L800CE1B0:
+/* 0CEDB0 800CE1B0 24630001 */  addiu $v1, $v1, 1
+/* 0CEDB4 800CE1B4 55E0FFFE */  bnezl $t7, .L800CE1B0
+/* 0CEDB8 800CE1B8 906F0001 */   lbu   $t7, 1($v1)
+.L800CE1BC:
+/* 0CEDBC 800CE1BC 03E00008 */  jr    $ra
+/* 0CEDC0 800CE1C0 00641023 */   subu  $v0, $v1, $a0
+

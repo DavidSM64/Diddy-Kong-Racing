@@ -1,0 +1,17 @@
+glabel func_800C61DC
+/* 0C6DDC 800C61DC 00A03025 */  move  $a2, $a1
+/* 0C6DE0 800C61E0 27BDFFE8 */  addiu $sp, $sp, -0x18
+/* 0C6DE4 800C61E4 3C05800E */  lui   $a1, %hi(D_800E3764) # $a1, 0x800e
+/* 0C6DE8 800C61E8 AFBF0014 */  sw    $ra, 0x14($sp)
+/* 0C6DEC 800C61EC 8CA53764 */  lw    $a1, %lo(D_800E3764)($a1)
+/* 0C6DF0 800C61F0 0C01DB9A */  jal   func_80076E68
+/* 0C6DF4 800C61F4 24070008 */   li    $a3, 8
+/* 0C6DF8 800C61F8 3C04800E */  lui   $a0, %hi(D_800E3764) # $a0, 0x800e
+/* 0C6DFC 800C61FC 8C843764 */  lw    $a0, %lo(D_800E3764)($a0)
+/* 0C6E00 800C6200 0C03186B */  jal   func_800C61AC
+/* 0C6E04 800C6204 00000000 */   nop   
+/* 0C6E08 800C6208 8FBF0014 */  lw    $ra, 0x14($sp)
+/* 0C6E0C 800C620C 27BD0018 */  addiu $sp, $sp, 0x18
+/* 0C6E10 800C6210 03E00008 */  jr    $ra
+/* 0C6E14 800C6214 00000000 */   nop   
+

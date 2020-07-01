@@ -1,0 +1,46 @@
+glabel func_800C5F60
+/* 0C6B60 800C5F60 27BDFFD8 */  addiu $sp, $sp, -0x28
+/* 0C6B64 800C5F64 AFBF0024 */  sw    $ra, 0x24($sp)
+/* 0C6B68 800C5F68 AFB30020 */  sw    $s3, 0x20($sp)
+/* 0C6B6C 800C5F6C AFB2001C */  sw    $s2, 0x1c($sp)
+/* 0C6B70 800C5F70 AFB10018 */  sw    $s1, 0x18($sp)
+/* 0C6B74 800C5F74 AFB00014 */  sw    $s0, 0x14($sp)
+/* 0C6B78 800C5F78 AFA5002C */  sw    $a1, 0x2c($sp)
+/* 0C6B7C 800C5F7C 90820000 */  lbu   $v0, ($a0)
+/* 0C6B80 800C5F80 00808025 */  move  $s0, $a0
+/* 0C6B84 800C5F84 10400014 */  beqz  $v0, .L800C5FD8
+/* 0C6B88 800C5F88 00C09825 */   move  $s3, $a2
+/* 0C6B8C 800C5F8C 27B2002C */  addiu $s2, $sp, 0x2c
+/* 0C6B90 800C5F90 2411007E */  li    $s1, 126
+.L800C5F94:
+/* 0C6B94 800C5F94 16220005 */  bne   $s1, $v0, .L800C5FAC
+/* 0C6B98 800C5F98 02402025 */   move  $a0, $s2
+/* 0C6B9C 800C5F9C 0C031603 */  jal   func_800C580C
+/* 0C6BA0 800C5FA0 02602825 */   move  $a1, $s3
+/* 0C6BA4 800C5FA4 10000008 */  b     .L800C5FC8
+/* 0C6BA8 800C5FA8 26100001 */   addiu $s0, $s0, 1
+.L800C5FAC:
+/* 0C6BAC 800C5FAC 8FAE002C */  lw    $t6, 0x2c($sp)
+/* 0C6BB0 800C5FB0 26100001 */  addiu $s0, $s0, 1
+/* 0C6BB4 800C5FB4 A1C20000 */  sb    $v0, ($t6)
+/* 0C6BB8 800C5FB8 8FAF002C */  lw    $t7, 0x2c($sp)
+/* 0C6BBC 800C5FBC 00000000 */  nop   
+/* 0C6BC0 800C5FC0 25F80001 */  addiu $t8, $t7, 1
+/* 0C6BC4 800C5FC4 AFB8002C */  sw    $t8, 0x2c($sp)
+.L800C5FC8:
+/* 0C6BC8 800C5FC8 92020000 */  lbu   $v0, ($s0)
+/* 0C6BCC 800C5FCC 00000000 */  nop   
+/* 0C6BD0 800C5FD0 1440FFF0 */  bnez  $v0, .L800C5F94
+/* 0C6BD4 800C5FD4 00000000 */   nop   
+.L800C5FD8:
+/* 0C6BD8 800C5FD8 8FB9002C */  lw    $t9, 0x2c($sp)
+/* 0C6BDC 800C5FDC 00000000 */  nop   
+/* 0C6BE0 800C5FE0 A3200000 */  sb    $zero, ($t9)
+/* 0C6BE4 800C5FE4 8FBF0024 */  lw    $ra, 0x24($sp)
+/* 0C6BE8 800C5FE8 8FB30020 */  lw    $s3, 0x20($sp)
+/* 0C6BEC 800C5FEC 8FB2001C */  lw    $s2, 0x1c($sp)
+/* 0C6BF0 800C5FF0 8FB10018 */  lw    $s1, 0x18($sp)
+/* 0C6BF4 800C5FF4 8FB00014 */  lw    $s0, 0x14($sp)
+/* 0C6BF8 800C5FF8 03E00008 */  jr    $ra
+/* 0C6BFC 800C5FFC 27BD0028 */   addiu $sp, $sp, 0x28
+

@@ -1,0 +1,22 @@
+glabel func_8003CFE0
+/* 03DBE0 8003CFE0 27BDFFE8 */  addiu $sp, $sp, -0x18
+/* 03DBE4 8003CFE4 AFBF0014 */  sw    $ra, 0x14($sp)
+/* 03DBE8 8003CFE8 90A60009 */  lbu   $a2, 9($a1)
+/* 03DBEC 8003CFEC 240100FF */  li    $at, 255
+/* 03DBF0 8003CFF0 14C10006 */  bne   $a2, $at, .L8003D00C
+/* 03DBF4 8003CFF4 00000000 */   nop   
+/* 03DBF8 8003CFF8 0C007123 */  jal   func_8001C48C
+/* 03DBFC 8003CFFC AFA5001C */   sw    $a1, 0x1c($sp)
+/* 03DC00 8003D000 8FA5001C */  lw    $a1, 0x1c($sp)
+/* 03DC04 8003D004 304600FF */  andi  $a2, $v0, 0xff
+/* 03DC08 8003D008 A0A20009 */  sb    $v0, 9($a1)
+.L8003D00C:
+/* 03DC0C 8003D00C 0C00746F */  jal   func_8001D1BC
+/* 03DC10 8003D010 00C02025 */   move  $a0, $a2
+/* 03DC14 8003D014 0C00746B */  jal   func_8001D1AC
+/* 03DC18 8003D018 00000000 */   nop   
+/* 03DC1C 8003D01C 8FBF0014 */  lw    $ra, 0x14($sp)
+/* 03DC20 8003D020 27BD0018 */  addiu $sp, $sp, 0x18
+/* 03DC24 8003D024 03E00008 */  jr    $ra
+/* 03DC28 8003D028 00000000 */   nop   
+
