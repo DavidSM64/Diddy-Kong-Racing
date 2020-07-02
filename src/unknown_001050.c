@@ -78,8 +78,8 @@ s16 func_800015B8(void) {
     return D_80115D30;
 }
 
-s32 func_800015C8(void) {
-    return (func_800C7A50(D_800DC630) == 1) & 0xFF;
+u8 func_800015C8(void) {
+    return (func_800C7A50(D_800DC630) == 1);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800015F8.s")

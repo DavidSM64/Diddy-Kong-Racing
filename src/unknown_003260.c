@@ -4,17 +4,39 @@
 #include "types.h"
 #include "macros.h"
 
+extern s32 D_800DC6C0;
+
+extern s32* D_80115FB0;
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002660.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002A50.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002A74.s")
+
+void func_80002A50(void) {
+    osStartThread(&D_80115FB0);
+}
+
+void func_80002A74(void) {
+    func_800C8AF0(&D_80115FB0);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002A98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002E38.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80003008.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003040.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003160.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/sfxVolumeSliderPercentage.s")
+
+void func_80003160(u32 arg0) {
+    if (arg0 > 256) {
+        arg0 = 256;
+    }
+
+    D_800DC6C0 = arg0;
+}
+
+s32 sfxVolumeSliderPercentage(void) {
+    return D_800DC6C0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000318C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800031C0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_800033C8.s")
@@ -30,6 +52,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004638.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000488C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800049D8.s")
+
+void func_800049D8(void) {
+    func_800048D8(3);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800049F8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004A60.s")
