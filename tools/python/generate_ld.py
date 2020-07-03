@@ -135,7 +135,7 @@ class LD:
                     matchedGroups = matches.groups()
                     files.append(('build/asm/' + filename[:-2] + '.o', matchedGroups[0], matchedGroups[1], 1))
                     break
-        srcFilenames = FileUtil.get_filenames_from_directory(SRC_DIR, ('.c',))
+        srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIR, ('.c','.2'))
         regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
         for filename in srcFilenames:
             with open(SRC_DIR + '/' + filename, 'r') as srcFile:

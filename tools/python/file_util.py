@@ -30,6 +30,19 @@ class FileUtil:
             return [f for f in listdir(directory) if isfile(join(directory, f))]
         else:
             return [f for f in listdir(directory) if isfile(join(directory, f)) and f.endswith(extensions)]
+
+    @staticmethod
+    def get_filenames_from_directory_recursive(directory, extensions=None, subDirectory=''):
+        filenames = []
+        for f in listdir(directory):
+            if isfile(join(directory, f)) and (extensions is None or f.endswith(extensions)):
+                filenames.append(((subDirectory + '/') if subDirectory != '' else '') + f)
+            elif isdir(join(directory, f)):
+                if subDirectory == '':
+                    filenames += FileUtil.get_filenames_from_directory_recursive(join(directory, f), extensions, f)
+                else:
+                    filenames += FileUtil.get_filenames_from_directory_recursive(join(directory, f), extensions, subDirectory + '/' + f)
+        return filenames
     
     @staticmethod
     def get_text_from_file(filename):
