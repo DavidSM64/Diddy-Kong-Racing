@@ -43,7 +43,9 @@ OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
 
 ASFLAGS = -mtune=vr4300 -march=vr4300 $(INCLUDE_FLAGS)
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
-CFLAGS  = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -O2 $(INCLUDE_CFLAGS) -mips1
+COMMON_CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -O2 $(INCLUDE_CFLAGS)
+CFLAGS = $(COMMON_CFLAGS) -mips1
+CFLAGS_MIPS2 = $(COMMON_CFLAGS) -mips2
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -63,10 +65,10 @@ COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 
 ASM_DIRS := asm asm/boot asm/assets
-SRC_DIRS := src
+SRC_DIRS := src src/mips1 src/mips2
 ASSETS_DIRS := animations audio billboards bin cheats fonts levels objects particles text textures textures/2d textures/3d tt_ghosts ucode 
 
-GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*/*.c)
+GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c src/mips1/*.c src/mips2/*.c)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
@@ -244,8 +246,11 @@ $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 
 $(BUILD_DIR)/%.o: %.s Makefile $(MAKEFILE_SPLIT) | $(BUILD_DIR) $(ALL_ASSETS_BUILT)
 	$(AS) $(ASFLAGS) -o $@ $<
+    
+$(BUILD_DIR)/src/mips2/%.o: src/mips2/%.c
+	$(CC) $(CFLAGS_MIPS2) -o $@ $<
 
-$(BUILD_DIR)/%.o: %.c
+$(BUILD_DIR)/src/mips1/%.o: src/mips1/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
@@ -279,3 +284,5 @@ load: $(BUILD_DIR)/$(TARGET).z64
 
 .PHONY: all clean default diff test
 
+# Remove built-in rules, to improve performance
+MAKEFLAGS += --no-builtin-rules
