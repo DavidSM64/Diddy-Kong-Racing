@@ -7,17 +7,24 @@
 extern u8 D_800DC638;
 extern s8 D_800DC670;
 extern u8 D_80115D05;
+extern u8 D_80115D41;
 
 extern s16 D_80115D30;
 
-extern s32 D_800DC634;
 extern s32 D_800DC648;
 extern s32 D_800DC654;
 extern s32 D_800DC658;
+extern s32 D_80115D18;
+extern s32 D_80115D1C;
+extern s32 D_80115D20;
+extern s32 D_80115D24;
+extern s32 D_80115D28;
+extern s32 D_80115D2C;
 extern s32 D_80115D38;
 extern s32 D_80115D3C;
 
 extern s32* D_800DC630;
+extern s32* D_800DC634;
 
 extern f32 D_800DC650;
 
@@ -44,7 +51,15 @@ void func_80000C2C(void) {
     D_800DC670 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000C38.s")
+void func_80000C38(u8 arg0) {
+    func_8000B010(D_800DC634, arg0);
+}
+
+/* Unused? */
+void func_80000C68(u8 arg0) {
+    func_80063A90(D_800DC630, arg0);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000C98.s")
 
 void func_80000CBC(void) {
@@ -63,9 +78,21 @@ void func_80001050(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_8000105C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001074.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001114.s")
+
+void func_80001114(u8 arg0) {
+    if (arg0 < 0x10) {
+        func_80063AF0(D_800DC630, arg0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_8000114C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001170.s")
+
+void func_80001170(u8 arg0) {
+    if (arg0 < 0x10) {
+        func_80063B44(D_800DC630, arg0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800011A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800011E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001268.s")
@@ -122,7 +149,32 @@ GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001F14.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001FB8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800020E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80002110.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80002128.s")
+
+void func_80002128(s32* arg0, s32* arg1, s32* arg2) {
+    if (arg0 != NULL) {
+        *arg0 = D_80115D18;
+    }
+    if (arg1 != NULL) {
+        *arg1 = D_80115D28;
+    }
+    if (arg2 != NULL) {
+        *arg2 = D_80115D20;
+    }
+}
+
+/* Unused? */
+void func_8000216C(s32* arg0, s32* arg1, s32* arg2) {
+    if (arg0 != NULL) {
+        *arg0 = D_80115D1C;
+    }
+    if (arg1 != NULL) {
+        *arg1 = D_80115D2C;
+    }
+    if (arg2 != NULL) {
+        *arg2 = D_80115D24;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800021B0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80002224.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800022BC.s")
