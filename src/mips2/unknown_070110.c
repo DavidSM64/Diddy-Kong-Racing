@@ -34,9 +34,14 @@ s32 get_rng_seed(void) {
     return D_800DD434;
 }
 
+/*
+ * func_8006F94C(start, end) = Gets a random number within a range. 
+ * Start is inclusive, end is exclusive; also changes the RNG seed.
+ * 
+ *  func_8006F94C(0, 5) will return a number from 0 to 4.
+ *  func_8006F94C(20, 30) will return a number from 20 to 29.
+*/
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F94C.s")
-
-
 
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F9B8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006FB60.s")
