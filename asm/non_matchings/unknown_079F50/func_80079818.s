@@ -37,7 +37,7 @@ glabel func_80079818
 /* 07A49C 8007989C 3C0400AA */   lui   $a0, (0x00AAAA82 >> 16) # lui $a0, 0xaa
 /* 07A4A0 800798A0 AC600000 */  sw    $zero, ($v1)
 /* 07A4A4 800798A4 24100001 */  li    $s0, 1
-/* 07A4A8 800798A8 0C033490 */  jal   func_800CD240
+/* 07A4A8 800798A8 0C033490 */  jal   __osSpSetStatus
 /* 07A4AC 800798AC 3484AA82 */   ori   $a0, (0x00AAAA82 & 0xFFFF) # ori $a0, $a0, 0xaa82
 /* 07A4B0 800798B0 10000005 */  b     .L800798C8
 /* 07A4B4 800798B4 00000000 */   nop   
@@ -69,7 +69,7 @@ glabel func_80079818
 /* 07A510 80079910 3C01800E */  lui   $at, %hi(D_800DE758) # $at, 0x800e
 /* 07A514 80079914 3C0400AA */  lui   $a0, (0x00AAAA82 >> 16) # lui $a0, 0xaa
 /* 07A518 80079918 AC20E758 */  sw    $zero, %lo(D_800DE758)($at)
-/* 07A51C 8007991C 0C033490 */  jal   func_800CD240
+/* 07A51C 8007991C 0C033490 */  jal   __osSpSetStatus
 /* 07A520 80079920 3484AA82 */   ori   $a0, (0x00AAAA82 & 0xFFFF) # ori $a0, $a0, 0xaa82
 /* 07A524 80079924 0C033494 */  jal   func_800CD250
 /* 07A528 80079928 240401D6 */   li    $a0, 470
