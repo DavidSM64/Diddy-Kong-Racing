@@ -16,27 +16,33 @@ GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F6EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F768.s")
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F870.s")
 
-void func_8006F90C(s32 arg0) {
+void set_rng_seed(s32 arg0) {
     D_800DD434 = arg0;
 }
 
-void func_8006F918(s32 arg0) {
+void save_rng_seed(s32 arg0) {
     arg0 = D_800DD434;
     D_800DD438 = arg0;
 }
 
-void func_8006F92C(s32 arg0) {
+void load_rng_seed(s32 arg0) {
     arg0 = D_800DD438;
     D_800DD434 = arg0;
 }
 
-//GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F940.s")
-
-s32 func_8006F940(void) {
+s32 get_rng_seed(void) {
     return D_800DD434;
 }
 
+/*
+ * func_8006F94C(start, end) = Gets a random number within a range. 
+ * Start is inclusive, end is exclusive; also changes the RNG seed.
+ * 
+ *  func_8006F94C(0, 5) will return a number from 0 to 4.
+ *  func_8006F94C(20, 30) will return a number from 20 to 29.
+*/
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F94C.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006F9B8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006FB60.s")
 GLOBAL_ASM("asm/non_matchings/unknown_070110/func_8006FC30.s")
