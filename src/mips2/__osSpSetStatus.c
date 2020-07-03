@@ -3,5 +3,8 @@
 
 #include "types.h"
 #include "macros.h"
+#include "hardware.h"
 
-GLOBAL_ASM("asm/non_matchings/unknown_0CDE40/func_800CD240.s")
+void __osSpSetStatus(u32 status) {
+    HW_REG(SP_STATUS_REG, u32) = status;
+}
