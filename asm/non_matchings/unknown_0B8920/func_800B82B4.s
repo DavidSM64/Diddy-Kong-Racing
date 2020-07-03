@@ -229,10 +229,10 @@ glabel func_800B82B4
 /* 0B9210 800B8610 03CEF021 */   addu  $fp, $fp, $t6
 /* 0B9214 800B8614 0000B825 */  move  $s7, $zero
 .L800B8618:
-/* 0B9218 800B8618 0C01BE46 */  jal   func_8006F918
+/* 0B9218 800B8618 0C01BE46 */  jal   save_rng_seed
 /* 0B921C 800B861C 00000000 */   nop   
 /* 0B9220 800B8620 3C045741 */  lui   $a0, %hi(D_57410001) # $a0, 0x5741
-/* 0B9224 800B8624 0C01BE43 */  jal   func_8006F90C
+/* 0B9224 800B8624 0C01BE43 */  jal   set_rng_seed
 /* 0B9228 800B8628 34845646 */   ori   $a0, (0x57415646 & 0xFFFF) # ori $a0, $a0, 0x5646
 /* 0B922C 800B862C 8E830004 */  lw    $v1, 4($s4)
 /* 0B9230 800B8630 0000A825 */  move  $s5, $zero
@@ -273,7 +273,7 @@ glabel func_800B82B4
 /* 0B92B0 800B86B0 0000B825 */  move  $s7, $zero
 /* 0B92B4 800B86B4 0000A825 */  move  $s5, $zero
 .L800B86B8:
-/* 0B92B8 800B86B8 0C01BE4B */  jal   func_8006F92C
+/* 0B92B8 800B86B8 0C01BE4B */  jal   load_rng_seed
 /* 0B92BC 800B86BC 00000000 */   nop   
 /* 0B92C0 800B86C0 24010002 */  li    $at, 2
 /* 0B92C4 800B86C4 12610003 */  beq   $s3, $at, .L800B86D4
