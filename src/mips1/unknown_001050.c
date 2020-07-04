@@ -5,15 +5,23 @@
 #include "macros.h"
 
 extern u8 D_800DC638;
+extern u8 D_800DC63C;
+extern u8 D_800DC640;
 extern s8 D_800DC670;
+extern u8 D_80115D04;
 extern u8 D_80115D05;
+extern u8 D_80115D40;
 extern u8 D_80115D41;
+extern s8 D_80115F79;
 
 extern s16 D_80115D30;
 
+
 extern s32 D_800DC648;
+extern s32 D_800DC64C;
 extern s32 D_800DC654;
 extern s32 D_800DC658;
+extern s32 D_80115D08;
 extern s32 D_80115D18;
 extern s32 D_80115D1C;
 extern s32 D_80115D20;
@@ -22,6 +30,7 @@ extern s32 D_80115D28;
 extern s32 D_80115D2C;
 extern s32 D_80115D38;
 extern s32 D_80115D3C;
+extern s32 D_80115F7C;
 
 extern s32* D_800DC630;
 extern s32* D_800DC634;
@@ -30,7 +39,40 @@ extern f32 D_800DC650;
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000450.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000890.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000968.s")
+
+void func_80000968(s32 arg0) {
+    switch(arg0) {
+        case 1:
+            func_80004A60(0, 0);
+            func_80004A60(1, 0x7FFF);
+            func_80004A60(2, 0);
+            func_80004A60(4, 0);
+            func_800C7850(D_800DC630, (s16) (D_800DC638 * D_800DC654 >> 2));
+            func_800C7850(D_800DC634, 0);
+            break;
+        case 2:
+            func_80004A60(0, 0);
+            func_80004A60(1, 0x7FFF);
+            func_80004A60(2, 0x7FFF);
+            func_80004A60(4, 0x7FFF);
+            break;
+        case 3:
+            func_80004A60(0, 0);
+            func_80004A60(1, 0x7FFF);
+            func_80004A60(2, 0);
+            func_80004A60(4, 0);
+            break;
+        default:
+            func_80004A60(0, 0x7FFF);
+            func_80004A60(1, 0x7FFF);
+            func_80004A60(2, 0x7FFF);
+            func_80004A60(4, 0x7FFF);
+            func_800C7850(D_800DC630, (s16) (D_800DC638 * D_800DC654));
+            func_800C7850(D_800DC634, (s16) (sfxVolumeSliderPercentage() * D_800DC63C));
+            break;
+    }
+    D_80115F79 = arg0;
+}
 
 void func_80000B18(void) {
     D_800DC648 = 1;
@@ -40,7 +82,19 @@ void func_80000B28(void) {
     D_800DC648 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000B34.s")
+void func_80000B34(u8 arg0) {
+    if (D_800DC648 == 0 && D_800DC654 != 0) {
+        D_80115D04 = arg0;
+        D_800DC638 = 0x7F;
+        if (D_800DC640 != 0) {
+            func_800022BC(D_80115D04, D_800DC630);
+        }
+        D_80115D08 = func_800C7890(D_800DC630);
+        D_800DC64C = func_800C78D0();
+        D_80115D40 = 1;
+        D_80115F7C = -1;
+    }
+}
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000BE0.s")
 
 void func_80000C1C(void) {
@@ -138,7 +192,11 @@ s32 musicVolumeSliderPercentage(void) {
     return D_800DC654;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001B0C.s")
+void func_80001B0C(u8 arg0) {
+    D_800DC63C = arg0;
+    func_800C7850(D_800DC634, (s16) (sfxVolumeSliderPercentage() * D_800DC63C));
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001B58.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001BC0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001C08.s")
