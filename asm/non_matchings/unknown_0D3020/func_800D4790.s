@@ -12,8 +12,8 @@ glabel func_800D4790
 /* 0D53B4 800D47B4 1720FFFC */  bnez  $t9, .L800D47A8
 /* 0D53B8 800D47B8 00000000 */   nop   
 .L800D47BC:
-/* 0D53BC 800D47BC 3C088000 */  lui   $t0, %hi(D_80000308) # $t0, 0x8000
-/* 0D53C0 800D47C0 8D080308 */  lw    $t0, %lo(D_80000308)($t0)
+/* 0D53BC 800D47BC 3C088000 */  lui   $t0, %hi(osRomBase) # $t0, 0x8000
+/* 0D53C0 800D47C0 8D080308 */  lw    $t0, %lo(osRomBase)($t0)
 /* 0D53C4 800D47C4 3C01A000 */  lui   $at, 0xa000
 /* 0D53C8 800D47C8 00001025 */  move  $v0, $zero
 /* 0D53CC 800D47CC 01044825 */  or    $t1, $t0, $a0
