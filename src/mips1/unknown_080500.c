@@ -36,7 +36,7 @@ extern s32 D_800DF4B8;
 extern s32 D_800DF4BC;
 extern s32 D_800DF4C0;
 extern s32 D_800DF4CC;
-extern s32 D_800DF7C4;
+extern s16 D_800DF7C4[11];
 extern s32 D_800DFA2C;
 extern s32 D_800DFDC8;
 extern s32 D_800DFFD0;
@@ -136,7 +136,43 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuSaveOptionsLoop.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80087EB8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80087F14.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008832C.s")
+
+
+/*
+// Probably not unqiue to the boot menu.
+typedef struct MenuBootDrawTexture {
+u32* texture; // Pointer to texture to draw. TODO: Make structure for texture header.
+s16 xOffset; // Offset from the center of the screen.
+s16 yOffset; // Offset from the center of the screen.
+} MenuBootDrawTexture;
+
+extern s32 D_800DF77C;
+extern s16 D_800DF7C4[11];
+static MenuBootDrawTexture D_800DF7DC[11];
+extern u32* D_80126550[]; // texture lookup table?
+extern s32 D_80126C18;
+extern s32 D_80126C20;
+
+// Almost matches, except for an extra `lui` instruction when the loop unrolls.
+void menu_boot_init(void) {
+    s32 i;
+
+    func_800C01D8(&D_800DF77C);
+    func_80077B34(0, 0, 0);
+    func_8009C674(&D_800DF7C4);
+    
+    // Sets up the 11 texture pointers for the "Diddy Kong Racing" logo.
+    for(i = 0; i < 11; i++) {
+        D_800DF7DC[i].texture = D_80126550[D_800DF7C4[i]];
+    }
+    
+    // Reset variables for menu_boot_loop()
+    D_80126C20 = 0; // D_80126C20 is the current state of the boot screen. Either 0, 1, or 2.
+    D_80126C18 = 0; // D_80126C18 is a timer for the boot screen, counts up to 0x8C frames.
+}
+*/
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuBootInit.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuBootLoop.s")
 
 void func_800887C4(void) {

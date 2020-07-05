@@ -28,16 +28,11 @@ subfolder: "us_1.0"
 # [0x001000, 0x0D8200] = Game code, not extracted
 [0xD7200]: "NoExtract"
 
-# [0x0D8200, 0x0D90C0] = Unknown
-[0xEC0]: "Binary", "unknown", "bin"
-
-# ---------------------- Microcode ---------------------- #
+# [0x0D8200, 0x0D90C0] = Unknown microcode
+[0xEC0]: "Binary", "unknown_ucode", "ucode"
 
 # [0x0D90C0, 0x0D9190] = Microcode boot code
 [0xD0]: "Binary", "ucode_boot", "ucode" 
-
-# F3DDKR is a modified version of Fast3D
-# TODO: Audio microcode
 
 # [0x0D9190, 0x0DA390] = DRAM Dump version of F3DDKR
 [0x1200]: "Binary", "f3ddkr_dram", "ucode" 
@@ -48,10 +43,10 @@ subfolder: "us_1.0"
 # [0x0DB570, 0x0DC770] = XBUS version of F3DDKR
 [0x1200]: "Binary", "f3ddkr_xbus", "ucode" 
 
-# [0x0DC770, 0x0DD230] = Unknown microcode (Probably audio)
+# [0x0DC770, 0x0DD230] = Unknown microcode
 [0xAC0]: "Binary", "unknown_ucode", "ucode" 
 
-# [0x0DD230, 0x0EA7A0] = Unknown
+# [0x0DD230, 0x0EA7A0] = Unknown (Might be .data section?)
 [0xD570]: "Binary", "unknown", "bin" 
 
 # [0x0EA7A0, 0x0EAFA0] = Data section of F3DDKR-DRAM
@@ -62,8 +57,6 @@ subfolder: "us_1.0"
 
 # [0x0EB7A0, 0x0EBFA0] = Data section of F3DDKR-XBUS
 [0x800]: "Binary", "f3ddkr_xbus_data", "ucode" 
-
-# ------------------------------------------------------- #
 
 # [0x0EBFA0, 0x0ECD50] = Unknown
 [0xDB0]: "Binary", "unknown", "bin"

@@ -9,8 +9,8 @@ glabel func_80092E94
 /* 093AB0 80092EB0 AFA5007C */  sw    $a1, 0x7c($sp)
 /* 093AB4 80092EB4 0C01BAA4 */  jal   func_8006EA90
 /* 093AB8 80092EB8 AFA00054 */   sw    $zero, 0x54($sp)
-/* 093ABC 80092EBC 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 093AC0 80092EC0 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 093ABC 80092EBC 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 093AC0 80092EC0 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 093AC4 80092EC4 00402025 */  move  $a0, $v0
 /* 093AC8 80092EC8 15C00002 */  bnez  $t6, .L80092ED4
 /* 093ACC 80092ECC 00002825 */   move  $a1, $zero

@@ -5,7 +5,7 @@
     .incbin "\filename"
 .endm
 
-.incbin "./build/bin/unknown.0d8200.bin"
+.incbin "./build/ucode/unknown_ucode.0d8200.bin"
 .incbin "./build/ucode/ucode_boot.0d90c0.bin"
 .incbin "./build/ucode/f3ddkr_dram.0d9190.bin"
 .incbin "./build/ucode/f3ddkr_fifo.0da390.bin"

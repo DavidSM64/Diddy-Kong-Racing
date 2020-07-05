@@ -1,6 +1,6 @@
-glabel MenuBootLoop
-/* 08920C 8008860C 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 089210 80088610 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+glabel menu_boot_loop
+/* 08920C 8008860C 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 089210 80088610 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 089214 80088614 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 089218 80088618 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 08921C 8008861C 00802825 */  move  $a1, $a0

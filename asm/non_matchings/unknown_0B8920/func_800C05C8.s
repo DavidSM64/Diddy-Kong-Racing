@@ -8,8 +8,8 @@ glabel func_800C05C8
 /* 0C11E0 800C05E0 00A08825 */  move  $s1, $a1
 /* 0C11E4 800C05E4 11C0004A */  beqz  $t6, .L800C0710
 /* 0C11E8 800C05E8 AFBF001C */   sw    $ra, 0x1c($sp)
-/* 0C11EC 800C05EC 3C0F8000 */  lui   $t7, %hi(D_80000300) # $t7, 0x8000
-/* 0C11F0 800C05F0 8DEF0300 */  lw    $t7, %lo(D_80000300)($t7)
+/* 0C11EC 800C05EC 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+/* 0C11F0 800C05F0 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 0C11F4 800C05F4 3C01800F */  lui   $at, 0x800f
 /* 0C11F8 800C05F8 15E00008 */  bnez  $t7, .L800C061C
 /* 0C11FC 800C05FC 00000000 */   nop   

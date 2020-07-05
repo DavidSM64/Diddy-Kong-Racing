@@ -1,6 +1,6 @@
 glabel func_800AD2C4
-/* 0ADEC4 800AD2C4 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 0ADEC8 800AD2C8 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 0ADEC4 800AD2C4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 0ADEC8 800AD2C8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 0ADECC 800AD2CC 44866000 */  mtc1  $a2, $f12
 /* 0ADED0 800AD2D0 15C00012 */  bnez  $t6, .L800AD31C
 /* 0ADED4 800AD2D4 3C06800E */   lui   $a2, %hi(D_800E2C68) # $a2, 0x800e

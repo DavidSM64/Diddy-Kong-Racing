@@ -129,14 +129,14 @@ glabel func_800CC5A0
 /* 0CD388 800CC788 24060000 */  li    $a2, 0
 /* 0CD38C 800CC78C 0C033AB2 */  jal   __ull_div
 /* 0CD390 800CC790 24070004 */   li    $a3, 4
-/* 0CD394 800CC794 3C098000 */  lui   $t1, %hi(D_8000030C) # $t1, 0x8000
-/* 0CD398 800CC798 8D29030C */  lw    $t1, %lo(D_8000030C)($t1)
+/* 0CD394 800CC794 3C098000 */  lui   $t1, %hi(osResetType) # $t1, 0x8000
+/* 0CD398 800CC798 8D29030C */  lw    $t1, %lo(osResetType)($t1)
 /* 0CD39C 800CC79C 3C01800E */  lui   $at, %hi(D_800E38A4) # $at, 0x800e
 /* 0CD3A0 800CC7A0 AC2238A0 */  sw    $v0, %lo(D_800E38A0)($at)
 /* 0CD3A4 800CC7A4 15200005 */  bnez  $t1, .L800CC7BC
 /* 0CD3A8 800CC7A8 AC2338A4 */   sw    $v1, %lo(D_800E38A4)($at)
-/* 0CD3AC 800CC7AC 3C048000 */  lui   $a0, %hi(D_8000031C) # $a0, 0x8000
-/* 0CD3B0 800CC7B0 2484031C */  addiu $a0, %lo(D_8000031C) # addiu $a0, $a0, 0x31c
+/* 0CD3AC 800CC7AC 3C048000 */  lui   $a0, %hi(osAppNMIBuffer) # $a0, 0x8000
+/* 0CD3B0 800CC7B0 2484031C */  addiu $a0, %lo(osAppNMIBuffer) # addiu $a0, $a0, 0x31c
 /* 0CD3B4 800CC7B4 0C034138 */  jal   func_800D04E0
 /* 0CD3B8 800CC7B8 24050040 */   li    $a1, 64
 .L800CC7BC:

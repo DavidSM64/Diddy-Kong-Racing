@@ -1,7 +1,7 @@
 glabel func_8001C6C4
 /* 01D2C4 8001C6C4 27BDFF18 */  addiu $sp, $sp, -0xe8
-/* 01D2C8 8001C6C8 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 01D2CC 8001C6CC 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 01D2C8 8001C6C8 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 01D2CC 8001C6CC 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 01D2D0 8001C6D0 AFB2004C */  sw    $s2, 0x4c($sp)
 /* 01D2D4 8001C6D4 00809025 */  move  $s2, $a0
 /* 01D2D8 8001C6D8 AFBF005C */  sw    $ra, 0x5c($sp)

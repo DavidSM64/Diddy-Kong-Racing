@@ -33,8 +33,8 @@ glabel MenuCreditsLoop
 /* 09BFA8 8009B3A8 0C03005C */  jal   func_800C0170
 /* 09BFAC 8009B3AC 00000000 */   nop   
 .L8009B3B0:
-/* 09BFB0 8009B3B0 3C0F8000 */  lui   $t7, %hi(D_80000300) # $t7, 0x8000
-/* 09BFB4 8009B3B4 8DEF0300 */  lw    $t7, %lo(D_80000300)($t7)
+/* 09BFB0 8009B3B0 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+/* 09BFB4 8009B3B4 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 09BFB8 8009B3B8 00002025 */  move  $a0, $zero
 /* 09BFBC 8009B3BC 15E0000C */  bnez  $t7, .L8009B3F0
 /* 09BFC0 8009B3C0 24050028 */   li    $a1, 40
@@ -228,8 +228,8 @@ glabel MenuCreditsLoop
 /* 09C280 8009B680 1140FFF8 */  beqz  $t2, .L8009B664
 /* 09C284 8009B684 03002825 */   move  $a1, $t8
 .L8009B688:
-/* 09C288 8009B688 3C0C8000 */  lui   $t4, %hi(D_80000300) # $t4, 0x8000
-/* 09C28C 8009B68C 8D8C0300 */  lw    $t4, %lo(D_80000300)($t4)
+/* 09C288 8009B688 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+/* 09C28C 8009B68C 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
 /* 09C290 8009B690 00B01823 */  subu  $v1, $a1, $s0
 /* 09C294 8009B694 15800003 */  bnez  $t4, .L8009B6A4
 /* 09C298 8009B698 24010001 */   li    $at, 1

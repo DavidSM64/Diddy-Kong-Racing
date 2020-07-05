@@ -23,8 +23,8 @@ glabel D_800D25A0
 /* 0D31EC 800D25EC 8FA40030 */   lw    $a0, 0x30($sp)
 /* 0D31F0 800D25F0 3C08A460 */  lui   $t0, 0xa460
 /* 0D31F4 800D25F4 AD020000 */  sw    $v0, ($t0)
-/* 0D31F8 800D25F8 3C098000 */  lui   $t1, %hi(D_80000308) # $t1, 0x8000
-/* 0D31FC 800D25FC 8D290308 */  lw    $t1, %lo(D_80000308)($t1)
+/* 0D31F8 800D25F8 3C098000 */  lui   $t1, %hi(osRomBase) # $t1, 0x8000
+/* 0D31FC 800D25FC 8D290308 */  lw    $t1, %lo(osRomBase)($t1)
 /* 0D3200 800D2600 8FAA002C */  lw    $t2, 0x2c($sp)
 /* 0D3204 800D2604 3C011FFF */  lui   $at, (0x1FFFFFFF >> 16) # lui $at, 0x1fff
 /* 0D3208 800D2608 3421FFFF */  ori   $at, (0x1FFFFFFF & 0xFFFF) # ori $at, $at, 0xffff

@@ -1,6 +1,6 @@
 glabel func_8000C8B4
-/* 00D4B4 8000C8B4 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 00D4B8 8000C8B8 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 00D4B4 8000C8B4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 00D4B8 8000C8B8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 00D4BC 8000C8BC 00000000 */  nop   
 /* 00D4C0 8000C8C0 15C00003 */  bnez  $t6, .L8000C8D0
 /* 00D4C4 8000C8C4 00000000 */   nop   

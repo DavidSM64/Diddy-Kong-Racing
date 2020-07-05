@@ -18,8 +18,8 @@ glabel MenuMagicCodesListInit
 /* 08B128 8008A528 3C04800E */  lui   $a0, %hi(D_800DF77C) # $a0, 0x800e
 /* 08B12C 8008A52C 0C030076 */  jal   func_800C01D8
 /* 08B130 8008A530 2484F77C */   addiu $a0, %lo(D_800DF77C) # addiu $a0, $a0, -0x884
-/* 08B134 8008A534 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 08B138 8008A538 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 08B134 8008A534 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 08B138 8008A538 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 08B13C 8008A53C 2418000A */  li    $t8, 10
 /* 08B140 8008A540 15C00005 */  bnez  $t6, .L8008A558
 /* 08B144 8008A544 3C018012 */   lui   $at, 0x8012

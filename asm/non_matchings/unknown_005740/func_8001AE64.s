@@ -232,8 +232,8 @@ glabel func_8001AE64
 /* 01BDC8 8001B1C8 240B0005 */  li    $t3, 5
 /* 01BDCC 8001B1CC A02FC730 */  sb    $t7, %lo(D_800DC730)($at)
 .L8001B1D0:
-/* 01BDD0 8001B1D0 3C198000 */  lui   $t9, %hi(D_80000300) # $t9, 0x8000
-/* 01BDD4 8001B1D4 8F390300 */  lw    $t9, %lo(D_80000300)($t9)
+/* 01BDD0 8001B1D0 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
+/* 01BDD4 8001B1D4 8F390300 */  lw    $t9, %lo(osTvType)($t9)
 /* 01BDD8 8001B1D8 00107080 */  sll   $t6, $s0, 2
 /* 01BDDC 8001B1DC 17200010 */  bnez  $t9, .L8001B220
 /* 01BDE0 8001B1E0 3C188012 */   lui   $t8, %hi(D_8011AE80) # $t8, 0x8012

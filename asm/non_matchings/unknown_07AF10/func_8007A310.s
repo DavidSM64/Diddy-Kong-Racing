@@ -1,6 +1,6 @@
 glabel func_8007A310
-/* 07AF10 8007A310 3C028000 */  lui   $v0, %hi(D_80000300) # $v0, 0x8000
-/* 07AF14 8007A314 8C420300 */  lw    $v0, %lo(D_80000300)($v0)
+/* 07AF10 8007A310 3C028000 */  lui   $v0, %hi(osTvType) # $v0, 0x8000
+/* 07AF14 8007A314 8C420300 */  lw    $v0, %lo(osTvType)($v0)
 /* 07AF18 8007A318 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 07AF1C 8007A31C AFBF0014 */  sw    $ra, 0x14($sp)
 /* 07AF20 8007A320 AFA40018 */  sw    $a0, 0x18($sp)
