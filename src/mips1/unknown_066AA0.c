@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
-extern u32 D_80000300;
+extern u32 osTvType;
 extern s32 D_80120CE0;
 extern s32 D_80120CE4;
 extern f32 D_80120D10;
@@ -18,7 +18,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066060.s")
 
 void func_80066098(s8 arg0) {
     s8 temp = (arg0 << 24) >> 24;
-    if (!D_80000300) {
+    if (!osTvType) {
         D_80120D15 = temp;
     }
 }

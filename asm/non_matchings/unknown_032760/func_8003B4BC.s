@@ -1,9 +1,9 @@
 glabel func_8003B4BC
 /* 03C0BC 8003B4BC 44852000 */  mtc1  $a1, $f4
 /* 03C0C0 8003B4C0 27BDFFB0 */  addiu $sp, $sp, -0x50
-/* 03C0C4 8003B4C4 3C0F8000 */  lui   $t7, %hi(D_80000300) # $t7, 0x8000
+/* 03C0C4 8003B4C4 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 03C0C8 8003B4C8 46802020 */  cvt.s.w $f0, $f4
-/* 03C0CC 8003B4CC 8DEF0300 */  lw    $t7, %lo(D_80000300)($t7)
+/* 03C0CC 8003B4CC 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 03C0D0 8003B4D0 AFB10020 */  sw    $s1, 0x20($sp)
 /* 03C0D4 8003B4D4 00808825 */  move  $s1, $a0
 /* 03C0D8 8003B4D8 AFBF0024 */  sw    $ra, 0x24($sp)

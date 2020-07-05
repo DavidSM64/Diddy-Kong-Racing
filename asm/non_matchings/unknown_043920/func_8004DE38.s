@@ -42,7 +42,7 @@ glabel func_8004DE38
 /* 04EAD4 8004DED4 E62E0020 */  swc1  $f14, 0x20($s1)
 .L8004DED8:
 /* 04EAD8 8004DED8 C6260024 */  lwc1  $f6, 0x24($s1)
-/* 04EADC 8004DEDC 3C188000 */  lui   $t8, %hi(D_80000300) # $t8, 0x8000
+/* 04EADC 8004DEDC 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
 /* 04EAE0 8004DEE0 46003221 */  cvt.d.s $f8, $f6
 /* 04EAE4 8004DEE4 4628103C */  c.lt.d $f2, $f8
 /* 04EAE8 8004DEE8 00000000 */  nop   
@@ -146,7 +146,7 @@ glabel func_8004DE38
 /* 04EC48 8004E048 00000000 */   nop   
 /* 04EC4C 8004E04C A20001F1 */  sb    $zero, 0x1f1($s0)
 .L8004E050:
-/* 04EC50 8004E050 8F180300 */  lw    $t8, %lo(D_80000300)($t8)
+/* 04EC50 8004E050 8F180300 */  lw    $t8, %lo(osTvType)($t8)
 /* 04EC54 8004E054 3C01800E */  lui   $at, %hi(D_800E6594) # $at, 0x800e
 /* 04EC58 8004E058 17000006 */  bnez  $t8, .L8004E074
 /* 04EC5C 8004E05C 00000000 */   nop   

@@ -60,8 +60,8 @@ glabel func_8000BADC
 /* 00C7BC 8000BBBC 24090002 */  li    $t1, 2
 /* 00C7C0 8000BBC0 46802420 */  cvt.s.w $f16, $f4
 .L8000BBC4:
-/* 00C7C4 8000BBC4 3C188000 */  lui   $t8, %hi(D_80000300) # $t8, 0x8000
-/* 00C7C8 8000BBC8 8F180300 */  lw    $t8, %lo(D_80000300)($t8)
+/* 00C7C4 8000BBC4 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+/* 00C7C8 8000BBC8 8F180300 */  lw    $t8, %lo(osTvType)($t8)
 /* 00C7CC 8000BBCC 46008086 */  mov.s $f2, $f16
 /* 00C7D0 8000BBD0 17000005 */  bnez  $t8, .L8000BBE8
 /* 00C7D4 8000BBD4 3C01800E */   lui   $at, %hi(D_800E5138) # $at, 0x800e

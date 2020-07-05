@@ -1,6 +1,6 @@
 glabel MenuLogoScreenLoop
-/* 083784 80082B84 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 083788 80082B88 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 083784 80082B84 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 083788 80082B88 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 08378C 80082B8C 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 083790 80082B90 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 083794 80082B94 15C00020 */  bnez  $t6, .L80082C18

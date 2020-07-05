@@ -22,8 +22,8 @@ glabel func_800C29F0
 /* 0C3640 800C2A40 3C018013 */  lui   $at, %hi(D_8012A7BA) # $at, 0x8013
 /* 0C3644 800C2A44 A420A7BA */  sh    $zero, %lo(D_8012A7BA)($at)
 /* 0C3648 800C2A48 3C018013 */  lui   $at, %hi(D_8012A7AE) # $at, 0x8013
-/* 0C364C 800C2A4C 3C198000 */  lui   $t9, %hi(D_80000300) # $t9, 0x8000
-/* 0C3650 800C2A50 8F390300 */  lw    $t9, %lo(D_80000300)($t9)
+/* 0C364C 800C2A4C 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
+/* 0C3650 800C2A50 8F390300 */  lw    $t9, %lo(osTvType)($t9)
 /* 0C3654 800C2A54 A424A7AE */  sh    $a0, %lo(D_8012A7AE)($at)
 /* 0C3658 800C2A58 3C018013 */  lui   $at, %hi(D_8012A7B2) # $at, 0x8013
 /* 0C365C 800C2A5C 24180120 */  li    $t8, 288

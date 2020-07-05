@@ -240,8 +240,8 @@ glabel MenuGameSelectLoop
 /* 08EDF0 8008E1F0 3C018012 */  lui   $at, %hi(D_80126CC0) # $at, 0x8012
 /* 08EDF4 8008E1F4 AC396CC0 */  sw    $t9, %lo(D_80126CC0)($at)
 /* 08EDF8 8008E1F8 AD600000 */  sw    $zero, ($t3)
-/* 08EDFC 8008E1FC 3C0C8000 */  lui   $t4, %hi(D_80000300) # $t4, 0x8000
-/* 08EE00 8008E200 8D8C0300 */  lw    $t4, %lo(D_80000300)($t4)
+/* 08EDFC 8008E1FC 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+/* 08EE00 8008E200 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
 /* 08EE04 8008E204 00004025 */  move  $t0, $zero
 /* 08EE08 8008E208 15800002 */  bnez  $t4, .L8008E214
 /* 08EE0C 8008E20C 3C0A800E */   lui   $t2, %hi(D_800E03FC) # $t2, 0x800e

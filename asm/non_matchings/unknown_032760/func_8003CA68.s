@@ -4,9 +4,9 @@ glabel func_8003CA68
 /* 03D670 8003CA70 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 03D674 8003CA74 AFB00020 */  sw    $s0, 0x20($sp)
 /* 03D678 8003CA78 AFA50074 */  sw    $a1, 0x74($sp)
-/* 03D67C 8003CA7C 3C0F8000 */  lui   $t7, %hi(D_80000300) # $t7, 0x8000
+/* 03D67C 8003CA7C 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 03D680 8003CA80 46802020 */  cvt.s.w $f0, $f4
-/* 03D684 8003CA84 8DEF0300 */  lw    $t7, %lo(D_80000300)($t7)
+/* 03D684 8003CA84 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 03D688 8003CA88 8C830064 */  lw    $v1, 0x64($a0)
 /* 03D68C 8003CA8C 8C88003C */  lw    $t0, 0x3c($a0)
 /* 03D690 8003CA90 00808025 */  move  $s0, $a0

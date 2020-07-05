@@ -4,8 +4,8 @@ glabel func_800983C0
 /* 098FC8 800983C8 AFA40030 */  sw    $a0, 0x30($sp)
 /* 098FCC 800983CC 0C0078A7 */  jal   func_8001E29C
 /* 098FD0 800983D0 2404001A */   li    $a0, 26
-/* 098FD4 800983D4 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 098FD8 800983D8 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 098FD4 800983D4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 098FD8 800983D8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 098FDC 800983DC AFA20020 */  sw    $v0, 0x20($sp)
 /* 098FE0 800983E0 15C00004 */  bnez  $t6, .L800983F4
 /* 098FE4 800983E4 3C04800E */   lui   $a0, %hi(D_800E0FE8) # $a0, 0x800e

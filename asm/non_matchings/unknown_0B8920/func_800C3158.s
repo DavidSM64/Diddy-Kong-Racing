@@ -1,6 +1,6 @@
 glabel func_800C3158
-/* 0C3D58 800C3158 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 0C3D5C 800C315C 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 0C3D58 800C3158 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 0C3D5C 800C315C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 0C3D60 800C3160 44856000 */  mtc1  $a1, $f12
 /* 0C3D64 800C3164 15C00010 */  bnez  $t6, .L800C31A8
 /* 0C3D68 800C3168 3C01404E */   lui   $at, 0x404e

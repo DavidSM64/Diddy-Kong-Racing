@@ -11,8 +11,8 @@ glabel MenuLogosScreenInit
 /* 0836D0 80082AD0 00003025 */  move  $a2, $zero
 /* 0836D4 80082AD4 0C01DED7 */  jal   func_80077B5C
 /* 0836D8 80082AD8 E4246450 */   swc1  $f4, %lo(D_80126450)($at)
-/* 0836DC 80082ADC 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 0836E0 80082AE0 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 0836DC 80082ADC 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 0836E0 80082AE0 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 0836E4 80082AE4 00002025 */  move  $a0, $zero
 /* 0836E8 80082AE8 15C00011 */  bnez  $t6, .L80082B30
 /* 0836EC 80082AEC 00002825 */   move  $a1, $zero

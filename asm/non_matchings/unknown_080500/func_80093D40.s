@@ -34,8 +34,8 @@ glabel func_80093D40
 /* 0949B8 80093DB8 1420FFF1 */  bnez  $at, .L80093D80
 /* 0949BC 80093DBC 26100004 */   addiu $s0, $s0, 4
 .L80093DC0:
-/* 0949C0 80093DC0 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 0949C4 80093DC4 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 0949C0 80093DC0 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 0949C4 80093DC4 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 0949C8 80093DC8 00028900 */  sll   $s1, $v0, 4
 /* 0949CC 80093DCC 15C00003 */  bnez  $t6, .L80093DDC
 /* 0949D0 80093DD0 2631001C */   addiu $s1, $s1, 0x1c

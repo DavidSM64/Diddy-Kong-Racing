@@ -1,7 +1,7 @@
 glabel func_8008CD74
 /* 08D974 8008CD74 27BDFF78 */  addiu $sp, $sp, -0x88
-/* 08D978 8008CD78 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
-/* 08D97C 8008CD7C 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 08D978 8008CD78 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+/* 08D97C 8008CD7C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 08D980 8008CD80 AFBF0054 */  sw    $ra, 0x54($sp)
 /* 08D984 8008CD84 AFB70050 */  sw    $s7, 0x50($sp)
 /* 08D988 8008CD88 AFB6004C */  sw    $s6, 0x4c($sp)

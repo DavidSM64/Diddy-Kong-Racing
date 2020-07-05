@@ -161,8 +161,8 @@ glabel func_800A6254
 /* 0A70B0 800A64B0 00000000 */  nop   
 /* 0A70B4 800A64B4 A1C302FD */  sb    $v1, 0x2fd($t6)
 .L800A64B8:
-/* 0A70B8 800A64B8 3C048000 */  lui   $a0, %hi(D_80000300) # $a0, 0x8000
-/* 0A70BC 800A64BC 24840300 */  addiu $a0, %lo(D_80000300) # addiu $a0, $a0, 0x300
+/* 0A70B8 800A64B8 3C048000 */  lui   $a0, %hi(osTvType) # $a0, 0x8000
+/* 0A70BC 800A64BC 24840300 */  addiu $a0, %lo(osTvType) # addiu $a0, $a0, 0x300
 /* 0A70C0 800A64C0 8C8F0000 */  lw    $t7, ($a0)
 /* 0A70C4 800A64C4 00000000 */  nop   
 /* 0A70C8 800A64C8 15E00013 */  bnez  $t7, .L800A6518

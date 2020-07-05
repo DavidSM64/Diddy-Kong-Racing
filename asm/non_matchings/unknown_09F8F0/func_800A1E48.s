@@ -178,8 +178,8 @@ glabel func_800A1E48
 /* 0A2CF4 800A20F4 26940044 */   addiu $s4, $s4, 0x44
 .L800A20F8:
 /* 0A2CF8 800A20F8 17C30015 */  bne   $fp, $v1, .L800A2150
-/* 0A2CFC 800A20FC 3C0F8000 */   lui   $t7, %hi(D_80000300) # $t7, 0x8000
-/* 0A2D00 800A2100 8DEF0300 */  lw    $t7, %lo(D_80000300)($t7)
+/* 0A2CFC 800A20FC 3C0F8000 */   lui   $t7, %hi(osTvType) # $t7, 0x8000
+/* 0A2D00 800A2100 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 0A2D04 800A2104 00000000 */  nop   
 /* 0A2D08 800A2108 15E00010 */  bnez  $t7, .L800A214C
 /* 0A2D0C 800A210C 00000000 */   nop   

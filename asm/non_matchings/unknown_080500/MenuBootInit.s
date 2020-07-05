@@ -1,4 +1,4 @@
-glabel MenuBootInit
+glabel menu_boot_init
 /* 0890F4 800884F4 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0890F8 800884F8 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0890FC 800884FC 3C04800E */  lui   $a0, %hi(D_800DF77C) # $a0, 0x800e
@@ -32,6 +32,7 @@ glabel MenuBootInit
 /* 08916C 8008856C 008D7021 */  addu  $t6, $a0, $t5
 /* 089170 80088570 AC2BF7E4 */  sw    $t3, %lo(D_800DF7E4)($at)
 /* 089174 80088574 8DCF0000 */  lw    $t7, ($t6)
+                              # The extra lui is here.
 /* 089178 80088578 3C03800E */  lui   $v1, %hi(D_800DF7F4) # $v1, 0x800e
 /* 08917C 8008857C 3C02800E */  lui   $v0, %hi(D_800DF7CA) # $v0, 0x800e
 /* 089180 80088580 3C05800E */  lui   $a1, %hi(D_800DF7DA) # $a1, 0x800e

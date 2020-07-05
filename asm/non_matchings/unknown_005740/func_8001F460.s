@@ -29,9 +29,9 @@ glabel func_8001F460
 /* 0200C8 8001F4C8 AFB8019C */  sw    $t8, 0x19c($sp)
 .L8001F4CC:
 /* 0200CC 8001F4CC 8FB9019C */  lw    $t9, 0x19c($sp)
-/* 0200D0 8001F4D0 3C0E8000 */  lui   $t6, %hi(D_80000300) # $t6, 0x8000
+/* 0200D0 8001F4D0 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 0200D4 8001F4D4 44992000 */  mtc1  $t9, $f4
-/* 0200D8 8001F4D8 8DCE0300 */  lw    $t6, %lo(D_80000300)($t6)
+/* 0200D8 8001F4D8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 0200DC 8001F4DC 46802020 */  cvt.s.w $f0, $f4
 /* 0200E0 8001F4E0 3C01800E */  lui   $at, %hi(D_800E5674) # $at, 0x800e
 /* 0200E4 8001F4E4 00008025 */  move  $s0, $zero

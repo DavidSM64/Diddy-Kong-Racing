@@ -1,9 +1,9 @@
 glabel func_80033F60
 /* 034B60 80033F60 27BDFF78 */  addiu $sp, $sp, -0x88
 /* 034B64 80033F64 44852000 */  mtc1  $a1, $f4
-/* 034B68 80033F68 3C0F8000 */  lui   $t7, %hi(D_80000300) # $t7, 0x8000
+/* 034B68 80033F68 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 034B6C 80033F6C 46802020 */  cvt.s.w $f0, $f4
-/* 034B70 80033F70 8DEF0300 */  lw    $t7, %lo(D_80000300)($t7)
+/* 034B70 80033F70 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 034B74 80033F74 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 034B78 80033F78 AFB00028 */  sw    $s0, 0x28($sp)
 /* 034B7C 80033F7C AFA5008C */  sw    $a1, 0x8c($sp)

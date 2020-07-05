@@ -27,8 +27,8 @@ glabel MenuCreditsInit
 /* 09BBAC 8009AFAC 00002825 */  move  $a1, $zero
 /* 09BBB0 8009AFB0 0C01DED7 */  jal   func_80077B5C
 /* 09BBB4 8009AFB4 00003025 */   move  $a2, $zero
-/* 09BBB8 8009AFB8 3C0F8000 */  lui   $t7, %hi(D_80000300) # $t7, 0x8000
-/* 09BBBC 8009AFBC 8DEF0300 */  lw    $t7, %lo(D_80000300)($t7)
+/* 09BBB8 8009AFB8 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+/* 09BBBC 8009AFBC 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 09BBC0 8009AFC0 00002025 */  move  $a0, $zero
 /* 09BBC4 8009AFC4 15E00011 */  bnez  $t7, .L8009B00C
 /* 09BBC8 8009AFC8 00002825 */   move  $a1, $zero
