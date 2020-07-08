@@ -4,6 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
+/* Size: 0x0C bytes */
 typedef struct unk80063BA0 {
     s16 unk0;
     s16 unk2;
