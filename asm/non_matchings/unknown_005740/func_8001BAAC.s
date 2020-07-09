@@ -1,9 +1,0 @@
-glabel func_8001BAAC
-/* 01C6AC 8001BAAC 3C0E8012 */  lui   $t6, %hi(D_8011AEF0) # $t6, 0x8012
-/* 01C6B0 8001BAB0 8DCEAEF0 */  lw    $t6, %lo(D_8011AEF0)($t6)
-/* 01C6B4 8001BAB4 3C028012 */  lui   $v0, %hi(D_8011AEE8) # $v0, 0x8012
-/* 01C6B8 8001BAB8 AC8E0000 */  sw    $t6, ($a0)
-/* 01C6BC 8001BABC 8C42AEE8 */  lw    $v0, %lo(D_8011AEE8)($v0)
-/* 01C6C0 8001BAC0 03E00008 */  jr    $ra
-/* 01C6C4 8001BAC4 00000000 */   nop   
-

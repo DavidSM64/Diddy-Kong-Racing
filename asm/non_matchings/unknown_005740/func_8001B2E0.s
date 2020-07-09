@@ -1,6 +1,0 @@
-glabel func_8001B2E0
-/* 01BEE0 8001B2E0 3C028012 */  lui   $v0, %hi(D_8011AD34) # $v0, 0x8012
-/* 01BEE4 8001B2E4 8C42AD34 */  lw    $v0, %lo(D_8011AD34)($v0)
-/* 01BEE8 8001B2E8 03E00008 */  jr    $ra
-/* 01BEEC 8001B2EC 00000000 */   nop   
-
