@@ -14,9 +14,15 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 * `binutils-mips`
 * `libssl-dev`
 
-#### Debian / Ubuntu
+### Debian / Ubuntu
 
 `sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 libssl-dev`
+
+#### qemu-irix
+
+Download qemu-irix `.deb` package here: https://github.com/n64decomp/qemu-irix/releases
+
+Then install it by running `sudo dpkg -i qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb`
 
 ## Setup
 1. Place the ROM file within the `baseroms` directory.  
