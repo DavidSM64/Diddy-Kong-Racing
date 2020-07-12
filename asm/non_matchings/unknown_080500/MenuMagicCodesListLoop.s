@@ -73,9 +73,9 @@ glabel MenuMagicCodesListLoop
 /* 08B634 8008AA34 1611FFF0 */  bne   $s0, $s1, .L8008A9F8
 /* 08B638 8008AA38 024D9021 */   addu  $s2, $s2, $t5
 .L8008AA3C:
-/* 08B63C 8008AA3C 3C02800E */  lui   $v0, %hi(D_800DFD9C) # $v0, 0x800e
+/* 08B63C 8008AA3C 3C02800E */  lui   $v0, %hi(gUnlockedMagicCodes) # $v0, 0x800e
 /* 08B640 8008AA40 3C088012 */  lui   $t0, %hi(D_80126C80) # $t0, 0x8012
-/* 08B644 8008AA44 8C42FD9C */  lw    $v0, %lo(D_800DFD9C)($v0)
+/* 08B644 8008AA44 8C42FD9C */  lw    $v0, %lo(gUnlockedMagicCodes)($v0)
 /* 08B648 8008AA48 25086C80 */  addiu $t0, %lo(D_80126C80) # addiu $t0, $t0, 0x6c80
 /* 08B64C 8008AA4C 00008025 */  move  $s0, $zero
 /* 08B650 8008AA50 24110001 */  li    $s1, 1

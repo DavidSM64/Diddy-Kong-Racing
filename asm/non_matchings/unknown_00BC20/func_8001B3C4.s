@@ -48,7 +48,7 @@ glabel func_8001B3C4
 /* 01C074 8001B474 3421FFF0 */  ori   $at, (0x00FFFFF0 & 0xFFFF) # ori $at, $at, 0xfff0
 /* 01C078 8001B478 15A1000F */  bne   $t5, $at, .L8001B4B8
 /* 01C07C 8001B47C 2404024C */   li    $a0, 588
-/* 01C080 8001B480 0C0270B8 */  jal   func_8009C2E0
+/* 01C080 8001B480 0C0270B8 */  jal   set_magic_code_flags
 /* 01C084 8001B484 24040001 */   li    $a0, 1
 /* 01C088 8001B488 2404024E */  li    $a0, 590
 /* 01C08C 8001B48C 0C000741 */  jal   func_80001D04

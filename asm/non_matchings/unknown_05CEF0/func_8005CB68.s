@@ -198,7 +198,7 @@ glabel func_8005CB68
 .L8005CE44:
 /* 05DA44 8005CE44 0C01BC50 */  jal   func_8006F140
 /* 05DA48 8005CE48 24040003 */   li    $a0, 3
-/* 05DA4C 8005CE4C 0C027B20 */  jal   func_8009EC80
+/* 05DA4C 8005CE4C 0C027B20 */  jal   is_in_two_player_adventure
 /* 05DA50 8005CE50 00000000 */   nop   
 /* 05DA54 8005CE54 10400004 */  beqz  $v0, .L8005CE68
 /* 05DA58 8005CE58 83AE0043 */   lb    $t6, 0x43($sp)
@@ -323,7 +323,7 @@ glabel func_8005CB68
 .L8005D010:
 /* 05DC10 8005D010 00000000 */  nop   
 /* 05DC14 8005D014 25CF0001 */  addiu $t7, $t6, 1
-/* 05DC18 8005D018 0C027068 */  jal   func_8009C1A0
+/* 05DC18 8005D018 0C027068 */  jal   get_save_file_index
 /* 05DC1C 8005D01C A3AF0043 */   sb    $t7, 0x43($sp)
 /* 05DC20 8005D020 0C01BB12 */  jal   func_8006EC48
 /* 05DC24 8005D024 00402025 */   move  $a0, $v0

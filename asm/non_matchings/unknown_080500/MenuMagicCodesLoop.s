@@ -323,8 +323,8 @@ glabel MenuMagicCodesLoop
 /* 08AD64 8008A164 1000000E */  b     .L8008A1A0
 /* 08AD68 8008A168 A5790000 */   sh    $t9, ($t3)
 .L8008A16C:
-/* 08AD6C 8008A16C 3C03800E */  lui   $v1, %hi(D_800DFD9C) # $v1, 0x800e
-/* 08AD70 8008A170 2463FD9C */  addiu $v1, %lo(D_800DFD9C) # addiu $v1, $v1, -0x264
+/* 08AD6C 8008A16C 3C03800E */  lui   $v1, %hi(gUnlockedMagicCodes) # $v1, 0x800e
+/* 08AD70 8008A170 2463FD9C */  addiu $v1, %lo(gUnlockedMagicCodes) # addiu $v1, $v1, -0x264
 /* 08AD74 8008A174 8C780000 */  lw    $t8, ($v1)
 /* 08AD78 8008A178 00087043 */  sra   $t6, $t0, 1
 /* 08AD7C 8008A17C 240F0001 */  li    $t7, 1
@@ -366,9 +366,9 @@ glabel MenuMagicCodesLoop
 /* 08ADFC 8008A1FC 24010001 */  li    $at, 1
 /* 08AE00 8008A200 1461000E */  bne   $v1, $at, .L8008A23C
 /* 08AE04 8008A204 240F0001 */   li    $t7, 1
-/* 08AE08 8008A208 3C03800E */  lui   $v1, %hi(D_800DFD9C) # $v1, 0x800e
+/* 08AE08 8008A208 3C03800E */  lui   $v1, %hi(gUnlockedMagicCodes) # $v1, 0x800e
 /* 08AE0C 8008A20C 3C01800E */  lui   $at, %hi(gActiveMagicCodes) # $at, 0x800e
-/* 08AE10 8008A210 2463FD9C */  addiu $v1, %lo(D_800DFD9C) # addiu $v1, $v1, -0x264
+/* 08AE10 8008A210 2463FD9C */  addiu $v1, %lo(gUnlockedMagicCodes) # addiu $v1, $v1, -0x264
 /* 08AE14 8008A214 AC20FD98 */  sw    $zero, %lo(gActiveMagicCodes)($at)
 /* 08AE18 8008A218 8C6E0000 */  lw    $t6, ($v1)
 /* 08AE1C 8008A21C A5BF0000 */  sh    $ra, ($t5)

@@ -306,7 +306,7 @@ glabel func_80042D20
 /* 043D94 80043194 00000000 */   nop   
 /* 043D98 80043198 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 043D9C 8004319C A7AC0034 */  sh    $t4, 0x34($sp)
-/* 043DA0 800431A0 0C02658B */  jal   func_8009962C
+/* 043DA0 800431A0 0C02658B */  jal   is_in_trophy_race
 /* 043DA4 800431A4 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 043DA8 800431A8 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 043DAC 800431AC 87AC0034 */  lh    $t4, 0x34($sp)
@@ -348,7 +348,7 @@ glabel func_80042D20
 .L8004323C:
 /* 043E3C 8004323C AFA9005C */  sw    $t1, 0x5c($sp)
 /* 043E40 80043240 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 043E44 80043244 0C02658B */  jal   func_8009962C
+/* 043E44 80043244 0C02658B */  jal   is_in_trophy_race
 /* 043E48 80043248 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 043E4C 8004324C 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 043E50 80043250 87AC0034 */  lh    $t4, 0x34($sp)

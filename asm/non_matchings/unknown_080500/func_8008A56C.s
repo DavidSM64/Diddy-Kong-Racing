@@ -52,9 +52,9 @@ glabel func_8008A56C
 /* 08B234 8008A634 240500A0 */  li    $a1, 160
 /* 08B238 8008A638 0C031110 */  jal   func_800C4440
 /* 08B23C 8008A63C 24060020 */   li    $a2, 32
-/* 08B240 8008A640 3C03800E */  lui   $v1, %hi(D_800DFD9C) # $v1, 0x800e
+/* 08B240 8008A640 3C03800E */  lui   $v1, %hi(gUnlockedMagicCodes) # $v1, 0x800e
 /* 08B244 8008A644 3C048012 */  lui   $a0, %hi(D_80126C80) # $a0, 0x8012
-/* 08B248 8008A648 8C63FD9C */  lw    $v1, %lo(D_800DFD9C)($v1)
+/* 08B248 8008A648 8C63FD9C */  lw    $v1, %lo(gUnlockedMagicCodes)($v1)
 /* 08B24C 8008A64C 24846C80 */  addiu $a0, %lo(D_80126C80) # addiu $a0, $a0, 0x6c80
 /* 08B250 8008A650 00008025 */  move  $s0, $zero
 /* 08B254 8008A654 24020001 */  li    $v0, 1

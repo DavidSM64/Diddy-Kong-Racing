@@ -22,8 +22,8 @@ glabel MenuFileSelectInit
 /* 08D74C 8008CB4C 240E0001 */  li    $t6, 1
 /* 08D750 8008CB50 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
 /* 08D754 8008CB54 AC2E63D8 */  sw    $t6, %lo(D_801263D8)($at)
-/* 08D758 8008CB58 3C01800E */  lui   $at, %hi(D_800DF4CC) # $at, 0x800e
-/* 08D75C 8008CB5C AC20F4CC */  sw    $zero, %lo(D_800DF4CC)($at)
+/* 08D758 8008CB58 3C01800E */  lui   $at, %hi(gSaveFileIndex) # $at, 0x800e
+/* 08D75C 8008CB5C AC20F4CC */  sw    $zero, %lo(gSaveFileIndex)($at)
 /* 08D760 8008CB60 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
 /* 08D764 8008CB64 AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
 /* 08D768 8008CB68 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012

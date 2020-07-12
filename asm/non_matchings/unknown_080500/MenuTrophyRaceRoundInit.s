@@ -11,7 +11,7 @@ glabel MenuTrophyRaceRoundInit
 /* 098E90 80098290 2404001A */   li    $a0, 26
 /* 098E94 80098294 3C03800E */  lui   $v1, %hi(D_800E0FEC) # $v1, 0x800e
 /* 098E98 80098298 8C630FEC */  lw    $v1, %lo(D_800E0FEC)($v1)
-/* 098E9C 8009829C 3C0E800E */  lui   $t6, %hi(D_800E0FE8) # $t6, 0x800e
+/* 098E9C 8009829C 3C0E800E */  lui   $t6, %hi(gIsInTrophyRace) # $t6, 0x800e
 /* 098EA0 800982A0 1460000E */  bnez  $v1, .L800982DC
 /* 098EA4 800982A4 3C13800E */   lui   $s3, %hi(D_800DF4BC) # $s3, 0x800e
 /* 098EA8 800982A8 00008025 */  move  $s0, $zero
@@ -29,7 +29,7 @@ glabel MenuTrophyRaceRoundInit
 /* 098ED4 800982D4 8C630FEC */  lw    $v1, %lo(D_800E0FEC)($v1)
 /* 098ED8 800982D8 00000000 */  nop   
 .L800982DC:
-/* 098EDC 800982DC 8DCE0FE8 */  lw    $t6, %lo(D_800E0FE8)($t6)
+/* 098EDC 800982DC 8DCE0FE8 */  lw    $t6, %lo(gIsInTrophyRace)($t6)
 /* 098EE0 800982E0 2673F4BC */  addiu $s3, %lo(D_800DF4BC) # addiu $s3, $s3, -0xb44
 /* 098EE4 800982E4 000E7880 */  sll   $t7, $t6, 2
 /* 098EE8 800982E8 01EE7823 */  subu  $t7, $t7, $t6

@@ -3,7 +3,7 @@ glabel func_8006BFC8
 /* 06CBCC 8006BFCC AFBF001C */  sw    $ra, 0x1c($sp)
 /* 06CBD0 8006BFD0 AFB00018 */  sw    $s0, 0x18($sp)
 /* 06CBD4 8006BFD4 AFA40028 */  sw    $a0, 0x28($sp)
-/* 06CBD8 8006BFD8 0C0270B4 */  jal   func_8009C2D0
+/* 06CBD8 8006BFD8 0C0270B4 */  jal   is_in_tracks_mode
 /* 06CBDC 8006BFDC 00008025 */   move  $s0, $zero
 /* 06CBE0 8006BFE0 14400011 */  bnez  $v0, .L8006C028
 /* 06CBE4 8006BFE4 00000000 */   nop   
@@ -27,13 +27,13 @@ glabel func_8006BFC8
 .L8006C028:
 /* 06CC28 8006C028 24100003 */  li    $s0, 3
 .L8006C02C:
-/* 06CC2C 8006C02C 0C02658B */  jal   func_8009962C
+/* 06CC2C 8006C02C 0C02658B */  jal   is_in_trophy_race
 /* 06CC30 8006C030 00000000 */   nop   
 /* 06CC34 8006C034 10400002 */  beqz  $v0, .L8006C040
 /* 06CC38 8006C038 00000000 */   nop   
 /* 06CC3C 8006C03C 24100004 */  li    $s0, 4
 .L8006C040:
-/* 06CC40 8006C040 0C027B1C */  jal   func_8009EC70
+/* 06CC40 8006C040 0C027B1C */  jal   is_in_adventure_two
 /* 06CC44 8006C044 00000000 */   nop   
 /* 06CC48 8006C048 8FAD0028 */  lw    $t5, 0x28($sp)
 /* 06CC4C 8006C04C 10400005 */  beqz  $v0, .L8006C064

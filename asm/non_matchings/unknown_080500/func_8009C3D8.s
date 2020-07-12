@@ -3,8 +3,8 @@ glabel func_8009C3D8
 /* 09CFDC 8009C3DC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 09CFE0 8009C3E0 0C01AF6C */  jal   func_8006BDB0
 /* 09CFE4 8009C3E4 00000000 */   nop   
-/* 09CFE8 8009C3E8 3C0E800E */  lui   $t6, %hi(D_800DF4C0) # $t6, 0x800e
-/* 09CFEC 8009C3EC 8DCEF4C0 */  lw    $t6, %lo(D_800DF4C0)($t6)
+/* 09CFE8 8009C3E8 3C0E800E */  lui   $t6, %hi(gIsInTwoPlayerAdventure) # $t6, 0x800e
+/* 09CFEC 8009C3EC 8DCEF4C0 */  lw    $t6, %lo(gIsInTwoPlayerAdventure)($t6)
 /* 09CFF0 8009C3F0 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 09CFF4 8009C3F4 11C0000D */  beqz  $t6, .L8009C42C
 /* 09CFF8 8009C3F8 3C0F800E */   lui   $t7, %hi(D_800DF4B8) # $t7, 0x800e

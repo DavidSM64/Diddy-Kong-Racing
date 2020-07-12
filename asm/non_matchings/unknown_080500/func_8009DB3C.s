@@ -3,7 +3,7 @@ glabel func_8009DB3C
 /* 09E740 8009DB40 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 09E744 8009DB44 0C01BAA4 */  jal   func_8006EA90
 /* 09E748 8009DB48 00000000 */   nop   
-/* 09E74C 8009DB4C 0C027B20 */  jal   func_8009EC80
+/* 09E74C 8009DB4C 0C027B20 */  jal   is_in_two_player_adventure
 /* 09E750 8009DB50 AFA20030 */   sw    $v0, 0x30($sp)
 /* 09E754 8009DB54 10400007 */  beqz  $v0, .L8009DB74
 /* 09E758 8009DB58 3C038012 */   lui   $v1, %hi(D_801264E2) # $v1, 0x8012
@@ -94,7 +94,7 @@ glabel func_8009DB3C
 /* 09E898 8009DC98 8D44011C */  lw    $a0, 0x11c($t2)
 /* 09E89C 8009DC9C 0C02746E */  jal   func_8009D1B8
 /* 09E8A0 8009DCA0 24060003 */   li    $a2, 3
-/* 09E8A4 8009DCA4 0C027B20 */  jal   func_8009EC80
+/* 09E8A4 8009DCA4 0C027B20 */  jal   is_in_two_player_adventure
 /* 09E8A8 8009DCA8 00000000 */   nop   
 /* 09E8AC 8009DCAC 1440001B */  bnez  $v0, .L8009DD1C
 /* 09E8B0 8009DCB0 00000000 */   nop   

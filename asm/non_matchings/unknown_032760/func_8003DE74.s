@@ -18,7 +18,7 @@ glabel func_8003DE74
 /* 03EAB4 8003DEB4 AC8B0078 */  sw    $t3, 0x78($a0)
 /* 03EAB8 8003DEB8 0C01BAA4 */  jal   func_8006EA90
 /* 03EABC 8003DEBC AFA40020 */   sw    $a0, 0x20($sp)
-/* 03EAC0 8003DEC0 0C0270B4 */  jal   func_8009C2D0
+/* 03EAC0 8003DEC0 0C0270B4 */  jal   is_in_tracks_mode
 /* 03EAC4 8003DEC4 AFA2001C */   sw    $v0, 0x1c($sp)
 /* 03EAC8 8003DEC8 8FA40020 */  lw    $a0, 0x20($sp)
 /* 03EACC 8003DECC 14400008 */  bnez  $v0, .L8003DEF0

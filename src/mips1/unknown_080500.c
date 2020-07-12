@@ -4,6 +4,44 @@
 #include "types.h"
 #include "macros.h"
 
+extern s32 osTvType;
+
+extern s32 D_800DF458;
+extern s32 D_800DF46C;
+extern s32 gIsInAdventureTwo;
+extern s32 gActiveMagicCodes;
+extern s32 gUnlockedMagicCodes;
+
+typedef struct unk800DF4A0 {
+    u8 pad0[0x25C];
+    s32 unk25C;
+} unk800DF4A0;
+extern unk800DF4A0* D_800DF4A0;
+
+extern s32 D_800DF4B8;
+extern s32 D_800DF4BC;
+extern s32 gIsInTwoPlayerAdventure;
+extern s32 gSaveFileIndex;
+extern s16 D_800DF7C4[11];
+extern s32 D_800DFA2C;
+extern s32 D_800DFDC8;
+extern s32 D_800DFFD0;
+extern s32 D_800E0398;
+extern s32 D_800E0984;
+extern s32 D_800E0A24;
+extern s32 D_800E0F90;
+extern s32 D_800E0F94;
+extern s32 D_800E0F98;
+extern s32 D_800E0F9C;
+extern s32 D_800E0FA0;
+extern s32 D_800E0FB4;
+extern s32 gIsInTrophyRace;
+extern s32 D_800E1024;
+extern s32 D_800E1708;
+extern s32 D_800E1768;
+extern s32 D_800E17D8;
+
+extern s32 D_801263D8;
 extern u8 D_80126454;
 extern u8 D_80126455;
 extern u8 D_80126456;
@@ -28,31 +66,20 @@ extern u8 D_8012646C;
 extern u8 D_8012646D;
 extern u8 D_8012646E;
 extern u8 D_8012646F;
-
-extern s32 D_800DF458;
-extern s32 D_800DF494;
-extern s32 gActiveMagicCodes;
-extern s32 D_800DF4B8;
-extern s32 D_800DF4BC;
-extern s32 D_800DF4C0;
-extern s32 D_800DF4CC;
-extern s16 D_800DF7C4[11];
-extern s32 D_800DFA2C;
-extern s32 D_800DFDC8;
-extern s32 D_800DFFD0;
-extern s32 D_800E0398;
-extern s32 D_800E0984;
-extern s32 D_800E0A24;
-extern s32 D_800E0FB4;
-extern s32 D_800E0FE8;
-extern s32 D_800E1024;
-extern s32 D_800E1708;
-extern s32 D_800E1768;
-extern s32 D_800E17D8;
-extern s32 D_801263D8;
+extern s8 D_801264D8;
+extern s8 D_80126504;
+extern s8 D_8012650E;
+extern s8 D_80126516;
 extern s32 D_80126804;
 extern s32 D_801269FC;
 extern s32 D_80126AA0;
+extern s32 D_80126C34;
+extern s32 D_80126C3C;
+extern s32 D_80126C48;
+extern f32 D_80126C50;
+extern s32 *D_80126C6C;
+extern s32 D_80126C74;
+extern s32 D_80126C78;
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8007F900.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8007FF88.s")
@@ -75,7 +102,26 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80081E54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80081F4C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/DrawMenuText.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800828B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800829F8.s")
+
+void func_800829F8(s32 arg0, s32 arg1) {
+    s32 temp;
+
+    D_800DF46C += arg1;
+    
+    if (D_800DF46C & 0x10) {
+        func_8007F900(func_8009EB20());
+        func_800C42EC(0);
+        func_800C4384(0xFF, 0xFF, 0xFF, 0, 0xFF);
+        func_800C43CC(0, 0, 0, 0);
+        temp = 0xD0;
+        if (osTvType == 0) {
+            temp = 0xEA;
+        }
+        func_800C4440(arg0, -0x8000, temp, D_800DF4A0->unk25C, 0xC);
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuLogosScreenInit.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuLogoScreenLoop.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80082FAC.s")
@@ -125,7 +171,36 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800860A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800861C8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800862C4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800867D4.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80086A48.s")
+#else
+extern s32 D_80126A08;
+extern s32 D_80126A00;
+extern s32 D_801263E0;
+extern s32 D_80126BD4;
+extern f32 D_80126BDC;
+extern f32 D_800E8414;
+extern f32 D_80126BEC;
+extern s32 D_80126BE4;
+
+void func_80086A48(s32 arg0) {
+    f32 temp, temp2, temp3;
+    temp = D_80126BD4;
+    temp2 = D_80126BE4;
+    while (arg0 > 0) {
+        temp3 = D_800E8414;
+        if (D_80126A08 > 0) {
+            D_80126BDC = D_80126BDC + temp3 * (temp - D_80126BDC);
+        }
+        if (D_801263E0 > 0 && D_80126A00 > 0) {
+            D_80126BEC = D_80126BEC + temp3 * (temp2 - D_80126BDC);
+        }
+        arg0--;
+    }
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80086AFC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800871D8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800874D0.s")
@@ -274,7 +349,48 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80090918.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80090ED8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80090F30.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80092188.s")
+
+extern s32 D_80126448;
+extern s32 D_8012644C;
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80092BE0.s")
+#else
+s32 func_80092BE0(s32 arg0) {
+    s8 *trackIdArray; 
+    s32 index;
+    s32 temp;
+    
+    trackIdArray = (s8*)func_8001E29C(0x1C);
+    
+    index = 0;
+    temp = -1;
+    if (trackIdArray[0] != -1) {
+        while(temp < 0) {
+            if (arg0 == trackIdArray[index]) {
+                temp = index;
+            }
+            index++;
+            if (trackIdArray[index] == -1) {
+                break;
+            }
+        }
+    }
+    
+    // Does not match! This block has regalloc issues.
+    if (temp >= 0) {
+        s32 temp2 = 0x10 << temp;
+        s32 temp3 = (0x10 << temp) & D_8012644C;
+        s32 temp4 = ((0x10 << temp) >> 0x1F) & D_80126448;
+        if (temp4 == 0 && temp3 == 0) {
+            temp = -1;
+        }
+    }
+    
+    return temp;
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuLoadNewAreaInit.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80092E94.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuLoadNewAreaLoop.s")
@@ -307,7 +423,40 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094C14.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094D28.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80095624.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80095728.s")
+
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80096790.s")
+#else
+extern s16 D_800E0710[30];
+extern s32 D_80126BB8;
+extern s32 D_80126BBC;
+
+void func_800981E8(void);
+
+void func_80096790(void) {
+    s32 temp;
+    s8 *temp2;
+    
+    temp2 = (s8*)func_8006BDB0(); // temp2 = array of 8 bytes
+    func_8009C4A8(&D_800E0A24);
+    temp = *temp2 - 1; // temp is $v1, when it should be $v0!
+    
+    if (D_80126BB8) {
+        func_8009C508(D_800E0710[temp * 3]);
+    }
+    D_80126BB8 = 0;
+    
+    if (D_80126BBC) {
+        func_8009C508(D_800E0710[(temp * 3) + 1]);
+    }
+    D_80126BBC = 0;
+    
+    func_800981E8();
+    func_80000968(0);
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/Menu11Init.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80096978.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/Menu11Loop.s")
@@ -320,7 +469,24 @@ void func_800976CC(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800976F8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80097744.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800977D0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80097874.s")
+
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6) {
+    D_800E0F90 = arg0;
+    D_800E0F94 = arg1;
+    D_800E0F98 = arg2;
+    D_800E0F9C = arg3;
+    D_80126C6C = arg4;
+    D_80126C74 = arg5;
+    D_80126C78 = arg6;
+    D_800E0FA0 = 0;
+    D_80126C50 = (f32) *D_80126C6C;
+    D_80126C48 = 0;
+    D_80126C3C = 0;
+    D_80126C34 = 0;
+    func_800C4170(2);
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80097918.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80097D10.s")
 
@@ -347,8 +513,8 @@ void func_80099600(void) {
     func_800C422C(2);
 }
 
-s32 func_8009962C(void) {
-    return D_800E0FE8;
+s32 is_in_trophy_race(void) {
+    return gIsInTrophyRace;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009963C.s")
@@ -417,8 +583,8 @@ void func_8009BE5C(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009BF20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C154.s")
 
-s32 func_8009C1A0(void) {
-    return D_800DF4CC;
+s32 get_save_file_index(void) {
+    return gSaveFileIndex;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C1B0.s")
@@ -427,12 +593,39 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C250.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C274.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C280.s")
 
-s32 func_8009C2D0(void) {
+s32 is_in_tracks_mode(void) {
     return D_800DF4B8;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C2E0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C30C.s")
+void set_magic_code_flags(s32 flags) {
+    gActiveMagicCodes |= flags;
+    gUnlockedMagicCodes |= flags;
+}
+
+/* Unknown Size */
+typedef struct unknown8006EA90 {
+    u8 pad[0x49];
+    u8 unk49;
+} unknown8006EA90;
+
+unknown8006EA90* func_8006EA90();
+
+s32 func_8009C30C(void) {
+    s32 cheats = gActiveMagicCodes;
+    if (D_800DF4B8 == 0 || func_8000E4C8() != 0) {
+        cheats &= 0x1B400133;
+    }
+    if (!func_8006B240()) {
+        cheats &= ~4; // Clears MIRRORED_TRACKS cheat
+    }
+    if ((func_8006B14C(func_8006EA90()->unk49) & 0x40) != 0) {
+        cheats &= ~0xF9880; // Clears START_WITH_10_BANANAS, DISABLE_WEAPONS, DISABLE_BANANAS, and ALL_BALLOONS_ARE_* cheats.
+    }
+    if (gIsInAdventureTwo && func_8006B240()) {
+        cheats |= 4; // Sets MIRRORED_TRACKS cheat
+    }
+    return cheats;
+}
 
 s32 func_8009C3C8(void) {
     return D_800DF4BC;
@@ -453,7 +646,18 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009CF68.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009CFB0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009CFEC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009D118.s")
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009D1B8.s")
+
+void func_8009D1B8(s32 arg0, s32 arg1, s32 arg2) {
+    func_8009D118(D_801264D8 == D_80126504);
+    if (D_801264D8 == D_80126504) {
+        D_80126516 = (s8) arg2;
+    }
+    func_800C5168(1, -0x8000, D_8012650E, arg0, 1, 4);
+    D_8012650E = (s8) (D_8012650E + arg1);
+    D_80126504 = (s8) (D_80126504 + 1);
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009D26C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009D330.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009D33C.s")
@@ -480,15 +684,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009EB20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009EB94.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009EC60.s")
 
-s32 func_8009EC70(void) {
-    return D_800DF494;
+s32 is_in_adventure_two(void) {
+    return gIsInAdventureTwo;
 }
 
-s32 func_8009EC80(void) {
-    if (func_8009C2D0() != 0) {
+s32 is_in_two_player_adventure(void) {
+    if (is_in_tracks_mode()) {
         return 0;
     }
-    return D_800DF4C0;
+    return gIsInTwoPlayerAdventure;
 }
 
 s32 is_tt_unlocked(void) {

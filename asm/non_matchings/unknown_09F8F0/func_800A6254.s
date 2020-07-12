@@ -4,7 +4,7 @@ glabel func_800A6254
 /* 0A6E5C 800A625C AFA50074 */  sw    $a1, 0x74($sp)
 /* 0A6E60 800A6260 0C01AF66 */  jal   func_8006BD98
 /* 0A6E64 800A6264 AFA40070 */   sw    $a0, 0x70($sp)
-/* 0A6E68 800A6268 0C027B20 */  jal   func_8009EC80
+/* 0A6E68 800A6268 0C027B20 */  jal   is_in_two_player_adventure
 /* 0A6E6C 800A626C AFA2005C */   sw    $v0, 0x5c($sp)
 /* 0A6E70 800A6270 8FA70070 */  lw    $a3, 0x70($sp)
 /* 0A6E74 800A6274 10400049 */  beqz  $v0, .L800A639C
@@ -674,7 +674,7 @@ glabel func_800A6254
 /* 0A7834 800A6C34 24080001 */  li    $t0, 1
 /* 0A7838 800A6C38 110B000B */  beq   $t0, $t3, .L800A6C68
 /* 0A783C 800A6C3C 240C0003 */   li    $t4, 3
-/* 0A7840 800A6C40 0C027B20 */  jal   func_8009EC80
+/* 0A7840 800A6C40 0C027B20 */  jal   is_in_two_player_adventure
 /* 0A7844 800A6C44 AFA70070 */   sw    $a3, 0x70($sp)
 /* 0A7848 800A6C48 8FA70070 */  lw    $a3, 0x70($sp)
 /* 0A784C 800A6C4C 3C098012 */  lui   $t1, %hi(D_80126CDC) # $t1, 0x8012

@@ -1079,8 +1079,8 @@ glabel func_80090F30
 /* 092B1C 80091F1C 00000000 */   nop   
 /* 092B20 80091F20 0C01EFC7 */  jal   func_8007BF1C
 /* 092B24 80091F24 00002025 */   move  $a0, $zero
-/* 092B28 80091F28 3C0A800E */  lui   $t2, %hi(D_800DF494) # $t2, 0x800e
-/* 092B2C 80091F2C 8D4AF494 */  lw    $t2, %lo(D_800DF494)($t2)
+/* 092B28 80091F28 3C0A800E */  lui   $t2, %hi(gIsInAdventureTwo) # $t2, 0x800e
+/* 092B2C 80091F2C 8D4AF494 */  lw    $t2, %lo(gIsInAdventureTwo)($t2)
 /* 092B30 80091F30 2415000B */  li    $s5, 11
 /* 092B34 80091F34 11400002 */  beqz  $t2, .L80091F40
 /* 092B38 80091F38 3C014228 */   li    $at, 0x42280000 # 42.000000
