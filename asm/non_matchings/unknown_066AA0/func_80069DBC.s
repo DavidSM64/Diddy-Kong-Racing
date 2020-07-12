@@ -1,5 +1,0 @@
-glabel func_80069DBC
-/* 06A9BC 80069DBC 3C028012 */  lui   $v0, 0x8012
-/* 06A9C0 80069DC0 03E00008 */  jr    $ra
-/* 06A9C4 80069DC4 24420F60 */   addiu $v0, $v0, 0xf60
-
