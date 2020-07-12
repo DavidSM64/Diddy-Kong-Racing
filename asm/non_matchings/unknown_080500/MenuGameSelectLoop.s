@@ -168,8 +168,8 @@ glabel MenuGameSelectLoop
 /* 08ECDC 8008E0DC 00000000 */   nop   
 /* 08ECE0 8008E0E0 0C02607A */  jal   func_800981E8
 /* 08ECE4 8008E0E4 00000000 */   nop   
-/* 08ECE8 8008E0E8 3C0C800E */  lui   $t4, %hi(D_800DF4CC) # $t4, 0x800e
-/* 08ECEC 8008E0EC 8D8CF4CC */  lw    $t4, %lo(D_800DF4CC)($t4)
+/* 08ECE8 8008E0E8 3C0C800E */  lui   $t4, %hi(gSaveFileIndex) # $t4, 0x800e
+/* 08ECEC 8008E0EC 8D8CF4CC */  lw    $t4, %lo(gSaveFileIndex)($t4)
 /* 08ECF0 8008E0F0 3C0E8012 */  lui   $t6, %hi(D_801264A0) # $t6, 0x8012
 /* 08ECF4 8008E0F4 000C6880 */  sll   $t5, $t4, 2
 /* 08ECF8 8008E0F8 01AC6823 */  subu  $t5, $t5, $t4
@@ -179,8 +179,8 @@ glabel MenuGameSelectLoop
 /* 08ED08 8008E108 AC206CC0 */  sw    $zero, %lo(D_80126CC0)($at)
 /* 08ED0C 8008E10C 01AE1021 */  addu  $v0, $t5, $t6
 /* 08ED10 8008E110 A0400000 */  sb    $zero, ($v0)
-/* 08ED14 8008E114 3C0F800E */  lui   $t7, %hi(D_800DF494) # $t7, 0x800e
-/* 08ED18 8008E118 8DEFF494 */  lw    $t7, %lo(D_800DF494)($t7)
+/* 08ED14 8008E114 3C0F800E */  lui   $t7, %hi(gIsInAdventureTwo) # $t7, 0x800e
+/* 08ED18 8008E118 8DEFF494 */  lw    $t7, %lo(gIsInAdventureTwo)($t7)
 /* 08ED1C 8008E11C 24190001 */  li    $t9, 1
 /* 08ED20 8008E120 11E00003 */  beqz  $t7, .L8008E130
 /* 08ED24 8008E124 24440004 */   addiu $a0, $v0, 4
@@ -192,9 +192,9 @@ glabel MenuGameSelectLoop
 /* 08ED38 8008E138 0C025DD1 */  jal   func_80097744
 /* 08ED3C 8008E13C 24050003 */   li    $a1, 3
 /* 08ED40 8008E140 8FAC0038 */  lw    $t4, 0x38($sp)
-/* 08ED44 8008E144 3C04800E */  lui   $a0, %hi(D_800DF4CC) # $a0, 0x800e
+/* 08ED44 8008E144 3C04800E */  lui   $a0, %hi(gSaveFileIndex) # $a0, 0x800e
 /* 08ED48 8008E148 AD820050 */  sw    $v0, 0x50($t4)
-/* 08ED4C 8008E14C 8C84F4CC */  lw    $a0, %lo(D_800DF4CC)($a0)
+/* 08ED4C 8008E14C 8C84F4CC */  lw    $a0, %lo(gSaveFileIndex)($a0)
 /* 08ED50 8008E150 0C01BADE */  jal   func_8006EB78
 /* 08ED54 8008E154 00000000 */   nop   
 /* 08ED58 8008E158 0C000326 */  jal   func_80000C98
@@ -212,8 +212,8 @@ glabel MenuGameSelectLoop
 /* 08ED84 8008E184 10400041 */  beqz  $v0, .L8008E28C
 /* 08ED88 8008E188 AFA20040 */   sw    $v0, 0x40($sp)
 /* 08ED8C 8008E18C 18400036 */  blez  $v0, .L8008E268
-/* 08ED90 8008E190 3C09800E */   lui   $t1, %hi(D_800DF4CC) # $t1, 0x800e
-/* 08ED94 8008E194 8D29F4CC */  lw    $t1, %lo(D_800DF4CC)($t1)
+/* 08ED90 8008E190 3C09800E */   lui   $t1, %hi(gSaveFileIndex) # $t1, 0x800e
+/* 08ED94 8008E194 8D29F4CC */  lw    $t1, %lo(gSaveFileIndex)($t1)
 /* 08ED98 8008E198 3C0F8012 */  lui   $t7, %hi(D_801264A0) # $t7, 0x8012
 /* 08ED9C 8008E19C 00097080 */  sll   $t6, $t1, 2
 /* 08EDA0 8008E1A0 01C97023 */  subu  $t6, $t6, $t1
@@ -227,8 +227,8 @@ glabel MenuGameSelectLoop
 /* 08EDC0 8008E1C0 240400EF */  li    $a0, 239
 /* 08EDC4 8008E1C4 0C000741 */  jal   func_80001D04
 /* 08EDC8 8008E1C8 00002825 */   move  $a1, $zero
-/* 08EDCC 8008E1CC 3C04800E */  lui   $a0, %hi(D_800DF4CC) # $a0, 0x800e
-/* 08EDD0 8008E1D0 8C84F4CC */  lw    $a0, %lo(D_800DF4CC)($a0)
+/* 08EDCC 8008E1CC 3C04800E */  lui   $a0, %hi(gSaveFileIndex) # $a0, 0x800e
+/* 08EDD0 8008E1D0 8C84F4CC */  lw    $a0, %lo(gSaveFileIndex)($a0)
 /* 08EDD4 8008E1D4 0C01BADE */  jal   func_8006EB78
 /* 08EDD8 8008E1D8 00000000 */   nop   
 /* 08EDDC 8008E1DC 0C000326 */  jal   func_80000C98
@@ -293,8 +293,8 @@ glabel MenuGameSelectLoop
 /* 08EEB4 8008E2B4 00036140 */  sll   $t4, $v1, 5
 /* 08EEB8 8008E2B8 0581000F */  bgez  $t4, .L8008E2F8
 /* 08EEBC 8008E2BC 3484FFFF */   ori   $a0, (0xFBFFFFFF & 0xFFFF) # ori $a0, $a0, 0xffff
-/* 08EEC0 8008E2C0 3C05800E */  lui   $a1, %hi(D_800DFD9C) # $a1, 0x800e
-/* 08EEC4 8008E2C4 24A5FD9C */  addiu $a1, %lo(D_800DFD9C) # addiu $a1, $a1, -0x264
+/* 08EEC0 8008E2C0 3C05800E */  lui   $a1, %hi(gUnlockedMagicCodes) # $a1, 0x800e
+/* 08EEC4 8008E2C4 24A5FD9C */  addiu $a1, %lo(gUnlockedMagicCodes) # addiu $a1, $a1, -0x264
 /* 08EEC8 8008E2C8 8CAE0000 */  lw    $t6, ($a1)
 /* 08EECC 8008E2CC 8FB80038 */  lw    $t8, 0x38($sp)
 /* 08EED0 8008E2D0 00646824 */  and   $t5, $v1, $a0
@@ -310,9 +310,9 @@ glabel MenuGameSelectLoop
 .L8008E2F8:
 /* 08EEF8 8008E2F8 3C0D800E */  lui   $t5, %hi(D_800DF4BC) # $t5, 0x800e
 /* 08EEFC 8008E2FC 8DADF4BC */  lw    $t5, %lo(D_800DF4BC)($t5)
-/* 08EF00 8008E300 3C02800E */  lui   $v0, %hi(D_800DF4C0) # $v0, 0x800e
+/* 08EF00 8008E300 3C02800E */  lui   $v0, %hi(gIsInTwoPlayerAdventure) # $v0, 0x800e
 /* 08EF04 8008E304 39AE0002 */  xori  $t6, $t5, 2
-/* 08EF08 8008E308 2442F4C0 */  addiu $v0, %lo(D_800DF4C0) # addiu $v0, $v0, -0xb40
+/* 08EF08 8008E308 2442F4C0 */  addiu $v0, %lo(gIsInTwoPlayerAdventure) # addiu $v0, $v0, -0xb40
 /* 08EF0C 8008E30C 2DCE0001 */  sltiu $t6, $t6, 1
 /* 08EF10 8008E310 11C00003 */  beqz  $t6, .L8008E320
 /* 08EF14 8008E314 AC4E0000 */   sw    $t6, ($v0)
@@ -331,13 +331,13 @@ glabel MenuGameSelectLoop
 /* 08EF44 8008E344 0C01B96F */  jal   func_8006E5BC
 /* 08EF48 8008E348 00000000 */   nop   
 /* 08EF4C 8008E34C 8FA20038 */  lw    $v0, 0x38($sp)
-/* 08EF50 8008E350 3C01800E */  lui   $at, %hi(D_800E0FE8) # $at, 0x800e
-/* 08EF54 8008E354 AC200FE8 */  sw    $zero, %lo(D_800E0FE8)($at)
+/* 08EF50 8008E350 3C01800E */  lui   $at, %hi(gIsInTrophyRace) # $at, 0x800e
+/* 08EF54 8008E354 AC200FE8 */  sw    $zero, %lo(gIsInTrophyRace)($at)
 /* 08EF58 8008E358 904C004B */  lbu   $t4, 0x4b($v0)
-/* 08EF5C 8008E35C 3C0D800E */  lui   $t5, %hi(D_800DF494) # $t5, 0x800e
+/* 08EF5C 8008E35C 3C0D800E */  lui   $t5, %hi(gIsInAdventureTwo) # $t5, 0x800e
 /* 08EF60 8008E360 11800017 */  beqz  $t4, .L8008E3C0
 /* 08EF64 8008E364 00000000 */   nop   
-/* 08EF68 8008E368 8DADF494 */  lw    $t5, %lo(D_800DF494)($t5)
+/* 08EF68 8008E368 8DADF494 */  lw    $t5, %lo(gIsInAdventureTwo)($t5)
 /* 08EF6C 8008E36C 00000000 */  nop   
 /* 08EF70 8008E370 11A00005 */  beqz  $t5, .L8008E388
 /* 08EF74 8008E374 00000000 */   nop   
@@ -367,11 +367,11 @@ glabel MenuGameSelectLoop
 /* 08EFCC 8008E3CC 13200005 */  beqz  $t9, .L8008E3E4
 /* 08EFD0 8008E3D0 3C02800E */   lui   $v0, %hi(D_800DF4BC) # $v0, 0x800e
 /* 08EFD4 8008E3D4 240C0001 */  li    $t4, 1
-/* 08EFD8 8008E3D8 3C01800E */  lui   $at, %hi(D_800DF494) # $at, 0x800e
+/* 08EFD8 8008E3D8 3C01800E */  lui   $at, %hi(gIsInAdventureTwo) # $at, 0x800e
 /* 08EFDC 8008E3DC 10000002 */  b     .L8008E3E8
-/* 08EFE0 8008E3E0 AC2CF494 */   sw    $t4, %lo(D_800DF494)($at)
+/* 08EFE0 8008E3E0 AC2CF494 */   sw    $t4, %lo(gIsInAdventureTwo)($at)
 .L8008E3E4:
-/* 08EFE4 8008E3E4 AC20F494 */  sw    $zero, %lo(D_800DF494)($at)
+/* 08EFE4 8008E3E4 AC20F494 */  sw    $zero, %lo(gIsInAdventureTwo)($at)
 .L8008E3E8:
 /* 08EFE8 8008E3E8 8C42F4BC */  lw    $v0, %lo(D_800DF4BC)($v0)
 /* 08EFEC 8008E3EC 1000000B */  b     .L8008E41C

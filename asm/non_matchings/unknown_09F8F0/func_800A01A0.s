@@ -598,7 +598,7 @@ glabel func_800A01A0
 /* 0A1668 800A0A68 00000000 */  nop   
 /* 0A166C 800A0A6C 17010011 */  bne   $t8, $at, .L800A0AB4
 /* 0A1670 800A0A70 8FA40028 */   lw    $a0, 0x28($sp)
-/* 0A1674 800A0A74 0C027B20 */  jal   func_8009EC80
+/* 0A1674 800A0A74 0C027B20 */  jal   is_in_two_player_adventure
 /* 0A1678 800A0A78 00000000 */   nop   
 /* 0A167C 800A0A7C 10400007 */  beqz  $v0, .L800A0A9C
 /* 0A1680 800A0A80 8FA40028 */   lw    $a0, 0x28($sp)

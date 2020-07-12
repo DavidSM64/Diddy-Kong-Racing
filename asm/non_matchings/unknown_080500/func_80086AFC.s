@@ -440,8 +440,8 @@ glabel func_80086AFC
 /* 087D8C 8008718C 0C027AAF */  jal   func_8009EABC
 /* 087D90 80087190 34A5FFF3 */   ori   $a1, (0x00FFFFF3 & 0xFFFF) # ori $a1, $a1, 0xfff3
 /* 087D94 80087194 3C03800E */  lui   $v1, %hi(gActiveMagicCodes) # $v1, 0x800e
-/* 087D98 80087198 3C05800E */  lui   $a1, %hi(D_800DFD9C) # $a1, 0x800e
-/* 087D9C 8008719C 24A5FD9C */  addiu $a1, %lo(D_800DFD9C) # addiu $a1, $a1, -0x264
+/* 087D98 80087198 3C05800E */  lui   $a1, %hi(gUnlockedMagicCodes) # $a1, 0x800e
+/* 087D9C 8008719C 24A5FD9C */  addiu $a1, %lo(gUnlockedMagicCodes) # addiu $a1, $a1, -0x264
 /* 087DA0 800871A0 2463FD98 */  addiu $v1, %lo(gActiveMagicCodes) # addiu $v1, $v1, -0x268
 /* 087DA4 800871A4 8C780000 */  lw    $t8, ($v1)
 /* 087DA8 800871A8 8CAE0000 */  lw    $t6, ($a1)

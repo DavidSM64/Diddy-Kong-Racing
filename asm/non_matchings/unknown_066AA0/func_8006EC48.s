@@ -5,7 +5,7 @@ glabel func_8006EC48
 /* 06F854 8006EC54 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 06F858 8006EC58 15C00010 */  bnez  $t6, .L8006EC9C
 /* 06F85C 8006EC5C AFA40018 */   sw    $a0, 0x18($sp)
-/* 06F860 8006EC60 0C0270B4 */  jal   func_8009C2D0
+/* 06F860 8006EC60 0C0270B4 */  jal   is_in_tracks_mode
 /* 06F864 8006EC64 00000000 */   nop   
 /* 06F868 8006EC68 1440000C */  bnez  $v0, .L8006EC9C
 /* 06F86C 8006EC6C 2401F3FF */   li    $at, -3073

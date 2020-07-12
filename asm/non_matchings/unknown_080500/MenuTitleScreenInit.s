@@ -9,8 +9,8 @@ glabel MenuTitleScreenInit
 /* 084158 80083558 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
 /* 08415C 8008355C 0C027055 */  jal   func_8009C154
 /* 084160 80083560 AC20F47C */   sw    $zero, %lo(D_800DF47C)($at)
-/* 084164 80083564 3C01800E */  lui   $at, %hi(D_800DF4CC) # $at, 0x800e
-/* 084168 80083568 AC20F4CC */  sw    $zero, %lo(D_800DF4CC)($at)
+/* 084164 80083564 3C01800E */  lui   $at, %hi(gSaveFileIndex) # $at, 0x800e
+/* 084168 80083568 AC20F4CC */  sw    $zero, %lo(gSaveFileIndex)($at)
 /* 08416C 8008356C 3C01800E */  lui   $at, %hi(D_800DF45C) # $at, 0x800e
 /* 084170 80083570 AC20F45C */  sw    $zero, %lo(D_800DF45C)($at)
 /* 084174 80083574 3C01800E */  lui   $at, %hi(D_800DF4BC) # $at, 0x800e

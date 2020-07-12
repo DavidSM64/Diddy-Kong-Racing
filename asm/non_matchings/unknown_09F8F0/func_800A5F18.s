@@ -27,7 +27,7 @@ glabel func_800A5F18
 /* 0A6B7C 800A5F7C 304E0040 */  andi  $t6, $v0, 0x40
 /* 0A6B80 800A5F80 15C000B1 */  bnez  $t6, .L800A6248
 /* 0A6B84 800A5F84 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 0A6B88 800A5F88 0C027B20 */  jal   func_8009EC80
+/* 0A6B88 800A5F88 0C027B20 */  jal   is_in_two_player_adventure
 /* 0A6B8C 800A5F8C 00000000 */   nop   
 /* 0A6B90 800A5F90 144000AD */  bnez  $v0, .L800A6248
 /* 0A6B94 800A5F94 8FBF001C */   lw    $ra, 0x1c($sp)
@@ -39,7 +39,7 @@ glabel func_800A5F18
 /* 0A6BAC 800A5FAC 29E10002 */  slti  $at, $t7, 2
 /* 0A6BB0 800A5FB0 142000A5 */  bnez  $at, .L800A6248
 /* 0A6BB4 800A5FB4 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 0A6BB8 800A5FB8 0C027B20 */  jal   func_8009EC80
+/* 0A6BB8 800A5FB8 0C027B20 */  jal   is_in_two_player_adventure
 /* 0A6BBC 800A5FBC 00000000 */   nop   
 /* 0A6BC0 800A5FC0 10400005 */  beqz  $v0, .L800A5FD8
 /* 0A6BC4 800A5FC4 00000000 */   nop   

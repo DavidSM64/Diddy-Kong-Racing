@@ -240,7 +240,7 @@ glabel func_80094D28
 /* 095C98 80095098 AFA3003C */  sw    $v1, 0x3c($sp)
 /* 095C9C 8009509C AFA50040 */  sw    $a1, 0x40($sp)
 /* 095CA0 800950A0 AFA50044 */  sw    $a1, 0x44($sp)
-/* 095CA4 800950A4 0C027B20 */  jal   func_8009EC80
+/* 095CA4 800950A4 0C027B20 */  jal   is_in_two_player_adventure
 /* 095CA8 800950A8 AFA60034 */   sw    $a2, 0x34($sp)
 /* 095CAC 800950AC 8FA3003C */  lw    $v1, 0x3c($sp)
 /* 095CB0 800950B0 8FA40040 */  lw    $a0, 0x40($sp)
@@ -584,8 +584,8 @@ glabel func_80094D28
 /* 096198 80095598 8DEFF4BC */  lw    $t7, %lo(D_800DF4BC)($t7)
 /* 09619C 8009559C 24010001 */  li    $at, 1
 /* 0961A0 800955A0 15E10019 */  bne   $t7, $at, .L80095608
-/* 0961A4 800955A4 3C0B800E */   lui   $t3, %hi(D_800E0FE8) # $t3, 0x800e
-/* 0961A8 800955A8 8D6B0FE8 */  lw    $t3, %lo(D_800E0FE8)($t3)
+/* 0961A4 800955A4 3C0B800E */   lui   $t3, %hi(gIsInTrophyRace) # $t3, 0x800e
+/* 0961A8 800955A8 8D6B0FE8 */  lw    $t3, %lo(gIsInTrophyRace)($t3)
 /* 0961AC 800955AC 00002025 */  move  $a0, $zero
 /* 0961B0 800955B0 15600016 */  bnez  $t3, .L8009560C
 /* 0961B4 800955B4 8FBF002C */   lw    $ra, 0x2c($sp)

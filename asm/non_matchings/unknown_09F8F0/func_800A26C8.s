@@ -18,7 +18,7 @@ glabel func_800A26C8
 /* 0A3308 800A2708 8FA50024 */  lw    $a1, 0x24($sp)
 /* 0A330C 800A270C 0C028E21 */  jal   func_800A3884
 /* 0A3310 800A2710 00000000 */   nop   
-/* 0A3314 800A2714 0C027B20 */  jal   func_8009EC80
+/* 0A3314 800A2714 0C027B20 */  jal   is_in_two_player_adventure
 /* 0A3318 800A2718 00000000 */   nop   
 /* 0A331C 800A271C 10400011 */  beqz  $v0, .L800A2764
 /* 0A3320 800A2720 3C078012 */   lui   $a3, %hi(D_80126CDC) # $a3, 0x8012

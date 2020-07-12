@@ -192,7 +192,7 @@ glabel func_8008D8BC
 /* 08E780 8008DB80 00074880 */  sll   $t1, $a3, 2
 /* 08E784 8008DB84 01274823 */  subu  $t1, $t1, $a3
 /* 08E788 8008DB88 00094880 */  sll   $t1, $t1, 2
-/* 08E78C 8008DB8C 3C01800E */  lui   $at, %hi(D_800DF4CC) # $at, 0x800e
+/* 08E78C 8008DB8C 3C01800E */  lui   $at, %hi(gSaveFileIndex) # $at, 0x800e
 /* 08E790 8008DB90 00005012 */  mflo  $t2
 /* 08E794 8008DB94 010A1021 */  addu  $v0, $t0, $t2
 /* 08E798 8008DB98 A0400000 */  sb    $zero, ($v0)
@@ -237,7 +237,7 @@ glabel func_8008D8BC
 /* 08E82C 8008DC2C 01856821 */  addu  $t5, $t4, $a1
 .L8008DC30:
 /* 08E830 8008DC30 A1A00004 */  sb    $zero, 4($t5)
-/* 08E834 8008DC34 AC27F4CC */  sw    $a3, %lo(D_800DF4CC)($at)
+/* 08E834 8008DC34 AC27F4CC */  sw    $a3, %lo(gSaveFileIndex)($at)
 /* 08E838 8008DC38 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
 /* 08E83C 8008DC3C AC2063E0 */  sw    $zero, %lo(D_801263E0)($at)
 /* 08E840 8008DC40 3C018012 */  lui   $at, %hi(D_80126484) # $at, 0x8012

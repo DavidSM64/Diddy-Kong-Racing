@@ -310,7 +310,7 @@ glabel MenuTrophyRaceRankingsLoop
 /* 09A04C 8009944C 254A6438 */   addiu $t2, %lo(D_80126438) # addiu $t2, $t2, 0x6438
 /* 09A050 80099450 AFA30048 */  sw    $v1, 0x48($sp)
 /* 09A054 80099454 AFAB002C */  sw    $t3, 0x2c($sp)
-/* 09A058 80099458 0C027B20 */  jal   func_8009EC80
+/* 09A058 80099458 0C027B20 */  jal   is_in_two_player_adventure
 /* 09A05C 8009945C AFAC0034 */   sw    $t4, 0x34($sp)
 /* 09A060 80099460 8FA30048 */  lw    $v1, 0x48($sp)
 /* 09A064 80099464 3C0A8012 */  lui   $t2, %hi(D_80126438) # $t2, 0x8012
@@ -382,7 +382,7 @@ glabel MenuTrophyRaceRankingsLoop
 /* 09A160 80099560 A579000E */  sh    $t9, 0xe($t3)
 /* 09A164 80099564 032D7025 */  or    $t6, $t9, $t5
 /* 09A168 80099568 A56E000E */  sh    $t6, 0xe($t3)
-/* 09A16C 8009956C 0C027068 */  jal   func_8009C1A0
+/* 09A16C 8009956C 0C027068 */  jal   get_save_file_index
 /* 09A170 80099570 AFAC0034 */   sw    $t4, 0x34($sp)
 /* 09A174 80099574 0C01BB12 */  jal   func_8006EC48
 /* 09A178 80099578 00402025 */   move  $a0, $v0
@@ -395,8 +395,8 @@ glabel MenuTrophyRaceRankingsLoop
 /* 09A18C 8009958C 2404001F */   li    $a0, 31
 /* 09A190 80099590 0C0078A7 */  jal   func_8001E29C
 /* 09A194 80099594 AFAC0034 */   sw    $t4, 0x34($sp)
-/* 09A198 80099598 3C0F800E */  lui   $t7, %hi(D_800E0FE8) # $t7, 0x800e
-/* 09A19C 8009959C 8DEF0FE8 */  lw    $t7, %lo(D_800E0FE8)($t7)
+/* 09A198 80099598 3C0F800E */  lui   $t7, %hi(gIsInTrophyRace) # $t7, 0x800e
+/* 09A19C 8009959C 8DEF0FE8 */  lw    $t7, %lo(gIsInTrophyRace)($t7)
 /* 09A1A0 800995A0 8FAC0034 */  lw    $t4, 0x34($sp)
 /* 09A1A4 800995A4 000FC080 */  sll   $t8, $t7, 2
 /* 09A1A8 800995A8 3C0A8012 */  lui   $t2, %hi(D_80126438) # $t2, 0x8012
@@ -414,8 +414,8 @@ glabel MenuTrophyRaceRankingsLoop
 /* 09A1D8 800995D8 0C0204F4 */  jal   MenuInit
 /* 09A1DC 800995DC 24040017 */   li    $a0, 23
 .L800995E0:
-/* 09A1E0 800995E0 3C01800E */  lui   $at, %hi(D_800E0FE8) # $at, 0x800e
-/* 09A1E4 800995E4 AC200FE8 */  sw    $zero, %lo(D_800E0FE8)($at)
+/* 09A1E0 800995E0 3C01800E */  lui   $at, %hi(gIsInTrophyRace) # $at, 0x800e
+/* 09A1E4 800995E4 AC200FE8 */  sw    $zero, %lo(gIsInTrophyRace)($at)
 .L800995E8:
 /* 09A1E8 800995E8 8FBF001C */  lw    $ra, 0x1c($sp)
 .L800995EC:

@@ -75,7 +75,7 @@ glabel func_800249F0
 /* 025704 80024B04 1420FFEB */  bnez  $at, .L80024AB4
 /* 025708 80024B08 24630044 */   addiu $v1, $v1, 0x44
 .L80024B0C:
-/* 02570C 80024B0C 0C027B20 */  jal   func_8009EC80
+/* 02570C 80024B0C 0C027B20 */  jal   is_in_two_player_adventure
 /* 025710 80024B10 00000000 */   nop   
 /* 025714 80024B14 1040000B */  beqz  $v0, .L80024B44
 /* 025718 80024B18 3C0E800E */   lui   $t6, %hi(D_800DC91C) # $t6, 0x800e

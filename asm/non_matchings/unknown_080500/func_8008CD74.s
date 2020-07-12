@@ -30,8 +30,8 @@ glabel func_8008CD74
 /* 08D9DC 8008CDDC 3C10800E */  lui   $s0, %hi(D_800E03CC) # $s0, 0x800e
 /* 08D9E0 8008CDE0 3C158012 */  lui   $s5, %hi(D_80126550) # $s5, 0x8012
 /* 08D9E4 8008CDE4 3C13B0E0 */  lui   $s3, (0xB0E0C0FF >> 16) # lui $s3, 0xb0e0
-/* 08D9E8 8008CDE8 3C12800E */  lui   $s2, %hi(D_800DF494) # $s2, 0x800e
-/* 08D9EC 8008CDEC 2652F494 */  addiu $s2, %lo(D_800DF494) # addiu $s2, $s2, -0xb6c
+/* 08D9E8 8008CDE8 3C12800E */  lui   $s2, %hi(gIsInAdventureTwo) # $s2, 0x800e
+/* 08D9EC 8008CDEC 2652F494 */  addiu $s2, %lo(gIsInAdventureTwo) # addiu $s2, $s2, -0xb6c
 /* 08D9F0 8008CDF0 3673C0FF */  ori   $s3, (0xB0E0C0FF & 0xFFFF) # ori $s3, $s3, 0xc0ff
 /* 08D9F4 8008CDF4 26B56550 */  addiu $s5, %lo(D_80126550) # addiu $s5, $s5, 0x6550
 /* 08D9F8 8008CDF8 261003CC */  addiu $s0, %lo(D_800E03CC) # addiu $s0, $s0, 0x3cc
@@ -305,10 +305,10 @@ glabel func_8008CD74
 /* 08DDE8 8008D1E8 24120001 */   li    $s2, 1
 .L8008D1EC:
 /* 08DDEC 8008D1EC 8D4A63E0 */  lw    $t2, %lo(D_801263E0)($t2)
-/* 08DDF0 8008D1F0 3C0B800E */  lui   $t3, %hi(D_800DF4CC) # $t3, 0x800e
+/* 08DDF0 8008D1F0 3C0B800E */  lui   $t3, %hi(gSaveFileIndex) # $t3, 0x800e
 /* 08DDF4 8008D1F4 15400006 */  bnez  $t2, .L8008D210
 /* 08DDF8 8008D1F8 00000000 */   nop   
-/* 08DDFC 8008D1FC 8D6BF4CC */  lw    $t3, %lo(D_800DF4CC)($t3)
+/* 08DDFC 8008D1FC 8D6BF4CC */  lw    $t3, %lo(gSaveFileIndex)($t3)
 /* 08DE00 8008D200 00000000 */  nop   
 /* 08DE04 8008D204 166B0002 */  bne   $s3, $t3, .L8008D210
 /* 08DE08 8008D208 00000000 */   nop   
@@ -342,10 +342,10 @@ glabel func_8008CD74
 .L8008D274:
 /* 08DE74 8008D274 3C098012 */  lui   $t1, %hi(D_80126CC0) # $t1, 0x8012
 /* 08DE78 8008D278 8D296CC0 */  lw    $t1, %lo(D_80126CC0)($t1)
-/* 08DE7C 8008D27C 3C0A800E */  lui   $t2, %hi(D_800DF4CC) # $t2, 0x800e
+/* 08DE7C 8008D27C 3C0A800E */  lui   $t2, %hi(gSaveFileIndex) # $t2, 0x800e
 /* 08DE80 8008D280 11200004 */  beqz  $t1, .L8008D294
 /* 08DE84 8008D284 00135880 */   sll   $t3, $s3, 2
-/* 08DE88 8008D288 8D4AF4CC */  lw    $t2, %lo(D_800DF4CC)($t2)
+/* 08DE88 8008D288 8D4AF4CC */  lw    $t2, %lo(gSaveFileIndex)($t2)
 /* 08DE8C 8008D28C 00000000 */  nop   
 /* 08DE90 8008D290 126A0021 */  beq   $s3, $t2, .L8008D318
 .L8008D294:

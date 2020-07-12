@@ -191,9 +191,9 @@ glabel MenuTrackSelectLoop
 /* 0900E8 8008F4E8 AC28F478 */   sw    $t0, %lo(D_800DF478)($at)
 .L8008F4EC:
 /* 0900EC 8008F4EC 8D2969CC */  lw    $t1, %lo(D_801269CC)($t1)
-/* 0900F0 8008F4F0 3C01800E */  lui   $at, %hi(D_800E0FE8) # $at, 0x800e
+/* 0900F0 8008F4F0 3C01800E */  lui   $at, %hi(gIsInTrophyRace) # $at, 0x800e
 /* 0900F4 8008F4F4 252A0001 */  addiu $t2, $t1, 1
-/* 0900F8 8008F4F8 AC2A0FE8 */  sw    $t2, %lo(D_800E0FE8)($at)
+/* 0900F8 8008F4F8 AC2A0FE8 */  sw    $t2, %lo(gIsInTrophyRace)($at)
 /* 0900FC 8008F4FC 3C01800E */  lui   $at, %hi(D_800DF450) # $at, 0x800e
 /* 090100 8008F500 A020F450 */  sb    $zero, %lo(D_800DF450)($at)
 /* 090104 8008F504 3C01800E */  lui   $at, %hi(D_800E0FEC) # $at, 0x800e

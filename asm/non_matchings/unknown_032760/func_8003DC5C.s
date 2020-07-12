@@ -13,7 +13,7 @@ glabel func_8003DC5C
 /* 03E888 8003DC88 A1190010 */  sb    $t9, 0x10($t0)
 /* 03E88C 8003DC8C AC890078 */  sw    $t1, 0x78($a0)
 /* 03E890 8003DC90 AC80007C */  sw    $zero, 0x7c($a0)
-/* 03E894 8003DC94 0C0270B4 */  jal   func_8009C2D0
+/* 03E894 8003DC94 0C0270B4 */  jal   is_in_tracks_mode
 /* 03E898 8003DC98 AFA40018 */   sw    $a0, 0x18($sp)
 /* 03E89C 8003DC9C 8FA40018 */  lw    $a0, 0x18($sp)
 /* 03E8A0 8003DCA0 1440000F */  bnez  $v0, .L8003DCE0
@@ -23,7 +23,7 @@ glabel func_8003DC5C
 /* 03E8B0 8003DCB0 8FA40018 */  lw    $a0, 0x18($sp)
 /* 03E8B4 8003DCB4 10400009 */  beqz  $v0, .L8003DCDC
 /* 03E8B8 8003DCB8 240A0003 */   li    $t2, 3
-/* 03E8BC 8003DCBC 0C027B1C */  jal   func_8009EC70
+/* 03E8BC 8003DCBC 0C027B1C */  jal   is_in_adventure_two
 /* 03E8C0 8003DCC0 AFA40018 */   sw    $a0, 0x18($sp)
 /* 03E8C4 8003DCC4 8FA40018 */  lw    $a0, 0x18($sp)
 /* 03E8C8 8003DCC8 14400004 */  bnez  $v0, .L8003DCDC

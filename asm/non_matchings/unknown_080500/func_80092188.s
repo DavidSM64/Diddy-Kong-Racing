@@ -718,8 +718,8 @@ glabel func_80092188
 .L80092BC0:
 /* 0937C0 80092BC0 3C19800E */  lui   $t9, %hi(D_800E0418) # $t9, 0x800e
 /* 0937C4 80092BC4 8F390418 */  lw    $t9, %lo(D_800E0418)($t9)
-/* 0937C8 80092BC8 3C01800E */  lui   $at, %hi(D_800DF494) # $at, 0x800e
-/* 0937CC 80092BCC AC39F494 */  sw    $t9, %lo(D_800DF494)($at)
+/* 0937C8 80092BC8 3C01800E */  lui   $at, %hi(gIsInAdventureTwo) # $at, 0x800e
+/* 0937CC 80092BCC AC39F494 */  sw    $t9, %lo(gIsInAdventureTwo)($at)
 /* 0937D0 80092BD0 8FBF001C */  lw    $ra, 0x1c($sp)
 .L80092BD4:
 /* 0937D4 80092BD4 27BD0058 */  addiu $sp, $sp, 0x58

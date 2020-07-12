@@ -113,8 +113,8 @@ glabel func_8008DC7C
 /* 08EA1C 8008DE1C A0490005 */  sb    $t1, 5($v0)
 /* 08EA20 8008DE20 A04A0006 */  sb    $t2, 6($v0)
 /* 08EA24 8008DE24 A0400007 */  sb    $zero, 7($v0)
-/* 08EA28 8008DE28 3C01800E */  lui   $at, %hi(D_800DF4CC) # $at, 0x800e
-/* 08EA2C 8008DE2C AC23F4CC */  sw    $v1, %lo(D_800DF4CC)($at)
+/* 08EA28 8008DE28 3C01800E */  lui   $at, %hi(gSaveFileIndex) # $at, 0x800e
+/* 08EA2C 8008DE2C AC23F4CC */  sw    $v1, %lo(gSaveFileIndex)($at)
 /* 08EA30 8008DE30 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
 /* 08EA34 8008DE34 AC2063E0 */  sw    $zero, %lo(D_801263E0)($at)
 /* 08EA38 8008DE38 3C018012 */  lui   $at, %hi(D_80126488) # $at, 0x8012
