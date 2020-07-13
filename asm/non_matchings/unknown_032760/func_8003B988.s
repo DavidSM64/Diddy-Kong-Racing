@@ -19,7 +19,7 @@ glabel func_8003B988
 /* 03C5CC 8003B9CC 46283282 */  mul.d $f10, $f6, $f8
 /* 03C5D0 8003B9D0 462050A0 */  cvt.s.d $f2, $f10
 .L8003B9D4:
-/* 03C5D4 8003B9D4 0C01BAA4 */  jal   func_8006EA90
+/* 03C5D4 8003B9D4 0C01BAA4 */  jal   get_settings
 /* 03C5D8 8003B9D8 E7A20030 */   swc1  $f2, 0x30($sp)
 /* 03C5DC 8003B9DC 904B0049 */  lbu   $t3, 0x49($v0)
 /* 03C5E0 8003B9E0 8C590004 */  lw    $t9, 4($v0)

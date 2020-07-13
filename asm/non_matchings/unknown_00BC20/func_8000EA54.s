@@ -6,7 +6,7 @@ glabel func_8000EA54
 /* 00F664 8000EA64 AFB10018 */  sw    $s1, 0x18($sp)
 /* 00F668 8000EA68 AFB00014 */  sw    $s0, 0x14($sp)
 /* 00F66C 8000EA6C AFA40068 */  sw    $a0, 0x68($sp)
-/* 00F670 8000EA70 0C01BAA4 */  jal   func_8006EA90
+/* 00F670 8000EA70 0C01BAA4 */  jal   get_settings
 /* 00F674 8000EA74 AFA5006C */   sw    $a1, 0x6c($sp)
 /* 00F678 8000EA78 8FA30068 */  lw    $v1, 0x68($sp)
 /* 00F67C 8000EA7C 00408825 */  move  $s1, $v0

@@ -9,7 +9,7 @@ glabel func_80022CFC
 /* 023918 80022D18 00808025 */  move  $s0, $a0
 /* 02391C 80022D1C E7B50018 */  swc1  $f21, 0x18($sp)
 /* 023920 80022D20 E7AC002C */  swc1  $f12, 0x2c($sp)
-/* 023924 80022D24 0C01BAA4 */  jal   func_8006EA90
+/* 023924 80022D24 0C01BAA4 */  jal   get_settings
 /* 023928 80022D28 E7AE0030 */   swc1  $f14, 0x30($sp)
 /* 02392C 80022D2C 3C088012 */  lui   $t0, %hi(D_8011AE5C) # $t0, 0x8012
 /* 023930 80022D30 8D08AE5C */  lw    $t0, %lo(D_8011AE5C)($t0)

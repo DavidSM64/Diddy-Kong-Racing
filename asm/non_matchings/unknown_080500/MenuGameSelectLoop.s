@@ -1,7 +1,7 @@
 glabel MenuGameSelectLoop
 /* 08EA70 8008DE70 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 08EA74 8008DE74 AFBF0024 */  sw    $ra, 0x24($sp)
-/* 08EA78 8008DE78 0C01BAA4 */  jal   func_8006EA90
+/* 08EA78 8008DE78 0C01BAA4 */  jal   get_settings
 /* 08EA7C 8008DE7C AFA40048 */   sw    $a0, 0x48($sp)
 /* 08EA80 8008DE80 8FA40048 */  lw    $a0, 0x48($sp)
 /* 08EA84 8008DE84 0C02305A */  jal   func_8008C168
@@ -331,8 +331,8 @@ glabel MenuGameSelectLoop
 /* 08EF44 8008E344 0C01B96F */  jal   func_8006E5BC
 /* 08EF48 8008E348 00000000 */   nop   
 /* 08EF4C 8008E34C 8FA20038 */  lw    $v0, 0x38($sp)
-/* 08EF50 8008E350 3C01800E */  lui   $at, %hi(gIsInTrophyRace) # $at, 0x800e
-/* 08EF54 8008E354 AC200FE8 */  sw    $zero, %lo(gIsInTrophyRace)($at)
+/* 08EF50 8008E350 3C01800E */  lui   $at, %hi(gTrophyRaceWorldId) # $at, 0x800e
+/* 08EF54 8008E354 AC200FE8 */  sw    $zero, %lo(gTrophyRaceWorldId)($at)
 /* 08EF58 8008E358 904C004B */  lbu   $t4, 0x4b($v0)
 /* 08EF5C 8008E35C 3C0D800E */  lui   $t5, %hi(gIsInAdventureTwo) # $t5, 0x800e
 /* 08EF60 8008E360 11800017 */  beqz  $t4, .L8008E3C0

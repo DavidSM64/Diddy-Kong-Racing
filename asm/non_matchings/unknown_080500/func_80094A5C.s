@@ -23,7 +23,7 @@ glabel func_80094A5C
 /* 0956AC 80094AAC 24840A40 */   addiu $a0, %lo(D_800E0A40) # addiu $a0, $a0, 0xa40
 /* 0956B0 80094AB0 0C025181 */  jal   func_80094604
 /* 0956B4 80094AB4 00000000 */   nop   
-/* 0956B8 80094AB8 0C01BAA4 */  jal   func_8006EA90
+/* 0956B8 80094AB8 0C01BAA4 */  jal   get_settings
 /* 0956BC 80094ABC 00000000 */   nop   
 /* 0956C0 80094AC0 80580114 */  lb    $t8, 0x114($v0)
 /* 0956C4 80094AC4 3C05800E */  lui   $a1, %hi(D_800E0AF0) # $a1, 0x800e

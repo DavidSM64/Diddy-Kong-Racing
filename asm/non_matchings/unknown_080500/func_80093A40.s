@@ -5,7 +5,7 @@ glabel func_80093A40
 /* 09464C 80093A4C AFB00014 */  sw    $s0, 0x14($sp)
 /* 094650 80093A50 0C01C8A6 */  jal   func_80072298
 /* 094654 80093A54 00002025 */   move  $a0, $zero
-/* 094658 80093A58 0C01BAA4 */  jal   func_8006EA90
+/* 094658 80093A58 0C01BAA4 */  jal   get_settings
 /* 09465C 80093A5C 00000000 */   nop   
 /* 094660 80093A60 3C11800E */  lui   $s1, %hi(D_800E098C) # $s1, 0x800e
 /* 094664 80093A64 2631098C */  addiu $s1, %lo(D_800E098C) # addiu $s1, $s1, 0x98c
@@ -52,9 +52,9 @@ glabel func_80093A40
 /* 0946F8 80093AF8 26316A40 */  addiu $s1, %lo(D_80126A40) # addiu $s1, $s1, 0x6a40
 /* 0946FC 80093AFC 24070001 */  li    $a3, 1
 /* 094700 80093B00 ACA70000 */  sw    $a3, ($a1)
-/* 094704 80093B04 3C0A800E */  lui   $t2, %hi(gIsInTrophyRace) # $t2, 0x800e
+/* 094704 80093B04 3C0A800E */  lui   $t2, %hi(gTrophyRaceWorldId) # $t2, 0x800e
 /* 094708 80093B08 AE290000 */  sw    $t1, ($s1)
-/* 09470C 80093B0C 8D4A0FE8 */  lw    $t2, %lo(gIsInTrophyRace)($t2)
+/* 09470C 80093B0C 8D4A0FE8 */  lw    $t2, %lo(gTrophyRaceWorldId)($t2)
 /* 094710 80093B10 8FAB0024 */  lw    $t3, 0x24($sp)
 /* 094714 80093B14 15400073 */  bnez  $t2, .L80093CE4
 /* 094718 80093B18 00000000 */   nop   

@@ -25,7 +25,7 @@ glabel func_800A26C8
 /* 0A3324 800A2724 8CE76CDC */  lw    $a3, %lo(D_80126CDC)($a3)
 /* 0A3328 800A2728 00000000 */  nop   
 /* 0A332C 800A272C 24E70720 */  addiu $a3, $a3, 0x720
-/* 0A3330 800A2730 0C01BAA4 */  jal   func_8006EA90
+/* 0A3330 800A2730 0C01BAA4 */  jal   get_settings
 /* 0A3334 800A2734 AFA70018 */   sw    $a3, 0x18($sp)
 /* 0A3338 800A2738 80580071 */  lb    $t8, 0x71($v0)
 /* 0A333C 800A273C 8FA70018 */  lw    $a3, 0x18($sp)

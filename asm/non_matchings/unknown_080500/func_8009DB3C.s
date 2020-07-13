@@ -1,7 +1,7 @@
 glabel func_8009DB3C
 /* 09E73C 8009DB3C 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 09E740 8009DB40 AFBF001C */  sw    $ra, 0x1c($sp)
-/* 09E744 8009DB44 0C01BAA4 */  jal   func_8006EA90
+/* 09E744 8009DB44 0C01BAA4 */  jal   get_settings
 /* 09E748 8009DB48 00000000 */   nop   
 /* 09E74C 8009DB4C 0C027B20 */  jal   is_in_two_player_adventure
 /* 09E750 8009DB50 AFA20030 */   sw    $v0, 0x30($sp)

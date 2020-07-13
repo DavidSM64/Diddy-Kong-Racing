@@ -35,7 +35,7 @@ glabel func_8006A1C4
 /* 06AE44 8006A244 24841110 */   addiu $a0, %lo(D_80121110) # addiu $a0, $a0, 0x1110
 /* 06AE48 8006A248 12400043 */  beqz  $s2, .L8006A358
 /* 06AE4C 8006A24C 8FA4005C */   lw    $a0, 0x5c($sp)
-/* 06AE50 8006A250 0C01BAA4 */  jal   func_8006EA90
+/* 06AE50 8006A250 0C01BAA4 */  jal   get_settings
 /* 06AE54 8006A254 00000000 */   nop   
 /* 06AE58 8006A258 32430003 */  andi  $v1, $s2, 3
 /* 06AE5C 8006A25C 10600004 */  beqz  $v1, .L8006A270

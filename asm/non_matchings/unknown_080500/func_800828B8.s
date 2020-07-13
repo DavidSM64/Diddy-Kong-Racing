@@ -1,7 +1,7 @@
 glabel func_800828B8
 /* 0834B8 800828B8 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0834BC 800828BC AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0834C0 800828C0 0C01BAA4 */  jal   func_8006EA90
+/* 0834C0 800828C0 0C01BAA4 */  jal   get_settings
 /* 0834C4 800828C4 00000000 */   nop   
 /* 0834C8 800828C8 27A40024 */  addiu $a0, $sp, 0x24
 /* 0834CC 800828CC 27A50028 */  addiu $a1, $sp, 0x28

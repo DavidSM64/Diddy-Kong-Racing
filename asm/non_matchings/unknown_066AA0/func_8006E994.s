@@ -54,13 +54,13 @@ glabel func_8006E994
 /* 06F654 8006EA54 00000000 */   nop   
 
 /* 06F658 8006EA58 27BDFFE8 */  addiu $sp, $sp, -0x18
-/* 06F65C 8006EA5C 3C048012 */  lui   $a0, %hi(D_80123510) # $a0, 0x8012
+/* 06F65C 8006EA5C 3C048012 */  lui   $a0, %hi(gSettingsPtr) # $a0, 0x8012
 /* 06F660 8006EA60 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 06F664 8006EA64 8C843510 */  lw    $a0, %lo(D_80123510)($a0)
+/* 06F664 8006EA64 8C843510 */  lw    $a0, %lo(gSettingsPtr)($a0)
 /* 06F668 8006EA68 0C01B9DC */  jal   func_8006E770
 /* 06F66C 8006EA6C 24050003 */   li    $a1, 3
-/* 06F670 8006EA70 3C048012 */  lui   $a0, %hi(D_80123510) # $a0, 0x8012
-/* 06F674 8006EA74 8C843510 */  lw    $a0, %lo(D_80123510)($a0)
+/* 06F670 8006EA70 3C048012 */  lui   $a0, %hi(gSettingsPtr) # $a0, 0x8012
+/* 06F674 8006EA74 8C843510 */  lw    $a0, %lo(gSettingsPtr)($a0)
 /* 06F678 8006EA78 0C01BA65 */  jal   func_8006E994
 /* 06F67C 8006EA7C 00000000 */   nop   
 /* 06F680 8006EA80 8FBF0014 */  lw    $ra, 0x14($sp)

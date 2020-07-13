@@ -5,7 +5,7 @@ glabel func_8000C8F8
 /* 00D504 8000C904 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 00D508 8000C908 AFB00018 */  sw    $s0, 0x18($sp)
 /* 00D50C 8000C90C AFA40058 */  sw    $a0, 0x58($sp)
-/* 00D510 8000C910 0C01BAA4 */  jal   func_8006EA90
+/* 00D510 8000C910 0C01BAA4 */  jal   get_settings
 /* 00D514 8000C914 AFA5005C */   sw    $a1, 0x5c($sp)
 /* 00D518 8000C918 90580049 */  lbu   $t8, 0x49($v0)
 /* 00D51C 8000C91C 8C4F0004 */  lw    $t7, 4($v0)

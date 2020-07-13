@@ -17,7 +17,7 @@ glabel func_8003C7A4
 /* 03D3E0 8003C7E0 AFA5009C */  sw    $a1, 0x9c($sp)
 /* 03D3E4 8003C7E4 8C9E003C */  lw    $fp, 0x3c($a0)
 /* 03D3E8 8003C7E8 8C920064 */  lw    $s2, 0x64($a0)
-/* 03D3EC 8003C7EC 0C01BAA4 */  jal   func_8006EA90
+/* 03D3EC 8003C7EC 0C01BAA4 */  jal   get_settings
 /* 03D3F0 8003C7F0 0080A025 */   move  $s4, $a0
 /* 03D3F4 8003C7F4 904F0049 */  lbu   $t7, 0x49($v0)
 /* 03D3F8 8003C7F8 8C4E0004 */  lw    $t6, 4($v0)

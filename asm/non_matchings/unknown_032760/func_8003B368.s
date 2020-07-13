@@ -70,7 +70,7 @@ glabel func_8003B368
 /* 03C068 8003B468 00000000 */  nop   
 /* 03C06C 8003B46C 13000010 */  beqz  $t8, .L8003B4B0
 /* 03C070 8003B470 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 03C074 8003B474 0C01BAA4 */  jal   func_8006EA90
+/* 03C074 8003B474 0C01BAA4 */  jal   get_settings
 /* 03C078 8003B478 AFA60024 */   sw    $a2, 0x24($sp)
 /* 03C07C 8003B47C 8FA60024 */  lw    $a2, 0x24($sp)
 /* 03C080 8003B480 94590014 */  lhu   $t9, 0x14($v0)

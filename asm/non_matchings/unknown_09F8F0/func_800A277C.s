@@ -655,7 +655,7 @@ glabel func_800A277C
 /* 0A3D34 800A3134 29A10003 */  slti  $at, $t5, 3
 /* 0A3D38 800A3138 1020002B */  beqz  $at, .L800A31E8
 /* 0A3D3C 800A313C 00000000 */   nop   
-/* 0A3D40 800A3140 0C01BAA4 */  jal   func_8006EA90
+/* 0A3D40 800A3140 0C01BAA4 */  jal   get_settings
 /* 0A3D44 800A3144 00000000 */   nop   
 /* 0A3D48 800A3148 3C108012 */  lui   $s0, %hi(D_80127184) # $s0, 0x8012
 /* 0A3D4C 800A314C 26107184 */  addiu $s0, %lo(D_80127184) # addiu $s0, $s0, 0x7184

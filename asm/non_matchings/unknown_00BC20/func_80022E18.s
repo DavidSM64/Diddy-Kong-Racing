@@ -105,7 +105,7 @@ glabel func_80022E18
 /* 023BA0 80022FA0 24010001 */  li    $at, 1
 /* 023BA4 80022FA4 15A1001F */  bne   $t5, $at, .L80023024
 /* 023BA8 80022FA8 00000000 */   nop   
-/* 023BAC 80022FAC 0C01BAA4 */  jal   func_8006EA90
+/* 023BAC 80022FAC 0C01BAA4 */  jal   get_settings
 /* 023BB0 80022FB0 AFA30024 */   sw    $v1, 0x24($sp)
 /* 023BB4 80022FB4 8FA30024 */  lw    $v1, 0x24($sp)
 /* 023BB8 80022FB8 94580014 */  lhu   $t8, 0x14($v0)

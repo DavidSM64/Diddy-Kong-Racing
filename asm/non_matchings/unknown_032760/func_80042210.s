@@ -38,7 +38,7 @@ glabel func_80042210
 /* 042EA0 800422A0 8FA40018 */  lw    $a0, 0x18($sp)
 /* 042EA4 800422A4 14400009 */  bnez  $v0, .L800422CC
 /* 042EA8 800422A8 00000000 */   nop   
-/* 042EAC 800422AC 0C01BAA4 */  jal   func_8006EA90
+/* 042EAC 800422AC 0C01BAA4 */  jal   get_settings
 /* 042EB0 800422B0 AFA40018 */   sw    $a0, 0x18($sp)
 /* 042EB4 800422B4 9448000E */  lhu   $t0, 0xe($v0)
 /* 042EB8 800422B8 8FA40018 */  lw    $a0, 0x18($sp)

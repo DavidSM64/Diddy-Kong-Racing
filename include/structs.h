@@ -18,40 +18,48 @@ typedef struct dkr_racer_t {
   /* Size: 0x18 */
 } dkr_racer_t;
 
-typedef struct {
-  /* 0x0000 */ void *balloons_ptr;
-  /* 0x0004 */ void *course_flags_ptr;
+/* Unknown Size */
+typedef struct Settings4C {
+    u8 unk0;
+    u8 unk1;
+    u8 pad2[0xD];
+    u8 unkF;
+} Settings4C;
+
+typedef struct Settings {
+  /* 0x0000 */ void *balloonsPtr;
+  /* 0x0004 */ void *courseFlagsPtr;
   /* 0x0008 */ u16 keys;
-  /* 0x000A */ char unk000A[2];
+  /* 0x000A */ char unkA[2];
   /* 0x000C */ u16 bosses;
   /* 0x000E */ u16 trophies;
-  /* 0x0010 */ u32 cutscene_flags;
-  /* 0x0014 */ u16 taj_flags;
-  /* 0x0016 */ u8 tt_amulet;
-  /* 0x0017 */ u8 wizpig_amulet;
-  /* 0x0018 */ void *flap_initials_ptr[3];
-  /* 0x0024 */ void *flap_times_ptr[3];
-  /* 0x0030 */ void *course_initials_ptr[3];
-  /* 0x003C */ void *course_times_ptr[3];
-  /* 0x0048 */ u8 world;
-  /* 0x0049 */ u8 course;
-  /* 0x004A */ u8 player_count;
-  /* 0x004B */ u8 new_game;
-  /* 0x004C */ void *return_course_ptr;
+  /* 0x0010 */ u32 cutsceneFlags;
+  /* 0x0014 */ u16 tajFlags;
+  /* 0x0016 */ u8 ttAmulet;
+  /* 0x0017 */ u8 wizpigAmulet;
+  /* 0x0018 */ void *flapInitialsPtr[3];
+  /* 0x0024 */ void *flapTimesPtr[3];
+  /* 0x0030 */ void *courseInitialsPtr[3];
+  /* 0x003C */ void *courseTimesPtr[3];
+  /* 0x0048 */ u8 worldId;
+  /* 0x0049 */ u8 courseId;
+  /* 0x004A */ u8 playerCount;
+  /* 0x004B */ u8 newGame;
+  /* 0x004C */ Settings4C *unk4C;
   /* 0x0050 */ u32 filename;
   /* 0x0054 */ dkr_racer_t racers[8];
-  /* 0x0114 */ u8 time_trial_racer;
+  /* 0x0114 */ u8 timeTrialRacer;
   /* 0x0115 */ char unk0115[2];
   /* 0x0117 */ u8 display_times;
-  /* 0x0118 */ u32 course_flags[65];
+  /* 0x0118 */ u32 courseFlags[65];
   /* 0x021C */ u16 balloons;
-  /* 0x021E */ u16 world_balloons[5];
-  /* 0x0228 */ u16 flap_initials[3][65];
-  /* 0x03AE */ u16 flap_times[3][65];
-  /* 0x0534 */ u16 course_initials[3][65];
-  /* 0x06BA */ u16 course_times[3][65];
+  /* 0x021E */ u16 worldBalloons[5];
+  /* 0x0228 */ u16 flapInitials[3][65];
+  /* 0x03AE */ u16 flapTimes[3][65];
+  /* 0x0534 */ u16 courseInitials[3][65];
+  /* 0x06BA */ u16 courseTimes[3][65];
   /* Size: 0x0840 */
-} dkr_settings_t;
+} Settings;
 
 typedef struct {
   /* 0x00 */ u8 world;

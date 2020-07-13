@@ -1,7 +1,7 @@
 glabel MenuLoadNewAreaInit
 /* 093884 80092C84 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 093888 80092C88 AFBF001C */  sw    $ra, 0x1c($sp)
-/* 09388C 80092C8C 0C01BAA4 */  jal   func_8006EA90
+/* 09388C 80092C8C 0C01BAA4 */  jal   get_settings
 /* 093890 80092C90 AFB00018 */   sw    $s0, 0x18($sp)
 /* 093894 80092C94 3C01800E */  lui   $at, %hi(D_800DF4C4) # $at, 0x800e
 /* 093898 80092C98 AC20F4C4 */  sw    $zero, %lo(D_800DF4C4)($at)
