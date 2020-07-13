@@ -1,7 +1,7 @@
 glabel func_800A718C
 /* 0A7D8C 800A718C 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0A7D90 800A7190 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0A7D94 800A7194 0C01BAA4 */  jal   func_8006EA90
+/* 0A7D94 800A7194 0C01BAA4 */  jal   get_settings
 /* 0A7D98 800A7198 AFA40030 */   sw    $a0, 0x30($sp)
 /* 0A7D9C 800A719C 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 0A7DA0 800A71A0 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)

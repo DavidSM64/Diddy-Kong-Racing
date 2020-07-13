@@ -17,7 +17,7 @@ glabel func_80095728
 /* 096364 80095764 AC3963A8 */  sw    $t9, %lo(D_801263A8)($at)
 /* 096368 80095768 8CCD0000 */  lw    $t5, ($a2)
 /* 09636C 8009576C 3C018012 */  lui   $at, %hi(D_801263AC) # $at, 0x8012
-/* 096370 80095770 0C01BAA4 */  jal   func_8006EA90
+/* 096370 80095770 0C01BAA4 */  jal   get_settings
 /* 096374 80095774 AC2D63AC */   sw    $t5, %lo(D_801263AC)($at)
 /* 096378 80095778 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 09637C 8009577C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
@@ -279,8 +279,8 @@ glabel func_80095728
 /* 096738 80095B38 0C0207D3 */  jal   func_80081F4C
 /* 09673C 80095B3C 00000000 */   nop   
 /* 096740 80095B40 104002F4 */  beqz  $v0, .L80096714
-/* 096744 80095B44 3C0C800E */   lui   $t4, %hi(gIsInTrophyRace) # $t4, 0x800e
-/* 096748 80095B48 8D8C0FE8 */  lw    $t4, %lo(gIsInTrophyRace)($t4)
+/* 096744 80095B44 3C0C800E */   lui   $t4, %hi(gTrophyRaceWorldId) # $t4, 0x800e
+/* 096748 80095B48 8D8C0FE8 */  lw    $t4, %lo(gTrophyRaceWorldId)($t4)
 /* 09674C 80095B4C 8FA7002C */  lw    $a3, 0x2c($sp)
 /* 096750 80095B50 1180000A */  beqz  $t4, .L80095B7C
 /* 096754 80095B54 00000000 */   nop   
@@ -990,7 +990,7 @@ glabel func_80095728
 /* 097178 80096578 24040007 */   li    $a0, 7
 /* 09717C 8009657C 3C028012 */  lui   $v0, %hi(D_80126C28) # $v0, 0x8012
 /* 097180 80096580 80426C28 */  lb    $v0, %lo(D_80126C28)($v0)
-/* 097184 80096584 3C0C800E */  lui   $t4, %hi(gIsInTrophyRace) # $t4, 0x800e
+/* 097184 80096584 3C0C800E */  lui   $t4, %hi(gTrophyRaceWorldId) # $t4, 0x800e
 /* 097188 80096588 28410002 */  slti  $at, $v0, 2
 /* 09718C 8009658C 1420001C */  bnez  $at, .L80096600
 /* 097190 80096590 24010009 */   li    $at, 9
@@ -1024,7 +1024,7 @@ glabel func_80095728
 /* 0971F8 800965F8 10000046 */  b     .L80096714
 /* 0971FC 800965FC AFB90044 */   sw    $t9, 0x44($sp)
 .L80096600:
-/* 097200 80096600 8D8C0FE8 */  lw    $t4, %lo(gIsInTrophyRace)($t4)
+/* 097200 80096600 8D8C0FE8 */  lw    $t4, %lo(gTrophyRaceWorldId)($t4)
 /* 097204 80096604 240E000A */  li    $t6, 10
 /* 097208 80096608 11800003 */  beqz  $t4, .L80096618
 /* 09720C 8009660C 3C0F800E */   lui   $t7, %hi(D_800DF4BC) # $t7, 0x800e

@@ -46,8 +46,8 @@ glabel func_8006E3BC
 /* 06F06C 8006E46C 0C01C327 */  jal   func_80070C9C
 /* 06F070 8006E470 2405FFFF */   li    $a1, -1
 /* 06F074 8006E474 8FB80020 */  lw    $t8, 0x20($sp)
-/* 06F078 8006E478 3C048012 */  lui   $a0, %hi(D_80123510) # $a0, 0x8012
-/* 06F07C 8006E47C 24843510 */  addiu $a0, %lo(D_80123510) # addiu $a0, $a0, 0x3510
+/* 06F078 8006E478 3C048012 */  lui   $a0, %hi(gSettingsPtr) # $a0, 0x8012
+/* 06F07C 8006E47C 24843510 */  addiu $a0, %lo(gSettingsPtr) # addiu $a0, $a0, 0x3510
 /* 06F080 8006E480 AC820000 */  sw    $v0, ($a0)
 /* 06F084 8006E484 0302C821 */  addu  $t9, $t8, $v0
 /* 06F088 8006E488 AC590004 */  sw    $t9, 4($v0)

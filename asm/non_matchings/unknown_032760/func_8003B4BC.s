@@ -26,7 +26,7 @@ glabel func_8003B4BC
 /* 03C118 8003B518 00008025 */   move  $s0, $zero
 /* 03C11C 8003B51C 24100001 */  li    $s0, 1
 .L8003B520:
-/* 03C120 8003B520 0C01BAA4 */  jal   func_8006EA90
+/* 03C120 8003B520 0C01BAA4 */  jal   get_settings
 /* 03C124 8003B524 E7A2002C */   swc1  $f2, 0x2c($sp)
 /* 03C128 8003B528 904B0049 */  lbu   $t3, 0x49($v0)
 /* 03C12C 8003B52C 8E23003C */  lw    $v1, 0x3c($s1)

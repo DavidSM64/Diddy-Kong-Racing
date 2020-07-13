@@ -4,7 +4,7 @@ glabel func_80092188
 /* 092D90 80092190 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 092D94 80092194 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 092D98 80092198 AFA40058 */  sw    $a0, 0x58($sp)
-/* 092D9C 8009219C 0C01BAA4 */  jal   func_8006EA90
+/* 092D9C 8009219C 0C01BAA4 */  jal   get_settings
 /* 092DA0 800921A0 AFAE0030 */   sw    $t6, 0x30($sp)
 /* 092DA4 800921A4 3C06800E */  lui   $a2, %hi(D_800E0980) # $a2, 0x800e
 /* 092DA8 800921A8 24C60980 */  addiu $a2, %lo(D_800E0980) # addiu $a2, $a2, 0x980

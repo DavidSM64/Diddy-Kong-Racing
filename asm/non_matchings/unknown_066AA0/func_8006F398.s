@@ -5,8 +5,8 @@ glabel func_8006F398
 /* 06FFA4 8006F3A4 00000000 */   nop   
 /* 06FFA8 8006F3A8 0C003865 */  jal   func_8000E194
 /* 06FFAC 8006F3AC 00000000 */   nop   
-/* 06FFB0 8006F3B0 3C028012 */  lui   $v0, %hi(D_80123510) # $v0, 0x8012
-/* 06FFB4 8006F3B4 8C423510 */  lw    $v0, %lo(D_80123510)($v0)
+/* 06FFB0 8006F3B0 3C028012 */  lui   $v0, %hi(gSettingsPtr) # $v0, 0x8012
+/* 06FFB4 8006F3B4 8C423510 */  lw    $v0, %lo(gSettingsPtr)($v0)
 /* 06FFB8 8006F3B8 00002825 */  move  $a1, $zero
 /* 06FFBC 8006F3BC 24060018 */  li    $a2, 24
 /* 06FFC0 8006F3C0 24430054 */  addiu $v1, $v0, 0x54

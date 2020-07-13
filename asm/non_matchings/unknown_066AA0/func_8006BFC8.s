@@ -7,7 +7,7 @@ glabel func_8006BFC8
 /* 06CBDC 8006BFDC 00008025 */   move  $s0, $zero
 /* 06CBE0 8006BFE0 14400011 */  bnez  $v0, .L8006C028
 /* 06CBE4 8006BFE4 00000000 */   nop   
-/* 06CBE8 8006BFE8 0C01BAA4 */  jal   func_8006EA90
+/* 06CBE8 8006BFE8 0C01BAA4 */  jal   get_settings
 /* 06CBEC 8006BFEC 00000000 */   nop   
 /* 06CBF0 8006BFF0 904F0049 */  lbu   $t7, 0x49($v0)
 /* 06CBF4 8006BFF4 8C4E0004 */  lw    $t6, 4($v0)
@@ -27,7 +27,7 @@ glabel func_8006BFC8
 .L8006C028:
 /* 06CC28 8006C028 24100003 */  li    $s0, 3
 .L8006C02C:
-/* 06CC2C 8006C02C 0C02658B */  jal   is_in_trophy_race
+/* 06CC2C 8006C02C 0C02658B */  jal   get_trophy_race_world_id
 /* 06CC30 8006C030 00000000 */   nop   
 /* 06CC34 8006C034 10400002 */  beqz  $v0, .L8006C040
 /* 06CC38 8006C038 00000000 */   nop   

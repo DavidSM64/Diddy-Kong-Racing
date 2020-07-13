@@ -1,7 +1,7 @@
 glabel func_8009D360
 /* 09DF60 8009D360 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 09DF64 8009D364 AFBF001C */  sw    $ra, 0x1c($sp)
-/* 09DF68 8009D368 0C01BAA4 */  jal   func_8006EA90
+/* 09DF68 8009D368 0C01BAA4 */  jal   get_settings
 /* 09DF6C 8009D36C 00000000 */   nop   
 /* 09DF70 8009D370 3C03800E */  lui   $v1, %hi(D_800DF4DC) # $v1, 0x800e
 /* 09DF74 8009D374 8063F4DC */  lb    $v1, %lo(D_800DF4DC)($v1)

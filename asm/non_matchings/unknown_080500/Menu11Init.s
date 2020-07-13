@@ -1,7 +1,7 @@
 glabel Menu11Init
 /* 097448 80096848 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 09744C 8009684C AFBF0014 */  sw    $ra, 0x14($sp)
-/* 097450 80096850 0C01BAA4 */  jal   func_8006EA90
+/* 097450 80096850 0C01BAA4 */  jal   get_settings
 /* 097454 80096854 00000000 */   nop   
 /* 097458 80096858 3C03800E */  lui   $v1, %hi(D_800DF4A0) # $v1, 0x800e
 /* 09745C 8009685C 8C63F4A0 */  lw    $v1, %lo(D_800DF4A0)($v1)

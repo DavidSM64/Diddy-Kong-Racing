@@ -9,8 +9,8 @@ glabel func_8006E5BC
 /* 06F1D8 8006E5D8 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 06F1DC 8006E5DC 0C0270F2 */  jal   func_8009C3C8
 /* 06F1E0 8006E5E0 AFB00018 */   sw    $s0, 0x18($sp)
-/* 06F1E4 8006E5E4 3C108012 */  lui   $s0, %hi(D_80123510) # $s0, 0x8012
-/* 06F1E8 8006E5E8 26103510 */  addiu $s0, %lo(D_80123510) # addiu $s0, $s0, 0x3510
+/* 06F1E4 8006E5E4 3C108012 */  lui   $s0, %hi(gSettingsPtr) # $s0, 0x8012
+/* 06F1E8 8006E5E8 26103510 */  addiu $s0, %lo(gSettingsPtr) # addiu $s0, $s0, 0x3510
 /* 06F1EC 8006E5EC 8E0E0000 */  lw    $t6, ($s0)
 /* 06F1F0 8006E5F0 00008825 */  move  $s1, $zero
 /* 06F1F4 8006E5F4 00009825 */  move  $s3, $zero

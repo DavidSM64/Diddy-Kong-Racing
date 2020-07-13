@@ -12,7 +12,7 @@ glabel func_8009ECF0
 /* 09F918 8009ED18 0C01994B */  jal   func_8006652C
 /* 09F91C 8009ED1C 00402025 */   move  $a0, $v0
 /* 09F920 8009ED20 3C018012 */  lui   $at, %hi(D_80126D37) # $at, 0x8012
-/* 09F924 8009ED24 0C01BAA4 */  jal   func_8006EA90
+/* 09F924 8009ED24 0C01BAA4 */  jal   get_settings
 /* 09F928 8009ED28 A0226D37 */   sb    $v0, %lo(D_80126D37)($at)
 /* 09F92C 8009ED2C 3C018012 */  lui   $at, %hi(D_80127184) # $at, 0x8012
 /* 09F930 8009ED30 0C003877 */  jal   func_8000E1DC

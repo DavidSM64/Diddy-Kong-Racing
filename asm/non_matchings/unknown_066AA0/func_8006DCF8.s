@@ -313,8 +313,8 @@ glabel func_8006DCF8
 /* 06EDB0 8006E1B0 00002025 */  move  $a0, $zero
 /* 06EDB4 8006E1B4 0C027094 */  jal   func_8009C250
 /* 06EDB8 8006E1B8 AD6C0000 */   sw    $t4, ($t3)
-/* 06EDBC 8006E1BC 3C108012 */  lui   $s0, %hi(D_80123510) # $s0, 0x8012
-/* 06EDC0 8006E1C0 26103510 */  addiu $s0, %lo(D_80123510) # addiu $s0, $s0, 0x3510
+/* 06EDBC 8006E1BC 3C108012 */  lui   $s0, %hi(gSettingsPtr) # $s0, 0x8012
+/* 06EDC0 8006E1C0 26103510 */  addiu $s0, %lo(gSettingsPtr) # addiu $s0, $s0, 0x3510
 /* 06EDC4 8006E1C4 8E0D0000 */  lw    $t5, ($s0)
 /* 06EDC8 8006E1C8 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
 /* 06EDCC 8006E1CC 91AE004A */  lbu   $t6, 0x4a($t5)
@@ -368,8 +368,8 @@ glabel func_8006DCF8
 /* 06EE88 8006E288 8FA4002C */  lw    $a0, 0x2c($sp)
 /* 06EE8C 8006E28C 0C01B2B9 */  jal   func_8006CAE4
 /* 06EE90 8006E290 2405FFFF */   li    $a1, -1
-/* 06EE94 8006E294 3C108012 */  lui   $s0, %hi(D_80123510) # $s0, 0x8012
-/* 06EE98 8006E298 26103510 */  addiu $s0, %lo(D_80123510) # addiu $s0, $s0, 0x3510
+/* 06EE94 8006E294 3C108012 */  lui   $s0, %hi(gSettingsPtr) # $s0, 0x8012
+/* 06EE98 8006E298 26103510 */  addiu $s0, %lo(gSettingsPtr) # addiu $s0, $s0, 0x3510
 /* 06EE9C 8006E29C 8E0C0000 */  lw    $t4, ($s0)
 /* 06EEA0 8006E2A0 00000000 */  nop   
 /* 06EEA4 8006E2A4 918D004B */  lbu   $t5, 0x4b($t4)

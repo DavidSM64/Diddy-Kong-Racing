@@ -27,7 +27,7 @@ glabel func_8003DF08
 /* 03EB6C 8003DF6C 8FAE001C */   lw    $t6, 0x1c($sp)
 /* 03EB70 8003DF70 0C0006F0 */  jal   func_80001BC0
 /* 03EB74 8003DF74 AFA60018 */   sw    $a2, 0x18($sp)
-/* 03EB78 8003DF78 0C01BAA4 */  jal   func_8006EA90
+/* 03EB78 8003DF78 0C01BAA4 */  jal   get_settings
 /* 03EB7C 8003DF7C 00000000 */   nop   
 /* 03EB80 8003DF80 8FA40018 */  lw    $a0, 0x18($sp)
 /* 03EB84 8003DF84 94480008 */  lhu   $t0, 8($v0)

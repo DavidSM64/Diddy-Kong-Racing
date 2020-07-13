@@ -6,7 +6,7 @@ glabel func_8001B4FC
 /* 01C10C 8001B50C AFB00018 */  sw    $s0, 0x18($sp)
 /* 01C110 8001B510 3C01800E */  lui   $at, %hi(D_800DC734) # $at, 0x800e
 /* 01C114 8001B514 00808025 */  move  $s0, $a0
-/* 01C118 8001B518 0C01BAA4 */  jal   func_8006EA90
+/* 01C118 8001B518 0C01BAA4 */  jal   get_settings
 /* 01C11C 8001B51C A020C734 */   sb    $zero, %lo(D_800DC734)($at)
 /* 01C120 8001B520 AFA20020 */  sw    $v0, 0x20($sp)
 /* 01C124 8001B524 0C01AC2B */  jal   func_8006B0AC

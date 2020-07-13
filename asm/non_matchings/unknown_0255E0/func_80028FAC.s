@@ -9,7 +9,7 @@ glabel func_80028FAC
 /* 029BC8 80028FC8 AFB10024 */  sw    $s1, 0x24($sp)
 /* 029BCC 80028FCC 0C004B0C */  jal   func_80012C30
 /* 029BD0 80028FD0 AFB00020 */   sw    $s0, 0x20($sp)
-/* 029BD4 80028FD4 0C01BAA4 */  jal   func_8006EA90
+/* 029BD4 80028FD4 0C01BAA4 */  jal   get_settings
 /* 029BD8 80028FD8 00000000 */   nop   
 /* 029BDC 80028FDC 904E0049 */  lbu   $t6, 0x49($v0)
 /* 029BE0 80028FE0 24010024 */  li    $at, 36

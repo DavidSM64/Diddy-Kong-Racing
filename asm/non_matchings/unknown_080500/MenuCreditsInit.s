@@ -1,7 +1,7 @@
 glabel MenuCreditsInit
 /* 09BB48 8009AF48 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 09BB4C 8009AF4C AFBF001C */  sw    $ra, 0x1c($sp)
-/* 09BB50 8009AF50 0C01BAA4 */  jal   func_8006EA90
+/* 09BB50 8009AF50 0C01BAA4 */  jal   get_settings
 /* 09BB54 8009AF54 00000000 */   nop   
 /* 09BB58 8009AF58 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
 /* 09BB5C 8009AF5C AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)

@@ -15,7 +15,7 @@ glabel func_80096978
 /* 0975AC 800969AC E7B70030 */  swc1  $f23, 0x30($sp)
 /* 0975B0 800969B0 E7B60034 */  swc1  $f22, 0x34($sp)
 /* 0975B4 800969B4 E7B50028 */  swc1  $f21, 0x28($sp)
-/* 0975B8 800969B8 0C01BAA4 */  jal   func_8006EA90
+/* 0975B8 800969B8 0C01BAA4 */  jal   get_settings
 /* 0975BC 800969BC AFA400B0 */   sw    $a0, 0xb0($sp)
 /* 0975C0 800969C0 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 0975C4 800969C4 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)

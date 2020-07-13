@@ -1,7 +1,7 @@
 glabel func_800A6DB4
 /* 0A79B4 800A6DB4 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0A79B8 800A6DB8 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0A79BC 800A6DBC 0C01BAA4 */  jal   func_8006EA90
+/* 0A79BC 800A6DBC 0C01BAA4 */  jal   get_settings
 /* 0A79C0 800A6DC0 AFA40018 */   sw    $a0, 0x18($sp)
 /* 0A79C4 800A6DC4 8FA30018 */  lw    $v1, 0x18($sp)
 /* 0A79C8 800A6DC8 00000000 */  nop   

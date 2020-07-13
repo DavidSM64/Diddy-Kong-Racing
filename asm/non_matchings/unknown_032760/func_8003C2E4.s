@@ -5,7 +5,7 @@ glabel func_8003C2E4
 /* 03CEF0 8003C2F0 AFB0001C */  sw    $s0, 0x1c($sp)
 /* 03CEF4 8003C2F4 AFA50034 */  sw    $a1, 0x34($sp)
 /* 03CEF8 8003C2F8 8C900064 */  lw    $s0, 0x64($a0)
-/* 03CEFC 8003C2FC 0C01BAA4 */  jal   func_8006EA90
+/* 03CEFC 8003C2FC 0C01BAA4 */  jal   get_settings
 /* 03CF00 8003C300 00808825 */   move  $s1, $a0
 /* 03CF04 8003C304 AFA2002C */  sw    $v0, 0x2c($sp)
 /* 03CF08 8003C308 920E000F */  lbu   $t6, 0xf($s0)

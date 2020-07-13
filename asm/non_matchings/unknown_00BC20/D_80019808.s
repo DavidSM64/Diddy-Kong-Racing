@@ -10,7 +10,7 @@ glabel D_80019808
 /* 01A428 80019828 AFB00018 */  sw    $s0, 0x18($sp)
 /* 01A42C 8001982C 0C01AF6C */  jal   func_8006BDB0
 /* 01A430 80019830 AFA400A0 */   sw    $a0, 0xa0($sp)
-/* 01A434 80019834 0C01BAA4 */  jal   func_8006EA90
+/* 01A434 80019834 0C01BAA4 */  jal   get_settings
 /* 01A438 80019838 AFA20064 */   sw    $v0, 0x64($sp)
 /* 01A43C 8001983C 8FBF0064 */  lw    $ra, 0x64($sp)
 /* 01A440 80019840 A7A00088 */  sh    $zero, 0x88($sp)
@@ -836,7 +836,7 @@ glabel D_80019808
 /* 01AFF4 8001A3F4 00000000 */  nop   
 /* 01AFF8 8001A3F8 19E0000D */  blez  $t7, .L8001A430
 /* 01AFFC 8001A3FC 87AE0088 */   lh    $t6, 0x88($sp)
-/* 01B000 8001A400 0C02658B */  jal   is_in_trophy_race
+/* 01B000 8001A400 0C02658B */  jal   get_trophy_race_world_id
 /* 01B004 8001A404 00000000 */   nop   
 /* 01B008 8001A408 3C098012 */  lui   $t1, %hi(D_8011AEE8) # $t1, 0x8012
 /* 01B00C 8001A40C 14400007 */  bnez  $v0, .L8001A42C
@@ -1006,7 +1006,7 @@ glabel D_80019808
 /* 01B25C 8001A65C 00000000 */   nop   
 /* 01B260 8001A660 14400006 */  bnez  $v0, .L8001A67C
 /* 01B264 8001A664 00000000 */   nop   
-/* 01B268 8001A668 0C02658B */  jal   is_in_trophy_race
+/* 01B268 8001A668 0C02658B */  jal   get_trophy_race_world_id
 /* 01B26C 8001A66C 00000000 */   nop   
 /* 01B270 8001A670 14400002 */  bnez  $v0, .L8001A67C
 /* 01B274 8001A674 00000000 */   nop   

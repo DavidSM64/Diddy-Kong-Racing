@@ -3,9 +3,11 @@
 
 #include "types.h"
 #include "macros.h"
+#include "structs.h"
 
 extern s32 osTvType;
 
+extern s8 D_800DF450;
 extern s32 D_800DF458;
 extern s32 D_800DF46C;
 extern s32 gIsInAdventureTwo;
@@ -18,14 +20,17 @@ typedef struct unk800DF4A0 {
 } unk800DF4A0;
 extern unk800DF4A0* D_800DF4A0;
 
+extern s32 D_800DF478;
 extern s32 D_800DF47C;
 extern s32 D_800DF498;
 extern s32 D_800DF4B8;
 extern s32 D_800DF4BC;
 extern s32 D_800DF4C8;
+extern s32 D_800DF4D4;
 extern s8 D_800DF4D8;
 extern s8 D_800DF4E0;
 extern s8 D_800DF4E4[4];
+extern s8 D_800DF4EC;
 extern s32 gIsInTwoPlayerAdventure;
 extern s32 gSaveFileIndex;
 extern s16 D_800DF7C4[11];
@@ -38,8 +43,32 @@ extern s32 D_800DFFD4;
 extern s32 D_800E0398;
 extern s32 D_800E0410;
 extern s32 D_800E0414;
+
+/* Size: 0x18 Bytes */
+typedef struct unk800E045C {
+    u32* unk0;
+    s32 pad4;
+    u32* unk8;
+    s32 padC;
+    s32 pad10;
+    s32 pad14;
+} unk800E045C;
+extern unk800E045C D_800E045C;
+extern unk800E045C D_800E0474;
+extern unk800E045C D_800E048C;
+
 extern s32 D_800E0984;
 extern s32 D_800E0A24;
+extern u32* D_800E0A50;
+extern u32* D_800E0A60;
+extern u32* D_800E0A70;
+extern u32* D_800E0A90;
+extern u32* D_800E0A80;
+extern u32* D_800E0AA0;
+extern u32* D_800E0AB0;
+extern u32* D_800E0AC0;
+extern u32* D_800E0AD0;
+extern u32* D_800E0AE0;
 extern u8 D_800E0F6C[0x20]; // "ABCDEFGHIJKLMNOPQRSTYVWXYZ.?    " = Valid chars for name input.
 extern s32 D_800E0F90;
 extern s32 D_800E0F94;
@@ -47,11 +76,16 @@ extern s32 D_800E0F98;
 extern s32 D_800E0F9C;
 extern s32 D_800E0FA0;
 extern s32 D_800E0FB4;
-extern s32 gIsInTrophyRace;
+extern s32 D_800E0FEC;
+extern s32 gTrophyRaceWorldId;
 extern s32 D_800E1024;
 extern s32 D_800E1708;
-extern s32 D_800E1768;
+extern s16 D_800E1768[10];
 extern s32 D_800E17D8;
+extern s32 *D_800E1DA4[2];
+extern s32 *D_800E1DAC[2];
+extern s32 D_800E1DB8;
+extern s32 D_800E1DBC;
 extern s8 D_800E1E28;
 
 extern s32 D_801263A0;
@@ -95,6 +129,7 @@ extern s8 D_801264E2;
 extern s8 D_80126504;
 extern s8 D_8012650E;
 extern s8 D_80126516;
+extern u32* D_80126550[1]; // lookup table? Unknown number of entries.
 extern s8* D_801267EC;
 extern s32 D_80126804;
 extern s32 D_80126824;
@@ -106,6 +141,7 @@ extern s32 D_801269FC;
 extern s32 D_80126A0C;
 extern s32 D_80126A64;
 extern s32 D_80126AA0;
+extern s32 *D_80126C2C;
 extern s32 D_80126C34;
 extern s32 D_80126C3C;
 extern u16 D_80126C40;
@@ -117,13 +153,28 @@ extern s16 D_80126C4C;
 extern u8  D_80126C58;
 extern f32 D_80126C50;
 extern s32 *D_80126C6C;
+extern s32 D_80126C70;
 extern s32 D_80126C74;
 extern s32 D_80126C78;
 
+Settings *get_settings();
 void func_8009C4A8(s16 *arg0);
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8007F900.s")
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8007FF88.s")
+
+void func_8007FF88(void) {
+    if (D_800E1DAC[0] != NULL) {
+        func_80071140(D_800E1DAC[0]);
+        D_800E1DAC[0] = NULL;
+    }
+    D_800E1DAC[1] = NULL;
+    D_80126C2C = NULL;
+    D_800E1DA4[0] = NULL;
+    D_800E1DA4[1] = NULL;
+    D_800E1DB8 = 0;
+    D_800E1DBC = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8007FFEC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80080580.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80080BC8.s")
@@ -269,7 +320,21 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80086AFC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800871D8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800874D0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800875E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800876CC.s")
+
+s32 func_800876CC(s32 arg0, s32 arg1) {
+    if (arg0 & 0x4000) {
+        func_80001D04(0x241, 0);
+        D_801263E0 = 5;
+    } else if (arg0 & 0x9000) {
+        func_80001D04(0xEF, 0);
+        D_801263E0 = 7;
+        D_801263D8 = 0;
+    }
+    
+    return 0;
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80087734.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuSaveOptionsLoop.s")
 
@@ -363,7 +428,23 @@ void func_8008A4C8(void) {
     func_800C422C(2);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuMagicCodesListInit.s")
+void menu_magic_codes_list_init(void) {
+    D_801263BC = 0;
+    D_800DF47C = 0;
+    D_801263E0 = 0;
+    D_80126C46 = (u16)0;
+    func_800C4170(2);
+    func_8009C6D4(0x3F);
+    func_8008E4B0();
+    func_800C01D8(&D_800DF77C);
+    if (osTvType == 0) {
+        D_80126C70 = 0xB;
+    } else {
+        D_80126C70 = 0xA;
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008A56C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008A8F8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuMagicCodesListLoop.s")
@@ -449,7 +530,15 @@ void func_8008E428(void) {
     func_800C422C(2);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008E45C.s")
+void func_8008E45C(void) {
+    D_800E045C.unk0 = D_80126550[24];
+    D_800E045C.unk8 = D_80126550[25];
+    D_800E0474.unk0 = D_80126550[26];
+    D_800E0474.unk8 = D_80126550[27];
+    D_800E048C.unk0 = D_80126550[28];
+    D_800E048C.unk8 = D_80126550[29];
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008E4B0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008E4EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuTrackSelectInit.s")
@@ -536,14 +625,25 @@ void func_800945E4(void) {
     func_800945B0();
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094604.s")
+void func_80094604(void) {
+    D_800E0A50 = D_80126550[50];
+    D_800E0A60 = D_80126550[51];
+    D_800E0A70 = D_80126550[52];
+    D_800E0A90 = D_80126550[54];
+    D_800E0A80 = D_80126550[53];
+    D_800E0AA0 = D_80126550[55];
+    D_800E0AB0 = D_80126550[56];
+    D_800E0AC0 = D_80126550[57];
+    D_800E0AD0 = D_80126550[58];
+    D_800E0AE0 = D_80126550[59];
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094688.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094A5C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094C14.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094D28.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80095624.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80095728.s")
-
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80096790.s")
@@ -558,7 +658,7 @@ void func_80096790(void) {
     s32 temp;
     s8 *temp2;
     
-    temp2 = (s8*)func_8006BDB0(); // temp2 = array of 8 bytes
+    temp2 = (s8*)func_8006BDB0();
     func_8009C4A8((s16*)&D_800E0A24);
     temp = *temp2 - 1; // temp is $v1, when it should be $v0!
     
@@ -625,7 +725,19 @@ void func_800981E8(void) {
     func_800C422C(2);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80098208.s")
+// Gets triggered when entering trophy race in adventure mode.
+void func_80098208(void) {
+    Settings *settings = get_settings();
+    gTrophyRaceWorldId = settings->worldId;
+    D_800E0FEC = 0;
+    settings->unk4C->unk0 = settings->courseId;
+    settings->unk4C->unkF = 0;
+    settings->unk4C->unk1 = 0;
+    D_800DF450 = 1;
+    func_8000E4BC(0);
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuTrophyRaceRoundInit.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800983C0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuTrophyRaceRoundLoop.s")
@@ -644,8 +756,8 @@ void func_80099600(void) {
     func_800C422C(2);
 }
 
-s32 is_in_trophy_race(void) {
-    return gIsInTrophyRace;
+s32 get_trophy_race_world_id(void) {
+    return gTrophyRaceWorldId;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009963C.s")
@@ -686,12 +798,23 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     D_80126804 = arg5;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/Menu17Init.s")
+void func_8009C674(s16 *arg0);
+
+void menu_17_init(void) {
+    if (D_80126804 != 0) {
+        func_8009C674(D_800E1768);
+        func_80094604();
+    }
+    func_8006E2E8(D_801267EC[0], D_801267EC[1], D_801267EC[2]);
+    D_800DF47C = 0;
+    D_801263E0 = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/Menu17Loop.s")
 
 void func_8009AF18(void) {
     if (D_80126804 != 0) {
-        func_8009C4A8((s16*)&D_800E1768);
+        func_8009C4A8(D_800E1768);
     }
 }
 
@@ -751,7 +874,20 @@ s32 get_save_file_index(void) {
     return gSaveFileIndex;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C1B0.s")
+s32 func_8009C1B0(void) {
+    Settings *settings = get_settings();
+    if (D_800DF4B8 == 0 && D_800DF478 == 0) {
+        if (settings->newGame) {
+            return 0;
+        } else {
+            return settings->courseId;
+        }
+    }
+    D_800DF478 = 0;
+    return D_800DF4D4;
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C228.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C250.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C274.s")
@@ -779,14 +915,6 @@ void set_magic_code_flags(s32 flags) {
     gUnlockedMagicCodes |= flags;
 }
 
-/* Unknown Size */
-typedef struct unknown8006EA90 {
-    u8 pad[0x49];
-    u8 unk49;
-} unknown8006EA90;
-
-unknown8006EA90* func_8006EA90();
-
 s32 func_8009C30C(void) {
     s32 cheats = gActiveMagicCodes;
     if (D_800DF4B8 == 0 || func_8000E4C8() != 0) {
@@ -795,7 +923,7 @@ s32 func_8009C30C(void) {
     if (!func_8006B240()) {
         cheats &= ~4; // Clears MIRRORED_TRACKS cheat
     }
-    if ((func_8006B14C(func_8006EA90()->unk49) & 0x40) != 0) {
+    if ((func_8006B14C(get_settings()->courseId) & 0x40) != 0) {
         // Clears START_WITH_10_BANANAS, DISABLE_WEAPONS, DISABLE_BANANAS, and BALLOON cheats.
         cheats &= ~0xF9880; 
     }
@@ -809,13 +937,26 @@ s32 func_8009C3C8(void) {
     return D_800DF4BC;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C3D8.s")
+typedef struct unk8006BDB0 {
+    u8 pad[0x4C];
+    s8 unk4C;
+} unk8006BDB0;
+
+s32 func_8009C3D8(void) {
+    unk8006BDB0 *temp = (unk8006BDB0*)func_8006BDB0(); 
+    if (gIsInTwoPlayerAdventure && D_800DF4B8 == 0) {
+        if (temp->unk4C == 0 || (temp->unk4C & 0x40) != 0) {
+            return 2;
+        }
+    }
+    return D_800DF4BC;
+}
 
 s32 func_8009C440(void) {
     if (D_800DF4B8 == 0) {
         return 6;
     }
-    if (gIsInTrophyRace) {
+    if (gTrophyRaceWorldId) {
         return 6;
     }
     return (D_800E0410 + 1) << 1; // Doesn't match with multiply.
@@ -865,7 +1006,18 @@ void func_8009CF68(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009CFB0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009CFEC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009D118.s")
+
+void func_8009D118(s32 arg0) {
+    if (arg0 == 0) {
+        func_800C5000(1, 0, 0, 0x7F, 0x5A, 0xFF);
+        if (D_800DF4EC != 0) {
+            func_800C5000(1, 0, 0, 0x7F, 0x5A, 0x78);
+        }
+    } else {
+        func_800C5000(1, 0xCF, 0xCF, 0xCF, 0x5A, 0xFF);
+    }
+    D_800DF4EC = (u8)0;
+}
 
 void func_8009D1B8(s32 arg0, s32 arg1, s32 arg2) {
     func_8009D118(D_801264D8 == D_80126504);

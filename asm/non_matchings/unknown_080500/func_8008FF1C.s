@@ -10,7 +10,7 @@ glabel func_8008FF1C
 /* 090B3C 8008FF3C AFB20038 */  sw    $s2, 0x38($sp)
 /* 090B40 8008FF40 AFB10034 */  sw    $s1, 0x34($sp)
 /* 090B44 8008FF44 AFB00030 */  sw    $s0, 0x30($sp)
-/* 090B48 8008FF48 0C01BAA4 */  jal   func_8006EA90
+/* 090B48 8008FF48 0C01BAA4 */  jal   get_settings
 /* 090B4C 8008FF4C AFA40080 */   sw    $a0, 0x80($sp)
 /* 090B50 8008FF50 AFA20058 */  sw    $v0, 0x58($sp)
 /* 090B54 8008FF54 0C0078A7 */  jal   func_8001E29C

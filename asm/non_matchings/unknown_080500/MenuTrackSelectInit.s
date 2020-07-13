@@ -12,7 +12,7 @@ glabel MenuTrackSelectInit
 /* 08F3C8 8008E7C8 AFB00020 */  sw    $s0, 0x20($sp)
 /* 08F3CC 8008E7CC 0C03105C */  jal   func_800C4170
 /* 08F3D0 8008E7D0 24040002 */   li    $a0, 2
-/* 08F3D4 8008E7D4 0C01BAA4 */  jal   func_8006EA90
+/* 08F3D4 8008E7D4 0C01BAA4 */  jal   get_settings
 /* 08F3D8 8008E7D8 00000000 */   nop   
 /* 08F3DC 8008E7DC 0040A025 */  move  $s4, $v0
 /* 08F3E0 8008E7E0 27A4007C */  addiu $a0, $sp, 0x7c

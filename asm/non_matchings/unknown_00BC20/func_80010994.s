@@ -503,7 +503,7 @@ glabel func_80010994
 .L800110C8:
 /* 011CC8 800110C8 11A00011 */  beqz  $t5, .L80011110
 /* 011CCC 800110CC 8FBF0034 */   lw    $ra, 0x34($sp)
-/* 011CD0 800110D0 0C02658B */  jal   is_in_trophy_race
+/* 011CD0 800110D0 0C02658B */  jal   get_trophy_race_world_id
 /* 011CD4 800110D4 00000000 */   nop   
 /* 011CD8 800110D8 1440000D */  bnez  $v0, .L80011110
 /* 011CDC 800110DC 8FBF0034 */   lw    $ra, 0x34($sp)

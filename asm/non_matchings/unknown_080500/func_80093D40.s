@@ -116,8 +116,8 @@ glabel func_80093D40
 /* 094AF0 80093EF0 24040007 */  li    $a0, 7
 /* 094AF4 80093EF4 13200060 */  beqz  $t9, .L80094078
 /* 094AF8 80093EF8 24058000 */   li    $a1, -32768
-/* 094AFC 80093EFC 3C09800E */  lui   $t1, %hi(gIsInTrophyRace) # $t1, 0x800e
-/* 094B00 80093F00 8D290FE8 */  lw    $t1, %lo(gIsInTrophyRace)($t1)
+/* 094AFC 80093EFC 3C09800E */  lui   $t1, %hi(gTrophyRaceWorldId) # $t1, 0x800e
+/* 094B00 80093F00 8D290FE8 */  lw    $t1, %lo(gTrophyRaceWorldId)($t1)
 /* 094B04 80093F04 24040007 */  li    $a0, 7
 /* 094B08 80093F08 1120000F */  beqz  $t1, .L80093F48
 /* 094B0C 80093F0C 24058000 */   li    $a1, -32768

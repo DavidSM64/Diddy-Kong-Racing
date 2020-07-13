@@ -324,7 +324,7 @@ glabel func_8001A8F4
 .L8001ADAC:
 /* 01B9AC 8001ADAC 0C01A955 */  jal   func_8006A554
 /* 01B9B0 8001ADB0 00002025 */   move  $a0, $zero
-/* 01B9B4 8001ADB4 0C01BAA4 */  jal   func_8006EA90
+/* 01B9B4 8001ADB4 0C01BAA4 */  jal   get_settings
 /* 01B9B8 8001ADB8 30508000 */   andi  $s0, $v0, 0x8000
 /* 01B9BC 8001ADBC 8C590010 */  lw    $t9, %lo(D_80120010)($v0)
 /* 01B9C0 8001ADC0 00408825 */  move  $s1, $v0

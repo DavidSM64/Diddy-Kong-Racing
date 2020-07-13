@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "structs.h"
 
 extern u32 osTvType;
 extern s8  D_800DD318;
@@ -43,7 +44,7 @@ extern s32 D_801234EC;
 extern s32 D_801234F4;
 extern s32 D_80123500;
 extern s32 D_80123504;
-extern s32 D_80123510;
+extern Settings *gSettingsPtr;
 extern s8  D_80123514;
 extern s8  D_80123515;
 extern s8  D_80123516;
@@ -350,8 +351,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006E5BC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006E770.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006E994.s")
 
-s32 func_8006EA90(void) {
-    return D_80123510;
+Settings* get_settings(void) {
+    return gSettingsPtr;
 }
 
 s8 func_8006EAA0(void) {

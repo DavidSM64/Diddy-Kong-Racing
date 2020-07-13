@@ -46,7 +46,7 @@ glabel func_80022948
 /* 0235F8 800229F8 AE00012C */  sw    $zero, 0x12c($s0)
 /* 0235FC 800229FC AE000130 */  sw    $zero, 0x130($s0)
 /* 023600 80022A00 A60001BA */  sh    $zero, 0x1ba($s0)
-/* 023604 80022A04 0C01BAA4 */  jal   func_8006EA90
+/* 023604 80022A04 0C01BAA4 */  jal   get_settings
 /* 023608 80022A08 AFA2007C */   sw    $v0, 0x7c($sp)
 /* 02360C 80022A0C 24190050 */  li    $t9, 80
 /* 023610 80022A10 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
