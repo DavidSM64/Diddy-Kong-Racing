@@ -4,23 +4,26 @@
 #include "types.h"
 #include "macros.h"
 
-extern u8 D_800DC638;
-extern u8 D_800DC63C;
-extern u8 D_800DC640;
-extern s8 D_800DC670;
-extern u8 D_80115D04;
-extern u8 D_80115D05;
-extern u8 D_80115D40;
-extern u8 D_80115D41;
-extern s8 D_80115F79;
+/* Size: 0x08 bytes */
+typedef struct unk80115D48 {
+    /* 0x00 */ u16 unk0;
+    /* 0x02 */ s16 unk2;
+    /* 0x04 */ s32 unk4;
+} unk80115D48;
 
-extern s16 D_80115D30;
-
-
+extern s32* D_800DC630;
+extern s32* D_800DC634;
+extern u8  D_800DC638;
+extern u8  D_800DC63C;
+extern u8  D_800DC640;
 extern s32 D_800DC648;
 extern s32 D_800DC64C;
+extern f32 D_800DC650;
 extern s32 D_800DC654;
 extern s32 D_800DC658;
+extern s8  D_800DC670;
+extern u8  D_80115D04;
+extern u8  D_80115D05;
 extern s32 D_80115D08;
 extern s32 D_80115D18;
 extern s32 D_80115D1C;
@@ -28,14 +31,14 @@ extern s32 D_80115D20;
 extern s32 D_80115D24;
 extern s32 D_80115D28;
 extern s32 D_80115D2C;
+extern s16 D_80115D30;
 extern s32 D_80115D38;
 extern s32 D_80115D3C;
+extern u8  D_80115D40;
+extern u8  D_80115D41;
+extern unk80115D48 D_80115D48[8];
+extern s8  D_80115F79;
 extern s32 D_80115F7C;
-
-extern s32* D_800DC630;
-extern s32* D_800DC634;
-
-extern f32 D_800DC650;
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000450.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000890.s")
@@ -95,6 +98,7 @@ void func_80000B34(u8 arg0) {
         D_80115F7C = -1;
     }
 }
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000BE0.s")
 
 void func_80000C1C(void) {
@@ -124,7 +128,15 @@ void func_80000CBC(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000D00.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000FDC.s")
+
+void func_80000FDC(u16 arg0, s32 arg1, f32 arg2) {
+    if (D_800DC658 < 8) {
+        D_80115D48[D_800DC658].unk0 = arg0;
+        D_80115D48[D_800DC658].unk4 = arg1;
+        D_80115D48[D_800DC658].unk2 = arg2 * 60.0f;
+        D_800DC658++;
+    }
+}
 
 void func_80001050(void) {
     D_800DC658 = 0;
