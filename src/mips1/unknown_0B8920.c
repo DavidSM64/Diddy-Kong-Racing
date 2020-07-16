@@ -271,8 +271,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6274.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C68C0.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C69C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6B90.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6DDC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6F34.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C7040.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C7090.s")

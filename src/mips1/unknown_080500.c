@@ -5,6 +5,38 @@
 #include "macros.h"
 #include "structs.h"
 
+typedef enum MENU_ID {
+    TITLE_SCREEN,
+    LOGOS_SCREEN,
+    UNUSED_2,
+    CHARACTER_SELECT,
+    UNUSED_4,
+    UNKNOWN_5,
+    FILE_SELECT,
+    UNUSED_7,
+    UNUSED_8,
+    UNUSED_9,
+    MAGIC_CODES,
+    MAGIC_CODES_LIST,
+    OPTIONS,
+    AUDIO_OPTIONS,
+    SAVE_OPTIONS,
+    TRACK_SELECT,
+    UNUSED_16,
+    RESULTS,
+    UNUSED_18,
+    GAME_SELECT,
+    TROPHY_RACE_ROUND,
+    TROPHY_RACE_RANKINGS,
+    UNUSED_22,
+    UNKNOWN_23,
+    GHOST_DATA,
+    CREDITS,
+    BOOT_SCREEN,
+    UNUSED_27,
+    CAUTION_MESSAGE
+} MENU_ID;
+
 extern s32 osTvType;
 
 extern s8 D_800DF450;
@@ -34,6 +66,7 @@ extern s8 D_800DF4EC;
 extern s32 gIsInTwoPlayerAdventure;
 extern s32 gSaveFileIndex;
 extern s16 D_800DF7C4[11];
+extern s32 D_800DF774;
 extern s32 D_800DF77C;
 extern s32 D_800DFA2C;
 extern s16 D_800DFC78[24];
@@ -500,7 +533,37 @@ void menu_caution_init(void) {
     D_800DF498 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuCautionLoop.s")
+extern MenuElement D_800DFFD8[13];
+
+void func_8008C4E8(void);
+
+void DrawMenuText(s32, MenuElement*, f32);
+
+s32 menu_caution_loop(s32 arg0) {
+    if (D_800DF47C != 0) {
+        D_800DF47C += arg0;
+    } else {
+        if (D_801263C4 <= 0) {
+            if (func_8006A554(0) & 0xD000) {
+                func_80001D04(0xEF, 0);
+                D_800DF47C = 1;
+                func_800C01D8(&D_800DF774);
+            }
+        }
+    }
+    if (D_800DF47C < 0x14) {
+        DrawMenuText(1, D_800DFFD8, 1.0f);
+    }
+    if (D_800DF47C >= 0x1F) {
+        func_8008C4E8();
+        MenuInit(GAME_SELECT);
+    }
+    if (D_801263C4 > 0) {
+        D_801263C4 = (s32) (D_801263C4 - arg0);
+    }
+    
+    return 0;
+}
 
 void func_8008C4E8(void) {
     func_800C422C(2);
@@ -558,6 +621,7 @@ void func_80090ED8(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80090F30.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80092188.s")
 
 #if 1

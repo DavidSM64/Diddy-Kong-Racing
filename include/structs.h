@@ -5,6 +5,33 @@
 
 #include "types.h"
 
+/* Size: 0x20 bytes */
+typedef struct MenuElement {
+  /* 0x00 */ s16 unk0; // This is something related to position, not sure what though.
+  /* 0x02 */ s16 unk2; // This is something related to position, not sure what though.
+  /* 0x04 */ s16 screenX;
+  /* 0x06 */ s16 screenY;
+  /* 0x08 */ s16 unk6;
+  /* 0x0A */ s16 unk8;
+  /* 0x0C */ u8 filterRed;
+  /* 0x0D */ u8 filterGreen;
+  /* 0x0E */ u8 filterBlue;
+  /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
+  /* 0x10 */ u8 opacity;
+  /* 0x11 */ u8 textType; 
+  /* 0x12 */ u8 textAlignFlags;
+  /* 0x13 */ u8 unk13; // Source type? 0 = ascii text, 7 = texture?
+  union {
+  /* 0x14 */ char* asciiText; // Pointer to ascii text to be displayed on the screen.
+  /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
+  } source;
+  /* 0x18 */ u16 backgroundRed;
+  /* 0x1A */ u16 backgroundGreen; 
+  /* 0x1C */ u16 backgroundBlue;  
+  /* 0x1E */ u16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
+} MenuElement;
+
+/* Size: 0x18 bytes */
 typedef struct dkr_racer_t {
   /* 0x00 */ u32 trophy_points;
   /* 0x04 */ u8 best_times;
@@ -15,7 +42,6 @@ typedef struct dkr_racer_t {
   /* 0x10 */ u16 course_time;
   /* 0x12 */ u16 lap_times[3];
   /* 0x14 */ u32 unk14;
-  /* Size: 0x18 */
 } dkr_racer_t;
 
 /* Unknown Size */
@@ -26,6 +52,7 @@ typedef struct Settings4C {
     u8 unkF;
 } Settings4C;
 
+/* Size: 0x840 bytes */
 typedef struct Settings {
   /* 0x0000 */ void *balloonsPtr;
   /* 0x0004 */ void *courseFlagsPtr;
@@ -58,9 +85,9 @@ typedef struct Settings {
   /* 0x03AE */ u16 flapTimes[3][65];
   /* 0x0534 */ u16 courseInitials[3][65];
   /* 0x06BA */ u16 courseTimes[3][65];
-  /* Size: 0x0840 */
 } Settings;
 
+/* Size: 0xC8 bytes */
 typedef struct {
   /* 0x00 */ u8 world;
   
@@ -112,9 +139,9 @@ typedef struct {
   
   u32 unk9C[11]; // Not an array. Unknown values.
 
-  /* Size: 0xC8 */
 } dkr_level_header_t;
 
+/* Size: 0x50 bytes */
 typedef struct {
   /* 0x00 */ u32 unk00;
   /* 0x04 */ u32 unk04;
@@ -136,9 +163,10 @@ typedef struct {
   /* 0x44 */ f32 unk44;
   /* 0x48 */ f32 unk48;
   /* 0x4C */ u32 unk4C;
-  /* Size: 0x50 */
 } dkr_wave_t;
 
+  
+/* Size: 0x0630 bytes */
 typedef struct {
   /* 0x0000 */ u16 y_rotation;
   /* 0x0002 */ u16 x_rotation;
@@ -199,9 +227,10 @@ typedef struct {
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
 
-  /* 0x0098 */ u16 unk98;
+  /* 0x0098 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Player controlled
   /* 0x009A */ u8 unk9A;
-  /* 0x009B */ u8 minimap_color;
+  /* 0x009B */ u8 characterId; // Affects minimap color, horn, voice, etc.
+  
   /* 0x009C */ u32 unk9C;
 
   /* 0x00A0 */ f32 unkA0;
@@ -394,8 +423,6 @@ typedef struct {
   /* 0x0374 */ s32 unk374;
 
   u32 unk378[174]; // Not an array. Unknown values.
-  
-  /* Size: 0x0630 */
 } dkr_player_t;
 
 #endif

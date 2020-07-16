@@ -64,7 +64,7 @@ TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 
-ASM_DIRS := asm asm/boot asm/assets
+ASM_DIRS := asm asm/boot asm/assets data
 SRC_DIRS := src src/mips1 src/mips2
 ASSETS_DIRS := animations audio billboards bin cheats fonts levels objects particles text textures textures/2d textures/3d tt_ghosts ucode 
 
