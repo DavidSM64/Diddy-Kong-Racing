@@ -43,15 +43,15 @@ glabel func_800C6DDC
 /* 0C7A74 800C6E74 AD69001C */  sw    $t1, 0x1c($t3)
 /* 0C7A78 800C6E78 24080007 */  li    $t0, 7
 /* 0C7A7C 800C6E7C AFA80038 */  sw    $t0, 0x38($sp)
-/* 0C7A80 800C6E80 3C02800F */  lui   $v0, %hi(D_800E9412) # $v0, 0x800f
-/* 0C7A84 800C6E84 3C07800F */  lui   $a3, %hi(D_800E93D4) # $a3, 0x800f
-/* 0C7A88 800C6E88 24429412 */  addiu $v0, %lo(D_800E9412) # addiu $v0, $v0, -0x6bee
+/* 0C7A80 800C6E80 3C02800F */  lui   $v0, %hi(gzip_cplext) # $v0, 0x800f
+/* 0C7A84 800C6E84 3C07800F */  lui   $a3, %hi(gzip_cplens) # $a3, 0x800f
+/* 0C7A88 800C6E88 24429412 */  addiu $v0, %lo(gzip_cplext) # addiu $v0, $v0, -0x6bee
 /* 0C7A8C 800C6E8C 23A30020 */  addi  $v1, $sp, 0x20
 /* 0C7A90 800C6E90 23A80024 */  addi  $t0, $sp, 0x24
 /* 0C7A94 800C6E94 23A40044 */  addi  $a0, $sp, 0x44
 /* 0C7A98 800C6E98 24050120 */  li    $a1, 288
 /* 0C7A9C 800C6E9C 24060101 */  li    $a2, 257
-/* 0C7AA0 800C6EA0 24E793D4 */  addiu $a3, %lo(D_800E93D4) # addiu $a3, $a3, -0x6c2c
+/* 0C7AA0 800C6EA0 24E793D4 */  addiu $a3, %lo(gzip_cplens) # addiu $a3, $a3, -0x6c2c
 /* 0C7AA4 800C6EA4 AFA20010 */  sw    $v0, 0x10($sp)
 /* 0C7AA8 800C6EA8 AFA30014 */  sw    $v1, 0x14($sp)
 /* 0C7AAC 800C6EAC 0C03189D */  jal   func_800C6274
@@ -66,16 +66,16 @@ glabel func_800C6DDC
 /* 0C7ACC 800C6ECC AD690008 */  sw    $t1, 8($t3)
 /* 0C7AD0 800C6ED0 1500FFFB */  bnez  $t0, .L800C6EC0
 /* 0C7AD4 800C6ED4 256B000C */   addiu $t3, $t3, 0xc
-/* 0C7AD8 800C6ED8 3C02800F */  lui   $v0, %hi(D_800E946E) # $v0, 0x800f
-/* 0C7ADC 800C6EDC 3C07800F */  lui   $a3, %hi(D_800E9432) # $a3, 0x800f
-/* 0C7AE0 800C6EE0 2442946E */  addiu $v0, %lo(D_800E946E) # addiu $v0, $v0, -0x6b92
+/* 0C7AD8 800C6ED8 3C02800F */  lui   $v0, %hi(gzip_cpdext) # $v0, 0x800f
+/* 0C7ADC 800C6EDC 3C07800F */  lui   $a3, %hi(gzip_cpdist) # $a3, 0x800f
+/* 0C7AE0 800C6EE0 2442946E */  addiu $v0, %lo(gzip_cpdext) # addiu $v0, $v0, -0x6b92
 /* 0C7AE4 800C6EE4 23A30028 */  addi  $v1, $sp, 0x28
 /* 0C7AE8 800C6EE8 23A8002C */  addi  $t0, $sp, 0x2c
 /* 0C7AEC 800C6EEC AFA90040 */  sw    $t1, 0x40($sp)
 /* 0C7AF0 800C6EF0 23A40044 */  addi  $a0, $sp, 0x44
 /* 0C7AF4 800C6EF4 2405001E */  li    $a1, 30
 /* 0C7AF8 800C6EF8 24060000 */  li    $a2, 0
-/* 0C7AFC 800C6EFC 24E79432 */  addiu $a3, %lo(D_800E9432) # addiu $a3, $a3, -0x6bce
+/* 0C7AFC 800C6EFC 24E79432 */  addiu $a3, %lo(gzip_cpdist) # addiu $a3, $a3, -0x6bce
 /* 0C7B00 800C6F00 AFA20010 */  sw    $v0, 0x10($sp)
 /* 0C7B04 800C6F04 AFA30014 */  sw    $v1, 0x14($sp)
 /* 0C7B08 800C6F08 0C03189D */  jal   func_800C6274

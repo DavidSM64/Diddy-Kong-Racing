@@ -126,7 +126,7 @@ glabel MenuLoop
 /* 082394 80081794 10000005 */  b     .L800817AC
 /* 082398 80081798 AFA2001C */   sw    $v0, 0x1c($sp)
 /* 08239C 8008179C 8FA40030 */  lw    $a0, 0x30($sp)
-/* 0823A0 800817A0 0C0230FF */  jal   MenuCautionLoop
+/* 0823A0 800817A0 0C0230FF */  jal   menu_caution_loop
 /* 0823A4 800817A4 00000000 */   nop   
 /* 0823A8 800817A8 AFA2001C */  sw    $v0, 0x1c($sp)
 .L800817AC:
