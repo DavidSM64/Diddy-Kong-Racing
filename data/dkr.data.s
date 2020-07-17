@@ -1736,23 +1736,7 @@ glabel D_800DE440
 .word 0x00000000
 
 glabel D_800DE444
-.word 0x00202020
-.word 0x20202020
-.word 0x20202020
-.word 0x20202020
-.word 0x30313233
-.word 0x34353637
-.word 0x38394142
-.word 0x43444546
-.word 0x4748494A
-.word 0x4B4C4D4E
-.word 0x4F505152
-.word 0x53545556
-.word 0x5758595A
-.word 0x21222327
-.word 0x2A2B2C2D
-.word 0x2E2F3A3D
-.word 0x3F400000
+.aligned_text "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'*+,-./:=?@"
 
 glabel D_800DE488
 .word 0x00000000
@@ -4793,14 +4777,15 @@ glabel D_800E0B18
 .word 0x0000001E
 .word 0x0000001E
 .word 0x00000384
-.word 0x31535400
-.word 0x324E4400
-.word 0x33524400
-.word 0x34544800
-.word 0x35544800
-.word 0x36544800
-.word 0x37544800
-.word 0x38544800
+
+.aligned_text "1ST"
+.aligned_text "2ND"
+.aligned_text "3RD"
+.aligned_text "4TH"
+.aligned_text "5TH"
+.aligned_text "6TH"
+.aligned_text "7TH"
+.aligned_text "8TH"
 
 glabel D_800E0BCC
 .word 0x800E0BAC
@@ -5053,16 +5038,8 @@ glabel D_800E0E4C
 .word 0x00000000
 
 glabel D_800E0F6C
-.word 0x41424344
-.word 0x45464748
-.word 0x494A4B4C
-.word 0x4D4E4F50
-.word 0x51525354
-.word 0x55565758
-.word 0x595A2E3F
-.word 0x20202020
-
-glabel D_800E0F8C
+.ascii "ABCDEFGHIJKLMNOPQRSTUVWXYZ.?    "
+glabel D_800E0F8C # I'm assuming that this points to the null terminator of the above string
 .word 0x00000000
 
 glabel D_800E0F90
@@ -5084,7 +5061,7 @@ glabel D_800E0FA4
 .word 0x00000000
 
 glabel D_800E0FA8
-.word 0x444B5200
+.aligned_text "DKR"
 
 glabel D_800E0FAC
 .word 0x00000000
@@ -6108,12 +6085,7 @@ glabel D_800E1DE8
 .word 0x0078FFFF
 
 glabel D_800E1DF0
-.word 0x28432920
-.word 0x434F5059
-.word 0x52494748
-.word 0x54205241
-.word 0x52452031
-.word 0x39393700
+.aligned_text "(C) COPYRIGHT RARE 1997"
 
 glabel D_800E1E08
 .word 0x00000000
@@ -9301,26 +9273,11 @@ glabel D_800E4894
 .word 0x00000000
 
 glabel D_800E48C0
-.word 0x20202020
-.word 0x20202020
-.word 0x20202020
-.word 0x20202020
-.word 0x20202020
-.word 0x20202020
-.word 0x20202020
-.word 0x20202020
-.word 0x00000000
+.aligned_text "                                "
 
 glabel D_800E48E4
-.word 0x30303030
-.word 0x30303030
-.word 0x30303030
-.word 0x30303030
-.word 0x30303030
-.word 0x30303030
-.word 0x30303030
-.word 0x30303030
-.word 0x00000000
+.aligned_text "00000000000000000000000000000000"
+
 .word 0x00000000
 .word 0x00000000
 
@@ -9331,182 +9288,47 @@ glabel D_800E4910
 .word 0x00000000
 
 glabel D_800E4920
-.word 0x30313233
-.word 0x34353637
-.word 0x38396162
-.word 0x63646566
-.word 0x00000000
+.aligned_text "0123456789abcdef" # lowercase hex digits
 
 glabel D_800E4934
-.word 0x30313233
-.word 0x34353637
-.word 0x38394142
-.word 0x43444546
+.aligned_text "0123456789ABCDEF" # uppercase hex digits
+
 .word 0x00000000
 .word 0x00000000
-.word 0x00000000
-.word 0x616D536E
-.word 0x64506C61
-.word 0x793A2049
-.word 0x6C6C6567
-.word 0x616C2073
-.word 0x6F756E64
-.word 0x20656666
-.word 0x65637473
-.word 0x20746162
-.word 0x6C652069
-.word 0x6E646578
-.word 0x0A000000
-.word 0x616D536E
-.word 0x64506C61
-.word 0x79446972
-.word 0x6563743A
-.word 0x20536F6D
-.word 0x65626F64
-.word 0x79207472
-.word 0x69656420
-.word 0x746F2070
-.word 0x6C617920
-.word 0x696C6C65
-.word 0x67616C20
-.word 0x736F756E
-.word 0x64202564
-.word 0x0A000000
-.word 0x496E7661
-.word 0x6C696420
-.word 0x6D696469
-.word 0x20736571
-.word 0x75656E63
-.word 0x6520696E
-.word 0x6465780A
-.word 0x00000000
+
+.aligned_text "amSndPlay: Illegal sound effects table index\n"
+.aligned_text "amSndPlayDirect: Somebody tried to play illegal sound %d\n"
+.aligned_text "Invalid midi sequence index\n"
 
 glabel D_800E49DC
-.word 0x4C64E1C0
+.float 60000000.0
 
 glabel D_800E49E0
-.word 0x47371B00
+.float 46875.0
 
 glabel D_800E49E4
-.word 0x47371B00
+.float 46875.0
 
 glabel D_800E49E8
-.word 0x47EA6000
+.float 120000.0
 
 glabel D_800E49EC
-.word 0x4C64E1C0
-.word 0x61756469
-.word 0x6F206D61
-.word 0x6E616765
-.word 0x723A2052
-.word 0x43502061
-.word 0x7564696F
-.word 0x20696E74
-.word 0x65726661
-.word 0x63652062
-.word 0x75672063
-.word 0x61757365
-.word 0x6420444D
-.word 0x41206672
-.word 0x6F6D2062
-.word 0x61642061
-.word 0x64647265
-.word 0x7373202D
-.word 0x206D6F76
-.word 0x65206175
-.word 0x64696F6D
-.word 0x67722E63
-.word 0x20696E20
-.word 0x74686520
-.word 0x6D616B65
-.word 0x6C697374
-.word 0x210A0000
-.word 0x61756469
-.word 0x6F3A2061
-.word 0x69206F75
-.word 0x74206F66
-.word 0x2073616D
-.word 0x706C6573
-.word 0x0A000000
-.word 0x4F482044
-.word 0x45415220
-.word 0x2D204E6F
-.word 0x20617564
-.word 0x696F2044
-.word 0x4D412062
-.word 0x75666665
-.word 0x7273206C
-.word 0x6566740A
+.float 60000000.0
+
+.aligned_text "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n"
+.aligned_text "audio: ai out of samples\n"
+.aligned_text "OH DEAR - No audio DMA buffers left\n"
+.aligned_text "Dma not done\n"
+
 .word 0x00000000
-.word 0x446D6120
-.word 0x6E6F7420
-.word 0x646F6E65
-.word 0x0A000000
-.word 0x00000000
-.word 0x42616420
-.word 0x736F756E
-.word 0x64537461
-.word 0x74653A20
-.word 0x766F6963
-.word 0x6573203D
-.word 0x25642C20
-.word 0x73746174
-.word 0x65732066
-.word 0x72656520
-.word 0x3D25642C
-.word 0x20737461
-.word 0x74657320
-.word 0x62757379
-.word 0x203D2564
-.word 0x2C207479
-.word 0x70652025
-.word 0x64206461
-.word 0x74612025
-.word 0x780A0000
-.word 0x706C6179
-.word 0x696E6720
-.word 0x6120706C
-.word 0x6179696E
-.word 0x6720736F
-.word 0x756E640A
-.word 0x00000000
-.word 0x4E6F6E73
-.word 0x656E7365
-.word 0x20736E64
-.word 0x70206576
-.word 0x656E740A
-.word 0x00000000
-.word 0x536F756E
-.word 0x64207374
-.word 0x61746520
-.word 0x616C6C6F
-.word 0x63617465
-.word 0x20666169
-.word 0x6C656420
-.word 0x2D20736E
-.word 0x64496420
-.word 0x25640A00
-.word 0x446F6E27
-.word 0x7420776F
-.word 0x72727920
-.word 0x2D206761
-.word 0x6D652073
-.word 0x686F756C
-.word 0x6420636F
-.word 0x7065204F
-.word 0x4B0A0000
-.word 0x5741524E
-.word 0x494E473A
-.word 0x20417474
-.word 0x656D7074
-.word 0x20746F20
-.word 0x73746F70
-.word 0x204E554C
-.word 0x4C20736F
-.word 0x756E6420
-.word 0x61626F72
-.word 0x7465640A
-.word 0x00000000
+
+.aligned_text "Bad soundState: voices =%d, states free =%d, states busy =%d, type %d data %x\n"
+.aligned_text "playing a playing sound\n"
+.aligned_text "Nonsense sndp event\n"
+.aligned_text "Sound state allocate failed - sndId %d\n"
+.aligned_text "Don't worry - game should cope OK\n"
+.aligned_text "WARNING: Attempt to stop NULL sound aborted\n"
+
 .word 0x800035C4
 .word 0x80003A0C
 .word 0x80004090
@@ -9713,138 +9535,16 @@ glabel D_800E4CF8
 
 glabel D_800E4CFC
 .word 0xD2F1A9FC
-.word 0x4F555420
-.word 0x4F462041
-.word 0x5544494F
-.word 0x20504F49
-.word 0x4E54530A
-.word 0x00000000
-.word 0x616D4175
-.word 0x64696F4C
-.word 0x696E6541
-.word 0x64645665
-.word 0x72746578
-.word 0x3A204578
-.word 0x63656564
-.word 0x6564206D
-.word 0x6178696D
-.word 0x756D206E
-.word 0x756D6265
-.word 0x72206F66
-.word 0x206C696E
-.word 0x65732028
-.word 0x2564290A
-.word 0x00000000
-.word 0x616D4175
-.word 0x64696F4C
-.word 0x696E6541
-.word 0x64645665
-.word 0x72746578
-.word 0x3A204578
-.word 0x63656564
-.word 0x6564206D
-.word 0x6178696D
-.word 0x756D206E
-.word 0x756D6265
-.word 0x72206F66
-.word 0x206C696E
-.word 0x65207665
-.word 0x72746963
-.word 0x65732028
-.word 0x2564290A
-.word 0x00000000
-.word 0x616D5265
-.word 0x76657262
-.word 0x4C696E65
-.word 0x41646456
-.word 0x65727465
-.word 0x783A2045
-.word 0x78636565
-.word 0x64656420
-.word 0x6D617869
-.word 0x6D756D20
-.word 0x6E756D62
-.word 0x6572206F
-.word 0x66206C69
-.word 0x6E657320
-.word 0x28256429
-.word 0x0A000000
-.word 0x616D5265
-.word 0x76657262
-.word 0x4C696E65
-.word 0x41646456
-.word 0x65727465
-.word 0x783A2045
-.word 0x78636565
-.word 0x64656420
-.word 0x6D617869
-.word 0x6D756D20
-.word 0x6E756D62
-.word 0x6572206F
-.word 0x66206C69
-.word 0x6E652076
-.word 0x65727469
-.word 0x63657320
-.word 0x28256429
-.word 0x0A000000
-.word 0x41756469
-.word 0x6F206C69
-.word 0x6E652064
-.word 0x6566696E
-.word 0x6974696F
-.word 0x6E206572
-.word 0x726F7220
-.word 0x286C6573
-.word 0x73207468
-.word 0x616E2032
-.word 0x20766572
-.word 0x74696365
-.word 0x73206F6E
-.word 0x206C696E
-.word 0x65202564
-.word 0x290A0000
-.word 0x41756469
-.word 0x6F206C69
-.word 0x6E652064
-.word 0x6566696E
-.word 0x6974696F
-.word 0x6E206572
-.word 0x726F7220
-.word 0x286C696E
-.word 0x653D2564
-.word 0x2C207665
-.word 0x72746578
-.word 0x3D256429
-.word 0x0A000000
-.word 0x52657665
-.word 0x7262206C
-.word 0x696E6520
-.word 0x64656669
-.word 0x6E697469
-.word 0x6F6E2065
-.word 0x72726F72
-.word 0x20286C65
-.word 0x73732074
-.word 0x68616E20
-.word 0x32207665
-.word 0x72746963
-.word 0x6573206F
-.word 0x6E206C69
-.word 0x6E652025
-.word 0x64290A00
-.word 0x52657665
-.word 0x7262206C
-.word 0x696E6520
-.word 0x64656669
-.word 0x6E697469
-.word 0x6F6E2065
-.word 0x72726F72
-.word 0x20286C69
-.word 0x6E653D25
-.word 0x642C2076
-.word 0x65727465
-.word 0x783D2564
-.word 0x290A0000
+
+.aligned_text "OUT OF AUDIO POINTS\n"
+.aligned_text "amAudioLineAddVertex: Exceeded maximum number of lines (%d)\n"
+.aligned_text "amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n"
+.aligned_text "amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n"
+.aligned_text "amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n"
+.aligned_text "Audio line definition error (less than 2 vertices on line %d)\n"
+.aligned_text "Audio line definition error (line=%d, vertex=%d)\n"
+.aligned_text "Reverb line definition error (less than 2 vertices on line %d)\n"
+.aligned_text "Reverb line definition error (line=%d, vertex=%d)\n"
 
 glabel D_800E4F10
 .word 0xC7C35000
@@ -9865,136 +9565,30 @@ glabel D_800E4F24
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
-.word 0x45786365
-.word 0x65646564
-.word 0x20766F69
-.word 0x6365206C
-.word 0x696D6974
-.word 0x206F6620
-.word 0x25642028
-.word 0x2564290A
+
+.aligned_text "Exceeded voice limit of %d (%d)\n"
+
 .word 0x00000000
 .word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x4F626A65
-.word 0x63747320
-.word 0x6F757420
-.word 0x6F662072
-.word 0x616D2831
-.word 0x29202121
-.word 0x0A000000
-.word 0x446F6F72
-.word 0x206E756D
-.word 0x62657269
-.word 0x6E672065
-.word 0x72726F72
-.word 0x20256421
-.word 0x210A0000
-.word 0x6F626A47
-.word 0x65745363
-.word 0x6F70653A
-.word 0x20556E6B
-.word 0x6E6F776E
-.word 0x2073636F
-.word 0x70652066
-.word 0x6F72206F
-.word 0x626A6563
-.word 0x74202564
-.word 0x0A000000
-.word 0x4F626A4C
-.word 0x69737420
-.word 0x28506172
-.word 0x7429204F
-.word 0x76657266
-.word 0x6C6F7720
-.word 0x25642121
-.word 0x210A0000
-.word 0x4F626A53
-.word 0x65747570
-.word 0x4F626A65
-.word 0x63742831
-.word 0x29204D65
-.word 0x6D6F7279
-.word 0x20666169
-.word 0x6C21210A
-.word 0x00000000
-.word 0x4F626A53
-.word 0x65747570
-.word 0x4F626A65
-.word 0x63742832
-.word 0x29204D65
-.word 0x6D6F7279
-.word 0x20666169
-.word 0x6C21210A
-.word 0x00000000
-.word 0x4F626A53
-.word 0x65747570
-.word 0x4F626A65
-.word 0x63742835
-.word 0x29204D65
-.word 0x6D6F7279
-.word 0x20666169
-.word 0x6C21210A
-.word 0x00000000
-.word 0x4F626A53
-.word 0x65747570
-.word 0x4F626A65
-.word 0x63742836
-.word 0x29204D65
-.word 0x6D6F7279
-.word 0x20666169
-.word 0x6C21210A
-.word 0x00000000
-.word 0x4F626A53
-.word 0x65747570
-.word 0x4F626A65
-.word 0x63742833
-.word 0x29204D65
-.word 0x6D6F7279
-.word 0x20666169
-.word 0x6C21210A
-.word 0x00000000
-.word 0x4F626A4C
-.word 0x69737420
-.word 0x4F766572
-.word 0x666C6F77
-.word 0x20256421
-.word 0x21210A00
-.word 0x4F626A53
-.word 0x65747570
-.word 0x4F626A65
-.word 0x63742834
-.word 0x29204D65
-.word 0x6D6F7279
-.word 0x20666169
-.word 0x6C21210A
 .word 0x00000000
 
+.aligned_text "Objects out of ram(1) !!\n"
+.aligned_text "Door numbering error %d!!\n"
+.aligned_text "objGetScope: Unknown scope for object %d\n"
+.aligned_text "ObjList (Part) Overflow %d!!!\n"
+.aligned_text "ObjSetupObject(1) Memory fail!!\n"
+.aligned_text "ObjSetupObject(2) Memory fail!!\n"
+.aligned_text "ObjSetupObject(5) Memory fail!!\n"
+.aligned_text "ObjSetupObject(6) Memory fail!!\n"
+.aligned_text "ObjSetupObject(3) Memory fail!!\n"
+.aligned_text "ObjList Overflow %d!!!\n"
+.aligned_text "ObjSetupObject(4) Memory fail!!\n"
+
 glabel D_800E50D4
-.word 0x4572726F
-.word 0x723A204D
-.word 0x756C7469
-.word 0x706C6520
-.word 0x63686563
-.word 0x6B706F69
-.word 0x6E74206E
-.word 0x6F3A2025
-.word 0x64202121
-.word 0x0A000000
-.word 0x4552524F
-.word 0x52204368
-.word 0x616E6E65
-.word 0x6C202564
-.word 0x0A000000
-.word 0x524F2065
-.word 0x72726F72
-.word 0x20256421
-.word 0x210A0000
-.word 0x41524748
-.word 0x48484848
-.word 0x48484848
-.word 0x0A000000
+.aligned_text "Error: Multiple checkpoint no: %d !!\n"
+.aligned_text "ERROR Channel %d\n"
+.aligned_text "RO error %d!!\n"
+.aligned_text "ARGHHHHHHHHH\n"
 
 glabel D_800E5130
 .word 0x3F8B851F
@@ -10979,35 +10573,15 @@ glabel D_800E5684
 .word 0x00000000
 
 glabel D_800E5DF0
-.word 0x54542043
-.word 0x414D0000
-.word 0x536F6C69
-.word 0x6420436C
-.word 0x69707069
-.word 0x6E672078
-.word 0x303D7831
-.word 0x20457272
-.word 0x6F722121
-.word 0x210A0000
-.word 0x54726163
-.word 0x6B476574
-.word 0x48656967
-.word 0x68742829
-.word 0x202D204F
-.word 0x76657266
-.word 0x6C6F7721
-.word 0x21210A00
+.aligned_text "TT CAM"
+
+.aligned_text "Solid Clipping x0=x1 Error!!!\n"
+.aligned_text "TrackGetHeight() - Overflow!!!\n"
+
 
 glabel D_800E5E38
-.word 0x4552524F
-.word 0x52212120
-.word 0x54726163
-.word 0x6B4D656D
-.word 0x206F7665
-.word 0x72666C6F
-.word 0x77202E2E
-.word 0x2025640A
-.word 0x00000000
+.aligned_text "ERROR!! TrackMem overflow .. %d\n"
+
 .word 0x00000000
 
 glabel D_800E5E60
@@ -11165,25 +10739,14 @@ glabel D_800E5F70
 .word 0x00000000
 
 glabel D_800E5FA0
-.word 0x496C6C65
-.word 0x67616C20
-.word 0x646F6F72
-.word 0x206E6F21
-.word 0x21210A00
+.aligned_text "Illegal door no!!!\n"
 
 glabel D_800E5FB4
-.word 0x496C6C65
-.word 0x67616C20
-.word 0x646F6F72
-.word 0x206E6F21
-.word 0x21210A00
+.aligned_text "Illegal door no!!!\n"
 
 glabel D_800E5FC8
-.word 0x496C6C65
-.word 0x67616C20
-.word 0x646F6F72
-.word 0x206E6F21
-.word 0x21210A00
+.aligned_text "Illegal door no!!!\n"
+
 .word 0x00000000
 
 glabel D_800E5FE0
@@ -11527,16 +11090,9 @@ glabel D_800E6278
 .word 0x00000000
 
 glabel D_800E6280
-.word 0x252E3166
-.word 0x2C252E31
-.word 0x662C252E
-.word 0x31660A00
-.word 0x43686B20
-.word 0x6F76666C
-.word 0x6F772121
-.word 0x0A000000
-.word 0x4261636B
-.word 0x0A000000
+.aligned_text "%.1f,%.1f,%.1f\n" # Used with the Print Coordinates cheat?
+.aligned_text "Chk ovflow!!\n"
+.aligned_text "Back\n"
 
 glabel D_800E62A8
 .word 0xC0A38800
@@ -12855,74 +12411,19 @@ glabel D_800E6B14
 .word 0x9999999A
 .word 0x00000000
 .word 0x00000000
-.word 0x4572726F
-.word 0x723A204D
-.word 0x6F64656C
-.word 0x206E6F2E
-.word 0x206F7574
-.word 0x206F6620
-.word 0x72616E67
-.word 0x65206F6E
-.word 0x206C6F61
-.word 0x642E2021
-.word 0x210A0000
-.word 0x54455854
-.word 0x55524520
-.word 0x4552524F
-.word 0x5221210A
-.word 0x25642C25
-.word 0x640A0000
-.word 0x4572726F
-.word 0x723A204D
-.word 0x6F64656C
-.word 0x20746162
-.word 0x6C65206F
-.word 0x76657266
-.word 0x6C6F7721
-.word 0x210A0000
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A3A2063
-.word 0x72656174
-.word 0x654D6F64
-.word 0x656C496E
-.word 0x7374616E
-.word 0x63652063
-.word 0x616C6C65
-.word 0x64207769
-.word 0x7468204E
-.word 0x554C4C20
-.word 0x706F696E
-.word 0x7465720A
-.word 0x00000000
-.word 0x4D6F6446
-.word 0x7265654D
-.word 0x6F64656C
-.word 0x203A204E
-.word 0x554C4C20
-.word 0x6D6F645F
-.word 0x696E7374
-.word 0x21210A00
-.word 0x4D4F4420
-.word 0x4572726F
-.word 0x723A2054
-.word 0x72796564
-.word 0x20746F20
-.word 0x6465616C
-.word 0x6C6F6361
-.word 0x7465206E
-.word 0x6F6E2D65
-.word 0x78697374
-.word 0x656E7420
-.word 0x6D6F6465
-.word 0x6C21210A
+
+.aligned_text "Error: Model no. out of range on load. !!\n"
+.aligned_text "TEXTURE ERROR!!\n%d,%d\n"
+.aligned_text "Error: Model table overflow!!\n"
+.aligned_text "WARNING :: createModelInstance called with NULL pointer\n"
+.aligned_text "ModFreeModel : NULL mod_inst!!\n"
+.aligned_text "MOD Error: Tryed to deallocate non-existent model!!\n"
+
 .word 0x00000000
 .word 0x00000000
-.word 0x00000000
-.word 0x4353503A
-.word 0x206F6820
-.word 0x6F68200A
-.word 0x00000000
+
+.aligned_text "CSP: oh oh \n"
+
 .word 0x8006247C
 .word 0x80062978
 .word 0x800626F8
@@ -13083,6 +12584,7 @@ glabel D_800E6E94
 .word 0x3D3FB61B
 .word 0x00000000
 .word 0x00000000
+
 .word 0x80064AD8
 .word 0x80064AE4
 .word 0x80064AFC
@@ -13105,135 +12607,41 @@ glabel D_800E6EC4
 .word 0x00000000
 
 glabel D_800E6ED0
-.word 0x5741524E
-.word 0x494E473A
-.word 0x20537461
-.word 0x636B206F
-.word 0x76657266
-.word 0x6C6F772F
-.word 0x756E6465
-.word 0x72666C6F
-.word 0x77212121
-.word 0x0A000000
+.aligned_text "WARNING: Stack overflow/underflow!!!\n"
+
 .word 0x00000000
 .word 0x00000000
-.word 0x43616D65
-.word 0x72612045
-.word 0x72726F72
-.word 0x3A20496C
-.word 0x6C656761
-.word 0x6C206D6F
-.word 0x6465210A
-.word 0x00000000
-.word 0x43616D65
-.word 0x72612045
-.word 0x72726F72
-.word 0x3A20496C
-.word 0x6C656761
-.word 0x6C20706C
-.word 0x61796572
-.word 0x206E6F21
-.word 0x0A000000
-.word 0x63616D65
-.word 0x72615075
-.word 0x73685370
-.word 0x724D7478
-.word 0x3A206D6F
-.word 0x64656C20
-.word 0x73746163
-.word 0x6B206F76
-.word 0x6572666C
-.word 0x6F772121
-.word 0x0A000000
-.word 0x0A43616D
-.word 0x20646F20
-.word 0x32442073
-.word 0x70726974
-.word 0x65206361
-.word 0x6C6C6564
-.word 0x20776974
-.word 0x68204E55
-.word 0x4C4C2070
-.word 0x6F696E74
-.word 0x65722100
-.word 0x43616D44
-.word 0x6F324453
-.word 0x70726974
-.word 0x65204672
-.word 0x616D654E
-.word 0x6F204F76
-.word 0x6572666C
-.word 0x6F772021
-.word 0x21210A00
-.word 0x63616D65
-.word 0x72615075
-.word 0x73684D6F
-.word 0x64656C4D
-.word 0x74783A20
-.word 0x6D6F6465
-.word 0x6C207374
-.word 0x61636B20
-.word 0x6F766572
-.word 0x666C6F77
-.word 0x21210A00
-.word 0x63616D50
-.word 0x7573684D
-.word 0x6F64656C
-.word 0x4D74783A
-.word 0x20627370
-.word 0x20737461
-.word 0x636B206F
-.word 0x76657266
-.word 0x6C6F7721
-.word 0x210A0000
-.word 0x63616D50
-.word 0x6F704D6F
-.word 0x64656C4D
-.word 0x74783A20
-.word 0x6D6F6465
-.word 0x6C207374
-.word 0x61636B20
-.word 0x6E656761
-.word 0x74697665
-.word 0x206F7665
-.word 0x72666C6F
-.word 0x7721210A
-.word 0x00000000
-.word 0x63616D50
-.word 0x6F704D6F
-.word 0x64656C4D
-.word 0x74783A20
-.word 0x62737020
-.word 0x73746163
-.word 0x6B206E65
-.word 0x67617469
-.word 0x7665206F
-.word 0x76657266
-.word 0x6C6F7721
-.word 0x210A0000
+
+.aligned_text "Camera Error: Illegal mode!\n"
+.aligned_text "Camera Error: Illegal player no!\n"
+.aligned_text "cameraPushSprMtx: model stack overflow!!\n"
+.aligned_text "\nCam do 2D sprite called with NULL pointer!"
+.aligned_text "CamDo2DSprite FrameNo Overflow !!!\n"
+.aligned_text "cameraPushModelMtx: model stack overflow!!\n"
+.aligned_text "camPushModelMtx: bsp stack overflow!!\n"
+.aligned_text "camPopModelMtx: model stack negative overflow!!\n"
+.aligned_text "camPopModelMtx: bsp stack negative overflow!!\n"
 
 glabel D_800E7078
-.word 0x25782E00
+.aligned_text "%x."
 
 glabel D_800E707C
-.word 0x25782020
-.word 0x00000000
+.aligned_text "%x  "
 
 glabel D_800E7084
-.word 0x0A000000
+.aligned_text "\n"
 
 glabel D_800E7088
-.word 0x0A000000
+.aligned_text "\n"
 
 glabel D_800E708C
-.word 0x25662020
-.word 0x00000000
+.aligned_text "%f  "
 
 glabel D_800E7094
-.word 0x0A000000
+.aligned_text "\n"
 
 glabel D_800E7098
-.word 0x0A000000
+.aligned_text "\n"
 
 glabel D_800E709C
 .word 0x466A6000
@@ -13245,49 +12653,22 @@ glabel D_800E70A4
 .word 0x466A6000
 .word 0x00000000
 .word 0x00000000
-.word 0x4C4F4144
-.word 0x4C455645
-.word 0x4C204572
-.word 0x726F723A
-.word 0x204C6576
-.word 0x656C206F
-.word 0x7574206F
-.word 0x66207261
-.word 0x6E67650A
-.word 0x00000000
-.word 0x426F7373
-.word 0x4C657620
-.word 0x70726F62
-.word 0x6C656D0A
-.word 0x00000000
-.word 0x41495441
-.word 0x424C4520
-.word 0x4572726F
-.word 0x723A2054
-.word 0x61626C65
-.word 0x206F7574
-.word 0x206F6620
-.word 0x72616E67
-.word 0x650A0000
-.word 0x312E3136
-.word 0x30350000
-.word 0x30322F31
-.word 0x302F3937
-.word 0x2031363A
-.word 0x30330000
-.word 0x706D6F75
-.word 0x6E746169
-.word 0x6E000000
+
+.aligned_text "LOADLEVEL Error: Level out of range\n"
+.aligned_text "BossLev problem\n"
+.aligned_text "AITABLE Error: Table out of range\n"
+.aligned_text "1.1605"
+.aligned_text "02/10/97 16:03"
+.aligned_text "pmountain"
 
 glabel D_800E7134
-.word 0x4242420A
-.word 0x00000000
-.word 0x43415200
-.word 0x484F5600
-.word 0x504C4E00
-.word 0x53776170
-.word 0x70696E67
-.word 0x0A000000
+.aligned_text "BBB\n"
+
+.aligned_text "CAR"
+.aligned_text "HOV"
+.aligned_text "PLN"
+.aligned_text "Swapping\n"
+
 .word 0x8006CF68
 .word 0x8006CF5C
 .word 0x8006D024
@@ -13335,435 +12716,133 @@ glabel D_800E7134
 .word 0x8006E0E0
 .word 0x8006E0E0
 .word 0x8006DF00
-.word 0x2A2A2A20
-.word 0x6D6D416C
-.word 0x6C6F633A
-.word 0x2073697A
-.word 0x65203D20
-.word 0x30202A2A
-.word 0x2A0A0000
-.word 0x2A2A2A20
-.word 0x6D6D2045
-.word 0x72726F72
-.word 0x202A2A2A
-.word 0x202D2D2D
-.word 0x3E204E6F
-.word 0x206D6F72
-.word 0x6520736C
-.word 0x6F747320
-.word 0x61766169
-.word 0x6C61626C
-.word 0x652E0A00
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E204E
-.word 0x6F207375
-.word 0x6974626C
-.word 0x6520626C
-.word 0x6F636B20
-.word 0x666F756E
-.word 0x6420666F
-.word 0x7220616C
-.word 0x6C6F6361
-.word 0x74696F6E
-.word 0x2E0A0000
-.word 0x2A2A2A20
-.word 0x6D6D416C
-.word 0x6C6F6341
-.word 0x74416464
-.word 0x723A2073
-.word 0x697A6520
-.word 0x3D203020
-.word 0x2A2A2A0A
-.word 0x00000000
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E204E
-.word 0x6F206D6F
-.word 0x72652073
-.word 0x6C6F7473
-.word 0x20617661
-.word 0x696C6162
-.word 0x6C652E0A
-.word 0x00000000
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E2043
-.word 0x616E2774
-.word 0x20616C6C
-.word 0x6F636174
-.word 0x65206D65
-.word 0x6D6F7279
-.word 0x20617420
-.word 0x64657369
-.word 0x72656420
-.word 0x61646472
-.word 0x6573732E
-.word 0x0A000000
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E2043
-.word 0x616E2774
-.word 0x20667265
-.word 0x65207261
-.word 0x6D206174
-.word 0x20746869
-.word 0x73206C6F
-.word 0x63617469
-.word 0x6F6E3A20
-.word 0x25780A00
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E204E
-.word 0x6F206D61
-.word 0x74636820
-.word 0x666F756E
-.word 0x6420666F
-.word 0x72206D6D
-.word 0x46726565
-.word 0x2E0A0000
-.word 0x2A2A2A20
-.word 0x536C6F74
-.word 0x73207374
-.word 0x696C6C20
-.word 0x696E2075
-.word 0x73652069
-.word 0x6E207265
-.word 0x67696F6E
-.word 0x202A2A2A
-.word 0x0A000000
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E2073
-.word 0x74626620
-.word 0x73746163
-.word 0x6B20746F
-.word 0x6F206465
-.word 0x6570210A
-.word 0x00000000
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E2043
-.word 0x616E2774
-.word 0x20666978
-.word 0x20746865
-.word 0x20737065
-.word 0x63696669
-.word 0x65642062
-.word 0x6C6F636B
-.word 0x2E0A0000
-.word 0x0A2A2A2A
-.word 0x206D6D20
-.word 0x4572726F
-.word 0x72202A2A
-.word 0x2A202D2D
-.word 0x2D3E2043
-.word 0x616E2774
-.word 0x20756E66
-.word 0x69782074
-.word 0x68652073
-.word 0x70656369
-.word 0x66696564
-.word 0x20626C6F
-.word 0x636B2E0A
-.word 0x00000000
-.word 0x436F6C6F
-.word 0x75722025
-.word 0x78203E3E
-.word 0x2025640A
-.word 0x00000000
-.word 0x556E6162
-.word 0x6C652074
-.word 0x6F207265
-.word 0x636F7264
-.word 0x20256420
-.word 0x736C6F74
-.word 0x732C2063
-.word 0x6F6C6F75
-.word 0x7273206F
-.word 0x76657266
-.word 0x6C6F7765
-.word 0x64207461
-.word 0x626C652E
-.word 0x0A000000
-.word 0x52454420
-.word 0x25640A00
-.word 0x47524545
-.word 0x4E202564
-.word 0x0A000000
-.word 0x424C5545
-.word 0x2025640A
-.word 0x00000000
-.word 0x59454C4C
-.word 0x4F572025
-.word 0x640A0000
-.word 0x4D414745
-.word 0x4E544120
-.word 0x25640A00
-.word 0x4359414E
-.word 0x2025640A
-.word 0x00000000
-.word 0x57484954
-.word 0x45202564
-.word 0x0A000000
-.word 0x47524559
-.word 0x2025640A
-.word 0x00000000
-.word 0x4F52414E
-.word 0x47452025
-.word 0x640A0A00
+
+.aligned_text "*** mmAlloc: size = 0 ***\n"
+.aligned_text "*** mm Error *** ---> No more slots available.\n"
+.aligned_text "\n*** mm Error *** ---> No suitble block found for allocation.\n"
+.aligned_text "*** mmAllocAtAddr: size = 0 ***\n"
+.aligned_text "\n*** mm Error *** ---> No more slots available.\n"
+.aligned_text "\n*** mm Error *** ---> Can't allocate memory at desired address.\n"
+.aligned_text "\n*** mm Error *** ---> Can't free ram at this location: %x\n"
+.aligned_text "\n*** mm Error *** ---> No match found for mmFree.\n"
+.aligned_text "*** Slots still in use in region ***\n"
+.aligned_text "\n*** mm Error *** ---> stbf stack too deep!\n"
+.aligned_text "\n*** mm Error *** ---> Can't fix the specified block.\n"
+.aligned_text "\n*** mm Error *** ---> Can't unfix the specified block.\n"
+.aligned_text "Colour %x >> %d\n"
+.aligned_text "Unable to record %d slots, colours overflowed table.\n"
+.aligned_text "RED %d\n"
+.aligned_text "GREEN %d\n"
+.aligned_text "BLUE %d\n"
+.aligned_text "YELLOW %d\n"
+.aligned_text "MAGENTA %d\n"
+.aligned_text "CYAN %d\n"
+.aligned_text "WHITE %d\n"
+.aligned_text "GREY %d\n"
+.aligned_text "ORANGE %d\n\n"
 
 glabel D_800E7528
-.word 0x52454420
-.word 0x25640A00
-
+.aligned_text "RED %d\n"
 glabel D_800E7530
-.word 0x47524545
-.word 0x4E202564
-.word 0x0A000000
-
+.aligned_text "GREEN %d\n"
 glabel D_800E753C
-.word 0x424C5545
-.word 0x2025640A
-.word 0x00000000
-
+.aligned_text "BLUE %d\n"
 glabel D_800E7548
-.word 0x59454C4C
-.word 0x4F572025
-.word 0x640A0000
-
+.aligned_text "YELLOW %d\n"
 glabel D_800E7554
-.word 0x4D414745
-.word 0x4E544120
-.word 0x25640A00
-
+.aligned_text "MAGENTA %d\n"
 glabel D_800E7560
-.word 0x4359414E
-.word 0x2025640A
-.word 0x00000000
-
+.aligned_text "CYAN %d\n"
 glabel D_800E756C
-.word 0x57484954
-.word 0x45202564
-.word 0x0A000000
-
+.aligned_text "WHITE %d\n"
 glabel D_800E7578
-.word 0x47524559
-.word 0x2025640A
-.word 0x00000000
-
+.aligned_text "GREY %d\n"
 glabel D_800E7584
-.word 0x4F52414E
-.word 0x47452025
-.word 0x640A0A00
-.word 0x52656769
-.word 0x6F6E203D
-.word 0x20256409
-.word 0x206C6F63
-.word 0x203D2025
-.word 0x78092073
-.word 0x697A6520
-.word 0x3D202578
-.word 0x09000000
-.word 0x46524545
-.word 0x00000000
-.word 0x414C4C4F
-.word 0x43415445
-.word 0x44000000
-.word 0x414C4C4F
-.word 0x43415445
-.word 0x442C4649
-.word 0x58454400
-.word 0x0A000000
-.word 0x0A000000
-.word 0x52656769
-.word 0x6F6E206E
-.word 0x756D6265
-.word 0x72203D20
-.word 0x25640900
-.word 0x6D617853
-.word 0x6C6F7473
-.word 0x203D2025
-.word 0x64090000
-.word 0x736C6F74
-.word 0x73557365
-.word 0x64203D20
-.word 0x25640900
-.word 0x6C6F6320
-.word 0x3D202578
-.word 0x09000000
-.word 0x73697A65
-.word 0x203D2025
-.word 0x780A0000
-.word 0x0A000000
+.aligned_text "ORANGE %d\n\n"
+
+.aligned_text "Region = %d	 loc = %x	 size = %x\t"
+.aligned_text "FREE"
+.aligned_text "ALLOCATED"
+.aligned_text "ALLOCATED,FIXED"
+.aligned_text "\n"
+.aligned_text "\n"
+.aligned_text "Region number = %d\t"
+.aligned_text "maxSlots = %d\t"
+.aligned_text "slotsUsed = %d\t"
+.aligned_text "loc = %x\t"
+.aligned_text "size = %x\n"
+.aligned_text "\n"
 
 glabel D_800E7630
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D414456
-.word 0x00000000
+.aligned_text "DKRACING-ADV"
 
 glabel D_800E7640
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D414456
-.word 0x00000000
+.aligned_text "DKRACING-ADV"
 
 glabel D_800E7650
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D54494D
-.word 0x45530000
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D54494D
-.word 0x45530000
+.aligned_text "DKRACING-TIMES"
+.aligned_text "DKRACING-TIMES"
 
 glabel D_800E7670
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D414456
-.word 0x00000000
+.aligned_text "DKRACING-ADV"
 
 glabel D_800E7680
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D414456
-.word 0x00000000
+.aligned_text "DKRACING-ADV"
 
 glabel D_800E7690
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D54494D
-.word 0x45530000
+.aligned_text "DKRACING-TIMES"
 
 glabel D_800E76A0
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D54494D
-.word 0x45530000
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A204E6F
-.word 0x20457072
-.word 0x6F6D0A00
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A204E6F
-.word 0x20457072
-.word 0x6F6D0A00
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A204E6F
-.word 0x20457072
-.word 0x6F6D0A00
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A204E6F
-.word 0x20457072
-.word 0x6F6D0A00
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A204E6F
-.word 0x20457072
-.word 0x6F6D0A00
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A204E6F
-.word 0x20457072
-.word 0x6F6D0A00
-.word 0x5741524E
-.word 0x494E4720
-.word 0x3A204E6F
-.word 0x20457072
-.word 0x6F6D0A00
+.aligned_text "DKRACING-TIMES"
+
+.aligned_text "WARNING : No Eprom\n"
+.aligned_text "WARNING : No Eprom\n"
+.aligned_text "WARNING : No Eprom\n"
+.aligned_text "WARNING : No Eprom\n"
+.aligned_text "WARNING : No Eprom\n"
+.aligned_text "WARNING : No Eprom\n"
+.aligned_text "WARNING : No Eprom\n"
 
 glabel D_800E773C
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D47484F
-.word 0x53545300
+.aligned_text "DKRACING-GHOSTS"
 
 glabel D_800E774C
 .word 0x00000000
-.word 0x7761726E
-.word 0x696E673A
-.word 0x20636F72
-.word 0x72757074
-.word 0x2067686F
-.word 0x73740A00
+
+.aligned_text "warning: corrupt ghost\n"
 
 glabel D_800E7768
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D47484F
-.word 0x53545300
+.aligned_text "DKRACING-GHOSTS"
 
 glabel D_800E7778
 .word 0x00000000
 
 glabel D_800E777C
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D47484F
-.word 0x53545300
+.aligned_text "DKRACING-GHOSTS"
 
 glabel D_800E778C
 .word 0x00000000
 
 glabel D_800E7790
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D47484F
-.word 0x53545300
+.aligned_text "DKRACING-GHOSTS"
 
 glabel D_800E77A0
 .word 0x00000000
 
 glabel D_800E77A4
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D47484F
-.word 0x53545300
+.aligned_text "DKRACING-GHOSTS"
 
 glabel D_800E77B4
 .word 0x00000000
 
 glabel D_800E77B8
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D47484F
-.word 0x53545300
+.aligned_text "DKRACING-GHOSTS"
 
 glabel D_800E77C8
 .word 0x00000000
 
 glabel D_800E77CC
-.word 0x444B5241
-.word 0x43494E47
-.word 0x2D47484F
-.word 0x53545300
+.aligned_text "DKRACING-GHOSTS"
 
 glabel D_800E77DC
 .word 0x00000000
@@ -13787,97 +12866,26 @@ glabel D_800E77F4
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
-.word 0x28417564
-.word 0x696F2074
-.word 0x61736B29
-.word 0x00000000
-.word 0x2847616D
-.word 0x65207461
-.word 0x736B2900
-.word 0x28444920
-.word 0x7461736B
-.word 0x290A0000
-.word 0x28444920
-.word 0x62656E63
-.word 0x686D6172
-.word 0x6B207465
-.word 0x7374290A
-.word 0x00000000
-.word 0x28556E6B
-.word 0x6E6F776E
-.word 0x20746173
-.word 0x6B207479
-.word 0x70652025
-.word 0x64290A00
-.word 0x0A524350
-.word 0x20544153
-.word 0x4B20494E
-.word 0x464F0A00
-.word 0x2D2D2D2D
-.word 0x2D2D2D2D
-.word 0x2D2D2D2D
-.word 0x2D0A0000
-.word 0x09747970
-.word 0x6509093D
-.word 0x2025750A
-.word 0x00000000
-.word 0x09666C61
-.word 0x67730909
-.word 0x3D202575
-.word 0x0A000000
-.word 0x0975636F
-.word 0x64655F62
-.word 0x6F6F7409
-.word 0x093D2025
-.word 0x700A0000
-.word 0x0975636F
-.word 0x64655F62
-.word 0x6F6F745F
-.word 0x73697A65
-.word 0x09093D20
-.word 0x25750A00
-.word 0x0975636F
-.word 0x64650909
-.word 0x3D202570
-.word 0x0A000000
-.word 0x0975636F
-.word 0x64655F73
-.word 0x697A6509
-.word 0x093D2025
-.word 0x750A0000
-.word 0x0975636F
-.word 0x64655F64
-.word 0x61746109
-.word 0x093D2025
-.word 0x700A0000
-.word 0x0975636F
-.word 0x64655F64
-.word 0x6174615F
-.word 0x73697A65
-.word 0x09093D20
-.word 0x25750A00
-.word 0x096F7574
-.word 0x7075745F
-.word 0x62756666
-.word 0x09093D20
-.word 0x25700A00
-.word 0x096F7574
-.word 0x7075745F
-.word 0x62756666
-.word 0x5F73697A
-.word 0x6509093D
-.word 0x2025750A
-.word 0x00000000
-.word 0x09646174
-.word 0x615F7074
-.word 0x7209093D
-.word 0x2025700A
-.word 0x00000000
-.word 0x09646174
-.word 0x615F7369
-.word 0x7A650909
-.word 0x3D202575
-.word 0x0A000000
+
+.aligned_text "(Audio task)"
+.aligned_text "(Game task)"
+.aligned_text "(DI task)\n"
+.aligned_text "(DI benchmark test)\n"
+.aligned_text "(Unknown task type %d)\n"
+.aligned_text "\nRCP TASK INFO\n"
+.aligned_text "-------------\n"
+.aligned_text "\ttype\t\t= %u\n"
+.aligned_text "\tflags\t\t= %u\n"
+.aligned_text "\tucode_boot\t\t= %p\n"
+.aligned_text "\tucode_boot_size\t\t= %u\n"
+.aligned_text "\tucode\t\t= %p\n"
+.aligned_text "\tucode_size\t\t= %u\n"
+.aligned_text "\tucode_data\t\t= %p\n"
+.aligned_text "\tucode_data_size\t\t= %u\n"
+.aligned_text "\toutput_buff\t\t= %p\n"
+.aligned_text "\toutput_buff_size\t\t= %u\n"
+.aligned_text "\tdata_ptr\t\t= %p\n"
+.aligned_text "\tdata_size\t\t= %u\n"
 
 glabel D_800E796C
 .word 0x48E4E1C0
@@ -13889,97 +12897,15 @@ glabel D_800E796C
 .word 0x8007A248
 .word 0x8007A248
 .word 0x00000000
-.word 0x33323020
-.word 0x62792032
-.word 0x34302050
-.word 0x6F696E74
-.word 0x2073616D
-.word 0x706C6564
-.word 0x2C204E6F
-.word 0x6E20696E
-.word 0x7465726C
-.word 0x61636564
-.word 0x2E0A0000
-.word 0x33323020
-.word 0x62792032
-.word 0x34302041
-.word 0x6E74692D
-.word 0x616C6961
-.word 0x7365642C
-.word 0x204E6F6E
-.word 0x20696E74
-.word 0x65726C61
-.word 0x6365642E
-.word 0x0A000000
-.word 0x36343020
-.word 0x62792032
-.word 0x34302050
-.word 0x6F696E74
-.word 0x2073616D
-.word 0x706C6564
-.word 0x2C204E6F
-.word 0x6E20696E
-.word 0x7465726C
-.word 0x61636564
-.word 0x2E0A0000
-.word 0x36343020
-.word 0x62792032
-.word 0x34302041
-.word 0x6E74692D
-.word 0x616C6961
-.word 0x7365642C
-.word 0x204E6F6E
-.word 0x20696E74
-.word 0x65726C61
-.word 0x6365642E
-.word 0x0A000000
-.word 0x36343020
-.word 0x62792034
-.word 0x38302050
-.word 0x6F696E74
-.word 0x2073616D
-.word 0x706C6564
-.word 0x2C20496E
-.word 0x7465726C
-.word 0x61636564
-.word 0x2E0A0000
-.word 0x36343020
-.word 0x62792034
-.word 0x38302041
-.word 0x6E74692D
-.word 0x616C6961
-.word 0x7365642C
-.word 0x20496E74
-.word 0x65726C61
-.word 0x6365642E
-.word 0x0A000000
-.word 0x36343020
-.word 0x62792034
-.word 0x38302050
-.word 0x6F696E74
-.word 0x2073616D
-.word 0x706C6564
-.word 0x2C20496E
-.word 0x7465726C
-.word 0x61636564
-.word 0x2C204465
-.word 0x2D666C69
-.word 0x636B6572
-.word 0x65642E0A
-.word 0x00000000
-.word 0x36343020
-.word 0x62792034
-.word 0x38302041
-.word 0x6E74692D
-.word 0x616C6961
-.word 0x7365642C
-.word 0x20496E74
-.word 0x65726C61
-.word 0x6365642C
-.word 0x2044652D
-.word 0x666C6963
-.word 0x6B657265
-.word 0x642E0A00
+
+.aligned_text "320 by 240 Point sampled, Non interlaced.\n"
+.aligned_text "320 by 240 Anti-aliased, Non interlaced.\n"
+.aligned_text "640 by 240 Point sampled, Non interlaced.\n"
+.aligned_text "640 by 240 Anti-aliased, Non interlaced.\n"
+.aligned_text "640 by 480 Point sampled, Interlaced.\n"
+.aligned_text "640 by 480 Anti-aliased, Interlaced.\n"
+.aligned_text "640 by 480 Point sampled, Interlaced, De-flickered.\n"
+.aligned_text "640 by 480 Anti-aliased, Interlaced, De-flickered.\n"
 
 glabel D_800E7AFC
 .word 0x3F9B26CA
@@ -13992,6 +12918,7 @@ glabel D_800E7B04
 
 glabel D_800E7B08
 .word 0x3FAAAAAB
+
 .word 0x8007A5AC
 .word 0x8007A5D0
 .word 0x8007A658
@@ -14001,128 +12928,39 @@ glabel D_800E7B08
 .word 0x8007A778
 .word 0x8007A7A0
 .word 0x00000000
-.word 0x4572726F
-.word 0x723A2054
-.word 0x65787475
-.word 0x7265206E
-.word 0x6F202578
-.word 0x206F7574
-.word 0x206F6620
-.word 0x72616E67
-.word 0x65206F6E
-.word 0x206C6F61
-.word 0x642E2021
-.word 0x210A0000
-.word 0x54455820
-.word 0x4572726F
-.word 0x723A2050
-.word 0x616C6574
-.word 0x7465206D
-.word 0x656D6F72
-.word 0x79206F76
-.word 0x6572666C
-.word 0x6F772121
-.word 0x0A000000
-.word 0x54455820
-.word 0x4572726F
-.word 0x723A2054
-.word 0x65785461
-.word 0x62206F76
-.word 0x6572666C
-.word 0x6F772121
-.word 0x0A000000
-.word 0x74657846
-.word 0x72656554
-.word 0x65787475
-.word 0x72653A20
-.word 0x4E554C4C
-.word 0x20746578
-.word 0x21210A00
-.word 0x54455820
-.word 0x4572726F
-.word 0x723A2054
-.word 0x72796564
-.word 0x20746F20
-.word 0x6465616C
-.word 0x6C6F6361
-.word 0x7465206E
-.word 0x6F6E2D65
-.word 0x78697374
-.word 0x656E7420
-.word 0x74657874
-.word 0x75726521
-.word 0x210A0000
-.word 0x53525042
-.word 0x5546206F
-.word 0x76657266
-.word 0x6C6F7721
-.word 0x210A0000
-.word 0x4572726F
-.word 0x723A2053
-.word 0x70726974
-.word 0x65207461
-.word 0x626C6520
-.word 0x6F766572
-.word 0x666C6F77
-.word 0x21210A00
-.word 0x74657846
-.word 0x72656553
-.word 0x70726974
-.word 0x653A204E
-.word 0x554C4C20
-.word 0x73707269
-.word 0x74652121
-.word 0x0A000000
-.word 0x54455853
-.word 0x50522045
-.word 0x72726F72
-.word 0x3A205472
-.word 0x79656420
-.word 0x746F2064
-.word 0x65616C6C
-.word 0x6F636174
-.word 0x65206E6F
-.word 0x6E2D6578
-.word 0x69737465
-.word 0x6E742073
-.word 0x70726974
-.word 0x6521210A
-.word 0x00000000
+
+.aligned_text "Error: Texture no %x out of range on load. !!\n"
+.aligned_text "TEX Error: Palette memory overflow!!\n"
+.aligned_text "TEX Error: TexTab overflow!!\n"
+.aligned_text "texFreeTexture: NULL tex!!\n"
+.aligned_text "TEX Error: Tryed to deallocate non-existent texture!!\n"
+.aligned_text "SRPBUF overflow!!\n"
+.aligned_text "Error: Sprite table overflow!!\n"
+.aligned_text "texFreeSprite: NULL sprite!!\n"
+.aligned_text "TEXSPR Error: Tryed to deallocate non-existent sprite!!\n"
+
 .word 0x00000000
 
 glabel D_800E7C90
-.word 0x53435245
-.word 0x454E3A20
-.word 0x4E6F206F
-.word 0x7574206F
-.word 0x66207261
-.word 0x6E676521
-.word 0x210A0000
-.word 0x00000000
-.word 0x54494D42
-.word 0x45520000
-.word 0x42554D50
-.word 0x45520000
-.word 0x434F4E4B
-.word 0x45520000
-.word 0x54495054
-.word 0x55500000
-.word 0x4452554D
-.word 0x53544943
-.word 0x4B000000
-.word 0x50495053
-.word 0x59000000
-.word 0x42414E4A
-.word 0x4F000000
-.word 0x4B52554E
-.word 0x43480000
-.word 0x57495A50
-.word 0x49470000
-.word 0x44494444
-.word 0x59000000
-.word 0x3F000000
+.aligned_text "SCREEN: No out of range!!\n"
 
-# 800E7D08
+.word 0x00000000
+
+# Used in the title screen sequence.
+.aligned_text "TIMBER"
+.aligned_text "BUMPER"
+.aligned_text "CONKER"
+.aligned_text "TIPTUP"
+.aligned_text "DRUMSTICK"
+.aligned_text "PIPSY"
+.aligned_text "BANJO"
+.aligned_text "KRUNCH"
+.aligned_text "WIZPIG"
+.aligned_text "DIDDY"
+
+.float 0.5
+
+# Credits, 800E7D08
 .aligned_text "CREDITS"
 
 .aligned_text "Software Director"
@@ -14587,53 +13425,41 @@ glabel D_800E8570
 .word 0x00000000
 
 glabel D_800E8640
-.word 0x43414E27
-.word 0x54000000
+.aligned_text "CAN'T"
 
 glabel D_800E8648
-.word 0x53415645
-.word 0x00000000
+.aligned_text "SAVE"
 
 glabel D_800E8650
-.word 0x47484F53
-.word 0x54000000
+.aligned_text "GHOST"
 
 glabel D_800E8658
-.word 0x20434F4E
-.word 0x54524F4C
-.word 0x4C455200
+.aligned_text " CONTROLLER"
 
 glabel D_800E8664
-.word 0x50414B00
+.aligned_text "PAK"
 
 glabel D_800E8668
-.word 0x46554C4C
-.word 0x00000000
+.aligned_text "FULL"
 
 glabel D_800E8670
-.word 0x20434F4E
-.word 0x54524F4C
-.word 0x4C455200
+.aligned_text " CONTROLLER"
 
 glabel D_800E867C
-.word 0x50414B00
+.aligned_text "PAK"
 
 glabel D_800E8680
-.word 0x44414D41
-.word 0x47454400
+.aligned_text "DAMAGED"
 
 glabel D_800E8688
-.word 0x52414345
-.word 0x00000000
+.aligned_text "RACE"
 
 glabel D_800E8690
-.word 0x4C415000
+.aligned_text "LAP"
 
 glabel D_800E8694
-.word 0x44494420
-.word 0x4E4F5420
-.word 0x46494E49
-.word 0x53480000
+.aligned_text "DID NOT FINISH"
+
 .word 0x00000000
 
 glabel D_800E86A8
@@ -14807,239 +13633,31 @@ glabel D_800E87E4
 .word 0x9999999A
 .word 0x00000000
 .word 0x00000000
-.word 0x0A4D6178
-.word 0x696D756D
-.word 0x206C696D
-.word 0x6974206F
-.word 0x66202564
-.word 0x206C656E
-.word 0x7320666C
-.word 0x61726520
-.word 0x73776974
-.word 0x63686573
-.word 0x2C207065
-.word 0x72206C65
-.word 0x76656C2C
-.word 0x20686173
-.word 0x20626565
-.word 0x6E206578
-.word 0x63656564
-.word 0x65642E00
+
+.aligned_text "\nMaximum limit of %d lens flare switches, per level, has been exceeded."
+
 .word 0x00000000
 .word 0x00000000
-.word 0x0A0A556E
-.word 0x6B6E6F77
-.word 0x6E207472
-.word 0x69676765
-.word 0x72207479
-.word 0x70652069
-.word 0x6E20696E
-.word 0x69745061
-.word 0x72746963
-.word 0x6C655472
-.word 0x69676765
-.word 0x72202564
-.word 0x2C204D61
-.word 0x78202564
-.word 0x2E0A0A00
-.word 0x0A0A556E
-.word 0x6B6E6F77
-.word 0x6E207061
-.word 0x72746963
-.word 0x6C652074
-.word 0x79706520
-.word 0x696E2069
-.word 0x6E697450
-.word 0x61727469
-.word 0x636C6554
-.word 0x72696767
-.word 0x65722025
-.word 0x642C204D
-.word 0x61782025
-.word 0x642E0A0A
-.word 0x00000000
-.word 0x0A0A556E
-.word 0x6B6E6F77
-.word 0x6E207472
-.word 0x69676765
-.word 0x72207479
-.word 0x70652069
-.word 0x6E20696E
-.word 0x69745061
-.word 0x72746963
-.word 0x6C655472
-.word 0x69676765
-.word 0x72202564
-.word 0x2C204D61
-.word 0x78202564
-.word 0x2E0A0A00
-.word 0x53707269
-.word 0x74652050
-.word 0x61727469
-.word 0x636C6520
-.word 0x62756666
-.word 0x65722069
-.word 0x73206675
-.word 0x6C6C2E0A
-.word 0x00000000
-.word 0x54726961
-.word 0x6E676C65
-.word 0x20506172
-.word 0x7469636C
-.word 0x65206275
-.word 0x66666572
-.word 0x20697320
-.word 0x66756C6C
-.word 0x2E0A0000
-.word 0x52656374
-.word 0x616E676C
-.word 0x65205061
-.word 0x72746963
-.word 0x6C652062
-.word 0x75666665
-.word 0x72206973
-.word 0x2066756C
-.word 0x6C2E0A00
-.word 0x4C696E65
-.word 0x20506172
-.word 0x7469636C
-.word 0x65206275
-.word 0x66666572
-.word 0x20697320
-.word 0x66756C6C
-.word 0x2E0A0000
-.word 0x506F696E
-.word 0x74205061
-.word 0x72746963
-.word 0x6C652062
-.word 0x75666665
-.word 0x72206973
-.word 0x2066756C
-.word 0x6C2E0A00
-.word 0x0A0A4361
-.word 0x6E277420
-.word 0x616C6C6F
-.word 0x63617465
-.word 0x20737061
-.word 0x63652066
-.word 0x6F722075
-.word 0x6E6B6E6F
-.word 0x776E2070
-.word 0x61727469
-.word 0x636C6520
-.word 0x74797065
-.word 0x2E000000
-.word 0x0A0A5061
-.word 0x72746963
-.word 0x6C652068
-.word 0x61732062
-.word 0x65656E20
-.word 0x66726565
-.word 0x64207477
-.word 0x6963652C
-.word 0x20746869
-.word 0x73206973
-.word 0x20537570
-.word 0x65722053
-.word 0x6166652C
-.word 0x20486F6E
-.word 0x65737421
-.word 0x0A000000
-.word 0x0A0A5370
-.word 0x72697465
-.word 0x20506172
-.word 0x7469636C
-.word 0x65204275
-.word 0x66666572
-.word 0x20697320
-.word 0x656D7074
-.word 0x792E0A0A
-.word 0x00000000
-.word 0x0A0A5472
-.word 0x69616E67
-.word 0x6C652050
-.word 0x61727469
-.word 0x636C6520
-.word 0x42756666
-.word 0x65722069
-.word 0x7320656D
-.word 0x7074792E
-.word 0x0A0A0000
-.word 0x0A0A5265
-.word 0x6374616E
-.word 0x676C6520
-.word 0x50617274
-.word 0x69636C65
-.word 0x20427566
-.word 0x66657220
-.word 0x69732065
-.word 0x6D707479
-.word 0x2E0A0A00
-.word 0x0A0A4C69
-.word 0x6E652050
-.word 0x61727469
-.word 0x636C6520
-.word 0x62756666
-.word 0x65722069
-.word 0x7320656D
-.word 0x7074792E
-.word 0x0A0A0000
-.word 0x0A0A506F
-.word 0x696E7420
-.word 0x50617274
-.word 0x69636C65
-.word 0x20627566
-.word 0x66657220
-.word 0x69732065
-.word 0x6D707479
-.word 0x2E0A0A00
-.word 0x0A0A4361
-.word 0x6E277420
-.word 0x6465616C
-.word 0x6C6F6361
-.word 0x74652073
-.word 0x70616365
-.word 0x20666F72
-.word 0x20756E6B
-.word 0x6E6F776E
-.word 0x20706172
-.word 0x7469636C
-.word 0x65207479
-.word 0x70652E0A
-.word 0x0A000000
-.word 0x0A457272
-.word 0x6F72203A
-.word 0x3A207472
-.word 0x69676765
-.word 0x72202578
-.word 0x20686173
-.word 0x206E6F20
-.word 0x72656665
-.word 0x72656E63
-.word 0x6520746F
-.word 0x20706F69
-.word 0x6E742025
-.word 0x78000000
-.word 0x0A457272
-.word 0x6F72203A
-.word 0x3A207061
-.word 0x72746963
-.word 0x6C652025
-.word 0x78206973
-.word 0x206E6F74
-.word 0x20696E64
-.word 0x65786564
-.word 0x20636F72
-.word 0x72656374
-.word 0x6C792069
-.word 0x6E207472
-.word 0x69676765
-.word 0x72206C69
-.word 0x73742025
-.word 0x78202825
-.word 0x64203E3E
-.word 0x20257029
-.word 0x00000000
+
+.aligned_text "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n"
+.aligned_text "\n\nUnknown particle type in initParticleTrigger %d, Max %d.\n\n"
+.aligned_text "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n"
+.aligned_text "Sprite Particle buffer is full.\n"
+.aligned_text "Triangle Particle buffer is full.\n"
+.aligned_text "Rectangle Particle buffer is full.\n"
+.aligned_text "Line Particle buffer is full.\n"
+.aligned_text "Point Particle buffer is full.\n"
+.aligned_text "\n\nCan't allocate space for unknown particle type."
+.aligned_text "\n\nParticle has been freed twice, this is Super Safe, Honest!\n"
+.aligned_text "\n\nSprite Particle Buffer is empty.\n\n"
+.aligned_text "\n\nTriangle Particle Buffer is empty.\n\n"
+.aligned_text "\n\nRectangle Particle Buffer is empty.\n\n"
+.aligned_text "\n\nLine Particle buffer is empty.\n\n"
+.aligned_text "\n\nPoint Particle buffer is empty.\n\n"
+.aligned_text "\n\nCan't deallocate space for unknown particle type.\n\n"
+.aligned_text "\nError :: trigger %x has no reference to point %x"
+.aligned_text "\nError :: particle %x is not indexed correctly in trigger list %x (%d >> %p)"
+
 .word 0x00000000
 
 glabel D_800E8B98
@@ -15092,6 +13710,7 @@ glabel D_800E8BD4
 
 glabel D_800E8BD8
 .word 0x3DCCCCCD
+
 .word 0x800B2250
 .word 0x800B20E0
 .word 0x800B2138
@@ -15107,57 +13726,22 @@ glabel D_800E8BF4
 .word 0x00000000
 
 glabel D_800E8C00
-.word 0x30313233
-.word 0x34353637
-.word 0x38396162
-.word 0x63646566
-.word 0x6768696A
-.word 0x6B6C6D6E
-.word 0x6F707172
-.word 0x73747576
-.word 0x7778797A
-.word 0x00000000
+.aligned_text "0123456789abcdefghijklmnopqrstuvwxyz"
 
 glabel D_800E8C28
-.word 0x30313233
-.word 0x34353637
-.word 0x38394142
-.word 0x43444546
-.word 0x4748494A
-.word 0x4B4C4D4E
-.word 0x4F505152
-.word 0x53545556
-.word 0x5758595A
-.word 0x00000000
+.aligned_text "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 glabel D_800E8C50
 .word 0x00000000
 
 glabel D_800E8C54
-.word 0x286E756C
-.word 0x6C290000
+.aligned_text "(null)"
 
 glabel D_800E8C5C
-.word 0x286E696C
-.word 0x29000000
-.word 0x2A2A2A20
-.word 0x64695072
-.word 0x696E7466
-.word 0x20457272
-.word 0x6F72202A
-.word 0x2A2A202D
-.word 0x2D2D3E20
-.word 0x4F757420
-.word 0x6F662073
-.word 0x7472696E
-.word 0x67207370
-.word 0x6163652E
-.word 0x20285072
-.word 0x696E7420
-.word 0x6C657373
-.word 0x20746578
-.word 0x7421290A
-.word 0x00000000
+.aligned_text "(nil)"
+
+.aligned_text "*** diPrintf Error *** ---> Out of string space. (Print less text!)\n"
+
 .word 0x800B4BA4
 .word 0x800B4BC8
 .word 0x800B4BC8
@@ -15270,343 +13854,137 @@ glabel D_800E8C5C
 .word 0x800B6614
 .word 0x800B6634
 .word 0x800B66CC
-.word 0x00000000
-.word 0x0A417373
-.word 0x65727469
-.word 0x6F6E2066
-.word 0x61696C65
-.word 0x643A2027
-.word 0x25732720
-.word 0x696E2066
-.word 0x696C6520
-.word 0x25732C20
-.word 0x6C696E65
-.word 0x2025640A
-.word 0x00000000
-.word 0x0A417373
-.word 0x65727469
-.word 0x6F6E2066
-.word 0x61696C65
-.word 0x643A2027
-.word 0x25732720
-.word 0x696E2066
-.word 0x696C6520
-.word 0x25732C20
-.word 0x6C696E65
-.word 0x2025640A
-.word 0x00000000
-.word 0x3E666175
-.word 0x6C743C20
+
 .word 0x00000000
 
+.aligned_text "\nAssertion failed: '%s' in file %s, line %d\n"
+.aligned_text "\nAssertion failed: '%s' in file %s, line %d\n"
+.aligned_text ">fault< "
+
 glabel D_800E8EDC
-.word 0x434F5245
-.word 0x00000000
+.aligned_text "CORE"
 
 glabel D_800E8EE4
 .word 0x00000000
 
 glabel D_800E8EE8
-.word 0x434F5245
-.word 0x00000000
+.aligned_text "CORE"
 
 glabel D_800E8EF0
 .word 0x00000000
 
 glabel D_800E8EF4
-.word 0x434F5245
-.word 0x00000000
+.aligned_text "CORE"
 
 glabel D_800E8EFC
 .word 0x00000000
-.word 0x73657475
-.word 0x70000000
-.word 0x636F6E74
-.word 0x726F6C00
-.word 0x7072696E
-.word 0x74000000
 
+.aligned_text "setup"
+.aligned_text "control"
+.aligned_text "print"
+
+# EPC (Error program counter?) Lockup display strings, see: https://tcrf.net/Diddy_Kong_Racing#Crash_Debugger
 glabel D_800E8F18
-.word 0x20657063
-.word 0x09093078
-.word 0x25303878
-.word 0x0A000000
+.aligned_text " epc\t\t0x%08x\n"
 
 glabel D_800E8F28
-.word 0x20636175
-.word 0x73650909
-.word 0x6D6D416C
-.word 0x6C6F6328
-.word 0x25642C30
-.word 0x78253878
-.word 0x290A0000
+.aligned_text " cause\t\tmmAlloc(%d,0x%8x)\n"
 
 glabel D_800E8F44
-.word 0x206F626A
-.word 0x65637409
-.word 0x09000000
+.aligned_text " object\t\t"
 
 glabel D_800E8F50
-.word 0x25732025
-.word 0x64200000
+.aligned_text "%s %d "
 
 glabel D_800E8F58
-.word 0x0A000000
+.aligned_text "\n"
 
 glabel D_800E8F5C
-.word 0x0A0A0A0A
-.word 0x0A0A0A0A
-.word 0x0A0A0A0A
-.word 0x0A0A0000
+.aligned_text "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
 glabel D_800E8F6C
-.word 0x20466175
-.word 0x6C742069
-.word 0x6E207468
-.word 0x72656164
-.word 0x2025640A
-.word 0x00000000
+.aligned_text " Fault in thread %d\n"
 
 glabel D_800E8F84
-.word 0x20657063
-.word 0x09093078
-.word 0x25303878
-.word 0x0A000000
+.aligned_text " epc\t\t0x%08x\n"
 
 glabel D_800E8F94
-.word 0x20636175
-.word 0x73650909
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " cause\t\t0x%08x\n"
 
 glabel D_800E8FA4
-.word 0x20737209
-.word 0x09307825
-.word 0x3038780A
-.word 0x00000000
+.aligned_text " sr\t\t0x%08x\n"
 
 glabel D_800E8FB4
-.word 0x20626164
-.word 0x76616464
-.word 0x72093078
-.word 0x25303878
-.word 0x0A000000
+.aligned_text " badvaddr\t0x%08x\n"
 
 glabel D_800E8FC8
-.word 0x206F626A
-.word 0x65637409
-.word 0x09000000
+.aligned_text " object\t\t"
 
 glabel D_800E8FD4
-.word 0x25732025
-.word 0x64200000
+.aligned_text "%s %d "
 
 glabel D_800E8FDC
-.word 0x0A000000
+.aligned_text "\n"
 
 glabel D_800E8FE0
-.word 0x20617420
-.word 0x30782530
-.word 0x38782076
-.word 0x30203078
-.word 0x25303878
-.word 0x20763120
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " at 0x%08x v0 0x%08x v1 0x%08x\n"
 
 glabel D_800E9000
-.word 0x20613020
-.word 0x30782530
-.word 0x38782061
-.word 0x31203078
-.word 0x25303878
-.word 0x20613220
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " a0 0x%08x a1 0x%08x a2 0x%08x\n"
 
 glabel D_800E9020
-.word 0x20613320
-.word 0x30782530
-.word 0x38782074
-.word 0x30203078
-.word 0x25303878
-.word 0x20743120
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " a3 0x%08x t0 0x%08x t1 0x%08x\n"
 
 glabel D_800E9040
-.word 0x20743220
-.word 0x30782530
-.word 0x38782074
-.word 0x33203078
-.word 0x25303878
-.word 0x20743420
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " t2 0x%08x t3 0x%08x t4 0x%08x\n"
 
 glabel D_800E9060
-.word 0x20743520
-.word 0x30782530
-.word 0x38782074
-.word 0x36203078
-.word 0x25303878
-.word 0x20743720
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " t5 0x%08x t6 0x%08x t7 0x%08x\n"
 
 glabel D_800E9080
-.word 0x20733020
-.word 0x30782530
-.word 0x38782073
-.word 0x31203078
-.word 0x25303878
-.word 0x20733220
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " s0 0x%08x s1 0x%08x s2 0x%08x\n"
 
 glabel D_800E90A0
-.word 0x20733320
-.word 0x30782530
-.word 0x38782073
-.word 0x34203078
-.word 0x25303878
-.word 0x20733520
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " s3 0x%08x s4 0x%08x s5 0x%08x\n"
 
 glabel D_800E90C0
-.word 0x20733620
-.word 0x30782530
-.word 0x38782073
-.word 0x37203078
-.word 0x25303878
-.word 0x20743820
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " s6 0x%08x s7 0x%08x t8 0x%08x\n"
 
 glabel D_800E90E0
-.word 0x20743920
-.word 0x30782530
-.word 0x38782067
-.word 0x70203078
-.word 0x25303878
-.word 0x20737020
-.word 0x30782530
-.word 0x38780A00
+.aligned_text " t9 0x%08x gp 0x%08x sp 0x%08x\n"
 
 glabel D_800E9100
-.word 0x20733820
-.word 0x30782530
-.word 0x38782072
-.word 0x61203078
-.word 0x25303878
-.word 0x0A0A0000
-
+.aligned_text " s8 0x%08x ra 0x%08x\n\n"
 glabel D_800E9118
-.word 0x20202025
-.word 0x30387820
-.word 0x25303878
-.word 0x20253038
-.word 0x780A0000
+.aligned_text "   %08x %08x %08x\n"
 
 glabel D_800E912C
-.word 0x20200000
+.aligned_text "  "
 
 glabel D_800E9130
-.word 0x25303478
-.word 0x20000000
+.aligned_text "%04x "
 
 glabel D_800E9138
-.word 0x0A000000
+.aligned_text "\n"
+
+### End of EPC lockup strings ###
+
 .word 0x800B7898
 .word 0x800B7C18
 .word 0x800B7C18
 .word 0x800B7C18
 .word 0x800B7C70
 .word 0x800B7CE4
+
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
-.word 0x0A436F75
-.word 0x6C646E27
-.word 0x74206669
-.word 0x6E642061
-.word 0x20626C6F
-.word 0x636B2074
-.word 0x6F207069
-.word 0x636B2077
-.word 0x61766520
-.word 0x64657461
-.word 0x696C7320
-.word 0x66726F6D
-.word 0x2E0A5573
-.word 0x696E6720
-.word 0x626C6F63
-.word 0x6B203020
-.word 0x61732064
-.word 0x65666175
-.word 0x6C742E00
-.word 0x0A0A426C
-.word 0x6F636B20
-.word 0x6D617920
-.word 0x62652073
-.word 0x70656369
-.word 0x66696564
-.word 0x20757369
-.word 0x6E672027
-.word 0x5027206F
-.word 0x6E207761
-.word 0x74657220
-.word 0x67726F75
-.word 0x70206E6F
-.word 0x64652E00
-.word 0x0A457272
-.word 0x6F72203A
-.word 0x3A206361
-.word 0x6E206E6F
-.word 0x74207265
-.word 0x6D6F7665
-.word 0x20612077
-.word 0x61766520
-.word 0x7377656C
-.word 0x6C206F62
-.word 0x6A656374
-.word 0x20776869
-.word 0x63682064
-.word 0x6F65736E
-.word 0x27742065
-.word 0x78697374
-.word 0x20210000
-.word 0x0A457272
-.word 0x6F72203A
-.word 0x3A206D6F
-.word 0x72652074
-.word 0x68616E20
-.word 0x65696768
-.word 0x74207377
-.word 0x656C6C73
-.word 0x206F7665
-.word 0x726C6170
-.word 0x206F6E20
-.word 0x636F6C75
-.word 0x6D6E2025
-.word 0x642E0000
-.word 0x0A457272
-.word 0x6F72203A
-.word 0x3A206361
-.word 0x6E206E6F
-.word 0x74206164
-.word 0x6420616E
-.word 0x6F746865
-.word 0x72207761
-.word 0x76652073
-.word 0x77656C6C
-.word 0x2C207265
-.word 0x61636865
-.word 0x64206C69
-.word 0x6D697420
-.word 0x6F662025
-.word 0x642E0000
+
+.aligned_text "\nCouldn't find a block to pick wave details from.\nUsing block 0 as default."
+.aligned_text "\n\nBlock may be specified using 'P' on water group node."
+.aligned_text "\nError :: can not remove a wave swell object which doesn't exist !"
+.aligned_text "\nError :: more than eight swells overlap on column %d."
+.aligned_text "\nError :: can not add another wave swell, reached limit of %d."
 
 glabel D_800E92A0
 .word 0x461C4000
@@ -15776,36 +14154,23 @@ glabel D_800E9558
 .word 0x00000000
 
 glabel D_800E9560
-.word 0x73616D70
-.word 0x6C657320
-.word 0x3E3D2030
-.word 0x00000000
+.aligned_text "samples >= 0"
 
 glabel D_800E9570
-.word 0x656E762E
-.word 0x63000000
+.aligned_text "env.c"
 
 glabel D_800E9578
-.word 0x73616D70
-.word 0x6C657320
-.word 0x3C3D2041
-.word 0x4C5F4D41
-.word 0x585F5253
-.word 0x505F5341
-.word 0x4D504C45
-.word 0x53000000
+.aligned_text "samples <= AL_MAX_RSP_SAMPLES"
 
 glabel D_800E9598
-.word 0x656E762E
-.word 0x63000000
+.aligned_text "env.c"
 
 glabel D_800E95A0
-.word 0x736F7572
-.word 0x63650000
+.aligned_text "source"
 
 glabel D_800E95A8
-.word 0x656E762E
-.word 0x63000000
+.aligned_text "env.c"
+
 .word 0x800CA870
 .word 0x800CA8C4
 .word 0x800CA8C4
@@ -15823,6 +14188,7 @@ glabel D_800E95A8
 .word 0x800CA7A8
 .word 0x800CA828
 .word 0x800CA460
+
 .word 0x00000000
 
 glabel D_800E95F8
@@ -16012,13 +14378,14 @@ glabel D_800E9860
 .word 0x7F73BF3C
 
 glabel D_800E98A8
-.word 0x4E614E00
+.aligned_text "NaN"
 
 glabel D_800E98AC
-.word 0x496E6600
+.aligned_text "Inf"
 
 glabel D_800E98B0
 .word 0x30000000
+
 .word 0x00000000
 .word 0x4197D784
 .word 0x00000000
