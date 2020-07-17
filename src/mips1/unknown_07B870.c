@@ -4,20 +4,64 @@
 #include "types.h"
 #include "macros.h"
 
+extern s32 D_800DE7C4;
+extern s32 D_80126338;
+extern s32 D_8012633C;
+extern s32 D_80126354;
+extern s32 D_80126378;
+extern s16 D_80126382;
+extern s16 D_80126384;
+
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007AC70.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007AE0C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007AE28.s")
+
+void func_8007AE0C(s32 arg0) {
+    D_80126378 |= arg0;
+}
+
+void func_8007AE28(s32 arg0) {
+    D_80126378 &= ~arg0;
+}
+
+/* Unused? */
+s32 func_8007AE44(void) {
+    return D_80126338;
+}
+
+/* Unused? */
+s32 func_8007AE54(void) {
+    return D_8012633C;
+}
+
+/* Unused? */
+s32 func_8007AE64(void) {
+    return D_80126354;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007AE74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B2BC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B374.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B3D0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B43C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B454.s")
+
+void func_8007B43C(void) {
+    D_80126384 = 1;
+    D_80126382 = 1;
+}
+
+void func_8007B454(void) {
+    D_80126384 = 0;
+    D_80126382 = 1;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B46C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B4C8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B4E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007BA5C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007BF1C.s")
+
+void func_8007BF1C(s32 arg0) {
+    D_800DE7C4 = arg0;
+    D_80126382 = 1;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007BF34.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007C12C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007C57C.s")
