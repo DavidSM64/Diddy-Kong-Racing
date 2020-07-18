@@ -4154,6 +4154,8 @@ glabel D_800E043C
 .word 0xFFF4FFF8
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E044C
 .word 0x00000000
 .word 0xFFF8FFF4
 .word 0x00000000
