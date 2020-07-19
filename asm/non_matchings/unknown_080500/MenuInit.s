@@ -68,7 +68,7 @@ glabel MenuInit
 /* 0820D8 800814D8 00000000 */   nop   
 /* 0820DC 800814DC 1000002C */  b     .L80081590
 /* 0820E0 800814E0 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 0820E4 800814E4 0C0232BF */  jal   MenuFileSelectInit
+/* 0820E4 800814E4 0C0232BF */  jal   menu_file_select_init
 /* 0820E8 800814E8 00000000 */   nop   
 /* 0820EC 800814EC 10000028 */  b     .L80081590
 /* 0820F0 800814F0 8FBF0014 */   lw    $ra, 0x14($sp)
