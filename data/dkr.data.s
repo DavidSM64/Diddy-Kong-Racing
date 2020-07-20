@@ -5857,6 +5857,8 @@ glabel D_800E1AE4
 .word 0x800E81E0
 .word 0x800E81E8
 .word 0x800E81F4
+
+glabel D_800E1AF8
 .word 0x00000010
 .word 0x00000020
 .word 0x00000040

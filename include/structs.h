@@ -41,7 +41,6 @@ typedef struct dkr_racer_t {
   /* 0x08 */ u16 placements[4];
   /* 0x10 */ u16 course_time;
   /* 0x12 */ u16 lap_times[3];
-  /* 0x14 */ u32 unk14;
 } dkr_racer_t;
 
 /* Unknown Size */
