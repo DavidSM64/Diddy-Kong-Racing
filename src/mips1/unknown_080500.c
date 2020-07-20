@@ -567,9 +567,9 @@ void func_800851FC(void) {
     func_800C422C(2);
 }
 
-//GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuSaveOptionsInit.s")
+//GLOBAL_ASM("asm/non_matchings/unknown_080500/menu_save_options_init.s")
 
-void MenuSaveOptionsInit(void) {
+void menu_save_options_init(void) {
     D_80126A6C = 1;
     D_80126A10 = 0;
     D_80126A18 = 1;
@@ -1517,7 +1517,7 @@ void func_80096790(void) {
 }
 #endif
 
-void Menu11Init(void) {
+void menu_11_init(void) {
     Settings *settings;
     u16 *placements;
     s32 i;
@@ -1828,7 +1828,7 @@ void func_8009AF18(void) {
     }
 }
 
-void MenuCreditsInit(void) {
+void menu_credits_init(void) {
     s32 phi_v1;
     s32 phi_a0;
     u16 *temp;
