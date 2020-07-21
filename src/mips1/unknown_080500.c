@@ -111,8 +111,6 @@ extern unk800DFA3C D_800DFA3C;
 extern s32 D_800DFAC0;
 extern s32 D_800DFAC4;
 extern s16 D_800DFA38;
-
-
 extern u32* D_800DFC10;
 extern u32* D_800DFC20;
 extern u32* D_800DFC30;
@@ -203,7 +201,10 @@ extern s32 D_801263AC;
 extern s8 D_801263B4;
 extern s32 D_801263BC;
 extern s32 D_801263C4;
-extern s8 D_801263D4[4];
+extern s8 D_801263D4;
+extern s8 D_801263D5;
+extern s8 D_801263D6;
+extern s8 D_801263D7;
 extern s8 D_801263DC;
 extern s32 D_801263D8;
 extern s32 D_801263E0;
@@ -221,14 +222,18 @@ extern u8 D_80126458;
 extern u8 D_80126459;
 extern u8 D_8012645A;
 extern u8 D_8012645B;
+//extern s8 D_8012645C[4];
 extern s8 D_8012645C;
 extern s8 D_8012645D;
-extern u8 D_8012645E;
-extern u8 D_8012645F;
+extern s8 D_8012645E;
+extern s8 D_8012645F;
+
+//extern s8 D_80126464[4];
 extern s8 D_80126464;
-extern u8 D_80126465;
-extern u8 D_80126466;
-extern u8 D_80126467;
+extern s8 D_80126465;
+extern s8 D_80126466;
+extern s8 D_80126467;
+
 extern u8 D_80126468;
 extern u8 D_80126469;
 extern u8 D_8012646A;
@@ -278,6 +283,8 @@ extern s32 D_80126A6C;
 extern s32 D_80126A94;
 extern s32* D_80126AA0[16];
 extern s32 D_80126BB4;
+extern s32 D_80126BB8;
+extern s32 D_80126BBC;
 extern s32 D_80126BC4;
 extern s32 D_80126BC8;
 extern s32 D_80126BCC;
@@ -297,7 +304,7 @@ extern s32 D_80126C34;
 extern s32 D_80126C3C;
 extern u16 D_80126C40;
 extern u16 D_80126C42;
-extern u16 D_80126C46;
+extern s16 D_80126C46;
 extern u16 D_80126C44;
 extern s32 D_80126C48;
 extern s16 D_80126C4C;
@@ -567,8 +574,6 @@ void func_800851FC(void) {
     func_800C422C(2);
 }
 
-//GLOBAL_ASM("asm/non_matchings/unknown_080500/menu_save_options_init.s")
-
 void menu_save_options_init(void) {
     D_80126A6C = 1;
     D_80126A10 = 0;
@@ -677,7 +682,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800867D4.s")
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80086A48.s")
 #else
-
 void func_80086A48(s32 arg0) {
     f32 temp, temp2, temp3;
     temp = D_80126BD4;
@@ -688,7 +692,7 @@ void func_80086A48(s32 arg0) {
             D_80126BDC = D_80126BDC + temp3 * (temp - D_80126BDC);
         }
         if (D_801263E0 > 0 && D_80126A00 > 0) {
-            D_80126BEC = D_80126BEC + temp3 * (temp2 - D_80126BDC);
+            D_80126BEC = D_80126BEC + temp3 * (temp2 - D_80126BEC);
         }
         arg0--;
     }
@@ -923,7 +927,131 @@ void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuMagicCodesListLoop.s")
+#else
+
+extern s16 D_80126C80[0x1E]; // Array of shorts of the unlocked cheat's bit ids.
+void func_8008AD1C(void);
+void func_8008A56C(void);
+s32 func_8006A554(s32 arg0);
+
+s32 MenuMagicCodesListLoop(s32 arg0) {
+    s32 temp_t0;
+    s32 phi_a2;
+    s32 phi_s0;
+    s32 sp48;
+    s32 phi_s1;
+    s32 phi_s2;
+    s32 phi_a3_2;
+    s32 phi_v0_2;
+    s32 phi_s3;
+    s8 *temp, *temp2;
+
+    sp48 = 0;
+    if (D_800DF47C != 0) {
+        if (D_800DF47C > 0) {
+            D_800DF47C += arg0;
+        } else {
+            D_800DF47C -= arg0;
+        }
+    }
+    D_801263BC = (D_801263BC + arg0) & 0x3F;
+    if (D_800DF47C >= -0x13 && D_800DF47C < 0x14) {
+        func_8008A56C();
+    }
+    
+    phi_s3 = 0;
+    phi_a2 = 0;
+    phi_s2 = 0;
+    if (D_801263C4 == 0 && D_800DF47C == 0) {
+        phi_s0 = 0; 
+        temp = (s8*)&D_80126464;
+        temp2 = (s8*)&D_8012645C;
+        while(phi_s0 < 4) {
+            phi_s3 |= func_8006A554(phi_s0);
+            phi_a2 += *temp;
+            phi_s2 += *temp2;
+            temp++;
+            temp2++;
+            phi_s0++;
+        }
+    }
+    
+    phi_s0 = 0;
+    phi_s1 = 1;
+    phi_a3_2 = 0;
+    while(phi_s0 < 32) { // 32 is the max number of cheats.
+        if (phi_s1 & gUnlockedMagicCodes) {
+            D_80126C80[phi_a3_2] = phi_s0;
+            phi_a3_2++;
+        }
+        phi_s1 <<= 1;
+        phi_s0++;
+    }
+    
+    if (((phi_a2 < 0) || (phi_a2 > 0)) && (phi_a3_2 != D_80126C46)) {
+        func_80001D04(0xEF, NULL);
+        phi_s1 = 1 << D_80126C80[D_80126C46];
+        gActiveMagicCodes ^= phi_s1; // Toggle active cheats?
+        func_8008A8F8(phi_s1, 0x10, 0x20);  // func_8008A8F8() = Clear flags?
+        func_8008A8F8(phi_s1, 0x20, 0x10);
+        func_8008A8F8(phi_s1, 0x1000, 0x6080);
+        func_8008A8F8(phi_s1, 0x6080, 0x1000);
+        func_8008A8F8(phi_s1, 0x800, 0x1F8000);
+        func_8008A8F8(phi_s1, 0x1F8000, 0x800);
+        func_8008A8F8(phi_s1, 0x8000, 0xF0000);
+        func_8008A8F8(phi_s1, 0x10000, 0xE8000);
+        func_8008A8F8(phi_s1, 0x20000, 0xD8000);
+        func_8008A8F8(phi_s1, 0x40000, 0xB8000);
+        func_8008A8F8(phi_s1, 0x80000, 0x78000);
+    }
+    
+    phi_a2 = D_80126C46;
+    
+    if (phi_s2 < 0) {
+        D_80126C46++;
+        if (phi_a3_2 < D_80126C46) {
+            D_80126C46 = phi_a3_2;
+        }
+    }
+    if (phi_s2 > 0) {
+        D_80126C46--;
+        if ((s32) D_80126C46 < 0) {
+            D_80126C46 = 0;
+        }
+    }
+    
+    if (D_80126C46 < D_801263E0) {
+        D_801263E0 = D_80126C46;
+    } else if (D_80126C46 >= (D_801263E0 + D_80126C70)) {
+        D_801263E0 = (D_80126C46 - D_80126C70) + 1;
+    }
+    
+    if (D_80126C46 != phi_a2) {
+        func_80001D04(0xEB, NULL);
+    }
+    
+    if ((phi_s3 & 0x9000) && (phi_a3_2 == D_80126C46)) {
+        sp48 = -1;
+    }
+    if (phi_s3 & 0x4000) {
+        sp48 = -1;
+    }
+    if (sp48 != 0) {
+        D_800DF47C = sp48;
+        func_800C01D8(&D_800DF774);
+        func_80001D04(0x241, NULL);
+    }
+    if (D_800DF47C < -0x1E) {
+        func_8008AD1C();
+        MenuInit(0xA);
+        return 0;
+    }
+    D_801263C4 = 0;
+    return 0;
+}
+#endif
 
 void func_8008AD1C(void) {
     func_8009C508(0x3F);
@@ -948,7 +1076,45 @@ void func_8008AEB4(s32 arg0, s32 *arg1) {
     }
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008AF00.s")
+#else
+void func_8008AF00(s32 arg0) {
+    s32 i;
+    
+    D_800DF4BC = 1;
+    
+    i = 0;
+    while (i < 8) {
+        D_801263E8[i] = (i == arg0) ? 1 : -1;
+        i++;
+    }
+
+    if (arg0 == 0) {
+        D_801263D4 = 1;
+    } else {
+        D_801263D4 = 0;
+    }
+    if (arg0 == 1) {
+        D_801263D5 = 1;
+    } else {
+        D_801263D5 = 0;
+    }
+    if (arg0 == 2) {
+        D_801263D6 = 1;
+    } else {
+        D_801263D6 = 0;
+    }
+    if (arg0 == 3) {
+        D_801263D7 = 1;
+        return;
+    } else {
+        D_801263D7 = 0;
+        return;
+    }
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuCharacterSelectInit.s")
 
 void func_8008B20C(s32 arg0) {
@@ -1330,7 +1496,6 @@ void func_8008E45C(void) {
     D_800E048C.unk8 = D_80126550[29];
 }
 
-//GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008E4B0.s")
 void func_8008E4B0(void) {
     D_800E041C = D_80126550[61];
     D_800E042C = D_80126550[60];
@@ -1485,13 +1650,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094D28.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80095624.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80095728.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80096790.s")
-#else
-extern s16 D_800E0710[30];
-extern s32 D_80126BB8;
-extern s32 D_80126BBC;
-
 void func_800981E8(void);
 
 void func_80096790(void) {
@@ -1515,7 +1673,6 @@ void func_80096790(void) {
     func_800981E8();
     func_80000968(0);
 }
-#endif
 
 void menu_11_init(void) {
     Settings *settings;
@@ -1575,10 +1732,6 @@ void func_800976F8(u32 arg0, char *output, s32 length) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80097744.s")
-#else
-// Almost matches, except for some regalloc issues.
 s32 func_80097744(unsigned char *arg0, s32 arg1) {
     s32 i;
     u32 output;
@@ -1596,12 +1749,13 @@ s32 func_80097744(unsigned char *arg0, s32 arg1) {
         
         if (!processingChars) {
             currentChar = ' ';
+            charIndex = 0;
         } else {
             currentChar = arg0[i];
+            charIndex = 0;
         }
         
-        charIndex = 0;
-        while (D_800E0F6C[charIndex] != currentChar) {
+        while (currentChar != D_800E0F6C[charIndex]) {
             charIndex++;
             if (charIndex >= 0x1F) {
                 break;
@@ -1614,7 +1768,6 @@ s32 func_80097744(unsigned char *arg0, s32 arg1) {
     
     return output;
 }
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800977D0.s")
 
@@ -1738,19 +1891,22 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80098EBC.s")
 void func_80098EBC(s32 arg0) {
     s32 fade;
     s32 i;
+    s32 test;
+    s32 test2;
 
     D_801263BC = (D_801263BC + arg0) & 0x3F;
     
-    arg0 = D_801263BC * 8;
-    if (arg0 >= 0x100) {
-        arg0 = 0x1FF - arg0;
+    test = D_801263BC * 8;
+    if (test >= 0x100) {
+        test = 0x1FF - test;
     }
     
     // Has regalloc issues starting here.
     for (i = 0; i < D_800E0FE4; i++) {
         fade = 0xFF;
+        
         if (D_800DF4BC < 3 && ((D_801263E0 == 0 && D_80126418[i] != 0) || (D_801263E0 != 0 && D_80126420[i] != 0))) {
-            fade = (arg0 >> 1) + 0x80;
+            fade = (test >> 1) + 0x80;
         }
         D_800E1088[i][0].filterRed = fade;
         D_800E1088[i][0].filterGreen = fade;
@@ -2040,7 +2196,7 @@ s8 func_8009C280(s32 arg0) {
     if (arg0 < 0 || arg0 >= 4) {
         return -1;
     }
-    if (D_801263D4[arg0] == 0) {
+    if (*(&D_801263D4 + arg0) == 0) {
         return -1;
     }
     return D_801263E8[arg0];
@@ -2126,7 +2282,6 @@ void func_8007CCB0(u32 arg0);
 void func_8000FFB8(u32 arg0);
 void func_8005FF40(u32 arg0);
 
-//GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C508.s")
 void func_8009C508(s32 arg0) {
     if (D_80126750[arg0] != 0) {
         if (D_80126550[arg0] != 0) {
@@ -2186,7 +2341,6 @@ void func_8009C8A4(s16 *arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8009C904.s")
 # else 
 s32 func_8006F94C(s32, s32);
-unk8009C904 *func_80070C9C(s32, u32);
 void func_8009C904(s32 arg0) {
     if (D_800DF75C == NULL) {
         D_800DF75C = func_80070C9C(0x240, 0xFF0000FF);
