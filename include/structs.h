@@ -32,7 +32,7 @@ typedef struct MenuElement {
 } MenuElement;
 
 /* Size: 0x18 bytes */
-typedef struct dkr_racer_t {
+typedef struct Racer {
   /* 0x00 */ u32 trophy_points;
   /* 0x04 */ u8 best_times;
   /* 0x05 */ u8 character;
@@ -41,7 +41,7 @@ typedef struct dkr_racer_t {
   /* 0x08 */ u16 placements[4];
   /* 0x10 */ u16 course_time;
   /* 0x12 */ u16 lap_times[3];
-} dkr_racer_t;
+} Racer;
 
 /* Unknown Size */
 typedef struct Settings4C {
@@ -73,7 +73,7 @@ typedef struct Settings {
   /* 0x004B */ u8 newGame;
   /* 0x004C */ Settings4C *unk4C;
   /* 0x0050 */ u32 filename;
-  /* 0x0054 */ dkr_racer_t racers[8];
+  /* 0x0054 */ Racer racers[8];
   /* 0x0114 */ u8 timeTrialRacer;
   /* 0x0115 */ char unk0115[2];
   /* 0x0117 */ u8 display_times;

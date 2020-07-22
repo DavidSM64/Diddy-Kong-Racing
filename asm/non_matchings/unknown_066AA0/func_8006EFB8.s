@@ -6,7 +6,6 @@ glabel func_8006EFB8
 /* 06FBC8 8006EFC8 24020001 */   li    $v0, 1
 /* 06FBCC 8006EFCC 03E00008 */  jr    $ra
 /* 06FBD0 8006EFD0 00001025 */   move  $v0, $zero
-
 .L8006EFD4:
 /* 06FBD4 8006EFD4 03E00008 */  jr    $ra
 /* 06FBD8 8006EFD8 00000000 */   nop   
