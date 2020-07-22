@@ -1046,6 +1046,8 @@ glabel D_800DD2B8
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800DD2CC
 .word 0x3F800000
 .word 0x00000000
 .word 0x00000000
