@@ -164,9 +164,29 @@ typedef struct {
   /* 0x4C */ u32 unk4C;
 } dkr_wave_t;
 
+typedef struct Player_40 {
+    u8 pad0[0xC];
+    f32 unkC;
+} Player_40;
+
+typedef struct Player_4C {
+    u8 pad0[0x10];
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u16 unk14;
+} Player_4C;
+
+typedef struct Player_64 {
+    f32 unk0;
+    u8 pad4[9];
+    u8 unkD;
+} Player_64;
+
   
 /* Size: 0x0630 bytes */
-typedef struct {
+typedef struct Player {
   /* 0x0000 */ u16 y_rotation;
   /* 0x0002 */ u16 x_rotation;
   /* 0x0004 */ u16 z_rotation;
@@ -175,7 +195,7 @@ typedef struct {
   /* 0x000C */ f32 x_position;
   /* 0x0010 */ f32 y_position;
   /* 0x0014 */ f32 z_position;
-  /* 0x0018 */ u16 unk18;
+  /* 0x0018 */ s16 unk18;
   /* 0x001A */ u16 unk1A;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
@@ -198,25 +218,25 @@ typedef struct {
   /* 0x003E */ u8 unk3E;
   /* 0x003F */ u8 unk3F;
 
-  /* 0x0040 */ void *descriptor_ptr;
+  /* 0x0040 */ Player_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ u16 unk48;
   /* 0x004A */ u16 unk4A;
-  /* 0x004C */ void *unk4C; //player + 0x318
+  /* 0x004C */ Player_4C *unk4C; //player + 0x318
   /* 0x0050 */ void *unk50; //player + 0x2F4
   /* 0x0054 */ void *unk54; //player + 0x2C0
   /* 0x0058 */ void *unk58; //player + 0x304
   /* 0x005C */ u32 unk5C;
 
   /* 0x0060 */ void *unk60; //player + 0x340
-  /* 0x0064 */ void *unk64; //player + 0x98
+  /* 0x0064 */ Player_64 *unk64; //player + 0x98
   /* 0x0068 */ void *unk68; //player + 0x80
   /* 0x006C */ void *unk6C; //player + 0x370
   /* 0x0070 */ u32 unk70;
 
   /* 0x0074 */ u32 unk74;
   /* 0x0078 */ u32 unk78;
-  /* 0x007C */ u32 unk7C;
+  /* 0x007C */ s32 unk7C;
 
   /* 0x0080 */ void *unk80;
   /* 0x0084 */ u32 unk84;
@@ -422,6 +442,6 @@ typedef struct {
   /* 0x0374 */ s32 unk374;
 
   u32 unk378[174]; // Not an array. Unknown values.
-} dkr_player_t;
+} Player;
 
 #endif
