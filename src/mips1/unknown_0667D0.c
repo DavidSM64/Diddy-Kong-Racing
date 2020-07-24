@@ -7,7 +7,6 @@
 extern s16 D_800DD050;
 
 extern s32* D_80065D98;
-extern s32* D_8006C330;
 extern s32* D_8011D750;
 extern s32* D_8011F758;
 extern s32* D_8011F760;

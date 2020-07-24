@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "fast3d.h"
 
 extern s32 D_800E7C90;
 
@@ -39,21 +40,6 @@ u32 func_8007F640(s32 arg0) {
         
         return someAddr;
     }
-}
-
-
-// TODO: Replace with real Gfx struct
-typedef struct Gfx {
-    u32 w0;
-    u32 w1;
-} Gfx;
-
-// TODO: Replace with real gbi.h macros
-#define fast3d_cmd(pkt, word0, word1) \
-{                                     \
-    Gfx *_g = (Gfx*)(pkt);            \
-    _g->w0 = word0;                   \
-    _g->w1 = word1;                   \
 }
 
 extern Gfx D_800DF440;
