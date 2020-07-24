@@ -388,8 +388,7 @@ void func_8003CE64(Player *arg0, u8 *arg1) {
     arg0->unk78 = arg1[8];
 }
 
-//GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003CEA0.s")
-
+GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003CEA0.s")
 
 void func_8003CF00(s32 arg0, s32 arg1) {
 
