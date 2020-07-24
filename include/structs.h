@@ -53,10 +53,10 @@ typedef struct Settings4C {
 
 /* Size: 0x840 bytes */
 typedef struct Settings {
-  /* 0x0000 */ void *balloonsPtr;
+  /* 0x0000 */ u16 *balloonsPtr;
   /* 0x0004 */ s32 *courseFlagsPtr;
   /* 0x0008 */ u16 keys;
-  /* 0x000A */ char unkA[2];
+  /* 0x000A */ u16 unkA;
   /* 0x000C */ u16 bosses;
   /* 0x000E */ u16 trophies;
   /* 0x0010 */ u32 cutsceneFlags;
