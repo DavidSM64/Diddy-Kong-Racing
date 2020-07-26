@@ -164,9 +164,16 @@ typedef struct {
   /* 0x4C */ u32 unk4C;
 } dkr_wave_t;
 
+typedef struct Player_3C {
+    u8 pad0[0x8];
+    s8 unk8;
+} Player_3C;
+
 typedef struct Player_40 {
     u8 pad0[0xC];
     f32 unkC;
+    u8 pad10[0x45];
+    s8 unk55;
 } Player_40;
 
 typedef struct Player_4C {
@@ -180,10 +187,27 @@ typedef struct Player_4C {
 
 typedef struct Player_64 {
     f32 unk0;
-    u8 pad4[9];
-    u8 unkD;
+    s32 unk4;
+    u8 pad8[4];
+    union {
+        struct {
+            u8 byteC;
+            u8 byteD;
+        } bytes;
+        s16 half;
+    } unkCD;
+    u8 unkE;
+    s8 unkF;
+    u8 unk10;
+    u8 unk11;
+    u8 pad12[0x16];
+    s16 unk28;
+    s16 unk2A;
+    s32 unk2C;
+    s32 unk30;
+    s16 unk34;
+    s8 unk36;
 } Player_64;
-
   
 /* Size: 0x0630 bytes */
 typedef struct Player {
@@ -204,19 +228,15 @@ typedef struct Player {
 
   /* 0x002C */ u16 unk2C;
   
-  /* 0x002E */ u16 unk2E;
+  /* 0x002E */ s16 unk2E;
   /* 0x0030 */ f32 unk30;
   /* 0x0034 */ f32 unk34;
   /* 0x0038 */ u8 unk38;
 
   /* 0x0039 */ u8 unk39;
-  /* 0x003A */ u8 unk3A;
+  /* 0x003A */ s8 unk3A;
   /* 0x003B */ u8 unk3B;
-  /* 0x003C */ u8 unk3C;
-  
-  /* 0x003D */ u8 unk3D;
-  /* 0x003E */ u8 unk3E;
-  /* 0x003F */ u8 unk3F;
+  /* 0x003C */ Player_3C* unk3C;
 
   /* 0x0040 */ Player_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;
@@ -235,8 +255,15 @@ typedef struct Player {
   /* 0x0070 */ u32 unk70;
 
   /* 0x0074 */ u32 unk74;
-  /* 0x0078 */ u32 unk78;
-  /* 0x007C */ s32 unk7C;
+  /* 0x0078 */ s32 unk78;
+  
+  union {
+      struct {
+          s16 upper;
+          s16 lower;
+      } half;
+      s32 word;
+  } unk7C;
 
   /* 0x0080 */ void *unk80;
   /* 0x0084 */ u32 unk84;

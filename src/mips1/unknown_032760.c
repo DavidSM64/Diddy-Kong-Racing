@@ -5,14 +5,35 @@
 #include "macros.h"
 #include "structs.h"
 
+extern s32 D_800DC950;
+extern s32 D_800DC954;
+extern s32 D_800DC958;
 extern s32 D_800DC95C;
+extern s32 D_800DC960;
+extern s32 D_800DC964;
 
 extern f32 D_8011D4D0;
+extern s32 D_8011D4D4;
 extern s32 D_8011D4D8;
 extern s32 D_8011D4DC;
 extern s16 D_8011D4E2;
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031B60.s")
+Settings* get_settings();
+Player_64 *func_800BE654(s16, f32, f32);
+void func_80000FDC(s32, s32, f32);
+
+void func_80031B60(void) {
+    if (D_800DC950 != 0) {
+        func_80071140(D_800DC950);
+        D_800DC950 = 0;
+        D_800DC954 = 0;
+        D_800DC960 = 0;
+        D_800DC964 = 0;
+    }
+    D_800DC95C = 0;
+    D_800DC958 = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031BB8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031CAC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031F88.s")
@@ -37,7 +58,31 @@ void func_80033F44(Player *arg0, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033F60.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034530.s")
+
+typedef struct unk80034530 {
+    u8 pad0[0x8];
+    u8 unk8;
+    u8 unk9;
+    s8 unkA;
+    s8 unkB;
+    u8 unkC;
+    u8 unkD;
+} unk80034530;
+
+void func_80034530(Player *arg0, unk80034530 *arg1) {
+    Player_64* temp;
+    arg0->unk4C->unk14 = 0x22;
+    arg0->unk4C->unk11 = 0;
+    temp = arg0->unk64;
+    temp->unkE = arg1->unkA;
+    temp->unkF = arg1->unkB;
+    temp->unk10 = arg1->unkC;
+    temp->unk11 = arg1->unkD;
+    temp->unkCD.half = temp->unkF;
+    arg0->y_rotation = arg1->unk8 << 4 << 4; // Not sure about the shift amounts here, but it
+    arg0->x_rotation = arg1->unk9 << 4 << 4; // just needs to be 2 left shifts that add up to 8.
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800345A0.s")
 
 // Literally the same function as func_80033F44()
@@ -80,16 +125,11 @@ void func_80034B68(s32 arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034B74.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034E70.s")
-#else
 void func_80034E70(Player *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 2;
-    // Regalloc issue here.
-    arg0->unk0 = arg1[8] << 10;
+    arg0->y_rotation = arg1[8] << 6 << 4; // Not sure about the values here.
 }
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034E9C.s")
 
@@ -128,7 +168,27 @@ void func_80035E20(unk80035E20 *arg0, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035E34.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035EF8.s")
+
+typedef struct unk80035EF8 {
+    u8 pad0[0xA];
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} unk80035EF8;
+
+void func_80035EF8(Player *arg0, unk80035EF8 *arg1) {
+    f32 phi_f0;
+    arg0->unk78 = (s32) arg1->unkE;
+    arg0->unk7C.word = -1;
+    arg0->y_rotation = arg1->unkC << 6 << 4; // Not sure about the values here.
+    phi_f0 = (f32) (arg1->unkA & 0xFF);
+    if (phi_f0 < 10.0f) {
+        phi_f0 = 10.0f;
+    }
+    phi_f0 /= 64;
+    arg0->scale = (f32) (arg0->descriptor_ptr->unkC * phi_f0);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035F6C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
@@ -139,13 +199,23 @@ void func_80036194(Player *arg0, s32 arg1) {
     arg0->unk4C->unk10 = 0x1E;
     arg0->unk4C->unk12 = 0;
     temp = arg0->unk64;
-    temp->unkD = 0xFF;
+    temp->unkCD.bytes.byteD = 0xFF;
     temp->unk0 = 0.0f;
     D_8011D4D8 = 0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800361E0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036BCC.s")
+
+void func_80036BCC(u16 arg0, s32 arg1) {
+    if ((D_8011D4D8 != 0) && (arg1 & 1)) {
+        func_8000488C(D_8011D4D8);
+        D_8011D4D8 = 0;
+    }
+    if (D_8011D4D8 == 0) {
+        func_80001D04(arg0, &D_8011D4D8);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036C30.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800370D4.s")
 
@@ -257,7 +327,21 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003827C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003833C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038710.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800387CC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038854.s")
+
+void func_80038854(Player *arg0, u8 *arg1) {
+    if (arg1[9] != 0) {
+        arg0->unk4C->unk14 = 0x21;
+    } else {
+        arg0->unk4C->unk14 = 0x22;
+    }
+    arg0->unk4C->unk11 = 0;
+    arg0->unk4C->unk10 = 0xF;
+    arg0->unk4C->unk12 = 0;
+    arg0->unk78 = (arg1[10] << 16) | arg1[8]; // Not sure about the values here.
+    arg0->unk7C.word = arg1[9];
+    arg0->y_rotation = arg1[11] << 10; // Not sure about the values here.
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800388D4.s")
 
 void func_800389AC(s32 arg0, s32 arg1) {
@@ -290,8 +374,29 @@ void func_80038AC8(s32 arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038AD4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038B74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038BF4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038D58.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038DC4.s")
+
+void func_80038D58(Player *arg0, s32 arg1) {
+    arg0->unk4C->unk14 = 2;
+    arg0->unk4C->unk11 = 0;
+    arg0->unk4C->unk10 = 0xF;
+    arg0->unk4C->unk12 = 0;
+    if (get_settings()->cutsceneFlags & 1) {
+        arg0->unk78 = 1;
+    }
+}
+
+void func_80038DC4(Player *arg0, s32 arg1) {
+    if (arg0->unk78 != 0) {
+        Player_3C* temp = arg0->unk3C;
+        if(arg0->unk4C->unk13 < 0x78) {
+            func_8006F338(temp->unk8);
+            arg0->unk78 = 0;
+            func_80001D04(0x30, 0, arg0);
+            func_80000FDC(0x12A, 0, 1.0f);
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038E3C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038F58.s")
 
@@ -309,10 +414,6 @@ void func_80039184(s32 arg0, s32 arg1) {
 
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80039190.s")
-#else
-
 typedef struct unk80039190 {
     u16 unk0;
     u8 pad2[0x76];
@@ -324,11 +425,8 @@ void func_80039190(unk80039190 *arg0, u8 *arg1) {
     s32 temp;
     arg0->unk78 = arg1[8];
     arg0->unk7C = arg1[9];
-    
-    // Regalloc issues here
-    arg0->unk0 = arg1[10] * 0x400;
+    arg0->unk0 = arg1[10] << 6 << 4; // Not sure about the values here.
 }
-#endif
 
 void func_800391BC(s32 arg0, s32 arg1) {
 
@@ -342,14 +440,39 @@ void func_800391C8(Player *arg0, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800391FC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800392B8.s")
+
+void func_800392B8(Player *arg0, s32 arg1) {
+    Player_64* temp;
+    arg0->unk4C->unk14 = (u16)1;
+    arg0->unk4C->unk11 = (u8)0;
+    arg0->unk4C->unk10 = (u8)0x1E;
+    arg0->unk4C->unk12 = (u8)0;
+    temp = arg0->unk64;
+    temp->unkCD.bytes.byteD = 0xFF;
+    temp->unk0 = 0.0f;
+    temp->unk28 = 0;
+    temp->unk2C = 0;
+    temp->unk34 = 0;
+    temp->unk36 = 0;
+    D_8011D4D4 = 0;
+    D_8011D4E2 = 0x10F;
+}
 
 void func_80039320(s16 arg0) {
     D_8011D4E2 = arg0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80039330.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003AC3C.s")
+
+void func_8003AC3C(u16 arg0, s32 arg1) {
+    if ((D_8011D4D4 != 0) && (arg1 & 1)) {
+        func_8000488C(D_8011D4D4);
+        D_8011D4D4 = 0;
+    }
+    if (D_8011D4D4 == 0) {
+        func_80001D04(arg0, &D_8011D4D4);
+    }
+}
 
 void func_8003ACA0(s32 arg0, s32 arg1) {
 
@@ -359,7 +482,21 @@ f32 func_8003ACAC(void) {
     return D_8011D4D0;
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003ACBC.s")
+#else
+
+void func_8003ACBC(Player *arg0, u8 *arg1, s32 arg2) {
+    f32 phi_f0 = (s32)arg1[8]; // Regalloc issue here
+    if (phi_f0 < 5.0f) {
+        phi_f0 = 5.0f;
+    }
+    phi_f0 /= 64;
+    arg0->scale = phi_f0;
+    arg0->y_rotation = arg1[10] << 6 << 4; // Not sure about the values here.
+    func_80011390();
+}
+#endif
 
 void func_8003AD28(s32 arg0, s32 arg1) {
 
@@ -377,7 +514,22 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C1E0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C2E4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C644.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C7A4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C9EC.s")
+
+void func_8003C9EC(Player *arg0, u8 *arg1) {
+    Player_64 *temp = arg0->unk64;
+    arg0->unk3A = arg1[8];
+    arg0->y_rotation = arg1[9] << 6 << 4;
+    temp->unk0 = arg0->y_position;
+    arg0->unk4C->unk14 = 0x21;
+    arg0->unk4C->unk11 = 2;
+    arg0->unk4C->unk10 = 0x14;
+    arg0->unk4C->unk12 = 0;
+    temp->unk4 = 0;
+    if (arg0->unk3A >= arg0->descriptor_ptr->unk55) {
+        arg0->unk3A = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003CA68.s")
 
 void func_8003CE64(Player *arg0, u8 *arg1) {
@@ -388,7 +540,12 @@ void func_8003CE64(Player *arg0, u8 *arg1) {
     arg0->unk78 = arg1[8];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003CEA0.s")
+void func_8003CEA0(Player *arg0, s32 arg1) {
+    if (arg0->unk4C->unk13 < 0x2D) {
+        func_8001E344(arg0->unk78, arg0);
+    }
+    arg0->unk4C->unk13 = (u8)0xFF;
+}
 
 void func_8003CF00(s32 arg0, s32 arg1) {
 
@@ -415,11 +572,11 @@ void func_8003CF58(Player *arg0, u8 *arg1) {
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = arg1[9];
     arg0->unk78 = arg1[8];
-    arg0->unk7C = arg1[9];
+    arg0->unk7C.word = arg1[9];
 }
 
 void func_8003CF98(Player *arg0, s32 arg1) {
-    if (arg0->unk4C->unk13 < arg0->unk7C) {
+    if (arg0->unk4C->unk13 < arg0->unk7C.word) {
         func_80028044(arg0->unk78);
     }
 }
@@ -466,7 +623,18 @@ void func_8003D3EC(unk8003D3EC *arg0, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D3FC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D534.s")
+
+void func_8003D534(Player *arg0, s32 arg1) {
+    arg0->unk4C->unk14 = 2;
+    arg0->unk4C->unk11 = 0;
+    arg0->unk4C->unk10 = 0x1E;
+    arg0->unk7C.half.upper = 0x14;
+    arg0->unk7C.half.lower = 0x10;
+    if (func_8009C30C() & 0x1000) {
+        func_8000FFB8(arg0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D5A0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003DBA0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003DC5C.s")
@@ -484,7 +652,15 @@ void func_8003E5BC(s32 arg0, s32 arg1) {
 
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E5C8.s")
+void func_8003E5C8(Player *arg0, s32 arg1) {
+    arg0->unk4C->unk14 = 2;
+    arg0->unk4C->unk11 = 0;
+    arg0->unk4C->unk10 = 0x18;
+    arg0->unk4C->unk12 = 0;
+    arg0->unk78 = func_8000C8B4(0x1E0, arg0);
+    arg0->unk7C.word = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E630.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E694.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EC14.s")
@@ -516,7 +692,13 @@ void func_800403A8(unk800403A8 *arg0, s32 arg1, s32 arg2) {
     arg0->unk64 = func_80031CAC(arg0, arg1);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800403D8.s")
+void func_800403D8(Player *arg0, s32 arg1, s32 arg2) {
+    arg0->unk64 = func_800BE654(arg0->unk2E, arg0->x_position, arg0->z_position);
+    arg0->unk4C->unk14 = 1;
+    arg0->unk4C->unk11 = 0;
+    arg0->unk4C->unk10 = 0x1E;
+    arg0->unk4C->unk12 = 0;
+}
 
 f32 func_800BEEB4(Player_64*);
 
@@ -599,7 +781,16 @@ void func_8004203C(Player *arg0, unk8004203C_arg1 *arg1) {
     arg0->unk78 = arg1->unkA;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042090.s")
+void func_80042090(Player *arg0, s32 arg1) {
+    if (arg0->unk78 >= func_8006F94C(0, 0x400)) {
+        arg0->unk74 = 1;
+    } else {
+        arg0->unk74 = 0;
+    }
+    if (func_8009C3C8() < 2) {
+        func_800AFC3C(arg0, arg1);
+    }
+}
 
 typedef struct unk8004210C {
     u8 pad0[0x3C];
@@ -629,7 +820,25 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042178.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042210.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800422F0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042998.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042A1C.s")
+
+typedef struct unk80042A1C {
+    u8 pad0[0x78];
+    f32 unk78;
+    s16 unk7C;
+    s16 unk7E;
+} unk80042A1C;
+
+void func_80042A1C(unk80042A1C *arg0, s8 *arg1) {
+    arg0->unk78 = arg1[9] * 8.0f;
+    arg0->unk78 *= arg0->unk78;
+    arg0->unk7C = arg1[8];
+    arg0->unk7E = 0;
+    if (is_in_tracks_mode()) {
+        func_8000FFB8(arg0);
+    }
+    func_800C56D0(4);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042A90.s")
 
 typedef struct unk80042CD0 {

@@ -10998,6 +10998,7 @@ glabel D_800E61B8
 
 glabel D_800E61BC
 .word 0x9999999A
+
 .word 0x8003E66C
 .word 0x8003E66C
 .word 0x8003E67C
