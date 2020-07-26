@@ -172,7 +172,8 @@ typedef struct Player_3C {
 typedef struct Player_40 {
     u8 pad0[0xC];
     f32 unkC;
-    u8 pad10[0x45];
+    u8 pad10[0x44];
+    s8 unk54;
     s8 unk55;
 } Player_40;
 
@@ -207,14 +208,28 @@ typedef struct Player_64 {
     s32 unk30;
     s16 unk34;
     s8 unk36;
+    u8 pad37[0x41];
+    f32 unk78;
+    f32 unk7C;
+    f32 unk80;
+    u8 pad84[0xDC];
+    s16 unk160;
+    s16 unk162;
+    s16 unk164;
+    u8 pad166[0x2A];
+    u16 unk190;
+    u8 unk192;
+    u8 unk193;
+    u8 pad194[0x26];
+    u16 unk1BA;
 } Player_64;
   
 /* Size: 0x0630 bytes */
 typedef struct Player {
-  /* 0x0000 */ u16 y_rotation;
-  /* 0x0002 */ u16 x_rotation;
-  /* 0x0004 */ u16 z_rotation;
-  /* 0x0006 */ u16 unk6;
+  /* 0x0000 */ s16 y_rotation;
+  /* 0x0002 */ s16 x_rotation;
+  /* 0x0004 */ s16 z_rotation;
+  /* 0x0006 */ s16 unk6;
   /* 0x0008 */ f32 scale;
   /* 0x000C */ f32 x_position;
   /* 0x0010 */ f32 y_position;
@@ -226,7 +241,7 @@ typedef struct Player {
   /* 0x0024 */ f32 z_velocity;
   /* 0x0028 */ u32 unk28;
 
-  /* 0x002C */ u16 unk2C;
+  /* 0x002C */ s16 unk2C;
   
   /* 0x002E */ s16 unk2E;
   /* 0x0030 */ f32 unk30;
@@ -240,7 +255,7 @@ typedef struct Player {
 
   /* 0x0040 */ Player_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;
-  /* 0x0048 */ u16 unk48;
+  /* 0x0048 */ s16 unk48;
   /* 0x004A */ u16 unk4A;
   /* 0x004C */ Player_4C *unk4C; //player + 0x318
   /* 0x0050 */ void *unk50; //player + 0x2F4
