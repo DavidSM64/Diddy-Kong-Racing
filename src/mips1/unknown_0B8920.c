@@ -25,16 +25,16 @@ extern s32 D_800E3678;
 extern s32 D_800E3680;
 extern u8* D_800E3760;
 extern u8* D_800E3764;
-extern s32 D_800E3768;
-extern s32 D_800E376C;
+extern u8* D_800E3768;
+extern u8* D_800E376C;
 extern s32 D_8012A0D8;
 extern s32 D_8012A0DC;
 extern u16 D_8012A7B6;
 extern s32* D_8012A7C8;
 extern s32 D_8012A7F0;
 extern s32 D_8012AAD8;
-extern s32 D_8012AAD4;
-extern s32 D_8012AAD0;
+extern u32 D_8012AAD4;
+extern u32 D_8012AAD0;
 
 u8* func_80070C9C(s32 arg0, s32 arg1);
 void func_80071140(s32* arg0);
@@ -232,6 +232,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C580C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5AA0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5B58.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5F60.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6000.s")
 
 void func_800C6170(void) {
@@ -256,9 +257,9 @@ s32 func_800C61DC(s32 arg0, s32 arg1) {
 
 s32 func_800C68C0(void);
 
-s32 func_800C6218(s32 arg0, s32 arg1) {
+u8* func_800C6218(u8* arg0, u8* arg1) {
     // The compression header is 5 bytes. Maybe this is part of the decompression routine?
-    D_800E3768 = (s32) (arg0 + 5); 
+    D_800E3768 = arg0 + 5; 
     D_800E376C = arg1;
     D_8012AAD4 = 0;
     D_8012AAD0 = 0;
@@ -267,10 +268,3 @@ s32 func_800C6218(s32 arg0, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6274.s")
-
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C68C0.s")
-
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C69C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6DDC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6F34.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C7040.s")
