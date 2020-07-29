@@ -8102,10 +8102,10 @@ glabel D_800E3760
 glabel D_800E3764
 .word 0x00000000
 
-glabel D_800E3768
+glabel gzip_inflate_input
 .word 0x00000000
 
-glabel D_800E376C
+glabel gzip_inflate_output
 .word 0x00000000
 
 glabel D_800E3770

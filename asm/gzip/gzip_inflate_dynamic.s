@@ -1,20 +1,20 @@
-glabel func_800C69C4
+glabel gzip_inflate_dynamic
 /* 0C75C4 800C69C4 27BDFAC0 */  addiu $sp, $sp, -0x540
 /* 0C75C8 800C69C8 AFB30028 */  sw    $s3, 0x28($sp)
-/* 0C75CC 800C69CC 3C138013 */  lui   $s3, %hi(D_8012AAD4) # $s3, 0x8013
-/* 0C75D0 800C69D0 8E73AAD4 */  lw    $s3, %lo(D_8012AAD4)($s3)
+/* 0C75CC 800C69CC 3C138013 */  lui   $s3, %hi(gzip_num_bits) # $s3, 0x8013
+/* 0C75D0 800C69D0 8E73AAD4 */  lw    $s3, %lo(gzip_num_bits)($s3)
 /* 0C75D4 800C69D4 AFB4002C */  sw    $s4, 0x2c($sp)
 /* 0C75D8 800C69D8 AFB20024 */  sw    $s2, 0x24($sp)
 /* 0C75DC 800C69DC 24080005 */  li    $t0, 5
-/* 0C75E0 800C69E0 3C14800E */  lui   $s4, %hi(D_800E3768) # $s4, 0x800e
-/* 0C75E4 800C69E4 3C128013 */  lui   $s2, %hi(D_8012AAD0) # $s2, 0x8013
+/* 0C75E0 800C69E0 3C14800E */  lui   $s4, %hi(gzip_inflate_input) # $s4, 0x800e
+/* 0C75E4 800C69E4 3C128013 */  lui   $s2, %hi(gzip_bit_buffer) # $s2, 0x8013
 /* 0C75E8 800C69E8 0268082B */  sltu  $at, $s3, $t0
 /* 0C75EC 800C69EC AFBF0030 */  sw    $ra, 0x30($sp)
 /* 0C75F0 800C69F0 AFB10020 */  sw    $s1, 0x20($sp)
 /* 0C75F4 800C69F4 AFB0001C */  sw    $s0, 0x1c($sp)
-/* 0C75F8 800C69F8 8E943768 */  lw    $s4, %lo(D_800E3768)($s4)
+/* 0C75F8 800C69F8 8E943768 */  lw    $s4, %lo(gzip_inflate_input)($s4)
 /* 0C75FC 800C69FC 10200008 */  beqz  $at, .L800C6A20
-/* 0C7600 800C6A00 8E52AAD0 */   lw    $s2, %lo(D_8012AAD0)($s2)
+/* 0C7600 800C6A00 8E52AAD0 */   lw    $s2, %lo(gzip_bit_buffer)($s2)
 .L800C6A04:
 /* 0C7604 800C6A04 92820000 */  lbu   $v0, ($s4)
 /* 0C7608 800C6A08 26940001 */  addiu $s4, $s4, 1
@@ -111,7 +111,7 @@ glabel func_800C69C4
 /* 0C774C 800C6B4C 24070000 */  li    $a3, 0
 /* 0C7750 800C6B50 AFA00010 */  sw    $zero, 0x10($sp)
 /* 0C7754 800C6B54 AFA80014 */  sw    $t0, 0x14($sp)
-/* 0C7758 800C6B58 0C03189D */  jal   func_800C6274
+/* 0C7758 800C6B58 0C03189D */  jal   gzip_huft_build
 /* 0C775C 800C6B5C AFA90018 */   sw    $t1, 0x18($sp)
 /* 0C7760 800C6B60 23A90038 */  addi  $t1, $sp, 0x38
 /* 0C7764 800C6B64 8D2D0000 */  lw    $t5, ($t1)
@@ -125,7 +125,7 @@ glabel func_800C69C4
 /* 0C7784 800C6B84 84580000 */  lh    $t8, ($v0)
 /* 0C7788 800C6B88 23AF0044 */  addi  $t7, $sp, 0x44
 /* 0C778C 800C6B8C 240A0000 */  li    $t2, 0
-glabel func_800C6B90
+.L800C6B90:
 /* 0C7790 800C6B90 1320005F */  beqz  $t9, .L800C6D10
 /* 0C7794 800C6B94 026D082B */   sltu  $at, $s3, $t5
 /* 0C7798 800C6B98 50200009 */  beql  $at, $zero, .L800C6BC0
@@ -176,14 +176,14 @@ glabel func_800C6B90
 /* 0C7838 800C6C38 ADE00000 */  sw    $zero, ($t7)
 /* 0C783C 800C6C3C 1520FFFD */  bnez  $t1, .L800C6C34
 /* 0C7840 800C6C40 25EF0004 */   addiu $t7, $t7, 4
-/* 0C7844 800C6C44 08031AE4 */  j     func_800C6B90
+/* 0C7844 800C6C44 08031AE4 */  j     .L800C6B90
 /* 0C7848 800C6C48 240A0000 */   li    $t2, 0
 
 .L800C6C4C:
 /* 0C784C 800C6C4C ADE80000 */  sw    $t0, ($t7)
 /* 0C7850 800C6C50 25EF0004 */  addiu $t7, $t7, 4
 /* 0C7854 800C6C54 2739FFFF */  addiu $t9, $t9, -1
-/* 0C7858 800C6C58 08031AE4 */  j     func_800C6B90
+/* 0C7858 800C6C58 08031AE4 */  j     .L800C6B90
 /* 0C785C 800C6C5C 00085025 */   or    $t2, $zero, $t0
 
 .L800C6C60:
@@ -210,7 +210,7 @@ glabel func_800C6B90
 /* 0C78A4 800C6CA4 ADEA0000 */  sw    $t2, ($t7)
 /* 0C78A8 800C6CA8 1520FFFD */  bnez  $t1, .L800C6CA0
 /* 0C78AC 800C6CAC 25EF0004 */   addiu $t7, $t7, 4
-/* 0C78B0 800C6CB0 08031AE4 */  j     func_800C6B90
+/* 0C78B0 800C6CB0 08031AE4 */  j     .L800C6B90
 /* 0C78B4 800C6CB4 00000000 */   nop   
 
 /* 0C78B8 800C6CB8 24080003 */  li    $t0, 3
@@ -237,30 +237,30 @@ glabel func_800C6B90
 /* 0C78FC 800C6CFC ADE00000 */  sw    $zero, ($t7)
 /* 0C7900 800C6D00 1520FFFD */  bnez  $t1, .L800C6CF8
 /* 0C7904 800C6D04 25EF0004 */   addiu $t7, $t7, 4
-/* 0C7908 800C6D08 08031AE4 */  j     func_800C6B90
+/* 0C7908 800C6D08 08031AE4 */  j     .L800C6B90
 /* 0C790C 800C6D0C 240A0000 */   li    $t2, 0
 
 .L800C6D10:
-/* 0C7910 800C6D10 3C01800E */  lui   $at, %hi(D_800E3768) # $at, 0x800e
-/* 0C7914 800C6D14 AC343768 */  sw    $s4, %lo(D_800E3768)($at)
-/* 0C7918 800C6D18 3C018013 */  lui   $at, %hi(D_8012AAD0) # $at, 0x8013
+/* 0C7910 800C6D10 3C01800E */  lui   $at, %hi(gzip_inflate_input) # $at, 0x800e
+/* 0C7914 800C6D14 AC343768 */  sw    $s4, %lo(gzip_inflate_input)($at)
+/* 0C7918 800C6D18 3C018013 */  lui   $at, %hi(gzip_bit_buffer) # $at, 0x8013
 /* 0C791C 800C6D1C 24080009 */  li    $t0, 9
-/* 0C7920 800C6D20 AC32AAD0 */  sw    $s2, %lo(D_8012AAD0)($at)
+/* 0C7920 800C6D20 AC32AAD0 */  sw    $s2, %lo(gzip_bit_buffer)($at)
 /* 0C7924 800C6D24 AFA80038 */  sw    $t0, 0x38($sp)
 /* 0C7928 800C6D28 3C02800F */  lui   $v0, %hi(gzip_cplext) # $v0, 0x800f
-/* 0C792C 800C6D2C 3C018013 */  lui   $at, %hi(D_8012AAD4) # $at, 0x8013
+/* 0C792C 800C6D2C 3C018013 */  lui   $at, %hi(gzip_num_bits) # $at, 0x8013
 /* 0C7930 800C6D30 3C07800F */  lui   $a3, %hi(gzip_cplens) # $a3, 0x800f
 /* 0C7934 800C6D34 24429412 */  addiu $v0, %lo(gzip_cplext) # addiu $v0, $v0, -0x6bee
 /* 0C7938 800C6D38 23A30034 */  addi  $v1, $sp, 0x34
 /* 0C793C 800C6D3C 23A80038 */  addi  $t0, $sp, 0x38
-/* 0C7940 800C6D40 AC33AAD4 */  sw    $s3, %lo(D_8012AAD4)($at)
+/* 0C7940 800C6D40 AC33AAD4 */  sw    $s3, %lo(gzip_num_bits)($at)
 /* 0C7944 800C6D44 23A40044 */  addi  $a0, $sp, 0x44
 /* 0C7948 800C6D48 00112825 */  or    $a1, $zero, $s1
 /* 0C794C 800C6D4C 24060101 */  li    $a2, 257
 /* 0C7950 800C6D50 24E793D4 */  addiu $a3, %lo(gzip_cplens) # addiu $a3, $a3, -0x6c2c
 /* 0C7954 800C6D54 AFA20010 */  sw    $v0, 0x10($sp)
 /* 0C7958 800C6D58 AFA30014 */  sw    $v1, 0x14($sp)
-/* 0C795C 800C6D5C 0C03189D */  jal   func_800C6274
+/* 0C795C 800C6D5C 0C03189D */  jal   gzip_huft_build
 /* 0C7960 800C6D60 AFA80018 */   sw    $t0, 0x18($sp)
 /* 0C7964 800C6D64 23A40044 */  addi  $a0, $sp, 0x44
 /* 0C7968 800C6D68 00111080 */  sll   $v0, $s1, 2
@@ -277,12 +277,12 @@ glabel func_800C6B90
 /* 0C7994 800C6D94 24E79432 */  addiu $a3, %lo(gzip_cpdist) # addiu $a3, $a3, -0x6bce
 /* 0C7998 800C6D98 AFA20010 */  sw    $v0, 0x10($sp)
 /* 0C799C 800C6D9C AFA30014 */  sw    $v1, 0x14($sp)
-/* 0C79A0 800C6DA0 0C03189D */  jal   func_800C6274
+/* 0C79A0 800C6DA0 0C03189D */  jal   gzip_huft_build
 /* 0C79A4 800C6DA4 AFA80018 */   sw    $t0, 0x18($sp)
 /* 0C79A8 800C6DA8 8FA40034 */  lw    $a0, 0x34($sp)
 /* 0C79AC 800C6DAC 8FA5003C */  lw    $a1, 0x3c($sp)
 /* 0C79B0 800C6DB0 8FA60038 */  lw    $a2, 0x38($sp)
-/* 0C79B4 800C6DB4 0C031C10 */  jal   func_800C7040
+/* 0C79B4 800C6DB4 0C031C10 */  jal   gzip_inflate_codes
 /* 0C79B8 800C6DB8 8FA70040 */   lw    $a3, 0x40($sp)
 /* 0C79BC 800C6DBC 8FBF0030 */  lw    $ra, 0x30($sp)
 /* 0C79C0 800C6DC0 8FB4002C */  lw    $s4, 0x2c($sp)

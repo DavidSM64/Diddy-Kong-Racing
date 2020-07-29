@@ -1,4 +1,4 @@
-glabel func_800C6DDC
+glabel gzip_inflate_fixed
 /* 0C79DC 800C6DDC 27BDFAD0 */  addiu $sp, $sp, -0x530
 /* 0C79E0 800C6DE0 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0C79E4 800C6DE4 23AB0044 */  addi  $t3, $sp, 0x44
@@ -54,7 +54,7 @@ glabel func_800C6DDC
 /* 0C7AA0 800C6EA0 24E793D4 */  addiu $a3, %lo(gzip_cplens) # addiu $a3, $a3, -0x6c2c
 /* 0C7AA4 800C6EA4 AFA20010 */  sw    $v0, 0x10($sp)
 /* 0C7AA8 800C6EA8 AFA30014 */  sw    $v1, 0x14($sp)
-/* 0C7AAC 800C6EAC 0C03189D */  jal   func_800C6274
+/* 0C7AAC 800C6EAC 0C03189D */  jal   gzip_huft_build
 /* 0C7AB0 800C6EB0 AFA80018 */   sw    $t0, 0x18($sp)
 /* 0C7AB4 800C6EB4 23AB0044 */  addi  $t3, $sp, 0x44
 /* 0C7AB8 800C6EB8 2408000A */  li    $t0, 10
@@ -78,12 +78,12 @@ glabel func_800C6DDC
 /* 0C7AFC 800C6EFC 24E79432 */  addiu $a3, %lo(gzip_cpdist) # addiu $a3, $a3, -0x6bce
 /* 0C7B00 800C6F00 AFA20010 */  sw    $v0, 0x10($sp)
 /* 0C7B04 800C6F04 AFA30014 */  sw    $v1, 0x14($sp)
-/* 0C7B08 800C6F08 0C03189D */  jal   func_800C6274
+/* 0C7B08 800C6F08 0C03189D */  jal   gzip_huft_build
 /* 0C7B0C 800C6F0C AFA80018 */   sw    $t0, 0x18($sp)
 /* 0C7B10 800C6F10 8FA40020 */  lw    $a0, 0x20($sp)
 /* 0C7B14 800C6F14 8FA50028 */  lw    $a1, 0x28($sp)
 /* 0C7B18 800C6F18 8FA60024 */  lw    $a2, 0x24($sp)
-/* 0C7B1C 800C6F1C 0C031C10 */  jal   func_800C7040
+/* 0C7B1C 800C6F1C 0C031C10 */  jal   gzip_inflate_codes
 /* 0C7B20 800C6F20 8FA7002C */   lw    $a3, 0x2c($sp)
 /* 0C7B24 800C6F24 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 0C7B28 800C6F28 27BD0530 */  addiu $sp, $sp, 0x530

@@ -68,8 +68,8 @@ class LD:
     def gen_main_section(self):
         self.gen_line('.main 0x80000400 : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
-        for asmFile in self.files:
-            self.gen_line(asmFile[0] + '(.text);')
+        for file in self.files:
+            self.gen_line(file[0] + '(.text);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.main);')
         self.gen_newline()
@@ -141,7 +141,7 @@ class LD:
     def get_code_files(self):
         files = []
         asmFilenames = FileUtil.get_filenames_from_directory(ASM_DIR, ('.s',))
-        regex = r'[\/][*]\s*([0-9A-Fa-f]{6})\s*([0-9A-Fa-f]{8})\s*([0-9A-Fa-f]{8})\s*[*][\/]'
+        regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
         for filename in asmFilenames:
             with open(ASM_DIR + '/' + filename, 'r') as asmFile:
                 notDone = True
@@ -152,7 +152,7 @@ class LD:
                         line = asmFile.readline()
                         continue
                     matchedGroups = matches.groups()
-                    files.append(('build/asm/' + filename[:-2] + '.o', matchedGroups[0], matchedGroups[1], 1))
+                    files.append(('build/asm/' + filename[:-2] + '.o', '', matchedGroups[0], 0))
                     break
         srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIR, ('.c','.2'))
         regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'

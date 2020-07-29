@@ -1,4 +1,14 @@
-glabel EntryPoint
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x80000400 */
+
+.include "globals.inc"
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
+glabel entrypoint
 /* 001000 80000400 3C08800F */  lui   $t0, %hi(D_800EBF60) # $t0, 0x800f
 /* 001004 80000404 3C090004 */  lui   $t1, (0x00041490 >> 16) # lui $t1, 4
 /* 001008 80000408 2508BF60 */  addiu $t0, %lo(D_800EBF60) # addiu $t0, $t0, -0x40a0
@@ -20,4 +30,3 @@ glabel EntryPoint
 /* 001044 80000444 00000000 */  nop   
 /* 001048 80000448 00000000 */  nop   
 /* 00104C 8000044C 00000000 */  nop   
-
