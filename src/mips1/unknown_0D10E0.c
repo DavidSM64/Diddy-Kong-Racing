@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("asm/non_matchings/unknown_0D10E0/func_800D04E0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0D10E0/memzero.s")

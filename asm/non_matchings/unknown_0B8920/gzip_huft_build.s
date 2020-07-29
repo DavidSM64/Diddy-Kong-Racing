@@ -1,4 +1,4 @@
-glabel func_800C6274
+glabel gzip_huft_build
 /* 0C6E74 800C6274 27BDFA08 */  addiu $sp, $sp, -0x5f8
 /* 0C6E78 800C6278 AFB20020 */  sw    $s2, 0x20($sp)
 /* 0C6E7C 800C627C AFB1001C */  sw    $s1, 0x1c($sp)
@@ -16,7 +16,7 @@ glabel func_800C6274
 /* 0C6EAC 800C62AC AFA60600 */  sw    $a2, 0x600($sp)
 /* 0C6EB0 800C62B0 AFA70604 */  sw    $a3, 0x604($sp)
 /* 0C6EB4 800C62B4 24050044 */  li    $a1, 68
-/* 0C6EB8 800C62B8 0C034138 */  jal   func_800D04E0
+/* 0C6EB8 800C62B8 0C034138 */  jal   memzero
 /* 0C6EBC 800C62BC 02202025 */   move  $a0, $s1
 /* 0C6EC0 800C62C0 8FAE05FC */  lw    $t6, 0x5fc($sp)
 /* 0C6EC4 800C62C4 0240F025 */  move  $fp, $s2

@@ -1,18 +1,18 @@
-glabel func_800C6F34
-/* 0C7B34 800C6F34 3C0D8013 */  lui   $t5, %hi(D_8012AAD4) # $t5, 0x8013
-/* 0C7B38 800C6F38 8DADAAD4 */  lw    $t5, %lo(D_8012AAD4)($t5)
-/* 0C7B3C 800C6F3C 3C0C8013 */  lui   $t4, %hi(D_8012AAD0) # $t4, 0x8013
-/* 0C7B40 800C6F40 8D8CAAD0 */  lw    $t4, %lo(D_8012AAD0)($t4)
+glabel gzip_inflate_stored
+/* 0C7B34 800C6F34 3C0D8013 */  lui   $t5, %hi(gzip_num_bits) # $t5, 0x8013
+/* 0C7B38 800C6F38 8DADAAD4 */  lw    $t5, %lo(gzip_num_bits)($t5)
+/* 0C7B3C 800C6F3C 3C0C8013 */  lui   $t4, %hi(gzip_bit_buffer) # $t4, 0x8013
+/* 0C7B40 800C6F40 8D8CAAD0 */  lw    $t4, %lo(gzip_bit_buffer)($t4)
 /* 0C7B44 800C6F44 31A80007 */  andi  $t0, $t5, 7
 /* 0C7B48 800C6F48 01A86822 */  sub   $t5, $t5, $t0
 /* 0C7B4C 800C6F4C 010C6006 */  srlv  $t4, $t4, $t0
 /* 0C7B50 800C6F50 24080010 */  li    $t0, 16
-/* 0C7B54 800C6F54 3C0F800E */  lui   $t7, %hi(D_800E3768) # $t7, 0x800e
-/* 0C7B58 800C6F58 3C0E800E */  lui   $t6, %hi(D_800E376C) # $t6, 0x800e
+/* 0C7B54 800C6F54 3C0F800E */  lui   $t7, %hi(gzip_inflate_input) # $t7, 0x800e
+/* 0C7B58 800C6F58 3C0E800E */  lui   $t6, %hi(gzip_inflate_output) # $t6, 0x800e
 /* 0C7B5C 800C6F5C 01A8082B */  sltu  $at, $t5, $t0
-/* 0C7B60 800C6F60 8DEF3768 */  lw    $t7, %lo(D_800E3768)($t7)
+/* 0C7B60 800C6F60 8DEF3768 */  lw    $t7, %lo(gzip_inflate_input)($t7)
 /* 0C7B64 800C6F64 10200008 */  beqz  $at, .L800C6F88
-/* 0C7B68 800C6F68 8DCE376C */   lw    $t6, %lo(D_800E376C)($t6)
+/* 0C7B68 800C6F68 8DCE376C */   lw    $t6, %lo(gzip_inflate_output)($t6)
 .L800C6F6C:
 /* 0C7B6C 800C6F6C 91E20000 */  lbu   $v0, ($t7)
 /* 0C7B70 800C6F70 25EF0001 */  addiu $t7, $t7, 1
@@ -64,12 +64,12 @@ glabel func_800C6F34
 /* 0C7C14 800C7014 1520FFF5 */  bnez  $t1, .L800C6FEC
 /* 0C7C18 800C7018 A1CBFFFF */   sb    $t3, -1($t6)
 .L800C701C:
-/* 0C7C1C 800C701C 3C01800E */  lui   $at, %hi(D_800E3768) # $at, 0x800e
-/* 0C7C20 800C7020 AC2F3768 */  sw    $t7, %lo(D_800E3768)($at)
-/* 0C7C24 800C7024 3C01800E */  lui   $at, %hi(D_800E376C) # $at, 0x800e
-/* 0C7C28 800C7028 AC2E376C */  sw    $t6, %lo(D_800E376C)($at)
-/* 0C7C2C 800C702C 3C018013 */  lui   $at, %hi(D_8012AAD0) # $at, 0x8013
-/* 0C7C30 800C7030 AC2CAAD0 */  sw    $t4, %lo(D_8012AAD0)($at)
+/* 0C7C1C 800C701C 3C01800E */  lui   $at, %hi(gzip_inflate_input) # $at, 0x800e
+/* 0C7C20 800C7020 AC2F3768 */  sw    $t7, %lo(gzip_inflate_input)($at)
+/* 0C7C24 800C7024 3C01800E */  lui   $at, %hi(gzip_inflate_output) # $at, 0x800e
+/* 0C7C28 800C7028 AC2E376C */  sw    $t6, %lo(gzip_inflate_output)($at)
+/* 0C7C2C 800C702C 3C018013 */  lui   $at, %hi(gzip_bit_buffer) # $at, 0x8013
+/* 0C7C30 800C7030 AC2CAAD0 */  sw    $t4, %lo(gzip_bit_buffer)($at)
 /* 0C7C34 800C7034 3C018013 */  lui   $at, 0x8013
 /* 0C7C38 800C7038 03E00008 */  jr    $ra
 /* 0C7C3C 800C703C AC2DAAD4 */   sw    $t5, -0x552c($at)

@@ -25,16 +25,16 @@ extern s32 D_800E3678;
 extern s32 D_800E3680;
 extern u8* D_800E3760;
 extern u8* D_800E3764;
-extern u8* D_800E3768;
-extern u8* D_800E376C;
+extern u8* gzip_inflate_input;
+extern u8* gzip_inflate_output;
 extern s32 D_8012A0D8;
 extern s32 D_8012A0DC;
 extern u16 D_8012A7B6;
 extern s32* D_8012A7C8;
 extern s32 D_8012A7F0;
 extern s32 D_8012AAD8;
-extern u32 D_8012AAD4;
-extern u32 D_8012AAD0;
+extern u32 gzip_num_bits;
+extern u32 gzip_bit_buffer;
 
 u8* func_80070C9C(s32 arg0, s32 arg1);
 void func_80071140(s32* arg0);
@@ -255,16 +255,16 @@ s32 func_800C61DC(s32 arg0, s32 arg1) {
     return byteswap32(D_800E3764);
 }
 
-s32 func_800C68C0(void);
+s32 gzip_inflate_block(void);
 
 u8* func_800C6218(u8* arg0, u8* arg1) {
     // The compression header is 5 bytes. Maybe this is part of the decompression routine?
-    D_800E3768 = arg0 + 5; 
-    D_800E376C = arg1;
-    D_8012AAD4 = 0;
-    D_8012AAD0 = 0;
-    while(func_800C68C0() != 0) {} // Keep calling func_800C68C0() until it returns 0.
+    gzip_inflate_input = arg0 + 5; 
+    gzip_inflate_output = arg1;
+    gzip_num_bits = 0;
+    gzip_bit_buffer = 0;
+    while(gzip_inflate_block() != 0) {} // Keep calling gzip_inflate_block() until it returns 0.
     return arg1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6274.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0B8920/gzip_huft_build.s")

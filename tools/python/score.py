@@ -2,6 +2,26 @@ import re
 import sys
 from file_util import FileUtil
 
+ASM_FOLDERS = [
+    './asm/unknown_0251F0',
+    './asm/unknown_031D30',
+    './asm/unknown_062930',
+    './asm/unknown_070110',
+    './asm/gzip',
+]
+
+# These will automatically be added to the adventure one percentage.
+ASM_FUNCTIONS = [ 'entrypoint' ]
+for folder in ASM_FOLDERS:
+    GLABEL_REGEX = r'glabel ([0-9A-Za-z_]+)'
+    filenames = FileUtil.get_filenames_from_directory(folder, extensions=('.s',))
+    for filename in filenames:
+        with open(folder + '/' + filename, 'r') as asmFile:
+            text = asmFile.read()
+            matches = re.finditer(GLABEL_REGEX, text, re.MULTILINE)
+            for matchNum, match in enumerate(matches, start=1):
+                ASM_FUNCTIONS.append(match.groups()[0])
+
 SRC_DIRECTORY = './src'
 FUNCTION_REGEX = r'([/][*]([^*]|([*][^/]))*[*][/][\n]\s*)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]\"[^/]*/[^/]*/[^/]*/([a-zA-Z0-9_]*).s\"[)]'
@@ -120,6 +140,9 @@ def main():
         totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
         scoreFiles.append(scoreFile)
     totalNumberOfFunctions = MAP_FILE.numFunctions
+    
+    for asm_function in ASM_FUNCTIONS:
+        totalSizeOfDecompiledFunctions += MAP_FILE.functionSizes[asm_function]
     
     adventureOnePercentage = (totalSizeOfDecompiledFunctions / CODE_SIZE) * 100
     adventureTwoPercentage = (totalSizeOfDocumentedFunctions / CODE_SIZE) * 100

@@ -773,7 +773,3 @@ void func_800245B4(s16 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800245F0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80024744.s")
-
-
