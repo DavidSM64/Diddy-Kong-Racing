@@ -4,12 +4,12 @@ glabel func_800CED20
 /* 0CF928 800CED28 AFA40020 */  sw    $a0, 0x20($sp)
 /* 0CF92C 800CED2C AFA50024 */  sw    $a1, 0x24($sp)
 /* 0CF930 800CED30 AFA60028 */  sw    $a2, 0x28($sp)
-/* 0CF934 800CED34 0C033594 */  jal   func_800CD650
+/* 0CF934 800CED34 0C033594 */  jal   __osSiGetAccess
 /* 0CF938 800CED38 AFA0001C */   sw    $zero, 0x1c($sp)
 /* 0CF93C 800CED3C 8FA40020 */  lw    $a0, 0x20($sp)
-/* 0CF940 800CED40 0C033B75 */  jal   func_800CEDD4
+/* 0CF940 800CED40 0C033B75 */  jal   __osPfsGetStatus
 /* 0CF944 800CED44 8FA50028 */   lw    $a1, 0x28($sp)
-/* 0CF948 800CED48 0C0335A5 */  jal   func_800CD694
+/* 0CF948 800CED48 0C0335A5 */  jal   __osSiRelAccess
 /* 0CF94C 800CED4C AFA2001C */   sw    $v0, 0x1c($sp)
 /* 0CF950 800CED50 8FAE001C */  lw    $t6, 0x1c($sp)
 /* 0CF954 800CED54 11C00003 */  beqz  $t6, .L800CED64
@@ -25,7 +25,7 @@ glabel func_800CED20
 /* 0CF978 800CED78 AD190008 */  sw    $t9, 8($t0)
 /* 0CF97C 800CED7C 8FA90024 */  lw    $t1, 0x24($sp)
 /* 0CF980 800CED80 AD200000 */  sw    $zero, ($t1)
-/* 0CF984 800CED84 0C035659 */  jal   func_800D5964
+/* 0CF984 800CED84 0C035659 */  jal   __osGetId
 /* 0CF988 800CED88 8FA40024 */   lw    $a0, 0x24($sp)
 /* 0CF98C 800CED8C AFA2001C */  sw    $v0, 0x1c($sp)
 /* 0CF990 800CED90 8FAA001C */  lw    $t2, 0x1c($sp)

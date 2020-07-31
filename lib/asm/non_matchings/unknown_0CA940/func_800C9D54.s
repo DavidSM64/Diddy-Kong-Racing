@@ -9,7 +9,7 @@ glabel func_800C9D54
 /* 0CA970 800C9D70 24849D40 */  addiu $a0, %lo(D_800C9D40) # addiu $a0, $a0, -0x62c0
 /* 0CA974 800C9D74 27A70024 */  addiu $a3, $sp, 0x24
 /* 0CA978 800C9D78 8FA60020 */  lw    $a2, 0x20($sp)
-/* 0CA97C 800C9D7C 0C034FC4 */  jal   func_800D3F10
+/* 0CA97C 800C9D7C 0C034FC4 */  jal   _Printf
 /* 0CA980 800C9D80 00002825 */   move  $a1, $zero
 /* 0CA984 800C9D84 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 0CA988 800C9D88 27BD0020 */  addiu $sp, $sp, 0x20

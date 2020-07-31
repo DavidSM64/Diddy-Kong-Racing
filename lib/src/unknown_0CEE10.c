@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CEE10/func_800CE210.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CEE10/osEepromProbe.s")

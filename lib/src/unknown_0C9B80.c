@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9B80/func_800C8F80.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9B80/osPiStartDma.s")

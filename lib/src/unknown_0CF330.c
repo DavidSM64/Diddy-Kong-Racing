@@ -4,8 +4,8 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/func_800CE730.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/func_800CE83C.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osPackEepWriteData.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rshift.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rem.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_div.s")
@@ -14,6 +14,6 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_div.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_mul.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_divremi.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/func_800CED20.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/func_800CEDD4.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/func_800CEEE0.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s")

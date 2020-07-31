@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/func_800CD770.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/func_800CD820.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/func_800CD8F0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/func_800CDB20.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osContAddressCrc.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osContDataCrc.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osPackRamWriteData.s")

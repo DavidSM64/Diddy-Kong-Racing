@@ -18,7 +18,7 @@ glabel func_80076194
 /* 076DD4 800761D4 27184018 */  addiu $t8, %lo(D_80124018) # addiu $t8, $t8, 0x4018
 /* 076DD8 800761D8 000F78C0 */  sll   $t7, $t7, 3
 /* 076DDC 800761DC 01F82021 */  addu  $a0, $t7, $t8
-/* 076DE0 800761E0 0C033CF8 */  jal   func_800CF3E0
+/* 076DE0 800761E0 0C033CF8 */  jal   osPfsFreeBlocks
 /* 076DE4 800761E4 27A50028 */   addiu $a1, $sp, 0x28
 /* 076DE8 800761E8 10400007 */  beqz  $v0, .L80076208
 /* 076DEC 800761EC 00401825 */   move  $v1, $v0

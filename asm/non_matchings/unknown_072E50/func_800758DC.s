@@ -62,7 +62,7 @@ glabel func_800758DC
 /* 0765BC 800759BC 24100005 */  li    $s0, 5
 /* 0765C0 800759C0 02602025 */  move  $a0, $s3
 .L800759C4:
-/* 0765C4 800759C4 0C033CF8 */  jal   func_800CF3E0
+/* 0765C4 800759C4 0C033CF8 */  jal   osPfsFreeBlocks
 /* 0765C8 800759C8 27A5003C */   addiu $a1, $sp, 0x3c
 /* 0765CC 800759CC 14500006 */  bne   $v0, $s0, .L800759E8
 /* 0765D0 800759D0 00401825 */   move  $v1, $v0

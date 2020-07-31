@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D23F0/func_800D17F0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D23F0/osInvalDCache.s")

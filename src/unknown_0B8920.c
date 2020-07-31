@@ -233,7 +233,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5AA0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5B58.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5F60.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C6000.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0B8920/osCreatePiManager.s")
 
 void func_800C6170(void) {
     D_800E3760 = func_80070C9C(0x2800, 0xFF);

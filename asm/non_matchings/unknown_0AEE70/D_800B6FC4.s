@@ -28,7 +28,7 @@ glabel D_800B6FC4
 /* 0B7C2C 800B702C 24C697C8 */  addiu $a2, %lo(D_801297C8) # addiu $a2, $a2, -0x6838
 /* 0B7C30 800B7030 24A597E8 */  addiu $a1, %lo(D_801297E8) # addiu $a1, $a1, -0x6818
 /* 0B7C34 800B7034 24040096 */  li    $a0, 150
-/* 0B7C38 800B7038 0C031800 */  jal   func_800C6000
+/* 0B7C38 800B7038 0C031800 */  jal   osCreatePiManager
 /* 0B7C3C 800B703C 24070008 */   li    $a3, 8
 /* 0B7C40 800B7040 2413FFF7 */  li    $s3, -9
 /* 0B7C44 800B7044 3C120800 */  lui   $s2, 0x800

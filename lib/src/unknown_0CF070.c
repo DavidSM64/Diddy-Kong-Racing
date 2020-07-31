@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF070/func_800CE470.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF070/__osPackEepReadData.s")

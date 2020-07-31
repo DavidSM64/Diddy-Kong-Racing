@@ -120,7 +120,7 @@ glabel D_800CC17C
 /* 0CCF48 800CC348 AC4F0008 */  sw    $t7, 8($v0)
 /* 0CCF4C 800CC34C 24450010 */  addiu $a1, $v0, 0x10
 /* 0CCF50 800CC350 8D040014 */  lw    $a0, 0x14($t0)
-/* 0CCF54 800CC354 0C03233C */  jal   func_800C8CF0
+/* 0CCF54 800CC354 0C03233C */  jal   osVirtualToPhysical
 /* 0CCF58 800CC358 AFA50048 */   sw    $a1, 0x48($sp)
 /* 0CCF5C 800CC35C 8FB80028 */  lw    $t8, 0x28($sp)
 /* 0CCF60 800CC360 8FA80050 */  lw    $t0, 0x50($sp)

@@ -13,7 +13,7 @@ glabel func_8007A98C
 /* 07B5B8 8007A9B8 244EFFFF */  addiu $t6, $v0, -1
 /* 07B5BC 8007A9BC 15C00003 */  bnez  $t6, .L8007A9CC
 /* 07B5C0 8007A9C0 AC6E0000 */   sw    $t6, ($v1)
-/* 07B5C4 8007A9C4 0C034744 */  jal   func_800D1D10
+/* 07B5C4 8007A9C4 0C034744 */  jal   osViBlack
 /* 07B5C8 8007A9C8 00002025 */   move  $a0, $zero
 .L8007A9CC:
 /* 07B5CC 8007A9CC 24010008 */  li    $at, 8

@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CFFE0/func_800CF3E0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CFFE0/osPfsFreeBlocks.s")

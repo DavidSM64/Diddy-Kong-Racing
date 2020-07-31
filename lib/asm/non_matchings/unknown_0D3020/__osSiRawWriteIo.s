@@ -1,0 +1,24 @@
+glabel __osSiRawWriteIo
+/* 0D51E0 800D45E0 27BDFFE8 */  addiu $sp, $sp, -0x18
+/* 0D51E4 800D45E4 AFBF0014 */  sw    $ra, 0x14($sp)
+/* 0D51E8 800D45E8 AFA40018 */  sw    $a0, 0x18($sp)
+/* 0D51EC 800D45EC 0C0354B0 */  jal   __osSiDeviceBusy
+/* 0D51F0 800D45F0 AFA5001C */   sw    $a1, 0x1c($sp)
+/* 0D51F4 800D45F4 10400003 */  beqz  $v0, .L800D4604
+/* 0D51F8 800D45F8 00000000 */   nop   
+/* 0D51FC 800D45FC 10000007 */  b     .L800D461C
+/* 0D5200 800D4600 2402FFFF */   li    $v0, -1
+.L800D4604:
+/* 0D5204 800D4604 8FAF0018 */  lw    $t7, 0x18($sp)
+/* 0D5208 800D4608 8FAE001C */  lw    $t6, 0x1c($sp)
+/* 0D520C 800D460C 3C01A000 */  lui   $at, 0xa000
+/* 0D5210 800D4610 01E1C025 */  or    $t8, $t7, $at
+/* 0D5214 800D4614 00001025 */  move  $v0, $zero
+/* 0D5218 800D4618 AF0E0000 */  sw    $t6, ($t8)
+.L800D461C:
+/* 0D521C 800D461C 8FBF0014 */  lw    $ra, 0x14($sp)
+/* 0D5220 800D4620 27BD0018 */  addiu $sp, $sp, 0x18
+/* 0D5224 800D4624 03E00008 */  jr    $ra
+/* 0D5228 800D4628 00000000 */   nop   
+
+/* 0D522C 800D462C 00000000 */  nop   

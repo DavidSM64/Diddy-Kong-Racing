@@ -18,7 +18,7 @@ glabel osStartThread
 /* 0C95E0 800C89E0 3C04800E */  lui   $a0, %hi(D_800E4888) # $a0, 0x800e
 /* 0C95E4 800C89E4 A70F0010 */  sh    $t7, 0x10($t8)
 /* 0C95E8 800C89E8 8FA50028 */  lw    $a1, 0x28($sp)
-/* 0C95EC 800C89EC 0C034CF3 */  jal   func_800D33CC
+/* 0C95EC 800C89EC 0C034CF3 */  jal   __osEnqueueThread
 /* 0C95F0 800C89F0 24844888 */   addiu $a0, %lo(D_800E4888) # addiu $a0, $a0, 0x4888
 /* 0C95F4 800C89F4 10000021 */  b     .L800C8A7C
 /* 0C95F8 800C89F8 00000000 */   nop   
@@ -37,7 +37,7 @@ glabel osStartThread
 /* 0C9624 800C8A24 3C04800E */  lui   $a0, %hi(D_800E4888) # $a0, 0x800e
 /* 0C9628 800C8A28 A56A0010 */  sh    $t2, 0x10($t3)
 /* 0C962C 800C8A2C 8FA50028 */  lw    $a1, 0x28($sp)
-/* 0C9630 800C8A30 0C034CF3 */  jal   func_800D33CC
+/* 0C9630 800C8A30 0C034CF3 */  jal   __osEnqueueThread
 /* 0C9634 800C8A34 24844888 */   addiu $a0, %lo(D_800E4888) # addiu $a0, $a0, 0x4888
 /* 0C9638 800C8A38 10000010 */  b     .L800C8A7C
 /* 0C963C 800C8A3C 00000000 */   nop   
@@ -47,7 +47,7 @@ glabel osStartThread
 /* 0C9648 800C8A48 A5AC0010 */  sh    $t4, 0x10($t5)
 /* 0C964C 800C8A4C 8FAE0028 */  lw    $t6, 0x28($sp)
 /* 0C9650 800C8A50 8DC40008 */  lw    $a0, 8($t6)
-/* 0C9654 800C8A54 0C034CF3 */  jal   func_800D33CC
+/* 0C9654 800C8A54 0C034CF3 */  jal   __osEnqueueThread
 /* 0C9658 800C8A58 01C02825 */   move  $a1, $t6
 /* 0C965C 800C8A5C 8FAF0028 */  lw    $t7, 0x28($sp)
 /* 0C9660 800C8A60 0C034D05 */  jal   __osPopThread
@@ -55,14 +55,14 @@ glabel osStartThread
 /* 0C9668 800C8A68 00408825 */  move  $s1, $v0
 /* 0C966C 800C8A6C 3C04800E */  lui   $a0, %hi(D_800E4888) # $a0, 0x800e
 /* 0C9670 800C8A70 24844888 */  addiu $a0, %lo(D_800E4888) # addiu $a0, $a0, 0x4888
-/* 0C9674 800C8A74 0C034CF3 */  jal   func_800D33CC
+/* 0C9674 800C8A74 0C034CF3 */  jal   __osEnqueueThread
 /* 0C9678 800C8A78 02202825 */   move  $a1, $s1
 .L800C8A7C:
 /* 0C967C 800C8A7C 3C18800E */  lui   $t8, %hi(D_800E4890) # $t8, 0x800e
 /* 0C9680 800C8A80 8F184890 */  lw    $t8, %lo(D_800E4890)($t8)
 /* 0C9684 800C8A84 17000005 */  bnez  $t8, .L800C8A9C
 /* 0C9688 800C8A88 00000000 */   nop   
-/* 0C968C 800C8A8C 0C034D09 */  jal   func_800D3424
+/* 0C968C 800C8A8C 0C034D09 */  jal   __osDispatchThread
 /* 0C9690 800C8A90 00000000 */   nop   
 /* 0C9694 800C8A94 1000000F */  b     .L800C8AD4
 /* 0C9698 800C8A98 00000000 */   nop   

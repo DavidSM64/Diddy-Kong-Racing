@@ -37,7 +37,7 @@ s32 func_80065BEC(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_0667D0/func_80065C38.s")
 
 void func_80065D40(void) {
-    func_800CC5A0();
+    osInitialize();
     osCreateThread(&D_8011F760, 1, &D_80065D98, 0, &D_8011D750, 0);
     osStartThread(&D_8011F760);
 }

@@ -16,7 +16,7 @@ glabel func_800CEEE0
 /* 0CFB18 800CEF18 8FA50028 */  lw    $a1, 0x28($sp)
 /* 0CFB1C 800CEF1C 8FA40020 */  lw    $a0, 0x20($sp)
 /* 0CFB20 800CEF20 00003025 */  move  $a2, $zero
-/* 0CFB24 800CEF24 0C03572F */  jal   func_800D5CBC
+/* 0CFB24 800CEF24 0C03572F */  jal   __osPfsRWInode
 /* 0CFB28 800CEF28 91070000 */   lbu   $a3, ($t0)
 /* 0CFB2C 800CEF2C AFA2001C */  sw    $v0, 0x1c($sp)
 /* 0CFB30 800CEF30 8FA9001C */  lw    $t1, 0x1c($sp)

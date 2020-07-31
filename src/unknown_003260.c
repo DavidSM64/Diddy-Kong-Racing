@@ -23,7 +23,7 @@ void func_80002A50(void) {
 }
 
 void func_80002A74(void) {
-    func_800C8AF0(&D_80115FB0);
+    osStopThread(&D_80115FB0);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002A98.s")

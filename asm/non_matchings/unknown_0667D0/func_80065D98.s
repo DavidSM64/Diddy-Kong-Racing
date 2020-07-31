@@ -29,7 +29,7 @@ glabel D_80065D98
 /* 066A04 80065E04 0C032268 */  jal   osStartThread
 /* 066A08 80065E08 2484F910 */   addiu $a0, %lo(D_8011F910) # addiu $a0, $a0, -0x6f0
 /* 066A0C 80065E0C 00002025 */  move  $a0, $zero
-/* 066A10 80065E10 0C033210 */  jal   func_800CC840
+/* 066A10 80065E10 0C033210 */  jal   osSetThreadPri
 /* 066A14 80065E14 00002825 */   move  $a1, $zero
 .L80065E18:
 /* 066A18 80065E18 1000FFFF */  b     .L80065E18

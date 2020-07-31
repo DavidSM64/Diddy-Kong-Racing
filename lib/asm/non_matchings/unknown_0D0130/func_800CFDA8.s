@@ -67,7 +67,7 @@ glabel func_800CFDA8
 /* 0D0A90 800CFE90 8FA40030 */  lw    $a0, 0x30($sp)
 /* 0D0A94 800CFE94 01002825 */  move  $a1, $t0
 /* 0D0A98 800CFE98 00003025 */  move  $a2, $zero
-/* 0D0A9C 800CFE9C 0C03572F */  jal   func_800D5CBC
+/* 0D0A9C 800CFE9C 0C03572F */  jal   __osPfsRWInode
 /* 0D0AA0 800CFEA0 01E03825 */   move  $a3, $t7
 /* 0D0AA4 800CFEA4 AFA20018 */  sw    $v0, 0x18($sp)
 /* 0D0AA8 800CFEA8 8FAA0018 */  lw    $t2, 0x18($sp)

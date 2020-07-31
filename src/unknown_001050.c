@@ -146,7 +146,7 @@ void func_80000B34(u8 arg0) {
             func_800022BC(D_80115D04, D_800DC630);
         }
         D_80115D08 = func_800C7890(D_800DC630);
-        D_800DC64C = func_800C78D0();
+        D_800DC64C = osGetCount();
         D_80115D40 = 1;
         D_80115F7C = -1;
     }

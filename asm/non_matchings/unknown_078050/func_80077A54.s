@@ -28,7 +28,7 @@ glabel func_80077A54
 /* 0786B0 80077AB0 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0786B4 80077AB4 AFA40018 */  sw    $a0, 0x18($sp)
 /* 0786B8 80077AB8 AFA5001C */  sw    $a1, 0x1c($sp)
-/* 0786BC 80077ABC 0C034628 */  jal   func_800D18A0
+/* 0786BC 80077ABC 0C034628 */  jal   osWritebackDCacheAll
 /* 0786C0 80077AC0 AFA60020 */   sw    $a2, 0x20($sp)
 /* 0786C4 80077AC4 0C034634 */  jal   func_800D18D0
 /* 0786C8 80077AC8 00000000 */   nop   
@@ -44,7 +44,7 @@ glabel func_80077A54
 /* 0786EC 80077AEC 8FA7001C */  lw    $a3, 0x1c($sp)
 .L80077AF0:
 /* 0786F0 80077AF0 8FA40018 */  lw    $a0, 0x18($sp)
-/* 0786F4 80077AF4 0C034638 */  jal   func_800D18E0
+/* 0786F4 80077AF4 0C034638 */  jal   osDpSetNextBuffer
 /* 0786F8 80077AF8 000737C3 */   sra   $a2, $a3, 0x1f
 /* 0786FC 80077AFC 0C034634 */  jal   func_800D18D0
 /* 078700 80077B00 00000000 */   nop   

@@ -5,4 +5,4 @@
 #include "macros.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8490/func_800C7890.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8490/func_800C78D0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8490/osGetCount.s")

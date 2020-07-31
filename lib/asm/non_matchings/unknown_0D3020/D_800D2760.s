@@ -94,7 +94,7 @@ glabel D_800D2760
 /* 0D34B8 800D28B8 8FB8003C */  lw    $t8, 0x3c($sp)
 /* 0D34BC 800D28BC 00003025 */  move  $a2, $zero
 /* 0D34C0 800D28C0 8F040004 */  lw    $a0, 4($t8)
-/* 0D34C4 800D28C4 0C03238C */  jal   func_800C8E30
+/* 0D34C4 800D28C4 0C03238C */  jal   osSendMesg
 /* 0D34C8 800D28C8 03002825 */   move  $a1, $t8
 /* 0D34CC 800D28CC 8FA80028 */  lw    $t0, 0x28($sp)
 /* 0D34D0 800D28D0 24010001 */  li    $at, 1
@@ -111,7 +111,7 @@ glabel D_800D2760
 /* 0D34F8 800D28F8 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 0D34FC 800D28FC 00002825 */  move  $a1, $zero
 /* 0D3500 800D2900 00003025 */  move  $a2, $zero
-/* 0D3504 800D2904 0C03238C */  jal   func_800C8E30
+/* 0D3504 800D2904 0C03238C */  jal   osSendMesg
 /* 0D3508 800D2908 8D640010 */   lw    $a0, 0x10($t3)
 /* 0D350C 800D290C 8FAD003C */  lw    $t5, 0x3c($sp)
 /* 0D3510 800D2910 24010001 */  li    $at, 1
@@ -206,7 +206,7 @@ glabel D_800D2760
 /* 0D3670 800D2A70 8FAE003C */  lw    $t6, 0x3c($sp)
 /* 0D3674 800D2A74 00003025 */  move  $a2, $zero
 /* 0D3678 800D2A78 8DC40004 */  lw    $a0, 4($t6)
-/* 0D367C 800D2A7C 0C03238C */  jal   func_800C8E30
+/* 0D367C 800D2A7C 0C03238C */  jal   osSendMesg
 /* 0D3680 800D2A80 01C02825 */   move  $a1, $t6
 /* 0D3684 800D2A84 240AFFFF */  li    $t2, -1
 /* 0D3688 800D2A88 10000003 */  b     .L800D2A98
@@ -226,12 +226,12 @@ glabel D_800D2760
 /* 0D36B8 800D2AB8 8FAC003C */  lw    $t4, 0x3c($sp)
 /* 0D36BC 800D2ABC 00003025 */  move  $a2, $zero
 /* 0D36C0 800D2AC0 8D840004 */  lw    $a0, 4($t4)
-/* 0D36C4 800D2AC4 0C03238C */  jal   func_800C8E30
+/* 0D36C4 800D2AC4 0C03238C */  jal   osSendMesg
 /* 0D36C8 800D2AC8 01802825 */   move  $a1, $t4
 /* 0D36CC 800D2ACC 8FA9002C */  lw    $t1, 0x2c($sp)
 /* 0D36D0 800D2AD0 00002825 */  move  $a1, $zero
 /* 0D36D4 800D2AD4 00003025 */  move  $a2, $zero
-/* 0D36D8 800D2AD8 0C03238C */  jal   func_800C8E30
+/* 0D36D8 800D2AD8 0C03238C */  jal   osSendMesg
 /* 0D36DC 800D2ADC 8D240010 */   lw    $a0, 0x10($t1)
 /* 0D36E0 800D2AE0 1000FF27 */  b     .L800D2780
 /* 0D36E4 800D2AE4 00000000 */   nop   

@@ -4,5 +4,5 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/func_800CDCA0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/func_800CDEE4.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s")

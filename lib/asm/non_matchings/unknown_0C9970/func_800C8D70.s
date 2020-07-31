@@ -33,7 +33,7 @@ glabel func_800C8D70
 /* 0C99E0 800C8DE0 10000009 */  b     .L800C8E08
 /* 0C99E4 800C8DE4 2402FFFF */   li    $v0, -1
 .L800C8DE8:
-/* 0C99E8 800C8DE8 0C03233C */  jal   func_800C8CF0
+/* 0C99E8 800C8DE8 0C03233C */  jal   osVirtualToPhysical
 /* 0C99EC 800C8DEC 8FA4001C */   lw    $a0, 0x1c($sp)
 /* 0C99F0 800C8DF0 3C0CA450 */  lui   $t4, 0xa450
 /* 0C99F4 800C8DF4 AD820000 */  sw    $v0, ($t4)

@@ -13,7 +13,7 @@ glabel func_800CCC20
 .L800CCC4C:
 /* 0CD84C 800CCC4C 240F0001 */  li    $t7, 1
 /* 0CD850 800CCC50 3C01800E */  lui   $at, %hi(D_800E38C0) # $at, 0x800e
-/* 0CD854 800CCC54 0C03486C */  jal   func_800D21B0
+/* 0CD854 800CCC54 0C03486C */  jal   osGetTime
 /* 0CD858 800CCC58 AC2F38C0 */   sw    $t7, %lo(D_800E38C0)($at)
 /* 0CD85C 800CCC5C 3C050007 */  lui   $a1, (0x0007A120 >> 16) # lui $a1, 7
 /* 0CD860 800CCC60 3C06800E */  lui   $a2, %hi(D_800E38A0) # $a2, 0x800e
@@ -81,7 +81,7 @@ glabel func_800CCC20
 /* 0CD954 800CCD54 AFAD0014 */  sw    $t5, 0x14($sp)
 /* 0CD958 800CCD58 AFAC0010 */  sw    $t4, 0x10($sp)
 /* 0CD95C 800CCD5C 27A40050 */  addiu $a0, $sp, 0x50
-/* 0CD960 800CCD60 0C035378 */  jal   func_800D4DE0
+/* 0CD960 800CCD60 0C035378 */  jal   osSetTimer
 /* 0CD964 800CCD64 012B3823 */   subu  $a3, $t1, $t3
 /* 0CD968 800CCD68 27A40038 */  addiu $a0, $sp, 0x38
 /* 0CD96C 800CCD6C 27A5007C */  addiu $a1, $sp, 0x7c
@@ -95,7 +95,7 @@ glabel func_800CCC20
 /* 0CD988 800CCD88 00002025 */   move  $a0, $zero
 /* 0CD98C 800CCD8C 3C058013 */  lui   $a1, %hi(D_8012CD50) # $a1, 0x8013
 /* 0CD990 800CCD90 24A5CD50 */  addiu $a1, %lo(D_8012CD50) # addiu $a1, $a1, -0x32b0
-/* 0CD994 800CCD94 0C0335B0 */  jal   func_800CD6C0
+/* 0CD994 800CCD94 0C0335B0 */  jal   __osSiRawStartDma
 /* 0CD998 800CCD98 24040001 */   li    $a0, 1
 /* 0CD99C 800CCD9C AFA20078 */  sw    $v0, 0x78($sp)
 /* 0CD9A0 800CCDA0 8FA40080 */  lw    $a0, 0x80($sp)
@@ -104,7 +104,7 @@ glabel func_800CCC20
 /* 0CD9AC 800CCDAC 24060001 */   li    $a2, 1
 /* 0CD9B0 800CCDB0 3C058013 */  lui   $a1, %hi(D_8012CD50) # $a1, 0x8013
 /* 0CD9B4 800CCDB4 24A5CD50 */  addiu $a1, %lo(D_8012CD50) # addiu $a1, $a1, -0x32b0
-/* 0CD9B8 800CCDB8 0C0335B0 */  jal   func_800CD6C0
+/* 0CD9B8 800CCDB8 0C0335B0 */  jal   __osSiRawStartDma
 /* 0CD9BC 800CCDBC 00002025 */   move  $a0, $zero
 /* 0CD9C0 800CCDC0 AFA20078 */  sw    $v0, 0x78($sp)
 /* 0CD9C4 800CCDC4 8FA40080 */  lw    $a0, 0x80($sp)
@@ -115,7 +115,7 @@ glabel func_800CCC20
 /* 0CD9D8 800CCDD8 0C033386 */  jal   func_800CCE18
 /* 0CD9DC 800CCDDC 8FA50088 */   lw    $a1, 0x88($sp)
 /* 0CD9E0 800CCDE0 3C018013 */  lui   $at, %hi(D_8012CD90) # $at, 0x8013
-/* 0CD9E4 800CCDE4 0C033580 */  jal   func_800CD600
+/* 0CD9E4 800CCDE4 0C033580 */  jal   __osSiCreateAccessQueue
 /* 0CD9E8 800CCDE8 A020CD90 */   sb    $zero, %lo(D_8012CD90)($at)
 /* 0CD9EC 800CCDEC 3C048013 */  lui   $a0, %hi(D_8012CDB8) # $a0, 0x8013
 /* 0CD9F0 800CCDF0 3C058013 */  lui   $a1, %hi(D_8012CDD0) # $a1, 0x8013

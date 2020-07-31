@@ -15,10 +15,10 @@ glabel osEepromRead
 /* 0CEEB4 800CE2B4 1000006A */  b     .L800CE460
 /* 0CEEB8 800CE2B8 2402FFFF */   li    $v0, -1
 .L800CE2BC:
-/* 0CEEBC 800CE2BC 0C033594 */  jal   func_800CD650
+/* 0CEEBC 800CE2BC 0C033594 */  jal   __osSiGetAccess
 /* 0CEEC0 800CE2C0 00000000 */   nop   
 /* 0CEEC4 800CE2C4 8FA40038 */  lw    $a0, 0x38($sp)
-/* 0CEEC8 800CE2C8 0C033A0F */  jal   func_800CE83C
+/* 0CEEC8 800CE2C8 0C033A0F */  jal   __osEepStatus
 /* 0CEECC 800CE2CC 27A50028 */   addiu $a1, $sp, 0x28
 /* 0CEED0 800CE2D0 AFA20034 */  sw    $v0, 0x34($sp)
 /* 0CEED4 800CE2D4 8FB80034 */  lw    $t8, 0x34($sp)
@@ -38,18 +38,18 @@ glabel osEepromRead
 /* 0CEF04 800CE304 00000000 */   nop   
 .L800CE308:
 /* 0CEF08 800CE308 8FA40038 */  lw    $a0, 0x38($sp)
-/* 0CEF0C 800CE30C 0C033A0F */  jal   func_800CE83C
+/* 0CEF0C 800CE30C 0C033A0F */  jal   __osEepStatus
 /* 0CEF10 800CE310 27A50028 */   addiu $a1, $sp, 0x28
 /* 0CEF14 800CE314 93AA002A */  lbu   $t2, 0x2a($sp)
 /* 0CEF18 800CE318 314B0080 */  andi  $t3, $t2, 0x80
 /* 0CEF1C 800CE31C 1560FFFA */  bnez  $t3, .L800CE308
 /* 0CEF20 800CE320 00000000 */   nop   
 .L800CE324:
-/* 0CEF24 800CE324 0C03391C */  jal   func_800CE470
+/* 0CEF24 800CE324 0C03391C */  jal   __osPackEepReadData
 /* 0CEF28 800CE328 93A4003F */   lbu   $a0, 0x3f($sp)
 /* 0CEF2C 800CE32C 3C058013 */  lui   $a1, %hi(D_8012CE40) # $a1, 0x8013
 /* 0CEF30 800CE330 24A5CE40 */  addiu $a1, %lo(D_8012CE40) # addiu $a1, $a1, -0x31c0
-/* 0CEF34 800CE334 0C0335B0 */  jal   func_800CD6C0
+/* 0CEF34 800CE334 0C0335B0 */  jal   __osSiRawStartDma
 /* 0CEF38 800CE338 24040001 */   li    $a0, 1
 /* 0CEF3C 800CE33C AFA20034 */  sw    $v0, 0x34($sp)
 /* 0CEF40 800CE340 8FA40038 */  lw    $a0, 0x38($sp)
@@ -73,7 +73,7 @@ glabel osEepromRead
 /* 0CEF84 800CE384 3C058013 */  lui   $a1, %hi(D_8012CE40) # $a1, 0x8013
 /* 0CEF88 800CE388 AC20CE7C */  sw    $zero, %lo(D_8012CE7C)($at)
 /* 0CEF8C 800CE38C 24A5CE40 */  addiu $a1, %lo(D_8012CE40) # addiu $a1, $a1, -0x31c0
-/* 0CEF90 800CE390 0C0335B0 */  jal   func_800CD6C0
+/* 0CEF90 800CE390 0C0335B0 */  jal   __osSiRawStartDma
 /* 0CEF94 800CE394 00002025 */   move  $a0, $zero
 /* 0CEF98 800CE398 24190004 */  li    $t9, 4
 /* 0CEF9C 800CE39C 3C018013 */  lui   $at, %hi(D_8012CD90) # $at, 0x8013
@@ -125,7 +125,7 @@ glabel osEepromRead
 /* 0CF04C 800CE44C 1420FFF4 */  bnez  $at, .L800CE420
 /* 0CF050 800CE450 AFAD0040 */   sw    $t5, 0x40($sp)
 .L800CE454:
-/* 0CF054 800CE454 0C0335A5 */  jal   func_800CD694
+/* 0CF054 800CE454 0C0335A5 */  jal   __osSiRelAccess
 /* 0CF058 800CE458 00000000 */   nop   
 /* 0CF05C 800CE45C 8FA20034 */  lw    $v0, 0x34($sp)
 .L800CE460:

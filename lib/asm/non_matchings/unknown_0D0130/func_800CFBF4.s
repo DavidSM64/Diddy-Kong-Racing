@@ -37,7 +37,7 @@ glabel func_800CFBF4
 /* 0D0870 800CFC70 8FA40130 */  lw    $a0, 0x130($sp)
 /* 0D0874 800CFC74 27A50020 */  addiu $a1, $sp, 0x20
 /* 0D0878 800CFC78 00003025 */  move  $a2, $zero
-/* 0D087C 800CFC7C 0C03572F */  jal   func_800D5CBC
+/* 0D087C 800CFC7C 0C03572F */  jal   __osPfsRWInode
 /* 0D0880 800CFC80 93A70123 */   lbu   $a3, 0x123($sp)
 /* 0D0884 800CFC84 AFA2001C */  sw    $v0, 0x1c($sp)
 /* 0D0888 800CFC88 8FB9001C */  lw    $t9, 0x1c($sp)

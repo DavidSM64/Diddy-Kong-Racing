@@ -1,0 +1,22 @@
+glabel __osEnqueueThread
+/* 0D3FCC 800D33CC 8C980000 */  lw    $t8, ($a0)
+/* 0D3FD0 800D33D0 8CAF0004 */  lw    $t7, 4($a1)
+/* 0D3FD4 800D33D4 0080C825 */  move  $t9, $a0
+/* 0D3FD8 800D33D8 8F0E0004 */  lw    $t6, 4($t8)
+/* 0D3FDC 800D33DC 01CF082A */  slt   $at, $t6, $t7
+/* 0D3FE0 800D33E0 14200007 */  bnez  $at, .L800D3400
+/* 0D3FE4 800D33E4 00000000 */   nop   
+.L800D33E8:
+/* 0D3FE8 800D33E8 0300C825 */  move  $t9, $t8
+/* 0D3FEC 800D33EC 8F180000 */  lw    $t8, ($t8)
+/* 0D3FF0 800D33F0 8F0E0004 */  lw    $t6, 4($t8)
+/* 0D3FF4 800D33F4 01CF082A */  slt   $at, $t6, $t7
+/* 0D3FF8 800D33F8 1020FFFB */  beqz  $at, .L800D33E8
+/* 0D3FFC 800D33FC 00000000 */   nop   
+.L800D3400:
+/* 0D4000 800D3400 8F380000 */  lw    $t8, ($t9)
+/* 0D4004 800D3404 ACB80000 */  sw    $t8, ($a1)
+/* 0D4008 800D3408 AF250000 */  sw    $a1, ($t9)
+/* 0D400C 800D340C 03E00008 */  jr    $ra
+/* 0D4010 800D3410 ACA40008 */   sw    $a0, 8($a1)
+

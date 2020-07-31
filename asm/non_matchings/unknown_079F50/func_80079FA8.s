@@ -11,9 +11,9 @@ glabel func_80079FA8
 /* 07ABCC 80079FCC 24010002 */  li    $at, 2
 /* 07ABD0 80079FD0 15C10007 */  bne   $t6, $at, .L80079FF0
 /* 07ABD4 80079FD4 00000000 */   nop   
-/* 07ABD8 80079FD8 0C034628 */  jal   func_800D18A0
+/* 07ABD8 80079FD8 0C034628 */  jal   osWritebackDCacheAll
 /* 07ABDC 80079FDC 00000000 */   nop   
-/* 07ABE0 80079FE0 0C031E34 */  jal   func_800C78D0
+/* 07ABE0 80079FE0 0C031E34 */  jal   osGetCount
 /* 07ABE4 80079FE4 00000000 */   nop   
 /* 07ABE8 80079FE8 3C018012 */  lui   $at, %hi(D_80126120) # $at, 0x8012
 /* 07ABEC 80079FEC AC226120 */  sw    $v0, %lo(D_80126120)($at)
@@ -23,10 +23,10 @@ glabel func_80079FA8
 /* 07ABF8 80079FF8 01E1C024 */  and   $t8, $t7, $at
 /* 07ABFC 80079FFC AE180004 */  sw    $t8, 4($s0)
 /* 07AC00 8007A000 26040010 */  addiu $a0, $s0, 0x10
-/* 07AC04 8007A004 0C034803 */  jal   func_800D200C
+/* 07AC04 8007A004 0C034803 */  jal   osSpTaskLoad
 /* 07AC08 8007A008 AFA40024 */   sw    $a0, 0x24($sp)
 /* 07AC0C 8007A00C 8FA40024 */  lw    $a0, 0x24($sp)
-/* 07AC10 8007A010 0C03485B */  jal   func_800D216C
+/* 07AC10 8007A010 0C03485B */  jal   osSpTaskStartGo
 /* 07AC14 8007A014 00000000 */   nop   
 /* 07AC18 8007A018 3C01800E */  lui   $at, %hi(D_800DE754) # $at, 0x800e
 /* 07AC1C 8007A01C AC20E754 */  sw    $zero, %lo(D_800DE754)($at)
@@ -45,7 +45,7 @@ glabel func_80079FA8
 /* 07AC4C 8007A04C 8E240038 */  lw    $a0, 0x38($s1)
 /* 07AC50 8007A050 8D060000 */  lw    $a2, ($t0)
 /* 07AC54 8007A054 8D070004 */  lw    $a3, 4($t0)
-/* 07AC58 8007A058 0C034638 */  jal   func_800D18E0
+/* 07AC58 8007A058 0C034638 */  jal   osDpSetNextBuffer
 /* 07AC5C 8007A05C 00000000 */   nop   
 /* 07AC60 8007A060 8FA90028 */  lw    $t1, 0x28($sp)
 /* 07AC64 8007A064 00000000 */  nop   

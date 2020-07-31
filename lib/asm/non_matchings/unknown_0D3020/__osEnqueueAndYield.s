@@ -62,9 +62,9 @@ glabel __osEnqueueAndYield
 .L800D33B4:
 /* 0D3FB4 800D33B4 10800003 */  beqz  $a0, .L800D33C4
 /* 0D3FB8 800D33B8 ACBB0128 */   sw    $k1, 0x128($a1)
-/* 0D3FBC 800D33BC 0C034CF3 */  jal   func_800D33CC
+/* 0D3FBC 800D33BC 0C034CF3 */  jal   __osEnqueueThread
 /* 0D3FC0 800D33C0 00000000 */   nop   
 .L800D33C4:
-/* 0D3FC4 800D33C4 08034D09 */  j     func_800D3424
+/* 0D3FC4 800D33C4 08034D09 */  j     __osDispatchThread
 /* 0D3FC8 800D33C8 00000000 */   nop   
 

@@ -12,7 +12,7 @@ glabel func_80076F78
 /* 077BA0 80076FA0 AFB5003C */  sw    $s5, 0x3c($sp)
 /* 077BA4 80076FA4 AFB40038 */  sw    $s4, 0x38($sp)
 /* 077BA8 80076FA8 AFB00028 */  sw    $s0, 0x28($sp)
-/* 077BAC 80076FAC 0C0345FC */  jal   func_800D17F0
+/* 077BAC 80076FAC 0C0345FC */  jal   osInvalDCache
 /* 077BB0 80076FB0 00C02825 */   move  $a1, $a2
 /* 077BB4 80076FB4 1A200019 */  blez  $s1, .L8007701C
 /* 077BB8 80076FB8 24105000 */   li    $s0, 20480
@@ -32,7 +32,7 @@ glabel func_80076F78
 /* 077BE8 80076FE8 02603825 */  move  $a3, $s3
 /* 077BEC 80076FEC AFB20010 */  sw    $s2, 0x10($sp)
 /* 077BF0 80076FF0 AFB00014 */  sw    $s0, 0x14($sp)
-/* 077BF4 80076FF4 0C0323E0 */  jal   func_800C8F80
+/* 077BF4 80076FF4 0C0323E0 */  jal   osPiStartDma
 /* 077BF8 80076FF8 AFB40018 */   sw    $s4, 0x18($sp)
 /* 077BFC 80076FFC 02802025 */  move  $a0, $s4
 /* 077C00 80077000 02C02825 */  move  $a1, $s6

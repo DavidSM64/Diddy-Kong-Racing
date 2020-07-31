@@ -178,7 +178,7 @@ void func_800014BC(f32 arg0);
 s8* func_8001E29C(s32 arg0);
 s32 func_8006A624(s8 arg0);
 void func_8006F64C(s32*, f32, f32, f32, f32*, f32*, f32*);
-void func_800CC920(s32*, s32*, f32, f32, f32, f32, f32);
+void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);
 void func_8006F870(s32*, s32*);
 s16 func_80029F18(f32, f32, f32);    
 void func_8006A50C(void);
@@ -221,13 +221,13 @@ f32 func_800660DC(void) {
 void func_800660EC(f32 arg0) {
     if (0.0f < arg0 && arg0 < 90.0f && arg0 != D_80120D10) {
         D_80120D10 = arg0;
-        func_800CC920(&D_80120EE0, &D_80120D6C, arg0, 1.33333333f, 10.0f, D_800E70A0, 1.0f);
+        guPerspectiveF(&D_80120EE0, &D_80120D6C, arg0, 1.33333333f, 10.0f, D_800E70A0, 1.0f);
         func_8006F870(&D_80120EE0, &D_80120FE0);
     }
 }
 
 void func_80066194(void) {
-    func_800CC920(&D_80120EE0, &D_80120D6C, 60.0f, 1.33333333f, 10.0f, D_800E70A4, 1.0f);
+    guPerspectiveF(&D_80120EE0, &D_80120D6C, 60.0f, 1.33333333f, 10.0f, D_800E70A4, 1.0f);
     func_8006F870(&D_80120EE0, &D_80120FE0);
 }
 

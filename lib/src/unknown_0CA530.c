@@ -6,5 +6,5 @@
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA530/func_800C9930.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA530/func_800C99E0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA530/func_800C9A30.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA530/osSetIntMask.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA530/sqrtf.s")
