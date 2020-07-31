@@ -25,7 +25,7 @@ glabel func_80071F80
 /* 072BD8 80071FD8 A3B9002E */  sb    $t9, 0x2e($sp)
 /* 072BDC 80071FDC A3A9002F */  sb    $t1, 0x2f($sp)
 /* 072BE0 80071FE0 AFA60060 */  sw    $a2, 0x60($sp)
-/* 072BE4 80071FE4 0C0335DC */  jal   func_800CD770
+/* 072BE4 80071FE4 0C0335DC */  jal   __osContAddressCrc
 /* 072BE8 80071FE8 AFA30054 */   sw    $v1, 0x54($sp)
 /* 072BEC 80071FEC 97AA005E */  lhu   $t2, 0x5e($sp)
 /* 072BF0 80071FF0 240D00FF */  li    $t5, 255

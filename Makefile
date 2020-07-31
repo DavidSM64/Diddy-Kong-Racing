@@ -16,6 +16,7 @@ endif
 BUILD_DIR = build
 
 ##################### Compiler Options #######################
+
 IRIX_ROOT := tools/ido5.3_compiler
 
 ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
@@ -41,11 +42,12 @@ LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
 
+MIPSISET := -mips1
+OPT_FLAGS := -O2
+
 ASFLAGS = -mtune=vr4300 -march=vr4300 $(INCLUDE_FLAGS)
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
-COMMON_CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -O2 $(INCLUDE_CFLAGS)
-CFLAGS = $(COMMON_CFLAGS) -mips1
-CFLAGS_MIPS2 = $(COMMON_CFLAGS) -mips2
+CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(INCLUDE_CFLAGS) $(MIPSISET)
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -64,11 +66,12 @@ TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 
-ASM_DIRS := asm asm/boot asm/assets data
-SRC_DIRS := src src/mips1 src/mips2
+LIB_DIRS := lib
+ASM_DIRS := asm asm/boot asm/assets data lib/asm
+SRC_DIRS := src src/mips1 lib/src
 ASSETS_DIRS := animations audio billboards bin cheats fonts levels objects particles text textures textures/2d textures/3d tt_ghosts ucode 
 
-GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c src/mips1/*.c src/mips2/*.c)
+GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c lib/src/*.c)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
 S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
@@ -80,6 +83,8 @@ O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
 
 
 ####################### ASSETS #########################
+
+# TODO: Clean this up if possible
 
 ASSETS_DIR = assets/us_1.0
 
@@ -163,6 +168,10 @@ UCODE_BUILT := $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
 
 ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(FONTS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT)
 
+####################### LIBULTRA #########################
+
+$(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 
 ######################## Targets #############################
 
@@ -181,7 +190,7 @@ else
 endif 
     
 $(BUILD_DIR):
-	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
+	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
 
 # This is here to prevent make from deleting all the asset files after the build completes/fails.
 dont_remove_asset_files: $(ALL_ASSETS_BUILT)
@@ -246,11 +255,8 @@ $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 
 $(BUILD_DIR)/%.o: %.s Makefile $(MAKEFILE_SPLIT) | $(BUILD_DIR) $(ALL_ASSETS_BUILT)
 	$(AS) $(ASFLAGS) -o $@ $<
-    
-$(BUILD_DIR)/src/mips2/%.o: src/mips2/%.c
-	$(CC) $(CFLAGS_MIPS2) -o $@ $<
 
-$(BUILD_DIR)/src/mips1/%.o: src/mips1/%.c
+$(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)

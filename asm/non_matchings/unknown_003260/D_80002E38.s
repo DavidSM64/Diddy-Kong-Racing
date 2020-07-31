@@ -26,7 +26,7 @@ glabel D_80002E38
 /* 003A94 80002E94 8DEFC680 */  lw    $t7, %lo(D_800DC680)($t7)
 /* 003A98 80002E98 0307C821 */  addu  $t9, $t8, $a3
 /* 003A9C 80002E9C 03222023 */  subu  $a0, $t9, $v0
-/* 003AA0 80002EA0 0C03233C */  jal   func_800C8CF0
+/* 003AA0 80002EA0 0C03233C */  jal   osVirtualToPhysical
 /* 003AA4 80002EA4 AE0F000C */   sw    $t7, 0xc($s0)
 /* 003AA8 80002EA8 10000054 */  b     .L80002FFC
 /* 003AAC 80002EAC 8FBF002C */   lw    $ra, 0x2c($sp)
@@ -47,7 +47,7 @@ glabel D_80002E38
 /* 003ADC 80002EDC 16000007 */  bnez  $s0, .L80002EFC
 /* 003AE0 80002EE0 00000000 */   nop   
 /* 003AE4 80002EE4 8CC40010 */  lw    $a0, 0x10($a2)
-/* 003AE8 80002EE8 0C03233C */  jal   func_800C8CF0
+/* 003AE8 80002EE8 0C03233C */  jal   osVirtualToPhysical
 /* 003AEC 80002EEC AFAA0030 */   sw    $t2, 0x30($sp)
 /* 003AF0 80002EF0 8FAA0030 */  lw    $t2, 0x30($sp)
 /* 003AF4 80002EF4 10000040 */  b     .L80002FF8
@@ -112,10 +112,10 @@ glabel D_80002E38
 /* 003BCC 80002FCC 24050001 */  li    $a1, 1
 /* 003BD0 80002FD0 00003025 */  move  $a2, $zero
 /* 003BD4 80002FD4 AFA30010 */  sw    $v1, 0x10($sp)
-/* 003BD8 80002FD8 0C0323E0 */  jal   func_800C8F80
+/* 003BD8 80002FD8 0C0323E0 */  jal   osPiStartDma
 /* 003BDC 80002FDC AFA3004C */   sw    $v1, 0x4c($sp)
 /* 003BE0 80002FE0 8FA4004C */  lw    $a0, 0x4c($sp)
-/* 003BE4 80002FE4 0C03233C */  jal   func_800C8CF0
+/* 003BE4 80002FE4 0C03233C */  jal   osVirtualToPhysical
 /* 003BE8 80002FE8 00000000 */   nop   
 /* 003BEC 80002FEC 8FAC0048 */  lw    $t4, 0x48($sp)
 /* 003BF0 80002FF0 00000000 */  nop   

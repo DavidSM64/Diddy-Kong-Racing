@@ -10,11 +10,11 @@ glabel func_8007A080
 /* 07ACA0 8007A0A0 8C4F0004 */  lw    $t7, 4($v0)
 /* 07ACA4 8007A0A4 00000000 */  nop   
 /* 07ACA8 8007A0A8 35F80010 */  ori   $t8, $t7, 0x10
-/* 07ACAC 8007A0AC 0C03486C */  jal   func_800D21B0
+/* 07ACAC 8007A0AC 0C03486C */  jal   osGetTime
 /* 07ACB0 8007A0B0 AC580004 */   sw    $t8, 4($v0)
 /* 07ACB4 8007A0B4 3C018012 */  lui   $at, %hi(D_8012611C) # $at, 0x8012
 /* 07ACB8 8007A0B8 AC226118 */  sw    $v0, %lo(D_80126118)($at)
-/* 07ACBC 8007A0BC 0C034890 */  jal   func_800D2240
+/* 07ACBC 8007A0BC 0C034890 */  jal   osSpTaskYield
 /* 07ACC0 8007A0C0 AC23611C */   sw    $v1, %lo(D_8012611C)($at)
 /* 07ACC4 8007A0C4 8FBF0014 */  lw    $ra, 0x14($sp)
 .L8007A0C8:

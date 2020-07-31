@@ -8,6 +8,8 @@ from file_util import FileUtil
 LD_NAME = 'dkr.ld'
 ASM_DIR = './asm'
 SRC_DIR = './src'
+LIB_ASM_DIR = './lib/asm'
+LIB_SRC_DIR = './lib/src'
 ASSETS_S_FILENAME = './asm/assets/assets.s'
 ASSETS_UCODE_S_FILENAME = './asm/assets/ucode.s'
 ASSETS_DIR = './assets/us_1.0'
@@ -137,37 +139,30 @@ class LD:
         
     def gen_newline(self):
         self.file.write('\n')
+        
+        
+    def append_files(self, files, extensions, directory, outputDir):
+        filenames = FileUtil.get_filenames_from_directory(directory, extensions)
+        regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
+        for filename in filenames:
+            with open(directory + '/' + filename, 'r') as inFile:
+                notDone = True
+                line = inFile.readline()
+                while line:
+                    matches = re.match(regex, line)
+                    if matches is None:
+                        line = inFile.readline()
+                        continue
+                    matchedGroups = matches.groups()
+                    files.append((outputDir + filename[:-2] + '.o', '', matchedGroups[0], 0))
+                    break
     
     def get_code_files(self):
         files = []
-        asmFilenames = FileUtil.get_filenames_from_directory(ASM_DIR, ('.s',))
-        regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
-        for filename in asmFilenames:
-            with open(ASM_DIR + '/' + filename, 'r') as asmFile:
-                notDone = True
-                line = asmFile.readline()
-                while line:
-                    matches = re.match(regex, line)
-                    if matches is None:
-                        line = asmFile.readline()
-                        continue
-                    matchedGroups = matches.groups()
-                    files.append(('build/asm/' + filename[:-2] + '.o', '', matchedGroups[0], 0))
-                    break
-        srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIR, ('.c','.2'))
-        regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
-        for filename in srcFilenames:
-            with open(SRC_DIR + '/' + filename, 'r') as srcFile:
-                notDone = True
-                line = srcFile.readline()
-                while line:
-                    matches = re.match(regex, line)
-                    if matches is None:
-                        line = srcFile.readline()
-                        continue
-                    matchedGroups = matches.groups()
-                    files.append(('build/src/' + filename[:-2] + '.o', '', matchedGroups[0], 0))
-                    break
+        self.append_files(files, ('.s',), ASM_DIR, 'build/asm/')
+        self.append_files(files, ('.c',), SRC_DIR, 'build/src/')
+        self.append_files(files, ('.s',), LIB_ASM_DIR, 'build/lib/asm/')
+        self.append_files(files, ('.c',), LIB_SRC_DIR, 'build/lib/src/')
         files.sort(key = lambda x: (x[2], x[3])) # Sort tuples by RAM address and prioritize src files first.
         return files
     

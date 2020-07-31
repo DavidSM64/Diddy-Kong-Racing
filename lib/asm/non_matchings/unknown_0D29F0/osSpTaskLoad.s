@@ -1,0 +1,99 @@
+glabel osSpTaskLoad
+/* 0D2C0C 800D200C 27BDFFE0 */  addiu $sp, $sp, -0x20
+/* 0D2C10 800D2010 AFBF0014 */  sw    $ra, 0x14($sp)
+/* 0D2C14 800D2014 AFA40020 */  sw    $a0, 0x20($sp)
+/* 0D2C18 800D2018 0C0347BC */  jal   _VirtualToPhysicalTask
+/* 0D2C1C 800D201C 8FA40020 */   lw    $a0, 0x20($sp)
+/* 0D2C20 800D2020 AFA2001C */  sw    $v0, 0x1c($sp)
+/* 0D2C24 800D2024 8FAE001C */  lw    $t6, 0x1c($sp)
+/* 0D2C28 800D2028 8DCF0004 */  lw    $t7, 4($t6)
+/* 0D2C2C 800D202C 31F80001 */  andi  $t8, $t7, 1
+/* 0D2C30 800D2030 1300000B */  beqz  $t8, .L800D2060
+/* 0D2C34 800D2034 00000000 */   nop   
+/* 0D2C38 800D2038 8DD90038 */  lw    $t9, 0x38($t6)
+/* 0D2C3C 800D203C 2401FFFE */  li    $at, -2
+/* 0D2C40 800D2040 ADD90018 */  sw    $t9, 0x18($t6)
+/* 0D2C44 800D2044 8FA8001C */  lw    $t0, 0x1c($sp)
+/* 0D2C48 800D2048 8D09003C */  lw    $t1, 0x3c($t0)
+/* 0D2C4C 800D204C AD09001C */  sw    $t1, 0x1c($t0)
+/* 0D2C50 800D2050 8FAA0020 */  lw    $t2, 0x20($sp)
+/* 0D2C54 800D2054 8D4B0004 */  lw    $t3, 4($t2)
+/* 0D2C58 800D2058 01616024 */  and   $t4, $t3, $at
+/* 0D2C5C 800D205C AD4C0004 */  sw    $t4, 4($t2)
+.L800D2060:
+/* 0D2C60 800D2060 8FA4001C */  lw    $a0, 0x1c($sp)
+/* 0D2C64 800D2064 0C03518C */  jal   osWritebackDCache
+/* 0D2C68 800D2068 24050040 */   li    $a1, 64
+/* 0D2C6C 800D206C 0C033490 */  jal   __osSpSetStatus
+/* 0D2C70 800D2070 24042B00 */   li    $a0, 11008
+/* 0D2C74 800D2074 3C040400 */  lui   $a0, (0x04001000 >> 16) # lui $a0, 0x400
+/* 0D2C78 800D2078 0C035900 */  jal   __osSpSetPc
+/* 0D2C7C 800D207C 34841000 */   ori   $a0, (0x04001000 & 0xFFFF) # ori $a0, $a0, 0x1000
+/* 0D2C80 800D2080 2401FFFF */  li    $at, -1
+/* 0D2C84 800D2084 14410007 */  bne   $v0, $at, .L800D20A4
+/* 0D2C88 800D2088 00000000 */   nop   
+.L800D208C:
+/* 0D2C8C 800D208C 3C040400 */  lui   $a0, (0x04001000 >> 16) # lui $a0, 0x400
+/* 0D2C90 800D2090 0C035900 */  jal   __osSpSetPc
+/* 0D2C94 800D2094 34841000 */   ori   $a0, (0x04001000 & 0xFFFF) # ori $a0, $a0, 0x1000
+/* 0D2C98 800D2098 2401FFFF */  li    $at, -1
+/* 0D2C9C 800D209C 1041FFFB */  beq   $v0, $at, .L800D208C
+/* 0D2CA0 800D20A0 00000000 */   nop   
+.L800D20A4:
+/* 0D2CA4 800D20A4 3C050400 */  lui   $a1, (0x04000FC0 >> 16) # lui $a1, 0x400
+/* 0D2CA8 800D20A8 34A50FC0 */  ori   $a1, (0x04000FC0 & 0xFFFF) # ori $a1, $a1, 0xfc0
+/* 0D2CAC 800D20AC 24040001 */  li    $a0, 1
+/* 0D2CB0 800D20B0 8FA6001C */  lw    $a2, 0x1c($sp)
+/* 0D2CB4 800D20B4 0C035910 */  jal   __osSpRawStartDma
+/* 0D2CB8 800D20B8 24070040 */   li    $a3, 64
+/* 0D2CBC 800D20BC 2401FFFF */  li    $at, -1
+/* 0D2CC0 800D20C0 1441000A */  bne   $v0, $at, .L800D20EC
+/* 0D2CC4 800D20C4 00000000 */   nop   
+.L800D20C8:
+/* 0D2CC8 800D20C8 3C050400 */  lui   $a1, (0x04000FC0 >> 16) # lui $a1, 0x400
+/* 0D2CCC 800D20CC 34A50FC0 */  ori   $a1, (0x04000FC0 & 0xFFFF) # ori $a1, $a1, 0xfc0
+/* 0D2CD0 800D20D0 24040001 */  li    $a0, 1
+/* 0D2CD4 800D20D4 8FA6001C */  lw    $a2, 0x1c($sp)
+/* 0D2CD8 800D20D8 0C035910 */  jal   __osSpRawStartDma
+/* 0D2CDC 800D20DC 24070040 */   li    $a3, 64
+/* 0D2CE0 800D20E0 2401FFFF */  li    $at, -1
+/* 0D2CE4 800D20E4 1041FFF8 */  beq   $v0, $at, .L800D20C8
+/* 0D2CE8 800D20E8 00000000 */   nop   
+.L800D20EC:
+/* 0D2CEC 800D20EC 0C035934 */  jal   __osSpDeviceBusy
+/* 0D2CF0 800D20F0 00000000 */   nop   
+/* 0D2CF4 800D20F4 10400005 */  beqz  $v0, .L800D210C
+/* 0D2CF8 800D20F8 00000000 */   nop   
+.L800D20FC:
+/* 0D2CFC 800D20FC 0C035934 */  jal   __osSpDeviceBusy
+/* 0D2D00 800D2100 00000000 */   nop   
+/* 0D2D04 800D2104 1440FFFD */  bnez  $v0, .L800D20FC
+/* 0D2D08 800D2108 00000000 */   nop   
+.L800D210C:
+/* 0D2D0C 800D210C 8FAD001C */  lw    $t5, 0x1c($sp)
+/* 0D2D10 800D2110 3C050400 */  lui   $a1, (0x04001000 >> 16) # lui $a1, 0x400
+/* 0D2D14 800D2114 34A51000 */  ori   $a1, (0x04001000 & 0xFFFF) # ori $a1, $a1, 0x1000
+/* 0D2D18 800D2118 24040001 */  li    $a0, 1
+/* 0D2D1C 800D211C 8DA60008 */  lw    $a2, 8($t5)
+/* 0D2D20 800D2120 0C035910 */  jal   __osSpRawStartDma
+/* 0D2D24 800D2124 8DA7000C */   lw    $a3, 0xc($t5)
+/* 0D2D28 800D2128 2401FFFF */  li    $at, -1
+/* 0D2D2C 800D212C 1441000B */  bne   $v0, $at, .L800D215C
+/* 0D2D30 800D2130 00000000 */   nop   
+.L800D2134:
+/* 0D2D34 800D2134 8FAF001C */  lw    $t7, 0x1c($sp)
+/* 0D2D38 800D2138 3C050400 */  lui   $a1, (0x04001000 >> 16) # lui $a1, 0x400
+/* 0D2D3C 800D213C 34A51000 */  ori   $a1, (0x04001000 & 0xFFFF) # ori $a1, $a1, 0x1000
+/* 0D2D40 800D2140 24040001 */  li    $a0, 1
+/* 0D2D44 800D2144 8DE60008 */  lw    $a2, 8($t7)
+/* 0D2D48 800D2148 0C035910 */  jal   __osSpRawStartDma
+/* 0D2D4C 800D214C 8DE7000C */   lw    $a3, 0xc($t7)
+/* 0D2D50 800D2150 2401FFFF */  li    $at, -1
+/* 0D2D54 800D2154 1041FFF7 */  beq   $v0, $at, .L800D2134
+/* 0D2D58 800D2158 00000000 */   nop   
+.L800D215C:
+/* 0D2D5C 800D215C 8FBF0014 */  lw    $ra, 0x14($sp)
+/* 0D2D60 800D2160 27BD0020 */  addiu $sp, $sp, 0x20
+/* 0D2D64 800D2164 03E00008 */  jr    $ra
+/* 0D2D68 800D2168 00000000 */   nop   
+

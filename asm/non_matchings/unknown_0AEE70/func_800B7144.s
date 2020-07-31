@@ -14,7 +14,7 @@ glabel func_800B7144
 /* 0B7D70 800B7170 28410080 */   slti  $at, $v0, 0x80
 /* 0B7D74 800B7174 10200003 */  beqz  $at, .L800B7184
 /* 0B7D78 800B7178 00000000 */   nop   
-/* 0B7D7C 800B717C 0C0322BC */  jal   func_800C8AF0
+/* 0B7D7C 800B717C 0C0322BC */  jal   osStopThread
 /* 0B7D80 800B7180 02002025 */   move  $a0, $s0
 .L800B7184:
 /* 0B7D84 800B7184 8E10000C */  lw    $s0, 0xc($s0)

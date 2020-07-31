@@ -1,0 +1,21 @@
+glabel osSpTaskStartGo
+/* 0D2D6C 800D216C 27BDFFE8 */  addiu $sp, $sp, -0x18
+/* 0D2D70 800D2170 AFBF0014 */  sw    $ra, 0x14($sp)
+/* 0D2D74 800D2174 0C035934 */  jal   __osSpDeviceBusy
+/* 0D2D78 800D2178 AFA40018 */   sw    $a0, 0x18($sp)
+/* 0D2D7C 800D217C 10400005 */  beqz  $v0, .L800D2194
+/* 0D2D80 800D2180 00000000 */   nop   
+.L800D2184:
+/* 0D2D84 800D2184 0C035934 */  jal   __osSpDeviceBusy
+/* 0D2D88 800D2188 00000000 */   nop   
+/* 0D2D8C 800D218C 1440FFFD */  bnez  $v0, .L800D2184
+/* 0D2D90 800D2190 00000000 */   nop   
+.L800D2194:
+/* 0D2D94 800D2194 0C033490 */  jal   __osSpSetStatus
+/* 0D2D98 800D2198 24040125 */   li    $a0, 293
+/* 0D2D9C 800D219C 8FBF0014 */  lw    $ra, 0x14($sp)
+/* 0D2DA0 800D21A0 27BD0018 */  addiu $sp, $sp, 0x18
+/* 0D2DA4 800D21A4 03E00008 */  jr    $ra
+/* 0D2DA8 800D21A8 00000000 */   nop   
+
+/* 0D2DAC 800D21AC 00000000 */  nop   

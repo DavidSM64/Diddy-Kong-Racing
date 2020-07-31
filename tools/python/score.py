@@ -8,6 +8,7 @@ ASM_FOLDERS = [
     './asm/unknown_062930',
     './asm/unknown_070110',
     './asm/gzip',
+    './lib/asm',
 ]
 
 # These will automatically be added to the adventure one percentage.
@@ -23,8 +24,9 @@ for folder in ASM_FOLDERS:
                 ASM_FUNCTIONS.append(match.groups()[0])
 
 SRC_DIRECTORY = './src'
+LIB_SRC_DIRECTORY = './lib/src'
 FUNCTION_REGEX = r'([/][*]([^*]|([*][^/]))*[*][/][\n]\s*)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
-GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]\"[^/]*/[^/]*/[^/]*/([a-zA-Z0-9_]*).s\"[)]'
+GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#if(.|\n)*?(GLOBAL_ASM[(]([^)]*)[)])(.|\n)*?#else(.|\n)*?#endif'
 
 CODE_START = 0x80000400
@@ -125,12 +127,13 @@ def main():
                 showTopFiles = int(num)
 
     scoreFiles = []
-    srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIRECTORY, extensions=('.c'))
     totalNumberOfDecompiledFunctions = 0
     totalNumberOfDocumentedFunctions = 0
     totalNumberOfGlobalAsms = 0
     totalSizeOfDecompiledFunctions = 0
     totalSizeOfDocumentedFunctions = 0
+    
+    srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIRECTORY, extensions=('.c'))
     for filename in srcFilenames:
         scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename)
         totalNumberOfDecompiledFunctions += len(scoreFile.functions)
@@ -139,6 +142,16 @@ def main():
         totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
         totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
         scoreFiles.append(scoreFile)
+    srcFilenames = FileUtil.get_filenames_from_directory_recursive(LIB_SRC_DIRECTORY, extensions=('.c'))
+    for filename in srcFilenames:
+        scoreFile = ScoreFile(LIB_SRC_DIRECTORY + '/' + filename)
+        totalNumberOfDecompiledFunctions += len(scoreFile.functions)
+        totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
+        totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+        totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
+        totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+        scoreFiles.append(scoreFile)
+    
     totalNumberOfFunctions = MAP_FILE.numFunctions
     
     for asm_function in ASM_FUNCTIONS:

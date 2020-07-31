@@ -39,7 +39,7 @@ glabel func_80075B18
 /* 0767AC 80075BAC 8E840000 */  lw    $a0, ($s4)
 /* 0767B0 80075BB0 A2A00000 */  sb    $zero, ($s5)
 /* 0767B4 80075BB4 A2C00000 */  sb    $zero, ($s6)
-/* 0767B8 80075BB8 0C0334A4 */  jal   func_800CD290
+/* 0767B8 80075BB8 0C0334A4 */  jal   osPfsIsPlug
 /* 0767BC 80075BBC 27A5004E */   addiu $a1, $sp, 0x4e
 /* 0767C0 80075BC0 3C118012 */  lui   $s1, %hi(D_801241B8) # $s1, 0x8012
 /* 0767C4 80075BC4 263141B8 */  addiu $s1, %lo(D_801241B8) # addiu $s1, $s1, 0x41b8

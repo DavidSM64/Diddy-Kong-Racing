@@ -6,7 +6,7 @@ glabel func_80002C00
 /* 003810 80002C10 0C000C10 */  jal   func_80003040
 /* 003814 80002C14 AFA5002C */   sw    $a1, 0x2c($sp)
 /* 003818 80002C18 8E040000 */  lw    $a0, ($s0)
-/* 00381C 80002C1C 0C03233C */  jal   func_800C8CF0
+/* 00381C 80002C1C 0C03233C */  jal   osVirtualToPhysical
 /* 003820 80002C20 00000000 */   nop   
 /* 003824 80002C24 8FA3002C */  lw    $v1, 0x2c($sp)
 /* 003828 80002C28 AFA20024 */  sw    $v0, 0x24($sp)
@@ -116,7 +116,7 @@ glabel func_80002C00
 /* 0039C0 80002DC0 00000000 */   nop   
 /* 0039C4 80002DC4 00402025 */  move  $a0, $v0
 /* 0039C8 80002DC8 26050008 */  addiu $a1, $s0, 8
-/* 0039CC 80002DCC 0C03238C */  jal   func_800C8E30
+/* 0039CC 80002DCC 0C03238C */  jal   osSendMesg
 /* 0039D0 80002DD0 00003025 */   move  $a2, $zero
 /* 0039D4 80002DD4 3C03800E */  lui   $v1, %hi(D_800DC688) # $v1, 0x800e
 /* 0039D8 80002DD8 2463C688 */  addiu $v1, %lo(D_800DC688) # addiu $v1, $v1, -0x3978

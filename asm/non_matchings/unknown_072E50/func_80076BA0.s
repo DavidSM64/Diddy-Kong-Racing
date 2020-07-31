@@ -18,7 +18,7 @@ glabel func_80076BA0
 /* 0777E0 80076BE0 24C64238 */  addiu $a2, %lo(D_80124238) # addiu $a2, $a2, 0x4238
 /* 0777E4 80076BE4 24A54278 */  addiu $a1, %lo(D_80124278) # addiu $a1, $a1, 0x4278
 /* 0777E8 80076BE8 24040096 */  li    $a0, 150
-/* 0777EC 80076BEC 0C031800 */  jal   func_800C6000
+/* 0777EC 80076BEC 0C031800 */  jal   osCreatePiManager
 /* 0777F0 80076BF0 24070010 */   li    $a3, 16
 /* 0777F4 80076BF4 3C0E000F */  lui   $t6, %hi(D_000ECC30) # $t6, 0xf
 /* 0777F8 80076BF8 3C0F000F */  lui   $t7, %hi(D_000ECB60) # $t7, 0xf

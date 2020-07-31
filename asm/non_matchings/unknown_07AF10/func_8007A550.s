@@ -165,11 +165,11 @@ glabel func_8007A550
 /* 07B3B8 8007A7B8 0C034728 */  jal   func_800D1CA0
 /* 07B3BC 8007A7BC 016C2021 */   addu  $a0, $t3, $t4
 .L8007A7C0:
-/* 07B3C0 8007A7C0 0C034898 */  jal   func_800D2260
+/* 07B3C0 8007A7C0 0C034898 */  jal   osViSetSpecialFeatures
 /* 07B3C4 8007A7C4 24040010 */   li    $a0, 16
-/* 07B3C8 8007A7C8 0C034898 */  jal   func_800D2260
+/* 07B3C8 8007A7C8 0C034898 */  jal   osViSetSpecialFeatures
 /* 07B3CC 8007A7CC 24040040 */   li    $a0, 64
-/* 07B3D0 8007A7D0 0C034898 */  jal   func_800D2260
+/* 07B3D0 8007A7D0 0C034898 */  jal   osViSetSpecialFeatures
 /* 07B3D4 8007A7D4 24040002 */   li    $a0, 2
 /* 07B3D8 8007A7D8 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 07B3DC 8007A7DC 27BD0018 */  addiu $sp, $sp, 0x18
