@@ -98,7 +98,7 @@ glabel func_8007A98C
 .L8007AAE8:
 /* 07B6E8 8007AAE8 3C048012 */  lui   $a0, %hi(D_801262D8) # $a0, 0x8012
 /* 07B6EC 8007AAEC 8C8462D8 */  lw    $a0, %lo(D_801262D8)($a0)
-/* 07B6F0 8007AAF0 0C034908 */  jal   func_800D2420
+/* 07B6F0 8007AAF0 0C034908 */  jal   osViSwapBuffer
 /* 07B6F4 8007AAF4 AFA30028 */   sw    $v1, 0x28($sp)
 /* 07B6F8 8007AAF8 02402025 */  move  $a0, $s2
 /* 07B6FC 8007AAFC 00002825 */  move  $a1, $zero

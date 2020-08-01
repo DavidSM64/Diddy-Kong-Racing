@@ -172,6 +172,22 @@ ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BIN
 
 $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osViSwapBuffer.o : OPT_FLAGS := -O1
+
+
+
+
 
 ######################## Targets #############################
 
@@ -189,6 +205,13 @@ else
 	@echo "/build/ directory has already been deleted." 
 endif 
     
+clean_lib:
+ifneq ($(wildcard ./build/lib/.*),) 
+	rm -r $(BUILD_DIR)/lib/src/*.o
+else 
+	@echo "/build/lib directory has already been deleted." 
+endif 
+
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
 

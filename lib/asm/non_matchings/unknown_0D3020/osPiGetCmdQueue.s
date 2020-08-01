@@ -1,6 +1,6 @@
 glabel osPiGetCmdQueue
-/* 0D43F0 800D37F0 3C0E800E */  lui   $t6, %hi(D_800E3740) # $t6, 0x800e
-/* 0D43F4 800D37F4 8DCE3740 */  lw    $t6, %lo(D_800E3740)($t6)
+/* 0D43F0 800D37F0 3C0E800E */  lui   $t6, %hi(__osPiDevMgr) # $t6, 0x800e
+/* 0D43F4 800D37F4 8DCE3740 */  lw    $t6, %lo(__osPiDevMgr)($t6)
 /* 0D43F8 800D37F8 15C00003 */  bnez  $t6, .L800D3808
 /* 0D43FC 800D37FC 00000000 */   nop   
 /* 0D4400 800D3800 03E00008 */  jr    $ra

@@ -1,8 +1,8 @@
 glabel osCreatePiManager
 /* 0C6C00 800C6000 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0C6C04 800C6004 AFB00020 */  sw    $s0, 0x20($sp)
-/* 0C6C08 800C6008 3C10800E */  lui   $s0, %hi(D_800E3740) # $s0, 0x800e
-/* 0C6C0C 800C600C 26103740 */  addiu $s0, %lo(D_800E3740) # addiu $s0, $s0, 0x3740
+/* 0C6C08 800C6008 3C10800E */  lui   $s0, %hi(__osPiDevMgr) # $s0, 0x800e
+/* 0C6C0C 800C600C 26103740 */  addiu $s0, %lo(__osPiDevMgr) # addiu $s0, $s0, 0x3740
 /* 0C6C10 800C6010 8E0E0000 */  lw    $t6, ($s0)
 /* 0C6C14 800C6014 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 0C6C18 800C6018 AFA40030 */  sw    $a0, 0x30($sp)

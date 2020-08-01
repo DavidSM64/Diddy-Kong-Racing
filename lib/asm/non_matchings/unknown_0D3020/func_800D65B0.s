@@ -3,8 +3,8 @@ glabel func_800D65B0
 /* 0D71B4 800D65B4 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D71B8 800D65B8 0C034958 */  jal   __osDisableInt
 /* 0D71BC 800D65BC AFB00018 */   sw    $s0, 0x18($sp)
-/* 0D71C0 800D65C0 3C0F800E */  lui   $t7, %hi(D_800E4890) # $t7, 0x800e
-/* 0D71C4 800D65C4 8DEF4890 */  lw    $t7, %lo(D_800E4890)($t7)
+/* 0D71C0 800D65C0 3C0F800E */  lui   $t7, %hi(__osRunningThread) # $t7, 0x800e
+/* 0D71C4 800D65C4 8DEF4890 */  lw    $t7, %lo(__osRunningThread)($t7)
 /* 0D71C8 800D65C8 240E0002 */  li    $t6, 2
 /* 0D71CC 800D65CC 3C04800E */  lui   $a0, %hi(D_800E4888) # $a0, 0x800e
 /* 0D71D0 800D65D0 00408025 */  move  $s0, $v0
