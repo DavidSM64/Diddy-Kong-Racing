@@ -1,0 +1,31 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800D52C0 */
+
+#include "macros.h"
+
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSiDeviceBusy.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSumcalc.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osIdCheckSum.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osCheckPackId.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osGetId.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osCheckId.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osPfsSelectBank.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osDpDeviceBusy.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osViGetCurrentContext.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D63F0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpSetPc.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpRawStartDma.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpDeviceBusy.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D6500.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D6560.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D65B0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Litob.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Genld.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Ldtob.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetCompare.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/lldiv.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/ldiv.s")

@@ -1,6 +1,7 @@
 #ifndef _HARDWARE_H_
 #define _HARDWARE_H_
-#include "types.h"
+#include "libultra_internal.h"
+//#include "types.h"
 
 #define HW_REG(reg, type) *(volatile type *)(u32*)(reg | 0xa0000000)
 
