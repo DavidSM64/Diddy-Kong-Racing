@@ -22,10 +22,10 @@ glabel viMgrMain
 /* 0D2758 800D1B58 A423D190 */  sh    $v1, %lo(D_8012D190)($at)
 .L800D1B5C:
 /* 0D275C 800D1B5C 3C138013 */  lui   $s3, %hi(D_8012D22C) # $s3, 0x8013
-/* 0D2760 800D1B60 3C128013 */  lui   $s2, %hi(D_8012D228) # $s2, 0x8013
-/* 0D2764 800D1B64 3C118013 */  lui   $s1, %hi(D_8012D220) # $s1, 0x8013
-/* 0D2768 800D1B68 2631D220 */  addiu $s1, %lo(D_8012D220) # addiu $s1, $s1, -0x2de0
-/* 0D276C 800D1B6C 2652D228 */  addiu $s2, %lo(D_8012D228) # addiu $s2, $s2, -0x2dd8
+/* 0D2760 800D1B60 3C128013 */  lui   $s2, %hi(__osBaseCounter) # $s2, 0x8013
+/* 0D2764 800D1B64 3C118013 */  lui   $s1, %hi(__osCurrentTime) # $s1, 0x8013
+/* 0D2768 800D1B68 2631D220 */  addiu $s1, %lo(__osCurrentTime) # addiu $s1, $s1, -0x2de0
+/* 0D276C 800D1B6C 2652D228 */  addiu $s2, %lo(__osBaseCounter) # addiu $s2, $s2, -0x2dd8
 /* 0D2770 800D1B70 2673D22C */  addiu $s3, %lo(D_8012D22C) # addiu $s3, $s3, -0x2dd4
 /* 0D2774 800D1B74 2415000D */  li    $s5, 13
 /* 0D2778 800D1B78 27B40044 */  addiu $s4, $sp, 0x44

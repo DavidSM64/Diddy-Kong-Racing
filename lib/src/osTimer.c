@@ -5,8 +5,8 @@
 #include "libultra_internal.h"
 
 extern OSTimer *D_800E4910;
-extern OSTime D_8012D220;
-extern u32 D_8012D228;
+extern OSTime __osCurrentTime;
+extern u32 __osBaseCounter;
 extern u32 D_8012D22C;
 extern u32 D_8012D230;
 
@@ -17,8 +17,8 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s")
 /*void __osTimerServicesInit(void)
 {
     //D_8012D224 = 0;
-	D_8012D220 = 0;
-    D_8012D228 = 0;
+	__osCurrentTime = 0;
+    __osBaseCounter = 0;
     D_8012D22C = 0;
 	D_800E4910->prev = D_800E4910;
 	D_800E4910->next = D_800E4910->prev;
