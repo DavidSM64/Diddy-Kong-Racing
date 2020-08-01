@@ -172,6 +172,7 @@ ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BIN
 
 $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
