@@ -60,10 +60,19 @@ typedef struct {
     /*0x08*/ void *dramAddr;
     /*0x0C*/ uintptr_t devAddr;
     /*0x10*/ size_t size;
-#if defined(VERSION_EU) || defined(VERSION_SH)
     OSPiHandle *piHandle; // from the official definition
-#endif
 } OSIoMesg;
+
+typedef struct {
+    s32             active;		/* Status flag */
+    OSThread	*thread;	/* Calling thread */
+    OSMesgQueue  	*cmdQueue;	/* Command queue */
+    OSMesgQueue  	*evtQueue;	/* Event queue */
+    OSMesgQueue  	*acsQueue;	/* Access queue */
+	                            /* Raw DMA routine */
+    s32             (*dma)(s32, u32, void *, u32);
+    s32             (*edma)(OSPiHandle *, s32, u32, void *, u32);
+} OSDevMgr;
 
 /* Definitions */
 
