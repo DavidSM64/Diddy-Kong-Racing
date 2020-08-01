@@ -176,11 +176,14 @@ $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViSwapBuffer.o : OPT_FLAGS := -O1
+
 
 
 
