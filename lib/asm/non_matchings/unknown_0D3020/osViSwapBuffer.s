@@ -1,4 +1,4 @@
-glabel func_800D2420
+glabel osViSwapBuffer
 /* 0D3020 800D2420 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0D3024 800D2424 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0D3028 800D2428 0C034958 */  jal   __osDisableInt
