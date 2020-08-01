@@ -1,7 +1,7 @@
 glabel __osPackRamWriteData
 /* 0CE720 800CDB20 27BDFFB8 */  addiu $sp, $sp, -0x48
-/* 0CE724 800CDB24 3C0E8013 */  lui   $t6, %hi(D_8012CDE0) # $t6, 0x8013
-/* 0CE728 800CDB28 25CECDE0 */  addiu $t6, %lo(D_8012CDE0) # addiu $t6, $t6, -0x3220
+/* 0CE724 800CDB24 3C0E8013 */  lui   $t6, %hi(__osPfsPifRam) # $t6, 0x8013
+/* 0CE728 800CDB28 25CECDE0 */  addiu $t6, %lo(__osPfsPifRam) # addiu $t6, $t6, -0x3220
 /* 0CE72C 800CDB2C AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0CE730 800CDB30 AFA40048 */  sw    $a0, 0x48($sp)
 /* 0CE734 800CDB34 AFA5004C */  sw    $a1, 0x4c($sp)

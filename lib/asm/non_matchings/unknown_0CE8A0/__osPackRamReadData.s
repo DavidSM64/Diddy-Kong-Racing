@@ -1,7 +1,7 @@
 glabel __osPackRamReadData
 /* 0CEAE4 800CDEE4 27BDFFB8 */  addiu $sp, $sp, -0x48
-/* 0CEAE8 800CDEE8 3C0E8013 */  lui   $t6, %hi(D_8012CDE0) # $t6, 0x8013
-/* 0CEAEC 800CDEEC 25CECDE0 */  addiu $t6, %lo(D_8012CDE0) # addiu $t6, $t6, -0x3220
+/* 0CEAE8 800CDEE8 3C0E8013 */  lui   $t6, %hi(__osPfsPifRam) # $t6, 0x8013
+/* 0CEAEC 800CDEEC 25CECDE0 */  addiu $t6, %lo(__osPfsPifRam) # addiu $t6, $t6, -0x3220
 /* 0CEAF0 800CDEF0 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0CEAF4 800CDEF4 AFA40048 */  sw    $a0, 0x48($sp)
 /* 0CEAF8 800CDEF8 AFA5004C */  sw    $a1, 0x4c($sp)

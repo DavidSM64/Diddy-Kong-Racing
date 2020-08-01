@@ -1,6 +1,6 @@
 glabel func_800CD0A4
-/* 0CDCA4 800CD0A4 3C0F8013 */  lui   $t7, %hi(D_8012CD91) # $t7, 0x8013
-/* 0CDCA8 800CD0A8 91EFCD91 */  lbu   $t7, %lo(D_8012CD91)($t7)
+/* 0CDCA4 800CD0A4 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
+/* 0CDCA8 800CD0A8 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
 /* 0CDCAC 800CD0AC 3C0E8013 */  lui   $t6, %hi(D_8012CD50) # $t6, 0x8013
 /* 0CDCB0 800CD0B0 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 0CDCB4 800CD0B4 25CECD50 */  addiu $t6, %lo(D_8012CD50) # addiu $t6, $t6, -0x32b0
@@ -31,8 +31,8 @@ glabel func_800CD0A4
 /* 0CDD14 800CD114 A0880003 */  sb    $t0, 3($a0)
 .L800CD118:
 /* 0CDD18 800CD118 8FB80000 */  lw    $t8, ($sp)
-/* 0CDD1C 800CD11C 3C0B8013 */  lui   $t3, %hi(D_8012CD91) # $t3, 0x8013
-/* 0CDD20 800CD120 916BCD91 */  lbu   $t3, %lo(D_8012CD91)($t3)
+/* 0CDD1C 800CD11C 3C0B8013 */  lui   $t3, %hi(__osMaxControllers) # $t3, 0x8013
+/* 0CDD20 800CD120 916BCD91 */  lbu   $t3, %lo(__osMaxControllers)($t3)
 /* 0CDD24 800CD124 8FA9000C */  lw    $t1, 0xc($sp)
 /* 0CDD28 800CD128 27190001 */  addiu $t9, $t8, 1
 /* 0CDD2C 800CD12C 032B082A */  slt   $at, $t9, $t3

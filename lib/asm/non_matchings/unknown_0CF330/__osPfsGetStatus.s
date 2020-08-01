@@ -6,8 +6,8 @@ glabel __osPfsGetStatus
 /* 0CF9E4 800CEDE4 AFA00034 */  sw    $zero, 0x34($sp)
 /* 0CF9E8 800CEDE8 0C03350C */  jal   __osPfsRequestData
 /* 0CF9EC 800CEDEC 00002025 */   move  $a0, $zero
-/* 0CF9F0 800CEDF0 3C058013 */  lui   $a1, %hi(D_8012CDE0) # $a1, 0x8013
-/* 0CF9F4 800CEDF4 24A5CDE0 */  addiu $a1, %lo(D_8012CDE0) # addiu $a1, $a1, -0x3220
+/* 0CF9F0 800CEDF0 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+/* 0CF9F4 800CEDF4 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
 /* 0CF9F8 800CEDF8 0C0335B0 */  jal   __osSiRawStartDma
 /* 0CF9FC 800CEDFC 24040001 */   li    $a0, 1
 /* 0CFA00 800CEE00 AFA20034 */  sw    $v0, 0x34($sp)
@@ -15,8 +15,8 @@ glabel __osPfsGetStatus
 /* 0CFA08 800CEE08 27A50030 */  addiu $a1, $sp, 0x30
 /* 0CFA0C 800CEE0C 0C0322EC */  jal   osRecvMesg
 /* 0CFA10 800CEE10 24060001 */   li    $a2, 1
-/* 0CFA14 800CEE14 3C058013 */  lui   $a1, %hi(D_8012CDE0) # $a1, 0x8013
-/* 0CFA18 800CEE18 24A5CDE0 */  addiu $a1, %lo(D_8012CDE0) # addiu $a1, $a1, -0x3220
+/* 0CFA14 800CEE14 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+/* 0CFA18 800CEE18 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
 /* 0CFA1C 800CEE1C 0C0335B0 */  jal   __osSiRawStartDma
 /* 0CFA20 800CEE20 00002025 */   move  $a0, $zero
 /* 0CFA24 800CEE24 AFA20034 */  sw    $v0, 0x34($sp)
