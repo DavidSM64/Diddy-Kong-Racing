@@ -1,3 +1,13 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800D35B0 */
+
+.include "globals.inc"
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
 glabel __osProbeTLB
 /* 0D41B0 800D35B0 40085000 */  mfc0  $t0, $10
 /* 0D41B4 800D35B4 310900FF */  andi  $t1, $t0, 0xff

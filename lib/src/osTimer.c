@@ -13,8 +13,10 @@ extern u32 D_8012D230;
 
 OSTime __osInsertTimer(OSTimer *t);
 
+#if 1
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s")
-/*void __osTimerServicesInit(void)
+#else
+void __osTimerServicesInit(void)
 {
     //D_8012D224 = 0;
 	__osCurrentTime = 0;
@@ -26,7 +28,8 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s")
 	D_800E4910->interval = D_800E4910->remaining;
 	D_800E4910->mq = NULL;
 	D_800E4910->msg = 0;
-}*/
+}
+#endif
 
 void __osTimerInterrupt(void)
 {
@@ -67,8 +70,10 @@ void __osTimerInterrupt(void)
 	}
 }
 
+#if 1
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s")
-/*void __osSetTimerIntr(OSTime tim)
+#else
+void __osSetTimerIntr(OSTime tim)
 {
 	OSTime NewTime;
 	u32 savedMask;
@@ -77,8 +82,8 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s")
 	NewTime = tim + D_8012D230;
 	__osSetCompare(NewTime);
 	__osRestoreInt(savedMask);
-}*/
-
+}
+#endif
 
 
 OSTime __osInsertTimer(OSTimer *t)

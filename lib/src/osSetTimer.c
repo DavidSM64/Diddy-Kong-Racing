@@ -3,10 +3,10 @@
 
 #include "macros.h"
 
+#if 1
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osSetTimer.s")
-
-
-/*#include "libultra_internal.h"
+#else
+#include "libultra_internal.h"
 
 extern OSTimer *D_800E4910;
 
@@ -25,4 +25,5 @@ u32 osSetTimer(OSTimer *t, OSTime value, OSTime interval, OSMesgQueue *mq, OSMes
         __osSetTimerIntr(time);
     }
     return 0;
-}*/
+}
+#endif

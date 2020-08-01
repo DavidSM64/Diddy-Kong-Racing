@@ -7,7 +7,6 @@
 
 extern OSThread *__osRunningThread;
 
-//GLOBAL_ASM("lib/asm/non_matchings/unknown_0C96F0/osRecvMesg.s")
 s32 osRecvMesg(OSMesgQueue *mq, OSMesg *msg, s32 flags)
 {
     register u32 saveMask;
