@@ -10,8 +10,8 @@ glabel osDestroyThread
 /* 0D7220 800D6620 00408025 */  move  $s0, $v0
 /* 0D7224 800D6624 15C00005 */  bnez  $t6, .L800D663C
 /* 0D7228 800D6628 00000000 */   nop   
-/* 0D722C 800D662C 3C0F800E */  lui   $t7, %hi(D_800E4890) # $t7, 0x800e
-/* 0D7230 800D6630 8DEF4890 */  lw    $t7, %lo(D_800E4890)($t7)
+/* 0D722C 800D662C 3C0F800E */  lui   $t7, %hi(__osRunningThread) # $t7, 0x800e
+/* 0D7230 800D6630 8DEF4890 */  lw    $t7, %lo(__osRunningThread)($t7)
 /* 0D7234 800D6634 10000009 */  b     .L800D665C
 /* 0D7238 800D6638 AFAF0038 */   sw    $t7, 0x38($sp)
 .L800D663C:
@@ -52,8 +52,8 @@ glabel osDestroyThread
 /* 0D72B4 800D66B4 1640FFF7 */  bnez  $s2, .L800D6694
 /* 0D72B8 800D66B8 00000000 */   nop   
 .L800D66BC:
-/* 0D72BC 800D66BC 3C0E800E */  lui   $t6, %hi(D_800E4890) # $t6, 0x800e
-/* 0D72C0 800D66C0 8DCE4890 */  lw    $t6, %lo(D_800E4890)($t6)
+/* 0D72BC 800D66BC 3C0E800E */  lui   $t6, %hi(__osRunningThread) # $t6, 0x800e
+/* 0D72C0 800D66C0 8DCE4890 */  lw    $t6, %lo(__osRunningThread)($t6)
 /* 0D72C4 800D66C4 8FAD0038 */  lw    $t5, 0x38($sp)
 /* 0D72C8 800D66C8 15AE0003 */  bne   $t5, $t6, .L800D66D8
 /* 0D72CC 800D66CC 00000000 */   nop   

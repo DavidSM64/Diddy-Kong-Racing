@@ -13,8 +13,8 @@ glabel __osException
 /* 0D38EC 800D2CEC AF400018 */  sw    $zero, 0x18($k0)
 /* 0D38F0 800D2CF0 40086800 */  mfc0  $t0, $13
 /* 0D38F4 800D2CF4 03404025 */  move  $t0, $k0
-/* 0D38F8 800D2CF8 3C1A800E */  lui   $k0, %hi(D_800E4890) # $k0, 0x800e
-/* 0D38FC 800D2CFC 8F5A4890 */  lw    $k0, %lo(D_800E4890)($k0)
+/* 0D38F8 800D2CF8 3C1A800E */  lui   $k0, %hi(__osRunningThread) # $k0, 0x800e
+/* 0D38FC 800D2CFC 8F5A4890 */  lw    $k0, %lo(__osRunningThread)($k0)
 /* 0D3900 800D2D00 DD090020 */  ld    $t1, 0x20($t0)
 /* 0D3904 800D2D04 FF490020 */  sd    $t1, 0x20($k0)
 /* 0D3908 800D2D08 DD090118 */  ld    $t1, 0x118($t0)

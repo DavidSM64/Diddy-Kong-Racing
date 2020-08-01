@@ -27,8 +27,8 @@ glabel osStopThread
 /* 0C974C 800C8B4C 10000010 */  b     .L800C8B90
 /* 0C9750 800C8B50 00000000 */   nop   
 .L800C8B54:
-/* 0C9754 800C8B54 3C19800E */  lui   $t9, %hi(D_800E4890) # $t9, 0x800e
-/* 0C9758 800C8B58 8F394890 */  lw    $t9, %lo(D_800E4890)($t9)
+/* 0C9754 800C8B54 3C19800E */  lui   $t9, %hi(__osRunningThread) # $t9, 0x800e
+/* 0C9758 800C8B58 8F394890 */  lw    $t9, %lo(__osRunningThread)($t9)
 /* 0C975C 800C8B5C 24180001 */  li    $t8, 1
 /* 0C9760 800C8B60 00002025 */  move  $a0, $zero
 /* 0C9764 800C8B64 0C034CB3 */  jal   __osEnqueueAndYield

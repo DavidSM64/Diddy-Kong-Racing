@@ -21,8 +21,8 @@ glabel osRecvMesg
 /* 0C97F8 800C8BF8 10000036 */  b     .L800C8CD4
 /* 0C97FC 800C8BFC 2402FFFF */   li    $v0, -1
 .L800C8C00:
-/* 0C9800 800C8C00 3C08800E */  lui   $t0, %hi(D_800E4890) # $t0, 0x800e
-/* 0C9804 800C8C04 8D084890 */  lw    $t0, %lo(D_800E4890)($t0)
+/* 0C9800 800C8C00 3C08800E */  lui   $t0, %hi(__osRunningThread) # $t0, 0x800e
+/* 0C9804 800C8C04 8D084890 */  lw    $t0, %lo(__osRunningThread)($t0)
 /* 0C9808 800C8C08 24190008 */  li    $t9, 8
 /* 0C980C 800C8C0C A5190010 */  sh    $t9, 0x10($t0)
 /* 0C9810 800C8C10 0C034CB3 */  jal   __osEnqueueAndYield

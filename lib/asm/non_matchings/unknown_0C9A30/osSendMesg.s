@@ -20,8 +20,8 @@ glabel osSendMesg
 /* 0C9A74 800C8E74 24010001 */  li    $at, 1
 /* 0C9A78 800C8E78 1721000A */  bne   $t9, $at, .L800C8EA4
 /* 0C9A7C 800C8E7C 00000000 */   nop   
-/* 0C9A80 800C8E80 3C09800E */  lui   $t1, %hi(D_800E4890) # $t1, 0x800e
-/* 0C9A84 800C8E84 8D294890 */  lw    $t1, %lo(D_800E4890)($t1)
+/* 0C9A80 800C8E80 3C09800E */  lui   $t1, %hi(__osRunningThread) # $t1, 0x800e
+/* 0C9A84 800C8E84 8D294890 */  lw    $t1, %lo(__osRunningThread)($t1)
 /* 0C9A88 800C8E88 24080008 */  li    $t0, 8
 /* 0C9A8C 800C8E8C A5280010 */  sh    $t0, 0x10($t1)
 /* 0C9A90 800C8E90 8FA40038 */  lw    $a0, 0x38($sp)

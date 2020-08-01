@@ -3,10 +3,10 @@
 
 #include "libultra_internal.h"
 
-extern OSThread *D_800E4890; //__osRunningThread;
+extern OSThread *__osRunningThread;
 OSPri osGetThreadPri(OSThread *thread)
 {
     if (thread == NULL)
-        thread = D_800E4890;
+        thread = __osRunningThread;
     return thread->priority;
 }

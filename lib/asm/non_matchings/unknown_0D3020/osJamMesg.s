@@ -19,8 +19,8 @@ glabel osJamMesg
 /* 0D42E0 800D36E0 24010001 */  li    $at, 1
 /* 0D42E4 800D36E4 1721000A */  bne   $t9, $at, .L800D3710
 /* 0D42E8 800D36E8 00000000 */   nop   
-/* 0D42EC 800D36EC 3C09800E */  lui   $t1, %hi(D_800E4890) # $t1, 0x800e
-/* 0D42F0 800D36F0 8D294890 */  lw    $t1, %lo(D_800E4890)($t1)
+/* 0D42EC 800D36EC 3C09800E */  lui   $t1, %hi(__osRunningThread) # $t1, 0x800e
+/* 0D42F0 800D36F0 8D294890 */  lw    $t1, %lo(__osRunningThread)($t1)
 /* 0D42F4 800D36F4 24080008 */  li    $t0, 8
 /* 0D42F8 800D36F8 A5280010 */  sh    $t0, 0x10($t1)
 /* 0D42FC 800D36FC 8FA40028 */  lw    $a0, 0x28($sp)

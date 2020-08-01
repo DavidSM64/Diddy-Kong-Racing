@@ -1,6 +1,6 @@
 glabel __osEnqueueAndYield
-/* 0D3ECC 800D32CC 3C05800E */  lui   $a1, %hi(D_800E4890) # $a1, 0x800e
-/* 0D3ED0 800D32D0 8CA54890 */  lw    $a1, %lo(D_800E4890)($a1)
+/* 0D3ECC 800D32CC 3C05800E */  lui   $a1, %hi(__osRunningThread) # $a1, 0x800e
+/* 0D3ED0 800D32D0 8CA54890 */  lw    $a1, %lo(__osRunningThread)($a1)
 /* 0D3ED4 800D32D4 40086000 */  mfc0  $t0, $12
 /* 0D3ED8 800D32D8 8CBB0018 */  lw    $k1, 0x18($a1)
 /* 0D3EDC 800D32DC 35080002 */  ori   $t0, $t0, 2

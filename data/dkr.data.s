@@ -8084,7 +8084,7 @@ glabel D_800E3710
 .word 0x00000000
 .word 0x00000000
 
-glabel D_800E3740
+glabel __osPiDevMgr
 .word 0x00000000
 .word 0x00000000
 
@@ -9262,7 +9262,7 @@ glabel D_800E4888
 glabel D_800E488C
 .word 0x800E4880
 
-glabel D_800E4890
+glabel __osRunningThread
 .word 0x00000000
 
 glabel D_800E4894
