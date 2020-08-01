@@ -176,6 +176,7 @@ $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osPfsFreeBlocks.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1

@@ -9259,7 +9259,7 @@ glabel __osThreadTail
 glabel D_800E4888
 .word 0x800E4880
 
-glabel D_800E488C
+glabel __osActiveQueue
 .word 0x800E4880
 
 glabel __osRunningThread

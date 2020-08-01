@@ -3,6 +3,11 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
 
+extern OSTime __osCurrentTime;
+extern u32 __osBaseCounter;
+extern u32 D_8012D22C; //__osViIntrCount
+//extern u16 D_8012D190; //static u16 retrace
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D2590/osCreateViManager.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D2590/viMgrMain.s")

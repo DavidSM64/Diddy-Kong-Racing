@@ -24,18 +24,18 @@ glabel osDestroyThread
 /* 0D7254 800D6654 0C034B1C */  jal   __osDequeueThread
 /* 0D7258 800D6658 03002825 */   move  $a1, $t8
 .L800D665C:
-/* 0D725C 800D665C 3C08800E */  lui   $t0, %hi(D_800E488C) # $t0, 0x800e
-/* 0D7260 800D6660 8D08488C */  lw    $t0, %lo(D_800E488C)($t0)
+/* 0D725C 800D665C 3C08800E */  lui   $t0, %hi(__osActiveQueue) # $t0, 0x800e
+/* 0D7260 800D6660 8D08488C */  lw    $t0, %lo(__osActiveQueue)($t0)
 /* 0D7264 800D6664 8FA90038 */  lw    $t1, 0x38($sp)
 /* 0D7268 800D6668 15090005 */  bne   $t0, $t1, .L800D6680
 /* 0D726C 800D666C 00000000 */   nop   
 /* 0D7270 800D6670 8D0A000C */  lw    $t2, 0xc($t0)
-/* 0D7274 800D6674 3C01800E */  lui   $at, %hi(D_800E488C) # $at, 0x800e
+/* 0D7274 800D6674 3C01800E */  lui   $at, %hi(__osActiveQueue) # $at, 0x800e
 /* 0D7278 800D6678 10000010 */  b     .L800D66BC
-/* 0D727C 800D667C AC2A488C */   sw    $t2, %lo(D_800E488C)($at)
+/* 0D727C 800D667C AC2A488C */   sw    $t2, %lo(__osActiveQueue)($at)
 .L800D6680:
-/* 0D7280 800D6680 3C11800E */  lui   $s1, %hi(D_800E488C) # $s1, 0x800e
-/* 0D7284 800D6684 8E31488C */  lw    $s1, %lo(D_800E488C)($s1)
+/* 0D7280 800D6680 3C11800E */  lui   $s1, %hi(__osActiveQueue) # $s1, 0x800e
+/* 0D7284 800D6684 8E31488C */  lw    $s1, %lo(__osActiveQueue)($s1)
 /* 0D7288 800D6688 8E32000C */  lw    $s2, 0xc($s1)
 /* 0D728C 800D668C 1240000B */  beqz  $s2, .L800D66BC
 /* 0D7290 800D6690 00000000 */   nop   

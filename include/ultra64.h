@@ -30,5 +30,6 @@
 #include <PR/os_ai.h>
 #include <PR/libaudio.h>
 #include <PR/libultra.h>
+#include <PR/pfs.h>
 
 #endif
