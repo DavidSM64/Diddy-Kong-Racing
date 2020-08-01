@@ -9252,7 +9252,7 @@ glabel D_800E4878
 .word 0x02E6D354
 .word 0x00000000
 
-glabel D_800E4880
+glabel __osThreadTail
 .word 0x00000000
 .word 0xFFFFFFFF
 
