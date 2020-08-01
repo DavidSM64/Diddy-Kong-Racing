@@ -11,3 +11,6 @@ assets/
 
 # Linker file is automatically generated, so it should be ignored
 dkr.ld
+
+# Misc stuff that should be ignored.
+.*/
