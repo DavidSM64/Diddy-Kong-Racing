@@ -35,7 +35,7 @@ extern u8  D_800DC670;
 /* Unknown size */
 typedef struct unk80115CF8 {
     u8 pad0[2];
-    s16 unk2; 
+    s16 unk2;
 } unk80115CF8;
 
 extern unk80115CF8 *D_80115CF8;
@@ -234,7 +234,24 @@ void func_800011A8(u8 arg0, u8 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800011E8.s")
+void func_800C7940(unk800DC630*, u8 arg1, u8 arg2);
+
+void func_800011E8(u8 arg0, u8 arg1) {
+    if (arg0 < 0x10) {
+        func_800C7940(D_800DC630, arg0, arg1);
+    }
+}
+
+s32 func_800C79A0(unk800DC630*, u8 arg1);
+
+/* Unused?*/
+s32 func_80001228(u8 arg0) {
+    if (arg0 >= 0x10) {
+        return 0;
+    } else {
+        return func_800C79A0(D_800DC630, arg0);
+    }
+}
 
 s32 func_80063BA0(unk800DC630*, u8 arg1, u8 arg2);
 
