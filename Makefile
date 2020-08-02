@@ -10,6 +10,10 @@ ifeq ($(wildcard ./assets/.*),)
     $(error Error, /assets/ folder was not found. Did you run the ./setup.sh script?)
 endif
 
+#################### Generate linker file ####################
+
+GENERATE_LD := $(shell ./generate_ld.sh)
+
 ################ Target Executable and Sources ###############
 
 # BUILD_DIR is location where all build artifacts are placed

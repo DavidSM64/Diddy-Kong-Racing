@@ -1,10 +1,9 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800C9DA0 */
+/* RAM_POS: 0x800CA0B0 */
 
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/bcopy.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CA0B0.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/D_800CA0D0.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/D_800CAA7C.s")

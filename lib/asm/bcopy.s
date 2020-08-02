@@ -1,3 +1,13 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800C9DA0 */
+
+.include "globals.inc"
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
 glabel bcopy
 /* 0CA9A0 800C9DA0 10C0001A */  beqz  $a2, .L800C9E0C
 /* 0CA9A4 800C9DA4 00A03825 */   move  $a3, $a1
