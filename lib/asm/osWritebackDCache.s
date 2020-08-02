@@ -1,3 +1,14 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800D4630 */
+
+.include "globals.inc"
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
+
 glabel osWritebackDCache
 /* 0D5230 800D4630 18A00011 */  blez  $a1, .L800D4678
 /* 0D5234 800D4634 00000000 */   nop   

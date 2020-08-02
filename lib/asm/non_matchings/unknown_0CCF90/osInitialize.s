@@ -97,7 +97,7 @@ glabel osInitialize
 /* 0CD30C 800CC70C 0C03518C */  jal   osWritebackDCache
 /* 0CD310 800CC710 ADF8000C */   sw    $t8, %lo(D_8000000C)($t7)
 /* 0CD314 800CC714 3C048000 */  lui   $a0, 0x8000
-/* 0CD318 800CC718 0C0351AC */  jal   osWritebackICache
+/* 0CD318 800CC718 0C0351AC */  jal   osInvalICache
 /* 0CD31C 800CC71C 24050190 */   li    $a1, 400
 /* 0CD320 800CC720 0C0351CC */  jal   osMapTLBRdb
 /* 0CD324 800CC724 00000000 */   nop   
