@@ -180,6 +180,7 @@ $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/unknown_0D3160.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osPfsFreeBlocks.o: OPT_FLAGS := -O1
@@ -212,11 +213,7 @@ else
 endif 
     
 clean_lib:
-<<<<<<< HEAD
-ifneq ($(wildcard ./build/lib/src/.*),) 
-=======
 ifneq ($(wildcard $(BUILD_DIR)/lib/.*),) 
->>>>>>> b1b1e461a6aa490d7355c207a9a9530181aa8fd7
 	rm -r $(BUILD_DIR)/lib/src/*.o
 else 
 	@echo "build lib directory has already been deleted." 

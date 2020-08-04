@@ -13,8 +13,8 @@ def add_custom_arguments(parser):
 
 def apply(config, args):
     lang = args.lang or 'us'
-    config['mapfile'] = f'build/dkr.map'
-    config['myimg'] = f'build/dkr.z64'
+    config['mapfile'] = f'build/us_1.0/dkr.map'
+    config['myimg'] = f'build/us_1.0/dkr.z64'
     config['baseimg'] = f'baseroms/Diddy Kong Racing (USA 1.0).z64'
     config['makeflags'] = [f'']
     config['source_directories'] = ['src']
