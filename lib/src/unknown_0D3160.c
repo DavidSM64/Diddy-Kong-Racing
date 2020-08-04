@@ -4,6 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
+<<<<<<< HEAD
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osDisableInt.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osRestoreInt.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/D_800D25A0.s")
@@ -37,3 +38,13 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osWritebackICache.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osMapTLBRdb.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osPiRawWriteIo.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D47F0.s")
+=======
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDisableInt.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osRestoreInt.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/D_800D25A0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/D_800D2680.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/D_800D2760.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osViInit.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/func_800D2C60.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDequeueThread.s")
+>>>>>>> 1ea984894c2baacd9f5fc72c2f6b34bed05b3021

@@ -9,6 +9,7 @@ ASM_FOLDERS = [
     './asm/unknown_070110',
     './asm/gzip',
     './lib/asm',
+    './lib/asm/exception',
 ]
 
 # These will automatically be added to the adventure one percentage.
@@ -25,7 +26,7 @@ for folder in ASM_FOLDERS:
 
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './lib/src'
-FUNCTION_REGEX = r'([/][*]([^*]|([*][^/]))*[*][/][\n]\s*)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
+FUNCTION_REGEX = r'([/][*][*]([^*]|([*][^/]))*[*][/][\n]\s*)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#if(.|\n)*?(GLOBAL_ASM[(]([^)]*)[)])(.|\n)*?#else(.|\n)*?#endif'
 
@@ -35,23 +36,27 @@ CODE_SIZE = CODE_END - CODE_START
 
 class DkrMapFile:
     def __init__(self):
-        with open('./build/dkr.map', 'r') as mapFile:
-            self.functionSizes = {}
-            functions = []
-            lines = mapFile.read().split('\n')
-            for line in lines:
-                if line.startswith('                0x00000000'):
-                    if '=' in line:
-                        line = line[0:line.find('=')-1]
-                    address = int(line[26:26+8], 16)
-                    if address >= CODE_START and address < CODE_END:
-                        symbol = line[line.rfind(' ')+1:]
-                        functions.append((symbol, address))
-            functions.sort(key=lambda x:x[1]) # Sort by RAM address
-            for i in range(0, len(functions) - 1):
-                self.functionSizes[functions[i][0]] = functions[i + 1][1] - functions[i][1]
-            self.functionSizes[functions[len(functions) - 1][0]] = CODE_END - 0x800D7570 
-            self.numFunctions = len(functions)
+        try:
+            with open('./build/dkr.map', 'r') as mapFile:
+                self.functionSizes = {}
+                functions = []
+                lines = mapFile.read().split('\n')
+                for line in lines:
+                    if line.startswith('                0x00000000'):
+                        if '=' in line:
+                            line = line[0:line.find('=')-1]
+                        address = int(line[26:26+8], 16)
+                        if address >= CODE_START and address < CODE_END:
+                            symbol = line[line.rfind(' ')+1:]
+                            functions.append((symbol, address))
+                functions.sort(key=lambda x:x[1]) # Sort by RAM address
+                for i in range(0, len(functions) - 1):
+                    self.functionSizes[functions[i][0]] = functions[i + 1][1] - functions[i][1]
+                self.functionSizes[functions[len(functions) - 1][0]] = CODE_END - 0x800D7570 
+                self.numFunctions = len(functions)
+        except FileNotFoundError:
+            print("You must build a rom before it can be scored!")
+            sys.exit()
 
 MAP_FILE = DkrMapFile()
 

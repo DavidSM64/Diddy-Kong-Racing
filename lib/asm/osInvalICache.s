@@ -1,4 +1,14 @@
-glabel osWritebackICache
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800D46B0 */
+
+.include "globals.inc"
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
+glabel osInvalICache
 /* 0D52B0 800D46B0 18A00011 */  blez  $a1, .L800D46F8
 /* 0D52B4 800D46B4 00000000 */   nop   
 /* 0D52B8 800D46B8 240B4000 */  li    $t3, 16384
