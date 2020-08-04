@@ -186,6 +186,7 @@ $(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetEventMesg.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osSetTime.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
@@ -213,8 +214,15 @@ else
 endif 
     
 clean_lib:
-ifneq ($(wildcard ./build/lib/.*),) 
+ifneq ($(wildcard ./build/lib/src/.*),) 
 	rm -r $(BUILD_DIR)/lib/src/*.o
+else 
+	@echo "/build/lib directory has already been deleted." 
+endif 
+
+clean_src: clean_lib
+ifneq ($(wildcard ./build/src/.*),) 
+	rm -r $(BUILD_DIR)/src/*.o
 else 
 	@echo "/build/lib directory has already been deleted." 
 endif 
