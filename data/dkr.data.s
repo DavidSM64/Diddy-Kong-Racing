@@ -8226,7 +8226,7 @@ glabel D_800E38D0
 .word 0x00000000
 .word 0x00000000
 
-glabel D_800E38E0
+glabel __osViDevMgr
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
