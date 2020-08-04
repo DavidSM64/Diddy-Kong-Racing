@@ -835,7 +835,7 @@ extern u8 D_80121103;
 s32 func_8006A10C(void) {
     u8 sp23;
     osCreateMesgQueue(&D_801210E0, &D_801210F8, 1);
-    osSetEventMsg(5, &D_801210E0, D_801210FC);
+    osSetEventMesg(5, &D_801210E0, D_801210FC);
     func_800CCC20(&D_801210E0, &sp23, &D_80121100);
     func_800CCFE0(&D_801210E0);
     func_8006A434();

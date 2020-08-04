@@ -3,5 +3,10 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/osSetTime_0CDE60/osSetTime.s")
+//GLOBAL_ASM("lib/asm/non_matchings/osSetTime_0CDE60/osSetTime.s")
+
+void osSetTime(OSTime time){
+    __osCurrentTime = time;
+}

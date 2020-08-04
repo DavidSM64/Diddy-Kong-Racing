@@ -1,6 +1,6 @@
 glabel send_mesg
-/* 0D3DE4 800D31E4 3C0A8013 */  lui   $t2, %hi(D_8012CCD0) # $t2, 0x8013
-/* 0D3DE8 800D31E8 254ACCD0 */  addiu $t2, %lo(D_8012CCD0) # addiu $t2, $t2, -0x3330
+/* 0D3DE4 800D31E4 3C0A8013 */  lui   $t2, %hi(__osEventStateTab) # $t2, 0x8013
+/* 0D3DE8 800D31E8 254ACCD0 */  addiu $t2, %lo(__osEventStateTab) # addiu $t2, $t2, -0x3330
 /* 0D3DEC 800D31EC 01445021 */  addu  $t2, $t2, $a0
 /* 0D3DF0 800D31F0 8D490000 */  lw    $t1, ($t2)
 /* 0D3DF4 800D31F4 03E09025 */  move  $s2, $ra

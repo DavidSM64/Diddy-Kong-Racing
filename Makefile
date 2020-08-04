@@ -185,6 +185,7 @@ $(BUILD_DIR)/lib/src/osPfsFreeBlocks.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osSetEventMesg.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1

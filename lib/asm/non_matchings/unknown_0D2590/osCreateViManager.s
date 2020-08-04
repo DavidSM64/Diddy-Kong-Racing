@@ -30,13 +30,13 @@ glabel osCreateViManager
 /* 0D2600 800D1A00 A0E00002 */  sb    $zero, 2($a3)
 /* 0D2604 800D1A04 ACE00004 */  sw    $zero, 4($a3)
 /* 0D2608 800D1A08 24A5D130 */  addiu $a1, %lo(D_8012D130) # addiu $a1, $a1, -0x2ed0
-/* 0D260C 800D1A0C 0C0332EC */  jal   osSetEventMsg
+/* 0D260C 800D1A0C 0C0332EC */  jal   osSetEventMesg
 /* 0D2610 800D1A10 24040007 */   li    $a0, 7
 /* 0D2614 800D1A14 3C078013 */  lui   $a3, 0x8013
 /* 0D2618 800D1A18 3C058013 */  lui   $a1, %hi(D_8012D130) # $a1, 0x8013
 /* 0D261C 800D1A1C 24E6D178 */  addiu $a2, $a3, -0x2e88
 /* 0D2620 800D1A20 24A5D130 */  addiu $a1, %lo(D_8012D130) # addiu $a1, $a1, -0x2ed0
-/* 0D2624 800D1A24 0C0332EC */  jal   osSetEventMsg
+/* 0D2624 800D1A24 0C0332EC */  jal   osSetEventMesg
 /* 0D2628 800D1A28 24040003 */   li    $a0, 3
 /* 0D262C 800D1A2C 2419FFFF */  li    $t9, -1
 /* 0D2630 800D1A30 AFB90028 */  sw    $t9, 0x28($sp)

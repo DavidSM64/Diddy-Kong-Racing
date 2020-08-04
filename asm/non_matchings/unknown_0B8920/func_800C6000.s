@@ -31,7 +31,7 @@ glabel osCreatePiManager
 /* 0C6C70 800C6070 3C062222 */  lui   $a2, (0x22222222 >> 16) # lui $a2, 0x2222
 /* 0C6C74 800C6074 34C62222 */  ori   $a2, (0x22222222 & 0xFFFF) # ori $a2, $a2, 0x2222
 /* 0C6C78 800C6078 24A5AAB0 */  addiu $a1, %lo(D_8012AAB0) # addiu $a1, $a1, -0x5550
-/* 0C6C7C 800C607C 0C0332EC */  jal   osSetEventMsg
+/* 0C6C7C 800C607C 0C0332EC */  jal   osSetEventMesg
 /* 0C6C80 800C6080 24040008 */   li    $a0, 8
 /* 0C6C84 800C6084 2418FFFF */  li    $t8, -1
 /* 0C6C88 800C6088 AFB80028 */  sw    $t8, 0x28($sp)
