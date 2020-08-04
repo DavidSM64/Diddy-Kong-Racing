@@ -9256,7 +9256,7 @@ glabel __osThreadTail
 .word 0x00000000
 .word 0xFFFFFFFF
 
-glabel D_800E4888
+glabel __RunQueue
 .word 0x800E4880
 
 glabel __osActiveQueue

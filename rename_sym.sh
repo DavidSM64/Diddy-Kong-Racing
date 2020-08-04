@@ -10,4 +10,6 @@ fi
 
 #echo "Replace $1 with $2?"
 #read
+ofiles=$(grep -rl "$1" build/**/*.o)
+rm -v $ofiles
 grep -rl "$1" asm/**/*.s src/**/*.{c,h} lib/**/*.{c,s} include/*.h data/dkr.data.s undefined_syms.txt | xargs sed -i "s/\b$1\b/$2/g"

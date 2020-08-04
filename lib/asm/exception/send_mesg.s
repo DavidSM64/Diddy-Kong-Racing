@@ -40,10 +40,10 @@ glabel send_mesg
 /* 0D3E74 800D3274 0C034D05 */  jal   __osPopThread
 /* 0D3E78 800D3278 01202025 */   move  $a0, $t1
 /* 0D3E7C 800D327C 00405025 */  move  $t2, $v0
-/* 0D3E80 800D3280 3C04800E */  lui   $a0, %hi(D_800E4888) # $a0, 0x800e
+/* 0D3E80 800D3280 3C04800E */  lui   $a0, %hi(__RunQueue) # $a0, 0x800e
 /* 0D3E84 800D3284 01402825 */  move  $a1, $t2
 /* 0D3E88 800D3288 0C034CF3 */  jal   __osEnqueueThread
-/* 0D3E8C 800D328C 24844888 */   addiu $a0, %lo(D_800E4888) # addiu $a0, $a0, 0x4888
+/* 0D3E8C 800D328C 24844888 */   addiu $a0, %lo(__RunQueue) # addiu $a0, $a0, 0x4888
 .L800D3290:
 /* 0D3E90 800D3290 02400008 */  jr    $s2
 /* 0D3E94 800D3294 00000000 */   nop   

@@ -6,9 +6,9 @@ glabel func_800D65B0
 /* 0D71C0 800D65C0 3C0F800E */  lui   $t7, %hi(__osRunningThread) # $t7, 0x800e
 /* 0D71C4 800D65C4 8DEF4890 */  lw    $t7, %lo(__osRunningThread)($t7)
 /* 0D71C8 800D65C8 240E0002 */  li    $t6, 2
-/* 0D71CC 800D65CC 3C04800E */  lui   $a0, %hi(D_800E4888) # $a0, 0x800e
+/* 0D71CC 800D65CC 3C04800E */  lui   $a0, %hi(__RunQueue) # $a0, 0x800e
 /* 0D71D0 800D65D0 00408025 */  move  $s0, $v0
-/* 0D71D4 800D65D4 24844888 */  addiu $a0, %lo(D_800E4888) # addiu $a0, $a0, 0x4888
+/* 0D71D4 800D65D4 24844888 */  addiu $a0, %lo(__RunQueue) # addiu $a0, $a0, 0x4888
 /* 0D71D8 800D65D8 0C034CB3 */  jal   __osEnqueueAndYield
 /* 0D71DC 800D65DC A5EE0010 */   sh    $t6, 0x10($t7)
 /* 0D71E0 800D65E0 0C034960 */  jal   __osRestoreInt

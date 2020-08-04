@@ -188,6 +188,7 @@ $(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetEventMesg.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTime.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osStartThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
