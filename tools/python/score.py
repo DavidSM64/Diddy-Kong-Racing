@@ -24,6 +24,7 @@ for folder in ASM_FOLDERS:
             for matchNum, match in enumerate(matches, start=1):
                 ASM_FUNCTIONS.append(match.groups()[0])
 
+BUILD_DIRECTORY = './build/us_1.0'
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './lib/src'
 FUNCTION_REGEX = r'([/][*][*]([^*]|([*][^/]))*[*][/][\n]\s*)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
@@ -37,7 +38,7 @@ CODE_SIZE = CODE_END - CODE_START
 class DkrMapFile:
     def __init__(self):
         try:
-            with open('./build/dkr.map', 'r') as mapFile:
+            with open(BUILD_DIRECTORY + '/dkr.map', 'r') as mapFile:
                 self.functionSizes = {}
                 functions = []
                 lines = mapFile.read().split('\n')
