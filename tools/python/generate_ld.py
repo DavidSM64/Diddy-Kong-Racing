@@ -14,6 +14,7 @@ ASSETS_S_FILENAME = './asm/assets/assets.s'
 ASSETS_UCODE_S_FILENAME = './asm/assets/ucode.s'
 ASSETS_DIR = './assets/us_1.0'
 ASSETS_START = 0x0D8200
+BUILD_DIR = 'build/us_1.0'
 
 class LD:
     def __init__(self, file):
@@ -61,8 +62,8 @@ class LD:
     def gen_boot_section(self):
         self.gen_line('.boot 0 : AT(romPos)')
         self.gen_open_block()
-        self.gen_line('build/asm/boot/rom_header.o(.text);')
-        self.gen_line('build/asm/boot/rom_boot.o(.text);')
+        self.gen_line(BUILD_DIR + '/asm/boot/rom_header.o(.text);')
+        self.gen_line(BUILD_DIR + '/asm/boot/rom_boot.o(.text);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.boot);')
         self.gen_newline()
@@ -79,7 +80,7 @@ class LD:
     def gen_ucode_section(self):
         self.gen_line('.ucode 0 : AT(romPos)')
         self.gen_open_block()
-        self.gen_line('build/asm/assets/ucode.o(.text);')
+        self.gen_line(BUILD_DIR + '/asm/assets/ucode.o(.text);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.ucode);')
         self.gen_newline()
@@ -87,7 +88,7 @@ class LD:
     def gen_data_section(self):
         self.gen_line('.main_data 0x80000400 : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
-        self.gen_line('build/data/dkr.data.o(.data);')
+        self.gen_line(BUILD_DIR + '/data/dkr.data.o(.data);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.main_data);')
         self.gen_newline()
@@ -95,7 +96,7 @@ class LD:
     def gen_assets_section(self):
         self.gen_line('.assets 0 : AT(romPos)')
         self.gen_open_block()
-        self.gen_line('build/asm/assets/assets.o(.text);')
+        self.gen_line(BUILD_DIR + '/asm/assets/assets.o(.text);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.assets);')
         self.gen_newline()
@@ -159,10 +160,10 @@ class LD:
     
     def get_code_files(self):
         files = []
-        self.append_files(files, ('.s',), ASM_DIR, 'build/asm/')
-        self.append_files(files, ('.c',), SRC_DIR, 'build/src/')
-        self.append_files(files, ('.s',), LIB_ASM_DIR, 'build/lib/asm/')
-        self.append_files(files, ('.c',), LIB_SRC_DIR, 'build/lib/src/')
+        self.append_files(files, ('.s',), ASM_DIR, BUILD_DIR + '/asm/')
+        self.append_files(files, ('.c',), SRC_DIR, BUILD_DIR + '/src/')
+        self.append_files(files, ('.s',), LIB_ASM_DIR, BUILD_DIR + '/lib/asm/')
+        self.append_files(files, ('.c',), LIB_SRC_DIR, BUILD_DIR + '/lib/src/')
         files.sort(key = lambda x: (x[2], x[3])) # Sort tuples by RAM address and prioritize src files first.
         return files
     
@@ -185,7 +186,7 @@ class LD:
                 outFileExtension = fileExtension
             else:
                 outFileExtension = '.bin'
-            outFilename = 'build/' + matchedGroups[0] + '.' + matchedGroups[1] + outFileExtension
+            outFilename = BUILD_DIR + '/' + matchedGroups[0] + '.' + matchedGroups[1] + outFileExtension
             if int(ramAddress, 16) >= ASSETS_START:
                 assetFiles.append((outFilename, ramAddress, fileExtension, isMicrocode))
         assetFiles.sort(key = lambda x: x[1]) # Sort tuples by RAM address

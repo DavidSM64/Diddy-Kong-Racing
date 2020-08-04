@@ -1,4 +1,4 @@
-# Makefile to rebuild DKR split image
+# Makefile to build DKR
 
 ############################ Shell ###########################
 
@@ -17,7 +17,8 @@ GENERATE_LD := $(shell ./generate_ld.sh)
 ################ Target Executable and Sources ###############
 
 # BUILD_DIR is location where all build artifacts are placed
-BUILD_DIR = build
+# TODO: Support other versions of DKR
+BUILD_DIR = build/us_1.0
 
 ##################### Compiler Options #######################
 
@@ -194,10 +195,6 @@ $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViSwapBuffer.o : OPT_FLAGS := -O1
 
-
-
-
-
 ######################## Targets #############################
 
 default: all
@@ -209,16 +206,20 @@ all: $(BUILD_DIR)/$(TARGET).z64
 
 clean: 
 ifneq ($(wildcard ./build/.*),) 
-	rm -r $(BUILD_DIR)
+	rm -r build
 else 
 	@echo "/build/ directory has already been deleted." 
 endif 
     
 clean_lib:
+<<<<<<< HEAD
 ifneq ($(wildcard ./build/lib/src/.*),) 
+=======
+ifneq ($(wildcard $(BUILD_DIR)/lib/.*),) 
+>>>>>>> b1b1e461a6aa490d7355c207a9a9530181aa8fd7
 	rm -r $(BUILD_DIR)/lib/src/*.o
 else 
-	@echo "/build/lib directory has already been deleted." 
+	@echo "build lib directory has already been deleted." 
 endif 
 
 clean_src: clean_lib
@@ -229,7 +230,10 @@ else
 endif 
 
 $(BUILD_DIR):
-	mkdir $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
+	mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
+
+# Helps fix an issue with parallel jobs.
+$(ALL_ASSETS_BUILT): | $(BUILD_DIR)
 
 # This is here to prevent make from deleting all the asset files after the build completes/fails.
 dont_remove_asset_files: $(ALL_ASSETS_BUILT)
@@ -292,26 +296,26 @@ $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
     
 ###############################
 
-$(BUILD_DIR)/%.o: %.s Makefile $(MAKEFILE_SPLIT) | $(BUILD_DIR) $(ALL_ASSETS_BUILT)
+$(BUILD_DIR)/%.o: %.s | $(ALL_ASSETS_BUILT)
 	$(AS) $(ASFLAGS) -o $@ $<
 
-$(BUILD_DIR)/%.o: %.c
+$(BUILD_DIR)/%.o: %.c | $(ALL_ASSETS_BUILT)
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT)
+$(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
 	$(CPP) $(VERSION_CFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
 
-$(BUILD_DIR)/$(TARGET).elf: $(O_FILES) $(BUILD_DIR)/$(LD_SCRIPT)
+$(BUILD_DIR)/$(TARGET).elf: $(O_FILES) $(BUILD_DIR)/$(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
 	$(LD) $(LDFLAGS) -o $@ $(O_FILES) $(LIBS)
 
-$(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)/$(TARGET).elf
+$(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)/$(TARGET).elf | $(ALL_ASSETS_BUILT)
 	$(OBJCOPY) $< $@ -O binary
     
 # final z64 updates checksum
-$(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin
+$(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
 	cp $< $@
 	$(N64CRC) $@
-	sha1sum -c $(TARGET).sha1
+	sha1sum -c sha1/dkr.us_1.0.sha1
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
 	xxd $< > $@
