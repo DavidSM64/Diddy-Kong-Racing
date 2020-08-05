@@ -17,11 +17,11 @@ glabel D_800B6FC4
 /* 0B7C00 800B7000 24060008 */   li    $a2, 8
 /* 0B7C04 800B7004 2404000C */  li    $a0, 12
 /* 0B7C08 800B7008 02802825 */  move  $a1, $s4
-/* 0B7C0C 800B700C 0C0332EC */  jal   osSetEventMsg
+/* 0B7C0C 800B700C 0C0332EC */  jal   osSetEventMesg
 /* 0B7C10 800B7010 24060008 */   li    $a2, 8
 /* 0B7C14 800B7014 2404000A */  li    $a0, 10
 /* 0B7C18 800B7018 02802825 */  move  $a1, $s4
-/* 0B7C1C 800B701C 0C0332EC */  jal   osSetEventMsg
+/* 0B7C1C 800B701C 0C0332EC */  jal   osSetEventMesg
 /* 0B7C20 800B7020 24060002 */   li    $a2, 2
 /* 0B7C24 800B7024 3C058013 */  lui   $a1, %hi(D_801297E8) # $a1, 0x8013
 /* 0B7C28 800B7028 3C068013 */  lui   $a2, %hi(D_801297C8) # $a2, 0x8013

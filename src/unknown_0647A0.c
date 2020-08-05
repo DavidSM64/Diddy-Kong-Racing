@@ -22,6 +22,6 @@ void func_80063BA0(u32 arg0, u8 arg1, u8 arg2) {
     unknownStruct.unk8 = arg1 | 0xB0;
     unknownStruct.unk9 = 8;
     unknownStruct.unkA = arg2;
-    func_800C91AC(arg0 + 0x48, &unknownStruct, 0);
+    alEvtqPostEvent(arg0 + 0x48, &unknownStruct, 0);
 }
 

@@ -19,8 +19,8 @@ glabel func_80071D30
 /* 072974 80071D74 8D240004 */  lw    $a0, 4($t1)
 /* 072978 80071D78 0C0322EC */  jal   osRecvMesg
 /* 07297C 80071D7C 24060001 */   li    $a2, 1
-/* 072980 80071D80 3C058013 */  lui   $a1, %hi(D_8012CDE0) # $a1, 0x8013
-/* 072984 80071D84 24A5CDE0 */  addiu $a1, %lo(D_8012CDE0) # addiu $a1, $a1, -0x3220
+/* 072980 80071D80 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+/* 072984 80071D84 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
 /* 072988 80071D88 0C0335B0 */  jal   __osSiRawStartDma
 /* 07298C 80071D8C 00002025 */   move  $a0, $zero
 /* 072990 80071D90 8FAA0050 */  lw    $t2, 0x50($sp)
@@ -29,9 +29,9 @@ glabel func_80071D30
 /* 07299C 80071D9C 0C0322EC */  jal   osRecvMesg
 /* 0729A0 80071DA0 24060001 */   li    $a2, 1
 /* 0729A4 80071DA4 8FAB0050 */  lw    $t3, 0x50($sp)
-/* 0729A8 80071DA8 3C038013 */  lui   $v1, %hi(D_8012CDE0) # $v1, 0x8013
+/* 0729A8 80071DA8 3C038013 */  lui   $v1, %hi(__osPfsPifRam) # $v1, 0x8013
 /* 0729AC 80071DAC 8D640008 */  lw    $a0, 8($t3)
-/* 0729B0 80071DB0 2463CDE0 */  addiu $v1, %lo(D_8012CDE0) # addiu $v1, $v1, -0x3220
+/* 0729B0 80071DB0 2463CDE0 */  addiu $v1, %lo(__osPfsPifRam) # addiu $v1, $v1, -0x3220
 /* 0729B4 80071DB4 10800007 */  beqz  $a0, .L80071DD4
 /* 0729B8 80071DB8 27AC001C */   addiu $t4, $sp, 0x1c
 /* 0729BC 80071DBC 18800005 */  blez  $a0, .L80071DD4

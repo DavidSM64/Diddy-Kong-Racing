@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("asm/non_matchings/unknown_066500/D_80065900.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066500/D_800659D4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_066500/alAuxBusPull.s")
+GLOBAL_ASM("asm/non_matchings/unknown_066500/alAuxBusParam.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066500/func_80065A80.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066500/func_80065B20.s")
+GLOBAL_ASM("asm/non_matchings/unknown_066500/alSynSetPan.s")

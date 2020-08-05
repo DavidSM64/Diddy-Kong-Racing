@@ -89,8 +89,8 @@ glabel func_800CCC20
 /* 0CD974 800CCD74 24060001 */   li    $a2, 1
 .L800CCD78:
 /* 0CD978 800CCD78 24180004 */  li    $t8, 4
-/* 0CD97C 800CCD7C 3C018013 */  lui   $at, %hi(D_8012CD91) # $at, 0x8013
-/* 0CD980 800CCD80 A038CD91 */  sb    $t8, %lo(D_8012CD91)($at)
+/* 0CD97C 800CCD7C 3C018013 */  lui   $at, %hi(__osMaxControllers) # $at, 0x8013
+/* 0CD980 800CCD80 A038CD91 */  sb    $t8, %lo(__osMaxControllers)($at)
 /* 0CD984 800CCD84 0C0333BA */  jal   func_800CCEE8
 /* 0CD988 800CCD88 00002025 */   move  $a0, $zero
 /* 0CD98C 800CCD8C 3C058013 */  lui   $a1, %hi(D_8012CD50) # $a1, 0x8013

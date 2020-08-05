@@ -35,7 +35,7 @@ glabel func_800C7FFC
 /* 0C8C7C 800C807C 01A05825 */  move  $t3, $t5
 /* 0C8C80 800C8080 032FC025 */  or    $t8, $t9, $t7
 /* 0C8C84 800C8084 AE180004 */  sw    $t8, 4($s0)
-/* 0C8C88 800C8088 0C031F29 */  jal   func_800C7CA4
+/* 0C8C88 800C8088 0C031F29 */  jal   __readVarLen
 /* 0C8C8C 800C808C AD8E0018 */   sw    $t6, 0x18($t4)
 /* 0C8C90 800C8090 10000002 */  b     .L800C809C
 /* 0C8C94 800C8094 AD8200B8 */   sw    $v0, 0xb8($t4)
@@ -149,7 +149,7 @@ glabel func_800C7FFC
 /* 0C8E2C 800C822C 1490FFD4 */  bne   $a0, $s0, .L800C8180
 /* 0C8E30 800C8230 AC5900A8 */   sw    $t9, 0xa8($v0)
 /* 0C8E34 800C8234 02602025 */  move  $a0, $s3
-/* 0C8E38 800C8238 0C031F41 */  jal   func_800C7D04
+/* 0C8E38 800C8238 0C031F41 */  jal   __alCSeqGetTrackEvent
 /* 0C8E3C 800C823C 02802825 */   move  $a1, $s4
 /* 0C8E40 800C8240 87A80140 */  lh    $t0, 0x140($sp)
 /* 0C8E44 800C8244 8FA90054 */  lw    $t1, 0x54($sp)

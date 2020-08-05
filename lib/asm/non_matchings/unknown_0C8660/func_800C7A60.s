@@ -6,7 +6,7 @@ glabel func_800C7A60
 /* 0C8670 800C7A70 A7AE0018 */  sh    $t6, 0x18($sp)
 /* 0C8674 800C7A74 27A50018 */  addiu $a1, $sp, 0x18
 /* 0C8678 800C7A78 24840048 */  addiu $a0, $a0, 0x48
-/* 0C867C 800C7A7C 0C03246B */  jal   func_800C91AC
+/* 0C867C 800C7A7C 0C03246B */  jal   alEvtqPostEvent
 /* 0C8680 800C7A80 00003025 */   move  $a2, $zero
 /* 0C8684 800C7A84 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 0C8688 800C7A88 27BD0028 */  addiu $sp, $sp, 0x28

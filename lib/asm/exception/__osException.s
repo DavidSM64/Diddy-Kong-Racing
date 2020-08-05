@@ -281,8 +281,8 @@ glabel __osException
 /* 0D3CE4 800D30E4 AD2A0000 */  sw    $t2, ($t1)
 /* 0D3CE8 800D30E8 0C034C79 */  jal   send_mesg
 /* 0D3CEC 800D30EC 24040070 */   li    $a0, 112
-/* 0D3CF0 800D30F0 3C0A800E */  lui   $t2, %hi(D_800E4888) # $t2, 0x800e
-/* 0D3CF4 800D30F4 8D4A4888 */  lw    $t2, %lo(D_800E4888)($t2)
+/* 0D3CF0 800D30F0 3C0A800E */  lui   $t2, %hi(__RunQueue) # $t2, 0x800e
+/* 0D3CF4 800D30F4 8D4A4888 */  lw    $t2, %lo(__RunQueue)($t2)
 /* 0D3CF8 800D30F8 2401EFFF */  li    $at, -4097
 /* 0D3CFC 800D30FC 02018024 */  and   $s0, $s0, $at
 /* 0D3D00 800D3100 8D5B0118 */  lw    $k1, 0x118($t2)
@@ -313,23 +313,23 @@ glabel __osException
 /* 0D3D60 800D3160 10000001 */  b     .L800D3168
 /* 0D3D64 800D3164 00000000 */   nop   
 .L800D3168:
-/* 0D3D68 800D3168 3C0A800E */  lui   $t2, %hi(D_800E4888) # $t2, 0x800e
-/* 0D3D6C 800D316C 8D4A4888 */  lw    $t2, %lo(D_800E4888)($t2)
+/* 0D3D68 800D3168 3C0A800E */  lui   $t2, %hi(__RunQueue) # $t2, 0x800e
+/* 0D3D6C 800D316C 8D4A4888 */  lw    $t2, %lo(__RunQueue)($t2)
 /* 0D3D70 800D3170 8F490004 */  lw    $t1, 4($k0)
 /* 0D3D74 800D3174 8D4B0004 */  lw    $t3, 4($t2)
 /* 0D3D78 800D3178 012B082A */  slt   $at, $t1, $t3
 /* 0D3D7C 800D317C 10200007 */  beqz  $at, .L800D319C
 /* 0D3D80 800D3180 00000000 */   nop   
-/* 0D3D84 800D3184 3C04800E */  lui   $a0, %hi(D_800E4888) # $a0, 0x800e
+/* 0D3D84 800D3184 3C04800E */  lui   $a0, %hi(__RunQueue) # $a0, 0x800e
 /* 0D3D88 800D3188 03402825 */  move  $a1, $k0
 /* 0D3D8C 800D318C 0C034CF3 */  jal   __osEnqueueThread
-/* 0D3D90 800D3190 24844888 */   addiu $a0, %lo(D_800E4888) # addiu $a0, $a0, 0x4888
+/* 0D3D90 800D3190 24844888 */   addiu $a0, %lo(__RunQueue) # addiu $a0, $a0, 0x4888
 /* 0D3D94 800D3194 08034D09 */  j     __osDispatchThread
 /* 0D3D98 800D3198 00000000 */   nop   
 
 .L800D319C:
-/* 0D3D9C 800D319C 3C09800E */  lui   $t1, %hi(D_800E4888) # $t1, 0x800e
-/* 0D3DA0 800D31A0 25294888 */  addiu $t1, %lo(D_800E4888) # addiu $t1, $t1, 0x4888
+/* 0D3D9C 800D319C 3C09800E */  lui   $t1, %hi(__RunQueue) # $t1, 0x800e
+/* 0D3DA0 800D31A0 25294888 */  addiu $t1, %lo(__RunQueue) # addiu $t1, $t1, 0x4888
 /* 0D3DA4 800D31A4 8D2A0000 */  lw    $t2, ($t1)
 /* 0D3DA8 800D31A8 AF4A0000 */  sw    $t2, ($k0)
 /* 0D3DAC 800D31AC 08034D09 */  j     __osDispatchThread

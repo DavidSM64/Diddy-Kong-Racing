@@ -10,7 +10,7 @@ glabel func_800049F8
 /* 005618 80004A18 8C84C6BC */  lw    $a0, %lo(D_800DC6BC)($a0)
 /* 00561C 80004A1C 27A50018 */  addiu $a1, $sp, 0x18
 /* 005620 80004A20 00003025 */  move  $a2, $zero
-/* 005624 80004A24 0C03246B */  jal   func_800C91AC
+/* 005624 80004A24 0C03246B */  jal   alEvtqPostEvent
 /* 005628 80004A28 24840014 */   addiu $a0, $a0, 0x14
 .L80004A2C:
 /* 00562C 80004A2C 8FBF0014 */  lw    $ra, 0x14($sp)

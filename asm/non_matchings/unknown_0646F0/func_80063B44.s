@@ -14,7 +14,7 @@ glabel func_80063B44
 /* 064774 80063B74 A3A70022 */  sb    $a3, 0x22($sp)
 /* 064778 80063B78 27A50018 */  addiu $a1, $sp, 0x18
 /* 06477C 80063B7C 24840048 */  addiu $a0, $a0, 0x48
-/* 064780 80063B80 0C03246B */  jal   func_800C91AC
+/* 064780 80063B80 0C03246B */  jal   alEvtqPostEvent
 /* 064784 80063B84 00003025 */   move  $a2, $zero
 /* 064788 80063B88 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 06478C 80063B8C 27BD0028 */  addiu $sp, $sp, 0x28

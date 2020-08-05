@@ -179,15 +179,26 @@ $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/unknown_0D3160.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osJamMesg.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osPfsFreeBlocks.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osPiGetCmdQueue.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osSetEventMesg.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osSetTime.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/__osSiRawReadIo.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/__osSiRawWriteIo.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osStartThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osViMgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/osViSwapBuffer.o : OPT_FLAGS := -O1
 
 ######################## Targets #############################
@@ -211,6 +222,13 @@ ifneq ($(wildcard $(BUILD_DIR)/lib/.*),)
 	rm -r $(BUILD_DIR)/lib/src/*.o
 else 
 	@echo "build lib directory has already been deleted." 
+endif 
+
+clean_src: clean_lib
+ifneq ($(wildcard ./build/src/.*),) 
+	rm -r $(BUILD_DIR)/src/*.o
+else 
+	@echo "/build/lib directory has already been deleted." 
 endif 
 
 $(BUILD_DIR):

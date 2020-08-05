@@ -8120,7 +8120,7 @@ glabel D_800E3778
 glabel D_800E377C
 .word 0x00000000
 
-glabel D_800E3780
+glabel alGlobals
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
@@ -8226,7 +8226,7 @@ glabel D_800E38D0
 .word 0x00000000
 .word 0x00000000
 
-glabel D_800E38E0
+glabel __osViDevMgr
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
@@ -9210,7 +9210,7 @@ glabel D_800E47B0
 .word 0x000E0204
 .word 0x00000002
 
-glabel D_800E4800
+glabel __osPiAccessQueueEnabled
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
@@ -9256,10 +9256,10 @@ glabel __osThreadTail
 .word 0x00000000
 .word 0xFFFFFFFF
 
-glabel D_800E4888
+glabel __RunQueue
 .word 0x800E4880
 
-glabel D_800E488C
+glabel __osActiveQueue
 .word 0x800E4880
 
 glabel __osRunningThread

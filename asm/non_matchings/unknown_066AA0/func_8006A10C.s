@@ -11,7 +11,7 @@ glabel func_8006A10C
 /* 06AD30 8006A130 8CC610FC */  lw    $a2, %lo(D_801210FC)($a2)
 /* 06AD34 8006A134 3C058012 */  lui   $a1, %hi(D_801210E0) # $a1, 0x8012
 /* 06AD38 8006A138 24A510E0 */  addiu $a1, %lo(D_801210E0) # addiu $a1, $a1, 0x10e0
-/* 06AD3C 8006A13C 0C0332EC */  jal   osSetEventMsg
+/* 06AD3C 8006A13C 0C0332EC */  jal   osSetEventMesg
 /* 06AD40 8006A140 24040005 */   li    $a0, 5
 /* 06AD44 8006A144 3C048012 */  lui   $a0, %hi(D_801210E0) # $a0, 0x8012
 /* 06AD48 8006A148 3C068012 */  lui   $a2, %hi(D_80121100) # $a2, 0x8012

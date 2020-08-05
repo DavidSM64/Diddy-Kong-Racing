@@ -43,15 +43,15 @@ glabel func_80079350
 /* 079FF4 800793F4 24060008 */   li    $a2, 8
 /* 079FF8 800793F8 24040004 */  li    $a0, 4
 /* 079FFC 800793FC 02202825 */  move  $a1, $s1
-/* 07A000 80079400 0C0332EC */  jal   osSetEventMsg
+/* 07A000 80079400 0C0332EC */  jal   osSetEventMesg
 /* 07A004 80079404 2406029B */   li    $a2, 667
 /* 07A008 80079408 24040009 */  li    $a0, 9
 /* 07A00C 8007940C 02202825 */  move  $a1, $s1
-/* 07A010 80079410 0C0332EC */  jal   osSetEventMsg
+/* 07A010 80079410 0C0332EC */  jal   osSetEventMesg
 /* 07A014 80079414 2406029C */   li    $a2, 668
 /* 07A018 80079418 2404000E */  li    $a0, 14
 /* 07A01C 8007941C 02202825 */  move  $a1, $s1
-/* 07A020 80079420 0C0332EC */  jal   osSetEventMsg
+/* 07A020 80079420 0C0332EC */  jal   osSetEventMesg
 /* 07A024 80079424 2406029D */   li    $a2, 669
 /* 07A028 80079428 93A6003B */  lbu   $a2, 0x3b($sp)
 /* 07A02C 8007942C 02202025 */  move  $a0, $s1

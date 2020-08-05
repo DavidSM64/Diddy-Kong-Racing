@@ -6,7 +6,7 @@ glabel func_800C96F0
 /* 0CA300 800C9700 8CAE0008 */  lw    $t6, 8($a1)
 /* 0CA304 800C9704 51C0001A */  beql  $t6, $zero, .L800C9770
 /* 0CA308 800C9708 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 0CA30C 800C970C 0C01959A */  jal   func_80065668
+/* 0CA30C 800C970C 0C01959A */  jal   __allocParam
 /* 0CA310 800C9710 AFA5001C */   sw    $a1, 0x1c($sp)
 /* 0CA314 800C9714 8FA7001C */  lw    $a3, 0x1c($sp)
 /* 0CA318 800C9718 10400014 */  beqz  $v0, .L800C976C

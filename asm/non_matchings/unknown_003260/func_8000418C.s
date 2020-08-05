@@ -6,7 +6,7 @@ glabel func_8000418C
 /* 004D9C 8000419C 8DCF0004 */  lw    $t7, 4($t6)
 /* 004DA0 800041A0 00000000 */  nop   
 /* 004DA4 800041A4 81E40005 */  lb    $a0, 5($t7)
-/* 004DA8 800041A8 0C032678 */  jal   func_800C99E0
+/* 004DA8 800041A8 0C032678 */  jal   alCents2Ratio
 /* 004DAC 800041AC AFA70030 */   sw    $a3, 0x30($sp)
 /* 004DB0 800041B0 8FA70030 */  lw    $a3, 0x30($sp)
 /* 004DB4 800041B4 3C04800E */  lui   $a0, %hi(D_800DC6BC) # $a0, 0x800e
@@ -21,7 +21,7 @@ glabel func_8000418C
 /* 004DD8 800041D8 34068235 */  li    $a2, 33333
 /* 004DDC 800041DC AFA70024 */  sw    $a3, 0x24($sp)
 /* 004DE0 800041E0 24840014 */  addiu $a0, $a0, 0x14
-/* 004DE4 800041E4 0C03246B */  jal   func_800C91AC
+/* 004DE4 800041E4 0C03246B */  jal   alEvtqPostEvent
 /* 004DE8 800041E8 AFB90028 */   sw    $t9, 0x28($sp)
 /* 004DEC 800041EC 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 004DF0 800041F0 27BD0030 */  addiu $sp, $sp, 0x30

@@ -3,6 +3,10 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D2E40/osSpTaskYield.s")
+void osSpTaskYield(void) {
+    __osSpSetStatus(SPSTATUS_SET_SIGNAL0);
+}
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s")

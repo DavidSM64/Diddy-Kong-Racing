@@ -15,12 +15,12 @@ glabel __osPfsRequestData
 /* 0CE060 800CD460 2B210010 */  slti  $at, $t9, 0x10
 /* 0CE064 800CD464 1420FFF7 */  bnez  $at, .L800CD444
 /* 0CE068 800CD468 AFB90000 */   sw    $t9, ($sp)
-/* 0CE06C 800CD46C 3C198013 */  lui   $t9, %hi(D_8012CD91) # $t9, 0x8013
-/* 0CE070 800CD470 9339CD91 */  lbu   $t9, %lo(D_8012CD91)($t9)
-/* 0CE074 800CD474 3C098013 */  lui   $t1, %hi(D_8012CDE0) # $t1, 0x8013
+/* 0CE06C 800CD46C 3C198013 */  lui   $t9, %hi(__osMaxControllers) # $t9, 0x8013
+/* 0CE070 800CD470 9339CD91 */  lbu   $t9, %lo(__osMaxControllers)($t9)
+/* 0CE074 800CD474 3C098013 */  lui   $t1, %hi(__osPfsPifRam) # $t1, 0x8013
 /* 0CE078 800CD478 24080001 */  li    $t0, 1
 /* 0CE07C 800CD47C 3C018013 */  lui   $at, %hi(D_8012CE1C) # $at, 0x8013
-/* 0CE080 800CD480 2529CDE0 */  addiu $t1, %lo(D_8012CDE0) # addiu $t1, $t1, -0x3220
+/* 0CE080 800CD480 2529CDE0 */  addiu $t1, %lo(__osPfsPifRam) # addiu $t1, $t1, -0x3220
 /* 0CE084 800CD484 240A00FF */  li    $t2, 255
 /* 0CE088 800CD488 240B0001 */  li    $t3, 1
 /* 0CE08C 800CD48C 240C0003 */  li    $t4, 3
@@ -44,14 +44,14 @@ glabel __osPfsRequestData
 /* 0CE0D0 800CD4D0 27A90004 */  addiu $t1, $sp, 4
 /* 0CE0D4 800CD4D4 8D210000 */  lw    $at, ($t1)
 /* 0CE0D8 800CD4D8 8FA8000C */  lw    $t0, 0xc($sp)
-/* 0CE0DC 800CD4DC 3C188013 */  lui   $t8, %hi(D_8012CD91) # $t8, 0x8013
+/* 0CE0DC 800CD4DC 3C188013 */  lui   $t8, %hi(__osMaxControllers) # $t8, 0x8013
 /* 0CE0E0 800CD4E0 A9010000 */  swl   $at, ($t0)
 /* 0CE0E4 800CD4E4 B9010003 */  swr   $at, 3($t0)
 /* 0CE0E8 800CD4E8 8D2B0004 */  lw    $t3, 4($t1)
 /* 0CE0EC 800CD4EC A90B0004 */  swl   $t3, 4($t0)
 /* 0CE0F0 800CD4F0 B90B0007 */  swr   $t3, 7($t0)
 /* 0CE0F4 800CD4F4 8FAE0000 */  lw    $t6, ($sp)
-/* 0CE0F8 800CD4F8 9318CD91 */  lbu   $t8, %lo(D_8012CD91)($t8)
+/* 0CE0F8 800CD4F8 9318CD91 */  lbu   $t8, %lo(__osMaxControllers)($t8)
 /* 0CE0FC 800CD4FC 8FAC000C */  lw    $t4, 0xc($sp)
 /* 0CE100 800CD500 25CF0001 */  addiu $t7, $t6, 1
 /* 0CE104 800CD504 01F8082A */  slt   $at, $t7, $t8
