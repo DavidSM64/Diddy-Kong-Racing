@@ -3,38 +3,39 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
 
-extern s32 D_80065900;
+extern s32 alAuxBusPull;
 extern s32 alAuxBusParam;
-extern s32 D_800CA0D0;
+extern s32 alEnvMixerPull;
 extern s32 alEnvmixerParam;
 extern s32 alLoadParam;
-extern s32 D_800CBBEC;
+extern s32 alLoadPull;
 extern s32 alResampleParam;
-extern s32 D_800CC17C;
-extern s32 D_800CC390;
-extern s32 D_800CC3C0;
+extern s32 alResamplePull;
+extern s32 alMainBusParam;
+extern s32 alMainBusPull;
 extern s32 alSaveParam;
-extern s32 D_800CC514;
+extern s32 alSavePull;
 
-GLOBAL_ASM("asm/non_matchings/unknown_064830/D_80063C30.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxPull.s")
 
-s32 D_80063F94(s32* arg0, s32 arg1, s32 arg2) {
+s32 alFxParam(s32* arg0, s32 arg1, s32 arg2) {
     if (arg1 == 1) {
         *arg0 = arg2;
     }
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_064830/D_80063FAC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_80064224.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_800644A0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_80064638.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_800647D0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_80064884.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxParamHdl.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/_loadOutputBuffer.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/_loadBuffer.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/_saveBuffer.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/_filterBuffer.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/_doModFunc.s")
 GLOBAL_ASM("asm/non_matchings/unknown_064830/func_8006492C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_80064950.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_80064A08.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/init_lpfilter.s")
+GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxNew.s")
 
 typedef struct unk80064E54 {
     u8  unk00[0x14]; // unknown
@@ -60,7 +61,7 @@ typedef struct unk80064E54 {
 } unk80064E54;
 
 void alEnvmixerNew(unk80064E54* arg0, s32 arg1) {
-    func_800CA0B0(arg0, &D_800CA0D0, &alEnvmixerParam, 4);
+    alFilterNew(arg0, &alEnvMixerPull, &alEnvmixerParam, 4);
     arg0->unk14 = alHeapDBAlloc(0, 0, arg1, 1, 0x50);
     arg0->unk38 = 1;
     arg0->unk48 = 0;
@@ -81,7 +82,7 @@ void alEnvmixerNew(unk80064E54* arg0, s32 arg1) {
     arg0->unk44 = 0;
 }
 
-typedef struct unk80064EF8 {
+typedef struct ALFilter_s {
     u8  unk00[0x14]; // unknown
     s32 unk14;
     s32 unk18;
@@ -92,10 +93,10 @@ typedef struct unk80064EF8 {
     s32 unk3C;
     s32 unk40;
     s32 unk44;
-} unk80064EF8;
+} ALFilter;
 
-void alLoadNew(unk80064EF8* arg0, s32 (*arg1)(s32*), s32 arg2) {
-    func_800CA0B0(arg0, &D_800CBBEC, &alLoadParam, 0);
+void alLoadNew(ALFilter* arg0, s32 (*arg1)(s32*), s32 arg2) {
+    alFilterNew(arg0, &alLoadPull, &alLoadParam, 0);
     arg0->unk14 = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
     arg0->unk18 = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
     arg0->unk30 = arg1(&arg0->unk34);
@@ -117,7 +118,7 @@ typedef struct unk80064F9C {
 } unk80064F9C;
 
 void alResampleNew(unk80064F9C* arg0, s32 arg1) {
-    func_800CA0B0(arg0, &D_800CC17C, &alResampleParam, 1);
+    alFilterNew(arg0, &alResamplePull, &alResampleParam, 1);
     arg0->unk14 = alHeapDBAlloc(0, 0, arg1, 1, 0x20);
     arg0->unk24 = 1;
     arg0->unk30 = 0;
@@ -136,7 +137,7 @@ typedef struct unk80065024 {
 } unk80065024;
 
 void alAuxBusNew(unk80065024* arg0, s32 arg1, s32 arg2) {
-    func_800CA0B0(arg0, &D_80065900, &alAuxBusParam, 6);
+    alFilterNew(arg0, &alAuxBusPull, &alAuxBusParam, 6);
     arg0->unk14 = 0;
     arg0->unk18 = arg2;
     arg0->unk1C = arg1;
@@ -150,7 +151,7 @@ typedef struct unk80065084 {
 } unk80065084;
 
 void alMainBusNew(unk80065084* arg0, s32 arg1, s32 arg2) {
-    func_800CA0B0(arg0, &D_800CC3C0, &D_800CC390, 7);
+    alFilterNew(arg0, &alMainBusPull, &alMainBusParam, 7);
     arg0->unk14 = 0;
     arg0->unk18 = arg2;
     arg0->unk1C = arg1;
@@ -163,7 +164,7 @@ typedef struct unk800650E4 {
 } unk800650E4;
 
 void alSaveNew(unk800650E4* arg0) {
-    func_800CA0B0(arg0, &D_800CC514, &alSaveParam, 3);
+    alFilterNew(arg0, &alSavePull, &alSaveParam, 3);
     arg0->unk14 = 0;
     arg0->unk18 = 1;
 }

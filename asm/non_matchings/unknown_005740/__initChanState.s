@@ -14,7 +14,7 @@ glabel __initChanState
 /* 00BABC 8000AEBC 02202025 */  move  $a0, $s1
 /* 00BAC0 8000AEC0 01F2C021 */  addu  $t8, $t7, $s2
 /* 00BAC4 8000AEC4 AF000000 */  sw    $zero, ($t8)
-/* 00BAC8 8000AEC8 0C002B7D */  jal   func_8000ADF4
+/* 00BAC8 8000AEC8 0C002B7D */  jal   __resetPerfChanState
 /* 00BACC 8000AECC 02002825 */   move  $a1, $s0
 /* 00BAD0 8000AED0 92390034 */  lbu   $t9, 0x34($s1)
 /* 00BAD4 8000AED4 26100001 */  addiu $s0, $s0, 1

@@ -99,7 +99,7 @@ glabel alSynNew
 /* 065EB0 800652B0 0005CC03 */  sra   $t9, $a1, 0x10
 /* 065EB4 800652B4 03202825 */  move  $a1, $t9
 /* 065EB8 800652B8 03C03025 */  move  $a2, $fp
-/* 065EBC 800652BC 0C019618 */  jal   func_80065860
+/* 065EBC 800652BC 0C019618 */  jal   alSynAllocFX
 /* 065EC0 800652C0 02E03825 */   move  $a3, $s7
 /* 065EC4 800652C4 1000000A */  b     .L800652F0
 /* 065EC8 800652C8 26100001 */   addiu $s0, $s0, 1
@@ -110,7 +110,7 @@ glabel alSynNew
 /* 065ED8 800652D8 24050002 */  li    $a1, 2
 /* 065EDC 800652DC 00004812 */  mflo  $t1
 /* 065EE0 800652E0 01093021 */  addu  $a2, $t0, $t1
-/* 065EE4 800652E4 0C0330E4 */  jal   D_800CC390
+/* 065EE4 800652E4 0C0330E4 */  jal   alMainBusParam
 /* 065EE8 800652E8 00000000 */   nop   
 /* 065EEC 800652EC 26100001 */  addiu $s0, $s0, 1
 .L800652F0:

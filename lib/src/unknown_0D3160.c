@@ -38,7 +38,7 @@ s32 osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size)
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/osEPiRawStartDma.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osViInit.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/func_800D2C60.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/alSynDelete.s")
 
 void __osDequeueThread(OSThread **queue, OSThread *t)
 {

@@ -34,7 +34,7 @@ s32 func_80065BEC(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0667D0/func_80065C38.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0667D0/alSynStartVoiceParams.s")
 
 void func_80065D40(void) {
     osInitialize();

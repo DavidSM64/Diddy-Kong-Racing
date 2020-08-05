@@ -8120,7 +8120,7 @@ glabel D_800E3778
 glabel D_800E377C
 .word 0x00000000
 
-glabel D_800E3780
+glabel alGlobals
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000

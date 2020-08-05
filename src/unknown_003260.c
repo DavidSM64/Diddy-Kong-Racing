@@ -54,8 +54,8 @@ void func_8000318C(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/alSndpNew.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/D_800033C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003470.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000410C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000418C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")

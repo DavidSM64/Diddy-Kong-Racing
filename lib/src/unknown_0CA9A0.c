@@ -4,8 +4,8 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CA0B0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/D_800CA0D0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alFilterNew.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alEnvMixerPull.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alEnvmixerParam.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CAC5C.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CB2D4.s")
@@ -13,6 +13,6 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CB498.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alLoadParam.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/D_800CB714.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CBAC0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/D_800CBBEC.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alLoadPull.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alResampleParam.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/D_800CC17C.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alResamplePull.s")

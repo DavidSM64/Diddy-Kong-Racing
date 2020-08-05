@@ -6,7 +6,7 @@ glabel func_8000418C
 /* 004D9C 8000419C 8DCF0004 */  lw    $t7, 4($t6)
 /* 004DA0 800041A0 00000000 */  nop   
 /* 004DA4 800041A4 81E40005 */  lb    $a0, 5($t7)
-/* 004DA8 800041A8 0C032678 */  jal   func_800C99E0
+/* 004DA8 800041A8 0C032678 */  jal   alCents2Ratio
 /* 004DAC 800041AC AFA70030 */   sw    $a3, 0x30($sp)
 /* 004DB0 800041B0 8FA70030 */  lw    $a3, 0x30($sp)
 /* 004DB4 800041B4 3C04800E */  lui   $a0, %hi(D_800DC6BC) # $a0, 0x800e

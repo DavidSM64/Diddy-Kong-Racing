@@ -80,7 +80,7 @@ glabel D_80002A98
 /* 0037BC 80002BBC 1200FFD8 */  beqz  $s0, .L80002B20
 /* 0037C0 80002BC0 00000000 */   nop   
 /* 0037C4 80002BC4 3C048011 */  lui   $a0, %hi(D_801161D0) # $a0, 0x8011
-/* 0037C8 80002BC8 0C0321ED */  jal   func_800C87B4
+/* 0037C8 80002BC8 0C0321ED */  jal   alClose
 /* 0037CC 80002BCC 248461D0 */   addiu $a0, %lo(D_801161D0) # addiu $a0, $a0, 0x61d0
 /* 0037D0 80002BD0 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 0037D4 80002BD4 8FB00018 */  lw    $s0, 0x18($sp)
