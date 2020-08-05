@@ -16,30 +16,16 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 
 ### Debian / Ubuntu
 
-`sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 libssl-dev`
+`sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 libssl-dev wget`
 
-#### qemu-irix
-
-Download qemu-irix `.deb` package here: https://github.com/n64decomp/qemu-irix/releases
-
-Then install it by running `sudo dpkg -i qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb`
-
-## Setup
+## Setup / Building
 1. Place the ROM file within the `baseroms` directory.  
     **a.** Any DKR ROM should work as long as it is US 1.0.  
     **b.** The name of the ROM file does not matter. It will be detected automatically from an md5 checksum.  
     **c.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
-2. Run `./setup.sh` in the main directory.  
-    **a.** All of the tools within `/tools/` will be built.  
-    **b.** Assets from the original DKR rom will be extracted into the generated `/assets/` folder.  
-    **c.** Lastly, the linker file `dkr.ld` will be generated  
-  
-If you see the message `Setup complete!`, then you are ready to build.
-
-## Build
-
-To build the ROM, you just simply type in `make` in the main directory. You should see an `OK` at the end of the build if it worked correctly. The generated ROM file should appear in the `/build/` folder. 
-
+2. Run `make` in the main directory.  
+    **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
+    
 ## Assets
 
 See the [ASSETS_README.md](ASSETS_README.md) file for more information on the assets within this decompilation.
@@ -50,18 +36,11 @@ There are some useful scripts that should be kept in mind when working on this r
 
 ---
 
-#### `./generate_ld.sh`
-
-This script will generate the linker file `dkr.ld`, which is used for building. You will need to call this when you add or remove files from the `/asm/` or `/src/` directories.
-
----
-
 #### `./extract.sh`
 
 This script will extract all the assets from the DKR ROM and place them into `/assets/` folder according to the extract-config file within the `/extract-ver/` folder. You will need to run this every time you update one of the `.extract-config` files.
 
-Note 1: You do not need to call `./generate_ld.sh`, since that is done automatically from this script.  
-Note 2: The `/assets/` folder will get deleted if it already exists, so don't put anything important in there! 
+Note: The `/assets/` folder will get deleted if it already exists, so don't put anything important in there! 
 
 ---
 
@@ -70,6 +49,12 @@ Note 2: The `/assets/` folder will get deleted if it already exists, so don't pu
 This script will rename an existing symbol within the repo with a new one.
 
 Example: `./rename_sym.sh D_A4001000 SP_IMEM`
+
+---
+
+#### `./score.sh`
+
+Prints out the current completion percentage of the decomp. You do need to have an `OK` build for this to work properly.
 
 ---
 
@@ -94,7 +79,6 @@ TODO: Add more things to the TODO list.
 What should be focused on.
 
 * Decompiling the asm files into matching c files.
-* Split the asm files into smaller ones. This has been partially done, but nowhere near complete.
 
 ### Minor
 
