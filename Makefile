@@ -4,15 +4,79 @@
 
 SHELL := /bin/bash
 
-######################### Setup Check ########################
+############################ Setup ###########################
 
-ifeq ($(wildcard ./assets/.*),)
-    $(error Error, /assets/ folder was not found. Did you run the ./setup.sh script?)
+# Don't do setup checks if cleaning.
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),clean_lib)
+ifneq ($(MAKECMDGOALS),clean_src)
+
+########## QEMU_IRIX ###########
+
+ifndef QEMU_IRIX
+  QEMU_IRIX := $(shell which qemu-irix 2>/dev/null)
+  ifndef QEMU_IRIX
+    # Use /etc/os-release to get the distro's ID_LIKE string
+    DISTRO_TYPE := $(shell grep ^ID_LIKE= /etc/os-release | cut -c9-)
+    # If the current distro is Ubuntu/Debian, then automatically download & install qemu-irix
+    ifneq ($(filter $(DISTRO_TYPE),debian),)
+      QEMU_IRIX_REPO = https://github.com/n64decomp/qemu-irix
+      QEMU_IRIX_RELEASE = $(QEMU_IRIX_REPO)/releases/download/v2.11-deb
+      QEMU_IRIX_FILENAME = qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb
+      QEMU_IRIX_URL = $(QEMU_IRIX_RELEASE)/$(QEMU_IRIX_FILENAME)
+      # Download qemu-irix using wget
+      DUMMY != wget --no-check-certificate --content-disposition $(QEMU_IRIX_URL) >&2 || echo FAIL
+      ifeq ($(DUMMY),FAIL)
+        $(error Failed to get QEMU_IRIX)
+      else
+        # Install qemu-irix using dpkg
+        DUMMY != sudo dpkg -i $(QEMU_IRIX_FILENAME) >&2 || echo FAIL
+        ifeq ($(DUMMY),FAIL)
+          $(error Failed to install QEMU_IRIX)
+        else
+          # Removed the downloaded .deb package, since it is no longer needed.
+          DUMMY != rm -f $(QEMU_IRIX_FILENAME) >&2 || echo FAIL
+          ifeq ($(DUMMY),FAIL)
+            $(warning Failed to remove $(QEMU_IRIX_FILENAME))
+          endif
+          $(info QEMU_IRIX has been installed sucessfully!)
+          QEMU_IRIX := $(shell which qemu-irix 2>/dev/null)
+        endif
+      endif
+    else
+      $(error Please install qemu-irix package or set QEMU_IRIX env var to the full qemu-irix binary path)
+    endif
+  endif
 endif
 
-#################### Generate linker file ####################
+########## Make tools ##########
 
-GENERATE_LD := $(shell ./generate_ld.sh)
+DUMMY != make -s -C tools >&2 || echo FAIL
+ifeq ($(DUMMY),FAIL)
+  $(error Failed to build tools)
+endif
+
+######## Extract Assets ########
+
+ifeq ($(wildcard ./assets/.*),)
+  DUMMY != ./extract.sh >&2 || echo FAIL
+  ifeq ($(DUMMY),FAIL)
+    $(error Failed to extract assets)
+  endif
+endif
+
+##### Generate linker file #####
+
+DUMMY != ./generate_ld.sh >&2 || echo FAIL
+ifeq ($(DUMMY),FAIL)
+  $(error Failed to generate the linker file)
+endif
+
+################################
+
+endif
+endif
+endif
 
 ################ Target Executable and Sources ###############
 
@@ -30,14 +94,6 @@ else ifeq ($(shell type mips64-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0
   CROSS := mips64-linux-gnu-
 else
   CROSS := mips64-elf-
-endif
-
-# check that either QEMU_IRIX is set or qemu-irix package installed
-ifndef QEMU_IRIX
-  QEMU_IRIX := $(shell which qemu-irix 2>/dev/null)
-  ifeq (, $(QEMU_IRIX))
-    $(error Please install qemu-irix package or set QEMU_IRIX env var to the full qemu-irix binary path)
-  endif
 endif
 
 AS = $(CROSS)as

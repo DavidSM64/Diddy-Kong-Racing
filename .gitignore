@@ -14,3 +14,6 @@ dkr.ld
 
 # Misc stuff that should be ignored.
 .*/
+
+# Ignore .deb packages
+*.deb
