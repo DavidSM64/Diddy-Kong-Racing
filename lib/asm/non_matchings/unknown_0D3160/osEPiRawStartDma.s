@@ -1,4 +1,4 @@
-glabel D_800D2680
+glabel osEPiRawStartDma
 /* 0D3280 800D2680 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0D3284 800D2684 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D3288 800D2688 AFA40028 */  sw    $a0, 0x28($sp)

@@ -3,6 +3,18 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
+
+#define OS_PIM_STACKSIZE	4096
+
+extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
+extern OSDevMgr __osPiDevMgr;
+extern u8 piThreadStack[OS_PIM_STACKSIZE];//piThreadStack
+extern OSThread piThread; //piThread
+extern OSMesgQueue piEventQueue; //piEventQueue
+extern OSMesg piEventBuf[1]; //piEventBuf
+extern OSMesgQueue piAccessQueue; //piAccessQueue
+void __osDevMgrMain(void);
 
 extern s32* D_800E3040;
 extern s32* D_800E3044;
@@ -233,7 +245,44 @@ GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5AA0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5B58.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5F60.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/osCreatePiManager.s")
+void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
+{
+	u32 savedMask;
+	OSPri oldPri;
+	OSPri myPri;
+	if (!__osPiDevMgr.active)
+	{
+		osCreateMesgQueue(cmdQ, cmdBuf, cmdMsgCnt);
+		osCreateMesgQueue(&piEventQueue, (OSMesg*)&piEventBuf, 1);
+		if (!__osPiAccessQueueEnabled)
+			__osPiCreateAccessQueue();
+		osSetEventMesg(OS_EVENT_PI, &piEventQueue, (OSMesg)0x22222222);
+		oldPri = -1;
+		myPri = osGetThreadPri(NULL);
+		if (myPri < pri)
+		{
+			oldPri = myPri;
+			osSetThreadPri(NULL, pri);
+		}
+		savedMask = __osDisableInt();
+		__osPiDevMgr.active = 1;
+		__osPiDevMgr.thread = &piThread;
+		__osPiDevMgr.cmdQueue = cmdQ;
+		__osPiDevMgr.evtQueue = &piEventQueue;
+		__osPiDevMgr.acsQueue = &piAccessQueue;
+		__osPiDevMgr.dma = osPiRawStartDma;
+        __osPiDevMgr.edma = osEPiRawStartDma;
+
+		osCreateThread(&piThread, 0, __osDevMgrMain, &__osPiDevMgr, &piThreadStack[OS_PIM_STACKSIZE], pri);
+		osStartThread(&piThread);
+		__osRestoreInt(savedMask);
+		if (oldPri != -1)
+		{
+			osSetThreadPri(NULL, oldPri);
+		}
+	}
+}
+
 
 void func_800C6170(void) {
     D_800E3760 = func_80070C9C(0x2800, 0xFF);

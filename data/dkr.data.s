@@ -9210,7 +9210,7 @@ glabel D_800E47B0
 .word 0x000E0204
 .word 0x00000002
 
-glabel D_800E4800
+glabel __osPiAccessQueueEnabled
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000

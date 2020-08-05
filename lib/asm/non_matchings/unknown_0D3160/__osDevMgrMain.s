@@ -1,4 +1,4 @@
-glabel D_800D2760
+glabel __osDevMgrMain
 /* 0D3360 800D2760 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 0D3364 800D2764 AFA40040 */  sw    $a0, 0x40($sp)
 /* 0D3368 800D2768 8FAE0040 */  lw    $t6, 0x40($sp)

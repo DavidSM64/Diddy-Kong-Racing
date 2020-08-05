@@ -8,26 +8,26 @@
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D2470.s")
 
 #define PI_Q_BUF_LEN 1
-extern u32 D_800E4800;//__osPiAccessQueueEnabled
+extern u32 __osPiAccessQueueEnabled;//__osPiAccessQueueEnabled
 extern OSMesg D_8012D1E0[PI_Q_BUF_LEN];//piAccessBuf
-extern OSMesgQueue D_8012D1E8; //__osPiAccessQueue
+extern OSMesgQueue piAccessQueue; //__osPiAccessQueue
 void __osPiCreateAccessQueue(void)
 {
 
-	D_800E4800 = 1;
-	osCreateMesgQueue(&D_8012D1E8, D_8012D1E0, PI_Q_BUF_LEN);
-	osSendMesg(&D_8012D1E8, NULL, OS_MESG_NOBLOCK);
+	__osPiAccessQueueEnabled = 1;
+	osCreateMesgQueue(&piAccessQueue, D_8012D1E0, PI_Q_BUF_LEN);
+	osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
 }
 
 void __osPiGetAccess(void)
 {
 	OSMesg dummyMesg;
-	if (!D_800E4800)
+	if (!__osPiAccessQueueEnabled)
 		__osPiCreateAccessQueue();
-	osRecvMesg(&D_8012D1E8, &dummyMesg, OS_MESG_BLOCK);
+	osRecvMesg(&piAccessQueue, &dummyMesg, OS_MESG_BLOCK);
 }
 
 void __osPiRelAccess(void)
 {
-	osSendMesg(&D_8012D1E8, NULL, OS_MESG_NOBLOCK);
+	osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
 }
