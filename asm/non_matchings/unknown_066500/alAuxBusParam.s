@@ -1,4 +1,4 @@
-glabel D_800659D4
+glabel alAuxBusParam
 /* 0665D4 800659D4 8C83001C */  lw    $v1, 0x1c($a0)
 /* 0665D8 800659D8 24010002 */  li    $at, 2
 /* 0665DC 800659DC 10A10006 */  beq   $a1, $at, .L800659F8

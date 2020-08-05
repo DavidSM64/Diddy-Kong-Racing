@@ -1,4 +1,4 @@
-glabel D_800CC4E0
+glabel alSaveParam
 /* 0CD0E0 800CC4E0 24010001 */  li    $at, 1
 /* 0CD0E4 800CC4E4 10A10006 */  beq   $a1, $at, .L800CC500
 /* 0CD0E8 800CC4E8 00001025 */   move  $v0, $zero

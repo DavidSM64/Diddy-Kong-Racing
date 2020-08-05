@@ -1,4 +1,4 @@
-glabel func_800C93D0
+glabel alSynAddPlayer
 /* 0C9FD0 800C93D0 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0C9FD4 800C93D4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C9FD8 800C93D8 00803025 */  move  $a2, $a0

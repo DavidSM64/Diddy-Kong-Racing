@@ -6,7 +6,7 @@ glabel func_800C87EC
 /* 0C93FC 800C87FC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C9400 800C8800 55C00004 */  bnezl $t6, .L800C8814
 /* 0C9404 800C8804 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 0C9408 800C8808 0C01944C */  jal   func_80065130
+/* 0C9408 800C8808 0C01944C */  jal   alSynNew
 /* 0C940C 800C880C AC440000 */   sw    $a0, ($v0)
 /* 0C9410 800C8810 8FBF0014 */  lw    $ra, 0x14($sp)
 .L800C8814:

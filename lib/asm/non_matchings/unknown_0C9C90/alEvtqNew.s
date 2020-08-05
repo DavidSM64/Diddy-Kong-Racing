@@ -1,4 +1,4 @@
-glabel func_800C935C
+glabel alEvtqNew
 /* 0C9F5C 800C935C 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C9F60 800C9360 AFB30020 */  sw    $s3, 0x20($sp)
 /* 0C9F64 800C9364 AFB2001C */  sw    $s2, 0x1c($sp)
@@ -17,7 +17,7 @@ glabel func_800C935C
 /* 0C9F98 800C9398 00A08825 */  move  $s1, $a1
 .L800C939C:
 /* 0C9F9C 800C939C 02202025 */  move  $a0, $s1
-/* 0C9FA0 800C93A0 0C0321E4 */  jal   func_800C8790
+/* 0C9FA0 800C93A0 0C0321E4 */  jal   alLink
 /* 0C9FA4 800C93A4 02402825 */   move  $a1, $s2
 /* 0C9FA8 800C93A8 26100001 */  addiu $s0, $s0, 1
 /* 0C9FAC 800C93AC 1613FFFB */  bne   $s0, $s3, .L800C939C

@@ -37,7 +37,7 @@ glabel func_80004A60
 /* 0056E8 80004AE8 8E440000 */  lw    $a0, ($s2)
 /* 0056EC 80004AEC A7AB002C */  sh    $t3, 0x2c($sp)
 /* 0056F0 80004AF0 AFB00030 */  sw    $s0, 0x30($sp)
-/* 0056F4 80004AF4 0C03246B */  jal   func_800C91AC
+/* 0056F4 80004AF4 0C03246B */  jal   alEvtqPostEvent
 /* 0056F8 80004AF8 24840014 */   addiu $a0, $a0, 0x14
 .L80004AFC:
 /* 0056FC 80004AFC 8E100000 */  lw    $s0, ($s0)

@@ -1,4 +1,4 @@
-glabel func_800C8760
+glabel alUnlink
 /* 0C9360 800C8760 8C820000 */  lw    $v0, ($a0)
 /* 0C9364 800C8764 50400004 */  beql  $v0, $zero, .L800C8778
 /* 0C9368 800C8768 8C820004 */   lw    $v0, 4($a0)

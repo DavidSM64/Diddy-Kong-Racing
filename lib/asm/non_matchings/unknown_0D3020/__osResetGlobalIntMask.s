@@ -1,4 +1,4 @@
-glabel func_800D6500
+glabel __osResetGlobalIntMask
 /* 0D7100 800D6500 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0D7104 800D6504 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D7108 800D6508 AFA40028 */  sw    $a0, 0x28($sp)

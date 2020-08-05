@@ -51,7 +51,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000AC34.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000ACE0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000AD98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000ADF4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000AE90.s")
+GLOBAL_ASM("asm/non_matchings/unknown_005740/__initChanState.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000AEFC.s")
 
 /* Unknown Size */

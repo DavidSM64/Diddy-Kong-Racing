@@ -1,4 +1,4 @@
-glabel D_800CAA7C
+glabel alEnvmixerParam
 /* 0CB67C 800CAA7C 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0CB680 800CAA80 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0CB684 800CAA84 AFA40030 */  sw    $a0, 0x30($sp)

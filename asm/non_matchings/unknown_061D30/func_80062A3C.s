@@ -38,7 +38,7 @@ glabel func_80062A3C
 /* 0636CC 80062ACC 3C067FFF */  lui   $a2, (0x7FFFFFFF >> 16) # lui $a2, 0x7fff
 /* 0636D0 80062AD0 A7B90028 */  sh    $t9, 0x28($sp)
 /* 0636D4 80062AD4 34C6FFFF */  ori   $a2, (0x7FFFFFFF & 0xFFFF) # ori $a2, $a2, 0xffff
-/* 0636D8 80062AD8 0C03246B */  jal   func_800C91AC
+/* 0636D8 80062AD8 0C03246B */  jal   alEvtqPostEvent
 /* 0636DC 80062ADC 26040048 */   addiu $a0, $s0, 0x48
 /* 0636E0 80062AE0 10000004 */  b     .L80062AF4
 /* 0636E4 80062AE4 8FBF001C */   lw    $ra, 0x1c($sp)

@@ -1,4 +1,4 @@
-glabel func_800C77F0
+glabel alHeapDBAlloc
 /* 0C83F0 800C77F0 8FAE0010 */  lw    $t6, 0x10($sp)
 /* 0C83F4 800C77F4 AFA40000 */  sw    $a0, ($sp)
 /* 0C83F8 800C77F8 AFA50004 */  sw    $a1, 4($sp)

@@ -5,16 +5,16 @@
 #include "macros.h"
 
 extern s32 D_80065900;
-extern s32 D_800659D4;
+extern s32 alAuxBusParam;
 extern s32 D_800CA0D0;
-extern s32 D_800CAA7C;
-extern s32 D_800CB540;
+extern s32 alEnvmixerParam;
+extern s32 alLoadParam;
 extern s32 D_800CBBEC;
-extern s32 D_800CC090;
+extern s32 alResampleParam;
 extern s32 D_800CC17C;
 extern s32 D_800CC390;
 extern s32 D_800CC3C0;
-extern s32 D_800CC4E0;
+extern s32 alSaveParam;
 extern s32 D_800CC514;
 
 GLOBAL_ASM("asm/non_matchings/unknown_064830/D_80063C30.s")
@@ -59,9 +59,9 @@ typedef struct unk80064E54 {
     s32 unk48;
 } unk80064E54;
 
-void func_80064E54(unk80064E54* arg0, s32 arg1) {
-    func_800CA0B0(arg0, &D_800CA0D0, &D_800CAA7C, 4);
-    arg0->unk14 = func_800C77F0(0, 0, arg1, 1, 0x50);
+void alEnvmixerNew(unk80064E54* arg0, s32 arg1) {
+    func_800CA0B0(arg0, &D_800CA0D0, &alEnvmixerParam, 4);
+    arg0->unk14 = alHeapDBAlloc(0, 0, arg1, 1, 0x50);
     arg0->unk38 = 1;
     arg0->unk48 = 0;
     arg0->unk1A = 1;
@@ -94,10 +94,10 @@ typedef struct unk80064EF8 {
     s32 unk44;
 } unk80064EF8;
 
-void func_80064EF8(unk80064EF8* arg0, s32 (*arg1)(s32*), s32 arg2) {
-    func_800CA0B0(arg0, &D_800CBBEC, &D_800CB540, 0);
-    arg0->unk14 = func_800C77F0(0, 0, arg2, 1, 0x20);
-    arg0->unk18 = func_800C77F0(0, 0, arg2, 1, 0x20);
+void alLoadNew(unk80064EF8* arg0, s32 (*arg1)(s32*), s32 arg2) {
+    func_800CA0B0(arg0, &D_800CBBEC, &alLoadParam, 0);
+    arg0->unk14 = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
+    arg0->unk18 = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
     arg0->unk30 = arg1(&arg0->unk34);
     arg0->unk3C = 0;
     arg0->unk40 = 1;
@@ -116,9 +116,9 @@ typedef struct unk80064F9C {
     s32 unk30;
 } unk80064F9C;
 
-void func_80064F9C(unk80064F9C* arg0, s32 arg1) {
-    func_800CA0B0(arg0, &D_800CC17C, &D_800CC090, 1);
-    arg0->unk14 = func_800C77F0(0, 0, arg1, 1, 0x20);
+void alResampleNew(unk80064F9C* arg0, s32 arg1) {
+    func_800CA0B0(arg0, &D_800CC17C, &alResampleParam, 1);
+    arg0->unk14 = alHeapDBAlloc(0, 0, arg1, 1, 0x20);
     arg0->unk24 = 1;
     arg0->unk30 = 0;
     arg0->unk1C = 0;
@@ -135,8 +135,8 @@ typedef struct unk80065024 {
     s32 unk1C;
 } unk80065024;
 
-void func_80065024(unk80065024* arg0, s32 arg1, s32 arg2) {
-    func_800CA0B0(arg0, &D_80065900, &D_800659D4, 6);
+void alAuxBusNew(unk80065024* arg0, s32 arg1, s32 arg2) {
+    func_800CA0B0(arg0, &D_80065900, &alAuxBusParam, 6);
     arg0->unk14 = 0;
     arg0->unk18 = arg2;
     arg0->unk1C = arg1;
@@ -149,7 +149,7 @@ typedef struct unk80065084 {
     s32 unk1C;
 } unk80065084;
 
-void func_80065084(unk80065084* arg0, s32 arg1, s32 arg2) {
+void alMainBusNew(unk80065084* arg0, s32 arg1, s32 arg2) {
     func_800CA0B0(arg0, &D_800CC3C0, &D_800CC390, 7);
     arg0->unk14 = 0;
     arg0->unk18 = arg2;
@@ -162,8 +162,8 @@ typedef struct unk800650E4 {
     s32 unk18;
 } unk800650E4;
 
-void func_800650E4(unk800650E4* arg0) {
-    func_800CA0B0(arg0, &D_800CC514, &D_800CC4E0, 3);
+void alSaveNew(unk800650E4* arg0) {
+    func_800CA0B0(arg0, &D_800CC514, &alSaveParam, 3);
     arg0->unk14 = 0;
     arg0->unk18 = 1;
 }

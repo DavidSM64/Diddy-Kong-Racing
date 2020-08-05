@@ -1,4 +1,4 @@
-glabel func_800D65B0
+glabel osYieldThread
 /* 0D71B0 800D65B0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0D71B4 800D65B4 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D71B8 800D65B8 0C034958 */  jal   __osDisableInt

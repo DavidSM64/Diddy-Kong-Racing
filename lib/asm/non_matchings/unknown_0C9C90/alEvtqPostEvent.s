@@ -1,4 +1,4 @@
-glabel func_800C91AC
+glabel alEvtqPostEvent
 /* 0C9DAC 800C91AC 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0C9DB0 800C91B0 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C9DB4 800C91B4 AFA40030 */  sw    $a0, 0x30($sp)
@@ -20,12 +20,12 @@ glabel func_800C91AC
 .L800C91F4:
 /* 0C9DF4 800C91F4 AFA5001C */  sw    $a1, 0x1c($sp)
 /* 0C9DF8 800C91F8 AFA70038 */  sw    $a3, 0x38($sp)
-/* 0C9DFC 800C91FC 0C0321D8 */  jal   func_800C8760
+/* 0C9DFC 800C91FC 0C0321D8 */  jal   alUnlink
 /* 0C9E00 800C9200 AFA8002C */   sw    $t0, 0x2c($sp)
 /* 0C9E04 800C9204 8FA8002C */  lw    $t0, 0x2c($sp)
 /* 0C9E08 800C9208 8FA40034 */  lw    $a0, 0x34($sp)
 /* 0C9E0C 800C920C 24060010 */  li    $a2, 16
-/* 0C9E10 800C9210 0C034E08 */  jal   func_800D3820
+/* 0C9E10 800C9210 0C034E08 */  jal   alCopy
 /* 0C9E14 800C9214 2505000C */   addiu $a1, $t0, 0xc
 /* 0C9E18 800C9218 8FA70038 */  lw    $a3, 0x38($sp)
 /* 0C9E1C 800C921C 3C017FFF */  lui   $at, (0x7FFFFFFF >> 16) # lui $at, 0x7fff
@@ -50,7 +50,7 @@ glabel func_800C91AC
 /* 0C9E60 800C9260 AD000008 */   sw    $zero, 8($t0)
 /* 0C9E64 800C9264 AD070008 */  sw    $a3, 8($t0)
 .L800C9268:
-/* 0C9E68 800C9268 0C0321E4 */  jal   func_800C8790
+/* 0C9E68 800C9268 0C0321E4 */  jal   alLink
 /* 0C9E6C 800C926C 01002025 */   move  $a0, $t0
 /* 0C9E70 800C9270 10000011 */  b     .L800C92B8
 /* 0C9E74 800C9274 00000000 */   nop   
@@ -64,7 +64,7 @@ glabel func_800C91AC
 /* 0C9E90 800C9290 8CD90008 */  lw    $t9, 8($a2)
 /* 0C9E94 800C9294 01002025 */  move  $a0, $t0
 /* 0C9E98 800C9298 03274823 */  subu  $t1, $t9, $a3
-/* 0C9E9C 800C929C 0C0321E4 */  jal   func_800C8790
+/* 0C9E9C 800C929C 0C0321E4 */  jal   alLink
 /* 0C9EA0 800C92A0 ACC90008 */   sw    $t1, 8($a2)
 /* 0C9EA4 800C92A4 10000004 */  b     .L800C92B8
 /* 0C9EA8 800C92A8 00000000 */   nop   

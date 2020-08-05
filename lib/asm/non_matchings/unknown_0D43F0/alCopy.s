@@ -1,4 +1,4 @@
-glabel func_800D3820
+glabel alCopy
 /* 0D4420 800D3820 00801025 */  move  $v0, $a0
 /* 0D4424 800D3824 00A01825 */  move  $v1, $a1
 /* 0D4428 800D3828 18C00018 */  blez  $a2, .L800D388C

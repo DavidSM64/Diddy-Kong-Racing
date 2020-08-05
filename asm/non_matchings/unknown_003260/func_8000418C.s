@@ -21,7 +21,7 @@ glabel func_8000418C
 /* 004DD8 800041D8 34068235 */  li    $a2, 33333
 /* 004DDC 800041DC AFA70024 */  sw    $a3, 0x24($sp)
 /* 004DE0 800041E0 24840014 */  addiu $a0, $a0, 0x14
-/* 004DE4 800041E4 0C03246B */  jal   func_800C91AC
+/* 004DE4 800041E4 0C03246B */  jal   alEvtqPostEvent
 /* 004DE8 800041E8 AFB90028 */   sw    $t9, 0x28($sp)
 /* 004DEC 800041EC 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 004DF0 800041F0 27BD0030 */  addiu $sp, $sp, 0x30

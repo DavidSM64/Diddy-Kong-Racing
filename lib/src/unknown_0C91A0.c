@@ -8,8 +8,8 @@
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C85A0.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C85D0.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C8600.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C8760.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C8790.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/alUnlink.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/alLink.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C87B4.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C87EC.s")
 

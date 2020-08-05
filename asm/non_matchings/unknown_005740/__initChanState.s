@@ -1,4 +1,4 @@
-glabel func_8000AE90
+glabel __initChanState
 /* 00BA90 8000AE90 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 00BA94 8000AE94 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 00BA98 8000AE98 AFB20020 */  sw    $s2, 0x20($sp)

@@ -12,11 +12,11 @@ glabel func_800C9420
 /* 0CA048 800C9448 AFA80028 */  sw    $t0, 0x28($sp)
 /* 0CA04C 800C944C AFA70024 */  sw    $a3, 0x24($sp)
 /* 0CA050 800C9450 AFA0001C */  sw    $zero, 0x1c($sp)
-/* 0CA054 800C9454 0C0321D8 */  jal   func_800C8760
+/* 0CA054 800C9454 0C0321D8 */  jal   alUnlink
 /* 0CA058 800C9458 00E02025 */   move  $a0, $a3
 /* 0CA05C 800C945C 8FA80028 */  lw    $t0, 0x28($sp)
 /* 0CA060 800C9460 8FA40024 */  lw    $a0, 0x24($sp)
-/* 0CA064 800C9464 0C0321E4 */  jal   func_800C8790
+/* 0CA064 800C9464 0C0321E4 */  jal   alLink
 /* 0CA068 800C9468 2505000C */   addiu $a1, $t0, 0xc
 /* 0CA06C 800C946C 10000021 */  b     .L800C94F4
 /* 0CA070 800C9470 8FA3001C */   lw    $v1, 0x1c($sp)
@@ -27,11 +27,11 @@ glabel func_800C9420
 /* 0CA080 800C9480 ACA70000 */  sw    $a3, ($a1)
 /* 0CA084 800C9484 AFA80028 */  sw    $t0, 0x28($sp)
 /* 0CA088 800C9488 AFA70024 */  sw    $a3, 0x24($sp)
-/* 0CA08C 800C948C 0C0321D8 */  jal   func_800C8760
+/* 0CA08C 800C948C 0C0321D8 */  jal   alUnlink
 /* 0CA090 800C9490 AFA3001C */   sw    $v1, 0x1c($sp)
 /* 0CA094 800C9494 8FA80028 */  lw    $t0, 0x28($sp)
 /* 0CA098 800C9498 8FA40024 */  lw    $a0, 0x24($sp)
-/* 0CA09C 800C949C 0C0321E4 */  jal   func_800C8790
+/* 0CA09C 800C949C 0C0321E4 */  jal   alLink
 /* 0CA0A0 800C94A0 2505000C */   addiu $a1, $t0, 0xc
 /* 0CA0A4 800C94A4 10000013 */  b     .L800C94F4
 /* 0CA0A8 800C94A8 8FA3001C */   lw    $v1, 0x1c($sp)

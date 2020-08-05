@@ -40,17 +40,17 @@ glabel func_80062290
 /* 062F28 80062328 AFAF0010 */  sw    $t7, 0x10($sp)
 /* 062F2C 8006232C 00002025 */  move  $a0, $zero
 /* 062F30 80062330 00002825 */  move  $a1, $zero
-/* 062F34 80062334 0C031DFC */  jal   func_800C77F0
+/* 062F34 80062334 0C031DFC */  jal   alHeapDBAlloc
 /* 062F38 80062338 AFA6002C */   sw    $a2, 0x2c($sp)
 /* 062F3C 8006233C AE020060 */  sw    $v0, 0x60($s0)
-/* 062F40 80062340 0C002BA4 */  jal   func_8000AE90
+/* 062F40 80062340 0C002BA4 */  jal   __initChanState
 /* 062F44 80062344 02002025 */   move  $a0, $s0
 /* 062F48 80062348 8FA6002C */  lw    $a2, 0x2c($sp)
 /* 062F4C 8006234C 8E270000 */  lw    $a3, ($s1)
 /* 062F50 80062350 24180038 */  li    $t8, 56
 /* 062F54 80062354 AFB80010 */  sw    $t8, 0x10($sp)
 /* 062F58 80062358 00002025 */  move  $a0, $zero
-/* 062F5C 8006235C 0C031DFC */  jal   func_800C77F0
+/* 062F5C 8006235C 0C031DFC */  jal   alHeapDBAlloc
 /* 062F60 80062360 00002825 */   move  $a1, $zero
 /* 062F64 80062364 AE00006C */  sw    $zero, 0x6c($s0)
 /* 062F68 80062368 8E390000 */  lw    $t9, ($s1)
@@ -75,11 +75,11 @@ glabel func_80062290
 /* 062FAC 800623AC 8FA6002C */  lw    $a2, 0x2c($sp)
 /* 062FB0 800623B0 240A001C */  li    $t2, 28
 /* 062FB4 800623B4 AFAA0010 */  sw    $t2, 0x10($sp)
-/* 062FB8 800623B8 0C031DFC */  jal   func_800C77F0
+/* 062FB8 800623B8 0C031DFC */  jal   alHeapDBAlloc
 /* 062FBC 800623BC 00002025 */   move  $a0, $zero
 /* 062FC0 800623C0 8E260004 */  lw    $a2, 4($s1)
 /* 062FC4 800623C4 26040048 */  addiu $a0, $s0, 0x48
-/* 062FC8 800623C8 0C0324D7 */  jal   func_800C935C
+/* 062FC8 800623C8 0C0324D7 */  jal   alEvtqNew
 /* 062FCC 800623CC 00402825 */   move  $a1, $v0
 /* 062FD0 800623D0 3C0B8006 */  lui   $t3, %hi(D_80062408) # $t3, 0x8006
 /* 062FD4 800623D4 256B2408 */  addiu $t3, %lo(D_80062408) # addiu $t3, $t3, 0x2408
@@ -88,7 +88,7 @@ glabel func_80062290
 /* 062FE0 800623E0 AE100004 */  sw    $s0, 4($s0)
 /* 062FE4 800623E4 3C04800E */  lui   $a0, %hi(D_800E3780) # $a0, 0x800e
 /* 062FE8 800623E8 8C843780 */  lw    $a0, %lo(D_800E3780)($a0)
-/* 062FEC 800623EC 0C0324F4 */  jal   func_800C93D0
+/* 062FEC 800623EC 0C0324F4 */  jal   alSynAddPlayer
 /* 062FF0 800623F0 02002825 */   move  $a1, $s0
 /* 062FF4 800623F4 8FBF0024 */  lw    $ra, 0x24($sp)
 /* 062FF8 800623F8 8FB0001C */  lw    $s0, 0x1c($sp)

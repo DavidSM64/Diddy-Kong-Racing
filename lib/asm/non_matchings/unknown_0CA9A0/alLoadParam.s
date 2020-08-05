@@ -1,4 +1,4 @@
-glabel D_800CB540
+glabel alLoadParam
 /* 0CC140 800CB540 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0CC144 800CB544 24010004 */  li    $at, 4
 /* 0CC148 800CB548 AFBF0014 */  sw    $ra, 0x14($sp)
@@ -64,7 +64,7 @@ glabel D_800CB540
 /* 0CC22C 800CB62C 8F190008 */  lw    $t9, 8($t8)
 /* 0CC230 800CB630 ACF90024 */  sw    $t9, 0x24($a3)
 /* 0CC234 800CB634 8C44000C */  lw    $a0, 0xc($v0)
-/* 0CC238 800CB638 0C034E08 */  jal   func_800D3820
+/* 0CC238 800CB638 0C034E08 */  jal   alCopy
 /* 0CC23C 800CB63C 2484000C */   addiu $a0, $a0, 0xc
 /* 0CC240 800CB640 10000031 */  b     .L800CB708
 /* 0CC244 800CB644 8FBF0014 */   lw    $ra, 0x14($sp)

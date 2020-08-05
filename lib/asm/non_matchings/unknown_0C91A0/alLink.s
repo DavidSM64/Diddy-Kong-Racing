@@ -1,4 +1,4 @@
-glabel func_800C8790
+glabel alLink
 /* 0C9390 800C8790 8CAE0000 */  lw    $t6, ($a1)
 /* 0C9394 800C8794 AC850004 */  sw    $a1, 4($a0)
 /* 0C9398 800C8798 AC8E0000 */  sw    $t6, ($a0)

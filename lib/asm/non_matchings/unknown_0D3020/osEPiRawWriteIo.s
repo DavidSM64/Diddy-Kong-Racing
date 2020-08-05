@@ -1,4 +1,4 @@
-glabel func_800D6560
+glabel osEPiRawWriteIo
 /* 0D7160 800D6560 3C0EA460 */  lui   $t6, %hi(D_A4600010) # $t6, 0xa460
 /* 0D7164 800D6564 8DC70010 */  lw    $a3, %lo(D_A4600010)($t6)
 /* 0D7168 800D6568 27BDFFF8 */  addiu $sp, $sp, -8

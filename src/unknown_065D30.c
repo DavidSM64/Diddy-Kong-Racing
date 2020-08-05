@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("asm/non_matchings/unknown_065D30/func_80065130.s")
+GLOBAL_ASM("asm/non_matchings/unknown_065D30/alSynNew.s")
 GLOBAL_ASM("asm/non_matchings/unknown_065D30/func_80065494.s")
 GLOBAL_ASM("asm/non_matchings/unknown_065D30/func_80065668.s")
 GLOBAL_ASM("asm/non_matchings/unknown_065D30/func_8006569C.s")

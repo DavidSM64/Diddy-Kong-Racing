@@ -27,11 +27,11 @@ glabel func_8000AC34
 /* 00B894 8000AC94 AC4A0008 */  sw    $t2, 8($v0)
 .L8000AC98:
 /* 00B898 8000AC98 AFA7002C */  sw    $a3, 0x2c($sp)
-/* 00B89C 8000AC9C 0C0321D8 */  jal   func_800C8760
+/* 00B89C 8000AC9C 0C0321D8 */  jal   alUnlink
 /* 00B8A0 8000ACA0 A3A9001F */   sb    $t1, 0x1f($sp)
 /* 00B8A4 8000ACA4 8FA50030 */  lw    $a1, 0x30($sp)
 /* 00B8A8 8000ACA8 8FA4002C */  lw    $a0, 0x2c($sp)
-/* 00B8AC 8000ACAC 0C0321E4 */  jal   func_800C8790
+/* 00B8AC 8000ACAC 0C0321E4 */  jal   alLink
 /* 00B8B0 8000ACB0 24A50048 */   addiu $a1, $a1, 0x48
 /* 00B8B4 8000ACB4 93A9001F */  lbu   $t1, 0x1f($sp)
 /* 00B8B8 8000ACB8 10000006 */  b     .L8000ACD4

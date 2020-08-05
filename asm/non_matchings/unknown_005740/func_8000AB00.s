@@ -36,10 +36,10 @@ glabel func_8000AB00
 /* 00B784 8000AB84 03284821 */  addu  $t1, $t9, $t0
 /* 00B788 8000AB88 AE290008 */  sw    $t1, 8($s1)
 .L8000AB8C:
-/* 00B78C 8000AB8C 0C0321D8 */  jal   func_800C8760
+/* 00B78C 8000AB8C 0C0321D8 */  jal   alUnlink
 /* 00B790 8000AB90 02002025 */   move  $a0, $s0
 /* 00B794 8000AB94 02002025 */  move  $a0, $s0
-/* 00B798 8000AB98 0C0321E4 */  jal   func_800C8790
+/* 00B798 8000AB98 0C0321E4 */  jal   alLink
 /* 00B79C 8000AB9C 02402825 */   move  $a1, $s2
 .L8000ABA0:
 /* 00B7A0 8000ABA0 1620FFEB */  bnez  $s1, .L8000AB50
@@ -68,7 +68,7 @@ glabel func_8000AB00
 /* 00B7F8 8000ABF8 A7AE0050 */  sh    $t6, 0x50($sp)
 /* 00B7FC 8000ABFC AFB50054 */  sw    $s5, 0x54($sp)
 /* 00B800 8000AC00 02402025 */  move  $a0, $s2
-/* 00B804 8000AC04 0C03246B */  jal   func_800C91AC
+/* 00B804 8000AC04 0C03246B */  jal   alEvtqPostEvent
 /* 00B808 8000AC08 27A50050 */   addiu $a1, $sp, 0x50
 /* 00B80C 8000AC0C 8FBF0034 */  lw    $ra, 0x34($sp)
 /* 00B810 8000AC10 8FB00018 */  lw    $s0, 0x18($sp)

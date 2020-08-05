@@ -17,7 +17,7 @@ glabel func_80004384
 /* 004FC0 800043C0 3C03800E */  lui   $v1, %hi(D_800DC6B0) # $v1, 0x800e
 /* 004FC4 800043C4 2463C6B0 */  addiu $v1, %lo(D_800DC6B0) # addiu $v1, $v1, -0x3950
 /* 004FC8 800043C8 02002025 */  move  $a0, $s0
-/* 004FCC 800043CC 0C0321D8 */  jal   func_800C8760
+/* 004FCC 800043CC 0C0321D8 */  jal   alUnlink
 /* 004FD0 800043D0 AC6F0008 */   sw    $t7, 8($v1)
 /* 004FD4 800043D4 3C03800E */  lui   $v1, %hi(D_800DC6B0) # $v1, 0x800e
 /* 004FD8 800043D8 2463C6B0 */  addiu $v1, %lo(D_800DC6B0) # addiu $v1, $v1, -0x3950

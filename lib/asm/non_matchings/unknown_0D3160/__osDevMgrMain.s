@@ -73,7 +73,7 @@ glabel __osDevMgrMain
 /* 0D3468 800D2868 0C0322EC */  jal   osRecvMesg
 /* 0D346C 800D286C 8D640010 */   lw    $a0, 0x10($t3)
 /* 0D3470 800D2870 3C040010 */  lui   $a0, (0x00100401 >> 16) # lui $a0, 0x10
-/* 0D3474 800D2874 0C035940 */  jal   func_800D6500
+/* 0D3474 800D2874 0C035940 */  jal   __osResetGlobalIntMask
 /* 0D3478 800D2878 34840401 */   ori   $a0, (0x00100401 & 0xFFFF) # ori $a0, $a0, 0x401
 /* 0D347C 800D287C 8FAE0020 */  lw    $t6, 0x20($sp)
 /* 0D3480 800D2880 8FAD003C */  lw    $t5, 0x3c($sp)
@@ -83,7 +83,7 @@ glabel __osDevMgrMain
 /* 0D3490 800D2890 34A50510 */  ori   $a1, (0x05000510 & 0xFFFF) # ori $a1, $a1, 0x510
 /* 0D3494 800D2894 00C15025 */  or    $t2, $a2, $at
 /* 0D3498 800D2898 01403025 */  move  $a2, $t2
-/* 0D349C 800D289C 0C035958 */  jal   func_800D6560
+/* 0D349C 800D289C 0C035958 */  jal   osEPiRawWriteIo
 /* 0D34A0 800D28A0 8DA40014 */   lw    $a0, 0x14($t5)
 .L800D28A4:
 /* 0D34A4 800D28A4 8FAF002C */  lw    $t7, 0x2c($sp)
@@ -119,7 +119,7 @@ glabel __osDevMgrMain
 /* 0D3518 800D2918 95CA001A */  lhu   $t2, 0x1a($t6)
 /* 0D351C 800D291C 1541FF98 */  bne   $t2, $at, .L800D2780
 /* 0D3520 800D2920 00000000 */   nop   
-/* 0D3524 800D2924 0C03596C */  jal   func_800D65B0
+/* 0D3524 800D2924 0C03596C */  jal   osYieldThread
 /* 0D3528 800D2928 00000000 */   nop   
 /* 0D352C 800D292C 1000FF94 */  b     .L800D2780
 /* 0D3530 800D2930 00000000 */   nop   

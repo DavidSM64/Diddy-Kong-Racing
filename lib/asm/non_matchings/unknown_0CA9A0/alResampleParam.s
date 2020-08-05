@@ -1,4 +1,4 @@
-glabel D_800CC090
+glabel alResampleParam
 /* 0CCC90 800CC090 24AEFFFF */  addiu $t6, $a1, -1
 /* 0CCC94 800CC094 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0CCC98 800CC098 2DC10009 */  sltiu $at, $t6, 9
