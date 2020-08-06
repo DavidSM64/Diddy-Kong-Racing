@@ -30,8 +30,55 @@ s32 alFxParam(void* filter, s32 paramID, void* param) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxParamHdl.s")
 GLOBAL_ASM("asm/non_matchings/unknown_064830/_loadOutputBuffer.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/_loadBuffer.s")
-//GLOBAL_ASM("asm/non_matchings/unknown_064830/_saveBuffer.s")
+/* 
+ * This routine is for loading data from the delay line buff. If the
+ * address of curr_ptr < r->base, it will force it to be within r->base
+ * space, If the load goes past the end of r->base it will wrap around.
+ * Cause count bytes of data at curr_ptr (within the delay line) to be
+ * loaded into buff. (Buff is a dmem buffer)
+ */
+Acmd *_loadBuffer(ALFx *r, s16 *curr_ptr, s32 buff, s32 count, Acmd *p)
+{
+    Acmd    *ptr = p;
+    s32     after_end, before_end;
+    s16     *updated_ptr, *delay_end;
+
+#ifdef AUD_PROFILE
+    lastCnt[++cnt_index] = osGetCount();
+#endif
+
+    delay_end = &r->base[r->length];
+
+#ifdef _DEBUG
+    if(curr_ptr > delay_end)
+        __osError(ERR_ALMODDELAYOVERFLOW, 1, delay_end - curr_ptr);
+#endif
+
+    if (curr_ptr < r->base)
+    curr_ptr += r->length;
+    updated_ptr = curr_ptr + count;
+    
+    if (updated_ptr > delay_end) {
+        after_end = updated_ptr - delay_end;
+        before_end = delay_end - curr_ptr;
+        
+        aSetBuffer(ptr++, 0, buff, 0, before_end<<1);
+        aLoadBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+        aSetBuffer(ptr++, 0, buff+(before_end<<1), 0, after_end<<1);
+        aLoadBuffer(ptr++, osVirtualToPhysical(r->base));
+    } else {
+        aSetBuffer(ptr++, 0, buff, 0, count<<1);
+        aLoadBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+    }
+
+    aSetBuffer(ptr++, 0, 0, 0, count<<1);
+
+#ifdef AUD_PROFILE
+    PROFILE_AUD(load_num, load_cnt, load_max, load_min);
+#endif
+    return ptr;
+
+}
 
 /*
  * This routine is for writing data to the delay line buff. If the
@@ -74,8 +121,6 @@ Acmd *_saveBuffer(ALFx *r, s16 *curr_ptr, s32 buff, s32 count, Acmd *p)
     return ptr;
 
 }
-
-
 
 Acmd *_filterBuffer(ALLowPass *lp, s32 buff, s32 count, Acmd *p)
 {
