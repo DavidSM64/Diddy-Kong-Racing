@@ -97,7 +97,8 @@ else
 endif
 
 AS = $(CROSS)as
-CC := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
+#CC := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
+CC := $(QEMU_IRIX) -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
 CPP := cpp -P -Wno-trigraphs
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
@@ -237,6 +238,7 @@ $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D3160.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/unknown_066460.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
 $(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osJamMesg.o : OPT_FLAGS := -O1
