@@ -6,11 +6,109 @@
 #include "audio_internal.h"
 #include "libultra_internal.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alEvtqFlushType.s")
+void alEvtqFlushType(ALEventQueue *evtq, s16 type)
+{
+    ALLink      	*thisNode;
+    ALLink      	*nextNode;
+    ALEventListItem     *thisItem, *nextItem;
+    OSIntMask   	mask;
 
+    mask = osSetIntMask(OS_IM_NONE);
 
+    thisNode = evtq->allocList.next;
+    while( thisNode != 0 )
+    {
+	nextNode = thisNode->next;
+	thisItem = (ALEventListItem *)thisNode;
+	nextItem = (ALEventListItem *)nextNode;
+	if (thisItem->evt.type == type)
+	{
+	    if (nextItem)
+		nextItem->delta += thisItem->delta;
+	    alUnlink(thisNode);
+	    alLink(thisNode, &evtq->freeList);
+	}
+	thisNode = nextNode;
+    }
+
+    osSetIntMask(mask);
+}
+
+void alEvtqFlush(ALEventQueue *evtq)
+{
+    ALLink      *thisNode;
+    ALLink      *nextNode;
+    OSIntMask   mask;
+
+    mask = osSetIntMask(OS_IM_NONE);
+
+    thisNode = evtq->allocList.next;
+    while( thisNode != 0 ) {
+	nextNode = thisNode->next;
+	alUnlink(thisNode);
+	alLink(thisNode, &evtq->freeList);
+	thisNode = nextNode;
+    }
+    
+    osSetIntMask(mask);
+}
+
+#if 1
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s")
-//GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alEvtqNextEvent.s")
+#else
+void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta)
+{
+    ALEventListItem     *item;
+    ALEventListItem     *nextItem;
+    ALLink              *node;
+    s32                 postAtEnd=0;
+    OSIntMask           mask;
+
+    mask = osSetIntMask(OS_IM_NONE);
+
+    item = (ALEventListItem *)evtq->freeList.next;
+    if (!item) {
+        osSetIntMask(mask);
+#ifdef _DEBUG
+        __osError(ERR_ALEVENTNOFREE, 0);
+#endif        
+        return;
+    }
+    
+    alUnlink((ALLink *)item);
+    alCopy(evt, &item->evt, sizeof(*evt));
+
+    if (delta == AL_EVTQ_END)
+        postAtEnd = -1;
+    
+    for (node = &evtq->allocList; node != 0; node = node->next) {
+        if (!node->next) { /* end of the list */
+            if (postAtEnd)
+                item->delta = 0;
+            else
+                item->delta = delta;
+            alLink((ALLink *)item, node);
+            break;
+        } else {
+            nextItem = (ALEventListItem *)node->next;
+
+            if (delta < nextItem->delta) {
+                item->delta = delta;
+                nextItem->delta -= delta;
+                    
+                alLink((ALLink *)item, node);
+                break;
+            }
+                
+            delta -= nextItem->delta;
+
+        }
+    }
+
+    osSetIntMask(mask);
+    
+}
+#endif
 
 ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt) 
 {
