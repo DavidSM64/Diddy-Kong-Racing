@@ -3,11 +3,22 @@
 
 #include "types.h"
 #include "macros.h"
+#include "audio_internal.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/func_800C7AA0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/func_800C7B40.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqSetLoc.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqGetLoc.s")
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/__getTrackByte.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/__readVarLen.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/__alCSeqGetTrackEvent.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/func_800C7FFC.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqNew.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqNewMarker.s")
+
+s32 alCSeqGetTicks(ALCSeq *seq)
+{
+    return seq->lastTicks; 
+}
+
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/func_800C8284.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/func_800C8380.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/__alCSeqNextDelta.s")

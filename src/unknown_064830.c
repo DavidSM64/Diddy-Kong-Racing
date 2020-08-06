@@ -4,6 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
+#include "audio_internal.h"
 
 extern s32 alAuxBusPull;
 extern s32 alAuxBusParam;
@@ -20,151 +21,211 @@ extern s32 alSavePull;
 
 GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxPull.s")
 
-s32 alFxParam(s32* arg0, s32 arg1, s32 arg2) {
-    if (arg1 == 1) {
-        *arg0 = arg2;
+s32 alFxParam(void* filter, s32 paramID, void* param) {
+    if (paramID == 1) {
+        ((ALFilter *)filter)->source = param;
     }
     return 0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxParamHdl.s")
 GLOBAL_ASM("asm/non_matchings/unknown_064830/_loadOutputBuffer.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/_loadBuffer.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/_saveBuffer.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/_filterBuffer.s")
+
+
+/* 
+ * This routine is for loading data from the delay line buff. If the
+ * address of curr_ptr < r->base, it will force it to be within r->base
+ * space, If the load goes past the end of r->base it will wrap around.
+ * Cause count bytes of data at curr_ptr (within the delay line) to be
+ * loaded into buff. (Buff is a dmem buffer)
+ */
+Acmd *_loadBuffer(ALFx *r, s16 *curr_ptr, s32 buff, s32 count, Acmd *p)
+{
+    Acmd    *ptr = p;
+    s32     after_end, before_end;
+    s16     *updated_ptr, *delay_end;
+
+#ifdef AUD_PROFILE
+    lastCnt[++cnt_index] = osGetCount();
+#endif
+
+    delay_end = &r->base[r->length];
+
+#ifdef _DEBUG
+    if(curr_ptr > delay_end)
+        __osError(ERR_ALMODDELAYOVERFLOW, 1, delay_end - curr_ptr);
+#endif
+
+    if (curr_ptr < r->base)
+    curr_ptr += r->length;
+    updated_ptr = curr_ptr + count;
+    
+    if (updated_ptr > delay_end) {
+        after_end = updated_ptr - delay_end;
+        before_end = delay_end - curr_ptr;
+        
+        aSetBuffer(ptr++, 0, buff, 0, before_end<<1);
+        aLoadBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+        aSetBuffer(ptr++, 0, buff+(before_end<<1), 0, after_end<<1);
+        aLoadBuffer(ptr++, osVirtualToPhysical(r->base));
+    } else {
+        aSetBuffer(ptr++, 0, buff, 0, count<<1);
+        aLoadBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+    }
+
+    aSetBuffer(ptr++, 0, 0, 0, count<<1);
+
+#ifdef AUD_PROFILE
+    PROFILE_AUD(load_num, load_cnt, load_max, load_min);
+#endif
+    return ptr;
+
+}
+
+/*
+ * This routine is for writing data to the delay line buff. If the
+ * address of curr_ptr < r->base, it will force it to be within r->base
+ * space. If the write goes past the end of r->base, it will wrap around
+ * Cause count bytes of data at buff to be written to delay line, curr_ptr.
+ */
+Acmd *_saveBuffer(ALFx *r, s16 *curr_ptr, s32 buff, s32 count, Acmd *p)
+{
+    Acmd    *ptr = p;
+    s32     after_end, before_end;
+    s16     *updated_ptr, *delay_end;
+
+#ifdef AUD_PROFILE
+    lastCnt[++cnt_index] = osGetCount();
+#endif
+
+    delay_end = &r->base[r->length];
+    if (curr_ptr < r->base)      /* probably just security */
+        curr_ptr += r->length;   /* shouldn't occur */
+    updated_ptr = curr_ptr + count;
+
+    if (updated_ptr > delay_end) { /* if the data wraps past end of r->base */
+        after_end = updated_ptr - delay_end;
+        before_end = delay_end - curr_ptr;
+
+        aSetBuffer(ptr++, 0, 0, buff, before_end<<1);
+        aSaveBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+        aSetBuffer(ptr++, 0, 0, buff+(before_end<<1), after_end<<1);
+        aSaveBuffer(ptr++, osVirtualToPhysical(r->base));
+        aSetBuffer(ptr++, 0, 0, 0, count<<1);
+    } else {
+        aSetBuffer(ptr++, 0, 0, buff, count<<1);
+        aSaveBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+    }
+
+#ifdef AUD_PROFILE
+    PROFILE_AUD(save_num, save_cnt, save_max, save_min);
+#endif
+    return ptr;
+
+}
+
+Acmd *_filterBuffer(ALLowPass *lp, s32 buff, s32 count, Acmd *p)
+{
+    Acmd	*ptr = p;
+
+    aSetBuffer(ptr++, 0, buff, buff, count<<1);
+    aLoadADPCM(ptr++, 32, osVirtualToPhysical(lp->fcvec.fccoef));
+    aPoleFilter(ptr++, lp->first, lp->fgain, osVirtualToPhysical(lp->fstate));
+    lp->first = 0;
+
+    return ptr;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_064830/_doModFunc.s")
 GLOBAL_ASM("asm/non_matchings/unknown_064830/func_8006492C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/init_lpfilter.s")
+
+#define	SCALE 16384
+
+void init_lpfilter(ALLowPass *lp)
+{
+    s32		i, temp;
+    s16		fc;
+    f64		ffc, fcoef;
+
+    temp = lp->fc * SCALE;
+    fc = temp >> 15;
+    lp->fgain = SCALE - fc;
+
+    lp->first = 1;
+    for (i=0; i<8; i++)
+	lp->fcvec.fccoef[i] = 0;
+    
+    lp->fcvec.fccoef[i++] = fc;
+    fcoef = ffc = (f64)fc/SCALE;
+
+    for (; i<16; i++){
+	fcoef *= ffc;
+	lp->fcvec.fccoef[i] = (s16)(fcoef * SCALE);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxNew.s")
 
-typedef struct unk80064E54 {
-    u8  unk00[0x14]; // unknown
-    s32 unk14;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    s16 unk28;
-    u8  unk2A[0x04]; // unknown
-    s16 unk2E;
-    s32 unk30;
-    s32 unk34;
-    s32 unk38;
-    s32 unk3C;
-    s32 unk40;
-    s32 unk44;
-    s32 unk48;
-} unk80064E54;
-
-void alEnvmixerNew(unk80064E54* arg0, s32 arg1) {
-    alFilterNew(arg0, &alEnvMixerPull, &alEnvmixerParam, 4);
-    arg0->unk14 = alHeapDBAlloc(0, 0, arg1, 1, 0x50);
-    arg0->unk38 = 1;
-    arg0->unk48 = 0;
-    arg0->unk1A = 1;
-    arg0->unk28 = 1;
-    arg0->unk2E = 1;
-    arg0->unk1C = 1;
-    arg0->unk1E = 1;
-    arg0->unk20 = 0;
-    arg0->unk22 = 0;
-    arg0->unk26 = 1;
-    arg0->unk24 = 0;
-    arg0->unk30 = 0;
-    arg0->unk34 = 0;
-    arg0->unk18 = 0;
-    arg0->unk3C = 0;
-    arg0->unk40 = 0;
-    arg0->unk44 = 0;
+void alEnvmixerNew(ALEnvMixer* e, s32 arg1) {
+    alFilterNew(e, &alEnvMixerPull, &alEnvmixerParam, 4);
+    e->state = alHeapDBAlloc(0, 0, arg1, 1, 0x50);
+    e->first = 1;
+    e->motion = AL_STOPPED;
+    e->volume = 1;
+    e->ltgt = 1;
+    e->rtgt = 1;
+    e->cvolL = 1;
+    e->cvolR = 1;
+    e->dryamt = 0;
+    e->wetamt = 0;
+    e->lratm = 1;
+    e->lratl = 0;
+    e->delta = 0;
+    e->segEnd = 0;
+    e->pan = 0;
+    e->ctrlList = 0;
+    e->ctrlTail = 0;
+    e->sources = 0;
 }
 
-typedef struct ALFilter_s {
-    u8  unk00[0x14]; // unknown
-    s32 unk14;
-    s32 unk18;
-    u8  unk1C[0x14]; // unknown
-    s32 unk30;
-    s32 unk34;
-    u8  unk38[0x04]; // unknown
-    s32 unk3C;
-    s32 unk40;
-    s32 unk44;
-} ALFilter;
-
-void alLoadNew(ALFilter* arg0, s32 (*arg1)(s32*), s32 arg2) {
+void alLoadNew(ALLoadFilter* arg0, s32 (*arg1)(s32*), s32 arg2) {
     alFilterNew(arg0, &alLoadPull, &alLoadParam, 0);
-    arg0->unk14 = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
-    arg0->unk18 = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
-    arg0->unk30 = arg1(&arg0->unk34);
-    arg0->unk3C = 0;
-    arg0->unk40 = 1;
-    arg0->unk44 = 0;
+    arg0->state = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
+    arg0->lstate = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
+    arg0->dma = arg1(&arg0->dmaState);
+    arg0->lastsam = 0;
+    arg0->first = 1;
+    arg0->memin = 0;
 }
 
-typedef struct unk80064F9C {
-    u8  unk00[0x14]; // unknown
-    s32 unk14;
-    f32 unk18;
-    s32 unk1C;
-    f32 unk20;
-    s32 unk24;
-    s32 unk28;
-    s32 unk2C;
-    s32 unk30;
-} unk80064F9C;
-
-void alResampleNew(unk80064F9C* arg0, s32 arg1) {
-    alFilterNew(arg0, &alResamplePull, &alResampleParam, 1);
-    arg0->unk14 = alHeapDBAlloc(0, 0, arg1, 1, 0x20);
-    arg0->unk24 = 1;
-    arg0->unk30 = 0;
-    arg0->unk1C = 0;
-    arg0->unk28 = 0;
-    arg0->unk2C = 0;
-    arg0->unk20 = 0.0f;
-    arg0->unk18 = 1.0f;
+void alResampleNew(ALResampler* r, ALHeap* hp) {
+    alFilterNew(r, &alResamplePull, &alResampleParam, 1);
+    r->state = alHeapDBAlloc(0, 0, hp, 1, 0x20);
+    r->first = 1;
+    r->motion = AL_STOPPED;
+    r->upitch = 0;
+    r->ctrlList = 0;
+    r->ctrlTail = 0;
+    r->delta = 0.0f;
+    r->ratio = 1.0f;
 }
 
-typedef struct unk80065024 {
-    u8  unk00[0x14]; // unknown
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-} unk80065024;
-
-void alAuxBusNew(unk80065024* arg0, s32 arg1, s32 arg2) {
-    alFilterNew(arg0, &alAuxBusPull, &alAuxBusParam, 6);
-    arg0->unk14 = 0;
-    arg0->unk18 = arg2;
-    arg0->unk1C = arg1;
+void alAuxBusNew(ALAuxBus* m, void* sources, s32 maxSources) {
+    alFilterNew(m, &alAuxBusPull, &alAuxBusParam, 6);
+    m->sourceCount = 0;
+    m->maxSources = maxSources;
+    m->sources = sources;
 }
 
-typedef struct unk80065084 {
-    u8  unk00[0x14]; // unknown
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-} unk80065084;
-
-void alMainBusNew(unk80065084* arg0, s32 arg1, s32 arg2) {
-    alFilterNew(arg0, &alMainBusPull, &alMainBusParam, 7);
-    arg0->unk14 = 0;
-    arg0->unk18 = arg2;
-    arg0->unk1C = arg1;
+void alMainBusNew(ALMainBus* m, void* sources, s32 maxSources) {
+    alFilterNew(m, &alMainBusPull, &alMainBusParam, 7);
+    m->sourceCount = 0;
+    m->maxSources = maxSources;
+    m->sources = sources;
 }
 
-typedef struct unk800650E4 {
-    u8  unk00[0x14]; // unknown
-    s32 unk14;
-    s32 unk18;
-} unk800650E4;
-
-void alSaveNew(unk800650E4* arg0) {
-    alFilterNew(arg0, &alSavePull, &alSaveParam, 3);
-    arg0->unk14 = 0;
-    arg0->unk18 = 1;
+void alSaveNew(ALSave* f) {
+    alFilterNew(f, &alSavePull, &alSaveParam, AL_SAVE);
+    f->dramout = 0;
+    f->first = 1;
 }

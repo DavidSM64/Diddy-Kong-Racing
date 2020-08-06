@@ -1,4 +1,4 @@
-glabel func_800C85A0
+glabel alCSPPlay
 /* 0C91A0 800C85A0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C91A4 800C85A4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C91A8 800C85A8 240E000F */  li    $t6, 15

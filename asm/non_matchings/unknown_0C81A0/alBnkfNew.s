@@ -1,4 +1,4 @@
-glabel func_800C76A4
+glabel alBnkfNew
 /* 0C82A4 800C76A4 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0C82A8 800C76A8 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 0C82AC 800C76AC AFB40028 */  sw    $s4, 0x28($sp)
@@ -32,7 +32,7 @@ glabel func_800C76A4
 /* 0C8318 800C7718 00502021 */   addu  $a0, $v0, $s0
 /* 0C831C 800C771C AF240008 */  sw    $a0, 8($t9)
 /* 0C8320 800C7720 02002825 */  move  $a1, $s0
-/* 0C8324 800C7724 0C031D6C */  jal   func_800C75B0
+/* 0C8324 800C7724 0C031D6C */  jal   _bnkfPatchBank
 /* 0C8328 800C7728 02203825 */   move  $a3, $s1
 .L800C772C:
 /* 0C832C 800C772C 85B80000 */  lh    $t8, ($t5)
@@ -45,7 +45,7 @@ glabel func_800C76A4
 /* 0C8344 800C7744 03302021 */  addu  $a0, $t9, $s0
 /* 0C8348 800C7748 10800003 */  beqz  $a0, .L800C7758
 /* 0C834C 800C774C AD64000C */   sw    $a0, 0xc($t3)
-/* 0C8350 800C7750 0C031D6C */  jal   func_800C75B0
+/* 0C8350 800C7750 0C031D6C */  jal   _bnkfPatchBank
 /* 0C8354 800C7754 02203825 */   move  $a3, $s1
 .L800C7758:
 /* 0C8358 800C7758 85AF0000 */  lh    $t7, ($t5)

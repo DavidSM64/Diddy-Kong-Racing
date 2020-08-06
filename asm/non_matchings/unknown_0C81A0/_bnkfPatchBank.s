@@ -1,4 +1,4 @@
-glabel func_800C75B0
+glabel _bnkfPatchBank
 /* 0C81B0 800C75B0 908E0003 */  lbu   $t6, 3($a0)
 /* 0C81B4 800C75B4 15C00037 */  bnez  $t6, .L800C7694
 /* 0C81B8 800C75B8 00000000 */   nop   
