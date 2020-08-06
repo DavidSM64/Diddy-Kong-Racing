@@ -1,4 +1,4 @@
-glabel func_800C7AA0
+glabel alCSeqSetLoc
 /* 0C86A0 800C7AA0 8C8E0004 */  lw    $t6, 4($a0)
 /* 0C86A4 800C7AA4 00803025 */  move  $a2, $a0
 /* 0C86A8 800C7AA8 00804025 */  move  $t0, $a0

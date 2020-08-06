@@ -1,4 +1,4 @@
-glabel func_800C7A60
+glabel alCSPSetBank
 /* 0C8660 800C7A60 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C8664 800C7A64 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C8668 800C7A68 240E000E */  li    $t6, 14

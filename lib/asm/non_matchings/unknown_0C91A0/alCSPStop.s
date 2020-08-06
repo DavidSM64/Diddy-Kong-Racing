@@ -1,4 +1,4 @@
-glabel func_800C85D0
+glabel alCSPStop
 /* 0C91D0 800C85D0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C91D4 800C85D4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C91D8 800C85D8 240E0011 */  li    $t6, 17

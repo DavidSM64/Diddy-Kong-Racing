@@ -205,7 +205,6 @@ s32 _allocatePVoice(ALSynth *drvr, PVoice **pvoice, s16 priority)
 }
 #endif
 
-//GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alSynAllocVoice.s")
 s32 alSynAllocVoice(ALSynth *drvr, ALVoice *voice, ALVoiceConfig *vc)
 {
     PVoice  *pvoice = 0;

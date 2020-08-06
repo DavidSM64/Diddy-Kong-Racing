@@ -5,8 +5,8 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C85A0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C85D0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/alCSPPlay.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/alCSPStop.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/func_800C8600.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/alUnlink.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/alLink.s")
