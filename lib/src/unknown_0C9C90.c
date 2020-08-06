@@ -110,8 +110,7 @@ void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta)
 }
 #endif
 
-ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt) 
-{
+ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt) {
     ALEventListItem *item;
     ALMicroTime delta;
     OSIntMask mask;
@@ -144,8 +143,7 @@ ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt)
 }
 
 
-void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount)
-{
+void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount){
     s32 i;
     
     evtq->eventCount     = 0;
@@ -159,6 +157,17 @@ void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount)
     }
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alSynAddPlayer.s")
+//GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alSynAddPlayer.s")
+void alSynAddPlayer(ALSynth *drvr, ALPlayer *client)
+{
+    OSIntMask mask = osSetIntMask(OS_IM_NONE);
+
+    client->samplesLeft = drvr->curSamples;
+    client->next = drvr->head;
+    drvr->head   = client;
+
+    osSetIntMask(mask);
+}
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/_allocatePVoice.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alSynAllocVoice.s")
