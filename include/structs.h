@@ -36,7 +36,7 @@ typedef struct Racer {
   /* 0x00 */ u32 trophy_points;
   /* 0x04 */ u8 best_times;
   /* 0x05 */ u8 character;
-  /* 0x06 */ u8 starting_position;
+  /* 0x06 */ s8 starting_position;
   /* 0x07 */ char unk7;
   /* 0x08 */ u16 placements[4];
   /* 0x10 */ u16 course_time;
@@ -60,6 +60,25 @@ typedef struct Settings {
   /* 0x000C */ u16 bosses;
   /* 0x000E */ u16 trophies;
   /* 0x0010 */ u32 cutsceneFlags;
+  /* Cutscene flags:
+   * 0x1     = Lighthouse rocket cutscene
+   * 0x2     = T.T. help prompt
+   * 0x4     = Adventure 2 flag?
+   * 0x8     = Dino domain boss cutscene
+   * 0x10    = Sherbet island boss cutscene
+   * 0x20    = Snowflake mountain boss cutscene
+   * 0x40    = Dragon forest boss cutscene
+   * 0x80    = Future Fun Land boss cutscene
+   * 0x100   = Dino domain boss cutscene 2
+   * 0x200   = Shertbet island boss cutscene 2
+   * 0x400   = Snowflake mountain boss cutscene 2
+   * 0x800   = Dragon forest boss cutscene 2
+   * 0x2000  = Wizpig face cutscene
+   * 0x4000  = Dino domain key cutscene
+   * 0x8000  = Sherbet Island key cutscene
+   * 0x10000 = Snowflake mountain key cutscene
+   * 0x20000 = Dragon forest key cutscene
+   */
   /* 0x0014 */ u16 tajFlags;
   /* 0x0016 */ u8 ttAmulet;
   /* 0x0017 */ u8 wizpigAmulet;
@@ -75,7 +94,7 @@ typedef struct Settings {
   /* 0x0050 */ u32 filename;
   /* 0x0054 */ Racer racers[8];
   /* 0x0114 */ u8 timeTrialRacer;
-  /* 0x0115 */ char unk0115[2];
+  /* 0x0115 */ char unk115[2];
   /* 0x0117 */ u8 display_times;
   /* 0x0118 */ u32 courseFlags[65];
   /* 0x021C */ u16 balloons;
@@ -87,58 +106,76 @@ typedef struct Settings {
 } Settings;
 
 /* Size: 0xC8 bytes */
-typedef struct {
-  /* 0x00 */ u8 world;
-  
+typedef struct LevelHeader {
+  /* 0x00 */ s8 world;
   /* 0x01 */ u8 unk1;
   /* 0x02 */ u8 unk2;
   /* 0x03 */ u8 unk3;
-  /* 0x04 */ u8 unk4;
-  /* 0x05 */ u8 unk5;
-  /* 0x06 */ u8 unk6;
-  /* 0x07 */ u8 unk7;
+  /* 0x04 */ u8 unk4[4];
              
   /* 0x08 */ f32 course_height;
   
-  u32 unkC[10]; // Not an array. Unknown values.
-
-  /* 0x34 */ u16 geometry;
-  /* 0x36 */ u16 collectables; // Objects such as bananas, balloons, etc.
-  /* 0x38 */ u16 skybox;
+  /* 0x0C */ u8 padC[0x14];
   
-  /* 0x3A */ u16 unk3A;
-  /* 0x3C */ u16 unk3C;
+  /* 0x20 */ s32 *unk20;
+  
+  /* 0x24 */ u8 pad24[0x10];
 
-  /* 0x3E */ u16 r; // Fog related
-  /* 0x40 */ u16 g;
-  /* 0x42 */ u16 b;
+  /* 0x34 */ s16 geometry;
+  /* 0x36 */ s16 collectables; // Objects such as bananas, balloons, etc.
+  /* 0x38 */ s16 skybox;
+  
+  // Fog related?
+  /* 0x3A */ s16 unk3A;
+  /* 0x3C */ s16 unk3C;
+  /* 0x3E */ s16 fogR; 
+  /* 0x40 */ s16 fogG;
+  /* 0x42 */ s16 fogB;
+  
+  /* 0x44 */ u8 unk44[0x5];
 
+  /* 0x49 */ s8 unk49;
+  /* 0x4A */ u8 unk4A;
   /* 0x4B */ u8 laps;
-  /* 0x4C */ u8 race_type;
+  /* 0x4C */ s8 race_type;
   /* 0x4D */ u8 vehicle;
   /* 0x4E */ u8 available_vehicles;
 
-  /* 0x4F */ u8 unk4F;
-  /* 0x50 */ u8 unk50;
-  /* 0x51 */ u8 unk51;
+  /* 0x4F */ u8 unk4F[3];
   
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
   
-  u32 unk58[14]; // Not an array. Unknown values.
+  /* 0x56 */ u8 pad56[0x1E];
+  
+  /* 0x74 */ s8 *unk74[7];
 
   // Weather related?
-  /* 0x90 */ u16 weather_enable;
-  /* 0x92 */ u16 unk92;
+  /* 0x90 */ s16 weather_enable;
+  /* 0x92 */ s16 unk92;
   /* 0x94 */ u8 unk94;
   /* 0x95 */ u8 unk95;
-  /* 0x96 */ u16 unk96;
-  /* 0x98 */ u16 unk98;
+  /* 0x96 */ s16 unk96;
+  /* 0x98 */ s16 unk98;
+  /* 0x9A */ s16 unk9A;
   
-  u32 unk9C[11]; // Not an array. Unknown values.
-
-} dkr_level_header_t;
+  /* 0x9C */ s8 unk9C;
+  /* 0x9D */ u8 unk9D;
+  /* 0x9E */ u8 unk9E;
+  /* 0x9F */ u8 unk9F;
+  /* 0xA0 */ s32 unkA0;
+  /* 0xA4 */ s32 unkA4;
+  /* 0xA8 */ u16 unkA8;
+  /* 0xAA */ u16 unkAA;
+  /* 0xAC */ s8 *unkAC;
+  
+  /* 0xB0 */ u8 padB0[0x3];
+  /* 0xB3 */ u8 unkB3;
+  /* 0xB4 */ u8 padB4[0x6];
+  /* 0xBA */ s16 unkBA;
+  /* 0xBE */ u8 padBE[0xA];
+} LevelHeader;
 
 /* Size: 0x50 bytes */
 typedef struct {
