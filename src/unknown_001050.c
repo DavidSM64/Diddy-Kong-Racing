@@ -518,16 +518,13 @@ void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-#if 0
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800021B0.s")
-#else
 u8 func_800021B0(u16 arg0){
     if(arg0 <= 0 || D_80115D14->bankArray[0]->instArray[0]->soundCount < arg0){
         return 0;
     }
     return ((u32)(1+ D_80115D14->bankArray[0]->instArray[0]->soundArray[arg0-1]->envelope->decayTime) == 0);
 }
-#endif
+
 
 #if 0
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80002224.s")
