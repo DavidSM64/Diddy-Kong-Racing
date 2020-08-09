@@ -318,7 +318,42 @@ void func_800012E8(void){
     return;
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001358.s")
+#else
+void func_80001358(u8 arg0, u8 arg1, u32 arg2){
+    s8 updatedVol;
+    if(arg0 != 100){
+        
+        updatedVol = arg2 + alCSPGetChlVol(gMusicPlayer,arg0);
+        if(updatedVol < 0){
+            updatedVol = 127;
+        }
+        alCSPSetChlVol(gMusicPlayer,arg0, updatedVol);
+    }
+    if(arg1 != 100){
+        updatedVol = alCSPGetChlVol(gMusicPlayer,arg1) - arg2;
+        if(updatedVol < 0){
+            updatedVol = 0;
+        }
+        alCSPSetChlVol(gMusicPlayer,arg1, updatedVol);
+    }
+    return;
+}
+#endif
+
+u8 func_800C79C0(ALCSPlayer*, u8);
+//GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001440.s")
+void func_80001440(u8 *arg0){
+    s32 s0 = 0;
+    if(gMusicPlayer->maxChannels > 0){
+        do{
+            arg0[s0] = func_800C79C0(gMusicPlayer, s0);
+            s0++;
+        }while(s0 < gMusicPlayer->maxChannels);
+    }
+    return;
+}
 
 s16 func_800015B8(void);
 
