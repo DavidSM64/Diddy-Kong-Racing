@@ -387,7 +387,22 @@ void func_80001844(void){
     return;
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001878.s")
+#else
+void func_80001878(u8 arg0){
+    if(arg0 != D_800DC640){
+        D_800DC640 = arg0;
+        if(arg0 != 0){
+            func_80000B34(D_80115D04);
+        }
+        else{
+            func_80001844();
+        }
+    }
+    return;
+}
+#endif
 
 u8 func_800018D0(void){
     return D_800DC640;
@@ -459,16 +474,13 @@ u32 func_80001C08(void){
     return 0;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001C5C.s")
-#else
-void func_80001C5C(u32 arg0){
+void func_80001C5C(u16 arg0){
     u32 s0;
     for(s0 = 0; s0<64; s0++){
         func_80004A60(s0, arg0 << 8);
     }
 }
-#endif
+
 
 u16 func_80001CB8(u16 arg0) {
     if (D_80115D20 < arg0) {
