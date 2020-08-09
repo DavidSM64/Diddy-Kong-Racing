@@ -161,9 +161,9 @@ glabel osInitialize
 /* 0CD3FC 800CC7FC AFAB0034 */   sw    $t3, 0x34($sp)
 /* 0CD400 800CC800 240D0001 */  li    $t5, 1
 /* 0CD404 800CC804 3C01800E */  lui   $at, %hi(D_800E38B0) # $at, 0x800e
-/* 0CD408 800CC808 3C05800C */  lui   $a1, %hi(D_800C7340) # $a1, 0x800c
+/* 0CD408 800CC808 3C05800C */  lui   $a1, %hi(func_800C7340) # $a1, 0x800c
 /* 0CD40C 800CC80C AC2D38B0 */  sw    $t5, %lo(D_800E38B0)($at)
-/* 0CD410 800CC810 24A57340 */  addiu $a1, %lo(D_800C7340) # addiu $a1, $a1, 0x7340
+/* 0CD410 800CC810 24A57340 */  addiu $a1, %lo(func_800C7340) # addiu $a1, $a1, 0x7340
 /* 0CD414 800CC814 0C0351FC */  jal   func_800D47F0
 /* 0CD418 800CC818 24040001 */   li    $a0, 1
 /* 0CD41C 800CC81C 10000003 */  b     .L800CC82C
