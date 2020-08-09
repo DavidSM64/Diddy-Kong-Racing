@@ -222,7 +222,8 @@ u16 musicGetChanMask(void) {
 }
 void func_80001114(u8 arg0);
 void func_80001170(u8 arg0);
-//GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001074.s")
+
+
 void func_80001074(u16 arg0){
     u32 s0;
     if(D_800DC65C){
@@ -375,7 +376,13 @@ void sfxSetRelativeVolume(u8 arg0) {
     alCSPSetVol(gSndFxPlayer, (s16) (sfxVolumeSliderPercentage() * D_800DC63C));
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001B58.s")
+void sfxSetPan(ALPan pan){
+    u32 iChan;
+    for(iChan = 0; iChan < 16; iChan++){
+        alCSPSetChlPan(gSndFxPlayer, iChan, pan);
+    }
+    return;
+}
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001BC0.s")
 
