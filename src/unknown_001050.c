@@ -27,6 +27,7 @@ extern ALCSPlayer* gSndFxPlayer;
 extern u8  D_800DC638;
 extern u8  D_800DC63C;
 extern u8  D_800DC640;
+extern u8  D_800DC644;
 extern s32 D_800DC648;
 extern s32 D_800DC64C;
 extern f32 D_800DC650;
@@ -330,6 +331,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800017D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001844.s")
 
 void func_80002570(ALCSPlayer* arg0);
+u32 func_80001C08(void);
 
 void func_800018E0(void) {
     if (func_80001C08() == 0) {
@@ -386,7 +388,15 @@ void sfxSetPan(ALPan pan){
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001BC0.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001C08.s")
+u32 func_80001C08(void){
+    if(D_80115D05 && D_800DC644 && (gSndFxPlayer->state == AL_PLAYING) ){
+        return D_80115D05;
+    }
+    D_800DC644 = 0;
+    return 0;
+}
+
+GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001C5C.s")
 
 u16 func_80001CB8(u16 arg0) {
     if (D_80115D20 < arg0) {
