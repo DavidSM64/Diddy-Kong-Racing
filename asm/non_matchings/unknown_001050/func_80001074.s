@@ -14,8 +14,8 @@ glabel func_80001074
 /* 001CA4 800010A4 10000015 */  b     .L800010FC
 /* 001CA8 800010A8 AC2E5F7C */   sw    $t6, %lo(D_80115F7C)($at)
 .L800010AC:
-/* 001CAC 800010AC 3C18800E */  lui   $t8, %hi(D_800DC630) # $t8, 0x800e
-/* 001CB0 800010B0 8F18C630 */  lw    $t8, %lo(D_800DC630)($t8)
+/* 001CAC 800010AC 3C18800E */  lui   $t8, %hi(gMusicPlayer) # $t8, 0x800e
+/* 001CB0 800010B0 8F18C630 */  lw    $t8, %lo(gMusicPlayer)($t8)
 /* 001CB4 800010B4 00008025 */  move  $s0, $zero
 /* 001CB8 800010B8 00808825 */  move  $s1, $a0
 /* 001CBC 800010BC 24120010 */  li    $s2, 16

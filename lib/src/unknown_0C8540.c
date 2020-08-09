@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8540/func_800C7940.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8540/alCSPSetChlVol.s")

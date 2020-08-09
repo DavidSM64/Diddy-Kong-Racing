@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
-
+#include "audio_internal.h"
 /* Size: 0x14 bytes */
 typedef struct unk80063C00 {
     u32 unk00;
@@ -24,4 +24,5 @@ typedef struct unk80063C00_2 {
 
 u8 func_80063C00(unk80063C00_2 *arg0, u8 arg1) {
     return arg0->unk60[arg1].unk10;
+    //return seqp->chanState[chan].unk10???
 }

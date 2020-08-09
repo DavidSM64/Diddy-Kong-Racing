@@ -1,4 +1,4 @@
-glabel func_800C7940
+glabel alCSPSetChlVol
 /* 0C8540 800C7940 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C8544 800C7944 00A03825 */  move  $a3, $a1
 /* 0C8548 800C7948 AFBF0014 */  sw    $ra, 0x14($sp)

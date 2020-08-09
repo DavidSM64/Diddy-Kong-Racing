@@ -1,4 +1,4 @@
-glabel func_800C7890
+glabel alCSPGetTempo
 /* 0C8490 800C7890 8C830018 */  lw    $v1, 0x18($a0)
 /* 0C8494 800C7894 54600004 */  bnezl $v1, .L800C78A8
 /* 0C8498 800C7898 8C8E0024 */   lw    $t6, 0x24($a0)

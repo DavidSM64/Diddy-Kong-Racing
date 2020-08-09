@@ -1,4 +1,4 @@
-glabel func_800C7A50
+glabel alCSPGetState
 /* 0C8650 800C7A50 03E00008 */  jr    $ra
 /* 0C8654 800C7A54 8C82002C */   lw    $v0, 0x2c($a0)
 

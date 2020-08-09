@@ -136,8 +136,8 @@ glabel func_80000D00
 /* 001AF4 80000EF4 1420FFDE */  bnez  $at, .L80000E70
 /* 001AF8 80000EF8 00000000 */   nop   
 .L80000EFC:
-/* 001AFC 80000EFC 3C10800E */  lui   $s0, %hi(D_800DC630) # $s0, 0x800e
-/* 001B00 80000F00 2610C630 */  addiu $s0, %lo(D_800DC630) # addiu $s0, $s0, -0x39d0
+/* 001AFC 80000EFC 3C10800E */  lui   $s0, %hi(gMusicPlayer) # $s0, 0x800e
+/* 001B00 80000F00 2610C630 */  addiu $s0, %lo(gMusicPlayer) # addiu $s0, $s0, -0x39d0
 /* 001B04 80000F04 3C058011 */  lui   $a1, %hi(D_80115CFC) # $a1, 0x8011
 /* 001B08 80000F08 8CA55CFC */  lw    $a1, %lo(D_80115CFC)($a1)
 /* 001B0C 80000F0C 8E040000 */  lw    $a0, ($s0)
@@ -146,10 +146,10 @@ glabel func_80000D00
 /* 001B18 80000F18 24E75D88 */  addiu $a3, %lo(D_80115D88) # addiu $a3, $a3, 0x5d88
 /* 001B1C 80000F1C 0C0008CB */  jal   func_8000232C
 /* 001B20 80000F20 24C6C65C */   addiu $a2, %lo(D_800DC65C) # addiu $a2, $a2, -0x39a4
-/* 001B24 80000F24 3C04800E */  lui   $a0, %hi(D_800DC634) # $a0, 0x800e
+/* 001B24 80000F24 3C04800E */  lui   $a0, %hi(gSndFxPlayer) # $a0, 0x800e
 /* 001B28 80000F28 3C058011 */  lui   $a1, %hi(D_80115D00) # $a1, 0x8011
 /* 001B2C 80000F2C 8CA55D00 */  lw    $a1, %lo(D_80115D00)($a1)
-/* 001B30 80000F30 8C84C634 */  lw    $a0, %lo(D_800DC634)($a0)
+/* 001B30 80000F30 8C84C634 */  lw    $a0, %lo(gSndFxPlayer)($a0)
 /* 001B34 80000F34 3C06800E */  lui   $a2, %hi(D_800DC660) # $a2, 0x800e
 /* 001B38 80000F38 3C078011 */  lui   $a3, %hi(D_80115E80) # $a3, 0x8011
 /* 001B3C 80000F3C 24E75E80 */  addiu $a3, %lo(D_80115E80) # addiu $a3, $a3, 0x5e80
@@ -167,7 +167,7 @@ glabel func_80000D00
 /* 001B6C 80000F6C 00000000 */  nop   
 /* 001B70 80000F70 11200013 */  beqz  $t1, .L80000FC0
 /* 001B74 80000F74 8FBF002C */   lw    $ra, 0x2c($sp)
-/* 001B78 80000F78 0C031E24 */  jal   func_800C7890
+/* 001B78 80000F78 0C031E24 */  jal   alCSPGetTempo
 /* 001B7C 80000F7C 00000000 */   nop   
 /* 001B80 80000F80 3C0A0393 */  lui   $t2, (0x03938700 >> 16) # lui $t2, 0x393
 /* 001B84 80000F84 354A8700 */  ori   $t2, (0x03938700 & 0xFFFF) # ori $t2, $t2, 0x8700

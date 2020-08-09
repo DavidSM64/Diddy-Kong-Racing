@@ -6,10 +6,10 @@
     .balign 4
 .endm
 
-glabel D_800DC630
+glabel gMusicPlayer
 .word 0x00000000
 
-glabel D_800DC634
+glabel gSndFxPlayer
 .word 0x00000000
 
 glabel D_800DC638
