@@ -343,7 +343,7 @@ void func_80001358(u8 arg0, u8 arg1, u32 arg2){
 #endif
 
 u8 func_800C79C0(ALCSPlayer*, u8);
-//GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001440.s")
+
 void func_80001440(u8 *arg0){
     s32 s0 = 0;
     if(gMusicPlayer->maxChannels > 0){
