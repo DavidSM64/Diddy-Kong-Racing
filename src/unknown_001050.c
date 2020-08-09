@@ -321,10 +321,10 @@ void func_800012E8(void){
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001358.s")
 #else
-void func_80001358(u8 arg0, u8 arg1, u32 arg2){
-    s8 updatedVol;
-    if(arg0 != 100){
-        
+void func_80001358(u32 arg0, u32 arg1, u32 arg2){
+    u8 updatedVol;
+    //u8 fadeIn_chan = arg0;
+    if(!(arg0 == 100)){
         updatedVol = arg2 + alCSPGetChlVol(gMusicPlayer,arg0);
         if(updatedVol < 0){
             updatedVol = 127;
@@ -387,22 +387,18 @@ void func_80001844(void){
     return;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001878.s")
-#else
-void func_80001878(u8 arg0){
-    if(arg0 != D_800DC640){
+
+void func_80001878(u8 arg0) {
+    if (arg0 != D_800DC640) {
         D_800DC640 = arg0;
-        if(arg0 != 0){
+        if (arg0) {
             func_80000B34(D_80115D04);
-        }
-        else{
+        } else {
             func_80001844();
         }
     }
-    return;
 }
-#endif
+
 
 u8 func_800018D0(void){
     return D_800DC640;
@@ -464,7 +460,9 @@ void sfxSetPan(ALPan pan){
     return;
 }
 
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001BC0.s")
+
 
 u32 func_80001C08(void){
     if(D_80115D05 && D_800DC644 && (gSndFxPlayer->state == AL_PLAYING) ){
