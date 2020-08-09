@@ -342,13 +342,13 @@ void func_80001358(u8 arg0, u8 arg1, u32 arg2){
 }
 #endif
 
-u8 func_800C79C0(ALCSPlayer*, u8);
+u8 alSeqpGetChlFXMix(ALCSPlayer*, u8);
 
 void func_80001440(u8 *arg0){
     s32 s0 = 0;
     if(gMusicPlayer->maxChannels > 0){
         do{
-            arg0[s0] = func_800C79C0(gMusicPlayer, s0);
+            arg0[s0] = alSeqpGetChlFXMix(gMusicPlayer, s0);
             s0++;
         }while(s0 < gMusicPlayer->maxChannels);
     }
@@ -373,12 +373,20 @@ u8 musicIsPlaying(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800015F8.s")
 
+u32 func_80001C08(void);
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001784.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800017D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001844.s")
+GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001878.s")
+//GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800018D0.s")
+
+u8 func_800018D0(void){
+    return D_800DC640;
+}
 
 void func_80002570(ALCSPlayer* arg0);
-u32 func_80001C08(void);
+
 
 void func_800018E0(void) {
     if (func_80001C08() == 0) {

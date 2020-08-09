@@ -1,4 +1,4 @@
-glabel func_800C79C0
+glabel alSeqpGetChlFXMix
 /* 0C85C0 800C79C0 AFA50004 */  sw    $a1, 4($sp)
 /* 0C85C4 800C79C4 8C8F0060 */  lw    $t7, 0x60($a0)
 /* 0C85C8 800C79C8 30AE00FF */  andi  $t6, $a1, 0xff
