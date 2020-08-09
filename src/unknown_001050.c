@@ -377,15 +377,24 @@ u32 func_80001C08(void);
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001784.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800017D4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001844.s")
+//GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001844.s")
+
+void func_80002570(ALCSPlayer* arg0);
+
+void func_80001844(void){
+    if(!D_800DC648){
+        func_80002570(gMusicPlayer);
+    }
+    return;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001878.s")
-//GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800018D0.s")
 
 u8 func_800018D0(void){
     return D_800DC640;
 }
 
-void func_80002570(ALCSPlayer* arg0);
+
 
 
 void func_800018E0(void) {
