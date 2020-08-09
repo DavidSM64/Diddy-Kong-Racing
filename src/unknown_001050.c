@@ -52,25 +52,9 @@ extern u8  D_80115D04;
 extern u8  D_80115D05;
 extern s32 musicTempo;
 
-extern ALBank ** D_80115D10;
+extern ALBankFile *D_80115D10;
 
-
-typedef struct unk80115D14_4_C {
-    u8 pad0[0xE];
-    u16 unkE;
-} unk80115D14_4_C;
-
-typedef struct unk80115D14_4 {
-    u8 pad0[0xC];
-    unk80115D14_4_C* unkC;
-} unk80115D14_4;
-
-typedef struct unk80115D14 {
-    u8 pad0[4];
-    unk80115D14_4* unk4;
-} unk80115D14;
-
-extern unk80115D14 *D_80115D14;
+extern ALBankFile *D_80115D14;
 
 /* Size: 0x0A bytes */
 typedef struct unk80115D18 {
@@ -103,8 +87,21 @@ extern s8  D_80115F78;
 extern s8  D_80115F79;
 extern s32 D_80115F7C;
 
-
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000450.s")
+#else
+void func_80000450(void){
+    u32 *tmp;
+    ALBankFile *tmp2;
+    alHeapInit(&gALHeap, &D_800EBF60, 0x00029D88);
+    tmp = func_80076C58(38);
+    D_80115D14 = (ALBankFile*) func_80070C9C(tmp[2] - tmp[1], 0x00FFFFFF);
+    func_80076E68(39, D_80115D14, tmp[1], tmp[2] - tmp[1]);
+    alBnkfNew(D_80115D14, func_80076EE8(39, tmp[2]));
+}
+
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000890.s")
 
 void func_80004A60(u8, u16);
@@ -399,13 +396,9 @@ void func_80001878(u8 arg0) {
     }
 }
 
-
 u8 func_800018D0(void){
     return D_800DC640;
 }
-
-
-
 
 void func_800018E0(void) {
     if (func_80001C08() == 0) {
@@ -493,7 +486,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001F14.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001FB8.s")
 
 u16 func_800020E8(void) {
-    return D_80115D14->unk4->unkC->unkE;
+    return D_80115D14->bankArray[0]->instArray[0]->soundCount;
 }
 
 u8 func_80002110(void) {
@@ -525,11 +518,16 @@ void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-
-
-
-
+#if 0
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800021B0.s")
+#else
+u8 func_800021B0(u16 arg0){
+    if(arg0 <= 0 || D_80115D14->bankArray[0]->instArray[0]->soundCount < arg0){
+        return 0;
+    }
+    return ((u32)(1+ D_80115D14->bankArray[0]->instArray[0]->soundArray[arg0-1]->envelope->decayTime) == 0);
+}
+#endif
 
 #if 0
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80002224.s")
@@ -553,7 +551,7 @@ ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events){
     
     cseqp = (ALCSPlayer *) alHeapDBAlloc(NULL, 0, &gALHeap, 1, 128);
     alCSPNew(cseqp, &config);
-    alCSPSetBank(cseqp, D_80115D10[1]);
+    alCSPSetBank(cseqp, D_80115D10->bankArray[0]);
     ((u8*) cseqp)[0x36]= 0x7F; //this member doesn't exist in ALCSPlayer 
     return cseqp;
 }
