@@ -107,7 +107,7 @@ extern s32 D_80115F7C;
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000450.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000890.s")
 
-
+void func_80004A60(u8, u16);
 void func_80000968(s32 arg0) {
     switch(arg0) {
         case 1:
@@ -306,7 +306,19 @@ s32 func_800012A8(u8 arg0) {
     return func_80063C00(gMusicPlayer, arg0);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800012E8.s")
+void func_800012E8(void){
+    u32 s0;
+    if(!D_800DC648){
+        for(s0 = 0; s0<16; s0++){
+            func_80001170( s0 );
+            func_80001268( s0, 127 );
+            musicSetChlVol( s0, 127 );
+        }
+    }
+    return;
+}
+
+GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001358.s")
 
 s16 func_800015B8(void);
 
@@ -396,7 +408,16 @@ u32 func_80001C08(void){
     return 0;
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001C5C.s")
+#else
+void func_80001C5C(u32 arg0){
+    u32 s0;
+    for(s0 = 0; s0<64; s0++){
+        func_80004A60(s0, arg0 << 8);
+    }
+}
+#endif
 
 u16 func_80001CB8(u16 arg0) {
     if (D_80115D20 < arg0) {
