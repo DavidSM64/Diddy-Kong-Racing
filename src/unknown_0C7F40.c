@@ -4,4 +4,6 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("asm/non_matchings/unknown_0C7F40/D_800C7340.s")
+s32 func_800C7340(void) {
+    return 0;
+}
