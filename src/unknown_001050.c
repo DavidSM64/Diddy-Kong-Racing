@@ -30,8 +30,9 @@ extern u8  D_800DC640;
 extern s32 D_800DC648;
 extern s32 D_800DC64C;
 extern f32 D_800DC650;
-extern s32 D_800DC654;
+extern s32 musicVolumeSliderPercentage;
 extern s32 D_800DC658;
+extern u8  D_800DC65C;
 extern u8  D_800DC660;
 extern u8  D_800DC670;
 
@@ -48,7 +49,7 @@ extern unk80115CF8 *D_80115CF8;
 
 extern u8  D_80115D04;
 extern u8  D_80115D05;
-extern s32 D_80115D08;
+extern s32 musicTempo;
 
 extern ALBank ** D_80115D10;
 
@@ -105,6 +106,7 @@ extern s32 D_80115F7C;
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000450.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000890.s")
 
+
 void func_80000968(s32 arg0) {
     switch(arg0) {
         case 1:
@@ -112,7 +114,7 @@ void func_80000968(s32 arg0) {
             func_80004A60(1, 0x7FFF);
             func_80004A60(2, 0);
             func_80004A60(4, 0);
-            alCSPSetVol(gMusicPlayer, (s16) (D_800DC638 * D_800DC654 >> 2));
+            alCSPSetVol(gMusicPlayer, (s16) (D_800DC638 * musicVolumeSliderPercentage >> 2));
             alCSPSetVol(gSndFxPlayer, 0);
             break;
         case 2:
@@ -132,7 +134,7 @@ void func_80000968(s32 arg0) {
             func_80004A60(1, 0x7FFF);
             func_80004A60(2, 0x7FFF);
             func_80004A60(4, 0x7FFF);
-            alCSPSetVol(gMusicPlayer, (s16) (D_800DC638 * D_800DC654));
+            alCSPSetVol(gMusicPlayer, (s16) (D_800DC638 * musicVolumeSliderPercentage));
             alCSPSetVol(gSndFxPlayer, (s16) (sfxVolumeSliderPercentage() * D_800DC63C));
             break;
     }
@@ -150,13 +152,13 @@ void func_80000B28(void) {
 void func_800022BC(u8, ALCSPlayer*);
 
 void func_80000B34(u8 arg0) {
-    if (D_800DC648 == 0 && D_800DC654 != 0) {
+    if (D_800DC648 == 0 && musicVolumeSliderPercentage != 0) {
         D_80115D04 = arg0;
         D_800DC638 = 0x7F;
         if (D_800DC640 != 0) {
             func_800022BC(D_80115D04, gMusicPlayer);
         }
-        D_80115D08 = alCSPGetTempo(gMusicPlayer);
+        musicTempo = alCSPGetTempo(gMusicPlayer);
         D_800DC64C = osGetCount();
         D_80115D40 = 1;
         D_80115F7C = -1;
@@ -218,8 +220,29 @@ void func_80001050(void) {
 u16 musicGetChanMask(void) {
     return gMusicPlayer->chanMask;
 }
+void func_80001114(u8 arg0);
+void func_80001170(u8 arg0);
+//GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001074.s")
+void func_80001074(u16 arg0){
+    u32 s0;
+    if(D_800DC65C){
+        D_80115F7C = arg0;
+    }
+    else{
+        gMusicPlayer->chanMask = arg0;
+        for(s0 = 0; s0 != 16; s0++){
+            if(arg0 & (1 << s0)){
+                func_80001170(s0);
+            }
+            else{
+                func_80001114(s0);
+            }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001074.s")
+        }
+
+    }
+    return;
+}
 
 void func_80001114(u8 arg0) {
     if (arg0 < 0x10) {
@@ -227,7 +250,7 @@ void func_80001114(u8 arg0) {
     }
 }
 
-s32 func_8000114C(s32 arg0) {
+s32 musicGetChnlActive(s32 arg0) {
     return (gMusicPlayer->chanMask & (1 << arg0)) == 0;
 }
 
@@ -335,6 +358,7 @@ u8 func_80001980(void) {
     return D_80115D05;
 }
 
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001990.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001A3C.s")
 
@@ -342,8 +366,8 @@ u8 func_80001AEC(void) {
     return D_800DC638;
 }
 
-s32 musicVolumeSliderPercentage(void) {
-    return D_800DC654;
+s32 musicGetVolSliderPercentage(void) {
+    return musicVolumeSliderPercentage;
 }
 
 void sfxSetRelativeVolume(u8 arg0) {

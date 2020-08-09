@@ -6,8 +6,8 @@ glabel func_80001A3C
 /* 00264C 80001A4C 00803025 */   move  $a2, $a0
 /* 002650 80001A50 24060100 */  li    $a2, 256
 .L80001A54:
-/* 002654 80001A54 3C02800E */  lui   $v0, %hi(D_800DC654) # $v0, 0x800e
-/* 002658 80001A58 2442C654 */  addiu $v0, %lo(D_800DC654) # addiu $v0, $v0, -0x39ac
+/* 002654 80001A54 3C02800E */  lui   $v0, %hi(musicVolumeSliderPercentage) # $v0, 0x800e
+/* 002658 80001A58 2442C654 */  addiu $v0, %lo(musicVolumeSliderPercentage) # addiu $v0, $v0, -0x39ac
 /* 00265C 80001A5C AC460000 */  sw    $a2, ($v0)
 /* 002660 80001A60 3C0E800E */  lui   $t6, %hi(D_800DC638) # $t6, 0x800e
 /* 002664 80001A64 91CEC638 */  lbu   $t6, %lo(D_800DC638)($t6)

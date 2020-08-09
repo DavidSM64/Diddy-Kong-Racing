@@ -33,7 +33,7 @@ glabel D_800DC64C
 glabel D_800DC650
 .word 0x3F800000
 
-glabel D_800DC654
+glabel musicVolumeSliderPercentage
 .word 0x00000100
 
 glabel D_800DC658

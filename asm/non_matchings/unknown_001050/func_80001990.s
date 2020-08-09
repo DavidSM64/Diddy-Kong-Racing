@@ -3,8 +3,8 @@ glabel func_80001990
 /* 002594 80001994 2442C638 */  addiu $v0, %lo(D_800DC638) # addiu $v0, $v0, -0x39c8
 /* 002598 80001998 00803025 */  move  $a2, $a0
 /* 00259C 8000199C A0460000 */  sb    $a2, ($v0)
-/* 0025A0 800019A0 3C0F800E */  lui   $t7, %hi(D_800DC654) # $t7, 0x800e
-/* 0025A4 800019A4 8DEFC654 */  lw    $t7, %lo(D_800DC654)($t7)
+/* 0025A0 800019A0 3C0F800E */  lui   $t7, %hi(musicVolumeSliderPercentage) # $t7, 0x800e
+/* 0025A4 800019A4 8DEFC654 */  lw    $t7, %lo(musicVolumeSliderPercentage)($t7)
 /* 0025A8 800019A8 30CE00FF */  andi  $t6, $a2, 0xff
 /* 0025AC 800019AC 01CF0019 */  multu $t6, $t7
 /* 0025B0 800019B0 3C19800E */  lui   $t9, %hi(D_800DC66C) # $t9, 0x800e
