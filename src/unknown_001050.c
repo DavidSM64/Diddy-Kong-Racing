@@ -86,6 +86,7 @@ extern unk80115D48 D_80115D48[8];
 extern s8  D_80115F78;
 extern s8  D_80115F79;
 extern s32 D_80115F7C;
+extern u32 D_80115F88;
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000450.s")
@@ -482,7 +483,26 @@ u16 func_80001CB8(u16 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001D04.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001EA8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001F14.s")
+
+
+u16 func_800020E8(void);
+
+void func_80001F14(u16 arg0, u32 *arg1){
+    if(arg0 <= 0 || func_800020E8() < arg0){
+        if(arg1){
+            *arg1 = 0;
+        }
+    }
+    else{
+        if(arg1){
+            func_80004638(D_80115D14->bankArray[0], (s16) arg0, arg1);
+        }else{
+            func_80004638(D_80115D14->bankArray[0], (s16) arg0, &D_80115F88);
+        }
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001FB8.s")
 
 u16 func_800020E8(void) {
