@@ -35,6 +35,7 @@ extern s32 musicVolumeSliderPercentage;
 extern s32 D_800DC658;
 extern u8  D_800DC65C;
 extern u8  D_800DC660;
+extern s32 D_800DC66C;
 extern u8  D_800DC670;
 
 extern u8  D_800EBF60;
@@ -87,8 +88,8 @@ extern u8  D_80115D41;
 extern unk80115D48 D_80115D48[8];
 extern ALCSeq D_80115D88;
 extern ALCSeq D_80115E80;
-extern s8  D_80115F78;
-extern s8  D_80115F79;
+extern u8  D_80115F78;
+extern u8  D_80115F79;
 extern s32 D_80115F7C;
 extern u32 D_80115F84;
 extern u32 D_80115F88;
@@ -208,9 +209,26 @@ void audio_init(u32 arg0){
     return;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000890.s")
-
+void musicSetRelativeVolume(u8);
 void func_80004A60(u8, u16);
+
+
+void func_80000890(u8 arg0){
+    if(!D_80115F79){  
+        D_80115F78 = arg0;
+        if(D_80115F78 == 0){
+            D_800DC66C = 256;
+            musicSetRelativeVolume(D_800DC638);
+            func_80004A60(0,D_800DC66C*128-1);
+            func_80004A60(1,D_800DC66C*128-1);
+            func_80004A60(2,D_800DC66C*128-1);
+            func_80004A60(4,D_800DC66C*128-1);
+        }
+    }
+}
+
+
+
 void func_80000968(s32 arg0) {
     switch(arg0) {
         case 1:
@@ -540,7 +558,7 @@ u8 func_80001980(void) {
     return D_80115D05;
 }
 
-extern f32 D_800DC66C;
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/musicSetRelativeVolume.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001A3C.s")
 
