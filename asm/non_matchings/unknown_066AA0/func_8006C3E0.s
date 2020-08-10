@@ -62,7 +62,7 @@ glabel func_8006C3E0
 /* 06D0BC 8006C4BC 0C01E040 */  jal   func_80078100
 /* 06D0C0 8006C4C0 24841260 */   addiu $a0, %lo(D_80121260) # addiu $a0, $a0, 0x1260
 /* 06D0C4 8006C4C4 3C048012 */  lui   $a0, %hi(D_80121260) # $a0, 0x8012
-/* 06D0C8 8006C4C8 0C000114 */  jal   func_80000450
+/* 06D0C8 8006C4C8 0C000114 */  jal   audio_init
 /* 06D0CC 8006C4CC 24841260 */   addiu $a0, %lo(D_80121260) # addiu $a0, $a0, 0x1260
 /* 06D0D0 8006C4D0 0C002010 */  jal   func_80008040
 /* 06D0D4 8006C4D4 00000000 */   nop   

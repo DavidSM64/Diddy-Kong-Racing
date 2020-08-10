@@ -1,4 +1,4 @@
-glabel alSndpNew
+glabel func_800031C0
 /* 003DC0 800031C0 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 003DC4 800031C4 AFB20028 */  sw    $s2, 0x28($sp)
 /* 003DC8 800031C8 3C12800E */  lui   $s2, %hi(D_800DC6BC) # $s2, 0x800e

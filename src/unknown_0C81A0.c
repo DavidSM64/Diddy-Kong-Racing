@@ -9,4 +9,4 @@ void dummy_800C75A8(void) {}
 
 GLOBAL_ASM("asm/non_matchings/unknown_0C81A0/_bnkfPatchBank.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0C81A0/alBnkfNew.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0C81A0/func_800C77A8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0C81A0/alSeqFileNew.s")
