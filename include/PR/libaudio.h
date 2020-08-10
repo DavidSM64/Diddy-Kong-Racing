@@ -642,6 +642,7 @@ typedef struct {
     u8          maxChannels;       /* max MIDI channels to support (16)*/
     u8          debugFlags;        /* control which error get reported */
     ALHeap      *heap;             /* ptr to initialized heap          */
+    u8          unknown_0x10;
     void        *initOsc;
     void        *updateOsc;
     void        *stopOsc;

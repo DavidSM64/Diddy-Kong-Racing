@@ -1,7 +1,7 @@
 glabel func_80002224
 /* 002E24 80002224 27BDFFB8 */  addiu $sp, $sp, -0x48
-/* 002E28 80002228 3C068011 */  lui   $a2, %hi(D_80115CE8) # $a2, 0x8011
-/* 002E2C 8000222C 24C65CE8 */  addiu $a2, %lo(D_80115CE8) # addiu $a2, $a2, 0x5ce8
+/* 002E28 80002228 3C068011 */  lui   $a2, %hi(gALHeap) # $a2, 0x8011
+/* 002E2C 8000222C 24C65CE8 */  addiu $a2, %lo(gALHeap) # addiu $a2, $a2, 0x5ce8
 /* 002E30 80002230 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 002E34 80002234 AFA40048 */  sw    $a0, 0x48($sp)
 /* 002E38 80002238 AFA5004C */  sw    $a1, 0x4c($sp)

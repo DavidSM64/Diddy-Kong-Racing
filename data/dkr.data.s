@@ -6,10 +6,10 @@
     .balign 4
 .endm
 
-glabel D_800DC630
+glabel gMusicPlayer
 .word 0x00000000
 
-glabel D_800DC634
+glabel gSndFxPlayer
 .word 0x00000000
 
 glabel D_800DC638
@@ -33,7 +33,7 @@ glabel D_800DC64C
 glabel D_800DC650
 .word 0x3F800000
 
-glabel D_800DC654
+glabel musicVolumeSliderPercentage
 .word 0x00000100
 
 glabel D_800DC658

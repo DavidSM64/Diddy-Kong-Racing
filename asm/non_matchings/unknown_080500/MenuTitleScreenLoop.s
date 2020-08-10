@@ -295,7 +295,7 @@ glabel MenuTitleScreenLoop
 /* 084A34 80083E34 44048000 */  mfc1  $a0, $f16
 /* 084A38 80083E38 44CBF800 */  ctc1  $t3, $31
 /* 084A3C 80083E3C 308C00FF */  andi  $t4, $a0, 0xff
-/* 084A40 80083E40 0C000664 */  jal   func_80001990
+/* 084A40 80083E40 0C000664 */  jal   musicSetRelativeVolume
 /* 084A44 80083E44 01802025 */   move  $a0, $t4
 /* 084A48 80083E48 3C038012 */  lui   $v1, %hi(D_8012686C) # $v1, 0x8012
 /* 084A4C 80083E4C 1000002F */  b     .L80083F0C
@@ -310,7 +310,7 @@ glabel MenuTitleScreenLoop
 /* 084A6C 80083E6C 8C84F760 */  lw    $a0, %lo(D_800DF760)($a0)
 /* 084A70 80083E70 00000000 */  nop   
 /* 084A74 80083E74 00046843 */  sra   $t5, $a0, 1
-/* 084A78 80083E78 0C000664 */  jal   func_80001990
+/* 084A78 80083E78 0C000664 */  jal   musicSetRelativeVolume
 /* 084A7C 80083E7C 31A400FF */   andi  $a0, $t5, 0xff
 /* 084A80 80083E80 3C038012 */  lui   $v1, %hi(D_8012686C) # $v1, 0x8012
 /* 084A84 80083E84 10000021 */  b     .L80083F0C
@@ -338,14 +338,14 @@ glabel MenuTitleScreenLoop
 /* 084AD8 80083ED8 44043000 */  mfc1  $a0, $f6
 /* 084ADC 80083EDC 44D8F800 */  ctc1  $t8, $31
 /* 084AE0 80083EE0 309900FF */  andi  $t9, $a0, 0xff
-/* 084AE4 80083EE4 0C000664 */  jal   func_80001990
+/* 084AE4 80083EE4 0C000664 */  jal   musicSetRelativeVolume
 /* 084AE8 80083EE8 03202025 */   move  $a0, $t9
 /* 084AEC 80083EEC 3C038012 */  lui   $v1, %hi(D_8012686C) # $v1, 0x8012
 /* 084AF0 80083EF0 10000006 */  b     .L80083F0C
 /* 084AF4 80083EF4 2463686C */   addiu $v1, %lo(D_8012686C) # addiu $v1, $v1, 0x686c
 .L80083EF8:
 /* 084AF8 80083EF8 9084F763 */  lbu   $a0, %lo(D_800DF763)($a0)
-/* 084AFC 80083EFC 0C000664 */  jal   func_80001990
+/* 084AFC 80083EFC 0C000664 */  jal   musicSetRelativeVolume
 /* 084B00 80083F00 00000000 */   nop   
 /* 084B04 80083F04 3C038012 */  lui   $v1, %hi(D_8012686C) # $v1, 0x8012
 /* 084B08 80083F08 2463686C */  addiu $v1, %lo(D_8012686C) # addiu $v1, $v1, 0x686c

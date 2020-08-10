@@ -81,7 +81,7 @@ glabel MenuTrackSelectLoop
 /* 08FF5C 8008F35C 8FAF0020 */  lw    $t7, 0x20($sp)
 /* 08FF60 8008F360 04410005 */  bgez  $v0, .L8008F378
 /* 08FF64 8008F364 000FC040 */   sll   $t8, $t7, 1
-/* 08FF68 8008F368 0C000664 */  jal   func_80001990
+/* 08FF68 8008F368 0C000664 */  jal   musicSetRelativeVolume
 /* 08FF6C 8008F36C 00002025 */   move  $a0, $zero
 /* 08FF70 8008F370 1000000A */  b     .L8008F39C
 /* 08FF74 8008F374 00000000 */   nop   
@@ -94,7 +94,7 @@ glabel MenuTrackSelectLoop
 /* 08FF8C 8008F38C 24020050 */  li    $v0, 80
 /* 08FF90 8008F390 AC620000 */  sw    $v0, ($v1)
 .L8008F394:
-/* 08FF94 8008F394 0C000664 */  jal   func_80001990
+/* 08FF94 8008F394 0C000664 */  jal   musicSetRelativeVolume
 /* 08FF98 8008F398 304400FF */   andi  $a0, $v0, 0xff
 .L8008F39C:
 /* 08FF9C 8008F39C 3C028012 */  lui   $v0, %hi(D_801267D0) # $v0, 0x8012

@@ -1,4 +1,4 @@
-glabel func_800C79E0
+glabel alCSPSetTempo
 /* 0C85E0 800C79E0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C85E4 800C79E4 3C0100FF */  lui   $at, 0xff
 /* 0C85E8 800C79E8 00A1C824 */  and   $t9, $a1, $at

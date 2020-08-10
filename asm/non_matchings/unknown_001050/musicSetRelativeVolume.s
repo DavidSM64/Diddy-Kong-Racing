@@ -1,10 +1,10 @@
-glabel func_80001990
+glabel musicSetRelativeVolume
 /* 002590 80001990 3C02800E */  lui   $v0, %hi(D_800DC638) # $v0, 0x800e
 /* 002594 80001994 2442C638 */  addiu $v0, %lo(D_800DC638) # addiu $v0, $v0, -0x39c8
 /* 002598 80001998 00803025 */  move  $a2, $a0
 /* 00259C 8000199C A0460000 */  sb    $a2, ($v0)
-/* 0025A0 800019A0 3C0F800E */  lui   $t7, %hi(D_800DC654) # $t7, 0x800e
-/* 0025A4 800019A4 8DEFC654 */  lw    $t7, %lo(D_800DC654)($t7)
+/* 0025A0 800019A0 3C0F800E */  lui   $t7, %hi(musicVolumeSliderPercentage) # $t7, 0x800e
+/* 0025A4 800019A4 8DEFC654 */  lw    $t7, %lo(musicVolumeSliderPercentage)($t7)
 /* 0025A8 800019A8 30CE00FF */  andi  $t6, $a2, 0xff
 /* 0025AC 800019AC 01CF0019 */  multu $t6, $t7
 /* 0025B0 800019B0 3C19800E */  lui   $t9, %hi(D_800DC66C) # $t9, 0x800e
@@ -15,9 +15,9 @@ glabel func_80001990
 /* 0025C4 800019C4 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0025C8 800019C8 46805420 */  cvt.s.w $f16, $f10
 /* 0025CC 800019CC AFA40018 */  sw    $a0, 0x18($sp)
-/* 0025D0 800019D0 3C04800E */  lui   $a0, %hi(D_800DC630) # $a0, 0x800e
+/* 0025D0 800019D0 3C04800E */  lui   $a0, %hi(gMusicPlayer) # $a0, 0x800e
 /* 0025D4 800019D4 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0025D8 800019D8 8C84C630 */  lw    $a0, %lo(D_800DC630)($a0)
+/* 0025D8 800019D8 8C84C630 */  lw    $a0, %lo(gMusicPlayer)($a0)
 /* 0025DC 800019DC 0000C012 */  mflo  $t8
 /* 0025E0 800019E0 44982000 */  mtc1  $t8, $f4
 /* 0025E4 800019E4 00000000 */  nop   
@@ -36,7 +36,7 @@ glabel func_80001990
 /* 002618 80001A18 44C8F800 */  ctc1  $t0, $31
 /* 00261C 80001A1C 00054A03 */  sra   $t1, $a1, 8
 /* 002620 80001A20 00095400 */  sll   $t2, $t1, 0x10
-/* 002624 80001A24 0C031E14 */  jal   func_800C7850
+/* 002624 80001A24 0C031E14 */  jal   alCSPSetVol
 /* 002628 80001A28 000A2C03 */   sra   $a1, $t2, 0x10
 /* 00262C 80001A2C 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 002630 80001A30 27BD0018 */  addiu $sp, $sp, 0x18

@@ -7,10 +7,10 @@ glabel func_80001BC0
 /* 0027D4 80001BD4 00803025 */  move  $a2, $a0
 /* 0027D8 80001BD8 A02EC644 */  sb    $t6, %lo(D_800DC644)($at)
 /* 0027DC 80001BDC A0460000 */  sb    $a2, ($v0)
-/* 0027E0 80001BE0 3C05800E */  lui   $a1, %hi(D_800DC634) # $a1, 0x800e
+/* 0027E0 80001BE0 3C05800E */  lui   $a1, %hi(gSndFxPlayer) # $a1, 0x800e
 /* 0027E4 80001BE4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0027E8 80001BE8 AFA40018 */  sw    $a0, 0x18($sp)
-/* 0027EC 80001BEC 8CA5C634 */  lw    $a1, %lo(D_800DC634)($a1)
+/* 0027EC 80001BEC 8CA5C634 */  lw    $a1, %lo(gSndFxPlayer)($a1)
 /* 0027F0 80001BF0 0C0008AF */  jal   func_800022BC
 /* 0027F4 80001BF4 30C400FF */   andi  $a0, $a2, 0xff
 /* 0027F8 80001BF8 8FBF0014 */  lw    $ra, 0x14($sp)

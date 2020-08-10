@@ -15,7 +15,7 @@ glabel func_80000890
 /* 0014C4 800008C4 24190100 */  li    $t9, 256
 /* 0014C8 800008C8 3C01800E */  lui   $at, %hi(D_800DC66C) # $at, 0x800e
 /* 0014CC 800008CC 9084C638 */  lbu   $a0, %lo(D_800DC638)($a0)
-/* 0014D0 800008D0 0C000664 */  jal   func_80001990
+/* 0014D0 800008D0 0C000664 */  jal   musicSetRelativeVolume
 /* 0014D4 800008D4 AC39C66C */   sw    $t9, %lo(D_800DC66C)($at)
 /* 0014D8 800008D8 3C05800E */  lui   $a1, %hi(D_800DC66C) # $a1, 0x800e
 /* 0014DC 800008DC 8CA5C66C */  lw    $a1, %lo(D_800DC66C)($a1)

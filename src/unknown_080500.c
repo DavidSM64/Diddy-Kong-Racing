@@ -542,7 +542,7 @@ void MenuAudioOptionsInit(void) {
     func_8008E4B0();
     func_800C01D8(&D_800DF77C);
     func_8007FFEC(2);
-    D_800DFAC4 = musicVolumeSliderPercentage();
+    D_800DFAC4 = musicGetVolSliderPercentage();
     D_800DFAC0 = sfxVolumeSliderPercentage();
     if (gActiveMagicCodes & 0x40) { // Check if "JUKEBOX" cheat is active
         D_800DFA3C.unk6C = D_801269E0;

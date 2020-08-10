@@ -6,8 +6,8 @@ glabel func_80001A3C
 /* 00264C 80001A4C 00803025 */   move  $a2, $a0
 /* 002650 80001A50 24060100 */  li    $a2, 256
 .L80001A54:
-/* 002654 80001A54 3C02800E */  lui   $v0, %hi(D_800DC654) # $v0, 0x800e
-/* 002658 80001A58 2442C654 */  addiu $v0, %lo(D_800DC654) # addiu $v0, $v0, -0x39ac
+/* 002654 80001A54 3C02800E */  lui   $v0, %hi(musicVolumeSliderPercentage) # $v0, 0x800e
+/* 002658 80001A58 2442C654 */  addiu $v0, %lo(musicVolumeSliderPercentage) # addiu $v0, $v0, -0x39ac
 /* 00265C 80001A5C AC460000 */  sw    $a2, ($v0)
 /* 002660 80001A60 3C0E800E */  lui   $t6, %hi(D_800DC638) # $t6, 0x800e
 /* 002664 80001A64 91CEC638 */  lbu   $t6, %lo(D_800DC638)($t6)
@@ -17,9 +17,9 @@ glabel func_80001A3C
 /* 002674 80001A74 3C01800E */  lui   $at, %hi(D_800DC650) # $at, 0x800e
 /* 002678 80001A78 C428C650 */  lwc1  $f8, %lo(D_800DC650)($at)
 /* 00267C 80001A7C 44995000 */  mtc1  $t9, $f10
-/* 002680 80001A80 3C04800E */  lui   $a0, %hi(D_800DC630) # $a0, 0x800e
+/* 002680 80001A80 3C04800E */  lui   $a0, %hi(gMusicPlayer) # $a0, 0x800e
 /* 002684 80001A84 46805420 */  cvt.s.w $f16, $f10
-/* 002688 80001A88 8C84C630 */  lw    $a0, %lo(D_800DC630)($a0)
+/* 002688 80001A88 8C84C630 */  lw    $a0, %lo(gMusicPlayer)($a0)
 /* 00268C 80001A8C 0000C012 */  mflo  $t8
 /* 002690 80001A90 44982000 */  mtc1  $t8, $f4
 /* 002694 80001A94 00000000 */  nop   
@@ -38,7 +38,7 @@ glabel func_80001A3C
 /* 0026C8 80001AC8 44C8F800 */  ctc1  $t0, $31
 /* 0026CC 80001ACC 00054A03 */  sra   $t1, $a1, 8
 /* 0026D0 80001AD0 00095400 */  sll   $t2, $t1, 0x10
-/* 0026D4 80001AD4 0C031E14 */  jal   func_800C7850
+/* 0026D4 80001AD4 0C031E14 */  jal   alCSPSetVol
 /* 0026D8 80001AD8 000A2C03 */   sra   $a1, $t2, 0x10
 /* 0026DC 80001ADC 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 0026E0 80001AE0 27BD0018 */  addiu $sp, $sp, 0x18

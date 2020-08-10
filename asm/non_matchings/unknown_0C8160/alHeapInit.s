@@ -1,4 +1,4 @@
-glabel func_800C7560
+glabel alHeapInit
 /* 0C8160 800C7560 24030010 */  li    $v1, 16
 /* 0C8164 800C7564 30AE000F */  andi  $t6, $a1, 0xf
 /* 0C8168 800C7568 006E1023 */  subu  $v0, $v1, $t6
