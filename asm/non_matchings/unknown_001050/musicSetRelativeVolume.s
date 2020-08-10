@@ -1,4 +1,4 @@
-glabel func_80001990
+glabel musicSetRelativeVolume
 /* 002590 80001990 3C02800E */  lui   $v0, %hi(D_800DC638) # $v0, 0x800e
 /* 002594 80001994 2442C638 */  addiu $v0, %lo(D_800DC638) # addiu $v0, $v0, -0x39c8
 /* 002598 80001998 00803025 */  move  $a2, $a0
