@@ -373,7 +373,13 @@ GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800015F8.s")
 
 u32 func_80001C08(void);
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001784.s")
+void func_80001784(u8 a0){
+    if(!func_80001C08()){
+        func_800022BC(D_80115D05 = a0, gSndFxPlayer);
+        D_80115D41 = 1;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800017D4.s")
 
 void func_80002570(ALCSPlayer* arg0);
@@ -429,7 +435,7 @@ u8 func_80001980(void) {
     return D_80115D05;
 }
 
-
+extern f32 D_800DC66C;
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001990.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001A3C.s")
 
@@ -483,7 +489,6 @@ u16 func_80001CB8(u16 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001D04.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001EA8.s")
-
 
 u16 func_800020E8(void);
 

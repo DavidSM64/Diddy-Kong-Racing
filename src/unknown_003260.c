@@ -95,8 +95,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004604.s")
 
-void func_80004638(s32 arg0, s16 arg1, s32 arg2) {
-    func_80004668(arg0, arg1, 0, arg2);
+void func_80004638(ALBank* bnk, s16 arg1, s32 arg2) {
+    func_80004668(bnk, arg1, 0, arg2);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
