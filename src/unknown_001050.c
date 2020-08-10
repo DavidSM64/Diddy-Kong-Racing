@@ -86,6 +86,7 @@ extern unk80115D48 D_80115D48[8];
 extern s8  D_80115F78;
 extern s8  D_80115F79;
 extern s32 D_80115F7C;
+extern u32 D_80115F84;
 extern u32 D_80115F88;
 
 #if 1
@@ -356,10 +357,10 @@ void func_80001440(u8 *arg0){
 s16 func_800015B8(void);
 
 void func_800014BC(f32 arg0) {
-    func_80001534((s32)((f32)(u32)(func_800015B8() & 0xFF) * arg0));
+    musicSetTempo((s32)((f32)(u32)(func_800015B8() & 0xFF) * arg0));
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001534.s")
+GLOBAL_ASM("asm/non_matchings/unknown_001050/musicSetTempo.s")
 
 s16 func_800015B8(void) {
     return D_80115D30;
@@ -380,7 +381,7 @@ void func_80001784(u8 a0){
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800017D4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_001050/sfxSetTempo.s")
 
 void func_80002570(ALCSPlayer* arg0);
 
@@ -486,9 +487,25 @@ u16 func_80001CB8(u16 arg0) {
     }
     return D_80115D18[arg0].unk6;
 }
-
+void func_80001D04(u16, void*);
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001D04.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001EA8.s")
+
+
+typedef struct unknown_struct_80001EA8_s{
+    u32    unk00;
+    u32     unk04;
+    u32     unk08;
+}unknown_struct_80001EA8;
+
+void func_80001EA8(u16 arg0, unknown_struct_80001EA8 arg1, u32* arg2){
+    if(arg2 == NULL){
+        arg2 = &D_80115F84;
+    }
+    func_80001D04(arg0, arg2);
+    if(*arg2){
+        func_80009B7C(*arg2, arg1.unk00, arg1.unk04, arg1.unk08);
+    }
+}
 
 u16 func_800020E8(void);
 

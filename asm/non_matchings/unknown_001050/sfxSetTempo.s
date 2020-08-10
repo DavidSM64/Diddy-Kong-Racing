@@ -1,4 +1,4 @@
-glabel func_800017D4
+glabel sfxSetTempo
 /* 0023D4 800017D4 00803025 */  move  $a2, $a0
 /* 0023D8 800017D8 44863000 */  mtc1  $a2, $f6
 /* 0023DC 800017DC 3C013F80 */  li    $at, 0x3F800000 # 1.000000

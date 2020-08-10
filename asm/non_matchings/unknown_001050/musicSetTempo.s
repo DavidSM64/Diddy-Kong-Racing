@@ -1,4 +1,4 @@
-glabel func_80001534
+glabel musicSetTempo
 /* 002134 80001534 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 002138 80001538 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 00213C 8000153C 1080001A */  beqz  $a0, .L800015A8
