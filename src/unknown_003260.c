@@ -136,7 +136,18 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800042CC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004604.s")
+//GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004604.s")
+
+void func_80004604(u8* arg0, u8 arg1){
+    if (arg0)
+        arg0[0x36]=arg1;
+}
+
+u8 func_8000461C(u8* arg0){
+    if (arg0)
+        return arg0[0x3F];
+    return 0;     
+}
 
 void func_80004638(ALBank* bnk, s16 arg1, s32 arg2) {
     func_80004668(bnk, arg1, 0, arg2);
