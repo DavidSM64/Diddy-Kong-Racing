@@ -1,4 +1,4 @@
-glabel func_800C77A8
+glabel alSeqFileNew
 /* 0C83A8 800C77A8 848E0002 */  lh    $t6, 2($a0)
 /* 0C83AC 800C77AC 00001025 */  move  $v0, $zero
 /* 0C83B0 800C77B0 00801825 */  move  $v1, $a0

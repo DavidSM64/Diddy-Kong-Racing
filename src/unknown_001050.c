@@ -35,6 +35,7 @@ extern s32 musicVolumeSliderPercentage;
 extern s32 D_800DC658;
 extern u8  D_800DC65C;
 extern u8  D_800DC660;
+extern s32 D_800DC66C;
 extern u8  D_800DC670;
 
 extern u8  D_800EBF60;
@@ -46,7 +47,8 @@ typedef struct unk80115CF8 {
     s16 unk2;
 } unk80115CF8;
 
-extern unk80115CF8 *D_80115CF8;
+extern ALSeqFile *D_80115CF8;
+extern void *D_80115CFC;
 
 extern u8  D_80115D04;
 extern u8  D_80115D05;
@@ -71,12 +73,13 @@ typedef struct unk80115D1C {
     u8 unk1;
     u8 unk2;
 } unk80115D1C;
-
+extern void *D_80115D00;
+extern u32 *D_80115D0C;
 extern unk80115D1C* D_80115D1C;
 extern s32 D_80115D20;
 extern s32 D_80115D24;
-extern s32 D_80115D28;
-extern s32 D_80115D2C;
+extern u32 D_80115D28;
+extern u32 D_80115D2C;
 extern s16 D_80115D30;
 extern s32 D_80115D38;
 extern s32 D_80115D3C;
@@ -85,30 +88,147 @@ extern u8  D_80115D41;
 extern unk80115D48 D_80115D48[8];
 extern ALCSeq D_80115D88;
 extern ALCSeq D_80115E80;
-extern s8  D_80115F78;
-extern s8  D_80115F79;
+extern u8  D_80115F78;
+extern u8  D_80115F79;
 extern s32 D_80115F7C;
 extern u32 D_80115F84;
 extern u32 D_80115F88;
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000450.s")
-#else
-void func_80000450(void){
-    u32 *tmp;
-    ALBankFile *tmp2;
+
+
+typedef struct audioMgrConfig_s{
+    u32 unk00;
+    u32 unk04;
+    u32 maxChannels;
+    ALHeap* hp;
+    u16  unk10;
+} audioMgrConfig;
+
+typedef struct musicConfig_s{
+    u32 unk00;
+    u32 unk04;
+    u32 unk08;
+    u32 unk0c;
+    u32 unk10;
+    ALHeap *heap;
+    u32 unk18;
+    u8 unk1c;
+    u8 unk1d;
+} musicConfig;
+
+void func_80000968(s32 arg0);
+ALCSPlayer* func_80002224(s32, s32);
+void func_8000B010(ALCSPlayer*, u8);
+void    *func_80070C9C(u32, u32);
+void    *func_80076C58(u32);
+void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size);
+
+void audio_init(u32 arg0){
+    s32 iCnt;
+    s32 tmp;
+    musicConfig mConfig;
+    u32 *reg_s2;
+    u32 seqfSize;
+    u32 seq_max_len;
+    u32 tmp2;
+    audioMgrConfig audConfig;
+   
+    seq_max_len = 0;
     alHeapInit(&gALHeap, &D_800EBF60, 0x00029D88);
-    tmp = func_80076C58(38);
-    D_80115D14 = (ALBankFile*) func_80070C9C(tmp[2] - tmp[1], 0x00FFFFFF);
-    func_80076E68(39, D_80115D14, tmp[1], tmp[2] - tmp[1]);
-    alBnkfNew(D_80115D14, func_80076EE8(39, tmp[2]));
+    
+    reg_s2 = func_80076C58(38);
+    D_80115D14 = (ALBankFile*) func_80070C9C(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
+    func_80076E68(39, D_80115D14, reg_s2[1], reg_s2[2] - reg_s2[1]);
+    alBnkfNew(D_80115D14, func_80076EE8(39, reg_s2[2]));
+    D_80115D28 = reg_s2[7] - reg_s2[6];
+    
+    D_80115D18 = (unk80115D18 *) func_80070C9C(D_80115D28, 0x00FFFFFF);
+    func_80076E68(39, D_80115D18, reg_s2[6], D_80115D28);
+    D_80115D20 = D_80115D28/10;
+    
+    D_80115D2C = reg_s2[6]-reg_s2[5];
+    D_80115D1C = (unk80115D1C *) func_80070C9C(D_80115D2C, 0x00FFFFFF);
+    func_80076E68(39, D_80115D1C, reg_s2[5], D_80115D2C);
+    D_80115D24 = D_80115D2C/3;
+
+    D_80115D10 = (ALBankFile *)func_80070C9C(reg_s2[0], 0x00FFFFFF);
+    func_80076E68(39, D_80115D10, 0, reg_s2[0]);
+    alBnkfNew(D_80115D10, func_80076EE8(39, reg_s2[0]));
+    D_80115CF8 = (ALSeqFile *) alHeapDBAlloc(0,0,&gALHeap,1,4);
+    func_80076E68(39, D_80115CF8, reg_s2[4], 4);
+
+    seqfSize = (D_80115CF8->seqCount)*8 + 4;
+    D_80115CF8 = func_80070C9C(seqfSize, 0x00FFFFFF);
+    func_80076E68(39, D_80115CF8, reg_s2[4], seqfSize);
+    alSeqFileNew(D_80115CF8, func_80076EE8(39, reg_s2[4]));
+    D_80115D0C = (u32 *)func_80070C9C( (D_80115CF8->seqCount)*4, 0x00FFFFFF);
+
+
+    for(iCnt = 0; iCnt < D_80115CF8->seqCount; iCnt++){
+        (u32*)((u32) D_80115CF8 + 8 + iCnt*8);
+        D_80115D0C[iCnt] = D_80115CF8->seqArray[iCnt].len;
+        if(D_80115D0C[iCnt] & 1){
+            D_80115D0C[iCnt]++;
+        }
+        if(seq_max_len < D_80115D0C[iCnt]){
+            seq_max_len = D_80115D0C[iCnt];
+        }
+    }
+
+
+    mConfig.unk00 = 40;
+    mConfig.unk04 = 40;
+    mConfig.unk08 = 96;
+    mConfig.unk10 = 0;
+    mConfig.unk1c = 6;
+    mConfig.unk1d = 2;
+    mConfig.unk18 = 0;
+    mConfig.heap = &gALHeap;
+    func_80002660(&mConfig, 12, arg0);
+    gMusicPlayer = func_80002224(24, 120);
+    func_8000B010(gMusicPlayer, 18);
+    gSndFxPlayer = func_80002224(16, 50);
+    D_80115CFC = func_80070C9C( seq_max_len, 0x00FFFFFF);
+    D_80115D00 = func_80070C9C( seq_max_len, 0x00FFFFFF);
+    audConfig.unk04 = 150;
+    audConfig.unk00 = 32;
+    audConfig.maxChannels = 16;
+    audConfig.unk10 = 1;
+    audConfig.hp = &gALHeap;
+    func_800031C0(&audConfig);
+    func_80002A50();
+    func_80000968(0);
+    func_80071140(reg_s2);
+    func_8000318C(10);
+    D_800DC648 = 0;
+    D_80115D40 = 0;
+    D_80115D41 = 0;
+    D_800DC658 = 0;
+    D_80115F78 = 0;
+    D_80115F79 = 0;
+    return;
 }
 
-#endif
-
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000890.s")
-
+void musicSetRelativeVolume(u8);
 void func_80004A60(u8, u16);
+
+
+void func_80000890(u8 arg0){
+    if(!D_80115F79){  
+        D_80115F78 = arg0;
+        if(D_80115F78 == 0){
+            D_800DC66C = 256;
+            musicSetRelativeVolume(D_800DC638);
+            func_80004A60(0,D_800DC66C*128-1);
+            func_80004A60(1,D_800DC66C*128-1);
+            func_80004A60(2,D_800DC66C*128-1);
+            func_80004A60(4,D_800DC66C*128-1);
+        }
+    }
+}
+
+
+
 void func_80000968(s32 arg0) {
     switch(arg0) {
         case 1:
@@ -204,7 +324,65 @@ void func_80000CBC(void) {
     musicSetRelativeVolume(D_800DC638);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000D00.s")
+void func_80001D04(u16,void*);
+void func_8000232C(ALCSPlayer*, void*, u8*, ALCSeq*);
+
+void func_80000D00(u8 arg0){
+    s32 reg_s2;
+    s32 j;
+    if(D_80115D3C > 0){
+        
+        D_80115D38 += arg0;
+        D_800DC650 = ((f32)D_80115D38)/((f32)D_80115D3C);
+        
+        if((f64)D_800DC650 > 1.0f){
+            D_80115D38 = 0;
+            D_80115D3C = 0;
+            D_800DC650 = 1.0f;
+        }
+        musicSetRelativeVolume(D_800DC638);
+    }else if(D_80115D3C < 0) {
+        
+        D_80115D38 -= arg0;
+        D_800DC650 = 1.0f - ((f32)D_80115D38)/((f32)D_80115D3C);
+        if((f64)D_800DC650 < 0){
+            D_80115D38 = 0;
+            D_80115D3C = 0;
+            D_800DC650 = 0.0f;
+        }
+        musicSetRelativeVolume(D_800DC638);
+    }
+
+    if(D_800DC658 > 0){
+        //reg_arg0 = arg0;
+        for(reg_s2 = 0; reg_s2 < D_800DC658;){
+            D_80115D48[reg_s2].unk2 -= arg0;
+            if(D_80115D48[reg_s2].unk2 <= 0){
+                j = reg_s2;
+                func_80001D04(D_80115D48[reg_s2].unk0, D_80115D48[reg_s2].unk4);
+                
+                D_800DC658 -= 1;
+                while(j  < D_800DC658){
+                    D_80115D48[reg_s2].unk0 = D_80115D48[reg_s2 + 1].unk0;
+                    D_80115D48[reg_s2].unk2 = D_80115D48[reg_s2 + 1].unk2;
+                    D_80115D48[reg_s2].unk4 = D_80115D48[reg_s2 + 1].unk4;
+                    j++;
+                    //break;
+                }
+                j++;
+            }
+            else{
+                reg_s2++;
+            }
+        }
+    }
+
+    func_8000232C(gMusicPlayer, D_80115CFC, &D_800DC65C, &D_80115D88);
+    func_8000232C(gSndFxPlayer, D_80115D00, &D_800DC660, &D_80115E80);
+    if(D_80115D30 == -1 && gMusicPlayer->target){
+        D_80115D30 = 0x03938700/alCSPGetTempo(gMusicPlayer);
+    }
+}
 
 void func_80000FDC(u16 arg0, s32 arg1, f32 arg2) {
     if (D_800DC658 < 8) {
@@ -319,29 +497,32 @@ void func_800012E8(void){
     return;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001358.s")
-#else
-void func_80001358(u32 arg0, u32 arg1, u32 arg2){
-    u8 updatedVol;
+
+u8 func_80001358(u8 arg0, u8 arg1, s32 arg2){
+    u8 val_1f;
+    u8 val_1e;
+    s32 updatedVol;
+    
     //u8 fadeIn_chan = arg0;
     if(!(arg0 == 100)){
-        updatedVol = arg2 + alCSPGetChlVol(gMusicPlayer,arg0);
-        if(updatedVol < 0){
-            updatedVol = 127;
+        val_1f = arg2 + alCSPGetChlVol(gMusicPlayer,arg0);
+        if(val_1f > 127){
+            val_1f = 127;
         }
-        alCSPSetChlVol(gMusicPlayer,arg0, updatedVol);
+        alCSPSetChlVol(gMusicPlayer,arg0, val_1f);
     }
+
     if(arg1 != 100){
-        updatedVol = alCSPGetChlVol(gMusicPlayer,arg1) - arg2;
-        if(updatedVol < 0){
-            updatedVol = 0;
-        }
-        alCSPSetChlVol(gMusicPlayer,arg1, updatedVol);
+        
+        updatedVol = alCSPGetChlVol(gMusicPlayer,arg1);
+        val_1e = (updatedVol > arg2) ? updatedVol - arg2 : 0;
+        alCSPSetChlVol(gMusicPlayer,arg1, val_1e);
+        return val_1e;
     }
-    return;
+    else{
+        return 127-val_1f;
+    }
 }
-#endif
 
 u8 alSeqpGetChlFXMix(ALCSPlayer*, u8);
 
@@ -438,7 +619,7 @@ u8 func_80001980(void) {
     return D_80115D05;
 }
 
-extern f32 D_800DC66C;
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/musicSetRelativeVolume.s")
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001A3C.s")
 
@@ -534,7 +715,7 @@ u16 func_800020E8(void) {
 }
 
 u8 func_80002110(void) {
-    return D_80115CF8->unk2;
+    return D_80115CF8->seqCount;
 }
 
 void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2) {
@@ -602,7 +783,7 @@ ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events){
 
 void func_800022BC(u8 arg0, ALCSPlayer* arg1) {
     func_80002570(arg1);
-    if (arg0 < D_80115CF8->unk2) {
+    if (arg0 < D_80115CF8->seqCount) {
         if (arg1 == gMusicPlayer) {
             D_800DC65C = arg0;
             return;
@@ -612,7 +793,6 @@ void func_800022BC(u8 arg0, ALCSPlayer* arg1) {
 }
 
 
-extern u32 D_80115D0C;
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_8000232C.s")
 #else
