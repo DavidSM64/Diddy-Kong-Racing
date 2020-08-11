@@ -621,7 +621,15 @@ u8 func_80001980(void) {
 
 
 GLOBAL_ASM("asm/non_matchings/unknown_001050/musicSetRelativeVolume.s")
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001A3C.s")
+
+void musicSetVolSlider(u32 arg0){
+    f32 normalized_vol;
+    
+    arg0 = (arg0 < 0x101)?arg0:256;
+    musicVolumeSliderPercentage = arg0;
+    normalized_vol = musicVolumeSliderPercentage*D_800DC638*D_800DC650;
+    alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C*normalized_vol)>>8));
+}
 
 u8 func_80001AEC(void) {
     return D_800DC638;
@@ -671,7 +679,8 @@ u16 func_80001CB8(u16 arg0) {
     }
     return D_80115D18[arg0].unk6;
 }
-void func_80001D04(u16, void*);
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001D04.s")
 
 

@@ -242,7 +242,7 @@ glabel MenuAudioOptionsLoop
 /* 085BD8 80084FD8 24020100 */  li    $v0, 256
 /* 085BDC 80084FDC AC620000 */  sw    $v0, ($v1)
 .L80084FE0:
-/* 085BE0 80084FE0 0C00068F */  jal   func_80001A3C
+/* 085BE0 80084FE0 0C00068F */  jal   musicSetVolSlider
 /* 085BE4 80084FE4 00402025 */   move  $a0, $v0
 /* 085BE8 80084FE8 0C000572 */  jal   musicIsPlaying
 /* 085BEC 80084FEC 00000000 */   nop   
