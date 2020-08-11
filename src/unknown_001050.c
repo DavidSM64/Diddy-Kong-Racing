@@ -324,7 +324,65 @@ void func_80000CBC(void) {
     musicSetRelativeVolume(D_800DC638);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80000D00.s")
+void func_80001D04(u16,void*);
+void func_8000232C(ALCSPlayer*, void*, u8*, ALCSeq*);
+
+void func_80000D00(u8 arg0){
+    s32 reg_s2;
+    s32 j;
+    if(D_80115D3C > 0){
+        
+        D_80115D38 += arg0;
+        D_800DC650 = ((f32)D_80115D38)/((f32)D_80115D3C);
+        
+        if((f64)D_800DC650 > 1.0f){
+            D_80115D38 = 0;
+            D_80115D3C = 0;
+            D_800DC650 = 1.0f;
+        }
+        musicSetRelativeVolume(D_800DC638);
+    }else if(D_80115D3C < 0) {
+        
+        D_80115D38 -= arg0;
+        D_800DC650 = 1.0f - ((f32)D_80115D38)/((f32)D_80115D3C);
+        if((f64)D_800DC650 < 0){
+            D_80115D38 = 0;
+            D_80115D3C = 0;
+            D_800DC650 = 0.0f;
+        }
+        musicSetRelativeVolume(D_800DC638);
+    }
+
+    if(D_800DC658 > 0){
+        //reg_arg0 = arg0;
+        for(reg_s2 = 0; reg_s2 < D_800DC658;){
+            D_80115D48[reg_s2].unk2 -= arg0;
+            if(D_80115D48[reg_s2].unk2 <= 0){
+                j = reg_s2;
+                func_80001D04(D_80115D48[reg_s2].unk0, D_80115D48[reg_s2].unk4);
+                
+                D_800DC658 -= 1;
+                while(j  < D_800DC658){
+                    D_80115D48[reg_s2].unk0 = D_80115D48[reg_s2 + 1].unk0;
+                    D_80115D48[reg_s2].unk2 = D_80115D48[reg_s2 + 1].unk2;
+                    D_80115D48[reg_s2].unk4 = D_80115D48[reg_s2 + 1].unk4;
+                    j++;
+                    //break;
+                }
+                j++;
+            }
+            else{
+                reg_s2++;
+            }
+        }
+    }
+
+    func_8000232C(gMusicPlayer, D_80115CFC, &D_800DC65C, &D_80115D88);
+    func_8000232C(gSndFxPlayer, D_80115D00, &D_800DC660, &D_80115E80);
+    if(D_80115D30 == -1 && gMusicPlayer->target){
+        D_80115D30 = 0x03938700/alCSPGetTempo(gMusicPlayer);
+    }
+}
 
 void func_80000FDC(u16 arg0, s32 arg1, f32 arg2) {
     if (D_800DC658 < 8) {
@@ -439,29 +497,32 @@ void func_800012E8(void){
     return;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001358.s")
-#else
-void func_80001358(u32 arg0, u32 arg1, u32 arg2){
-    u8 updatedVol;
+
+u8 func_80001358(u8 arg0, u8 arg1, s32 arg2){
+    u8 val_1f;
+    u8 val_1e;
+    s32 updatedVol;
+    
     //u8 fadeIn_chan = arg0;
     if(!(arg0 == 100)){
-        updatedVol = arg2 + alCSPGetChlVol(gMusicPlayer,arg0);
-        if(updatedVol < 0){
-            updatedVol = 127;
+        val_1f = arg2 + alCSPGetChlVol(gMusicPlayer,arg0);
+        if(val_1f > 127){
+            val_1f = 127;
         }
-        alCSPSetChlVol(gMusicPlayer,arg0, updatedVol);
+        alCSPSetChlVol(gMusicPlayer,arg0, val_1f);
     }
+
     if(arg1 != 100){
-        updatedVol = alCSPGetChlVol(gMusicPlayer,arg1) - arg2;
-        if(updatedVol < 0){
-            updatedVol = 0;
-        }
-        alCSPSetChlVol(gMusicPlayer,arg1, updatedVol);
+        
+        updatedVol = alCSPGetChlVol(gMusicPlayer,arg1);
+        val_1e = (updatedVol > arg2) ? updatedVol - arg2 : 0;
+        alCSPSetChlVol(gMusicPlayer,arg1, val_1e);
+        return val_1e;
     }
-    return;
+    else{
+        return 127-val_1f;
+    }
 }
-#endif
 
 u8 alSeqpGetChlFXMix(ALCSPlayer*, u8);
 
