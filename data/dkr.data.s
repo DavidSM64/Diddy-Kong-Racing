@@ -27,7 +27,7 @@ glabel D_800DC644
 glabel D_800DC648
 .word 0x00000000
 
-glabel D_800DC64C
+glabel audioPrevCount
 .word 0x00000000
 
 glabel D_800DC650

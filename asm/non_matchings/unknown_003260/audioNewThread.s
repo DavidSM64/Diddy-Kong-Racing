@@ -245,10 +245,10 @@ glabel audioNewThread
 /* 003600 80002A00 8FB9004C */  lw    $t9, 0x4c($sp)
 /* 003604 80002A04 3C188012 */  lui   $t8, %hi(D_80119230) # $t8, 0x8012
 /* 003608 80002A08 27189230 */  addiu $t8, %lo(D_80119230) # addiu $t8, $t8, -0x6dd0
-/* 00360C 80002A0C 3C048011 */  lui   $a0, %hi(D_80115FB0) # $a0, 0x8011
+/* 00360C 80002A0C 3C048011 */  lui   $a0, %hi(audioThread) # $a0, 0x8011
 /* 003610 80002A10 3C068000 */  lui   $a2, %hi(D_80002A98) # $a2, 0x8000
 /* 003614 80002A14 24C62A98 */  addiu $a2, %lo(D_80002A98) # addiu $a2, $a2, 0x2a98
-/* 003618 80002A18 24845FB0 */  addiu $a0, %lo(D_80115FB0) # addiu $a0, $a0, 0x5fb0
+/* 003618 80002A18 24845FB0 */  addiu $a0, %lo(audioThread) # addiu $a0, $a0, 0x5fb0
 /* 00361C 80002A1C AFB80010 */  sw    $t8, 0x10($sp)
 /* 003620 80002A20 24050004 */  li    $a1, 4
 /* 003624 80002A24 00003825 */  move  $a3, $zero

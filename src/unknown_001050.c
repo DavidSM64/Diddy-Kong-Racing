@@ -29,7 +29,7 @@ extern u8  D_800DC63C;
 extern u8  D_800DC640;
 extern u8  D_800DC644;
 extern s32 D_800DC648;
-extern s32 D_800DC64C;
+extern s32 audioPrevCount;
 extern f32 D_800DC650;
 extern s32 musicVolumeSliderPercentage;
 extern s32 D_800DC658;
@@ -107,18 +107,6 @@ typedef struct audioMgrConfig_s{
     u16  unk10;
 } audioMgrConfig;
 
-typedef struct musicConfig_s{
-    u32 unk00;
-    u32 unk04;
-    u32 unk08;
-    u32 unk0c;
-    u32 unk10;
-    ALHeap *heap;
-    u32 unk18;
-    u8 unk1c;
-    u8 unk1d;
-} musicConfig;
-
 void func_80000968(s32 arg0);
 ALCSPlayer* func_80002224(s32, s32);
 void func_8000B010(ALCSPlayer*, u8);
@@ -128,8 +116,7 @@ void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size);
 
 void audio_init(u32 arg0){
     s32 iCnt;
-    s32 tmp;
-    musicConfig mConfig;
+    ALSynConfig synth_config;
     u32 *reg_s2;
     u32 seqfSize;
     u32 seq_max_len;
@@ -179,15 +166,15 @@ void audio_init(u32 arg0){
     }
 
 
-    mConfig.unk00 = 40;
-    mConfig.unk04 = 40;
-    mConfig.unk08 = 96;
-    mConfig.unk10 = 0;
-    mConfig.unk1c = 6;
-    mConfig.unk1d = 2;
-    mConfig.unk18 = 0;
-    mConfig.heap = &gALHeap;
-    audioNewThread(&mConfig, 12, arg0);
+    synth_config.maxVVoices = 40;
+    synth_config.maxPVoices = 40;
+    synth_config.maxUpdates = 96;
+    synth_config.dmaproc = NULL;
+    synth_config.fxType = 6;
+    synth_config.unk1d = 2;
+    synth_config.outputRate = 0;
+    synth_config.heap = &gALHeap;
+    audioNewThread(&synth_config, 12, arg0);
     gMusicPlayer = func_80002224(24, 120);
     func_8000B010(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
@@ -284,7 +271,7 @@ void func_80000B34(u8 arg0) {
             func_800022BC(D_80115D04, gMusicPlayer);
         }
         musicTempo = alCSPGetTempo(gMusicPlayer);
-        D_800DC64C = osGetCount();
+        audioPrevCount = osGetCount();
         D_80115D40 = 1;
         D_80115F7C = -1;
     }
@@ -565,7 +552,53 @@ u8 musicIsPlaying(void) {
     return (alCSPGetState(gMusicPlayer) == AL_PLAYING);
 }
 
+
+extern f32 D_800E49E0;
+extern f32 D_800E49E8;
+extern f32 D_80115D34;
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800015F8.s")
+#else
+f32 func_800015F8(void){
+    u32 current_cnt = osGetCount();
+    u32 delta;
+    f32 delta_f;
+    f32 tmp;
+    f32* tmp2 = &D_80115D34;
+    if(audioPrevCount < current_cnt){
+        delta = current_cnt - audioPrevCount;
+        delta_f = (delta < 0)
+            ? (f32) delta + 4294967296.000000f
+            : delta;
+        D_80115D34  = delta_f/D_800E49E0 + *tmp2;
+    }
+    else{
+        delta = audioPrevCount - current_cnt;
+        delta_f = (delta + -1);
+        delta_f = (delta < 0)
+            ? (f32) delta + 4294967296.000000f
+            : delta;
+        *tmp2  = delta_f/D_800E49E0 + D_80115D34;
+    }
+    if(D_80115D40 == 0){
+        D_80115D30 = 182;
+    }
+    tmp = D_800E49E8/(f32) D_80115D30;
+    while(D_80115D34 > tmp){
+        D_80115D34 -= tmp;
+    }
+    audioPrevCount = current_cnt;
+    return D_80115D34/tmp;
+
+}
+#endif
+
+void func_80001728(u8 arg0, u8* arg1, u8* arg2, u8* arg3){
+    *arg1 = D_80115D1C[arg0].unk1;
+    *arg2 = D_80115D1C[arg0].unk0;
+    *arg3 = D_80115D1C[arg0].unk2;
+}
 
 u32 func_80001C08(void);
 
@@ -740,8 +773,13 @@ void func_80001F14(u16 arg0, u32 *arg1){
     }
 }
 
-
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001FB8.s")
+#else
+void func_80001FB8(u16 arg0){
+    arg0*10 + D_80115D18[0].unk00;
+}
+#endif
 
 u16 func_800020E8(void) {
     return D_80115D14->bankArray[0]->instArray[0]->soundCount;
