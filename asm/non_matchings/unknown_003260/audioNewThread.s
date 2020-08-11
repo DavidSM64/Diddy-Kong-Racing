@@ -1,4 +1,4 @@
-glabel func_80002660
+glabel audioNewThread
 /* 003260 80002660 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 003264 80002664 3C018011 */  lui   $at, %hi(D_80115F90) # $at, 0x8011
 /* 003268 80002668 AFBF0034 */  sw    $ra, 0x34($sp)

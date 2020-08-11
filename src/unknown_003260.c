@@ -31,9 +31,9 @@ extern OSMesg D_80119B08;
 extern f32 D_80126170;
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002660.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #else
-    void func_80002660(ALSynConfig* c, OSPri p, s32 arg2){
+    void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
         D_80115F90 = arg2;
         D_80115F94 = c->heap;
         c->dmaproc = &D_80003008;
@@ -49,11 +49,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002660.s")
     }
 #endif
 
-void func_80002A50(void) {
+void audioStartThread(void) {
     osStartThread(&D_80115FB0);
 }
 
-void func_80002A74(void) {
+void audioStopThread(void) {
     osStopThread(&D_80115FB0);
 }
 

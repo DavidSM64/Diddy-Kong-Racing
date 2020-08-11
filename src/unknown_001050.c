@@ -184,7 +184,7 @@ void audio_init(u32 arg0){
     mConfig.unk1d = 2;
     mConfig.unk18 = 0;
     mConfig.heap = &gALHeap;
-    func_80002660(&mConfig, 12, arg0);
+    audioNewThread(&mConfig, 12, arg0);
     gMusicPlayer = func_80002224(24, 120);
     func_8000B010(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
@@ -196,7 +196,7 @@ void audio_init(u32 arg0){
     audConfig.unk10 = 1;
     audConfig.hp = &gALHeap;
     func_800031C0(&audConfig);
-    func_80002A50();
+    audioStartThread();
     func_80000968(0);
     func_80071140(reg_s2);
     func_8000318C(10);
@@ -644,9 +644,10 @@ void sfxSetPan(ALPan pan){
     return;
 }
 
-
-GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001BC0.s")
-
+void func_80001BC0(u8 arg0){
+    D_800DC644 = 1;
+    func_800022BC( D_80115D05 = arg0, gSndFxPlayer);
+}
 
 u32 func_80001C08(void){
     if(D_80115D05 && D_800DC644 && (gSndFxPlayer->state == AL_PLAYING) ){
