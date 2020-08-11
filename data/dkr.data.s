@@ -12,7 +12,7 @@ glabel gMusicPlayer
 glabel gSndFxPlayer
 .word 0x00000000
 
-glabel D_800DC638
+glabel musicRelativeVolume
 .word 0x7F000000
 
 glabel D_800DC63C

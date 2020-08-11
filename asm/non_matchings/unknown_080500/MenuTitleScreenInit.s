@@ -19,7 +19,7 @@ glabel MenuTitleScreenInit
 /* 084180 80083580 AC2FF4BC */   sw    $t7, %lo(D_800DF4BC)($at)
 /* 084184 80083584 0C0002CD */  jal   func_80000B34
 /* 084188 80083588 24040001 */   li    $a0, 1
-/* 08418C 8008358C 0C0006BB */  jal   func_80001AEC
+/* 08418C 8008358C 0C0006BB */  jal   musicGetRelativeVolume
 /* 084190 80083590 00000000 */   nop   
 /* 084194 80083594 3C03800E */  lui   $v1, %hi(D_800DF458) # $v1, 0x800e
 /* 084198 80083598 3C01800E */  lui   $at, %hi(D_800DF760) # $at, 0x800e
