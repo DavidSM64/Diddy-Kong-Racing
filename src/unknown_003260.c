@@ -39,6 +39,7 @@ extern unk80119240 D_80119240[0x31];
 extern s32 D_8011962C;
 extern OSMesgQueue D_80119AF0;
 extern OSMesg D_80119B08;
+extern u16* D_80119C28;
 extern f32 D_80126170;
 
 void    *alHeapDBAlloc(u8 *, s32, ALHeap *, s32, s32);
@@ -160,5 +161,12 @@ void func_800049D8(void) {
     func_800048D8(3);
 }
 
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800049F8.s")
+
+u16 func_80004A3C(u8 arg0){
+    return D_80119C28[arg0];
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004A60.s")
