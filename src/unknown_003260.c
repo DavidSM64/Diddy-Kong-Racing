@@ -16,45 +16,89 @@ typedef struct unk800DC6BC {
     s32 unk48;
 } unk800DC6BC;
 
+typedef struct unk80119240
+{
+    ALLink node;
+    u32    unk08;
+    u32    unk0C;
+    void*  unk10;
+} unk80119240;
+
 extern unk800DC6BC* D_800DC6BC;
 extern s32 D_800DC6C0;
 extern s32 D_80115F90;
 extern ALHeap* D_80115F94;
-extern OSThread D_80115FB0;
+extern OSThread audioThread;
 extern OSMesgQueue D_80116160;
 extern OSMesg D_80116178;
 extern OSMesgQueue D_80116198;
 extern OSMesg D_801161B0;
+extern ALGlobals D_801161D0;
 extern s32 D_80119230;
+extern unk80119240 D_80119240[0x31];
+extern s32 D_8011962C;
 extern OSMesgQueue D_80119AF0;
 extern OSMesg D_80119B08;
+extern u16* D_80119C28;
 extern f32 D_80126170;
 
+void    *alHeapDBAlloc(u8 *, s32, ALHeap *, s32, s32);
+
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002660.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #else
-    void func_80002660(ALSynConfig* c, OSPri p, s32 arg2){
-        D_80115F90 = arg2;
-        D_80115F94 = c->heap;
-        c->dmaproc = &D_80003008;
-        c->outputRate = func_800C8600(22050);
-
-        alHeapDBAlloc(0,0, c->heap, 1, 120);
-
-        osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
-        osCreateMesgQueue(&D_80116160, &D_80116178, 8);
-        osCreateMesgQueue(&D_80119AF0, &D_80119B08, 50);
-
-        osCreateThread(&D_80115FB0, 4, &D_80002A98, NULL, &D_80119230, p);
+void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
+    u32     *reg_v0;
+    void    *reg_s0;
+    u32     tmp_size;
+    s32     tmp;
+    s32 i;
+    D_80115F90 = arg2;
+    D_80115F94 = c->heap;
+    c->dmaproc = &D_80003008;
+    c->outputRate = func_800C8600(22050);
+    D_8011962C = (((f32) c->outputRate)*2.0f)/D_80126170;
+    if(D_8011962C < 0){
     }
+
+    if(c->fxType == AL_FX_CUSTOM){
+        reg_v0 = func_80076C58(38);
+        tmp_size = reg_v0[9]-reg_v0[8];
+        reg_s0 = func_80070C9C(tmp_size, 0x00FFFFFF, reg_v0[8]);
+        func_80076E68(39,reg_s0, reg_v0[8],tmp_size);
+        c->params = reg_s0;
+        c[1].maxVVoices = 0;
+        alInit(&D_801161D0, c);
+        func_80071140(reg_s0);
+    }
+    else{
+        alInit(&D_801161D0, c);
+    }
+    D_80119240[0].node.next = NULL;
+    D_80119240[0].node.prev = NULL;
+
+    for(i=0; i< 0x30; i++){
+        alLink(&(D_80119240[i+1].node), &(D_80119240[i].node));
+        D_80119240[i].unk10 = alHeapDBAlloc(0,0,c->heap, 1, 0x400);
+    }
+    D_80119240[i].unk10 = alHeapDBAlloc(0,0, c->heap, 1, 0x400);
+    alHeapDBAlloc(0,0, c->heap, 1, 120);
+
+
+    osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
+    osCreateMesgQueue(&D_80116160, &D_80116178, 8);
+    osCreateMesgQueue(&D_80119AF0, &D_80119B08, 50);
+
+    osCreateThread(&audioThread, 4, &D_80002A98, NULL, &D_80119230, p);
+}
 #endif
 
-void func_80002A50(void) {
-    osStartThread(&D_80115FB0);
+void audioStartThread(void) {
+    osStartThread(&audioThread);
 }
 
-void func_80002A74(void) {
-    osStopThread(&D_80115FB0);
+void audioStopThread(void) {
+    osStopThread(&audioThread);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002A98.s")
@@ -93,7 +137,17 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800042CC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004604.s")
+
+void func_80004604(u8* arg0, u8 arg1){
+    if (arg0)
+        arg0[0x36]=arg1;
+}
+
+u8 func_8000461C(u8* arg0){
+    if (arg0)
+        return arg0[0x3F];
+    return 0;     
+}
 
 void func_80004638(ALBank* bnk, s16 arg1, s32 arg2) {
     func_80004668(bnk, arg1, 0, arg2);
@@ -107,5 +161,12 @@ void func_800049D8(void) {
     func_800048D8(3);
 }
 
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800049F8.s")
+
+u16 func_80004A3C(u8 arg0){
+    return D_80119C28[arg0];
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004A60.s")

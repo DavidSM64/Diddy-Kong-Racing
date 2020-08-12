@@ -12,7 +12,7 @@ glabel gMusicPlayer
 glabel gSndFxPlayer
 .word 0x00000000
 
-glabel D_800DC638
+glabel musicRelativeVolume
 .word 0x7F000000
 
 glabel D_800DC63C
@@ -27,7 +27,7 @@ glabel D_800DC644
 glabel D_800DC648
 .word 0x00000000
 
-glabel D_800DC64C
+glabel audioPrevCount
 .word 0x00000000
 
 glabel D_800DC650

@@ -1411,7 +1411,7 @@ void func_8006C330(s32 arg0) {
     while(1) {
         if (func_8006EAC0() != 0) {
             func_80072708();
-            func_80002A74();
+            audioStopThread();
             func_800C73BC();
             __osSpSetStatus(0xAAAA82);
             func_800CD250(0x1D6);

@@ -265,6 +265,7 @@ typedef struct {
     ALHeap              *heap;
     s32                 outputRate;     /* output sample rate */
     ALFxId              fxType;
+    u8                  unk1d;
     s32                 *params;
 } ALSynConfig;
 
