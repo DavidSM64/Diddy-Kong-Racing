@@ -47,7 +47,8 @@ typedef struct Racer {
 typedef struct Settings4C {
     u8 unk0;
     u8 unk1;
-    u8 pad2[0xD];
+    s8 unk2;
+    u8 pad3[0xC];
     u8 unkF;
 } Settings4C;
 
