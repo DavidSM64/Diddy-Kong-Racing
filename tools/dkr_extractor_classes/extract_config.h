@@ -22,16 +22,20 @@ enum ConfigRangeType {
 
 class ConfigRange {
 public:
-    ConfigRange(int start, int size, ConfigRangeType type, std::vector<std::string> properties);
+    ConfigRange(int start, int size, ConfigRangeType type, std::vector<std::string> properties, std::string subfolder, std::string category);
     ~ConfigRange();
     
     int get_start();
     int get_size();
     ConfigRangeType get_type();
+    std::string get_category();
     std::string get_property(int propertyIndex);
+    std::string get_subfolder();
 
 private:
     int rangeStart, rangeSize;
+    std::string subfolder;
+    std::string assetCategory;
     ConfigRangeType rangeType;
     std::vector<std::string> rangeProperties;
 };
@@ -68,6 +72,7 @@ private:
     std::string md5;
     std::string subfolder;
     std::vector<ConfigRange> ranges;
+    std::string currentAssetCategory;
     
     int currentRangeOffset = 0;
 };

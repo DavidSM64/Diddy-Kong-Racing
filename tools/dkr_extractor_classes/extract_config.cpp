@@ -1,10 +1,12 @@
 #include "extract_config.h"
 
-ConfigRange::ConfigRange(int start, int size, ConfigRangeType type, std::vector<std::string> properties){
-    rangeStart = start;
-    rangeSize = size;
-    rangeType = type;
-    rangeProperties = properties;
+ConfigRange::ConfigRange(int start, int size, ConfigRangeType type, std::vector<std::string> properties, std::string subfolder, std::string category){
+    this->rangeStart = start;
+    this->rangeSize = size;
+    this->rangeType = type;
+    this->rangeProperties = properties;
+    this->subfolder = subfolder;
+    this->assetCategory = category;
 }
 
 ConfigRange::~ConfigRange(){
@@ -13,17 +15,28 @@ ConfigRange::~ConfigRange(){
 int ConfigRange::get_start(){
     return rangeStart;
 }
+
 int ConfigRange::get_size(){
     return rangeSize;
 }
+
 ConfigRangeType ConfigRange::get_type(){
     return rangeType;
 }
+
 std::string ConfigRange::get_property(int propertyIndex){
     if(propertyIndex >= rangeProperties.size()) {
         return "";
     }
     return rangeProperties[propertyIndex];
+}
+
+std::string ConfigRange::get_subfolder(){
+    return subfolder;
+}
+
+std::string ConfigRange::get_category(){
+    return assetCategory;
 }
 
 /**********************************************/
@@ -95,20 +108,17 @@ void Config::parse_property(std::string name, std::string value){
     
     if(name == "config-name") {
         this->name = value;
-        return;
     } else if (name == "subfolder") {
         this->subfolder = value;
-        return;
     } else if (name == "checksum-md5") {
         this->md5 = value;
-        return;
     } else if (name == "not-supported") {
         this->notSupported = get_lowercase(trim(value)) == "true";
-        return;
     } else if (name == "include") {
         std::string text = read_file(this->directory + '/' + value);
         parse(text);
-        return;
+    } else if (name == "asset-category") {
+        this->currentAssetCategory = get_lowercase(trim(value));
     }
     
     return;
@@ -127,7 +137,7 @@ void Config::parse_range(std::string rangeSize, std::string rangeProperties) {
     }
     
     ConfigRangeType type = get_range_type(properties[0]);
-    ranges.push_back(ConfigRange(currentRangeOffset, size, type, properties));
+    ranges.push_back(ConfigRange(currentRangeOffset, size, type, properties, this->subfolder, this->currentAssetCategory));
     currentRangeOffset += size;
 }
 
