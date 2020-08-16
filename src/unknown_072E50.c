@@ -83,9 +83,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_800766D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076924.s")
 GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_8007698C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076A38.s")
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076AF4.s")
-/*
-// Last function of file
+//GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076AF4.s")
+
 s32 func_80076AF4(s32 arg0, s32 arg1) {
     s32* temp;
     s32 pad;
@@ -112,11 +111,3 @@ s32 func_80076AF4(s32 arg0, s32 arg1) {
     func_80071140(temp);
     return ret;
 }
-*/
-
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076BA0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076C58.s")
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076E68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076EE8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076F30.s")
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076F78.s")

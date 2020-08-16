@@ -7,6 +7,7 @@ __pycache__
 # Automatically generated folders should be ignored
 build/
 assets/
+ucode/
 !asm/assets/
 
 # Linker file is automatically generated, so it should be ignored

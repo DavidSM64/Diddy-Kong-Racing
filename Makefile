@@ -56,9 +56,18 @@ ifeq ($(DUMMY),FAIL)
   $(error Failed to build tools)
 endif
 
-######## Extract Assets ########
+######## Extract Assets & Microcode ########
+
+NEED_TO_EXTRACT = no
 
 ifeq ($(wildcard ./assets/.*),)
+    NEED_TO_EXTRACT = yes
+endif
+ifeq ($(wildcard ./ucode/.*),)
+    NEED_TO_EXTRACT = yes
+endif
+
+ifeq ($(NEED_TO_EXTRACT),yes)
   DUMMY != ./extract.sh >&2 || echo FAIL
   ifeq ($(DUMMY),FAIL)
     $(error Failed to extract assets)
@@ -131,7 +140,7 @@ CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 LIB_DIRS := lib
 ASM_DIRS := asm asm/boot asm/assets data lib/asm
 SRC_DIRS := src src/mips1 lib/src
-ASSETS_DIRS := animations audio billboards bin cheats fonts levels objects particles text textures textures/2d textures/3d tt_ghosts ucode 
+ASSETS_DIRS := animations audio billboards bin cheats fonts levels lut objects particles text textures textures/2d textures/3d tt_ghosts ucode 
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c lib/src/*.c)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
@@ -149,6 +158,7 @@ O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
 # TODO: Clean this up if possible
 
 ASSETS_DIR = assets/us_1.0
+UCODE_DIR = ucode/us_1.0
 
 ASSETS_OBJCOPY = $(CROSS)objcopy --input-target=binary --output-target=binary
 
@@ -189,6 +199,11 @@ LEVELS = $(wildcard $(LEVELS_IN_DIR)/*.bin $(LEVELS_IN_DIR)/*.cbin)
 LEVELS_BUILT = $(patsubst $(LEVELS_IN_DIR)/%.bin,$(LEVELS_OUT_DIR)/%.bin,$(LEVELS))
 LEVELS_BUILT += $(patsubst $(LEVELS_IN_DIR)/%.cbin,$(LEVELS_OUT_DIR)/%.cbin,$(LEVELS))
 
+LUT_IN_DIR = $(ASSETS_DIR)/lut
+LUT_OUT_DIR = $(BUILD_DIR)/lut
+LUT = $(wildcard $(LUT_IN_DIR)/*.bin)
+LUT_BUILT := $(patsubst $(LUT_IN_DIR)/%.bin,$(LUT_OUT_DIR)/%.bin,$(LUT))
+
 OBJECTS_IN_DIR = $(ASSETS_DIR)/objects
 OBJECTS_OUT_DIR = $(BUILD_DIR)/objects
 OBJECTS = $(wildcard $(OBJECTS_IN_DIR)/*.bin $(OBJECTS_IN_DIR)/*.cbin)
@@ -223,12 +238,12 @@ TT_GHOSTS_OUT_DIR = $(BUILD_DIR)/tt_ghosts
 TT_GHOSTS = $(wildcard $(TT_GHOSTS_IN_DIR)/*.bin)
 TT_GHOSTS_BUILT := $(patsubst $(TT_GHOSTS_IN_DIR)/%.bin,$(TT_GHOSTS_OUT_DIR)/%.bin,$(TT_GHOSTS))
 
-UCODE_IN_DIR = $(ASSETS_DIR)/ucode
+UCODE_IN_DIR = $(UCODE_DIR)
 UCODE_OUT_DIR = $(BUILD_DIR)/ucode
 UCODE = $(wildcard $(UCODE_IN_DIR)/*.bin)
 UCODE_BUILT := $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
 
-ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(FONTS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT)
+ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(FONTS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT) $(LUT_BUILT)
 
 ####################### LIBULTRA #########################
 
@@ -326,6 +341,9 @@ $(LEVELS_OUT_DIR)/%.bin: $(LEVELS_IN_DIR)/%.bin
 
 $(LEVELS_OUT_DIR)/%.cbin: $(LEVELS_IN_DIR)/%.cbin 
 	$(COMPRESS) $^ $@
+
+$(LUT_OUT_DIR)/%.bin: $(LUT_IN_DIR)/%.bin 
+	$(ASSETS_OBJCOPY) $^ $@
     
 $(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin 
 	$(ASSETS_OBJCOPY) $^ $@
@@ -333,10 +351,10 @@ $(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin
 $(OBJECTS_OUT_DIR)/%.cbin: $(OBJECTS_IN_DIR)/%.cbin 
 	$(COMPRESS) $^ $@
 
-$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png 
+$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png $(TEXTURES_2D_IN_DIR)/%.header 
 	$(TEXBUILDER) $^ $@ 
 
-$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png 
+$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png $(TEXTURES_3D_IN_DIR)/%.header 
 	$(TEXBUILDER) $^ $@ 
 
 $(TEXTURES_OUT_DIR)/%.bin: $(TEXTURES_IN_DIR)/%.bin 

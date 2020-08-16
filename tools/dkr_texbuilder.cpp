@@ -24,7 +24,7 @@ const std::string PNG_EXTENSION = ".png";
 /*********************************************/
 
 void show_help() {
-    std::cout << "Usage: ./dkr_texbuilder <input_png_file> <output_compressed_file>" << std::endl;
+    std::cout << "Usage: ./dkr_texbuilder <input_png_file> <input_header_file> <output_compressed_file>" << std::endl;
 }
 
 bool starts_with(std::string filename, std::string pattern) {
@@ -52,6 +52,19 @@ std::vector<std::string> split(const std::string &s, char delim) {
         elems.push_back(std::move(item));
     }
     return elems;
+}
+
+std::vector<uint8_t> read_binary(std::string filename) {
+    std::vector<uint8_t> bytes;
+    std::ifstream is;
+    is.open(filename.c_str(), std::ios::binary);
+    is.seekg(0, std::ios::end);
+    size_t filesize = is.tellg();
+    is.seekg(0, std::ios::beg);
+    bytes.resize(filesize);
+    is.read((char *)bytes.data(), filesize);
+    is.close();
+    return bytes;
 }
 
 /*********************************************/
@@ -87,41 +100,6 @@ void deinterlace(std::vector<uint8_t>& data, int width, int height, int bitDepth
     }
     
     delete[] temp;
-}
-
-void flip_vertically(std::vector<uint8_t>& data, int width, int height, int bitDepth) {
-    int rowSize;
-    if(bitDepth == 4) {
-        rowSize = width / 2;
-    } else {
-        rowSize = width * (bitDepth / 8);
-    }
-    
-    uint8_t temp = 0;
-    
-    for(int y = 0; y < height/2; y++) {
-        for(int x = 0; x < rowSize; x++) {
-            temp = data[y * rowSize + x];
-            data[y * rowSize + x] = data[(height - y - 1) * rowSize + x];
-            data[(height - y - 1) * rowSize + x] = temp;
-        }
-    }
-}
-
-int get_texture_type(std::string textureFormatString) {
-    to_lowercase(textureFormatString);
-    
-    if(textureFormatString == "rgba32")      return TEX_FORMAT_RGBA32;
-    else if(textureFormatString == "rgba16") return TEX_FORMAT_RGBA16;
-    else if(textureFormatString == "i8")     return TEX_FORMAT_I8;
-    else if(textureFormatString == "i4")     return TEX_FORMAT_I4;
-    else if(textureFormatString == "ia16")   return TEX_FORMAT_IA16;
-    else if(textureFormatString == "ia8")    return TEX_FORMAT_IA8;
-    else if(textureFormatString == "ia4")    return TEX_FORMAT_IA4;
-    else if(textureFormatString == "ci4")    return TEX_FORMAT_CI4;
-    
-    std::cout << "Error: Invalid texture type: " << textureFormatString << std::endl;
-    throw 1;
 }
 
 std::vector<uint8_t> load_texture_from_png(std::string filepath, int textureFormat, int* width, int* height) {
@@ -178,61 +156,6 @@ int get_texture_size(int width, int height, int textureFormat) {
     throw 1;
 }
 
-void generate_texture_header(std::vector<uint8_t>& outData, int width, int height, int textureFormat, 
-    int numTextures, std::string flags, std::string headerBytes, bool& forceAlignment) {
-    // I currently do not know what these are for.
-    int A = std::stoi(headerBytes.substr(0, 1), 0, 16);
-    int B = std::stoi(headerBytes.substr(1, 2), 0, 16);
-    int C = std::stoi(headerBytes.substr(3, 2), 0, 16);
-    int D = std::stoi(headerBytes.substr(5, 4), 0, 16);
-    int E = std::stoi(headerBytes.substr(9, 2), 0, 16);
-    
-    bool dontComputeSize = (flags.at(2) == 'Z');
-    
-    int textureSize = get_texture_size(width, height, textureFormat);
-    
-    /* Texture header is 0x20 bytes long */
-    /* 0x00 */ outData.push_back(width);
-    /* 0x01 */ outData.push_back(height);
-    /* 0x02 */ outData.push_back((A << 4) | textureFormat);
-    /* 0x03 */ outData.push_back(B);
-    /* 0x04 */ outData.push_back(C);
-    /* 0x05 */ outData.push_back(0x01); // Always 0x01?
-    /* 0x06 */ outData.push_back((D >> 8) & 0xFF); 
-               outData.push_back(D & 0xFF);
-    /* 0x08 */ outData.push_back(0); // Offset to CI4 palette
-               outData.push_back(0);
-    /* 0x0A */ outData.push_back(0);
-    /* 0x0B */ outData.push_back(0); // Initalized in RAM; Number of commands in display list.
-    /* 0x0C */ outData.push_back(0); // Initalized in RAM; Pointer to texture display list
-               outData.push_back(0);
-               outData.push_back(0);
-               outData.push_back(0);
-    /* 0x10 */ outData.push_back(0);
-    /* 0x11 */ outData.push_back(0);
-    /* 0x12 */ outData.push_back(numTextures);
-    /* 0x13 */ outData.push_back(0);
-    /* 0x14 */ outData.push_back(0);
-    /* 0x15 */ outData.push_back(E);
-    if(dontComputeSize) {
-    /* 0x16 */ outData.push_back(0); // Keep it zero, Not sure why this is neccessary though.
-               outData.push_back(0);
-               forceAlignment = true;
-    } else {
-    /* 0x16 */ outData.push_back((textureSize >> 8) & 0xFF); // Texture size
-               outData.push_back(textureSize & 0xFF);
-               forceAlignment = false;
-    }   
-    /* 0x18 */ outData.push_back(0);
-    /* 0x19 */ outData.push_back(0);
-    /* 0x1A */ outData.push_back(0);
-    /* 0x1B */ outData.push_back(0);
-    /* 0x1C */ outData.push_back(0);
-    /* 0x1D */ outData.push_back(dontComputeSize ? 1 : 0);
-    /* 0x1E */ outData.push_back(0);
-    /* 0x1F */ outData.push_back(0);
-}
-
 int get_bitdepth_from_format(int textureFormat){
     switch(textureFormat) {
         case TEX_FORMAT_RGBA32: 
@@ -252,22 +175,19 @@ int get_bitdepth_from_format(int textureFormat){
     throw 1;
 }
 
-std::vector<uint8_t> get_texture_data(std::vector<uint8_t> pngData, int width, int height, int textureFormat, int numTextures, 
-std::string flags, std::string headerBytes) {
+std::vector<uint8_t> get_texture_data(std::vector<uint8_t> pngData, std::vector<uint8_t> &header, bool forceAlignment) {
     std::vector<uint8_t> outData;
     
-    bool forceAlignment;
-    generate_texture_header(outData, width, height, textureFormat, numTextures, flags, headerBytes, forceAlignment);
-    
-    bool flipVertically = (flags.at(1) == 'F');
+    outData.insert(outData.end(), header.begin(), header.begin() + TEX_HEADER_SIZE);
     bool interlace = ((outData[0x06] & 0x4) == 0x04);
+    
+    int width = outData[0x00];
+    int height = outData[0x01];
+    int textureFormat = outData[0x02] & 0x0F;
     
     switch(textureFormat) {
         case TEX_FORMAT_RGBA32:
         {
-            if(flipVertically) {
-                flip_vertically(pngData, width, height, 32); 
-            }
             if (interlace) {
                 deinterlace(pngData, width, height, 32, 8);
             }
@@ -280,9 +200,6 @@ std::string flags, std::string headerBytes) {
             rgba2raw(rgba16Data, (const rgba*)&pngData[0], width, height, 16);
             std::vector<uint8_t> rgba16(rgba16Data, rgba16Data + (width * height * 2));
             free(rgba16Data);
-            if(flipVertically) {
-                flip_vertically(rgba16, width, height, 16); 
-            }
             if (interlace) {
                 deinterlace(rgba16, width, height, 16, 4);
             }
@@ -295,9 +212,6 @@ std::string flags, std::string headerBytes) {
             i2raw(i8Data, (const ia*)&pngData[0], width, height, 8);
             std::vector<uint8_t> i8(i8Data, i8Data + (width * height));
             free(i8Data);
-            if(flipVertically) {
-                flip_vertically(i8, width, height, 8); 
-            }
             if (interlace) {
                 deinterlace(i8, width, height, 8, 4);
             }
@@ -310,9 +224,6 @@ std::string flags, std::string headerBytes) {
             i2raw(i4Data, (const ia*)&pngData[0], width, height, 4);
             std::vector<uint8_t> i4(i4Data, i4Data + (width * height / 2));
             free(i4Data);
-            if(flipVertically) {
-                flip_vertically(i4, width, height, 4); 
-            }
             if (interlace) {
                 deinterlace(i4, width, height, 4, 4);
             }
@@ -325,9 +236,6 @@ std::string flags, std::string headerBytes) {
             ia2raw(ia16Data, (const ia*)&pngData[0], width, height, 16);
             std::vector<uint8_t> ia16(ia16Data, ia16Data + (width * height * 2));
             free(ia16Data);
-            if(flipVertically) {
-                flip_vertically(ia16, width, height, 16); 
-            }
             if (interlace) {
                 deinterlace(ia16, width, height, 16, 4);
             }
@@ -340,9 +248,6 @@ std::string flags, std::string headerBytes) {
             ia2raw(ia8Data, (const ia*)&pngData[0], width, height, 8);
             std::vector<uint8_t> ia8(ia8Data, ia8Data + (width * height));
             free(ia8Data);
-            if(flipVertically) {
-                flip_vertically(ia8, width, height, 8); 
-            }
             if (interlace) {
                 deinterlace(ia8, width, height, 8, 4);
             }
@@ -355,9 +260,6 @@ std::string flags, std::string headerBytes) {
             ia2raw(ia4Data, (const ia*)&pngData[0], width, height, 4);
             std::vector<uint8_t> ia4(ia4Data, ia4Data + (width * height / 2));
             free(ia4Data);
-            if(flipVertically) {
-                flip_vertically(ia4, width, height, 4); 
-            }
             if (interlace) {
                 deinterlace(ia4, width, height, 4, 4);
             }
@@ -375,29 +277,20 @@ std::string flags, std::string headerBytes) {
     return outData;
 }
 
-std::vector<uint8_t> get_texture_binary(std::string inputFilename, std::string inputFilepath, std::string& flags) {
+std::vector<uint8_t> get_texture_binary(std::string inputFilepath, std::string inputHeaderFilepath, bool& isCompressed) {
     std::vector<uint8_t> out;
-    std::vector<std::string> elems = split(inputFilename, '.');
     
-    int numElements = elems.size();
+    std::vector<uint8_t> header = read_binary(inputHeaderFilepath);
     
-    int numTextures, textureFormat;
-    std::string headerBytes;
+    isCompressed = (header[0x1D] != 0x00);
+    bool dontComputeSizeInHeader = (header[0x16] == 0x00 && header[0x17] == 0x00);
     
-    if(numElements == 6) {
-        numTextures = 1;
-        flags = elems[2];
-        headerBytes = elems[3];
-        textureFormat = get_texture_type(elems[4]);
-    } else if(numElements == 7) {
-        numTextures = stoi(elems[2], 0, 10);
-        flags = elems[3];
-        headerBytes = elems[4];
-        textureFormat = get_texture_type(elems[5]);
-    } else {
-        std::cout << "Invalid texture name" << std::endl;
-        throw 1;
+    if (!dontComputeSizeInHeader) {
+        header[0x1D] = 0x00;
     }
+    
+    int textureFormat = header[0x02] & 0xF;
+    int numTextures = header[0x12];
     
     int width, totalHeight;
     
@@ -416,7 +309,7 @@ std::vector<uint8_t> get_texture_binary(std::string inputFilename, std::string i
         int pngSectionStart = i * pngSize;
         int pngSectionEnd = (i + 1) * pngSize;
         std::vector<uint8_t> pngData(combinedPngData.begin() + pngSectionStart, combinedPngData.begin() + pngSectionEnd);
-        std::vector<uint8_t> textureData = get_texture_data(pngData, width, height, textureFormat, numTextures, flags, headerBytes);
+        std::vector<uint8_t> textureData = get_texture_data(pngData, header, dontComputeSizeInHeader);
         out.insert(out.end(), textureData.begin(), textureData.end());
     }
     
@@ -426,30 +319,23 @@ std::vector<uint8_t> get_texture_binary(std::string inputFilename, std::string i
 /*********************************************/
 
 int main(int argc, char* argv[]) {
-    if(argc != 3) {
+    if(argc != 4) {
         show_help();
         return 1;
     }
     
     std::string inputFilepath = argv[1];
-    std::string outputFilename = argv[2];
-    std::string inputFilename;
+    std::string inputHeaderFilepath = argv[2];
+    std::string outputFilename = argv[3];
     
-    std::size_t lastSlash = inputFilepath.rfind('/');
-    if(lastSlash == std::string::npos) {
-        inputFilename = inputFilepath;
-    } else {
-        inputFilename = inputFilepath.substr(lastSlash + 1, inputFilepath.length() - lastSlash - 1);
-    }
-    
-    std::string flags;
-    std::vector<uint8_t> uncompressed = get_texture_binary(inputFilename, inputFilepath, flags);
+    bool isCompressed;
+    std::vector<uint8_t> uncompressed = get_texture_binary(inputFilepath, inputHeaderFilepath, isCompressed);
     
     // DEBUG
     // std::string outFilename = outputFilename + ".uncmp.bin";
     // write_binary_file(uncompressed, outFilename);
     
-    if(flags.at(0) == 'C') {
+    if(isCompressed) {
         std::vector<uint8_t> compressedHeader;
         compressedHeader.insert(compressedHeader.end(), uncompressed.begin(), uncompressed.begin() + TEX_HEADER_SIZE);
         
