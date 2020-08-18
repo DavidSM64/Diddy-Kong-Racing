@@ -178,7 +178,7 @@ void audio_init(u32 arg0){
     audConfig.maxChannels = 16;
     audConfig.unk10 = 1;
     audConfig.hp = &gALHeap;
-    func_800031C0(&audConfig);
+    alSndPNew(&audConfig);
     audioStartThread();
     func_80000968(0);
     func_80071140(reg_s2);

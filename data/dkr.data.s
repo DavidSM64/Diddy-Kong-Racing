@@ -95,7 +95,7 @@ glabel D_800DC6B4
 glabel D_800DC6B8
 .word 0x00000000
 
-glabel D_800DC6BC
+glabel gAlSndPlayer
 .word 0x80119BD0
 
 glabel sfxVolumeSlider

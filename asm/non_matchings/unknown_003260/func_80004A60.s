@@ -21,8 +21,8 @@ glabel func_80004A60
 /* 0056AC 80004AAC 12000017 */  beqz  $s0, .L80004B0C
 /* 0056B0 80004AB0 A7110000 */   sh    $s1, ($t8)
 /* 0056B4 80004AB4 02408825 */  move  $s1, $s2
-/* 0056B8 80004AB8 3C12800E */  lui   $s2, %hi(D_800DC6BC) # $s2, 0x800e
-/* 0056BC 80004ABC 2652C6BC */  addiu $s2, %lo(D_800DC6BC) # addiu $s2, $s2, -0x3944
+/* 0056B8 80004AB8 3C12800E */  lui   $s2, %hi(gAlSndPlayer) # $s2, 0x800e
+/* 0056BC 80004ABC 2652C6BC */  addiu $s2, %lo(gAlSndPlayer) # addiu $s2, $s2, -0x3944
 /* 0056C0 80004AC0 27B3002C */  addiu $s3, $sp, 0x2c
 .L80004AC4:
 /* 0056C4 80004AC4 8E190008 */  lw    $t9, 8($s0)

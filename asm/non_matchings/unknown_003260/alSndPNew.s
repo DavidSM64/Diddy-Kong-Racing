@@ -1,8 +1,8 @@
-glabel func_800031C0
+glabel alSndPNew
 /* 003DC0 800031C0 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 003DC4 800031C4 AFB20028 */  sw    $s2, 0x28($sp)
-/* 003DC8 800031C8 3C12800E */  lui   $s2, %hi(D_800DC6BC) # $s2, 0x800e
-/* 003DCC 800031CC 2652C6BC */  addiu $s2, %lo(D_800DC6BC) # addiu $s2, $s2, -0x3944
+/* 003DC8 800031C8 3C12800E */  lui   $s2, %hi(gAlSndPlayer) # $s2, 0x800e
+/* 003DCC 800031CC 2652C6BC */  addiu $s2, %lo(gAlSndPlayer) # addiu $s2, $s2, -0x3944
 /* 003DD0 800031D0 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 003DD4 800031D4 AFB10024 */  sw    $s1, 0x24($sp)
 /* 003DD8 800031D8 AFB00020 */  sw    $s0, 0x20($sp)
