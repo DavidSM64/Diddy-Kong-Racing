@@ -388,18 +388,18 @@ void func_80001170(u8 arg0);
 
 
 void func_80001074(u16 arg0){
-    u32 s0;
+    u32 chan;
     if(D_800DC65C){
         D_80115F7C = arg0;
     }
     else{
         gMusicPlayer->chanMask = arg0;
-        for(s0 = 0; s0 != 16; s0++){
-            if(arg0 & (1 << s0)){
-                func_80001170(s0);
+        for(chan = 0; chan != 16; chan++){
+            if(arg0 & (1 << chan)){
+                func_80001170(chan);
             }
             else{
-                func_80001114(s0);
+                func_80001114(chan);
             }
 
         }
@@ -469,12 +469,12 @@ s32 func_800012A8(u8 arg0) {
 }
 
 void func_800012E8(void){
-    u32 s0;
+    u32 chan;
     if(!D_800DC648){
-        for(s0 = 0; s0<16; s0++){
-            func_80001170( s0 );
-            func_80001268( s0, 127 );
-            musicSetChlVol( s0, 127 );
+        for(chan = 0; chan<16; chan++){
+            func_80001170( chan );
+            func_80001268( chan, 127 );
+            musicSetChlVol( chan, 127 );
         }
     }
     return;
@@ -559,6 +559,7 @@ f32 func_800015F8(void){
     f32 delta_f;
     f32 tmp;
     f32* tmp2 = &D_80115D34;
+    
     if(audioPrevCount < current_cnt){
         delta = current_cnt - audioPrevCount;
         delta_f = (delta < 0)
@@ -570,8 +571,8 @@ f32 func_800015F8(void){
         delta = audioPrevCount - current_cnt;
         delta_f = (delta + -1);
         delta_f = (delta < 0)
-            ? (f32) delta + 4294967296.000000f
-            : delta;
+            ? delta_f + 4294967296.000000f
+            : delta_f;
         *tmp2  = delta_f/D_800E49E0 + D_80115D34;
     }
     if(D_80115D40 == 0){
@@ -730,8 +731,11 @@ u16 func_80001CB8(u16 arg0) {
 }
 
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_80001D04.s")
+#else
 
+#endif
 
 typedef struct unknown_struct_80001EA8_s{
     u32    unk00;
@@ -860,11 +864,11 @@ void func_800022BC(u8 arg0, ALCSPlayer* arg1) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_8000232C.s")
 #else
-func_8000232C(ALCSPlayer* seqp, u8* ptr, u8* arg2, ALCSeq* seq){
+void func_8000232C(ALCSPlayer* seqp, void* ptr, u8* arg2, ALCSeq* seq){
     if(alCSPGetState(seqp) == AL_STOPPED && *arg2){
-        func_80076E68(39, ptr, 
-            ((u32*)(((*arg2) << 3) + ALSeqFile_80115CF8))[1]-func_80076EE8(39,0),
-            *((u32*)(((*arg2) << 3) + D_80115D0C)));
+        /*func_80076E68(39, ptr, 
+            (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - func_80076EE8(39,0),
+            *((u32*)(((*arg2) << 3) + D_80115D0C)));*/
         alCSeqNew(seq, ptr);
         alCSPSetSeq(seqp, seq);
         alCSPPlay(seqp);

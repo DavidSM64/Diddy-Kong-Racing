@@ -2,6 +2,10 @@
 /* RAM_POS: 0x800D52C0 */
 
 #include "macros.h"
+#include "libultra_internal.h"
+
+extern OSThread* __osRunningThread;
+extern OSThread* __RunQueue;
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSiDeviceBusy.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSumcalc.s")
@@ -22,6 +26,15 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpDeviceBusy.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osResetGlobalIntMask.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osEPiRawWriteIo.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osYieldThread.s")
+/*extern void __osEnqueueAndYield(OSThread **);
+extern void		__osRestoreInt(u32);
+void osYieldThread(void){
+    register u32 saveMask = __osDisableInt();
+    __osRunningThread->state = OS_STATE_RUNNABLE;
+    __osEnqueueAndYield(&__RunQueue);
+    __osRestoreInt(saveMask);
+}*/
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Litob.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Genld.s")

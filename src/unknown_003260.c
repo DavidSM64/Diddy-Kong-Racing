@@ -6,12 +6,14 @@
 #include "audio_internal.h"
 #include "libultra_internal.h"
 
-extern void D_80002A98(void*);
+extern void func_80002A98(void*);
 extern u32 D_80003008;
 
 /* Unknown Size */
 typedef struct unk800DC6BC {
-    u8  pad00[0x44];
+    ALPlayer node;
+    ALEventQueue evtq;
+    u8  pad18[0x1C];
     s32 unk44;
     s32 unk48;
 } unk800DC6BC;
@@ -37,11 +39,11 @@ extern s32 sfxVolumeSlider;
 extern s32 D_80115F90;
 extern ALHeap* D_80115F94;
 extern OSThread audioThread;
-extern OSMesgQueue D_80116160;
+extern OSMesgQueue OSMesgQueue_80116160;
 extern OSMesg D_80116178;
 extern OSMesgQueue D_80116198;
 extern OSMesg D_801161B0;
-extern ALGlobals D_801161D0;
+extern ALGlobals ALGlobals_801161D0;
 extern s32 D_80119230;
 extern unk80119240 D_80119240[0x31];
 extern s32 D_8011962C;
@@ -76,11 +78,11 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
         func_80076E68(39,reg_s0, reg_v0[8],tmp_size);
         c->params = reg_s0;
         c[1].maxVVoices = 0;
-        alInit(&D_801161D0, c);
+        alInit(&ALGlobals_801161D0, c);
         func_80071140(reg_s0);
     }
     else{
-        alInit(&D_801161D0, c);
+        alInit(&ALGlobals_801161D0, c);
     }
     D_80119240[0].node.next = NULL;
     D_80119240[0].node.prev = NULL;
@@ -94,10 +96,10 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
 
 
     osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
-    osCreateMesgQueue(&D_80116160, &D_80116178, 8);
+    osCreateMesgQueue(&OSMesgQueue_80116160, &D_80116178, 8);
     osCreateMesgQueue(&D_80119AF0, &D_80119B08, 50);
 
-    osCreateThread(&audioThread, 4, &D_80002A98, NULL, &D_80119230, p);
+    osCreateThread(&audioThread, 4, &func_80002A98, NULL, &D_80119230, p);
 }
 #endif
 
@@ -109,7 +111,7 @@ void audioStopThread(void) {
     osStopThread(&audioThread);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002A98.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002A98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002E38.s")
@@ -173,7 +175,16 @@ void func_80004668(ALBank* bnk, s16 sndIndx, u8, s32){
 }
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000488C.s")
+//input typing not right (some type of struct)
+void func_8000488C(u8* arg0){
+    ALEvent sp_18;
+    sp_18.type = 1024;
+    ((u32*)(&sp_18))[1] = (u32) arg0;
+    if(arg0){
+        arg0[0x3e] &= ~(1<<4);
+        alEvtqPostEvent(&(D_800DC6BC->evtq), &sp_18, 0);
+    }
+}
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
 
 void func_800049D8(void) {
