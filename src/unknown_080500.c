@@ -747,7 +747,7 @@ void MenuAudioOptionsInit(void) {
     func_800C01D8(&D_800DF77C);
     func_8007FFEC(2);
     D_800DFAC4 = musicGetVolSliderPercentage();
-    D_800DFAC0 = sfxVolumeSliderPercentage();
+    D_800DFAC0 = sfxGetVolumeSlider();
     if (gActiveMagicCodes & 0x40) { // Check if "JUKEBOX" cheat is active
         D_800DFA3C.unk6C = D_801269E0;
         D_800DFA3C.unk32 = 0xD4;
@@ -854,7 +854,7 @@ s32 MenuAudioOptionsLoop(s32 arg0) {
                 } else if (D_800DFAC0 >= 0x101) {
                     D_800DFAC0 = 0x100;
                 }
-                func_80003160(D_800DFAC0);
+                sfxSetVolumeSlider(D_800DFAC0);
             } else if(D_80126C46 == 1) {
                 D_800DFAC4 += (phi_a2 >> 2);
                 if (D_800DFAC4 < 0) {
@@ -881,7 +881,7 @@ s32 MenuAudioOptionsLoop(s32 arg0) {
             if (phi_t0 < 0 && D_800DFABC > 0) {
                 D_800DFABC--;
                 sp30 = 1;
-            } else if (phi_t0 > 0 && D_800DFABC < (func_80002110() - 1)) {
+            } else if (phi_t0 > 0 && D_800DFABC < (ALSeqFile_80115CF8_GetSeqCount() - 1)) {
                 D_800DFABC++;
                 sp30 = 1;
             }

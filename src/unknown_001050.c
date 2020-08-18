@@ -14,18 +14,11 @@ typedef struct unk80115D48 {
     /* 0x04 */ s32 unk4;
 } unk80115D48;
 
-/* Unknown size */
-typedef struct unk800DC630 {
-    u8 pad0[0x2C];
-    s32 unk2C;
-    u16 unk30;
-} unk800DC630;
-
 extern ALCSPlayer* gMusicPlayer;
 extern ALCSPlayer* gSndFxPlayer;
 
 extern u8  musicRelativeVolume;
-extern u8  D_800DC63C;
+extern u8  sfxRelativeVolume;
 extern u8  D_800DC640;
 extern u8  D_800DC644;
 extern s32 D_800DC648;
@@ -50,16 +43,16 @@ typedef struct unk80115CF8 {
     s16 unk2;
 } unk80115CF8;
 
-extern ALSeqFile *D_80115CF8;
+extern ALSeqFile *ALSeqFile_80115CF8;
 extern void *D_80115CFC;
 
 extern u8  D_80115D04;
 extern u8  D_80115D05;
 extern s32 musicTempo;
 
-extern ALBankFile *D_80115D10;
+extern ALBankFile *ALBankFile_80115D10;
 
-extern ALBankFile *D_80115D14;
+extern ALBankFile *ALBankFile_80115D14;
 
 /* Size: 0x0A bytes */
 typedef struct unk80115D18 {
@@ -127,11 +120,11 @@ void audio_init(u32 arg0){
     alHeapInit(&gALHeap, &D_800EBF60, 0x00029D88);
     
     reg_s2 = func_80076C58(38);
-    D_80115D14 = (ALBankFile*) func_80070C9C(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
-    func_80076E68(39, D_80115D14, reg_s2[1], reg_s2[2] - reg_s2[1]);
-    alBnkfNew(D_80115D14, func_80076EE8(39, reg_s2[2]));
-    D_80115D28 = reg_s2[7] - reg_s2[6];
+    ALBankFile_80115D14 = (ALBankFile*) func_80070C9C(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
+    func_80076E68(39, ALBankFile_80115D14, reg_s2[1], reg_s2[2] - reg_s2[1]);
+    alBnkfNew(ALBankFile_80115D14, func_80076EE8(39, reg_s2[2]));
     
+    D_80115D28 = reg_s2[7] - reg_s2[6];
     D_80115D18 = (unk80115D18 *) func_80070C9C(D_80115D28, 0x00FFFFFF);
     func_80076E68(39, D_80115D18, reg_s2[6], D_80115D28);
     D_80115D20 = D_80115D28/10;
@@ -141,22 +134,22 @@ void audio_init(u32 arg0){
     func_80076E68(39, D_80115D1C, reg_s2[5], D_80115D2C);
     D_80115D24 = D_80115D2C/3;
 
-    D_80115D10 = (ALBankFile *)func_80070C9C(reg_s2[0], 0x00FFFFFF);
-    func_80076E68(39, D_80115D10, 0, reg_s2[0]);
-    alBnkfNew(D_80115D10, func_80076EE8(39, reg_s2[0]));
-    D_80115CF8 = (ALSeqFile *) alHeapDBAlloc(0,0,&gALHeap,1,4);
-    func_80076E68(39, D_80115CF8, reg_s2[4], 4);
+    ALBankFile_80115D10 = (ALBankFile *)func_80070C9C(reg_s2[0], 0x00FFFFFF);
+    func_80076E68(39, ALBankFile_80115D10, 0, reg_s2[0]);
+    alBnkfNew(ALBankFile_80115D10, func_80076EE8(39, reg_s2[0]));
+    ALSeqFile_80115CF8 = (ALSeqFile *) alHeapDBAlloc(0,0,&gALHeap,1,4);
+    func_80076E68(39, ALSeqFile_80115CF8, reg_s2[4], 4);
 
-    seqfSize = (D_80115CF8->seqCount)*8 + 4;
-    D_80115CF8 = func_80070C9C(seqfSize, 0x00FFFFFF);
-    func_80076E68(39, D_80115CF8, reg_s2[4], seqfSize);
-    alSeqFileNew(D_80115CF8, func_80076EE8(39, reg_s2[4]));
-    D_80115D0C = (u32 *)func_80070C9C( (D_80115CF8->seqCount)*4, 0x00FFFFFF);
+    seqfSize = (ALSeqFile_80115CF8->seqCount)*8 + 4;
+    ALSeqFile_80115CF8 = func_80070C9C(seqfSize, 0x00FFFFFF);
+    func_80076E68(39, ALSeqFile_80115CF8, reg_s2[4], seqfSize);
+    alSeqFileNew(ALSeqFile_80115CF8, func_80076EE8(39, reg_s2[4]));
+    D_80115D0C = (u32 *)func_80070C9C( (ALSeqFile_80115CF8->seqCount)*4, 0x00FFFFFF);
 
 
-    for(iCnt = 0; iCnt < D_80115CF8->seqCount; iCnt++){
-        (u32*)((u32) D_80115CF8 + 8 + iCnt*8);
-        D_80115D0C[iCnt] = D_80115CF8->seqArray[iCnt].len;
+    for(iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++){
+        (u32*)((u32) ALSeqFile_80115CF8 + 8 + iCnt*8);
+        D_80115D0C[iCnt] = ALSeqFile_80115CF8->seqArray[iCnt].len;
         if(D_80115D0C[iCnt] & 1){
             D_80115D0C[iCnt]++;
         }
@@ -247,7 +240,7 @@ void func_80000968(s32 arg0) {
             func_80004A60(2, 0x7FFF);
             func_80004A60(4, 0x7FFF);
             alCSPSetVol(gMusicPlayer, (s16) (musicRelativeVolume * musicVolumeSliderPercentage));
-            alCSPSetVol(gSndFxPlayer, (s16) (sfxVolumeSliderPercentage() * D_800DC63C));
+            alCSPSetVol(gSndFxPlayer, (s16) (sfxGetVolumeSlider() * sfxRelativeVolume));
             break;
     }
     D_80115F79 = arg0;
@@ -450,7 +443,7 @@ void musicSetChlVol(u8 chan, u8 vol) {
 s32 alCSPGetChlVol(ALCSPlayer*, u8 arg1);
 
 /* Unused?*/
-s32 func_80001228(u8 arg0) {
+s32 musicGetChlVol(u8 arg0) {
     if (arg0 >= 0x10) {
         return 0;
     } else {
@@ -696,8 +689,8 @@ s32 musicGetVolSliderPercentage(void) {
 }
 
 void sfxSetRelativeVolume(u8 arg0) {
-    D_800DC63C = arg0;
-    alCSPSetVol(gSndFxPlayer, (s16) (sfxVolumeSliderPercentage() * D_800DC63C));
+    sfxRelativeVolume = arg0;
+    alCSPSetVol(gSndFxPlayer, (s16) (sfxGetVolumeSlider() * sfxRelativeVolume));
 }
 
 void sfxSetPan(ALPan pan){
@@ -756,19 +749,19 @@ void func_80001EA8(u16 arg0, unknown_struct_80001EA8 arg1, u32* arg2){
     }
 }
 
-u16 func_800020E8(void);
+u16 ALBankFile_80115D14_GetSoundCount(void);
 
-void func_80001F14(u16 arg0, u32 *arg1){
-    if(arg0 <= 0 || func_800020E8() < arg0){
+void func_80001F14(u16 sndIndx, u32 *arg1){
+    if(sndIndx <= 0 || ALBankFile_80115D14_GetSoundCount() < sndIndx){
         if(arg1){
             *arg1 = 0;
         }
     }
     else{
         if(arg1){
-            func_80004638(D_80115D14->bankArray[0], (s16) arg0, arg1);
+            func_80004638(ALBankFile_80115D14->bankArray[0], (s16) sndIndx, arg1);
         }else{
-            func_80004638(D_80115D14->bankArray[0], (s16) arg0, &D_80115F88);
+            func_80004638(ALBankFile_80115D14->bankArray[0], (s16) sndIndx, &D_80115F88);
         }
     }
 }
@@ -781,12 +774,12 @@ void func_80001FB8(u16 arg0){
 }
 #endif
 
-u16 func_800020E8(void) {
-    return D_80115D14->bankArray[0]->instArray[0]->soundCount;
+u16 ALBankFile_80115D14_GetSoundCount(void) {
+    return ALBankFile_80115D14->bankArray[0]->instArray[0]->soundCount;
 }
 
-u8 func_80002110(void) {
-    return D_80115CF8->seqCount;
+u8 ALSeqFile_80115CF8_GetSeqCount(void) {
+    return ALSeqFile_80115CF8->seqCount;
 }
 
 void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2) {
@@ -814,11 +807,11 @@ void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-u8 func_800021B0(u16 arg0){
-    if(arg0 <= 0 || D_80115D14->bankArray[0]->instArray[0]->soundCount < arg0){
+u8 ALBankFile_80115D14_GetSoundDecayTime(u16 sndIndx){
+    if(sndIndx <= 0 || ALBankFile_80115D14->bankArray[0]->instArray[0]->soundCount < sndIndx){
         return 0;
     }
-    return ((u32)(1+ D_80115D14->bankArray[0]->instArray[0]->soundArray[arg0-1]->envelope->decayTime) == 0);
+    return ((u32)(1+ ALBankFile_80115D14->bankArray[0]->instArray[0]->soundArray[sndIndx-1]->envelope->decayTime) == 0);
 }
 
 
@@ -844,7 +837,7 @@ ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events){
     
     cseqp = (ALCSPlayer *) alHeapDBAlloc(NULL, 0, &gALHeap, 1, 128);
     alCSPNew(cseqp, &config);
-    alCSPSetBank(cseqp, D_80115D10->bankArray[0]);
+    alCSPSetBank(cseqp, ALBankFile_80115D10->bankArray[0]);
     ((u8*) cseqp)[0x36]= 0x7F; //this member doesn't exist in ALCSPlayer 
     return cseqp;
 }
@@ -854,7 +847,7 @@ ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events){
 
 void func_800022BC(u8 arg0, ALCSPlayer* arg1) {
     func_80002570(arg1);
-    if (arg0 < D_80115CF8->seqCount) {
+    if (arg0 < ALSeqFile_80115CF8->seqCount) {
         if (arg1 == gMusicPlayer) {
             D_800DC65C = arg0;
             return;
@@ -870,7 +863,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_001050/func_8000232C.s")
 func_8000232C(ALCSPlayer* seqp, u8* ptr, u8* arg2, ALCSeq* seq){
     if(alCSPGetState(seqp) == AL_STOPPED && *arg2){
         func_80076E68(39, ptr, 
-            ((u32*)(((*arg2) << 3) + D_80115CF8))[1]-func_80076EE8(39,0),
+            ((u32*)(((*arg2) << 3) + ALSeqFile_80115CF8))[1]-func_80076EE8(39,0),
             *((u32*)(((*arg2) << 3) + D_80115D0C)));
         alCSeqNew(seq, ptr);
         alCSPSetSeq(seqp, seq);

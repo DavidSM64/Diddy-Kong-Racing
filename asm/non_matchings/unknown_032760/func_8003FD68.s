@@ -25,7 +25,7 @@ glabel func_8003FD68
 /* 0409C4 8003FDC4 90AB0010 */  lbu   $t3, 0x10($a1)
 /* 0409C8 8003FDC8 AC600008 */  sw    $zero, 8($v1)
 /* 0409CC 8003FDCC A06B000D */  sb    $t3, 0xd($v1)
-/* 0409D0 8003FDD0 0C00086C */  jal   func_800021B0
+/* 0409D0 8003FDD0 0C00086C */  jal   ALBankFile_80115D14_GetSoundDecayTime
 /* 0409D4 8003FDD4 AFA30044 */   sw    $v1, 0x44($sp)
 /* 0409D8 8003FDD8 8FA30044 */  lw    $v1, 0x44($sp)
 /* 0409DC 8003FDDC 10400021 */  beqz  $v0, .L8003FE64

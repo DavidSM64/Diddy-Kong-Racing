@@ -15,7 +15,7 @@ glabel gSndFxPlayer
 glabel musicRelativeVolume
 .word 0x7F000000
 
-glabel D_800DC63C
+glabel sfxRelativeVolume
 .word 0x7F000000
 
 glabel D_800DC640
@@ -98,7 +98,7 @@ glabel D_800DC6B8
 glabel D_800DC6BC
 .word 0x80119BD0
 
-glabel D_800DC6C0
+glabel sfxVolumeSlider
 .word 0x00000100
 
 glabel D_800DC6C4

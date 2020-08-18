@@ -24,8 +24,16 @@ typedef struct unk80119240
     void*  unk10;
 } unk80119240;
 
+/* Unknown Size */
+/*typedef struct unk800DC6B0 {
+    ALLink node;
+    ALLink_s * unk08;
+} unk800DC6B0;
+*/
+extern u32 D_800DC6A0;
+//extern unk800DC6B0* D_800DC6B0;
 extern unk800DC6BC* D_800DC6BC;
-extern s32 D_800DC6C0;
+extern s32 sfxVolumeSlider;
 extern s32 D_80115F90;
 extern ALHeap* D_80115F94;
 extern OSThread audioThread;
@@ -108,16 +116,16 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002E38.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80003008.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003040.s")
 
-void func_80003160(u32 arg0) {
+void sfxSetVolumeSlider(u32 arg0) {
     if (arg0 > 256) {
         arg0 = 256;
     }
 
-    D_800DC6C0 = arg0;
+    sfxVolumeSlider = arg0;
 }
 
-s32 sfxVolumeSliderPercentage(void) {
-    return D_800DC6C0;
+s32 sfxGetVolumeSlider(void) {
+    return sfxVolumeSlider;
 }
 
 void func_8000318C(s32 arg0) {
@@ -136,7 +144,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000418C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800042CC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
+
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
+
 
 void func_80004604(u8* arg0, u8 arg1){
     if (arg0)
@@ -149,11 +161,18 @@ u8 func_8000461C(u8* arg0){
     return 0;     
 }
 
-void func_80004638(ALBank* bnk, s16 arg1, s32 arg2) {
-    func_80004668(bnk, arg1, 0, arg2);
+void func_80004638(ALBank* bnk, s16 sndIndx, s32 arg2) {
+    func_80004668(bnk, sndIndx, 0, arg2);
 }
 
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
+#else
+void func_80004668(ALBank* bnk, s16 sndIndx, u8, s32){
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000488C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
 
