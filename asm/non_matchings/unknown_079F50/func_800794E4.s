@@ -1,30 +1,4 @@
-glabel func_80079480
-/* 07A080 80079480 27BDFFE8 */  addiu $sp, $sp, -0x18
-/* 07A084 80079484 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 07A088 80079488 AFA40018 */  sw    $a0, 0x18($sp)
-/* 07A08C 8007948C AFA60020 */  sw    $a2, 0x20($sp)
-/* 07A090 80079490 AFA70024 */  sw    $a3, 0x24($sp)
-/* 07A094 80079494 24040001 */  li    $a0, 1
-/* 07A098 80079498 0C03268C */  jal   osSetIntMask
-/* 07A09C 8007949C AFA5001C */   sw    $a1, 0x1c($sp)
-/* 07A0A0 800794A0 8FA30018 */  lw    $v1, 0x18($sp)
-/* 07A0A4 800794A4 8FA5001C */  lw    $a1, 0x1c($sp)
-/* 07A0A8 800794A8 8FAE0020 */  lw    $t6, 0x20($sp)
-/* 07A0AC 800794AC 00402025 */  move  $a0, $v0
-/* 07A0B0 800794B0 ACAE0008 */  sw    $t6, 8($a1)
-/* 07A0B4 800794B4 8C6F0260 */  lw    $t7, 0x260($v1)
-/* 07A0B8 800794B8 00000000 */  nop   
-/* 07A0BC 800794BC ACAF0004 */  sw    $t7, 4($a1)
-/* 07A0C0 800794C0 93B80027 */  lbu   $t8, 0x27($sp)
-/* 07A0C4 800794C4 00000000 */  nop   
-/* 07A0C8 800794C8 A0B80000 */  sb    $t8, ($a1)
-/* 07A0CC 800794CC 0C03268C */  jal   osSetIntMask
-/* 07A0D0 800794D0 AC650260 */   sw    $a1, 0x260($v1)
-/* 07A0D4 800794D4 8FBF0014 */  lw    $ra, 0x14($sp)
-/* 07A0D8 800794D8 27BD0018 */  addiu $sp, $sp, 0x18
-/* 07A0DC 800794DC 03E00008 */  jr    $ra
-/* 07A0E0 800794E0 00000000 */   nop   
-
+glabel osScRemoveClient
 /* 07A0E4 800794E4 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 07A0E8 800794E8 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 07A0EC 800794EC AFA40020 */  sw    $a0, 0x20($sp)

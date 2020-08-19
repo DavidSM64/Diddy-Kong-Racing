@@ -20,7 +20,7 @@ glabel func_80002A98
 /* 0036E0 80002AE0 AFA00044 */  sw    $zero, 0x44($sp)
 /* 0036E4 80002AE4 24C66160 */  addiu $a2, %lo(OSMesgQueue_80116160) # addiu $a2, $a2, 0x6160
 /* 0036E8 80002AE8 24A56220 */  addiu $a1, %lo(D_80116220) # addiu $a1, $a1, 0x6220
-/* 0036EC 80002AEC 0C01E520 */  jal   func_80079480
+/* 0036EC 80002AEC 0C01E520 */  jal   osScAddClient
 /* 0036F0 80002AF0 24070001 */   li    $a3, 1
 /* 0036F4 80002AF4 3C1E8011 */  lui   $fp, %hi(D_80116198) # $fp, 0x8011
 /* 0036F8 80002AF8 3C16800E */  lui   $s6, %hi(D_800DC680) # $s6, 0x800e

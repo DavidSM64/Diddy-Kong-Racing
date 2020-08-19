@@ -5,9 +5,6 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
-#if 0
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/osCreateScheduler.s")
-#else
 #define OS_SC_RETRACE_MSG       1
 #define OS_SC_PRE_NMI_MSG       4
 #define OS_SC_MAX_MESGS         8
@@ -34,6 +31,7 @@ typedef struct OSScTask_s {
 
 
 typedef struct SCClient_s {
+    u8                  unk0;
     struct SCClient_s   *next;  /* next client in the list      */
     OSMesgQueue         *msgQ;  /* where to send the frame msg  */
 } OSScClient;
@@ -79,8 +77,6 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     sc->retraceMsg.type = OS_SC_RETRACE_MSG;  /* sent to apps */
     sc->prenmiMsg.type  = OS_SC_PRE_NMI_MSG;
     
-
-
     /*
      * Set up video manager, listen for Video, RSP, and RDP interrupts
      */
@@ -101,9 +97,44 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     osCreateThread(&sc->thread, 5, __scMain, (void *)sc, stack, priority);
     osStartThread(&sc->thread);
 }
-#endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079480.s")
+void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 arg3){
+    OSIntMask mask;
+
+    mask = osSetIntMask(OS_IM_NONE);
+
+    c->msgQ = msgQ;
+    c->next = sc->clientList;
+    c->unk0 = arg3;
+    sc->clientList = c;
+    
+    osSetIntMask(mask);
+}
+
+
+void osScRemoveClient(OSSched *sc, OSScClient *c)
+{
+    OSScClient *client = sc->clientList; 
+    OSScClient *prev   = 0;
+    OSIntMask  mask;
+
+    mask = osSetIntMask(OS_IM_NONE);
+    
+    while (client != 0) {
+        if (client == c) {
+	    if(prev)
+		prev->next = c->next;
+	    else
+		sc->clientList = c->next;
+            break;
+        }
+        prev   = client;
+        client = client->next;
+    }
+
+    osSetIntMask(mask);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079574.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007957C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scMain.s")

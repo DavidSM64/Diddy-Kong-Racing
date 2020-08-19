@@ -1437,7 +1437,7 @@ extern s32 D_80123544;
 extern s32 D_801234E8;
 
 void osCreateScheduler(u16*, s32*, s32, u8, s32);
-void func_80079480(u16*, u8*, s32**, s32);
+void osScAddClient(u16*, u8*, s32**, s32);
 
 void func_8006C3E0(void) {
     s32 sp24;
@@ -1484,7 +1484,7 @@ void func_8006C3E0(void) {
     func_80081218();
     func_800C7350();
     osCreateMesgQueue(&D_80123548, &D_80123544, 1);
-    func_80079480(&D_80121260, &D_80123538, &D_80123548, 3);
+    osScAddClient(&D_80121260, &D_80123538, &D_80123548, 3);
     D_80123560 = 0;
     D_80123504 = 0;
     D_80123508 = 0;
