@@ -210,7 +210,6 @@ void alSndPNew(audioMgrConfig* c){
     alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_38, gAlSndPlayer->frameTime);
     gAlSndPlayer->nextDelta = alEvtqNextEvent(&(gAlSndPlayer->evtq), &(gAlSndPlayer->nextEvent));
 }
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
