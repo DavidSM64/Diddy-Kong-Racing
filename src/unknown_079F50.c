@@ -180,6 +180,20 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
     }
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A080.s")
+#else
+extern OSTime D_80126118;
+void func_8007A080(OSSched *sc) 
+{
+    if (sc->curRSPTask->list.t.type == M_GFXTASK) {
+
+        //sc->curRSPTask->state |= OS_SC_YIELD;
+        sc->curRSPTask->state |= 0x10;
+        D_80126118 = osGetTime(); //TODO extra lui
+        osSpTaskYield();
+    } 
+}
+#endif
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A0D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A2D0.s")
