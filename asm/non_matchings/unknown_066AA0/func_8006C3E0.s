@@ -42,7 +42,7 @@ glabel func_8006C3E0
 /* 06D070 8006C470 AFB90010 */  sw    $t9, 0x10($sp)
 /* 06D074 8006C474 24A534E8 */  addiu $a1, %lo(D_801234E8) # addiu $a1, $a1, 0x34e8
 /* 06D078 8006C478 24841260 */  addiu $a0, %lo(D_80121260) # addiu $a0, $a0, 0x1260
-/* 06D07C 8006C47C 0C01E4D4 */  jal   func_80079350
+/* 06D07C 8006C47C 0C01E4D4 */  jal   osCreateScheduler
 /* 06D080 8006C480 2406000D */   li    $a2, 13
 /* 06D084 8006C484 3C01800E */  lui   $at, %hi(D_800DD3A0) # $at, 0x800e
 /* 06D088 8006C488 0C01BBEE */  jal   func_8006EFB8

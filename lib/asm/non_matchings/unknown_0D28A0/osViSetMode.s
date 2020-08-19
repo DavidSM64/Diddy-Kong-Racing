@@ -1,4 +1,4 @@
-glabel func_800D1CA0
+glabel osViSetMode
 /* 0D28A0 800D1CA0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0D28A4 800D1CA4 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D28A8 800D1CA8 AFA40028 */  sw    $a0, 0x28($sp)

@@ -1436,7 +1436,7 @@ extern u8 D_80123538;
 extern s32 D_80123544;
 extern s32 D_801234E8;
 
-void func_80079350(u16*, s32*, s32, u8, s32);
+void osCreateScheduler(u16*, s32*, s32, u8, s32);
 void func_80079480(u16*, u8*, s32**, s32);
 
 void func_8006C3E0(void) {
@@ -1459,7 +1459,7 @@ void func_8006C3E0(void) {
         sp24 = 0x1C;
     }
     
-    func_80079350(&D_80121260, &D_801234E8, 0xD, sp24, 1);
+    osCreateScheduler(&D_80121260, &D_801234E8, 0xD, sp24, 1);
     D_800DD3A0 = 0;
     if (func_8006EFB8() == 0) {
         D_800DD3A0 = 1;

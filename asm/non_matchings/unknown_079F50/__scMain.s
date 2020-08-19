@@ -1,4 +1,4 @@
-glabel D_800795AC
+glabel __scMain
 /* 07A1AC 800795AC 27BDFF98 */  addiu $sp, $sp, -0x68
 /* 07A1B0 800795B0 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 07A1B4 800795B4 AFB70034 */  sw    $s7, 0x34($sp)
