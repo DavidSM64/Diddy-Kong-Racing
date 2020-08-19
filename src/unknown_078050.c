@@ -4,6 +4,11 @@
 #include "types.h"
 #include "macros.h"
 
+
+extern u32 D_800DE4C0;
+extern u32 D_800DE4C4;
+extern u32 D_800DE4C8;
+
 extern u32 D_800DE4D0;
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
@@ -14,7 +19,14 @@ GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077B9C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078054.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800780DC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078100.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078170.s")
+
+void func_80078170(u32 arg0, u32 arg1, u32 arg2){
+    D_800DE4C4 = arg0;
+    D_800DE4C8 = arg1;
+    D_800DE4C0 = arg2 << 2;
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800787FC.s")
 
