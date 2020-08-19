@@ -17,7 +17,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078100.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078170.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800787FC.s")
-//GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078AAC.s")
+
 void func_80078AAC(u32 arg0){
     D_800DE4D0 = arg0;
 }
