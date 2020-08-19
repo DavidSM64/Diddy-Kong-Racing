@@ -5,12 +5,17 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
+extern u8 D_800DE4B0;
+extern u8 D_800DE4B4;
+extern u8 D_800DE4B8;
 
 extern u32 D_800DE4C0;
 extern u32 D_800DE4C4;
 extern u32 D_800DE4C8;
 
 extern u32 D_800DE4D0;
+
+extern u32 D_800DE4E0;
 
 extern OSMesgQueue  D_80125EA0;
 extern OSMesg       D_80125EB8;
@@ -23,11 +28,38 @@ extern u32 D_80126100;
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077A54.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077B34.s")
+
+void func_80077B34(u8 arg0, u8 arg1, u8 arg2){
+    D_800DE4B0 = arg0;
+    D_800DE4B4 = arg1;
+    D_800DE4B8 = arg2;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077B5C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077B9C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078054.s")
+
+
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800780DC.s")
+#else
+typedef struct{
+    u32 unk00;
+    u32* unk04;
+} struct_800780DC_a0;
+
+void func_800780DC(struct_800780DC_a0** arg0){
+    u32* tmp2= &D_800DE4E0;
+    struct_800780DC_a0* tmp = *arg0;
+    
+
+    *arg0 = *arg0 + 1;
+    tmp->unk00 = 0x6000000;
+    tmp->unk04 = tmp2;
+}
+#endif
+
 
 void func_80078100(void){
     D_80126100 = func_8007957C();
