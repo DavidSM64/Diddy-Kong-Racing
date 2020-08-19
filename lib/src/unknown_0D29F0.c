@@ -50,6 +50,9 @@ void *osViGetNextFramebuffer(void){
     return framep;
 }
 
+
+//TODO Split into sptask.c and seperate header
+
 #define OS_TASK_YIELDED			0x0001
 
 #define SP_CLR_HALT		0x00001	    /* Bit  0: clear halt */
@@ -68,11 +71,30 @@ void *osViGetNextFramebuffer(void){
 
 #define SP_IMEM_START		0x04001000	/* read/write */
 
+#define _osVirtualToPhysical(ptr)               \
+	if (ptr != NULL)                            \
+	{                                           \
+		ptr = (void *)osVirtualToPhysical(ptr); \
+	}
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/_VirtualToPhysicalTask.s")
-
-void osSpTaskLoad(OSTask *intp)
+OSTask D_8012D1A0;
+OSTask *_VirtualToPhysicalTask(OSTask *intp)
 {
+	OSTask *tp;
+	tp = &D_8012D1A0;
+	bcopy(intp, tp, sizeof(OSTask));
+
+	_osVirtualToPhysical(tp->t.ucode);
+	_osVirtualToPhysical(tp->t.ucode_data);
+	_osVirtualToPhysical(tp->t.dram_stack);
+	_osVirtualToPhysical(tp->t.output_buff);
+	_osVirtualToPhysical(tp->t.output_buff_size);
+	_osVirtualToPhysical(tp->t.data_ptr);
+	_osVirtualToPhysical(tp->t.yield_data_ptr);
+	return tp;
+}
+
+void osSpTaskLoad(OSTask *intp){
 
 	OSTask *tp;
 	tp = _VirtualToPhysicalTask(intp);
@@ -98,8 +120,6 @@ void osSpTaskLoad(OSTask *intp)
 							 tp->t.ucode_boot_size) == -1)
 		;
 }
-
-
 
 void osSpTaskStartGo(OSTask *tp){
 	while (__osSpDeviceBusy());
