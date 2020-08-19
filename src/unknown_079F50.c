@@ -135,7 +135,10 @@ void osScRemoveClient(OSSched *sc, OSScClient *c)
     osSetIntMask(mask);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079574.s")
+OSMesgQueue *osScGetCmdQ(OSSched *sc){
+    return &sc->cmdQ;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007957C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scMain.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079760.s")
