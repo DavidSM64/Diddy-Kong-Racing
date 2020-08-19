@@ -28,6 +28,7 @@ typedef struct
 extern OSTime __osCurrentTime;//__osCurrentTime
 extern u32 __osBaseCounter; //__osBaseCounter
 extern __OSViContext *__osViCurr;
+extern __OSViContext *__osViNext;
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/func_800D1DF0.s")
 
@@ -42,7 +43,17 @@ void *osViGetCurrentFramebuffer(void)
     return framep;
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osViGetNextFramebuffer.s")
+void *osViGetNextFramebuffer(void)
+{
+    register u32 saveMask;
+    void *framep;
+
+    saveMask = __osDisableInt();
+    framep = __osViNext->framep;
+    __osRestoreInt(saveMask);
+    return framep;
+}
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/_VirtualToPhysicalTask.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskLoad.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskStartGo.s")
