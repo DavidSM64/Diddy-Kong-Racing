@@ -243,7 +243,7 @@ glabel _handleEvent
 /* 0043EC 800037EC 0018C840 */  sll   $t9, $t8, 1
 /* 0043F0 800037F0 01D94021 */  addu  $t0, $t6, $t9
 /* 0043F4 800037F4 85090000 */  lh    $t1, ($t0)
-/* 0043F8 800037F8 3C19800E */  lui   $t9, %hi(D_800DC6C0) # $t9, 0x800e
+/* 0043F8 800037F8 3C19800E */  lui   $t9, %hi(sfxVolumeSlider) # $t9, 0x800e
 /* 0043FC 800037FC 46105483 */  div.s $f18, $f10, $f16
 /* 004400 80003800 00006012 */  mflo  $t4
 /* 004404 80003804 444DF800 */  cfc1  $t5, $31
@@ -277,7 +277,7 @@ glabel _handleEvent
 /* 004474 80003874 10000001 */  b     .L8000387C
 /* 004478 80003878 00001025 */   move  $v0, $zero
 .L8000387C:
-/* 00447C 8000387C 8F39C6C0 */  lw    $t9, %lo(D_800DC6C0)($t9)
+/* 00447C 8000387C 8F39C6C0 */  lw    $t9, %lo(sfxVolumeSlider)($t9)
 /* 004480 80003880 8EE40038 */  lw    $a0, 0x38($s7)
 /* 004484 80003884 00590019 */  multu $v0, $t9
 /* 004488 80003888 02602825 */  move  $a1, $s3
@@ -585,7 +585,7 @@ glabel _handleEvent
 /* 0048CC 80003CCC 00000000 */  nop   
 /* 0048D0 80003CD0 032C5821 */  addu  $t3, $t9, $t4
 /* 0048D4 80003CD4 856F0000 */  lh    $t7, ($t3)
-/* 0048D8 80003CD8 3C0B800E */  lui   $t3, %hi(D_800DC6C0) # $t3, 0x800e
+/* 0048D8 80003CD8 3C0B800E */  lui   $t3, %hi(sfxVolumeSlider) # $t3, 0x800e
 /* 0048DC 80003CDC 00007012 */  mflo  $t6
 /* 0048E0 80003CE0 00000000 */  nop   
 /* 0048E4 80003CE4 00000000 */  nop   
@@ -610,7 +610,7 @@ glabel _handleEvent
 /* 004930 80003D30 10000001 */  b     .L80003D38
 /* 004934 80003D34 00001025 */   move  $v0, $zero
 .L80003D38:
-/* 004938 80003D38 8D6BC6C0 */  lw    $t3, %lo(D_800DC6C0)($t3)
+/* 004938 80003D38 8D6BC6C0 */  lw    $t3, %lo(sfxVolumeSlider)($t3)
 /* 00493C 80003D3C 8EE40038 */  lw    $a0, 0x38($s7)
 /* 004940 80003D40 004B0019 */  multu $v0, $t3
 /* 004944 80003D44 2625000C */  addiu $a1, $s1, 0xc
@@ -649,7 +649,7 @@ glabel _handleEvent
 /* 0049C0 80003DC0 000C5840 */  sll   $t3, $t4, 1
 /* 0049C4 80003DC4 01EB6821 */  addu  $t5, $t7, $t3
 /* 0049C8 80003DC8 85A90000 */  lh    $t1, ($t5)
-/* 0049CC 80003DCC 3C0B800E */  lui   $t3, %hi(D_800DC6C0) # $t3, 0x800e
+/* 0049CC 80003DCC 3C0B800E */  lui   $t3, %hi(sfxVolumeSlider) # $t3, 0x800e
 /* 0049D0 80003DD0 46083283 */  div.s $f10, $f6, $f8
 /* 0049D4 80003DD4 00004012 */  mflo  $t0
 /* 0049D8 80003DD8 444AF800 */  cfc1  $t2, $31
@@ -683,7 +683,7 @@ glabel _handleEvent
 /* 004A48 80003E48 10000001 */  b     .L80003E50
 /* 004A4C 80003E4C 00001025 */   move  $v0, $zero
 .L80003E50:
-/* 004A50 80003E50 8D6BC6C0 */  lw    $t3, %lo(D_800DC6C0)($t3)
+/* 004A50 80003E50 8D6BC6C0 */  lw    $t3, %lo(sfxVolumeSlider)($t3)
 /* 004A54 80003E54 8EE40038 */  lw    $a0, 0x38($s7)
 /* 004A58 80003E58 004B0019 */  multu $v0, $t3
 /* 004A5C 80003E5C 2625000C */  addiu $a1, $s1, 0xc
@@ -748,8 +748,8 @@ glabel _handleEvent
 /* 004B3C 80003F3C 448D9000 */  mtc1  $t5, $f18
 /* 004B40 80003F40 C62A002C */  lwc1  $f10, 0x2c($s1)
 /* 004B44 80003F44 46809120 */  cvt.s.w $f4, $f18
-/* 004B48 80003F48 3C0C800E */  lui   $t4, %hi(D_800DC6C0) # $t4, 0x800e
-/* 004B4C 80003F4C 8D8CC6C0 */  lw    $t4, %lo(D_800DC6C0)($t4)
+/* 004B48 80003F48 3C0C800E */  lui   $t4, %hi(sfxVolumeSlider) # $t4, 0x800e
+/* 004B4C 80003F4C 8D8CC6C0 */  lw    $t4, %lo(sfxVolumeSlider)($t4)
 /* 004B50 80003F50 46062203 */  div.s $f8, $f4, $f6
 /* 004B54 80003F54 004C0019 */  multu $v0, $t4
 /* 004B58 80003F58 8EE40038 */  lw    $a0, 0x38($s7)

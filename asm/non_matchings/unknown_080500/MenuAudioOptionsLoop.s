@@ -218,7 +218,7 @@ glabel MenuAudioOptionsLoop
 /* 085B84 80084F84 24020100 */  li    $v0, 256
 /* 085B88 80084F88 AC620000 */  sw    $v0, ($v1)
 .L80084F8C:
-/* 085B8C 80084F8C 0C000C58 */  jal   func_80003160
+/* 085B8C 80084F8C 0C000C58 */  jal   sfxSetVolumeSlider
 /* 085B90 80084F90 00402025 */   move  $a0, $v0
 /* 085B94 80084F94 1000005A */  b     .L80085100
 /* 085B98 80084F98 00000000 */   nop   
@@ -294,7 +294,7 @@ glabel MenuAudioOptionsLoop
 /* 085C98 80085098 3C10800E */  lui   $s0, %hi(D_800DFABC) # $s0, 0x800e
 /* 085C9C 8008509C 1900000C */  blez  $t0, .L800850D0
 /* 085CA0 800850A0 2610FABC */   addiu $s0, %lo(D_800DFABC) # addiu $s0, $s0, -0x544
-/* 085CA4 800850A4 0C000844 */  jal   func_80002110
+/* 085CA4 800850A4 0C000844 */  jal   ALSeqFile_80115CF8_GetSeqCount
 /* 085CA8 800850A8 AFA40028 */   sw    $a0, 0x28($sp)
 /* 085CAC 800850AC 8E030000 */  lw    $v1, ($s0)
 /* 085CB0 800850B0 2459FFFF */  addiu $t9, $v0, -1

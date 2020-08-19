@@ -1,4 +1,4 @@
-glabel D_80002A98
+glabel func_80002A98
 /* 003698 80002A98 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 00369C 80002A9C AFA40050 */  sw    $a0, 0x50($sp)
 /* 0036A0 80002AA0 3C048011 */  lui   $a0, %hi(D_80115F90) # $a0, 0x8011
@@ -6,7 +6,7 @@ glabel D_80002A98
 /* 0036A8 80002AA8 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0036AC 80002AAC 8C845F90 */  lw    $a0, %lo(D_80115F90)($a0)
 /* 0036B0 80002AB0 3C058011 */  lui   $a1, %hi(D_80116220) # $a1, 0x8011
-/* 0036B4 80002AB4 3C068011 */  lui   $a2, %hi(D_80116160) # $a2, 0x8011
+/* 0036B4 80002AB4 3C068011 */  lui   $a2, %hi(OSMesgQueue_80116160) # $a2, 0x8011
 /* 0036B8 80002AB8 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 0036BC 80002ABC AFB70034 */  sw    $s7, 0x34($sp)
 /* 0036C0 80002AC0 AFB60030 */  sw    $s6, 0x30($sp)
@@ -18,7 +18,7 @@ glabel D_80002A98
 /* 0036D8 80002AD8 00008025 */  move  $s0, $zero
 /* 0036DC 80002ADC AFA00048 */  sw    $zero, 0x48($sp)
 /* 0036E0 80002AE0 AFA00044 */  sw    $zero, 0x44($sp)
-/* 0036E4 80002AE4 24C66160 */  addiu $a2, %lo(D_80116160) # addiu $a2, $a2, 0x6160
+/* 0036E4 80002AE4 24C66160 */  addiu $a2, %lo(OSMesgQueue_80116160) # addiu $a2, $a2, 0x6160
 /* 0036E8 80002AE8 24A56220 */  addiu $a1, %lo(D_80116220) # addiu $a1, $a1, 0x6220
 /* 0036EC 80002AEC 0C01E520 */  jal   func_80079480
 /* 0036F0 80002AF0 24070001 */   li    $a3, 1
@@ -34,8 +34,8 @@ glabel D_80002A98
 /* 003718 80002B18 24120001 */  li    $s2, 1
 /* 00371C 80002B1C 27B10048 */  addiu $s1, $sp, 0x48
 .L80002B20:
-/* 003720 80002B20 3C048011 */  lui   $a0, %hi(D_80116160) # $a0, 0x8011
-/* 003724 80002B24 24846160 */  addiu $a0, %lo(D_80116160) # addiu $a0, $a0, 0x6160
+/* 003720 80002B20 3C048011 */  lui   $a0, %hi(OSMesgQueue_80116160) # $a0, 0x8011
+/* 003724 80002B24 24846160 */  addiu $a0, %lo(OSMesgQueue_80116160) # addiu $a0, $a0, 0x6160
 /* 003728 80002B28 02202825 */  move  $a1, $s1
 /* 00372C 80002B2C 0C0322EC */  jal   osRecvMesg
 /* 003730 80002B30 02403025 */   move  $a2, $s2
@@ -79,9 +79,9 @@ glabel D_80002A98
 .L80002BBC:
 /* 0037BC 80002BBC 1200FFD8 */  beqz  $s0, .L80002B20
 /* 0037C0 80002BC0 00000000 */   nop   
-/* 0037C4 80002BC4 3C048011 */  lui   $a0, %hi(D_801161D0) # $a0, 0x8011
+/* 0037C4 80002BC4 3C048011 */  lui   $a0, %hi(ALGlobals_801161D0) # $a0, 0x8011
 /* 0037C8 80002BC8 0C0321ED */  jal   alClose
-/* 0037CC 80002BCC 248461D0 */   addiu $a0, %lo(D_801161D0) # addiu $a0, $a0, 0x61d0
+/* 0037CC 80002BCC 248461D0 */   addiu $a0, %lo(ALGlobals_801161D0) # addiu $a0, $a0, 0x61d0
 /* 0037D0 80002BD0 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 0037D4 80002BD4 8FB00018 */  lw    $s0, 0x18($sp)
 /* 0037D8 80002BD8 8FB1001C */  lw    $s1, 0x1c($sp)

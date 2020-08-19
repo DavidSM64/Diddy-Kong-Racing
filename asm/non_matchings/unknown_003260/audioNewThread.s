@@ -90,10 +90,10 @@ glabel audioNewThread
 /* 0033B4 800027B4 00402825 */  move  $a1, $v0
 /* 0033B8 800027B8 0C01DB9A */  jal   func_80076E68
 /* 0033BC 800027BC 02003825 */   move  $a3, $s0
-/* 0033C0 800027C0 3C048011 */  lui   $a0, %hi(D_801161D0) # $a0, 0x8011
+/* 0033C0 800027C0 3C048011 */  lui   $a0, %hi(ALGlobals_801161D0) # $a0, 0x8011
 /* 0033C4 800027C4 AE710020 */  sw    $s1, 0x20($s3)
 /* 0033C8 800027C8 AE600024 */  sw    $zero, 0x24($s3)
-/* 0033CC 800027CC 248461D0 */  addiu $a0, %lo(D_801161D0) # addiu $a0, $a0, 0x61d0
+/* 0033CC 800027CC 248461D0 */  addiu $a0, %lo(ALGlobals_801161D0) # addiu $a0, $a0, 0x61d0
 /* 0033D0 800027D0 0C0321FB */  jal   alInit
 /* 0033D4 800027D4 02602825 */   move  $a1, $s3
 /* 0033D8 800027D8 0C01C450 */  jal   func_80071140
@@ -101,8 +101,8 @@ glabel audioNewThread
 /* 0033E0 800027E0 10000005 */  b     .L800027F8
 /* 0033E4 800027E4 00000000 */   nop   
 .L800027E8:
-/* 0033E8 800027E8 3C048011 */  lui   $a0, %hi(D_801161D0) # $a0, 0x8011
-/* 0033EC 800027EC 248461D0 */  addiu $a0, %lo(D_801161D0) # addiu $a0, $a0, 0x61d0
+/* 0033E8 800027E8 3C048011 */  lui   $a0, %hi(ALGlobals_801161D0) # $a0, 0x8011
+/* 0033EC 800027EC 248461D0 */  addiu $a0, %lo(ALGlobals_801161D0) # addiu $a0, $a0, 0x61d0
 /* 0033F0 800027F0 0C0321FB */  jal   alInit
 /* 0033F4 800027F4 02602825 */   move  $a1, $s3
 .L800027F8:
@@ -230,10 +230,10 @@ glabel audioNewThread
 /* 0035C4 800029C4 24846198 */  addiu $a0, %lo(D_80116198) # addiu $a0, $a0, 0x6198
 /* 0035C8 800029C8 0C032208 */  jal   osCreateMesgQueue
 /* 0035CC 800029CC 24060008 */   li    $a2, 8
-/* 0035D0 800029D0 3C048011 */  lui   $a0, %hi(D_80116160) # $a0, 0x8011
+/* 0035D0 800029D0 3C048011 */  lui   $a0, %hi(OSMesgQueue_80116160) # $a0, 0x8011
 /* 0035D4 800029D4 3C058011 */  lui   $a1, %hi(D_80116178) # $a1, 0x8011
 /* 0035D8 800029D8 24A56178 */  addiu $a1, %lo(D_80116178) # addiu $a1, $a1, 0x6178
-/* 0035DC 800029DC 24846160 */  addiu $a0, %lo(D_80116160) # addiu $a0, $a0, 0x6160
+/* 0035DC 800029DC 24846160 */  addiu $a0, %lo(OSMesgQueue_80116160) # addiu $a0, $a0, 0x6160
 /* 0035E0 800029E0 0C032208 */  jal   osCreateMesgQueue
 /* 0035E4 800029E4 24060008 */   li    $a2, 8
 /* 0035E8 800029E8 3C048012 */  lui   $a0, %hi(D_80119AF0) # $a0, 0x8012
@@ -246,8 +246,8 @@ glabel audioNewThread
 /* 003604 80002A04 3C188012 */  lui   $t8, %hi(D_80119230) # $t8, 0x8012
 /* 003608 80002A08 27189230 */  addiu $t8, %lo(D_80119230) # addiu $t8, $t8, -0x6dd0
 /* 00360C 80002A0C 3C048011 */  lui   $a0, %hi(audioThread) # $a0, 0x8011
-/* 003610 80002A10 3C068000 */  lui   $a2, %hi(D_80002A98) # $a2, 0x8000
-/* 003614 80002A14 24C62A98 */  addiu $a2, %lo(D_80002A98) # addiu $a2, $a2, 0x2a98
+/* 003610 80002A10 3C068000 */  lui   $a2, %hi(func_80002A98) # $a2, 0x8000
+/* 003614 80002A14 24C62A98 */  addiu $a2, %lo(func_80002A98) # addiu $a2, $a2, 0x2a98
 /* 003618 80002A18 24845FB0 */  addiu $a0, %lo(audioThread) # addiu $a0, $a0, 0x5fb0
 /* 00361C 80002A1C AFB80010 */  sw    $t8, 0x10($sp)
 /* 003620 80002A20 24050004 */  li    $a1, 4

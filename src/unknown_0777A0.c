@@ -1,5 +1,5 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x80072250 */
+/* RAM_POS: 0x80076BA0*/
 
 #include "types.h"
 #include "macros.h"

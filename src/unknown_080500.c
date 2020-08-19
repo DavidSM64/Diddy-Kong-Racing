@@ -747,7 +747,7 @@ void MenuAudioOptionsInit(void) {
     func_800C01D8(&D_800DF77C);
     func_8007FFEC(2);
     D_800DFAC4 = musicGetVolSliderPercentage();
-    D_800DFAC0 = sfxVolumeSliderPercentage();
+    D_800DFAC0 = sfxGetVolumeSlider();
     if (gActiveMagicCodes & 0x40) { // Check if "JUKEBOX" cheat is active
         D_800DFA3C.unk6C = D_801269E0;
         D_800DFA3C.unk32 = 0xD4;
@@ -854,7 +854,7 @@ s32 MenuAudioOptionsLoop(s32 arg0) {
                 } else if (D_800DFAC0 >= 0x101) {
                     D_800DFAC0 = 0x100;
                 }
-                func_80003160(D_800DFAC0);
+                sfxSetVolumeSlider(D_800DFAC0);
             } else if(D_80126C46 == 1) {
                 D_800DFAC4 += (phi_a2 >> 2);
                 if (D_800DFAC4 < 0) {
@@ -881,7 +881,7 @@ s32 MenuAudioOptionsLoop(s32 arg0) {
             if (phi_t0 < 0 && D_800DFABC > 0) {
                 D_800DFABC--;
                 sp30 = 1;
-            } else if (phi_t0 > 0 && D_800DFABC < (func_80002110() - 1)) {
+            } else if (phi_t0 > 0 && D_800DFABC < (ALSeqFile_80115CF8_GetSeqCount() - 1)) {
                 D_800DFABC++;
                 sp30 = 1;
             }
@@ -1905,7 +1905,33 @@ void func_8008E4B0(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008E4EC.s")
+
+
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuTrackSelectInit.s")
+#else
+extern u32 D_800E0418;
+void MenuTrackSelectInit(void){
+    u32 sp_7c;
+    u32 sp_78;
+    Settings *settings;
+
+    func_800C4170(2);
+    get_settings();
+    func_8006B224(&sp_7c, &sp_78);
+    func_8001E29C(26);
+    if(D_800DF488){
+        D_801269C8 = 0;
+        D_801269CC = 0;
+        D_800E0414 = 0;
+        D_800E0418 = 0;
+        D_800DF488 = 0;
+    }
+    func_8007A520();
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008F00C.s")
 
 #if 1
@@ -1928,7 +1954,7 @@ void musicSetRelativeVolume(u8 arg0);
 s32 MenuTrackSelectLoop(s32 arg0) {
     s32 phi_a2;
     Settings *settings;
-    s32 i;
+    s32 i = 0;
 
     settings = get_settings();
     D_801263BC = (D_801263BC + arg0) & 0x3F;
