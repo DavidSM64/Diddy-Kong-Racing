@@ -59,7 +59,11 @@ typedef struct{
     u8 pad00[0x50];
 }unk800E3900;
 
+extern u32 D_800DE754;
+extern u32 D_800DE758;
 extern OSViMode D_800E3900[];//osViModeTable;
+
+extern s32 D_80126120;
 
 void __scMain(void);
 
@@ -111,7 +115,6 @@ void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 arg3){
     osSetIntMask(mask);
 }
 
-
 void osScRemoveClient(OSSched *sc, OSScClient *c)
 {
     OSScClient *client = sc->clientList; 
@@ -148,7 +151,35 @@ GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079D5C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079DE8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079E40.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079F40.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079FA8.s")
+
+void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
+{
+
+    if (sp) {
+        if (sp->list.t.type == M_AUDTASK) {
+            osWritebackDCacheAll();  /* flush the cache */
+            D_80126120 = osGetCount();
+        }
+        
+        //sp->state &= ~(OS_SC_YIELD | OS_SC_YIELDED);
+        sp->state &= -49;
+        osSpTaskLoad(&sp->list);
+        osSpTaskStartGo(&sp->list); 
+        D_800DE754 = 0;
+        D_800DE758 = 0;
+        sc->curRSPTask = sp;
+
+        if (sp == dp)
+            sc->curRDPTask = dp;
+    }
+
+    if (dp && (dp != sp)) {
+        osDpSetNextBuffer(dp->list.t.output_buff,
+                               *dp->list.t.output_buff_size);        
+        sc->curRDPTask = dp;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A080.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A0D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A2D0.s")

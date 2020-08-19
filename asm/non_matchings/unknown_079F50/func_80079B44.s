@@ -137,7 +137,7 @@ glabel func_80079B44
 /* 07A938 80079D38 10470005 */  beq   $v0, $a3, .L80079D50
 /* 07A93C 80079D3C 8FBF001C */   lw    $ra, 0x1c($sp)
 /* 07A940 80079D40 8FA6002C */  lw    $a2, 0x2c($sp)
-/* 07A944 80079D44 0C01E7EA */  jal   func_80079FA8
+/* 07A944 80079D44 0C01E7EA */  jal   __scExec
 /* 07A948 80079D48 02002025 */   move  $a0, $s0
 /* 07A94C 80079D4C 8FBF001C */  lw    $ra, 0x1c($sp)
 .L80079D50:
