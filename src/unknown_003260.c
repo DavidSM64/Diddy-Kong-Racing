@@ -53,8 +53,21 @@ typedef struct unk80119240
     ALLink_s * unk08;
 } unk800DC6B0;
 */
+
+
+typedef struct audioMgrConfig_s{
+    u32 unk00;
+    u32 unk04;
+    u32 maxChannels;
+    ALHeap* hp;
+    u16  unk10;
+} audioMgrConfig;
+
+
+
 extern u32 D_800DC6A0;
 //extern unk800DC6B0* D_800DC6B0;
+extern unk800DC6BC_40* D_800DC6B8;
 extern unk800DC6BC* gAlSndPlayer;
 extern s32 sfxVolumeSlider;
 extern s32 D_80115F90;
@@ -159,23 +172,12 @@ void func_8000318C(s32 arg0) {
     }
 }
 
-#if 1 //BAD Regalloc in first for loop
-GLOBAL_ASM("asm/non_matchings/unknown_003260/alSndPNew.s")
-#else
-typedef struct audioMgrConfig_s{
-    u32 unk00;
-    u32 unk04;
-    u32 maxChannels;
-    ALHeap* hp;
-    u16  unk10;
-} audioMgrConfig;
 
-extern unk800DC6BC_40* D_800DC6B8;
 
 ALMicroTime     _sndpVoiceHandler(void *node);
 
 void alSndPNew(audioMgrConfig* c){
-    s32 i;
+    u32 i;
     unk800DC6BC_40* tmp1;
     ALEvent sp_38;
 
@@ -186,10 +188,10 @@ void alSndPNew(audioMgrConfig* c){
     gAlSndPlayer->unk40 = (unk800DC6BC_40 *) alHeapDBAlloc(0, 0, c->hp, 1, (c->unk00) << 6);
     alEvtqNew(&(gAlSndPlayer->evtq), alHeapDBAlloc(0,0,c->hp,1, (c->unk04)*28), c->unk04);
     D_800DC6B8 = gAlSndPlayer->unk40;
-    for (i=1; i < c->unk00; i++){
-        //bad regalloc
-        tmp1 = &(gAlSndPlayer->unk40[i]);
-        alLink(tmp1, tmp1 - 1);
+    i=1;
+    for(i=1; i < c->unk00; i++){
+        tmp1 = gAlSndPlayer->unk40;
+        alLink( i + tmp1, i + tmp1 - 1);
     }
 
     D_80119C28 = alHeapDBAlloc(0,0,c->hp, 2, c->unk10);
@@ -262,14 +264,13 @@ void func_800049D8(void) {
     func_800048D8(3);
 }
 
-
 void func_800049F8(void * sndState,s16 type, u32 arg2){
-    ALSndpEvent sp_18;
-    sp_18.snd_event.type = type;
-    sp_18.snd_event.state = sndState;
-    sp_18.snd_event.unk04 = arg2;
+    ALSndpEvent sndEvt;
+    sndEvt.snd_event.type = type;
+    sndEvt.snd_event.state = sndState;
+    sndEvt.snd_event.unk04 = arg2;
     if(sndState){
-        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_18,0);
+        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sndEvt,0);
     }
 
 }
