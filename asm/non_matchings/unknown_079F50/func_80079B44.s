@@ -117,7 +117,7 @@ glabel func_80079B44
 /* 07A8F4 80079CF4 8E0B0274 */   lw    $t3, 0x274($s0)
 .L80079CF8:
 /* 07A8F8 80079CF8 ACAA0004 */  sw    $t2, 4($a1)
-/* 07A8FC 80079CFC 0C01E790 */  jal   func_80079E40
+/* 07A8FC 80079CFC 0C01E790 */  jal   __scTaskComplete
 /* 07A900 80079D00 02002025 */   move  $a0, $s0
 .L80079D04:
 /* 07A904 80079D04 8E0B0274 */  lw    $t3, 0x274($s0)
@@ -130,7 +130,7 @@ glabel func_80079B44
 /* 07A91C 80079D1C AFA70028 */  sw    $a3, 0x28($sp)
 /* 07A920 80079D20 02002025 */  move  $a0, $s0
 /* 07A924 80079D24 27A50030 */  addiu $a1, $sp, 0x30
-/* 07A928 80079D28 0C01E835 */  jal   func_8007A0D4
+/* 07A928 80079D28 0C01E835 */  jal   __scSchedule
 /* 07A92C 80079D2C 27A6002C */   addiu $a2, $sp, 0x2c
 /* 07A930 80079D30 8FA70028 */  lw    $a3, 0x28($sp)
 /* 07A934 80079D34 8FA50030 */  lw    $a1, 0x30($sp)

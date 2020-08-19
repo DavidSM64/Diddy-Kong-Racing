@@ -3,8 +3,8 @@ glabel osViGetNextFramebuffer
 /* 0D2AB4 800D1EB4 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D2AB8 800D1EB8 0C034958 */  jal   __osDisableInt
 /* 0D2ABC 800D1EBC AFB00018 */   sw    $s0, 0x18($sp)
-/* 0D2AC0 800D1EC0 3C0E800E */  lui   $t6, %hi(D_800E4874) # $t6, 0x800e
-/* 0D2AC4 800D1EC4 8DCE4874 */  lw    $t6, %lo(D_800E4874)($t6)
+/* 0D2AC0 800D1EC0 3C0E800E */  lui   $t6, %hi(__osViNext) # $t6, 0x800e
+/* 0D2AC4 800D1EC4 8DCE4874 */  lw    $t6, %lo(__osViNext)($t6)
 /* 0D2AC8 800D1EC8 00408025 */  move  $s0, $v0
 /* 0D2ACC 800D1ECC 02002025 */  move  $a0, $s0
 /* 0D2AD0 800D1ED0 8DCF0004 */  lw    $t7, 4($t6)

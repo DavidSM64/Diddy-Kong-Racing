@@ -29,7 +29,7 @@ glabel func_80079760
 /* 07A3C4 800797C4 2D6C0001 */  sltiu $t4, $t3, 1
 /* 07A3C8 800797C8 014C3825 */  or    $a3, $t2, $t4
 /* 07A3CC 800797CC AFA70024 */  sw    $a3, 0x24($sp)
-/* 07A3D0 800797D0 0C01E835 */  jal   func_8007A0D4
+/* 07A3D0 800797D0 0C01E835 */  jal   __scSchedule
 /* 07A3D4 800797D4 AFA40028 */   sw    $a0, 0x28($sp)
 /* 07A3D8 800797D8 8FA70024 */  lw    $a3, 0x24($sp)
 /* 07A3DC 800797DC 8FA40028 */  lw    $a0, 0x28($sp)

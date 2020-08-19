@@ -1,4 +1,4 @@
-glabel func_8007A0D4
+glabel __scSchedule
 /* 07ACD4 8007A0D4 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 07ACD8 8007A0D8 AFB10018 */  sw    $s1, 0x18($sp)
 /* 07ACDC 8007A0DC 00808825 */  move  $s1, $a0

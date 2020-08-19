@@ -66,6 +66,7 @@ extern OSViMode D_800E3900[];//osViModeTable;
 extern s32 D_80126120;
 
 void __scMain(void);
+void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields){
     sc->curRSPTask      = 0;
@@ -147,7 +148,31 @@ GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scMain.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079760.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079818.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079B44.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079D5C.s")
+
+
+
+
+/*
+ * __scHandleRDP is called when an RDP task signals that it has
+ * finished
+ */
+void __scHandleRDP(OSSched *sc)
+{
+    OSScTask *t, *sp = 0, *dp = 0; 
+    s32 state;
+    
+    t = sc->curRDPTask;
+    sc->curRDPTask = 0;
+
+    t->state &= -2;
+
+    __scTaskComplete(sc, t);
+
+    state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
+    if ( (__scSchedule(sc, &sp, &dp, state)) != state)
+        __scExec(sc, sp, dp);
+}
+
 
 OSScTask *__scTaskReady(OSScTask *t)
 {
@@ -167,9 +192,9 @@ OSScTask *__scTaskReady(OSScTask *t)
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079E40.s")
+GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scTaskComplete.s")
 #else
-s32 func_80079E40(OSSched *sc, OSScTask *t) 
+s32 __scTaskComplete(OSSched *sc, OSScTask *t) 
 {
     int rv;
     int firsttime = 1;
@@ -272,5 +297,5 @@ void func_8007A080(OSSched *sc)
     } 
 }
 #endif
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A0D4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scSchedule.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A2D0.s")
