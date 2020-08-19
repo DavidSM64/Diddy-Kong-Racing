@@ -122,7 +122,7 @@ glabel func_80079818
 /* 07A5CC 800799CC 00000000 */   nop   
 /* 07A5D0 800799D0 8FA50038 */  lw    $a1, 0x38($sp)
 /* 07A5D4 800799D4 8FA60034 */  lw    $a2, 0x34($sp)
-/* 07A5D8 800799D8 0C01E7EA */  jal   func_80079FA8
+/* 07A5D8 800799D8 0C01E7EA */  jal   __scExec
 /* 07A5DC 800799DC 02202025 */   move  $a0, $s1
 .L800799E0:
 /* 07A5E0 800799E0 3C0D800E */  lui   $t5, %hi(D_800DE764) # $t5, 0x800e

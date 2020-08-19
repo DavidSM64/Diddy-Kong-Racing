@@ -37,7 +37,7 @@ glabel func_80079760
 /* 07A3E4 800797E4 8FBF0014 */   lw    $ra, 0x14($sp)
 /* 07A3E8 800797E8 8FA50020 */  lw    $a1, 0x20($sp)
 /* 07A3EC 800797EC 8FA6001C */  lw    $a2, 0x1c($sp)
-/* 07A3F0 800797F0 0C01E7EA */  jal   func_80079FA8
+/* 07A3F0 800797F0 0C01E7EA */  jal   __scExec
 /* 07A3F4 800797F4 00000000 */   nop   
 /* 07A3F8 800797F8 8FBF0014 */  lw    $ra, 0x14($sp)
 .L800797FC:

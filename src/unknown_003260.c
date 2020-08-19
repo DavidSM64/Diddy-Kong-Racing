@@ -6,6 +6,16 @@
 #include "audio_internal.h"
 #include "libultra_internal.h"
 
+#define AL_SNDP_PLAY_EVT (1 << 0)
+#define AL_SNDP_STOP_EVT (1 << 1)
+#define AL_SNDP_PAN_EVT (1 << 2)
+#define AL_SNDP_VOL_EVT (1 << 3)
+#define AL_SNDP_PITCH_EVT (1 << 4)
+#define AL_SNDP_API_EVT (1 << 5)
+#define AL_SNDP_DECAY_EVT (1 << 6)
+#define AL_SNDP_END_EVT (1 << 7)
+#define AL_SNDP_FX_EVT (1 << 8)
+
 extern void func_80002A98(void*);
 extern u32 D_80003008;
 
@@ -37,6 +47,7 @@ typedef struct unk800DC6BC {
     s32             unk48;
     s32             frameTime;
     ALMicroTime     nextDelta;
+    ALMicroTime     curTime;
 } unk800DC6BC; //ALSndPlayer
 
 typedef struct unk80119240
@@ -211,8 +222,39 @@ void alSndPNew(audioMgrConfig* c){
     gAlSndPlayer->nextDelta = alEvtqNextEvent(&(gAlSndPlayer->evtq), &(gAlSndPlayer->nextEvent));
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
+#else  
+ALMicroTime     _sndpVoiceHandler(void *node){
+    unk800DC6BC *sndp = (unk800DC6BC *) node;
+    ALSndpEvent evt;
+
+    do {
+        switch (sndp->nextEvent.type) {
+            case (AL_SNDP_API_EVT):
+                //TODO cannot get this const to load into reg t7
+                evt.snd_event.type = AL_SNDP_API_EVT;
+                alEvtqPostEvent(&sndp->evtq, (ALEvent *)&evt, sndp->frameTime);
+                break;
+            
+            default:
+                _handleEvent(sndp, (ALSndpEvent *)&sndp->nextEvent);
+                break;
+        }
+        sndp->nextDelta = alEvtqNextEvent(&sndp->evtq, &sndp->nextEvent);
+        
+    } while (sndp->nextDelta == 0);
+    sndp->curTime += sndp->nextDelta;
+    return sndp->nextDelta;
+}
+#endif
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
+#else
+
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000410C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000418C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")

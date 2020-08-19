@@ -1,4 +1,4 @@
-glabel D_800795AC
+glabel __scMain
 /* 07A1AC 800795AC 27BDFF98 */  addiu $sp, $sp, -0x68
 /* 07A1B0 800795B0 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 07A1B4 800795B4 AFB70034 */  sw    $s7, 0x34($sp)
@@ -94,7 +94,7 @@ glabel D_800795AC
 /* 07A2FC 800796FC 02602025 */   move  $a0, $s3
 /* 07A300 80079700 8FA50054 */  lw    $a1, 0x54($sp)
 /* 07A304 80079704 8FA60050 */  lw    $a2, 0x50($sp)
-/* 07A308 80079708 0C01E7EA */  jal   func_80079FA8
+/* 07A308 80079708 0C01E7EA */  jal   __scExec
 /* 07A30C 8007970C 02402025 */   move  $a0, $s2
 /* 07A310 80079710 1000FFBC */  b     .L80079604
 /* 07A314 80079714 02602025 */   move  $a0, $s3
