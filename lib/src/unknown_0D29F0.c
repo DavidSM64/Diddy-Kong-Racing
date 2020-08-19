@@ -32,8 +32,7 @@ extern __OSViContext *__osViNext;
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/func_800D1DF0.s")
 
-void *osViGetCurrentFramebuffer(void)
-{
+void *osViGetCurrentFramebuffer(void){
     register u32 saveMask;
     void *framep;
 
@@ -43,8 +42,7 @@ void *osViGetCurrentFramebuffer(void)
     return framep;
 }
 
-void *osViGetNextFramebuffer(void)
-{
+void *osViGetNextFramebuffer(void){
     register u32 saveMask;
     void *framep;
 
