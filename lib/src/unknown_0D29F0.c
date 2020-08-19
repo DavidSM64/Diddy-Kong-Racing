@@ -25,8 +25,6 @@ typedef struct
     /* 0x24 */ __OSViScale y;
 } __OSViContext;
 
-extern OSTime __osCurrentTime;//__osCurrentTime
-extern u32 __osBaseCounter; //__osBaseCounter
 extern __OSViContext *__osViCurr;
 extern __OSViContext *__osViNext;
 
@@ -54,18 +52,19 @@ void *osViGetNextFramebuffer(void){
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/_VirtualToPhysicalTask.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskLoad.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskStartGo.s")
 
-OSTime osGetTime()
-{
-    u32 tmptime;
-    u32 elapseCount;
-    OSTime currentCount;
-    register u32 saveMask;
-    saveMask = __osDisableInt();
-    tmptime = osGetCount();
-    elapseCount = tmptime - __osBaseCounter;
-    currentCount = __osCurrentTime;
-    __osRestoreInt(saveMask);
-    return currentCount + elapseCount;
+
+/*
+ * Values to clear/set bit in status reg (SP_STATUS_REG - write)
+ */
+#define SP_CLR_HALT		0x00001	    /* Bit  0: clear halt */
+#define SP_CLR_BROKE		0x00004	    /* Bit  2: clear broke */
+#define SP_CLR_SSTEP		0x00020	    /* Bit  5: clear sstep */
+#define SP_SET_INTR_BREAK	0x00100	    /* Bit  8: set intr on break */
+
+void osSpTaskStartGo(OSTask *tp){
+	while (__osSpDeviceBusy());
+
+	__osSpSetStatus(SP_SET_INTR_BREAK | SP_CLR_SSTEP | SP_CLR_BROKE | SP_CLR_HALT);
 }
+
