@@ -9,8 +9,8 @@ extern OSTime __osCurrentTime;//__osCurrentTime
 extern u32 __osBaseCounter; //__osBaseCounter
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/func_800D1DF0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/func_800D1E70.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/func_800D1EB0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osViGetCurrentFramebuffer.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osViGetNextFramebuffer.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/_VirtualToPhysicalTask.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskLoad.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskStartGo.s")

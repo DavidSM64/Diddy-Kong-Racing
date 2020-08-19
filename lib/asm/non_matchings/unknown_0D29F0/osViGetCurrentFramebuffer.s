@@ -1,4 +1,4 @@
-glabel func_800D1E70
+glabel osViGetCurrentFramebuffer
 /* 0D2A70 800D1E70 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0D2A74 800D1E74 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D2A78 800D1E78 0C034958 */  jal   __osDisableInt

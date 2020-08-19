@@ -148,9 +148,63 @@ GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079760.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079818.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079B44.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079D5C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079DE8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079E40.s")
 
+OSScTask *__scTaskReady(OSScTask *t)
+{
+    if (t) {    
+        /*
+         * If there is a pending swap bail out til later (next
+         * retrace).
+         */
+        if (osViGetCurrentFramebuffer() != osViGetNextFramebuffer()) {           
+            return 0;
+        }
+
+        return t;
+    }
+
+    return 0;
+}
+
+#if 1
+GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079E40.s")
+#else
+s32 func_80079E40(OSSched *sc, OSScTask *t) 
+{
+    int rv;
+    int firsttime = 1;
+
+    if ((t->state & 0x03) == 0) { /* none of the needs bits set */
+
+//        assert (t->msgQ);
+        if(t->msgQ){
+
+            //rv = osSendMesg(t->msgQ, &t->msg, OS_MESG_BLOCK);
+
+            //if (t->list.t.type == M_GFXTASK) {
+                    if ((t->flags & 0x20) /*&& (t->flags & OS_SC_LAST_TASK)*/){
+                        if(sc->doAudio < 2){
+                            sc->frameCount = t;
+                        }
+                        else{
+                            if(t->startTime == 0){
+                                osSendMesg(t->msgQ, t->msg, 1);
+                            }
+                        }
+                        //if (firsttime) {
+                         //       osViBlack(FALSE);
+                          //  firsttime = 0;
+                        //}
+                        //osViSwapBuffer(t->framebuffer);
+                    }
+            //}
+        }
+        return 1;
+    }
+    
+    return 0;
+}
+#endif
 
 void __scAppendList(OSSched *sc, OSScTask *t) 
 {
@@ -168,7 +222,7 @@ void __scAppendList(OSSched *sc, OSScTask *t)
             sc->gfxListTail->next = t;
         else
             sc->gfxListHead = t;
-            
+
         sc->gfxListTail = t;
    }
     t->next = NULL;
