@@ -77,7 +77,7 @@ glabel __scMain
 /* 07A2BC 800796BC 02602025 */   move  $a0, $s3
 /* 07A2C0 800796C0 8FA50064 */  lw    $a1, 0x64($sp)
 .L800796C4:
-/* 07A2C4 800796C4 0C01E7D0 */  jal   func_80079F40
+/* 07A2C4 800796C4 0C01E7D0 */  jal   __scAppendList
 /* 07A2C8 800796C8 02402025 */   move  $a0, $s2
 /* 07A2CC 800796CC 8E4F0274 */  lw    $t7, 0x274($s2)
 /* 07A2D0 800796D0 8E480278 */  lw    $t0, 0x278($s2)

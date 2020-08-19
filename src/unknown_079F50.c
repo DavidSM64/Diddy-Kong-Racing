@@ -150,7 +150,30 @@ GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079B44.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079D5C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079DE8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079E40.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079F40.s")
+
+
+void __scAppendList(OSSched *sc, OSScTask *t) 
+{
+   u32 tmp = t->list.t.type;
+   if (tmp == 2){
+        if(sc->audioListTail)
+            sc->audioListTail->next = t;
+        else
+            sc->audioListHead = t;
+
+        sc->audioListTail = t;
+   }
+   else{
+        if(sc->gfxListTail)
+            sc->gfxListTail->next = t;
+        else
+            sc->gfxListHead = t;
+            
+        sc->gfxListTail = t;
+   }
+    t->next = NULL;
+    t->state = t->flags & 0x03;
+}
 
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp)
 {
