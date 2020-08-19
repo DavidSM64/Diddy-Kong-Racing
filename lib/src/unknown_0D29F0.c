@@ -50,17 +50,56 @@ void *osViGetNextFramebuffer(void){
     return framep;
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/_VirtualToPhysicalTask.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskLoad.s")
+#define OS_TASK_YIELDED			0x0001
 
-
-/*
- * Values to clear/set bit in status reg (SP_STATUS_REG - write)
- */
 #define SP_CLR_HALT		0x00001	    /* Bit  0: clear halt */
 #define SP_CLR_BROKE		0x00004	    /* Bit  2: clear broke */
 #define SP_CLR_SSTEP		0x00020	    /* Bit  5: clear sstep */
 #define SP_SET_INTR_BREAK	0x00100	    /* Bit  8: set intr on break */
+#define SP_CLR_SIG0		0x00200	    /* Bit  9: clear signal 0 */
+#define SP_CLR_SIG1		0x00800	    /* Bit 11: clear signal 1 */
+#define SP_CLR_SIG2		0x02000	    /* Bit 11: clear signal 1 */
+
+
+
+#define SP_CLR_YIELD		SP_CLR_SIG0
+#define SP_CLR_YIELDED		SP_CLR_SIG1
+#define SP_CLR_TASKDONE		SP_CLR_SIG2
+
+#define SP_IMEM_START		0x04001000	/* read/write */
+
+
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/_VirtualToPhysicalTask.s")
+
+void osSpTaskLoad(OSTask *intp)
+{
+
+	OSTask *tp;
+	tp = _VirtualToPhysicalTask(intp);
+	if (tp->t.flags & OS_TASK_YIELDED)
+	{
+		tp->t.ucode_data = tp->t.yield_data_ptr;
+		tp->t.ucode_data_size = tp->t.yield_data_size;
+		intp->t.flags &= ~OS_TASK_YIELDED;
+	}
+	osWritebackDCache(tp, sizeof(OSTask));
+	__osSpSetStatus(SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE | SP_SET_INTR_BREAK);
+	while (__osSpSetPc(SP_IMEM_START) == -1)
+		;
+
+	while (__osSpRawStartDma(1, (SP_IMEM_START - sizeof(*tp)), tp,
+							 sizeof(OSTask)) == -1)
+		;
+
+	while (__osSpDeviceBusy())
+		;
+
+	while (__osSpRawStartDma(1, SP_IMEM_START, tp->t.ucode_boot,
+							 tp->t.ucode_boot_size) == -1)
+		;
+}
+
+
 
 void osSpTaskStartGo(OSTask *tp){
 	while (__osSpDeviceBusy());
