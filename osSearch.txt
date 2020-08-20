@@ -1,0 +1,1708 @@
+asm/assets/assets.s:.incbin "./build/us_1.0/levels/levelHeader03_FossilCanyon.3A17A8.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/levels/levelHeader0D_EverfrostPeak.3A1F78.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/levels/levelHeader1C_FrostyVillage.3A2B30.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/levels/name03_FossilCanyon.3A49C9.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/levels/name0D_EverfrostPeak.3A4BD7.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/levels/name1C_FrostyVillage.3A4F0F.bin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/levels/levelModel03_FossilCanyon.3CD820.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/levels/levelModel0E_EverfrostPeak.42C9D0.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/levels/levelModel1D_FrostyVillage.48CF00.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel0ef_YellowDinosaur.5DF3E0.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel0f0_GreenDinosaur.5DFF90.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel0fe_RedBalloonSignpost.5E3030.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel0ff_30Signpost.5E3230.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel100_60Signpost.5E3430.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel101_100Signpost.5E3630.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel154_BossGate.6054D0.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel155_BossGate2.605790.cbin"
+asm/assets/assets.s:.incbinaligned "./build/us_1.0/objects/objModel156_BossGate3.605AE0.cbin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader037_LampPost.6C33B0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader03B_Dinosaur1.6C35C8.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader03C_Dinosaur2.6C3650.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader03D_Dinosaur3.6C36D8.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader04E_BossDoor.6C3F88.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader04F_BigBossDoor.6C4010.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader06E_BombExplosion.6C5030.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader086_OverRidePos.6C5CD0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader08A_WizpigGhosts.6C5F60.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0A1_RocketSignpost.6C6B70.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0D7_PostForParty.6C88D0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0DB_AnimDinosaur2.6C8AF8.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0DE_AnimDinosaur1.6C8D38.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0EB_WizpigBoss.6C98C0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0EC_WizpigBoss2.6C9960.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0FD_TerryBoss.6CA2F8.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader0FE_SmokeyBoss.6CA398.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader101_SnowballBoss.6CA578.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader10E_Boost.6CACB0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/objects/objHeader114_PosArrow.6CAFB0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhostsHeader.ABBDC0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_FossilCanyon.ABBE70.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_PirateLagoon.ABC830.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_AncientLake.ABD1E0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_WalrusCove.ABD920.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_HotTopVolcano.ABE690.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_WhaleBay.ABF070.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_SnowballValley.ABF840.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_CrescentIsland.AC0020.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_EverfrostPeak.AC0AB0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_SpaceportAlpha.AC1610.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_SpacedustAlley.AC2380.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_GreenwoodVillage.AC3070.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_BoulderCanyon.AC3B40.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_WindmillPlains.AC4A60.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_FrostyVillage.AC5B50.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_JungleFalls.AC65A0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_TreasureCaves.AC6CB0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_HauntedWoods.AC73D0.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_DarkmoonCaverns.AC7B50.bin"
+asm/assets/assets.s:.incbin "./build/us_1.0/tt_ghosts/ttGhost_StarCity.AC89B0.bin"
+asm/entrypoint.s:.include "macros.inc"
+asm/gzip.s:.include "macros.inc"
+asm/non_matchings/unknown_001050/func_800015F8.s:/* 002200 80001600 0C031E34 */  jal   osGetCount
+asm/non_matchings/unknown_003260/audioNewThread.s:/* 0035C8 800029C8 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_003260/audioNewThread.s:/* 0035E0 800029E0 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_003260/audioNewThread.s:/* 0035F8 800029F8 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_003260/audioNewThread.s:/* 003628 80002A28 0C032214 */  jal   osCreateThread
+asm/non_matchings/unknown_003260/D_80002E38.s:/* 003AA0 80002EA0 0C03233C */  jal   osVirtualToPhysical
+asm/non_matchings/unknown_003260/D_80002E38.s:/* 003AE8 80002EE8 0C03233C */  jal   osVirtualToPhysical
+asm/non_matchings/unknown_003260/D_80002E38.s:/* 003BD8 80002FD8 0C0323E0 */  jal   osPiStartDma
+asm/non_matchings/unknown_003260/D_80002E38.s:/* 003BE4 80002FE4 0C03233C */  jal   osVirtualToPhysical
+asm/non_matchings/unknown_003260/func_80002A98.s:/* 0036EC 80002AEC 0C01E520 */  jal   osScAddClient
+asm/non_matchings/unknown_003260/func_80002A98.s:/* 00372C 80002B2C 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_003260/func_80002A98.s:/* 00379C 80002B9C 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_003260/func_80002A98.s:/* 0037C8 80002BC8 0C0321ED */  jal   alClose
+asm/non_matchings/unknown_003260/func_80002C00.s:/* 00381C 80002C1C 0C03233C */  jal   osVirtualToPhysical
+asm/non_matchings/unknown_003260/func_80002C00.s:/* 0039BC 80002DBC 0C01E55D */  jal   osScGetCmdQ
+asm/non_matchings/unknown_003260/func_80002C00.s:/* 0039CC 80002DCC 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_003260/func_80003040.s:/* 003C88 80003088 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_003260/func_8000418C.s:/* 004DE4 800041E4 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/func_800041FC.s:/* 004E28 80004228 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_800041FC.s:/* 004EA4 800042A4 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_800042CC.s:/* 004EDC 800042DC 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_800042CC.s:/* 004F6C 8000436C 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_80004384.s:/* 004FB0 800043B0 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_80004384.s:/* 00501C 8000441C 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_80004668.s:/* 005384 80004784 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/func_80004668.s:/* 0053A4 800047A4 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/func_80004668.s:/* 005440 80004840 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/func_800048D8.s:/* 0054FC 800048FC 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_800048D8.s:/* 005554 80004954 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/func_800048D8.s:/* 005570 80004970 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_80004A60.s:/* 005688 80004A88 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/func_80004A60.s:/* 0056F4 80004AF4 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/func_80004A60.s:/* 005710 80004B10 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_003260/_handleEvent.s:/* 004294 80003694 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/_handleEvent.s:/* 0042FC 800036FC 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/_handleEvent.s:/* 00434C 8000374C 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/_handleEvent.s:/* 0045F0 800039F0 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/_handleEvent.s:/* 0046D8 80003AD8 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/_handleEvent.s:/* 004BB8 80003FB8 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_003260/_sndpVoiceHandler.s:/* 004014 80003414 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_005740/__seqpReleaseVoice.s:/* 00B804 8000AC04 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_00BC20/func_8000BADC.s:/* 00C7C4 8000BBC4 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_00BC20/func_8000BADC.s:/* 00C7C8 8000BBC8 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_00BC20/func_800120C8.s:/* 013378 80012778 3C0D8000 */   lui   $t5, %hi(osCicId) # $t5, 0x8000
+asm/non_matchings/unknown_00BC20/func_800120C8.s:/* 013398 80012798 8DAD0310 */  lw    $t5, %lo(osCicId)($t5)
+asm/non_matchings/unknown_00BC20/func_8001A8F4.s:/* 01B960 8001AD60 3C0C8000 */   lui   $t4, %hi(osTvType) # $t4, 0x8000
+asm/non_matchings/unknown_00BC20/func_8001A8F4.s:/* 01B964 8001AD64 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
+asm/non_matchings/unknown_00BC20/func_8001AE64.s:/* 01BDD0 8001B1D0 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
+asm/non_matchings/unknown_00BC20/func_8001AE64.s:/* 01BDD4 8001B1D4 8F390300 */  lw    $t9, %lo(osTvType)($t9)
+asm/non_matchings/unknown_00BC20/func_8001C6C4.s:/* 01D2C8 8001C6C8 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_00BC20/func_8001C6C4.s:/* 01D2CC 8001C6CC 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_00BC20/func_8001F460.s:/* 0200D0 8001F4D0 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_00BC20/func_8001F460.s:/* 0200D8 8001F4D8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_0255E0/D_80024D54.s:/* 026014 80025414 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
+asm/non_matchings/unknown_0255E0/D_80024D54.s:/* 026018 80025418 8F390300 */  lw    $t9, %lo(osTvType)($t9)
+asm/non_matchings/unknown_0255E0/func_800289B8.s:/* 02968C 80028A8C 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_0255E0/func_800289B8.s:/* 029698 80028A98 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_032760/func_80033F60.s:/* 034B68 80033F68 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_80033F60.s:/* 034B70 80033F70 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_80034860.s:/* 035464 80034864 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_80034860.s:/* 03546C 8003486C 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_80035260.s:/* 035E68 80035268 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_032760/func_80035260.s:/* 035E70 80035270 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_032760/func_800361E0.s:/* 036DF8 800361F8 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_800361E0.s:/* 036E04 80036204 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_800389B8.s:/* 0395BC 800389BC 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_032760/func_800389B8.s:/* 0395C4 800389C4 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_032760/func_80038AD4.s:/* 0396D8 80038AD8 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_032760/func_80038AD4.s:/* 0396E0 80038AE0 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_032760/func_80039330.s:/* 039F4C 8003934C 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_80039330.s:/* 039F58 80039358 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_8003B4BC.s:/* 03C0C4 8003B4C4 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_8003B4BC.s:/* 03C0CC 8003B4CC 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_8003B988.s:/* 03C59C 8003B99C 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_032760/func_8003B988.s:/* 03C5A8 8003B9A8 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_032760/func_8003CA68.s:/* 03D67C 8003CA7C 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_8003CA68.s:/* 03D684 8003CA84 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_8003D2B8.s:/* 03DEBC 8003D2BC 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_8003D2B8.s:/* 03DEC4 8003D2C4 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_8003D5A0.s:/* 03E1A4 8003D5A4 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_8003D5A0.s:/* 03E1AC 8003D5AC 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_032760/func_8003E694.s:/* 03F348 8003E748 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+asm/non_matchings/unknown_032760/func_8003E694.s:/* 03F350 8003E750 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
+asm/non_matchings/unknown_032760/func_8003F2E8.s:/* 03FF08 8003F308 3C0B8000 */  lui   $t3, %hi(osTvType) # $t3, 0x8000
+asm/non_matchings/unknown_032760/func_8003F2E8.s:/* 03FF10 8003F310 8D6B0300 */  lw    $t3, %lo(osTvType)($t3)
+asm/non_matchings/unknown_032760/func_800422F0.s:/* 042EF8 800422F8 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_032760/func_800422F0.s:/* 042F00 80042300 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_032760/func_80042A90.s:/* 043790 80042B90 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_032760/func_80042A90.s:/* 043794 80042B94 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_043920/func_8004DE38.s:/* 04EADC 8004DEDC 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_043920/func_8004DE38.s:/* 04EC50 8004E050 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_043920/func_80059E40.s:/* 05AA7C 80059E7C 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_043920/func_80059E40.s:/* 05AA8C 80059E8C 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_061D30/__CSPHandleMetaMsg.s:/* 06454C 8006394C 0C018E61 */  jal   __CSPRepostEvent
+asm/non_matchings/unknown_061D30/__CSPHandleMIDIMsg.s:/* 063A28 80062E28 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPHandleMIDIMsg.s:/* 063B40 80062F40 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPHandleMIDIMsg.s:/* 063C0C 8006300C 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPHandleMIDIMsg.s:/* 063C58 80063058 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPHandleNextSeqEvent.s:/* 063698 80062A98 0C018A73 */  jal   __CSPPostNextSeqEvent
+asm/non_matchings/unknown_061D30/__CSPHandleNextSeqEvent.s:/* 0636B0 80062AB0 0C018A73 */  jal   __CSPPostNextSeqEvent
+asm/non_matchings/unknown_061D30/__CSPHandleNextSeqEvent.s:/* 0636D8 80062AD8 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPHandleNextSeqEvent.s:/* 0636E8 80062AE8 0C018A73 */  jal   __CSPPostNextSeqEvent
+asm/non_matchings/unknown_061D30/__CSPPostNextSeqEvent.s:glabel __CSPPostNextSeqEvent
+asm/non_matchings/unknown_061D30/__CSPPostNextSeqEvent.s:/* 063624 80062A24 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPRepostEvent.s:glabel __CSPRepostEvent
+asm/non_matchings/unknown_061D30/__CSPRepostEvent.s:/* 064594 80063994 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_061D30/__CSPRepostEvent.s:/* 06461C 80063A1C 0C03268C */  jal   osSetIntMask
+asm/non_matchings/unknown_061D30/__CSPVoiceHandler.s:/* 06309C 8006249C 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPVoiceHandler.s:/* 063258 80062658 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPVoiceHandler.s:/* 0632E8 800626E8 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_061D30/__CSPVoiceHandler.s:/* 06339C 8006279C 0C018A73 */  jal   __CSPPostNextSeqEvent
+asm/non_matchings/unknown_061D30/__CSPVoiceHandler.s:/* 063514 80062914 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_0646F0/func_80063AF0.s:/* 06472C 80063B2C 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_0646F0/func_80063B44.s:/* 064780 80063B80 0C03246B */  jal   alEvtqPostEvent
+asm/non_matchings/unknown_064830/_loadOutputBuffer.s:/* 06501C 8006441C 0C03233C */  jal   osVirtualToPhysical
+asm/non_matchings/unknown_0667D0/func_80065D98.s:/* 0669D0 80065DD0 0C032214 */  jal   osCreateThread
+asm/non_matchings/unknown_0667D0/func_80065D98.s:/* 066A04 80065E04 0C032268 */  jal   osStartThread
+asm/non_matchings/unknown_0667D0/func_80065D98.s:/* 066A10 80065E10 0C033210 */  jal   osSetThreadPri
+asm/non_matchings/unknown_066AA0/D_8006C330.s:/* 06CF98 8006C398 0C033490 */  jal   __osSpSetStatus
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 067B20 80066F20 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 067B24 80066F24 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 067C08 80067008 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 067C40 80067040 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 067E38 80067238 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 067E3C 8006723C 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 067E58 80067258 3C0A8000 */   lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 068034 80067434 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 0681AC 800675AC 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 0681E0 800675E0 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 0682D4 800676D4 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 068308 80067708 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 0683F8 800677F8 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 06842C 8006782C 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 068574 80067974 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_066AA0/func_80066CDC.s:/* 0685A8 800679A8 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_066AA0/func_8006A10C.s:/* 06AD24 8006A124 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_066AA0/func_8006A10C.s:/* 06AD3C 8006A13C 0C0332EC */  jal   osSetEventMesg
+asm/non_matchings/unknown_066AA0/func_8006A1C4.s:/* 06ADEC 8006A1EC 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_066AA0/func_8006C3E0.s:/* 06D01C 8006C41C 3C028000 */  lui   $v0, %hi(osTvType) # $v0, 0x8000
+asm/non_matchings/unknown_066AA0/func_8006C3E0.s:/* 06D020 8006C420 8C420300 */  lw    $v0, %lo(osTvType)($v0)
+asm/non_matchings/unknown_066AA0/func_8006C3E0.s:/* 06D07C 8006C47C 0C01E4D4 */  jal   osCreateScheduler
+asm/non_matchings/unknown_066AA0/func_8006C3E0.s:/* 06D15C 8006C55C 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_066AA0/func_8006C3E0.s:/* 06D17C 8006C57C 0C01E520 */  jal   osScAddClient
+asm/non_matchings/unknown_066AA0/func_8006C3E0.s:/* 06D1F4 8006C5F4 0C033498 */  jal   osSetTime
+asm/non_matchings/unknown_066AA0/func_8006C60C.s:/* 06D218 8006C618 0C033498 */  jal   osSetTime
+asm/non_matchings/unknown_066AA0/func_8006C60C.s:/* 06D674 8006CA74 3C0B8000 */   lui   $t3, %hi(osTvType) # $t3, 0x8000
+asm/non_matchings/unknown_066AA0/func_8006C60C.s:/* 06D678 8006CA78 8D6B0300 */  lw    $t3, %lo(osTvType)($t3)
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 072938 80071D38 0C033594 */  jal   __osSiGetAccess
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 072964 80071D64 0C0335B0 */  jal   __osSiRawStartDma
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 072978 80071D78 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 072980 80071D80 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 072984 80071D84 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 072988 80071D88 0C0335B0 */  jal   __osSiRawStartDma
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 07299C 80071D9C 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 0729A8 80071DA8 3C038013 */  lui   $v1, %hi(__osPfsPifRam) # $v1, 0x8013
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 0729B0 80071DB0 2463CDE0 */  addiu $v1, %lo(__osPfsPifRam) # addiu $v1, $v1, -0x3220
+asm/non_matchings/unknown_071730/func_80071D30.s:/* 072A40 80071E40 0C0335A5 */  jal   __osSiRelAccess
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072A60 80071E60 0C033594 */  jal   __osSiGetAccess
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072A8C 80071E8C 0C0335B0 */  jal   __osSiRawStartDma
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072AA0 80071EA0 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072AA8 80071EA8 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072AAC 80071EAC 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072AB0 80071EB0 0C0335B0 */  jal   __osSiRawStartDma
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072AC4 80071EC4 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072AD0 80071ED0 3C038013 */  lui   $v1, %hi(__osPfsPifRam) # $v1, 0x8013
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072AD8 80071ED8 2463CDE0 */  addiu $v1, %lo(__osPfsPifRam) # addiu $v1, $v1, -0x3220
+asm/non_matchings/unknown_071730/func_80071E58.s:/* 072B68 80071F68 0C0335A5 */  jal   __osSiRelAccess
+asm/non_matchings/unknown_071730/func_80071F80.s:/* 072BE4 80071FE4 0C0335DC */  jal   __osContAddressCrc
+asm/non_matchings/unknown_071730/func_800720DC.s:/* 072D28 80072128 0C03363C */  jal   __osContRamWrite
+asm/non_matchings/unknown_071730/func_800720DC.s:/* 072D4C 8007214C 0C03363C */  jal   __osContRamWrite
+asm/non_matchings/unknown_071730/func_800720DC.s:/* 072D70 80072170 0C033728 */  jal   __osContRamRead
+asm/non_matchings/unknown_072E50/func_80072718.s:/* 0733A4 800727A4 0C0334A4 */  jal   osPfsIsPlug
+asm/non_matchings/unknown_072E50/func_80072718.s:/* 0734C4 800728C4 0C0334A4 */  jal   osPfsIsPlug
+asm/non_matchings/unknown_072E50/func_80074204.s:/* 074E28 80074228 0C033884 */  jal   osEepromProbe
+asm/non_matchings/unknown_072E50/func_80074204.s:/* 074EA4 800742A4 0C0338A0 */  jal   osEepromRead
+asm/non_matchings/unknown_072E50/func_8007431C.s:/* 074F40 80074340 0C033884 */  jal   osEepromProbe
+asm/non_matchings/unknown_072E50/func_8007431C.s:/* 0750A4 800744A4 0C033960 */  jal   osEepromWrite
+asm/non_matchings/unknown_072E50/func_800744DC.s:/* 075100 80074500 0C033884 */  jal   osEepromProbe
+asm/non_matchings/unknown_072E50/func_800744DC.s:/* 075194 80074594 0C033960 */  jal   osEepromWrite
+asm/non_matchings/unknown_072E50/func_800745D0.s:/* 0751F4 800745F4 0C033884 */  jal   osEepromProbe
+asm/non_matchings/unknown_072E50/func_800745D0.s:/* 075248 80074648 0C0338A0 */  jal   osEepromRead
+asm/non_matchings/unknown_072E50/func_800745D0.s:/* 0752A4 800746A4 0C0338A0 */  jal   osEepromRead
+asm/non_matchings/unknown_072E50/func_800746F0.s:/* 075314 80074714 0C033884 */  jal   osEepromProbe
+asm/non_matchings/unknown_072E50/func_800746F0.s:/* 07537C 8007477C 0C033960 */  jal   osEepromWrite
+asm/non_matchings/unknown_072E50/func_800746F0.s:/* 0753D4 800747D4 0C033960 */  jal   osEepromWrite
+asm/non_matchings/unknown_072E50/func_80074874.s:/* 075488 80074888 0C033884 */  jal   osEepromProbe
+asm/non_matchings/unknown_072E50/func_80074874.s:/* 0754B0 800748B0 0C0338A0 */  jal   osEepromRead
+asm/non_matchings/unknown_072E50/func_8007497C.s:/* 075590 80074990 0C033884 */  jal   osEepromProbe
+asm/non_matchings/unknown_072E50/func_8007497C.s:/* 075630 80074A30 0C033960 */  jal   osEepromWrite
+asm/non_matchings/unknown_072E50/func_800758DC.s:/* 07658C 8007598C 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_072E50/func_800758DC.s:/* 0765C4 800759C4 0C033CF8 */  jal   osPfsFreeBlocks
+asm/non_matchings/unknown_072E50/func_80075B18.s:/* 0767B8 80075BB8 0C0334A4 */  jal   osPfsIsPlug
+asm/non_matchings/unknown_072E50/func_80075E60.s:/* 076B2C 80075F2C 3C088000 */  lui   $t0, %hi(osTvType) # $t0, 0x8000
+asm/non_matchings/unknown_072E50/func_80075E60.s:/* 076B30 80075F30 8D080300 */  lw    $t0, %lo(osTvType)($t0)
+asm/non_matchings/unknown_072E50/func_80076194.s:/* 076DE0 800761E0 0C033CF8 */  jal   osPfsFreeBlocks
+asm/non_matchings/unknown_072E50/func_800764E8.s:/* 077140 80076540 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_072E50/func_800764E8.s:/* 077144 80076544 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_072E50/func_800764E8.s:/* 077194 80076594 0C0343A0 */  jal   osPfsFindFile
+asm/non_matchings/unknown_072E50/func_800766D4.s:/* 077358 80076758 3C0F8000 */   lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_072E50/func_800766D4.s:/* 07736C 8007676C 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_072E50/func_800766D4.s:/* 077438 80076838 0C034410 */  jal   osPfsAllocateFile
+asm/non_matchings/unknown_078050/func_80077A54.s:/* 078680 80077A80 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_078050/func_80077A54.s:/* 0786BC 80077ABC 0C034628 */  jal   osWritebackDCacheAll
+asm/non_matchings/unknown_078050/func_80077A54.s:/* 0786F4 80077AF4 0C034638 */  jal   osDpSetNextBuffer
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 078184 80077584 0C034628 */  jal   osWritebackDCacheAll
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 078198 80077598 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 0782EC 800776EC 0C034628 */  jal   osWritebackDCacheAll
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 078300 80077700 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 07831C 8007771C 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 078480 80077880 0C034628 */  jal   osWritebackDCacheAll
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 078494 80077894 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 0784B0 800778B0 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 07860C 80077A0C 0C034628 */  jal   osWritebackDCacheAll
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 078620 80077A20 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_078050/setupOSTasks.s:/* 07863C 80077A3C 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A4A8 800798A8 0C033490 */  jal   __osSpSetStatus
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A4FC 800798FC 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A51C 8007991C 0C033490 */  jal   __osSpSetStatus
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A564 80079964 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A58C 8007998C 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A674 80079A74 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A684 80079A84 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A6E0 80079AE0 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/func_80079818.s:/* 07A718 80079B18 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/func_80079B44.s:/* 07A770 80079B70 0C031E34 */  jal   osGetCount
+asm/non_matchings/unknown_079F50/func_8007A080.s:/* 07ACAC 8007A0AC 0C03486C */  jal   osGetTime
+asm/non_matchings/unknown_079F50/func_8007A080.s:/* 07ACBC 8007A0BC 0C034890 */  jal   osSpTaskYield
+asm/non_matchings/unknown_079F50/__scMain.s:/* 07A208 80079608 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_079F50/__scMain.s:/* 07A2A0 800796A0 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/__scTaskComplete.s:/* 07AAC4 80079EC4 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/__scTaskComplete.s:/* 07AAD4 80079ED4 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/__scTaskComplete.s:/* 07AB10 80079F10 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_079F50/__scTaskComplete.s:/* 07AB20 80079F20 0C03238C */  jal   osSendMesg
+asm/non_matchings/unknown_07AF10/func_8007A310.s:/* 07AF10 8007A310 3C028000 */  lui   $v0, %hi(osTvType) # $v0, 0x8000
+asm/non_matchings/unknown_07AF10/func_8007A310.s:/* 07AF14 8007A314 8C420300 */  lw    $v0, %lo(osTvType)($v0)
+asm/non_matchings/unknown_07AF10/func_8007A310.s:/* 07B060 8007A460 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_07AF10/func_8007A310.s:/* 07B07C 8007A47C 0C01E520 */  jal   osScAddClient
+asm/non_matchings/unknown_07AF10/func_8007A310.s:/* 07B098 8007A498 0C034744 */  jal   osViBlack
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B150 8007A550 3C028000 */  lui   $v0, %hi(osTvType) # $v0, 0x8000
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B154 8007A554 8C420300 */  lw    $v0, %lo(osTvType)($v0)
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B1C0 8007A5C0 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B208 8007A608 3C088000 */  lui   $t0, %hi(osTvType) # $t0, 0x8000
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B20C 8007A60C 8D080300 */  lw    $t0, %lo(osTvType)($t0)
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B248 8007A648 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B2B0 8007A6B0 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B318 8007A718 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B340 8007A740 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B368 8007A768 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B390 8007A790 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B3B8 8007A7B8 0C034728 */  jal   osViSetMode
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B3C0 8007A7C0 0C034898 */  jal   osViSetSpecialFeatures
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B3C8 8007A7C8 0C034898 */  jal   osViSetSpecialFeatures
+asm/non_matchings/unknown_07AF10/func_8007A550.s:/* 07B3D0 8007A7D0 0C034898 */  jal   osViSetSpecialFeatures
+asm/non_matchings/unknown_07AF10/func_8007A98C.s:/* 07B5C4 8007A9C4 0C034744 */  jal   osViBlack
+asm/non_matchings/unknown_07AF10/func_8007A98C.s:/* 07B5F0 8007A9F0 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_07AF10/func_8007A98C.s:/* 07B618 8007AA18 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_07AF10/func_8007A98C.s:/* 07B6C8 8007AAC8 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_07AF10/func_8007A98C.s:/* 07B6F0 8007AAF0 0C034908 */  jal   osViSwapBuffer
+asm/non_matchings/unknown_07AF10/func_8007A98C.s:/* 07B700 8007AB00 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_080500/func_8008377C.s:/* 08449C 8008389C 3C0D8000 */   lui   $t5, %hi(osTvType) # $t5, 0x8000
+asm/non_matchings/unknown_080500/func_8008377C.s:/* 0844A0 800838A0 8DAD0300 */  lw    $t5, %lo(osTvType)($t5)
+asm/non_matchings/unknown_080500/func_80084854.s:/* 085588 80084988 3C088000 */  lui   $t0, %hi(osTvType) # $t0, 0x8000
+asm/non_matchings/unknown_080500/func_80084854.s:/* 08558C 8008498C 8D080300 */  lw    $t0, %lo(osTvType)($t0)
+asm/non_matchings/unknown_080500/func_800853D0.s:/* 08649C 8008589C 3C038000 */  lui   $v1, %hi(osTvType) # $v1, 0x8000
+asm/non_matchings/unknown_080500/func_800853D0.s:/* 0864A0 800858A0 8C630300 */  lw    $v1, %lo(osTvType)($v1)
+asm/non_matchings/unknown_080500/func_80085B9C.s:/* 086908 80085D08 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_080500/func_80085B9C.s:/* 086914 80085D14 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_080500/func_80088938.s:/* 089AC0 80088EC0 3C0D8000 */  lui   $t5, %hi(osTvType) # $t5, 0x8000
+asm/non_matchings/unknown_080500/func_80088938.s:/* 089ACC 80088ECC 8DAD0300 */  lw    $t5, %lo(osTvType)($t5)
+asm/non_matchings/unknown_080500/func_800896A4.s:/* 08A574 80089974 3C168000 */  lui   $s6, %hi(osTvType) # $s6, 0x8000
+asm/non_matchings/unknown_080500/func_800896A4.s:/* 08A578 80089978 26D60300 */  addiu $s6, %lo(osTvType) # addiu $s6, $s6, 0x300
+asm/non_matchings/unknown_080500/func_8008C698.s:/* 08D354 8008C754 3C0D8000 */  lui   $t5, %hi(osTvType) # $t5, 0x8000
+asm/non_matchings/unknown_080500/func_8008C698.s:/* 08D358 8008C758 8DAD0300 */  lw    $t5, %lo(osTvType)($t5)
+asm/non_matchings/unknown_080500/func_8008CD74.s:/* 08D978 8008CD78 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/func_8008CD74.s:/* 08D97C 8008CD7C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/func_8008FA54.s:/* 09065C 8008FA5C 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_080500/func_8008FA54.s:/* 090664 8008FA64 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_080500/func_8008FA54.s:/* 09083C 8008FC3C 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
+asm/non_matchings/unknown_080500/func_8008FA54.s:/* 090840 8008FC40 8F390300 */  lw    $t9, %lo(osTvType)($t9)
+asm/non_matchings/unknown_080500/func_8008FA54.s:/* 0909DC 8008FDDC 3C098000 */  lui   $t1, %hi(osTvType) # $t1, 0x8000
+asm/non_matchings/unknown_080500/func_8008FA54.s:/* 0909E8 8008FDE8 8D290300 */  lw    $t1, %lo(osTvType)($t1)
+asm/non_matchings/unknown_080500/func_80090F30.s:/* 091B70 80090F70 3C108000 */  lui   $s0, %hi(osTvType) # $s0, 0x8000
+asm/non_matchings/unknown_080500/func_80090F30.s:/* 091B74 80090F74 26100300 */  addiu $s0, %lo(osTvType) # addiu $s0, $s0, 0x300
+asm/non_matchings/unknown_080500/func_80092E94.s:/* 093ABC 80092EBC 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/func_80092E94.s:/* 093AC0 80092EC0 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/func_80093D40.s:/* 0949C0 80093DC0 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/func_80093D40.s:/* 0949C4 80093DC4 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/func_80094D28.s:/* 095E78 80095278 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_080500/func_80094D28.s:/* 095E80 80095280 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_080500/func_80094D28.s:/* 0961C0 800955C0 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+asm/non_matchings/unknown_080500/func_80094D28.s:/* 0961C4 800955C4 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
+asm/non_matchings/unknown_080500/func_80095728.s:/* 096378 80095778 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/func_80095728.s:/* 09637C 8009577C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/func_80096978.s:/* 0975C0 800969C0 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/func_80096978.s:/* 0975C4 800969C4 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/func_80098774.s:/* 0993E8 800987E8 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
+asm/non_matchings/unknown_080500/func_80098774.s:/* 0993EC 800987EC 8F390300 */  lw    $t9, %lo(osTvType)($t9)
+asm/non_matchings/unknown_080500/func_80099E8C.s:/* 09AAD4 80099ED4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/func_80099E8C.s:/* 09AAD8 80099ED8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/func_8009E3D0.s:/* 09F02C 8009E42C 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_080500/func_8009E3D0.s:/* 09F030 8009E430 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_080500/MenuBootLoop.s:/* 08920C 8008860C 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/MenuBootLoop.s:/* 089210 80088610 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/MenuCreditsLoop.s:/* 09BFB0 8009B3B0 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_080500/MenuCreditsLoop.s:/* 09BFB4 8009B3B4 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_080500/MenuCreditsLoop.s:/* 09C288 8009B688 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+asm/non_matchings/unknown_080500/MenuCreditsLoop.s:/* 09C28C 8009B68C 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
+asm/non_matchings/unknown_080500/MenuGameSelectLoop.s:/* 08EDFC 8008E1FC 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+asm/non_matchings/unknown_080500/MenuGameSelectLoop.s:/* 08EE00 8008E200 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
+asm/non_matchings/unknown_080500/MenuGhostDataInit.s:glabel MenuGhostDataInit
+asm/non_matchings/unknown_080500/MenuGhostDataLoop.s:glabel MenuGhostDataLoop
+asm/non_matchings/unknown_080500/MenuInit.s:/* 082054 80081454 0C020AAB */  jal   menu_logos_screen_init
+asm/non_matchings/unknown_080500/MenuInit.s:/* 082154 80081554 0C026697 */  jal   MenuGhostDataInit
+asm/non_matchings/unknown_080500/MenuLogoScreenLoop.s:/* 083784 80082B84 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_080500/MenuLogoScreenLoop.s:/* 083788 80082B88 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_080500/MenuLoop.s:/* 082364 80081764 0C0269F5 */  jal   MenuGhostDataLoop
+asm/non_matchings/unknown_080500/MenuTitleScreenLoop.s:/* 084618 80083A18 3C098000 */  lui   $t1, %hi(osTvType) # $t1, 0x8000
+asm/non_matchings/unknown_080500/MenuTitleScreenLoop.s:/* 08461C 80083A1C 8D290300 */  lw    $t1, %lo(osTvType)($t1)
+asm/non_matchings/unknown_09F8F0/func_8009F034.s:/* 09FC94 8009F094 3C108000 */   lui   $s0, %hi(osTvType) # $s0, 0x8000
+asm/non_matchings/unknown_09F8F0/func_8009F034.s:/* 09FD38 8009F138 26100300 */  addiu $s0, %lo(osTvType) # addiu $s0, $s0, 0x300
+asm/non_matchings/unknown_09F8F0/func_8009F034.s:/* 0A0704 8009FB04 3C0F8000 */   lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_09F8F0/func_8009F034.s:/* 0A081C 8009FC1C 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_09F8F0/func_8009F034.s:/* 0A0A04 8009FE04 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_09F8F0/func_8009F034.s:/* 0A0A08 8009FE08 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_09F8F0/func_800A14F0.s:/* 0A2480 800A1880 3C0E8000 */   lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A14F0.s:/* 0A2488 800A1888 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_09F8F0/func_800A1E48.s:/* 0A2CFC 800A20FC 3C0F8000 */   lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A1E48.s:/* 0A2D00 800A2100 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_09F8F0/func_800A277C.s:/* 0A37A8 800A2BA8 3C188000 */   lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A277C.s:/* 0A37D8 800A2BD8 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_09F8F0/func_800A6254.s:/* 0A70B8 800A64B8 3C048000 */  lui   $a0, %hi(osTvType) # $a0, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A6254.s:/* 0A70BC 800A64BC 24840300 */  addiu $a0, %lo(osTvType) # addiu $a0, $a0, 0x300
+asm/non_matchings/unknown_09F8F0/func_800A718C.s:/* 0A7D9C 800A719C 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A718C.s:/* 0A7DA0 800A71A0 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_09F8F0/func_800A718C.s:/* 0A7FB4 800A73B4 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A718C.s:/* 0A7FB8 800A73B8 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A94E8 800A88E8 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A9588 800A8988 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A98C4 800A8CC4 3C0A8000 */  lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A98CC 800A8CCC 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A98D0 800A8CD0 3C0D8000 */  lui   $t5, %hi(osTvType) # $t5, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A9904 800A8D04 8DAD0300 */  lw    $t5, %lo(osTvType)($t5)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A9A0C 800A8E0C 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A9B40 800A8F40 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A9E64 800A9264 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0A9E68 800A9268 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AA0BC 800A94BC 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AA15C 800A955C 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AA738 800A9B38 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AA73C 800A9B3C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AA7CC 800A9BCC 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AA7D4 800A9BD4 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AAE70 800AA270 3C0A8000 */   lui   $t2, %hi(osTvType) # $t2, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800A8474.s:/* 0AAE84 800AA284 8D4A0300 */  lw    $t2, %lo(osTvType)($t2)
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB4B8 800AA8B8 3C048000 */   lui   $a0, %hi(osTvType) # $a0, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB4BC 800AA8BC 8C840300 */  lw    $a0, %lo(osTvType)($a0)
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB4D4 800AA8D4 3C048000 */  lui   $a0, %hi(osTvType) # $a0, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB4E4 800AA8E4 8C840300 */  lw    $a0, %lo(osTvType)($a0)
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB6D4 800AAAD4 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB6D8 800AAAD8 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB704 800AAB04 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800AA600.s:/* 0AB710 800AAB10 8F180300 */  lw    $t8, %lo(osTvType)($t8)
+asm/non_matchings/unknown_09F8F0/func_800AD2C4.s:/* 0ADEC4 800AD2C4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_09F8F0/func_800AD2C4.s:/* 0ADEC8 800AD2C8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_0AEE70/D_800B6FC4.s:/* 0B7BFC 800B6FFC 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_0AEE70/D_800B6FC4.s:/* 0B7C0C 800B700C 0C0332EC */  jal   osSetEventMesg
+asm/non_matchings/unknown_0AEE70/D_800B6FC4.s:/* 0B7C1C 800B701C 0C0332EC */  jal   osSetEventMesg
+asm/non_matchings/unknown_0AEE70/D_800B6FC4.s:/* 0B7C38 800B7038 0C031800 */  jal   osCreatePiManager
+asm/non_matchings/unknown_0AEE70/D_800B6FC4.s:/* 0B7C54 800B7054 0C0322EC */  jal   osRecvMesg
+asm/non_matchings/unknown_0AEE70/func_800B6F50.s:/* 0B7B80 800B6F80 0C032214 */  jal   osCreateThread
+asm/non_matchings/unknown_0AEE70/func_800B6F50.s:/* 0B7B8C 800B6F8C 0C032268 */  jal   osStartThread
+asm/non_matchings/unknown_0AEE70/func_800B7144.s:/* 0B7D7C 800B717C 0C0322BC */  jal   osStopThread
+asm/non_matchings/unknown_0B8920/func_800BF634.s:/* 0C0430 800BF830 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_0B8920/func_800BF634.s:/* 0C045C 800BF85C 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_0B8920/func_800BF634.s:/* 0C08B4 800BFCB4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_0B8920/func_800BF634.s:/* 0C08CC 800BFCCC 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_0B8920/func_800C05C8.s:/* 0C11EC 800C05EC 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
+asm/non_matchings/unknown_0B8920/func_800C05C8.s:/* 0C11F0 800C05F0 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
+asm/non_matchings/unknown_0B8920/func_800C29F0.s:/* 0C364C 800C2A4C 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
+asm/non_matchings/unknown_0B8920/func_800C29F0.s:/* 0C3650 800C2A50 8F390300 */  lw    $t9, %lo(osTvType)($t9)
+asm/non_matchings/unknown_0B8920/func_800C3158.s:/* 0C3D58 800C3158 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_0B8920/func_800C3158.s:/* 0C3D5C 800C315C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_0B8920/func_800C38B4.s:/* 0C4588 800C3988 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
+asm/non_matchings/unknown_0B8920/func_800C38B4.s:/* 0C45A8 800C39A8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
+asm/non_matchings/unknown_0B8920/func_800C6000.s:glabel osCreatePiManager
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C08 800C6008 3C10800E */  lui   $s0, %hi(__osPiDevMgr) # $s0, 0x800e
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C0C 800C600C 26103740 */  addiu $s0, %lo(__osPiDevMgr) # addiu $s0, $s0, 0x3740
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C30 800C6030 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C48 800C6048 0C032208 */  jal   osCreateMesgQueue
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C50 800C6050 3C0F800E */  lui   $t7, %hi(__osPiAccessQueueEnabled) # $t7, 0x800e
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C54 800C6054 8DEF4800 */  lw    $t7, %lo(__osPiAccessQueueEnabled)($t7)
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C64 800C6064 0C034920 */  jal   __osPiCreateAccessQueue
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C7C 800C607C 0C0332EC */  jal   osSetEventMesg
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6C8C 800C608C 0C034950 */  jal   osGetThreadPri
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6CA8 800C60A8 0C033210 */  jal   osSetThreadPri
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6CB0 800C60B0 0C034958 */  jal   __osDisableInt
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6CCC 800C60CC 3C0C800D */  lui   $t4, %hi(osPiRawStartDma) # $t4, 0x800d
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6CD0 800C60D0 3C0D800D */  lui   $t5, %hi(osEPiRawStartDma) # $t5, 0x800d
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6CE8 800C60E8 258C25A0 */  addiu $t4, %lo(osPiRawStartDma) # addiu $t4, $t4, 0x25a0
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6CEC 800C60EC 25AD2680 */  addiu $t5, %lo(osEPiRawStartDma) # addiu $t5, $t5, 0x2680
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6CF4 800C60F4 3C06800D */  lui   $a2, %hi(__osDevMgrMain) # $a2, 0x800d
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6D14 800C6114 24C62760 */  addiu $a2, %lo(__osDevMgrMain) # addiu $a2, $a2, 0x2760
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6D28 800C6128 0C032214 */  jal   osCreateThread
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6D34 800C6134 0C032268 */  jal   osStartThread
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6D40 800C6140 0C034960 */  jal   __osRestoreInt
+asm/non_matchings/unknown_0B8920/func_800C6000.s:/* 0C6D58 800C6158 0C033210 */  jal   osSetThreadPri
+asm/non_matchings/unknown_0C8450/alCSPSetVol.s:/* 0C8474 800C7874 0C03246B */  jal   alEvtqPostEvent
+asm/unknown_0251F0.s:.include "macros.inc"
+asm/unknown_031D30.s:.include "macros.inc"
+asm/unknown_062930.s:.include "macros.inc"
+asm/unknown_070110.s:.include "macros.inc"
+src/unknown_001050.c:#include "macros.h"
+src/unknown_001050.c:        audioPrevCount = osGetCount();
+src/unknown_001050.c:    u32 current_cnt = osGetCount();
+src/unknown_003260.c:#include "macros.h"
+src/unknown_003260.c:    osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
+src/unknown_003260.c:    osCreateMesgQueue(&OSMesgQueue_80116160, &D_80116178, 8);
+src/unknown_003260.c:    osCreateMesgQueue(&D_80119AF0, &D_80119B08, 50);
+src/unknown_003260.c:    osCreateThread(&audioThread, 4, &func_80002A98, NULL, &D_80119230, p);
+src/unknown_003260.c:    osStartThread(&audioThread);
+src/unknown_003260.c:    osStopThread(&audioThread);
+src/unknown_003260.c:    alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_38, gAlSndPlayer->frameTime);
+src/unknown_003260.c:                alEvtqPostEvent(&sndp->evtq, (ALEvent *)&evt, sndp->frameTime);
+src/unknown_003260.c:        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_18, 0);
+src/unknown_003260.c:        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sndEvt,0);
+src/unknown_005740.c:#include "macros.h"
+src/unknown_00BC20.c:#include "macros.h"
+src/unknown_00BC20.c:extern s32 osTvType;
+src/unknown_00BC20.c:    if (osTvType != 0 || arg0 < 0) {
+src/unknown_00BC20.c:        arg0->y_position -= D_8011ADD0;
+src/unknown_00BC20.c:        arg0->x_position -= arg0->unk64->unk78;
+src/unknown_00BC20.c:        arg0->y_position -= arg0->unk64->unk7C;
+src/unknown_00BC20.c:        arg0->z_position -= arg0->unk64->unk80;
+src/unknown_0255E0.c:#include "macros.h"
+src/unknown_032760.c:#include "macros.h"
+src/unknown_032760.c:    temp->unk0 = arg0->y_position;
+src/unknown_032760.c:    arg0->unk64 = func_800BE654(arg0->unk2E, arg0->x_position, arg0->z_position);
+src/unknown_032760.c:        arg0->y_position = func_800BEEB4(arg0->unk64);
+src/unknown_043920.c:#include "macros.h"
+src/unknown_05CEF0.c:#include "macros.h"
+src/unknown_05DCD0.c:#include "macros.h"
+src/unknown_05F0C0.c:#include "macros.h"
+src/unknown_05F690.c:#include "macros.h"
+src/unknown_061D30.c:#include "macros.h"
+src/unknown_061D30.c:GLOBAL_ASM("asm/non_matchings/unknown_061D30/__CSPPostNextSeqEvent.s")
+src/unknown_061D30.c:GLOBAL_ASM("asm/non_matchings/unknown_061D30/__CSPRepostEvent.s")
+src/unknown_064690.c:#include "macros.h"
+src/unknown_064690.c:    alEvtqPostEvent(arg0 + 0x48, &unknownStruct, 0);
+src/unknown_0646F0.c:#include "macros.h"
+src/unknown_0647A0.c:#include "macros.h"
+src/unknown_0647A0.c:    alEvtqPostEvent(arg0 + 0x48, &unknownStruct, 0);
+src/unknown_064800.c:#include "macros.h"
+src/unknown_064800.c:    unk80063C00* unk60; // Array of unk80063C00, unknown number of elements (At most 256).
+src/unknown_064830.c:#include "macros.h"
+src/unknown_064830.c:    lastCnt[++cnt_index] = osGetCount();
+src/unknown_064830.c:        __osError(ERR_ALMODDELAYOVERFLOW, 1, delay_end - curr_ptr);
+src/unknown_064830.c:        aLoadBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+src/unknown_064830.c:        aLoadBuffer(ptr++, osVirtualToPhysical(r->base));
+src/unknown_064830.c:        aLoadBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+src/unknown_064830.c:    lastCnt[++cnt_index] = osGetCount();
+src/unknown_064830.c:        aSaveBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+src/unknown_064830.c:        aSaveBuffer(ptr++, osVirtualToPhysical(r->base));
+src/unknown_064830.c:        aSaveBuffer(ptr++, osVirtualToPhysical(curr_ptr));
+src/unknown_064830.c:    aLoadADPCM(ptr++, 32, osVirtualToPhysical(lp->fcvec.fccoef));
+src/unknown_064830.c:    aPoleFilter(ptr++, lp->first, lp->fgain, osVirtualToPhysical(lp->fstate));
+src/unknown_065D30.c:#include "macros.h"
+src/unknown_066460.c:#include "macros.h"
+src/unknown_066500.c:#include "macros.h"
+src/unknown_0667D0.c:#include "macros.h"
+src/unknown_0667D0.c:    osInitialize();
+src/unknown_0667D0.c:    osCreateThread(&D_8011F760, 1, &D_80065D98, 0, &D_8011D750, 0);
+src/unknown_0667D0.c:    osStartThread(&D_8011F760);
+src/unknown_066AA0.c:#include "macros.h"
+src/unknown_066AA0.c:extern u32 osTvType;
+src/unknown_066AA0.c:void osSetTime(u64);
+src/unknown_066AA0.c:    if (!osTvType) {
+src/unknown_066AA0.c:    if (osTvType == 0) {
+src/unknown_066AA0.c:            if (osTvType == 0) {
+src/unknown_066AA0.c:                if (osTvType == 0) {
+src/unknown_066AA0.c:            if (osTvType == 0) {
+src/unknown_066AA0.c:    if (osTvType == 0) {
+src/unknown_066AA0.c:    osCreateMesgQueue(&D_801210E0, &D_801210F8, 1);
+src/unknown_066AA0.c:    osSetEventMesg(5, &D_801210E0, D_801210FC);
+src/unknown_066AA0.c:                    if ((settings->bosses & (1 << settings->worldId)) != 0) {
+src/unknown_066AA0.c:            __osSpSetStatus(0xAAAA82);
+src/unknown_066AA0.c:void osCreateScheduler(u16*, s32*, s32, u8, s32);
+src/unknown_066AA0.c:void osScAddClient(u16*, u8*, s32**, s32);
+src/unknown_066AA0.c:    if (osTvType == 0) {
+src/unknown_066AA0.c:    } else if (osTvType == 1) {
+src/unknown_066AA0.c:    } else if (osTvType == 2) {
+src/unknown_066AA0.c:    osCreateScheduler(&D_80121260, &D_801234E8, 0xD, sp24, 1);
+src/unknown_066AA0.c:    osCreateMesgQueue(&D_80123548, &D_80123544, 1);
+src/unknown_066AA0.c:    osScAddClient(&D_80121260, &D_80123538, &D_80123548, 3);
+src/unknown_066AA0.c:    osSetTime(0);
+src/unknown_066AA0.c:    osSetTime(0);
+src/unknown_066AA0.c:    osSetTime(0);
+src/unknown_066AA0.c:            gSettingsPtr->racers[i].starting_position = i;
+src/unknown_066AA0.c:            gSettingsPtr->racers[i].starting_position = 5 - i;
+src/unknown_066AA0.c:            gSettingsPtr->racers[i].starting_position = 7 - i;
+src/unknown_066AA0.c:    settings->bosses = 0;
+src/unknown_066AA0.c:        D_80123560 = (s32) ((osRecvMesg(&D_80123548, NULL, 0) + 1) != 0);
+src/unknown_066AA0.c:        if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & 1) && gSettingsPtr->bosses & 1) {
+src/unknown_071730.c:#include "macros.h"
+src/unknown_072E50.c:#include "macros.h"
+src/unknown_0777A0.c:#include "macros.h"
+src/unknown_0777A0.c:void osCreateMesgQueue(s32*, s32*, s32);
+src/unknown_0777A0.c:void osCreatePiManager(s32, s32*, s32*, s32);
+src/unknown_0777A0.c:    osCreateMesgQueue(&D_80124278, &D_80124238, 0x10);
+src/unknown_0777A0.c:    osCreateMesgQueue(&D_80124220, &D_80124218, 1);
+src/unknown_0777A0.c:    osCreatePiManager(0x96, &D_80124278, &D_80124238, 0x10);
+src/unknown_0777A0.c:    osInvalDCache(ramAddress, numBytes);
+src/unknown_0777A0.c:        osPiStartDma(&D_80124200, 0, 0, romOffset, ramAddress, numBytesToDMA, &D_80124220);
+src/unknown_0777A0.c:        osRecvMesg(&D_80124220, &sp4C, 1);
+src/unknown_077C50.c:#include "macros.h"
+src/unknown_078050.c:#include "macros.h"
+src/unknown_078050.c:    osCreateMesgQueue(&D_80125EA0, &D_80125EB8,1);
+src/unknown_078050.c:    osCreateMesgQueue(&D_80125EC0, &D_80125EF0,8);
+src/unknown_078050.c:    osCreateMesgQueue(&D_80125ED8, &D_80125F10,8);
+src/unknown_079F50.c:#include "macros.h"
+src/unknown_079F50.c:    OSTime              totalTime;      /* possible conflict if       */
+src/unknown_079F50.c:extern OSViMode D_800E3900[];//osViModeTable;
+src/unknown_079F50.c:void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields){
+src/unknown_079F50.c:    osCreateViManager(OS_PRIORITY_VIMGR);    
+src/unknown_079F50.c:    osViSetMode(&D_800E3900[mode]);
+src/unknown_079F50.c:    osViBlack(TRUE);
+src/unknown_079F50.c:    osCreateMesgQueue(&sc->interruptQ, sc->intBuf, OS_SC_MAX_MESGS);
+src/unknown_079F50.c:    osCreateMesgQueue(&sc->cmdQ, sc->cmdMsgBuf, OS_SC_MAX_MESGS);
+src/unknown_079F50.c:    osSetEventMesg(OS_EVENT_SP, &sc->interruptQ, (OSMesg)667);
+src/unknown_079F50.c:    osSetEventMesg(OS_EVENT_DP, &sc->interruptQ, (OSMesg)668);    
+src/unknown_079F50.c:    osSetEventMesg(OS_EVENT_PRENMI, &sc->interruptQ, (OSMesg)669);    
+src/unknown_079F50.c:    osViSetEventMsg(&sc->interruptQ, (OSMesg)666, numFields);    
+src/unknown_079F50.c:    osCreateThread(&sc->thread, 5, __scMain, (void *)sc, stack, priority);
+src/unknown_079F50.c:    osStartThread(&sc->thread);
+src/unknown_079F50.c:void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 arg3){
+src/unknown_079F50.c:    mask = osSetIntMask(OS_IM_NONE);
+src/unknown_079F50.c:    osSetIntMask(mask);
+src/unknown_079F50.c:void osScRemoveClient(OSSched *sc, OSScClient *c)
+src/unknown_079F50.c:    mask = osSetIntMask(OS_IM_NONE);
+src/unknown_079F50.c:    osSetIntMask(mask);
+src/unknown_079F50.c:OSMesgQueue *osScGetCmdQ(OSSched *sc){
+src/unknown_079F50.c:        D_80126124 = osGetCount();
+src/unknown_079F50.c:        if (osViGetCurrentFramebuffer() != osViGetNextFramebuffer()) {           
+src/unknown_079F50.c:            //rv = osSendMesg(t->msgQ, &t->msg, OS_MESG_BLOCK);
+src/unknown_079F50.c:                                osSendMesg(t->msgQ, t->msg, 1);
+src/unknown_079F50.c:                         //       osViBlack(FALSE);
+src/unknown_079F50.c:                        //osViSwapBuffer(t->framebuffer);
+src/unknown_079F50.c:            osWritebackDCacheAll();  /* flush the cache */
+src/unknown_079F50.c:            D_80126120 = osGetCount();
+src/unknown_079F50.c:        osSpTaskLoad(&sp->list);
+src/unknown_079F50.c:        osSpTaskStartGo(&sp->list); 
+src/unknown_079F50.c:        osDpSetNextBuffer(dp->list.t.output_buff,
+src/unknown_079F50.c:        D_80126118 = osGetTime(); //TODO extra lui
+src/unknown_079F50.c:        osSpTaskYield();
+src/unknown_07AF10.c:#include "macros.h"
+src/unknown_07B870.c:#include "macros.h"
+src/unknown_080240.c:#include "macros.h"
+src/unknown_080240.c:    s32 y_pos;
+src/unknown_080240.c:    y_pos = 0;
+src/unknown_080240.c:    while(y_pos != 240) {
+src/unknown_080240.c:        fast3d_cmd((*dlist)++, 0xE4500000 | (((y_pos + 6) << 2) & 0xFFF), (y_pos << 2) & 0xFFF)
+src/unknown_080240.c:        y_pos += 6;
+src/unknown_080500.c:#include "macros.h"
+src/unknown_080500.c:extern s32 osTvType;
+src/unknown_080500.c:    settings->bosses = 0;
+src/unknown_080500.c:        settings->bosses |= D_80126530[i]->bosses;
+src/unknown_080500.c:        if (osTvType == 0) {
+src/unknown_080500.c:void menu_logos_screen_init(void) {
+src/unknown_080500.c:    if (osTvType == 0) {
+src/unknown_080500.c:// Almost matches, except for an extra `lui` instruction when the loop unrolls.
+src/unknown_080500.c:    if (osTvType == 0) {
+src/unknown_080500.c:    if (osTvType == 0) {
+src/unknown_080500.c:            if (osTvType == 0) {
+src/unknown_080500.c:        if (osTvType == 0) {
+src/unknown_080500.c:// Close to done with this function. Just a regalloc issue remains. :/
+src/unknown_080500.c:                settings->racers[i].starting_position = i;
+src/unknown_080500.c:        temp_a2 = settings->racers[i].starting_position;
+src/unknown_080500.c:    if (osTvType == 0) {
+src/unknown_080500.c:GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuGhostDataInit.s")
+src/unknown_080500.c:GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuGhostDataLoop.s")
+src/unknown_080500.c:    if (osTvType == 0) {
+src/unknown_080500.c:        if (settings->bosses & 0x20) {
+src/unknown_09F8F0.c:#include "macros.h"
+src/unknown_0AEE70.c:#include "macros.h"
+src/unknown_0B8920.c:#include "macros.h"
+src/unknown_0B8920.c:extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
+src/unknown_0B8920.c:extern OSDevMgr __osPiDevMgr;
+src/unknown_0B8920.c:void __osDevMgrMain(void);
+src/unknown_0B8920.c:        // How is temp supposed to be setup for all of these functions? This is driving me nuts.
+src/unknown_0B8920.c:void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
+src/unknown_0B8920.c:	if (!__osPiDevMgr.active)
+src/unknown_0B8920.c:		osCreateMesgQueue(cmdQ, cmdBuf, cmdMsgCnt);
+src/unknown_0B8920.c:		osCreateMesgQueue(&piEventQueue, (OSMesg*)&piEventBuf, 1);
+src/unknown_0B8920.c:		if (!__osPiAccessQueueEnabled)
+src/unknown_0B8920.c:			__osPiCreateAccessQueue();
+src/unknown_0B8920.c:		osSetEventMesg(OS_EVENT_PI, &piEventQueue, (OSMesg)0x22222222);
+src/unknown_0B8920.c:		myPri = osGetThreadPri(NULL);
+src/unknown_0B8920.c:			osSetThreadPri(NULL, pri);
+src/unknown_0B8920.c:		savedMask = __osDisableInt();
+src/unknown_0B8920.c:		__osPiDevMgr.active = 1;
+src/unknown_0B8920.c:		__osPiDevMgr.thread = &piThread;
+src/unknown_0B8920.c:		__osPiDevMgr.cmdQueue = cmdQ;
+src/unknown_0B8920.c:		__osPiDevMgr.evtQueue = &piEventQueue;
+src/unknown_0B8920.c:		__osPiDevMgr.acsQueue = &piAccessQueue;
+src/unknown_0B8920.c:		__osPiDevMgr.dma = osPiRawStartDma;
+src/unknown_0B8920.c:        __osPiDevMgr.edma = osEPiRawStartDma;
+src/unknown_0B8920.c:		osCreateThread(&piThread, 0, __osDevMgrMain, &__osPiDevMgr, &piThreadStack[OS_PIM_STACKSIZE], pri);
+src/unknown_0B8920.c:		osStartThread(&piThread);
+src/unknown_0B8920.c:		__osRestoreInt(savedMask);
+src/unknown_0B8920.c:			osSetThreadPri(NULL, oldPri);
+src/unknown_0C7F40.c:#include "macros.h"
+src/unknown_0C7F50.c:#include "macros.h"
+src/unknown_0C7F50.c:    osCreateMesgQueue(&D_8012ACA0, &D_8012ACB8, 2);
+src/unknown_0C7F50.c:    osCreateThread(&D_8012AAF0, 0x1E, &func_800C74A0, 0, &D_8012CCC0, 8);
+src/unknown_0C7F50.c:    osStartThread(&D_8012AAF0);
+src/unknown_0C7F50.c:    osStopThread(&D_8012AAF0);
+src/unknown_0C7F50.c:                osSendMesg(&D_8012ACA0, (OSMesg)10, 0);
+src/unknown_0C7F50.c:            osRecvMesg(&D_8012ACA0, &sp34, 1);
+src/unknown_0C8160.c:#include "macros.h"
+src/unknown_0C81A0.c:#include "macros.h"
+src/unknown_0C83F0.c:#include "macros.h"
+src/unknown_0C8450.c:#include "macros.h"
+lib/src/osCreateThread.c:extern OSThread *__osActiveQueue; //__osActiveQueue;
+lib/src/osCreateThread.c:void __osCleanupThread(void); //__osCleanupThread
+lib/src/osCreateThread.c:void osCreateThread(OSThread *t, OSId id, void (*entry)(void *), void *arg, void *sp, OSPri p)
+lib/src/osCreateThread.c:    t->context.ra = (u64)__osCleanupThread;
+lib/src/osCreateThread.c:    saveMask = __osDisableInt();
+lib/src/osCreateThread.c:    t->tlnext = __osActiveQueue;
+lib/src/osCreateThread.c:    __osActiveQueue = t;
+lib/src/osCreateThread.c:    __osRestoreInt(saveMask);
+lib/src/osEepromRead.c:#include "macros.h"
+lib/src/osEepromRead.c:GLOBAL_ASM("lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s")
+lib/src/osEepromWrite.c:#include "macros.h"
+lib/src/osEepromWrite.c:GLOBAL_ASM("lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s")
+lib/src/osGetThreadPri.c:extern OSThread *__osRunningThread;
+lib/src/osGetThreadPri.c:OSPri osGetThreadPri(OSThread *thread)
+lib/src/osGetThreadPri.c:        thread = __osRunningThread;
+lib/src/osGetTime.c:extern OSTime __osCurrentTime;//__osCurrentTime
+lib/src/osGetTime.c:extern u32 __osBaseCounter; //__osBaseCounter
+lib/src/osGetTime.c:OSTime osGetTime()
+lib/src/osGetTime.c:    saveMask = __osDisableInt();
+lib/src/osGetTime.c:    tmptime = osGetCount();
+lib/src/osGetTime.c:    elapseCount = tmptime - __osBaseCounter;
+lib/src/osGetTime.c:    currentCount = __osCurrentTime;
+lib/src/osGetTime.c:    __osRestoreInt(saveMask);
+lib/src/osJamMesg.c:extern OSThread* __osRunningThread;
+lib/src/osJamMesg.c:s32 osJamMesg(OSMesgQueue *mq, OSMesg msg, s32 flag)
+lib/src/osJamMesg.c:    register u32 saveMask = __osDisableInt();
+lib/src/osJamMesg.c:            __osRunningThread->state = OS_STATE_WAITING;
+lib/src/osJamMesg.c:            __osEnqueueAndYield(&mq->fullqueue);
+lib/src/osJamMesg.c:            __osRestoreInt(saveMask);
+lib/src/osJamMesg.c:        osStartThread(__osPopThread(&mq->mtqueue));
+lib/src/osJamMesg.c:    __osRestoreInt(saveMask);
+lib/src/osPfsFreeBlocks.c:s32 osPfsFreeBlocks(OSPfs *pfs, s32 *bytes_not_used)
+lib/src/osPfsFreeBlocks.c:        ERRCK(__osPfsRWInode(pfs, &inode, OS_READ, bank));
+lib/src/osPiGetCmdQueue.c:extern OSDevMgr __osPiDevMgr;
+lib/src/osPiGetCmdQueue.c:OSMesgQueue *osPiGetCmdQueue(void)
+lib/src/osPiGetCmdQueue.c:    if (!__osPiDevMgr.active)
+lib/src/osPiGetCmdQueue.c:    return __osPiDevMgr.cmdQueue;
+lib/src/osPiStartDma.c:extern OSDevMgr __osPiDevMgr; //__osPiDevMgr;
+lib/src/osPiStartDma.c:s32 osPiStartDma(OSIoMesg *mb, s32 priority, s32 direction, u32 devAddr, void *dramAddr, u32 size, OSMesgQueue *mq)
+lib/src/osPiStartDma.c:    if (!__osPiDevMgr.active)
+lib/src/osPiStartDma.c:        ret = osJamMesg(osPiGetCmdQueue(), (OSMesg)mb, OS_MESG_NOBLOCK);
+lib/src/osPiStartDma.c:        ret = osSendMesg(osPiGetCmdQueue(), (OSMesg)mb, OS_MESG_NOBLOCK);
+lib/src/osRecvMesg.c:#include "macros.h"
+lib/src/osRecvMesg.c:extern OSThread *__osRunningThread;
+lib/src/osRecvMesg.c:s32 osRecvMesg(OSMesgQueue *mq, OSMesg *msg, s32 flags)
+lib/src/osRecvMesg.c:    saveMask = __osDisableInt();
+lib/src/osRecvMesg.c:            __osRestoreInt(saveMask);
+lib/src/osRecvMesg.c:        __osRunningThread->state = OS_STATE_WAITING;
+lib/src/osRecvMesg.c:        __osEnqueueAndYield(&mq->mtqueue);
+lib/src/osRecvMesg.c:        osStartThread(__osPopThread(&mq->fullqueue));
+lib/src/osRecvMesg.c:    __osRestoreInt(saveMask);
+lib/src/osSendMesg.c:extern OSThread *__osRunningThread;
+lib/src/osSendMesg.c:s32 osSendMesg(OSMesgQueue *mq, OSMesg msg, s32 flags)
+lib/src/osSendMesg.c:    saveMask = __osDisableInt();
+lib/src/osSendMesg.c:            __osRunningThread->state = OS_STATE_WAITING;
+lib/src/osSendMesg.c:            __osEnqueueAndYield(&mq->fullqueue);
+lib/src/osSendMesg.c:            __osRestoreInt(saveMask);
+lib/src/osSendMesg.c:        osStartThread(__osPopThread(&mq->mtqueue));
+lib/src/osSendMesg.c:    __osRestoreInt(saveMask);
+lib/src/osSetEventMesg.c:__OSEventState __osEventStateTab[OS_NUM_EVENTS];//__osEventStateTab[OS_NUM_EVENTS];
+lib/src/osSetEventMesg.c:void osSetEventMesg(OSEvent event, OSMesgQueue *mq, OSMesg msg)
+lib/src/osSetEventMesg.c:	register u32 saveMask = __osDisableInt();
+lib/src/osSetEventMesg.c:	es = &__osEventStateTab[event];
+lib/src/osSetEventMesg.c:	__osRestoreInt(saveMask);
+lib/src/osSetTime.c:extern OSTime __osCurrentTime;
+lib/src/osSetTime.c:void osSetTime(OSTime time){
+lib/src/osSetTime.c:    __osCurrentTime = time;
+lib/src/osSetTimer.c:#include "macros.h"
+lib/src/osSetTimer.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osSetTimer.s")
+lib/src/osSetTimer.c:u32 osSetTimer(OSTimer *t, OSTime value, OSTime interval, OSMesgQueue *mq, OSMesg msg)
+lib/src/osSetTimer.c:    time = (OSTime) __osInsertTimer(t);
+lib/src/osSetTimer.c:        __osSetTimerIntr(time);
+lib/src/__osSiRawReadIo.c:s32 __osSiRawReadIo(u32 devAddr, u32 *data)
+lib/src/__osSiRawReadIo.c:    if (__osSiDeviceBusy())
+lib/src/__osSiRawWriteIo.c:s32 __osSiRawWriteIo(u32 devAddr, u32 data)
+lib/src/__osSiRawWriteIo.c:    if (__osSiDeviceBusy())
+lib/src/__osSpSetStatus.c:#include "macros.h"
+lib/src/__osSpSetStatus.c:void __osSpSetStatus(u32 status) {
+lib/src/osStartThread.c:extern OSThread* __osRunningThread;
+lib/src/osStartThread.c:extern OSThread* __RunQueue; //__osRunQueue
+lib/src/osStartThread.c:void osStartThread(OSThread *t)
+lib/src/osStartThread.c:    register u32 saveMask = __osDisableInt();
+lib/src/osStartThread.c:        __osEnqueueThread(&__RunQueue, t);
+lib/src/osStartThread.c:            __osEnqueueThread(&__RunQueue, t);
+lib/src/osStartThread.c:            __osEnqueueThread(t->queue, t);
+lib/src/osStartThread.c:            __osEnqueueThread(&__RunQueue, __osPopThread(t->queue));
+lib/src/osStartThread.c:    if (__osRunningThread == NULL)
+lib/src/osStartThread.c:        __osDispatchThread();
+lib/src/osStartThread.c:        if (__osRunningThread->priority < __RunQueue->priority)
+lib/src/osStartThread.c:            __osRunningThread->state = OS_STATE_RUNNABLE;
+lib/src/osStartThread.c:            __osEnqueueAndYield(&__RunQueue);
+lib/src/osStartThread.c:    __osRestoreInt(saveMask);
+lib/src/osStopThread.c:extern OSThread *__osRunningThread;
+lib/src/osStopThread.c:void osStopThread(OSThread *t)
+lib/src/osStopThread.c:    register u32 saveMask = __osDisableInt();
+lib/src/osStopThread.c:        __osRunningThread->state = OS_STATE_STOPPED;
+lib/src/osStopThread.c:        __osEnqueueAndYield(NULL);
+lib/src/osStopThread.c:        __osDequeueThread(t->queue, t);
+lib/src/osStopThread.c:    __osRestoreInt(saveMask);
+lib/src/osTimer.c:#include "macros.h"
+lib/src/osTimer.c:extern OSTime __osCurrentTime;
+lib/src/osTimer.c:extern u32 __osBaseCounter;
+lib/src/osTimer.c:OSTime __osInsertTimer(OSTimer *t);
+lib/src/osTimer.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s")
+lib/src/osTimer.c:void __osTimerServicesInit(void)
+lib/src/osTimer.c:	__osCurrentTime = 0;
+lib/src/osTimer.c:    __osBaseCounter = 0;
+lib/src/osTimer.c:void __osTimerInterrupt(void)
+lib/src/osTimer.c:			__osSetCompare(0);
+lib/src/osTimer.c:		count = osGetCount();
+lib/src/osTimer.c:			__osSetTimerIntr(t->remaining);
+lib/src/osTimer.c:				osSendMesg(t->mq, t->msg, OS_MESG_NOBLOCK);
+lib/src/osTimer.c:				__osInsertTimer(t);
+lib/src/osTimer.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s")
+lib/src/osTimer.c:void __osSetTimerIntr(OSTime tim)
+lib/src/osTimer.c:	savedMask = __osDisableInt();
+lib/src/osTimer.c:	D_8012D230 = osGetCount();
+lib/src/osTimer.c:	__osSetCompare(NewTime);
+lib/src/osTimer.c:	__osRestoreInt(savedMask);
+lib/src/osTimer.c:OSTime __osInsertTimer(OSTimer *t)
+lib/src/osTimer.c:	savedMask = __osDisableInt();
+lib/src/osTimer.c:	__osRestoreInt(savedMask);
+lib/src/osViBlack.c:extern OSViContext *__osViNext;
+lib/src/osViBlack.c:void osViBlack(u8 active) {
+lib/src/osViBlack.c:    register u32 int_disabled = __osDisableInt();
+lib/src/osViBlack.c:        __osViNext->unk00 |= 0x20;
+lib/src/osViBlack.c:        __osViNext->unk00 &= ~0x20;
+lib/src/osViBlack.c:    __osRestoreInt(int_disabled);
+lib/src/osViMgr.c:#include "macros.h"
+lib/src/osViMgr.c:extern OSTime __osCurrentTime;
+lib/src/osViMgr.c:extern u32 __osBaseCounter;
+lib/src/osViMgr.c:extern u32 D_8012D22C; //__osViIntrCount
+lib/src/osViMgr.c:extern OSDevMgr __osViDevMgr;
+lib/src/osViMgr.c:void osCreateViManager(OSPri pri)
+lib/src/osViMgr.c:	if (__osViDevMgr.active == 0)
+lib/src/osViMgr.c:		__osTimerServicesInit();
+lib/src/osViMgr.c:		osCreateMesgQueue(&viEventQueue, viEventBuf, 5);
+lib/src/osViMgr.c:		osSetEventMesg(OS_EVENT_VI, &viEventQueue, &viRetraceMsg);
+lib/src/osViMgr.c:		osSetEventMesg(OS_EVENT_COUNTER, &viEventQueue, &viCounterMsg);
+lib/src/osViMgr.c:		myPri = osGetThreadPri(NULL);
+lib/src/osViMgr.c:			osSetThreadPri(NULL, pri);
+lib/src/osViMgr.c:		savedMask = __osDisableInt();
+lib/src/osViMgr.c:		__osViDevMgr.active = 1;
+lib/src/osViMgr.c:		__osViDevMgr.thread = &viThread;
+lib/src/osViMgr.c:		__osViDevMgr.cmdQueue = &viEventQueue;
+lib/src/osViMgr.c:		__osViDevMgr.evtQueue = &viEventQueue;
+lib/src/osViMgr.c:		__osViDevMgr.acsQueue = NULL;
+lib/src/osViMgr.c:		__osViDevMgr.dma = NULL;
+lib/src/osViMgr.c:		__osViDevMgr.edma = NULL;
+lib/src/osViMgr.c:		osCreateThread(&viThread, 0, viMgrMain, &__osViDevMgr, &viThreadStack[OS_VIM_STACKSIZE], pri); //TODO give 0x8012C130 a proper symbol
+lib/src/osViMgr.c:		__osViInit();
+lib/src/osViMgr.c:		osStartThread(&viThread);
+lib/src/osViMgr.c:		__osRestoreInt(savedMask);
+lib/src/osViMgr.c:			osSetThreadPri(0, oldPri);
+lib/src/osViMgr.c:GLOBAL_ASM("lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s")
+lib/src/osViSetEventMsg.c:#include "macros.h"
+lib/src/osViSetEventMsg.c:GLOBAL_ASM("lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s")
+lib/src/osViSwapBuffer.c:extern OSViContext* __osViNext;
+lib/src/osViSwapBuffer.c:void osViSwapBuffer(void* frameBufPtr){
+lib/src/osViSwapBuffer.c:    u32 saveMask = __osDisableInt();
+lib/src/osViSwapBuffer.c:    __osViNext->buffer = frameBufPtr;
+lib/src/osViSwapBuffer.c:    __osViNext->unk00 |= 0x10;
+lib/src/osViSwapBuffer.c:    __osRestoreInt(saveMask);
+lib/src/string.c:#include "macros.h"
+lib/src/unknown_0C8490.c:#include "macros.h"
+lib/src/unknown_0C8490.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8490/osGetCount.s")
+lib/src/unknown_0C84E0.c:#include "macros.h"
+lib/src/unknown_0C84E0.c:    alEvtqPostEvent(&seqp->evtq, &evt, 0);
+lib/src/unknown_0C8540.c:#include "macros.h"
+lib/src/unknown_0C85E0.c:#include "macros.h"
+lib/src/unknown_0C85E0.c:    alEvtqPostEvent(&seqp->evtq, &evt, 0);
+lib/src/unknown_0C8650.c:#include "macros.h"
+lib/src/unknown_0C8660.c:#include "macros.h"
+lib/src/unknown_0C86A0.c:#include "macros.h"
+lib/src/unknown_0C9160.c:#include "macros.h"
+lib/src/unknown_0C91A0.c:#include "macros.h"
+lib/src/unknown_0C91A0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0C91A0/alClose.s")
+lib/src/unknown_0C91A0.c:extern OSThread __osThreadTail;
+lib/src/unknown_0C91A0.c:void osCreateMesgQueue(OSMesgQueue *mq, OSMesg *msg, s32 msgCount)
+lib/src/unknown_0C91A0.c:    mq->mtqueue = (OSThread *)&__osThreadTail;
+lib/src/unknown_0C91A0.c:    mq->fullqueue = (OSThread *)&__osThreadTail;
+lib/src/unknown_0C98F0.c:#include "macros.h"
+lib/src/unknown_0C98F0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0C98F0/osVirtualToPhysical.s")
+lib/src/unknown_0C9970.c:#include "macros.h"
+lib/src/unknown_0C9A20.c:#include "macros.h"
+lib/src/unknown_0C9C90.c:#include "macros.h"
+lib/src/unknown_0C9C90.c:    mask = osSetIntMask(OS_IM_NONE);
+lib/src/unknown_0C9C90.c:    osSetIntMask(mask);
+lib/src/unknown_0C9C90.c:    mask = osSetIntMask(OS_IM_NONE);
+lib/src/unknown_0C9C90.c:    osSetIntMask(mask);
+lib/src/unknown_0C9C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s")
+lib/src/unknown_0C9C90.c:void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta)
+lib/src/unknown_0C9C90.c:    s32                 postAtEnd=0;
+lib/src/unknown_0C9C90.c:    mask = osSetIntMask(OS_IM_NONE);
+lib/src/unknown_0C9C90.c:        osSetIntMask(mask);
+lib/src/unknown_0C9C90.c:        __osError(ERR_ALEVENTNOFREE, 0);
+lib/src/unknown_0C9C90.c:        postAtEnd = -1;
+lib/src/unknown_0C9C90.c:            if (postAtEnd)
+lib/src/unknown_0C9C90.c:    osSetIntMask(mask);
+lib/src/unknown_0C9C90.c:    mask = osSetIntMask(OS_IM_NONE);
+lib/src/unknown_0C9C90.c:        /* sct 11/28/95 - If we get here, most like we overflowed the event queue */
+lib/src/unknown_0C9C90.c:    osSetIntMask(mask);
+lib/src/unknown_0C9C90.c:    OSIntMask mask = osSetIntMask(OS_IM_NONE);
+lib/src/unknown_0C9C90.c:    osSetIntMask(mask);
+lib/src/unknown_0C9C90.c:        __osError(ERR_ALSYN_NO_UPDATE, 0);
+lib/src/unknown_0C9C90.c:        __osError(ERR_ALSYN_NO_UPDATE, 0);
+lib/src/unknown_0C9C90.c:                __osError(ERR_ALSYN_NO_UPDATE, 0);
+lib/src/unknown_0CA250.c:#include "macros.h"
+lib/src/unknown_0CA2F0.c:#include "macros.h"
+lib/src/unknown_0CA380.c:#include "macros.h"
+lib/src/unknown_0CA410.c:#include "macros.h"
+lib/src/unknown_0CA4B0.c:#include "macros.h"
+lib/src/unknown_0CA530.c:#include "macros.h"
+lib/src/unknown_0CA530.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA530/osSetIntMask.s")
+lib/src/unknown_0CA6E0.c:#include "macros.h"
+lib/src/unknown_0CA730.c:#include "macros.h"
+lib/src/unknown_0CA940.c:#include "macros.h"
+lib/src/unknown_0CA9A0.c:#include "macros.h"
+lib/src/unknown_0CCF90.c:#include "macros.h"
+lib/src/unknown_0CCF90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CCF90/osInitialize.s")
+lib/src/unknown_0CCF90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s")
+lib/src/unknown_0CD820.c:#include "macros.h"
+lib/src/unknown_0CDE50.c:#include "macros.h"
+lib/src/unknown_0CDE90.c:#include "macros.h"
+lib/src/unknown_0CDE90.c:extern OSPifRam __osPfsPifRam; //__osPfsPifRam
+lib/src/unknown_0CDE90.c:extern u8 D_8012CD90; //__osContLastCmd
+lib/src/unknown_0CDE90.c:extern u8 __osMaxControllers;//__osMaxControllers
+lib/src/unknown_0CDE90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s")
+lib/src/unknown_0CDE90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s")
+lib/src/unknown_0CDE90.c:void __osPfsGetInitData(u8 *pattern, OSContStatus *data)
+lib/src/unknown_0CDE90.c:    ptr = (u8 *)&__osPfsPifRam;
+lib/src/unknown_0CDE90.c:    for (i = 0; i < __osMaxControllers; i++, ptr += sizeof(__OSContRequesFormat))
+lib/src/unknown_0CE200.c:#include "macros.h"
+lib/src/unknown_0CE200.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiCreateAccessQueue.s")
+lib/src/unknown_0CE200.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiGetAccess.s")
+lib/src/unknown_0CE200.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiRelAccess.s")
+lib/src/unknown_0CE200.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s")
+lib/src/unknown_0CE370.c:#include "macros.h"
+lib/src/unknown_0CE370.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osContAddressCrc.s")
+lib/src/unknown_0CE370.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osContDataCrc.s")
+lib/src/unknown_0CE370.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s")
+lib/src/unknown_0CE370.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE370/__osPackRamWriteData.s")
+lib/src/unknown_0CE8A0.c:#include "macros.h"
+lib/src/unknown_0CE8A0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s")
+lib/src/unknown_0CE8A0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s")
+lib/src/unknown_0CEC50.c:#include "macros.h"
+lib/src/unknown_0CEE10.c:#include "macros.h"
+lib/src/unknown_0CEE10.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CEE10/osEepromProbe.s")
+lib/src/unknown_0CF070.c:#include "macros.h"
+lib/src/unknown_0CF070.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF070/__osPackEepReadData.s")
+lib/src/unknown_0CF330.c:#include "macros.h"
+lib/src/unknown_0CF330.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osPackEepWriteData.s")
+lib/src/unknown_0CF330.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s")
+lib/src/unknown_0CF330.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s")
+lib/src/unknown_0D0130.c:#include "macros.h"
+lib/src/unknown_0D10E0.c:#include "macros.h"
+lib/src/unknown_0D1180.c:#include "macros.h"
+lib/src/unknown_0D1A80.c:#include "macros.h"
+lib/src/unknown_0D1A80.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1A80/osPfsFindFile.s")
+lib/src/unknown_0D1C40.c:#include "macros.h"
+lib/src/unknown_0D1C40.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s")
+lib/src/unknown_0D1C40.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1C40/__osPfsDeclearPage.s")
+lib/src/unknown_0D1C40.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1C40/__osClearPage.s")
+lib/src/unknown_0D23F0.c:#include "macros.h"
+lib/src/unknown_0D23F0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D23F0/osInvalDCache.s")
+lib/src/unknown_0D24A0.c:#include "macros.h"
+lib/src/unknown_0D24A0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D24A0/osWritebackDCacheAll.s")
+lib/src/unknown_0D24D0.c:#include "macros.h"
+lib/src/unknown_0D24E0.c:#include "macros.h"
+lib/src/unknown_0D24E0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D24E0/osDpSetNextBuffer.s")
+lib/src/unknown_0D28A0.c:#include "macros.h"
+lib/src/unknown_0D28A0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s")
+lib/src/unknown_0D29F0.c:#include "macros.h"
+lib/src/unknown_0D29F0.c:extern __OSViContext *__osViCurr;
+lib/src/unknown_0D29F0.c:extern __OSViContext *__osViNext;
+lib/src/unknown_0D29F0.c:void *osViGetCurrentFramebuffer(void){
+lib/src/unknown_0D29F0.c:    saveMask = __osDisableInt();
+lib/src/unknown_0D29F0.c:    framep = __osViCurr->framep;
+lib/src/unknown_0D29F0.c:    __osRestoreInt(saveMask);
+lib/src/unknown_0D29F0.c:void *osViGetNextFramebuffer(void){
+lib/src/unknown_0D29F0.c:    saveMask = __osDisableInt();
+lib/src/unknown_0D29F0.c:    framep = __osViNext->framep;
+lib/src/unknown_0D29F0.c:    __osRestoreInt(saveMask);
+lib/src/unknown_0D29F0.c:#define _osVirtualToPhysical(ptr)               \
+lib/src/unknown_0D29F0.c:		ptr = (void *)osVirtualToPhysical(ptr); \
+lib/src/unknown_0D29F0.c:	_osVirtualToPhysical(tp->t.ucode);
+lib/src/unknown_0D29F0.c:	_osVirtualToPhysical(tp->t.ucode_data);
+lib/src/unknown_0D29F0.c:	_osVirtualToPhysical(tp->t.dram_stack);
+lib/src/unknown_0D29F0.c:	_osVirtualToPhysical(tp->t.output_buff);
+lib/src/unknown_0D29F0.c:	_osVirtualToPhysical(tp->t.output_buff_size);
+lib/src/unknown_0D29F0.c:	_osVirtualToPhysical(tp->t.data_ptr);
+lib/src/unknown_0D29F0.c:	_osVirtualToPhysical(tp->t.yield_data_ptr);
+lib/src/unknown_0D29F0.c:void osSpTaskLoad(OSTask *intp){
+lib/src/unknown_0D29F0.c:	osWritebackDCache(tp, sizeof(OSTask));
+lib/src/unknown_0D29F0.c:	__osSpSetStatus(SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE | SP_SET_INTR_BREAK);
+lib/src/unknown_0D29F0.c:	while (__osSpSetPc(SP_IMEM_START) == -1)
+lib/src/unknown_0D29F0.c:	while (__osSpRawStartDma(1, (SP_IMEM_START - sizeof(*tp)), tp,
+lib/src/unknown_0D29F0.c:	while (__osSpDeviceBusy())
+lib/src/unknown_0D29F0.c:	while (__osSpRawStartDma(1, SP_IMEM_START, tp->t.ucode_boot,
+lib/src/unknown_0D29F0.c:void osSpTaskStartGo(OSTask *tp){
+lib/src/unknown_0D29F0.c:	while (__osSpDeviceBusy());
+lib/src/unknown_0D29F0.c:	__osSpSetStatus(SP_SET_INTR_BREAK | SP_CLR_SSTEP | SP_CLR_BROKE | SP_CLR_HALT);
+lib/src/unknown_0D2E40.c:#include "macros.h"
+lib/src/unknown_0D2E40.c:void osSpTaskYield(void) {
+lib/src/unknown_0D2E40.c:    __osSpSetStatus(SPSTATUS_SET_SIGNAL0);
+lib/src/unknown_0D2E40.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s")
+lib/src/unknown_0D3020.c:#include "macros.h"
+lib/src/unknown_0D3020.c:extern u32 __osPiAccessQueueEnabled;//__osPiAccessQueueEnabled
+lib/src/unknown_0D3020.c:extern OSMesgQueue piAccessQueue; //__osPiAccessQueue
+lib/src/unknown_0D3020.c:void __osPiCreateAccessQueue(void)
+lib/src/unknown_0D3020.c:	__osPiAccessQueueEnabled = 1;
+lib/src/unknown_0D3020.c:	osCreateMesgQueue(&piAccessQueue, D_8012D1E0, PI_Q_BUF_LEN);
+lib/src/unknown_0D3020.c:	osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
+lib/src/unknown_0D3020.c:void __osPiGetAccess(void)
+lib/src/unknown_0D3020.c:	if (!__osPiAccessQueueEnabled)
+lib/src/unknown_0D3020.c:		__osPiCreateAccessQueue();
+lib/src/unknown_0D3020.c:	osRecvMesg(&piAccessQueue, &dummyMesg, OS_MESG_BLOCK);
+lib/src/unknown_0D3020.c:void __osPiRelAccess(void)
+lib/src/unknown_0D3020.c:	osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
+lib/src/unknown_0D3160.c:#include "macros.h"
+lib/src/unknown_0D3160.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDisableInt.s")
+lib/src/unknown_0D3160.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osRestoreInt.s")
+lib/src/unknown_0D3160.c:s32 osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size)
+lib/src/unknown_0D3160.c:    HW_REG(PI_DRAM_ADDR_REG, void *) = (void *) osVirtualToPhysical(dramAddr);
+lib/src/unknown_0D3160.c:    HW_REG(PI_CART_ADDR_REG, void *) = (void *) (((uintptr_t) osRomBase | devAddr) & 0x1fffffff);
+lib/src/unknown_0D3160.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/osEPiRawStartDma.s")
+lib/src/unknown_0D3160.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s")
+lib/src/unknown_0D3160.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osViInit.s")
+lib/src/unknown_0D3160.c:void __osDequeueThread(OSThread **queue, OSThread *t)
+lib/src/unknown_0D4270.c:#include "macros.h"
+lib/src/unknown_0D43F0.c:#include "macros.h"
+lib/src/unknown_0D5390.c:#include "macros.h"
+lib/src/unknown_0D5390.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D5390/osPiRawWriteIo.s")
+lib/src/unknown_0D56B0.c:#include "macros.h"
+lib/src/unknown_0D56B0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/cosf.s")
+lib/src/unknown_0D5EC0.c:#include "macros.h"
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSiDeviceBusy.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSumcalc.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osIdCheckSum.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osCheckPackId.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osGetId.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osCheckId.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osPfsSelectBank.s")
+lib/src/unknown_0D5EC0.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osDpDeviceBusy.s")
+lib/src/unknown_0D5EC0.c:__OSViContext *__osViGetCurrentContext(void){
+lib/src/unknown_0D5EC0.c:    return __osViCurr;
+lib/src/unknown_0D6C90.c:#include "macros.h"
+lib/src/unknown_0D6C90.c:extern OSThread* __osRunningThread;
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s")
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpSetPc.s")
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpRawStartDma.s")
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpDeviceBusy.s")
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osResetGlobalIntMask.s")
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osEPiRawWriteIo.s")
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osYieldThread.s")
+lib/src/unknown_0D6C90.c:/*extern void __osEnqueueAndYield(OSThread **);
+lib/src/unknown_0D6C90.c:extern void		__osRestoreInt(u32);
+lib/src/unknown_0D6C90.c:void osYieldThread(void){
+lib/src/unknown_0D6C90.c:    register u32 saveMask = __osDisableInt();
+lib/src/unknown_0D6C90.c:    __osRunningThread->state = OS_STATE_RUNNABLE;
+lib/src/unknown_0D6C90.c:    __osEnqueueAndYield(&__RunQueue);
+lib/src/unknown_0D6C90.c:    __osRestoreInt(saveMask);
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s")
+lib/src/unknown_0D6C90.c:GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetCompare.s")
+lib/asm/bcopy.s:.include "macros.inc"
+lib/asm/exception/D_800D35A0.s:/* 0D41A0 800D35A0 0C035980 */  jal   osDestroyThread
+lib/asm/exception/__osDispatchThread.s:glabel __osDispatchThread
+lib/asm/exception/__osDispatchThread.s:/* 0D4028 800D3428 0C034D05 */  jal   __osPopThread
+lib/asm/exception/__osDispatchThread.s:/* 0D4030 800D3430 3C01800E */  lui   $at, %hi(__osRunningThread) # $at, 0x800e
+lib/asm/exception/__osDispatchThread.s:/* 0D4034 800D3434 AC224890 */  sw    $v0, %lo(__osRunningThread)($at)
+lib/asm/exception/__osEnqueueAndYield.s:glabel __osEnqueueAndYield
+lib/asm/exception/__osEnqueueAndYield.s:/* 0D3ECC 800D32CC 3C05800E */  lui   $a1, %hi(__osRunningThread) # $a1, 0x800e
+lib/asm/exception/__osEnqueueAndYield.s:/* 0D3ED0 800D32D0 8CA54890 */  lw    $a1, %lo(__osRunningThread)($a1)
+lib/asm/exception/__osEnqueueAndYield.s:/* 0D3FBC 800D33BC 0C034CF3 */  jal   __osEnqueueThread
+lib/asm/exception/__osEnqueueAndYield.s:/* 0D3FC4 800D33C4 08034D09 */  j     __osDispatchThread
+lib/asm/exception/__osEnqueueThread.s:glabel __osEnqueueThread
+lib/asm/exception/__osExceptionPreamble.s:glabel __osExceptionPreamble
+lib/asm/exception/__osExceptionPreamble.s:/* 0D38B0 800D2CB0 3C1A800D */  lui   $k0, %hi(__osException) # $k0, 0x800d
+lib/asm/exception/__osExceptionPreamble.s:/* 0D38B4 800D2CB4 275A2CC0 */  addiu $k0, %lo(__osException) # addiu $k0, $k0, 0x2cc0
+lib/asm/exception/__osException.s:glabel __osException
+lib/asm/exception/__osException.s:/* 0D38F8 800D2CF8 3C1A800E */  lui   $k0, %hi(__osRunningThread) # $k0, 0x800e
+lib/asm/exception/__osException.s:/* 0D38FC 800D2CFC 8F5A4890 */  lw    $k0, %lo(__osRunningThread)($k0)
+lib/asm/exception/__osException.s:/* 0D3D8C 800D318C 0C034CF3 */  jal   __osEnqueueThread
+lib/asm/exception/__osException.s:/* 0D3D94 800D3194 08034D09 */  j     __osDispatchThread
+lib/asm/exception/__osException.s:/* 0D3DAC 800D31AC 08034D09 */  j     __osDispatchThread
+lib/asm/exception/__osException.s:/* 0D3DDC 800D31DC 08034D09 */  j     __osDispatchThread
+lib/asm/exception/__osPopThread.s:glabel __osPopThread
+lib/asm/exception.s:.include "macros.inc"
+lib/asm/exception.s:.include "lib/asm/exception/__osExceptionPreamble.s"
+lib/asm/exception.s:.include "lib/asm/exception/__osException.s"
+lib/asm/exception.s:.include "lib/asm/exception/__osEnqueueAndYield.s"
+lib/asm/exception.s:.include "lib/asm/exception/__osEnqueueThread.s"
+lib/asm/exception.s:.include "lib/asm/exception/__osPopThread.s"
+lib/asm/exception.s:.include "lib/asm/exception/__osDispatchThread.s"
+lib/asm/exception/send_mesg.s:/* 0D3DE4 800D31E4 3C0A8013 */  lui   $t2, %hi(__osEventStateTab) # $t2, 0x8013
+lib/asm/exception/send_mesg.s:/* 0D3DE8 800D31E8 254ACCD0 */  addiu $t2, %lo(__osEventStateTab) # addiu $t2, $t2, -0x3330
+lib/asm/exception/send_mesg.s:/* 0D3E74 800D3274 0C034D05 */  jal   __osPopThread
+lib/asm/exception/send_mesg.s:/* 0D3E88 800D3288 0C034CF3 */  jal   __osEnqueueThread
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:glabel osEepromRead
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEEBC 800CE2BC 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEEC8 800CE2C8 0C033A0F */  jal   __osEepStatus
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEF0C 800CE30C 0C033A0F */  jal   __osEepStatus
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEF24 800CE324 0C03391C */  jal   __osPackEepReadData
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEF34 800CE334 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEF48 800CE348 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEF90 800CE390 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CEFB0 800CE3B0 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/osEepromRead_0CEE80/osEepromRead.s:/* 0CF054 800CE454 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:glabel osEepromWrite
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF1B8 800CE5B8 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF1C4 800CE5C4 0C033A0F */  jal   __osEepStatus
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF208 800CE608 0C033A0F */  jal   __osEepStatus
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF224 800CE624 0C0339CC */  jal   __osPackEepWriteData
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF234 800CE634 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF248 800CE648 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF290 800CE690 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF2B0 800CE6B0 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/osEepromWrite_0CF180/osEepromWrite.s:/* 0CF314 800CE714 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D2734 800D1B34 0C035820 */  jal   __osViGetCurrentContext
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D2760 800D1B60 3C128013 */  lui   $s2, %hi(__osBaseCounter) # $s2, 0x8013
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D2764 800D1B64 3C118013 */  lui   $s1, %hi(__osCurrentTime) # $s1, 0x8013
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D2768 800D1B68 2631D220 */  addiu $s1, %lo(__osCurrentTime) # addiu $s1, $s1, -0x2de0
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D276C 800D1B6C 2652D228 */  addiu $s2, %lo(__osBaseCounter) # addiu $s2, $s2, -0x2dd8
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D2784 800D1B84 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D27AC 800D1BAC 0C035824 */  jal   __osViSwapContext
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D27D0 800D1BD0 0C035820 */  jal   __osViGetCurrentContext
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D27F0 800D1BF0 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D2810 800D1C10 0C031E34 */  jal   osGetCount
+lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s:/* 0D2848 800D1C48 0C0353D3 */  jal   __osTimerInterrupt
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:glabel osViSetEventMsg
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D2994 800D1D94 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D299C 800D1D9C 3C0F800E */  lui   $t7, %hi(__osViNext) # $t7, 0x800e
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D29A0 800D1DA0 8DEF4874 */  lw    $t7, %lo(__osViNext)($t7)
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D29A8 800D1DA8 3C19800E */  lui   $t9, %hi(__osViNext) # $t9, 0x800e
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D29AC 800D1DAC 3C09800E */  lui   $t1, %hi(__osViNext) # $t1, 0x800e
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D29B4 800D1DB4 8F394874 */  lw    $t9, %lo(__osViNext)($t9)
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D29C8 800D1DC8 8D294874 */  lw    $t1, %lo(__osViNext)($t1)
+lib/asm/non_matchings/osViSetEventMsg_0D2980/osViSetEventMsg.s:/* 0D29D0 800D1DD0 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0C8490/osGetCount.s:glabel osGetCount
+lib/asm/non_matchings/unknown_0C84E0/alCSPSetChlPan.s:/* 0C8520 800C7920 0C03246B */  jal   alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C8540/alCSPSetChlVol.s:/* 0C8580 800C7980 0C03246B */  jal   alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C85E0/alCSPSetTempo.s:/* 0C862C 800C7A2C 0C03246B */  jal   alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C8660/alCSPSetBank.s:/* 0C867C 800C7A7C 0C03246B */  jal   alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C9160/alCSPSetSeq.s:/* 0C917C 800C857C 0C03246B */  jal   alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C91A0/alClose.s:glabel alClose
+lib/asm/non_matchings/unknown_0C91A0/alCSPPlay.s:/* 0C91B8 800C85B8 0C03246B */  jal   alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C91A0/alCSPStop.s:/* 0C91E8 800C85E8 0C03246B */  jal   alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C98F0/osVirtualToPhysical.s:glabel osVirtualToPhysical
+lib/asm/non_matchings/unknown_0C98F0/osVirtualToPhysical.s:/* 0C9954 800C8D54 0C034D6C */  jal   __osProbeTLB
+lib/asm/non_matchings/unknown_0C9970/func_800C8D70.s:/* 0C99E8 800C8DE8 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:glabel osSendMesg
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9A4C 800C8E4C 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9A80 800C8E80 3C09800E */  lui   $t1, %hi(__osRunningThread) # $t1, 0x800e
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9A84 800C8E84 8D294890 */  lw    $t1, %lo(__osRunningThread)($t1)
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9A94 800C8E94 0C034CB3 */  jal   __osEnqueueAndYield
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9AA4 800C8EA4 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9B44 800C8F44 0C034D05 */  jal   __osPopThread
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9B50 800C8F50 0C032268 */  jal   osStartThread
+lib/asm/non_matchings/unknown_0C9A30/osSendMesg.s:/* 0C9B58 800C8F58 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s:glabel alEvtqPostEvent
+lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s:/* 0C9DC4 800C91C4 0C03268C */  jal   osSetIntMask
+lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s:/* 0C9DE4 800C91E4 0C03268C */  jal   osSetIntMask
+lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s:/* 0C9EB8 800C92B8 0C03268C */  jal   osSetIntMask
+lib/asm/non_matchings/unknown_0CA530/osSetIntMask.s:glabel osSetIntMask
+lib/asm/non_matchings/unknown_0CA9A0/alResamplePull.s:/* 0CCF54 800CC354 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0CA9A0/func_800CAC5C.s:/* 0CBC6C 800CB06C 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0CA9A0/func_800CAC5C.s:/* 0CBCB4 800CB0B4 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0CCF90/guPerspectiveF.s:/* 0CD564 800CC964 0C0352AC */  jal   cosf
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:glabel osInitialize
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD1B8 800CC5B8 0C03515C */  jal   __osGetSR
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD1C8 800CC5C8 0C035158 */  jal   __osSetSR
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD1D4 800CC5D4 0C035160 */  jal   __osSetFpcCsr
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD1E4 800CC5E4 0C035164 */  jal   __osSiRawReadIo
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD1FC 800CC5FC 0C035164 */  jal   __osSiRawReadIo
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD21C 800CC61C 0C035178 */  jal   __osSiRawWriteIo
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD23C 800CC63C 0C035178 */  jal   __osSiRawWriteIo
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD24C 800CC64C 3C08800D */  lui   $t0, %hi(__osExceptionPreamble) # $t0, 0x800d
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD250 800CC650 25082CB0 */  addiu $t0, %lo(__osExceptionPreamble) # addiu $t0, $t0, 0x2cb0
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD25C 800CC65C 3C0D800D */  lui   $t5, %hi(__osExceptionPreamble) # $t5, 0x800d
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD268 800CC668 25AD2CB0 */  addiu $t5, %lo(__osExceptionPreamble) # addiu $t5, $t5, 0x2cb0
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD27C 800CC67C 3C09800D */  lui   $t1, %hi(__osExceptionPreamble) # $t1, 0x800d
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD288 800CC688 25292CB0 */  addiu $t1, %lo(__osExceptionPreamble) # addiu $t1, $t1, 0x2cb0
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD29C 800CC69C 3C0E800D */  lui   $t6, %hi(__osExceptionPreamble) # $t6, 0x800d
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD2A8 800CC6A8 25CE2CB0 */  addiu $t6, %lo(__osExceptionPreamble) # addiu $t6, $t6, 0x2cb0
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD30C 800CC70C 0C03518C */  jal   osWritebackDCache
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD318 800CC718 0C0351AC */  jal   osInvalICache
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD320 800CC720 0C0351CC */  jal   osMapTLBRdb
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD32C 800CC72C 0C0351E4 */  jal   osPiRawWriteIo
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD394 800CC794 3C098000 */  lui   $t1, %hi(osResetType) # $t1, 0x8000
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD398 800CC798 8D29030C */  lw    $t1, %lo(osResetType)($t1)
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD3AC 800CC7AC 3C048000 */  lui   $a0, %hi(osAppNMIBuffer) # $a0, 0x8000
+lib/asm/non_matchings/unknown_0CCF90/osInitialize.s:/* 0CD3B0 800CC7B0 2484031C */  addiu $a0, %lo(osAppNMIBuffer) # addiu $a0, $a0, 0x31c
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:glabel osSetThreadPri
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD450 800CC850 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD468 800CC868 3C0F800E */  lui   $t7, %hi(__osRunningThread) # $t7, 0x800e
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD46C 800CC86C 8DEF4890 */  lw    $t7, %lo(__osRunningThread)($t7)
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD48C 800CC88C 3C0A800E */  lui   $t2, %hi(__osRunningThread) # $t2, 0x800e
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD490 800CC890 8D4A4890 */  lw    $t2, %lo(__osRunningThread)($t2)
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD4B4 800CC8B4 0C034B1C */  jal   __osDequeueThread
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD4C4 800CC8C4 0C034CF3 */  jal   __osEnqueueThread
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD4CC 800CC8CC 3C0D800E */  lui   $t5, %hi(__osRunningThread) # $t5, 0x800e
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD4D8 800CC8D8 8DAD4890 */  lw    $t5, %lo(__osRunningThread)($t5)
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD4FC 800CC8FC 0C034CB3 */  jal   __osEnqueueAndYield
+lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s:/* 0CD504 800CC904 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD854 800CCC54 0C03486C */  jal   osGetTime
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD8D0 800CCCD0 0C032208 */  jal   osCreateMesgQueue
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD960 800CCD60 0C035378 */  jal   osSetTimer
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD970 800CCD70 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD97C 800CCD7C 3C018013 */  lui   $at, %hi(__osMaxControllers) # $at, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD980 800CCD80 A038CD91 */  sb    $t8, %lo(__osMaxControllers)($at)
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD994 800CCD94 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD9A8 800CCDA8 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD9B8 800CCDB8 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD9CC 800CCDCC 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD9E4 800CCDE4 0C033580 */  jal   __osSiCreateAccessQueue
+lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s:/* 0CD9FC 800CCDFC 0C032208 */  jal   osCreateMesgQueue
+lib/asm/non_matchings/unknown_0CD820/func_800CCE18.s:/* 0CDA18 800CCE18 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CCE18.s:/* 0CDA1C 800CCE1C 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
+lib/asm/non_matchings/unknown_0CD820/func_800CCE18.s:/* 0CDAB0 800CCEB0 3C198013 */  lui   $t9, %hi(__osMaxControllers) # $t9, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CCE18.s:/* 0CDAB4 800CCEB4 9339CD91 */  lbu   $t9, %lo(__osMaxControllers)($t9)
+lib/asm/non_matchings/unknown_0CD820/func_800CCEE8.s:/* 0CDB1C 800CCF1C 3C198013 */  lui   $t9, %hi(__osMaxControllers) # $t9, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CCEE8.s:/* 0CDB20 800CCF20 9339CD91 */  lbu   $t9, %lo(__osMaxControllers)($t9)
+lib/asm/non_matchings/unknown_0CD820/func_800CCEE8.s:/* 0CDB8C 800CCF8C 3C188013 */  lui   $t8, %hi(__osMaxControllers) # $t8, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CCEE8.s:/* 0CDBA8 800CCFA8 9318CD91 */  lbu   $t8, %lo(__osMaxControllers)($t8)
+lib/asm/non_matchings/unknown_0CD820/func_800CCFE0.s:/* 0CDBEC 800CCFEC 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/unknown_0CD820/func_800CCFE0.s:/* 0CDC18 800CD018 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CD820/func_800CCFE0.s:/* 0CDC2C 800CD02C 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CD820/func_800CCFE0.s:/* 0CDC74 800CD074 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CD820/func_800CCFE0.s:/* 0CDC88 800CD088 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CD820/func_800CD0A4.s:/* 0CDCA4 800CD0A4 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CD0A4.s:/* 0CDCA8 800CD0A8 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
+lib/asm/non_matchings/unknown_0CD820/func_800CD0A4.s:/* 0CDD1C 800CD11C 3C0B8013 */  lui   $t3, %hi(__osMaxControllers) # $t3, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CD0A4.s:/* 0CDD20 800CD120 916BCD91 */  lbu   $t3, %lo(__osMaxControllers)($t3)
+lib/asm/non_matchings/unknown_0CD820/func_800CD14C.s:/* 0CDD88 800CD188 3C198013 */  lui   $t9, %hi(__osMaxControllers) # $t9, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CD14C.s:/* 0CDD8C 800CD18C 9339CD91 */  lbu   $t9, %lo(__osMaxControllers)($t9)
+lib/asm/non_matchings/unknown_0CD820/func_800CD14C.s:/* 0CDDE8 800CD1E8 3C188013 */  lui   $t8, %hi(__osMaxControllers) # $t8, 0x8013
+lib/asm/non_matchings/unknown_0CD820/func_800CD14C.s:/* 0CDE04 800CD204 9318CD91 */  lbu   $t8, %lo(__osMaxControllers)($t8)
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:glabel osPfsIsPlug
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEAC 800CD2AC 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEB4 800CD2B4 0C03350C */  jal   __osPfsRequestData
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEBC 800CD2BC 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEC0 800CD2C0 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEC4 800CD2C4 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDED8 800CD2D8 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEE0 800CD2E0 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEE4 800CD2E4 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEE8 800CD2E8 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDEFC 800CD2FC 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF08 800CD308 0C03354B */  jal   __osPfsGetInitData
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF10 800CD310 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF14 800CD314 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF54 800CD354 3C0E8013 */  lui   $t6, %hi(__osMaxControllers) # $t6, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF58 800CD358 91CECD91 */  lbu   $t6, %lo(__osMaxControllers)($t6)
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF70 800CD370 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF74 800CD374 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF94 800CD394 3C088013 */  lui   $t0, %hi(__osMaxControllers) # $t0, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDF98 800CD398 9108CD91 */  lbu   $t0, %lo(__osMaxControllers)($t0)
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDFEC 800CD3EC 3C0C8013 */  lui   $t4, %hi(__osMaxControllers) # $t4, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CDFF0 800CD3F0 918CCD91 */  lbu   $t4, %lo(__osMaxControllers)($t4)
+lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s:/* 0CE008 800CD408 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s:glabel __osPfsRequestData
+lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s:/* 0CE06C 800CD46C 3C198013 */  lui   $t9, %hi(__osMaxControllers) # $t9, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s:/* 0CE070 800CD470 9339CD91 */  lbu   $t9, %lo(__osMaxControllers)($t9)
+lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s:/* 0CE074 800CD474 3C098013 */  lui   $t1, %hi(__osPfsPifRam) # $t1, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s:/* 0CE080 800CD480 2529CDE0 */  addiu $t1, %lo(__osPfsPifRam) # addiu $t1, $t1, -0x3220
+lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s:/* 0CE0DC 800CD4DC 3C188013 */  lui   $t8, %hi(__osMaxControllers) # $t8, 0x8013
+lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s:/* 0CE0F8 800CD4F8 9318CD91 */  lbu   $t8, %lo(__osMaxControllers)($t8)
+lib/asm/non_matchings/unknown_0CE200/__osSiCreateAccessQueue.s:glabel __osSiCreateAccessQueue
+lib/asm/non_matchings/unknown_0CE200/__osSiCreateAccessQueue.s:/* 0CE224 800CD624 0C032208 */  jal   osCreateMesgQueue
+lib/asm/non_matchings/unknown_0CE200/__osSiCreateAccessQueue.s:/* 0CE238 800CD638 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/unknown_0CE200/__osSiGetAccess.s:glabel __osSiGetAccess
+lib/asm/non_matchings/unknown_0CE200/__osSiGetAccess.s:/* 0CE268 800CD668 0C033580 */  jal   __osSiCreateAccessQueue
+lib/asm/non_matchings/unknown_0CE200/__osSiGetAccess.s:/* 0CE27C 800CD67C 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s:glabel __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s:/* 0CE2CC 800CD6CC 0C0354B0 */  jal   __osSiDeviceBusy
+lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s:/* 0CE2F8 800CD6F8 0C03518C */  jal   osWritebackDCache
+lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s:/* 0CE300 800CD700 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s:/* 0CE350 800CD750 0C0345FC */  jal   osInvalDCache
+lib/asm/non_matchings/unknown_0CE200/__osSiRelAccess.s:glabel __osSiRelAccess
+lib/asm/non_matchings/unknown_0CE200/__osSiRelAccess.s:/* 0CE2A8 800CD6A8 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/unknown_0CE370/__osContAddressCrc.s:glabel __osContAddressCrc
+lib/asm/non_matchings/unknown_0CE370/__osContDataCrc.s:glabel __osContDataCrc
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:glabel __osContRamWrite
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE4F8 800CD8F8 3C0E8013 */  lui   $t6, %hi(__osPfsPifRam) # $t6, 0x8013
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE4FC 800CD8FC 25CECDE0 */  addiu $t6, %lo(__osPfsPifRam) # addiu $t6, $t6, -0x3220
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE550 800CD950 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE56C 800CD96C 0C0336C8 */  jal   __osPackRamWriteData
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE574 800CD974 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE578 800CD978 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE57C 800CD97C 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE590 800CD990 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE5CC 800CD9CC 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE5D4 800CD9D4 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE5D8 800CD9D8 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE5EC 800CD9EC 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE5F8 800CD9F8 3C0E8013 */  lui   $t6, %hi(__osPfsPifRam) # $t6, 0x8013
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE5FC 800CD9FC 25CECDE0 */  addiu $t6, %lo(__osPfsPifRam) # addiu $t6, $t6, -0x3220
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE690 800CDA90 0C033608 */  jal   __osContDataCrc
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE6A8 800CDAA8 0C033B75 */  jal   __osPfsGetStatus
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE6C0 800CDAC0 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CE370/__osContRamWrite.s:/* 0CE700 800CDB00 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CE370/__osPackRamWriteData.s:glabel __osPackRamWriteData
+lib/asm/non_matchings/unknown_0CE370/__osPackRamWriteData.s:/* 0CE724 800CDB24 3C0E8013 */  lui   $t6, %hi(__osPfsPifRam) # $t6, 0x8013
+lib/asm/non_matchings/unknown_0CE370/__osPackRamWriteData.s:/* 0CE728 800CDB28 25CECDE0 */  addiu $t6, %lo(__osPfsPifRam) # addiu $t6, $t6, -0x3220
+lib/asm/non_matchings/unknown_0CE370/__osPackRamWriteData.s:/* 0CE798 800CDB98 0C0335DC */  jal   __osContAddressCrc
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:glabel __osContRamRead
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE8A4 800CDCA4 3C0E8013 */  lui   $t6, %hi(__osPfsPifRam) # $t6, 0x8013
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE8AC 800CDCAC 25CECDE0 */  addiu $t6, %lo(__osPfsPifRam) # addiu $t6, $t6, -0x3220
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE8D0 800CDCD0 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE8E8 800CDCE8 0C0337B9 */  jal   __osPackRamReadData
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE8F0 800CDCF0 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE8F4 800CDCF4 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE8F8 800CDCF8 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE90C 800CDD0C 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE948 800CDD48 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE950 800CDD50 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE954 800CDD54 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE968 800CDD68 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE974 800CDD74 3C0C8013 */  lui   $t4, %hi(__osPfsPifRam) # $t4, 0x8013
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CE978 800CDD78 258CCDE0 */  addiu $t4, %lo(__osPfsPifRam) # addiu $t4, $t4, -0x3220
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CEA10 800CDE10 0C033608 */  jal   __osContDataCrc
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CEA30 800CDE30 0C033B75 */  jal   __osPfsGetStatus
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CEA48 800CDE48 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s:/* 0CEAC4 800CDEC4 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s:glabel __osPackRamReadData
+lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s:/* 0CEAE8 800CDEE8 3C0E8013 */  lui   $t6, %hi(__osPfsPifRam) # $t6, 0x8013
+lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s:/* 0CEAEC 800CDEEC 25CECDE0 */  addiu $t6, %lo(__osPfsPifRam) # addiu $t6, $t6, -0x3220
+lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s:/* 0CEB58 800CDF58 0C0335DC */  jal   __osContAddressCrc
+lib/asm/non_matchings/unknown_0CEE10/osEepromProbe.s:glabel osEepromProbe
+lib/asm/non_matchings/unknown_0CEE10/osEepromProbe.s:/* 0CEE1C 800CE21C 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/unknown_0CEE10/osEepromProbe.s:/* 0CEE28 800CE228 0C033A0F */  jal   __osEepStatus
+lib/asm/non_matchings/unknown_0CEE10/osEepromProbe.s:/* 0CEE60 800CE260 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CF070/__osPackEepReadData.s:glabel __osPackEepReadData
+lib/asm/non_matchings/unknown_0CF330/func_800CED20.s:/* 0CF934 800CED34 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/unknown_0CF330/func_800CED20.s:/* 0CF940 800CED40 0C033B75 */  jal   __osPfsGetStatus
+lib/asm/non_matchings/unknown_0CF330/func_800CED20.s:/* 0CF948 800CED48 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0CF330/func_800CED20.s:/* 0CF984 800CED84 0C035659 */  jal   __osGetId
+lib/asm/non_matchings/unknown_0CF330/func_800CEEE0.s:/* 0CFB24 800CEF24 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFC78 800CF078 0C0356F0 */  jal   __osCheckId
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFCA8 800CF0A8 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFCE0 800CF0E0 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFE80 800CF280 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFECC 800CF2CC 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFEF0 800CF2F0 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFF6C 800CF36C 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0CF330/func_800CEFDC.s:/* 0CFFA8 800CF3A8 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s:glabel __osEepStatus
+lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s:/* 0CF544 800CE944 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s:/* 0CF558 800CE958 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s:/* 0CF574 800CE974 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s:/* 0CF588 800CE988 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CF330/__osPackEepWriteData.s:glabel __osPackEepWriteData
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:glabel __osPfsGetStatus
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CF9E8 800CEDE8 0C03350C */  jal   __osPfsRequestData
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CF9F0 800CEDF0 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CF9F4 800CEDF4 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CF9F8 800CEDF8 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CFA0C 800CEE0C 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CFA14 800CEE14 3C058013 */  lui   $a1, %hi(__osPfsPifRam) # $a1, 0x8013
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CFA18 800CEE18 24A5CDE0 */  addiu $a1, %lo(__osPfsPifRam) # addiu $a1, $a1, -0x3220
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CFA1C 800CEE1C 0C0335B0 */  jal   __osSiRawStartDma
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CFA30 800CEE30 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s:/* 0CFA3C 800CEE3C 0C03354B */  jal   __osPfsGetInitData
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D0140 800CF540 0C0356F0 */  jal   __osCheckId
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D015C 800CF55C 0C035659 */  jal   __osGetId
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D01CC 800CF5CC 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D027C 800CF67C 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D037C 800CF77C 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D03B8 800CF7B8 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D0428 800CF828 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D0464 800CF864 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D04DC 800CF8DC 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D0590 800CF990 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D0130/func_800CF530.s:/* 0D0768 800CFB68 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D0130/func_800CFBF4.s:/* 0D087C 800CFC7C 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D0130/func_800CFDA8.s:/* 0D0A9C 800CFE9C 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0BA0 800CFFA0 0C033594 */  jal   __osSiGetAccess
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0BAC 800CFFAC 0C033B75 */  jal   __osPfsGetStatus
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0BF0 800CFFF0 0C0335A5 */  jal   __osSiRelAccess
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0BF8 800CFFF8 0C035659 */  jal   __osGetId
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0C2C 800D002C 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0CA0 800D00A0 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0D80 800D0180 0C0354BC */  jal   __osSumcalc
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0DC0 800D01C0 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0E04 800D0204 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0E8C 800D028C 0C0354BC */  jal   __osSumcalc
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0ED8 800D02D8 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D0130/func_800CFF90.s:/* 0D0F28 800D0328 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D0130/func_800D0390.s:/* 0D0FC4 800D03C4 0C0356F0 */  jal   __osCheckId
+lib/asm/non_matchings/unknown_0D0130/func_800D0390.s:/* 0D0FF4 800D03F4 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D0130/func_800D0390.s:/* 0D1040 800D0440 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D1180/func_800D0580.s:/* 0D11D8 800D05D8 0C0356F0 */  jal   __osCheckId
+lib/asm/non_matchings/unknown_0D1180/func_800D0580.s:/* 0D1208 800D0608 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D1180/func_800D0580.s:/* 0D1240 800D0640 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D1180/func_800D0580.s:/* 0D12D4 800D06D4 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D1180/func_800D0870.s:/* 0D14C4 800D08C4 0C0356F0 */  jal   __osCheckId
+lib/asm/non_matchings/unknown_0D1180/func_800D0870.s:/* 0D14F4 800D08F4 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D1180/func_800D0870.s:/* 0D1530 800D0930 0C0343A0 */  jal   osPfsFindFile
+lib/asm/non_matchings/unknown_0D1180/func_800D0870.s:/* 0D1580 800D0980 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D1180/func_800D0870.s:/* 0D15D0 800D09D0 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D1180/func_800D0870.s:/* 0D1640 800D0A40 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D1180/func_800D0870.s:/* 0D1730 800D0B30 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D1180/func_800D0D88.s:/* 0D19B0 800D0DB0 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D1180/func_800D0D88.s:/* 0D19F0 800D0DF0 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D1180/func_800D0D88.s:/* 0D1A10 800D0E10 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D1180/func_800D0D88.s:/* 0D1A24 800D0E24 0C0354BC */  jal   __osSumcalc
+lib/asm/non_matchings/unknown_0D1180/func_800D0D88.s:/* 0D1A58 800D0E58 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D1A80/osPfsFindFile.s:glabel osPfsFindFile
+lib/asm/non_matchings/unknown_0D1A80/osPfsFindFile.s:/* 0D1A9C 800D0E9C 0C0356F0 */  jal   __osCheckId
+lib/asm/non_matchings/unknown_0D1A80/osPfsFindFile.s:/* 0D1AE4 800D0EE4 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D1C40/__osClearPage.s:glabel __osClearPage
+lib/asm/non_matchings/unknown_0D1C40/__osClearPage.s:/* 0D2350 800D1750 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D1C40/__osClearPage.s:/* 0D2394 800D1794 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D1C40/__osClearPage.s:/* 0D23C8 800D17C8 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:glabel osPfsAllocateFile
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1CBC 800D10BC 0C0356F0 */  jal   __osCheckId
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1CF4 800D10F4 0C0343A0 */  jal   osPfsFindFile
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1D3C 800D113C 0C033CF8 */  jal   osPfsFreeBlocks
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1D88 800D1188 0C0343A0 */  jal   osPfsFindFile
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1DEC 800D11EC 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1E30 800D1230 0C034531 */  jal   __osPfsDeclearPage
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1EB0 800D12B0 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D1FBC 800D13BC 0C03572F */  jal   __osPfsRWInode
+lib/asm/non_matchings/unknown_0D1C40/osPfsAllocateFile.s:/* 0D2088 800D1488 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D1C40/__osPfsDeclearPage.s:glabel __osPfsDeclearPage
+lib/asm/non_matchings/unknown_0D1C40/__osPfsDeclearPage.s:/* 0D2228 800D1628 0C0345CA */  jal   __osClearPage
+lib/asm/non_matchings/unknown_0D1C40/__osPfsDeclearPage.s:/* 0D2300 800D1700 0C0345CA */  jal   __osClearPage
+lib/asm/non_matchings/unknown_0D23F0/osInvalDCache.s:glabel osInvalDCache
+lib/asm/non_matchings/unknown_0D24A0/osWritebackDCacheAll.s:glabel osWritebackDCacheAll
+lib/asm/non_matchings/unknown_0D24E0/osDpSetNextBuffer.s:glabel osDpSetNextBuffer
+lib/asm/non_matchings/unknown_0D24E0/osDpSetNextBuffer.s:/* 0D24F4 800D18F4 0C035814 */  jal   __osDpDeviceBusy
+lib/asm/non_matchings/unknown_0D24E0/osDpSetNextBuffer.s:/* 0D252C 800D192C 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0D24E0/osDpSetNextBuffer.s:/* 0D253C 800D193C 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:glabel osViSetMode
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28AC 800D1CAC 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28B4 800D1CB4 3C0F800E */  lui   $t7, %hi(__osViNext) # $t7, 0x800e
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28B8 800D1CB8 8DEF4874 */  lw    $t7, %lo(__osViNext)($t7)
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28C0 800D1CC0 3C19800E */  lui   $t9, %hi(__osViNext) # $t9, 0x800e
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28CC 800D1CCC 8F394874 */  lw    $t9, %lo(__osViNext)($t9)
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28D0 800D1CD0 3C08800E */  lui   $t0, %hi(__osViNext) # $t0, 0x800e
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28DC 800D1CDC 8D084874 */  lw    $t0, %lo(__osViNext)($t0)
+lib/asm/non_matchings/unknown_0D28A0/osViSetMode.s:/* 0D28EC 800D1CEC 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:glabel osViSetSpecialFeatures
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2E6C 800D226C 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2E88 800D2288 3C18800E */  lui   $t8, %hi(__osViNext) # $t8, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2E8C 800D228C 8F184874 */  lw    $t8, %lo(__osViNext)($t8)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2EAC 800D22AC 3C0B800E */  lui   $t3, %hi(__osViNext) # $t3, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2EB0 800D22B0 8D6B4874 */  lw    $t3, %lo(__osViNext)($t3)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2ED4 800D22D4 3C19800E */  lui   $t9, %hi(__osViNext) # $t9, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2ED8 800D22D8 8F394874 */  lw    $t9, %lo(__osViNext)($t9)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2EF8 800D22F8 3C0C800E */  lui   $t4, %hi(__osViNext) # $t4, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2EFC 800D22FC 8D8C4874 */  lw    $t4, %lo(__osViNext)($t4)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F20 800D2320 3C08800E */  lui   $t0, %hi(__osViNext) # $t0, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F24 800D2324 8D084874 */  lw    $t0, %lo(__osViNext)($t0)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F44 800D2344 3C0D800E */  lui   $t5, %hi(__osViNext) # $t5, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F48 800D2348 8DAD4874 */  lw    $t5, %lo(__osViNext)($t5)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F6C 800D236C 3C18800E */  lui   $t8, %hi(__osViNext) # $t8, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F70 800D2370 8F184874 */  lw    $t8, %lo(__osViNext)($t8)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F78 800D2378 3C09800E */  lui   $t1, %hi(__osViNext) # $t1, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2F88 800D2388 8D294874 */  lw    $t1, %lo(__osViNext)($t1)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2FAC 800D23AC 3C0E800E */  lui   $t6, %hi(__osViNext) # $t6, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2FB0 800D23B0 8DCE4874 */  lw    $t6, %lo(__osViNext)($t6)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2FC0 800D23C0 3C08800E */  lui   $t0, %hi(__osViNext) # $t0, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2FCC 800D23CC 8D084874 */  lw    $t0, %lo(__osViNext)($t0)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2FE8 800D23E8 3C0D800E */  lui   $t5, %hi(__osViNext) # $t5, 0x800e
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2FEC 800D23EC 8DAD4874 */  lw    $t5, %lo(__osViNext)($t5)
+lib/asm/non_matchings/unknown_0D2E40/osViSetSpecialFeatures.s:/* 0D2FFC 800D23FC 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D3020/cosf.s:glabel cosf
+lib/asm/non_matchings/unknown_0D3020/__osCheckId.s:glabel __osCheckId
+lib/asm/non_matchings/unknown_0D3020/__osCheckId.s:/* 0D67E0 800D5BE0 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osCheckId.s:/* 0D6810 800D5C10 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osCheckId.s:/* 0D6848 800D5C48 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osCheckPackId.s:glabel __osCheckPackId
+lib/asm/non_matchings/unknown_0D3020/__osCheckPackId.s:/* 0D63F4 800D57F4 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osCheckPackId.s:/* 0D6468 800D5868 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osCheckPackId.s:/* 0D6490 800D5890 0C0354D3 */  jal   __osIdCheckSum
+lib/asm/non_matchings/unknown_0D3020/__osCheckPackId.s:/* 0D651C 800D591C 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osCleanupThread.s:glabel __osCleanupThread
+lib/asm/non_matchings/unknown_0D3020/__osCleanupThread.s:/* 0D41A0 800D35A0 0C035980 */  jal   osDestroyThread
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:glabel osDestroyThread
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D7214 800D6614 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D722C 800D662C 3C0F800E */  lui   $t7, %hi(__osRunningThread) # $t7, 0x800e
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D7230 800D6630 8DEF4890 */  lw    $t7, %lo(__osRunningThread)($t7)
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D7254 800D6654 0C034B1C */  jal   __osDequeueThread
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D725C 800D665C 3C08800E */  lui   $t0, %hi(__osActiveQueue) # $t0, 0x800e
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D7260 800D6660 8D08488C */  lw    $t0, %lo(__osActiveQueue)($t0)
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D7274 800D6674 3C01800E */  lui   $at, %hi(__osActiveQueue) # $at, 0x800e
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D727C 800D667C AC2A488C */   sw    $t2, %lo(__osActiveQueue)($at)
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D7280 800D6680 3C11800E */  lui   $s1, %hi(__osActiveQueue) # $s1, 0x800e
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D7284 800D6684 8E31488C */  lw    $s1, %lo(__osActiveQueue)($s1)
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D72BC 800D66BC 3C0E800E */  lui   $t6, %hi(__osRunningThread) # $t6, 0x800e
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D72C0 800D66C0 8DCE4890 */  lw    $t6, %lo(__osRunningThread)($t6)
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D72D0 800D66D0 0C034D09 */  jal   __osDispatchThread
+lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s:/* 0D72D8 800D66D8 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D3020/__osDpDeviceBusy.s:glabel __osDpDeviceBusy
+lib/asm/non_matchings/unknown_0D3020/osEPiRawWriteIo.s:glabel osEPiRawWriteIo
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:glabel __osGetId
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:/* 0D6584 800D5984 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:/* 0D65B4 800D59B4 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:/* 0D65DC 800D59DC 0C0354D3 */  jal   __osIdCheckSum
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:/* 0D6610 800D5A10 0C0355F3 */  jal   __osCheckPackId
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:/* 0D6634 800D5A34 0C0354ED */  jal   __osRepairPackId
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:/* 0D6690 800D5A90 0C0354ED */  jal   __osRepairPackId
+lib/asm/non_matchings/unknown_0D3020/__osGetId.s:/* 0D678C 800D5B8C 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osIdCheckSum.s:glabel __osIdCheckSum
+lib/asm/non_matchings/unknown_0D3020/__osInsertTimer.s:glabel __osInsertTimer
+lib/asm/non_matchings/unknown_0D3020/__osInsertTimer.s:/* 0D5D40 800D5140 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D3020/__osInsertTimer.s:/* 0D5EA4 800D52A4 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:glabel __osPfsRWInode
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D68E8 800D5CE8 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D6958 800D5D58 0C0354BC */  jal   __osSumcalc
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D69B0 800D5DB0 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D69E4 800D5DE4 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D6A18 800D5E18 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D6A74 800D5E74 0C0354BC */  jal   __osSumcalc
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D6ACC 800D5ECC 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D6B44 800D5F44 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s:/* 0D6BA8 800D5FA8 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osPfsSelectBank.s:glabel __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osPfsSelectBank.s:/* 0D6C2C 800D602C 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:glabel __osRepairPackId
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D5FE4 800D53E4 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D600C 800D540C 0C031E34 */  jal   osGetCount
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D605C 800D545C 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D608C 800D548C 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D6104 800D5504 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D6134 800D5534 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D61AC 800D55AC 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D61DC 800D55DC 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D6234 800D5634 0C0357F7 */  jal   __osPfsSelectBank
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D62B4 800D56B4 0C0354D3 */  jal   __osIdCheckSum
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D6314 800D5714 0C03363C */  jal   __osContRamWrite
+lib/asm/non_matchings/unknown_0D3020/__osRepairPackId.s:/* 0D6358 800D5758 0C033728 */  jal   __osContRamRead
+lib/asm/non_matchings/unknown_0D3020/__osResetGlobalIntMask.s:glabel __osResetGlobalIntMask
+lib/asm/non_matchings/unknown_0D3020/__osResetGlobalIntMask.s:/* 0D710C 800D650C 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D3020/__osResetGlobalIntMask.s:/* 0D713C 800D653C 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D3020/__osSetCompare.s:glabel __osSetCompare
+lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s:glabel __osSetTimerIntr
+lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s:/* 0D5CD0 800D50D0 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s:/* 0D5CD8 800D50D8 0C031E34 */  jal   osGetCount
+lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s:/* 0D5D18 800D5118 0C035D18 */  jal   __osSetCompare
+lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s:/* 0D5D20 800D5120 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D3020/osSetTimer.s:glabel osSetTimer
+lib/asm/non_matchings/unknown_0D3020/osSetTimer.s:/* 0D5A6C 800D4E6C 0C03544E */  jal   __osInsertTimer
+lib/asm/non_matchings/unknown_0D3020/osSetTimer.s:/* 0D5A98 800D4E98 0C035431 */  jal   __osSetTimerIntr
+lib/asm/non_matchings/unknown_0D3020/__osSiDeviceBusy.s:glabel __osSiDeviceBusy
+lib/asm/non_matchings/unknown_0D3020/__osSpDeviceBusy.s:glabel __osSpDeviceBusy
+lib/asm/non_matchings/unknown_0D3020/__osSpRawStartDma.s:glabel __osSpRawStartDma
+lib/asm/non_matchings/unknown_0D3020/__osSpRawStartDma.s:/* 0D7054 800D6454 0C035934 */  jal   __osSpDeviceBusy
+lib/asm/non_matchings/unknown_0D3020/__osSpRawStartDma.s:/* 0D7078 800D6478 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0D3020/__osSpSetPc.s:glabel __osSpSetPc
+lib/asm/non_matchings/unknown_0D3020/__osSumcalc.s:glabel __osSumcalc
+lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s:glabel __osTimerServicesInit
+lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s:/* 0D5AC0 800D4EC0 3C018013 */  lui   $at, %hi(__osCurrentTime) # $at, 0x8013
+lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s:/* 0D5AD0 800D4ED0 AC2ED220 */  sw    $t6, %lo(__osCurrentTime)($at)
+lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s:/* 0D5AD4 800D4ED4 3C018013 */  lui   $at, %hi(__osBaseCounter) # $at, 0x8013
+lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s:/* 0D5AE0 800D4EE0 AC20D228 */  sw    $zero, %lo(__osBaseCounter)($at)
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:glabel __osViSwapContext
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6CA8 800D60A8 3C11800E */  lui   $s1, %hi(__osViNext) # $s1, 0x800e
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6CB0 800D60B0 8E314874 */  lw    $s1, %lo(__osViNext)($s1)
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6CC4 800D60C4 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6E80 800D6280 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6EB0 800D62B0 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6EE4 800D62E4 3C01800E */  lui   $at, %hi(__osViNext) # $at, 0x800e
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6F6C 800D636C 3C0F800E */  lui   $t7, %hi(__osViCurr) # $t7, 0x800e
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6F78 800D6378 3C18800E */  lui   $t8, %hi(__osViCurr) # $t8, 0x800e
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6F7C 800D637C 3C0E800E */  lui   $t6, %hi(__osViNext) # $t6, 0x800e
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6F94 800D6394 8DEF4870 */  lw    $t7, %lo(__osViCurr)($t7)
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6F98 800D6398 AC2F4874 */  sw    $t7, %lo(__osViNext)($at)
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6F9C 800D639C 3C01800E */  lui   $at, %hi(__osViCurr) # $at, 0x800e
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6FA0 800D63A0 AC314870 */  sw    $s1, %lo(__osViCurr)($at)
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6FA4 800D63A4 8F184870 */  lw    $t8, %lo(__osViCurr)($t8)
+lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s:/* 0D6FA8 800D63A8 8DCE4874 */  lw    $t6, %lo(__osViNext)($t6)
+lib/asm/non_matchings/unknown_0D3020/osYieldThread.s:glabel osYieldThread
+lib/asm/non_matchings/unknown_0D3020/osYieldThread.s:/* 0D71B8 800D65B8 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D3020/osYieldThread.s:/* 0D71C0 800D65C0 3C0F800E */  lui   $t7, %hi(__osRunningThread) # $t7, 0x800e
+lib/asm/non_matchings/unknown_0D3020/osYieldThread.s:/* 0D71C4 800D65C4 8DEF4890 */  lw    $t7, %lo(__osRunningThread)($t7)
+lib/asm/non_matchings/unknown_0D3020/osYieldThread.s:/* 0D71D8 800D65D8 0C034CB3 */  jal   __osEnqueueAndYield
+lib/asm/non_matchings/unknown_0D3020/osYieldThread.s:/* 0D71E0 800D65E0 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:glabel __osDevMgrMain
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D338C 800D278C 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D3468 800D2868 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D3474 800D2874 0C035940 */  jal   __osResetGlobalIntMask
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D349C 800D289C 0C035958 */  jal   osEPiRawWriteIo
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D34B0 800D28B0 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D34C4 800D28C4 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D3504 800D2904 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D3524 800D2924 0C03596C */  jal   osYieldThread
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D3570 800D2970 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D35B0 800D29B0 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D35EC 800D29EC 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D3634 800D2A34 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D367C 800D2A7C 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D36B0 800D2AB0 0C0322EC */  jal   osRecvMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D36C4 800D2AC4 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s:/* 0D36D8 800D2AD8 0C03238C */  jal   osSendMesg
+lib/asm/non_matchings/unknown_0D3160/__osDisableInt.s:glabel __osDisableInt
+lib/asm/non_matchings/unknown_0D3160/osEPiRawStartDma.s:glabel osEPiRawStartDma
+lib/asm/non_matchings/unknown_0D3160/osEPiRawStartDma.s:/* 0D32C8 800D26C8 0C03233C */  jal   osVirtualToPhysical
+lib/asm/non_matchings/unknown_0D3160/__osRestoreInt.s:glabel __osRestoreInt
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:glabel __osViInit
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3730 800D2B30 3C01800E */  lui   $at, %hi(__osViCurr) # $at, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3734 800D2B34 AC2E4870 */  sw    $t6, %lo(__osViCurr)($at)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3738 800D2B38 3C01800E */  lui   $at, %hi(__osViNext) # $at, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3740 800D2B40 AC2F4874 */  sw    $t7, %lo(__osViNext)($at)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D374C 800D2B4C 3C08800E */  lui   $t0, %hi(__osViCurr) # $t0, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3750 800D2B50 8D084870 */  lw    $t0, %lo(__osViCurr)($t0)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3758 800D2B58 3C098000 */  lui   $t1, %hi(osTvType) # $t1, 0x8000
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3760 800D2B60 8D290300 */  lw    $t1, %lo(osTvType)($t1)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D376C 800D2B6C 3C0B800E */  lui   $t3, %hi(__osViNext) # $t3, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3770 800D2B70 8D6B4874 */  lw    $t3, %lo(__osViNext)($t3)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3794 800D2B94 3C0D8000 */  lui   $t5, %hi(osTvType) # $t5, 0x8000
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3798 800D2B98 8DAD0300 */  lw    $t5, %lo(osTvType)($t5)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D37A8 800D2BA8 3C18800E */  lui   $t8, %hi(__osViNext) # $t8, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D37AC 800D2BAC 8F184874 */  lw    $t8, %lo(__osViNext)($t8)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D37D0 800D2BD0 3C08800E */  lui   $t0, %hi(__osViNext) # $t0, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D37D4 800D2BD4 8D084874 */  lw    $t0, %lo(__osViNext)($t0)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D37F4 800D2BF4 3C0B800E */  lui   $t3, %hi(__osViNext) # $t3, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D37F8 800D2BF8 8D6B4874 */  lw    $t3, %lo(__osViNext)($t3)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3800 800D2C00 3C0C800E */  lui   $t4, %hi(__osViNext) # $t4, 0x800e
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3808 800D2C08 8D8C4874 */  lw    $t4, %lo(__osViNext)($t4)
+lib/asm/non_matchings/unknown_0D3160/__osViInit.s:/* 0D3844 800D2C44 0C035824 */  jal   __osViSwapContext
+lib/asm/non_matchings/unknown_0D5390/func_800D47F0.s:/* 0D5400 800D4800 0C034958 */  jal   __osDisableInt
+lib/asm/non_matchings/unknown_0D5390/func_800D47F0.s:/* 0D5424 800D4824 0C034960 */  jal   __osRestoreInt
+lib/asm/non_matchings/unknown_0D5390/osPiRawWriteIo.s:glabel osPiRawWriteIo
+lib/asm/non_matchings/unknown_0D5390/osPiRawWriteIo.s:/* 0D53BC 800D47BC 3C088000 */  lui   $t0, %hi(osRomBase) # $t0, 0x8000
+lib/asm/non_matchings/unknown_0D5390/osPiRawWriteIo.s:/* 0D53C0 800D47C0 8D080308 */  lw    $t0, %lo(osRomBase)($t0)
+lib/asm/__osGetSR.s:.include "macros.inc"
+lib/asm/__osGetSR.s:glabel __osGetSR
+lib/asm/osInvalICache.s:.include "macros.inc"
+lib/asm/osInvalICache.s:glabel osInvalICache
+lib/asm/osMapTLBRdb.s:.include "macros.inc"
+lib/asm/osMapTLBRdb.s:glabel osMapTLBRdb
+lib/asm/__osProbeTLB.s:.include "macros.inc"
+lib/asm/__osProbeTLB.s:glabel __osProbeTLB
+lib/asm/__osSetFpcCsr.s:.include "macros.inc"
+lib/asm/__osSetFpcCsr.s:glabel __osSetFpcCsr
+lib/asm/__osSetSR.s:.include "macros.inc"
+lib/asm/__osSetSR.s:glabel __osSetSR
+lib/asm/osWritebackDCache.s:.include "macros.inc"
+lib/asm/osWritebackDCache.s:glabel osWritebackDCache
+include/controller.h://some version of this almost certainly existed since there's plenty of times where it's used right before a return 0
+include/controller.h:        ERRCK(__osPfsSelectBank(pfs)) \
+include/controller.h:    if (__osCheckId(pfs) == PFS_ERR_NEW_PACK) \
+include/controller.h:    __osSiGetAccess();                      \
+include/controller.h:    ret = __osPfsGetStatus(queue, channel); \
+include/controller.h:    __osSiRelAccess();                      \
+include/macros.h:#error Matching build is only possible on IDO; please build with NON_MATCHING=1.
+include/structs.h:  /* 0x00 */ s16 unk0; // This is something related to position, not sure what though.
+include/structs.h:  /* 0x02 */ s16 unk2; // This is something related to position, not sure what though.
+include/structs.h:  /* 0x06 */ s8 starting_position;
+include/structs.h:  /* 0x000C */ u16 bosses;
+include/structs.h:   * 0x8     = Dino domain boss cutscene
+include/structs.h:   * 0x10    = Sherbet island boss cutscene
+include/structs.h:   * 0x20    = Snowflake mountain boss cutscene
+include/structs.h:   * 0x40    = Dragon forest boss cutscene
+include/structs.h:   * 0x80    = Future Fun Land boss cutscene
+include/structs.h:   * 0x100   = Dino domain boss cutscene 2
+include/structs.h:   * 0x200   = Shertbet island boss cutscene 2
+include/structs.h:   * 0x400   = Snowflake mountain boss cutscene 2
+include/structs.h:   * 0x800   = Dragon forest boss cutscene 2
+include/structs.h:  /* 0x000C */ f32 x_position;
+include/structs.h:  /* 0x0010 */ f32 y_position;
+include/structs.h:  /* 0x0014 */ f32 z_position;
+include/structs.h:  /* 0x00F4 */ f32 prev_x_position;
+include/structs.h:  /* 0x00F8 */ f32 prev_y_position;
+include/structs.h:  /* 0x00FC */ f32 prev_z_position;
+include/structs.h:  /* 0x0287 */ u8 boost_sound;
+include/ultra64.h:#include <PR/os_exception.h>
+include/ultra64.h:#include <PR/os_misc.h>
+include/ultra64.h:#include <PR/os_rdp.h>
+include/ultra64.h:#include <PR/os_thread.h>
+include/ultra64.h:#include <PR/os_time.h>
+include/ultra64.h:#include <PR/os_message.h>
+include/ultra64.h:#include <PR/os_cont.h>
+include/ultra64.h:#include <PR/os_tlb.h>
+include/ultra64.h:#include <PR/os_cache.h>
+include/ultra64.h:#include <PR/os_vi.h>
+include/ultra64.h:#include <PR/os_pi.h>
+include/ultra64.h:#include <PR/os_internal.h>
+include/ultra64.h:#include <PR/os_eeprom.h>
+include/ultra64.h:#include <PR/os_libc.h>
+include/ultra64.h:#include <PR/os_ai.h>
+include/viint.h:#include <PR/os_internal.h>
+include/viint.h:void __osViSwapContext(void);
+include/viint.h:extern __OSViContext *__osViCurr;
+include/viint.h:extern __OSViContext *__osViNext;
+include/viint.h:__OSViContext *__osViGetCurrentContext(void);
+include/viint.h:void __osViInit(void);
+data/dkr.data.s:.include "macros.inc"
+data/dkr.data.s:glabel __osPiDevMgr
+data/dkr.data.s:glabel __osViDevMgr
+data/dkr.data.s:glabel __osPiAccessQueueEnabled
+data/dkr.data.s:glabel __osViCurr
+data/dkr.data.s:glabel __osViNext
+data/dkr.data.s:glabel __osThreadTail
+data/dkr.data.s:glabel __osActiveQueue
+data/dkr.data.s:glabel __osRunningThread
+data/dkr.data.s:.aligned_text "BossLev problem\n"
+data/dkr.data.s:.aligned_text "warning: corrupt ghost\n"
+undefined_syms.txt:osTvType = 0x80000300;
+undefined_syms.txt:osRomBase = 0x80000308;
+undefined_syms.txt:osResetType = 0x8000030C;
+undefined_syms.txt:osCicId = 0x80000310;
+undefined_syms.txt:osAppNMIBuffer = 0x8000031C;
+undefined_syms.txt:osPiRawStartDma = 0x800D25A0;
+undefined_syms.txt:osEPiRawStartDma = 0x800D2680;
+undefined_syms.txt:__osDevMgrMain = 0x800D2760;
+undefined_syms.txt:__osExceptionPreamble = 0x800D2CB0;
+undefined_syms.txt:__osException = 0x800D2CC0;
+undefined_syms.txt:__osCleanupThread = 0x800D35A0;
+undefined_syms.txt:__osPiDevMgr = 0x800E3740;
+undefined_syms.txt:__osViDevMgr = 0x800E38E0;
+undefined_syms.txt:__osPiAccessQueueEnabled = 0x800E4800;
+undefined_syms.txt:__osViCurr = 0x800E4870;
+undefined_syms.txt:__osViNext = 0x800E4874;
+undefined_syms.txt:__osThreadTail = 0x800E4880;
+undefined_syms.txt:__osActiveQueue = 0x800E488C;
+undefined_syms.txt:__osRunningThread = 0x800E4890;
+undefined_syms.txt:__osEventStateTab = 0x8012CCD0;
+undefined_syms.txt:__osMaxControllers = 0x8012CD91;
+undefined_syms.txt:__osPfsPifRam = 0x8012CDE0;
+undefined_syms.txt:__osCurrentTime = 0x8012D220;
+undefined_syms.txt:__osBaseCounter = 0x8012D228;

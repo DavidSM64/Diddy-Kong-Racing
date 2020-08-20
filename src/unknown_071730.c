@@ -80,20 +80,19 @@ void func_80070B30(void) {
 }
 #endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_071730/func_80070B78.s")
-#else
-// Has stack issues
 s32 *func_80070B78(s32 arg0, s32 arg1) {
-    s32 *temp, *temp2;
     s32 temp3;
-    temp = func_8006F510();
+    unk80070BE4_8 * unused_1;
+    s32 unused_2;
+    s32 *temp = func_8006F510();
+    s32 *temp2;
+
     temp3 = arg0 + (arg1 * sizeof(unk80070BE4_8));
-    temp2 = func_80070BE4((unk80070BE4_8 *)func_80070C9C(temp3, -1), temp3, arg1);
+    unused_1 = (unk80070BE4_8 *)func_80070C9C(temp3, -1);
+    temp2 = func_80070BE4(unused_1, temp3, arg1);
     func_8006F53C(temp);
     return temp2;
 }
-#endif
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_071730/func_80070BE4.s")
