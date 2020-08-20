@@ -77,7 +77,7 @@ void *osViGetNextFramebuffer(void){
 		ptr = (void *)osVirtualToPhysical(ptr); \
 	}
 
-OSTask D_8012D1A0;
+extern OSTask D_8012D1A0;
 OSTask *_VirtualToPhysicalTask(OSTask *intp)
 {
 	OSTask *tp;

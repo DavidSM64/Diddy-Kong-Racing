@@ -31,5 +31,6 @@
 #include <PR/libaudio.h>
 #include <PR/libultra.h>
 #include <PR/pfs.h>
+#include <PR/rcp.h>
 
 #endif
