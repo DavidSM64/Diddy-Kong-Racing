@@ -97,6 +97,9 @@ extern s16 D_8011AE7C;
 extern s8 D_8011AE7E;
 extern s16 D_8011AE82;
 extern s32 D_8011AE88;
+extern u32 D_8011AE8C;
+extern u32 D_8011AE90;
+extern u32 D_8011AE94;
 extern s32 D_8011AEB0[2];
 extern s16 *D_8011AEB8;
 extern s32 D_8011AEBC;
@@ -128,6 +131,7 @@ extern u32 (*D_8011AF04)[64]; // Not sure about the number of elements
 extern s32 D_8011AF08[2];
 extern s32 D_8011AF10;
 extern s32 D_8011AF60;
+
 
 /* Size: 0x40 bytes */
 typedef struct unk800179D0 {
@@ -362,10 +366,10 @@ void func_8000CBF0(u32 *arg0, s32 arg1) {
     u32 *temp2;
     temp2 = *temp;
     if (temp2 != NULL) {
-        return;
+        return; // I can't get this second return to appear.
     }
     D_8011AE08[arg1] = arg0;
-    return; // I can't get this second return to appear.
+    return; 
 }
 #endif
 
@@ -594,7 +598,27 @@ void func_80012F30(Player *arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001348C.s")
+
+
+
+
+void func_80013548(Player *arg0);
+
+void func_8001348C(Player *this){
+    func_80012F94(this);
+    if(this->unk6 & 0x8000){
+        func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
+    }
+    else{
+        if(this->descriptor_ptr->unk53 == 0)
+            func_800120C8(this);
+        else if(this->descriptor_ptr->unk53 == 1)
+            func_80011C94(this);
+        else if(this->descriptor_ptr->unk53 == 4)
+            func_80011AD0(this);
+    }
+    func_80013548(this);
+}
 
 void func_80013548(Player *arg0) {
     if ((arg0->unk6 & 0x8000) == 0 && arg0->descriptor_ptr->unk54 == 1) {

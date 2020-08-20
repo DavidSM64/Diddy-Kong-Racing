@@ -210,7 +210,8 @@ typedef struct Player_3C {
 typedef struct Player_40 {
     u8 pad0[0xC];
     f32 unkC;
-    u8 pad10[0x44];
+    u8 pad10[0x43];
+    s8 unk53;
     s8 unk54;
     s8 unk55;
 } Player_40;
