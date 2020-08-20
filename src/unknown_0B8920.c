@@ -79,7 +79,7 @@ typedef struct unk8012A7E8 {
     u8 pad24[0x4];
 } unk8012A7E8;
 
-extern unk8012A7E8 *D_8012A7E8[8];
+extern unk8012A7E8 (*D_8012A7E8)[1];
 extern s32 D_8012A7F0;
 extern s8 D_8012A7F4;
 extern s32 D_8012AAD8;
@@ -298,9 +298,6 @@ void func_800C4404(s32 arg0, s32 arg1, s32 arg2) {
     func_800C45A4(arg0, *D_8012A7E8, arg1, arg2, 1.0f);
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4440.s")
-#else
 // This function is OK
 void func_800C4440(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     unk8012A7E8 *temp = &(*D_8012A7E8)[0];
@@ -309,37 +306,33 @@ void func_800C4440(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     func_800C45A4(arg0, temp, arg3, arg4, 1.0f);
 }
 
-// Unused?
 void func_800C44C0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    if (arg1 >= 0 && arg1 < 8) {
-        unk8012A7E8 *temp = &(*D_8012A7E8)[arg1]; // Issue with temp
-        func_800C45A4(arg0, temp, arg2, arg3, 1.0f);
+    if (arg1 >= 0) {
+        if(arg1 < 8){
+            unk8012A7E8 *temp = &D_8012A7E8[arg1];
+            func_800C45A4(arg0, temp, arg2, arg3, 1.0f);
+        }
     }
 }
 
-// Unused?
 void func_800C4510(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     if (arg1 >= 0 && arg1 < 8) {
-        unk8012A7E8 *temp = &(*D_8012A7E8)[arg1]; // Issue with temp
+        unk8012A7E8 *temp = &D_8012A7E8[arg1];
         temp->unk0 = (arg2 == -0x8000) ? temp->unkC >> 1 : arg2;
         temp->unk2 = (arg3 == -0x8000) ? temp->unkE >> 1 : arg3;
         func_800C45A4(arg0, temp, arg4, arg5, 1.0f);
     }
 }
-#endif
 
 // Has a jump table
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C45A4.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4DA0.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4EDC.s")
-#else
 void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 > 0 && arg0 < 8) {
         // How is temp supposed to be setup for all of these functions? This is driving me nuts.
-        unk8012A7E8 *temp = &(*D_8012A7E8)[arg0]; // Issue with temp
+        unk8012A7E8 *temp = &D_8012A7E8[arg0]; // Issue with temp
         temp->unk0 = 0;
         temp->unk2 = 0;
         if (arg1 < arg3) {
@@ -360,61 +353,46 @@ void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         temp->unkE = (temp->unkA - temp->unk6) + 1;
     }
 }
-#endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4F7C.s")
-#else
 void func_800C4F7C(s32 arg0, s32 arg1) {
     if (arg0 >= 0 && arg0 < 8) {
-        unk8012A7E8 *temp = &(*D_8012A7E8)[arg0]; // Issue with temp
+        unk8012A7E8 *temp = &D_8012A7E8[arg0];
         if (arg1 < D_8012A7E0) {
             temp->unk1D = arg1;
         }
     }
 }
-#endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4FBC.s")
-#else
+
 void func_800C4FBC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 > 0 && arg0 < 8) {
-        unk8012A7E8 *temp = &(*D_8012A7E8[arg0]); // Issue with temp
+        unk8012A7E8 *temp = &D_8012A7E8[arg0];
         temp->unk10 = arg1;
         temp->unk11 = arg2;
         temp->unk12 = arg3;
         temp->unk13 = arg4;
     }
 }
-#endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5000.s")
-#else
 void func_800C5000(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     unk8012A7E8 *temp;
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
-    temp = &(*D_8012A7E8)[arg0]; // Issue with temp
+    temp = &D_8012A7E8[arg0];
     temp->unk14 = arg1;
     temp->unk15 = arg2;
     temp->unk16 = arg3;
     temp->unk17 = arg4;
     temp->unk1C = arg5;
 }
-#endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5050.s")
-#else 
 void func_800C5050(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     unk8012A7E8 *temp;
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
-    temp = &(*D_8012A7E8)[arg0]; // Issue with temp
+    temp = &D_8012A7E8[arg0]; // Issue with temp
     temp->unk18 = arg1;
     temp->unk19 = arg2;
     temp->unk1A = arg3;
@@ -427,7 +405,7 @@ void func_800C5094(s32 arg0, s32 arg1, s32 arg2) {
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
-    temp = &(*D_8012A7E8)[arg0]; // Issue with temp
+    temp = &D_8012A7E8[arg0]; // Issue with temp
     temp->unk20 += arg1;
     temp->unk22 += arg2;
 }
@@ -438,7 +416,7 @@ void func_800C50D8(s32 arg0) {
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
-    temp = &(*D_8012A7E8)[arg0]; // Issue with temp
+    temp = &D_8012A7E8[arg0]; // Issue with temp
     temp->unk20 = 0;
     temp->unk22 = 0;
 }
@@ -448,7 +426,7 @@ void func_800C50D8(s32 arg0) {
 void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     func_800C5168(arg0, (*D_8012A7E8)[arg0].unk0, (*D_8012A7E8)[arg0].unk2, arg1, arg2, arg3);
 }
-#endif
+
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5168.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5494.s")

@@ -81,14 +81,14 @@ void func_80070B30(void) {
 
 s32 *func_80070B78(s32 arg0, s32 arg1) {
     s32 temp3;
-    unk80070BE4_8 * unused_1;
+    unk80070BE4_8 * temp4;
     s32 unused_2;
     s32 *temp = func_8006F510();
     s32 *temp2;
 
     temp3 = arg0 + (arg1 * sizeof(unk80070BE4_8));
-    unused_1 = (unk80070BE4_8 *)func_80070C9C(temp3, -1);
-    temp2 = func_80070BE4(unused_1, temp3, arg1);
+    temp4 = (unk80070BE4_8 *)func_80070C9C(temp3, -1);
+    temp2 = func_80070BE4(temp4, temp3, arg1);
     func_8006F53C(temp);
     return temp2;
 }
@@ -101,12 +101,15 @@ unk80070BE4_8 *func_80070BE4(unk80070BE4_8 *arg0, s32 size, s32 arg2) {
     unk80070BE4 *temp;
     unk80070BE4_8 *temp2;
     unk80070BE4_8_0 *temp3;
+    s32 tmp = ++D_801235C0;
+    //s32 tmp2;
 
-    temp = &D_80123580[++D_801235C0];
+    temp = D_80123580 + tmp;
     temp->unk0 = arg2;
     temp->unk4 = 0;
     temp->unk8 = arg0;
     temp->size = size;
+    
     
     for(i = 0; i < temp->unk0; i++) {
         arg0[i].unkE = i;
