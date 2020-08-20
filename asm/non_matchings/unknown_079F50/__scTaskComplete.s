@@ -1,4 +1,4 @@
-glabel func_80079E40
+glabel __scTaskComplete
 /* 07AA40 80079E40 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 07AA44 80079E44 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 07AA48 80079E48 AFA40018 */  sw    $a0, 0x18($sp)

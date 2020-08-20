@@ -1,4 +1,4 @@
-glabel func_8007A0D4
+glabel __scSchedule
 /* 07ACD4 8007A0D4 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 07ACD8 8007A0D8 AFB10018 */  sw    $s1, 0x18($sp)
 /* 07ACDC 8007A0DC 00808825 */  move  $s1, $a0
@@ -39,7 +39,7 @@ glabel func_8007A0D4
 /* 07AD58 8007A158 AFA30024 */  sw    $v1, 0x24($sp)
 /* 07AD5C 8007A15C AFA5002C */  sw    $a1, 0x2c($sp)
 /* 07AD60 8007A160 AFA60030 */  sw    $a2, 0x30($sp)
-/* 07AD64 8007A164 0C01E77A */  jal   func_80079DE8
+/* 07AD64 8007A164 0C01E77A */  jal   __scTaskReady
 /* 07AD68 8007A168 AFA70034 */   sw    $a3, 0x34($sp)
 /* 07AD6C 8007A16C 8FA30024 */  lw    $v1, 0x24($sp)
 /* 07AD70 8007A170 8FA5002C */  lw    $a1, 0x2c($sp)

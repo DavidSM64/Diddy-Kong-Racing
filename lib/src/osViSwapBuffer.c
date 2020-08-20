@@ -3,11 +3,11 @@
 
 #include "libultra_internal.h"
 
-extern OSViContext* D_800E4874;
+extern OSViContext* __osViNext;
 
 void osViSwapBuffer(void* frameBufPtr){
     u32 saveMask = __osDisableInt();
-    D_800E4874->buffer = frameBufPtr;
-    D_800E4874->unk00 |= 0x10;
+    __osViNext->buffer = frameBufPtr;
+    __osViNext->unk00 |= 0x10;
     __osRestoreInt(saveMask);
 }

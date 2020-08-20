@@ -257,6 +257,7 @@ $(BUILD_DIR)/lib/src/unknown_0D5EC0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
 $(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osGetTime.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osJamMesg.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osPfsFreeBlocks.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osPiGetCmdQueue.o : OPT_FLAGS := -O1

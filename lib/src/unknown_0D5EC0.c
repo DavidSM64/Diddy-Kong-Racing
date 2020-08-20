@@ -3,9 +3,7 @@
 
 #include "macros.h"
 #include "libultra_internal.h"
-
-extern OSThread* __osRunningThread;
-extern OSThread* __RunQueue;
+#include "viint.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSiDeviceBusy.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSumcalc.s")
@@ -17,28 +15,8 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osCheckId.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osPfsRWInode.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osPfsSelectBank.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osDpDeviceBusy.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osViGetCurrentContext.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D63F0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpSetPc.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpRawStartDma.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSpDeviceBusy.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osResetGlobalIntMask.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osEPiRawWriteIo.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osYieldThread.s")
-/*extern void __osEnqueueAndYield(OSThread **);
-extern void		__osRestoreInt(u32);
-void osYieldThread(void){
-    register u32 saveMask = __osDisableInt();
-    __osRunningThread->state = OS_STATE_RUNNABLE;
-    __osEnqueueAndYield(&__RunQueue);
-    __osRestoreInt(saveMask);
-}*/
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Litob.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Genld.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Ldtob.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetCompare.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/lldiv.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/ldiv.s")
+__OSViContext *__osViGetCurrentContext(void){
+    return __osViCurr;
+}
+

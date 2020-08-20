@@ -9242,10 +9242,10 @@ glabel D_800E4810
 .word 0x00000000
 .word 0x00000000
 
-glabel D_800E4870
+glabel __osViCurr
 .word 0x800E4810
 
-glabel D_800E4874
+glabel __osViNext
 .word 0x800E4840
 
 glabel D_800E4878
