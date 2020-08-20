@@ -68,17 +68,16 @@ void func_8006F53C(s32*);
 
 void func_80071440(s32 arg0);
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_071730/func_80070B30.s")
-#else
+
 void func_80070B30(void) {
-    D_801235C0 = -1;
-    // Issue with a0
-    func_80070BE4(&D_8012D3F0, 0x80400000 - (s32)(&D_8012D3F0), 1600);
+    s32 tmp = -1;
+    D_801235C0 = tmp;
+    if(1){
+        func_80070BE4(&D_8012D3F0, 0x80400000 - (s32)(&D_8012D3F0), 1600);
+    }
     func_800710B0(2);
     D_80123DC8 = 0;
 }
-#endif
 
 s32 *func_80070B78(s32 arg0, s32 arg1) {
     s32 temp3;
