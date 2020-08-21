@@ -3,10 +3,28 @@
 
 #include "types.h"
 #include "macros.h"
+#include "structs.h"
 
+typedef struct{
+u8 pad00[0x49];
+s8 unk49;
+} unk800DC91C;
+
+extern unk800DC91C* D_800DC91C;
 extern s32 D_800DC924;
 extern s32 D_8011D37C;
 extern s32 D_8011D474;
+
+extern s32 D_8011B0A0;
+extern s32 D_8011B0A4;
+extern s32 D_8011B0A8;
+
+typedef struct{
+    Player * unk00;
+} unk8011B0B8;
+
+extern unk8011B0B8 D_8011B0B8;
+
 extern s32 D_8011B0DC;
 extern s32 D_8011B0F0;
 extern s32 D_8011B0F4;
@@ -52,7 +70,25 @@ void func_80028044(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028C10.s")
+
+void func_80028C10(void){
+    Player * v0_player;
+    if(D_8011B0B8.unk00 == NULL)
+        return;
+
+    v0_player = func_80069D20();
+    if(D_800DC91C->unk49 == 0){
+        D_8011B0B8.unk00->x_position = v0_player->x_position;
+        D_8011B0B8.unk00->y_position = v0_player->y_position;
+        D_8011B0B8.unk00->z_position = v0_player->z_position;
+    }
+
+    func_80068408(&D_8011B0A0, &D_8011B0A4);
+    if(D_8011B0DC){
+        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8.unk00);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028CD0.s")
 
 void func_80028FA0(s32 arg0) {
