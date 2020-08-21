@@ -31,7 +31,7 @@ glabel func_800A5F18
 /* 0A6B8C 800A5F8C 00000000 */   nop   
 /* 0A6B90 800A5F90 144000AD */  bnez  $v0, .L800A6248
 /* 0A6B94 800A5F94 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 0A6B98 800A5F98 0C006E9D */  jal   func_8001BA74
+/* 0A6B98 800A5F98 0C006E9D */  jal   getPlayerStructArray
 /* 0A6B9C 800A5F9C 27A40024 */   addiu $a0, $sp, 0x24
 /* 0A6BA0 800A5FA0 3C0F8012 */  lui   $t7, %hi(D_80126D37) # $t7, 0x8012
 /* 0A6BA4 800A5FA4 91EF6D37 */  lbu   $t7, %lo(D_80126D37)($t7)

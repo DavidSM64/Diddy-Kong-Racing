@@ -922,7 +922,7 @@ glabel func_800A8474
 /* 0A9E24 800A9224 460021A4 */  cvt.w.s $f6, $f4
 /* 0A9E28 800A9228 440B3000 */  mfc1  $t3, $f6
 /* 0A9E2C 800A922C 44CAF800 */  ctc1  $t2, $31
-/* 0A9E30 800A9230 0C006E9D */  jal   func_8001BA74
+/* 0A9E30 800A9230 0C006E9D */  jal   getPlayerStructArray
 /* 0A9E34 800A9234 AFAB00BC */   sw    $t3, 0xbc($sp)
 /* 0A9E38 800A9238 8FAC00CC */  lw    $t4, 0xcc($sp)
 /* 0A9E3C 800A923C 00001825 */  move  $v1, $zero

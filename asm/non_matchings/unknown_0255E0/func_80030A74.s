@@ -26,7 +26,7 @@ glabel func_80030A74
 /* 0316D4 80030AD4 10000005 */  b     .L80030AEC
 /* 0316D8 80030AD8 AFAE0074 */   sw    $t6, 0x74($sp)
 .L80030ADC:
-/* 0316DC 80030ADC 0C006E9D */  jal   func_8001BA74
+/* 0316DC 80030ADC 0C006E9D */  jal   getPlayerStructArray
 /* 0316E0 80030AE0 AFAB0044 */   sw    $t3, 0x44($sp)
 /* 0316E4 80030AE4 8FAB0044 */  lw    $t3, 0x44($sp)
 /* 0316E8 80030AE8 0040F825 */  move  $ra, $v0

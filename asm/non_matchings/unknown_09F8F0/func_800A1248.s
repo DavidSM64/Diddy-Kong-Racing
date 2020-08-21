@@ -12,7 +12,7 @@ glabel func_800A1248
 /* 0A1E70 800A1270 8CA70064 */  lw    $a3, 0x64($a1)
 /* 0A1E74 800A1274 00808025 */  move  $s0, $a0
 /* 0A1E78 800A1278 27A4003C */  addiu $a0, $sp, 0x3c
-/* 0A1E7C 800A127C 0C006E9D */  jal   func_8001BA74
+/* 0A1E7C 800A127C 0C006E9D */  jal   getPlayerStructArray
 /* 0A1E80 800A1280 AFA70044 */   sw    $a3, 0x44($sp)
 /* 0A1E84 800A1284 00409025 */  move  $s2, $v0
 /* 0A1E88 800A1288 0C01A142 */  jal   func_80068508

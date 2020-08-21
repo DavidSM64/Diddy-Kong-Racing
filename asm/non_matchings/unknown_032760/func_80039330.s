@@ -47,7 +47,7 @@ glabel func_80039330
 /* 039FDC 800393DC 00002025 */  move  $a0, $zero
 /* 039FE0 800393E0 E7A0009C */  swc1  $f0, 0x9c($sp)
 /* 039FE4 800393E4 E600001C */  swc1  $f0, 0x1c($s0)
-/* 039FE8 800393E8 0C006EB2 */  jal   func_8001BAC8
+/* 039FE8 800393E8 0C006EB2 */  jal   getPlayerStruct
 /* 039FEC 800393EC E6000024 */   swc1  $f0, 0x24($s0)
 /* 039FF0 800393F0 00401825 */  move  $v1, $v0
 /* 039FF4 800393F4 10400019 */  beqz  $v0, .L8003945C
@@ -1408,7 +1408,7 @@ glabel func_80039330
 /* 03B3D8 8003A7D8 46204120 */  cvt.s.d $f4, $f8
 /* 03B3DC 8003A7DC E6240004 */  swc1  $f4, 4($s1)
 .L8003A7E0:
-/* 03B3E0 8003A7E0 0C006E9D */  jal   func_8001BA74
+/* 03B3E0 8003A7E0 0C006E9D */  jal   getPlayerStructArray
 /* 03B3E4 8003A7E4 27A40078 */   addiu $a0, $sp, 0x78
 /* 03B3E8 8003A7E8 8C480000 */  lw    $t0, ($v0)
 /* 03B3EC 8003A7EC 00000000 */  nop   

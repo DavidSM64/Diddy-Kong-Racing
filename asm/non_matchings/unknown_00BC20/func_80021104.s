@@ -57,8 +57,8 @@ glabel func_80021104
 /* 021DD8 800211D8 1420001C */  bnez  $at, .L8002124C
 /* 021DDC 800211DC 28810012 */   slti  $at, $a0, 0x12
 /* 021DE0 800211E0 1020001A */  beqz  $at, .L8002124C
-/* 021DE4 800211E4 3C188012 */   lui   $t8, %hi(D_8011AEE4) # $t8, 0x8012
-/* 021DE8 800211E8 8F18AEE4 */  lw    $t8, %lo(D_8011AEE4)($t8)
+/* 021DE4 800211E4 3C188012 */   lui   $t8, %hi(playerStructArray_Ptr) # $t8, 0x8012
+/* 021DE8 800211E8 8F18AEE4 */  lw    $t8, %lo(playerStructArray_Ptr)($t8)
 /* 021DEC 800211EC 0004C880 */  sll   $t9, $a0, 2
 /* 021DF0 800211F0 03194021 */  addu  $t0, $t8, $t9
 /* 021DF4 800211F4 8D02FFD8 */  lw    $v0, -0x28($t0)

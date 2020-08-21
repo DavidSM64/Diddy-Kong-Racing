@@ -206,7 +206,7 @@ glabel func_8003CA68
 .L8003CD6C:
 /* 03D96C 8003CD6C AE090078 */  sw    $t1, 0x78($s0)
 /* 03D970 8003CD70 AFA8005C */  sw    $t0, 0x5c($sp)
-/* 03D974 8003CD74 0C006EB2 */  jal   func_8001BAC8
+/* 03D974 8003CD74 0C006EB2 */  jal   getPlayerStruct
 /* 03D978 8003CD78 00002025 */   move  $a0, $zero
 /* 03D97C 8003CD7C 8FA8005C */  lw    $t0, 0x5c($sp)
 /* 03D980 8003CD80 10400013 */  beqz  $v0, .L8003CDD0

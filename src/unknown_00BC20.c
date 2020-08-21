@@ -119,10 +119,10 @@ extern s32 D_8011AED4;
 extern s16 D_8011AED8;
 extern u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 extern s32 D_8011AEE0;
-extern Player *(*D_8011AEE4)[8];
+extern Player *(*playerStructArray_Ptr)[8];
 extern s32 *D_8011AEE8;
 extern s32 *D_8011AEEC;
-extern s32 D_8011AEF0;
+extern s32 playerCount;
 extern u8 D_8011AEF4;
 extern u8 D_8011AEF5;
 extern u8 D_8011AEF6;
@@ -190,7 +190,7 @@ void func_8000BF8C(void) {
     D_8011AE74 = (s32*)func_80070C9C(0x200, 0xFFFF);
     D_8011AECC = (unknown8011AECC*)func_80070C9C(0xE10, 0xFFFF);
     D_8011AEDC = (s32*)func_80070C9C(0x50, 0xFFFF);
-    D_8011AEE4 = (s32*)func_80070C9C(0x28, 0xFFFF);
+    playerStructArray_Ptr = (s32*)func_80070C9C(0x28, 0xFFFF);
     D_8011AEEC = (s32*)func_80070C9C(0x28, 0xFFFF);
     D_8011AEE8 = (s32*)func_80070C9C(0x28, 0xFFFF);
     D_8011AF04 = (s32*)func_80070C9C(0x200, 0xFFFF);
@@ -267,7 +267,7 @@ void func_8000C460(void) {
     D_8011AE70 = 0;
     D_8011AED0 = 0;
     D_8011AED4 = 0;
-    D_8011AEF0 = 0;
+    playerCount = 0;
     D_8011AE78 = 0;
     D_8011AD21 = 0;
     D_8011AD22[0] = 0;
@@ -448,7 +448,7 @@ void func_8000E1EC(unk8011AD40 *arg0, s32 arg1) {
     D_8011AD4A = arg0->unk14;
     D_8011AD4C = arg0->unk0;
     func_8000FFB8();
-    D_8011AEF0 = 0;
+    playerCount = 0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
@@ -558,10 +558,171 @@ void func_80011560(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
+void func_80011960(Player*, s32, u32, Player_64*, u32, u32, u32, u32, f32);
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
+#else
+void func_80011960(Player* arg0, s32 arg2, u32 arg3, Player_64* arg4
+                  , u32 arg5 , u32 arg6 , u32 arg7, u32 arg8, f32 arg9)
+{
+
+
+}
+#endif
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
+#else
+extern f32 D_800E5550;
+void func_80011AD0(Player* this){
+    f32 tmp_f0;
+    u32 offset;
+    switch(this->unk48){
+        case 47:
+            //L80011B10
+            if(this->unk7C.word < 0)
+                break;
+            func_80011960( this, this->unk64->unk20, 4, this->unk64
+                            , 2, this->unk64->unk24, 11, 0, 1.0f);
+            break;
+
+        case 61:
+            //L80011B58
+            offset = (this->unk64->unkFC*6);
+            offset *= 5;
+            offset = offset*2 + 0x80;
+            func_80011960(this, offset, 6, this->unk64
+                            , 8, this->unk64->unkF8, 10, 0, 1.0f);
+            break;
+
+        case 3://L80011BB4
+            tmp_f0 = (f32) this->unk3C->unkD;
+            if(this->unk3C->unkD < 0){
+                tmp_f0 += 4294967296.0f;
+            }
+            offset = (this->unk64->unkFC*6);
+            offset *= 5;
+            offset = offset*2 + 0x80;
+            func_80011960(this, offset, 6, this->unk64
+                            , 8, this->unk64->unkF8, 26, 0, tmp_f0 * D_800E5550);
+            break;
+
+        case 89: //L80011C38
+            if(this->unk78 == 0)
+                break;
+            if(this->unk64->unk70 > 0 || 0.0f < this->unk64->unk74){
+                func_800135B8(this);
+            }
+            break;
+        default:
+            break;
+    }//L80011C88
+}
+#endif
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011C94.s")
+#else
+void func_80011C94(Player* this){
+}
+#endif
+
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800120C8.s")
+#else
+
+extern f32 D_8011AD30;
+
+void func_800120C8(Player* this){
+    u32 sp_b8;
+    u32 sp_a8;
+    u32 sp_a4;
+    u32 sp_78;
+
+    u32 *s0;
+    f32 tmp_f_1;
+    f32 *tmp_fp_s1;
+    Player_64* tmp_s3;
+
+    s0 = ((u32*) this->unk68)[this->unk3A];
+    if(s0){
+        /*
+        sp_a8 = 0;
+        sp_a4 = 0;
+        sp_b8 = 255;
+        sp_78 = *s0;
+
+        if(this->unk54){
+            tmp_f_1 = *((f32*) this->unk54) * 255.0f * D_8011AD30;
+            sp_a8 = 1;
+            sp_a4 = 1;
+            sp_b8 = tmp_f_1;
+        }
+        
+
+        tmp_fp_s1 = &D_8011AD30;
+        if(this->unk48 == 1){
+            tmp_s3 = this->unk64;
+            func_80012E28(this);
+
+        }else{
+            tmp_s3 = NULL;
+        }
+        if(s0->unk20 < 0){
+            this->s0->unk1f
+        }
+        //L800122Fc
+        */
+        //L800129A0
+        {
+            $t6 = this->unk3A;
+
+
+            //f64 $f8;
+            $f12 = (f32) $t9;
+            $f8 = ( (f64) $f16) + (((f64) $f8)* 0.25f);
+            $f4 = (((f32) $v0->unk2) - this->y_position);
+            this->x_position = (f32) $f8;
+            this->y_position = (f32) (((f64)$f18) + (((f64) $f4) * $f14));
+            $sp_38 = this->z_position;
+            $f8 = ( (f64) $f10) + (((f64) ($f12 - $f6)) * $f14);
+            $s0->0x14 = (f32) $f8;
+            if(this->descriptor_ptr->unk53 == 1){
+                
+                func_80068514( $s1, &D_8011AE90, &D_8011AE94, this, $t4, 266);
+            }
+        }
+        //L80012AF8
+        if($sp_9c != -1){
+            if(this->descriptor_ptr->unk71){
+                fast3d_cmd($v0++, 0xFA000000, 
+                    ($v1->unk18 << 0x18) | ($v1->unk19 << 0x10) | ($v1->unk1a << 0x08) | ($sp_b4 & 0xff)); 
+                    //G_SETPRIMCOLOR
+                
+                func_8007B43C();
+            }
+            //L80012B6C
+            func_800143A8($sp_78, this, $sp_9c, 4, $sp_b0);
+            if(this->descriptor_ptr->unk71){
+                func_8007B54();
+            } 
+        }
+        //L80012BA8
+        if( $sp_a8 || this->descriptor_ptr->unk71){
+            fast3d_cmd($v0++, 0xFA000000, 0xFFFFFFFF); //G_SETPRIMCOLOR
+        }
+        //L80012BE8
+        if($sp_a4){
+            fast3d_cmd($v0++, 0xFB000000, 0xFFFFFDA9); //G_SETENVCOLOR 
+        }
+        //L80012C0C
+        func_80069A40($s1);
+    }
+    //L80012C14
+    return;
+}
+#endif
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
@@ -584,8 +745,68 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012D5C.s")
+void func_8001348C(Player *);
+
+func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Player * arg3){
+    f32 scale;
+    u32 tmp2;
+    u32 tmp3;
+    if(arg3->unk6 & 0x5000)
+        return;
+    
+    func_800B76B8(2, arg3->unk4A);
+    D_8011AE8C = *arg0;
+    D_8011AE90 = *arg1;
+    D_8011AE94 = *arg2;
+    scale = arg3->scale;
+    func_8001348C(arg3);
+    arg3->scale = scale;
+    *arg0 = D_8011AE8C;
+    *arg1 = D_8011AE90;
+    *arg2 = D_8011AE94;
+    func_800B76B8(2, -1);
+
+    
+}
+
+extern f32 func_800707F8(s16);
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
+#else
+void func_80012E28(Player *this){
+    s32         unused1;
+    Player_64  *sp_20;
+    f32         tmp_f2;
+    f32         sp_1c;
+    f32         tmp_f0;
+    
+
+    if(this->unk48 == 1){
+        
+        sp_20 = this->unk64;
+        this->y_rotation += sp_20->unk160;
+        this->x_rotation += sp_20->unk162;
+        this->z_rotation += sp_20->unk164;
+        sp_1c = 0.0f;
+        if(sp_20->unk1D7 < 5) {
+            
+            sp_1c = func_800707F8(sp_20->unk164);
+            tmp_f2 = sp_1c;
+            tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166)*tmp_f2;
+            
+            //bad regalloc of 0.0f
+            tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0*tmp_f0;
+            
+            sp_1c = (1.0f - tmp_f0)*24.0f + sp_20->unkD0;
+        }
+        //L80012F0C
+        this->y_position = this->y_position + sp_1c;
+        D_8011ADD0 = sp_1c;
+    }
+    //L80012F20
+}
+#endif
+
 
 void func_80012F30(Player *arg0) {
     if (arg0->unk48 == 1) {
@@ -768,29 +989,29 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Player **func_8001BA74(s32 *arg0) {
-    *arg0 = D_8011AEF0;
-    return *D_8011AEE4;
+Player **getPlayerStructArray(s32 *cnt) {
+    *cnt = playerCount;
+    return *playerStructArray_Ptr;
 }
 
 s32 *func_8001BA90(s32 *arg0) {
-    *arg0 = D_8011AEF0;
+    *arg0 = playerCount;
     return D_8011AEEC;
 }
 
 s32 *func_8001BAAC(s32 *arg0) {
-    *arg0 = D_8011AEF0;
+    *arg0 = playerCount;
     return D_8011AEE8;
 }
 
-Player *func_8001BAC8(s32 arg0) {
-    if (D_8011AEF0 == 0) {
+Player *getPlayerStruct(s32 indx) {
+    if (playerCount == 0) {
         return NULL;
     }
-    if(arg0 < 0 || arg0 >= D_8011AEF0) {
+    if(indx < 0 || indx >= playerCount) {
         return NULL;
     }
-    return (*D_8011AEE4)[arg0];
+    return (*playerStructArray_Ptr)[indx];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB18.s")
@@ -978,7 +1199,7 @@ void func_800228EC(s32 arg0) {
     Player_64 *player_64;
 
     D_8011AEF7 = 3;
-    player_64 = func_8001BAC8(0)->unk64;
+    player_64 = getPlayerStruct(0)->unk64;
     player_64->unk190 = 0;
     player_64->unk192 = 0;
     player_64->unk193 = 0;
@@ -997,8 +1218,6 @@ s8 func_8002341C(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002342C.s")
-
-//GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023568.s")
 
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {

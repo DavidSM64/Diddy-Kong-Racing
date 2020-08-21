@@ -205,6 +205,8 @@ typedef struct {
 typedef struct Player_3C {
     u8 pad0[0x8];
     s8 unk8;
+    u8 pad9[0x4];
+    u8 unkD;
 } Player_3C;
 
 typedef struct Player_40 {
@@ -214,6 +216,10 @@ typedef struct Player_40 {
     s8 unk53;
     s8 unk54;
     s8 unk55;
+    u8 pad56[0x02];
+    u8 pad58[0x18];
+    u8 unk70;
+    u8 unk71;
 } Player_40;
 
 typedef struct Player_4C {
@@ -240,27 +246,40 @@ typedef struct Player_64 {
     s8 unkF;
     u8 unk10;
     u8 unk11;
-    u8 pad12[0x16];
+    u8 pad12[0x0E];
+    u32 unk20;
+    u32 unk24;
     s16 unk28;
     s16 unk2A;
     s32 unk2C;
     s32 unk30;
     s16 unk34;
     s8 unk36;
-    u8 pad37[0x41];
+    u8 pad37[0x39];
+    u8 unk70;
+    u8 pad71[0x03];
+    f32 unk74;
     f32 unk78;
     f32 unk7C;
     f32 unk80;
-    u8 pad84[0xDC];
+    u8 pad84[0x4C];
+    f32 unkD0;
+    u8 padD0[0x24];
+    u32 unkF8;
+    u8 unkFC;
+    u8 padFD[0x63];
     s16 unk160;
     s16 unk162;
     s16 unk164;
-    u8 pad166[0x2A];
+    s16 unk166;
+    u8 pad166[0x28];
     u16 unk190;
     u8 unk192;
     u8 unk193;
     u8 pad194[0x26];
     u16 unk1BA;
+    u8 pad1BC[0x1B];
+    s8 unk1D7;
 } Player_64;
   
 /* Size: 0x0630 bytes */
@@ -295,7 +314,7 @@ typedef struct Player {
   /* 0x0040 */ Player_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ s16 unk48;
-  /* 0x004A */ u16 unk4A;
+  /* 0x004A */ s16 unk4A;
   /* 0x004C */ Player_4C *unk4C; //player + 0x318
   /* 0x0050 */ void *unk50; //player + 0x2F4
   /* 0x0054 */ void *unk54; //player + 0x2C0

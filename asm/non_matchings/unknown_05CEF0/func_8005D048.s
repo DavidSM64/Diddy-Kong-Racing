@@ -4,7 +4,7 @@ glabel func_8005D048
 /* 05DC50 8005D050 AFA40020 */  sw    $a0, 0x20($sp)
 /* 05DC54 8005D054 AFA50024 */  sw    $a1, 0x24($sp)
 /* 05DC58 8005D058 AFA60028 */  sw    $a2, 0x28($sp)
-/* 05DC5C 8005D05C 0C006EB2 */  jal   func_8001BAC8
+/* 05DC5C 8005D05C 0C006EB2 */  jal   getPlayerStruct
 /* 05DC60 8005D060 00002025 */   move  $a0, $zero
 /* 05DC64 8005D064 8FAF0024 */  lw    $t7, 0x24($sp)
 /* 05DC68 8005D068 AFA2001C */  sw    $v0, 0x1c($sp)
