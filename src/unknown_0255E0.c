@@ -87,10 +87,10 @@ typedef struct{
 
 typedef struct{
     s16 unk00;
-    u8 pad02[0x02];
+    s16 unk02;
     s16 unk04;  
     s16 unk06;
-    u8 pad08[0x02];
+    s16 unk08;
     s16 unk0A;
 } unk800DC918_08;
 
@@ -99,7 +99,7 @@ typedef struct{
     unk800DC918_04 *unk04;
     unk800DC918_08 *unk08;
     u8 pad0C[0x0E];
-    s16 unk08_count;
+    s16 count;
 } unk800DC918;
 
 extern unk800DC918* D_800DC918;
@@ -197,7 +197,7 @@ s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
     s32 i;
     s32 cnt = 0;
     unk800DC918_08 * a0;
-    for(i = 0; i < D_800DC918->unk08_count; i++){
+    for(i = 0; i < D_800DC918->count; i++){
         a0 = D_800DC918->unk08 + i;
         if(arg0 < a0->unk06 + 4 && a0->unk00 - 4 < arg0
         && arg1 < a0->unk0A + 4 && a0->unk04 - 4 < arg1
@@ -206,15 +206,54 @@ s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
             cnt++;
             arg2++;
         }
-
     }
     return cnt;
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A134.s")
+#else
+s32 func_8002A134(s32* arg0, unk800DC918_08 arg1){
+    s32 i;
+    unk800DC918_08 * a0;
+    s32 cnt = 0;
+    unk800DC918_08 bnd;
+    
+    //BAD variable assignments;
+    bnd.unk00 = arg1.unk00 - 4;
+    bnd.unk02 = arg1.unk02 - 4;
+    bnd.unk04 = arg1.unk04 - 4;
+    bnd.unk06 = arg1.unk06 + 4;
+    bnd.unk08 = arg1.unk08 + 4;
+    bnd.unk0A = arg1.unk0A + 4;
+
+
+    for(i = 0; i < D_800DC918->count; i++){
+        a0 = D_800DC918->unk08 + i;
+        if( a0->unk06 >= bnd.unk00 && bnd.unk06 >= a0->unk00
+        &&  a0->unk0A >= bnd.unk04 && bnd.unk0A >= a0->unk04
+        &&  a0->unk08 >= bnd.unk02 && bnd.unk08 >= a0->unk02
+        ){
+            *arg0 = i;
+            cnt++;
+            arg0++;
+        }
+    }
+    return cnt;
+}
+#endif
+
+unk800DC918_04 *func_8002A2C8(s32 arg0){
+    if(arg0 < 0 || D_800DC918->count < arg0)
+        return NULL;
+    
+    return D_800DC918->unk04 + arg0;
+}
+
+
 
 unk800DC918_08 *func_8002A2DC(s32 arg0){
-    if(arg0 < 0 || D_800DC918->unk08_count < arg0)
+    if(arg0 < 0 || D_800DC918->count < arg0)
         return NULL;
 
     return D_800DC918->unk08 + arg0;
