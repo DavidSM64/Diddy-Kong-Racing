@@ -58,9 +58,9 @@ typedef struct unk80120AC0 {
     s16 unk2;
     s16 unk4;
     u8  pad6[6];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 x_position;
+    f32 y_position;
+    f32 z_position;
     f32 pad18;
     f32 unk1C;
     f32 pad20;
@@ -248,26 +248,26 @@ void func_80066230(s32 arg0, s32 arg1) {
     sp2A = someStruct->unk0;
     sp28 = someStruct->unk2;
     sp26 = someStruct->unk4;
-    sp20 = someStruct->unkC;
-    sp1C = someStruct->unk10;
-    sp18 = someStruct->unk14;
+    sp20 = someStruct->x_position;
+    sp1C = someStruct->y_position;
+    sp18 = someStruct->z_position;
     sp24 = someStruct->unk38;
     someStruct->unk4 = 0;
     someStruct->unk2 = 0;
     someStruct->unk0 = -0x8000;
     someStruct->unk38 = 0;
-    someStruct->unkC = 0.0f;
-    someStruct->unk10 = 0.0f;
-    someStruct->unk14 = 0.0f;
+    someStruct->x_position = 0.0f;
+    someStruct->y_position = 0.0f;
+    someStruct->z_position = 0.0f;
     func_8001D5E0(0.0f, 0.0f, -1.0f);
     func_80066CDC(arg0, arg1);
     someStruct->unk38 = sp24;
     someStruct->unk0 = sp2A;
     someStruct->unk2 = sp28;
     someStruct->unk4 = sp26;
-    someStruct->unkC = sp20;
-    someStruct->unk10 = sp1C;
-    someStruct->unk14 = sp18;
+    someStruct->x_position = sp20;
+    someStruct->y_position = sp1C;
+    someStruct->z_position = sp18;
 }
 
 f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
@@ -280,17 +280,17 @@ f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
         phi_v1 += 4;
     }
     
-    temp_f0 = arg2 - D_80120AC0[phi_v1].unk14;
-    temp_f2 = arg0 - D_80120AC0[phi_v1].unkC;
-    temp_f14 = arg1 - D_80120AC0[phi_v1].unk10;
+    temp_f0 = arg2 - D_80120AC0[phi_v1].z_position;
+    temp_f2 = arg0 - D_80120AC0[phi_v1].x_position;
+    temp_f14 = arg1 - D_80120AC0[phi_v1].y_position;
     return sqrtf((temp_f0 * temp_f0) + ((temp_f2 * temp_f2) + (temp_f14 * temp_f14)));
 }
 
-void func_800663DC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+void func_800663DC(s32 x_pos, s32 y_pos, s32 z_pos, s32 arg3, s32 arg4, s32 arg5) {
     D_80120AC0[D_80120CE4].unk4 = (s16) (arg3 * 0xB6);
-    D_80120AC0[D_80120CE4].unkC = (f32) arg0;
-    D_80120AC0[D_80120CE4].unk10 = (f32) arg1;
-    D_80120AC0[D_80120CE4].unk14 = (f32) arg2;
+    D_80120AC0[D_80120CE4].x_position = (f32) x_pos;
+    D_80120AC0[D_80120CE4].y_position = (f32) y_pos;
+    D_80120AC0[D_80120CE4].z_position = (f32) z_pos;
     D_80120AC0[D_80120CE4].unk2 = (s16) (arg4 * 0xB6);
     D_80120AC0[D_80120CE4].unk38 = (u16)0;
     D_80120AC0[D_80120CE4].unk24 = 0.0f;
@@ -305,9 +305,9 @@ void func_800663DC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
 void func_80066488(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s16 arg4, s16 arg5, s16 arg6) {
     arg0 += 4;
     D_80120AC0[arg0].unk38 = 0;
-    D_80120AC0[arg0].unkC = arg1;
-    D_80120AC0[arg0].unk10 = arg2;
-    D_80120AC0[arg0].unk14 = arg3;
+    D_80120AC0[arg0].x_position = arg1;
+    D_80120AC0[arg0].y_position = arg2;
+    D_80120AC0[arg0].z_position = arg3;
     D_80120AC0[arg0].unk0 = arg4;
     D_80120AC0[arg0].unk2 = arg5;
     D_80120AC0[arg0].unk4 = arg6;
@@ -793,9 +793,9 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
     s32 i;
     
     for (i = 0; i <= D_80120CE0; i++) {
-        temp_f0 = arg0 - D_80120AC0[i].unkC;
-        temp_f2 = arg1 - D_80120AC0[i].unk10;
-        temp_f14 = arg2 - D_80120AC0[i].unk14;
+        temp_f0 = arg0 - D_80120AC0[i].x_position;
+        temp_f2 = arg1 - D_80120AC0[i].y_position;
+        temp_f14 = arg2 - D_80120AC0[i].z_position;
         temp_f0_2 = sqrtf(((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) + (temp_f14 * temp_f14));
         if (temp_f0_2 < arg3) {
             D_80120AC0[i].unk30 = ((arg3 - temp_f0_2) * arg4) / arg3;
