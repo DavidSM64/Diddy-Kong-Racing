@@ -173,9 +173,19 @@ typedef struct LevelHeader {
   
   /* 0xB0 */ u8 padB0[0x3];
   /* 0xB3 */ u8 unkB3;
-  /* 0xB4 */ u8 padB4[0x6];
+  /* 0xB3 */ u8 unkB4;
+  /* 0xB3 */ u8 unkB5;
+  /* 0xB3 */ u8 unkB6;
+  /* 0xB3 */ u8 unkB7;
+  /* 0xB4 */ u8 padB8[0x2];
   /* 0xBA */ s16 unkBA;
-  /* 0xBE */ u8 padBE[0xA];
+  /* 0xBE */ u8 unkBE;
+  /* 0xBE */ u8 unkBF;
+  /* 0xBE */ u8 unkC0;
+  /* 0xC1 */ u8 unkC1;
+  /* 0xC2 */ u8 unkC2;
+  /* 0xC3 */ u8 unkC3;
+  /* 0xC4 */ u8 padC4[0x4];
 } LevelHeader;
 
 /* Size: 0x50 bytes */

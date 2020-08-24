@@ -5,11 +5,6 @@
 #include "macros.h"
 #include "structs.h"
 
-typedef struct{
-u8 pad00[0x49];
-s8 unk49;
-} unk800DC91C;
-
 /* Size: 0x44 bytes */
 typedef struct unk80120AC0 {
     s16 unk0;
@@ -34,7 +29,7 @@ typedef struct unk80120AC0 {
     u8  pad3C[8];
 } unk80120AC0;
 
-extern unk800DC91C* D_800DC91C;
+extern LevelHeader *D_800DC91C;
 extern s32 D_800DC924;
 extern s32 D_8011D37C;
 extern s32 D_8011D474;
@@ -82,17 +77,19 @@ typedef struct{
     unk800DC918_04_0C* unk0C;
     u8 pad0C[0x10];
     s16 unk20;
-    u8 pad24[0x20];
+    u8 pad22[0x09];
+    s8 unk2B;
+    u8 pad2C[0x18];
 } unk800DC918_04;
 
 typedef struct{
-    s16 unk00;
-    s16 unk02;
-    s16 unk04;  
-    s16 unk06;
-    s16 unk08;
-    s16 unk0A;
-} unk800DC918_08;
+    s16 unk00; //sx
+    s16 unk02; //sy
+    s16 unk04; //sz
+    s16 unk06; //lx
+    s16 unk08; //ly
+    s16 unk0A; //lz
+} unk800DC918_08; //bounding box
 
 typedef struct{
     unk800DC918_00 *unk00;
@@ -104,12 +101,129 @@ typedef struct{
 
 extern unk800DC918* D_800DC918;
 
+typedef struct{
+    s16 unk00;
+    s16 unk02;
+    s16 unk04;
+}unk8011B0B0;
+
+unk8011B0B0 *D_8011B0B0;
+
+typedef struct{
+    s32 unk00;
+    s32 unk04;
+    s32 unk08;
+}unk8011D468;
+
+unk8011D468 D_8011D468;
+extern void func_8006F64C(void*, f32, f32, f32, f32*, f32*, f32*);
+
+
+
 s32 func_800249E0(s32 arg0) {
     D_8011D37C = arg0;
     return 0;
 }
 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
+#else 
+extern u32 D_800DC874;
+extern u32 D_800DC87C;
+extern u32 D_8011B0C8;
+extern u8  D_8011B0E1;
+extern u8  D_8011B0E2;
+extern u8  D_8011B0E3;
+extern u32 D_8011B0F8;
+extern u32 D_8011B100;
+extern u32 D_8011B104;
+extern u32 D_8011B108;
+extern u32 D_8011B10C;
+extern u32 D_8011B110;
+extern u32 D_8011B114;
+extern u32 D_8011D320[4];
+extern u32 D_8011D338[4];
+extern u32 D_8011D348;
+extern u32 D_8011D350[4];
+
+extern u32 D_8011D384;
+
+
+void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6){
+    s32 i;
+    s32 tmp_a2;
+
+    D_800DC91C = func_8006BDB0();
+    D_8011B0F8 = 0;
+    D_8011B100 = 0;
+    D_8011B104 = 0;
+    D_8011B108 = 0;
+    D_8011B10C = 0;
+    if(D_800DC91C->race_type == 6 || D_800DC91C->race_type == 7){
+        D_8011B0F8 = 1;
+    }
+    func_8002C0C4(arg0);
+
+    if(arg2 < 2){
+        D_8011D384 = 0;
+        for(i = 0; i < D_800DC918->count; i++){
+            if(D_800DC918->unk04[i].unk2B != 0){
+                D_8011D384++;
+                D_800DC918->unk04[i].unk2B = 1;
+            }
+        }
+    }
+    if(is_in_two_player_adventure() && (D_800DC91C->race_type == 0 || D_800DC91C->race_type & 0x40)){
+        tmp_a2 = 2;
+    }else{
+        tmp_a2 = arg2;
+        tmp_a2++;
+    }
+    if(D_8011D384){
+        func_800B82B4(D_800DC918, D_800DC91C, tmp_a2);
+    }
+    func_8006652C(arg2);
+    func_80027FC4(arg1);
+    D_8011B110 = 0;
+    D_8011B114 = 0x10000;
+    func_80011390();
+    func_8000C8F8(arg6,0);
+    func_8000C8F8(arg5,1);
+    D_8011D37C = arg2;
+    func_8000CC7C(arg3, arg4, arg2);
+    func_8000B020(72, 64);
+    if(arg0 == 0 && arg4 == 0){
+        func_800C01D8(&D_800DC87C);
+    }
+    else{
+        func_800C01D8(&D_800DC874);
+    }
+    func_8006652C(D_8011D37C);
+    D_8011B0FC = 0;
+    i = 0;
+    do{
+        D_8011D350[i] = func_80070C9C(3200, 0xFFFF00FF);
+        D_8011D320[i] = func_80070C9C(12800, 0xFFFF00FF);
+        D_8011D338[i] = func_80070C9C(20000, 0xFFFF00FF);
+    }while(&D_8011D338[++i] != &D_8011D348);
+    
+    D_8011B0C8 = 0;
+    func_8002D8DC(1,1,0);
+    func_8002D8DC(2,2,0);
+    D_8011B0C8 = 1;
+    func_8002D8DC(1,1,0);
+    func_8002D8DC(2,2,0);
+    D_8011B0C8 = 0;
+    if(D_800DC91C->unkB7){
+        D_8011B0E1 = D_800DC91C->unkB4;
+        D_8011B0E2 = D_800DC91C->unkB5;
+        D_8011B0E3 = D_800DC91C->unkB6;
+        func_80025510(arg2 + 1);
+    }
+}
+#endif
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/D_80024D54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
 
@@ -157,7 +271,23 @@ void func_80028044(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
+#else
+void func_800289B8(void){
+    u8 sp_2f = D_800DC91C->unkC1;
+    u8 sp_2e = D_800DC91C->unkC2;
+    u8 sp_2d = D_800DC91C->unkC3;
+    u8 sp_2c = D_800DC91C->unkBE;
+    u8 sp_2b = D_800DC91C->unkBF;
+    u8 sp_2a = D_800DC91C->unkC0;
+    u32 sp_24 = D_8011B0A8;
+    func_8007B3D0(&D_8011B0A0);
+    func_8007B4C8(&D_8011B0A0, 0, 8);
+    D_8011B0A0 += 8;
+}
+#endif
 
 void func_80028C10(void){
     unk80120AC0 * v0_some_struct;
@@ -191,7 +321,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028FAC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029658.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029AF8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029D14.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029F18.s")
+#else
+func_80029F18(){
+    
+}
+#endif
+
 
 s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
     s32 i;
@@ -218,7 +356,7 @@ s32 func_8002A134(s32* arg0, unk800DC918_08 arg1){
     unk800DC918_08 * a0;
     s32 cnt = 0;
     unk800DC918_08 bnd;
-    
+
     //BAD variable assignments;
     bnd.unk00 = arg1.unk00 - 4;
     bnd.unk02 = arg1.unk02 - 4;
@@ -309,4 +447,39 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030838.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8003093C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030A74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80031018.s")
+
+
+void func_80031018(void){
+    struct {
+        u8 pad00[0x40];
+    } sp_50; //same as unk80535C4_3
+
+    struct {
+        s16 unk00; //sp_38
+        s16 unk02; //sp_3A
+        s16 unk04; //sp_3C
+        u8 pad06[0x02];
+        f32 unk08; //sp40;
+        f32 unk0C; //sp44;
+        f32 unk10; //sp48;
+        f32 unk14; //sp4C;
+    } sp_38;
+
+    f32 sp_34 = 0.0f;
+    f32 sp_30 = 0.0f;
+    f32 sp_2C = -65536.0f;    
+    
+    sp_38.unk04 = D_8011B0B0->unk04;
+    sp_38.unk02 = D_8011B0B0->unk02;
+    sp_38.unk00 = D_8011B0B0->unk00;
+    sp_38.unk0C = 0.0f;
+    sp_38.unk10 = 0.0f;
+    sp_38.unk14 = 0.0f;
+    sp_38.unk08 = 1.0f;
+    
+    func_8006FC30(&sp_50, &sp_38);
+    func_8006F64C(&sp_50, sp_34, sp_30, sp_2C, &sp_34, &sp_30, &sp_2C);
+    D_8011D468.unk00 = sp_34;
+    D_8011D468.unk04 = sp_30;
+    D_8011D468.unk08 = sp_2C;
+}
