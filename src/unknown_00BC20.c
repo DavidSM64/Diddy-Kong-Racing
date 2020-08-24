@@ -6,6 +6,7 @@
 #include "structs.h"
 #include "fast3d.h"
 
+
 extern s32 D_800DC700;
 extern s16 D_800DC708;
 extern s32 D_800DC718;
@@ -161,6 +162,9 @@ void *func_80070B78(s32, u32);
 void *func_80070C9C(s32, u32);
 s32 *func_80076C58(s32);
 void func_8001D258(f32, f32, s32, s32, s32);
+
+extern void func_800245B4(s16);
+
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B020.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
@@ -486,7 +490,13 @@ s32 func_8000E9C0(void) {
     return D_8011AE64;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E9D0.s")
+void func_8000E9D0(Player* arg0){
+    arg0->unk6 |= 0x8000;
+    func_800245B4(arg0->unk2C | 0xC000);
+    objPtrList[objCount++] = arg0;
+    if(1);
+    D_8011AE64++;
+}    
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000EA54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F648.s")
@@ -1115,10 +1125,11 @@ void func_8001E36C(s32 arg0, f32* arg1, f32* arg2, f32* arg3){
     *arg3 = -32000.0f;
     for(i=0; i<objCount; i++){
         current_obj = objPtrList[i];
+
         if( current_obj != NULL
-            && (current_obj->unk6 & 0x8000) == 0 
-            && current_obj->unk48 == 39
-            && current_obj->unk78 == arg0
+        && (current_obj->unk6 & 0x8000) == 0 
+        &&  current_obj->unk48 == 39
+        &&  current_obj->unk78 == arg0
         ){
             *arg1 = current_obj->x_position;
             *arg2 = current_obj->y_position;
@@ -1245,8 +1256,39 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800230D0.s")
 s8 func_8002341C(void) {
     return D_8011AEF6;
 }
-
+#if 1 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002342C.s")
+#else
+
+extern f32 sqrtf(f32);
+
+//bad regalloc
+//finds furthest object (with some additional conditions)
+Player* func_8002342C(f32 x, f32 z){
+    Player* retval = NULL;
+    s32 i;
+    Player* currObj = NULL;
+    f32 x;
+    f32 z;
+    f32 dist;
+    f32 max = 0.0f;
+    
+    for(i=0; i<objCount; i++){
+        currObj = objPtrList[i];
+        if((currObj->unk6 & 0x8000) == 0 && currObj->unk48 == 87){
+            x = currObj->x_position - x;
+            z = currObj->z_position - z;
+            dist = sqrtf(x*x + z*z);
+
+            if(max < dist){
+                max = dist;
+                retval = currObj;
+            }
+        }
+    }
+    return retval;
+}
+#endif
 
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
