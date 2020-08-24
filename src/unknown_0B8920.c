@@ -24,7 +24,35 @@ extern s32* D_800E3070;
 extern s32* D_800E3080;
 extern s32* D_800E30D0;
 extern s32* D_800E30D4;
-extern s32* D_800E30D8;
+
+typedef struct{
+    u8 unk00;
+    u8 pad01[0x05];
+    u8  unk06;
+    u8  unk07;
+    u32 unk08;  
+} unk800DC918_04_0C; //copied from unknown_0255E0.c
+
+typedef struct{
+    u8 pad00[0x0C];
+    unk800DC918_04_0C* unk0C;
+    u8 pad0C[0x10];
+    s16 unk20;
+    u8 pad22[0x09];
+    s8 unk2B;
+    u8 pad2C[0x14];
+    u8 unk40;
+    u8 pad41[0x3];
+} unk800DC918_04; //copied from unknown_0255E0.c
+
+typedef struct{
+    unk800DC918_04 * unk00;
+    u8 pad04[0x8];
+    u32 unk0C;
+    u8 pad10[0xC];
+}unk800E30D8;
+
+extern unk800E30D8 *D_800E30D8;
 extern s32 D_800E30DC;
 extern s32* D_800E3178;
 extern s32* D_800E3184;
@@ -48,6 +76,14 @@ extern u8 D_8012A789;
 extern u16 D_8012A7B6;
 extern s32* D_8012A7C8;
 extern s32 D_8012A7E0;
+
+/* Size: 0x28 bytes */
+typedef struct unk8012A7E8_24 {
+    u8 unk00;
+    u8 unk01;
+    u8 pad02[0x1A];
+    struct unk8012A7E8_24* unk1C;
+} unk8012A7E8_24;
 
 /* Size: 0x28 bytes */
 typedef struct unk8012A7E8 {
@@ -76,8 +112,11 @@ typedef struct unk8012A7E8 {
     u16 unk1E;
     s16 unk20;
     s16 unk22;
-    u8 pad24[0x4];
+    unk8012A7E8_24 *unk24;
 } unk8012A7E8;
+
+
+
 
 extern unk8012A7E8 (*D_8012A7E8)[1];
 extern s32 D_8012A7F0;
@@ -159,7 +198,32 @@ void func_800B8B8C(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B8C04.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B9228.s")
+#else
+
+extern s32 D_800E30DC;
+extern s32 D_8012A0E0;
+extern s16* D_8012A1E8;
+
+s32 func_800B9228(unk800DC918_04 * arg0){
+    s32 v0 = 0;
+    s32 retval = 0;
+    s32 tmp;
+    while(v0 < D_8012A0E0 && arg0 != D_800E30D8[v0].unk00){
+        v0++;
+    };
+    if(D_800E30D4[D_800E30D8[v0].unk0C]){ 
+        //load array address differently;
+        retval = 1;
+        *(D_8012A1E8 + (tmp = D_800E30DC)) = v0;
+        D_800E30DC = tmp + 1;
+    }
+    return retval;
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B92F4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B97A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B9C18.s")
@@ -266,7 +330,22 @@ s32 func_800C3400(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C3440.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C3564.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C38B4.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C3C00.s")
+#else
+
+extern u32* D_8012A7E4;
+void func_800C3C00(void){
+    s32 i;
+    D_8012A7E4 = func_80076C58(44);
+    D_8012A7E0 = *(D_8012A7E4++);
+    for(i = 0; i< D_8012A7E0; i++){
+        D_8012A7E0[]
+    }
+}
+#endif
+
 
 void func_800C4164(s32 arg0) {
     D_8012A7F0 = arg0;
@@ -429,7 +508,46 @@ void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5168.s")
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5494.s")
+#else
+void func_800C5494(s32 arg0){
+    unk8012A7E8 *tmp2 = &(*D_8012A7E8)[arg0];
+    unk8012A7E8_24 *tmp = tmp2->unk24;
+    if(tmp == NULL)
+        return;
+    
+    while(tmp){
+        tmp->unk01 = 255;
+        tmp = tmp->unk1C;
+    }
+    tmp2->unk24 = NULL;
+}
+
+void func_800C54E8(s32 arg0, s16* arg1, u16 arg2, u16 arg3){
+    s16 t4;
+    s16 a3 = arg3;
+    if(arg1 == 0 || (*D_8012A7E8)[arg0].unk19 == 255)
+        return;
+    t4 = arg1[6];
+    switch(arg3){
+        case 4: //L800C55E4;
+            arg1[6] = 0;
+            arg1[7] = 0;
+            return;
+        case 1: //L800C554C;
+            a3 = arg3*1;
+            break;
+        case 2: //L800C5564;
+        default: //L800C5564;
+            break;
+        
+    }
+    arg1[6] += arg2;
+    arg1[7] += a3;
+}
+#endif
+
 
 void func_800C55F4(s32 arg0) {
     (*D_8012A7E8)[arg0].unk1E |= 0x8000;

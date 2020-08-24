@@ -72,9 +72,9 @@ glabel MenuFileSelectLoop
 /* 08D4C0 8008C8C0 AC22F494 */  sw    $v0, %lo(gIsInAdventureTwo)($at)
 /* 08D4C4 8008C8C4 3C01800E */  lui   $at, %hi(D_800DF4B8) # $at, 0x800e
 /* 08D4C8 8008C8C8 AC20F4B8 */  sw    $zero, %lo(D_800DF4B8)($at)
-/* 08D4CC 8008C8CC 3C018012 */  lui   $at, %hi(D_801269C0) # $at, 0x8012
+/* 08D4CC 8008C8CC 3C018012 */  lui   $at, %hi(p1_vehicle) # $at, 0x8012
 /* 08D4D0 8008C8D0 0C01B6C5 */  jal   func_8006DB14
-/* 08D4D4 8008C8D4 A02069C0 */   sb    $zero, %lo(D_801269C0)($at)
+/* 08D4D4 8008C8D4 A02069C0 */   sb    $zero, %lo(p1_vehicle)($at)
 /* 08D4D8 8008C8D8 0C0204F4 */  jal   MenuInit
 /* 08D4DC 8008C8DC 24040006 */   li    $a0, 6
 /* 08D4E0 8008C8E0 10000076 */  b     .L8008CABC

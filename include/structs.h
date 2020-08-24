@@ -394,7 +394,7 @@ typedef struct Player {
   /* 0x0120 */ u32 unk120;
   /* 0x0124 */ f32 stretch_height;
   /* 0x0128 */ f32 stretch_height_cap;
-  /* 0x012C */ f32 unk12C;
+  /* 0x012C */ f32 camera_zoom;
   /* 0x0130 */ u32 unk130;
   /* 0x0134 */ f32 pitch;
   /* 0x0138 */ u32 unk138;

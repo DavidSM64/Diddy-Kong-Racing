@@ -18,10 +18,10 @@ glabel func_8001004C
 /* 010C8C 8001008C 00009825 */   move  $s3, $zero
 /* 010C90 80010090 3C158012 */  lui   $s5, %hi(D_8011AEC4) # $s5, 0x8012
 /* 010C94 80010094 3C148012 */  lui   $s4, %hi(D_8011AE7C) # $s4, 0x8012
-/* 010C98 80010098 3C118012 */  lui   $s1, %hi(D_8011AE58) # $s1, 0x8012
-/* 010C9C 8001009C 3C108012 */  lui   $s0, %hi(D_8011AE5C) # $s0, 0x8012
-/* 010CA0 800100A0 2610AE5C */  addiu $s0, %lo(D_8011AE5C) # addiu $s0, $s0, -0x51a4
-/* 010CA4 800100A4 2631AE58 */  addiu $s1, %lo(D_8011AE58) # addiu $s1, $s1, -0x51a8
+/* 010C98 80010098 3C118012 */  lui   $s1, %hi(objPtrList) # $s1, 0x8012
+/* 010C9C 8001009C 3C108012 */  lui   $s0, %hi(objCount) # $s0, 0x8012
+/* 010CA0 800100A0 2610AE5C */  addiu $s0, %lo(objCount) # addiu $s0, $s0, -0x51a4
+/* 010CA4 800100A4 2631AE58 */  addiu $s1, %lo(objPtrList) # addiu $s1, $s1, -0x51a8
 /* 010CA8 800100A8 2694AE7C */  addiu $s4, %lo(D_8011AE7C) # addiu $s4, $s4, -0x5184
 /* 010CAC 800100AC 26B5AEC4 */  addiu $s5, %lo(D_8011AEC4) # addiu $s5, $s5, -0x513c
 /* 010CB0 800100B0 00009025 */  move  $s2, $zero

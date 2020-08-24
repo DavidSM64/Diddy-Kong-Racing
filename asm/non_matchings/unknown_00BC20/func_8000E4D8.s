@@ -153,15 +153,15 @@ glabel func_8000E4D8
 .L8000E6F0:
 /* 00F2F0 8000E6F0 01681821 */  addu  $v1, $t3, $t0
 /* 00F2F4 8000E6F4 8C790000 */  lw    $t9, ($v1)
-/* 00F2F8 8000E6F8 3C068012 */  lui   $a2, %hi(D_8011AE5C) # $a2, 0x8012
+/* 00F2F8 8000E6F8 3C068012 */  lui   $a2, %hi(objCount) # $a2, 0x8012
 /* 00F2FC 8000E6FC 03226023 */  subu  $t4, $t9, $v0
 /* 00F300 8000E700 AC6C0000 */  sw    $t4, ($v1)
-/* 00F304 8000E704 8CC6AE5C */  lw    $a2, %lo(D_8011AE5C)($a2)
+/* 00F304 8000E704 8CC6AE5C */  lw    $a2, %lo(objCount)($a2)
 /* 00F308 8000E708 00004025 */  move  $t0, $zero
 /* 00F30C 8000E70C 18C00021 */  blez  $a2, .L8000E794
 /* 00F310 8000E710 00002825 */   move  $a1, $zero
-/* 00F314 8000E714 3C0B8012 */  lui   $t3, %hi(D_8011AE58) # $t3, 0x8012
-/* 00F318 8000E718 256BAE58 */  addiu $t3, %lo(D_8011AE58) # addiu $t3, $t3, -0x51a8
+/* 00F314 8000E714 3C0B8012 */  lui   $t3, %hi(objPtrList) # $t3, 0x8012
+/* 00F318 8000E718 256BAE58 */  addiu $t3, %lo(objPtrList) # addiu $t3, $t3, -0x51a8
 .L8000E71C:
 /* 00F31C 8000E71C 8D6D0000 */  lw    $t5, ($t3)
 /* 00F320 8000E720 24A50001 */  addiu $a1, $a1, 1
@@ -180,16 +180,16 @@ glabel func_8000E4D8
 /* 00F354 8000E754 10200006 */  beqz  $at, .L8000E770
 /* 00F358 8000E758 01227823 */   subu  $t7, $t1, $v0
 /* 00F35C 8000E75C AC6F003C */  sw    $t7, 0x3c($v1)
-/* 00F360 8000E760 3C068012 */  lui   $a2, %hi(D_8011AE5C) # $a2, 0x8012
-/* 00F364 8000E764 8CC6AE5C */  lw    $a2, %lo(D_8011AE5C)($a2)
+/* 00F360 8000E760 3C068012 */  lui   $a2, %hi(objCount) # $a2, 0x8012
+/* 00F364 8000E764 8CC6AE5C */  lw    $a2, %lo(objCount)($a2)
 /* 00F368 8000E768 10000008 */  b     .L8000E78C
 /* 00F36C 8000E76C 00A6082A */   slt   $at, $a1, $a2
 .L8000E770:
 /* 00F370 8000E770 148A0006 */  bne   $a0, $t2, .L8000E78C
 /* 00F374 8000E774 00A6082A */   slt   $at, $a1, $a2
 /* 00F378 8000E778 AC60003C */  sw    $zero, 0x3c($v1)
-/* 00F37C 8000E77C 3C068012 */  lui   $a2, %hi(D_8011AE5C) # $a2, 0x8012
-/* 00F380 8000E780 8CC6AE5C */  lw    $a2, %lo(D_8011AE5C)($a2)
+/* 00F37C 8000E77C 3C068012 */  lui   $a2, %hi(objCount) # $a2, 0x8012
+/* 00F380 8000E780 8CC6AE5C */  lw    $a2, %lo(objCount)($a2)
 /* 00F384 8000E784 00000000 */  nop   
 .L8000E788:
 /* 00F388 8000E788 00A6082A */  slt   $at, $a1, $a2

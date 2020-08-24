@@ -237,7 +237,7 @@ extern s8 D_801263D4[4]; // Array of bools
 extern s8 D_801263DC[4];
 extern s32 D_801263D8;
 extern s32 D_801263E0;
-extern s8 D_801263E8[8];
+extern s8 players_character_array[8];
 extern s8 D_801263F0[8];
 extern u8 D_80126418[8];
 extern u8 D_80126420[8];
@@ -273,7 +273,7 @@ extern s32 D_80126854;
 extern s32 D_80126858;
 extern s32 D_8012685C;
 extern s32 D_80126860;
-extern s8 D_801269C0[4]; // Unknown number of entries.
+extern s8 p1_vehicle[4]; // Unknown number of entries.
 extern s32 D_801269C8;
 extern s32 D_801269CC;
 extern u32* D_801269E0;
@@ -1440,7 +1440,7 @@ void func_8008AF00(s32 arg0) {
     D_800DF4BC = 1;
     
     for (i = 0; i < 8; i++) {
-        D_801263E8[i] = (i == arg0) ? 1 : -1;
+        players_character_array[i] = (i == arg0) ? 1 : -1;
     }
     
     for(i = 0; i < 4; i++) {
@@ -1534,7 +1534,7 @@ s32 MenuCharacterSelectLoop(s32 arg0) {
             phi_a0 = 0;
             for(i = 0; i < 4; i++) {
                 if (D_801263D4[i]) {
-                    D_801263F0[phi_a0] = (*D_801263CC)[D_801263E8[i]].unkC;
+                    D_801263F0[phi_a0] = (*D_801263CC)[players_character_array[i]].unkC;
                     phi_a0++;
                 }
             }
@@ -1583,7 +1583,7 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
         if ((func_8009C30C() & 0x400000) == 0) {
             i = 0;
             while(i < 4 && !someBool){
-                if (i != arg0 && D_801263E8[i] == arg1[j]) {
+                if (i != arg0 && players_character_array[i] == arg1[j]) {
                     someBool = 1;
                 }
                 i++;
@@ -1594,7 +1594,7 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
         }
     }
     if (!someBool) {
-        D_801263E8[arg0] = arg1[j];
+        players_character_array[arg0] = arg1[j];
         func_80001D04(arg3, NULL);
         return;
     }
@@ -2123,7 +2123,7 @@ void MenuLoadNewAreaInit(void) {
     D_801263BC = 0;
     D_800DF47C = 0;
     temp_s0 = settings->unk4C->unk2;
-    D_801269C0 = func_8006B0AC(temp_s0);
+    p1_vehicle = func_8006B0AC(temp_s0);
     temp_v0_2 = func_8006B14C(temp_s0);
     if (temp_v0_2 != 5) {
         if (temp_v0_2 != 8) {
@@ -2460,7 +2460,7 @@ void MenuTrophyRaceRoundInit(void) {
     }
     
     for(i = 0; i < D_800DF4BC; i++){
-        D_801269C0[i] = func_8006B0AC(temp);
+        p1_vehicle[i] = func_8006B0AC(temp);
     }
     
     func_8006DB14(func_8006B0AC(temp));
@@ -2792,11 +2792,11 @@ s8 func_8009C23C(s32 arg0) {
 }
 
 s8 func_8009C250(s32 arg0) {
-    return D_801269C0[arg0];
+    return p1_vehicle[arg0];
 }
 
 void func_8009C264(s32 arg0, s32 arg1) {
-    D_801269C0[arg0] = arg1;
+    p1_vehicle[arg0] = arg1;
 }
 
 s8* func_8009C274(void) {
@@ -2810,7 +2810,7 @@ s8 func_8009C280(s32 arg0) {
     if (D_801263D4[arg0] == 0) {
         return -1;
     }
-    return D_801263E8[arg0];
+    return players_character_array[arg0];
 }
 
 void func_8009C2C4(s32 arg0) {

@@ -83,8 +83,8 @@ extern s8 D_8011AE03;
 u32 *D_8011AE08[16];
 extern s32 (*D_8011AE48)[8]; // Unknown number of entries.
 extern u8 (*D_8011AE4C)[8]; // Unknown number of entries.
-extern u32 (*D_8011AE58)[64]; // Not sure about the number of elements
-extern s32 D_8011AE5C;
+extern Player **objPtrList; // Not sure about the number of elements
+extern s32 objCount;
 extern s32 D_8011AE60;
 extern s32 D_8011AE64;
 extern s32 *D_8011AE68;
@@ -222,7 +222,7 @@ void func_8000BF8C(void) {
         D_8011ADA0++;
     }
     func_8000C2D8(&D_8011AD6C[D_8011AD70[65]], (D_8011AD70[66] - D_8011AD70[65]) * 4);
-    D_8011AE58 = (u32**)func_80070C9C(0x800, 0xFFFF);
+    objPtrList = (Player**)func_80070C9C(0x800, 0xFFFF);
     D_8011ADC4 = 0;
     D_8011AEF4 = 0;
     D_8011AEF5 = 0;
@@ -285,7 +285,7 @@ void func_8000C460(void) {
     
     D_8011AF08[0] = 0xFF;
     D_8011AF08[1] = 0xFF;
-    D_8011AE5C = 0;
+    objCount = 0;
     D_8011AE60 = 0;
     D_8011AE64 = 0;
     D_8011AE88 = 0;
@@ -316,12 +316,12 @@ void func_8000C604(void) {
         func_8006F398();
     }
     func_8001004C();
-    len = D_8011AE5C;
+    len = objCount;
     for (i = 0; i < len; i++) {
-        func_800101AC((*D_8011AE58)[i], 1);
+        func_800101AC(objPtrList[i], 1);
     }
     D_8011AEC8 = 0;
-    D_8011AE5C = 0;
+    objCount = 0;
     D_8011AE60 = 0;
     func_8000C460();
     func_80071140(D_8011AEB0[0]);
@@ -463,22 +463,22 @@ u8 func_8000E4C8() {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E4D8.s")
 
-u32 func_8000E948(s32 arg0) {
-    if (arg0 < 0 || arg0 >= D_8011AE5C) {
+Player *getObject(s32 indx) {
+    if (indx < 0 || indx >= objCount) {
         return 0;
     }
-    return (*D_8011AE58)[arg0];
+    return objPtrList[indx];
 }
 
-u32 *func_8000E988(s32 *arg0, s32 *arg1) {
+Player **func_8000E988(s32 *arg0, s32 *cnt) {
     *arg0 = D_8011AE60;
-    *arg1 = D_8011AE5C;
-    return *D_8011AE58;
+    *cnt = objCount;
+    return objPtrList;
 }
 
 // Unused?
-s32 func_8000E9B0(void) {
-    return D_8011AE5C;
+s32 getObjectCount(void) {
+    return objCount;
 }
 
 // Unused?
@@ -896,7 +896,20 @@ s16 func_80017E88(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
+#if 0
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80018C6C.s")
+#else
+Player * func_80018C6C(void){
+    s32 i;
+    Player* current_obj;
+    for(i=D_8011AE60; i < objCount; i++){
+        current_obj = objPtrList[i];
+        if(!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
+            return current_obj;
+    }
+    return NULL;
+}
+#endif
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80018CE0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001955C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/D_80019808.s")

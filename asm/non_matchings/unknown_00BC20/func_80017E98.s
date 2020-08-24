@@ -1,7 +1,7 @@
 glabel func_80017E98
 /* 018A98 80017E98 27BDFEE8 */  addiu $sp, $sp, -0x118
-/* 018A9C 80017E9C 3C038012 */  lui   $v1, %hi(D_8011AE5C) # $v1, 0x8012
-/* 018AA0 80017EA0 8C63AE5C */  lw    $v1, %lo(D_8011AE5C)($v1)
+/* 018A9C 80017E9C 3C038012 */  lui   $v1, %hi(objCount) # $v1, 0x8012
+/* 018AA0 80017EA0 8C63AE5C */  lw    $v1, %lo(objCount)($v1)
 /* 018AA4 80017EA4 AFB30044 */  sw    $s3, 0x44($sp)
 /* 018AA8 80017EA8 3C018012 */  lui   $at, %hi(D_8011AED0) # $at, 0x8012
 /* 018AAC 80017EAC AFBF005C */  sw    $ra, 0x5c($sp)
@@ -23,8 +23,8 @@ glabel func_80017E98
 /* 018AEC 80017EEC 00009825 */   move  $s3, $zero
 /* 018AF0 80017EF0 3C148012 */  lui   $s4, %hi(D_8011AECC) # $s4, 0x8012
 /* 018AF4 80017EF4 3C098012 */  lui   $t1, %hi(D_8011AED8) # $t1, 0x8012
-/* 018AF8 80017EF8 3C068012 */  lui   $a2, %hi(D_8011AE58) # $a2, 0x8012
-/* 018AFC 80017EFC 24C6AE58 */  addiu $a2, %lo(D_8011AE58) # addiu $a2, $a2, -0x51a8
+/* 018AF8 80017EF8 3C068012 */  lui   $a2, %hi(objPtrList) # $a2, 0x8012
+/* 018AFC 80017EFC 24C6AE58 */  addiu $a2, %lo(objPtrList) # addiu $a2, $a2, -0x51a8
 /* 018B00 80017F00 2529AED8 */  addiu $t1, %lo(D_8011AED8) # addiu $t1, $t1, -0x5128
 /* 018B04 80017F04 2694AECC */  addiu $s4, %lo(D_8011AECC) # addiu $s4, $s4, -0x5134
 /* 018B08 80017F08 00001025 */  move  $v0, $zero
@@ -74,7 +74,7 @@ glabel func_80017E98
 /* 018BB0 80017FB0 8E8B0000 */  lw    $t3, ($s4)
 /* 018BB4 80017FB4 01850019 */  multu $t4, $a1
 /* 018BB8 80017FB8 240FFFFF */  li    $t7, -1
-/* 018BBC 80017FBC 3C038012 */  lui   $v1, %hi(D_8011AE5C) # $v1, 0x8012
+/* 018BBC 80017FBC 3C038012 */  lui   $v1, %hi(objCount) # $v1, 0x8012
 /* 018BC0 80017FC0 00006812 */  mflo  $t5
 /* 018BC4 80017FC4 016D7021 */  addu  $t6, $t3, $t5
 /* 018BC8 80017FC8 A5C4002C */  sh    $a0, 0x2c($t6)
@@ -88,7 +88,7 @@ glabel func_80017E98
 /* 018BE8 80017FE8 00000000 */  nop   
 /* 018BEC 80017FEC 25AE0001 */  addiu $t6, $t5, 1
 /* 018BF0 80017FF0 ACEE0000 */  sw    $t6, ($a3)
-/* 018BF4 80017FF4 8C63AE5C */  lw    $v1, %lo(D_8011AE5C)($v1)
+/* 018BF4 80017FF4 8C63AE5C */  lw    $v1, %lo(objCount)($v1)
 /* 018BF8 80017FF8 00000000 */  nop   
 /* 018BFC 80017FFC 0263082A */  slt   $at, $s3, $v1
 .L80018000:

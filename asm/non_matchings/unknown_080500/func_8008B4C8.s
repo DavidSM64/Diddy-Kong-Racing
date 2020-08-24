@@ -132,10 +132,10 @@ glabel func_8008B4C8
 /* 08C2AC 8008B6AC 02E22821 */  addu  $a1, $s7, $v0
 /* 08C2B0 8008B6B0 31F94000 */  andi  $t9, $t7, 0x4000
 /* 08C2B4 8008B6B4 13200019 */  beqz  $t9, .L8008B71C
-/* 08C2B8 8008B6B8 3C0A8012 */   lui   $t2, %hi(D_801263E8) # $t2, 0x8012
+/* 08C2B8 8008B6B8 3C0A8012 */   lui   $t2, %hi(players_character_array) # $t2, 0x8012
 /* 08C2BC 8008B6BC 8E680000 */  lw    $t0, ($s3)
 /* 08C2C0 8008B6C0 8CA40000 */  lw    $a0, ($a1)
-/* 08C2C4 8008B6C4 254A63E8 */  addiu $t2, %lo(D_801263E8) # addiu $t2, $t2, 0x63e8
+/* 08C2C4 8008B6C4 254A63E8 */  addiu $t2, %lo(players_character_array) # addiu $t2, $t2, 0x63e8
 /* 08C2C8 8008B6C8 2509FFFF */  addiu $t1, $t0, -1
 /* 08C2CC 8008B6CC A0600000 */  sb    $zero, ($v1)
 /* 08C2D0 8008B6D0 AE690000 */  sw    $t1, ($s3)

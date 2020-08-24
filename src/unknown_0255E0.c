@@ -79,7 +79,9 @@ typedef struct{
     s16 unk20;
     u8 pad22[0x09];
     s8 unk2B;
-    u8 pad2C[0x18];
+    u8 pad2C[0x14];
+    u8 unk40;
+    u8 pad41[0x3];
 } unk800DC918_04;
 
 typedef struct{
@@ -318,7 +320,59 @@ void func_80028FA0(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028FAC.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029658.s")
+#else
+
+extern s32 D_8011D384;
+
+func_80029658(s32 arg0, s32 arg1){
+    unk800DC918_04 *sp_ac;
+    void *sp_78;
+    u32   sp_70;
+    u8   v0;
+
+    sp_ac = D_800DC918->unk04 + arg0;
+    if(D_8011D384){
+        sp_78 = func_800B9228(sp_ac);
+    }
+    else{
+        sp_78 = NULL;
+    }
+
+    if(arg1){
+        v0 = sp_ac->unk40;
+        sp_70 = sp_ac->unk20;
+    }
+    else{
+        v0 = 0;
+        sp_70 = sp_ac->unk20;
+    }
+
+    if(v0 > sp_70)
+        return;
+    
+    for(i = v0; i <= sp_70; i++){
+        if(sp_ac->unk0C[i].unk08 & 0x100)
+            break;
+        
+        if(sp_ac->unk0C[i].unk00 == 255){
+
+        }
+        else{
+
+        }
+
+        if((sp_ac->unk0C[i].unk08 | 0xa) & 0x10 == 0
+        ||  (sp_ac->unk0C[i].unk08 | 0xa) & 0x800 == 0
+        ){
+            //$s1 = (sp_ac->unk0C[i].unk08 | 0xa) | D_8011B0FC;
+        }
+    }
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029AF8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029D14.s")
 
@@ -426,7 +480,34 @@ unk800DC918* func_8002C7C4(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C7D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C954.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002CC30.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D30C.s")
+#else
+
+typedef struct{
+    u8 pad00[0x04];
+    u32 unk04;
+    u32 unk08;
+}unk8002D30C_a0;
+
+void func_8002D30C(unk8002D30C_a0* arg0, u32 arg1){
+    unk8002D30C_a0* s0 = arg0;
+    while(s0 != NULL){
+        if(s0->unk04){
+            s0->unk04 += arg1;
+        }
+
+        if(s0->unk08){
+            s0->unk08 += arg1;
+        }
+
+        func_8002D30C(s0->unk04, arg1);
+        s0 = s0->unk08;
+    }
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D384.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D670.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D8DC.s")

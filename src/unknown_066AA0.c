@@ -147,7 +147,7 @@ extern s32 D_80123504;
 extern s32 D_80123508;
 extern Settings *gSettingsPtr;
 extern s8  D_80123514;
-extern s8  D_80123515;
+extern s8  gIsPaused;
 extern s8  D_80123516;
 extern s32 D_80123518;
 extern s32 D_8012351C;
@@ -1549,7 +1549,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006CCF0.s")
 
 void func_8006D8A4(void) {
     D_800DD390 = 0x2C;
-    D_80123515 = 0;
+    gIsPaused = 0;
     func_800945E4();
     func_800C01D8(&D_800DD408);
 }
@@ -1779,7 +1779,7 @@ Settings* get_settings(void) {
 }
 
 s8 func_8006EAA0(void) {
-    return D_80123515;
+    return gIsPaused;
 }
 
 s8 func_8006EAB0(void) {
