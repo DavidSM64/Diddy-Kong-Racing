@@ -15,7 +15,7 @@ dkr_decompressor_SOURCES := dkr_decompressor.cpp $(wildcard dkr_decompressor_src
 dkr_decompressor_CXXFLAGS := -lstdc++fs -lcrypto -lssl
 
 dkr_extractor_SOURCES := dkr_extractor.cpp $(wildcard dkr_decompressor_src/*.cpp dkr_decompressor_src/*.c dkr_extractor_classes/*.cpp n64graphics/*.c)
-dkr_extractor_CXXFLAGS := -lstdc++fs -lcrypto -lssl
+dkr_extractor_CXXFLAGS := -lstdc++fs -lcrypto -lssl -lpthread
 
 dkr_texbuilder_SOURCES := dkr_texbuilder.cpp $(wildcard dkr_decompressor_src/*.cpp dkr_decompressor_src/*.c n64graphics/*.c)
 dkr_texbuilder_CXXFLAGS := -lstdc++fs

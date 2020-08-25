@@ -15,6 +15,7 @@ VERSION := us_1.0
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),clean_lib)
 ifneq ($(MAKECMDGOALS),clean_src)
+ifneq ($(MAKECMDGOALS),reset)
 
 ########## QEMU_IRIX ###########
 
@@ -88,6 +89,7 @@ endif
 
 ################################
 
+endif
 endif
 endif
 endif
@@ -301,6 +303,18 @@ TARGET = dkr
 LD_SCRIPT = $(TARGET).ld
 
 all: $(BUILD_DIR)/$(TARGET).z64
+
+reset: 
+ifneq ($(wildcard ./build/.*),) 
+	rm -r build
+endif 
+ifneq ($(wildcard ./assets/.*),) 
+	rm -r assets
+endif 
+ifneq ($(wildcard ./ucode/.*),) 
+	rm -r ucode
+endif 
+	@echo "Done." 
 
 clean: 
 ifneq ($(wildcard ./build/.*),) 

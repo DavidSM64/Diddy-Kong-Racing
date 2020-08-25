@@ -1,6 +1,6 @@
 #include "extract_compressed.h"
 
-ExtractCompressed::ExtractCompressed(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath) 
+ExtractCompressed::ExtractCompressed(std::vector<uint8_t> data, ROM& rom, std::string outFilepath) 
 : Extract(data, rom, outFilepath) {
     
     if(data.size() == 0) {

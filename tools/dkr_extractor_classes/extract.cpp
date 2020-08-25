@@ -1,6 +1,6 @@
 #include "extract.h"
 
-Extract::Extract(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath){
+Extract::Extract(std::vector<uint8_t> data, ROM& rom, std::string outFilepath){
 }
 
 Extract::~Extract(){
@@ -21,7 +21,9 @@ void Extract::write_text_file(std::string text, std::string filepath){
 }
 
 void Extract::print_extracted(std::string outFilepath) {
-    std::cout << "Extracted " << outFilepath << std::endl;
+    std::stringstream out;
+    out << "Extracted " << outFilepath << std::endl;
+    std::cout << out.str();
 }
 
 void Extract::to_lowercase(std::string& input) {
