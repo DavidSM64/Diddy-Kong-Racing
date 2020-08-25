@@ -1,6 +1,6 @@
 #include "extract_textures.h"
 
-ExtractTextures::ExtractTextures(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath) 
+ExtractTextures::ExtractTextures(std::vector<uint8_t> data, ROM& rom, std::string outFilepath) 
 : Extract(data, rom, outFilepath) {
     std::vector<uint8_t> header(data.begin(), data.begin() + TEX_HEADER_SIZE);
     std::vector<uint8_t> texData;

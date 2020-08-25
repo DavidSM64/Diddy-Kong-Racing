@@ -17,7 +17,7 @@
 
 class ExtractTextures : Extract {
 public:
-    ExtractTextures(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath);
+    ExtractTextures(std::vector<uint8_t> data, ROM& rom, std::string outFilepath);
     ~ExtractTextures();
     
 private:

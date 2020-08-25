@@ -17,7 +17,7 @@ namespace fs = std::experimental::filesystem;
 
 class Extract {
 public:
-    Extract(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath);
+    Extract(std::vector<uint8_t> data, ROM& rom, std::string outFilepath);
     ~Extract();
     
     void write_binary_file(std::vector<uint8_t> data, std::string filepath);

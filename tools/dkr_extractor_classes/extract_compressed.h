@@ -5,6 +5,6 @@
 
 class ExtractCompressed : Extract {
 public:
-    ExtractCompressed(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath);
+    ExtractCompressed(std::vector<uint8_t> data, ROM& rom, std::string outFilepath);
     ~ExtractCompressed();
 };

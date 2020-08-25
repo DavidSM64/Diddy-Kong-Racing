@@ -37,23 +37,7 @@ std::string get_extension_from_type(std::string type) {
 }
 
 void ExtractConfig::extract_file(ROM& rom, std::string type, std::string folder, std::string filename, std::vector<uint8_t> data) {
-    if(!fs::is_directory(folder)) {
-        fs::create_directories(folder);
-    }
     
-    std::string outFilepath = folder + "/" + filename;
-    
-    if(is_binary_type(type)) {
-        ExtractBinary(data, rom, outFilepath + ".bin");
-    } else if(is_compressed_type(type)) {
-        ExtractCompressed(data, rom, outFilepath + ".cbin");
-    } else if(type == "Textures") {
-        ExtractTextures(data, rom, outFilepath + ".png");
-    } else if(type == "Empty") {
-    } else if(type != "NoExtract") {
-        std::cout << "Unknown extraction type: " << type << std::endl;
-        throw 1;
-    }
 }
 
 uint32_t get_uint_from_table(std::vector<uint8_t>& table, int index) {
@@ -140,8 +124,8 @@ void ExtractConfig::extract(ROM& rom, json::JSON& assetsJson) {
         for(int j = 0; j < numFiles; j++) {
             json::JSON file = files[j];
             int length = std::stoul(file["length"].ToString(), nullptr, 16);
-            extract_file(rom, type, folder, file["filename"].ToString(), 
-                rom.get_bytes_from_range(currentROMOffset, length));
+            extractions.push_back(ExtractInfo(type, folder, file["filename"].ToString(), 
+                rom.get_bytes_from_range(currentROMOffset, length)));
             currentROMOffset += length;
         }
     }
@@ -214,7 +198,7 @@ void ExtractConfig::extract(ROM& rom, json::JSON& assetsJson) {
                     filename = filenameStream.str();
                 }
                 outputAsset["filenames"].append(filename + get_extension_from_type(type));
-                extract_file(rom, type, folder, filename, sectionFiles[j]);
+                extractions.push_back(ExtractInfo(type, folder, filename, sectionFiles[j]));
             }
         } else {
             // No lookup table associated, so the section is assumed to be 1 file.
@@ -228,11 +212,40 @@ void ExtractConfig::extract(ROM& rom, json::JSON& assetsJson) {
                 filename = filenameStream.str();
             }
             outputAsset["filenames"].append(filename + get_extension_from_type(type));
-            extract_file(rom, type, folder, filename, sectionsData[i]);
+            extractions.push_back(ExtractInfo(type, folder, filename, sectionsData[i]));
         }
         currentROMOffset += sectionsData[i].size();
         assetsJson["assets"].append(outputAsset);
     }
+    
+    ThreadPool pool(std::thread::hardware_concurrency());
+    
+    for(int i = 0; i < extractions.size(); i++) {
+        std::string type = extractions[i].type;
+        std::string folder = extractions[i].folder;
+        std::string filename = extractions[i].filename;
+        std::vector<uint8_t> data = extractions[i].data;
+        pool.enqueue([&rom, type, folder, filename, data] {
+            if(!fs::is_directory(folder)) {
+                fs::create_directories(folder);
+            }
+            
+            std::string outFilepath = folder + "/" + filename;
+            
+            if(is_binary_type(type)) {
+                ExtractBinary(data, rom, outFilepath + ".bin");
+            } else if(is_compressed_type(type)) {
+                ExtractCompressed(data, rom, outFilepath + ".cbin");
+            } else if(type == "Textures") {
+                ExtractTextures(data, rom, outFilepath + ".png");
+            } else if(type == "Empty") {
+            } else if(type != "NoExtract") {
+                std::cout << "Unknown extraction type: " << type << std::endl;
+                throw 1;
+            }
+        });
+    }
+    
 }
 
 bool ExtractConfig::is_supported(){

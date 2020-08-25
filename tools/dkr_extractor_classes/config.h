@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
+#include <thread>
 
 // C++17
 #include <experimental/filesystem> 
@@ -17,6 +18,16 @@ namespace fs = std::experimental::filesystem;
 #include "extract_binary.h"
 #include "extract_compressed.h"
 #include "extract_textures.h"
+#include "ThreadPool.h"
+
+struct ExtractInfo {
+    std::string type;
+    std::string folder;
+    std::string filename;
+    std::vector<uint8_t> data;
+    ExtractInfo(std::string type, std::string folder, std::string filename, std::vector<uint8_t> data) 
+        : type(type), folder(folder), filename(filename), data(data) {}
+};
 
 class ExtractConfig {
 public:
@@ -42,6 +53,8 @@ private:
     std::string name;
     std::string md5;
     std::string subfolder;
+    
+    std::vector<ExtractInfo> extractions;
     
     std::string read_file(std::string filename);
 };
