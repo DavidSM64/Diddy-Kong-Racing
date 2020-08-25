@@ -832,7 +832,13 @@ void func_80012C30(void) {
     D_8011ADA4 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012C3C.s")
+void func_80012C3C(Gfx** dlist){
+    s32 i;
+    Gfx *tmp;
+    for(i = 0; i<D_8011ADA4; i++){
+        fast3d_cmd((*dlist)++, 0x06000000, D_8011AD78[i]);
+    }
+}
 
 void func_80012C98(Gfx **dlist) {
     if (D_8011ADA4 < 9) {
@@ -964,11 +970,10 @@ void func_800142B8(void){
     s32 j;
     Player* currObj;
     Player_68 *curr_68;
+
     for(; i < objCount; i++){
         currObj = objPtrList[i];
-        if( (currObj->unk6 & 0x8000) == 0 
-        && currObj->descriptor_ptr->unk53 == 0
-        ){
+        if( (currObj->unk6 & 0x8000) == 0  && currObj->descriptor_ptr->unk53 == 0){
             for(j=0; j<currObj->descriptor_ptr->unk55; j++){
                 curr_68 = currObj->unk68[j];
                 if( curr_68 != NULL && curr_68->unk20 > 0){

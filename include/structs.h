@@ -225,7 +225,7 @@ typedef struct Player_40 {
     u8 pad10[0x43];
     s8 unk53;
     s8 unk54;
-    s8 unk55;
+    s8 unk55; //size of array pointed by Player->unk68
     u8 pad56[0x02];
     u8 pad58[0x18];
     u8 unk70;
