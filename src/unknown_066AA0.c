@@ -1679,7 +1679,7 @@ void func_8006DBE4(void) {
 void func_8006DC58(s32 arg0) {
     if (func_800C73E0() == 0) {
         func_80010994(arg0);
-        func_8001004C();
+        particlePtrList_flush();
         func_8001BF20();
         D_80024D54(&D_801211F8, &D_80121208, &D_80121218, &D_80121228, arg0);
         func_800C3440(arg0);

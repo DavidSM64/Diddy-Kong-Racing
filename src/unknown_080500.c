@@ -2915,7 +2915,7 @@ void func_8009C508(s32 arg0) {
         D_80126550[arg0] = 0;
         D_80126750[arg0] = 0;
         D_800DF758--;
-        func_8001004C();
+        particlePtrList_flush();
     }
     if (D_800DF758 == 0) {
         if (D_800DF75C != NULL) {

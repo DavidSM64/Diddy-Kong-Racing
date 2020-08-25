@@ -60,7 +60,7 @@ glabel func_8000B290
 /* 00BF64 8000B364 0C003FEE */  jal   func_8000FFB8
 /* 00BF68 8000B368 00000000 */   nop   
 .L8000B36C:
-/* 00BF6C 8000B36C 0C004013 */  jal   func_8001004C
+/* 00BF6C 8000B36C 0C004013 */  jal   particlePtrList_flush
 /* 00BF70 8000B370 AE200000 */   sw    $zero, ($s1)
 /* 00BF74 8000B374 8FBF0024 */  lw    $ra, 0x24($sp)
 /* 00BF78 8000B378 8FB00018 */  lw    $s0, 0x18($sp)

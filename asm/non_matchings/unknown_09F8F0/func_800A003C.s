@@ -81,7 +81,7 @@ glabel func_800A003C
 /* 0A0D5C 800A015C 8E440000 */  lw    $a0, ($s2)
 /* 0A0D60 800A0160 0C01C450 */  jal   func_80071140
 /* 0A0D64 800A0164 00000000 */   nop   
-/* 0A0D68 800A0168 0C004013 */  jal   func_8001004C
+/* 0A0D68 800A0168 0C004013 */  jal   particlePtrList_flush
 /* 0A0D6C 800A016C 00000000 */   nop   
 /* 0A0D70 800A0170 8FBF002C */  lw    $ra, 0x2c($sp)
 /* 0A0D74 800A0174 8FB00018 */  lw    $s0, 0x18($sp)
