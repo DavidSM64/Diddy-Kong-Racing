@@ -5,6 +5,6 @@
 
 class ExtractCompressed : Extract {
 public:
-    ExtractCompressed(ConfigRange& range, ROM& rom, json::JSON& assetsJson, std::string outDirectory);
+    ExtractCompressed(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath);
     ~ExtractCompressed();
 };

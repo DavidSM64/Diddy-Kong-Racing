@@ -17,13 +17,12 @@
 
 class ExtractTextures : Extract {
 public:
-    ExtractTextures(ConfigRange& range, ROM& rom, json::JSON& assetsJson, std::string outDirectory);
+    ExtractTextures(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath);
     ~ExtractTextures();
     
 private:
     void deinterlace(std::vector<uint8_t>& data, int width, int height, int bitDepth, int bufferSize);
-    void flip_vertically(std::vector<uint8_t>& data, int width, int height, int bitDepth);
-    void process_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& data, bool shouldFlip);
+    void process_texture(std::vector<uint8_t>& header, std::vector<uint8_t>& data);
     int get_texture_size(int width, int height, int textureFormat);
     
 };

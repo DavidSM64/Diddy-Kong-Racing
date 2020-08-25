@@ -4,12 +4,8 @@
 #include <iomanip>
 #include <string>
 #include <vector>
-#include "dkr_extractor_classes/extract_config.h"
+#include "dkr_extractor_classes/config.h"
 #include "dkr_extractor_classes/rom.h"
-#include "dkr_extractor_classes/extract_binary.h"
-#include "dkr_extractor_classes/extract_compressed.h"
-#include "dkr_extractor_classes/extract_cheats.h"
-#include "dkr_extractor_classes/extract_textures.h"
 #include "dkr_decompressor_src/DKRCompression.h"
 #include "n64graphics/n64graphics.h"
 
@@ -17,7 +13,9 @@
 #include <experimental/filesystem> 
 namespace fs = std::experimental::filesystem;
 
-const std::string CONFIG_EXTENSION = ".extract-config";
+#define REVISION_NUMBER 1
+
+const std::string CONFIG_EXTENSION = ".config.json";
 
 const std::string ROM_EXTENSIONS[3] = { ".z64", ".v64", ".n64" };
 
@@ -27,7 +25,7 @@ std::string currentCategory;
 /*********************************************/
 
 void show_help() {
-    std::cout << "Usage: ./dkr_extractor <configs_directory> <baseroms_directory> <out_directory>" << std::endl;
+    std::cout << "Usage: ./dkr_extractor <version> <configs_directory> <baseroms_directory> <out_directory>" << std::endl;
 }
 
 bool ends_with_extension(std::string filename, std::string extension) {
@@ -58,61 +56,21 @@ void add_to_JSON(json::JSON& assetsJson, std::string filename) {
     }
 }
 
-void extract_range(std::string subfolder, ConfigRange& range, ROM& rom, json::JSON& assetsJson) {
-
-    switch(range.get_type()) {
-        case ConfigRangeType::BINARY:
-        {
-            ExtractBinary(range, rom, assetsJson, outDirectory);
-            break;
-        }
-        case ConfigRangeType::COMPRESSED:
-        {
-            ExtractCompressed(range, rom, assetsJson, outDirectory);
-            break;
-        }
-        case ConfigRangeType::CHEATS:
-        {
-            ExtractCheats(range, rom, assetsJson, outDirectory);
-            break;
-        }
-        case ConfigRangeType::TEXTURE:
-        {
-            ExtractTextures(range, rom, assetsJson, outDirectory);
-            break;
-        }
-    }
-}
-
 void write_json(json::JSON& assetsJson) {
-    std::string filename = "./assets/us_1.0/assets.json";
+    std::string filename = outDirectory + "/assets/" + assetsJson["@version"].ToString() + "/assets.json";
     std::ofstream myfile;
     myfile.open(filename);
     myfile << assetsJson;
     myfile.close();
 }
 
-void extract_assets_from_rom(Config& config, ROM& rom) {
-    if(config.get_size() != rom.get_size()) {
-        std::cout << "Error: Config does not add up to the ROM size." << std::endl 
-            << std::hex << "ROM size is " << rom.get_size() 
-            << "; Config ends at " << config.get_size() << std::dec << std::endl;
-    }
-    
-    currentCategory = "none";
-    
+void extract_assets_from_rom(ExtractConfig& config, ROM& rom) {
     json::JSON assetsJson;
     
     assetsJson["@version"] = config.get_subfolder();
-    assetsJson["@revision"] = 0;
-    assetsJson["assets"] = json::Array();
+    assetsJson["@revision"] = REVISION_NUMBER;
     
-    int numRanges = config.get_number_of_ranges();
-    for (int i = 0; i < numRanges; i++) {
-        ConfigRange range = config.get_range(i);
-        currentCategory = range.get_category();
-        extract_range(config.get_subfolder(), range, rom, assetsJson);
-    }
+    config.extract(rom, assetsJson);
     
     write_json(assetsJson);
 }
@@ -121,22 +79,23 @@ void extract_assets_from_rom(Config& config, ROM& rom) {
 
 int main(int argc, char* argv[]) {
     
-    if(argc != 4) {
+    if(argc != 5) {
         show_help();
         return 1;
     }
     
-    std::string configsDirectory = argv[1];
-    std::string baseromsDirectory = argv[2];
-    outDirectory = argv[3];
+    std::string version = argv[1];
+    std::string configsDirectory = argv[2];
+    std::string baseromsDirectory = argv[3];
+    outDirectory = argv[4];
     
-    std::vector<Config> configs;
+    std::vector<ExtractConfig> configs;
     std::vector<ROM> roms;
     
     for (const auto & entry : fs::directory_iterator(configsDirectory)){
         std::string filename = entry.path().filename();
         if(ends_with_config_extension(filename)) {
-            configs.push_back(Config(configsDirectory, filename));
+            configs.push_back(ExtractConfig(configsDirectory, filename, outDirectory));
         }
     }
     
@@ -150,7 +109,7 @@ int main(int argc, char* argv[]) {
     bool completedAnExtraction = false;
     
     for(auto& config : configs) {
-        if(config.is_supported()) {
+        if(config.is_supported() && config.get_subfolder() == version) {
             for(auto& rom : roms) {
                 if(rom.get_md5() == config.get_md5()) {
                     extract_assets_from_rom(config, rom);
@@ -158,8 +117,6 @@ int main(int argc, char* argv[]) {
                     break;
                 }
             }
-        } else {
-            std::cout << "The config for \"" << config.get_name() << "\" is currently not supported." << std::endl;
         }
     }
     

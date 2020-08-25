@@ -19,16 +19,13 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 `sudo apt install build-essential pkg-config git binutils-mips-linux-gnu python3 libssl-dev wget`
 
 ## Setup / Building
-1. Place the ROM file within the `baseroms` directory.  
+1. Install the dependencies
+2. Place the ROM file within the `baseroms` directory.  
     **a.** Any DKR ROM should work as long as it is US 1.0.  
     **b.** The name of the ROM file does not matter. It will be detected automatically from an md5 checksum.  
     **c.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
-2. Run `make` in the main directory.  
+3. Run `make` in the main directory.  
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
-    
-## Assets
-
-See the [ASSETS_README.md](ASSETS_README.md) file for more information on the assets within this decompilation.
 
 ## Scripts
 
@@ -36,11 +33,9 @@ There are some useful scripts that should be kept in mind when working on this r
 
 ---
 
-#### `./extract.sh`
+#### `./extract.sh <version>`
 
-This script will extract all the assets from the DKR ROM and place them into `/assets/` folder according to the extract-config file within the `/extract-ver/` folder. You will need to run this every time you update one of the `.extract-config` files.
-
-Note: The `/assets/` folder will get deleted if it already exists, so don't put anything important in there! 
+This script will extract all the assets from a DKR ROM and place them into `/assets/` folder according to the config file within the `/extract-ver/` folder. The version parameter should either be `us_1.0`, `us_1.1`, `eu_1.0`, `eu_1.1`, or `jp`.
 
 ---
 
@@ -84,12 +79,11 @@ What should be focused on.
 
 What can be done, but not essential.
 
-* Create file formats for all the assets files, instead of just having .bin files.
-* Figuring out the unknown .bin files within the /assets/bin/ directory.
+* Figuring out the formats for the assets in the /assets/ folder.
 
 ### Future
 
 These features won't be complete anytime soon.
 
-* Make the ROM shiftable.
+* Make the ROM fully shiftable.
 * Add support for the other 4 versions.

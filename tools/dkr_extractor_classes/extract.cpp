@@ -1,7 +1,6 @@
 #include "extract.h"
 
-Extract::Extract(ConfigRange& range, ROM& rom, json::JSON& assetsJson, std::string outDirectory) : 
-    range(range), rom(rom), assetsJson(assetsJson), outDirectory(outDirectory) {
+Extract::Extract(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath){
 }
 
 Extract::~Extract(){
@@ -21,10 +20,8 @@ void Extract::write_text_file(std::string text, std::string filepath){
     myfile.close();
 }
 
-void Extract::print_extracted(int start, int end, std::string subfolder, std::string filename) {
-    std::cout << "Extracted " << std::setfill('0') << std::setw(6) << std::hex << std::uppercase 
-        << start << "-" << std::setfill('0') << std::setw(6) << std::hex << std::uppercase << end 
-        << " as /" << subfolder << "/" << filename << std::endl;
+void Extract::print_extracted(std::string outFilepath) {
+    std::cout << "Extracted " << outFilepath << std::endl;
 }
 
 void Extract::to_lowercase(std::string& input) {

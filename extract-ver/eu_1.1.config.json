@@ -1,0 +1,416 @@
+{
+    "config-name" : "Diddy Kong Racing (Europe v1.1)",
+    "checksum-md5" : "6b2bafe540e0af052a78e85b992be999",
+    "subfolder" : "eu_1.1",
+    "code" : {
+        "sections" : [
+            { 
+                "type": "NoExtract",
+                "folder" : "",
+                "files" : [
+                    { "filename": "work-in-progress",  "length" : "0xED170" }
+                ]
+            }
+        ]
+    },
+    "assets" : {
+        "sections": [
+            {
+                "type": "Binary",
+                "folder": "unknown_0",
+                "table": 1
+            },
+            { "type": "Table" },
+            {
+                "type": "Textures",
+                "folder": "textures/3d",
+                "table": 3,
+                "flip-textures": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            },
+            { "type": "Table" },
+            {
+                "type": "Textures",
+                "folder": "textures/2d",
+                "table": 5,
+                "flip-textures" : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            },
+            { "type": "Table" },
+            {
+                "type": "GameText",
+                "folder": "text/game",
+                "table": 7
+            },
+            { "type": "Table" },
+            {
+                "type": "MenuText",
+                "folder": "text/menu",
+                "table": 9,
+                "filenames": [ 
+                    "english_menu_text",
+                    "german_menu_text",
+                    "french_menu_text",
+                    "japanese_menu_text"
+                ]
+            },
+            { "type": "Table" },
+            { "type": "Empty", "table": 11},
+            { "type": "Table" },
+            {
+                "type": "Sprites",
+                "folder": "sprites",
+                "table": 13
+            },
+            { "type": "Table" },
+            { "type": "Empty" },
+            {
+                "type": "Miscellaneous",
+                "folder": "misc",
+                "table": 16,
+                "filenames": [
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "tracks_menu_ids",
+                    "hub_area_ids",
+                    "main_tracks_ids",
+                    "battle_tracks_ids",
+                    "boss_tracks_ids",
+                    "",
+                    "",
+                    "RacerStats_Unknown0",
+                    "RacerStats_Diddy",
+                    "RacerStats_TT",
+                    "RacerStats_Unknown1",
+                    "RacerStats_Krunch",
+                    "RacerStats_Bumper",
+                    "RacerStats_Tiptup",
+                    "RacerStats_Conker",
+                    "RacerStats_Timber",
+                    "RacerStats_Banjo",
+                    "RacerStats_Drumstick",
+                    "RacerStats_Pipsy",
+                    "RacerStats_Unknown2",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "magic_codes",
+                    "title_screen_demo_ids",
+                    "",
+                    "",
+                    "",
+                    ""
+                ]
+            },
+            { "type": "Table" },
+            {
+                "type": "Binary",
+                "folder": "ids",
+                "filenames": [ "hud_element_ids" ]
+            },
+            {
+                "type": "Binary",
+                "folder": "ids",
+                "filenames": [ "menu_element_ids" ]
+            },
+            { 
+                "type": "Binary",
+                "folder": "bin",
+                "filenames": [ "unknown_table" ]
+            },
+            { "type": "Table" },
+            {
+                "type": "LevelObjectMap",
+                "folder": "levels/objectMaps",
+                "table": 20
+            },
+            { "type": "Table" },
+            {
+                "type": "LevelHeaders",
+                "folder": "levels/headers",
+                "table": 22,
+                "filenames": [
+                    "CentralAreaHub",
+                    "Bluey1",
+                    "DragonForestHub",
+                    "FossilCanyon",
+                    "PirateLagoon",
+                    "AncientLake",
+                    "WalrusCove",
+                    "HotTopVolcano",
+                    "WhaleBay",
+                    "SnowballValley",
+                    "CrescentIsland",
+                    "FireMountain",
+                    "DinoDomainHub",
+                    "EverfrostPeak",
+                    "SherbetIslandHub",
+                    "SpaceportAlpha",
+                    "HorseshoeGulch",
+                    "SpacedustAlley",
+                    "GreenwoodVillage",
+                    "BoulderCanyon",
+                    "WindmillPlains",
+                    "FrontEnd",
+                    "CharacterSelect",
+                    "TitleScreenSequence",
+                    "SnowflakeMountainHub",
+                    "SmokeyCastle",
+                    "DarkwaterBeach",
+                    "IciclePyramid",
+                    "FrostyVillage",
+                    "JungleFalls",
+                    "TreasureCaves",
+                    "HauntedWoods",
+                    "DarkmoonCaverns",
+                    "StarCity",
+                    "TrophyRace",
+                    "FutureFunLandHub",
+                    "OpeningSequence",
+                    "Wizpig1",
+                    "Trickytops1",
+                    "OptionsBackground",
+                    "Bubbler1",
+                    "Smokey1",
+                    "WizpigMouthSequence",
+                    "WizpigAmuletSequence", 
+                    "TTAmuletSequence", 
+                    "RocketSequence", 
+                    "Trickytops2", 
+                    "DinoDomainTrophyAnim",
+                    "SnowflakeMountainTrophyAnim",
+                    "SherbetIslandTrophyAnim",
+                    "DragonForestTrophyAnim",
+                    "FutureFunLandTrophyAnim",
+                    "Bluey2", 
+                    "Bubbler2", 
+                    "Smokey2", 
+                    "Wizpig2", 
+                    "PartySequence",
+                    "TricktopsAnim",
+                    "SmokeyAnim",
+                    "BlueyAnim",
+                    "Wizpig1Anim",
+                    "BubblerAnim",
+                    "Wizpig2Anim",
+                    "LastBit",
+                    "LastBitB"
+                ]
+            },
+            { "type": "Table" },
+            {
+                "type": "LevelNames",
+                "folder": "levels/names",
+                "table": 24,
+                "filenames": [
+                    "CentralAreaHub",
+                    "Bluey1",
+                    "DragonForestHub",
+                    "FossilCanyon",
+                    "PirateLagoon",
+                    "AncientLake",
+                    "WalrusCove",
+                    "HotTopVolcano",
+                    "WhaleBay",
+                    "SnowballValley",
+                    "CrescentIsland",
+                    "FireMountain",
+                    "DinoDomainHub",
+                    "EverfrostPeak",
+                    "SherbetIslandHub",
+                    "SpaceportAlpha",
+                    "HorseshoeGulch",
+                    "SpacedustAlley",
+                    "GreenwoodVillage",
+                    "BoulderCanyon",
+                    "WindmillPlains",
+                    "FrontEnd",
+                    "CharacterSelect",
+                    "TitleScreenSequence",
+                    "SnowflakeMountainHub",
+                    "SmokeyCastle",
+                    "DarkwaterBeach",
+                    "IciclePyramid",
+                    "FrostyVillage",
+                    "JungleFalls",
+                    "TreasureCaves",
+                    "HauntedWoods",
+                    "DarkmoonCaverns",
+                    "StarCity",
+                    "TrophyRace",
+                    "FutureFunLandHub",
+                    "OpeningSequence",
+                    "Wizpig1",
+                    "Trickytops1",
+                    "OptionsBackground",
+                    "Bubbler1",
+                    "Smokey1",
+                    "WizpigMouthSequence",
+                    "WizpigAmuletSequence", 
+                    "TTAmuletSequence", 
+                    "RocketSequence", 
+                    "Trickytops2", 
+                    "DinoDomainTrophyAnim",
+                    "SnowflakeMountainTrophyAnim",
+                    "SherbetIslandTrophyAnim",
+                    "DragonForestTrophyAnim",
+                    "FutureFunLandTrophyAnim",
+                    "Bluey2", 
+                    "Bubbler2", 
+                    "Smokey2", 
+                    "Wizpig2", 
+                    "PartySequence",
+                    "TricktopsAnim",
+                    "SmokeyAnim",
+                    "BlueyAnim",
+                    "Wizpig1Anim",
+                    "BubblerAnim",
+                    "Wizpig2Anim",
+                    "LastBit",
+                    "LastBitB"
+                ]
+            },
+            { "type": "Table" },
+            {
+                "type": "LevelModels",
+                "folder": "levels/models",
+                "table": 26
+            },
+            { "type": "Table" },
+            {
+                "type": "ObjectModels",
+                "folder": "objects/models",
+                "table": 28
+            },
+            {
+                "type": "Binary",
+                "folder": "objects",
+                "filenames": [ "animation_ids" ]
+            },
+            { "type": "Table" },
+            {
+                "type": "ObjectAnimations",
+                "folder": "objects/animations",
+                "table": 31
+            },
+            { "type": "Table" },
+            {
+                "type": "ObjectHeaders",
+                "folder": "objects/headers",
+                "table": 33
+            },
+            {
+                "type": "Binary",
+                "folder": "objects",
+                "filenames": [ "level_object_translation_table" ]
+            },
+            { "type": "Table" },
+            { "type": "Empty", "table": 36 },
+            { "type": "Table" },
+            {
+                "type": "Audio",
+                "folder": "audio",
+                "table": 38
+            },
+            { "type": "Table" },
+            {
+                "type": "Particles",
+                "folder": "particles/particles",
+                "table": 40
+            },
+            { "type": "Table" },
+            {
+                "type": "ParticleBehaviors",
+                "folder": "particles/behaviors",
+                "table": 42
+            },
+            {
+                "type": "Binary",
+                "folder": "fonts"
+            },
+            {
+                "type": "Binary",
+                "folder": "fonts"
+            },
+            {
+                "type": "Binary",
+                "folder": "fonts"
+            },
+            {
+                "type": "Binary",
+                "folder": "ids"
+            },
+            { "type": "Table" },
+            {
+                "type": "TTGhosts",
+                "folder": "tt_ghosts",
+                "table": 48,
+                "filenames": [
+                    "FossilCanyon",
+                    "PirateLagoon",
+                    "AncientLake",
+                    "WalrusCove",
+                    "HotTopVolcano",
+                    "WhaleBay",
+                    "SnowballValley",
+                    "CrescentIsland",
+                    "EverfrostPeak", 
+                    "SpaceportAlpha",
+                    "SpacedustAlley",
+                    "GreenwoodVillage",
+                    "BoulderCanyon",
+                    "WindmillPlains",
+                    "FrostyVillage",
+                    "JungleFalls",
+                    "TreasureCaves",
+                    "HauntedWoods",
+                    "DarkmoonCaverns",
+                    "StarCity"
+                ]
+            }
+        ]
+    }
+}
+
+
+
+
+
