@@ -6,6 +6,7 @@
 #include "structs.h"
 #include "fast3d.h"
 
+
 extern s32 D_800DC700;
 extern s16 D_800DC708;
 extern s32 D_800DC718;
@@ -35,15 +36,8 @@ extern s32 D_8011AD34;
 extern s8 D_8011AD3C;
 extern s8 D_8011AD3D;
 
-typedef struct unk8011AD40 {
-    s16 unk0;
-    s8 pad2[0xA];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk8011AD40;
 
-extern unk8011AD40 *D_8011AD40;
+extern Player *D_8011AD40;
 extern s8 D_8011AD44;
 extern s8 D_8011AD45;
 extern s16 D_8011AD46;
@@ -83,8 +77,8 @@ extern s8 D_8011AE03;
 u32 *D_8011AE08[16];
 extern s32 (*D_8011AE48)[8]; // Unknown number of entries.
 extern u8 (*D_8011AE4C)[8]; // Unknown number of entries.
-extern u32 (*D_8011AE58)[64]; // Not sure about the number of elements
-extern s32 D_8011AE5C;
+extern Player **objPtrList; // Not sure about the number of elements
+extern s32 objCount;
 extern s32 D_8011AE60;
 extern s32 D_8011AE64;
 extern s32 *D_8011AE68;
@@ -97,11 +91,14 @@ extern s16 D_8011AE7C;
 extern s8 D_8011AE7E;
 extern s16 D_8011AE82;
 extern s32 D_8011AE88;
+extern u32 D_8011AE8C;
+extern u32 D_8011AE90;
+extern u32 D_8011AE94;
 extern s32 D_8011AEB0[2];
 extern s16 *D_8011AEB8;
 extern s32 D_8011AEBC;
-extern s32 *D_8011AEC4;
-extern s32 D_8011AEC8;
+extern Player **particlePtrList;
+extern s32 particleCount;
 
 /* Size: 0x3C bytes */
 typedef struct unknown8011AECC {
@@ -116,10 +113,10 @@ extern s32 D_8011AED4;
 extern s16 D_8011AED8;
 extern u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 extern s32 D_8011AEE0;
-extern Player *(*D_8011AEE4)[8];
+extern Player *(*playerStructArray_Ptr)[8];
 extern s32 *D_8011AEE8;
 extern s32 *D_8011AEEC;
-extern s32 D_8011AEF0;
+extern s32 playerCount;
 extern u8 D_8011AEF4;
 extern u8 D_8011AEF5;
 extern u8 D_8011AEF6;
@@ -128,6 +125,7 @@ extern u32 (*D_8011AF04)[64]; // Not sure about the number of elements
 extern s32 D_8011AF08[2];
 extern s32 D_8011AF10;
 extern s32 D_8011AF60;
+
 
 /* Size: 0x40 bytes */
 typedef struct unk800179D0 {
@@ -156,10 +154,52 @@ void func_8000C460(void);
 void *func_80070B78(s32, u32);
 void *func_80070C9C(s32, u32);
 s32 *func_80076C58(s32);
+void particlePtrList_addObject(Player *);
+void particlePtrList_flush(void);
 void func_8001D258(f32, f32, s32, s32, s32);
 
+extern void func_800245B4(s16);
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B020.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
+#else 
+
+extern s32 D_800DC754;
+extern Player* D_800DC75C;
+extern Player* D_800DC764;
+
+s32 *func_8001E29C(s32 arg0);
+
+void func_8000B290(){
+
+    if(D_800DC754){
+        func_80071140();
+    }
+    func_8001E29C(20);
+    /*{
+        if(D_800DC754->unk7a)
+            func_8007CCB0();
+        D_800DC754->unk7a = 0;
+
+        if(D_800DC754->unk7C)
+            func_8007B2BC();
+        D_800DC754->unk7C = 0;
+    }*/
+    if(D_800DC75C)
+        particlePtrList_addObject(D_800DC75C);
+    D_800DC75C = NULL;
+    
+    if(D_800DC764)
+        particlePtrList_addObject(D_800DC764);
+    D_800DC764 = NULL;
+
+    particlePtrList_flush();
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B38C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B750.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000BADC.s")
@@ -181,12 +221,12 @@ void func_8000BF8C(void) {
 
     func_8001D258(D_800E514C, D_800E5150, 0, -0x2000, 0);
     D_8011AE68 = (s32*)func_80070B78(0x15800, 0x200);
-    D_8011AEC4 = (s32*)func_80070C9C(0x320, 0xFFFF);
+    particlePtrList = (Player **)func_80070C9C(0x320, 0xFFFF);
     D_8011AE6C = (s32*)func_80070C9C(0x50, 0xFFFF);
     D_8011AE74 = (s32*)func_80070C9C(0x200, 0xFFFF);
     D_8011AECC = (unknown8011AECC*)func_80070C9C(0xE10, 0xFFFF);
     D_8011AEDC = (s32*)func_80070C9C(0x50, 0xFFFF);
-    D_8011AEE4 = (s32*)func_80070C9C(0x28, 0xFFFF);
+    playerStructArray_Ptr = (s32*)func_80070C9C(0x28, 0xFFFF);
     D_8011AEEC = (s32*)func_80070C9C(0x28, 0xFFFF);
     D_8011AEE8 = (s32*)func_80070C9C(0x28, 0xFFFF);
     D_8011AF04 = (s32*)func_80070C9C(0x200, 0xFFFF);
@@ -218,7 +258,7 @@ void func_8000BF8C(void) {
         D_8011ADA0++;
     }
     func_8000C2D8(&D_8011AD6C[D_8011AD70[65]], (D_8011AD70[66] - D_8011AD70[65]) * 4);
-    D_8011AE58 = (u32**)func_80070C9C(0x800, 0xFFFF);
+    objPtrList = (Player**)func_80070C9C(0x800, 0xFFFF);
     D_8011ADC4 = 0;
     D_8011AEF4 = 0;
     D_8011AEF5 = 0;
@@ -259,11 +299,11 @@ void func_8000C460(void) {
     D_8011AD26 = 1;
     D_8011AD5C = 0;
     D_8011AD60 = 0;
-    D_8011AEC8 = 0;
+    particleCount = 0;
     D_8011AE70 = 0;
     D_8011AED0 = 0;
     D_8011AED4 = 0;
-    D_8011AEF0 = 0;
+    playerCount = 0;
     D_8011AE78 = 0;
     D_8011AD21 = 0;
     D_8011AD22[0] = 0;
@@ -281,7 +321,7 @@ void func_8000C460(void) {
     
     D_8011AF08[0] = 0xFF;
     D_8011AF08[1] = 0xFF;
-    D_8011AE5C = 0;
+    objCount = 0;
     D_8011AE60 = 0;
     D_8011AE64 = 0;
     D_8011AE88 = 0;
@@ -311,13 +351,13 @@ void func_8000C604(void) {
         D_800DC744 = 0;
         func_8006F398();
     }
-    func_8001004C();
-    len = D_8011AE5C;
+    particlePtrList_flush();
+    len = objCount;
     for (i = 0; i < len; i++) {
-        func_800101AC((*D_8011AE58)[i], 1);
+        func_800101AC(objPtrList[i], 1);
     }
-    D_8011AEC8 = 0;
-    D_8011AE5C = 0;
+    particleCount = 0;
+    objCount = 0;
     D_8011AE60 = 0;
     func_8000C460();
     func_80071140(D_8011AEB0[0]);
@@ -362,10 +402,10 @@ void func_8000CBF0(u32 *arg0, s32 arg1) {
     u32 *temp2;
     temp2 = *temp;
     if (temp2 != NULL) {
-        return;
+        return; // I can't get this second return to appear.
     }
     D_8011AE08[arg1] = arg0;
-    return; // I can't get this second return to appear.
+    return; 
 }
 #endif
 
@@ -391,6 +431,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CC7C.s")
 
 // Has a jump table
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E0B0.s")
+
 
 void func_8000E128(void) {
     D_800DC708 = 0x8000;
@@ -435,16 +476,16 @@ s8 func_8000E1DC() {
     return D_8011AE03;
 }
 
-void func_8000E1EC(unk8011AD40 *arg0, s32 arg1) {
+void func_8000E1EC(Player *arg0, s32 arg1) {
     D_8011AD40 = arg0;
     D_8011AD44 = 4;
     D_8011AD45 = arg1;
-    D_8011AD46 = arg0->unkC;
-    D_8011AD48 = arg0->unk10;
-    D_8011AD4A = arg0->unk14;
-    D_8011AD4C = arg0->unk0;
-    func_8000FFB8();
-    D_8011AEF0 = 0;
+    D_8011AD46 = arg0->x_position;
+    D_8011AD48 = arg0->y_position;
+    D_8011AD4A = arg0->z_position;
+    D_8011AD4C = arg0->y_rotation;
+    particlePtrList_addObject(arg0);
+    playerCount = 0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
@@ -457,24 +498,33 @@ u8 func_8000E4C8() {
     return D_8011AEF4;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E4D8.s")
-
-u32 func_8000E948(s32 arg0) {
-    if (arg0 < 0 || arg0 >= D_8011AE5C) {
-        return 0;
-    }
-    return (*D_8011AE58)[arg0];
+u8 func_8000E4D8(void){
+    return D_8011AEF5;
 }
 
-u32 *func_8000E988(s32 *arg0, s32 *arg1) {
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E4E8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E558.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E5EC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E79C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E898.s")
+
+
+Player *getObject(s32 indx) {
+    if (indx < 0 || indx >= objCount) {
+        return 0;
+    }
+    return objPtrList[indx];
+}
+
+Player **func_8000E988(s32 *arg0, s32 *cnt) {
     *arg0 = D_8011AE60;
-    *arg1 = D_8011AE5C;
-    return *D_8011AE58;
+    *cnt = objCount;
+    return objPtrList;
 }
 
 // Unused?
-s32 func_8000E9B0(void) {
-    return D_8011AE5C;
+s32 getObjectCount(void) {
+    return objCount;
 }
 
 // Unused?
@@ -482,7 +532,13 @@ s32 func_8000E9C0(void) {
     return D_8011AE64;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E9D0.s")
+void func_8000E9D0(Player* arg0){
+    arg0->unk6 |= 0x8000;
+    func_800245B4(arg0->unk2C | 0xC000);
+    objPtrList[objCount++] = arg0;
+    if(1);
+    D_8011AE64++;
+}    
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000EA54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F648.s")
@@ -524,8 +580,60 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FFB8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001004C.s")
+
+
+void particlePtrList_addObject(Player* arg0){
+    func_800245B4(arg0->unk4A | 0x8000);
+    particlePtrList[particleCount] = arg0;
+    particleCount++;
+}
+
+
+s32 func_80010018(void){
+    return D_8011AEBC;
+}
+
+s32 func_80010028(s32 arg0){
+    return (D_8011AEB8[arg0] < D_8011AD68);
+}
+
+#if 1
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/particlePtrList_flush.s")
+#else
+//bad regalloc; swap s2 = s3
+/*removes objects in particleList from objPtrList and frees*/
+void particlePtrList_flush(void){
+    s32  j, i, search_indx, tmp;
+    Player* searchObj;
+    
+    D_8011AE88 = 0;
+    for (i = 0; i < particleCount; i++){
+        search_indx = -1;
+        searchObj = particlePtrList[i];
+        
+        for(j = 0; j < objCount; j++){
+            if(searchObj == objPtrList[j])
+                search_indx = j;
+        }
+
+        //if object found
+        if(search_indx != -1){
+            tmp = D_8011AE7C;
+            if(search_indx < D_8011AE7C)
+                D_8011AE7C = tmp-1; 
+            
+            objCount--;
+            for(j = search_indx; j < objCount; j++){
+                objPtrList[j] = objPtrList[j+1];
+            }
+        }
+        func_800101AC(searchObj,0);
+    }
+    particleCount = 0;
+}
+#endif
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800101AC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80010994.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011134.s")
@@ -554,16 +662,183 @@ void func_80011560(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
+void func_80011960(Player*, s32, u32, Player_64*, u32, u32, u32, u32, f32);
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
+#else
+void func_80011960(Player* arg0, s32 arg2, u32 arg3, Player_64* arg4
+                  , u32 arg5 , u32 arg6 , u32 arg7, u32 arg8, f32 arg9)
+{
+
+
+}
+#endif
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
+#else
+extern f32 D_800E5550;
+void func_80011AD0(Player* this){
+    f32 tmp_f0;
+    u32 offset;
+    switch(this->unk48){
+        case 47:
+            //L80011B10
+            if(this->unk7C.word < 0)
+                break;
+            func_80011960( this, this->unk64->unk20, 4, this->unk64
+                            , 2, this->unk64->unk24, 11, 0, 1.0f);
+            break;
+
+        case 61:
+            //L80011B58
+            offset = (this->unk64->unkFC*6);
+            offset *= 5;
+            offset = offset*2 + 0x80;
+            func_80011960(this, offset, 6, this->unk64
+                            , 8, this->unk64->unkF8, 10, 0, 1.0f);
+            break;
+
+        case 3://L80011BB4
+            tmp_f0 = (f32) this->unk3C->unkD;
+            if(this->unk3C->unkD < 0){
+                tmp_f0 += 4294967296.0f;
+            }
+            offset = (this->unk64->unkFC*6);
+            offset *= 5;
+            offset = offset*2 + 0x80;
+            func_80011960(this, offset, 6, this->unk64
+                            , 8, this->unk64->unkF8, 26, 0, tmp_f0 * D_800E5550);
+            break;
+
+        case 89: //L80011C38
+            if(this->unk78 == 0)
+                break;
+            if(this->unk64->unk70 > 0 || 0.0f < this->unk64->unk74){
+                func_800135B8(this);
+            }
+            break;
+        default:
+            break;
+    }//L80011C88
+}
+#endif
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011C94.s")
+#else
+void func_80011C94(Player* this){
+}
+#endif
+
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800120C8.s")
+#else
+
+extern f32 D_8011AD30;
+
+void func_800120C8(Player* this){
+    u32 sp_b8;
+    u32 sp_a8;
+    u32 sp_a4;
+    u32 sp_78;
+
+    u32 *s0;
+    f32 tmp_f_1;
+    f32 *tmp_fp_s1;
+    Player_64* tmp_s3;
+
+    s0 = ((u32*) this->unk68)[this->unk3A];
+    if(s0){
+        /*
+        sp_a8 = 0;
+        sp_a4 = 0;
+        sp_b8 = 255;
+        sp_78 = *s0;
+
+        if(this->unk54){
+            tmp_f_1 = *((f32*) this->unk54) * 255.0f * D_8011AD30;
+            sp_a8 = 1;
+            sp_a4 = 1;
+            sp_b8 = tmp_f_1;
+        }
+        
+
+        tmp_fp_s1 = &D_8011AD30;
+        if(this->unk48 == 1){
+            tmp_s3 = this->unk64;
+            func_80012E28(this);
+
+        }else{
+            tmp_s3 = NULL;
+        }
+        if(s0->unk20 < 0){
+            this->s0->unk1f
+        }
+        //L800122Fc
+        */
+        //L800129A0
+        {
+            $t6 = this->unk3A;
+
+
+            //f64 $f8;
+            $f12 = (f32) $t9;
+            $f8 = ( (f64) $f16) + (((f64) $f8)* 0.25f);
+            $f4 = (((f32) $v0->unk2) - this->y_position);
+            this->x_position = (f32) $f8;
+            this->y_position = (f32) (((f64)$f18) + (((f64) $f4) * $f14));
+            $sp_38 = this->z_position;
+            $f8 = ( (f64) $f10) + (((f64) ($f12 - $f6)) * $f14);
+            $s0->0x14 = (f32) $f8;
+            if(this->descriptor_ptr->unk53 == 1){
+                
+                func_80068514( $s1, &D_8011AE90, &D_8011AE94, this, $t4, 266);
+            }
+        }
+        //L80012AF8
+        if($sp_9c != -1){
+            if(this->descriptor_ptr->unk71){
+                fast3d_cmd($v0++, 0xFA000000, 
+                    ($v1->unk18 << 0x18) | ($v1->unk19 << 0x10) | ($v1->unk1a << 0x08) | ($sp_b4 & 0xff)); 
+                    //G_SETPRIMCOLOR
+                
+                func_8007B43C();
+            }
+            //L80012B6C
+            func_800143A8($sp_78, this, $sp_9c, 4, $sp_b0);
+            if(this->descriptor_ptr->unk71){
+                func_8007B54();
+            } 
+        }
+        //L80012BA8
+        if( $sp_a8 || this->descriptor_ptr->unk71){
+            fast3d_cmd($v0++, 0xFA000000, 0xFFFFFFFF); //G_SETPRIMCOLOR
+        }
+        //L80012BE8
+        if($sp_a4){
+            fast3d_cmd($v0++, 0xFB000000, 0xFFFFFDA9); //G_SETENVCOLOR 
+        }
+        //L80012C0C
+        func_80069A40($s1);
+    }
+    //L80012C14
+    return;
+}
+#endif
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012C3C.s")
+void func_80012C3C(Gfx** dlist){
+    s32 i;
+    Gfx *tmp;
+    for(i = 0; i<D_8011ADA4; i++){
+        fast3d_cmd((*dlist)++, 0x06000000, D_8011AD78[i]);
+    }
+}
 
 void func_80012C98(Gfx **dlist) {
     if (D_8011ADA4 < 9) {
@@ -580,8 +855,68 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012D5C.s")
+void func_8001348C(Player *);
+
+func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Player * arg3){
+    f32 scale;
+    u32 tmp2;
+    u32 tmp3;
+    if(arg3->unk6 & 0x5000)
+        return;
+    
+    func_800B76B8(2, arg3->unk4A);
+    D_8011AE8C = *arg0;
+    D_8011AE90 = *arg1;
+    D_8011AE94 = *arg2;
+    scale = arg3->scale;
+    func_8001348C(arg3);
+    arg3->scale = scale;
+    *arg0 = D_8011AE8C;
+    *arg1 = D_8011AE90;
+    *arg2 = D_8011AE94;
+    func_800B76B8(2, -1);
+
+    
+}
+
+extern f32 func_800707F8(s16);
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
+#else
+void func_80012E28(Player *this){
+    s32         unused1;
+    Player_64  *sp_20;
+    f32         tmp_f2;
+    f32         sp_1c;
+    f32         tmp_f0;
+    
+
+    if(this->unk48 == 1){
+        
+        sp_20 = this->unk64;
+        this->y_rotation += sp_20->unk160;
+        this->x_rotation += sp_20->unk162;
+        this->z_rotation += sp_20->unk164;
+        sp_1c = 0.0f;
+        if(sp_20->unk1D7 < 5) {
+            
+            sp_1c = func_800707F8(sp_20->unk164);
+            tmp_f2 = sp_1c;
+            tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166)*tmp_f2;
+            
+            //bad regalloc of 0.0f
+            tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0*tmp_f0;
+            
+            sp_1c = (1.0f - tmp_f0)*24.0f + sp_20->unkD0;
+        }
+        //L80012F0C
+        this->y_position = this->y_position + sp_1c;
+        D_8011ADD0 = sp_1c;
+    }
+    //L80012F20
+}
+#endif
+
 
 void func_80012F30(Player *arg0) {
     if (arg0->unk48 == 1) {
@@ -594,7 +929,27 @@ void func_80012F30(Player *arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001348C.s")
+
+
+
+
+void func_80013548(Player *arg0);
+
+void func_8001348C(Player *this){
+    func_80012F94(this);
+    if(this->unk6 & 0x8000){
+        func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
+    }
+    else{
+        if(this->descriptor_ptr->unk53 == 0)
+            func_800120C8(this);
+        else if(this->descriptor_ptr->unk53 == 1)
+            func_80011C94(this);
+        else if(this->descriptor_ptr->unk53 == 4)
+            func_80011AD0(this);
+    }
+    func_80013548(this);
+}
 
 void func_80013548(Player *arg0) {
     if ((arg0->unk6 & 0x8000) == 0 && arg0->descriptor_ptr->unk54 == 1) {
@@ -609,7 +964,27 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800138A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013A0C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013DCC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800142B8.s")
+
+void func_800142B8(void){
+    s32 i =  D_8011AE60;
+    s32 j;
+    Player* currObj;
+    Player_68 *curr_68;
+
+    for(; i < objCount; i++){
+        currObj = objPtrList[i];
+        if( (currObj->unk6 & 0x8000) == 0  && currObj->descriptor_ptr->unk53 == 0){
+            for(j=0; j<currObj->descriptor_ptr->unk55; j++){
+                curr_68 = currObj->unk68[j];
+                if( curr_68 != NULL && curr_68->unk20 > 0){
+                    curr_68->unk20 = curr_68->unk20-- & 0x03;
+                }
+            }
+        }
+    }
+
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800143A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014814.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014B50.s")
@@ -651,7 +1026,18 @@ s16 func_80017E88(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80018C6C.s")
+
+Player * func_80018C6C(void){
+    s32 i;
+    Player* current_obj;
+    for(i=D_8011AE60; i < objCount; i++){
+        current_obj = objPtrList[i];
+        if(!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
+            return current_obj;
+    }
+    return NULL;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80018CE0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001955C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/D_80019808.s")
@@ -726,6 +1112,7 @@ void func_8001B790(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B7A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B834.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B974.s")
 
 // Returns a pointer to some struct that is 0x3C bytes long.
 unknown8011AECC *func_8001BA00(s32 arg0) {
@@ -744,38 +1131,40 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Player **func_8001BA74(s32 *arg0) {
-    *arg0 = D_8011AEF0;
-    return *D_8011AEE4;
+Player **getPlayerStructArray(s32 *cnt) {
+    *cnt = playerCount;
+    return *playerStructArray_Ptr;
 }
 
 s32 *func_8001BA90(s32 *arg0) {
-    *arg0 = D_8011AEF0;
+    *arg0 = playerCount;
     return D_8011AEEC;
 }
 
 s32 *func_8001BAAC(s32 *arg0) {
-    *arg0 = D_8011AEF0;
+    *arg0 = playerCount;
     return D_8011AEE8;
 }
 
-Player *func_8001BAC8(s32 arg0) {
-    if (D_8011AEF0 == 0) {
+Player *getPlayerStruct(s32 indx) {
+    if (playerCount == 0) {
         return NULL;
     }
-    if(arg0 < 0 || arg0 >= D_8011AEF0) {
+    if(indx < 0 || indx >= playerCount) {
         return NULL;
     }
-    return (*D_8011AEE4)[arg0];
+    return (*playerStructArray_Ptr)[indx];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB18.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB68.s")
 
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BC54.s")
+
 
 u32 func_8001BD94(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011AEE0) {
@@ -821,11 +1210,13 @@ void func_8001D23C(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D258.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D6E4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D80C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001DD54.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E13C.s")
 
 s32 *func_8001E29C(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011ADA0) {
@@ -851,7 +1242,26 @@ void func_8001E344(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E36C.s")
+void func_8001E36C(s32 arg0, f32* arg1, f32* arg2, f32* arg3){
+    s32 i;
+    Player* current_obj;
+    *arg1 = -32000.0f;
+    *arg2 = -32000.0f;
+    *arg3 = -32000.0f;
+    for(i=0; i<objCount; i++){
+        current_obj = objPtrList[i];
+
+        if( current_obj != NULL
+        && (current_obj->unk6 & 0x8000) == 0 
+        &&  current_obj->unk48 == 39
+        &&  current_obj->unk78 == arg0
+        ){
+            *arg1 = current_obj->x_position;
+            *arg2 = current_obj->y_position;
+            *arg3 = current_obj->z_position;
+        }
+    }
+}
 
 s16 func_8001E440() {
     return D_8011AE7A;
@@ -954,7 +1364,7 @@ void func_800228EC(s32 arg0) {
     Player_64 *player_64;
 
     D_8011AEF7 = 3;
-    player_64 = func_8001BAC8(0)->unk64;
+    player_64 = getPlayerStruct(0)->unk64;
     player_64->unk190 = 0;
     player_64->unk192 = 0;
     player_64->unk193 = 0;
@@ -971,10 +1381,39 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800230D0.s")
 s8 func_8002341C(void) {
     return D_8011AEF6;
 }
-
+#if 1 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002342C.s")
+#else
 
-//GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023568.s")
+extern f32 sqrtf(f32);
+
+//bad regalloc
+//finds furthest object (with some additional conditions)
+Player* func_8002342C(f32 x, f32 z){
+    Player* retval = NULL;
+    s32 i;
+    Player* currObj = NULL;
+    f32 x;
+    f32 z;
+    f32 dist;
+    f32 max = 0.0f;
+    
+    for(i=0; i<objCount; i++){
+        currObj = objPtrList[i];
+        if((currObj->unk6 & 0x8000) == 0 && currObj->unk48 == 87){
+            x = currObj->x_position - x;
+            z = currObj->z_position - z;
+            dist = sqrtf(x*x + z*z);
+
+            if(max < dist){
+                max = dist;
+                retval = currObj;
+            }
+        }
+    }
+    return retval;
+}
+#endif
 
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {

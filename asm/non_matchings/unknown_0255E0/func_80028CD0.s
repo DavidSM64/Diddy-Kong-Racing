@@ -65,7 +65,7 @@ glabel func_80028CD0
 /* 0299C4 80028DC4 E42AD31C */   swc1  $f10, %lo(D_8011D31C)($at)
 /* 0299C8 80028DC8 0C02E2E3 */  jal   func_800B8B8C
 /* 0299CC 80028DCC AFA7003C */   sw    $a3, 0x3c($sp)
-/* 0299D0 80028DD0 0C006E9D */  jal   func_8001BA74
+/* 0299D0 80028DD0 0C006E9D */  jal   getPlayerStructArray
 /* 0299D4 80028DD4 27A40040 */   addiu $a0, $sp, 0x40
 /* 0299D8 80028DD8 3C0F8012 */  lui   $t7, %hi(D_8011B0B0) # $t7, 0x8012
 /* 0299DC 80028DDC 8DEFB0B0 */  lw    $t7, %lo(D_8011B0B0)($t7)

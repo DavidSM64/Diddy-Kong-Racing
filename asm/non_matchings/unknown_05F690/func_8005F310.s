@@ -317,7 +317,7 @@ glabel func_8005F310
 /* 0603C4 8005F7C4 0C002DD4 */  jal   func_8000B750
 /* 0603C8 8005F7C8 24070001 */   li    $a3, 1
 .L8005F7CC:
-/* 0603CC 8005F7CC 0C006EB2 */  jal   func_8001BAC8
+/* 0603CC 8005F7CC 0C006EB2 */  jal   getPlayerStruct
 /* 0603D0 8005F7D0 00002025 */   move  $a0, $zero
 /* 0603D4 8005F7D4 8C43004C */  lw    $v1, 0x4c($v0)
 /* 0603D8 8005F7D8 8C470064 */  lw    $a3, 0x64($v0)

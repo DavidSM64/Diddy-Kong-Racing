@@ -64,9 +64,9 @@ glabel MenuCharacterSelectInit
 /* 08BCB0 8008B0B0 3C01800E */  lui   $at, %hi(D_800DF484) # $at, 0x800e
 /* 08BCB4 8008B0B4 250863D4 */  addiu $t0, %lo(D_801263D4) # addiu $t0, $t0, 0x63d4
 /* 08BCB8 8008B0B8 3C128012 */  lui   $s2, %hi(D_801263C0) # $s2, 0x8012
-/* 08BCBC 8008B0BC 3C038012 */  lui   $v1, %hi(D_801263E8) # $v1, 0x8012
+/* 08BCBC 8008B0BC 3C038012 */  lui   $v1, %hi(players_character_array) # $v1, 0x8012
 /* 08BCC0 8008B0C0 AC20F484 */  sw    $zero, %lo(D_800DF484)($at)
-/* 08BCC4 8008B0C4 246363E8 */  addiu $v1, %lo(D_801263E8) # addiu $v1, $v1, 0x63e8
+/* 08BCC4 8008B0C4 246363E8 */  addiu $v1, %lo(players_character_array) # addiu $v1, $v1, 0x63e8
 /* 08BCC8 8008B0C8 265263C0 */  addiu $s2, %lo(D_801263C0) # addiu $s2, $s2, 0x63c0
 /* 08BCCC 8008B0CC 00081021 */  addu  $v0, $zero, $t0
 /* 08BCD0 8008B0D0 00008025 */  move  $s0, $zero

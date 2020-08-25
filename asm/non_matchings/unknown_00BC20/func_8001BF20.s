@@ -26,13 +26,13 @@ glabel func_8001BF20
 /* 01CB7C 8001BF7C 2BC10200 */  slti  $at, $fp, 0x200
 /* 01CB80 8001BF80 1420FFFA */  bnez  $at, .L8001BF6C
 /* 01CB84 8001BF84 AF000000 */   sw    $zero, ($t8)
-/* 01CB88 8001BF88 3C048012 */  lui   $a0, %hi(D_8011AE5C) # $a0, 0x8012
-/* 01CB8C 8001BF8C 8C84AE5C */  lw    $a0, %lo(D_8011AE5C)($a0)
+/* 01CB88 8001BF88 3C048012 */  lui   $a0, %hi(objCount) # $a0, 0x8012
+/* 01CB8C 8001BF8C 8C84AE5C */  lw    $a0, %lo(objCount)($a0)
 /* 01CB90 8001BF90 A7A00186 */  sh    $zero, 0x186($sp)
 /* 01CB94 8001BF94 1880002D */  blez  $a0, .L8001C04C
 /* 01CB98 8001BF98 00003825 */   move  $a3, $zero
-/* 01CB9C 8001BF9C 3C058012 */  lui   $a1, %hi(D_8011AE58) # $a1, 0x8012
-/* 01CBA0 8001BFA0 24A5AE58 */  addiu $a1, %lo(D_8011AE58) # addiu $a1, $a1, -0x51a8
+/* 01CB9C 8001BF9C 3C058012 */  lui   $a1, %hi(objPtrList) # $a1, 0x8012
+/* 01CBA0 8001BFA0 24A5AE58 */  addiu $a1, %lo(objPtrList) # addiu $a1, $a1, -0x51a8
 /* 01CBA4 8001BFA4 0000F025 */  move  $fp, $zero
 /* 01CBA8 8001BFA8 27B70064 */  addiu $s7, $sp, 0x64
 /* 01CBAC 8001BFAC 24060010 */  li    $a2, 16
@@ -59,7 +59,7 @@ glabel func_8001BF20
 /* 01CBFC 8001BFFC 15E00010 */  bnez  $t7, .L8001C040
 /* 01CC00 8001C000 0003C880 */   sll   $t9, $v1, 2
 /* 01CC04 8001C004 8D580000 */  lw    $t8, ($t2)
-/* 01CC08 8001C008 3C048012 */  lui   $a0, %hi(D_8011AE5C) # $a0, 0x8012
+/* 01CC08 8001C008 3C048012 */  lui   $a0, %hi(objCount) # $a0, 0x8012
 /* 01CC0C 8001C00C 03195821 */  addu  $t3, $t8, $t9
 /* 01CC10 8001C010 AD730000 */  sw    $s3, ($t3)
 /* 01CC14 8001C014 87AD0186 */  lh    $t5, 0x186($sp)
@@ -71,7 +71,7 @@ glabel func_8001BF20
 /* 01CC2C 8001C02C 31F80003 */  andi  $t8, $t7, 3
 /* 01CC30 8001C030 A3380000 */  sb    $t8, ($t9)
 /* 01CC34 8001C034 25AB0001 */  addiu $t3, $t5, 1
-/* 01CC38 8001C038 8C84AE5C */  lw    $a0, %lo(D_8011AE5C)($a0)
+/* 01CC38 8001C038 8C84AE5C */  lw    $a0, %lo(objCount)($a0)
 /* 01CC3C 8001C03C A7AB0186 */  sh    $t3, 0x186($sp)
 .L8001C040:
 /* 01CC40 8001C040 00E4082A */  slt   $at, $a3, $a0

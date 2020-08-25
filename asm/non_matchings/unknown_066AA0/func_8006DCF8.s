@@ -1,9 +1,9 @@
 glabel func_8006DCF8
-/* 06E8F8 8006DCF8 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
+/* 06E8F8 8006DCF8 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06E8FC 8006DCFC 3C0E8012 */  lui   $t6, %hi(D_80123514) # $t6, 0x8012
 /* 06E900 8006DD00 81CE3514 */  lb    $t6, %lo(D_80123514)($t6)
 /* 06E904 8006DD04 27BDFFD0 */  addiu $sp, $sp, -0x30
-/* 06E908 8006DD08 A0203515 */  sb    $zero, %lo(D_80123515)($at)
+/* 06E908 8006DD08 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 /* 06E90C 8006DD0C 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012
 /* 06E910 8006DD10 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 06E914 8006DD14 AFB00020 */  sw    $s0, 0x20($sp)
@@ -84,8 +84,8 @@ glabel func_8006DCF8
 /* 06EA34 8006DE34 AD780000 */  sw    $t8, ($t3)
 /* 06EA38 8006DE38 3C018012 */  lui   $at, %hi(D_801234EC) # $at, 0x8012
 /* 06EA3C 8006DE3C AC2034EC */  sw    $zero, %lo(D_801234EC)($at)
-/* 06EA40 8006DE40 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
-/* 06EA44 8006DE44 A0203515 */  sb    $zero, %lo(D_80123515)($at)
+/* 06EA40 8006DE40 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
+/* 06EA44 8006DE44 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 /* 06EA48 8006DE48 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012
 /* 06EA4C 8006DE4C A0203516 */  sb    $zero, %lo(D_80123516)($at)
 /* 06EA50 8006DE50 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
@@ -112,8 +112,8 @@ glabel func_8006DCF8
 /* 06EAA0 8006DEA0 0C01B305 */  jal   func_8006CC14
 /* 06EAA4 8006DEA4 00000000 */   nop   
 /* 06EAA8 8006DEA8 8FAC002C */  lw    $t4, 0x2c($sp)
-/* 06EAAC 8006DEAC 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
-/* 06EAB0 8006DEB0 A0203515 */  sb    $zero, %lo(D_80123515)($at)
+/* 06EAAC 8006DEAC 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
+/* 06EAB0 8006DEB0 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 /* 06EAB4 8006DEB4 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012
 /* 06EAB8 8006DEB8 318D007F */  andi  $t5, $t4, 0x7f
 /* 06EABC 8006DEBC A0203516 */  sb    $zero, %lo(D_80123516)($at)

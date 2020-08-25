@@ -46,7 +46,7 @@ glabel func_800A003C
 .L800A00E4:
 /* 0A0CE4 800A00E4 11600005 */  beqz  $t3, .L800A00FC
 /* 0A0CE8 800A00E8 00000000 */   nop   
-/* 0A0CEC 800A00EC 0C003FEE */  jal   func_8000FFB8
+/* 0A0CEC 800A00EC 0C003FEE */  jal   particlePtrList_addObject
 /* 0A0CF0 800A00F0 00000000 */   nop   
 /* 0A0CF4 800A00F4 10000004 */  b     .L800A0108
 /* 0A0CF8 800A00F8 8E4C0000 */   lw    $t4, ($s2)
@@ -81,7 +81,7 @@ glabel func_800A003C
 /* 0A0D5C 800A015C 8E440000 */  lw    $a0, ($s2)
 /* 0A0D60 800A0160 0C01C450 */  jal   func_80071140
 /* 0A0D64 800A0164 00000000 */   nop   
-/* 0A0D68 800A0168 0C004013 */  jal   func_8001004C
+/* 0A0D68 800A0168 0C004013 */  jal   particlePtrList_flush
 /* 0A0D6C 800A016C 00000000 */   nop   
 /* 0A0D70 800A0170 8FBF002C */  lw    $ra, 0x2c($sp)
 /* 0A0D74 800A0174 8FB00018 */  lw    $s0, 0x18($sp)

@@ -3,12 +3,12 @@ glabel func_8001B7A8
 /* 01C3AC 8001B7AC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 01C3B0 8001B7B0 AFA60028 */  sw    $a2, 0x28($sp)
 /* 01C3B4 8001B7B4 848E01AA */  lh    $t6, 0x1aa($a0)
-/* 01C3B8 8001B7B8 3C0F8012 */  lui   $t7, %hi(D_8011AEF0) # $t7, 0x8012
+/* 01C3B8 8001B7B8 3C0F8012 */  lui   $t7, %hi(playerCount) # $t7, 0x8012
 /* 01C3BC 8001B7BC 01C52823 */  subu  $a1, $t6, $a1
 /* 01C3C0 8001B7C0 24A5FFFF */  addiu $a1, $a1, -1
 /* 01C3C4 8001B7C4 04A00006 */  bltz  $a1, .L8001B7E0
 /* 01C3C8 8001B7C8 00000000 */   nop   
-/* 01C3CC 8001B7CC 8DEFAEF0 */  lw    $t7, %lo(D_8011AEF0)($t7)
+/* 01C3CC 8001B7CC 8DEFAEF0 */  lw    $t7, %lo(playerCount)($t7)
 /* 01C3D0 8001B7D0 3C188012 */  lui   $t8, %hi(D_8011AEE8) # $t8, 0x8012
 /* 01C3D4 8001B7D4 00AF082A */  slt   $at, $a1, $t7
 /* 01C3D8 8001B7D8 14200003 */  bnez  $at, .L8001B7E8

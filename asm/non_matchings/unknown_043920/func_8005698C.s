@@ -61,7 +61,7 @@ glabel func_8005698C
 /* 057674 80056A74 E7B000A8 */  swc1  $f16, 0xa8($sp)
 /* 057678 80056A78 460A4780 */  add.s $f30, $f8, $f10
 /* 05767C 80056A7C 4600D687 */  neg.s $f26, $f26
-/* 057680 80056A80 0C006E9D */  jal   func_8001BA74
+/* 057680 80056A80 0C006E9D */  jal   getPlayerStructArray
 /* 057684 80056A84 4600F787 */   neg.s $f30, $f30
 /* 057688 80056A88 3C01800E */  lui   $at, %hi(D_800E68C4) # $at, 0x800e
 /* 05768C 80056A8C C42C68C4 */  lwc1  $f12, %lo(D_800E68C4)($at)

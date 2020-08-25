@@ -14,7 +14,7 @@ glabel func_800A1E48
 /* 0A2A78 800A1E78 E7B50018 */  swc1  $f21, 0x18($sp)
 /* 0A2A7C 800A1E7C E7B4001C */  swc1  $f20, 0x1c($sp)
 /* 0A2A80 800A1E80 AFA5008C */  sw    $a1, 0x8c($sp)
-/* 0A2A84 800A1E84 0C006E9D */  jal   func_8001BA74
+/* 0A2A84 800A1E84 0C006E9D */  jal   getPlayerStructArray
 /* 0A2A88 800A1E88 27A40078 */   addiu $a0, $sp, 0x78
 /* 0A2A8C 800A1E8C 12000004 */  beqz  $s0, .L800A1EA0
 /* 0A2A90 800A1E90 0040A825 */   move  $s5, $v0

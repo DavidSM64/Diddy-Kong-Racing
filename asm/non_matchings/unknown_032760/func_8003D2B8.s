@@ -59,7 +59,7 @@ glabel func_8003D2B8
 /* 03DF98 8003D398 00000000 */   nop   
 /* 03DF9C 8003D39C A04D01D8 */  sb    $t5, 0x1d8($v0)
 .L8003D3A0:
-/* 03DFA0 8003D3A0 0C003FEE */  jal   func_8000FFB8
+/* 03DFA0 8003D3A0 0C003FEE */  jal   particlePtrList_addObject
 /* 03DFA4 8003D3A4 AFA20020 */   sw    $v0, 0x20($sp)
 /* 03DFA8 8003D3A8 8FA20020 */  lw    $v0, 0x20($sp)
 /* 03DFAC 8003D3AC 2401FFFF */  li    $at, -1

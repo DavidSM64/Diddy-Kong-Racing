@@ -31,7 +31,7 @@ glabel func_8001E93C
 /* 01F5AC 8001E9AC 1219000A */  beq   $s0, $t9, .L8001E9D8
 /* 01F5B0 8001E9B0 00000000 */   nop   
 /* 01F5B4 8001E9B4 00602025 */  move  $a0, $v1
-/* 01F5B8 8001E9B8 0C003FEE */  jal   func_8000FFB8
+/* 01F5B8 8001E9B8 0C003FEE */  jal   particlePtrList_addObject
 /* 01F5BC 8001E9BC AFA2003C */   sw    $v0, 0x3c($sp)
 /* 01F5C0 8001E9C0 8FA2003C */  lw    $v0, 0x3c($sp)
 /* 01F5C4 8001E9C4 3C048012 */  lui   $a0, %hi(D_8011AE78) # $a0, 0x8012
@@ -56,15 +56,15 @@ glabel func_8001E93C
 .L8001EA08:
 /* 01F608 8001EA08 0C007931 */  jal   func_8001E4C4
 /* 01F60C 8001EA0C 00000000 */   nop   
-/* 01F610 8001EA10 3C068012 */  lui   $a2, %hi(D_8011AE5C) # $a2, 0x8012
-/* 01F614 8001EA14 8CC6AE5C */  lw    $a2, %lo(D_8011AE5C)($a2)
+/* 01F610 8001EA10 3C068012 */  lui   $a2, %hi(objCount) # $a2, 0x8012
+/* 01F614 8001EA14 8CC6AE5C */  lw    $a2, %lo(objCount)($a2)
 /* 01F618 8001EA18 3C0D8012 */  lui   $t5, %hi(D_8011AE74) # $t5, 0x8012
 /* 01F61C 8001EA1C 18C00023 */  blez  $a2, .L8001EAAC
 /* 01F620 8001EA20 25ADAE74 */   addiu $t5, %lo(D_8011AE74) # addiu $t5, $t5, -0x518c
-/* 01F624 8001EA24 3C058012 */  lui   $a1, %hi(D_8011AE58) # $a1, 0x8012
+/* 01F624 8001EA24 3C058012 */  lui   $a1, %hi(objPtrList) # $a1, 0x8012
 /* 01F628 8001EA28 3C0B8012 */  lui   $t3, %hi(D_8011ADD8) # $t3, 0x8012
 /* 01F62C 8001EA2C 3C098012 */  lui   $t1, %hi(D_8011AE7A) # $t1, 0x8012
-/* 01F630 8001EA30 8CA5AE58 */  lw    $a1, %lo(D_8011AE58)($a1)
+/* 01F630 8001EA30 8CA5AE58 */  lw    $a1, %lo(objPtrList)($a1)
 /* 01F634 8001EA34 2529AE7A */  addiu $t1, %lo(D_8011AE7A) # addiu $t1, $t1, -0x5186
 /* 01F638 8001EA38 256BADD8 */  addiu $t3, %lo(D_8011ADD8) # addiu $t3, $t3, -0x5228
 /* 01F63C 8001EA3C 00005025 */  move  $t2, $zero
@@ -111,8 +111,8 @@ glabel func_8001E93C
 /* 01F6D0 8001EAD0 0186082A */  slt   $at, $t4, $a2
 /* 01F6D4 8001EAD4 1020001E */  beqz  $at, .L8001EB50
 /* 01F6D8 8001EAD8 00009825 */   move  $s3, $zero
-/* 01F6DC 8001EADC 3C038012 */  lui   $v1, %hi(D_8011AE58) # $v1, 0x8012
-/* 01F6E0 8001EAE0 2463AE58 */  addiu $v1, %lo(D_8011AE58) # addiu $v1, $v1, -0x51a8
+/* 01F6DC 8001EADC 3C038012 */  lui   $v1, %hi(objPtrList) # $v1, 0x8012
+/* 01F6E0 8001EAE0 2463AE58 */  addiu $v1, %lo(objPtrList) # addiu $v1, $v1, -0x51a8
 /* 01F6E4 8001EAE4 000C5080 */  sll   $t2, $t4, 2
 /* 01F6E8 8001EAE8 24040031 */  li    $a0, 49
 .L8001EAEC:
@@ -133,10 +133,10 @@ glabel func_8001E93C
 /* 01F724 8001EB24 14990008 */  bne   $a0, $t9, .L8001EB48
 /* 01F728 8001EB28 0186082A */   slt   $at, $t4, $a2
 /* 01F72C 8001EB2C 8DAE0000 */  lw    $t6, ($t5)
-/* 01F730 8001EB30 3C068012 */  lui   $a2, %hi(D_8011AE5C) # $a2, 0x8012
+/* 01F730 8001EB30 3C068012 */  lui   $a2, %hi(objCount) # $a2, 0x8012
 /* 01F734 8001EB34 01CFC021 */  addu  $t8, $t6, $t7
 /* 01F738 8001EB38 AF020000 */  sw    $v0, ($t8)
-/* 01F73C 8001EB3C 8CC6AE5C */  lw    $a2, %lo(D_8011AE5C)($a2)
+/* 01F73C 8001EB3C 8CC6AE5C */  lw    $a2, %lo(objCount)($a2)
 /* 01F740 8001EB40 26730001 */  addiu $s3, $s3, 1
 /* 01F744 8001EB44 0186082A */  slt   $at, $t4, $a2
 .L8001EB48:

@@ -7,7 +7,7 @@ glabel func_80035F6C
 /* 036B80 80035F80 05C1002C */  bgez  $t6, .L80036034
 /* 036B84 80035F84 8FBF0014 */   lw    $ra, 0x14($sp)
 /* 036B88 80035F88 8C840078 */  lw    $a0, 0x78($a0)
-/* 036B8C 80035F8C 0C006EB2 */  jal   func_8001BAC8
+/* 036B8C 80035F8C 0C006EB2 */  jal   getPlayerStruct
 /* 036B90 80035F90 AFA60018 */   sw    $a2, 0x18($sp)
 /* 036B94 80035F94 8FA60018 */  lw    $a2, 0x18($sp)
 /* 036B98 80035F98 10400025 */  beqz  $v0, .L80036030

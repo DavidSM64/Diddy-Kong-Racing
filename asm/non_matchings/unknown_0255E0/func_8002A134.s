@@ -92,24 +92,3 @@ glabel func_8002A134
 /* 02AE90 8002A290 27BD0018 */  addiu $sp, $sp, 0x18
 /* 02AE94 8002A294 03E00008 */  jr    $ra
 /* 02AE98 8002A298 00601025 */   move  $v0, $v1
-
-/* 02AE9C 8002A29C 04800008 */  bltz  $a0, .L8002A2C0
-/* 02AEA0 8002A2A0 3C03800E */   lui   $v1, %hi(D_800DC918) # $v1, 0x800e
-/* 02AEA4 8002A2A4 8C63C918 */  lw    $v1, %lo(D_800DC918)($v1)
-/* 02AEA8 8002A2A8 0004C100 */  sll   $t8, $a0, 4
-/* 02AEAC 8002A2AC 846E001A */  lh    $t6, 0x1a($v1)
-/* 02AEB0 8002A2B0 0304C021 */  addu  $t8, $t8, $a0
-/* 02AEB4 8002A2B4 01C4082A */  slt   $at, $t6, $a0
-/* 02AEB8 8002A2B8 10200003 */  beqz  $at, .L8002A2C8
-/* 02AEBC 8002A2BC 00000000 */   nop   
-.L8002A2C0:
-/* 02AEC0 8002A2C0 03E00008 */  jr    $ra
-/* 02AEC4 8002A2C4 00001025 */   move  $v0, $zero
-
-.L8002A2C8:
-/* 02AEC8 8002A2C8 8C6F0004 */  lw    $t7, 4($v1)
-/* 02AECC 8002A2CC 0018C080 */  sll   $t8, $t8, 2
-/* 02AED0 8002A2D0 01F81021 */  addu  $v0, $t7, $t8
-/* 02AED4 8002A2D4 03E00008 */  jr    $ra
-/* 02AED8 8002A2D8 00000000 */   nop   
-

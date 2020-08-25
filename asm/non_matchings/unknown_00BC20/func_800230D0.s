@@ -8,14 +8,14 @@ glabel func_800230D0
 /* 023CE8 800230E8 00A08825 */  move  $s1, $a1
 /* 023CEC 800230EC 14400032 */  bnez  $v0, .L800231B8
 /* 023CF0 800230F0 AFBF001C */   sw    $ra, 0x1c($sp)
-/* 023CF4 800230F4 3C078012 */  lui   $a3, %hi(D_8011AE5C) # $a3, 0x8012
-/* 023CF8 800230F8 24E7AE5C */  addiu $a3, %lo(D_8011AE5C) # addiu $a3, $a3, -0x51a4
+/* 023CF4 800230F4 3C078012 */  lui   $a3, %hi(objCount) # $a3, 0x8012
+/* 023CF8 800230F8 24E7AE5C */  addiu $a3, %lo(objCount) # addiu $a3, $a3, -0x51a4
 /* 023CFC 800230FC 8CE40000 */  lw    $a0, ($a3)
 /* 023D00 80023100 00004025 */  move  $t0, $zero
 /* 023D04 80023104 1880002A */  blez  $a0, .L800231B0
 /* 023D08 80023108 00001025 */   move  $v0, $zero
-/* 023D0C 8002310C 3C058012 */  lui   $a1, %hi(D_8011AE58) # $a1, 0x8012
-/* 023D10 80023110 24A5AE58 */  addiu $a1, %lo(D_8011AE58) # addiu $a1, $a1, -0x51a8
+/* 023D0C 8002310C 3C058012 */  lui   $a1, %hi(objPtrList) # $a1, 0x8012
+/* 023D10 80023110 24A5AE58 */  addiu $a1, %lo(objPtrList) # addiu $a1, $a1, -0x51a8
 /* 023D14 80023114 2406000B */  li    $a2, 11
 .L80023118:
 /* 023D18 80023118 8CAE0000 */  lw    $t6, ($a1)

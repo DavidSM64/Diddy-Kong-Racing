@@ -31,7 +31,7 @@ glabel func_8003DE74
 /* 03EAE8 8003DEE8 13200004 */  beqz  $t9, .L8003DEFC
 /* 03EAEC 8003DEEC 8FBF0014 */   lw    $ra, 0x14($sp)
 .L8003DEF0:
-/* 03EAF0 8003DEF0 0C003FEE */  jal   func_8000FFB8
+/* 03EAF0 8003DEF0 0C003FEE */  jal   particlePtrList_addObject
 /* 03EAF4 8003DEF4 00000000 */   nop   
 /* 03EAF8 8003DEF8 8FBF0014 */  lw    $ra, 0x14($sp)
 .L8003DEFC:

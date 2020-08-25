@@ -159,7 +159,7 @@ glabel func_8005A6F0
 /* 05B53C 8005A93C C422694C */  lwc1  $f2, %lo(D_800E694C)($at)
 /* 05B540 8005A940 1700007C */  bnez  $t8, .L8005AB34
 /* 05B544 8005A944 27A40090 */   addiu $a0, $sp, 0x90
-/* 05B548 8005A948 0C006E9D */  jal   func_8001BA74
+/* 05B548 8005A948 0C006E9D */  jal   getPlayerStructArray
 /* 05B54C 8005A94C E7A20078 */   swc1  $f2, 0x78($sp)
 /* 05B550 8005A950 8FAF0090 */  lw    $t7, 0x90($sp)
 /* 05B554 8005A954 C7A20078 */  lwc1  $f2, 0x78($sp)

@@ -37,11 +37,11 @@ glabel func_8006CCF0
 /* 06D974 8006CD74 816BD374 */  lb    $t3, %lo(D_800DD374)($t3)
 /* 06D978 8006CD78 8FAC004C */  lw    $t4, 0x4c($sp)
 /* 06D97C 8006CD7C 11600003 */  beqz  $t3, .L8006CD8C
-/* 06D980 8006CD80 3C0E8012 */   lui   $t6, %hi(D_80123515) # $t6, 0x8012
+/* 06D980 8006CD80 3C0E8012 */   lui   $t6, %hi(gIsPaused) # $t6, 0x8012
 /* 06D984 8006CD84 358D1000 */  ori   $t5, $t4, 0x1000
 /* 06D988 8006CD88 AFAD004C */  sw    $t5, 0x4c($sp)
 .L8006CD8C:
-/* 06D98C 8006CD8C 81CE3515 */  lb    $t6, %lo(D_80123515)($t6)
+/* 06D98C 8006CD8C 81CE3515 */  lb    $t6, %lo(gIsPaused)($t6)
 /* 06D990 8006CD90 8FA40050 */  lw    $a0, 0x50($sp)
 /* 06D994 8006CD94 15C00032 */  bnez  $t6, .L8006CE60
 /* 06D998 8006CD98 00000000 */   nop   
@@ -84,10 +84,10 @@ glabel func_8006CCF0
 /* 06DA28 8006CE28 808C0000 */  lb    $t4, ($a0)
 /* 06DA2C 8006CE2C 240D0001 */  li    $t5, 1
 /* 06DA30 8006CE30 15800004 */  bnez  $t4, .L8006CE44
-/* 06DA34 8006CE34 3C018012 */   lui   $at, %hi(D_80123515) # $at, 0x8012
+/* 06DA34 8006CE34 3C018012 */   lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06DA38 8006CE38 AFA0004C */  sw    $zero, 0x4c($sp)
 /* 06DA3C 8006CE3C 0C024E90 */  jal   func_80093A40
-/* 06DA40 8006CE40 A02D3515 */   sb    $t5, %lo(D_80123515)($at)
+/* 06DA40 8006CE40 A02D3515 */   sb    $t5, %lo(gIsPaused)($at)
 .L8006CE44:
 /* 06DA44 8006CE44 3C04800E */  lui   $a0, %hi(D_800DD398) # $a0, 0x800e
 /* 06DA48 8006CE48 2484D398 */  addiu $a0, %lo(D_800DD398) # addiu $a0, $a0, -0x2c68
@@ -107,7 +107,7 @@ glabel func_8006CCF0
 /* 06DA7C 8006CE7C 2484D398 */  addiu $a0, %lo(D_800DD398) # addiu $a0, $a0, -0x2c68
 /* 06DA80 8006CE80 8FAE0050 */  lw    $t6, 0x50($sp)
 .L8006CE84:
-/* 06DA84 8006CE84 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
+/* 06DA84 8006CE84 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06DA88 8006CE88 006E7823 */  subu  $t7, $v1, $t6
 /* 06DA8C 8006CE8C A08F0000 */  sb    $t7, ($a0)
 /* 06DA90 8006CE90 80980000 */  lb    $t8, ($a0)
@@ -118,9 +118,9 @@ glabel func_8006CCF0
 .L8006CEA4:
 /* 06DAA4 8006CEA4 10400002 */  beqz  $v0, .L8006CEB0
 /* 06DAA8 8006CEA8 00000000 */   nop   
-/* 06DAAC 8006CEAC A0203515 */  sb    $zero, %lo(D_80123515)($at)
+/* 06DAAC 8006CEAC A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 .L8006CEB0:
-/* 06DAB0 8006CEB0 0C004013 */  jal   func_8001004C
+/* 06DAB0 8006CEB0 0C004013 */  jal   particlePtrList_flush
 /* 06DAB4 8006CEB4 00000000 */   nop   
 /* 06DAB8 8006CEB8 0C006FC8 */  jal   func_8001BF20
 /* 06DABC 8006CEBC 00000000 */   nop   
@@ -226,19 +226,19 @@ glabel func_8006CCF0
 /* 06DC40 8006D040 24010002 */  li    $at, 2
 /* 06DC44 8006D044 14410003 */  bne   $v0, $at, .L8006D054
 /* 06DC48 8006D048 240B0001 */   li    $t3, 1
-/* 06DC4C 8006D04C 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
-/* 06DC50 8006D050 A02B3515 */  sb    $t3, %lo(D_80123515)($at)
+/* 06DC4C 8006D04C 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
+/* 06DC50 8006D050 A02B3515 */  sb    $t3, %lo(gIsPaused)($at)
 .L8006D054:
 /* 06DC54 8006D054 0C030D00 */  jal   func_800C3400
 /* 06DC58 8006D058 00000000 */   nop   
 /* 06DC5C 8006D05C 24010002 */  li    $at, 2
 /* 06DC60 8006D060 10410003 */  beq   $v0, $at, .L8006D070
-/* 06DC64 8006D064 3C018012 */   lui   $at, %hi(D_80123515) # $at, 0x8012
+/* 06DC64 8006D064 3C018012 */   lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06DC68 8006D068 0C025179 */  jal   func_800945E4
-/* 06DC6C 8006D06C A0203515 */   sb    $zero, %lo(D_80123515)($at)
+/* 06DC6C 8006D06C A0203515 */   sb    $zero, %lo(gIsPaused)($at)
 .L8006D070:
-/* 06DC70 8006D070 3C0C8012 */  lui   $t4, %hi(D_80123515) # $t4, 0x8012
-/* 06DC74 8006D074 818C3515 */  lb    $t4, %lo(D_80123515)($t4)
+/* 06DC70 8006D070 3C0C8012 */  lui   $t4, %hi(gIsPaused) # $t4, 0x8012
+/* 06DC74 8006D074 818C3515 */  lb    $t4, %lo(gIsPaused)($t4)
 /* 06DC78 8006D078 8FA50050 */  lw    $a1, 0x50($sp)
 /* 06DC7C 8006D07C 11800050 */  beqz  $t4, .L8006D1C0
 /* 06DC80 8006D080 3C048012 */   lui   $a0, %hi(D_801211F8) # $a0, 0x8012
@@ -255,9 +255,9 @@ glabel func_8006CCF0
 /* 06DCAC 8006D0AC 00000000 */  nop   
 /* 06DCB0 8006D0B0 01A00008 */  jr    $t5
 /* 06DCB4 8006D0B4 00000000 */   nop   
-/* 06DCB8 8006D0B8 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
+/* 06DCB8 8006D0B8 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06DCBC 8006D0BC 10000040 */  b     .L8006D1C0
-/* 06DCC0 8006D0C0 A0203515 */   sb    $zero, %lo(D_80123515)($at)
+/* 06DCC0 8006D0C0 A0203515 */   sb    $zero, %lo(gIsPaused)($at)
 /* 06DCC4 8006D0C4 0C000414 */  jal   func_80001050
 /* 06DCC8 8006D0C8 00000000 */   nop   
 /* 06DCCC 8006D0CC 0C030C53 */  jal   func_800C314C
@@ -306,14 +306,14 @@ glabel func_8006CCF0
 /* 06DD70 8006D170 360A0020 */  ori   $t2, $s0, 0x20
 /* 06DD74 8006D174 10000012 */  b     .L8006D1C0
 /* 06DD78 8006D178 01408025 */   move  $s0, $t2
-/* 06DD7C 8006D17C 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
+/* 06DD7C 8006D17C 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06DD80 8006D180 1000000F */  b     .L8006D1C0
-/* 06DD84 8006D184 A0203515 */   sb    $zero, %lo(D_80123515)($at)
+/* 06DD84 8006D184 A0203515 */   sb    $zero, %lo(gIsPaused)($at)
 /* 06DD88 8006D188 0C008B86 */  jal   func_80022E18
 /* 06DD8C 8006D18C 24040001 */   li    $a0, 1
-/* 06DD90 8006D190 3C018012 */  lui   $at, %hi(D_80123515) # $at, 0x8012
+/* 06DD90 8006D190 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06DD94 8006D194 1000000A */  b     .L8006D1C0
-/* 06DD98 8006D198 A0203515 */   sb    $zero, %lo(D_80123515)($at)
+/* 06DD98 8006D198 A0203515 */   sb    $zero, %lo(gIsPaused)($at)
 /* 06DD9C 8006D19C 3C01800E */  lui   $at, %hi(D_800DD390) # $at, 0x800e
 /* 06DDA0 8006D1A0 0C000414 */  jal   func_80001050
 /* 06DDA4 8006D1A4 A020D390 */   sb    $zero, %lo(D_800DD390)($at)
@@ -589,8 +589,8 @@ glabel func_8006CCF0
 /* 06E180 8006D580 00000000 */  nop   
 /* 06E184 8006D584 11C000AC */  beqz  $t6, .L8006D838
 .L8006D588:
-/* 06E188 8006D588 3C018012 */   lui   $at, %hi(D_80123515) # $at, 0x8012
-/* 06E18C 8006D58C A0203515 */  sb    $zero, %lo(D_80123515)($at)
+/* 06E188 8006D588 3C018012 */   lui   $at, %hi(gIsPaused) # $at, 0x8012
+/* 06E18C 8006D58C A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 /* 06E190 8006D590 3C01800E */  lui   $at, %hi(D_800DD394) # $at, 0x800e
 /* 06E194 8006D594 A420D394 */  sh    $zero, %lo(D_800DD394)($at)
 /* 06E198 8006D598 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012

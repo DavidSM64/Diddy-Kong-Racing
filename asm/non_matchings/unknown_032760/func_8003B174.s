@@ -24,7 +24,7 @@ glabel func_8003B174
 /* 03BDCC 8003B1CC 10200056 */  beqz  $at, .L8003B328
 /* 03BDD0 8003B1D0 27A40084 */   addiu $a0, $sp, 0x84
 /* 03BDD4 8003B1D4 44822000 */  mtc1  $v0, $f4
-/* 03BDD8 8003B1D8 0C006E9D */  jal   func_8001BA74
+/* 03BDD8 8003B1D8 0C006E9D */  jal   getPlayerStructArray
 /* 03BDDC 8003B1DC 468025A0 */   cvt.s.w $f22, $f4
 /* 03BDE0 8003B1E0 8FB80084 */  lw    $t8, 0x84($sp)
 /* 03BDE4 8003B1E4 00009025 */  move  $s2, $zero

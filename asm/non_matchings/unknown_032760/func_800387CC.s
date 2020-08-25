@@ -7,7 +7,7 @@ glabel func_800387CC
 /* 0393E0 800387E0 10400006 */  beqz  $v0, .L800387FC
 /* 0393E4 800387E4 00001825 */   move  $v1, $zero
 /* 0393E8 800387E8 2444FFFF */  addiu $a0, $v0, -1
-/* 0393EC 800387EC 0C006EB2 */  jal   func_8001BAC8
+/* 0393EC 800387EC 0C006EB2 */  jal   getPlayerStruct
 /* 0393F0 800387F0 AFA70020 */   sw    $a3, 0x20($sp)
 /* 0393F4 800387F4 8FA70020 */  lw    $a3, 0x20($sp)
 /* 0393F8 800387F8 00401825 */  move  $v1, $v0

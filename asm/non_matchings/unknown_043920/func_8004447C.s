@@ -15,7 +15,7 @@ glabel func_8004447C
 /* 0450B0 800444B0 00A08025 */  move  $s0, $a1
 /* 0450B4 800444B4 AFA60080 */  sw    $a2, 0x80($sp)
 /* 0450B8 800444B8 AC20D538 */  sw    $zero, %lo(D_8011D538)($at)
-/* 0450BC 800444BC 0C006E9D */  jal   func_8001BA74
+/* 0450BC 800444BC 0C006E9D */  jal   getPlayerStructArray
 /* 0450C0 800444C0 27A40058 */   addiu $a0, $sp, 0x58
 /* 0450C4 800444C4 8FAE0058 */  lw    $t6, 0x58($sp)
 /* 0450C8 800444C8 24010004 */  li    $at, 4
@@ -285,7 +285,7 @@ glabel func_8004447C
 /* 045498 80044898 A7A70048 */  sh    $a3, 0x48($sp)
 /* 04549C 8004489C A7A8004A */  sh    $t0, 0x4a($sp)
 /* 0454A0 800448A0 A7A90046 */  sh    $t1, 0x46($sp)
-/* 0454A4 800448A4 0C006EB2 */  jal   func_8001BAC8
+/* 0454A4 800448A4 0C006EB2 */  jal   getPlayerStruct
 /* 0454A8 800448A8 A7AA004C */   sh    $t2, 0x4c($sp)
 /* 0454AC 800448AC 87A90046 */  lh    $t1, 0x46($sp)
 /* 0454B0 800448B0 87A50052 */  lh    $a1, 0x52($sp)
@@ -345,7 +345,7 @@ glabel func_8004447C
 /* 045580 80044980 87A8004A */  lh    $t0, 0x4a($sp)
 /* 045584 80044984 1440000A */  bnez  $v0, .L800449B0
 /* 045588 80044988 00C02025 */   move  $a0, $a2
-/* 04558C 8004498C 0C006EB2 */  jal   func_8001BAC8
+/* 04558C 8004498C 0C006EB2 */  jal   getPlayerStruct
 /* 045590 80044990 A7A8004A */   sh    $t0, 0x4a($sp)
 /* 045594 80044994 8C430064 */  lw    $v1, 0x64($v0)
 /* 045598 80044998 87A8004A */  lh    $t0, 0x4a($sp)
@@ -636,7 +636,7 @@ glabel func_8004447C
 /* 0459B4 80044DB4 AFA20058 */   sw    $v0, 0x58($sp)
 .L80044DB8:
 /* 0459B8 80044DB8 820401CF */  lb    $a0, 0x1cf($s0)
-/* 0459BC 80044DBC 0C006EB2 */  jal   func_8001BAC8
+/* 0459BC 80044DBC 0C006EB2 */  jal   getPlayerStruct
 /* 0459C0 80044DC0 00000000 */   nop   
 /* 0459C4 80044DC4 8C430064 */  lw    $v1, 0x64($v0)
 /* 0459C8 80044DC8 2401FFFF */  li    $at, -1
@@ -776,7 +776,7 @@ glabel func_8004447C
 /* 045BA8 80044FA8 00A02025 */  move  $a0, $a1
 /* 045BAC 80044FAC 10AC0054 */  beq   $a1, $t4, .L80045100
 /* 045BB0 80044FB0 00000000 */   nop   
-/* 045BB4 80044FB4 0C006EB2 */  jal   func_8001BAC8
+/* 045BB4 80044FB4 0C006EB2 */  jal   getPlayerStruct
 /* 045BB8 80044FB8 A7A50052 */   sh    $a1, 0x52($sp)
 /* 045BBC 80044FBC 8C430064 */  lw    $v1, 0x64($v0)
 /* 045BC0 80044FC0 87A50052 */  lh    $a1, 0x52($sp)

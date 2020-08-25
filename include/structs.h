@@ -173,9 +173,19 @@ typedef struct LevelHeader {
   
   /* 0xB0 */ u8 padB0[0x3];
   /* 0xB3 */ u8 unkB3;
-  /* 0xB4 */ u8 padB4[0x6];
+  /* 0xB3 */ u8 unkB4;
+  /* 0xB3 */ u8 unkB5;
+  /* 0xB3 */ u8 unkB6;
+  /* 0xB3 */ u8 unkB7;
+  /* 0xB4 */ u8 padB8[0x2];
   /* 0xBA */ s16 unkBA;
-  /* 0xBE */ u8 padBE[0xA];
+  /* 0xBE */ u8 unkBE;
+  /* 0xBE */ u8 unkBF;
+  /* 0xBE */ u8 unkC0;
+  /* 0xC1 */ u8 unkC1;
+  /* 0xC2 */ u8 unkC2;
+  /* 0xC3 */ u8 unkC3;
+  /* 0xC4 */ u8 padC4[0x4];
 } LevelHeader;
 
 /* Size: 0x50 bytes */
@@ -205,14 +215,21 @@ typedef struct {
 typedef struct Player_3C {
     u8 pad0[0x8];
     s8 unk8;
+    u8 pad9[0x4];
+    u8 unkD;
 } Player_3C;
 
 typedef struct Player_40 {
     u8 pad0[0xC];
     f32 unkC;
-    u8 pad10[0x44];
+    u8 pad10[0x43];
+    s8 unk53;
     s8 unk54;
-    s8 unk55;
+    s8 unk55; //size of array pointed by Player->unk68
+    u8 pad56[0x02];
+    u8 pad58[0x18];
+    u8 unk70;
+    u8 unk71;
 } Player_40;
 
 typedef struct Player_4C {
@@ -239,29 +256,46 @@ typedef struct Player_64 {
     s8 unkF;
     u8 unk10;
     u8 unk11;
-    u8 pad12[0x16];
+    u8 pad12[0x0E];
+    u32 unk20;
+    u32 unk24;
     s16 unk28;
     s16 unk2A;
     s32 unk2C;
     s32 unk30;
     s16 unk34;
     s8 unk36;
-    u8 pad37[0x41];
+    u8 pad37[0x39];
+    u8 unk70;
+    u8 pad71[0x03];
+    f32 unk74;
     f32 unk78;
     f32 unk7C;
     f32 unk80;
-    u8 pad84[0xDC];
+    u8 pad84[0x4C];
+    f32 unkD0;
+    u8 padD0[0x24];
+    u32 unkF8;
+    u8 unkFC;
+    u8 padFD[0x63];
     s16 unk160;
     s16 unk162;
     s16 unk164;
-    u8 pad166[0x2A];
+    s16 unk166;
+    u8 pad166[0x28];
     u16 unk190;
     u8 unk192;
     u8 unk193;
     u8 pad194[0x26];
     u16 unk1BA;
+    u8 pad1BC[0x1B];
+    s8 unk1D7;
 } Player_64;
   
+typedef struct Player_68{
+    u8 pad00[0x20];
+    s8 unk20;
+ } Player_68; 
 /* Size: 0x0630 bytes */
 typedef struct Player {
   /* 0x0000 */ s16 y_rotation;
@@ -294,7 +328,7 @@ typedef struct Player {
   /* 0x0040 */ Player_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ s16 unk48;
-  /* 0x004A */ u16 unk4A;
+  /* 0x004A */ s16 unk4A;
   /* 0x004C */ Player_4C *unk4C; //player + 0x318
   /* 0x0050 */ void *unk50; //player + 0x2F4
   /* 0x0054 */ void *unk54; //player + 0x2C0
@@ -303,7 +337,7 @@ typedef struct Player {
 
   /* 0x0060 */ void *unk60; //player + 0x340
   /* 0x0064 */ Player_64 *unk64; //player + 0x98
-  /* 0x0068 */ void *unk68; //player + 0x80
+  /* 0x0068 */ Player_68 **unk68; //player + 0x80
   /* 0x006C */ void *unk6C; //player + 0x370
   /* 0x0070 */ u32 unk70;
 
@@ -364,7 +398,7 @@ typedef struct Player {
   /* 0x0120 */ u32 unk120;
   /* 0x0124 */ f32 stretch_height;
   /* 0x0128 */ f32 stretch_height_cap;
-  /* 0x012C */ f32 unk12C;
+  /* 0x012C */ f32 camera_zoom;
   /* 0x0130 */ u32 unk130;
   /* 0x0134 */ f32 pitch;
   /* 0x0138 */ u32 unk138;
