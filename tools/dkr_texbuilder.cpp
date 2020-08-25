@@ -24,7 +24,7 @@ const std::string PNG_EXTENSION = ".png";
 /*********************************************/
 
 void show_help() {
-    std::cout << "Usage: ./dkr_texbuilder <input_png_file> <input_header_file> <output_compressed_file>" << std::endl;
+    std::cout << "Usage: ./dkr_texbuilder <input_png_file> <output_compressed_file>" << std::endl;
 }
 
 bool starts_with(std::string filename, std::string pattern) {
@@ -319,14 +319,14 @@ std::vector<uint8_t> get_texture_binary(std::string inputFilepath, std::string i
 /*********************************************/
 
 int main(int argc, char* argv[]) {
-    if(argc != 4) {
+    if(argc != 3) {
         show_help();
         return 1;
     }
     
     std::string inputFilepath = argv[1];
-    std::string inputHeaderFilepath = argv[2];
-    std::string outputFilename = argv[3];
+    std::string inputHeaderFilepath = inputFilepath + ".header";
+    std::string outputFilename = argv[2];
     
     bool isCompressed;
     std::vector<uint8_t> uncompressed = get_texture_binary(inputFilepath, inputHeaderFilepath, isCompressed);

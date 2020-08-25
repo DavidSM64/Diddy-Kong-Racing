@@ -1,13 +1,14 @@
 #include "extract_compressed.h"
 
-ExtractCompressed::ExtractCompressed(ConfigRange& range, ROM& rom, json::JSON& assetsJson, std::string outDirectory) : Extract(range, rom, assetsJson, outDirectory) {
-    std::string name = range.get_property(1);
-    std::string outFolder = range.get_property(2);
-    std::string subfolder = range.get_subfolder();
-    int startOffset = range.get_start();
-    int endOffset = startOffset + range.get_size();
+ExtractCompressed::ExtractCompressed(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath) 
+: Extract(data, rom, outFilepath) {
     
-    std::vector<uint8_t> data = rom.get_bytes_from_range(startOffset, range.get_size());
+    if(data.size() == 0) {
+        std::cout << "Warning: \"" << outFilepath << "\" is empty." << std::endl;
+        write_binary_file(data, outFilepath);
+        print_extracted(outFilepath);
+        return;
+    }
     
     // Needed padding to prevent errors with decompressing.
     if(data[data.size() - 1] != 0) {
@@ -20,28 +21,8 @@ ExtractCompressed::ExtractCompressed(ConfigRange& range, ROM& rom, json::JSON& a
     DKRCompression compression;
     data = compression.decompressBuffer(data);
     
-    std::string outputDirectory = outDirectory + "/assets/" + subfolder + "/" + outFolder;
-    if(!fs::is_directory(outputDirectory)) {
-        fs::create_directories(outputDirectory);
-    }
-    
-    std::stringstream filename;
-    filename << name << "." << std::setfill('0') << std::setw(6) << std::hex << std::uppercase << startOffset << std::dec << ".cbin";
-    
-    std::stringstream filepath;
-    filepath << outputDirectory << "/" << filename.str();
-    
-    write_binary_file(data, filepath.str());
-    
-    print_extracted(startOffset, endOffset, outFolder, filename.str());
-    
-    std::string category = range.get_category();
-    if(category != "none") {
-        json::JSON obj = json::Object();
-        obj["filename"] = outFolder + "/" + filename.str();
-        obj["category"] = category;
-        assetsJson["assets"].append(obj);
-    }
+    write_binary_file(data, outFilepath);
+    print_extracted(outFilepath);
 }
 
 ExtractCompressed::~ExtractCompressed(){

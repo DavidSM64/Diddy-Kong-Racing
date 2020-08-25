@@ -4,6 +4,6 @@
 
 class ExtractBinary : Extract {
 public:
-    ExtractBinary(ConfigRange& range, ROM& rom, json::JSON& assetsJson, std::string outDirectory);
+    ExtractBinary(std::vector<uint8_t>& data, ROM& rom, std::string outFilepath);
     ~ExtractBinary();
 };

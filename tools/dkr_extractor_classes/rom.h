@@ -17,6 +17,7 @@ public:
     
     std::vector<uint8_t> get_bytes_from_range(int start, int numBytes);
     uint8_t get_byte(int romOffset);
+    uint32_t get_uint(int romOffset);
     
     std::string get_md5();
     int get_size();

@@ -44,16 +44,19 @@ int main(int argc, char *argv[])
     
     if(compression.readBinaryFile(inputBinary, inputFilename))
     {
-        if (option == "-c") 
-        {
-            outputBinary = compression.compressBuffer(inputBinary);
-        } 
-        else if (option == "-d") 
-        {
-            outputBinary = compression.decompressBuffer(inputBinary);
+        if(inputBinary.size() == 0) {
+            compression.writeBinaryFile(inputBinary, outputFilename);
+        } else {
+            if (option == "-c") 
+            {
+                outputBinary = compression.compressBuffer(inputBinary);
+            } 
+            else if (option == "-d") 
+            {
+                outputBinary = compression.decompressBuffer(inputBinary);
+            }
+            compression.writeBinaryFile(outputBinary, outputFilename);
         }
-        
-        compression.writeBinaryFile(outputBinary, outputFilename);
     }
     else 
     {
