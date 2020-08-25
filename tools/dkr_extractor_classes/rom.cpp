@@ -24,6 +24,10 @@ uint8_t ROM::get_byte(int romOffset){
     return bytes[romOffset];
 }
 
+uint32_t ROM::get_uint(int romOffset){
+    return (bytes[romOffset] << 24) | (bytes[romOffset + 1] << 16) | (bytes[romOffset + 2] << 8) | bytes[romOffset + 3];
+}
+
 std::string ROM::get_md5(){
     return md5;
 }

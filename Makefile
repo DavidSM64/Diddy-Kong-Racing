@@ -4,6 +4,11 @@
 
 SHELL := /bin/bash
 
+########################### Version ##########################
+
+# Currently, only US 1.0 is supported.
+VERSION := us_1.0
+
 ############################ Setup ###########################
 
 # Don't do setup checks if cleaning.
@@ -68,7 +73,7 @@ ifeq ($(wildcard ./ucode/.*),)
 endif
 
 ifeq ($(NEED_TO_EXTRACT),yes)
-  DUMMY != ./extract.sh >&2 || echo FAIL
+  DUMMY != ./extract.sh $(VERSION) >&2 || echo FAIL
   ifeq ($(DUMMY),FAIL)
     $(error Failed to extract assets)
   endif
@@ -76,7 +81,7 @@ endif
 
 ##### Generate linker file #####
 
-DUMMY != ./generate_ld.sh >&2 || echo FAIL
+DUMMY != ./generate_ld.sh $(VERSION) >&2 || echo FAIL
 ifeq ($(DUMMY),FAIL)
   $(error Failed to generate the linker file)
 endif
@@ -91,7 +96,7 @@ endif
 
 # BUILD_DIR is location where all build artifacts are placed
 # TODO: Support other versions of DKR
-BUILD_DIR = build/us_1.0
+BUILD_DIR = build/$(VERSION)
 
 ##################### Compiler Options #######################
 
@@ -135,12 +140,10 @@ FixPath = $(subst /,,$1)
 N64CRC = $(TOOLS_DIR)/n64crc
 TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
-CHEAT_ENCRYPTOR = $(TOOLS_DIR)/dkr_cheats_encryptor
 
 LIB_DIRS := lib
 ASM_DIRS := asm asm/boot asm/assets data lib/asm
 SRC_DIRS := src src/mips1 lib/src
-ASSETS_DIRS := animations audio billboards bin cheats fonts levels lut objects particles text textures textures/2d textures/3d tt_ghosts ucode 
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c lib/src/*.c)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
@@ -157,93 +160,107 @@ O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
 
 # TODO: Clean this up if possible
 
-ASSETS_DIR = assets/us_1.0
-UCODE_DIR = ucode/us_1.0
+# All the asset subfolders to create in the build folder.
+ASSETS_DIRS := audio bin fonts ids levels levels/headers levels/models levels/names levels/objectMaps misc objects objects/animations objects/headers objects/models particles particles/behaviors particles/particles sprites text text/game text/menu textures textures/2d textures/3d tt_ghosts unknown_0 ucode
 
-ASSETS_OBJCOPY = $(CROSS)objcopy --input-target=binary --output-target=binary
+ASSETS_DIR = assets/$(VERSION)
+UCODE_DIR = ucode/$(VERSION)
 
-ANIMATIONS_IN_DIR = $(ASSETS_DIR)/animations
-ANIMATIONS_OUT_DIR = $(BUILD_DIR)/animations
-ANIMATIONS = $(wildcard $(ANIMATIONS_IN_DIR)/*.bin $(ANIMATIONS_IN_DIR)/*.cbin)
-ANIMATIONS_BUILT = $(patsubst $(ANIMATIONS_IN_DIR)/%.bin,$(ANIMATIONS_OUT_DIR)/%.bin,$(ANIMATIONS))
-ANIMATIONS_BUILT += $(patsubst $(ANIMATIONS_IN_DIR)/%.cbin,$(ANIMATIONS_OUT_DIR)/%.cbin,$(ANIMATIONS))
+ASSETS_COPY = cp
 
 AUDIO_IN_DIR = $(ASSETS_DIR)/audio
 AUDIO_OUT_DIR = $(BUILD_DIR)/audio
-AUDIO = $(wildcard $(AUDIO_IN_DIR)/*.bin)
-AUDIO_BUILT := $(patsubst $(AUDIO_IN_DIR)/%.bin,$(AUDIO_OUT_DIR)/%.bin,$(AUDIO))
+ALL_ASSETS_BUILT += $(patsubst $(AUDIO_IN_DIR)/%.bin,$(AUDIO_OUT_DIR)/%.bin,$(wildcard $(AUDIO_IN_DIR)/*.bin))
 
-BINS_IN_DIR = $(ASSETS_DIR)/bin
-BINS_OUT_DIR = $(BUILD_DIR)/bin
-BINS = $(wildcard $(BINS_IN_DIR)/*.bin)
-BINS_BUILT := $(patsubst $(BINS_IN_DIR)/%.bin,$(BINS_OUT_DIR)/%.bin,$(BINS))
-
-BILLBOARDS_IN_DIR = $(ASSETS_DIR)/billboards
-BILLBOARDS_OUT_DIR = $(BUILD_DIR)/billboards
-BILLBOARDS = $(wildcard $(BILLBOARDS_IN_DIR)/*.bin)
-BILLBOARDS_BUILT := $(patsubst $(BILLBOARDS_IN_DIR)/%.bin,$(BILLBOARDS_OUT_DIR)/%.bin,$(BILLBOARDS))
-
-CHEATS_IN_DIR = $(ASSETS_DIR)/cheats
-CHEATS_OUT_DIR = $(BUILD_DIR)/cheats
-CHEATS = $(wildcard $(CHEATS_IN_DIR)/*.cheats)
-CHEATS_BUILT := $(patsubst %.cheats,%.bin,$(patsubst $(CHEATS_IN_DIR)/%.cheats,$(CHEATS_OUT_DIR)/%.cheats,$(CHEATS)))
+BIN_IN_DIR = $(ASSETS_DIR)/bin
+BIN_OUT_DIR = $(BUILD_DIR)/bin
+ALL_ASSETS_BUILT += $(patsubst $(BIN_IN_DIR)/%.bin,$(BIN_OUT_DIR)/%.bin,$(wildcard $(BIN_IN_DIR)/*.bin))
 
 FONTS_IN_DIR = $(ASSETS_DIR)/fonts
 FONTS_OUT_DIR = $(BUILD_DIR)/fonts
-FONTS = $(wildcard $(FONTS_IN_DIR)/*.bin)
-FONTS_BUILT := $(patsubst $(FONTS_IN_DIR)/%.bin,$(FONTS_OUT_DIR)/%.bin,$(FONTS))
+ALL_ASSETS_BUILT += $(patsubst $(FONTS_IN_DIR)/%.bin,$(FONTS_OUT_DIR)/%.bin,$(wildcard $(FONTS_IN_DIR)/*.bin))
+
+IDS_IN_DIR = $(ASSETS_DIR)/ids
+IDS_OUT_DIR = $(BUILD_DIR)/ids
+ALL_ASSETS_BUILT += $(patsubst $(IDS_IN_DIR)/%.bin,$(IDS_OUT_DIR)/%.bin,$(wildcard $(IDS_IN_DIR)/*.bin))
 
 LEVELS_IN_DIR = $(ASSETS_DIR)/levels
 LEVELS_OUT_DIR = $(BUILD_DIR)/levels
-LEVELS = $(wildcard $(LEVELS_IN_DIR)/*.bin $(LEVELS_IN_DIR)/*.cbin)
-LEVELS_BUILT = $(patsubst $(LEVELS_IN_DIR)/%.bin,$(LEVELS_OUT_DIR)/%.bin,$(LEVELS))
-LEVELS_BUILT += $(patsubst $(LEVELS_IN_DIR)/%.cbin,$(LEVELS_OUT_DIR)/%.cbin,$(LEVELS))
+LEVEL_HEADERS_IN_DIR = $(LEVELS_IN_DIR)/headers
+LEVEL_HEADERS_OUT_DIR = $(LEVELS_OUT_DIR)/headers
+LEVEL_MODELS_IN_DIR = $(LEVELS_IN_DIR)/models
+LEVEL_MODELS_OUT_DIR = $(LEVELS_OUT_DIR)/models
+LEVEL_NAMES_IN_DIR = $(LEVELS_IN_DIR)/names
+LEVEL_NAMES_OUT_DIR = $(LEVELS_OUT_DIR)/names
+LEVEL_OBJMAPS_IN_DIR = $(LEVELS_IN_DIR)/objectMaps
+LEVEL_OBJMAPS_OUT_DIR = $(LEVELS_OUT_DIR)/objectMaps
+ALL_ASSETS_BUILT += $(patsubst $(LEVEL_HEADERS_IN_DIR)/%.bin,$(LEVEL_HEADERS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_HEADERS_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(LEVEL_MODELS_IN_DIR)/%.cbin,$(LEVEL_MODELS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_MODELS_IN_DIR)/*.cbin))
+ALL_ASSETS_BUILT += $(patsubst $(LEVEL_NAMES_IN_DIR)/%.bin,$(LEVEL_NAMES_OUT_DIR)/%.bin,$(wildcard $(LEVEL_NAMES_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(LEVEL_OBJMAPS_IN_DIR)/%.cbin,$(LEVEL_OBJMAPS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_OBJMAPS_IN_DIR)/*.cbin))
 
-LUT_IN_DIR = $(ASSETS_DIR)/lut
-LUT_OUT_DIR = $(BUILD_DIR)/lut
-LUT = $(wildcard $(LUT_IN_DIR)/*.bin)
-LUT_BUILT := $(patsubst $(LUT_IN_DIR)/%.bin,$(LUT_OUT_DIR)/%.bin,$(LUT))
+MISC_IN_DIR = $(ASSETS_DIR)/misc
+MISC_OUT_DIR = $(BUILD_DIR)/misc
+ALL_ASSETS_BUILT += $(patsubst $(MISC_IN_DIR)/%.bin,$(MISC_OUT_DIR)/%.bin,$(wildcard $(MISC_IN_DIR)/*.bin))
 
 OBJECTS_IN_DIR = $(ASSETS_DIR)/objects
 OBJECTS_OUT_DIR = $(BUILD_DIR)/objects
-OBJECTS = $(wildcard $(OBJECTS_IN_DIR)/*.bin $(OBJECTS_IN_DIR)/*.cbin)
-OBJECTS_BUILT = $(patsubst $(OBJECTS_IN_DIR)/%.bin,$(OBJECTS_OUT_DIR)/%.bin,$(OBJECTS))
-OBJECTS_BUILT += $(patsubst $(OBJECTS_IN_DIR)/%.cbin,$(OBJECTS_OUT_DIR)/%.cbin,$(OBJECTS))
+OBJECT_ANIMS_IN_DIR = $(OBJECTS_IN_DIR)/animations
+OBJECT_ANIMS_OUT_DIR = $(OBJECTS_OUT_DIR)/animations
+OBJECT_HEADERS_IN_DIR = $(OBJECTS_IN_DIR)/headers
+OBJECT_HEADERS_OUT_DIR = $(OBJECTS_OUT_DIR)/headers
+OBJECT_MODELS_IN_DIR = $(OBJECTS_IN_DIR)/models
+OBJECT_MODELS_OUT_DIR = $(OBJECTS_OUT_DIR)/models
+ALL_ASSETS_BUILT += $(patsubst $(OBJECTS_IN_DIR)/%.bin,$(OBJECTS_OUT_DIR)/%.bin,$(wildcard $(OBJECTS_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(OBJECT_ANIMS_IN_DIR)/%.cbin,$(OBJECT_ANIMS_OUT_DIR)/%.bin,$(wildcard $(OBJECT_ANIMS_IN_DIR)/*.cbin))
+ALL_ASSETS_BUILT += $(patsubst $(OBJECT_HEADERS_IN_DIR)/%.bin,$(OBJECT_HEADERS_OUT_DIR)/%.bin,$(wildcard $(OBJECT_HEADERS_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(OBJECT_MODELS_IN_DIR)/%.cbin,$(OBJECT_MODELS_OUT_DIR)/%.bin,$(wildcard $(OBJECT_MODELS_IN_DIR)/*.cbin))
 
 PARTICLES_IN_DIR = $(ASSETS_DIR)/particles
 PARTICLES_OUT_DIR = $(BUILD_DIR)/particles
-PARTICLES = $(wildcard $(PARTICLES_IN_DIR)/*.bin)
-PARTICLES_BUILT := $(patsubst $(PARTICLES_IN_DIR)/%.bin,$(PARTICLES_OUT_DIR)/%.bin,$(PARTICLES))
+PART_BEHAVIORS_IN_DIR = $(PARTICLES_IN_DIR)/behaviors
+PART_BEHAVIORS_OUT_DIR = $(PARTICLES_OUT_DIR)/behaviors
+PART_PARTICLES_IN_DIR = $(PARTICLES_IN_DIR)/particles
+PART_PARTICLES_OUT_DIR = $(PARTICLES_OUT_DIR)/particles
+ALL_ASSETS_BUILT += $(patsubst $(PART_BEHAVIORS_IN_DIR)/%.bin,$(PART_BEHAVIORS_OUT_DIR)/%.bin,$(wildcard $(PART_BEHAVIORS_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(PART_PARTICLES_IN_DIR)/%.bin,$(PART_PARTICLES_OUT_DIR)/%.bin,$(wildcard $(PART_PARTICLES_IN_DIR)/*.bin))
+
+SPRITES_IN_DIR = $(ASSETS_DIR)/sprites
+SPRITES_OUT_DIR = $(BUILD_DIR)/sprites
+ALL_ASSETS_BUILT += $(patsubst $(SPRITES_IN_DIR)/%.bin,$(SPRITES_OUT_DIR)/%.bin,$(wildcard $(SPRITES_IN_DIR)/*.bin))
 
 TEXT_IN_DIR = $(ASSETS_DIR)/text
 TEXT_OUT_DIR = $(BUILD_DIR)/text
-TEXT = $(wildcard $(TEXT_IN_DIR)/*.bin)
-TEXT_BUILT := $(patsubst $(TEXT_IN_DIR)/%.bin,$(TEXT_OUT_DIR)/%.bin,$(TEXT))
+TEXT_GAME_IN_DIR = $(TEXT_IN_DIR)/game
+TEXT_GAME_OUT_DIR = $(TEXT_OUT_DIR)/game
+TEXT_MENU_IN_DIR = $(TEXT_IN_DIR)/menu
+TEXT_MENU_OUT_DIR = $(TEXT_OUT_DIR)/menu
+ALL_ASSETS_BUILT += $(patsubst $(TEXT_GAME_IN_DIR)/%.bin,$(TEXT_GAME_OUT_DIR)/%.bin,$(wildcard $(TEXT_GAME_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(TEXT_MENU_IN_DIR)/%.bin,$(TEXT_MENU_OUT_DIR)/%.bin,$(wildcard $(TEXT_MENU_IN_DIR)/*.bin))
 
 TEXTURES_IN_DIR = $(ASSETS_DIR)/textures
-TEXTURES_2D_IN_DIR = $(ASSETS_DIR)/textures/2d
-TEXTURES_3D_IN_DIR = $(ASSETS_DIR)/textures/3d
 TEXTURES_OUT_DIR = $(BUILD_DIR)/textures
-TEXTURES_2D_OUT_DIR = $(BUILD_DIR)/textures/2d
-TEXTURES_3D_OUT_DIR = $(BUILD_DIR)/textures/3d
-TEXTURES_BIN = $(wildcard $(TEXTURES_IN_DIR)/*.bin)
-TEXTURES_2D = $(wildcard $(TEXTURES_2D_IN_DIR)/*.png)
-TEXTURES_3D = $(wildcard $(TEXTURES_3D_IN_DIR)/*.png)
-TEXTURES_BUILT = $(patsubst $(TEXTURES_IN_DIR)/%.bin,$(TEXTURES_OUT_DIR)/%.bin,$(TEXTURES_BIN))
-TEXTURES_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.png,$(TEXTURES_2D_OUT_DIR)/%.bin,$(TEXTURES_2D))
-TEXTURES_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.png,$(TEXTURES_3D_OUT_DIR)/%.bin,$(TEXTURES_3D))
+TEXTURES_2D_IN_DIR = $(TEXTURES_IN_DIR)/2d
+TEXTURES_2D_OUT_DIR = $(TEXTURES_OUT_DIR)/2d
+TEXTURES_3D_IN_DIR = $(TEXTURES_IN_DIR)/3d
+TEXTURES_3D_OUT_DIR = $(TEXTURES_OUT_DIR)/3d
+ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.png,$(TEXTURES_2D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_2D_IN_DIR)/*.png))
+ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.png,$(TEXTURES_3D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_3D_IN_DIR)/*.png))
 
 TT_GHOSTS_IN_DIR = $(ASSETS_DIR)/tt_ghosts
 TT_GHOSTS_OUT_DIR = $(BUILD_DIR)/tt_ghosts
-TT_GHOSTS = $(wildcard $(TT_GHOSTS_IN_DIR)/*.bin)
-TT_GHOSTS_BUILT := $(patsubst $(TT_GHOSTS_IN_DIR)/%.bin,$(TT_GHOSTS_OUT_DIR)/%.bin,$(TT_GHOSTS))
+ALL_ASSETS_BUILT += $(patsubst $(TT_GHOSTS_IN_DIR)/%.bin,$(TT_GHOSTS_OUT_DIR)/%.bin,$(wildcard $(TT_GHOSTS_IN_DIR)/*.bin))
+
+UNKNOWN_0_IN_DIR = $(ASSETS_DIR)/unknown_0
+UNKNOWN_0_OUT_DIR = $(BUILD_DIR)/unknown_0
+ALL_ASSETS_BUILT += $(patsubst $(UNKNOWN_0_IN_DIR)/%.bin,$(UNKNOWN_0_OUT_DIR)/%.bin,$(wildcard $(UNKNOWN_0_IN_DIR)/*.bin))
 
 UCODE_IN_DIR = $(UCODE_DIR)
 UCODE_OUT_DIR = $(BUILD_DIR)/ucode
 UCODE = $(wildcard $(UCODE_IN_DIR)/*.bin)
-UCODE_BUILT := $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
+ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
 
-ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(FONTS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT) $(LUT_BUILT)
+#ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(FONTS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT) $(LUT_BUILT)
 
 ####################### LIBULTRA #########################
 
@@ -317,62 +334,79 @@ dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 
 ######## Asset Targets ########
 
-$(ANIMATIONS_OUT_DIR)/%.bin: $(ANIMATIONS_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+# All assets should output a .bin file
 
-$(ANIMATIONS_OUT_DIR)/%.cbin: $(ANIMATIONS_IN_DIR)/%.cbin 
-	$(COMPRESS) $^ $@
-    
 $(AUDIO_OUT_DIR)/%.bin: $(AUDIO_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+	$(ASSETS_COPY) $^ $@
 
-$(BILLBOARDS_OUT_DIR)/%.bin: $(BILLBOARDS_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
-
-$(BINS_OUT_DIR)/%.bin: $(BINS_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
-    
-$(CHEATS_OUT_DIR)/%.bin: $(CHEATS_IN_DIR)/%.cheats
-	$(CHEAT_ENCRYPTOR) $^ $@
+$(BIN_OUT_DIR)/%.bin: $(BIN_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
     
 $(FONTS_OUT_DIR)/%.bin: $(FONTS_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+	$(ASSETS_COPY) $^ $@
     
-$(LEVELS_OUT_DIR)/%.bin: $(LEVELS_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+$(IDS_OUT_DIR)/%.bin: $(IDS_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
+    
+$(LEVEL_HEADERS_OUT_DIR)/%.bin: $(LEVEL_HEADERS_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
 
-$(LEVELS_OUT_DIR)/%.cbin: $(LEVELS_IN_DIR)/%.cbin 
+$(LEVEL_MODELS_OUT_DIR)/%.bin: $(LEVEL_MODELS_IN_DIR)/%.cbin 
+	$(COMPRESS) $^ $@
+    
+$(LEVEL_NAMES_OUT_DIR)/%.bin: $(LEVEL_NAMES_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
+
+$(LEVEL_OBJMAPS_OUT_DIR)/%.bin: $(LEVEL_OBJMAPS_IN_DIR)/%.cbin 
 	$(COMPRESS) $^ $@
 
-$(LUT_OUT_DIR)/%.bin: $(LUT_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+$(MISC_OUT_DIR)/%.bin: $(MISC_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
     
 $(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+	$(ASSETS_COPY) $^ $@
 
-$(OBJECTS_OUT_DIR)/%.cbin: $(OBJECTS_IN_DIR)/%.cbin 
+$(OBJECT_ANIMS_OUT_DIR)/%.bin: $(OBJECT_ANIMS_IN_DIR)/%.cbin 
 	$(COMPRESS) $^ $@
+    
+$(OBJECT_HEADERS_OUT_DIR)/%.bin: $(OBJECT_HEADERS_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
 
-$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png $(TEXTURES_2D_IN_DIR)/%.header 
+$(OBJECT_MODELS_OUT_DIR)/%.bin: $(OBJECT_MODELS_IN_DIR)/%.cbin 
+	$(COMPRESS) $^ $@
+    
+$(PART_BEHAVIORS_OUT_DIR)/%.bin: $(PART_BEHAVIORS_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
+    
+$(PART_PARTICLES_OUT_DIR)/%.bin: $(PART_PARTICLES_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
+    
+$(SPRITES_OUT_DIR)/%.bin: $(SPRITES_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
+    
+$(TEXT_GAME_OUT_DIR)/%.bin: $(TEXT_GAME_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
+    
+$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
+
+$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png
 	$(TEXBUILDER) $^ $@ 
 
-$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png $(TEXTURES_3D_IN_DIR)/%.header 
+$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png
 	$(TEXBUILDER) $^ $@ 
 
-$(TEXTURES_OUT_DIR)/%.bin: $(TEXTURES_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
-
-$(PARTICLES_OUT_DIR)/%.bin: $(PARTICLES_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
-
-$(TEXT_OUT_DIR)/%.bin: $(TEXT_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
 
 $(TT_GHOSTS_OUT_DIR)/%.bin: $(TT_GHOSTS_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+	$(ASSETS_COPY) $^ $@
+
+$(UNKNOWN_0_OUT_DIR)/%.bin: $(UNKNOWN_0_IN_DIR)/%.bin 
+	$(ASSETS_COPY) $^ $@
     
 $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin 
-	$(ASSETS_OBJCOPY) $^ $@
+	$(ASSETS_COPY) $^ $@
     
 ###############################
 
@@ -390,12 +424,11 @@ $(BUILD_DIR)/$(TARGET).elf: $(O_FILES) $(BUILD_DIR)/$(LD_SCRIPT) | $(ALL_ASSETS_
 
 $(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)/$(TARGET).elf | $(ALL_ASSETS_BUILT)
 	$(OBJCOPY) $< $@ -O binary
-    
-# final z64 updates checksum
+
 $(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
 	cp $< $@
 	$(N64CRC) $@
-	sha1sum -c sha1/dkr.us_1.0.sha1
+	sha1sum -c sha1/dkr.$(VERSION).sha1
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
 	xxd $< > $@
