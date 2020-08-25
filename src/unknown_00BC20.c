@@ -36,15 +36,8 @@ extern s32 D_8011AD34;
 extern s8 D_8011AD3C;
 extern s8 D_8011AD3D;
 
-typedef struct unk8011AD40 {
-    s16 unk0;
-    s8 pad2[0xA];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk8011AD40;
 
-extern unk8011AD40 *D_8011AD40;
+extern Player *D_8011AD40;
 extern s8 D_8011AD44;
 extern s8 D_8011AD45;
 extern s16 D_8011AD46;
@@ -161,7 +154,7 @@ void func_8000C460(void);
 void *func_80070B78(s32, u32);
 void *func_80070C9C(s32, u32);
 s32 *func_80076C58(s32);
-void func_8000FFB8(Player *);
+void particlePtrList_addObject(Player *);
 void particlePtrList_flush(void);
 void func_8001D258(f32, f32, s32, s32, s32);
 
@@ -169,7 +162,44 @@ extern void func_800245B4(s16);
 
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B020.s")
+
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
+#else 
+
+extern s32 D_800DC754;
+extern Player* D_800DC75C;
+extern Player* D_800DC764;
+
+s32 *func_8001E29C(s32 arg0);
+
+void func_8000B290(){
+
+    if(D_800DC754){
+        func_80071140();
+    }
+    func_8001E29C(20);
+    /*{
+        if(D_800DC754->unk7a)
+            func_8007CCB0();
+        D_800DC754->unk7a = 0;
+
+        if(D_800DC754->unk7C)
+            func_8007B2BC();
+        D_800DC754->unk7C = 0;
+    }*/
+    if(D_800DC75C)
+        particlePtrList_addObject(D_800DC75C);
+    D_800DC75C = NULL;
+    
+    if(D_800DC764)
+        particlePtrList_addObject(D_800DC764);
+    D_800DC764 = NULL;
+
+    particlePtrList_flush();
+}
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B38C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B750.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000BADC.s")
@@ -402,6 +432,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CC7C.s")
 // Has a jump table
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E0B0.s")
 
+
 void func_8000E128(void) {
     D_800DC708 = 0x8000;
 }
@@ -445,15 +476,15 @@ s8 func_8000E1DC() {
     return D_8011AE03;
 }
 
-void func_8000E1EC(unk8011AD40 *arg0, s32 arg1) {
+void func_8000E1EC(Player *arg0, s32 arg1) {
     D_8011AD40 = arg0;
     D_8011AD44 = 4;
     D_8011AD45 = arg1;
-    D_8011AD46 = arg0->unkC;
-    D_8011AD48 = arg0->unk10;
-    D_8011AD4A = arg0->unk14;
-    D_8011AD4C = arg0->unk0;
-    func_8000FFB8(arg0);
+    D_8011AD46 = arg0->x_position;
+    D_8011AD48 = arg0->y_position;
+    D_8011AD4A = arg0->z_position;
+    D_8011AD4C = arg0->y_rotation;
+    particlePtrList_addObject(arg0);
     playerCount = 0;
 }
 
@@ -467,7 +498,16 @@ u8 func_8000E4C8() {
     return D_8011AEF4;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E4D8.s")
+u8 func_8000E4D8(void){
+    return D_8011AEF5;
+}
+
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E4E8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E558.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E5EC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E79C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E898.s")
+
 
 Player *getObject(s32 indx) {
     if (indx < 0 || indx >= objCount) {
@@ -542,7 +582,7 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
 
 
-void func_8000FFB8(Player* arg0){
+void particlePtrList_addObject(Player* arg0){
     func_800245B4(arg0->unk4A | 0x8000);
     particlePtrList[particleCount] = arg0;
     particleCount++;
@@ -918,7 +958,28 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800138A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013A0C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013DCC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800142B8.s")
+
+void func_800142B8(void){
+    s32 i =  D_8011AE60;
+    s32 j;
+    Player* currObj;
+    Player_68 *curr_68;
+    for(; i < objCount; i++){
+        currObj = objPtrList[i];
+        if( (currObj->unk6 & 0x8000) == 0 
+        && currObj->descriptor_ptr->unk53 == 0
+        ){
+            for(j=0; j<currObj->descriptor_ptr->unk55; j++){
+                curr_68 = currObj->unk68[j];
+                if( curr_68 != NULL && curr_68->unk20 > 0){
+                    curr_68->unk20 = curr_68->unk20-- & 0x03;
+                }
+            }
+        }
+    }
+
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800143A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014814.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014B50.s")
@@ -1046,6 +1107,7 @@ void func_8001B790(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B7A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B834.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B974.s")
 
 // Returns a pointer to some struct that is 0x3C bytes long.
 unknown8011AECC *func_8001BA00(s32 arg0) {
@@ -1090,12 +1152,14 @@ Player *getPlayerStruct(s32 indx) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB18.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB68.s")
 
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BC54.s")
+
 
 u32 func_8001BD94(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011AEE0) {
@@ -1141,11 +1205,13 @@ void func_8001D23C(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D258.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D6E4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D80C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001DD54.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E13C.s")
 
 s32 *func_8001E29C(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011ADA0) {

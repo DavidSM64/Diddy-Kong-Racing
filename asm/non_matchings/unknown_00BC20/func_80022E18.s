@@ -39,7 +39,7 @@ glabel func_80022E18
 /* 023AA8 80022EA8 8CEB0000 */  lw    $t3, ($a3)
 /* 023AAC 80022EAC 00000000 */  nop   
 /* 023AB0 80022EB0 8D640004 */  lw    $a0, 4($t3)
-/* 023AB4 80022EB4 0C003FEE */  jal   func_8000FFB8
+/* 023AB4 80022EB4 0C003FEE */  jal   particlePtrList_addObject
 /* 023AB8 80022EB8 00000000 */   nop   
 /* 023ABC 80022EBC 3C078012 */  lui   $a3, %hi(playerStructArray_Ptr) # $a3, 0x8012
 /* 023AC0 80022EC0 24E7AEE4 */  addiu $a3, %lo(playerStructArray_Ptr) # addiu $a3, $a3, -0x511c
@@ -91,7 +91,7 @@ glabel func_80022E18
 /* 023B6C 80022F6C 00000000 */  nop   
 /* 023B70 80022F70 10800007 */  beqz  $a0, .L80022F90
 /* 023B74 80022F74 8FAC0030 */   lw    $t4, 0x30($sp)
-/* 023B78 80022F78 0C003FEE */  jal   func_8000FFB8
+/* 023B78 80022F78 0C003FEE */  jal   particlePtrList_addObject
 /* 023B7C 80022F7C AFA30024 */   sw    $v1, 0x24($sp)
 /* 023B80 80022F80 8FA30024 */  lw    $v1, 0x24($sp)
 /* 023B84 80022F84 00000000 */  nop   

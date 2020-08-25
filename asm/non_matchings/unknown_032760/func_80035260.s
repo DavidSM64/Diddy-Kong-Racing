@@ -149,7 +149,7 @@ glabel func_80035260
 /* 03609C 8003549C 00000000 */   nop   
 /* 0360A0 800354A0 AC400078 */  sw    $zero, 0x78($v0)
 .L800354A4:
-/* 0360A4 800354A4 0C003FEE */  jal   func_8000FFB8
+/* 0360A4 800354A4 0C003FEE */  jal   particlePtrList_addObject
 /* 0360A8 800354A8 02002025 */   move  $a0, $s0
 .L800354AC:
 /* 0360AC 800354AC 8FAB0034 */  lw    $t3, 0x34($sp)

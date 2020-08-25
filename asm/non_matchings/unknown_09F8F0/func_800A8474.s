@@ -133,7 +133,7 @@ glabel func_800A8474
 /* 0A9268 800A8668 00000000 */  nop   
 /* 0A926C 800A866C 01B17021 */  addu  $t6, $t5, $s1
 /* 0A9270 800A8670 8DC40000 */  lw    $a0, ($t6)
-/* 0A9274 800A8674 0C003FEE */  jal   func_8000FFB8
+/* 0A9274 800A8674 0C003FEE */  jal   particlePtrList_addObject
 /* 0A9278 800A8678 AFA30144 */   sw    $v1, 0x144($sp)
 /* 0A927C 800A867C 8FA30144 */  lw    $v1, 0x144($sp)
 /* 0A9280 800A8680 10000009 */  b     .L800A86A8

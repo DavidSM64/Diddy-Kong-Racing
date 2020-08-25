@@ -2890,7 +2890,7 @@ void func_8009C4A8(s16 *arg0) {
 
 void func_8007B2BC(u32 arg0);
 void func_8007CCB0(u32 arg0);
-void func_8000FFB8(u32 arg0);
+void particlePtrList_addObject(u32 arg0);
 void func_8005FF40(u32 arg0);
 
 void func_8009C508(s32 arg0) {
@@ -2905,7 +2905,7 @@ void func_8009C508(s32 arg0) {
                     func_8007CCB0((u32)D_80126550[arg0]);
                 } else {
                     if ((*D_800DF750)[arg0] & 0x4000) {
-                        func_8000FFB8((u32)D_80126550[arg0]);
+                        particlePtrList_addObject((u32)D_80126550[arg0]);
                     } else {
                         func_8005FF40((u32)D_80126550[arg0]);
                     }

@@ -27,7 +27,7 @@ glabel func_8004001C
 /* 040C80 80040080 0C00265A */  jal   func_80009968
 /* 040C84 80040084 46802320 */   cvt.s.w $f12, $f4
 /* 040C88 80040088 8FA40020 */  lw    $a0, 0x20($sp)
-/* 040C8C 8004008C 0C003FEE */  jal   func_8000FFB8
+/* 040C8C 8004008C 0C003FEE */  jal   particlePtrList_addObject
 /* 040C90 80040090 00000000 */   nop   
 /* 040C94 80040094 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 040C98 80040098 27BD0020 */  addiu $sp, $sp, 0x20

@@ -362,7 +362,7 @@ typedef struct unk80038A78 {
 void func_80038A78(unk80038A78 *arg0, s32 arg1) {
     arg0->unk18 += arg1 * 8;
     if (arg0->unk18 >= 0x100) {
-        func_8000FFB8();
+        particlePtrList_addObject();
         arg0->unk18 = 0xFF;
     }
 }
@@ -631,7 +631,7 @@ void func_8003D534(Player *arg0, s32 arg1) {
     arg0->unk7C.half.upper = 0x14;
     arg0->unk7C.half.lower = 0x10;
     if (func_8009C30C() & 0x1000) {
-        func_8000FFB8(arg0);
+        particlePtrList_addObject(arg0);
     }
 }
 
@@ -834,7 +834,7 @@ void func_80042A1C(unk80042A1C *arg0, s8 *arg1) {
     arg0->unk7C = arg1[8];
     arg0->unk7E = 0;
     if (is_in_tracks_mode()) {
-        func_8000FFB8(arg0);
+        particlePtrList_addObject(arg0);
     }
     func_800C56D0(4);
 }

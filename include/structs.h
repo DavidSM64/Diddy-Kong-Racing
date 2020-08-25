@@ -292,6 +292,10 @@ typedef struct Player_64 {
     s8 unk1D7;
 } Player_64;
   
+typedef struct Player_68{
+    u8 pad00[0x20];
+    s8 unk20;
+ } Player_68; 
 /* Size: 0x0630 bytes */
 typedef struct Player {
   /* 0x0000 */ s16 y_rotation;
@@ -333,7 +337,7 @@ typedef struct Player {
 
   /* 0x0060 */ void *unk60; //player + 0x340
   /* 0x0064 */ Player_64 *unk64; //player + 0x98
-  /* 0x0068 */ void *unk68; //player + 0x80
+  /* 0x0068 */ Player_68 **unk68; //player + 0x80
   /* 0x006C */ void *unk6C; //player + 0x370
   /* 0x0070 */ u32 unk70;
 

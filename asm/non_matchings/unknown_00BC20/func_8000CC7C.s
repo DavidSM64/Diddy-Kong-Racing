@@ -975,7 +975,7 @@ glabel func_8000CC7C
 /* 00E634 8000DA34 00000000 */  nop   
 /* 00E638 8000DA38 11A00007 */  beqz  $t5, .L8000DA58
 /* 00E63C 8000DA3C 00000000 */   nop   
-/* 00E640 8000DA40 0C003FEE */  jal   func_8000FFB8
+/* 00E640 8000DA40 0C003FEE */  jal   particlePtrList_addObject
 /* 00E644 8000DA44 02202025 */   move  $a0, $s1
 /* 00E648 8000DA48 3C028012 */  lui   $v0, %hi(objCount) # $v0, 0x8012
 /* 00E64C 8000DA4C 8C42AE5C */  lw    $v0, %lo(objCount)($v0)
@@ -989,7 +989,7 @@ glabel func_8000CC7C
 /* 00E668 8000DA68 2B210002 */  slti  $at, $t9, 2
 /* 00E66C 8000DA6C 14200006 */  bnez  $at, .L8000DA88
 /* 00E670 8000DA70 00000000 */   nop   
-/* 00E674 8000DA74 0C003FEE */  jal   func_8000FFB8
+/* 00E674 8000DA74 0C003FEE */  jal   particlePtrList_addObject
 /* 00E678 8000DA78 02202025 */   move  $a0, $s1
 /* 00E67C 8000DA7C 3C028012 */  lui   $v0, %hi(objCount) # $v0, 0x8012
 /* 00E680 8000DA80 8C42AE5C */  lw    $v0, %lo(objCount)($v0)

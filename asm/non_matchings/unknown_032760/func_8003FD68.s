@@ -94,7 +94,7 @@ glabel func_8003FD68
 /* 040AD4 8003FED4 AFAC0028 */   sw    $t4, 0x28($sp)
 /* 040AD8 8003FED8 8FA40048 */  lw    $a0, 0x48($sp)
 .L8003FEDC:
-/* 040ADC 8003FEDC 0C003FEE */  jal   func_8000FFB8
+/* 040ADC 8003FEDC 0C003FEE */  jal   particlePtrList_addObject
 /* 040AE0 8003FEE0 00000000 */   nop   
 /* 040AE4 8003FEE4 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 040AE8 8003FEE8 8FB00038 */  lw    $s0, 0x38($sp)
