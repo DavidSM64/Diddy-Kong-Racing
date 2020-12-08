@@ -34,7 +34,7 @@ typedef struct MenuElement {
 /* Size: 0x18 bytes */
 typedef struct Racer {
   /* 0x00 */ u32 trophy_points;
-  /* 0x04 */ u8 best_times;
+  /* 0x04 */ s8 best_times;
   /* 0x05 */ u8 character;
   /* 0x06 */ s8 starting_position;
   /* 0x07 */ char unk7;
@@ -137,7 +137,7 @@ typedef struct LevelHeader {
 
   /* 0x49 */ s8 unk49;
   /* 0x4A */ u8 unk4A;
-  /* 0x4B */ u8 laps;
+  /* 0x4B */ s8 laps;
   /* 0x4C */ s8 race_type;
   /* 0x4D */ u8 vehicle;
   /* 0x4E */ u8 available_vehicles;
