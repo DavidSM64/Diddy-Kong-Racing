@@ -18,7 +18,7 @@ typedef struct MenuElement {
   /* 0x0E */ u8 filterBlue;
   /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
   /* 0x10 */ u8 opacity;
-  /* 0x11 */ u8 textType; 
+  /* 0x11 */ u8 textType;
   /* 0x12 */ u8 textAlignFlags;
   /* 0x13 */ u8 unk13; // Source type? 0 = ascii text, 7 = texture?
   union {
@@ -26,8 +26,8 @@ typedef struct MenuElement {
   /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
   } source;
   /* 0x18 */ u16 backgroundRed;
-  /* 0x1A */ u16 backgroundGreen; 
-  /* 0x1C */ u16 backgroundBlue;  
+  /* 0x1A */ u16 backgroundGreen;
+  /* 0x1C */ u16 backgroundBlue;
   /* 0x1E */ u16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
 } MenuElement;
 
@@ -113,26 +113,26 @@ typedef struct LevelHeader {
   /* 0x02 */ u8 unk2;
   /* 0x03 */ u8 unk3;
   /* 0x04 */ u8 unk4[4];
-             
+
   /* 0x08 */ f32 course_height;
-  
+
   /* 0x0C */ u8 padC[0x14];
-  
+
   /* 0x20 */ s32 *unk20;
-  
+
   /* 0x24 */ u8 pad24[0x10];
 
   /* 0x34 */ s16 geometry;
   /* 0x36 */ s16 collectables; // Objects such as bananas, balloons, etc.
   /* 0x38 */ s16 skybox;
-  
+
   // Fog related?
   /* 0x3A */ s16 unk3A;
   /* 0x3C */ s16 unk3C;
-  /* 0x3E */ s16 fogR; 
+  /* 0x3E */ s16 fogR;
   /* 0x40 */ s16 fogG;
   /* 0x42 */ s16 fogB;
-  
+
   /* 0x44 */ u8 unk44[0x5];
 
   /* 0x49 */ s8 unk49;
@@ -143,13 +143,13 @@ typedef struct LevelHeader {
   /* 0x4E */ u8 available_vehicles;
 
   /* 0x4F */ u8 unk4F[3];
-  
+
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
-  
+
   /* 0x56 */ u8 pad56[0x1E];
-  
+
   /* 0x74 */ s8 *unk74[7];
 
   // Weather related?
@@ -160,7 +160,7 @@ typedef struct LevelHeader {
   /* 0x96 */ s16 unk96;
   /* 0x98 */ s16 unk98;
   /* 0x9A */ s16 unk9A;
-  
+
   /* 0x9C */ s8 unk9C;
   /* 0x9D */ u8 unk9D;
   /* 0x9E */ u8 unk9E;
@@ -170,7 +170,7 @@ typedef struct LevelHeader {
   /* 0xA8 */ u16 unkA8;
   /* 0xAA */ u16 unkAA;
   /* 0xAC */ s8 *unkAC;
-  
+
   /* 0xB0 */ u8 padB0[0x3];
   /* 0xB3 */ u8 unkB3;
   /* 0xB3 */ u8 unkB4;
@@ -272,12 +272,17 @@ typedef struct Player_64 {
     f32 unk78;
     f32 unk7C;
     f32 unk80;
-    u8 pad84[0x4C];
+    u8 pad84[0x30];
+    /* 0xB4 */ f32 throttle;
+    /* 0xB8 */ f32 brake;
+    u8 padBC[0x14];
     f32 unkD0;
     u8 padD0[0x24];
     u32 unkF8;
     u8 unkFC;
-    u8 padFD[0x63];
+    u8 padFD[0xB];
+    s32 unk108;
+    u8 pad10C[0x54];
     s16 unk160;
     s16 unk162;
     s16 unk164;
@@ -290,12 +295,15 @@ typedef struct Player_64 {
     u16 unk1BA;
     u8 pad1BC[0x1B];
     s8 unk1D7;
+    u8 pad1D8[0x1A];
+    u8 unk1F2;
+    u8 unk1F3;
 } Player_64;
-  
+
 typedef struct Player_68{
     u8 pad00[0x20];
     s8 unk20;
- } Player_68; 
+ } Player_68;
 /* Size: 0x0630 bytes */
 typedef struct Player {
   /* 0x0000 */ s16 y_rotation;
@@ -314,7 +322,7 @@ typedef struct Player {
   /* 0x0028 */ u32 unk28;
 
   /* 0x002C */ s16 unk2C;
-  
+
   /* 0x002E */ s16 unk2E;
   /* 0x0030 */ f32 unk30;
   /* 0x0034 */ f32 unk34;
@@ -322,7 +330,7 @@ typedef struct Player {
 
   /* 0x0039 */ u8 unk39;
   /* 0x003A */ s8 unk3A;
-  /* 0x003B */ u8 unk3B;
+  /* 0x003B */ s8 unk3B;
   /* 0x003C */ Player_3C* unk3C;
 
   /* 0x0040 */ Player_40 *descriptor_ptr;
@@ -343,7 +351,7 @@ typedef struct Player {
 
   /* 0x0074 */ u32 unk74;
   /* 0x0078 */ s32 unk78;
-  
+
   union {
       struct {
           s16 upper;
@@ -355,7 +363,7 @@ typedef struct Player {
   /* 0x0080 */ void *unk80;
   /* 0x0084 */ u32 unk84;
   /* 0x0088 */ u32 unk88;
-  
+
   /* 0x008C */ u32 unk8C;
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
@@ -363,11 +371,11 @@ typedef struct Player {
   /* 0x0098 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Player controlled
   /* 0x009A */ u8 unk9A;
   /* 0x009B */ u8 characterId; // Affects minimap color, horn, voice, etc.
-  
+
   /* 0x009C */ u32 unk9C;
 
   /* 0x00A0 */ f32 unkA0;
-  
+
   /* 0x00A4 */ u32 unkA4;
   /* 0x00A8 */ u32 unkA8;
   /* 0x00AC */ u32 unkAC;
@@ -376,16 +384,16 @@ typedef struct Player {
   /* 0x00B8 */ u32 unkB8;
   /* 0x00BC */ u32 unkBC;
   /* 0x00C0 */ u32 unkc0;
-  
+
   /* 0x00C4 */ f32 velocity;
   /* 0x00C8 */ f32 lateral_velocity;
-  
+
   u32 unkCC[10]; // Not an array. Unknown values.
 
   /* 0x00F4 */ f32 prev_x_position;
   /* 0x00F8 */ f32 prev_y_position;
   /* 0x00FC */ f32 prev_z_position;
-  
+
   /* 0x0100 */ u32 unk100;
   /* 0x0104 */ u32 unk104;
   /* 0x0108 */ u32 unk108;
@@ -427,25 +435,25 @@ typedef struct Player {
   /* 0x0194 */ f32 unk194;
   /* 0x0198 */ f32 unk198;
   /* 0x019C */ f32 unk19C;
-  
+
   u32 unk1A0[8]; // Not an array. Unknown values.
-  
+
   /* 0x01C0 */ u32 lap_times[3];
-  
+
   /* 0x01CC */ u32 unk1CC;
   /* 0x01D0 */ u32 unk1D0;
   /* 0x01D4 */ u32 unk1D4;
   /* 0x01D8 */ u32 unk1D8;
 
   /* 0x01DC */ void *held_obj_ptr;
-  
+
   u32 unk1E0[10]; // Not an array. Unknown values.
 
   /* 0x0208 */ u16 unk208;
   /* 0x020A */ u8 balloon_type;
   /* 0x020B */ u8 balloon_quantity;
   /* 0x020C */ u8 balloon_level;
-  
+
   /* 0x020D */ u8 unk20D;
   /* 0x020E */ u8 unk20E;
   /* 0x020F */ u8 unk20F;
@@ -464,13 +472,13 @@ typedef struct Player {
 
   /* 0x0273 */ u8 spinout_timer;
   /* 0x0274 */ u8 wheel_surfaces[4];
-  
+
   /* 0x0278 */ u32 unk278;
   /* 0x027C */ u16 unk27C;
 
   /* 0x027E */ u8 drift_direction;
   /* 0x027F */ u8 unk27F;
-  
+
   /* 0x0280 */ u32 unk280;
   /* 0x0284 */ u8 unk284;
 
@@ -478,7 +486,7 @@ typedef struct Player {
   /* 0x0286 */ u8 unk286;
   /* 0x0287 */ u8 boost_sound;
   /* 0x0288 */ u32 unk288;
-  
+
   /* 0x028C */ u16 unk28C;
   /* 0x028E */ u8 unk28E;
 
@@ -486,16 +494,16 @@ typedef struct Player {
   /* 0x0290 */ u8 indicator_type;
   /* 0x0291 */ s8 indicator_timer;
   /* 0x0292 */ u16 unk292;
-  
+
   u32 unk294[11]; // Not an array. Unknown values.
 
   /* 0x02C0 */ f32 unk2C0;
-  
+
   /* 0x02C4 */ u8 red;
   /* 0x02C5 */ u8 blue;
   /* 0x02C6 */ u8 green;
   /* 0x02C7 */ u8 alpha;
-  
+
   /* 0x02C8 */ u32 unk2C8;
   /* 0x02CC */ u32 unk2CC;
   /* 0x02D0 */ u32 unk2D0;
@@ -505,7 +513,7 @@ typedef struct Player {
   /* 0x02DC */ u16 unk2DC;
   /* 0x02DE */ u16 unk2DE;
   /* 0x02E0 */ u16 unk2E0;
-  
+
   /* 0x02E2 */ u16 unk2E2;
   /* 0x02E4 */ u32 unk2E4;
 
@@ -530,7 +538,7 @@ typedef struct Player {
   /* 0x031C */ f32 unk31C;
   /* 0x0320 */ f32 unk320;
   /* 0x0324 */ f32 unk324;
-  
+
   /* 0x0328 */ u32 unk328;
   /* 0x032C */ u32 unk32C;
   /* 0x0330 */ u32 unk330;
@@ -543,7 +551,7 @@ typedef struct Player {
   /* 0x0348 */ void *unk348;
   /* 0x034C */ void *unk34C;
   /* 0x0350 */ void *unk350;
-  
+
   /* 0x0354 */ u32 unk354;
   /* 0x0358 */ u32 unk358;
   /* 0x035C */ u32 unk35C;

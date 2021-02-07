@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "structs.h"
 
 extern s32 D_800DCB50;
 extern s16 D_800DCB54;
@@ -65,7 +66,7 @@ void func_8004F77C(unk8004F77C *arg0) {
     if ((D_8011D528 & 0x4000) != 0) {
         arg0->unk20A |= 0x80;
     }
-    
+
     temp = arg0->unk20A & 0xF;
     if ((arg0->unk20A & 0xC0) != 0) {
         temp++;
@@ -78,7 +79,7 @@ void func_8004F77C(unk8004F77C *arg0) {
             temp = 0;
         }
     }
-    
+
     arg0->unk20A = (arg0->unk20A & 0xFFF0) | temp;
 }
 
@@ -116,7 +117,67 @@ void func_8005234C(unk8005234C *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052388.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005250C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052988.s")
+
+void func_80052988(Player* arg0, Player_64* arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+    arg5 *= arg7;
+
+    if ((D_8011D55C == -1) && (arg2 >= 3)) {
+        arg0->unk3B = 0;
+        arg1->unk1F2 = 0;
+    } else if (arg0->unk3B == 0) {
+        if (arg6 & 1) {
+            if (arg0->unk18 >= 0x29) {
+                arg0->unk18 -= arg7 * 4;
+                if (arg0->unk18 < 0x29) {
+                    arg0->unk3B = arg2;
+                    arg0->unk18 = arg3;
+                }
+            } else {
+                arg0->unk18 += arg7 * 4;
+                if (arg0->unk18 >= 0x28) {
+                    arg0->unk3B = arg2;
+                    arg0->unk18 = arg3;
+                }
+            }
+        } else {
+            arg0->unk3B = arg2;
+            arg0->unk18 = arg3;
+            arg1->unk1F3 &= ~0x80;
+        }
+    } else if (arg0->unk3B == arg2) {
+        if (arg6 & 2) {
+            if (arg1->unk1F3 & 0x80) {
+                arg0->unk18 -= arg5;
+                if (arg0->unk18 <= 0) {
+                    arg0->unk3B = 0;
+                    arg1->unk1F2 = 0;
+                    arg0->unk18 = 0x28;
+                    arg1->unk1F3 = 0;
+                }
+            } else {
+                arg0->unk18 += arg5;
+                if (arg0->unk18 >= arg4) {
+                    arg0->unk18 = arg4 - 1;
+                    if ((arg6 & 4) == 0) {
+                        arg1->unk1F3 |= 0x80;
+                    }
+                }
+            }
+        } else {
+            arg0->unk18 += arg5;
+            if (arg0->unk18 >= arg4) {
+                arg0->unk3B = 0;
+                arg1->unk1F2 = 0;
+                arg0->unk18 = 0x28;
+                arg1->unk1F3 = 0;
+            }
+        }
+    } else {
+        arg0->unk18 = arg3;
+        arg0->unk3B = arg2;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052B64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052D7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80053478.s")
@@ -171,40 +232,27 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     D_8011D510.unk14 = 0;
     D_8011D510.unk8 = 1;
     func_8006FE74(&sp30, &D_8011D510);
-    
+
     func_8006F64C(&sp30, 0, -1, 0, &arg1->unkA0, &arg1->unkA4, &arg1->unk9C);
 }
 
-typedef struct unk80053664 {
-    u8 unk0[0xB4];
-    f32 unkB4;
-    f32 unkB8;
-} unk80053664;
-
-void func_80053664(unk80053664 *arg0) {
-    f64 temp_f0;
-    f64 temp_f0_2;
-    f64 temp_f0_3;
-
-    temp_f0 = (f64) arg0->unkB4;
-    
-    if (0.0 < temp_f0) {
-        arg0->unkB4 = (f32) (temp_f0 - D_800E6768);
+void func_80053664(Player_64 *arg0) {
+    if (arg0->throttle > 0.0) {
+        arg0->throttle -= D_800E6768;
     }
-    
-    if ((D_8011D528 & 0x8000) != 0) {
-        arg0->unkB4 = 1.0f;
+
+    if (D_8011D528 & 0x8000) {
+        arg0->throttle = 1.0f;
     }
-    
-    if ((D_8011D528 & 0x4000) != 0) {
-        temp_f0_2 = (f64) arg0->unkB8;
-        if (temp_f0_2 < 1.0) {
-            arg0->unkB8 = (f32) (temp_f0_2 + D_800E6770);
+
+    if (D_8011D528 & 0x4000) {
+        if (arg0->brake < 1.0) {
+            arg0->brake += D_800E6770;
         }
     } else {
-        temp_f0_3 = (f64) arg0->unkB8;
-        if (D_800E6778 < temp_f0_3) {
-            arg0->unkB8 = (f32) (temp_f0_3 - D_800E6780);
+        //! @bug Will cause a negative brake value resulting in higher velocity
+        if (arg0->brake > D_800E6778) {
+            arg0->brake -= D_800E6780;
         }
     }
 }
@@ -220,7 +268,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80055EC0.s")
 /* Unknown Size */
 typedef struct unk800570A4 {
     u8 unk0[0x108];
-    s32 unk108; 
+    s32 unk108;
     u8 unk10C[0x102];
     s16 unk20E;
     s8 unk210;
@@ -264,11 +312,10 @@ void func_80057048(unk800570A4_2 *arg0, s32 arg1) {
     }
 }
 
-unk800570A4 *func_800570A4(unk800570A4_2 *arg0, s32 arg1, s32 arg2) {
+void func_800570A4(unk800570A4_2 *arg0, s32 arg1, s32 arg2) {
     unk800570A4 *temp = arg0->unk64;
     temp->unk20E = arg1;
     temp->unk210 = arg2;
-    return temp;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800570B8.s")
@@ -289,7 +336,7 @@ void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
 
     temp = D_8011D534 - arg0->unk1E1;
     temp2 = (s32)((f64)((f32)temp * arg2) * 0.125);
-    
+
     if (temp != 0 && temp2 == 0) {
         if (temp > 0) {
             temp2 = 1;
@@ -298,7 +345,7 @@ void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
             temp2 = -1;
         }
     }
-    
+
     arg0->unk1E1 = arg0->unk1E1 + temp2;
 }
 
@@ -356,7 +403,7 @@ s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
             D_8011D5AC = -1;
         }
     }
-    
+
     return temp_v0;
 }
 
@@ -395,11 +442,11 @@ void func_8005A3D0(void) {
     s32 i;
     s32 count = 0;
     u8* temp = (u8*)&func_8003B4BC;
-    
+
     for(i = 0; i < D_800DCB50; i++) {
         count += temp[i];
     }
-    
+
     if (count != D_800DCDD0) {
         D_800DCB54 = 0x800;
     }
@@ -423,7 +470,7 @@ typedef struct unk8005C270 {
 
 void func_8005C270(unk8005C270 *arg0) {
     s32 temp = func_8001BA64();
-    
+
     arg0->unk192--;
     if (arg0->unk192 < 0) {
         arg0->unk192 += temp;
@@ -431,10 +478,8 @@ void func_8005C270(unk8005C270 *arg0) {
             arg0->unk193--;
         }
     }
-    
+
     if (arg0->unk190 >= -31999) {
         arg0->unk190--;
     }
 }
-
-
