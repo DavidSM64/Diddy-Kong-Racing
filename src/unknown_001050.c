@@ -14,27 +14,38 @@ typedef struct unk80115D48 {
     /* 0x04 */ s32 unk4;
 } unk80115D48;
 
-extern ALCSPlayer* gMusicPlayer;
-extern ALCSPlayer* gSndFxPlayer;
+/************ .data ************/
 
-extern u8  musicRelativeVolume;
-extern u8  sfxRelativeVolume;
-extern u8  D_800DC640;
-extern u8  D_800DC644;
-extern s32 D_800DC648;
-extern s32 audioPrevCount;
-extern f32 D_800DC650;
-extern s32 musicVolumeSliderPercentage;
-extern s32 D_800DC658;
-extern u8  D_800DC65C;
-extern u8  D_800DC660;
-extern s32 D_800DC66C;
-extern u8  D_800DC670;
+ALCSPlayer* gMusicPlayer = NULL;
+ALCSPlayer* gSndFxPlayer = NULL;
+u8 musicRelativeVolume = 0x7F;
+u8 sfxRelativeVolume = 0x7F;
+u8 D_800DC640 = 1;
+u8 D_800DC644 = 0;
+s32 D_800DC648 = 0;
+s32 audioPrevCount = 0;
+f32 D_800DC650 = 1.0;
+s32 musicVolumeSliderPercentage = 0x100;
+s32 D_800DC658 = 0;
+u8 D_800DC65C = 0;
+u8  D_800DC660 = 0;
+s32 D_800DC664 = 0; // Currently unknown, might be a different type.
+s32 D_800DC668 = 0; // Currently unknown, might be a different type.
+s32 D_800DC66C = 0x100;
+u8 D_800DC670 = 0;
+
+/*******************************/
+
+/************ .rodata ************/
 
 extern f32 D_800E49DC;
 extern f32 D_800E49EC;
-
 extern u8  D_800EBF60;
+
+/*********************************/
+
+/************ .bss ************/
+
 extern ALHeap gALHeap;
 
 /* Unknown size */
@@ -90,7 +101,7 @@ extern s32 D_80115F7C;
 extern u32 D_80115F84;
 extern u32 D_80115F88;
 
-
+/******************************/
 
 typedef struct audioMgrConfig_s{
     u32 unk00;

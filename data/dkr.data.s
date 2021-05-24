@@ -6,55 +6,57 @@
     .balign 4
 .endm
 
-glabel gMusicPlayer
-.word 0x00000000
+############## unknown_001050.c (.data) ##############
 
-glabel gSndFxPlayer
-.word 0x00000000
+# glabel gMusicPlayer
+# .word 0x00000000
+# 
+# glabel gSndFxPlayer
+# .word 0x00000000
+# 
+# glabel musicRelativeVolume
+# .word 0x7F000000
+# 
+# glabel sfxRelativeVolume
+# .word 0x7F000000
+# 
+# glabel D_800DC640
+# .word 0x01000000
+# 
+# glabel D_800DC644
+# .word 0x00000000
+# 
+# glabel D_800DC648
+# .word 0x00000000
+# 
+# glabel audioPrevCount
+# .word 0x00000000
+# 
+# glabel D_800DC650
+# .word 0x3F800000
+# 
+# glabel musicVolumeSliderPercentage
+# .word 0x00000100
+# 
+# glabel D_800DC658
+# .word 0x00000000
+# 
+# glabel D_800DC65C
+# .word 0x00000000
+# 
+# glabel D_800DC660
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# glabel D_800DC66C
+# .word 0x00000100
+  
+#  glabel D_800DC670
+#  .word 0x00000000
 
-glabel musicRelativeVolume
-.word 0x7F000000
+#  .word 0, 0, 0 # File Padding?
 
-glabel sfxRelativeVolume
-.word 0x7F000000
-
-glabel D_800DC640
-.word 0x01000000
-
-glabel D_800DC644
-.word 0x00000000
-
-glabel D_800DC648
-.word 0x00000000
-
-glabel audioPrevCount
-.word 0x00000000
-
-glabel D_800DC650
-.word 0x3F800000
-
-glabel musicVolumeSliderPercentage
-.word 0x00000100
-
-glabel D_800DC658
-.word 0x00000000
-
-glabel D_800DC65C
-.word 0x00000000
-
-glabel D_800DC660
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-
-glabel D_800DC66C
-.word 0x00000100
-
-glabel D_800DC670
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
+######################################################
 
 glabel D_800DC680
 .word 0x00000000
