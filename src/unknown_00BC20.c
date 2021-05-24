@@ -92,6 +92,8 @@ s32 D_800DC85C = 0x0028FFFF;  // Currently unknown, might be a different type.
 u8 D_800DC860 = 0x80;
 u16 D_800DC864 = 0x0028;
 
+/*******************************/
+
 /************ .rodata ************/
 
 extern f32 D_800E514C;

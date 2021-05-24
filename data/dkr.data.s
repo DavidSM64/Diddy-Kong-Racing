@@ -288,76 +288,82 @@
 
 ############## unknown_0255E0.c (.data) ##############
 
-.word 0x00000000
-.word 0x80000000
-.word 0x0028FFFF
+# .word 0x00000000
+# .word 0x80000000
+# .word 0x0028FFFF
+# 
+# glabel D_800DC87C
+# .word 0x83000000
+# .word 0x0046FFFF
+# 
+# glabel D_800DC884
+# .word 0x00000000
+# .word 0x3E000000
+# .word 0x3E800000
 
-glabel D_800DC87C
-.word 0x83000000
-.word 0x0046FFFF
+# .word 0x3EC00000
+# .word 0x3F000000
+# .word 0x3F200000
+# .word 0x3F400000
+# .word 0x3F600000
+# .word 0x00000000
+# .word 0x00000000
+# 
+# glabel D_800DC8AC
+# .word 0x42480000
 
-glabel D_800DC884
-.word 0x00000000
-.word 0x3E000000
-.word 0x3E800000
-.word 0x3EC00000
-.word 0x3F000000
-.word 0x3F200000
-.word 0x3F400000
-.word 0x3F600000
-.word 0x00000000
-.word 0x00000000
+# .word 0x00000000
+# .word 0x42000000
+# .word 0xC2480000
+# .word 0x00000000
+# .word 0x42000000
+# .word 0xC2480000
+# .word 0x42C80000
+# .word 0x42000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x42000000
+# .word 0x43020000
+# .word 0x42700000
+# .word 0xC2880000
+# .word 0x43020000
+# .word 0xC2700000
+# .word 0xC2880000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x42000000
+# .word 0xC3020000
+# .word 0xC2700000
+# .word 0xC2880000
+# .word 0xC3020000
+# .word 0x42700000
+# .word 0xC2880000
+# 
+# glabel D_800DC918
+# .word 0x00000000
+# 
+# glabel D_800DC91C
+# .word 0x00000000
+# 
+# .word 0xFFFFFFFF
+# 
+# glabel D_800DC924
+# .word 0x00000000
+# .word 0x00000000
+# 
+# glabel D_800DC92C
+# .word 0x00010401
+# .word 0x02040203
+# .word 0x04030004
+# .word 0x05060101
+# .word 0x00050302
+# .word 0x07070803
+# 
+# .word 0, 0, 0 # Padding
 
-glabel D_800DC8AC
-.word 0x42480000
-.word 0x00000000
-.word 0x42000000
-.word 0xC2480000
-.word 0x00000000
-.word 0x42000000
-.word 0xC2480000
-.word 0x42C80000
-.word 0x42000000
-.word 0x00000000
-.word 0x00000000
-.word 0x42000000
-.word 0x43020000
-.word 0x42700000
-.word 0xC2880000
-.word 0x43020000
-.word 0xC2700000
-.word 0xC2880000
-.word 0x00000000
-.word 0x00000000
-.word 0x42000000
-.word 0xC3020000
-.word 0xC2700000
-.word 0xC2880000
-.word 0xC3020000
-.word 0x42700000
-.word 0xC2880000
+######################################################
 
-glabel D_800DC918
-.word 0x00000000
-
-glabel D_800DC91C
-.word 0x00000000
-.word 0xFFFFFFFF
-
-glabel D_800DC924
-.word 0x00000000
-.word 0x00000000
-
-glabel D_800DC92C
-.word 0x00010401
-.word 0x02040203
-.word 0x04030004
-.word 0x05060101
-.word 0x00050302
-.word 0x07070803
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
+############## unknown_032760.c (.data) ##############
 
 glabel D_800DC950
 .word 0x00000000
