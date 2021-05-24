@@ -7,23 +7,99 @@
 #include "fast3d.h"
 
 
-extern s32 D_800DC700;
-extern s16 D_800DC708;
-extern s32 D_800DC718;
-extern s8 D_800DC71C;
-extern s16 D_800DC724;
-extern s16 D_800DC728;
-extern s16 D_800DC72C;
-extern u8 D_800DC730;
-extern u8 D_800DC738;
-extern s8 D_800DC73C;
-extern s8 D_800DC740;
-extern s8 D_800DC744;
-extern s8 D_800DC748;
-extern s32 D_800DC760;
-extern s8 D_800DC848;
+/************ .data ************/
+
+/* Size: 0x8 bytes */
+typedef struct unknown800DC6F0 {
+    union {
+        s8 unk00;
+        s32 dummy_force_alignment; // Not sure of a better way to do this.
+    };
+    u16 unk04;
+    u16 unk06;
+} unknown800DC6F0;
+
+unknown800DC6F0 D_800DC6F0 = { -128, 0x1E, 0x0F };
+unknown800DC6F0 D_800DC6F8 = { 3, 0x1E, 0x0F };
+
+s32 D_800DC700 = 0;
+s32 D_800DC704 = 0; // Currently unknown, might be a different type.
+s16 D_800DC708 = 0;
+s32 D_800DC70C = 0; // Currently unknown, might be a different type.
+s16 D_800DC710 = 1;
+s32 D_800DC714 = 0; // Currently unknown, might be a different type.
+s32 D_800DC718 = 0;
+s8 D_800DC71C = 0;
+s32 D_800DC720 = 0; // Currently unknown, might be a different type.
+s16 D_800DC724 = 0x2A30;
+s16 D_800DC728 = -1;
+s16 D_800DC72C = 0;
+u8 D_800DC730 = 0;
+s32 D_800DC734 = 0; // Currently unknown, might be a different type.
+u8 D_800DC738 = 0;
+s8 D_800DC73C = 0;
+s8 D_800DC740 = 0;
+s8 D_800DC744 = 0;
+s8 D_800DC748 = 0;
+s32 D_800DC74C = 0; // Currently unknown, might be a different type.
+s32 D_800DC750 = 0; // Currently unknown, might be a different type.
+s32 D_800DC754 = 0; // Currently unknown, might be a different type.
+s32 D_800DC758 = 0; // Currently unknown, might be a different type.
+s32 D_800DC75C = 0; // Currently unknown, might be a different type.
+s32 D_800DC760 = 9; // Currently unknown, might be a different type.
+s32 D_800DC764 = 0; // Currently unknown, might be a different type.
+s32 D_800DC768 = 0; // Currently unknown, might be a different type.
+
+f32 D_800DC76C[15] = { 
+    1.0f, 0.70711f, 0.70711f, 1.0f, 
+    0.0f, 0.70711f, -0.70711f, 0.0f,
+    -1.0f, -0.70711f, -0.70711f, -1.0f,
+    0.0f, -0.70711f, 0.70711f
+};
+
+u16 D_800DC7A8[76] = { 
+    0x0001, 0x0002, 0x0003, 0x0004, 
+    0x0051, 0x0054, 0x0055, 0x0056, 
+    0x00ED, 0x00FF, 0x0037, 0x0038, 
+    0x0039, 0x003A, 0x0057, 0x0058, 
+    0x0059, 0x005A, 0x00F3, 0x00FD,
+    0x0042, 0x0043, 0x0044, 0x0045,
+    0x005B, 0x005C, 0x005D, 0x005E,
+    0x00F4, 0x0101, 0x0001, 0x0002,
+    0x0003, 0x0004, 0x0051, 0x0054,
+    0x0055, 0x0056, 0x00ED, 0x00FF,
+    0x0001, 0x0002, 0x0003, 0x0004,
+    0x0051, 0x0054, 0x0055, 0x0056,
+    0x00ED, 0x00FF, 0x00D9, 0x00DF,
+    0x00E0, 0x0105, 0x008A, 0x00DA,
+    0x00E8, 0x0115, 0x0118, 0x0000,
+    0x0005, 0x0106, 0x0207, 0x0005,
+    0x0106, 0x010B, 0x010B, 0x0207,
+    0x000C, 0x020D, 0x0101, 0x0101,
+    0x0101, 0x0101, 0x0101, 0x0000
+};
+
+s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
+
+s8 D_800DC848 = 0;
+s32 D_800DC84C = 0xFF401000; // Currently unknown, might be a different type.
+
+s32 D_800DC850 = 0x1040FF00;  // Currently unknown, might be a different type.
+s32 D_800DC854 = 0x10FF4000;  // Currently unknown, might be a different type.
+s32 D_800DC858 = 0;           // Currently unknown, might be a different type.
+s32 D_800DC85C = 0x0028FFFF;  // Currently unknown, might be a different type.
+
+u8 D_800DC860 = 0x80;
+u16 D_800DC864 = 0x0028;
+
+/************ .rodata ************/
+
 extern f32 D_800E514C;
 extern f32 D_800E5150;
+
+/*********************************/
+
+/************ .bss ************/
 
 extern s16 D_8011AC20[12];
 extern s16 D_8011AD4E;
@@ -74,7 +150,7 @@ extern s8 D_8011AE00;
 extern s8 D_8011AE01;
 extern s8 D_8011AE02;
 extern s8 D_8011AE03;
-u32 *D_8011AE08[16];
+extern u32 *D_8011AE08[16];
 extern s32 (*D_8011AE48)[8]; // Unknown number of entries.
 extern u8 (*D_8011AE4C)[8]; // Unknown number of entries.
 extern Player **objPtrList; // Not sure about the number of elements
@@ -146,6 +222,8 @@ extern unk800179D0_2 D_8011AFF4;
 extern u32* D_8011B020[10];
 
 extern s16 D_8011D5AC;
+
+/******************************/
 
 extern s32 osTvType;
 
