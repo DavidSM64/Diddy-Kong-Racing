@@ -98,8 +98,6 @@ s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
 
 /*******************************/
 
-/*** No .rodata section ***/
-
 /************ .bss ************/
 
 extern s32 D_80115F90;

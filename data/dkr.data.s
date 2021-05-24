@@ -112,21 +112,27 @@
 
 ######################################################
 
-glabel D_800DC6D0
-.word 0x01000000
+############## unknown_005740.c (.data) ##############
 
-glabel D_800DC6D4
-.word 0x00000000
+# glabel D_800DC6D0
+# .word 0x01000000
+# 
+# glabel D_800DC6D4
+# .word 0x00000000
+# 
+# glabel D_800DC6D8
+# .word 0x00000001
+# .word 0x00000000
+# 
+# glabel D_800DC6E0
+# .word 0x00000000
+# 
+# .word 0, 0, 0 # Padding
 
-glabel D_800DC6D8
-.word 0x00000001
-.word 0x00000000
+######################################################
 
-glabel D_800DC6E0
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
+
+############## unknown_00BC20.c (.data) ##############
 
 glabel D_800DC6F0
 .word 0x80000000

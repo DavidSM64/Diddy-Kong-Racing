@@ -4,7 +4,21 @@
 #include "types.h"
 #include "macros.h"
 
+/************ .data ************/
+
+s8 D_800DC6D0 = 1; // Currently unknown, might be a u8.
+s32 D_800DC6D4 = 0; // Currently unknown, might be a different type.
+s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
+s32 D_800DC6DC = 0; // Currently unknown, might be a different type.
+s32 D_800DC6E0 = 0; // Currently unknown, might be a different type.
+
+/*******************************/
+
+/************ .bss ************/
+
 extern s8 D_8011AC18;
+
+/*******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80004B40.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800050D0.s")
