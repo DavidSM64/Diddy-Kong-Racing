@@ -65,7 +65,6 @@ typedef struct unk80119240
 } unk800DC6B0;
 */
 
-
 typedef struct audioMgrConfig_s{
     u32 unk00;
     u32 unk04;
@@ -74,13 +73,35 @@ typedef struct audioMgrConfig_s{
     u16  unk10;
 } audioMgrConfig;
 
+/************ .data ************/
 
+s32 D_800DC680 = 0; // Currently unknown, might be a different type.
+s32 D_800DC684 = 0; // Currently unknown, might be a different type.
+s32 D_800DC688 = 0; // Currently unknown, might be a different type.
+s32 D_800DC68C = 0; // Currently unknown, might be a different type.
+s32 D_800DC690 = 0x35281; // Currently unknown, might be a different type.
+s32 D_800DC694 = 0xFD0; // Currently unknown, might be a different type.
+s32 D_800DC698 = 0; // Currently unknown, might be a different type.
+s32 D_800DC69C = 0; // Currently unknown, might be a different type.
+s32 D_800DC6A0 = 1; // Currently unknown, might be a different type.
+s32 D_800DC6A4 = 0; // Currently unknown, might be a different type.
+s32 D_800DC6A8 = 0; // Currently unknown, might be a different type.
+s32 D_800DC6AC = 0; // Currently unknown, might be a different type.
 
-extern u32 D_800DC6A0;
-//extern unk800DC6B0* D_800DC6B0;
-extern unk800DC6BC_40* D_800DC6B8;
-extern unk800DC6BC* gAlSndPlayer;
-extern s32 sfxVolumeSlider;
+s32 D_800DC6B0 = 0; // Currently unknown, might be a different type.
+s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
+unk800DC6BC_40* D_800DC6B8 = NULL;
+unk800DC6BC* gAlSndPlayer = (unk800DC6BC*)0x80119BD0; // What variable is 0x80119BD0?
+
+s32 sfxVolumeSlider = 0x100;
+s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
+
+/*******************************/
+
+/*** No .rodata section ***/
+
+/************ .bss ************/
+
 extern s32 D_80115F90;
 extern ALHeap* D_80115F94;
 extern OSThread audioThread;
@@ -96,6 +117,8 @@ extern OSMesgQueue D_80119AF0;
 extern OSMesg D_80119B08;
 extern u16* D_80119C28;
 extern f32 D_80126170;
+
+/******************************/
 
 void    *alHeapDBAlloc(u8 *, s32, ALHeap *, s32, s32);
 

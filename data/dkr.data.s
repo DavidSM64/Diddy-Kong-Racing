@@ -50,63 +50,67 @@
 # .word 0x00000000
 # glabel D_800DC66C
 # .word 0x00000100
-  
+#
 #  glabel D_800DC670
 #  .word 0x00000000
-
-#  .word 0, 0, 0 # File Padding?
+#
+#  .word 0, 0, 0 # Padding
 
 ######################################################
 
-glabel D_800DC680
-.word 0x00000000
+############## unknown_003260.c (.data) ##############
 
-glabel D_800DC684
-.word 0x00000000
+# glabel D_800DC680
+# .word 0x00000000
+# 
+# glabel D_800DC684
+# .word 0x00000000
+# 
+# glabel D_800DC688
+# .word 0x00000000
+# 
+# glabel D_800DC68C
+# .word 0x00000000
+#
+# glabel D_800DC690
+# .word 0x00035281
+# 
+# glabel D_800DC694
+# .word 0x00000FD0
+# 
+# glabel D_800DC698
+# .word 0x00000000
+# 
+# glabel D_800DC69C
+# .word 0x00000000
+#
+# glabel D_800DC6A0
+# .word 0x00000001
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+#
+# glabel D_800DC6B0
+# .word 0x00000000
+# 
+# glabel D_800DC6B4
+# .word 0x00000000
+# 
+# glabel D_800DC6B8
+# .word 0x00000000
+# 
+# glabel gAlSndPlayer
+# .word 0x80119BD0
+# 
+# glabel sfxVolumeSlider
+# .word 0x00000100
+# 
+# glabel D_800DC6C4
+# .word 0x00000000
+#
+# .word 0, 0 # Padding
 
-glabel D_800DC688
-.word 0x00000000
-
-glabel D_800DC68C
-.word 0x00000000
-
-glabel D_800DC690
-.word 0x00035281
-
-glabel D_800DC694
-.word 0x00000FD0
-
-glabel D_800DC698
-.word 0x00000000
-
-glabel D_800DC69C
-.word 0x00000000
-
-glabel D_800DC6A0
-.word 0x00000001
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-
-glabel D_800DC6B0
-.word 0x00000000
-
-glabel D_800DC6B4
-.word 0x00000000
-
-glabel D_800DC6B8
-.word 0x00000000
-
-glabel gAlSndPlayer
-.word 0x80119BD0
-
-glabel sfxVolumeSlider
-.word 0x00000100
-
-glabel D_800DC6C4
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
+######################################################
 
 glabel D_800DC6D0
 .word 0x01000000
