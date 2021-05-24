@@ -75,6 +75,7 @@ class GenerateLD:
     def gen_data_section(self):
         self.gen_line('.main_data 0x80000400 : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
+        self.gen_line(BUILD_DIR + '/src/unknown_001050.o(.data);')
         self.gen_line(BUILD_DIR + '/data/dkr.data.o(.data);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.main_data);')
