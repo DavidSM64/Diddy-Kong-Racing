@@ -1,5 +1,5 @@
-from os import listdir, remove
-from os.path import isfile, isdir, join
+from os import chdir, listdir, remove
+from os.path import dirname, isfile, isdir, join, realpath
 
 class FileUtil:
     @staticmethod
@@ -58,3 +58,6 @@ class FileUtil:
     def delete_file(filename):
         remove(filename)
     
+    @staticmethod
+    def set_working_dir_to_project_base():
+        chdir(join(dirname(realpath(__file__)), '../..'))
