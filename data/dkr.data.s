@@ -1529,43 +1529,47 @@
 
 ############## unknown_079F50.c (.data) ##############
 
-glabel D_800DE730
-.word 0x00000000
-.word 0x00000000
+# glabel D_800DE730
+# .word 0x00000000
+# .word 0x00000000
+# 
+# glabel D_800DE738
+# .word 0x00000000
+# .word 0x00000008
+# 
+# glabel D_800DE740
+# .word 0x00000000
+# 
+# glabel D_800DE744
+# .word 0x00000000
+# 
+# glabel D_800DE748
+# .word 0x00000000
+# 
+# glabel D_800DE74C
+# .word 0x00000000
+# 
+# glabel D_800DE750
+# .word 0x00000000
+# 
+# glabel D_800DE754
+# .word 0x00000000
+# 
+# glabel D_800DE758
+# .word 0x00000000
+# .word 0x00000000
+# 
+# glabel D_800DE760
+# .word 0x00000000
+# 
+# glabel D_800DE764
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
 
-glabel D_800DE738
-.word 0x00000000
-.word 0x00000008
+######################################################
 
-glabel D_800DE740
-.word 0x00000000
-
-glabel D_800DE744
-.word 0x00000000
-
-glabel D_800DE748
-.word 0x00000000
-
-glabel D_800DE74C
-.word 0x00000000
-
-glabel D_800DE750
-.word 0x00000000
-
-glabel D_800DE754
-.word 0x00000000
-
-glabel D_800DE758
-.word 0x00000000
-.word 0x00000000
-
-glabel D_800DE760
-.word 0x00000000
-
-glabel D_800DE764
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
+############## unknown_07AF10.c (.data) ##############
 
 glabel D_800DE770
 .word 0x00000000
