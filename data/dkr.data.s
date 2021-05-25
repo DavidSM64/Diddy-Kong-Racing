@@ -1571,31 +1571,35 @@
 
 ############## unknown_07AF10.c (.data) ##############
 
-glabel D_800DE770
-.word 0x00000000
-.word 0x00000000
-.word 0x02000000
+# glabel D_800DE770
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x02000000
+# 
+# glabel D_800DE77C
+# .word 0x00000140
+# .word 0x000000F0
+# .word 0x00000140
+# .word 0x000000F0
+# .word 0x00000280
+# .word 0x000000F0
+# .word 0x00000280
+# .word 0x000000F0
+# .word 0x00000280
+# .word 0x000001E0
+# .word 0x00000280
+# .word 0x000001E0
+# .word 0x00000280
+# .word 0x000001E0
+# .word 0x00000280
+# .word 0x000001E0
+# 
+# glabel D_800DE7BC
+# .word 0x00000000
 
-glabel D_800DE77C
-.word 0x00000140
-.word 0x000000F0
-.word 0x00000140
-.word 0x000000F0
-.word 0x00000280
-.word 0x000000F0
-.word 0x00000280
-.word 0x000000F0
-.word 0x00000280
-.word 0x000001E0
-.word 0x00000280
-.word 0x000001E0
-.word 0x00000280
-.word 0x000001E0
-.word 0x00000280
-.word 0x000001E0
+######################################################
 
-glabel D_800DE7BC
-.word 0x00000000
+############## unknown_07B870.c (.data) ##############
 
 glabel D_800DE7C0
 .word 0xFF00FFFF
