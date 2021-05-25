@@ -776,33 +776,33 @@
 
 ############## unknown_05F690.c (.data) ##############
 
-glabel D_800DCE60
-.word 0x022C00A5
-.word 0x00A60057
-.word 0x0051006D
-.word 0x005200F8
-.word 0x00F90227
-.word 0x0228002E
-.word 0x002F0030
-.word 0x00000000
-
-glabel D_800DCE80
-.word 0x022C00A5
-.word 0x00A60057
-.word 0x0051006D
-.word 0x005200F8
-.word 0x00F90227
-.word 0x0228002E
-.word 0x002F0030
-.word 0x00000000
-
-glabel D_800DCEA0
-.word 0x0001C65B
-
-glabel D_800DCEA4
-.word 0x000007BC
-.word 0x00000000
-.word 0x00000000
+# glabel D_800DCE60
+# .word 0x022C00A5
+# .word 0x00A60057
+# .word 0x0051006D
+# .word 0x005200F8
+# .word 0x00F90227
+# .word 0x0228002E
+# .word 0x002F0030
+# .word 0x00000000
+# 
+# glabel D_800DCE80
+# .word 0x022C00A5
+# .word 0x00A60057
+# .word 0x0051006D
+# .word 0x005200F8
+# .word 0x00F90227
+# .word 0x0228002E
+# .word 0x002F0030
+# .word 0x00000000
+# 
+# glabel D_800DCEA0
+# .word 0x0001C65B
+# 
+# glabel D_800DCEA4
+# .word 0x000007BC
+# .word 0x00000000
+# .word 0x00000000
 
 ######################################################
 
