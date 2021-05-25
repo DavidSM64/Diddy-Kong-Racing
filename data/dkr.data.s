@@ -1299,17 +1299,21 @@
 
 ############## unknown_072E50.c (.data) ##############
 
-glabel D_800DE440
-.word 0x00000000
+# glabel D_800DE440
+# .word 0x00000000
+# 
+# glabel D_800DE444
+# .aligned_text "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'*+,-./:=?@"
+# 
+# glabel D_800DE488
+# .word 0x00000000
+# 
+# glabel D_800DE48C
+# .word 0x00000000
 
-glabel D_800DE444
-.aligned_text "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'*+,-./:=?@"
+######################################################
 
-glabel D_800DE488
-.word 0x00000000
-
-glabel D_800DE48C
-.word 0x00000000
+############## unknown_078050.c (.data) ##############
 
 glabel D_800DE490
 .word 0x00020000
