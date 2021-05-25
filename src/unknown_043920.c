@@ -5,15 +5,103 @@
 #include "macros.h"
 #include "structs.h"
 
-extern s32 D_800DCB50;
-extern s16 D_800DCB54;
-extern f32 D_800DCB9C;
-extern s32 D_800DCDD0;
+
+/************ .data ************/
+
+s32 D_800DCB50 = 0x310;
+s16 D_800DCB54 = 0;
+s32 D_800DCB58 = 0; // Currently unknown, might be a different type.
+s32 D_800DCB5C = 0; // Currently unknown, might be a different type.
+
+// Not sure if D_800DCB58 & D_800DCB5C are actually a part of this array.
+f32 D_800DCB60[14] = {
+    -10.0f, 5.0f, 0.0f, 0.0f,
+    10.0f, 5.0f, 0.0f, 0.0f,
+    -10.0f, 10.0f, 0.0f, 0.0f, 
+    10.0f, 10.0f
+};
+
+s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
+f32 D_800DCB9C[38] = { 
+    0.004f, 0.007f, 0.0099999999f, 0.004f, 
+    0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f, 
+    0.0099999999f, 0.0099999999f, 0.004f, 0.004f, 
+    0.004f, 0.004f, 0.004f, 0.004f, 
+    0.004f, 0.004f, 0.004f, 0.8f, 
+    0.85f, 0.85f, 0.5f, 0.5f, 
+    0.5f, 0.5f, 0.5f, 0.5f, 
+    0.5f, 0.5f, 0.8f, 0.8f, 
+    0.84f, 0.8f, 0.8f, 0.8f,
+    0.8f, 0.8f
+};
+
+// Unused? Not sure if this is actually an array or just some random data.
+s32 D_800DCC34[38] = {
+    0, 1, 1, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 26, 27, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0
+};
+
+// Unused?
+s16 D_800DCCB4[20] = {
+    0x010C, 0x010B, 0x0009, 0x010C,
+    0x010C, 0x010C, 0x010C, 0x010C,
+    0x010C, 0x010C, 0x010C, 0x0005,
+    0x010C, 0x010C, 0x010C, 0x010C,
+    0x010C, 0x010C, 0x010C, 0x0000
+};
+
+// Unused? Not sure if this is actually an array or just some random data.
+s32 D_800DCCDC[39] = {
+    1, 4, 16, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 0x100, 1, 1,
+    1, 1, 1, 0, 4, 16, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0x100, 0, 0, 0, 0, 0, 0
+};
+
+s8 D_800DCD90[15] = {
+    1, 1, 2, 2, 4, 3, 0, 6,
+    4, 3, 2, 2, 5, 5, 5
+};
+
+// Unused?
+s8 D_800DCDA0[16] = {
+    0, 0, 0, 1, 1, 2, 2, 2,
+    1, 1, 1, 2, 3, 2, 3, 2 
+};
+
+// Unused?
+s16 D_800DCDB0[16] = {
+    0x02FE, 0x03FE, 0x02FC, 0x02FB,
+    0x02FB, 0x02FE, 0x02FD, 0x02FE,
+    0x03FD, 0x05FC, 0x04FE, 0x02FE,
+    0x02FA, 0x02FE, 0x08F8, 0x03FD
+};
+
+s32 D_800DCDD0 = 42391;
+
+s16 D_800DCDD4[4] = {
+    0, 0, 0x32, -1
+    // There might be one or two extra zeroes here.
+};
+
+/*******************************/
+
+/************ .rodata ************/
+
 extern f64 D_800E6768;
 extern f64 D_800E6770;
 extern f64 D_800E6778;
 extern f64 D_800E6780;
 extern f32 D_800E6A00;
+
+/*********************************/
+
+/************ .bss ************/
+
 extern s32 D_8011D528;
 extern s32 D_8011D55C;
 extern s8 D_8011D582;
@@ -457,7 +545,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005A6F0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005B818.s")
 
 void func_8005C25C(void) {
-    D_800DCB9C = D_800E6A00;
+    D_800DCB9C[0] = D_800E6A00;
 }
 
 /* Unknown Size */
