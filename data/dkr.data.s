@@ -2437,11 +2437,15 @@
 
 ############## unknown_080240.c (.data) ##############
 
-glabel D_800DF440
-.word 0xFC137E26
-.word 0xFFFFF3F9
-.word 0xEF200CCF
-.word 0x00000000
+# glabel D_800DF440
+# .word 0xFC137E26
+# .word 0xFFFFF3F9
+# .word 0xEF200CCF
+# .word 0x00000000
+
+######################################################
+
+############## unknown_080500.c (.data) ##############
 
 glabel D_800DF450
 .word 0x00000000
