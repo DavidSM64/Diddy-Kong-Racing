@@ -724,15 +724,15 @@
 
 ############## unknown_05CEF0.c (.data) ##############
 
-glabel D_800DCDE0
-.word 0x022B00A3
-.word 0x00A400B3
-.word 0x00B400F0
-.word 0x00F100F6
-.word 0x00F70225
-.word 0x0226002E
-.word 0x002F0030
-.word 0x00000000
+# glabel D_800DCDE0
+# .word 0x022B00A3
+# .word 0x00A400B3
+# .word 0x00B400F0
+# .word 0x00F100F6
+# .word 0x00F70225
+# .word 0x0226002E
+# .word 0x002F0030
+# .word 0x00000000
 
 ######################################################
 
