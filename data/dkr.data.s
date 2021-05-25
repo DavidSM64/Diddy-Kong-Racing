@@ -738,25 +738,29 @@
 
 ############## unknown_05DCD0.c (.data) ##############
 
-glabel D_800DCE00
-.word 0x022D00A7
-.word 0x00A800B7
-.word 0x00B800F4
-.word 0x00F500FA
-.word 0x00FB0229
-.word 0x022A002E
-.word 0x002F0030
-.word 0x00000000
+# glabel D_800DCE00
+# .word 0x022D00A7
+# .word 0x00A800B7
+# .word 0x00B800F4
+# .word 0x00F500FA
+# .word 0x00FB0229
+# .word 0x022A002E
+# .word 0x002F0030
+# .word 0x00000000
+# 
+# glabel D_800DCE20
+# .word 0x022C00A5
+# .word 0x00A600B5
+# .word 0x00B600F2
+# .word 0x00F300F8
+# .word 0x00F90227
+# .word 0x0228002E
+# .word 0x002F0030
+# .word 0x00000000
 
-glabel D_800DCE20
-.word 0x022C00A5
-.word 0x00A600B5
-.word 0x00B600F2
-.word 0x00F300F8
-.word 0x00F90227
-.word 0x0228002E
-.word 0x002F0030
-.word 0x00000000
+######################################################
+
+############## unknown_05F0C0.c (.data) ##############
 
 glabel D_800DCE40
 .word 0x02440242
