@@ -65,7 +65,7 @@ class GenerateLD:
         self.gen_newline()
         
     def gen_ucode_text_section(self):
-        self.gen_line('.ucodeText 0 : AT(romPos)')
+        self.gen_line('.ucodeText . : AT(romPos)')
         self.gen_open_block()
         self.gen_line(BUILD_DIR + '/asm/assets/ucode_text.o(.text);')
         self.gen_close_block()
@@ -73,7 +73,7 @@ class GenerateLD:
         self.gen_newline()
         
     def gen_data_section(self):
-        self.gen_line('.main_data 0x80000400 : AT(romPos) SUBALIGN(16)')
+        self.gen_line('.main_data . : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
         for file in self.files:
             self.gen_line(file[0] + '(.data);')
@@ -83,7 +83,7 @@ class GenerateLD:
         self.gen_newline()
         
     def gen_ucode_data_section(self):
-        self.gen_line('.ucodeData 0 : AT(romPos)')
+        self.gen_line('.ucodeData . : AT(romPos)')
         self.gen_open_block()
         self.gen_line(BUILD_DIR + '/asm/assets/ucode_data.o(.text);')
         self.gen_close_block()
