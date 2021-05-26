@@ -8,6 +8,10 @@ from file_util import FileUtil
 DATA_FILE_PATH = 'data/dkr.data.s'
 GLABEL_REGEX = r'D_[0-9A-F]{8}'
 GLABEL_DEF_REGEX = r'glabel (%s)' % GLABEL_REGEX
+# List of labels that are not used in the file they are defined in.
+# This throws off the splitter algorithm, so the troublesome ones
+# must be individually blacklisted for now.
+IGNORE_GLABELS = ['D_800E0001']
 
 def _rom_offset(vaddr):
     """
@@ -25,7 +29,8 @@ def _get_glabels():
     Returns all the glabel definitions in the data file.
     """
     data_file = FileUtil.get_text_from_file(DATA_FILE_PATH)
-    return re.findall(GLABEL_DEF_REGEX, data_file)
+    glabels = re.findall(GLABEL_DEF_REGEX, data_file)
+    return [glabel for glabel in glabels if glabel not in IGNORE_GLABELS]
 
 def _get_file_offset(file, contents):
     """
@@ -62,7 +67,8 @@ def _log_glabel_usage(glabels):
                 c_file_offsets.append((file, offset))
             matches = re.findall(GLABEL_REGEX, contents)
             for glabel in matches:
-                usage[glabel].add(offset)
+                if glabel in usage:
+                    usage[glabel].add(offset)
         except:
             pass
     for glabel in usage:
