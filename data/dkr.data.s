@@ -6766,335 +6766,339 @@
 
 ############## unknown_0AEE70.c (.data) ##############
 
-glabel D_800E2CA0
-.word 0x00000000
+# glabel D_800E2CA0
+# .word 0x00000000
+# 
+# glabel D_800E2CA4
+# .word 0x00000000
+# 
+# glabel D_800E2CA8
+# .word 0x00000000
+# 
+# glabel D_800E2CAC
+# .word 0x00000000
+# 
+# glabel D_800E2CB0
+# .word 0x00000000
+# 
+# glabel D_800E2CB4
+# .word 0x00000000
+# 
+# glabel D_800E2CB8
+# .word 0x00000000
+# 
+# glabel D_800E2CBC
+# .word 0x00000000
+# 
+# glabel D_800E2CC0
+# .word 0x00000000
+# 
+# glabel D_800E2CC4
+# .word 0x00000000
+# 
+# glabel D_800E2CC8
+# .word 0x00000000
+# 
+# glabel D_800E2CCC
+# .word 0x00000000
+# 
+# glabel D_800E2CD0
+# .word 0x00000000
+# 
+# glabel D_800E2CD4
+# .word 0x00000000
+# 
+# glabel D_800E2CD8
+# .word 0x00000000
+# 
+# glabel D_800E2CDC
+# .word 0x00000000
+# 
+# glabel D_800E2CE0
+# .word 0x00000000
+# 
+# glabel D_800E2CE4
+# .word 0x00000000
+# 
+# glabel D_800E2CE8
+# .word 0x00000000
+# 
+# glabel D_800E2CEC
+# .word 0x00000000
+# 
+# glabel D_800E2CF0
+# .word 0x00000000
+# 
+# glabel D_800E2CF4
+# .word 0x00000000
+# 
+# glabel D_800E2CF8
+# .word 0x00000000
+# 
+# glabel D_800E2CFC
+# .word 0x00000000
+# 
+# glabel D_800E2D00
+# .word 0x00000000
+# .word 0x00000000
+# 
+# glabel D_800E2D08
+# .word 0x40000102 # struct 0x10 bytes with all s16?
+# .word 0x01000000
+# .word 0x000001E0
+# .word 0x010001E0
+# .word 0x40000203
+# .word 0x01000000
+# .word 0x010001E0
+# .word 0x01E001E0
+# .word 0x40010204
+# .word 0x00000000
+# .word 0x01000000
+# .word 0x000001E0
+# .word 0x40020305
+# .word 0x01000000
+# .word 0x01E00000
+# .word 0x01E001E0
+# .word 0x40000103
+# .word 0x01000000
+# .word 0x000001E0
+# .word 0x01E001E0
+# 
+# glabel D_800E2D58
+# .word 0x000001FF
+# .word 0x01FF0000
+# .word 0x01FF01FF
+# .word 0x00000000
+# .word 0x01FF0000
+# .word 0x000001FF
+# .word 0x000001FF
+# .word 0x01FF0000
+# 
+# glabel D_800E2D78
+# .word 0x00000105
+# .word 0x00000000
+# .word 0x00800000
+# .word 0x008001FF
+# .word 0x00000504
+# .word 0x00000000
+# .word 0x008001FF
+# .word 0x000001FF
+# .word 0x00010206
+# .word 0x00800000
+# .word 0x01000000
+# .word 0x010001FF
+# .word 0x00010605
+# .word 0x00800000
+# .word 0x010001FF
+# .word 0x008001FF
+# .word 0x00020307
+# .word 0x01000000
+# .word 0x01800000
+# .word 0x018001FF
+# .word 0x00020706
+# .word 0x01000000
+# .word 0x018001FF
+# .word 0x010001FF
+# .word 0x00030004
+# .word 0x01800000
+# .word 0x02000000
+# .word 0x020001FF
+# .word 0x00030407
+# .word 0x01800000
+# .word 0x020001FF
+# .word 0x018001FF
+# 
+# glabel D_800E2DF8
+# .word 0x00000000
+# .word 0x01FF0000
+# .word 0x01FF01FF
+# .word 0x00000000
+# .word 0x01FF0000
+# .word 0x01FF01FF
+# .word 0x00000000
+# .word 0x01FF0000
+# .word 0x01FF01FF
+# .word 0x00000000
+# .word 0x01FF0000
+# .word 0x01FF01FF
+# 
+# glabel D_800E2E28
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x3DCCCCCD
+# .word 0x3E4CCCCD
+# .word 0x3E99999A
+# .word 0x3EE66666
+# .word 0x3F066666
+# .word 0x3F19999A
+# .word 0x3F4CCCCD
+# 
+# glabel D_800E2E4C
+# .word 0x00000000
+# 
+# glabel D_800E2E50
+# .word 0x00000000
+# 
+# glabel D_800E2E54
+# .word 0x00000000
+# 
+# glabel D_800E2E58
+# .word 0x00000000
+# 
+# glabel D_800E2E5C
+# .word 0x00000000
+# 
+# glabel D_800E2E60
+# .word 0x00000000
+# 
+# glabel D_800E2E64
+# .word 0x00000000
+# 
+# glabel D_800E2E68
+# .word 0x00000008
+# .word 0x0007FFFC
+# .word 0xFFF9FFFC
+# 
+# glabel D_800E2E74
+# .word 0xFFFA0006
+# .word 0x00060006
+# .word 0x0006FFFA
+# .word 0xFFFAFFFA
+# 
+# glabel D_800E2E84
+# .word 0x00000000
+# .word 0xC00840FF
+# .word 0xFF6008FF
+# .word 0x404040FF
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x00000000
+# .word 0x1070FFFF
+# .word 0x00000000
+# .word 0x00000000
+# 
+# glabel D_800E2EC4
+# .word 0x404040FF
+# .word 0x404040FF
+# .word 0x002D00FF
+# .word 0x002D00FF
+# .word 0x403C0AFF
+# .word 0x403C0AFF
+# .word 0x4040FFFF
+# .word 0x4040FFFF
+# .word 0x404040FF
+# .word 0x404040FF
+# 
+# glabel D_800E2EEC
+# .word 0x00000100
+# 
+# glabel D_800E2EF0
+# .word 0x00000000
+# 
+# glabel D_800E2EF4
+# .word 0x02040608
+# .word 0x0A0F1115
+# .word 0x171F2127
+# .word 0x292B2D2F
+# .word 0x31333538
+# .word 0x3A3F4143
+# .word 0x45484A4B
+# .word 0x4D505256
+# .word 0x585B5D62
+# .word 0x64686A6F
+# .word 0x7176787D
+# .word 0x7F84868B
+# .word 0x8D929496
+# .word 0x989A9DA2
+# .word 0xA5A9ABB0
+# .word 0xB3B80001
+# .word 0x00090B11
+# .word 0x13191B21
+# .word 0x23292B31
+# .word 0x33383A41
+# .word 0x43494B4C
+# .word 0x4E53555B
+# .word 0x5D62646B
+# .word 0x6D73757B
+# .word 0x7D83858B
+# .word 0x8D93959B
+# .word 0x9DA3A5AA
+# .word 0xACB2B4BC
+# .word 0xBEC4C6CC
+# .word 0xCED3D5D7
+# .word 0xD9DCDEE0
+# .word 0xE2E7E9EF
+# .word 0x00010308
+# .word 0x090F1116
+# .word 0x181D1F24
+# .word 0x26282A2F
+# .word 0x31363839
+# .word 0x3B3D3F43
+# .word 0x4546484F
+# .word 0x5156585D
+# .word 0x5F64666B
+# .word 0x6C707277
+# .word 0x797C7E82
+# .word 0x84898B92
+# .word 0x94999BA0
+# .word 0xA2A6A8AB
+# .word 0xADAEB0B3
+# .word 0xB5B9B5B9
+# .word 0x00000000
+# 
+# glabel D_800E2FB8
+# .word 0xE7000000
+# .word 0x00000000
+# .word 0xBA001402
+# .word 0x00000000
+# .word 0xBA001001
+# .word 0x00000000
+# .word 0xBA000E02
+# .word 0x00000000
+# .word 0xBA001102
+# .word 0x00000000
+# .word 0xBA001301
+# .word 0x00000000
+# .word 0xBA000C02
+# .word 0x00002000
+# .word 0xBA000903
+# .word 0x00000C00
+# .word 0xB9000002
+# .word 0x00000000
+# .word 0xB900031D
+# .word 0x00504240
+# .word 0xFB000000
+# .word 0xFFFFFFFF
+# .word 0xFA000000
+# .word 0x00000000
+# .word 0xB8000000
+# .word 0x00000000
+# 
+# glabel D_800E3020
+# .word 0xFFFFFFFF
+# 
+# glabel D_800E3024
+# .word 0x00000000
+# 
+# glabel D_800E3028
+# .word 0x00000000
+# 
+# glabel D_800E302C
+# .word 0x800E8F00
+# .word 0x800E8F08
+# .word 0x800E8F10
+# .word 0x00000000
+# .word 0x00000000
 
-glabel D_800E2CA4
-.word 0x00000000
+######################################################
 
-glabel D_800E2CA8
-.word 0x00000000
-
-glabel D_800E2CAC
-.word 0x00000000
-
-glabel D_800E2CB0
-.word 0x00000000
-
-glabel D_800E2CB4
-.word 0x00000000
-
-glabel D_800E2CB8
-.word 0x00000000
-
-glabel D_800E2CBC
-.word 0x00000000
-
-glabel D_800E2CC0
-.word 0x00000000
-
-glabel D_800E2CC4
-.word 0x00000000
-
-glabel D_800E2CC8
-.word 0x00000000
-
-glabel D_800E2CCC
-.word 0x00000000
-
-glabel D_800E2CD0
-.word 0x00000000
-
-glabel D_800E2CD4
-.word 0x00000000
-
-glabel D_800E2CD8
-.word 0x00000000
-
-glabel D_800E2CDC
-.word 0x00000000
-
-glabel D_800E2CE0
-.word 0x00000000
-
-glabel D_800E2CE4
-.word 0x00000000
-
-glabel D_800E2CE8
-.word 0x00000000
-
-glabel D_800E2CEC
-.word 0x00000000
-
-glabel D_800E2CF0
-.word 0x00000000
-
-glabel D_800E2CF4
-.word 0x00000000
-
-glabel D_800E2CF8
-.word 0x00000000
-
-glabel D_800E2CFC
-.word 0x00000000
-
-glabel D_800E2D00
-.word 0x00000000
-.word 0x00000000
-
-glabel D_800E2D08
-.word 0x40000102
-.word 0x01000000
-.word 0x000001E0
-.word 0x010001E0
-.word 0x40000203
-.word 0x01000000
-.word 0x010001E0
-.word 0x01E001E0
-.word 0x40010204
-.word 0x00000000
-.word 0x01000000
-.word 0x000001E0
-.word 0x40020305
-.word 0x01000000
-.word 0x01E00000
-.word 0x01E001E0
-.word 0x40000103
-.word 0x01000000
-.word 0x000001E0
-.word 0x01E001E0
-
-glabel D_800E2D58
-.word 0x000001FF
-.word 0x01FF0000
-.word 0x01FF01FF
-.word 0x00000000
-.word 0x01FF0000
-.word 0x000001FF
-.word 0x000001FF
-.word 0x01FF0000
-
-glabel D_800E2D78
-.word 0x00000105
-.word 0x00000000
-.word 0x00800000
-.word 0x008001FF
-.word 0x00000504
-.word 0x00000000
-.word 0x008001FF
-.word 0x000001FF
-.word 0x00010206
-.word 0x00800000
-.word 0x01000000
-.word 0x010001FF
-.word 0x00010605
-.word 0x00800000
-.word 0x010001FF
-.word 0x008001FF
-.word 0x00020307
-.word 0x01000000
-.word 0x01800000
-.word 0x018001FF
-.word 0x00020706
-.word 0x01000000
-.word 0x018001FF
-.word 0x010001FF
-.word 0x00030004
-.word 0x01800000
-.word 0x02000000
-.word 0x020001FF
-.word 0x00030407
-.word 0x01800000
-.word 0x020001FF
-.word 0x018001FF
-
-glabel D_800E2DF8
-.word 0x00000000
-.word 0x01FF0000
-.word 0x01FF01FF
-.word 0x00000000
-.word 0x01FF0000
-.word 0x01FF01FF
-.word 0x00000000
-.word 0x01FF0000
-.word 0x01FF01FF
-.word 0x00000000
-.word 0x01FF0000
-.word 0x01FF01FF
-
-glabel D_800E2E28
-.word 0x00000000
-.word 0x00000000
-.word 0x3DCCCCCD
-.word 0x3E4CCCCD
-.word 0x3E99999A
-.word 0x3EE66666
-.word 0x3F066666
-.word 0x3F19999A
-.word 0x3F4CCCCD
-
-glabel D_800E2E4C
-.word 0x00000000
-
-glabel D_800E2E50
-.word 0x00000000
-
-glabel D_800E2E54
-.word 0x00000000
-
-glabel D_800E2E58
-.word 0x00000000
-
-glabel D_800E2E5C
-.word 0x00000000
-
-glabel D_800E2E60
-.word 0x00000000
-
-glabel D_800E2E64
-.word 0x00000000
-
-glabel D_800E2E68
-.word 0x00000008
-.word 0x0007FFFC
-.word 0xFFF9FFFC
-
-glabel D_800E2E74
-.word 0xFFFA0006
-.word 0x00060006
-.word 0x0006FFFA
-.word 0xFFFAFFFA
-
-glabel D_800E2E84
-.word 0x00000000
-.word 0xC00840FF
-.word 0xFF6008FF
-.word 0x404040FF
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x00000000
-.word 0x1070FFFF
-.word 0x00000000
-.word 0x00000000
-
-glabel D_800E2EC4
-.word 0x404040FF
-.word 0x404040FF
-.word 0x002D00FF
-.word 0x002D00FF
-.word 0x403C0AFF
-.word 0x403C0AFF
-.word 0x4040FFFF
-.word 0x4040FFFF
-.word 0x404040FF
-.word 0x404040FF
-
-glabel D_800E2EEC
-.word 0x00000100
-
-glabel D_800E2EF0
-.word 0x00000000
-
-glabel D_800E2EF4
-.word 0x02040608
-.word 0x0A0F1115
-.word 0x171F2127
-.word 0x292B2D2F
-.word 0x31333538
-.word 0x3A3F4143
-.word 0x45484A4B
-.word 0x4D505256
-.word 0x585B5D62
-.word 0x64686A6F
-.word 0x7176787D
-.word 0x7F84868B
-.word 0x8D929496
-.word 0x989A9DA2
-.word 0xA5A9ABB0
-.word 0xB3B80001
-.word 0x00090B11
-.word 0x13191B21
-.word 0x23292B31
-.word 0x33383A41
-.word 0x43494B4C
-.word 0x4E53555B
-.word 0x5D62646B
-.word 0x6D73757B
-.word 0x7D83858B
-.word 0x8D93959B
-.word 0x9DA3A5AA
-.word 0xACB2B4BC
-.word 0xBEC4C6CC
-.word 0xCED3D5D7
-.word 0xD9DCDEE0
-.word 0xE2E7E9EF
-.word 0x00010308
-.word 0x090F1116
-.word 0x181D1F24
-.word 0x26282A2F
-.word 0x31363839
-.word 0x3B3D3F43
-.word 0x4546484F
-.word 0x5156585D
-.word 0x5F64666B
-.word 0x6C707277
-.word 0x797C7E82
-.word 0x84898B92
-.word 0x94999BA0
-.word 0xA2A6A8AB
-.word 0xADAEB0B3
-.word 0xB5B9B5B9
-.word 0x00000000
-
-glabel D_800E2FB8
-.word 0xE7000000
-.word 0x00000000
-.word 0xBA001402
-.word 0x00000000
-.word 0xBA001001
-.word 0x00000000
-.word 0xBA000E02
-.word 0x00000000
-.word 0xBA001102
-.word 0x00000000
-.word 0xBA001301
-.word 0x00000000
-.word 0xBA000C02
-.word 0x00002000
-.word 0xBA000903
-.word 0x00000C00
-.word 0xB9000002
-.word 0x00000000
-.word 0xB900031D
-.word 0x00504240
-.word 0xFB000000
-.word 0xFFFFFFFF
-.word 0xFA000000
-.word 0x00000000
-.word 0xB8000000
-.word 0x00000000
-
-glabel D_800E3020
-.word 0xFFFFFFFF
-
-glabel D_800E3024
-.word 0x00000000
-
-glabel D_800E3028
-.word 0x00000000
-
-glabel D_800E302C
-.word 0x800E8F00
-.word 0x800E8F08
-.word 0x800E8F10
-.word 0x00000000
-.word 0x00000000
+############## unknown_0B8920.c (.data) ##############
 
 glabel D_800E3040
 .word 0x00000000
@@ -7703,6 +7707,10 @@ glabel gzip_inflate_input
 
 glabel gzip_inflate_output
 .word 0x00000000
+
+######################################################
+
+############## unknown_0C7F50.c (.data) ##############
 
 glabel D_800E3770
 .word 0x00000000
