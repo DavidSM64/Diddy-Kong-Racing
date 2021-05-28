@@ -5,11 +5,11 @@ from file_util import FileUtil
 LINE_START_REGEX = r'\n(/\* ([0-9A-F]{6}) [0-9A-F]{8} [0-9A-F]{8} \*/\s+|\.L80[0-9A-F]{6}:)'
 REG_REGEX = r'(\$(at|v[0-1]|a[0-3]|t[0-9]|s[0-7]|k[0-1]|gp|sp|fp|ra))'
 GLABEL_UPPER_REGEX = '(' + LINE_START_REGEX + r'lui\s+' + REG_REGEX + r',\s+(0x80[0-9a-f]{2}))'
-GLABEL_LOWER_REGEX = '(' + LINE_START_REGEX + r'[sl][bhw]u?\s+' + REG_REGEX + r',\s+(0x[0-9a-f]{4})\(\4\))'
+GLABEL_LOWER_REGEX = '(' + LINE_START_REGEX + r'[sl][bhw]u?\s+' + REG_REGEX + r',\s+(-?0x[0-9a-f]{4})\(\4\))'
 GLABEL_REGEX = GLABEL_UPPER_REGEX + '(' + LINE_START_REGEX + '[^\n]*){0,10}' + GLABEL_LOWER_REGEX
 
 UPPER_INSTR_REGEX_TMPL = r'(/\* %s[^\n]*lui\s+)([^\n]*)'
-LOWER_INSTR_REGEX_TMPL = r'(/\* %s[^\n]*[ls][bhw]u?\s+' + REG_REGEX + r',\s+)0x[0-9a-f]{4}([^\n]*)'
+LOWER_INSTR_REGEX_TMPL = r'(/\* %s[^\n]*[ls][bhw]u?\s+' + REG_REGEX + r',\s+)-?0x[0-9a-f]{4}([^\n]*)'
 
 IGNORE_GLABELS = ['D_800E389E', 'D_801264A1']
 
@@ -23,6 +23,8 @@ def _find_glabels(asm):
             offsets = (match[2], match[11])  # ROM offsets of the lui and [sl][bhw]
             glabel_upper = int(match[5], 16)  # upper immediate of glabel
             glabel_lower = int(match[14], 16)  # lower immediate of the glabel
+            if glabel_lower < 0:
+                glabel_lower = (-glabel_lower ^ 0xFFFF) + 1
             if glabel_lower & 0x8000:
                 glabel_upper -= 1
             glabel = 'D_%08X' % (glabel_upper << 16 | glabel_lower)

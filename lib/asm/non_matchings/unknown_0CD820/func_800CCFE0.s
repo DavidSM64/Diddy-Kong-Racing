@@ -25,11 +25,11 @@ glabel func_800CCFE0
 .L800CD038:
 /* 0CDC38 800CD038 8FB80018 */  lw    $t8, 0x18($sp)
 /* 0CDC3C 800CD03C 8FA80018 */  lw    $t0, 0x18($sp)
-/* 0CDC40 800CD040 3C018013 */  lui   $at, 0x8013
+/* 0CDC40 800CD040 3C018013 */  lui   $at, %hi(D_8012CD50) # $at, 0x8013
 /* 0CDC44 800CD044 0018C880 */  sll   $t9, $t8, 2
 /* 0CDC48 800CD048 00390821 */  addu  $at, $at, $t9
 /* 0CDC4C 800CD04C 240F00FF */  li    $t7, 255
-/* 0CDC50 800CD050 AC2FCD50 */  sw    $t7, -0x32b0($at)
+/* 0CDC50 800CD050 AC2FCD50 */  sw    $t7, %lo(D_8012CD50)($at)
 /* 0CDC54 800CD054 25090001 */  addiu $t1, $t0, 1
 /* 0CDC58 800CD058 29210010 */  slti  $at, $t1, 0x10
 /* 0CDC5C 800CD05C 1420FFF6 */  bnez  $at, .L800CD038

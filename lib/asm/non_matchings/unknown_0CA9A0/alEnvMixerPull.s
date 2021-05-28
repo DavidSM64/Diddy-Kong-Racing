@@ -86,9 +86,9 @@ glabel alEnvMixerPull
 /* 0CAE08 800CA208 102001AE */  beqz  $at, .L800CA8C4
 /* 0CAE0C 800CA20C 00000000 */   nop   
 /* 0CAE10 800CA210 000C6080 */  sll   $t4, $t4, 2
-/* 0CAE14 800CA214 3C01800F */  lui   $at, 0x800f
+/* 0CAE14 800CA214 3C01800F */  lui   $at, %hi(D_800E95B0) # $at, 0x800f
 /* 0CAE18 800CA218 002C0821 */  addu  $at, $at, $t4
-/* 0CAE1C 800CA21C 8C2C95B0 */  lw    $t4, -0x6a50($at)
+/* 0CAE1C 800CA21C 8C2C95B0 */  lw    $t4, %lo(D_800E95B0)($at)
 /* 0CAE20 800CA220 00000000 */  nop   
 /* 0CAE24 800CA224 01800008 */  jr    $t4
 /* 0CAE28 800CA228 00000000 */   nop   

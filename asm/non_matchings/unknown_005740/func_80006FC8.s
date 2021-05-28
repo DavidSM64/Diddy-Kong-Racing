@@ -1085,9 +1085,9 @@ glabel func_80006FC8
 /* 008B74 80007F74 27BD00C8 */   addiu $sp, $sp, 0xc8
 
 /* 008B78 80007F78 240E0001 */  li    $t6, 1
-/* 008B7C 80007F7C 3C01800E */  lui   $at, 0x800e
+/* 008B7C 80007F7C 3C01800E */  lui   $at, %hi(D_800DC6D0) # $at, 0x800e
 /* 008B80 80007F80 03E00008 */  jr    $ra
-/* 008B84 80007F84 A02EC6D0 */   sb    $t6, -0x3930($at)
+/* 008B84 80007F84 A02EC6D0 */   sb    $t6, %lo(D_800DC6D0)($at)
 
 /* 008B88 80007F88 3C01800E */  lui   $at, 0x800e
 /* 008B8C 80007F8C 03E00008 */  jr    $ra

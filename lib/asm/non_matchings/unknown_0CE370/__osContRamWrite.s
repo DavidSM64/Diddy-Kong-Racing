@@ -47,11 +47,11 @@ glabel __osContRamWrite
 .L800CD99C:
 /* 0CE59C 800CD99C 8FAA0058 */  lw    $t2, 0x58($sp)
 /* 0CE5A0 800CD9A0 8FAC0058 */  lw    $t4, 0x58($sp)
-/* 0CE5A4 800CD9A4 3C018013 */  lui   $at, 0x8013
+/* 0CE5A4 800CD9A4 3C018013 */  lui   $at, %hi(__osPfsPifRam) # $at, 0x8013
 /* 0CE5A8 800CD9A8 000A5880 */  sll   $t3, $t2, 2
 /* 0CE5AC 800CD9AC 002B0821 */  addu  $at, $at, $t3
 /* 0CE5B0 800CD9B0 240900FF */  li    $t1, 255
-/* 0CE5B4 800CD9B4 AC29CDE0 */  sw    $t1, -0x3220($at)
+/* 0CE5B4 800CD9B4 AC29CDE0 */  sw    $t1, %lo(__osPfsPifRam)($at)
 /* 0CE5B8 800CD9B8 258D0001 */  addiu $t5, $t4, 1
 /* 0CE5BC 800CD9BC 29A10010 */  slti  $at, $t5, 0x10
 /* 0CE5C0 800CD9C0 1420FFF6 */  bnez  $at, .L800CD99C

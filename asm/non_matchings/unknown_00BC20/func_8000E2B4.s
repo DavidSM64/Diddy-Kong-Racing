@@ -34,7 +34,8 @@ glabel func_8000E2B4
 /* 00EF34 8000E334 00000000 */   nop   
 .L8000E338:
 /* 00EF38 8000E338 00046040 */  sll   $t4, $a0, 1
-/* 00EF3C 8000E33C 3C03800E */  lui   $v1, 0x800e
+# Indexing into D_800DC7B8 starting at index 37?
+/* 00EF3C 8000E33C 3C03800E */  lui   $v1, %hi(D_800DC7B8) # $v1, 0x800e
 /* 00EF40 8000E340 006C1821 */  addu  $v1, $v1, $t4
 /* 00EF44 8000E344 8463C802 */  lh    $v1, -0x37fe($v1)
 /* 00EF48 8000E348 00000000 */  nop   

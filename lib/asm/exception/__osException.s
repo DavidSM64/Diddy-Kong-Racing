@@ -134,12 +134,12 @@ glabel __osException
 /* 0D3AC0 800D2EC0 00095202 */  srl   $t2, $t1, 8
 /* 0D3AC4 800D2EC4 214A0010 */  addi  $t2, $t2, 0x10
 .L800D2EC8:
-/* 0D3AC8 800D2EC8 3C01800F */  lui   $at, 0x800f
+/* 0D3AC8 800D2EC8 3C01800F */  lui   $at, %hi(D_800E9670) # $at, 0x800f
 /* 0D3ACC 800D2ECC 002A0821 */  addu  $at, $at, $t2
-/* 0D3AD0 800D2ED0 902A9670 */  lbu   $t2, -0x6990($at)
-/* 0D3AD4 800D2ED4 3C01800F */  lui   $at, 0x800f
+/* 0D3AD0 800D2ED0 902A9670 */  lbu   $t2, %lo(D_800E9670)($at)
+/* 0D3AD4 800D2ED4 3C01800F */  lui   $at, %hi(D_800E9690) # $at, 0x800f
 /* 0D3AD8 800D2ED8 002A0821 */  addu  $at, $at, $t2
-/* 0D3ADC 800D2EDC 8C2A9690 */  lw    $t2, -0x6970($at)
+/* 0D3ADC 800D2EDC 8C2A9690 */  lw    $t2, %lo(D_800E9690)($at)
 /* 0D3AE0 800D2EE0 01400008 */  jr    $t2
 /* 0D3AE4 800D2EE4 00000000 */   nop   
 /* 0D3AE8 800D2EE8 2401DFFF */  li    $at, -8193

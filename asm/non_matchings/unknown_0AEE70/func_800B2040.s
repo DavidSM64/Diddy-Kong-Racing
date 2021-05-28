@@ -14,9 +14,9 @@ glabel func_800B2040
 /* 0B2C6C 800B206C 2C410005 */  sltiu $at, $v0, 5
 /* 0B2C70 800B2070 10200077 */  beqz  $at, .L800B2250
 /* 0B2C74 800B2074 00027080 */   sll   $t6, $v0, 2
-/* 0B2C78 800B2078 3C01800F */  lui   $at, 0x800f
+/* 0B2C78 800B2078 3C01800F */  lui   $at, %hi(D_800E8BDC) # $at, 0x800f
 /* 0B2C7C 800B207C 002E0821 */  addu  $at, $at, $t6
-/* 0B2C80 800B2080 8C2E8BDC */  lw    $t6, -0x7424($at)
+/* 0B2C80 800B2080 8C2E8BDC */  lw    $t6, %lo(D_800E8BDC)($at)
 /* 0B2C84 800B2084 00000000 */  nop   
 /* 0B2C88 800B2088 01C00008 */  jr    $t6
 /* 0B2C8C 800B208C 00000000 */   nop   

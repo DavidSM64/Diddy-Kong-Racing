@@ -12863,6 +12863,7 @@ glabel D_800E824C
 
 .aligned_text "loadFrontEndItem() - Item no %d out of range 0-%d\n"
 
+glabel D_800E8284
 .word 0x80081464
 .word 0x80081454
 .word 0x8008158C
@@ -12892,6 +12893,8 @@ glabel D_800E824C
 .word 0x80081574
 .word 0x8008158C
 .word 0x80081584
+
+glabel D_800E82F8
 .word 0x80081634
 .word 0x80081620
 .word 0x800817AC
@@ -12921,6 +12924,8 @@ glabel D_800E824C
 .word 0x80081788
 .word 0x800817AC
 .word 0x8008179C
+
+glabel D_800E836C
 .word 0x800823E8
 .word 0x80082454
 .word 0x800824B8
@@ -12958,6 +12963,8 @@ glabel D_800E83AC
 glabel D_800E83B0
 .word 0x3F2B851F
 .word 0x40351EB8
+
+glabel D_800E83B8
 .word 0x8008541C
 .word 0x8008553C
 .word 0x80085574
@@ -12968,6 +12975,8 @@ glabel D_800E83B0
 .word 0x80085774
 .word 0x800857C0
 .word 0x800857F0
+
+glabel D_800E83E0
 .word 0x80085C30
 .word 0x80085BF8
 .word 0x80085BF8
@@ -12976,6 +12985,8 @@ glabel D_800E83B0
 .word 0x80085C08
 .word 0x80085C14
 .word 0x80085C24
+
+glabel D_800E8400
 .word 0x80086834
 .word 0x80086888
 .word 0x800868C0
@@ -12984,6 +12995,8 @@ glabel D_800E83B0
 
 glabel D_800E8414
 .word 0x3DCCCCCD
+
+glabel D_800E8418
 .word 0x80086B54
 .word 0x80086CDC
 .word 0x80086D54
@@ -12994,6 +13007,8 @@ glabel D_800E8414
 .word 0x800871C4
 .word 0x800871C4
 .word 0x80087158
+
+glabel D_800E8440
 .word 0x800878D4
 .word 0x800878D4
 .word 0x800878D4
@@ -13003,6 +13018,8 @@ glabel D_800E8414
 .word 0x800878E0
 .word 0x800878F0
 .word 0x800878D4
+
+glabel D_800E8464
 .word 0x80087930
 .word 0x80087948
 .word 0x80087948
@@ -13012,6 +13029,8 @@ glabel D_800E8414
 .word 0x80087954
 .word 0x80087964
 .word 0x80087948
+
+glabel D_800E8488
 .word 0x800879A4
 .word 0x800879A4
 .word 0x800879A4
@@ -13022,6 +13041,8 @@ glabel D_800E8414
 .word 0x80087B50
 .word 0x800879BC
 .word 0x800879BC
+
+glabel D_800E84B0
 .word 0x80087D18
 .word 0x80087D28
 .word 0x80087D54
@@ -13055,11 +13076,15 @@ glabel D_800E84EC
 
 glabel D_800E84F0
 .word 0x3F99999A
+
+glabel D_800E84F4
 .word 0x8009246C
 .word 0x8009251C
 .word 0x80092740
 .word 0x8009287C
 .word 0x8009287C
+
+glabel D_800E8508
 .word 0x80094DD0
 .word 0x80094FB0
 .word 0x80095084
@@ -13069,6 +13094,8 @@ glabel D_800E84F0
 
 glabel D_800E8520
 .word 0x3F99999A
+
+glabel D_800E8524
 .word 0x80095650
 .word 0x800956C8
 .word 0x800956C8
@@ -13078,6 +13105,8 @@ glabel D_800E8520
 .word 0x80095680
 .word 0x80095698
 .word 0x800956B0
+
+glabel D_800E8548
 .word 0x80095948
 .word 0x80095964
 .word 0x80095B34
@@ -13093,17 +13122,23 @@ glabel D_800E856C
 
 glabel D_800E8570
 .word 0x3D99999A
+
+glabel D_800E8574
 .word 0x8009BA98
 .word 0x8009BAD8
 .word 0x8009BB08
 .word 0x8009BB48
 .word 0x8009BB9C
+
+glabel D_800E8588
 .word 0x8009D0B8
 .word 0x8009D104
 .word 0x8009D0C8
 .word 0x8009D0D8
 .word 0x8009D0E8
 .word 0x8009D0F8
+
+glabel D_800E85A0
 .word 0x8009D944
 .word 0x8009D944
 .word 0x8009D944
@@ -13120,6 +13155,8 @@ glabel D_800E8570
 .word 0x8009D998
 .word 0x8009D9B0
 .word 0x8009D9B0
+
+glabel D_800E85E0
 .word 0x8009DC60
 .word 0x8009DEF0
 .word 0x8009E37C
@@ -13131,6 +13168,8 @@ glabel D_800E8570
 .word 0x8009E23C
 .word 0x8009E37C
 .word 0x8009DC60
+
+glabel D_800E860C
 .word 0x8009E2D0
 .word 0x8009E2F4
 .word 0x8009E354
@@ -13220,6 +13259,8 @@ glabel D_800E86F0
 
 glabel D_800E86F4
 .word 0x33333333
+
+glabel D_800E86F8
 .word 0x800A0F28
 .word 0x800A0F38
 .word 0x800A0F48
@@ -13259,6 +13300,8 @@ glabel D_800E873C
 
 glabel D_800E8740
 .word 0x46C92000
+
+glabel D_800E8744
 .word 0x800A63D8
 .word 0x800A691C
 .word 0x800A6BCC
@@ -13276,6 +13319,8 @@ glabel D_800E8760
 
 glabel D_800E8764
 .word 0x9999999A
+
+glabel D_800E8768
 .word 0x800A6E70
 .word 0x800A6F3C
 .word 0x800A7014
@@ -13432,6 +13477,7 @@ glabel D_800E8BD4
 glabel D_800E8BD8
 .word 0x3DCCCCCD
 
+glabel D_800E8BDC
 .word 0x800B2250
 .word 0x800B20E0
 .word 0x800B2138
@@ -13463,6 +13509,7 @@ glabel D_800E8C5C
 
 .aligned_text "*** diPrintf Error *** ---> Out of string space. (Print less text!)\n"
 
+glabel D_800E8CAC
 .word 0x800B4BA4
 .word 0x800B4BC8
 .word 0x800B4BC8
@@ -13480,6 +13527,8 @@ glabel D_800E8C5C
 .word 0x800B4BC8
 .word 0x800B4BC8
 .word 0x800B4BC4
+
+glabel D_800E8CF0
 .word 0x800B4DB0
 .word 0x800B4DC4
 .word 0x800B4DC4
@@ -13518,6 +13567,8 @@ glabel D_800E8C5C
 .word 0x800B4DC4
 .word 0x800B4DC4
 .word 0x800B4DC0
+
+glabel D_800E8D88
 .word 0x800B52C4
 .word 0x800B5E0C
 .word 0x800B5794
@@ -13570,6 +13621,8 @@ glabel D_800E8C5C
 .word 0x800B5E0C
 .word 0x800B5E0C
 .word 0x800B4FA4
+
+glabel D_800E8E58
 .word 0x800B6658
 .word 0x800B6740
 .word 0x800B6614
@@ -13690,6 +13743,7 @@ glabel D_800E9138
 
 ### End of EPC lockup strings ###
 
+glabel D_800E913C
 .word 0x800B7898
 .word 0x800B7C18
 .word 0x800B7C18
@@ -13730,6 +13784,8 @@ glabel D_800E92BC
 .word 0x47AE147B
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E92D0
 .word 0x800C0310
 .word 0x800C0320
 .word 0x800C0370
@@ -13737,6 +13793,8 @@ glabel D_800E92BC
 .word 0x800C03D0
 .word 0x800C0420
 .word 0x800C0470
+
+glabel D_800E92EC
 .word 0x800C056C
 .word 0x800C0580
 .word 0x800C0580
@@ -13750,6 +13808,8 @@ glabel D_800E9308
 
 glabel D_800E930C
 .word 0x3F99999A
+
+glabel D_800E9310
 .word 0x800C0680
 .word 0x800C0694
 .word 0x800C06A8
@@ -13760,6 +13820,8 @@ glabel D_800E930C
 
 glabel D_800E932C
 .word 0x3F99999A
+
+glabel D_800E9330
 .word 0x800C3958
 .word 0x800C3984
 .word 0x800C3A30
@@ -13772,6 +13834,8 @@ glabel D_800E932C
 .word 0x800C3BA0
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E9360
 .word 0x800C4A88
 .word 0x800C4A78
 .word 0x800C4AD0
@@ -13892,6 +13956,7 @@ glabel D_800E95A0
 glabel D_800E95A8
 .aligned_text "env.c"
 
+glabel D_800E95B0
 .word 0x800CA870
 .word 0x800CA8C4
 .word 0x800CA8C4
@@ -13917,6 +13982,8 @@ glabel D_800E95F8
 
 glabel D_800E95FC
 .word 0x00000000
+
+glabel D_800E9600
 .word 0x800CC0C0
 .word 0x800CC150
 .word 0x800CC150
@@ -13937,6 +14004,8 @@ glabel D_800E95FC
 .word 0x9D353918
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E9650
 .word 0x800D2A70
 .word 0x800D2964
 .word 0x800D29A4
@@ -13945,6 +14014,8 @@ glabel D_800E95FC
 .word 0x800D29E0
 .word 0x800D2A28
 .word 0x00000000
+
+glabel D_800E9670
 .word 0x00141818
 .word 0x1C1C1C1C
 .word 0x20202020
@@ -13953,6 +14024,8 @@ glabel D_800E95FC
 .word 0x0C0C0C0C
 .word 0x10101010
 .word 0x10101010
+
+glabel D_800E9690
 .word 0x800D3168
 .word 0x800D3130
 .word 0x800D3110
@@ -13972,12 +14045,16 @@ glabel D_800E96C0
 glabel D_800E96C4
 .word 0x202B2D23
 .word 0x30000000
+
+glabel D_800E96CC
 .word 0x00000001
 .word 0x00000002
 .word 0x00000004
 .word 0x00000008
 .word 0x00000010
 .word 0x00000000
+
+glabel D_800E96E4
 .word 0x800D3C08
 .word 0x800D3EE8
 .word 0x800D3C08

@@ -74,9 +74,9 @@ glabel func_800C01D8
 /* 0C0EEC 800C02EC 10200062 */  beqz  $at, .L800C0478
 /* 0C0EF0 800C02F0 A0AD0000 */   sb    $t5, ($a1)
 /* 0C0EF4 800C02F4 000E7080 */  sll   $t6, $t6, 2
-/* 0C0EF8 800C02F8 3C01800F */  lui   $at, 0x800f
+/* 0C0EF8 800C02F8 3C01800F */  lui   $at, %hi(D_800E92D0) # $at, 0x800f
 /* 0C0EFC 800C02FC 002E0821 */  addu  $at, $at, $t6
-/* 0C0F00 800C0300 8C2E92D0 */  lw    $t6, -0x6d30($at)
+/* 0C0F00 800C0300 8C2E92D0 */  lw    $t6, %lo(D_800E92D0)($at)
 /* 0C0F04 800C0304 00000000 */  nop   
 /* 0C0F08 800C0308 01C00008 */  jr    $t6
 /* 0C0F0C 800C030C 00000000 */   nop   

@@ -214,11 +214,11 @@ glabel func_800BCC70
 /* 0BDB98 800BCF98 240F0001 */  li    $t7, 1
 /* 0BDB9C 800BCF9C 032E2821 */  addu  $a1, $t9, $t6
 /* 0BDBA0 800BCFA0 90A4000B */  lbu   $a0, 0xb($a1)
-/* 0BDBA4 800BCFA4 3C0E8013 */  lui   $t6, 0x8013
+/* 0BDBA4 800BCFA4 3C0E8013 */  lui   $t6, %hi(D_8012A0E8) # $t6, 0x8013
 /* 0BDBA8 800BCFA8 0004C880 */  sll   $t9, $a0, 2
 /* 0BDBAC 800BCFAC 90A3000A */  lbu   $v1, 0xa($a1)
 /* 0BDBB0 800BCFB0 01D97021 */  addu  $t6, $t6, $t9
-/* 0BDBB4 800BCFB4 8DCEA0E8 */  lw    $t6, -0x5f18($t6)
+/* 0BDBB4 800BCFB4 8DCEA0E8 */  lw    $t6, %lo(D_8012A0E8)($t6)
 /* 0BDBB8 800BCFB8 006FC004 */  sllv  $t8, $t7, $v1
 /* 0BDBBC 800BCFBC 030E7824 */  and   $t7, $t8, $t6
 /* 0BDBC0 800BCFC0 11E00091 */  beqz  $t7, .L800BD208

@@ -1,7 +1,7 @@
 glabel func_8007B374
-/* 07BF74 8007B374 3C01800E */  lui   $at, 0x800e
+/* 07BF74 8007B374 3C01800E */  lui   $at, %hi(D_800DE7C0) # $at, 0x800e
 /* 07BF78 8007B378 03E00008 */  jr    $ra
-/* 07BF7C 8007B37C AC24E7C0 */   sw    $a0, -0x1840($at)
+/* 07BF7C 8007B37C AC24E7C0 */   sw    $a0, %lo(D_800DE7C0)($at)
 
 /* 07BF80 8007B380 04800006 */  bltz  $a0, .L8007B39C
 /* 07BF84 8007B384 3C0E8012 */   lui   $t6, %hi(D_80126330) # $t6, 0x8012

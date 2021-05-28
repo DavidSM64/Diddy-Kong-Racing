@@ -60,11 +60,11 @@ glabel osEepromWrite
 .L800CE654:
 /* 0CF254 800CE654 8FAD0030 */  lw    $t5, 0x30($sp)
 /* 0CF258 800CE658 8FAF0030 */  lw    $t7, 0x30($sp)
-/* 0CF25C 800CE65C 3C018013 */  lui   $at, 0x8013
+/* 0CF25C 800CE65C 3C018013 */  lui   $at, %hi(D_8012CE40) # $at, 0x8013
 /* 0CF260 800CE660 000D7080 */  sll   $t6, $t5, 2
 /* 0CF264 800CE664 002E0821 */  addu  $at, $at, $t6
 /* 0CF268 800CE668 240C00FF */  li    $t4, 255
-/* 0CF26C 800CE66C AC2CCE40 */  sw    $t4, -0x31c0($at)
+/* 0CF26C 800CE66C AC2CCE40 */  sw    $t4, %lo(D_8012CE40)($at)
 /* 0CF270 800CE670 25F80001 */  addiu $t8, $t7, 1
 /* 0CF274 800CE674 2B010010 */  slti  $at, $t8, 0x10
 /* 0CF278 800CE678 1420FFF6 */  bnez  $at, .L800CE654
