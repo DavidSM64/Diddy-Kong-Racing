@@ -5,8 +5,18 @@
 #include "libultra_internal.h"
 #include "viint.h"
 
-extern OSThread* __osRunningThread;
-extern OSThread* __RunQueue;
+struct __osThreadTail
+{
+    OSThread *next;
+    OSPri priority;
+} __osThreadTail;
+
+struct __osThreadTail __osThreadTail = {0, -1};
+OSThread *__osActiveQueue = &__osThreadTail.next;
+OSThread *__RunQueue = &__osThreadTail.next;
+
+extern OSThread *__osRunningThread = NULL;
+extern OSThread *D_800E4894 = NULL; // __osFaultedThread
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osViSwapContext.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D63F0.s")

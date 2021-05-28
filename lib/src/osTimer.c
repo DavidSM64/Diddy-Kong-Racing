@@ -4,7 +4,8 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
-extern OSTimer *D_800E4910;
+OSTimer *D_800E4910 = (OSTimer *)0x8012D200;
+
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
 extern u32 D_8012D22C;

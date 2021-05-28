@@ -6,6 +6,90 @@
 #include "libultra_internal.h"
 #include "audio_internal.h"
 
+/************ .data ************/
+
+s8 D_800DCEB0 = 1;
+s32 D_800DCEB4 = 0x10; // Currently unknown, might be a different type.
+s32 D_800DCEB8 = 0x10; // Currently unknown, might be a different type.
+s32 D_800DCEBC = 0x20; // Currently unknown, might be a different type.
+
+// TODO: Figure out what this actually is.
+s32 D_800DCEC0[26] = {
+    0x00000003, 0x00000FA0,
+    0x00000000, 0x00000870,
+    0x00002666, 0xFFFFD99A,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000000,
+    0x000002F8, 0x000005F0,
+    0x00000CCC, 0xFFFFF334,
+    0x00003FFF, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000960,
+    0x00001388, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00005000
+};
+
+// TODO: Figure out what this actually is.
+s32 D_800DCF28[34] = {
+    0x00000004, 0x00000FA0,
+    0x00000000, 0x00000A50,
+    0x00002666, 0xFFFFD99A,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000370, 0x00000870,
+    0x00000CCC, 0xFFFFF334,
+    0x00003FFF, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000A50, 0x00000E38,
+    0x00000CCC, 0xFFFFF334,
+    0x00003FFF, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000EB0,
+    0x00001F40, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00005000
+};
+
+// TODO: Figure out what this actually is.
+s32 D_800DCFB0[10] = {
+    0x00000001, 0x00001F40,
+    0x00000000, 0x00001BF8,
+    0x00002EE0, 0x00000000,
+    0x00007FFF, 0x00000000,
+    0x00000000, 0x00000000
+};
+
+// TODO: Figure out what this actually is.
+s32 D_800DCFD8[10] = {
+    0x00000001, 0x00000320,
+    0x00000000, 0x000000C8,
+    0x00004000, 0x00000000,
+    0x00007FFF, 0x00001DB0,
+    0x000002BC, 0x00000000
+};
+
+// TODO: Figure out what this actually is.
+s32 D_800DD000[10] = {
+    0x00000001, 0x00000320,
+    0x00000000, 0x000000C8,
+    0x00000000, 0x00005FFF,
+    0x00007FFF, 0x0000017C,
+    0x000001F4, 0x00000000
+};
+
+// TODO: Figure out what this actually is.
+s32 D_800DD028[10] = {
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000000,
+    0x00000000, 0x00000000
+};
+
+
+/*******************************/
+
 extern s32 alAuxBusPull;
 extern s32 alAuxBusParam;
 extern s32 alEnvMixerPull;

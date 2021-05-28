@@ -5,17 +5,136 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
-extern u8 D_800DE4B0;
-extern u8 D_800DE4B4;
-extern u8 D_800DE4B8;
+/************ .data ************/
 
-extern u32 D_800DE4C0;
-extern u32 D_800DE4C4;
-extern u32 D_800DE4C8;
+s16 D_800DE490[16] = {
+    2, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
+};
 
-extern u32 D_800DE4D0;
+u8 D_800DE4B0 = 0;
+u8 D_800DE4B4 = 0;
+u8 D_800DE4B8 = 0;
+s32 D_800DE4BC = 0x00010001;
 
-extern u32 D_800DE4E0;
+u32 D_800DE4C0 = 0x40;
+u32 D_800DE4C4 = 0;
+u32 D_800DE4C8 = 0;
+s32 D_800DE4CC = 0;
+
+u32 D_800DE4D0 = 0;
+s32 D_800DE4D4 = 0;
+s32 D_800DE4D8 = 0;
+s32 D_800DE4DC = 0;
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE4E0[] = {
+    0xB6000000, 0x001F3204,
+    0xBB000000, 0x00000000,
+    0xB7000000, 0x00000204,
+    0xBC000404, 0x00000002,
+    0xBC000C04, 0x00000002,
+    0xBC001404, 0x0000FFFE,
+    0xBC001C04, 0x0000FFFE,
+    0xB8000000, 0x00000000
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE520[] = {
+    0xBA001402, 0x00000000,
+    0xBA001701, 0x00800000,
+    0xBA001001, 0x00000000,
+    0xBA000E02, 0x00000000,
+    0xBA001102, 0x00000000,
+    0xBA001301, 0x00080000,
+    0xBA000C02, 0x00002000,
+    0xBA000903, 0x00000C00,
+    0xFCFFFFFF, 0xFFFCF87C,
+    0xBA000801, 0x00000000,
+    0xB9000002, 0x00000000,
+    0xB900031D, 0x0F0A4000,
+    0xBA000602, 0x00000000,
+    0xE7000000, 0x00000000,
+    0xB8000000, 0x00000000
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE598[] = {
+    0xE7000000, 0x00000000,
+    0xBA001001, 0x00000000,
+    0xBA000E02, 0x00000000,
+    0xB9000002, 0x00000000,
+    0xB6000000, 0x00010001,
+    0xE7000000, 0x00000000,
+    0xFCFFFFFF, 0xFFFCF279,
+    0xEF000C0F, 0x0F0A4000,
+    0xB8000000, 0x00000000
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE5E0[] = {
+    0xE7000000, 0x00000000,
+    0xBA001001, 0x00000000,
+    0xBA000E02, 0x00000000,
+    0xB9000002, 0x00000000,
+    0xB6000000, 0x00010001,
+    0xE7000000, 0x00000000,
+    0xFCFFFFFF, 0xFFFDF6FB,
+    0xEF000C0F, 0x0F0A4000,
+    0xB8000000, 0x00000000
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE628[] = {
+    0xE7000000, 0x00000000,
+    0xBA001001, 0x00000000,
+    0xBA000E02, 0x00000000,
+    0xB9000002, 0x00000000,
+    0xB6000000, 0x00010001,
+    0xE7000000, 0x00000000,
+    0xFC119623, 0xFF2FFFFF,
+    0xEF000C0F, 0x00504240,
+    0xB8000000, 0x00000000
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE670[] = {
+    0xE7000000, 0x00000000,
+    0xBA001001, 0x00000000,
+    0xBA000E02, 0x00000000,
+    0xB9000002, 0x00000000,
+    0xB6000000, 0x00010001,
+    0xE7000000, 0x00000000,
+    0xB8000000, 0x00000000
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE6A8[] = {
+    0xFC119623, 0xFF2FFFFF,
+    0xEF002C0F, 0x00552048,
+    0xFC119623, 0xFF2FFFFF,
+    0xEF002C0F, 0x0F0A4000,
+    0xFC119623, 0xFF2FFFFF,
+    0xEF000C0F, 0x00552048,
+    0xFC119623, 0xFF2FFFFF,
+    0xEF000C0F, 0x0F0A4000
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800DE6E8[] = {
+    0xFC119623, 0xFF2FFFFF,
+    0xEF002C0F, 0x005041C8,
+    0xFC119623, 0xFF2FFFFF,
+    0xEF002C0F, 0x00504240,
+    0xFC119623, 0xFF2FFFFF,
+    0xEF000C0F, 0x005041C8,
+    0xFC119623, 0xFF2FFFFF,
+    0xEF000C0F, 0x00504240
+};
+
+/*******************************/
+
+/************ .bss ************/
 
 extern OSMesgQueue  D_80125EA0;
 extern OSMesg       D_80125EB8;
@@ -25,6 +144,8 @@ extern OSMesg       D_80125EF0;
 extern OSMesg       D_80125F10;
 
 extern u32 D_80126100;
+
+/*******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077A54.s")
@@ -50,7 +171,7 @@ typedef struct{
 } struct_800780DC_a0;
 
 void func_800780DC(struct_800780DC_a0** arg0){
-    u32* tmp2= &D_800DE4E0;
+    u32* tmp2= D_800DE4E0;
     struct_800780DC_a0* tmp = *arg0;
     
 

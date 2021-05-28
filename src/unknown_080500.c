@@ -40,13 +40,28 @@ typedef enum MENU_ID {
 
 extern s32 osTvType;
 
-extern s8 D_800DF450;
-extern s32 D_800DF458;
-extern s32 D_800DF460;
-extern s32 D_800DF46C;
-extern s32 gIsInAdventureTwo;
-extern s32 gActiveMagicCodes;
-extern s32 gUnlockedMagicCodes;
+/************ .data ************/
+
+s8  D_800DF450 = 0;
+f32 D_800DF454 = 1.0f;
+s32 D_800DF458 = 1;
+s32 D_800DF45C = 0; // Currently unknown, might be a different type.
+s32 D_800DF460 = 0;
+s32 D_800DF464 = 4; // Currently unknown, might be a different type.
+s32 D_800DF468 = 0;
+s32 D_800DF46C = 0;
+s32 D_800DF470 = 0; // Currently unknown, might be a different type.
+s32 D_800DF474 = 0; // Currently unknown, might be a different type.
+s32 D_800DF478 = 0; // Currently unknown, might be a different type.
+s32 D_800DF47C = 0; // Currently unknown, might be a different type.
+s32 D_800DF480 = 0;
+s32 D_800DF484 = 0; // Currently unknown, might be a different type.
+s32 D_800DF488 = 0;
+s32 D_800DF48C = 0; // Currently unknown, might be a different type.
+s32 D_800DF490 = 0; // Currently unknown, might be a different type.
+s32 gIsInAdventureTwo = 0;
+s32 D_800DF498 = 0;
+s32 D_800DF49C = 0; // Currently unknown, might be a different type.
 
 typedef struct unk800DF4A0 {
     u8  pad0[0x5C];
@@ -72,28 +87,38 @@ typedef struct unk800DF4A0 {
     s32 unk2D8;
     s32 unk2DC;
 } unk800DF4A0;
-extern unk800DF4A0* D_800DF4A0;
 
-extern s32 D_800DF478;
-extern s32 D_800DF47C;
-extern s32 D_800DF480;
-extern s32 D_800DF488;
-extern s32 D_800DF498;
-extern s32 D_800DF4B8;
-extern s32 D_800DF4BC; // Number of active players?
-extern s32 D_800DF4C8;
-extern s32 D_800DF4D4;
-extern s8 D_800DF4D8;
-extern s8 D_800DF4DC;
-extern s8 D_800DF4E0;
-extern s8 D_800DF4E4[4];
-extern s8 D_800DF4EC;
-extern s32 gIsInTwoPlayerAdventure;
-extern s32 gSaveFileIndex;
+unk800DF4A0* D_800DF4A0 = NULL;
 
-extern u8 D_800DF4A4;
-extern u8 D_800DF4A8;
-extern u8 D_800DF4AC;
+u8 D_800DF4A4 = 0xFF;
+u8 D_800DF4A8 = 0xFF;
+u8 D_800DF4AC = 0xFF;
+
+s32 D_800DF4B0 = 0; // Currently unknown, might be a different type.
+s32 D_800DF4B4 = 0; // Currently unknown, might be a different type.
+s32 D_800DF4B8 = 1;
+s32 D_800DF4BC = 1; // Number of active players?
+s32 gIsInTwoPlayerAdventure = 0;
+s32 D_800DF4C4 = 0; // Currently unknown, might be a different type.
+s32 D_800DF4C8 = 0;
+s32 gSaveFileIndex = 0;
+
+s32 D_800DF4D0 = 0; // Currently unknown, might be a different type.
+s32 D_800DF4D4 = 0;
+s8 D_800DF4D8 = 1;
+s8 D_800DF4DC = 0;
+s8 D_800DF4E0 = 0;
+s8 D_800DF4E4[4] = {
+    0, 0, 0, 0
+};
+s32 D_800DF4E8 = 0; // Currently unknown, might be a different type.
+s8 D_800DF4EC = 0;
+
+// Unused?
+s32 D_800DF4F0[] = {
+    0x4000, 0x8000, 0x1000, 0x2000,
+    0x8000, 0x10, 0x400, 0x00
+};
 
 /* Size: 0x20 bytes */
 typedef struct unk800DF510 {
@@ -113,119 +138,1196 @@ typedef struct unk800DF510 {
     u8  pad1E[2];
 } unk800DF510;
 
-extern unk800DF510 D_800DF510[18];
-extern unk800DF510 *D_800DF75C;
-extern s32 D_800DF764;
+unk800DF510 D_800DF510[18] = {
+    { 0, 0, 0, 0x00, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x01, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x02, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x03, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x05, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x06, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x07, 0.215f, 0.0f, 0.0f, -500.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x04, 0.125f, 0.0f, -40.0f, -500.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x5B, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x5C, 0.75f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x42, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x40, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x41, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x4C, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x4D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x4E, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x4F, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0x5D, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0 }
+};
 
-extern s16 *D_800DF750[32]; // unknown number of entries
-extern s16 D_800DF754;
-extern s16 D_800DF758;
-extern s32 D_800DF760;
-extern s16 D_800DF7C4[11];
-extern s32 D_800DF774;
-extern s32 D_800DF77C;
-extern s32 D_800DF794;
-extern s32 D_800DF798;
-extern s32 D_800DF79C;
-extern s32 D_800DF7A0;
-extern char *D_800DFA10[7];
-extern s32 D_800DFA2C;
+s16 *D_800DF750[1] = { NULL }; // This is probably not correct.
+s16 D_800DF754 = 0;
+s16 D_800DF758 = 0;
+unk800DF510 *D_800DF75C = NULL;
+
+s32 D_800DF760 = 0x7F;
+s32 D_800DF764 = 0xFF;
+s32 D_800DF768 = 1;
+
+// Not sure about typing with these arrays.
+s16 D_800DF76C[4] = { 
+    0, 0, 10, -1 
+};
+s16 D_800DF774[4] = { 
+    0, 0, 18, -1 
+};
+u16 D_800DF77C[12] = { 
+    0x8000, 0x0000, 0x0012, 0x0000,
+    0x00FF, 0xFFFF, 0x0012, 0xFFFF,
+    0x80FF, 0xFFFF, 0x0012, 0x0000
+};
+
+s32 D_800DF794 = 4;
+s32 D_800DF798 = 0;
+s32 D_800DF79C = 0;
+
+s32 D_800DF7A0 = 0;
+s32 D_800DF7A4 = 0;
+s32 D_800DF7A8 = 0; // Currently unknown, might be a different type.
+s32 D_800DF7AC = 0; // Currently unknown, might be a different type.
+
+// Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
+char gVersionDisplayText[20] = "VERSION XXXXXXXX";
+
+// Probably not unqiue to the boot menu.
+typedef struct MenuBootDrawTexture {
+    u32* texture; // Pointer to texture to draw. TODO: Make structure for texture header.
+    s16 xOffset; // Offset from the center of the screen.
+    s16 yOffset; // Offset from the center of the screen.
+} MenuBootDrawTexture;
+
+s16 D_800DF7C4[12] = {
+    0x50, 0x51, 0x52, 0x53, 
+    0x54, 0x55, 0x56, 0x57,
+    0x58, 0x59, 0x5A, -1
+};
+
+MenuBootDrawTexture D_800DF7DC[12] = {
+    { NULL, -75, -32 },
+    { NULL, -60, -32 },
+    { NULL, -45, -32 },
+    { NULL, -30, -32 },
+    { NULL, -15, -32 },
+    { NULL,   0, -32 },
+    { NULL,  15, -32 },
+    { NULL,  30, -32 },
+    { NULL,  45, -32 },
+    { NULL,  60, -32 },
+    { NULL,  75, -32 },
+    { NULL,   0,   0 }
+};
+
+/* Size: 0x30 bytes */
+typedef struct unk800DF83C {
+    s32* unk0; // Pointer to something.
+    f32  unk4;
+    f32  unk8;
+    f32  unkC;
+    f32  unk10;
+    f32  unk14;
+    f32  unk18;
+    f32  unk1C;
+    f32  unk20;
+    f32  unk24;
+    f32  unk28;
+} unk800DF83C;
+
+unk800DF83C D_800DF83C[10] = {
+    { (s32*)0x800E7CB0, 14.0f, 14.5f, 16.5f, 17.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CB8, 19.0f, 19.5f, 21.5f, 22.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CC0, 24.0f, 24.5f, 26.5f, 27.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CC8, 29.0f, 29.5f, 31.5f, 32.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CD0, 35.0f, 35.5f, 37.5f, 38.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CDC, 40.0f, 40.5f, 42.5f, 43.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CE4, 45.0f, 45.5f, 47.5f, 48.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CEC, 50.0f, 50.5f, 52.5f, 53.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CF4, 57.5f, 58.0f, 60.0f, 60.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { (s32*)0x800E7CFC, 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f }
+};
+
+s32 D_800DF9F4 = 0;
+
+u16 D_800DF9F8[12] = {
+    0xFFFF, 0x00FF, 0xCC00, 0xFF00,
+    0xFF99, 0x00FF, 0xFFFF, 0x6600,
+    0x00FF, 0xFF33, 0x0000, 0x0F78
+};
+
+char *D_800DFA10[7] = {
+    NULL, NULL, NULL, NULL, NULL, NULL, NULL
+};
+
+s16 D_800DFA2C[8] = {
+    0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0
+};
 
 typedef struct unk800DFA3C {
-    u8 pad0[0x32];
-    u16 unk32;
-    u8 pad34[0x38];
-    u32* unk6C;
+    s16 unk0;
+    s16 unk2;
+    u8  unk4;
+    u8  unk5;
+    u8  unk6;
+    u8  unk7;
+    u8  unk8;
+    u8  unk9;
+    u8  unkA;
+    u8  unkB;
+    u32* unkC;
 } unk800DFA3C;
 
-extern unk800DFA3C D_800DFA3C;
+unk800DFA3C D_800DFA3C[8] = {
+    { 160,  80, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
+    { 160, 104, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
+    { 160, 144, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
+    { 160, 192, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
+    { 161,  35,    0,    0,    0, 0xFF, 0x80, 2, 0, 12, NULL },
+    { 160,  32, 0xFF, 0x80, 0xFF,    0, 0xFF, 2, 0, 12, NULL },
+    { 160, 188, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
+    {   0,   0,    0,    0,    0,    0,    0, 0, 0,  0, NULL }
+};
 
-extern s32 D_800DFAC0;
-extern s32 D_800DFAC4;
-extern s16 D_800DFA38;
-extern u32* D_800DFC10;
-extern u32* D_800DFC20;
-extern u32* D_800DFC30;
-extern u32* D_800DFC40;
-extern u32* D_800DFC50;
-extern u32* D_800DFC60;
-extern s16 D_800DFC78[24];
-extern u32* D_800DFCAC;
-extern s32 D_800DFD94;
-extern u8 D_800DFDB4[10][2];
-extern s32 D_800DFDC8;
-extern s32 D_800DFFD0;
-extern s32 D_800DFFD4;
-extern s32 D_800E0398;
-extern s32 D_800E03A4;
-extern s32 D_800E0410;
-extern s32 D_800E0414;
-extern u32* D_800E041C;
-extern u32* D_800E042C;
-extern u32* D_800E043C;
-extern u32* D_800E044C;
+s32 D_800DFABC = 0; // Currently unknown, might be a different type.
 
-/* Size: 0x18 Bytes */
-typedef struct unk800E045C {
-    u32* unk0;
-    s32 pad4;
-    u32* unk8;
-    s32 padC;
-    s32 pad10;
-    s32 pad14;
-} unk800E045C;
+s32 D_800DFAC0 = 0x100;
+s32 D_800DFAC4 = 0x100;
+s32 D_800DFAC8 = 0;
 
-extern unk800E045C D_800E045C;
+// Unsure about typing here.
+u16 D_800DFACC[8] = {
+    0x4040, 0xFFFF, 0xFF40, 0x40FF,
+    0xFFD0, 0x40FF, 0x40FF, 0x40FF
+};
 
-extern unk800E045C D_800E0474;
-extern unk800E045C D_800E048C;
-extern s16 D_800E0710[30];
-extern s16 D_800E07C4[30];
-extern s32 D_800E0970;
-extern s32 D_800E0984;
-extern s32 D_800E0988;
-extern s32 D_800E0A24;
-extern s32 D_800E0A40;
-extern u32* D_800E0A50;
-extern u32* D_800E0A60;
-extern u32* D_800E0A70;
-extern u32* D_800E0A90;
-extern u32* D_800E0A80;
-extern u32* D_800E0AA0;
-extern u32* D_800E0AB0;
-extern u32* D_800E0AC0;
-extern u32* D_800E0AD0;
-extern u32* D_800E0AE0;
-extern u8 D_800E0F6C[0x20]; // "ABCDEFGHIJKLMNOPQRSTYVWXYZ.?    " = Valid chars for name input.
-extern s32 D_800E0F90;
-extern s32 D_800E0F94;
-extern s32 D_800E0F98;
-extern s32 D_800E0F9C;
-extern s32 D_800E0FA0;
-extern s32 D_800E0FB4;
-extern s32 D_800E0FE4; // Number of racers in trophy race? (1 to 8)
-extern s32 D_800E0FEC; // Trophy race round? (0 to 3)
-extern s32 gTrophyRaceWorldId;
-extern s32 D_800E1024;
-extern MenuElement D_800E1048;
-extern MenuElement D_800E1088[8][3]; // 8 Racers with 3 MenuElement structs.
-extern s32 D_800E1708;
-extern s16 D_800E1768[10];
-extern s32 D_800E17D8;
-extern s16 D_800E17F0[8]; // Unknown number of entries
-extern u16 D_800E18F8;
-extern char *D_800E1938[107]; // Credits text look-up table
-extern char *D_800E1AE4[5]; // Credits text look-up table
-extern s32 D_800E1AF8[28];
-extern s32 D_800E1B4C; // boolean, set to 1 if viewing credits from "WHODIDTHIS" cheat
-extern s32 *D_800E1DA4[2];
-extern s32 *D_800E1DAC[2];
-extern s32 D_800E1DB4;
-extern s32 D_800E1DB8;
-extern s32 D_800E1DBC;
-extern s8 D_800E1E28;
+s32 D_800DFADC = 0; // Currently unknown, might be a different type.
+s32 D_800DFAE0 = 0; // Currently unknown, might be a different type.
+
+
+// Unsure about typing with these arrays.
+s32 D_800DFAE4[6] = { 0, 0, 0, 0, 0, 0 };
+s32 D_800DFAFC[6] = { 0, 0, 0, 0, 0, 0 };
+s32 D_800DFB14[6] = { 0, 0, 0, 0, 0, 0 };
+s32 D_800DFB2C[5] = { 0, 0, 0, 0, 0 };
+s32 D_800DFB40[7] = { 0, 0, 0, 0, 0, 0, 0 };
+s32 D_800DFB5C[6] = { 0, 0, 0, 0, 0, 0 };
+s32 D_800DFB74[6] = { 0, 0, 0, 0, 0, 0 };
+s32 D_800DFB8C[6] = { 0, 0, 0, 0, 0, 0 };
+s32 D_800DFBA4[6] = { 0, 0, 0, 0, 0, 0 };
+s32 D_800DFBBC[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+// Unused?
+s32* D_800DFBE0[10] = {
+    D_800DFAE4, D_800DFAFC, D_800DFB14, D_800DFB2C,
+    D_800DFB40, D_800DFB5C, D_800DFB8C, D_800DFBA4, 
+    D_800DFB74, D_800DFBBC
+};
+
+s32 D_800DFC08 = 0; // Currently unknown, might be a different type.
+s32 D_800DFC0C = 0xFFFF; // Currently unknown, might be a different type.
+
+typedef struct unk800DFC10 {
+    u32 *unk0;
+    s16 unk4;
+    s16 unk6;
+    u32 *unk8;
+    s32 unkC;
+} unk800DFC10;
+
+unk800DFC10 D_800DFC10 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800DFC20 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800DFC30 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800DFC40 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800DFC50 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800DFC60 = { NULL, 0, 0, NULL, 0 };
+
+// Unused?
+u8 D_800DFC70[8] = { 0x40, 0x40, 0x04, 0x04, 0xFF, 0, 0, 0 };
+
+s16 D_800DFC78[26] = {
+    0x0024, 0x0025, 0x0018, 0x0019,
+    0x001A, 0x001B, 0x001C, 0x001D,
+    0x003D, 0x003F, 0x003E, 0x003C,
+    0x0043, 0x0044, 0x0045, 0x0046,
+    0x0047, 0x0048, 0x0049, 0x004A,
+    0x004B, 0x0040, 0x0041, 0x0002,
+    0xFFFF, 0x0000
+};
+
+s16 D_800DFCAC[4] = {
+    0x000B, 0x000C, 0x0002, 0xFFFF
+};
+
+u16 D_800DFCB4[112] = {
+    0x00A1, 0x0020, 0x00A1, 0x0021, 
+    0x00A1, 0x0020, 0x0000, 0x00FF, 
+    0x8002, 0x0C00, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x00A0, 0x001E, 0x00A0, 0x001E, 
+    0x00A0, 0x001E, 0xFFFF, 0xFF00, 
+    0xFF02, 0x0C00, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x00A0, 0x0070, 0x00A0, 0x0070, 
+    0x00A0, 0x0070, 0xFFFF, 0xFF00, 
+    0xFF00, 0x0C00, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x00A0, 0x0080, 0x00A0, 0x0080, 
+    0x00A0, 0x0080, 0xFFFF, 0xFF00, 
+    0xFF00, 0x0C00, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x00A0, 0x00C0, 0x00A0, 0x00C0, 
+    0x00A0, 0x00C0, 0xFFFF, 0xFF00, 
+    0xFF00, 0x0C00, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x00A0, 0x00D0, 0x00A0, 0x00D0, 
+    0x00A0, 0x00D0, 0xFFFF, 0xFF00, 
+    0xFF00, 0x0C00, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000
+};
+
+s32 D_800DFD94 = 0;
+
+s32 gActiveMagicCodes = 0;
+s32 gUnlockedMagicCodes = 0;
+
+s32 D_800DFDA0[5] = { 0, 0, 0, 0, 0 };
+
+u8 D_800DFDB4[10][2] = {
+    { 0x0F, 0x64 },
+    { 0x0C, 0x07 },
+    { 0x09, 0x64 },
+    { 0x0A, 0x64 },
+    { 0x08, 0x64 },
+    { 0x0B, 0x64 },
+    { 0x0D, 0x64 },
+    { 0x0E, 0x64 },
+    { 0x05, 0x64 },
+    { 0x04, 0x64 }
+};
+
+s16 D_800DFDC8[2] = { -1, 0 };
+s16 D_800DFDCC[2] = { -1, 0 };
+
+// Not sure what this is
+s32 D_800DFDD0[28] = {
+    0xFFFF04FF, 0xFFFFFFFF, 0x010203FF, 0x0000FFFF, 
+    0x05FF00FF, 0xFFFF0203, 0xFFFF0009, 0xFFFF06FF, 
+    0x0100FFFF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0201, 
+    0x00FFFFFF, 0xFFFF0005, 0x00FFFFFF, 0xFFFFFFFF, 
+    0x050607FF, 0x000301FF, 0xFFFF04FF, 0xFFFF0607, 
+    0xFFFF0002, 0x02FFFFFF, 0x0504FFFF, 0x07FFFFFF, 
+    0x000703FF, 0xFFFF0605, 0x04FFFFFF, 0xFFFF0004
+};
+
+// Not sure what this is
+s32 D_800DFE40[32] = {
+    0xFFFF04FF, 0xFFFFFFFF, 0x01080203, 0x0000FFFF, 
+    0x040500FF, 0xFFFF0802, 0x03FF0009, 0xFFFF0607, 
+    0x080100FF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0208, 
+    0x0100FFFF, 0xFFFF0005, 0x0001FFFF, 0xFFFFFFFF, 
+    0x050607FF, 0x00030108, 0xFFFF04FF, 0xFFFF0607, 
+    0xFFFF0002, 0x0802FFFF, 0x0504FFFF, 0x07FFFFFF, 
+    0x00070203, 0xFFFF0605, 0x04FFFFFF, 0xFFFF0004, 
+    0xFFFF0506, 0x0100FFFF, 0x0203FFFF, 0x00060000
+};
+
+// Not sure what this is
+s32 D_800DFEC0[32] = {
+    0xFFFF04FF, 0xFFFFFFFF, 0x010203FF, 0x0000FFFF, 
+    0x050800FF, 0xFFFF0203, 0xFFFF0009, 0xFFFF0806, 
+    0x0100FFFF, 0x03FFFFFF, 0x0001FFFF, 0x06070201, 
+    0x00FFFFFF, 0xFFFF0005, 0x00FFFFFF, 0xFFFFFFFF, 
+    0x05080607, 0x00030001, 0xFFFF04FF, 0xFFFF0806, 
+    0x07FF0002, 0x0203FFFF, 0x080504FF, 0x07FFFFFF, 
+    0x000703FF, 0xFFFF0608, 0x0504FFFF, 0xFFFF0004, 
+    0x0102FFFF, 0x0504FFFF, 0x0607FFFF, 0x00080000
+};
+
+// Not sure what this is
+s32 D_800DFF40[36] = {
+    0xFFFF04FF, 0xFFFFFFFF, 0x01080203, 0x0000FFFF, 
+    0x05FF00FF, 0xFFFF0802, 0x03FF0009, 0xFFFF06FF, 
+    0x080100FF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0208, 
+    0x0100FFFF, 0xFFFF0005, 0x00FFFFFF, 0xFFFFFFFF, 
+    0x05090607, 0x000301FF, 0xFFFF04FF, 0xFFFF0906, 
+    0x07FF0002, 0x02FFFFFF, 0x090504FF, 0x07FFFFFF,
+    0x000703FF, 0xFFFF0609, 0x0504FFFF, 0xFFFF0004, 
+    0xFFFF09FF, 0x0100FFFF, 0x0203FFFF, 0x000608FF, 
+    0x05FF0504, 0xFFFF0607, 0xFFFF0008, 0x00000000
+};
+
+s32 D_800DFFD0 = 0;
+s32 D_800DFFD4 = -1;
+
+MenuElement D_800DFFD8[14] = {
+    { 161,  35, 161,  35, 161,  35,   0,   0,   0, 255, 128, 2, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160,  32, 160,  32, 160,  32, 255, 255, 255,   0, 255, 2, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160,  72, 160,  68, 160,  72, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160,  86, 160,  82, 160,  86, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 100, 160,  96, 160, 100, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 114, 160, 110, 160, 114, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 128, 160, 124, 160, 128, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 142, 160, 138, 160, 142, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 156, 160, 152, 160, 156, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 156, 160, 166, 160, 156, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 186, 160, 180, 160, 186, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 200, 160, 194, 160, 200, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    { 160, 200, 160, 208, 160, 200, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
+    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, NULL, 0, 0, 0, 0 }
+};
+                                                                             
+MenuElement D_800E0198[7] = {                                                       
+    { 161,  35, 161,  35, 161,  35,   0,   0,   0, 255, 128, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    { 160,  32, 160,  32, 160,  32, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    { -96,  39, -96,  39, -96,  39, 176, 224, 192, 255, 255, 0,  0, 7, NULL, 192, 44, 4, 4 },
+    { 160, 104, 160, 104, 160, 104, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    { -96,  -9, -96,  -9, -96,  -9, 176, 224, 192, 255, 255, 0,  0, 7, NULL, 192, 44, 4, 4 },
+    { 160, 152, 160, 152, 160, 152, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, NULL,   0,  0, 0, 0 }
+};   
+                                                                        
+MenuElement D_800E0278[9] = { 
+    {  161,  35,  161,  35,  161,  35,   0,   0,   0, 255, 128, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    {  160,  32,  160,  32,  160,  32, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    { -112,  55, -112,  55, -112,  55, 176, 224, 192, 255, 255, 0,  0, 7, NULL, 224, 44, 4, 4 },
+    {  160,  88,  160,  88,  160,  88, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    { -112,   7, -112,   7, -112,   7, 176, 224, 192, 255, 255, 0,  0, 7, NULL, 224, 44, 4, 4 },
+    {  160, 136,  160, 136,  160, 136, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    { -112, -41, -112, -41, -112, -41, 176, 224, 192, 255, 255, 0,  0, 7, NULL, 224, 44, 4, 4 },
+    {  160, 184,  160, 184,  160, 184, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
+    {    0,   0,    0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, NULL,   0,  0, 0, 0 }
+};
+
+s16 D_800E0398[6] = {
+    0x00, 0x43, 0x40, 0x41, 0x42, -1
+};
+
+s16 D_800E03A4[6] = {
+    0x00, 0x0B, 0x0C, 0x0A, -1, 0
+};
+
+u16 D_800E03B0[14] = {
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x004C, 0x0070, 
+    0x00F4, 0x0070, 0x004C, 0x00D0, 
+    0x00F4, 0x00D0
+};
+
+u16 D_800E03CC[24] = {
+    0x0018, 0x0051, 0x0058, 0x0040, 
+    0x0004, 0x0004, 0x4080, 0xFFC0, 
+    0x0074, 0x0051, 0x0058, 0x0040, 
+    0x0004, 0x0004, 0x4080, 0xFFC0, 
+    0x00D0, 0x0051, 0x0058, 0x0040, 
+    0x0004, 0x0004, 0x4080, 0xFFC0
+};
+
+u16 D_800E03FC[10] = {
+    0x002C, 0x0036,
+    0x0015, 0x0019,
+    0x002C, 0x001B,
+    0x003F, 0x0019,
+    0x002D, 0x0019
+};
+
+s32 D_800E0410 = 0;
+s32 D_800E0414 = 0;
+s32 D_800E0418 = 0;
+
+unk800DFC10 D_800E041C = { NULL, -12,  -8, 0, 0 };
+unk800DFC10 D_800E042C = { NULL,  -8, -12, 0, 0 };
+unk800DFC10 D_800E043C = { NULL, -12,  -8, 0, 0 };
+unk800DFC10 D_800E044C = { NULL,  -8, -12, 0, 0 };
+
+unk800DFC10 D_800E045C = { NULL, 0, 0, NULL, 0x20 };
+s32 D_800E046C[2] = {0, 0}; // Not sure what these are.
+unk800DFC10 D_800E0474 = { NULL, 0, 0, NULL, 0x20 };
+s32 D_800E0484[2] = {0, 0}; // Not sure what these are.
+unk800DFC10 D_800E048C = { NULL, 0, 0, NULL, 0x20 };
+s32 D_800E049C[2] = {0, 0}; // Not sure what these are.
+unk800DFC10 D_800E04A4 = { NULL, 0, 0, NULL, 0x20 };
+s32 D_800E04B4[2] = {0, 0}; // Not sure what these are.
+unk800DFC10 D_800E04BC = { NULL, 0, 0, NULL, 0x20 };
+s32 D_800E04CC[2] = {0, 0}; // Not sure what these are.
+unk800DFC10 D_800E04D4 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E04E4 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E04F4 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0504 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0514 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0524 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0534 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0544 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0554 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0564 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0574 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0584 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0594 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E05A4 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E05B4 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E05C4 = { NULL, 0, 0, NULL, 0 };
+
+// These are probably structs
+s32 D_800E05D4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
+s32 D_800E05F4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
+
+unk800DFC10 D_800E0614 = { NULL, -16, -16, 0, 0 };
+
+unk800DFC10 *D_800E0624[9] = {
+    &D_800E045C, &D_800E04D4, &D_800E04E4,
+    &D_800E0474, &D_800E04F4, &D_800E0504,
+    &D_800E048C, &D_800E0514, &D_800E0524
+};
+
+unk800DFC10 *D_800E0648[6] = {
+    &D_800E04BC, &D_800E0544, &D_800E0564,
+    &D_800E04A4, &D_800E0534, &D_800E0554
+};
+
+unk800DFC10 *D_800E0660[6] = {
+    &D_800E0574, &D_800E0584, &D_800E0594,
+    &D_800E05A4, &D_800E05B4, &D_800E05C4
+};
+
+unk800DFC10 *D_800E0678[4] = {
+    &D_800E041C, &D_800E042C, &D_800E043C, &D_800E044C
+};
+
+u16 D_800E0688[20] = {  
+    0x44, 0x72, 0x44, 0x72,
+    0xCC, 0x72, 0x21, 0x72,
+    0x88, 0x72, 0xEF, 0x72,
+    0x21, 0x72, 0x66, 0x72,
+    0xAA, 0x72, 0xEF, 0x72
+};
+
+u16 D_800E06B0[10] = {
+    0x68, 0x21, 0xFB, 0x27, 
+    0x8E, 0xF5, 0x27, 0x6C, 
+    0xB0, 0xF5 
+};
+
+s16 D_800E06C4[8] = {
+    0x0000, 0xFFC2, 0x0055, 0x0000,
+    0x0000, 0x003E, 0xFFAB, 0x0000
+};
+
+s16 D_800E06D4[8] = {
+    0x0000, 0xFFB6, 0x0055, 0x0000,
+    0x0000, 0x004A, 0xFFAB, 0x0000
+};
+
+u16 D_800E06E4[14] = {
+    0x50, 0x8C, 0xA0, 0x40,
+    0x04, 0x04, 0x50, 0x14,
+    0x3A, 0x28, 0x50, 0x28,
+    0x66, 0x28
+};
+
+u16 D_800E0700[8] = {
+    0x50, 0x98, 0xA0, 0x28,
+    0x04, 0x04, 0x50, 0x0E
+};
+
+s16 D_800E0710[16] = {
+    0x0E, 0x0F, 0x00, 0x10,
+    0x11, 0x20, 0x12, 0x13,
+    0x00, 0x14, 0x15, 0x20,
+    0x16, 0x17, 0x20, 0x00
+};
+
+s16 D_800E0730[74] = {
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0x0000, 0x0000, 0x0000, 0x0000, 
+    0xFFFF, 0xFFFF, 0x0129, 0x011A, 
+    0x0120, 0x0115, 0x0126, 0x011D, 
+    0x0130, 0x0121, 0x0117, 0x0154, 
+    0x0128, 0x0119, 0x012C, 0x0123, 
+    0xFFFF, 0x0122, 0x011C, 0x0116, 
+    0x0127, 0xFFFF, 0xFFFF, 0xFFFF, 
+    0x012D, 0x012E, 0x0153, 0x012B, 
+    0x011B, 0x011F, 0x0124, 0x011E, 
+    0x0118, 0x0125, 0x012F, 0x012A, 
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 
+    0xFFFF, 0x0000
+};
+
+s16 D_800E07C4[14] = {
+    0x05, 0x06, 0x07, 0x3D, 
+    0x3C, 0x3F, 0x3E, 0x08, 
+    0x09, 0x0A, 0x0B, 0x0C, 
+    0x0D, -1
+};
+
+s16 D_800E07E0[4] = {
+    0x04, 0x05, 0x06, -1
+};
+
+s16 D_800E07E8[36] = {
+    0x0004, 0x0000, 0x0001, 0x0002, 
+    0x0003, 0x0018, 0x0019, 0x001A, 
+    0x001B, 0x001C, 0x001D, 0x0024, 
+    0x0025, 0x0026, 0x0027, 0x0028, 
+    0x0029, 0x002A, 0x002B, 0x001E, 
+    0x001F, 0x0020, 0x0021, 0x0022, 
+    0x0023, 0x002C, 0x002D, 0x002E, 
+    0x002F, 0x0030, 0x0031, 0x0040, 
+    0x0041, 0x0043, 0x005E, 0xFFFF
+};
+
+s16 D_800E0830[8] = {
+    0x07, 0x00, 0x01, 0x02, 
+    0x03, 0x0B, 0x0C, -1
+};
+
+s16 D_800E0840[148] = {
+    0x0000, 0xFFFF, 0x0001, 0x01FF, 
+    0xFF00, 0x0200, 0xFFFF, 0x0003, 
+    0x01FF, 0xFF00, 0x0400, 0xFFFF, 
+    0x0005, 0x01FF, 0xFF00, 0x0600, 
+    0xFFFF, 0x0006, 0x0200, 0x4000, 
+    0x0701, 0xFFFF, 0x0007, 0x0340, 
+    0x8000, 0x0800, 0xFFFF, 0x0008, 
+    0x0280, 0xC020, 0x0901, 0xFFFF, 
+    0x0009, 0x03C0, 0xFF20, 0x0A02, 
+    0xFFFF, 0x000B, 0x03FF, 0xFF00, 
+    0x0C02, 0xFFFF, 0x200D, 0x03FF, 
+    0xFF20, 0x0E02, 0xFFFF, 0x000E, 
+    0x0400, 0x4000, 0x0F03, 0xFFFF, 
+    0x000F, 0x0540, 0x8000, 0x1002, 
+    0xFFFF, 0x2010, 0x0480, 0xC000, 
+    0x1103, 0xFFFF, 0x2011, 0x05C0, 
+    0xFF00, 0x1204, 0xFFFF, 0x0013, 
+    0x05FF, 0xFF00, 0x1404, 0xFFFF, 
+    0x0015, 0x05FF, 0xFF00, 0x1604, 
+    0xFFFF, 0x0016, 0x0600, 0x4000, 
+    0x1705, 0xFFFF, 0x0017, 0x0740, 
+    0x8000, 0x1804, 0xFFFF, 0x0018, 
+    0x0680, 0xC020, 0x1905, 0xFFFF, 
+    0x0019, 0x07C0, 0xFF20, 0x1A06, 
+    0xFFFF, 0x001B, 0x07FF, 0xFF00, 
+    0x1C06, 0xFFFF, 0x201D, 0x07FF, 
+    0xFF20, 0x1E06, 0xFFFF, 0x001E, 
+    0x0800, 0x4000, 0x1F07, 0xFFFF, 
+    0x001F, 0x0940, 0x8000, 0x2006, 
+    0xFFFF, 0x2020, 0x0880, 0xC020, 
+    0x2107, 0xFFFF, 0x2021, 0x09C0, 
+    0xFF20, 0x2208, 0xFFFF, 0x0023, 
+    0x09FF, 0xFF00, 0x2408, 0xFFFF, 
+    0x2025, 0x09FF, 0xFF20, 0x2608, 
+    0xFFFF, 0x0027, 0x09FF, 0xFF00, 
+    0x2808, 0xFFFF, 0x2029, 0x09FF, 
+    0xFF20, 0xFF00, 0x0000, 0x0000
+};
+
+s32 D_800E0968 = 0;
+s32 D_800E096C = 0;
+s32 D_800E0970 = 0;
+s32 D_800E0974 = 0;
+u32* D_800E0978 = (u32*)0x800E7D04;
+s32 D_800E097C = 0;
+s32 D_800E0980 = 0;
+s32 D_800E0984 = 0;
+s32 D_800E0988 = 0;
+s32 D_800E098C = 0;
+
+s16 D_800E0990[8] = {
+    0x4040, 0xFFA0, 0xFF40, 0x40A0,
+    0xD0C0, 0x20B0, 0x20C0, 0x40B0
+};
+
+s16 D_800E09A0[8] = {
+    0x00FF, 0x0080, 0x00FF, 0x0060,
+    0x0000, 0xFF60, 0x0000, 0xFF80
+};
+
+// Not sure about typing with these.
+s32 D_800E09B0[5] = { 0, 0, 0, 0, 0 };
+s32 D_800E09C4[5] = { 0, 0, 0, 0, 0 };
+s32 D_800E09D8[5] = { 0, 0, 0, 0, 0 };
+s32 D_800E09EC[3] = { 0, 0, 0 };
+s32 D_800E09F8[3] = { 0, 0, 0 };
+s32 D_800E0A04[4] = { 0, 0, 0, 0 };
+s32 D_800E0A14[4] = { 0, 0, 0, 0 };
+
+s16 D_800E0A24[14] = {
+    0x0005, 0x003B, 0x0032, 0x0033, 
+    0x0034, 0x0035, 0x0036, 0x0039, 
+    0x0037, 0x0038, 0x003A, 0x0000, 
+    0x0001, 0xFFFF
+};
+
+s16 D_800E0A40[8] = {
+    0x0004, 0x0000, 0x0001, 0xFFFF,
+    0x0300, 0x0000, 0x0012, 0xFFFF
+};
+
+unk800DFC10 D_800E0A50 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0A60 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0A70 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0A90 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0A80 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0AA0 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0AB0 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0AC0 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0AD0 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0AE0 = { NULL, 0, 0, NULL, 0 };
+
+unk800DFC10* D_800E0AF0[10] = {
+    &D_800E0A50, &D_800E0A60, &D_800E0A70, &D_800E0A80, 
+    &D_800E0A90, &D_800E0AA0, &D_800E0AB0, &D_800E0AC0, 
+    &D_800E0AD0, &D_800E0AE0
+};
+
+s16 D_800E0B18[74] = {
+    0x0140, 0x017C, 0x01B8, 0x01F4, 
+    0x0230, 0x026C, 0x02A8, 0x02E4, 
+    0x01E0, 0x0000, 0x0018, 0x0039, 
+    0x005A, 0x007B, 0x009C, 0x00BD, 
+    0x00DE, 0x00FF, 0x00A0, 0x0000, 
+    0x0140, 0x01B8, 0x0230, 0x02A8, 
+    0x01E0, 0x0000, 0x0018, 0x0065, 
+    0x00B3, 0x0100, 0x00A0, 0x0000, 
+    0x0140, 0x01F4, 0x02A8, 0x01E0, 
+    0x0028, 0x008C, 0x00F0, 0x00A0, 
+    0x01E0, 0x00C0, 0x00A0, 0x00C0, 
+    0xFF60, 0x00C0, 0xFF80, 0xFFEC, 
+    0xFFE4, 0xFFE6, 0x0050, 0xFFF8, 
+    0xFFE4, 0xFFF4, 0xFFE4, 0x0006, 
+    0xFFE4, 0x0018, 0x0050, 0x0008, 
+    0x0000, 0x0078, 0x0000, 0x003C, 
+    0x0000, 0x001E, 0x0000, 0x0384, 
+    0x0000, 0x001E, 0x0000, 0x001E, 
+    0x0000, 0x0384
+};
+
+char gFirstPlace[4]   = "1ST";
+char gSecondPlace[4]  = "2ND";
+char gThirdPlace[4]   = "3RD";
+char gFourthPlace[4]  = "4TH";
+char gFifthPlace[4]   = "5TH";
+char gSixthPlace[4]   = "6TH";
+char gSeventhPlace[4] = "7TH";
+char gEighthPlace[4]  = "8TH";
+
+char *D_800E0BCC[8] = {
+    gFirstPlace, gSecondPlace, gThirdPlace, gFourthPlace,     
+    gFifthPlace, gSixthPlace, gSeventhPlace, gEighthPlace
+};
+
+MenuElement D_800E0BEC[8] = {                                                       
+    { 352, 172,  32, 172, -288, 172, 255, 255, 255, 0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 452, 166, 132, 166, -188, 166, 255, 255, 255, 0, 255, 0, 12, 0,        NULL, 0, 0, 0, 0 },
+    { 560, 184, 240, 184,  -80, 184, 255, 255, 255, 0, 255, 0, 12, 0,        NULL, 0, 0, 0, 0 },
+    { 452, 180, 132, 180, -188, 180, 255, 192, 255, 0, 255, 0,  0, 1,        NULL, 0, 0, 0, 0 },
+    { 452, 198, 132, 198, -188, 198, 255, 192, 255, 0, 255, 0,  0, 1,        NULL, 0, 0, 0, 0 },
+    { 452, 216, 132, 216, -188, 216, 255, 192, 255, 0, 255, 0,  0, 1,        NULL, 0, 0, 0, 0 },
+    { 560, 200, 240, 200,  -80, 200, 128, 255, 255, 0, 255, 0,  0, 1,        NULL, 0, 0, 0, 0 },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0, 0,   0, 0,  0, 0,        NULL, 0, 0, 0, 0 },
+};   
+
+MenuElement D_800E0CEC[11] = {                                                       
+    { 575, 172, 255, 172,  -65, 172, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 542, 172, 222, 172,  -98, 172, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 509, 172, 189, 172, -131, 172, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 476, 172, 156, 172, -164, 172, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 443, 172, 123, 172, -197, 172, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 410, 172,  90, 172, -230, 172, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 377, 172,  57, 172, -263, 172, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 344, 172,  24, 172, -296, 166, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 },
+    { 481, 166, 161, 166, -159, 166,   0,   0,   0, 255, 128, 0, 12, 0,        NULL, 0, 0, 0, 0 },
+    { 479, 164, 159, 164, -161, 164, 255, 255, 255,   0, 255, 0, 12, 0,        NULL, 0, 0, 0, 0 },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0,        NULL, 0, 0, 0, 0 },
+    
+};
+
+MenuElement D_800E0E4C[9] = {    
+    { 481, 174, 161, 174, -159, 174,   0,   0,   0, 255, 128, 0, 12, 0,             NULL, 0, 0, 0, 0 },
+    { 479, 172, 159, 172, -161, 172, 255, 255, 255,   0, 255, 0, 12, 0,             NULL, 0, 0, 0, 0 },
+    { 368, 192,  48, 192, -272, 192, 255,  64,  64,  96, 255, 0,  8, 0,             NULL, 0, 0, 0, 0 },
+    { 506, 187, 186, 187, -134, 187, 255, 192, 255,   0, 255, 0,  0, 1,             NULL, 0, 0, 0, 0 },
+    { 578, 192, 258, 192,  -62, 192, 255, 128, 255,  96, 255, 0, 12, 0, (s32*)0x80126390, 0, 0, 0, 0 },
+    { 368, 212,  48, 212, -272, 212, 255,  64,  64,  96, 255, 0,  8, 0,             NULL, 0, 0, 0, 0 },
+    { 506, 207, 186, 207, -134, 207, 128, 255, 255,   0, 255, 0,  0, 1,             NULL, 0, 0, 0, 0 },
+    { 578, 212, 258, 212,  -62, 212, 255, 128, 255,  96, 255, 0, 12, 0, (s32*)0x80126394, 0, 0, 0, 0 },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0,             NULL, 0, 0, 0, 0 },
+};
+
+// Valid characters for name input. Must be u8, not char.
+u8 D_800E0F6C[32] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.?    ";
+
+s32 D_800E0F8C = 0;
+s32 D_800E0F90 = 192;
+s32 D_800E0F94 = 160;
+s32 D_800E0F98 = 120;
+s32 D_800E0F9C = 2;
+s32 D_800E0FA0 = 0;
+s32 D_800E0FA4 = 0;
+char D_800E0FA8[4] = "DKR"; // Default file name?
+s32 D_800E0FAC = 0;
+s32 D_800E0FB0 = 0;
+
+s16 D_800E0FB4[18] = {
+    0x0004, 0x0000, 0x0001, 0x0018, 
+    0x0019, 0x001A, 0x001B, 0x001C, 
+    0x001D, 0x001E, 0x001F, 0x0020, 
+    0x0021, 0x0022, 0x0023, 0x0030, 
+    0x005E, -1
+};
+
+s16 D_800E0FD8[6] = {
+    7, 0, 1, 2, 3, -1
+};
+
+s32 D_800E0FE4 = 8; // Number of racers in trophy race? (1 to 8)
+s32 gTrophyRaceWorldId = 0;
+s32 D_800E0FEC = 0; // Trophy race round? (0 to 3)
+s32 D_800E0FF0 = 0;
+
+// Unused? Not sure what this is.
+u32 D_800E0FF4[4] = {
+    0x01FFFFFF, 0x0012FFFF, 0x81FFFFFF, 0x00120000
+};
+
+// Number of points to award in trophy race for each place?
+s32 D_800E1004[8] = {
+    9, 7, 5, 3, 1, 0, 0, 0
+};
+
+s16 D_800E1024[14] = {
+    0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 
+    0x39, 0x3A, 0x3B, 0x00, 0x01, -1, 0x00    
+};
+
+s32 D_800E1040 = 1;
+s16 D_800E1044 = -1;
+
+MenuElement D_800E1048[9][3] = {
+    {
+        { 481,   35, 161, 35, -159,  35,   0,   0,   0, 255, 128, 2, 12, 0,        NULL, 0, 0, 0, 0 },
+        { 480,   32, 160, 32, -160,  32, 255, 255, 255,   0, 255, 2, 12, 0,        NULL, 0, 0, 0, 0 },
+        {  64, -192,  64, 48,   64, 288, 255, 255, 255,   0, 255, 0,  0, 3, &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        {  32, -192,  32, 48,  32, 288, 255, 255, 255, 0, 255, 0, 0, 0,    gFirstPlace, 0, 0, 0, 0 },
+        { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, 0, 4, 2, &D_800E1004[0], 0, 0, 0, 0 },
+        {  64, -150,  64, 90,  64, 330, 255, 255, 255, 0, 255, 0, 0, 3,    &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        {  32, -150,  32,  90,  32, 330, 255, 255, 255, 0, 255, 0, 0, 0,   gSecondPlace, 0, 0, 0, 0 },
+        { 130, -130, 130, 110, 130, 350, 255, 192, 255, 0, 255, 0, 4, 2, &D_800E1004[1], 0, 0, 0, 0 },
+        {  64, -108,  64, 132,  64, 372, 255, 255, 255, 0, 255, 0, 0, 3,    &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        {  32, -108,  32, 132,  32, 372, 255, 255, 255, 0, 255, 0, 0, 0,    gThirdPlace, 0, 0, 0, 0 },
+        { 130,  -88, 130, 152, 130, 392, 255, 128, 255, 0, 255, 0, 4, 2, &D_800E1004[2], 0, 0, 0, 0 },
+        {  64,  -66,  64, 174,  64, 414, 255, 255, 255, 0, 255, 0, 0, 3,    &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        {  32, -66,  32, 174,  32,  414, 255, 255, 255, 0, 255, 0, 0, 0,   gFourthPlace, 0, 0, 0, 0 },
+        { 130, -46, 130, 194, 130,  434, 255,  64, 255, 0, 255, 0, 4, 2, &D_800E1004[3], 0, 0, 0, 0 },
+        { 220, 288, 220,  48, 220, -192, 255, 255, 255, 0, 255, 0, 0, 3,    &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        { 188, 288, 188, 48, 188, -192, 255, 255, 255, 0, 255, 0, 0, 0,    gFifthPlace, 0, 0, 0, 0 },
+        { 286, 308, 286, 68, 286, -172, 255, 255, 255, 0, 255, 0, 4, 2, &D_800E1004[4], 0, 0, 0, 0 },
+        { 220, 330, 220, 90, 220, -160, 255, 255, 255, 0, 255, 0, 0, 3,    &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        { 188, 330, 188,  90, 188, -150, 255, 255, 255, 0, 255, 0, 0, 0,    gSixthPlace, 0, 0, 0, 0 },
+        { 286, 350, 286, 110, 286, -130, 255, 192, 255, 0, 255, 0, 4, 2, &D_800E1004[5], 0, 0, 0, 0 },
+        { 220, 372, 220, 132, 220, -108, 255, 255, 255, 0, 255, 0, 0, 3,    &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        { 188, 372, 188, 132, 188, -108, 255, 255, 255, 0, 255, 0, 0, 0,  gSeventhPlace, 0, 0, 0, 0 },
+        { 286, 392, 286, 152, 286,  -88, 255, 128, 255, 0, 255, 0, 4, 2, &D_800E1004[6], 0, 0, 0, 0 },
+        { 220, 414, 220, 174, 220,  -66, 255, 255, 255, 0, 255, 0, 0, 3,    &D_800E0A50, 0, 0, 0, 0 }
+    },
+    {
+        { 188, 414, 188, 174, 188, -66, 255, 255, 255, 0, 255, 0, 0, 0,   gEighthPlace, 0, 0, 0, 0 },
+        { 286, 434, 286, 194, 286, -46, 255,  64, 255, 0, 255, 0, 4, 2, &D_800E1004[7], 0, 0, 0, 0 },
+        {   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,   0, 0, 0, 0,           NULL, 0, 0, 0, 0 }
+    },
+};
+
+s16 D_800E13A8[138] = {
+    0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 
+    0x0082, 0x0040, 0x0020, 0x0082, 0x00DC, 0x00BC, 0x011E, 0x00DC, 
+    0x00BC, 0x011E, 0x00DC, 0x00BC, 0x011E, 0x00DC, 0x00BC, 0x011E, 
+    0x0030, 0x0030, 0x0044, 0x005A, 0x005A, 0x006E, 0x0084, 0x0084, 
+    0x0098, 0x00AE, 0x00AE, 0x00C2, 0x0030, 0x0030, 0x0044, 0x005A, 
+    0x005A, 0x006E, 0x0084, 0x0084, 0x0098, 0x00AE, 0x00AE, 0x00C2, 
+    0x0038, 0x0038, 0x0040, 0x006A, 0x006A, 0x0072, 0x009C, 0x009C, 
+    0x00A4, 0x00CE, 0x00CE, 0x00D6, 0x0038, 0x0038, 0x0040, 0x006A, 
+    0x006A, 0x0072, 0x009C, 0x009C, 0x00A4, 0x00CE, 0x00CE, 0x00D6, 
+    0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 
+    0x0082, 0x00DC, 0x00BC, 0x011E, 0x00DC, 0x00BC, 0x011E, 0x00DC, 
+    0x00BC, 0x011E, 0x0034, 0x0034, 0x0048, 0x006F, 0x006F, 0x0083, 
+    0x00AA, 0x00AA, 0x00BE, 0x0034, 0x0034, 0x0048, 0x006F, 0x006F, 
+    0x0083, 0x00AA, 0x00AA, 0x00BE, 0x004C, 0x004C, 0x0054, 0x007E, 
+    0x007E, 0x0086, 0x00B0, 0x00B0, 0x00B8, 0x004C, 0x004C, 0x0054, 
+    0x007E, 0x007E, 0x0086, 0x00B0, 0x00B0, 0x00B8, 0x008C, 0x006C, 
+    0x00CE, 0x008C, 0x006C, 0x00CE, 0x008C, 0x006C, 0x00CE, 0x008C, 
+    0x006C, 0x00CE
+};
+
+s16* D_800E14BC[32] = {
+    NULL, NULL, NULL, NULL,
+    &D_800E13A8[126], &D_800E13A8[90], &D_800E13A8[126], &D_800E13A8[24],
+    NULL, NULL , &D_800E13A8[72], &D_800E13A8[90],
+    NULL, NULL, &D_800E13A8[0], &D_800E13A8[24],
+    NULL, NULL, NULL, NULL,
+    &D_800E13A8[126], &D_800E13A8[108], &D_800E13A8[126], &D_800E13A8[48],
+    NULL, NULL, &D_800E13A8[72], &D_800E13A8[108],
+    NULL, NULL, &D_800E13A8[0], &D_800E13A8[48]
+};
+
+// Not sure what these arrays are supposed to be
+s32 D_800E153C[10] = {
+    0, 0x00000000, 
+    0, 0x00400000,
+    0, 0x00800000, 
+    0, 0x00C00000,
+    0, 0x01000000
+};
+s32 D_800E1564[12] = {
+    0, 0x00000020, 
+    0, 0x00400020, 
+    0, 0x00800020, 
+    0, 0x00C00020, 
+    0, 0x01000020, 
+    0, 0x00000000
+};
+s32 D_800E1594[10] = {
+    0, 0x00000000, 
+    0, 0x00400000,
+    0, 0x00800000, 
+    0, 0x00C00000,
+    0, 0x01000000
+};
+s32 D_800E15BC[12] = {
+    0, 0x00000020, 
+    0, 0x00400020, 
+    0, 0x00800020, 
+    0, 0x00C00020, 
+    0, 0x01000020, 
+    0, 0x00000000
+};
+s32 D_800E15EC[10] = {
+    0, 0x00000000, 
+    0, 0x00400000,
+    0, 0x00800000, 
+    0, 0x00C00000,
+    0, 0x01000000
+};
+s32 D_800E1614[12] = {
+    0, 0x00000020, 
+    0, 0x00400020, 
+    0, 0x00800020, 
+    0, 0x00C00020, 
+    0, 0x01000020, 
+    0, 0x00000000
+};
+s32 D_800E1644[10] = {
+    0, 0x00000000, 
+    0, 0x00400000,
+    0, 0x00800000, 
+    0, 0x00C00000,
+    0, 0x01000000
+};
+s32 D_800E166C[12] = {
+    0, 0x00000020, 
+    0, 0x00400020, 
+    0, 0x00800020, 
+    0, 0x00C00020, 
+    0, 0x01000020, 
+    0, 0x00000000
+};
+s32 D_800E169C[10] = {
+    0, 0x00000000, 
+    0, 0x00400000,
+    0, 0x00800000, 
+    0, 0x00C00000,
+    0, 0x01000000
+};
+s32 D_800E16C4[12] = {
+    0, 0x00000020, 
+    0, 0x00400020, 
+    0, 0x00800020, 
+    0, 0x00C00020, 
+    0, 0x01000020, 
+    0, 0x00000000
+};
+
+s32 *D_800E16F0[5] = {
+    D_800E153C, D_800E1594, D_800E15EC, D_800E1644, 
+    D_800E169C
+};
+
+s16 D_800E1708[34] = {
+    0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 
+    0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 
+    0x32, 0x33, 0x34, 0x36, 0x35, 0x37, 0x38, 0x39, 
+    0x3A, 0x3B, 0x00, 0x01, 0x04, 0x3D, 0x3C, 0x3F, 
+    0x3E, -1
+};
+
+s16 D_800E174C[4] = {
+    0, 1, 7, -1
+};
+
+s16 D_800E1754[10] = {
+    0x78, 0x12, 0x08, 0x06, 0xC0, 0x06, 0xD4, 0x1A, 
+    0x78, 0x22
+};
+
+s16 D_800E1768[12] = {
+    0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 
+    0x3A, 0x3B, -1, 0
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800E1780[22] = {
+    0xE7000000, 0x00000000, 
+    0xBA001402, 0x00000000, 
+    0xBA001001, 0x00000000, 
+    0xBA000E02, 0x00000000, 
+    0xBA001102, 0x00000000, 
+    0xBA001301, 0x00000000, 
+    0xBA000C02, 0x00002000, 
+    0xBA000903, 0x00000C00, 
+    0xB9000002, 0x00000000, 
+    0xB900031D, 0x00504340, 
+    0xB8000000, 0x00000000
+};
+
+s16 D_800E17D8[12] = {
+    0x0032, 0x0033, 0x0034, 0x0035, 
+    0x0036, 0x0037, 0x0038, 0x0039, 
+    0x003A, 0x003B, -1, 0
+};
+
+s16 D_800E17F0[2] = { 
+    -1, 0
+};
+
+s16 D_800E17F4[130] = {
+    0x20A5, 0x0000, 0x20A5, 0x0001, 0x0002, 0x20A5, 0x0003, 0x0004, 
+    0x0005, 0x0006, 0x4000, 0x20A5, 0x0007, 0x0008, 0x20A5, 0x0009, 
+    0x000A, 0x000B, 0x000C, 0x30A5, 0x000D, 0x000E, 0x000F, 0x4000, 
+    0x20A5, 0x0010, 0x0011, 0x20A5, 0x0012, 0x0013, 0x20A5, 0x0014, 
+    0x4000, 0x20A5, 0x0015, 0x0016, 0x20A5, 0x0017, 0x0018, 0x20A5, 
+    0x0019, 0x001A, 0x4000, 0x20A5, 0x001B, 0x001C, 0x001D, 0x001E, 
+    0x001F, 0x30A5, 0x0020, 0x0021, 0x0022, 0x0023, 0x30A5, 0x0024, 
+    0x0025, 0x0026, 0x4000, 0x20A5, 0x0027, 0x0028, 0x0029, 0x002A, 
+    0x002B, 0x30A5, 0x002C, 0x002D, 0x002E, 0x30A5, 0x002F, 0x0030, 
+    0x0031, 0x4000, 0x20A5, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 
+    0x30A5, 0x0037, 0x0038, 0x0039, 0x003A, 0x30A5, 0x003B, 0x003C, 
+    0x003D, 0x003E, 0x4000, 0x20A5, 0x003F, 0x0040, 0x0041, 0x20A5, 
+    0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x20A5, 0x0047, 0x0048, 
+    0x0049, 0x4000, 0x20A5, 0x004A, 0x004B, 0x30A5, 0x004C, 0x30A5, 
+    0x004D, 0x4000, 0x20A5, 0x004E, 0x004F, 0x20A5, 0x0050, 0x0051, 
+    0x20A5, 0x0052, 0x0053, 0x4000, 0x20A5, 0x0054, 0x210E, 0x0055, 
+    0x0056, 0x4000
+};
+
+u16 D_800E18F8 = 0x1000;
+
+// Unused?
+u16 D_800E18FC[30] = {
+    0x0001, 0x0002, 0x0003, 0x4000, 
+    0x61F4, 0x0004, 0x0005, 0x0006, 
+    0x0007, 0x4000, 0x61F4, 0x0008, 
+    0x0009, 0x000A, 0x000B, 0x4000, 
+    0x61F4, 0x000C, 0x000D, 0x000E, 
+    0x000F, 0x4000, 0x61F4, 0x0010, 
+    0x0011, 0x0012, 0x0013, 0x4000, 
+    0x1000, 0x0000
+};
+
+// Credits text look-up table
+char *D_800E1938[107] = {
+    (char*)0x800E7D08, (char*)0x800E7D10, (char*)0x800E7D24, (char*)0x800E7D30, 
+    (char*)0x800E7D44, (char*)0x800E7D50, (char*)0x800E7D58, (char*)0x800E7D60, 
+    (char*)0x800E7D70, (char*)0x800E7D7C, (char*)0x800E7D88, (char*)0x800E7D94, 
+    (char*)0x800E7DA0, (char*)0x800E7DA8, (char*)0x800E7DB8, (char*)0x800E7DC0, 
+    (char*)0x800E7DD0, (char*)0x800E7DD8, (char*)0x800E7DE0, (char*)0x800E7DF0, 
+    (char*)0x800E7DFC, (char*)0x800E7E04, (char*)0x800E7E18, (char*)0x800E7E24, 
+    (char*)0x800E7E34, (char*)0x800E7E40, (char*)0x800E7E48, (char*)0x800E7E54, 
+    (char*)0x800E7E68, (char*)0x800E7E74, (char*)0x800E7E84, (char*)0x800E7E90, 
+    (char*)0x800E7E9C, (char*)0x800E7EA4, (char*)0x800E7EB0, (char*)0x800E7EBC, 
+    (char*)0x800E7EC4, (char*)0x800E7ED0, (char*)0x800E7EDC, (char*)0x800E7EEC, 
+    (char*)0x800E7F04, (char*)0x800E7F0C, (char*)0x800E7F18, (char*)0x800E7F24, 
+    (char*)0x800E7F30, (char*)0x800E7F38, (char*)0x800E7F40, (char*)0x800E7F48, 
+    (char*)0x800E7F50, (char*)0x800E7F5C, (char*)0x800E7F68, (char*)0x800E7F78, 
+    (char*)0x800E7F84, (char*)0x800E7F8C, (char*)0x800E7F98, (char*)0x800E7FA4, 
+    (char*)0x800E7FB0, (char*)0x800E7FBC, (char*)0x800E7FC8, (char*)0x800E7FD4, 
+    (char*)0x800E7FE0, (char*)0x800E7FEC, (char*)0x800E7FFC, (char*)0x800E8004, 
+    (char*)0x800E8014, (char*)0x800E8024, (char*)0x800E8034, (char*)0x800E8044, 
+    (char*)0x800E8050, (char*)0x800E8058, (char*)0x800E8064, (char*)0x800E8070, 
+    (char*)0x800E8080, (char*)0x800E8088, (char*)0x800E8094, (char*)0x800E80A8, 
+    (char*)0x800E80B4, (char*)0x800E80C0, (char*)0x800E80CC, (char*)0x800E80DC, 
+    (char*)0x800E80E8, (char*)0x800E80F4, (char*)0x800E8100, (char*)0x800E8114, 
+    (char*)0x00000000, (char*)0x00000000, (char*)0x00000000, (char*)0x800E8120, 
+    (char*)0x800E8128, (char*)0x800E8130, (char*)0x800E8138, (char*)0x800E8140, 
+    (char*)0x800E8148, (char*)0x800E8150, (char*)0x800E8158, (char*)0x800E8160, 
+    (char*)0x800E8168, (char*)0x800E8170, (char*)0x800E8178, (char*)0x800E8180, 
+    (char*)0x800E8188, (char*)0x800E8190, (char*)0x800E8198, (char*)0x800E81A0, 
+    (char*)0x800E81A8, (char*)0x800E81B0, (char*)0x800E81B8
+};
+
+// Another credits text look-up table
+char *D_800E1AE4[5] = {
+    (char*)0x800E81C0, (char*)0x800E81CC, (char*)0x800E81E0, (char*)0x800E81E8, 
+    (char*)0x800E81F4, 
+};
+
+s32 D_800E1AF8[21] = {
+    0x00000010, 0x00000020, 0x00000040, 0x00000080, 
+    0x00000100, 0x00000400, 0x00000800, 0x00001000, 
+    0x00002000, 0x00004000, 0x00008000, 0x00010000, 
+    0x00020000, 0x00040000, 0x00080000, 0x00100000, 
+    0x00200000, 0x00400000, 0x00800000, 0x01000000, 
+    0x02000000
+};
+
+s32 D_800E1B4C = 0; // Set to 1 if viewing credits from "WHODIDTHIS" cheat
+
+MenuElement D_800E1B50[9] = {    
+    { 480, 104, 160, 104, -160, 104, 255,   0, 255, 48, 255, 0, 4, 0, NULL, 0, 0, 0, 0 },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, 2, 4, 0, NULL, 0, 0, 0, 0 },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, 2, 4, 0, NULL, 0, 0, 0, 0 },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, 2, 4, 0, NULL, 0, 0, 0, 0 },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, 2, 4, 0, NULL, 0, 0, 0, 0 },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, 2, 4, 0, NULL, 0, 0, 0, 0 },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, 2, 4, 0, NULL, 0, 0, 0, 0 },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, 2, 4, 0, NULL, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0 }
+};
+
+// Fast3D (F3DDKR) display list
+u32 D_800E1C70[24] = {
+    0xE7000000, 0x00000000, 
+    0xBA001001, 0x00000000, 
+    0xBA000E02, 0x00000000, 
+    0xB9000002, 0x00000000, 
+    0xB6000000, 0x00010001, 
+    0xB8000000, 0x00000000, 
+    0xFCFFFFFF, 0xFFFE793C, 
+    0xEF000C0F, 0x00504240, 
+    0xFC121824, 0xFF33FFFF, 
+    0xEF082C0F, 0x00504240, 
+    0xFCFFFFFF, 0xFFFDF6FB, 
+    0xEF000C0F, 0x00504240
+};
+
+s8 D_800E1CD0[32] = {
+    0, 1, 2, 0, 2, 3, 4, 5,
+    6, 4, 6, 7, 8, 9, 10, 8,
+    10, 11, 12, 13, 14, 12, 14, 15, 
+    16, 17, 18, 16, 18, 19, 0, 0
+};
+
+s8 D_800E1CF0[60] = {
+    0, 0, 3, 0, 2, 1, 0, 0,
+    2, 1, 1, 1, 2, 1, 3, 0,
+    3, 3, 2, 1, 3, 3, 2, 2,
+    1, 2, 2, 2, 3, 3, 1, 2,
+    3, 3, 0, 3, 0, 0, 1, 1,
+    1, 2, 0, 0, 1, 2, 0, 3,
+    1, 1, 2, 1, 2, 2, 1, 1,
+    2, 2, 1, 2
+};
+
+u16 D_800E1D2C[40] = {
+    0x0000, 0x0000, 0x0100, 0x0000, 0x01FF, 0x00FF, 0x0001, 0x00FF, 
+    0x01FF, 0x00FF, 0x0100, 0x0000, 0x0100, 0xFF00, 0x01FF, 0xFF01, 
+    0x0001, 0xFF01, 0x01FF, 0xFF01, 0x0100, 0xFF00, 0x0000, 0xFF00, 
+    0x0000, 0x0000, 0x0001, 0x00FF, 0x0001, 0xFF01, 0x0000, 0xFF00, 
+    0x0001, 0x00FF, 0x01FF, 0x00FF, 0x01FF, 0xFF01, 0x0001, 0xFF01
+};
+
+s16 D_800E1D7C[20] = {
+    0x00D8, 0x00D8, 0x00D8, 0x0100,
+    0x00B0, 0x00B0, 0x00B0, 0x0100,
+    0x0060, 0x0060, 0x0060, 0x0100,
+    0x0088, 0x0088, 0x0088, 0x0100,
+    0x0100, 0x0100, 0x0100, 0x0100
+};
+
+s32 *D_800E1DA4[2] = {
+    NULL, NULL
+};
+
+s32 *D_800E1DAC[2] = {
+    NULL, NULL
+};
+
+s32 D_800E1DB4 = 0;
+s32 D_800E1DB8 = 0;
+s32 D_800E1DBC = 0;
+
+s32 D_800E1DC0 = 32;
+s32 D_800E1DC4 = 32;
+
+s16 D_800E1DC8[16] = {
+    1, 1, -1, 1, -1, 1, -1, -1,
+    1, -1, -1, -1, 1, 1, 1, -1
+};
+
+s16 D_800E1DE8[4] = { 
+    0, 0, 0x78, -1 
+};
+
+char D_800E1DF0[24] = "(C) COPYRIGHT RARE 1997";
+
+s16 D_800E1E08[4] = { 
+    0, 0, 0x34, -1 
+};
+
+s32 *D_800E1E10 = (s32 *)0x800E8200;
+
+s32 D_800E1E14 = 0;
+s32 D_800E1E18 = 0;
+s32 D_800E1E1C = 0;
+
+s8 D_800E1E20[8] = { 
+    0, -1, 1, 0, 0, 1, -1, 0 
+};
+
+s8 D_800E1E28 = 0;
+
+s16 D_800E1E2C[10] = {
+    0x4C, 0x4D, 0x4E, 0x4F, 0x5B, 0x5C, 0x00, 0x42,
+    -1, 0
+};
+
+s16 D_800E1E40[10] = {
+    0x0D, 0x0E, 0x0F, 0x10, 0x08, 0x09, 0x00, 0x0A,
+    -1, 0
+};
+
+/*******************************/
+
+/************ .rodata ************/
+
 extern s32 D_800E8230;
 extern f32 D_800E8414;
+
+/*********************************/
+
+/************ .bss ************/
 
 extern Gfx *D_801263A0;
 extern s32 D_801263A8;
@@ -233,7 +1335,7 @@ extern s32 D_801263AC;
 extern s8 D_801263B4;
 extern s32 D_801263BC;
 extern s32 D_801263C4;
-extern s8 D_801263D4[4]; // Array of bools
+extern s8 D_801263D4[4]; 
 extern s8 D_801263DC[4];
 extern s32 D_801263D8;
 extern s32 D_801263E0;
@@ -326,6 +1428,8 @@ extern s32 D_80126C70;
 extern s32 D_80126C74;
 extern s32 D_80126C78;
 extern s32 D_80126CC0;
+
+/******************************/
 
 Settings *get_settings(void);
 void func_8009C4A8(s16 *arg0);
@@ -563,7 +1667,7 @@ void func_80084118(void) {
 void menu_options_init(void) {
     D_801263BC = 0;
     D_800DF47C = 0;
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     func_800C4170(2);
     func_800C42EC(2);
     func_80000BE0(0x18);
@@ -651,7 +1755,7 @@ s32 MenuOptionsLoop(s32 arg0) {
         // Leave the option menu
         func_80000C98(-0x80, D_800DF460, analogX);
         D_800DF47C = -1;
-        func_800C01D8(&D_800DF774);
+        func_800C01D8(D_800DF774);
         func_80001D04(0x241, 0);
     } else if ((buttonsPressed & 0x9000) && D_800DF460 >= 2) {
         // Go to a sub-menu
@@ -741,21 +1845,21 @@ void MenuAudioOptionsInit(void) {
     D_800DF47C = 0;
     D_801269FC = 0;
     D_801263D8 = -1;
-    func_8009C674((s16*)&D_800DFA2C);
-    func_8009C8A4(&D_800DFA38);
+    func_8009C674(D_800DFA2C);
+    func_8009C8A4(&D_800DFA2C[6]);
     func_8008E4B0();
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     func_8007FFEC(2);
     D_800DFAC4 = musicGetVolSliderPercentage();
     D_800DFAC0 = sfxGetVolumeSlider();
     if (gActiveMagicCodes & 0x40) { // Check if "JUKEBOX" cheat is active
-        D_800DFA3C.unk6C = D_801269E0;
-        D_800DFA3C.unk32 = 0xD4;
+        D_800DFA3C[6].unkC = D_801269E0;
+        D_800DFA3C[3].unk2 = 0xD4;
         func_80000BE0(0x20);
         D_801263E0 = 5;
     } else {
-        D_800DFA3C.unk6C = NULL;
-        D_800DFA3C.unk32 = 0xC0;
+        D_800DFA3C[6].unkC = NULL;
+        D_800DFA3C[3].unk2 = 0xC0;
         D_801263E0 = 4;
     }
     func_800C4170(2);
@@ -821,7 +1925,7 @@ s32 MenuAudioOptionsLoop(s32 arg0) {
         
         if (((sp40 & 0x9000) && (D_801263E0 == D_80126C46 + 1)) || (sp40 & 0x4000)) {
             D_800DF47C = -1;
-            func_800C01D8(&D_800DF774);
+            func_800C01D8(D_800DF774);
             if (D_801263D8 >= 0) {
                 func_80000C98(-0x80);
             }
@@ -928,7 +2032,7 @@ void func_800851FC(void) {
         func_80000C98(0x100);
         func_80000B18();
     }
-    func_8009C4A8((s16*)&D_800DFA2C);
+    func_8009C4A8(D_800DFA2C);
     func_800C422C(2);
 }
 
@@ -951,19 +2055,19 @@ void menu_save_options_init(void) {
     D_80126A00 = 0;
     D_80126BE4 = 0;
     D_80126BEC = 0.0f;
-    func_8009C674((s16*)&D_800DFC78);
-    func_8009C8A4((s16*)&D_800DFCAC);
+    func_8009C674(D_800DFC78);
+    func_8009C8A4(D_800DFCAC);
     func_8007FFEC(0xA);
     func_800C4170(2);
-    D_800DFC10 = D_80126550[71];
-    D_800DFC20 = D_80126550[72];
-    D_800DFC30 = D_80126550[75];
-    D_800DFC40 = D_80126550[74];
-    D_800DFC50 = D_80126550[73];
-    D_800DFC60 = D_80126550[70];
+    D_800DFC10.unk0 = D_80126550[71];
+    D_800DFC20.unk0 = D_80126550[72];
+    D_800DFC30.unk0 = D_80126550[75];
+    D_800DFC40.unk0 = D_80126550[74];
+    D_800DFC50.unk0 = D_80126550[73];
+    D_800DFC60.unk0 = D_80126550[70];
     func_8008E4B0();
     func_8006EBA8();
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800853D0.s")
@@ -1151,7 +2255,6 @@ s16 xOffset; // Offset from the center of the screen.
 s16 yOffset; // Offset from the center of the screen.
 } MenuBootDrawTexture;
 
-extern s32 D_800DF77C;
 extern s16 D_800DF7C4[11];
 static MenuBootDrawTexture D_800DF7DC[11];
 extern u32* D_80126550[]; // texture lookup table?
@@ -1162,7 +2265,7 @@ extern s32 D_80126C20;
 void menu_boot_init(void) {
     s32 i;
 
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     func_80077B34(0, 0, 0);
     func_8009C674(&D_800DF7C4);
     
@@ -1244,7 +2347,7 @@ void menu_magic_codes_init(void) {
     D_800DF47C = 0;
     D_801263D8 = 0;
     D_801263E0 = 0;
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     func_800C4EDC(7, 0x32, 0x32, 0x10E, 0x84);
     func_800C4FBC(7, 0, 0, 0, 0x80);
     func_800C5494(7);
@@ -1266,7 +2369,7 @@ void menu_magic_codes_list_init(void) {
     func_800C4170(2);
     func_8009C6D4(0x3F);
     func_8008E4B0();
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     if (osTvType == 0) {
         D_80126C70 = 0xB;
     } else {
@@ -1398,7 +2501,7 @@ s32 MenuMagicCodesListLoop(s32 arg0) {
     }
     if (sp48 != 0) {
         D_800DF47C = sp48;
-        func_800C01D8(&D_800DF774);
+        func_800C01D8(D_800DF774);
         func_80001D04(0x241, NULL);
     }
     if (D_800DF47C < -0x1E) {
@@ -1615,11 +2718,9 @@ void menu_caution_init(void) {
     D_801263C4 = 0x3C;
     D_800DF47C = 0;
     func_800C4170(2);
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     D_800DF498 = 1;
 }
-
-extern MenuElement D_800DFFD8[13];
 
 void func_8008C4E8(void);
 
@@ -1633,7 +2734,7 @@ s32 menu_caution_loop(s32 arg0) {
             if (func_8006A554(0) & 0xD000) {
                 func_80001D04(0xEF, NULL);
                 D_800DF47C = 1;
-                func_800C01D8(&D_800DF774);
+                func_800C01D8(D_800DF774);
             }
         }
     }
@@ -1675,7 +2776,7 @@ void MenuGameSelectInit(void) {
     D_801263BC = 0;
     D_800DF460 = 0;
     D_801263E0 = 2;
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     func_8006EBA8();
     func_8001B790();
     D_801263D8 = 1;
@@ -1766,8 +2867,8 @@ void menu_file_select_init(void) {
     s32 sp34;
 
     func_8006B224(&sp38, &sp34);
-    func_8009C674((s16*)&D_800E0398);
-    func_8009C8A4((s16*)&D_800E03A4);
+    func_8009C674(D_800E0398);
+    func_8009C8A4(D_800E03A4);
     func_8007FFEC(6);
     func_8006EBA8();
     D_801263D8 = 1;
@@ -1778,7 +2879,7 @@ void menu_file_select_init(void) {
     D_80126484 = 0;
     D_80126488 = 0;
     D_80126CC0 = 0;
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     func_800C4170(2);
     func_80000B34(0x1A);
     for(i = 0; i < 10; i++) {
@@ -1883,7 +2984,7 @@ void func_8008DC7C(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuGameSelectLoop.s")
 
 void func_8008E428(void) {
-    func_8009C4A8((s16*)&D_800E0398);
+    func_8009C4A8(D_800E0398);
     func_8007FF88();
     func_800C422C(2);
 }
@@ -1898,10 +2999,10 @@ void func_8008E45C(void) {
 }
 
 void func_8008E4B0(void) {
-    D_800E041C = D_80126550[61];
-    D_800E042C = D_80126550[60];
-    D_800E043C = D_80126550[63];
-    D_800E044C = D_80126550[62];
+    D_800E041C.unk0 = D_80126550[61];
+    D_800E042C.unk0 = D_80126550[60];
+    D_800E043C.unk0 = D_80126550[63];
+    D_800E044C.unk0 = D_80126550[62];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008E4EC.s")
@@ -2154,7 +3255,7 @@ block_7:
                     D_800E0524 = (s32) D_80126550.unk88;
                     D_800E05B4 = (s32) D_80126550.unkC0;
                     D_800E0614 = (s32) D_80126550.unk178;
-                    func_800C01D8(&D_800DF77C);
+                    func_800C01D8(D_800DF77C);
                     D_801263BC = 0;
                     D_800DF47C = 0;
                     D_800E0980 = 0x1E;
@@ -2202,16 +3303,16 @@ void func_800945E4(void) {
 }
 
 void func_80094604(void) {
-    D_800E0A50 = D_80126550[50];
-    D_800E0A60 = D_80126550[51];
-    D_800E0A70 = D_80126550[52];
-    D_800E0A90 = D_80126550[54];
-    D_800E0A80 = D_80126550[53];
-    D_800E0AA0 = D_80126550[55];
-    D_800E0AB0 = D_80126550[56];
-    D_800E0AC0 = D_80126550[57];
-    D_800E0AD0 = D_80126550[58];
-    D_800E0AE0 = D_80126550[59];
+    D_800E0A50.unk0 = D_80126550[50];
+    D_800E0A60.unk0 = D_80126550[51];
+    D_800E0A70.unk0 = D_80126550[52];
+    D_800E0A90.unk0 = D_80126550[54];
+    D_800E0A80.unk0 = D_80126550[53];
+    D_800E0AA0.unk0 = D_80126550[55];
+    D_800E0AB0.unk0 = D_80126550[56];
+    D_800E0AC0.unk0 = D_80126550[57];
+    D_800E0AD0.unk0 = D_80126550[58];
+    D_800E0AE0.unk0 = D_80126550[59];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80094688.s")
@@ -2254,7 +3355,7 @@ void func_80096790(void) {
     s8 *temp2;
     
     temp2 = (s8*)func_8006BDB0();
-    func_8009C4A8((s16*)&D_800E0A24);
+    func_8009C4A8(D_800E0A24);
     temp = *temp2 - 1; // temp is $v1, when it should be $v0!
     
     if (D_80126BB8) {
@@ -2299,11 +3400,11 @@ void menu_11_init(void) {
     D_80126A68 = 0;
     D_801263C4 = 1;
     D_800E0988 = 0;
-    func_8009C674((s16*)&D_800E0A24);
-    func_8009C8A4((s16*)&D_800E0A40);
+    func_8009C674(D_800E0A24);
+    func_8009C8A4(D_800E0A40);
     func_80094604();
     func_800C4170(2);
-    func_800C01D8(&D_800DF77C);
+    func_800C01D8(D_800DF77C);
     func_80000BE0(0x18);
     func_80000B34(0x18);
     func_80000C98(0x80);
@@ -2313,7 +3414,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80096978.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/Menu11Loop.s")
 
 void func_800976CC(void) {
-    func_8009C4A8((s16*)&D_800E0A24);
+    func_8009C4A8(D_800E0A24);
     func_800C422C(2);
 }
 
@@ -2548,7 +3649,7 @@ void func_80098EBC(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuTrophyRaceRankingsLoop.s")
 
 void func_80099600(void) {
-    func_8009C4A8((s16*)&D_800E1024);
+    func_8009C4A8(D_800E1024);
     func_800C422C(2);
 }
 
@@ -2563,7 +3664,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_080500/func_80099E8C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuGhostDataLoop.s")
 
 void func_8009ABAC(void) {
-    func_8009C4A8((s16*)&D_800E1708);
+    func_8009C4A8(D_800E1708);
     func_800C422C(2);
 }
 
@@ -2636,8 +3737,8 @@ void menu_credits_init(void) {
     }
     func_80066610();
     func_80066818(0, 1);
-    func_8009C674((s16*)&D_800E17D8);
-    func_8009C8A4((s16*)&D_800E17F0);
+    func_8009C674(D_800E17D8);
+    func_8009C8A4(D_800E17F0);
     func_80094604();
     func_800C4170(2);
     func_80000BE0(0x18);
@@ -2683,7 +3784,7 @@ void func_8009BCF0(void) {
     func_800C0180();
     func_80066894(0, 0);
     func_80066AA8(0, 0x8000, 0x8000, 0x8000, 0x8000);
-    func_8009C4A8((s16*)&D_800E17D8);
+    func_8009C4A8(D_800E17D8);
     func_800C422C(2);
     func_8006F564(0);
 }

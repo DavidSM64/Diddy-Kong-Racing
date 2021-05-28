@@ -61,8 +61,28 @@ typedef struct{
     u8 pad00[0x50];
 }unk800E3900;
 
-extern u32 D_800DE754;
-extern u32 D_800DE758;
+
+/************ .data ************/
+
+// Unsure about if this is an array or struct.
+s32 D_800DE730[] = { 0, 0 };
+s32 D_800DE738[] = { 0, 8 };
+
+s32 D_800DE740 = 0; // Currently unknown, might be a different type.
+s32 D_800DE744 = 0; // Currently unknown, might be a different type.
+s32 D_800DE748 = 0; // Currently unknown, might be a different type.
+s32 D_800DE74C = 0; // Currently unknown, might be a different type.
+
+s32 D_800DE750 = 0; // Currently unknown, might be a different type.
+u32 D_800DE754 = 0;
+u32 D_800DE758 = 0;
+s32 D_800DE75C = 0; // Currently unknown, might be a different type.
+
+s32 D_800DE760 = 0; // Currently unknown, might be a different type.
+s32 D_800DE764 = 0; // Currently unknown, might be a different type.
+
+/*******************************/
+
 extern OSViMode D_800E3900[];//osViModeTable;
 
 extern s32 D_80126120;
