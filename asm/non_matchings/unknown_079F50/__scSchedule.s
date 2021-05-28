@@ -55,9 +55,9 @@ glabel __scSchedule
 /* 07AD98 8007A198 2DE10007 */  sltiu $at, $t7, 7
 /* 07AD9C 8007A19C 10200041 */  beqz  $at, .L8007A2A4
 /* 07ADA0 8007A1A0 000F7880 */   sll   $t7, $t7, 2
-/* 07ADA4 8007A1A4 3C01800E */  lui   $at, 0x800e
+/* 07ADA4 8007A1A4 3C01800E */  lui   $at, %hi(D_800E7970) # $at, 0x800e
 /* 07ADA8 8007A1A8 002F0821 */  addu  $at, $at, $t7
-/* 07ADAC 8007A1AC 8C2F7970 */  lw    $t7, 0x7970($at)
+/* 07ADAC 8007A1AC 8C2F7970 */  lw    $t7, %lo(D_800E7970)($at)
 /* 07ADB0 8007A1B0 00000000 */  nop   
 /* 07ADB4 8007A1B4 01E00008 */  jr    $t7
 /* 07ADB8 8007A1B8 00000000 */   nop   

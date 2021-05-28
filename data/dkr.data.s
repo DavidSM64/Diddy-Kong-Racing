@@ -8969,6 +8969,7 @@ glabel D_800E49EC
 .aligned_text "Don't worry - game should cope OK\n"
 .aligned_text "WARNING: Attempt to stop NULL sound aborted\n"
 
+glabel D_800E4BB0
 .word 0x800035C4
 .word 0x80003A0C
 .word 0x80004090
@@ -9256,6 +9257,8 @@ glabel D_800E514C
 
 glabel D_800E5150
 .word 0x3EA8F5C3
+
+glabel D_800E5154
 .word 0x8000D974
 .word 0x8000D974
 .word 0x8000D974
@@ -9277,6 +9280,8 @@ glabel D_800E5180
 
 glabel D_800E5184
 .word 0x3F36C8B4
+
+glabel D_800E5188
 .word 0x8000E104
 .word 0x8000E0E4
 .word 0x8000E0F4
@@ -9292,6 +9297,8 @@ glabel D_800E51AC
 
 glabel D_800E51B0
 .word 0x3F36C8B4
+
+glabel D_800E51B4
 .word 0x8000ECD8
 .word 0x8000EDE0
 .word 0x8000EDE0
@@ -9331,6 +9338,8 @@ glabel D_800E51B0
 .word 0x8000EDE0
 .word 0x8000EDE0
 .word 0x8000ED54
+
+glabel D_800E5250
 .word 0x80010374
 .word 0x800105F8
 .word 0x800105F8
@@ -9447,6 +9456,8 @@ glabel D_800E51B0
 .word 0x800105F8
 .word 0x800105F8
 .word 0x8001044C
+
+glabel D_800E5420
 .word 0x8001063C
 .word 0x8001063C
 .word 0x80010664
@@ -9575,6 +9586,8 @@ glabel D_800E5580
 
 glabel D_800E5584
 .word 0x3F7AE148
+
+glabel D_800E5588
 .word 0x80014B80
 .word 0x80014CCC
 .word 0x80014E18
@@ -9737,6 +9750,8 @@ glabel D_800E5680
 
 glabel D_800E5684
 .word 0x9999999A
+
+glabel D_800E5688
 .word 0x80023614
 .word 0x800238A8
 .word 0x80023808
@@ -9856,6 +9871,8 @@ glabel D_800E5684
 .word 0x800238A8
 .word 0x800237CC
 .word 0x80023790
+
+glabel D_800E5864
 .word 0x80023908
 .word 0x80023918
 .word 0x80023928
@@ -9974,6 +9991,8 @@ glabel D_800E5684
 .word 0x80023DE8
 .word 0x80023E18
 .word 0x80023CC8
+
+glabel D_800E5A3C
 .word 0x80023E5C
 .word 0x80023E64
 .word 0x80023F40
@@ -10090,6 +10109,8 @@ glabel D_800E5684
 .word 0x80023F3C
 .word 0x80023EEC
 .word 0x80023F14
+
+glabel D_800E5C0C
 .word 0x80023FA4
 .word 0x80023FB8
 .word 0x80023FCC
@@ -10295,6 +10316,8 @@ glabel D_800E5EB8
 
 glabel D_800E5EBC
 .word 0x00000000
+
+glabel D_800E5EC0
 .word 0x8002AB40
 .word 0x8002AB40
 .word 0x8002AB54
@@ -10369,6 +10392,8 @@ glabel D_800E5F70
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E5F80
 .word 0x80033A70
 .word 0x80033AA4
 .word 0x80033AE4
@@ -10492,6 +10517,8 @@ glabel D_800E6068
 
 glabel D_800E606C
 .word 0x00000000
+
+glabel D_800E6070
 .word 0x80039758
 .word 0x80039758
 .word 0x80039758
@@ -10513,6 +10540,8 @@ glabel D_800E606C
 .word 0x80039768
 .word 0x80039758
 .word 0x80039758
+
+glabel D_800E60C4
 .word 0x800397BC
 .word 0x80039978
 .word 0x80039AE0
@@ -10633,6 +10662,7 @@ glabel D_800E61B8
 glabel D_800E61BC
 .word 0x9999999A
 
+glabel D_800E61C0;
 .word 0x8003E66C
 .word 0x8003E66C
 .word 0x8003E67C
@@ -10687,6 +10717,8 @@ glabel D_800E6220
 
 glabel D_800E6224
 .word 0x3FCCCCCD
+
+glabel D_800E6228;
 .word 0x80040D30
 .word 0x80040E54
 .word 0x80040E54
@@ -10711,6 +10743,8 @@ glabel D_800E6250
 
 glabel D_800E6254
 .word 0x33333333
+
+glabel D_800E6258
 .word 0x80042378
 .word 0x800426B8
 .word 0x80042898
@@ -10818,6 +10852,8 @@ glabel D_800E6310
 
 glabel D_800E6314
 .word 0x33333333
+
+glabel D_800E6318
 .word 0x800446AC
 .word 0x80044A04
 .word 0x80044A04
@@ -10825,6 +10861,8 @@ glabel D_800E6314
 .word 0x80044A04
 .word 0x80044F54
 .word 0x80044A04
+
+glabel D_800E6334
 .word 0x80044A2C
 .word 0x80044A44
 .word 0x80044A60
@@ -10838,6 +10876,8 @@ glabel D_800E6350
 
 glabel D_800E6354
 .word 0x00000000
+
+glabel D_800E6358
 .word 0x800456A0
 .word 0x800456A8
 .word 0x800456B0
@@ -10849,6 +10889,8 @@ glabel D_800E6354
 
 glabel D_800E6378
 .word 0x49742400
+
+glabel D_800E637C
 .word 0x80045ADC
 .word 0x80045AF8
 .word 0x80045B30
@@ -11005,6 +11047,8 @@ glabel D_800E6464
 
 glabel D_800E6468
 .word 0x3DE147AE
+
+glabel D_800E646C
 .word 0x80048D40
 .word 0x80048D40
 .word 0x80048E50
@@ -11226,6 +11270,8 @@ glabel D_800E65A8
 
 glabel D_800E65AC
 .word 0xC61C4000
+
+glabel D_800E65B0
 .word 0x8004EB84
 .word 0x8004EBBC
 .word 0x8004EBD8
@@ -11410,6 +11456,8 @@ glabel D_800E66C8
 
 glabel D_800E66CC
 .word 0x9999999A
+
+glabel D_800E66D0
 .word 0x80052678
 .word 0x80052978
 .word 0x80052978
@@ -11545,6 +11593,8 @@ glabel D_800E679C
 
 glabel D_800E67A0
 .word 0x3DCCCCCD
+
+glabel D_800E67A4
 .word 0x80053FF0
 .word 0x8005406C
 .word 0x800540FC
@@ -11661,6 +11711,8 @@ glabel D_800E684C
 
 glabel D_800E6850
 .word 0x44BB8000
+
+glabel D_800E6854
 .word 0x8005635C
 .word 0x80056370
 .word 0x80056380
@@ -11677,6 +11729,8 @@ glabel D_800E6850
 .word 0x800565E0
 .word 0x80056600
 .word 0x800563EC
+
+glabel D_800E6894
 .word 0x80056828
 .word 0x80056834
 .word 0x80056840
@@ -11698,6 +11752,8 @@ glabel D_800E68C8
 
 glabel D_800E68CC
 .word 0x3CCCCCCD
+
+glabel D_800E68D0
 .word 0x80057BBC
 .word 0x80057BE4
 .word 0x80057CD0
@@ -11794,6 +11850,8 @@ glabel D_800E6960
 
 glabel D_800E6964
 .word 0x00000000
+
+glabel D_800E6968
 .word 0x8005AF80
 .word 0x8005AFD8
 .word 0x8005B004
@@ -11952,6 +12010,8 @@ glabel D_800E6A68
 
 glabel D_800E6A6C
 .word 0xCCCCCCCD
+
+glabel D_800E6A70
 .word 0x8005DBEC
 .word 0x8005DC10
 .word 0x8005DC48
@@ -12012,6 +12072,8 @@ glabel D_800E6AC8
 
 glabel D_800E6ACC
 .word 0xCCCCCCCD
+
+glabel D_800E6AD0
 .word 0x8005EE9C
 .word 0x8005EEC0
 .word 0x8005EEF8
@@ -12065,6 +12127,7 @@ glabel D_800E6B14
 
 .aligned_text "CSP: oh oh \n"
 
+glabel D_800E6C30
 .word 0x8006247C
 .word 0x80062978
 .word 0x800626F8
@@ -12089,6 +12152,8 @@ glabel D_800E6B14
 .word 0x800626F8
 .word 0x80062564
 .word 0x80062668
+
+glabel D_800E6C90
 .word 0x80062A90
 .word 0x80062AF0
 .word 0x80062AA8
@@ -12109,6 +12174,8 @@ glabel D_800E6B14
 .word 0x80062AE8
 .word 0x80062AE8
 .word 0x80062AE8
+
+glabel D_800E6CE0
 .word 0x80063068
 .word 0x800637CC
 .word 0x800637CC
@@ -12209,6 +12276,8 @@ glabel D_800E6B14
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E6E70
 .word 0x80063FE8
 .word 0x8006401C
 .word 0x8006407C
@@ -12226,6 +12295,7 @@ glabel D_800E6E94
 .word 0x00000000
 .word 0x00000000
 
+glabel D_800E6EA0
 .word 0x80064AD8
 .word 0x80064AE4
 .word 0x80064AFC
@@ -12310,6 +12380,7 @@ glabel D_800E7134
 .aligned_text "PLN"
 .aligned_text "Swapping\n"
 
+glabel D_800E7154
 .word 0x8006CF68
 .word 0x8006CF5C
 .word 0x8006D024
@@ -12323,6 +12394,8 @@ glabel D_800E7134
 .word 0x8006CFEC
 .word 0x8006D000
 .word 0x8006D014
+
+glabel D_800E7188
 .word 0x8006D0B8
 .word 0x8006D0C4
 .word 0x8006D108
@@ -12335,6 +12408,8 @@ glabel D_800E7134
 .word 0x8006D1C0
 .word 0x8006D1C0
 .word 0x8006D164
+
+glabel D_800E71B8
 .word 0x8006D5FC
 .word 0x8006D614
 .word 0x8006D62C
@@ -12347,6 +12422,8 @@ glabel D_800E7134
 .word 0x8006E00C
 .word 0x8006E054
 .word 0x8006E0E0
+
+glabel D_800E71D8
 .word 0x8006DEE8
 .word 0x8006E0E0
 .word 0x8006E0E0
@@ -12530,6 +12607,8 @@ glabel D_800E77F4
 
 glabel D_800E796C
 .word 0x48E4E1C0
+
+glabel D_800E7970
 .word 0x8007A2A4
 .word 0x8007A248
 .word 0x8007A1BC
@@ -12560,6 +12639,7 @@ glabel D_800E7B04
 glabel D_800E7B08
 .word 0x3FAAAAAB
 
+glabel D_800E7B0C
 .word 0x8007A5AC
 .word 0x8007A5D0
 .word 0x8007A658

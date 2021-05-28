@@ -121,9 +121,9 @@ glabel func_8006DCF8
 /* 06EAC4 8006DEC4 2DC1000E */  sltiu $at, $t6, 0xe
 /* 06EAC8 8006DEC8 10200085 */  beqz  $at, .L8006E0E0
 /* 06EACC 8006DECC 000E7080 */   sll   $t6, $t6, 2
-/* 06EAD0 8006DED0 3C01800E */  lui   $at, 0x800e
+/* 06EAD0 8006DED0 3C01800E */  lui   $at, %hi(D_800E71D8) # $at, 0x800e
 /* 06EAD4 8006DED4 002E0821 */  addu  $at, $at, $t6
-/* 06EAD8 8006DED8 8C2E71D8 */  lw    $t6, 0x71d8($at)
+/* 06EAD8 8006DED8 8C2E71D8 */  lw    $t6, %lo(D_800E71D8)($at)
 /* 06EADC 8006DEDC 00000000 */  nop   
 /* 06EAE0 8006DEE0 01C00008 */  jr    $t6
 /* 06EAE4 8006DEE4 00000000 */   nop   

@@ -123,9 +123,9 @@ glabel func_8002A900
 /* 02B6D4 8002AAD4 2D610020 */  sltiu $at, $t3, 0x20
 /* 02B6D8 8002AAD8 1020001E */  beqz  $at, .L8002AB54
 /* 02B6DC 8002AADC 000B5880 */   sll   $t3, $t3, 2
-/* 02B6E0 8002AAE0 3C01800E */  lui   $at, 0x800e
+/* 02B6E0 8002AAE0 3C01800E */  lui   $at, %hi(D_800E5EC0) # $at, 0x800e
 /* 02B6E4 8002AAE4 002B0821 */  addu  $at, $at, $t3
-/* 02B6E8 8002AAE8 8C2B5EC0 */  lw    $t3, 0x5ec0($at)
+/* 02B6E8 8002AAE8 8C2B5EC0 */  lw    $t3, %lo(D_800E5EC0)($at)
 /* 02B6EC 8002AAEC 00000000 */  nop   
 /* 02B6F0 8002AAF0 01600008 */  jr    $t3
 /* 02B6F4 8002AAF4 00000000 */   nop   

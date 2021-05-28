@@ -8,9 +8,9 @@ glabel alFxParamHdl
 /* 064BC4 80063FC4 10200093 */  beqz  $at, .L80064214
 /* 064BC8 80063FC8 00803825 */   move  $a3, $a0
 /* 064BCC 80063FCC 000E7080 */  sll   $t6, $t6, 2
-/* 064BD0 80063FD0 3C01800E */  lui   $at, 0x800e
+/* 064BD0 80063FD0 3C01800E */  lui   $at, %hi(D_800E6E70) # $at, 0x800e
 /* 064BD4 80063FD4 002E0821 */  addu  $at, $at, $t6
-/* 064BD8 80063FD8 8C2E6E70 */  lw    $t6, 0x6e70($at)
+/* 064BD8 80063FD8 8C2E6E70 */  lw    $t6, %lo(D_800E6E70)($at)
 /* 064BDC 80063FDC 00000000 */  nop   
 /* 064BE0 80063FE0 01C00008 */  jr    $t6
 /* 064BE4 80063FE4 00000000 */   nop   

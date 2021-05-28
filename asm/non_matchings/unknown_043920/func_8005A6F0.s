@@ -585,9 +585,9 @@ glabel func_8005A6F0
 /* 05BB5C 8005AF5C 10200094 */  beqz  $at, .L8005B1B0
 /* 05BB60 8005AF60 2442D52C */   addiu $v0, %lo(D_8011D52C) # addiu $v0, $v0, -0x2ad4
 /* 05BB64 8005AF64 0019C880 */  sll   $t9, $t9, 2
-/* 05BB68 8005AF68 3C01800E */  lui   $at, 0x800e
+/* 05BB68 8005AF68 3C01800E */  lui   $at, %hi(D_800E6968) # $at, 0x800e
 /* 05BB6C 8005AF6C 00390821 */  addu  $at, $at, $t9
-/* 05BB70 8005AF70 8C396968 */  lw    $t9, 0x6968($at)
+/* 05BB70 8005AF70 8C396968 */  lw    $t9, %lo(D_800E6968)($at)
 /* 05BB74 8005AF74 00000000 */  nop   
 /* 05BB78 8005AF78 03200008 */  jr    $t9
 /* 05BB7C 8005AF7C 00000000 */   nop   
