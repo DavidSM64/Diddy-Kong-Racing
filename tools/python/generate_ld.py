@@ -19,6 +19,12 @@ LIB_ASM_DIR = ROOT_DIR + '/lib/asm'
 LIB_SRC_DIR = ROOT_DIR + '/lib/src'
 BUILD_DIR = 'build/' + VERSION
 
+LATE_DATA_FILES = [ 
+    BUILD_DIR + '/lib/src/unknown_0D43F0.o',
+    BUILD_DIR + '/lib/src/osTimer.o',
+    BUILD_DIR + '/lib/src/unknown_0D3020.o'
+]
+
 class GenerateLD:
     def __init__(self, file):
         print('Generating linker file...')
@@ -76,7 +82,10 @@ class GenerateLD:
         self.gen_line('.main_data . : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
         for file in self.files:
-            self.gen_line(file[0] + '(.data);')
+            if file[0] not in LATE_DATA_FILES:
+                self.gen_line(file[0] + '(.data);')
+        for file in LATE_DATA_FILES:
+            self.gen_line(file + '(.data);')
         self.gen_line(BUILD_DIR + '/data/dkr.data.o(.data);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.main_data);')
