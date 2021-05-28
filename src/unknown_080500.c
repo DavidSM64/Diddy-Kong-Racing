@@ -1070,7 +1070,7 @@ s32 D_800E16C4[12] = {
     0, 0x00000000
 };
 
-s32 *D_800E16F0[5] = {
+s32 *D_800E16F4[5] = {
     D_800E153C, D_800E1594, D_800E15EC, D_800E1644, 
     D_800E169C
 };
@@ -1157,7 +1157,7 @@ u16 D_800E18FC[30] = {
 };
 
 // Credits text look-up table
-char *D_800E1938[107] = {
+char *D_800E1938[87] = {
     (char*)0x800E7D08, (char*)0x800E7D10, (char*)0x800E7D24, (char*)0x800E7D30, 
     (char*)0x800E7D44, (char*)0x800E7D50, (char*)0x800E7D58, (char*)0x800E7D60, 
     (char*)0x800E7D70, (char*)0x800E7D7C, (char*)0x800E7D88, (char*)0x800E7D94, 
@@ -1179,12 +1179,16 @@ char *D_800E1938[107] = {
     (char*)0x800E8080, (char*)0x800E8088, (char*)0x800E8094, (char*)0x800E80A8, 
     (char*)0x800E80B4, (char*)0x800E80C0, (char*)0x800E80CC, (char*)0x800E80DC, 
     (char*)0x800E80E8, (char*)0x800E80F4, (char*)0x800E8100, (char*)0x800E8114, 
-    (char*)0x00000000, (char*)0x00000000, (char*)0x00000000, (char*)0x800E8120, 
-    (char*)0x800E8128, (char*)0x800E8130, (char*)0x800E8138, (char*)0x800E8140, 
-    (char*)0x800E8148, (char*)0x800E8150, (char*)0x800E8158, (char*)0x800E8160, 
-    (char*)0x800E8168, (char*)0x800E8170, (char*)0x800E8178, (char*)0x800E8180, 
-    (char*)0x800E8188, (char*)0x800E8190, (char*)0x800E8198, (char*)0x800E81A0, 
-    (char*)0x800E81A8, (char*)0x800E81B0, (char*)0x800E81B8
+    (char*)0x00000000, (char*)0x00000000, (char*)0x00000000
+};
+
+// Credits text look-up table (time trials time sheet)
+char *D_800E1A94[20] = {
+    (char*)0x800E8120, (char*)0x800E8128, (char*)0x800E8130, (char*)0x800E8138,
+    (char*)0x800E8140, (char*)0x800E8148, (char*)0x800E8150, (char*)0x800E8158,
+    (char*)0x800E8160, (char*)0x800E8168, (char*)0x800E8170, (char*)0x800E8178,
+    (char*)0x800E8180, (char*)0x800E8188, (char*)0x800E8190, (char*)0x800E8198,
+    (char*)0x800E81A0, (char*)0x800E81A8, (char*)0x800E81B0, (char*)0x800E81B8
 };
 
 // Another credits text look-up table
