@@ -41,6 +41,7 @@ glabel func_8008DC7C
 /* 08E910 8008DD10 3C068012 */  lui   $a2, %hi(D_8012648C) # $a2, 0x8012
 /* 08E914 8008DD14 24C6648C */  addiu $a2, %lo(D_8012648C) # addiu $a2, $a2, 0x648c
 /* 08E918 8008DD18 8CC90000 */  lw    $t1, ($a2)
+# This is accessing unk801264A0->unk1
 /* 08E91C 8008DD1C 3C0B8012 */  lui   $t3, 0x8012
 /* 08E920 8008DD20 00095080 */  sll   $t2, $t1, 2
 /* 08E924 8008DD24 01495023 */  subu  $t2, $t2, $t1
