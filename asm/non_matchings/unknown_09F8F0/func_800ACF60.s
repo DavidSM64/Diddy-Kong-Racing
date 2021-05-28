@@ -6,9 +6,9 @@ glabel func_800ACF60
 /* 0ADB70 800ACF70 28410010 */  slti  $at, $v0, 0x10
 /* 0ADB74 800ACF74 10200006 */  beqz  $at, .L800ACF90
 /* 0ADB78 800ACF78 00027080 */   sll   $t6, $v0, 2
-/* 0ADB7C 800ACF7C 3C018012 */  lui   $at, 0x8012
+/* 0ADB7C 800ACF7C 3C018012 */  lui   $at, %hi(D_80127C40) # $at, 0x8012
 /* 0ADB80 800ACF80 002E0821 */  addu  $at, $at, $t6
-/* 0ADB84 800ACF84 AC247C40 */  sw    $a0, 0x7c40($at)
+/* 0ADB84 800ACF84 AC247C40 */  sw    $a0, %lo(D_80127C40)($at)
 /* 0ADB88 800ACF88 244F0001 */  addiu $t7, $v0, 1
 /* 0ADB8C 800ACF8C AC6F0000 */  sw    $t7, ($v1)
 .L800ACF90:

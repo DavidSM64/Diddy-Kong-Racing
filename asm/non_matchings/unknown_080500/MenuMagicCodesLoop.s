@@ -207,11 +207,11 @@ glabel MenuMagicCodesLoop
 /* 08ABC8 80089FC8 0004C0C0 */   sll   $t8, $a0, 3
 /* 08ABCC 80089FCC 0304C023 */  subu  $t8, $t8, $a0
 /* 08ABD0 80089FD0 0303C821 */  addu  $t9, $t8, $v1
-/* 08ABD4 80089FD4 3C018012 */  lui   $at, 0x8012
+/* 08ABD4 80089FD4 3C018012 */  lui   $at, %hi(D_80126C58) # $at, 0x8012
 /* 08ABD8 80089FD8 AFAF0038 */  sw    $t7, 0x38($sp)
 /* 08ABDC 80089FDC 00220821 */  addu  $at, $at, $v0
 /* 08ABE0 80089FE0 272E0041 */  addiu $t6, $t9, 0x41
-/* 08ABE4 80089FE4 A02E6C58 */  sb    $t6, 0x6c58($at)
+/* 08ABE4 80089FE4 A02E6C58 */  sb    $t6, %lo(D_80126C58)($at)
 /* 08ABE8 80089FE8 244F0001 */  addiu $t7, $v0, 1
 /* 08ABEC 80089FEC A4CF0000 */  sh    $t7, ($a2)
 /* 08ABF0 80089FF0 84D80000 */  lh    $t8, ($a2)

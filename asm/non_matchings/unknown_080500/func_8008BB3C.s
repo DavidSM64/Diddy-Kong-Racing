@@ -44,9 +44,9 @@ glabel func_8008BB3C
 .L8008BBD4:
 /* 08C7D4 8008BBD4 16200005 */  bnez  $s1, .L8008BBEC
 /* 08C7D8 8008BBD8 24030009 */   li    $v1, 9
-/* 08C7DC 8008BBDC 3C018012 */  lui   $at, 0x8012
+/* 08C7DC 8008BBDC 3C018012 */  lui   $at, %hi(D_801263F0) # $at, 0x8012
 /* 08C7E0 8008BBE0 00300821 */  addu  $at, $at, $s0
-/* 08C7E4 8008BBE4 A02363F0 */  sb    $v1, 0x63f0($at)
+/* 08C7E4 8008BBE4 A02363F0 */  sb    $v1, %lo(D_801263F0)($at)
 /* 08C7E8 8008BBE8 26100001 */  addiu $s0, $s0, 1
 .L8008BBEC:
 /* 08C7EC 8008BBEC 2A010008 */  slti  $at, $s0, 8

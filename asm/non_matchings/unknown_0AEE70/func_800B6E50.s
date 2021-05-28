@@ -27,10 +27,10 @@ glabel func_800B6E50
 /* 0B7AAC 800B6EAC 24080010 */  li    $t0, 16
 /* 0B7AB0 800B6EB0 3C018012 */  lui   $at, %hi(D_80127CC4) # $at, 0x8012
 /* 0B7AB4 800B6EB4 AC287CC4 */  sw    $t0, %lo(D_80127CC4)($at)
-/* 0B7AB8 800B6EB8 3C018012 */  lui   $at, 0x8012
+/* 0B7AB8 800B6EB8 3C018012 */  lui   $at, %hi(D_80127CC8) # $at, 0x8012
 /* 0B7ABC 800B6EBC 2449FFF0 */  addiu $t1, $v0, -0x10
 /* 0B7AC0 800B6EC0 03E00008 */  jr    $ra
-/* 0B7AC4 800B6EC4 AC297CC8 */   sw    $t1, 0x7cc8($at)
+/* 0B7AC4 800B6EC4 AC297CC8 */   sw    $t1, %lo(D_80127CC8)($at)
 
 .L800B6EC8:
 /* 0B7AC8 800B6EC8 3C018012 */  lui   $at, %hi(D_80127CC4) # $at, 0x8012

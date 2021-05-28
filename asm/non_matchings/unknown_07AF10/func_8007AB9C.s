@@ -20,7 +20,7 @@ glabel func_8007AB9C
 /* 07B7E4 8007ABE4 ACB90000 */  sw    $t9, ($a1)
 /* 07B7E8 8007ABE8 3C018012 */  lui   $at, %hi(D_801262D4) # $at, 0x8012
 /* 07B7EC 8007ABEC AC2B62D4 */  sw    $t3, %lo(D_801262D4)($at)
-/* 07B7F0 8007ABF0 3C018012 */  lui   $at, 0x8012
+/* 07B7F0 8007ABF0 3C018012 */  lui   $at, %hi(D_801262DC) # $at, 0x8012
 /* 07B7F4 8007ABF4 03E00008 */  jr    $ra
-/* 07B7F8 8007ABF8 AC2362DC */   sw    $v1, 0x62dc($at)
+/* 07B7F8 8007ABF8 AC2362DC */   sw    $v1, %lo(D_801262DC)($at)
 

@@ -90,7 +90,7 @@ glabel func_800C2640
 /* 0C3388 800C2788 3C018013 */  lui   $at, %hi(D_8012A74C) # $at, 0x8013
 /* 0C338C 800C278C 00007812 */  mflo  $t7
 /* 0C3390 800C2790 AC2FA74C */  sw    $t7, %lo(D_8012A74C)($at)
-/* 0C3394 800C2794 3C01800E */  lui   $at, 0x800e
+/* 0C3394 800C2794 3C01800E */  lui   $at, %hi(D_800E31AC) # $at, 0x800e
 /* 0C3398 800C2798 03E00008 */  jr    $ra
-/* 0C339C 800C279C AC3831AC */   sw    $t8, 0x31ac($at)
+/* 0C339C 800C279C AC3831AC */   sw    $t8, %lo(D_800E31AC)($at)
 
