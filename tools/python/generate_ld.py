@@ -19,6 +19,12 @@ LIB_ASM_DIR = ROOT_DIR + '/lib/asm'
 LIB_SRC_DIR = ROOT_DIR + '/lib/src'
 BUILD_DIR = 'build/' + VERSION
 
+LATE_DATA_FILES = [ 
+    BUILD_DIR + '/lib/src/unknown_0D43F0.o',
+    BUILD_DIR + '/lib/src/osTimer.o',
+    BUILD_DIR + '/lib/src/unknown_0D3020.o'
+]
+
 class GenerateLD:
     def __init__(self, file):
         print('Generating linker file...')
@@ -65,7 +71,7 @@ class GenerateLD:
         self.gen_newline()
         
     def gen_ucode_text_section(self):
-        self.gen_line('.ucodeText 0 : AT(romPos)')
+        self.gen_line('.ucodeText . : AT(romPos)')
         self.gen_open_block()
         self.gen_line(BUILD_DIR + '/asm/assets/ucode_text.o(.text);')
         self.gen_close_block()
@@ -73,15 +79,20 @@ class GenerateLD:
         self.gen_newline()
         
     def gen_data_section(self):
-        self.gen_line('.main_data 0x80000400 : AT(romPos) SUBALIGN(16)')
+        self.gen_line('.main_data . : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
+        for file in self.files:
+            if file[0] not in LATE_DATA_FILES:
+                self.gen_line(file[0] + '(.data);')
+        for file in LATE_DATA_FILES:
+            self.gen_line(file + '(.data);')
         self.gen_line(BUILD_DIR + '/data/dkr.data.o(.data);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.main_data);')
         self.gen_newline()
         
     def gen_ucode_data_section(self):
-        self.gen_line('.ucodeData 0 : AT(romPos)')
+        self.gen_line('.ucodeData . : AT(romPos)')
         self.gen_open_block()
         self.gen_line(BUILD_DIR + '/asm/assets/ucode_data.o(.text);')
         self.gen_close_block()

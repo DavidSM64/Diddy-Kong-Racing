@@ -20,10 +20,11 @@ typedef struct MenuElement {
   /* 0x10 */ u8 opacity;
   /* 0x11 */ u8 textType;
   /* 0x12 */ u8 textAlignFlags;
-  /* 0x13 */ u8 unk13; // Source type? 0 = ascii text, 7 = texture?
+  /* 0x13 */ u8 unk13; // Source type? 0 = ascii text, 2 = number, 7 = texture
   union {
   /* 0x14 */ char* asciiText; // Pointer to ascii text to be displayed on the screen.
   /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
+  /* 0x14 */ s32* number;     // Pointer to a number to be displayed on the screen.
   } source;
   /* 0x18 */ u16 backgroundRed;
   /* 0x1A */ u16 backgroundGreen;

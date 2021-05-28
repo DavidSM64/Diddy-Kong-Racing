@@ -4,13 +4,33 @@
 #include "types.h"
 #include "macros.h"
 
+/************ .data ************/
+
+s32 D_800DE770 = 0;
+s32 D_800DE774 = 0; // Currently unknown, might be a different type.
+s8  D_800DE778 = 2;
+
 /* Size: 0x08 bytes */
 typedef struct unk800DE77C {
     /* 0x00 */ s32 unk0;
     /* 0x04 */ s32 unk4;
 } unk800DE77C;
 
-extern unk800DE77C D_800DE77C[8];
+extern unk800DE77C D_800DE77C[8] = {
+    { 0x140, 0xF0 },
+    { 0x140, 0xF0 },
+    { 0x280, 0xF0 },
+    { 0x280, 0xF0 },
+    { 0x280, 0x1E0 },
+    { 0x280, 0x1E0 },
+    { 0x280, 0x1E0 },
+    { 0x280, 0x1E0 }
+};
+
+s32 D_800DE7BC = 0; // Currently unknown, might be a different type.
+
+/*******************************/
+
 extern s32 D_801262B0[2];
 extern s32 D_801262B8[2];
 extern s32 D_801262C8;

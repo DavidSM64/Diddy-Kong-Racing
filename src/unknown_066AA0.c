@@ -8,8 +8,12 @@
 
 extern u32 osTvType;
 
-/* Size: 0x34 bytes. Might be an array? */
-typedef struct unk800DD094 {
+/************ .data ************/
+
+s32 D_800DD060 = 0; // Currently unknown, might be a different type.
+
+/* Size: 0x34 bytes. */
+typedef struct unk800DD064 {
     s32 unk0;
     s32 unk4;
     s32 unk8;
@@ -23,32 +27,194 @@ typedef struct unk800DD094 {
     s32 unk28;
     s32 unk2C;
     s32 unk30;
-} unk800DD094;
-extern unk800DD094 D_800DD064[2]; // Unknown number of entries
-extern unk800DD094 D_800DD094[2]; // Unknown number of entries
+} unk800DD064;
 
-extern s32 D_800DD288;
-extern s32 D_800DD2A0;
-extern f32 D_800DD2CC;
-extern u8 D_800DD2F8[8]; // Unknown number of entries
-extern s16 D_800DD304;
-extern s8  D_800DD318;
-extern s32 D_800DD31C;
-extern s16 D_800DD328;
-extern s16 D_800DD32C;
-extern s8  D_800DD330;
-extern s32 D_800DD37C;
-extern s32 D_800DD384;
-extern s8 D_800DD38C;
-extern u8  D_800DD390;
-extern s16 D_800DD394;
-extern u8  D_800DD398;
-extern s8  D_800DD3F0;
-extern s32 D_800DD3F4;
-extern s32 D_800DD408;
-extern s32 D_800DD41C;
-extern s32 D_800DD424;
+unk800DD064 D_800DD064[4] = {
+    { 
+        0x00, 0x00, 0x140, 0xF0,
+        0xA0, 0x78, 0x140, 0xF0,
+        0x00, 0x00, 0x13F, 0xEF, 0x00
+    },
+    { 
+        0x00, 0x00, 0x140, 0xF0,
+        0xA0, 0x78, 0x140, 0xF0,
+        0x00, 0x00, 0x13F, 0xEF, 0x00
+    },
+    { 
+        0x00, 0x00, 0x140, 0xF0,
+        0xA0, 0x78, 0x140, 0xF0,
+        0x00, 0x00, 0x13F, 0xEF, 0x00
+    },
+    { 
+        0x00, 0x00, 0x140, 0xF0,
+        0xA0, 0x78, 0x140, 0xF0,
+        0x00, 0x00, 0x13F, 0xEF, 0x00
+    }
+};
+
+// Not sure about the typing here
+s16 D_800DD134[10] = { 
+    0, 0, 0, 0, 
+    0, -1, -1, 0,
+    0, 0
+};
+
+// Not sure about the typing here
+u16 D_800DD148[160] = {
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0,
+    0, 0, 0x01FF, 0
+};
+
+f32 D_800DD288[6] = {  
+    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, -281.0f
+};
+
+f32 D_800DD2A0[6] = {  
+    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f
+};
+
+f32 D_800DD2B8[5] = {  
+    1.0f, 0.0f, 0.0f, 0.0f, 0.0f
+};
+
+f32 D_800DD2CC[11] = {
+    1.0f, 0.0f, 0.0f, 0.0f, 
+    0.0f, 0.0f, 0.0f, 0.0f, 
+    0.0f, 0.0f, 160.0f
+};
+
+u8 D_800DD2F8[8] = {
+    0, 0, 0, 0, 0, 0, 0, 0
+};
+
+s32 D_800DD300 = 0; // Currently unknown, might be a different type.
+
+s16 D_800DD304 = -1;
+
+// Remove this when unknown_066AA0 is split.
+s32 __FILE_BOUNDARY_PADDING[2] = {0, 0};
+
+/** File boundary! The following variables belong to the next file when unknown_066AA0 is split **/
+
+s8  D_800DD310 = 0; // Currently unknown, might be a different type. 
+s8  D_800DD314 = -1;
+s8  D_800DD318 = 0;
+s32 D_800DD31C = 0;
+s32 D_800DD320 = 0x585E;
+s32 D_800DD324 = 0x154;
+s16 D_800DD328 = 0;
+s16 D_800DD32C = 0;
+
+s8 D_800DD330 = 0;
+
+// Unused? Unsure on pointer type
+s32 *D_800DD334[6] = {
+    NULL, NULL, NULL, // These also could just be regular zeroes and not pointers.
+    0x800E7110, 0x800E7118, 0x800E7128
+};
+
+// Unused?
+char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
+
+s8  D_800DD374 = 0;
+s32 D_800DD378 = 1;
+s32 D_800DD37C = 0;
+s32 D_800DD380 = 0; // Currently unknown, might be a different type. 
+s32 D_800DD384 = 0;
+s32 D_800DD388 = 0; // Currently unknown, might be a different type. 
+s8  D_800DD38C = 0;
+u8  D_800DD390 = 0;
+s16 D_800DD394 = 0;
+u8  D_800DD398 = 0;
+s32 D_800DD39C = 0; // Currently unknown, might be a different type. 
+s8  D_800DD3A0 = 0;
+s32 D_800DD3A4 = 0; // Currently unknown, might be a different type. 
+s32 D_800DD3A8 = 0; // Currently unknown, might be a different type. 
+s32 D_800DD3AC = 0; // Currently unknown, might be a different type. 
+s32 D_800DD3B0 = 0x1194;
+s32 D_800DD3B4 = 0x1B58;
+s32 D_800DD3B8 = 0x2AF8;
+s32 D_800DD3BC = 0x2AF8;
+s32 D_800DD3C0 = 0x12C;
+s32 D_800DD3C4 = 0x258;
+s32 D_800DD3C8 = 0x352;
+s32 D_800DD3CC = 0x384;
+s32 D_800DD3D0 = 0x12C;
+s32 D_800DD3D4 = 0x190;
+s32 D_800DD3D8 = 0x226;
+s32 D_800DD3DC = 0x258;
+s32 D_800DD3E0 = 0x14;
+s32 D_800DD3E4 = 0x1E;
+s32 D_800DD3E8 = 0x28;
+s32 D_800DD3EC = 0x32;
+
+s8  D_800DD3F0 = 0;
+s16 D_800DD3F4[8] = {
+    -32768, 0, 20, 0,
+    255, -1, 20, -1
+};
+s32 D_800DD404 = 12;
+s32 D_800DD408 = 0x00FFFFFF;
+s32 D_800DD40C = 0x001EFFFF; // Unused?
+
+// Unused? Unsure on pointer type
+s32 *D_800DD410[3] = {
+    0x800E713C, 0x800E7140, 0x800E7144
+};
+
+// Not sure if this is an array or a struct.
+s32 D_800DD41C[2] = { 
+    0, 0x001EFFFF
+};
+
+s32 D_800DD424[2] = { 
+    0, 0x0104FFFF
+};
+
+/*******************************/
+
 extern s32 D_800DFD94;
+
+/*******************************/
+
 extern f32 D_800E70A0;
 extern f32 D_800E70A4;
 
@@ -378,7 +544,7 @@ void func_80066894(s32 arg0, s32 arg1) {
 }
 
 s32 func_80066910(s32 arg0) {
-    return D_800DD094[arg0].unk0 & 0x1;
+    return D_800DD064[arg0].unk30 & 0x1;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066940.s")
@@ -705,7 +871,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80067A3C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80067D3C.s")
 
 void func_80067F20(f32 arg0) {
-    D_800DD2CC = arg0;
+    D_800DD2CC[0] = arg0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80067F2C.s")

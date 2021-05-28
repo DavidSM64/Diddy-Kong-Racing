@@ -4,13 +4,22 @@
 #include "types.h"
 #include "macros.h"
 
-extern s16 D_800DD050;
+/************ .data ************/
+
+s16 D_800DD050 = 0;
+
+/*******************************/
 
 extern s32* D_80065D98;
+
+/************ .bss ************/
+
 extern s32* D_8011D750;
 extern s32* D_8011F758;
 extern s32* D_8011F760;
 extern s32* D_8011F910;
+
+/******************************/
 
 void func_80065BD0(s32 arg0) {
     D_800DD050 = arg0;

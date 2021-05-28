@@ -4,9 +4,20 @@
 #include "types.h"
 #include "macros.h"
 
-extern s32 D_800DE440;
-extern s32 D_800DE48C;
+/************ .data ************/
+
+s32 D_800DE440 = 0;
+char D_800DE444[68] = "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'*+,-./:=?@";
+s32 D_800DE488 = 0; // Currently unknown, might be a different type. 
+s32 D_800DE48C = 0;
+
+/*******************************/
+
+/************ .bss ************/
+
 extern s32 D_80124010;
+
+/*******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80072250.s")
 GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80072298.s")

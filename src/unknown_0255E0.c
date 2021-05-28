@@ -29,29 +29,36 @@ typedef struct unk80120AC0 {
     u8  pad3C[8];
 } unk80120AC0;
 
-extern LevelHeader *D_800DC91C;
-extern s32 D_800DC924;
-extern s32 D_8011D37C;
-extern s32 D_8011D474;
+/************ .data ************/
 
-extern s32 D_8011B0A0;
-extern s32 D_8011B0A4;
-extern s32 D_8011B0A8;
+/* Size: 0x8 bytes */
+typedef struct unknown800DC874 {
+    union {
+        s8 unk00;
+        s32 dummy_force_alignment; // Not sure of a better way to do this.
+    };
+    u16 unk04;
+    s16 unk06;
+} unknown800DC874;
 
-typedef struct{
-    Player * unk00;
-} unk8011B0B8;
+s32 D_800DC870 = 0; // Currently unknown, might be a different type.
+unknown800DC874 D_800DC874 = { -128, 40, -1 };
+unknown800DC874 D_800DC87C = { -125, 70, -1 };
 
-extern unk8011B0B8 D_8011B0B8;
+f32 D_800DC884[10] = { 
+    0.0f, 0.125f, 0.25f, 0.375f,
+    0.5f, 0.625f, 0.75f, 0.875f
+};
 
-extern s32 D_8011B0DC;
-extern s32 D_8011B0F0;
-extern s32 D_8011B0F4;
-extern s32 D_8011B0FC;
-
-extern f32 D_8011B0E4;
-extern f32 D_8011B0E8;
-extern f32 D_8011B0EC;
+f32 D_800DC8AC[27] = {
+    50.0f, 0.0f, 32.0f, -50.0f, 
+    0.0f, 32.0f, -50.0f, 100.0f, 
+    32.0f, 0.0f, 0.0f, 32.0f, 
+    130.0f, 60.0f, -68.0f, 130.0f, 
+    -60.0f, -68.0f, 0.0f, 0.0f, 
+    32.0f, -130.0f, -60.0f, -68.0f, 
+    -130.0f, 60.0f, -68.0f
+};
 
 typedef struct{
     u8 pad00[0x12];
@@ -101,7 +108,45 @@ typedef struct{
     s16 count;
 } unk800DC918;
 
-extern unk800DC918* D_800DC918;
+unk800DC918* D_800DC918 = NULL;
+LevelHeader *D_800DC91C = NULL;
+
+s32 D_800DC920 = -1;
+s32 D_800DC924 = 0;
+s32 D_800DC928 = 0; // Currently unknown, might be a different type.
+
+s8 D_800DC92C[24] = { 
+    0, 1, 4, 1, 2, 4, 2, 3, 
+    4, 3, 0, 4, 5, 6, 1, 1, 
+    0, 5, 3, 2, 7, 7, 8, 3
+    // There may or may not be extra zeroes here.
+};
+
+/*******************************/
+
+/************ .bss ************/
+
+extern s32 D_8011D37C;
+extern s32 D_8011D474;
+
+extern s32 D_8011B0A0;
+extern s32 D_8011B0A4;
+extern s32 D_8011B0A8;
+
+typedef struct{
+    Player * unk00;
+} unk8011B0B8;
+
+extern unk8011B0B8 D_8011B0B8;
+
+extern s32 D_8011B0DC;
+extern s32 D_8011B0F0;
+extern s32 D_8011B0F4;
+extern s32 D_8011B0FC;
+
+extern f32 D_8011B0E4;
+extern f32 D_8011B0E8;
+extern f32 D_8011B0EC;
 
 typedef struct{
     s16 unk00;
@@ -118,6 +163,9 @@ typedef struct{
 }unk8011D468;
 
 unk8011D468 D_8011D468;
+
+/******************************/
+
 extern void func_8006F64C(void*, f32, f32, f32, f32*, f32*, f32*);
 
 

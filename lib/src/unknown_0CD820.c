@@ -4,6 +4,8 @@
 #include "types.h"
 #include "macros.h"
 
+s32 D_800E38C0 = 0;
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CCE18.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CCEE8.s")

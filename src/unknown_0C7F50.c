@@ -5,15 +5,23 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
-extern s32 D_800E3770; // boolean
-extern s32 D_800E3774;
-extern s32 D_800E3778;
-extern s32 D_800E377C;
+/************ .data ************/
+
+s32 D_800E3770 = 0;
+s32 D_800E3774 = -1;
+s32 D_800E3778 = -1;
+s32 D_800E377C = 0;
+
+/*******************************/
+
+/************ .bss ************/
 
 extern OSMesgQueue D_8012ACA0;
 extern OSMesg D_8012ACB8;
 extern OSThread D_8012AAF0;
 extern void *D_8012CCC0;
+
+/*****************************/
 
 void func_800C74A0(void *arg);
 

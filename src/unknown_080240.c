@@ -5,6 +5,16 @@
 #include "macros.h"
 #include "fast3d.h"
 
+/************ .data ************/
+
+// Fast3D (F3DDKR) display list
+Gfx D_800DF440[] = {
+    0xFC137E26, 0xFFFFF3F9,
+    0xEF200CCF, 0x00000000
+};
+
+/*******************************/
+
 extern s32 D_800E7C90;
 
 u32 func_8007F640(s32 arg0) {
@@ -41,8 +51,6 @@ u32 func_8007F640(s32 arg0) {
         return someAddr;
     }
 }
-
-extern Gfx D_800DF440;
 
 void func_8007F714(Gfx **dlist, s32 arg1) {
     s32 y_pos;
