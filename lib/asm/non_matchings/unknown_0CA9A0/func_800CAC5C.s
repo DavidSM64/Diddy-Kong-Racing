@@ -105,12 +105,12 @@ glabel func_800CAC5C
 /* 0CB9EC 800CADEC 00000000 */  nop   
 /* 0CB9F0 800CADF0 AD600038 */  sw    $zero, 0x38($t3)
 /* 0CB9F4 800CADF4 8FA90048 */  lw    $t1, 0x48($sp)
-/* 0CB9F8 800CADF8 3C0A800E */  lui   $t2, 0x800e
+/* 0CB9F8 800CADF8 3C0A800E */  lui   $t2, %hi(eqpower) # $t2, 0x800e
 /* 0CB9FC 800CADFC 85390018 */  lh    $t9, 0x18($t1)
 /* 0CBA00 800CAE00 852E001A */  lh    $t6, 0x1a($t1)
 /* 0CBA04 800CAE04 00196040 */  sll   $t4, $t9, 1
 /* 0CBA08 800CAE08 014C5021 */  addu  $t2, $t2, $t4
-/* 0CBA0C 800CAE0C 854A37A0 */  lh    $t2, 0x37a0($t2)
+/* 0CBA0C 800CAE0C 854A37A0 */  lh    $t2, %lo(eqpower)($t2)
 /* 0CBA10 800CAE10 00000000 */  nop   
 /* 0CBA14 800CAE14 014E0019 */  multu $t2, $t6
 /* 0CBA18 800CAE18 00007812 */  mflo  $t7
@@ -133,6 +133,7 @@ glabel func_800CAC5C
 /* 0CBA5C 800CAE5C 00000000 */  nop   
 /* 0CBA60 800CAE60 A5420026 */  sh    $v0, 0x26($t2)
 /* 0CBA64 800CAE64 8FAE0048 */  lw    $t6, 0x48($sp)
+# This is indexing into eqpower (0x800E37A0) from the end
 /* 0CBA68 800CAE68 3C08800E */  lui   $t0, 0x800e
 /* 0CBA6C 800CAE6C 85CF0018 */  lh    $t7, 0x18($t6)
 /* 0CBA70 800CAE70 85CB001A */  lh    $t3, 0x1a($t6)
