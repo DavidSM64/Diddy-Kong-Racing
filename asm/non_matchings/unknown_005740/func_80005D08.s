@@ -180,7 +180,8 @@ glabel func_80005D08
 /* 006B98 80005F98 44805000 */  mtc1  $zero, $f10
 /* 006B9C 80005F9C 46008221 */  cvt.d.s $f8, $f16
 /* 006BA0 80005FA0 46285032 */  c.eq.d $f10, $f8
-/* 006BA4 80005FA4 3C01800E */  lui   $at, 0x800e
+# Used to access D_800E4C58 and D_800E4C5C.
+/* 006BA4 80005FA4 3C01800E */  lui   $at, %hi(D_800E4C58) # $at, 0x800e
 /* 006BA8 80005FA8 45010034 */  bc1t  .L8000607C
 /* 006BAC 80005FAC 00000000 */   nop   
 /* 006BB0 80005FB0 8C849C3C */  lw    $a0, %lo(D_80119C3C)($a0)

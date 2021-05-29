@@ -222,7 +222,7 @@ glabel func_800BCC70
 /* 0BDBB8 800BCFB8 006FC004 */  sllv  $t8, $t7, $v1
 /* 0BDBBC 800BCFBC 030E7824 */  and   $t7, $t8, $t6
 /* 0BDBC0 800BCFC0 11E00091 */  beqz  $t7, .L800BD208
-/* 0BDBC4 800BCFC4 3C0E800E */   lui   $t6, 0x800e
+/* 0BDBC4 800BCFC4 3C0E800E */   lui   $t6, %hi(D_800E317C) # $t6, 0x800e
 /* 0BDBC8 800BCFC8 3C0E8013 */  lui   $t6, %hi(D_8012A0D8) # $t6, 0x8013
 /* 0BDBCC 800BCFCC 8DCEA0D8 */  lw    $t6, %lo(D_8012A0D8)($t6)
 /* 0BDBD0 800BCFD0 8FB800A4 */  lw    $t8, 0xa4($sp)
@@ -380,7 +380,7 @@ glabel func_800BCC70
 /* 0BDE00 800BD200 10000014 */  b     .L800BD254
 /* 0BDE04 800BD204 8FB9018C */   lw    $t9, 0x18c($sp)
 .L800BD208:
-/* 0BDE08 800BD208 8DCE317C */  lw    $t6, 0x317c($t6)
+/* 0BDE08 800BD208 8DCE317C */  lw    $t6, %lo(D_800E317C)($t6)
 /* 0BDE0C 800BD20C 00005025 */  move  $t2, $zero
 /* 0BDE10 800BD210 19C00010 */  blez  $t6, .L800BD254
 /* 0BDE14 800BD214 8FB9018C */   lw    $t9, 0x18c($sp)

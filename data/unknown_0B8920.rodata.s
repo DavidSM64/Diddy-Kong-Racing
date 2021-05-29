@@ -24,7 +24,11 @@ glabel D_800E92A8
 
 glabel D_800E92AC
 .word 0x47AE147B
+
+glabel D_800E92B0
 .word 0x40D11111
+
+glabel D_800E92B4
 .word 0x47AE147B
 
 glabel D_800E92B8
@@ -32,7 +36,11 @@ glabel D_800E92B8
 
 glabel D_800E92BC
 .word 0x47AE147B
+
+glabel D_800E92C0
 .word 0x40D11111
+
+glabel D_800E92C4
 .word 0x47AE147B
 .word 0x00000000
 .word 0x00000000

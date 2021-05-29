@@ -366,10 +366,12 @@ glabel func_8004F7F4
 /* 05092C 8004FD2C 0C016420 */  jal   func_80059080
 /* 050930 8004FD30 27A700B0 */   addiu $a3, $sp, 0xb0
 /* 050934 8004FD34 920C01F0 */  lbu   $t4, 0x1f0($s0)
-/* 050938 8004FD38 3C01800E */  lui   $at, 0x800e
+# Used to access D_800E6620 and D_800E6624.
+/* 050938 8004FD38 3C01800E */  lui   $at, %hi(D_800E6620) # $at, 0x800e
 /* 05093C 8004FD3C 1180000A */  beqz  $t4, .L8004FD68
 /* 050940 8004FD40 00000000 */   nop   
-/* 050944 8004FD44 3C01800E */  lui   $at, %hi(D_800E6624) # $at, 0x800e
+# Used to access D_800E6618 and D_800E661C.
+/* 050944 8004FD44 3C01800E */  lui   $at, %hi(D_800E6618) # $at, 0x800e
 /* 050948 8004FD48 C60600A8 */  lwc1  $f6, 0xa8($s0)
 /* 05094C 8004FD4C C4296618 */  lwc1  $f9, %lo(D_800E6618)($at)
 /* 050950 8004FD50 C428661C */  lwc1  $f8, %lo(D_800E661C)($at)

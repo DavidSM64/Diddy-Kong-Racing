@@ -16,7 +16,7 @@ IGNORE_GLABELS = ['D_800E389E', 'D_801264A1', 'D_800E1B84']
 def _find_glabels(asm):
     glabels = []
     for file in FileUtil.get_filenames_from_directory_recursive('.', '.s'):
-        #'''
+        '''
         contents = FileUtil.get_text_from_file(file)
         matches = re.findall(GLABEL_REGEX, contents)
         for match in matches:
@@ -24,8 +24,7 @@ def _find_glabels(asm):
             offsets = (match[2], match[11])  # ROM offsets of the lui and [sl][bhw]
             glabel_upper = int(match[5], 16)  # upper immediate of glabel
             glabel_lower = int(match[15], 16)  # lower immediate of the glabel
-            if glabel_lower < 0:
-                glabel_lower = (-glabel_lower ^ 0xFFFF) + 1
+            glabel_lower &= 0xFFFF)
             if glabel_lower & 0x8000:
                 glabel_upper -= 1
             glabel = 'D_%08X' % (glabel_upper << 16 | glabel_lower)

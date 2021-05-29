@@ -1118,6 +1118,8 @@ glabel D_800E69A4
 
 glabel D_800E69A8
 .word 0x3CA3D70A
+
+glabel D_800E69AC
 .word 0xBCA3D70A
 
 glabel D_800E69B0

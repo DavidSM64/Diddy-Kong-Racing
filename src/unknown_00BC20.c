@@ -88,10 +88,9 @@ s16 D_800DC820[16] = {
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
 s8 D_800DC848 = 0;
-s32 D_800DC84C = 0xFF401000; // Currently unknown, might be a different type.
-
-s32 D_800DC850 = 0x1040FF00;  // Currently unknown, might be a different type.
-s32 D_800DC854 = 0x10FF4000;  // Currently unknown, might be a different type.
+s32 D_800DC84C[3] = {         // Currently unknown, might be a different type.
+    0xFF401000, 0x1040FF00, 0x10FF4000
+};
 s32 D_800DC858 = 0;           // Currently unknown, might be a different type.
 s32 D_800DC85C = 0x0028FFFF;  // Currently unknown, might be a different type.
 

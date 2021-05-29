@@ -70,7 +70,7 @@ glabel func_800AC8A8
 /* 0AD598 800AC998 906B000E */  lbu   $t3, 0xe($v1)
 /* 0AD59C 800AC99C 3C0C800E */  lui   $t4, %hi(D_800E2980) # $t4, 0x800e
 /* 0AD5A0 800AC9A0 14CB0005 */  bne   $a2, $t3, .L800AC9B8
-/* 0AD5A4 800AC9A4 3C018012 */   lui   $at, 0x8012
+/* 0AD5A4 800AC9A4 3C018012 */   lui   $at, %hi(D_80127C2C) # $at, 0x8012
 /* 0AD5A8 800AC9A8 258C2980 */  addiu $t4, %lo(D_800E2980) # addiu $t4, $t4, 0x2980
 /* 0AD5AC 800AC9AC 3C018012 */  lui   $at, %hi(D_80127C2C) # $at, 0x8012
 /* 0AD5B0 800AC9B0 10000002 */  b     .L800AC9BC

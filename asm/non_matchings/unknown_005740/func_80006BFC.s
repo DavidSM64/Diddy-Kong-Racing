@@ -219,7 +219,8 @@ glabel func_80006BFC
 /* 007B38 80006F38 C42B4CA8 */  lwc1  $f11, %lo(D_800E4CA8)($at)
 /* 007B3C 80006F3C 46004321 */  cvt.d.s $f12, $f8
 /* 007B40 80006F40 462C503C */  c.lt.d $f10, $f12
-/* 007B44 80006F44 3C01800E */  lui   $at, 0x800e
+# Used to access D_800E4CB8 and D_800E4CBC.
+/* 007B44 80006F44 3C01800E */  lui   $at, %hi(D_800E4CB8) # $at, 0x800e
 /* 007B48 80006F48 45000009 */  bc1f  .L80006F70
 /* 007B4C 80006F4C 00000000 */   nop   
 /* 007B50 80006F50 3C01800E */  lui   $at, %hi(D_800E4CBC) # $at, 0x800e

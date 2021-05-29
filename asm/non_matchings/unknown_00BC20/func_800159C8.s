@@ -391,7 +391,8 @@ glabel func_800159C8
 /* 016BA4 80015FA4 8C850064 */  lw    $a1, 0x64($a0)
 /* 016BA8 80015FA8 00001025 */  move  $v0, $zero
 /* 016BAC 80015FAC 80AF01D6 */  lb    $t7, 0x1d6($a1)
-/* 016BB0 80015FB0 3C01800E */  lui   $at, 0x800e
+# Used to access D_800E55E0 and D_800E55E4
+/* 016BB0 80015FB0 3C01800E */  lui   $at, %hi(D_800E55E0) # $at, 0x800e
 /* 016BB4 80015FB4 152F0059 */  bne   $t1, $t7, .L8001611C
 /* 016BB8 80015FB8 00000000 */   nop   
 /* 016BBC 80015FBC 3C01800E */  lui   $at, %hi(D_800E55C4) # $at, 0x800e
@@ -439,7 +440,8 @@ glabel func_800159C8
 /* 016C5C 8001605C 460C2202 */  mul.s $f8, $f4, $f12
 /* 016C60 80016060 C480001C */  lwc1  $f0, 0x1c($a0)
 /* 016C64 80016064 C4E4000C */  lwc1  $f4, 0xc($a3)
-/* 016C68 80016068 3C01800E */  lui   $at, 0x800e
+# Used to access D_800E55D8 and D_800E55DC.
+/* 016C68 80016068 3C01800E */  lui   $at, %hi(D_800E55D8) # $at, 0x800e
 /* 016C6C 8001606C 46003282 */  mul.s $f10, $f6, $f0
 /* 016C70 80016070 460A4081 */  sub.s $f2, $f8, $f10
 /* 016C74 80016074 C4E80014 */  lwc1  $f8, 0x14($a3)
