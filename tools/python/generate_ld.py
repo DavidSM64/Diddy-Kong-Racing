@@ -17,6 +17,7 @@ ASM_DIR = ROOT_DIR + '/asm'
 SRC_DIR = ROOT_DIR + '/src'
 LIB_ASM_DIR = ROOT_DIR + '/lib/asm'
 LIB_SRC_DIR = ROOT_DIR + '/lib/src'
+DATA_DIR = ROOT_DIR + '/data'
 BUILD_DIR = 'build/' + VERSION
 
 LATE_DATA_FILES = [ 
@@ -47,6 +48,7 @@ class GenerateLD:
         self.gen_main_section()
         self.gen_ucode_text_section()
         self.gen_data_section()
+        self.gen_rodata_section()
         self.gen_ucode_data_section()
         self.gen_assets_section()
         self.gen_discard()
@@ -79,16 +81,37 @@ class GenerateLD:
         self.gen_newline()
         
     def gen_data_section(self):
-        self.gen_line('.main_data . : AT(romPos) SUBALIGN(16)')
+        self.gen_line('.data . : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
         for file in self.files:
             if file[0] not in LATE_DATA_FILES:
                 self.gen_line(file[0] + '(.data);')
         for file in LATE_DATA_FILES:
             self.gen_line(file + '(.data);')
-        self.gen_line(BUILD_DIR + '/data/dkr.data.o(.data);')
         self.gen_close_block()
-        self.gen_line('romPos += SIZEOF(.main_data);')
+        self.gen_line('romPos += SIZEOF(.data);')
+        self.gen_newline()
+        
+    def gen_rodata_section(self):
+        self.gen_line('.rodata . : AT(romPos) SUBALIGN(16)')
+        self.gen_open_block()
+        for file in self.files:
+            f = file[0]
+            if f not in LATE_DATA_FILES:
+                self.gen_line(f + '(.rodata);')
+                fname = f[f.rindex('/')+1:f.rindex('.')]
+                testName = DATA_DIR + '/' + fname + '.rodata.s'
+                if FileUtil.does_file_exist(testName):
+                    self.gen_line(BUILD_DIR + '/data/' + fname + '.rodata.o(.rodata);')
+        for f in LATE_DATA_FILES:
+            self.gen_line(f + '(.rodata);')
+            fname = f[f.rindex('/')+1:f.rindex('.')]
+            testName = DATA_DIR + '/' + fname + '.rodata.s'
+            if FileUtil.does_file_exist(testName):
+                self.gen_line(BUILD_DIR + '/data/' + fname + '.rodata.o(.rodata);')
+        self.gen_line(BUILD_DIR + '/data/unknown_last.rodata.o(.rodata);')
+        self.gen_close_block()
+        self.gen_line('romPos += SIZEOF(.rodata);')
         self.gen_newline()
         
     def gen_ucode_data_section(self):

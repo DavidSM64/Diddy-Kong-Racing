@@ -1,0 +1,1028 @@
+.include "macros.inc"
+
+.macro .aligned_text ascii
+    .asciz "\ascii"
+    .balign 4
+.endm
+
+.section .rodata
+
+.aligned_text "Objects out of ram(1) !!\n"
+.aligned_text "Door numbering error %d!!\n"
+.aligned_text "objGetScope: Unknown scope for object %d\n"
+.aligned_text "ObjList (Part) Overflow %d!!!\n"
+.aligned_text "ObjSetupObject(1) Memory fail!!\n"
+.aligned_text "ObjSetupObject(2) Memory fail!!\n"
+.aligned_text "ObjSetupObject(5) Memory fail!!\n"
+.aligned_text "ObjSetupObject(6) Memory fail!!\n"
+.aligned_text "ObjSetupObject(3) Memory fail!!\n"
+.aligned_text "ObjList Overflow %d!!!\n"
+.aligned_text "ObjSetupObject(4) Memory fail!!\n"
+
+glabel D_800E50D4
+.aligned_text "Error: Multiple checkpoint no: %d !!\n"
+.aligned_text "ERROR Channel %d\n"
+.aligned_text "RO error %d!!\n"
+.aligned_text "ARGHHHHHHHHH\n"
+
+glabel D_800E5130
+.word 0x3F8B851F
+
+glabel D_800E5134
+.word 0x3F970A3D
+
+glabel D_800E5138
+.word 0x3F99999A
+
+glabel D_800E513C
+.word 0x4019999A
+
+glabel D_800E5140
+.word 0x4099999A
+
+glabel D_800E5144
+.word 0x3D4CCCCD
+
+glabel D_800E5148
+.word 0x3DCCCCCD
+
+glabel D_800E514C
+.word 0x3F2B851F
+
+glabel D_800E5150
+.word 0x3EA8F5C3
+
+glabel D_800E5154
+.word 0x8000D974
+.word 0x8000D974
+.word 0x8000D974
+.word 0x8000D974
+.word 0x8000D974
+.word 0x8000D98C
+.word 0x8000D974
+.word 0x8000D974
+.word 0x8000D974
+
+glabel D_800E5178
+.word 0x3C23D70A
+
+glabel D_800E517C
+.word 0x3C23D70A
+
+glabel D_800E5180
+.word 0x3FB33333
+
+glabel D_800E5184
+.word 0x3F36C8B4
+
+glabel D_800E5188
+.word 0x8000E104
+.word 0x8000E0E4
+.word 0x8000E0F4
+.word 0x8000E0F4
+.word 0x8000E0FC
+.word 0x8000E104
+.word 0x8000E0FC
+.word 0x8000E0EC
+.word 0x8000E104
+
+glabel D_800E51AC
+.word 0x3FB33333
+
+glabel D_800E51B0
+.word 0x3F36C8B4
+
+glabel D_800E51B4
+.word 0x8000ECD8
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000ED98
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000ECF4
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000ED10
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000ED40
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000EDE0
+.word 0x8000ED54
+
+glabel D_800E5250
+.word 0x80010374
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x80010400
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x80010400
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800104C0
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105A8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105D0
+.word 0x800105E4
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800104D8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800104AC
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105A8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x80010508
+.word 0x800105F8
+.word 0x80010374
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x8001047C
+.word 0x8001047C
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x8001047C
+.word 0x8001047C
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x800105F8
+.word 0x8001044C
+
+glabel D_800E5420
+.word 0x8001063C
+.word 0x8001063C
+.word 0x80010664
+.word 0x8001063C
+.word 0x8001063C
+.word 0x80010664
+.word 0x8001063C
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x8001063C
+.word 0x80010664
+.word 0x8001063C
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x8001063C
+.word 0x8001063C
+.word 0x80010664
+.word 0x80010664
+.word 0x8001063C
+.word 0x8001063C
+.word 0x8001063C
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x8001063C
+.word 0x8001063C
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x8001063C
+.word 0x8001063C
+.word 0x8001063C
+.word 0x8001063C
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x8001063C
+.word 0x80010664
+.word 0x8001063C
+.word 0x80010664
+.word 0x80010664
+.word 0x80010664
+.word 0x8001063C
+
+glabel D_800E5538
+.word 0x408F4000
+
+glabel D_800E553C
+.word 0x00000000
+
+glabel D_800E5540
+.word 0x40A77000
+
+glabel D_800E5544
+.word 0x00000000
+
+glabel D_800E5548
+.word 0x407F4000
+
+glabel D_800E554C
+.word 0x00000000
+
+glabel D_800E5550
+.word 0x3C23D70A
+
+glabel D_800E5554
+.word 0x3E4CCCCD
+
+glabel D_800E5558
+.word 0x3D4CCCCD
+
+glabel D_800E555C
+.word 0x455AC000
+
+glabel D_800E5560
+.word 0x4528C000
+
+glabel D_800E5564
+.word 0x3F19999A
+
+glabel D_800E5568
+.word 0x3F933333
+
+glabel D_800E556C
+.word 0x3D4CCCCD
+
+glabel D_800E5570
+.word 0x3F733333
+.word 0x00000000
+
+glabel D_800E5578
+.word 0x3FB99999
+
+glabel D_800E557C
+.word 0x9999999A
+
+glabel D_800E5580
+.word 0x3CA3D70A
+
+glabel D_800E5584
+.word 0x3F7AE148
+
+glabel D_800E5588
+.word 0x80014B80
+.word 0x80014CCC
+.word 0x80014E18
+.word 0x80015340
+.word 0x80015340
+.word 0x80015340
+.word 0x80015340
+.word 0x80015340
+.word 0x80014F64
+.word 0x800150B0
+.word 0x800151FC
+.word 0x00000000
+
+glabel D_800E55B8
+.word 0x3FD33333
+
+glabel D_800E55BC
+.word 0x33333333
+
+glabel D_800E55C0
+.word 0x3FD33333
+
+glabel D_800E55C4
+.word 0x33333333
+
+glabel D_800E55C8
+.word 0x3FE99999
+
+glabel D_800E55CC
+.word 0x9999999A
+
+glabel D_800E55D0
+.word 0x3FB99999
+
+glabel D_800E55D4
+.word 0x9999999A
+
+glabel D_800E55D8
+.word 0x3FB99999
+
+glabel D_800E55DC
+.word 0x9999999A
+
+glabel D_800E55E0
+.word 0x3FD33333
+
+glabel D_800E55E4
+.word 0x33333333
+
+glabel D_800E55E8
+.word 0x3FD33333
+
+glabel D_800E55EC
+.word 0x33333333
+
+glabel D_800E55F0
+.word 0x3FB99999
+
+glabel D_800E55F4
+.word 0x9999999A
+
+glabel D_800E55F8
+.word 0x3FD33333
+
+glabel D_800E55FC
+.word 0x33333333
+
+glabel D_800E5600
+.word 0x3FB99999
+
+glabel D_800E5604
+.word 0x9999999A
+
+glabel D_800E5608
+.word 0xBFB99999
+
+glabel D_800E560C
+.word 0x9999999A
+
+glabel D_800E5610
+.word 0xBFB99999
+
+glabel D_800E5614
+.word 0x9999999A
+
+glabel D_800E5618
+.word 0x3FE69FBE
+
+glabel D_800E561C
+.word 0x76C8B439
+
+glabel D_800E5620
+.word 0xBFD33333
+
+glabel D_800E5624
+.word 0x33333333
+
+glabel D_800E5628
+.word 0x3FF4CCCC
+
+glabel D_800E562C
+.word 0xCCCCCCCD
+
+glabel D_800E5630
+.word 0x407F4000
+
+glabel D_800E5634
+.word 0x00000000
+
+glabel D_800E5638
+.word 0xC69C4000
+
+glabel D_800E563C
+.word 0xC61C4000
+
+glabel D_800E5640
+.word 0xC69C4000
+
+glabel D_800E5644
+.word 0x47435000
+
+glabel D_800E5648
+.word 0x3FF33333
+
+glabel D_800E564C
+.word 0x33333333
+
+glabel D_800E5650
+.word 0x3C23D70A
+.word 0x00000000
+
+glabel D_800E5658
+.word 0x406FE000
+
+glabel D_800E565C
+.word 0x00000000
+
+glabel D_800E5660
+.word 0x3FFEB852
+.word 0x00000000
+
+glabel D_800E5668
+.word 0x3FB99999
+
+glabel D_800E566C
+.word 0x9999999A
+
+glabel D_800E5670
+.word 0x3FF33333
+
+glabel D_800E5674
+.word 0x33333333
+
+glabel D_800E5678
+.word 0x3C23D70A
+.word 0x00000000
+
+glabel D_800E5680
+.word 0x3FB99999
+
+glabel D_800E5684
+.word 0x9999999A
+
+glabel D_800E5688
+.word 0x80023614
+.word 0x800238A8
+.word 0x80023808
+.word 0x80023650
+.word 0x800236DC
+.word 0x800238A8
+.word 0x8002363C
+.word 0x80023664
+.word 0x80023678
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023790
+.word 0x800238A8
+.word 0x80023628
+.word 0x800238A8
+.word 0x8002368C
+.word 0x800236F0
+.word 0x800236DC
+.word 0x80023678
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800236B4
+.word 0x800238A8
+.word 0x800236C8
+.word 0x800236A0
+.word 0x80023754
+.word 0x80023704
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023718
+.word 0x800238A8
+.word 0x8002372C
+.word 0x800236A0
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023740
+.word 0x800238A8
+.word 0x80023830
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023790
+.word 0x80023790
+.word 0x800238A8
+.word 0x80023790
+.word 0x80023790
+.word 0x800236A0
+.word 0x80023790
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800237E0
+.word 0x80023754
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023790
+.word 0x800237A4
+.word 0x80023790
+.word 0x800238A8
+.word 0x8002386C
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023754
+.word 0x800238A8
+.word 0x80023768
+.word 0x80023790
+.word 0x80023790
+.word 0x800238A8
+.word 0x8002377C
+.word 0x80023790
+.word 0x80023790
+.word 0x80023790
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023858
+.word 0x800238A8
+.word 0x80023790
+.word 0x80023790
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023790
+.word 0x80023790
+.word 0x80023790
+.word 0x80023790
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x800238A8
+.word 0x80023880
+.word 0x800238A8
+.word 0x80023628
+.word 0x800237B8
+.word 0x80023790
+.word 0x800238A8
+.word 0x80023790
+.word 0x80023894
+.word 0x800238A8
+.word 0x800237CC
+.word 0x80023790
+
+glabel D_800E5864
+.word 0x80023908
+.word 0x80023918
+.word 0x80023928
+.word 0x80023938
+.word 0x80023A78
+.word 0x80023948
+.word 0x80023978
+.word 0x80023988
+.word 0x80023998
+.word 0x800239B8
+.word 0x800239C8
+.word 0x800239D8
+.word 0x800239E8
+.word 0x80023A18
+.word 0x80023A38
+.word 0x80023A48
+.word 0x80023A58
+.word 0x80023A78
+.word 0x80023998
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023968
+.word 0x80023A68
+.word 0x80023E20
+.word 0x80023958
+.word 0x80023A88
+.word 0x800239A8
+.word 0x80023A98
+.word 0x80023AA8
+.word 0x800239F8
+.word 0x80023AB8
+.word 0x80023AC8
+.word 0x80023AD8
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023AE8
+.word 0x80023B08
+.word 0x80023B18
+.word 0x80023B28
+.word 0x80023B38
+.word 0x80023A08
+.word 0x80023E20
+.word 0x80023B48
+.word 0x80023B58
+.word 0x80023B68
+.word 0x80023B78
+.word 0x80023B88
+.word 0x80023E20
+.word 0x80023B98
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023BA8
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023BB8
+.word 0x80023E20
+.word 0x80023BC8
+.word 0x80023BD8
+.word 0x80023BE8
+.word 0x80023E20
+.word 0x80023BF8
+.word 0x80023C08
+.word 0x80023E20
+.word 0x80023C18
+.word 0x80023C28
+.word 0x80023C38
+.word 0x80023AF8
+.word 0x80023C48
+.word 0x80023C58
+.word 0x80023C68
+.word 0x80023CA8
+.word 0x80023C78
+.word 0x80023CD8
+.word 0x80023CE8
+.word 0x80023CF8
+.word 0x80023D08
+.word 0x80023D18
+.word 0x80023D28
+.word 0x80023D38
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023D48
+.word 0x80023D58
+.word 0x80023D68
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023D88
+.word 0x80023D78
+.word 0x80023D98
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023BC8
+.word 0x80023DA8
+.word 0x80023C78
+.word 0x80023C88
+.word 0x80023C98
+.word 0x80023DB8
+.word 0x80023DC8
+.word 0x80023DC8
+.word 0x80023C88
+.word 0x80023C98
+.word 0x80023C68
+.word 0x80023C78
+.word 0x80023DD8
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023DE8
+.word 0x80023DF8
+.word 0x80023E08
+.word 0x80023A28
+.word 0x80023CB8
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023E20
+.word 0x80023DE8
+.word 0x80023E18
+.word 0x80023CC8
+
+glabel D_800E5A3C
+.word 0x80023E5C
+.word 0x80023E64
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023E6C
+.word 0x80023F40
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023E74
+.word 0x80023F14
+.word 0x80023E7C
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023E84
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023E9C
+.word 0x80023F40
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F14
+.word 0x80023EA4
+.word 0x80023EAC
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023EBC
+.word 0x80023EC4
+.word 0x80023ECC
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023ED4
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023EDC
+.word 0x80023F24
+.word 0x80023EEC
+.word 0x80023F24
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023EF4
+.word 0x80023F14
+.word 0x80023EEC
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F24
+.word 0x80023F2C
+.word 0x80023EE4
+.word 0x80023EAC
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023EB4
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023E8C
+.word 0x80023F40
+.word 0x80023E8C
+.word 0x80023F40
+.word 0x80023EFC
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023E84
+.word 0x80023F14
+.word 0x80023F14
+.word 0x80023EEC
+.word 0x80023F0C
+.word 0x80023F1C
+.word 0x80023F40
+.word 0x80023EEC
+.word 0x80023F40
+.word 0x80023EEC
+.word 0x80023F40
+.word 0x80023EAC
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F04
+.word 0x80023F40
+.word 0x80023F14
+.word 0x80023F40
+.word 0x80023EFC
+.word 0x80023E8C
+.word 0x80023E8C
+.word 0x80023F14
+.word 0x80023EFC
+.word 0x80023EFC
+.word 0x80023E94
+.word 0x80023E94
+.word 0x80023E94
+.word 0x80023E94
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F14
+.word 0x80023F34
+.word 0x80023EAC
+.word 0x80023E7C
+.word 0x80023F40
+.word 0x80023F40
+.word 0x80023F3C
+.word 0x80023EEC
+.word 0x80023F14
+
+glabel D_800E5C0C
+.word 0x80023FA4
+.word 0x80023FB8
+.word 0x80023FCC
+.word 0x80024108
+.word 0x80023FE0
+.word 0x8002401C
+.word 0x80024570
+.word 0x80024570
+.word 0x80024030
+.word 0x80024044
+.word 0x80024058
+.word 0x8002406C
+.word 0x800240A8
+.word 0x800240BC
+.word 0x800240CC
+.word 0x800240E0
+.word 0x80024108
+.word 0x80024570
+.word 0x80024570
+.word 0x80024570
+.word 0x80024008
+.word 0x800240F4
+.word 0x80024570
+.word 0x80023FF4
+.word 0x8002411C
+.word 0x80024570
+.word 0x80024130
+.word 0x80024144
+.word 0x80024080
+.word 0x80024158
+.word 0x8002416C
+.word 0x80024570
+.word 0x80024570
+.word 0x80024570
+.word 0x80024180
+.word 0x800241A8
+.word 0x800241BC
+.word 0x800241D0
+.word 0x800241E4
+.word 0x80024094
+.word 0x80024570
+.word 0x80024570
+.word 0x80024570
+.word 0x800241F8
+.word 0x8002420C
+.word 0x80024220
+.word 0x80024570
+.word 0x80024570
+.word 0x80024234
+.word 0x8002425C
+.word 0x80024270
+.word 0x80024284
+.word 0x80024298
+.word 0x800242AC
+.word 0x800242C0
+.word 0x800242D4
+.word 0x800242E8
+.word 0x80024570
+.word 0x800242FC
+.word 0x8002430C
+.word 0x80024320
+.word 0x80024570
+.word 0x80024334
+.word 0x80024348
+.word 0x8002435C
+.word 0x80024194
+.word 0x80024370
+.word 0x80024384
+.word 0x80024398
+.word 0x80024570
+.word 0x80024398
+.word 0x800243C0
+.word 0x800243D4
+.word 0x800243E8
+.word 0x800243FC
+.word 0x80024410
+.word 0x80024424
+.word 0x80024438
+.word 0x8002444C
+.word 0x80024234
+.word 0x80024460
+.word 0x80024570
+.word 0x80024474
+.word 0x80024234
+.word 0x80024234
+.word 0x80024570
+.word 0x80024488
+.word 0x80024570
+.word 0x8002449C
+.word 0x80024570
+.word 0x80024570
+.word 0x800242D4
+.word 0x800244B0
+.word 0x80024570
+.word 0x800243AC
+.word 0x800243AC
+.word 0x800244C4
+.word 0x80024570
+.word 0x800244EC
+.word 0x800243AC
+.word 0x800243AC
+.word 0x80024398
+.word 0x80024398
+.word 0x800244D8
+.word 0x80024570
+.word 0x80024570
+.word 0x80024500
+.word 0x80024514
+.word 0x80024488
+.word 0x80024528
+.word 0x80024570
+.word 0x8002453C
+.word 0x80024570
+.word 0x80024550
+.word 0x80024500
+.word 0x80024564
+.word 0x80024570
+.word 0x80024248
+.word 0x00000000
+.word 0x00000000
+.word 0x00000000

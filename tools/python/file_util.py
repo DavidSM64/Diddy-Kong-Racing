@@ -1,5 +1,5 @@
 from os import chdir, listdir, remove
-from os.path import dirname, isfile, isdir, join, realpath
+from os.path import dirname, isfile, isdir, join, realpath, exists
 
 class FileUtil:
     @staticmethod
@@ -61,3 +61,7 @@ class FileUtil:
     @staticmethod
     def set_working_dir_to_project_base():
         chdir(join(dirname(realpath(__file__)), '../..'))
+        
+    @staticmethod
+    def does_file_exist(filename):
+        return exists(filename)
