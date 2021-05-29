@@ -7,10 +7,10 @@ glabel func_800CD14C
 .L800CD160:
 /* 0CDD60 800CD160 8FAF0000 */  lw    $t7, ($sp)
 /* 0CDD64 800CD164 8FB90000 */  lw    $t9, ($sp)
-/* 0CDD68 800CD168 3C018013 */  lui   $at, 0x8013
+/* 0CDD68 800CD168 3C018013 */  lui   $at, %hi(D_8012CD50) #$at, 0x8013
 /* 0CDD6C 800CD16C 000FC080 */  sll   $t8, $t7, 2
 /* 0CDD70 800CD170 00380821 */  addu  $at, $at, $t8
-/* 0CDD74 800CD174 AC20CD50 */  sw    $zero, -0x32b0($at)
+/* 0CDD74 800CD174 AC20CD50 */  sw    $zero, %lo(D_8012CD50)($at)
 /* 0CDD78 800CD178 27280001 */  addiu $t0, $t9, 1
 /* 0CDD7C 800CD17C 29010010 */  slti  $at, $t0, 0x10
 /* 0CDD80 800CD180 1420FFF7 */  bnez  $at, .L800CD160

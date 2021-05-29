@@ -215,9 +215,9 @@ glabel MenuMagicCodesLoop
 /* 08ABE8 80089FE8 244F0001 */  addiu $t7, $v0, 1
 /* 08ABEC 80089FEC A4CF0000 */  sh    $t7, ($a2)
 /* 08ABF0 80089FF0 84D80000 */  lh    $t8, ($a2)
-/* 08ABF4 80089FF4 3C018012 */  lui   $at, 0x8012
+/* 08ABF4 80089FF4 3C018012 */  lui   $at, %hi(D_80126C58) #$at, 0x8012
 /* 08ABF8 80089FF8 00380821 */  addu  $at, $at, $t8
-/* 08ABFC 80089FFC A0206C58 */  sb    $zero, 0x6c58($at)
+/* 08ABFC 80089FFC A0206C58 */  sb    $zero, %lo(D_80126C58)($at)
 .L8008A000:
 /* 08AC00 8008A000 3C068012 */  lui   $a2, %hi(D_80126C44) # $a2, 0x8012
 /* 08AC04 8008A004 31594000 */  andi  $t9, $t2, 0x4000
@@ -253,9 +253,9 @@ glabel MenuMagicCodesLoop
 /* 08AC70 8008A070 244FFFFF */  addiu $t7, $v0, -1
 /* 08AC74 8008A074 A4CF0000 */  sh    $t7, ($a2)
 /* 08AC78 8008A078 84D80000 */  lh    $t8, ($a2)
-/* 08AC7C 8008A07C 3C018012 */  lui   $at, 0x8012
+/* 08AC7C 8008A07C 3C018012 */  lui   $at, %hi(D_80126C58) #$at, 0x8012
 /* 08AC80 8008A080 00380821 */  addu  $at, $at, $t8
-/* 08AC84 8008A084 A0206C58 */  sb    $zero, 0x6c58($at)
+/* 08AC84 8008A084 A0206C58 */  sb    $zero, %lo(D_80126C58)($at)
 .L8008A088:
 /* 08AC88 8008A088 8FB90048 */  lw    $t9, 0x48($sp)
 .L8008A08C:

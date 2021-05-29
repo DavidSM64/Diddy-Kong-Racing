@@ -3,7 +3,7 @@ import re
 from file_util import FileUtil
 
 LINE_START_REGEX = r'\n(/\* ([0-9A-F]{6}) [0-9A-F]{8} [0-9A-F]{8} \*/\s+|\.L80[0-9A-F]{6}:)'
-REG_REGEX = r'(\$(at|v[0-1]|a[0-3]|t[0-9]|s[0-7]|k[0-1]|gp|sp|fp|ra))'
+REG_REGEX = r'(\$(at|v[0-1]|a[0-3]|t[0-9]|s[0-7]|k[0-1]|gp|sp|fp|ra|zero))'
 GLABEL_UPPER_REGEX = '(' + LINE_START_REGEX + r'lui\s+' + REG_REGEX + r',\s+(0x80[0-9a-f]{2}))'
 GLABEL_LOWER_REGEX = '(' + LINE_START_REGEX + r'[sl][bhw]u?\s+' + REG_REGEX + r',\s+(-?0x[0-9a-f]{4})\(\4\))'
 GLABEL_REGEX = GLABEL_UPPER_REGEX + '(' + LINE_START_REGEX + '[^\n]*){0,10}' + GLABEL_LOWER_REGEX
@@ -11,7 +11,7 @@ GLABEL_REGEX = GLABEL_UPPER_REGEX + '(' + LINE_START_REGEX + '[^\n]*){0,10}' + G
 UPPER_INSTR_REGEX_TMPL = r'(/\* %s[^\n]*lui\s+)([^\n]*)'
 LOWER_INSTR_REGEX_TMPL = r'(/\* %s[^\n]*[ls][bhw]u?\s+' + REG_REGEX + r',\s+)-?0x[0-9a-f]{4}([^\n]*)'
 
-IGNORE_GLABELS = ['D_800E389E', 'D_801264A1']
+IGNORE_GLABELS = ['D_800E389E', 'D_801264A1', 'D_800E1B84']
 
 def _find_glabels(asm):
     glabels = []

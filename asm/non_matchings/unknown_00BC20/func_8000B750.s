@@ -228,10 +228,10 @@ glabel func_8000B750
 /* 00C6B4 8000BAB4 00000000 */   nop   
 .L8000BAB8:
 /* 00C6B8 8000BAB8 8FAF0090 */  lw    $t7, 0x90($sp)
-/* 00C6BC 8000BABC 3C018012 */  lui   $at, 0x8012
+/* 00C6BC 8000BABC 3C018012 */  lui   $at, %hi(D_8011B068) #$at, 0x8012
 /* 00C6C0 8000BAC0 11E00002 */  beqz  $t7, .L8000BACC
 /* 00C6C4 8000BAC4 00300821 */   addu  $at, $at, $s0
-/* 00C6C8 8000BAC8 A020B068 */  sb    $zero, -0x4f98($at)
+/* 00C6C8 8000BAC8 A020B068 */  sb    $zero, %lo(D_8011B068)($at)
 .L8000BACC:
 /* 00C6CC 8000BACC 8FBF002C */  lw    $ra, 0x2c($sp)
 .L8000BAD0:
