@@ -13,12 +13,16 @@ glabel D_800E96C0
 glabel D_800E96C4
 .word 0x202B2D23
 .word 0x30000000
+
+glabel D_800E96CC
 .word 0x00000001
 .word 0x00000002
 .word 0x00000004
 .word 0x00000008
 .word 0x00000010
 .word 0x00000000
+
+glabel D_800E96E4
 .word 0x800D3C08
 .word 0x800D3EE8
 .word 0x800D3C08

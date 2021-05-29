@@ -89,6 +89,8 @@ glabel D_800E5EB8
 
 glabel D_800E5EBC
 .word 0x00000000
+
+glabel D_800E5EC0
 .word 0x8002AB40
 .word 0x8002AB40
 .word 0x8002AB54

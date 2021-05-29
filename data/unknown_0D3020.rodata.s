@@ -83,6 +83,8 @@ glabel D_800E98B0
 .word 0x00000000
 .word 0x4197D784
 .word 0x00000000
+
+glabel D_800E98C0
 .word 0x7F810000
 .word 0x00000000
 .word 0x00000000

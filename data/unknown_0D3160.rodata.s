@@ -11,6 +11,8 @@
 .word 0x9D353918
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E9650
 .word 0x800D2A70
 .word 0x800D2964
 .word 0x800D29A4
@@ -19,6 +21,8 @@
 .word 0x800D29E0
 .word 0x800D2A28
 .word 0x00000000
+
+glabel D_800E9670
 .word 0x00141818
 .word 0x1C1C1C1C
 .word 0x20202020
@@ -27,6 +31,8 @@
 .word 0x0C0C0C0C
 .word 0x10101010
 .word 0x10101010
+
+glabel D_800E9690
 .word 0x800D3168
 .word 0x800D3130
 .word 0x800D3110

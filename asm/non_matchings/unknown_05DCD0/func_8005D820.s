@@ -249,9 +249,9 @@ glabel func_8005D820
 .L8005DBCC:
 /* 05E7CC 8005DBCC 1020004F */  beqz  $at, .L8005DD0C
 /* 05E7D0 8005DBD0 00037880 */   sll   $t7, $v1, 2
-/* 05E7D4 8005DBD4 3C01800E */  lui   $at, 0x800e
+/* 05E7D4 8005DBD4 3C01800E */  lui   $at, %hi(D_800E6A70) # $at, 0x800e
 /* 05E7D8 8005DBD8 002F0821 */  addu  $at, $at, $t7
-/* 05E7DC 8005DBDC 8C2F6A70 */  lw    $t7, 0x6a70($at)
+/* 05E7DC 8005DBDC 8C2F6A70 */  lw    $t7, %lo(D_800E6A70)($at)
 /* 05E7E0 8005DBE0 00000000 */  nop   
 /* 05E7E4 8005DBE4 01E00008 */  jr    $t7
 /* 05E7E8 8005DBE8 00000000 */   nop   

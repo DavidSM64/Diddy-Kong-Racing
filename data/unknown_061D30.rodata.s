@@ -9,6 +9,7 @@
 
 .aligned_text "CSP: oh oh \n"
 
+glabel D_800E6C30
 .word 0x8006247C
 .word 0x80062978
 .word 0x800626F8
@@ -33,6 +34,8 @@
 .word 0x800626F8
 .word 0x80062564
 .word 0x80062668
+
+glabel D_800E6C90
 .word 0x80062A90
 .word 0x80062AF0
 .word 0x80062AA8
@@ -53,6 +56,8 @@
 .word 0x80062AE8
 .word 0x80062AE8
 .word 0x80062AE8
+
+glabel D_800E6CE0
 .word 0x80063068
 .word 0x800637CC
 .word 0x800637CC

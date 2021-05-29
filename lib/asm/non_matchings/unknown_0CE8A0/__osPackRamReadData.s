@@ -10,10 +10,10 @@ glabel __osPackRamReadData
 .L800CDF04:
 /* 0CEB04 800CDF04 8FAF0018 */  lw    $t7, 0x18($sp)
 /* 0CEB08 800CDF08 8FB90018 */  lw    $t9, 0x18($sp)
-/* 0CEB0C 800CDF0C 3C018013 */  lui   $at, 0x8013
+/* 0CEB0C 800CDF0C 3C018013 */  lui   $at, %hi(__osPfsPifRam) #$at, 0x8013
 /* 0CEB10 800CDF10 000FC080 */  sll   $t8, $t7, 2
 /* 0CEB14 800CDF14 00380821 */  addu  $at, $at, $t8
-/* 0CEB18 800CDF18 AC20CDE0 */  sw    $zero, -0x3220($at)
+/* 0CEB18 800CDF18 AC20CDE0 */  sw    $zero, %lo(__osPfsPifRam)($at)
 /* 0CEB1C 800CDF1C 27280001 */  addiu $t0, $t9, 1
 /* 0CEB20 800CDF20 29010010 */  slti  $at, $t0, 0x10
 /* 0CEB24 800CDF24 1420FFF7 */  bnez  $at, .L800CDF04

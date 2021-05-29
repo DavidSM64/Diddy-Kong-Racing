@@ -36,6 +36,8 @@ glabel D_800E92BC
 .word 0x47AE147B
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E92D0
 .word 0x800C0310
 .word 0x800C0320
 .word 0x800C0370
@@ -43,6 +45,8 @@ glabel D_800E92BC
 .word 0x800C03D0
 .word 0x800C0420
 .word 0x800C0470
+
+glabel D_800E92EC
 .word 0x800C056C
 .word 0x800C0580
 .word 0x800C0580
@@ -56,6 +60,8 @@ glabel D_800E9308
 
 glabel D_800E930C
 .word 0x3F99999A
+
+glabel D_800E9310
 .word 0x800C0680
 .word 0x800C0694
 .word 0x800C06A8
@@ -66,6 +72,8 @@ glabel D_800E930C
 
 glabel D_800E932C
 .word 0x3F99999A
+
+glabel D_800E9330
 .word 0x800C3958
 .word 0x800C3984
 .word 0x800C3A30
@@ -78,6 +86,8 @@ glabel D_800E932C
 .word 0x800C3BA0
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E9360
 .word 0x800C4A88
 .word 0x800C4A78
 .word 0x800C4AD0

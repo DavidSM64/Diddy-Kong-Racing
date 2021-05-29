@@ -70,9 +70,9 @@ glabel _Printf
 .L800D4004:
 /* 0D4C04 800D4004 0216C823 */  subu  $t9, $s0, $s6
 /* 0D4C08 800D4008 00197080 */  sll   $t6, $t9, 2
-/* 0D4C0C 800D400C 3C0F800F */  lui   $t7, 0x800f
+/* 0D4C0C 800D400C 3C0F800F */  lui   $t7, %hi(D_800E96CC) # $t7, 0x800f
 /* 0D4C10 800D4010 01EE7821 */  addu  $t7, $t7, $t6
-/* 0D4C14 800D4014 8DEF96CC */  lw    $t7, -0x6934($t7)
+/* 0D4C14 800D4014 8DEF96CC */  lw    $t7, %lo(D_800E96CC)($t7)
 /* 0D4C18 800D4018 8FB800D8 */  lw    $t8, 0xd8($sp)
 /* 0D4C1C 800D401C 26520001 */  addiu $s2, $s2, 1
 /* 0D4C20 800D4020 02C02025 */  move  $a0, $s6

@@ -92,9 +92,9 @@ glabel func_800A6254
 /* 0A6FB4 800A63B4 2F210005 */  sltiu $at, $t9, 5
 /* 0A6FB8 800A63B8 10200278 */  beqz  $at, .L800A6D9C
 /* 0A6FBC 800A63BC 0019C880 */   sll   $t9, $t9, 2
-/* 0A6FC0 800A63C0 3C01800F */  lui   $at, 0x800f
+/* 0A6FC0 800A63C0 3C01800F */  lui   $at, %hi(D_800E8744) # $at, 0x800f
 /* 0A6FC4 800A63C4 00390821 */  addu  $at, $at, $t9
-/* 0A6FC8 800A63C8 8C398744 */  lw    $t9, -0x78bc($at)
+/* 0A6FC8 800A63C8 8C398744 */  lw    $t9, %lo(D_800E8744)($at)
 /* 0A6FCC 800A63CC 00000000 */  nop   
 /* 0A6FD0 800A63D0 03200008 */  jr    $t9
 /* 0A6FD4 800A63D4 00000000 */   nop   

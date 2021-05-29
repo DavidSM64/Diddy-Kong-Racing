@@ -423,12 +423,12 @@ glabel func_80078190
 /* 0793D4 800787D4 AC265F38 */  sw    $a2, %lo(D_80125F38)($at)
 /* 0793D8 800787D8 3C018012 */  lui   $at, %hi(D_80125F3C) # $at, 0x8012
 /* 0793DC 800787DC AC275F3C */  sw    $a3, %lo(D_80125F3C)($at)
-/* 0793E0 800787E0 3C01800E */  lui   $at, 0x800e
+/* 0793E0 800787E0 3C01800E */  lui   $at, %hi(D_800DE4CC) # $at, 0x800e
 /* 0793E4 800787E4 24080001 */  li    $t0, 1
 /* 0793E8 800787E8 03E00008 */  jr    $ra
-/* 0793EC 800787EC AC28E4CC */   sw    $t0, -0x1b34($at)
+/* 0793EC 800787EC AC28E4CC */   sw    $t0, %lo(D_800DE4CC)($at)
 
-/* 0793F0 800787F0 3C01800E */  lui   $at, 0x800e
+/* 0793F0 800787F0 3C01800E */  lui   $at, %hi(D_800DE4CC) #$at, 0x800e
 /* 0793F4 800787F4 03E00008 */  jr    $ra
-/* 0793F8 800787F8 AC20E4CC */   sw    $zero, -0x1b34($at)
+/* 0793F8 800787F8 AC20E4CC */   sw    $zero, %lo(D_800DE4CC)($at)
 

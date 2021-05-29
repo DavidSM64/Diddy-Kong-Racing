@@ -33,11 +33,11 @@ glabel __osContRamRead
 .L800CDD18:
 /* 0CE918 800CDD18 8FA80058 */  lw    $t0, 0x58($sp)
 /* 0CE91C 800CDD1C 8FAA0058 */  lw    $t2, 0x58($sp)
-/* 0CE920 800CDD20 3C018013 */  lui   $at, 0x8013
+/* 0CE920 800CDD20 3C018013 */  lui   $at, %hi(__osPfsPifRam) # $at, 0x8013
 /* 0CE924 800CDD24 00084880 */  sll   $t1, $t0, 2
 /* 0CE928 800CDD28 00290821 */  addu  $at, $at, $t1
 /* 0CE92C 800CDD2C 241900FF */  li    $t9, 255
-/* 0CE930 800CDD30 AC39CDE0 */  sw    $t9, -0x3220($at)
+/* 0CE930 800CDD30 AC39CDE0 */  sw    $t9, %lo(__osPfsPifRam)($at)
 /* 0CE934 800CDD34 254B0001 */  addiu $t3, $t2, 1
 /* 0CE938 800CDD38 29610010 */  slti  $at, $t3, 0x10
 /* 0CE93C 800CDD3C 1420FFF6 */  bnez  $at, .L800CDD18

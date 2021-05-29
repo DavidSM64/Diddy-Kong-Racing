@@ -28,6 +28,7 @@ glabel D_800E7B04
 glabel D_800E7B08
 .word 0x3FAAAAAB
 
+glabel D_800E7B0C
 .word 0x8007A5AC
 .word 0x8007A5D0
 .word 0x8007A658

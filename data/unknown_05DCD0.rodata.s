@@ -54,6 +54,8 @@ glabel D_800E6A68
 
 glabel D_800E6A6C
 .word 0xCCCCCCCD
+
+glabel D_800E6A70
 .word 0x8005DBEC
 .word 0x8005DC10
 .word 0x8005DC48

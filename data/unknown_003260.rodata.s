@@ -21,6 +21,7 @@
 .aligned_text "Don't worry - game should cope OK\n"
 .aligned_text "WARNING: Attempt to stop NULL sound aborted\n"
 
+glabel D_800E4BB0
 .word 0x800035C4
 .word 0x80003A0C
 .word 0x80004090

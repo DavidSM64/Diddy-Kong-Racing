@@ -35,7 +35,7 @@ glabel func_800C3158
 /* 0C3DD8 800C31D8 E4263678 */  swc1  $f6, %lo(D_800E3678)($at)
 /* 0C3DDC 800C31DC 00000000 */  nop   
 .L800C31E0:
-/* 0C3DE0 800C31E0 3C01800E */  lui   $at, 0x800e
+/* 0C3DE0 800C31E0 3C01800E */  lui   $at, %hi(D_800E367C) # $at, 0x800e
 /* 0C3DE4 800C31E4 03E00008 */  jr    $ra
-/* 0C3DE8 800C31E8 AC24367C */   sw    $a0, 0x367c($at)
+/* 0C3DE8 800C31E8 AC24367C */   sw    $a0, %lo(D_800E367C)($at)
 

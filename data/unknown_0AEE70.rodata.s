@@ -84,6 +84,7 @@ glabel D_800E8BD4
 glabel D_800E8BD8
 .word 0x3DCCCCCD
 
+glabel D_800E8BDC
 .word 0x800B2250
 .word 0x800B20E0
 .word 0x800B2138
@@ -115,6 +116,7 @@ glabel D_800E8C5C
 
 .aligned_text "*** diPrintf Error *** ---> Out of string space. (Print less text!)\n"
 
+glabel D_800E8CAC
 .word 0x800B4BA4
 .word 0x800B4BC8
 .word 0x800B4BC8
@@ -132,6 +134,8 @@ glabel D_800E8C5C
 .word 0x800B4BC8
 .word 0x800B4BC8
 .word 0x800B4BC4
+
+glabel D_800E8CF0
 .word 0x800B4DB0
 .word 0x800B4DC4
 .word 0x800B4DC4
@@ -170,6 +174,8 @@ glabel D_800E8C5C
 .word 0x800B4DC4
 .word 0x800B4DC4
 .word 0x800B4DC0
+
+glabel D_800E8D88
 .word 0x800B52C4
 .word 0x800B5E0C
 .word 0x800B5794
@@ -222,6 +228,8 @@ glabel D_800E8C5C
 .word 0x800B5E0C
 .word 0x800B5E0C
 .word 0x800B4FA4
+
+glabel D_800E8E58
 .word 0x800B6658
 .word 0x800B6740
 .word 0x800B6614
@@ -342,6 +350,7 @@ glabel D_800E9138
 
 ### End of EPC lockup strings ###
 
+glabel D_800E913C
 .word 0x800B7898
 .word 0x800B7C18
 .word 0x800B7C18

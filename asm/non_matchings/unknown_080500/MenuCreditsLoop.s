@@ -293,7 +293,7 @@ glabel MenuCreditsLoop
 /* 09C360 8009B760 24150002 */   li    $s5, 2
 /* 09C364 8009B764 862D0000 */  lh    $t5, ($s1)
 /* 09C368 8009B768 2643000E */  addiu $v1, $s2, 0xe
-/* 09C36C 8009B76C 3C0F800E */  lui   $t7, 0x800e
+/* 09C36C 8009B76C 3C0F800E */  lui   $t7, %hi(D_800E1A94) # $t7, 0x800e
 /* 09C370 8009B770 000D7080 */  sll   $t6, $t5, 2
 /* 09C374 8009B774 8EC50000 */  lw    $a1, ($s6)
 /* 09C378 8009B778 AE020014 */  sw    $v0, 0x14($s0)
@@ -302,7 +302,7 @@ glabel MenuCreditsLoop
 /* 09C384 8009B784 A603002A */  sh    $v1, 0x2a($s0)
 /* 09C388 8009B788 A2000031 */  sb    $zero, 0x31($s0)
 /* 09C38C 8009B78C 01EE7821 */  addu  $t7, $t7, $t6
-/* 09C390 8009B790 8DEF1A94 */  lw    $t7, 0x1a94($t7)
+/* 09C390 8009B790 8DEF1A94 */  lw    $t7, %lo(D_800E1A94)($t7)
 /* 09C394 8009B794 3C19800E */  lui   $t9, %hi(D_800E17F4) # $t9, 0x800e
 /* 09C398 8009B798 83A6005B */  lb    $a2, 0x5b($sp)
 /* 09C39C 8009B79C 3C08800E */  lui   $t0, %hi(D_800E1938) # $t0, 0x800e
@@ -438,6 +438,7 @@ glabel MenuCreditsLoop
 /* 09C578 8009B978 000FC823 */  negu  $t9, $t7
 /* 09C57C 8009B97C 0014C140 */  sll   $t8, $s4, 5
 /* 09C580 8009B980 03194821 */  addu  $t1, $t8, $t9
+# Setting D_800E1B50[1].source? Not sure why adding $t1 then
 /* 09C584 8009B984 3C01800E */  lui   $at, 0x800e
 /* 09C588 8009B988 448A8000 */  mtc1  $t2, $f16
 /* 09C58C 8009B98C 00290821 */  addu  $at, $at, $t1
@@ -508,9 +509,9 @@ glabel MenuCreditsLoop
 /* 09C674 8009BA74 2D410005 */  sltiu $at, $t2, 5
 /* 09C678 8009BA78 10200062 */  beqz  $at, .L8009BC04
 /* 09C67C 8009BA7C 000A5080 */   sll   $t2, $t2, 2
-/* 09C680 8009BA80 3C01800F */  lui   $at, 0x800f
+/* 09C680 8009BA80 3C01800F */  lui   $at, %hi(D_800E8574) # $at, 0x800f
 /* 09C684 8009BA84 002A0821 */  addu  $at, $at, $t2
-/* 09C688 8009BA88 8C2A8574 */  lw    $t2, -0x7a8c($at)
+/* 09C688 8009BA88 8C2A8574 */  lw    $t2, %lo(D_800E8574)($at)
 /* 09C68C 8009BA8C 00000000 */  nop   
 /* 09C690 8009BA90 01400008 */  jr    $t2
 /* 09C694 8009BA94 00000000 */   nop   

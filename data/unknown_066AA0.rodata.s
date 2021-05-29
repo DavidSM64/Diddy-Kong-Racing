@@ -64,6 +64,7 @@ glabel D_800E7134
 .aligned_text "PLN"
 .aligned_text "Swapping\n"
 
+glabel D_800E7154
 .word 0x8006CF68
 .word 0x8006CF5C
 .word 0x8006D024
@@ -77,6 +78,8 @@ glabel D_800E7134
 .word 0x8006CFEC
 .word 0x8006D000
 .word 0x8006D014
+
+glabel D_800E7188
 .word 0x8006D0B8
 .word 0x8006D0C4
 .word 0x8006D108
@@ -89,6 +92,8 @@ glabel D_800E7134
 .word 0x8006D1C0
 .word 0x8006D1C0
 .word 0x8006D164
+
+glabel D_800E71B8
 .word 0x8006D5FC
 .word 0x8006D614
 .word 0x8006D62C
@@ -101,6 +106,8 @@ glabel D_800E7134
 .word 0x8006E00C
 .word 0x8006E054
 .word 0x8006E0E0
+
+glabel D_800E71D8
 .word 0x8006DEE8
 .word 0x8006E0E0
 .word 0x8006E0E0

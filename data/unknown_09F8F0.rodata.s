@@ -82,6 +82,8 @@ glabel D_800E86F0
 
 glabel D_800E86F4
 .word 0x33333333
+
+glabel D_800E86F8
 .word 0x800A0F28
 .word 0x800A0F38
 .word 0x800A0F48
@@ -121,6 +123,8 @@ glabel D_800E873C
 
 glabel D_800E8740
 .word 0x46C92000
+
+glabel D_800E8744
 .word 0x800A63D8
 .word 0x800A691C
 .word 0x800A6BCC
@@ -138,6 +142,8 @@ glabel D_800E8760
 
 glabel D_800E8764
 .word 0x9999999A
+
+glabel D_800E8768
 .word 0x800A6E70
 .word 0x800A6F3C
 .word 0x800A7014

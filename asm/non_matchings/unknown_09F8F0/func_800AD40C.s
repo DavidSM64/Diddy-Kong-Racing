@@ -41,7 +41,7 @@ glabel func_800AD40C
 /* 0AE0A4 800AD4A4 03E00008 */  jr    $ra
 /* 0AE0A8 800AD4A8 00000000 */   nop   
 
-/* 0AE0AC 800AD4AC 3C01800E */  lui   $at, 0x800e
+/* 0AE0AC 800AD4AC 3C01800E */  lui   $at, %hi(D_800E2C6C) # $at, 0x800e
 /* 0AE0B0 800AD4B0 03E00008 */  jr    $ra
-/* 0AE0B4 800AD4B4 AC242C6C */   sw    $a0, 0x2c6c($at)
+/* 0AE0B4 800AD4B4 AC242C6C */   sw    $a0, %lo(D_800E2C6C)($at)
 

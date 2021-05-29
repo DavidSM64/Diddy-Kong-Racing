@@ -7,6 +7,7 @@
 
 .section .rodata
 
+glabel D_800E6E70
 .word 0x80063FE8
 .word 0x8006401C
 .word 0x8006407C
@@ -24,6 +25,7 @@ glabel D_800E6E94
 .word 0x00000000
 .word 0x00000000
 
+glabel D_800E6EA0
 .word 0x80064AD8
 .word 0x80064AE4
 .word 0x80064AFC

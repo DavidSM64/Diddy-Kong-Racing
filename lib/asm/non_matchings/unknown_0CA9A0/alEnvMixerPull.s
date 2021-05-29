@@ -86,9 +86,9 @@ glabel alEnvMixerPull
 /* 0CAE08 800CA208 102001AE */  beqz  $at, .L800CA8C4
 /* 0CAE0C 800CA20C 00000000 */   nop   
 /* 0CAE10 800CA210 000C6080 */  sll   $t4, $t4, 2
-/* 0CAE14 800CA214 3C01800F */  lui   $at, 0x800f
+/* 0CAE14 800CA214 3C01800F */  lui   $at, %hi(D_800E95B0) # $at, 0x800f
 /* 0CAE18 800CA218 002C0821 */  addu  $at, $at, $t4
-/* 0CAE1C 800CA21C 8C2C95B0 */  lw    $t4, -0x6a50($at)
+/* 0CAE1C 800CA21C 8C2C95B0 */  lw    $t4, %lo(D_800E95B0)($at)
 /* 0CAE20 800CA220 00000000 */  nop   
 /* 0CAE24 800CA224 01800008 */  jr    $t4
 /* 0CAE28 800CA228 00000000 */   nop   
@@ -158,15 +158,16 @@ glabel alEnvMixerPull
 /* 0CAF20 800CA320 00000000 */  nop   
 /* 0CAF24 800CA324 A70F0018 */  sh    $t7, 0x18($t8)
 /* 0CAF28 800CA328 8FA80038 */  lw    $t0, 0x38($sp)
-/* 0CAF2C 800CA32C 3C0B800E */  lui   $t3, 0x800e
+/* 0CAF2C 800CA32C 3C0B800E */  lui   $t3, %hi(eqpower) # $t3, 0x800e
 /* 0CAF30 800CA330 910A0013 */  lbu   $t2, 0x13($t0)
 /* 0CAF34 800CA334 8FB90058 */  lw    $t9, 0x58($sp)
 /* 0CAF38 800CA338 000A4840 */  sll   $t1, $t2, 1
 /* 0CAF3C 800CA33C 01695821 */  addu  $t3, $t3, $t1
-/* 0CAF40 800CA340 856B37A0 */  lh    $t3, 0x37a0($t3)
+/* 0CAF40 800CA340 856B37A0 */  lh    $t3, %lo(eqpower)($t3)
 /* 0CAF44 800CA344 00000000 */  nop   
 /* 0CAF48 800CA348 A72B0020 */  sh    $t3, 0x20($t9)
 /* 0CAF4C 800CA34C 8FAC0038 */  lw    $t4, 0x38($sp)
+# This is indexing into eqpower (0x800E37A0) from the end
 /* 0CAF50 800CA350 3C18800E */  lui   $t8, 0x800e
 /* 0CAF54 800CA354 918D0013 */  lbu   $t5, 0x13($t4)
 /* 0CAF58 800CA358 8FA80058 */  lw    $t0, 0x58($sp)
@@ -191,18 +192,19 @@ glabel alEnvMixerPull
 /* 0CAFA4 800CA3A4 A5AC001E */   sh    $t4, 0x1e($t5)
 .L800CA3A8:
 /* 0CAFA8 800CA3A8 8FAE0058 */  lw    $t6, 0x58($sp)
-/* 0CAFAC 800CA3AC 3C08800E */  lui   $t0, 0x800e
+/* 0CAFAC 800CA3AC 3C08800E */  lui   $t0, %hi(eqpower) # $t0, 0x800e
 /* 0CAFB0 800CA3B0 85CF0018 */  lh    $t7, 0x18($t6)
 /* 0CAFB4 800CA3B4 85CA001A */  lh    $t2, 0x1a($t6)
 /* 0CAFB8 800CA3B8 000FC040 */  sll   $t8, $t7, 1
 /* 0CAFBC 800CA3BC 01184021 */  addu  $t0, $t0, $t8
-/* 0CAFC0 800CA3C0 850837A0 */  lh    $t0, 0x37a0($t0)
+/* 0CAFC0 800CA3C0 850837A0 */  lh    $t0, %lo(eqpower)($t0)
 /* 0CAFC4 800CA3C4 00000000 */  nop   
 /* 0CAFC8 800CA3C8 010A0019 */  multu $t0, $t2
 /* 0CAFCC 800CA3CC 00004812 */  mflo  $t1
 /* 0CAFD0 800CA3D0 00095BC3 */  sra   $t3, $t1, 0xf
 /* 0CAFD4 800CA3D4 A5CB001C */  sh    $t3, 0x1c($t6)
 /* 0CAFD8 800CA3D8 8FB90058 */  lw    $t9, 0x58($sp)
+# This is indexing into eqpower (0x800E37A0) from the end
 /* 0CAFDC 800CA3DC 3C18800E */  lui   $t8, 0x800e
 /* 0CAFE0 800CA3E0 872C0018 */  lh    $t4, 0x18($t9)
 /* 0CAFE4 800CA3E4 8728001A */  lh    $t0, 0x1a($t9)
@@ -263,18 +265,19 @@ glabel alEnvMixerPull
 /* 0CB0B8 800CA4B8 14200029 */  bnez  $at, .L800CA560
 /* 0CB0BC 800CA4BC 00000000 */   nop   
 /* 0CB0C0 800CA4C0 8FB90058 */  lw    $t9, 0x58($sp)
-/* 0CB0C4 800CA4C4 3C09800E */  lui   $t1, 0x800e
+/* 0CB0C4 800CA4C4 3C09800E */  lui   $t1, %hi(eqpower) # $t1, 0x800e
 /* 0CB0C8 800CA4C8 87380018 */  lh    $t8, 0x18($t9)
 /* 0CB0CC 800CA4CC 872B001A */  lh    $t3, 0x1a($t9)
 /* 0CB0D0 800CA4D0 00184040 */  sll   $t0, $t8, 1
 /* 0CB0D4 800CA4D4 01284821 */  addu  $t1, $t1, $t0
-/* 0CB0D8 800CA4D8 852937A0 */  lh    $t1, 0x37a0($t1)
+/* 0CB0D8 800CA4D8 852937A0 */  lh    $t1, %lo(eqpower)($t1)
 /* 0CB0DC 800CA4DC 00000000 */  nop   
 /* 0CB0E0 800CA4E0 012B0019 */  multu $t1, $t3
 /* 0CB0E4 800CA4E4 00007012 */  mflo  $t6
 /* 0CB0E8 800CA4E8 000E53C3 */  sra   $t2, $t6, 0xf
 /* 0CB0EC 800CA4EC A72A0028 */  sh    $t2, 0x28($t9)
 /* 0CB0F0 800CA4F0 8FAC0058 */  lw    $t4, 0x58($sp)
+# This is indexing into eqpower (0x800E37A0) from the end
 /* 0CB0F4 800CA4F4 3C08800E */  lui   $t0, 0x800e
 /* 0CB0F8 800CA4F8 858D0018 */  lh    $t5, 0x18($t4)
 /* 0CB0FC 800CA4FC 8589001A */  lh    $t1, 0x1a($t4)
@@ -428,17 +431,18 @@ glabel alEnvMixerPull
 /* 0CB330 800CA730 15C10018 */  bne   $t6, $at, .L800CA794
 /* 0CB334 800CA734 00000000 */   nop   
 /* 0CB338 800CA738 8FAC0058 */  lw    $t4, 0x58($sp)
-/* 0CB33C 800CA73C 3C0D800E */  lui   $t5, 0x800e
+/* 0CB33C 800CA73C 3C0D800E */  lui   $t5, %hi(eqpower) # $t5, 0x800e
 /* 0CB340 800CA740 8D89003C */  lw    $t1, 0x3c($t4)
 /* 0CB344 800CA744 00000000 */  nop   
 /* 0CB348 800CA748 8D39000C */  lw    $t9, 0xc($t1)
 /* 0CB34C 800CA74C 00000000 */  nop   
 /* 0CB350 800CA750 00197840 */  sll   $t7, $t9, 1
 /* 0CB354 800CA754 01AF6821 */  addu  $t5, $t5, $t7
-/* 0CB358 800CA758 85AD37A0 */  lh    $t5, 0x37a0($t5)
+/* 0CB358 800CA758 85AD37A0 */  lh    $t5, %lo(eqpower)($t5)
 /* 0CB35C 800CA75C 00000000 */  nop   
 /* 0CB360 800CA760 A58D0020 */  sh    $t5, 0x20($t4)
 /* 0CB364 800CA764 8FA80058 */  lw    $t0, 0x58($sp)
+# This is indexing into eqpower (0x800E37A0) from the end
 /* 0CB368 800CA768 3C09800E */  lui   $t1, 0x800e
 /* 0CB36C 800CA76C 8D0A003C */  lw    $t2, 0x3c($t0)
 /* 0CB370 800CA770 00000000 */  nop   

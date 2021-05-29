@@ -70,7 +70,7 @@ glabel gzip_inflate_stored
 /* 0C7C28 800C7028 AC2E376C */  sw    $t6, %lo(gzip_inflate_output)($at)
 /* 0C7C2C 800C702C 3C018013 */  lui   $at, %hi(gzip_bit_buffer) # $at, 0x8013
 /* 0C7C30 800C7030 AC2CAAD0 */  sw    $t4, %lo(gzip_bit_buffer)($at)
-/* 0C7C34 800C7034 3C018013 */  lui   $at, 0x8013
+/* 0C7C34 800C7034 3C018013 */  lui   $at, %hi(gzip_num_bits) # $at, 0x8013
 /* 0C7C38 800C7038 03E00008 */  jr    $ra
-/* 0C7C3C 800C703C AC2DAAD4 */   sw    $t5, -0x552c($at)
+/* 0C7C3C 800C703C AC2DAAD4 */   sw    $t5, %lo(gzip_num_bits)($at)
 

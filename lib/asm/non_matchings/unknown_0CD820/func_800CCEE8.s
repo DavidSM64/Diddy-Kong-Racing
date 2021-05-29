@@ -5,10 +5,10 @@ glabel func_800CCEE8
 .L800CCEF4:
 /* 0CDAF4 800CCEF4 8FAE0000 */  lw    $t6, ($sp)
 /* 0CDAF8 800CCEF8 8FB80000 */  lw    $t8, ($sp)
-/* 0CDAFC 800CCEFC 3C018013 */  lui   $at, 0x8013
+/* 0CDAFC 800CCEFC 3C018013 */  lui   $at, %hi(D_8012CD50) #$at, 0x8013
 /* 0CDB00 800CCF00 000E7880 */  sll   $t7, $t6, 2
 /* 0CDB04 800CCF04 002F0821 */  addu  $at, $at, $t7
-/* 0CDB08 800CCF08 AC20CD50 */  sw    $zero, -0x32b0($at)
+/* 0CDB08 800CCF08 AC20CD50 */  sw    $zero, %lo(D_8012CD50)($at)
 /* 0CDB0C 800CCF0C 27190001 */  addiu $t9, $t8, 1
 /* 0CDB10 800CCF10 2B210010 */  slti  $at, $t9, 0x10
 /* 0CDB14 800CCF14 1420FFF7 */  bnez  $at, .L800CCEF4

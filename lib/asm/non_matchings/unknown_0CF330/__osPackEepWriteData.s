@@ -8,11 +8,11 @@ glabel __osPackEepWriteData
 .L800CE748:
 /* 0CF348 800CE748 8FB80004 */  lw    $t8, 4($sp)
 /* 0CF34C 800CE74C 8FA80004 */  lw    $t0, 4($sp)
-/* 0CF350 800CE750 3C018013 */  lui   $at, 0x8013
+/* 0CF350 800CE750 3C018013 */  lui   $at, %hi(D_8012CE40) # $at, 0x8013
 /* 0CF354 800CE754 0018C880 */  sll   $t9, $t8, 2
 /* 0CF358 800CE758 00390821 */  addu  $at, $at, $t9
 /* 0CF35C 800CE75C 240F00FF */  li    $t7, 255
-/* 0CF360 800CE760 AC2FCE40 */  sw    $t7, -0x31c0($at)
+/* 0CF360 800CE760 AC2FCE40 */  sw    $t7, %lo(D_8012CE40)($at)
 /* 0CF364 800CE764 25090001 */  addiu $t1, $t0, 1
 /* 0CF368 800CE768 29210010 */  slti  $at, $t1, 0x10
 /* 0CF36C 800CE76C 1420FFF6 */  bnez  $at, .L800CE748

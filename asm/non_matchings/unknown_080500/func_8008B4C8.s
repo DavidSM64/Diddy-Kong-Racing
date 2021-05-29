@@ -68,9 +68,9 @@ glabel func_8008B4C8
 /* 08C1C0 8008B5C0 0C001223 */  jal   func_8000488C
 /* 08C1C4 8008B5C4 00000000 */   nop   
 .L8008B5C8:
-/* 08C1C8 8008B5C8 3C188012 */  lui   $t8, 0x8012
+/* 08C1C8 8008B5C8 3C188012 */  lui   $t8, %hi(players_character_array) # $t8, 0x8012
 /* 08C1CC 8008B5CC 0311C021 */  addu  $t8, $t8, $s1
-/* 08C1D0 8008B5D0 831863E8 */  lb    $t8, 0x63e8($t8)
+/* 08C1D0 8008B5D0 831863E8 */  lb    $t8, %lo(players_character_array)($t8)
 /* 08C1D4 8008B5D4 3C1E8012 */  lui   $fp, %hi(D_801263CC) # $fp, 0x8012
 /* 08C1D8 8008B5D8 27DE63CC */  addiu $fp, %lo(D_801263CC) # addiu $fp, $fp, 0x63cc
 /* 08C1DC 8008B5DC 0018C8C0 */  sll   $t9, $t8, 3

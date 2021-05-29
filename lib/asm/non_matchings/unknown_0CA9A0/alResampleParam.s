@@ -6,9 +6,9 @@ glabel alResampleParam
 /* 0CCCA0 800CC0A0 1020002B */  beqz  $at, .L800CC150
 /* 0CCCA4 800CC0A4 00803825 */   move  $a3, $a0
 /* 0CCCA8 800CC0A8 000E7080 */  sll   $t6, $t6, 2
-/* 0CCCAC 800CC0AC 3C01800F */  lui   $at, 0x800f
+/* 0CCCAC 800CC0AC 3C01800F */  lui   $at, %hi(D_800E9600) # $at, 0x800f
 /* 0CCCB0 800CC0B0 002E0821 */  addu  $at, $at, $t6
-/* 0CCCB4 800CC0B4 8C2E9600 */  lw    $t6, -0x6a00($at)
+/* 0CCCB4 800CC0B4 8C2E9600 */  lw    $t6, %lo(D_800E9600)($at)
 /* 0CCCB8 800CC0B8 01C00008 */  jr    $t6
 /* 0CCCBC 800CC0BC 00000000 */   nop   
 /* 0CCCC0 800CC0C0 10000029 */  b     .L800CC168

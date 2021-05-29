@@ -24,6 +24,8 @@ glabel D_800E5F70
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
+
+glabel D_800E5F80
 .word 0x80033A70
 .word 0x80033AA4
 .word 0x80033AE4

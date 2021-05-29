@@ -4,13 +4,13 @@ glabel func_8000E79C
 /* 00F3A4 8000E7A4 3C188012 */  lui   $t8, %hi(D_8011AEA0) # $t8, 0x8012
 /* 00F3A8 8000E7A8 00064080 */  sll   $t0, $a2, 2
 /* 00F3AC 8000E7AC 2718AEA0 */  addiu $t8, %lo(D_8011AEA0) # addiu $t8, $t8, -0x5160
-/* 00F3B0 8000E7B0 3C0D8012 */  lui   $t5, 0x8012
+/* 00F3B0 8000E7B0 3C0D8012 */  lui   $t5, %hi(D_8011AEB0) # $t5, 0x8012
 /* 00F3B4 8000E7B4 90820001 */  lbu   $v0, 1($a0)
 /* 00F3B8 8000E7B8 90A30001 */  lbu   $v1, 1($a1)
 /* 00F3BC 8000E7BC 01A86821 */  addu  $t5, $t5, $t0
 /* 00F3C0 8000E7C0 01184821 */  addu  $t1, $t0, $t8
 /* 00F3C4 8000E7C4 8D390000 */  lw    $t9, ($t1)
-/* 00F3C8 8000E7C8 8DADAEB0 */  lw    $t5, -0x5150($t5)
+/* 00F3C8 8000E7C8 8DADAEB0 */  lw    $t5, %lo(D_8011AEB0)($t5)
 /* 00F3CC 8000E7CC 304E003F */  andi  $t6, $v0, 0x3f
 /* 00F3D0 8000E7D0 306F003F */  andi  $t7, $v1, 0x3f
 /* 00F3D4 8000E7D4 01EE082A */  slt   $at, $t7, $t6

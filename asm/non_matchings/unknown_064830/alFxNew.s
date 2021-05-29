@@ -45,9 +45,9 @@ glabel alFxNew
 /* 0656B4 80064AB4 1020001C */  beqz  $at, .L80064B28
 /* 0656B8 80064AB8 2673D028 */   addiu $s3, %lo(D_800DD028) # addiu $s3, $s3, -0x2fd8
 /* 0656BC 80064ABC 00094880 */  sll   $t1, $t1, 2
-/* 0656C0 80064AC0 3C01800E */  lui   $at, 0x800e
+/* 0656C0 80064AC0 3C01800E */  lui   $at, %hi(D_800E6EA0) # $at, 0x800e
 /* 0656C4 80064AC4 00290821 */  addu  $at, $at, $t1
-/* 0656C8 80064AC8 8C296EA0 */  lw    $t1, 0x6ea0($at)
+/* 0656C8 80064AC8 8C296EA0 */  lw    $t1, %lo(D_800E6EA0)($at)
 /* 0656CC 80064ACC 00000000 */  nop   
 /* 0656D0 80064AD0 01200008 */  jr    $t1
 /* 0656D4 80064AD4 00000000 */   nop   

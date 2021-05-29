@@ -6,9 +6,9 @@ glabel func_8000E0B0
 /* 00ECC0 8000E0C0 10200014 */  beqz  $at, .L8000E114
 /* 00ECC4 8000E0C4 AFBF0014 */   sw    $ra, 0x14($sp)
 /* 00ECC8 8000E0C8 000E7080 */  sll   $t6, $t6, 2
-/* 00ECCC 8000E0CC 3C01800E */  lui   $at, 0x800e
+/* 00ECCC 8000E0CC 3C01800E */  lui   $at, %hi(D_800E5188) # $at, 0x800e
 /* 00ECD0 8000E0D0 002E0821 */  addu  $at, $at, $t6
-/* 00ECD4 8000E0D4 8C2E5188 */  lw    $t6, 0x5188($at)
+/* 00ECD4 8000E0D4 8C2E5188 */  lw    $t6, %lo(D_800E5188)($at)
 /* 00ECD8 8000E0D8 00000000 */  nop   
 /* 00ECDC 8000E0DC 01C00008 */  jr    $t6
 /* 00ECE0 8000E0E0 00000000 */   nop   

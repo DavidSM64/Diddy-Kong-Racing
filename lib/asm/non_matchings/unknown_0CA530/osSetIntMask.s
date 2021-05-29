@@ -23,9 +23,9 @@ glabel osSetIntMask
 /* 0CA680 800C9A80 00814024 */  and   $t0, $a0, $at
 /* 0CA684 800C9A84 010B4024 */  and   $t0, $t0, $t3
 /* 0CA688 800C9A88 000843C2 */  srl   $t0, $t0, 0xf
-/* 0CA68C 800C9A8C 3C0A800F */  lui   $t2, 0x800f
+/* 0CA68C 800C9A8C 3C0A800F */  lui   $t2, %hi(D_800E94D0) # $t2, 0x800f
 /* 0CA690 800C9A90 01485021 */  addu  $t2, $t2, $t0
-/* 0CA694 800C9A94 954A94D0 */  lhu   $t2, -0x6b30($t2)
+/* 0CA694 800C9A94 954A94D0 */  lhu   $t2, %lo(D_800E94D0)($t2)
 /* 0CA698 800C9A98 3C01A430 */  lui   $at, %hi(D_A430000C) # $at, 0xa430
 /* 0CA69C 800C9A9C AC2A000C */  sw    $t2, %lo(D_A430000C)($at)
 /* 0CA6A0 800C9AA0 3088FF01 */  andi  $t0, $a0, 0xff01

@@ -29,6 +29,8 @@
 
 glabel D_800E796C
 .word 0x48E4E1C0
+
+glabel D_800E7970
 .word 0x8007A2A4
 .word 0x8007A248
 .word 0x8007A1BC

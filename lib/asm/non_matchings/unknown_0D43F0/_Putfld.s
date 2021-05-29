@@ -17,9 +17,9 @@ glabel _Putfld
 /* 0D44DC 800D38DC 2DE10034 */  sltiu $at, $t7, 0x34
 /* 0D44E0 800D38E0 10200181 */  beqz  $at, .L800D3EE8
 /* 0D44E4 800D38E4 000F7880 */   sll   $t7, $t7, 2
-/* 0D44E8 800D38E8 3C01800F */  lui   $at, 0x800f
+/* 0D44E8 800D38E8 3C01800F */  lui   $at, %hi(D_800E96E4) # $at, 0x800f
 /* 0D44EC 800D38EC 002F0821 */  addu  $at, $at, $t7
-/* 0D44F0 800D38F0 8C2F96E4 */  lw    $t7, -0x691c($at)
+/* 0D44F0 800D38F0 8C2F96E4 */  lw    $t7, %lo(D_800E96E4)($at)
 /* 0D44F4 800D38F4 01E00008 */  jr    $t7
 /* 0D44F8 800D38F8 00000000 */   nop   
 .L800D38FC:

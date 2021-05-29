@@ -30,6 +30,8 @@ glabel D_800E6AC8
 
 glabel D_800E6ACC
 .word 0xCCCCCCCD
+
+glabel D_800E6AD0
 .word 0x8005EE9C
 .word 0x8005EEC0
 .word 0x8005EEF8

@@ -60,11 +60,11 @@ glabel osEepromRead
 .L800CE354:
 /* 0CEF54 800CE354 8FAD0030 */  lw    $t5, 0x30($sp)
 /* 0CEF58 800CE358 8FAF0030 */  lw    $t7, 0x30($sp)
-/* 0CEF5C 800CE35C 3C018013 */  lui   $at, 0x8013
+/* 0CEF5C 800CE35C 3C018013 */  lui   $at, %hi(D_8012CE40) # $at, 0x8013
 /* 0CEF60 800CE360 000D7080 */  sll   $t6, $t5, 2
 /* 0CEF64 800CE364 002E0821 */  addu  $at, $at, $t6
 /* 0CEF68 800CE368 240C00FF */  li    $t4, 255
-/* 0CEF6C 800CE36C AC2CCE40 */  sw    $t4, -0x31c0($at)
+/* 0CEF6C 800CE36C AC2CCE40 */  sw    $t4, %lo(D_8012CE40)($at)
 /* 0CEF70 800CE370 25F80001 */  addiu $t8, $t7, 1
 /* 0CEF74 800CE374 2B010010 */  slti  $at, $t8, 0x10
 /* 0CEF78 800CE378 1420FFF6 */  bnez  $at, .L800CE354

@@ -175,9 +175,9 @@ glabel func_800AC5A4
 /* 0AD44C 800AC84C 27BD0038 */   addiu $sp, $sp, 0x38
 
 /* 0AD450 800AC850 240E0001 */  li    $t6, 1
-/* 0AD454 800AC854 3C01800E */  lui   $at, 0x800e
+/* 0AD454 800AC854 3C01800E */  lui   $at, %hi(D_800E2A84) # $at, 0x800e
 /* 0AD458 800AC858 03E00008 */  jr    $ra
-/* 0AD45C 800AC85C AC2E2A84 */   sw    $t6, 0x2a84($at)
+/* 0AD45C 800AC85C AC2E2A84 */   sw    $t6, %lo(D_800E2A84)($at)
 
 /* 0AD460 800AC860 3C0E800E */  lui   $t6, %hi(D_800E2A80) # $t6, 0x800e
 /* 0AD464 800AC864 8DCE2A80 */  lw    $t6, %lo(D_800E2A80)($t6)

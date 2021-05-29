@@ -25,6 +25,7 @@ glabel D_800E95A0
 glabel D_800E95A8
 .aligned_text "env.c"
 
+glabel D_800E95B0
 .word 0x800CA870
 .word 0x800CA8C4
 .word 0x800CA8C4
@@ -50,6 +51,8 @@ glabel D_800E95F8
 
 glabel D_800E95FC
 .word 0x00000000
+
+glabel D_800E9600
 .word 0x800CC0C0
 .word 0x800CC150
 .word 0x800CC150
