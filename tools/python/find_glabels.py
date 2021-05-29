@@ -2,7 +2,7 @@ import re
 
 from file_util import FileUtil
 
-LINE_START_REGEX = r'\n(/\* ([0-9A-F]{6}) [0-9A-F]{8} [0-9A-F]{8} \*/\s+|\.L80[0-9A-F]{6}:)'
+LINE_START_REGEX = r'\n(/\* ([0-9A-F]{6}) [0-9A-F]{8} [0-9A-F]{8} \*/\s+|\.L80[0-9A-F]{6}:|\n)'
 REG_REGEX = r'(\$(at|v[0-1]|a[0-3]|t[0-9]|s[0-7]|f[0-9]{1,2}|k[0-1]|gp|sp|fp|ra|zero))'
 GLABEL_UPPER_REGEX = '(' + LINE_START_REGEX + r'lui\s+' + REG_REGEX + r',\s+(0x80[0-9a-f]{2}))'
 GLABEL_LOWER_REGEX = '(' + LINE_START_REGEX + r'[sl][bhwd](u|c1)?\s+' + REG_REGEX + r',\s+(-?0x[0-9a-f]{4})\(\4\))'
@@ -33,7 +33,7 @@ def _find_glabels(asm):
                 glabels.append((glabel, *offsets))
                 # replace upper instruction
                 contents = re.sub(UPPER_INSTR_REGEX_TMPL % offsets[0],
-                                r'\1' + '%s, %%hi(%s) #' % (reg, glabel) + r'\2',
+                                r'\1' + '%s, %%hi(%s) # ' % (reg, glabel) + r'\2',
                                 contents)
                 # replace lower instruction
                 contents = re.sub(LOWER_INSTR_REGEX_TMPL % offsets[1],

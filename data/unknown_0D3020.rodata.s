@@ -30,6 +30,8 @@ glabel D_800E97F0
 glabel D_800E97F8
 .word 0x3E6110B4
 .word 0x611A6263
+
+glabel D_800E9800
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
@@ -56,6 +58,8 @@ glabel D_800E9840
 glabel D_800E9848
 .word 0x3E6110B4
 .word 0x611A6263
+
+glabel D_800E9850
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
