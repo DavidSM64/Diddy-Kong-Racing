@@ -43,5 +43,8 @@ typedef s32 ptrdiff_t;
 typedef struct FloatLiteral {
     float floatLiteral;
 } FloatLiteral;
+typedef struct DoubleLiteral {
+    double doubleLiteral;
+} DoubleLiteral;
 
 #endif
