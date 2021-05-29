@@ -98,6 +98,31 @@ s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
 
 /*******************************/
 
+/************ .rodata ************/
+
+// Debug strings
+const char D_800E49F0[] = "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
+const char D_800E4A58[] = "audio: ai out of samples\n";
+const char D_800E4A74[] = "OH DEAR - No audio DMA buffers left\n";
+const char D_800E4A9C[] = "Dma not done\n";
+const char D_800E4AAC[] = "";
+const char D_800E49B0[] = "Bad soundState: voices =%d, states free =%d, states busy =%d, type %d data %x\n";
+const char D_800E4B00[] = "playing a playing sound\n";
+const char D_800E4B1C[] = "Nonsense sndp event\n";
+const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
+const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
+const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
+
+// Jump table for _handleEvent
+const u32 D_800E4BB0[] = {
+    0x800035C4, 0x80003A0C, 0x80004090, 0x80003B2C, 
+    0x80004090, 0x80004090, 0x80004090, 0x80003C8C, 
+    0x80004090, 0x80004090, 0x80004090, 0x80004090, 
+    0x80004090, 0x80004090, 0x80004090, 0x80003BA4
+};
+
+/*******************************/
+
 /************ .bss ************/
 
 extern s32 D_80115F90;

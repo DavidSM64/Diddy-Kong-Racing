@@ -38,7 +38,7 @@ u8 D_800DC670 = 0;
 
 /************ .rodata ************/
 
-// Unused debug strings?
+// Debug strings
 const char D_800E4950[] = "amSndPlay: Illegal sound effects table index\n";
 const char D_800E4980[] = "amSndPlayDirect: Somebody tried to play illegal sound %d\n";
 const char D_800E49BC[] = "Invalid midi sequence index\n";
