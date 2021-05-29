@@ -21,8 +21,8 @@ glabel func_800C8380
 /* 0C8FC8 800C83C8 00000000 */  nop   
 /* 0C8FCC 800C83CC 46068400 */  add.s $f16, $f16, $f6
 .L800C83D0:
-/* 0C8FD0 800C83D0 3C01800F */  lui   $at, 0x800f
-/* 0C8FD4 800C83D4 D43294B8 */  ldc1  $f18, -0x6b48($at)
+/* 0C8FD0 800C83D0 3C01800F */  lui   $at, %hi(D_800E94B8) #$at, 0x800f
+/* 0C8FD4 800C83D4 D43294B8 */  ldc1  $f18, %lo(D_800E94B8)($at)
 /* 0C8FD8 800C83D8 460082A1 */  cvt.d.s $f10, $f16
 /* 0C8FDC 800C83DC 46325202 */  mul.d $f8, $f10, $f18
 /* 0C8FE0 800C83E0 46282183 */  div.d $f6, $f4, $f8

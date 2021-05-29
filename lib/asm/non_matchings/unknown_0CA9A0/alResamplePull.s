@@ -41,8 +41,8 @@ glabel alResamplePull
 /* 0CCE14 800CC214 AC4D0004 */   sw    $t5, 4($v0)
 /* 0CCE18 800CC218 C5020018 */  lwc1  $f2, 0x18($t0)
 .L800CC21C:
-/* 0CCE1C 800CC21C 3C01800F */  lui   $at, 0x800f
-/* 0CCE20 800CC220 D4249628 */  ldc1  $f4, -0x69d8($at)
+/* 0CCE1C 800CC21C 3C01800F */  lui   $at, %hi(D_800E9628) #$at, 0x800f
+/* 0CCE20 800CC220 D4249628 */  ldc1  $f4, %lo(D_800E9628)($at)
 /* 0CCE24 800CC224 460011A1 */  cvt.d.s $f6, $f2
 /* 0CCE28 800CC228 3C01800F */  lui   $at, 0x800f
 /* 0CCE2C 800CC22C 4626203C */  c.lt.d $f4, $f6
