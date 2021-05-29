@@ -13,7 +13,7 @@ glabel cosf
 /* 0D56DC 800D4ADC 44819800 */  mtc1  $at, $f19
 /* 0D56E0 800D4AE0 4606203C */  c.lt.s $f4, $f6
 /* 0D56E4 800D4AE4 C7A00000 */  lwc1  $f0, ($sp)
-/* 0D56E8 800D4AE8 3C01800F */  lui   $at, %hi(D_800E97E8) #$at, 0x800f
+/* 0D56E8 800D4AE8 3C01800F */  lui   $at, %hi(D_800E97E8) # $at, 0x800f
 /* 0D56EC 800D4AEC 45020004 */  bc1fl .L800D4B00
 /* 0D56F0 800D4AF0 46000007 */   neg.s $f0, $f0
 /* 0D56F4 800D4AF4 10000002 */  b     .L800D4B00

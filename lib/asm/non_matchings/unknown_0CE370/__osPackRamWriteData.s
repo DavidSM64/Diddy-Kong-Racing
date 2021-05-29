@@ -11,7 +11,7 @@ glabel __osPackRamWriteData
 .L800CDB44:
 /* 0CE744 800CDB44 8FAF0018 */  lw    $t7, 0x18($sp)
 /* 0CE748 800CDB48 8FB90018 */  lw    $t9, 0x18($sp)
-/* 0CE74C 800CDB4C 3C018013 */  lui   $at, %hi(__osPfsPifRam) #$at, 0x8013
+/* 0CE74C 800CDB4C 3C018013 */  lui   $at, %hi(__osPfsPifRam) # $at, 0x8013
 /* 0CE750 800CDB50 000FC080 */  sll   $t8, $t7, 2
 /* 0CE754 800CDB54 00380821 */  addu  $at, $at, $t8
 /* 0CE758 800CDB58 AC20CDE0 */  sw    $zero, %lo(__osPfsPifRam)($at)

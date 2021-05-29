@@ -7,7 +7,7 @@ glabel __osPfsRequestData
 .L800CD444:
 /* 0CE044 800CD444 8FAE0000 */  lw    $t6, ($sp)
 /* 0CE048 800CD448 8FB80000 */  lw    $t8, ($sp)
-/* 0CE04C 800CD44C 3C018013 */  lui   $at, %hi(__osPfsPifRam) #$at, 0x8013
+/* 0CE04C 800CD44C 3C018013 */  lui   $at, %hi(__osPfsPifRam) # $at, 0x8013
 /* 0CE050 800CD450 000E7880 */  sll   $t7, $t6, 2
 /* 0CE054 800CD454 002F0821 */  addu  $at, $at, $t7
 /* 0CE058 800CD458 AC20CDE0 */  sw    $zero, %lo(__osPfsPifRam)($at)

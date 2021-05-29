@@ -616,7 +616,7 @@ glabel func_8000CC7C
 /* 00E124 8000D524 3C0E8012 */  lui   $t6, %hi(D_8011AD25) # $t6, 0x8012
 /* 00E128 8000D528 81CEAD25 */  lb    $t6, %lo(D_8011AD25)($t6)
 # Indexing into D_800DC820 only reading the MSB?
-/* 00E12C 8000D52C 3C1E800E */  lui   $fp, %hi(D_800DC820) #$fp, 0x800e
+/* 00E12C 8000D52C 3C1E800E */  lui   $fp, %hi(D_800DC820) # $fp, 0x800e
 /* 00E130 8000D530 000E7840 */  sll   $t7, $t6, 1
 /* 00E134 8000D534 03CFF021 */  addu  $fp, $fp, $t7
 /* 00E138 8000D538 83DEC820 */  lb    $fp, %lo(D_800DC820)($fp)

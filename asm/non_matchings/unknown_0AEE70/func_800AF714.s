@@ -328,7 +328,7 @@ glabel func_800AF714
 /* 0B07BC 800AFBBC 00000000 */   nop   
 .L800AFBC0:
 /* 0B07C0 800AFBC0 82790002 */  lb    $t9, 2($s3)
-/* 0B07C4 800AFBC4 3C018012 */  lui   $at, %hi(D_80127C88) #$at, 0x8012
+/* 0B07C4 800AFBC4 3C018012 */  lui   $at, %hi(D_80127C88) # $at, 0x8012
 /* 0B07C8 800AFBC8 33380007 */  andi  $t8, $t9, 7
 /* 0B07CC 800AFBCC 00186040 */  sll   $t4, $t8, 1
 /* 0B07D0 800AFBD0 002C0821 */  addu  $at, $at, $t4

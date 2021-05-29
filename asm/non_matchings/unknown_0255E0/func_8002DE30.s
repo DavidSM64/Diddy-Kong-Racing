@@ -210,7 +210,7 @@ glabel func_8002DE30
 /* 02ED5C 8002E15C 8FAB0088 */  lw    $t3, 0x88($sp)
 /* 02ED60 8002E160 1040000F */  beqz  $v0, .L8002E1A0
 /* 02ED64 8002E164 001EC880 */   sll   $t9, $fp, 2
-/* 02ED68 8002E168 3C01800E */  lui   $at, %hi(D_800DC884) #$at, 0x800e
+/* 02ED68 8002E168 3C01800E */  lui   $at, %hi(D_800DC884) # $at, 0x800e
 /* 02ED6C 8002E16C 00390821 */  addu  $at, $at, $t9
 /* 02ED70 8002E170 C42AC884 */  lwc1  $f10, %lo(D_800DC884)($at)
 /* 02ED74 8002E174 8EC20054 */  lw    $v0, 0x54($s6)
