@@ -38,14 +38,21 @@ u8 D_800DC670 = 0;
 
 /************ .rodata ************/
 
-extern f32 D_800E49DC;
-extern f32 D_800E49EC;
-extern u8  D_800EBF60;
+// Unused debug strings?
+const char D_800E4950[] = "amSndPlay: Illegal sound effects table index\n";
+const char D_800E4980[] = "amSndPlayDirect: Somebody tried to play illegal sound %d\n";
+const char D_800E49BC[] = "Invalid midi sequence index\n";
+
+const FloatLiteral D_800E49DC = { 60000000.0f };
+const FloatLiteral D_800E49E0 = { 46875.0f };
+const FloatLiteral D_800E49E4 = { 46875.0f };
+const FloatLiteral D_800E49E8 = { 120000.0f };
 
 /*********************************/
 
 /************ .bss ************/
 
+extern u8  D_800EBF60;
 extern ALHeap gALHeap;
 
 /* Unknown size */
@@ -539,11 +546,10 @@ void func_800014BC(f32 arg0) {
     musicSetTempo((s32)((f32)(u32)(musicGetTempo() & 0xFF) * arg0));
 }
 
-
 void musicSetTempo(s32 tempo){
     if(tempo != 0){
         f32 inv_tempo = (1.0f/tempo);
-        alCSPSetTempo(gMusicPlayer,(s32)(inv_tempo*D_800E49DC));
+        alCSPSetTempo(gMusicPlayer,(s32)(inv_tempo*D_800E49DC.floatLiteral));
         D_80115D30 = tempo;
     }
 }
@@ -557,8 +563,6 @@ u8 musicIsPlaying(void) {
 }
 
 
-extern f32 D_800E49E0;
-extern f32 D_800E49E8;
 extern f32 D_80115D34;
 
 #if 1
@@ -617,7 +621,7 @@ void func_80001784(u8 a0){
 
 void sfxSetTempo(s32 tempo){
     f32 inv_tempo = (1.0f/tempo);
-    alCSPSetTempo(gSndFxPlayer,(s32)(inv_tempo*D_800E49EC));
+    alCSPSetTempo(gSndFxPlayer,(s32)(inv_tempo * 60000000.0f));
 }
 
 

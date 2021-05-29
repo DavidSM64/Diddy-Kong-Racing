@@ -39,4 +39,9 @@ typedef s32 ptrdiff_t;
 //#include <stddef.h>
 //#endif
 
+// Temporary until all the appropriate functions are decompiled.
+typedef struct FloatLiteral {
+    float floatLiteral;
+} FloatLiteral;
+
 #endif
