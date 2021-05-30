@@ -357,7 +357,8 @@ glabel func_800AA600
 /* 0AB73C 800AAB3C 01CF0019 */  multu $t6, $t7
 /* 0AB740 800AAB40 A7A00076 */  sh    $zero, 0x76($sp)
 /* 0AB744 800AAB44 AFA00078 */  sw    $zero, 0x78($sp)
-/* 0AB748 800AAB48 3C01800F */  li    $at, 0x800F0000 # -0.000000
+# Used to access D_800E87E0 and D_800E87E4.
+/* 0AB748 800AAB48 3C01800F */  lui   $at, %hi(D_800E87E0) # $at, 0x800f
 /* 0AB74C 800AAB4C C43387E0 */  lwc1  $f19, %lo(D_800E87E0)($at)
 /* 0AB750 800AAB50 C43287E4 */  lwc1  $f18, %lo(D_800E87E4)($at)
 /* 0AB754 800AAB54 3C18800E */  lui   $t8, %hi(D_800E2834) # $t8, 0x800e
