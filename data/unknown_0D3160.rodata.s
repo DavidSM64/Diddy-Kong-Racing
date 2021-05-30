@@ -7,6 +7,7 @@
 
 .section .rodata
 
+glabel D_800E9640
 .word 0x3F91DF46
 .word 0x9D353918
 .word 0x00000000

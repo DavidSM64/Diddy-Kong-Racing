@@ -39,8 +39,8 @@ glabel sinf
 /* 0D58A4 800D4CA4 10200044 */  beqz  $at, .L800D4DB8
 /* 0D58A8 800D4CA8 C7A40000 */   lwc1  $f4, ($sp)
 /* 0D58AC 800D4CAC C7A60000 */  lwc1  $f6, ($sp)
-/* 0D58B0 800D4CB0 3C01800F */  li    $at, 0x800F0000 # -0.000000
-/* 0D58B4 800D4CB4 D42A9838 */  ldc1  $f10, -0x67c8($at)
+/* 0D58B0 800D4CB0 3C01800F */  lui   $at, %hi(D_800E9838) # $at, 0x800f
+/* 0D58B4 800D4CB4 D42A9838 */  ldc1  $f10, %lo(D_800E9838)($at)
 /* 0D58B8 800D4CB8 460030A1 */  cvt.d.s $f2, $f6
 /* 0D58BC 800D4CBC 44804800 */  mtc1  $zero, $f9
 /* 0D58C0 800D4CC0 462A1002 */  mul.d $f0, $f2, $f10

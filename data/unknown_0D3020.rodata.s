@@ -48,6 +48,8 @@ glabel D_800E9810
 .word 0xEEA56814
 .word 0x3EC5DBDF
 .word 0x0E314BFE
+
+glabel D_800E9838
 .word 0x3FD45F30
 .word 0x6DC9C883
 

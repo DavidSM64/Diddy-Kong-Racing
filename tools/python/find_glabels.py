@@ -8,6 +8,7 @@ MAX_LINE_DIFF = 10
 LINE_START_REGEX = r'\n(/\* ([0-9A-F]{6}) [0-9A-F]{8} [0-9A-F]{8} \*/\s+|\.L80[0-9A-F]{6}:)?'
 REG_REGEX = r'(\$(at|v[0-1]|a[0-3]|t[0-9]|s[0-7]|f[0-9]{1,2}|k[01]|gp|sp|fp|ra|zero))'
 GLABEL_UPPER_REGEX = '(' + LINE_START_REGEX + r'lui\s+' + REG_REGEX + r',\s+(0x80[0-9a-f]{2}))'
+#GLABEL_UPPER_REGEX = '(' + LINE_START_REGEX + r'li\s+' + REG_REGEX + r',\s+(0x80[0-9A-F]{2})0000\s+#[^\n]*)'
 GLABEL_LOWER_LS_REGEX = r'[sl][bhwd](u|c1)?\s+' + REG_REGEX + r',\s+(-?0x[0-9a-f]{3,4})\(\4\)'
 GLABEL_LOWER_ADDU_REGEX = r'addiu\s+' + REG_REGEX + r',\s+\4,\s+(-?0x[0-9a-f]{3,4})'
 GLABEL_LOWER_REGEX = LINE_START_REGEX + '(' + GLABEL_LOWER_LS_REGEX + '|' + GLABEL_LOWER_ADDU_REGEX + ')'
@@ -24,7 +25,6 @@ IGNORE_GLABELS = ['D_800E389E', 'D_801264A1', 'D_800E1B84']
 def _find_glabels(asm):
     glabels = []
     for file in FileUtil.get_filenames_from_directory_recursive('.', '.s'):
-        #'''
         contents = FileUtil.get_text_from_file(file)
         matches = GLABEL_REGEX.findall(contents)
         for match in matches:
@@ -56,17 +56,6 @@ def _find_glabels(asm):
                                 contents)
         if len(matches):
             FileUtil.write_text_to_file(file, contents)
-        '''
-        matches = re.findall(LINE_START_REGEX + r'lui\s+' + REG_REGEX + r',\s+(0x800[1-9a-fA-F]|0x801[0-9a-fA-F])', FileUtil.get_text_from_file(file))
-        for match in matches:
-            offsets = (match[1])  # ROM offsets of the lu and lw
-            glabel_upper = int(match[4], 16)  # upper immediate of glabel
-            glabel_lower = 0  # lower immediate of the glabel
-            if glabel_lower & 0x8000:
-                glabel_upper -= 1
-            glabel = 'D_%08X' % (glabel_upper << 16 | glabel_lower)
-            glabels.append((glabel, offsets))
-        #'''
     return glabels
 
 def main():

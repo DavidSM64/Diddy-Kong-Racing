@@ -8,8 +8,8 @@ glabel guPerspectiveF
 /* 0CD538 800CC938 0C035250 */  jal   guMtxIdentF
 /* 0CD53C 800CC93C E7AE0038 */   swc1  $f14, 0x38($sp)
 /* 0CD540 800CC940 C7AE0038 */  lwc1  $f14, 0x38($sp)
-/* 0CD544 800CC944 3C01800F */  li    $at, 0x800F0000 # -0.000000
-/* 0CD548 800CC948 D4269640 */  ldc1  $f6, -0x69c0($at)
+/* 0CD544 800CC944 3C01800F */  lui   $at, %hi(D_800E9640) # $at, 0x800f
+/* 0CD548 800CC948 D4269640 */  ldc1  $f6, %lo(D_800E9640)($at)
 /* 0CD54C 800CC94C 46007121 */  cvt.d.s $f4, $f14
 /* 0CD550 800CC950 3C014000 */  li    $at, 0x40000000 # 2.000000
 /* 0CD554 800CC954 46262202 */  mul.d $f8, $f4, $f6
