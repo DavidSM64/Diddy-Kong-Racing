@@ -159,7 +159,7 @@ glabel MenuAudioOptionsLoop
 /* 085AB4 80084EB4 1100001F */  beqz  $t0, .L80084F34
 /* 085AB8 80084EB8 00000000 */   nop   
 /* 085ABC 80084EBC 05010008 */  bgez  $t0, .L80084EE0
-/* 085AC0 80084EC0 3C02800E */   lui   $v0, 0x800e
+/* 085AC0 80084EC0 3C02800E */   lui   $v0, %hi(D_800DFAC8) # $v0, 0x800e
 /* 085AC4 80084EC4 3C02800E */  lui   $v0, %hi(D_800DFAC8) # $v0, 0x800e
 /* 085AC8 80084EC8 2442FAC8 */  addiu $v0, %lo(D_800DFAC8) # addiu $v0, $v0, -0x538
 /* 085ACC 80084ECC 8C590000 */  lw    $t9, ($v0)
@@ -168,7 +168,7 @@ glabel MenuAudioOptionsLoop
 /* 085AD8 80084ED8 10000006 */  b     .L80084EF4
 /* 085ADC 80084EDC AC4A0000 */   sw    $t2, ($v0)
 .L80084EE0:
-/* 085AE0 80084EE0 2442FAC8 */  addiu $v0, $v0, -0x538
+/* 085AE0 80084EE0 2442FAC8 */  addiu $v0, %lo(D_800DFAC8) # addiu $v0, $v0, -0x538
 /* 085AE4 80084EE4 8C4C0000 */  lw    $t4, ($v0)
 /* 085AE8 80084EE8 00000000 */  nop   
 /* 085AEC 80084EEC 258B0001 */  addiu $t3, $t4, 1
