@@ -349,7 +349,8 @@ glabel func_800A8474
 /* 0A958C 800A898C 44074000 */  mfc1  $a3, $f8
 /* 0A9590 800A8990 44D8F800 */  ctc1  $t8, $31
 /* 0A9594 800A8994 15800020 */  bnez  $t4, .L800A8A18
-/* 0A9598 800A8998 3C01800F */   li    $at, 0x800F0000 # -0.000000
+# Used to access D_800E87A0 and D_800E87A4.
+/* 0A9598 800A8998 3C01800F */   lui   $at, %hi(D_800E87A0) # $at, 0x800f
 /* 0A959C 800A899C C42187A0 */  lwc1  $f1, %lo(D_800E87A0)($at)
 /* 0A95A0 800A89A0 C42087A4 */  lwc1  $f0, %lo(D_800E87A4)($at)
 /* 0A95A4 800A89A4 8E420000 */  lw    $v0, ($s2)
@@ -572,7 +573,7 @@ glabel func_800A8474
 /* 0A98D0 800A8CD0 3C0D8000 */  lui   $t5, %hi(osTvType) # $t5, 0x8000
 /* 0A98D4 800A8CD4 15400006 */  bnez  $t2, .L800A8CF0
 /* 0A98D8 800A8CD8 3C118012 */   lui   $s1, %hi(D_80126CD5) # $s1, 0x8012
-/* 0A98DC 800A8CDC 3C01800F */  li    $at, 0x800F0000 # -0.000000
+/* 0A98DC 800A8CDC 3C01800F */  lui   $at, %hi(D_800E87A8) # $at, 0x800f
 /* 0A98E0 800A8CE0 C42487A8 */  lwc1  $f4, %lo(D_800E87A8)($at)
 /* 0A98E4 800A8CE4 8E4B0000 */  lw    $t3, ($s2)
 /* 0A98E8 800A8CE8 10000006 */  b     .L800A8D04
@@ -935,7 +936,8 @@ glabel func_800A8474
 /* 0A9E54 800A9254 AFA60054 */  sw    $a2, 0x54($sp)
 /* 0A9E58 800A9258 0C02917C */  jal   func_800A45F0
 /* 0A9E5C 800A925C AFA300D0 */   sw    $v1, 0xd0($sp)
-/* 0A9E60 800A9260 3C01800F */  li    $at, 0x800F0000 # -0.000000
+# Used to access D_800E87B8 and D_800E87BC.
+/* 0A9E60 800A9260 3C01800F */  lui   $at, %hi(D_800E87B8) # $at, 0x800f
 /* 0A9E64 800A9264 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 0A9E68 800A9268 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 0A9E6C 800A926C C42187B8 */  lwc1  $f1, %lo(D_800E87B8)($at)
@@ -1143,7 +1145,8 @@ glabel func_800A8474
 /* 0AA160 800A9560 44053000 */  mfc1  $a1, $f6
 /* 0AA164 800A9564 44D8F800 */  ctc1  $t8, $31
 /* 0AA168 800A9568 1580003C */  bnez  $t4, .L800A965C
-/* 0AA16C 800A956C 3C01800F */   li    $at, 0x800F0000 # -0.000000
+# Used to access D_800E87C0 and D_800E87C4.
+/* 0AA16C 800A956C 3C01800F */   lui   $at, %hi(D_800E87C0) # $at, 0x800f
 /* 0AA170 800A9570 C42187C0 */  lwc1  $f1, %lo(D_800E87C0)($at)
 /* 0AA174 800A9574 C42087C4 */  lwc1  $f0, %lo(D_800E87C4)($at)
 /* 0AA178 800A9578 8E420000 */  lw    $v0, ($s2)
