@@ -49,6 +49,17 @@ const DoubleLiteral D_800E6B00 = { 0.3 };
 const DoubleLiteral D_800E6B08 = { -0.3 };
 const DoubleLiteral D_800E6B10 = { 0.4 };
 
+// This is another file boundary.
+const DoubleLiteral D_800E6B18 = { 0.0 }; 
+
+// I am not sure where these go. It is hard to tell without any glabels.
+// Need to figure out which file handles creating models.
+const char D_800E6B20[] = "Error: Model no. out of range on load. !!\n";
+const char D_800E6B4C[] = "TEXTURE ERROR!!\n%d,%d\n";
+const char D_800E6B64[] = "Error: Model table overflow!!\n";
+const char D_800E6B84[] = "WARNING :: createModelInstance called with NULL pointer\n";
+const char D_800E6BC0[] = "ModFreeModel : NULL mod_inst!!\n";
+const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n";
 
 /*********************************/
 
