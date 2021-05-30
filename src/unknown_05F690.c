@@ -26,6 +26,32 @@ s32 D_800DCEA4 = 1980;
 
 /*******************************/
 
+/************ .rodata ************/
+
+const DoubleLiteral D_800E6AB0 = { 0.3 };
+const DoubleLiteral D_800E6AB8 = { -0.3 };
+const DoubleLiteral D_800E6AC0 = { 0.4 };
+const DoubleLiteral D_800E6AC8 = { 0.45 };
+
+// Jump table in func_8005EA90
+const u32 D_800E6AD0[] = {
+    0x8005EE9C, 0x8005EEC0, 0x8005EEF8, 0x8005EF14,
+    0x8005EF6C, 0x8005EF98
+};
+
+const DoubleLiteral D_800E6AE8 = { -0.1 };
+const DoubleLiteral D_800E6AF0 = { 0.1 };
+
+// This is probably just file boundary padding.
+const DoubleLiteral D_800E6AF8 = { 0.0 }; 
+
+const DoubleLiteral D_800E6B00 = { 0.3 };
+const DoubleLiteral D_800E6B08 = { -0.3 };
+const DoubleLiteral D_800E6B10 = { 0.4 };
+
+
+/*********************************/
+
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005EA90.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F310.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F850.s")
