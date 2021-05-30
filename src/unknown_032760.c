@@ -108,6 +108,126 @@ u16 D_800DCB28[20] = {
 
 /*******************************/
 
+/************ .rodata ************/
+
+// Jump table in func_80033A14
+const u32 D_800E5F80[] = {
+    0x80033A70, 0x80033AA4, 0x80033AE4, 0x80033B48, 
+    0x80033BB4
+};
+
+// Not sure if these are actually strings. Might just be padding.
+const char D_800E5F94[] = "";
+const char D_800E5F98[] = "";
+const char D_800E5F9C[] = "";
+
+const char D_800E5FA0[] = "Illegal door no!!!\n";
+const char D_800E5FB4[] = "Illegal door no!!!\n";
+const char D_800E5FC8[] = "Illegal door no!!!\n";
+
+const DoubleLiteral D_800E5FE0 = { 1.2 };
+const DoubleLiteral D_800E5FE8 = { 0.1 };
+const DoubleLiteral D_800E5FF0 = { 0.9 };
+const DoubleLiteral D_800E5FF8 = { 1.2 };
+const FloatLiteral D_800E6000 = { 0.2f };
+const FloatLiteral D_800E6004 = { 0.612f };
+const FloatLiteral D_800E6008 = { 0.552f };
+const DoubleLiteral D_800E6010 = { 1.2 };
+const DoubleLiteral D_800E6018 = { 0.98 };
+const DoubleLiteral D_800E6020 = { 0.95 };
+const DoubleLiteral D_800E6028 = { 1.2 };
+const DoubleLiteral D_800E6030 = { 300.0 };
+const DoubleLiteral D_800E6038 = { 0.05 };
+const DoubleLiteral D_800E6040 = { 0.05 };
+const FloatLiteral D_800E6048 = { 0.01f };
+const DoubleLiteral D_800E6050 = { 1.2 };
+const DoubleLiteral D_800E6058 = { 1.2 };
+const DoubleLiteral D_800E6060 = { 1.2 };
+const DoubleLiteral D_800E6068 = { 300.0 };
+
+// Jump table in func_80039330
+const u32 D_800E6070[] = {
+    0x80039758, 0x80039758, 0x80039758, 0x80039758, 
+    0x80039768, 0x80039768, 0x80039758, 0x80039768, 
+    0x80039768, 0x80039758, 0x80039758, 0x80039768, 
+    0x80039768, 0x80039768, 0x80039758, 0x80039768,
+    0x80039768, 0x80039768, 0x80039768, 0x80039758, 
+    0x80039758
+};
+
+// Jump table in func_80039330
+const u32 D_800E60C4[] = {
+    0x800397BC, 0x80039978, 0x80039AE0, 0x80039BB8, 
+    0x80039DC4, 0x80039ED8, 0x80039FDC, 0x80039FDC, 
+    0x8003A5AC, 0x8003A0CC, 0x8003A1E8, 0x8003A5AC, 
+    0x8003A5AC, 0x8003A5AC, 0x8003A268, 0x8003A5AC, 
+    0x8003A5AC, 0x8003A5AC, 0x8003A5AC, 0x8003A3FC, 
+    0x8003A4F4, 0x8003A5AC, 0x8003A5AC, 0x8003A5AC,
+    0x8003A5AC, 0x8003A5AC, 0x8003A5AC, 0x8003A5AC, 
+    0x8003A5AC, 0x8003A574
+};
+
+const DoubleLiteral D_800E6140 = { 77.0 };
+const FloatLiteral D_800E6148 = { 0.1f };
+const DoubleLiteral D_800E6150 = { 1.1 };
+const DoubleLiteral D_800E6158 = { 2.2 };
+const DoubleLiteral D_800E6160 = { 1.2 };
+const DoubleLiteral D_800E6168 = { 1.2 };
+const DoubleLiteral D_800E6170 = { 130.0 };
+const DoubleLiteral D_800E6178 = { 1.2 };
+const FloatLiteral D_800E6180 = { 50625.0f };
+const DoubleLiteral D_800E6188 = { 1.2 };
+const DoubleLiteral D_800E6190 = { 1.2 };
+const DoubleLiteral D_800E6198 = { 0.95 };
+const FloatLiteral D_800E61A0 = { -10000.0f };
+const DoubleLiteral D_800E61A8 = { 0.001 };
+const FloatLiteral D_800E61B0 = { 0.001f };
+const DoubleLiteral D_800E61B8 = { 0.1 };
+
+// Jump table in func_8003E630
+const u32 D_800E61C0[] = {
+    0x8003E66C, 0x8003E66C, 0x8003E67C, 0x8003E67C, 
+    0x8003E684, 0x8003E684, 0x8003E684, 0x8003E684, 
+    0x8003E684, 0x8003E684, 0x8003E67C, 0x8003E67C
+};
+
+const DoubleLiteral D_800E61F0 = { 1.2 };
+const DoubleLiteral D_800E61F8 = { 10000.0 };
+const DoubleLiteral D_800E6200 = { 1.2 };
+const FloatLiteral D_800E6208 = { -10000.0f };
+const FloatLiteral D_800E620C = { 0.6f };
+const FloatLiteral D_800E6210 = { 0.6f };
+const FloatLiteral D_800E6214 = { 0.075f };
+const FloatLiteral D_800E6218 = { 0.01f };
+const FloatLiteral D_800E621C = { 0.1f };
+const FloatLiteral D_800E6220 = { 1.6f };
+const FloatLiteral D_800E6224 = { 1.6f };
+
+// Jump table in func_80040C54
+const u32 D_800E6228[] = {
+    0x80040D30, 0x80040E54, 0x80040E54, 0x800411E4,
+    0x8004153C
+};
+
+const FloatLiteral D_800E623C = { 22500.0f };
+const FloatLiteral D_800E6240 = { 1.2f };
+const FloatLiteral D_800E6244 = { 1.6f };
+const FloatLiteral D_800E6248 = { 1.6f };
+const DoubleLiteral D_800E6250 = { 1.2 };
+
+// Jump table in func_800422F0
+const u32 D_800E6258[] = {
+    0x80042378, 0x800426B8, 0x80042898, 0x800428E8, 
+    0x8004292C
+};
+
+const FloatLiteral D_800E626C = { 1.34f };
+const FloatLiteral D_800E6270 = { 0.05f };
+const FloatLiteral D_800E6274 = { 0.15f };
+const FloatLiteral D_800E6278 = { 0.15f };
+
+/*********************************/
+
 /************ .bss ************/
 
 extern f32 D_8011D4D0;
