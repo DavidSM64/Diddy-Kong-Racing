@@ -4,6 +4,43 @@
 #include "types.h"
 #include "macros.h"
 
+/************ .rodata ************/
+
+const char D_800E7210[] = "*** mmAlloc: size = 0 ***\n";
+const char D_800E722C[] = "*** mm Error *** ---> No more slots available.\n";
+const char D_800E725C[] = "\n*** mm Error *** ---> No suitble block found for allocation.\n";
+const char D_800E729C[] = "*** mmAllocAtAddr: size = 0 ***\n";
+const char D_800E72C0[] = "\n*** mm Error *** ---> No more slots available.\n";
+const char D_800E72F4[] = "\n*** mm Error *** ---> Can't allocate memory at desired address.\n";
+const char D_800E7338[] = "\n*** mm Error *** ---> Can't free ram at this location: %x\n";
+const char D_800E7374[] = "\n*** mm Error *** ---> No match found for mmFree.\n";
+const char D_800E73A8[] = "*** Slots still in use in region ***\n";
+const char D_800E73D0[] = "\n*** mm Error *** ---> stbf stack too deep!\n";
+const char D_800E7400[] = "\n*** mm Error *** ---> Can't fix the specified block.\n";
+const char D_800E7438[] = "\n*** mm Error *** ---> Can't unfix the specified block.\n";
+const char D_800E7474[] = "Colour %x >> %d\n";
+const char D_800E7488[] = "Unable to record %d slots, colours overflowed table.\n";
+const char D_800E74C0[] = "RED %d\n";
+const char D_800E74C8[] = "GREEN %d\n";
+const char D_800E74D4[] = "BLUE %d\n";
+const char D_800E74E0[] = "YELLOW %d\n";
+const char D_800E74EC[] = "MAGENTA %d\n";
+const char D_800E74F8[] = "CYAN %d\n";
+const char D_800E7504[] = "WHITE %d\n";
+const char D_800E7510[] = "GREY %d\n";
+const char D_800E751C[] = "ORANGE %d\n\n";
+const char D_800E7528[] = "RED %d\n";
+const char D_800E7530[] = "GREEN %d\n";
+const char D_800E753C[] = "BLUE %d\n";
+const char D_800E7548[] = "YELLOW %d\n";
+const char D_800E7554[] = "MAGENTA %d\n";
+const char D_800E7560[] = "CYAN %d\n";
+const char D_800E756C[] = "WHITE %d\n";
+const char D_800E7578[] = "GREY %d\n";
+const char D_800E7584[] = "ORANGE %d\n\n";
+                          
+/*********************************/
+
 /* Size: 0x8 bytes */
 typedef struct unk80070BE4_8_0 {
     s16 unk0;
