@@ -83,6 +83,38 @@ s32 D_800DE764 = 0; // Currently unknown, might be a different type.
 
 /*******************************/
 
+/************ .rodata ************/
+
+const char D_800E7800[] = "(Audio task)";
+const char D_800E7810[] = "(Game task)";
+const char D_800E781C[] = "(DI task)\n";
+const char D_800E7828[] = "(DI benchmark test)\n";
+const char D_800E7840[] = "(Unknown task type %d)\n";
+const char D_800E7858[] = "\nRCP TASK INFO\n";
+const char D_800E7868[] = "-------------\n";
+const char D_800E7878[] = "\ttype\t\t= %u\n";
+const char D_800E7888[] = "\tflags\t\t= %u\n";
+const char D_800E7898[] = "\tucode_boot\t\t= %p\n";
+const char D_800E78AC[] = "\tucode_boot_size\t\t= %u\n";
+const char D_800E78C4[] = "\tucode\t\t= %p\n";
+const char D_800E78D4[] = "\tucode_size\t\t= %u\n";
+const char D_800E78E8[] = "\tucode_data\t\t= %p\n";
+const char D_800E78FC[] = "\tucode_data_size\t\t= %u\n";
+const char D_800E7914[] = "\toutput_buff\t\t= %p\n";
+const char D_800E7928[] = "\toutput_buff_size\t\t= %u\n";
+const char D_800E7944[] = "\tdata_ptr\t\t= %p\n";
+const char D_800E7958[] = "\tdata_size\t\t= %u\n";
+
+const FloatLiteral D_800E796C = { 468750.0f };
+
+// Jump table in __scSchedule
+const u32 D_800E7970[] = {
+    0x8007A2A4, 0x8007A248, 0x8007A1BC, 0x8007A2A4, 
+    0x8007A2A4, 0x8007A248, 0x8007A248
+};
+
+/*********************************/
+
 extern OSViMode D_800E3900[];//osViModeTable;
 
 extern s32 D_80126120;
