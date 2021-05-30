@@ -6,6 +6,19 @@
 #include "libultra_internal.h"
 #include "hardware.h"
 
+/************ .rodata ************/
+
+const DoubleLiteral D_800E9640 = { 0.017453292222222222 };
+const DoubleLiteral D_800E9648 = { 0.0 }; // This is probably a file boundary. This file needs to be split.
+
+// Jump table in __osDevMgrMain
+const u32 D_800E9650[] = {
+    0x800D2A70, 0x800D2964, 0x800D29A4, 0x800D2A90, 
+    0x800D2A90, 0x800D29E0, 0x800D2A28
+};
+
+/*********************************/
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDisableInt.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osRestoreInt.s")
 

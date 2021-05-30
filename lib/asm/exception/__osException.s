@@ -1,3 +1,28 @@
+.section .rodata
+
+glabel D_800E9670
+.word 0x00141818
+.word 0x1C1C1C1C
+.word 0x20202020
+.word 0x20202020
+.word 0x00040808
+.word 0x0C0C0C0C
+.word 0x10101010
+.word 0x10101010
+
+glabel D_800E9690
+.word 0x800D3168
+.word 0x800D3130
+.word 0x800D3110
+.word 0x800D2F74
+.word 0x800D2F20
+.word 0x800D30B4
+.word 0x800D2EE8
+.word 0x800D2EF4
+.word 0x800D2F00
+
+.section .text
+
 glabel __osException
 /* 0D38C0 800D2CC0 3C1A8013 */  lui   $k0, %hi(D_8012D240) # $k0, 0x8013
 /* 0D38C4 800D2CC4 275AD240 */  addiu $k0, %lo(D_8012D240) # addiu $k0, $k0, -0x2dc0
