@@ -18,12 +18,20 @@ glabel D_800E97C0
 .word 0xEEA56814
 .word 0x3EC5DBDF
 .word 0x0E314BFE
+
+glabel D_800E97E8
 .word 0x3FD45F30
 .word 0x6DC9C883
+
+glabel D_800E97F0
 .word 0x400921FB
 .word 0x50000000
+
+glabel D_800E97F8
 .word 0x3E6110B4
 .word 0x611A6263
+
+glabel D_800E9800
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
@@ -40,12 +48,20 @@ glabel D_800E9810
 .word 0xEEA56814
 .word 0x3EC5DBDF
 .word 0x0E314BFE
+
+glabel D_800E9838
 .word 0x3FD45F30
 .word 0x6DC9C883
+
+glabel D_800E9840
 .word 0x400921FB
 .word 0x50000000
+
+glabel D_800E9848
 .word 0x3E6110B4
 .word 0x611A6263
+
+glabel D_800E9850
 .word 0x00000000
 .word 0x00000000
 .word 0x00000000
@@ -79,8 +95,9 @@ glabel D_800E98AC
 
 glabel D_800E98B0
 .word 0x30000000
-
 .word 0x00000000
+
+glabel D_800E98B8
 .word 0x4197D784
 .word 0x00000000
 

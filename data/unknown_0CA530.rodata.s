@@ -10,6 +10,8 @@
 glabel D_800E94B0
 .word 0x412E8480
 .word 0x00000000
+
+glabel D_800E94B8
 .word 0x412E8480
 .word 0x00000000
 

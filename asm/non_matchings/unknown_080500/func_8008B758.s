@@ -78,7 +78,7 @@ glabel func_8008B758
 /* 08C47C 8008B87C AC2AF4BC */  sw    $t2, %lo(D_800DF4BC)($at)
 /* 08C480 8008B880 3C06800E */  lui   $a2, %hi(D_800DF4BC) # $a2, 0x800e
 /* 08C484 8008B884 8CC6F4BC */  lw    $a2, %lo(D_800DF4BC)($a2)
-/* 08C488 8008B888 3C018012 */  lui   $at, %hi(D_801263D4) #$at, 0x8012
+/* 08C488 8008B888 3C018012 */  lui   $at, %hi(D_801263D4) # $at, 0x8012
 /* 08C48C 8008B88C 00340821 */  addu  $at, $at, $s4
 /* 08C490 8008B890 18C00026 */  blez  $a2, .L8008B92C
 /* 08C494 8008B894 A02063D4 */   sb    $zero, %lo(D_801263D4)($at)

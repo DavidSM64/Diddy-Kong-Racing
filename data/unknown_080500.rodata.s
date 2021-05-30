@@ -165,6 +165,7 @@
 glabel D_800E8208
 .aligned_text "OK?"
 
+glabel D_800E820C
 .aligned_text "~"
 
 glabel D_800E8210
@@ -302,6 +303,8 @@ glabel D_800E83AC
 
 glabel D_800E83B0
 .word 0x3F2B851F
+
+glabel D_800E83B4
 .word 0x40351EB8
 
 glabel D_800E83B8

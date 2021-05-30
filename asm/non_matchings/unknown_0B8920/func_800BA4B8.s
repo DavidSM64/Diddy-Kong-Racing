@@ -35,7 +35,7 @@ glabel func_800BA4B8
 /* 0BB128 800BA528 8FAC005C */  lw    $t4, 0x5c($sp)
 /* 0BB12C 800BA52C 332E000F */  andi  $t6, $t9, 0xf
 /* 0BB130 800BA530 15C00073 */  bnez  $t6, .L800BA700
-/* 0BB134 800BA534 3C038013 */   lui   $v1, 0x8013
+/* 0BB134 800BA534 3C038013 */   lui   $v1, %hi(D_80129FC0) # $v1, 0x8013
 /* 0BB138 800BA538 3C038013 */  lui   $v1, %hi(D_80129FC0) # $v1, 0x8013
 /* 0BB13C 800BA53C 24639FC0 */  addiu $v1, %lo(D_80129FC0) # addiu $v1, $v1, -0x6040
 /* 0BB140 800BA540 8C620000 */  lw    $v0, ($v1)
@@ -158,7 +158,7 @@ glabel func_800BA4B8
 /* 0BB2F8 800BA6F8 10000078 */  b     .L800BA8DC
 /* 0BB2FC 800BA6FC 00407825 */   move  $t7, $v0
 .L800BA700:
-/* 0BB300 800BA700 24639FC0 */  addiu $v1, $v1, -0x6040
+/* 0BB300 800BA700 24639FC0 */  addiu $v1, %lo(D_80129FC0) # addiu $v1, $v1, -0x6040
 /* 0BB304 800BA704 8C620000 */  lw    $v0, ($v1)
 /* 0BB308 800BA708 3C018000 */  lui   $at, (0x80000020 >> 16) # lui $at, 0x8000
 /* 0BB30C 800BA70C 244E0008 */  addiu $t6, $v0, 8

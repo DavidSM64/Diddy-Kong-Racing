@@ -119,8 +119,8 @@ glabel func_80067D3C
 /* 068B04 80067F04 24840FA0 */   addiu $a0, %lo(D_80120FA0) # addiu $a0, $a0, 0xfa0
 /* 068B08 80067F08 8FAC001C */  lw    $t4, 0x1c($sp)
 /* 068B0C 80067F0C 8FBF0014 */  lw    $ra, 0x14($sp)
-/* 068B10 80067F10 3C018012 */  lui   $at, 0x8012
+/* 068B10 80067F10 3C018012 */  lui   $at, %hi(D_80120CE4) # $at, 0x8012
 /* 068B14 80067F14 27BD0020 */  addiu $sp, $sp, 0x20
 /* 068B18 80067F18 03E00008 */  jr    $ra
-/* 068B1C 80067F1C AC2C0CE4 */   sw    $t4, 0xce4($at)
+/* 068B1C 80067F1C AC2C0CE4 */   sw    $t4, %lo(D_80120CE4)($at)
 

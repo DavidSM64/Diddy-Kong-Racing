@@ -10,10 +10,10 @@ glabel func_800C05C8
 /* 0C11E8 800C05E8 AFBF001C */   sw    $ra, 0x1c($sp)
 /* 0C11EC 800C05EC 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 0C11F0 800C05F0 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
-/* 0C11F4 800C05F4 3C01800F */  lui   $at, 0x800f
+/* 0C11F4 800C05F4 3C01800F */  lui   $at, %hi(D_800E930C) # $at, 0x800f
 /* 0C11F8 800C05F8 15E00008 */  bnez  $t7, .L800C061C
 /* 0C11FC 800C05FC 00000000 */   nop   
-/* 0C1200 800C0600 3C01800F */  lui   $at, %hi(D_800E930C) # $at, 0x800f
+/* 0C1200 800C0600 3C01800F */  lui   $at, %hi(D_800E9308) # $at, 0x800f
 /* 0C1204 800C0604 C42C9308 */  lwc1  $f12, %lo(D_800E9308)($at)
 /* 0C1208 800C0608 0C019FC8 */  jal   func_80067F20
 /* 0C120C 800C060C AFA60028 */   sw    $a2, 0x28($sp)

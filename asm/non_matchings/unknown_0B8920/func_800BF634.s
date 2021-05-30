@@ -150,7 +150,8 @@ glabel func_800BF634
 /* 0C0448 800BF848 E4AA0014 */  swc1  $f10, 0x14($a1)
 /* 0C044C 800BF84C E4A8000C */  swc1  $f8, 0xc($a1)
 /* 0C0450 800BF850 8FAE0010 */  lw    $t6, 0x10($sp)
-/* 0C0454 800BF854 3C01800F */  lui   $at, 0x800f
+# Used to access D_800E92B0 and D_800E92B4.
+/* 0C0454 800BF854 3C01800F */  lui   $at, %hi(D_800E92B0) # $at, 0x800f
 /* 0C0458 800BF858 A4AE001A */  sh    $t6, 0x1a($a1)
 /* 0C045C 800BF85C 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 0C0460 800BF860 C7A00014 */  lwc1  $f0, 0x14($sp)
@@ -177,7 +178,7 @@ glabel func_800BF634
 /* 0C04B4 800BF8B4 44803000 */  mtc1  $zero, $f6
 /* 0C04B8 800BF8B8 24190001 */  li    $t9, 1
 /* 0C04BC 800BF8BC 46262181 */  sub.d $f6, $f4, $f6
-/* 0C04C0 800BF8C0 3C018000 */  lui   $at, %hi(D_7FFF92B4) # $at, 0x8000
+/* 0C04C0 800BF8C0 3C018000 */  lui   $at, 0x8000
 /* 0C04C4 800BF8C4 44D9F800 */  ctc1  $t9, $31
 /* 0C04C8 800BF8C8 00000000 */  nop   
 /* 0C04CC 800BF8CC 462031A4 */  cvt.w.d $f6, $f6
@@ -202,8 +203,8 @@ glabel func_800BF634
 /* 0C050C 800BF90C 10000029 */  b     .L800BF9B4
 /* 0C0510 800BF910 ACB9001C */   sw    $t9, 0x1c($a1)
 .L800BF914:
-/* 0C0514 800BF914 C42B92B0 */  lwc1  $f11, %lo(D_7FFF92B0)($at)
-/* 0C0518 800BF918 C42A92B4 */  lwc1  $f10, %lo(D_7FFF92B4)($at)
+/* 0C0514 800BF914 C42B92B0 */  lwc1  $f11, %lo(D_800E92B0)($at)
+/* 0C0518 800BF918 C42A92B4 */  lwc1  $f10, %lo(D_800E92B4)($at)
 /* 0C051C 800BF91C 46000221 */  cvt.d.s $f8, $f0
 /* 0C0520 800BF920 462A4402 */  mul.d $f16, $f8, $f10
 /* 0C0524 800BF924 240C0001 */  li    $t4, 1
@@ -467,10 +468,12 @@ glabel func_800BF634
 /* 0C08C4 800BFCC4 E4840004 */  swc1  $f4, 4($a0)
 /* 0C08C8 800BFCC8 E4880028 */  swc1  $f8, 0x28($a0)
 /* 0C08CC 800BFCCC 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
-/* 0C08D0 800BFCD0 3C01800F */  lui   $at, 0x800f
+# Used to access D_800E92C0 and D_800E92C4.
+/* 0C08D0 800BFCD0 3C01800F */  lui   $at, %hi(D_800E92C0) # $at, 0x800f
 /* 0C08D4 800BFCD4 15C0002B */  bnez  $t6, .L800BFD84
 /* 0C08D8 800BFCD8 00000000 */   nop   
-/* 0C08DC 800BFCDC 3C01800F */  lui   $at, %hi(D_800E92BC) # $at, 0x800f
+# Used to access D_800E92B8 and D_800E92BC.
+/* 0C08DC 800BFCDC 3C01800F */  lui   $at, %hi(D_800E92B8) # $at, 0x800f
 /* 0C08E0 800BFCE0 C48A0028 */  lwc1  $f10, 0x28($a0)
 /* 0C08E4 800BFCE4 C42592B8 */  lwc1  $f5, %lo(D_800E92B8)($at)
 /* 0C08E8 800BFCE8 C42492BC */  lwc1  $f4, %lo(D_800E92BC)($at)
@@ -491,7 +494,7 @@ glabel func_800BF634
 /* 0C0924 800BFD24 44804000 */  mtc1  $zero, $f8
 /* 0C0928 800BFD28 24180001 */  li    $t8, 1
 /* 0C092C 800BFD2C 46283201 */  sub.d $f8, $f6, $f8
-/* 0C0930 800BFD30 3C018000 */  lui   $at, %hi(D_7FFF92C4) # $at, 0x8000
+/* 0C0930 800BFD30 3C018000 */  lui   $at, 0x8000
 /* 0C0934 800BFD34 44D8F800 */  ctc1  $t8, $31
 /* 0C0938 800BFD38 00000000 */  nop   
 /* 0C093C 800BFD3C 46204224 */  cvt.w.d $f8, $f8
@@ -517,8 +520,8 @@ glabel func_800BF634
 /* 0C0980 800BFD80 AC98001C */   sw    $t8, 0x1c($a0)
 .L800BFD84:
 /* 0C0984 800BFD84 C48A0028 */  lwc1  $f10, 0x28($a0)
-/* 0C0988 800BFD88 C42592C0 */  lwc1  $f5, %lo(D_7FFF92C0)($at)
-/* 0C098C 800BFD8C C42492C4 */  lwc1  $f4, %lo(D_7FFF92C4)($at)
+/* 0C0988 800BFD88 C42592C0 */  lwc1  $f5, %lo(D_800E92C0)($at)
+/* 0C098C 800BFD8C C42492C4 */  lwc1  $f4, %lo(D_800E92C4)($at)
 /* 0C0990 800BFD90 460054A1 */  cvt.d.s $f18, $f10
 /* 0C0994 800BFD94 46249182 */  mul.d $f6, $f18, $f4
 /* 0C0998 800BFD98 24080001 */  li    $t0, 1

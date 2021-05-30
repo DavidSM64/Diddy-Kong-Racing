@@ -142,7 +142,7 @@ glabel func_8000B750
 /* 00C560 8000B960 000D6840 */  sll   $t5, $t5, 1
 /* 00C564 8000B964 A7A00052 */  sh    $zero, 0x52($sp)
 /* 00C568 8000B968 A7A00054 */  sh    $zero, 0x54($sp)
-/* 00C56C 8000B96C 3C0E800E */  lui   $t6, 0x800e
+/* 00C56C 8000B96C 3C0E800E */  lui   $t6, %hi(D_800DC754) # $t6, 0x800e
 /* 00C570 8000B970 E7AE0010 */  swc1  $f14, 0x10($sp)
 /* 00C574 8000B974 E7B20064 */  swc1  $f18, 0x64($sp)
 /* 00C578 8000B978 E7B00058 */  swc1  $f16, 0x58($sp)
@@ -155,7 +155,7 @@ glabel func_8000B750
 /* 00C594 8000B994 AFAD0014 */  sw    $t5, 0x14($sp)
 /* 00C598 8000B998 000FC900 */  sll   $t9, $t7, 4
 /* 00C59C 8000B99C 8D8F007C */  lw    $t7, 0x7c($t4)
-/* 00C5A0 8000B9A0 8DCEC754 */  lw    $t6, -0x38ac($t6)
+/* 00C5A0 8000B9A0 8DCEC754 */  lw    $t6, %lo(D_800DC754)($t6)
 /* 00C5A4 8000B9A4 44071000 */  mfc1  $a3, $f2
 /* 00C5A8 8000B9A8 AFAA0038 */  sw    $t2, 0x38($sp)
 /* 00C5AC 8000B9AC AFA20044 */  sw    $v0, 0x44($sp)
@@ -228,7 +228,7 @@ glabel func_8000B750
 /* 00C6B4 8000BAB4 00000000 */   nop   
 .L8000BAB8:
 /* 00C6B8 8000BAB8 8FAF0090 */  lw    $t7, 0x90($sp)
-/* 00C6BC 8000BABC 3C018012 */  lui   $at, %hi(D_8011B068) #$at, 0x8012
+/* 00C6BC 8000BABC 3C018012 */  lui   $at, %hi(D_8011B068) # $at, 0x8012
 /* 00C6C0 8000BAC0 11E00002 */  beqz  $t7, .L8000BACC
 /* 00C6C4 8000BAC4 00300821 */   addu  $at, $at, $s0
 /* 00C6C8 8000BAC8 A020B068 */  sb    $zero, %lo(D_8011B068)($at)

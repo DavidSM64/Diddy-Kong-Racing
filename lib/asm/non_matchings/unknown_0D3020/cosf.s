@@ -13,14 +13,14 @@ glabel cosf
 /* 0D56DC 800D4ADC 44819800 */  mtc1  $at, $f19
 /* 0D56E0 800D4AE0 4606203C */  c.lt.s $f4, $f6
 /* 0D56E4 800D4AE4 C7A00000 */  lwc1  $f0, ($sp)
-/* 0D56E8 800D4AE8 3C01800F */  lui   $at, 0x800f
+/* 0D56E8 800D4AE8 3C01800F */  lui   $at, %hi(D_800E97E8) # $at, 0x800f
 /* 0D56EC 800D4AEC 45020004 */  bc1fl .L800D4B00
 /* 0D56F0 800D4AF0 46000007 */   neg.s $f0, $f0
 /* 0D56F4 800D4AF4 10000002 */  b     .L800D4B00
 /* 0D56F8 800D4AF8 46003006 */   mov.s $f0, $f6
 /* 0D56FC 800D4AFC 46000007 */  neg.s $f0, $f0
 .L800D4B00:
-/* 0D5700 800D4B00 D42897E8 */  ldc1  $f8, -0x6818($at)
+/* 0D5700 800D4B00 D42897E8 */  ldc1  $f8, %lo(D_800E97E8)($at)
 /* 0D5704 800D4B04 46000321 */  cvt.d.s $f12, $f0
 /* 0D5708 800D4B08 44809000 */  mtc1  $zero, $f18
 /* 0D570C 800D4B0C 46286282 */  mul.d $f10, $f12, $f8
@@ -43,11 +43,11 @@ glabel cosf
 /* 0D574C 800D4B4C 00000000 */  nop   
 /* 0D5750 800D4B50 44823000 */  mtc1  $v0, $f6
 .L800D4B54:
-/* 0D5754 800D4B54 3C01800F */  lui   $at, 0x800f
-/* 0D5758 800D4B58 D42A97F0 */  ldc1  $f10, -0x6810($at)
+/* 0D5754 800D4B54 3C01800F */  lui   $at, %hi(D_800E97F0) # $at, 0x800f
+/* 0D5758 800D4B58 D42A97F0 */  ldc1  $f10, %lo(D_800E97F0)($at)
 /* 0D575C 800D4B5C 46803221 */  cvt.d.w $f8, $f6
-/* 0D5760 800D4B60 3C01800F */  lui   $at, 0x800f
-/* 0D5764 800D4B64 D42697F8 */  ldc1  $f6, -0x6808($at)
+/* 0D5760 800D4B60 3C01800F */  lui   $at, %hi(D_800E97F8) # $at, 0x800f
+/* 0D5764 800D4B64 D42697F8 */  ldc1  $f6, %lo(D_800E97F8)($at)
 /* 0D5768 800D4B68 3C03800F */  lui   $v1, %hi(D_800E97C0) # $v1, 0x800f
 /* 0D576C 800D4B6C 246397C0 */  addiu $v1, %lo(D_800E97C0) # addiu $v1, $v1, -0x6840
 /* 0D5770 800D4B70 46324001 */  sub.d $f0, $f8, $f18
@@ -87,15 +87,15 @@ glabel cosf
 
 /* 0D57F0 800D4BF0 460A5032 */  c.eq.s $f10, $f10
 .L800D4BF4:
-/* 0D57F4 800D4BF4 3C01800F */  lui   $at, %hi(D_800E98C0) #$at, 0x800f
+/* 0D57F4 800D4BF4 3C01800F */  lui   $at, %hi(D_800E9800) # $at, 0x800f
 /* 0D57F8 800D4BF8 45010004 */  bc1t  .L800D4C0C
 /* 0D57FC 800D4BFC 00000000 */   nop   
-/* 0D5800 800D4C00 3C01800F */  lui   $at, 0x800f
+/* 0D5800 800D4C00 3C01800F */  lui   $at, %hi(D_800E98C0) # $at, 0x800f
 /* 0D5804 800D4C04 03E00008 */  jr    $ra
 /* 0D5808 800D4C08 C42098C0 */   lwc1  $f0, %lo(D_800E98C0)($at)
 
 .L800D4C0C:
-/* 0D580C 800D4C0C C4209800 */  lwc1  $f0, -0x6800($at)
+/* 0D580C 800D4C0C C4209800 */  lwc1  $f0, %lo(D_800E9800)($at)
 /* 0D5810 800D4C10 03E00008 */  jr    $ra
 /* 0D5814 800D4C14 00000000 */   nop   
 

@@ -15,7 +15,7 @@ glabel MenuCharacterSelectInit
 /* 08BC00 8008B000 0C027B2E */  jal   is_tt_unlocked
 /* 08BC04 8008B004 00000000 */   nop   
 /* 08BC08 8008B008 10400007 */  beqz  $v0, .L8008B028
-/* 08BC0C 8008B00C 3C078012 */   lui   $a3, 0x8012
+/* 08BC0C 8008B00C 3C078012 */   lui   $a3, %hi(D_801263CC) # $a3, 0x8012
 /* 08BC10 8008B010 3C078012 */  lui   $a3, %hi(D_801263CC) # $a3, 0x8012
 /* 08BC14 8008B014 3C0E800E */  lui   $t6, %hi(D_800DFF40) # $t6, 0x800e
 /* 08BC18 8008B018 24E763CC */  addiu $a3, %lo(D_801263CC) # addiu $a3, $a3, 0x63cc
@@ -24,7 +24,7 @@ glabel MenuCharacterSelectInit
 /* 08BC24 8008B024 ACEE0000 */   sw    $t6, ($a3)
 .L8008B028:
 /* 08BC28 8008B028 3C0F800E */  lui   $t7, %hi(D_800DFE40) # $t7, 0x800e
-/* 08BC2C 8008B02C 24E763CC */  addiu $a3, $a3, 0x63cc
+/* 08BC2C 8008B02C 24E763CC */  addiu $a3, %lo(D_801263CC) # addiu $a3, $a3, 0x63cc
 /* 08BC30 8008B030 25EFFE40 */  addiu $t7, %lo(D_800DFE40) # addiu $t7, $t7, -0x1c0
 /* 08BC34 8008B034 1000000F */  b     .L8008B074
 /* 08BC38 8008B038 ACEF0000 */   sw    $t7, ($a3)

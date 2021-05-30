@@ -362,7 +362,7 @@ glabel MenuGameSelectLoop
 /* 08EFBC 8008E3BC 00001025 */   move  $v0, $zero
 .L8008E3C0:
 /* 08EFC0 8008E3C0 8C580010 */  lw    $t8, 0x10($v0)
-/* 08EFC4 8008E3C4 3C01800E */  lui   $at, 0x800e
+/* 08EFC4 8008E3C4 3C01800E */  lui   $at, %hi(gIsInAdventureTwo) # $at, 0x800e
 /* 08EFC8 8008E3C8 33190004 */  andi  $t9, $t8, 4
 /* 08EFCC 8008E3CC 13200005 */  beqz  $t9, .L8008E3E4
 /* 08EFD0 8008E3D0 3C02800E */   lui   $v0, %hi(D_800DF4BC) # $v0, 0x800e

@@ -11,7 +11,7 @@ glabel __osEepStatus
 .L800CE860:
 /* 0CF460 800CE860 8FAF0028 */  lw    $t7, 0x28($sp)
 /* 0CF464 800CE864 8FB90028 */  lw    $t9, 0x28($sp)
-/* 0CF468 800CE868 3C018013 */  lui   $at, %hi(D_8012CE40) #$at, 0x8013
+/* 0CF468 800CE868 3C018013 */  lui   $at, %hi(D_8012CE40) # $at, 0x8013
 /* 0CF46C 800CE86C 000FC080 */  sll   $t8, $t7, 2
 /* 0CF470 800CE870 00380821 */  addu  $at, $at, $t8
 /* 0CF474 800CE874 AC20CE40 */  sw    $zero, %lo(D_8012CE40)($at)

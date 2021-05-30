@@ -51,7 +51,7 @@ glabel MenuFileSelectLoop
 /* 08D470 8008C870 3C0B8012 */  lui   $t3, %hi(D_801263E0) # $t3, 0x8012
 /* 08D474 8008C874 8D6B63E0 */  lw    $t3, %lo(D_801263E0)($t3)
 /* 08D478 8008C878 8C42F460 */  lw    $v0, %lo(D_800DF460)($v0)
-/* 08D47C 8008C87C 3C01800E */  lui   $at, 0x800e
+/* 08D47C 8008C87C 3C01800E */  lui   $at, %hi(gIsInAdventureTwo) # $at, 0x800e
 /* 08D480 8008C880 1562000F */  bne   $t3, $v0, .L8008C8C0
 /* 08D484 8008C884 00002025 */   move  $a0, $zero
 /* 08D488 8008C888 0C0002CA */  jal   func_80000B28

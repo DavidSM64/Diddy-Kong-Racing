@@ -1,9 +1,9 @@
 glabel func_8002F2AC
 /* 02FEAC 8002F2AC 3C038012 */  lui   $v1, %hi(D_8011B118) # $v1, 0x8012
 /* 02FEB0 8002F2B0 8C63B118 */  lw    $v1, %lo(D_8011B118)($v1)
-/* 02FEB4 8002F2B4 3C0E8012 */  lui   $t6, 0x8012
+/* 02FEB4 8002F2B4 3C0E8012 */  lui   $t6, %hi(D_8011B120) # $t6, 0x8012
 /* 02FEB8 8002F2B8 18600028 */  blez  $v1, .L8002F35C
-/* 02FEBC 8002F2BC 25C4B120 */   addiu $a0, $t6, -0x4ee0
+/* 02FEBC 8002F2BC 25C4B120 */   addiu $a0, $t6, %lo(D_8011B120)
 /* 02FEC0 8002F2C0 00037900 */  sll   $t7, $v1, 4
 /* 02FEC4 8002F2C4 01E42821 */  addu  $a1, $t7, $a0
 /* 02FEC8 8002F2C8 24840010 */  addiu $a0, $a0, 0x10

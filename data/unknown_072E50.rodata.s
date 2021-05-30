@@ -28,6 +28,8 @@ glabel D_800E7640
 
 glabel D_800E7650
 .aligned_text "DKRACING-TIMES"
+
+glabel D_800E7660
 .aligned_text "DKRACING-TIMES"
 
 glabel D_800E7670

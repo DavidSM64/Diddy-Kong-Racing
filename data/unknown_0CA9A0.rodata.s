@@ -63,6 +63,8 @@ glabel D_800E9600
 .word 0x800CC144
 .word 0x800CC104
 .word 0x00000000
+
+glabel D_800E9628
 .word 0x3FFFFFD6
 .word 0x0E94EE39
 .word 0x3FFFFEB0

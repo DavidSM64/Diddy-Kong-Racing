@@ -1,6 +1,6 @@
 glabel func_800C4DA0
 /* 0C59A0 800C4DA0 14800003 */  bnez  $a0, .L800C4DB0
-/* 0C59A4 800C4DA4 3C188013 */   lui   $t8, 0x8013
+/* 0C59A4 800C4DA4 3C188013 */   lui   $t8, %hi(D_8012A7E4) # $t8, 0x8013
 /* 0C59A8 800C4DA8 03E00008 */  jr    $ra
 /* 0C59AC 800C4DAC 00001025 */   move  $v0, $zero
 
@@ -13,7 +13,7 @@ glabel func_800C4DA0
 /* 0C59C4 800C4DC4 91C6001D */  lbu   $a2, 0x1d($t6)
 /* 0C59C8 800C4DC8 00000000 */  nop   
 .L800C4DCC:
-/* 0C59CC 800C4DCC 8F18A7E4 */  lw    $t8, -0x581c($t8)
+/* 0C59CC 800C4DCC 8F18A7E4 */  lw    $t8, %lo(D_8012A7E4)($t8)
 /* 0C59D0 800C4DD0 90990000 */  lbu   $t9, ($a0)
 /* 0C59D4 800C4DD4 00067A80 */  sll   $t7, $a2, 0xa
 /* 0C59D8 800C4DD8 1320003D */  beqz  $t9, .L800C4ED0

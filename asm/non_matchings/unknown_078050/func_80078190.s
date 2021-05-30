@@ -428,7 +428,7 @@ glabel func_80078190
 /* 0793E8 800787E8 03E00008 */  jr    $ra
 /* 0793EC 800787EC AC28E4CC */   sw    $t0, %lo(D_800DE4CC)($at)
 
-/* 0793F0 800787F0 3C01800E */  lui   $at, %hi(D_800DE4CC) #$at, 0x800e
+/* 0793F0 800787F0 3C01800E */  lui   $at, %hi(D_800DE4CC) # $at, 0x800e
 /* 0793F4 800787F4 03E00008 */  jr    $ra
 /* 0793F8 800787F8 AC20E4CC */   sw    $zero, %lo(D_800DE4CC)($at)
 

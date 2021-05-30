@@ -2,8 +2,8 @@ glabel alCents2Ratio
 /* 0CA5E0 800C99E0 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 0CA5E4 800C99E4 44811000 */  mtc1  $at, $f2
 /* 0CA5E8 800C99E8 04800004 */  bltz  $a0, .L800C99FC
-/* 0CA5EC 800C99EC 3C01800F */   lui   $at, 0x800f
-/* 0CA5F0 800C99F0 3C01800F */  lui   $at, %hi(D_800E94C4) # $at, 0x800f
+/* 0CA5EC 800C99EC 3C01800F */   lui   $at, %hi(D_800E94C4) # $at, 0x800f
+/* 0CA5F0 800C99F0 3C01800F */  lui   $at, %hi(D_800E94C0) # $at, 0x800f
 /* 0CA5F4 800C99F4 10000003 */  b     .L800C9A04
 /* 0CA5F8 800C99F8 C42094C0 */   lwc1  $f0, %lo(D_800E94C0)($at)
 .L800C99FC:
