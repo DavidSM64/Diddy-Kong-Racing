@@ -545,7 +545,7 @@ glabel MenuTrackSelectInit
 /* 08FBCC 8008EFCC 8D6B0410 */  lw    $t3, %lo(D_800E0410)($t3)
 /* 08FBD0 8008EFD0 8FBF0044 */  lw    $ra, 0x44($sp)
 /* 08FBD4 8008EFD4 AC2CF494 */  sw    $t4, %lo(gIsInAdventureTwo)($at)
-/* 08FBD8 8008EFD8 3C018012 */  lui   $at, 0x8012
+/* 08FBD8 8008EFD8 3C018012 */  lui   $at, %hi(D_80126548) # $at, 0x8012
 /* 08FBDC 8008EFDC 8FB00020 */  lw    $s0, 0x20($sp)
 /* 08FBE0 8008EFE0 8FB10024 */  lw    $s1, 0x24($sp)
 /* 08FBE4 8008EFE4 8FB20028 */  lw    $s2, 0x28($sp)
@@ -557,5 +557,5 @@ glabel MenuTrackSelectInit
 /* 08FBFC 8008EFFC 8FBE0040 */  lw    $fp, 0x40($sp)
 /* 08FC00 8008F000 27BD0080 */  addiu $sp, $sp, 0x80
 /* 08FC04 8008F004 03E00008 */  jr    $ra
-/* 08FC08 8008F008 AC2B6548 */   sw    $t3, 0x6548($at)
+/* 08FC08 8008F008 AC2B6548 */   sw    $t3, %lo(D_80126548)($at)
 
