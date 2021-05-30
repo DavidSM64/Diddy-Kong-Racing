@@ -282,13 +282,13 @@ glabel func_80099E8C
 /* 09AEBC 8009A2BC 0C031110 */  jal   func_800C4440
 /* 09AEC0 8009A2C0 01323021 */   addu  $a2, $t1, $s2
 /* 09AEC4 8009A2C4 8FAB0074 */  lw    $t3, 0x74($sp)
-/* 09AEC8 8009A2C8 3C05800E */  lui   $a1, 0x800e
+/* 09AEC8 8009A2C8 3C05800E */  lui   $a1, %hi(D_800E0AF0) # $a1, 0x800e
 /* 09AECC 8009A2CC 916C0000 */  lbu   $t4, ($t3)
 /* 09AED0 8009A2D0 86260004 */  lh    $a2, 4($s1)
 /* 09AED4 8009A2D4 000C6880 */  sll   $t5, $t4, 2
 /* 09AED8 8009A2D8 862E0006 */  lh    $t6, 6($s1)
 /* 09AEDC 8009A2DC 00AD2821 */  addu  $a1, $a1, $t5
-/* 09AEE0 8009A2E0 8CA50AF0 */  lw    $a1, 0xaf0($a1)
+/* 09AEE0 8009A2E0 8CA50AF0 */  lw    $a1, %lo(D_800E0AF0)($a1)
 /* 09AEE4 8009A2E4 240F00FF */  li    $t7, 255
 /* 09AEE8 8009A2E8 241800FF */  li    $t8, 255
 /* 09AEEC 8009A2EC 241900FF */  li    $t9, 255
