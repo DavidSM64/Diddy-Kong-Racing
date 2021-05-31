@@ -1,6 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8000B020 */
 
+#include "unknown_00BC20.h"
+
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
@@ -8,16 +10,6 @@
 
 
 /************ .data ************/
-
-/* Size: 0x8 bytes */
-typedef struct unknown800DC6F0 {
-    union {
-        s8 unk00;
-        s32 dummy_force_alignment; // Not sure of a better way to do this.
-    };
-    u16 unk04;
-    u16 unk06;
-} unknown800DC6F0;
 
 unknown800DC6F0 D_800DC6F0 = { -128, 0x1E, 0x0F };
 unknown800DC6F0 D_800DC6F8 = { 3, 0x1E, 0x0F };
