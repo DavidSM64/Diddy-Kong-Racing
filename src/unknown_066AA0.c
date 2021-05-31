@@ -8,6 +8,78 @@
 
 extern u32 osTvType;
 
+/************ .rodata ************/
+
+const char D_800E6F00[] = "Camera Error: Illegal mode!\n";
+const char D_800E6F20[] = "Camera Error: Illegal player no!\n";
+const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
+const char D_800E6F70[] = "\nCam do 2D sprite called with NULL pointer!";
+const char D_800E6F9C[] = "CamDo2DSprite FrameNo Overflow !!!\n";
+const char D_800E6FC0[] = "cameraPushModelMtx: model stack overflow!!\n";
+const char D_800E6FEC[] = "camPushModelMtx: bsp stack overflow!!\n";
+const char D_800E7010[] = "camPopModelMtx: model stack negative overflow!!\n";
+const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
+
+const char D_800E7078[] = "%x.";
+const char D_800E707C[] = "%x  ";
+const char D_800E7084[] = "\n";
+const char D_800E7088[] = "\n";
+const char D_800E708C[] = "%f  ";
+const char D_800E7094[] = "\n";
+const char D_800E7098[] = "\n";
+
+const FloatLiteral D_800E709C = { 15000.0f };
+const FloatLiteral D_800E70A0 = { 15000.0f };
+const FloatLiteral D_800E70A4 = { 15000.0f };
+
+// This is probably a file boundary.
+const DoubleLiteral D_800E70A8 = { 0.0 };
+
+const char D_800E70B0[] = "LOADLEVEL Error: Level out of range\n";
+const char D_800E70D8[] = "BossLev problem\n";
+const char D_800E70EC[] = "AITABLE Error: Table out of range\n";
+const char D_800E7110[] = "1.1605";
+const char D_800E7118[] = "02/10/97 16:03";
+const char D_800E7128[] = "pmountain";
+
+const char D_800E7134[] = "BBB\n";
+const char D_800E713C[] = "CAR";
+const char D_800E7140[] = "HOV";
+const char D_800E7144[] = "PLN";
+const char D_800E7148[] = "Swapping\n";
+
+// Jump table in func_8006CCF0
+const u32 D_800E7154[] = {
+    0x8006CF68, 0x8006CF5C, 0x8006D024, 0x8006CF80, 
+    0x8006CF9C, 0x8006D024, 0x8006D024, 0x8006CFB0,
+    0x8006CFC4, 0x8006CFD8, 0x8006CFEC, 0x8006D000, 
+    0x8006D014
+};
+
+// Jump table in func_8006CCF0
+const u32 D_800E7188[] = {
+    0x8006D0B8, 0x8006D0C4, 0x8006D108, 0x8006D19C, 
+    0x8006D14C, 0x8006D17C, 0x8006D188, 0x8006D1C0, 
+    0x8006D1C0, 0x8006D1C0, 0x8006D1C0, 0x8006D164
+};
+
+// Jump table in func_8006CCF0
+const u32 D_800E71B8[] = {
+    0x8006D5FC, 0x8006D614, 0x8006D62C, 0x8006D644, 
+    0x8006D65C, 0x8006D674, 0x8006D6D4, 0x8006D6F4, 
+    0x8006DF70, 0x8006E00C, 0x8006E054, 0x8006E0E0
+};
+
+// Jump table in func_8006DCF8
+const u32 D_800E71D8[] = {
+    0x8006DEE8, 0x8006E0E0, 0x8006E0E0, 0x8006E0E0, 
+    0x8006E0E0, 0x8006E0E0, 0x8006E0E0, 0x8006E0E0, 
+    0x8006E0E0, 0x8006DF00
+};
+
+
+/*********************************/
+
 /************ .data ************/
 
 s32 D_800DD060 = 0; // Currently unknown, might be a different type.
@@ -145,10 +217,10 @@ s16 D_800DD32C = 0;
 
 s8 D_800DD330 = 0;
 
-// Unused? Unsure on pointer type
-s32 *D_800DD334[6] = {
+// Unused?
+char *D_800DD334[6] = {
     NULL, NULL, NULL, // These also could just be regular zeroes and not pointers.
-    0x800E7110, 0x800E7118, 0x800E7128
+    D_800E7110, D_800E7118, D_800E7128
 };
 
 // Unused?
@@ -195,9 +267,9 @@ s32 D_800DD404 = 12;
 s32 D_800DD408 = 0x00FFFFFF;
 s32 D_800DD40C = 0x001EFFFF; // Unused?
 
-// Unused? Unsure on pointer type
-s32 *D_800DD410[3] = {
-    0x800E713C, 0x800E7140, 0x800E7144
+// Unused?
+char *D_800DD410[3] = {
+    D_800E713C, D_800E7140, D_800E7144
 };
 
 // Not sure if this is an array or a struct.
@@ -208,15 +280,9 @@ s32 D_800DD41C[2] = {
 s32 D_800DD424[2] = { 
     0, 0x0104FFFF
 };
-
-/*******************************/
-
 extern s32 D_800DFD94;
 
 /*******************************/
-
-extern f32 D_800E70A0;
-extern f32 D_800E70A4;
 
 /* Size: 0x44 bytes */
 typedef struct unk80120AC0 {
@@ -375,13 +441,13 @@ f32 func_800660DC(void) {
 void func_800660EC(f32 arg0) {
     if (0.0f < arg0 && arg0 < 90.0f && arg0 != D_80120D10) {
         D_80120D10 = arg0;
-        guPerspectiveF(&D_80120EE0, &D_80120D6C, arg0, 1.33333333f, 10.0f, D_800E70A0, 1.0f);
+        guPerspectiveF(&D_80120EE0, &D_80120D6C, arg0, 1.33333333f, 10.0f, D_800E70A0.floatLiteral, 1.0f);
         func_8006F870(&D_80120EE0, &D_80120FE0);
     }
 }
 
 void func_80066194(void) {
-    guPerspectiveF(&D_80120EE0, &D_80120D6C, 60.0f, 1.33333333f, 10.0f, D_800E70A4, 1.0f);
+    guPerspectiveF(&D_80120EE0, &D_80120D6C, 60.0f, 1.33333333f, 10.0f, D_800E70A4.floatLiteral, 1.0f);
     func_8006F870(&D_80120EE0, &D_80120FE0);
 }
 
