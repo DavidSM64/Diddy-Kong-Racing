@@ -223,7 +223,7 @@ MenuBootDrawTexture D_800DF7DC[12] = {
 
 /* Size: 0x30 bytes */
 typedef struct unk800DF83C {
-    s32* unk0; // Pointer to something.
+    char* unk0; // Pointer to ascii text.
     f32  unk4;
     f32  unk8;
     f32  unkC;
@@ -236,17 +236,18 @@ typedef struct unk800DF83C {
     f32  unk28;
 } unk800DF83C;
 
+// Title screen cinematic text
 unk800DF83C D_800DF83C[10] = {
-    { (s32*)0x800E7CB0, 14.0f, 14.5f, 16.5f, 17.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CB8, 19.0f, 19.5f, 21.5f, 22.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CC0, 24.0f, 24.5f, 26.5f, 27.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CC8, 29.0f, 29.5f, 31.5f, 32.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CD0, 35.0f, 35.5f, 37.5f, 38.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CDC, 40.0f, 40.5f, 42.5f, 43.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CE4, 45.0f, 45.5f, 47.5f, 48.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CEC, 50.0f, 50.5f, 52.5f, 53.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CF4, 57.5f, 58.0f, 60.0f, 60.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CFC, 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f }
+    { "TIMBER", 14.0f, 14.5f, 16.5f, 17.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "BUMPER", 19.0f, 19.5f, 21.5f, 22.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "CONKER", 24.0f, 24.5f, 26.5f, 27.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "TIPTUP", 29.0f, 29.5f, 31.5f, 32.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "DRUMSTICK", 35.0f, 35.5f, 37.5f, 38.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "PIPSY", 40.0f, 40.5f, 42.5f, 43.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "BANJO", 45.0f, 45.5f, 47.5f, 48.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "KRUNCH", 50.0f, 50.5f, 52.5f, 53.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "WIZPIG", 57.5f, 58.0f, 60.0f, 60.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "DIDDY", 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f }
 };
 
 s32 D_800DF9F4 = 0;
@@ -738,7 +739,8 @@ s32 D_800E0968 = 0;
 s32 D_800E096C = 0;
 s32 D_800E0970 = 0;
 s32 D_800E0974 = 0;
-u32* D_800E0978 = (u32*)0x800E7D04;
+const FloatLiteral D_800E7D04 = { 0.5f };
+f32* D_800E0978 = &D_800E7D04;
 s32 D_800E097C = 0;
 s32 D_800E0980 = 0;
 s32 D_800E0984 = 0;
@@ -1160,45 +1162,47 @@ u16 D_800E18FC[30] = {
     0x1000, 0x0000
 };
 
-// Credits text look-up table
+// List of amazing people.
 char *D_800E1938[87] = {
-    (char*)0x800E7D08, (char*)0x800E7D10, (char*)0x800E7D24, (char*)0x800E7D30, 
-    (char*)0x800E7D44, (char*)0x800E7D50, (char*)0x800E7D58, (char*)0x800E7D60, 
-    (char*)0x800E7D70, (char*)0x800E7D7C, (char*)0x800E7D88, (char*)0x800E7D94, 
-    (char*)0x800E7DA0, (char*)0x800E7DA8, (char*)0x800E7DB8, (char*)0x800E7DC0, 
-    (char*)0x800E7DD0, (char*)0x800E7DD8, (char*)0x800E7DE0, (char*)0x800E7DF0, 
-    (char*)0x800E7DFC, (char*)0x800E7E04, (char*)0x800E7E18, (char*)0x800E7E24, 
-    (char*)0x800E7E34, (char*)0x800E7E40, (char*)0x800E7E48, (char*)0x800E7E54, 
-    (char*)0x800E7E68, (char*)0x800E7E74, (char*)0x800E7E84, (char*)0x800E7E90, 
-    (char*)0x800E7E9C, (char*)0x800E7EA4, (char*)0x800E7EB0, (char*)0x800E7EBC, 
-    (char*)0x800E7EC4, (char*)0x800E7ED0, (char*)0x800E7EDC, (char*)0x800E7EEC, 
-    (char*)0x800E7F04, (char*)0x800E7F0C, (char*)0x800E7F18, (char*)0x800E7F24, 
-    (char*)0x800E7F30, (char*)0x800E7F38, (char*)0x800E7F40, (char*)0x800E7F48, 
-    (char*)0x800E7F50, (char*)0x800E7F5C, (char*)0x800E7F68, (char*)0x800E7F78, 
-    (char*)0x800E7F84, (char*)0x800E7F8C, (char*)0x800E7F98, (char*)0x800E7FA4, 
-    (char*)0x800E7FB0, (char*)0x800E7FBC, (char*)0x800E7FC8, (char*)0x800E7FD4, 
-    (char*)0x800E7FE0, (char*)0x800E7FEC, (char*)0x800E7FFC, (char*)0x800E8004, 
-    (char*)0x800E8014, (char*)0x800E8024, (char*)0x800E8034, (char*)0x800E8044, 
-    (char*)0x800E8050, (char*)0x800E8058, (char*)0x800E8064, (char*)0x800E8070, 
-    (char*)0x800E8080, (char*)0x800E8088, (char*)0x800E8094, (char*)0x800E80A8, 
-    (char*)0x800E80B4, (char*)0x800E80C0, (char*)0x800E80CC, (char*)0x800E80DC, 
-    (char*)0x800E80E8, (char*)0x800E80F4, (char*)0x800E8100, (char*)0x800E8114, 
-    (char*)0x00000000, (char*)0x00000000, (char*)0x00000000
+    "CREDITS", 
+    "Software Director", "R.Harrison", 
+    "Software Engineers", "P.Mountain", "J.Pegg", "R.Gale", 
+    "Art Director", "K.Bayliss", 
+    "3D Artists", "L.Musgrave", "K.Rabbette", "D.Smith", "J.Christensen", "B.Smyth", "P.Cunningham",
+    "Music", "D.Wise", 
+    "Sound Effects", "G.Norgate", 
+    "ALSO", 
+    "Additional Design", "M.Wakeley", 
+    "Documentation", "L.Loveday", "Liason", "E.Hochberg", 
+    "Character Voices", "K.Bayliss", "J.Christensen", "E.Fischer", "K.Rabbette", "L.Ray", 
+        "L.Schuneman", "C.Seavor", "D.Smith", "J.Stamper", "K.Stamper", "C.Sutherland",
+    "Rare Quality Assurance", "H.Ward", "G.Richards", "S.Farmer", "J.Williams", "D.Wong", 
+        "G.Jones", "M.Penny", "S.Brand", "S.Malpass", "A.Wilson", 
+    "NOA Thanks To", "M.Fukuda", "K.Lobb", "M.Kelbaugh", "A.Williams", "R.Johnson", "M.Forrest", 
+        "P.Sandhop", "H.Sterchi", "T.Hertzog", "D.Bridgham", "G.Richardson", "B.Smith", 
+    "NOA Thanks To", "NOA Tree House", "NOA Tree Branch", 
+    "NCL Thank You's", "K.Terasaki", "M.Goto", "H.Yamada", "Mario Club", 
+    "NOE Thank You's", "J.Kraft", "J.Bardakoff", 
+    "Special Thanks To", "J.Hochberg", "H.Lincoln", "M.Arakawa", 
+    "Game Director", "L.Schuneman", 
+    "Producer", "C.Stamper", 
+    "Executive Producer", "T.Stamper", 
+    NULL, NULL, NULL
 };
 
-// Credits text look-up table (time trials time sheet)
+// Developer's best times for each track
 char *D_800E1A94[20] = {
-    (char*)0x800E8120, (char*)0x800E8128, (char*)0x800E8130, (char*)0x800E8138,
-    (char*)0x800E8140, (char*)0x800E8148, (char*)0x800E8150, (char*)0x800E8158,
-    (char*)0x800E8160, (char*)0x800E8168, (char*)0x800E8170, (char*)0x800E8178,
-    (char*)0x800E8180, (char*)0x800E8188, (char*)0x800E8190, (char*)0x800E8198,
-    (char*)0x800E81A0, (char*)0x800E81A8, (char*)0x800E81B0, (char*)0x800E81B8
+/***** Dino Domain *****/ "0:53:43", "1:21:55", "0:54:13", "1:22:48",
+/** Snowflake Mountain */ "1:04:11", "1:13:51", "1:25:01", "0:55:05",
+/**** Sherbet Island ***/ "1:37:63", "1:56:60", "0:57:81", "1:28:01",
+/**** Dragon Forest ****/ "1:51:15", "1:31:80", "2:03:16", "0:58:25",
+/*** Future Fun Land ***/ "2:00:38", "2:05:68", "1:52:96", "1:55:00"
 };
 
-// Another credits text look-up table
 char *D_800E1AE4[5] = {
-    (char*)0x800E81C0, (char*)0x800E81CC, (char*)0x800E81E0, (char*)0x800E81E8, 
-    (char*)0x800E81F4, 
+    "THE END?", "TO BE CONTINUED ...", // Appears after beating the first wizpig race.
+    "THE END",                         // Appears after beating the second wizpig race.
+    "NO CHEAT", "THIS TIME.",          // Appears if you use the "WHODIDTHIS" cheat.
 };
 
 s32 D_800E1AF8[21] = {
@@ -1330,8 +1334,185 @@ s16 D_800E1E40[10] = {
 
 /************ .rodata ************/
 
-extern s32 D_800E8230;
-extern f32 D_800E8414;
+const char D_800E8200[] = " (ADV.";
+const char D_800E8208[] = "OK?";
+const char D_800E820C[] = "~";
+const char D_800E8210[] = "DEL";
+const char D_800E8214[] = "OK";
+const char D_800E8218[] = "ROM checksum %08X,%d\n"; // Used with the "DODGYROMMER" cheat.
+const char D_800E8230[] = "OK?";
+const char D_800E8234[] = "OK?";
+const char D_800E8238[] = "OK?";
+const char D_800E823C[] = "OK?";
+const char D_800E8240[] = "OK?";
+const char D_800E8244[] = "SP";
+const char D_800E8248[] = "DEL";
+const char D_800E824C[] = "OK";
+const char D_800E8250[] = "loadFrontEndItem() - Item no %d out of range 0-%d\n";
+
+// Jump table in MenuInit
+const u32 D_800E8284[] = {
+    0x80081464, 0x80081454, 0x8008158C, 0x800814C4, 
+    0x8008158C, 0x80081504, 0x800814E4, 0x8008158C, 
+    0x8008158C, 0x8008158C, 0x800814A4, 0x800814B4, 
+    0x80081474, 0x80081484, 0x80081494, 0x800814F4, 
+    0x8008158C, 0x80081514, 0x8008158C, 0x800814D4, 
+    0x80081524, 0x80081534, 0x8008158C, 0x80081544, 
+    0x80081554, 0x80081564, 0x80081574, 0x8008158C, 
+    0x80081584
+};
+
+// Jump table in MenuLoop
+const u32 D_800E82F8[] = {
+    0x80081634, 0x80081620, 0x800817AC, 0x800816AC, 
+    0x800817AC, 0x800816FC, 0x800816C0, 0x800817AC, 
+    0x800817AC, 0x800817AC, 0x80081684, 0x80081698, 
+    0x80081648, 0x8008165C, 0x80081670, 0x800816E8, 
+    0x800817AC, 0x80081710, 0x800817AC, 0x800816D4, 
+    0x80081724, 0x80081738, 0x800817AC, 0x8008174C, 
+    0x80081760, 0x80081774, 0x80081788, 0x800817AC, 
+    0x8008179C
+};
+
+// Jump table in DrawMenuText
+const u32 D_800E836C[] = {
+    0x800823E8, 0x80082454, 0x800824B8, 0x80082524, 
+    0x8008256C, 0x80082608, 0x80082760, 0x800827C0
+};
+
+const FloatLiteral D_800E838C = { 2.6f };
+const FloatLiteral D_800E8390 = { 2.17f };
+const DoubleLiteral D_800E8398 = { 510.0 };
+const DoubleLiteral D_800E83A0 = { 510.0 };
+const DoubleLiteral D_800E83A8 = { 510.0 };
+const FloatLiteral D_800E83B0 = { 0.67f };
+const FloatLiteral D_800E83B4 = { 2.83f };
+
+// Jump table in func_800853D0
+const u32 D_800E83B8[] = {
+    0x8008541C, 0x8008553C, 0x80085574, 0x80085690, 
+    0x800856DC, 0x80085728, 0x80085828, 0x80085774, 
+    0x800857C0, 0x800857F0
+};
+
+// Jump table in func_80085B9C
+const u32 D_800E83E0[] = {
+    0x80085C30, 0x80085BF8, 0x80085BF8, 0x80085C00, 
+    0x80085C00, 0x80085C08, 0x80085C14, 0x80085C24
+};
+
+// Jump table in func_800867D4
+const u32 D_800E8400[] = {
+    0x80086834, 0x80086888, 0x800868C0, 0x80086920, 
+    0x80086998
+};
+
+const FloatLiteral D_800E8414 = { 0.1f };
+
+// Jump table in func_80086AFC
+const u32 D_800E8418[] = {
+    0x80086B54, 0x80086CDC, 0x80086D54, 0x80086F74, 
+    0x80087084, 0x80087110, 0x800871C4, 0x800871C4, 
+    0x800871C4, 0x80087158
+};
+
+// Jump table in func_80087734
+const u32 D_800E8440[] = {
+    0x800878D4, 0x800878D4, 0x800878D4, 0x800878F0, 
+    0x800878BC, 0x800878F0, 0x800878E0, 0x800878F0, 
+    0x800878D4
+};
+
+// Jump table in func_80087734
+const u32 D_800E8464[] = {
+    0x80087930, 0x80087948, 0x80087948, 0x80087964, 
+    0x80087930, 0x80087964, 0x80087954, 0x80087964, 
+    0x80087948
+};
+
+// Jump table in func_80087734
+const u32 D_800E8488[] = {
+    0x800879A4, 0x800879A4, 0x800879A4, 0x80087B50, 
+    0x800879A4, 0x80087B50, 0x800879A4, 0x80087B50, 
+    0x800879BC, 0x800879BC
+};
+
+// Jump table in MenuSaveOptionsLoop
+const u32 D_800E84B0[] = {
+    0x80087D18, 0x80087D28, 0x80087D54, 0x80087D94, 
+    0x80087DAC, 0x80087DEC, 0x80087E04, 0x80087E1C
+};
+
+const DoubleLiteral D_800E84D0 = { 1.1 };
+const FloatLiteral D_800E84D8 = { 1.2f };
+const DoubleLiteral D_800E84E0 = { 0.1 };
+const DoubleLiteral D_800E84E8 = { 0.1 };
+const FloatLiteral D_800E84F0 = { 1.2f };
+
+// Jump table in func_80092188
+const u32 D_800E84F4[] = {
+    0x8009246C, 0x8009251C, 0x80092740, 0x8009287C, 
+    0x8009287C
+};
+
+// Jump table in func_80094D28
+const u32 D_800E8508[] = {
+    0x80094DD0, 0x80094FB0, 0x80095084, 0x80095588, 
+    0x80095110, 0x800951CC
+};
+
+const FloatLiteral D_800E8520 = { 1.2f };
+
+// Jump table in func_80095624
+const u32 D_800E8524[] = {
+    0x80095650, 0x800956C8, 0x800956C8, 0x80095668, 
+    0x80095650, 0x80095668, 0x80095680, 0x80095698, 
+    0x800956B0
+};
+
+// Jump table in func_80095728
+const u32 D_800E8548[] = {
+    0x80095948, 0x80095964, 0x80095B34, 0x80095D30, 
+    0x80095D50, 0x80095EA8, 0x80095EC8, 0x800964AC, 
+    0x800964DC
+};
+
+const FloatLiteral D_800E856C = { 0.1f };
+const FloatLiteral D_800E8570 = { 0.075f };
+
+// Jump table in MenuCreditsLoop
+const u32 D_800E8574[] = {
+    0x8009BA98, 0x8009BAD8, 0x8009BB08, 0x8009BB48, 
+    0x8009BB9C
+};
+
+// Jump table in func_8009CFEC
+const u32 D_800E8588[] = {
+    0x8009D0B8, 0x8009D104, 0x8009D0C8, 0x8009D0D8, 
+    0x8009D0E8, 0x8009D0F8
+};
+
+// Jump table in func_8009D360
+const u32 D_800E85A0[] = {
+    0x8009D944, 0x8009D944, 0x8009D944, 0x8009D91C, 
+    0x8009D8F0, 0x8009D8D4, 0x8009D8D4, 0x8009D8D4, 
+    0x8009D618, 0x8009D638, 0x8009D7A0, 0x8009D840, 
+    0x8009D968, 0x8009D998, 0x8009D9B0, 0x8009D9B0
+};
+
+// Jump table in func_8009DB3C
+const u32 D_800E85E0[] = {
+    0x8009DC60, 0x8009DEF0, 0x8009E37C, 0x8009E37C, 
+    0x8009DFB0, 0x8009DFEC, 0x8009E098, 0x8009E194, 
+    0x8009E23C, 0x8009E37C, 0x8009DC60
+};
+
+// Jump table in func_8009DB3C
+const u32 D_800E860C[] = {
+    0x8009E2D0, 0x8009E2F4, 0x8009E354, 0x8009E354, 
+    0x8009E314, 0x8009E354, 0x8009E314, 0x8009E2E4, 
+    0x8009E354, 0x8009E334
+};
 
 /*********************************/
 
@@ -2157,7 +2338,7 @@ void func_80086A48(s32 arg0) {
     temp = D_80126BD4;
     temp2 = D_80126BE4;
     while (arg0 > 0) {
-        temp3 = D_800E8414;
+        temp3 = D_800E8414.floatLiteral;
         if (D_80126A08 > 0) {
             D_80126BDC = D_80126BDC + temp3 * (temp - D_80126BDC);
         }
@@ -2575,7 +2756,7 @@ void func_8008B20C(s32 arg0) {
             if (osTvType == 0) {
                 temp = 0xEA;
             }
-            func_800C4440(&D_801263A0, 0xA0, temp, &D_800E8230, 0xC);
+            func_800C4440(&D_801263A0, 0xA0, temp, D_800E8230 /* "OK?" */, 0xC);
         }
         func_8007B3D0(&D_801263A0);
         func_800660EC(40.0f);
