@@ -32,6 +32,8 @@ void __osPiRelAccess(void)
 	osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
 }
 
-// Used with _Litob.s. Please move this later!
+// Used with _Litob.s. Please move these later!
 char D_800E4920[20] = "0123456789abcdef"; // lowercase hex digits
 char D_800E4934[20] = "0123456789ABCDEF"; // uppercase hex digits
+
+
