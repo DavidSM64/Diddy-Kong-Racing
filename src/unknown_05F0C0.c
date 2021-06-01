@@ -15,4 +15,12 @@ s16 D_800DCE40[16] = {
 
 /*******************************/
 
+/************ .rodata ************/
+
+// In func_8005E4C0
+const DoubleLiteral D_800E6AA0 = { 0.3 };
+const DoubleLiteral D_800E6AA8 = { 700.0 };
+
+/*********************************/
+
 GLOBAL_ASM("asm/non_matchings/unknown_05F0C0/func_8005E4C0.s")

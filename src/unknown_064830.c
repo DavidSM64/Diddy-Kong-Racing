@@ -87,8 +87,31 @@ s32 D_800DD028[10] = {
     0x00000000, 0x00000000
 };
 
-
 /*******************************/
+
+/************ .rodata ************/
+
+// Jump table in alFxParamHdl
+const u32 D_800E6E70[] = {
+    0x80063FE8, 0x8006401C, 0x8006407C, 0x80064050, 
+    0x800640A8, 0x800640D4, 0x80064144, 0x800641C4
+};
+
+const FloatLiteral D_800E6E90 = { 8.320827f };
+const FloatLiteral D_800E6E94 = { 0.04680453f };
+
+const DoubleLiteral D_800E6E98 = { 0.0f }; // Probably a file boundary.
+
+// Jump table in alFxNew
+const u32 D_800E6EA0[] = {
+    0x80064AD8, 0x80064AE4, 0x80064AFC, 0x80064B08, 
+    0x80064AF0, 0x80064B14
+};
+
+const FloatLiteral D_800E6EB8 = { 8.320827f };
+const FloatLiteral D_800E6EBC = { 0.04680453f };
+
+/*********************************/
 
 extern s32 alAuxBusPull;
 extern s32 alAuxBusParam;

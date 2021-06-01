@@ -330,6 +330,74 @@ u8* gzip_inflate_output = NULL;
 
 /*******************************/
 
+/************ .rodata ************/
+
+const char D_800E9160[] = "\nCouldn't find a block to pick wave details from.\nUsing block 0 as default.";
+const char D_800E91AC[] = "\n\nBlock may be specified using 'P' on water group node.";
+const char D_800E91E4[] = "\nError :: can not remove a wave swell object which doesn't exist !";
+const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
+const char D_800E9260[] = "\nError :: can not add another wave swell, reached limit of %d.";
+
+const FloatLiteral D_800E92A0 = { 10000.0f };
+const FloatLiteral D_800E92A4 = { -10000.0f };
+const FloatLiteral D_800E92A8 = { 6.64f };
+const FloatLiteral D_800E92AC = { 89128.961f };
+const FloatLiteral D_800E92B0 = { 6.5333333f };
+const FloatLiteral D_800E92B4 = { 89128.961f};
+const FloatLiteral D_800E92B8 = { 6.64f };
+const FloatLiteral D_800E92BC = { 89128.961f };
+const FloatLiteral D_800E92C0 = { 6.5333333f };
+const FloatLiteral D_800E92C4 = { 89128.961f };
+
+// This is probably a file boundary.
+const DoubleLiteral D_800E92C8 = { 0.0 };
+
+// Jump table in func_800C01D8
+const u32 D_800E92D0[] = {
+    0x800C0310, 0x800C0320, 0x800C0370, 0x800C03C0, 
+    0x800C03D0, 0x800C0420, 0x800C0470
+};
+
+// Jump table in func_800C0494
+const u32 D_800E92EC[] = {
+    0x800C056C, 0x800C0580, 0x800C0580, 0x800C0594, 
+    0x800C0580, 0x800C0580, 0x800C05A8
+};
+
+const FloatLiteral D_800E9308 = { 1.4f };
+const FloatLiteral D_800E930C = { 1.2f };
+
+// Jump table in func_800C05C8
+const u32 D_800E9310[] = {
+    0x800C0680, 0x800C0694, 0x800C06A8, 0x800C06BC, 
+    0x800C06D0, 0x800C06E4, 0x800C06F8
+};
+
+const FloatLiteral D_800E932C = { 1.2f };
+
+// Jump table in func_800C38B4
+const u32 D_800E9330[] = {
+    0x800C3958, 0x800C3984, 0x800C3A30, 0x800C3AA8,
+    0x800C3ADC, 0x800C3B00, 0x800C3B2C, 0x800C3B50,
+    0x800C3B88, 0x800C3BA0
+};
+
+// This is probably a file boundary.
+const DoubleLiteral D_800E9358 = { 0.0 };
+
+// Jump table in func_800C45A4
+const u32 D_800E9360[] = {
+    0x800C4A88, 0x800C4A78, 0x800C4AD0, 0x800C4AE8, 
+    0x800C4ADC, 0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 
+    0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 
+    0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 
+    0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 
+    0x800C4AE8, 0x800C4AE8, 0x800C4AE8, 0x800C4A6C
+};
+
+
+/*********************************/
+
 /************ .bss ************/
 
 extern s32 D_8012A0D8;

@@ -12,6 +12,14 @@ s16 D_800DD050 = 0;
 
 extern s32* D_80065D98;
 
+/************ .rodata ************/
+
+// In func_80065E30
+const char D_800E6ED0[] = "WARNING: Stack overflow/underflow!!!\n";
+
+/*********************************/
+
+
 /************ .bss ************/
 
 extern s32* D_8011D750;

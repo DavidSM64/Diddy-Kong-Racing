@@ -12,24 +12,51 @@ s8  D_800DE778 = 2;
 
 /* Size: 0x08 bytes */
 typedef struct unk800DE77C {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
+    /* 0x00 */ s32 width;
+    /* 0x04 */ s32 height;
 } unk800DE77C;
 
-extern unk800DE77C D_800DE77C[8] = {
-    { 0x140, 0xF0 },
-    { 0x140, 0xF0 },
-    { 0x280, 0xF0 },
-    { 0x280, 0xF0 },
-    { 0x280, 0x1E0 },
-    { 0x280, 0x1E0 },
-    { 0x280, 0x1E0 },
-    { 0x280, 0x1E0 }
+// Video mode resolutions
+unk800DE77C D_800DE77C[8] = {
+    { 320, 240 },
+    { 320, 240 },
+    { 640, 240 },
+    { 640, 240 },
+    { 640, 480 },
+    { 640, 480 },
+    { 640, 480 },
+    { 640, 480 }
 };
 
 s32 D_800DE7BC = 0; // Currently unknown, might be a different type.
 
 /*******************************/
+
+/************ .rodata ************/
+
+const char D_800E7990[] = "320 by 240 Point sampled, Non interlaced.\n";
+const char D_800E79BC[] = "320 by 240 Anti-aliased, Non interlaced.\n";
+const char D_800E79EC[] = "640 by 240 Point sampled, Non interlaced.\n";
+const char D_800E7A10[] = "640 by 240 Anti-aliased, Non interlaced.\n";
+const char D_800E7A40[] = "640 by 480 Point sampled, Interlaced.\n";
+const char D_800E7A68[] = "640 by 480 Anti-aliased, Interlaced.\n";
+const char D_800E7A90[] = "640 by 480 Point sampled, Interlaced, De-flickered.\n";
+const char D_800E7AC8[] = "640 by 480 Anti-aliased, Interlaced, De-flickered.\n";
+
+const FloatLiteral D_800E7AFC = { 1.21212125f };
+const FloatLiteral D_800E7B00 = { 1.1f };
+const FloatLiteral D_800E7B04 = { 1.33333333f };
+const FloatLiteral D_800E7B08 = { 1.33333333f };
+
+// Jump table in func_8007A550
+const u32 D_800E7B0C[] = {
+    0x8007A5AC, 0x8007A5D0, 0x8007A658, 0x8007A6C0, 
+    0x8007A728, 0x8007A750, 0x8007A778, 0x8007A7A0
+};
+
+/*********************************/
+
+/************ .bss ************/
 
 extern s32 D_801262B0[2];
 extern s32 D_801262B8[2];
@@ -37,6 +64,8 @@ extern s32 D_801262C8;
 extern s32 D_801262CC;
 extern s8  D_80126308;
 extern s8  D_80126309;
+
+/******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_07AF10/func_8007A310.s")
 
@@ -51,8 +80,8 @@ s32 func_8007A4CC(void) {
 
 /* Unused? */
 void func_8007A4DC(s32 arg0) {
-    D_801262B0[arg0] = D_800DE77C[D_801262CC & 0x07].unk0;
-    D_801262B8[arg0] = D_800DE77C[D_801262CC & 0x07].unk4;
+    D_801262B0[arg0] = D_800DE77C[D_801262CC & 0x07].width;
+    D_801262B8[arg0] = D_800DE77C[D_801262CC & 0x07].height;
 }
 
 s32 func_8007A520(void) {
