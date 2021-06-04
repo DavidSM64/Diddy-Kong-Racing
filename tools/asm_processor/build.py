@@ -36,9 +36,6 @@ try:
         opt_flags.append('-mips1')
     asmproc_flags = opt_flags + [in_file, '--input-enc', 'utf-8', '--output-enc', 'euc-jp']
     compile_cmdline = compiler + compile_args + ['-I', in_dir, '-o', out_file, preprocessed_file.name]
-    
-    print(asmproc_flags)
-
     asm_processor.run(asmproc_flags, outfile=preprocessed_file)
     try:
         subprocess.check_call(compile_cmdline)
