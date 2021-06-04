@@ -32,8 +32,12 @@ opt_flags = [x for x in compile_args if x in ['-g3', '-g', '-O1', '-O2', '-frame
 preprocessed_file = tempfile.NamedTemporaryFile(prefix='preprocessed', suffix='.c', delete=False)
 
 try:
+    if '-O2' in opt_flags:
+        opt_flags.append('-mips1')
     asmproc_flags = opt_flags + [in_file, '--input-enc', 'utf-8', '--output-enc', 'euc-jp']
     compile_cmdline = compiler + compile_args + ['-I', in_dir, '-o', out_file, preprocessed_file.name]
+    
+    print(asmproc_flags)
 
     asm_processor.run(asmproc_flags, outfile=preprocessed_file)
     try:
