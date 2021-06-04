@@ -66,6 +66,7 @@ def adjustAsmFile(asmFilepath, refs):
                 rodata += 'glabel ' + ref[1] + '\n'
                 rodata += '.' + ref[0] + ' ' + ref[2] + '\n'
             elif ref[0] == 'double' or ref[0] == 'float':
+                lateRodata += 'glabel ' + ref[1] + '\n'
                 lateRodata += '.' + ref[0] + ' ' + ref[2] + '\n'
             elif ref[0] == 'table':
                 replaces.append((ref[1], 'jpt' + ref[1][1:]))
@@ -84,6 +85,7 @@ def adjustAsmFile(asmFilepath, refs):
                                 asmLines.insert(i, 'glabel L' + word)
                                 break
                     doneWords.append(word)
+                lateRodata += 'glabel ' + ref[1] + '\n'
                 lateRodata += tblWords + '\n'
             if index < len(refs) - 1 and ref[0] != 'double' and refs[index + 1][0] == 'double':
                 addPadding = False
