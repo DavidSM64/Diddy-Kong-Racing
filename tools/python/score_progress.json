@@ -1,0 +1,335 @@
+[
+    {
+        "msg": "We are collecting the first balloon on Timber's Island.",
+        "rewards": { "Balloon": 1 },
+        "type": "Task"
+    },
+    {
+        "msg": "We are collecting the second balloon on Timber's Island.",
+        "rewards": { "Balloon": 1 },
+        "type": "Task"
+    },
+    {
+        "msg": "We are collecting the third balloon on Timber's Island.",
+        "rewards": { "Balloon": 1 },
+        "type": "Task"
+    },
+    {
+        "msg": "We are collecting the fourth balloon on Timber's Island.",
+        "rewards": { "Balloon": 1 },
+        "type": "Task"
+    },
+    {
+        "msg": "We are racing in Ancient Lake.",
+        "rewards": { "Balloon": 1, "Key": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Fossil Canyon.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Jungle Falls.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Hot Top Volcano.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing the dinosaur boss Trickytops",
+        "rewards": {},
+        "type": "Task"
+    },
+    {
+        "msg": "We are collecting eggs in Fire Mountain.",
+        "rewards": { "TTAmulet": 1 },
+        "type": "Collecting",
+        "collecting": { "name": "Egg", "max": 3 }
+    },
+    {
+        "msg": "We are collecting silver coins in Ancient Lake.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Fossil Canyon.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Jungle Falls.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Hot Top Volcano.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are racing in the rematch against Trickytops.",
+        "rewards": { "WizpigAmulet": 1 },
+        "type": "Task"
+    },
+    {
+        "msg": "We are participating in the Trophy Race of Dino Domain.",
+        "rewards": { "Trophy": 1 },
+        "type": "TrophyRace"
+    },
+    {
+        "msg": "We are racing Taj in the Car Challenge.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Everfrost Peak.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Walrus Cove.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Snowball Valley.",
+        "rewards": { "Balloon": 1, "Key": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Frosty Village.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing the walrus boss Bluey.",
+        "rewards": {},
+        "type": "Task"
+    },
+    {
+        "msg": "We are battling in Icicle Pyramid.",
+        "rewards": { "TTAmulet": 1 },
+        "type": "Battle"
+    },
+    {
+        "msg": "We are collecting silver coins in Everfrost Peak.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Walrus Cove.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Snowball Valley.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Frosty Village.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are racing in the rematch against Bluey.",
+        "rewards": { "WizpigAmulet": 1 },
+        "type": "Task"
+    },
+    {
+        "msg": "We are participating in the Trophy Race of Snowflake Mountain.",
+        "rewards": { "Trophy": 1 },
+        "type": "TrophyRace"
+    },
+    {
+        "msg": "We are racing Taj in the Hover Challenge.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Whale Bay.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Crescent Island.",
+        "rewards": { "Balloon": 1, "Key": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Pirate Lagoon.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Treasure Caves.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing the octopus boss Bubbler.",
+        "rewards": {},
+        "type": "Race"
+    },
+    {
+        "msg": "We are battling in Darkwater Beach.",
+        "rewards": { "TTAmulet": 1 },
+        "type": "Battle"
+    },
+    {
+        "msg": "We are collecting silver coins in Whale Bay.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Crescent Island.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Pirate Lagoon.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Treasure Caves.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are racing in the rematch against Bubbler.",
+        "rewards": { "WizpigAmulet": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are participating in the Trophy Race of Sherbet Island.",
+        "rewards": { "Trophy": 1 },
+        "type": "TrophyRace"
+    },
+    {
+        "msg": "We are racing Taj in the Plane Challenge.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Windmill Plains.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Greenwood Village.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Boulder Canyon.",
+        "rewards": { "Balloon": 1, "Key": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Haunted Woods.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing the dragon boss Smokey.",
+        "rewards": {},
+        "type": "Race"
+    },
+    {
+        "msg": "We are collecting bananas in Smokey Castle.",
+        "rewards": { "TTAmulet": 1 },
+        "type": "Collecting",
+        "collecting": { "name": "Banana", "max": 10 }
+    },
+    {
+        "msg": "We are collecting silver coins in Windmill Plains.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Greenwood Village.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Boulder Canyon.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Haunted Woods.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are racing in the rematch against Smokey.",
+        "rewards": { "WizpigAmulet": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are participating in the Trophy Race of Dragon Forest.",
+        "rewards": { "Trophy": 1 },
+        "type": "TrophyRace"
+    },
+    {
+        "msg": "We are racing the wizard pig boss Wizpig.",
+        "rewards": {},
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Spacedust Alley.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Darkmoon Caverns.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Spaceport Alpha.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are racing in Star City.",
+        "rewards": { "Balloon": 1 },
+        "type": "Race"
+    },
+    {
+        "msg": "We are collecting silver coins in Spacedust Alley.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Darkmoon Caverns.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Spaceport Alpha.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are collecting silver coins in Star City.",
+        "rewards": { "Balloon": 1 },
+        "type": "SilverCoinsRace"
+    },
+    {
+        "msg": "We are racing in the rematch against Wizpig.",
+        "rewards": {},
+        "type": "Race"
+    },
+    {
+        "msg": "We are participating in the Trophy Race of Future Fun Land.",
+        "rewards": {},
+        "type": "TrophyRace"
+    }
+]
+
