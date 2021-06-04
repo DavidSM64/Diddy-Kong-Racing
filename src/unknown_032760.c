@@ -116,14 +116,8 @@ const u32 D_800E5F80[] = {
     0x80033BB4
 };
 
-// Not sure if these are actually strings. Might just be padding.
-const char D_800E5F94[] = "";
-const char D_800E5F98[] = "";
-const char D_800E5F9C[] = "";
-
-const char D_800E5FA0[] = "Illegal door no!!!\n";
-const char D_800E5FB4[] = "Illegal door no!!!\n";
-const char D_800E5FC8[] = "Illegal door no!!!\n";
+// File boundary padding
+const s32 padding[] = { 0, 0, 0 };
 
 
 /*********************************/

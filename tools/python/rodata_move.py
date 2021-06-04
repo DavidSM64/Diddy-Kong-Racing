@@ -57,12 +57,16 @@ def adjustAsmFile(asmFilepath, refs):
             raise Exception('Cannot add to file "' + asmFilepath + '" since it already has .late_rodata in it!')
         asmLines = asmFile.split('\n')
         replaces = []
-        cur = 0
-        asmLines.insert(cur, '.late_rodata'); cur += 1
+        
+        rodata = ''
+        lateRodata = ''
+        
         for index, ref in enumerate(refs):
-            asmLines.insert(cur, 'glabel ' + ref[1]); cur += 1
-            if ref[0] == 'double' or ref[0] == 'float' or ref[0] == 'asciz':
-                asmLines.insert(cur, '.' + ref[0] + ' ' + ref[2]); cur += 1
+            if ref[0] == 'asciz':
+                rodata += 'glabel ' + ref[1] + '\n'
+                rodata += '.' + ref[0] + ' ' + ref[2] + '\n'
+            elif ref[0] == 'double' or ref[0] == 'float':
+                lateRodata += '.' + ref[0] + ' ' + ref[2] + '\n'
             elif ref[0] == 'table':
                 replaces.append((ref[1], 'jpt' + ref[1][1:]))
                 tblWords = '.word L' + ref[2][0]
@@ -80,7 +84,7 @@ def adjustAsmFile(asmFilepath, refs):
                                 asmLines.insert(i, 'glabel L' + word)
                                 break
                     doneWords.append(word)
-                asmLines.insert(cur, tblWords); cur += 1
+                lateRodata += tblWords + '\n'
             if index < len(refs) - 1 and ref[0] != 'double' and refs[index + 1][0] == 'double':
                 addPadding = False
                 if ref[0] == 'float':
@@ -92,9 +96,13 @@ def adjustAsmFile(asmFilepath, refs):
                     else:
                         addPadding = tableSizeAlignment == 0 or tableSizeAlignment == 2
                 if addPadding:
-                    asmLines.insert(cur, '.word 0 # Padding'); cur += 1 # Insert padding before the next double.
-        asmLines.insert(cur, ''); cur += 1
-        asmLines.insert(cur, '.text'); cur += 1
+                    lateRodata += '.word 0 # Padding\n' # Insert padding before the next double.
+        outData = ''
+        if len(rodata) > 0:
+            outData += '.rdata\n' + rodata + '\n'
+        if len(lateRodata) > 0:
+            outData += '.late_rodata\n' + lateRodata + '\n'
+        asmLines.insert(0, outData + '.text');
         asmOut = '\n'.join(asmLines)
         for rep in replaces:
             asmOut = asmOut.replace(rep[0], rep[1])
@@ -128,20 +136,20 @@ def convertFile(cFilepath):
             if lineType == 0:
                 pass
             elif lineType == 1: # Literal string
-                # try:
-                #     strMatch = getMatches(line, C_STRING_REGEX)[0]
-                #     strLabel = strMatch[1][0]
-                #     strValue = strMatch[1][1]
-                #     # Check if the string has a reference somewhere
-                #     getAsmFileReferenceForLabel(filename, strLabel) 
-                #     hasProcessed = True
-                #     bottomLine = curLine
-                #     asmData.insert(0, ('asciz', strLabel, strValue, bottomLine))
-                # except:
-                print('Currently cannot process literal string: ')
-                print(line)
-                stoppedPremature = True
-                break
+                try:
+                    strMatch = getMatches(line, C_STRING_REGEX)[0]
+                    strLabel = strMatch[1][0]
+                    strValue = strMatch[1][1]
+                    # Check if the string has a reference somewhere
+                    getAsmFileReferenceForLabel(filename, strLabel) 
+                    hasProcessed = True
+                    bottomLine = curLine
+                    asmData.insert(0, ('asciz', strLabel, strValue, bottomLine))
+                except:
+                    print('Currently cannot process literal string: ')
+                    print(line)
+                    stoppedPremature = True
+                    break
             elif lineType == 2: # Literal float
                 floatMatch = getMatches(line, C_FLOAT_REGEX)[0]
                 floatLabel = floatMatch[1][0]
@@ -205,8 +213,9 @@ def convertFile(cFilepath):
             for ref in asmRefs[asmFilepath]:
                 asmBottomLine = min(asmBottomLine, ref[3])
             if ONLY_THE_FIRST_ASM_FILE:
-                # print(bottomLine, asmBottomLine)
+                print(bottomLine, asmBottomLine)
                 bottomLine = asmBottomLine
+                stoppedPremature = True
                 break
             # print(asmRefs)
         if hasProcessed and not NO_OUTPUT:
