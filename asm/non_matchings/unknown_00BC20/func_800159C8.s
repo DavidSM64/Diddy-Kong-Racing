@@ -1,3 +1,22 @@
+.late_rodata
+glabel D_800E55B8
+.double 0.3
+glabel D_800E55C0
+.double 0.3
+glabel D_800E55C8
+.double 0.8
+glabel D_800E55D0
+.double 0.1
+glabel D_800E55D8
+.double 0.1
+glabel D_800E55E0
+.double 0.3
+glabel D_800E55E8
+.double 0.3
+glabel D_800E55F0
+.double 0.1
+
+.text
 glabel func_800159C8
 /* 0165C8 800159C8 27BDFF60 */  addiu $sp, $sp, -0xa0
 /* 0165CC 800159CC AFBF0014 */  sw    $ra, 0x14($sp)

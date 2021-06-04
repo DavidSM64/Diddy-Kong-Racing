@@ -135,7 +135,7 @@ def convertFile(cFilepath):
                 #     # Check if the string has a reference somewhere
                 #     getAsmFileReferenceForLabel(filename, strLabel) 
                 #     hasProcessed = True
-                #     bottomLine = curLine - 1
+                #     bottomLine = curLine
                 #     asmData.insert(0, ('asciz', strLabel, strValue, bottomLine))
                 # except:
                 print('Currently cannot process literal string: ')
@@ -151,7 +151,7 @@ def convertFile(cFilepath):
                     stoppedPremature = True
                     break
                 hasProcessed = True
-                bottomLine = curLine - 1
+                bottomLine = curLine
                 asmData.insert(0, ('float', floatLabel, floatValue, bottomLine))
             elif lineType == 3: # Literal double
                 floatMatch = getMatches(line, C_FLOAT_REGEX)[0]
@@ -162,7 +162,7 @@ def convertFile(cFilepath):
                     stoppedPremature = True
                     break
                 hasProcessed = True
-                bottomLine = curLine - 1
+                bottomLine = curLine
                 asmData.insert(0, ('double', floatLabel, floatValue, bottomLine))
             elif lineType == 4: # Jump table bottom
                 tableBottom = curLine
@@ -173,7 +173,7 @@ def convertFile(cFilepath):
                 for val in range(1, len(tblMatch)):
                     tblValues.append(tblMatch[val][0][2:])
                 hasProcessed = True
-                bottomLine = curLine - 1
+                bottomLine = curLine
                 asmData.insert(0, ('table', tblLabel, tblValues, bottomLine))
                 tableBottom = -1
             else:
@@ -181,22 +181,25 @@ def convertFile(cFilepath):
             curLine -= 1
         asmRefs = {}
         asmBottomLine = 999999
-        for i in range(0, len(asmData)):
+        for i in reversed(range(0, len(asmData))):
             data = asmData[i]
             try:
                 ref = getAsmFileReferenceForLabel(filename, data[1])
                 if ref not in asmRefs:
                     asmRefs[ref] = []
                 asmRefs[ref].append(data)
-                asmBottomLine = min(asmBottomLine, asmRefs[ref][3])
+                asmBottomLine = min(asmBottomLine, data[3])
             except Exception as e:
+                # raise e
                 print(e)
                 if asmBottomLine != 999999:
+                    print(bottomLine, asmBottomLine)
                     bottomLine = asmBottomLine
                 stoppedPremature = True
                 break
-        for asmFilepath in reversed(asmRefs):
+        for asmFilepath in asmRefs:
             print('Processing: ' + asmFilepath)
+            asmRefs[asmFilepath].reverse()
             asmBottomLine = 999999
             adjustAsmFile(asmFilepath, asmRefs[asmFilepath])
             for ref in asmRefs[asmFilepath]:
@@ -218,7 +221,11 @@ def convertFile(cFilepath):
 
 parser = argparse.ArgumentParser(description="")
 parser.add_argument("file", help=".c file that contains rodata to move.")
+parser.add_argument("-s", "--single", help="Only do one ASM function in the file", action='store_true')
 args = parser.parse_args()
+
+if args.single is not None and args.single:
+    ONLY_THE_FIRST_ASM_FILE = True
 
 if args.file.endswith('.c'):
     convertFile(args.file)
