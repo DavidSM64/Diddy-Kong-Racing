@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E932C
+.float 1.2
+
+.text
 glabel func_800C1EE8
 /* 0C2AE8 800C1EE8 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 0C2AEC 800C1EEC 3C03800E */  lui   $v1, %hi(D_800E31B0) # $v1, 0x800e
