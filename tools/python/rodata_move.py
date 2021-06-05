@@ -12,6 +12,9 @@ C_JMPTABLE_REGEX = r"(?:(?:D_)|0x)[0-9A-Fa-f]{8}"
 NO_OUTPUT = False               # If True, then no files will be changed.
 ONLY_THE_FIRST_ASM_FILE = False # If True, then only one asm file will be changed.
 
+#ASM_DIRECTORY = 'asm/non_matchings/'
+ASM_DIRECTORY = 'lib/asm/non_matchings/'
+
 def getMatches(string, regex):
     out = []
     matches = re.finditer(regex, string, re.MULTILINE)
@@ -36,7 +39,7 @@ def getLineType(line):
         return 0
         
 def getAsmFileReferenceForLabel(filename, label):
-    searchLabel = 'asm/non_matchings/'+filename
+    searchLabel = ASM_DIRECTORY + filename
     possibleFiles = []
     search = os.popen('fgrep -r "' + label + '"').read().split('\n')
     for line in search:
