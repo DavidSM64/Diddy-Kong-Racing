@@ -22,29 +22,6 @@ s16 D_800DCE20[16] = {
 
 /*******************************/
 
-/************ .rodata ************/
-
-const DoubleLiteral D_800E6A30 = { 0.3 };
-const DoubleLiteral D_800E6A38 = { -0.1 };
-const DoubleLiteral D_800E6A40 = { 0.1 };
-const DoubleLiteral D_800E6A48 = { 700.0 };
-const DoubleLiteral D_800E6A50 = { 0.3 };
-const DoubleLiteral D_800E6A58 = { -0.3 };
-const DoubleLiteral D_800E6A60 = { 0.27 };
-const DoubleLiteral D_800E6A68 = { 0.45 };
-
-// Jump table in func_8005D820
-const u32 D_800E6A70[] = {
-    0x8005DBEC, 0x8005DC10, 0x8005DC48, 0x8005DC64, 
-    0x8005DCBC, 0x8005DCE8
-};
-
-const DoubleLiteral D_800E6A88 = { -0.1 };
-const DoubleLiteral D_800E6A90 = { 0.1 };
-const DoubleLiteral D_800E6A98 = { 700.0 };
-
-/*********************************/
-
 GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005D0D0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005D820.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005E204.s")
