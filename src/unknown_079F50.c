@@ -105,14 +105,6 @@ const char D_800E7928[] = "\toutput_buff_size\t\t= %u\n";
 const char D_800E7944[] = "\tdata_ptr\t\t= %p\n";
 const char D_800E7958[] = "\tdata_size\t\t= %u\n";
 
-const FloatLiteral D_800E796C = { 468750.0f };
-
-// Jump table in __scSchedule
-const u32 D_800E7970[] = {
-    0x8007A2A4, 0x8007A248, 0x8007A1BC, 0x8007A2A4, 
-    0x8007A2A4, 0x8007A248, 0x8007A248
-};
-
 /*********************************/
 
 extern OSViMode D_800E3900[];//osViModeTable;
@@ -211,7 +203,6 @@ extern f32 D_800DE744;
 extern f32 D_800DE748;
 extern f32 D_800DE74C;
 extern u32 D_800DE750;
-extern f32 D_800E796C;
 extern u32 D_80126124;
 void func_80079B44(OSSched *sc){
     OSScTask *t, *sp = 0, *dp = 0;
@@ -232,7 +223,7 @@ void func_80079B44(OSSched *sc){
         if(delta < 0){
             tmp1 += 4294967296.0;
         }
-        D_800DE74C = tmp1*60.0f/D_800E796C;
+        D_800DE74C = tmp1*60.0f/468750.0f;
         D_800DE744 = D_800DE744 + D_800DE74C;
         if(D_800DE740 < D_800DE74C){
             D_800DE740 = D_800DE74C;
