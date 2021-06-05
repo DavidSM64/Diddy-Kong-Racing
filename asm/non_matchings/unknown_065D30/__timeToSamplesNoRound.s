@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E6EC0
+.double 1000000.0
+
+.text
 glabel __timeToSamplesNoRound
 /* 066354 80065754 8C8E0044 */  lw    $t6, 0x44($a0)
 /* 066358 80065758 44852000 */  mtc1  $a1, $f4

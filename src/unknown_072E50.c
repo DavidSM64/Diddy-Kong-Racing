@@ -47,16 +47,6 @@ const char D_800E7728[] = "WARNING : No Eprom\n";
 
 const char D_800E773C[] = "DKRACING-GHOSTS\0";
 const char D_800E7750[] = "warning: corrupt ghost\n";
-const char D_800E7768[] = "DKRACING-GHOSTS\0";
-const char D_800E777C[] = "DKRACING-GHOSTS\0";
-const char D_800E7790[] = "DKRACING-GHOSTS\0";
-const char D_800E77A4[] = "DKRACING-GHOSTS\0";
-const char D_800E77B8[] = "DKRACING-GHOSTS\0";
-const char D_800E77CC[] = "DKRACING-GHOSTS\0";
-
-const DoubleLiteral D_800E77E0 = { 0.1 };
-const DoubleLiteral D_800E77E8 = { 3.6 };
-const DoubleLiteral D_800E77F0 = { 490.0 };
 
 /*********************************/
 

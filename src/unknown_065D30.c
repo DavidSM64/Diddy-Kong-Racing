@@ -4,13 +4,6 @@
 #include "types.h"
 #include "macros.h"
 
-/************ .rodata ************/
-
-// In __timeToSamplesNoRound
-const DoubleLiteral D_800E6EC0 = { 1000000.0 };
-
-/*********************************/
-
 GLOBAL_ASM("asm/non_matchings/unknown_065D30/alSynNew.s")
 GLOBAL_ASM("asm/non_matchings/unknown_065D30/alAudioFrame.s")
 GLOBAL_ASM("asm/non_matchings/unknown_065D30/__allocParam.s")
