@@ -112,17 +112,6 @@ const char D_800E91E4[] = "\nError :: can not remove a wave swell object which d
 const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
 const char D_800E9260[] = "\nError :: can not add another wave swell, reached limit of %d.";
 
-const FloatLiteral D_800E92A0 = { 10000.0f };
-const FloatLiteral D_800E92A4 = { -10000.0f };
-const FloatLiteral D_800E92A8 = { 6.64f };
-const FloatLiteral D_800E92AC = { 89128.961f };
-const FloatLiteral D_800E92B0 = { 6.5333333f };
-const FloatLiteral D_800E92B4 = { 89128.961f};
-const FloatLiteral D_800E92B8 = { 6.64f };
-const FloatLiteral D_800E92BC = { 89128.961f };
-const FloatLiteral D_800E92C0 = { 6.5333333f };
-const FloatLiteral D_800E92C4 = { 89128.961f };
-
 /*********************************/
 
 /************ .bss ************/
