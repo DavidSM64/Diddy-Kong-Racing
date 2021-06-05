@@ -1,3 +1,12 @@
+.late_rodata
+glabel D_800E5E78
+.double 300.0
+glabel D_800E5E80
+.double -300.0
+glabel D_800E5E88
+.double -300.0
+
+.text
 glabel func_80026430
 /* 027030 80026430 27BDFEF0 */  addiu $sp, $sp, -0x110
 /* 027034 80026434 3C0E8012 */  lui   $t6, %hi(D_8011D49E) # $t6, 0x8012
