@@ -1,3 +1,22 @@
+.rdata
+glabel D_800E9560
+.asciz "samples >= 0"
+.ascii "\0\0\0" # padding
+glabel D_800E9570
+.asciz "env.c"
+.ascii "\0\0" # padding
+glabel D_800E9578
+.asciz "samples <= AL_MAX_RSP_SAMPLES"
+.ascii "\0\0" # padding
+glabel D_800E9598
+.asciz "env.c"
+.ascii "\0\0" # padding
+
+.late_rodata
+glabel jpt_800E95B0
+.word L800CA870, L800CA8C4, L800CA8C4, L800CA8C4, L800CA8C4, L800CA8C4, L800CA8C4, L800CA8C4, L800CA8C4, L800CA8C4, L800CA8C4, L800CA460, L800CA460, L800CA22C, L800CA7A8, L800CA828, L800CA460
+
+.text
 glabel alEnvMixerPull
 /* 0CACD0 800CA0D0 27BDFFA0 */  addiu $sp, $sp, -0x60
 /* 0CACD4 800CA0D4 AFBF001C */  sw    $ra, 0x1c($sp)
@@ -86,12 +105,13 @@ glabel alEnvMixerPull
 /* 0CAE08 800CA208 102001AE */  beqz  $at, .L800CA8C4
 /* 0CAE0C 800CA20C 00000000 */   nop   
 /* 0CAE10 800CA210 000C6080 */  sll   $t4, $t4, 2
-/* 0CAE14 800CA214 3C01800F */  lui   $at, %hi(D_800E95B0) # $at, 0x800f
+/* 0CAE14 800CA214 3C01800F */  lui   $at, %hi(jpt_800E95B0) # $at, 0x800f
 /* 0CAE18 800CA218 002C0821 */  addu  $at, $at, $t4
-/* 0CAE1C 800CA21C 8C2C95B0 */  lw    $t4, %lo(D_800E95B0)($at)
+/* 0CAE1C 800CA21C 8C2C95B0 */  lw    $t4, %lo(jpt_800E95B0)($at)
 /* 0CAE20 800CA220 00000000 */  nop   
 /* 0CAE24 800CA224 01800008 */  jr    $t4
 /* 0CAE28 800CA228 00000000 */   nop   
+glabel L800CA22C
 /* 0CAE2C 800CA22C 8FAD0058 */  lw    $t5, 0x58($sp)
 /* 0CAE30 800CA230 00000000 */  nop   
 /* 0CAE34 800CA234 8DAE003C */  lw    $t6, 0x3c($t5)
@@ -240,6 +260,7 @@ glabel alEnvMixerPull
 .L800CA458:
 /* 0CB058 800CA458 10000134 */  b     .L800CA92C
 /* 0CB05C 800CA45C 00000000 */   nop   
+glabel L800CA460
 /* 0CB060 800CA460 8FB8006C */  lw    $t8, 0x6c($sp)
 /* 0CB064 800CA464 8FA8005C */  lw    $t0, 0x5c($sp)
 /* 0CB068 800CA468 8FA40058 */  lw    $a0, 0x58($sp)
@@ -460,6 +481,7 @@ glabel alEnvMixerPull
 /* 0CB39C 800CA79C ADF90038 */  sw    $t9, 0x38($t7)
 /* 0CB3A0 800CA7A0 10000062 */  b     .L800CA92C
 /* 0CB3A4 800CA7A4 00000000 */   nop   
+glabel L800CA7A8
 /* 0CB3A8 800CA7A8 8FAD0058 */  lw    $t5, 0x58($sp)
 /* 0CB3AC 800CA7AC 00000000 */  nop   
 /* 0CB3B0 800CA7B0 8DAC003C */  lw    $t4, 0x3c($t5)
@@ -493,6 +515,7 @@ glabel alEnvMixerPull
 /* 0CB41C 800CA81C 01002025 */  move  $a0, $t0
 /* 0CB420 800CA820 10000042 */  b     .L800CA92C
 /* 0CB424 800CA824 00000000 */   nop   
+glabel L800CA828
 /* 0CB428 800CA828 8FAF006C */  lw    $t7, 0x6c($sp)
 /* 0CB42C 800CA82C 8FAD005C */  lw    $t5, 0x5c($sp)
 /* 0CB430 800CA830 8FA40058 */  lw    $a0, 0x58($sp)
@@ -511,6 +534,7 @@ glabel alEnvMixerPull
 /* 0CB464 800CA864 01802025 */  move  $a0, $t4
 /* 0CB468 800CA868 10000030 */  b     .L800CA92C
 /* 0CB46C 800CA86C 00000000 */   nop   
+glabel L800CA870
 /* 0CB470 800CA870 3C0A800E */  lui   $t2, %hi(alGlobals) # $t2, 0x800e
 /* 0CB474 800CA874 8D4A3780 */  lw    $t2, %lo(alGlobals)($t2)
 /* 0CB478 800CA878 00000000 */  nop   
@@ -533,6 +557,7 @@ glabel alEnvMixerPull
 /* 0CB4BC 800CA8BC 1000001B */  b     .L800CA92C
 /* 0CB4C0 800CA8C0 00000000 */   nop   
 .L800CA8C4:
+glabel L800CA8C4
 /* 0CB4C4 800CA8C4 8FAF006C */  lw    $t7, 0x6c($sp)
 /* 0CB4C8 800CA8C8 8FAD005C */  lw    $t5, 0x5c($sp)
 /* 0CB4CC 800CA8CC 8FA40058 */  lw    $a0, 0x58($sp)
