@@ -16,13 +16,4 @@ s16 D_800DCE80[14] = {
 
 /*******************************/
 
-/************ .rodata ************/
-
-const DoubleLiteral D_800E6B00 = { 0.3 };
-const DoubleLiteral D_800E6B08 = { -0.3 };
-const DoubleLiteral D_800E6B10 = { 0.4 };
-
-/*********************************/
-
-
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F310.s")
