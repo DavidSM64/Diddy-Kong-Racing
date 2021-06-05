@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E94C0
+.float 1.0005778075
+glabel D_800E94C4
+.float 0.999422551
+
+.text
 glabel alCents2Ratio
 /* 0CA5E0 800C99E0 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 0CA5E4 800C99E4 44811000 */  mtc1  $at, $f2
