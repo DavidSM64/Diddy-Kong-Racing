@@ -43,17 +43,6 @@ const char D_800E7A68[] = "640 by 480 Anti-aliased, Interlaced.\n";
 const char D_800E7A90[] = "640 by 480 Point sampled, Interlaced, De-flickered.\n";
 const char D_800E7AC8[] = "640 by 480 Anti-aliased, Interlaced, De-flickered.\n";
 
-const FloatLiteral D_800E7AFC = { 1.21212125f };
-const FloatLiteral D_800E7B00 = { 1.1f };
-const FloatLiteral D_800E7B04 = { 1.33333333f };
-const FloatLiteral D_800E7B08 = { 1.33333333f };
-
-// Jump table in func_8007A550
-const u32 D_800E7B0C[] = {
-    0x8007A5AC, 0x8007A5D0, 0x8007A658, 0x8007A6C0, 
-    0x8007A728, 0x8007A750, 0x8007A778, 0x8007A7A0
-};
-
 /*********************************/
 
 /************ .bss ************/
