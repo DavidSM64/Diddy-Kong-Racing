@@ -9,8 +9,6 @@
 s8 D_800DC6D0 = 1; // Currently unknown, might be a u8.
 s32 D_800DC6D4 = 0; // Currently unknown, might be a different type.
 s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
-s32 D_800DC6DC = 0; // Currently unknown, might be a different type.
-s32 D_800DC6E0 = 0; // Currently unknown, might be a different type.
 
 /*******************************/
 
@@ -55,32 +53,7 @@ const FloatLiteral D_800E4CF0 = { 1500.0f };
 const FloatLiteral D_800E4CF4 = { 0.05f };
 const DoubleLiteral D_800E4CF8 = { 0.001 };
 
-const char D_800E4D00[] = "OUT OF AUDIO POINTS\n";
-const char D_800E4D18[] = "amAudioLineAddVertex: Exceeded maximum number of lines (%d)\n";
-const char D_800E4D58[] = "amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
-const char D_800E4DA0[] = "amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n";
-const char D_800E4DE0[] = "amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
-const char D_800E4E28[] = "Audio line definition error (less than 2 vertices on line %d)\n";
-const char D_800E4E68[] = "Audio line definition error (line=%d, vertex=%d)\n";
-const char D_800E4E9C[] = "Reverb line definition error (less than 2 vertices on line %d)\n";
-const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
-
-const FloatLiteral D_800E4F10 = { -100000.0f };
-const FloatLiteral D_800E4F14 = { 999999.0f };
-const DoubleLiteral D_800E4F18 = { -100000.0 };
-const DoubleLiteral D_800E4F20 = { -100000.0 };
-
-const u32 filePadding[2] = { 0, 0 }; // unknown_005740 needs to be split.
-
-const char D_800E4F30[] = "Exceeded voice limit of %d (%d)\n";
-
-/*******************************/
-
-/************ .bss ************/
-
-extern s8 D_8011AC18;
-
-/*******************************/
+/*********************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80004B40.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800050D0.s")
@@ -91,52 +64,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006AC8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006FC8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80007FA4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008040.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008140.s")
 
-void func_80008168(void) {
-    D_8011AC18 = 0;
-}
 
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008174.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800090C0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800092A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800096D8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800096F8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000974C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800098A4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800099EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009AB4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A2E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A414.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__mapVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__unmapVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__lookupVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__lookupSoundQuick.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__vsVol.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__vsDelta.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__vsPan.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__seqpReleaseVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__voiceNeedsNoteKill.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__initFromBank.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__setInstChanState.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__resetPerfChanState.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__initChanState.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__seqpStopOsc.s")
 
-/* Unknown Size */
-typedef struct unk8000B010 {
-    u8 unk00[0x70];
-    s8 unk70;
-} unk8000B010;
-
-void func_8000B010(unk8000B010 *arg0, s8 arg1) {
-    arg0->unk70 = arg1;
-}
 

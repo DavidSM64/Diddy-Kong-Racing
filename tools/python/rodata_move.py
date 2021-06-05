@@ -39,11 +39,10 @@ def getLineType(line):
         return 0
         
 def getAsmFileReferenceForLabel(filename, label):
-    searchLabel = ASM_DIRECTORY + filename
     possibleFiles = []
     search = os.popen('fgrep -r "' + label + '"').read().split('\n')
     for line in search:
-        if searchLabel in line:
+        if ASM_DIRECTORY in line:
             asmfilePath = line.split(':')[0]
             if asmfilePath not in possibleFiles:
                 possibleFiles.append(asmfilePath)
