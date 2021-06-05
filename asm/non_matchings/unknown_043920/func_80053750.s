@@ -1,3 +1,12 @@
+.late_rodata
+glabel D_800E6788
+.double 0.4
+glabel D_800E6790
+.double 0.1
+glabel D_800E6798
+.double 1.4
+
+.text
 glabel func_80053750
 /* 054350 80053750 AFA50004 */  sw    $a1, 4($sp)
 /* 054354 80053754 8C820060 */  lw    $v0, 0x60($a0)

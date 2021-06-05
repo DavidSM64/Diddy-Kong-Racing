@@ -1,3 +1,46 @@
+.late_rodata
+glabel D_800E6638
+.double 0.024999999999999998
+glabel D_800E6640
+.double 0.4
+glabel D_800E6648
+.double 1.1
+glabel D_800E6650
+.double -0.3
+glabel D_800E6658
+.double 0.3
+glabel D_800E6660
+.float 0.02
+.word 0 # Padding
+glabel D_800E6668
+.double 0.9
+glabel D_800E6670
+.double 0.7
+glabel D_800E6678
+.double 1.7
+glabel D_800E6680
+.double 0.15
+glabel D_800E6688
+.double 0.3
+glabel D_800E6690
+.double 0.32
+glabel D_800E6698
+.double -0.04
+glabel D_800E66A0
+.double 0.04
+glabel D_800E66A8
+.double 0.9
+glabel D_800E66B0
+.double 0.3
+glabel D_800E66B8
+.double 0.1
+glabel D_800E66C0
+.float 0.1
+.word 0 # Padding
+glabel D_800E66C8
+.double 0.05
+
+.text
 glabel func_80050A28
 /* 051628 80050A28 27BDFF88 */  addiu $sp, $sp, -0x78
 /* 05162C 80050A2C AFBF0024 */  sw    $ra, 0x24($sp)
