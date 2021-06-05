@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E77E0
+.double 0.1
+
+.text
 glabel func_80072578
 /* 073178 80072578 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 07317C 8007257C 3C198012 */  lui   $t9, %hi(D_801241E4) # $t9, 0x8012

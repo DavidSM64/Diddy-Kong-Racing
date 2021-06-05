@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E6178
+.double 1.2
+
+.text
 glabel func_8003CA68
 /* 03D668 8003CA68 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 03D66C 8003CA6C 44852000 */  mtc1  $a1, $f4

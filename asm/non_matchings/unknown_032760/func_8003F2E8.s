@@ -1,3 +1,16 @@
+.late_rodata
+glabel D_800E6200
+.double 1.2
+glabel D_800E6208
+.float -10000.0
+glabel D_800E620C
+.float 0.6
+glabel D_800E6210
+.float 0.6
+glabel D_800E6214
+.float 0.075
+
+.text
 glabel func_8003F2E8
 /* 03FEE8 8003F2E8 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 03FEEC 8003F2EC AFBF002C */  sw    $ra, 0x2c($sp)

@@ -1,3 +1,14 @@
+.rdata
+glabel D_800E8688
+.asciz "RACE"
+.ascii "\0\0\0" # padding
+glabel D_800E8690
+.asciz "LAP"
+glabel D_800E8694
+.asciz "DID NOT FINISH"
+.ascii "\0" # padding
+
+.text
 glabel func_800A5F18
 /* 0A6B18 800A5F18 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0A6B1C 800A5F1C 3C078012 */  lui   $a3, %hi(D_80126CDC) # $a3, 0x8012

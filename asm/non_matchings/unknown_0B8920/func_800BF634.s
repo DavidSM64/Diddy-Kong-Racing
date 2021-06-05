@@ -1,3 +1,22 @@
+.late_rodata
+glabel D_800E92A8
+.float 6.64
+glabel D_800E92AC
+.float 89128.961
+glabel D_800E92B0
+.float 6.5333333
+glabel D_800E92B4
+.float 89128.961
+glabel D_800E92B8
+.float 6.64
+glabel D_800E92BC
+.float 89128.961
+glabel D_800E92C0
+.float 6.5333333
+glabel D_800E92C4
+.float 89128.961
+
+.text
 glabel func_800BF634
 /* 0C0234 800BF634 3C03800E */  lui   $v1, %hi(D_800E3190) # $v1, 0x800e
 /* 0C0238 800BF638 24633190 */  addiu $v1, %lo(D_800E3190) # addiu $v1, $v1, 0x3190

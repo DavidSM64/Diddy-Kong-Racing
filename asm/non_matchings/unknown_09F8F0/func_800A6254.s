@@ -1,3 +1,12 @@
+.late_rodata
+glabel jpt_800E8744
+.word L800A63D8, L800A691C, L800A6BCC, L800A6CA4, L800A6D68
+glabel D_800E8758
+.double 1.1
+glabel D_800E8760
+.double 1.1
+
+.text
 glabel func_800A6254
 /* 0A6E54 800A6254 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 0A6E58 800A6258 AFBF0014 */  sw    $ra, 0x14($sp)
@@ -92,12 +101,13 @@ glabel func_800A6254
 /* 0A6FB4 800A63B4 2F210005 */  sltiu $at, $t9, 5
 /* 0A6FB8 800A63B8 10200278 */  beqz  $at, .L800A6D9C
 /* 0A6FBC 800A63BC 0019C880 */   sll   $t9, $t9, 2
-/* 0A6FC0 800A63C0 3C01800F */  lui   $at, %hi(D_800E8744) # $at, 0x800f
+/* 0A6FC0 800A63C0 3C01800F */  lui   $at, %hi(jpt_800E8744) # $at, 0x800f
 /* 0A6FC4 800A63C4 00390821 */  addu  $at, $at, $t9
-/* 0A6FC8 800A63C8 8C398744 */  lw    $t9, %lo(D_800E8744)($at)
+/* 0A6FC8 800A63C8 8C398744 */  lw    $t9, %lo(jpt_800E8744)($at)
 /* 0A6FCC 800A63CC 00000000 */  nop   
 /* 0A6FD0 800A63D0 03200008 */  jr    $t9
 /* 0A6FD4 800A63D4 00000000 */   nop   
+glabel L800A63D8
 /* 0A6FD8 800A63D8 8FAA005C */  lw    $t2, 0x5c($sp)
 /* 0A6FDC 800A63DC 240C007F */  li    $t4, 127
 /* 0A6FE0 800A63E0 314B0040 */  andi  $t3, $t2, 0x40
@@ -460,6 +470,7 @@ glabel func_800A6254
 /* 0A7510 800A6910 8FAD0038 */  lw    $t5, 0x38($sp)
 /* 0A7514 800A6914 10000123 */  b     .L800A6DA4
 /* 0A7518 800A6918 A1CD017C */   sb    $t5, 0x17c($t6)
+glabel L800A691C
 /* 0A751C 800A691C 8FA40074 */  lw    $a0, 0x74($sp)
 /* 0A7520 800A6920 804505FD */  lb    $a1, 0x5fd($v0)
 /* 0A7524 800A6924 00047880 */  sll   $t7, $a0, 2
@@ -644,6 +655,7 @@ glabel func_800A6254
 /* 0A77C0 800A6BC0 00E02025 */   move  $a0, $a3
 /* 0A77C4 800A6BC4 10000078 */  b     .L800A6DA8
 /* 0A77C8 800A6BC8 8FBF0014 */   lw    $ra, 0x14($sp)
+glabel L800A6BCC
 /* 0A77CC 800A6BCC 804B05FB */  lb    $t3, 0x5fb($v0)
 /* 0A77D0 800A6BD0 8FAC0074 */  lw    $t4, 0x74($sp)
 /* 0A77D4 800A6BD4 240FFF88 */  li    $t7, -120
@@ -702,6 +714,7 @@ glabel func_800A6254
 /* 0A7898 800A6C98 00E02025 */   move  $a0, $a3
 /* 0A789C 800A6C9C 10000042 */  b     .L800A6DA8
 /* 0A78A0 800A6CA0 8FBF0014 */   lw    $ra, 0x14($sp)
+glabel L800A6CA4
 /* 0A78A4 800A6CA4 8FAF005C */  lw    $t7, 0x5c($sp)
 /* 0A78A8 800A6CA8 24010040 */  li    $at, 64
 /* 0A78AC 800A6CAC 15E10003 */  bne   $t7, $at, .L800A6CBC
@@ -754,6 +767,7 @@ glabel func_800A6254
 /* 0A795C 800A6D5C 00E02025 */   move  $a0, $a3
 /* 0A7960 800A6D60 10000011 */  b     .L800A6DA8
 /* 0A7964 800A6D64 8FBF0014 */   lw    $ra, 0x14($sp)
+glabel L800A6D68
 /* 0A7968 800A6D68 84EC0000 */  lh    $t4, ($a3)
 /* 0A796C 800A6D6C 806D000C */  lb    $t5, 0xc($v1)
 /* 0A7970 800A6D70 240F0005 */  li    $t7, 5

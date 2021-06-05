@@ -1,3 +1,26 @@
+.rdata
+glabel D_800E7078
+.asciz "%x."
+glabel D_800E707C
+.asciz "%x  "
+.ascii "\0\0\0" # padding
+glabel D_800E7084
+.asciz "\n"
+.ascii "\0\0" # padding
+glabel D_800E7088
+.asciz "\n"
+.ascii "\0\0" # padding
+glabel D_800E708C
+.asciz "%f  "
+.ascii "\0\0\0" # padding
+glabel D_800E7094
+.asciz "\n"
+.ascii "\0\0" # padding
+glabel D_800E7098
+.asciz "\n"
+.ascii "\0\0" # padding
+
+.text
 glabel func_80069F28
 /* 06AB28 80069F28 3C038012 */  lui   $v1, %hi(D_80120CE0) # $v1, 0x8012
 /* 06AB2C 80069F2C 8C630CE0 */  lw    $v1, %lo(D_80120CE0)($v1)

@@ -43,11 +43,6 @@ const char D_800E4950[] = "amSndPlay: Illegal sound effects table index\n";
 const char D_800E4980[] = "amSndPlayDirect: Somebody tried to play illegal sound %d\n";
 const char D_800E49BC[] = "Invalid midi sequence index\n";
 
-const FloatLiteral D_800E49DC = { 60000000.0f };
-const FloatLiteral D_800E49E0 = { 46875.0f };
-const FloatLiteral D_800E49E4 = { 46875.0f };
-const FloatLiteral D_800E49E8 = { 120000.0f };
-
 /*********************************/
 
 /************ .bss ************/
@@ -549,7 +544,7 @@ void func_800014BC(f32 arg0) {
 void musicSetTempo(s32 tempo){
     if(tempo != 0){
         f32 inv_tempo = (1.0f/tempo);
-        alCSPSetTempo(gMusicPlayer,(s32)(inv_tempo*D_800E49DC.floatLiteral));
+        alCSPSetTempo(gMusicPlayer,(s32)(inv_tempo * 60000000.0f));
         D_80115D30 = tempo;
     }
 }

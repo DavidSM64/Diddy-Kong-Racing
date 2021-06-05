@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E6188
+.double 1.2
+
+.text
 glabel func_8003D2B8
 /* 03DEB8 8003D2B8 44852000 */  mtc1  $a1, $f4
 /* 03DEBC 8003D2BC 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000

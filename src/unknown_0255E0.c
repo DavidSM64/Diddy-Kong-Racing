@@ -129,40 +129,6 @@ s8 D_800DC92C[24] = {
 const char D_800E5DF0[] = "TT CAM";
 const char D_800E5DF8[] = "Solid Clipping x0=x1 Error!!!\n";
 const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
-const char D_800E5E38[] = "ERROR!! TrackMem overflow .. %d\n";
-
-const DoubleLiteral D_800E5E60 = { 250.0 };
-const DoubleLiteral D_800E5E68 = { -300.0 };
-const DoubleLiteral D_800E5E70 = { 300.0 };
-const DoubleLiteral D_800E5E78 = { 300.0 };
-const DoubleLiteral D_800E5E80 = { -300.0 };
-const DoubleLiteral D_800E5E88 = { -300.0 };
-const DoubleLiteral D_800E5E90 = { -0.1 };
-const DoubleLiteral D_800E5E98 = { -0.1 };
-const DoubleLiteral D_800E5EA0 = { 1000.0 };
-const DoubleLiteral D_800E5EA8 = { 1000.0 };
-const DoubleLiteral D_800E5EB0 = { 0.8 };
-const DoubleLiteral D_800E5EB8 = { 255.0 };
-
-// Jump table in func_8002A900
-const u32 D_800E5EC0[] = {
-    0x8002AB40, 0x8002AB40, 0x8002AB54, 0x8002AB40, 
-    0x8002AB40, 0x8002AB54, 0x8002AB40, 0x8002AB54, 
-    0x8002AB2C, 0x8002AB54, 0x8002AB54, 0x8002AB54, 
-    0x8002AB58, 0x8002AB54, 0x8002AB54, 0x8002AB54, 
-    0x8002AB54, 0x8002AB54, 0x8002AB54, 0x8002AB54, 
-    0x8002AB40, 0x8002AB54, 0x8002AB40, 0x8002AB54, 
-    0x8002AB54, 0x8002AB54, 0x8002AB54, 0x8002AB58, 
-    0x8002AB54, 0x8002AB54, 0x8002AB58, 0x8002AB40
-};
-
-const DoubleLiteral D_800E5F40 = { 0.2 };
-const FloatLiteral D_800E5F48 = { 1.4f };
-const FloatLiteral D_800E5F4C = { 0.714f };
-const FloatLiteral D_800E5F50 = { 0.005f };
-const FloatLiteral D_800E5F54 = { 1.4142f };
-const FloatLiteral D_800E5F58 = { 0.005f };
-const FloatLiteral D_800E5F5C = { 0.99f };
 
 /*********************************/
 

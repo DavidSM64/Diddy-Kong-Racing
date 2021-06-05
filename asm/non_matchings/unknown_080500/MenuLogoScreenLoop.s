@@ -1,3 +1,17 @@
+.late_rodata
+glabel D_800E838C
+.float 2.6
+glabel D_800E8390
+.float 2.17
+.word 0 # Padding
+glabel D_800E8398
+.double 510.0
+glabel D_800E83A0
+.double 510.0
+glabel D_800E83A8
+.double 510.0
+
+.text
 glabel MenuLogoScreenLoop
 /* 083784 80082B84 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 083788 80082B88 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)

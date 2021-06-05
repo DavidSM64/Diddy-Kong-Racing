@@ -4,6 +4,34 @@
 #include "types.h"
 #include "macros.h"
 
+/************ .rodata ************/
+
+const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
+
+// File Boundary! Not sure where the split occurs though.
+const int D_800E8838[2] = { 0, 0 };
+
+const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
+const char D_800E887C[] = "\n\nUnknown particle type in initParticleTrigger %d, Max %d.\n\n";
+const char D_800E88BC[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
+const char D_800E88F8[] = "Sprite Particle buffer is full.\n";
+const char D_800E891C[] = "Triangle Particle buffer is full.\n";
+const char D_800E8940[] = "Rectangle Particle buffer is full.\n";
+const char D_800E8964[] = "Line Particle buffer is full.\n";
+const char D_800E8980[] = "Point Particle buffer is full.\n";
+const char D_800E89A4[] = "\n\nCan't allocate space for unknown particle type.";
+const char D_800E89D8[] = "\n\nParticle has been freed twice, this is Super Safe, Honest!\n";
+const char D_800E8A18[] = "\n\nSprite Particle Buffer is empty.\n\n";
+const char D_800E8A40[] = "\n\nTriangle Particle Buffer is empty.\n\n";
+const char D_800E8A68[] = "\n\nRectangle Particle Buffer is empty.\n\n";
+const char D_800E8A90[] = "\n\nLine Particle buffer is empty.\n\n";
+const char D_800E8AB4[] = "\n\nPoint Particle buffer is empty.\n\n";
+const char D_800E8AD8[] = "\n\nCan't deallocate space for unknown particle type.\n\n";
+const char D_800E8B10[] = "\nError :: trigger %x has no reference to point %x";
+const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in trigger list %x (%d >> %p)";
+
+/*********************************/
+
 /************ .data ************/
 
 // I woundn't be suprised if most of these zeroes are really just null pointers.
@@ -128,203 +156,8 @@ s32 D_800E2EC4[10] = {
 };
 
 s32 D_800E2EEC = 0x100;
-s32 D_800E2EF0 = 0;
-
-u8 D_800E2EF4[196] = {
-    0x02, 0x04, 0x06, 0x08, 0x0A, 0x0F, 0x11, 0x15, 0x17, 0x1F, 0x21, 0x27, 0x29, 0x2B, 0x2D, 0x2F, 
-    0x31, 0x33, 0x35, 0x38, 0x3A, 0x3F, 0x41, 0x43, 0x45, 0x48, 0x4A, 0x4B, 0x4D, 0x50, 0x52, 0x56, 
-    0x58, 0x5B, 0x5D, 0x62, 0x64, 0x68, 0x6A, 0x6F, 0x71, 0x76, 0x78, 0x7D, 0x7F, 0x84, 0x86, 0x8B, 
-    0x8D, 0x92, 0x94, 0x96, 0x98, 0x9A, 0x9D, 0xA2, 0xA5, 0xA9, 0xAB, 0xB0, 0xB3, 0xB8, 0x00, 0x01, 
-    0x00, 0x09, 0x0B, 0x11, 0x13, 0x19, 0x1B, 0x21, 0x23, 0x29, 0x2B, 0x31, 0x33, 0x38, 0x3A, 0x41, 
-    0x43, 0x49, 0x4B, 0x4C, 0x4E, 0x53, 0x55, 0x5B, 0x5D, 0x62, 0x64, 0x6B, 0x6D, 0x73, 0x75, 0x7B, 
-    0x7D, 0x83, 0x85, 0x8B, 0x8D, 0x93, 0x95, 0x9B, 0x9D, 0xA3, 0xA5, 0xAA, 0xAC, 0xB2, 0xB4, 0xBC, 
-    0xBE, 0xC4, 0xC6, 0xCC, 0xCE, 0xD3, 0xD5, 0xD7, 0xD9, 0xDC, 0xDE, 0xE0, 0xE2, 0xE7, 0xE9, 0xEF, 
-    0x00, 0x01, 0x03, 0x08, 0x09, 0x0F, 0x11, 0x16, 0x18, 0x1D, 0x1F, 0x24, 0x26, 0x28, 0x2A, 0x2F, 
-    0x31, 0x36, 0x38, 0x39, 0x3B, 0x3D, 0x3F, 0x43, 0x45, 0x46, 0x48, 0x4F, 0x51, 0x56, 0x58, 0x5D, 
-    0x5F, 0x64, 0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92, 
-    0x94, 0x99, 0x9B, 0xA0, 0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9, 
-    0x00, 0x00, 0x00, 0x00
-};
-
-// Fast3D (F3DDKR) display list
-u32 D_800E2FB8[] = {
-    0xE7000000, 0x00000000, 
-    0xBA001402, 0x00000000, 
-    0xBA001001, 0x00000000, 
-    0xBA000E02, 0x00000000, 
-    0xBA001102, 0x00000000, 
-    0xBA001301, 0x00000000, 
-    0xBA000C02, 0x00002000, 
-    0xBA000903, 0x00000C00, 
-    0xB9000002, 0x00000000, 
-    0xB900031D, 0x00504240, 
-    0xFB000000, 0xFFFFFFFF, 
-    0xFA000000, 0x00000000, 
-    0xB8000000, 0x00000000
-};
-
-s32 D_800E3020 = -1;
-s32 D_800E3024 = 0;
-s32 D_800E3028 = 0;
-
-s32 *D_800E302C[3] = {
-    (s32*)0x800E8F00, (s32*)0x800E8F08, (s32*)0x800E8F10
-};
 
 /*******************************/
-/************ .rodata ************/
-
-const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
-
-// This is probably a file boundary.
-const DoubleLiteral D_800E8838 = { 0.0 };
-
-const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
-const char D_800E887C[] = "\n\nUnknown particle type in initParticleTrigger %d, Max %d.\n\n";
-const char D_800E88BC[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
-const char D_800E88F8[] = "Sprite Particle buffer is full.\n";
-const char D_800E891C[] = "Triangle Particle buffer is full.\n";
-const char D_800E8940[] = "Rectangle Particle buffer is full.\n";
-const char D_800E8964[] = "Line Particle buffer is full.\n";
-const char D_800E8980[] = "Point Particle buffer is full.\n";
-const char D_800E89A4[] = "\n\nCan't allocate space for unknown particle type.";
-const char D_800E89D8[] = "\n\nParticle has been freed twice, this is Super Safe, Honest!\n";
-const char D_800E8A18[] = "\n\nSprite Particle Buffer is empty.\n\n";
-const char D_800E8A40[] = "\n\nTriangle Particle Buffer is empty.\n\n";
-const char D_800E8A68[] = "\n\nRectangle Particle Buffer is empty.\n\n";
-const char D_800E8A90[] = "\n\nLine Particle buffer is empty.\n\n";
-const char D_800E8AB4[] = "\n\nPoint Particle buffer is empty.\n\n";
-const char D_800E8AD8[] = "\n\nCan't deallocate space for unknown particle type.\n\n";
-const char D_800E8B10[] = "\nError :: trigger %x has no reference to point %x";
-const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in trigger list %x (%d >> %p)";
-
-const DoubleLiteral D_800E8B98 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BA0 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BA8 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BB0 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BB8 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BC0 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BC8 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BD0 = { 0.00001525878906 };
-const FloatLiteral D_800E8BD8 = { 0.1f };
-
-// Jump table in func_800B2040
-const u32 D_800E8BDC[] = {
-    0x800B2250, 0x800B20E0, 0x800B2138, 0x800B2190, 
-    0x800B21E8
-};
-
-const FloatLiteral D_800E8BF0 = { 0.1f };
-const FloatLiteral D_800E8BF4 = { 0.01f };
-
-// This is probably another file boundary.
-const DoubleLiteral D_800E8BF8 = { 0.0 };
-
-const char D_800E8C00[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-const char D_800E8C28[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const char D_800E8C50[] = "";
-const char D_800E8C54[] = "(null)";
-const char D_800E8C5C[] = "(nil)";
-const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Print less text!)\n";
-
-// Jump table in func_800B4A40
-const u32 D_800E8CAC[] = {
-    0x800B4BA4, 0x800B4BC8, 0x800B4BC8, 0x800B4BBC, 
-    0x800B4BC8, 0x800B4BC8, 0x800B4BC8, 0x800B4BC8, 
-    0x800B4BC8, 0x800B4BC8, 0x800B4BC8, 0x800B4BAC, 
-    0x800B4BC8, 0x800B4BB4, 0x800B4BC8, 0x800B4BC8, 
-    0x800B4BC4
-};
-
-// Jump table in func_800B4A40
-const u32 D_800E8CF0[] = {
-    0x800B4DB0, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4DC4, 0x800B4DC4, 0x800B4DB8, 0x800B4DC4, 
-    0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4D90, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4D98, 0x800B4DC4, 0x800B4DC4, 0x800B4DC4, 
-    0x800B4DC4, 0x800B4DC0
-};
-
-// Jump table in func_800B4A40
-const u32 D_800E8D88[] = {
-    0x800B52C4, 0x800B5E0C, 0x800B5794, 0x800B5E0C, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 0x800B4F84, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5AC4, 0x800B4E38, 
-    0x800B52C4, 0x800B57A4, 0x800B5794, 0x800B5E0C, 
-    0x800B4E38, 0x800B5E0C, 0x800B5E0C, 0x800B5E0C, 
-    0x800B5E0C, 0x800B5D78, 0x800B4F64, 0x800B5C8C, 
-    0x800B5E0C, 0x800B5E0C, 0x800B5B48, 0x800B5E0C, 
-    0x800B4F44, 0x800B5E0C, 0x800B5E0C, 0x800B4FA4
-};
-
-// Jump table in func_800B653C
-const u32 D_800E8E58[] = {
-    0x800B6658, 0x800B6740, 0x800B6614, 0x800B6634, 
-    0x800B66CC
-};
-
-// This is probably another file boundary.
-const FloatLiteral D_800E8E6C = { 0.0f };
-
-const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
-const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
-const char D_800E8ED0[] = ">fault< ";
-const char D_800E8EDC[] = "CORE\0\0\0\0";
-const char D_800E8EE8[] = "CORE\0\0\0\0";
-const char D_800E8EF4[] = "CORE\0\0\0\0";
-
-const char D_800E8F00[] = "setup";
-const char D_800E8F08[] = "control";
-const char D_800E8F10[] = "print";
-
-// EPC (Error program counter?) Lockup display strings, see: https://tcrf.net/Diddy_Kong_Racing#Crash_Debugger
-const char D_800E8F18[] = " epc\t\t0x%08x\n";
-const char D_800E8F28[] = " cause\t\tmmAlloc(%d,0x%8x)\n";
-const char D_800E8F44[] = " object\t\t";
-const char D_800E8F50[] = "%s %d ";
-const char D_800E8F58[] = "\n";
-const char D_800E8F5C[] = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-const char D_800E8F6C[] = " Fault in thread %d\n";
-const char D_800E8F84[] = " epc\t\t0x%08x\n";
-const char D_800E8F94[] = " cause\t\t0x%08x\n";
-const char D_800E8FA4[] = " sr\t\t0x%08x\n";
-const char D_800E8FB4[] = " badvaddr\t0x%08x\n";
-const char D_800E8FC8[] = " object\t\t";
-const char D_800E8FD4[] = "%s %d ";
-const char D_800E8FDC[] = "\n";
-const char D_800E8FE0[] = " at 0x%08x v0 0x%08x v1 0x%08x\n";
-const char D_800E9000[] = " a0 0x%08x a1 0x%08x a2 0x%08x\n";
-const char D_800E9020[] = " a3 0x%08x t0 0x%08x t1 0x%08x\n";
-const char D_800E9040[] = " t2 0x%08x t3 0x%08x t4 0x%08x\n";
-const char D_800E9060[] = " t5 0x%08x t6 0x%08x t7 0x%08x\n";
-const char D_800E9080[] = " s0 0x%08x s1 0x%08x s2 0x%08x\n";
-const char D_800E90A0[] = " s3 0x%08x s4 0x%08x s5 0x%08x\n";
-const char D_800E90C0[] = " s6 0x%08x s7 0x%08x t8 0x%08x\n";
-const char D_800E90E0[] = " t9 0x%08x gp 0x%08x sp 0x%08x\n";
-const char D_800E9100[] = " s8 0x%08x ra 0x%08x\n\n";
-const char D_800E9118[] = "   %08x %08x %08x\n";
-const char D_800E912C[] = "  ";
-const char D_800E9130[] = "%04x ";
-const char D_800E9138[] = "\n";
-// End of EPC lockup strings
-
-// Jump table in func_800B7810
-const u32 D_800E913C[] = {
-    0x800B7898, 0x800B7C18, 0x800B7C18, 0x800B7C18, 
-    0x800B7C70, 0x800B7CE4
-};
-
-/*********************************/
 
 void func_800AE2D8(void);
 void func_800AE374(void);
@@ -445,38 +278,4 @@ GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B22FC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B263C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B26E0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B2FBC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B3140.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B3240.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B3358.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B34B0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B3564.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B3740.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B3E64.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B4668.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B46BC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B4940.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B4A08.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B4A40.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B5E88.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B5EDC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B5F78.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B62B4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B635C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B653C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B695C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B69FC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6E50.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6EE0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6F04.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6F40.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6F50.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/D_800B6FC4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B70D0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B7144.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B71B0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B7460.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B76B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B76DC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B77D4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B7810.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B7D10.s")
+

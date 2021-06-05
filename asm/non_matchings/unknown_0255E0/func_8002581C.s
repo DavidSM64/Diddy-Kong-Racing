@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E5E60
+.double 250.0
+
+.text
 glabel func_8002581C
 /* 02641C 8002581C 27BDFF40 */  addiu $sp, $sp, -0xc0
 /* 026420 80025820 3C0E8012 */  lui   $t6, %hi(D_8011D474) # $t6, 0x8012

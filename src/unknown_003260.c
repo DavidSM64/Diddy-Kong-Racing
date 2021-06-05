@@ -113,15 +113,7 @@ const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
 const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
 const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
-// Jump table for _handleEvent
-const u32 D_800E4BB0[] = {
-    0x800035C4, 0x80003A0C, 0x80004090, 0x80003B2C, 
-    0x80004090, 0x80004090, 0x80004090, 0x80003C8C, 
-    0x80004090, 0x80004090, 0x80004090, 0x80004090, 
-    0x80004090, 0x80004090, 0x80004090, 0x80003BA4
-};
-
-/*******************************/
+/*********************************/
 
 /************ .bss ************/
 

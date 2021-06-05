@@ -1,3 +1,23 @@
+.late_rodata
+glabel D_800E87A0
+.double 1.1
+glabel D_800E87A8
+.float 181.5
+.word 0 # padding
+glabel D_800E87B0
+.double 66.0
+glabel D_800E87B8
+.double 66.0
+glabel D_800E87C0
+.double 1.1
+glabel D_800E87C8
+.double 1.2
+glabel D_800E87D0
+.float 0.8
+glabel D_800E87D4
+.float 1.2
+
+.text
 glabel func_800A8474
 /* 0A9074 800A8474 27BDFEA0 */  addiu $sp, $sp, -0x160
 /* 0A9078 800A8478 AFBF003C */  sw    $ra, 0x3c($sp)

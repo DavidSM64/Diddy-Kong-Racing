@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E4CF8
+.double 0.001
+
+.text
 glabel func_80007FA4
 /* 008BA4 80007FA4 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 008BA8 80007FA8 44818000 */  mtc1  $at, $f16

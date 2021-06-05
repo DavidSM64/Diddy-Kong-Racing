@@ -1,3 +1,8 @@
+.late_rodata
+glabel jpt_800E9600
+.word L800CC0C0, L800CC150, L800CC150, L800CC0C8, L800CC150, L800CC150, L800CC134, L800CC144, L800CC104
+
+.text
 glabel alResampleParam
 /* 0CCC90 800CC090 24AEFFFF */  addiu $t6, $a1, -1
 /* 0CCC94 800CC094 27BDFFD8 */  addiu $sp, $sp, -0x28
@@ -6,13 +11,15 @@ glabel alResampleParam
 /* 0CCCA0 800CC0A0 1020002B */  beqz  $at, .L800CC150
 /* 0CCCA4 800CC0A4 00803825 */   move  $a3, $a0
 /* 0CCCA8 800CC0A8 000E7080 */  sll   $t6, $t6, 2
-/* 0CCCAC 800CC0AC 3C01800F */  lui   $at, %hi(D_800E9600) # $at, 0x800f
+/* 0CCCAC 800CC0AC 3C01800F */  lui   $at, %hi(jpt_800E9600) # $at, 0x800f
 /* 0CCCB0 800CC0B0 002E0821 */  addu  $at, $at, $t6
-/* 0CCCB4 800CC0B4 8C2E9600 */  lw    $t6, %lo(D_800E9600)($at)
+/* 0CCCB4 800CC0B4 8C2E9600 */  lw    $t6, %lo(jpt_800E9600)($at)
 /* 0CCCB8 800CC0B8 01C00008 */  jr    $t6
 /* 0CCCBC 800CC0BC 00000000 */   nop   
+glabel L800CC0C0
 /* 0CCCC0 800CC0C0 10000029 */  b     .L800CC168
 /* 0CCCC4 800CC0C4 ACE60000 */   sw    $a2, ($a3)
+glabel L800CC0C8
 /* 0CCCC8 800CC0C8 8CE40000 */  lw    $a0, ($a3)
 /* 0CCCCC 800CC0CC 44802000 */  mtc1  $zero, $f4
 /* 0CCCD0 800CC0D0 240F0001 */  li    $t7, 1
@@ -28,6 +35,7 @@ glabel alResampleParam
 /* 0CCCF8 800CC0F8 00000000 */  nop   
 /* 0CCCFC 800CC0FC 1000001B */  b     .L800CC16C
 /* 0CCD00 800CC100 8FBF0014 */   lw    $ra, 0x14($sp)
+glabel L800CC104
 /* 0CCD04 800CC104 8CE40000 */  lw    $a0, ($a3)
 /* 0CCD08 800CC108 24180001 */  li    $t8, 1
 /* 0CCD0C 800CC10C ACF80030 */  sw    $t8, 0x30($a3)
@@ -40,14 +48,17 @@ glabel alResampleParam
 /* 0CCD28 800CC128 00000000 */  nop   
 /* 0CCD2C 800CC12C 1000000F */  b     .L800CC16C
 /* 0CCD30 800CC130 8FBF0014 */   lw    $ra, 0x14($sp)
+glabel L800CC134
 /* 0CCD34 800CC134 AFA6001C */  sw    $a2, 0x1c($sp)
 /* 0CCD38 800CC138 C7A6001C */  lwc1  $f6, 0x1c($sp)
 /* 0CCD3C 800CC13C 1000000A */  b     .L800CC168
 /* 0CCD40 800CC140 E4E60018 */   swc1  $f6, 0x18($a3)
+glabel L800CC144
 /* 0CCD44 800CC144 24080001 */  li    $t0, 1
 /* 0CCD48 800CC148 10000007 */  b     .L800CC168
 /* 0CCD4C 800CC14C ACE8001C */   sw    $t0, 0x1c($a3)
 .L800CC150:
+glabel L800CC150
 /* 0CCD50 800CC150 8CE40000 */  lw    $a0, ($a3)
 /* 0CCD54 800CC154 50800005 */  beql  $a0, $zero, .L800CC16C
 /* 0CCD58 800CC158 8FBF0014 */   lw    $ra, 0x14($sp)

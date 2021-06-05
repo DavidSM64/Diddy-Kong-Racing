@@ -1,3 +1,30 @@
+.rdata
+glabel D_800E7528
+.asciz "RED %d\n"
+glabel D_800E7530
+.asciz "GREEN %d\n"
+.ascii "\0\0" # padding
+glabel D_800E753C
+.asciz "BLUE %d\n"
+.ascii "\0\0\0" # padding
+glabel D_800E7548
+.asciz "YELLOW %d\n"
+.ascii "\0" # padding
+glabel D_800E7554
+.asciz "MAGENTA %d\n"
+glabel D_800E7560
+.asciz "CYAN %d\n"
+.ascii "\0\0\0" # padding
+glabel D_800E756C
+.asciz "WHITE %d\n"
+.ascii "\0\0" # padding
+glabel D_800E7578
+.asciz "GREY %d\n"
+.ascii "\0\0\0" # padding
+glabel D_800E7584
+.asciz "ORANGE %d\n\n"
+
+.text
 glabel func_80071A24
 /* 072624 80071A24 3C028012 */  lui   $v0, %hi(D_80123588) # $v0, 0x8012
 /* 072628 80071A28 8C423588 */  lw    $v0, %lo(D_80123588)($v0)

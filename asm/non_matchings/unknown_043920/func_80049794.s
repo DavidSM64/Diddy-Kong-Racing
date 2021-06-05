@@ -1,3 +1,55 @@
+.late_rodata
+glabel D_800E64A8
+.double 1.09
+glabel D_800E64B0
+.double 0.4
+glabel D_800E64B8
+.double 0.01
+glabel D_800E64C0
+.double 0.01
+glabel D_800E64C8
+.double 0.016
+glabel D_800E64D0
+.double 1.2
+glabel D_800E64D8
+.float 1.2
+.word 0 # Padding
+glabel D_800E64E0
+.double 0.016
+glabel D_800E64E8
+.float 1.4
+glabel D_800E64EC
+.float 0.01
+glabel D_800E64F0
+.float 0.02
+glabel D_800E64F4
+.float 0.004
+glabel D_800E64F8
+.double 0.6
+glabel D_800E6500
+.double 0.3
+glabel D_800E6508
+.float 1.2
+.word 0 # Padding
+glabel D_800E6510
+.double 0.00015
+glabel D_800E6518
+.double 1.8
+glabel D_800E6520
+.double 0.4
+glabel D_800E6528
+.float 0.4
+.word 0 # Padding
+glabel D_800E6530
+.double 0.058823529411764705
+glabel D_800E6538
+.double 0.05
+glabel D_800E6540
+.double 0.65
+glabel D_800E6548
+.double 0.65
+
+.text
 glabel func_80049794
 /* 04A394 80049794 27BDFF08 */  addiu $sp, $sp, -0xf8
 /* 04A398 80049798 AFBF0034 */  sw    $ra, 0x34($sp)

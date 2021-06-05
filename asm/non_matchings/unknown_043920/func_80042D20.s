@@ -1,3 +1,34 @@
+.late_rodata
+glabel D_800E62A8
+.double -2500.0
+glabel D_800E62B0
+.double 0.025
+glabel D_800E62B8
+.double 0.561
+glabel D_800E62C0
+.double 0.004
+glabel D_800E62C8
+.double 0.025
+glabel D_800E62D0
+.double 0.561
+glabel D_800E62D8
+.double 0.004
+glabel D_800E62E0
+.double 0.2
+glabel D_800E62E8
+.double 0.004
+glabel D_800E62F0
+.double 0.595
+glabel D_800E62F8
+.double 0.025
+glabel D_800E6300
+.double 500.0
+glabel D_800E6308
+.double 650.0
+glabel D_800E6310
+.double -0.3
+
+.text
 glabel func_80042D20
 /* 043920 80042D20 27BDFF68 */  addiu $sp, $sp, -0x98
 /* 043924 80042D24 AFBF001C */  sw    $ra, 0x1c($sp)

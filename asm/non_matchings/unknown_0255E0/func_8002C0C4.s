@@ -1,3 +1,9 @@
+.rdata
+glabel D_800E5E38
+.asciz "ERROR!! TrackMem overflow .. %d\n"
+.ascii "\0\0\0" # padding
+
+.text
 glabel func_8002C0C4
 /* 02CCC4 8002C0C4 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 02CCC8 8002C0C8 AFB2001C */  sw    $s2, 0x1c($sp)

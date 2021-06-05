@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E94B8
+.double 1000000.0
+
+.text
 glabel func_800C8380
 /* 0C8F80 800C8380 44852000 */  mtc1  $a1, $f4
 /* 0C8F84 800C8384 44864000 */  mtc1  $a2, $f8

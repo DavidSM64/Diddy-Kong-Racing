@@ -1,3 +1,13 @@
+.rdata
+glabel D_800E96C0
+.asciz "hlL"
+glabel D_800E96C4
+.asciz " +-#0"
+.ascii "\0\0" # padding
+glabel D_800E96CC
+.word 1, 2, 4, 8, 16, 0
+
+.text
 glabel _Printf
 /* 0D4B10 800D3F10 27BDFF20 */  addiu $sp, $sp, -0xe0
 /* 0D4B14 800D3F14 AFB70034 */  sw    $s7, 0x34($sp)

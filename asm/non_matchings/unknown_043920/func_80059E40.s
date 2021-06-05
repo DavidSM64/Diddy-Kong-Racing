@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E6930
+.double 1.2
+glabel D_800E6938
+.double 0.8
+
+.text
 glabel func_80059E40
 /* 05AA40 80059E40 3C058012 */  lui   $a1, %hi(D_80120001) # $a1, 0x8012
 /* 05AA44 80059E44 80A5D59C */  lb    $a1, %lo(D_8011D59C)($a1)

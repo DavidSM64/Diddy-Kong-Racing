@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E83B0
+.float 0.67
+glabel D_800E83B4
+.float 2.83
+
+.text
 glabel MenuTitleScreenLoop
 /* 0845E4 800839E4 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0845E8 800839E8 AFBF0014 */  sw    $ra, 0x14($sp)

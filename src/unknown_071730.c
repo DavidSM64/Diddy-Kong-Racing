@@ -29,15 +29,6 @@ const char D_800E74F8[] = "CYAN %d\n";
 const char D_800E7504[] = "WHITE %d\n";
 const char D_800E7510[] = "GREY %d\n";
 const char D_800E751C[] = "ORANGE %d\n\n";
-const char D_800E7528[] = "RED %d\n";
-const char D_800E7530[] = "GREEN %d\n";
-const char D_800E753C[] = "BLUE %d\n";
-const char D_800E7548[] = "YELLOW %d\n";
-const char D_800E7554[] = "MAGENTA %d\n";
-const char D_800E7560[] = "CYAN %d\n";
-const char D_800E756C[] = "WHITE %d\n";
-const char D_800E7578[] = "GREY %d\n";
-const char D_800E7584[] = "ORANGE %d\n\n";
                           
 /*********************************/
 

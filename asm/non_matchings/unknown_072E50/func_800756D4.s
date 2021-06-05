@@ -1,3 +1,9 @@
+.rdata
+glabel D_800E77CC
+.asciz "DKRACING-GHOSTS\0"
+.ascii "\0\0\0" # padding
+
+.text
 glabel func_800756D4
 /* 0762D4 800756D4 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 0762D8 800756D8 AFBF003C */  sw    $ra, 0x3c($sp)

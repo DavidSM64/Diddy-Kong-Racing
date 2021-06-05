@@ -1,3 +1,14 @@
+.late_rodata
+glabel D_800E7AFC
+.float 1.21212125
+glabel D_800E7B00
+.float 1.1
+glabel D_800E7B04
+.float 1.33333333
+glabel D_800E7B08
+.float 1.33333333
+
+.text
 glabel func_8007A310
 /* 07AF10 8007A310 3C028000 */  lui   $v0, %hi(osTvType) # $v0, 0x8000
 /* 07AF14 8007A314 8C420300 */  lw    $v0, %lo(osTvType)($v0)
