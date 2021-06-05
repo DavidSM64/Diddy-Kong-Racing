@@ -22,11 +22,6 @@ const char D_800E4E68[] = "Audio line definition error (line=%d, vertex=%d)\n";
 const char D_800E4E9C[] = "Reverb line definition error (less than 2 vertices on line %d)\n";
 const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
 
-const FloatLiteral D_800E4F10 = { -100000.0f };
-const FloatLiteral D_800E4F14 = { 999999.0f };
-const DoubleLiteral D_800E4F18 = { -100000.0 };
-const DoubleLiteral D_800E4F20 = { -100000.0 };
-
 /*********************************/
 
 /************ .bss ************/

@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E4F20
+.double -100000.0
+
+.text
 glabel func_80009AB4
 /* 00A6B4 80009AB4 308E00FF */  andi  $t6, $a0, 0xff
 /* 00A6B8 80009AB8 000E7880 */  sll   $t7, $t6, 2
