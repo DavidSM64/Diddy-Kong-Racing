@@ -65,6 +65,9 @@ def adjustAsmFile(asmFilepath, refs):
             if ref[0] == 'asciz':
                 rodata += 'glabel ' + ref[1] + '\n'
                 rodata += '.' + ref[0] + ' ' + ref[2] + '\n'
+                strEnd = int(ref[1][-1:], 16) + len(ref[2].replace('\\', '')) - 2 + 1
+                if strEnd % 4 != 0:
+                    rodata += '.ascii "' + ('\\0' * (4 - (strEnd % 4))) + '" # padding\n'
             elif ref[0] == 'double' or ref[0] == 'float':
                 lateRodata += 'glabel ' + ref[1] + '\n'
                 lateRodata += '.' + ref[0] + ' ' + ref[2] + '\n'
