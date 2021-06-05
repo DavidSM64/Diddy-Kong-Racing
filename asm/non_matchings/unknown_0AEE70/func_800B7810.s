@@ -1,3 +1,84 @@
+.rdata
+glabel D_800E8F18
+.asciz " epc\t\t0x%08x\n"
+.ascii "\0\0" # padding
+glabel D_800E8F28
+.asciz " cause\t\tmmAlloc(%d,0x%8x)\n"
+.ascii "\0" # padding
+glabel D_800E8F44
+.asciz " object\t\t"
+.ascii "\0\0" # padding
+glabel D_800E8F50
+.asciz "%s %d "
+.ascii "\0" # padding
+glabel D_800E8F58
+.asciz "\n"
+.ascii "\0\0" # padding
+glabel D_800E8F5C
+.asciz "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+.ascii "\0" # padding
+glabel D_800E8F6C
+.asciz " Fault in thread %d\n"
+.ascii "\0\0\0" # padding
+glabel D_800E8F84
+.asciz " epc\t\t0x%08x\n"
+.ascii "\0\0" # padding
+glabel D_800E8F94
+.asciz " cause\t\t0x%08x\n"
+glabel D_800E8FA4
+.asciz " sr\t\t0x%08x\n"
+.ascii "\0\0\0" # padding
+glabel D_800E8FB4
+.asciz " badvaddr\t0x%08x\n"
+.ascii "\0\0" # padding
+glabel D_800E8FC8
+.asciz " object\t\t"
+.ascii "\0\0" # padding
+glabel D_800E8FD4
+.asciz "%s %d "
+.ascii "\0" # padding
+glabel D_800E8FDC
+.asciz "\n"
+.ascii "\0\0" # padding
+glabel D_800E8FE0
+.asciz " at 0x%08x v0 0x%08x v1 0x%08x\n"
+glabel D_800E9000
+.asciz " a0 0x%08x a1 0x%08x a2 0x%08x\n"
+glabel D_800E9020
+.asciz " a3 0x%08x t0 0x%08x t1 0x%08x\n"
+glabel D_800E9040
+.asciz " t2 0x%08x t3 0x%08x t4 0x%08x\n"
+glabel D_800E9060
+.asciz " t5 0x%08x t6 0x%08x t7 0x%08x\n"
+glabel D_800E9080
+.asciz " s0 0x%08x s1 0x%08x s2 0x%08x\n"
+glabel D_800E90A0
+.asciz " s3 0x%08x s4 0x%08x s5 0x%08x\n"
+glabel D_800E90C0
+.asciz " s6 0x%08x s7 0x%08x t8 0x%08x\n"
+glabel D_800E90E0
+.asciz " t9 0x%08x gp 0x%08x sp 0x%08x\n"
+glabel D_800E9100
+.asciz " s8 0x%08x ra 0x%08x\n\n"
+.ascii "\0" # padding
+glabel D_800E9118
+.asciz "   %08x %08x %08x\n"
+.ascii "\0" # padding
+glabel D_800E912C
+.asciz "  "
+.ascii "\0" # padding
+glabel D_800E9130
+.asciz "%04x "
+.ascii "\0\0" # padding
+glabel D_800E9138
+.asciz "\n"
+.ascii "\0\0" # padding
+
+.late_rodata
+glabel jpt_800E913C
+.word L800B7898, L800B7C18, L800B7C18, L800B7C18, L800B7C70, L800B7CE4
+
+.text
 glabel func_800B7810
 /* 0B8410 800B7810 27BDFFA0 */  addiu $sp, $sp, -0x60
 /* 0B8414 800B7814 3C0F800E */  lui   $t7, %hi(D_800E302C) # $t7, 0x800e
@@ -27,12 +108,13 @@ glabel func_800B7810
 /* 0B8474 800B7874 2C410006 */  sltiu $at, $v0, 6
 /* 0B8478 800B7878 1020011B */  beqz  $at, .L800B7CE8
 /* 0B847C 800B787C 00024880 */   sll   $t1, $v0, 2
-/* 0B8480 800B7880 3C01800F */  lui   $at, %hi(D_800E913C) # $at, 0x800f
+/* 0B8480 800B7880 3C01800F */  lui   $at, %hi(jpt_800E913C) # $at, 0x800f
 /* 0B8484 800B7884 00290821 */  addu  $at, $at, $t1
-/* 0B8488 800B7888 8C29913C */  lw    $t1, %lo(D_800E913C)($at)
+/* 0B8488 800B7888 8C29913C */  lw    $t1, %lo(jpt_800E913C)($at)
 /* 0B848C 800B788C 00000000 */  nop   
 /* 0B8490 800B7890 01200008 */  jr    $t1
 /* 0B8494 800B7894 00000000 */   nop   
+glabel L800B7898
 /* 0B8498 800B7898 444AF800 */  cfc1  $t2, $31
 /* 0B849C 800B789C 3C038013 */  lui   $v1, %hi(D_80129800) # $v1, 0x8013
 /* 0B84A0 800B78A0 35410003 */  ori   $at, $t2, 3
@@ -264,6 +346,7 @@ glabel func_800B7810
 /* 0B880C 800B7C0C 24849100 */   addiu $a0, %lo(D_800E9100) # addiu $a0, $a0, -0x6f00
 /* 0B8810 800B7C10 10000036 */  b     .L800B7CEC
 /* 0B8814 800B7C14 8FBF002C */   lw    $ra, 0x2c($sp)
+glabel L800B7C18
 /* 0B8818 800B7C18 00021880 */  sll   $v1, $v0, 2
 /* 0B881C 800B7C1C 00621823 */  subu  $v1, $v1, $v0
 /* 0B8820 800B7C20 00031900 */  sll   $v1, $v1, 4
@@ -287,6 +370,7 @@ glabel func_800B7810
 /* 0B8864 800B7C64 26100004 */   addiu $s0, $s0, 4
 /* 0B8868 800B7C68 10000020 */  b     .L800B7CEC
 /* 0B886C 800B7C6C 8FBF002C */   lw    $ra, 0x2c($sp)
+glabel L800B7C70
 /* 0B8870 800B7C70 000219C0 */  sll   $v1, $v0, 7
 /* 0B8874 800B7C74 2463FE00 */  addiu $v1, $v1, -0x200
 /* 0B8878 800B7C78 3C198013 */  lui   $t9, %hi(D_80129BB0) # $t9, 0x8013
@@ -318,6 +402,7 @@ glabel func_800B7810
 /* 0B88D8 800B7CD8 00000000 */   nop   
 /* 0B88DC 800B7CDC 10000003 */  b     .L800B7CEC
 /* 0B88E0 800B7CE0 8FBF002C */   lw    $ra, 0x2c($sp)
+glabel L800B7CE4
 /* 0B88E4 800B7CE4 AC600000 */  sw    $zero, ($v1)
 .L800B7CE8:
 /* 0B88E8 800B7CE8 8FBF002C */  lw    $ra, 0x2c($sp)
