@@ -1,3 +1,32 @@
+.rdata
+glabel D_800E8640
+.asciz "CAN'T"
+.ascii "\0\0" # padding
+glabel D_800E8648
+.asciz "SAVE"
+.ascii "\0\0\0" # padding
+glabel D_800E8650
+.asciz "GHOST"
+.ascii "\0\0" # padding
+glabel D_800E8658
+.asciz " CONTROLLER"
+glabel D_800E8664
+.asciz "PAK"
+glabel D_800E8668
+.asciz "FULL"
+.ascii "\0\0\0" # padding
+glabel D_800E8670
+.asciz " CONTROLLER"
+glabel D_800E867C
+.asciz "PAK"
+glabel D_800E8680
+.asciz "DAMAGED"
+
+.late_rodata
+glabel D_800E8738
+.double 1.2
+
+.text
 glabel func_800A277C
 /* 0A337C 800A277C 27BDFF40 */  addiu $sp, $sp, -0xc0
 /* 0A3380 800A2780 AFB00020 */  sw    $s0, 0x20($sp)
