@@ -8,8 +8,8 @@
 
 const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
 
-// File Boundary! Not sure where the split occurs. Need to split when that gets figured out.
-const DoubleLiteral D_800E8838 = { 0.0 };
+// File Boundary! Not sure where the split occurs though.
+const int D_800E8838[2] = { 0, 0 };
 
 const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
 const char D_800E887C[] = "\n\nUnknown particle type in initParticleTrigger %d, Max %d.\n\n";

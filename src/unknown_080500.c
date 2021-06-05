@@ -739,8 +739,8 @@ s32 D_800E0968 = 0;
 s32 D_800E096C = 0;
 s32 D_800E0970 = 0;
 s32 D_800E0974 = 0;
-const FloatLiteral D_800E7D04 = { 0.5f };
-f32* D_800E0978 = &D_800E7D04;
+const f32 D_800E7D04[1] = { 0.5f }; // .rodata
+f32* D_800E0978 = D_800E7D04; // .data
 s32 D_800E097C = 0;
 s32 D_800E0980 = 0;
 s32 D_800E0984 = 0;
@@ -2174,7 +2174,7 @@ void func_80086A48(s32 arg0) {
     temp = D_80126BD4;
     temp2 = D_80126BE4;
     while (arg0 > 0) {
-        temp3 = D_800E8414.floatLiteral;
+        temp3 = 0.1f;
         if (D_80126A08 > 0) {
             D_80126BDC = D_80126BDC + temp3 * (temp - D_80126BDC);
         }
