@@ -8,7 +8,7 @@
 
 const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
 
-// This is probably a file boundary.
+// File Boundary! Not sure where the split occurs. Need to split when that gets figured out.
 const DoubleLiteral D_800E8838 = { 0.0 };
 
 const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
@@ -29,25 +29,6 @@ const char D_800E8AB4[] = "\n\nPoint Particle buffer is empty.\n\n";
 const char D_800E8AD8[] = "\n\nCan't deallocate space for unknown particle type.\n\n";
 const char D_800E8B10[] = "\nError :: trigger %x has no reference to point %x";
 const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in trigger list %x (%d >> %p)";
-
-const DoubleLiteral D_800E8B98 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BA0 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BA8 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BB0 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BB8 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BC0 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BC8 = { 0.00001525878906 };
-const DoubleLiteral D_800E8BD0 = { 0.00001525878906 };
-const FloatLiteral D_800E8BD8 = { 0.1f };
-
-// Jump table in func_800B2040
-const u32 D_800E8BDC[] = {
-    0x800B2250, 0x800B20E0, 0x800B2138, 0x800B2190, 
-    0x800B21E8
-};
-
-const FloatLiteral D_800E8BF0 = { 0.1f };
-const FloatLiteral D_800E8BF4 = { 0.01f };
 
 /*********************************/
 
