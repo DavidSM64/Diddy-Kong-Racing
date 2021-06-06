@@ -1,6 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80065EA0 */
 
+#include "unknown_066AA0.h"
+
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
@@ -11,23 +13,6 @@ extern u32 osTvType;
 /************ .data ************/
 
 s32 D_800DD060 = 0; // Currently unknown, might be a different type.
-
-/* Size: 0x34 bytes. */
-typedef struct unk800DD064 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    s32 unk28;
-    s32 unk2C;
-    s32 unk30;
-} unk800DD064;
 
 unk800DD064 D_800DD064[4] = {
     { 
