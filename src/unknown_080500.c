@@ -558,15 +558,16 @@ s16 D_800E0710[16] = {
     0x16, 0x17, 0x20, 0x00
 };
 
-s16 D_800E0730[18] = {
+s16 D_800E0730[19] = {
     0x0000, 0x0000, 0x0000, 0x0000, 
     0x0000, 0x0000, 0x0000, 0x0000, 
     0x0000, 0x0000, 0x0000, 0x0000, 
     0x0000, 0x0000, 0x0000, 0x0000, 
-    0x0000, 0x0000
+    0x0000, 0x0000, 0x0000
 };
-s16 D_800E0758[56] = {
-    0x0000, 0x0000, 0xFFFF, 0xFFFF,
+
+s16 D_800E0758[54] = {
+    0xFFFF, 0xFFFF,
     0x0129, 0x011A, 0x0120, 0x0115,
     0x0126, 0x011D, 0x0130, 0x0121,
     0x0117, 0x0154, 0x0128, 0x0119,
@@ -697,8 +698,8 @@ s16 D_800E0A40[8] = {
 unk800DFC10 D_800E0A50 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0A60 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0A70 = { NULL, 0, 0, NULL, 0 };
-unk800DFC10 D_800E0A90 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0A80 = { NULL, 0, 0, NULL, 0 };
+unk800DFC10 D_800E0A90 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0AA0 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0AB0 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0AC0 = { NULL, 0, 0, NULL, 0 };
@@ -1653,7 +1654,6 @@ void func_800841B8(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuOptionsLoop.s")
 #else
     
-extern s32 D_800DFA14;
 extern s32 D_8012644C;
 
 void func_80084734(void);
@@ -1716,12 +1716,12 @@ s32 MenuOptionsLoop(s32 arg0) {
             func_80001D04(0xEB, 0);
             func_8009EABC(0, 0x2000000);
             func_800C2AF4(0);
-            D_800DFA14 = D_800DF4A0->unk2DC;
+            D_800DFA10[1] = D_800DF4A0->unk2DC;
         } else {
             func_80001D04(0xEB, 0);
             func_8009EA78(0, 0x2000000);
             func_800C2AF4(1);
-            D_800DFA14 = D_800DF4A0->unk2D8;
+            D_800DFA10[1] = D_800DF4A0->unk2D8;
         }
     } else {
         // Move up & down the list
@@ -3575,9 +3575,9 @@ void func_80098EBC(s32 arg0) {
             fade = (test >> 1) + 0x80;
         }
         
-        D_800E1088[i][0].filterRed = fade;
-        D_800E1088[i][0].filterGreen = fade;
-        D_800E1088[i][0].filterBlue = fade;
+        D_800E1048+64[i][0].filterRed = fade;
+        D_800E1048+64[i][0].filterGreen = fade;
+        D_800E1048+64[i][0].filterBlue = fade;
     }
     
     if (D_801263E0 == 2 || D_801263E0 == 3) {
