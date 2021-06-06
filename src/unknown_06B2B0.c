@@ -85,8 +85,19 @@ s16 D_800DD3F4[8] = {
     255, -1, 20, -1
 };
 s32 D_800DD404 = 12;
-s32 D_800DD408 = 0x00FFFFFF;
-s32 D_800DD40C = 0x001EFFFF; // Unused?
+
+typedef struct unknown800DD408 {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u16 unk4;
+    u16 unk6;
+} unknown800DD408;
+
+unknown800DD408 D_800DD408 = {
+    0, 255, 255, 255, 30, 0xFFFF
+};
 
 // Unused?
 char *D_800DD410[3] = {
