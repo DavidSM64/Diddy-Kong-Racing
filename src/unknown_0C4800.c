@@ -48,6 +48,8 @@ s8 D_800E3710[48] = {
 
 OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL };
 
+s32 pad800E375C = 0; // File boundary?
+
 u8* D_800E3760 = NULL;
 u8* D_800E3764 = NULL;
 u8* gzip_inflate_input = NULL;
