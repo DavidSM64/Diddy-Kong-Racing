@@ -51,6 +51,7 @@ class GenerateLD:
         self.gen_data_section()
         self.gen_rodata_section()
         self.gen_ucode_data_section()
+        self.gen_bss_section()
         self.gen_assets_section()
         self.gen_discard()
         self.gen_close_block()
@@ -113,6 +114,17 @@ class GenerateLD:
         self.gen_line(BUILD_DIR + '/data/unknown_last.rodata.o(.rodata);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.rodata);')
+        self.gen_newline()
+        
+    def gen_bss_section(self):
+        self.gen_line('.bss.noload (NOLOAD):')
+        self.gen_open_block()
+        for file in self.files:
+            if file[0] not in LATE_DATA_FILES:
+                self.gen_line(file[0] + '(.bss);')
+        for file in LATE_DATA_FILES:
+            self.gen_line(file + '(.bss);')
+        self.gen_close_block()
         self.gen_newline()
         
     def gen_ucode_data_section(self):

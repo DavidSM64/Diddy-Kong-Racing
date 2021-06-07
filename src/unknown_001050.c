@@ -49,7 +49,7 @@ const char D_800E49BC[] = "Invalid midi sequence index\n";
 
 /************ .bss ************/
 
-extern u8  D_800EBF60;
+u8 D_800EBF60;
 extern ALHeap gALHeap;
 
 /* Unknown size */

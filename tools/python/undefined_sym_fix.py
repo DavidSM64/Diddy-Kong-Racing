@@ -32,24 +32,27 @@ def check_is_double(symbol, address):
     outLines = command.stdout.decode("utf-8").split('\n')
     for outLine in outLines:
         if 'lwc1' in outLine:
-            newSym = hex(address - 4)[2:].upper() + '+4'
+            newSym = 'D_' + hex(address - 4)[2:].upper() + ' + 4'
             subprocess.run(['./rename_sym.sh', symbol, newSym])
             return True
     return False
     
 def fixDoubleLoads():
     syms = load_syms()
-    for i in range(0, len(syms)):
+    target = len(syms)
+    i = 0
+    while i < target:
         sym = syms[i]
-        if not sym.startswith('D_'):
-            continue
-        symSplit = sym.split(' = ')
-        symbol = symSplit[0]
-        address = int(symSplit[1][2:-1], 16)
-        if address >= 0x800E4BFC and address < 0x800E9BA0 and (address & 4 == 4):
-            if check_is_double(symbol, address):
-                syms.pop(i)
-                i -= 1
+        if sym.startswith('D_'):
+            symSplit = sym.split(' = ')
+            symbol = symSplit[0]
+            address = int(symSplit[1][2:-1], 16)
+            if address >= 0x800E4BFC and address < 0x800E9BA0 and ((address & 4) != 0):
+                if check_is_double(symbol, address):
+                    syms.pop(i)
+                    target -= 1
+                    continue
+        i += 1
     save_syms(syms)
 
 #fixBadLabel()

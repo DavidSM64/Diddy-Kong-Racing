@@ -58,12 +58,12 @@ glabel func_800A1E48
 /* 0A2B0C 800A1F0C 37210003 */  ori   $at, $t9, 3
 /* 0A2B10 800A1F10 38210002 */  xori  $at, $at, 2
 /* 0A2B14 800A1F14 44C1F800 */  ctc1  $at, $31
-/* 0A2B18 800A1F18 3C01800F */  lui   $at, %hi(D_800E8734) # $at, 0x800f
+/* 0A2B18 800A1F18 3C01800F */  lui   $at, %hi(D_800E8730 + 4) # $at, 0x800f
 /* 0A2B1C 800A1F1C 460042A4 */  cvt.w.s $f10, $f8
 /* 0A2B20 800A1F20 C4358730 */  lwc1  $f21, %lo(D_800E8730)($at)
 /* 0A2B24 800A1F24 44D9F800 */  ctc1  $t9, $31
 /* 0A2B28 800A1F28 44085000 */  mfc1  $t0, $f10
-/* 0A2B2C 800A1F2C C4348734 */  lwc1  $f20, %lo(D_800E8734)($at)
+/* 0A2B2C 800A1F2C C4348734 */  lwc1  $f20, %lo(D_800E8730 + 4)($at)
 /* 0A2B30 800A1F30 26B56D37 */  addiu $s5, %lo(D_80126D37) # addiu $s5, $s5, 0x6d37
 /* 0A2B34 800A1F34 00009025 */  move  $s2, $zero
 /* 0A2B38 800A1F38 241E0002 */  li    $fp, 2
