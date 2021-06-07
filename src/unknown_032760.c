@@ -1,6 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80031B60 */
 
+#include "unknown_032760.h"
+
 #include "types.h"
 #include "macros.h"
 #include "structs.h"

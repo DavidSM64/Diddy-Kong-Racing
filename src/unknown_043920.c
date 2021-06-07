@@ -1,6 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80042D20 */
 
+#include "unknown_043920.h"
+
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
@@ -51,36 +53,26 @@ s32 D_800DCC80[19] = {
     0, 0, 0
 };
 
-// Unused?
-s16 D_800DCCB4[6] = {
+u16 D_800DCCCC[20] = {
     0x010C, 0x010B, 0x0009, 0x010C,
-    0x010C, 0x010C
-};
-
-u16 D_800DCCCC[14] = {
     0x010C, 0x010C, 0x010C, 0x010C,
-    0x010C, 0x0005, 0x010C, 0x010C,
+    0x010C, 0x010C, 0x010C, 0x0005,
     0x010C, 0x010C, 0x010C, 0x010C,
-    0x010C, 0x0000
-};
-
-// Unused? Not sure if this is actually an array or just some random data.
-s32 D_800DCCDC[2] = {
-    1, 4
+    0x010C, 0x010C, 0x010C, 0x0000
 };
 
 // Used for some sort of bit mask
 s32 D_800DCCF4[19] = {
-    16, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 0x100, 1, 1, 1, 1,
-    1, 0, 4
+    1, 4, 16, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 0x100, 1, 1,
+    1, 1, 1
 };
 
 // Used for some sort of bit mask
-s32 D_800DCD40[18] = {
-    16, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0x100, 0, 0, 0, 0,
-    0, 0
+s32 D_800DCD40[20] = {
+    0, 4, 16, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0x100, 0, 0,
+    0, 0, 0, 0
 };
 
 s8 D_800DCD90[15] = {

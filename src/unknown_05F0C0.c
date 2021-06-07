@@ -1,6 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005E4C0 */
 
+#include "unknown_05F0C0.h"
+
 #include "types.h"
 #include "macros.h"
 

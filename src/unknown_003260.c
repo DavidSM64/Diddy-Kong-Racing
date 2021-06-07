@@ -1,6 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80002660 */
 
+#include "unknown_003260.h"
+
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
@@ -19,11 +21,6 @@
 extern void func_80002A98(void*);
 extern u32 D_80003008;
 
-typedef struct unk800DC6BC_40 {
-    ALLink node;
-    u8 pad0C[0x38];
-} unk800DC6BC_40; //ALSoundState
-
 typedef union {
     ALEvent msg;
 
@@ -34,21 +31,6 @@ typedef union {
     }snd_event;
 
 }ALSndpEvent;
-
-/* Unknown Size */
-typedef struct unk800DC6BC {
-    ALPlayer        node;
-    ALEventQueue    evtq;
-    ALEvent         nextEvent;
-    ALSynth        *drvr;
-    u32             unk3C;
-    unk800DC6BC_40 *unk40;
-    s32             unk44;
-    s32             unk48;
-    s32             frameTime;
-    ALMicroTime     nextDelta;
-    ALMicroTime     curTime;
-} unk800DC6BC; //ALSndPlayer
 
 typedef struct unk80119240
 {

@@ -328,7 +328,8 @@ glabel MenuTitleScreenLoop
 /* 084A94 80083E94 4606003C */  c.lt.s $f0, $f6
 /* 084A98 80083E98 3C0F800E */  lui   $t7, %hi(D_800DF760) # $t7, 0x800e
 /* 084A9C 80083E9C 45000016 */  bc1f  .L80083EF8
-/* 084AA0 80083EA0 3C04800E */   lui   $a0, %hi(D_800DF763) # $a0, 0x800e
+# Casting D_800DF760 to u8 (see instr 084AF8).
+/* 084AA0 80083EA0 3C04800E */   lui   $a0, %hi(D_800DF760) # $a0, 0x800e
 /* 084AA4 80083EA4 8DEFF760 */  lw    $t7, %lo(D_800DF760)($t7)
 /* 084AA8 80083EA8 44815000 */  mtc1  $at, $f10
 /* 084AAC 80083EAC 448F2000 */  mtc1  $t7, $f4
@@ -351,7 +352,7 @@ glabel MenuTitleScreenLoop
 /* 084AF0 80083EF0 10000006 */  b     .L80083F0C
 /* 084AF4 80083EF4 2463686C */   addiu $v1, %lo(D_8012686C) # addiu $v1, $v1, 0x686c
 .L80083EF8:
-/* 084AF8 80083EF8 9084F763 */  lbu   $a0, %lo(D_800DF763)($a0)
+/* 084AF8 80083EF8 9084F763 */  lbu   $a0, -0x89d($a0)
 /* 084AFC 80083EFC 0C000664 */  jal   musicSetRelativeVolume
 /* 084B00 80083F00 00000000 */   nop   
 /* 084B04 80083F04 3C038012 */  lui   $v1, %hi(D_8012686C) # $v1, 0x8012

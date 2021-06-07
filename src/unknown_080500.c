@@ -1,6 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8007F900 */
 
+#include "unknown_080500.h"
+
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
@@ -63,31 +65,6 @@ s32 gIsInAdventureTwo = 0;
 s32 D_800DF498 = 0;
 s32 D_800DF49C = 0; // Currently unknown, might be a different type.
 
-typedef struct unk800DF4A0 {
-    u8  pad0[0x5C];
-    s32 unk5C;
-    s32 unk60;
-    u8  unk64[0xC];
-    s32 unk70;
-    u8  pad74[0x1C];
-    s32 unk90;
-    u8  pad94[0x30];
-    s32 unkC4;
-    s32 unkC8;
-    s32 unkCC;
-    u8  padD0[0x48];
-    s32 unk118;
-    u8  pad11C[0x100];
-    s32 unk21C;
-    u8  pad220[0x8];
-    s32 unk228[4];
-    u8  pad238[0x24];
-    s32 unk25C;
-    u8  pad260[0x78];
-    s32 unk2D8;
-    s32 unk2DC;
-} unk800DF4A0;
-
 unk800DF4A0* D_800DF4A0 = NULL;
 
 u8 D_800DF4A4 = 0xFF;
@@ -119,24 +96,6 @@ s32 D_800DF4F0[] = {
     0x4000, 0x8000, 0x1000, 0x2000,
     0x8000, 0x10, 0x400, 0x00
 };
-
-/* Size: 0x20 bytes */
-typedef struct unk800DF510 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    s16 unk18;
-    s8  unk1A;
-    s8  unk1B;
-    s8  unk1C;
-    s8  unk1D;
-    u8  pad1E[2];
-} unk800DF510;
 
 unk800DF510 D_800DF510[18] = {
     { 0, 0, 0, 0x00, 1.0f, 0.0f, 0.0f, -32.0f, 0, 0, 0, 0, 0 },
@@ -193,13 +152,6 @@ s32 D_800DF7AC = 0; // Currently unknown, might be a different type.
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 char gVersionDisplayText[20] = "VERSION XXXXXXXX";
 
-// Probably not unqiue to the boot menu.
-typedef struct MenuBootDrawTexture {
-    u32* texture; // Pointer to texture to draw. TODO: Make structure for texture header.
-    s16 xOffset; // Offset from the center of the screen.
-    s16 yOffset; // Offset from the center of the screen.
-} MenuBootDrawTexture;
-
 s16 D_800DF7C4[12] = {
     0x50, 0x51, 0x52, 0x53, 
     0x54, 0x55, 0x56, 0x57,
@@ -220,21 +172,6 @@ MenuBootDrawTexture D_800DF7DC[12] = {
     { NULL,  75, -32 },
     { NULL,   0,   0 }
 };
-
-/* Size: 0x30 bytes */
-typedef struct unk800DF83C {
-    char* unk0; // Pointer to ascii text.
-    f32  unk4;
-    f32  unk8;
-    f32  unkC;
-    f32  unk10;
-    f32  unk14;
-    f32  unk18;
-    f32  unk1C;
-    f32  unk20;
-    f32  unk24;
-    f32  unk28;
-} unk800DF83C;
 
 // Title screen cinematic text
 unk800DF83C D_800DF83C[10] = {
@@ -265,20 +202,6 @@ char *D_800DFA10[7] = {
 s16 D_800DFA2C[8] = {
     0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0
 };
-
-typedef struct unk800DFA3C {
-    s16 unk0;
-    s16 unk2;
-    u8  unk4;
-    u8  unk5;
-    u8  unk6;
-    u8  unk7;
-    u8  unk8;
-    u8  unk9;
-    u8  unkA;
-    u8  unkB;
-    u32* unkC;
-} unk800DFA3C;
 
 unk800DFA3C D_800DFA3C[8] = {
     { 160,  80, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
@@ -329,14 +252,6 @@ s32* D_800DFBE0[10] = {
 
 s32 D_800DFC08 = 0; // Currently unknown, might be a different type.
 s32 D_800DFC0C = 0xFFFF; // Currently unknown, might be a different type.
-
-typedef struct unk800DFC10 {
-    u32 *unk0;
-    s16 unk4;
-    s16 unk6;
-    u32 *unk8;
-    s32 unkC;
-} unk800DFC10;
 
 unk800DFC10 D_800DFC10 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800DFC20 = { NULL, 0, 0, NULL, 0 };
