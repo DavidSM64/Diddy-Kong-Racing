@@ -12,8 +12,8 @@ struct __osThreadTail
 } __osThreadTail;
 
 struct __osThreadTail __osThreadTail = {0, -1};
-OSThread *__osActiveQueue = &__osThreadTail.next;
 OSThread *__RunQueue = &__osThreadTail.next;
+OSThread *__osActiveQueue = &__osThreadTail.next;
 
 extern OSThread *__osRunningThread = NULL;
 extern OSThread *D_800E4894 = NULL; // __osFaultedThread
