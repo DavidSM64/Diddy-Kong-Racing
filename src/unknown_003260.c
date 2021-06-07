@@ -50,6 +50,7 @@ typedef struct unk800DC6BC {
     ALMicroTime     curTime;
 } unk800DC6BC; //ALSndPlayer
 
+/* Size: 0x14 bytes */
 typedef struct unk80119240
 {
     ALLink node;
@@ -117,20 +118,29 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /************ .bss ************/
 
-extern s32 D_80115F90;
-extern ALHeap* D_80115F94;
-extern OSThread audioThread;
-extern OSMesgQueue OSMesgQueue_80116160;
-extern OSMesg D_80116178;
-extern OSMesgQueue D_80116198;
-extern OSMesg D_801161B0;
-extern ALGlobals ALGlobals_801161D0;
-extern s32 D_80119230;
-extern unk80119240 D_80119240[0x31];
-extern s32 D_8011962C;
-extern OSMesgQueue D_80119AF0;
-extern OSMesg D_80119B08;
-extern u16* D_80119C28;
+s32 D_80115F90;
+ALHeap* D_80115F94;
+s32 D_80115F98[2];
+s32 D_80115FA0[3];
+OSThread audioThread;
+OSMesgQueue OSMesgQueue_80116160;
+OSMesg D_80116178[8];
+OSMesgQueue D_80116198;
+OSMesg D_801161B0[8];
+ALGlobals ALGlobals_801161D0;
+s32 D_80116220[3076];
+s32 D_80119230[3];
+unk80119240 D_80119240[50];
+s32 D_80119628;
+s32 D_8011962C;
+s32 D_80119630;
+s32 D_80119634;
+s32 D_80119638[2];
+s32 D_80119640[300];
+OSMesgQueue D_80119AF0;
+OSMesg D_80119B08[72];
+u16* D_80119C28;
+
 extern f32 D_80126170;
 
 /******************************/

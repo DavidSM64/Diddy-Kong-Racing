@@ -8,11 +8,15 @@
 .set noreorder # dont insert nops after branches
 .set gp=64     # 64-bit instructions are used
 
+.section .text
+
+# .word __BSS_SECTION_SIZE # Should equal 0x41490
+
 glabel entrypoint
-/* 001000 80000400 3C08800F */  lui   $t0, %hi(D_800EBF60) # $t0, 0x800f
-/* 001004 80000404 3C090004 */  lui   $t1, (0x00041490 >> 16) # lui $t1, 4
-/* 001008 80000408 2508BF60 */  addiu $t0, %lo(D_800EBF60) # addiu $t0, $t0, -0x40a0
-/* 00100C 8000040C 35291490 */  ori   $t1, (0x00041490 & 0xFFFF) # ori $t1, $t1, 0x1490
+/* 001000 80000400 3C08800F */  lui   $t0, %hi(gBssSectionStart) # $t0, 0x800f
+/* 001004 80000404 3C090004 */  lui   $t1, (0x41490 >> 16) # lui $t1, 4
+/* 001008 80000408 2508BF60 */  addiu $t0, %lo(gBssSectionStart) # addiu $t0, $t0, -0x40a0
+/* 00100C 8000040C 35291490 */  ori   $t1, (0x41490 & 0xFFFF) # ori $t1, $t1, 0x1490
 .L80000410:
 /* 001010 80000410 2129FFF8 */  addi  $t1, $t1, -8
 /* 001014 80000414 AD000000 */  sw    $zero, ($t0)
