@@ -104,9 +104,9 @@ glabel func_8002DE30
 /* 02EBB4 8002DFB4 00005025 */   move  $t2, $zero
 /* 02EBB8 8002DFB8 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 02EBBC 8002DFBC 4481B000 */  mtc1  $at, $f22
-/* 02EBC0 8002DFC0 3C01800E */  lui   $at, %hi(D_800E5F44) # $at, 0x800e
+/* 02EBC0 8002DFC0 3C01800E */  lui   $at, %hi(D_800E5F40 + 4) # $at, 0x800e
 /* 02EBC4 8002DFC4 C4355F40 */  lwc1  $f21, %lo(D_800E5F40)($at)
-/* 02EBC8 8002DFC8 C4345F44 */  lwc1  $f20, %lo(D_800E5F44)($at)
+/* 02EBC8 8002DFC8 C4345F44 */  lwc1  $f20, %lo(D_800E5F40 + 4)($at)
 /* 02EBCC 8002DFCC 8EA2000C */  lw    $v0, 0xc($s5)
 /* 02EBD0 8002DFD0 24120003 */  li    $s2, 3
 /* 02EBD4 8002DFD4 2411000A */  li    $s1, 10

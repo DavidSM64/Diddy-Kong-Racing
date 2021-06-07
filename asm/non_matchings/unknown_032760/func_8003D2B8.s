@@ -15,9 +15,9 @@ glabel func_8003D2B8
 /* 03DED8 8003D2D8 AFA5002C */  sw    $a1, 0x2c($sp)
 /* 03DEDC 8003D2DC 15E00007 */  bnez  $t7, .L8003D2FC
 /* 03DEE0 8003D2E0 46001006 */   mov.s $f0, $f2
-/* 03DEE4 8003D2E4 3C01800E */  lui   $at, %hi(D_800E618C) # $at, 0x800e
+/* 03DEE4 8003D2E4 3C01800E */  lui   $at, %hi(D_800E6188 + 4) # $at, 0x800e
 /* 03DEE8 8003D2E8 C4296188 */  lwc1  $f9, %lo(D_800E6188)($at)
-/* 03DEEC 8003D2EC C428618C */  lwc1  $f8, %lo(D_800E618C)($at)
+/* 03DEEC 8003D2EC C428618C */  lwc1  $f8, %lo(D_800E6188 + 4)($at)
 /* 03DEF0 8003D2F0 460011A1 */  cvt.d.s $f6, $f2
 /* 03DEF4 8003D2F4 46283282 */  mul.d $f10, $f6, $f8
 /* 03DEF8 8003D2F8 46205020 */  cvt.s.d $f0, $f10

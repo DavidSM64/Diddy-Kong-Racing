@@ -181,10 +181,10 @@ glabel func_8002A5F8
 /* 02B480 8002A880 3C028012 */  lui   $v0, %hi(D_8011D380) # $v0, 0x8012
 /* 02B484 8002A884 2442D380 */  addiu $v0, %lo(D_8011D380) # addiu $v0, $v0, -0x2c80
 /* 02B488 8002A888 E4400000 */  swc1  $f0, ($v0)
-/* 02B48C 8002A88C 3C01800E */  lui   $at, %hi(D_800E5EAC) # $at, 0x800e
+/* 02B48C 8002A88C 3C01800E */  lui   $at, %hi(D_800E5EA8 + 4) # $at, 0x800e
 /* 02B490 8002A890 C4460000 */  lwc1  $f6, ($v0)
 /* 02B494 8002A894 C42B5EA8 */  lwc1  $f11, %lo(D_800E5EA8)($at)
-/* 02B498 8002A898 C42A5EAC */  lwc1  $f10, %lo(D_800E5EAC)($at)
+/* 02B498 8002A898 C42A5EAC */  lwc1  $f10, %lo(D_800E5EA8 + 4)($at)
 /* 02B49C 8002A89C 46003221 */  cvt.d.s $f8, $f6
 /* 02B4A0 8002A8A0 462A403C */  c.lt.d $f8, $f10
 /* 02B4A4 8002A8A4 3C018012 */  lui   $at, %hi(D_8011B0BC) # $at, 0x8012
