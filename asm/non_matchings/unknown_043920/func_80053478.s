@@ -1,3 +1,13 @@
+.late_rodata
+glabel D_800E6750
+.double 1.8
+glabel D_800E6758
+.float 1.8
+.word 0 # Padding
+glabel D_800E6760
+.double 0.2
+
+.text
 glabel func_80053478
 /* 054078 80053478 C480002C */  lwc1  $f0, 0x2c($a0)
 /* 05407C 8005347C 44806800 */  mtc1  $zero, $f13

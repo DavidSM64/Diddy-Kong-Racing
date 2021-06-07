@@ -1,3 +1,14 @@
+.late_rodata
+glabel D_800E6A30
+.double 0.3
+glabel D_800E6A38
+.double -0.1
+glabel D_800E6A40
+.double 0.1
+glabel D_800E6A48
+.double 700.0
+
+.text
 glabel func_8005D0D0
 /* 05DCD0 8005D0D0 27BDFFA0 */  addiu $sp, $sp, -0x60
 /* 05DCD4 8005D0D4 AFA40060 */  sw    $a0, 0x60($sp)

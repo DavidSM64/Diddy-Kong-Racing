@@ -1,3 +1,12 @@
+.rdata
+glabel D_800E95A0
+.asciz "source"
+.ascii "\0" # padding
+glabel D_800E95A8
+.asciz "env.c"
+.ascii "\0\0" # padding
+
+.text
 glabel func_800CAC5C
 /* 0CB85C 800CAC5C 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 0CB860 800CAC60 AFBF001C */  sw    $ra, 0x1c($sp)

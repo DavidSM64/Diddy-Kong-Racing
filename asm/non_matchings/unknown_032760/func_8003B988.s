@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E6168
+.double 1.2
+glabel D_800E6170
+.double 130.0
+
+.text
 glabel func_8003B988
 /* 03C588 8003B988 27BDFFA0 */  addiu $sp, $sp, -0x60
 /* 03C58C 8003B98C 44852000 */  mtc1  $a1, $f4

@@ -1,3 +1,8 @@
+.rdata
+glabel D_800E5FC8
+.asciz "Illegal door no!!!\n"
+
+.text
 glabel func_8003C644
 /* 03D244 8003C644 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 03D248 8003C648 AFBF001C */  sw    $ra, 0x1c($sp)

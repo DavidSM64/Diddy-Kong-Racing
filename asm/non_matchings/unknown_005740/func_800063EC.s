@@ -1,3 +1,17 @@
+.late_rodata
+glabel D_800E4C78
+.float 10000.0
+.word 0 # Padding
+glabel D_800E4C80
+.double 0.05
+glabel D_800E4C88
+.double 0.95
+glabel D_800E4C90
+.double 6.5534
+glabel D_800E4C98
+.float 6.5534
+
+.text
 glabel func_800063EC
 /* 006FEC 800063EC 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 006FF0 800063F0 AFBF0014 */  sw    $ra, 0x14($sp)

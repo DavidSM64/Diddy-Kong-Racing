@@ -17,8 +17,6 @@ Gfx D_800DF440[] = {
 
 /*******************************/
 
-extern s32 D_800E7C90;
-
 u32 func_8007F640(s32 arg0) {
     u32 someAddr;
     s32 count, start, size;
@@ -39,7 +37,7 @@ u32 func_8007F640(s32 arg0) {
         return 0x80100000;
     } else {
         if (arg0 < 0 || arg0 >= count) {
-            func_800C9D54(&D_800E7C90);
+            func_800C9D54("SCREEN: No out of range!!\n");
             arg0 = 0;
         }
         

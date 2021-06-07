@@ -1,3 +1,16 @@
+.late_rodata
+glabel D_800E5138
+.float 1.2
+glabel D_800E513C
+.float 2.4
+glabel D_800E5140
+.float 4.8
+glabel D_800E5144
+.float 0.05
+glabel D_800E5148
+.float 0.1
+
+.text
 glabel func_8000BADC
 /* 00C6DC 8000BADC 3C028012 */  lui   $v0, %hi(D_8011B008) # $v0, 0x8012
 /* 00C6E0 8000BAE0 2442B008 */  addiu $v0, %lo(D_8011B008) # addiu $v0, $v0, -0x4ff8

@@ -15,6 +15,43 @@ s32 D_800DE48C = 0;
 
 /*******************************/
 
+/************ .rodata ************/
+
+const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
+const char D_800E75B4[] = "FREE";
+const char D_800E75BC[] = "ALLOCATED";
+const char D_800E75C8[] = "ALLOCATED,FIXED";
+const char D_800E75D8[] = "\n";
+const char D_800E75DC[] = "\n";
+const char D_800E75E0[] = "Region number = %d\t";
+const char D_800E75F4[] = "maxSlots = %d\t";
+const char D_800E7604[] = "slotsUsed = %d\t";
+const char D_800E7614[] = "loc = %x\t";
+const char D_800E7620[] = "size = %x\n";
+const char D_800E762C[] = "\n";
+
+const char D_800E7630[] = "DKRACING-ADV";
+const char D_800E7640[] = "DKRACING-ADV";
+const char D_800E7650[] = "DKRACING-TIMES";
+const char D_800E7660[] = "DKRACING-TIMES";
+const char D_800E7670[] = "DKRACING-ADV";
+const char D_800E7680[] = "DKRACING-ADV";
+const char D_800E7690[] = "DKRACING-TIMES";
+const char D_800E76A0[] = "DKRACING-TIMES";
+
+const char D_800E76B0[] = "WARNING : No Eprom\n";
+const char D_800E76C4[] = "WARNING : No Eprom\n";
+const char D_800E76D8[] = "WARNING : No Eprom\n";
+const char D_800E76EC[] = "WARNING : No Eprom\n";
+const char D_800E7700[] = "WARNING : No Eprom\n";
+const char D_800E7714[] = "WARNING : No Eprom\n";
+const char D_800E7728[] = "WARNING : No Eprom\n";
+
+const char D_800E773C[] = "DKRACING-GHOSTS\0";
+const char D_800E7750[] = "warning: corrupt ghost\n";
+
+/*********************************/
+
 /************ .bss ************/
 
 extern s32 D_80124010;

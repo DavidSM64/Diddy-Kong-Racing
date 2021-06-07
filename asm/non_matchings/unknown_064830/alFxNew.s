@@ -1,3 +1,12 @@
+.late_rodata
+glabel jpt_800E6EA0
+.word L80064AD8, L80064AE4, L80064AFC, L80064B08, L80064AF0, L80064B14
+glabel D_800E6EB8
+.float 8.320827
+glabel D_800E6EBC
+.float 0.04680453
+
+.text
 glabel alFxNew
 /* 065608 80064A08 27BDFFA0 */  addiu $sp, $sp, -0x60
 /* 06560C 80064A0C AFB00038 */  sw    $s0, 0x38($sp)
@@ -45,27 +54,33 @@ glabel alFxNew
 /* 0656B4 80064AB4 1020001C */  beqz  $at, .L80064B28
 /* 0656B8 80064AB8 2673D028 */   addiu $s3, %lo(D_800DD028) # addiu $s3, $s3, -0x2fd8
 /* 0656BC 80064ABC 00094880 */  sll   $t1, $t1, 2
-/* 0656C0 80064AC0 3C01800E */  lui   $at, %hi(D_800E6EA0) # $at, 0x800e
+/* 0656C0 80064AC0 3C01800E */  lui   $at, %hi(jpt_800E6EA0) # $at, 0x800e
 /* 0656C4 80064AC4 00290821 */  addu  $at, $at, $t1
-/* 0656C8 80064AC8 8C296EA0 */  lw    $t1, %lo(D_800E6EA0)($at)
+/* 0656C8 80064AC8 8C296EA0 */  lw    $t1, %lo(jpt_800E6EA0)($at)
 /* 0656CC 80064ACC 00000000 */  nop   
 /* 0656D0 80064AD0 01200008 */  jr    $t1
 /* 0656D4 80064AD4 00000000 */   nop   
+glabel L80064AD8
 /* 0656D8 80064AD8 3C13800E */  lui   $s3, %hi(D_800DCEC0) # $s3, 0x800e
 /* 0656DC 80064ADC 10000012 */  b     .L80064B28
 /* 0656E0 80064AE0 2673CEC0 */   addiu $s3, %lo(D_800DCEC0) # addiu $s3, $s3, -0x3140
+glabel L80064AE4
 /* 0656E4 80064AE4 3C13800E */  lui   $s3, %hi(D_800DCF28) # $s3, 0x800e
 /* 0656E8 80064AE8 1000000F */  b     .L80064B28
 /* 0656EC 80064AEC 2673CF28 */   addiu $s3, %lo(D_800DCF28) # addiu $s3, $s3, -0x30d8
+glabel L80064AF0
 /* 0656F0 80064AF0 3C13800E */  lui   $s3, %hi(D_800DCFB0) # $s3, 0x800e
 /* 0656F4 80064AF4 1000000C */  b     .L80064B28
 /* 0656F8 80064AF8 2673CFB0 */   addiu $s3, %lo(D_800DCFB0) # addiu $s3, $s3, -0x3050
+glabel L80064AFC
 /* 0656FC 80064AFC 3C13800E */  lui   $s3, %hi(D_800DCFD8) # $s3, 0x800e
 /* 065700 80064B00 10000009 */  b     .L80064B28
 /* 065704 80064B04 2673CFD8 */   addiu $s3, %lo(D_800DCFD8) # addiu $s3, $s3, -0x3028
+glabel L80064B08
 /* 065708 80064B08 3C13800E */  lui   $s3, %hi(D_800DD000) # $s3, 0x800e
 /* 06570C 80064B0C 10000006 */  b     .L80064B28
 /* 065710 80064B10 2673D000 */   addiu $s3, %lo(D_800DD000) # addiu $s3, $s3, -0x3000
+glabel L80064B14
 /* 065714 80064B14 00105080 */  sll   $t2, $s0, 2
 /* 065718 80064B18 004A5821 */  addu  $t3, $v0, $t2
 /* 06571C 80064B1C 8D730020 */  lw    $s3, 0x20($t3)

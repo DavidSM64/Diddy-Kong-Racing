@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E9628
+.double 1.99996
+glabel D_800E9630
+.float 1.99996
+
+.text
 glabel alResamplePull
 /* 0CCD7C 800CC17C 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 0CCD80 800CC180 AFBF001C */  sw    $ra, 0x1c($sp)

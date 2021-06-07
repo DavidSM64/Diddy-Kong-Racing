@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E6498
+.double 65.0
+
+.text
 glabel func_80048E64
 /* 049A64 80048E64 27BDFFA0 */  addiu $sp, $sp, -0x60
 /* 049A68 80048E68 3C014325 */  li    $at, 0x43250000 # 165.000000

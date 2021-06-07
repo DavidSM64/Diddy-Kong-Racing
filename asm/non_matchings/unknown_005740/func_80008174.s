@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E4F10
+.float -100000.0
+
+.text
 glabel func_80008174
 /* 008D74 80008174 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 008D78 80008178 3C038012 */  lui   $v1, %hi(D_80119C4C) # $v1, 0x8012

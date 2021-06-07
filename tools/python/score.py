@@ -1,6 +1,8 @@
 import re
 import sys
+import argparse
 from file_util import FileUtil
+from score_display import ScoreDisplay
 
 ASM_FOLDERS = [
     './asm/unknown_0251F0',
@@ -13,7 +15,7 @@ ASM_FOLDERS = [
 ]
 
 # These will automatically be added to the adventure one percentage.
-ASM_FUNCTIONS = [ 'entrypoint' ]
+ASM_LABELS = [ 'entrypoint' ]
 for folder in ASM_FOLDERS:
     GLABEL_REGEX = r'glabel ([0-9A-Za-z_]+)'
     filenames = FileUtil.get_filenames_from_directory(folder, extensions=('.s',))
@@ -22,12 +24,12 @@ for folder in ASM_FOLDERS:
             text = asmFile.read()
             matches = re.finditer(GLABEL_REGEX, text, re.MULTILINE)
             for matchNum, match in enumerate(matches, start=1):
-                ASM_FUNCTIONS.append(match.groups()[0])
+                ASM_LABELS.append(match.groups()[0])
 
 BUILD_DIRECTORY = './build/us_1.0'
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './lib/src'
-FUNCTION_REGEX = r'([/][*][*]([^*]|([*][^/]))*[*][/][\n]\s*)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
+FUNCTION_REGEX = r'((?:[\/][*][*]+[\n])(?:[^\n]*\n)*?(?:.*[*][\/]))?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(?:\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#if(.|\n)*?(GLOBAL_ASM[(]([^)]*)[)])(.|\n)*?#else(.|\n)*?#endif'
 
@@ -87,7 +89,7 @@ class ScoreFile:
         matches = re.finditer(FUNCTION_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
-            self.functions.append(ScoreFileMatch(groups[0], groups[5]))
+            self.functions.append(ScoreFileMatch(groups[0], groups[2]))
             
         matches = re.finditer(GLOBAL_ASM_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
@@ -120,17 +122,16 @@ class ScoreFile:
 
 def main():
     showTopFiles = 0
-
-    numArgs = len(sys.argv)
-    for i in range(1, numArgs):
-        arg = sys.argv[i].lower()
-        print('Argument:', sys.argv[i])
-        if arg.startswith("--top"):
-            num = arg[5:]
-            if num == "":
-                showTopFiles = 10 # 10 is the default
-            else:
-                showTopFiles = int(num)
+    
+    parser = argparse.ArgumentParser(description="")
+    parser.add_argument("-t", "--top", help="(Optional) Shows the top N files remaining.")
+    parser.add_argument("-a", "--adventure", help="(Optional) Only shows adventure 1 or 2 based on passed in value.", choices=['1', '2'])
+    args = parser.parse_args()
+    adventureSelect = 3 # Show both adventures by default
+    if args.adventure != None:
+        adventureSelect = int(args.adventure)
+    if args.top != None:
+        showTopFiles = int(args.top)
 
     scoreFiles = []
     totalNumberOfDecompiledFunctions = 0
@@ -158,25 +159,17 @@ def main():
         totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
         scoreFiles.append(scoreFile)
     
-    totalNumberOfFunctions = MAP_FILE.numFunctions
     
-    for asm_function in ASM_FUNCTIONS:
-        totalSizeOfDecompiledFunctions += MAP_FILE.functionSizes[asm_function]
+    totalNumberOfFunctions = MAP_FILE.numFunctions
+    for asm_function in ASM_LABELS:
+        if asm_function in MAP_FILE.functionSizes:
+            totalSizeOfDecompiledFunctions += MAP_FILE.functionSizes[asm_function]
     
     adventureOnePercentage = (totalSizeOfDecompiledFunctions / CODE_SIZE) * 100
     adventureTwoPercentage = (totalSizeOfDocumentedFunctions / CODE_SIZE) * 100
     
-    print('=========================================')
-    print(' ADVENTURE ONE (ASM -> C Decompilation)')
-    print(' ----------- {:5.2f}% Complete -----------'.format(adventureOnePercentage))
-    print(' # Decompiled functions: ' + str(totalNumberOfDecompiledFunctions))
-    print(' # GLOBAL_ASM remaining: ' + str(totalNumberOfGlobalAsms))
-    print('=========================================')
-    print(' ADVENTURE TWO (Cleanup & Documentation)')
-    print(' ----------- {:5.2f}% Complete -----------'.format(adventureTwoPercentage))
-    print(' # Documented functions:   ' + str(totalNumberOfDocumentedFunctions))
-    print(' # Undocumented remaining: ' + str(totalNumberOfFunctions - totalNumberOfDocumentedFunctions))
-    print('=========================================')
+    scoreDisplay = ScoreDisplay()
+    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfDocumentedFunctions, totalNumberOfFunctions - totalNumberOfDocumentedFunctions))
     
     if showTopFiles > 0:
         if showTopFiles > len(scoreFiles):
@@ -189,7 +182,9 @@ def main():
         for i in range(0, showTopFiles):
             percentageRemaining = (files[i][1] / CODE_SIZE) * 100
             percentageDone = (files[i][2] / CODE_SIZE) * 100
-            funcName = files[i][0][12:]
+            funcName = files[i][0]
+            if '/' in funcName:
+                funcName = funcName[funcName.rindex('/') + 1:]
             print("", funcName, (" " * (24 - len(funcName))), "| {:5.2f}% | {:5.2f}% |".format(percentageRemaining, percentageDone))
     
 

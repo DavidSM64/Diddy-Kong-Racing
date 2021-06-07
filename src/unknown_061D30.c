@@ -6,6 +6,12 @@
 #include "types.h"
 #include "macros.h"
 
+/************ .rodata ************/
+
+const char D_800E6C20[] = "CSP: oh oh \n";
+
+/*********************************/
+
 GLOBAL_ASM("asm/non_matchings/unknown_061D30/alCSPNew.s")
 GLOBAL_ASM("asm/non_matchings/unknown_061D30/__CSPVoiceHandler.s")
 GLOBAL_ASM("asm/non_matchings/unknown_061D30/__CSPPostNextSeqEvent.s")

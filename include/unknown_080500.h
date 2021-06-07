@@ -136,7 +136,7 @@ MenuBootDrawTexture D_800DF7DC[12];
 
 /* Size: 0x30 bytes */
 typedef struct unk800DF83C {
-    s32* unk0; // Pointer to something.
+    char* unk0; // Pointer to ascii text.
     f32  unk4;
     f32  unk8;
     f32  unkC;
@@ -149,6 +149,7 @@ typedef struct unk800DF83C {
     f32  unk28;
 } unk800DF83C;
 
+// Title screen cinematic text
 extern unk800DF83C D_800DF83C[10];
 
 extern s32 D_800DF9F4;
@@ -355,7 +356,7 @@ extern s32 D_800E0968;
 extern s32 D_800E096C;
 extern s32 D_800E0970;
 extern s32 D_800E0974;
-extern u32* D_800E0978;
+extern f32* D_800E0978;
 extern s32 D_800E097C;
 extern s32 D_800E0980;
 extern s32 D_800E0984;

@@ -173,17 +173,18 @@ MenuBootDrawTexture D_800DF7DC[12] = {
     { NULL,   0,   0 }
 };
 
+// Title screen cinematic text
 unk800DF83C D_800DF83C[10] = {
-    { (s32*)0x800E7CB0, 14.0f, 14.5f, 16.5f, 17.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CB8, 19.0f, 19.5f, 21.5f, 22.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CC0, 24.0f, 24.5f, 26.5f, 27.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CC8, 29.0f, 29.5f, 31.5f, 32.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CD0, 35.0f, 35.5f, 37.5f, 38.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CDC, 40.0f, 40.5f, 42.5f, 43.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CE4, 45.0f, 45.5f, 47.5f, 48.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CEC, 50.0f, 50.5f, 52.5f, 53.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CF4, 57.5f, 58.0f, 60.0f, 60.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { (s32*)0x800E7CFC, 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f }
+    { "TIMBER", 14.0f, 14.5f, 16.5f, 17.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "BUMPER", 19.0f, 19.5f, 21.5f, 22.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "CONKER", 24.0f, 24.5f, 26.5f, 27.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "TIPTUP", 29.0f, 29.5f, 31.5f, 32.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "DRUMSTICK", 35.0f, 35.5f, 37.5f, 38.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "PIPSY", 40.0f, 40.5f, 42.5f, 43.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "BANJO", 45.0f, 45.5f, 47.5f, 48.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "KRUNCH", 50.0f, 50.5f, 52.5f, 53.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "WIZPIG", 57.5f, 58.0f, 60.0f, 60.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
+    { "DIDDY", 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f }
 };
 
 s32 D_800DF9F4 = 0;
@@ -653,7 +654,8 @@ s32 D_800E0968 = 0;
 s32 D_800E096C = 0;
 s32 D_800E0970 = 0;
 s32 D_800E0974 = 0;
-u32* D_800E0978 = (u32*)0x800E7D04;
+const f32 D_800E7D04[1] = { 0.5f }; // .rodata
+f32* D_800E0978 = D_800E7D04; // .data
 s32 D_800E097C = 0;
 s32 D_800E0980 = 0;
 s32 D_800E0984 = 0;
@@ -1075,45 +1077,47 @@ u16 D_800E18FC[30] = {
     0x1000, 0x0000
 };
 
-// Credits text look-up table
+// List of amazing people.
 char *D_800E1938[87] = {
-    (char*)0x800E7D08, (char*)0x800E7D10, (char*)0x800E7D24, (char*)0x800E7D30, 
-    (char*)0x800E7D44, (char*)0x800E7D50, (char*)0x800E7D58, (char*)0x800E7D60, 
-    (char*)0x800E7D70, (char*)0x800E7D7C, (char*)0x800E7D88, (char*)0x800E7D94, 
-    (char*)0x800E7DA0, (char*)0x800E7DA8, (char*)0x800E7DB8, (char*)0x800E7DC0, 
-    (char*)0x800E7DD0, (char*)0x800E7DD8, (char*)0x800E7DE0, (char*)0x800E7DF0, 
-    (char*)0x800E7DFC, (char*)0x800E7E04, (char*)0x800E7E18, (char*)0x800E7E24, 
-    (char*)0x800E7E34, (char*)0x800E7E40, (char*)0x800E7E48, (char*)0x800E7E54, 
-    (char*)0x800E7E68, (char*)0x800E7E74, (char*)0x800E7E84, (char*)0x800E7E90, 
-    (char*)0x800E7E9C, (char*)0x800E7EA4, (char*)0x800E7EB0, (char*)0x800E7EBC, 
-    (char*)0x800E7EC4, (char*)0x800E7ED0, (char*)0x800E7EDC, (char*)0x800E7EEC, 
-    (char*)0x800E7F04, (char*)0x800E7F0C, (char*)0x800E7F18, (char*)0x800E7F24, 
-    (char*)0x800E7F30, (char*)0x800E7F38, (char*)0x800E7F40, (char*)0x800E7F48, 
-    (char*)0x800E7F50, (char*)0x800E7F5C, (char*)0x800E7F68, (char*)0x800E7F78, 
-    (char*)0x800E7F84, (char*)0x800E7F8C, (char*)0x800E7F98, (char*)0x800E7FA4, 
-    (char*)0x800E7FB0, (char*)0x800E7FBC, (char*)0x800E7FC8, (char*)0x800E7FD4, 
-    (char*)0x800E7FE0, (char*)0x800E7FEC, (char*)0x800E7FFC, (char*)0x800E8004, 
-    (char*)0x800E8014, (char*)0x800E8024, (char*)0x800E8034, (char*)0x800E8044, 
-    (char*)0x800E8050, (char*)0x800E8058, (char*)0x800E8064, (char*)0x800E8070, 
-    (char*)0x800E8080, (char*)0x800E8088, (char*)0x800E8094, (char*)0x800E80A8, 
-    (char*)0x800E80B4, (char*)0x800E80C0, (char*)0x800E80CC, (char*)0x800E80DC, 
-    (char*)0x800E80E8, (char*)0x800E80F4, (char*)0x800E8100, (char*)0x800E8114, 
-    (char*)0x00000000, (char*)0x00000000, (char*)0x00000000
+    "CREDITS", 
+    "Software Director", "R.Harrison", 
+    "Software Engineers", "P.Mountain", "J.Pegg", "R.Gale", 
+    "Art Director", "K.Bayliss", 
+    "3D Artists", "L.Musgrave", "K.Rabbette", "D.Smith", "J.Christensen", "B.Smyth", "P.Cunningham",
+    "Music", "D.Wise", 
+    "Sound Effects", "G.Norgate", 
+    "ALSO", 
+    "Additional Design", "M.Wakeley", 
+    "Documentation", "L.Loveday", "Liason", "E.Hochberg", 
+    "Character Voices", "K.Bayliss", "J.Christensen", "E.Fischer", "K.Rabbette", "L.Ray", 
+        "L.Schuneman", "C.Seavor", "D.Smith", "J.Stamper", "K.Stamper", "C.Sutherland",
+    "Rare Quality Assurance", "H.Ward", "G.Richards", "S.Farmer", "J.Williams", "D.Wong", 
+        "G.Jones", "M.Penny", "S.Brand", "S.Malpass", "A.Wilson", 
+    "NOA Thanks To", "M.Fukuda", "K.Lobb", "M.Kelbaugh", "A.Williams", "R.Johnson", "M.Forrest", 
+        "P.Sandhop", "H.Sterchi", "T.Hertzog", "D.Bridgham", "G.Richardson", "B.Smith", 
+    "NOA Thanks To", "NOA Tree House", "NOA Tree Branch", 
+    "NCL Thank You's", "K.Terasaki", "M.Goto", "H.Yamada", "Mario Club", 
+    "NOE Thank You's", "J.Kraft", "J.Bardakoff", 
+    "Special Thanks To", "J.Hochberg", "H.Lincoln", "M.Arakawa", 
+    "Game Director", "L.Schuneman", 
+    "Producer", "C.Stamper", 
+    "Executive Producer", "T.Stamper", 
+    NULL, NULL, NULL
 };
 
-// Credits text look-up table (time trials time sheet)
+// Developer's best times for each track
 char *D_800E1A94[20] = {
-    (char*)0x800E8120, (char*)0x800E8128, (char*)0x800E8130, (char*)0x800E8138,
-    (char*)0x800E8140, (char*)0x800E8148, (char*)0x800E8150, (char*)0x800E8158,
-    (char*)0x800E8160, (char*)0x800E8168, (char*)0x800E8170, (char*)0x800E8178,
-    (char*)0x800E8180, (char*)0x800E8188, (char*)0x800E8190, (char*)0x800E8198,
-    (char*)0x800E81A0, (char*)0x800E81A8, (char*)0x800E81B0, (char*)0x800E81B8
+/***** Dino Domain *****/ "0:53:43", "1:21:55", "0:54:13", "1:22:48",
+/** Snowflake Mountain */ "1:04:11", "1:13:51", "1:25:01", "0:55:05",
+/**** Sherbet Island ***/ "1:37:63", "1:56:60", "0:57:81", "1:28:01",
+/**** Dragon Forest ****/ "1:51:15", "1:31:80", "2:03:16", "0:58:25",
+/*** Future Fun Land ***/ "2:00:38", "2:05:68", "1:52:96", "1:55:00"
 };
 
-// Another credits text look-up table
 char *D_800E1AE4[5] = {
-    (char*)0x800E81C0, (char*)0x800E81CC, (char*)0x800E81E0, (char*)0x800E81E8, 
-    (char*)0x800E81F4, 
+    "THE END?", "TO BE CONTINUED ...", // Appears after beating the first wizpig race.
+    "THE END",                         // Appears after beating the second wizpig race.
+    "NO CHEAT", "THIS TIME.",          // Appears if you use the "WHODIDTHIS" cheat.
 };
 
 s32 D_800E1AF8[21] = {
@@ -1245,8 +1249,21 @@ s16 D_800E1E40[10] = {
 
 /************ .rodata ************/
 
-extern s32 D_800E8230;
-extern f32 D_800E8414;
+const char D_800E8200[] = " (ADV.";
+const char D_800E8208[] = "OK?";
+const char D_800E820C[] = "~";
+const char D_800E8210[] = "DEL";
+const char D_800E8214[] = "OK";
+const char D_800E8218[] = "ROM checksum %08X,%d\n"; // Used with the "DODGYROMMER" cheat.
+const char D_800E8230[] = "OK?";
+const char D_800E8234[] = "OK?";
+const char D_800E8238[] = "OK?";
+const char D_800E823C[] = "OK?";
+const char D_800E8240[] = "OK?";
+const char D_800E8244[] = "SP";
+const char D_800E8248[] = "DEL";
+const char D_800E824C[] = "OK";
+const char D_800E8250[] = "loadFrontEndItem() - Item no %d out of range 0-%d\n";
 
 /*********************************/
 
@@ -2072,7 +2089,7 @@ void func_80086A48(s32 arg0) {
     temp = D_80126BD4;
     temp2 = D_80126BE4;
     while (arg0 > 0) {
-        temp3 = D_800E8414;
+        temp3 = 0.1f;
         if (D_80126A08 > 0) {
             D_80126BDC = D_80126BDC + temp3 * (temp - D_80126BDC);
         }
@@ -2490,7 +2507,7 @@ void func_8008B20C(s32 arg0) {
             if (osTvType == 0) {
                 temp = 0xEA;
             }
-            func_800C4440(&D_801263A0, 0xA0, temp, &D_800E8230, 0xC);
+            func_800C4440(&D_801263A0, 0xA0, temp, D_800E8230 /* "OK?" */, 0xC);
         }
         func_8007B3D0(&D_801263A0);
         func_800660EC(40.0f);

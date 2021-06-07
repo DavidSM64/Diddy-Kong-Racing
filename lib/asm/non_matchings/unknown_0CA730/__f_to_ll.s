@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E9550
+.double -0.0
+glabel D_800E9558
+.double -0.0
+
+.text
 glabel __f_to_ll
 /* 0CA74C 800C9B4C 46006109 */  trunc.l.s $f4, $f12
 /* 0CA750 800C9B50 44222000 */  dmfc1 $v0, $f4

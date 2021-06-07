@@ -1,3 +1,8 @@
+.late_rodata
+glabel jpt_800E9650
+.word L800D2A70, L800D2964, L800D29A4, L800D2A90, L800D2A90, L800D29E0, L800D2A28
+
+.text
 glabel __osDevMgrMain
 /* 0D3360 800D2760 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 0D3364 800D2764 AFA40040 */  sw    $a0, 0x40($sp)
@@ -131,11 +136,12 @@ glabel __osDevMgrMain
 /* 0D3544 800D2944 10200052 */  beqz  $at, .L800D2A90
 /* 0D3548 800D2948 00000000 */   nop   
 /* 0D354C 800D294C 00084080 */  sll   $t0, $t0, 2
-/* 0D3550 800D2950 3C01800F */  lui   $at, %hi(D_800E9650) # $at, 0x800f
+/* 0D3550 800D2950 3C01800F */  lui   $at, %hi(jpt_800E9650) # $at, 0x800f
 /* 0D3554 800D2954 00280821 */  addu  $at, $at, $t0
-/* 0D3558 800D2958 8C289650 */  lw    $t0, %lo(D_800E9650)($at)
+/* 0D3558 800D2958 8C289650 */  lw    $t0, %lo(jpt_800E9650)($at)
 /* 0D355C 800D295C 01000008 */  jr    $t0
 /* 0D3560 800D2960 00000000 */   nop   
+glabel L800D2964
 /* 0D3564 800D2964 8FAC002C */  lw    $t4, 0x2c($sp)
 /* 0D3568 800D2968 27A50034 */  addiu $a1, $sp, 0x34
 /* 0D356C 800D296C 24060001 */  li    $a2, 1
@@ -152,6 +158,7 @@ glabel __osDevMgrMain
 /* 0D3598 800D2998 00000000 */  nop   
 /* 0D359C 800D299C 1000003E */  b     .L800D2A98
 /* 0D35A0 800D29A0 AFA20030 */   sw    $v0, 0x30($sp)
+glabel L800D29A4
 /* 0D35A4 800D29A4 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 0D35A8 800D29A8 27A50034 */  addiu $a1, $sp, 0x34
 /* 0D35AC 800D29AC 24060001 */  li    $a2, 1
@@ -167,6 +174,7 @@ glabel __osDevMgrMain
 /* 0D35D4 800D29D4 8DA70010 */  lw    $a3, 0x10($t5)
 /* 0D35D8 800D29D8 1000002F */  b     .L800D2A98
 /* 0D35DC 800D29DC AFA20030 */   sw    $v0, 0x30($sp)
+glabel L800D29E0
 /* 0D35E0 800D29E0 8FAA002C */  lw    $t2, 0x2c($sp)
 /* 0D35E4 800D29E4 27A50034 */  addiu $a1, $sp, 0x34
 /* 0D35E8 800D29E8 24060001 */  li    $a2, 1
@@ -185,6 +193,7 @@ glabel __osDevMgrMain
 /* 0D361C 800D2A1C 00000000 */  nop   
 /* 0D3620 800D2A20 1000001D */  b     .L800D2A98
 /* 0D3624 800D2A24 AFA20030 */   sw    $v0, 0x30($sp)
+glabel L800D2A28
 /* 0D3628 800D2A28 8FAC002C */  lw    $t4, 0x2c($sp)
 /* 0D362C 800D2A2C 27A50034 */  addiu $a1, $sp, 0x34
 /* 0D3630 800D2A30 24060001 */  li    $a2, 1
@@ -203,6 +212,7 @@ glabel __osDevMgrMain
 /* 0D3664 800D2A64 00000000 */  nop   
 /* 0D3668 800D2A68 1000000B */  b     .L800D2A98
 /* 0D366C 800D2A6C AFA20030 */   sw    $v0, 0x30($sp)
+glabel L800D2A70
 /* 0D3670 800D2A70 8FAE003C */  lw    $t6, 0x3c($sp)
 /* 0D3674 800D2A74 00003025 */  move  $a2, $zero
 /* 0D3678 800D2A78 8DC40004 */  lw    $a0, 4($t6)
@@ -212,6 +222,7 @@ glabel __osDevMgrMain
 /* 0D3688 800D2A88 10000003 */  b     .L800D2A98
 /* 0D368C 800D2A8C AFAA0030 */   sw    $t2, 0x30($sp)
 .L800D2A90:
+glabel L800D2A90
 /* 0D3690 800D2A90 240FFFFF */  li    $t7, -1
 /* 0D3694 800D2A94 AFAF0030 */  sw    $t7, 0x30($sp)
 .L800D2A98:

@@ -93,8 +93,21 @@ u16 D_800DC864 = 0x0028;
 
 /************ .rodata ************/
 
-extern f32 D_800E514C;
-extern f32 D_800E5150;
+const char D_800E4F60[] = "Objects out of ram(1) !!\n";
+const char D_800E4F7C[] = "Door numbering error %d!!\n";
+const char D_800E4F98[] = "objGetScope: Unknown scope for object %d\n";
+const char D_800E4FC4[] = "ObjList (Part) Overflow %d!!!\n";
+const char D_800E4FE4[] = "ObjSetupObject(1) Memory fail!!\n";
+const char D_800E5008[] = "ObjSetupObject(2) Memory fail!!\n";
+const char D_800E502C[] = "ObjSetupObject(5) Memory fail!!\n";
+const char D_800E5050[] = "ObjSetupObject(6) Memory fail!!\n";
+const char D_800E5074[] = "ObjSetupObject(3) Memory fail!!\n";
+const char D_800E5098[] = "ObjList Overflow %d!!!\n";
+const char D_800E50B0[] = "ObjSetupObject(4) Memory fail!!\n";
+const char D_800E50D4[] = "Error: Multiple checkpoint no: %d !!\n";
+const char D_800E50FC[] = "ERROR Channel %d\n";
+const char D_800E5110[] = "RO error %d!!\n";
+const char D_800E5120[] = "ARGHHHHHHHHH\n";
 
 /*********************************/
 
@@ -296,7 +309,7 @@ void func_8000C2D8(u8 *arg0, s32 length);
 void func_8000BF8C(void) {
     s32 i;
 
-    func_8001D258(D_800E514C, D_800E5150, 0, -0x2000, 0);
+    func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     D_8011AE68 = (s32*)func_80070B78(0x15800, 0x200);
     particlePtrList = (Player **)func_80070C9C(0x320, 0xFFFF);
     D_8011AE6C = (s32*)func_80070C9C(0x50, 0xFFFF);

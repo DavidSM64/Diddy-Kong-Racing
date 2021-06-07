@@ -1,3 +1,14 @@
+.late_rodata
+glabel D_800E6028
+.double 1.2
+glabel D_800E6030
+.double 300.0
+glabel D_800E6038
+.double 0.05
+glabel D_800E6040
+.double 0.05
+
+.text
 glabel func_800361E0
 /* 036DE0 800361E0 27BDFF80 */  addiu $sp, $sp, -0x80
 /* 036DE4 800361E4 44853000 */  mtc1  $a1, $f6

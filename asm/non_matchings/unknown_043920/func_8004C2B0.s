@@ -1,3 +1,17 @@
+.late_rodata
+glabel D_800E6558
+.double 0.4
+glabel D_800E6560
+.double 0.005555555555555556
+glabel D_800E6568
+.float 0.4
+.word 0 # Padding
+glabel D_800E6570
+.double 65.0
+glabel D_800E6578
+.double 0.2
+
+.text
 glabel func_8004C2B0
 /* 04CEB0 8004C2B0 3C014348 */  li    $at, 0x43480000 # 200.000000
 /* 04CEB4 8004C2B4 44810000 */  mtc1  $at, $f0

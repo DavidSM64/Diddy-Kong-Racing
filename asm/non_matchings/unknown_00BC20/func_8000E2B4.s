@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E51AC
+.float 1.4
+glabel D_800E51B0
+.float 0.714
+
+.text
 glabel func_8000E2B4
 /* 00EEB4 8000E2B4 3C038012 */  lui   $v1, %hi(D_8011AD44) # $v1, 0x8012
 /* 00EEB8 8000E2B8 2463AD44 */  addiu $v1, %lo(D_8011AD44) # addiu $v1, $v1, -0x52bc

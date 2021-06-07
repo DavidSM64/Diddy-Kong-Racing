@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E9640
+.double 0.017453292222222222
+
+.text
 glabel guPerspectiveF
 /* 0CD520 800CC920 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0CD524 800CC924 44867000 */  mtc1  $a2, $f14

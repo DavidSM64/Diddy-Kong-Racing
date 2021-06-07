@@ -9,8 +9,8 @@ extern s8  D_800DE778;
 
 /* Size: 0x08 bytes */
 typedef struct unk800DE77C {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
+    /* 0x00 */ s32 width;
+    /* 0x04 */ s32 height;
 } unk800DE77C;
 
 extern unk800DE77C D_800DE77C[8];

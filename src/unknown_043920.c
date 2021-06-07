@@ -108,11 +108,9 @@ s16 D_800DCDD4[4] = {
 
 /************ .rodata ************/
 
-extern f64 D_800E6768;
-extern f64 D_800E6770;
-extern f64 D_800E6778;
-extern f64 D_800E6780;
-extern f32 D_800E6A00;
+const char D_800E6280[] = "%.1f,%.1f,%.1f\n";
+const char D_800E6290[] = "Chk ovflow!!\n";
+const char D_800E62A0[] = "Back\n";
 
 /*********************************/
 
@@ -342,7 +340,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
 
 void func_80053664(Player_64 *arg0) {
     if (arg0->throttle > 0.0) {
-        arg0->throttle -= D_800E6768;
+        arg0->throttle -= 0.1;
     }
 
     if (D_8011D528 & 0x8000) {
@@ -351,12 +349,12 @@ void func_80053664(Player_64 *arg0) {
 
     if (D_8011D528 & 0x4000) {
         if (arg0->brake < 1.0) {
-            arg0->brake += D_800E6770;
+            arg0->brake += 0.2;
         }
     } else {
         //! @bug Will cause a negative brake value resulting in higher velocity
-        if (arg0->brake > D_800E6778) {
-            arg0->brake -= D_800E6780;
+        if (arg0->brake > 0.05) {
+            arg0->brake -= 0.1;
         }
     }
 }
@@ -561,7 +559,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005A6F0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005B818.s")
 
 void func_8005C25C(void) {
-    D_800DCB9C[0] = D_800E6A00;
+    D_800DCB9C[0] = 0.05f;
 }
 
 /* Unknown Size */

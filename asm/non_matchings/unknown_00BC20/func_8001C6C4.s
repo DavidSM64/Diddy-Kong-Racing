@@ -1,3 +1,15 @@
+.late_rodata
+glabel D_800E5644
+.float 50000.0
+glabel D_800E5648
+.double 1.2
+glabel D_800E5650
+.float 0.01
+.word 0 # Padding
+glabel D_800E5658
+.double 255.0
+
+.text
 glabel func_8001C6C4
 /* 01D2C4 8001C6C4 27BDFF18 */  addiu $sp, $sp, -0xe8
 /* 01D2C8 8001C6C8 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000

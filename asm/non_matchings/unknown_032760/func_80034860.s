@@ -1,3 +1,10 @@
+.late_rodata
+glabel D_800E5FF8
+.double 1.2
+glabel D_800E6000
+.float 0.2
+
+.text
 glabel func_80034860
 /* 035460 80034860 44852000 */  mtc1  $a1, $f4
 /* 035464 80034864 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000

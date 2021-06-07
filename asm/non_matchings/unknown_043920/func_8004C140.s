@@ -1,3 +1,8 @@
+.late_rodata
+glabel D_800E6550
+.double 0.7
+
+.text
 glabel func_8004C140
 /* 04CD40 8004C140 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 04CD44 8004C144 AFBF001C */  sw    $ra, 0x1c($sp)

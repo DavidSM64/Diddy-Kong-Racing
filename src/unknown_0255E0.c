@@ -68,6 +68,14 @@ s8 D_800DC92C[24] = {
 
 /*******************************/
 
+/************ .rodata ************/
+
+const char D_800E5DF0[] = "TT CAM";
+const char D_800E5DF8[] = "Solid Clipping x0=x1 Error!!!\n";
+const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
+
+/*********************************/
+
 /************ .bss ************/
 
 extern s32 D_8011D37C;
