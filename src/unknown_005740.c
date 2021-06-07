@@ -14,6 +14,28 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 
 /*******************************/
 
+/************ .bss ************/
+
+s32 D_80119C30[2];
+s32 D_80119C38;
+s32 D_80119C3C;
+s32 D_80119C40;
+s32 D_80119C44;
+s32 D_80119C48;
+s32 D_80119C4C;
+s32 D_80119C50[2];
+s32 D_80119C58;
+s32 D_80119C5C;
+s32 D_80119C60[670];
+s32 D_8011A6D8;
+s32 D_8011A6DC;
+s32 D_8011A6E0[334];
+s32 D_8011AC18;
+s32 D_8011AC1C;
+s32 D_8011AC20[64];
+
+/******************************/
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80004B40.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800050D0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")

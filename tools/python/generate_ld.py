@@ -116,8 +116,18 @@ class GenerateLD:
         self.gen_line('romPos += SIZEOF(.rodata);')
         self.gen_newline()
         
+    def gen_ucode_data_section(self):
+        self.gen_line('.ucodeData . : AT(romPos)')
+        self.gen_open_block()
+        self.gen_line(BUILD_DIR + '/asm/assets/ucode_data.o(.text);')
+        self.gen_close_block()
+        self.gen_line('romPos += SIZEOF(.ucodeData);')
+        self.gen_newline()
+    
     def gen_bss_section(self):
-        self.gen_line('.bss.noload (NOLOAD):')
+        self.gen_line('__BSS_SECTION_SIZE = SIZEOF(.bss.noload);')
+        self.gen_newline()
+        self.gen_line('.bss.noload . (NOLOAD): SUBALIGN(4)')
         self.gen_open_block()
         for file in self.files:
             if file[0] not in LATE_DATA_FILES:
@@ -125,14 +135,6 @@ class GenerateLD:
         for file in LATE_DATA_FILES:
             self.gen_line(file + '(.bss);')
         self.gen_close_block()
-        self.gen_newline()
-        
-    def gen_ucode_data_section(self):
-        self.gen_line('.ucodeData . : AT(romPos)')
-        self.gen_open_block()
-        self.gen_line(BUILD_DIR + '/asm/assets/ucode_data.o(.text);')
-        self.gen_close_block()
-        self.gen_line('romPos += SIZEOF(.ucodeData);')
         self.gen_newline()
         
     def gen_assets_section(self):
