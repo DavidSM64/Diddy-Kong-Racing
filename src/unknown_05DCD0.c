@@ -22,6 +22,21 @@ s16 D_800DCE20[16] = {
 
 /*******************************/
 
+/************ .bss ************/
+
+s8 D_8011D5D0;
+s8 D_8011D5D1;
+
+// These 3 might be a file boundary.
+s32 D_8011D5D4;
+s32 D_8011D5D8; 
+s32 D_8011D5DC; 
+
+s8 D_8011D5E0;
+s8 D_8011D5E1;
+
+/******************************/
+
 GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005D0D0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005D820.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005E204.s")

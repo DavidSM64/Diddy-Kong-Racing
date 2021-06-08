@@ -116,19 +116,82 @@ const char D_800E62A0[] = "Back\n";
 
 /************ .bss ************/
 
-extern s32 D_8011D528;
-extern s32 D_8011D55C;
-extern s8 D_8011D582;
-extern s8 D_8011D583;
-extern s8 D_8011D584;
-extern s32 D_8011D598;
-extern s8 D_8011D59C;
-extern s8 D_8011D59D;
-extern s16 D_8011D59E;
-extern u32 D_8011D590[];
-extern s16 D_8011D5A0[];
-extern s16 D_8011D5A8[];
-extern s16 D_8011D5AC;
+s32 D_8011D4F0[2];
+s32 D_8011D4F8[3];
+s32 D_8011D504;
+s32 D_8011D508[2];
+
+/* Size: 0x18 bytes */
+typedef struct unk8011D510 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    u16 unk6;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+} unk8011D510;
+unk8011D510 D_8011D510;
+
+s32 D_8011D528;
+s32 D_8011D52C;
+s32 D_8011D530;
+s32 D_8011D534;
+s32 D_8011D538;
+s32 D_8011D53C;
+s32 D_8011D540;
+s32 D_8011D544;
+s32 D_8011D548;
+s32 D_8011D54C;
+s16 D_8011D550;
+s8 D_8011D552;
+s8 D_8011D553;
+s32 D_8011D554;
+s32 D_8011D558;
+s32 D_8011D55C;
+s32 D_8011D560;
+s32 D_8011D564;
+s32 D_8011D568;
+s32 D_8011D56C;
+s32 D_8011D570;
+s32 D_8011D574;
+s32 D_8011D578;
+s32 D_8011D57C;
+s8 D_8011D580;
+s8 D_8011D581;
+s8 D_8011D582;
+s8 D_8011D583;
+s8 D_8011D584;
+s8 D_8011D585;
+s8 D_8011D586;
+s8 D_8011D587;
+s8 D_8011D588;
+s8 D_8011D589;
+s8 D_8011D58A;
+s8 D_8011D58B;
+s8 D_8011D58C;
+s8 D_8011D58D;
+s8 D_8011D58E;
+s8 D_8011D58F;
+u32 D_8011D590[2];
+s32 D_8011D598;
+s8 D_8011D59C;
+s8 D_8011D59D;
+s16 D_8011D59E;
+s16 D_8011D5A0[2];
+s32 D_8011D5A4;
+s16 D_8011D5A8[2];
+s16 D_8011D5AC;
+s16 D_8011D5AE;
+s32 D_8011D5B0;
+s32 D_8011D5B4;
+s16 D_8011D5B8;
+s8 D_8011D5BA;
+s8 D_8011D5BB;
+s8 D_8011D5BC;
+
+/******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80042D20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80043ECC.s")
@@ -284,17 +347,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052B64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052D7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80053478.s")
 
-/* Unknown Size */
-typedef struct unk8011D510 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk8011D510;
 
 extern unk8011D510 D_8011D510;
 
