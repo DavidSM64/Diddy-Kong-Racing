@@ -17,6 +17,15 @@ s16 D_800DCDE0[16] = {
 
 /*******************************/
 
+/************ .bss ************/
+
+s32 D_8011D5C0;
+s32 D_8011D5C4;
+s32 D_8011D5C8;
+s32 D_8011D5CC;
+
+/******************************/
+
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005C2F0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005C364.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CA78.s")
