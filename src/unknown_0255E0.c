@@ -134,43 +134,127 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 
 /************ .bss ************/
 
-extern s32 D_8011D37C;
-extern s32 D_8011D474;
-
-extern s32 D_8011B0A0;
-extern s32 D_8011B0A4;
-extern s32 D_8011B0A8;
-
-typedef struct{
-    Player * unk00;
-} unk8011B0B8;
-
-extern unk8011B0B8 D_8011B0B8;
-
-extern s32 D_8011B0DC;
-extern s32 D_8011B0F0;
-extern s32 D_8011B0F4;
-extern s32 D_8011B0FC;
-
-extern f32 D_8011B0E4;
-extern f32 D_8011B0E8;
-extern f32 D_8011B0EC;
+s32 D_8011B0A0;
+s32 D_8011B0A4;
+s32 D_8011B0A8;
+s32 D_8011B0AC;
 
 typedef struct{
     s16 unk00;
     s16 unk02;
     s16 unk04;
 }unk8011B0B0;
-
 unk8011B0B0 *D_8011B0B0;
+
+s32 D_8011B0B4;
+Player *D_8011B0B8;
+s32 D_8011B0BC;
+s32 D_8011B0C0;
+s32 D_8011B0C4;
+s32 D_8011B0C8;
+s32 D_8011B0CC;
+s32 D_8011B0D0;
+s32 D_8011B0D4;
+s32 D_8011B0D8;
+s32 D_8011B0DC;
+s8 D_8011B0E0;
+s8 D_8011B0E1;
+s8 D_8011B0E2;
+s8 D_8011B0E3;
+f32 D_8011B0E4;
+f32 D_8011B0E8;
+f32 D_8011B0EC;
+s32 D_8011B0F0;
+s32 D_8011B0F4;
+s32 D_8011B0F8;
+s32 D_8011B0FC;
+s32 D_8011B100;
+s32 D_8011B104;
+s32 D_8011B108;
+s32 D_8011B10C;
+s32 D_8011B110;
+s32 D_8011B114;
+s32 D_8011B118;
+s32 D_8011B11C;
+s32 D_8011B120[128];
+s32 D_8011B320[4];
+s32 D_8011B330[960];
+s32 D_8011C230[2];
+s32 D_8011C238[96];
+s32 D_8011C3B8[320];
+s32 D_8011C8B8[512];
+s32 D_8011D0B8;
+s32 D_8011D0BC;
+s32 D_8011D0C0;
+s32 D_8011D0C4;
+s32 D_8011D0C8;
+s16 D_8011D0CC;
+s16 D_8011D0CE;
+s32 D_8011D0D0;
+s32 D_8011D0D4;
+s32 D_8011D0D8;
+s32 D_8011D0DC;
+s32 D_8011D0E0;
+s32 D_8011D0E4;
+s32 D_8011D0E8;
+s32 D_8011D0EC;
+s32 D_8011D0F0;
+s32 D_8011D0F4;
+s32 D_8011D0F8[12];
+s32 D_8011D128[15];
+s32 D_8011D164;
+s32 D_8011D168[84];
+s32 D_8011D2B8[20];
+s32 D_8011D308;
+s32 D_8011D30C;
+s32 D_8011D310;
+s32 D_8011D314;
+s32 D_8011D318;
+s32 D_8011D31C;
+s32 D_8011D320[4];
+s32 D_8011D330[2];
+s32 D_8011D338[4];
+s32 D_8011D348[2];
+s32 D_8011D350[4];
+s32 D_8011D360;
+s32 D_8011D364;
+s32 D_8011D368;
+s32 D_8011D36C;
+s32 D_8011D370;
+s32 D_8011D374;
+s32 D_8011D378;
+s32 D_8011D37C;
+s32 D_8011D380;
+s32 D_8011D384;
+s32 D_8011D388[56];
 
 typedef struct{
     s32 unk00;
     s32 unk04;
     s32 unk08;
 }unk8011D468;
-
 unk8011D468 D_8011D468;
+
+s32 D_8011D474;
+s32 D_8011D478;
+s32 D_8011D47C;
+s32 D_8011D480[2];
+s32 D_8011D488[2];
+s32 D_8011D490[2];
+s32 D_8011D498;
+s16 D_8011D49C;
+s16 D_8011D49E;
+s32 D_8011D4A0;
+s32 D_8011D4A4;
+s32 D_8011D4A8;
+s32 D_8011D4AC;
+s32 D_8011D4B0;
+s16 D_8011D4B4;
+s16 D_8011D4B6;
+s16 D_8011D4B8;
+s16 D_8011D4BA;
+s32 D_8011D4BC;
+
 
 /******************************/
 
@@ -349,19 +433,19 @@ void func_800289B8(void){
 
 void func_80028C10(void){
     unk80120AC0 * v0_some_struct;
-    if(D_8011B0B8.unk00 == NULL)
+    if(D_8011B0B8 == NULL)
         return;
 
     v0_some_struct = func_80069D20();
     if(D_800DC91C->unk49 == 0){
-        D_8011B0B8.unk00->x_position = v0_some_struct->x_position;
-        D_8011B0B8.unk00->y_position = v0_some_struct->y_position;
-        D_8011B0B8.unk00->z_position = v0_some_struct->z_position;
+        D_8011B0B8->x_position = v0_some_struct->x_position;
+        D_8011B0B8->y_position = v0_some_struct->y_position;
+        D_8011B0B8->z_position = v0_some_struct->z_position;
     }
 
     func_80068408(&D_8011B0A0, &D_8011B0A4);
     if(D_8011B0DC){
-        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8.unk00);
+        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8);
     }
 }
 #if 1

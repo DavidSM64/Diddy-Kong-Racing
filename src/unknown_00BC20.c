@@ -121,80 +121,98 @@ const char D_800E5120[] = "ARGHHHHHHHHH\n";
 
 /************ .bss ************/
 
-extern s16 D_8011AC20[12];
-extern s16 D_8011AD4E;
-extern s8 D_8011AD20[4];
-extern s8 D_8011AD21;
-extern s8 D_8011AD22[2];
-extern s8 D_8011AD25;
-extern s8 D_8011AD26;
-extern s32 D_8011AD34;
-extern s8 D_8011AD3C;
-extern s8 D_8011AD3D;
+// Currently defined in unknown_005740. Might need to be defined here.
+extern s16 D_8011AC20[128];
 
-
-extern Player *D_8011AD40;
-extern s8 D_8011AD44;
-extern s8 D_8011AD45;
-extern s16 D_8011AD46;
-extern s16 D_8011AD48;
-extern s16 D_8011AD4A;
-extern s16 D_8011AD4C;
-extern s8 D_8011AD50;
-extern s8 D_8011AD51;
-extern s8 D_8011AD52;
-extern s8 D_8011AD53;
-extern s32 *D_8011AD58;
-extern s32 D_8011AD5C;
-extern s32 D_8011AD60;
-extern s32 *D_8011AD64;
-extern s32 D_8011AD68;
-extern s32 *D_8011AD6C;
-extern s32 *D_8011AD70;
-extern Gfx *D_8011AD78[9];
-extern s32 D_8011ADA0;
-extern s16 D_8011ADA4;
-extern f32 D_8011ADA8;
-extern s32 D_8011ADAC;
-
-extern s32 D_8011ADB0;
-extern s32 D_8011ADB8;
-extern s32 D_8011ADBC;
-extern u8 D_8011ADC4;
-extern s32 D_8011ADC8;
-extern s8 (*D_8011ADCC)[8];
-extern f32 D_8011ADD0;
-extern s8 D_8011ADD4;
-extern s8 D_8011ADD5;
-extern s8 D_8011AE00;
-extern s8 D_8011AE01;
-extern s8 D_8011AE02;
-extern s8 D_8011AE03;
-extern u32 *D_8011AE08[16];
-extern s32 (*D_8011AE48)[8]; // Unknown number of entries.
-extern u8 (*D_8011AE4C)[8]; // Unknown number of entries.
-extern Player **objPtrList; // Not sure about the number of elements
-extern s32 objCount;
-extern s32 D_8011AE60;
-extern s32 D_8011AE64;
-extern s32 *D_8011AE68;
-extern s32 *D_8011AE6C;
-extern s32 D_8011AE70;
-extern s32 *D_8011AE74;
-extern s16 D_8011AE78;
-extern s16 D_8011AE7A;
-extern s16 D_8011AE7C;
-extern s8 D_8011AE7E;
-extern s16 D_8011AE82;
-extern s32 D_8011AE88;
-extern u32 D_8011AE8C;
-extern u32 D_8011AE90;
-extern u32 D_8011AE94;
-extern s32 D_8011AEB0[2];
-extern s16 *D_8011AEB8;
-extern s32 D_8011AEBC;
-extern Player **particlePtrList;
-extern s32 particleCount;
+s8 D_8011AD20[2];
+s8 D_8011AD22[2];
+s8 D_8011AD24[2];
+s8 D_8011AD26[2];
+f32 D_8011AD28;
+s32 D_8011AD2C;
+f32 D_8011AD30;
+s32 D_8011AD34;
+s32 D_8011AD38;
+s8 D_8011AD3C;
+s8 D_8011AD3D;
+s8 D_8011AD3E;
+Player *D_8011AD40;
+s8 D_8011AD44;
+s8 D_8011AD45;
+s16 D_8011AD46;
+s16 D_8011AD48;
+s16 D_8011AD4A;
+s16 D_8011AD4C;
+s16 D_8011AD4E;
+s8 D_8011AD50;
+s8 D_8011AD51;
+s8 D_8011AD52;
+s8 D_8011AD53;
+s32 D_8011AD54;
+s32 *D_8011AD58;
+s32 D_8011AD5C;
+s32 D_8011AD60;
+s32 *D_8011AD64;
+s32 D_8011AD68;
+s32 *D_8011AD6C;
+s32 *D_8011AD70;
+s32 D_8011AD74;
+Gfx *D_8011AD78[10];
+s32 D_8011ADA0;
+s16 D_8011ADA4;
+f32 D_8011ADA8;
+s32 D_8011ADAC;
+s32 D_8011ADB0;
+s32 D_8011ADB4;
+s32 D_8011ADB8;
+s32 D_8011ADBC;
+s32 D_8011ADC0;
+u8 D_8011ADC4;
+u8 D_8011ADC5;
+s32 D_8011ADC8;
+s8 (*D_8011ADCC)[8];
+f32 D_8011ADD0;
+s8 D_8011ADD4;
+s8 D_8011ADD5;
+s32 D_8011ADD8[10];
+s8 D_8011AE00;
+s8 D_8011AE01;
+s8 D_8011AE02;
+s8 D_8011AE03;
+u32 *D_8011AE08[16];
+s32 (*D_8011AE48)[8]; // Unknown number of entries.
+u8 (*D_8011AE4C)[8]; // Unknown number of entries.
+s32 D_8011AE50;
+s32 D_8011AE54;
+Player **objPtrList; // Not sure about the number of elements
+s32 objCount;
+s32 D_8011AE60;
+s32 D_8011AE64;
+s32 *D_8011AE68;
+s32 *D_8011AE6C;
+s32 D_8011AE70;
+s32 *D_8011AE74;
+s16 D_8011AE78;
+s16 D_8011AE7A;
+s16 D_8011AE7C;
+s8 D_8011AE7E;
+s16 D_8011AE80;
+s16 D_8011AE82;
+s32 D_8011AE84;
+s32 D_8011AE88;
+u32 D_8011AE8C;
+u32 D_8011AE90;
+u32 D_8011AE94;
+s32 D_8011AE98[2];
+s32 D_8011AEA0;
+s32 D_8011AEA4;
+s32 D_8011AEA8[2];
+s32 D_8011AEB0[2];
+s16 *D_8011AEB8;
+s32 D_8011AEBC;
+s32 D_8011AEC0;
+Player **particlePtrList;
+s32 particleCount;
 
 /* Size: 0x3C bytes */
 typedef struct unknown8011AECC {
@@ -202,26 +220,31 @@ typedef struct unknown8011AECC {
     s8 unk3A;
     s8 unk3B;
 } unknown8011AECC;
-extern unknown8011AECC* D_8011AECC; // Array of structs, unknown number of members
-
-extern s32 D_8011AED0;
-extern s32 D_8011AED4;
-extern s16 D_8011AED8;
-extern u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
-extern s32 D_8011AEE0;
-extern Player *(*playerStructArray_Ptr)[8];
-extern s32 *D_8011AEE8;
-extern s32 *D_8011AEEC;
-extern s32 playerCount;
-extern u8 D_8011AEF4;
-extern u8 D_8011AEF5;
-extern u8 D_8011AEF6;
-extern u8 D_8011AEF7;
-extern u32 (*D_8011AF04)[64]; // Not sure about the number of elements
-extern s32 D_8011AF08[2];
-extern s32 D_8011AF10;
-extern s32 D_8011AF60;
-
+unknown8011AECC* D_8011AECC; // Array of structs, unknown number of members
+s32 D_8011AED0;
+s32 D_8011AED4;
+s16 D_8011AED8;
+u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
+s32 D_8011AEE0;
+Player *(*playerStructArray_Ptr)[8];
+s32 *D_8011AEE8;
+s32 *D_8011AEEC;
+s32 playerCount;
+u8 D_8011AEF4;
+u8 D_8011AEF5;
+u8 D_8011AEF6;
+u8 D_8011AEF7;
+s32 D_8011AEF8;
+s32 D_8011AEFC;
+s32 D_8011AF00;
+u32 (*D_8011AF04)[64]; // Not sure about the number of elements
+s32 D_8011AF08[2];
+s32 D_8011AF10[2];
+s32 D_8011AF18[5];
+s32 D_8011AF2C;
+s32 D_8011AF30[12];
+s32 D_8011AF60[2];
+s32 D_8011AF68[32];
 
 /* Size: 0x40 bytes */
 typedef struct unk800179D0 {
@@ -234,12 +257,28 @@ typedef struct unk800179D0 {
 
 /* Unknown Size */
 typedef struct unk800179D0_2 {
-    unk800179D0* unk0; 
     s32 unk04; 
 } unk800179D0_2;
 
-extern unk800179D0_2 D_8011AFF4;
-extern u32* D_8011B020[10];
+s32 D_8011AFE8;
+s16 D_8011AFEC;
+s16 D_8011AFEE;
+s32 D_8011AFF0;
+unk800179D0* D_8011AFF4; 
+s32 D_8011AFF8;
+s32 D_8011AFFC;
+s32 D_8011B000;
+s32 D_8011B004;
+s32 D_8011B008;
+s32 D_8011B010[4];
+u32* D_8011B020[10];
+s32 D_8011B048[4];
+s32 D_8011B058[4];
+s32 D_8011B068[4];
+s8 D_8011B078[3];
+s8 D_8011B07B;
+s32 D_8011B07C;
+s32 D_8011B080[7];
 
 extern s16 D_8011D5AC;
 
@@ -329,7 +368,7 @@ void func_8000BF8C(void) {
     D_8011AEE8 = (s32*)func_80070C9C(0x28, 0xFFFF);
     D_8011AF04 = (s32*)func_80070C9C(0x200, 0xFFFF);
     D_8011ADCC = (s32*)func_80070C9C(8, 0xFFFF);
-    D_8011AFF4.unk0 = (s32*)func_80070C9C(0x400, 0xFFFF);
+    D_8011AFF4 = (s32*)func_80070C9C(0x400, 0xFFFF);
     D_8011AEB8 = (s32*)func_80076C58(0x23);
     D_8011AEBC = (func_80076F30(0x23) >> 1) - 1;
     while (D_8011AEB8[D_8011AEBC] == 0) {
@@ -394,7 +433,7 @@ void func_8000C2D8(u8 *arg0, s32 length) {
 void func_8000C460(void) {
     s32 i;
     
-    D_8011AD26 = 1;
+    D_8011AD26[0] = 1;
     D_8011AD5C = 0;
     D_8011AD60 = 0;
     particleCount = 0;
@@ -403,7 +442,7 @@ void func_8000C460(void) {
     D_8011AED4 = 0;
     playerCount = 0;
     D_8011AE78 = 0;
-    D_8011AD21 = 0;
+    D_8011AD20[1] = 0;
     D_8011AD22[0] = 0;
     D_8011AD22[1] = 0;
     
@@ -414,7 +453,7 @@ void func_8000C460(void) {
         (*D_8011ADCC)[i] = 0;
     }
     for (i = 0; i < 0x10; i++) {
-        D_8011AFF4.unk0[i].unk0 = 0;
+        D_8011AFF4[i].unk0 = 0;
     }
     
     D_8011AF08[0] = 0xFF;
@@ -430,7 +469,7 @@ void func_8000C460(void) {
     D_8011AD44 = 0;
     D_8011AEF6 = 0;
     D_8011AEF7 = 0;
-    D_8011AF60 = 0;
+    D_8011AF60[0] = 0;
     D_8011AE00 = 0;
     D_8011AE01 = 1;
     D_8011AD53 = 0;
@@ -1103,7 +1142,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017978.s")
 u32 func_800179D0(void) {
     s16 i = 0;
     while(i < 16) {
-        unk800179D0* temp = &D_8011AFF4.unk0[i]; 
+        unk800179D0* temp = &D_8011AFF4[i]; 
         if (temp->unk0 != 0) {
             temp->unk0--;
         }
@@ -1281,7 +1320,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001CC48.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001CD28.s")
 
 void func_8001D1AC(void) {
-    D_8011AF10 = 1;
+    D_8011AF10[0] = 1;
 }
 
 void func_8001D1BC(s32 arg0) {
@@ -1425,7 +1464,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002125C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021400.s")
 
 s8 func_800214C4(void) {
-    return D_8011AD20[3 - D_8011AD21];
+    return D_8011AD22[1 - D_8011AD20[1]];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800214E4.s")
@@ -1515,9 +1554,9 @@ Player* func_8002342C(f32 x, f32 z){
 
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
-        return D_8011AD25 + 1;
+        return D_8011AD24[1] + 1;
     } else if (func_8006BD98() == 8) {
-        return D_8011AD25 + 1;
+        return D_8011AD24[1] + 1;
     }
     return 0;
 }
