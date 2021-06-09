@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
 
 /************ .data ************/
 
@@ -10,7 +11,7 @@ s16 D_800DD050 = 0;
 
 /*******************************/
 
-extern s32* D_80065D98;
+extern s32* D_80065D98; // func_80065D98 is the entry function for thread 1
 
 /************ .rodata ************/
 
@@ -19,13 +20,17 @@ const char D_800E6ED0[] = "WARNING: Stack overflow/underflow!!!\n";
 
 /*********************************/
 
-
 /************ .bss ************/
 
-extern s32* D_8011D750;
-extern s32* D_8011F758;
-extern s32* D_8011F760;
-extern s32* D_8011F910;
+s32 *D_8011D750; // stack pointer for thread 1
+s32 D_8011D754;
+s32 D_8011D758[2048];
+s32 *D_8011F758;
+s32 D_8011F75C;
+OSThread *D_8011F760; // OSThread for thread 1
+s32 D_8011F764;
+s32 D_8011F768[106];
+s32 *D_8011F910;
 
 /******************************/
 

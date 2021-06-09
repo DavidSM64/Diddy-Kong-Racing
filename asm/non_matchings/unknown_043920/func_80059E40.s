@@ -6,10 +6,10 @@ glabel D_800E6938
 
 .text
 glabel func_80059E40
-/* 05AA40 80059E40 3C058012 */  lui   $a1, %hi(D_80120001) # $a1, 0x8012
+/* 05AA40 80059E40 3C058012 */  lui   $a1, %hi(D_8011D59C) # $a1, 0x8012
 /* 05AA44 80059E44 80A5D59C */  lb    $a1, %lo(D_8011D59C)($a1)
 /* 05AA48 80059E48 27BDFF68 */  addiu $sp, $sp, -0x98
-/* 05AA4C 80059E4C 24A50001 */  addiu $a1, %lo(D_80120001) # addiu $a1, $a1, 1
+/* 05AA4C 80059E4C 24A50001 */  addiu $a1, $a1, 1
 /* 05AA50 80059E50 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 05AA54 80059E54 AFB00018 */  sw    $s0, 0x18($sp)
 /* 05AA58 80059E58 30AE0001 */  andi  $t6, $a1, 1
