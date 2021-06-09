@@ -285,7 +285,7 @@ glabel func_8001A8F4
 /* 01B91C 8001AD1C A02BAD50 */  sb    $t3, %lo(D_8011AD50)($at)
 /* 01B920 8001AD20 0C00A3E8 */  jal   func_80028FA0
 /* 01B924 8001AD24 24040001 */   li    $a0, 1
-/* 01B928 8001AD28 3C028012 */  lui   $v0, %hi(D_80120010) # $v0, 0x8012
+/* 01B928 8001AD28 3C028012 */  lui   $v0, %hi(D_8011AD50) # $v0, 0x8012
 /* 01B92C 8001AD2C 8042AD50 */  lb    $v0, %lo(D_8011AD50)($v0)
 /* 01B930 8001AD30 00000000 */  nop   
 .L8001AD34:
@@ -326,7 +326,7 @@ glabel func_8001A8F4
 /* 01B9B0 8001ADB0 00002025 */   move  $a0, $zero
 /* 01B9B4 8001ADB4 0C01BAA4 */  jal   get_settings
 /* 01B9B8 8001ADB8 30508000 */   andi  $s0, $v0, 0x8000
-/* 01B9BC 8001ADBC 8C590010 */  lw    $t9, %lo(D_80120010)($v0)
+/* 01B9BC 8001ADBC 8C590010 */  lw    $t9, 0x10($v0)
 /* 01B9C0 8001ADC0 00408825 */  move  $s1, $v0
 /* 01B9C4 8001ADC4 00194B40 */  sll   $t1, $t9, 0xd
 /* 01B9C8 8001ADC8 05200002 */  bltz  $t1, .L8001ADD4

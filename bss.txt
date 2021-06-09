@@ -1,63 +1,31 @@
 unknown_001050
 
-
 unknown_003260
-
 
 unknown_005740
 
-
 unknown_00BC20
-
 
 unknown_0255E0
 
-
 unknown_032760
-
 
 unknown_0348C0
 
-
 unknown_043920
-
 
 unknown_05CEF0
 
-
 unknown_05DCD0
-
 
 unknown_05F0C0
 
-
 unknown_05F690
 
-
 unknown_0667D0
-D_8011D750;
-D_8011D758;
-D_8011F758;
-D_8011F760;
-D_8011F910;
-D_8011FFF0;
-D_80120001;
-
-
-unknown_080500
-D_80120004;
-
-
-unknown_00BC20
-D_80120010;
-
-
-unknown_09F8F0
-D_8012004B;
-D_80120AC0;
-
 
 unknown_066AA0
+D_80120AC0;
 D_80120AC4;
 D_80120AF4;
 D_80120BD0;
