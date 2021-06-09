@@ -5,23 +5,23 @@
 
 #include "types.h"
 #include "macros.h"
+#include "ultra64.h"
 
 /************ .bss ************/
 
-extern s32 *D_80124200;
-extern s32 D_80124218;
-extern s32 D_80124220;
-extern s32 D_80124238;
-extern s32 D_80124278;
-extern s32 *D_80124290;
+OSIoMesg D_80124200;
+OSMesg D_80124218;
+OSMesgQueue D_80124220;
+OSMesg D_80124238;
+s32 D_80124240[14];
+OSMesgQueue D_80124278;
+s32 *D_80124290;
 
 /*******************************/
 
 // These are both defined in the generated dkr.ld file.
 extern u8 __ASSETS_LUT_START, __ASSETS_LUT_END; // __ASSETS_LUT_START = 0xECB60, _END = 0xECC30
 
-void osCreateMesgQueue(s32*, s32*, s32);
-void osCreatePiManager(s32, s32*, s32*, s32);
 void *func_80070C9C(s32, s32);
 s32 func_80071478(s32*);
 void dmacopy(u32 romOffset, u8 *ramAddress, s32 numBytes);
