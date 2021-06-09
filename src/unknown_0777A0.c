@@ -6,12 +6,16 @@
 #include "types.h"
 #include "macros.h"
 
+/************ .bss ************/
+
 extern s32 *D_80124200;
 extern s32 D_80124218;
 extern s32 D_80124220;
 extern s32 D_80124238;
 extern s32 D_80124278;
 extern s32 *D_80124290;
+
+/*******************************/
 
 // These are both defined in the generated dkr.ld file.
 extern u8 __ASSETS_LUT_START, __ASSETS_LUT_END; // __ASSETS_LUT_START = 0xECB60, _END = 0xECC30
