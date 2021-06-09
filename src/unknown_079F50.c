@@ -109,7 +109,17 @@ const char D_800E7958[] = "\tdata_size\t\t= %u\n";
 
 extern OSViMode D_800E3900[];//osViModeTable;
 
-extern s32 D_80126120;
+/************ .bss ************/
+
+s32 D_80126110;
+s32 D_80126114;
+s32 D_80126118;
+s32 D_8012611C;
+s32 D_80126120;
+s32 D_80126124;
+s32 D_80126128[18];
+
+/*******************************/
 
 void __scMain(void);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
