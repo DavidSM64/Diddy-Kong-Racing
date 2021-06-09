@@ -113,32 +113,35 @@ s32 D_800DD424[2] = {
 
 /*******************************/
 
-
 extern s32 D_800DFD94;
-extern s32 D_80121164;
 
-extern LevelHeader* D_80121168;
+/************ .bss ************/
 
-extern s32 D_80121170;
-extern s32 D_80121174;
+s32 D_80121160;
+s32 D_80121164;
+LevelHeader* D_80121168;
+s32 D_8012116C;
+s32 D_80121170;
+s32 D_80121174;
 
-// Size: 6 bytes
-typedef struct unk8012117C {
+// Unknown size
+typedef struct unk80121178 {
     s8 unk0;
     s8 unk1;
     s8 unk2;
     s8 pad3[3];
-} unk8012117C;
-extern unk8012117C *D_8012117C[2]; // Unknown number of entries
+} unk80121178;
+unk80121178 *D_80121178[2];
+s32 D_80121180;
 
-extern s32 D_801211C0;
-extern s16 D_801211C8[8]; // Unknown number of entries
-extern Gfx *D_801211F0[3]; // Unknown number of entries.
+extern s32 D_801211C0[2];
+extern s16 D_801211C8[8];
+extern Gfx *D_801211F0[3];
 extern Gfx *D_801211F8;
 extern s32 D_80121208;
 extern s32 D_80121218;
 extern s32 D_80121228;
-extern s8  D_80121250[16]; // Unknown number of entries
+extern s8  D_80121250[16];
 extern s32 D_801234E8;
 extern s32 D_801234EC;
 extern s32 D_801234F0;
@@ -160,6 +163,8 @@ extern u8  D_80123525;
 extern u8  D_80123526;
 extern s32* D_80123548; // This is actually an OSMesgQueue pointer.
 extern s32 D_80123560;
+
+/******************************/
 
 void func_800014BC(f32 arg0);
 s8* func_8001E29C(s32 arg0);
@@ -184,14 +189,14 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A6B0.s")
 
 s32 func_8006B0AC(s32 arg0) {
     if (arg0 > 0 && arg0 < D_80121170) {
-        return (*D_8012117C)[arg0].unk2 & 0xF;
+        return D_80121178[1][arg0].unk2 & 0xF;
     }
     return 0;
 }
 
 s32 func_8006B0F8(s32 arg0) {
     if (arg0 > 0 && arg0 < D_80121170) {
-        s32 temp = (*D_8012117C)[arg0].unk2;
+        s32 temp = D_80121178[1][arg0].unk2;
         if(temp != 0) {
             return (temp >> 4) & 0xF;
         }
@@ -201,14 +206,14 @@ s32 func_8006B0F8(s32 arg0) {
 
 s8 func_8006B14C(s32 arg0) {
     if (arg0 >= 0 && arg0 < D_80121170) {
-        return (*D_8012117C)[arg0].unk1;
+        return D_80121178[1][arg0].unk1;
     }
     return -1;
 }
 
 s8 func_8006B190(s32 arg0) {
     if (arg0 >= 0 && arg0 < D_80121170) {
-        return (*D_8012117C)[arg0].unk0;
+        return D_80121178[1][arg0].unk0;
     }
     return 0;
 }
@@ -237,9 +242,6 @@ s32 func_8006B240(void) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006B250.s")
 #else
-
-extern s32 *D_80121160;
-extern s32 D_800DD314;
 
 Settings *get_settings(void);
 s32 *func_80076C58(s32);
@@ -554,7 +556,6 @@ void func_8006BEFC(void) {
     }
 }
 
-extern s32 *D_80121160;
 Settings *get_settings(void);
 s32 *func_80076C58(s32);
 
@@ -607,18 +608,18 @@ void func_8006BFC8(s8 *arg0) {
     }
     temp2 = D_80121160[phi_s0];
     temp = D_80121160[phi_s0 + 1] - temp2;
-    D_801211C0 = func_80070C9C(temp, 0xFFFF00FF, D_80121160);
-    func_80076E68(0, D_801211C0, temp2, temp);
+    D_801211C0[0] = func_80070C9C(temp, 0xFFFF00FF, D_80121160);
+    func_80076E68(0, D_801211C0[0], temp2, temp);
     func_80071140(D_80121160);
 }
 #endif
 
 void func_8006C164(void) {
-    func_80071140(D_801211C0);
+    func_80071140(D_801211C0[0]);
 }
 
 s32 func_8006C18C(void) {
-    return D_801211C0;
+    return D_801211C0[0];
 }
 
 s8 func_8006C19C(void) {
