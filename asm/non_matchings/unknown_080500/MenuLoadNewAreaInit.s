@@ -15,8 +15,8 @@ glabel MenuLoadNewAreaInit
 /* 0938B8 80092CB8 81D00002 */  lb    $s0, 2($t6)
 /* 0938BC 80092CBC 0C01AC2B */  jal   func_8006B0AC
 /* 0938C0 80092CC0 02002025 */   move  $a0, $s0
-/* 0938C4 80092CC4 3C018012 */  lui   $at, %hi(p1_vehicle) # $at, 0x8012
-/* 0938C8 80092CC8 A02269C0 */  sb    $v0, %lo(p1_vehicle)($at)
+/* 0938C4 80092CC4 3C018012 */  lui   $at, %hi(gPlayerVehicle) # $at, 0x8012
+/* 0938C8 80092CC8 A02269C0 */  sb    $v0, %lo(gPlayerVehicle)($at)
 /* 0938CC 80092CCC 0C01AC53 */  jal   func_8006B14C
 /* 0938D0 80092CD0 02002025 */   move  $a0, $s0
 /* 0938D4 80092CD4 24010005 */  li    $at, 5

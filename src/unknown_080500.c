@@ -42,6 +42,255 @@ typedef enum MENU_ID {
 
 extern s32 osTvType;
 
+typedef struct unk800DFC10 {
+    u32 *unk0;
+    s16 unk4;
+    s16 unk6;
+    u32 *unk8;
+    s32 unkC;
+} unk800DFC10;
+
+/************ .bss ************/
+
+// The bss section needs to stay above the data section! 
+// Otherwise the bss variables will get reordered, which is bad.
+
+unk800DFC10 *D_80126390;
+unk800DFC10 *D_80126394;
+s32 D_80126398;
+s32 D_8012639C;
+Gfx *D_801263A0;
+s32 D_801263A4;
+s32 D_801263A8;
+s32 D_801263AC;
+s32 D_801263B0;
+s8 D_801263B4;
+s32 D_801263B8;
+s32 D_801263BC;
+s32 D_801263C0;
+s32 D_801263C4;
+s32 D_801263C8;
+s32 D_801263CC;
+s32 D_801263D0;
+s8 D_801263D4[4]; 
+s32 D_801263D8;
+s8 D_801263DC[4];
+s32 D_801263E0;
+s32 D_801263E4;
+s8 players_character_array[8];
+s8 D_801263F0[8];
+s32 D_801263F8[8];
+u8 D_80126418[8];
+u8 D_80126420[8];
+u8 D_80126428[8];
+s8 D_80126430;
+s8 D_80126431;
+s32 D_80126434;
+s32 D_80126438[4];
+s64 D_80126448;
+f32 D_80126450;
+u8 D_80126454[4];
+u8 D_80126458[4];
+s8 D_8012645C[4];
+s8 D_80126460[4];
+s8 D_80126464[4];
+u8 D_80126468[4];
+u8 D_8012646C[4];
+s32 D_80126470;
+s32 D_80126474;
+s32 D_80126478;
+s32 D_8012647C;
+s32 D_80126480;
+s32 D_80126484;
+s32 D_80126488;
+s32 D_8012648C;
+s32 D_80126490;
+s32 D_80126494;
+s32 D_80126498;
+s32 D_8012649C;
+s32 D_801264A0[12];
+s32 D_801264D0;
+s32 D_801264D4;
+s8 D_801264D8;
+s32 D_801264DC;
+s8 D_801264E0;
+s8 D_801264E1;
+s8 D_801264E2;
+s32 D_801264E4;
+s32 D_801264E8;
+s32 D_801264EC;
+s32 D_801264F0[2];
+s32 D_801264F8[2];
+s32 D_80126500;
+s8 D_80126504;
+s32 D_80126508;
+s16 D_8012650C;
+s8 D_8012650E;
+s32 D_80126510;
+s16 D_80126514;
+s8 D_80126516;
+s32 D_80126518;
+s32 D_8012651C;
+s32 D_80126520;
+s32 D_80126524;
+s32 D_80126528;
+s32 D_8012652C;
+Settings *D_80126530[4];
+s8 D_80126540;
+s8 D_80126541;
+s32 D_80126544;
+s32 D_80126548;
+u32* D_80126550[67]; // lookup table?
+s32 D_8012665C;
+s32 D_80126660;
+s32 D_80126664;
+s32 D_80126668[58];
+u8 D_80126750[128];
+s32 D_801267D0;
+s32 D_801267D4;
+s32 D_801267D8[3];
+s32 D_801267E4;
+s32 D_801267E8;
+s8* D_801267EC;
+s32 D_801267F0[5];
+s32 D_80126804;
+s32 D_80126808;
+s32 D_8012680C;
+s32 D_80126810;
+s32 D_80126814;
+s32 D_80126818;
+s32 D_8012681C;
+s32 D_80126820;
+s32 D_80126824;
+s32 D_80126828;
+s32 D_8012682C;
+s32 D_80126830;
+s32 D_80126834;
+s16 D_80126838;
+s16 D_8012683A;
+s32 D_8012683C;
+s32 D_80126840;
+s32 D_80126844;
+s32 D_80126848;
+s32 D_8012684C;
+s32 D_80126850;
+s32 D_80126854;
+s32 D_80126858;
+s32 D_8012685C;
+s32 D_80126860;
+s32 D_80126864;
+s32 D_80126868;
+s32 D_8012686C;
+s32 D_80126870;
+s32 D_80126874;
+s32 D_80126878[24];
+s32 D_801268D8;
+s32 D_801268DC;
+s32 D_801268E0;
+s32 D_801268E4;
+s32 D_801268E8[12];
+s32 D_80126918[3];
+s32 D_80126924;
+s32 D_80126928;
+s32 D_8012692C;
+s32 D_80126930[36];
+s8 gPlayerVehicle[4]; // Unknown number of entries.
+s32 D_801269C4;
+s32 D_801269C8;
+s32 D_801269CC;
+s32 D_801269D0[3];
+s32 D_801269DC;
+u32* D_801269E0;
+s32 D_801269E4;
+s32 D_801269E8;
+s32 D_801269EC;
+s32 D_801269F0;
+s32 D_801269F4;
+s32 D_801269F8;
+s32 D_801269FC;
+s32 D_80126A00;
+s32 D_80126A04;
+s32 D_80126A08;
+s32 D_80126A0C;
+s32 D_80126A10;
+s32 D_80126A14;
+s32 D_80126A18;
+s32 D_80126A1C;
+s32 D_80126A20[4];
+s32 D_80126A30;
+s32 D_80126A34;
+s32 D_80126A38;
+s32 D_80126A3C;
+s32 D_80126A40[8];
+s8 D_80126A60[2]; 
+s32 D_80126A64;
+s32 D_80126A68;
+s32 D_80126A6C;
+s32 D_80126A70;
+s32 D_80126A74;
+s32 D_80126A78;
+s32 D_80126A7C;
+s32 D_80126A80[4];
+s32 D_80126A90;
+s32 D_80126A94;
+s32 D_80126A98;
+s32 D_80126A9C;
+s32* D_80126AA0[16];
+s32 D_80126AE0[16];
+s32 D_80126B20[16];
+s32 D_80126B60[4];
+s32 D_80126B70[16];
+s32 D_80126BB0;
+s32 D_80126BB4;
+s32 D_80126BB8;
+s32 D_80126BBC;
+s32 D_80126BC0;
+s32 D_80126BC4;
+s32 D_80126BC8;
+s32 D_80126BCC;
+s32 D_80126BD0;
+s32 D_80126BD4;
+s32 D_80126BD8;
+f32 D_80126BDC;
+s32 D_80126BE0;
+s32 D_80126BE4;
+s32 D_80126BE8;
+f32 D_80126BEC;
+s32 D_80126BF0[8];
+s32 D_80126C10; 
+s32 D_80126C14;
+s32 D_80126C18;
+s32 D_80126C1C;
+s32 D_80126C20;
+s32 D_80126C24;
+s32 D_80126C28;
+s32 *D_80126C2C;
+u16 (*D_80126C30)[30]; // Cheat table.
+s32 D_80126C34;
+s32 D_80126C38;
+s32 D_80126C3C;
+u16 D_80126C40;
+u16 D_80126C42;
+u16 D_80126C44;
+s16 D_80126C46;
+s32 D_80126C48;
+s16 D_80126C4C;
+f32 D_80126C50;
+s8 D_80126C54;
+s8 D_80126C55;
+s8 D_80126C56;
+s8 D_80126C57;
+u8  D_80126C58[20];
+s32 *D_80126C6C;
+s32 D_80126C70;
+s32 D_80126C74;
+s32 D_80126C78;
+s32 D_80126C7C;
+s32 D_80126C80[16];
+s32 D_80126CC0;
+
+/******************************/
+
 /************ .data ************/
 
 s8  D_800DF450 = 0;
@@ -774,15 +1023,17 @@ MenuElement D_800E0CEC[11] = {
     
 };
 
+
+
 MenuElement D_800E0E4C[9] = {    
     { 481, 174, 161, 174, -159, 174,   0,   0,   0, 255, 128, 0, 12, 0,             NULL, 0, 0, 0, 0 },
     { 479, 172, 159, 172, -161, 172, 255, 255, 255,   0, 255, 0, 12, 0,             NULL, 0, 0, 0, 0 },
     { 368, 192,  48, 192, -272, 192, 255,  64,  64,  96, 255, 0,  8, 0,             NULL, 0, 0, 0, 0 },
     { 506, 187, 186, 187, -134, 187, 255, 192, 255,   0, 255, 0,  0, 1,             NULL, 0, 0, 0, 0 },
-    { 578, 192, 258, 192,  -62, 192, 255, 128, 255,  96, 255, 0, 12, 0, (s32*)0x80126390, 0, 0, 0, 0 },
+    { 578, 192, 258, 192,  -62, 192, 255, 128, 255,  96, 255, 0, 12, 0,      &D_80126390, 0, 0, 0, 0 },
     { 368, 212,  48, 212, -272, 212, 255,  64,  64,  96, 255, 0,  8, 0,             NULL, 0, 0, 0, 0 },
     { 506, 207, 186, 207, -134, 207, 128, 255, 255,   0, 255, 0,  0, 1,             NULL, 0, 0, 0, 0 },
-    { 578, 212, 258, 212,  -62, 212, 255, 128, 255,  96, 255, 0, 12, 0, (s32*)0x80126394, 0, 0, 0, 0 },
+    { 578, 212, 258, 212,  -62, 212, 255, 128, 255,  96, 255, 0, 12, 0,      &D_80126394, 0, 0, 0, 0 },
     {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0,             NULL, 0, 0, 0, 0 },
 };
 
@@ -1224,7 +1475,7 @@ s16 D_800E1E08[4] = {
     0, 0, 0x34, -1 
 };
 
-s32 *D_800E1E10 = (s32 *)0x800E8200;
+s32 *D_800E1E10 = " (ADV.";
 
 s32 D_800E1E14 = 0;
 s32 D_800E1E18 = 0;
@@ -1250,7 +1501,6 @@ s16 D_800E1E40[10] = {
 
 /************ .rodata ************/
 
-const char D_800E8200[] = " (ADV.";
 const char D_800E8208[] = "OK?";
 const char D_800E820C[] = "~";
 const char D_800E8210[] = "DEL";
@@ -1267,110 +1517,6 @@ const char D_800E824C[] = "OK";
 const char D_800E8250[] = "loadFrontEndItem() - Item no %d out of range 0-%d\n";
 
 /*********************************/
-
-/************ .bss ************/
-
-extern Gfx *D_801263A0;
-extern s32 D_801263A8;
-extern s32 D_801263AC;
-extern s8 D_801263B4;
-extern s32 D_801263BC;
-extern s32 D_801263C4;
-extern s8 D_801263D4[4]; 
-extern s8 D_801263DC[4];
-extern s32 D_801263D8;
-extern s32 D_801263E0;
-extern s8 players_character_array[8];
-extern s8 D_801263F0[8];
-extern u8 D_80126418[8];
-extern u8 D_80126420[8];
-extern s64 D_80126448;
-extern f32 D_80126450;
-extern u8 D_80126454[4];
-extern u8 D_80126458[4];
-extern s8 D_8012645C[4];
-extern s8 D_80126464[4];
-extern u8 D_80126468[4];
-extern u8 D_8012646C[4];
-extern s32 D_80126470;
-extern s32 D_80126484;
-extern s32 D_80126488;
-extern s8 D_801264D8;
-extern s8 D_801264E2;
-extern s8 D_80126504;
-extern s8 D_8012650E;
-extern s8 D_80126516;
-extern Settings *D_80126530[3];
-extern s32 D_80126548;
-extern u32* D_80126550[1]; // lookup table? Unknown number of entries.
-extern u8 D_80126750[1]; // unknown number of entries
-extern s32 D_801267D0;
-extern s8* D_801267EC;
-extern s32 D_80126804;
-extern s32 D_80126824;
-extern s32 D_8012683C;
-extern s32 D_80126840;
-extern s32 D_80126844;
-extern s32 D_8012684C;
-extern s32 D_80126854;
-extern s32 D_80126858;
-extern s32 D_8012685C;
-extern s32 D_80126860;
-extern s8 p1_vehicle[4]; // Unknown number of entries.
-extern s32 D_801269C8;
-extern s32 D_801269CC;
-extern u32* D_801269E0;
-extern s32 D_801269FC;
-extern s32 D_80126A00;
-extern s32 D_80126A04;
-extern s32 D_80126A08;
-extern s32 D_80126A0C;
-extern s32 D_80126A10;
-extern s32 D_80126A14;
-extern s32 D_80126A18;
-extern s32 D_80126A1C;
-extern s32 D_80126A20[8]; // Unknown number of entries.
-extern s8 D_80126A60[2]; 
-extern s32 D_80126A64;
-extern s32 D_80126A68;
-extern s32 D_80126A6C;
-extern s32 D_80126A94;
-extern s32* D_80126AA0[16];
-extern s32 D_80126BB4;
-extern s32 D_80126BB8;
-extern s32 D_80126BBC;
-extern s32 D_80126BC4;
-extern s32 D_80126BC8;
-extern s32 D_80126BCC;
-extern s32 D_80126BD0;
-extern s32 D_80126BD4;
-extern s32 D_80126BD8;
-extern f32 D_80126BDC;
-extern s32 D_80126BE0;
-extern f32 D_80126BEC;
-extern s32 D_80126BE4;
-extern s32 D_80126BF0[3];
-extern s32 D_80126C10; 
-extern s32 D_80126C14;
-extern s32 *D_80126C2C;
-extern u16 *D_80126C30[30]; // Cheat table.
-extern s32 D_80126C34;
-extern s32 D_80126C3C;
-extern u16 D_80126C40;
-extern u16 D_80126C42;
-extern s16 D_80126C46;
-extern u16 D_80126C44;
-extern s32 D_80126C48;
-extern s16 D_80126C4C;
-extern u8  D_80126C58;
-extern f32 D_80126C50;
-extern s32 *D_80126C6C;
-extern s32 D_80126C70;
-extern s32 D_80126C74;
-extern s32 D_80126C78;
-extern s32 D_80126CC0;
-
-/******************************/
 
 Settings *get_settings(void);
 void func_8009C4A8(s16 *arg0);
@@ -1653,8 +1799,6 @@ void func_800841B8(s32 arg0) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_080500/MenuOptionsLoop.s")
 #else
-    
-extern s32 D_8012644C;
 
 void func_80084734(void);
 void set_language(s32 language);
@@ -1712,7 +1856,7 @@ s32 MenuOptionsLoop(s32 arg0) {
         func_80001D04(0xEB, 0);
     } else if (D_800DF460 == 1 && analogX != 0) {
         // Enable/Disable subtitles.
-        if (D_8012644C & 0x2000000) {
+        if (D_80126448+4 & 0x2000000) {
             func_80001D04(0xEB, 0);
             func_8009EABC(0, 0x2000000);
             func_800C2AF4(0);
@@ -2282,7 +2426,7 @@ void menu_magic_codes_init(void) {
     D_80126C44 = 0;
     D_80126470 = 0;
     D_80126C4C = -1;
-    D_80126C58 = 0;
+    D_80126C58[0] = 0;
     D_801263BC = 0;
     D_800DF47C = 0;
     D_801263D8 = 0;
@@ -2864,7 +3008,7 @@ void func_8008DC7C(s32 arg0) {
     temp_a1 = D_8012645C;
     if (D_800DF4BC == 2) {
         phi_v1 = phi_v1 | func_8006A554(1);
-        temp_a1 += D_8012645D;
+        temp_a1 += D_8012645C+1;
     }
     
     if (D_80126494 == 0) {
@@ -3164,7 +3308,7 @@ void MenuLoadNewAreaInit(void) {
     D_801263BC = 0;
     D_800DF47C = 0;
     temp_s0 = settings->unk4C->unk2;
-    p1_vehicle = func_8006B0AC(temp_s0);
+    gPlayerVehicle = func_8006B0AC(temp_s0);
     temp_v0_2 = func_8006B14C(temp_s0);
     if (temp_v0_2 != 5) {
         if (temp_v0_2 != 8) {
@@ -3501,7 +3645,7 @@ void MenuTrophyRaceRoundInit(void) {
     }
     
     for(i = 0; i < D_800DF4BC; i++){
-        p1_vehicle[i] = func_8006B0AC(temp);
+        gPlayerVehicle[i] = func_8006B0AC(temp);
     }
     
     func_8006DB14(func_8006B0AC(temp));
@@ -3833,11 +3977,11 @@ s8 func_8009C23C(s32 arg0) {
 }
 
 s8 func_8009C250(s32 arg0) {
-    return p1_vehicle[arg0];
+    return gPlayerVehicle[arg0];
 }
 
 void func_8009C264(s32 arg0, s32 arg1) {
-    p1_vehicle[arg0] = arg1;
+    gPlayerVehicle[arg0] = arg1;
 }
 
 s8* func_8009C274(void) {
