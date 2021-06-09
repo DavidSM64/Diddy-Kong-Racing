@@ -145,7 +145,9 @@ s16 D_800DD304 = -1;
 
 /*******************************/
 
-/* Size: 0x44 bytes */
+/************ .bss ************/
+
+/* Size: 0x44 bytes, might just be Player? */
 typedef struct unk80120AC0 {
     s16 unk0;
     s16 unk2;
@@ -169,42 +171,53 @@ typedef struct unk80120AC0 {
     u8  pad3C[8];
 } unk80120AC0;
 
-extern unk80120AC0 D_80120AC0[4]; // Unknown number of entries.
-extern unk80120AC0 D_80120AFB[4]; // Unknown number of entries.
-extern unk80120AC0 D_80120BD0[4]; // Unknown number of entries.
-extern s32 D_80120CE0;
-extern s32 D_80120CE4;
-extern s32 D_80120CE8;
-extern s32 D_80120D08;
-extern s32 D_80120D0C;
-extern f32 D_80120D10;
-extern s8  D_80120D14;
-extern u8  D_80120D15;
-extern s32 D_80120D18;
-extern s32 D_80120D1C;
-extern s32 D_80120D6C;
-extern s32 D_80120D70[6];
-extern s32 D_80120D88[6]; // Unknown number of entries.
-extern s32 D_80120EE0;
-extern s32 D_80120F20;
-extern s32 D_80120F60;
-extern s32 D_80120FE0;
-extern s32 D_80120FA0;
-extern s32 D_80121060;
-extern s32 D_801210A0;
-extern s32 D_801210E0;
+unk80120AC0 D_80120AC0[8];
+s32 D_80120CE0;
+s32 D_80120CE4;
+s32 D_80120CE8;
+s32 D_80120CEC;
+s32 D_80120CF0[6];
+s32 D_80120D08;
+s32 D_80120D0C;
+f32 D_80120D10;
+s8  D_80120D14;
+u8  D_80120D15;
+s32 D_80120D18;
+s32 D_80120D1C;
+s32 D_80120D20[2];
+s32 D_80120D28[6];
+s32 D_80120D40[6];
+s32 D_80120D58[6];
+s32 D_80120D70[6];
+s32 D_80120D88[6];
+s32 D_80120DA0[80];
+s32 D_80120EE0[16];
+s32 D_80120F20[16];
+s32 D_80120F60[16];
+s32 D_80120FA0[16];
+s32 D_80120FE0[16];
+s32 D_80121020[16];
+s32 D_80121060[16];
+s32 D_801210A0[16];
+s32 D_801210E0[6];
+s32 D_801210F8;
+s32 D_801210FC;
+u8 D_80121100[16];
 
-/* Size: 5 bytes */
+/* Size: 6 bytes */
 typedef struct unk80121110 {
     u16 unk0;
     s8 unk2;
     s8 unk3;
     s8 unk4;
+    s8 unk6;
 } unk80121110;
-extern unk80121110 D_80121110[2]; // Unknown number of entries
-extern u16 D_80121140[2]; // Unknown number of entries.
-extern u16 D_80121148[2]; // Unknown number of entries.
-extern u8 D_80121150[8]; // Unknown number of entries.
+unk80121110 D_80121110[8];
+u16 D_80121140[4];
+u16 D_80121148[4];
+u8 D_80121150[16];
+
+/******************************/
 
 extern s32 D_A4000000;
 extern s32 SP_IMEM;
@@ -258,13 +271,13 @@ f32 func_800660DC(void) {
 void func_800660EC(f32 arg0) {
     if (0.0f < arg0 && arg0 < 90.0f && arg0 != D_80120D10) {
         D_80120D10 = arg0;
-        guPerspectiveF(&D_80120EE0, &D_80120D6C, arg0, 1.33333333f, 10.0f, 15000.0f, 1.0f);
+        guPerspectiveF(&D_80120EE0, &D_80120D58[5], arg0, 1.33333333f, 10.0f, 15000.0f, 1.0f);
         func_8006F870(&D_80120EE0, &D_80120FE0);
     }
 }
 
 void func_80066194(void) {
-    guPerspectiveF(&D_80120EE0, &D_80120D6C, 60.0f, 1.33333333f, 10.0f, 15000.0f, 1.0f);
+    guPerspectiveF(&D_80120EE0, &D_80120D58[5], 60.0f, 1.33333333f, 10.0f, 15000.0f, 1.0f);
     func_8006F870(&D_80120EE0, &D_80120FE0);
 }
 
@@ -809,9 +822,9 @@ unk80120AC0 *func_80069D20(void) {
 
 unk80120AC0 *func_80069D7C(void) {
     if (D_80120D14 != 0) {
-        return D_80120BD0;
+        return &D_80120AC0[4];
     }
-    return D_80120AC0;
+    return &D_80120AC0[0];
 }
 
 s32* func_80069DA4(void) {
@@ -866,7 +879,7 @@ extern s32 D_800DD300;
 extern s32 D_801210F8;  
 extern s32 D_801210FC;
 extern s8 D_80121100;   
-extern u8 D_80121103;   
+extern u8 D_80121100+3;   
 
 // Has regalloc & stack issues.
 s32 func_8006A10C(void) {
@@ -877,7 +890,7 @@ s32 func_8006A10C(void) {
     func_800CCFE0(&D_801210E0);
     func_8006A434();
     D_800DD300 = 0;
-    if ((sp23 & 1) && !(D_80121103 & 8)) {
+    if ((sp23 & 1) && !(D_80121100+3 & 8)) {
         return 0;
     }
     D_800DD300 = 1;
