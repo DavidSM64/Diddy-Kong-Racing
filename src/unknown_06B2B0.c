@@ -132,37 +132,54 @@ typedef struct unk80121178 {
     s8 pad3[3];
 } unk80121178;
 unk80121178 *D_80121178[2];
-s32 D_80121180;
+s32 D_80121180[16];
 
-extern s32 D_801211C0[2];
-extern s16 D_801211C8[8];
-extern Gfx *D_801211F0[3];
-extern Gfx *D_801211F8;
-extern s32 D_80121208;
-extern s32 D_80121218;
-extern s32 D_80121228;
-extern s8  D_80121250[16];
-extern s32 D_801234E8;
-extern s32 D_801234EC;
-extern s32 D_801234F0;
-extern s32 D_801234F4;
-extern s32 D_801234F8;
-extern s32 D_801234FC;
-extern s32 D_80123500;
-extern s32 D_80123504;
-extern s32 D_80123508;
-extern Settings *gSettingsPtr;
-extern s8  D_80123514;
-extern s8  gIsPaused;
-extern s8  D_80123516;
-extern s32 D_80123518;
-extern s32 D_8012351C;
-extern s32 D_80123520;
-extern u8  D_80123524;
-extern u8  D_80123525;
-extern u8  D_80123526;
-extern s32* D_80123548; // This is actually an OSMesgQueue pointer.
-extern s32 D_80123560;
+s32 D_801211C0[2];
+s16 D_801211C8[20];
+Gfx *D_801211F0[2];
+Gfx *D_801211F8;
+s32 D_801211FC;
+s32 D_80121200;
+s32 D_80121204;
+s32 D_80121208[2];
+s32 D_80121210;
+s32 D_80121214;
+s32 D_80121218[2];
+s32 D_80121220;
+s32 D_80121224;
+s32 D_80121228[10];
+s8  D_80121250[16];
+s32 D_80121260[2210];
+s32 D_801234E8;
+s32 D_801234EC;
+s32 D_801234F0;
+s32 D_801234F4;
+s32 D_801234F8;
+s32 D_801234FC;
+s32 D_80123500;
+s32 D_80123504;
+s32 D_80123508;
+s32 D_8012350C;
+Settings *gSettingsPtr;
+s8  D_80123514;
+s8  gIsPaused;
+s8  D_80123516;
+s32 D_80123518;
+s32 D_8012351C;
+s32 D_80123520;
+u8  D_80123524;
+u8  D_80123525;
+u8  D_80123526;
+s32 D_80123528;
+s32 D_8012352C;
+s32 D_80123530;
+s32 D_80123534;
+s32 D_80123538[3];
+s32 D_80123544;
+s32* D_80123548; // This is actually an OSMesgQueue pointer.
+s32 D_8012354C;
+s32 D_80123550[4];
+s32 D_80123560[8];
 
 /******************************/
 
@@ -755,7 +772,7 @@ void func_8006C3E0(void) {
     func_800C7350();
     osCreateMesgQueue(&D_80123548, &D_80123544, 1);
     osScAddClient(&D_80121260, &D_80123538, &D_80123548, 3);
-    D_80123560 = 0;
+    D_80123560[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
     D_801234E8 = 0;
@@ -1057,10 +1074,10 @@ s8 func_8006EAB0(void) {
 }
 
 s32 func_8006EAC0(void) {
-    if (D_80123560 == 0) {
-        D_80123560 = (s32) ((osRecvMesg(&D_80123548, NULL, 0) + 1) != 0);
+    if (D_80123560[0] == 0) {
+        D_80123560[0] = (s32) ((osRecvMesg(&D_80123548, NULL, 0) + 1) != 0);
     }
-    return D_80123560;
+    return D_80123560[0];
 }
 
 s32 func_8006EB14(void) {

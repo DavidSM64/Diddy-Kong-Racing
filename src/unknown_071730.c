@@ -32,6 +32,8 @@ const char D_800E751C[] = "ORANGE %d\n\n";
                           
 /*********************************/
 
+/************ .bss ************/
+
 /* Size: 0x8 bytes */
 typedef struct unk80070BE4_8_0 {
     s16 unk0;
@@ -58,13 +60,14 @@ typedef struct unk80070BE4 {
     s32 size;
 } unk80070BE4;
 
-extern unk80070BE4 D_80123580[12]; // unknown number of entries
+unk80070BE4 D_80123580[4];
 
 #ifndef _ALIGN16
     #define _ALIGN16(val) ((val) & 0xFFFFFFF0) + 0x10
 #endif
 
-extern s32 D_801235C0;
+s32 D_801235C0;
+s32 D_801235C4;
 
 /* Size: 0x8 bytes */
 typedef struct unk801235C8 {
@@ -73,11 +76,18 @@ typedef struct unk801235C8 {
     u8 pad5[3];
 } unk801235C8;
 
-extern unk801235C8 D_801235C8[8];
+unk801235C8 D_801235C8[256];
 
-extern s32 D_80123DC8;
-extern s32 D_80123DCC;
+s32 D_80123DC8;
+s32 D_80123DCC;
+s32 D_80123DD0[64];
+s32 D_80123ED0[64];
+s32 D_80123FD0[8];
+s32 D_80123FF0[8];
+
 extern unk80070BE4_8 D_8012D3F0;
+
+/******************************/
 
 /* Unknown size */
 typedef struct unk800B7D10 {
