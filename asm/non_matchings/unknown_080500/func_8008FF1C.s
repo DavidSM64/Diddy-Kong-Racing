@@ -335,11 +335,11 @@ glabel func_8008FF1C
 /* 091000 80090400 3C018012 */  lui   $at, %hi(D_801269F0) # $at, 0x8012
 /* 091004 80090404 3C108012 */  lui   $s0, %hi(D_80126930) # $s0, 0x8012
 /* 091008 80090408 3C14800E */  lui   $s4, %hi(D_800E05F4) # $s4, 0x800e
-/* 09100C 8009040C 3C138012 */  lui   $s3, %hi(p1_vehicle) # $s3, 0x8012
+/* 09100C 8009040C 3C138012 */  lui   $s3, %hi(gPlayerVehicle) # $s3, 0x8012
 /* 091010 80090410 3C12800E */  lui   $s2, %hi(D_800E05D4) # $s2, 0x800e
 /* 091014 80090414 AC2069F0 */  sw    $zero, %lo(D_801269F0)($at)
 /* 091018 80090418 265205D4 */  addiu $s2, %lo(D_800E05D4) # addiu $s2, $s2, 0x5d4
-/* 09101C 8009041C 267369C0 */  addiu $s3, %lo(p1_vehicle) # addiu $s3, $s3, 0x69c0
+/* 09101C 8009041C 267369C0 */  addiu $s3, %lo(gPlayerVehicle) # addiu $s3, $s3, 0x69c0
 /* 091020 80090420 269405F4 */  addiu $s4, %lo(D_800E05F4) # addiu $s4, $s4, 0x5f4
 /* 091024 80090424 26106930 */  addiu $s0, %lo(D_80126930) # addiu $s0, $s0, 0x6930
 /* 091028 80090428 AFA0007C */  sw    $zero, 0x7c($sp)

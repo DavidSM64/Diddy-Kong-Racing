@@ -72,9 +72,9 @@ glabel MenuFileSelectLoop
 /* 08D4C0 8008C8C0 AC22F494 */  sw    $v0, %lo(gIsInAdventureTwo)($at)
 /* 08D4C4 8008C8C4 3C01800E */  lui   $at, %hi(D_800DF4B8) # $at, 0x800e
 /* 08D4C8 8008C8C8 AC20F4B8 */  sw    $zero, %lo(D_800DF4B8)($at)
-/* 08D4CC 8008C8CC 3C018012 */  lui   $at, %hi(p1_vehicle) # $at, 0x8012
+/* 08D4CC 8008C8CC 3C018012 */  lui   $at, %hi(gPlayerVehicle) # $at, 0x8012
 /* 08D4D0 8008C8D0 0C01B6C5 */  jal   func_8006DB14
-/* 08D4D4 8008C8D4 A02069C0 */   sb    $zero, %lo(p1_vehicle)($at)
+/* 08D4D4 8008C8D4 A02069C0 */   sb    $zero, %lo(gPlayerVehicle)($at)
 /* 08D4D8 8008C8D8 0C0204F4 */  jal   MenuInit
 /* 08D4DC 8008C8DC 24040006 */   li    $a0, 6
 /* 08D4E0 8008C8E0 10000076 */  b     .L8008CABC
@@ -134,10 +134,10 @@ glabel MenuFileSelectLoop
 /* 08D5A8 8008C9A8 AFA20024 */  sw    $v0, 0x24($sp)
 /* 08D5AC 8008C9AC 0C01A955 */  jal   func_8006A554
 /* 08D5B0 8008C9B0 AFA60020 */   sw    $a2, 0x20($sp)
-/* 08D5B4 8008C9B4 3C198012 */  lui   $t9, %hi(D_80126465) # $t9, 0x8012
+/* 08D5B4 8008C9B4 3C198012 */  lui   $t9, %hi(D_80126464+1) # $t9, 0x8012
 /* 08D5B8 8008C9B8 8FA30024 */  lw    $v1, 0x24($sp)
 /* 08D5BC 8008C9BC 8FA60020 */  lw    $a2, 0x20($sp)
-/* 08D5C0 8008C9C0 83396465 */  lb    $t9, %lo(D_80126465)($t9)
+/* 08D5C0 8008C9C0 83396465 */  lb    $t9, %lo(D_80126464+1)($t9)
 /* 08D5C4 8008C9C4 00621825 */  or    $v1, $v1, $v0
 /* 08D5C8 8008C9C8 00D93021 */  addu  $a2, $a2, $t9
 .L8008C9CC:
