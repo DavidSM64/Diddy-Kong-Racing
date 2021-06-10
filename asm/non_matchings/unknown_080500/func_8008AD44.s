@@ -9,8 +9,8 @@ glabel func_8008AD44
 /* 08B960 8008AD60 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 08B964 8008AD64 15C0003B */  bnez  $t6, .L8008AE54
 /* 08B968 8008AD68 AFB00018 */   sw    $s0, 0x18($sp)
-/* 08B96C 8008AD6C 3C1000AD */  lui   $s0, %hi(D_00AC9630) # $s0, 0xad
-/* 08B970 8008AD70 26109630 */  addiu $s0, %lo(D_00AC9630) # addiu $s0, $s0, -0x69d0
+/* 08B96C 8008AD6C 3C1000AD */  lui   $s0, %hi(__ROM_END) # $s0, 0xad
+/* 08B970 8008AD70 26109630 */  addiu $s0, %lo(__ROM_END) # addiu $s0, $s0, -0x69d0
 /* 08B974 8008AD74 2610F000 */  addiu $s0, $s0, -0x1000
 /* 08B978 8008AD78 24131000 */  li    $s3, 4096
 /* 08B97C 8008AD7C 02009025 */  move  $s2, $s0
@@ -75,8 +75,8 @@ glabel func_8008AD44
 /* 08BA4C 8008AE4C 3C01800E */  lui   $at, %hi(D_800E1E18) # $at, 0x800e
 /* 08BA50 8008AE50 AC2A1E18 */  sw    $t2, %lo(D_800E1E18)($at)
 .L8008AE54:
-/* 08BA54 8008AE54 3C1000AD */  lui   $s0, %hi(D_00AC9630) # $s0, 0xad
-/* 08BA58 8008AE58 26109630 */  addiu $s0, %lo(D_00AC9630) # addiu $s0, $s0, -0x69d0
+/* 08BA54 8008AE54 3C1000AD */  lui   $s0, %hi(__ROM_END) # $s0, 0xad
+/* 08BA58 8008AE58 26109630 */  addiu $s0, %lo(__ROM_END) # addiu $s0, $s0, -0x69d0
 /* 08BA5C 8008AE5C 00002025 */  move  $a0, $zero
 /* 08BA60 8008AE60 00002825 */  move  $a1, $zero
 /* 08BA64 8008AE64 00003025 */  move  $a2, $zero

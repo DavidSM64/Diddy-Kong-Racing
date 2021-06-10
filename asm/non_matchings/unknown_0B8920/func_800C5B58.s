@@ -30,8 +30,10 @@ glabel func_800C5B58
 /* 0C67C8 800C5BC8 3C0D0702 */  lui   $t5, (0x07020010 >> 16) # lui $t5, 0x702
 /* 0C67CC 800C5BCC 244C0008 */  addiu $t4, $v0, 8
 /* 0C67D0 800C5BD0 AE6C0000 */  sw    $t4, ($s3)
-/* 0C67D4 800C5BD4 3C0E000E */  lui   $t6, %hi(D_000E36D8) # $t6, 0xe
-/* 0C67D8 800C5BD8 25CE36D8 */  addiu $t6, %lo(D_000E36D8) # addiu $t6, $t6, 0x36d8
+                                             # D_800E3690 - 0x7FFFFFB8 = 0xE36D8
+/* 0C67D4 800C5BD4 3C0E000E */  lui   $t6, %hi(D_800E3690 - 0x7FFFFFB8) # $t6, 0xe
+                                             # D_800E3690 - 0x7FFFFFB8 = 0xE36D8
+/* 0C67D8 800C5BD8 25CE36D8 */  addiu $t6, %lo(D_800E3690 - 0x7FFFFFB8) # addiu $t6, $t6, 0x36d8
 /* 0C67DC 800C5BDC 35AD0010 */  ori   $t5, (0x07020010 & 0xFFFF) # ori $t5, $t5, 0x10
 /* 0C67E0 800C5BE0 AC4D0000 */  sw    $t5, ($v0)
 /* 0C67E4 800C5BE4 AC4E0004 */  sw    $t6, 4($v0)
