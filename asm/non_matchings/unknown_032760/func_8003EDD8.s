@@ -14,10 +14,10 @@ glabel func_8003EDD8
 /* 03F9F4 8003EDF4 104000A1 */  beqz  $v0, .L8003F07C
 /* 03F9F8 8003EDF8 00C08825 */   move  $s1, $a2
 /* 03F9FC 8003EDFC 8C430064 */  lw    $v1, 0x64($v0)
-/* 03FA00 8003EE00 3C01800E */  lui   $at, %hi(D_800E61FC) # $at, 0x800e
+/* 03FA00 8003EE00 3C01800E */  lui   $at, %hi(D_800E61F8 + 4) # $at, 0x800e
 /* 03FA04 8003EE04 846E01BA */  lh    $t6, 0x1ba($v1)
 /* 03FA08 8003EE08 C42D61F8 */  lwc1  $f13, %lo(D_800E61F8)($at)
-/* 03FA0C 8003EE0C C42C61FC */  lwc1  $f12, %lo(D_800E61FC)($at)
+/* 03FA0C 8003EE0C C42C61FC */  lwc1  $f12, %lo(D_800E61F8 + 4)($at)
 /* 03FA10 8003EE10 000E7843 */  sra   $t7, $t6, 1
 /* 03FA14 8003EE14 A4CF0014 */  sh    $t7, 0x14($a2)
 /* 03FA18 8003EE18 847801BC */  lh    $t8, 0x1bc($v1)

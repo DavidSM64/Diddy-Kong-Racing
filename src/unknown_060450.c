@@ -22,6 +22,22 @@ const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n
 
 /*********************************/
 
+/************ .bss ************/
+
+s32 D_8011D620;
+s32 D_8011D624;
+s32 D_8011D628;
+s32 D_8011D62C;
+s32 D_8011D630;
+s32 D_8011D634;
+s32 D_8011D638;
+s32 D_8011D63C;
+s32 D_8011D640;
+s32 D_8011D644;
+s32 D_8011D648[66];
+
+/******************************/
+
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F850.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F99C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005FCD0.s")

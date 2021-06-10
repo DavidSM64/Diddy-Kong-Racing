@@ -6,7 +6,7 @@
 
 // This probably does not belong here. Please move it to the appropriate place!
 #define EQPOWER_LENGTH 128
-static s16 eqpower[ EQPOWER_LENGTH ] = {
+s16 eqpower[ EQPOWER_LENGTH ] = {
     32767,  32764,  32757,  32744,  32727,  32704,
     32677,  32644,  32607,  32564,  32517,  32464,
     32407,  32344,  32277,  32205,  32127,  32045,

@@ -85,8 +85,10 @@ s16 D_800DD3F4[8] = {
     255, -1, 20, -1
 };
 s32 D_800DD404 = 12;
-s32 D_800DD408 = 0x00FFFFFF;
-s32 D_800DD40C = 0x001EFFFF; // Unused?
+
+unknown800DD408 D_800DD408 = {
+    0, 255, 255, 255, 30, 0xFFFF
+};
 
 // Unused?
 char *D_800DD410[3] = {
@@ -104,53 +106,75 @@ s32 D_800DD424[2] = {
 
 /*******************************/
 
-
 extern s32 D_800DFD94;
-extern s32 D_80121164;
 
-extern LevelHeader* D_80121168;
+/************ .bss ************/
 
-extern s32 D_80121170;
-extern s32 D_80121174;
+s32 D_80121160;
+s32 D_80121164;
+LevelHeader* D_80121168;
+s32 D_8012116C;
+s32 D_80121170;
+s32 D_80121174;
 
-// Size: 6 bytes
-typedef struct unk8012117C {
+// Unknown size
+typedef struct unk80121178 {
     s8 unk0;
     s8 unk1;
     s8 unk2;
     s8 pad3[3];
-} unk8012117C;
-extern unk8012117C *D_8012117C[2]; // Unknown number of entries
+} unk80121178;
+unk80121178 *D_80121178[2];
+s32 D_80121180[16];
 
-extern s32 D_801211C0;
-extern s16 D_801211C8[8]; // Unknown number of entries
-extern Gfx *D_801211F0[3]; // Unknown number of entries.
-extern Gfx *D_801211F8;
-extern s32 D_80121208;
-extern s32 D_80121218;
-extern s32 D_80121228;
-extern s8  D_80121250[16]; // Unknown number of entries
-extern s32 D_801234E8;
-extern s32 D_801234EC;
-extern s32 D_801234F0;
-extern s32 D_801234F4;
-extern s32 D_801234F8;
-extern s32 D_801234FC;
-extern s32 D_80123500;
-extern s32 D_80123504;
-extern s32 D_80123508;
-extern Settings *gSettingsPtr;
-extern s8  D_80123514;
-extern s8  gIsPaused;
-extern s8  D_80123516;
-extern s32 D_80123518;
-extern s32 D_8012351C;
-extern s32 D_80123520;
-extern u8  D_80123524;
-extern u8  D_80123525;
-extern u8  D_80123526;
-extern s32* D_80123548; // This is actually an OSMesgQueue pointer.
-extern s32 D_80123560;
+s32 D_801211C0[2];
+s16 D_801211C8[20];
+Gfx *D_801211F0[2];
+Gfx *D_801211F8;
+s32 D_801211FC;
+s32 D_80121200;
+s32 D_80121204;
+s32 D_80121208[2];
+s32 D_80121210;
+s32 D_80121214;
+s32 D_80121218[2];
+s32 D_80121220;
+s32 D_80121224;
+s32 D_80121228[10];
+s8  D_80121250[16];
+s32 D_80121260[2210];
+s32 D_801234E8;
+s32 D_801234EC;
+s32 D_801234F0;
+s32 D_801234F4;
+s32 D_801234F8;
+s32 D_801234FC;
+s32 D_80123500;
+s32 D_80123504;
+s32 D_80123508;
+s32 D_8012350C;
+Settings *gSettingsPtr;
+s8  D_80123514;
+s8  gIsPaused;
+s8  D_80123516;
+s32 D_80123518;
+s32 D_8012351C;
+s32 D_80123520;
+u8  D_80123524;
+u8  D_80123525;
+u8  D_80123526;
+s32 D_80123528;
+s32 D_8012352C;
+s32 D_80123530;
+s32 D_80123534;
+s32 D_80123538[3];
+s32 D_80123544;
+s32* D_80123548; // This is actually an OSMesgQueue pointer.
+s32 D_8012354C;
+s32 D_80123550[4];
+s32 D_80123560[8];
+
+/******************************/
 
 void func_800014BC(f32 arg0);
 s8* func_8001E29C(s32 arg0);
@@ -175,14 +199,14 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A6B0.s")
 
 s32 func_8006B0AC(s32 arg0) {
     if (arg0 > 0 && arg0 < D_80121170) {
-        return (*D_8012117C)[arg0].unk2 & 0xF;
+        return D_80121178[1][arg0].unk2 & 0xF;
     }
     return 0;
 }
 
 s32 func_8006B0F8(s32 arg0) {
     if (arg0 > 0 && arg0 < D_80121170) {
-        s32 temp = (*D_8012117C)[arg0].unk2;
+        s32 temp = D_80121178[1][arg0].unk2;
         if(temp != 0) {
             return (temp >> 4) & 0xF;
         }
@@ -192,14 +216,14 @@ s32 func_8006B0F8(s32 arg0) {
 
 s8 func_8006B14C(s32 arg0) {
     if (arg0 >= 0 && arg0 < D_80121170) {
-        return (*D_8012117C)[arg0].unk1;
+        return D_80121178[1][arg0].unk1;
     }
     return -1;
 }
 
 s8 func_8006B190(s32 arg0) {
     if (arg0 >= 0 && arg0 < D_80121170) {
-        return (*D_8012117C)[arg0].unk0;
+        return D_80121178[1][arg0].unk0;
     }
     return 0;
 }
@@ -228,9 +252,6 @@ s32 func_8006B240(void) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006B250.s")
 #else
-
-extern s32 *D_80121160;
-extern s32 D_800DD314;
 
 Settings *get_settings(void);
 s32 *func_80076C58(s32);
@@ -545,7 +566,6 @@ void func_8006BEFC(void) {
     }
 }
 
-extern s32 *D_80121160;
 Settings *get_settings(void);
 s32 *func_80076C58(s32);
 
@@ -598,18 +618,18 @@ void func_8006BFC8(s8 *arg0) {
     }
     temp2 = D_80121160[phi_s0];
     temp = D_80121160[phi_s0 + 1] - temp2;
-    D_801211C0 = func_80070C9C(temp, 0xFFFF00FF, D_80121160);
-    func_80076E68(0, D_801211C0, temp2, temp);
+    D_801211C0[0] = func_80070C9C(temp, 0xFFFF00FF, D_80121160);
+    func_80076E68(0, D_801211C0[0], temp2, temp);
     func_80071140(D_80121160);
 }
 #endif
 
 void func_8006C164(void) {
-    func_80071140(D_801211C0);
+    func_80071140(D_801211C0[0]);
 }
 
 s32 func_8006C18C(void) {
-    return D_801211C0;
+    return D_801211C0[0];
 }
 
 s8 func_8006C19C(void) {
@@ -745,7 +765,7 @@ void func_8006C3E0(void) {
     func_800C7350();
     osCreateMesgQueue(&D_80123548, &D_80123544, 1);
     osScAddClient(&D_80121260, &D_80123538, &D_80123548, 3);
-    D_80123560 = 0;
+    D_80123560[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
     D_801234E8 = 0;
@@ -1047,10 +1067,10 @@ s8 func_8006EAB0(void) {
 }
 
 s32 func_8006EAC0(void) {
-    if (D_80123560 == 0) {
-        D_80123560 = (s32) ((osRecvMesg(&D_80123548, NULL, 0) + 1) != 0);
+    if (D_80123560[0] == 0) {
+        D_80123560[0] = (s32) ((osRecvMesg(&D_80123548, NULL, 0) + 1) != 0);
     }
-    return D_80123560;
+    return D_80123560[0];
 }
 
 s32 func_8006EB14(void) {

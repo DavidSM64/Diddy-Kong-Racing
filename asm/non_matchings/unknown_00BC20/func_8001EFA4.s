@@ -77,7 +77,7 @@ glabel func_8001EFA4
 /* 01FCB0 8001F0B0 00000000 */  nop   
 /* 01FCB4 8001F0B4 A60D0028 */  sh    $t5, 0x28($s0)
 /* 01FCB8 8001F0B8 822E0014 */  lb    $t6, 0x14($s1)
-/* 01FCBC 8001F0BC C430566C */  lwc1  $f16, %lo(D_800E566C)($at)
+/* 01FCBC 8001F0BC C430566C */  lwc1  $f16, %lo(D_800E5668 + 4)($at)
 /* 01FCC0 8001F0C0 448E3000 */  mtc1  $t6, $f6
 /* 01FCC4 8001F0C4 C4315668 */  lwc1  $f17, %lo(D_800E5668)($at)
 /* 01FCC8 8001F0C8 46803220 */  cvt.s.w $f8, $f6

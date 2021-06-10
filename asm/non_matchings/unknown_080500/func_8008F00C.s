@@ -48,8 +48,8 @@ glabel func_8008F00C
 /* 08FCB8 8008F0B8 3C048012 */  lui   $a0, %hi(D_801269C4) # $a0, 0x8012
 /* 08FCBC 8008F0BC 18C0000B */  blez  $a2, .L8008F0EC
 /* 08FCC0 8008F0C0 24180001 */   li    $t8, 1
-/* 08FCC4 8008F0C4 3C0F8012 */  lui   $t7, %hi(p1_vehicle) # $t7, 0x8012
-/* 08FCC8 8008F0C8 25E369C0 */  addiu $v1, $t7, %lo(p1_vehicle)
+/* 08FCC4 8008F0C4 3C0F8012 */  lui   $t7, %hi(gPlayerVehicle) # $t7, 0x8012
+/* 08FCC8 8008F0C8 25E369C0 */  addiu $v1, $t7, %lo(gPlayerVehicle)
 /* 08FCCC 8008F0CC 00C32821 */  addu  $a1, $a2, $v1
 /* 08FCD0 8008F0D0 248469C4 */  addiu $a0, %lo(D_801269C4) # addiu $a0, $a0, 0x69c4
 .L8008F0D4:

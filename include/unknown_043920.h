@@ -19,7 +19,9 @@ extern f32 D_800DCBE8[19];
 // Unused? Not sure if this is actually an array or just some random data.
 extern s32 D_800DCC34[19];
 
-extern s32 D_800DCC80[19];
+extern s32 D_800DCC80[13];
+
+extern s16 D_800DCCB4[12];
 
 extern u16 D_800DCCCC[20];
 

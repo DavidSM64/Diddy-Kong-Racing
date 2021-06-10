@@ -82,10 +82,10 @@ glabel func_800CB2D4
 /* 0CBFF4 800CB3F4 448B8000 */  mtc1  $t3, $f16
 /* 0CBFF8 800CB3F8 C7AA0004 */  lwc1  $f10, 4($sp)
 /* 0CBFFC 800CB3FC 468084A0 */  cvt.s.w $f18, $f16
-/* 0CC000 800CB400 3C01800F */  lui   $at, %hi(D_800E95FC) # $at, 0x800f
+/* 0CC000 800CB400 3C01800F */  lui   $at, %hi(D_800E95F8 + 4) # $at, 0x800f
 /* 0CC004 800CB404 C42595F8 */  lwc1  $f5, %lo(D_800E95F8)($at)
 /* 0CC008 800CB408 460091A1 */  cvt.d.s $f6, $f18
-/* 0CC00C 800CB40C C42495FC */  lwc1  $f4, %lo(D_800E95FC)($at)
+/* 0CC00C 800CB40C C42495FC */  lwc1  $f4, %lo(D_800E95F8 + 4)($at)
 /* 0CC010 800CB410 46265201 */  sub.d $f8, $f10, $f6
 /* 0CC014 800CB414 8FB80024 */  lw    $t8, 0x24($sp)
 /* 0CC018 800CB418 46244402 */  mul.d $f16, $f8, $f4

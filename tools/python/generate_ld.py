@@ -26,6 +26,13 @@ LATE_DATA_FILES = [
     BUILD_DIR + '/lib/src/unknown_0D3020.o'
 ]
 
+BSS_LIB_ORDER_FILES = [
+    BUILD_DIR + '/lib/src/osViMgr.o',
+    BUILD_DIR + '/lib/src/osSetEventMesg.o',
+    BUILD_DIR + '/lib/src/unknown_0CD820.o',
+    BUILD_DIR + '/lib/src/unknown_0CE200.o'
+]
+
 class GenerateLD:
     def __init__(self, file):
         print('Generating linker file...')
@@ -51,7 +58,10 @@ class GenerateLD:
         self.gen_data_section()
         self.gen_rodata_section()
         self.gen_ucode_data_section()
+        self.gen_bss_section()
         self.gen_assets_section()
+        self.gen_line('__ROM_END = romPos;')
+        self.gen_newline()
         self.gen_discard()
         self.gen_close_block()
     
@@ -121,6 +131,19 @@ class GenerateLD:
         self.gen_line(BUILD_DIR + '/asm/assets/ucode_data.o(.text);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.ucodeData);')
+        self.gen_newline()
+    
+    def gen_bss_section(self):
+        self.gen_line('__BSS_SECTION_SIZE = SIZEOF(.bss.noload);')
+        self.gen_newline()
+        self.gen_line('.bss.noload . (NOLOAD): SUBALIGN(4)')
+        self.gen_open_block()
+        for file in self.files:
+            if file[0] not in BSS_LIB_ORDER_FILES:
+                self.gen_line(file[0] + '(.bss);')
+        for file in BSS_LIB_ORDER_FILES:
+            self.gen_line(file + '(.bss);')
+        self.gen_close_block()
         self.gen_newline()
         
     def gen_assets_section(self):

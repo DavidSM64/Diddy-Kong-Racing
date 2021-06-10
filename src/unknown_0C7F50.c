@@ -16,9 +16,12 @@ s32 D_800E377C = 0;
 
 /************ .bss ************/
 
-extern OSMesgQueue D_8012ACA0;
-extern OSMesg D_8012ACB8;
-extern OSThread D_8012AAF0;
+s32 D_8012AAE0[4];
+OSThread D_8012AAF0;
+OSMesgQueue D_8012ACA0;
+OSMesg D_8012ACB8;
+s32 D_8012ACC0[1306];
+
 extern void *D_8012CCC0;
 
 /*****************************/

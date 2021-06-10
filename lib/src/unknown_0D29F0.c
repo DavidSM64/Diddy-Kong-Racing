@@ -25,7 +25,7 @@ typedef struct
     /* 0x24 */ __OSViScale y;
 } __OSViContext;
 
-static __OSViContext vi[2] = {0};
+__OSViContext vi[2] = {0};
 
 __OSViContext *__osViCurr = &vi[0];
 __OSViContext *__osViNext = &vi[1];

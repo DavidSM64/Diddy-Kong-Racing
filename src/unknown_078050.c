@@ -138,14 +138,29 @@ u32 D_800DE6E8[] = {
 
 /************ .bss ************/
 
-extern OSMesgQueue  D_80125EA0;
-extern OSMesg       D_80125EB8;
-extern OSMesgQueue  D_80125EC0;
-extern OSMesgQueue  D_80125ED8;
-extern OSMesg       D_80125EF0;
-extern OSMesg       D_80125F10;
-
-extern u32 D_80126100;
+s32 D_801242A0[256];
+s32 D_801246A0[1536];
+OSMesgQueue  D_80125EA0;
+OSMesg       D_80125EB8;
+OSMesgQueue  D_80125EC0;
+OSMesgQueue  D_80125ED8;
+OSMesg       D_80125EF0;
+s32          D_80125EF8[6];
+OSMesg       D_80125F10;
+s32          D_80125F18[6];
+s8 D_80125F30;
+s8 D_80125F31;
+s8 D_80125F32;
+s8 D_80125F33;
+s8 D_80125F34;
+s8 D_80125F35;
+s8 D_80125F36;
+s8 D_80125F37;
+s32 D_80125F38;
+s32 D_80125F3C;
+s32 D_80125F40[56];
+s32 D_80126020[56];
+u32 D_80126100;
 
 /*******************************/
 

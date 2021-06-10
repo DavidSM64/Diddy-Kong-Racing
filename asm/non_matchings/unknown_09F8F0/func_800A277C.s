@@ -327,10 +327,10 @@ glabel func_800A277C
 /* 0A37E0 800A2BE0 17000012 */  bnez  $t8, .L800A2C2C
 /* 0A37E4 800A2BE4 00000000 */   nop   
 /* 0A37E8 800A2BE8 44892000 */  mtc1  $t1, $f4
-/* 0A37EC 800A2BEC 3C01800F */  lui   $at, %hi(D_800E873C) # $at, 0x800f
+/* 0A37EC 800A2BEC 3C01800F */  lui   $at, %hi(D_800E8738 + 4) # $at, 0x800f
 /* 0A37F0 800A2BF0 468021A0 */  cvt.s.w $f6, $f4
 /* 0A37F4 800A2BF4 C42B8738 */  lwc1  $f11, %lo(D_800E8738)($at)
-/* 0A37F8 800A2BF8 C42A873C */  lwc1  $f10, %lo(D_800E873C)($at)
+/* 0A37F8 800A2BF8 C42A873C */  lwc1  $f10, %lo(D_800E8738 + 4)($at)
 /* 0A37FC 800A2BFC 46003221 */  cvt.d.s $f8, $f6
 /* 0A3800 800A2C00 462A4102 */  mul.d $f4, $f8, $f10
 /* 0A3804 800A2C04 444FF800 */  cfc1  $t7, $31

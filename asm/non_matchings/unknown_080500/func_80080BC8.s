@@ -23,16 +23,20 @@ glabel func_80080BC8
 /* 08181C 80080C1C 00006825 */  move  $t5, $zero
 /* 081820 80080C20 1920007E */  blez  $t1, .L80080E1C
 /* 081824 80080C24 00003825 */   move  $a3, $zero
-/* 081828 80080C28 3C16000E */  lui   $s6, %hi(D_000E1CA0) # $s6, 0xe
-/* 08182C 80080C2C 3C11000E */  lui   $s1, %hi(D_000E1CB0) # $s1, 0xe
+                                             # D_800E1C70 - 0x7FFFFFD0 = 0xE1CA0
+/* 081828 80080C28 3C16000E */  lui   $s6, %hi(D_800E1C70 - 0x7FFFFFD0) # $s6, 0xe
+                                             # D_800E1C70 - 0x7FFFFFC0 = 0xE1CB0
+/* 08182C 80080C2C 3C11000E */  lui   $s1, %hi(D_800E1C70 - 0x7FFFFFC0) # $s1, 0xe
 /* 081830 80080C30 3C1F0702 */  lui   $ra, (0x07020010 >> 16) # lui $ra, 0x702
 /* 081834 80080C34 3C0B8012 */  lui   $t3, %hi(D_80126C2C) # $t3, 0x8012
 /* 081838 80080C38 3C0A800E */  lui   $t2, %hi(D_800E1DB4) # $t2, 0x800e
 /* 08183C 80080C3C 254A1DB4 */  addiu $t2, %lo(D_800E1DB4) # addiu $t2, $t2, 0x1db4
 /* 081840 80080C40 256B6C2C */  addiu $t3, %lo(D_80126C2C) # addiu $t3, $t3, 0x6c2c
 /* 081844 80080C44 37FF0010 */  ori   $ra, (0x07020010 & 0xFFFF) # ori $ra, $ra, 0x10
-/* 081848 80080C48 26311CB0 */  addiu $s1, %lo(D_000E1CB0) # addiu $s1, $s1, 0x1cb0
-/* 08184C 80080C4C 26D61CA0 */  addiu $s6, %lo(D_000E1CA0) # addiu $s6, $s6, 0x1ca0
+                                             # D_800E1C70 - 0x7FFFFFC0 = 0xE1CB0
+/* 081848 80080C48 26311CB0 */  addiu $s1, %lo(D_800E1C70 - 0x7FFFFFC0) # addiu $s1, $s1, 0x1cb0
+                                             # D_800E1C70 - 0x7FFFFFD0 = 0xE1CA0
+/* 08184C 80080C4C 26D61CA0 */  addiu $s6, %lo(D_800E1C70 - 0x7FFFFFD0) # addiu $s6, $s6, 0x1ca0
 /* 081850 80080C50 3C150500 */  lui   $s5, 0x500
 /* 081854 80080C54 3C140400 */  lui   $s4, 0x400
 /* 081858 80080C58 3C13E700 */  lui   $s3, 0xe700

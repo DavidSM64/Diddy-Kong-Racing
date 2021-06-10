@@ -6,10 +6,10 @@ glabel D_800E6938
 
 .text
 glabel func_80059E40
-/* 05AA40 80059E40 3C058012 */  lui   $a1, %hi(D_80120001) # $a1, 0x8012
+/* 05AA40 80059E40 3C058012 */  lui   $a1, %hi(D_8011D59C) # $a1, 0x8012
 /* 05AA44 80059E44 80A5D59C */  lb    $a1, %lo(D_8011D59C)($a1)
 /* 05AA48 80059E48 27BDFF68 */  addiu $sp, $sp, -0x98
-/* 05AA4C 80059E4C 24A50001 */  addiu $a1, %lo(D_80120001) # addiu $a1, $a1, 1
+/* 05AA4C 80059E4C 24A50001 */  addiu $a1, $a1, 1
 /* 05AA50 80059E50 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 05AA54 80059E54 AFB00018 */  sw    $s0, 0x18($sp)
 /* 05AA58 80059E58 30AE0001 */  andi  $t6, $a1, 1
@@ -32,9 +32,9 @@ glabel func_80059E40
 /* 05AA98 80059E98 46060083 */   div.s $f2, $f0, $f6
 /* 05AA9C 80059E9C 24010002 */  li    $at, 2
 /* 05AAA0 80059EA0 14A1000B */  bne   $a1, $at, .L80059ED0
-/* 05AAA4 80059EA4 3C01800E */   lui   $at, %hi(D_800E6934) # $at, 0x800e
+/* 05AAA4 80059EA4 3C01800E */   lui   $at, %hi(D_800E6930 + 4) # $at, 0x800e
 /* 05AAA8 80059EA8 C42B6930 */  lwc1  $f11, %lo(D_800E6930)($at)
-/* 05AAAC 80059EAC C42A6934 */  lwc1  $f10, %lo(D_800E6934)($at)
+/* 05AAAC 80059EAC C42A6934 */  lwc1  $f10, %lo(D_800E6930 + 4)($at)
 /* 05AAB0 80059EB0 46000221 */  cvt.d.s $f8, $f0
 /* 05AAB4 80059EB4 462A4402 */  mul.d $f16, $f8, $f10
 /* 05AAB8 80059EB8 3C01403E */  li    $at, 0x403E0000 # 2.968750
@@ -310,12 +310,12 @@ glabel func_80059E40
 /* 05AEBC 8005A2BC C7A20094 */  lwc1  $f2, 0x94($sp)
 /* 05AEC0 8005A2C0 A602002E */  sh    $v0, 0x2e($s0)
 /* 05AEC4 8005A2C4 8FAF0060 */  lw    $t7, 0x60($sp)
-/* 05AEC8 8005A2C8 3C01800E */  lui   $at, %hi(D_800E693C) # $at, 0x800e
+/* 05AEC8 8005A2C8 3C01800E */  lui   $at, %hi(D_800E6938 + 4) # $at, 0x800e
 /* 05AECC 8005A2CC 25F90003 */  addiu $t9, $t7, 3
 /* 05AED0 8005A2D0 15B90033 */  bne   $t5, $t9, .L8005A3A0
 /* 05AED4 8005A2D4 24020001 */   li    $v0, 1
 /* 05AED8 8005A2D8 C42D6938 */  lwc1  $f13, %lo(D_800E6938)($at)
-/* 05AEDC 8005A2DC C42C693C */  lwc1  $f12, %lo(D_800E693C)($at)
+/* 05AEDC 8005A2DC C42C693C */  lwc1  $f12, %lo(D_800E6938 + 4)($at)
 /* 05AEE0 8005A2E0 46001021 */  cvt.d.s $f0, $f2
 /* 05AEE4 8005A2E4 4620603E */  c.le.d $f12, $f0
 /* 05AEE8 8005A2E8 8E020064 */  lw    $v0, 0x64($s0)

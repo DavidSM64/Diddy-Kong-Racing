@@ -1,6 +1,6 @@
 glabel func_800C8600
-/* 0C9200 800C8600 3C0E800E */  lui   $t6, %hi(D_800E4878) # $t6, 0x800e
-/* 0C9204 800C8604 8DCE4878 */  lw    $t6, %lo(D_800E4878)($t6)
+/* 0C9200 800C8600 3C0E800E */  lui   $t6, %hi(osViClock) # $t6, 0x800e
+/* 0C9204 800C8604 8DCE4878 */  lw    $t6, %lo(osViClock)($t6)
 /* 0C9208 800C8608 44844000 */  mtc1  $a0, $f8
 /* 0C920C 800C860C 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 0C9210 800C8610 448E2000 */  mtc1  $t6, $f4
@@ -78,8 +78,8 @@ glabel func_800C8600
 /* 0C9318 800C8718 240B0001 */  li    $t3, 1
 /* 0C931C 800C871C 3C0CA450 */  lui   $t4, %hi(D_A4500008) # $t4, 0xa450
 /* 0C9320 800C8720 AD8B0008 */  sw    $t3, %lo(D_A4500008)($t4)
-/* 0C9324 800C8724 3C0D800E */  lui   $t5, %hi(D_800E4878) # $t5, 0x800e
-/* 0C9328 800C8728 8DAD4878 */  lw    $t5, %lo(D_800E4878)($t5)
+/* 0C9324 800C8724 3C0D800E */  lui   $t5, %hi(osViClock) # $t5, 0x800e
+/* 0C9328 800C8728 8DAD4878 */  lw    $t5, %lo(osViClock)($t5)
 /* 0C932C 800C872C 01A5001A */  div   $zero, $t5, $a1
 /* 0C9330 800C8730 00001012 */  mflo  $v0
 /* 0C9334 800C8734 14A00002 */  bnez  $a1, .L800C8740

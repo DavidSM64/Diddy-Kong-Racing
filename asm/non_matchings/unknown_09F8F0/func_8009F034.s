@@ -181,13 +181,13 @@ glabel func_8009F034
 /* 09FE68 8009F268 4481A000 */  mtc1  $at, $f20
 /* 09FE6C 8009F26C 3C013FE8 */  li    $at, 0x3FE80000 # 1.812500
 /* 09FE70 8009F270 44818800 */  mtc1  $at, $f17
-/* 09FE74 8009F274 3C01800F */  lui   $at, %hi(D_800E86AC) # $at, 0x800f
+/* 09FE74 8009F274 3C01800F */  lui   $at, %hi(D_800E86A8 + 4) # $at, 0x800f
 /* 09FE78 8009F278 27186CE0 */  addiu $t8, %lo(D_80126CE0) # addiu $t8, $t8, 0x6ce0
 /* 09FE7C 8009F27C 3C10800E */  lui   $s0, %hi(D_800E25C4) # $s0, 0x800e
 /* 09FE80 8009F280 3C098012 */  lui   $t1, %hi(D_80126CF0) # $t1, 0x8012
 /* 09FE84 8009F284 3C058012 */  lui   $a1, %hi(D_80126CDC) # $a1, 0x8012
 /* 09FE88 8009F288 C42F86A8 */  lwc1  $f15, %lo(D_800E86A8)($at)
-/* 09FE8C 8009F28C C42E86AC */  lwc1  $f14, %lo(D_800E86AC)($at)
+/* 09FE8C 8009F28C C42E86AC */  lwc1  $f14, %lo(D_800E86A8 + 4)($at)
 /* 09FE90 8009F290 44808000 */  mtc1  $zero, $f16
 /* 09FE94 8009F294 24A56CDC */  addiu $a1, %lo(D_80126CDC) # addiu $a1, $a1, 0x6cdc
 /* 09FE98 8009F298 25296CF0 */  addiu $t1, %lo(D_80126CF0) # addiu $t1, $t1, 0x6cf0
@@ -912,12 +912,12 @@ glabel func_8009F034
 /* 0A0924 8009FD24 AFA70090 */   sw    $a3, 0x90($sp)
 /* 0A0928 8009FD28 3C014120 */  li    $at, 0x41200000 # 10.000000
 /* 0A092C 8009FD2C 44811000 */  mtc1  $at, $f2
-/* 0A0930 8009FD30 3C01800F */  lui   $at, %hi(D_800E86EC) # $at, 0x800f
+/* 0A0930 8009FD30 3C01800F */  lui   $at, %hi(D_800E86E8 + 4) # $at, 0x800f
 /* 0A0934 8009FD34 C42D86E8 */  lwc1  $f13, %lo(D_800E86E8)($at)
-/* 0A0938 8009FD38 C42C86EC */  lwc1  $f12, %lo(D_800E86EC)($at)
-/* 0A093C 8009FD3C 3C01800F */  lui   $at, %hi(D_800E86F4) # $at, 0x800f
+/* 0A0938 8009FD38 C42C86EC */  lwc1  $f12, %lo(D_800E86E8 + 4)($at)
+/* 0A093C 8009FD3C 3C01800F */  lui   $at, %hi(D_800E86F0 + 4) # $at, 0x800f
 /* 0A0940 8009FD40 C42F86F0 */  lwc1  $f15, %lo(D_800E86F0)($at)
-/* 0A0944 8009FD44 C42E86F4 */  lwc1  $f14, %lo(D_800E86F4)($at)
+/* 0A0944 8009FD44 C42E86F4 */  lwc1  $f14, %lo(D_800E86F0 + 4)($at)
 /* 0A0948 8009FD48 3C013FE8 */  li    $at, 0x3FE80000 # 1.812500
 /* 0A094C 8009FD4C 44818800 */  mtc1  $at, $f17
 /* 0A0950 8009FD50 3C014080 */  li    $at, 0x40800000 # 4.000000

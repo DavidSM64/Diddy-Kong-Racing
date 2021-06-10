@@ -49,8 +49,12 @@ const char D_800E49BC[] = "Invalid midi sequence index\n";
 
 /************ .bss ************/
 
-extern u8  D_800EBF60;
-extern ALHeap gALHeap;
+#define AUDIO_HEAP_SIZE 0x29D88
+
+// The audio heap is located at the start of the BSS section.
+u8 gBssSectionStart[AUDIO_HEAP_SIZE];
+
+ALHeap gALHeap;
 
 /* Unknown size */
 typedef struct unk80115CF8 {
@@ -58,16 +62,16 @@ typedef struct unk80115CF8 {
     s16 unk2;
 } unk80115CF8;
 
-extern ALSeqFile *ALSeqFile_80115CF8;
-extern void *D_80115CFC;
+ALSeqFile *ALSeqFile_80115CF8;
+void *D_80115CFC;
 
-extern u8  D_80115D04;
-extern u8  D_80115D05;
-extern s32 musicTempo;
-
-extern ALBankFile *ALBankFile_80115D10;
-
-extern ALBankFile *ALBankFile_80115D14;
+void *D_80115D00;
+u8  D_80115D04;
+u8  D_80115D05;
+s32 musicTempo;
+u32 *D_80115D0C;
+ALBankFile *ALBankFile_80115D10;
+ALBankFile *ALBankFile_80115D14;
 
 /* Size: 0x0A bytes */
 typedef struct unk80115D18 {
@@ -76,7 +80,7 @@ typedef struct unk80115D18 {
     u8 pad8[2];
 } unk80115D18;
 
-extern unk80115D18* D_80115D18;
+unk80115D18 *D_80115D18;
 
 /* Size: 3 bytes */
 typedef struct unk80115D1C {
@@ -84,26 +88,27 @@ typedef struct unk80115D1C {
     u8 unk1;
     u8 unk2;
 } unk80115D1C;
-extern void *D_80115D00;
-extern u32 *D_80115D0C;
-extern unk80115D1C* D_80115D1C;
-extern s32 D_80115D20;
-extern s32 D_80115D24;
-extern u32 D_80115D28;
-extern u32 D_80115D2C;
-extern s16 D_80115D30;
-extern s32 D_80115D38;
-extern s32 D_80115D3C;
-extern u8  D_80115D40;
-extern u8  D_80115D41;
-extern unk80115D48 D_80115D48[8];
-extern ALCSeq D_80115D88;
-extern ALCSeq D_80115E80;
-extern u8  D_80115F78;
-extern u8  D_80115F79;
-extern s32 D_80115F7C;
-extern u32 D_80115F84;
-extern u32 D_80115F88;
+unk80115D1C* D_80115D1C;
+
+s32 D_80115D20;
+s32 D_80115D24;
+u32 D_80115D28;
+u32 D_80115D2C;
+s16 D_80115D30;
+f32 D_80115D34;
+s32 D_80115D38;
+s32 D_80115D3C;
+u8  D_80115D40;
+u8  D_80115D41;
+unk80115D48 D_80115D48[8];
+ALCSeq D_80115D88;
+ALCSeq D_80115E80;
+u8  D_80115F78;
+u8  D_80115F79;
+s32 D_80115F7C;
+s32 D_80115F80;
+u32 D_80115F84;
+u32 D_80115F88;
 
 /******************************/
 
@@ -132,7 +137,7 @@ void audio_init(u32 arg0){
     audioMgrConfig audConfig;
    
     seq_max_len = 0;
-    alHeapInit(&gALHeap, &D_800EBF60, 0x00029D88);
+    alHeapInit(&gALHeap, gBssSectionStart, 0x00029D88);
     
     reg_s2 = func_80076C58(38);
     ALBankFile_80115D14 = (ALBankFile*) func_80070C9C(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
@@ -558,9 +563,6 @@ s16 musicGetTempo(void) {
 u8 musicIsPlaying(void) {
     return (alCSPGetState(gMusicPlayer) == AL_PLAYING);
 }
-
-
-extern f32 D_80115D34;
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_001050/func_800015F8.s")

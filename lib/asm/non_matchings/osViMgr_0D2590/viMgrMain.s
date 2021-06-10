@@ -46,10 +46,10 @@ glabel viMgrMain
 .L800D1BAC:
 /* 0D27AC 800D1BAC 0C035824 */  jal   __osViSwapContext
 /* 0D27B0 800D1BB0 00000000 */   nop   
-/* 0D27B4 800D1BB4 3C038013 */  lui   $v1, %hi(D_8012FFFF) # $v1, 0x8013
+/* 0D27B4 800D1BB4 3C038013 */  lui   $v1, %hi(D_8012D190) # $v1, 0x8013
 /* 0D27B8 800D1BB8 9463D190 */  lhu   $v1, %lo(D_8012D190)($v1)
 /* 0D27BC 800D1BBC 3C018013 */  lui   $at, %hi(D_8012D190) # $at, 0x8013
-/* 0D27C0 800D1BC0 2463FFFF */  addiu $v1, %lo(D_8012FFFF) # addiu $v1, $v1, -1
+/* 0D27C0 800D1BC0 2463FFFF */  addiu $v1, $v1, -1
 /* 0D27C4 800D1BC4 306FFFFF */  andi  $t7, $v1, 0xffff
 /* 0D27C8 800D1BC8 15E0000E */  bnez  $t7, .L800D1C04
 /* 0D27CC 800D1BCC A42FD190 */   sh    $t7, %lo(D_8012D190)($at)

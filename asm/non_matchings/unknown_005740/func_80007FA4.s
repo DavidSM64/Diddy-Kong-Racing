@@ -6,11 +6,11 @@ glabel D_800E4CF8
 glabel func_80007FA4
 /* 008BA4 80007FA4 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 008BA8 80007FA8 44818000 */  mtc1  $at, $f16
-/* 008BAC 80007FAC 3C01800E */  lui   $at, %hi(D_800E4CFC) # $at, 0x800e
+/* 008BAC 80007FAC 3C01800E */  lui   $at, %hi(D_800E4CF8 + 4) # $at, 0x800e
 /* 008BB0 80007FB0 46106101 */  sub.s $f4, $f12, $f16
 /* 008BB4 80007FB4 C4334CF8 */  lwc1  $f19, %lo(D_800E4CF8)($at)
 /* 008BB8 80007FB8 460C8180 */  add.s $f6, $f16, $f12
-/* 008BBC 80007FBC C4324CFC */  lwc1  $f18, %lo(D_800E4CFC)($at)
+/* 008BBC 80007FBC C4324CFC */  lwc1  $f18, %lo(D_800E4CF8 + 4)($at)
 /* 008BC0 80007FC0 46062303 */  div.s $f12, $f4, $f6
 /* 008BC4 80007FC4 3C01BF80 */  li    $at, 0xBF800000 # -1.000000
 /* 008BC8 80007FC8 44801000 */  mtc1  $zero, $f2

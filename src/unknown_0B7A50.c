@@ -9,9 +9,12 @@
 const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 const char D_800E8ED0[] = ">fault< ";
-const char D_800E8EDC[] = "CORE\0\0\0\0";
-const char D_800E8EE8[] = "CORE\0\0\0\0";
-const char D_800E8EF4[] = "CORE\0\0\0\0";
+const char D_800E8EDC[] = "CORE";
+const u8 D_800E8EE4[4] = { 0, 0, 0, 0 };
+const char D_800E8EE8[] = "CORE";
+const u8 D_800E8EF0[4] = { 0, 0, 0, 0 };
+const char D_800E8EF4[] = "CORE";
+const u8 D_800E8EFC[4] = { 0, 0, 0, 0 };
 
 /*********************************/
 

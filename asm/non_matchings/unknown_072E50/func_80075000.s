@@ -1,10 +1,12 @@
 .rdata
 glabel D_800E777C
-.asciz "DKRACING-GHOSTS\0"
-.ascii "\0\0\0" # padding
+.asciz "DKRACING-GHOSTS"
+glabel D_800E778C
+.word 0
 glabel D_800E7790
-.asciz "DKRACING-GHOSTS\0"
-.ascii "\0\0\0" # padding
+.asciz "DKRACING-GHOSTS"
+glabel D_800E77A0
+.word 0
 
 .text
 glabel func_80075000

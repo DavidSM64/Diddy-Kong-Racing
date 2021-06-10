@@ -66,13 +66,16 @@ s32 D_800DCA7C[3] = { // Not sure about typing
 s32 D_800DCA88[3] = { // Not sure about typing
     0, 0, 0
 };
+
 s8 D_800DCA94[8] = {
     0x00, 0x00, 0x01, 0x01, 0x02, 0x00, 0x00, 0x00
 };
+
 s8 D_800DCA9C[12] = {
     0x00, 0x01, 0x01, 0x02, 0x02, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00
 };
+
 u16 D_800DCAA8[64] = {
     0x0000, 0x0301, 0x0000, 0x0000,
     0xFFFF, 0xFFFF, 0x0000, 0xFFFF,
@@ -103,11 +106,12 @@ u16 D_800DCB28[20] = {
 
 /************ .bss ************/
 
-extern f32 D_8011D4D0;
-extern s32 D_8011D4D4;
-extern s32 D_8011D4D8;
-extern s32 D_8011D4DC;
-extern s16 D_8011D4E2;
+f32 D_8011D4D0;
+s32 D_8011D4D4;
+s32 D_8011D4D8;
+s32 D_8011D4DC;
+s16 D_8011D4E0;
+s16 D_8011D4E2;
 
 /******************************/
 

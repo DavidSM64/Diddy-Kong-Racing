@@ -5,7 +5,6 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
-#define OS_VIM_STACKSIZE 4096
 
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
@@ -13,7 +12,11 @@ extern u32 D_8012D22C; //__osViIntrCount
 
 OSDevMgr __osViDevMgr = {0};
 
-extern u8 viThreadStack[OS_VIM_STACKSIZE];
+#define OS_VIM_STACKSIZE 4096
+u8 viThreadStack[2960]; // viThreadStack[OS_VIM_STACKSIZE];
+
+s32 D_8012CCC0;
+
 extern OSThread viThread;
 extern OSMesgQueue viEventQueue;
 extern OSMesg viEventBuf[5]; //viEventBuf;

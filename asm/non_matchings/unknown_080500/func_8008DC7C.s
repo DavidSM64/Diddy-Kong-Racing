@@ -15,10 +15,10 @@ glabel func_8008DC7C
 /* 08E8B0 8008DCB0 AFA2001C */  sw    $v0, 0x1c($sp)
 /* 08E8B4 8008DCB4 0C01A955 */  jal   func_8006A554
 /* 08E8B8 8008DCB8 AFA50018 */   sw    $a1, 0x18($sp)
-/* 08E8BC 8008DCBC 3C0F8012 */  lui   $t7, %hi(D_8012645D) # $t7, 0x8012
+/* 08E8BC 8008DCBC 3C0F8012 */  lui   $t7, %hi(D_8012645C+1) # $t7, 0x8012
 /* 08E8C0 8008DCC0 8FA3001C */  lw    $v1, 0x1c($sp)
 /* 08E8C4 8008DCC4 8FA50018 */  lw    $a1, 0x18($sp)
-/* 08E8C8 8008DCC8 81EF645D */  lb    $t7, %lo(D_8012645D)($t7)
+/* 08E8C8 8008DCC8 81EF645D */  lb    $t7, %lo(D_8012645C+1)($t7)
 /* 08E8CC 8008DCCC 00621825 */  or    $v1, $v1, $v0
 /* 08E8D0 8008DCD0 00AF2821 */  addu  $a1, $a1, $t7
 .L8008DCD4:

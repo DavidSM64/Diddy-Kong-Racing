@@ -84,11 +84,11 @@ glabel MenuLoadNewAreaLoop
 /* 094330 80093730 00000000 */   nop   
 /* 094334 80093734 0C01AC2B */  jal   func_8006B0AC
 /* 094338 80093738 00000000 */   nop   
-/* 09433C 8009373C 3C018012 */  lui   $at, %hi(p1_vehicle) # $at, 0x8012
-/* 094340 80093740 A02269C0 */  sb    $v0, %lo(p1_vehicle)($at)
+/* 09433C 8009373C 3C018012 */  lui   $at, %hi(gPlayerVehicle) # $at, 0x8012
+/* 094340 80093740 A02269C0 */  sb    $v0, %lo(gPlayerVehicle)($at)
 .L80093744:
-/* 094344 80093744 3C038012 */  lui   $v1, %hi(p1_vehicle) # $v1, 0x8012
-/* 094348 80093748 806369C0 */  lb    $v1, %lo(p1_vehicle)($v1)
+/* 094344 80093744 3C038012 */  lui   $v1, %hi(gPlayerVehicle) # $v1, 0x8012
+/* 094348 80093748 806369C0 */  lb    $v1, %lo(gPlayerVehicle)($v1)
 /* 09434C 8009374C 8FA40024 */  lw    $a0, 0x24($sp)
 /* 094350 80093750 0C01AC3E */  jal   func_8006B0F8
 /* 094354 80093754 AFA30034 */   sw    $v1, 0x34($sp)
@@ -238,9 +238,9 @@ glabel MenuLoadNewAreaLoop
 /* 094558 80093958 0C000741 */  jal   func_80001D04
 /* 09455C 8009395C AFA30034 */   sw    $v1, 0x34($sp)
 /* 094560 80093960 8FA30034 */  lw    $v1, 0x34($sp)
-/* 094564 80093964 3C018012 */  lui   $at, %hi(p1_vehicle) # $at, 0x8012
+/* 094564 80093964 3C018012 */  lui   $at, %hi(gPlayerVehicle) # $at, 0x8012
 /* 094568 80093968 10000021 */  b     .L800939F0
-/* 09456C 8009396C A02369C0 */   sb    $v1, %lo(p1_vehicle)($at)
+/* 09456C 8009396C A02369C0 */   sb    $v1, %lo(gPlayerVehicle)($at)
 .L80093970:
 /* 094570 80093970 04410007 */  bgez  $v0, .L80093990
 /* 094574 80093974 8FAA0038 */   lw    $t2, 0x38($sp)

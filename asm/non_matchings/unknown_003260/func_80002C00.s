@@ -80,22 +80,22 @@ glabel func_80002C00
 /* 003930 80002D30 0018C880 */  sll   $t9, $t8, 2
 /* 003934 80002D34 00F94021 */  addu  $t0, $a3, $t9
 /* 003938 80002D38 8D090000 */  lw    $t1, ($t0)
-/* 00393C 80002D3C 3C05800E */  lui   $a1, %hi(D_800D84C0) # $a1, 0x800e
+/* 00393C 80002D3C 3C05800E */  lui   $a1, %hi(rspF3DDKRBootStart) # $a1, 0x800e
 /* 003940 80002D40 AE090048 */  sw    $t1, 0x48($s0)
 /* 003944 80002D44 8CCA0000 */  lw    $t2, ($a2)
-/* 003948 80002D48 3C19800E */  lui   $t9, %hi(D_800D8590) # $t9, 0x800e
+/* 003948 80002D48 3C19800E */  lui   $t9, %hi(rspF3DDKRDramStart) # $t9, 0x800e
 /* 00394C 80002D4C 000A5880 */  sll   $t3, $t2, 2
 /* 003950 80002D50 00EB6021 */  addu  $t4, $a3, $t3
 /* 003954 80002D54 8D8D0000 */  lw    $t5, ($t4)
-/* 003958 80002D58 24A584C0 */  addiu $a1, %lo(D_800D84C0) # addiu $a1, $a1, -0x7b40
+/* 003958 80002D58 24A584C0 */  addiu $a1, %lo(rspF3DDKRBootStart) # addiu $a1, $a1, -0x7b40
 /* 00395C 80002D5C 004D7023 */  subu  $t6, $v0, $t5
 /* 003960 80002D60 000E78C3 */  sra   $t7, $t6, 3
-/* 003964 80002D64 27398590 */  addiu $t9, %lo(D_800D8590) # addiu $t9, $t9, -0x7a70
-/* 003968 80002D68 3C09800D */  lui   $t1, %hi(D_800D7600) # $t1, 0x800d
+/* 003964 80002D64 27398590 */  addiu $t9, %lo(rspF3DDKRDramStart) # addiu $t9, $t9, -0x7a70
+/* 003968 80002D68 3C09800D */  lui   $t1, %hi(rspUnknownStart) # $t1, 0x800d
 /* 00396C 80002D6C 3C0A800F */  lui   $t2, %hi(D_800E98D0) # $t2, 0x800f
 /* 003970 80002D70 000FC0C0 */  sll   $t8, $t7, 3
 /* 003974 80002D74 03254023 */  subu  $t0, $t9, $a1
-/* 003978 80002D78 25297600 */  addiu $t1, %lo(D_800D7600) # addiu $t1, $t1, 0x7600
+/* 003978 80002D78 25297600 */  addiu $t1, %lo(rspUnknownStart) # addiu $t1, $t1, 0x7600
 /* 00397C 80002D7C 254A98D0 */  addiu $t2, %lo(D_800E98D0) # addiu $t2, $t2, -0x6730
 /* 003980 80002D80 240B0800 */  li    $t3, 2048
 /* 003984 80002D84 240C0001 */  li    $t4, 1

@@ -47,14 +47,27 @@ const char D_800E7700[] = "WARNING : No Eprom\n";
 const char D_800E7714[] = "WARNING : No Eprom\n";
 const char D_800E7728[] = "WARNING : No Eprom\n";
 
-const char D_800E773C[] = "DKRACING-GHOSTS\0";
+const char D_800E773C[] = "DKRACING-GHOSTS"; // Used in func_80074B34
+const   u8 D_800E774C[4] = { 0, 0, 0, 0 }; // Used in func_80074B34, but I'm confused to what this is for. 
 const char D_800E7750[] = "warning: corrupt ghost\n";
 
 /*********************************/
 
 /************ .bss ************/
 
-extern s32 D_80124010;
+s32 D_80124010;
+s32 D_80124014;
+s32 D_80124018[104];
+s32 D_801241B8[10];
+s32 D_801241E0;
+s8 D_801241E4;
+s8 D_801241E5;
+s8 D_801241E6;
+s8 D_801241E7;
+s32 D_801241E8;
+s32 D_801241EC;
+s32 D_801241F0;
+s32 D_801241F4;
 
 /*******************************/
 
