@@ -1,7 +1,7 @@
 glabel func_80031130
 /* 031D30 80031130 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 031D34 80031134 3C080001 */  lui   $t0, (0x000186A0 >> 16) # lui $t0, 1
-/* 031D38 80031138 3C09FFFE */  lui   $t1, %hi(D_FFFDFFFB) # $t1, 0xfffe
+/* 031D38 80031138 3C09FFFE */  lui   $t1, %hi(0xFFFDFFFB) # $t1, 0xfffe
 /* 031D3C 8003113C AFB6002C */  sw    $s6, 0x2c($sp)
 /* 031D40 80031140 AFB50028 */  sw    $s5, 0x28($sp)
 /* 031D44 80031144 AFB40024 */  sw    $s4, 0x24($sp)
@@ -121,7 +121,7 @@ glabel func_80031130
 /* 031ED8 800312D8 25080005 */  addiu $t0, $t0, 5
 /* 031EDC 800312DC 0113082A */  slt   $at, $t0, $s3
 /* 031EE0 800312E0 14200010 */  bnez  $at, .L80031324
-/* 031EE4 800312E4 2529FFFB */   addiu $t1, %lo(D_FFFDFFFB) # addiu $t1, $t1, -5
+/* 031EE4 800312E4 2529FFFB */   addiu $t1, %lo(0xFFFDFFFB) # addiu $t1, $t1, -5
 /* 031EE8 800312E8 0249082A */  slt   $at, $s2, $t1
 /* 031EEC 800312EC 5420000E */  bnezl $at, .L80031328
 /* 031EF0 800312F0 25EFFFFF */   addiu $t7, $t7, -1

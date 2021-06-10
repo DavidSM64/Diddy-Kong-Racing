@@ -26,7 +26,7 @@ glabel func_800C3C00
 /* 0C485C 800C3C5C 1420FFF8 */  bnez  $at, .L800C3C40
 /* 0C4860 800C3C60 00000000 */   nop   
 .L800C3C64:
-/* 0C4864 800C3C64 3C05FFFF */  lui   $a1, %hi(D_FFFF0028) # $a1, 0xffff
+/* 0C4864 800C3C64 3C05FFFF */  lui   $a1, %hi(0xFFFF0028) # $a1, 0xffff
 /* 0C4868 800C3C68 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 0C486C 800C3C6C 0C01C327 */  jal   func_80070C9C
 /* 0C4870 800C3C70 24040940 */   li    $a0, 2368
@@ -156,7 +156,7 @@ glabel func_800C3C00
 /* 0C4A54 800C3E54 8CCB0000 */  lw    $t3, ($a2)
 /* 0C4A58 800C3E58 00000000 */  nop   
 /* 0C4A5C 800C3E5C 01656021 */  addu  $t4, $t3, $a1
-/* 0C4A60 800C3E60 24A50028 */  addiu $a1, %lo(D_FFFF0028) # addiu $a1, $a1, 0x28
+/* 0C4A60 800C3E60 24A50028 */  addiu $a1, %lo(0xFFFF0028) # addiu $a1, $a1, 0x28
 /* 0C4A64 800C3E64 28A10140 */  slti  $at, $a1, 0x140
 /* 0C4A68 800C3E68 1420FF90 */  bnez  $at, .L800C3CAC
 /* 0C4A6C 800C3E6C AD800024 */   sw    $zero, 0x24($t4)
