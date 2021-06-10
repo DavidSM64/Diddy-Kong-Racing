@@ -5,17 +5,6 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
-#define OS_PIM_STACKSIZE	4096
-
-extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
-extern OSDevMgr __osPiDevMgr;
-extern u8 piThreadStack[OS_PIM_STACKSIZE];//piThreadStack
-extern OSThread piThread; //piThread
-extern OSMesgQueue piEventQueue; //piEventQueue
-extern OSMesg piEventBuf[1]; //piEventBuf
-extern OSMesgQueue piAccessQueue; //piAccessQueue
-void __osDevMgrMain(void);
-
 /************ .data ************/
 
 // Fast3D (F3DDKR) display list
@@ -57,7 +46,124 @@ u8* gzip_inflate_output = NULL;
 
 /*******************************/
 
-extern s32 D_8012A7E0;
+/************ .bss ************/
+
+#define OS_PIM_STACKSIZE	4096
+u8 piThreadStack[256];//piThreadStack[OS_PIM_STACKSIZE];
+
+s32 D_80129BB0[256];
+s32 D_80129FB0[3];
+s32 D_80129FBC;
+s32 D_80129FC0;
+s32 D_80129FC4;
+s32 D_80129FC8;
+s32 D_80129FCC;
+s32 D_80129FD0[4];
+s32 D_80129FE0[2];
+s32 D_80129FE8;
+s32 D_80129FF0[6];
+s32 D_8012A008;
+s32 D_8012A00C;
+s32 D_8012A010;
+s32 D_8012A014;
+s32 D_8012A018;
+s32 D_8012A01C;
+s32 D_8012A020[2];
+s32 D_8012A028[20];
+s32 D_8012A078;
+s32 D_8012A07C;
+s32 D_8012A080;
+s32 D_8012A084;
+s32 D_8012A088;
+s32 D_8012A08C;
+s32 D_8012A090;
+s32 D_8012A094;
+s32 D_8012A098;
+s32 D_8012A09C;
+s32 D_8012A0A0;
+s32 D_8012A0A4;
+s32 D_8012A0A8;
+s32 D_8012A0AC;
+s32 D_8012A0B0;
+s32 D_8012A0B4;
+s32 D_8012A0B8;
+s32 D_8012A0BC;
+s32 D_8012A0C0;
+s32 D_8012A0C4;
+s32 D_8012A0C8;
+s32 D_8012A0CC;
+s32 D_8012A0D0;
+s32 D_8012A0D4;
+s32 D_8012A0D8;
+s32 D_8012A0DC;
+s32 D_8012A0E0;
+s32 D_8012A0E8[64];
+s32 D_8012A1E8[256];
+s32 D_8012A5E8[3];
+s32 D_8012A5F4;
+s32 D_8012A5F8;
+s32 D_8012A5FC;
+s32 D_8012A600[72];
+s32 D_8012A720;
+s32 D_8012A724;
+s32 D_8012A728[2];
+s32 D_8012A730;
+s8 D_8012A734;
+s8 D_8012A735;
+s8 D_8012A736;
+s8 D_8012A737;
+s32 D_8012A738;
+s32 D_8012A73C;
+s32 D_8012A740;
+s32 D_8012A744;
+s32 D_8012A748;
+s32 D_8012A74C;
+s32 D_8012A750;
+s32 D_8012A754;
+s32 D_8012A758;
+s32 D_8012A75C;
+s32 D_8012A760;
+s32 D_8012A764;
+s32 D_8012A768;
+s32 D_8012A76C;
+s32 D_8012A770;
+s32 D_8012A774;
+s32 D_8012A778;
+s32 D_8012A77C;
+s32 D_8012A780;
+s8 D_8012A784;
+s8 D_8012A785;
+s8 D_8012A786;
+s8 D_8012A787;
+s8 D_8012A788;
+s8 D_8012A789;
+s8 D_8012A78A;
+s16 D_8012A78C;
+s16 D_8012A78E;
+s32 D_8012A790[2];
+s32 D_8012A798;
+s32 D_8012A79C;
+s32 D_8012A7A0;
+s32 D_8012A7A4;
+s16 D_8012A7A8;
+s16 D_8012A7AA;
+s16 D_8012A7AC;
+s16 D_8012A7AE;
+s16 D_8012A7B0;
+s16 D_8012A7B2;
+s16 D_8012A7B4;
+s16 D_8012A7B6;
+s16 D_8012A7B8;
+s16 D_8012A7BA;
+s32 D_8012A7C0[2];
+s32 D_8012A7C8;
+s32 D_8012A7CC;
+s32 D_8012A7D0;
+s32 D_8012A7D4;
+s32 D_8012A7D8;
+s32 D_8012A7DC;
+s32 D_8012A7E0;
+s32 D_8012A7E4;
 
 /* Size: 0x28 bytes */
 typedef struct unk8012A7E8_24 {
@@ -97,13 +203,26 @@ typedef struct unk8012A7E8 {
     unk8012A7E8_24 *unk24;
 } unk8012A7E8;
 
-extern unk8012A7E8 (*D_8012A7E8)[1];
-extern s32 D_8012A7F0;
-extern s8 D_8012A7F4;
-extern s32 D_8012AAD8;
-extern u32 gzip_num_bits;
-extern u32 gzip_bit_buffer;
+unk8012A7E8 (*D_8012A7E8)[1];
+s32 D_8012A7EC;
+s32 D_8012A7F0;
+s8 D_8012A7F4;
+s32 D_8012A7F8;
+s32 D_8012A7FC;
+OSThread piThread; //piThread
+s32 D_8012A9B0[64];
+OSMesgQueue piEventQueue; //piEventQueue
+OSMesg piEventBuf[2]; //piEventBuf
+u32 gzip_bit_buffer;
+u32 gzip_num_bits;
+s32 D_8012AAD8;
 
+/******************************/
+
+extern OSMesgQueue piAccessQueue; //piAccessQueue
+extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
+extern OSDevMgr __osPiDevMgr;
+void __osDevMgrMain(void);
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C3C00.s")
