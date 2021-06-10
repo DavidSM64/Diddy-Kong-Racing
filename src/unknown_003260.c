@@ -32,21 +32,6 @@ typedef union {
 
 }ALSndpEvent;
 
-/* Unknown Size */
-typedef struct unk800DC6BC {
-    ALPlayer        node;
-    ALEventQueue    evtq;
-    ALEvent         nextEvent;
-    ALSynth        *drvr;
-    u32             unk3C;
-    unk800DC6BC_40 *unk40;
-    s32             unk44;
-    s32             unk48;
-    s32             frameTime;
-    ALMicroTime     nextDelta;
-    ALMicroTime     curTime;
-} unk800DC6BC; //ALSndPlayer
-
 typedef struct unk80119240
 {
     ALLink node;

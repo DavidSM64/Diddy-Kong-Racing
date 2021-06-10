@@ -339,8 +339,8 @@ extern u16 D_800E0700[8];
 
 extern s16 D_800E0710[16];
 
-extern s16 D_800E0730[18];
-extern s16 D_800E0758[56];
+extern s16 D_800E0730[19];
+extern s16 D_800E0758[54];
 
 extern s16 D_800E07C4[14];
 

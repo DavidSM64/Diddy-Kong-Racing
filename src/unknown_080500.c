@@ -42,14 +42,6 @@ typedef enum MENU_ID {
 
 extern s32 osTvType;
 
-typedef struct unk800DFC10 {
-    u32 *unk0;
-    s16 unk4;
-    s16 unk6;
-    u32 *unk8;
-    s32 unkC;
-} unk800DFC10;
-
 /************ .bss ************/
 
 // The bss section needs to stay above the data section! 
