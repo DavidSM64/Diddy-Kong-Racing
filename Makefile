@@ -140,6 +140,7 @@ LOADER_FLAGS = -vwf
 FixPath = $(subst /,,$1)
 
 N64CRC = $(TOOLS_DIR)/n64crc
+FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
 TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 
@@ -442,6 +443,7 @@ $(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)/$(TARGET).elf | $(ALL_ASSETS_BUILT)
 
 $(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
 	cp $< $@
+	$(FIXCHECKSUMS)
 	$(N64CRC) $@
 	sha1sum -c sha1/dkr.$(VERSION).sha1
 
