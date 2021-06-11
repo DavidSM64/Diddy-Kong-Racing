@@ -142,14 +142,14 @@ glabel func_800CAC5C
 /* 0CBA5C 800CAE5C 00000000 */  nop   
 /* 0CBA60 800CAE60 A5420026 */  sh    $v0, 0x26($t2)
 /* 0CBA64 800CAE64 8FAE0048 */  lw    $t6, 0x48($sp)
-# This is indexing into eqpower (0x800E37A0) from the end
-/* 0CBA68 800CAE68 3C08800E */  lui   $t0, 0x800e
+# This is indexing into eqpower from the end.
+/* 0CBA68 800CAE68 3C08800E */  lui   $t0, %hi(eqpower+0xfe) # $t0, 0x800e
 /* 0CBA6C 800CAE6C 85CF0018 */  lh    $t7, 0x18($t6)
 /* 0CBA70 800CAE70 85CB001A */  lh    $t3, 0x1a($t6)
 /* 0CBA74 800CAE74 000F6823 */  negu  $t5, $t7
 /* 0CBA78 800CAE78 000D4840 */  sll   $t1, $t5, 1
 /* 0CBA7C 800CAE7C 01094021 */  addu  $t0, $t0, $t1
-/* 0CBA80 800CAE80 8508389E */  lh    $t0, 0x389e($t0)
+/* 0CBA80 800CAE80 8508389E */  lh    $t0, %lo(eqpower+0xfe)($t0)
 /* 0CBA84 800CAE84 00000000 */  nop   
 /* 0CBA88 800CAE88 010B0019 */  multu $t0, $t3
 /* 0CBA8C 800CAE8C 0000C812 */  mflo  $t9
