@@ -99,6 +99,7 @@ s16 D_800DCDB0[16] = {
     0x02FA, 0x02FE, 0x08F8, 0x03FD
 };
 
+// Checksum count for func_8003B4BC
 s32 D_800DCDD0 = 42391;
 
 s16 D_800DCDD4[4] = {

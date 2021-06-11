@@ -50,9 +50,19 @@ class FileUtil:
             return inFile.read()
             
     @staticmethod
+    def get_bytes_from_file(filename):
+        with open(filename, 'rb') as inFile:
+            return list(inFile.read())
+            
+    @staticmethod
     def write_text_to_file(filename, text):
         with open(filename, 'w') as outFile:
             outFile.write(text)
+            
+    @staticmethod
+    def write_bytes_to_file(filename, binary):
+        with open(filename, 'wb') as outFile:
+            outFile.write(bytearray(binary))
             
     @staticmethod
     def delete_file(filename):
