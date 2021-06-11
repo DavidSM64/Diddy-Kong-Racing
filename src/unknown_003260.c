@@ -3,11 +3,6 @@
 
 #include "unknown_003260.h"
 
-#include "types.h"
-#include "macros.h"
-#include "audio_internal.h"
-#include "libultra_internal.h"
-
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_STOP_EVT (1 << 1)
 #define AL_SNDP_PAN_EVT (1 << 2)
@@ -21,39 +16,38 @@
 extern void func_80002A98(void*);
 extern u32 D_80003008;
 
-typedef union {
-    ALEvent msg;
+/************ .bss ************/
 
-    struct{
-        s16 type;
-        void* state;
-        u32 unk04;
-    }snd_event;
+// All of these are defined in unknown_003260_bss.c
+// This was needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 
-}ALSndpEvent;
+extern s32 D_80115F90;
+extern ALHeap* D_80115F94;
+extern s32 D_80115F98[2];
+extern s32 D_80115FA0[3];
+extern OSThread audioThread;
+extern OSMesgQueue OSMesgQueue_80116160;
+extern OSMesg D_80116178[8];
+extern OSMesgQueue D_80116198;
+extern OSMesg D_801161B0[8];
+extern ALGlobals ALGlobals_801161D0;
+extern s32 D_80116220[3076];
+extern s32 D_80119230[3];
+extern unk80119240 D_80119240[50];
+extern s32 D_80119628;
+extern s32 D_8011962C;
+extern s32 D_80119630;
+extern s32 D_80119634;
+extern s32 D_80119638[2];
+extern s32 D_80119640[300];
+extern OSMesgQueue D_80119AF0;
+extern OSMesg D_80119B08[50];
+extern unk800DC6BC D_80119BD0;
+extern u16 *D_80119C28;
 
-typedef struct unk80119240
-{
-    ALLink node;
-    u32    unk08;
-    u32    unk0C;
-    void*  unk10;
-} unk80119240;
+extern f32 D_80126170;
 
-/* Unknown Size */
-/*typedef struct unk800DC6B0 {
-    ALLink node;
-    ALLink_s * unk08;
-} unk800DC6B0;
-*/
-
-typedef struct audioMgrConfig_s{
-    u32 unk00;
-    u32 unk04;
-    u32 maxChannels;
-    ALHeap* hp;
-    u16  unk10;
-} audioMgrConfig;
+/******************************/
 
 /************ .data ************/
 
@@ -72,8 +66,8 @@ s32 D_800DC6AC = 0; // Currently unknown, might be a different type.
 
 s32 D_800DC6B0 = 0; // Currently unknown, might be a different type.
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
-unk800DC6BC_40* D_800DC6B8 = NULL;
-unk800DC6BC* gAlSndPlayer = (unk800DC6BC*)0x80119BD0; // What variable is 0x80119BD0?
+unk800DC6BC_40 *D_800DC6B8 = NULL;
+unk800DC6BC *gAlSndPlayer = &D_80119BD0;
 
 s32 sfxVolumeSlider = 0x100;
 s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
@@ -96,35 +90,6 @@ const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
 const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /*********************************/
-
-/************ .bss ************/
-
-s32 D_80115F90;
-ALHeap* D_80115F94;
-s32 D_80115F98[2];
-s32 D_80115FA0[3];
-OSThread audioThread;
-OSMesgQueue OSMesgQueue_80116160;
-OSMesg D_80116178[8];
-OSMesgQueue D_80116198;
-OSMesg D_801161B0[8];
-ALGlobals ALGlobals_801161D0;
-s32 D_80116220[3076];
-s32 D_80119230[3];
-unk80119240 D_80119240[50];
-s32 D_80119628;
-s32 D_8011962C;
-s32 D_80119630;
-s32 D_80119634;
-s32 D_80119638[2];
-s32 D_80119640[300];
-OSMesgQueue D_80119AF0;
-OSMesg D_80119B08[72];
-u16* D_80119C28;
-
-extern f32 D_80126170;
-
-/******************************/
 
 void    *alHeapDBAlloc(u8 *, s32, ALHeap *, s32, s32);
 
@@ -196,7 +161,7 @@ void sfxSetVolumeSlider(u32 arg0) {
     if (arg0 > 256) {
         arg0 = 256;
     }
-
+    
     sfxVolumeSlider = arg0;
 }
 

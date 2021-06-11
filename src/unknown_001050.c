@@ -135,6 +135,8 @@ void audio_init(u32 arg0){
     u32 seq_max_len;
     u32 tmp2;
     audioMgrConfig audConfig;
+    
+    //*((s32*)0x803FFFFC) = 0xDEADBEEF;
    
     seq_max_len = 0;
     alHeapInit(&gALHeap, gBssSectionStart, 0x00029D88);
