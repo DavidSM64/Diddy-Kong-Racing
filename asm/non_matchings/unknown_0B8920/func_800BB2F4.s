@@ -450,12 +450,12 @@ glabel func_800BB2F4
 /* 0BC590 800BB990 010E2021 */  addu  $a0, $t0, $t6
 /* 0BC594 800BB994 24840001 */  addiu $a0, $a0, 1
 .L800BB998:
-/* 0BC598 800BB998 8D4A3044 */  lw    $t2, 0x3044($t2)
+/* 0BC598 800BB998 8D4A3044 */  lw    $t2, %lo(D_800E3044)($t2)
 /* 0BC59C 800BB99C 00047880 */  sll   $t7, $a0, 2
 /* 0BC5A0 800BB9A0 014F1021 */  addu  $v0, $t2, $t7
 /* 0BC5A4 800BB9A4 84580002 */  lh    $t8, 2($v0)
 /* 0BC5A8 800BB9A8 844F0000 */  lh    $t7, ($v0)
-/* 0BC5AC 800BB9AC 8CA53040 */  lw    $a1, 0x3040($a1)
+/* 0BC5AC 800BB9AC 8CA53040 */  lw    $a1, %lo(D_800E3040)($a1)
 /* 0BC5B0 800BB9B0 0018C880 */  sll   $t9, $t8, 2
 /* 0BC5B4 800BB9B4 000FC080 */  sll   $t8, $t7, 2
 /* 0BC5B8 800BB9B8 00B97021 */  addu  $t6, $a1, $t9
