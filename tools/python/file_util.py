@@ -52,7 +52,7 @@ class FileUtil:
     @staticmethod
     def get_bytes_from_file(filename):
         with open(filename, 'rb') as inFile:
-            return list(inFile.read())
+            return bytearray(inFile.read())
             
     @staticmethod
     def write_text_to_file(filename, text):
@@ -62,7 +62,7 @@ class FileUtil:
     @staticmethod
     def write_bytes_to_file(filename, binary):
         with open(filename, 'wb') as outFile:
-            outFile.write(bytearray(binary))
+            outFile.write(binary)
             
     @staticmethod
     def delete_file(filename):

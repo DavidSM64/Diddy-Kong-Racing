@@ -24,7 +24,7 @@ def getMatches(string, regex):
         end = match.end()
         out.append((string[start:end], match.groups(), (start, end)))
     return out
-    
+
 rom = FileUtil.get_bytes_from_file(ROM_FILEPATH)
 mapFile = {}
 RAM_TO_ROM = None
@@ -56,8 +56,9 @@ def calculate_checksum_for_function(funcLabel, varLabel):
 
 def calculate_matches():
     global mapFile, RAM_TO_ROM
-    REGEX_MAP_GET_LABEL = r"[ ]*0x[0-9A-Fa-f]{8}([0-9A-Fa-f]{8})[ ]*([_A-Za-z0-9]+)"
-    mapMatches = getMatches(FileUtil.get_text_from_file(MAP_FILEPATH), REGEX_MAP_GET_LABEL)
+    REGEX_MAP_GET_LABEL = r"[ ]*?0x[0-9A-Fa-f]{8}([0-9A-Fa-f]{8})[ ]*?([_A-Za-z0-9]+)"
+    mapText = FileUtil.get_text_from_file(MAP_FILEPATH)
+    mapMatches = getMatches(mapText, REGEX_MAP_GET_LABEL)
     for i in range(0, len(mapMatches) - 1):
         match = mapMatches[i]
         labelValue = match[1]
