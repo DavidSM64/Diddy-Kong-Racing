@@ -134,7 +134,7 @@ class GenerateLD:
         self.gen_newline()
     
     def gen_bss_section(self):
-        self.gen_line('__BSS_SECTION_SIZE = SIZEOF(.bss.noload);')
+        self.gen_line('__BSS_SECTION_SIZE = SIZEOF(.bss.noload) - 0x10;')
         self.gen_newline()
         self.gen_line('.bss.noload . (NOLOAD): SUBALIGN(4)')
         self.gen_open_block()

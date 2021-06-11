@@ -2,7 +2,9 @@
 #define _UNKNOWN_003260_H_
 
 #include "types.h"
+#include "macros.h"
 #include "audio_internal.h"
+#include "libultra_internal.h"
 
 typedef struct unk800DC6BC_40 {
     ALLink node;
@@ -23,6 +25,40 @@ typedef struct unk800DC6BC {
     ALMicroTime     nextDelta;
     ALMicroTime     curTime;
 } unk800DC6BC; //ALSndPlayer
+
+typedef union {
+    ALEvent msg;
+
+    struct{
+        s16 type;
+        void* state;
+        u32 unk04;
+    }snd_event;
+
+}ALSndpEvent;
+
+typedef struct unk80119240
+{
+    ALLink node;
+    u32    unk08;
+    u32    unk0C;
+    void*  unk10;
+} unk80119240;
+
+/* Unknown Size */
+/*typedef struct unk800DC6B0 {
+    ALLink node;
+    ALLink_s * unk08;
+} unk800DC6B0;
+*/
+
+typedef struct audioMgrConfig_s{
+    u32 unk00;
+    u32 unk04;
+    u32 maxChannels;
+    ALHeap *hp;
+    u16  unk10;
+} audioMgrConfig;
 
 extern s32 D_800DC680;
 extern s32 D_800DC684;

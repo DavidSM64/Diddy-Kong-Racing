@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
 
 s32 D_800E38D0 = 0;
 
@@ -22,7 +23,8 @@ s32 viCounterMsg[6];
 s32 D_8012D190[4];     
 s32 D_8012D1A0[16];     
 s32 D_8012D1E0[2];     
-s32 piAccessQueue[14];  
+s32 piAccessQueue[6];  
+OSTimer D_8012D200;
 s32 __osCurrentTime;
 s32 D_8012D224;     
 s32 __osBaseCounter;
