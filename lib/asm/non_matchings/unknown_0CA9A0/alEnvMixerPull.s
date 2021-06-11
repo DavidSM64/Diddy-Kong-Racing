@@ -187,14 +187,14 @@ glabel L800CA22C
 /* 0CAF44 800CA344 00000000 */  nop   
 /* 0CAF48 800CA348 A72B0020 */  sh    $t3, 0x20($t9)
 /* 0CAF4C 800CA34C 8FAC0038 */  lw    $t4, 0x38($sp)
-# This is indexing into eqpower (0x800E37A0) from the end
-/* 0CAF50 800CA350 3C18800E */  lui   $t8, 0x800e
+# This is indexing into eqpower from the end.
+/* 0CAF50 800CA350 3C18800E */  lui   $t8, %hi(eqpower+0xfe) # $t8, 0x800e
 /* 0CAF54 800CA354 918D0013 */  lbu   $t5, 0x13($t4)
 /* 0CAF58 800CA358 8FA80058 */  lw    $t0, 0x58($sp)
 /* 0CAF5C 800CA35C 000D7023 */  negu  $t6, $t5
 /* 0CAF60 800CA360 000E7840 */  sll   $t7, $t6, 1
 /* 0CAF64 800CA364 030FC021 */  addu  $t8, $t8, $t7
-/* 0CAF68 800CA368 8718389E */  lh    $t8, 0x389e($t8)
+/* 0CAF68 800CA368 8718389E */  lh    $t8, %lo(eqpower+0xfe)($t8)
 /* 0CAF6C 800CA36C 00000000 */  nop   
 /* 0CAF70 800CA370 A5180022 */  sh    $t8, 0x22($t0)
 /* 0CAF74 800CA374 8FAA0038 */  lw    $t2, 0x38($sp)
@@ -224,14 +224,14 @@ glabel L800CA22C
 /* 0CAFD0 800CA3D0 00095BC3 */  sra   $t3, $t1, 0xf
 /* 0CAFD4 800CA3D4 A5CB001C */  sh    $t3, 0x1c($t6)
 /* 0CAFD8 800CA3D8 8FB90058 */  lw    $t9, 0x58($sp)
-# This is indexing into eqpower (0x800E37A0) from the end
-/* 0CAFDC 800CA3DC 3C18800E */  lui   $t8, 0x800e
+# This is indexing into eqpower from the end.
+/* 0CAFDC 800CA3DC 3C18800E */  lui   $t8, %hi(eqpower+0xfe) # $t8, 0x800e
 /* 0CAFE0 800CA3E0 872C0018 */  lh    $t4, 0x18($t9)
 /* 0CAFE4 800CA3E4 8728001A */  lh    $t0, 0x1a($t9)
 /* 0CAFE8 800CA3E8 000C6823 */  negu  $t5, $t4
 /* 0CAFEC 800CA3EC 000D7840 */  sll   $t7, $t5, 1
 /* 0CAFF0 800CA3F0 030FC021 */  addu  $t8, $t8, $t7
-/* 0CAFF4 800CA3F4 8718389E */  lh    $t8, 0x389e($t8)
+/* 0CAFF4 800CA3F4 8718389E */  lh    $t8, %lo(eqpower+0xfe)($t8)
 /* 0CAFF8 800CA3F8 00000000 */  nop   
 /* 0CAFFC 800CA3FC 03080019 */  multu $t8, $t0
 /* 0CB000 800CA400 00005012 */  mflo  $t2
@@ -298,14 +298,14 @@ glabel L800CA460
 /* 0CB0E8 800CA4E8 000E53C3 */  sra   $t2, $t6, 0xf
 /* 0CB0EC 800CA4EC A72A0028 */  sh    $t2, 0x28($t9)
 /* 0CB0F0 800CA4F0 8FAC0058 */  lw    $t4, 0x58($sp)
-# This is indexing into eqpower (0x800E37A0) from the end
-/* 0CB0F4 800CA4F4 3C08800E */  lui   $t0, 0x800e
+# This is indexing into eqpower from the end.
+/* 0CB0F4 800CA4F4 3C08800E */  lui   $t0, %hi(eqpower+0xfe) # $t0, 0x800e
 /* 0CB0F8 800CA4F8 858D0018 */  lh    $t5, 0x18($t4)
 /* 0CB0FC 800CA4FC 8589001A */  lh    $t1, 0x1a($t4)
 /* 0CB100 800CA500 000D7823 */  negu  $t7, $t5
 /* 0CB104 800CA504 000FC040 */  sll   $t8, $t7, 1
 /* 0CB108 800CA508 01184021 */  addu  $t0, $t0, $t8
-/* 0CB10C 800CA50C 8508389E */  lh    $t0, 0x389e($t0)
+/* 0CB10C 800CA50C 8508389E */  lh    $t0, %lo(eqpower+0xfe)($t0)
 /* 0CB110 800CA510 00000000 */  nop   
 /* 0CB114 800CA514 01090019 */  multu $t0, $t1
 /* 0CB118 800CA518 00005812 */  mflo  $t3
@@ -463,8 +463,8 @@ glabel L800CA460
 /* 0CB35C 800CA75C 00000000 */  nop   
 /* 0CB360 800CA760 A58D0020 */  sh    $t5, 0x20($t4)
 /* 0CB364 800CA764 8FA80058 */  lw    $t0, 0x58($sp)
-# This is indexing into eqpower (0x800E37A0) from the end
-/* 0CB368 800CA768 3C09800E */  lui   $t1, 0x800e
+# This is indexing into eqpower from the end.
+/* 0CB368 800CA768 3C09800E */  lui   $t1, %hi(eqpower+0xfe) # $t1, 0x800e
 /* 0CB36C 800CA76C 8D0A003C */  lw    $t2, 0x3c($t0)
 /* 0CB370 800CA770 00000000 */  nop   
 /* 0CB374 800CA774 8D58000C */  lw    $t8, 0xc($t2)
@@ -472,7 +472,7 @@ glabel L800CA460
 /* 0CB37C 800CA77C 00185823 */  negu  $t3, $t8
 /* 0CB380 800CA780 000B7040 */  sll   $t6, $t3, 1
 /* 0CB384 800CA784 012E4821 */  addu  $t1, $t1, $t6
-/* 0CB388 800CA788 8529389E */  lh    $t1, 0x389e($t1)
+/* 0CB388 800CA788 8529389E */  lh    $t1, %lo(eqpower+0xfe)($t1)
 /* 0CB38C 800CA78C 00000000 */  nop   
 /* 0CB390 800CA790 A5090022 */  sh    $t1, 0x22($t0)
 .L800CA794:
