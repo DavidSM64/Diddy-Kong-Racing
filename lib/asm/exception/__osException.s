@@ -11,15 +11,15 @@ glabel D_800E9670
 .word 0x10101010
 
 glabel D_800E9690
-.word 0x800D3168
-.word 0x800D3130
-.word 0x800D3110
-.word 0x800D2F74
-.word 0x800D2F20
-.word 0x800D30B4
-.word 0x800D2EE8
-.word 0x800D2EF4
-.word 0x800D2F00
+.word .L800D3168
+.word .L800D3130
+.word .L800D3110
+.word .L800D2F74
+.word .L800D2F20
+.word .L800D30B4
+.word .L800D2EE8
+.word .L800D2EF4
+.word .L800D2F00
 
 .section .text
 
@@ -167,12 +167,15 @@ glabel __osException
 /* 0D3ADC 800D2EDC 8C2A9690 */  lw    $t2, %lo(D_800E9690)($at)
 /* 0D3AE0 800D2EE0 01400008 */  jr    $t2
 /* 0D3AE4 800D2EE4 00000000 */   nop   
+.L800D2EE8:
 /* 0D3AE8 800D2EE8 2401DFFF */  li    $at, -8193
 /* 0D3AEC 800D2EEC 1000FFF0 */  b     .L800D2EB0
 /* 0D3AF0 800D2EF0 02018024 */   and   $s0, $s0, $at
+.L800D2EF4:
 /* 0D3AF4 800D2EF4 2401BFFF */  li    $at, -16385
 /* 0D3AF8 800D2EF8 1000FFED */  b     .L800D2EB0
 /* 0D3AFC 800D2EFC 02018024 */   and   $s0, $s0, $at
+.L800D2F00:
 /* 0D3B00 800D2F00 40095800 */  mfc0  $t1, $11
 /* 0D3B04 800D2F04 40895800 */  mtc0  $t1, $11
 /* 0D3B08 800D2F08 0C034C79 */  jal   send_mesg
@@ -181,6 +184,7 @@ glabel __osException
 /* 0D3B14 800D2F14 34217FFF */  ori   $at, (0xFFFF7FFF & 0xFFFF) # ori $at, $at, 0x7fff
 /* 0D3B18 800D2F18 1000FFE5 */  b     .L800D2EB0
 /* 0D3B1C 800D2F1C 02018024 */   and   $s0, $s0, $at
+.L800D2F20:
 /* 0D3B20 800D2F20 2401F7FF */  li    $at, -2049
 /* 0D3B24 800D2F24 02018024 */  and   $s0, $s0, $at
 /* 0D3B28 800D2F28 240A0004 */  li    $t2, 4
@@ -203,6 +207,7 @@ glabel __osException
 /* 0D3B68 800D2F68 00000000 */   nop   
 /* 0D3B6C 800D2F6C 1000FFD0 */  b     .L800D2EB0
 /* 0D3B70 800D2F70 00000000 */   nop   
+.L800D2F74:
 /* 0D3B74 800D2F74 3C08800E */  lui   $t0, %hi(D_800E38AC) # $t0, 0x800e
 /* 0D3B78 800D2F78 250838AC */  addiu $t0, %lo(D_800E38AC) # addiu $t0, $t0, 0x38ac
 /* 0D3B7C 800D2F7C 8D080000 */  lw    $t0, ($t0)
@@ -290,6 +295,7 @@ glabel __osException
 /* 0D3CA8 800D30A8 2401FBFF */  li    $at, -1025
 /* 0D3CAC 800D30AC 1000FF80 */  b     .L800D2EB0
 /* 0D3CB0 800D30B0 02018024 */   and   $s0, $s0, $at
+.L800D30B4:
 /* 0D3CB4 800D30B4 8F5B0118 */  lw    $k1, 0x118($k0)
 /* 0D3CB8 800D30B8 2401EFFF */  li    $at, -4097
 /* 0D3CBC 800D30BC 3C09800E */  lui   $t1, %hi(D_800E38A8) # $t1, 0x800e
@@ -314,6 +320,7 @@ glabel __osException
 /* 0D3D04 800D3104 0361D824 */  and   $k1, $k1, $at
 /* 0D3D08 800D3108 10000017 */  b     .L800D3168
 /* 0D3D0C 800D310C AD5B0118 */   sw    $k1, 0x118($t2)
+.L800D3110:
 /* 0D3D10 800D3110 2401FDFF */  li    $at, -513
 /* 0D3D14 800D3114 01014024 */  and   $t0, $t0, $at
 /* 0D3D18 800D3118 40886800 */  mtc0  $t0, $13
@@ -322,6 +329,7 @@ glabel __osException
 /* 0D3D24 800D3124 2401FDFF */  li    $at, -513
 /* 0D3D28 800D3128 1000FF61 */  b     .L800D2EB0
 /* 0D3D2C 800D312C 02018024 */   and   $s0, $s0, $at
+.L800D3130:
 /* 0D3D30 800D3130 2401FEFF */  li    $at, -257
 /* 0D3D34 800D3134 01014024 */  and   $t0, $t0, $at
 /* 0D3D38 800D3138 40886800 */  mtc0  $t0, $13
