@@ -83,7 +83,7 @@ glabel func_80065EA0
 /* 066BC8 80065FC8 00000000 */   nop   
 .L80065FCC:
 /* 066BCC 80065FCC 8DCF0578 */  lw    $t7, %lo(D_B0000578)($t6)
-/* 066BD0 80065FD0 34018965 */  li    $at, 35173
+/* 066BD0 80065FD0 34018965 */  li    $at, 0x8965
 /* 066BD4 80065FD4 31F8FFFF */  andi  $t8, $t7, 0xffff
 /* 066BD8 80065FD8 13010003 */  beq   $t8, $at, .L80065FE8
 /* 066BDC 80065FDC 26100EE0 */   addiu $s0, %lo(D_80120EE0) # addiu $s0, $s0, 0xee0

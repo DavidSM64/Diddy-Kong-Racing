@@ -137,7 +137,7 @@ void audio_init(u32 arg0){
     audioMgrConfig audConfig;
     
     // Uncomment this to test shiftibilty!
-    // *((s32*)0x803FFFFC) = 0xDEADBEEF;
+    //*((s32*)0x803FFFFC) = 0xDEADBEEF;
    
     seq_max_len = 0;
     alHeapInit(&gALHeap, gBssSectionStart, 0x00029D88);
