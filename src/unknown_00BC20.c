@@ -1169,7 +1169,7 @@ Player * func_80018C6C(void){
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80018CE0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001955C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/D_80019808.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80019808.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001A7D8.s")
 
 void func_8001A8D4(s32 arg0) {
