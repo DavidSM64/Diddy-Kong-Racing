@@ -3,11 +3,13 @@
 .include "globals.inc"
 .include "macros.inc"
 
+glabel rspUnknownDataStart
+.incbin "./build/us_1.0/ucode/data_unknown.bin"
 glabel rspF3DDKRDataDramStart
 .incbin "./build/us_1.0/ucode/data_f3ddkr_dram.bin"
 glabel rspF3DDKRDataFifoStart
 .incbin "./build/us_1.0/ucode/data_f3ddkr_fifo.bin"
 glabel rspF3DDKRDataXbusStart
 .incbin "./build/us_1.0/ucode/data_f3ddkr_xbus.bin"
-glabel rspUnknownDataStart
-.incbin "./build/us_1.0/ucode/data_unknown.bin"
+glabel rspUnknown2DataStart
+.incbin "./build/us_1.0/ucode/data_unknown_2.bin"

@@ -123,7 +123,6 @@ class GenerateLD:
             testName = DATA_DIR + '/' + fname + '.rodata.s'
             if FileUtil.does_file_exist(testName):
                 self.gen_line(BUILD_DIR + '/data/' + fname + '.rodata.o(.rodata);')
-        self.gen_line(BUILD_DIR + '/data/unknown_last.rodata.o(.rodata);')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.rodata);')
         self.gen_newline()

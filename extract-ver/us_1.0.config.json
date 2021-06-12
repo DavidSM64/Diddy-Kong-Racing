@@ -41,17 +41,18 @@
                 "type": "NoExtract",
                 "folder" : "",
                 "files" : [
-                    {  "filename": "game_data", "length" : "0xD570" }
+                    {  "filename": "game_data", "length" : "0xD2A0" }
                 ]
             },
             { 
                 "type": "Binary",
                 "folder" : "../../ucode/us_1.0",
                 "files" : [
+                    { "filename": "data_unknown", "length" : "0x2D0" },
                     { "filename": "data_f3ddkr_dram", "length" : "0x800" },
                     { "filename": "data_f3ddkr_fifo", "length" : "0x800" },
                     { "filename": "data_f3ddkr_xbus", "length" : "0x800" },
-                    { "filename": "data_unknown", "length" : "0xBC0" }
+                    { "filename": "data_unknown_2", "length" : "0xBC0" }
                 ]
             }
         ]

@@ -140,7 +140,7 @@ void audio_init(u32 arg0){
     //*((s32*)0x803FFFFC) = 0xDEADBEEF;
    
     seq_max_len = 0;
-    alHeapInit(&gALHeap, gBssSectionStart, 0x00029D88);
+    alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
     
     reg_s2 = func_80076C58(38);
     ALBankFile_80115D14 = (ALBankFile*) func_80070C9C(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
