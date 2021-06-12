@@ -681,7 +681,7 @@ s32 func_8006C300(void) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/D_8006C330.s")
+GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006C330.s")
 #else
 void func_8006C330(s32 arg0) {
     func_8006C3E0();
@@ -961,7 +961,7 @@ void func_8006DC58(s32 arg0) {
         func_80010994(arg0);
         particlePtrList_flush();
         func_8001BF20();
-        D_80024D54(&D_801211F8, &D_80121208, &D_80121218, &D_80121228, arg0);
+        func_80024D54(&D_801211F8, &D_80121208, &D_80121218, &D_80121228, arg0);
         func_800C3440(arg0);
         func_80078054(&D_801211F8);
         func_80077050(&D_801211F8);

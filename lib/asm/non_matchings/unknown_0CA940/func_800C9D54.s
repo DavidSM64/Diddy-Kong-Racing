@@ -5,8 +5,8 @@ glabel func_800C9D54
 /* 0CA960 800C9D60 AFA50024 */  sw    $a1, 0x24($sp)
 /* 0CA964 800C9D64 AFA60028 */  sw    $a2, 0x28($sp)
 /* 0CA968 800C9D68 AFA7002C */  sw    $a3, 0x2c($sp)
-/* 0CA96C 800C9D6C 3C04800D */  lui   $a0, %hi(D_800C9D40) # $a0, 0x800d
-/* 0CA970 800C9D70 24849D40 */  addiu $a0, %lo(D_800C9D40) # addiu $a0, $a0, -0x62c0
+/* 0CA96C 800C9D6C 3C04800D */  lui   $a0, %hi(func_800C9D40) # $a0, 0x800d
+/* 0CA970 800C9D70 24849D40 */  addiu $a0, %lo(func_800C9D40) # addiu $a0, $a0, -0x62c0
 /* 0CA974 800C9D74 27A70024 */  addiu $a3, $sp, 0x24
 /* 0CA978 800C9D78 8FA60020 */  lw    $a2, 0x20($sp)
 /* 0CA97C 800C9D7C 0C034FC4 */  jal   _Printf

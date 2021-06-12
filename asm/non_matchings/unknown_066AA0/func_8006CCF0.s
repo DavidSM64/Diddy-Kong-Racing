@@ -142,7 +142,7 @@ glabel func_8006CCF0
 /* 06DAD8 8006CED8 24C61218 */  addiu $a2, %lo(D_80121218) # addiu $a2, $a2, 0x1218
 /* 06DADC 8006CEDC 24A51208 */  addiu $a1, %lo(D_80121208) # addiu $a1, $a1, 0x1208
 /* 06DAE0 8006CEE0 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
-/* 06DAE4 8006CEE4 0C009355 */  jal   D_80024D54
+/* 06DAE4 8006CEE4 0C009355 */  jal   func_80024D54
 /* 06DAE8 8006CEE8 AFB90010 */   sw    $t9, 0x10($sp)
 /* 06DAEC 8006CEEC 3C098012 */  lui   $t1, %hi(D_801234EC) # $t1, 0x8012
 /* 06DAF0 8006CEF0 8D2934EC */  lw    $t1, %lo(D_801234EC)($t1)

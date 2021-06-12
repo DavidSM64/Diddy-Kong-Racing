@@ -1,4 +1,4 @@
-glabel D_8008F618
+glabel func_8008F618
 /* 090218 8008F618 27BDFF80 */  addiu $sp, $sp, -0x80
 /* 09021C 8008F61C AFB60030 */  sw    $s6, 0x30($sp)
 /* 090220 8008F620 AFB00018 */  sw    $s0, 0x18($sp)

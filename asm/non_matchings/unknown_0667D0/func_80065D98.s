@@ -6,10 +6,10 @@ glabel D_80065D98
 /* 0669A8 80065DA8 3C0E8012 */  lui   $t6, %hi(D_8011F758) # $t6, 0x8012
 /* 0669AC 80065DAC 25CEF758 */  addiu $t6, %lo(D_8011F758) # addiu $t6, $t6, -0x8a8
 /* 0669B0 80065DB0 3C048012 */  lui   $a0, %hi(D_8011F910) # $a0, 0x8012
-/* 0669B4 80065DB4 3C068007 */  lui   $a2, %hi(D_8006C330) # $a2, 0x8007
+/* 0669B4 80065DB4 3C068007 */  lui   $a2, %hi(func_8006C330) # $a2, 0x8007
 /* 0669B8 80065DB8 240F000A */  li    $t7, 10
 /* 0669BC 80065DBC AFAF0014 */  sw    $t7, 0x14($sp)
-/* 0669C0 80065DC0 24C6C330 */  addiu $a2, %lo(D_8006C330) # addiu $a2, $a2, -0x3cd0
+/* 0669C0 80065DC0 24C6C330 */  addiu $a2, %lo(func_8006C330) # addiu $a2, $a2, -0x3cd0
 /* 0669C4 80065DC4 2484F910 */  addiu $a0, %lo(D_8011F910) # addiu $a0, $a0, -0x6f0
 /* 0669C8 80065DC8 AFAE0010 */  sw    $t6, 0x10($sp)
 /* 0669CC 80065DCC 24050003 */  li    $a1, 3

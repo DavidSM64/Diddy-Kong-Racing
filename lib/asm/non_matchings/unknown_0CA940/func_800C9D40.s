@@ -1,4 +1,4 @@
-glabel D_800C9D40
+glabel func_800C9D40
 /* 0CA940 800C9D40 AFA40000 */  sw    $a0, ($sp)
 /* 0CA944 800C9D44 AFA50004 */  sw    $a1, 4($sp)
 /* 0CA948 800C9D48 AFA60008 */  sw    $a2, 8($sp)

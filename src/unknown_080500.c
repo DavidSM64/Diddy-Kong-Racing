@@ -3237,7 +3237,7 @@ void func_8008F534(void) {
     func_8006F564(0);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_080500/D_8008F618.s")
+GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008F618.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008FA54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_8008FF1C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_080500/func_800904E8.s")

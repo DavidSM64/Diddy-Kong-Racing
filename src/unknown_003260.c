@@ -14,7 +14,7 @@
 #define AL_SNDP_FX_EVT (1 << 8)
 
 extern void func_80002A98(void*);
-extern u32 D_80003008;
+extern u32 func_80003008;
 
 /************ .bss ************/
 
@@ -104,7 +104,7 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
     s32 i;
     D_80115F90 = arg2;
     D_80115F94 = c->heap;
-    c->dmaproc = &D_80003008;
+    c->dmaproc = &func_80003008;
     c->outputRate = func_800C8600(22050);
     D_8011962C = (((f32) c->outputRate)*2.0f)/D_80126170;
     if(D_8011962C < 0){
@@ -153,8 +153,8 @@ void audioStopThread(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002A98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80002E38.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/D_80003008.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002E38.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003008.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003040.s")
 
 void sfxSetVolumeSlider(u32 arg0) {
