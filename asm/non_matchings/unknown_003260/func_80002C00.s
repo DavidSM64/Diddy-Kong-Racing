@@ -92,11 +92,11 @@ glabel func_80002C00
 /* 003960 80002D60 000E78C3 */  sra   $t7, $t6, 3
 /* 003964 80002D64 27398590 */  addiu $t9, %lo(rspF3DDKRDramStart) # addiu $t9, $t9, -0x7a70
 /* 003968 80002D68 3C09800D */  lui   $t1, %hi(rspUnknownStart) # $t1, 0x800d
-/* 00396C 80002D6C 3C0A800F */  lui   $t2, %hi(D_800E98D0) # $t2, 0x800f
+/* 00396C 80002D6C 3C0A800F */  lui   $t2, %hi(rspUnknownDataStart) # $t2, 0x800f
 /* 003970 80002D70 000FC0C0 */  sll   $t8, $t7, 3
 /* 003974 80002D74 03254023 */  subu  $t0, $t9, $a1
 /* 003978 80002D78 25297600 */  addiu $t1, %lo(rspUnknownStart) # addiu $t1, $t1, 0x7600
-/* 00397C 80002D7C 254A98D0 */  addiu $t2, %lo(D_800E98D0) # addiu $t2, $t2, -0x6730
+/* 00397C 80002D7C 254A98D0 */  addiu $t2, %lo(rspUnknownDataStart) # addiu $t2, $t2, -0x6730
 /* 003980 80002D80 240B0800 */  li    $t3, 2048
 /* 003984 80002D84 240C0001 */  li    $t4, 1
 /* 003988 80002D88 AE18004C */  sw    $t8, 0x4c($s0)
