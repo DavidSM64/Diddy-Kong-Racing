@@ -309,10 +309,10 @@ glabel MenuTrackSelectInit
 /* 08F84C 8008EC4C 1420FFDA */  bnez  $at, .L8008EBB8
 /* 08F850 8008EC50 00001025 */   move  $v0, $zero
 /* 08F854 8008EC54 3C018012 */  lui   $at, %hi(D_80126924) # $at, 0x8012
-/* 08F858 8008EC58 3C048009 */  lui   $a0, %hi(D_8008F618) # $a0, 0x8009
+/* 08F858 8008EC58 3C048009 */  lui   $a0, %hi(func_8008F618) # $a0, 0x8009
 /* 08F85C 8008EC5C AC206924 */  sw    $zero, %lo(D_80126924)($at)
 /* 08F860 8008EC60 0C01E2AB */  jal   func_80078AAC
-/* 08F864 8008EC64 2484F618 */   addiu $a0, %lo(D_8008F618) # addiu $a0, $a0, -0x9e8
+/* 08F864 8008EC64 2484F618 */   addiu $a0, %lo(func_8008F618) # addiu $a0, $a0, -0x9e8
 /* 08F868 8008EC68 8FC20000 */  lw    $v0, ($fp)
 /* 08F86C 8008EC6C 00002025 */  move  $a0, $zero
 /* 08F870 8008EC70 00021843 */  sra   $v1, $v0, 1

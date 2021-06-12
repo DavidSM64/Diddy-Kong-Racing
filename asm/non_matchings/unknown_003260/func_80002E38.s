@@ -1,4 +1,4 @@
-glabel D_80002E38
+glabel func_80002E38
 /* 003A38 80002E38 3C098012 */  lui   $t1, %hi(D_80119230) # $t1, 0x8012
 /* 003A3C 80002E3C 25299230 */  addiu $t1, %lo(D_80119230) # addiu $t1, $t1, -0x6dd0
 /* 003A40 80002E40 27BDFFB0 */  addiu $sp, $sp, -0x50

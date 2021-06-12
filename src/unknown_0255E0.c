@@ -310,7 +310,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
 #endif
 
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/D_80024D54.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80024D54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
 
 void func_800257D0(void) {

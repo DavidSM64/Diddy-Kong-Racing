@@ -4,5 +4,5 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA940/D_800C9D40.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA940/func_800C9D40.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA940/func_800C9D54.s")

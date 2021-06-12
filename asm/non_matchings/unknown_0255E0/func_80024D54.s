@@ -1,4 +1,4 @@
-glabel D_80024D54
+glabel func_80024D54
 /* 025954 80024D54 27BDFF70 */  addiu $sp, $sp, -0x90
 /* 025958 80024D58 AFB10020 */  sw    $s1, 0x20($sp)
 /* 02595C 80024D5C AFBF002C */  sw    $ra, 0x2c($sp)
