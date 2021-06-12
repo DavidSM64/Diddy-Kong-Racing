@@ -1,4 +1,4 @@
-glabel D_80019808
+glabel func_80019808
 /* 01A408 80019808 27BDFF60 */  addiu $sp, $sp, -0xa0
 /* 01A40C 8001980C AFBF0034 */  sw    $ra, 0x34($sp)
 /* 01A410 80019810 AFB60030 */  sw    $s6, 0x30($sp)

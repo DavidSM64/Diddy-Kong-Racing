@@ -437,7 +437,7 @@ glabel func_80010994
 /* 011BCC 80010FCC 00000000 */  nop   
 /* 011BD0 80010FD0 15200007 */  bnez  $t1, .L80010FF0
 /* 011BD4 80010FD4 00000000 */   nop   
-/* 011BD8 80010FD8 0C006602 */  jal   D_80019808
+/* 011BD8 80010FD8 0C006602 */  jal   func_80019808
 /* 011BDC 80010FDC 02802025 */   move  $a0, $s4
 /* 011BE0 80010FE0 3C078012 */  lui   $a3, %hi(playerCount) # $a3, 0x8012
 /* 011BE4 80010FE4 8CE7AEF0 */  lw    $a3, %lo(playerCount)($a3)
