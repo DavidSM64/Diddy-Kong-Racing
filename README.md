@@ -29,7 +29,9 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 
 ## Modding
 
-If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command: `make NON_MATCHING=1 -j4`
+If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.
+  
+Example: `make NON_MATCHING=1 -j4`  
 
 ## Style Guide
 
@@ -87,10 +89,10 @@ The scoring is split into 2 sections:
 1. Assembly to C Decompilation (Adventure One)
 2. Cleanup and Documentation (Adventure Two)
 
-Show scores for Adventure One & Adventure Two: `./score.sh`
-Show score for Adventure One only: `./score.sh -a 1`
-Show score for Adventure Two only: `./score.sh -a 2`
-Show top 10 files remaining: `./score.sh -t 10`
+Show scores for Adventure One & Adventure Two: `./score.sh`  
+Show score for Adventure One only: `./score.sh -a 1`  
+Show score for Adventure Two only: `./score.sh -a 2`  
+Show top 10 files remaining: `./score.sh -t 10`  
 
 To make progress in Adventure 2, a function must be properly named (must not start with `func_`) and also include a doxygen comment above it.
 

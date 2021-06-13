@@ -1,1 +1,1 @@
-python3 tools/python/diff.py "$1"
+python3 tools/python/diff.py "$@"
