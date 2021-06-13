@@ -4,10 +4,20 @@
 
 SHELL := /bin/bash
 
-########################### Version ##########################
+################## Preprocessor definitions ##################
 
 # Currently, only US 1.0 is supported.
 VERSION := us_1.0
+
+NON_MATCHING ?= 0
+$(eval $(call validate-option,NON_MATCHING,0 1))
+
+ifeq ($(VERSION),us_1.0)
+  DEFINES += VERSION_US_1_0=1
+endif
+ifeq ($(NON_MATCHING),1)
+  DEFINES += NON_MATCHING=1
+endif
 
 ############################ Setup ###########################
 
@@ -123,9 +133,12 @@ OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
 MIPSISET := -mips1
 OPT_FLAGS := -O2
 
-ASFLAGS = -mtune=vr4300 -march=vr4300 $(INCLUDE_FLAGS)
+C_DEFINES := $(foreach d,$(DEFINES),-D$(d))
+DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
+
+ASFLAGS = -mtune=vr4300 -march=vr4300 $(foreach d,$(DEFINES),--defsym $(d))
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
-CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(INCLUDE_CFLAGS) $(MIPSISET)
+CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(INCLUDE_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS)
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -445,7 +458,11 @@ $(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
 	cp $< $@
 	$(FIXCHECKSUMS)
 	$(N64CRC) $@
+ifeq ($(NON_MATCHING),0)
 	sha1sum -c sha1/dkr.$(VERSION).sha1
+else
+	@echo "Build complete!"
+endif
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
 	xxd $< > $@

@@ -55,7 +55,7 @@ glabel func_8006DA28
 /* 06E6F0 8006DAF0 8FA40020 */  lw    $a0, 0x20($sp)
 /* 06E6F4 8006DAF4 00000000 */  nop   
 .L8006DAF8:
-/* 06E6F8 8006DAF8 0C0204F4 */  jal   MenuInit
+/* 06E6F8 8006DAF8 0C0204F4 */  jal   menu_init
 /* 06E6FC 8006DAFC 00000000 */   nop   
 /* 06E700 8006DB00 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 06E704 8006DB04 3C018012 */  lui   $at, %hi(D_80123504) # $at, 0x8012

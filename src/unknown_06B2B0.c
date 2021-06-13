@@ -891,7 +891,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006DA28.s")
 void func_8006DB3C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800813C0(s32);
 void func_80004A60(s32, s32);
-void MenuInit(s32);
+void menu_init(s32);
 
 void func_8006DA28(s32 arg0, s32 arg1, s32 arg2) {
     func_8006ECFC(0);
@@ -913,7 +913,7 @@ void func_8006DA28(s32 arg0, s32 arg1, s32 arg2) {
     if (arg0 == 0 || arg0 == 1 || arg0 == 2) {
         func_800813C0(arg0);
     }
-    MenuInit(arg0);
+    menu_init(arg0);
     D_80123504 = 0;
 }
 #endif
