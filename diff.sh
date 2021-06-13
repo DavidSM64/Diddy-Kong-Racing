@@ -1,0 +1,1 @@
+python3 tools/python/diff.py "$1"

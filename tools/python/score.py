@@ -1,6 +1,7 @@
 import re
 import sys
 import argparse
+import time
 from file_util import FileUtil
 from score_display import ScoreDisplay
 
@@ -29,9 +30,9 @@ for folder in ASM_FOLDERS:
 BUILD_DIRECTORY = './build/us_1.0'
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './lib/src'
-FUNCTION_REGEX = r'((?:[\/][*][*]+[\n])(?:[^\n]*\n)*?(?:.*[*][\/]))?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(?:\s|[*])*([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
+FUNCTION_REGEX = r'(\/[*][*!]+\n(?:.*\n)+?\s*[*]\/\n)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
-WIP_REGEX = r'#if(.|\n)*?(GLOBAL_ASM[(]([^)]*)[)])(.|\n)*?#else(.|\n)*?#endif'
+WIP_REGEX = r'#if(?:.|\n)*?(GLOBAL_ASM[(][^)]*[)])(.|\n)*?#endif'
 
 CODE_START = 0x80000400
 CODE_END = 0x800D75F4
@@ -83,14 +84,13 @@ class ScoreFile:
     def read_file(self):
         with open(self.path, "r") as inFile:
             self.text = inFile.read()
-            self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\3)", self.text)
+            self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\1)", self.text)
             
     def get_matches(self):
         matches = re.finditer(FUNCTION_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
             self.functions.append(ScoreFileMatch(groups[0], groups[2]))
-            
         matches = re.finditer(GLOBAL_ASM_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
@@ -160,7 +160,7 @@ def main():
         scoreFiles.append(scoreFile)
     
     
-    totalNumberOfFunctions = MAP_FILE.numFunctions
+    totalNumberOfFunctions = totalNumberOfDecompiledFunctions + totalNumberOfGlobalAsms
     for asm_function in ASM_LABELS:
         if asm_function in MAP_FILE.functionSizes:
             totalSizeOfDecompiledFunctions += MAP_FILE.functionSizes[asm_function]

@@ -25,7 +25,7 @@ typedef struct MenuElement {
   /* 0x14 */ char* asciiText; // Pointer to ascii text to be displayed on the screen.
   /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
   /* 0x14 */ s32* number;     // Pointer to a number to be displayed on the screen.
-  } source;
+  };
   /* 0x18 */ u16 backgroundRed;
   /* 0x1A */ u16 backgroundGreen;
   /* 0x1C */ u16 backgroundBlue;

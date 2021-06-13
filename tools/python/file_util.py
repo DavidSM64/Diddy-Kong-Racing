@@ -1,4 +1,4 @@
-from os import chdir, listdir, remove
+from os import chdir, listdir, remove, rename
 from os.path import dirname, isfile, isdir, join, realpath, exists
 
 class FileUtil:
@@ -43,6 +43,19 @@ class FileUtil:
                 else:
                     filenames += FileUtil.get_filenames_from_directory_recursive(join(directory, f), extensions, subDirectory + '/' + f)
         return filenames
+        
+    @staticmethod
+    def get_directories_from_directory_recursive(directory, extensions=None, subDirectory=''):
+        filenames = []
+        for f in listdir(directory):
+            path = join(directory, f)
+            if isdir(path):
+                filenames.append(((subDirectory + '/') if subDirectory != '' else '') + f)
+                if subDirectory == '':
+                    filenames += FileUtil.get_directories_from_directory_recursive(path, extensions, f)
+                else:
+                    filenames += FileUtil.get_directories_from_directory_recursive(path, extensions, subDirectory + '/' + f)
+        return filenames
     
     @staticmethod
     def get_text_from_file(filename):
@@ -63,7 +76,11 @@ class FileUtil:
     def write_bytes_to_file(filename, binary):
         with open(filename, 'wb') as outFile:
             outFile.write(binary)
-            
+    
+    @staticmethod
+    def rename_file(old_filename, new_filename):
+        rename(old_filename, new_filename)
+    
     @staticmethod
     def delete_file(filename):
         remove(filename)

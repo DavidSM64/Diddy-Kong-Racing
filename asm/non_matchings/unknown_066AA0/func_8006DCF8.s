@@ -34,7 +34,7 @@ glabel func_8006DCF8
 /* 06E95C 8006DD5C 24C61218 */  addiu $a2, %lo(D_80121218) # addiu $a2, $a2, 0x1218
 /* 06E960 8006DD60 24A51208 */  addiu $a1, %lo(D_80121208) # addiu $a1, $a1, 0x1208
 /* 06E964 8006DD64 02002025 */  move  $a0, $s0
-/* 06E968 8006DD68 0C020569 */  jal   MenuLoop
+/* 06E968 8006DD68 0C020569 */  jal   menu_loop
 /* 06E96C 8006DD6C AFB80010 */   sw    $t8, 0x10($sp)
 /* 06E970 8006DD70 24190001 */  li    $t9, 1
 /* 06E974 8006DD74 3C018012 */  lui   $at, %hi(D_801234F0) # $at, 0x8012
