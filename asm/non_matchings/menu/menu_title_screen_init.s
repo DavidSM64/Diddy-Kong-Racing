@@ -7,7 +7,7 @@ glabel menu_title_screen_init
 /* 084150 80083550 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
 /* 084154 80083554 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 084158 80083558 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 08415C 8008355C 0C027055 */  jal   func_8009C154
+/* 08415C 8008355C 0C027055 */  jal   reset_character_id_slots
 /* 084160 80083560 AC20F47C */   sw    $zero, %lo(D_800DF47C)($at)
 /* 084164 80083564 3C01800E */  lui   $at, %hi(gSaveFileIndex) # $at, 0x800e
 /* 084168 80083568 AC20F4CC */  sw    $zero, %lo(gSaveFileIndex)($at)
@@ -101,7 +101,7 @@ glabel menu_title_screen_init
 /* 0842BC 800836BC 2404001B */   li    $a0, 27
 /* 0842C0 800836C0 0C019830 */  jal   func_800660C0
 /* 0842C4 800836C4 00000000 */   nop   
-/* 0842C8 800836C8 0C0310BB */  jal   func_800C42EC
+/* 0842C8 800836C8 0C0310BB */  jal   set_text_font
 /* 0842CC 800836CC 00002025 */   move  $a0, $zero
 /* 0842D0 800836D0 0C03105C */  jal   func_800C4170
 /* 0842D4 800836D4 24040002 */   li    $a0, 2

@@ -1,4 +1,4 @@
-glabel func_800C42EC
+glabel set_text_font
 /* 0C4EEC 800C42EC 3C0E8013 */  lui   $t6, %hi(D_8012A7E0) # $t6, 0x8013
 /* 0C4EF0 800C42F0 8DCEA7E0 */  lw    $t6, %lo(D_8012A7E0)($t6)
 /* 0C4EF4 800C42F4 3C0F8013 */  lui   $t7, %hi(D_8012A7E8) # $t7, 0x8013

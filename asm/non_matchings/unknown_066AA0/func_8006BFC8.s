@@ -44,7 +44,7 @@ glabel func_8006BFC8
 /* 06CC60 8006C060 020D7821 */  addu  $t7, $s0, $t5
 .L8006C064:
 /* 06CC64 8006C064 81F00000 */  lb    $s0, ($t7)
-/* 06CC68 8006C068 0C0270C3 */  jal   func_8009C30C
+/* 06CC68 8006C068 0C0270C3 */  jal   get_filtered_cheats
 /* 06CC6C 8006C06C 00000000 */   nop   
 /* 06CC70 8006C070 00027180 */  sll   $t6, $v0, 6
 /* 06CC74 8006C074 05C10002 */  bgez  $t6, .L8006C080

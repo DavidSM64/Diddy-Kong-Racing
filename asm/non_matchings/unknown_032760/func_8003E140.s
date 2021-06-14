@@ -181,7 +181,7 @@ glabel func_8003E140
 /* 03EFB4 8003E3B4 240C0003 */  li    $t4, 3
 .L8003E3B8:
 /* 03EFB8 8003E3B8 A3AC002D */  sb    $t4, 0x2d($sp)
-/* 03EFBC 8003E3BC 0C0270C3 */  jal   func_8009C30C
+/* 03EFBC 8003E3BC 0C0270C3 */  jal   get_filtered_cheats
 /* 03EFC0 8003E3C0 AFA30038 */   sw    $v1, 0x38($sp)
 /* 03EFC4 8003E3C4 8FA30038 */  lw    $v1, 0x38($sp)
 /* 03EFC8 8003E3C8 00026AC0 */  sll   $t5, $v0, 0xb

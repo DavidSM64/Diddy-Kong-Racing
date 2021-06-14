@@ -1617,7 +1617,7 @@ glabel func_800A8474
 /* 0AA7F8 800A9BF8 86390004 */  lh    $t9, 4($s1)
 /* 0AA7FC 800A9BFC A7A00122 */  sh    $zero, 0x122($sp)
 /* 0AA800 800A9C00 00195023 */  negu  $t2, $t9
-/* 0AA804 800A9C04 0C0270C3 */  jal   func_8009C30C
+/* 0AA804 800A9C04 0C0270C3 */  jal   get_filtered_cheats
 /* 0AA808 800A9C08 A7AA0124 */   sh    $t2, 0x124($sp)
 /* 0AA80C 800A9C0C 304B0004 */  andi  $t3, $v0, 4
 /* 0AA810 800A9C10 1160000B */  beqz  $t3, .L800A9C40
@@ -1972,7 +1972,7 @@ glabel func_800A8474
 /* 0AAD54 800AA154 00007012 */  mflo  $t6
 /* 0AAD58 800AA158 018E6823 */  subu  $t5, $t4, $t6
 /* 0AAD5C 800AA15C A5ED01E4 */  sh    $t5, 0x1e4($t7)
-/* 0AAD60 800AA160 0C0270C3 */  jal   func_8009C30C
+/* 0AAD60 800AA160 0C0270C3 */  jal   get_filtered_cheats
 /* 0AAD64 800AA164 AFA50148 */   sw    $a1, 0x148($sp)
 /* 0AAD68 800AA168 8FA50148 */  lw    $a1, 0x148($sp)
 /* 0AAD6C 800AA16C 304B0004 */  andi  $t3, $v0, 4

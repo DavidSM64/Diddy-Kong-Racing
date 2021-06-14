@@ -701,7 +701,7 @@ void func_8003D534(Player *arg0, s32 arg1) {
     arg0->unk4C->unk10 = 0x1E;
     arg0->unk7C.half.upper = 0x14;
     arg0->unk7C.half.lower = 0x10;
-    if (func_8009C30C() & 0x1000) {
+    if (get_filtered_cheats() & 0x1000) {
         particlePtrList_addObject(arg0);
     }
 }

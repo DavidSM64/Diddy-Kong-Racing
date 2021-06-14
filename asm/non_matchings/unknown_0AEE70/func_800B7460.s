@@ -3,7 +3,7 @@ glabel func_800B7460
 /* 0B8064 800B7464 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0B8068 800B7468 AFA409F0 */  sw    $a0, 0x9f0($sp)
 /* 0B806C 800B746C AFA509F4 */  sw    $a1, 0x9f4($sp)
-/* 0B8070 800B7470 0C0270C3 */  jal   func_8009C30C
+/* 0B8070 800B7470 0C0270C3 */  jal   get_filtered_cheats
 /* 0B8074 800B7474 AFA609F8 */   sw    $a2, 0x9f8($sp)
 /* 0B8078 800B7478 00027100 */  sll   $t6, $v0, 4
 /* 0B807C 800B747C 05C1008A */  bgez  $t6, .L800B76A8

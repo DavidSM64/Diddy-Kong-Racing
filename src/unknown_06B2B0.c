@@ -601,7 +601,7 @@ void func_8006BFC8(s8 *arg0) {
     
     phi_s0 = arg0[phi_s0];
     
-    if ((func_8009C30C() << 6) < 0) {
+    if ((get_filtered_cheats() << 6) < 0) {
         phi_s0 = 9;
     }
     if (func_8006DA0C() == 1) {
@@ -996,7 +996,7 @@ void func_8006E5BC(void) {
     gSettingsPtr->playerCount = func_8009C3C8();
     for (i = 0; i < 8; i++) {
         gSettingsPtr->racers[i].best_times = 0;
-        gSettingsPtr->racers[i].character = func_8009C228(i);
+        gSettingsPtr->racers[i].character = get_character_id_from_slot(i);
         if (gSettingsPtr->playerCount >= 2) {
             gSettingsPtr->racers[i].starting_position = i;
         } else if (is_in_two_player_adventure()) {

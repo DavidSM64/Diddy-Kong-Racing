@@ -59,7 +59,7 @@ glabel func_800A5F18
 /* 0A6BD0 800A5FD0 1440009D */  bnez  $v0, .L800A6248
 /* 0A6BD4 800A5FD4 8FBF001C */   lw    $ra, 0x1c($sp)
 .L800A5FD8:
-/* 0A6BD8 800A5FD8 0C0310BB */  jal   func_800C42EC
+/* 0A6BD8 800A5FD8 0C0310BB */  jal   set_text_font
 /* 0A6BDC 800A5FDC 00002025 */   move  $a0, $zero
 /* 0A6BE0 800A5FE0 8FB90028 */  lw    $t9, 0x28($sp)
 /* 0A6BE4 800A5FE4 8FB80024 */  lw    $t8, 0x24($sp)
@@ -72,7 +72,7 @@ glabel func_800A5F18
 /* 0A6C00 800A6000 240400FF */  li    $a0, 255
 /* 0A6C04 800A6004 240500FF */  li    $a1, 255
 /* 0A6C08 800A6008 240600FF */  li    $a2, 255
-/* 0A6C0C 800A600C 0C0310E1 */  jal   func_800C4384
+/* 0A6C0C 800A600C 0C0310E1 */  jal   set_text_color
 /* 0A6C10 800A6010 00003825 */   move  $a3, $zero
 /* 0A6C14 800A6014 3C028012 */  lui   $v0, %hi(D_80126CDC) # $v0, 0x8012
 /* 0A6C18 800A6018 8C426CDC */  lw    $v0, %lo(D_80126CDC)($v0)
@@ -102,7 +102,7 @@ glabel func_800A5F18
 /* 0A6C78 800A6078 460084A4 */  cvt.w.s $f18, $f16
 /* 0A6C7C 800A607C 44069000 */  mfc1  $a2, $f18
 /* 0A6C80 800A6080 44CBF800 */  ctc1  $t3, $31
-/* 0A6C84 800A6084 0C031110 */  jal   func_800C4440
+/* 0A6C84 800A6084 0C031110 */  jal   draw_text
 /* 0A6C88 800A6088 00000000 */   nop   
 /* 0A6C8C 800A608C 444CF800 */  cfc1  $t4, $31
 /* 0A6C90 800A6090 3C028012 */  lui   $v0, %hi(D_80126CDC) # $v0, 0x8012
@@ -157,7 +157,7 @@ glabel func_800A5F18
 /* 0A6D54 800A6154 460042A4 */  cvt.w.s $f10, $f8
 /* 0A6D58 800A6158 44065000 */  mfc1  $a2, $f10
 /* 0A6D5C 800A615C 44D8F800 */  ctc1  $t8, $31
-/* 0A6D60 800A6160 0C031110 */  jal   func_800C4440
+/* 0A6D60 800A6160 0C031110 */  jal   draw_text
 /* 0A6D64 800A6164 00000000 */   nop   
 /* 0A6D68 800A6168 4448F800 */  cfc1  $t0, $31
 /* 0A6D6C 800A616C 3C028012 */  lui   $v0, %hi(D_80126CDC) # $v0, 0x8012
@@ -213,7 +213,7 @@ glabel func_800A5F18
 /* 0A6E30 800A6230 460021A4 */  cvt.w.s $f6, $f4
 /* 0A6E34 800A6234 44063000 */  mfc1  $a2, $f6
 /* 0A6E38 800A6238 44CDF800 */  ctc1  $t5, $31
-/* 0A6E3C 800A623C 0C031110 */  jal   func_800C4440
+/* 0A6E3C 800A623C 0C031110 */  jal   draw_text
 /* 0A6E40 800A6240 00000000 */   nop   
 /* 0A6E44 800A6244 8FBF001C */  lw    $ra, 0x1c($sp)
 .L800A6248:

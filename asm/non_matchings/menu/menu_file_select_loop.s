@@ -54,7 +54,7 @@ glabel menu_file_select_loop
 /* 08EB34 8008DF34 8C640050 */  lw    $a0, 0x50($v1)
 /* 08EB38 8008DF38 AFA80044 */  sw    $t0, 0x44($sp)
 /* 08EB3C 8008DF3C AFA7002C */  sw    $a3, 0x2c($sp)
-/* 08EB40 8008DF40 0C025DBE */  jal   func_800976F8
+/* 08EB40 8008DF40 0C025DBE */  jal   decompress_filename_string
 /* 08EB44 8008DF44 AFA20030 */   sw    $v0, 0x30($sp)
 /* 08EB48 8008DF48 8FA20030 */  lw    $v0, 0x30($sp)
 /* 08EB4C 8008DF4C 8FA7002C */  lw    $a3, 0x2c($sp)
@@ -189,7 +189,7 @@ glabel menu_file_select_loop
 .L8008E130:
 /* 08ED30 8008E130 A0590001 */  sb    $t9, 1($v0)
 /* 08ED34 8008E134 A4400002 */  sh    $zero, 2($v0)
-/* 08ED38 8008E138 0C025DD1 */  jal   func_80097744
+/* 08ED38 8008E138 0C025DD1 */  jal   compress_filename_string
 /* 08ED3C 8008E13C 24050003 */   li    $a1, 3
 /* 08ED40 8008E140 8FAC0038 */  lw    $t4, 0x38($sp)
 /* 08ED44 8008E144 3C04800E */  lui   $a0, %hi(gSaveFileIndex) # $a0, 0x800e

@@ -414,7 +414,7 @@ MenuElement D_800E0CEC[11];
 MenuElement D_800E0E4C[9];
 
 // Valid characters for name input. Must be u8, not char.
-extern u8 D_800E0F6C[32];
+extern u8 gFileNameValidChars[32];
 
 extern s32 D_800E0F8C;
 extern s32 D_800E0F90;

@@ -102,7 +102,7 @@ glabel func_8000E2B4
 /* 00F01C 8000E41C A4600000 */  sh    $zero, ($v1)
 /* 00F020 8000E420 AC600118 */  sw    $zero, 0x118($v1)
 /* 00F024 8000E424 A0690003 */  sb    $t1, 3($v1)
-/* 00F028 8000E428 0C0270C3 */  jal   func_8009C30C
+/* 00F028 8000E428 0C0270C3 */  jal   get_filtered_cheats
 /* 00F02C 8000E42C AFA2003C */   sw    $v0, 0x3c($sp)
 /* 00F030 8000E430 8FA4003C */  lw    $a0, 0x3c($sp)
 /* 00F034 8000E434 30480010 */  andi  $t0, $v0, 0x10
@@ -114,7 +114,7 @@ glabel func_8000E2B4
 /* 00F04C 8000E44C 46062202 */  mul.s $f8, $f4, $f6
 /* 00F050 8000E450 E4880008 */  swc1  $f8, 8($a0)
 .L8000E454:
-/* 00F054 8000E454 0C0270C3 */  jal   func_8009C30C
+/* 00F054 8000E454 0C0270C3 */  jal   get_filtered_cheats
 /* 00F058 8000E458 AFA4003C */   sw    $a0, 0x3c($sp)
 /* 00F05C 8000E45C 8FA4003C */  lw    $a0, 0x3c($sp)
 /* 00F060 8000E460 304A0020 */  andi  $t2, $v0, 0x20

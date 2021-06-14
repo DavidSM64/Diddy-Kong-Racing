@@ -70,7 +70,7 @@ s8 D_801263DC[4];
 s32 D_801263E0;
 s32 D_801263E4;
 s8 players_character_array[8];
-s8 D_801263F0[8];
+s8 gCharacterIdSlots[8];
 s32 D_801263F8[8];
 u8 D_80126418[8];
 u8 D_80126420[8];
@@ -186,13 +186,13 @@ s32 D_80126924;
 s32 D_80126928;
 s32 D_8012692C;
 s32 D_80126930[36];
-s8 gPlayerVehicle[4]; // Unknown number of entries.
+s8 gPlayerSelectVehicle[4]; // Unknown number of entries.
 s32 D_801269C4;
 s32 D_801269C8;
 s32 D_801269CC;
 s32 D_801269D0[3];
 s32 D_801269DC;
-u32* D_801269E0;
+u32 *D_801269E0;
 s32 D_801269E4;
 s32 D_801269E8;
 s32 D_801269EC;
@@ -227,7 +227,7 @@ s32 D_80126A90;
 s32 D_80126A94;
 s32 D_80126A98;
 s32 D_80126A9C;
-s32* D_80126AA0[16];
+s32 *D_80126AA0[16];
 s32 D_80126AE0[16];
 s32 D_80126B20[16];
 s32 D_80126B60[4];
@@ -306,7 +306,7 @@ s32 gIsInAdventureTwo = 0;
 s32 D_800DF498 = 0;
 s32 D_800DF49C = 0; // Currently unknown, might be a different type.
 
-unk800DF4A0* D_800DF4A0 = NULL;
+unk800DF4A0 *D_800DF4A0 = NULL;
 
 u8 D_800DF4A4 = 0xFF;
 u8 D_800DF4A8 = 0xFF;
@@ -485,7 +485,7 @@ s32 D_800DFBBC[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 s32 D_800DFBDC = 0;
 
 // Unused?
-s32* D_800DFBE0[10] = {
+s32 *D_800DFBE0[10] = {
     D_800DFAE4, D_800DFAFC, D_800DFB14, D_800DFB2C,
     D_800DFB40, D_800DFB5C, D_800DFB8C, D_800DFBA4, 
     D_800DFB74, D_800DFBBC
@@ -897,7 +897,7 @@ s32 D_800E096C = 0;
 s32 D_800E0970 = 0;
 s32 D_800E0974 = 0;
 const f32 D_800E7D04[1] = { 0.5f }; // .rodata
-f32* D_800E0978 = D_800E7D04; // .data
+f32 *D_800E0978 = D_800E7D04; // .data
 s32 D_800E097C = 0;
 s32 D_800E0980 = 0;
 s32 D_800E0984 = 0;
@@ -947,7 +947,7 @@ unk800DFC10 D_800E0AC0 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0AD0 = { NULL, 0, 0, NULL, 0 };
 unk800DFC10 D_800E0AE0 = { NULL, 0, 0, NULL, 0 };
 
-unk800DFC10* D_800E0AF0[10] = {
+unk800DFC10 *D_800E0AF0[10] = {
     &D_800E0A50, &D_800E0A60, &D_800E0A70, &D_800E0A80, 
     &D_800E0A90, &D_800E0AA0, &D_800E0AB0, &D_800E0AC0, 
     &D_800E0AD0, &D_800E0AE0
@@ -1030,7 +1030,8 @@ MenuElement D_800E0E4C[9] = {
 };
 
 // Valid characters for name input. Must be u8, not char.
-u8 D_800E0F6C[32] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.?    ";
+// The length of the array must be a power of two.
+u8 gFileNameValidChars[32] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.?    ";
 
 s32 D_800E0F8C = 0;
 s32 D_800E0F90 = 192;
@@ -1147,7 +1148,7 @@ s16 D_800E13A8[138] = {
     0x006C, 0x00CE
 };
 
-s16* D_800E14BC[32] = {
+s16 *D_800E14BC[32] = {
     NULL, NULL, NULL, NULL,
     &D_800E13A8[126], &D_800E13A8[90], &D_800E13A8[126], &D_800E13A8[24],
     NULL, NULL , &D_800E13A8[72], &D_800E13A8[90],
@@ -1514,7 +1515,7 @@ Settings *get_settings(void);
 void func_8009C4A8(s16 *arg0);
 void func_8009C674(s16 *arg0);
 void func_8008E4B0(void);
-s8* func_8001E29C(s32 arg0);
+s8 *func_8001E29C(s32 arg0);
 void func_80001D04(s32, s32*);
 void func_800660EC(f32 arg0);
 void func_8009C508(s32 arg0);
@@ -1823,7 +1824,7 @@ void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
 
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80081F4C.s")
-GLOBAL_ASM("asm/non_matchings/menu/DrawMenuText.s")
+GLOBAL_ASM("asm/non_matchings/menu/draw_menu_element.s")
 
 void func_800828B8(void) {
     s32 i;
@@ -1859,15 +1860,15 @@ void func_800829F8(s32 arg0, s32 arg1) {
     D_800DF46C += arg1;
     
     if (D_800DF46C & 0x10) {
-        func_8007F900(func_8009EB20());
-        func_800C42EC(0);
-        func_800C4384(0xFF, 0xFF, 0xFF, 0, 0xFF);
-        func_800C43CC(0, 0, 0, 0);
+        func_8007F900(get_language());
+        set_text_font(0);
+        set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+        set_text_background_color(0, 0, 0, 0);
         temp = 0xD0;
         if (osTvType == 0) {
             temp = 0xEA;
         }
-        func_800C4440(arg0, -0x8000, temp, D_800DF4A0->unk25C, 0xC);
+        draw_text(arg0, -0x8000, temp, D_800DF4A0->unk25C, 0xC);
     }
 }
 
@@ -1905,7 +1906,7 @@ void func_80082FAC(void) {
     if ((D_80126448 & 0x2000000) == 0) {
         func_800C2AF4(0);
     }
-    func_8007F900(func_8009EB20());
+    func_8007F900(get_language());
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80083098.s")
@@ -1914,7 +1915,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008377C.s")
 GLOBAL_ASM("asm/non_matchings/menu/menu_title_screen_loop.s")
 
 void func_80084118(void) {
-    func_8009C4A8((s16*)D_800DF7C4);
+    func_8009C4A8((s16 *)D_800DF7C4);
     func_80000BE0(0x10);
     func_800660D0();
     func_800C422C(2);
@@ -1926,7 +1927,7 @@ void menu_options_init(void) {
     D_800DF47C = 0;
     func_800C01D8(D_800DF77C);
     func_800C4170(2);
-    func_800C42EC(2);
+    set_text_font(2);
     func_80000BE0(0x18);
     func_80000B34(0x18);
     func_80000B18();
@@ -1937,17 +1938,17 @@ void func_800841B8(s32 arg0) {
     s32 phi_a3;
     s32 phi_s2;
 
-    func_800C42EC(2);
-    func_800C43CC(0, 0, 0, 0);
-    func_800C4384(0, 0, 0, 0xFF, 0x80);
-    func_800C4440(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk90, 0xC);
-    func_800C4384(0xFF, 0xFF, 0xFF, 0, 0xFF);
-    func_800C4440(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk90, 0xC);
+    set_text_font(2);
+    set_text_background_color(0, 0, 0, 0);
+    set_text_color(0, 0, 0, 0xFF, 0x80);
+    draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk90, 0xC);
+    set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk90, 0xC);
     
     phi_s1 = 0;
     phi_s2 = 0x4C;
     
-    func_800C42EC(0);
+    set_text_font(0);
     
     while(D_800DFA10[phi_s1] != NULL) {
         if (phi_s1 == D_800DF460) {
@@ -1958,8 +1959,8 @@ void func_800841B8(s32 arg0) {
         } else {
             phi_a3 = 0;
         }
-        func_800C4384(0xFF, 0xFF, 0xFF, phi_a3, 0xFF);
-        func_800C4440(&D_801263A0, -0x8000, phi_s2, D_800DFA10[phi_s1], 0xC);
+        set_text_color(0xFF, 0xFF, 0xFF, phi_a3, 0xFF);
+        draw_text(&D_801263A0, -0x8000, phi_s2, D_800DFA10[phi_s1], 0xC);
         
         phi_s1++;
         phi_s2 += 0x1C;
@@ -2017,7 +2018,7 @@ s32 menu_options_loop(s32 arg0) {
         func_80001D04(0xEF, 0);
     } else if (D_800DF460 == 0 && analogX != 0) {
         // Change language
-        s32 temp_v0 = func_8009EB20();
+        s32 temp_v0 = get_language();
         if ((temp_v0 >> 0x1F) == 0 && temp_v0 == 0) {
             set_language(2); // Sets language to french
         } else {
@@ -2599,7 +2600,7 @@ void func_800887E8(void) {
     D_801263E0 = 0;
     D_801263BC = 0;
     D_80126A68 = -1;
-    func_8007F900(func_8009EB20());
+    func_8007F900(get_language());
     if (func_80087F14(&D_80126A68, 0) == 0) {
         D_800DF47C = 0;
     } else if (func_8008832C() == 0) {
@@ -2848,20 +2849,20 @@ void func_8008AF00(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_init.s")
 
 void func_8008B20C(s32 arg0) {
-    s32 temp;
+    s32 yPos;
     if (D_800DF47C >= -0x16 && D_800DF47C < 0x17) {
-        func_800C42EC(2);
-        func_800C43CC(0, 0, 0, 0);
-        func_800C4384(0, 0, 0, 0xFF, 0x80);
-        func_800C4440(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk21C, 0xC);
-        func_800C4384(0xFF, 0xFF, 0xFF, 0, 0xFF);
-        func_800C4440(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk21C, 0xC);
+        set_text_font(2); // Set font to the Big Yellow Text
+        set_text_background_color(0, 0, 0, 0);
+        set_text_color(0, 0, 0, 0xFF, 0x80);
+        draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk21C, 0xC); // Draw "Player Select" text drop shadow
+        set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+        draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk21C, 0xC); // Draw "Player Select" text
         if (D_800DF480 == D_800DF4BC && D_800DF4BC > 0) {
-            temp = 0xD0;
+            yPos = 0xD0;
             if (osTvType == 0) {
-                temp = 0xEA;
+                yPos = 0xEA;
             }
-            func_800C4440(&D_801263A0, 0xA0, temp, D_800E8230 /* "OK?" */, 0xC);
+            draw_text(&D_801263A0, 0xA0, yPos, D_800E8230 /* "OK?" */, 0xC);
         }
         func_8007B3D0(&D_801263A0);
         func_800660EC(40.0f);
@@ -2931,7 +2932,7 @@ s32 menu_character_select_loop(s32 arg0) {
             phi_a0 = 0;
             for(i = 0; i < 4; i++) {
                 if (D_801263D4[i]) {
-                    D_801263F0[phi_a0] = (*D_801263CC)[players_character_array[i]].unkC;
+                    gCharacterIdSlots[phi_a0] = (*D_801263CC)[players_character_array[i]].unkC;
                     phi_a0++;
                 }
             }
@@ -2977,7 +2978,7 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
     someBool = 1;
     while (someBool && j < arg2 && arg1[j] != -1) {
         someBool = 0;
-        if ((func_8009C30C() & 0x400000) == 0) {
+        if ((get_filtered_cheats() & 0x400000) == 0) {
             i = 0;
             while(i < 4 && !someBool){
                 if (i != arg0 && players_character_array[i] == arg1[j]) {
@@ -3018,7 +3019,7 @@ void menu_caution_init(void) {
 
 void func_8008C4E8(void);
 
-void DrawMenuText(s32, MenuElement*, f32);
+void draw_menu_element(s32, MenuElement*, f32);
 
 s32 menu_caution_loop(s32 arg0) {
     if (D_800DF47C != 0) {
@@ -3033,7 +3034,7 @@ s32 menu_caution_loop(s32 arg0) {
         }
     }
     if (D_800DF47C < 0x14) {
-        DrawMenuText(1, D_800DFFD8, 1.0f);
+        draw_menu_element(1, D_800DFFD8, 1.0f);
     }
     if (D_800DF47C >= 0x1F) {
         func_8008C4E8();
@@ -3132,7 +3133,7 @@ void func_8008C698(s32 arg0) {
             D_800DF7A0 = 0;
         }
         
-        DrawMenuText(1, (MenuElement*)*D_80126460, 1.0f);
+        draw_menu_element(1, (MenuElement*)*D_80126460, 1.0f);
         func_80080BC8(&D_801263A0);
     }
 }
@@ -3467,7 +3468,7 @@ s32 func_80092BE0(s32 arg0) {
     s32 index;
     s32 temp;
     
-    trackIdArray = (s8*)func_8001E29C(0x1C);
+    trackIdArray = (s8 *)func_8001E29C(0x1C);
     
     index = 0;
     temp = -1;
@@ -3509,7 +3510,7 @@ void menu_5_init(void) {
     D_801263BC = 0;
     D_800DF47C = 0;
     temp_s0 = settings->unk4C->unk2;
-    gPlayerVehicle = func_8006B0AC(temp_s0);
+    gPlayerSelectVehicle = func_8006B0AC(temp_s0);
     temp_v0_2 = func_8006B14C(temp_s0);
     if (temp_v0_2 != 5) {
         if (temp_v0_2 != 8) {
@@ -3641,7 +3642,7 @@ void func_80096790(void) {
     
     temp2 = (s8*)func_8006BDB0();
     func_8009C4A8(D_800E0A24);
-    temp = *temp2 - 1; // temp is $v1, when it should be $v0!
+    temp = *temp2 - 1;
     
     if (D_80126BB8) {
         func_8009C508(D_800E0710[temp * 3]);
@@ -3703,19 +3704,25 @@ void func_800976CC(void) {
     func_800C422C(2);
 }
 
-void func_800976F8(u32 arg0, char *output, s32 length) {
+/**
+ * Takes in a compressed filename integer, and decompresses it to a string.
+ * Each character takes up 5 bits, so up to 6 chars can fit in the integer.
+ */
+void decompress_filename_string(u32 compressedFilename, char *output, s32 length) {
     s32 index;
-    output[length] = 0; // Set null terminator
-    index = length - 1;
-    while(index >= 0){
+    output[length] = '\0'; // Set null terminator at the end
+    for(index = length - 1; index >= 0; ) {
         index--;
-        // D_800E0F6C[0x20] = "ABCDEFGHIJKLMNOPQRSTYVWXYZ.?    " = valid ascii chars for name input.
-        output[index + 1] = D_800E0F6C[arg0 & 0x1F];
-        arg0 = arg0 >> 5;
+        output[index + 1] = gFileNameValidChars[compressedFilename & (sizeof(gFileNameValidChars) - 1)];
+        compressedFilename /= sizeof(gFileNameValidChars); // compressedFilename >>= 5;
     }
 }
 
-s32 func_80097744(unsigned char *arg0, s32 arg1) {
+/**
+ * Takes in a string, and compresses it into an integer.
+ * Each character takes up 5 bits, so up to 6 chars can fit in the integer.
+ */
+s32 compress_filename_string(unsigned char *filename, s32 length) {
     s32 i;
     u32 output;
     u8 processingChars;
@@ -3725,8 +3732,8 @@ s32 func_80097744(unsigned char *arg0, s32 arg1) {
     output = 0;
     processingChars = 1;
     
-    for (i = 0; i < arg1; i++) {
-        if (arg0[i] == '\0') {
+    for (i = 0; i < length; i++) {
+        if (filename[i] == '\0') {
             processingChars = 0;
         }
         
@@ -3734,19 +3741,19 @@ s32 func_80097744(unsigned char *arg0, s32 arg1) {
             currentChar = ' ';
             charIndex = 0;
         } else {
-            currentChar = arg0[i];
+            currentChar = filename[i];
             charIndex = 0;
         }
         
-        while (currentChar != D_800E0F6C[charIndex]) {
+        while (currentChar != gFileNameValidChars[charIndex]) {
             charIndex++;
-            if (charIndex >= 0x1F) {
+            if (charIndex >= (s32)(sizeof(gFileNameValidChars) - 1)) {
                 break;
             }
         }
         
-        output <<= 5;
-        output |= charIndex & 0x1F;
+        output *= sizeof(gFileNameValidChars); // output <<= 5;
+        output |= charIndex & (sizeof(gFileNameValidChars) - 1);
     }
     
     return output;
@@ -3846,7 +3853,7 @@ void menu_trophy_race_round_init(void) {
     }
     
     for(i = 0; i < D_800DF4BC; i++){
-        gPlayerVehicle[i] = func_8006B0AC(temp);
+        gPlayerSelectVehicle[i] = func_8006B0AC(temp);
     }
     
     func_8006DB14(func_8006B0AC(temp));
@@ -3876,16 +3883,16 @@ void func_800983C0(s32 arg0) {
     
     sp28 = func_8006BDDC(func_8006B1D4(gTrophyRaceWorldId));
     sp24 = func_8006BDDC(sp20[((gTrophyRaceWorldId - 1) * 6) + D_800E0FEC]);
-    func_800C43CC(0, 0, 0, 0);
-    func_800C42EC(2);
-    func_800C4384(0, 0, 0, 0xFF, 0x80);
-    func_800C4440(&D_801263A0, 0xA1, 0x23, sp28, 0xC);
-    func_800C4440(&D_801263A0, 0xA1, 0x43, D_800DF4A0->unk118, 0xC);
-    func_800C4384(0xFF, 0xFF, 0xFF, 0, 0xFF);
-    func_800C4440(&D_801263A0, 0xA0, 0x20, sp28, 0xC);
-    func_800C4440(&D_801263A0, 0xA0, 0x40, D_800DF4A0->unk118, 0xC);
-    func_800C4440(&D_801263A0, 0xA0, sp2C + 0xB0, D_800DF4A0->unk228[D_800E0FEC], 0xC);
-    func_800C4440(&D_801263A0, 0xA0, sp2C + 0xD0, sp24, 0xC);
+    set_text_background_color(0, 0, 0, 0);
+    set_text_font(2);
+    set_text_color(0, 0, 0, 0xFF, 0x80);
+    draw_text(&D_801263A0, 0xA1, 0x23, sp28, 0xC);
+    draw_text(&D_801263A0, 0xA1, 0x43, D_800DF4A0->unk118, 0xC);
+    set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    draw_text(&D_801263A0, 0xA0, 0x20, sp28, 0xC);
+    draw_text(&D_801263A0, 0xA0, 0x40, D_800DF4A0->unk118, 0xC);
+    draw_text(&D_801263A0, 0xA0, sp2C + 0xB0, D_800DF4A0->unk228[D_800E0FEC], 0xC);
+    draw_text(&D_801263A0, 0xA0, sp2C + 0xD0, sp24, 0xC);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_round_loop.s")
@@ -3926,7 +3933,7 @@ void func_80098EBC(s32 arg0) {
     }
     
     if (D_801263E0 == 2 || D_801263E0 == 3) {
-        DrawMenuText(1, &D_800E1048, 1.0f);
+        draw_menu_element(1, &D_800E1048, 1.0f);
     }
 }
 #endif
@@ -4143,11 +4150,14 @@ void func_8009BE5C(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8009BF20.s")
 
-void func_8009C154(void) {
+/**
+ * Reset the character slot indices from 0 to 7.
+ */
+void reset_character_id_slots(void) {
     s32 i;
     D_800DF4C8 = 1;
     for(i = 0; i < 8; i++) {
-        D_801263F0[i] = i;
+        gCharacterIdSlots[i] = i;
     }
 }
 
@@ -4168,21 +4178,34 @@ s32 func_8009C1B0(void) {
     return D_800DF4D4;
 }
 
-s8 func_8009C228(s32 arg0) {
-    return D_801263F0[arg0];
+/**
+ * Gets the character id from a slot index. Slot should be a value within [0,7]
+ */
+s8 get_character_id_from_slot(s32 slot) {
+    return gCharacterIdSlots[slot];
 }
 
-// Unused duplicate of func_8009C228()?
-s8 func_8009C23C(s32 arg0) {
-    return D_801263F0[arg0];
+/**
+ * Unused duplicate of get_character_id_from_slot()
+ */
+s8 get_character_id_from_slot_unused(s32 slot) {
+    return gCharacterIdSlots[slot];
 }
 
-s8 func_8009C250(s32 arg0) {
-    return gPlayerVehicle[arg0];
+/**
+ * Gets the selected vehicle index for a player.
+ * 0 = Car, 1 = Hovercraft, 2 = Plane
+ */
+s8 get_player_selected_vehicle(s32 playerNum) {
+    return gPlayerSelectVehicle[playerNum];
 }
 
-void func_8009C264(s32 arg0, s32 arg1) {
-    gPlayerVehicle[arg0] = arg1;
+/**
+ * Sets the selected vehicle index for a player.
+ * 0 = Car, 1 = Hovercraft, 2 = Plane
+ */
+void set_player_selected_vehicle(s32 playerNum, s32 index) {
+    gPlayerSelectVehicle[playerNum] = index;
 }
 
 s8* func_8009C274(void) {
@@ -4203,16 +4226,25 @@ void func_8009C2C4(s32 arg0) {
     D_800DF4B8 = arg0;
 }
 
+/**
+ * Returns if the player is playing in the tracks mode instead of adventure.
+ */
 s32 is_in_tracks_mode(void) {
     return D_800DF4B8;
 }
 
+/**
+ * Sets the active & unlocked magic code flags.
+ */
 void set_magic_code_flags(s32 flags) {
     gActiveMagicCodes |= flags;
     gUnlockedMagicCodes |= flags;
 }
 
-s32 func_8009C30C(void) {
+/**
+ * Filters active cheats based on different conditions. 
+ */
+s32 get_filtered_cheats(void) {
     s32 cheats = gActiveMagicCodes;
     if (D_800DF4B8 == 0 || func_8000E4C8() != 0) {
         cheats &= 0x1B400133;
@@ -4514,39 +4546,48 @@ s64 func_8009EB08(void) {
     return D_80126448;
 }
 
-s32 func_8009EB20(void) {
-    s32 val = 0;
+/**
+ * Returns the current language being used by the game.
+ * 0 = English, 1 = German, 2 = French, 3 = Japanese
+ */
+s32 get_language(void) {
+    s32 language = 0; // English
     switch(D_80126448 & 0xC) {
-        case 4: 
-            val = 1;
+        case 4: // German
+            language = 1;
             break;
-        case 8: 
-            val = 2;
+        case 8: // French
+            language = 2;
             break;
-        case 12: 
-            val = 3;
+        case 12: // "Japanese"
+            language = 3;
             break;
     }
-    return val;
+    return language;
 }
 
+/**
+ * Sets the language used by the game. Even though German is not selectable in the US version, it is 
+ * still fully intact. Japanese is not properly implemented in the US 1.0 version of the game. If you 
+ * tried to switch to it, all you would see is the word "Japanese" used everywhere as a placeholder.
+ */
 void set_language(s32 language) {
-    s64 sp18 = 0; // English
+    s64 langFlag = 0; // English
     
     switch(language) {
         case 1: // German
-            sp18 = 4;
+            langFlag = 4;
             break;
         case 2: // French
-            sp18 = 8;
+            langFlag = 8;
             break;
-        case 3: // Japanese
-            sp18 = 12;
+        case 3: // "Japanese"
+            langFlag = 12;
             break;
     }
     
-    D_80126448 &= 0xFFFFFFFFFFFFFFF3;
-    D_80126448 |= sp18;
+    D_80126448 &= ~0xC;
+    D_80126448 |= langFlag;
     
     func_8007F900();
     func_8006ECE0();

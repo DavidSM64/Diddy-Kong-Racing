@@ -11,7 +11,7 @@ glabel func_8003DFCC
 /* 03EBF0 8003DFF0 24080014 */  li    $t0, 20
 /* 03EBF4 8003DFF4 A1280010 */  sb    $t0, 0x10($t1)
 /* 03EBF8 8003DFF8 AFA5001C */  sw    $a1, 0x1c($sp)
-/* 03EBFC 8003DFFC 0C0270C3 */  jal   func_8009C30C
+/* 03EBFC 8003DFFC 0C0270C3 */  jal   get_filtered_cheats
 /* 03EC00 8003E000 AFA40018 */   sw    $a0, 0x18($sp)
 /* 03EC04 8003E004 8FA40018 */  lw    $a0, 0x18($sp)
 /* 03EC08 8003E008 8FA5001C */  lw    $a1, 0x1c($sp)
@@ -88,7 +88,7 @@ glabel func_8003DFCC
 /* 03ED04 8003E104 A4400004 */  sh    $zero, 4($v0)
 /* 03ED08 8003E108 E4500000 */  swc1  $f16, ($v0)
 /* 03ED0C 8003E10C AC80007C */  sw    $zero, 0x7c($a0)
-/* 03ED10 8003E110 0C0270C3 */  jal   func_8009C30C
+/* 03ED10 8003E110 0C0270C3 */  jal   get_filtered_cheats
 /* 03ED14 8003E114 AFA40018 */   sw    $a0, 0x18($sp)
 /* 03ED18 8003E118 8FA40018 */  lw    $a0, 0x18($sp)
 /* 03ED1C 8003E11C 30480800 */  andi  $t0, $v0, 0x800

@@ -85,10 +85,10 @@ glabel menu_character_select_loop
 /* 08CA5C 8008BE5C 3C038012 */  lui   $v1, %hi(D_801263D4) # $v1, 0x8012
 /* 08CA60 8008BE60 3C078012 */  lui   $a3, %hi(players_character_array) # $a3, 0x8012
 /* 08CA64 8008BE64 3C068012 */  lui   $a2, %hi(D_801263CC) # $a2, 0x8012
-/* 08CA68 8008BE68 3C058012 */  lui   $a1, %hi(D_801263F0) # $a1, 0x8012
+/* 08CA68 8008BE68 3C058012 */  lui   $a1, %hi(gCharacterIdSlots) # $a1, 0x8012
 /* 08CA6C 8008BE6C 8FAB0024 */  lw    $t3, 0x24($sp)
 /* 08CA70 8008BE70 00002025 */  move  $a0, $zero
-/* 08CA74 8008BE74 24A563F0 */  addiu $a1, %lo(D_801263F0) # addiu $a1, $a1, 0x63f0
+/* 08CA74 8008BE74 24A563F0 */  addiu $a1, %lo(gCharacterIdSlots) # addiu $a1, $a1, 0x63f0
 /* 08CA78 8008BE78 24C663CC */  addiu $a2, %lo(D_801263CC) # addiu $a2, $a2, 0x63cc
 /* 08CA7C 8008BE7C 24E763E8 */  addiu $a3, %lo(players_character_array) # addiu $a3, $a3, 0x63e8
 /* 08CA80 8008BE80 246363D4 */  addiu $v1, %lo(D_801263D4) # addiu $v1, $v1, 0x63d4

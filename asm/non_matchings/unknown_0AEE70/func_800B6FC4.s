@@ -38,7 +38,7 @@ glabel func_800B6FC4
 /* 0B7C50 800B7050 02202825 */  move  $a1, $s1
 /* 0B7C54 800B7054 0C0322EC */  jal   osRecvMesg
 /* 0B7C58 800B7058 24060001 */   li    $a2, 1
-/* 0B7C5C 800B705C 0C0270C3 */  jal   func_8009C30C
+/* 0B7C5C 800B705C 0C0270C3 */  jal   get_filtered_cheats
 /* 0B7C60 800B7060 00000000 */   nop   
 /* 0B7C64 800B7064 00527024 */  and   $t6, $v0, $s2
 /* 0B7C68 800B7068 11C0FFF9 */  beqz  $t6, .L800B7050

@@ -83,7 +83,7 @@ glabel L800A0FAC
 /* 0A1BC0 800A0FC0 A6090006 */  sh    $t1, 6($s0)
 /* 0A1BC4 800A0FC4 A6000000 */  sh    $zero, ($s0)
 .L800A0FC8:
-/* 0A1BC8 800A0FC8 0C0270C3 */  jal   func_8009C30C
+/* 0A1BC8 800A0FC8 0C0270C3 */  jal   get_filtered_cheats
 /* 0A1BCC 800A0FCC 00000000 */   nop   
 /* 0A1BD0 800A0FD0 304A0004 */  andi  $t2, $v0, 4
 /* 0A1BD4 800A0FD4 1140000C */  beqz  $t2, .L800A1008
@@ -184,7 +184,7 @@ glabel L800A0FAC
 /* 0A1D40 800A1140 26100420 */  addiu $s0, $s0, 0x420
 /* 0A1D44 800A1144 A6000000 */  sh    $zero, ($s0)
 /* 0A1D48 800A1148 A6000002 */  sh    $zero, 2($s0)
-/* 0A1D4C 800A114C 0C0270C3 */  jal   func_8009C30C
+/* 0A1D4C 800A114C 0C0270C3 */  jal   get_filtered_cheats
 /* 0A1D50 800A1150 A60D0006 */   sh    $t5, 6($s0)
 /* 0A1D54 800A1154 304C0004 */  andi  $t4, $v0, 4
 /* 0A1D58 800A1158 1180000C */  beqz  $t4, .L800A118C
