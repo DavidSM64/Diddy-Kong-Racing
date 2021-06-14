@@ -3,7 +3,6 @@
 
 .section .text
 
-.include "globals.inc"
 .include "macros.inc"
 
 .set noat      # allow manual use of $at

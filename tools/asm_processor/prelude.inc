@@ -1,4 +1,3 @@
-.include "globals.inc"
 .include "macros.inc"
 
 # assembler directives
