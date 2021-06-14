@@ -1,7 +1,6 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800D4560 */
 
-.include "globals.inc"
 .include "macros.inc"
 
 .set noat      # allow manual use of $at
