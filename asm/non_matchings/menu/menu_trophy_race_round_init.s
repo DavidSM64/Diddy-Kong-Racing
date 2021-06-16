@@ -50,8 +50,8 @@ glabel menu_trophy_race_round_init
 /* 098F1C 8009831C 8E690000 */  lw    $t1, ($s3)
 /* 098F20 80098320 00008825 */  move  $s1, $zero
 /* 098F24 80098324 1920000A */  blez  $t1, .L80098350
-/* 098F28 80098328 3C128012 */   lui   $s2, %hi(gPlayerVehicle) # $s2, 0x8012
-/* 098F2C 8009832C 265269C0 */  addiu $s2, %lo(gPlayerVehicle) # addiu $s2, $s2, 0x69c0
+/* 098F28 80098328 3C128012 */   lui   $s2, %hi(gPlayerSelectVehicle) # $s2, 0x8012
+/* 098F2C 8009832C 265269C0 */  addiu $s2, %lo(gPlayerSelectVehicle) # addiu $s2, $s2, 0x69c0
 .L80098330:
 /* 098F30 80098330 0C01AC2B */  jal   func_8006B0AC
 /* 098F34 80098334 02002025 */   move  $a0, $s0

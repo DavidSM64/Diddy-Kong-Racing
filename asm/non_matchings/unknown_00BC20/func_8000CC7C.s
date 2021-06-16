@@ -664,7 +664,7 @@ glabel func_8000CC7C
 /* 00E19C 8000D59C 10400006 */  beqz  $v0, .L8000D5B8
 /* 00E1A0 8000D5A0 00002025 */   move  $a0, $zero
 .L8000D5A4:
-/* 00E1A4 8000D5A4 0C027094 */  jal   func_8009C250
+/* 00E1A4 8000D5A4 0C027094 */  jal   get_player_selected_vehicle
 /* 00E1A8 8000D5A8 AFA60054 */   sw    $a2, 0x54($sp)
 /* 00E1AC 8000D5AC 8FA60054 */  lw    $a2, 0x54($sp)
 /* 00E1B0 8000D5B0 1000000B */  b     .L8000D5E0
@@ -676,7 +676,7 @@ glabel func_8000CC7C
 /* 00E1C4 8000D5C4 14200006 */  bnez  $at, .L8000D5E0
 /* 00E1C8 8000D5C8 00000000 */   nop   
 /* 00E1CC 8000D5CC 86C4000E */  lh    $a0, 0xe($s6)
-/* 00E1D0 8000D5D0 0C027094 */  jal   func_8009C250
+/* 00E1D0 8000D5D0 0C027094 */  jal   get_player_selected_vehicle
 /* 00E1D4 8000D5D4 AFA60054 */   sw    $a2, 0x54($sp)
 /* 00E1D8 8000D5D8 8FA60054 */  lw    $a2, 0x54($sp)
 /* 00E1DC 8000D5DC 0040F025 */  move  $fp, $v0
@@ -878,7 +878,7 @@ glabel func_8000CC7C
 .L8000D8A4:
 /* 00E4A4 8000D8A4 A2600185 */  sb    $zero, 0x185($s3)
 .L8000D8A8:
-/* 00E4A8 8000D8A8 0C0270C3 */  jal   func_8009C30C
+/* 00E4A8 8000D8A8 0C0270C3 */  jal   get_filtered_cheats
 /* 00E4AC 8000D8AC 00000000 */   nop   
 /* 00E4B0 8000D8B0 304E0080 */  andi  $t6, $v0, 0x80
 /* 00E4B4 8000D8B4 11C0000B */  beqz  $t6, .L8000D8E4
@@ -1235,7 +1235,7 @@ glabel L8000D98C
 /* 00E9C4 8000DDC4 1420FFEE */  bnez  $at, .L8000DD80
 /* 00E9C8 8000DDC8 24630004 */   addiu $v1, $v1, 4
 .L8000DDCC:
-/* 00E9CC 8000DDCC 0C0270C3 */  jal   func_8009C30C
+/* 00E9CC 8000DDCC 0C0270C3 */  jal   get_filtered_cheats
 /* 00E9D0 8000DDD0 00000000 */   nop   
 /* 00E9D4 8000DDD4 30590010 */  andi  $t9, $v0, 0x10
 /* 00E9D8 8000DDD8 13200006 */  beqz  $t9, .L8000DDF4
@@ -1246,7 +1246,7 @@ glabel L8000D98C
 /* 00E9EC 8000DDEC 460A4402 */  mul.s $f16, $f8, $f10
 /* 00E9F0 8000DDF0 E6300008 */  swc1  $f16, 8($s1)
 .L8000DDF4:
-/* 00E9F4 8000DDF4 0C0270C3 */  jal   func_8009C30C
+/* 00E9F4 8000DDF4 0C0270C3 */  jal   get_filtered_cheats
 /* 00E9F8 8000DDF8 00000000 */   nop   
 /* 00E9FC 8000DDFC 304F0020 */  andi  $t7, $v0, 0x20
 /* 00EA00 8000DE00 11E00006 */  beqz  $t7, .L8000DE1C

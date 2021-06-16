@@ -450,7 +450,7 @@ typedef struct unk80056930 {
 void func_80057048(unk800570A4_2 *arg0, s32 arg1);
 
 void func_80056930(unk800570A4_2 *arg0, unk80056930 *arg1) {
-    if ((func_8009C30C() & 0x100) != 0) {
+    if ((get_filtered_cheats() & 0x100) != 0) {
         func_800570B8(arg0, 0x162, 8, 0x82);
     } else {
         func_80057048(arg0, arg1->unk3 + 0x156);

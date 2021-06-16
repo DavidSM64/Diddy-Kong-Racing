@@ -13,7 +13,7 @@ glabel func_800C31EC
 /* 0C3E18 800C3218 008F082A */  slt   $at, $a0, $t7
 /* 0C3E1C 800C321C 10200072 */  beqz  $at, .L800C33E8
 /* 0C3E20 800C3220 24190001 */   li    $t9, 1
-/* 0C3E24 800C3224 0C027AC8 */  jal   func_8009EB20
+/* 0C3E24 800C3224 0C027AC8 */  jal   get_language
 /* 0C3E28 800C3228 00000000 */   nop   
 /* 0C3E2C 800C322C 24010001 */  li    $at, 1
 /* 0C3E30 800C3230 10410008 */  beq   $v0, $at, .L800C3254

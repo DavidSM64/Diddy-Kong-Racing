@@ -41,7 +41,7 @@ glabel func_800AA3EC
 /* 0AB088 800AA488 46805120 */  cvt.s.w $f4, $f10
 /* 0AB08C 800AA48C 00000000 */  nop   
 /* 0AB090 800AA490 46048083 */  div.s $f2, $f16, $f4
-/* 0AB094 800AA494 0C0270C3 */  jal   func_8009C30C
+/* 0AB094 800AA494 0C0270C3 */  jal   get_filtered_cheats
 /* 0AB098 800AA498 E7A2001C */   swc1  $f2, 0x1c($sp)
 /* 0AB09C 800AA49C 8FA5002C */  lw    $a1, 0x2c($sp)
 /* 0AB0A0 800AA4A0 C7A00020 */  lwc1  $f0, 0x20($sp)

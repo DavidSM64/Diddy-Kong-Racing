@@ -22,11 +22,11 @@ glabel func_8008BB3C
 /* 08C788 8008BB88 26D60001 */  addiu $s6, $s6, 1
 .L8008BB8C:
 /* 08C78C 8008BB8C 10200017 */  beqz  $at, .L8008BBEC
-/* 08C790 8008BB90 3C188012 */   lui   $t8, %hi(D_801263F0) # $t8, 0x8012
+/* 08C790 8008BB90 3C188012 */   lui   $t8, %hi(gCharacterIdSlots) # $t8, 0x8012
 /* 08C794 8008BB94 1A00000F */  blez  $s0, .L8008BBD4
 /* 08C798 8008BB98 00008825 */   move  $s1, $zero
-/* 08C79C 8008BB9C 3C0E8012 */  lui   $t6, %hi(D_801263F0) # $t6, 0x8012
-/* 08C7A0 8008BBA0 25CE63F0 */  addiu $t6, %lo(D_801263F0) # addiu $t6, $t6, 0x63f0
+/* 08C79C 8008BB9C 3C0E8012 */  lui   $t6, %hi(gCharacterIdSlots) # $t6, 0x8012
+/* 08C7A0 8008BBA0 25CE63F0 */  addiu $t6, %lo(gCharacterIdSlots) # addiu $t6, $t6, 0x63f0
 /* 08C7A4 8008BBA4 000E9821 */  addu  $s3, $zero, $t6
 /* 08C7A8 8008BBA8 020E1021 */  addu  $v0, $s0, $t6
 /* 08C7AC 8008BBAC 24030009 */  li    $v1, 9
@@ -44,15 +44,15 @@ glabel func_8008BB3C
 .L8008BBD4:
 /* 08C7D4 8008BBD4 16200005 */  bnez  $s1, .L8008BBEC
 /* 08C7D8 8008BBD8 24030009 */   li    $v1, 9
-/* 08C7DC 8008BBDC 3C018012 */  lui   $at, %hi(D_801263F0) # $at, 0x8012
+/* 08C7DC 8008BBDC 3C018012 */  lui   $at, %hi(gCharacterIdSlots) # $at, 0x8012
 /* 08C7E0 8008BBE0 00300821 */  addu  $at, $at, $s0
-/* 08C7E4 8008BBE4 A02363F0 */  sb    $v1, %lo(D_801263F0)($at)
+/* 08C7E4 8008BBE4 A02363F0 */  sb    $v1, %lo(gCharacterIdSlots)($at)
 /* 08C7E8 8008BBE8 26100001 */  addiu $s0, $s0, 1
 .L8008BBEC:
 /* 08C7EC 8008BBEC 2A010008 */  slti  $at, $s0, 8
 /* 08C7F0 8008BBF0 10200042 */  beqz  $at, .L8008BCFC
 /* 08C7F4 8008BBF4 02009025 */   move  $s2, $s0
-/* 08C7F8 8008BBF8 271863F0 */  addiu $t8, %lo(D_801263F0) # addiu $t8, $t8, 0x63f0
+/* 08C7F8 8008BBF8 271863F0 */  addiu $t8, %lo(gCharacterIdSlots) # addiu $t8, $t8, 0x63f0
 /* 08C7FC 8008BBFC 3C148012 */  lui   $s4, %hi(D_801263CC) # $s4, 0x8012
 /* 08C800 8008BC00 269463CC */  addiu $s4, %lo(D_801263CC) # addiu $s4, $s4, 0x63cc
 /* 08C804 8008BC04 02189821 */  addu  $s3, $s0, $t8
@@ -74,8 +74,8 @@ glabel func_8008BB3C
 /* 08C83C 8008BC3C A26A0000 */   sb    $t2, ($s3)
 /* 08C840 8008BC40 10A0000D */  beqz  $a1, .L8008BC78
 /* 08C844 8008BC44 00A02025 */   move  $a0, $a1
-/* 08C848 8008BC48 3C0B8012 */  lui   $t3, %hi(D_801263F0) # $t3, 0x8012
-/* 08C84C 8008BC4C 256B63F0 */  addiu $t3, %lo(D_801263F0) # addiu $t3, $t3, 0x63f0
+/* 08C848 8008BC48 3C0B8012 */  lui   $t3, %hi(gCharacterIdSlots) # $t3, 0x8012
+/* 08C84C 8008BC4C 256B63F0 */  addiu $t3, %lo(gCharacterIdSlots) # addiu $t3, $t3, 0x63f0
 /* 08C850 8008BC50 82630000 */  lb    $v1, ($s3)
 /* 08C854 8008BC54 020B1021 */  addu  $v0, $s0, $t3
 .L8008BC58:
@@ -89,8 +89,8 @@ glabel func_8008BB3C
 /* 08C870 8008BC70 24420001 */   addiu $v0, $v0, 1
 /* 08C874 8008BC74 1212001B */  beq   $s0, $s2, .L8008BCE4
 .L8008BC78:
-/* 08C878 8008BC78 3C0D8012 */   lui   $t5, %hi(D_801263F0) # $t5, 0x8012
-/* 08C87C 8008BC7C 25AD63F0 */  addiu $t5, %lo(D_801263F0) # addiu $t5, $t5, 0x63f0
+/* 08C878 8008BC78 3C0D8012 */   lui   $t5, %hi(gCharacterIdSlots) # $t5, 0x8012
+/* 08C87C 8008BC7C 25AD63F0 */  addiu $t5, %lo(gCharacterIdSlots) # addiu $t5, $t5, 0x63f0
 /* 08C880 8008BC80 82630000 */  lb    $v1, ($s3)
 /* 08C884 8008BC84 020D1021 */  addu  $v0, $s0, $t5
 /* 08C888 8008BC88 024D2021 */  addu  $a0, $s2, $t5

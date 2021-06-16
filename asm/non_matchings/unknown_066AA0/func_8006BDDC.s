@@ -19,7 +19,7 @@ glabel func_8006BDDC
 /* 06CA18 8006BE18 01F8C821 */  addu  $t9, $t7, $t8
 /* 06CA1C 8006BE1C 8F240000 */  lw    $a0, ($t9)
 /* 06CA20 8006BE20 A3A3001B */  sb    $v1, 0x1b($sp)
-/* 06CA24 8006BE24 0C027AC8 */  jal   func_8009EB20
+/* 06CA24 8006BE24 0C027AC8 */  jal   get_language
 /* 06CA28 8006BE28 AFA4001C */   sw    $a0, 0x1c($sp)
 /* 06CA2C 8006BE2C 93A3001B */  lbu   $v1, 0x1b($sp)
 /* 06CA30 8006BE30 8FA4001C */  lw    $a0, 0x1c($sp)

@@ -182,7 +182,7 @@ glabel L8000ECD8
 /* 00F8EC 8000ECEC 1000003D */  b     .L8000EDE4
 /* 00F8F0 8000ECF0 8FAF002C */   lw    $t7, 0x2c($sp)
 glabel L8000ECF4
-/* 00F8F4 8000ECF4 0C02708A */  jal   func_8009C228
+/* 00F8F4 8000ECF4 0C02708A */  jal   get_character_id_from_slot
 /* 00F8F8 8000ECF8 00002025 */   move  $a0, $zero
 /* 00F8FC 8000ECFC A242003A */  sb    $v0, 0x3a($s2)
 /* 00F900 8000ED00 8FA7006C */  lw    $a3, 0x6c($sp)

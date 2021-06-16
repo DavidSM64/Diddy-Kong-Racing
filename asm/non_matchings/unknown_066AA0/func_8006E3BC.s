@@ -3,7 +3,7 @@ glabel func_8006E3BC
 /* 06EFC0 8006E3C0 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 06EFC4 8006E3C4 0C01A9AC */  jal   func_8006A6B0
 /* 06EFC8 8006E3C8 00000000 */   nop   
-/* 06EFCC 8006E3CC 0C027055 */  jal   func_8009C154
+/* 06EFCC 8006E3CC 0C027055 */  jal   reset_character_id_slots
 /* 06EFD0 8006E3D0 00000000 */   nop   
 /* 06EFD4 8006E3D4 27A40018 */  addiu $a0, $sp, 0x18
 /* 06EFD8 8006E3D8 0C01AC89 */  jal   func_8006B224

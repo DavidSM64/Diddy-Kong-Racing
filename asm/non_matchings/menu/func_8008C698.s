@@ -69,7 +69,7 @@ glabel func_8008C698
 .L8008C790:
 /* 08D390 8008C790 8CE50000 */  lw    $a1, ($a3)
 /* 08D394 8008C794 24040001 */  li    $a0, 1
-/* 08D398 8008C798 0C02087B */  jal   DrawMenuText
+/* 08D398 8008C798 0C02087B */  jal   draw_menu_element
 /* 08D39C 8008C79C 3C063F80 */   lui   $a2, 0x3f80
 /* 08D3A0 8008C7A0 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 08D3A4 8008C7A4 0C0202F2 */  jal   func_80080BC8

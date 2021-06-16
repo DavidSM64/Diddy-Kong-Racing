@@ -322,7 +322,7 @@ glabel L8006E0E0
 /* 06EDA8 8006E1A8 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
 /* 06EDAC 8006E1AC 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
 /* 06EDB0 8006E1B0 00002025 */  move  $a0, $zero
-/* 06EDB4 8006E1B4 0C027094 */  jal   func_8009C250
+/* 06EDB4 8006E1B4 0C027094 */  jal   get_player_selected_vehicle
 /* 06EDB8 8006E1B8 AD6C0000 */   sw    $t4, ($t3)
 /* 06EDBC 8006E1BC 3C108012 */  lui   $s0, %hi(gSettingsPtr) # $s0, 0x8012
 /* 06EDC0 8006E1C0 26103510 */  addiu $s0, %lo(gSettingsPtr) # addiu $s0, $s0, 0x3510

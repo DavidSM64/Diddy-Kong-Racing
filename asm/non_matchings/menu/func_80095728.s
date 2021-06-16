@@ -306,8 +306,8 @@ glabel L80095B34
 /* 096780 80095B80 3C013F00 */  lui   $at, 0x3f00
 /* 096784 80095B84 11C0005B */  beqz  $t6, .L80095CF4
 /* 096788 80095B88 240D0003 */   li    $t5, 3
-/* 09678C 80095B8C 3C0F8012 */  lui   $t7, %hi(gPlayerVehicle) # $t7, 0x8012
-/* 096790 80095B90 81EF69C0 */  lb    $t7, %lo(gPlayerVehicle)($t7)
+/* 09678C 80095B8C 3C0F8012 */  lui   $t7, %hi(gPlayerSelectVehicle) # $t7, 0x8012
+/* 096790 80095B90 81EF69C0 */  lb    $t7, %lo(gPlayerSelectVehicle)($t7)
 /* 096794 80095B94 90EC0049 */  lbu   $t4, 0x49($a3)
 /* 096798 80095B98 000FC080 */  sll   $t8, $t7, 2
 /* 09679C 80095B9C 00F81021 */  addu  $v0, $a3, $t8
@@ -329,11 +329,11 @@ glabel L80095B34
 /* 0967DC 80095BDC 95E40000 */  lhu   $a0, ($t7)
 /* 0967E0 80095BE0 3C058012 */  lui   $a1, %hi(D_80126390) # $a1, 0x8012
 /* 0967E4 80095BE4 24A56390 */  addiu $a1, %lo(D_80126390) # addiu $a1, $a1, 0x6390
-/* 0967E8 80095BE8 0C025DBE */  jal   func_800976F8
+/* 0967E8 80095BE8 0C025DBE */  jal   decompress_filename_string
 /* 0967EC 80095BEC 24060003 */   li    $a2, 3
-/* 0967F0 80095BF0 3C0C8012 */  lui   $t4, %hi(gPlayerVehicle) # $t4, 0x8012
+/* 0967F0 80095BF0 3C0C8012 */  lui   $t4, %hi(gPlayerSelectVehicle) # $t4, 0x8012
 /* 0967F4 80095BF4 8FA2002C */  lw    $v0, 0x2c($sp)
-/* 0967F8 80095BF8 818C69C0 */  lb    $t4, %lo(gPlayerVehicle)($t4)
+/* 0967F8 80095BF8 818C69C0 */  lb    $t4, %lo(gPlayerSelectVehicle)($t4)
 /* 0967FC 80095BFC 90580049 */  lbu   $t8, 0x49($v0)
 /* 096800 80095C00 000CC880 */  sll   $t9, $t4, 2
 /* 096804 80095C04 00597021 */  addu  $t6, $v0, $t9
@@ -343,7 +343,7 @@ glabel L80095B34
 /* 096814 80095C14 95840000 */  lhu   $a0, ($t4)
 /* 096818 80095C18 3C058012 */  lui   $a1, %hi(D_80126394) # $a1, 0x8012
 /* 09681C 80095C1C 24A56394 */  addiu $a1, %lo(D_80126394) # addiu $a1, $a1, 0x6394
-/* 096820 80095C20 0C025DBE */  jal   func_800976F8
+/* 096820 80095C20 0C025DBE */  jal   decompress_filename_string
 /* 096824 80095C24 24060003 */   li    $a2, 3
 /* 096828 80095C28 8FA2002C */  lw    $v0, 0x2c($sp)
 /* 09682C 80095C2C 3C04800E */  lui   $a0, %hi(D_800E0E4C) # $a0, 0x800e
@@ -363,7 +363,7 @@ glabel L80095B34
 /* 096864 80095C64 11A00006 */  beqz  $t5, .L80095C80
 /* 096868 80095C68 24A50FA8 */   addiu $a1, %lo(D_800E0FA8) # addiu $a1, $a1, 0xfa8
 /* 09686C 80095C6C 8C440050 */  lw    $a0, 0x50($v0)
-/* 096870 80095C70 0C025DBE */  jal   func_800976F8
+/* 096870 80095C70 0C025DBE */  jal   decompress_filename_string
 /* 096874 80095C74 24060003 */   li    $a2, 3
 /* 096878 80095C78 3C01800E */  lui   $at, %hi(D_800E0FAC) # $at, 0x800e
 /* 09687C 80095C7C AC200FAC */  sw    $zero, %lo(D_800E0FAC)($at)
@@ -436,10 +436,10 @@ glabel L80095D50
 /* 096974 80095D74 3058007F */  andi  $t8, $v0, 0x7f
 /* 096978 80095D78 1300001F */  beqz  $t8, .L80095DF8
 /* 09697C 80095D7C 304E0080 */   andi  $t6, $v0, 0x80
-/* 096980 80095D80 0C025DD1 */  jal   func_80097744
+/* 096980 80095D80 0C025DD1 */  jal   compress_filename_string
 /* 096984 80095D84 24050003 */   li    $a1, 3
-/* 096988 80095D88 3C078012 */  lui   $a3, %hi(gPlayerVehicle) # $a3, 0x8012
-/* 09698C 80095D8C 24E769C0 */  addiu $a3, %lo(gPlayerVehicle) # addiu $a3, $a3, 0x69c0
+/* 096988 80095D88 3C078012 */  lui   $a3, %hi(gPlayerSelectVehicle) # $a3, 0x8012
+/* 09698C 80095D8C 24E769C0 */  addiu $a3, %lo(gPlayerSelectVehicle) # addiu $a3, $a3, 0x69c0
 /* 096990 80095D90 80ED0000 */  lb    $t5, ($a3)
 /* 096994 80095D94 8FA3002C */  lw    $v1, 0x2c($sp)
 /* 096998 80095D98 000D7880 */  sll   $t7, $t5, 2
@@ -459,7 +459,7 @@ glabel L80095D50
 /* 0969D0 80095DD0 95E40000 */  lhu   $a0, ($t7)
 /* 0969D4 80095DD4 3C058012 */  lui   $a1, %hi(D_80126394) # $a1, 0x8012
 /* 0969D8 80095DD8 24A56394 */  addiu $a1, %lo(D_80126394) # addiu $a1, $a1, 0x6394
-/* 0969DC 80095DDC 0C025DBE */  jal   func_800976F8
+/* 0969DC 80095DDC 0C025DBE */  jal   decompress_filename_string
 /* 0969E0 80095DE0 24060003 */   li    $a2, 3
 /* 0969E4 80095DE4 8FAC002C */  lw    $t4, 0x2c($sp)
 /* 0969E8 80095DE8 00000000 */  nop   
@@ -470,10 +470,10 @@ glabel L80095D50
 /* 0969F8 80095DF8 11C0001B */  beqz  $t6, .L80095E68
 /* 0969FC 80095DFC 3C04800E */   lui   $a0, %hi(D_800E0FA8) # $a0, 0x800e
 /* 096A00 80095E00 24840FA8 */  addiu $a0, %lo(D_800E0FA8) # addiu $a0, $a0, 0xfa8
-/* 096A04 80095E04 0C025DD1 */  jal   func_80097744
+/* 096A04 80095E04 0C025DD1 */  jal   compress_filename_string
 /* 096A08 80095E08 24050003 */   li    $a1, 3
-/* 096A0C 80095E0C 3C078012 */  lui   $a3, %hi(gPlayerVehicle) # $a3, 0x8012
-/* 096A10 80095E10 24E769C0 */  addiu $a3, %lo(gPlayerVehicle) # addiu $a3, $a3, 0x69c0
+/* 096A0C 80095E0C 3C078012 */  lui   $a3, %hi(gPlayerSelectVehicle) # $a3, 0x8012
+/* 096A10 80095E10 24E769C0 */  addiu $a3, %lo(gPlayerSelectVehicle) # addiu $a3, $a3, 0x69c0
 /* 096A14 80095E14 80F80000 */  lb    $t8, ($a3)
 /* 096A18 80095E18 8FA3002C */  lw    $v1, 0x2c($sp)
 /* 096A1C 80095E1C 0018C880 */  sll   $t9, $t8, 2
@@ -493,7 +493,7 @@ glabel L80095D50
 /* 096A54 80095E54 97240000 */  lhu   $a0, ($t9)
 /* 096A58 80095E58 3C058012 */  lui   $a1, %hi(D_80126390) # $a1, 0x8012
 /* 096A5C 80095E5C 24A56390 */  addiu $a1, %lo(D_80126390) # addiu $a1, $a1, 0x6390
-/* 096A60 80095E60 0C025DBE */  jal   func_800976F8
+/* 096A60 80095E60 0C025DBE */  jal   decompress_filename_string
 /* 096A64 80095E64 24060003 */   li    $a2, 3
 .L80095E68:
 /* 096A68 80095E68 3C013F00 */  li    $at, 0x3F000000 # 0.500000

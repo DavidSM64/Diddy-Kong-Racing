@@ -70,7 +70,7 @@ glabel func_80098EBC
 .L80098FB4:
 /* 099BB4 80098FB4 3C05800E */   lui   $a1, %hi(D_800E1048) # $a1, 0x800e
 /* 099BB8 80098FB8 24A51048 */  addiu $a1, %lo(D_800E1048) # addiu $a1, $a1, 0x1048
-/* 099BBC 80098FBC 0C02087B */  jal   DrawMenuText
+/* 099BBC 80098FBC 0C02087B */  jal   draw_menu_element
 /* 099BC0 80098FC0 3C063F80 */   lui   $a2, 0x3f80
 .L80098FC4:
 /* 099BC4 80098FC4 8FBF0014 */  lw    $ra, 0x14($sp)

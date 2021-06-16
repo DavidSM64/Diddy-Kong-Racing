@@ -246,9 +246,9 @@ void func_800C4164(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4170.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C422C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C42EC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0B8920/set_text_font.s")
 
-void func_800C4384(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void set_text_color(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     (*D_8012A7E8)[0].unk14 = arg0;
     (*D_8012A7E8)[0].unk15 = arg1;
     (*D_8012A7E8)[0].unk16 = arg2;
@@ -256,7 +256,7 @@ void func_800C4384(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     (*D_8012A7E8)[0].unk1C = arg4;
 }
 
-void func_800C43CC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void set_text_background_color(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     (*D_8012A7E8)[0].unk18 = arg0;
     (*D_8012A7E8)[0].unk19 = arg1;
     (*D_8012A7E8)[0].unk1A = arg2;
@@ -270,7 +270,7 @@ void func_800C4404(s32 arg0, s32 arg1, s32 arg2) {
     func_800C45A4(arg0, *D_8012A7E8, arg1, arg2, 1.0f);
 }
 
-void func_800C4440(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void draw_text(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     unk8012A7E8 *temp = &(*D_8012A7E8)[0];
     temp->unk0 = (arg1 == -0x8000) ? temp->unkC >> 1 : arg1;
     temp->unk2 = (arg2 == -0x8000) ? temp->unkE >> 1 : arg2;

@@ -32,7 +32,7 @@ glabel func_8002E234
 /* 02EE88 8002E288 0080A825 */  move  $s5, $a0
 /* 02EE8C 8002E28C 164F000F */  bne   $s2, $t7, .L8002E2CC
 /* 02EE90 8002E290 00A0B025 */   move  $s6, $a1
-/* 02EE94 8002E294 0C0270C3 */  jal   func_8009C30C
+/* 02EE94 8002E294 0C0270C3 */  jal   get_filtered_cheats
 /* 02EE98 8002E298 E7B2006C */   swc1  $f18, 0x6c($sp)
 /* 02EE9C 8002E29C C7B2006C */  lwc1  $f18, 0x6c($sp)
 /* 02EEA0 8002E2A0 30580010 */  andi  $t8, $v0, 0x10
