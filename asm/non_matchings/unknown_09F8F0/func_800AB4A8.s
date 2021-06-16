@@ -115,27 +115,27 @@ glabel func_800AB4A8
 /* 0AC260 800AB660 00008025 */  move  $s0, $zero
 .L800AB664:
 /* 0AC264 800AB664 8EA50018 */  lw    $a1, 0x18($s5)
-/* 0AC268 800AB668 0C01BE53 */  jal   func_8006F94C
+/* 0AC268 800AB668 0C01BE53 */  jal   get_random_number_from_range
 /* 0AC26C 800AB66C 00002025 */   move  $a0, $zero
 /* 0AC270 800AB670 8E4F0000 */  lw    $t7, ($s2)
 /* 0AC274 800AB674 00002025 */  move  $a0, $zero
 /* 0AC278 800AB678 01F0C021 */  addu  $t8, $t7, $s0
 /* 0AC27C 800AB67C AF020000 */  sw    $v0, ($t8)
 /* 0AC280 800AB680 8EA5001C */  lw    $a1, 0x1c($s5)
-/* 0AC284 800AB684 0C01BE53 */  jal   func_8006F94C
+/* 0AC284 800AB684 0C01BE53 */  jal   get_random_number_from_range
 /* 0AC288 800AB688 00000000 */   nop   
 /* 0AC28C 800AB68C 8E590000 */  lw    $t9, ($s2)
 /* 0AC290 800AB690 00002025 */  move  $a0, $zero
 /* 0AC294 800AB694 03304821 */  addu  $t1, $t9, $s0
 /* 0AC298 800AB698 AD220004 */  sw    $v0, 4($t1)
 /* 0AC29C 800AB69C 8EA50020 */  lw    $a1, 0x20($s5)
-/* 0AC2A0 800AB6A0 0C01BE53 */  jal   func_8006F94C
+/* 0AC2A0 800AB6A0 0C01BE53 */  jal   get_random_number_from_range
 /* 0AC2A4 800AB6A4 00000000 */   nop   
 /* 0AC2A8 800AB6A8 8E4A0000 */  lw    $t2, ($s2)
 /* 0AC2AC 800AB6AC 00002025 */  move  $a0, $zero
 /* 0AC2B0 800AB6B0 01505821 */  addu  $t3, $t2, $s0
 /* 0AC2B4 800AB6B4 AD620008 */  sw    $v0, 8($t3)
-/* 0AC2B8 800AB6B8 0C01BE53 */  jal   func_8006F94C
+/* 0AC2B8 800AB6B8 0C01BE53 */  jal   get_random_number_from_range
 /* 0AC2BC 800AB6BC 24050020 */   li    $a1, 32
 /* 0AC2C0 800AB6C0 8E4F0000 */  lw    $t7, ($s2)
 /* 0AC2C4 800AB6C4 244C0005 */  addiu $t4, $v0, 5
@@ -144,7 +144,7 @@ glabel func_800AB4A8
 /* 0AC2D0 800AB6D0 01F0C021 */  addu  $t8, $t7, $s0
 /* 0AC2D4 800AB6D4 A30E000C */  sb    $t6, 0xc($t8)
 /* 0AC2D8 800AB6D8 00002025 */  move  $a0, $zero
-/* 0AC2DC 800AB6DC 0C01BE53 */  jal   func_8006F94C
+/* 0AC2DC 800AB6DC 0C01BE53 */  jal   get_random_number_from_range
 /* 0AC2E0 800AB6E0 24050020 */   li    $a1, 32
 /* 0AC2E4 800AB6E4 8E4B0000 */  lw    $t3, ($s2)
 /* 0AC2E8 800AB6E8 24590005 */  addiu $t9, $v0, 5
@@ -153,7 +153,7 @@ glabel func_800AB4A8
 /* 0AC2F4 800AB6F4 01706821 */  addu  $t5, $t3, $s0
 /* 0AC2F8 800AB6F8 A1AA000D */  sb    $t2, 0xd($t5)
 /* 0AC2FC 800AB6FC 00002025 */  move  $a0, $zero
-/* 0AC300 800AB700 0C01BE53 */  jal   func_8006F94C
+/* 0AC300 800AB700 0C01BE53 */  jal   get_random_number_from_range
 /* 0AC304 800AB704 24050020 */   li    $a1, 32
 /* 0AC308 800AB708 8E580000 */  lw    $t8, ($s2)
 /* 0AC30C 800AB70C 244C0005 */  addiu $t4, $v0, 5
@@ -163,7 +163,7 @@ glabel func_800AB4A8
 /* 0AC31C 800AB71C A12E000E */  sb    $t6, 0xe($t1)
 /* 0AC320 800AB720 8EA50004 */  lw    $a1, 4($s5)
 /* 0AC324 800AB724 00002025 */  move  $a0, $zero
-/* 0AC328 800AB728 0C01BE53 */  jal   func_8006F94C
+/* 0AC328 800AB728 0C01BE53 */  jal   get_random_number_from_range
 /* 0AC32C 800AB72C 24A5FFFF */   addiu $a1, $a1, -1
 /* 0AC330 800AB730 8E590000 */  lw    $t9, ($s2)
 /* 0AC334 800AB734 26310001 */  addiu $s1, $s1, 1

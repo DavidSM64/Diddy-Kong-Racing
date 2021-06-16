@@ -56,7 +56,7 @@ glabel func_800ADAB8
 /* 0AE780 800ADB80 3C01800E */  lui   $at, %hi(D_800E2C80) # $at, 0x800e
 /* 0AE784 800ADB84 AC2D2C80 */  sw    $t5, %lo(D_800E2C80)($at)
 /* 0AE788 800ADB88 24040384 */  li    $a0, 900
-/* 0AE78C 800ADB8C 0C01BE53 */  jal   func_8006F94C
+/* 0AE78C 800ADB8C 0C01BE53 */  jal   get_random_number_from_range
 /* 0AE790 800ADB90 24050474 */   li    $a1, 1140
 /* 0AE794 800ADB94 3C0E800E */  lui   $t6, %hi(D_800E2C60) # $t6, 0x800e
 /* 0AE798 800ADB98 8DCE2C60 */  lw    $t6, %lo(D_800E2C60)($t6)

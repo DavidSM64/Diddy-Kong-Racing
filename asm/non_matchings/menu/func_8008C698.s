@@ -1,6 +1,6 @@
 glabel func_8008C698
-/* 08D298 8008C698 3C02800E */  lui   $v0, %hi(D_800DF47C) # $v0, 0x800e
-/* 08D29C 8008C69C 8C42F47C */  lw    $v0, %lo(D_800DF47C)($v0)
+/* 08D298 8008C698 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
+/* 08D29C 8008C69C 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
 /* 08D2A0 8008C6A0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 08D2A4 8008C6A4 2841FFEB */  slti  $at, $v0, -0x15
 /* 08D2A8 8008C6A8 AFBF0014 */  sw    $ra, 0x14($sp)

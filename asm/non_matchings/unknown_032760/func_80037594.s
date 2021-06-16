@@ -24,7 +24,7 @@ glabel func_80037594
 /* 0381E8 800375E8 A4C00018 */  sh    $zero, 0x18($a2)
 /* 0381EC 800375EC AFA60018 */  sw    $a2, 0x18($sp)
 /* 0381F0 800375F0 00002025 */  move  $a0, $zero
-/* 0381F4 800375F4 0C01BE53 */  jal   func_8006F94C
+/* 0381F4 800375F4 0C01BE53 */  jal   get_random_number_from_range
 /* 0381F8 800375F8 2405001E */   li    $a1, 30
 /* 0381FC 800375FC 8FA60018 */  lw    $a2, 0x18($sp)
 /* 038200 80037600 00000000 */  nop   

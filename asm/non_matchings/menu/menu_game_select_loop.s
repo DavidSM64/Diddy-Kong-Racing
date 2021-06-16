@@ -25,8 +25,8 @@ glabel menu_game_select_loop
 /* 08D418 8008C818 8FA40028 */  lw    $a0, 0x28($sp)
 /* 08D41C 8008C81C ACA00000 */  sw    $zero, ($a1)
 .L8008C820:
-/* 08D420 8008C820 3C03800E */  lui   $v1, %hi(D_800DF47C) # $v1, 0x800e
-/* 08D424 8008C824 2463F47C */  addiu $v1, %lo(D_800DF47C) # addiu $v1, $v1, -0xb84
+/* 08D420 8008C820 3C03800E */  lui   $v1, %hi(gMenuDelay) # $v1, 0x800e
+/* 08D424 8008C824 2463F47C */  addiu $v1, %lo(gMenuDelay) # addiu $v1, $v1, -0xb84
 /* 08D428 8008C828 8C620000 */  lw    $v0, ($v1)
 /* 08D42C 8008C82C 00000000 */  nop   
 /* 08D430 8008C830 1040000A */  beqz  $v0, .L8008C85C
@@ -59,7 +59,7 @@ glabel menu_game_select_loop
 /* 08D490 8008C890 240C0001 */  li    $t4, 1
 /* 08D494 8008C894 3C01800E */  lui   $at, %hi(gIsInAdventureTwo) # $at, 0x800e
 /* 08D498 8008C898 0C01B96F */  jal   func_8006E5BC
-/* 08D49C 8008C89C AC2CF4B8 */   sw    $t4, %lo(D_800DF4B8)($at)
+/* 08D49C 8008C89C AC2CF4B8 */   sw    $t4, %lo(gIsInTracksMode)($at)
 /* 08D4A0 8008C8A0 2404FFFF */  li    $a0, -1
 /* 08D4A4 8008C8A4 2405FFFF */  li    $a1, -1
 /* 08D4A8 8008C8A8 0C01B8BA */  jal   func_8006E2E8
@@ -70,8 +70,8 @@ glabel menu_game_select_loop
 /* 08D4BC 8008C8BC 00001025 */   move  $v0, $zero
 .L8008C8C0:
 /* 08D4C0 8008C8C0 AC22F494 */  sw    $v0, %lo(gIsInAdventureTwo)($at)
-/* 08D4C4 8008C8C4 3C01800E */  lui   $at, %hi(D_800DF4B8) # $at, 0x800e
-/* 08D4C8 8008C8C8 AC20F4B8 */  sw    $zero, %lo(D_800DF4B8)($at)
+/* 08D4C4 8008C8C4 3C01800E */  lui   $at, %hi(gIsInTracksMode) # $at, 0x800e
+/* 08D4C8 8008C8C8 AC20F4B8 */  sw    $zero, %lo(gIsInTracksMode)($at)
 /* 08D4CC 8008C8CC 3C018012 */  lui   $at, %hi(gPlayerSelectVehicle) # $at, 0x8012
 /* 08D4D0 8008C8D0 0C01B6C5 */  jal   func_8006DB14
 /* 08D4D4 8008C8D4 A02069C0 */   sb    $zero, %lo(gPlayerSelectVehicle)($at)
@@ -112,8 +112,8 @@ glabel menu_game_select_loop
 .L8008C954:
 /* 08D554 8008C954 0C0231A6 */  jal   func_8008C698
 /* 08D558 8008C958 00000000 */   nop   
-/* 08D55C 8008C95C 3C0E800E */  lui   $t6, %hi(D_800DF47C) # $t6, 0x800e
-/* 08D560 8008C960 8DCEF47C */  lw    $t6, %lo(D_800DF47C)($t6)
+/* 08D55C 8008C95C 3C0E800E */  lui   $t6, %hi(gMenuDelay) # $t6, 0x800e
+/* 08D560 8008C960 8DCEF47C */  lw    $t6, %lo(gMenuDelay)($t6)
 /* 08D564 8008C964 3C058012 */  lui   $a1, %hi(D_801263D8) # $a1, 0x8012
 /* 08D568 8008C968 15C00051 */  bnez  $t6, .L8008CAB0
 /* 08D56C 8008C96C 24A563D8 */   addiu $a1, %lo(D_801263D8) # addiu $a1, $a1, 0x63d8
@@ -121,23 +121,23 @@ glabel menu_game_select_loop
 /* 08D574 8008C974 00000000 */  nop   
 /* 08D578 8008C978 15E0004D */  bnez  $t7, .L8008CAB0
 /* 08D57C 8008C97C 00000000 */   nop   
-/* 08D580 8008C980 0C01A955 */  jal   func_8006A554
+/* 08D580 8008C980 0C01A955 */  jal   get_button_inputs_from_player
 /* 08D584 8008C984 00002025 */   move  $a0, $zero
-/* 08D588 8008C988 3C18800E */  lui   $t8, %hi(D_800DF4BC) # $t8, 0x800e
-/* 08D58C 8008C98C 8F18F4BC */  lw    $t8, %lo(D_800DF4BC)($t8)
-/* 08D590 8008C990 3C068012 */  lui   $a2, %hi(D_80126464) # $a2, 0x8012
-/* 08D594 8008C994 80C66464 */  lb    $a2, %lo(D_80126464)($a2)
+/* 08D588 8008C988 3C18800E */  lui   $t8, %hi(gNumberOfActivePlayers) # $t8, 0x800e
+/* 08D58C 8008C98C 8F18F4BC */  lw    $t8, %lo(gNumberOfActivePlayers)($t8)
+/* 08D590 8008C990 3C068012 */  lui   $a2, %hi(gControllersYAxisDirection) # $a2, 0x8012
+/* 08D594 8008C994 80C66464 */  lb    $a2, %lo(gControllersYAxisDirection)($a2)
 /* 08D598 8008C998 24010002 */  li    $at, 2
 /* 08D59C 8008C99C 1701000B */  bne   $t8, $at, .L8008C9CC
 /* 08D5A0 8008C9A0 00401825 */   move  $v1, $v0
 /* 08D5A4 8008C9A4 24040001 */  li    $a0, 1
 /* 08D5A8 8008C9A8 AFA20024 */  sw    $v0, 0x24($sp)
-/* 08D5AC 8008C9AC 0C01A955 */  jal   func_8006A554
+/* 08D5AC 8008C9AC 0C01A955 */  jal   get_button_inputs_from_player
 /* 08D5B0 8008C9B0 AFA60020 */   sw    $a2, 0x20($sp)
-/* 08D5B4 8008C9B4 3C198012 */  lui   $t9, %hi(D_80126464+1) # $t9, 0x8012
+/* 08D5B4 8008C9B4 3C198012 */  lui   $t9, %hi(gControllersYAxisDirection+1) # $t9, 0x8012
 /* 08D5B8 8008C9B8 8FA30024 */  lw    $v1, 0x24($sp)
 /* 08D5BC 8008C9BC 8FA60020 */  lw    $a2, 0x20($sp)
-/* 08D5C0 8008C9C0 83396465 */  lb    $t9, %lo(D_80126464+1)($t9)
+/* 08D5C0 8008C9C0 83396465 */  lb    $t9, %lo(gControllersYAxisDirection+1)($t9)
 /* 08D5C4 8008C9C4 00621825 */  or    $v1, $v1, $v0
 /* 08D5C8 8008C9C8 00D93021 */  addu  $a2, $a2, $t9
 .L8008C9CC:
@@ -158,8 +158,8 @@ glabel menu_game_select_loop
 /* 08D600 8008CA00 0C030076 */  jal   func_800C01D8
 /* 08D604 8008CA04 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
 /* 08D608 8008CA08 240B0001 */  li    $t3, 1
-/* 08D60C 8008CA0C 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 08D610 8008CA10 AC2BF47C */  sw    $t3, %lo(D_800DF47C)($at)
+/* 08D60C 8008CA0C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 08D610 8008CA10 AC2BF47C */  sw    $t3, %lo(gMenuDelay)($at)
 /* 08D614 8008CA14 240400EF */  li    $a0, 239
 /* 08D618 8008CA18 0C000741 */  jal   func_80001D04
 /* 08D61C 8008CA1C 00002825 */   move  $a1, $zero
@@ -171,9 +171,9 @@ glabel menu_game_select_loop
 /* 08D630 8008CA30 0C030076 */  jal   func_800C01D8
 /* 08D634 8008CA34 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
 /* 08D638 8008CA38 240DFFFF */  li    $t5, -1
-/* 08D63C 8008CA3C 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
+/* 08D63C 8008CA3C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 08D640 8008CA40 1000001B */  b     .L8008CAB0
-/* 08D644 8008CA44 AC2DF47C */   sw    $t5, %lo(D_800DF47C)($at)
+/* 08D644 8008CA44 AC2DF47C */   sw    $t5, %lo(gMenuDelay)($at)
 .L8008CA48:
 /* 08D648 8008CA48 04C1000F */  bgez  $a2, .L8008CA88
 /* 08D64C 8008CA4C 3C03800E */   lui   $v1, %hi(D_800DF460) # $v1, 0x800e
@@ -203,8 +203,8 @@ glabel menu_game_select_loop
 /* 08D6A8 8008CAA8 0C000741 */  jal   func_80001D04
 /* 08D6AC 8008CAAC 00002825 */   move  $a1, $zero
 .L8008CAB0:
-/* 08D6B0 8008CAB0 3C018012 */  lui   $at, %hi(D_801263C4) # $at, 0x8012
-/* 08D6B4 8008CAB4 AC2063C4 */  sw    $zero, %lo(D_801263C4)($at)
+/* 08D6B0 8008CAB0 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 08D6B4 8008CAB4 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
 /* 08D6B8 8008CAB8 00001025 */  move  $v0, $zero
 .L8008CABC:
 /* 08D6BC 8008CABC 8FBF0014 */  lw    $ra, 0x14($sp)

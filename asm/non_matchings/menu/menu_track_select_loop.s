@@ -13,8 +13,8 @@ glabel menu_track_select_loop
 /* 08FE60 8008F260 0C031CF8 */  jal   func_800C73E0
 /* 08FE64 8008F264 AC790000 */   sw    $t9, ($v1)
 /* 08FE68 8008F268 14400011 */  bnez  $v0, .L8008F2B0
-/* 08FE6C 8008F26C 3C03800E */   lui   $v1, %hi(D_800DF47C) # $v1, 0x800e
-/* 08FE70 8008F270 2463F47C */  addiu $v1, %lo(D_800DF47C) # addiu $v1, $v1, -0xb84
+/* 08FE6C 8008F26C 3C03800E */   lui   $v1, %hi(gMenuDelay) # $v1, 0x800e
+/* 08FE70 8008F270 2463F47C */  addiu $v1, %lo(gMenuDelay) # addiu $v1, $v1, -0xb84
 /* 08FE74 8008F274 8C620000 */  lw    $v0, ($v1)
 /* 08FE78 8008F278 00000000 */  nop   
 /* 08FE7C 8008F27C 1040000C */  beqz  $v0, .L8008F2B0
@@ -81,7 +81,7 @@ glabel menu_track_select_loop
 /* 08FF5C 8008F35C 8FAF0020 */  lw    $t7, 0x20($sp)
 /* 08FF60 8008F360 04410005 */  bgez  $v0, .L8008F378
 /* 08FF64 8008F364 000FC040 */   sll   $t8, $t7, 1
-/* 08FF68 8008F368 0C000664 */  jal   musicSetRelativeVolume
+/* 08FF68 8008F368 0C000664 */  jal   set_relative_volume_for_music
 /* 08FF6C 8008F36C 00002025 */   move  $a0, $zero
 /* 08FF70 8008F370 1000000A */  b     .L8008F39C
 /* 08FF74 8008F374 00000000 */   nop   
@@ -94,7 +94,7 @@ glabel menu_track_select_loop
 /* 08FF8C 8008F38C 24020050 */  li    $v0, 80
 /* 08FF90 8008F390 AC620000 */  sw    $v0, ($v1)
 .L8008F394:
-/* 08FF94 8008F394 0C000664 */  jal   musicSetRelativeVolume
+/* 08FF94 8008F394 0C000664 */  jal   set_relative_volume_for_music
 /* 08FF98 8008F398 304400FF */   andi  $a0, $v0, 0xff
 .L8008F39C:
 /* 08FF9C 8008F39C 3C028012 */  lui   $v0, %hi(D_801267D0) # $v0, 0x8012
@@ -104,8 +104,8 @@ glabel menu_track_select_loop
 /* 08FFAC 8008F3AC 28410002 */   slti  $at, $v0, 2
 /* 08FFB0 8008F3B0 0C023D4D */  jal   func_8008F534
 /* 08FFB4 8008F3B4 00000000 */   nop   
-/* 08FFB8 8008F3B8 3C02800E */  lui   $v0, %hi(D_800DF4BC) # $v0, 0x800e
-/* 08FFBC 8008F3BC 8C42F4BC */  lw    $v0, %lo(D_800DF4BC)($v0)
+/* 08FFB8 8008F3B8 3C02800E */  lui   $v0, %hi(gNumberOfActivePlayers) # $v0, 0x800e
+/* 08FFBC 8008F3BC 8C42F4BC */  lw    $v0, %lo(gNumberOfActivePlayers)($v0)
 /* 08FFC0 8008F3C0 3C01800E */  lui   $at, %hi(D_800DF478) # $at, 0x800e
 /* 08FFC4 8008F3C4 AC20F478 */  sw    $zero, %lo(D_800DF478)($at)
 /* 08FFC8 8008F3C8 28410003 */  slti  $at, $v0, 3
@@ -158,10 +158,10 @@ glabel menu_track_select_loop
 /* 09006C 8008F46C 00001025 */   move  $v0, $zero
 /* 090070 8008F470 0C023D4D */  jal   func_8008F534
 /* 090074 8008F474 00000000 */   nop   
-/* 090078 8008F478 3C0C800E */  lui   $t4, %hi(D_800E0410) # $t4, 0x800e
-/* 09007C 8008F47C 3C0D8012 */  lui   $t5, %hi(D_80126548) # $t5, 0x8012
-/* 090080 8008F480 8DAD6548 */  lw    $t5, %lo(D_80126548)($t5)
-/* 090084 8008F484 8D8C0410 */  lw    $t4, %lo(D_800E0410)($t4)
+/* 090078 8008F478 3C0C800E */  lui   $t4, %hi(gMultiplayerSelectedNumberOfRacers) # $t4, 0x800e
+/* 09007C 8008F47C 3C0D8012 */  lui   $t5, %hi(gMultiplayerSelectedNumberOfRacersCopy) # $t5, 0x8012
+/* 090080 8008F480 8DAD6548 */  lw    $t5, %lo(gMultiplayerSelectedNumberOfRacersCopy)($t5)
+/* 090084 8008F484 8D8C0410 */  lw    $t4, %lo(gMultiplayerSelectedNumberOfRacers)($t4)
 /* 090088 8008F488 00003025 */  move  $a2, $zero
 /* 09008C 8008F48C 118D000D */  beq   $t4, $t5, .L8008F4C4
 /* 090090 8008F490 3C198012 */   lui   $t9, %hi(D_801269C8) # $t9, 0x8012
@@ -183,10 +183,10 @@ glabel menu_track_select_loop
 /* 0900C8 8008F4C8 24010004 */  li    $at, 4
 /* 0900CC 8008F4CC 13210007 */  beq   $t9, $at, .L8008F4EC
 /* 0900D0 8008F4D0 3C098012 */   lui   $t1, %hi(D_801269CC) # $t1, 0x8012
-/* 0900D4 8008F4D4 3C02800E */  lui   $v0, %hi(D_800DF4BC) # $v0, 0x800e
+/* 0900D4 8008F4D4 3C02800E */  lui   $v0, %hi(gNumberOfActivePlayers) # $v0, 0x800e
 /* 0900D8 8008F4D8 24080001 */  li    $t0, 1
 /* 0900DC 8008F4DC 3C01800E */  lui   $at, %hi(D_800DF478) # $at, 0x800e
-/* 0900E0 8008F4E0 8C42F4BC */  lw    $v0, %lo(D_800DF4BC)($v0)
+/* 0900E0 8008F4E0 8C42F4BC */  lw    $v0, %lo(gNumberOfActivePlayers)($v0)
 /* 0900E4 8008F4E4 1000000F */  b     .L8008F524
 /* 0900E8 8008F4E8 AC28F478 */   sw    $t0, %lo(D_800DF478)($at)
 .L8008F4EC:
@@ -203,8 +203,8 @@ glabel menu_track_select_loop
 /* 090114 8008F514 10000003 */  b     .L8008F524
 /* 090118 8008F518 00001025 */   move  $v0, $zero
 .L8008F51C:
-/* 09011C 8008F51C 3C018012 */  lui   $at, %hi(D_801263C4) # $at, 0x8012
-/* 090120 8008F520 AC2063C4 */  sw    $zero, %lo(D_801263C4)($at)
+/* 09011C 8008F51C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 090120 8008F520 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
 .L8008F524:
 /* 090124 8008F524 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 090128 8008F528 27BD0020 */  addiu $sp, $sp, 0x20

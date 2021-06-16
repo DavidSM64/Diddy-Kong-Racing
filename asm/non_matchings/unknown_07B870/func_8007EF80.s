@@ -14,7 +14,7 @@ glabel func_8007EF80
 /* 07FBB0 8007EFB0 00414824 */   and   $t1, $v0, $at
 /* 07FBB4 8007EFB4 1520000E */  bnez  $t1, .L8007EFF0
 /* 07FBB8 8007EFB8 00002025 */   move  $a0, $zero
-/* 07FBBC 8007EFBC 0C01BE53 */  jal   func_8006F94C
+/* 07FBBC 8007EFBC 0C01BE53 */  jal   get_random_number_from_range
 /* 07FBC0 8007EFC0 240503E8 */   li    $a1, 1000
 /* 07FBC4 8007EFC4 284103DA */  slti  $at, $v0, 0x3da
 /* 07FBC8 8007EFC8 14200082 */  bnez  $at, .L8007F1D4

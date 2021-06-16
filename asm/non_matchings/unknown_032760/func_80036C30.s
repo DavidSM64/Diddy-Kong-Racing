@@ -62,15 +62,15 @@ glabel func_80036C30
 /* 037904 80036D04 00000000 */  nop   
 /* 037908 80036D08 15A0000E */  bnez  $t5, .L80036D44
 /* 03790C 80036D0C 00002025 */   move  $a0, $zero
-/* 037910 80036D10 0C01BE53 */  jal   func_8006F94C
+/* 037910 80036D10 0C01BE53 */  jal   get_random_number_from_range
 /* 037914 80036D14 3C050001 */   lui   $a1, 1
 /* 037918 80036D18 A60200FE */  sh    $v0, 0xfe($s0)
 /* 03791C 80036D1C 00002025 */  move  $a0, $zero
-/* 037920 80036D20 0C01BE53 */  jal   func_8006F94C
+/* 037920 80036D20 0C01BE53 */  jal   get_random_number_from_range
 /* 037924 80036D24 3C050001 */   lui   $a1, 1
 /* 037928 80036D28 A6020102 */  sh    $v0, 0x102($s0)
 /* 03792C 80036D2C 00002025 */  move  $a0, $zero
-/* 037930 80036D30 0C01BE53 */  jal   func_8006F94C
+/* 037930 80036D30 0C01BE53 */  jal   get_random_number_from_range
 /* 037934 80036D34 3C050001 */   lui   $a1, 1
 /* 037938 80036D38 A6020106 */  sh    $v0, 0x106($s0)
 /* 03793C 80036D3C 10000005 */  b     .L80036D54

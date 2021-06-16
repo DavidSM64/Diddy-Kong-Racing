@@ -7,22 +7,22 @@
 extern s8  D_800DF450;
 extern f32 D_800DF454;
 extern s32 D_800DF458;
-extern s32 D_800DF45C;
+extern s32 gTitleScreenCurrentOption;
 extern s32 D_800DF460;
 extern s32 D_800DF464;
 extern s32 D_800DF468;
 extern s32 D_800DF46C;
-extern s32 D_800DF470;
+extern s32 gCurrentMenuId;
 extern s32 D_800DF474;
 extern s32 D_800DF478;
-extern s32 D_800DF47C;
-extern s32 D_800DF480;
+extern s32 gMenuDelay;
+extern s32 gNumberOfReadyPlayers;
 extern s32 D_800DF484;
 extern s32 D_800DF488;
 extern s32 D_800DF48C;
 extern s32 D_800DF490;
 extern s32 gIsInAdventureTwo;
-extern s32 D_800DF498;
+extern s32 gPlayerHasSeenCautionMenu;
 extern s32 D_800DF49C;
 
 typedef struct unk800DF4A0 {
@@ -58,15 +58,15 @@ extern u8 D_800DF4AC;
 
 extern s32 D_800DF4B0;
 extern s32 D_800DF4B4;
-extern s32 D_800DF4B8;
-extern s32 D_800DF4BC;
+extern s32 gIsInTracksMode;
+extern s32 gNumberOfActivePlayers;
 extern s32 gIsInTwoPlayerAdventure;
-extern s32 D_800DF4C4;
-extern s32 D_800DF4C8;
+extern s32 gTrackIdForPreview;
+extern s32 gTrackSelectRow;
 extern s32 gSaveFileIndex;
 
 extern s32 D_800DF4D0;
-extern s32 D_800DF4D4;
+extern s32 gTrackIdToLoad;
 extern s8 D_800DF4D8;
 extern s8 D_800DF4DC;
 extern s8 D_800DF4E0;
@@ -178,8 +178,8 @@ extern unk800DFA3C D_800DFA3C[8];
 
 extern s32 D_800DFABC;
 
-extern s32 D_800DFAC0;
-extern s32 D_800DFAC4;
+extern s32 gSfxVolumeSliderValue;
+extern s32 gMusicVolumeSliderValue;
 extern s32 D_800DFAC8;
 
 // Unsure about typing here.
@@ -275,7 +275,7 @@ extern u16 D_800E03CC[24];
 
 extern u16 D_800E03FC[10];
 
-extern s32 D_800E0410;
+extern s32 gMultiplayerSelectedNumberOfRacers;
 extern s32 D_800E0414;
 extern s32 D_800E0418;
 
@@ -405,7 +405,7 @@ extern char gSixthPlace[4];
 extern char gSeventhPlace[4];
 extern char gEighthPlace[4];
 
-extern char *D_800E0BCC[8];
+extern char *gRacePlacementsArray[8];
 
 MenuElement D_800E0BEC[8];
 
@@ -440,7 +440,7 @@ extern s32 D_800E0FF0;
 extern u32 D_800E0FF4[4];
 
 // Number of points to award in trophy race for each place?
-extern s32 D_800E1004[8];
+extern s32 gTrophyRacePointsArray[8];
 
 extern s16 D_800E1024[14];
 
@@ -490,17 +490,17 @@ extern u16 D_800E18F8;
 extern u16 D_800E18FC[30];
 
 // Credits text look-up table
-extern char *D_800E1938[87];
+extern char *gCreditsArray[87];
 
 // Credits text look-up table (time trials time sheet)
-extern char *D_800E1A94[20];
+extern char *gCreditsBestTimesArray[20];
 
 // Another credits text look-up table
-extern char *D_800E1AE4[5];
+extern char *gCreditsLastMessageArray[5];
 
-extern s32 D_800E1AF8[21];
+extern s32 gCheatsInCreditsArray[21];
 
-extern s32 D_800E1B4C;
+extern s32 gViewingCreditsFromCheat;
 
 MenuElement D_800E1B50[9];
 
@@ -530,7 +530,7 @@ extern s16 D_800E1DC8[16];
 
 extern s16 D_800E1DE8[4];
 
-extern char D_800E1DF0[24];
+extern char gRareCopyrightString[24];
 
 extern s16 D_800E1E08[4];
 

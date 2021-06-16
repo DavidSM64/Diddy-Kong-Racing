@@ -1,7 +1,7 @@
 glabel func_8008E4EC
 /* 08F0EC 8008E4EC 27BDFF88 */  addiu $sp, $sp, -0x78
-/* 08F0F0 8008E4F0 3C0E8012 */  lui   $t6, %hi(D_801263C4) # $t6, 0x8012
-/* 08F0F4 8008E4F4 8DCE63C4 */  lw    $t6, %lo(D_801263C4)($t6)
+/* 08F0F0 8008E4F0 3C0E8012 */  lui   $t6, %hi(gIgnorePlayerInput) # $t6, 0x8012
+/* 08F0F4 8008E4F4 8DCE63C4 */  lw    $t6, %lo(gIgnorePlayerInput)($t6)
 /* 08F0F8 8008E4F8 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 08F0FC 8008E4FC AFBE0038 */  sw    $fp, 0x38($sp)
 /* 08F100 8008E500 AFB70034 */  sw    $s7, 0x34($sp)
@@ -31,16 +31,16 @@ glabel func_8008E4EC
 /* 08F15C 8008E55C A620FFFE */   sh    $zero, -2($s1)
 /* 08F160 8008E560 3C128012 */  lui   $s2, %hi(D_80126818) # $s2, 0x8012
 /* 08F164 8008E564 3C118012 */  lui   $s1, %hi(D_80126830) # $s1, 0x8012
-/* 08F168 8008E568 3C148012 */  lui   $s4, %hi(D_8012645C) # $s4, 0x8012
-/* 08F16C 8008E56C 3C158012 */  lui   $s5, %hi(D_80126464) # $s5, 0x8012
-/* 08F170 8008E570 3C1E800E */  lui   $fp, %hi(D_800DF4BC) # $fp, 0x800e
+/* 08F168 8008E568 3C148012 */  lui   $s4, %hi(gControllersXAxisDirection) # $s4, 0x8012
+/* 08F16C 8008E56C 3C158012 */  lui   $s5, %hi(gControllersYAxisDirection) # $s5, 0x8012
+/* 08F170 8008E570 3C1E800E */  lui   $fp, %hi(gNumberOfActivePlayers) # $fp, 0x800e
 /* 08F174 8008E574 3C178012 */  lui   $s7, %hi(D_80126830) # $s7, 0x8012
 /* 08F178 8008E578 3C168012 */  lui   $s6, %hi(D_80126818) # $s6, 0x8012
 /* 08F17C 8008E57C 26D66818 */  addiu $s6, %lo(D_80126818) # addiu $s6, $s6, 0x6818
 /* 08F180 8008E580 26F76830 */  addiu $s7, %lo(D_80126830) # addiu $s7, $s7, 0x6830
-/* 08F184 8008E584 27DEF4BC */  addiu $fp, %lo(D_800DF4BC) # addiu $fp, $fp, -0xb44
-/* 08F188 8008E588 26B56464 */  addiu $s5, %lo(D_80126464) # addiu $s5, $s5, 0x6464
-/* 08F18C 8008E58C 2694645C */  addiu $s4, %lo(D_8012645C) # addiu $s4, $s4, 0x645c
+/* 08F184 8008E584 27DEF4BC */  addiu $fp, %lo(gNumberOfActivePlayers) # addiu $fp, $fp, -0xb44
+/* 08F188 8008E588 26B56464 */  addiu $s5, %lo(gControllersYAxisDirection) # addiu $s5, $s5, 0x6464
+/* 08F18C 8008E58C 2694645C */  addiu $s4, %lo(gControllersXAxisDirection) # addiu $s4, $s4, 0x645c
 /* 08F190 8008E590 26316830 */  addiu $s1, %lo(D_80126830) # addiu $s1, $s1, 0x6830
 /* 08F194 8008E594 26526818 */  addiu $s2, %lo(D_80126818) # addiu $s2, $s2, 0x6818
 /* 08F198 8008E598 00009825 */  move  $s3, $zero

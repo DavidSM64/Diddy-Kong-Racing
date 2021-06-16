@@ -2,29 +2,29 @@ glabel func_8008D5F8
 /* 08E1F8 8008D5F8 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 08E1FC 8008D5FC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 08E200 8008D600 AFA40028 */  sw    $a0, 0x28($sp)
-/* 08E204 8008D604 0C01A955 */  jal   func_8006A554
+/* 08E204 8008D604 0C01A955 */  jal   get_button_inputs_from_player
 /* 08E208 8008D608 00002025 */   move  $a0, $zero
-/* 08E20C 8008D60C 3C0E800E */  lui   $t6, %hi(D_800DF4BC) # $t6, 0x800e
-/* 08E210 8008D610 8DCEF4BC */  lw    $t6, %lo(D_800DF4BC)($t6)
-/* 08E214 8008D614 3C068012 */  lui   $a2, %hi(D_8012645C) # $a2, 0x8012
-/* 08E218 8008D618 3C078012 */  lui   $a3, %hi(D_80126464) # $a3, 0x8012
+/* 08E20C 8008D60C 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
+/* 08E210 8008D610 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)
+/* 08E214 8008D614 3C068012 */  lui   $a2, %hi(gControllersXAxisDirection) # $a2, 0x8012
+/* 08E218 8008D618 3C078012 */  lui   $a3, %hi(gControllersYAxisDirection) # $a3, 0x8012
 /* 08E21C 8008D61C 24080002 */  li    $t0, 2
-/* 08E220 8008D620 80C6645C */  lb    $a2, %lo(D_8012645C)($a2)
-/* 08E224 8008D624 80E76464 */  lb    $a3, %lo(D_80126464)($a3)
+/* 08E220 8008D620 80C6645C */  lb    $a2, %lo(gControllersXAxisDirection)($a2)
+/* 08E224 8008D624 80E76464 */  lb    $a3, %lo(gControllersYAxisDirection)($a3)
 /* 08E228 8008D628 150E0011 */  bne   $t0, $t6, .L8008D670
 /* 08E22C 8008D62C 00401825 */   move  $v1, $v0
 /* 08E230 8008D630 24040001 */  li    $a0, 1
 /* 08E234 8008D634 AFA20024 */  sw    $v0, 0x24($sp)
 /* 08E238 8008D638 AFA60020 */  sw    $a2, 0x20($sp)
-/* 08E23C 8008D63C 0C01A955 */  jal   func_8006A554
+/* 08E23C 8008D63C 0C01A955 */  jal   get_button_inputs_from_player
 /* 08E240 8008D640 AFA7001C */   sw    $a3, 0x1c($sp)
-/* 08E244 8008D644 3C0F8012 */  lui   $t7, %hi(D_8012645C+1) # $t7, 0x8012
-/* 08E248 8008D648 3C188012 */  lui   $t8, %hi(D_80126464+1) # $t8, 0x8012
+/* 08E244 8008D644 3C0F8012 */  lui   $t7, %hi(gControllersXAxisDirection+1) # $t7, 0x8012
+/* 08E248 8008D648 3C188012 */  lui   $t8, %hi(gControllersYAxisDirection+1) # $t8, 0x8012
 /* 08E24C 8008D64C 8FA30024 */  lw    $v1, 0x24($sp)
 /* 08E250 8008D650 8FA60020 */  lw    $a2, 0x20($sp)
 /* 08E254 8008D654 8FA7001C */  lw    $a3, 0x1c($sp)
-/* 08E258 8008D658 81EF645D */  lb    $t7, %lo(D_8012645C+1)($t7)
-/* 08E25C 8008D65C 83186465 */  lb    $t8, %lo(D_80126464+1)($t8)
+/* 08E258 8008D658 81EF645D */  lb    $t7, %lo(gControllersXAxisDirection+1)($t7)
+/* 08E25C 8008D65C 83186465 */  lb    $t8, %lo(gControllersYAxisDirection+1)($t8)
 /* 08E260 8008D660 24080002 */  li    $t0, 2
 /* 08E264 8008D664 00621825 */  or    $v1, $v1, $v0
 /* 08E268 8008D668 00CF3021 */  addu  $a2, $a2, $t7

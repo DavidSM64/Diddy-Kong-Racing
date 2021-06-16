@@ -1,7 +1,7 @@
 glabel menu_23_loop
 /* 09B8FC 8009ACFC 27BDFFB8 */  addiu $sp, $sp, -0x48
-/* 09B900 8009AD00 3C0E8012 */  lui   $t6, %hi(D_801263C4) # $t6, 0x8012
-/* 09B904 8009AD04 8DCE63C4 */  lw    $t6, %lo(D_801263C4)($t6)
+/* 09B900 8009AD00 3C0E8012 */  lui   $t6, %hi(gIgnorePlayerInput) # $t6, 0x8012
+/* 09B904 8009AD04 8DCE63C4 */  lw    $t6, %lo(gIgnorePlayerInput)($t6)
 /* 09B908 8009AD08 AFB20030 */  sw    $s2, 0x30($sp)
 /* 09B90C 8009AD0C AFBF0044 */  sw    $ra, 0x44($sp)
 /* 09B910 8009AD10 AFB60040 */  sw    $s6, 0x40($sp)
@@ -13,14 +13,14 @@ glabel menu_23_loop
 /* 09B928 8009AD28 AFA40048 */  sw    $a0, 0x48($sp)
 /* 09B92C 8009AD2C 15C0000E */  bnez  $t6, .L8009AD68
 /* 09B930 8009AD30 00009025 */   move  $s2, $zero
-/* 09B934 8009AD34 3C11800E */  lui   $s1, %hi(D_800DF4BC) # $s1, 0x800e
-/* 09B938 8009AD38 2631F4BC */  addiu $s1, %lo(D_800DF4BC) # addiu $s1, $s1, -0xb44
+/* 09B934 8009AD34 3C11800E */  lui   $s1, %hi(gNumberOfActivePlayers) # $s1, 0x800e
+/* 09B938 8009AD38 2631F4BC */  addiu $s1, %lo(gNumberOfActivePlayers) # addiu $s1, $s1, -0xb44
 /* 09B93C 8009AD3C 8E2F0000 */  lw    $t7, ($s1)
 /* 09B940 8009AD40 00008025 */  move  $s0, $zero
 /* 09B944 8009AD44 19E00008 */  blez  $t7, .L8009AD68
 /* 09B948 8009AD48 00000000 */   nop   
 .L8009AD4C:
-/* 09B94C 8009AD4C 0C01A955 */  jal   func_8006A554
+/* 09B94C 8009AD4C 0C01A955 */  jal   get_button_inputs_from_player
 /* 09B950 8009AD50 02002025 */   move  $a0, $s0
 /* 09B954 8009AD54 8E380000 */  lw    $t8, ($s1)
 /* 09B958 8009AD58 26100001 */  addiu $s0, $s0, 1
@@ -130,8 +130,8 @@ glabel menu_23_loop
 /* 09BADC 8009AEDC 1691FFEC */  bne   $s4, $s1, .L8009AE90
 /* 09BAE0 8009AEE0 00117880 */   sll   $t7, $s1, 2
 .L8009AEE4:
-/* 09BAE4 8009AEE4 3C018012 */  lui   $at, %hi(D_801263C4) # $at, 0x8012
-/* 09BAE8 8009AEE8 AC2063C4 */  sw    $zero, %lo(D_801263C4)($at)
+/* 09BAE4 8009AEE4 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 09BAE8 8009AEE8 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
 /* 09BAEC 8009AEEC 00001025 */  move  $v0, $zero
 /* 09BAF0 8009AEF0 8FBF0044 */  lw    $ra, 0x44($sp)
 .L8009AEF4:

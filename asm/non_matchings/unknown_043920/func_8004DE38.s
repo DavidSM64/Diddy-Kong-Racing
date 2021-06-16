@@ -285,7 +285,7 @@ glabel func_8004DE38
 /* 04EDE0 8004E1E0 E4460000 */   swc1  $f6, ($v0)
 .L8004E1E4:
 /* 04EDE4 8004E1E4 2404FFC4 */  li    $a0, -60
-/* 04EDE8 8004E1E8 0C01BE53 */  jal   func_8006F94C
+/* 04EDE8 8004E1E8 0C01BE53 */  jal   get_random_number_from_range
 /* 04EDEC 8004E1EC 2405003C */   li    $a1, 60
 /* 04EDF0 8004E1F0 244E0078 */  addiu $t6, $v0, 0x78
 /* 04EDF4 8004E1F4 A60E01C6 */  sh    $t6, 0x1c6($s0)
@@ -611,7 +611,7 @@ glabel func_8004DE38
 /* 04F2B0 8004E6B0 AC22D538 */   sw    $v0, %lo(D_8011D538)($at)
 /* 04F2B4 8004E6B4 8FA400AC */  lw    $a0, 0xac($sp)
 /* 04F2B8 8004E6B8 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
-/* 04F2BC 8004E6BC 0C01A955 */  jal   func_8006A554
+/* 04F2BC 8004E6BC 0C01A955 */  jal   get_button_inputs_from_player
 /* 04F2C0 8004E6C0 AC22D528 */   sw    $v0, %lo(D_8011D528)($at)
 /* 04F2C4 8004E6C4 8FA400AC */  lw    $a0, 0xac($sp)
 /* 04F2C8 8004E6C8 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
@@ -728,7 +728,7 @@ glabel func_8004DE38
 /* 04F460 8004E860 00CC082A */  slt   $at, $a2, $t4
 /* 04F464 8004E864 10200004 */  beqz  $at, .L8004E878
 /* 04F468 8004E868 00000000 */   nop   
-/* 04F46C 8004E86C 0C01BE53 */  jal   func_8006F94C
+/* 04F46C 8004E86C 0C01BE53 */  jal   get_random_number_from_range
 /* 04F470 8004E870 24050050 */   li    $a1, 80
 /* 04F474 8004E874 A20201D1 */  sb    $v0, 0x1d1($s0)
 .L8004E878:

@@ -30,7 +30,7 @@ for folder in ASM_FOLDERS:
 BUILD_DIRECTORY = './build/us_1.0'
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './lib/src'
-FUNCTION_REGEX = r'(\/[*][*!]+\n(?:.*\n)+?\s*[*]\/\n)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
+FUNCTION_REGEX = r'(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#if(?:.|\n)*?(GLOBAL_ASM[(][^)]*[)])(.|\n)*?#endif'
 

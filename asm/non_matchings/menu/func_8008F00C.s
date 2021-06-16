@@ -27,7 +27,7 @@ glabel func_8008F00C
 /* 08FC6C 8008F06C 3C018012 */   lui   $at, %hi(D_801269DC) # $at, 0x8012
 /* 08FC70 8008F070 24010001 */  li    $at, 1
 /* 08FC74 8008F074 11C1000B */  beq   $t6, $at, .L8008F0A4
-/* 08FC78 8008F078 3C04800E */   lui   $a0, %hi(D_800DF4C4) # $a0, 0x800e
+/* 08FC78 8008F078 3C04800E */   lui   $a0, %hi(gTrackIdForPreview) # $a0, 0x800e
 /* 08FC7C 8008F07C 10000069 */  b     .L8008F224
 /* 08FC80 8008F080 8FBF0014 */   lw    $ra, 0x14($sp)
 .L8008F084:
@@ -40,11 +40,11 @@ glabel func_8008F00C
 /* 08FC9C 8008F09C 10000060 */  b     .L8008F220
 /* 08FCA0 8008F0A0 E42669EC */   swc1  $f6, %lo(D_801269EC)($at)
 .L8008F0A4:
-/* 08FCA4 8008F0A4 8C84F4C4 */  lw    $a0, %lo(D_800DF4C4)($a0)
+/* 08FCA4 8008F0A4 8C84F4C4 */  lw    $a0, %lo(gTrackIdForPreview)($a0)
 /* 08FCA8 8008F0A8 0C01AC2B */  jal   func_8006B0AC
 /* 08FCAC 8008F0AC 00000000 */   nop   
-/* 08FCB0 8008F0B0 3C06800E */  lui   $a2, %hi(D_800DF4BC) # $a2, 0x800e
-/* 08FCB4 8008F0B4 8CC6F4BC */  lw    $a2, %lo(D_800DF4BC)($a2)
+/* 08FCB0 8008F0B0 3C06800E */  lui   $a2, %hi(gNumberOfActivePlayers) # $a2, 0x800e
+/* 08FCB4 8008F0B4 8CC6F4BC */  lw    $a2, %lo(gNumberOfActivePlayers)($a2)
 /* 08FCB8 8008F0B8 3C048012 */  lui   $a0, %hi(D_801269C4) # $a0, 0x8012
 /* 08FCBC 8008F0BC 18C0000B */  blez  $a2, .L8008F0EC
 /* 08FCC0 8008F0C0 24180001 */   li    $t8, 1
@@ -60,8 +60,8 @@ glabel func_8008F00C
 /* 08FCE4 8008F0E4 1420FFFB */  bnez  $at, .L8008F0D4
 /* 08FCE8 8008F0E8 A062FFFF */   sb    $v0, -1($v1)
 .L8008F0EC:
-/* 08FCEC 8008F0EC 3C01800E */  lui   $at, %hi(D_800DF480) # $at, 0x800e
-/* 08FCF0 8008F0F0 AC20F480 */  sw    $zero, %lo(D_800DF480)($at)
+/* 08FCEC 8008F0EC 3C01800E */  lui   $at, %hi(gNumberOfReadyPlayers) # $at, 0x800e
+/* 08FCF0 8008F0F0 AC20F480 */  sw    $zero, %lo(gNumberOfReadyPlayers)($at)
 /* 08FCF4 8008F0F4 3C01800E */  lui   $at, %hi(D_800E0980) # $at, 0x800e
 /* 08FCF8 8008F0F8 3C04800E */  lui   $a0, %hi(D_800E07E8) # $a0, 0x800e
 /* 08FCFC 8008F0FC AC380980 */  sw    $t8, %lo(D_800E0980)($at)
@@ -140,8 +140,8 @@ glabel func_8008F00C
 .L8008F220:
 /* 08FE20 8008F220 8FBF0014 */  lw    $ra, 0x14($sp)
 .L8008F224:
-/* 08FE24 8008F224 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 08FE28 8008F228 AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
+/* 08FE24 8008F224 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 08FE28 8008F228 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 08FE2C 8008F22C 03E00008 */  jr    $ra
 /* 08FE30 8008F230 27BD0018 */   addiu $sp, $sp, 0x18
 

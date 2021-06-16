@@ -51,7 +51,7 @@ glabel func_800370D4
 .L80037188:
 /* 037D88 80037188 00002025 */  move  $a0, $zero
 /* 037D8C 8003718C 24050007 */  li    $a1, 7
-/* 037D90 80037190 0C01BE53 */  jal   func_8006F94C
+/* 037D90 80037190 0C01BE53 */  jal   get_random_number_from_range
 /* 037D94 80037194 E7A00068 */   swc1  $f0, 0x68($sp)
 /* 037D98 80037198 14400037 */  bnez  $v0, .L80037278
 /* 037D9C 8003719C 3C013F80 */   li    $at, 0x3F800000 # 1.000000
@@ -62,7 +62,7 @@ glabel func_800370D4
 /* 037DB0 800371B0 00000000 */  nop   
 /* 037DB4 800371B4 45000031 */  bc1f  .L8003727C
 /* 037DB8 800371B8 8FA50074 */   lw    $a1, 0x74($sp)
-/* 037DBC 800371BC 0C01BE53 */  jal   func_8006F94C
+/* 037DBC 800371BC 0C01BE53 */  jal   get_random_number_from_range
 /* 037DC0 800371C0 240500FF */   li    $a1, 255
 /* 037DC4 800371C4 444FF800 */  cfc1  $t7, $31
 /* 037DC8 800371C8 C6080118 */  lwc1  $f8, 0x118($s0)
@@ -74,7 +74,7 @@ glabel func_800370D4
 /* 037DE0 800371E0 00002025 */  move  $a0, $zero
 /* 037DE4 800371E4 44052000 */  mfc1  $a1, $f4
 /* 037DE8 800371E8 44CFF800 */  ctc1  $t7, $31
-/* 037DEC 800371EC 0C01BE53 */  jal   func_8006F94C
+/* 037DEC 800371EC 0C01BE53 */  jal   get_random_number_from_range
 /* 037DF0 800371F0 00000000 */   nop   
 /* 037DF4 800371F4 C6200010 */  lwc1  $f0, 0x10($s1)
 /* 037DF8 800371F8 C60A010C */  lwc1  $f10, 0x10c($s0)

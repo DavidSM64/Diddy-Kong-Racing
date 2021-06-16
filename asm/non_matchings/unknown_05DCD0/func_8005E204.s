@@ -140,7 +140,7 @@ glabel func_8005E204
 /* 05F024 8005E424 000C6900 */  sll   $t5, $t4, 4
 /* 05F028 8005E428 01AC6823 */  subu  $t5, $t5, $t4
 /* 05F02C 8005E42C 000D6880 */  sll   $t5, $t5, 2
-/* 05F030 8005E430 0C01BE53 */  jal   func_8006F94C
+/* 05F030 8005E430 0C01BE53 */  jal   get_random_number_from_range
 /* 05F034 8005E434 AC4D007C */   sw    $t5, 0x7c($v0)
 /* 05F038 8005E438 8E05000C */  lw    $a1, 0xc($s0)
 /* 05F03C 8005E43C 8E060010 */  lw    $a2, 0x10($s0)

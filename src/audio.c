@@ -215,7 +215,7 @@ void audio_init(u32 arg0){
     return;
 }
 
-void musicSetRelativeVolume(u8);
+void set_relative_volume_for_music(u8);
 void func_80004A60(u8, u16);
 
 
@@ -224,7 +224,7 @@ void func_80000890(u8 arg0){
         D_80115F78 = arg0;
         if(D_80115F78 == 0){
             D_800DC66C = 256;
-            musicSetRelativeVolume(musicRelativeVolume);
+            set_relative_volume_for_music(musicRelativeVolume);
             func_80004A60(0,D_800DC66C*128-1);
             func_80004A60(1,D_800DC66C*128-1);
             func_80004A60(2,D_800DC66C*128-1);
@@ -279,7 +279,7 @@ void func_80000B28(void) {
 
 void func_800022BC(u8, ALCSPlayer*);
 
-void func_80000B34(u8 arg0) {
+void play_music(u8 arg0) {
     if (D_800DC648 == 0 && musicVolumeSliderPercentage != 0) {
         D_80115D04 = arg0;
         musicRelativeVolume = 0x7F;
@@ -327,7 +327,7 @@ void func_80000CBC(void) {
     D_80115D38 = 0;
     D_80115D3C = 0;
     D_800DC650 = 1.0f;
-    musicSetRelativeVolume(musicRelativeVolume);
+    set_relative_volume_for_music(musicRelativeVolume);
 }
 
 void func_80001D04(u16,void*);
@@ -346,7 +346,7 @@ void func_80000D00(u8 arg0){
             D_80115D3C = 0;
             D_800DC650 = 1.0f;
         }
-        musicSetRelativeVolume(musicRelativeVolume);
+        set_relative_volume_for_music(musicRelativeVolume);
     }else if(D_80115D3C < 0) {
         
         D_80115D38 -= arg0;
@@ -356,7 +356,7 @@ void func_80000D00(u8 arg0){
             D_80115D3C = 0;
             D_800DC650 = 0.0f;
         }
-        musicSetRelativeVolume(musicRelativeVolume);
+        set_relative_volume_for_music(musicRelativeVolume);
     }
 
     if(D_800DC658 > 0){
@@ -641,7 +641,7 @@ void func_80001878(u8 arg0) {
     if (arg0 != D_800DC640) {
         D_800DC640 = arg0;
         if (arg0) {
-            func_80000B34(D_80115D04);
+            play_music(D_80115D04);
         } else {
             func_80001844();
         }
@@ -681,7 +681,7 @@ u8 func_80001980(void) {
 }
 
 
-void musicSetRelativeVolume(u8 vol){
+void set_relative_volume_for_music(u8 vol){
     f32 normalized_vol;
 
     musicRelativeVolume = vol;
@@ -890,7 +890,7 @@ void func_8000232C(ALCSPlayer* seqp, void* ptr, u8* arg2, ALCSeq* seq){
         alCSPSetSeq(seqp, seq);
         alCSPPlay(seqp);
         if(seqp == gMusicPlayer){
-            musicSetRelativeVolume(*((u8*)((*arg2)*3 + D_80115D1C->unk0)));
+            set_relative_volume_for_music(*((u8*)((*arg2)*3 + D_80115D1C->unk0)));
         }else{
 
         }

@@ -40,7 +40,7 @@ glabel func_80033DD0
 /* 034A64 80033E64 240E000A */  li    $t6, 10
 /* 034A68 80033E68 A46D0006 */  sh    $t5, 6($v1)
 /* 034A6C 80033E6C A46E0004 */  sh    $t6, 4($v1)
-/* 034A70 80033E70 0C0270F2 */  jal   func_8009C3C8
+/* 034A70 80033E70 0C0270F2 */  jal   get_number_of_active_players
 /* 034A74 80033E74 AC6C0000 */   sw    $t4, ($v1)
 /* 034A78 80033E78 8FA30028 */  lw    $v1, 0x28($sp)
 /* 034A7C 80033E7C 28410002 */  slti  $at, $v0, 2
@@ -58,7 +58,7 @@ glabel func_80033DD0
 /* 034AAC 80033EAC 00003025 */   move  $a2, $zero
 .L80033EB0:
 /* 034AB0 80033EB0 2445FFFF */  addiu $a1, $v0, -1
-/* 034AB4 80033EB4 0C01BE53 */  jal   func_8006F94C
+/* 034AB4 80033EB4 0C01BE53 */  jal   get_random_number_from_range
 /* 034AB8 80033EB8 AFA30028 */   sw    $v1, 0x28($sp)
 /* 034ABC 80033EBC 8FA30028 */  lw    $v1, 0x28($sp)
 /* 034AC0 80033EC0 00403025 */  move  $a2, $v0

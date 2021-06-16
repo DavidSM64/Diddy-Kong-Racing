@@ -222,7 +222,7 @@ Player *(*playerStructArray_Ptr)[8];
 s32 *D_8011AEE8;
 s32 *D_8011AEEC;
 s32 playerCount;
-u8 D_8011AEF4;
+u8 gTimeTrialEnabled;
 u8 D_8011AEF5;
 u8 D_8011AEF6;
 u8 D_8011AEF7;
@@ -389,7 +389,7 @@ void func_8000BF8C(void) {
     func_8000C2D8(&D_8011AD6C[D_8011AD70[65]], (D_8011AD70[66] - D_8011AD70[65]) * 4);
     objPtrList = (Player**)func_80070C9C(0x800, 0xFFFF);
     D_8011ADC4 = 0;
-    D_8011AEF4 = 0;
+    gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
     D_8011ADA8 = 2.0f;
     func_8000C460();
@@ -619,12 +619,12 @@ void func_8000E1EC(Player *arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
 
-void func_8000E4BC(s32 arg0) {
-    D_8011AEF4 = arg0;
+void set_time_trial_enabled(s32 arg0) {
+    gTimeTrialEnabled = arg0;
 }
 
-u8 func_8000E4C8() {
-    return D_8011AEF4;
+u8 is_time_trial_enabled() {
+    return gTimeTrialEnabled;
 }
 
 u8 func_8000E4D8(void){

@@ -630,7 +630,7 @@ glabel func_800A277C
 /* 0A3C68 800A3068 26106D64 */   addiu $s0, %lo(D_80126D64) # addiu $s0, $s0, 0x6d64
 /* 0A3C6C 800A306C 92050000 */  lbu   $a1, ($s0)
 /* 0A3C70 800A3070 00002025 */  move  $a0, $zero
-/* 0A3C74 800A3074 0C01BE53 */  jal   func_8006F94C
+/* 0A3C74 800A3074 0C01BE53 */  jal   get_random_number_from_range
 /* 0A3C78 800A3078 24A50002 */   addiu $a1, $a1, 2
 /* 0A3C7C 800A307C 3C118012 */  lui   $s1, %hi(D_80126D48) # $s1, 0x8012
 /* 0A3C80 800A3080 26316D48 */  addiu $s1, %lo(D_80126D48) # addiu $s1, $s1, 0x6d48
@@ -642,7 +642,7 @@ glabel func_800A277C
 .L800A3098:
 /* 0A3C98 800A3098 92050000 */  lbu   $a1, ($s0)
 /* 0A3C9C 800A309C 00002025 */  move  $a0, $zero
-/* 0A3CA0 800A30A0 0C01BE53 */  jal   func_8006F94C
+/* 0A3CA0 800A30A0 0C01BE53 */  jal   get_random_number_from_range
 /* 0A3CA4 800A30A4 24A50002 */   addiu $a1, $a1, 2
 /* 0A3CA8 800A30A8 962C0000 */  lhu   $t4, ($s1)
 /* 0A3CAC 800A30AC 2443014B */  addiu $v1, $v0, 0x14b
@@ -779,7 +779,7 @@ glabel func_800A277C
 /* 0A3EA0 800A32A0 00002025 */  move  $a0, $zero
 /* 0A3EA4 800A32A4 15E00018 */  bnez  $t7, .L800A3308
 /* 0A3EA8 800A32A8 00000000 */   nop   
-/* 0A3EAC 800A32AC 0C01BE53 */  jal   func_8006F94C
+/* 0A3EAC 800A32AC 0C01BE53 */  jal   get_random_number_from_range
 /* 0A3EB0 800A32B0 24050002 */   li    $a1, 2
 /* 0A3EB4 800A32B4 962A0000 */  lhu   $t2, ($s1)
 /* 0A3EB8 800A32B8 24430147 */  addiu $v1, $v0, 0x147
@@ -788,7 +788,7 @@ glabel func_800A277C
 /* 0A3EC4 800A32C4 3064FFFF */   andi  $a0, $v1, 0xffff
 .L800A32C8:
 /* 0A3EC8 800A32C8 00002025 */  move  $a0, $zero
-/* 0A3ECC 800A32CC 0C01BE53 */  jal   func_8006F94C
+/* 0A3ECC 800A32CC 0C01BE53 */  jal   get_random_number_from_range
 /* 0A3ED0 800A32D0 24050002 */   li    $a1, 2
 /* 0A3ED4 800A32D4 96390000 */  lhu   $t9, ($s1)
 /* 0A3ED8 800A32D8 24430147 */  addiu $v1, $v0, 0x147
@@ -801,7 +801,7 @@ glabel func_800A277C
 /* 0A3EF0 800A32F0 0C000741 */  jal   func_80001D04
 /* 0A3EF4 800A32F4 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
 /* 0A3EF8 800A32F8 24040078 */  li    $a0, 120
-/* 0A3EFC 800A32FC 0C01BE53 */  jal   func_8006F94C
+/* 0A3EFC 800A32FC 0C01BE53 */  jal   get_random_number_from_range
 /* 0A3F00 800A3300 240504B0 */   li    $a1, 1200
 /* 0A3F04 800A3304 AE020000 */  sw    $v0, ($s0)
 .L800A3308:

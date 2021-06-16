@@ -390,7 +390,7 @@ glabel func_8003D5A0
 /* 03E748 8003DB48 00000000 */   nop   
 /* 03E74C 8003DB4C AC4D007C */  sw    $t5, 0x7c($v0)
 .L8003DB50:
-/* 03E750 8003DB50 0C0270F2 */  jal   func_8009C3C8
+/* 03E750 8003DB50 0C0270F2 */  jal   get_number_of_active_players
 /* 03E754 8003DB54 AFA90030 */   sw    $t1, 0x30($sp)
 /* 03E758 8003DB58 8FA90030 */  lw    $t1, 0x30($sp)
 /* 03E75C 8003DB5C 28410002 */  slti  $at, $v0, 2

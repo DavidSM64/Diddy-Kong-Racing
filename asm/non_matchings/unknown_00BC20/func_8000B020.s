@@ -86,12 +86,12 @@ glabel func_8000B020
 /* 00BD6C 8000B16C AE020078 */   sw    $v0, 0x78($s0)
 /* 00BD70 8000B170 AE02007C */  sw    $v0, 0x7c($s0)
 /* 00BD74 8000B174 00002025 */  move  $a0, $zero
-/* 00BD78 8000B178 0C01BE53 */  jal   func_8006F94C
+/* 00BD78 8000B178 0C01BE53 */  jal   get_random_number_from_range
 /* 00BD7C 8000B17C 240500FF */   li    $a1, 255
 /* 00BD80 8000B180 A2020072 */  sb    $v0, 0x72($s0)
 /* 00BD84 8000B184 A2000073 */  sb    $zero, 0x73($s0)
 /* 00BD88 8000B188 00002025 */  move  $a0, $zero
-/* 00BD8C 8000B18C 0C01BE53 */  jal   func_8006F94C
+/* 00BD8C 8000B18C 0C01BE53 */  jal   get_random_number_from_range
 /* 00BD90 8000B190 240500FF */   li    $a1, 255
 /* 00BD94 8000B194 A2820000 */  sb    $v0, ($s4)
 .L8000B198:
@@ -123,11 +123,11 @@ glabel func_8000B020
 .L8000B1FC:
 /* 00BDFC 8000B1FC A2000000 */  sb    $zero, ($s0)
 /* 00BE00 8000B200 00002025 */  move  $a0, $zero
-/* 00BE04 8000B204 0C01BE53 */  jal   func_8006F94C
+/* 00BE04 8000B204 0C01BE53 */  jal   get_random_number_from_range
 /* 00BE08 8000B208 240500FF */   li    $a1, 255
 /* 00BE0C 8000B20C A2020001 */  sb    $v0, 1($s0)
 /* 00BE10 8000B210 00002025 */  move  $a0, $zero
-/* 00BE14 8000B214 0C01BE53 */  jal   func_8006F94C
+/* 00BE14 8000B214 0C01BE53 */  jal   get_random_number_from_range
 /* 00BE18 8000B218 240500FF */   li    $a1, 255
 /* 00BE1C 8000B21C 26100004 */  addiu $s0, $s0, 4
 /* 00BE20 8000B220 A202FFFE */  sb    $v0, -2($s0)

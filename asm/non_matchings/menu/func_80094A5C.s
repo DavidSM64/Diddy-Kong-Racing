@@ -38,7 +38,7 @@ glabel func_80094A5C
 /* 0956E8 80094AE8 8DAE0000 */  lw    $t6, ($t5)
 /* 0956EC 80094AEC 3C01800E */  lui   $at, %hi(D_800E0BEC+20) # $at, 0x800e
 /* 0956F0 80094AF0 AFA2001C */  sw    $v0, 0x1c($sp)
-/* 0956F4 80094AF4 0C003932 */  jal   func_8000E4C8
+/* 0956F4 80094AF4 0C003932 */  jal   is_time_trial_enabled
 /* 0956F8 80094AF8 AC2E0C00 */   sw    $t6, %lo(D_800E0BEC+20)($at)
 /* 0956FC 80094AFC 3C05800E */  lui   $a1, %hi(D_800E0AF0) # $a1, 0x800e
 /* 095700 80094B00 8FA9001C */  lw    $t1, 0x1c($sp)

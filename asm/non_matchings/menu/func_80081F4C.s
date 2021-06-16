@@ -21,20 +21,20 @@ glabel func_80081F4C
 /* 082B98 80081F98 AFAE0040 */  sw    $t6, 0x40($sp)
 /* 082B9C 80081F9C 12C70086 */  beq   $s6, $a3, .L800821B8
 /* 082BA0 80081FA0 00008825 */   move  $s1, $zero
-/* 082BA4 80081FA4 3C0F8012 */  lui   $t7, %hi(D_801263C4) # $t7, 0x8012
-/* 082BA8 80081FA8 8DEF63C4 */  lw    $t7, %lo(D_801263C4)($t7)
-/* 082BAC 80081FAC 3C18800E */  lui   $t8, %hi(D_800DF4BC) # $t8, 0x800e
+/* 082BA4 80081FA4 3C0F8012 */  lui   $t7, %hi(gIgnorePlayerInput) # $t7, 0x8012
+/* 082BA8 80081FA8 8DEF63C4 */  lw    $t7, %lo(gIgnorePlayerInput)($t7)
+/* 082BAC 80081FAC 3C18800E */  lui   $t8, %hi(gNumberOfActivePlayers) # $t8, 0x800e
 /* 082BB0 80081FB0 15E0000F */  bnez  $t7, .L80081FF0
 /* 082BB4 80081FB4 00000000 */   nop   
-/* 082BB8 80081FB8 8F18F4BC */  lw    $t8, %lo(D_800DF4BC)($t8)
+/* 082BB8 80081FB8 8F18F4BC */  lw    $t8, %lo(gNumberOfActivePlayers)($t8)
 /* 082BBC 80081FBC 00008025 */  move  $s0, $zero
 /* 082BC0 80081FC0 1B00000B */  blez  $t8, .L80081FF0
 /* 082BC4 80081FC4 00000000 */   nop   
 .L80081FC8:
-/* 082BC8 80081FC8 0C01A955 */  jal   func_8006A554
+/* 082BC8 80081FC8 0C01A955 */  jal   get_button_inputs_from_player
 /* 082BCC 80081FCC 02002025 */   move  $a0, $s0
-/* 082BD0 80081FD0 3C19800E */  lui   $t9, %hi(D_800DF4BC) # $t9, 0x800e
-/* 082BD4 80081FD4 8F39F4BC */  lw    $t9, %lo(D_800DF4BC)($t9)
+/* 082BD0 80081FD0 3C19800E */  lui   $t9, %hi(gNumberOfActivePlayers) # $t9, 0x800e
+/* 082BD4 80081FD4 8F39F4BC */  lw    $t9, %lo(gNumberOfActivePlayers)($t9)
 /* 082BD8 80081FD8 26100001 */  addiu $s0, $s0, 1
 /* 082BDC 80081FDC 0219082A */  slt   $at, $s0, $t9
 /* 082BE0 80081FE0 1420FFF9 */  bnez  $at, .L80081FC8

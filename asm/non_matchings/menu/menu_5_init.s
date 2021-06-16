@@ -3,13 +3,13 @@ glabel menu_5_init
 /* 093888 80092C88 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 09388C 80092C8C 0C01BAA4 */  jal   get_settings
 /* 093890 80092C90 AFB00018 */   sw    $s0, 0x18($sp)
-/* 093894 80092C94 3C01800E */  lui   $at, %hi(D_800DF4C4) # $at, 0x800e
-/* 093898 80092C98 AC20F4C4 */  sw    $zero, %lo(D_800DF4C4)($at)
+/* 093894 80092C94 3C01800E */  lui   $at, %hi(gTrackIdForPreview) # $at, 0x800e
+/* 093898 80092C98 AC20F4C4 */  sw    $zero, %lo(gTrackIdForPreview)($at)
 /* 09389C 80092C9C 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
 /* 0938A0 80092CA0 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
-/* 0938A4 80092CA4 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
+/* 0938A4 80092CA4 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 0938A8 80092CA8 AFA20024 */  sw    $v0, 0x24($sp)
-/* 0938AC 80092CAC AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
+/* 0938AC 80092CAC AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 0938B0 80092CB0 8C4E004C */  lw    $t6, 0x4c($v0)
 /* 0938B4 80092CB4 00000000 */  nop   
 /* 0938B8 80092CB8 81D00002 */  lb    $s0, 2($t6)
@@ -64,7 +64,7 @@ glabel menu_5_init
 .L80092D70:
 /* 093970 80092D70 0C0002F8 */  jal   func_80000BE0
 /* 093974 80092D74 24040018 */   li    $a0, 24
-/* 093978 80092D78 0C0002CD */  jal   func_80000B34
+/* 093978 80092D78 0C0002CD */  jal   play_music
 /* 09397C 80092D7C 24040018 */   li    $a0, 24
 /* 093980 80092D80 0C0002C6 */  jal   func_80000B18
 /* 093984 80092D84 00000000 */   nop   
@@ -109,8 +109,8 @@ glabel menu_5_init
 /* 093A20 80092E20 AC2C0614 */   sw    $t4, %lo(D_800E0614)($at)
 /* 093A24 80092E24 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
 /* 093A28 80092E28 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
-/* 093A2C 80092E2C 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 093A30 80092E30 AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
+/* 093A2C 80092E2C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 093A30 80092E30 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 093A34 80092E34 3C01800E */  lui   $at, %hi(D_800E0980) # $at, 0x800e
 /* 093A38 80092E38 240D001E */  li    $t5, 30
 /* 093A3C 80092E3C AC2D0980 */  sw    $t5, %lo(D_800E0980)($at)

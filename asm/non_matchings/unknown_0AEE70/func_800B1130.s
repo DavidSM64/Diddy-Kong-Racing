@@ -88,7 +88,7 @@ glabel func_800B1130
 /* 0B1E50 800B1250 E7B00024 */  swc1  $f16, 0x24($sp)
 /* 0B1E54 800B1254 AFA80028 */  sw    $t0, 0x28($sp)
 /* 0B1E58 800B1258 AFA70038 */  sw    $a3, 0x38($sp)
-/* 0B1E5C 800B125C 0C01BE53 */  jal   func_8006F94C
+/* 0B1E5C 800B125C 0C01BE53 */  jal   get_random_number_from_range
 /* 0B1E60 800B1260 00052023 */   negu  $a0, $a1
 /* 0B1E64 800B1264 44829000 */  mtc1  $v0, $f18
 /* 0B1E68 800B1268 3C01800F */  lui   $at, %hi(D_800E8BC8 + 4) # $at, 0x800f
@@ -118,7 +118,7 @@ glabel func_800B1130
 /* 0B1EC4 800B12C4 E7B00024 */  swc1  $f16, 0x24($sp)
 /* 0B1EC8 800B12C8 AFA80028 */  sw    $t0, 0x28($sp)
 /* 0B1ECC 800B12CC AFA70038 */  sw    $a3, 0x38($sp)
-/* 0B1ED0 800B12D0 0C01BE53 */  jal   func_8006F94C
+/* 0B1ED0 800B12D0 0C01BE53 */  jal   get_random_number_from_range
 /* 0B1ED4 800B12D4 00052023 */   negu  $a0, $a1
 /* 0B1ED8 800B12D8 44829000 */  mtc1  $v0, $f18
 /* 0B1EDC 800B12DC 3C01800F */  lui   $at, %hi(D_800E8BD0 + 4) # $at, 0x800f
@@ -170,7 +170,7 @@ glabel func_800B1130
 /* 0B1F88 800B1388 84E5000A */  lh    $a1, 0xa($a3)
 /* 0B1F8C 800B138C AFA80028 */  sw    $t0, 0x28($sp)
 /* 0B1F90 800B1390 AFA70038 */  sw    $a3, 0x38($sp)
-/* 0B1F94 800B1394 0C01BE53 */  jal   func_8006F94C
+/* 0B1F94 800B1394 0C01BE53 */  jal   get_random_number_from_range
 /* 0B1F98 800B1398 00052023 */   negu  $a0, $a1
 /* 0B1F9C 800B139C 8FA70038 */  lw    $a3, 0x38($sp)
 /* 0B1FA0 800B13A0 8FA60044 */  lw    $a2, 0x44($sp)
@@ -256,7 +256,7 @@ glabel func_800B1130
 /* 0B20D0 800B14D0 92250098 */  lbu   $a1, 0x98($s1)
 /* 0B20D4 800B14D4 AFA70038 */  sw    $a3, 0x38($sp)
 /* 0B20D8 800B14D8 AFB9003C */  sw    $t9, 0x3c($sp)
-/* 0B20DC 800B14DC 0C01BE53 */  jal   func_8006F94C
+/* 0B20DC 800B14DC 0C01BE53 */  jal   get_random_number_from_range
 /* 0B20E0 800B14E0 00052023 */   negu  $a0, $a1
 /* 0B20E4 800B14E4 920B006C */  lbu   $t3, 0x6c($s0)
 /* 0B20E8 800B14E8 8FA3003C */  lw    $v1, 0x3c($sp)
@@ -271,7 +271,7 @@ glabel func_800B1130
 /* 0B2108 800B1508 92250099 */  lbu   $a1, 0x99($s1)
 /* 0B210C 800B150C AFA70038 */  sw    $a3, 0x38($sp)
 /* 0B2110 800B1510 AFA3003C */  sw    $v1, 0x3c($sp)
-/* 0B2114 800B1514 0C01BE53 */  jal   func_8006F94C
+/* 0B2114 800B1514 0C01BE53 */  jal   get_random_number_from_range
 /* 0B2118 800B1518 00052023 */   negu  $a0, $a1
 /* 0B211C 800B151C 920F006D */  lbu   $t7, 0x6d($s0)
 /* 0B2120 800B1520 8FA3003C */  lw    $v1, 0x3c($sp)
@@ -286,7 +286,7 @@ glabel func_800B1130
 /* 0B2140 800B1540 9225009A */  lbu   $a1, 0x9a($s1)
 /* 0B2144 800B1544 AFA70038 */  sw    $a3, 0x38($sp)
 /* 0B2148 800B1548 AFA3003C */  sw    $v1, 0x3c($sp)
-/* 0B214C 800B154C 0C01BE53 */  jal   func_8006F94C
+/* 0B214C 800B154C 0C01BE53 */  jal   get_random_number_from_range
 /* 0B2150 800B1550 00052023 */   negu  $a0, $a1
 /* 0B2154 800B1554 9219006E */  lbu   $t9, 0x6e($s0)
 /* 0B2158 800B1558 8FA3003C */  lw    $v1, 0x3c($sp)
@@ -300,7 +300,7 @@ glabel func_800B1130
 /* 0B2174 800B1574 00000000 */   nop   
 /* 0B2178 800B1578 9225009B */  lbu   $a1, 0x9b($s1)
 /* 0B217C 800B157C AFA70038 */  sw    $a3, 0x38($sp)
-/* 0B2180 800B1580 0C01BE53 */  jal   func_8006F94C
+/* 0B2180 800B1580 0C01BE53 */  jal   get_random_number_from_range
 /* 0B2184 800B1584 00052023 */   negu  $a0, $a1
 /* 0B2188 800B1588 920C006F */  lbu   $t4, 0x6f($s0)
 /* 0B218C 800B158C 8FA60044 */  lw    $a2, 0x44($sp)
@@ -418,7 +418,7 @@ glabel func_800B1130
 /* 0B2328 800B1728 8E0F0044 */  lw    $t7, 0x44($s0)
 /* 0B232C 800B172C 00002025 */  move  $a0, $zero
 /* 0B2330 800B1730 85E50000 */  lh    $a1, ($t7)
-/* 0B2334 800B1734 0C01BE53 */  jal   func_8006F94C
+/* 0B2334 800B1734 0C01BE53 */  jal   get_random_number_from_range
 /* 0B2338 800B1738 24A5FFFF */   addiu $a1, $a1, -1
 /* 0B233C 800B173C 8E180040 */  lw    $t8, 0x40($s0)
 /* 0B2340 800B1740 8FA60044 */  lw    $a2, 0x44($sp)
@@ -502,7 +502,7 @@ glabel func_800B1130
 /* 0B245C 800B185C 95E50012 */  lhu   $a1, 0x12($t7)
 /* 0B2460 800B1860 00000000 */  nop   
 /* 0B2464 800B1864 00057203 */  sra   $t6, $a1, 8
-/* 0B2468 800B1868 0C01BE53 */  jal   func_8006F94C
+/* 0B2468 800B1868 0C01BE53 */  jal   get_random_number_from_range
 /* 0B246C 800B186C 25C5FFFF */   addiu $a1, $t6, -1
 /* 0B2470 800B1870 8E190040 */  lw    $t9, 0x40($s0)
 /* 0B2474 800B1874 8FA60044 */  lw    $a2, 0x44($sp)
@@ -607,7 +607,7 @@ glabel func_800B1130
 /* 0B25DC 800B19DC 30791000 */   andi  $t9, $v1, 0x1000
 /* 0B25E0 800B19E0 86250080 */  lh    $a1, 0x80($s1)
 /* 0B25E4 800B19E4 AFAD003C */  sw    $t5, 0x3c($sp)
-/* 0B25E8 800B19E8 0C01BE53 */  jal   func_8006F94C
+/* 0B25E8 800B19E8 0C01BE53 */  jal   get_random_number_from_range
 /* 0B25EC 800B19EC 00052023 */   negu  $a0, $a1
 /* 0B25F0 800B19F0 860E0000 */  lh    $t6, ($s0)
 /* 0B25F4 800B19F4 8FA3003C */  lw    $v1, 0x3c($sp)
@@ -620,7 +620,7 @@ glabel func_800B1130
 /* 0B260C 800B1A0C 306C2000 */   andi  $t4, $v1, 0x2000
 /* 0B2610 800B1A10 86250082 */  lh    $a1, 0x82($s1)
 /* 0B2614 800B1A14 AFA3003C */  sw    $v1, 0x3c($sp)
-/* 0B2618 800B1A18 0C01BE53 */  jal   func_8006F94C
+/* 0B2618 800B1A18 0C01BE53 */  jal   get_random_number_from_range
 /* 0B261C 800B1A1C 00052023 */   negu  $a0, $a1
 /* 0B2620 800B1A20 860A0002 */  lh    $t2, 2($s0)
 /* 0B2624 800B1A24 8FA3003C */  lw    $v1, 0x3c($sp)
@@ -632,7 +632,7 @@ glabel func_800B1130
 /* 0B2638 800B1A38 11800008 */  beqz  $t4, .L800B1A5C
 /* 0B263C 800B1A3C 00000000 */   nop   
 /* 0B2640 800B1A40 86250084 */  lh    $a1, 0x84($s1)
-/* 0B2644 800B1A44 0C01BE53 */  jal   func_8006F94C
+/* 0B2644 800B1A44 0C01BE53 */  jal   get_random_number_from_range
 /* 0B2648 800B1A48 00052023 */   negu  $a0, $a1
 /* 0B264C 800B1A4C 860D0004 */  lh    $t5, 4($s0)
 /* 0B2650 800B1A50 8FA60044 */  lw    $a2, 0x44($sp)
@@ -658,7 +658,7 @@ glabel func_800B1130
 /* 0B269C 800B1A9C 306F8000 */   andi  $t7, $v1, 0x8000
 /* 0B26A0 800B1AA0 86250086 */  lh    $a1, 0x86($s1)
 /* 0B26A4 800B1AA4 AFAA003C */  sw    $t2, 0x3c($sp)
-/* 0B26A8 800B1AA8 0C01BE53 */  jal   func_8006F94C
+/* 0B26A8 800B1AA8 0C01BE53 */  jal   get_random_number_from_range
 /* 0B26AC 800B1AAC 00052023 */   negu  $a0, $a1
 /* 0B26B0 800B1AB0 860C0062 */  lh    $t4, 0x62($s0)
 /* 0B26B4 800B1AB4 8FA3003C */  lw    $v1, 0x3c($sp)
@@ -671,7 +671,7 @@ glabel func_800B1130
 /* 0B26CC 800B1ACC 0003CBC0 */   sll   $t9, $v1, 0xf
 /* 0B26D0 800B1AD0 86250088 */  lh    $a1, 0x88($s1)
 /* 0B26D4 800B1AD4 AFA3003C */  sw    $v1, 0x3c($sp)
-/* 0B26D8 800B1AD8 0C01BE53 */  jal   func_8006F94C
+/* 0B26D8 800B1AD8 0C01BE53 */  jal   get_random_number_from_range
 /* 0B26DC 800B1ADC 00052023 */   negu  $a0, $a1
 /* 0B26E0 800B1AE0 860E0064 */  lh    $t6, 0x64($s0)
 /* 0B26E4 800B1AE4 8FA3003C */  lw    $v1, 0x3c($sp)
@@ -683,7 +683,7 @@ glabel func_800B1130
 /* 0B26F8 800B1AF8 07210009 */  bgez  $t9, .L800B1B20
 /* 0B26FC 800B1AFC 8FA50040 */   lw    $a1, 0x40($sp)
 /* 0B2700 800B1B00 8625008A */  lh    $a1, 0x8a($s1)
-/* 0B2704 800B1B04 0C01BE53 */  jal   func_8006F94C
+/* 0B2704 800B1B04 0C01BE53 */  jal   get_random_number_from_range
 /* 0B2708 800B1B08 00052023 */   negu  $a0, $a1
 /* 0B270C 800B1B0C 860A0066 */  lh    $t2, 0x66($s0)
 /* 0B2710 800B1B10 8FA60044 */  lw    $a2, 0x44($sp)

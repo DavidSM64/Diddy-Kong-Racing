@@ -36,8 +36,8 @@ glabel func_8008FA54
 /* 0906BC 8008FABC 00003025 */  move  $a2, $zero
 /* 0906C0 8008FAC0 0C0310F3 */  jal   set_text_background_color
 /* 0906C4 8008FAC4 00003825 */   move  $a3, $zero
-/* 0906C8 8008FAC8 3C02800E */  lui   $v0, %hi(D_800DF47C) # $v0, 0x800e
-/* 0906CC 8008FACC 8C42F47C */  lw    $v0, %lo(D_800DF47C)($v0)
+/* 0906C8 8008FAC8 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
+/* 0906CC 8008FACC 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
 /* 0906D0 8008FAD0 241100FF */  li    $s1, 255
 /* 0906D4 8008FAD4 18400008 */  blez  $v0, .L8008FAF8
 /* 0906D8 8008FAD8 3C098012 */   lui   $t1, %hi(D_801269F0) # $t1, 0x8012

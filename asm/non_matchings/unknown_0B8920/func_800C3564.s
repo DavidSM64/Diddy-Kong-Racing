@@ -178,7 +178,7 @@ glabel func_800C3564
 .L800C37F0:
 /* 0C43F0 800C37F0 1640FFC7 */  bnez  $s2, .L800C3710
 /* 0C43F4 800C37F4 00000000 */   nop   
-/* 0C43F8 800C37F8 0C01A955 */  jal   func_8006A554
+/* 0C43F8 800C37F8 0C01A955 */  jal   get_button_inputs_from_player
 /* 0C43FC 800C37FC 00002025 */   move  $a0, $zero
 /* 0C4400 800C3800 3C0B8013 */  lui   $t3, %hi(D_8012A787) # $t3, 0x8013
 /* 0C4404 800C3804 816BA787 */  lb    $t3, %lo(D_8012A787)($t3)

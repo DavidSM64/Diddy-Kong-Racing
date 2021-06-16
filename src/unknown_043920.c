@@ -201,7 +201,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80043ECC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80044170.s")
 
 s32 func_80044450(s32 arg0) {
-    return func_8006F94C(0, 99) < arg0;
+    return get_random_number_from_range(0, 99) < arg0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004447C.s")

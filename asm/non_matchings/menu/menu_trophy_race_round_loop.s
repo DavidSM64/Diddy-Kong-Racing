@@ -37,8 +37,8 @@ glabel menu_trophy_race_round_loop
 .L80098628:
 /* 099228 80098628 ACE00000 */  sw    $zero, ($a3)
 .L8009862C:
-/* 09922C 8009862C 3C03800E */  lui   $v1, %hi(D_800DF47C) # $v1, 0x800e
-/* 099230 80098630 2463F47C */  addiu $v1, %lo(D_800DF47C) # addiu $v1, $v1, -0xb84
+/* 09922C 8009862C 3C03800E */  lui   $v1, %hi(gMenuDelay) # $v1, 0x800e
+/* 099230 80098630 2463F47C */  addiu $v1, %lo(gMenuDelay) # addiu $v1, $v1, -0xb84
 /* 099234 80098634 8C620000 */  lw    $v0, ($v1)
 /* 099238 80098638 8FAD0020 */  lw    $t5, 0x20($sp)
 /* 09923C 8009863C 10400003 */  beqz  $v0, .L8009864C
@@ -52,11 +52,11 @@ glabel menu_trophy_race_round_loop
 /* 099258 80098658 8FA40020 */  lw    $a0, 0x20($sp)
 /* 09925C 8009865C 0C0260F0 */  jal   func_800983C0
 /* 099260 80098660 00000000 */   nop   
-/* 099264 80098664 3C03800E */  lui   $v1, %hi(D_800DF47C) # $v1, 0x800e
-/* 099268 80098668 2463F47C */  addiu $v1, %lo(D_800DF47C) # addiu $v1, $v1, -0xb84
+/* 099264 80098664 3C03800E */  lui   $v1, %hi(gMenuDelay) # $v1, 0x800e
+/* 099268 80098668 2463F47C */  addiu $v1, %lo(gMenuDelay) # addiu $v1, $v1, -0xb84
 .L8009866C:
-/* 09926C 8009866C 3C0F8012 */  lui   $t7, %hi(D_801263C4) # $t7, 0x8012
-/* 099270 80098670 8DEF63C4 */  lw    $t7, %lo(D_801263C4)($t7)
+/* 09926C 8009866C 3C0F8012 */  lui   $t7, %hi(gIgnorePlayerInput) # $t7, 0x8012
+/* 099270 80098670 8DEF63C4 */  lw    $t7, %lo(gIgnorePlayerInput)($t7)
 /* 099274 80098674 00000000 */  nop   
 /* 099278 80098678 15E00014 */  bnez  $t7, .L800986CC
 /* 09927C 8009867C 00000000 */   nop   
@@ -75,13 +75,13 @@ glabel menu_trophy_race_round_loop
 /* 0992B0 800986B0 0C030076 */  jal   func_800C01D8
 /* 0992B4 800986B4 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
 /* 0992B8 800986B8 24090001 */  li    $t1, 1
-/* 0992BC 800986BC 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 0992C0 800986C0 AC29F47C */  sw    $t1, %lo(D_800DF47C)($at)
+/* 0992BC 800986BC 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 0992C0 800986C0 AC29F47C */  sw    $t1, %lo(gMenuDelay)($at)
 /* 0992C4 800986C4 0C000326 */  jal   func_80000C98
 /* 0992C8 800986C8 2404FF80 */   li    $a0, -128
 .L800986CC:
-/* 0992CC 800986CC 3C03800E */  lui   $v1, %hi(D_800DF47C) # $v1, 0x800e
-/* 0992D0 800986D0 2463F47C */  addiu $v1, %lo(D_800DF47C) # addiu $v1, $v1, -0xb84
+/* 0992CC 800986CC 3C03800E */  lui   $v1, %hi(gMenuDelay) # $v1, 0x800e
+/* 0992D0 800986D0 2463F47C */  addiu $v1, %lo(gMenuDelay) # addiu $v1, $v1, -0xb84
 /* 0992D4 800986D4 8C6A0000 */  lw    $t2, ($v1)
 /* 0992D8 800986D8 00001025 */  move  $v0, $zero
 /* 0992DC 800986DC 2941001F */  slti  $at, $t2, 0x1f
@@ -100,17 +100,17 @@ glabel menu_trophy_race_round_loop
 /* 099310 80098710 018D7021 */  addu  $t6, $t4, $t5
 /* 099314 80098714 01CFC021 */  addu  $t8, $t6, $t7
 /* 099318 80098718 8319FFFA */  lb    $t9, -6($t8)
-/* 09931C 8009871C 3C01800E */  lui   $at, %hi(D_800DF4D4) # $at, 0x800e
-/* 099320 80098720 3C02800E */  lui   $v0, %hi(D_800DF4BC) # $v0, 0x800e
-/* 099324 80098724 AC39F4D4 */  sw    $t9, %lo(D_800DF4D4)($at)
+/* 09931C 8009871C 3C01800E */  lui   $at, %hi(gTrackIdToLoad) # $at, 0x800e
+/* 099320 80098720 3C02800E */  lui   $v0, %hi(gNumberOfActivePlayers) # $v0, 0x800e
+/* 099324 80098724 AC39F4D4 */  sw    $t9, %lo(gTrackIdToLoad)($at)
 /* 099328 80098728 3C01800E */  lui   $at, %hi(D_800DF478) # $at, 0x800e
 /* 09932C 8009872C 24080001 */  li    $t0, 1
-/* 099330 80098730 8C42F4BC */  lw    $v0, %lo(D_800DF4BC)($v0)
+/* 099330 80098730 8C42F4BC */  lw    $v0, %lo(gNumberOfActivePlayers)($v0)
 /* 099334 80098734 10000003 */  b     .L80098744
 /* 099338 80098738 AC28F478 */   sw    $t0, %lo(D_800DF478)($at)
 .L8009873C:
-/* 09933C 8009873C 3C018012 */  lui   $at, %hi(D_801263C4) # $at, 0x8012
-/* 099340 80098740 AC2063C4 */  sw    $zero, %lo(D_801263C4)($at)
+/* 09933C 8009873C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 099340 80098740 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
 .L80098744:
 /* 099344 80098744 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 099348 80098748 27BD0020 */  addiu $sp, $sp, 0x20

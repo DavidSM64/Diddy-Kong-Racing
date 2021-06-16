@@ -93,7 +93,7 @@ glabel func_800A3CE4
 /* 0A4A44 800A3E44 27A40038 */   addiu $a0, $sp, 0x38
 /* 0A4A48 800A3E48 8FA50038 */  lw    $a1, 0x38($sp)
 /* 0A4A4C 800A3E4C AFA20044 */  sw    $v0, 0x44($sp)
-/* 0A4A50 800A3E50 0C01BE53 */  jal   func_8006F94C
+/* 0A4A50 800A3E50 0C01BE53 */  jal   get_random_number_from_range
 /* 0A4A54 800A3E54 24040001 */   li    $a0, 1
 /* 0A4A58 800A3E58 8FAE0044 */  lw    $t6, 0x44($sp)
 /* 0A4A5C 800A3E5C 00027880 */  sll   $t7, $v0, 2
@@ -106,14 +106,14 @@ glabel func_800A3CE4
 /* 0A4A78 800A3E78 00000000 */  nop   
 /* 0A4A7C 800A3E7C 172000AF */  bnez  $t9, .L800A413C
 /* 0A4A80 800A3E80 00000000 */   nop   
-/* 0A4A84 800A3E84 0C01BE53 */  jal   func_8006F94C
+/* 0A4A84 800A3E84 0C01BE53 */  jal   get_random_number_from_range
 /* 0A4A88 800A3E88 AFA80040 */   sw    $t0, 0x40($sp)
 /* 0A4A8C 800A3E8C 8FA80040 */  lw    $t0, 0x40($sp)
 /* 0A4A90 800A3E90 28410060 */  slti  $at, $v0, 0x60
 /* 0A4A94 800A3E94 142000A9 */  bnez  $at, .L800A413C
 /* 0A4A98 800A3E98 00002025 */   move  $a0, $zero
 /* 0A4A9C 800A3E9C 24050007 */  li    $a1, 7
-/* 0A4AA0 800A3EA0 0C01BE53 */  jal   func_8006F94C
+/* 0A4AA0 800A3EA0 0C01BE53 */  jal   get_random_number_from_range
 /* 0A4AA4 800A3EA4 AFA80040 */   sw    $t0, 0x40($sp)
 /* 0A4AA8 800A3EA8 44822000 */  mtc1  $v0, $f4
 /* 0A4AAC 800A3EAC 3C013FE0 */  li    $at, 0x3FE00000 # 1.750000
@@ -132,7 +132,7 @@ glabel func_800A3CE4
 /* 0A4AE0 800A3EE0 24050007 */  li    $a1, 7
 /* 0A4AE4 800A3EE4 46322181 */  sub.d $f6, $f4, $f18
 /* 0A4AE8 800A3EE8 46203220 */  cvt.s.d $f8, $f6
-/* 0A4AEC 800A3EEC 0C01BE53 */  jal   func_8006F94C
+/* 0A4AEC 800A3EEC 0C01BE53 */  jal   get_random_number_from_range
 /* 0A4AF0 800A3EF0 E7A8004C */   swc1  $f8, 0x4c($sp)
 /* 0A4AF4 800A3EF4 00025980 */  sll   $t3, $v0, 6
 /* 0A4AF8 800A3EF8 01625823 */  subu  $t3, $t3, $v0
@@ -222,7 +222,7 @@ glabel func_800A3CE4
 /* 0A4C44 800A4044 28410002 */  slti  $at, $v0, 2
 /* 0A4C48 800A4048 14200006 */  bnez  $at, .L800A4064
 /* 0A4C4C 800A404C 3C013F80 */   lui   $at, 0x3f80
-/* 0A4C50 800A4050 0C0002CD */  jal   func_80000B34
+/* 0A4C50 800A4050 0C0002CD */  jal   play_music
 /* 0A4C54 800A4054 00002025 */   move  $a0, $zero
 /* 0A4C58 800A4058 10000006 */  b     .L800A4074
 /* 0A4C5C 800A405C 24040016 */   li    $a0, 22

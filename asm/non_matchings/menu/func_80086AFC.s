@@ -395,8 +395,8 @@ glabel L80087084
 /* 087CB8 800870B8 24010009 */   li    $at, 9
 /* 087CBC 800870BC 14410042 */  bne   $v0, $at, .L800871C8
 /* 087CC0 800870C0 240C0001 */   li    $t4, 1
-/* 087CC4 800870C4 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 087CC8 800870C8 AC2CF47C */  sw    $t4, %lo(D_800DF47C)($at)
+/* 087CC4 800870C4 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 087CC8 800870C8 AC2CF47C */  sw    $t4, %lo(gMenuDelay)($at)
 /* 087CCC 800870CC 90EF0006 */  lbu   $t7, 6($a3)
 /* 087CD0 800870D0 3C018012 */  lui   $at, %hi(D_801264D0) # $at, 0x8012
 /* 087CD4 800870D4 1000003C */  b     .L800871C8
