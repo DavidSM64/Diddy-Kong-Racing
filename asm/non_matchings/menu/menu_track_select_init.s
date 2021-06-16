@@ -492,10 +492,10 @@ glabel menu_track_select_init
 /* 08FAFC 8008EEFC 000C6840 */  sll   $t5, $t4, 1
 /* 08FB00 8008EF00 016D7821 */  addu  $t7, $t3, $t5
 /* 08FB04 8008EF04 85EE0000 */  lh    $t6, ($t7)
-/* 08FB08 8008EF08 3C03800E */  lui   $v1, %hi(D_800DF4C4) # $v1, 0x800e
-/* 08FB0C 8008EF0C 3C10800E */  lui   $s0, %hi(D_800DF4C8) # $s0, 0x800e
-/* 08FB10 8008EF10 2610F4C8 */  addiu $s0, %lo(D_800DF4C8) # addiu $s0, $s0, -0xb38
-/* 08FB14 8008EF14 2463F4C4 */  addiu $v1, %lo(D_800DF4C4) # addiu $v1, $v1, -0xb3c
+/* 08FB08 8008EF08 3C03800E */  lui   $v1, %hi(gTrackIdForPreview) # $v1, 0x800e
+/* 08FB0C 8008EF0C 3C10800E */  lui   $s0, %hi(gTrackSelectRow) # $s0, 0x800e
+/* 08FB10 8008EF10 2610F4C8 */  addiu $s0, %lo(gTrackSelectRow) # addiu $s0, $s0, -0xb38
+/* 08FB14 8008EF14 2463F4C4 */  addiu $v1, %lo(gTrackIdForPreview) # addiu $v1, $v1, -0xb3c
 /* 08FB18 8008EF18 24580001 */  addiu $t8, $v0, 1
 /* 08FB1C 8008EF1C AE180000 */  sw    $t8, ($s0)
 /* 08FB20 8008EF20 16AE000E */  bne   $s5, $t6, .L8008EF5C
@@ -529,10 +529,10 @@ glabel menu_track_select_init
 /* 08FB8C 8008EF8C 24040018 */   li    $a0, 24
 /* 08FB90 8008EF90 0C000307 */  jal   func_80000C1C
 /* 08FB94 8008EF94 00000000 */   nop   
-/* 08FB98 8008EF98 0C0002CD */  jal   func_80000B34
+/* 08FB98 8008EF98 0C0002CD */  jal   play_music
 /* 08FB9C 8008EF9C 24040018 */   li    $a0, 24
 /* 08FBA0 8008EFA0 92040003 */  lbu   $a0, 3($s0)
-/* 08FBA4 8008EFA4 0C000664 */  jal   musicSetRelativeVolume
+/* 08FBA4 8008EFA4 0C000664 */  jal   set_relative_volume_for_music
 /* 08FBA8 8008EFA8 00000000 */   nop   
 /* 08FBAC 8008EFAC 0C0002C6 */  jal   func_80000B18
 /* 08FBB0 8008EFB0 00000000 */   nop   
@@ -541,11 +541,11 @@ glabel menu_track_select_init
 /* 08FBBC 8008EFBC 3C0C800E */  lui   $t4, %hi(D_800E0418) # $t4, 0x800e
 /* 08FBC0 8008EFC0 8D8C0418 */  lw    $t4, %lo(D_800E0418)($t4)
 /* 08FBC4 8008EFC4 3C01800E */  lui   $at, %hi(gIsInAdventureTwo) # $at, 0x800e
-/* 08FBC8 8008EFC8 3C0B800E */  lui   $t3, %hi(D_800E0410) # $t3, 0x800e
-/* 08FBCC 8008EFCC 8D6B0410 */  lw    $t3, %lo(D_800E0410)($t3)
+/* 08FBC8 8008EFC8 3C0B800E */  lui   $t3, %hi(gMultiplayerSelectedNumberOfRacers) # $t3, 0x800e
+/* 08FBCC 8008EFCC 8D6B0410 */  lw    $t3, %lo(gMultiplayerSelectedNumberOfRacers)($t3)
 /* 08FBD0 8008EFD0 8FBF0044 */  lw    $ra, 0x44($sp)
 /* 08FBD4 8008EFD4 AC2CF494 */  sw    $t4, %lo(gIsInAdventureTwo)($at)
-/* 08FBD8 8008EFD8 3C018012 */  lui   $at, %hi(D_80126548) # $at, 0x8012
+/* 08FBD8 8008EFD8 3C018012 */  lui   $at, %hi(gMultiplayerSelectedNumberOfRacersCopy) # $at, 0x8012
 /* 08FBDC 8008EFDC 8FB00020 */  lw    $s0, 0x20($sp)
 /* 08FBE0 8008EFE0 8FB10024 */  lw    $s1, 0x24($sp)
 /* 08FBE4 8008EFE4 8FB20028 */  lw    $s2, 0x28($sp)
@@ -557,5 +557,5 @@ glabel menu_track_select_init
 /* 08FBFC 8008EFFC 8FBE0040 */  lw    $fp, 0x40($sp)
 /* 08FC00 8008F000 27BD0080 */  addiu $sp, $sp, 0x80
 /* 08FC04 8008F004 03E00008 */  jr    $ra
-/* 08FC08 8008F008 AC2B6548 */   sw    $t3, %lo(D_80126548)($at)
+/* 08FC08 8008F008 AC2B6548 */   sw    $t3, %lo(gMultiplayerSelectedNumberOfRacersCopy)($at)
 

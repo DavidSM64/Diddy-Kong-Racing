@@ -11,7 +11,7 @@ glabel func_80038B74
 /* 039798 80038B98 00002025 */  move  $a0, $zero
 /* 03979C 80038B9C 81C50055 */  lb    $a1, 0x55($t6)
 /* 0397A0 80038BA0 AFA60018 */  sw    $a2, 0x18($sp)
-/* 0397A4 80038BA4 0C01BE53 */  jal   func_8006F94C
+/* 0397A4 80038BA4 0C01BE53 */  jal   get_random_number_from_range
 /* 0397A8 80038BA8 24A5FFFF */   addiu $a1, $a1, -1
 /* 0397AC 80038BAC 8FA4001C */  lw    $a0, 0x1c($sp)
 /* 0397B0 80038BB0 8FA60018 */  lw    $a2, 0x18($sp)

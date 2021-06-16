@@ -160,7 +160,7 @@ glabel func_8004447C
 /* 0452A8 800446A8 00000000 */   nop   
 glabel L800446AC
 /* 0452AC 800446AC 00002025 */  move  $a0, $zero
-/* 0452B0 800446B0 0C01BE53 */  jal   func_8006F94C
+/* 0452B0 800446B0 0C01BE53 */  jal   get_random_number_from_range
 /* 0452B4 800446B4 24050009 */   li    $a1, 9
 /* 0452B8 800446B8 820E0173 */  lb    $t6, 0x173($s0)
 /* 0452BC 800446BC 8FAD0038 */  lw    $t5, 0x38($sp)

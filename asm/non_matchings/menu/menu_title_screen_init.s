@@ -6,18 +6,18 @@ glabel menu_title_screen_init
 /* 08414C 8008354C 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 084150 80083550 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
 /* 084154 80083554 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 084158 80083558 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
+/* 084158 80083558 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 08415C 8008355C 0C027055 */  jal   reset_character_id_slots
-/* 084160 80083560 AC20F47C */   sw    $zero, %lo(D_800DF47C)($at)
+/* 084160 80083560 AC20F47C */   sw    $zero, %lo(gMenuDelay)($at)
 /* 084164 80083564 3C01800E */  lui   $at, %hi(gSaveFileIndex) # $at, 0x800e
 /* 084168 80083568 AC20F4CC */  sw    $zero, %lo(gSaveFileIndex)($at)
-/* 08416C 8008356C 3C01800E */  lui   $at, %hi(D_800DF45C) # $at, 0x800e
-/* 084170 80083570 AC20F45C */  sw    $zero, %lo(D_800DF45C)($at)
-/* 084174 80083574 3C01800E */  lui   $at, %hi(D_800DF4BC) # $at, 0x800e
+/* 08416C 8008356C 3C01800E */  lui   $at, %hi(gTitleScreenCurrentOption) # $at, 0x800e
+/* 084170 80083570 AC20F45C */  sw    $zero, %lo(gTitleScreenCurrentOption)($at)
+/* 084174 80083574 3C01800E */  lui   $at, %hi(gNumberOfActivePlayers) # $at, 0x800e
 /* 084178 80083578 240F0004 */  li    $t7, 4
 /* 08417C 8008357C 0C01A90D */  jal   func_8006A434
-/* 084180 80083580 AC2FF4BC */   sw    $t7, %lo(D_800DF4BC)($at)
-/* 084184 80083584 0C0002CD */  jal   func_80000B34
+/* 084180 80083580 AC2FF4BC */   sw    $t7, %lo(gNumberOfActivePlayers)($at)
+/* 084184 80083584 0C0002CD */  jal   play_music
 /* 084188 80083588 24040001 */   li    $a0, 1
 /* 08418C 8008358C 0C0006BB */  jal   musicGetRelativeVolume
 /* 084190 80083590 00000000 */   nop   
@@ -107,7 +107,7 @@ glabel menu_title_screen_init
 /* 0842D4 800836D4 24040002 */   li    $a0, 2
 /* 0842D8 800836D8 0C000224 */  jal   func_80000890
 /* 0842DC 800836DC 00002025 */   move  $a0, $zero
-/* 0842E0 800836E0 0C00392F */  jal   func_8000E4BC
+/* 0842E0 800836E0 0C00392F */  jal   set_time_trial_enabled
 /* 0842E4 800836E4 00002025 */   move  $a0, $zero
 /* 0842E8 800836E8 3C018012 */  lui   $at, %hi(D_80126864) # $at, 0x8012
 /* 0842EC 800836EC AC206864 */  sw    $zero, %lo(D_80126864)($at)
@@ -143,8 +143,8 @@ glabel menu_title_screen_init
 /* 084360 80083760 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
 /* 084364 80083764 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 084368 80083768 AC2063D8 */  sw    $zero, %lo(D_801263D8)($at)
-/* 08436C 8008376C 3C01800E */  lui   $at, %hi(D_800DF4B8) # $at, 0x800e
-/* 084370 80083770 AC20F4B8 */  sw    $zero, %lo(D_800DF4B8)($at)
+/* 08436C 8008376C 3C01800E */  lui   $at, %hi(gIsInTracksMode) # $at, 0x800e
+/* 084370 80083770 AC20F4B8 */  sw    $zero, %lo(gIsInTracksMode)($at)
 /* 084374 80083774 03E00008 */  jr    $ra
 /* 084378 80083778 27BD0018 */   addiu $sp, $sp, 0x18
 

@@ -254,14 +254,14 @@ glabel func_800B82B4
 .L800B8650:
 /* 0B9250 800B8650 8E850020 */  lw    $a1, 0x20($s4)
 /* 0B9254 800B8654 00002025 */  move  $a0, $zero
-/* 0B9258 800B8658 0C01BE53 */  jal   func_8006F94C
+/* 0B9258 800B8658 0C01BE53 */  jal   get_random_number_from_range
 /* 0B925C 800B865C 24A5FFFF */   addiu $a1, $a1, -1
 /* 0B9260 800B8660 8FD80000 */  lw    $t8, ($fp)
 /* 0B9264 800B8664 00002025 */  move  $a0, $zero
 /* 0B9268 800B8668 0316C821 */  addu  $t9, $t8, $s6
 /* 0B926C 800B866C A7220000 */  sh    $v0, ($t9)
 /* 0B9270 800B8670 8E850020 */  lw    $a1, 0x20($s4)
-/* 0B9274 800B8674 0C01BE53 */  jal   func_8006F94C
+/* 0B9274 800B8674 0C01BE53 */  jal   get_random_number_from_range
 /* 0B9278 800B8678 24A5FFFF */   addiu $a1, $a1, -1
 /* 0B927C 800B867C 8FCA0000 */  lw    $t2, ($fp)
 /* 0B9280 800B8680 26100001 */  addiu $s0, $s0, 1

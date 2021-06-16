@@ -241,10 +241,10 @@ glabel menu_ghost_data_init
 /* 09AA14 80099E14 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
 /* 09AA18 80099E18 AC2063E0 */  sw    $zero, %lo(D_801263E0)($at)
 /* 09AA1C 80099E1C 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
-/* 09AA20 80099E20 3C02800E */  lui   $v0, %hi(D_800DF47C) # $v0, 0x800e
+/* 09AA20 80099E20 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 09AA24 80099E24 AC2063D8 */  sw    $zero, %lo(D_801263D8)($at)
 /* 09AA28 80099E28 8FB90070 */  lw    $t9, 0x70($sp)
-/* 09AA2C 80099E2C 2442F47C */  addiu $v0, %lo(D_800DF47C) # addiu $v0, $v0, -0xb84
+/* 09AA2C 80099E2C 2442F47C */  addiu $v0, %lo(gMenuDelay) # addiu $v0, $v0, -0xb84
 /* 09AA30 80099E30 AC400000 */  sw    $zero, ($v0)
 /* 09AA34 80099E34 3C018012 */  lui   $at, %hi(D_80126498) # $at, 0x8012
 /* 09AA38 80099E38 17200006 */  bnez  $t9, .L80099E54

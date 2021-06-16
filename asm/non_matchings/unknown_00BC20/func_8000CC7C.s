@@ -54,16 +54,16 @@ glabel func_8000CC7C
 /* 00D918 8000CD18 306E0040 */   andi  $t6, $v1, 0x40
 /* 00D91C 8000CD1C 11C00005 */  beqz  $t6, .L8000CD34
 .L8000CD20:
-/* 00D920 8000CD20 3C148012 */   lui   $s4, %hi(D_8011AEF4) # $s4, 0x8012
+/* 00D920 8000CD20 3C148012 */   lui   $s4, %hi(gTimeTrialEnabled) # $s4, 0x8012
 /* 00D924 8000CD24 3C018012 */  lui   $at, %hi(D_8011AEF5) # $at, 0x8012
-/* 00D928 8000CD28 2694AEF4 */  addiu $s4, %lo(D_8011AEF4) # addiu $s4, $s4, -0x510c
+/* 00D928 8000CD28 2694AEF4 */  addiu $s4, %lo(gTimeTrialEnabled) # addiu $s4, $s4, -0x510c
 /* 00D92C 8000CD2C A020AEF5 */  sb    $zero, %lo(D_8011AEF5)($at)
 /* 00D930 8000CD30 A2800000 */  sb    $zero, ($s4)
 .L8000CD34:
-/* 00D934 8000CD34 3C148012 */  lui   $s4, %hi(D_8011AEF4) # $s4, 0x8012
-/* 00D938 8000CD38 2694AEF4 */  addiu $s4, %lo(D_8011AEF4) # addiu $s4, $s4, -0x510c
+/* 00D934 8000CD34 3C148012 */  lui   $s4, %hi(gTimeTrialEnabled) # $s4, 0x8012
+/* 00D938 8000CD38 2694AEF4 */  addiu $s4, %lo(gTimeTrialEnabled) # addiu $s4, $s4, -0x510c
 /* 00D93C 8000CD3C AFAF0130 */  sw    $t7, 0x130($sp)
-/* 00D940 8000CD40 0C003932 */  jal   func_8000E4C8
+/* 00D940 8000CD40 0C003932 */  jal   is_time_trial_enabled
 /* 00D944 8000CD44 AFA40068 */   sw    $a0, 0x68($sp)
 /* 00D948 8000CD48 1040000C */  beqz  $v0, .L8000CD7C
 /* 00D94C 8000CD4C 00000000 */   nop   
@@ -275,7 +275,7 @@ glabel func_8000CC7C
 .L8000D058:
 /* 00DC58 8000D058 15E10006 */  bne   $t7, $at, .L8000D074
 /* 00DC5C 8000D05C 8FB80064 */   lw    $t8, 0x64($sp)
-/* 00DC60 8000D060 0C027110 */  jal   func_8009C440
+/* 00DC60 8000D060 0C027110 */  jal   get_multiplayer_racer_count
 /* 00DC64 8000D064 00000000 */   nop   
 /* 00DC68 8000D068 3C018012 */  lui   $at, %hi(playerCount) # $at, 0x8012
 /* 00DC6C 8000D06C AC22AEF0 */  sw    $v0, %lo(playerCount)($at)

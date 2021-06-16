@@ -13,7 +13,7 @@ glabel menu_trophy_race_round_init
 /* 098E98 80098298 8C630FEC */  lw    $v1, %lo(D_800E0FEC)($v1)
 /* 098E9C 8009829C 3C0E800E */  lui   $t6, %hi(gTrophyRaceWorldId) # $t6, 0x800e
 /* 098EA0 800982A0 1460000E */  bnez  $v1, .L800982DC
-/* 098EA4 800982A4 3C13800E */   lui   $s3, %hi(D_800DF4BC) # $s3, 0x800e
+/* 098EA4 800982A4 3C13800E */   lui   $s3, %hi(gNumberOfActivePlayers) # $s3, 0x800e
 /* 098EA8 800982A8 00008025 */  move  $s0, $zero
 /* 098EAC 800982AC 02201825 */  move  $v1, $s1
 /* 098EB0 800982B0 24040008 */  li    $a0, 8
@@ -30,7 +30,7 @@ glabel menu_trophy_race_round_init
 /* 098ED8 800982D8 00000000 */  nop   
 .L800982DC:
 /* 098EDC 800982DC 8DCE0FE8 */  lw    $t6, %lo(gTrophyRaceWorldId)($t6)
-/* 098EE0 800982E0 2673F4BC */  addiu $s3, %lo(D_800DF4BC) # addiu $s3, $s3, -0xb44
+/* 098EE0 800982E0 2673F4BC */  addiu $s3, %lo(gNumberOfActivePlayers) # addiu $s3, $s3, -0xb44
 /* 098EE4 800982E4 000E7880 */  sll   $t7, $t6, 2
 /* 098EE8 800982E8 01EE7823 */  subu  $t7, $t7, $t6
 /* 098EEC 800982EC 000F7840 */  sll   $t7, $t7, 1
@@ -70,8 +70,8 @@ glabel menu_trophy_race_round_init
 /* 098F64 80098364 2405FFFF */  li    $a1, -1
 /* 098F68 80098368 0C01B8BA */  jal   func_8006E2E8
 /* 098F6C 8009836C 24060001 */   li    $a2, 1
-/* 098F70 80098370 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 098F74 80098374 AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
+/* 098F70 80098370 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 098F74 80098374 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 098F78 80098378 3C01800E */  lui   $at, %hi(D_800E0980) # $at, 0x800e
 /* 098F7C 8009837C 240B000A */  li    $t3, 10
 /* 098F80 80098380 AC2B0980 */  sw    $t3, %lo(D_800E0980)($at)
@@ -79,7 +79,7 @@ glabel menu_trophy_race_round_init
 /* 098F88 80098388 24040002 */   li    $a0, 2
 /* 098F8C 8009838C 0C0002F8 */  jal   func_80000BE0
 /* 098F90 80098390 24040018 */   li    $a0, 24
-/* 098F94 80098394 0C0002CD */  jal   func_80000B34
+/* 098F94 80098394 0C0002CD */  jal   play_music
 /* 098F98 80098398 24040018 */   li    $a0, 24
 /* 098F9C 8009839C 0C000326 */  jal   func_80000C98
 /* 098FA0 800983A0 24040100 */   li    $a0, 256

@@ -2,23 +2,23 @@ glabel func_8008DC7C
 /* 08E87C 8008DC7C 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 08E880 8008DC80 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 08E884 8008DC84 AFA40020 */  sw    $a0, 0x20($sp)
-/* 08E888 8008DC88 0C01A955 */  jal   func_8006A554
+/* 08E888 8008DC88 0C01A955 */  jal   get_button_inputs_from_player
 /* 08E88C 8008DC8C 00002025 */   move  $a0, $zero
-/* 08E890 8008DC90 3C0E800E */  lui   $t6, %hi(D_800DF4BC) # $t6, 0x800e
-/* 08E894 8008DC94 8DCEF4BC */  lw    $t6, %lo(D_800DF4BC)($t6)
-/* 08E898 8008DC98 3C058012 */  lui   $a1, %hi(D_8012645C) # $a1, 0x8012
-/* 08E89C 8008DC9C 80A5645C */  lb    $a1, %lo(D_8012645C)($a1)
+/* 08E890 8008DC90 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
+/* 08E894 8008DC94 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)
+/* 08E898 8008DC98 3C058012 */  lui   $a1, %hi(gControllersXAxisDirection) # $a1, 0x8012
+/* 08E89C 8008DC9C 80A5645C */  lb    $a1, %lo(gControllersXAxisDirection)($a1)
 /* 08E8A0 8008DCA0 24010002 */  li    $at, 2
 /* 08E8A4 8008DCA4 15C1000B */  bne   $t6, $at, .L8008DCD4
 /* 08E8A8 8008DCA8 00401825 */   move  $v1, $v0
 /* 08E8AC 8008DCAC 24040001 */  li    $a0, 1
 /* 08E8B0 8008DCB0 AFA2001C */  sw    $v0, 0x1c($sp)
-/* 08E8B4 8008DCB4 0C01A955 */  jal   func_8006A554
+/* 08E8B4 8008DCB4 0C01A955 */  jal   get_button_inputs_from_player
 /* 08E8B8 8008DCB8 AFA50018 */   sw    $a1, 0x18($sp)
-/* 08E8BC 8008DCBC 3C0F8012 */  lui   $t7, %hi(D_8012645C+1) # $t7, 0x8012
+/* 08E8BC 8008DCBC 3C0F8012 */  lui   $t7, %hi(gControllersXAxisDirection+1) # $t7, 0x8012
 /* 08E8C0 8008DCC0 8FA3001C */  lw    $v1, 0x1c($sp)
 /* 08E8C4 8008DCC4 8FA50018 */  lw    $a1, 0x18($sp)
-/* 08E8C8 8008DCC8 81EF645D */  lb    $t7, %lo(D_8012645C+1)($t7)
+/* 08E8C8 8008DCC8 81EF645D */  lb    $t7, %lo(gControllersXAxisDirection+1)($t7)
 /* 08E8CC 8008DCCC 00621825 */  or    $v1, $v1, $v0
 /* 08E8D0 8008DCD0 00AF2821 */  addu  $a1, $a1, $t7
 .L8008DCD4:

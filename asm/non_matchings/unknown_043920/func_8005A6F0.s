@@ -58,7 +58,7 @@ glabel func_8005A6F0
 /* 05B354 8005A754 00000000 */  nop   
 /* 05B358 8005A758 13200005 */  beqz  $t9, .L8005A770
 /* 05B35C 8005A75C 2404FFC4 */   li    $a0, -60
-/* 05B360 8005A760 0C01BE53 */  jal   func_8006F94C
+/* 05B360 8005A760 0C01BE53 */  jal   get_random_number_from_range
 /* 05B364 8005A764 2405003C */   li    $a1, 60
 /* 05B368 8005A768 244D0078 */  addiu $t5, $v0, 0x78
 /* 05B36C 8005A76C A60D01C6 */  sh    $t5, 0x1c6($s0)

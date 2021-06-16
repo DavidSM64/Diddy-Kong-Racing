@@ -401,7 +401,7 @@ glabel func_80019808
 /* 01A9C4 80019DC4 1420FFED */  bnez  $at, .L80019D7C
 /* 01A9C8 80019DC8 24840004 */   addiu $a0, $a0, 4
 .L80019DCC:
-/* 01A9CC 80019DCC 0C0002CD */  jal   func_80000B34
+/* 01A9CC 80019DCC 0C0002CD */  jal   play_music
 /* 01A9D0 80019DD0 30A400FF */   andi  $a0, $a1, 0xff
 /* 01A9D4 80019DD4 24050004 */  li    $a1, 4
 /* 01A9D8 80019DD8 00001825 */  move  $v1, $zero
@@ -776,7 +776,7 @@ glabel func_80019808
 /* 01AF10 8001A310 00008025 */  move  $s0, $zero
 .L8001A314:
 /* 01AF14 8001A314 02002025 */  move  $a0, $s0
-/* 01AF18 8001A318 0C01A955 */  jal   func_8006A554
+/* 01AF18 8001A318 0C01A955 */  jal   get_button_inputs_from_player
 /* 01AF1C 8001A31C AFA50094 */   sw    $a1, 0x94($sp)
 /* 01AF20 8001A320 8FA50094 */  lw    $a1, 0x94($sp)
 /* 01AF24 8001A324 26100001 */  addiu $s0, $s0, 1
@@ -1092,7 +1092,7 @@ glabel func_80019808
 /* 01B390 8001A790 02802025 */   move  $a0, $s4
 .L8001A794:
 /* 01B394 8001A794 3C018012 */  lui   $at, %hi(D_8011ADB4) # $at, 0x8012
-/* 01B398 8001A798 0C0270F2 */  jal   func_8009C3C8
+/* 01B398 8001A798 0C0270F2 */  jal   get_number_of_active_players
 /* 01B39C 8001A79C AC35ADB4 */   sw    $s5, %lo(D_8011ADB4)($at)
 /* 01B3A0 8001A7A0 14540004 */  bne   $v0, $s4, .L8001A7B4
 /* 01B3A4 8001A7A4 8FBF0034 */   lw    $ra, 0x34($sp)

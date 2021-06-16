@@ -6,7 +6,7 @@ glabel func_8005CA84
 /* 05D694 8005CA94 AFA60028 */  sw    $a2, 0x28($sp)
 /* 05D698 8005CA98 AFA7002C */  sw    $a3, 0x2c($sp)
 /* 05D69C 8005CA9C 00002025 */  move  $a0, $zero
-/* 05D6A0 8005CAA0 0C01BE53 */  jal   func_8006F94C
+/* 05D6A0 8005CAA0 0C01BE53 */  jal   get_random_number_from_range
 /* 05D6A4 8005CAA4 24050001 */   li    $a1, 1
 /* 05D6A8 8005CAA8 8FA8002C */  lw    $t0, 0x2c($sp)
 /* 05D6AC 8005CAAC 00021E00 */  sll   $v1, $v0, 0x18

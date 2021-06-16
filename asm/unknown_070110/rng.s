@@ -23,13 +23,13 @@ glabel get_rng_seed
 /* 070548 8006F948 8C42D434 */   lw    $v0, %lo(D_800DD434)($v0)
 
 /*
- * func_8006F94C(start, end) = Gets a random number within a range. 
+ * get_random_number_from_range(start, end) = Gets a random number within a range. 
  * Start is inclusive, end is exclusive; also changes the RNG seed.
  * 
- *  func_8006F94C(0, 5) will return a number from 0 to 4.
- *  func_8006F94C(20, 30) will return a number from 20 to 29.
+ *  get_random_number_from_range(0, 5) will return a number from 0 to 4.
+ *  get_random_number_from_range(20, 30) will return a number from 20 to 29.
 */
-glabel func_8006F94C
+glabel get_random_number_from_range
 /* 07054C 8006F94C 3C08800E */  lui   $t0, %hi(D_800DD434) # $t0, 0x800e
 /* 070550 8006F950 8D08D434 */  lw    $t0, %lo(D_800DD434)($t0)
 /* 070554 8006F954 3C01800E */  lui   $at, %hi(D_800DD434) # $at, 0x800e

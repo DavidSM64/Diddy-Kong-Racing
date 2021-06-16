@@ -9,19 +9,19 @@ glabel func_8008B358
 /* 08BF74 8008B374 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 08BF78 8008B378 AFB60030 */  sw    $s6, 0x30($sp)
 /* 08BF7C 8008B37C AFB1001C */  sw    $s1, 0x1c($sp)
-/* 08BF80 8008B380 3C108012 */  lui   $s0, %hi(players_character_array) # $s0, 0x8012
-/* 08BF84 8008B384 3C128012 */  lui   $s2, %hi(D_801263D4) # $s2, 0x8012
+/* 08BF80 8008B380 3C108012 */  lui   $s0, %hi(gPlayersCharacterArray) # $s0, 0x8012
+/* 08BF84 8008B384 3C128012 */  lui   $s2, %hi(gActivePlayersArray) # $s2, 0x8012
 /* 08BF88 8008B388 3C138012 */  lui   $s3, %hi(D_801263C0) # $s3, 0x8012
-/* 08BF8C 8008B38C 3C14800E */  lui   $s4, %hi(D_800DF4BC) # $s4, 0x800e
+/* 08BF8C 8008B38C 3C14800E */  lui   $s4, %hi(gNumberOfActivePlayers) # $s4, 0x800e
 /* 08BF90 8008B390 3C158012 */  lui   $s5, %hi(D_801267D8) # $s5, 0x8012
 /* 08BF94 8008B394 3C178012 */  lui   $s7, %hi(D_801263CC) # $s7, 0x8012
 /* 08BF98 8008B398 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 08BF9C 8008B39C 26F763CC */  addiu $s7, %lo(D_801263CC) # addiu $s7, $s7, 0x63cc
 /* 08BFA0 8008B3A0 26B567D8 */  addiu $s5, %lo(D_801267D8) # addiu $s5, $s5, 0x67d8
-/* 08BFA4 8008B3A4 2694F4BC */  addiu $s4, %lo(D_800DF4BC) # addiu $s4, $s4, -0xb44
+/* 08BFA4 8008B3A4 2694F4BC */  addiu $s4, %lo(gNumberOfActivePlayers) # addiu $s4, $s4, -0xb44
 /* 08BFA8 8008B3A8 267363C0 */  addiu $s3, %lo(D_801263C0) # addiu $s3, $s3, 0x63c0
-/* 08BFAC 8008B3AC 265263D4 */  addiu $s2, %lo(D_801263D4) # addiu $s2, $s2, 0x63d4
-/* 08BFB0 8008B3B0 261063E8 */  addiu $s0, %lo(players_character_array) # addiu $s0, $s0, 0x63e8
+/* 08BFAC 8008B3AC 265263D4 */  addiu $s2, %lo(gActivePlayersArray) # addiu $s2, $s2, 0x63d4
+/* 08BFB0 8008B3B0 261063E8 */  addiu $s0, %lo(gPlayersCharacterArray) # addiu $s0, $s0, 0x63e8
 /* 08BFB4 8008B3B4 00008825 */  move  $s1, $zero
 /* 08BFB8 8008B3B8 24160001 */  li    $s6, 1
 /* 08BFBC 8008B3BC 241E000E */  li    $fp, 14
@@ -36,8 +36,8 @@ glabel func_8008B358
 /* 08BFDC 8008B3DC 1100002A */  beqz  $t0, .L8008B488
 /* 08BFE0 8008B3E0 02113821 */   addu  $a3, $s0, $s1
 .L8008B3E4:
-/* 08BFE4 8008B3E4 3C098012 */  lui   $t1, %hi(D_801263D4) # $t1, 0x8012
-/* 08BFE8 8008B3E8 252963D4 */  addiu $t1, %lo(D_801263D4) # addiu $t1, $t1, 0x63d4
+/* 08BFE4 8008B3E4 3C098012 */  lui   $t1, %hi(gActivePlayersArray) # $t1, 0x8012
+/* 08BFE8 8008B3E8 252963D4 */  addiu $t1, %lo(gActivePlayersArray) # addiu $t1, $t1, 0x63d4
 /* 08BFEC 8008B3EC 24C60001 */  addiu $a2, $a2, 1
 /* 08BFF0 8008B3F0 02C02025 */  move  $a0, $s6
 /* 08BFF4 8008B3F4 00091821 */  addu  $v1, $zero, $t1

@@ -369,7 +369,7 @@ glabel func_80042D20
 /* 043E14 80043214 24050002 */  li    $a1, 2
 /* 043E18 80043218 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 043E1C 8004321C A7AC0034 */  sh    $t4, 0x34($sp)
-/* 043E20 80043220 0C01BE53 */  jal   func_8006F94C
+/* 043E20 80043220 0C01BE53 */  jal   get_random_number_from_range
 /* 043E24 80043224 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 043E28 80043228 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 043E2C 8004322C 87AC0034 */  lh    $t4, 0x34($sp)

@@ -216,7 +216,7 @@ glabel func_8003E140
 /* 03F034 8003E434 358D0001 */  ori   $t5, $t4, 1
 /* 03F038 8003E438 A06D0209 */  sb    $t5, 0x209($v1)
 /* 03F03C 8003E43C A06B0173 */  sb    $t3, 0x173($v1)
-/* 03F040 8003E440 0C0270F2 */  jal   func_8009C3C8
+/* 03F040 8003E440 0C0270F2 */  jal   get_number_of_active_players
 /* 03F044 8003E444 A3A6002E */   sb    $a2, 0x2e($sp)
 /* 03F048 8003E448 8FA30038 */  lw    $v1, 0x38($sp)
 /* 03F04C 8003E44C 83A6002E */  lb    $a2, 0x2e($sp)

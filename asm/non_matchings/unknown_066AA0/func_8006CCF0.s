@@ -27,7 +27,7 @@ glabel func_8006CCF0
 /* 06D92C 8006CD2C 0C01A94A */  jal   func_8006A528
 /* 06D930 8006CD30 00000000 */   nop   
 /* 06D934 8006CD34 8FA40044 */  lw    $a0, 0x44($sp)
-/* 06D938 8006CD38 0C01A955 */  jal   func_8006A554
+/* 06D938 8006CD38 0C01A955 */  jal   get_button_inputs_from_player
 /* 06D93C 8006CD3C 02028025 */   or    $s0, $s0, $v0
 /* 06D940 8006CD40 8FB90044 */  lw    $t9, 0x44($sp)
 /* 06D944 8006CD44 8FAF004C */  lw    $t7, 0x4c($sp)

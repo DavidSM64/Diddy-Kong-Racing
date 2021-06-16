@@ -32,8 +32,8 @@ glabel func_8001F23C
 /* 01FEB4 8001F2B4 844C0048 */  lh    $t4, 0x48($v0)
 /* 01FEB8 8001F2B8 2401000C */  li    $at, 12
 /* 01FEBC 8001F2BC 15810009 */  bne   $t4, $at, .L8001F2E4
-/* 01FEC0 8001F2C0 3C0D8012 */   lui   $t5, %hi(D_8011AEF4) # $t5, 0x8012
-/* 01FEC4 8001F2C4 91ADAEF4 */  lbu   $t5, %lo(D_8011AEF4)($t5)
+/* 01FEC0 8001F2C0 3C0D8012 */   lui   $t5, %hi(gTimeTrialEnabled) # $t5, 0x8012
+/* 01FEC4 8001F2C4 91ADAEF4 */  lbu   $t5, %lo(gTimeTrialEnabled)($t5)
 /* 01FEC8 8001F2C8 00000000 */  nop   
 /* 01FECC 8001F2CC 11A00005 */  beqz  $t5, .L8001F2E4
 /* 01FED0 8001F2D0 00000000 */   nop   

@@ -1,4 +1,4 @@
-glabel func_8006F94C
+glabel get_random_number_from_range
 /* 07054C 8006F94C 3C08800E */  lui   $t0, %hi(D_800DD434) # $t0, 0x800e
 /* 070550 8006F950 8D08D434 */  lw    $t0, %lo(D_800DD434)($t0)
 /* 070554 8006F954 3C01800E */  lui   $at, %hi(D_800DD434) # $at, 0x800e

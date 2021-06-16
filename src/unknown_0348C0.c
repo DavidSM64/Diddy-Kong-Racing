@@ -853,12 +853,12 @@ void func_8004203C(Player *arg0, unk8004203C_arg1 *arg1) {
 }
 
 void func_80042090(Player *arg0, s32 arg1) {
-    if (arg0->unk78 >= func_8006F94C(0, 0x400)) {
+    if (arg0->unk78 >= get_random_number_from_range(0, 0x400)) {
         arg0->unk74 = 1;
     } else {
         arg0->unk74 = 0;
     }
-    if (func_8009C3C8() < 2) {
+    if (get_number_of_active_players() < 2) {
         func_800AFC3C(arg0, arg1);
     }
 }

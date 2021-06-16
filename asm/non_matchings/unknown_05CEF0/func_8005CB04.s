@@ -4,7 +4,7 @@ glabel func_8005CB04
 /* 05D70C 8005CB0C 00803025 */  move  $a2, $a0
 /* 05D710 8005CB10 AFA60018 */  sw    $a2, 0x18($sp)
 /* 05D714 8005CB14 00002025 */  move  $a0, $zero
-/* 05D718 8005CB18 0C01BE53 */  jal   func_8006F94C
+/* 05D718 8005CB18 0C01BE53 */  jal   get_random_number_from_range
 /* 05D71C 8005CB1C 24050001 */   li    $a1, 1
 /* 05D720 8005CB20 8FA60018 */  lw    $a2, 0x18($sp)
 /* 05D724 8005CB24 00021E00 */  sll   $v1, $v0, 0x18

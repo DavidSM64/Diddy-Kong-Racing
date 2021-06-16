@@ -62,7 +62,7 @@ glabel func_8008BB3C
 .L8008BC10:
 /* 08C810 8008BC10 02C02825 */  move  $a1, $s6
 /* 08C814 8008BC14 00008825 */  move  $s1, $zero
-/* 08C818 8008BC18 0C01BE53 */  jal   func_8006F94C
+/* 08C818 8008BC18 0C01BE53 */  jal   get_random_number_from_range
 /* 08C81C 8008BC1C 00008025 */   move  $s0, $zero
 /* 08C820 8008BC20 00550019 */  multu $v0, $s5
 /* 08C824 8008BC24 8E990000 */  lw    $t9, ($s4)

@@ -82,28 +82,28 @@ glabel func_80093A40
 /* 094770 80093B70 24180002 */  li    $t8, 2
 /* 094774 80093B74 8DCF0200 */  lw    $t7, 0x200($t6)
 /* 094778 80093B78 ACB80000 */  sw    $t8, ($a1)
-/* 09477C 80093B7C 3C02800E */  lui   $v0, %hi(D_800DF4B8) # $v0, 0x800e
+/* 09477C 80093B7C 3C02800E */  lui   $v0, %hi(gIsInTracksMode) # $v0, 0x800e
 /* 094780 80093B80 AE2F0004 */  sw    $t7, 4($s1)
-/* 094784 80093B84 8C42F4B8 */  lw    $v0, %lo(D_800DF4B8)($v0)
+/* 094784 80093B84 8C42F4B8 */  lw    $v0, %lo(gIsInTracksMode)($v0)
 /* 094788 80093B88 1000003F */  b     .L80093C88
 /* 09478C 80093B8C 00000000 */   nop   
 .L80093B90:
 /* 094790 80093B90 8FB90024 */  lw    $t9, 0x24($sp)
 /* 094794 80093B94 24010008 */  li    $at, 8
 /* 094798 80093B98 93280048 */  lbu   $t0, 0x48($t9)
-/* 09479C 80093B9C 3C02800E */  lui   $v0, %hi(D_800DF4B8) # $v0, 0x800e
+/* 09479C 80093B9C 3C02800E */  lui   $v0, %hi(gIsInTracksMode) # $v0, 0x800e
 /* 0947A0 80093BA0 1900002B */  blez  $t0, .L80093C50
 /* 0947A4 80093BA4 00000000 */   nop   
 /* 0947A8 80093BA8 12010029 */  beq   $s0, $at, .L80093C50
 /* 0947AC 80093BAC 32090040 */   andi  $t1, $s0, 0x40
 /* 0947B0 80093BB0 11200012 */  beqz  $t1, .L80093BFC
-/* 0947B4 80093BB4 3C02800E */   lui   $v0, %hi(D_800DF4B8) # $v0, 0x800e
+/* 0947B4 80093BB4 3C02800E */   lui   $v0, %hi(gIsInTracksMode) # $v0, 0x800e
 /* 0947B8 80093BB8 8CC30000 */  lw    $v1, ($a2)
-/* 0947BC 80093BBC 3C0B800E */  lui   $t3, %hi(D_800DF4B8) # $t3, 0x800e
+/* 0947BC 80093BBC 3C0B800E */  lui   $t3, %hi(gIsInTracksMode) # $t3, 0x800e
 /* 0947C0 80093BC0 8C6A01FC */  lw    $t2, 0x1fc($v1)
 /* 0947C4 80093BC4 240E0003 */  li    $t6, 3
 /* 0947C8 80093BC8 AE2A0004 */  sw    $t2, 4($s1)
-/* 0947CC 80093BCC 8D6BF4B8 */  lw    $t3, %lo(D_800DF4B8)($t3)
+/* 0947CC 80093BCC 8D6BF4B8 */  lw    $t3, %lo(gIsInTracksMode)($t3)
 /* 0947D0 80093BD0 00000000 */  nop   
 /* 0947D4 80093BD4 15600004 */  bnez  $t3, .L80093BE8
 /* 0947D8 80093BD8 00000000 */   nop   
@@ -121,11 +121,11 @@ glabel func_80093A40
 /* 0947FC 80093BFC 16000011 */  bnez  $s0, .L80093C44
 /* 094800 80093C00 24090003 */   li    $t1, 3
 /* 094804 80093C04 8CC30000 */  lw    $v1, ($a2)
-/* 094808 80093C08 3C18800E */  lui   $t8, %hi(D_800DF4B8) # $t8, 0x800e
+/* 094808 80093C08 3C18800E */  lui   $t8, %hi(gIsInTracksMode) # $t8, 0x800e
 /* 09480C 80093C0C 8C6F01F8 */  lw    $t7, 0x1f8($v1)
 /* 094810 80093C10 00000000 */  nop   
 /* 094814 80093C14 AE2F0004 */  sw    $t7, 4($s1)
-/* 094818 80093C18 8F18F4B8 */  lw    $t8, %lo(D_800DF4B8)($t8)
+/* 094818 80093C18 8F18F4B8 */  lw    $t8, %lo(gIsInTracksMode)($t8)
 /* 09481C 80093C1C 00000000 */  nop   
 /* 094820 80093C20 17000004 */  bnez  $t8, .L80093C34
 /* 094824 80093C24 00000000 */   nop   
@@ -139,11 +139,11 @@ glabel func_80093A40
 .L80093C40:
 /* 094840 80093C40 ACA90000 */  sw    $t1, ($a1)
 .L80093C44:
-/* 094844 80093C44 8C42F4B8 */  lw    $v0, %lo(D_800DF4B8)($v0)
+/* 094844 80093C44 8C42F4B8 */  lw    $v0, %lo(gIsInTracksMode)($v0)
 /* 094848 80093C48 1000000F */  b     .L80093C88
 /* 09484C 80093C4C 00000000 */   nop   
 .L80093C50:
-/* 094850 80093C50 8C42F4B8 */  lw    $v0, %lo(D_800DF4B8)($v0)
+/* 094850 80093C50 8C42F4B8 */  lw    $v0, %lo(gIsInTracksMode)($v0)
 /* 094854 80093C54 24010008 */  li    $at, 8
 /* 094858 80093C58 1440000B */  bnez  $v0, .L80093C88
 /* 09485C 80093C5C 00000000 */   nop   
@@ -161,8 +161,8 @@ glabel func_80093A40
 /* 094888 80093C88 3C03800E */  lui   $v1, %hi(D_800DF4A0) # $v1, 0x800e
 /* 09488C 80093C8C 8C63F4A0 */  lw    $v1, %lo(D_800DF4A0)($v1)
 /* 094890 80093C90 14E2000C */  bne   $a3, $v0, .L80093CC4
-/* 094894 80093C94 3C0D800E */   lui   $t5, %hi(D_800DF4BC) # $t5, 0x800e
-/* 094898 80093C98 8DADF4BC */  lw    $t5, %lo(D_800DF4BC)($t5)
+/* 094894 80093C94 3C0D800E */   lui   $t5, %hi(gNumberOfActivePlayers) # $t5, 0x800e
+/* 094898 80093C98 8DADF4BC */  lw    $t5, %lo(gNumberOfActivePlayers)($t5)
 /* 09489C 80093C9C 00000000 */  nop   
 /* 0948A0 80093CA0 14ED0008 */  bne   $a3, $t5, .L80093CC4
 /* 0948A4 80093CA4 00000000 */   nop   
@@ -195,12 +195,12 @@ glabel func_80093A40
 /* 094904 80093D04 AC206A68 */  sw    $zero, %lo(D_80126A68)($at)
 /* 094908 80093D08 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
 /* 09490C 80093D0C AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
-/* 094910 80093D10 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 094914 80093D14 AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
-/* 094918 80093D18 3C018012 */  lui   $at, %hi(D_801263C4) # $at, 0x8012
-/* 09491C 80093D1C AC2763C4 */  sw    $a3, %lo(D_801263C4)($at)
+/* 094910 80093D10 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 094914 80093D14 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
+/* 094918 80093D18 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 09491C 80093D1C AC2763C4 */  sw    $a3, %lo(gIgnorePlayerInput)($at)
 /* 094920 80093D20 3C01800E */  lui   $at, %hi(D_800E0988) # $at, 0x800e
-/* 094924 80093D24 0C026F97 */  jal   func_8009BE5C
+/* 094924 80093D24 0C026F97 */  jal   reset_controller_sticks
 /* 094928 80093D28 AC200988 */   sw    $zero, %lo(D_800E0988)($at)
 /* 09492C 80093D2C 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 094930 80093D30 8FB00014 */  lw    $s0, 0x14($sp)

@@ -158,8 +158,8 @@ glabel func_80084854
 /* 0856A8 80084AA8 00003025 */  move  $a2, $zero
 /* 0856AC 80084AAC 0C0316D6 */  jal   func_800C5B58
 /* 0856B0 80084AB0 24070007 */   li    $a3, 7
-/* 0856B4 80084AB4 3C06800E */  lui   $a2, %hi(D_800DFAC0) # $a2, 0x800e
-/* 0856B8 80084AB8 8CC6FAC0 */  lw    $a2, %lo(D_800DFAC0)($a2)
+/* 0856B4 80084AB4 3C06800E */  lui   $a2, %hi(gSfxVolumeSliderValue) # $a2, 0x800e
+/* 0856B8 80084AB8 8CC6FAC0 */  lw    $a2, %lo(gSfxVolumeSliderValue)($a2)
 /* 0856BC 80084ABC 3C10800E */  lui   $s0, %hi(D_800E042C) # $s0, 0x800e
 /* 0856C0 80084AC0 2610042C */  addiu $s0, %lo(D_800E042C) # addiu $s0, $s0, 0x42c
 /* 0856C4 80084AC4 240D00FF */  li    $t5, 255
@@ -176,8 +176,8 @@ glabel func_80084854
 /* 0856F0 80084AF0 02402025 */  move  $a0, $s2
 /* 0856F4 80084AF4 0C01E2AE */  jal   func_80078AB8
 /* 0856F8 80084AF8 24070078 */   li    $a3, 120
-/* 0856FC 80084AFC 3C06800E */  lui   $a2, %hi(D_800DFAC4) # $a2, 0x800e
-/* 085700 80084B00 8CC6FAC4 */  lw    $a2, %lo(D_800DFAC4)($a2)
+/* 0856FC 80084AFC 3C06800E */  lui   $a2, %hi(gMusicVolumeSliderValue) # $a2, 0x800e
+/* 085700 80084B00 8CC6FAC4 */  lw    $a2, %lo(gMusicVolumeSliderValue)($a2)
 /* 085704 80084B04 240800FF */  li    $t0, 255
 /* 085708 80084B08 240900FF */  li    $t1, 255
 /* 08570C 80084B0C 240B00FF */  li    $t3, 255
@@ -205,13 +205,13 @@ glabel func_80084854
 /* 085764 80084B64 29810005 */  slti  $at, $t4, 5
 /* 085768 80084B68 10200005 */  beqz  $at, .L80084B80
 /* 08576C 80084B6C 3C0D800E */   lui   $t5, %hi(D_800DFA3C+12) # $t5, 0x800e
-/* 085770 80084B70 3C118012 */  lui   $s1, %hi(D_80126C46) # $s1, 0x8012
-/* 085774 80084B74 86316C46 */  lh    $s1, %lo(D_80126C46)($s1)
+/* 085770 80084B70 3C118012 */  lui   $s1, %hi(gOptionsMenuItemIndex) # $s1, 0x8012
+/* 085774 80084B74 86316C46 */  lh    $s1, %lo(gOptionsMenuItemIndex)($s1)
 /* 085778 80084B78 1000000E */  b     .L80084BB4
 /* 08577C 80084B7C 00000000 */   nop   
 .L80084B80:
-/* 085780 80084B80 3C028012 */  lui   $v0, %hi(D_80126C46) # $v0, 0x8012
-/* 085784 80084B84 84426C46 */  lh    $v0, %lo(D_80126C46)($v0)
+/* 085780 80084B80 3C028012 */  lui   $v0, %hi(gOptionsMenuItemIndex) # $v0, 0x8012
+/* 085784 80084B84 84426C46 */  lh    $v0, %lo(gOptionsMenuItemIndex)($v0)
 /* 085788 80084B88 00000000 */  nop   
 /* 08578C 80084B8C 28410003 */  slti  $at, $v0, 3
 /* 085790 80084B90 10200004 */  beqz  $at, .L80084BA4

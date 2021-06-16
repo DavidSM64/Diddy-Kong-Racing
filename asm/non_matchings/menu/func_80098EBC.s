@@ -18,12 +18,12 @@ glabel func_80098EBC
 /* 099AF8 80098EF8 8D290FE4 */  lw    $t1, %lo(D_800E0FE4)($t1)
 /* 099AFC 80098EFC 00002025 */  move  $a0, $zero
 /* 099B00 80098F00 19200024 */  blez  $t1, .L80098F94
-/* 099B04 80098F04 3C0A800E */   lui   $t2, %hi(D_800DF4BC) # $t2, 0x800e
+/* 099B04 80098F04 3C0A800E */   lui   $t2, %hi(gNumberOfActivePlayers) # $t2, 0x800e
 /* 099B08 80098F08 3C05800E */  lui   $a1, %hi(D_800E1048+64) # $a1, 0x800e
 /* 099B0C 80098F0C 3C0B8012 */  lui   $t3, %hi(D_801263E0) # $t3, 0x8012
 /* 099B10 80098F10 3C088012 */  lui   $t0, %hi(D_80126420) # $t0, 0x8012
 /* 099B14 80098F14 3C078012 */  lui   $a3, %hi(D_80126418) # $a3, 0x8012
-/* 099B18 80098F18 8D4AF4BC */  lw    $t2, %lo(D_800DF4BC)($t2)
+/* 099B18 80098F18 8D4AF4BC */  lw    $t2, %lo(gNumberOfActivePlayers)($t2)
 /* 099B1C 80098F1C 24E76418 */  addiu $a3, %lo(D_80126418) # addiu $a3, $a3, 0x6418
 /* 099B20 80098F20 25086420 */  addiu $t0, %lo(D_80126420) # addiu $t0, $t0, 0x6420
 /* 099B24 80098F24 256B63E0 */  addiu $t3, %lo(D_801263E0) # addiu $t3, $t3, 0x63e0

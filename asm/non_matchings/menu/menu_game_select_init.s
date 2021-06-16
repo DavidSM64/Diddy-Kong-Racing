@@ -1,7 +1,7 @@
 glabel menu_game_select_init
-/* 08D108 8008C508 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
+/* 08D108 8008C508 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 08D10C 8008C50C 27BDFFD0 */  addiu $sp, $sp, -0x30
-/* 08D110 8008C510 AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
+/* 08D110 8008C510 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 08D114 8008C514 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
 /* 08D118 8008C518 AFB40028 */  sw    $s4, 0x28($sp)
 /* 08D11C 8008C51C AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
@@ -32,7 +32,7 @@ glabel menu_game_select_init
 /* 08D180 8008C580 24040003 */   li    $a0, 3
 /* 08D184 8008C584 0C03105C */  jal   func_800C4170
 /* 08D188 8008C588 24040002 */   li    $a0, 2
-/* 08D18C 8008C58C 0C0002CD */  jal   func_80000B34
+/* 08D18C 8008C58C 0C0002CD */  jal   play_music
 /* 08D190 8008C590 2404001A */   li    $a0, 26
 /* 08D194 8008C594 3C13800E */  lui   $s3, %hi(D_800DFDB4) # $s3, 0x800e
 /* 08D198 8008C598 3C128012 */  lui   $s2, %hi(D_801263B4) # $s2, 0x8012

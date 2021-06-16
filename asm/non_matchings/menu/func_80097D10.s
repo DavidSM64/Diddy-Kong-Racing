@@ -9,7 +9,7 @@ glabel func_80097D10
 /* 098918 80097D18 AFA40030 */  sw    $a0, 0x30($sp)
 /* 09891C 80097D1C E7B50010 */  swc1  $f21, 0x10($sp)
 /* 098920 80097D20 E7B40014 */  swc1  $f20, 0x14($sp)
-/* 098924 80097D24 0C01A955 */  jal   func_8006A554
+/* 098924 80097D24 0C01A955 */  jal   get_button_inputs_from_player
 /* 098928 80097D28 00002025 */   move  $a0, $zero
 /* 09892C 80097D2C 00002025 */  move  $a0, $zero
 /* 098930 80097D30 0C01A967 */  jal   func_8006A59C
@@ -266,9 +266,9 @@ glabel func_80097D10
 /* 098CBC 800980BC 0C000741 */  jal   func_80001D04
 /* 098CC0 800980C0 A1A00000 */   sb    $zero, ($t5)
 /* 098CC4 800980C4 240E0001 */  li    $t6, 1
-/* 098CC8 800980C8 3C018012 */  lui   $at, %hi(D_80126C48) # $at, 0x8012
+/* 098CC8 800980C8 3C018012 */  lui   $at, %hi(gCheatInputString) # $at, 0x8012
 /* 098CCC 800980CC 1000003C */  b     .L800981C0
-/* 098CD0 800980D0 AC2E6C48 */   sw    $t6, %lo(D_80126C48)($at)
+/* 098CD0 800980D0 AC2E6C48 */   sw    $t6, %lo(gCheatInputString)($at)
 /* 098CD4 800980D4 310F4000 */  andi  $t7, $t0, 0x4000
 .L800980D8:
 /* 098CD8 800980D8 11E0000E */  beqz  $t7, .L80098114
@@ -322,9 +322,9 @@ glabel func_80097D10
 /* 098D7C 8009817C 0C000741 */  jal   func_80001D04
 /* 098D80 80098180 00002825 */   move  $a1, $zero
 /* 098D84 80098184 240D0001 */  li    $t5, 1
-/* 098D88 80098188 3C018012 */  lui   $at, %hi(D_80126C48) # $at, 0x8012
+/* 098D88 80098188 3C018012 */  lui   $at, %hi(gCheatInputString) # $at, 0x8012
 /* 098D8C 8009818C 1000000C */  b     .L800981C0
-/* 098D90 80098190 AC2D6C48 */   sw    $t5, %lo(D_80126C48)($at)
+/* 098D90 80098190 AC2D6C48 */   sw    $t5, %lo(gCheatInputString)($at)
 .L80098194:
 /* 098D94 80098194 11C0000A */  beqz  $t6, .L800981C0
 /* 098D98 80098198 3C088012 */   lui   $t0, %hi(D_80126C74) # $t0, 0x8012
@@ -343,8 +343,8 @@ glabel func_80097D10
 /* 098DC4 800981C4 0C025E46 */  jal   func_80097918
 /* 098DC8 800981C8 00000000 */   nop   
 /* 098DCC 800981CC 8FBF001C */  lw    $ra, 0x1c($sp)
-/* 098DD0 800981D0 3C028012 */  lui   $v0, %hi(D_80126C48) # $v0, 0x8012
-/* 098DD4 800981D4 8C426C48 */  lw    $v0, %lo(D_80126C48)($v0)
+/* 098DD0 800981D0 3C028012 */  lui   $v0, %hi(gCheatInputString) # $v0, 0x8012
+/* 098DD4 800981D4 8C426C48 */  lw    $v0, %lo(gCheatInputString)($v0)
 /* 098DD8 800981D8 C7B50010 */  lwc1  $f21, 0x10($sp)
 /* 098DDC 800981DC C7B40014 */  lwc1  $f20, 0x14($sp)
 /* 098DE0 800981E0 03E00008 */  jr    $ra

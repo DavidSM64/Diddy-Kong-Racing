@@ -95,8 +95,8 @@ glabel func_8008A56C
 /* 08B2D4 8008A6D4 3C198012 */  lui   $t9, %hi(D_80126C70) # $t9, 0x8012
 /* 08B2D8 8008A6D8 8F396C70 */  lw    $t9, %lo(D_80126C70)($t9)
 /* 08B2DC 8008A6DC 8C6363E0 */  lw    $v1, %lo(D_801263E0)($v1)
-/* 08B2E0 8008A6E0 3C168012 */  lui   $s6, %hi(D_80126C30) # $s6, 0x8012
-/* 08B2E4 8008A6E4 8ED66C30 */  lw    $s6, %lo(D_80126C30)($s6)
+/* 08B2E0 8008A6E0 3C168012 */  lui   $s6, %hi(gCheatsAssetData) # $s6, 0x8012
+/* 08B2E4 8008A6E4 8ED66C30 */  lw    $s6, %lo(gCheatsAssetData)($s6)
 /* 08B2E8 8008A6E8 00791021 */  addu  $v0, $v1, $t9
 /* 08B2EC 8008A6EC 0062082A */  slt   $at, $v1, $v0
 /* 08B2F0 8008A6F0 00608025 */  move  $s0, $v1
@@ -107,8 +107,8 @@ glabel func_8008A56C
 /* 08B304 8008A704 00034040 */   sll   $t0, $v1, 1
 /* 08B308 8008A708 3C098012 */  lui   $t1, %hi(D_80126C80) # $t1, 0x8012
 /* 08B30C 8008A70C 25296C80 */  addiu $t1, %lo(D_80126C80) # addiu $t1, $t1, 0x6c80
-/* 08B310 8008A710 3C148012 */  lui   $s4, %hi(D_80126C46) # $s4, 0x8012
-/* 08B314 8008A714 26946C46 */  addiu $s4, %lo(D_80126C46) # addiu $s4, $s4, 0x6c46
+/* 08B310 8008A710 3C148012 */  lui   $s4, %hi(gOptionsMenuItemIndex) # $s4, 0x8012
+/* 08B314 8008A714 26946C46 */  addiu $s4, %lo(gOptionsMenuItemIndex) # addiu $s4, $s4, 0x6c46
 /* 08B318 8008A718 01098821 */  addu  $s1, $t0, $t1
 .L8008A71C:
 /* 08B31C 8008A71C 868A0000 */  lh    $t2, ($s4)
@@ -122,11 +122,11 @@ glabel func_8008A56C
 /* 08B33C 8008A73C 03C03825 */   move  $a3, $fp
 .L8008A740:
 /* 08B340 8008A740 862D0000 */  lh    $t5, ($s1)
-/* 08B344 8008A744 3C198012 */  lui   $t9, %hi(D_80126C30) # $t9, 0x8012
+/* 08B344 8008A744 3C198012 */  lui   $t9, %hi(gCheatsAssetData) # $t9, 0x8012
 /* 08B348 8008A748 000D7080 */  sll   $t6, $t5, 2
 /* 08B34C 8008A74C 02CE7821 */  addu  $t7, $s6, $t6
 /* 08B350 8008A750 95F80002 */  lhu   $t8, 2($t7)
-/* 08B354 8008A754 8F396C30 */  lw    $t9, %lo(D_80126C30)($t9)
+/* 08B354 8008A754 8F396C30 */  lw    $t9, %lo(gCheatsAssetData)($t9)
 /* 08B358 8008A758 AFA00010 */  sw    $zero, 0x10($sp)
 /* 08B35C 8008A75C 02A02025 */  move  $a0, $s5
 /* 08B360 8008A760 24050030 */  li    $a1, 48
@@ -182,10 +182,10 @@ glabel func_8008A56C
 /* 08B41C 8008A81C 1420FFBF */  bnez  $at, .L8008A71C
 /* 08B420 8008A820 00000000 */   nop   
 .L8008A824:
-/* 08B424 8008A824 3C148012 */  lui   $s4, %hi(D_80126C46) # $s4, 0x8012
+/* 08B424 8008A824 3C148012 */  lui   $s4, %hi(gOptionsMenuItemIndex) # $s4, 0x8012
 /* 08B428 8008A828 0202082A */  slt   $at, $s0, $v0
 /* 08B42C 8008A82C 10200014 */  beqz  $at, .L8008A880
-/* 08B430 8008A830 26946C46 */   addiu $s4, %lo(D_80126C46) # addiu $s4, $s4, 0x6c46
+/* 08B430 8008A830 26946C46 */   addiu $s4, %lo(gOptionsMenuItemIndex) # addiu $s4, $s4, 0x6c46
 /* 08B434 8008A834 86880000 */  lh    $t0, ($s4)
 /* 08B438 8008A838 240400FF */  li    $a0, 255
 /* 08B43C 8008A83C 16680006 */  bne   $s3, $t0, .L8008A858

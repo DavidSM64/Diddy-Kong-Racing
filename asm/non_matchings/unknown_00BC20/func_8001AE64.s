@@ -40,7 +40,7 @@ glabel func_8001AE64
 /* 01BAF8 8001AEF8 AFA90050 */  sw    $t1, 0x50($sp)
 /* 01BAFC 8001AEFC AFAA002C */  sw    $t2, 0x2c($sp)
 /* 01BB00 8001AF00 AFAC0024 */  sw    $t4, 0x24($sp)
-/* 01BB04 8001AF04 0C0270F2 */  jal   func_8009C3C8
+/* 01BB04 8001AF04 0C0270F2 */  jal   get_number_of_active_players
 /* 01BB08 8001AF08 AFAD004C */   sw    $t5, 0x4c($sp)
 /* 01BB0C 8001AF0C 8FA70038 */  lw    $a3, 0x38($sp)
 /* 01BB10 8001AF10 8FA80030 */  lw    $t0, 0x30($sp)

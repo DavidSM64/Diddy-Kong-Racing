@@ -95,8 +95,8 @@ glabel func_8008377C
 /* 0844E4 800838E4 3C18800E */   lui   $t8, %hi(D_800DF7A4) # $t8, 0x800e
 /* 0844E8 800838E8 2718F7A4 */  addiu $t8, %lo(D_800DF7A4) # addiu $t8, $t8, -0x85c
 /* 0844EC 800838EC 3C148012 */  lui   $s4, %hi(D_801263BC) # $s4, 0x8012
-/* 0844F0 800838F0 3C13800E */  lui   $s3, %hi(D_800DF45C) # $s3, 0x800e
-/* 0844F4 800838F4 2673F45C */  addiu $s3, %lo(D_800DF45C) # addiu $s3, $s3, -0xba4
+/* 0844F0 800838F0 3C13800E */  lui   $s3, %hi(gTitleScreenCurrentOption) # $s3, 0x800e
+/* 0844F4 800838F4 2673F45C */  addiu $s3, %lo(gTitleScreenCurrentOption) # addiu $s3, $s3, -0xba4
 /* 0844F8 800838F8 269463BC */  addiu $s4, %lo(D_801263BC) # addiu $s4, $s4, 0x63bc
 /* 0844FC 800838FC 01F88021 */  addu  $s0, $t7, $t8
 /* 084500 80083900 241501FF */  li    $s5, 511

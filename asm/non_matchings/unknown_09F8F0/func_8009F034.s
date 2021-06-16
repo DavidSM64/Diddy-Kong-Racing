@@ -120,7 +120,7 @@ glabel func_8009F034
 /* 09FD88 8009F188 A0207189 */  sb    $zero, %lo(D_80127189)($at)
 /* 09FD8C 8009F18C 3C018012 */  lui   $at, %hi(D_80126D4C) # $at, 0x8012
 /* 09FD90 8009F190 AC396D4C */  sw    $t9, %lo(D_80126D4C)($at)
-/* 09FD94 8009F194 0C01BE53 */  jal   func_8006F94C
+/* 09FD94 8009F194 0C01BE53 */  jal   get_random_number_from_range
 /* 09FD98 8009F198 24050168 */   li    $a1, 360
 /* 09FD9C 8009F19C 3C018012 */  lui   $at, %hi(D_80126D50) # $at, 0x8012
 /* 09FDA0 8009F1A0 0C003856 */  jal   func_8000E158

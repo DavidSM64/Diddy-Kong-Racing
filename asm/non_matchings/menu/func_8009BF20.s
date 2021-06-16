@@ -8,20 +8,20 @@ glabel func_8009BF20
 /* 09CB38 8009BF38 AFB00018 */  sw    $s0, 0x18($sp)
 /* 09CB3C 8009BF3C AFBE0038 */  sw    $fp, 0x38($sp)
 /* 09CB40 8009BF40 AFB5002C */  sw    $s5, 0x2c($sp)
-/* 09CB44 8009BF44 3C108012 */  lui   $s0, %hi(D_80126454) # $s0, 0x8012
-/* 09CB48 8009BF48 3C118012 */  lui   $s1, %hi(D_80126458) # $s1, 0x8012
-/* 09CB4C 8009BF4C 3C128012 */  lui   $s2, %hi(D_80126468) # $s2, 0x8012
-/* 09CB50 8009BF50 3C138012 */  lui   $s3, %hi(D_8012646C) # $s3, 0x8012
-/* 09CB54 8009BF54 3C168012 */  lui   $s6, %hi(D_8012645C) # $s6, 0x8012
-/* 09CB58 8009BF58 3C178012 */  lui   $s7, %hi(D_80126464) # $s7, 0x8012
+/* 09CB44 8009BF44 3C108012 */  lui   $s0, %hi(gControllersXAxisDelay) # $s0, 0x8012
+/* 09CB48 8009BF48 3C118012 */  lui   $s1, %hi(gControllersYAxisDelay) # $s1, 0x8012
+/* 09CB4C 8009BF4C 3C128012 */  lui   $s2, %hi(gControllersXAxis) # $s2, 0x8012
+/* 09CB50 8009BF50 3C138012 */  lui   $s3, %hi(gControllersYAxis) # $s3, 0x8012
+/* 09CB54 8009BF54 3C168012 */  lui   $s6, %hi(gControllersXAxisDirection) # $s6, 0x8012
+/* 09CB58 8009BF58 3C178012 */  lui   $s7, %hi(gControllersYAxisDirection) # $s7, 0x8012
 /* 09CB5C 8009BF5C AFBF003C */  sw    $ra, 0x3c($sp)
 /* 09CB60 8009BF60 AFB40028 */  sw    $s4, 0x28($sp)
-/* 09CB64 8009BF64 26F76464 */  addiu $s7, %lo(D_80126464) # addiu $s7, $s7, 0x6464
-/* 09CB68 8009BF68 26D6645C */  addiu $s6, %lo(D_8012645C) # addiu $s6, $s6, 0x645c
-/* 09CB6C 8009BF6C 2673646C */  addiu $s3, %lo(D_8012646C) # addiu $s3, $s3, 0x646c
-/* 09CB70 8009BF70 26526468 */  addiu $s2, %lo(D_80126468) # addiu $s2, $s2, 0x6468
-/* 09CB74 8009BF74 26316458 */  addiu $s1, %lo(D_80126458) # addiu $s1, $s1, 0x6458
-/* 09CB78 8009BF78 26106454 */  addiu $s0, %lo(D_80126454) # addiu $s0, $s0, 0x6454
+/* 09CB64 8009BF64 26F76464 */  addiu $s7, %lo(gControllersYAxisDirection) # addiu $s7, $s7, 0x6464
+/* 09CB68 8009BF68 26D6645C */  addiu $s6, %lo(gControllersXAxisDirection) # addiu $s6, $s6, 0x645c
+/* 09CB6C 8009BF6C 2673646C */  addiu $s3, %lo(gControllersYAxis) # addiu $s3, $s3, 0x646c
+/* 09CB70 8009BF70 26526468 */  addiu $s2, %lo(gControllersXAxis) # addiu $s2, $s2, 0x6468
+/* 09CB74 8009BF74 26316458 */  addiu $s1, %lo(gControllersYAxisDelay) # addiu $s1, $s1, 0x6458
+/* 09CB78 8009BF78 26106454 */  addiu $s0, %lo(gControllersXAxisDelay) # addiu $s0, $s0, 0x6454
 /* 09CB7C 8009BF7C 0000A825 */  move  $s5, $zero
 /* 09CB80 8009BF80 241EFFFF */  li    $fp, -1
 .L8009BF84:

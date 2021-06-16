@@ -467,7 +467,7 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     } else {
         D_800DD318 = (u8)0;
     }
-    if (D_80121168->race_type == 0 && sp48 == 0 && func_8000E4C8(arg4) != 0) {
+    if (D_80121168->race_type == 0 && sp48 == 0 && is_time_trial_enabled(arg4) != 0) {
         arg4 = 0x64;
     }
     func_8001E450(arg4);
@@ -521,7 +521,7 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 void func_8006BD10(f32 arg0) {
     if (D_80121168->music != 0) {
         func_800012E8();
-        func_80000B34(D_80121168->music);
+        play_music(D_80121168->music);
         func_800014BC(arg0);
         func_80001074(D_80121168->instruments);
     }
@@ -784,7 +784,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006C60C.s")
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
     D_80123500 = arg0 - 1;
     if (arg1 == -1) {
-        D_801234F4 = func_8009C1B0();
+        D_801234F4 = get_track_id_to_load();
     } else {
         D_801234F4 = arg1;
     }
@@ -993,7 +993,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006E3BC.s")
 
 void func_8006E5BC(void) {
     s32 i, j;
-    gSettingsPtr->playerCount = func_8009C3C8();
+    gSettingsPtr->playerCount = get_number_of_active_players();
     for (i = 0; i < 8; i++) {
         gSettingsPtr->racers[i].best_times = 0;
         gSettingsPtr->racers[i].character = get_character_id_from_slot(i);

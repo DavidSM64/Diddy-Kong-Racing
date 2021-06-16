@@ -14,8 +14,8 @@ glabel func_80094D28
 /* 09593C 80094D3C AFB0001C */  sw    $s0, 0x1c($sp)
 /* 095940 80094D40 0C01BAA4 */  jal   get_settings
 /* 095944 80094D44 AFA40060 */   sw    $a0, 0x60($sp)
-/* 095948 80094D48 3C0E800E */  lui   $t6, %hi(D_800DF4BC) # $t6, 0x800e
-/* 09594C 80094D4C 8DCEF4BC */  lw    $t6, %lo(D_800DF4BC)($t6)
+/* 095948 80094D48 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
+/* 09594C 80094D4C 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)
 /* 095950 80094D50 24010001 */  li    $at, 1
 /* 095954 80094D54 15C10006 */  bne   $t6, $at, .L80094D70
 /* 095958 80094D58 00408025 */   move  $s0, $v0
@@ -593,8 +593,8 @@ glabel L80095588
 /* 096188 80095588 0C01B683 */  jal   func_8006DA0C
 /* 09618C 8009558C 00000000 */   nop   
 /* 096190 80095590 1440001D */  bnez  $v0, .L80095608
-/* 096194 80095594 3C0F800E */   lui   $t7, %hi(D_800DF4BC) # $t7, 0x800e
-/* 096198 80095598 8DEFF4BC */  lw    $t7, %lo(D_800DF4BC)($t7)
+/* 096194 80095594 3C0F800E */   lui   $t7, %hi(gNumberOfActivePlayers) # $t7, 0x800e
+/* 096198 80095598 8DEFF4BC */  lw    $t7, %lo(gNumberOfActivePlayers)($t7)
 /* 09619C 8009559C 24010001 */  li    $at, 1
 /* 0961A0 800955A0 15E10019 */  bne   $t7, $at, .L80095608
 /* 0961A4 800955A4 3C0B800E */   lui   $t3, %hi(gTrophyRaceWorldId) # $t3, 0x800e

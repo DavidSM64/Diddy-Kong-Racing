@@ -54,19 +54,19 @@ glabel menu_character_select_init
 /* 08BC88 8008B088 0043082B */  sltu  $at, $v0, $v1
 /* 08BC8C 8008B08C 1420FFFD */  bnez  $at, .L8008B084
 /* 08BC90 8008B090 A040FFFF */   sb    $zero, -1($v0)
-/* 08BC94 8008B094 3C01800E */  lui   $at, %hi(D_800DF480) # $at, 0x800e
-/* 08BC98 8008B098 AC20F480 */  sw    $zero, %lo(D_800DF480)($at)
-/* 08BC9C 8008B09C 3C01800E */  lui   $at, %hi(D_800DF47C) # $at, 0x800e
-/* 08BCA0 8008B0A0 AC20F47C */  sw    $zero, %lo(D_800DF47C)($at)
+/* 08BC94 8008B094 3C01800E */  lui   $at, %hi(gNumberOfReadyPlayers) # $at, 0x800e
+/* 08BC98 8008B098 AC20F480 */  sw    $zero, %lo(gNumberOfReadyPlayers)($at)
+/* 08BC9C 8008B09C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
+/* 08BCA0 8008B0A0 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 08BCA4 8008B0A4 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
 /* 08BCA8 8008B0A8 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
-/* 08BCAC 8008B0AC 3C088012 */  lui   $t0, %hi(D_801263D4) # $t0, 0x8012
+/* 08BCAC 8008B0AC 3C088012 */  lui   $t0, %hi(gActivePlayersArray) # $t0, 0x8012
 /* 08BCB0 8008B0B0 3C01800E */  lui   $at, %hi(D_800DF484) # $at, 0x800e
-/* 08BCB4 8008B0B4 250863D4 */  addiu $t0, %lo(D_801263D4) # addiu $t0, $t0, 0x63d4
+/* 08BCB4 8008B0B4 250863D4 */  addiu $t0, %lo(gActivePlayersArray) # addiu $t0, $t0, 0x63d4
 /* 08BCB8 8008B0B8 3C128012 */  lui   $s2, %hi(D_801263C0) # $s2, 0x8012
-/* 08BCBC 8008B0BC 3C038012 */  lui   $v1, %hi(players_character_array) # $v1, 0x8012
+/* 08BCBC 8008B0BC 3C038012 */  lui   $v1, %hi(gPlayersCharacterArray) # $v1, 0x8012
 /* 08BCC0 8008B0C0 AC20F484 */  sw    $zero, %lo(D_800DF484)($at)
-/* 08BCC4 8008B0C4 246363E8 */  addiu $v1, %lo(players_character_array) # addiu $v1, $v1, 0x63e8
+/* 08BCC4 8008B0C4 246363E8 */  addiu $v1, %lo(gPlayersCharacterArray) # addiu $v1, $v1, 0x63e8
 /* 08BCC8 8008B0C8 265263C0 */  addiu $s2, %lo(D_801263C0) # addiu $s2, $s2, 0x63c0
 /* 08BCCC 8008B0CC 00081021 */  addu  $v0, $zero, $t0
 /* 08BCD0 8008B0D0 00008025 */  move  $s0, $zero
@@ -110,7 +110,7 @@ glabel menu_character_select_init
 /* 08BD5C 8008B15C A4600002 */  sh    $zero, 2($v1)
 /* 08BD60 8008B160 A0600001 */  sb    $zero, 1($v1)
 /* 08BD64 8008B164 2404001A */  li    $a0, 26
-/* 08BD68 8008B168 0C0002CD */  jal   func_80000B34
+/* 08BD68 8008B168 0C0002CD */  jal   play_music
 /* 08BD6C 8008B16C 00008025 */   move  $s0, $zero
 /* 08BD70 8008B170 3C13800E */  lui   $s3, %hi(D_800DFDB4) # $s3, 0x800e
 /* 08BD74 8008B174 2673FDB4 */  addiu $s3, %lo(D_800DFDB4) # addiu $s3, $s3, -0x24c

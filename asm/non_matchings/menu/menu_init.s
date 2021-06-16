@@ -6,12 +6,12 @@ glabel jpt_800E8284
 glabel menu_init
 /* 081FD0 800813D0 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 081FD4 800813D4 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 081FD8 800813D8 3C01800E */  lui   $at, %hi(D_800DF470) # $at, 0x800e
-/* 081FDC 800813DC 0C026F97 */  jal   func_8009BE5C
-/* 081FE0 800813E0 AC24F470 */   sw    $a0, %lo(D_800DF470)($at)
+/* 081FD8 800813D8 3C01800E */  lui   $at, %hi(gCurrentMenuId) # $at, 0x800e
+/* 081FDC 800813DC 0C026F97 */  jal   reset_controller_sticks
+/* 081FE0 800813E0 AC24F470 */   sw    $a0, %lo(gCurrentMenuId)($at)
 /* 081FE4 800813E4 240E0001 */  li    $t6, 1
-/* 081FE8 800813E8 3C018012 */  lui   $at, %hi(D_801263C4) # $at, 0x8012
-/* 081FEC 800813EC AC2E63C4 */  sw    $t6, %lo(D_801263C4)($at)
+/* 081FE8 800813E8 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 081FEC 800813EC AC2E63C4 */  sw    $t6, %lo(gIgnorePlayerInput)($at)
 /* 081FF0 800813F0 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
 /* 081FF4 800813F4 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
 /* 081FF8 800813F8 3C018012 */  lui   $at, %hi(D_801263C8) # $at, 0x8012
@@ -25,8 +25,8 @@ glabel menu_init
 /* 082018 80081418 AC206810 */  sw    $zero, %lo(D_80126810)($at)
 /* 08201C 8008141C 0C000611 */  jal   func_80001844
 /* 082020 80081420 AC206814 */   sw    $zero, %lo(D_80126814)($at)
-/* 082024 80081424 3C0F800E */  lui   $t7, %hi(D_800DF470) # $t7, 0x800e
-/* 082028 80081428 8DEFF470 */  lw    $t7, %lo(D_800DF470)($t7)
+/* 082024 80081424 3C0F800E */  lui   $t7, %hi(gCurrentMenuId) # $t7, 0x800e
+/* 082028 80081428 8DEFF470 */  lw    $t7, %lo(gCurrentMenuId)($t7)
 /* 08202C 8008142C 00000000 */  nop   
 /* 082030 80081430 2DE1001D */  sltiu $at, $t7, 0x1d
 /* 082034 80081434 10200055 */  beqz  $at, .L8008158C

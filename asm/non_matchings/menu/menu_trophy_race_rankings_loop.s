@@ -4,8 +4,8 @@ glabel menu_trophy_race_rankings_loop
 /* 099BDC 80098FDC AFA40050 */  sw    $a0, 0x50($sp)
 /* 099BE0 80098FE0 0C01BAA4 */  jal   get_settings
 /* 099BE4 80098FE4 AFA0003C */   sw    $zero, 0x3c($sp)
-/* 099BE8 80098FE8 3C05800E */  lui   $a1, %hi(D_800DF47C) # $a1, 0x800e
-/* 099BEC 80098FEC 24A5F47C */  addiu $a1, %lo(D_800DF47C) # addiu $a1, $a1, -0xb84
+/* 099BE8 80098FE8 3C05800E */  lui   $a1, %hi(gMenuDelay) # $a1, 0x800e
+/* 099BEC 80098FEC 24A5F47C */  addiu $a1, %lo(gMenuDelay) # addiu $a1, $a1, -0xb84
 /* 099BF0 80098FF0 8CA30000 */  lw    $v1, ($a1)
 /* 099BF4 80098FF4 8FA40050 */  lw    $a0, 0x50($sp)
 /* 099BF8 80098FF8 2861FFED */  slti  $at, $v1, -0x13
@@ -24,10 +24,10 @@ glabel menu_trophy_race_rankings_loop
 /* 099C28 80099028 3C028012 */  lui   $v0, %hi(D_801263E0) # $v0, 0x8012
 /* 099C2C 8009902C 8C4263E0 */  lw    $v0, %lo(D_801263E0)($v0)
 /* 099C30 80099030 8FA40050 */  lw    $a0, 0x50($sp)
-/* 099C34 80099034 3C05800E */  lui   $a1, %hi(D_800DF47C) # $a1, 0x800e
+/* 099C34 80099034 3C05800E */  lui   $a1, %hi(gMenuDelay) # $a1, 0x800e
 /* 099C38 80099038 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 099C3C 8009903C 1040000B */  beqz  $v0, .L8009906C
-/* 099C40 80099040 24A5F47C */   addiu $a1, %lo(D_800DF47C) # addiu $a1, $a1, -0xb84
+/* 099C40 80099040 24A5F47C */   addiu $a1, %lo(gMenuDelay) # addiu $a1, $a1, -0xb84
 /* 099C44 80099044 24010001 */  li    $at, 1
 /* 099C48 80099048 1041001B */  beq   $v0, $at, .L800990B8
 /* 099C4C 8009904C 24010002 */   li    $at, 2
@@ -123,21 +123,21 @@ glabel menu_trophy_race_rankings_loop
 .L8009919C:
 /* 099D9C 8009919C 3C068012 */  lui   $a2, %hi(D_80126A68) # $a2, 0x8012
 /* 099DA0 800991A0 24C66A68 */  addiu $a2, %lo(D_80126A68) # addiu $a2, $a2, 0x6a68
-/* 099DA4 800991A4 3C0D800E */  lui   $t5, %hi(D_800DF4BC) # $t5, 0x800e
+/* 099DA4 800991A4 3C0D800E */  lui   $t5, %hi(gNumberOfActivePlayers) # $t5, 0x800e
 /* 099DA8 800991A8 8CC20000 */  lw    $v0, ($a2)
-/* 099DAC 800991AC 8DADF4BC */  lw    $t5, %lo(D_800DF4BC)($t5)
+/* 099DAC 800991AC 8DADF4BC */  lw    $t5, %lo(gNumberOfActivePlayers)($t5)
 /* 099DB0 800991B0 00004025 */  move  $t0, $zero
 /* 099DB4 800991B4 00002825 */  move  $a1, $zero
 /* 099DB8 800991B8 19A00023 */  blez  $t5, .L80099248
 /* 099DBC 800991BC AFA20040 */   sw    $v0, 0x40($sp)
-/* 099DC0 800991C0 3C078012 */  lui   $a3, %hi(D_80126464) # $a3, 0x8012
-/* 099DC4 800991C4 24E76464 */  addiu $a3, %lo(D_80126464) # addiu $a3, $a3, 0x6464
+/* 099DC0 800991C0 3C078012 */  lui   $a3, %hi(gControllersYAxisDirection) # $a3, 0x8012
+/* 099DC4 800991C4 24E76464 */  addiu $a3, %lo(gControllersYAxisDirection) # addiu $a3, $a3, 0x6464
 .L800991C8:
 /* 099DC8 800991C8 00A02025 */  move  $a0, $a1
 /* 099DCC 800991CC AFA5004C */  sw    $a1, 0x4c($sp)
 /* 099DD0 800991D0 AFA70020 */  sw    $a3, 0x20($sp)
 /* 099DD4 800991D4 AFA80044 */  sw    $t0, 0x44($sp)
-/* 099DD8 800991D8 0C01A955 */  jal   func_8006A554
+/* 099DD8 800991D8 0C01A955 */  jal   get_button_inputs_from_player
 /* 099DDC 800991DC AFAB002C */   sw    $t3, 0x2c($sp)
 /* 099DE0 800991E0 8FA70020 */  lw    $a3, 0x20($sp)
 /* 099DE4 800991E4 8FA80044 */  lw    $t0, 0x44($sp)
@@ -154,13 +154,13 @@ glabel menu_trophy_race_rankings_loop
 /* 099E10 80099210 ACCF0000 */  sw    $t7, ($a2)
 .L80099214:
 /* 099E14 80099214 18600005 */  blez  $v1, .L8009922C
-/* 099E18 80099218 3C0D800E */   lui   $t5, %hi(D_800DF4BC) # $t5, 0x800e
+/* 099E18 80099218 3C0D800E */   lui   $t5, %hi(gNumberOfActivePlayers) # $t5, 0x800e
 /* 099E1C 8009921C 8CD80000 */  lw    $t8, ($a2)
 /* 099E20 80099220 00000000 */  nop   
 /* 099E24 80099224 2719FFFF */  addiu $t9, $t8, -1
 /* 099E28 80099228 ACD90000 */  sw    $t9, ($a2)
 .L8009922C:
-/* 099E2C 8009922C 8DADF4BC */  lw    $t5, %lo(D_800DF4BC)($t5)
+/* 099E2C 8009922C 8DADF4BC */  lw    $t5, %lo(gNumberOfActivePlayers)($t5)
 /* 099E30 80099230 24A50001 */  addiu $a1, $a1, 1
 /* 099E34 80099234 00AD082A */  slt   $at, $a1, $t5
 /* 099E38 80099238 1420FFE3 */  bnez  $at, .L800991C8
@@ -301,8 +301,8 @@ glabel menu_trophy_race_rankings_loop
 /* 09A02C 8009942C 24C60001 */   addiu $a2, $a2, 1
 /* 09A030 80099430 AFAC0034 */  sw    $t4, 0x34($sp)
 .L80099434:
-/* 09A034 80099434 3C0F800E */  lui   $t7, %hi(D_800DF4BC) # $t7, 0x800e
-/* 09A038 80099438 8DEFF4BC */  lw    $t7, %lo(D_800DF4BC)($t7)
+/* 09A034 80099434 3C0F800E */  lui   $t7, %hi(gNumberOfActivePlayers) # $t7, 0x800e
+/* 09A038 80099438 8DEFF4BC */  lw    $t7, %lo(gNumberOfActivePlayers)($t7)
 /* 09A03C 8009943C 3C0A8012 */  lui   $t2, %hi(D_80126438) # $t2, 0x8012
 /* 09A040 80099440 8FAC0034 */  lw    $t4, 0x34($sp)
 /* 09A044 80099444 24010001 */  li    $at, 1
@@ -323,8 +323,8 @@ glabel menu_trophy_race_rankings_loop
 /* 09A07C 8009947C 2418FFFF */  li    $t8, -1
 /* 09A080 80099480 0143C821 */  addu  $t9, $t2, $v1
 /* 09A084 80099484 A3380000 */  sb    $t8, ($t9)
-/* 09A088 80099488 3C0D800E */  lui   $t5, %hi(D_800DF4B8) # $t5, 0x800e
-/* 09A08C 8009948C 8DADF4B8 */  lw    $t5, %lo(D_800DF4B8)($t5)
+/* 09A088 80099488 3C0D800E */  lui   $t5, %hi(gIsInTracksMode) # $t5, 0x800e
+/* 09A08C 8009948C 8DADF4B8 */  lw    $t5, %lo(gIsInTracksMode)($t5)
 /* 09A090 80099490 24010001 */  li    $at, 1
 /* 09A094 80099494 15A1000C */  bne   $t5, $at, .L800994C8
 /* 09A098 80099498 240F0001 */   li    $t7, 1
@@ -419,9 +419,9 @@ glabel menu_trophy_race_rankings_loop
 .L800995E8:
 /* 09A1E8 800995E8 8FBF001C */  lw    $ra, 0x1c($sp)
 .L800995EC:
-/* 09A1EC 800995EC 3C018012 */  lui   $at, %hi(D_801263C4) # $at, 0x8012
+/* 09A1EC 800995EC 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
 /* 09A1F0 800995F0 8FA2003C */  lw    $v0, 0x3c($sp)
-/* 09A1F4 800995F4 AC2063C4 */  sw    $zero, %lo(D_801263C4)($at)
+/* 09A1F4 800995F4 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
 /* 09A1F8 800995F8 03E00008 */  jr    $ra
 /* 09A1FC 800995FC 27BD0050 */   addiu $sp, $sp, 0x50
 
