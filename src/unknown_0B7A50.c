@@ -34,7 +34,10 @@ char *D_800E302C[3] = {
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6E50.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6EE0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6F04.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6F40.s")
+
+void func_800B6F40(s32 arg0, s32 arg1, s32 arg2) {
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6F50.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6FC4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B70D0.s")
