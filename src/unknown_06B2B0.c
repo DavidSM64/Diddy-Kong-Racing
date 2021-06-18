@@ -680,9 +680,6 @@ s32 func_8006C300(void) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006C330.s")
-#else
 void func_8006C330(s32 arg0) {
     func_8006C3E0();
     D_800DD37C = func_8006A1C4(D_800DD37C, 0);
@@ -700,9 +697,7 @@ void func_8006C330(s32 arg0) {
         func_8006C60C();
         func_80065E30();
     }
-    // This infinite loop creates too many nops! Needs to be 0x10 aligned, not 0x20 aligned.
 }
-#endif
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006C3E0.s")
