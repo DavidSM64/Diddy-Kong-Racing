@@ -558,9 +558,26 @@ s32 func_8000CC20(u32 *arg0) {
 // Has a jump table
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CC7C.s")
 
-// Has a jump table
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E0B0.s")
-
+u32 func_8000E0B0(void) {
+    switch(D_8011AD38) {
+        case 1:
+            return -1;
+        case 7:
+            return 0;
+        case 2:
+        case 3:
+            return 3;
+        case 4:
+        case 6:
+            return 2;
+        case 0:
+        case 5:
+        case 8:
+            return func_80059E20();
+        default:
+            return 0;
+    }
+}
 
 void func_8000E128(void) {
     D_800DC708 = 0x8000;
