@@ -571,7 +571,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007CA68.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007CCB0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007CDC0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007D0F4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007EF64.s")
+
+s32 func_8007EF64(s16 arg0) {
+    return arg0 + D_8012632C;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007EF80.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007F1E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007F24C.s")
