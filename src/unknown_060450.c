@@ -48,6 +48,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060910.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060AC8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060C58.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060EA8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_800619F4.s")
+
+void func_800619F4(s32 arg0) {
+    D_8011D640 = arg0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80061A00.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80061C0C.s")
