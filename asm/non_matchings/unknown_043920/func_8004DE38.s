@@ -203,7 +203,7 @@ glabel func_8004DE38
 .L8004E0B4:
 /* 04ECB4 8004E0B4 A2000201 */  sb    $zero, 0x201($s0)
 .L8004E0B8:
-/* 04ECB8 8004E0B8 0C01AF6C */  jal   func_8006BDB0
+/* 04ECB8 8004E0B8 0C01AF6C */  jal   get_current_level_header
 /* 04ECBC 8004E0BC E7B2009C */   swc1  $f18, 0x9c($sp)
 /* 04ECC0 8004E0C0 AFA2007C */  sw    $v0, 0x7c($sp)
 /* 04ECC4 8004E0C4 C4480008 */  lwc1  $f8, 8($v0)
@@ -245,7 +245,7 @@ glabel func_8004DE38
 /* 04ED50 8004E150 46005121 */  cvt.d.s $f4, $f10
 /* 04ED54 8004E154 E7A4001C */  swc1  $f4, 0x1c($sp)
 /* 04ED58 8004E158 E7A50018 */  swc1  $f5, 0x18($sp)
-/* 04ED5C 8004E15C 0C02D7B7 */  jal   func_800B5EDC
+/* 04ED5C 8004E15C 0C02D7B7 */  jal   render_printf
 /* 04ED60 8004E160 24846280 */   addiu $a0, %lo(D_800E6280) # addiu $a0, $a0, 0x6280
 .L8004E164:
 /* 04ED64 8004E164 00002025 */  move  $a0, $zero
@@ -1247,7 +1247,7 @@ glabel L8004ED88
 /* 04FBD4 8004EFD4 00000000 */  nop   
 /* 04FBD8 8004EFD8 1520000B */  bnez  $t1, .L8004F008
 /* 04FBDC 8004EFDC 00000000 */   nop   
-/* 04FBE0 8004EFE0 0C01AF66 */  jal   func_8006BD98
+/* 04FBE0 8004EFE0 0C01AF66 */  jal   get_current_level_race_type
 /* 04FBE4 8004EFE4 00000000 */   nop   
 /* 04FBE8 8004EFE8 14400007 */  bnez  $v0, .L8004F008
 /* 04FBEC 8004EFEC 3C01800E */   lui   $at, %hi(D_800E65E8) # $at, 0x800e

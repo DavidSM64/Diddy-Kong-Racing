@@ -95,7 +95,7 @@ glabel func_80031CAC
 /* 032A18 80031E18 10200020 */  beqz  $at, .L80031E9C
 /* 032A1C 80031E1C 00000000 */   nop   
 /* 032A20 80031E20 AFA50024 */  sw    $a1, 0x24($sp)
-/* 032A24 80031E24 0C01AF6C */  jal   func_8006BDB0
+/* 032A24 80031E24 0C01AF6C */  jal   get_current_level_header
 /* 032A28 80031E28 AFA60018 */   sw    $a2, 0x18($sp)
 /* 032A2C 80031E2C 8FA50024 */  lw    $a1, 0x24($sp)
 /* 032A30 80031E30 8FA60018 */  lw    $a2, 0x18($sp)

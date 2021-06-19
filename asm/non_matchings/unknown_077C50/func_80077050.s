@@ -63,7 +63,7 @@ glabel func_80077050
 .L80077140:
 /* 077D40 80077140 AFA80034 */  sw    $t0, 0x34($sp)
 /* 077D44 80077144 AFA90038 */  sw    $t1, 0x38($sp)
-/* 077D48 80077148 0C01AF6C */  jal   func_8006BDB0
+/* 077D48 80077148 0C01AF6C */  jal   get_current_level_header
 /* 077D4C 8007714C AFAA0024 */   sw    $t2, 0x24($sp)
 /* 077D50 80077150 0C02A116 */  jal   func_800A8458
 /* 077D54 80077154 AFA20020 */   sw    $v0, 0x20($sp)

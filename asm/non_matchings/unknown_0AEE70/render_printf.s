@@ -1,4 +1,4 @@
-glabel func_800B5EDC
+glabel render_printf
 /* 0B6ADC 800B5EDC 3C0E8013 */  lui   $t6, %hi(D_801285D8) # $t6, 0x8013
 /* 0B6AE0 800B5EE0 8DCE85D8 */  lw    $t6, %lo(D_801285D8)($t6)
 /* 0B6AE4 800B5EE4 27BDFFE0 */  addiu $sp, $sp, -0x20
@@ -20,7 +20,7 @@ glabel func_800B5EDC
 /* 0B6B20 800B5F20 3C048013 */  lui   $a0, %hi(D_801285D8) # $a0, 0x8013
 /* 0B6B24 800B5F24 8C8485D8 */  lw    $a0, %lo(D_801285D8)($a0)
 /* 0B6B28 800B5F28 8FA50020 */  lw    $a1, 0x20($sp)
-/* 0B6B2C 800B5F2C 0C02D290 */  jal   func_800B4A40
+/* 0B6B2C 800B5F2C 0C02D290 */  jal   sprintf
 /* 0B6B30 800B5F30 27A60024 */   addiu $a2, $sp, 0x24
 /* 0B6B34 800B5F34 00002025 */  move  $a0, $zero
 /* 0B6B38 800B5F38 0C02D282 */  jal   func_800B4A08

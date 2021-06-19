@@ -182,7 +182,7 @@ glabel func_800A8474
 /* 0A92D0 800A86D0 1420FFAE */  bnez  $at, .L800A858C
 /* 0A92D4 800A86D4 26310004 */   addiu $s1, $s1, 4
 .L800A86D8:
-/* 0A92D8 800A86D8 0C01AF6C */  jal   func_8006BDB0
+/* 0A92D8 800A86D8 0C01AF6C */  jal   get_current_level_header
 /* 0A92DC 800A86DC 00000000 */   nop   
 /* 0A92E0 800A86E0 3C018012 */  lui   $at, %hi(D_80126D60) # $at, 0x8012
 /* 0A92E4 800A86E4 AC226D60 */  sw    $v0, %lo(D_80126D60)($at)
@@ -1481,17 +1481,17 @@ glabel func_800A8474
 /* 0AA60C 800A9A0C 1000004A */  b     .L800A9B38
 /* 0AA610 800A9A10 AE0B0000 */   sw    $t3, ($s0)
 .L800A9A14:
-/* 0AA614 800A9A14 0C01AF66 */  jal   func_8006BD98
+/* 0AA614 800A9A14 0C01AF66 */  jal   get_current_level_race_type
 /* 0AA618 800A9A18 00000000 */   nop   
 /* 0AA61C 800A9A1C 24010042 */  li    $at, 66
 /* 0AA620 800A9A20 1041000B */  beq   $v0, $at, .L800A9A50
 /* 0AA624 800A9A24 00000000 */   nop   
-/* 0AA628 800A9A28 0C01AF66 */  jal   func_8006BD98
+/* 0AA628 800A9A28 0C01AF66 */  jal   get_current_level_race_type
 /* 0AA62C 800A9A2C 00000000 */   nop   
 /* 0AA630 800A9A30 24010040 */  li    $at, 64
 /* 0AA634 800A9A34 10410006 */  beq   $v0, $at, .L800A9A50
 /* 0AA638 800A9A38 00000000 */   nop   
-/* 0AA63C 800A9A3C 0C01AF66 */  jal   func_8006BD98
+/* 0AA63C 800A9A3C 0C01AF66 */  jal   get_current_level_race_type
 /* 0AA640 800A9A40 00000000 */   nop   
 /* 0AA644 800A9A44 24010041 */  li    $at, 65
 /* 0AA648 800A9A48 14410015 */  bne   $v0, $at, .L800A9AA0
@@ -2040,7 +2040,7 @@ glabel func_800A8474
 /* 0AAE54 800AA254 01D86025 */  or    $t4, $t6, $t8
 /* 0AAE58 800AA258 AD0C0004 */  sw    $t4, 4($t0)
 .L800AA25C:
-/* 0AAE5C 800AA25C 0C01AF66 */  jal   func_8006BD98
+/* 0AAE5C 800AA25C 0C01AF66 */  jal   get_current_level_race_type
 /* 0AAE60 800AA260 AFA50148 */   sw    $a1, 0x148($sp)
 /* 0AAE64 800AA264 8FA50148 */  lw    $a1, 0x148($sp)
 /* 0AAE68 800AA268 304D0040 */  andi  $t5, $v0, 0x40
@@ -2062,7 +2062,7 @@ glabel func_800A8474
 /* 0AAEA4 800AA2A4 46123101 */  sub.s $f4, $f6, $f18
 /* 0AAEA8 800AA2A8 E44401EC */  swc1  $f4, 0x1ec($v0)
 .L800AA2AC:
-/* 0AAEAC 800AA2AC 0C01AF66 */  jal   func_8006BD98
+/* 0AAEAC 800AA2AC 0C01AF66 */  jal   get_current_level_race_type
 /* 0AAEB0 800AA2B0 AFA50148 */   sw    $a1, 0x148($sp)
 /* 0AAEB4 800AA2B4 8FA50148 */  lw    $a1, 0x148($sp)
 /* 0AAEB8 800AA2B8 24010040 */  li    $at, 64

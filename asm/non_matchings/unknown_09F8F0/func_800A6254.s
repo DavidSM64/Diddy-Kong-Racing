@@ -11,7 +11,7 @@ glabel func_800A6254
 /* 0A6E54 800A6254 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 0A6E58 800A6258 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0A6E5C 800A625C AFA50074 */  sw    $a1, 0x74($sp)
-/* 0A6E60 800A6260 0C01AF66 */  jal   func_8006BD98
+/* 0A6E60 800A6260 0C01AF66 */  jal   get_current_level_race_type
 /* 0A6E64 800A6264 AFA40070 */   sw    $a0, 0x70($sp)
 /* 0A6E68 800A6268 0C027B20 */  jal   is_in_two_player_adventure
 /* 0A6E6C 800A626C AFA2005C */   sw    $v0, 0x5c($sp)
@@ -408,7 +408,7 @@ glabel L800A63D8
 .L800A6828:
 /* 0A7428 800A6828 1102015F */  beq   $t0, $v0, .L800A6DA8
 /* 0A742C 800A682C 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 0A7430 800A6830 0C01AF6C */  jal   func_8006BDB0
+/* 0A7430 800A6830 0C01AF6C */  jal   get_current_level_header
 /* 0A7434 800A6834 AFA70070 */   sw    $a3, 0x70($sp)
 /* 0A7438 800A6838 8FA70070 */  lw    $a3, 0x70($sp)
 /* 0A743C 800A683C 00004025 */  move  $t0, $zero

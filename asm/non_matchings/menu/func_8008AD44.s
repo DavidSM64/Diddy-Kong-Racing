@@ -89,7 +89,7 @@ glabel func_8008AD44
 /* 08BA80 8008AE80 8CA51E14 */  lw    $a1, %lo(D_800E1E14)($a1)
 /* 08BA84 8008AE84 3C04800F */  lui   $a0, %hi(D_800E8218) # $a0, 0x800f
 /* 08BA88 8008AE88 24848218 */  addiu $a0, %lo(D_800E8218) # addiu $a0, $a0, -0x7de8
-/* 08BA8C 8008AE8C 0C02D7B7 */  jal   func_800B5EDC
+/* 08BA8C 8008AE8C 0C02D7B7 */  jal   render_printf
 /* 08BA90 8008AE90 02003025 */   move  $a2, $s0
 /* 08BA94 8008AE94 8FBF002C */  lw    $ra, 0x2c($sp)
 /* 08BA98 8008AE98 8FB00018 */  lw    $s0, 0x18($sp)

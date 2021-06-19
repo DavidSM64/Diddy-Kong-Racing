@@ -33,7 +33,7 @@ glabel func_800A5F18
 /* 0A6B68 800A5F68 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A6B6C 800A5F6C 0C02A980 */  jal   func_800AA600
 /* 0A6B70 800A5F70 24E70600 */   addiu $a3, $a3, 0x600
-/* 0A6B74 800A5F74 0C01AF66 */  jal   func_8006BD98
+/* 0A6B74 800A5F74 0C01AF66 */  jal   get_current_level_race_type
 /* 0A6B78 800A5F78 00000000 */   nop   
 /* 0A6B7C 800A5F7C 304E0040 */  andi  $t6, $v0, 0x40
 /* 0A6B80 800A5F80 15C000B1 */  bnez  $t6, .L800A6248

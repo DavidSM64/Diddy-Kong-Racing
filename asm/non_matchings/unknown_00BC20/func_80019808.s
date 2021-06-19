@@ -8,7 +8,7 @@ glabel func_80019808
 /* 01A420 80019820 AFB20020 */  sw    $s2, 0x20($sp)
 /* 01A424 80019824 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 01A428 80019828 AFB00018 */  sw    $s0, 0x18($sp)
-/* 01A42C 8001982C 0C01AF6C */  jal   func_8006BDB0
+/* 01A42C 8001982C 0C01AF6C */  jal   get_current_level_header
 /* 01A430 80019830 AFA400A0 */   sw    $a0, 0xa0($sp)
 /* 01A434 80019834 0C01BAA4 */  jal   get_settings
 /* 01A438 80019838 AFA20064 */   sw    $v0, 0x64($sp)

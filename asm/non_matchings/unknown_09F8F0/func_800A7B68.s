@@ -86,7 +86,7 @@ glabel func_800A7B68
 /* 0A88A8 800A7CA8 000A182B */  sltu  $v1, $zero, $t2
 /* 0A88AC 800A7CAC 14600006 */  bnez  $v1, .L800A7CC8
 /* 0A88B0 800A7CB0 00000000 */   nop   
-/* 0A88B4 800A7CB4 0C01BAA8 */  jal   func_8006EAA0
+/* 0A88B4 800A7CB4 0C01BAA8 */  jal   is_game_paused
 /* 0A88B8 800A7CB8 00000000 */   nop   
 /* 0A88BC 800A7CBC 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A88C0 800A7CC0 8D086CDC */  lw    $t0, %lo(D_80126CDC)($t0)

@@ -7,6 +7,7 @@
 #include "macros.h"
 #include "structs.h"
 #include "fast3d.h"
+#include "menu.h"
 
 /************ .rodata ************/
 
@@ -110,9 +111,9 @@ extern s32 D_800DFD94;
 
 /************ .bss ************/
 
-s32 D_80121160;
+s32 *D_80121160;
 s32 D_80121164;
-LevelHeader* D_80121168;
+LevelHeader *gCurrentLevelHeader;
 s32 D_8012116C;
 s32 D_80121170;
 s32 D_80121174;
@@ -132,15 +133,13 @@ s16 D_801211C8[20];
 Gfx *D_801211F0[2];
 Gfx *D_801211F8;
 s32 D_801211FC;
-s32 D_80121200;
-s32 D_80121204;
-s32 D_80121208[2];
-s32 D_80121210;
-s32 D_80121214;
-s32 D_80121218[2];
-s32 D_80121220;
-s32 D_80121224;
-s32 D_80121228[10];
+s32 D_80121200[2];
+s32 D_80121208;
+s32 D_80121210[2];
+s32 D_80121218;
+s32 D_80121220[2];
+s32 D_80121228;
+s32 D_80121230[8];
 s8  D_80121250[16];
 s32 D_80121260[2210];
 s32 D_801234E8;
@@ -169,15 +168,22 @@ s32 D_80123530;
 s32 D_80123534;
 s32 D_80123538[3];
 s32 D_80123544;
-s32* D_80123548; // This is actually an OSMesgQueue pointer.
+s32 *D_80123548; // This is actually an OSMesgQueue pointer.
 s32 D_8012354C;
 s32 D_80123550[4];
 s32 D_80123560[8];
 
 /******************************/
 
+extern s32 D_801262D4;
+extern s32 D_801262D8;
+extern s32 D_801262E0;
+extern s32 osTvType;
+
+void func_8006F43C(void);
+
 void func_800014BC(f32 arg0);
-s8* func_8001E29C(s32 arg0);
+s8 *func_8001E29C(s32 arg0);
 s32 func_8006A624(s8 arg0);
 void func_8006F64C(s32*, f32, f32, f32, f32*, f32*, f32*);
 void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);
@@ -185,7 +191,7 @@ void func_8006F870(s32*, s32*);
 s16 func_80029F18(f32, f32, f32);    
 void func_8006A50C(void);
 void func_800665E8(s32 arg0);
-void func_8006CB58(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void load_level_2(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8006C164(void);
 void func_8000E194(void);
 f32 sqrtf(f32);
@@ -193,6 +199,10 @@ void osSetTime(u64);
 void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
 void func_800705F8(s32, f32, f32, f32);
 void func_8006ECFC(s32 arg0);
+void load_level_3(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void func_800813C0();
+void func_80004A60(s32, s32);
+void menu_init(s32);
 
 
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A6B0.s")
@@ -250,7 +260,7 @@ s32 func_8006B240(void) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006B250.s")
+GLOBAL_ASM("asm/non_matchings/unknown_066AA0/load_level.s")
 #else
 
 Settings *get_settings(void);
@@ -262,8 +272,8 @@ s16 func_8006C2F0(void);
 void func_8006DB20(s32 arg0);
 void func_80072708(void);
 
-// load_level(levelID, numOfPlayers, entrance, vehicle, ???);
-void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+// load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
+void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 sp48;
     s32 sp44;
     Settings *settings;
@@ -314,19 +324,19 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
     temp2 = D_80121160[arg0];
     temp = D_80121160[arg0 + 1] - temp2;
-    D_80121168 = func_80070C9C(temp, 0xFFFF00FF);
-    func_80076E68(0x17, D_80121168, temp2, temp);
+    gCurrentLevelHeader = func_80070C9C(temp, 0xFFFF00FF);
+    func_80076E68(0x17, gCurrentLevelHeader, temp2, temp);
     D_800DD330 = 0;
     sp44 = arg0;
-    if (D_80121168->race_type == 0) {
+    if (gCurrentLevelHeader->race_type == 0) {
         func_8006C2E4();
     }
     if (func_8006C2F0() == 0) {
         if (D_800DD32C == 0) {
-            if (D_80121168->race_type == 8) {
+            if (gCurrentLevelHeader->race_type == 8) {
                 phi_v1_2 = settings->courseFlagsPtr[temp2] & 1;
                 phi_v0_2 = 0;
-                if (D_80121168->world == 0 || D_80121168->world == 5) {
+                if (gCurrentLevelHeader->world == 0 || gCurrentLevelHeader->world == 5) {
                     phi_v0_2 = 1;
                 }
                 if (phi_v1_2 == 0 || phi_v0_2 != 0) {
@@ -352,21 +362,21 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
                 }
                 
             }
-            if (D_80121168->race_type == 5) {
-                if (D_80121168->world > 0 && D_80121168->world < 5) {
-                    if ((settings->keys & (1 << D_80121168->world)) != 0) {
-                        temp_v0_5 = 0x4000 << (D_80121168->world + 0x1F);
+            if (gCurrentLevelHeader->race_type == 5) {
+                if (gCurrentLevelHeader->world > 0 && gCurrentLevelHeader->world < 5) {
+                    if ((settings->keys & (1 << gCurrentLevelHeader->world)) != 0) {
+                        temp_v0_5 = 0x4000 << (gCurrentLevelHeader->world + 0x1F);
                         if ((settings->cutsceneFlags & temp_v0_5) == 0) {
                             func_8006C1AC(arg0, arg2, arg3, arg4);
                             settings->cutsceneFlags |= temp_v0_5;
                             arg2 = 0;
                             arg4 = 5;
-                            arg0 = func_8001E29C(0x44)[D_80121168->world - 1];
+                            arg0 = func_8001E29C(0x44)[gCurrentLevelHeader->world - 1];
                         }
                     }
                 }
             }
-            if (D_80121168->race_type == 5 && D_80121168->world == 0 && (settings->cutsceneFlags & 0x2000) == 0 && settings->wizpigAmulet >= 4) {
+            if (gCurrentLevelHeader->race_type == 5 && gCurrentLevelHeader->world == 0 && (settings->cutsceneFlags & 0x2000) == 0 && settings->wizpigAmulet >= 4) {
                 s32 temp_a1 = arg2;
                 s32 temp_a3 = arg4;
                 arg4 = 0;
@@ -379,48 +389,48 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
     D_800DD32C = 0;
     if (sp44 != arg0) {
-        func_80071140(D_80121168);
+        func_80071140(gCurrentLevelHeader);
         temp2 = D_80121160[arg0];
         temp = D_80121160[arg0 + 1] - temp2;
-        D_80121168 = func_80070C9C(temp, 0xFFFF00FF);
-        func_80076E68(0x17, D_80121168, temp2, temp);
+        gCurrentLevelHeader = func_80070C9C(temp, 0xFFFF00FF);
+        func_80076E68(0x17, gCurrentLevelHeader, temp2, temp);
     }
     func_80071140(D_80121160);
-    func_8006BFC8(&D_80121168->unk20);
+    func_8006BFC8(&gCurrentLevelHeader->unk20);
     func_8000CBC0();
     D_80121164 = arg0;
     for (phi_v1_5 = 0; phi_v1_5 < 7; phi_v1_5++) {
-        if ((s32)D_80121168->unk74[phi_v1_5] != -1) {
-            D_80121168->unk74[phi_v1_5] = func_8001E29C((s32)D_80121168->unk74[phi_v1_5]);
-            func_8007F1E8(D_80121168->unk74[phi_v1_5]);
+        if ((s32)gCurrentLevelHeader->unk74[phi_v1_5] != -1) {
+            gCurrentLevelHeader->unk74[phi_v1_5] = func_8001E29C((s32)gCurrentLevelHeader->unk74[phi_v1_5]);
+            func_8007F1E8(gCurrentLevelHeader->unk74[phi_v1_5]);
         }
     }
     if (arg4 == 0x64) {
-        if(get_trophy_race_world_id() != 0 && D_80121168->race_type == 0) {
+        if(get_trophy_race_world_id() != 0 && gCurrentLevelHeader->race_type == 0) {
             arg4 = 0;
-        } else if(is_in_tracks_mode() == 1 && D_80121168->race_type == 0) {
+        } else if(is_in_tracks_mode() == 1 && gCurrentLevelHeader->race_type == 0) {
             arg4 = 0;
         }
     }
-    if (D_80121168->race_type == 0 || D_80121168->race_type == 8) {
+    if (gCurrentLevelHeader->race_type == 0 || gCurrentLevelHeader->race_type == 8) {
         D_800DD31C = 1;
     } else {
         D_800DD31C = 0;
     }
-    if (sp48 != 0 && D_80121168->race_type != 7) {
-        D_80121168->race_type = 6;
+    if (sp48 != 0 && gCurrentLevelHeader->race_type != 7) {
+        gCurrentLevelHeader->race_type = 6;
     }
-    func_80000BE0(D_80121168->unkB3);
+    func_80000BE0(gCurrentLevelHeader->unkB3);
     func_80000CBC();
     func_80031BB8(0x20);
     phi_s0_2 = (u8)0;
     if (arg3 >= 0 && arg3 < 3) {
-        phi_s0_2 = D_80121168->unk4F[arg3];
+        phi_s0_2 = gCurrentLevelHeader->unk4F[arg3];
     }
     func_80017E74(phi_s0_2);
     settings->courseId = arg0;
-    if (D_80121168->world != -1) {
-        settings->worldId = D_80121168->world;
+    if (gCurrentLevelHeader->world != -1) {
+        settings->worldId = gCurrentLevelHeader->world;
     }
     if (settings->worldId == 0 && settings->worldId > 0) {
         D_800DD314 = func_8006DB2C();
@@ -429,7 +439,7 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         arg3 = D_800DD314;
     }
     func_8006DB20(arg3);
-    if (D_80121168->race_type == 5) {
+    if (gCurrentLevelHeader->race_type == 5) {
         if (settings->worldId > 0) {
             temp_s0_5 = 8 << (settings->worldId + 31);
             if (settings->worldId == 5) {
@@ -458,21 +468,21 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
             }
         }
     }
-    if (arg1 != 0 && D_80121168->race_type == 0) {
+    if (arg1 != 0 && gCurrentLevelHeader->race_type == 0) {
         arg4 = 0x64;
     }
-    if (D_80121168->race_type == 0 || ((D_80121168->race_type & 0x40) != 0 && is_in_two_player_adventure(D_80121168->race_type) != 0)) {
+    if (gCurrentLevelHeader->race_type == 0 || ((gCurrentLevelHeader->race_type & 0x40) != 0 && is_in_two_player_adventure(gCurrentLevelHeader->race_type) != 0)) {
         D_800DD318 = (u8)1;
         arg4 = 0x64;
     } else {
         D_800DD318 = (u8)0;
     }
-    if (D_80121168->race_type == 0 && sp48 == 0 && is_time_trial_enabled(arg4) != 0) {
+    if (gCurrentLevelHeader->race_type == 0 && sp48 == 0 && is_time_trial_enabled(arg4) != 0) {
         arg4 = 0x64;
     }
     func_8001E450(arg4);
-    func_800249F0(D_80121168->geometry, D_80121168->skybox, arg1, arg3, arg2, D_80121168->collectables, D_80121168->unkBA);
-    if (D_80121168->unk3A == 0 && D_80121168->unk3C == 0 && D_80121168->fogR == 0 && D_80121168->fogG == 0 && D_80121168->fogB == 0) {
+    func_800249F0(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, arg1, arg3, arg2, gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
+    if (gCurrentLevelHeader->unk3A == 0 && gCurrentLevelHeader->unk3C == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
         phi_s0_3 = 0;
         while(phi_s0_3 < 4) {
             func_800307BC(phi_s0_3);
@@ -481,49 +491,49 @@ void func_8006B250(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     } else {
         phi_s0_3 = 0;
         while(phi_s0_3 < 4) {
-            func_80030664(phi_s0_3, D_80121168->unk3A, D_80121168->unk3C, (u8)D_80121168->fogR, D_80121168->fogG, D_80121168->fogB);
+            func_80030664(phi_s0_3, gCurrentLevelHeader->unk3A, gCurrentLevelHeader->unk3C, (u8)gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
             phi_s0_3++;
         }
     }
     settings = get_settings();
-    if (D_80121168->world != -1) {
-        settings->worldId = D_80121168->world;
+    if (gCurrentLevelHeader->world != -1) {
+        settings->worldId = gCurrentLevelHeader->world;
     }
     settings->courseId = arg0;
-    if (D_80121168->weather_enable > 0) {
+    if (gCurrentLevelHeader->weather_enable > 0) {
         func_800AB4A8(
-            D_80121168->unk92, 
-            D_80121168->weather_enable, 
-            D_80121168->unk96 << 8, 
-            D_80121168->unk98 << 8, 
-            D_80121168->unk9A << 8, 
-            D_80121168->unk94 * 0x101, 
-            D_80121168->unk95 * 0x101
+            gCurrentLevelHeader->unk92, 
+            gCurrentLevelHeader->weather_enable, 
+            gCurrentLevelHeader->unk96 << 8, 
+            gCurrentLevelHeader->unk98 << 8, 
+            gCurrentLevelHeader->unk9A << 8, 
+            gCurrentLevelHeader->unk94 * 0x101, 
+            gCurrentLevelHeader->unk95 * 0x101
         );
         func_800AB308(-1, -0x200);
     }
-    if (D_80121168->unk49 == -1) {
-        D_80121168->unkA4 = func_8007AE74(D_80121168->unkA4);
-        D_80121168->unkA8 = (u16)0;
-        D_80121168->unkAA = (u16)0;
+    if (gCurrentLevelHeader->unk49 == -1) {
+        gCurrentLevelHeader->unkA4 = func_8007AE74(gCurrentLevelHeader->unkA4);
+        gCurrentLevelHeader->unkA8 = (u16)0;
+        gCurrentLevelHeader->unkAA = (u16)0;
     }
-    if ((s32)D_80121168->unkAC != -1) {
-        D_80121168->unkAC = func_8001E29C((s32)D_80121168->unkAC);
-        func_8007F414(D_80121168->unkAC);
+    if ((s32)gCurrentLevelHeader->unkAC != -1) {
+        gCurrentLevelHeader->unkAC = func_8001E29C((s32)gCurrentLevelHeader->unkAC);
+        func_8007F414(gCurrentLevelHeader->unkAC);
     }
-    func_800660EC((f32)D_80121168->unk9C);
-    func_80077B34(D_80121168->unk9D, D_80121168->unk9E, D_80121168->unk9F);
+    func_800660EC((f32)gCurrentLevelHeader->unk9C);
+    func_80077B34(gCurrentLevelHeader->unk9D, gCurrentLevelHeader->unk9E, gCurrentLevelHeader->unk9F);
     func_8007A974();
-    func_8007AB24(D_80121168->unk4[arg1]);
+    func_8007AB24(gCurrentLevelHeader->unk4[arg1]);
 }
 #endif
 
 void func_8006BD10(f32 arg0) {
-    if (D_80121168->music != 0) {
+    if (gCurrentLevelHeader->music != 0) {
         func_800012E8();
-        play_music(D_80121168->music);
+        play_music(gCurrentLevelHeader->music);
         func_800014BC(arg0);
-        func_80001074(D_80121168->instruments);
+        func_80001074(gCurrentLevelHeader->instruments);
     }
 }
 
@@ -531,12 +541,12 @@ s32 func_8006BD88(void) {
     return D_80121164;
 }
 
-u8 func_8006BD98(void) {
-    return D_80121168->race_type;
+u8 get_current_level_race_type(void) {
+    return gCurrentLevelHeader->race_type;
 }
 
-LevelHeader* func_8006BDB0(void) {
-    return D_80121168;
+LevelHeader* get_current_level_header(void) {
+    return gCurrentLevelHeader;
 }
 
 /* Unused? */
@@ -549,7 +559,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BDDC.s")
 void func_8006BEFC(void) {
     func_8006C164();
     func_80077B34(0, 0, 0);
-    func_80071140(D_80121168);
+    func_80071140(gCurrentLevelHeader);
     func_800049D8();
     func_80001844();
     func_800018E0();
@@ -558,20 +568,18 @@ void func_8006BEFC(void) {
     func_8002C7D4();
     func_80008174();
     func_80000968(0);
-    if (D_80121168->weather_enable > 0) {
+    if (gCurrentLevelHeader->weather_enable > 0) {
         func_800AB35C();
     }
-    if (D_80121168->unk49 == 0xFF) {
-       func_8007B2BC(D_80121168->unkA4);
+    if (gCurrentLevelHeader->unk49 == 0xFF) {
+       func_8007B2BC(gCurrentLevelHeader->unkA4);
     }
 }
 
 Settings *get_settings(void);
 s32 *func_80076C58(s32);
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BFC8.s")
-#else
+#ifdef NON_MATCHING
 void func_8006BFC8(s8 *arg0) {
     s32 temp, temp2;
     s16 phi_v1;
@@ -618,10 +626,12 @@ void func_8006BFC8(s8 *arg0) {
     }
     temp2 = D_80121160[phi_s0];
     temp = D_80121160[phi_s0 + 1] - temp2;
-    D_801211C0[0] = func_80070C9C(temp, 0xFFFF00FF, D_80121160);
+    D_801211C0[0] = func_80070C9C(temp, 0xFFFF00FF);
     func_80076E68(0, D_801211C0[0], temp2, temp);
     func_80071140(D_80121160);
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BFC8.s")
 #endif
 
 void func_8006C164(void) {
@@ -680,7 +690,7 @@ s32 func_8006C300(void) {
     }
 }
 
-void func_8006C330(s32 arg0) {
+void thread3_main(s32 arg0) {
     func_8006C3E0();
     D_800DD37C = func_8006A1C4(D_800DD37C, 0);
     D_80123520 = 0;
@@ -694,7 +704,7 @@ void func_8006C330(s32 arg0) {
             func_800CD250(0x1D6);
             while(1); // Infinite loop
         }
-        func_8006C60C();
+        render();
         func_80065E30();
     }
 }
@@ -774,7 +784,119 @@ void func_8006C3E0(void) {
 }
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006C60C.s")
+#ifdef NON_MATCHING
+void render(void) {
+    s32 phi_v0;
+    s32 phi_v0_2;
+    s32 i;
+    
+    if (D_800DD380 == 8) {
+        D_801211F8 = D_801211F0[D_801234E8];
+        func_8007A2D0(&D_801211F8, 0, 0);
+        func_8007A2D0(&D_801211F8, 1, D_801262D4);
+        func_8007A2D0(&D_801211F8, 2, D_801262E0);
+        func_8007A2D0(&D_801211F8, 4, D_801262D4 - 0x500);
+    }
+    if (D_800DD3F0 == 0) {
+        setupOSTasks(D_801211F0[D_801234E8], D_801211F8, 0);
+        D_801234E8 += 1;
+        D_801234E8 &= 1;
+    }
+    if (D_800DD3F0 != 0) {
+        D_800DD3F0 -= 1;
+    }
+    
+    D_801211F8 = D_801211F0[D_801234E8];
+    D_80121208 = D_80121200[D_801234E8];
+    D_80121218 = D_80121210[D_801234E8];
+    D_80121228 = D_80121220[D_801234E8];
+    
+    func_8007A2D0(&D_801211F8, 0, 0, &D_801234E8);
+    func_8007A2D0(&D_801211F8, 1, D_801262D8);
+    func_8007A2D0(&D_801211F8, 2, D_801262E0);
+    func_8007A2D0(&D_801211F8, 4, D_801262D8 - 0x500);
+    func_800780DC(&D_801211F8);
+    func_80078054(&D_801211F8);
+    func_80077B9C(&D_801211F8, &D_80121208, 1);
+    D_800DD37C = func_8006A1C4(D_800DD37C, D_800DD404);
+    if (func_800B76DC() != 0) {
+        render_epc_lock_up_display();
+        D_801234EC = 5;
+    }
+    if (D_800DD3A0 != 0) {
+        phi_v0 = 0;
+        while(phi_v0 != 10000000) {
+            phi_v0 += 1;
+        }
+        if (phi_v0 >= 20000001) { // This shouldn't ever be true?
+            render_printf(D_800E7134 /* "BBB\n" */);
+        }
+    }
+    
+    switch(D_801234EC) {
+        case -1:
+            func_8006F43C();
+            break;
+        case 0:
+            func_8006CCF0(D_800DD404);
+            break;
+        case 1:
+            func_8006DCF8(D_800DD404);
+            break;
+        case 5:
+            func_800B77D4(D_800DD404);
+            break;
+    }
+    
+    // This is a good spot to place custom text if you want it to overlay it over ALL the 
+    // menus & gameplay.
+    
+    func_80000D00((u8)D_800DD404);
+    func_800B5F78(&D_801211F8);
+    func_800C56FC(&D_801211F8, &D_80121208, &D_80121218);
+    func_800C5620(4);
+    func_800C5494(4);
+    if (func_800C0494(D_800DD404) != 0) {
+        func_800C05C8(&D_801211F8, &D_80121208, &D_80121218);
+    }
+    if ((D_80123520 >= 8) && (func_8006F4C8() != 0)) {
+        func_800829F8(&D_801211F8, D_800DD404);
+    }
+    
+    fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
+    fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+    
+    func_80066610();
+    if (D_800DD3F0 != 1) {
+        if (D_800DD38C == 0) {
+            D_800DD380 = func_80077A54();
+        }
+    } else {
+        D_800DD3F0 = 0;
+    }
+    D_800DD38C = 0;
+    func_80071198();
+    if (gIsPaused == 0) {
+        func_80066520();
+    }
+    if (D_800DD3F0 == 2) {
+        phi_v0_2 = 153600;
+        if (osTvType == 0) {
+            phi_v0_2 = 168960;
+        }
+        func_80070B04(D_801262D8, D_801262D4, D_801262D4 + phi_v0_2);
+    }
+    
+    D_800DD404 = func_8007A98C(D_800DD380);
+    
+    // Can't get this to match.
+    if (D_800DD404 >= 7) {
+        D_800DD404 = 6;
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_066AA0/render.s")
+#endif
 
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
     D_80123500 = arg0 - 1;
@@ -783,15 +905,20 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
     } else {
         D_801234F4 = arg1;
     }
-    func_8006CB58(D_801234F4, D_80123500, D_80123504, arg2);
+    load_level_2(D_801234F4, D_80123500, D_80123504, arg2);
 }
 
-void func_8006CB58(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    func_8006ECFC(arg1);
+/**
+ * Calls load_level() with the same arguments except for the cutsceneId, 
+ * which is the value at D_80123508. Also does some other stuff.
+ * Needs a better name!
+ */
+void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId) {
+    func_8006ECFC(numberOfPlayers);
     func_800710B0(0);
     func_80065EA0();
     func_800C3048();
-    func_8006B250(arg0, arg1, arg2, arg3, D_80123508);
+    load_level(levelId, numberOfPlayers, entranceId, vehicleId, D_80123508);
     func_8009ECF0(func_80066210());
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     func_8001BF20();
@@ -877,18 +1004,7 @@ void func_8006DA1C(s32 arg0) {
     D_801234EC = arg0;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006DA28.s")
-#else
-
-// For some reason this function is storing arg0 in s0.
-
-void func_8006DB3C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800813C0(s32);
-void func_80004A60(s32, s32);
-void menu_init(s32);
-
-void func_8006DA28(s32 arg0, s32 arg1, s32 arg2) {
+void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_8006ECFC(0);
     D_801234EC = 1;
     D_801234F0 = 1;
@@ -898,20 +1014,19 @@ void func_8006DA28(s32 arg0, s32 arg1, s32 arg2) {
     func_80065EA0();
     
     if (D_80123514 == 0) {
-        D_80123514 = 0; // Someone at rare: "I know I just checked if this was zero, but I need to be sure!"
-        if (arg1 < 0) {
+        D_80123514 = 0; // Someone at Rare: "I know I just checked if this was zero, but I need to be sure!"
+        if (levelId < 0) {
             D_80123514 = 1;
         } else {
-            func_8006DB3C(arg1, -1, 0, 2, arg2);
+            load_level_3(levelId, -1, 0, 2, cutsceneId);
         }
     }
-    if (arg0 == 0 || arg0 == 1 || arg0 == 2) {
-        func_800813C0(arg0);
+    if (menuId == MENU_UNUSED_2 || menuId == MENU_LOGOS || menuId == MENU_TITLE) {
+        func_800813C0();
     }
-    menu_init(arg0);
+    menu_init(menuId);
     D_80123504 = 0;
 }
-#endif
 
 void func_8006DB14(s32 arg0) {
     D_80123518 = arg0;
@@ -925,11 +1040,15 @@ s32 func_8006DB2C(void) {
     return D_80123518;
 }
 
-void func_8006DB3C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+/**
+ * Calls load_level() with the same arguments, but also does some other stuff.
+ * Needs a better name!
+ */
+void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
     func_800710B0(0);
     func_80065EA0();
     func_800C3048();
-    func_8006B250(arg0, arg1, arg2, arg3, arg4);
+    load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
     func_8009ECF0(func_80066210());
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     func_8001BF20();
@@ -977,7 +1096,7 @@ void func_8006E2E8(s32 arg0, s32 arg1, s32 arg2) {
         }
     }
     if (arg0 != -1) {
-        func_8006DB3C(arg0, arg1, 0, 2, arg2);
+        load_level_3(arg0, arg1, 0, 2, arg2);
         D_80123514 = (u8)0;
         return;
     }
@@ -1053,7 +1172,10 @@ Settings* get_settings(void) {
     return gSettingsPtr;
 }
 
-s8 func_8006EAA0(void) {
+/**
+ * Returns the value in gIsPaused.
+ */
+s8 is_game_paused(void) {
     return gIsPaused;
 }
 
@@ -1134,15 +1256,16 @@ void func_8006ECE0(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006ECFC.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006EFB8.s")
-#else
+#ifdef NON_MATCHING
+extern s32 D_A4000000;
 s32 func_8006EFB8(void) {
     if (D_A4000000 != -1) { // regalloc issue with D_A4000000
         return 0;
     }
     return 1;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006EFB8.s")
 #endif
 
 #if 1
@@ -1317,7 +1440,7 @@ void func_8006F43C(void) {
     }
     D_80123520++;
     if (D_80123520 >= 8) {
-        func_8006DA28(0x1A, 0x27, 2);
+        load_menu_with_level_background(0x1A, 0x27, 2);
     }
 }
 
@@ -1329,13 +1452,14 @@ s32 func_8006F4C8(void) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F4EC.s")
-#else
+#ifdef NON_MATCHING
+extern s32 SP_IMEM;
 s32 func_8006F4EC(void) {
     if (SP_IMEM != 0x17D7) { // Same regalloc issue as func_8006EFB8
         return 0;
     }
     return 1;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F4EC.s")
 #endif

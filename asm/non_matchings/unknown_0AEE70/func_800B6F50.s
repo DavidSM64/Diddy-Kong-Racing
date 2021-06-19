@@ -4,10 +4,10 @@ glabel func_800B6F50
 /* 0B7B58 800B6F58 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0B7B5C 800B6F5C 25CE95E0 */  addiu $t6, %lo(D_801295E0) # addiu $t6, $t6, -0x6a20
 /* 0B7B60 800B6F60 3C048013 */  lui   $a0, %hi(D_801295E0) # $a0, 0x8013
-/* 0B7B64 800B6F64 3C06800B */  lui   $a2, %hi(func_800B6FC4) # $a2, 0x800b
+/* 0B7B64 800B6F64 3C06800B */  lui   $a2, %hi(thread0) # $a2, 0x800b
 /* 0B7B68 800B6F68 240F00FF */  li    $t7, 255
 /* 0B7B6C 800B6F6C AFAF0014 */  sw    $t7, 0x14($sp)
-/* 0B7B70 800B6F70 24C66FC4 */  addiu $a2, %lo(func_800B6FC4) # addiu $a2, $a2, 0x6fc4
+/* 0B7B70 800B6F70 24C66FC4 */  addiu $a2, %lo(thread0) # addiu $a2, $a2, 0x6fc4
 /* 0B7B74 800B6F74 248495E0 */  addiu $a0, %lo(D_801295E0) # addiu $a0, $a0, -0x6a20
 /* 0B7B78 800B6F78 AFAE0010 */  sw    $t6, 0x10($sp)
 /* 0B7B7C 800B6F7C 00002825 */  move  $a1, $zero

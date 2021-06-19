@@ -1,4 +1,4 @@
-glabel func_8006B250
+glabel load_level
 /* 06BE50 8006B250 27BDFFA0 */  addiu $sp, $sp, -0x60
 /* 06BE54 8006B254 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 06BE58 8006B258 AFB10028 */  sw    $s1, 0x28($sp)
@@ -81,8 +81,8 @@ glabel func_8006B250
 /* 06BF68 8006B368 01F02023 */  subu  $a0, $t7, $s0
 /* 06BF6C 8006B36C 0C01C327 */  jal   func_80070C9C
 /* 06BF70 8006B370 AFA40054 */   sw    $a0, 0x54($sp)
-/* 06BF74 8006B374 3C118012 */  lui   $s1, %hi(D_80121168) # $s1, 0x8012
-/* 06BF78 8006B378 26311168 */  addiu $s1, %lo(D_80121168) # addiu $s1, $s1, 0x1168
+/* 06BF74 8006B374 3C118012 */  lui   $s1, %hi(gCurrentLevelHeader) # $s1, 0x8012
+/* 06BF78 8006B378 26311168 */  addiu $s1, %lo(gCurrentLevelHeader) # addiu $s1, $s1, 0x1168
 /* 06BF7C 8006B37C 8FA70054 */  lw    $a3, 0x54($sp)
 /* 06BF80 8006B380 AE220000 */  sw    $v0, ($s1)
 /* 06BF84 8006B384 24040017 */  li    $a0, 23

@@ -24,7 +24,7 @@ glabel func_8003C7A4
 /* 03D3FC 8003C7FC 000FC080 */  sll   $t8, $t7, 2
 /* 03D400 8003C800 01D8C821 */  addu  $t9, $t6, $t8
 /* 03D404 8003C804 8F300000 */  lw    $s0, ($t9)
-/* 03D408 8003C808 0C01AF66 */  jal   func_8006BD98
+/* 03D408 8003C808 0C01AF66 */  jal   get_current_level_race_type
 /* 03D40C 8003C80C 0040B825 */   move  $s7, $v0
 /* 03D410 8003C810 83C30009 */  lb    $v1, 9($fp)
 /* 03D414 8003C814 00000000 */  nop   

@@ -232,7 +232,7 @@ void func_8006F870(s32*, s32*);
 s16 func_80029F18(f32, f32, f32);    
 void func_8006A50C(void);
 void func_800665E8(s32 arg0);
-void func_8006CB58(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void load_level_2(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8006C164(void);
 void func_8000E194(void);
 f32 sqrtf(f32);

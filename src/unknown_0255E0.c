@@ -239,7 +239,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     s32 i;
     s32 tmp_a2;
 
-    D_800DC91C = func_8006BDB0();
+    D_800DC91C = get_current_level_header();
     D_8011B0F8 = 0;
     D_8011B100 = 0;
     D_8011B104 = 0;

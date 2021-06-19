@@ -39,7 +39,7 @@ glabel func_8005A6F0
 /* 05B310 8005A710 AFA700AC */  sw    $a3, 0xac($sp)
 /* 05B314 8005A714 0C01B683 */  jal   func_8006DA0C
 /* 05B318 8005A718 AC2ED55C */   sw    $t6, %lo(D_8011D55C)($at)
-/* 05B31C 8005A71C 0C01AF6C */  jal   func_8006BDB0
+/* 05B31C 8005A71C 0C01AF6C */  jal   get_current_level_header
 /* 05B320 8005A720 AFA20094 */   sw    $v0, 0x94($sp)
 /* 05B324 8005A724 AFA20070 */  sw    $v0, 0x70($sp)
 /* 05B328 8005A728 820301F6 */  lb    $v1, 0x1f6($s0)

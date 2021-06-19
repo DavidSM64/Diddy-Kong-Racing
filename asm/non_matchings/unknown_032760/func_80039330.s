@@ -44,7 +44,7 @@ glabel func_80039330
 .L80039384:
 /* 039F84 80039384 8E110064 */  lw    $s1, 0x64($s0)
 /* 039F88 80039388 E7A20048 */  swc1  $f2, 0x48($sp)
-/* 039F8C 8003938C 0C01AF6C */  jal   func_8006BDB0
+/* 039F8C 8003938C 0C01AF6C */  jal   get_current_level_header
 /* 039F90 80039390 E7A000AC */   swc1  $f0, 0xac($sp)
 /* 039F94 80039394 AFA20064 */  sw    $v0, 0x64($sp)
 /* 039F98 80039398 86180018 */  lh    $t8, 0x18($s0)

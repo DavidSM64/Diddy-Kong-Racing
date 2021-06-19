@@ -1,7 +1,7 @@
 glabel func_8001AE64
 /* 01BA64 8001AE64 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 01BA68 8001AE68 AFBF001C */  sw    $ra, 0x1c($sp)
-/* 01BA6C 8001AE6C 0C01AF6C */  jal   func_8006BDB0
+/* 01BA6C 8001AE6C 0C01AF6C */  jal   get_current_level_header
 /* 01BA70 8001AE70 AFB00018 */   sw    $s0, 0x18($sp)
 /* 01BA74 8001AE74 0C01BAA4 */  jal   get_settings
 /* 01BA78 8001AE78 AFA2002C */   sw    $v0, 0x2c($sp)

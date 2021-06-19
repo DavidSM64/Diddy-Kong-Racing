@@ -39,7 +39,7 @@ glabel func_8000CC7C
 /* 00D8DC 8000CCDC A2200000 */  sb    $zero, ($s1)
 /* 00D8E0 8000CCE0 0C01486E */  jal   func_800521B8
 /* 00D8E4 8000CCE4 00002025 */   move  $a0, $zero
-/* 00D8E8 8000CCE8 0C01AF6C */  jal   func_8006BDB0
+/* 00D8E8 8000CCE8 0C01AF6C */  jal   get_current_level_header
 /* 00D8EC 8000CCEC 00000000 */   nop   
 /* 00D8F0 8000CCF0 AFA20078 */  sw    $v0, 0x78($sp)
 /* 00D8F4 8000CCF4 9043004C */  lbu   $v1, 0x4c($v0)

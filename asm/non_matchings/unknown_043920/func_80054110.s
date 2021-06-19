@@ -79,7 +79,7 @@ glabel func_80054110
 /* 054E0C 8005420C 00003825 */  move  $a3, $zero
 /* 054E10 80054210 0C014214 */  jal   func_80050850
 /* 054E14 80054214 AFA00010 */   sw    $zero, 0x10($sp)
-/* 054E18 80054218 0C01AF6C */  jal   func_8006BDB0
+/* 054E18 80054218 0C01AF6C */  jal   get_current_level_header
 /* 054E1C 8005421C 00000000 */   nop   
 /* 054E20 80054220 C61000C0 */  lwc1  $f16, 0xc0($s0)
 /* 054E24 80054224 44805800 */  mtc1  $zero, $f11
