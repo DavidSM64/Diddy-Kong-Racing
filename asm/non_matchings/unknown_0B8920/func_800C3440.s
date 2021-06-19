@@ -7,7 +7,7 @@ glabel func_800C3440
 /* 0C4054 800C3454 AFB00014 */  sw    $s0, 0x14($sp)
 /* 0C4058 800C3458 11C0003D */  beqz  $t6, .L800C3550
 /* 0C405C 800C345C AFA40020 */   sw    $a0, 0x20($sp)
-/* 0C4060 800C3460 0C01BAA8 */  jal   func_8006EAA0
+/* 0C4060 800C3460 0C01BAA8 */  jal   is_game_paused
 /* 0C4064 800C3464 00000000 */   nop   
 /* 0C4068 800C3468 1440000D */  bnez  $v0, .L800C34A0
 /* 0C406C 800C346C 3C10800E */   lui   $s0, %hi(D_800E3678) # $s0, 0x800e

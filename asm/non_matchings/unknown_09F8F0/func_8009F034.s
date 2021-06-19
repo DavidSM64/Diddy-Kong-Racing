@@ -45,7 +45,7 @@ glabel func_8009F034
 /* 09FC78 8009F078 E7B70020 */  swc1  $f23, 0x20($sp)
 /* 09FC7C 8009F07C E7B60024 */  swc1  $f22, 0x24($sp)
 /* 09FC80 8009F080 E7B50018 */  swc1  $f21, 0x18($sp)
-/* 09FC84 8009F084 0C01AF66 */  jal   func_8006BD98
+/* 09FC84 8009F084 0C01AF66 */  jal   get_current_level_race_type
 /* 09FC88 8009F088 E7B4001C */   swc1  $f20, 0x1c($sp)
 /* 09FC8C 8009F08C 240C0001 */  li    $t4, 1
 /* 09FC90 8009F090 11820004 */  beq   $t4, $v0, .L8009F0A4
@@ -752,7 +752,7 @@ glabel func_8009F034
 /* 0A06C8 8009FAC8 461C3200 */  add.s $f8, $f6, $f28
 /* 0A06CC 8009FACC E488020C */  swc1  $f8, 0x20c($a0)
 .L8009FAD0:
-/* 0A06D0 8009FAD0 0C01AF66 */  jal   func_8006BD98
+/* 0A06D0 8009FAD0 0C01AF66 */  jal   get_current_level_race_type
 /* 0A06D4 8009FAD4 AFA70090 */   sw    $a3, 0x90($sp)
 /* 0A06D8 8009FAD8 3C014080 */  li    $at, 0x40800000 # 4.000000
 /* 0A06DC 8009FADC 44819000 */  mtc1  $at, $f18
@@ -1074,7 +1074,7 @@ glabel func_8009F034
 /* 0A0B9C 8009FF9C 14EFFCCE */  bne   $a3, $t7, .L8009F2D8
 /* 0A0BA0 8009FFA0 AFAE006C */   sw    $t6, 0x6c($sp)
 .L8009FFA4:
-/* 0A0BA4 8009FFA4 0C01AF66 */  jal   func_8006BD98
+/* 0A0BA4 8009FFA4 0C01AF66 */  jal   get_current_level_race_type
 /* 0A0BA8 8009FFA8 00000000 */   nop   
 /* 0A0BAC 8009FFAC 30590040 */  andi  $t9, $v0, 0x40
 /* 0A0BB0 8009FFB0 13200008 */  beqz  $t9, .L8009FFD4

@@ -44,7 +44,7 @@ glabel func_8000C8F8
 /* 00D598 8000C998 00000000 */   nop   
 /* 00D59C 8000C99C A2000000 */  sb    $zero, ($s0)
 .L8000C9A0:
-/* 00D5A0 8000C9A0 0C01AF66 */  jal   func_8006BD98
+/* 00D5A0 8000C9A0 0C01AF66 */  jal   get_current_level_race_type
 /* 00D5A4 8000C9A4 00000000 */   nop   
 /* 00D5A8 8000C9A8 10400002 */  beqz  $v0, .L8000C9B4
 /* 00D5AC 8000C9AC 3C018012 */   lui   $at, %hi(D_8011AD3E) # $at, 0x8012

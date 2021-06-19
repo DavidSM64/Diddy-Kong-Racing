@@ -43,7 +43,7 @@ glabel func_80042D20
 /* 043948 80042D48 AFA20040 */  sw    $v0, 0x40($sp)
 /* 04394C 80042D4C 0C0078A7 */  jal   func_8001E29C
 /* 043950 80042D50 24040002 */   li    $a0, 2
-/* 043954 80042D54 0C01AF6C */  jal   func_8006BDB0
+/* 043954 80042D54 0C01AF6C */  jal   get_current_level_header
 /* 043958 80042D58 AFA20044 */   sw    $v0, 0x44($sp)
 /* 04395C 80042D5C AFA20050 */  sw    $v0, 0x50($sp)
 /* 043960 80042D60 0C006EAB */  jal   func_8001BAAC

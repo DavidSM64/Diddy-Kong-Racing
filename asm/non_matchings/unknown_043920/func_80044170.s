@@ -3,7 +3,7 @@ glabel func_80044170
 /* 044D74 80044174 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 044D78 80044178 AFA60028 */  sw    $a2, 0x28($sp)
 /* 044D7C 8004417C AFA40020 */  sw    $a0, 0x20($sp)
-/* 044D80 80044180 0C01AF66 */  jal   func_8006BD98
+/* 044D80 80044180 0C01AF66 */  jal   get_current_level_race_type
 /* 044D84 80044184 AFA50024 */   sw    $a1, 0x24($sp)
 /* 044D88 80044188 8FA40020 */  lw    $a0, 0x20($sp)
 /* 044D8C 8004418C 8FA50024 */  lw    $a1, 0x24($sp)

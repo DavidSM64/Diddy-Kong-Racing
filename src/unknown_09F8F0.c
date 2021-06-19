@@ -529,7 +529,7 @@ void func_800A258C(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
     func_800A7B68(temp, arg2);
     func_800A7520(arg1, arg2);
 
-    level = func_8006BDB0();
+    level = get_current_level_header();
     if (level->laps > 1) {
         func_800A4F50(temp, arg2);
     }

@@ -1564,7 +1564,7 @@ Player* func_8002342C(f32 x, f32 z){
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
         return D_8011AD24[1] + 1;
-    } else if (func_8006BD98() == 8) {
+    } else if (get_current_level_race_type() == 8) {
         return D_8011AD24[1] + 1;
     }
     return 0;

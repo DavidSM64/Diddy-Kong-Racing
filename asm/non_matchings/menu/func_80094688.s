@@ -5,7 +5,7 @@ glabel func_80094688
 /* 095294 80094694 AFA50034 */  sw    $a1, 0x34($sp)
 /* 095298 80094698 0C01C8A6 */  jal   func_80072298
 /* 09529C 8009469C 00002025 */   move  $a0, $zero
-/* 0952A0 800946A0 0C01AF6C */  jal   func_8006BDB0
+/* 0952A0 800946A0 0C01AF6C */  jal   get_current_level_header
 /* 0952A4 800946A4 00000000 */   nop   
 /* 0952A8 800946A8 8FAE0030 */  lw    $t6, 0x30($sp)
 /* 0952AC 800946AC 3C018012 */  lui   $at, %hi(D_80126C28) # $at, 0x8012

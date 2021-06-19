@@ -258,7 +258,7 @@ glabel func_80010994
 /* 011944 80010D44 1420FFF5 */  bnez  $at, .L80010D1C
 /* 011948 80010D48 26520004 */   addiu $s2, $s2, 4
 .L80010D4C:
-/* 01194C 80010D4C 0C01AF66 */  jal   func_8006BD98
+/* 01194C 80010D4C 0C01AF66 */  jal   get_current_level_race_type
 /* 011950 80010D50 00000000 */   nop   
 /* 011954 80010D54 1440001C */  bnez  $v0, .L80010DC8
 /* 011958 80010D58 3C078012 */   lui   $a3, %hi(playerCount) # $a3, 0x8012

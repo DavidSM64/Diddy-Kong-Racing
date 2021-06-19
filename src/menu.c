@@ -12,72 +12,6 @@
  * @file Contains all the code used for every menu in the game.
  */
 
-#define CHEAT(index) 1 << index
-
-typedef enum Cheats {
-    CHEAT_CONTROL_TT               = CHEAT(0),
-    CHEAT_CONTROL_DRUMSTICK        = CHEAT(1),
-    CHEAT_MIRRORED_TRACKS          = CHEAT(2),
-    CHEAT_HIGH_SPEED_RACING        = CHEAT(3),
-    CHEAT_BIG_CHARACTERS           = CHEAT(4),
-    CHEAT_SMALL_CHARACTERS         = CHEAT(5),
-    CHEAT_MUSIC_MENU               = CHEAT(6),
-    CHEAT_START_WITH_10_BANANAS    = CHEAT(7),
-    CHEAT_HORN_CHEAT               = CHEAT(8),
-    CHEAT_PRINT_COORDS             = CHEAT(9),
-    CHEAT_DISPLAY_CREDITS          = CHEAT(10),
-    CHEAT_DISABLE_WEAPONS          = CHEAT(11),
-    CHEAT_DISABLE_BANANAS          = CHEAT(12),
-    CHEAT_BANANAS_REDUCE_SPEED     = CHEAT(13),
-    CHEAT_NO_LIMIT_TO_BANANAS      = CHEAT(14),
-    CHEAT_ALL_BALLOONS_ARE_RED     = CHEAT(15),
-    CHEAT_ALL_BALLOONS_ARE_GREEN   = CHEAT(16),
-    CHEAT_ALL_BALLOONS_ARE_BLUE    = CHEAT(17),
-    CHEAT_ALL_BALLOONS_ARE_YELLOW  = CHEAT(18),
-    CHEAT_ALL_BALLOONS_ARE_RAINBOW = CHEAT(19),
-    CHEAT_MAXIMUM_POWER_UP         = CHEAT(20),
-    CHEAT_TURN_OFF_ZIPPERS         = CHEAT(21),
-    CHEAT_SELECT_SAME_PLAYER       = CHEAT(22),
-    CHEAT_FOUR_WHEEL_DRIVER        = CHEAT(23),
-    CHEAT_TWO_PLAYER_ADVENTURE     = CHEAT(24),
-    CHEAT_ULTIMATE_AI              = CHEAT(25),
-    CHEAT_FREE_BALLOON             = CHEAT(26),
-    CHEAT_EPC_LOCK_UP_DISPLAY      = CHEAT(27),
-    CHEAT_ROM_CHECKSUM             = CHEAT(28)
-} Cheats;
-
-typedef enum MENU_ID {
-    MENU_TITLE,
-    MENU_LOGOS,
-    MENU_UNUSED_2,
-    MENU_CHARACTER_SELECT,
-    MENU_UNUSED_4,
-    MENU_UNKNOWN_5,
-    MENU_FILE_SELECT,
-    MENU_UNUSED_7,
-    MENU_UNUSED_8,
-    MENU_UNUSED_9,
-    MENU_MAGIC_CODES,
-    MENU_MAGIC_CODES_LIST,
-    MENU_OPTIONS,
-    MENU_AUDIO_OPTIONS,
-    MENU_SAVE_OPTIONS,
-    MENU_TRACK_SELECT,
-    MENU_UNUSED_16,
-    MENU_RESULTS,
-    MENU_UNUSED_18,
-    MENU_GAME_SELECT,
-    MENU_TROPHY_RACE_ROUND,
-    MENU_TROPHY_RACE_RANKINGS,
-    MENU_UNUSED_22,
-    MENU_UNKNOWN_23,
-    MENU_GHOST_DATA,
-    MENU_CREDITS,
-    MENU_BOOT,
-    MENU_UNUSED_27,
-    MENU_CAUTION
-} MENU_ID;
-
 extern s32 osTvType;
 
 /************ .bss ************/
@@ -3676,7 +3610,7 @@ void func_80096790(void) {
     s32 temp;
     s8 *temp2;
     
-    temp2 = (s8*)func_8006BDB0();
+    temp2 = (s8*)get_current_level_header();
     func_8009C4A8(D_800E0A24);
     temp = *temp2 - 1;
     
@@ -4334,7 +4268,7 @@ typedef struct unk8006BDB0 {
 } unk8006BDB0;
 
 s32 func_8009C3D8(void) {
-    unk8006BDB0 *temp = (unk8006BDB0*)func_8006BDB0(); 
+    unk8006BDB0 *temp = (unk8006BDB0*)get_current_level_header(); 
     if (gIsInTwoPlayerAdventure && !gIsInTracksMode) {
         if (temp->unk4C == 0 || (temp->unk4C & 0x40) != 0) {
             return 2;

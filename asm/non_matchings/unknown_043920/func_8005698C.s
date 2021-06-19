@@ -24,7 +24,7 @@ glabel func_8005698C
 /* 0575C8 800569C8 E7B6001C */  swc1  $f22, 0x1c($sp)
 /* 0575CC 800569CC E7B50010 */  swc1  $f21, 0x10($sp)
 /* 0575D0 800569D0 E7B40014 */  swc1  $f20, 0x14($sp)
-/* 0575D4 800569D4 0C01AF66 */  jal   func_8006BD98
+/* 0575D4 800569D4 0C01AF66 */  jal   get_current_level_race_type
 /* 0575D8 800569D8 AFA600C0 */   sw    $a2, 0xc0($sp)
 /* 0575DC 800569DC 860E0000 */  lh    $t6, ($s0)
 /* 0575E0 800569E0 30440040 */  andi  $a0, $v0, 0x40

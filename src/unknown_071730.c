@@ -3,6 +3,7 @@
 
 #include "unknown_071730.h"
 
+#include "structs.h"
 #include "types.h"
 #include "macros.h"
 
@@ -97,7 +98,7 @@ typedef struct unk800B7D10 {
     s32 unk14;
 } unk800B7D10;
 
-unk800B7D10 *func_800B7D10(void);
+unk800B7D10 *get_stack_pointer(void);
 void *func_80070D3C(s32, s32, s32);
 
 unk80070BE4_8 *func_80070BE4(unk80070BE4_8 *arg0, s32 size, s32 arg2);
@@ -106,8 +107,7 @@ void* func_80070C9C(s32, s32);
 s32 *func_8006F510(void);
 void func_8006F53C(s32*);
 
-void func_80071440(s32 arg0);
-
+void func_80071440(LevelHeader *levelHeader);
 
 void func_80070B30(void) {
     s32 tmp = -1;
@@ -173,14 +173,14 @@ unk80070BE4_8 *func_80070BE4(unk80070BE4_8 *arg0, s32 size, s32 arg2) {
 }
 #endif
 
-void *func_80070C9C(s32 arg0, s32 arg1) {
+void *func_80070C9C(s32 size, s32 mask) {
     void *temp_v0;
-    if (arg0 == 0) {
-        func_800B7460(func_800B7D10()->unk14, arg0, arg1);
+    if (size == 0) {
+        func_800B7460(*(s32 *)((u8 *)get_stack_pointer() + 0x14), size, mask);
     }
-    temp_v0 = func_80070D3C(0, arg0, arg1);
+    temp_v0 = func_80070D3C(0, size, mask);
     if (temp_v0 == (void *)NULL) {
-        func_800B7460(func_800B7D10()->unk14, arg0, arg1);
+        func_800B7460(*(s32 *)((u8 *)get_stack_pointer() + 0x14), size, mask);
     }
     return temp_v0;
 }
@@ -253,12 +253,12 @@ void func_800710B0(s32 arg0) {
     func_8006F53C(sp2C);
 }
 
-void func_80071140(s32 arg0) {
+void func_80071140(LevelHeader *levelHeader) {
     s32 *sp1C = func_8006F510();
     if (D_80123DCC == 0) {
-        func_80071278(arg0);
+        func_80071278(levelHeader);
     } else {
-        func_80071440(arg0);
+        func_80071440(levelHeader);
     }
     func_8006F53C(sp1C);
 }
@@ -266,8 +266,8 @@ void func_80071140(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_071730/func_80071198.s")
 GLOBAL_ASM("asm/non_matchings/unknown_071730/func_80071278.s")
 
-void func_80071440(s32 arg0) {
-    D_801235C8[D_80123DC8].unk0 = arg0;
+void func_80071440(LevelHeader *levelHeader) {
+    D_801235C8[D_80123DC8].unk0 = levelHeader;
     D_801235C8[D_80123DC8].unk4 = D_80123DCC;
     D_80123DC8++;
 }

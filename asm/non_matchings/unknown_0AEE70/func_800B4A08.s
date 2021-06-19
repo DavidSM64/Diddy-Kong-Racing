@@ -8,7 +8,7 @@ glabel func_800B4A08
 /* 0B561C 800B4A1C AFA60028 */  sw    $a2, 0x28($sp)
 /* 0B5620 800B4A20 AFA50024 */  sw    $a1, 0x24($sp)
 /* 0B5624 800B4A24 AFA7002C */  sw    $a3, 0x2c($sp)
-/* 0B5628 800B4A28 0C02D290 */  jal   func_800B4A40
+/* 0B5628 800B4A28 0C02D290 */  jal   sprintf
 /* 0B562C 800B4A2C 27A60028 */   addiu $a2, $sp, 0x28
 /* 0B5630 800B4A30 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 0B5634 800B4A34 27BD0020 */  addiu $sp, $sp, 0x20

@@ -31,7 +31,7 @@ glabel func_8004447C
 /* 0450C8 800444C8 24010004 */  li    $at, 4
 /* 0450CC 800444CC 15C10313 */  bne   $t6, $at, .L8004511C
 /* 0450D0 800444D0 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 0450D4 800444D4 0C01AF6C */  jal   func_8006BDB0
+/* 0450D4 800444D4 0C01AF6C */  jal   get_current_level_header
 /* 0450D8 800444D8 00000000 */   nop   
 /* 0450DC 800444DC 804F004C */  lb    $t7, 0x4c($v0)
 /* 0450E0 800444E0 2458002A */  addiu $t8, $v0, 0x2a

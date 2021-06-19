@@ -262,7 +262,7 @@ glabel func_8003D5A0
 /* 03E558 8003D958 1020001C */  beqz  $at, .L8003D9CC
 /* 03E55C 8003D95C 00000000 */   nop   
 /* 03E560 8003D960 AFA40044 */  sw    $a0, 0x44($sp)
-/* 03E564 8003D964 0C01AF66 */  jal   func_8006BD98
+/* 03E564 8003D964 0C01AF66 */  jal   get_current_level_race_type
 /* 03E568 8003D968 AFA90030 */   sw    $t1, 0x30($sp)
 /* 03E56C 8003D96C 8FA40044 */  lw    $a0, 0x44($sp)
 /* 03E570 8003D970 8FA90030 */  lw    $t1, 0x30($sp)
@@ -313,7 +313,7 @@ glabel func_8003D5A0
 /* 03E620 8003DA20 8C680064 */  lw    $t0, 0x64($v1)
 /* 03E624 8003DA24 AFA90030 */  sw    $t1, 0x30($sp)
 /* 03E628 8003DA28 AFA3006C */  sw    $v1, 0x6c($sp)
-/* 03E62C 8003DA2C 0C01AF66 */  jal   func_8006BD98
+/* 03E62C 8003DA2C 0C01AF66 */  jal   get_current_level_race_type
 /* 03E630 8003DA30 AFA80068 */   sw    $t0, 0x68($sp)
 /* 03E634 8003DA34 8FA3006C */  lw    $v1, 0x6c($sp)
 /* 03E638 8003DA38 8FA80068 */  lw    $t0, 0x68($sp)

@@ -334,7 +334,7 @@ glabel func_8004F7F4
 /* 05087C 8004FC7C 46209120 */  cvt.s.d $f4, $f18
 /* 050880 8004FC80 E6240020 */  swc1  $f4, 0x20($s1)
 .L8004FC84:
-/* 050884 8004FC84 0C01AF6C */  jal   func_8006BDB0
+/* 050884 8004FC84 0C01AF6C */  jal   get_current_level_header
 /* 050888 8004FC88 00000000 */   nop   
 /* 05088C 8004FC8C C60A00C0 */  lwc1  $f10, 0xc0($s0)
 /* 050890 8004FC90 44803800 */  mtc1  $zero, $f7

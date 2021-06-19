@@ -48,7 +48,7 @@ glabel func_800452A0
 /* 045F28 80045328 24010004 */  li    $at, 4
 /* 045F2C 8004532C 15E10235 */  bne   $t7, $at, .L80045C04
 /* 045F30 80045330 8FBF0054 */   lw    $ra, 0x54($sp)
-/* 045F34 80045334 0C01AF6C */  jal   func_8006BDB0
+/* 045F34 80045334 0C01AF6C */  jal   get_current_level_header
 /* 045F38 80045338 00000000 */   nop   
 /* 045F3C 8004533C 2458002A */  addiu $t8, $v0, 0x2a
 /* 045F40 80045340 AFB80074 */  sw    $t8, 0x74($sp)

@@ -121,61 +121,61 @@ glabel func_80071A24
 /* 072778 80071B78 348400FF */   ori   $a0, (0xFF0000FF & 0xFFFF) # ori $a0, $a0, 0xff
 /* 07277C 80071B7C 3C04800E */  lui   $a0, %hi(D_800E7528) # $a0, 0x800e
 /* 072780 80071B80 24847528 */  addiu $a0, %lo(D_800E7528) # addiu $a0, $a0, 0x7528
-/* 072784 80071B84 0C02D7B7 */  jal   func_800B5EDC
+/* 072784 80071B84 0C02D7B7 */  jal   render_printf
 /* 072788 80071B88 00402825 */   move  $a1, $v0
 /* 07278C 80071B8C 3C0400FF */  lui   $a0, (0x00FF00FF >> 16) # lui $a0, 0xff
 /* 072790 80071B90 0C01C689 */  jal   func_80071A24
 /* 072794 80071B94 348400FF */   ori   $a0, (0x00FF00FF & 0xFFFF) # ori $a0, $a0, 0xff
 /* 072798 80071B98 3C04800E */  lui   $a0, %hi(D_800E7530) # $a0, 0x800e
 /* 07279C 80071B9C 24847530 */  addiu $a0, %lo(D_800E7530) # addiu $a0, $a0, 0x7530
-/* 0727A0 80071BA0 0C02D7B7 */  jal   func_800B5EDC
+/* 0727A0 80071BA0 0C02D7B7 */  jal   render_printf
 /* 0727A4 80071BA4 00402825 */   move  $a1, $v0
 /* 0727A8 80071BA8 0C01C689 */  jal   func_80071A24
 /* 0727AC 80071BAC 3404FFFF */   li    $a0, 65535
 /* 0727B0 80071BB0 3C04800E */  lui   $a0, %hi(D_800E753C) # $a0, 0x800e
 /* 0727B4 80071BB4 2484753C */  addiu $a0, %lo(D_800E753C) # addiu $a0, $a0, 0x753c
-/* 0727B8 80071BB8 0C02D7B7 */  jal   func_800B5EDC
+/* 0727B8 80071BB8 0C02D7B7 */  jal   render_printf
 /* 0727BC 80071BBC 00402825 */   move  $a1, $v0
 /* 0727C0 80071BC0 3C04FFFF */  lui   $a0, (0xFFFF00FF >> 16) # lui $a0, 0xffff
 /* 0727C4 80071BC4 0C01C689 */  jal   func_80071A24
 /* 0727C8 80071BC8 348400FF */   ori   $a0, (0xFFFF00FF & 0xFFFF) # ori $a0, $a0, 0xff
 /* 0727CC 80071BCC 3C04800E */  lui   $a0, %hi(D_800E7548) # $a0, 0x800e
 /* 0727D0 80071BD0 24847548 */  addiu $a0, %lo(D_800E7548) # addiu $a0, $a0, 0x7548
-/* 0727D4 80071BD4 0C02D7B7 */  jal   func_800B5EDC
+/* 0727D4 80071BD4 0C02D7B7 */  jal   render_printf
 /* 0727D8 80071BD8 00402825 */   move  $a1, $v0
 /* 0727DC 80071BDC 3C04FF00 */  lui   $a0, (0xFF00FFFF >> 16) # lui $a0, 0xff00
 /* 0727E0 80071BE0 0C01C689 */  jal   func_80071A24
 /* 0727E4 80071BE4 3484FFFF */   ori   $a0, (0xFF00FFFF & 0xFFFF) # ori $a0, $a0, 0xffff
 /* 0727E8 80071BE8 3C04800E */  lui   $a0, %hi(D_800E7554) # $a0, 0x800e
 /* 0727EC 80071BEC 24847554 */  addiu $a0, %lo(D_800E7554) # addiu $a0, $a0, 0x7554
-/* 0727F0 80071BF0 0C02D7B7 */  jal   func_800B5EDC
+/* 0727F0 80071BF0 0C02D7B7 */  jal   render_printf
 /* 0727F4 80071BF4 00402825 */   move  $a1, $v0
 /* 0727F8 80071BF8 3C0400FF */  lui   $a0, (0x00FFFFFF >> 16) # lui $a0, 0xff
 /* 0727FC 80071BFC 0C01C689 */  jal   func_80071A24
 /* 072800 80071C00 3484FFFF */   ori   $a0, (0x00FFFFFF & 0xFFFF) # ori $a0, $a0, 0xffff
 /* 072804 80071C04 3C04800E */  lui   $a0, %hi(D_800E7560) # $a0, 0x800e
 /* 072808 80071C08 24847560 */  addiu $a0, %lo(D_800E7560) # addiu $a0, $a0, 0x7560
-/* 07280C 80071C0C 0C02D7B7 */  jal   func_800B5EDC
+/* 07280C 80071C0C 0C02D7B7 */  jal   render_printf
 /* 072810 80071C10 00402825 */   move  $a1, $v0
 /* 072814 80071C14 0C01C689 */  jal   func_80071A24
 /* 072818 80071C18 2404FFFF */   li    $a0, -1
 /* 07281C 80071C1C 3C04800E */  lui   $a0, %hi(D_800E756C) # $a0, 0x800e
 /* 072820 80071C20 2484756C */  addiu $a0, %lo(D_800E756C) # addiu $a0, $a0, 0x756c
-/* 072824 80071C24 0C02D7B7 */  jal   func_800B5EDC
+/* 072824 80071C24 0C02D7B7 */  jal   render_printf
 /* 072828 80071C28 00402825 */   move  $a1, $v0
 /* 07282C 80071C2C 3C047F7F */  lui   $a0, (0x7F7F7FFF >> 16) # lui $a0, 0x7f7f
 /* 072830 80071C30 0C01C689 */  jal   func_80071A24
 /* 072834 80071C34 34847FFF */   ori   $a0, (0x7F7F7FFF & 0xFFFF) # ori $a0, $a0, 0x7fff
 /* 072838 80071C38 3C04800E */  lui   $a0, %hi(D_800E7578) # $a0, 0x800e
 /* 07283C 80071C3C 24847578 */  addiu $a0, %lo(D_800E7578) # addiu $a0, $a0, 0x7578
-/* 072840 80071C40 0C02D7B7 */  jal   func_800B5EDC
+/* 072840 80071C40 0C02D7B7 */  jal   render_printf
 /* 072844 80071C44 00402825 */   move  $a1, $v0
 /* 072848 80071C48 3C04FF7F */  lui   $a0, (0xFF7F7FFF >> 16) # lui $a0, 0xff7f
 /* 07284C 80071C4C 0C01C689 */  jal   func_80071A24
 /* 072850 80071C50 34847FFF */   ori   $a0, (0xFF7F7FFF & 0xFFFF) # ori $a0, $a0, 0x7fff
 /* 072854 80071C54 3C04800E */  lui   $a0, %hi(D_800E7584) # $a0, 0x800e
 /* 072858 80071C58 24847584 */  addiu $a0, %lo(D_800E7584) # addiu $a0, $a0, 0x7584
-/* 07285C 80071C5C 0C02D7B7 */  jal   func_800B5EDC
+/* 07285C 80071C5C 0C02D7B7 */  jal   render_printf
 /* 072860 80071C60 00402825 */   move  $a1, $v0
 /* 072864 80071C64 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 072868 80071C68 27BD0018 */  addiu $sp, $sp, 0x18

@@ -35,7 +35,7 @@ glabel func_80024D54
 /* 0259D8 80024DD8 8C84D37C */  lw    $a0, %lo(D_8011D37C)($a0)
 /* 0259DC 80024DDC 0C01994B */  jal   func_8006652C
 /* 0259E0 80024DE0 AC20B0BC */   sw    $zero, %lo(D_8011B0BC)($at)
-/* 0259E4 80024DE4 0C01BAA8 */  jal   func_8006EAA0
+/* 0259E4 80024DE4 0C01BAA8 */  jal   is_game_paused
 /* 0259E8 80024DE8 00409825 */   move  $s3, $v0
 /* 0259EC 80024DEC 10400003 */  beqz  $v0, .L80024DFC
 /* 0259F0 80024DF0 3C188012 */   lui   $t8, %hi(D_8011D384) # $t8, 0x8012
@@ -366,17 +366,17 @@ glabel func_80024D54
 /* 025EAC 800252AC 24010003 */  li    $at, 3
 /* 025EB0 800252B0 1661006C */  bne   $s3, $at, .L80025464
 /* 025EB4 800252B4 00000000 */   nop   
-/* 025EB8 800252B8 0C01AF66 */  jal   func_8006BD98
+/* 025EB8 800252B8 0C01AF66 */  jal   get_current_level_race_type
 /* 025EBC 800252BC 00000000 */   nop   
 /* 025EC0 800252C0 24010042 */  li    $at, 66
 /* 025EC4 800252C4 10410067 */  beq   $v0, $at, .L80025464
 /* 025EC8 800252C8 00000000 */   nop   
-/* 025ECC 800252CC 0C01AF66 */  jal   func_8006BD98
+/* 025ECC 800252CC 0C01AF66 */  jal   get_current_level_race_type
 /* 025ED0 800252D0 00000000 */   nop   
 /* 025ED4 800252D4 24010040 */  li    $at, 64
 /* 025ED8 800252D8 10410062 */  beq   $v0, $at, .L80025464
 /* 025EDC 800252DC 00000000 */   nop   
-/* 025EE0 800252E0 0C01AF66 */  jal   func_8006BD98
+/* 025EE0 800252E0 0C01AF66 */  jal   get_current_level_race_type
 /* 025EE4 800252E4 00000000 */   nop   
 /* 025EE8 800252E8 24010041 */  li    $at, 65
 /* 025EEC 800252EC 1041005D */  beq   $v0, $at, .L80025464

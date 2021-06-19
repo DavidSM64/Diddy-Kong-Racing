@@ -158,7 +158,7 @@ glabel func_80017E98
 /* 018CE4 800180E4 240500DC */   li    $a1, 220
 /* 018CE8 800180E8 3C04800E */  lui   $a0, %hi(D_800E50D4) # $a0, 0x800e
 /* 018CEC 800180EC 248450D4 */  addiu $a0, %lo(D_800E50D4) # addiu $a0, $a0, 0x50d4
-/* 018CF0 800180F0 0C02D7B7 */  jal   func_800B5EDC
+/* 018CF0 800180F0 0C02D7B7 */  jal   render_printf
 /* 018CF4 800180F4 02402825 */   move  $a1, $s2
 /* 018CF8 800180F8 3C088012 */  lui   $t0, %hi(D_8011AED4) # $t0, 0x8012
 /* 018CFC 800180FC 2508AED4 */  addiu $t0, %lo(D_8011AED4) # addiu $t0, $t0, -0x512c

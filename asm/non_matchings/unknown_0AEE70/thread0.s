@@ -1,4 +1,4 @@
-glabel func_800B6FC4
+glabel thread0
 /* 0B7BC4 800B6FC4 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 0B7BC8 800B6FC8 AFB40028 */  sw    $s4, 0x28($sp)
 /* 0B7BCC 800B6FCC 3C148013 */  lui   $s4, %hi(D_80129790) # $s4, 0x8013

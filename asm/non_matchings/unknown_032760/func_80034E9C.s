@@ -12,7 +12,7 @@ glabel func_80034E9C
 /* 035AA8 80034EA8 00808025 */  move  $s0, $a0
 /* 035AAC 80034EAC 0C01BAA4 */  jal   get_settings
 /* 035AB0 80034EB0 AFA5005C */   sw    $a1, 0x5c($sp)
-/* 035AB4 80034EB4 0C01AF6C */  jal   func_8006BDB0
+/* 035AB4 80034EB4 0C01AF6C */  jal   get_current_level_header
 /* 035AB8 80034EB8 AFA20054 */   sw    $v0, 0x54($sp)
 /* 035ABC 80034EBC 8E0E0064 */  lw    $t6, 0x64($s0)
 /* 035AC0 80034EC0 8FA30054 */  lw    $v1, 0x54($sp)

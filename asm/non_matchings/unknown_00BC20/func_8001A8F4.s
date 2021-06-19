@@ -296,7 +296,7 @@ glabel func_8001A8F4
 /* 01B944 8001AD44 24040001 */   li    $a0, 1
 /* 01B948 8001AD48 0C0168EC */  jal   func_8005A3B0
 /* 01B94C 8001AD4C 00000000 */   nop   
-/* 01B950 8001AD50 0C01AF66 */  jal   func_8006BD98
+/* 01B950 8001AD50 0C01AF66 */  jal   get_current_level_race_type
 /* 01B954 8001AD54 00000000 */   nop   
 /* 01B958 8001AD58 304A0040 */  andi  $t2, $v0, 0x40
 /* 01B95C 8001AD5C 15400013 */  bnez  $t2, .L8001ADAC

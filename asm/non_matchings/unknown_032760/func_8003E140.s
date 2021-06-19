@@ -159,7 +159,7 @@ glabel func_8003E140
 /* 03EF68 8003E368 A0600174 */  sb    $zero, 0x174($v1)
 .L8003E36C:
 /* 03EF6C 8003E36C AFA30038 */  sw    $v1, 0x38($sp)
-/* 03EF70 8003E370 0C01AF66 */  jal   func_8006BD98
+/* 03EF70 8003E370 0C01AF66 */  jal   get_current_level_race_type
 /* 03EF74 8003E374 AFA60034 */   sw    $a2, 0x34($sp)
 /* 03EF78 8003E378 8FA30038 */  lw    $v1, 0x38($sp)
 /* 03EF7C 8003E37C 30490040 */  andi  $t1, $v0, 0x40

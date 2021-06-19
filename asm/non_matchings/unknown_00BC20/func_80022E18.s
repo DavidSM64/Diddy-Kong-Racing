@@ -1,7 +1,7 @@
 glabel func_80022E18
 /* 023A18 80022E18 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 023A1C 80022E1C AFBF0014 */  sw    $ra, 0x14($sp)
-/* 023A20 80022E20 0C01AF6C */  jal   func_8006BDB0
+/* 023A20 80022E20 0C01AF6C */  jal   get_current_level_header
 /* 023A24 80022E24 AFA40030 */   sw    $a0, 0x30($sp)
 /* 023A28 80022E28 240E0005 */  li    $t6, 5
 /* 023A2C 80022E2C A04E004C */  sb    $t6, 0x4c($v0)

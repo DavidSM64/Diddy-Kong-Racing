@@ -12,7 +12,7 @@ glabel func_800A4C44
 /* 0A586C 800A4C6C 8FA30034 */  lw    $v1, 0x34($sp)
 /* 0A5870 800A4C70 1040001B */  beqz  $v0, .L800A4CE0
 /* 0A5874 800A4C74 00000000 */   nop   
-/* 0A5878 800A4C78 0C01AF66 */  jal   func_8006BD98
+/* 0A5878 800A4C78 0C01AF66 */  jal   get_current_level_race_type
 /* 0A587C 800A4C7C 00000000 */   nop   
 /* 0A5880 800A4C80 24010008 */  li    $at, 8
 /* 0A5884 800A4C84 10410005 */  beq   $v0, $at, .L800A4C9C

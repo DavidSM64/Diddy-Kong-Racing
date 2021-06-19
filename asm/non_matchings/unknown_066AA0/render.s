@@ -1,4 +1,4 @@
-glabel func_8006C60C
+glabel render
 /* 06D20C 8006C60C 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 06D210 8006C610 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 06D214 8006C614 24040000 */  li    $a0, 0
@@ -140,7 +140,7 @@ glabel func_8006C60C
 /* 06D428 8006C828 AC22D37C */   sw    $v0, %lo(D_800DD37C)($at)
 /* 06D42C 8006C82C 10400006 */  beqz  $v0, .L8006C848
 /* 06D430 8006C830 00000000 */   nop   
-/* 06D434 8006C834 0C02DE04 */  jal   func_800B7810
+/* 06D434 8006C834 0C02DE04 */  jal   render_epc_lock_up_display
 /* 06D438 8006C838 00000000 */   nop   
 /* 06D43C 8006C83C 240A0005 */  li    $t2, 5
 /* 06D440 8006C840 3C018012 */  lui   $at, %hi(D_801234EC) # $at, 0x8012
@@ -162,7 +162,7 @@ glabel func_8006C60C
 /* 06D478 8006C878 0041082A */  slt   $at, $v0, $at
 /* 06D47C 8006C87C 14200003 */  bnez  $at, .L8006C88C
 /* 06D480 8006C880 3C04800E */   lui   $a0, %hi(D_800E7134) # $a0, 0x800e
-/* 06D484 8006C884 0C02D7B7 */  jal   func_800B5EDC
+/* 06D484 8006C884 0C02D7B7 */  jal   render_printf
 /* 06D488 8006C888 24847134 */   addiu $a0, %lo(D_800E7134) # addiu $a0, $a0, 0x7134
 .L8006C88C:
 /* 06D48C 8006C88C 3C028012 */  lui   $v0, %hi(D_801234EC) # $v0, 0x8012

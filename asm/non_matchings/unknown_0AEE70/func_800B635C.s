@@ -49,7 +49,7 @@ glabel func_800B635C
 /* 0B7014 800B6414 AFA0012C */   sw    $zero, 0x12c($sp)
 /* 0B7018 800B6418 8FA50138 */  lw    $a1, 0x138($sp)
 /* 0B701C 800B641C 27A4002C */  addiu $a0, $sp, 0x2c
-/* 0B7020 800B6420 0C02D290 */  jal   func_800B4A40
+/* 0B7020 800B6420 0C02D290 */  jal   sprintf
 /* 0B7024 800B6424 27A6013C */   addiu $a2, $sp, 0x13c
 /* 0B7028 800B6428 0C02D282 */  jal   func_800B4A08
 /* 0B702C 800B642C 00002025 */   move  $a0, $zero

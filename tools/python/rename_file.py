@@ -18,9 +18,9 @@ def find_and_rename(directory, paths):
         path = directory + '/' + name
         if oldSymbol in path:
             newPath = path.replace(oldSymbol, newSymbol)
-            print('Renamed "' + path + '" to "' + newPath + '"')
             try:
                 FileUtil.rename_file(path, newPath)
+                print('Renamed "' + path + '" to "' + newPath + '"')
             except FileNotFoundError:
                 pass
 

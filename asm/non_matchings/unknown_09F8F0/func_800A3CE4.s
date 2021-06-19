@@ -2,7 +2,7 @@ glabel func_800A3CE4
 /* 0A48E4 800A3CE4 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 0A48E8 800A3CE8 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 0A48EC 800A3CEC AFA40058 */  sw    $a0, 0x58($sp)
-/* 0A48F0 800A3CF0 0C01BAA8 */  jal   func_8006EAA0
+/* 0A48F0 800A3CF0 0C01BAA8 */  jal   is_game_paused
 /* 0A48F4 800A3CF4 AFA5005C */   sw    $a1, 0x5c($sp)
 /* 0A48F8 800A3CF8 8FA90058 */  lw    $t1, 0x58($sp)
 /* 0A48FC 800A3CFC 14400111 */  bnez  $v0, .L800A4144

@@ -48,7 +48,7 @@ glabel func_800361E0
 /* 036E68 80036268 00000000 */  nop   
 /* 036E6C 8003626C E62A0004 */  swc1  $f10, 4($s1)
 .L80036270:
-/* 036E70 80036270 0C01AF6C */  jal   func_8006BDB0
+/* 036E70 80036270 0C01AF6C */  jal   get_current_level_header
 /* 036E74 80036274 E7A2007C */   swc1  $f2, 0x7c($sp)
 /* 036E78 80036278 44800000 */  mtc1  $zero, $f0
 /* 036E7C 8003627C AFA2004C */  sw    $v0, 0x4c($sp)

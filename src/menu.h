@@ -4,6 +4,72 @@
 #include "types.h"
 #include "structs.h"
 
+#define CHEAT(index) 1 << index
+
+typedef enum Cheats {
+    CHEAT_CONTROL_TT               = CHEAT(0),
+    CHEAT_CONTROL_DRUMSTICK        = CHEAT(1),
+    CHEAT_MIRRORED_TRACKS          = CHEAT(2),
+    CHEAT_HIGH_SPEED_RACING        = CHEAT(3),
+    CHEAT_BIG_CHARACTERS           = CHEAT(4),
+    CHEAT_SMALL_CHARACTERS         = CHEAT(5),
+    CHEAT_MUSIC_MENU               = CHEAT(6),
+    CHEAT_START_WITH_10_BANANAS    = CHEAT(7),
+    CHEAT_HORN_CHEAT               = CHEAT(8),
+    CHEAT_PRINT_COORDS             = CHEAT(9),
+    CHEAT_DISPLAY_CREDITS          = CHEAT(10),
+    CHEAT_DISABLE_WEAPONS          = CHEAT(11),
+    CHEAT_DISABLE_BANANAS          = CHEAT(12),
+    CHEAT_BANANAS_REDUCE_SPEED     = CHEAT(13),
+    CHEAT_NO_LIMIT_TO_BANANAS      = CHEAT(14),
+    CHEAT_ALL_BALLOONS_ARE_RED     = CHEAT(15),
+    CHEAT_ALL_BALLOONS_ARE_GREEN   = CHEAT(16),
+    CHEAT_ALL_BALLOONS_ARE_BLUE    = CHEAT(17),
+    CHEAT_ALL_BALLOONS_ARE_YELLOW  = CHEAT(18),
+    CHEAT_ALL_BALLOONS_ARE_RAINBOW = CHEAT(19),
+    CHEAT_MAXIMUM_POWER_UP         = CHEAT(20),
+    CHEAT_TURN_OFF_ZIPPERS         = CHEAT(21),
+    CHEAT_SELECT_SAME_PLAYER       = CHEAT(22),
+    CHEAT_FOUR_WHEEL_DRIVER        = CHEAT(23),
+    CHEAT_TWO_PLAYER_ADVENTURE     = CHEAT(24),
+    CHEAT_ULTIMATE_AI              = CHEAT(25),
+    CHEAT_FREE_BALLOON             = CHEAT(26),
+    CHEAT_EPC_LOCK_UP_DISPLAY      = CHEAT(27),
+    CHEAT_ROM_CHECKSUM             = CHEAT(28)
+} Cheats;
+
+typedef enum MENU_ID {
+    MENU_TITLE,
+    MENU_LOGOS,
+    MENU_UNUSED_2,
+    MENU_CHARACTER_SELECT,
+    MENU_UNUSED_4,
+    MENU_UNKNOWN_5,
+    MENU_FILE_SELECT,
+    MENU_UNUSED_7,
+    MENU_UNUSED_8,
+    MENU_UNUSED_9,
+    MENU_MAGIC_CODES,
+    MENU_MAGIC_CODES_LIST,
+    MENU_OPTIONS,
+    MENU_AUDIO_OPTIONS,
+    MENU_SAVE_OPTIONS,
+    MENU_TRACK_SELECT,
+    MENU_UNUSED_16,
+    MENU_RESULTS,
+    MENU_UNUSED_18,
+    MENU_GAME_SELECT,
+    MENU_TROPHY_RACE_ROUND,
+    MENU_TROPHY_RACE_RANKINGS,
+    MENU_UNUSED_22,
+    MENU_UNKNOWN_23,
+    MENU_GHOST_DATA,
+    MENU_CREDITS,
+    MENU_BOOT,
+    MENU_UNUSED_27,
+    MENU_CAUTION
+} MENU_ID;
+
 extern s8  D_800DF450;
 extern f32 D_800DF454;
 extern s32 D_800DF458;
@@ -132,7 +198,7 @@ typedef struct MenuBootDrawTexture {
 
 extern s16 D_800DF7C4[12];
 
-MenuBootDrawTexture D_800DF7DC[12];
+extern MenuBootDrawTexture D_800DF7DC[12];
 
 /* Size: 0x30 bytes */
 typedef struct unk800DF83C {
@@ -259,11 +325,11 @@ extern s32 D_800DFF40[36];
 extern s32 D_800DFFD0;
 extern s32 D_800DFFD4;
 
-MenuElement D_800DFFD8[14];
+extern MenuElement D_800DFFD8[14];
                                                                              
-MenuElement D_800E0198[7];
+extern MenuElement D_800E0198[7];
                                                                         
-MenuElement D_800E0278[9];
+extern MenuElement D_800E0278[9];
 
 extern s16 D_800E0398[6];
 
@@ -407,11 +473,11 @@ extern char gEighthPlace[4];
 
 extern char *gRacePlacementsArray[8];
 
-MenuElement D_800E0BEC[8];
+extern MenuElement D_800E0BEC[8];
 
-MenuElement D_800E0CEC[11];
+extern MenuElement D_800E0CEC[11];
 
-MenuElement D_800E0E4C[9];
+extern MenuElement D_800E0E4C[9];
 
 // Valid characters for name input. Must be u8, not char.
 extern u8 gFileNameValidChars[32];
@@ -447,7 +513,7 @@ extern s16 D_800E1024[14];
 extern s32 D_800E1040;
 extern s16 D_800E1044;
 
-MenuElement D_800E1048[9][3];
+extern MenuElement D_800E1048[9][3];
 
 extern s16 D_800E13A8[138];
 
@@ -502,7 +568,7 @@ extern s32 gCheatsInCreditsArray[21];
 
 extern s32 gViewingCreditsFromCheat;
 
-MenuElement D_800E1B50[9];
+extern MenuElement D_800E1B50[9];
 
 // Fast3D (F3DDKR) display list
 extern u32 D_800E1C70[24];
