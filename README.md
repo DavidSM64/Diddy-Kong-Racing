@@ -30,7 +30,7 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 ## Modding
 
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.
-  
+
 Example: `make NON_MATCHING=1 -j4`  
 
 ## Style Guide
@@ -69,14 +69,17 @@ Example: `./rename.sh D_A4001000 SP_IMEM`
 
 ---
 
-#### `./get_symbol.sh <ram_address>`
+#### `./get_symbol.sh <ram_address>|<symbol>`
 
-Will return the symbol associated with the RAM address found in `/build/us_1.0/dkr.map`. The RAM address must be in base 16. The `0x` prefix is not required.
+Given either a RAM address or symbol, returns its `(symbol, address)` pairing as defined in `/build/us_1.0/dkr.map`. If specified, the RAM address must be in base 16. The `0x` prefix is not required.
 
 Example: 
 ```
 ./get_symbol.sh 0xA4001000
 0xA4001000 = SP_IMEM
+
+./get_symbol.sh osCicId
+0x80000310 = osCicId
 ```
 
 ---
