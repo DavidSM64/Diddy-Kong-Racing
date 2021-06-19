@@ -107,7 +107,7 @@ void* func_80070C9C(s32, s32);
 s32 *func_8006F510(void);
 void func_8006F53C(s32*);
 
-void func_80071440(LevelHeader *levelHeader);
+void func_80071440(TextureHeader *texHeader);
 
 void func_80070B30(void) {
     s32 tmp = -1;
@@ -253,12 +253,12 @@ void func_800710B0(s32 arg0) {
     func_8006F53C(sp2C);
 }
 
-void func_80071140(LevelHeader *levelHeader) {
+void func_80071140(TextureHeader *texHeader) {
     s32 *sp1C = func_8006F510();
     if (D_80123DCC == 0) {
-        func_80071278(levelHeader);
+        func_80071278(texHeader);
     } else {
-        func_80071440(levelHeader);
+        func_80071440(texHeader);
     }
     func_8006F53C(sp1C);
 }
@@ -266,8 +266,8 @@ void func_80071140(LevelHeader *levelHeader) {
 GLOBAL_ASM("asm/non_matchings/unknown_071730/func_80071198.s")
 GLOBAL_ASM("asm/non_matchings/unknown_071730/func_80071278.s")
 
-void func_80071440(LevelHeader *levelHeader) {
-    D_801235C8[D_80123DC8].unk0 = levelHeader;
+void func_80071440(TextureHeader *texHeader) {
+    D_801235C8[D_80123DC8].unk0 = texHeader;
     D_801235C8[D_80123DC8].unk4 = D_80123DCC;
     D_80123DC8++;
 }

@@ -2,8 +2,9 @@
 #define _UNKNOWN_032760_H_
 
 #include "types.h"
+#include "structs.h"
 
-extern s32 D_800DC950;
+extern TextureHeader **D_800DC950;
 extern s32 D_800DC954;
 extern s32 D_800DC958;
 extern s32 D_800DC95C;
