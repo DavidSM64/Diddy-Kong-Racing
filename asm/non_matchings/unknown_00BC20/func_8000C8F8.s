@@ -52,7 +52,7 @@ glabel func_8000C8F8
 .L8000C9B4:
 /* 00D5B4 8000C9B4 A020AD3E */  sb    $zero, %lo(D_8011AD3E)($at)
 /* 00D5B8 8000C9B8 24043000 */  li    $a0, 12288
-/* 00D5BC 8000C9BC 0C01C327 */  jal   func_80070C9C
+/* 00D5BC 8000C9BC 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 00D5C0 8000C9C0 3405FFFF */   li    $a1, 65535
 /* 00D5C4 8000C9C4 8FA3005C */  lw    $v1, 0x5c($sp)
 /* 00D5C8 8000C9C8 3C0B8012 */  lui   $t3, %hi(D_8011AEB0) # $t3, 0x8012

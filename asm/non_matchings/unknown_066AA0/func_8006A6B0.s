@@ -7,7 +7,7 @@ glabel func_8006A6B0
 /* 06B2C4 8006A6C4 AFB10018 */  sw    $s1, 0x18($sp)
 /* 06B2C8 8006A6C8 AFB00014 */  sw    $s0, 0x14($sp)
 /* 06B2CC 8006A6CC 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 06B2D0 8006A6D0 0C01C327 */  jal   func_80070C9C
+/* 06B2D0 8006A6D0 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06B2D4 8006A6D4 240400C4 */   li    $a0, 196
 /* 06B2D8 8006A6D8 AFA20044 */  sw    $v0, 0x44($sp)
 /* 06B2DC 8006A6DC 0C01DB16 */  jal   func_80076C58
@@ -52,7 +52,7 @@ glabel func_8006A6B0
 /* 06B36C 8006A76C 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 06B370 8006A770 AD4F0000 */  sw    $t7, ($t2)
 /* 06B374 8006A774 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 06B378 8006A778 0C01C327 */  jal   func_80070C9C
+/* 06B378 8006A778 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06B37C 8006A77C 00182040 */   sll   $a0, $t8, 1
 /* 06B380 8006A780 3C0A8012 */  lui   $t2, %hi(D_80121170) # $t2, 0x8012
 /* 06B384 8006A784 254A1170 */  addiu $t2, %lo(D_80121170) # addiu $t2, $t2, 0x1170
@@ -152,7 +152,7 @@ glabel func_8006A6B0
 /* 06B4EC 8006A8EC 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 06B4F0 8006A8F0 25840001 */  addiu $a0, $t4, 1
 /* 06B4F4 8006A8F4 AD240000 */  sw    $a0, ($t1)
-/* 06B4F8 8006A8F8 0C01C327 */  jal   func_80070C9C
+/* 06B4F8 8006A8F8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06B4FC 8006A8FC 34A500FF */   ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 06B500 8006A900 3C098012 */  lui   $t1, %hi(D_80121174) # $t1, 0x8012
 /* 06B504 8006A904 25291174 */  addiu $t1, %lo(D_80121174) # addiu $t1, $t1, 0x1174
@@ -231,14 +231,14 @@ glabel func_8006A6B0
 /* 06B60C 8006AA0C 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 06B610 8006AA10 03063823 */  subu  $a3, $t8, $a2
 /* 06B614 8006AA14 AFA70050 */  sw    $a3, 0x50($sp)
-/* 06B618 8006AA18 0C01C327 */  jal   func_80070C9C
+/* 06B618 8006AA18 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06B61C 8006AA1C 34A500FF */   ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 06B620 8006AA20 3C038012 */  lui   $v1, %hi(D_8012116C) # $v1, 0x8012
 /* 06B624 8006AA24 2463116C */  addiu $v1, %lo(D_8012116C) # addiu $v1, $v1, 0x116c
 /* 06B628 8006AA28 8FA40050 */  lw    $a0, 0x50($sp)
 /* 06B62C 8006AA2C 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 06B630 8006AA30 AC620000 */  sw    $v0, ($v1)
-/* 06B634 8006AA34 0C01C327 */  jal   func_80070C9C
+/* 06B634 8006AA34 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06B638 8006AA38 34A500FF */   ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 06B63C 8006AA3C 3C10800E */  lui   $s0, %hi(D_800DD310) # $s0, 0x800e
 /* 06B640 8006AA40 2610D310 */  addiu $s0, %lo(D_800DD310) # addiu $s0, $s0, -0x2cf0

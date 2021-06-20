@@ -15,7 +15,7 @@ glabel func_80031BB8
 /* 0327EC 80031BEC 01EE7823 */  subu  $t7, $t7, $t6
 /* 0327F0 80031BF0 000F2080 */  sll   $a0, $t7, 2
 /* 0327F4 80031BF4 34A5FFFF */  ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
-/* 0327F8 80031BF8 0C01C327 */  jal   func_80070C9C
+/* 0327F8 80031BF8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0327FC 80031BFC ACCE0000 */   sw    $t6, ($a2)
 /* 032800 80031C00 3C06800E */  lui   $a2, %hi(D_800DC958) # $a2, 0x800e
 /* 032804 80031C04 24C6C958 */  addiu $a2, %lo(D_800DC958) # addiu $a2, $a2, -0x36a8

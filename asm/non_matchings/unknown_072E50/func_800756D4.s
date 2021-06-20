@@ -68,7 +68,7 @@ glabel func_800756D4
 /* 0763B8 800757B8 AFA20064 */   sw    $v0, 0x64($sp)
 /* 0763BC 800757BC 8FA40058 */  lw    $a0, 0x58($sp)
 /* 0763C0 800757C0 240500FF */  li    $a1, 255
-/* 0763C4 800757C4 0C01C327 */  jal   func_80070C9C
+/* 0763C4 800757C4 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0763C8 800757C8 24840100 */   addiu $a0, $a0, 0x100
 /* 0763CC 800757CC 8FA40070 */  lw    $a0, 0x70($sp)
 /* 0763D0 800757D0 8FA5005C */  lw    $a1, 0x5c($sp)

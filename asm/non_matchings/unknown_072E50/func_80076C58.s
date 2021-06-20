@@ -19,7 +19,7 @@ glabel func_80076C58
 /* 077898 80076C98 03072023 */  subu  $a0, $t8, $a3
 /* 07789C 80076C9C AFA4001C */  sw    $a0, 0x1c($sp)
 /* 0778A0 80076CA0 34A57FFF */  ori   $a1, (0x7F7F7FFF & 0xFFFF) # ori $a1, $a1, 0x7fff
-/* 0778A4 80076CA4 0C01C327 */  jal   func_80070C9C
+/* 0778A4 80076CA4 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0778A8 80076CA8 AFA70018 */   sw    $a3, 0x18($sp)
 /* 0778AC 80076CAC 8FA70018 */  lw    $a3, 0x18($sp)
 /* 0778B0 80076CB0 14400003 */  bnez  $v0, .L80076CC0
@@ -62,7 +62,7 @@ glabel func_80076C58
 /* 077934 80076D34 0303C823 */  subu  $t9, $t8, $v1
 /* 077938 80076D38 AFB90034 */  sw    $t9, 0x34($sp)
 /* 07793C 80076D3C 2405FFFF */  li    $a1, -1
-/* 077940 80076D40 0C01C327 */  jal   func_80070C9C
+/* 077940 80076D40 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 077944 80076D44 AFA30030 */   sw    $v1, 0x30($sp)
 /* 077948 80076D48 8FA30030 */  lw    $v1, 0x30($sp)
 /* 07794C 80076D4C 3C08000F */  lui   $t0, %hi(__ASSETS_LUT_END) # $t0, 0xf
@@ -85,7 +85,7 @@ glabel func_80076C58
 /* 077990 80076D90 8FAC003C */  lw    $t4, 0x3c($sp)
 /* 077994 80076D94 3C057F7F */  lui   $a1, (0x7F7F7FFF >> 16) # lui $a1, 0x7f7f
 /* 077998 80076D98 34A57FFF */  ori   $a1, (0x7F7F7FFF & 0xFFFF) # ori $a1, $a1, 0x7fff
-/* 07799C 80076D9C 0C01C327 */  jal   func_80070C9C
+/* 07799C 80076D9C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0779A0 80076DA0 016C2021 */   addu  $a0, $t3, $t4
 /* 0779A4 80076DA4 14400003 */  bnez  $v0, .L80076DB4
 /* 0779A8 80076DA8 00403825 */   move  $a3, $v0

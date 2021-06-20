@@ -188,7 +188,7 @@ glabel func_800BBF78
 /* 0BCE20 800BC220 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 0BCE24 800BC224 00002012 */  mflo  $a0
 /* 0BCE28 800BC228 00047880 */  sll   $t7, $a0, 2
-/* 0BCE2C 800BC22C 0C01C327 */  jal   func_80070C9C
+/* 0BCE2C 800BC22C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0BCE30 800BC230 01E02025 */   move  $a0, $t7
 /* 0BCE34 800BC234 AE420000 */  sw    $v0, ($s2)
 /* 0BCE38 800BC238 3C04800E */  lui   $a0, %hi(D_800E30D8) # $a0, 0x800e
@@ -208,7 +208,7 @@ glabel func_800BBF78
 /* 0BCE6C 800BC26C 01CF2021 */  addu  $a0, $t6, $t7
 /* 0BCE70 800BC270 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 0BCE74 800BC274 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
-/* 0BCE78 800BC278 0C01C327 */  jal   func_80070C9C
+/* 0BCE78 800BC278 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0BCE7C 800BC27C 24840880 */   addiu $a0, $a0, 0x880
 /* 0BCE80 800BC280 3C01800E */  lui   $at, %hi(D_800E30D8) # $at, 0x800e
 /* 0BCE84 800BC284 AC2230D8 */  sw    $v0, %lo(D_800E30D8)($at)

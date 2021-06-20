@@ -79,7 +79,7 @@ glabel func_80075E60
 /* 076B7C 80075F7C 00065080 */  sll   $t2, $a2, 2
 /* 076B80 80075F80 01465023 */  subu  $t2, $t2, $a2
 /* 076B84 80075F84 000A20C0 */  sll   $a0, $t2, 3
-/* 076B88 80075F88 0C01C327 */  jal   func_80070C9C
+/* 076B88 80075F88 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 076B8C 80075F8C AFA40064 */   sw    $a0, 0x64($sp)
 /* 076B90 80075F90 8FA50064 */  lw    $a1, 0x64($sp)
 /* 076B94 80075F94 AE020000 */  sw    $v0, ($s0)

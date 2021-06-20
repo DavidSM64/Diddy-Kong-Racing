@@ -38,7 +38,7 @@ glabel func_8007A7E8
 /* 07B474 8007A874 ACEB0000 */   sw    $t3, ($a3)
 /* 07B478 8007A878 3C040009 */  lui   $a0, (0x00096030 >> 16) # lui $a0, 9
 /* 07B47C 8007A87C 34846030 */  ori   $a0, (0x00096030 & 0xFFFF) # ori $a0, $a0, 0x6030
-/* 07B480 8007A880 0C01C327 */  jal   func_80070C9C
+/* 07B480 8007A880 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B484 8007A884 2405FFFF */   li    $a1, -1
 /* 07B488 8007A888 3C03800E */  lui   $v1, %hi(D_800DE770) # $v1, 0x800e
 /* 07B48C 8007A88C 2463E770 */  addiu $v1, %lo(D_800DE770) # addiu $v1, $v1, -0x1890
@@ -50,7 +50,7 @@ glabel func_8007A7E8
 /* 07B4A4 8007A8A4 AE0D0000 */   sw    $t5, ($s0)
 /* 07B4A8 8007A8A8 3C040009 */  lui   $a0, (0x00096030 >> 16) # lui $a0, 9
 /* 07B4AC 8007A8AC 34846030 */  ori   $a0, (0x00096030 & 0xFFFF) # ori $a0, $a0, 0x6030
-/* 07B4B0 8007A8B0 0C01C327 */  jal   func_80070C9C
+/* 07B4B0 8007A8B0 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B4B4 8007A8B4 2405FFFF */   li    $a1, -1
 /* 07B4B8 8007A8B8 3C03800E */  lui   $v1, %hi(D_800DE770) # $v1, 0x800e
 /* 07B4BC 8007A8BC 2463E770 */  addiu $v1, %lo(D_800DE770) # addiu $v1, $v1, -0x1890
@@ -69,7 +69,7 @@ glabel func_8007A7E8
 /* 07B4EC 8007A8EC AFA70020 */  sw    $a3, 0x20($sp)
 /* 07B4F0 8007A8F0 00002012 */  mflo  $a0
 /* 07B4F4 8007A8F4 00045040 */  sll   $t2, $a0, 1
-/* 07B4F8 8007A8F8 0C01C327 */  jal   func_80070C9C
+/* 07B4F8 8007A8F8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B4FC 8007A8FC 25440030 */   addiu $a0, $t2, 0x30
 /* 07B500 8007A900 3C03800E */  lui   $v1, %hi(D_800DE770) # $v1, 0x800e
 /* 07B504 8007A904 2463E770 */  addiu $v1, %lo(D_800DE770) # addiu $v1, $v1, -0x1890
@@ -87,7 +87,7 @@ glabel func_8007A7E8
 /* 07B534 8007A934 01CF0019 */  multu $t6, $t7
 /* 07B538 8007A938 00002012 */  mflo  $a0
 /* 07B53C 8007A93C 0004C040 */  sll   $t8, $a0, 1
-/* 07B540 8007A940 0C01C327 */  jal   func_80070C9C
+/* 07B540 8007A940 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B544 8007A944 27040030 */   addiu $a0, $t8, 0x30
 /* 07B548 8007A948 3C03800E */  lui   $v1, %hi(D_800DE770) # $v1, 0x800e
 /* 07B54C 8007A94C 2463E770 */  addiu $v1, %lo(D_800DE770) # addiu $v1, $v1, -0x1890

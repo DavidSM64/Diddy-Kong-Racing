@@ -123,7 +123,7 @@ typedef struct audioMgrConfig_s{
 void func_80000968(s32 arg0);
 ALCSPlayer* func_80002224(s32, s32);
 void func_8000B010(ALCSPlayer*, u8);
-void    *func_80070C9C(u32, u32);
+void    *allocate_from_main_pool_safe(u32, u32);
 void    *func_80076C58(u32);
 void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size);
 
@@ -143,31 +143,31 @@ void audio_init(u32 arg0){
     alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
     
     reg_s2 = func_80076C58(38);
-    ALBankFile_80115D14 = (ALBankFile*) func_80070C9C(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
+    ALBankFile_80115D14 = (ALBankFile*) allocate_from_main_pool_safe(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
     func_80076E68(39, ALBankFile_80115D14, reg_s2[1], reg_s2[2] - reg_s2[1]);
     alBnkfNew(ALBankFile_80115D14, func_80076EE8(39, reg_s2[2]));
     
     D_80115D28 = reg_s2[7] - reg_s2[6];
-    D_80115D18 = (unk80115D18 *) func_80070C9C(D_80115D28, 0x00FFFFFF);
+    D_80115D18 = (unk80115D18 *) allocate_from_main_pool_safe(D_80115D28, 0x00FFFFFF);
     func_80076E68(39, D_80115D18, reg_s2[6], D_80115D28);
     D_80115D20 = D_80115D28/10;
     
     D_80115D2C = reg_s2[6]-reg_s2[5];
-    D_80115D1C = (unk80115D1C *) func_80070C9C(D_80115D2C, 0x00FFFFFF);
+    D_80115D1C = (unk80115D1C *) allocate_from_main_pool_safe(D_80115D2C, 0x00FFFFFF);
     func_80076E68(39, D_80115D1C, reg_s2[5], D_80115D2C);
     D_80115D24 = D_80115D2C/3;
 
-    ALBankFile_80115D10 = (ALBankFile *)func_80070C9C(reg_s2[0], 0x00FFFFFF);
+    ALBankFile_80115D10 = (ALBankFile *)allocate_from_main_pool_safe(reg_s2[0], 0x00FFFFFF);
     func_80076E68(39, ALBankFile_80115D10, 0, reg_s2[0]);
     alBnkfNew(ALBankFile_80115D10, func_80076EE8(39, reg_s2[0]));
     ALSeqFile_80115CF8 = (ALSeqFile *) alHeapDBAlloc(0,0,&gALHeap,1,4);
     func_80076E68(39, ALSeqFile_80115CF8, reg_s2[4], 4);
 
     seqfSize = (ALSeqFile_80115CF8->seqCount)*8 + 4;
-    ALSeqFile_80115CF8 = func_80070C9C(seqfSize, 0x00FFFFFF);
+    ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, 0x00FFFFFF);
     func_80076E68(39, ALSeqFile_80115CF8, reg_s2[4], seqfSize);
     alSeqFileNew(ALSeqFile_80115CF8, func_80076EE8(39, reg_s2[4]));
-    D_80115D0C = (u32 *)func_80070C9C( (ALSeqFile_80115CF8->seqCount)*4, 0x00FFFFFF);
+    D_80115D0C = (u32 *)allocate_from_main_pool_safe( (ALSeqFile_80115CF8->seqCount)*4, 0x00FFFFFF);
 
 
     for(iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++){
@@ -194,8 +194,8 @@ void audio_init(u32 arg0){
     gMusicPlayer = func_80002224(24, 120);
     func_8000B010(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
-    D_80115CFC = func_80070C9C( seq_max_len, 0x00FFFFFF);
-    D_80115D00 = func_80070C9C( seq_max_len, 0x00FFFFFF);
+    D_80115CFC = allocate_from_main_pool_safe( seq_max_len, 0x00FFFFFF);
+    D_80115D00 = allocate_from_main_pool_safe( seq_max_len, 0x00FFFFFF);
     audConfig.unk04 = 150;
     audConfig.unk00 = 32;
     audConfig.maxChannels = 16;

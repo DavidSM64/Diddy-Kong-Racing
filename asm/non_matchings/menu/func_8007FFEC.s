@@ -33,7 +33,7 @@ glabel func_8007FFEC
 /* 080C64 80080064 AFB80020 */  sw    $t8, 0x20($sp)
 /* 080C68 80080068 AFAC0028 */  sw    $t4, 0x28($sp)
 /* 080C6C 8008006C AFAD0024 */  sw    $t5, 0x24($sp)
-/* 080C70 80080070 0C01C327 */  jal   func_80070C9C
+/* 080C70 80080070 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 080C74 80080074 2405FFFF */   li    $a1, -1
 /* 080C78 80080078 8FA30020 */  lw    $v1, 0x20($sp)
 /* 080C7C 8008007C 3C07800E */  lui   $a3, %hi(D_800E1DAC) # $a3, 0x800e

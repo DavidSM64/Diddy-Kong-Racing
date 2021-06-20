@@ -3,7 +3,7 @@ glabel func_800C29F0
 /* 0C35F4 800C29F4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C35F8 800C29F8 3C0500FF */  lui   $a1, (0x00FF00FF >> 16) # lui $a1, 0xff
 /* 0C35FC 800C29FC 34A500FF */  ori   $a1, (0x00FF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 0C3600 800C2A00 0C01C327 */  jal   func_80070C9C
+/* 0C3600 800C2A00 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0C3604 800C2A04 24040780 */   li    $a0, 1920
 /* 0C3608 800C2A08 3C038013 */  lui   $v1, %hi(D_8012A7C8) # $v1, 0x8013
 /* 0C360C 800C2A0C 2463A7C8 */  addiu $v1, %lo(D_8012A7C8) # addiu $v1, $v1, -0x5838

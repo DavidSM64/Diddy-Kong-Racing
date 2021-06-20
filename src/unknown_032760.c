@@ -5,11 +5,10 @@
 
 #include "types.h"
 #include "macros.h"
-#include "structs.h"
 
 /************ .data ************/
 
-s32 D_800DC950 = 0;
+TextureHeader **D_800DC950 = NULL;
 s32 D_800DC954 = 0;
 s32 D_800DC958 = 0;
 s32 D_800DC95C = 0;

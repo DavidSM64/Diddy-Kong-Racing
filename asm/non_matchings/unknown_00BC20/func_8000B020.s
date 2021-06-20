@@ -20,7 +20,7 @@ glabel func_8000B020
 /* 00BC68 8000B068 E7B50010 */  swc1  $f21, 0x10($sp)
 /* 00BC6C 8000B06C E7B40014 */  swc1  $f20, 0x14($sp)
 /* 00BC70 8000B070 01C02025 */  move  $a0, $t6
-/* 00BC74 8000B074 0C01C327 */  jal   func_80070C9C
+/* 00BC74 8000B074 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 00BC78 8000B078 3405FFFF */   li    $a1, 65535
 /* 00BC7C 8000B07C 3C03800E */  lui   $v1, %hi(D_800DC754) # $v1, 0x800e
 /* 00BC80 8000B080 3C05800E */  lui   $a1, %hi(D_800DC74C) # $a1, 0x800e

@@ -35,7 +35,7 @@ glabel func_80074018
 .L80074098:
 /* 074C98 80074098 1460001E */  bnez  $v1, .L80074114
 /* 074C9C 8007409C 00000000 */   nop   
-/* 074CA0 800740A0 0C01C327 */  jal   func_80070C9C
+/* 074CA0 800740A0 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 074CA4 800740A4 240500FF */   li    $a1, 255
 /* 074CA8 800740A8 8FA50024 */  lw    $a1, 0x24($sp)
 /* 074CAC 800740AC 8FA70020 */  lw    $a3, 0x20($sp)

@@ -28,7 +28,7 @@ glabel func_800C3C00
 .L800C3C64:
 /* 0C4864 800C3C64 3C05FFFF */  lui   $a1, %hi(0xFFFF0028) # $a1, 0xffff
 /* 0C4868 800C3C68 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 0C486C 800C3C6C 0C01C327 */  jal   func_80070C9C
+/* 0C486C 800C3C6C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0C4870 800C3C70 24040940 */   li    $a0, 2368
 /* 0C4874 800C3C74 3C068013 */  lui   $a2, %hi(D_8012A7E8) # $a2, 0x8013
 /* 0C4878 800C3C78 24C6A7E8 */  addiu $a2, %lo(D_8012A7E8) # addiu $a2, $a2, -0x5818

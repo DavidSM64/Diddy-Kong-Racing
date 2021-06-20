@@ -1,11 +1,11 @@
 glabel func_800715EC
-/* 0721EC 800715EC 3C038012 */  lui   $v1, %hi(D_801235C0) # $v1, 0x8012
-/* 0721F0 800715F0 8C6335C0 */  lw    $v1, %lo(D_801235C0)($v1)
+/* 0721EC 800715EC 3C038012 */  lui   $v1, %hi(gNumberOfMemoryPools) # $v1, 0x8012
+/* 0721F0 800715F0 8C6335C0 */  lw    $v1, %lo(gNumberOfMemoryPools)($v1)
 /* 0721F4 800715F4 00802825 */  move  $a1, $a0
 /* 0721F8 800715F8 18600012 */  blez  $v1, .L80071644
 /* 0721FC 800715FC 00037100 */   sll   $t6, $v1, 4
-/* 072200 80071600 3C0F8012 */  lui   $t7, %hi(D_80123580) # $t7, 0x8012
-/* 072204 80071604 25EF3580 */  addiu $t7, %lo(D_80123580) # addiu $t7, $t7, 0x3580
+/* 072200 80071600 3C0F8012 */  lui   $t7, %hi(gMemoryPools) # $t7, 0x8012
+/* 072204 80071604 25EF3580 */  addiu $t7, %lo(gMemoryPools) # addiu $t7, $t7, 0x3580
 /* 072208 80071608 01CF1021 */  addu  $v0, $t6, $t7
 .L8007160C:
 /* 07220C 8007160C 8C440008 */  lw    $a0, 8($v0)

@@ -94,7 +94,7 @@ glabel func_8006BFC8
 /* 06CD10 8006C110 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 06CD14 8006C114 03032023 */  subu  $a0, $t8, $v1
 /* 06CD18 8006C118 AFA40024 */  sw    $a0, 0x24($sp)
-/* 06CD1C 8006C11C 0C01C327 */  jal   func_80070C9C
+/* 06CD1C 8006C11C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06CD20 8006C120 AFA30020 */   sw    $v1, 0x20($sp)
 /* 06CD24 8006C124 3C038012 */  lui   $v1, %hi(D_801211C0) # $v1, 0x8012
 /* 06CD28 8006C128 246311C0 */  addiu $v1, %lo(D_801211C0) # addiu $v1, $v1, 0x11c0

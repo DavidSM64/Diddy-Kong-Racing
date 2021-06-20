@@ -79,7 +79,7 @@ glabel load_level
 /* 06BF60 8006B360 8C4F0004 */  lw    $t7, 4($v0)
 /* 06BF64 8006B364 AFAE0034 */  sw    $t6, 0x34($sp)
 /* 06BF68 8006B368 01F02023 */  subu  $a0, $t7, $s0
-/* 06BF6C 8006B36C 0C01C327 */  jal   func_80070C9C
+/* 06BF6C 8006B36C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06BF70 8006B370 AFA40054 */   sw    $a0, 0x54($sp)
 /* 06BF74 8006B374 3C118012 */  lui   $s1, %hi(gCurrentLevelHeader) # $s1, 0x8012
 /* 06BF78 8006B378 26311168 */  addiu $s1, %lo(gCurrentLevelHeader) # addiu $s1, $s1, 0x1168
@@ -288,7 +288,7 @@ glabel load_level
 /* 06C26C 8006B66C 8C4A0004 */  lw    $t2, 4($v0)
 /* 06C270 8006B670 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 06C274 8006B674 01502023 */  subu  $a0, $t2, $s0
-/* 06C278 8006B678 0C01C327 */  jal   func_80070C9C
+/* 06C278 8006B678 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06C27C 8006B67C AFA40054 */   sw    $a0, 0x54($sp)
 /* 06C280 8006B680 8FA70054 */  lw    $a3, 0x54($sp)
 /* 06C284 8006B684 AE220000 */  sw    $v0, ($s1)

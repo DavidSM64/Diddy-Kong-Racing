@@ -9,8 +9,8 @@ glabel func_80070EF8
 /* 071B14 80070F14 0C01BD44 */  jal   func_8006F510
 /* 071B18 80070F18 AFA60050 */   sw    $a2, 0x50($sp)
 /* 071B1C 80070F1C AFA20038 */  sw    $v0, 0x38($sp)
-/* 071B20 80070F20 3C028012 */  lui   $v0, %hi(D_80123580) # $v0, 0x8012
-/* 071B24 80070F24 24423580 */  addiu $v0, %lo(D_80123580) # addiu $v0, $v0, 0x3580
+/* 071B20 80070F20 3C028012 */  lui   $v0, %hi(gMemoryPools) # $v0, 0x8012
+/* 071B24 80070F24 24423580 */  addiu $v0, %lo(gMemoryPools) # addiu $v0, $v0, 0x3580
 /* 071B28 80070F28 8C4E0004 */  lw    $t6, 4($v0)
 /* 071B2C 80070F2C 8C580000 */  lw    $t8, ($v0)
 /* 071B30 80070F30 25CF0001 */  addiu $t7, $t6, 1
@@ -59,7 +59,7 @@ glabel func_80070EF8
 /* 071BD0 80070FD0 24070001 */  li    $a3, 1
 /* 071BD4 80070FD4 AFA00010 */  sw    $zero, 0x10($sp)
 /* 071BD8 80070FD8 AFA30034 */  sw    $v1, 0x34($sp)
-/* 071BDC 80070FDC 0C01C5E3 */  jal   func_8007178C
+/* 071BDC 80070FDC 0C01C5E3 */  jal   allocate_memory_pool_slot
 /* 071BE0 80070FE0 AFB80014 */   sw    $t8, 0x14($sp)
 /* 071BE4 80070FE4 8FA40038 */  lw    $a0, 0x38($sp)
 /* 071BE8 80070FE8 0C01BD4F */  jal   func_8006F53C
@@ -77,7 +77,7 @@ glabel func_80070EF8
 /* 071C14 80071014 02223023 */  subu  $a2, $s1, $v0
 /* 071C18 80071018 00003825 */  move  $a3, $zero
 /* 071C1C 8007101C AFA9003C */  sw    $t1, 0x3c($sp)
-/* 071C20 80071020 0C01C5E3 */  jal   func_8007178C
+/* 071C20 80071020 0C01C5E3 */  jal   allocate_memory_pool_slot
 /* 071C24 80071024 AFAA0014 */   sw    $t2, 0x14($sp)
 /* 071C28 80071028 8FAB0050 */  lw    $t3, 0x50($sp)
 /* 071C2C 8007102C 00408025 */  move  $s0, $v0
@@ -86,7 +86,7 @@ glabel func_80070EF8
 /* 071C38 80071038 02403025 */  move  $a2, $s2
 /* 071C3C 8007103C 24070001 */  li    $a3, 1
 /* 071C40 80071040 AFA00010 */  sw    $zero, 0x10($sp)
-/* 071C44 80071044 0C01C5E3 */  jal   func_8007178C
+/* 071C44 80071044 0C01C5E3 */  jal   allocate_memory_pool_slot
 /* 071C48 80071048 AFAB0014 */   sw    $t3, 0x14($sp)
 /* 071C4C 8007104C 8FA40038 */  lw    $a0, 0x38($sp)
 /* 071C50 80071050 0C01BD4F */  jal   func_8006F53C

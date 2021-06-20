@@ -153,7 +153,7 @@ s32 func_80076AF4(s32 arg0, s32 arg1) {
     s32 ret;
 
     ret = 6;
-    temp = func_80070C9C(0x100, 0xFF);
+    temp = allocate_from_main_pool_safe(0x100, 0xFF);
     if (func_80076610(arg0, arg1, temp, 0x100) == 0) {
         switch(*temp) {
             case 0x47414D44: // GAMD

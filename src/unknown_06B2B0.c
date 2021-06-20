@@ -203,7 +203,7 @@ void load_level_3(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800813C0();
 void func_80004A60(s32, s32);
 void menu_init(s32);
-
+void render(void);
 
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A6B0.s")
 
@@ -265,7 +265,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/load_level.s")
 
 Settings *get_settings(void);
 s32 *func_80076C58(s32);
-LevelHeader *func_80070C9C(s32, s32);
+LevelHeader *allocate_from_main_pool_safe(s32, s32);
 void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8006C2E4(void);
 s16 func_8006C2F0(void);
@@ -324,7 +324,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
     temp2 = D_80121160[arg0];
     temp = D_80121160[arg0 + 1] - temp2;
-    gCurrentLevelHeader = func_80070C9C(temp, 0xFFFF00FF);
+    gCurrentLevelHeader = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
     func_80076E68(0x17, gCurrentLevelHeader, temp2, temp);
     D_800DD330 = 0;
     sp44 = arg0;
@@ -392,7 +392,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         func_80071140(gCurrentLevelHeader);
         temp2 = D_80121160[arg0];
         temp = D_80121160[arg0 + 1] - temp2;
-        gCurrentLevelHeader = func_80070C9C(temp, 0xFFFF00FF);
+        gCurrentLevelHeader = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
         func_80076E68(0x17, gCurrentLevelHeader, temp2, temp);
     }
     func_80071140(D_80121160);
@@ -626,7 +626,7 @@ void func_8006BFC8(s8 *arg0) {
     }
     temp2 = D_80121160[phi_s0];
     temp = D_80121160[phi_s0 + 1] - temp2;
-    D_801211C0[0] = func_80070C9C(temp, 0xFFFF00FF);
+    D_801211C0[0] = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
     func_80076E68(0, D_801211C0[0], temp2, temp);
     func_80071140(D_80121160);
 }
@@ -727,7 +727,7 @@ void osScAddClient(u16*, u8*, s32**, s32);
 void func_8006C3E0(void) {
     s32 sp24;
 
-    func_80070B30();
+    init_main_memory_pool();
     func_800C6170();
     D_800DD374 = 1;
     if (func_8006F4EC() != 0) {
@@ -1303,7 +1303,7 @@ extern unk80121200 *D_80121200[3];
 extern unk80121210 *D_80121210[3];
 extern unk80121220 *D_80121220[3];
 
-void *func_80070C9C(s32, s32); // Allocates memory?
+void *allocate_from_main_pool_safe(s32, s32); // Allocates memory?
 
 void func_8006EFDC(void) {
     s32 size;
@@ -1316,7 +1316,7 @@ void func_8006EFDC(void) {
            (D_800DD3DC * sizeof(unk80121200)) + 
            (D_800DD3CC * sizeof(unk80121210));
     
-    current = (s8*)func_80070C9C(size, 0xFF0000FF);
+    current = (s8*)allocate_from_main_pool_safe(size, 0xFF0000FF);
     D_801211F0[0] = (Gfx*)current;
     current += (D_800DD3BC * sizeof(Gfx));
     D_80121200[0] = (unk80121200*)current;
@@ -1325,7 +1325,7 @@ void func_8006EFDC(void) {
     current += (D_800DD3CC * sizeof(unk80121210));
     D_80121220[0] = (unk80121220*)current;
     
-    current = (s8*)func_80070C9C(size, 0xFFFF00FF);
+    current = (s8*)allocate_from_main_pool_safe(size, 0xFFFF00FF);
     D_801211F0[1] = (Gfx*)current;
     current += (D_800DD3BC * sizeof(Gfx));
     D_80121200[1] = (unk80121200*)current;

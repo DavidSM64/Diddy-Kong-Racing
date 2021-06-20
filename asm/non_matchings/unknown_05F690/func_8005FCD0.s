@@ -20,7 +20,7 @@ glabel func_8005FCD0
 /* 060918 8005FD18 01262021 */  addu  $a0, $t1, $a2
 /* 06091C 8005FD1C AFA6001C */  sw    $a2, 0x1c($sp)
 /* 060920 8005FD20 AFA70020 */  sw    $a3, 0x20($sp)
-/* 060924 8005FD24 0C01C344 */  jal   func_80070D10
+/* 060924 8005FD24 0C01C344 */  jal   allocate_from_main_pool
 /* 060928 8005FD28 3405FFFF */   li    $a1, 65535
 /* 06092C 8005FD2C 8FA6001C */  lw    $a2, 0x1c($sp)
 /* 060930 8005FD30 8FA70020 */  lw    $a3, 0x20($sp)
@@ -55,7 +55,7 @@ glabel func_8005FCD0
 /* 06099C 8005FD9C 00064880 */  sll   $t1, $a2, 2
 /* 0609A0 8005FDA0 01264821 */  addu  $t1, $t1, $a2
 /* 0609A4 8005FDA4 00094840 */  sll   $t1, $t1, 1
-/* 0609A8 8005FDA8 0C01C344 */  jal   func_80070D10
+/* 0609A8 8005FDA8 0C01C344 */  jal   allocate_from_main_pool
 /* 0609AC 8005FDAC 25240024 */   addiu $a0, $t1, 0x24
 /* 0609B0 8005FDB0 8FA70020 */  lw    $a3, 0x20($sp)
 /* 0609B4 8005FDB4 14400003 */  bnez  $v0, .L8005FDC4
@@ -72,7 +72,7 @@ glabel func_8005FCD0
 /* 0609DC 8005FDDC A04A001E */   sb    $t2, 0x1e($v0)
 .L8005FDE0:
 /* 0609E0 8005FDE0 3405FFFF */  li    $a1, 65535
-/* 0609E4 8005FDE4 0C01C344 */  jal   func_80070D10
+/* 0609E4 8005FDE4 0C01C344 */  jal   allocate_from_main_pool
 /* 0609E8 8005FDE8 AFA70020 */   sw    $a3, 0x20($sp)
 /* 0609EC 8005FDEC 8FA70020 */  lw    $a3, 0x20($sp)
 /* 0609F0 8005FDF0 14400003 */  bnez  $v0, .L8005FE00

@@ -1,11 +1,11 @@
-glabel func_80070BE4
-/* 0717E4 80070BE4 3C098012 */  lui   $t1, %hi(D_801235C0) # $t1, 0x8012
-/* 0717E8 80070BE8 252935C0 */  addiu $t1, %lo(D_801235C0) # addiu $t1, $t1, 0x35c0
+glabel new_memory_pool
+/* 0717E4 80070BE4 3C098012 */  lui   $t1, %hi(gNumberOfMemoryPools) # $t1, 0x8012
+/* 0717E8 80070BE8 252935C0 */  addiu $t1, %lo(gNumberOfMemoryPools) # addiu $t1, $t1, 0x35c0
 /* 0717EC 80070BEC 8D2E0000 */  lw    $t6, ($t1)
-/* 0717F0 80070BF0 3C198012 */  lui   $t9, %hi(D_80123580) # $t9, 0x8012
+/* 0717F0 80070BF0 3C198012 */  lui   $t9, %hi(gMemoryPools) # $t9, 0x8012
 /* 0717F4 80070BF4 25CF0001 */  addiu $t7, $t6, 1
 /* 0717F8 80070BF8 000FC100 */  sll   $t8, $t7, 4
-/* 0717FC 80070BFC 27393580 */  addiu $t9, %lo(D_80123580) # addiu $t9, $t9, 0x3580
+/* 0717FC 80070BFC 27393580 */  addiu $t9, %lo(gMemoryPools) # addiu $t9, $t9, 0x3580
 /* 071800 80070C00 03193821 */  addu  $a3, $t8, $t9
 /* 071804 80070C04 AD2F0000 */  sw    $t7, ($t1)
 /* 071808 80070C08 ACE60000 */  sw    $a2, ($a3)

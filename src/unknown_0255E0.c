@@ -288,9 +288,9 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     D_8011B0FC = 0;
     i = 0;
     do{
-        D_8011D350[i] = func_80070C9C(3200, 0xFFFF00FF);
-        D_8011D320[i] = func_80070C9C(12800, 0xFFFF00FF);
-        D_8011D338[i] = func_80070C9C(20000, 0xFFFF00FF);
+        D_8011D350[i] = allocate_from_main_pool_safe(3200, 0xFFFF00FF);
+        D_8011D320[i] = allocate_from_main_pool_safe(12800, 0xFFFF00FF);
+        D_8011D338[i] = allocate_from_main_pool_safe(20000, 0xFFFF00FF);
     }while(&D_8011D338[++i] != &D_8011D348);
     
     D_8011B0C8 = 0;

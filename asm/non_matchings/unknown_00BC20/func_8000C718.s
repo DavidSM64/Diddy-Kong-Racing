@@ -30,7 +30,7 @@ glabel func_8000C718
 /* 00D384 8000C784 01A62823 */  subu  $a1, $t5, $a2
 /* 00D388 8000C788 AFA50020 */  sw    $a1, 0x20($sp)
 /* 00D38C 8000C78C AFAB0018 */  sw    $t3, 0x18($sp)
-/* 00D390 8000C790 0C01C3A4 */  jal   func_80070E90
+/* 00D390 8000C790 0C01C3A4 */  jal   allocate_from_pool_containing_slots
 /* 00D394 8000C794 AFA60024 */   sw    $a2, 0x24($sp)
 /* 00D398 8000C798 8FA60024 */  lw    $a2, 0x24($sp)
 /* 00D39C 8000C79C 8FA70020 */  lw    $a3, 0x20($sp)

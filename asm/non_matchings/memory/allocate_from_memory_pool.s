@@ -1,4 +1,4 @@
-glabel func_80070D3C
+glabel allocate_from_memory_pool
 /* 07193C 80070D3C 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 071940 80070D40 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 071944 80070D44 AFB10020 */  sw    $s1, 0x20($sp)
@@ -8,9 +8,9 @@ glabel func_80070D3C
 /* 071954 80070D54 0C01BD44 */  jal   func_8006F510
 /* 071958 80070D58 AFA60048 */   sw    $a2, 0x48($sp)
 /* 07195C 80070D5C 8FAE0040 */  lw    $t6, 0x40($sp)
-/* 071960 80070D60 3C188012 */  lui   $t8, %hi(D_80123580) # $t8, 0x8012
+/* 071960 80070D60 3C188012 */  lui   $t8, %hi(gMemoryPools) # $t8, 0x8012
 /* 071964 80070D64 AFA20028 */  sw    $v0, 0x28($sp)
-/* 071968 80070D68 27183580 */  addiu $t8, %lo(D_80123580) # addiu $t8, $t8, 0x3580
+/* 071968 80070D68 27183580 */  addiu $t8, %lo(gMemoryPools) # addiu $t8, $t8, 0x3580
 /* 07196C 80070D6C 000E7900 */  sll   $t7, $t6, 4
 /* 071970 80070D70 01F81021 */  addu  $v0, $t7, $t8
 /* 071974 80070D74 8C590004 */  lw    $t9, 4($v0)
@@ -66,7 +66,7 @@ glabel func_80070D3C
 /* 071A2C 80070E2C 24070001 */  li    $a3, 1
 /* 071A30 80070E30 AFA00010 */  sw    $zero, 0x10($sp)
 /* 071A34 80070E34 AFA9002C */  sw    $t1, 0x2c($sp)
-/* 071A38 80070E38 0C01C5E3 */  jal   func_8007178C
+/* 071A38 80070E38 0C01C5E3 */  jal   allocate_memory_pool_slot
 /* 071A3C 80070E3C AFB80014 */   sw    $t8, 0x14($sp)
 /* 071A40 80070E40 8FA40028 */  lw    $a0, 0x28($sp)
 /* 071A44 80070E44 0C01BD4F */  jal   func_8006F53C

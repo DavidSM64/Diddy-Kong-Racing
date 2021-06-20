@@ -51,7 +51,7 @@ glabel func_80004B40
 /* 0057E4 80004BE4 0019C880 */  sll   $t9, $t9, 2
 /* 0057E8 80004BE8 02402825 */  move  $a1, $s2
 /* 0057EC 80004BEC 2404004C */  li    $a0, 76
-/* 0057F0 80004BF0 0C01C327 */  jal   func_80070C9C
+/* 0057F0 80004BF0 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0057F4 80004BF4 01F98821 */   addu  $s1, $t7, $t9
 /* 0057F8 80004BF8 0040A825 */  move  $s5, $v0
 /* 0057FC 80004BFC 24040027 */  li    $a0, 39
@@ -60,7 +60,7 @@ glabel func_80004B40
 /* 005808 80004C08 0C01DB9A */  jal   func_80076E68
 /* 00580C 80004C0C 2407004C */   li    $a3, 76
 /* 005810 80004C10 240400E0 */  li    $a0, 224
-/* 005814 80004C14 0C01C327 */  jal   func_80070C9C
+/* 005814 80004C14 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 005818 80004C18 02402825 */   move  $a1, $s2
 /* 00581C 80004C1C AFA20044 */  sw    $v0, 0x44($sp)
 /* 005820 80004C20 00401825 */  move  $v1, $v0

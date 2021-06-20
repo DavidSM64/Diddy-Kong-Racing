@@ -43,7 +43,7 @@ u32 func_8007F640(s32 arg0) {
         
         start = lut[arg0];
         size = lut[arg0 + 1] - start;
-        someAddr = func_80070C9C(size, 0xFFFF);
+        someAddr = allocate_from_main_pool_safe(size, 0xFFFF);
         
         func_80076E68(10, someAddr, start, size);
         func_80071140(lut);
