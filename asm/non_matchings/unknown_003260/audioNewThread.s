@@ -82,7 +82,7 @@ glabel audioNewThread
 /* 003394 80002794 03298023 */  subu  $s0, $t9, $t1
 /* 003398 80002798 00409025 */  move  $s2, $v0
 /* 00339C 8000279C 02002025 */  move  $a0, $s0
-/* 0033A0 800027A0 0C01C327 */  jal   func_80070C9C
+/* 0033A0 800027A0 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0033A4 800027A4 34A5FFFF */   ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 0033A8 800027A8 8E460020 */  lw    $a2, 0x20($s2)
 /* 0033AC 800027AC 00408825 */  move  $s1, $v0

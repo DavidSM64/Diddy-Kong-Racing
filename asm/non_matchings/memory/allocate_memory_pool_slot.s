@@ -1,8 +1,8 @@
-glabel func_8007178C
+glabel allocate_memory_pool_slot
 /* 07238C 8007178C 240B0014 */  li    $t3, 20
 /* 072390 80071790 00AB0019 */  multu $a1, $t3
-/* 072394 80071794 3C0F8012 */  lui   $t7, %hi(D_80123580) # $t7, 0x8012
-/* 072398 80071798 25EF3580 */  addiu $t7, %lo(D_80123580) # addiu $t7, $t7, 0x3580
+/* 072394 80071794 3C0F8012 */  lui   $t7, %hi(gMemoryPools) # $t7, 0x8012
+/* 072398 80071798 25EF3580 */  addiu $t7, %lo(gMemoryPools) # addiu $t7, $t7, 0x3580
 /* 07239C 8007179C 00047100 */  sll   $t6, $a0, 4
 /* 0723A0 800717A0 01CF1821 */  addu  $v1, $t6, $t7
 /* 0723A4 800717A4 8C620008 */  lw    $v0, 8($v1)

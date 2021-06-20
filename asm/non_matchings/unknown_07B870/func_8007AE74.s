@@ -84,7 +84,7 @@ glabel func_8007AE74
 /* 07BBA4 8007AFA4 8CA5E7C0 */  lw    $a1, %lo(D_800DE7C0)($a1)
 /* 07BBA8 8007AFA8 000D6940 */  sll   $t5, $t5, 5
 /* 07BBAC 8007AFAC 01AE2021 */  addu  $a0, $t5, $t6
-/* 07BBB0 8007AFB0 0C01C344 */  jal   func_80070D10
+/* 07BBB0 8007AFB0 0C01C344 */  jal   allocate_from_main_pool
 /* 07BBB4 8007AFB4 0160A025 */   move  $s4, $t3
 /* 07BBB8 8007AFB8 14400003 */  bnez  $v0, .L8007AFC8
 /* 07BBBC 8007AFBC 00409825 */   move  $s3, $v0
@@ -111,7 +111,7 @@ glabel func_8007AE74
 /* 07BC08 8007B008 03022021 */  addu  $a0, $t8, $v0
 /* 07BC0C 8007B00C AFAF003C */  sw    $t7, 0x3c($sp)
 /* 07BC10 8007B010 24840020 */  addiu $a0, $a0, 0x20
-/* 07BC14 8007B014 0C01C344 */  jal   func_80070D10
+/* 07BC14 8007B014 0C01C344 */  jal   allocate_from_main_pool
 /* 07BC18 8007B018 0220A025 */   move  $s4, $s1
 /* 07BC1C 8007B01C 14400003 */  bnez  $v0, .L8007B02C
 /* 07BC20 8007B020 00409825 */   move  $s3, $v0

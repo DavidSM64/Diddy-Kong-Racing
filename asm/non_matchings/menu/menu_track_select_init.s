@@ -147,7 +147,7 @@ glabel menu_track_select_init
 /* 08F5CC 8008E9CC 26310006 */   addiu $s1, $s1, 6
 /* 08F5D0 8008E9D0 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 08F5D4 8008E9D4 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 08F5D8 8008E9D8 0C01C327 */  jal   func_80070C9C
+/* 08F5D8 8008E9D8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 08F5DC 8008E9DC 24040B40 */   li    $a0, 2880
 /* 08F5E0 8008E9E0 3C05800E */  lui   $a1, %hi(D_800E0970) # $a1, 0x800e
 /* 08F5E4 8008E9E4 24A50970 */  addiu $a1, %lo(D_800E0970) # addiu $a1, $a1, 0x970

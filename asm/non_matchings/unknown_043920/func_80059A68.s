@@ -7,7 +7,7 @@ glabel func_80059A68
 /* 05A67C 80059A7C 3C05FF00 */  lui   $a1, (0xFF0000FF >> 16) # lui $a1, 0xff00
 /* 05A680 80059A80 AFB00018 */  sw    $s0, 0x18($sp)
 /* 05A684 80059A84 AFA60030 */  sw    $a2, 0x30($sp)
-/* 05A688 80059A88 0C01C327 */  jal   func_80070C9C
+/* 05A688 80059A88 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 05A68C 80059A8C 34A500FF */   ori   $a1, (0xFF0000FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 05A690 80059A90 10400029 */  beqz  $v0, .L80059B38
 /* 05A694 80059A94 00408025 */   move  $s0, $v0
@@ -29,7 +29,7 @@ glabel func_80059A68
 /* 05A6D0 80059AD0 2405FFFF */  li    $a1, -1
 /* 05A6D4 80059AD4 24C6FFF8 */  addiu $a2, $a2, -8
 /* 05A6D8 80059AD8 00C02025 */  move  $a0, $a2
-/* 05A6DC 80059ADC 0C01C327 */  jal   func_80070C9C
+/* 05A6DC 80059ADC 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 05A6E0 80059AE0 AFA60020 */   sw    $a2, 0x20($sp)
 /* 05A6E4 80059AE4 3C038012 */  lui   $v1, %hi(D_8011D590) # $v1, 0x8012
 /* 05A6E8 80059AE8 2463D590 */  addiu $v1, %lo(D_8011D590) # addiu $v1, $v1, -0x2a70

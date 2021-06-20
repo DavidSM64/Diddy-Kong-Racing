@@ -6,7 +6,7 @@ glabel func_80073F5C
 /* 074B6C 80073F6C AFA5003C */   sw    $a1, 0x3c($sp)
 /* 074B70 80073F70 AFA20024 */  sw    $v0, 0x24($sp)
 /* 074B74 80073F74 00402025 */  move  $a0, $v0
-/* 074B78 80073F78 0C01C327 */  jal   func_80070C9C
+/* 074B78 80073F78 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 074B7C 80073F7C 2405FFFF */   li    $a1, -1
 /* 074B80 80073F80 3C0E4741 */  lui   $t6, (0x47414D44 >> 16) # lui $t6, 0x4741
 /* 074B84 80073F84 AFA2002C */  sw    $v0, 0x2c($sp)

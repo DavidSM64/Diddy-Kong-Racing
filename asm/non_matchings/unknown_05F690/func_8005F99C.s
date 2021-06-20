@@ -77,7 +77,7 @@ glabel func_8005F99C
 /* 0606AC 8005FAAC 24440080 */  addiu $a0, $v0, 0x80
 /* 0606B0 8005FAB0 3C05FF00 */  lui   $a1, (0xFF0000FF >> 16) # lui $a1, 0xff00
 /* 0606B4 8005FAB4 AFA40034 */  sw    $a0, 0x34($sp)
-/* 0606B8 8005FAB8 0C01C344 */  jal   func_80070D10
+/* 0606B8 8005FAB8 0C01C344 */  jal   allocate_from_main_pool
 /* 0606BC 8005FABC 34A500FF */   ori   $a1, (0xFF0000FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 0606C0 8005FAC0 14400003 */  bnez  $v0, .L8005FAD0
 /* 0606C4 8005FAC4 00409025 */   move  $s2, $v0

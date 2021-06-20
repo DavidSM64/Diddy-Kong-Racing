@@ -87,7 +87,7 @@ glabel func_8007C57C
 /* 07D2B4 8007C6B4 26106338 */   addiu $s0, %lo(D_80126338) # addiu $s0, $s0, 0x6338
 /* 07D2B8 8007C6B8 8E040000 */  lw    $a0, ($s0)
 /* 07D2BC 8007C6BC 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
-/* 07D2C0 8007C6C0 0C01C327 */  jal   func_80070C9C
+/* 07D2C0 8007C6C0 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07D2C4 8007C6C4 34A5FFFF */   ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 07D2C8 8007C6C8 8E190000 */  lw    $t9, ($s0)
 /* 07D2CC 8007C6CC AE620000 */  sw    $v0, ($s3)

@@ -24,7 +24,7 @@ glabel func_800C0B00
 /* 0C1758 800C0B58 01F82021 */  addu  $a0, $t7, $t8
 /* 0C175C 800C0B5C AFA8002C */  sw    $t0, 0x2c($sp)
 /* 0C1760 800C0B60 AFA90028 */  sw    $t1, 0x28($sp)
-/* 0C1764 800C0B64 0C01C327 */  jal   func_80070C9C
+/* 0C1764 800C0B64 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0C1768 800C0B68 AFA30030 */   sw    $v1, 0x30($sp)
 /* 0C176C 800C0B6C 8FA30030 */  lw    $v1, 0x30($sp)
 /* 0C1770 800C0B70 3C04800E */  lui   $a0, %hi(D_800E31C0) # $a0, 0x800e

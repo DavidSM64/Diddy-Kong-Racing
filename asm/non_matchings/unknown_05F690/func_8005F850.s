@@ -3,13 +3,13 @@ glabel func_8005F850
 /* 060454 8005F854 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 060458 8005F858 3C0500FF */  lui   $a1, (0x00FF00FF >> 16) # lui $a1, 0xff
 /* 06045C 8005F85C 34A500FF */  ori   $a1, (0x00FF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 060460 8005F860 0C01C327 */  jal   func_80070C9C
+/* 060460 8005F860 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 060464 8005F864 24040230 */   li    $a0, 560
 /* 060468 8005F868 3C018012 */  lui   $at, %hi(D_8011D624) # $at, 0x8012
 /* 06046C 8005F86C 3C0500FF */  lui   $a1, (0x00FF00FF >> 16) # lui $a1, 0xff
 /* 060470 8005F870 AC22D624 */  sw    $v0, %lo(D_8011D624)($at)
 /* 060474 8005F874 34A500FF */  ori   $a1, (0x00FF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 060478 8005F878 0C01C327 */  jal   func_80070C9C
+/* 060478 8005F878 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06047C 8005F87C 24040190 */   li    $a0, 400
 /* 060480 8005F880 3C018012 */  lui   $at, %hi(D_8011D628) # $at, 0x8012
 /* 060484 8005F884 AC22D628 */  sw    $v0, %lo(D_8011D628)($at)
@@ -54,7 +54,7 @@ glabel func_8005F850
 /* 060518 8005F918 3C0500FF */  lui   $a1, (0x00FF00FF >> 16) # lui $a1, 0xff
 /* 06051C 8005F91C AC22D63C */  sw    $v0, %lo(D_8011D63C)($at)
 /* 060520 8005F920 34A500FF */  ori   $a1, (0x00FF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 060524 8005F924 0C01C327 */  jal   func_80070C9C
+/* 060524 8005F924 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 060528 8005F928 24040C00 */   li    $a0, 3072
 /* 06052C 8005F92C 3C018012 */  lui   $at, %hi(D_8011D644) # $at, 0x8012
 /* 060530 8005F930 3C05800E */  lui   $a1, %hi(D_800DCEA4) # $a1, 0x800e

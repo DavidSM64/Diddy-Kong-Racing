@@ -1520,7 +1520,7 @@ s8 *func_8001E29C(s32 arg0);
 void func_80001D04(s32, s32*);
 void func_800660EC(f32 arg0);
 void func_8009C508(s32 arg0);
-void *func_80070C9C(s32, u32);
+void *allocate_from_main_pool_safe(s32, u32);
 void func_800C4170(s32 arg0);
 void play_music(s32 arg0);
 
@@ -2305,8 +2305,8 @@ void menu_save_options_init(void) {
     gMenuDelay = 0;
     D_801263E0 = 1;
     D_801263D8 = 0;
-    D_80126A64 = (s32)func_80070C9C(0x800, 0xFFFFFFFF);
-    D_80126A0C = (s32)func_80070C9C(0xA00, 0xFFFFFFFF);
+    D_80126A64 = (s32)allocate_from_main_pool_safe(0x800, 0xFFFFFFFF);
+    D_80126A0C = (s32)allocate_from_main_pool_safe(0xA00, 0xFFFFFFFF);
     D_80126A04 = (s32)(D_80126A0C + 0x500);
     D_80126A08 = 0;
     D_80126BD4 = 0;
@@ -2582,7 +2582,7 @@ void func_800887E8(void) {
     s32 i;
 
     // Starting point
-    D_80126AA0[0] = func_80070C9C(0x200, 0xFFFFFFFF);
+    D_80126AA0[0] = allocate_from_main_pool_safe(0x200, 0xFFFFFFFF);
     
     // Fills in the table.
     for(i = 1; i < 16; i++) {
@@ -4369,7 +4369,7 @@ void func_8009C8A4(s16 *arg0) {
 s32 get_random_number_from_range(s32, s32);
 void func_8009C904(s32 arg0) {
     if (D_800DF75C == NULL) {
-        D_800DF75C = func_80070C9C(sizeof(unk800DF510) * 18, 0xFF0000FF);
+        D_800DF75C = allocate_from_main_pool_safe(sizeof(unk800DF510) * 18, 0xFF0000FF);
     }
     
     D_800DF75C[arg0].unk0 = D_800DF510[arg0].unk0;

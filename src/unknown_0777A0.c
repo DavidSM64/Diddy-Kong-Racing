@@ -22,7 +22,7 @@ s32 *D_80124290;
 // These are both defined in the generated dkr.ld file.
 extern u8 __ASSETS_LUT_START, __ASSETS_LUT_END; // __ASSETS_LUT_START = 0xECB60, _END = 0xECC30
 
-void *func_80070C9C(s32, s32);
+void *allocate_from_main_pool_safe(s32, s32);
 s32 func_80071478(s32*);
 void dmacopy(u32 romOffset, u8 *ramAddress, s32 numBytes);
     
@@ -32,7 +32,7 @@ void func_80076BA0(void) {
     osCreateMesgQueue(&D_80124220, &D_80124218, 1);
     osCreatePiManager(0x96, &D_80124278, &D_80124238, 0x10);
     size = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
-    D_80124290 = (s32*)func_80070C9C(size, 0x7F7F7FFF);
+    D_80124290 = (s32*)allocate_from_main_pool_safe(size, 0x7F7F7FFF);
     func_80071478(D_80124290);
     dmacopy(&__ASSETS_LUT_START, D_80124290, size);
 }
@@ -54,7 +54,7 @@ s32 *func_80076C58(u32 arg0) {
     temp = arg0 + D_80124290;
     start = *temp;
     size = *(temp + 1) - start;
-    temp2 = (s32*)func_80070C9C(size, 0x7F7F7FFF);
+    temp2 = (s32*)allocate_from_main_pool_safe(size, 0x7F7F7FFF);
     if (temp2 == NULL) {
         return NULL;
     }
@@ -83,13 +83,13 @@ u8 *func_80076CF0(u32 arg0, s32 arg1) {
     start = *temp;
     size = *(temp + 1) - start;
     
-    temp_v0_2 = (u8*)func_80070C9C(8, 0xFFFFFFFF);
+    temp_v0_2 = (u8*)allocate_from_main_pool_safe(8, 0xFFFFFFFF);
     temp_a0 = start + &__ASSETS_LUT_END;
     
     dmacopy(temp_a0, temp_v0_2, 8);
     sp2C = byteswap32(temp_v0_2) + arg1;
     func_80071140(temp_v0_2);
-    temp_v0_3 = (u8*)func_80070C9C(sp2C + arg1, 0x7F7F7FFF);
+    temp_v0_3 = (u8*)allocate_from_main_pool_safe(sp2C + arg1, 0x7F7F7FFF);
     
     if (temp_v0_3 == NULL) {
         return NULL;

@@ -33,7 +33,7 @@ glabel func_80074B34
 /* 0757A8 80074BA8 144000A1 */  bnez  $v0, .L80074E30
 /* 0757AC 80074BAC 00403825 */   move  $a3, $v0
 /* 0757B0 80074BB0 24040100 */  li    $a0, 256
-/* 0757B4 80074BB4 0C01C327 */  jal   func_80070C9C
+/* 0757B4 80074BB4 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0757B8 80074BB8 240500FF */   li    $a1, 255
 /* 0757BC 80074BBC 8FB90058 */  lw    $t9, 0x58($sp)
 /* 0757C0 80074BC0 3C0B8012 */  lui   $t3, %hi(D_80124018) # $t3, 0x8012
@@ -148,7 +148,7 @@ glabel func_80074B34
 /* 075944 80074D44 8FA4003C */  lw    $a0, 0x3c($sp)
 /* 075948 80074D48 11E00032 */  beqz  $t7, .L80074E14
 /* 07594C 80074D4C 24840100 */   addiu $a0, $a0, 0x100
-/* 075950 80074D50 0C01C327 */  jal   func_80070C9C
+/* 075950 80074D50 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 075954 80074D54 240500FF */   li    $a1, 255
 /* 075958 80074D58 8FB8003C */  lw    $t8, 0x3c($sp)
 /* 07595C 80074D5C 8FA40030 */  lw    $a0, 0x30($sp)

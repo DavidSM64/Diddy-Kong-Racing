@@ -19,7 +19,7 @@ glabel func_80074EB8
 /* 075AE0 80074EE0 24440200 */  addiu $a0, $v0, 0x200
 /* 075AE4 80074EE4 AFA20024 */  sw    $v0, 0x24($sp)
 /* 075AE8 80074EE8 240500FF */  li    $a1, 255
-/* 075AEC 80074EEC 0C01C327 */  jal   func_80070C9C
+/* 075AEC 80074EEC 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 075AF0 80074EF0 AFA60030 */   sw    $a2, 0x30($sp)
 /* 075AF4 80074EF4 3C0E4748 */  lui   $t6, (0x47485353 >> 16) # lui $t6, 0x4748
 /* 075AF8 80074EF8 8FA60030 */  lw    $a2, 0x30($sp)

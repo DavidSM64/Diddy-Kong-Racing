@@ -44,11 +44,11 @@ glabel func_80071850
 /* 0724DC 800718DC AC80FFF0 */  sw    $zero, -0x10($a0)
 /* 0724E0 800718E0 14A3FFF6 */  bne   $a1, $v1, .L800718BC
 /* 0724E4 800718E4 ACA0FFF0 */   sw    $zero, -0x10($a1)
-/* 0724E8 800718E8 3C048012 */  lui   $a0, %hi(D_801235C0) # $a0, 0x8012
-/* 0724EC 800718EC 8C8435C0 */  lw    $a0, %lo(D_801235C0)($a0)
-/* 0724F0 800718F0 3C0E8012 */  lui   $t6, %hi(D_80123580) # $t6, 0x8012
+/* 0724E8 800718E8 3C048012 */  lui   $a0, %hi(gNumberOfMemoryPools) # $a0, 0x8012
+/* 0724EC 800718EC 8C8435C0 */  lw    $a0, %lo(gNumberOfMemoryPools)($a0)
+/* 0724F0 800718F0 3C0E8012 */  lui   $t6, %hi(gMemoryPools) # $t6, 0x8012
 /* 0724F4 800718F4 1880003B */  blez  $a0, .L800719E4
-/* 0724F8 800718F8 25C53580 */   addiu $a1, $t6, %lo(D_80123580)
+/* 0724F8 800718F8 25C53580 */   addiu $a1, $t6, %lo(gMemoryPools)
 /* 0724FC 800718FC 00047900 */  sll   $t7, $a0, 4
 /* 072500 80071900 01E55021 */  addu  $t2, $t7, $a1
 /* 072504 80071904 24100014 */  li    $s0, 20

@@ -594,7 +594,7 @@ glabel L8000EDE0
 .L8000F2C8:
 /* 00FEC8 8000F2C8 8C84AE68 */  lw    $a0, %lo(D_8011AE68)($a0)
 /* 00FECC 8000F2CC 00A08825 */  move  $s1, $a1
-/* 00FED0 8000F2D0 0C01C3A4 */  jal   func_80070E90
+/* 00FED0 8000F2D0 0C01C3A4 */  jal   allocate_from_pool_containing_slots
 /* 00FED4 8000F2D4 02408025 */   move  $s0, $s2
 /* 00FED8 8000F2D8 14400018 */  bnez  $v0, .L8000F33C
 /* 00FEDC 8000F2DC 00409025 */   move  $s2, $v0

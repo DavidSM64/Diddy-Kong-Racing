@@ -23,7 +23,7 @@ glabel func_8000FD54
 /* 0109A0 8000FDA0 3405FFFF */  li    $a1, 65535
 /* 0109A4 8000FDA4 00107880 */  sll   $t7, $s0, 2
 /* 0109A8 8000FDA8 25F00080 */  addiu $s0, $t7, 0x80
-/* 0109AC 8000FDAC 0C01C344 */  jal   func_80070D10
+/* 0109AC 8000FDAC 0C01C344 */  jal   allocate_from_main_pool
 /* 0109B0 8000FDB0 02002025 */   move  $a0, $s0
 /* 0109B4 8000FDB4 14400006 */  bnez  $v0, .L8000FDD0
 /* 0109B8 8000FDB8 00409025 */   move  $s2, $v0

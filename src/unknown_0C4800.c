@@ -603,8 +603,8 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
 
 
 void func_800C6170(void) {
-    D_800E3760 = func_80070C9C(0x2800, 0xFF);
-    D_800E3764 = func_80070C9C(0x10, 0xFF);
+    D_800E3760 = allocate_from_main_pool_safe(0x2800, 0xFF);
+    D_800E3764 = allocate_from_main_pool_safe(0x10, 0xFF);
 }
 
 // Returns the little-endian value from a byte array.

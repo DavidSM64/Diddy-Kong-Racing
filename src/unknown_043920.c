@@ -517,7 +517,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059208.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059790.s")
 
 void func_800598D0(void) {
-    D_8011D590[0] = func_80070C9C(0x21C0, 0xFF0000FF);
+    D_8011D590[0] = allocate_from_main_pool_safe(0x21C0, 0xFF0000FF);
     D_8011D590[1] = D_8011D590[0] + 0x10E0;
     D_8011D590[2] = 0;
     D_8011D5A0[0] = 0;

@@ -12,7 +12,7 @@ glabel func_800C15D4
 /* 0C21FC 800C15FC E7B50010 */  swc1  $f21, 0x10($sp)
 /* 0C2200 800C1600 E7B40014 */  swc1  $f20, 0x14($sp)
 /* 0C2204 800C1604 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 0C2208 800C1608 0C01C327 */  jal   func_80070C9C
+/* 0C2208 800C1608 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0C220C 800C160C 24040DA0 */   li    $a0, 3488
 /* 0C2210 800C1610 3C04800E */  lui   $a0, %hi(D_800E31C0) # $a0, 0x800e
 /* 0C2214 800C1614 3C05800E */  lui   $a1, %hi(D_800E31C8) # $a1, 0x800e

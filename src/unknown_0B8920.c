@@ -121,7 +121,7 @@ extern s32 D_8012A0DC;
 
 /*****************************/
 
-u8* func_80070C9C(s32 arg0, s32 arg1);
+u8* allocate_from_main_pool_safe(s32 arg0, s32 arg1);
 void func_80071140(s32* arg0);
 void func_8007B2BC(s32* arg0);
 void func_800C5494(s32 arg0);

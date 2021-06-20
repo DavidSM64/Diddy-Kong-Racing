@@ -53,7 +53,7 @@ glabel func_800AF29C
 /* 0AFF5C 800AF35C 92040007 */  lbu   $a0, 7($s0)
 /* 0AFF60 800AF360 AFA30024 */  sw    $v1, 0x24($sp)
 /* 0AFF64 800AF364 00045080 */  sll   $t2, $a0, 2
-/* 0AFF68 800AF368 0C01C327 */  jal   func_80070C9C
+/* 0AFF68 800AF368 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0AFF6C 800AF36C 01402025 */   move  $a0, $t2
 /* 0AFF70 800AF370 8FA30024 */  lw    $v1, 0x24($sp)
 /* 0AFF74 800AF374 AE02000C */  sw    $v0, 0xc($s0)

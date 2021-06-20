@@ -534,7 +534,7 @@ glabel func_8000CC7C
 /* 00DFCC 8000D3CC 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 00DFD0 8000D3D0 24150018 */  li    $s5, 24
 /* 00DFD4 8000D3D4 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 00DFD8 8000D3D8 0C01C327 */  jal   func_80070C9C
+/* 00DFD8 8000D3D8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 00DFDC 8000D3DC 24040010 */   li    $a0, 16
 /* 00DFE0 8000D3E0 A440000C */  sh    $zero, 0xc($v0)
 /* 00DFE4 8000D3E4 A440000A */  sh    $zero, 0xa($v0)

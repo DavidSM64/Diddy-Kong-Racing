@@ -111,7 +111,7 @@ glabel func_8007C12C
 /* 07CEBC 8007C2BC 01C02025 */   move  $a0, $t6
 /* 07CEC0 8007C2C0 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
 /* 07CEC4 8007C2C4 02022021 */  addu  $a0, $s0, $v0
-/* 07CEC8 8007C2C8 0C01C344 */  jal   func_80070D10
+/* 07CEC8 8007C2C8 0C01C344 */  jal   allocate_from_main_pool
 /* 07CECC 8007C2CC 34A5FFFF */   ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 07CED0 8007C2D0 1440000B */  bnez  $v0, .L8007C300
 /* 07CED4 8007C2D4 00409825 */   move  $s3, $v0

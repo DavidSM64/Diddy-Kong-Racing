@@ -1,7 +1,7 @@
 glabel func_8006C3E0
 /* 06CFE0 8006C3E0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 06CFE4 8006C3E4 AFBF001C */  sw    $ra, 0x1c($sp)
-/* 06CFE8 8006C3E8 0C01C2CC */  jal   func_80070B30
+/* 06CFE8 8006C3E8 0C01C2CC */  jal   init_main_memory_pool
 /* 06CFEC 8006C3EC 00000000 */   nop   
 /* 06CFF0 8006C3F0 0C03185C */  jal   func_800C6170
 /* 06CFF4 8006C3F4 00000000 */   nop   

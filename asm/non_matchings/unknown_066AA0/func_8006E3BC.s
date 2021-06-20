@@ -43,7 +43,7 @@ glabel func_8006E3BC
 /* 06F060 8006E460 AFA80028 */  sw    $t0, 0x28($sp)
 /* 06F064 8006E464 AFA60024 */  sw    $a2, 0x24($sp)
 /* 06F068 8006E468 AFA30020 */  sw    $v1, 0x20($sp)
-/* 06F06C 8006E46C 0C01C327 */  jal   func_80070C9C
+/* 06F06C 8006E46C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06F070 8006E470 2405FFFF */   li    $a1, -1
 /* 06F074 8006E474 8FB80020 */  lw    $t8, 0x20($sp)
 /* 06F078 8006E478 3C048012 */  lui   $a0, %hi(gSettingsPtr) # $a0, 0x8012

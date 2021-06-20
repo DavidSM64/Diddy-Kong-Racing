@@ -15,7 +15,7 @@ glabel func_8008AD44
 /* 08B978 8008AD78 24131000 */  li    $s3, 4096
 /* 08B97C 8008AD7C 02009025 */  move  $s2, $s0
 /* 08B980 8008AD80 24045000 */  li    $a0, 20480
-/* 08B984 8008AD84 0C01C327 */  jal   func_80070C9C
+/* 08B984 8008AD84 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 08B988 8008AD88 240500FF */   li    $a1, 255
 /* 08B98C 8008AD8C 1200002C */  beqz  $s0, .L8008AE40
 /* 08B990 8008AD90 0040A025 */   move  $s4, $v0

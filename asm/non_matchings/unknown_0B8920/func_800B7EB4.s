@@ -12,7 +12,7 @@ glabel func_800B7EB4
 /* 0B8ADC 800B7EDC 3631FFFF */  ori   $s1, (0x00FFFFFF & 0xFFFF) # ori $s1, $s1, 0xffff
 /* 0B8AE0 800B7EE0 00047080 */  sll   $t6, $a0, 2
 /* 0B8AE4 800B7EE4 01C02025 */  move  $a0, $t6
-/* 0B8AE8 800B7EE8 0C01C327 */  jal   func_80070C9C
+/* 0B8AE8 800B7EE8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8AEC 800B7EEC 02202825 */   move  $a1, $s1
 /* 0B8AF0 800B7EF0 3C01800E */  lui   $at, %hi(D_800E3040) # $at, 0x800e
 /* 0B8AF4 800B7EF4 AC223040 */  sw    $v0, %lo(D_800E3040)($at)
@@ -21,7 +21,7 @@ glabel func_800B7EB4
 /* 0B8B00 800B7F00 00037880 */  sll   $t7, $v1, 2
 /* 0B8B04 800B7F04 01E30019 */  multu $t7, $v1
 /* 0B8B08 800B7F08 00002012 */  mflo  $a0
-/* 0B8B0C 800B7F0C 0C01C327 */  jal   func_80070C9C
+/* 0B8B0C 800B7F0C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8B10 800B7F10 00000000 */   nop   
 /* 0B8B14 800B7F14 3C01800E */  lui   $at, %hi(D_800E3044) # $at, 0x800e
 /* 0B8B18 800B7F18 AC223044 */  sw    $v0, %lo(D_800E3044)($at)
@@ -31,7 +31,7 @@ glabel func_800B7EB4
 /* 0B8B28 800B7F28 0003C080 */  sll   $t8, $v1, 2
 /* 0B8B2C 800B7F2C 03030019 */  multu $t8, $v1
 /* 0B8B30 800B7F30 00002012 */  mflo  $a0
-/* 0B8B34 800B7F34 0C01C327 */  jal   func_80070C9C
+/* 0B8B34 800B7F34 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8B38 800B7F38 00000000 */   nop   
 /* 0B8B3C 800B7F3C 3C01800E */  lui   $at, %hi(D_800E3048) # $at, 0x800e
 /* 0B8B40 800B7F40 AC223048 */  sw    $v0, %lo(D_800E3048)($at)
@@ -46,7 +46,7 @@ glabel func_800B7EB4
 /* 0B8B64 800B7F64 00000000 */  nop   
 /* 0B8B68 800B7F68 021F0019 */  multu $s0, $ra
 /* 0B8B6C 800B7F6C 00002012 */  mflo  $a0
-/* 0B8B70 800B7F70 0C01C327 */  jal   func_80070C9C
+/* 0B8B70 800B7F70 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8B74 800B7F74 00000000 */   nop   
 /* 0B8B78 800B7F78 3C04800E */  lui   $a0, %hi(D_800E304C) # $a0, 0x800e
 /* 0B8B7C 800B7F7C 2484304C */  addiu $a0, %lo(D_800E304C) # addiu $a0, $a0, 0x304c
@@ -99,7 +99,7 @@ glabel func_800B7EB4
 /* 0B8C34 800B8034 00102040 */  sll   $a0, $s0, 1
 /* 0B8C38 800B8038 11E10009 */  beq   $t7, $at, .L800B8060
 /* 0B8C3C 800B803C 00000000 */   nop   
-/* 0B8C40 800B8040 0C01C327 */  jal   func_80070C9C
+/* 0B8C40 800B8040 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8C44 800B8044 02202825 */   move  $a1, $s1
 /* 0B8C48 800B8048 3C03800E */  lui   $v1, %hi(D_800E3070) # $v1, 0x800e
 /* 0B8C4C 800B804C 24633070 */  addiu $v1, %lo(D_800E3070) # addiu $v1, $v1, 0x3070
@@ -109,7 +109,7 @@ glabel func_800B7EB4
 /* 0B8C5C 800B805C AC790004 */   sw    $t9, 4($v1)
 .L800B8060:
 /* 0B8C60 800B8060 00102080 */  sll   $a0, $s0, 2
-/* 0B8C64 800B8064 0C01C327 */  jal   func_80070C9C
+/* 0B8C64 800B8064 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8C68 800B8068 02202825 */   move  $a1, $s1
 /* 0B8C6C 800B806C 3C03800E */  lui   $v1, %hi(D_800E3070) # $v1, 0x800e
 /* 0B8C70 800B8070 24633070 */  addiu $v1, %lo(D_800E3070) # addiu $v1, $v1, 0x3070
@@ -131,7 +131,7 @@ glabel func_800B7EB4
 /* 0B8CAC 800B80AC 00102040 */  sll   $a0, $s0, 1
 /* 0B8CB0 800B80B0 13210009 */  beq   $t9, $at, .L800B80D8
 /* 0B8CB4 800B80B4 00000000 */   nop   
-/* 0B8CB8 800B80B8 0C01C327 */  jal   func_80070C9C
+/* 0B8CB8 800B80B8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8CBC 800B80BC 02202825 */   move  $a1, $s1
 /* 0B8CC0 800B80C0 3C03800E */  lui   $v1, %hi(D_800E3080) # $v1, 0x800e
 /* 0B8CC4 800B80C4 24633080 */  addiu $v1, %lo(D_800E3080) # addiu $v1, $v1, 0x3080
@@ -141,7 +141,7 @@ glabel func_800B7EB4
 /* 0B8CD4 800B80D4 AC6F0004 */   sw    $t7, 4($v1)
 .L800B80D8:
 /* 0B8CD8 800B80D8 00102080 */  sll   $a0, $s0, 2
-/* 0B8CDC 800B80DC 0C01C327 */  jal   func_80070C9C
+/* 0B8CDC 800B80DC 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0B8CE0 800B80E0 02202825 */   move  $a1, $s1
 /* 0B8CE4 800B80E4 3C03800E */  lui   $v1, %hi(D_800E3080) # $v1, 0x800e
 /* 0B8CE8 800B80E8 24633080 */  addiu $v1, %lo(D_800E3080) # addiu $v1, $v1, 0x3080

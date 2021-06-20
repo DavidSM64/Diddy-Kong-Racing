@@ -113,7 +113,7 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
     if(c->fxType == AL_FX_CUSTOM){
         reg_v0 = func_80076C58(38);
         tmp_size = reg_v0[9]-reg_v0[8];
-        reg_s0 = func_80070C9C(tmp_size, 0x00FFFFFF, reg_v0[8]);
+        reg_s0 = allocate_from_main_pool_safe(tmp_size, 0x00FFFFFF, reg_v0[8]);
         func_80076E68(39,reg_s0, reg_v0[8],tmp_size);
         c->params = reg_s0;
         c[1].maxVVoices = 0;

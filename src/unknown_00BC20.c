@@ -280,8 +280,8 @@ extern s32 osTvType;
 
 void func_8000C460(void);
 
-void *func_80070B78(s32, u32);
-void *func_80070C9C(s32, u32);
+void *new_sub_memory_pool(s32, u32);
+void *allocate_from_main_pool_safe(s32, u32);
 s32 *func_80076C58(s32);
 void particlePtrList_addObject(Player *);
 void particlePtrList_flush(void);
@@ -349,32 +349,32 @@ void func_8000BF8C(void) {
     s32 i;
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
-    D_8011AE68 = (s32*)func_80070B78(0x15800, 0x200);
-    particlePtrList = (Player **)func_80070C9C(0x320, 0xFFFF);
-    D_8011AE6C = (s32*)func_80070C9C(0x50, 0xFFFF);
-    D_8011AE74 = (s32*)func_80070C9C(0x200, 0xFFFF);
-    D_8011AECC = (unknown8011AECC*)func_80070C9C(0xE10, 0xFFFF);
-    D_8011AEDC = (s32*)func_80070C9C(0x50, 0xFFFF);
-    playerStructArray_Ptr = (s32*)func_80070C9C(0x28, 0xFFFF);
-    D_8011AEEC = (s32*)func_80070C9C(0x28, 0xFFFF);
-    D_8011AEE8 = (s32*)func_80070C9C(0x28, 0xFFFF);
-    D_8011AF04 = (s32*)func_80070C9C(0x200, 0xFFFF);
-    D_8011ADCC = (s32*)func_80070C9C(8, 0xFFFF);
-    D_8011AFF4 = (s32*)func_80070C9C(0x400, 0xFFFF);
+    D_8011AE68 = (s32*)new_sub_memory_pool(0x15800, 0x200);
+    particlePtrList = (Player **)allocate_from_main_pool_safe(0x320, 0xFFFF);
+    D_8011AE6C = (s32*)allocate_from_main_pool_safe(0x50, 0xFFFF);
+    D_8011AE74 = (s32*)allocate_from_main_pool_safe(0x200, 0xFFFF);
+    D_8011AECC = (unknown8011AECC*)allocate_from_main_pool_safe(0xE10, 0xFFFF);
+    D_8011AEDC = (s32*)allocate_from_main_pool_safe(0x50, 0xFFFF);
+    playerStructArray_Ptr = (s32*)allocate_from_main_pool_safe(0x28, 0xFFFF);
+    D_8011AEEC = (s32*)allocate_from_main_pool_safe(0x28, 0xFFFF);
+    D_8011AEE8 = (s32*)allocate_from_main_pool_safe(0x28, 0xFFFF);
+    D_8011AF04 = (s32*)allocate_from_main_pool_safe(0x200, 0xFFFF);
+    D_8011ADCC = (s32*)allocate_from_main_pool_safe(8, 0xFFFF);
+    D_8011AFF4 = (s32*)allocate_from_main_pool_safe(0x400, 0xFFFF);
     D_8011AEB8 = (s32*)func_80076C58(0x23);
     D_8011AEBC = (func_80076F30(0x23) >> 1) - 1;
     while (D_8011AEB8[D_8011AEBC] == 0) {
         D_8011AEBC--;
     }
-    D_8011AD58 = (s32*)func_80070C9C(0x800, 0xFFFF);
+    D_8011AD58 = (s32*)allocate_from_main_pool_safe(0x800, 0xFFFF);
     D_8011AD64 = func_80076C58(0x21);
     D_8011AD68 = 0;
     while (-1 != D_8011AD64[D_8011AD68]) {
         D_8011AD68++;
     }
     D_8011AD68--;
-    D_8011AE48 = (s32*)func_80070C9C(D_8011AD68 << 2, 0xFFFFFFFF);
-    D_8011AE4C = (s32*)func_80070C9C(D_8011AD68, 0xFFFFFFFF);
+    D_8011AE48 = (s32*)allocate_from_main_pool_safe(D_8011AD68 << 2, 0xFFFFFFFF);
+    D_8011AE4C = (s32*)allocate_from_main_pool_safe(D_8011AD68, 0xFFFFFFFF);
     
     for (i = 0; i < D_8011AD68; i++) {
         (*D_8011AE4C)[i] = 0;
@@ -387,7 +387,7 @@ void func_8000BF8C(void) {
         D_8011ADA0++;
     }
     func_8000C2D8(&D_8011AD6C[D_8011AD70[65]], (D_8011AD70[66] - D_8011AD70[65]) * 4);
-    objPtrList = (Player**)func_80070C9C(0x800, 0xFFFF);
+    objPtrList = (Player**)allocate_from_main_pool_safe(0x800, 0xFFFF);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
