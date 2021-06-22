@@ -29,8 +29,15 @@ else:
     if md5Calculated != md5Saved:
         needToExtract = True
 
+def run_until_done(args):
+    subprocess.run(args)
+
 if needToExtract:
     md5Calculated = hashlib.md5(FileUtil.get_bytes_from_file(extractConfigFilename)).hexdigest()
     FileUtil.write_text_to_file(configChecksumFilename, md5Calculated)
-    subprocess.run(['./extract.sh', version])
+    print('Extracting...')
+    run_until_done(['make', 'clean'])
+    run_until_done(['rm', '-Rf', 'assets'])
+    run_until_done(['rm', '-Rf', 'ucode'])
+    run_until_done(['./extract.sh', version])
     
