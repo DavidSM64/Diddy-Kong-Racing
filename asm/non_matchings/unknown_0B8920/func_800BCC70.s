@@ -41,7 +41,7 @@ glabel func_800BCC70
 /* 0BD908 800BCD08 00000000 */  nop   
 /* 0BD90C 800BCD0C 10800004 */  beqz  $a0, .L800BCD20
 /* 0BD910 800BCD10 8FAF0190 */   lw    $t7, 0x190($sp)
-/* 0BD914 800BCD14 0C01C450 */  jal   func_80071140
+/* 0BD914 800BCD14 0C01C450 */  jal   free_from_memory_pool
 /* 0BD918 800BCD18 00000000 */   nop   
 /* 0BD91C 800BCD1C 8FAF0190 */  lw    $t7, 0x190($sp)
 .L800BCD20:
@@ -1069,13 +1069,13 @@ glabel func_800BCC70
 /* 0BE800 800BDC00 018F6021 */   addu  $t4, $t4, $t7
 .L800BDC04:
 /* 0BE804 800BDC04 8FA400A8 */  lw    $a0, 0xa8($sp)
-/* 0BE808 800BDC08 0C01C450 */  jal   func_80071140
+/* 0BE808 800BDC08 0C01C450 */  jal   free_from_memory_pool
 /* 0BE80C 800BDC0C 00000000 */   nop   
 /* 0BE810 800BDC10 8FA400A4 */  lw    $a0, 0xa4($sp)
-/* 0BE814 800BDC14 0C01C450 */  jal   func_80071140
+/* 0BE814 800BDC14 0C01C450 */  jal   free_from_memory_pool
 /* 0BE818 800BDC18 00000000 */   nop   
 /* 0BE81C 800BDC1C 8FA400A0 */  lw    $a0, 0xa0($sp)
-/* 0BE820 800BDC20 0C01C450 */  jal   func_80071140
+/* 0BE820 800BDC20 0C01C450 */  jal   free_from_memory_pool
 /* 0BE824 800BDC24 00000000 */   nop   
 /* 0BE828 800BDC28 8FBF0064 */  lw    $ra, 0x64($sp)
 /* 0BE82C 800BDC2C C7B50018 */  lwc1  $f21, 0x18($sp)

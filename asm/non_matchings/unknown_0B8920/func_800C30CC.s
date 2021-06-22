@@ -9,7 +9,7 @@ glabel func_800C30CC
 /* 0C3CE8 800C30E8 AFB00014 */   sw    $s0, 0x14($sp)
 /* 0C3CEC 800C30EC 3C048013 */  lui   $a0, %hi(D_8012A780) # $a0, 0x8013
 /* 0C3CF0 800C30F0 8C84A780 */  lw    $a0, %lo(D_8012A780)($a0)
-/* 0C3CF4 800C30F4 0C01C450 */  jal   func_80071140
+/* 0C3CF4 800C30F4 0C01C450 */  jal   free_from_memory_pool
 /* 0C3CF8 800C30F8 00000000 */   nop   
 /* 0C3CFC 800C30FC A2200000 */  sb    $zero, ($s1)
 /* 0C3D00 800C3100 3C018013 */  lui   $at, %hi(D_8012A789) # $at, 0x8013

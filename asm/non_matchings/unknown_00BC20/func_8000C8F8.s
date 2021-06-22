@@ -123,7 +123,7 @@ glabel func_8000C8F8
 /* 00D6C0 8000CAC0 0C031886 */  jal   func_800C6218
 /* 00D6C4 8000CAC4 00000000 */   nop   
 /* 00D6C8 8000CAC8 8FA4003C */  lw    $a0, 0x3c($sp)
-/* 00D6CC 8000CACC 0C01C450 */  jal   func_80071140
+/* 00D6CC 8000CACC 0C01C450 */  jal   free_from_memory_pool
 /* 00D6D0 8000CAD0 00000000 */   nop   
 /* 00D6D4 8000CAD4 8FAF0028 */  lw    $t7, 0x28($sp)
 /* 00D6D8 8000CAD8 8FA80048 */  lw    $t0, 0x48($sp)

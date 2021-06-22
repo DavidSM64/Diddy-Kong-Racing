@@ -31,7 +31,7 @@ glabel func_800B2260
 /* 0B2ED0 800B22D0 8CA4000C */  lw    $a0, 0xc($a1)
 /* 0B2ED4 800B22D4 00000000 */  nop   
 .L800B22D8:
-/* 0B2ED8 800B22D8 0C01C450 */  jal   func_80071140
+/* 0B2ED8 800B22D8 0C01C450 */  jal   free_from_memory_pool
 /* 0B2EDC 800B22DC AFA50018 */   sw    $a1, 0x18($sp)
 /* 0B2EE0 800B22E0 8FA50018 */  lw    $a1, 0x18($sp)
 /* 0B2EE4 800B22E4 00000000 */  nop   

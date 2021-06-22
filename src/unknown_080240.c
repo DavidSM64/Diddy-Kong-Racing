@@ -36,7 +36,7 @@ u32 func_8007F640(s32 arg0) {
     count--;
     
     if (count == 0) {
-        func_80071140(lut);
+        free_from_memory_pool(lut);
         return 0x80100000;
     } else {
         if (arg0 < 0 || arg0 >= count) {
@@ -49,7 +49,7 @@ u32 func_8007F640(s32 arg0) {
         someAddr = allocate_from_main_pool_safe(size, COLOR_TAG_BLUE);
         
         load_asset_to_address(ASSET_EMPTY_10, someAddr, start, size);
-        func_80071140(lut);
+        free_from_memory_pool(lut);
         
         return someAddr;
     }

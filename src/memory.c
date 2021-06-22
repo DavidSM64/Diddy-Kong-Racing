@@ -79,7 +79,7 @@ typedef struct FreeQueueSlot {
 FreeQueueSlot gFreeQueue[256];
 
 s32 gFreeQueueCount;
-s32 D_80123DCC;
+s32 gFreeQueueState;
 s32 D_80123DD0[64];
 s32 D_80123ED0[64];
 s32 D_80123FD0[8];
@@ -99,14 +99,13 @@ unk800B7D10 *get_stack_pointer(void);
 MemoryPoolSlot *allocate_from_memory_pool(s32, s32, u32);
 
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *arg0, s32 size, s32 numSlots);
-void func_800710B0(s32);
+void set_free_queue_state(s32);
 void* allocate_from_main_pool_safe(s32, u32);
 s32 *func_8006F510(void);
 void func_8006F53C(s32*);
-
 void func_80071440(void *dataAddress);
-
 s32 get_memory_pool_index_containing_address(u8 *address);
+void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
 
 /**
  * Creates the main memory pool. 
@@ -118,7 +117,7 @@ void init_main_memory_pool(void) {
         // Create the main memory pool.
         new_memory_pool(&D_8012D3F0, RAM_END - (s32)(&D_8012D3F0), MAIN_POOL_SLOT_COUNT);
     }
-    func_800710B0(2);
+    set_free_queue_state(2);
     gFreeQueueCount = 0;
 }
 
@@ -176,6 +175,10 @@ MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlot
 GLOBAL_ASM("asm/non_matchings/memory/new_memory_pool.s")
 #endif
 
+/**
+ * Reserves and returns memory from the main memory pool. Has 2 assert checks.
+ * Will cause an exception if the size is 0 or if memory cannot be reserved.
+ */
 void *allocate_from_main_pool_safe(s32 size, u32 colorTag) {
     void *temp_v0;
     if (size == 0) {
@@ -188,6 +191,9 @@ void *allocate_from_main_pool_safe(s32 size, u32 colorTag) {
     return temp_v0;
 }
 
+/**
+ * Reserves and returns memory from the main memory pool. Has no assert checks.
+ */
 MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colorTag) {
     return allocate_from_memory_pool(0, size, colorTag);
 }
@@ -288,10 +294,14 @@ GLOBAL_ASM("asm/non_matchings/memory/allocate_at_address_in_main_pool.s")
 
 void free_slot_containing_address(u8 *address);
 
-void func_800710B0(s32 arg0) {
+/**
+ * Sets the state of the free queue. State is either 0, 1, or 2.
+ * The free queue will get flushed if the state is set to 0.
+ */
+void set_free_queue_state(s32 state) {
     s32 *sp2C = func_8006F510();
-    D_80123DCC = arg0;
-    if (arg0 == 0) {
+    gFreeQueueState = state;
+    if (state == 0) { // flush free queue if state is 0.
         while (gFreeQueueCount > 0) {
             free_slot_containing_address(gFreeQueue[--gFreeQueueCount].dataAddress);
         }
@@ -299,10 +309,13 @@ void func_800710B0(s32 arg0) {
     func_8006F53C(sp2C);
 }
 
-// This function seems to take in both TextureHeader and LevelHeader.
-void func_80071140(void *data) {
+/**
+ * Unallocates data from the pool that contains the data. Will free immediately if the free queue
+ * state is set to 0, otherwise the data will just be marked for deletion.  
+ */
+void free_from_memory_pool(void *data) {
     s32 *sp1C = func_8006F510();
-    if (D_80123DCC == 0) {
+    if (gFreeQueueState == 0) {
         free_slot_containing_address(data);
     } else {
         func_80071440(data);
@@ -311,8 +324,6 @@ void func_80071140(void *data) {
 }
 
 GLOBAL_ASM("asm/non_matchings/memory/func_80071198.s")
-
-void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
 
 #ifdef NON_MATCHING
 void free_slot_containing_address(u8 *address) {
@@ -368,7 +379,7 @@ GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
 
 void func_80071440(void* data) {
     gFreeQueue[gFreeQueueCount].dataAddress = data;
-    gFreeQueue[gFreeQueueCount].unk4 = D_80123DCC;
+    gFreeQueue[gFreeQueueCount].unk4 = gFreeQueueState;
     gFreeQueueCount++;
 }
 
@@ -420,6 +431,9 @@ s32 func_80071538(u8 *address) {
     return 0;
 }
 
+/**
+ * Returns the index of the memory pool containing the memory address.
+ */
 s32 get_memory_pool_index_containing_address(u8 *address) {
     s32 i;
     MemoryPool *pool;

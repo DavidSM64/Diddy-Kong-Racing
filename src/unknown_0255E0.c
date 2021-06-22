@@ -315,8 +315,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
 
 void func_800257D0(void) {
     if (D_800DC924 != 0) {
-        func_80071140(D_8011D474);
-        func_80071140(D_800DC924);
+        free_from_memory_pool(D_8011D474);
+        free_from_memory_pool(D_800DC924);
         D_800DC924 = 0;
     }
 }

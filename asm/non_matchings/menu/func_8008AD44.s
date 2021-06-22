@@ -69,7 +69,7 @@ glabel func_8008AD44
 /* 08BA38 8008AE38 1640FFD6 */  bnez  $s2, .L8008AD94
 /* 08BA3C 8008AE3C 02719821 */   addu  $s3, $s3, $s1
 .L8008AE40:
-/* 08BA40 8008AE40 0C01C450 */  jal   func_80071140
+/* 08BA40 8008AE40 0C01C450 */  jal   free_from_memory_pool
 /* 08BA44 8008AE44 02802025 */   move  $a0, $s4
 /* 08BA48 8008AE48 240A0001 */  li    $t2, 1
 /* 08BA4C 8008AE4C 3C01800E */  lui   $at, %hi(D_800E1E18) # $at, 0x800e

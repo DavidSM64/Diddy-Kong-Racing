@@ -223,60 +223,60 @@ void func_800AE2D8(void) {
                 phi_s1 += 1;
             } while (phi_s0 < D_800E2E64);
         }
-        func_80071140(D_800E2E60);
+        free_from_memory_pool(D_800E2E60);
         D_800E2E60 = 0;
     }
 }
 
 void func_800AE374(void) {
     if (D_800E2CA8 != NULL) {
-        func_80071140(D_800E2CA8);
+        free_from_memory_pool(D_800E2CA8);
         D_800E2CA8 = NULL;
     }
     if (D_800E2CB4 != NULL) {
-        func_80071140(D_800E2CB4);
+        free_from_memory_pool(D_800E2CB4);
         D_800E2CB4 = NULL;
     }
     if (D_800E2CC0 != NULL) {
-        func_80071140(D_800E2CC0);
+        free_from_memory_pool(D_800E2CC0);
         D_800E2CC0 = NULL;
     }
     if (D_800E2CCC != NULL) {
-        func_80071140(D_800E2CCC);
+        free_from_memory_pool(D_800E2CCC);
         D_800E2CCC = NULL;
     }
     if (D_800E2CD8 != NULL) {
-        func_80071140(D_800E2CD8);
+        free_from_memory_pool(D_800E2CD8);
         D_800E2CD8 = NULL;
     }
 }
 
 void func_800AE438(void) {
     if (D_800E2CE0 != NULL) {
-        func_80071140(D_800E2CE0);
+        free_from_memory_pool(D_800E2CE0);
         D_800E2CE0 = NULL;
     }
     if (D_800E2CE4 != NULL) {
-        func_80071140(D_800E2CE4);
+        free_from_memory_pool(D_800E2CE4);
         D_800E2CE4 = NULL;
     }
 }
 
 void func_800AE490(void) {
     if (D_800E2CEC != NULL) {
-        func_80071140(D_800E2CEC);
+        free_from_memory_pool(D_800E2CEC);
         D_800E2CEC = NULL;
     }
     if (D_800E2CF0 != NULL) {
-        func_80071140(D_800E2CF0);
+        free_from_memory_pool(D_800E2CF0);
         D_800E2CF0 = NULL;
     }
     if (D_800E2CF8 != NULL) {
-        func_80071140(D_800E2CF8);
+        free_from_memory_pool(D_800E2CF8);
         D_800E2CF8 = NULL;
     }
     if (D_800E2CFC != NULL) {
-        func_80071140(D_800E2CFC);
+        free_from_memory_pool(D_800E2CFC);
         D_800E2CFC = NULL;
     }
 }

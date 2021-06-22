@@ -106,7 +106,7 @@ glabel func_8006BFC8
 /* 06CD40 8006C140 00402825 */   move  $a1, $v0
 /* 06CD44 8006C144 3C048012 */  lui   $a0, %hi(D_80121160) # $a0, 0x8012
 /* 06CD48 8006C148 8C841160 */  lw    $a0, %lo(D_80121160)($a0)
-/* 06CD4C 8006C14C 0C01C450 */  jal   func_80071140
+/* 06CD4C 8006C14C 0C01C450 */  jal   free_from_memory_pool
 /* 06CD50 8006C150 00000000 */   nop   
 /* 06CD54 8006C154 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 06CD58 8006C158 8FB00018 */  lw    $s0, 0x18($sp)

@@ -71,15 +71,15 @@ glabel func_800A003C
 /* 0A0D34 800A0134 3C148012 */  lui   $s4, %hi(D_80126CF0) # $s4, 0x8012
 /* 0A0D38 800A0138 8C846CE0 */  lw    $a0, %lo(D_80126CE0)($a0)
 /* 0A0D3C 800A013C 26946CF0 */  addiu $s4, %lo(D_80126CF0) # addiu $s4, $s4, 0x6cf0
-/* 0A0D40 800A0140 0C01C450 */  jal   func_80071140
+/* 0A0D40 800A0140 0C01C450 */  jal   free_from_memory_pool
 /* 0A0D44 800A0144 26526CF4 */   addiu $s2, %lo(D_80126CF4) # addiu $s2, $s2, 0x6cf4
 /* 0A0D48 800A0148 8E840000 */  lw    $a0, ($s4)
-/* 0A0D4C 800A014C 0C01C450 */  jal   func_80071140
+/* 0A0D4C 800A014C 0C01C450 */  jal   free_from_memory_pool
 /* 0A0D50 800A0150 00000000 */   nop   
 /* 0A0D54 800A0154 3C018012 */  lui   $at, %hi(D_80126CF8) # $at, 0x8012
 /* 0A0D58 800A0158 AC206CF8 */  sw    $zero, %lo(D_80126CF8)($at)
 /* 0A0D5C 800A015C 8E440000 */  lw    $a0, ($s2)
-/* 0A0D60 800A0160 0C01C450 */  jal   func_80071140
+/* 0A0D60 800A0160 0C01C450 */  jal   free_from_memory_pool
 /* 0A0D64 800A0164 00000000 */   nop   
 /* 0A0D68 800A0168 0C004013 */  jal   particlePtrList_flush
 /* 0A0D6C 800A016C 00000000 */   nop   

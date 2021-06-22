@@ -460,7 +460,7 @@ glabel func_800AE728
 /* 0AF9D4 800AEDD4 1420FFEF */  bnez  $at, .L800AED94
 /* 0AF9D8 800AEDD8 24630004 */   addiu $v1, $v1, 4
 .L800AEDDC:
-/* 0AF9DC 800AEDDC 0C01C450 */  jal   func_80071140
+/* 0AF9DC 800AEDDC 0C01C450 */  jal   free_from_memory_pool
 /* 0AF9E0 800AEDE0 02402025 */   move  $a0, $s2
 /* 0AF9E4 800AEDE4 8FBF003C */  lw    $ra, 0x3c($sp)
 .L800AEDE8:

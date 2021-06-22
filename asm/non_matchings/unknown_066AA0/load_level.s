@@ -277,7 +277,7 @@ glabel load_level
 /* 06C240 8006B640 A420D32C */   sh    $zero, %lo(D_800DD32C)($at)
 /* 06C244 8006B644 8E240000 */  lw    $a0, ($s1)
 /* 06C248 8006B648 00187880 */  sll   $t7, $t8, 2
-/* 06C24C 8006B64C 0C01C450 */  jal   func_80071140
+/* 06C24C 8006B64C 0C01C450 */  jal   free_from_memory_pool
 /* 06C250 8006B650 AFAF0034 */   sw    $t7, 0x34($sp)
 /* 06C254 8006B654 3C0D8012 */  lui   $t5, %hi(D_80121160) # $t5, 0x8012
 /* 06C258 8006B658 8DAD1160 */  lw    $t5, %lo(D_80121160)($t5)
@@ -299,7 +299,7 @@ glabel load_level
 .L8006B698:
 /* 06C298 8006B698 3C048012 */  lui   $a0, %hi(D_80121160) # $a0, 0x8012
 /* 06C29C 8006B69C 8C841160 */  lw    $a0, %lo(D_80121160)($a0)
-/* 06C2A0 8006B6A0 0C01C450 */  jal   func_80071140
+/* 06C2A0 8006B6A0 0C01C450 */  jal   free_from_memory_pool
 /* 06C2A4 8006B6A4 00000000 */   nop   
 /* 06C2A8 8006B6A8 8E240000 */  lw    $a0, ($s1)
 /* 06C2AC 8006B6AC 0C01AFF2 */  jal   func_8006BFC8

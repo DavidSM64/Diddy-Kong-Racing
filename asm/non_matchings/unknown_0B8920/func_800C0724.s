@@ -5,7 +5,7 @@ glabel func_800C0724
 /* 0C1330 800C0730 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0C1334 800C0734 1080000B */  beqz  $a0, .L800C0764
 /* 0C1338 800C0738 AFBF0014 */   sw    $ra, 0x14($sp)
-/* 0C133C 800C073C 0C01C450 */  jal   func_80071140
+/* 0C133C 800C073C 0C01C450 */  jal   free_from_memory_pool
 /* 0C1340 800C0740 00000000 */   nop   
 /* 0C1344 800C0744 3C02800E */  lui   $v0, %hi(D_800E31C0) # $v0, 0x800e
 /* 0C1348 800C0748 3C03800E */  lui   $v1, %hi(D_800E31C8) # $v1, 0x800e

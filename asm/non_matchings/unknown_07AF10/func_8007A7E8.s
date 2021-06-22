@@ -12,7 +12,7 @@ glabel func_8007A7E8
 /* 07B410 8007A810 0C01C54E */  jal   func_80071538
 /* 07B414 8007A814 AFA5002C */   sw    $a1, 0x2c($sp)
 /* 07B418 8007A818 8E040000 */  lw    $a0, ($s0)
-/* 07B41C 8007A81C 0C01C450 */  jal   func_80071140
+/* 07B41C 8007A81C 0C01C450 */  jal   free_from_memory_pool
 /* 07B420 8007A820 00000000 */   nop   
 /* 07B424 8007A824 8FA5002C */  lw    $a1, 0x2c($sp)
 /* 07B428 8007A828 00000000 */  nop   

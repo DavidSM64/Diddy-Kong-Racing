@@ -391,13 +391,13 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
     D_800DD32C = 0;
     if (sp44 != arg0) {
-        func_80071140(gCurrentLevelHeader);
+        free_from_memory_pool(gCurrentLevelHeader);
         offset = D_80121160[arg0];
         size = D_80121160[arg0 + 1] - offset;
         gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
         load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     }
-    func_80071140(D_80121160);
+    free_from_memory_pool(D_80121160);
     func_8006BFC8(&gCurrentLevelHeader->unk20);
     func_8000CBC0();
     D_80121164 = arg0;
@@ -561,7 +561,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BDDC.s")
 void func_8006BEFC(void) {
     func_8006C164();
     func_80077B34(0, 0, 0);
-    func_80071140(gCurrentLevelHeader);
+    free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
     func_80001844();
     func_800018E0();
@@ -630,14 +630,14 @@ void func_8006BFC8(s8 *arg0) {
     temp = D_80121160[phi_s0 + 1] - temp2;
     D_801211C0[0] = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
     load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0[0], temp2, temp);
-    func_80071140(D_80121160);
+    free_from_memory_pool(D_80121160);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BFC8.s")
 #endif
 
 void func_8006C164(void) {
-    func_80071140(D_801211C0[0]);
+    free_from_memory_pool(D_801211C0[0]);
 }
 
 s32 func_8006C18C(void) {
@@ -916,7 +916,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId) {
     func_8006ECFC(numberOfPlayers);
-    func_800710B0(0);
+    set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, D_80123508);
@@ -924,12 +924,12 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     func_8001BF20();
     osSetTime(0);
-    func_800710B0(2);
+    set_free_queue_state(2);
     func_80072298(1);
 }
 
 void func_8006CC14(void) {
-    func_800710B0(0);
+    set_free_queue_state(0);
     if (D_800DD38C == 0) {
         if (D_800DD3F0 != 1) {
             func_80077A54();
@@ -944,7 +944,7 @@ void func_8006CC14(void) {
     D_801211F8 = D_801211F0[D_801234E8];
     fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
     fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
-    func_800710B0(2);
+    set_free_queue_state(2);
 }
 
 // Has a jump table
@@ -1046,7 +1046,7 @@ s32 func_8006DB2C(void) {
  * Needs a better name!
  */
 void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
-    func_800710B0(0);
+    set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
@@ -1054,19 +1054,19 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     func_8001BF20();
     osSetTime(0);
-    func_800710B0(2);
+    set_free_queue_state(2);
 }
 
 void func_8006DBE4(void) {
     if (D_80123514 == 0) {
         D_80123514 = 1;
-        func_800710B0(0);
+        set_free_queue_state(0);
         func_8006BEFC();
         func_800C01D8(&D_800DD3F4);
         func_800AE270();
         func_800A003C();
         func_800C30CC();
-        func_800710B0(2);
+        set_free_queue_state(2);
     }
     D_80123514 = 0;
 }

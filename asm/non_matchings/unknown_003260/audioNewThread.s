@@ -96,7 +96,7 @@ glabel audioNewThread
 /* 0033CC 800027CC 248461D0 */  addiu $a0, %lo(ALGlobals_801161D0) # addiu $a0, $a0, 0x61d0
 /* 0033D0 800027D0 0C0321FB */  jal   alInit
 /* 0033D4 800027D4 02602825 */   move  $a1, $s3
-/* 0033D8 800027D8 0C01C450 */  jal   func_80071140
+/* 0033D8 800027D8 0C01C450 */  jal   free_from_memory_pool
 /* 0033DC 800027DC 02202025 */   move  $a0, $s1
 /* 0033E0 800027E0 10000005 */  b     .L800027F8
 /* 0033E4 800027E4 00000000 */   nop   

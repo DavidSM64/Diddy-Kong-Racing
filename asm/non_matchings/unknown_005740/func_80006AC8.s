@@ -69,7 +69,7 @@ glabel func_80006AC8
 /* 0077BC 80006BBC 24420004 */  addiu $v0, $v0, 4
 /* 0077C0 80006BC0 1443FFF9 */  bne   $v0, $v1, .L80006BA8
 /* 0077C4 80006BC4 00000000 */   nop   
-/* 0077C8 80006BC8 0C01C450 */  jal   func_80071140
+/* 0077C8 80006BC8 0C01C450 */  jal   free_from_memory_pool
 /* 0077CC 80006BCC 00A02025 */   move  $a0, $a1
 /* 0077D0 80006BD0 8FAD0028 */  lw    $t5, 0x28($sp)
 /* 0077D4 80006BD4 00000000 */  nop   

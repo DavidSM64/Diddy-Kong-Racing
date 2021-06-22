@@ -122,34 +122,34 @@ extern s32 D_8012A0DC;
 /*****************************/
 
 u8* allocate_from_main_pool_safe(s32 arg0, s32 arg1);
-void func_80071140(s32* arg0);
+void free_from_memory_pool(s32* arg0);
 void func_8007B2BC(s32* arg0);
 void func_800C5494(s32 arg0);
 void func_800C5620(s32 arg0);
 
 void func_800B7D20(void) {
     if (D_800E3040 != NULL) {
-        func_80071140(D_800E3040);
+        free_from_memory_pool(D_800E3040);
         D_800E3040 = NULL;
     }
     if (D_800E3044 != NULL) {
-        func_80071140(D_800E3044);
+        free_from_memory_pool(D_800E3044);
         D_800E3044 = NULL;
     }
     if (D_800E3048 != NULL) {
-        func_80071140(D_800E3048);
+        free_from_memory_pool(D_800E3048);
         D_800E3048 = NULL;
     }
     if (D_800E304C != NULL) {
-        func_80071140(D_800E304C);
+        free_from_memory_pool(D_800E304C);
         D_800E304C = NULL;
     }
     if (D_800E3070[0] != NULL) {
-        func_80071140(D_800E3070[0]);
+        free_from_memory_pool(D_800E3070[0]);
         D_800E3070[0] = NULL;
     }
     if (D_800E3080[0] != NULL) {
-        func_80071140(D_800E3080[0]);
+        free_from_memory_pool(D_800E3080[0]);
         D_800E3080[0] = NULL;
     }
     if (D_800E30D0 != NULL) {
@@ -157,15 +157,15 @@ void func_800B7D20(void) {
         D_800E30D0 = NULL;
     }
     if (D_800E30D4 != NULL) {
-        func_80071140(D_800E30D4);
+        free_from_memory_pool(D_800E30D4);
         D_800E30D4 = NULL;
     }
     if (D_800E30D8 != NULL) {
-        func_80071140(D_800E30D8);
+        free_from_memory_pool(D_800E30D8);
         D_800E30D8 = NULL;
     }
     if (D_800E3178 != NULL) {
-        func_80071140(D_800E3178);
+        free_from_memory_pool(D_800E3178);
         D_800E3178 = NULL;
     }
     D_800E3190 = NULL;

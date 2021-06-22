@@ -37,7 +37,7 @@ glabel func_80076CF0
 /* 077978 80076D78 8FA9003C */  lw    $t1, 0x3c($sp)
 /* 07797C 80076D7C 8FA40028 */  lw    $a0, 0x28($sp)
 /* 077980 80076D80 00495021 */  addu  $t2, $v0, $t1
-/* 077984 80076D84 0C01C450 */  jal   func_80071140
+/* 077984 80076D84 0C01C450 */  jal   free_from_memory_pool
 /* 077988 80076D88 AFAA002C */   sw    $t2, 0x2c($sp)
 /* 07798C 80076D8C 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 077990 80076D90 8FAC003C */  lw    $t4, 0x3c($sp)

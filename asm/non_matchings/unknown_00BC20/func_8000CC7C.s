@@ -1417,11 +1417,11 @@ glabel L8000D98C
 /* 00EC60 8000E060 0C01AF44 */  jal   func_8006BD10
 /* 00EC64 8000E064 00000000 */   nop   
 .L8000E068:
-/* 00EC68 8000E068 0C01C42C */  jal   func_800710B0
+/* 00EC68 8000E068 0C01C42C */  jal   set_free_queue_state
 /* 00EC6C 8000E06C 00002025 */   move  $a0, $zero
-/* 00EC70 8000E070 0C01C450 */  jal   func_80071140
+/* 00EC70 8000E070 0C01C450 */  jal   free_from_memory_pool
 /* 00EC74 8000E074 02C02025 */   move  $a0, $s6
-/* 00EC78 8000E078 0C01C42C */  jal   func_800710B0
+/* 00EC78 8000E078 0C01C42C */  jal   set_free_queue_state
 /* 00EC7C 8000E07C 24040002 */   li    $a0, 2
 .L8000E080:
 /* 00EC80 8000E080 8FBF003C */  lw    $ra, 0x3c($sp)

@@ -364,9 +364,9 @@ glabel func_80004B40
 /* 005C8C 8000508C E4520054 */  swc1  $f18, 0x54($v0)
 .L80005090:
 /* 005C90 80005090 8FA4003C */  lw    $a0, 0x3c($sp)
-/* 005C94 80005094 0C01C450 */  jal   func_80071140
+/* 005C94 80005094 0C01C450 */  jal   free_from_memory_pool
 /* 005C98 80005098 00000000 */   nop   
-/* 005C9C 8000509C 0C01C450 */  jal   func_80071140
+/* 005C9C 8000509C 0C01C450 */  jal   free_from_memory_pool
 /* 005CA0 800050A0 02A02025 */   move  $a0, $s5
 /* 005CA4 800050A4 8FBF0034 */  lw    $ra, 0x34($sp)
 /* 005CA8 800050A8 8FA20044 */  lw    $v0, 0x44($sp)

@@ -306,7 +306,7 @@ s32 *func_8001E29C(s32 arg0);
 void func_8000B290(){
 
     if(D_800DC754){
-        func_80071140();
+        free_from_memory_pool();
     }
     func_8001E29C(20);
     /*{
@@ -490,8 +490,8 @@ void func_8000C604(void) {
     objCount = 0;
     D_8011AE60 = 0;
     func_8000C460();
-    func_80071140(D_8011AEB0[0]);
-    func_80071140(D_8011AEB0[1]);
+    free_from_memory_pool(D_8011AEB0[0]);
+    free_from_memory_pool(D_8011AEB0[1]);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C718.s")
@@ -500,7 +500,7 @@ void func_8000C844(s32 arg0) {
     if ((*D_8011AE4C)[arg0] != 0) {
         (*D_8011AE4C)[arg0]--;
         if ((*D_8011AE4C)[arg0] == 0) {
-            func_80071140((*D_8011AE48)[arg0]);
+            free_from_memory_pool((*D_8011AE48)[arg0]);
         }
     }
 }

@@ -8,7 +8,7 @@ glabel func_8000B290
 /* 00BEA8 8000B2A8 AFB20020 */  sw    $s2, 0x20($sp)
 /* 00BEAC 8000B2AC 10800009 */  beqz  $a0, .L8000B2D4
 /* 00BEB0 8000B2B0 AFB1001C */   sw    $s1, 0x1c($sp)
-/* 00BEB4 8000B2B4 0C01C450 */  jal   func_80071140
+/* 00BEB4 8000B2B4 0C01C450 */  jal   free_from_memory_pool
 /* 00BEB8 8000B2B8 00000000 */   nop   
 /* 00BEBC 8000B2BC 3C02800E */  lui   $v0, %hi(D_800DC74C) # $v0, 0x800e
 /* 00BEC0 8000B2C0 2442C74C */  addiu $v0, %lo(D_800DC74C) # addiu $v0, $v0, -0x38b4

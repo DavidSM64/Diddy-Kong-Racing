@@ -88,7 +88,7 @@ u8 *func_80076CF0(u32 assetIndex, s32 arg1) {
     
     dmacopy(temp_a0, temp_v0_2, 8);
     sp2C = byteswap32(temp_v0_2) + arg1;
-    func_80071140(temp_v0_2);
+    free_from_memory_pool(temp_v0_2);
     temp_v0_3 = (u8*)allocate_from_main_pool_safe(sp2C + arg1, COLOR_TAG_GRAY);
     
     if (temp_v0_3 == NULL) {

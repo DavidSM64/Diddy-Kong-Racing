@@ -569,7 +569,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059A68.s")
 
 void func_80059B4C(void) {
     if (D_8011D598 != 0) {
-        func_80071140(D_8011D598);
+        free_from_memory_pool(D_8011D598);
     }
     D_8011D598 = 0;
 }

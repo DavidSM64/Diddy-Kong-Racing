@@ -133,7 +133,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80075E60.s")
 
 void func_80076164(void) {
     if (D_800DE440 != 0) {
-        func_80071140(D_800DE440);
+        free_from_memory_pool(D_800DE440);
     }
     D_800DE440 = 0;
 }
@@ -171,6 +171,6 @@ s32 func_80076AF4(s32 arg0, s32 arg1) {
                 break;
         }
     }
-    func_80071140(temp);
+    free_from_memory_pool(temp);
     return ret;
 }

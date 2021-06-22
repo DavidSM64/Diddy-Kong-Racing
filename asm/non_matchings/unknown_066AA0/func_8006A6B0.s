@@ -206,10 +206,10 @@ glabel func_8006A6B0
 /* 06B5B4 8006A9B4 00008825 */  move  $s1, $zero
 .L8006A9B8:
 /* 06B5B8 8006A9B8 8E640000 */  lw    $a0, ($s3)
-/* 06B5BC 8006A9BC 0C01C450 */  jal   func_80071140
+/* 06B5BC 8006A9BC 0C01C450 */  jal   free_from_memory_pool
 /* 06B5C0 8006A9C0 00000000 */   nop   
 /* 06B5C4 8006A9C4 8FA40044 */  lw    $a0, 0x44($sp)
-/* 06B5C8 8006A9C8 0C01C450 */  jal   func_80071140
+/* 06B5C8 8006A9C8 0C01C450 */  jal   free_from_memory_pool
 /* 06B5CC 8006A9CC 00000000 */   nop   
 /* 06B5D0 8006A9D0 0C01DB16 */  jal   load_asset_section_from_rom
 /* 06B5D4 8006A9D4 24040018 */   li    $a0, 24
@@ -309,7 +309,7 @@ glabel func_8006A6B0
 /* 06B738 8006AB38 AF0C000C */   sw    $t4, 0xc($t8)
 .L8006AB3C:
 /* 06B73C 8006AB3C 8E640000 */  lw    $a0, ($s3)
-/* 06B740 8006AB40 0C01C450 */  jal   func_80071140
+/* 06B740 8006AB40 0C01C450 */  jal   free_from_memory_pool
 /* 06B744 8006AB44 00000000 */   nop   
 /* 06B748 8006AB48 3C04800E */  lui   $a0, %hi(D_800DD324) # $a0, 0x800e
 /* 06B74C 8006AB4C 8C84D324 */  lw    $a0, %lo(D_800DD324)($a0)

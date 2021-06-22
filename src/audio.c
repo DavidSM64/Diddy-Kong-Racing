@@ -202,7 +202,7 @@ void audio_init(u32 arg0){
     alSndPNew(&audConfig);
     audioStartThread();
     func_80000968(0);
-    func_80071140(reg_s2);
+    free_from_memory_pool(reg_s2);
     func_8000318C(10);
     D_800DC648 = 0;
     D_80115D40 = 0;

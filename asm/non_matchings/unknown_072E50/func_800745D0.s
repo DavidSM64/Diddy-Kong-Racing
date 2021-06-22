@@ -67,7 +67,7 @@ glabel func_800745D0
 /* 0752C4 800746C4 0C01CD62 */  jal   func_80073588
 /* 0752C8 800746C8 24060002 */   li    $a2, 2
 .L800746CC:
-/* 0752CC 800746CC 0C01C450 */  jal   func_80071140
+/* 0752CC 800746CC 0C01C450 */  jal   free_from_memory_pool
 /* 0752D0 800746D0 02402025 */   move  $a0, $s2
 /* 0752D4 800746D4 00001025 */  move  $v0, $zero
 .L800746D8:

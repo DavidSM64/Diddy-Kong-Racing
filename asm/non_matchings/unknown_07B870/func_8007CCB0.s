@@ -46,7 +46,7 @@ glabel func_8007CCB0
 /* 07D958 8007CD58 1420FFF6 */  bnez  $at, .L8007CD34
 /* 07D95C 8007CD5C 26310004 */   addiu $s1, $s1, 4
 .L8007CD60:
-/* 07D960 8007CD60 0C01C450 */  jal   func_80071140
+/* 07D960 8007CD60 0C01C450 */  jal   free_from_memory_pool
 /* 07D964 8007CD64 02402025 */   move  $a0, $s2
 /* 07D968 8007CD68 3C028012 */  lui   $v0, %hi(D_8012634C) # $v0, 0x8012
 /* 07D96C 8007CD6C 2442634C */  addiu $v0, %lo(D_8012634C) # addiu $v0, $v0, 0x634c

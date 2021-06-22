@@ -119,7 +119,7 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
         c->params = reg_s0;
         c[1].maxVVoices = 0;
         alInit(&ALGlobals_801161D0, c);
-        func_80071140(reg_s0);
+        free_from_memory_pool(reg_s0);
     }
     else{
         alInit(&ALGlobals_801161D0, c);
