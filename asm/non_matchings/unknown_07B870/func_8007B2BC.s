@@ -24,7 +24,7 @@ glabel func_8007B2BC
 /* 07BF10 8007B310 14C90011 */  bne   $a2, $t1, .L8007B358
 /* 07BF14 8007B314 24420001 */   addiu $v0, $v0, 1
 /* 07BF18 8007B318 00C02025 */  move  $a0, $a2
-/* 07BF1C 8007B31C 0C01C450 */  jal   func_80071140
+/* 07BF1C 8007B31C 0C01C450 */  jal   free_from_memory_pool
 /* 07BF20 8007B320 AFB90018 */   sw    $t9, 0x18($sp)
 /* 07BF24 8007B324 3C028012 */  lui   $v0, %hi(D_80126328) # $v0, 0x8012
 /* 07BF28 8007B328 24426328 */  addiu $v0, %lo(D_80126328) # addiu $v0, $v0, 0x6328

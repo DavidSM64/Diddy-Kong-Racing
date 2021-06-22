@@ -29,7 +29,7 @@ s32 D_8011D4CC;
 
 void func_80031B60(void) {
     if (D_800DC950 != 0) {
-        func_80071140(D_800DC950);
+        free_from_memory_pool(D_800DC950);
         D_800DC950 = 0;
         D_800DC954 = 0;
         D_800DC960 = 0;

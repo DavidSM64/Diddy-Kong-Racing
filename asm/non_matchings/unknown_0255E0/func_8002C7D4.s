@@ -40,15 +40,15 @@ glabel func_8002C7D4
 .L8002C864:
 /* 02D464 8002C864 3C048012 */  lui   $a0, %hi(D_8011D30C) # $a0, 0x8012
 /* 02D468 8002C868 8C84D30C */  lw    $a0, %lo(D_8011D30C)($a0)
-/* 02D46C 8002C86C 0C01C450 */  jal   func_80071140
+/* 02D46C 8002C86C 0C01C450 */  jal   free_from_memory_pool
 /* 02D470 8002C870 00000000 */   nop   
 /* 02D474 8002C874 3C048012 */  lui   $a0, %hi(D_8011D370) # $a0, 0x8012
 /* 02D478 8002C878 8C84D370 */  lw    $a0, %lo(D_8011D370)($a0)
-/* 02D47C 8002C87C 0C01C450 */  jal   func_80071140
+/* 02D47C 8002C87C 0C01C450 */  jal   free_from_memory_pool
 /* 02D480 8002C880 00000000 */   nop   
 /* 02D484 8002C884 3C048012 */  lui   $a0, %hi(D_8011D374) # $a0, 0x8012
 /* 02D488 8002C888 8C84D374 */  lw    $a0, %lo(D_8011D374)($a0)
-/* 02D48C 8002C88C 0C01C450 */  jal   func_80071140
+/* 02D48C 8002C88C 0C01C450 */  jal   free_from_memory_pool
 /* 02D490 8002C890 00000000 */   nop   
 /* 02D494 8002C894 8E890000 */  lw    $t1, ($s4)
 /* 02D498 8002C898 00000000 */  nop   
@@ -65,13 +65,13 @@ glabel func_8002C7D4
 /* 02D4C4 8002C8C4 2631D350 */  addiu $s1, %lo(D_8011D350) # addiu $s1, $s1, -0x2cb0
 .L8002C8C8:
 /* 02D4C8 8002C8C8 8E240000 */  lw    $a0, ($s1)
-/* 02D4CC 8002C8CC 0C01C450 */  jal   func_80071140
+/* 02D4CC 8002C8CC 0C01C450 */  jal   free_from_memory_pool
 /* 02D4D0 8002C8D0 00000000 */   nop   
 /* 02D4D4 8002C8D4 8E440000 */  lw    $a0, ($s2)
-/* 02D4D8 8002C8D8 0C01C450 */  jal   func_80071140
+/* 02D4D8 8002C8D8 0C01C450 */  jal   free_from_memory_pool
 /* 02D4DC 8002C8DC 00000000 */   nop   
 /* 02D4E0 8002C8E0 8E040000 */  lw    $a0, ($s0)
-/* 02D4E4 8002C8E4 0C01C450 */  jal   func_80071140
+/* 02D4E4 8002C8E4 0C01C450 */  jal   free_from_memory_pool
 /* 02D4E8 8002C8E8 00000000 */   nop   
 /* 02D4EC 8002C8EC 26100004 */  addiu $s0, $s0, 4
 /* 02D4F0 8002C8F0 26310004 */  addiu $s1, $s1, 4

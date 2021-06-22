@@ -6,7 +6,7 @@ glabel func_8001B2F0
 /* 01BF00 8001B300 3C058012 */  lui   $a1, %hi(D_8011AE84) # $a1, 0x8012
 /* 01BF04 8001B304 24A5AE84 */  addiu $a1, %lo(D_8011AE84) # addiu $a1, $a1, -0x517c
 /* 01BF08 8001B308 A4A20000 */  sh    $v0, ($a1)
-/* 01BF0C 8001B30C 0C01DB16 */  jal   func_80076C58
+/* 01BF0C 8001B30C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 01BF10 8001B310 24040030 */   li    $a0, 48
 /* 01BF14 8001B314 3C058012 */  lui   $a1, %hi(D_8011AE84) # $a1, 0x8012
 /* 01BF18 8001B318 8FA60028 */  lw    $a2, 0x28($sp)
@@ -44,7 +44,7 @@ glabel func_8001B2F0
 /* 01BF8C 8001B38C 00402825 */  move  $a1, $v0
 .L8001B390:
 /* 01BF90 8001B390 8FA40024 */  lw    $a0, 0x24($sp)
-/* 01BF94 8001B394 0C01C450 */  jal   func_80071140
+/* 01BF94 8001B394 0C01C450 */  jal   free_from_memory_pool
 /* 01BF98 8001B398 AFA5001C */   sw    $a1, 0x1c($sp)
 /* 01BF9C 8001B39C 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 01BFA0 8001B3A0 8FA2001C */  lw    $v0, 0x1c($sp)

@@ -48,7 +48,7 @@ glabel load_level
 /* 06BEF0 8006B2F0 0C01BAA4 */  jal   get_settings
 /* 06BEF4 8006B2F4 00000000 */   nop   
 /* 06BEF8 8006B2F8 AFA20040 */  sw    $v0, 0x40($sp)
-/* 06BEFC 8006B2FC 0C01DB16 */  jal   func_80076C58
+/* 06BEFC 8006B2FC 0C01DB16 */  jal   load_asset_section_from_rom
 /* 06BF00 8006B300 24040016 */   li    $a0, 22
 /* 06BF04 8006B304 3C098012 */  lui   $t1, %hi(D_80121160) # $t1, 0x8012
 /* 06BF08 8006B308 25291160 */  addiu $t1, %lo(D_80121160) # addiu $t1, $t1, 0x1160
@@ -87,7 +87,7 @@ glabel load_level
 /* 06BF80 8006B380 AE220000 */  sw    $v0, ($s1)
 /* 06BF84 8006B384 24040017 */  li    $a0, 23
 /* 06BF88 8006B388 00402825 */  move  $a1, $v0
-/* 06BF8C 8006B38C 0C01DB9A */  jal   func_80076E68
+/* 06BF8C 8006B38C 0C01DB9A */  jal   load_asset_to_address
 /* 06BF90 8006B390 02003025 */   move  $a2, $s0
 /* 06BF94 8006B394 3C01800E */  lui   $at, %hi(D_800DD330) # $at, 0x800e
 /* 06BF98 8006B398 8FB80060 */  lw    $t8, 0x60($sp)
@@ -277,7 +277,7 @@ glabel load_level
 /* 06C240 8006B640 A420D32C */   sh    $zero, %lo(D_800DD32C)($at)
 /* 06C244 8006B644 8E240000 */  lw    $a0, ($s1)
 /* 06C248 8006B648 00187880 */  sll   $t7, $t8, 2
-/* 06C24C 8006B64C 0C01C450 */  jal   func_80071140
+/* 06C24C 8006B64C 0C01C450 */  jal   free_from_memory_pool
 /* 06C250 8006B650 AFAF0034 */   sw    $t7, 0x34($sp)
 /* 06C254 8006B654 3C0D8012 */  lui   $t5, %hi(D_80121160) # $t5, 0x8012
 /* 06C258 8006B658 8DAD1160 */  lw    $t5, %lo(D_80121160)($t5)
@@ -294,12 +294,12 @@ glabel load_level
 /* 06C284 8006B684 AE220000 */  sw    $v0, ($s1)
 /* 06C288 8006B688 24040017 */  li    $a0, 23
 /* 06C28C 8006B68C 00402825 */  move  $a1, $v0
-/* 06C290 8006B690 0C01DB9A */  jal   func_80076E68
+/* 06C290 8006B690 0C01DB9A */  jal   load_asset_to_address
 /* 06C294 8006B694 02003025 */   move  $a2, $s0
 .L8006B698:
 /* 06C298 8006B698 3C048012 */  lui   $a0, %hi(D_80121160) # $a0, 0x8012
 /* 06C29C 8006B69C 8C841160 */  lw    $a0, %lo(D_80121160)($a0)
-/* 06C2A0 8006B6A0 0C01C450 */  jal   func_80071140
+/* 06C2A0 8006B6A0 0C01C450 */  jal   free_from_memory_pool
 /* 06C2A4 8006B6A4 00000000 */   nop   
 /* 06C2A8 8006B6A8 8E240000 */  lw    $a0, ($s1)
 /* 06C2AC 8006B6AC 0C01AFF2 */  jal   func_8006BFC8

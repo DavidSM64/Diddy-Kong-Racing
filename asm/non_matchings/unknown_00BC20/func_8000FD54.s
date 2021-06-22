@@ -155,7 +155,7 @@ glabel func_8000FD54
 /* 010B7C 8000FF7C 8FA40038 */  lw    $a0, 0x38($sp)
 /* 010B80 8000FF80 0C003211 */  jal   func_8000C844
 /* 010B84 8000FF84 00000000 */   nop   
-/* 010B88 8000FF88 0C01C450 */  jal   func_80071140
+/* 010B88 8000FF88 0C01C450 */  jal   free_from_memory_pool
 /* 010B8C 8000FF8C 02402025 */   move  $a0, $s2
 /* 010B90 8000FF90 10000001 */  b     .L8000FF98
 /* 010B94 8000FF94 00001025 */   move  $v0, $zero

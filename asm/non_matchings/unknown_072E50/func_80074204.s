@@ -52,7 +52,7 @@ glabel func_80074204
 /* 074EB8 800742B8 8FA40034 */  lw    $a0, 0x34($sp)
 /* 074EBC 800742BC 0C01CC1B */  jal   func_8007306C
 /* 074EC0 800742C0 02402825 */   move  $a1, $s2
-/* 074EC4 800742C4 0C01C450 */  jal   func_80071140
+/* 074EC4 800742C4 0C01C450 */  jal   free_from_memory_pool
 /* 074EC8 800742C8 02402025 */   move  $a0, $s2
 /* 074ECC 800742CC 8FA50034 */  lw    $a1, 0x34($sp)
 /* 074ED0 800742D0 8FA40030 */  lw    $a0, 0x30($sp)

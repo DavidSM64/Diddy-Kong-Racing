@@ -1,4 +1,4 @@
-glabel func_800B62B4
+glabel set_render_printf_background_color
 /* 0B6EB4 800B62B4 3C028013 */  lui   $v0, %hi(D_801285D8) # $v0, 0x8013
 /* 0B6EB8 800B62B8 244285D8 */  addiu $v0, %lo(D_801285D8) # addiu $v0, $v0, -0x7a28
 /* 0B6EBC 800B62BC 8C490000 */  lw    $t1, ($v0)

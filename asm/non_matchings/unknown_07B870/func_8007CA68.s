@@ -37,7 +37,7 @@ glabel func_8007CA68
 /* 07D6EC 8007CAEC 8E526350 */  lw    $s2, %lo(D_80126350)($s2)
 /* 07D6F0 8007CAF0 2404000C */  li    $a0, 12
 /* 07D6F4 8007CAF4 01263823 */  subu  $a3, $t1, $a2
-/* 07D6F8 8007CAF8 0C01DB9A */  jal   func_80076E68
+/* 07D6F8 8007CAF8 0C01DB9A */  jal   load_asset_to_address
 /* 07D6FC 8007CAFC 02402825 */   move  $a1, $s2
 /* 07D700 8007CB00 864A0002 */  lh    $t2, 2($s2)
 /* 07D704 8007CB04 8FB70050 */  lw    $s7, 0x50($sp)

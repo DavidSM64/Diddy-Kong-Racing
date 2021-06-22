@@ -68,7 +68,7 @@ glabel func_8007AE74
 /* 07BB64 8007AF64 AFB30050 */  sw    $s3, 0x50($sp)
 /* 07BB68 8007AF68 02602025 */  move  $a0, $s3
 /* 07BB6C 8007AF6C 24070028 */  li    $a3, 40
-/* 07BB70 8007AF70 0C01DB9A */  jal   func_80076E68
+/* 07BB70 8007AF70 0C01DB9A */  jal   load_asset_to_address
 /* 07BB74 8007AF74 02403025 */   move  $a2, $s2
 /* 07BB78 8007AF78 8E830000 */  lw    $v1, ($s4)
 /* 07BB7C 8007AF7C 8FAE0058 */  lw    $t6, 0x58($sp)
@@ -95,7 +95,7 @@ glabel func_8007AE74
 /* 07BBCC 8007AFCC 8FA70058 */  lw    $a3, 0x58($sp)
 /* 07BBD0 8007AFD0 02602825 */  move  $a1, $s3
 /* 07BBD4 8007AFD4 02403025 */  move  $a2, $s2
-/* 07BBD8 8007AFD8 0C01DB9A */  jal   func_80076E68
+/* 07BBD8 8007AFD8 0C01DB9A */  jal   load_asset_to_address
 /* 07BBDC 8007AFDC 00008825 */   move  $s1, $zero
 /* 07BBE0 8007AFE0 1000002A */  b     .L8007B08C
 /* 07BBE4 8007AFE4 00000000 */   nop   
@@ -133,7 +133,7 @@ glabel func_8007AE74
 /* 07BC58 8007B058 AFA50034 */  sw    $a1, 0x34($sp)
 /* 07BC5C 8007B05C 02403025 */  move  $a2, $s2
 /* 07BC60 8007B060 00008825 */  move  $s1, $zero
-/* 07BC64 8007B064 0C01DB9A */  jal   func_80076E68
+/* 07BC64 8007B064 0C01DB9A */  jal   load_asset_to_address
 /* 07BC68 8007B068 01603825 */   move  $a3, $t3
 /* 07BC6C 8007B06C 8FA40034 */  lw    $a0, 0x34($sp)
 /* 07BC70 8007B070 02602825 */  move  $a1, $s3
@@ -199,7 +199,7 @@ glabel func_8007AE74
 /* 07BD4C 8007B14C 8D4A632C */  lw    $t2, %lo(D_8012632C)($t2)
 /* 07BD50 8007B150 86660008 */  lh    $a2, 8($s3)
 /* 07BD54 8007B154 24070020 */  li    $a3, 32
-/* 07BD58 8007B158 0C01DB9A */  jal   func_80076E68
+/* 07BD58 8007B158 0C01DB9A */  jal   load_asset_to_address
 /* 07BD5C 8007B15C 014C2821 */   addu  $a1, $t2, $t4
 /* 07BD60 8007B160 3C0B8012 */  lui   $t3, %hi(D_80126340) # $t3, 0x8012
 /* 07BD64 8007B164 8D6B6340 */  lw    $t3, %lo(D_80126340)($t3)
@@ -232,7 +232,7 @@ glabel func_8007AE74
 /* 07BDC8 8007B1C8 8F39632C */  lw    $t9, %lo(D_8012632C)($t9)
 /* 07BDCC 8007B1CC 86660008 */  lh    $a2, 8($s3)
 /* 07BDD0 8007B1D0 24070080 */  li    $a3, 128
-/* 07BDD4 8007B1D4 0C01DB9A */  jal   func_80076E68
+/* 07BDD4 8007B1D4 0C01DB9A */  jal   load_asset_to_address
 /* 07BDD8 8007B1D8 03302821 */   addu  $a1, $t9, $s0
 /* 07BDDC 8007B1DC 3C038012 */  lui   $v1, %hi(D_80126340) # $v1, 0x8012
 /* 07BDE0 8007B1E0 24636340 */  addiu $v1, %lo(D_80126340) # addiu $v1, $v1, 0x6340

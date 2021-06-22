@@ -34,7 +34,7 @@ glabel func_80074148
 /* 074DC8 800741C8 00401825 */  move  $v1, $v0
 .L800741CC:
 /* 074DCC 800741CC 8FA40034 */  lw    $a0, 0x34($sp)
-/* 074DD0 800741D0 0C01C450 */  jal   func_80071140
+/* 074DD0 800741D0 0C01C450 */  jal   free_from_memory_pool
 /* 074DD4 800741D4 AFA30030 */   sw    $v1, 0x30($sp)
 /* 074DD8 800741D8 8FA30030 */  lw    $v1, 0x30($sp)
 /* 074DDC 800741DC 8FBF001C */  lw    $ra, 0x1c($sp)

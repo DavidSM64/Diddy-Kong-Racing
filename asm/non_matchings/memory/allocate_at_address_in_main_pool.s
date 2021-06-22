@@ -1,4 +1,4 @@
-glabel func_80070EF8
+glabel allocate_at_address_in_main_pool
 /* 071AF8 80070EF8 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 071AFC 80070EFC AFBF002C */  sw    $ra, 0x2c($sp)
 /* 071B00 80070F00 AFB20028 */  sw    $s2, 0x28($sp)

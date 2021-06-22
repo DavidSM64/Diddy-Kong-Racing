@@ -169,6 +169,10 @@ void ExtractConfig::extract(ROM& rom, json::JSON& assetsJson) {
         json::JSON outputAsset = json::Object();
         outputAsset["type"] = type;
         
+        if(section.hasKey("name")) {
+            outputAsset["name"] = section["name"].ToString();
+        }
+        
         if(type == "Table") {
             assetsJson["assets"].append(outputAsset);
             continue;

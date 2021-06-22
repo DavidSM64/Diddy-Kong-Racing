@@ -69,7 +69,7 @@ glabel func_8008AD44
 /* 08BA38 8008AE38 1640FFD6 */  bnez  $s2, .L8008AD94
 /* 08BA3C 8008AE3C 02719821 */   addu  $s3, $s3, $s1
 .L8008AE40:
-/* 08BA40 8008AE40 0C01C450 */  jal   func_80071140
+/* 08BA40 8008AE40 0C01C450 */  jal   free_from_memory_pool
 /* 08BA44 8008AE44 02802025 */   move  $a0, $s4
 /* 08BA48 8008AE48 240A0001 */  li    $t2, 1
 /* 08BA4C 8008AE4C 3C01800E */  lui   $at, %hi(D_800E1E18) # $at, 0x800e
@@ -80,10 +80,10 @@ glabel func_8008AD44
 /* 08BA5C 8008AE5C 00002025 */  move  $a0, $zero
 /* 08BA60 8008AE60 00002825 */  move  $a1, $zero
 /* 08BA64 8008AE64 00003025 */  move  $a2, $zero
-/* 08BA68 8008AE68 0C02D8AD */  jal   func_800B62B4
+/* 08BA68 8008AE68 0C02D8AD */  jal   set_render_printf_background_color
 /* 08BA6C 8008AE6C 24070080 */   li    $a3, 128
 /* 08BA70 8008AE70 24040020 */  li    $a0, 32
-/* 08BA74 8008AE74 0C02D8D7 */  jal   func_800B635C
+/* 08BA74 8008AE74 0C02D8D7 */  jal   set_render_printf_position
 /* 08BA78 8008AE78 24050088 */   li    $a1, 136
 /* 08BA7C 8008AE7C 3C05800E */  lui   $a1, %hi(D_800E1E14) # $a1, 0x800e
 /* 08BA80 8008AE80 8CA51E14 */  lw    $a1, %lo(D_800E1E14)($a1)

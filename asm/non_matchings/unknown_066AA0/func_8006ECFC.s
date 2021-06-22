@@ -10,15 +10,15 @@ glabel func_8006ECFC
 /* 06F91C 8006ED1C 00802825 */   move  $a1, $a0
 /* 06F920 8006ED20 AC440000 */  sw    $a0, ($v0)
 /* 06F924 8006ED24 00002025 */  move  $a0, $zero
-/* 06F928 8006ED28 0C01C42C */  jal   func_800710B0
+/* 06F928 8006ED28 0C01C42C */  jal   set_free_queue_state
 /* 06F92C 8006ED2C AFA50048 */   sw    $a1, 0x48($sp)
 /* 06F930 8006ED30 3C118012 */  lui   $s1, %hi(D_801211F0) # $s1, 0x8012
 /* 06F934 8006ED34 263111F0 */  addiu $s1, %lo(D_801211F0) # addiu $s1, $s1, 0x11f0
 /* 06F938 8006ED38 8E240000 */  lw    $a0, ($s1)
-/* 06F93C 8006ED3C 0C01C450 */  jal   func_80071140
+/* 06F93C 8006ED3C 0C01C450 */  jal   free_from_memory_pool
 /* 06F940 8006ED40 00000000 */   nop   
 /* 06F944 8006ED44 8E240004 */  lw    $a0, 4($s1)
-/* 06F948 8006ED48 0C01C450 */  jal   func_80071140
+/* 06F948 8006ED48 0C01C450 */  jal   free_from_memory_pool
 /* 06F94C 8006ED4C 00000000 */   nop   
 /* 06F950 8006ED50 8FA20048 */  lw    $v0, 0x48($sp)
 /* 06F954 8006ED54 3C18800E */  lui   $t8, %hi(D_800DD3E0) # $t8, 0x800e
@@ -54,13 +54,13 @@ glabel func_8006ECFC
 /* 06F9CC 8006EDCC AFA90020 */  sw    $t1, 0x20($sp)
 /* 06F9D0 8006EDD0 AFA70028 */  sw    $a3, 0x28($sp)
 /* 06F9D4 8006EDD4 AFA3002C */  sw    $v1, 0x2c($sp)
-/* 06F9D8 8006EDD8 0C01C3BE */  jal   func_80070EF8
+/* 06F9D8 8006EDD8 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 06F9DC 8006EDDC AFA80024 */   sw    $t0, 0x24($sp)
 /* 06F9E0 8006EDE0 8E250004 */  lw    $a1, 4($s1)
 /* 06F9E4 8006EDE4 3C06FFFF */  lui   $a2, (0xFFFF00FF >> 16) # lui $a2, 0xffff
 /* 06F9E8 8006EDE8 AE220000 */  sw    $v0, ($s1)
 /* 06F9EC 8006EDEC 34C600FF */  ori   $a2, (0xFFFF00FF & 0xFFFF) # ori $a2, $a2, 0xff
-/* 06F9F0 8006EDF0 0C01C3BE */  jal   func_80070EF8
+/* 06F9F0 8006EDF0 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 06F9F4 8006EDF4 02002025 */   move  $a0, $s0
 /* 06F9F8 8006EDF8 8E300000 */  lw    $s0, ($s1)
 /* 06F9FC 8006EDFC AE220004 */  sw    $v0, 4($s1)
@@ -71,7 +71,7 @@ glabel func_8006ECFC
 .L8006EE10:
 /* 06FA10 8006EE10 12000004 */  beqz  $s0, .L8006EE24
 /* 06FA14 8006EE14 00000000 */   nop   
-/* 06FA18 8006EE18 0C01C450 */  jal   func_80071140
+/* 06FA18 8006EE18 0C01C450 */  jal   free_from_memory_pool
 /* 06FA1C 8006EE1C 02002025 */   move  $a0, $s0
 /* 06FA20 8006EE20 AE200000 */  sw    $zero, ($s1)
 .L8006EE24:
@@ -79,7 +79,7 @@ glabel func_8006ECFC
 /* 06FA28 8006EE28 00000000 */  nop   
 /* 06FA2C 8006EE2C 10A00004 */  beqz  $a1, .L8006EE40
 /* 06FA30 8006EE30 00000000 */   nop   
-/* 06FA34 8006EE34 0C01C450 */  jal   func_80071140
+/* 06FA34 8006EE34 0C01C450 */  jal   free_from_memory_pool
 /* 06FA38 8006EE38 00A02025 */   move  $a0, $a1
 /* 06FA3C 8006EE3C AE200004 */  sw    $zero, 4($s1)
 .L8006EE40:
@@ -134,7 +134,7 @@ glabel func_8006ECFC
 /* 06FAFC 8006EEFC 8D8E0000 */  lw    $t6, ($t4)
 /* 06FB00 8006EF00 3C018012 */  lui   $at, %hi(D_80123534) # $at, 0x8012
 /* 06FB04 8006EF04 24040002 */  li    $a0, 2
-/* 06FB08 8006EF08 0C01C42C */  jal   func_800710B0
+/* 06FB08 8006EF08 0C01C42C */  jal   set_free_queue_state
 /* 06FB0C 8006EF0C AC2E3534 */   sw    $t6, %lo(D_80123534)($at)
 .L8006EF10:
 /* 06FB10 8006EF10 3C038012 */  lui   $v1, %hi(D_801234E8) # $v1, 0x8012

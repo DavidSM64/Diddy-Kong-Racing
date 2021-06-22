@@ -74,21 +74,23 @@ endif
 
 ######## Extract Assets & Microcode ########
 
-NEED_TO_EXTRACT = no
+DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION)
 
-ifeq ($(wildcard ./assets/.*),)
-    NEED_TO_EXTRACT = yes
-endif
-ifeq ($(wildcard ./ucode/.*),)
-    NEED_TO_EXTRACT = yes
-endif
-
-ifeq ($(NEED_TO_EXTRACT),yes)
-  DUMMY != ./extract.sh $(VERSION) >&2 || echo FAIL
-  ifeq ($(DUMMY),FAIL)
-    $(error Failed to extract assets)
-  endif
-endif
+# NEED_TO_EXTRACT = no
+# 
+# ifeq ($(wildcard ./assets/.*),)
+#     NEED_TO_EXTRACT = yes
+# endif
+# ifeq ($(wildcard ./ucode/.*),)
+#     NEED_TO_EXTRACT = yes
+# endif
+# 
+# ifeq ($(NEED_TO_EXTRACT),yes)
+#   DUMMY != ./extract.sh $(VERSION) >&2 || echo FAIL
+#   ifeq ($(DUMMY),FAIL)
+#     $(error Failed to extract assets)
+#   endif
+# endif
 
 ##### Generate linker file #####
 

@@ -2,7 +2,9 @@
 /* RAM_POS: 0x80076BA0 */
 
 #include "unknown_0777A0.h"
+#include "memory.h"
 
+//#include "assets.h"
 #include "types.h"
 #include "macros.h"
 #include "ultra64.h"
@@ -15,7 +17,7 @@ OSMesgQueue D_80124220;
 OSMesg D_80124238;
 s32 D_80124240[14];
 OSMesgQueue D_80124278;
-s32 *D_80124290;
+s32 *gAssetsLookupTable;
 
 /*******************************/
 
@@ -27,69 +29,67 @@ s32 func_80071478(s32*);
 void dmacopy(u32 romOffset, u8 *ramAddress, s32 numBytes);
     
 void func_80076BA0(void) {
-    u32 size;
-    osCreateMesgQueue(&D_80124278, &D_80124238, 0x10);
+    u32 assetTableSize;
+    osCreateMesgQueue(&D_80124278, &D_80124238, 16);
     osCreateMesgQueue(&D_80124220, &D_80124218, 1);
-    osCreatePiManager(0x96, &D_80124278, &D_80124238, 0x10);
-    size = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
-    D_80124290 = (s32*)allocate_from_main_pool_safe(size, 0x7F7F7FFF);
-    func_80071478(D_80124290);
-    dmacopy(&__ASSETS_LUT_START, D_80124290, size);
+    osCreatePiManager(150, &D_80124278, &D_80124238, 16);
+    assetTableSize = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
+    gAssetsLookupTable = (s32*)allocate_from_main_pool_safe(assetTableSize, COLOR_TAG_GRAY);
+    func_80071478(gAssetsLookupTable);
+    dmacopy(&__ASSETS_LUT_START, gAssetsLookupTable, assetTableSize);
 }
-
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80076C58.s")
-#else
     
-// This function is OK
-s32 *func_80076C58(u32 arg0) {
-    s32 *temp;
-    s32 *temp2;
+/**
+ * Returns the memory address containing an asset section loaded from ROM.
+ */
+s32 *load_asset_section_from_rom(u32 assetIndex) {
+    s32 *index;
+    s32 *out;
     s32 size;
     s32 start;
-    if (D_80124290[0] < arg0) {
+    if (gAssetsLookupTable[0] < assetIndex) {
         return NULL;
     }
-    arg0++;
-    temp = arg0 + D_80124290;
-    start = *temp;
-    size = *(temp + 1) - start;
-    temp2 = (s32*)allocate_from_main_pool_safe(size, 0x7F7F7FFF);
-    if (temp2 == NULL) {
+    assetIndex++;
+    index = assetIndex + gAssetsLookupTable;
+    start = *index;
+    size = *(index + 1) - start;
+    out = (s32*)allocate_from_main_pool_safe(size, COLOR_TAG_GRAY);
+    if (out == NULL) {
         return NULL;
     }
-    dmacopy(start + &__ASSETS_LUT_END, temp2, size);
-    return temp2;
+    dmacopy(start + &__ASSETS_LUT_END, out, size);
+    return out;
 }
 
-// Unused?
+#ifdef NON_MATCHING
 // This has regalloc & stack issues.
-u8 *func_80076CF0(u32 arg0, s32 arg1) {
+u8 *func_80076CF0(u32 assetIndex, s32 arg1) {
     s32 size;
     s32 sp2C;
     s32 start;
-    s32 *temp;
+    s32 *index;
     u8 *temp_a1;
     u8 *temp_v0_2;
     u8 *temp_v0_3;
     u8 *temp_a0;
 
-    if (D_80124290[0] < arg0) {
+    if (gAssetsLookupTable[0] < assetIndex) {
         return NULL;
     }
     
-    arg0++;
-    temp = arg0 + D_80124290;
-    start = *temp;
-    size = *(temp + 1) - start;
+    assetIndex++;
+    index = assetIndex + gAssetsLookupTable;
+    start = *index;
+    size = *(index + 1) - start;
     
-    temp_v0_2 = (u8*)allocate_from_main_pool_safe(8, 0xFFFFFFFF);
+    temp_v0_2 = (u8*)allocate_from_main_pool_safe(8, COLOR_TAG_WHITE);
     temp_a0 = start + &__ASSETS_LUT_END;
     
     dmacopy(temp_a0, temp_v0_2, 8);
     sp2C = byteswap32(temp_v0_2) + arg1;
-    func_80071140(temp_v0_2);
-    temp_v0_3 = (u8*)allocate_from_main_pool_safe(sp2C + arg1, 0x7F7F7FFF);
+    free_from_memory_pool(temp_v0_2);
+    temp_v0_3 = (u8*)allocate_from_main_pool_safe(sp2C + arg1, COLOR_TAG_GRAY);
     
     if (temp_v0_3 == NULL) {
         return NULL;
@@ -99,66 +99,86 @@ u8 *func_80076CF0(u32 arg0, s32 arg1) {
     func_800C6218(temp_a1, temp_v0_3);
     return temp_v0_3;
 }
-
-// Unused?
-// This function is OK
-s32 func_80076DFC(u32 arg0, s32 *arg1) {
-    s32 start;
-    s32 size;
-    u8 *temp;
-    if (D_80124290[0] < arg0) {
-        return 0;
-    }
-    arg0++;
-    temp = arg0 + D_80124290;
-    start = *temp;
-    size = *(temp + 1) - start;
-    dmacopy(start + &__ASSETS_LUT_END, arg1, size);
-    return size;
-}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_072E50/load_asset_section_from_rom.s")
 #endif
 
-s32 func_80076E68(u32 arg0, s32 *arg1, s32 arg2, s32 arg3) {
-    s32 *temp;
-    s32 temp2;
+/**
+ * Unused.
+ * Loads an asset section to a specific memory address.
+ * Returns the size of asset section.
+ */
+s32 load_asset_section_from_rom_to_address(u32 assetIndex, s32 *address) {
+    s32 start;
+    s32 size;
+    s32 *index;
+    if (gAssetsLookupTable[0] < assetIndex) {
+        return 0;
+    }
+    assetIndex++;
+    index = assetIndex + gAssetsLookupTable;
+    start = *index;
+    size = *(index + 1) - start;
+    dmacopy(start + &__ASSETS_LUT_END, address, size);
+    return size;
+}
+
+/**
+ * Loads part of an asset section to a specific memory address.
+ * Returns the size argument.
+ */
+s32 load_asset_to_address(u32 assetIndex, s32 *address, s32 assetOffset, s32 size) {
+    s32 *index;
+    s32 start;
     
-    if (arg3 == 0 || D_80124290[0] < arg0) {
+    if (size == 0 || gAssetsLookupTable[0] < assetIndex) {
         return 0;
     }
     
-    arg0++;
-    temp = arg0 + D_80124290;
-    temp2 = *temp + arg2;
-    dmacopy(temp2 + &__ASSETS_LUT_END, arg1, arg3);
-    return arg3;
+    assetIndex++;
+    index = assetIndex + gAssetsLookupTable;
+    start = *index + assetOffset;
+    dmacopy(start + &__ASSETS_LUT_END, address, size);
+    return size;
 }
 
-u8 *func_80076EE8(u32 arg0, s32 arg1) {
-    s32 *temp;
-    s32 temp2;
-    s32 temp3;
-    if (D_80124290[0] < arg0) {
+/**
+ * Returns a rom offset of an asset given its asset section and a local offset.
+ */
+u8 *get_rom_offset_of_asset(u32 assetIndex, s32 assetOffset) {
+    s32 *index;
+    s32 start;
+    
+    if (gAssetsLookupTable[0] < assetIndex) {
         return NULL;
     }
-    arg0++;
-    temp = arg0 + D_80124290;
-    temp3 = *temp + arg1;
-    return temp3 + &__ASSETS_LUT_END;
+    
+    assetIndex++;
+    index = assetIndex + gAssetsLookupTable;
+    start = *index + assetOffset;
+    return start + &__ASSETS_LUT_END;
 }
 
-s32 func_80076F30(u32 arg0) {
-    s32 *temp;
+/**
+ * Returns the size of an asset section.
+ */
+s32 get_size_of_asset_section(u32 assetIndex) {
+    s32 *index;
 
-    if (D_80124290[0] < arg0) {
+    if (gAssetsLookupTable[0] < assetIndex) {
         return 0;
     }
-    arg0++;
-    temp = arg0 + D_80124290;
-    return *(temp + 1) - *temp;
+    
+    assetIndex++;
+    index = assetIndex + gAssetsLookupTable;
+    return *(index + 1) - *index;
 }
 
-#define MAX_TRANSFER_SIZE 0x5000 // Why did they pick 20 KB as the transfer limit?
+#define MAX_TRANSFER_SIZE 0x5000
 
+/**
+ * Copies data from the game cartridge to a ram address.
+ */
 void dmacopy(u32 romOffset, u8 *ramAddress, s32 numBytes) {
     s32 sp4C;
     s32 numBytesToDMA;

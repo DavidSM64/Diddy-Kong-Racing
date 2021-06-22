@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80042D20 */
 
 #include "unknown_043920.h"
+#include "memory.h"
 
 #include "types.h"
 #include "macros.h"
@@ -517,7 +518,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059208.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059790.s")
 
 void func_800598D0(void) {
-    D_8011D590[0] = allocate_from_main_pool_safe(0x21C0, 0xFF0000FF);
+    D_8011D590[0] = allocate_from_main_pool_safe(0x21C0, COLOR_TAG_RED);
     D_8011D590[1] = D_8011D590[0] + 0x10E0;
     D_8011D590[2] = 0;
     D_8011D5A0[0] = 0;
@@ -568,7 +569,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059A68.s")
 
 void func_80059B4C(void) {
     if (D_8011D598 != 0) {
-        func_80071140(D_8011D598);
+        free_from_memory_pool(D_8011D598);
     }
     D_8011D598 = 0;
 }

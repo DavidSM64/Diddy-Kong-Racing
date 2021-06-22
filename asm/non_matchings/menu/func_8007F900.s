@@ -7,7 +7,7 @@ glabel func_8007F900
 /* 080514 8007F914 14600009 */  bnez  $v1, .L8007F93C
 /* 080518 8007F918 00802825 */   move  $a1, $a0
 /* 08051C 8007F91C 24040009 */  li    $a0, 9
-/* 080520 8007F920 0C01DB16 */  jal   func_80076C58
+/* 080520 8007F920 0C01DB16 */  jal   load_asset_section_from_rom
 /* 080524 8007F924 AFA50018 */   sw    $a1, 0x18($sp)
 /* 080528 8007F928 3C09800E */  lui   $t1, %hi(D_800DF49C) # $t1, 0x800e
 /* 08052C 8007F92C 2529F49C */  addiu $t1, %lo(D_800DF49C) # addiu $t1, $t1, -0xb64
@@ -42,7 +42,7 @@ glabel func_8007F900
 /* 080590 8007F990 00E63823 */  subu  $a3, $a3, $a2
 /* 080594 8007F994 10A00179 */  beqz  $a1, .L8007FF7C
 /* 080598 8007F998 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 08059C 8007F99C 0C01DB9A */  jal   func_80076E68
+/* 08059C 8007F99C 0C01DB9A */  jal   load_asset_to_address
 /* 0805A0 8007F9A0 24040008 */   li    $a0, 8
 /* 0805A4 8007F9A4 3C09800E */  lui   $t1, %hi(D_800DF49C) # $t1, 0x800e
 /* 0805A8 8007F9A8 2529F49C */  addiu $t1, %lo(D_800DF49C) # addiu $t1, $t1, -0xb64

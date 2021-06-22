@@ -288,9 +288,9 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     D_8011B0FC = 0;
     i = 0;
     do{
-        D_8011D350[i] = allocate_from_main_pool_safe(3200, 0xFFFF00FF);
-        D_8011D320[i] = allocate_from_main_pool_safe(12800, 0xFFFF00FF);
-        D_8011D338[i] = allocate_from_main_pool_safe(20000, 0xFFFF00FF);
+        D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOR_TAG_YELLOW);
+        D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOR_TAG_YELLOW);
+        D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOR_TAG_YELLOW);
     }while(&D_8011D338[++i] != &D_8011D348);
     
     D_8011B0C8 = 0;
@@ -315,8 +315,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
 
 void func_800257D0(void) {
     if (D_800DC924 != 0) {
-        func_80071140(D_8011D474);
-        func_80071140(D_800DC924);
+        free_from_memory_pool(D_8011D474);
+        free_from_memory_pool(D_800DC924);
         D_800DC924 = 0;
     }
 }

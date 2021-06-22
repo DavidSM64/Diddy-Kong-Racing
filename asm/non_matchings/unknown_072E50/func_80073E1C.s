@@ -66,7 +66,7 @@ glabel func_80073E1C
 .L80073F14:
 /* 074B14 80073F14 8FA4002C */  lw    $a0, 0x2c($sp)
 .L80073F18:
-/* 074B18 80073F18 0C01C450 */  jal   func_80071140
+/* 074B18 80073F18 0C01C450 */  jal   free_from_memory_pool
 /* 074B1C 80073F1C AFA30028 */   sw    $v1, 0x28($sp)
 /* 074B20 80073F20 8FA30028 */  lw    $v1, 0x28($sp)
 /* 074B24 80073F24 00000000 */  nop   

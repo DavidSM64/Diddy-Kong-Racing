@@ -2,6 +2,7 @@
 /* RAM_POS: 0x8007F900 */
 
 #include "menu.h"
+#include "memory.h"
 
 #include "types.h"
 #include "macros.h"
@@ -1528,7 +1529,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8007F900.s")
 
 void func_8007FF88(void) {
     if (D_800E1DAC[0] != NULL) {
-        func_80071140(D_800E1DAC[0]);
+        free_from_memory_pool(D_800E1DAC[0]);
         D_800E1DAC[0] = NULL;
     }
     D_800E1DAC[1] = NULL;
@@ -2305,8 +2306,8 @@ void menu_save_options_init(void) {
     gMenuDelay = 0;
     D_801263E0 = 1;
     D_801263D8 = 0;
-    D_80126A64 = (s32)allocate_from_main_pool_safe(0x800, 0xFFFFFFFF);
-    D_80126A0C = (s32)allocate_from_main_pool_safe(0xA00, 0xFFFFFFFF);
+    D_80126A64 = (s32)allocate_from_main_pool_safe(0x800, COLOR_TAG_WHITE);
+    D_80126A0C = (s32)allocate_from_main_pool_safe(0xA00, COLOR_TAG_WHITE);
     D_80126A04 = (s32)(D_80126A0C + 0x500);
     D_80126A08 = 0;
     D_80126BD4 = 0;
@@ -2490,8 +2491,8 @@ void func_80087EB8(void) {
     func_8007FF88();
     func_8009C4A8(D_800DFC78);
     func_800C5494(7);
-    func_80071140(D_80126A0C);
-    func_80071140(D_80126A64);
+    free_from_memory_pool(D_80126A0C);
+    free_from_memory_pool(D_80126A64);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80087F14.s")
@@ -2582,7 +2583,7 @@ void func_800887E8(void) {
     s32 i;
 
     // Starting point
-    D_80126AA0[0] = allocate_from_main_pool_safe(0x200, 0xFFFFFFFF);
+    D_80126AA0[0] = allocate_from_main_pool_safe(0x200, COLOR_TAG_WHITE);
     
     // Fills in the table.
     for(i = 1; i < 16; i++) {
@@ -2623,7 +2624,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_800890AC.s")
 
 void func_800895A4(void) {
     func_8009C508(0x3F);
-    func_80071140(D_80126AA0[0]);
+    free_from_memory_pool(D_80126AA0[0]);
     func_800C422C(2);
 }
 
@@ -2998,9 +2999,9 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
 
 void func_8008C128(void) {
     func_8009C4A8((s16*)&D_800DFDC8);
-    func_800710B0(0);
+    set_free_queue_state(0);
     func_800C422C(2);
-    func_800710B0(2);
+    set_free_queue_state(2);
     D_800DFFD0 = 0;
 }
 
@@ -3398,9 +3399,9 @@ void func_8008F534(void) {
 
     func_80066894(0, 0);
     func_8009C4A8(D_800E07C4);
-    func_800710B0(0);
-    func_80071140(D_800E0970);
-    func_800710B0(2);
+    set_free_queue_state(0);
+    free_from_memory_pool(D_800E0970);
+    set_free_queue_state(2);
     for(i = 0; i < 15; i += 3){
         if (D_800E0710[i] != -1) {
             func_8009C508(D_800E0710[i]);
@@ -4315,9 +4316,9 @@ void func_8009C508(s32 arg0) {
     if (D_80126750[arg0] != 0) {
         if (D_80126550[arg0] != 0) {
             if ((((*D_800DF750)[arg0] & 0xC000) == 0xC000) && (D_80126550[arg0] != 0)) {
-                func_800710B0(0);
+                set_free_queue_state(0);
                 func_8007B2BC((u32)D_80126550[arg0]);
-                func_800710B0(2);
+                set_free_queue_state(2);
             } else {
                 if ((*D_800DF750)[arg0] & 0x8000) {
                     func_8007CCB0((u32)D_80126550[arg0]);
@@ -4337,11 +4338,11 @@ void func_8009C508(s32 arg0) {
     }
     if (D_800DF758 == 0) {
         if (D_800DF75C != NULL) {
-            func_80071140(D_800DF75C);
+            free_from_memory_pool(D_800DF75C);
             D_800DF75C = NULL;
         }
         if (*D_800DF750 != NULL) {
-            func_80071140(*D_800DF750);
+            free_from_memory_pool(*D_800DF750);
             *D_800DF750 = NULL;
             D_800DF754 = (u16)0;
         }
@@ -4369,7 +4370,7 @@ void func_8009C8A4(s16 *arg0) {
 s32 get_random_number_from_range(s32, s32);
 void func_8009C904(s32 arg0) {
     if (D_800DF75C == NULL) {
-        D_800DF75C = allocate_from_main_pool_safe(sizeof(unk800DF510) * 18, 0xFF0000FF);
+        D_800DF75C = allocate_from_main_pool_safe(sizeof(unk800DF510) * 18, COLOR_TAG_RED);
     }
     
     D_800DF75C[arg0].unk0 = D_800DF510[arg0].unk0;

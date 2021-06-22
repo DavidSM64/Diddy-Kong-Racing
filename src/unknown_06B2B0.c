@@ -2,11 +2,13 @@
 /* RAM_POS: 0x8006A6B0 */
 
 #include "unknown_06B2B0.h"
+#include "memory.h"
 
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
 #include "fast3d.h"
+#include "asset_sections.h"
 #include "menu.h"
 
 /************ .rodata ************/
@@ -264,8 +266,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/load_level.s")
 #else
 
 Settings *get_settings(void);
-s32 *func_80076C58(s32);
-LevelHeader *allocate_from_main_pool_safe(s32, s32);
+s32 *load_asset_section_from_rom(s32);
+void *allocate_from_main_pool_safe(s32, s32);
 void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8006C2E4(void);
 s16 func_8006C2F0(void);
@@ -292,7 +294,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 phi_s0_3;
     s32 phi_s0_5;
     s32 phi_v1_9;
-    s32 temp, temp2;
+    s32 size, offset;
 
     func_80072708();
     if (arg4 == -1) {
@@ -313,7 +315,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
     
     settings = get_settings();
-    D_80121160 = func_80076C58(0x16);
+    D_80121160 = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
     phi_v1 = 0;
     while (-1 != D_80121160[phi_v1]) {
         phi_v1++;
@@ -322,10 +324,10 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 >= phi_v1) {
         arg0 = 0;
     }
-    temp2 = D_80121160[arg0];
-    temp = D_80121160[arg0 + 1] - temp2;
-    gCurrentLevelHeader = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
-    func_80076E68(0x17, gCurrentLevelHeader, temp2, temp);
+    offset = D_80121160[arg0];
+    size = D_80121160[arg0 + 1] - offset;
+    gCurrentLevelHeader = (LevelHeader*)allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
+    load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     D_800DD330 = 0;
     sp44 = arg0;
     if (gCurrentLevelHeader->race_type == 0) {
@@ -389,13 +391,13 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
     D_800DD32C = 0;
     if (sp44 != arg0) {
-        func_80071140(gCurrentLevelHeader);
-        temp2 = D_80121160[arg0];
-        temp = D_80121160[arg0 + 1] - temp2;
-        gCurrentLevelHeader = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
-        func_80076E68(0x17, gCurrentLevelHeader, temp2, temp);
+        free_from_memory_pool(gCurrentLevelHeader);
+        offset = D_80121160[arg0];
+        size = D_80121160[arg0 + 1] - offset;
+        gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
+        load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     }
-    func_80071140(D_80121160);
+    free_from_memory_pool(D_80121160);
     func_8006BFC8(&gCurrentLevelHeader->unk20);
     func_8000CBC0();
     D_80121164 = arg0;
@@ -559,7 +561,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BDDC.s")
 void func_8006BEFC(void) {
     func_8006C164();
     func_80077B34(0, 0, 0);
-    func_80071140(gCurrentLevelHeader);
+    free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
     func_80001844();
     func_800018E0();
@@ -577,7 +579,7 @@ void func_8006BEFC(void) {
 }
 
 Settings *get_settings(void);
-s32 *func_80076C58(s32);
+s32 *load_asset_section_from_rom(s32);
 
 #ifdef NON_MATCHING
 void func_8006BFC8(s8 *arg0) {
@@ -615,7 +617,7 @@ void func_8006BFC8(s8 *arg0) {
     if (func_8006DA0C() == 1) {
         phi_s0 = 5;
     }
-    D_80121160 = func_80076C58(1);
+    D_80121160 = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
     phi_v1 = 0;
     while (-1 != (s32)D_80121160[phi_v1]) {
         phi_v1++;
@@ -626,16 +628,16 @@ void func_8006BFC8(s8 *arg0) {
     }
     temp2 = D_80121160[phi_s0];
     temp = D_80121160[phi_s0 + 1] - temp2;
-    D_801211C0[0] = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
-    func_80076E68(0, D_801211C0[0], temp2, temp);
-    func_80071140(D_80121160);
+    D_801211C0[0] = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
+    load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0[0], temp2, temp);
+    free_from_memory_pool(D_80121160);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BFC8.s")
 #endif
 
 void func_8006C164(void) {
-    func_80071140(D_801211C0[0]);
+    free_from_memory_pool(D_801211C0[0]);
 }
 
 s32 func_8006C18C(void) {
@@ -788,7 +790,6 @@ void func_8006C3E0(void) {
 void render(void) {
     s32 phi_v0;
     s32 phi_v0_2;
-    s32 i;
     
     if (D_800DD380 == 8) {
         D_801211F8 = D_801211F0[D_801234E8];
@@ -915,7 +916,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId) {
     func_8006ECFC(numberOfPlayers);
-    func_800710B0(0);
+    set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, D_80123508);
@@ -923,12 +924,12 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     func_8001BF20();
     osSetTime(0);
-    func_800710B0(2);
+    set_free_queue_state(2);
     func_80072298(1);
 }
 
 void func_8006CC14(void) {
-    func_800710B0(0);
+    set_free_queue_state(0);
     if (D_800DD38C == 0) {
         if (D_800DD3F0 != 1) {
             func_80077A54();
@@ -943,7 +944,7 @@ void func_8006CC14(void) {
     D_801211F8 = D_801211F0[D_801234E8];
     fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
     fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
-    func_800710B0(2);
+    set_free_queue_state(2);
 }
 
 // Has a jump table
@@ -1045,7 +1046,7 @@ s32 func_8006DB2C(void) {
  * Needs a better name!
  */
 void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
-    func_800710B0(0);
+    set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
@@ -1053,19 +1054,19 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     func_8001BF20();
     osSetTime(0);
-    func_800710B0(2);
+    set_free_queue_state(2);
 }
 
 void func_8006DBE4(void) {
     if (D_80123514 == 0) {
         D_80123514 = 1;
-        func_800710B0(0);
+        set_free_queue_state(0);
         func_8006BEFC();
         func_800C01D8(&D_800DD3F4);
         func_800AE270();
         func_800A003C();
         func_800C30CC();
-        func_800710B0(2);
+        set_free_queue_state(2);
     }
     D_80123514 = 0;
 }
@@ -1303,7 +1304,7 @@ extern unk80121200 *D_80121200[3];
 extern unk80121210 *D_80121210[3];
 extern unk80121220 *D_80121220[3];
 
-void *allocate_from_main_pool_safe(s32, s32); // Allocates memory?
+void *allocate_from_main_pool_safe(s32, s32);
 
 void func_8006EFDC(void) {
     s32 size;
@@ -1316,7 +1317,7 @@ void func_8006EFDC(void) {
            (D_800DD3DC * sizeof(unk80121200)) + 
            (D_800DD3CC * sizeof(unk80121210));
     
-    current = (s8*)allocate_from_main_pool_safe(size, 0xFF0000FF);
+    current = (s8*)allocate_from_main_pool_safe(size, COLOR_TAG_RED);
     D_801211F0[0] = (Gfx*)current;
     current += (D_800DD3BC * sizeof(Gfx));
     D_80121200[0] = (unk80121200*)current;
@@ -1325,7 +1326,7 @@ void func_8006EFDC(void) {
     current += (D_800DD3CC * sizeof(unk80121210));
     D_80121220[0] = (unk80121220*)current;
     
-    current = (s8*)allocate_from_main_pool_safe(size, 0xFFFF00FF);
+    current = (s8*)allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
     D_801211F0[1] = (Gfx*)current;
     current += (D_800DD3BC * sizeof(Gfx));
     D_80121200[1] = (unk80121200*)current;

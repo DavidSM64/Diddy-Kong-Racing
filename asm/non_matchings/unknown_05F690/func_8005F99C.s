@@ -91,7 +91,7 @@ glabel func_8005F99C
 /* 0606E0 8005FAE0 AFA50030 */  sw    $a1, 0x30($sp)
 /* 0606E4 8005FAE4 2404001D */  li    $a0, 29
 /* 0606E8 8005FAE8 02003025 */  move  $a2, $s0
-/* 0606EC 8005FAEC 0C01DB9A */  jal   func_80076E68
+/* 0606EC 8005FAEC 0C01DB9A */  jal   load_asset_to_address
 /* 0606F0 8005FAF0 00008825 */   move  $s1, $zero
 /* 0606F4 8005FAF4 8FA40030 */  lw    $a0, 0x30($sp)
 /* 0606F8 8005FAF8 0C031886 */  jal   func_800C6218

@@ -2,12 +2,13 @@
 /* RAM_POS: 0x8000B020 */
 
 #include "unknown_00BC20.h"
+#include "memory.h"
 
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
 #include "fast3d.h"
-
+#include "asset_sections.h"
 
 /************ .data ************/
 
@@ -282,7 +283,7 @@ void func_8000C460(void);
 
 void *new_sub_memory_pool(s32, u32);
 void *allocate_from_main_pool_safe(s32, u32);
-s32 *func_80076C58(s32);
+s32 *load_asset_section_from_rom(s32);
 void particlePtrList_addObject(Player *);
 void particlePtrList_flush(void);
 void func_8001D258(f32, f32, s32, s32, s32);
@@ -305,7 +306,7 @@ s32 *func_8001E29C(s32 arg0);
 void func_8000B290(){
 
     if(D_800DC754){
-        func_80071140();
+        free_from_memory_pool();
     }
     func_8001E29C(20);
     /*{
@@ -350,44 +351,44 @@ void func_8000BF8C(void) {
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     D_8011AE68 = (s32*)new_sub_memory_pool(0x15800, 0x200);
-    particlePtrList = (Player **)allocate_from_main_pool_safe(0x320, 0xFFFF);
-    D_8011AE6C = (s32*)allocate_from_main_pool_safe(0x50, 0xFFFF);
-    D_8011AE74 = (s32*)allocate_from_main_pool_safe(0x200, 0xFFFF);
-    D_8011AECC = (unknown8011AECC*)allocate_from_main_pool_safe(0xE10, 0xFFFF);
-    D_8011AEDC = (s32*)allocate_from_main_pool_safe(0x50, 0xFFFF);
-    playerStructArray_Ptr = (s32*)allocate_from_main_pool_safe(0x28, 0xFFFF);
-    D_8011AEEC = (s32*)allocate_from_main_pool_safe(0x28, 0xFFFF);
-    D_8011AEE8 = (s32*)allocate_from_main_pool_safe(0x28, 0xFFFF);
-    D_8011AF04 = (s32*)allocate_from_main_pool_safe(0x200, 0xFFFF);
-    D_8011ADCC = (s32*)allocate_from_main_pool_safe(8, 0xFFFF);
-    D_8011AFF4 = (s32*)allocate_from_main_pool_safe(0x400, 0xFFFF);
-    D_8011AEB8 = (s32*)func_80076C58(0x23);
-    D_8011AEBC = (func_80076F30(0x23) >> 1) - 1;
+    particlePtrList = (Player **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
+    D_8011AE6C = (s32*)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
+    D_8011AE74 = (s32*)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
+    D_8011AECC = (unknown8011AECC*)allocate_from_main_pool_safe(0xE10, COLOR_TAG_BLUE);
+    D_8011AEDC = (s32*)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
+    playerStructArray_Ptr = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
+    D_8011AEEC = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
+    D_8011AEE8 = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
+    D_8011AF04 = (s32*)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
+    D_8011ADCC = (s32*)allocate_from_main_pool_safe(8, COLOR_TAG_BLUE);
+    D_8011AFF4 = (s32*)allocate_from_main_pool_safe(0x400, COLOR_TAG_BLUE);
+    D_8011AEB8 = (s32*)load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
+    D_8011AEBC = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (D_8011AEB8[D_8011AEBC] == 0) {
         D_8011AEBC--;
     }
-    D_8011AD58 = (s32*)allocate_from_main_pool_safe(0x800, 0xFFFF);
-    D_8011AD64 = func_80076C58(0x21);
+    D_8011AD58 = (s32*)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    D_8011AD64 = load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     D_8011AD68 = 0;
     while (-1 != D_8011AD64[D_8011AD68]) {
         D_8011AD68++;
     }
     D_8011AD68--;
-    D_8011AE48 = (s32*)allocate_from_main_pool_safe(D_8011AD68 << 2, 0xFFFFFFFF);
-    D_8011AE4C = (s32*)allocate_from_main_pool_safe(D_8011AD68, 0xFFFFFFFF);
+    D_8011AE48 = (s32*)allocate_from_main_pool_safe(D_8011AD68 << 2, COLOR_TAG_WHITE);
+    D_8011AE4C = (s32*)allocate_from_main_pool_safe(D_8011AD68, COLOR_TAG_WHITE);
     
     for (i = 0; i < D_8011AD68; i++) {
         (*D_8011AE4C)[i] = 0;
     }
     
-    D_8011AD6C = func_80076C58(0xF);
-    D_8011AD70 = func_80076C58(0x10);
+    D_8011AD6C = load_asset_section_from_rom(ASSET_MISC);
+    D_8011AD70 = load_asset_section_from_rom(ASSET_MISC_TABLE);
     D_8011ADA0 = 0;
     while (-1 != D_8011AD70[D_8011ADA0]) {
         D_8011ADA0++;
     }
     func_8000C2D8(&D_8011AD6C[D_8011AD70[65]], (D_8011AD70[66] - D_8011AD70[65]) * 4);
-    objPtrList = (Player**)allocate_from_main_pool_safe(0x800, 0xFFFF);
+    objPtrList = (Player**)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
@@ -489,8 +490,8 @@ void func_8000C604(void) {
     objCount = 0;
     D_8011AE60 = 0;
     func_8000C460();
-    func_80071140(D_8011AEB0[0]);
-    func_80071140(D_8011AEB0[1]);
+    free_from_memory_pool(D_8011AEB0[0]);
+    free_from_memory_pool(D_8011AEB0[1]);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C718.s")
@@ -499,7 +500,7 @@ void func_8000C844(s32 arg0) {
     if ((*D_8011AE4C)[arg0] != 0) {
         (*D_8011AE4C)[arg0]--;
         if ((*D_8011AE4C)[arg0] == 0) {
-            func_80071140((*D_8011AE48)[arg0]);
+            free_from_memory_pool((*D_8011AE48)[arg0]);
         }
     }
 }

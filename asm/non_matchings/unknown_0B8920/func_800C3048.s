@@ -20,7 +20,7 @@ glabel func_800C3048
 /* 0C3C90 800C3090 3C018013 */  lui   $at, %hi(D_8012A7A4) # $at, 0x8013
 /* 0C3C94 800C3094 0C030A7C */  jal   func_800C29F0
 /* 0C3C98 800C3098 AC20A7A4 */   sw    $zero, %lo(D_8012A7A4)($at)
-/* 0C3C9C 800C309C 0C01DBCC */  jal   func_80076F30
+/* 0C3C9C 800C309C 0C01DBCC */  jal   get_size_of_asset_section
 /* 0C3CA0 800C30A0 24040007 */   li    $a0, 7
 /* 0C3CA4 800C30A4 00024883 */  sra   $t1, $v0, 2
 /* 0C3CA8 800C30A8 252AFFFE */  addiu $t2, $t1, -2

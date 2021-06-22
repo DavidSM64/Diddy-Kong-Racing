@@ -82,7 +82,7 @@ glabel func_80074EB8
 /* 075BDC 80074FDC 0C01D9B5 */  jal   func_800766D4
 /* 075BE0 80074FE0 AFAD0010 */   sw    $t5, 0x10($sp)
 /* 075BE4 80074FE4 8FA40038 */  lw    $a0, 0x38($sp)
-/* 075BE8 80074FE8 0C01C450 */  jal   func_80071140
+/* 075BE8 80074FE8 0C01C450 */  jal   free_from_memory_pool
 /* 075BEC 80074FEC AFA20028 */   sw    $v0, 0x28($sp)
 /* 075BF0 80074FF0 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 075BF4 80074FF4 8FA20028 */  lw    $v0, 0x28($sp)

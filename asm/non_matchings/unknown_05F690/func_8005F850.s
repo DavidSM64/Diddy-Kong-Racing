@@ -17,7 +17,7 @@ glabel func_8005F850
 /* 06048C 8005F88C AC20D62C */  sw    $zero, %lo(D_8011D62C)($at)
 /* 060490 8005F890 3C018012 */  lui   $at, %hi(D_8011D634) # $at, 0x8012
 /* 060494 8005F894 AC20D634 */  sw    $zero, %lo(D_8011D634)($at)
-/* 060498 8005F898 0C01DB16 */  jal   func_80076C58
+/* 060498 8005F898 0C01DB16 */  jal   load_asset_section_from_rom
 /* 06049C 8005F89C 2404001C */   li    $a0, 28
 /* 0604A0 8005F8A0 3C058012 */  lui   $a1, %hi(D_8011D630) # $a1, 0x8012
 /* 0604A4 8005F8A4 3C078012 */  lui   $a3, %hi(D_8011D620) # $a3, 0x8012
@@ -44,11 +44,11 @@ glabel func_8005F850
 .L8005F8F4:
 /* 0604F4 8005F8F4 246BFFFF */  addiu $t3, $v1, -1
 /* 0604F8 8005F8F8 ACAB0000 */  sw    $t3, ($a1)
-/* 0604FC 8005F8FC 0C01DB16 */  jal   func_80076C58
+/* 0604FC 8005F8FC 0C01DB16 */  jal   load_asset_section_from_rom
 /* 060500 8005F900 2404001E */   li    $a0, 30
 /* 060504 8005F904 3C018012 */  lui   $at, %hi(D_8011D638) # $at, 0x8012
 /* 060508 8005F908 AC22D638 */  sw    $v0, %lo(D_8011D638)($at)
-/* 06050C 8005F90C 0C01DB16 */  jal   func_80076C58
+/* 06050C 8005F90C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 060510 8005F910 2404001F */   li    $a0, 31
 /* 060514 8005F914 3C018012 */  lui   $at, %hi(D_8011D63C) # $at, 0x8012
 /* 060518 8005F918 3C0500FF */  lui   $a1, (0x00FF00FF >> 16) # lui $a1, 0xff

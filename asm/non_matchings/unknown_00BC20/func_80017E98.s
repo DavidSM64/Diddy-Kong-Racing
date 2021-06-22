@@ -154,7 +154,7 @@ glabel func_80017E98
 /* 018CD4 800180D4 1120000A */  beqz  $t1, .L80018100
 /* 018CD8 800180D8 AC39AED0 */   sw    $t9, %lo(D_8011AED0)($at)
 /* 018CDC 800180DC 24040014 */  li    $a0, 20
-/* 018CE0 800180E0 0C02D8D7 */  jal   func_800B635C
+/* 018CE0 800180E0 0C02D8D7 */  jal   set_render_printf_position
 /* 018CE4 800180E4 240500DC */   li    $a1, 220
 /* 018CE8 800180E8 3C04800E */  lui   $a0, %hi(D_800E50D4) # $a0, 0x800e
 /* 018CEC 800180EC 248450D4 */  addiu $a0, %lo(D_800E50D4) # addiu $a0, $a0, 0x50d4

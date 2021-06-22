@@ -2,10 +2,12 @@
 /* RAM_POS: 0x8007F640 */
 
 #include "unknown_080240.h"
+#include "memory.h"
 
 #include "types.h"
 #include "macros.h"
 #include "fast3d.h"
+#include "asset_sections.h"
 
 /************ .data ************/
 
@@ -17,12 +19,13 @@ Gfx D_800DF440[] = {
 
 /*******************************/
 
+// Unused?
 u32 func_8007F640(s32 arg0) {
     u32 someAddr;
     s32 count, start, size;
     s32 *lut;
     
-    lut = (s32 *)func_80076C58(0xB); // Returns a lookup table?
+    lut = (s32 *)load_asset_section_from_rom(ASSET_EMPTY_10_TABLE);
     
     count = 0;
     
@@ -33,7 +36,7 @@ u32 func_8007F640(s32 arg0) {
     count--;
     
     if (count == 0) {
-        func_80071140(lut);
+        free_from_memory_pool(lut);
         return 0x80100000;
     } else {
         if (arg0 < 0 || arg0 >= count) {
@@ -43,10 +46,10 @@ u32 func_8007F640(s32 arg0) {
         
         start = lut[arg0];
         size = lut[arg0 + 1] - start;
-        someAddr = allocate_from_main_pool_safe(size, 0xFFFF);
+        someAddr = allocate_from_main_pool_safe(size, COLOR_TAG_BLUE);
         
-        func_80076E68(10, someAddr, start, size);
-        func_80071140(lut);
+        load_asset_to_address(ASSET_EMPTY_10, someAddr, start, size);
+        free_from_memory_pool(lut);
         
         return someAddr;
     }

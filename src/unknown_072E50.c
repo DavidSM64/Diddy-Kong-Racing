@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80072250 */
 
 #include "unknown_072E50.h"
+#include "memory.h"
 
 #include "types.h"
 #include "macros.h"
@@ -132,7 +133,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_072E50/func_80075E60.s")
 
 void func_80076164(void) {
     if (D_800DE440 != 0) {
-        func_80071140(D_800DE440);
+        free_from_memory_pool(D_800DE440);
     }
     D_800DE440 = 0;
 }
@@ -153,7 +154,7 @@ s32 func_80076AF4(s32 arg0, s32 arg1) {
     s32 ret;
 
     ret = 6;
-    temp = allocate_from_main_pool_safe(0x100, 0xFF);
+    temp = allocate_from_main_pool_safe(0x100, COLOR_TAG_BLACK);
     if (func_80076610(arg0, arg1, temp, 0x100) == 0) {
         switch(*temp) {
             case 0x47414D44: // GAMD
@@ -170,6 +171,6 @@ s32 func_80076AF4(s32 arg0, s32 arg1) {
                 break;
         }
     }
-    func_80071140(temp);
+    free_from_memory_pool(temp);
     return ret;
 }

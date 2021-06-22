@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80002660 */
 
 #include "unknown_003260.h"
+#include "memory.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_STOP_EVT (1 << 1)
@@ -111,14 +112,14 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
     }
 
     if(c->fxType == AL_FX_CUSTOM){
-        reg_v0 = func_80076C58(38);
+        reg_v0 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
         tmp_size = reg_v0[9]-reg_v0[8];
-        reg_s0 = allocate_from_main_pool_safe(tmp_size, 0x00FFFFFF, reg_v0[8]);
-        func_80076E68(39,reg_s0, reg_v0[8],tmp_size);
+        reg_s0 = allocate_from_main_pool_safe(tmp_size, COLOR_TAG_CYAN);
+        load_asset_to_address(39,reg_s0, reg_v0[8],tmp_size);
         c->params = reg_s0;
         c[1].maxVVoices = 0;
         alInit(&ALGlobals_801161D0, c);
-        func_80071140(reg_s0);
+        free_from_memory_pool(reg_s0);
     }
     else{
         alInit(&ALGlobals_801161D0, c);
