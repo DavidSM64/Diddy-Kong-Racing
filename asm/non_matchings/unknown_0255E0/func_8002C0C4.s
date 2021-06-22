@@ -43,7 +43,7 @@ glabel func_8002C0C4
 /* 02CD50 8002C150 AC22D374 */  sw    $v0, %lo(D_8011D374)($at)
 /* 02CD54 8002C154 3C018012 */  lui   $at, %hi(D_8011D378) # $at, 0x8012
 /* 02CD58 8002C158 AC20D378 */  sw    $zero, %lo(D_8011D378)($at)
-/* 02CD5C 8002C15C 0C01DB16 */  jal   func_80076C58
+/* 02CD5C 8002C15C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 02CD60 8002C160 2404001A */   li    $a0, 26
 /* 02CD64 8002C164 3C148012 */  lui   $s4, %hi(D_8011D310) # $s4, 0x8012
 /* 02CD68 8002C168 2694D310 */  addiu $s4, %lo(D_8011D310) # addiu $s4, $s4, -0x2cf0
@@ -81,7 +81,7 @@ glabel func_8002C0C4
 .L8002C1DC:
 /* 02CDDC 8002C1DC 020F8023 */  subu  $s0, $s0, $t7
 /* 02CDE0 8002C1E0 02002825 */  move  $a1, $s0
-/* 02CDE4 8002C1E4 0C01DB9A */  jal   func_80076E68
+/* 02CDE4 8002C1E4 0C01DB9A */  jal   load_asset_to_address
 /* 02CDE8 8002C1E8 02603825 */   move  $a3, $s3
 /* 02CDEC 8002C1EC 8E250000 */  lw    $a1, ($s1)
 /* 02CDF0 8002C1F0 0C031886 */  jal   func_800C6218
@@ -301,7 +301,7 @@ glabel func_8002C0C4
 /* 02D12C 8002C52C 8CA5D30C */  lw    $a1, %lo(D_8011D30C)($a1)
 /* 02D130 8002C530 3C06FFFF */  lui   $a2, (0xFFFF00FF >> 16) # lui $a2, 0xffff
 /* 02D134 8002C534 34C600FF */  ori   $a2, (0xFFFF00FF & 0xFFFF) # ori $a2, $a2, 0xff
-/* 02D138 8002C538 0C01C3BE */  jal   func_80070EF8
+/* 02D138 8002C538 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 02D13C 8002C53C 02602025 */   move  $a0, $s3
 /* 02D140 8002C540 0C01C42C */  jal   func_800710B0
 /* 02D144 8002C544 24040002 */   li    $a0, 2

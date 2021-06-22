@@ -41,7 +41,7 @@ glabel func_800AB1F0
 /* 0ABE8C 800AB28C 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0ABE90 800AB290 15600018 */  bnez  $t3, .L800AB2F4
 /* 0ABE94 800AB294 AFBF0014 */   sw    $ra, 0x14($sp)
-/* 0ABE98 800AB298 0C01DB16 */  jal   func_80076C58
+/* 0ABE98 800AB298 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0ABE9C 800AB29C 24040013 */   li    $a0, 19
 /* 0ABEA0 800AB2A0 3C04800E */  lui   $a0, %hi(D_800E2920) # $a0, 0x800e
 /* 0ABEA4 800AB2A4 3C07800E */  lui   $a3, %hi(D_800E291C) # $a3, 0x800e

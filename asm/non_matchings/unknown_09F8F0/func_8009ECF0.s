@@ -19,7 +19,7 @@ glabel func_8009ECF0
 /* 09F934 8009ED34 AC227184 */   sw    $v0, %lo(D_80127184)($at)
 /* 09F938 8009ED38 3C018012 */  lui   $at, %hi(D_80127188) # $at, 0x8012
 /* 09F93C 8009ED3C A0227188 */  sb    $v0, %lo(D_80127188)($at)
-/* 09F940 8009ED40 0C01DB16 */  jal   func_80076C58
+/* 09F940 8009ED40 0C01DB16 */  jal   load_asset_section_from_rom
 /* 09F944 8009ED44 24040011 */   li    $a0, 17
 /* 09F948 8009ED48 3C068012 */  lui   $a2, %hi(D_80126CF8) # $a2, 0x8012
 /* 09F94C 8009ED4C 3C118012 */  lui   $s1, %hi(D_80126CF0) # $s1, 0x8012

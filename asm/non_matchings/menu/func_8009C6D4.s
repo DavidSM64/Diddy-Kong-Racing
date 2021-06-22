@@ -7,7 +7,7 @@ glabel func_8009C6D4
 /* 09D2E8 8009C6E8 14C00026 */  bnez  $a2, .L8009C784
 /* 09D2EC 8009C6EC 00803825 */   move  $a3, $a0
 /* 09D2F0 8009C6F0 24040012 */  li    $a0, 18
-/* 09D2F4 8009C6F4 0C01DB16 */  jal   func_80076C58
+/* 09D2F4 8009C6F4 0C01DB16 */  jal   load_asset_section_from_rom
 /* 09D2F8 8009C6F8 AFA70038 */   sw    $a3, 0x38($sp)
 /* 09D2FC 8009C6FC 3C05800E */  lui   $a1, %hi(D_800DF754) # $a1, 0x800e
 /* 09D300 8009C700 24A5F754 */  addiu $a1, %lo(D_800DF754) # addiu $a1, $a1, -0x8ac

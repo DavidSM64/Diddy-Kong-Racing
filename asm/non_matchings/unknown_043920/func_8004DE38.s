@@ -252,7 +252,7 @@ glabel func_8004DE38
 .L8004E168:
 /* 04ED68 8004E168 00002825 */  move  $a1, $zero
 /* 04ED6C 8004E16C 00003025 */  move  $a2, $zero
-/* 04ED70 8004E170 0C02D8AD */  jal   func_800B62B4
+/* 04ED70 8004E170 0C02D8AD */  jal   set_render_printf_background_color
 /* 04ED74 8004E174 24070080 */   li    $a3, 128
 /* 04ED78 8004E178 0C008D07 */  jal   func_8002341C
 /* 04ED7C 8004E17C 00000000 */   nop   

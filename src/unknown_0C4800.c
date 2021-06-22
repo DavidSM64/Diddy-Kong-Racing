@@ -1,8 +1,11 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C3C00 */
 
+#include "memory.h"
+
 #include "types.h"
 #include "macros.h"
+#include "asset_sections.h"
 #include "libultra_internal.h"
 
 /************ .data ************/
@@ -231,7 +234,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C3C00.s")
 extern u32* D_8012A7E4;
 void func_800C3C00(void){
     s32 i;
-    D_8012A7E4 = func_80076C58(44);
+    D_8012A7E4 = load_asset_section_from_rom(ASSET_BINARY_44);
     D_8012A7E0 = *(D_8012A7E4++);
     for(i = 0; i< D_8012A7E0; i++){
         D_8012A7E0[]
@@ -603,8 +606,8 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
 
 
 void func_800C6170(void) {
-    D_800E3760 = allocate_from_main_pool_safe(0x2800, 0xFF);
-    D_800E3764 = allocate_from_main_pool_safe(0x10, 0xFF);
+    D_800E3760 = allocate_from_main_pool_safe(0x2800, COLOR_TAG_BLACK);
+    D_800E3764 = allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
 }
 
 // Returns the little-endian value from a byte array.
@@ -618,7 +621,7 @@ s32 byteswap32(u8* arg0) {
 }
 
 s32 func_800C61DC(s32 arg0, s32 arg1) {
-    func_80076E68(arg0, D_800E3764, arg1, 8);
+    load_asset_to_address(arg0, D_800E3764, arg1, 8);
     return byteswap32(D_800E3764);
 }
 

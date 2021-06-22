@@ -14,7 +14,7 @@ glabel func_80059A68
 /* 05A698 80059A98 8FA60028 */  lw    $a2, 0x28($sp)
 /* 05A69C 80059A9C 8FA7002C */  lw    $a3, 0x2c($sp)
 /* 05A6A0 80059AA0 24040031 */  li    $a0, 49
-/* 05A6A4 80059AA4 0C01DB9A */  jal   func_80076E68
+/* 05A6A4 80059AA4 0C01DB9A */  jal   load_asset_to_address
 /* 05A6A8 80059AA8 00402825 */   move  $a1, $v0
 /* 05A6AC 80059AAC 3C038012 */  lui   $v1, %hi(D_8011D590) # $v1, 0x8012
 /* 05A6B0 80059AB0 2463D590 */  addiu $v1, %lo(D_8011D590) # addiu $v1, $v1, -0x2a70

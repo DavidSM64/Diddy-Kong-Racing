@@ -6,7 +6,7 @@ glabel func_8001B2F0
 /* 01BF00 8001B300 3C058012 */  lui   $a1, %hi(D_8011AE84) # $a1, 0x8012
 /* 01BF04 8001B304 24A5AE84 */  addiu $a1, %lo(D_8011AE84) # addiu $a1, $a1, -0x517c
 /* 01BF08 8001B308 A4A20000 */  sh    $v0, ($a1)
-/* 01BF0C 8001B30C 0C01DB16 */  jal   func_80076C58
+/* 01BF0C 8001B30C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 01BF10 8001B310 24040030 */   li    $a0, 48
 /* 01BF14 8001B314 3C058012 */  lui   $a1, %hi(D_8011AE84) # $a1, 0x8012
 /* 01BF18 8001B318 8FA60028 */  lw    $a2, 0x28($sp)

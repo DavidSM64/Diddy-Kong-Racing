@@ -16,7 +16,7 @@ glabel func_8000232C
 /* 002F64 80002364 24040027 */  li    $a0, 39
 /* 002F68 80002368 11C0007B */  beqz  $t6, .L80002558
 /* 002F6C 8000236C 8FBF0024 */   lw    $ra, 0x24($sp)
-/* 002F70 80002370 0C01DBBA */  jal   func_80076EE8
+/* 002F70 80002370 0C01DBBA */  jal   get_rom_offset_of_asset
 /* 002F74 80002374 00002825 */   move  $a1, $zero
 /* 002F78 80002378 92630000 */  lbu   $v1, ($s3)
 /* 002F7C 8000237C 3C0F8011 */  lui   $t7, %hi(ALSeqFile_80115CF8) # $t7, 0x8011
@@ -31,7 +31,7 @@ glabel func_8000232C
 /* 002FA0 800023A0 8D670000 */  lw    $a3, ($t3)
 /* 002FA4 800023A4 24040027 */  li    $a0, 39
 /* 002FA8 800023A8 02202825 */  move  $a1, $s1
-/* 002FAC 800023AC 0C01DB9A */  jal   func_80076E68
+/* 002FAC 800023AC 0C01DB9A */  jal   load_asset_to_address
 /* 002FB0 800023B0 01023023 */   subu  $a2, $t0, $v0
 /* 002FB4 800023B4 02402025 */  move  $a0, $s2
 /* 002FB8 800023B8 0C031FFF */  jal   alCSeqNew

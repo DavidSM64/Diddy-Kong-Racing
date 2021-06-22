@@ -37,7 +37,7 @@ glabel func_8000C718
 /* 00D3A0 8000C7A0 10400021 */  beqz  $v0, .L8000C828
 /* 00D3A4 8000C7A4 00402825 */   move  $a1, $v0
 /* 00D3A8 8000C7A8 24040022 */  li    $a0, 34
-/* 00D3AC 8000C7AC 0C01DB9A */  jal   func_80076E68
+/* 00D3AC 8000C7AC 0C01DB9A */  jal   load_asset_to_address
 /* 00D3B0 8000C7B0 AFA2001C */   sw    $v0, 0x1c($sp)
 /* 00D3B4 8000C7B4 8FA5001C */  lw    $a1, 0x1c($sp)
 /* 00D3B8 8000C7B8 00000000 */  nop   

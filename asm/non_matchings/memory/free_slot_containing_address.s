@@ -1,7 +1,7 @@
-glabel func_80071278
+glabel free_slot_containing_address
 /* 071E78 80071278 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 071E7C 8007127C AFBF0014 */  sw    $ra, 0x14($sp)
-/* 071E80 80071280 0C01C57B */  jal   func_800715EC
+/* 071E80 80071280 0C01C57B */  jal   get_memory_pool_index_containing_address
 /* 071E84 80071284 AFA40020 */   sw    $a0, 0x20($sp)
 /* 071E88 80071288 00027100 */  sll   $t6, $v0, 4
 /* 071E8C 8007128C 3C038012 */  lui   $v1, %hi(gMemoryPools+8) # $v1, 0x8012
@@ -28,7 +28,7 @@ glabel func_80071278
 /* 071EDC 800712DC 8FBF0014 */   lw    $ra, 0x14($sp)
 .L800712E0:
 /* 071EE0 800712E0 8FA40018 */  lw    $a0, 0x18($sp)
-/* 071EE4 800712E4 0C01C593 */  jal   func_8007164C
+/* 071EE4 800712E4 0C01C593 */  jal   free_memory_pool_slot
 /* 071EE8 800712E8 00000000 */   nop   
 /* 071EEC 800712EC 10000006 */  b     .L80071308
 /* 071EF0 800712F0 8FBF0014 */   lw    $ra, 0x14($sp)
@@ -79,7 +79,7 @@ glabel func_80071278
 /* 071F90 80071390 00000000 */  nop   
 /* 071F94 80071394 16620005 */  bne   $s3, $v0, .L800713AC
 /* 071F98 80071398 00000000 */   nop   
-/* 071F9C 8007139C 0C01C593 */  jal   func_8007164C
+/* 071F9C 8007139C 0C01C593 */  jal   free_memory_pool_slot
 /* 071FA0 800713A0 02002825 */   move  $a1, $s0
 /* 071FA4 800713A4 86220008 */  lh    $v0, 8($s1)
 /* 071FA8 800713A8 00000000 */  nop   
@@ -90,7 +90,7 @@ glabel func_80071278
 /* 071FB8 800713B8 00000000 */  nop   
 /* 071FBC 800713BC 16790005 */  bne   $s3, $t9, .L800713D4
 /* 071FC0 800713C0 00000000 */   nop   
-/* 071FC4 800713C4 0C01C593 */  jal   func_8007164C
+/* 071FC4 800713C4 0C01C593 */  jal   free_memory_pool_slot
 /* 071FC8 800713C8 02002825 */   move  $a1, $s0
 /* 071FCC 800713CC 10000007 */  b     .L800713EC
 /* 071FD0 800713D0 8630000C */   lh    $s0, 0xc($s1)

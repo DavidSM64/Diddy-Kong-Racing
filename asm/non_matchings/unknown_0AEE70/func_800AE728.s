@@ -408,7 +408,7 @@ glabel func_800AE728
 /* 0AF910 800AED10 00000000 */  nop   
 /* 0AF914 800AED14 15C00034 */  bnez  $t6, .L800AEDE8
 /* 0AF918 800AED18 8FBF003C */   lw    $ra, 0x3c($sp)
-/* 0AF91C 800AED1C 0C01DB16 */  jal   func_80076C58
+/* 0AF91C 800AED1C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0AF920 800AED20 00008825 */   move  $s1, $zero
 /* 0AF924 800AED24 3C06800E */  lui   $a2, %hi(D_800E2E64) # $a2, 0x800e
 /* 0AF928 800AED28 24C62E64 */  addiu $a2, %lo(D_800E2E64) # addiu $a2, $a2, 0x2e64

@@ -335,7 +335,7 @@ void render_epc_lock_up_display(void) {
     
     s3 = 0;
     
-    func_800B635C(0x10, 0x20);
+    set_render_printf_position(0x10, 0x20);
     
     switch (D_800E3024) {
         case 0:

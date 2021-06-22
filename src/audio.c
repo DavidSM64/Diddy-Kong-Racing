@@ -2,10 +2,11 @@
 /* RAM_POS: 0x80000450 */
 
 #include "audio.h"
+#include "memory.h"
 
 #include "types.h"
 #include "macros.h"
-
+#include "asset_sections.h"
 #include "audio_internal.h"
 
 
@@ -124,7 +125,7 @@ void func_80000968(s32 arg0);
 ALCSPlayer* func_80002224(s32, s32);
 void func_8000B010(ALCSPlayer*, u8);
 void    *allocate_from_main_pool_safe(u32, u32);
-void    *func_80076C58(u32);
+void    *load_asset_section_from_rom(u32);
 void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size);
 
 void audio_init(u32 arg0){
@@ -135,39 +136,36 @@ void audio_init(u32 arg0){
     u32 seq_max_len;
     u32 tmp2;
     audioMgrConfig audConfig;
-    
-    // Uncomment this to test shiftibilty!
-    //*((s32*)0x803FFFFC) = 0xDEADBEEF;
    
     seq_max_len = 0;
     alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
     
-    reg_s2 = func_80076C58(38);
-    ALBankFile_80115D14 = (ALBankFile*) allocate_from_main_pool_safe(reg_s2[2] - reg_s2[1], 0x00FFFFFF);
-    func_80076E68(39, ALBankFile_80115D14, reg_s2[1], reg_s2[2] - reg_s2[1]);
-    alBnkfNew(ALBankFile_80115D14, func_80076EE8(39, reg_s2[2]));
+    reg_s2 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
+    ALBankFile_80115D14 = (ALBankFile*) allocate_from_main_pool_safe(reg_s2[2] - reg_s2[1], COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D14, reg_s2[1], reg_s2[2] - reg_s2[1]);
+    alBnkfNew(ALBankFile_80115D14, get_rom_offset_of_asset(ASSET_AUDIO, reg_s2[2]));
     
     D_80115D28 = reg_s2[7] - reg_s2[6];
-    D_80115D18 = (unk80115D18 *) allocate_from_main_pool_safe(D_80115D28, 0x00FFFFFF);
-    func_80076E68(39, D_80115D18, reg_s2[6], D_80115D28);
+    D_80115D18 = (unk80115D18 *) allocate_from_main_pool_safe(D_80115D28, COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, D_80115D18, reg_s2[6], D_80115D28);
     D_80115D20 = D_80115D28/10;
     
     D_80115D2C = reg_s2[6]-reg_s2[5];
-    D_80115D1C = (unk80115D1C *) allocate_from_main_pool_safe(D_80115D2C, 0x00FFFFFF);
-    func_80076E68(39, D_80115D1C, reg_s2[5], D_80115D2C);
+    D_80115D1C = (unk80115D1C *) allocate_from_main_pool_safe(D_80115D2C, COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, D_80115D1C, reg_s2[5], D_80115D2C);
     D_80115D24 = D_80115D2C/3;
 
-    ALBankFile_80115D10 = (ALBankFile *)allocate_from_main_pool_safe(reg_s2[0], 0x00FFFFFF);
-    func_80076E68(39, ALBankFile_80115D10, 0, reg_s2[0]);
-    alBnkfNew(ALBankFile_80115D10, func_80076EE8(39, reg_s2[0]));
+    ALBankFile_80115D10 = (ALBankFile *)allocate_from_main_pool_safe(reg_s2[0], COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D10, 0, reg_s2[0]);
+    alBnkfNew(ALBankFile_80115D10, get_rom_offset_of_asset(ASSET_AUDIO, reg_s2[0]));
     ALSeqFile_80115CF8 = (ALSeqFile *) alHeapDBAlloc(0,0,&gALHeap,1,4);
-    func_80076E68(39, ALSeqFile_80115CF8, reg_s2[4], 4);
+    load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, reg_s2[4], 4);
 
     seqfSize = (ALSeqFile_80115CF8->seqCount)*8 + 4;
-    ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, 0x00FFFFFF);
-    func_80076E68(39, ALSeqFile_80115CF8, reg_s2[4], seqfSize);
-    alSeqFileNew(ALSeqFile_80115CF8, func_80076EE8(39, reg_s2[4]));
-    D_80115D0C = (u32 *)allocate_from_main_pool_safe( (ALSeqFile_80115CF8->seqCount)*4, 0x00FFFFFF);
+    ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, reg_s2[4], seqfSize);
+    alSeqFileNew(ALSeqFile_80115CF8, get_rom_offset_of_asset(ASSET_AUDIO, reg_s2[4]));
+    D_80115D0C = (u32 *)allocate_from_main_pool_safe( (ALSeqFile_80115CF8->seqCount)*4, COLOR_TAG_CYAN);
 
 
     for(iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++){
@@ -194,8 +192,8 @@ void audio_init(u32 arg0){
     gMusicPlayer = func_80002224(24, 120);
     func_8000B010(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
-    D_80115CFC = allocate_from_main_pool_safe( seq_max_len, 0x00FFFFFF);
-    D_80115D00 = allocate_from_main_pool_safe( seq_max_len, 0x00FFFFFF);
+    D_80115CFC = allocate_from_main_pool_safe( seq_max_len, COLOR_TAG_CYAN);
+    D_80115D00 = allocate_from_main_pool_safe( seq_max_len, COLOR_TAG_CYAN);
     audConfig.unk04 = 150;
     audConfig.unk00 = 32;
     audConfig.maxChannels = 16;
@@ -883,8 +881,8 @@ GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
 #else
 void func_8000232C(ALCSPlayer* seqp, void* ptr, u8* arg2, ALCSeq* seq){
     if(alCSPGetState(seqp) == AL_STOPPED && *arg2){
-        /*func_80076E68(39, ptr, 
-            (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - func_80076EE8(39,0),
+        /*load_asset_to_address(ASSET_AUDIO, ptr, 
+            (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - get_rom_offset_of_asset(ASSET_AUDIO,0),
             *((u32*)(((*arg2) << 3) + D_80115D0C)));*/
         alCSeqNew(seq, ptr);
         alCSPSetSeq(seqp, seq);

@@ -54,13 +54,13 @@ glabel func_8006ECFC
 /* 06F9CC 8006EDCC AFA90020 */  sw    $t1, 0x20($sp)
 /* 06F9D0 8006EDD0 AFA70028 */  sw    $a3, 0x28($sp)
 /* 06F9D4 8006EDD4 AFA3002C */  sw    $v1, 0x2c($sp)
-/* 06F9D8 8006EDD8 0C01C3BE */  jal   func_80070EF8
+/* 06F9D8 8006EDD8 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 06F9DC 8006EDDC AFA80024 */   sw    $t0, 0x24($sp)
 /* 06F9E0 8006EDE0 8E250004 */  lw    $a1, 4($s1)
 /* 06F9E4 8006EDE4 3C06FFFF */  lui   $a2, (0xFFFF00FF >> 16) # lui $a2, 0xffff
 /* 06F9E8 8006EDE8 AE220000 */  sw    $v0, ($s1)
 /* 06F9EC 8006EDEC 34C600FF */  ori   $a2, (0xFFFF00FF & 0xFFFF) # ori $a2, $a2, 0xff
-/* 06F9F0 8006EDF0 0C01C3BE */  jal   func_80070EF8
+/* 06F9F0 8006EDF0 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 06F9F4 8006EDF4 02002025 */   move  $a0, $s0
 /* 06F9F8 8006EDF8 8E300000 */  lw    $s0, ($s1)
 /* 06F9FC 8006EDFC AE220004 */  sw    $v0, 4($s1)

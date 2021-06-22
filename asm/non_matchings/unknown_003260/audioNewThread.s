@@ -74,7 +74,7 @@ glabel audioNewThread
 /* 003374 80002774 24010006 */  li    $at, 6
 /* 003378 80002778 1701001B */  bne   $t8, $at, .L800027E8
 /* 00337C 8000277C 00000000 */   nop   
-/* 003380 80002780 0C01DB16 */  jal   func_80076C58
+/* 003380 80002780 0C01DB16 */  jal   load_asset_section_from_rom
 /* 003384 80002784 24040026 */   li    $a0, 38
 /* 003388 80002788 8C590024 */  lw    $t9, 0x24($v0)
 /* 00338C 8000278C 8C490020 */  lw    $t1, 0x20($v0)
@@ -88,7 +88,7 @@ glabel audioNewThread
 /* 0033AC 800027AC 00408825 */  move  $s1, $v0
 /* 0033B0 800027B0 24040027 */  li    $a0, 39
 /* 0033B4 800027B4 00402825 */  move  $a1, $v0
-/* 0033B8 800027B8 0C01DB9A */  jal   func_80076E68
+/* 0033B8 800027B8 0C01DB9A */  jal   load_asset_to_address
 /* 0033BC 800027BC 02003825 */   move  $a3, $s0
 /* 0033C0 800027C0 3C048011 */  lui   $a0, %hi(ALGlobals_801161D0) # $a0, 0x8011
 /* 0033C4 800027C4 AE710020 */  sw    $s1, 0x20($s3)
@@ -200,7 +200,7 @@ glabel audioNewThread
 /* 003550 80002950 3C0600FF */  lui   $a2, (0x00FFFFFF >> 16) # lui $a2, 0xff
 /* 003554 80002954 34C6FFFF */  ori   $a2, (0x00FFFFFF & 0xFFFF) # ori $a2, $a2, 0xffff
 /* 003558 80002958 01842823 */  subu  $a1, $t4, $a0
-/* 00355C 8000295C 0C01C3BE */  jal   func_80070EF8
+/* 00355C 8000295C 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 003560 80002960 00801025 */   move  $v0, $a0
 /* 003564 80002964 3C108011 */  lui   $s0, %hi(D_80115F98) # $s0, 0x8011
 /* 003568 80002968 3C118011 */  lui   $s1, %hi(D_80115FA0+4) # $s1, 0x8011

@@ -17,12 +17,12 @@ glabel func_8007AC70
 /* 07B8AC 8007ACAC AC206330 */  sw    $zero, %lo(D_80126330)($at)
 /* 07B8B0 8007ACB0 3C018012 */  lui   $at, %hi(D_80126340) # $at, 0x8012
 /* 07B8B4 8007ACB4 AC206340 */  sw    $zero, %lo(D_80126340)($at)
-/* 07B8B8 8007ACB8 0C01DB16 */  jal   func_80076C58
+/* 07B8B8 8007ACB8 0C01DB16 */  jal   load_asset_section_from_rom
 /* 07B8BC 8007ACBC 24040005 */   li    $a0, 5
 /* 07B8C0 8007ACC0 3C058012 */  lui   $a1, %hi(D_80126320) # $a1, 0x8012
 /* 07B8C4 8007ACC4 24A56320 */  addiu $a1, %lo(D_80126320) # addiu $a1, $a1, 0x6320
 /* 07B8C8 8007ACC8 ACA20000 */  sw    $v0, ($a1)
-/* 07B8CC 8007ACCC 0C01DB16 */  jal   func_80076C58
+/* 07B8CC 8007ACCC 0C01DB16 */  jal   load_asset_section_from_rom
 /* 07B8D0 8007ACD0 24040003 */   li    $a0, 3
 /* 07B8D4 8007ACD4 3C058012 */  lui   $a1, %hi(D_80126320) # $a1, 0x8012
 /* 07B8D8 8007ACD8 24A56320 */  addiu $a1, %lo(D_80126320) # addiu $a1, $a1, 0x6320
@@ -70,7 +70,7 @@ glabel func_8007AC70
 /* 07B970 8007AD70 AC226350 */  sw    $v0, %lo(D_80126350)($at)
 /* 07B974 8007AD74 3C018012 */  lui   $at, %hi(D_80126358) # $at, 0x8012
 /* 07B978 8007AD78 AC206358 */  sw    $zero, %lo(D_80126358)($at)
-/* 07B97C 8007AD7C 0C01DB16 */  jal   func_80076C58
+/* 07B97C 8007AD7C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 07B980 8007AD80 2404000D */   li    $a0, 13
 /* 07B984 8007AD84 3C058012 */  lui   $a1, %hi(D_80126348) # $a1, 0x8012
 /* 07B988 8007AD88 3C068012 */  lui   $a2, %hi(D_80126354) # $a2, 0x8012

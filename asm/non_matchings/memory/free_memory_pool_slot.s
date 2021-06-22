@@ -1,4 +1,4 @@
-glabel func_8007164C
+glabel free_memory_pool_slot
 /* 07224C 8007164C 240A0014 */  li    $t2, 20
 /* 072250 80071650 00AA0019 */  multu $a1, $t2
 /* 072254 80071654 3C0F8012 */  lui   $t7, %hi(gMemoryPools) # $t7, 0x8012

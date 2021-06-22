@@ -41,7 +41,7 @@ glabel func_800C31EC
 /* 0C3E74 800C3274 8CA5A780 */  lw    $a1, %lo(D_8012A780)($a1)
 /* 0C3E78 800C3278 0006C080 */  sll   $t8, $a2, 2
 /* 0C3E7C 800C327C 03003025 */  move  $a2, $t8
-/* 0C3E80 800C3280 0C01DB9A */  jal   func_80076E68
+/* 0C3E80 800C3280 0C01DB9A */  jal   load_asset_to_address
 /* 0C3E84 800C3284 24070010 */   li    $a3, 16
 /* 0C3E88 800C3288 3C048013 */  lui   $a0, %hi(D_8012A780) # $a0, 0x8013
 /* 0C3E8C 800C328C 8C84A780 */  lw    $a0, %lo(D_8012A780)($a0)
@@ -66,7 +66,7 @@ glabel func_800C31EC
 /* 0C3ED8 800C32D8 00AF2821 */  addu  $a1, $a1, $t7
 /* 0C3EDC 800C32DC 8CA5A7C8 */  lw    $a1, %lo(D_8012A7C8)($a1)
 /* 0C3EE0 800C32E0 24040006 */  li    $a0, 6
-/* 0C3EE4 800C32E4 0C01DB9A */  jal   func_80076E68
+/* 0C3EE4 800C32E4 0C01DB9A */  jal   load_asset_to_address
 /* 0C3EE8 800C32E8 01093026 */   xor   $a2, $t0, $t1
 /* 0C3EEC 800C32EC 8E180000 */  lw    $t8, ($s0)
 /* 0C3EF0 800C32F0 3C0A8013 */  lui   $t2, %hi(D_8012A7C8) # $t2, 0x8013
@@ -92,7 +92,7 @@ glabel func_800C31EC
 /* 0C3F3C 800C333C 8CA5A798 */  lw    $a1, %lo(D_8012A798)($a1)
 /* 0C3F40 800C3340 24040006 */  li    $a0, 6
 /* 0C3F44 800C3344 01093026 */  xor   $a2, $t0, $t1
-/* 0C3F48 800C3348 0C01DB9A */  jal   func_80076E68
+/* 0C3F48 800C3348 0C01DB9A */  jal   load_asset_to_address
 /* 0C3F4C 800C334C AFA70024 */   sw    $a3, 0x24($sp)
 /* 0C3F50 800C3350 8E030000 */  lw    $v1, ($s0)
 /* 0C3F54 800C3354 3C198013 */  lui   $t9, %hi(D_8012A798) # $t9, 0x8013
