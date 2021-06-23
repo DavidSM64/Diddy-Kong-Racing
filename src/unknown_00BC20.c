@@ -279,6 +279,40 @@ extern s16 D_8011D5AC;
 
 extern s32 osTvType;
 
+/* Size: 12 bytes */
+typedef struct TriangleBatchInfo {
+/* 0x00 */ u8  textureIndex; // 0xFF = No texture
+/* 0x02 */ s16 verticesOffset;
+/* 0x04 */ s16 facesOffset;
+/* 0x06 */ u8  unk6;
+/* 0x08 */ u32 flags;
+    // 0x00000100 = Hidden geometry
+    // 0x00008000 = Environment mapping
+} TriangleBatchInfo;
+
+typedef struct ObjectModel {
+           u8 pad0[0x28];
+/* 0x28 */ s16 numberOfBatches;
+           u8 pad2A[14];
+/* 0x38 */ TriangleBatchInfo *batches;
+} ObjectModel;
+
+typedef struct unk8001D6E4_arg1_40 {
+           u8 pad0[0x71];
+/* 0x71 */ u8 unk71;
+} unk8001D6E4_arg1_40;
+
+typedef struct unk8001D6E4_arg1 {
+/* 0x00 */ s16 unk0;
+/* 0x02 */ s16 unk2;
+/* 0x04 */ s16 unk4;
+           u8  pad6[0x3A];
+/* 0x40 */ unk8001D6E4_arg1_40 *unk40;
+} unk8001D6E4_arg1;
+
+void func_8001D80C(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
+void func_80024744(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
+
 void func_8000C460(void);
 
 void *new_sub_memory_pool(s32, u32);
@@ -1360,7 +1394,41 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D258.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D6E4.s")
+
+void func_8001D6E4(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
+    s16 environmentMappingEnabled;
+    s32 dynamicLightingEnabled;
+    s16 i;
+    
+    dynamicLightingEnabled = 0;
+    environmentMappingEnabled = 0;
+    
+    for (i = 0; i < arg0->numberOfBatches; i++) {
+        if (arg0->batches[i].unk6 != 0xFF) {
+            dynamicLightingEnabled = -1; // This is a bit weird, but I guess it works.
+        }
+        if (arg0->batches[i].flags & 0x8000) {
+            environmentMappingEnabled = -1;
+        }
+    }
+    
+    if (dynamicLightingEnabled) {
+        // Calculates dynamic lighting for the object
+        if (object->descriptor_ptr->unk71 != 0) {
+            // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
+            func_8001D80C(object, arg0, arg2, object, arg3, 1.0f);
+        } else {
+            // Dynamic lighting for other objects? (Racers, Rare logo, Wizpig face, etc.)
+            func_80024744(object, arg0, arg2, arg3);
+        }
+    }
+    
+    if (environmentMappingEnabled) {
+        // Calculates environment mapping for the object
+        func_8001DD54(arg0, object->z_rotation, object->x_rotation, object->y_rotation);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D80C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001DD54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E13C.s")
