@@ -1,6 +1,7 @@
 import argparse
 import hashlib
 import subprocess
+import time
 from file_util import FileUtil
 
 parser = argparse.ArgumentParser(description="")
@@ -17,27 +18,34 @@ configChecksumFilename = extractConfigFilename + '.md5'
 
 needToExtract = False
 
+def do_extraction(reason):
+    global needToExtract
+    needToExtract = True
+    print(reason)
+
 if not FileUtil.does_file_exist(assetsDirectory):
-    needToExtract = True
+    do_extraction("Extracting because /assets/ directory does not exist.")
 elif not FileUtil.does_file_exist(ucodeDirectory):
-    needToExtract = True
+    do_extraction("Extracting because /ucode/ directory does not exist.")
 elif not FileUtil.does_file_exist(configChecksumFilename):
-    needToExtract = True
+    do_extraction('Extracting because "' + configChecksumFilename + '" does not exist.')
 else:
     md5Calculated = hashlib.md5(FileUtil.get_bytes_from_file(extractConfigFilename)).hexdigest()
     md5Saved = FileUtil.get_text_from_file(configChecksumFilename)
     if md5Calculated != md5Saved:
-        needToExtract = True
+        do_extraction('Extracting because "' + extractConfigFilename + '" has changed.')
 
-def run_until_done(args):
-    subprocess.run(args)
+def run_until_done(args, hide=False):
+    if hide:
+        subprocess.run(args, stdout=subprocess.DEVNULL)
+    else:
+        subprocess.run(args)
 
 if needToExtract:
     md5Calculated = hashlib.md5(FileUtil.get_bytes_from_file(extractConfigFilename)).hexdigest()
     FileUtil.write_text_to_file(configChecksumFilename, md5Calculated)
-    print('Extracting...')
     run_until_done(['make', 'clean'])
     run_until_done(['rm', '-Rf', 'assets'])
     run_until_done(['rm', '-Rf', 'ucode'])
-    run_until_done(['./extract.sh', version])
+    run_until_done(['./extract.sh', version], True)
     
