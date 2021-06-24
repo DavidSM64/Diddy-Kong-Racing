@@ -310,8 +310,8 @@ typedef struct unk8001D6E4_arg1 {
 /* 0x40 */ unk8001D6E4_arg1_40 *unk40;
 } unk8001D6E4_arg1;
 
-void func_8001D80C(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
-void func_80024744(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
+void calc_dynamic_lighting_for_object_1(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
+void calc_dynamic_lighting_for_object_2(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
 
 void func_8000C460(void);
 
@@ -1395,7 +1395,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
 
-void func_8001D6E4(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
+void calc_dyn_light_and_env_map_for_object(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
     s16 environmentMappingEnabled;
     s32 dynamicLightingEnabled;
     s16 i;
@@ -1416,21 +1416,21 @@ void func_8001D6E4(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
         // Calculates dynamic lighting for the object
         if (object->descriptor_ptr->unk71 != 0) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
-            func_8001D80C(object, arg0, arg2, object, arg3, 1.0f);
+            calc_dynamic_lighting_for_object_1(object, arg0, arg2, object, arg3, 1.0f);
         } else {
             // Dynamic lighting for other objects? (Racers, Rare logo, Wizpig face, etc.)
-            func_80024744(object, arg0, arg2, arg3);
+            calc_dynamic_lighting_for_object_2(object, arg0, arg2, arg3);
         }
     }
     
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
-        func_8001DD54(arg0, object->z_rotation, object->x_rotation, object->y_rotation);
+        calc_env_mapping_for_object(arg0, object->z_rotation, object->x_rotation, object->y_rotation);
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D80C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001DD54.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_dynamic_lighting_for_object_1.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_env_mapping_for_object.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E13C.s")
 
 s32 *func_8001E29C(s32 arg0) {

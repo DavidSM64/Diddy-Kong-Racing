@@ -1,4 +1,4 @@
-glabel func_80024744
+glabel calc_dynamic_lighting_for_object_2
 /* 025344 80024744 27BDFF80 */  addiu $sp, $sp, -0x80
 /* 025348 80024748 AFB00080 */  sw    $s0, 0x80($sp)
 /* 02534C 8002474C AFBF0078 */  sw    $ra, 0x78($sp)
