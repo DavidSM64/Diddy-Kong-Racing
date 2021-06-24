@@ -53,8 +53,9 @@ class GenerateLD:
         self.gen_open_block()
         self.gen_line('romPos = 0x0;')
         self.gen_boot_section()
-        self.gen_line('__RAM_START = 0x80000400;')
-        self.gen_line('__RAM_TO_ROM = __RAM_START - romPos;')
+        self.gen_line('__FUNC_RAM_START = 0x80000400;')
+        self.gen_line('__FUNC_ROM_START = 0x00001000;')
+        self.gen_line('__RAM_TO_ROM = __FUNC_RAM_START - __FUNC_ROM_START;')
         self.gen_newline()
         self.gen_main_section()
         self.gen_ucode_text_section()
@@ -78,7 +79,7 @@ class GenerateLD:
         self.gen_newline()
     
     def gen_main_section(self):
-        self.gen_line('.main __RAM_START : AT(romPos) SUBALIGN(16)')
+        self.gen_line('.main __FUNC_RAM_START : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
         for file in self.files:
             self.gen_line(file[0] + '(.text);')
