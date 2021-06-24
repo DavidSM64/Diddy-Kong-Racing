@@ -1,8 +1,8 @@
 glabel func_80014CCC
 /* 0158CC 80014CCC 00A4082A */  slt   $at, $a1, $a0
 /* 0158D0 80014CD0 1420019B */  bnez  $at, .L80015340
-/* 0158D4 80014CD4 3C0A8012 */   lui   $t2, %hi(objPtrList) # $t2, 0x8012
-/* 0158D8 80014CD8 254AAE58 */  addiu $t2, %lo(objPtrList) # addiu $t2, $t2, -0x51a8
+/* 0158D4 80014CD4 3C0A8012 */   lui   $t2, %hi(gObjPtrList) # $t2, 0x8012
+/* 0158D8 80014CD8 254AAE58 */  addiu $t2, %lo(gObjPtrList) # addiu $t2, $t2, -0x51a8
 /* 0158DC 80014CDC 0064082A */  slt   $at, $v1, $a0
 .L80014CE0:
 /* 0158E0 80014CE0 1420001D */  bnez  $at, .L80014D58
@@ -93,8 +93,8 @@ glabel func_80014CCC
 
 /* 015A18 80014E18 00A4082A */  slt   $at, $a1, $a0
 /* 015A1C 80014E1C 14200148 */  bnez  $at, .L80015340
-/* 015A20 80014E20 3C0A8012 */   lui   $t2, %hi(objPtrList) # $t2, 0x8012
-/* 015A24 80014E24 254AAE58 */  addiu $t2, %lo(objPtrList) # addiu $t2, $t2, -0x51a8
+/* 015A20 80014E20 3C0A8012 */   lui   $t2, %hi(gObjPtrList) # $t2, 0x8012
+/* 015A24 80014E24 254AAE58 */  addiu $t2, %lo(gObjPtrList) # addiu $t2, $t2, -0x51a8
 /* 015A28 80014E28 0064082A */  slt   $at, $v1, $a0
 .L80014E2C:
 /* 015A2C 80014E2C 1420001D */  bnez  $at, .L80014EA4
@@ -185,8 +185,8 @@ glabel func_80014CCC
 
 /* 015B64 80014F64 00A4082A */  slt   $at, $a1, $a0
 /* 015B68 80014F68 142000F5 */  bnez  $at, .L80015340
-/* 015B6C 80014F6C 3C0A8012 */   lui   $t2, %hi(objPtrList) # $t2, 0x8012
-/* 015B70 80014F70 254AAE58 */  addiu $t2, %lo(objPtrList) # addiu $t2, $t2, -0x51a8
+/* 015B6C 80014F6C 3C0A8012 */   lui   $t2, %hi(gObjPtrList) # $t2, 0x8012
+/* 015B70 80014F70 254AAE58 */  addiu $t2, %lo(gObjPtrList) # addiu $t2, $t2, -0x51a8
 /* 015B74 80014F74 0064082A */  slt   $at, $v1, $a0
 .L80014F78:
 /* 015B78 80014F78 1420001D */  bnez  $at, .L80014FF0
@@ -277,8 +277,8 @@ glabel func_80014CCC
 
 /* 015CB0 800150B0 00A4082A */  slt   $at, $a1, $a0
 /* 015CB4 800150B4 142000A2 */  bnez  $at, .L80015340
-/* 015CB8 800150B8 3C0A8012 */   lui   $t2, %hi(objPtrList) # $t2, 0x8012
-/* 015CBC 800150BC 254AAE58 */  addiu $t2, %lo(objPtrList) # addiu $t2, $t2, -0x51a8
+/* 015CB8 800150B8 3C0A8012 */   lui   $t2, %hi(gObjPtrList) # $t2, 0x8012
+/* 015CBC 800150BC 254AAE58 */  addiu $t2, %lo(gObjPtrList) # addiu $t2, $t2, -0x51a8
 /* 015CC0 800150C0 0064082A */  slt   $at, $v1, $a0
 .L800150C4:
 /* 015CC4 800150C4 1420001D */  bnez  $at, .L8001513C
@@ -369,8 +369,8 @@ glabel func_80014CCC
 
 /* 015DFC 800151FC 00A4082A */  slt   $at, $a1, $a0
 /* 015E00 80015200 1420004F */  bnez  $at, .L80015340
-/* 015E04 80015204 3C0A8012 */   lui   $t2, %hi(objPtrList) # $t2, 0x8012
-/* 015E08 80015208 254AAE58 */  addiu $t2, %lo(objPtrList) # addiu $t2, $t2, -0x51a8
+/* 015E04 80015204 3C0A8012 */   lui   $t2, %hi(gObjPtrList) # $t2, 0x8012
+/* 015E08 80015208 254AAE58 */  addiu $t2, %lo(gObjPtrList) # addiu $t2, $t2, -0x51a8
 /* 015E0C 8001520C 0064082A */  slt   $at, $v1, $a0
 .L80015210:
 /* 015E10 80015210 1420001D */  bnez  $at, .L80015288

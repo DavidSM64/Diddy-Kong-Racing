@@ -1,7 +1,7 @@
 glabel func_8000FD54
 /* 010954 8000FD54 27BDFFC8 */  addiu $sp, $sp, -0x38
-/* 010958 8000FD58 3C0E8012 */  lui   $t6, %hi(D_8011AD68) # $t6, 0x8012
-/* 01095C 8000FD5C 8DCEAD68 */  lw    $t6, %lo(D_8011AD68)($t6)
+/* 010958 8000FD58 3C0E8012 */  lui   $t6, %hi(gAssetsObjectHeadersTableLength) # $t6, 0x8012
+/* 01095C 8000FD5C 8DCEAD68 */  lw    $t6, %lo(gAssetsObjectHeadersTableLength)($t6)
 /* 010960 8000FD60 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 010964 8000FD64 008E082A */  slt   $at, $a0, $t6
 /* 010968 8000FD68 AFB40028 */  sw    $s4, 0x28($sp)

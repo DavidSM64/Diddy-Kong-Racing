@@ -75,11 +75,11 @@ glabel func_8000E2B4
 /* 00EFB0 8000E3B0 27A4002C */  addiu $a0, $sp, 0x2c
 /* 00EFB4 8000E3B4 0C003A95 */  jal   func_8000EA54
 /* 00EFB8 8000E3B8 24050011 */   li    $a1, 17
-/* 00EFBC 8000E3BC 3C0C8012 */  lui   $t4, %hi(playerStructArray_Ptr) # $t4, 0x8012
-/* 00EFC0 8000E3C0 8D8CAEE4 */  lw    $t4, %lo(playerStructArray_Ptr)($t4)
+/* 00EFBC 8000E3BC 3C0C8012 */  lui   $t4, %hi(gObjectStructArrayPtr) # $t4, 0x8012
+/* 00EFC0 8000E3C0 8D8CAEE4 */  lw    $t4, %lo(gObjectStructArrayPtr)($t4)
 /* 00EFC4 8000E3C4 240B0001 */  li    $t3, 1
-/* 00EFC8 8000E3C8 3C018012 */  lui   $at, %hi(playerCount) # $at, 0x8012
-/* 00EFCC 8000E3CC AC2BAEF0 */  sw    $t3, %lo(playerCount)($at)
+/* 00EFC8 8000E3C8 3C018012 */  lui   $at, %hi(gObjectCount) # $at, 0x8012
+/* 00EFCC 8000E3CC AC2BAEF0 */  sw    $t3, %lo(gObjectCount)($at)
 /* 00EFD0 8000E3D0 3C0E8012 */  lui   $t6, %hi(D_8011AEEC) # $t6, 0x8012
 /* 00EFD4 8000E3D4 AD820000 */  sw    $v0, ($t4)
 /* 00EFD8 8000E3D8 8DCEAEEC */  lw    $t6, %lo(D_8011AEEC)($t6)

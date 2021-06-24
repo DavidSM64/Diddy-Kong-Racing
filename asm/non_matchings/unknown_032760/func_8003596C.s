@@ -34,7 +34,7 @@ glabel func_8003596C
 /* 0365E4 800359E4 314B4000 */  andi  $t3, $t2, 0x4000
 /* 0365E8 800359E8 15600038 */  bnez  $t3, .L80035ACC
 /* 0365EC 800359EC 8FBF002C */   lw    $ra, 0x2c($sp)
-/* 0365F0 800359F0 0C006E9D */  jal   getPlayerStructArray
+/* 0365F0 800359F0 0C006E9D */  jal   get_object_struct_array
 /* 0365F4 800359F4 27A40040 */   addiu $a0, $sp, 0x40
 /* 0365F8 800359F8 8FAC0040 */  lw    $t4, 0x40($sp)
 /* 0365FC 800359FC 00008825 */  move  $s1, $zero

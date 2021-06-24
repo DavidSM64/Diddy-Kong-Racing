@@ -74,7 +74,7 @@ endif
 
 ######## Extract Assets & Microcode ########
 
-DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION)
+DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION) >&2 || echo FAIL
 
 # NEED_TO_EXTRACT = no
 # 

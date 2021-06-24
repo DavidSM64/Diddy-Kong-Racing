@@ -198,7 +198,7 @@ glabel func_8003E140
 /* 03EFF0 8003E3F0 A3A4002D */  sb    $a0, 0x2d($sp)
 .L8003E3F4:
 /* 03EFF4 8003E3F4 2404000C */  li    $a0, 12
-/* 03EFF8 8003E3F8 0C0078A7 */  jal   func_8001E29C
+/* 03EFF8 8003E3F8 0C0078A7 */  jal   get_misc_asset
 /* 03EFFC 8003E3FC AFA30038 */   sw    $v1, 0x38($sp)
 /* 03F000 8003E400 8FA30038 */  lw    $v1, 0x38($sp)
 /* 03F004 8003E404 00000000 */  nop   

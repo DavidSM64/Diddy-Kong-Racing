@@ -76,7 +76,7 @@ glabel func_80081218
 /* 081F40 80081340 8DAE0004 */  lw    $t6, 4($t5)
 /* 081F44 80081344 00000000 */  nop   
 /* 081F48 80081348 01C65821 */  addu  $t3, $t6, $a2
-/* 081F4C 8008134C 0C0078A7 */  jal   func_8001E29C
+/* 081F4C 8008134C 0C0078A7 */  jal   get_misc_asset
 /* 081F50 80081350 ADAB0000 */   sw    $t3, ($t5)
 /* 081F54 80081354 3C038012 */  lui   $v1, %hi(gCheatsAssetData) # $v1, 0x8012
 /* 081F58 80081358 24636C30 */  addiu $v1, %lo(gCheatsAssetData) # addiu $v1, $v1, 0x6c30

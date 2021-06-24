@@ -33,7 +33,7 @@ glabel func_8000B750
 /* 00C3A8 8000B7A8 8FBF002C */   lw    $ra, 0x2c($sp)
 /* 00C3AC 8000B7AC 102000C7 */  beqz  $at, .L8000BACC
 /* 00C3B0 8000B7B0 24040014 */   li    $a0, 20
-/* 00C3B4 8000B7B4 0C0078A7 */  jal   func_8001E29C
+/* 00C3B4 8000B7B4 0C0078A7 */  jal   get_misc_asset
 /* 00C3B8 8000B7B8 AFA60088 */   sw    $a2, 0x88($sp)
 /* 00C3BC 8000B7BC 3C0E8012 */  lui   $t6, %hi(D_8011B020) # $t6, 0x8012
 /* 00C3C0 8000B7C0 25CEB020 */  addiu $t6, %lo(D_8011B020) # addiu $t6, $t6, -0x4fe0

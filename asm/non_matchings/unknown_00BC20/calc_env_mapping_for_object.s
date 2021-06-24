@@ -1,4 +1,4 @@
-glabel func_8001DD54
+glabel calc_env_mapping_for_object
 /* 01E954 8001DD54 27BDFEE8 */  addiu $sp, $sp, -0x118
 /* 01E958 8001DD58 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 01E95C 8001DD5C AFBE0038 */  sw    $fp, 0x38($sp)

@@ -1,8 +1,8 @@
 glabel func_80016DE8
 /* 0179E8 80016DE8 27BDFF48 */  addiu $sp, $sp, -0xb8
 /* 0179EC 80016DEC AFB6004C */  sw    $s6, 0x4c($sp)
-/* 0179F0 80016DF0 3C168012 */  lui   $s6, %hi(playerCount) # $s6, 0x8012
-/* 0179F4 80016DF4 26D6AEF0 */  addiu $s6, %lo(playerCount) # addiu $s6, $s6, -0x5110
+/* 0179F0 80016DF0 3C168012 */  lui   $s6, %hi(gObjectCount) # $s6, 0x8012
+/* 0179F4 80016DF4 26D6AEF0 */  addiu $s6, %lo(gObjectCount) # addiu $s6, $s6, -0x5110
 /* 0179F8 80016DF8 8EC20000 */  lw    $v0, ($s6)
 /* 0179FC 80016DFC E7BA002C */  swc1  $f26, 0x2c($sp)
 /* 017A00 80016E00 E7B6001C */  swc1  $f22, 0x1c($sp)
@@ -28,10 +28,10 @@ glabel func_80016DE8
 /* 017A50 80016E50 0000A025 */   move  $s4, $zero
 /* 017A54 80016E54 1840003C */  blez  $v0, .L80016F48
 /* 017A58 80016E58 00008825 */   move  $s1, $zero
-/* 017A5C 80016E5C 3C138012 */  lui   $s3, %hi(playerStructArray_Ptr) # $s3, 0x8012
+/* 017A5C 80016E5C 3C138012 */  lui   $s3, %hi(gObjectStructArrayPtr) # $s3, 0x8012
 /* 017A60 80016E60 8FB500C8 */  lw    $s5, 0xc8($sp)
 /* 017A64 80016E64 8FB000CC */  lw    $s0, 0xcc($sp)
-/* 017A68 80016E68 2673AEE4 */  addiu $s3, %lo(playerStructArray_Ptr) # addiu $s3, $s3, -0x511c
+/* 017A68 80016E68 2673AEE4 */  addiu $s3, %lo(gObjectStructArrayPtr) # addiu $s3, $s3, -0x511c
 /* 017A6C 80016E6C 00009025 */  move  $s2, $zero
 /* 017A70 80016E70 27B70098 */  addiu $s7, $sp, 0x98
 .L80016E74:

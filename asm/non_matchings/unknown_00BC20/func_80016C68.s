@@ -25,9 +25,9 @@ glabel func_80016C68
 /* 0178C4 80016CC4 E7B70020 */  swc1  $f23, 0x20($sp)
 /* 0178C8 80016CC8 19C00034 */  blez  $t6, .L80016D9C
 /* 0178CC 80016CCC 00008825 */   move  $s1, $zero
-/* 0178D0 80016CD0 3C148012 */  lui   $s4, %hi(objPtrList) # $s4, 0x8012
+/* 0178D0 80016CD0 3C148012 */  lui   $s4, %hi(gObjPtrList) # $s4, 0x8012
 /* 0178D4 80016CD4 8FB30068 */  lw    $s3, 0x68($sp)
-/* 0178D8 80016CD8 2694AE58 */  addiu $s4, %lo(objPtrList) # addiu $s4, $s4, -0x51a8
+/* 0178D8 80016CD8 2694AE58 */  addiu $s4, %lo(gObjPtrList) # addiu $s4, $s4, -0x51a8
 /* 0178DC 80016CDC 00009025 */  move  $s2, $zero
 /* 0178E0 80016CE0 24150055 */  li    $s5, 85
 .L80016CE4:

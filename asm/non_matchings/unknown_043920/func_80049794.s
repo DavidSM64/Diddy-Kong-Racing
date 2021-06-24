@@ -2759,7 +2759,7 @@ glabel func_80049794
 /* 04CAF4 8004BEF4 2B010002 */  slti  $at, $t8, 2
 /* 04CAF8 8004BEF8 1020003D */  beqz  $at, .L8004BFF0
 /* 04CAFC 8004BEFC 00000000 */   nop   
-/* 04CB00 8004BF00 0C0078A7 */  jal   func_8001E29C
+/* 04CB00 8004BF00 0C0078A7 */  jal   get_misc_asset
 /* 04CB04 8004BF04 24040014 */   li    $a0, 20
 /* 04CB08 8004BF08 82080203 */  lb    $t0, 0x203($s0)
 /* 04CB0C 8004BF0C 820C0002 */  lb    $t4, 2($s0)

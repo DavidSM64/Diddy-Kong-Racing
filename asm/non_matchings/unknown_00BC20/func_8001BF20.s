@@ -38,8 +38,8 @@ glabel func_8001BF20
 /* 01CB90 8001BF90 A7A00186 */  sh    $zero, 0x186($sp)
 /* 01CB94 8001BF94 1880002D */  blez  $a0, .L8001C04C
 /* 01CB98 8001BF98 00003825 */   move  $a3, $zero
-/* 01CB9C 8001BF9C 3C058012 */  lui   $a1, %hi(objPtrList) # $a1, 0x8012
-/* 01CBA0 8001BFA0 24A5AE58 */  addiu $a1, %lo(objPtrList) # addiu $a1, $a1, -0x51a8
+/* 01CB9C 8001BF9C 3C058012 */  lui   $a1, %hi(gObjPtrList) # $a1, 0x8012
+/* 01CBA0 8001BFA0 24A5AE58 */  addiu $a1, %lo(gObjPtrList) # addiu $a1, $a1, -0x51a8
 /* 01CBA4 8001BFA4 0000F025 */  move  $fp, $zero
 /* 01CBA8 8001BFA8 27B70064 */  addiu $s7, $sp, 0x64
 /* 01CBAC 8001BFAC 24060010 */  li    $a2, 16

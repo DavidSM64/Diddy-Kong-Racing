@@ -18,7 +18,7 @@ glabel menu_track_select_init
 /* 08F3E0 8008E7E0 27A4007C */  addiu $a0, $sp, 0x7c
 /* 08F3E4 8008E7E4 0C01AC89 */  jal   func_8006B224
 /* 08F3E8 8008E7E8 27A50078 */   addiu $a1, $sp, 0x78
-/* 08F3EC 8008E7EC 0C0078A7 */  jal   func_8001E29C
+/* 08F3EC 8008E7EC 0C0078A7 */  jal   get_misc_asset
 /* 08F3F0 8008E7F0 2404001A */   li    $a0, 26
 /* 08F3F4 8008E7F4 3C03800E */  lui   $v1, %hi(D_800DF488) # $v1, 0x800e
 /* 08F3F8 8008E7F8 2463F488 */  addiu $v1, %lo(D_800DF488) # addiu $v1, $v1, -0xb78

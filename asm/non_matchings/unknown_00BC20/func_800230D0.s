@@ -14,8 +14,8 @@ glabel func_800230D0
 /* 023D00 80023100 00004025 */  move  $t0, $zero
 /* 023D04 80023104 1880002A */  blez  $a0, .L800231B0
 /* 023D08 80023108 00001025 */   move  $v0, $zero
-/* 023D0C 8002310C 3C058012 */  lui   $a1, %hi(objPtrList) # $a1, 0x8012
-/* 023D10 80023110 24A5AE58 */  addiu $a1, %lo(objPtrList) # addiu $a1, $a1, -0x51a8
+/* 023D0C 8002310C 3C058012 */  lui   $a1, %hi(gObjPtrList) # $a1, 0x8012
+/* 023D10 80023110 24A5AE58 */  addiu $a1, %lo(gObjPtrList) # addiu $a1, $a1, -0x51a8
 /* 023D14 80023114 2406000B */  li    $a2, 11
 .L80023118:
 /* 023D18 80023118 8CAE0000 */  lw    $t6, ($a1)

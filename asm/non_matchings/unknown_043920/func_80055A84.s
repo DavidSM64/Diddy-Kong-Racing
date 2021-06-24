@@ -14,7 +14,7 @@ glabel func_80055A84
 /* 0566B4 80055AB4 00000000 */   nop   
 /* 0566B8 80055AB8 E4800010 */  swc1  $f0, 0x10($a0)
 .L80055ABC:
-/* 0566BC 80055ABC 0C0078A7 */  jal   func_8001E29C
+/* 0566BC 80055ABC 0C0078A7 */  jal   get_misc_asset
 /* 0566C0 80055AC0 24040038 */   li    $a0, 56
 /* 0566C4 80055AC4 240EFFFF */  li    $t6, -1
 /* 0566C8 80055AC8 A3AE003F */  sb    $t6, 0x3f($sp)

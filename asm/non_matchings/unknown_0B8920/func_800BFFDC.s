@@ -6,7 +6,7 @@ glabel func_800BFFDC
 /* 0C0BEC 800BFFEC 00808025 */  move  $s0, $a0
 /* 0C0BF0 800BFFF0 108E005B */  beq   $a0, $t6, .L800C0160
 /* 0C0BF4 800BFFF4 AFBF001C */   sw    $ra, 0x1c($sp)
-/* 0C0BF8 800BFFF8 0C006E9D */  jal   getPlayerStructArray
+/* 0C0BF8 800BFFF8 0C006E9D */  jal   get_object_struct_array
 /* 0C0BFC 800BFFFC 27A40050 */   addiu $a0, $sp, 0x50
 /* 0C0C00 800C0000 8FA50050 */  lw    $a1, 0x50($sp)
 /* 0C0C04 800C0004 00000000 */  nop   

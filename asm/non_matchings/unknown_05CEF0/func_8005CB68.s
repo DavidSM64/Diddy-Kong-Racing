@@ -12,7 +12,7 @@ glabel func_8005CB68
 /* 05D790 8005CB90 03194804 */  sllv  $t1, $t9, $t8
 /* 05D794 8005CB94 AFA90038 */  sw    $t1, 0x38($sp)
 /* 05D798 8005CB98 AFA20044 */  sw    $v0, 0x44($sp)
-/* 05D79C 8005CB9C 0C0078A7 */  jal   func_8001E29C
+/* 05D79C 8005CB9C 0C0078A7 */  jal   get_misc_asset
 /* 05D7A0 8005CBA0 24040044 */   li    $a0, 68
 /* 05D7A4 8005CBA4 804C0005 */  lb    $t4, 5($v0)
 /* 05D7A8 8005CBA8 24040043 */  li    $a0, 67
@@ -21,7 +21,7 @@ glabel func_8005CB68
 /* 05D7B4 8005CBB4 00000000 */  nop   
 /* 05D7B8 8005CBB8 AFAD0028 */  sw    $t5, 0x28($sp)
 /* 05D7BC 8005CBBC 804E0007 */  lb    $t6, 7($v0)
-/* 05D7C0 8005CBC0 0C0078A7 */  jal   func_8001E29C
+/* 05D7C0 8005CBC0 0C0078A7 */  jal   get_misc_asset
 /* 05D7C4 8005CBC4 AFAE0024 */   sw    $t6, 0x24($sp)
 /* 05D7C8 8005CBC8 8FAA0044 */  lw    $t2, 0x44($sp)
 /* 05D7CC 8005CBCC 804F0000 */  lb    $t7, ($v0)

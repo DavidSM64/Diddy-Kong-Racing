@@ -8,7 +8,7 @@ glabel func_8006E770
 /* 06F388 8006E788 27A5003C */  addiu $a1, $sp, 0x3c
 /* 06F38C 8006E78C 0C01AC89 */  jal   func_8006B224
 /* 06F390 8006E790 27A40038 */   addiu $a0, $sp, 0x38
-/* 06F394 8006E794 0C0078A7 */  jal   func_8001E29C
+/* 06F394 8006E794 0C0078A7 */  jal   get_misc_asset
 /* 06F398 8006E798 24040017 */   li    $a0, 23
 /* 06F39C 8006E79C 00004025 */  move  $t0, $zero
 /* 06F3A0 8006E7A0 240C0003 */  li    $t4, 3

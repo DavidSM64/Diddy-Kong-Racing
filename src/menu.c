@@ -1517,7 +1517,7 @@ Settings *get_settings(void);
 void func_8009C4A8(s16 *arg0);
 void func_8009C674(s16 *arg0);
 void func_8008E4B0(void);
-s8 *func_8001E29C(s32 arg0);
+s8 *get_misc_asset(s32 arg0);
 void func_80001D04(s32, s32*);
 void func_800660EC(f32 arg0);
 void func_8009C508(s32 arg0);
@@ -2849,7 +2849,7 @@ void set_active_player_index(s32 controllerIndex) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_init.s")
 
 /**
- * Draws the "Player Select" and "OK?" text in the character select menu.
+ * Draws the "Object Select" and "OK?" text in the character select menu.
  */
 void draw_character_select_text(s32 arg0) {
     s32 yPos;
@@ -2857,10 +2857,10 @@ void draw_character_select_text(s32 arg0) {
         set_text_font(2); // Set font to the Big Yellow Text
         set_text_background_color(0, 0, 0, 0);
         set_text_color(0, 0, 0, 0xFF, 0x80);
-        // Draw "Player Select" text drop shadow
+        // Draw "Object Select" text drop shadow
         draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk21C, 0xC); 
         set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
-        // Draw "Player Select" text
+        // Draw "Object Select" text
         draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk21C, 0xC); 
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers && gNumberOfActivePlayers > 0) {
             yPos = 0xD0;
@@ -3439,7 +3439,7 @@ s32 func_80092BE0(s32 arg0) {
     s32 index;
     s32 temp;
     
-    trackIdArray = (s8 *)func_8001E29C(0x1C);
+    trackIdArray = (s8 *)get_misc_asset(0x1C);
     
     index = 0;
     temp = -1;
@@ -3798,7 +3798,7 @@ void func_80098208(void) {
 }
 
 extern s32 D_800E0980;
-s8* func_8001E29C(s32 arg0);
+s8* get_misc_asset(s32 arg0);
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_round_init.s")
@@ -3810,7 +3810,7 @@ void menu_trophy_race_round_init(void) {
     s8 *temp_t9;
 
     settings = get_settings();
-    temp_t9 = func_8001E29C(0x1A); // Returns level ids array.
+    temp_t9 = get_misc_asset(0x1A); // Returns level ids array.
     
     if (D_800E0FEC == 0) {
         for(i = 0; i < 8; i++) {
@@ -3845,7 +3845,7 @@ void func_800983C0(s32 arg0) {
     s32 sp24;
     s8* sp20;
 
-    sp20 = func_8001E29C(0x1A);
+    sp20 = get_misc_asset(0x1A);
     if (osTvType == 0) {
         sp2C = 0x12;
     } else {
@@ -3943,7 +3943,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
         arg0++;
     }
     
-    if ((phi_v1 == 0) && (func_8001E29C(0x19) == arg0)) {
+    if ((phi_v1 == 0) && (get_misc_asset(0x19) == arg0)) {
         D_8012684C = 1;
     } else {
         D_8012684C = 0;
@@ -4309,7 +4309,7 @@ void func_8009C4A8(s16 *arg0) {
 
 void func_8007B2BC(u32 arg0);
 void func_8007CCB0(u32 arg0);
-void particlePtrList_addObject(u32 arg0);
+void gParticlePtrList_addObject(u32 arg0);
 void func_8005FF40(u32 arg0);
 
 void func_8009C508(s32 arg0) {
@@ -4324,7 +4324,7 @@ void func_8009C508(s32 arg0) {
                     func_8007CCB0((u32)D_80126550[arg0]);
                 } else {
                     if ((*D_800DF750)[arg0] & 0x4000) {
-                        particlePtrList_addObject((u32)D_80126550[arg0]);
+                        gParticlePtrList_addObject((u32)D_80126550[arg0]);
                     } else {
                         func_8005FF40((u32)D_80126550[arg0]);
                     }
@@ -4334,7 +4334,7 @@ void func_8009C508(s32 arg0) {
         D_80126550[arg0] = 0;
         D_80126750[arg0] = 0;
         D_800DF758--;
-        particlePtrList_flush();
+        gParticlePtrList_flush();
     }
     if (D_800DF758 == 0) {
         if (D_800DF75C != NULL) {

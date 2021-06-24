@@ -111,7 +111,7 @@ glabel menu_title_screen_init
 /* 0842E4 800836E4 00002025 */   move  $a0, $zero
 /* 0842E8 800836E8 3C018012 */  lui   $at, %hi(D_80126864) # $at, 0x8012
 /* 0842EC 800836EC AC206864 */  sw    $zero, %lo(D_80126864)($at)
-/* 0842F0 800836F0 0C0078A7 */  jal   func_8001E29C
+/* 0842F0 800836F0 0C0078A7 */  jal   get_misc_asset
 /* 0842F4 800836F4 24040042 */   li    $a0, 66
 /* 0842F8 800836F8 3C048012 */  lui   $a0, %hi(D_80126874) # $a0, 0x8012
 /* 0842FC 800836FC 24846874 */  addiu $a0, %lo(D_80126874) # addiu $a0, $a0, 0x6874

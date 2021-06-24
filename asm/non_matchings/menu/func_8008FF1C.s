@@ -13,7 +13,7 @@ glabel func_8008FF1C
 /* 090B48 8008FF48 0C01BAA4 */  jal   get_settings
 /* 090B4C 8008FF4C AFA40080 */   sw    $a0, 0x80($sp)
 /* 090B50 8008FF50 AFA20058 */  sw    $v0, 0x58($sp)
-/* 090B54 8008FF54 0C0078A7 */  jal   func_8001E29C
+/* 090B54 8008FF54 0C0078A7 */  jal   get_misc_asset
 /* 090B58 8008FF58 2404001A */   li    $a0, 26
 /* 090B5C 8008FF5C 3C03800E */  lui   $v1, %hi(gMenuDelay) # $v1, 0x800e
 /* 090B60 8008FF60 8C63F47C */  lw    $v1, %lo(gMenuDelay)($v1)

@@ -172,7 +172,7 @@ glabel func_80034860
 .L80034AD0:
 /* 0356D0 80034AD0 11000004 */  beqz  $t0, .L80034AE4
 /* 0356D4 80034AD4 8FBF002C */   lw    $ra, 0x2c($sp)
-/* 0356D8 80034AD8 0C003FEE */  jal   particlePtrList_addObject
+/* 0356D8 80034AD8 0C003FEE */  jal   gParticlePtrList_addObject
 /* 0356DC 80034ADC 02002025 */   move  $a0, $s0
 /* 0356E0 80034AE0 8FBF002C */  lw    $ra, 0x2c($sp)
 .L80034AE4:

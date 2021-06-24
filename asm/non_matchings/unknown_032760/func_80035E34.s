@@ -21,7 +21,7 @@ glabel func_80035E34
 /* 036A7C 80035E7C 8FA50024 */  lw    $a1, 0x24($sp)
 /* 036A80 80035E80 0C02BF0F */  jal   func_800AFC3C
 /* 036A84 80035E84 02002025 */   move  $a0, $s0
-/* 036A88 80035E88 0C006EB2 */  jal   getPlayerStruct
+/* 036A88 80035E88 0C006EB2 */  jal   get_object_struct
 /* 036A8C 80035E8C 00002025 */   move  $a0, $zero
 /* 036A90 80035E90 8E030060 */  lw    $v1, 0x60($s0)
 /* 036A94 80035E94 24050001 */  li    $a1, 1

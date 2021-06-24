@@ -17,7 +17,7 @@ glabel func_80035C50
 /* 03688C 80035C8C 00000000 */  nop   
 /* 036890 80035C90 37191000 */  ori   $t9, $t8, 0x1000
 /* 036894 80035C94 A4990006 */  sh    $t9, 6($a0)
-/* 036898 80035C98 0C006EB2 */  jal   getPlayerStruct
+/* 036898 80035C98 0C006EB2 */  jal   get_object_struct
 /* 03689C 80035C9C 00002025 */   move  $a0, $zero
 /* 0368A0 80035CA0 8E48004C */  lw    $t0, 0x4c($s2)
 /* 0368A4 80035CA4 8E4A0078 */  lw    $t2, 0x78($s2)
@@ -26,7 +26,7 @@ glabel func_80035C50
 /* 0368B0 80035CB0 012A082A */  slt   $at, $t1, $t2
 /* 0368B4 80035CB4 10200051 */  beqz  $at, .L80035DFC
 /* 0368B8 80035CB8 8FBF003C */   lw    $ra, 0x3c($sp)
-/* 0368BC 80035CBC 0C006E9D */  jal   getPlayerStructArray
+/* 0368BC 80035CBC 0C006E9D */  jal   get_object_struct_array
 /* 0368C0 80035CC0 27A40054 */   addiu $a0, $sp, 0x54
 /* 0368C4 80035CC4 8FAB0054 */  lw    $t3, 0x54($sp)
 /* 0368C8 80035CC8 00009825 */  move  $s3, $zero

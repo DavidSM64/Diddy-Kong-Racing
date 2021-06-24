@@ -112,7 +112,7 @@ glabel L80042378
 /* 043060 80042460 24040002 */   li    $a0, 2
 /* 043064 80042464 0C01B629 */  jal   func_8006D8A4
 /* 043068 80042468 00000000 */   nop   
-/* 04306C 8004246C 0C003FEE */  jal   particlePtrList_addObject
+/* 04306C 8004246C 0C003FEE */  jal   gParticlePtrList_addObject
 /* 043070 80042470 02202025 */   move  $a0, $s1
 /* 043074 80042474 10000140 */  b     .L80042978
 /* 043078 80042478 8FBF0034 */   lw    $ra, 0x34($sp)
@@ -383,7 +383,7 @@ glabel L800426B8
 /* 043454 80042854 24040002 */   li    $a0, 2
 /* 043458 80042858 0C01B629 */  jal   func_8006D8A4
 /* 04345C 8004285C 00000000 */   nop   
-/* 043460 80042860 0C003FEE */  jal   particlePtrList_addObject
+/* 043460 80042860 0C003FEE */  jal   gParticlePtrList_addObject
 /* 043464 80042864 02202025 */   move  $a0, $s1
 /* 043468 80042868 10000043 */  b     .L80042978
 /* 04346C 8004286C 8FBF0034 */   lw    $ra, 0x34($sp)

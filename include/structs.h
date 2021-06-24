@@ -130,7 +130,7 @@ typedef struct Settings {
   /* 0x003C */ void *courseTimesPtr[3];
   /* 0x0048 */ u8 worldId;
   /* 0x0049 */ u8 courseId;
-  /* 0x004A */ u8 playerCount;
+  /* 0x004A */ u8 gObjectCount;
   /* 0x004B */ u8 newGame;
   /* 0x004C */ Settings4C *unk4C;
   /* 0x0050 */ u32 filename;
@@ -253,25 +253,25 @@ typedef struct {
   /* 0x4C */ u32 unk4C;
 } dkr_wave_t;
 
-typedef struct Player_3C {
+typedef struct Object_3C {
     u8 pad0[0x8];
     s8 unk8;
     u8 pad9[0x4];
     u8 unkD;
-} Player_3C;
+} Object_3C;
 
-typedef struct Player_40 {
+typedef struct Object_40 {
     u8 pad0[0xC];
     f32 unkC;
     u8 pad10[0x43];
     s8 unk53;
     s8 unk54;
-    s8 unk55; //size of array pointed by Player->unk68
+    s8 unk55; //size of array pointed by Object->unk68
     u8 pad56[0x02];
     u8 pad58[0x18];
     u8 unk70;
     u8 unk71;
-} Player_40;
+} Object_40;
 
 typedef struct Player_4C {
     u8 pad0[0x10];
@@ -282,7 +282,7 @@ typedef struct Player_4C {
     u16 unk14;
 } Player_4C;
 
-typedef struct Player_64 {
+typedef struct Object_64 {
     f32 unk0;
     s32 unk4;
     u8 pad8[4];
@@ -339,14 +339,14 @@ typedef struct Player_64 {
     u8 pad1D8[0x1A];
     u8 unk1F2;
     u8 unk1F3;
-} Player_64;
+} Object_64;
 
-typedef struct Player_68{
+typedef struct Object_68{
     u8 pad00[0x20];
     s8 unk20;
- } Player_68;
+ } Object_68;
 /* Size: 0x0630 bytes */
-typedef struct Player {
+typedef struct Object {
   /* 0x0000 */ s16 y_rotation;
   /* 0x0002 */ s16 x_rotation;
   /* 0x0004 */ s16 z_rotation;
@@ -372,9 +372,9 @@ typedef struct Player {
   /* 0x0039 */ u8 unk39;
   /* 0x003A */ s8 unk3A;
   /* 0x003B */ s8 unk3B;
-  /* 0x003C */ Player_3C* unk3C;
+  /* 0x003C */ Object_3C* unk3C;
 
-  /* 0x0040 */ Player_40 *descriptor_ptr;
+  /* 0x0040 */ Object_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ s16 unk48;
   /* 0x004A */ s16 unk4A;
@@ -385,8 +385,8 @@ typedef struct Player {
   /* 0x005C */ u32 unk5C;
 
   /* 0x0060 */ void *unk60; //player + 0x340
-  /* 0x0064 */ Player_64 *unk64; //player + 0x98
-  /* 0x0068 */ Player_68 **unk68; //player + 0x80
+  /* 0x0064 */ Object_64 *unk64; //player + 0x98
+  /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ void *unk6C; //player + 0x370
   /* 0x0070 */ u32 unk70;
 
@@ -409,7 +409,7 @@ typedef struct Player {
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
 
-  /* 0x0098 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Player controlled
+  /* 0x0098 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
   /* 0x009A */ u8 unk9A;
   /* 0x009B */ u8 characterId; // Affects minimap color, horn, voice, etc.
 
@@ -605,6 +605,6 @@ typedef struct Player {
   /* 0x0374 */ s32 unk374;
 
   u32 unk378[174]; // Not an array. Unknown values.
-} Player;
+} Object;
 
 #endif

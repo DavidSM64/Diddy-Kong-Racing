@@ -1,4 +1,4 @@
-glabel func_8001D80C
+glabel calc_dynamic_lighting_for_object_1
 /* 01E40C 8001D80C 27BDFF60 */  addiu $sp, $sp, -0xa0
 /* 01E410 8001D810 AFB20020 */  sw    $s2, 0x20($sp)
 /* 01E414 8001D814 AFBF003C */  sw    $ra, 0x3c($sp)

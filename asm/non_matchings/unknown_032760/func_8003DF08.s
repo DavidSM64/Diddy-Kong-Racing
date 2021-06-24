@@ -35,7 +35,7 @@ glabel func_8003DF08
 /* 03EB8C 8003DF8C 240A0001 */  li    $t2, 1
 /* 03EB90 8003DF90 012A5804 */  sllv  $t3, $t2, $t1
 /* 03EB94 8003DF94 010B6025 */  or    $t4, $t0, $t3
-/* 03EB98 8003DF98 0C003FEE */  jal   particlePtrList_addObject
+/* 03EB98 8003DF98 0C003FEE */  jal   gParticlePtrList_addObject
 /* 03EB9C 8003DF9C A44C0008 */   sh    $t4, 8($v0)
 /* 03EBA0 8003DFA0 8FA60018 */  lw    $a2, 0x18($sp)
 /* 03EBA4 8003DFA4 00000000 */  nop   

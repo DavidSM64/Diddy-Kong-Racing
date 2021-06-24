@@ -2,7 +2,7 @@ glabel menu_trophy_race_round_loop
 /* 09919C 8009859C 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0991A0 800985A0 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0991A4 800985A4 AFA40020 */  sw    $a0, 0x20($sp)
-/* 0991A8 800985A8 0C0078A7 */  jal   func_8001E29C
+/* 0991A8 800985A8 0C0078A7 */  jal   get_misc_asset
 /* 0991AC 800985AC 2404001A */   li    $a0, 26
 /* 0991B0 800985B0 3C07800E */  lui   $a3, %hi(D_800E0980) # $a3, 0x800e
 /* 0991B4 800985B4 24E70980 */  addiu $a3, %lo(D_800E0980) # addiu $a3, $a3, 0x980

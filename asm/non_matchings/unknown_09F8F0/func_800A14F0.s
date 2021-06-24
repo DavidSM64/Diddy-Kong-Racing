@@ -10,7 +10,7 @@ glabel func_800A14F0
 /* 0A20F4 800A14F4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0A20F8 800A14F8 AFA40060 */  sw    $a0, 0x60($sp)
 /* 0A20FC 800A14FC AFA50064 */  sw    $a1, 0x64($sp)
-/* 0A2100 800A1500 0C006E9D */  jal   getPlayerStructArray
+/* 0A2100 800A1500 0C006E9D */  jal   get_object_struct_array
 /* 0A2104 800A1504 27A40050 */   addiu $a0, $sp, 0x50
 /* 0A2108 800A1508 3C0E8012 */  lui   $t6, %hi(D_80126D37) # $t6, 0x8012
 /* 0A210C 800A150C 91CE6D37 */  lbu   $t6, %lo(D_80126D37)($t6)

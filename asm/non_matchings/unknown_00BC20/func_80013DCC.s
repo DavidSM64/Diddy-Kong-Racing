@@ -37,7 +37,7 @@ glabel func_80013DCC
 /* 014A3C 80013E3C 8CD90000 */  lw    $t9, ($a2)
 /* 014A40 80013E40 3C018012 */  lui   $at, %hi(D_8011AE94) # $at, 0x8012
 /* 014A44 80013E44 AFAB0054 */  sw    $t3, 0x54($sp)
-/* 014A48 80013E48 0C0078A7 */  jal   func_8001E29C
+/* 014A48 80013E48 0C0078A7 */  jal   get_misc_asset
 /* 014A4C 80013E4C AC39AE94 */   sw    $t9, %lo(D_8011AE94)($at)
 /* 014A50 80013E50 8FAB0054 */  lw    $t3, 0x54($sp)
 /* 014A54 80013E54 00000000 */  nop   

@@ -185,7 +185,7 @@ extern s32 osTvType;
 void func_8006F43C(void);
 
 void func_800014BC(f32 arg0);
-s8 *func_8001E29C(s32 arg0);
+s8 *get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
 void func_8006F64C(s32*, f32, f32, f32, f32*, f32*, f32*);
 void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);
@@ -246,7 +246,7 @@ s32 func_8006B1D4(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_80121174) {
         arg0 = 0;
     }
-    temp = func_8001E29C(0x1B);
+    temp = get_misc_asset(0x1B);
     
     return temp[arg0];
 }
@@ -354,7 +354,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
                             D_800DD330 = (u8)2;
                         }
                     }
-                    temp_v0_4 = func_8001E29C(0x43);
+                    temp_v0_4 = get_misc_asset(0x43);
                     phi_s0 = 0;
                     while(arg0 != temp_v0_4[phi_s0 + 1]) {
                         phi_s0++;
@@ -373,7 +373,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
                             settings->cutsceneFlags |= temp_v0_5;
                             arg2 = 0;
                             arg4 = 5;
-                            arg0 = func_8001E29C(0x44)[gCurrentLevelHeader->world - 1];
+                            arg0 = get_misc_asset(0x44)[gCurrentLevelHeader->world - 1];
                         }
                     }
                 }
@@ -385,7 +385,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
                 arg2 = 0;
                 func_8006C1AC(arg0, temp_a1, arg3, temp_a3);
                 settings->cutsceneFlags |= 0x2000;
-                arg0 = (s32) func_8001E29C(0x44)[1];
+                arg0 = (s32) get_misc_asset(0x44)[1];
             }
         }
     }
@@ -403,7 +403,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     D_80121164 = arg0;
     for (phi_v1_5 = 0; phi_v1_5 < 7; phi_v1_5++) {
         if ((s32)gCurrentLevelHeader->unk74[phi_v1_5] != -1) {
-            gCurrentLevelHeader->unk74[phi_v1_5] = func_8001E29C((s32)gCurrentLevelHeader->unk74[phi_v1_5]);
+            gCurrentLevelHeader->unk74[phi_v1_5] = get_misc_asset((s32)gCurrentLevelHeader->unk74[phi_v1_5]);
             func_8007F1E8(gCurrentLevelHeader->unk74[phi_v1_5]);
         }
     }
@@ -520,7 +520,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         gCurrentLevelHeader->unkAA = (u16)0;
     }
     if ((s32)gCurrentLevelHeader->unkAC != -1) {
-        gCurrentLevelHeader->unkAC = func_8001E29C((s32)gCurrentLevelHeader->unkAC);
+        gCurrentLevelHeader->unkAC = get_misc_asset((s32)gCurrentLevelHeader->unkAC);
         func_8007F414(gCurrentLevelHeader->unkAC);
     }
     func_800660EC((f32)gCurrentLevelHeader->unk9C);
@@ -1074,7 +1074,7 @@ void func_8006DBE4(void) {
 void func_8006DC58(s32 arg0) {
     if (func_800C73E0() == 0) {
         func_80010994(arg0);
-        particlePtrList_flush();
+        gParticlePtrList_flush();
         func_8001BF20();
         func_80024D54(&D_801211F8, &D_80121208, &D_80121218, &D_80121228, arg0);
         func_800C3440(arg0);
@@ -1108,11 +1108,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006E3BC.s")
 
 void func_8006E5BC(void) {
     s32 i, j;
-    gSettingsPtr->playerCount = get_number_of_active_players();
+    gSettingsPtr->gObjectCount = get_number_of_active_players();
     for (i = 0; i < 8; i++) {
         gSettingsPtr->racers[i].best_times = 0;
         gSettingsPtr->racers[i].character = get_character_id_from_slot(i);
-        if (gSettingsPtr->playerCount >= 2) {
+        if (gSettingsPtr->gObjectCount >= 2) {
             gSettingsPtr->racers[i].starting_position = i;
         } else if (is_in_two_player_adventure()) {
             gSettingsPtr->racers[i].starting_position = 5 - i;

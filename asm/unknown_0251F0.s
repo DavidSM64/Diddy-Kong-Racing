@@ -8,4 +8,4 @@
 .set gp=64     # 64-bit instructions are used
 
 .include "asm/unknown_0251F0/func_800245F0.s"
-.include "asm/unknown_0251F0/func_80024744.s"
+.include "asm/unknown_0251F0/calc_dynamic_lighting_for_object_2.s"

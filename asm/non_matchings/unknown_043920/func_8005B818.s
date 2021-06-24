@@ -41,7 +41,7 @@ glabel func_8005B818
 /* 05C464 8005B864 E7B50010 */  swc1  $f21, 0x10($sp)
 /* 05C468 8005B868 E7B40014 */  swc1  $f20, 0x14($sp)
 /* 05C46C 8005B86C AFA60130 */  sw    $a2, 0x130($sp)
-/* 05C470 8005B870 0C0078A7 */  jal   func_8001E29C
+/* 05C470 8005B870 0C0078A7 */  jal   get_misc_asset
 /* 05C474 8005B874 24040021 */   li    $a0, 33
 /* 05C478 8005B878 3C018012 */  lui   $at, %hi(D_8011D564) # $at, 0x8012
 /* 05C47C 8005B87C 0C01AF6C */  jal   get_current_level_header

@@ -129,7 +129,7 @@ s32 D_8011AD38;
 s8 D_8011AD3C;
 s8 D_8011AD3D;
 s8 D_8011AD3E;
-Player *D_8011AD40;
+Object *D_8011AD40;
 s8 D_8011AD44;
 s8 D_8011AD45;
 s16 D_8011AD46;
@@ -145,13 +145,13 @@ s32 D_8011AD54;
 s32 *D_8011AD58;
 s32 D_8011AD5C;
 s32 D_8011AD60;
-s32 *D_8011AD64;
-s32 D_8011AD68;
-s32 *D_8011AD6C;
-s32 *D_8011AD70;
+s32 *gAssetsObjectHeadersTable;
+s32 gAssetsObjectHeadersTableLength;
+s32 *gAssetsMiscSection;
+s32 *gAssetsMiscTable;
 s32 D_8011AD74;
 Gfx *D_8011AD78[10];
-s32 D_8011ADA0;
+s32 gAssetsMiscTableLength;
 s16 D_8011ADA4;
 f32 D_8011ADA8;
 s32 D_8011ADAC;
@@ -177,7 +177,7 @@ s32 (*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8]; // Unknown number of entries.
 s32 D_8011AE50;
 s32 D_8011AE54;
-Player **objPtrList; // Not sure about the number of elements
+Object **gObjPtrList; // Not sure about the number of elements
 s32 objCount;
 s32 D_8011AE60;
 s32 D_8011AE64;
@@ -201,11 +201,11 @@ s32 D_8011AEA0;
 s32 D_8011AEA4;
 s32 D_8011AEA8[2];
 s32 D_8011AEB0[2];
-s16 *D_8011AEB8;
-s32 D_8011AEBC;
+s16 *gAssetsLvlObjTranslationTable;
+s32 gAssetsLvlObjTranslationTableLength;
 s32 D_8011AEC0;
-Player **particlePtrList;
-s32 particleCount;
+Object **gParticlePtrList;
+s32 gParticleCount;
 
 /* Size: 0x3C bytes */
 typedef struct unknown8011AECC {
@@ -219,10 +219,10 @@ s32 D_8011AED4;
 s16 D_8011AED8;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 s32 D_8011AEE0;
-Player *(*playerStructArray_Ptr)[8];
+Object *(*gObjectStructArrayPtr)[8];
 s32 *D_8011AEE8;
 s32 *D_8011AEEC;
-s32 playerCount;
+s32 gObjectCount;
 u8 gTimeTrialEnabled;
 u8 D_8011AEF5;
 u8 D_8011AEF6;
@@ -310,16 +310,16 @@ typedef struct unk8001D6E4_arg1 {
 /* 0x40 */ unk8001D6E4_arg1_40 *unk40;
 } unk8001D6E4_arg1;
 
-void func_8001D80C(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
-void func_80024744(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
+void calc_dynamic_lighting_for_object_1(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
+void calc_dynamic_lighting_for_object_2(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
 
 void func_8000C460(void);
 
 void *new_sub_memory_pool(s32, u32);
 void *allocate_from_main_pool_safe(s32, u32);
 s32 *load_asset_section_from_rom(s32);
-void particlePtrList_addObject(Player *);
-void particlePtrList_flush(void);
+void gParticlePtrList_addObject(Object *);
+void gParticlePtrList_flush(void);
 void func_8001D258(f32, f32, s32, s32, s32);
 
 extern void func_800245B4(s16);
@@ -332,17 +332,17 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
 #else 
 
 extern s32 D_800DC754;
-extern Player* D_800DC75C;
-extern Player* D_800DC764;
+extern Object* D_800DC75C;
+extern Object* D_800DC764;
 
-s32 *func_8001E29C(s32 arg0);
+s32 *get_misc_asset(s32 arg0);
 
 void func_8000B290(){
 
     if(D_800DC754){
         free_from_memory_pool();
     }
-    func_8001E29C(20);
+    get_misc_asset(20);
     /*{
         if(D_800DC754->unk7a)
             func_8007CCB0();
@@ -353,14 +353,14 @@ void func_8000B290(){
         D_800DC754->unk7C = 0;
     }*/
     if(D_800DC75C)
-        particlePtrList_addObject(D_800DC75C);
+        gParticlePtrList_addObject(D_800DC75C);
     D_800DC75C = NULL;
     
     if(D_800DC764)
-        particlePtrList_addObject(D_800DC764);
+        gParticlePtrList_addObject(D_800DC764);
     D_800DC764 = NULL;
 
-    particlePtrList_flush();
+    gParticlePtrList_flush();
 }
 #endif
 
@@ -378,51 +378,52 @@ u32* func_8000BF44(s32 arg0) {
     return D_8011B020[arg0];
 }
 
-void func_8000C2D8(u8 *arg0, s32 length);
+void decrypt_magic_codes(u8 *arg0, s32 length);
 
 void func_8000BF8C(void) {
     s32 i;
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     D_8011AE68 = (s32*)new_sub_memory_pool(0x15800, 0x200);
-    particlePtrList = (Player **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
+    gParticlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
     D_8011AE6C = (s32*)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
     D_8011AE74 = (s32*)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
     D_8011AECC = (unknown8011AECC*)allocate_from_main_pool_safe(0xE10, COLOR_TAG_BLUE);
     D_8011AEDC = (s32*)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
-    playerStructArray_Ptr = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
+    gObjectStructArrayPtr = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
     D_8011AEEC = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
     D_8011AEE8 = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
     D_8011AF04 = (s32*)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
     D_8011ADCC = (s32*)allocate_from_main_pool_safe(8, COLOR_TAG_BLUE);
     D_8011AFF4 = (s32*)allocate_from_main_pool_safe(0x400, COLOR_TAG_BLUE);
-    D_8011AEB8 = (s32*)load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
-    D_8011AEBC = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
-    while (D_8011AEB8[D_8011AEBC] == 0) {
-        D_8011AEBC--;
+    gAssetsLvlObjTranslationTable = (s32*)load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
+    gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
+    while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
+        gAssetsLvlObjTranslationTableLength--;
     }
     D_8011AD58 = (s32*)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
-    D_8011AD64 = load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
-    D_8011AD68 = 0;
-    while (-1 != D_8011AD64[D_8011AD68]) {
-        D_8011AD68++;
+    gAssetsObjectHeadersTable = load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
+    gAssetsObjectHeadersTableLength = 0;
+    while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
+        gAssetsObjectHeadersTableLength++;
     }
-    D_8011AD68--;
-    D_8011AE48 = (s32*)allocate_from_main_pool_safe(D_8011AD68 << 2, COLOR_TAG_WHITE);
-    D_8011AE4C = (s32*)allocate_from_main_pool_safe(D_8011AD68, COLOR_TAG_WHITE);
+    gAssetsObjectHeadersTableLength--;
+    D_8011AE48 = (s32*)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOR_TAG_WHITE);
+    D_8011AE4C = (s32*)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOR_TAG_WHITE);
     
-    for (i = 0; i < D_8011AD68; i++) {
+    for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
         (*D_8011AE4C)[i] = 0;
     }
     
-    D_8011AD6C = load_asset_section_from_rom(ASSET_MISC);
-    D_8011AD70 = load_asset_section_from_rom(ASSET_MISC_TABLE);
-    D_8011ADA0 = 0;
-    while (-1 != D_8011AD70[D_8011ADA0]) {
-        D_8011ADA0++;
+    gAssetsMiscSection = load_asset_section_from_rom(ASSET_MISC);
+    gAssetsMiscTable = load_asset_section_from_rom(ASSET_MISC_TABLE);
+    gAssetsMiscTableLength = 0;
+    while (-1 != gAssetsMiscTable[gAssetsMiscTableLength]) {
+        gAssetsMiscTableLength++;
     }
-    func_8000C2D8(&D_8011AD6C[D_8011AD70[65]], (D_8011AD70[66] - D_8011AD70[65]) * 4);
-    objPtrList = (Player**)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    
+    decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
+    gObjPtrList = (Object**)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
@@ -431,10 +432,10 @@ void func_8000BF8C(void) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C2D8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/decrypt_magic_codes.s")
 #else
 // Decrypts cheats
-void func_8000C2D8(u8 *arg0, s32 length) {
+void decrypt_magic_codes(u8 *data, s32 length) {
     u8 sp3;
     u8 sp2;
     u8 sp1;
@@ -445,14 +446,14 @@ void func_8000C2D8(u8 *arg0, s32 length) {
     //numWords = length / 4;
     
     for (i = 0; i < length; i++) {
-        sp0 = ((arg0[i + 3] & 0xC0) >> 6) | (arg0[i + 0] & 0xC0) | ((arg0[i + 1] & 0xC0) >> 2) | ((arg0[i + 2] & 0xC0) >> 4);
-        sp1 = ((arg0[i + 3] & 0x30) >> 4) | ((arg0[i + 0] & 0x30) << 2) | (arg0[i + 1] & 0x30) | ((arg0[i + 2] & 0x30) >> 2);
-        sp2 = ((arg0[i + 3] & 0xC) >> 2) | ((arg0[i + 0] & 0xC) << 4) | ((arg0[i + 1] & 0xC) << 2) | (arg0[i + 2] & 0xC);
-        sp3 = (arg0[i + 3] & 3) | (arg0[i + 0] << 6) | ((arg0[i + 1] & 3) << 4) | ((arg0[i + 2] & 3) << 2);
-        arg0[i + 0] = ((sp0 & 0x55) << 1) | ((sp0 & 0xAA) >> 1);
-        arg0[i + 1] = ((sp1 & 0x55) << 1) | ((sp1 & 0xAA) >> 1);
-        arg0[i + 2] = ((sp2 & 0x55) << 1) | ((sp2 & 0xAA) >> 1);
-        arg0[i + 3] = ((sp3 & 0x55) << 1) | ((sp3 & 0xAA) >> 1);
+        sp0 = ((data[i + 3] & 0xC0) >> 6) | (data[i + 0] & 0xC0) | ((data[i + 1] & 0xC0) >> 2) | ((data[i + 2] & 0xC0) >> 4);
+        sp1 = ((data[i + 3] & 0x30) >> 4) | ((data[i + 0] & 0x30) << 2) | (data[i + 1] & 0x30) | ((data[i + 2] & 0x30) >> 2);
+        sp2 = ((data[i + 3] & 0xC) >> 2) | ((data[i + 0] & 0xC) << 4) | ((data[i + 1] & 0xC) << 2) | (data[i + 2] & 0xC);
+        sp3 = (data[i + 3] & 3) | (data[i + 0] << 6) | ((data[i + 1] & 3) << 4) | ((data[i + 2] & 3) << 2);
+        data[i + 0] = ((sp0 & 0x55) << 1) | ((sp0 & 0xAA) >> 1);
+        data[i + 1] = ((sp1 & 0x55) << 1) | ((sp1 & 0xAA) >> 1);
+        data[i + 2] = ((sp2 & 0x55) << 1) | ((sp2 & 0xAA) >> 1);
+        data[i + 3] = ((sp3 & 0x55) << 1) | ((sp3 & 0xAA) >> 1);
     }
 }
 #endif
@@ -463,11 +464,11 @@ void func_8000C460(void) {
     D_8011AD26[0] = 1;
     D_8011AD5C = 0;
     D_8011AD60 = 0;
-    particleCount = 0;
+    gParticleCount = 0;
     D_8011AE70 = 0;
     D_8011AED0 = 0;
     D_8011AED4 = 0;
-    playerCount = 0;
+    gObjectCount = 0;
     D_8011AE78 = 0;
     D_8011AD20[1] = 0;
     D_8011AD22[0] = 0;
@@ -515,12 +516,12 @@ void func_8000C604(void) {
         D_800DC744 = 0;
         func_8006F398();
     }
-    particlePtrList_flush();
+    gParticlePtrList_flush();
     len = objCount;
     for (i = 0; i < len; i++) {
-        func_800101AC(objPtrList[i], 1);
+        func_800101AC(gObjPtrList[i], 1);
     }
-    particleCount = 0;
+    gParticleCount = 0;
     objCount = 0;
     D_8011AE60 = 0;
     func_8000C460();
@@ -657,24 +658,30 @@ s8 func_8000E1DC() {
     return D_8011AE03;
 }
 
-void func_8000E1EC(Player *arg0, s32 arg1) {
-    D_8011AD40 = arg0;
+void func_8000E1EC(Object *object, s32 arg1) {
+    D_8011AD40 = object;
     D_8011AD44 = 4;
     D_8011AD45 = arg1;
-    D_8011AD46 = arg0->x_position;
-    D_8011AD48 = arg0->y_position;
-    D_8011AD4A = arg0->z_position;
-    D_8011AD4C = arg0->y_rotation;
-    particlePtrList_addObject(arg0);
-    playerCount = 0;
+    D_8011AD46 = object->x_position;
+    D_8011AD48 = object->y_position;
+    D_8011AD4A = object->z_position;
+    D_8011AD4C = object->y_rotation;
+    gParticlePtrList_addObject(object);
+    gObjectCount = 0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
 
+/**
+ * Enables or Disables time trial mode.
+ */
 void set_time_trial_enabled(s32 arg0) {
     gTimeTrialEnabled = arg0;
 }
 
+/**
+ * Returns the value in gTimeTrialEnabled.
+ */
 u8 is_time_trial_enabled() {
     return gTimeTrialEnabled;
 }
@@ -690,17 +697,17 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E79C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E898.s")
 
 
-Player *getObject(s32 indx) {
-    if (indx < 0 || indx >= objCount) {
+Object *get_object(s32 index) {
+    if (index < 0 || index >= objCount) {
         return 0;
     }
-    return objPtrList[indx];
+    return gObjPtrList[index];
 }
 
-Player **func_8000E988(s32 *arg0, s32 *cnt) {
+Object **func_8000E988(s32 *arg0, s32 *cnt) {
     *arg0 = D_8011AE60;
     *cnt = objCount;
-    return objPtrList;
+    return gObjPtrList;
 }
 
 // Unused?
@@ -713,10 +720,10 @@ s32 func_8000E9C0(void) {
     return D_8011AE64;
 }
 
-void func_8000E9D0(Player* arg0){
+void func_8000E9D0(Object* arg0){
     arg0->unk6 |= 0x8000;
     func_800245B4(arg0->unk2C | 0xC000);
-    objPtrList[objCount++] = arg0;
+    gObjPtrList[objCount++] = arg0;
     if(1);
     D_8011AE64++;
 }    
@@ -763,37 +770,36 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
 
 
-void particlePtrList_addObject(Player* arg0){
-    func_800245B4(arg0->unk4A | 0x8000);
-    particlePtrList[particleCount] = arg0;
-    particleCount++;
+void gParticlePtrList_addObject(Object* object){
+    func_800245B4(object->unk4A | 0x8000);
+    gParticlePtrList[gParticleCount] = object;
+    gParticleCount++;
 }
 
-
 s32 func_80010018(void){
-    return D_8011AEBC;
+    return gAssetsLvlObjTranslationTableLength;
 }
 
 s32 func_80010028(s32 arg0){
-    return (D_8011AEB8[arg0] < D_8011AD68);
+    return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/particlePtrList_flush.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/gParticlePtrList_flush.s")
 #else
 //bad regalloc; swap s2 = s3
-/*removes objects in particleList from objPtrList and frees*/
-void particlePtrList_flush(void){
+/*removes objects in particleList from gObjPtrList and frees*/
+void gParticlePtrList_flush(void){
     s32  j, i, search_indx, tmp;
-    Player* searchObj;
+    Object* searchObj;
     
     D_8011AE88 = 0;
-    for (i = 0; i < particleCount; i++){
+    for (i = 0; i < gParticleCount; i++){
         search_indx = -1;
-        searchObj = particlePtrList[i];
+        searchObj = gParticlePtrList[i];
         
         for(j = 0; j < objCount; j++){
-            if(searchObj == objPtrList[j])
+            if(searchObj == gObjPtrList[j])
                 search_indx = j;
         }
 
@@ -805,12 +811,12 @@ void particlePtrList_flush(void){
             
             objCount--;
             for(j = search_indx; j < objCount; j++){
-                objPtrList[j] = objPtrList[j+1];
+                gObjPtrList[j] = gObjPtrList[j+1];
             }
         }
         func_800101AC(searchObj,0);
     }
-    particleCount = 0;
+    gParticleCount = 0;
 }
 #endif
 
@@ -843,11 +849,11 @@ void func_80011560(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
-void func_80011960(Player*, s32, u32, Player_64*, u32, u32, u32, u32, f32);
+void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
 #else
-void func_80011960(Player* arg0, s32 arg2, u32 arg3, Player_64* arg4
+void func_80011960(Object* arg0, s32 arg2, u32 arg3, Object_64* arg4
                   , u32 arg5 , u32 arg6 , u32 arg7, u32 arg8, f32 arg9)
 {
 
@@ -859,7 +865,7 @@ void func_80011960(Player* arg0, s32 arg2, u32 arg3, Player_64* arg4
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
 #else
 extern f32 D_800E5550;
-void func_80011AD0(Player* this){
+void func_80011AD0(Object* this){
     f32 tmp_f0;
     u32 offset;
     switch(this->unk48){
@@ -908,7 +914,7 @@ void func_80011AD0(Player* this){
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011C94.s")
 #else
-void func_80011C94(Player* this){
+void func_80011C94(Object* this){
 }
 #endif
 
@@ -919,7 +925,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800120C8.s")
 
 extern f32 D_8011AD30;
 
-void func_800120C8(Player* this){
+void func_800120C8(Object* this){
     u32 sp_b8;
     u32 sp_a8;
     u32 sp_a4;
@@ -928,7 +934,7 @@ void func_800120C8(Player* this){
     u32 *s0;
     f32 tmp_f_1;
     f32 *tmp_fp_s1;
-    Player_64* tmp_s3;
+    Object_64* tmp_s3;
 
     s0 = ((u32*) this->unk68)[this->unk3A];
     if(s0){
@@ -1036,37 +1042,34 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_8001348C(Player *);
+void func_8001348C(Object *);
 
-func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Player * arg3){
+func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object){
     f32 scale;
     u32 tmp2;
     u32 tmp3;
-    if(arg3->unk6 & 0x5000)
+    if(object->unk6 & 0x5000)
         return;
-    
-    func_800B76B8(2, arg3->unk4A);
+    func_800B76B8(2, object->unk4A);
     D_8011AE8C = *arg0;
     D_8011AE90 = *arg1;
     D_8011AE94 = *arg2;
-    scale = arg3->scale;
-    func_8001348C(arg3);
-    arg3->scale = scale;
+    scale = object->scale;
+    func_8001348C(object);
+    object->scale = scale;
     *arg0 = D_8011AE8C;
     *arg1 = D_8011AE90;
     *arg2 = D_8011AE94;
     func_800B76B8(2, -1);
-
-    
 }
 
 extern f32 func_800707F8(s16);
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
 #else
-void func_80012E28(Player *this){
+void func_80012E28(Object *this){
     s32         unused1;
-    Player_64  *sp_20;
+    Object_64  *sp_20;
     f32         tmp_f2;
     f32         sp_1c;
     f32         tmp_f0;
@@ -1099,12 +1102,12 @@ void func_80012E28(Player *this){
 #endif
 
 
-void func_80012F30(Player *arg0) {
+void func_80012F30(Object *arg0) {
     if (arg0->unk48 == 1) {
-        Player_64 *player_64 = arg0->unk64;
-        arg0->y_rotation -= player_64->unk160;
-        arg0->x_rotation -= player_64->unk162;
-        arg0->z_rotation -= player_64->unk164;
+        Object_64 *object_64 = arg0->unk64;
+        arg0->y_rotation -= object_64->unk160;
+        arg0->x_rotation -= object_64->unk162;
+        arg0->z_rotation -= object_64->unk164;
         arg0->y_position -= D_8011ADD0;
     }
 }
@@ -1112,11 +1115,9 @@ void func_80012F30(Player *arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
 
 
+void func_80013548(Object *arg0);
 
-
-void func_80013548(Player *arg0);
-
-void func_8001348C(Player *this){
+void func_8001348C(Object *this){
     func_80012F94(this);
     if(this->unk6 & 0x8000){
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
@@ -1132,7 +1133,7 @@ void func_8001348C(Player *this){
     func_80013548(this);
 }
 
-void func_80013548(Player *arg0) {
+void func_80013548(Object *arg0) {
     if ((arg0->unk6 & 0x8000) == 0 && arg0->descriptor_ptr->unk54 == 1) {
         arg0->x_position -= arg0->unk64->unk78;
         arg0->y_position -= arg0->unk64->unk7C;
@@ -1149,11 +1150,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
 void func_800142B8(void){
     s32 i =  D_8011AE60;
     s32 j;
-    Player* currObj;
-    Player_68 *curr_68;
+    Object* currObj;
+    Object_68 *curr_68;
 
     for(; i < objCount; i++){
-        currObj = objPtrList[i];
+        currObj = gObjPtrList[i];
         if( (currObj->unk6 & 0x8000) == 0  && currObj->descriptor_ptr->unk53 == 0){
             for(j=0; j<currObj->descriptor_ptr->unk55; j++){
                 curr_68 = currObj->unk68[j];
@@ -1208,11 +1209,11 @@ s16 func_80017E88(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
 
-Player * func_80018C6C(void){
+Object * func_80018C6C(void){
     s32 i;
-    Player* current_obj;
+    Object* current_obj;
     for(i=D_8011AE60; i < objCount; i++){
-        current_obj = objPtrList[i];
+        current_obj = gObjPtrList[i];
         if(!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
             return current_obj;
     }
@@ -1312,29 +1313,29 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Player **getPlayerStructArray(s32 *cnt) {
-    *cnt = playerCount;
-    return *playerStructArray_Ptr;
+Object **get_object_struct_array(s32 *cnt) {
+    *cnt = gObjectCount;
+    return *gObjectStructArrayPtr;
 }
 
 s32 *func_8001BA90(s32 *arg0) {
-    *arg0 = playerCount;
+    *arg0 = gObjectCount;
     return D_8011AEEC;
 }
 
 s32 *func_8001BAAC(s32 *arg0) {
-    *arg0 = playerCount;
+    *arg0 = gObjectCount;
     return D_8011AEE8;
 }
 
-Player *getPlayerStruct(s32 indx) {
-    if (playerCount == 0) {
+Object *get_object_struct(s32 indx) {
+    if (gObjectCount == 0) {
         return NULL;
     }
-    if(indx < 0 || indx >= playerCount) {
+    if(indx < 0 || indx >= gObjectCount) {
         return NULL;
     }
-    return (*playerStructArray_Ptr)[indx];
+    return (*gObjectStructArrayPtr)[indx];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB18.s")
@@ -1395,7 +1396,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
 
-void func_8001D6E4(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
+void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 arg3) {
     s16 environmentMappingEnabled;
     s32 dynamicLightingEnabled;
     s16 i;
@@ -1403,11 +1404,11 @@ void func_8001D6E4(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
     dynamicLightingEnabled = 0;
     environmentMappingEnabled = 0;
     
-    for (i = 0; i < arg0->numberOfBatches; i++) {
-        if (arg0->batches[i].unk6 != 0xFF) {
+    for (i = 0; i < model->numberOfBatches; i++) {
+        if (model->batches[i].unk6 != 0xFF) {
             dynamicLightingEnabled = -1; // This is a bit weird, but I guess it works.
         }
-        if (arg0->batches[i].flags & 0x8000) {
+        if (model->batches[i].flags & 0x8000) {
             environmentMappingEnabled = -1;
         }
     }
@@ -1416,28 +1417,32 @@ void func_8001D6E4(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
         // Calculates dynamic lighting for the object
         if (object->descriptor_ptr->unk71 != 0) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
-            func_8001D80C(object, arg0, arg2, object, arg3, 1.0f);
+            calc_dynamic_lighting_for_object_1(object, model, arg2, object, arg3, 1.0f);
         } else {
             // Dynamic lighting for other objects? (Racers, Rare logo, Wizpig face, etc.)
-            func_80024744(object, arg0, arg2, arg3);
+            calc_dynamic_lighting_for_object_2(object, model, arg2, arg3);
         }
     }
     
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
-        func_8001DD54(arg0, object->z_rotation, object->x_rotation, object->y_rotation);
+        calc_env_mapping_for_object(model, object->z_rotation, object->x_rotation, object->y_rotation);
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D80C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001DD54.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_dynamic_lighting_for_object_1.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_env_mapping_for_object.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E13C.s")
 
-s32 *func_8001E29C(s32 arg0) {
-    if (arg0 < 0 || arg0 >= D_8011ADA0) {
-        return D_8011AD6C;
+/**
+ * Returns a pointer to the asset in the misc. section. If index is out of range, then this
+ * function just returns the pointer to gAssetsMiscSection.
+ */
+s32 *get_misc_asset(s32 index) {
+    if (index < 0 || index >= gAssetsMiscTableLength) {
+        return gAssetsMiscSection;
     }
-    return (s32*)&D_8011AD6C[D_8011AD70[arg0]];
+    return (s32*)&gAssetsMiscSection[gAssetsMiscTable[index]];
 }
 
 s32 func_8001E2EC(s32 arg0) {
@@ -1459,12 +1464,12 @@ void func_8001E344(s32 arg0) {
 
 void func_8001E36C(s32 arg0, f32* arg1, f32* arg2, f32* arg3){
     s32 i;
-    Player* current_obj;
+    Object* current_obj;
     *arg1 = -32000.0f;
     *arg2 = -32000.0f;
     *arg3 = -32000.0f;
     for(i=0; i<objCount; i++){
-        current_obj = objPtrList[i];
+        current_obj = gObjPtrList[i];
 
         if( current_obj != NULL
         && (current_obj->unk6 & 0x8000) == 0 
@@ -1576,14 +1581,14 @@ void func_800228DC(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 void func_800228EC(s32 arg0) {
-    Player_64 *player_64;
+    Object_64 *object_64;
 
     D_8011AEF7 = 3;
-    player_64 = getPlayerStruct(0)->unk64;
-    player_64->unk190 = 0;
-    player_64->unk192 = 0;
-    player_64->unk193 = 0;
-    player_64->unk1BA = 0;
+    object_64 = get_object_struct(0)->unk64;
+    object_64->unk190 = 0;
+    object_64->unk192 = 0;
+    object_64->unk193 = 0;
+    object_64->unk1BA = 0;
     func_80017E74(arg0);
     func_8006F388(10);
 }
@@ -1604,17 +1609,17 @@ extern f32 sqrtf(f32);
 
 //bad regalloc
 //finds furthest object (with some additional conditions)
-Player* func_8002342C(f32 x, f32 z){
-    Player* retval = NULL;
+Object* func_8002342C(f32 x, f32 z){
+    Object* retval = NULL;
     s32 i;
-    Player* currObj = NULL;
+    Object* currObj = NULL;
     f32 x;
     f32 z;
     f32 dist;
     f32 max = 0.0f;
     
     for(i=0; i<objCount; i++){
-        currObj = objPtrList[i];
+        currObj = gObjPtrList[i];
         if((currObj->unk6 & 0x8000) == 0 && currObj->unk48 == 87){
             x = currObj->x_position - x;
             z = currObj->z_position - z;

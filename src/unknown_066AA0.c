@@ -147,7 +147,7 @@ s16 D_800DD304 = -1;
 
 /************ .bss ************/
 
-/* Size: 0x44 bytes, might just be Player? */
+/* Size: 0x44 bytes, might just be Object? */
 typedef struct unk80120AC0 {
     s16 unk0;
     s16 unk2;
@@ -224,7 +224,7 @@ extern s32 SP_IMEM;
 
 unk80120AC0 *func_80069D20(void);
 void func_800014BC(f32 arg0);
-s8* func_8001E29C(s32 arg0);
+s8* get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
 void func_8006F64C(s32*, f32, f32, f32, f32*, f32*, f32*);
 void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);

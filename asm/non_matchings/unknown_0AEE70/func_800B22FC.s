@@ -167,7 +167,7 @@ glabel func_800B22FC
 /* 0B3158 800B2558 00000000 */  nop   
 /* 0B315C 800B255C 1D400005 */  bgtz  $t2, .L800B2574
 /* 0B3160 800B2560 00000000 */   nop   
-/* 0B3164 800B2564 0C003FEE */  jal   particlePtrList_addObject
+/* 0B3164 800B2564 0C003FEE */  jal   gParticlePtrList_addObject
 /* 0B3168 800B2568 02002025 */   move  $a0, $s0
 /* 0B316C 800B256C 10000030 */  b     .L800B2630
 /* 0B3170 800B2570 8FBF001C */   lw    $ra, 0x1c($sp)

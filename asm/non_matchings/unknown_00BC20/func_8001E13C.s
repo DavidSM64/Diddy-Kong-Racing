@@ -12,11 +12,11 @@ glabel func_8001E13C
 /* 01ED64 8001E164 AFA40010 */  sw    $a0, 0x10($sp)
 /* 01ED68 8001E168 18600048 */  blez  $v1, .L8001E28C
 /* 01ED6C 8001E16C 00001025 */   move  $v0, $zero
-/* 01ED70 8001E170 3C0C8012 */  lui   $t4, %hi(objPtrList) # $t4, 0x8012
+/* 01ED70 8001E170 3C0C8012 */  lui   $t4, %hi(gObjPtrList) # $t4, 0x8012
 /* 01ED74 8001E174 8FAA0028 */  lw    $t2, 0x28($sp)
 /* 01ED78 8001E178 8FA90024 */  lw    $t1, 0x24($sp)
 /* 01ED7C 8001E17C 8FA80020 */  lw    $t0, 0x20($sp)
-/* 01ED80 8001E180 258CAE58 */  addiu $t4, %lo(objPtrList) # addiu $t4, $t4, -0x51a8
+/* 01ED80 8001E180 258CAE58 */  addiu $t4, %lo(gObjPtrList) # addiu $t4, $t4, -0x51a8
 /* 01ED84 8001E184 240D0001 */  li    $t5, 1
 .L8001E188:
 /* 01ED88 8001E188 8D8F0000 */  lw    $t7, ($t4)

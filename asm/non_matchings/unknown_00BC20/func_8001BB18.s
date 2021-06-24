@@ -1,6 +1,6 @@
 glabel func_8001BB18
-/* 01C718 8001BB18 3C028012 */  lui   $v0, %hi(playerCount) # $v0, 0x8012
-/* 01C71C 8001BB1C 8C42AEF0 */  lw    $v0, %lo(playerCount)($v0)
+/* 01C718 8001BB18 3C028012 */  lui   $v0, %hi(gObjectCount) # $v0, 0x8012
+/* 01C71C 8001BB1C 8C42AEF0 */  lw    $v0, %lo(gObjectCount)($v0)
 /* 01C720 8001BB20 00000000 */  nop   
 /* 01C724 8001BB24 14400003 */  bnez  $v0, .L8001BB34
 /* 01C728 8001BB28 00000000 */   nop   

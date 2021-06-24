@@ -37,7 +37,7 @@ glabel func_8001F23C
 /* 01FEC8 8001F2C8 00000000 */  nop   
 /* 01FECC 8001F2CC 11A00005 */  beqz  $t5, .L8001F2E4
 /* 01FED0 8001F2D0 00000000 */   nop   
-/* 01FED4 8001F2D4 0C003FEE */  jal   particlePtrList_addObject
+/* 01FED4 8001F2D4 0C003FEE */  jal   gParticlePtrList_addObject
 /* 01FED8 8001F2D8 00402025 */   move  $a0, $v0
 /* 01FEDC 8001F2DC AE800064 */  sw    $zero, 0x64($s4)
 /* 01FEE0 8001F2E0 00008825 */  move  $s1, $zero

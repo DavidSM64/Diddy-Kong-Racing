@@ -6,7 +6,7 @@ glabel func_8000C718
 /* 00D328 8000C728 AFA40028 */  sw    $a0, 0x28($sp)
 /* 00D32C 8000C72C 01C41821 */  addu  $v1, $t6, $a0
 /* 00D330 8000C730 90650000 */  lbu   $a1, ($v1)
-/* 00D334 8000C734 3C0C8012 */  lui   $t4, %hi(D_8011AD64) # $t4, 0x8012
+/* 00D334 8000C734 3C0C8012 */  lui   $t4, %hi(gAssetsObjectHeadersTable) # $t4, 0x8012
 /* 00D338 8000C738 10A0000B */  beqz  $a1, .L8000C768
 /* 00D33C 8000C73C 3C048012 */   lui   $a0, %hi(D_8011AE68) # $a0, 0x8012
 /* 00D340 8000C740 24B80001 */  addiu $t8, $a1, 1
@@ -21,7 +21,7 @@ glabel func_8000C718
 /* 00D364 8000C764 8FBF0014 */   lw    $ra, 0x14($sp)
 .L8000C768:
 /* 00D368 8000C768 8FA30028 */  lw    $v1, 0x28($sp)
-/* 00D36C 8000C76C 8D8CAD64 */  lw    $t4, %lo(D_8011AD64)($t4)
+/* 00D36C 8000C76C 8D8CAD64 */  lw    $t4, %lo(gAssetsObjectHeadersTable)($t4)
 /* 00D370 8000C770 00035880 */  sll   $t3, $v1, 2
 /* 00D374 8000C774 018B1021 */  addu  $v0, $t4, $t3
 /* 00D378 8000C778 8C460000 */  lw    $a2, ($v0)

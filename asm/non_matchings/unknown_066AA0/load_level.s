@@ -165,7 +165,7 @@ glabel load_level
 /* 06C0A0 8006B4A0 3C01800E */  lui   $at, %hi(D_800DD330) # $at, 0x800e
 /* 06C0A4 8006B4A4 A038D330 */  sb    $t8, %lo(D_800DD330)($at)
 .L8006B4A8:
-/* 06C0A8 8006B4A8 0C0078A7 */  jal   func_8001E29C
+/* 06C0A8 8006B4A8 0C0078A7 */  jal   get_misc_asset
 /* 06C0AC 8006B4AC 24040043 */   li    $a0, 67
 /* 06C0B0 8006B4B0 8FA50060 */  lw    $a1, 0x60($sp)
 /* 06C0B4 8006B4B4 804B0000 */  lb    $t3, ($v0)
@@ -222,7 +222,7 @@ glabel load_level
 /* 06C174 8006B574 8C6F0010 */  lw    $t7, 0x10($v1)
 /* 06C178 8006B578 24040044 */  li    $a0, 68
 /* 06C17C 8006B57C 01E25825 */  or    $t3, $t7, $v0
-/* 06C180 8006B580 0C0078A7 */  jal   func_8001E29C
+/* 06C180 8006B580 0C0078A7 */  jal   get_misc_asset
 /* 06C184 8006B584 AC6B0010 */   sw    $t3, 0x10($v1)
 /* 06C188 8006B588 02025021 */  addu  $t2, $s0, $v0
 /* 06C18C 8006B58C 814CFFFF */  lb    $t4, -1($t2)
@@ -263,7 +263,7 @@ glabel load_level
 /* 06C210 8006B610 8C4A0010 */  lw    $t2, 0x10($v0)
 /* 06C214 8006B614 00000000 */  nop   
 /* 06C218 8006B618 354C2000 */  ori   $t4, $t2, 0x2000
-/* 06C21C 8006B61C 0C0078A7 */  jal   func_8001E29C
+/* 06C21C 8006B61C 0C0078A7 */  jal   get_misc_asset
 /* 06C220 8006B620 AC4C0010 */   sw    $t4, 0x10($v0)
 /* 06C224 8006B624 80590004 */  lb    $t9, 4($v0)
 /* 06C228 8006B628 00000000 */  nop   
@@ -318,7 +318,7 @@ glabel load_level
 /* 06C2DC 8006B6DC 00000000 */  nop   
 /* 06C2E0 8006B6E0 10810010 */  beq   $a0, $at, .L8006B724
 /* 06C2E4 8006B6E4 00000000 */   nop   
-/* 06C2E8 8006B6E8 0C0078A7 */  jal   func_8001E29C
+/* 06C2E8 8006B6E8 0C0078A7 */  jal   get_misc_asset
 /* 06C2EC 8006B6EC AFA30038 */   sw    $v1, 0x38($sp)
 /* 06C2F0 8006B6F0 8FA30038 */  lw    $v1, 0x38($sp)
 /* 06C2F4 8006B6F4 8E380000 */  lw    $t8, ($s1)
@@ -703,7 +703,7 @@ glabel load_level
 /* 06C86C 8006BC6C 2401FFFF */  li    $at, -1
 /* 06C870 8006BC70 1081000D */  beq   $a0, $at, .L8006BCA8
 /* 06C874 8006BC74 00000000 */   nop   
-/* 06C878 8006BC78 0C0078A7 */  jal   func_8001E29C
+/* 06C878 8006BC78 0C0078A7 */  jal   get_misc_asset
 /* 06C87C 8006BC7C 00000000 */   nop   
 /* 06C880 8006BC80 8E2A0000 */  lw    $t2, ($s1)
 /* 06C884 8006BC84 00000000 */  nop   

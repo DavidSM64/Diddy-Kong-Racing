@@ -10,7 +10,7 @@ glabel func_800521C4
 /* 052DE4 800521E4 83A3002B */  lb    $v1, 0x2b($sp)
 /* 052DE8 800521E8 1040000C */  beqz  $v0, .L8005221C
 /* 052DEC 800521EC 00000000 */   nop   
-/* 052DF0 800521F0 0C006EB2 */  jal   getPlayerStruct
+/* 052DF0 800521F0 0C006EB2 */  jal   get_object_struct
 /* 052DF4 800521F4 24040001 */   li    $a0, 1
 /* 052DF8 800521F8 8FA40030 */  lw    $a0, 0x30($sp)
 /* 052DFC 800521FC 3C07481C */  lui   $a3, (0x481C4000 >> 16) # lui $a3, 0x481c

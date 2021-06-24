@@ -178,7 +178,7 @@ glabel func_80037A18
 /* 0388A8 80037CA8 11F80004 */  beq   $t7, $t8, .L80037CBC
 /* 0388AC 80037CAC 00000000 */   nop   
 .L80037CB0:
-/* 0388B0 80037CB0 0C003FEE */  jal   particlePtrList_addObject
+/* 0388B0 80037CB0 0C003FEE */  jal   gParticlePtrList_addObject
 /* 0388B4 80037CB4 00A02025 */   move  $a0, $a1
 /* 0388B8 80037CB8 AE000064 */  sw    $zero, 0x64($s0)
 .L80037CBC:
