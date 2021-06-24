@@ -23,8 +23,8 @@ glabel func_8002342C
 /* 024080 80023480 00008825 */  move  $s1, $zero
 /* 024084 80023484 19C00027 */  blez  $t6, .L80023524
 /* 024088 80023488 0000B025 */   move  $s6, $zero
-/* 02408C 8002348C 3C148012 */  lui   $s4, %hi(objPtrList) # $s4, 0x8012
-/* 024090 80023490 2694AE58 */  addiu $s4, %lo(objPtrList) # addiu $s4, $s4, -0x51a8
+/* 02408C 8002348C 3C148012 */  lui   $s4, %hi(gObjPtrList) # $s4, 0x8012
+/* 024090 80023490 2694AE58 */  addiu $s4, %lo(gObjPtrList) # addiu $s4, $s4, -0x51a8
 /* 024094 80023494 00009025 */  move  $s2, $zero
 /* 024098 80023498 24150057 */  li    $s5, 87
 .L8002349C:

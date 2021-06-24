@@ -8,8 +8,8 @@ glabel func_8001BC54
 /* 01C86C 8001BC6C 18600026 */  blez  $v1, .L8001BD08
 /* 01C870 8001BC70 00002825 */   move  $a1, $zero
 /* 01C874 8001BC74 3C0A8012 */  lui   $t2, %hi(D_8011AEDC) # $t2, 0x8012
-/* 01C878 8001BC78 3C088012 */  lui   $t0, %hi(objPtrList) # $t0, 0x8012
-/* 01C87C 8001BC7C 2508AE58 */  addiu $t0, %lo(objPtrList) # addiu $t0, $t0, -0x51a8
+/* 01C878 8001BC78 3C088012 */  lui   $t0, %hi(gObjPtrList) # $t0, 0x8012
+/* 01C87C 8001BC7C 2508AE58 */  addiu $t0, %lo(gObjPtrList) # addiu $t0, $t0, -0x51a8
 /* 01C880 8001BC80 254AAEDC */  addiu $t2, %lo(D_8011AEDC) # addiu $t2, $t2, -0x5124
 /* 01C884 8001BC84 2409000A */  li    $t1, 10
 .L8001BC88:

@@ -346,7 +346,7 @@ glabel menu_file_select_loop
 /* 08EF80 8008E380 35CF0004 */  ori   $t7, $t6, 4
 /* 08EF84 8008E384 AC4F0010 */  sw    $t7, 0x10($v0)
 .L8008E388:
-/* 08EF88 8008E388 0C0078A7 */  jal   func_8001E29C
+/* 08EF88 8008E388 0C0078A7 */  jal   get_misc_asset
 /* 08EF8C 8008E38C 24040019 */   li    $a0, 25
 /* 08EF90 8008E390 3C06800E */  lui   $a2, %hi(gNumberOfActivePlayers) # $a2, 0x800e
 /* 08EF94 8008E394 8CC6F4BC */  lw    $a2, %lo(gNumberOfActivePlayers)($a2)

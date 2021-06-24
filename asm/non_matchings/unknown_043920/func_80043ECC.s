@@ -92,7 +92,7 @@ glabel func_80043ECC
 /* 044C18 80044018 A020D5BC */  sb    $zero, %lo(D_8011D5BC)($at)
 .L8004401C:
 /* 044C1C 8004401C AFA50024 */  sw    $a1, 0x24($sp)
-/* 044C20 80044020 0C0078A7 */  jal   func_8001E29C
+/* 044C20 80044020 0C0078A7 */  jal   get_misc_asset
 /* 044C24 80044024 AFA6001C */   sw    $a2, 0x1c($sp)
 /* 044C28 80044028 3C0D8012 */  lui   $t5, %hi(D_8011D530) # $t5, 0x8012
 /* 044C2C 8004402C 8DADD530 */  lw    $t5, %lo(D_8011D530)($t5)

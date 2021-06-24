@@ -281,7 +281,7 @@ glabel func_80033F60
 /* 034F6C 8003436C 2407002C */  li    $a3, 44
 /* 034F70 80034370 0C00FF11 */  jal   func_8003FC44
 /* 034F74 80034374 E7A60014 */   swc1  $f6, 0x14($sp)
-/* 034F78 80034378 0C003FEE */  jal   particlePtrList_addObject
+/* 034F78 80034378 0C003FEE */  jal   gParticlePtrList_addObject
 /* 034F7C 8003437C 02002025 */   move  $a0, $s0
 /* 034F80 80034380 1000000D */  b     .L800343B8
 /* 034F84 80034384 86090048 */   lh    $t1, 0x48($s0)
@@ -317,7 +317,7 @@ glabel func_80033F60
 /* 034FF0 800343F0 2401012A */  li    $at, 298
 /* 034FF4 800343F4 15A1000F */  bne   $t5, $at, .L80034434
 /* 034FF8 800343F8 00000000 */   nop   
-/* 034FFC 800343FC 0C003FEE */  jal   particlePtrList_addObject
+/* 034FFC 800343FC 0C003FEE */  jal   gParticlePtrList_addObject
 /* 035000 80034400 02002025 */   move  $a0, $s0
 /* 035004 80034404 C60C000C */  lwc1  $f12, 0xc($s0)
 /* 035008 80034408 C60E0010 */  lwc1  $f14, 0x10($s0)
@@ -349,7 +349,7 @@ glabel func_80033F60
 /* 03506C 8003446C 00000000 */  nop   
 /* 035070 80034470 4500002C */  bc1f  .L80034524
 /* 035074 80034474 8FBF002C */   lw    $ra, 0x2c($sp)
-/* 035078 80034478 0C003FEE */  jal   particlePtrList_addObject
+/* 035078 80034478 0C003FEE */  jal   gParticlePtrList_addObject
 /* 03507C 8003447C 02002025 */   move  $a0, $s0
 /* 035080 80034480 10000028 */  b     .L80034524
 /* 035084 80034484 8FBF002C */   lw    $ra, 0x2c($sp)
@@ -393,7 +393,7 @@ glabel func_80033F60
 /* 03510C 8003450C AFA00014 */  sw    $zero, 0x14($sp)
 /* 035110 80034510 0C002556 */  jal   func_80009558
 /* 035114 80034514 24040155 */   li    $a0, 341
-/* 035118 80034518 0C003FEE */  jal   particlePtrList_addObject
+/* 035118 80034518 0C003FEE */  jal   gParticlePtrList_addObject
 /* 03511C 8003451C 02002025 */   move  $a0, $s0
 .L80034520:
 /* 035120 80034520 8FBF002C */  lw    $ra, 0x2c($sp)

@@ -43,7 +43,7 @@ glabel func_8000B020
 /* 00BCC4 8000B0C4 AC20B004 */  sw    $zero, %lo(D_8011B004)($at)
 /* 00BCC8 8000B0C8 3C018012 */  lui   $at, %hi(D_8011B008) # $at, 0x8012
 /* 00BCCC 8000B0CC AC20B008 */  sw    $zero, %lo(D_8011B008)($at)
-/* 00BCD0 8000B0D0 0C0078A7 */  jal   func_8001E29C
+/* 00BCD0 8000B0D0 0C0078A7 */  jal   get_misc_asset
 /* 00BCD4 8000B0D4 24040014 */   li    $a0, 20
 /* 00BCD8 8000B0D8 3C118012 */  lui   $s1, %hi(D_8011B020) # $s1, 0x8012
 /* 00BCDC 8000B0DC 3C138012 */  lui   $s3, %hi(D_8011B068) # $s3, 0x8012

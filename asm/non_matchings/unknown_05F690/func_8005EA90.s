@@ -571,7 +571,7 @@ glabel L8005EF98
 /* 05FE80 8005F280 02002825 */  move  $a1, $s0
 /* 05FE84 8005F284 0C017412 */  jal   func_8005D048
 /* 05FE88 8005F288 24060028 */   li    $a2, 40
-/* 05FE8C 8005F28C 0C006EB2 */  jal   getPlayerStruct
+/* 05FE8C 8005F28C 0C006EB2 */  jal   get_object_struct
 /* 05FE90 8005F290 00002025 */   move  $a0, $zero
 /* 05FE94 8005F294 8C43004C */  lw    $v1, 0x4c($v0)
 /* 05FE98 8005F298 8C500064 */  lw    $s0, 0x64($v0)

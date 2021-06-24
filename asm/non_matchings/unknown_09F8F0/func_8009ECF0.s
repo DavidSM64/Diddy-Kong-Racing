@@ -181,7 +181,7 @@ glabel func_8009ECF0
 /* 09FBA4 8009EFA4 AC206D44 */  sw    $zero, %lo(D_80126D44)($at)
 /* 09FBA8 8009EFA8 3C018012 */  lui   $at, %hi(D_80126CD3) # $at, 0x8012
 /* 09FBAC 8009EFAC A0206CD3 */  sb    $zero, %lo(D_80126CD3)($at)
-/* 09FBB0 8009EFB0 0C0078A7 */  jal   func_8001E29C
+/* 09FBB0 8009EFB0 0C0078A7 */  jal   get_misc_asset
 /* 09FBB4 8009EFB4 2404003A */   li    $a0, 58
 /* 09FBB8 8009EFB8 3C038012 */  lui   $v1, %hi(D_80127194) # $v1, 0x8012
 /* 09FBBC 8009EFBC 24637194 */  addiu $v1, %lo(D_80127194) # addiu $v1, $v1, 0x7194

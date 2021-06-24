@@ -87,7 +87,7 @@ glabel func_80035AE8
 /* 03682C 80035C2C 0002C280 */  sll   $t8, $v0, 0xa
 /* 036830 80035C30 07010004 */  bgez  $t8, .L80035C44
 /* 036834 80035C34 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 036838 80035C38 0C003FEE */  jal   particlePtrList_addObject
+/* 036838 80035C38 0C003FEE */  jal   gParticlePtrList_addObject
 /* 03683C 80035C3C 00000000 */   nop   
 /* 036840 80035C40 8FBF0014 */  lw    $ra, 0x14($sp)
 .L80035C44:

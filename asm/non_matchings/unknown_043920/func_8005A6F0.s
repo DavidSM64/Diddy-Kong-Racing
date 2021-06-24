@@ -75,7 +75,7 @@ glabel func_8005A6F0
 .L8005A794:
 /* 05B394 8005A794 A600018C */  sh    $zero, 0x18c($s0)
 .L8005A798:
-/* 05B398 8005A798 0C0078A7 */  jal   func_8001E29C
+/* 05B398 8005A798 0C0078A7 */  jal   get_misc_asset
 /* 05B39C 8005A79C 24040009 */   li    $a0, 9
 /* 05B3A0 8005A7A0 3C038012 */  lui   $v1, %hi(D_8011D564) # $v1, 0x8012
 /* 05B3A4 8005A7A4 2463D564 */  addiu $v1, %lo(D_8011D564) # addiu $v1, $v1, -0x2a9c
@@ -101,7 +101,7 @@ glabel func_8005A6F0
 /* 05B3F4 8005A7F4 00000000 */  nop   
 /* 05B3F8 8005A7F8 E5840000 */  swc1  $f4, ($t4)
 .L8005A7FC:
-/* 05B3FC 8005A7FC 0C0078A7 */  jal   func_8001E29C
+/* 05B3FC 8005A7FC 0C0078A7 */  jal   get_misc_asset
 /* 05B400 8005A800 2404000A */   li    $a0, 10
 /* 05B404 8005A804 3C038012 */  lui   $v1, %hi(D_8011D564) # $v1, 0x8012
 /* 05B408 8005A808 2463D564 */  addiu $v1, %lo(D_8011D564) # addiu $v1, $v1, -0x2a9c
@@ -112,7 +112,7 @@ glabel func_8005A6F0
 /* 05B41C 8005A81C 004D7021 */  addu  $t6, $v0, $t5
 /* 05B420 8005A820 C5C60000 */  lwc1  $f6, ($t6)
 /* 05B424 8005A824 2404000B */  li    $a0, 11
-/* 05B428 8005A828 0C0078A7 */  jal   func_8001E29C
+/* 05B428 8005A828 0C0078A7 */  jal   get_misc_asset
 /* 05B42C 8005A82C E426D570 */   swc1  $f6, %lo(D_8011D570)($at)
 /* 05B430 8005A830 3C058012 */  lui   $a1, %hi(D_8011D564) # $a1, 0x8012
 /* 05B434 8005A834 24A5D564 */  addiu $a1, %lo(D_8011D564) # addiu $a1, $a1, -0x2a9c
@@ -188,7 +188,7 @@ glabel func_8005A6F0
 /* 05B53C 8005A93C C422694C */  lwc1  $f2, %lo(D_800E694C)($at)
 /* 05B540 8005A940 1700007C */  bnez  $t8, .L8005AB34
 /* 05B544 8005A944 27A40090 */   addiu $a0, $sp, 0x90
-/* 05B548 8005A948 0C006E9D */  jal   getPlayerStructArray
+/* 05B548 8005A948 0C006E9D */  jal   get_object_struct_array
 /* 05B54C 8005A94C E7A20078 */   swc1  $f2, 0x78($sp)
 /* 05B550 8005A950 8FAF0090 */  lw    $t7, 0x90($sp)
 /* 05B554 8005A954 C7A20078 */  lwc1  $f2, 0x78($sp)
@@ -507,7 +507,7 @@ glabel func_8005A6F0
 /* 05B9CC 8005ADCC 44814000 */  mtc1  $at, $f8
 /* 05B9D0 8005ADD0 3C018012 */  lui   $at, %hi(D_8011D570) # $at, 0x8012
 /* 05B9D4 8005ADD4 24040021 */  li    $a0, 33
-/* 05B9D8 8005ADD8 0C0078A7 */  jal   func_8001E29C
+/* 05B9D8 8005ADD8 0C0078A7 */  jal   get_misc_asset
 /* 05B9DC 8005ADDC E428D570 */   swc1  $f8, %lo(D_8011D570)($at)
 /* 05B9E0 8005ADE0 8FB900A0 */  lw    $t9, 0xa0($sp)
 /* 05B9E4 8005ADE4 3C018012 */  lui   $at, %hi(D_8011D564) # $at, 0x8012
@@ -515,7 +515,7 @@ glabel func_8005A6F0
 /* 05B9EC 8005ADEC 8F2D0040 */  lw    $t5, 0x40($t9)
 /* 05B9F0 8005ADF0 00000000 */  nop   
 /* 05B9F4 8005ADF4 91A4005D */  lbu   $a0, 0x5d($t5)
-/* 05B9F8 8005ADF8 0C0078A7 */  jal   func_8001E29C
+/* 05B9F8 8005ADF8 0C0078A7 */  jal   get_misc_asset
 /* 05B9FC 8005ADFC 00000000 */   nop   
 /* 05BA00 8005AE00 3C018012 */  lui   $at, %hi(D_8011D568) # $at, 0x8012
 /* 05BA04 8005AE04 8FAE00A0 */  lw    $t6, 0xa0($sp)
@@ -1157,7 +1157,7 @@ glabel L8005B1B0
 /* 05C324 8005B724 17200034 */  bnez  $t9, .L8005B7F8
 /* 05C328 8005B728 00002025 */   move  $a0, $zero
 /* 05C32C 8005B72C C5B2000C */  lwc1  $f18, 0xc($t5)
-/* 05C330 8005B730 0C0078A7 */  jal   func_8001E29C
+/* 05C330 8005B730 0C0078A7 */  jal   get_misc_asset
 /* 05C334 8005B734 E452000C */   swc1  $f18, 0xc($v0)
 /* 05C338 8005B738 820E0003 */  lb    $t6, 3($s0)
 /* 05C33C 8005B73C 8FA300A0 */  lw    $v1, 0xa0($sp)

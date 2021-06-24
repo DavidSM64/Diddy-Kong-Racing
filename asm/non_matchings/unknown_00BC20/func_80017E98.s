@@ -23,8 +23,8 @@ glabel func_80017E98
 /* 018AEC 80017EEC 00009825 */   move  $s3, $zero
 /* 018AF0 80017EF0 3C148012 */  lui   $s4, %hi(D_8011AECC) # $s4, 0x8012
 /* 018AF4 80017EF4 3C098012 */  lui   $t1, %hi(D_8011AED8) # $t1, 0x8012
-/* 018AF8 80017EF8 3C068012 */  lui   $a2, %hi(objPtrList) # $a2, 0x8012
-/* 018AFC 80017EFC 24C6AE58 */  addiu $a2, %lo(objPtrList) # addiu $a2, $a2, -0x51a8
+/* 018AF8 80017EF8 3C068012 */  lui   $a2, %hi(gObjPtrList) # $a2, 0x8012
+/* 018AFC 80017EFC 24C6AE58 */  addiu $a2, %lo(gObjPtrList) # addiu $a2, $a2, -0x51a8
 /* 018B00 80017F00 2529AED8 */  addiu $t1, %lo(D_8011AED8) # addiu $t1, $t1, -0x5128
 /* 018B04 80017F04 2694AECC */  addiu $s4, %lo(D_8011AECC) # addiu $s4, $s4, -0x5134
 /* 018B08 80017F08 00001025 */  move  $v0, $zero

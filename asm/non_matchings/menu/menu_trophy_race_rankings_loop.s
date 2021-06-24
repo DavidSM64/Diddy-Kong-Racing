@@ -393,7 +393,7 @@ glabel menu_trophy_race_rankings_loop
 .L80099588:
 /* 09A188 80099588 10200015 */  beqz  $at, .L800995E0
 /* 09A18C 8009958C 2404001F */   li    $a0, 31
-/* 09A190 80099590 0C0078A7 */  jal   func_8001E29C
+/* 09A190 80099590 0C0078A7 */  jal   get_misc_asset
 /* 09A194 80099594 AFAC0034 */   sw    $t4, 0x34($sp)
 /* 09A198 80099598 3C0F800E */  lui   $t7, %hi(gTrophyRaceWorldId) # $t7, 0x800e
 /* 09A19C 8009959C 8DEF0FE8 */  lw    $t7, %lo(gTrophyRaceWorldId)($t7)

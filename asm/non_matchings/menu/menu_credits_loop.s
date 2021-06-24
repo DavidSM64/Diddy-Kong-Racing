@@ -19,10 +19,10 @@ glabel menu_credits_loop
 /* 09BF5C 8009B35C E7B50028 */  swc1  $f21, 0x28($sp)
 /* 09BF60 8009B360 E7B4002C */  swc1  $f20, 0x2c($sp)
 /* 09BF64 8009B364 AFA00068 */  sw    $zero, 0x68($sp)
-/* 09BF68 8009B368 0C0078A7 */  jal   func_8001E29C
+/* 09BF68 8009B368 0C0078A7 */  jal   get_misc_asset
 /* 09BF6C 8009B36C 2404001C */   li    $a0, 28
 /* 09BF70 8009B370 AFA2005C */  sw    $v0, 0x5c($sp)
-/* 09BF74 8009B374 0C0078A7 */  jal   func_8001E29C
+/* 09BF74 8009B374 0C0078A7 */  jal   get_misc_asset
 /* 09BF78 8009B378 24040045 */   li    $a0, 69
 /* 09BF7C 8009B37C 0C031CFC */  jal   func_800C73F0
 /* 09BF80 8009B380 AFA20060 */   sw    $v0, 0x60($sp)

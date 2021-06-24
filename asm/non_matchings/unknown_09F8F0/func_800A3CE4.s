@@ -89,7 +89,7 @@ glabel func_800A3CE4
 /* 0A4A34 800A3E34 00000000 */   nop   
 /* 0A4A38 800A3E38 144000C0 */  bnez  $v0, .L800A413C
 /* 0A4A3C 800A3E3C 00000000 */   nop   
-/* 0A4A40 800A3E40 0C006E9D */  jal   getPlayerStructArray
+/* 0A4A40 800A3E40 0C006E9D */  jal   get_object_struct_array
 /* 0A4A44 800A3E44 27A40038 */   addiu $a0, $sp, 0x38
 /* 0A4A48 800A3E48 8FA50038 */  lw    $a1, 0x38($sp)
 /* 0A4A4C 800A3E4C AFA20044 */  sw    $v0, 0x44($sp)

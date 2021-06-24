@@ -52,7 +52,7 @@ glabel func_80013A0C
 .L80013AA8:
 /* 0146A8 80013AA8 AFA50050 */  sw    $a1, 0x50($sp)
 /* 0146AC 80013AAC AFA6004C */  sw    $a2, 0x4c($sp)
-/* 0146B0 80013AB0 0C0078A7 */  jal   func_8001E29C
+/* 0146B0 80013AB0 0C0078A7 */  jal   get_misc_asset
 /* 0146B4 80013AB4 AFA80064 */   sw    $t0, 0x64($sp)
 /* 0146B8 80013AB8 8FA50050 */  lw    $a1, 0x50($sp)
 /* 0146BC 80013ABC 8FA6004C */  lw    $a2, 0x4c($sp)

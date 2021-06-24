@@ -84,9 +84,9 @@ glabel func_8002C7D4
 /* 02D50C 8002C90C 00000000 */  nop   
 /* 02D510 8002C910 10800005 */  beqz  $a0, .L8002C928
 /* 02D514 8002C914 00000000 */   nop   
-/* 02D518 8002C918 0C003FEE */  jal   particlePtrList_addObject
+/* 02D518 8002C918 0C003FEE */  jal   gParticlePtrList_addObject
 /* 02D51C 8002C91C 00000000 */   nop   
-/* 02D520 8002C920 0C004013 */  jal   particlePtrList_flush
+/* 02D520 8002C920 0C004013 */  jal   gParticlePtrList_flush
 /* 02D524 8002C924 00000000 */   nop   
 .L8002C928:
 /* 02D528 8002C928 0C003181 */  jal   func_8000C604

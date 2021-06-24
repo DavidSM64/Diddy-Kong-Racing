@@ -18,10 +18,10 @@ glabel func_80022CFC
 /* 02393C 80022D3C 19000030 */  blez  $t0, .L80022E00
 /* 023940 80022D40 00003025 */   move  $a2, $zero
 /* 023944 80022D44 3C014024 */  li    $at, 0x40240000 # 2.562500
-/* 023948 80022D48 3C098012 */  lui   $t1, %hi(objPtrList) # $t1, 0x8012
+/* 023948 80022D48 3C098012 */  lui   $t1, %hi(gObjPtrList) # $t1, 0x8012
 /* 02394C 80022D4C 44810800 */  mtc1  $at, $f1
 /* 023950 80022D50 44800000 */  mtc1  $zero, $f0
-/* 023954 80022D54 2529AE58 */  addiu $t1, %lo(objPtrList) # addiu $t1, $t1, -0x51a8
+/* 023954 80022D54 2529AE58 */  addiu $t1, %lo(gObjPtrList) # addiu $t1, $t1, -0x51a8
 /* 023958 80022D58 00003825 */  move  $a3, $zero
 /* 02395C 80022D5C 240A004D */  li    $t2, 77
 .L80022D60:

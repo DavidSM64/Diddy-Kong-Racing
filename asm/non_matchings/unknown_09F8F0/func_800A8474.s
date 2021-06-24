@@ -153,7 +153,7 @@ glabel func_800A8474
 /* 0A9268 800A8668 00000000 */  nop   
 /* 0A926C 800A866C 01B17021 */  addu  $t6, $t5, $s1
 /* 0A9270 800A8670 8DC40000 */  lw    $a0, ($t6)
-/* 0A9274 800A8674 0C003FEE */  jal   particlePtrList_addObject
+/* 0A9274 800A8674 0C003FEE */  jal   gParticlePtrList_addObject
 /* 0A9278 800A8678 AFA30144 */   sw    $v1, 0x144($sp)
 /* 0A927C 800A867C 8FA30144 */  lw    $v1, 0x144($sp)
 /* 0A9280 800A8680 10000009 */  b     .L800A86A8
@@ -943,7 +943,7 @@ glabel func_800A8474
 /* 0A9E24 800A9224 460021A4 */  cvt.w.s $f6, $f4
 /* 0A9E28 800A9228 440B3000 */  mfc1  $t3, $f6
 /* 0A9E2C 800A922C 44CAF800 */  ctc1  $t2, $31
-/* 0A9E30 800A9230 0C006E9D */  jal   getPlayerStructArray
+/* 0A9E30 800A9230 0C006E9D */  jal   get_object_struct_array
 /* 0A9E34 800A9234 AFAB00BC */   sw    $t3, 0xbc($sp)
 /* 0A9E38 800A9238 8FAC00CC */  lw    $t4, 0xcc($sp)
 /* 0A9E3C 800A923C 00001825 */  move  $v1, $zero

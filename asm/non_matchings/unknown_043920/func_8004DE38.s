@@ -302,7 +302,7 @@ glabel func_8004DE38
 .L8004E21C:
 /* 04EE1C 8004E21C A600018C */  sh    $zero, 0x18c($s0)
 .L8004E220:
-/* 04EE20 8004E220 0C0078A7 */  jal   func_8001E29C
+/* 04EE20 8004E220 0C0078A7 */  jal   get_misc_asset
 /* 04EE24 8004E224 24040009 */   li    $a0, 9
 /* 04EE28 8004E228 3C058012 */  lui   $a1, %hi(D_8011D564) # $a1, 0x8012
 /* 04EE2C 8004E22C 24A5D564 */  addiu $a1, %lo(D_8011D564) # addiu $a1, $a1, -0x2a9c
@@ -328,7 +328,7 @@ glabel func_8004DE38
 /* 04EE7C 8004E27C 00000000 */  nop   
 /* 04EE80 8004E280 E46A0000 */  swc1  $f10, ($v1)
 .L8004E284:
-/* 04EE84 8004E284 0C0078A7 */  jal   func_8001E29C
+/* 04EE84 8004E284 0C0078A7 */  jal   get_misc_asset
 /* 04EE88 8004E288 2404000A */   li    $a0, 10
 /* 04EE8C 8004E28C 3C058012 */  lui   $a1, %hi(D_8011D564) # $a1, 0x8012
 /* 04EE90 8004E290 24A5D564 */  addiu $a1, %lo(D_8011D564) # addiu $a1, $a1, -0x2a9c
@@ -339,7 +339,7 @@ glabel func_8004DE38
 /* 04EEA4 8004E2A4 004E7821 */  addu  $t7, $v0, $t6
 /* 04EEA8 8004E2A8 C5E40000 */  lwc1  $f4, ($t7)
 /* 04EEAC 8004E2AC 2404000B */  li    $a0, 11
-/* 04EEB0 8004E2B0 0C0078A7 */  jal   func_8001E29C
+/* 04EEB0 8004E2B0 0C0078A7 */  jal   get_misc_asset
 /* 04EEB4 8004E2B4 E424D570 */   swc1  $f4, %lo(D_8011D570)($at)
 /* 04EEB8 8004E2B8 3C018012 */  lui   $at, %hi(D_8011D564) # $at, 0x8012
 /* 04EEBC 8004E2BC AC22D564 */  sw    $v0, %lo(D_8011D564)($at)
@@ -481,14 +481,14 @@ glabel func_8004DE38
 /* 04F0C4 8004E4C4 8E2A0040 */  lw    $t2, 0x40($s1)
 /* 04F0C8 8004E4C8 00000000 */  nop   
 /* 04F0CC 8004E4CC 9144005C */  lbu   $a0, 0x5c($t2)
-/* 04F0D0 8004E4D0 0C0078A7 */  jal   func_8001E29C
+/* 04F0D0 8004E4D0 0C0078A7 */  jal   get_misc_asset
 /* 04F0D4 8004E4D4 00000000 */   nop   
 /* 04F0D8 8004E4D8 3C018012 */  lui   $at, %hi(D_8011D564) # $at, 0x8012
 /* 04F0DC 8004E4DC AC22D564 */  sw    $v0, %lo(D_8011D564)($at)
 /* 04F0E0 8004E4E0 8E2B0040 */  lw    $t3, 0x40($s1)
 /* 04F0E4 8004E4E4 00000000 */  nop   
 /* 04F0E8 8004E4E8 9164005D */  lbu   $a0, 0x5d($t3)
-/* 04F0EC 8004E4EC 0C0078A7 */  jal   func_8001E29C
+/* 04F0EC 8004E4EC 0C0078A7 */  jal   get_misc_asset
 /* 04F0F0 8004E4F0 00000000 */   nop   
 /* 04F0F4 8004E4F4 3C018012 */  lui   $at, %hi(D_8011D568) # $at, 0x8012
 /* 04F0F8 8004E4F8 AC22D568 */  sw    $v0, %lo(D_8011D568)($at)
@@ -1652,7 +1652,7 @@ glabel L8004ED88
 /* 050198 8004F598 15A0003A */  bnez  $t5, .L8004F684
 /* 05019C 8004F59C 240D00FF */   li    $t5, 255
 /* 0501A0 8004F5A0 C624000C */  lwc1  $f4, 0xc($s1)
-/* 0501A4 8004F5A4 0C0078A7 */  jal   func_8001E29C
+/* 0501A4 8004F5A4 0C0078A7 */  jal   get_misc_asset
 /* 0501A8 8004F5A8 E444000C */   swc1  $f4, 0xc($v0)
 /* 0501AC 8004F5AC 820B0003 */  lb    $t3, 3($s0)
 /* 0501B0 8004F5B0 C6260010 */  lwc1  $f6, 0x10($s1)

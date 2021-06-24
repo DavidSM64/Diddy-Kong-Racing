@@ -7,7 +7,7 @@ glabel menu_trophy_race_round_init
 /* 098E80 80098280 0C01BAA4 */  jal   get_settings
 /* 098E84 80098284 AFB00014 */   sw    $s0, 0x14($sp)
 /* 098E88 80098288 00408825 */  move  $s1, $v0
-/* 098E8C 8009828C 0C0078A7 */  jal   func_8001E29C
+/* 098E8C 8009828C 0C0078A7 */  jal   get_misc_asset
 /* 098E90 80098290 2404001A */   li    $a0, 26
 /* 098E94 80098294 3C03800E */  lui   $v1, %hi(D_800E0FEC) # $v1, 0x800e
 /* 098E98 80098298 8C630FEC */  lw    $v1, %lo(D_800E0FEC)($v1)

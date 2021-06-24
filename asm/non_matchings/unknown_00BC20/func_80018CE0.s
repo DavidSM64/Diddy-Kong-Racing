@@ -48,8 +48,8 @@ glabel func_80018CE0
 /* 019998 80018D98 24160002 */  li    $s6, 2
 /* 01999C 80018D9C 24150001 */  li    $s5, 1
 .L80018DA0:
-/* 0199A0 80018DA0 3C0F8012 */  lui   $t7, %hi(objPtrList) # $t7, 0x8012
-/* 0199A4 80018DA4 8DEFAE58 */  lw    $t7, %lo(objPtrList)($t7)
+/* 0199A0 80018DA0 3C0F8012 */  lui   $t7, %hi(gObjPtrList) # $t7, 0x8012
+/* 0199A4 80018DA4 8DEFAE58 */  lw    $t7, %lo(gObjPtrList)($t7)
 /* 0199A8 80018DA8 8FAE0098 */  lw    $t6, 0x98($sp)
 /* 0199AC 80018DAC 00000000 */  nop   
 /* 0199B0 80018DB0 01EEC821 */  addu  $t9, $t7, $t6

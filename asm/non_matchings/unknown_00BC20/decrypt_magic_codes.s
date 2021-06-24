@@ -1,4 +1,4 @@
-glabel func_8000C2D8
+glabel decrypt_magic_codes
 /* 00CED8 8000C2D8 00053083 */  sra   $a2, $a1, 2
 /* 00CEDC 8000C2DC 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 00CEE0 8000C2E0 00801025 */  move  $v0, $a0

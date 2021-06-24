@@ -171,7 +171,7 @@ glabel func_8000C8F8
 /* 00D778 8000CB78 00000000 */  nop   
 /* 00D77C 8000CB7C 15000009 */  bnez  $t0, .L8000CBA4
 /* 00D780 8000CB80 00000000 */   nop   
-/* 00D784 8000CB84 0C004013 */  jal   particlePtrList_flush
+/* 00D784 8000CB84 0C004013 */  jal   gParticlePtrList_flush
 /* 00D788 8000CB88 00000000 */   nop   
 /* 00D78C 8000CB8C 0C005FA6 */  jal   func_80017E98
 /* 00D790 8000CB90 00000000 */   nop   

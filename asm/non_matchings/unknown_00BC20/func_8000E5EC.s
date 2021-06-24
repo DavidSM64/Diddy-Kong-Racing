@@ -80,8 +80,8 @@ glabel func_8000E5EC
 /* 00F308 8000E708 00004025 */  move  $t0, $zero
 /* 00F30C 8000E70C 18C00021 */  blez  $a2, .L8000E794
 /* 00F310 8000E710 00002825 */   move  $a1, $zero
-/* 00F314 8000E714 3C0B8012 */  lui   $t3, %hi(objPtrList) # $t3, 0x8012
-/* 00F318 8000E718 256BAE58 */  addiu $t3, %lo(objPtrList) # addiu $t3, $t3, -0x51a8
+/* 00F314 8000E714 3C0B8012 */  lui   $t3, %hi(gObjPtrList) # $t3, 0x8012
+/* 00F318 8000E718 256BAE58 */  addiu $t3, %lo(gObjPtrList) # addiu $t3, $t3, -0x51a8
 .L8000E71C:
 /* 00F31C 8000E71C 8D6D0000 */  lw    $t5, ($t3)
 /* 00F320 8000E720 24A50001 */  addiu $a1, $a1, 1

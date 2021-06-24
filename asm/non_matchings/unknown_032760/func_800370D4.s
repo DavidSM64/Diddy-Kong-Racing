@@ -8,7 +8,7 @@ glabel func_800370D4
 /* 037CEC 800370EC AFA50074 */   sw    $a1, 0x74($sp)
 /* 037CF0 800370F0 18400005 */  blez  $v0, .L80037108
 /* 037CF4 800370F4 00000000 */   nop   
-/* 037CF8 800370F8 0C003FEE */  jal   particlePtrList_addObject
+/* 037CF8 800370F8 0C003FEE */  jal   gParticlePtrList_addObject
 /* 037CFC 800370FC 02202025 */   move  $a0, $s1
 /* 037D00 80037100 10000119 */  b     .L80037568
 /* 037D04 80037104 8FBF001C */   lw    $ra, 0x1c($sp)

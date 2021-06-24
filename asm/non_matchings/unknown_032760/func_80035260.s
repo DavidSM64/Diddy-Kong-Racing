@@ -158,7 +158,7 @@ glabel func_80035260
 /* 03609C 8003549C 00000000 */   nop   
 /* 0360A0 800354A0 AC400078 */  sw    $zero, 0x78($v0)
 .L800354A4:
-/* 0360A4 800354A4 0C003FEE */  jal   particlePtrList_addObject
+/* 0360A4 800354A4 0C003FEE */  jal   gParticlePtrList_addObject
 /* 0360A8 800354A8 02002025 */   move  $a0, $s0
 .L800354AC:
 /* 0360AC 800354AC 8FAB0034 */  lw    $t3, 0x34($sp)
@@ -185,7 +185,7 @@ glabel func_80035260
 /* 0360F4 800354F4 A22F000A */  sb    $t7, 0xa($s1)
 /* 0360F8 800354F8 24180003 */  li    $t8, 3
 /* 0360FC 800354FC 8224000A */  lb    $a0, 0xa($s1)
-/* 036100 80035500 0C006EB2 */  jal   getPlayerStruct
+/* 036100 80035500 0C006EB2 */  jal   get_object_struct
 /* 036104 80035504 A238000B */   sb    $t8, 0xb($s1)
 /* 036108 80035508 44800000 */  mtc1  $zero, $f0
 /* 03610C 8003550C 10400007 */  beqz  $v0, .L8003552C
@@ -205,7 +205,7 @@ glabel func_80035260
 /* 03613C 8003553C 862A0008 */  lh    $t2, 8($s1)
 /* 036140 80035540 8224000A */  lb    $a0, 0xa($s1)
 /* 036144 80035544 01455823 */  subu  $t3, $t2, $a1
-/* 036148 80035548 0C006EB2 */  jal   getPlayerStruct
+/* 036148 80035548 0C006EB2 */  jal   get_object_struct
 /* 03614C 8003554C A62B0008 */   sh    $t3, 8($s1)
 /* 036150 80035550 10400004 */  beqz  $v0, .L80035564
 /* 036154 80035554 00403825 */   move  $a3, $v0
@@ -254,7 +254,7 @@ glabel func_80035260
 /* 0361F0 800355F0 A0C801CF */   sb    $t0, 0x1cf($a2)
 .L800355F4:
 /* 0361F4 800355F4 8224000A */  lb    $a0, 0xa($s1)
-/* 0361F8 800355F8 0C006EB2 */  jal   getPlayerStruct
+/* 0361F8 800355F8 0C006EB2 */  jal   get_object_struct
 /* 0361FC 800355FC 00000000 */   nop   
 /* 036200 80035600 10400009 */  beqz  $v0, .L80035628
 /* 036204 80035604 240B0080 */   li    $t3, 128

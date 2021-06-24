@@ -77,7 +77,7 @@ glabel func_80031F88
 /* 032CB4 800320B4 1081001C */  beq   $a0, $at, .L80032128
 /* 032CB8 800320B8 00000000 */   nop   
 /* 032CBC 800320BC AFA50024 */  sw    $a1, 0x24($sp)
-/* 032CC0 800320C0 0C0078A7 */  jal   func_8001E29C
+/* 032CC0 800320C0 0C0078A7 */  jal   get_misc_asset
 /* 032CC4 800320C4 AFA60018 */   sw    $a2, 0x18($sp)
 /* 032CC8 800320C8 8FA60018 */  lw    $a2, 0x18($sp)
 /* 032CCC 800320CC 8FA50024 */  lw    $a1, 0x24($sp)

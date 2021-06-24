@@ -16,10 +16,10 @@ glabel func_8001B4FC
 /* 01C134 8001B534 00000000 */  nop   
 /* 01C138 8001B538 144E003C */  bne   $v0, $t6, .L8001B62C
 /* 01C13C 8001B53C 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 01C140 8001B540 0C0078A7 */  jal   func_8001E29C
+/* 01C140 8001B540 0C0078A7 */  jal   get_misc_asset
 /* 01C144 8001B544 2404001C */   li    $a0, 28
 /* 01C148 8001B548 24040018 */  li    $a0, 24
-/* 01C14C 8001B54C 0C0078A7 */  jal   func_8001E29C
+/* 01C14C 8001B54C 0C0078A7 */  jal   get_misc_asset
 /* 01C150 8001B550 AFA20028 */   sw    $v0, 0x28($sp)
 /* 01C154 8001B554 8FA80028 */  lw    $t0, 0x28($sp)
 /* 01C158 8001B558 2407FFFF */  li    $a3, -1

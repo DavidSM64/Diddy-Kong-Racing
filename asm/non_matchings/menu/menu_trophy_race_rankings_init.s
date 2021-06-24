@@ -4,7 +4,7 @@ glabel menu_trophy_race_rankings_init
 /* 09962C 80098A2C 0C01BAA4 */  jal   get_settings
 /* 099630 80098A30 00000000 */   nop   
 /* 099634 80098A34 2404001A */  li    $a0, 26
-/* 099638 80098A38 0C0078A7 */  jal   func_8001E29C
+/* 099638 80098A38 0C0078A7 */  jal   get_misc_asset
 /* 09963C 80098A3C AFA20040 */   sw    $v0, 0x40($sp)
 /* 099640 80098A40 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
 /* 099644 80098A44 AC2063E0 */  sw    $zero, %lo(D_801263E0)($at)

@@ -24,7 +24,7 @@ glabel func_8000EA54
 /* 00F698 8000EA98 0C02DDAE */  jal   func_800B76B8
 /* 00F69C 8000EA9C 00002025 */   move  $a0, $zero
 /* 00F6A0 8000EAA0 8FA3006C */  lw    $v1, 0x6c($sp)
-/* 00F6A4 8000EAA4 3C0F8012 */  lui   $t7, %hi(D_8011AD68) # $t7, 0x8012
+/* 00F6A4 8000EAA4 3C0F8012 */  lui   $t7, %hi(gAssetsObjectHeadersTableLength) # $t7, 0x8012
 /* 00F6A8 8000EAA8 30680002 */  andi  $t0, $v1, 2
 /* 00F6AC 8000EAAC 11000004 */  beqz  $t0, .L8000EAC0
 /* 00F6B0 8000EAB0 01001825 */   move  $v1, $t0
@@ -33,15 +33,15 @@ glabel func_8000EA54
 /* 00F6BC 8000EABC 00000000 */   nop   
 .L8000EAC0:
 /* 00F6C0 8000EAC0 8FAA0064 */  lw    $t2, 0x64($sp)
-/* 00F6C4 8000EAC4 3C098012 */  lui   $t1, %hi(D_8011AEB8) # $t1, 0x8012
-/* 00F6C8 8000EAC8 8D29AEB8 */  lw    $t1, %lo(D_8011AEB8)($t1)
+/* 00F6C4 8000EAC4 3C098012 */  lui   $t1, %hi(gAssetsLvlObjTranslationTable) # $t1, 0x8012
+/* 00F6C8 8000EAC8 8D29AEB8 */  lw    $t1, %lo(gAssetsLvlObjTranslationTable)($t1)
 /* 00F6CC 8000EACC 000A5840 */  sll   $t3, $t2, 1
 /* 00F6D0 8000EAD0 012B6021 */  addu  $t4, $t1, $t3
 /* 00F6D4 8000EAD4 85840000 */  lh    $a0, ($t4)
 /* 00F6D8 8000EAD8 00000000 */  nop   
 /* 00F6DC 8000EADC A7A4004E */  sh    $a0, 0x4e($sp)
 .L8000EAE0:
-/* 00F6E0 8000EAE0 8DEFAD68 */  lw    $t7, %lo(D_8011AD68)($t7)
+/* 00F6E0 8000EAE0 8DEFAD68 */  lw    $t7, %lo(gAssetsObjectHeadersTableLength)($t7)
 /* 00F6E4 8000EAE4 00008025 */  move  $s0, $zero
 /* 00F6E8 8000EAE8 008F082A */  slt   $at, $a0, $t7
 /* 00F6EC 8000EAEC 14200002 */  bnez  $at, .L8000EAF8
@@ -727,7 +727,7 @@ glabel L8000EDE0
 /* 0100A0 8000F4A0 8068005A */  lb    $t0, 0x5a($v1)
 /* 0100A4 8000F4A4 24490080 */  addiu $t1, $v0, 0x80
 /* 0100A8 8000F4A8 19000006 */  blez  $t0, .L8000F4C4
-/* 0100AC 8000F4AC 3C0F8012 */   lui   $t7, %hi(objPtrList) # $t7, 0x8012
+/* 0100AC 8000F4AC 3C0F8012 */   lui   $t7, %hi(gObjPtrList) # $t7, 0x8012
 /* 0100B0 8000F4B0 8C4A0070 */  lw    $t2, 0x70($v0)
 /* 0100B4 8000F4B4 8CAB0000 */  lw    $t3, ($a1)
 /* 0100B8 8000F4B8 004AC821 */  addu  $t9, $v0, $t2
@@ -741,7 +741,7 @@ glabel L8000EDE0
 /* 0100D4 8000F4D4 11A0000A */  beqz  $t5, .L8000F500
 /* 0100D8 8000F4D8 01A08825 */   move  $s1, $t5
 /* 0100DC 8000F4DC 8E180000 */  lw    $t8, ($s0)
-/* 0100E0 8000F4E0 8DEFAE58 */  lw    $t7, %lo(objPtrList)($t7)
+/* 0100E0 8000F4E0 8DEFAE58 */  lw    $t7, %lo(gObjPtrList)($t7)
 /* 0100E4 8000F4E4 00187080 */  sll   $t6, $t8, 2
 /* 0100E8 8000F4E8 01EE4021 */  addu  $t0, $t7, $t6
 /* 0100EC 8000F4EC AD020000 */  sw    $v0, ($t0)

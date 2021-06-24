@@ -22,7 +22,7 @@ glabel func_80022948
 /* 023598 80022998 AC29AEFC */  sw    $t1, %lo(D_8011AEFC)($at)
 /* 02359C 8002299C A04A0052 */  sb    $t2, 0x52($v0)
 /* 0235A0 800229A0 A44B0054 */  sh    $t3, 0x54($v0)
-/* 0235A4 800229A4 0C006EB2 */  jal   getPlayerStruct
+/* 0235A4 800229A4 0C006EB2 */  jal   get_object_struct
 /* 0235A8 800229A8 00002025 */   move  $a0, $zero
 /* 0235AC 800229AC 8C500064 */  lw    $s0, 0x64($v0)
 /* 0235B0 800229B0 3C018012 */  lui   $at, %hi(D_8011AEF6) # $at, 0x8012
@@ -166,8 +166,8 @@ glabel func_80022948
 /* 0237CC 80022BCC 27A40058 */  addiu $a0, $sp, 0x58
 /* 0237D0 80022BD0 0C003A95 */  jal   func_8000EA54
 /* 0237D4 80022BD4 24050001 */   li    $a1, 1
-/* 0237D8 80022BD8 3C0B8012 */  lui   $t3, %hi(playerStructArray_Ptr) # $t3, 0x8012
-/* 0237DC 80022BDC 8D6BAEE4 */  lw    $t3, %lo(playerStructArray_Ptr)($t3)
+/* 0237D8 80022BD8 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
+/* 0237DC 80022BDC 8D6BAEE4 */  lw    $t3, %lo(gObjectStructArrayPtr)($t3)
 /* 0237E0 80022BE0 3C0D8012 */  lui   $t5, %hi(D_8011AEE8) # $t5, 0x8012
 /* 0237E4 80022BE4 AD620004 */  sw    $v0, 4($t3)
 /* 0237E8 80022BE8 8DADAEE8 */  lw    $t5, %lo(D_8011AEE8)($t5)
@@ -178,9 +178,9 @@ glabel func_80022948
 /* 0237FC 80022BFC 44810000 */  mtc1  $at, $f0
 /* 023800 80022C00 AD820004 */  sw    $v0, 4($t4)
 /* 023804 80022C04 AC40003C */  sw    $zero, 0x3c($v0)
-/* 023808 80022C08 3C018012 */  lui   $at, %hi(playerCount) # $at, 0x8012
+/* 023808 80022C08 3C018012 */  lui   $at, %hi(gObjectCount) # $at, 0x8012
 /* 02380C 80022C0C 240E0002 */  li    $t6, 2
-/* 023810 80022C10 AC2EAEF0 */  sw    $t6, %lo(playerCount)($at)
+/* 023810 80022C10 AC2EAEF0 */  sw    $t6, %lo(gObjectCount)($at)
 /* 023814 80022C14 8C500064 */  lw    $s0, 0x64($v0)
 /* 023818 80022C18 2418000A */  li    $t8, 10
 /* 02381C 80022C1C A21801D6 */  sb    $t8, 0x1d6($s0)
@@ -207,8 +207,8 @@ glabel func_80022948
 /* 023870 80022C70 0085082A */  slt   $at, $a0, $a1
 /* 023874 80022C74 10200018 */  beqz  $at, .L80022CD8
 /* 023878 80022C78 00041880 */   sll   $v1, $a0, 2
-/* 02387C 80022C7C 3C068012 */  lui   $a2, %hi(objPtrList) # $a2, 0x8012
-/* 023880 80022C80 24C6AE58 */  addiu $a2, %lo(objPtrList) # addiu $a2, $a2, -0x51a8
+/* 02387C 80022C7C 3C068012 */  lui   $a2, %hi(gObjPtrList) # $a2, 0x8012
+/* 023880 80022C80 24C6AE58 */  addiu $a2, %lo(gObjPtrList) # addiu $a2, $a2, -0x51a8
 .L80022C84:
 /* 023884 80022C84 8CCE0000 */  lw    $t6, ($a2)
 /* 023888 80022C88 24840001 */  addiu $a0, $a0, 1

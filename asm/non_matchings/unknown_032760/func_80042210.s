@@ -47,7 +47,7 @@ glabel func_80042210
 /* 042EC4 800422C4 11210007 */  beq   $t1, $at, .L800422E4
 /* 042EC8 800422C8 8FBF0014 */   lw    $ra, 0x14($sp)
 .L800422CC:
-/* 042ECC 800422CC 0C003FEE */  jal   particlePtrList_addObject
+/* 042ECC 800422CC 0C003FEE */  jal   gParticlePtrList_addObject
 /* 042ED0 800422D0 00000000 */   nop   
 /* 042ED4 800422D4 10000003 */  b     .L800422E4
 /* 042ED8 800422D8 8FBF0014 */   lw    $ra, 0x14($sp)

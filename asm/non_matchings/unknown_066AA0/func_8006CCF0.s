@@ -129,7 +129,7 @@ glabel func_8006CCF0
 /* 06DAA8 8006CEA8 00000000 */   nop   
 /* 06DAAC 8006CEAC A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 .L8006CEB0:
-/* 06DAB0 8006CEB0 0C004013 */  jal   particlePtrList_flush
+/* 06DAB0 8006CEB0 0C004013 */  jal   gParticlePtrList_flush
 /* 06DAB4 8006CEB4 00000000 */   nop   
 /* 06DAB8 8006CEB8 0C006FC8 */  jal   func_8001BF20
 /* 06DABC 8006CEBC 00000000 */   nop   

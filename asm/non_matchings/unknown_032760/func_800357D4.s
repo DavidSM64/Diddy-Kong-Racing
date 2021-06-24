@@ -3,7 +3,7 @@ glabel func_800357D4
 /* 0363D8 800357D8 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0363DC 800357DC AFA40020 */  sw    $a0, 0x20($sp)
 /* 0363E0 800357E0 AFA50024 */  sw    $a1, 0x24($sp)
-/* 0363E4 800357E4 0C006EB2 */  jal   getPlayerStruct
+/* 0363E4 800357E4 0C006EB2 */  jal   get_object_struct
 /* 0363E8 800357E8 00002025 */   move  $a0, $zero
 /* 0363EC 800357EC 1040001F */  beqz  $v0, .L8003586C
 /* 0363F0 800357F0 8FAC0020 */   lw    $t4, 0x20($sp)

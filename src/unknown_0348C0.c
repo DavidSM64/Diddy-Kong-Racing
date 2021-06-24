@@ -433,7 +433,7 @@ typedef struct unk80038A78 {
 void func_80038A78(unk80038A78 *arg0, s32 arg1) {
     arg0->unk18 += arg1 * 8;
     if (arg0->unk18 >= 0x100) {
-        particlePtrList_addObject();
+        gParticlePtrList_addObject();
         arg0->unk18 = 0xFF;
     }
 }
@@ -702,7 +702,7 @@ void func_8003D534(Object *arg0, s32 arg1) {
     arg0->unk7C.half.upper = 0x14;
     arg0->unk7C.half.lower = 0x10;
     if (get_filtered_cheats() & 0x1000) {
-        particlePtrList_addObject(arg0);
+        gParticlePtrList_addObject(arg0);
     }
 }
 
@@ -871,7 +871,7 @@ typedef struct unk8004210C {
 } unk8004210C;
 
 void func_8004210C(unk8004210C *arg0, s8 *arg1) {
-    arg0->unk64 = func_8001E29C(0x14) + (arg1[8] << 7);
+    arg0->unk64 = get_misc_asset(0x14) + (arg1[8] << 7);
     arg0->unk3C = 0;
 }
 
@@ -905,7 +905,7 @@ void func_80042A1C(unk80042A1C *arg0, s8 *arg1) {
     arg0->unk7C = arg1[8];
     arg0->unk7E = 0;
     if (is_in_tracks_mode()) {
-        particlePtrList_addObject(arg0);
+        gParticlePtrList_addObject(arg0);
     }
     func_800C56D0(4);
 }
