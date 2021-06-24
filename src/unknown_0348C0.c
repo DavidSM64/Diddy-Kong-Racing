@@ -116,14 +116,14 @@ s16 D_8011D4E2;
 /******************************/
 
 Settings* get_settings();
-Player_64 *func_800BE654(s16, f32, f32);
+Object_64 *func_800BE654(s16, f32, f32);
 void func_80000FDC(s32, s32, f32);
 
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033CC0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033DD0.s")
 
-void func_80033F44(Player *arg0, s32 arg1) {
+void func_80033F44(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
 }
@@ -140,8 +140,8 @@ typedef struct unk80034530 {
     u8 unkD;
 } unk80034530;
 
-void func_80034530(Player *arg0, unk80034530 *arg1) {
-    Player_64* temp;
+void func_80034530(Object *arg0, unk80034530 *arg1) {
+    Object_64* temp;
     arg0->unk4C->unk14 = 0x22;
     arg0->unk4C->unk11 = 0;
     temp = arg0->unk64;
@@ -157,7 +157,7 @@ void func_80034530(Player *arg0, unk80034530 *arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800345A0.s")
 
 // Literally the same function as func_80033F44()
-void func_80034844(Player *arg0, s32 arg1) {
+void func_80034844(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
 }
@@ -168,7 +168,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034860.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034AF0.s")
 #else
 // regalloc issues
-void func_80034AF0(Player *arg0, u8 *arg1) {
+void func_80034AF0(Object *arg0, u8 *arg1) {
     f32 phi_f0 = (s32)arg1[9];
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
@@ -196,7 +196,7 @@ void func_80034B68(s32 arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034B74.s")
 
-void func_80034E70(Player *arg0, u8 *arg1) {
+void func_80034E70(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 2;
     arg0->y_rotation = arg1[8] << 6 << 4; // Not sure about the values here.
@@ -204,7 +204,7 @@ void func_80034E70(Player *arg0, u8 *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034E9C.s")
 
-void func_8003522C(Player *arg0, s32 arg1) {
+void func_8003522C(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x14;
@@ -247,7 +247,7 @@ typedef struct unk80035EF8 {
     s16 unkE;
 } unk80035EF8;
 
-void func_80035EF8(Player *arg0, unk80035EF8 *arg1) {
+void func_80035EF8(Object *arg0, unk80035EF8 *arg1) {
     f32 phi_f0;
     arg0->unk78 = (s32) arg1->unkE;
     arg0->unk7C.word = -1;
@@ -263,8 +263,8 @@ void func_80035EF8(Player *arg0, unk80035EF8 *arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035F6C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
-void func_80036194(Player *arg0, s32 arg1) {
-    Player_64* temp;
+void func_80036194(Object *arg0, s32 arg1) {
+    Object_64* temp;
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x1E;
@@ -359,7 +359,7 @@ void func_80037D6C(s32 arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80037D78.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800380F8.s")
 
-void func_8003818C(Player *arg0, s32 arg1) {
+void func_8003818C(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 0x81;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
@@ -371,7 +371,7 @@ void func_800381C0(s32 arg0, s32 arg1) {
     func_8001F460(arg0, arg1, arg0);
 }
 
-void func_800381E0(Player *arg0, s32 arg1) {
+void func_800381E0(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
@@ -379,7 +379,7 @@ void func_800381E0(Player *arg0, s32 arg1) {
 }
 
 // Literally the same as func_8003818C()
-void func_80038214(Player *arg0, s32 arg1) {
+void func_80038214(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 0x81;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
@@ -387,7 +387,7 @@ void func_80038214(Player *arg0, s32 arg1) {
 }
 
 // Literally the same as func_800381E0()
-void func_80038248(Player *arg0, s32 arg1) {
+void func_80038248(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
@@ -399,7 +399,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003833C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038710.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800387CC.s")
 
-void func_80038854(Player *arg0, u8 *arg1) {
+void func_80038854(Object *arg0, u8 *arg1) {
     if (arg1[9] != 0) {
         arg0->unk4C->unk14 = 0x21;
     } else {
@@ -446,7 +446,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038AD4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038B74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038BF4.s")
 
-void func_80038D58(Player *arg0, s32 arg1) {
+void func_80038D58(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0xF;
@@ -456,9 +456,9 @@ void func_80038D58(Player *arg0, s32 arg1) {
     }
 }
 
-void func_80038DC4(Player *arg0, s32 arg1) {
+void func_80038DC4(Object *arg0, s32 arg1) {
     if (arg0->unk78 != 0) {
-        Player_3C* temp = arg0->unk3C;
+        Object_3C* temp = arg0->unk3C;
         if(arg0->unk4C->unk13 < 0x78) {
             func_8006F338(temp->unk8);
             arg0->unk78 = 0;
@@ -503,7 +503,7 @@ void func_800391BC(s32 arg0, s32 arg1) {
 
 }
 
-void func_800391C8(Player *arg0, s32 arg1) {
+void func_800391C8(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 3;
     arg0->unk4C->unk10 = 0x14;
@@ -512,8 +512,8 @@ void func_800391C8(Player *arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800391FC.s")
 
-void func_800392B8(Player *arg0, s32 arg1) {
-    Player_64* temp;
+void func_800392B8(Object *arg0, s32 arg1) {
+    Object_64* temp;
     arg0->unk4C->unk14 = (u16)1;
     arg0->unk4C->unk11 = (u8)0;
     arg0->unk4C->unk10 = (u8)0x1E;
@@ -557,7 +557,7 @@ f32 func_8003ACAC(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003ACBC.s")
 #else
 
-void func_8003ACBC(Player *arg0, u8 *arg1, s32 arg2) {
+void func_8003ACBC(Object *arg0, u8 *arg1, s32 arg2) {
     f32 phi_f0 = (s32)arg1[8]; // Regalloc issue here
     if (phi_f0 < 5.0f) {
         phi_f0 = 5.0f;
@@ -586,8 +586,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C2E4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C644.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C7A4.s")
 
-void func_8003C9EC(Player *arg0, u8 *arg1) {
-    Player_64 *temp = arg0->unk64;
+void func_8003C9EC(Object *arg0, u8 *arg1) {
+    Object_64 *temp = arg0->unk64;
     arg0->unk3A = arg1[8];
     arg0->y_rotation = arg1[9] << 6 << 4;
     temp->unk0 = arg0->y_position;
@@ -603,7 +603,7 @@ void func_8003C9EC(Player *arg0, u8 *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003CA68.s")
 
-void func_8003CE64(Player *arg0, u8 *arg1) {
+void func_8003CE64(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x14;
@@ -611,7 +611,7 @@ void func_8003CE64(Player *arg0, u8 *arg1) {
     arg0->unk78 = arg1[8];
 }
 
-void func_8003CEA0(Player *arg0, s32 arg1) {
+void func_8003CEA0(Object *arg0, s32 arg1) {
     if (arg0->unk4C->unk13 < 0x2D) {
         func_8001E344(arg0->unk78, arg0);
     }
@@ -638,7 +638,7 @@ void func_8003CF18(unk8003CF18 *arg0, u8 *arg1) {
     arg0->unk78 = temp_f0;
 }
 
-void func_8003CF58(Player *arg0, u8 *arg1) {
+void func_8003CF58(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = arg1[9];
@@ -646,7 +646,7 @@ void func_8003CF58(Player *arg0, u8 *arg1) {
     arg0->unk7C.word = arg1[9];
 }
 
-void func_8003CF98(Player *arg0, s32 arg1) {
+void func_8003CF98(Object *arg0, s32 arg1) {
     if (arg0->unk4C->unk13 < arg0->unk7C.word) {
         func_80028044(arg0->unk78);
     }
@@ -695,7 +695,7 @@ void func_8003D3EC(unk8003D3EC *arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D3FC.s")
 
-void func_8003D534(Player *arg0, s32 arg1) {
+void func_8003D534(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x1E;
@@ -723,7 +723,7 @@ void func_8003E5BC(s32 arg0, s32 arg1) {
 
 }
 
-void func_8003E5C8(Player *arg0, s32 arg1) {
+void func_8003E5C8(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x18;
@@ -763,7 +763,7 @@ void func_800403A8(unk800403A8 *arg0, s32 arg1, s32 arg2) {
     arg0->unk64 = func_80031CAC(arg0, arg1);
 }
 
-void func_800403D8(Player *arg0, s32 arg1, s32 arg2) {
+void func_800403D8(Object *arg0, s32 arg1, s32 arg2) {
     arg0->unk64 = func_800BE654(arg0->unk2E, arg0->x_position, arg0->z_position);
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 0;
@@ -771,9 +771,9 @@ void func_800403D8(Player *arg0, s32 arg1, s32 arg2) {
     arg0->unk4C->unk12 = 0;
 }
 
-f32 func_800BEEB4(Player_64*);
+f32 func_800BEEB4(Object_64*);
 
-void func_80040448(Player *arg0, s32 arg1) {
+void func_80040448(Object *arg0, s32 arg1) {
     if (arg0->unk64 != NULL) {
         arg0->y_position = func_800BEEB4(arg0->unk64);
     }
@@ -800,7 +800,7 @@ void func_8004092C(s32 arg0, s32 arg1) {
     func_800AC8A8(arg0);
 }
 
-void func_8004094C(Player *arg0, s16 *arg1, s32 arg2) {
+void func_8004094C(Object *arg0, s16 *arg1, s32 arg2) {
     func_800ACF60();
     arg0->scale = arg1[4];
     arg0->scale /= 40.0f;
@@ -847,12 +847,12 @@ typedef struct unk8004203C_arg1 {
     u16 unkA;
 } unk8004203C_arg1;
 
-void func_8004203C(Player *arg0, unk8004203C_arg1 *arg1) {
+void func_8004203C(Object *arg0, unk8004203C_arg1 *arg1) {
     func_800AF134(arg0->unk6C, arg1->unk9, arg1->unk8, 0, 0, 0);
     arg0->unk78 = arg1->unkA;
 }
 
-void func_80042090(Player *arg0, s32 arg1) {
+void func_80042090(Object *arg0, s32 arg1) {
     if (arg0->unk78 >= get_random_number_from_range(0, 0x400)) {
         arg0->unk74 = 1;
     } else {

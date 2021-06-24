@@ -2849,7 +2849,7 @@ void set_active_player_index(s32 controllerIndex) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_init.s")
 
 /**
- * Draws the "Player Select" and "OK?" text in the character select menu.
+ * Draws the "Object Select" and "OK?" text in the character select menu.
  */
 void draw_character_select_text(s32 arg0) {
     s32 yPos;
@@ -2857,10 +2857,10 @@ void draw_character_select_text(s32 arg0) {
         set_text_font(2); // Set font to the Big Yellow Text
         set_text_background_color(0, 0, 0, 0);
         set_text_color(0, 0, 0, 0xFF, 0x80);
-        // Draw "Player Select" text drop shadow
+        // Draw "Object Select" text drop shadow
         draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk21C, 0xC); 
         set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
-        // Draw "Player Select" text
+        // Draw "Object Select" text
         draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk21C, 0xC); 
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers && gNumberOfActivePlayers > 0) {
             yPos = 0xD0;

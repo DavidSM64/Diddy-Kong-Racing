@@ -287,7 +287,7 @@ void func_8005234C(unk8005234C *arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052388.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005250C.s")
 
-void func_80052988(Player* arg0, Player_64* arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+void func_80052988(Object* arg0, Object_64* arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
     if ((D_8011D55C == -1) && (arg2 >= 3)) {
@@ -394,7 +394,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     func_8006F64C(&sp30, 0, -1, 0, &arg1->unkA0, &arg1->unkA4, &arg1->unk9C);
 }
 
-void func_80053664(Player_64 *arg0) {
+void func_80053664(Object_64 *arg0) {
     if (arg0->throttle > 0.0) {
         arg0->throttle -= 0.1;
     }

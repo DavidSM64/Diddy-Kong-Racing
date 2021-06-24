@@ -129,7 +129,7 @@ s32 D_8011AD38;
 s8 D_8011AD3C;
 s8 D_8011AD3D;
 s8 D_8011AD3E;
-Player *D_8011AD40;
+Object *D_8011AD40;
 s8 D_8011AD44;
 s8 D_8011AD45;
 s16 D_8011AD46;
@@ -177,7 +177,7 @@ s32 (*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8]; // Unknown number of entries.
 s32 D_8011AE50;
 s32 D_8011AE54;
-Player **objPtrList; // Not sure about the number of elements
+Object **objPtrList; // Not sure about the number of elements
 s32 objCount;
 s32 D_8011AE60;
 s32 D_8011AE64;
@@ -204,7 +204,7 @@ s32 D_8011AEB0[2];
 s16 *D_8011AEB8;
 s32 D_8011AEBC;
 s32 D_8011AEC0;
-Player **particlePtrList;
+Object **particlePtrList;
 s32 particleCount;
 
 /* Size: 0x3C bytes */
@@ -219,7 +219,7 @@ s32 D_8011AED4;
 s16 D_8011AED8;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 s32 D_8011AEE0;
-Player *(*playerStructArray_Ptr)[8];
+Object *(*playerStructArray_Ptr)[8];
 s32 *D_8011AEE8;
 s32 *D_8011AEEC;
 s32 playerCount;
@@ -318,7 +318,7 @@ void func_8000C460(void);
 void *new_sub_memory_pool(s32, u32);
 void *allocate_from_main_pool_safe(s32, u32);
 s32 *load_asset_section_from_rom(s32);
-void particlePtrList_addObject(Player *);
+void particlePtrList_addObject(Object *);
 void particlePtrList_flush(void);
 void func_8001D258(f32, f32, s32, s32, s32);
 
@@ -332,8 +332,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
 #else 
 
 extern s32 D_800DC754;
-extern Player* D_800DC75C;
-extern Player* D_800DC764;
+extern Object* D_800DC75C;
+extern Object* D_800DC764;
 
 s32 *func_8001E29C(s32 arg0);
 
@@ -385,7 +385,7 @@ void func_8000BF8C(void) {
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     D_8011AE68 = (s32*)new_sub_memory_pool(0x15800, 0x200);
-    particlePtrList = (Player **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
+    particlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
     D_8011AE6C = (s32*)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
     D_8011AE74 = (s32*)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
     D_8011AECC = (unknown8011AECC*)allocate_from_main_pool_safe(0xE10, COLOR_TAG_BLUE);
@@ -422,7 +422,7 @@ void func_8000BF8C(void) {
         D_8011ADA0++;
     }
     func_8000C2D8(&D_8011AD6C[D_8011AD70[65]], (D_8011AD70[66] - D_8011AD70[65]) * 4);
-    objPtrList = (Player**)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    objPtrList = (Object**)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
@@ -657,7 +657,7 @@ s8 func_8000E1DC() {
     return D_8011AE03;
 }
 
-void func_8000E1EC(Player *arg0, s32 arg1) {
+void func_8000E1EC(Object *arg0, s32 arg1) {
     D_8011AD40 = arg0;
     D_8011AD44 = 4;
     D_8011AD45 = arg1;
@@ -690,14 +690,14 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E79C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E898.s")
 
 
-Player *getObject(s32 indx) {
+Object *getObject(s32 indx) {
     if (indx < 0 || indx >= objCount) {
         return 0;
     }
     return objPtrList[indx];
 }
 
-Player **func_8000E988(s32 *arg0, s32 *cnt) {
+Object **func_8000E988(s32 *arg0, s32 *cnt) {
     *arg0 = D_8011AE60;
     *cnt = objCount;
     return objPtrList;
@@ -713,7 +713,7 @@ s32 func_8000E9C0(void) {
     return D_8011AE64;
 }
 
-void func_8000E9D0(Player* arg0){
+void func_8000E9D0(Object* arg0){
     arg0->unk6 |= 0x8000;
     func_800245B4(arg0->unk2C | 0xC000);
     objPtrList[objCount++] = arg0;
@@ -763,7 +763,7 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
 
 
-void particlePtrList_addObject(Player* arg0){
+void particlePtrList_addObject(Object* arg0){
     func_800245B4(arg0->unk4A | 0x8000);
     particlePtrList[particleCount] = arg0;
     particleCount++;
@@ -785,7 +785,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/particlePtrList_flush.s")
 /*removes objects in particleList from objPtrList and frees*/
 void particlePtrList_flush(void){
     s32  j, i, search_indx, tmp;
-    Player* searchObj;
+    Object* searchObj;
     
     D_8011AE88 = 0;
     for (i = 0; i < particleCount; i++){
@@ -843,11 +843,11 @@ void func_80011560(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
-void func_80011960(Player*, s32, u32, Player_64*, u32, u32, u32, u32, f32);
+void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
 #else
-void func_80011960(Player* arg0, s32 arg2, u32 arg3, Player_64* arg4
+void func_80011960(Object* arg0, s32 arg2, u32 arg3, Object_64* arg4
                   , u32 arg5 , u32 arg6 , u32 arg7, u32 arg8, f32 arg9)
 {
 
@@ -859,7 +859,7 @@ void func_80011960(Player* arg0, s32 arg2, u32 arg3, Player_64* arg4
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
 #else
 extern f32 D_800E5550;
-void func_80011AD0(Player* this){
+void func_80011AD0(Object* this){
     f32 tmp_f0;
     u32 offset;
     switch(this->unk48){
@@ -908,7 +908,7 @@ void func_80011AD0(Player* this){
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011C94.s")
 #else
-void func_80011C94(Player* this){
+void func_80011C94(Object* this){
 }
 #endif
 
@@ -919,7 +919,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800120C8.s")
 
 extern f32 D_8011AD30;
 
-void func_800120C8(Player* this){
+void func_800120C8(Object* this){
     u32 sp_b8;
     u32 sp_a8;
     u32 sp_a4;
@@ -928,7 +928,7 @@ void func_800120C8(Player* this){
     u32 *s0;
     f32 tmp_f_1;
     f32 *tmp_fp_s1;
-    Player_64* tmp_s3;
+    Object_64* tmp_s3;
 
     s0 = ((u32*) this->unk68)[this->unk3A];
     if(s0){
@@ -1036,9 +1036,9 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_8001348C(Player *);
+void func_8001348C(Object *);
 
-func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Player * arg3){
+func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object * arg3){
     f32 scale;
     u32 tmp2;
     u32 tmp3;
@@ -1064,9 +1064,9 @@ extern f32 func_800707F8(s16);
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
 #else
-void func_80012E28(Player *this){
+void func_80012E28(Object *this){
     s32         unused1;
-    Player_64  *sp_20;
+    Object_64  *sp_20;
     f32         tmp_f2;
     f32         sp_1c;
     f32         tmp_f0;
@@ -1099,9 +1099,9 @@ void func_80012E28(Player *this){
 #endif
 
 
-void func_80012F30(Player *arg0) {
+void func_80012F30(Object *arg0) {
     if (arg0->unk48 == 1) {
-        Player_64 *player_64 = arg0->unk64;
+        Object_64 *player_64 = arg0->unk64;
         arg0->y_rotation -= player_64->unk160;
         arg0->x_rotation -= player_64->unk162;
         arg0->z_rotation -= player_64->unk164;
@@ -1114,9 +1114,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
 
 
 
-void func_80013548(Player *arg0);
+void func_80013548(Object *arg0);
 
-void func_8001348C(Player *this){
+void func_8001348C(Object *this){
     func_80012F94(this);
     if(this->unk6 & 0x8000){
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
@@ -1132,7 +1132,7 @@ void func_8001348C(Player *this){
     func_80013548(this);
 }
 
-void func_80013548(Player *arg0) {
+void func_80013548(Object *arg0) {
     if ((arg0->unk6 & 0x8000) == 0 && arg0->descriptor_ptr->unk54 == 1) {
         arg0->x_position -= arg0->unk64->unk78;
         arg0->y_position -= arg0->unk64->unk7C;
@@ -1149,8 +1149,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
 void func_800142B8(void){
     s32 i =  D_8011AE60;
     s32 j;
-    Player* currObj;
-    Player_68 *curr_68;
+    Object* currObj;
+    Object_68 *curr_68;
 
     for(; i < objCount; i++){
         currObj = objPtrList[i];
@@ -1208,9 +1208,9 @@ s16 func_80017E88(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
 
-Player * func_80018C6C(void){
+Object * func_80018C6C(void){
     s32 i;
-    Player* current_obj;
+    Object* current_obj;
     for(i=D_8011AE60; i < objCount; i++){
         current_obj = objPtrList[i];
         if(!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
@@ -1312,7 +1312,7 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Player **getPlayerStructArray(s32 *cnt) {
+Object **getPlayerStructArray(s32 *cnt) {
     *cnt = playerCount;
     return *playerStructArray_Ptr;
 }
@@ -1327,7 +1327,7 @@ s32 *func_8001BAAC(s32 *arg0) {
     return D_8011AEE8;
 }
 
-Player *getPlayerStruct(s32 indx) {
+Object *getPlayerStruct(s32 indx) {
     if (playerCount == 0) {
         return NULL;
     }
@@ -1395,7 +1395,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
 
-void calc_dyn_light_and_env_map_for_object(ObjectModel *arg0, Player *object, s32 arg2, f32 arg3) {
+void calc_dyn_light_and_env_map_for_object(ObjectModel *arg0, Object *object, s32 arg2, f32 arg3) {
     s16 environmentMappingEnabled;
     s32 dynamicLightingEnabled;
     s16 i;
@@ -1459,7 +1459,7 @@ void func_8001E344(s32 arg0) {
 
 void func_8001E36C(s32 arg0, f32* arg1, f32* arg2, f32* arg3){
     s32 i;
-    Player* current_obj;
+    Object* current_obj;
     *arg1 = -32000.0f;
     *arg2 = -32000.0f;
     *arg3 = -32000.0f;
@@ -1576,7 +1576,7 @@ void func_800228DC(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 void func_800228EC(s32 arg0) {
-    Player_64 *player_64;
+    Object_64 *player_64;
 
     D_8011AEF7 = 3;
     player_64 = getPlayerStruct(0)->unk64;
@@ -1604,10 +1604,10 @@ extern f32 sqrtf(f32);
 
 //bad regalloc
 //finds furthest object (with some additional conditions)
-Player* func_8002342C(f32 x, f32 z){
-    Player* retval = NULL;
+Object* func_8002342C(f32 x, f32 z){
+    Object* retval = NULL;
     s32 i;
-    Player* currObj = NULL;
+    Object* currObj = NULL;
     f32 x;
     f32 z;
     f32 dist;

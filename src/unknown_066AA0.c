@@ -147,7 +147,7 @@ s16 D_800DD304 = -1;
 
 /************ .bss ************/
 
-/* Size: 0x44 bytes, might just be Player? */
+/* Size: 0x44 bytes, might just be Object? */
 typedef struct unk80120AC0 {
     s16 unk0;
     s16 unk2;
