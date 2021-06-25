@@ -6,6 +6,7 @@ glabel __ll_to_f
 /* 0CA8CC 800C9CCC 03E00008 */  jr    $ra
 /* 0CA8D0 800C9CD0 46A02020 */   cvt.s.l $f0, $f4
 
+glabel __ull_to_d
 /* 0CA8D4 800C9CD4 AFA40000 */  sw    $a0, ($sp)
 /* 0CA8D8 800C9CD8 AFA50004 */  sw    $a1, 4($sp)
 /* 0CA8DC 800C9CDC DFAE0000 */  ld    $t6, ($sp)
@@ -21,6 +22,7 @@ glabel __ll_to_f
 /* 0CA900 800C9D00 03E00008 */  jr    $ra
 /* 0CA904 800C9D04 00000000 */   nop   
 
+glabel __ull_to_f
 /* 0CA908 800C9D08 AFA40000 */  sw    $a0, ($sp)
 /* 0CA90C 800C9D0C AFA50004 */  sw    $a1, 4($sp)
 /* 0CA910 800C9D10 DFAE0000 */  ld    $t6, ($sp)
