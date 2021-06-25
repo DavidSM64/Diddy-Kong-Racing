@@ -14,6 +14,7 @@ glabel __f_to_ll
 /* 0CA760 800C9B60 03E00008 */  jr    $ra
 /* 0CA764 800C9B64 0002103F */   dsra32 $v0, $v0, 0
 
+glabel __d_to_ull
 /* 0CA768 800C9B68 444EF800 */  cfc1  $t6, $31
 /* 0CA76C 800C9B6C 24020001 */  li    $v0, 1
 /* 0CA770 800C9B70 44C2F800 */  ctc1  $v0, $31
@@ -58,6 +59,7 @@ glabel __f_to_ll
 /* 0CA800 800C9C00 03E00008 */  jr    $ra
 /* 0CA804 800C9C04 0002103F */   dsra32 $v0, $v0, 0
 
+glabel __f_to_ull
 /* 0CA808 800C9C08 444EF800 */  cfc1  $t6, $31
 /* 0CA80C 800C9C0C 24020001 */  li    $v0, 1
 /* 0CA810 800C9C10 44C2F800 */  ctc1  $v0, $31
@@ -101,6 +103,7 @@ glabel __f_to_ll
 /* 0CA89C 800C9C9C 03E00008 */  jr    $ra
 /* 0CA8A0 800C9CA0 0002103F */   dsra32 $v0, $v0, 0
 
+glabel __ll_to_d
 /* 0CA8A4 800C9CA4 AFA40000 */  sw    $a0, ($sp)
 /* 0CA8A8 800C9CA8 AFA50004 */  sw    $a1, 4($sp)
 /* 0CA8AC 800C9CAC DFAE0000 */  ld    $t6, ($sp)
