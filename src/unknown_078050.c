@@ -29,109 +29,115 @@ s32 D_800DE4D4 = 0;
 s32 D_800DE4D8 = 0;
 s32 D_800DE4DC = 0;
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE4E0[] = {
-    0xB6000000, 0x001F3204,
-    0xBB000000, 0x00000000,
-    0xB7000000, 0x00000204,
-    0xBC000404, 0x00000002,
-    0xBC000C04, 0x00000002,
-    0xBC001404, 0x0000FFFE,
-    0xBC001C04, 0x0000FFFE,
-    0xB8000000, 0x00000000
+Gfx D_800DE4E0[] = {
+    gsSPClearGeometryMode(0x001F3204),
+    gsSPTexture(0, 0, 0, 0, 0),
+    gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE),
+    gsSPClipRatio(FRUSTRATIO_2),
+    gsSPEndDisplayList(),
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE520[] = {
-    0xBA001402, 0x00000000,
-    0xBA001701, 0x00800000,
-    0xBA001001, 0x00000000,
-    0xBA000E02, 0x00000000,
-    0xBA001102, 0x00000000,
-    0xBA001301, 0x00080000,
-    0xBA000C02, 0x00002000,
-    0xBA000903, 0x00000C00,
-    0xFCFFFFFF, 0xFFFCF87C,
-    0xBA000801, 0x00000000,
-    0xB9000002, 0x00000000,
-    0xB900031D, 0x0F0A4000,
-    0xBA000602, 0x00000000,
-    0xE7000000, 0x00000000,
-    0xB8000000, 0x00000000
+// Default RDP settings
+Gfx D_800DE520[] = {
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPPipelineMode(G_PM_1PRIMITIVE),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetTextureDetail(G_TD_CLAMP),
+    gsDPSetTexturePersp(G_TP_PERSP),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetCombineMode(G_CC_DECALRGB, G_CC_DECALRGB),
+    gsDPSetCombineKey(G_CK_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
+    gsDPSetColorDither(G_CD_MAGICSQ),
+    gsDPPipeSync(), 
+    gsSPEndDisplayList(),
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE598[] = {
-    0xE7000000, 0x00000000,
-    0xBA001001, 0x00000000,
-    0xBA000E02, 0x00000000,
-    0xB9000002, 0x00000000,
-    0xB6000000, 0x00010001,
-    0xE7000000, 0x00000000,
-    0xFCFFFFFF, 0xFFFCF279,
-    0xEF000C0F, 0x0F0A4000,
-    0xB8000000, 0x00000000
+Gfx D_800DE598[] = {
+    gsDPPipeSync(), 
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
+    gsDPPipeSync(), 
+    gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
+    gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
+    gsSPEndDisplayList(),
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE5E0[] = {
-    0xE7000000, 0x00000000,
-    0xBA001001, 0x00000000,
-    0xBA000E02, 0x00000000,
-    0xB9000002, 0x00000000,
-    0xB6000000, 0x00010001,
-    0xE7000000, 0x00000000,
-    0xFCFFFFFF, 0xFFFDF6FB,
-    0xEF000C0F, 0x0F0A4000,
-    0xB8000000, 0x00000000
+Gfx D_800DE5E0[] = {
+    gsDPPipeSync(), 
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
+    gsDPPipeSync(), 
+    gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE),
+    gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
+    gsSPEndDisplayList(),
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE628[] = {
-    0xE7000000, 0x00000000,
-    0xBA001001, 0x00000000,
-    0xBA000E02, 0x00000000,
-    0xB9000002, 0x00000000,
-    0xB6000000, 0x00010001,
-    0xE7000000, 0x00000000,
-    0xFC119623, 0xFF2FFFFF,
-    0xEF000C0F, 0x00504240,
-    0xB8000000, 0x00000000
+Gfx D_800DE628[] = {
+    gsDPPipeSync(), 
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
+    gsDPPipeSync(), 
+    gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+    gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
+    gsSPEndDisplayList(),
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE670[] = {
-    0xE7000000, 0x00000000,
-    0xBA001001, 0x00000000,
-    0xBA000E02, 0x00000000,
-    0xB9000002, 0x00000000,
-    0xB6000000, 0x00010001,
-    0xE7000000, 0x00000000,
-    0xB8000000, 0x00000000
+Gfx D_800DE670[] = {
+    gsDPPipeSync(), 
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
+    gsDPPipeSync(), 
+    gsSPEndDisplayList(),
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE6A8[] = {
-    0xFC119623, 0xFF2FFFFF,
-    0xEF002C0F, 0x00552048,
-    0xFC119623, 0xFF2FFFFF,
-    0xEF002C0F, 0x0F0A4000,
-    0xFC119623, 0xFF2FFFFF,
-    0xEF000C0F, 0x00552048,
-    0xFC119623, 0xFF2FFFFF,
-    0xEF000C0F, 0x0F0A4000
+Gfx D_800DE6A8[][2] = {
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_AA_OPA_SURF | G_RM_AA_OPA_SURF2),
+    },
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
+    },
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_AA_OPA_SURF | G_RM_AA_OPA_SURF2),
+    },
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
+    }
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800DE6E8[] = {
-    0xFC119623, 0xFF2FFFFF,
-    0xEF002C0F, 0x005041C8,
-    0xFC119623, 0xFF2FFFFF,
-    0xEF002C0F, 0x00504240,
-    0xFC119623, 0xFF2FFFFF,
-    0xEF000C0F, 0x005041C8,
-    0xFC119623, 0xFF2FFFFF,
-    0xEF000C0F, 0x00504240
+Gfx D_800DE6E8[][2] = {
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_AA_XLU_SURF | G_RM_AA_XLU_SURF2),
+    },
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
+    },
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_AA_XLU_SURF | G_RM_AA_XLU_SURF2),
+    },
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
+    }
 };
 
 /*******************************/

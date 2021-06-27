@@ -2,6 +2,7 @@
 #define _UNKNOWN_078050_H_
 
 #include "types.h"
+#include "f3ddkr.h"
 
 extern s16 D_800DE490[16];
 
@@ -20,6 +21,7 @@ extern s32 D_800DE4D4;
 extern s32 D_800DE4D8;
 extern s32 D_800DE4DC;
 
+/*
 // Fast3D (F3DDKR) display list
 extern u32 D_800DE4E0[];
 
@@ -43,5 +45,6 @@ extern u32 D_800DE6A8[];
 
 // Fast3D (F3DDKR) display list
 extern u32 D_800DE6E8[];
+*/
 
 #endif
