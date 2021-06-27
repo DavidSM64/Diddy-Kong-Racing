@@ -16,4 +16,5 @@ typedef struct Gfx {
     _g->w0 = word0;                   \
     _g->w1 = word1;                   \
 }
+
 #endif
