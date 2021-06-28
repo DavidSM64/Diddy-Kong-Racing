@@ -17,7 +17,7 @@ namespace fs = std::experimental::filesystem;
 
 const std::string CONFIG_EXTENSION = ".config.json";
 
-const std::string ROM_EXTENSIONS[3] = { ".z64", ".v64", ".n64" };
+const std::string ROM_EXTENSIONS[] = { ".z64", ".v64", ".n64", ".rom" };
 
 std::string outDirectory;
 std::string currentCategory;
@@ -101,9 +101,9 @@ int main(int argc, char* argv[]) {
     
     for (const auto & entry : fs::directory_iterator(baseromsDirectory)){
         std::string filename = entry.path().string();
-        //if(ends_with_rom_extension(filename)) {
+        if(ends_with_rom_extension(filename)) {
             roms.push_back(ROM(filename));
-        //}
+        }
     }
     
     bool completedAnExtraction = false;
