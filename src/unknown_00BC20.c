@@ -911,109 +911,8 @@ void func_80011AD0(Object* this){
 }
 #endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011C94.s")
-#else
-void func_80011C94(Object* this){
-}
-#endif
-
-
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800120C8.s")
-#else
-
-extern f32 D_8011AD30;
-
-void func_800120C8(Object* this){
-    u32 sp_b8;
-    u32 sp_a8;
-    u32 sp_a4;
-    u32 sp_78;
-
-    u32 *s0;
-    f32 tmp_f_1;
-    f32 *tmp_fp_s1;
-    Object_64* tmp_s3;
-
-    s0 = ((u32*) this->unk68)[this->unk3A];
-    if(s0){
-        /*
-        sp_a8 = 0;
-        sp_a4 = 0;
-        sp_b8 = 255;
-        sp_78 = *s0;
-
-        if(this->unk54){
-            tmp_f_1 = *((f32*) this->unk54) * 255.0f * D_8011AD30;
-            sp_a8 = 1;
-            sp_a4 = 1;
-            sp_b8 = tmp_f_1;
-        }
-        
-
-        tmp_fp_s1 = &D_8011AD30;
-        if(this->unk48 == 1){
-            tmp_s3 = this->unk64;
-            func_80012E28(this);
-
-        }else{
-            tmp_s3 = NULL;
-        }
-        if(s0->unk20 < 0){
-            this->s0->unk1f
-        }
-        //L800122Fc
-        */
-        //L800129A0
-        {
-            $t6 = this->unk3A;
-
-
-            //f64 $f8;
-            $f12 = (f32) $t9;
-            $f8 = ( (f64) $f16) + (((f64) $f8)* 0.25f);
-            $f4 = (((f32) $v0->unk2) - this->y_position);
-            this->x_position = (f32) $f8;
-            this->y_position = (f32) (((f64)$f18) + (((f64) $f4) * $f14));
-            $sp_38 = this->z_position;
-            $f8 = ( (f64) $f10) + (((f64) ($f12 - $f6)) * $f14);
-            $s0->0x14 = (f32) $f8;
-            if(this->descriptor_ptr->unk53 == 1){
-                
-                func_80068514( $s1, &D_8011AE90, &D_8011AE94, this, $t4, 266);
-            }
-        }
-        //L80012AF8
-        if($sp_9c != -1){
-            if(this->descriptor_ptr->unk71){
-                fast3d_cmd($v0++, 0xFA000000, 
-                    ($v1->unk18 << 0x18) | ($v1->unk19 << 0x10) | ($v1->unk1a << 0x08) | ($sp_b4 & 0xff)); 
-                    //G_SETPRIMCOLOR
-                
-                func_8007B43C();
-            }
-            //L80012B6C
-            func_800143A8($sp_78, this, $sp_9c, 4, $sp_b0);
-            if(this->descriptor_ptr->unk71){
-                func_8007B54();
-            } 
-        }
-        //L80012BA8
-        if( $sp_a8 || this->descriptor_ptr->unk71){
-            fast3d_cmd($v0++, 0xFA000000, 0xFFFFFFFF); //G_SETPRIMCOLOR
-        }
-        //L80012BE8
-        if($sp_a4){
-            fast3d_cmd($v0++, 0xFB000000, 0xFFFFFDA9); //G_SETENVCOLOR 
-        }
-        //L80012C0C
-        func_80069A40($s1);
-    }
-    //L80012C14
-    return;
-}
-#endif
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/render_3d_billboard.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/render_3d_model.s")
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
@@ -1042,7 +941,7 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_8001348C(Object *);
+void render_object(Object *);
 
 func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object){
     f32 scale;
@@ -1055,7 +954,7 @@ func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object){
     D_8011AE90 = *arg1;
     D_8011AE94 = *arg2;
     scale = object->scale;
-    func_8001348C(object);
+    render_object(object);
     object->scale = scale;
     *arg0 = D_8011AE8C;
     *arg1 = D_8011AE90;
@@ -1117,16 +1016,16 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
 
 void func_80013548(Object *arg0);
 
-void func_8001348C(Object *this){
+void render_object(Object *this){
     func_80012F94(this);
     if(this->unk6 & 0x8000){
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
     }
     else{
         if(this->descriptor_ptr->unk53 == 0)
-            func_800120C8(this);
+            render_3d_model(this);
         else if(this->descriptor_ptr->unk53 == 1)
-            func_80011C94(this);
+            render_3d_billboard(this);
         else if(this->descriptor_ptr->unk53 == 4)
             func_80011AD0(this);
     }

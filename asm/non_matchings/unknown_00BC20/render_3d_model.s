@@ -1,4 +1,4 @@
-glabel func_800120C8
+glabel render_3d_model
 /* 012CC8 800120C8 27BDFF40 */  addiu $sp, $sp, -0xc0
 /* 012CCC 800120CC AFBF002C */  sw    $ra, 0x2c($sp)
 /* 012CD0 800120D0 AFB30028 */  sw    $s3, 0x28($sp)

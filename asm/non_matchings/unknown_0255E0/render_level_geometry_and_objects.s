@@ -3,7 +3,7 @@ glabel D_800E5EA0
 .double 1000.0
 
 .text
-glabel func_80028FAC
+glabel render_level_geometry_and_objects
 /* 029BAC 80028FAC 27BDFE90 */  addiu $sp, $sp, -0x170
 /* 029BB0 80028FB0 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 029BB4 80028FB4 AFB60038 */  sw    $s6, 0x38($sp)
@@ -76,7 +76,7 @@ glabel func_80028FAC
 /* 029CAC 800290AC 24110001 */  li    $s1, 1
 .L800290B0:
 /* 029CB0 800290B0 92040000 */  lbu   $a0, ($s0)
-/* 029CB4 800290B4 0C00A596 */  jal   func_80029658
+/* 029CB4 800290B4 0C00A596 */  jal   render_level_segment
 /* 029CB8 800290B8 00002825 */   move  $a1, $zero
 /* 029CBC 800290BC 920E0000 */  lbu   $t6, ($s0)
 /* 029CC0 800290C0 26520001 */  addiu $s2, $s2, 1
@@ -183,7 +183,7 @@ glabel func_80028FAC
 /* 029E30 80029230 00000000 */  nop   
 /* 029E34 80029234 10A00004 */  beqz  $a1, .L80029248
 /* 029E38 80029238 02602025 */   move  $a0, $s3
-/* 029E3C 8002923C 0C00B4E1 */  jal   func_8002D384
+/* 029E3C 8002923C 0C00B4E1 */  jal   render_floor_decal
 /* 029E40 80029240 02202025 */   move  $a0, $s1
 /* 029E44 80029244 02602025 */  move  $a0, $s3
 .L80029248:
@@ -265,7 +265,7 @@ glabel func_80028FAC
 /* 029F60 80029360 00000000 */  nop   
 /* 029F64 80029364 10A00004 */  beqz  $a1, .L80029378
 /* 029F68 80029368 02602025 */   move  $a0, $s3
-/* 029F6C 8002936C 0C00B4E1 */  jal   func_8002D384
+/* 029F6C 8002936C 0C00B4E1 */  jal   render_floor_decal
 /* 029F70 80029370 02202025 */   move  $a0, $s1
 /* 029F74 80029374 02602025 */  move  $a0, $s3
 .L80029378:
@@ -304,7 +304,7 @@ glabel func_80028FAC
 /* 029FEC 800293EC 27B100D8 */  addiu $s1, $sp, 0xd8
 .L800293F0:
 /* 029FF0 800293F0 92040000 */  lbu   $a0, ($s0)
-/* 029FF4 800293F4 0C00A596 */  jal   func_80029658
+/* 029FF4 800293F4 0C00A596 */  jal   render_level_segment
 /* 029FF8 800293F8 24050001 */   li    $a1, 1
 /* 029FFC 800293FC 2610FFFF */  addiu $s0, $s0, -1
 /* 02A000 80029400 0211082B */  sltu  $at, $s0, $s1
@@ -402,7 +402,7 @@ glabel func_80028FAC
 /* 02A14C 8002954C 00000000 */  nop   
 /* 02A150 80029550 10A00004 */  beqz  $a1, .L80029564
 /* 02A154 80029554 02602025 */   move  $a0, $s3
-/* 02A158 80029558 0C00B4E1 */  jal   func_8002D384
+/* 02A158 80029558 0C00B4E1 */  jal   render_floor_decal
 /* 02A15C 8002955C 02202025 */   move  $a0, $s1
 /* 02A160 80029560 02602025 */  move  $a0, $s3
 .L80029564:

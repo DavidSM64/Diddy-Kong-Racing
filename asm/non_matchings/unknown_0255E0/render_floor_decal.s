@@ -1,4 +1,4 @@
-glabel func_8002D384
+glabel render_floor_decal
 /* 02DF84 8002D384 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 02DF88 8002D388 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 02DF8C 8002D38C AFBE0038 */  sw    $fp, 0x38($sp)

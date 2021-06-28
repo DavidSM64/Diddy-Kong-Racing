@@ -179,7 +179,7 @@ glabel func_80028CD0
 /* 029B7C 80028F7C 0C01AF6C */  jal   get_current_level_header
 /* 029B80 80028F80 00000000 */   nop   
 /* 029B84 80028F84 240A0001 */  li    $t2, 1
-/* 029B88 80028F88 0C00A3EB */  jal   func_80028FAC
+/* 029B88 80028F88 0C00A3EB */  jal   render_level_geometry_and_objects
 /* 029B8C 80028F8C A04A0003 */   sb    $t2, 3($v0)
 /* 029B90 80028F90 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 029B94 80028F94 27BD0048 */  addiu $sp, $sp, 0x48
