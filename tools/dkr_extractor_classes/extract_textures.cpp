@@ -35,10 +35,10 @@ ExtractTextures::ExtractTextures(std::vector<uint8_t> data, ROM& rom, std::strin
         int textureSize = get_texture_size(width, height, textureFormat);
         
         std::vector<uint8_t> texHeader(texData.begin() + dataOffset, texData.begin() + dataOffset + TEX_HEADER_SIZE);
-        std::vector<uint8_t> texData(texData.begin() + dataOffset + TEX_HEADER_SIZE, texData.begin() + dataOffset + textureSize);
+        std::vector<uint8_t> texData2(texData.begin() + dataOffset + TEX_HEADER_SIZE, texData.begin() + dataOffset + textureSize);
         
-        process_texture(texHeader, texData);
-        combinedTexturesData.insert(combinedTexturesData.end(), texData.begin(), texData.end());
+        process_texture(texHeader, texData2);
+        combinedTexturesData.insert(combinedTexturesData.end(), texData2.begin(), texData2.end());
         
         dataOffset += textureSize;
         totalHeight += texHeader[1];

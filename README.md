@@ -21,7 +21,7 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 ## Setup / Building
 1. Install the dependencies
 2. Place the ROM file within the `baseroms` directory.  
-    **a.** Any DKR ROM should work as long as it is US 1.0.  
+    **a.** Any DKR ROM should work as long as it is US 1.0, and it ends with one of these extensions: `.z64`, `.v64`, `.n64`, or `.rom`.
     **b.** The name of the ROM file does not matter. It will be detected automatically from an md5 checksum.  
     **c.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
 3. Run `make` in the main directory.  
