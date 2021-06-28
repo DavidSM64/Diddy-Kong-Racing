@@ -1,4 +1,4 @@
-glabel func_8007ABFC
+glabel memory_copy
 /* 07B7FC 8007ABFC 18C00018 */  blez  $a2, .L8007AC60
 /* 07B800 8007AC00 00001025 */   move  $v0, $zero
 /* 07B804 8007AC04 30C70003 */  andi  $a3, $a2, 3

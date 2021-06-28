@@ -54,7 +54,7 @@ glabel L8007A5D0
 .L8007A5F8:
 /* 07B1F8 8007A5F8 3C058012 */  lui   $a1, %hi(D_80126260) # $a1, 0x8012
 /* 07B1FC 8007A5FC 24A56260 */  addiu $a1, %lo(D_80126260) # addiu $a1, $a1, 0x6260
-/* 07B200 8007A600 0C01EAFF */  jal   func_8007ABFC
+/* 07B200 8007A600 0C01EAFF */  jal   memory_copy
 /* 07B204 8007A604 24060050 */   li    $a2, 80
 /* 07B208 8007A608 3C088000 */  lui   $t0, %hi(osTvType) # $t0, 0x8000
 /* 07B20C 8007A60C 8D080300 */  lw    $t0, %lo(osTvType)($t0)
@@ -92,7 +92,7 @@ glabel L8007A658
 .L8007A680:
 /* 07B280 8007A680 3C058012 */  lui   $a1, %hi(D_80126260) # $a1, 0x8012
 /* 07B284 8007A684 24A56260 */  addiu $a1, %lo(D_80126260) # addiu $a1, $a1, 0x6260
-/* 07B288 8007A688 0C01EAFF */  jal   func_8007ABFC
+/* 07B288 8007A688 0C01EAFF */  jal   memory_copy
 /* 07B28C 8007A68C 24060050 */   li    $a2, 80
 /* 07B290 8007A690 3C058012 */  lui   $a1, %hi(D_80126260) # $a1, 0x8012
 /* 07B294 8007A694 24A46260 */  addiu $a0, $a1, %lo(D_80126260)
@@ -121,7 +121,7 @@ glabel L8007A6C0
 .L8007A6E8:
 /* 07B2E8 8007A6E8 3C058012 */  lui   $a1, %hi(D_80126260) # $a1, 0x8012
 /* 07B2EC 8007A6EC 24A56260 */  addiu $a1, %lo(D_80126260) # addiu $a1, $a1, 0x6260
-/* 07B2F0 8007A6F0 0C01EAFF */  jal   func_8007ABFC
+/* 07B2F0 8007A6F0 0C01EAFF */  jal   memory_copy
 /* 07B2F4 8007A6F4 24060050 */   li    $a2, 80
 /* 07B2F8 8007A6F8 3C058012 */  lui   $a1, %hi(D_80126260) # $a1, 0x8012
 /* 07B2FC 8007A6FC 24A46260 */  addiu $a0, $a1, %lo(D_80126260)

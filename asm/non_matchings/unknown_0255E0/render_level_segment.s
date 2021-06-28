@@ -1,4 +1,4 @@
-glabel func_80029658
+glabel render_level_segment
 /* 02A258 80029658 27BDFF50 */  addiu $sp, $sp, -0xb0
 /* 02A25C 8002965C 3C0E800E */  lui   $t6, %hi(D_800DC918) # $t6, 0x800e
 /* 02A260 80029660 8DCEC918 */  lw    $t6, %lo(D_800DC918)($t6)

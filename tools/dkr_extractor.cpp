@@ -101,9 +101,9 @@ int main(int argc, char* argv[]) {
     
     for (const auto & entry : fs::directory_iterator(baseromsDirectory)){
         std::string filename = entry.path().string();
-        if(ends_with_rom_extension(filename)) {
+        //if(ends_with_rom_extension(filename)) {
             roms.push_back(ROM(filename));
-        }
+        //}
     }
     
     bool completedAnExtraction = false;

@@ -1,4 +1,4 @@
-glabel func_80011C94
+glabel render_3d_billboard
 /* 012894 80011C94 27BDFF70 */  addiu $sp, $sp, -0x90
 /* 012898 80011C98 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 01289C 80011C9C AFB00020 */  sw    $s0, 0x20($sp)
