@@ -27,6 +27,13 @@ ifneq ($(MAKECMDGOALS),clean_lib)
 ifneq ($(MAKECMDGOALS),clean_src)
 ifneq ($(MAKECMDGOALS),reset)
 
+################ Check if a baserom exists  ################
+
+numberOfFilesInBaseromsDirectory := $(words $(wildcard baseroms/*))
+ifeq ($(shell test $(numberOfFilesInBaseromsDirectory) -lt 1; echo $$?),0)
+  $(error Make sure you have a DKR rom in the /baseroms/ directory)
+endif
+
 ########## Make tools ##########
 
 DUMMY != make -s -C tools >&2 || echo FAIL
