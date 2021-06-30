@@ -27,42 +27,11 @@ ifneq ($(MAKECMDGOALS),clean_lib)
 ifneq ($(MAKECMDGOALS),clean_src)
 ifneq ($(MAKECMDGOALS),reset)
 
-########## QEMU_IRIX ###########
+################ Check if a baserom exists  ################
 
-ifndef QEMU_IRIX
-  QEMU_IRIX := $(shell which qemu-irix 2>/dev/null)
-  ifndef QEMU_IRIX
-    # Use /etc/os-release to get the distro's ID_LIKE string
-    DISTRO_TYPE := $(shell grep ^ID_LIKE= /etc/os-release | cut -c9-)
-    # If the current distro is Ubuntu/Debian, then automatically download & install qemu-irix
-    ifneq ($(filter $(DISTRO_TYPE),debian),)
-      QEMU_IRIX_REPO = https://github.com/n64decomp/qemu-irix
-      QEMU_IRIX_RELEASE = $(QEMU_IRIX_REPO)/releases/download/v2.11-deb
-      QEMU_IRIX_FILENAME = qemu-irix-2.11.0-2169-g32ab296eef_amd64.deb
-      QEMU_IRIX_URL = $(QEMU_IRIX_RELEASE)/$(QEMU_IRIX_FILENAME)
-      # Download qemu-irix using wget
-      DUMMY != wget --no-check-certificate --content-disposition $(QEMU_IRIX_URL) >&2 || echo FAIL
-      ifeq ($(DUMMY),FAIL)
-        $(error Failed to get QEMU_IRIX)
-      else
-        # Install qemu-irix using dpkg
-        DUMMY != sudo dpkg -i $(QEMU_IRIX_FILENAME) >&2 || echo FAIL
-        ifeq ($(DUMMY),FAIL)
-          $(error Failed to install QEMU_IRIX)
-        else
-          # Removed the downloaded .deb package, since it is no longer needed.
-          DUMMY != rm -f $(QEMU_IRIX_FILENAME) >&2 || echo FAIL
-          ifeq ($(DUMMY),FAIL)
-            $(warning Failed to remove $(QEMU_IRIX_FILENAME))
-          endif
-          $(info QEMU_IRIX has been installed sucessfully!)
-          QEMU_IRIX := $(shell which qemu-irix 2>/dev/null)
-        endif
-      endif
-    else
-      $(error Please install qemu-irix package or set QEMU_IRIX env var to the full qemu-irix binary path)
-    endif
-  endif
+numberOfFilesInBaseromsDirectory := $(words $(wildcard baseroms/*))
+ifeq ($(shell test $(numberOfFilesInBaseromsDirectory) -lt 1; echo $$?),0)
+  $(error Make sure you have a DKR rom in the /baseroms/ directory)
 endif
 
 ########## Make tools ##########
@@ -75,22 +44,6 @@ endif
 ######## Extract Assets & Microcode ########
 
 DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION) >&2 || echo FAIL
-
-# NEED_TO_EXTRACT = no
-# 
-# ifeq ($(wildcard ./assets/.*),)
-#     NEED_TO_EXTRACT = yes
-# endif
-# ifeq ($(wildcard ./ucode/.*),)
-#     NEED_TO_EXTRACT = yes
-# endif
-# 
-# ifeq ($(NEED_TO_EXTRACT),yes)
-#   DUMMY != ./extract.sh $(VERSION) >&2 || echo FAIL
-#   ifeq ($(DUMMY),FAIL)
-#     $(error Failed to extract assets)
-#   endif
-# endif
 
 ##### Generate linker file #####
 
@@ -114,19 +67,28 @@ BUILD_DIR = build/$(VERSION)
 
 ##################### Compiler Options #######################
 
-IRIX_ROOT := tools/ido5.3_compiler
+# If the `tools/ido5.3_recomp` directory doesn't exist, then we need to run recomp.
+ifeq ($(wildcard ./tools/ido5.3_recomp/.*),)
+  DUMMY != make -s -C tools/ido-static-recomp >&2 || echo FAIL
+endif 
 
+# Check if a binutils package is installed on the system.
 ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips-linux-gnu-
 else ifeq ($(shell type mips64-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips64-linux-gnu-
-else
+else ifeq ($(shell type mips64-elf-ld >/dev/null 2>/dev/null; echo $$?), 0)
   CROSS := mips64-elf-
+else
+# No binutil packages were found, so we have to download the source & build it.
+ifeq ($(wildcard ./tools/binutils/.*),)
+  DUMMY != ./tools/get-binutils.sh >&2 || echo FAIL
+endif 
+  CROSS := ./tools/binutils/mips64-elf-
 endif
 
 AS = $(CROSS)as
-#CC := $(QEMU_IRIX) -silent -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
-CC := $(QEMU_IRIX) -L $(IRIX_ROOT) $(IRIX_ROOT)/usr/bin/cc
+CC := tools/ido5.3_recomp/cc
 CPP := cpp -P -Wno-trigraphs
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
@@ -138,7 +100,7 @@ OPT_FLAGS := -O2
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d))
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
-ASFLAGS = -mtune=vr4300 -march=vr4300 $(foreach d,$(DEFINES),--defsym $(d))
+ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
 CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(INCLUDE_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS)
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
