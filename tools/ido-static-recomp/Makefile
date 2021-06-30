@@ -5,6 +5,7 @@ OUT := ../ido5.3_recomp
 CXX := g++
 GCC := gcc
 
+DUMMY != echo "Statically recompiling IDO 5.3. This might take a while." >&2 || echo FAIL
 DUMMY != mkdir -p $(OUT) >&2 || echo FAIL
 
 cc: OPT_CFLAGS := -O2
