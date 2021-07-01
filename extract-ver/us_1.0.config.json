@@ -118,12 +118,13 @@
                 "type": "Table" 
             },
             { 
-                "name": "EMPTY_10",
-                "type": "Empty", 
+                "name": "SCREENS",
+                "type": "Binary", 
+                "folder": "screens",
                 "table": 11
             },
             { 
-                "name": "EMPTY_10_TABLE",
+                "name": "SCREENS_TABLE",
                 "type": "Table" 
             },
             {

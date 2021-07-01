@@ -7,7 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "fast3d.h"
+#include "f3ddkr.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -1248,19 +1248,18 @@ s16 D_800E1768[12] = {
     0x3A, 0x3B, -1, 0
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800E1780[22] = {
-    0xE7000000, 0x00000000, 
-    0xBA001402, 0x00000000, 
-    0xBA001001, 0x00000000, 
-    0xBA000E02, 0x00000000, 
-    0xBA001102, 0x00000000, 
-    0xBA001301, 0x00000000, 
-    0xBA000C02, 0x00002000, 
-    0xBA000903, 0x00000C00, 
-    0xB9000002, 0x00000000, 
-    0xB900031D, 0x00504340, 
-    0xB8000000, 0x00000000
+Gfx D_800E1780[11] = {
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetTextureDetail(G_TD_CLAMP),
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetRenderMode(G_RM_CLD_SURF, G_RM_CLD_SURF2),
+    gsSPEndDisplayList(),
 };
 
 s16 D_800E17D8[12] = {
@@ -1390,20 +1389,29 @@ MenuElement D_800E1B50[9] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0 }
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800E1C70[24] = {
-    0xE7000000, 0x00000000, 
-    0xBA001001, 0x00000000, 
-    0xBA000E02, 0x00000000, 
-    0xB9000002, 0x00000000, 
-    0xB6000000, 0x00010001, 
-    0xB8000000, 0x00000000, 
-    0xFCFFFFFF, 0xFFFE793C, 
-    0xEF000C0F, 0x00504240, 
-    0xFC121824, 0xFF33FFFF, 
-    0xEF082C0F, 0x00504240, 
-    0xFCFFFFFF, 0xFFFDF6FB, 
-    0xEF000C0F, 0x00504240
+Gfx D_800E1C70[] = {
+    gsDPPipeSync(),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
+    gsSPEndDisplayList(),
+};
+
+// Unused?
+Gfx D_800E1CA0[][2] = {
+    {
+        gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2), 
+    },
+    {
+        gsDPSetCombineMode(G_CC_MODULATEIA, G_CC_MODULATEIA),
+        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2), 
+    },
+    {
+        gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2), 
+    }
 };
 
 s8 D_800E1CD0[32] = {

@@ -20,6 +20,8 @@
 #ifndef _GBI_H_
 #define _GBI_H_
 
+#define F3D_OLD
+
 #include <PR/ultratypes.h>
 
 /*

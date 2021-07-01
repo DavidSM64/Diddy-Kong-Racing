@@ -7838,12 +7838,10 @@ glabel ASSET_SECTION_9_END
 
 .balign 16
 glabel ASSET_SECTION_10
-# Empty
 glabel ASSET_SECTION_10_END
 
 .balign 16
 glabel ASSET_SECTION_11
-# Empty table
 .word ASSET_SECTION_10_END - ASSET_SECTION_10
 .word 0xFFFFFFFF
 glabel ASSET_SECTION_11_END
