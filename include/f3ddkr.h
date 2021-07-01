@@ -17,6 +17,7 @@
 #define DKR_CC_UNK7 TEXEL1, TEXEL0, PRIMITIVE, TEXEL0, TEXEL1, TEXEL0, PRIMITIVE, TEXEL0
 #define DKR_CC_UNK8 COMBINED, 0, SHADE, 0, 0, 0, 0, COMBINED
 #define DKR_CC_UNK9 PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0
+#define DKR_CC_UNK10 TEXEL0, 0, SCALE, 0, 0, 0, 0, TEXEL0
 #define DKR_CC_DECALFADEPRIM 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
 
 // For some reason DKR has a value for G_MDSFT_BLENDMASK, despite the fact that it is unsupported.
@@ -34,6 +35,10 @@
 #define DKR_OMH_2CYC_BILERP         DKR_OMH_COMMON | G_CYC_2CYCLE | G_TT_NONE   | G_TF_BILERP | G_TP_PERSP
 #define DKR_OMH_2CYC_POINT          DKR_OMH_COMMON | G_CYC_2CYCLE | G_TT_NONE   | G_TF_POINT  | G_TP_PERSP
 #define DKR_OMH_2CYC_CI_BILERP      DKR_OMH_COMMON | G_CYC_2CYCLE | G_TT_RGBA16 | G_TF_BILERP | G_TP_PERSP
+
+#define DKR_OMH_COPY_POINT_NOPERSP G_DKR_BLENDMASK | G_PM_NPRIMITIVE | G_TD_CLAMP | G_TL_TILE | G_TC_FILT \
+                                 | G_CK_NONE | G_CD_DISABLE | G_AD_PATTERN | G_CYC_COPY | G_TT_NONE       \
+                                 | G_TF_POINT  | G_TP_NONE
     
 // OtherMode_L values.
 #define DKR_OML_COMMON G_AC_NONE | G_ZS_PIXEL
@@ -55,8 +60,23 @@
 #define fast3d_cmd(pkt, word0, word1) \
 {                                     \
     Gfx *_g = (Gfx*)(pkt);            \
-    _g->w0 = word0;                   \
-    _g->w1 = word1;                   \
+    _g->words.w0 = word0;             \
+    _g->words.w1 = word1;             \
+}
+
+/****** F3DDKR display list commands ******/
+
+#define G_DMADL 7
+
+#define numberOfGfxCommands(gfxCmds) (sizeof(gfxCmds) / sizeof(Gwords))
+
+#define gDkrDmaDisplayList(pkt, address, numberOfCommands)                         \
+{                                                                                  \
+    Gfx *_g = (Gfx *)(pkt);                                                        \
+                                                                                   \
+    _g->words.w0 = (_SHIFTL(G_DMADL, 24, 8) | _SHIFTL((numberOfCommands), 16, 8) | \
+            _SHIFTL((numberOfCommands*8), 0, 16));                                 \
+    _g->words.w1 = (unsigned int)(address);                                        \
 }
 
 #endif

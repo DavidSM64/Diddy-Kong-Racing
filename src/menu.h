@@ -541,8 +541,7 @@ extern s16 D_800E1754[10];
 
 extern s16 D_800E1768[12];
 
-// Fast3D (F3DDKR) display list
-extern u32 D_800E1780[22];
+//extern u32 D_800E1780[22];
 
 extern s16 D_800E17D8[12];
 
@@ -570,8 +569,7 @@ extern s32 gViewingCreditsFromCheat;
 
 extern MenuElement D_800E1B50[9];
 
-// Fast3D (F3DDKR) display list
-extern u32 D_800E1C70[24];
+//extern u32 D_800E1C70[24];
 
 extern s8 D_800E1CD0[32];
 

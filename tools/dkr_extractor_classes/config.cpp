@@ -118,6 +118,10 @@ void ExtractConfig::extract(ROM& rom, json::JSON& assetsJson) {
         json::JSON section = codeSections[i];
         json::JSON files = section["files"];
         std::string folder = this->outDirectory + "/" + section["folder"].ToString();
+        if(!fs::is_directory(folder)) {
+            fs::create_directories(folder);
+        }
+        
         std::string type = section["type"].ToString();
         
         int numFiles = files.length();
@@ -165,6 +169,10 @@ void ExtractConfig::extract(ROM& rom, json::JSON& assetsJson) {
         json::JSON section = assetSections[i];
         std::string folder = this->outDirectory + "/" + section["folder"].ToString();
         std::string type = section["type"].ToString();
+        
+        if(!fs::is_directory(folder)) {
+            fs::create_directories(folder);
+        }
         
         json::JSON outputAsset = json::Object();
         outputAsset["type"] = type;
@@ -230,10 +238,6 @@ void ExtractConfig::extract(ROM& rom, json::JSON& assetsJson) {
         std::string filename = extractions[i].filename;
         std::vector<uint8_t> data = extractions[i].data;
         pool.enqueue([&rom, type, folder, filename, data] {
-            if(!fs::is_directory(folder)) {
-                fs::create_directories(folder);
-            }
-            
             std::string outFilepath = folder + "/" + filename;
             
             if(is_binary_type(type)) {
