@@ -1,10 +1,10 @@
 #ifndef _F3DDKR_H_
 #define _F3DDKR_H_
 
-// This file is an extension of PR/gbi.h
-
 #include "PR/mbi.h"
 #include "PR/gbi.h"
+
+// This file is an extension of PR/gbi.h
 
 // Color combiner values. These need better names!
 #define DKR_CC_UNK0 0, 0, 0, COMBINED, COMBINED, 0, PRIMITIVE, 0
@@ -18,6 +18,9 @@
 #define DKR_CC_UNK8 COMBINED, 0, SHADE, 0, 0, 0, 0, COMBINED
 #define DKR_CC_UNK9 PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0
 #define DKR_CC_UNK10 TEXEL0, 0, SCALE, 0, 0, 0, 0, TEXEL0
+#define DKR_CC_UNK11 ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
+
+#define	DKR_CC_ENVIRONMENT   0, 0, 0, ENVIRONMENT, 0, 0, 0, ENVIRONMENT
 #define DKR_CC_DECALFADEPRIM 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
 
 // For some reason DKR has a value for G_MDSFT_BLENDMASK, despite the fact that it is unsupported.

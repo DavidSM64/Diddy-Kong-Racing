@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "f3ddkr.h"
 
 /************ .data ************/
 
@@ -24,21 +25,20 @@ u8 D_800E2EF4[196] = {
     0x00, 0x00, 0x00, 0x00
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800E2FB8[] = {
-    0xE7000000, 0x00000000, 
-    0xBA001402, 0x00000000, 
-    0xBA001001, 0x00000000, 
-    0xBA000E02, 0x00000000, 
-    0xBA001102, 0x00000000, 
-    0xBA001301, 0x00000000, 
-    0xBA000C02, 0x00002000, 
-    0xBA000903, 0x00000C00, 
-    0xB9000002, 0x00000000, 
-    0xB900031D, 0x00504240, 
-    0xFB000000, 0xFFFFFFFF, 
-    0xFA000000, 0x00000000, 
-    0xB8000000, 0x00000000
+Gfx D_800E2FB8[] = {
+    gsDPPipeSync(), 
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetTextureDetail(G_TD_CLAMP), 
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTextureConvert(G_TC_FILT), 
+    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    gsDPSetEnvColor(255, 255, 255, 255),
+    gsDPSetPrimColor(0, 0, 0, 0, 0, 0),
+    gsSPEndDisplayList(),
 };
 
 /*******************************/

@@ -4,6 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
+#include "f3ddkr.h"
 
 typedef struct {
     u8 unk0[0x4C4];
@@ -226,19 +227,18 @@ s32 D_800E2914[2] = { 0, 0 };
 s32 D_800E291C = 0;
 s32 D_800E2920[2] = { 0, 0 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800E2928[] = {
-    0xE7000000, 0x00000000, 
-    0xBA001402, 0x00000000, 
-    0xBA001001, 0x00000000, 
-    0xBA000E02, 0x00000000, 
-    0xBA001102, 0x00000000, 
-    0xBA001301, 0x00000000, 
-    0xBA000C02, 0x00002000, 
-    0xBA000903, 0x00000C00, 
-    0xB9000002, 0x00000000, 
-    0xB900031D, 0x00504340, 
-    0xB8000000, 0x00000000
+Gfx D_800E2928[] = {
+    gsDPPipeSync(), 
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetTextureDetail(G_TD_CLAMP), 
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTextureConvert(G_TC_FILT), 
+    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetRenderMode(G_RM_CLD_SURF, G_RM_CLD_SURF2),
+    gsSPEndDisplayList(),
 };
 
 /* Size: 0x10 Bytes */
