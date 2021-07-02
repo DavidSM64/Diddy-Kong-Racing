@@ -19,7 +19,6 @@ u8 *load_screen(s32 screenIndex) {
     s32 screenTableCount, start, size;
     s32 *screenTable;
     
-    
     screenTable = (u8 *)load_asset_section_from_rom(ASSET_SCREENS_TABLE);
     screenTableCount = 0;
     

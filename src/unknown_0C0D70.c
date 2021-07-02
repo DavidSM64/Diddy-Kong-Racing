@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "f3ddkr.h"
 
 /************ .data ************/
 
@@ -20,19 +21,18 @@ s32 D_800E31C8 = 0;
 s32 D_800E31CC = 0;
 s32 D_800E31D0[2] = { 0, 0 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800E31D8[] = {
-    0xE7000000, 0x00000000, 
-    0xBA001402, 0x00000000, 
-    0xBA001001, 0x00000000, 
-    0xBA000E02, 0x00000000, 
-    0xBA001102, 0x00000000, 
-    0xBA001301, 0x00000000, 
-    0xBA000C02, 0x00002000, 
-    0xBA000903, 0x00000C00, 
-    0xB9000002, 0x00000000, 
-    0xB900031D, 0x00504340, 
-    0xB8000000, 0x00000000
+Gfx D_800E31D8[] = {
+    gsDPPipeSync(), 
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetTextureDetail(G_TD_CLAMP), 
+    gsDPSetTexturePersp(G_TP_NONE),
+    gsDPSetTextureFilter(G_TF_BILERP),
+    gsDPSetTextureConvert(G_TC_FILT), 
+    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetRenderMode(G_RM_CLD_SURF, G_RM_CLD_SURF2),
+    gsSPEndDisplayList(),
 };
 
 s16 D_800E3230[28] = {
@@ -168,13 +168,12 @@ s8 D_800E3554[244] = {
     0, 0, 0, 0
 };
 
-// Fast3D (F3DDKR) display list
-u32 D_800E3648[] = {
-    0xE7000000, 0x00000000, 
-    0xB6000000, 0x00010000, 
-    0xFCFFFFFF, 0xFFFE793C, 
-    0xEF080C0F, 0x00504340, 
-    0xB8000000, 0x00000000
+Gfx D_800E3648[] = {
+    gsDPPipeSync(),
+    gsSPClearGeometryMode(G_FOG),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsDPSetOtherMode(DKR_OMH_1CYC_POINT, DKR_OML_COMMON | G_RM_CLD_SURF | G_RM_CLD_SURF2),
+    gsSPEndDisplayList(),
 };
 
 s8 D_800E3670 = 0;

@@ -7,22 +7,30 @@
 #include "macros.h"
 #include "asset_sections.h"
 #include "libultra_internal.h"
+#include "f3ddkr.h"
 
 /************ .data ************/
 
-// Fast3D (F3DDKR) display list
-u32 D_800E3690[] = {
-    0xE7000000, 0x00000000, 
-    0xBA001001, 0x00000000, 
-    0xBA000E02, 0x00000000, 
-    0xB9000002, 0x00000000, 
-    0xB6000000, 0x00010001, 
-    0xE7000000, 0x00000000, 
-    0xB8000000, 0x00000000, 
-    0xFC5616AC, 0x112CFE7F, 
-    0xEF000C0F, 0x00504240, 
-    0xFCFFFFFF, 0xFFFEFB7D, 
-    0xEF000C0F, 0x00504240
+Gfx D_800E3690[] = {
+    gsDPPipeSync(), 
+    gsDPSetTextureLOD(G_TL_TILE),
+    gsDPSetTextureLUT(G_TT_NONE),
+    gsDPSetAlphaCompare(G_AC_NONE),
+    gsSPClearGeometryMode(G_ZBUFFER | G_FOG), 
+    gsDPPipeSync(), 
+    gsSPEndDisplayList(),
+};
+
+// Unused?
+Gfx D_800E36C8[][2] = {    
+    {
+        gsDPSetCombineMode(DKR_CC_UNK11, DKR_CC_UNK11),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
+    },
+    {
+        gsDPSetCombineMode(DKR_CC_ENVIRONMENT, DKR_CC_ENVIRONMENT),
+        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
+    },
 };
 
 s8 D_800E36E8 = 0;
