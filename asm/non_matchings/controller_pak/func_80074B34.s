@@ -36,13 +36,13 @@ glabel func_80074B34
 /* 0757B4 80074BB4 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0757B8 80074BB8 240500FF */   li    $a1, 255
 /* 0757BC 80074BBC 8FB90058 */  lw    $t9, 0x58($sp)
-/* 0757C0 80074BC0 3C0B8012 */  lui   $t3, %hi(D_80124018) # $t3, 0x8012
+/* 0757C0 80074BC0 3C0B8012 */  lui   $t3, %hi(pfs) # $t3, 0x8012
 /* 0757C4 80074BC4 00195080 */  sll   $t2, $t9, 2
 /* 0757C8 80074BC8 01595023 */  subu  $t2, $t2, $t9
 /* 0757CC 80074BCC 000A5080 */  sll   $t2, $t2, 2
 /* 0757D0 80074BD0 01595021 */  addu  $t2, $t2, $t9
 /* 0757D4 80074BD4 000A50C0 */  sll   $t2, $t2, 3
-/* 0757D8 80074BD8 256B4018 */  addiu $t3, %lo(D_80124018) # addiu $t3, $t3, 0x4018
+/* 0757D8 80074BD8 256B4018 */  addiu $t3, %lo(pfs) # addiu $t3, $t3, 0x4018
 /* 0757DC 80074BDC 014B6021 */  addu  $t4, $t2, $t3
 /* 0757E0 80074BE0 AFA20050 */  sw    $v0, 0x50($sp)
 /* 0757E4 80074BE4 AFAC0030 */  sw    $t4, 0x30($sp)
@@ -157,7 +157,7 @@ glabel func_80074B34
 /* 075968 80074D68 AFA20050 */  sw    $v0, 0x50($sp)
 /* 07596C 80074D6C 00003025 */  move  $a2, $zero
 /* 075970 80074D70 AFA20014 */  sw    $v0, 0x14($sp)
-/* 075974 80074D74 0C033BF7 */  jal   func_800CEFDC
+/* 075974 80074D74 0C033BF7 */  jal   osPfsReadWriteFile
 /* 075978 80074D78 AFB80010 */   sw    $t8, 0x10($sp)
 /* 07597C 80074D7C 14400020 */  bnez  $v0, .L80074E00
 /* 075980 80074D80 24070009 */   li    $a3, 9

@@ -1,4 +1,4 @@
-glabel func_800CEEE0
+glabel __osPfsGetNextPage
 /* 0CFAE0 800CEEE0 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0CFAE4 800CEEE4 AFA50024 */  sw    $a1, 0x24($sp)
 /* 0CFAE8 800CEEE8 AFA7002C */  sw    $a3, 0x2c($sp)

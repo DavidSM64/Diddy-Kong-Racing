@@ -1,4 +1,4 @@
-glabel func_800D0580
+glabel osPfsFileState
 /* 0D1180 800D0580 27BDFEB0 */  addiu $sp, $sp, -0x150
 /* 0D1184 800D0584 AFA40150 */  sw    $a0, 0x150($sp)
 /* 0D1188 800D0588 8FAF0150 */  lw    $t7, 0x150($sp)
