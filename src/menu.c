@@ -3333,7 +3333,7 @@ s32 menu_track_select_loop(s32 arg0) {
     }
     func_8008E4EC();
     
-    fast3d_cmd(D_801263A0++, 0xB6000000, 0x00001000) // gSPClearGeometryMode(D_801263A0++, G_CULL_FRONT)
+    gSPClearGeometryMode(D_801263A0++, G_CULL_FRONT)
     
     switch(D_801267D0) {
         case 0:

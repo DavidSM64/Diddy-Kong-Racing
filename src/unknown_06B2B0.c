@@ -7,7 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "fast3d.h"
+#include "f3ddkr.h"
 #include "asset_sections.h"
 #include "menu.h"
 
@@ -711,9 +711,7 @@ void thread3_main(s32 arg0) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006C3E0.s")
-#else
+#if 0
 extern Gfx *D_801211F0;
 extern u8 D_800DD374;
 extern u8 D_800DD3A0;
@@ -779,11 +777,13 @@ void func_8006C3E0(void) {
     
     // ???
     D_801211F8 = D_801211F0;
-    fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-    fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+    gDPFullSync(D_801211F8++)
+    gSPEndDisplayList(D_801211F8++)
     
     osSetTime(0);
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006C3E0.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -864,8 +864,8 @@ void render(void) {
         func_800829F8(&D_801211F8, D_800DD404);
     }
     
-    fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-    fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+    gDPFullSync(D_801211F8++)
+    gSPEndDisplayList(D_801211F8++)
     
     func_80066610();
     if (D_800DD3F0 != 1) {
@@ -942,8 +942,8 @@ void func_8006CC14(void) {
     func_800A003C();
     func_800C30CC();
     D_801211F8 = D_801211F0[D_801234E8];
-    fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-    fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+    gDPFullSync(D_801211F8++)
+    gSPEndDisplayList(D_801211F8++)
     set_free_queue_state(2);
 }
 
@@ -1092,8 +1092,8 @@ void func_8006E2E8(s32 arg0, s32 arg1, s32 arg2) {
         func_8006DBE4();
         if (func_800C73E0() == 0) {
             D_801211F8 = D_801211F0[D_801234E8];
-            fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-            fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+            gDPFullSync(D_801211F8++)
+            gSPEndDisplayList(D_801211F8++)
         }
     }
     if (arg0 != -1) {
