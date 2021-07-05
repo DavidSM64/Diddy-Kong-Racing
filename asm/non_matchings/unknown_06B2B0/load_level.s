@@ -719,7 +719,7 @@ glabel load_level
 /* 06C8A8 8006BCA8 806C009C */  lb    $t4, 0x9c($v1)
 /* 06C8AC 8006BCAC 00000000 */  nop   
 /* 06C8B0 8006BCB0 448C2000 */  mtc1  $t4, $f4
-/* 06C8B4 8006BCB4 0C01983B */  jal   func_800660EC
+/* 06C8B4 8006BCB4 0C01983B */  jal   update_camera_fov
 /* 06C8B8 8006BCB8 46802320 */   cvt.s.w $f12, $f4
 /* 06C8BC 8006BCBC 8E230000 */  lw    $v1, ($s1)
 /* 06C8C0 8006BCC0 00000000 */  nop   

@@ -207,7 +207,7 @@ void func_80004A60(s32, s32);
 void menu_init(s32);
 void render(void);
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A6B0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006A6B0.s")
 
 s32 func_8006B0AC(s32 arg0) {
     if (arg0 > 0 && arg0 < D_80121170) {
@@ -262,7 +262,7 @@ s32 func_8006B240(void) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/load_level.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/load_level.s")
 #else
 
 Settings *get_settings(void);
@@ -523,8 +523,8 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         gCurrentLevelHeader->unkAC = get_misc_asset((s32)gCurrentLevelHeader->unkAC);
         func_8007F414(gCurrentLevelHeader->unkAC);
     }
-    func_800660EC((f32)gCurrentLevelHeader->unk9C);
-    func_80077B34(gCurrentLevelHeader->unk9D, gCurrentLevelHeader->unk9E, gCurrentLevelHeader->unk9F);
+    update_camera_fov((f32)gCurrentLevelHeader->cameraFOV);
+    func_80077B34(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
     func_8007A974();
     func_8007AB24(gCurrentLevelHeader->unk4[arg1]);
 }
@@ -556,7 +556,7 @@ u8 func_8006BDC0(void) {
     return D_80121170 - 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BDDC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006BDDC.s")
 
 void func_8006BEFC(void) {
     func_8006C164();
@@ -633,7 +633,7 @@ void func_8006BFC8(s8 *arg0) {
     free_from_memory_pool(D_80121160);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006BFC8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006BFC8.s")
 #endif
 
 void func_8006C164(void) {
@@ -712,7 +712,7 @@ void thread3_main(s32 arg0) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006C3E0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006C3E0.s")
 #else
 extern Gfx *D_801211F0;
 extern u8 D_800DD374;
@@ -896,7 +896,7 @@ void render(void) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/render.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/render.s")
 #endif
 
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
@@ -948,7 +948,7 @@ void func_8006CC14(void) {
 }
 
 // Has a jump table
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006CCF0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006CCF0.s")
 
 void func_8006D8A4(void) {
     D_800DD390 = 0x2C;
@@ -1085,7 +1085,7 @@ void func_8006DC58(s32 arg0) {
 }
 
 // Has a jump table
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006DCF8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006DCF8.s")
 
 void func_8006E2E8(s32 arg0, s32 arg1, s32 arg2) {
     if (D_80123514 == 0) {
@@ -1104,7 +1104,7 @@ void func_8006E2E8(s32 arg0, s32 arg1, s32 arg2) {
     D_80123514 = (u8)1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006E3BC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006E3BC.s")
 
 void func_8006E5BC(void) {
     s32 i, j;
@@ -1136,7 +1136,7 @@ void func_8006E5BC(void) {
     gSettingsPtr->courseId = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006E770.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006E770.s")
 
 void func_8006E994(Settings* settings) {
     s32 i;
@@ -1255,7 +1255,7 @@ void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006ECFC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006ECFC.s")
 
 #ifdef NON_MATCHING
 extern s32 D_A4000000;
@@ -1266,11 +1266,11 @@ s32 func_8006EFB8(void) {
     return 1;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006EFB8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006EFB8.s")
 #endif
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006EFDC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006EFDC.s")
 #else
     
 /* Size: 0x40 bytes, I think this might be a 4x4 matrix. */
@@ -1462,5 +1462,5 @@ s32 func_8006F4EC(void) {
     return 1;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006F4EC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006F4EC.s")
 #endif

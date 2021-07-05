@@ -1527,7 +1527,7 @@ void func_8009C674(s16 *arg0);
 void func_8008E4B0(void);
 s8 *get_misc_asset(s32 arg0);
 void func_80001D04(s32, s32*);
-void func_800660EC(f32 arg0);
+void update_camera_fov(f32 arg0);
 void func_8009C508(s32 arg0);
 void *allocate_from_main_pool_safe(s32, u32);
 void func_800C4170(s32 arg0);
@@ -2878,7 +2878,7 @@ void draw_character_select_text(s32 arg0) {
             draw_text(&D_801263A0, 0xA0, yPos, D_800E8230 /* "OK?" */, 0xC);
         }
         func_8007B3D0(&D_801263A0);
-        func_800660EC(40.0f);
+        update_camera_fov(40.0f);
     }
 }
 

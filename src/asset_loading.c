@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80076BA0 */
 
-#include "unknown_0777A0.h"
+#include "asset_loading.h"
 #include "memory.h"
 
 //#include "assets.h"
@@ -100,7 +100,7 @@ u8 *func_80076CF0(u32 assetIndex, s32 arg1) {
     return temp_v0_3;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/controller_pak/load_asset_section_from_rom.s")
+GLOBAL_ASM("asm/non_matchings/asset_loading/load_asset_section_from_rom.s")
 #endif
 
 /**

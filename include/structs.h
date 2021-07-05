@@ -202,10 +202,10 @@ typedef struct LevelHeader {
   /* 0x98 */ s16 unk98;
   /* 0x9A */ s16 unk9A;
 
-  /* 0x9C */ s8 unk9C;
-  /* 0x9D */ u8 unk9D;
-  /* 0x9E */ u8 unk9E;
-  /* 0x9F */ u8 unk9F;
+  /* 0x9C */ s8 cameraFOV; // Must be a value within [0, 90]
+  /* 0x9D */ u8 bgColorRed;
+  /* 0x9E */ u8 bgColorGreen;
+  /* 0x9F */ u8 bgColorBlue;
   /* 0xA0 */ s32 unkA0;
   /* 0xA4 */ s32 unkA4;
   /* 0xA8 */ u16 unkA8;
