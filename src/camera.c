@@ -1,10 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80065EA0 */
 
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
-#include "fast3d.h"
+#include "camera.h"
 
 extern u32 osTvType;
 
@@ -24,97 +21,49 @@ const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
 
 /************ .data ************/
 
-s32 D_800DD060 = 0; // Currently unknown, might be a different type.
+s8 D_800DD060 = 0;
 
-/* Size: 0x34 bytes. */
-typedef struct unk800DD064 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    s32 unk28;
-    s32 unk2C;
-    s32 unk30;
-} unk800DD064;
+#define DEFAULT_VIEWPORT                                                \
+    0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,                                  \
+    SCREEN_WIDTH_HALF, SCREEN_HEIGHT_HALF, SCREEN_WIDTH, SCREEN_HEIGHT, \
+    0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1,                          \
+    0
 
-unk800DD064 D_800DD064[4] = {
-    { 
-        0x00, 0x00, 0x140, 0xF0,
-        0xA0, 0x78, 0x140, 0xF0,
-        0x00, 0x00, 0x13F, 0xEF, 0x00
-    },
-    { 
-        0x00, 0x00, 0x140, 0xF0,
-        0xA0, 0x78, 0x140, 0xF0,
-        0x00, 0x00, 0x13F, 0xEF, 0x00
-    },
-    { 
-        0x00, 0x00, 0x140, 0xF0,
-        0xA0, 0x78, 0x140, 0xF0,
-        0x00, 0x00, 0x13F, 0xEF, 0x00
-    },
-    { 
-        0x00, 0x00, 0x140, 0xF0,
-        0xA0, 0x78, 0x140, 0xF0,
-        0x00, 0x00, 0x13F, 0xEF, 0x00
-    }
+ScreenViewport gScreenViewports[4] = {
+    { DEFAULT_VIEWPORT },
+    { DEFAULT_VIEWPORT },
+    { DEFAULT_VIEWPORT },
+    { DEFAULT_VIEWPORT },
 };
 
-// Not sure about the typing here
-s16 D_800DD134[10] = { 
-    0, 0, 0, 0, 
-    0, -1, -1, 0,
-    0, 0
-};
+s32 D_800DD134 = 0;
 
 // Not sure about the typing here
-u16 D_800DD148[160] = {
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0,
-    0, 0, 0x01FF, 0
+s16 D_800DD138[8] = { 
+    0, 0, 0, -1, -1, 0, 0, 0
+};
+
+s16 D_800DD148[20][8] = {
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
 };
 
 f32 D_800DD288[6] = {  
@@ -179,7 +128,7 @@ s32 D_80120CEC;
 s32 D_80120CF0[6];
 s32 D_80120D08;
 s32 D_80120D0C;
-f32 D_80120D10;
+f32 gCurCamFOV;
 s8  D_80120D14;
 u8  D_80120D15;
 s32 D_80120D18;
@@ -188,9 +137,9 @@ s32 D_80120D20[2];
 s32 D_80120D28[6];
 s32 D_80120D40[6];
 s32 D_80120D58[6];
-s32 D_80120D70[6];
+Mtx *D_80120D70[6];
 s32 D_80120D88[6];
-s32 D_80120DA0[80];
+Mtx D_80120DA0[5];
 s32 D_80120EE0[16];
 s32 D_80120F20[16];
 s32 D_80120F60[16];
@@ -242,7 +191,41 @@ void func_800705F8(s32, f32, f32, f32);
 void func_8006ECFC(s32 arg0);
 
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80065EA0.s")
+#ifdef NON_MATCHING
+void func_800663DC(s32 x_pos, s32 y_pos, s32 z_pos, s32 arg3, s32 arg4, s32 arg5);
+extern s32 D_A4600010;
+extern s32 D_B0000578;
+
+void func_80065EA0(void) {
+    s32 i, j;
+    for(i = 0; i < 5; i++) {
+        D_80120D70[i] = &D_80120DA0[i];
+    };
+    for(j = 0; j < 8; j++) {
+        D_80120CE4 = j;
+        func_800663DC(200, 200, 200, 0, 0, 180);
+    };
+    D_80120D14 = 0;
+    D_80120CE4 = 0;
+    D_80120D1C = 0;
+    D_80120D20[0] = 0;
+    D_80120CE0 = 0;
+    D_80120D0C = 0;
+    D_80120D18 = 0;
+    D_80120D15 = 0;
+    D_800DD060 = 0;
+    while (D_A4600010 & 3) {
+    }
+    if ((D_B0000578 & 0xFFFF) != 0x8965) {
+        D_800DD060 = 1;
+    }
+    guPerspectiveF(&D_80120EE0, &D_80120D58[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    func_8006F870(&D_80120EE0, &D_80120FE0);
+    gCurCamFOV = CAMERA_DEFAULT_FOV;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
+#endif
 
 void func_80066060(s32 arg0, s32 arg1) {
     if (arg0 >= 0 && arg0 < 4) {
@@ -264,20 +247,22 @@ void func_800660D0(void) {
     D_80120D18 = 0;
 }
 /* Unused? */
-f32 func_800660DC(void) {
-    return D_80120D10;
+f32 get_current_camera_fov(void) {
+    return gCurCamFOV;
 }
 
-void func_800660EC(f32 arg0) {
-    if (0.0f < arg0 && arg0 < 90.0f && arg0 != D_80120D10) {
-        D_80120D10 = arg0;
-        guPerspectiveF(&D_80120EE0, &D_80120D58[5], arg0, 1.33333333f, 10.0f, 15000.0f, 1.0f);
+void update_camera_fov(f32 camFieldOfView) {
+    if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
+        gCurCamFOV = camFieldOfView;
+        guPerspectiveF(&D_80120EE0, &D_80120D58[5], camFieldOfView, 
+            CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
         func_8006F870(&D_80120EE0, &D_80120FE0);
     }
 }
 
 void func_80066194(void) {
-    guPerspectiveF(&D_80120EE0, &D_80120D58[5], 60.0f, 1.33333333f, 10.0f, 15000.0f, 1.0f);
+    guPerspectiveF(&D_80120EE0, &D_80120D58[5], CAMERA_DEFAULT_FOV, 
+        CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     func_8006F870(&D_80120EE0, &D_80120FE0);
 }
 
@@ -419,64 +404,128 @@ void func_800665E8(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066610.s")
+#ifdef NON_MATCHING
+
+// Has regalloc/stack issues
+void func_80066610(void) {
+    s32 s1;
+    s32 s2;
+    s32 s3;
+    s32 s4;
+    s32 s5;
+    s32 i;
+
+    D_800DD134 = 1 - D_800DD134;
+    for(i = 0; i < 4; i++) {
+        if (gScreenViewports[i].flags & 4) {
+            gScreenViewports[i].flags &= ~1;
+        } else if (gScreenViewports[i].flags & 2) {
+            gScreenViewports[i].flags |= 1;
+        }
+        gScreenViewports[i].flags &= ~6;
+        if (gScreenViewports[i].flags & 1) {
+            if (!(gScreenViewports[i].flags & 8)) {
+                // Issue here
+                s5 = (gScreenViewports[i].unk0 * 4) + (((gScreenViewports[i].unk8 - gScreenViewports[i].unk0) + 1) * 2);
+            } else {
+                s5 = gScreenViewports[i].unk10;
+                s5 *= 4;
+            }
+            if (!(gScreenViewports[i].flags & 0x10)) {
+                // Issue here
+                s4 = (gScreenViewports[i].unk4 * 4) + (((gScreenViewports[i].unkC - gScreenViewports[i].unk4) + 1) * 2);
+            } else {
+                s4 = gScreenViewports[i].unk14;
+                s4 *= 4;
+            }
+            if (!(gScreenViewports[i].flags & 0x20)) {
+                s1 = gScreenViewports[i].unk8 - gScreenViewports[i].unk0;
+                s1 += 1;
+                s1 *= 2;
+            } else {
+                s1 = gScreenViewports[i].unk18;
+                s1 *= 2;
+            }
+            if (!(gScreenViewports[i].flags & 0x40)) {
+                s2 = gScreenViewports[i].unkC - gScreenViewports[i].unk4;
+                s2 += 1;
+                s2 *= 2;
+            } else {
+                s2 = gScreenViewports[i].unk1C;
+                s2 *= 2;
+            }
+            s3 = i + (D_800DD134 * 5);
+            s3 += 10;
+            if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
+                s2 = -s2;
+            }
+            D_800DD148[s3][4] = s5;
+            D_800DD148[s3][5] = s4;
+            D_800DD148[s3][0] = s1;
+            D_800DD148[s3][1] = s2;
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/camera/func_80066610.s")
+#endif
 
 void func_80066818(s32 arg0, s32 arg1) {
     if (arg1 != 0) {
-        D_800DD064[arg0].unk30 |= 1;
+        gScreenViewports[arg0].flags |= 1;
     } else {
-        D_800DD064[arg0].unk30 |= 2;
+        gScreenViewports[arg0].flags |= 2;
     }
-    D_800DD064[arg0].unk30 &= -5;
+    gScreenViewports[arg0].flags &= ~4;
 }
 
 void func_80066894(s32 arg0, s32 arg1) {
     if (arg1 != 0) {
-        D_800DD064[arg0].unk30 &= -2;
+        gScreenViewports[arg0].flags &= ~1;
     } else {
-        D_800DD064[arg0].unk30 |= 4;
+        gScreenViewports[arg0].flags |= 4;
     }
-    D_800DD064[arg0].unk30 &= -3;
+    gScreenViewports[arg0].flags &= ~2;
 }
 
 s32 func_80066910(s32 arg0) {
-    return D_800DD064[arg0].unk30 & 0x1;
+    return gScreenViewports[arg0].flags & 0x1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066940.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80066940.s")
 
 void func_80066AA8(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg1 != 0x8000) {
-        D_800DD064[arg0].unk10 = arg1;
-        D_800DD064[arg0].unk30 |= 8;
+        gScreenViewports[arg0].unk10 = arg1;
+        gScreenViewports[arg0].flags |= 8;
     } else {
-        D_800DD064[arg0].unk30 &= 0xFFFFFFF7;
+        gScreenViewports[arg0].flags &= ~8;
     }
     if (arg2 != 0x8000) {
-        D_800DD064[arg0].unk10 = arg2;
-        D_800DD064[arg0].unk30 |= 0x10;
+        gScreenViewports[arg0].unk10 = arg2;
+        gScreenViewports[arg0].flags |= 0x10;
     } else {
-        D_800DD064[arg0].unk30 &= 0xFFFFFFEF;
+        gScreenViewports[arg0].flags &= ~0x10;
     }
     if (arg3 != 0x8000) {
-        D_800DD064[arg0].unk18 = arg3;
-        D_800DD064[arg0].unk30 |= 0x20;
+        gScreenViewports[arg0].unk18 = arg3;
+        gScreenViewports[arg0].flags |= 0x20;
     } else {
-        D_800DD064[arg0].unk30 &= 0xFFFFFFDF;
+        gScreenViewports[arg0].flags &= ~0x20;
     }
     if (arg4 != 0x8000) {
-        D_800DD064[arg0].unk1C = arg4;
-        D_800DD064[arg0].unk30 |= 0x40;
+        gScreenViewports[arg0].unk1C = arg4;
+        gScreenViewports[arg0].flags |= 0x40;
         return;
     }
-    D_800DD064[arg0].unk30 &= 0xFFFFFFBF;
+    gScreenViewports[arg0].flags &= ~0x40;
 }
 
 s32 func_80066BA8(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
-    *arg1 = D_800DD064[arg0].unk20;
-    *arg3 = D_800DD064[arg0].unk28;
-    *arg2 = D_800DD064[arg0].unk24;
-    *arg4 = D_800DD064[arg0].unk2C;
+    *arg1 = gScreenViewports[arg0].unk20;
+    *arg3 = gScreenViewports[arg0].unk28;
+    *arg2 = gScreenViewports[arg0].unk24;
+    *arg4 = gScreenViewports[arg0].unk2C;
     if ((*arg1 | *arg3 | *arg2 | *arg4) == 0) {
         return 0;
     }
@@ -484,10 +533,10 @@ s32 func_80066BA8(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
 }
 
 void func_80066C2C(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
-    *arg1 = D_800DD064[arg0].unk0;
-    *arg2 = D_800DD064[arg0].unk4;
-    *arg3 = D_800DD064[arg0].unk8;
-    *arg4 = D_800DD064[arg0].unkC;
+    *arg1 = gScreenViewports[arg0].unk0;
+    *arg2 = gScreenViewports[arg0].unk4;
+    *arg3 = gScreenViewports[arg0].unk8;
+    *arg4 = gScreenViewports[arg0].unkC;
 }
 
 // Unused?
@@ -501,7 +550,7 @@ void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
 
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80066CDC.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #else
 // Work in progress!
 
@@ -555,13 +604,13 @@ void func_80066CDC(Gfx **dlist, s32 *arg1) {
     temp_t0 = temp_v0 >> 0x10;
     temp_a3 = temp_t0 >> 1;
     
-    if (D_800DD064[phi_t1].unk30 & 1) {
+    if (gScreenViewports[phi_t1].flags & 1) {
         sp2C = D_80120CE4;
         D_80120CE4 = phi_t1;
         fast3d_cmd(
             (*dlist)++,
-            ((((s32)(D_800DD064[D_80120CE4].unk24 * 4.0f)) & 0xFFF) | 0xED000000) | (((s32)(D_800DD064[D_80120CE4].unk20 * 4.0f)) & 0xFFF) << 0xC,
-            (((s32)(D_800DD064[D_80120CE4].unk2C * 4.0f)) & 0xFFF) | (((s32)(D_800DD064[D_80120CE4].unk28 * 4.0f)) & 0xFFF) << 0xC
+            ((((s32)(gScreenViewports[D_80120CE4].unk24 * 4.0f)) & 0xFFF) | 0xED000000) | (((s32)(gScreenViewports[D_80120CE4].unk20 * 4.0f)) & 0xFFF) << 0xC,
+            (((s32)(gScreenViewports[D_80120CE4].unk2C * 4.0f)) & 0xFFF) | (((s32)(gScreenViewports[D_80120CE4].unk28 * 4.0f)) & 0xFFF) << 0xC
         )
         func_80068158(dlist, 0, 0, 0, 0);
         D_80120CE4 = sp2C;
@@ -763,14 +812,14 @@ void func_80066CDC(Gfx **dlist, s32 *arg1) {
 }
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80067A3C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80067D3C.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80067D3C.s")
 
 void func_80067F20(f32 arg0) {
     D_800DD2CC[0] = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80067F2C.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80067F2C.s")
 
 void func_8006807C(Gfx **dlist, s32 *arg1) {
     func_8006FE74(&D_80121060, &D_800DD288);
@@ -784,8 +833,8 @@ void func_8006807C(Gfx **dlist, s32 *arg1) {
     D_80120D08 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80068158.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_800682AC.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80068158.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_800682AC.s")
 
 void func_80068408(Gfx **dlist, s32 *arg1) {
     func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
@@ -802,12 +851,12 @@ void func_80068508(s32 arg0) {
     D_80120D0C = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80068514.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80068BF4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80068FA8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80069484.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80069790.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80069A40.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80068514.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80068BF4.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80069A40.s")
 
 unk80120AC0 *func_80069CFC(void) {
     return &D_80120AC0[D_80120CE4];
@@ -865,22 +914,13 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_80069F28.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_80069F28.s")
 
 s32* func_8006A100(void) {
     return &D_801210E0;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A10C.s")
-#else
-
-extern s32 D_800DD300; 
-extern s32 D_801210F8;  
-extern s32 D_801210FC;
-extern s8 D_80121100;   
-extern u8 D_80121100+3;   
-
+#ifdef NON_MATCHING
 // Has regalloc & stack issues.
 s32 func_8006A10C(void) {
     u8 sp23;
@@ -890,16 +930,18 @@ s32 func_8006A10C(void) {
     func_800CCFE0(&D_801210E0);
     func_8006A434();
     D_800DD300 = 0;
-    if ((sp23 & 1) && !(D_80121100+3 & 8)) {
+    if ((sp23 & 1) && !(D_80121100[3] & 8)) {
         return 0;
     }
     D_800DD300 = 1;
     return -1;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/camera/func_8006A10C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A1C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_066AA0/func_8006A434.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_8006A434.s")
 
 void func_8006A458(s8 *activePlayers) {
     s32 i;

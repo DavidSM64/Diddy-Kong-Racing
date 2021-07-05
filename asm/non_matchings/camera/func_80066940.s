@@ -38,8 +38,8 @@ glabel func_80066940
 /* 0675C4 800669C4 01E87823 */   subu  $t7, $t7, $t0
 /* 0675C8 800669C8 000F7880 */  sll   $t7, $t7, 2
 /* 0675CC 800669CC 01E87821 */  addu  $t7, $t7, $t0
-/* 0675D0 800669D0 3C18800E */  lui   $t8, %hi(D_800DD064) # $t8, 0x800e
-/* 0675D4 800669D4 2718D064 */  addiu $t8, %lo(D_800DD064) # addiu $t8, $t8, -0x2f9c
+/* 0675D0 800669D0 3C18800E */  lui   $t8, %hi(gScreenViewports) # $t8, 0x800e
+/* 0675D4 800669D4 2718D064 */  addiu $t8, %lo(gScreenViewports) # addiu $t8, $t8, -0x2f9c
 /* 0675D8 800669D8 000F7880 */  sll   $t7, $t7, 2
 /* 0675DC 800669DC 01F81021 */  addu  $v0, $t7, $t8
 /* 0675E0 800669E0 AC400020 */  sw    $zero, 0x20($v0)
@@ -54,8 +54,8 @@ glabel func_80066940
 /* 067600 80066A00 0328C823 */  subu  $t9, $t9, $t0
 /* 067604 80066A04 0019C880 */  sll   $t9, $t9, 2
 /* 067608 80066A08 0328C821 */  addu  $t9, $t9, $t0
-/* 06760C 80066A0C 3C09800E */  lui   $t1, %hi(D_800DD064) # $t1, 0x800e
-/* 067610 80066A10 2529D064 */  addiu $t1, %lo(D_800DD064) # addiu $t1, $t1, -0x2f9c
+/* 06760C 80066A0C 3C09800E */  lui   $t1, %hi(gScreenViewports) # $t1, 0x800e
+/* 067610 80066A10 2529D064 */  addiu $t1, %lo(gScreenViewports) # addiu $t1, $t1, -0x2f9c
 /* 067614 80066A14 0019C880 */  sll   $t9, $t9, 2
 /* 067618 80066A18 03291021 */  addu  $v0, $t9, $t1
 /* 06761C 80066A1C 1000000A */  b     .L80066A48
@@ -65,8 +65,8 @@ glabel func_80066940
 /* 067628 80066A28 01485023 */  subu  $t2, $t2, $t0
 /* 06762C 80066A2C 000A5080 */  sll   $t2, $t2, 2
 /* 067630 80066A30 01485021 */  addu  $t2, $t2, $t0
-/* 067634 80066A34 3C0B800E */  lui   $t3, %hi(D_800DD064) # $t3, 0x800e
-/* 067638 80066A38 256BD064 */  addiu $t3, %lo(D_800DD064) # addiu $t3, $t3, -0x2f9c
+/* 067634 80066A34 3C0B800E */  lui   $t3, %hi(gScreenViewports) # $t3, 0x800e
+/* 067638 80066A38 256BD064 */  addiu $t3, %lo(gScreenViewports) # addiu $t3, $t3, -0x2f9c
 /* 06763C 80066A3C 000A5080 */  sll   $t2, $t2, 2
 /* 067640 80066A40 014B1021 */  addu  $v0, $t2, $t3
 /* 067644 80066A44 AC450020 */  sw    $a1, 0x20($v0)

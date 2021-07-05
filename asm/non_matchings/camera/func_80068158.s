@@ -25,14 +25,14 @@ glabel func_80068158
 /* 068DAC 800681AC 00053023 */  negu  $a2, $a1
 .L800681B0:
 /* 068DB0 800681B0 8CE50000 */  lw    $a1, ($a3)
-/* 068DB4 800681B4 3C19800E */  lui   $t9, %hi(D_800DD064 + 0x30) # $t9, 0x800e
+/* 068DB4 800681B4 3C19800E */  lui   $t9, %hi(gScreenViewports + 0x30) # $t9, 0x800e
 /* 068DB8 800681B8 0005C080 */  sll   $t8, $a1, 2
 /* 068DBC 800681BC 0305C023 */  subu  $t8, $t8, $a1
 /* 068DC0 800681C0 0018C080 */  sll   $t8, $t8, 2
 /* 068DC4 800681C4 0305C021 */  addu  $t8, $t8, $a1
 /* 068DC8 800681C8 0018C080 */  sll   $t8, $t8, 2
 /* 068DCC 800681CC 0338C821 */  addu  $t9, $t9, $t8
-/* 068DD0 800681D0 8F39D094 */  lw    $t9, %lo(D_800DD064 + 0x30)($t9)
+/* 068DD0 800681D0 8F39D094 */  lw    $t9, %lo(gScreenViewports + 0x30)($t9)
 /* 068DD4 800681D4 3C0A800E */  lui   $t2, %hi(D_800DD148) # $t2, 0x800e
 /* 068DD8 800681D8 332B0001 */  andi  $t3, $t9, 1
 /* 068DDC 800681DC 1560001A */  bnez  $t3, .L80068248

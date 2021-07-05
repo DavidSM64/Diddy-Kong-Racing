@@ -27,8 +27,8 @@ glabel func_80066CDC
 /* 06793C 80066D3C 8FA90030 */  lw    $t1, 0x30($sp)
 /* 067940 80066D40 240B0034 */  li    $t3, 52
 /* 067944 80066D44 012B0019 */  multu $t1, $t3
-/* 067948 80066D48 3C0A800E */  lui   $t2, %hi(D_800DD064) # $t2, 0x800e
-/* 06794C 80066D4C 254AD064 */  addiu $t2, %lo(D_800DD064) # addiu $t2, $t2, -0x2f9c
+/* 067948 80066D48 3C0A800E */  lui   $t2, %hi(gScreenViewports) # $t2, 0x800e
+/* 06794C 80066D4C 254AD064 */  addiu $t2, %lo(gScreenViewports) # addiu $t2, $t2, -0x2f9c
 /* 067950 80066D50 3C1F8012 */  lui   $ra, %hi(D_80120CE4) # $ra, 0x8012
 /* 067954 80066D54 00024402 */  srl   $t0, $v0, 0x10
 /* 067958 80066D58 27FF0CE4 */  addiu $ra, %lo(D_80120CE4) # addiu $ra, $ra, 0xce4
