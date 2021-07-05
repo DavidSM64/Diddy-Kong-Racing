@@ -1,4 +1,4 @@
-glabel func_800CEFDC
+glabel osPfsReadWriteFile
 /* 0CFBDC 800CEFDC 27BDFEA8 */  addiu $sp, $sp, -0x158
 /* 0CFBE0 800CEFE0 AFA40158 */  sw    $a0, 0x158($sp)
 /* 0CFBE4 800CEFE4 8FAF0158 */  lw    $t7, 0x158($sp)
@@ -138,7 +138,7 @@ glabel func_800CEFDC
 /* 0CFDBC 800CF1BC 8FA40158 */  lw    $a0, 0x158($sp)
 /* 0CFDC0 800CF1C0 27A50023 */  addiu $a1, $sp, 0x23
 /* 0CFDC4 800CF1C4 27A60034 */  addiu $a2, $sp, 0x34
-/* 0CFDC8 800CF1C8 0C033BB8 */  jal   func_800CEEE0
+/* 0CFDC8 800CF1C8 0C033BB8 */  jal   __osPfsGetNextPage
 /* 0CFDCC 800CF1CC 27A70030 */   addiu $a3, $sp, 0x30
 /* 0CFDD0 800CF1D0 AFA20154 */  sw    $v0, 0x154($sp)
 /* 0CFDD4 800CF1D4 8FAE0154 */  lw    $t6, 0x154($sp)
@@ -173,7 +173,7 @@ glabel func_800CEFDC
 /* 0CFE38 800CF238 8FA40158 */  lw    $a0, 0x158($sp)
 /* 0CFE3C 800CF23C 27A50023 */  addiu $a1, $sp, 0x23
 /* 0CFE40 800CF240 27A60034 */  addiu $a2, $sp, 0x34
-/* 0CFE44 800CF244 0C033BB8 */  jal   func_800CEEE0
+/* 0CFE44 800CF244 0C033BB8 */  jal   __osPfsGetNextPage
 /* 0CFE48 800CF248 27A70030 */   addiu $a3, $sp, 0x30
 /* 0CFE4C 800CF24C AFA20154 */  sw    $v0, 0x154($sp)
 /* 0CFE50 800CF250 8FB80154 */  lw    $t8, 0x154($sp)

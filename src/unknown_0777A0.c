@@ -100,7 +100,7 @@ u8 *func_80076CF0(u32 assetIndex, s32 arg1) {
     return temp_v0_3;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_072E50/load_asset_section_from_rom.s")
+GLOBAL_ASM("asm/non_matchings/controller_pak/load_asset_section_from_rom.s")
 #endif
 
 /**

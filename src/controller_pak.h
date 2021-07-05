@@ -4,7 +4,7 @@
 #include "types.h"
 
 extern s32 D_800DE440;
-extern char D_800DE444[68];
+extern u8 gN64FontCodes[68];
 extern s32 D_800DE488;
 extern s32 D_800DE48C;
 
