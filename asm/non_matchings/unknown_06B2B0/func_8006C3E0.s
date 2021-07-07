@@ -54,7 +54,7 @@ glabel func_8006C3E0
 /* 06D0A0 8006C4A0 A029D3A0 */  sb    $t1, %lo(D_800DD3A0)($at)
 .L8006C4A4:
 /* 06D0A4 8006C4A4 3C058012 */  lui   $a1, %hi(D_80121260) # $a1, 0x8012
-/* 06D0A8 8006C4A8 0C01E8C4 */  jal   func_8007A310
+/* 06D0A8 8006C4A8 0C01E8C4 */  jal   init_video
 /* 06D0AC 8006C4AC 24A51260 */   addiu $a1, %lo(D_80121260) # addiu $a1, $a1, 0x1260
 /* 06D0B0 8006C4B0 0C01DAE8 */  jal   func_80076BA0
 /* 06D0B4 8006C4B4 00000000 */   nop   

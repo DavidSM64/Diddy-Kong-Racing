@@ -4,7 +4,7 @@ glabel func_80077B9C
 /* 0787A4 80077BA4 AFB00020 */  sw    $s0, 0x20($sp)
 /* 0787A8 80077BA8 00808025 */  move  $s0, $a0
 /* 0787AC 80077BAC AFA500A4 */  sw    $a1, 0xa4($sp)
-/* 0787B0 80077BB0 0C01E948 */  jal   func_8007A520
+/* 0787B0 80077BB0 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 0787B4 80077BB4 AFA600A8 */   sw    $a2, 0xa8($sp)
 /* 0787B8 80077BB8 304CFFFF */  andi  $t4, $v0, 0xffff
 /* 0787BC 80077BBC 2589FFFF */  addiu $t1, $t4, -1

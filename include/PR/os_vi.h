@@ -108,6 +108,21 @@ void osViSwapBuffer(void *vaddr);
 #define OS_VI_PAL_HPN2		26
 #define OS_VI_PAL_HPF2		27
 
+#define OS_VI_MPAL_LPN1		28	/* MPAL - mainly Brazil */
+#define OS_VI_MPAL_LPF1		29
+#define OS_VI_MPAL_LAN1		30
+#define OS_VI_MPAL_LAF1		31
+#define OS_VI_MPAL_LPN2		32
+#define OS_VI_MPAL_LPF2		33
+#define OS_VI_MPAL_LAN2		34
+#define OS_VI_MPAL_LAF2		35
+#define OS_VI_MPAL_HPN1		36
+#define OS_VI_MPAL_HPF1		37
+#define OS_VI_MPAL_HAN1		38
+#define OS_VI_MPAL_HAF1		39
+#define OS_VI_MPAL_HPN2		40
+#define OS_VI_MPAL_HPF2		41
+
 extern OSViMode	osViModeTable[];	/* Global VI mode table */
 
 

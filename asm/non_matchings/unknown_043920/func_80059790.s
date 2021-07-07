@@ -4,8 +4,8 @@ glabel D_800E6928
 
 .text
 glabel func_80059790
-/* 05A390 80059790 3C0E8012 */  lui   $t6, %hi(D_80126170) # $t6, 0x8012
-/* 05A394 80059794 8DCE6170 */  lw    $t6, %lo(D_80126170)($t6)
+/* 05A390 80059790 3C0E8012 */  lui   $t6, %hi(gVideoRefreshRate) # $t6, 0x8012
+/* 05A394 80059794 8DCE6170 */  lw    $t6, %lo(gVideoRefreshRate)($t6)
 /* 05A398 80059798 24010032 */  li    $at, 50
 /* 05A39C 8005979C 15C10012 */  bne   $t6, $at, .L800597E8
 /* 05A3A0 800597A0 24080E10 */   li    $t0, 3600

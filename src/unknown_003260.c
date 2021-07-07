@@ -46,7 +46,7 @@ extern OSMesg D_80119B08[50];
 extern unk800DC6BC D_80119BD0;
 extern u16 *D_80119C28;
 
-extern f32 D_80126170;
+extern f32 gVideoRefreshRate;
 
 /******************************/
 
@@ -107,7 +107,7 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
     D_80115F94 = c->heap;
     c->dmaproc = &func_80003008;
     c->outputRate = func_800C8600(22050);
-    D_8011962C = (((f32) c->outputRate)*2.0f)/D_80126170;
+    D_8011962C = (((f32) c->outputRate)*2.0f)/gVideoRefreshRate;
     if(D_8011962C < 0){
     }
 

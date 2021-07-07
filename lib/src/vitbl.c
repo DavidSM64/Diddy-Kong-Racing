@@ -82,8 +82,7 @@
 #define OS_VI_BIT_NTSC			0x0400
 #define OS_VI_BIT_PAL			0x0800
 
-// osViModeTable
-OSViMode D_800E3900[42] = {
+OSViMode osViModeTable[42] = {
     {OS_VI_NTSC_LPN1, //type
      {
          //comRegs

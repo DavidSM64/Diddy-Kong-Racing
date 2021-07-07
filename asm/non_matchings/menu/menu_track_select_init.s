@@ -35,7 +35,7 @@ glabel menu_track_select_init
 /* 08F424 8008E824 AC200418 */  sw    $zero, %lo(D_800E0418)($at)
 /* 08F428 8008E828 AC600000 */  sw    $zero, ($v1)
 .L8008E82C:
-/* 08F42C 8008E82C 0C01E948 */  jal   func_8007A520
+/* 08F42C 8008E82C 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 08F430 8008E830 00000000 */   nop   
 /* 08F434 8008E834 3C068012 */  lui   $a2, %hi(D_8012647C) # $a2, 0x8012
 /* 08F438 8008E838 24C6647C */  addiu $a2, %lo(D_8012647C) # addiu $a2, $a2, 0x647c

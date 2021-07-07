@@ -177,9 +177,9 @@ s32 D_80123560[8];
 
 /******************************/
 
-extern s32 D_801262D4;
-extern s32 D_801262D8;
-extern s32 D_801262E0;
+extern s32 gVideoCurrFramebuffer;
+extern s32 gVideoLastFramebuffer;
+extern s32 gVideoLastDepthBuffer;
 extern s32 osTvType;
 
 void func_8006F43C(void);
@@ -749,7 +749,7 @@ void func_8006C3E0(void) {
     if (func_8006EFB8() == 0) {
         D_800DD3A0 = 1;
     }
-    func_8007A310(1, &D_80121260);
+    init_video(1, &D_80121260);
     func_80076BA0();
     func_80078100(&D_80121260);
     audio_init(&D_80121260);
@@ -794,9 +794,9 @@ void render(void) {
     if (D_800DD380 == 8) {
         D_801211F8 = D_801211F0[D_801234E8];
         func_8007A2D0(&D_801211F8, 0, 0);
-        func_8007A2D0(&D_801211F8, 1, D_801262D4);
-        func_8007A2D0(&D_801211F8, 2, D_801262E0);
-        func_8007A2D0(&D_801211F8, 4, D_801262D4 - 0x500);
+        func_8007A2D0(&D_801211F8, 1, gVideoCurrFramebuffer);
+        func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
+        func_8007A2D0(&D_801211F8, 4, gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
         setupOSTasks(D_801211F0[D_801234E8], D_801211F8, 0);
@@ -813,9 +813,9 @@ void render(void) {
     D_80121228 = D_80121220[D_801234E8];
     
     func_8007A2D0(&D_801211F8, 0, 0, &D_801234E8);
-    func_8007A2D0(&D_801211F8, 1, D_801262D8);
-    func_8007A2D0(&D_801211F8, 2, D_801262E0);
-    func_8007A2D0(&D_801211F8, 4, D_801262D8 - 0x500);
+    func_8007A2D0(&D_801211F8, 1, gVideoLastFramebuffer);
+    func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
+    func_8007A2D0(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
     func_800780DC(&D_801211F8);
     func_80078054(&D_801211F8);
     func_80077B9C(&D_801211F8, &D_80121208, 1);
@@ -885,7 +885,7 @@ void render(void) {
         if (osTvType == 0) {
             phi_v0_2 = 168960;
         }
-        func_80070B04(D_801262D8, D_801262D4, D_801262D4 + phi_v0_2);
+        func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + phi_v0_2);
     }
     
     D_800DD404 = func_8007A98C(D_800DD380);

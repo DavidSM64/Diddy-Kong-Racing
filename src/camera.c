@@ -541,7 +541,7 @@ void func_80066C2C(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
 
 // Unused?
 void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
-    u32 temp_v0 = func_8007A520();
+    u32 temp_v0 = get_video_width_and_height_as_s32();
     *arg0 = 0;
     *arg1 = 0;
     *arg2 = temp_v0 & 0xFFFF;

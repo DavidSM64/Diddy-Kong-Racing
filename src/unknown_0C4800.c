@@ -543,7 +543,7 @@ void func_800C580C(char** outString, s32 number) {
 
 //GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5AA0.s")
 void func_800C5AA0(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    u32 temp_v0 = func_8007A520();
+    u32 temp_v0 = get_video_width_and_height_as_s32();
     if (arg3 >= 0 && arg1 < (temp_v0 & 0xFFFF) && arg4 >= 0 && arg2 < (temp_v0 >> 16)) {
         if (arg1 < 0) {
             arg1 = 0;

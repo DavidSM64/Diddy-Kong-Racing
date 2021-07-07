@@ -153,7 +153,7 @@ glabel func_80094688
 /* 0954B8 800948B8 8FA40030 */  lw    $a0, 0x30($sp)
 /* 0954BC 800948BC 0C01B638 */  jal   func_8006D8E0
 /* 0954C0 800948C0 00000000 */   nop   
-/* 0954C4 800948C4 0C01E948 */  jal   func_8007A520
+/* 0954C4 800948C4 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 0954C8 800948C8 00000000 */   nop   
 /* 0954CC 800948CC 3C058012 */  lui   $a1, %hi(D_8012647C) # $a1, 0x8012
 /* 0954D0 800948D0 24A5647C */  addiu $a1, %lo(D_8012647C) # addiu $a1, $a1, 0x647c

@@ -19,7 +19,7 @@ glabel func_8007A98C
 /* 07B5CC 8007A9CC 24010008 */  li    $at, 8
 /* 07B5D0 8007A9D0 12210003 */  beq   $s1, $at, .L8007A9E0
 /* 07B5D4 8007A9D4 00000000 */   nop   
-/* 07B5D8 8007A9D8 0C01EAE7 */  jal   func_8007AB9C
+/* 07B5D8 8007A9D8 0C01EAE7 */  jal   swap_framebuffers
 /* 07B5DC 8007A9DC 00000000 */   nop   
 .L8007A9E0:
 /* 07B5E0 8007A9E0 3C128012 */  lui   $s2, %hi(D_801261A0) # $s2, 0x8012
@@ -96,8 +96,8 @@ glabel func_8007A98C
 /* 07B6E0 8007AAE0 1420FFF7 */  bnez  $at, .L8007AAC0
 /* 07B6E4 8007AAE4 00608025 */   move  $s0, $v1
 .L8007AAE8:
-/* 07B6E8 8007AAE8 3C048012 */  lui   $a0, %hi(D_801262D8) # $a0, 0x8012
-/* 07B6EC 8007AAEC 8C8462D8 */  lw    $a0, %lo(D_801262D8)($a0)
+/* 07B6E8 8007AAE8 3C048012 */  lui   $a0, %hi(gVideoLastFramebuffer) # $a0, 0x8012
+/* 07B6EC 8007AAEC 8C8462D8 */  lw    $a0, %lo(gVideoLastFramebuffer)($a0)
 /* 07B6F0 8007AAF0 0C034908 */  jal   osViSwapBuffer
 /* 07B6F4 8007AAF4 AFA30028 */   sw    $v1, 0x28($sp)
 /* 07B6F8 8007AAF8 02402025 */  move  $a0, $s2

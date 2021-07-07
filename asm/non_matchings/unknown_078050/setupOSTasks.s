@@ -71,8 +71,8 @@ glabel setupOSTasks
 /* 078160 80077560 ACE00038 */  sw    $zero, 0x38($a3)
 /* 078164 80077564 ACE0003C */  sw    $zero, 0x3c($a3)
 /* 078168 80077568 ACE00000 */  sw    $zero, ($a3)
-/* 07816C 8007756C 3C188012 */  lui   $t8, %hi(D_801262D4) # $t8, 0x8012
-/* 078170 80077570 8F1862D4 */  lw    $t8, %lo(D_801262D4)($t8)
+/* 07816C 8007756C 3C188012 */  lui   $t8, %hi(gVideoCurrFramebuffer) # $t8, 0x8012
+/* 078170 80077570 8F1862D4 */  lw    $t8, %lo(gVideoCurrFramebuffer)($t8)
 /* 078174 80077574 240200FF */  li    $v0, 255
 /* 078178 80077578 ACE20060 */  sw    $v0, 0x60($a3)
 /* 07817C 8007757C ACE20064 */  sw    $v0, 0x64($a3)
@@ -153,8 +153,8 @@ glabel setupOSTasks
 /* 0782A0 800776A0 ACEC0008 */  sw    $t4, 8($a3)
 /* 0782A4 800776A4 ACED0050 */  sw    $t5, 0x50($a3)
 /* 0782A8 800776A8 ACEE0054 */  sw    $t6, 0x54($a3)
-/* 0782AC 800776AC 3C0F8012 */  lui   $t7, %hi(D_801262D4) # $t7, 0x8012
-/* 0782B0 800776B0 8DEF62D4 */  lw    $t7, %lo(D_801262D4)($t7)
+/* 0782AC 800776AC 3C0F8012 */  lui   $t7, %hi(gVideoCurrFramebuffer) # $t7, 0x8012
+/* 0782B0 800776B0 8DEF62D4 */  lw    $t7, %lo(gVideoCurrFramebuffer)($t7)
 /* 0782B4 800776B4 3C02FF00 */  lui   $v0, (0xFF0000FF >> 16) # lui $v0, 0xff00
 /* 0782B8 800776B8 344200FF */  ori   $v0, (0xFF0000FF & 0xFFFF) # ori $v0, $v0, 0xff
 /* 0782BC 800776BC 240300FF */  li    $v1, 255
@@ -258,8 +258,8 @@ glabel setupOSTasks
 /* 078434 80077834 ACEE0008 */  sw    $t6, 8($a3)
 /* 078438 80077838 ACEF0050 */  sw    $t7, 0x50($a3)
 /* 07843C 8007783C ACF80054 */  sw    $t8, 0x54($a3)
-/* 078440 80077840 3C198012 */  lui   $t9, %hi(D_801262D4) # $t9, 0x8012
-/* 078444 80077844 8F3962D4 */  lw    $t9, %lo(D_801262D4)($t9)
+/* 078440 80077840 3C198012 */  lui   $t9, %hi(gVideoCurrFramebuffer) # $t9, 0x8012
+/* 078444 80077844 8F3962D4 */  lw    $t9, %lo(gVideoCurrFramebuffer)($t9)
 /* 078448 80077848 3C02FF00 */  lui   $v0, (0xFF0000FF >> 16) # lui $v0, 0xff00
 /* 07844C 8007784C 344200FF */  ori   $v0, (0xFF0000FF & 0xFFFF) # ori $v0, $v0, 0xff
 /* 078450 80077850 240300FF */  li    $v1, 255
@@ -363,8 +363,8 @@ glabel setupOSTasks
 /* 0785C8 800779C8 ACEE0008 */  sw    $t6, 8($a3)
 /* 0785CC 800779CC ACEF0050 */  sw    $t7, 0x50($a3)
 /* 0785D0 800779D0 ACF80054 */  sw    $t8, 0x54($a3)
-/* 0785D4 800779D4 3C198012 */  lui   $t9, %hi(D_801262D4) # $t9, 0x8012
-/* 0785D8 800779D8 8F3962D4 */  lw    $t9, %lo(D_801262D4)($t9)
+/* 0785D4 800779D4 3C198012 */  lui   $t9, %hi(gVideoCurrFramebuffer) # $t9, 0x8012
+/* 0785D8 800779D8 8F3962D4 */  lw    $t9, %lo(gVideoCurrFramebuffer)($t9)
 /* 0785DC 800779DC 3C02FF00 */  lui   $v0, (0xFF0000FF >> 16) # lui $v0, 0xff00
 /* 0785E0 800779E0 344200FF */  ori   $v0, (0xFF0000FF & 0xFFFF) # ori $v0, $v0, 0xff
 /* 0785E4 800779E4 ACE20058 */  sw    $v0, 0x58($a3)
