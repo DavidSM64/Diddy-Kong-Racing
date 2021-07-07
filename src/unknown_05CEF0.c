@@ -3,6 +3,7 @@
 
 #include "unknown_05CEF0.h"
 
+#include "structs.h"
 #include "types.h"
 #include "macros.h"
 
@@ -19,17 +20,75 @@ s16 D_800DCDE0[16] = {
 
 /************ .bss ************/
 
-s32 D_8011D5C0;
-s32 D_8011D5C4;
-s32 D_8011D5C8;
+f32 D_8011D5C0;
+s8 D_8011D5C4;
+u16 *D_8011D5C8;
 s32 D_8011D5CC;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005C2F0.s")
+void func_80009558(u16, f32, f32, f32, s32, s32);
+s32 get_random_number_from_range(s32, s32);
+
+/* Unknown size */
+typedef struct unk8005C2F0 {
+    u8 pad0[0xC];
+    f32 unkC;
+    u8 pad10[0x108];
+    s32 unk118;
+} unk8005C2F0;
+
+void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
+    object->unk4C->unk14 = 5;
+    object->unk4C->unk11 = 0;
+    object->unk4C->unk10 = 0x1E;
+    object->unk4C->unk12 = 0;
+    arg1->unkC = 0.0f;
+    D_8011D5C0 = object->y_position;
+    if (arg1->unk118 != 0) {
+        func_80006AC8();
+    }
+    D_8011D5C4 = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005C364.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CA78.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CA84.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB04.s")
+
+void func_8005CA78(s32 arg0) {
+    D_8011D5C8 = arg0;
+}
+
+void func_8005CA84(f32 arg0, f32 arg1, f32 arg2, s32 arg3) {
+    s8 phi_v1 = get_random_number_from_range(0, 1);
+    if (arg3 == 0) {
+        phi_v1 = 0;
+    }
+    arg3 += phi_v1;
+    func_80009558(D_8011D5C8[arg3], arg0, arg1, arg2, 4, 0);
+}
+
+void func_8005CB04(s32 arg0) {
+    s8 phi_v1 = get_random_number_from_range(0, 1);
+    if (arg0 == 0) {
+        phi_v1 = 0;
+    }
+    arg0 += phi_v1;
+    func_80001D04(D_8011D5C8[arg0], 0);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005D048.s")
+
+/* Unknown size */
+typedef struct unk8005D048 {
+    u8 pad0[0x1F7];
+    u8 unk1F7;
+} unk8005D048;
+
+void func_8005D048(Object *object, unk8005D048 *arg1, s32 arg2) {
+    Object *sp1C = get_object_struct(0);
+    arg1->unk1F7 = 0xFF;
+    if (!func_8001139C()) {
+        if ((object->unk30 + arg2) < sp1C->unk30) {
+            arg1->unk1F7 = 0x40;
+        }
+    }
+}
