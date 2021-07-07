@@ -3,7 +3,7 @@ glabel func_800C0A08
 /* 0C160C 800C0A0C AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C1610 800C0A10 AFA5001C */  sw    $a1, 0x1c($sp)
 /* 0C1614 800C0A14 AFA60020 */  sw    $a2, 0x20($sp)
-/* 0C1618 800C0A18 0C01E948 */  jal   func_8007A520
+/* 0C1618 800C0A18 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 0C161C 800C0A1C AFA40018 */   sw    $a0, 0x18($sp)
 /* 0C1620 800C0A20 8FA40018 */  lw    $a0, 0x18($sp)
 /* 0C1624 800C0A24 3C18800E */  lui   $t8, %hi(D_800E31D8) # $t8, 0x800e

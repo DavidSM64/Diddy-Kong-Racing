@@ -13,7 +13,7 @@ glabel func_80078D00
 /* 07992C 80078D2C AFB30024 */  sw    $s3, 0x24($sp)
 /* 079930 80078D30 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 079934 80078D34 AFA600B8 */  sw    $a2, 0xb8($sp)
-/* 079938 80078D38 0C01E948 */  jal   func_8007A520
+/* 079938 80078D38 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 07993C 80078D3C AFA700BC */   sw    $a3, 0xbc($sp)
 /* 079940 80078D40 8FA900C8 */  lw    $t1, 0xc8($sp)
 /* 079944 80078D44 240100FF */  li    $at, 255

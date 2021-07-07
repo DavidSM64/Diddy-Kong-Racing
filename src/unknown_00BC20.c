@@ -7,7 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "fast3d.h"
+#include "f3ddkr.h"
 #include "asset_sections.h"
 
 /************ .data ************/
@@ -922,21 +922,21 @@ void func_80012C3C(Gfx** dlist){
     s32 i;
     Gfx *tmp;
     for(i = 0; i<D_8011ADA4; i++){
-        fast3d_cmd((*dlist)++, 0x06000000, D_8011AD78[i]);
+        gSPDisplayList((*dlist)++, D_8011AD78[i])
     }
 }
 
 void func_80012C98(Gfx **dlist) {
     if (D_8011ADA4 < 9) {
-        fast3d_cmd((*dlist)++, 0x00000000, 0x00000000); // Fast3D NOP
+        gSPNoOp((*dlist)++) // Placeholder instruction?
         D_8011AD78[D_8011ADA4] = *dlist;
     }
 }
 
 void func_80012CE8(Gfx **dlist) {
     if (D_8011ADA4 < 9) {
-        fast3d_cmd((*dlist)++, 0xB8000000, 0x00000000); // End display list
-        fast3d_cmd(D_8011AD78[D_8011ADA4] - 1, 0x6010000, (u32)*dlist); // Jump to display list
+        gSPEndDisplayList((*dlist)++)
+        gSPBranchList(D_8011AD78[D_8011ADA4] - 1, (u32)*dlist)
         D_8011ADA4++;
     }
 }

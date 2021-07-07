@@ -256,7 +256,7 @@ glabel func_800ACA20
 /* 0AD9F4 800ACDF4 26520001 */  addiu $s2, $s2, 1
 /* 0AD9F8 800ACDF8 1641FF7E */  bne   $s2, $at, .L800ACBF4
 /* 0AD9FC 800ACDFC 00000000 */   nop   
-/* 0ADA00 800ACE00 0C01E948 */  jal   func_8007A520
+/* 0ADA00 800ACE00 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 0ADA04 800ACE04 00000000 */   nop   
 /* 0ADA08 800ACE08 8E230000 */  lw    $v1, ($s1)
 /* 0ADA0C 800ACE0C 8FAA0098 */  lw    $t2, 0x98($sp)

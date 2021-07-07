@@ -20,20 +20,20 @@ glabel render
 /* 06D254 8006C654 00003025 */  move  $a2, $zero
 /* 06D258 8006C658 0C01E8B4 */  jal   func_8007A2D0
 /* 06D25C 8006C65C AC990000 */   sw    $t9, ($a0)
-/* 06D260 8006C660 3C068012 */  lui   $a2, %hi(D_801262D4) # $a2, 0x8012
-/* 06D264 8006C664 8CC662D4 */  lw    $a2, %lo(D_801262D4)($a2)
+/* 06D260 8006C660 3C068012 */  lui   $a2, %hi(gVideoCurrFramebuffer) # $a2, 0x8012
+/* 06D264 8006C664 8CC662D4 */  lw    $a2, %lo(gVideoCurrFramebuffer)($a2)
 /* 06D268 8006C668 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
 /* 06D26C 8006C66C 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06D270 8006C670 0C01E8B4 */  jal   func_8007A2D0
 /* 06D274 8006C674 24050001 */   li    $a1, 1
-/* 06D278 8006C678 3C068012 */  lui   $a2, %hi(D_801262E0) # $a2, 0x8012
-/* 06D27C 8006C67C 8CC662E0 */  lw    $a2, %lo(D_801262E0)($a2)
+/* 06D278 8006C678 3C068012 */  lui   $a2, %hi(gVideoLastDepthBuffer) # $a2, 0x8012
+/* 06D27C 8006C67C 8CC662E0 */  lw    $a2, %lo(gVideoLastDepthBuffer)($a2)
 /* 06D280 8006C680 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
 /* 06D284 8006C684 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06D288 8006C688 0C01E8B4 */  jal   func_8007A2D0
 /* 06D28C 8006C68C 24050002 */   li    $a1, 2
-/* 06D290 8006C690 3C068012 */  lui   $a2, %hi(D_801262D4) # $a2, 0x8012
-/* 06D294 8006C694 8CC662D4 */  lw    $a2, %lo(D_801262D4)($a2)
+/* 06D290 8006C690 3C068012 */  lui   $a2, %hi(gVideoCurrFramebuffer) # $a2, 0x8012
+/* 06D294 8006C694 8CC662D4 */  lw    $a2, %lo(gVideoCurrFramebuffer)($a2)
 /* 06D298 8006C698 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
 /* 06D29C 8006C69C 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06D2A0 8006C6A0 24050004 */  li    $a1, 4
@@ -98,20 +98,20 @@ glabel render
 /* 06D380 8006C780 00003025 */  move  $a2, $zero
 /* 06D384 8006C784 0C01E8B4 */  jal   func_8007A2D0
 /* 06D388 8006C788 AC291228 */   sw    $t1, %lo(D_80121228)($at)
-/* 06D38C 8006C78C 3C068012 */  lui   $a2, %hi(D_801262D8) # $a2, 0x8012
-/* 06D390 8006C790 8CC662D8 */  lw    $a2, %lo(D_801262D8)($a2)
+/* 06D38C 8006C78C 3C068012 */  lui   $a2, %hi(gVideoLastFramebuffer) # $a2, 0x8012
+/* 06D390 8006C790 8CC662D8 */  lw    $a2, %lo(gVideoLastFramebuffer)($a2)
 /* 06D394 8006C794 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
 /* 06D398 8006C798 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06D39C 8006C79C 0C01E8B4 */  jal   func_8007A2D0
 /* 06D3A0 8006C7A0 24050001 */   li    $a1, 1
-/* 06D3A4 8006C7A4 3C068012 */  lui   $a2, %hi(D_801262E0) # $a2, 0x8012
-/* 06D3A8 8006C7A8 8CC662E0 */  lw    $a2, %lo(D_801262E0)($a2)
+/* 06D3A4 8006C7A4 3C068012 */  lui   $a2, %hi(gVideoLastDepthBuffer) # $a2, 0x8012
+/* 06D3A8 8006C7A8 8CC662E0 */  lw    $a2, %lo(gVideoLastDepthBuffer)($a2)
 /* 06D3AC 8006C7AC 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
 /* 06D3B0 8006C7B0 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06D3B4 8006C7B4 0C01E8B4 */  jal   func_8007A2D0
 /* 06D3B8 8006C7B8 24050002 */   li    $a1, 2
-/* 06D3BC 8006C7BC 3C068012 */  lui   $a2, %hi(D_801262D8) # $a2, 0x8012
-/* 06D3C0 8006C7C0 8CC662D8 */  lw    $a2, %lo(D_801262D8)($a2)
+/* 06D3BC 8006C7BC 3C068012 */  lui   $a2, %hi(gVideoLastFramebuffer) # $a2, 0x8012
+/* 06D3C0 8006C7C0 8CC662D8 */  lw    $a2, %lo(gVideoLastFramebuffer)($a2)
 /* 06D3C4 8006C7C4 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
 /* 06D3C8 8006C7C8 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06D3CC 8006C7CC 24050004 */  li    $a1, 4
@@ -305,10 +305,10 @@ glabel render
 /* 06D688 8006CA88 3C020002 */  lui   $v0, (0x00029400 >> 16) # lui $v0, 2
 /* 06D68C 8006CA8C 34429400 */  ori   $v0, (0x00029400 & 0xFFFF) # ori $v0, $v0, 0x9400
 .L8006CA90:
-/* 06D690 8006CA90 3C058012 */  lui   $a1, %hi(D_801262D4) # $a1, 0x8012
-/* 06D694 8006CA94 8CA562D4 */  lw    $a1, %lo(D_801262D4)($a1)
-/* 06D698 8006CA98 3C048012 */  lui   $a0, %hi(D_801262D8) # $a0, 0x8012
-/* 06D69C 8006CA9C 8C8462D8 */  lw    $a0, %lo(D_801262D8)($a0)
+/* 06D690 8006CA90 3C058012 */  lui   $a1, %hi(gVideoCurrFramebuffer) # $a1, 0x8012
+/* 06D694 8006CA94 8CA562D4 */  lw    $a1, %lo(gVideoCurrFramebuffer)($a1)
+/* 06D698 8006CA98 3C048012 */  lui   $a0, %hi(gVideoLastFramebuffer) # $a0, 0x8012
+/* 06D69C 8006CA9C 8C8462D8 */  lw    $a0, %lo(gVideoLastFramebuffer)($a0)
 /* 06D6A0 8006CAA0 0C01C2C1 */  jal   func_80070B04
 /* 06D6A4 8006CAA4 00A23021 */   addu  $a2, $a1, $v0
 .L8006CAA8:

@@ -4,7 +4,7 @@ glabel func_800682AC
 /* 068EB4 800682B4 240E0004 */  li    $t6, 4
 /* 068EB8 800682B8 3C018012 */  lui   $at, %hi(D_80120CE4) # $at, 0x8012
 /* 068EBC 800682BC AC2E0CE4 */  sw    $t6, %lo(D_80120CE4)($at)
-/* 068EC0 800682C0 0C01E948 */  jal   func_8007A520
+/* 068EC0 800682C0 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 068EC4 800682C4 AFA40020 */   sw    $a0, 0x20($sp)
 /* 068EC8 800682C8 3C0F8012 */  lui   $t7, %hi(D_80120CE4) # $t7, 0x8012
 /* 068ECC 800682CC 8DEF0CE4 */  lw    $t7, %lo(D_80120CE4)($t7)

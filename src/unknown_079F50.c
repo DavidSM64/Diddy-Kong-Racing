@@ -109,7 +109,7 @@ const char D_800E7958[] = "\tdata_size\t\t= %u\n";
 
 /*********************************/
 
-extern OSViMode D_800E3900[];//osViModeTable;
+extern OSViMode osViModeTable[];//osViModeTable;
 
 /************ .bss ************/
 
@@ -144,7 +144,7 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
      * Set up video manager, listen for Video, RSP, and RDP interrupts
      */
     osCreateViManager(OS_PRIORITY_VIMGR);    
-    osViSetMode(&D_800E3900[mode]);
+    osViSetMode(&osViModeTable[mode]);
     osViBlack(TRUE);
 
     osCreateMesgQueue(&sc->interruptQ, sc->intBuf, OS_SC_MAX_MESGS);

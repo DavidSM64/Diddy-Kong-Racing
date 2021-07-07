@@ -7,7 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "fast3d.h"
+#include "f3ddkr.h"
 #include "asset_sections.h"
 #include "menu.h"
 
@@ -177,9 +177,9 @@ s32 D_80123560[8];
 
 /******************************/
 
-extern s32 D_801262D4;
-extern s32 D_801262D8;
-extern s32 D_801262E0;
+extern s32 gVideoCurrFramebuffer;
+extern s32 gVideoLastFramebuffer;
+extern s32 gVideoLastDepthBuffer;
 extern s32 osTvType;
 
 void func_8006F43C(void);
@@ -711,9 +711,7 @@ void thread3_main(s32 arg0) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006C3E0.s")
-#else
+#if 0
 extern Gfx *D_801211F0;
 extern u8 D_800DD374;
 extern u8 D_800DD3A0;
@@ -751,7 +749,7 @@ void func_8006C3E0(void) {
     if (func_8006EFB8() == 0) {
         D_800DD3A0 = 1;
     }
-    func_8007A310(1, &D_80121260);
+    init_video(1, &D_80121260);
     func_80076BA0();
     func_80078100(&D_80121260);
     audio_init(&D_80121260);
@@ -779,11 +777,13 @@ void func_8006C3E0(void) {
     
     // ???
     D_801211F8 = D_801211F0;
-    fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-    fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+    gDPFullSync(D_801211F8++)
+    gSPEndDisplayList(D_801211F8++)
     
     osSetTime(0);
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006C3E0.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -794,9 +794,9 @@ void render(void) {
     if (D_800DD380 == 8) {
         D_801211F8 = D_801211F0[D_801234E8];
         func_8007A2D0(&D_801211F8, 0, 0);
-        func_8007A2D0(&D_801211F8, 1, D_801262D4);
-        func_8007A2D0(&D_801211F8, 2, D_801262E0);
-        func_8007A2D0(&D_801211F8, 4, D_801262D4 - 0x500);
+        func_8007A2D0(&D_801211F8, 1, gVideoCurrFramebuffer);
+        func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
+        func_8007A2D0(&D_801211F8, 4, gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
         setupOSTasks(D_801211F0[D_801234E8], D_801211F8, 0);
@@ -813,9 +813,9 @@ void render(void) {
     D_80121228 = D_80121220[D_801234E8];
     
     func_8007A2D0(&D_801211F8, 0, 0, &D_801234E8);
-    func_8007A2D0(&D_801211F8, 1, D_801262D8);
-    func_8007A2D0(&D_801211F8, 2, D_801262E0);
-    func_8007A2D0(&D_801211F8, 4, D_801262D8 - 0x500);
+    func_8007A2D0(&D_801211F8, 1, gVideoLastFramebuffer);
+    func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
+    func_8007A2D0(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
     func_800780DC(&D_801211F8);
     func_80078054(&D_801211F8);
     func_80077B9C(&D_801211F8, &D_80121208, 1);
@@ -864,8 +864,8 @@ void render(void) {
         func_800829F8(&D_801211F8, D_800DD404);
     }
     
-    fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-    fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+    gDPFullSync(D_801211F8++)
+    gSPEndDisplayList(D_801211F8++)
     
     func_80066610();
     if (D_800DD3F0 != 1) {
@@ -885,7 +885,7 @@ void render(void) {
         if (osTvType == 0) {
             phi_v0_2 = 168960;
         }
-        func_80070B04(D_801262D8, D_801262D4, D_801262D4 + phi_v0_2);
+        func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + phi_v0_2);
     }
     
     D_800DD404 = func_8007A98C(D_800DD380);
@@ -942,8 +942,8 @@ void func_8006CC14(void) {
     func_800A003C();
     func_800C30CC();
     D_801211F8 = D_801211F0[D_801234E8];
-    fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-    fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+    gDPFullSync(D_801211F8++)
+    gSPEndDisplayList(D_801211F8++)
     set_free_queue_state(2);
 }
 
@@ -1092,8 +1092,8 @@ void func_8006E2E8(s32 arg0, s32 arg1, s32 arg2) {
         func_8006DBE4();
         if (func_800C73E0() == 0) {
             D_801211F8 = D_801211F0[D_801234E8];
-            fast3d_cmd(D_801211F8++, 0xE9000000, 0x00000000)
-            fast3d_cmd(D_801211F8++, 0xB8000000, 0x00000000)
+            gDPFullSync(D_801211F8++)
+            gSPEndDisplayList(D_801211F8++)
         }
     }
     if (arg0 != -1) {

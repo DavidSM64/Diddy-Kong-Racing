@@ -85,7 +85,7 @@ glabel menu_credits_loop
 /* 09C050 8009B450 0014C080 */  sll   $t8, $s4, 2
 /* 09C054 8009B454 0314C021 */  addu  $t8, $t8, $s4
 /* 09C058 8009B458 8C750000 */  lw    $s5, ($v1)
-/* 09C05C 8009B45C 0C01E948 */  jal   func_8007A520
+/* 09C05C 8009B45C 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 09C060 8009B460 27140048 */   addiu $s4, $t8, 0x48
 /* 09C064 8009B464 00029443 */  sra   $s2, $v0, 0x11
 /* 09C068 8009B468 32597FFF */  andi  $t9, $s2, 0x7fff

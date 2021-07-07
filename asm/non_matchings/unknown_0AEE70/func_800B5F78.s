@@ -8,7 +8,7 @@ glabel func_800B5F78
 /* 0B6B90 800B5F90 AFB10024 */  sw    $s1, 0x24($sp)
 /* 0B6B94 800B5F94 0C01E015 */  jal   func_80078054
 /* 0B6B98 800B5F98 AFB00020 */   sw    $s0, 0x20($sp)
-/* 0B6B9C 800B5F9C 0C01E948 */  jal   func_8007A520
+/* 0B6B9C 800B5F9C 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 0B6BA0 800B5FA0 00000000 */   nop   
 /* 0B6BA4 800B5FA4 3C048012 */  lui   $a0, %hi(D_80127CD2) # $a0, 0x8012
 /* 0B6BA8 800B5FA8 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012

@@ -2,7 +2,7 @@ glabel func_80077050
 /* 077C50 80077050 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 077C54 80077054 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 077C58 80077058 AFB00018 */  sw    $s0, 0x18($sp)
-/* 077C5C 8007705C 0C01E948 */  jal   func_8007A520
+/* 077C5C 8007705C 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 077C60 80077060 00808025 */   move  $s0, $a0
 /* 077C64 80077064 3045FFFF */  andi  $a1, $v0, 0xffff
 /* 077C68 80077068 00057202 */  srl   $t6, $a1, 8
