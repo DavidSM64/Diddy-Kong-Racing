@@ -279,6 +279,8 @@ s32 func_80066220(void) {
     return D_80120CE4;
 }
 
+void func_80066CDC(Gfx **dlist, s32 arg1);
+
 void func_80066230(s32 arg0, s32 arg1) {
     unk80120AC0 *someStruct;
     s16 sp2A;
@@ -549,7 +551,153 @@ void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
 }
 
 
+#ifdef NON_MATCHING
+
+// Still a work-in-progress but it doesn't seem to cause any problems,
+// which is why it is labeled under NON_MATCHING
+
+#define SCISSOR_INTERLACE G_SC_NON_INTERLACE
+
+void func_80066CDC(Gfx **dlist, s32 arg1) {
+    u32 sp58;
+    u32 sp54;
+    u32 sp4C;
+    u32 temp_a2;
+    u32 temp_a3;
+    u32 temp_t0;
+    u32 temp_t1;
+    u32 widthAndHeight;
+    u32 temp_v0_6;
+    u32 phi_a1;
+    u32 phi_t3;
+    u32 phi_t5;
+    u32 phi_t4;
+
+    if (func_8000E184() && !D_80120CE0) {
+        D_80120CE4 = 1;
+    }
+    widthAndHeight = get_video_width_and_height_as_s32();
+    temp_t0 = widthAndHeight >> 16;
+    temp_a3 = temp_t0 >> 1;
+    if (gScreenViewports[D_80120CE4].flags & 1) {
+        gDPSetScissor((*dlist)++, G_SC_EVEN_INTERLACE, 
+            gScreenViewports[D_80120CE4].unk20, 
+            gScreenViewports[D_80120CE4].unk24, 
+            gScreenViewports[D_80120CE4].unk28, 
+            gScreenViewports[D_80120CE4].unk2C
+        )
+        func_80068158(dlist, 0, 0, 0, 0);
+        if (arg1 != 0) {
+            func_80067D3C(dlist, arg1);
+        }
+        return;
+    }
+    temp_t1 = widthAndHeight & 0xFFFF;
+    if (D_80120CE0 == 2) {
+        D_80120CE0 = 3;
+    }
+    temp_a2 = temp_t1 >> 1;
+    sp54 = temp_a2;
+    sp58 = temp_a3;
+    if (osTvType == 0) {
+        sp58 = 0x91;
+    }
+    
+    switch(D_80120CE0) {
+        case 0:
+            phi_t3 = sp58;
+            if (osTvType == 0) {
+                phi_t3 = sp58 - 0x12;
+            }
+            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0)
+            sp4C = temp_a2;
+            break;
+        case 1:
+            if (D_80120CE4 == 0) {
+                temp_v0_6 = temp_t0 >> 2;
+                phi_t3 = temp_v0_6;
+                if (osTvType == 0) {
+                    phi_t3 = temp_v0_6 - 0xC;
+                }
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, (temp_a3 - (temp_t0 >> 7)))
+            } else {
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), temp_t1, (temp_t0 - (temp_t0 >> 7)))
+                phi_t3 = temp_a3 + (temp_t0 >> 2);
+            }
+            sp4C = temp_a2;
+            break;
+        case 2:
+            if (D_80120CE4 == 0) {
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (temp_t1 >> 8), temp_t0)
+                phi_a1 = temp_t1 >> 2;
+            } else {
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), 0, temp_t1 - (temp_t1 >> 8), temp_t0)
+                phi_a1 = temp_a2 + (temp_t1 >> 2);
+            }
+            sp4C = phi_a1;
+            phi_t3 = sp58;
+            break;
+        case 3:
+            sp58 = sp58 >> 1;
+            sp54 = temp_a2 >> 1;
+            switch(D_80120CE4) {
+                case 0:
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, 
+                        (temp_a2 - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)))
+                    phi_t5 = 0;
+                    phi_t4 = 0;
+                case 1:
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (temp_a2 + (temp_t1 >> 8)), 0, 
+                        ((temp_a2 * 2) - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)))
+                    phi_t5 = 0;
+                    phi_t4 = temp_a2;
+                    break;
+                case 2:
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, temp_a3 + (temp_t0 >> 7), 
+                        temp_a2 - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7))
+                    phi_t5 = temp_a3;
+                    phi_t4 = 0;
+                    break;
+                case 3:
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), temp_a3 + (temp_t0 >> 7), 
+                        (temp_a2 * 2) - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7))
+                    phi_t5 = temp_a3;
+                    phi_t4 = temp_a2;
+                    break;
+                default:
+                    phi_t5 = 0;
+                    phi_t4 = 0;
+                    break;
+            }
+            phi_t3 = phi_t5 + sp58;
+            sp4C = phi_t4 + sp54;
+            if (osTvType == 0) {
+                phi_t3 -= 6;
+                if (D_80120CE4 < 2) {
+                    phi_t3 -= 0x14;
+                }
+            }
+            break;
+        default:
+            //phi_t3 = sp50;
+            phi_t3 = sp54;
+            break;
+    }
+    
+    if (osTvType == 0) {
+        sp4C -= 4;
+    }
+    func_80068158(dlist, sp54, sp58, sp4C, phi_t3);
+    if (arg1 != 0) {
+        func_80067D3C(dlist, arg1);
+    }
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
+#endif
+
+
 GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80067D3C.s")
 
