@@ -281,7 +281,7 @@ s32 func_80066220(void) {
 
 void func_80066CDC(Gfx **dlist, s32 arg1);
 
-void func_80066230(s32 arg0, s32 arg1) {
+void func_80066230(Gfx **dlist, s32 arg1) {
     unk80120AC0 *someStruct;
     s16 sp2A;
     s16 sp28;
@@ -309,7 +309,7 @@ void func_80066230(s32 arg0, s32 arg1) {
     someStruct->y_position = 0.0f;
     someStruct->z_position = 0.0f;
     func_8001D5E0(0.0f, 0.0f, -1.0f);
-    func_80066CDC(arg0, arg1);
+    func_80066CDC(dlist, arg1);
     someStruct->unk38 = sp24;
     someStruct->unk0 = sp2A;
     someStruct->unk2 = sp28;
@@ -580,7 +580,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
     temp_t0 = widthAndHeight >> 16;
     temp_a3 = temp_t0 >> 1;
     if (gScreenViewports[D_80120CE4].flags & 1) {
-        gDPSetScissor((*dlist)++, G_SC_EVEN_INTERLACE, 
+        gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 
             gScreenViewports[D_80120CE4].unk20, 
             gScreenViewports[D_80120CE4].unk24, 
             gScreenViewports[D_80120CE4].unk28, 
