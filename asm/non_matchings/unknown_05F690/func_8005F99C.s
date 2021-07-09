@@ -94,7 +94,7 @@ glabel func_8005F99C
 /* 0606EC 8005FAEC 0C01DB9A */  jal   load_asset_to_address
 /* 0606F0 8005FAF0 00008825 */   move  $s1, $zero
 /* 0606F4 8005FAF4 8FA40030 */  lw    $a0, 0x30($sp)
-/* 0606F8 8005FAF8 0C031886 */  jal   func_800C6218
+/* 0606F8 8005FAF8 0C031886 */  jal   gzip_inflate
 /* 0606FC 8005FAFC 02402825 */   move  $a1, $s2
 /* 060700 8005FB00 8E4D0000 */  lw    $t5, ($s2)
 /* 060704 8005FB04 8E4F0004 */  lw    $t7, 4($s2)

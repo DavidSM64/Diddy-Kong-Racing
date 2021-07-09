@@ -42,7 +42,36 @@ GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F850.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F99C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005FCD0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005FF40.s")
+
+#if 1
+void func_80060058(void *arg0) {
+    s32 i;
+    for (i = 0; i < arg0->unk22; i++) {
+        if (arg0->unk0[i].unk0 != NULL) {
+            func_8007B2BC(arg0->unk0[i].unk0);
+        }
+    }
+    if (arg0->unkC != NULL) {
+        free_from_memory_pool(arg0->unkC);
+    }
+    if (arg0->unk10 != NULL) {
+        free_from_memory_pool(arg0->unk10);
+    }
+    if (arg0->unk40 != NULL) {
+        free_from_memory_pool(arg0->unk40);
+    }
+    if (arg0->unk44 != NULL) {
+        for (i = 0; i < arg0->unk48; i++) {
+            free_from_memory_pool((u8*)arg0->unk44[i] - 4);
+        }
+        free_from_memory_pool(arg0->unk44);
+    }
+    free_from_memory_pool(arg0);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060058.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8006017C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060910.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060AC8.s")

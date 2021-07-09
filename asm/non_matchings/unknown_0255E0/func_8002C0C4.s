@@ -84,7 +84,7 @@ glabel func_8002C0C4
 /* 02CDE4 8002C1E4 0C01DB9A */  jal   load_asset_to_address
 /* 02CDE8 8002C1E8 02603825 */   move  $a3, $s3
 /* 02CDEC 8002C1EC 8E250000 */  lw    $a1, ($s1)
-/* 02CDF0 8002C1F0 0C031886 */  jal   func_800C6218
+/* 02CDF0 8002C1F0 0C031886 */  jal   gzip_inflate
 /* 02CDF4 8002C1F4 02002025 */   move  $a0, $s0
 /* 02CDF8 8002C1F8 8E840000 */  lw    $a0, ($s4)
 /* 02CDFC 8002C1FC 0C01C450 */  jal   free_from_memory_pool

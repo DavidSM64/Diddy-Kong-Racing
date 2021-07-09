@@ -137,7 +137,7 @@ glabel func_8007AE74
 /* 07BC68 8007B068 01603825 */   move  $a3, $t3
 /* 07BC6C 8007B06C 8FA40034 */  lw    $a0, 0x34($sp)
 /* 07BC70 8007B070 02602825 */  move  $a1, $s3
-/* 07BC74 8007B074 0C031886 */  jal   func_800C6218
+/* 07BC74 8007B074 0C031886 */  jal   gzip_inflate
 /* 07BC78 8007B078 24840020 */   addiu $a0, $a0, 0x20
 /* 07BC7C 8007B07C 8FAD003C */  lw    $t5, 0x3c($sp)
 /* 07BC80 8007B080 00000000 */  nop   

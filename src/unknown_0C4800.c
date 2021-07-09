@@ -635,7 +635,7 @@ s32 func_800C61DC(s32 arg0, s32 arg1) {
 
 s32 gzip_inflate_block(void);
 
-u8* func_800C6218(u8* arg0, u8* arg1) {
+u8* gzip_inflate(u8* arg0, u8* arg1) {
     gzip_inflate_input = arg0 + 5; // The compression header is 5 bytes. 
     gzip_inflate_output = arg1;
     gzip_num_bits = 0;
