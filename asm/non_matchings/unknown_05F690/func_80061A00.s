@@ -57,7 +57,7 @@ glabel func_80061A00
 /* 0626C8 80061AC8 8C520000 */  lw    $s2, ($v0)
 /* 0626CC 80061ACC 8C490004 */  lw    $t1, 4($v0)
 /* 0626D0 80061AD0 02402825 */  move  $a1, $s2
-/* 0626D4 80061AD4 0C031877 */  jal   func_800C61DC
+/* 0626D4 80061AD4 0C031877 */  jal   get_asset_uncompressed_size
 /* 0626D8 80061AD8 01329823 */   subu  $s3, $t1, $s2
 /* 0626DC 80061ADC 24440080 */  addiu $a0, $v0, 0x80
 /* 0626E0 80061AE0 3C05FF00 */  lui   $a1, (0xFF0000FF >> 16) # lui $a1, 0xff00

@@ -313,8 +313,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4DA0.s")
 
 void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 > 0 && arg0 < 8) {
-        // How is temp supposed to be setup for all of these functions? This is driving me nuts.
-        unk8012A7E8 *temp = &D_8012A7E8[arg0]; // Issue with temp
+        unk8012A7E8 *temp = &D_8012A7E8[arg0];
         temp->unk0 = 0;
         temp->unk2 = 0;
         if (arg1 < arg3) {
@@ -374,7 +373,7 @@ void func_800C5050(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
-    temp = &D_8012A7E8[arg0]; // Issue with temp
+    temp = &D_8012A7E8[arg0];
     temp->unk18 = arg1;
     temp->unk19 = arg2;
     temp->unk1A = arg3;
@@ -387,7 +386,7 @@ void func_800C5094(s32 arg0, s32 arg1, s32 arg2) {
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
-    temp = &D_8012A7E8[arg0]; // Issue with temp
+    temp = &D_8012A7E8[arg0];
     temp->unk20 += arg1;
     temp->unk22 += arg2;
 }
@@ -398,13 +397,12 @@ void func_800C50D8(s32 arg0) {
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
-    temp = &D_8012A7E8[arg0]; // Issue with temp
+    temp = &D_8012A7E8[arg0];
     temp->unk20 = 0;
     temp->unk22 = 0;
 }
 
 // Unused?
-// This function is OK
 void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     func_800C5168(arg0, (*D_8012A7E8)[arg0].unk0, (*D_8012A7E8)[arg0].unk2, arg1, arg2, arg3);
 }
@@ -541,7 +539,6 @@ void func_800C580C(char** outString, s32 number) {
 }
 #endif
 
-//GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5AA0.s")
 void func_800C5AA0(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     u32 temp_v0 = get_video_width_and_height_as_s32();
     if (arg3 >= 0 && arg1 < (temp_v0 & 0xFFFF) && arg4 >= 0 && arg2 < (temp_v0 >> 16)) {
@@ -612,13 +609,16 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
 	}
 }
 
+// I would guess that there is a file boundary right here.
 
 void func_800C6170(void) {
     D_800E3760 = allocate_from_main_pool_safe(0x2800, COLOR_TAG_BLACK);
     D_800E3764 = allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
 }
 
-// Returns the little-endian value from a byte array.
+/**
+ * Converts a little endian value to big endian.
+ */
 s32 byteswap32(u8* arg0) {
     s32 value;
     value = *arg0++;
@@ -628,20 +628,27 @@ s32 byteswap32(u8* arg0) {
     return value;
 }
 
-s32 func_800C61DC(s32 arg0, s32 arg1) {
-    load_asset_to_address(arg0, D_800E3764, arg1, 8);
+/**
+ * Returns the uncompressed size of a gzip compressed asset.
+ */
+s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
+    load_asset_to_address(assetIndex, D_800E3764, assetOffset, 8);
     return byteswap32(D_800E3764);
 }
 
 s32 gzip_inflate_block(void);
 
-u8* gzip_inflate(u8* arg0, u8* arg1) {
-    gzip_inflate_input = arg0 + 5; // The compression header is 5 bytes. 
-    gzip_inflate_output = arg1;
+/**
+ * Decompresses gzip data.
+ * Returns the pointer to the decompressed data.
+ */
+u8* gzip_inflate(u8* compressedInput, u8* decompressedOutput) {
+    gzip_inflate_input = compressedInput + 5; // The compression header is 5 bytes. 
+    gzip_inflate_output = decompressedOutput;
     gzip_num_bits = 0;
     gzip_bit_buffer = 0;
     while(gzip_inflate_block() != 0) {} // Keep calling gzip_inflate_block() until it returns 0.
-    return arg1;
+    return decompressedOutput;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/gzip_huft_build.s")

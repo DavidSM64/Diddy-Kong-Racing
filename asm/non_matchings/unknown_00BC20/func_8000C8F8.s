@@ -107,7 +107,7 @@ glabel func_8000C8F8
 /* 00D680 8000CA80 10E0004A */  beqz  $a3, .L8000CBAC
 /* 00D684 8000CA84 8FBF0024 */   lw    $ra, 0x24($sp)
 /* 00D688 8000CA88 AFA6003C */  sw    $a2, 0x3c($sp)
-/* 00D68C 8000CA8C 0C031877 */  jal   func_800C61DC
+/* 00D68C 8000CA8C 0C031877 */  jal   get_asset_uncompressed_size
 /* 00D690 8000CA90 AFA70054 */   sw    $a3, 0x54($sp)
 /* 00D694 8000CA94 8FAD0048 */  lw    $t5, 0x48($sp)
 /* 00D698 8000CA98 8FA70054 */  lw    $a3, 0x54($sp)

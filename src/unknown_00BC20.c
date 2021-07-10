@@ -279,24 +279,6 @@ extern s16 D_8011D5AC;
 
 extern s32 osTvType;
 
-/* Size: 12 bytes */
-typedef struct TriangleBatchInfo {
-/* 0x00 */ u8  textureIndex; // 0xFF = No texture
-/* 0x02 */ s16 verticesOffset;
-/* 0x04 */ s16 facesOffset;
-/* 0x06 */ u8  unk6;
-/* 0x08 */ u32 flags;
-    // 0x00000100 = Hidden geometry
-    // 0x00008000 = Environment mapping
-} TriangleBatchInfo;
-
-typedef struct ObjectModel {
-           u8 pad0[0x28];
-/* 0x28 */ s16 numberOfBatches;
-           u8 pad2A[14];
-/* 0x38 */ TriangleBatchInfo *batches;
-} ObjectModel;
-
 typedef struct unk8001D6E4_arg1_40 {
            u8 pad0[0x71];
 /* 0x71 */ u8 unk71;

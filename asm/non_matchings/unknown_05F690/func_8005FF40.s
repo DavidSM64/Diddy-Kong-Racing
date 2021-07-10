@@ -42,7 +42,7 @@ glabel func_8005FF40
 /* 060BD0 8005FFD0 10C8001D */  beq   $a2, $t0, .L80060048
 /* 060BD4 8005FFD4 00A02025 */   move  $a0, $a1
 /* 060BD8 8005FFD8 AFA60018 */  sw    $a2, 0x18($sp)
-/* 060BDC 8005FFDC 0C018016 */  jal   func_80060058
+/* 060BDC 8005FFDC 0C018016 */  jal   free_object_model
 /* 060BE0 8005FFE0 AFA70020 */   sw    $a3, 0x20($sp)
 /* 060BE4 8005FFE4 3C038012 */  lui   $v1, %hi(D_8011D634) # $v1, 0x8012
 /* 060BE8 8005FFE8 2463D634 */  addiu $v1, %lo(D_8011D634) # addiu $v1, $v1, -0x29cc
