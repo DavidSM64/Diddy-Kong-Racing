@@ -253,6 +253,83 @@ typedef struct {
   /* 0x4C */ u32 unk4C;
 } dkr_wave_t;
 
+/* Size: 8 bytes */
+typedef struct TextureInfo {
+/* 0x00 */ TextureHeader *texture;
+/* 0x04 */ u8 width;
+/* 0x05 */ u8 height;
+/* 0x06 */ u8 format;
+/* 0x07 */ u8 unk7;
+} TextureInfo;
+
+/* Size: 10 bytes */
+typedef struct Vertex {
+/* 0x00 */ s16 x;
+/* 0x02 */ s16 y;
+/* 0x04 */ s16 z;
+/* 0x06 */ u8  r;
+/* 0x07 */ u8  g;
+/* 0x08 */ u8  b;
+/* 0x09 */ u8  a;
+} Vertex;
+
+/* Size: 4 bytes */
+typedef struct TexCoords {
+    s16 u, v;
+} TexCoords;
+
+/* Size: 16 bytes */
+typedef struct Triangle {
+/* 0x00 */ u8 drawBackface; // 0x40 = Draw backface, 0x00 = Cull backface
+/* 0x01 */ u8 vi0;          // First vertex index
+/* 0x02 */ u8 vi1;          // Second vertex index
+/* 0x03 */ u8 vi2;          // Third vertex index
+/* 0x04 */ TexCoords uv0;   // Texture coordinates for the first vertex
+/* 0x08 */ TexCoords uv1;   // Texture coordinates for the second vertex
+/* 0x0C */ TexCoords uv2;   // Texture coordinates for the third vertex
+} Triangle;
+
+/* Size: 12 bytes */
+typedef struct TriangleBatchInfo {
+/* 0x00 */ u8  textureIndex; // 0xFF = No texture
+/* 0x02 */ s16 verticesOffset;
+/* 0x04 */ s16 facesOffset;
+/* 0x06 */ u8  unk6;
+/* 0x08 */ u32 flags;
+    // 0x00000010 = Depth write
+    // 0x00000100 = Hidden/Invisible geometry
+    // 0x00000200 = ??? Used in func_80060AC8
+    // 0x00008000 = Environment mapping
+    // 0x00010000 = Texture is animated
+} TriangleBatchInfo;
+
+/* Size: 8 bytes */
+typedef struct ObjectModel_44 {
+/* 0x00 */ s32 *anim;
+/* 0x04 */ s32 unk4;
+} ObjectModel_44;
+
+typedef struct ObjectModel {
+/* 0x00 */ TextureInfo *textures;
+/* 0x04 */ Vertex *vertices;
+/* 0x08 */ Triangle *triangles;
+/* 0x0C */ s32 *unkC;
+/* 0x10 */ s32 *unk10;
+           u8 pad0[0x0E];
+/* 0x22 */ s16 numberOfTextures;
+/* 0x24 */ s16 numberOfVertices;
+/* 0x26 */ s16 numberOfTriangles;
+/* 0x28 */ s16 numberOfBatches;
+           u8 pad2A[6];
+/* 0x30 */ s16 unk30;
+           u8 pad32[6];
+/* 0x38 */ TriangleBatchInfo *batches;
+/* 0x3C */ u8 pad3C[4];
+/* 0x40 */ s32 *unk40;
+/* 0x44 */ ObjectModel_44 *animations;
+/* 0x48 */ s16 numberOfAnimations;
+} ObjectModel;
+
 typedef struct Object_3C {
     u8 pad0[0x8];
     s8 unk8;

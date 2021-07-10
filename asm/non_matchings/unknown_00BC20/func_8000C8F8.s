@@ -107,7 +107,7 @@ glabel func_8000C8F8
 /* 00D680 8000CA80 10E0004A */  beqz  $a3, .L8000CBAC
 /* 00D684 8000CA84 8FBF0024 */   lw    $ra, 0x24($sp)
 /* 00D688 8000CA88 AFA6003C */  sw    $a2, 0x3c($sp)
-/* 00D68C 8000CA8C 0C031877 */  jal   func_800C61DC
+/* 00D68C 8000CA8C 0C031877 */  jal   get_asset_uncompressed_size
 /* 00D690 8000CA90 AFA70054 */   sw    $a3, 0x54($sp)
 /* 00D694 8000CA94 8FAD0048 */  lw    $t5, 0x48($sp)
 /* 00D698 8000CA98 8FA70054 */  lw    $a3, 0x54($sp)
@@ -120,7 +120,7 @@ glabel func_8000C8F8
 /* 00D6B4 8000CAB4 02003025 */   move  $a2, $s0
 /* 00D6B8 8000CAB8 8FA40034 */  lw    $a0, 0x34($sp)
 /* 00D6BC 8000CABC 8FA50048 */  lw    $a1, 0x48($sp)
-/* 00D6C0 8000CAC0 0C031886 */  jal   func_800C6218
+/* 00D6C0 8000CAC0 0C031886 */  jal   gzip_inflate
 /* 00D6C4 8000CAC4 00000000 */   nop   
 /* 00D6C8 8000CAC8 8FA4003C */  lw    $a0, 0x3c($sp)
 /* 00D6CC 8000CACC 0C01C450 */  jal   free_from_memory_pool

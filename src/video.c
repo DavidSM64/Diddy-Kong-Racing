@@ -125,6 +125,8 @@ s32 get_video_width_and_height_as_s32(void) {
     return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
 }
 
+void memory_copy(u8 *src, u8 *dst, s32 numBytes);
+
 void init_vi_settings(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
@@ -307,7 +309,6 @@ void swap_framebuffers(void) {
 
 #ifdef NON_MATCHING
 // regalloc issues
-// They made their own (worse) version of memcpy, despite the fact that they already had bcopy?
 void memory_copy(u8 *src, u8 *dst, s32 numBytes) {
     s32 i;
     for(i = 0; i < numBytes; i++){

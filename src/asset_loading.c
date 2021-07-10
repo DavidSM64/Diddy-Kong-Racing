@@ -63,8 +63,9 @@ s32 *load_asset_section_from_rom(u32 assetIndex) {
 }
 
 #ifdef NON_MATCHING
+// Unused.
 // This has regalloc & stack issues.
-u8 *func_80076CF0(u32 assetIndex, s32 arg1) {
+u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 arg1) {
     s32 size;
     s32 sp2C;
     s32 start;
@@ -96,11 +97,11 @@ u8 *func_80076CF0(u32 assetIndex, s32 arg1) {
     }
     temp_a1 = (temp_v0_3 + sp2C) - size;
     dmacopy(temp_a0, temp_a1, size);
-    func_800C6218(temp_a1, temp_v0_3);
+    gzip_inflate(temp_a1, temp_v0_3);
     return temp_v0_3;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/asset_loading/load_asset_section_from_rom.s")
+GLOBAL_ASM("asm/non_matchings/asset_loading/load_compressed_asset_from_rom.s")
 #endif
 
 /**

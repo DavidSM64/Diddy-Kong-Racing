@@ -614,6 +614,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005A424.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005A6F0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005B818.s")
 
+// This gets called if an anti-piracy checksum fails in func_8005F850.
 void func_8005C25C(void) {
     D_800DCB9C[0] = 0.05f;
 }

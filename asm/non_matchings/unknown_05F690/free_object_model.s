@@ -1,4 +1,4 @@
-glabel func_80060058
+glabel free_object_model
 /* 060C58 80060058 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 060C5C 8006005C AFBF0024 */  sw    $ra, 0x24($sp)
 /* 060C60 80060060 AFB20020 */  sw    $s2, 0x20($sp)

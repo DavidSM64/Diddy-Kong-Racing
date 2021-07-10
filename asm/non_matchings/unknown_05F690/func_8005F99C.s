@@ -72,7 +72,7 @@ glabel func_8005F99C
 /* 060698 8005FA98 2404001D */  li    $a0, 29
 /* 06069C 8005FA9C 01305023 */  subu  $t2, $t1, $s0
 /* 0606A0 8005FAA0 AFAA0048 */  sw    $t2, 0x48($sp)
-/* 0606A4 8005FAA4 0C031877 */  jal   func_800C61DC
+/* 0606A4 8005FAA4 0C031877 */  jal   get_asset_uncompressed_size
 /* 0606A8 8005FAA8 02002825 */   move  $a1, $s0
 /* 0606AC 8005FAAC 24440080 */  addiu $a0, $v0, 0x80
 /* 0606B0 8005FAB0 3C05FF00 */  lui   $a1, (0xFF0000FF >> 16) # lui $a1, 0xff00
@@ -94,7 +94,7 @@ glabel func_8005F99C
 /* 0606EC 8005FAEC 0C01DB9A */  jal   load_asset_to_address
 /* 0606F0 8005FAF0 00008825 */   move  $s1, $zero
 /* 0606F4 8005FAF4 8FA40030 */  lw    $a0, 0x30($sp)
-/* 0606F8 8005FAF8 0C031886 */  jal   func_800C6218
+/* 0606F8 8005FAF8 0C031886 */  jal   gzip_inflate
 /* 0606FC 8005FAFC 02402825 */   move  $a1, $s2
 /* 060700 8005FB00 8E4D0000 */  lw    $t5, ($s2)
 /* 060704 8005FB04 8E4F0004 */  lw    $t7, 4($s2)
@@ -209,7 +209,7 @@ glabel func_8005F99C
 /* 0608A0 8005FCA0 10000004 */  b     .L8005FCB4
 /* 0608A4 8005FCA4 A0600020 */   sb    $zero, 0x20($v1)
 .L8005FCA8:
-/* 0608A8 8005FCA8 0C018016 */  jal   func_80060058
+/* 0608A8 8005FCA8 0C018016 */  jal   free_object_model
 /* 0608AC 8005FCAC 02402025 */   move  $a0, $s2
 /* 0608B0 8005FCB0 00001025 */  move  $v0, $zero
 .L8005FCB4:

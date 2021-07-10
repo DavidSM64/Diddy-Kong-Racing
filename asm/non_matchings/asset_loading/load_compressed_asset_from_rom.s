@@ -1,4 +1,4 @@
-glabel func_80076CF0
+glabel load_compressed_asset_from_rom
 /* 0778F0 80076CF0 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 0778F4 80076CF4 3C028012 */  lui   $v0, %hi(gAssetsLookupTable) # $v0, 0x8012
 /* 0778F8 80076CF8 8C424290 */  lw    $v0, %lo(gAssetsLookupTable)($v0)
@@ -60,7 +60,7 @@ glabel func_80076CF0
 /* 0779D0 80076DD0 AFA70024 */   sw    $a3, 0x24($sp)
 /* 0779D4 80076DD4 8FA50024 */  lw    $a1, 0x24($sp)
 /* 0779D8 80076DD8 8FA4001C */  lw    $a0, 0x1c($sp)
-/* 0779DC 80076DDC 0C031886 */  jal   func_800C6218
+/* 0779DC 80076DDC 0C031886 */  jal   gzip_inflate
 /* 0779E0 80076DE0 00000000 */   nop   
 /* 0779E4 80076DE4 8FA20024 */  lw    $v0, 0x24($sp)
 /* 0779E8 80076DE8 00000000 */  nop   
