@@ -5,22 +5,26 @@ OUT := ../ido5.3_recomp
 CXX := g++
 GCC := gcc
 
-DUMMY != echo "Statically recompiling IDO 5.3. This might take a while." >&2 || echo FAIL
+DUMMY != echo "Statically recompiling IDO 5.3 tools. This might take a while." >&2 || echo FAIL
 DUMMY != mkdir -p $(OUT) >&2 || echo FAIL
 
 cc: OPT_CFLAGS := -O2
 cfe: OPT_CFLAGS := -O2
 uopt: OPT_CFLAGS := -O2
 ugen: OPT_CFLAGS := -O2
+ujoin: OPT_CFLAGS := -O2
+usplit: OPT_CFLAGS := -O2
+umerge: OPT_CFLAGS := -O2
+uld: OPT_CFLAGS := -O2
 as1: OPT_CFLAGS := -O2
 acpp: OPT_CFLAGS := -O2
 
 RECOMP := recomp
 
-all: cc cfe uopt ugen as1 err.english.cc
+all: cc cfe uopt ugen as1 ujoin uld usplit umerge err.english.cc
 
 clean:
-	$(RM) cc* cfe* uopt* ugen* as1* err.english.cc $(RECOMP)
+	$(RM) cc* cfe* uopt* ugen* as1* ujoin* uld* usplit* umerge* err.english.cc $(RECOMP)
 
 recomp: recomp.cpp
 	g++ recomp.cpp -o $(RECOMP) -g -lcapstone

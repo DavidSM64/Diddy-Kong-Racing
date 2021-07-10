@@ -201,7 +201,7 @@ class GenerateLD:
         self.file.write('\n')
         
     def append_files(self, files, extensions, directory, outputDir):
-        filenames = FileUtil.get_filenames_from_directory(directory, extensions)
+        filenames = FileUtil.get_filenames_from_directory_recursive(directory, extensions)
         regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
         for filename in filenames:
             with open(directory + '/' + filename, 'r') as inFile:
