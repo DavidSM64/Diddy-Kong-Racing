@@ -254,7 +254,7 @@ glabel L8006D024
 /* 06DC5C 8006D05C 24010002 */  li    $at, 2
 /* 06DC60 8006D060 10410003 */  beq   $v0, $at, .L8006D070
 /* 06DC64 8006D064 3C018012 */   lui   $at, %hi(gIsPaused) # $at, 0x8012
-/* 06DC68 8006D068 0C025179 */  jal   func_800945E4
+/* 06DC68 8006D068 0C025179 */  jal   n_alSeqpDelete
 /* 06DC6C 8006D06C A0203515 */   sb    $zero, %lo(gIsPaused)($at)
 .L8006D070:
 /* 06DC70 8006D070 3C0C8012 */  lui   $t4, %hi(gIsPaused) # $t4, 0x8012

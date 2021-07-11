@@ -274,7 +274,7 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_800756D4.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_800758DC.s")
 
 s32 func_80075AEC(s32 controllerIndex) {
-    func_800CCFE0(D_80124010);
+    osContStartReadData(D_80124010);
     return 0;
 }
 
@@ -284,7 +284,7 @@ s32 func_80075D38(s32 controllerIndex) {
     s32 phi_v1;
     s32 temp_v0 = func_800758DC();
     if (temp_v0 == 0 || temp_v0 == 2) {
-        temp_v0 = func_800CF530(&pfs[controllerIndex]);
+        temp_v0 = osPfsChecker(&pfs[controllerIndex]);
         if (temp_v0 == 0) {
             phi_v1 = 0;
         } else if (temp_v0 == 2) {
@@ -303,7 +303,7 @@ s32 func_80075DC4(s32 controllerIndex) {
     s32 phi_v1;
     s32 temp_v0 = func_800758DC();
     if (temp_v0 == 0 || temp_v0 == 2 || temp_v0 == 3) {
-        temp_v0 = func_800CFF90(&pfs[controllerIndex], D_80124010, controllerIndex);
+        temp_v0 = osPfsReFormat(&pfs[controllerIndex], D_80124010, controllerIndex);
         if (temp_v0 == 0) {
             phi_v1 = 0;
         } else if (temp_v0 == 2) {
@@ -344,7 +344,7 @@ s32 func_80076194(s32 controllerIndex, s32 *arg1, s32 *arg2) {
             *arg1 = sp28;
         }
         if (arg2 != NULL) {
-            phi_v1 = func_800D0390(&pfs[controllerIndex], &sp24, &sp20);
+            phi_v1 = osPfsNumFiles(&pfs[controllerIndex], &sp24, &sp20);
             if (phi_v1 != 0) {
                 func_80075AEC(controllerIndex);
                 return (controllerIndex << 0x1E) | 9;
@@ -382,7 +382,7 @@ s32 func_800762C8(s32 controllerIndex, s32 arg1) {
     temp_a0 = &pfs[controllerIndex];
     temp_v0 |= 9;
     if (osPfsFileState(temp_a0, arg1, &sp30) == 0) {
-        if (func_800D0870(temp_a0, sp38, sp34, &sp3E, &sp3A) == 0) {
+        if (osPfsDeleteFile(temp_a0, sp38, sp34, &sp3E, &sp3A) == 0) {
             temp_v0 = 0;
         }
     }

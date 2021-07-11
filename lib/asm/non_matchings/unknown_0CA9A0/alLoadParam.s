@@ -17,7 +17,7 @@ glabel alLoadParam
 /* 0CC17C 800CB57C 8CE20028 */   lw    $v0, 0x28($a3)
 /* 0CC180 800CB580 24040001 */  li    $a0, 1
 /* 0CC184 800CB584 10440034 */  beq   $v0, $a0, .L800CB658
-/* 0CC188 800CB588 3C08800D */   lui   $t0, %hi(func_800CB714) # $t0, 0x800d
+/* 0CC188 800CB588 3C08800D */   lui   $t0, %hi(alRaw16Pull) # $t0, 0x800d
 /* 0CC18C 800CB58C 1000005E */  b     .L800CB708
 /* 0CC190 800CB590 8FBF0014 */   lw    $ra, 0x14($sp)
 /* 0CC194 800CB594 8CE20028 */  lw    $v0, 0x28($a3)
@@ -75,7 +75,7 @@ glabel alLoadParam
 /* 0CC254 800CB654 ACE0001C */   sw    $zero, 0x1c($a3)
 .L800CB658:
 /* 0CC258 800CB658 8CE20028 */  lw    $v0, 0x28($a3)
-/* 0CC25C 800CB65C 2508B714 */  addiu $t0, %lo(func_800CB714) # addiu $t0, $t0, -0x48ec
+/* 0CC25C 800CB65C 2508B714 */  addiu $t0, %lo(alRaw16Pull) # addiu $t0, $t0, -0x48ec
 /* 0CC260 800CB660 ACE80004 */  sw    $t0, 4($a3)
 /* 0CC264 800CB664 8C43000C */  lw    $v1, 0xc($v0)
 /* 0CC268 800CB668 5060000B */  beql  $v1, $zero, .L800CB698

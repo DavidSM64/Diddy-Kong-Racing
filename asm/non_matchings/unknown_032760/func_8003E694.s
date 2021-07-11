@@ -46,7 +46,7 @@ glabel func_8003E694
 /* 03F330 8003E730 AFAA0018 */  sw    $t2, 0x18($sp)
 /* 03F334 8003E734 AFA90014 */  sw    $t1, 0x14($sp)
 /* 03F338 8003E738 AFA80010 */  sw    $t0, 0x10($sp)
-/* 03F33C 8003E73C 0C01BD93 */  jal   func_8006F64C
+/* 03F33C 8003E73C 0C01BD93 */  jal   guMtxXFMF
 /* 03F340 8003E740 27A40054 */   addiu $a0, $sp, 0x54
 /* 03F344 8003E744 8FAB00EC */  lw    $t3, 0xec($sp)
 /* 03F348 8003E748 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000

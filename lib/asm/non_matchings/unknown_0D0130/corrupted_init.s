@@ -1,4 +1,4 @@
-glabel func_800CFBF4
+glabel corrupted_init
 /* 0D07F4 800CFBF4 27BDFED0 */  addiu $sp, $sp, -0x130
 /* 0D07F8 800CFBF8 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0D07FC 800CFBFC AFA40130 */  sw    $a0, 0x130($sp)

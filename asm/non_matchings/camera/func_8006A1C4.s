@@ -31,7 +31,7 @@ glabel func_8006A1C4
 /* 06AE34 8006A234 1420FFF6 */  bnez  $at, .L8006A210
 /* 06AE38 8006A238 00000000 */   nop   
 /* 06AE3C 8006A23C 3C048012 */  lui   $a0, %hi(D_80121110) # $a0, 0x8012
-/* 06AE40 8006A240 0C033429 */  jal   func_800CD0A4
+/* 06AE40 8006A240 0C033429 */  jal   osContGetReadData
 /* 06AE44 8006A244 24841110 */   addiu $a0, %lo(D_80121110) # addiu $a0, $a0, 0x1110
 /* 06AE48 8006A248 12400043 */  beqz  $s2, .L8006A358
 /* 06AE4C 8006A24C 8FA4005C */   lw    $a0, 0x5c($sp)
@@ -114,7 +114,7 @@ glabel func_8006A1C4
 /* 06AF58 8006A358 0C01C9C6 */  jal   func_80072718
 /* 06AF5C 8006A35C 00000000 */   nop   
 /* 06AF60 8006A360 3C048012 */  lui   $a0, %hi(D_801210E0) # $a0, 0x8012
-/* 06AF64 8006A364 0C0333F8 */  jal   func_800CCFE0
+/* 06AF64 8006A364 0C0333F8 */  jal   osContStartReadData
 /* 06AF68 8006A368 248410E0 */   addiu $a0, %lo(D_801210E0) # addiu $a0, $a0, 0x10e0
 .L8006A36C:
 /* 06AF6C 8006A36C 3C0A800E */  lui   $t2, %hi(D_800DD300) # $t2, 0x800e

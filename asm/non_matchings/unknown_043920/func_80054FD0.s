@@ -65,7 +65,7 @@ glabel func_80054FD0
 /* 055CA8 800550A8 AFAB0018 */  sw    $t3, 0x18($sp)
 /* 055CAC 800550AC AFAA0014 */  sw    $t2, 0x14($sp)
 /* 055CB0 800550B0 AFA90010 */  sw    $t1, 0x10($sp)
-/* 055CB4 800550B4 0C01BD93 */  jal   func_8006F64C
+/* 055CB4 800550B4 0C01BD93 */  jal   guMtxXFMF
 /* 055CB8 800550B8 27A400A0 */   addiu $a0, $sp, 0xa0
 /* 055CBC 800550BC 3C198012 */  lui   $t9, %hi(D_8011D568) # $t9, 0x8012
 /* 055CC0 800550C0 8FA80054 */  lw    $t0, 0x54($sp)
@@ -556,7 +556,7 @@ glabel func_80054FD0
 /* 0563F8 800557F8 AFA30018 */  sw    $v1, 0x18($sp)
 /* 0563FC 800557FC AFA90014 */  sw    $t1, 0x14($sp)
 /* 056400 80055800 AFA80010 */  sw    $t0, 0x10($sp)
-/* 056404 80055804 0C01BD93 */  jal   func_8006F64C
+/* 056404 80055804 0C01BD93 */  jal   guMtxXFMF
 /* 056408 80055808 27A40060 */   addiu $a0, $sp, 0x60
 /* 05640C 8005580C 8FA30048 */  lw    $v1, 0x48($sp)
 /* 056410 80055810 8FA20054 */  lw    $v0, 0x54($sp)

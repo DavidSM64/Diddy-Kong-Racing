@@ -247,7 +247,7 @@ void func_80079B44(OSSched *sc){
         }
     }
     if(t->state & 0x10){
-        if(func_800D1DF0(&(t->list))){
+        if(osSpTaskYielded(&(t->list))){
             t->state |= 0x20;
             if ((t->flags & 0x07) == -3) {
     

@@ -187,7 +187,7 @@ void func_8006F43C(void);
 void func_800014BC(f32 arg0);
 s8 *get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
-void func_8006F64C(s32*, f32, f32, f32, f32*, f32*, f32*);
+void guMtxXFMF(s32*, f32, f32, f32, f32*, f32*, f32*);
 void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);
 void func_8006F870(s32*, s32*);
 s16 func_80029F18(f32, f32, f32);    
@@ -953,7 +953,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006CCF0.s")
 void func_8006D8A4(void) {
     D_800DD390 = 0x2C;
     gIsPaused = 0;
-    func_800945E4();
+    n_alSeqpDelete();
     func_800C01D8(&D_800DD408);
 }
 

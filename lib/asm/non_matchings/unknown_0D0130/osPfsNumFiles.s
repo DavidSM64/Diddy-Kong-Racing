@@ -1,4 +1,4 @@
-glabel func_800D0390
+glabel osPfsNumFiles
 /* 0D0F90 800D0390 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 0D0F94 800D0394 AFA40048 */  sw    $a0, 0x48($sp)
 /* 0D0F98 800D0398 8FAE0048 */  lw    $t6, 0x48($sp)

@@ -34,7 +34,7 @@ glabel func_800CED20
 /* 0CF99C 800CED9C 10000009 */  b     .L800CEDC4
 /* 0CF9A0 800CEDA0 01401025 */   move  $v0, $t2
 .L800CEDA4:
-/* 0CF9A4 800CEDA4 0C033D4C */  jal   func_800CF530
+/* 0CF9A4 800CEDA4 0C033D4C */  jal   osPfsChecker
 /* 0CF9A8 800CEDA8 8FA40024 */   lw    $a0, 0x24($sp)
 /* 0CF9AC 800CEDAC 8FAB0024 */  lw    $t3, 0x24($sp)
 /* 0CF9B0 800CEDB0 AFA2001C */  sw    $v0, 0x1c($sp)

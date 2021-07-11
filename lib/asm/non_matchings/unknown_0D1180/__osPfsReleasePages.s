@@ -1,4 +1,4 @@
-glabel func_800D0B50
+glabel __osPfsReleasePages
 /* 0D1750 800D0B50 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0D1754 800D0B54 AFA60030 */  sw    $a2, 0x30($sp)
 /* 0D1758 800D0B58 93B80033 */  lbu   $t8, 0x33($sp)
@@ -70,7 +70,7 @@ glabel func_800D0B50
 /* 0D1848 800D0C48 8FA40028 */  lw    $a0, 0x28($sp)
 /* 0D184C 800D0C4C 93A50033 */  lbu   $a1, 0x33($sp)
 /* 0D1850 800D0C50 8FA60034 */  lw    $a2, 0x34($sp)
-/* 0D1854 800D0C54 0C034362 */  jal   func_800D0D88
+/* 0D1854 800D0C54 0C034362 */  jal   __osBlockSum
 /* 0D1858 800D0C58 93A7003B */   lbu   $a3, 0x3b($sp)
 /* 0D185C 800D0C5C AFA2001C */  sw    $v0, 0x1c($sp)
 /* 0D1860 800D0C60 8FB9001C */  lw    $t9, 0x1c($sp)
@@ -111,7 +111,7 @@ glabel func_800D0B50
 /* 0D18E0 800D0CE0 93A7003B */  lbu   $a3, 0x3b($sp)
 /* 0D18E4 800D0CE4 8FA60034 */  lw    $a2, 0x34($sp)
 /* 0D18E8 800D0CE8 93A50021 */  lbu   $a1, 0x21($sp)
-/* 0D18EC 800D0CEC 0C034362 */  jal   func_800D0D88
+/* 0D18EC 800D0CEC 0C034362 */  jal   __osBlockSum
 /* 0D18F0 800D0CF0 8FA40028 */   lw    $a0, 0x28($sp)
 /* 0D18F4 800D0CF4 AFA2001C */  sw    $v0, 0x1c($sp)
 /* 0D18F8 800D0CF8 8FAD001C */  lw    $t5, 0x1c($sp)

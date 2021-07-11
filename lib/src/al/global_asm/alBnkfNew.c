@@ -7,6 +7,6 @@
 void dummy_800C75A0(void) {}
 void dummy_800C75A8(void) {}
 
-GLOBAL_ASM("asm/non_matchings/unknown_0C81A0/_bnkfPatchBank.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0C81A0/alBnkfNew.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0C81A0/alSeqFileNew.s")
+GLOBAL_ASM("lib/asm/non_matchings/alBnkfNew/_bnkfPatchBank.s")
+GLOBAL_ASM("lib/asm/non_matchings/alBnkfNew/alBnkfNew.s")
+GLOBAL_ASM("lib/asm/non_matchings/alBnkfNew/alSeqFileNew.s")

@@ -133,15 +133,15 @@ FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
 TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 
-LIB_DIRS := lib
-ASM_DIRS := asm asm/boot asm/assets data lib/asm
-SRC_DIRS := src lib/src lib/src/al lib/src/os
+LIB_DIRS := lib/
+ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/
+SRC_DIRS := $(sort $(dir $(wildcard src/*/ src/**/*/))) $(sort $(dir $(wildcard lib/src/*/ lib/src/**/*/)))
 
-GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c lib/src/*.c)
+GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(SRC_DIRS)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
-S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
-C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
+S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)*.s))
+C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)*.c))
 
 # Object files
 O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
@@ -260,6 +260,7 @@ $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
@@ -270,8 +271,9 @@ $(BUILD_DIR)/lib/src/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
 $(BUILD_DIR)/lib/src/osEepromWrite.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osEepromRead.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osViMgr.o: OPT_FLAGS := -O2
+
+# asm-processor currently does not support -O3, so this is my workaround.
+$(BUILD_DIR)/lib/src/al/global_asm/%.o: OPT_FLAGS := -O2
 
 ######################## Targets #############################
 

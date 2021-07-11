@@ -1,4 +1,4 @@
-glabel func_800CCEE8
+glabel __osPackRequestData
 /* 0CDAE8 800CCEE8 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 0CDAEC 800CCEEC 308400FF */  andi  $a0, $a0, 0xff
 /* 0CDAF0 800CCEF0 AFA00000 */  sw    $zero, ($sp)

@@ -1,4 +1,4 @@
-glabel func_800CF530
+glabel osPfsChecker
 /* 0D0130 800CF530 27BDFB78 */  addiu $sp, $sp, -0x488
 /* 0D0134 800CF534 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D0138 800CF538 AFA40488 */  sw    $a0, 0x488($sp)
@@ -21,7 +21,7 @@ glabel func_800CF530
 /* 0D0178 800CF578 01E01025 */   move  $v0, $t7
 .L800CF57C:
 /* 0D017C 800CF57C 8FA40488 */  lw    $a0, 0x488($sp)
-/* 0D0180 800CF580 0C033EFD */  jal   func_800CFBF4
+/* 0D0180 800CF580 0C033EFD */  jal   corrupted_init
 /* 0D0184 800CF584 27A50038 */   addiu $a1, $sp, 0x38
 /* 0D0188 800CF588 AFA20480 */  sw    $v0, 0x480($sp)
 /* 0D018C 800CF58C 8FB80480 */  lw    $t8, 0x480($sp)
@@ -103,7 +103,7 @@ glabel func_800CF530
 /* 0D02A8 800CF6A8 8FA40488 */  lw    $a0, 0x488($sp)
 /* 0D02AC 800CF6AC 27A60038 */  addiu $a2, $sp, 0x38
 /* 0D02B0 800CF6B0 A7B80004 */  sh    $t8, 4($sp)
-/* 0D02B4 800CF6B4 0C033F6A */  jal   func_800CFDA8
+/* 0D02B4 800CF6B4 0C033F6A */  jal   corrupted
 /* 0D02B8 800CF6B8 8FA50004 */   lw    $a1, 4($sp)
 /* 0D02BC 800CF6BC 8FB90028 */  lw    $t9, 0x28($sp)
 /* 0D02C0 800CF6C0 00594823 */  subu  $t1, $v0, $t9

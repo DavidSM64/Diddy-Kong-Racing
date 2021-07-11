@@ -1,4 +1,4 @@
-glabel func_800CB714
+glabel alRaw16Pull
 /* 0CC314 800CB714 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 0CC318 800CB718 8FA80060 */  lw    $t0, 0x60($sp)
 /* 0CC31C 800CB71C AFB30020 */  sw    $s3, 0x20($sp)

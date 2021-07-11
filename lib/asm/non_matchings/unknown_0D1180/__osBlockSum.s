@@ -1,4 +1,4 @@
-glabel func_800D0D88
+glabel __osBlockSum
 /* 0D1988 800D0D88 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 0D198C 800D0D8C AFA40040 */  sw    $a0, 0x40($sp)
 /* 0D1990 800D0D90 AFA7004C */  sw    $a3, 0x4c($sp)

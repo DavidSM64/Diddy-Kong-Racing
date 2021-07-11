@@ -1,4 +1,4 @@
-glabel func_800C96F0
+glabel alSynStartVoice
 /* 0CA2F0 800C96F0 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0CA2F4 800C96F4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0CA2F8 800C96F8 AFA40018 */  sw    $a0, 0x18($sp)

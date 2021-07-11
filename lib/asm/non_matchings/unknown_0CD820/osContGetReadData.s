@@ -1,4 +1,4 @@
-glabel func_800CD0A4
+glabel osContGetReadData
 /* 0CDCA4 800CD0A4 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
 /* 0CDCA8 800CD0A8 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
 /* 0CDCAC 800CD0AC 3C0E8013 */  lui   $t6, %hi(D_8012CD50) # $t6, 0x8013

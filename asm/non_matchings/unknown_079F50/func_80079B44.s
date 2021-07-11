@@ -81,7 +81,7 @@ glabel func_80079B44
 /* 07A85C 80079C5C 11200026 */  beqz  $t1, .L80079CF8
 /* 07A860 80079C60 00415024 */   and   $t2, $v0, $at
 /* 07A864 80079C64 24A40010 */  addiu $a0, $a1, 0x10
-/* 07A868 80079C68 0C03477C */  jal   func_800D1DF0
+/* 07A868 80079C68 0C03477C */  jal   osSpTaskYielded
 /* 07A86C 80079C6C AFA50034 */   sw    $a1, 0x34($sp)
 /* 07A870 80079C70 8FA50034 */  lw    $a1, 0x34($sp)
 /* 07A874 80079C74 10400015 */  beqz  $v0, .L80079CCC

@@ -1,4 +1,4 @@
-glabel func_800CCFE0
+glabel osContStartReadData
 /* 0CDBE0 800CCFE0 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0CDBE4 800CCFE4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0CDBE8 800CCFE8 AFA40020 */  sw    $a0, 0x20($sp)

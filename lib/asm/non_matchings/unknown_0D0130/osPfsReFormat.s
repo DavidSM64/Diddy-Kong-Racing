@@ -1,4 +1,4 @@
-glabel func_800CFF90
+glabel osPfsReFormat
 /* 0D0B90 800CFF90 27BDFEB0 */  addiu $sp, $sp, -0x150
 /* 0D0B94 800CFF94 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D0B98 800CFF98 AFA40150 */  sw    $a0, 0x150($sp)

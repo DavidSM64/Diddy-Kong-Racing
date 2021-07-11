@@ -175,7 +175,7 @@ glabel func_80094170
 /* 094FE8 800943E8 29A10004 */  slti  $at, $t5, 4
 /* 094FEC 800943EC 14200066 */  bnez  $at, .L80094588
 /* 094FF0 800943F0 ACCD0000 */   sw    $t5, ($a2)
-/* 094FF4 800943F4 0C02516C */  jal   func_800945B0
+/* 094FF4 800943F4 0C02516C */  jal   n_alSynRemovePlayer
 /* 094FF8 800943F8 00000000 */   nop   
 /* 094FFC 800943FC 3C08800E */  lui   $t0, %hi(D_800E0988) # $t0, 0x800e
 /* 095000 80094400 25080988 */  addiu $t0, %lo(D_800E0988) # addiu $t0, $t0, 0x988

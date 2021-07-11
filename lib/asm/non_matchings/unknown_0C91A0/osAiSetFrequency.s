@@ -1,4 +1,4 @@
-glabel func_800C8600
+glabel osAiSetFrequency
 /* 0C9200 800C8600 3C0E800E */  lui   $t6, %hi(osViClock) # $t6, 0x800e
 /* 0C9204 800C8604 8DCE4878 */  lw    $t6, %lo(osViClock)($t6)
 /* 0C9208 800C8608 44844000 */  mtc1  $a0, $f8

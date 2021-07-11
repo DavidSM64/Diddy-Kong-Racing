@@ -137,7 +137,7 @@ void free_object_model(ObjectModel *model) {
     if (model->animations != NULL) {
         // Small issue with this loop too.
         for (i = 0; i < model->numberOfAnimations; i++) {
-            free_from_memory_pool(model->animations[i].unk0 - 1);
+            free_from_memory_pool(model->animations[i].anim - 1);
         }
         free_from_memory_pool(model->animations);
     }
