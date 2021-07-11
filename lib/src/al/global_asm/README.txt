@@ -1,0 +1,1 @@
+This folder contains source files that still have GLOBAL_ASM() in them. This is necessary because asm-processor currently does not yet support -O3.
