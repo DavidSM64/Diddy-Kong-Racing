@@ -100,7 +100,14 @@ typedef struct
 #define DIR_STATUS_UNKNOWN 1
 #define DIR_STATUS_OCCUPIED 2
 
-
+extern u8 __osContLastCmd;
+extern OSTimer __osEepromTimer;
+extern OSMesg __osEepromTimerMsg;
+extern OSMesgQueue __osEepromTimerQ;
+extern OSPifRam __osEepPifRam;
+extern OSPifRam __osContPifRam;
+extern OSPifRam __osPfsPifRam;
+extern u8 __osMaxControllers;
 
 //some version of this almost certainly existed since there's plenty of times where it's used right before a return 0
 #define ERRCK(fn) \

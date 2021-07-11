@@ -135,7 +135,7 @@ COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 
 LIB_DIRS := lib
 ASM_DIRS := asm asm/boot asm/assets data lib/asm
-SRC_DIRS := src lib/src lib/src/al
+SRC_DIRS := src lib/src lib/src/al lib/src/os
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c lib/src/*.c)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
@@ -259,6 +259,7 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
@@ -266,26 +267,11 @@ $(BUILD_DIR)/lib/src/unknown_0D3160.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D3360.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D5EC0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
-$(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osGetTime.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osJamMesg.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osPfsFreeBlocks.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osPiGetCmdQueue.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSetEventMesg.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSetTime.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osEepromWrite.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osEepromRead.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/__osSiRawReadIo.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/__osSiRawWriteIo.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osStartThread.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViMgr.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/src/osViSwapBuffer.o : OPT_FLAGS := -O1
 
 ######################## Targets #############################
 

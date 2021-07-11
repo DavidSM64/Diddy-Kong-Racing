@@ -13,7 +13,7 @@ s32 D_800E38D0 = 0;
 
 s32 D_8012CE20[2];
 s32 D_8012CE28[6];
-s32 D_8012CE40[15];     
+s32 __osEepPifRam[15];     
 s32 D_8012CE7C;     
 s32 viThread[172];    
 s32 viEventQueue[6];   

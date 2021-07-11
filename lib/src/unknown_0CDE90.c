@@ -7,7 +7,7 @@
 #include "controller.h"
 
 extern OSPifRam __osPfsPifRam; //__osPfsPifRam
-extern u8 D_8012CD90; //__osContLastCmd
+extern u8 __osContLastCmd; //__osContLastCmd
 extern u8 __osMaxControllers;//__osMaxControllers
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CDE90/osPfsIsPlug.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CDE90/__osPfsRequestData.s")

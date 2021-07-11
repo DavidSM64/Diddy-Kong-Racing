@@ -4,8 +4,6 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osPackEepWriteData.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osEepStatus.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rshift.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rem.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_div.s")

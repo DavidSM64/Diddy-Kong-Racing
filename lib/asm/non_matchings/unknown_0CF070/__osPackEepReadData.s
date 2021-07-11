@@ -1,18 +1,18 @@
 glabel __osPackEepReadData
 /* 0CF070 800CE470 27BDFFE8 */  addiu $sp, $sp, -0x18
-/* 0CF074 800CE474 3C0E8013 */  lui   $t6, %hi(D_8012CE40) # $t6, 0x8013
-/* 0CF078 800CE478 25CECE40 */  addiu $t6, %lo(D_8012CE40) # addiu $t6, $t6, -0x31c0
+/* 0CF074 800CE474 3C0E8013 */  lui   $t6, %hi(__osEepPifRam) # $t6, 0x8013
+/* 0CF078 800CE478 25CECE40 */  addiu $t6, %lo(__osEepPifRam) # addiu $t6, $t6, -0x31c0
 /* 0CF07C 800CE47C 308400FF */  andi  $a0, $a0, 0xff
 /* 0CF080 800CE480 AFAE0014 */  sw    $t6, 0x14($sp)
 /* 0CF084 800CE484 AFA00004 */  sw    $zero, 4($sp)
 .L800CE488:
 /* 0CF088 800CE488 8FB80004 */  lw    $t8, 4($sp)
 /* 0CF08C 800CE48C 8FA80004 */  lw    $t0, 4($sp)
-/* 0CF090 800CE490 3C018013 */  lui   $at, %hi(D_8012CE40) # $at, 0x8013
+/* 0CF090 800CE490 3C018013 */  lui   $at, %hi(__osEepPifRam) # $at, 0x8013
 /* 0CF094 800CE494 0018C880 */  sll   $t9, $t8, 2
 /* 0CF098 800CE498 00390821 */  addu  $at, $at, $t9
 /* 0CF09C 800CE49C 240F00FF */  li    $t7, 255
-/* 0CF0A0 800CE4A0 AC2FCE40 */  sw    $t7, %lo(D_8012CE40)($at)
+/* 0CF0A0 800CE4A0 AC2FCE40 */  sw    $t7, %lo(__osEepPifRam)($at)
 /* 0CF0A4 800CE4A4 25090001 */  addiu $t1, $t0, 1
 /* 0CF0A8 800CE4A8 29210010 */  slti  $at, $t1, 0x10
 /* 0CF0AC 800CE4AC 1420FFF6 */  bnez  $at, .L800CE488

@@ -5,8 +5,8 @@ glabel func_80071D30
 /* 07293C 80071D3C AFA40050 */   sw    $a0, 0x50($sp)
 /* 072940 80071D40 8FAF0050 */  lw    $t7, 0x50($sp)
 /* 072944 80071D44 240E0003 */  li    $t6, 3
-/* 072948 80071D48 3C018013 */  lui   $at, %hi(D_8012CD90) # $at, 0x8013
-/* 07294C 80071D4C A02ECD90 */  sb    $t6, %lo(D_8012CD90)($at)
+/* 072948 80071D48 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
+/* 07294C 80071D4C A02ECD90 */  sb    $t6, %lo(__osContLastCmd)($at)
 /* 072950 80071D50 8DF80008 */  lw    $t8, 8($t7)
 /* 072954 80071D54 3C088012 */  lui   $t0, %hi(D_80123DD0) # $t0, 0x8012
 /* 072958 80071D58 25083DD0 */  addiu $t0, %lo(D_80123DD0) # addiu $t0, $t0, 0x3dd0
