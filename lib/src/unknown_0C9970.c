@@ -6,4 +6,4 @@
 
 u8 D_800E3790 = 0;
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9970/func_800C8D70.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9970/osAiSetNextBuffer.s")

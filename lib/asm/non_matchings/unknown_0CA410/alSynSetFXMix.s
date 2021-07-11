@@ -1,4 +1,4 @@
-glabel func_800C9810
+glabel alSynSetFXMix
 /* 0CA410 800C9810 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0CA414 800C9814 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0CA418 800C9818 AFA40018 */  sw    $a0, 0x18($sp)

@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA2F0/func_800C96F0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA2F0/alSynStartVoice.s")

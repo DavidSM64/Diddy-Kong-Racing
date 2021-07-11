@@ -377,7 +377,7 @@ typedef struct unk800535C4_3 {
     u8 unk0[0x40];
 } unk800535C4_3;
 
-void func_8006F64C(unk800535C4_3*, f32, f32, f32, s32*, s32*, s32*);
+void guMtxXFMF(unk800535C4_3*, f32, f32, f32, s32*, s32*, s32*);
 
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     unk800535C4_3 sp30;
@@ -391,7 +391,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     D_8011D510.unk8 = 1;
     func_8006FE74(&sp30, &D_8011D510);
 
-    func_8006F64C(&sp30, 0, -1, 0, &arg1->unkA0, &arg1->unkA4, &arg1->unk9C);
+    guMtxXFMF(&sp30, 0, -1, 0, &arg1->unkA0, &arg1->unkA4, &arg1->unk9C);
 }
 
 void func_80053664(Object_64 *arg0) {

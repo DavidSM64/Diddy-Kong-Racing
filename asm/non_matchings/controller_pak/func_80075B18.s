@@ -104,7 +104,7 @@ glabel func_80075B18
 /* 07689C 80075C9C 161EFFCE */  bne   $s0, $fp, .L80075BD8
 /* 0768A0 80075CA0 2631000A */   addiu $s1, $s1, 0xa
 /* 0768A4 80075CA4 8E840000 */  lw    $a0, ($s4)
-/* 0768A8 80075CA8 0C0333F8 */  jal   func_800CCFE0
+/* 0768A8 80075CA8 0C0333F8 */  jal   osContStartReadData
 /* 0768AC 80075CAC 00000000 */   nop   
 /* 0768B0 80075CB0 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 0768B4 80075CB4 8FB00018 */  lw    $s0, 0x18($sp)

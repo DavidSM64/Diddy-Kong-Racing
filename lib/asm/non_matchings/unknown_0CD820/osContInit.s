@@ -1,4 +1,4 @@
-glabel func_800CCC20
+glabel osContInit
 /* 0CD820 800CCC20 27BDFF80 */  addiu $sp, $sp, -0x80
 /* 0CD824 800CCC24 3C0E800E */  lui   $t6, %hi(D_800E38C0) # $t6, 0x800e
 /* 0CD828 800CCC28 8DCE38C0 */  lw    $t6, %lo(D_800E38C0)($t6)
@@ -91,7 +91,7 @@ glabel func_800CCC20
 /* 0CD978 800CCD78 24180004 */  li    $t8, 4
 /* 0CD97C 800CCD7C 3C018013 */  lui   $at, %hi(__osMaxControllers) # $at, 0x8013
 /* 0CD980 800CCD80 A038CD91 */  sb    $t8, %lo(__osMaxControllers)($at)
-/* 0CD984 800CCD84 0C0333BA */  jal   func_800CCEE8
+/* 0CD984 800CCD84 0C0333BA */  jal   __osPackRequestData
 /* 0CD988 800CCD88 00002025 */   move  $a0, $zero
 /* 0CD98C 800CCD8C 3C058013 */  lui   $a1, %hi(D_8012CD50) # $a1, 0x8013
 /* 0CD990 800CCD90 24A5CD50 */  addiu $a1, %lo(D_8012CD50) # addiu $a1, $a1, -0x32b0
@@ -112,7 +112,7 @@ glabel func_800CCC20
 /* 0CD9CC 800CCDCC 0C0322EC */  jal   osRecvMesg
 /* 0CD9D0 800CCDD0 24060001 */   li    $a2, 1
 /* 0CD9D4 800CCDD4 8FA40084 */  lw    $a0, 0x84($sp)
-/* 0CD9D8 800CCDD8 0C033386 */  jal   func_800CCE18
+/* 0CD9D8 800CCDD8 0C033386 */  jal   __osContGetInitData
 /* 0CD9DC 800CCDDC 8FA50088 */   lw    $a1, 0x88($sp)
 /* 0CD9E0 800CCDE0 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
 /* 0CD9E4 800CCDE4 0C033580 */  jal   __osSiCreateAccessQueue

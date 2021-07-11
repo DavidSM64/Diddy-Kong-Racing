@@ -55,7 +55,7 @@ glabel func_80041A90
 /* 042760 80041B60 AFB80018 */  sw    $t8, 0x18($sp)
 /* 042764 80041B64 AFAF0014 */  sw    $t7, 0x14($sp)
 /* 042768 80041B68 AFAE0010 */  sw    $t6, 0x10($sp)
-/* 04276C 80041B6C 0C01BD93 */  jal   func_8006F64C
+/* 04276C 80041B6C 0C01BD93 */  jal   guMtxXFMF
 /* 042770 80041B70 27A4008C */   addiu $a0, $sp, 0x8c
 /* 042774 80041B74 8FA800FC */  lw    $t0, 0xfc($sp)
 /* 042778 80041B78 C7A400DC */  lwc1  $f4, 0xdc($sp)

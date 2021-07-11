@@ -4,4 +4,4 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D4270/func_800D3670.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D4270/__osAiDeviceBusy.s")

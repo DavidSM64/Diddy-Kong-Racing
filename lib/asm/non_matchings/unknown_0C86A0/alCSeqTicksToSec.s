@@ -3,7 +3,7 @@ glabel D_800E94B8
 .double 1000000.0
 
 .text
-glabel func_800C8380
+glabel alCSeqTicksToSec
 /* 0C8F80 800C8380 44852000 */  mtc1  $a1, $f4
 /* 0C8F84 800C8384 44864000 */  mtc1  $a2, $f8
 /* 0C8F88 800C8388 3C014F80 */  li    $at, 0x4F800000 # 4294967296.000000

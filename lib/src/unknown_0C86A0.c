@@ -19,6 +19,6 @@ s32 alCSeqGetTicks(ALCSeq *seq)
     return seq->lastTicks; 
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/func_800C8284.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/func_800C8380.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqSecToTicks.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqTicksToSec.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/__alCSeqNextDelta.s")

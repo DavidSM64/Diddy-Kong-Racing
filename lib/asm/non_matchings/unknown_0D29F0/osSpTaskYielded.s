@@ -1,7 +1,7 @@
-glabel func_800D1DF0
+glabel osSpTaskYielded
 /* 0D29F0 800D1DF0 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0D29F4 800D1DF4 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0D29F8 800D1DF8 0C0358FC */  jal   func_800D63F0
+/* 0D29F8 800D1DF8 0C0358FC */  jal   __osSpGetStatus
 /* 0D29FC 800D1DFC AFA40020 */   sw    $a0, 0x20($sp)
 /* 0D2A00 800D1E00 AFA2001C */  sw    $v0, 0x1c($sp)
 /* 0D2A04 800D1E04 8FAE001C */  lw    $t6, 0x1c($sp)

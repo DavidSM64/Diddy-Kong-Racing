@@ -5,4 +5,4 @@
 #include "macros.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D5390/osPiRawWriteIo.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D5390/func_800D47F0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D5390/__osSetHWIntrRoutine.s")

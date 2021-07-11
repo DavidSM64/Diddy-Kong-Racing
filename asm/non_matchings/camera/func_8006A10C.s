@@ -17,10 +17,10 @@ glabel func_8006A10C
 /* 06AD48 8006A148 3C068012 */  lui   $a2, %hi(D_80121100) # $a2, 0x8012
 /* 06AD4C 8006A14C 24C61100 */  addiu $a2, %lo(D_80121100) # addiu $a2, $a2, 0x1100
 /* 06AD50 8006A150 248410E0 */  addiu $a0, %lo(D_801210E0) # addiu $a0, $a0, 0x10e0
-/* 06AD54 8006A154 0C033308 */  jal   func_800CCC20
+/* 06AD54 8006A154 0C033308 */  jal   osContInit
 /* 06AD58 8006A158 27A50023 */   addiu $a1, $sp, 0x23
 /* 06AD5C 8006A15C 3C048012 */  lui   $a0, %hi(D_801210E0) # $a0, 0x8012
-/* 06AD60 8006A160 0C0333F8 */  jal   func_800CCFE0
+/* 06AD60 8006A160 0C0333F8 */  jal   osContStartReadData
 /* 06AD64 8006A164 248410E0 */   addiu $a0, %lo(D_801210E0) # addiu $a0, $a0, 0x10e0
 /* 06AD68 8006A168 0C01A90D */  jal   func_8006A434
 /* 06AD6C 8006A16C 00000000 */   nop   

@@ -1,4 +1,4 @@
-glabel func_800CCE18
+glabel __osContGetInitData
 /* 0CDA18 800CCE18 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
 /* 0CDA1C 800CCE1C 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
 /* 0CDA20 800CCE20 27BDFFE8 */  addiu $sp, $sp, -0x18

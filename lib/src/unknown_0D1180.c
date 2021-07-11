@@ -5,6 +5,6 @@
 #include "macros.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/osPfsFileState.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/func_800D0870.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/func_800D0B50.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/func_800D0D88.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/osPfsDeleteFile.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/__osPfsReleasePages.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/__osBlockSum.s")

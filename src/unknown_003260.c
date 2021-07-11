@@ -106,7 +106,7 @@ void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
     D_80115F90 = arg2;
     D_80115F94 = c->heap;
     c->dmaproc = &func_80003008;
-    c->outputRate = func_800C8600(22050);
+    c->outputRate = osAiSetFrequency(22050);
     D_8011962C = (((f32) c->outputRate)*2.0f)/gVideoRefreshRate;
     if(D_8011962C < 0){
     }

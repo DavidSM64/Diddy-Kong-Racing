@@ -13,7 +13,7 @@
 .include "asm/unknown_070110/func_8006F53C.s"
 .include "asm/unknown_070110/func_8006F564.s"
 .include "asm/unknown_070110/func_8006F5E0.s"
-.include "asm/unknown_070110/func_8006F64C.s"
+.include "asm/unknown_070110/guMtxXFMF.s"
 .include "asm/unknown_070110/func_8006F6EC.s"
 .include "asm/unknown_070110/func_8006F768.s"
 .include "asm/unknown_070110/func_8006F870.s"

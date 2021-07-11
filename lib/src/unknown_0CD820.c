@@ -24,9 +24,9 @@ s32 D_8012CDE8[12];
 s32 D_8012CE18;
 s32 D_8012CE1C;
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CCC20.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CCE18.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CCEE8.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CCFE0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CD0A4.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/osContInit.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/__osContGetInitData.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/__osPackRequestData.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/osContStartReadData.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/osContGetReadData.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/func_800CD14C.s")

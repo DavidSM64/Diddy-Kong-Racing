@@ -1,4 +1,4 @@
-glabel func_800CFDA8
+glabel corrupted
 /* 0D09A8 800CFDA8 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0D09AC 800CFDAC AFA50034 */  sw    $a1, 0x34($sp)
 /* 0D09B0 800CFDB0 93B80034 */  lbu   $t8, 0x34($sp)

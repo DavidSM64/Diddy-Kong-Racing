@@ -1,4 +1,4 @@
-glabel func_800D47F0
+glabel __osSetHWIntrRoutine
 /* 0D53F0 800D47F0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0D53F4 800D47F4 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0D53F8 800D47F8 AFA40028 */  sw    $a0, 0x28($sp)

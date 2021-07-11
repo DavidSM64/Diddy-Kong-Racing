@@ -1,4 +1,4 @@
-glabel func_800C8D70
+glabel osAiSetNextBuffer
 /* 0C9970 800C8D70 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0C9974 800C8D74 3C0F800E */  lui   $t7, %hi(D_800E3790) # $t7, 0x800e
 /* 0C9978 800C8D78 91EF3790 */  lbu   $t7, %lo(D_800E3790)($t7)
@@ -26,7 +26,7 @@ glabel func_800C8D70
 /* 0C99C8 800C8DC8 3C01800E */  lui   $at, %hi(D_800E3790) # $at, 0x800e
 /* 0C99CC 800C8DCC A0203790 */  sb    $zero, %lo(D_800E3790)($at)
 .L800C8DD0:
-/* 0C99D0 800C8DD0 0C034D9C */  jal   func_800D3670
+/* 0C99D0 800C8DD0 0C034D9C */  jal   __osAiDeviceBusy
 /* 0C99D4 800C8DD4 00000000 */   nop   
 /* 0C99D8 800C8DD8 10400003 */  beqz  $v0, .L800C8DE8
 /* 0C99DC 800C8DDC 00000000 */   nop   

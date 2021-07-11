@@ -1,4 +1,4 @@
-glabel func_800D0870
+glabel osPfsDeleteFile
 /* 0D1470 800D0870 27BDFEA0 */  addiu $sp, $sp, -0x160
 /* 0D1474 800D0874 AFA50164 */  sw    $a1, 0x164($sp)
 /* 0D1478 800D0878 97AE0166 */  lhu   $t6, 0x166($sp)
@@ -114,7 +114,7 @@ glabel func_800D0870
 /* 0D1608 800D0A08 27A50054 */  addiu $a1, $sp, 0x54
 /* 0D160C 800D0A0C 93A6002F */  lbu   $a2, 0x2f($sp)
 /* 0D1610 800D0A10 27A70032 */  addiu $a3, $sp, 0x32
-/* 0D1614 800D0A14 0C0342D4 */  jal   func_800D0B50
+/* 0D1614 800D0A14 0C0342D4 */  jal   __osPfsReleasePages
 /* 0D1618 800D0A18 AFAF0010 */   sw    $t7, 0x10($sp)
 /* 0D161C 800D0A1C AFA20154 */  sw    $v0, 0x154($sp)
 /* 0D1620 800D0A20 8FA80154 */  lw    $t0, 0x154($sp)

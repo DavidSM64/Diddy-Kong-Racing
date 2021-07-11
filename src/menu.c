@@ -3556,15 +3556,15 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80093A40.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80093D40.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80094170.s")
 
-void func_800945B0(void) {
+void n_alSynRemovePlayer(void) {
     func_80072298(1);
     func_800C5620(7);
     func_800C5494(7);
     D_800E0984 = 0;
 }
 
-void func_800945E4(void) {
-    func_800945B0();
+void n_alSeqpDelete(void) {
+    n_alSynRemovePlayer();
 }
 
 void func_80094604(void) {

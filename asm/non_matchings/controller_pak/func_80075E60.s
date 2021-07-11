@@ -32,7 +32,7 @@ glabel func_80075E60
 /* 076AD4 80075ED4 01F82021 */  addu  $a0, $t7, $t8
 /* 076AD8 80075ED8 AFA40054 */  sw    $a0, 0x54($sp)
 /* 076ADC 80075EDC 27A50068 */  addiu $a1, $sp, 0x68
-/* 076AE0 80075EE0 0C0340E4 */  jal   func_800D0390
+/* 076AE0 80075EE0 0C0340E4 */  jal   osPfsNumFiles
 /* 076AE4 80075EE4 27A60064 */   addiu $a2, $sp, 0x64
 /* 076AE8 80075EE8 10400007 */  beqz  $v0, .L80075F08
 /* 076AEC 80075EEC 00000000 */   nop   

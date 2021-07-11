@@ -202,7 +202,7 @@ s32 D_8011D4BC;
 
 /******************************/
 
-extern void func_8006F64C(void*, f32, f32, f32, f32*, f32*, f32*);
+extern void guMtxXFMF(void*, f32, f32, f32, f32*, f32*, f32*);
 
 
 
@@ -592,7 +592,7 @@ void func_80031018(void){
     sp_38.unk08 = 1.0f;
     
     func_8006FC30(&sp_50, &sp_38);
-    func_8006F64C(&sp_50, sp_34, sp_30, sp_2C, &sp_34, &sp_30, &sp_2C);
+    guMtxXFMF(&sp_50, sp_34, sp_30, sp_2C, &sp_34, &sp_30, &sp_2C);
     D_8011D468.unk00 = sp_34;
     D_8011D468.unk04 = sp_30;
     D_8011D468.unk08 = sp_2C;

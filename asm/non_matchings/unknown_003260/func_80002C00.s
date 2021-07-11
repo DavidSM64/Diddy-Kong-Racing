@@ -19,7 +19,7 @@ glabel func_80002C00
 /* 003844 80002C44 3C01800E */  lui   $at, %hi(D_800DC69C) # $at, 0x800e
 /* 003848 80002C48 00057080 */  sll   $t6, $a1, 2
 /* 00384C 80002C4C 01C02825 */  move  $a1, $t6
-/* 003850 80002C50 0C03235C */  jal   func_800C8D70
+/* 003850 80002C50 0C03235C */  jal   osAiSetNextBuffer
 /* 003854 80002C54 AC2EC69C */   sw    $t6, %lo(D_800DC69C)($at)
 /* 003858 80002C58 3C0F800E */  lui   $t7, %hi(D_800DC68C) # $t7, 0x800e
 /* 00385C 80002C5C 81EFC68C */  lb    $t7, %lo(D_800DC68C)($t7)
@@ -28,7 +28,7 @@ glabel func_80002C00
 /* 003868 80002C68 00000000 */   nop   
 /* 00386C 80002C6C 0C01BE53 */  jal   get_random_number_from_range
 /* 003870 80002C70 24052710 */   li    $a1, 10000
-/* 003874 80002C74 0C032180 */  jal   func_800C8600
+/* 003874 80002C74 0C032180 */  jal   osAiSetFrequency
 /* 003878 80002C78 24445622 */   addiu $a0, $v0, 0x5622
 .L80002C7C:
 /* 00387C 80002C7C 0C032388 */  jal   func_800C8E20

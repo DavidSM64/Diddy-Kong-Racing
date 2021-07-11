@@ -33,7 +33,7 @@ __OSViContext *__osViNext = &vi[1];
 #define VI_NTSC_CLOCK 48681812
 s32 osViClock = VI_NTSC_CLOCK;
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/func_800D1DF0.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0D29F0/osSpTaskYielded.s")
 
 void *osViGetCurrentFramebuffer(void){
     register u32 saveMask;

@@ -175,7 +175,7 @@ unk80120AC0 *func_80069D20(void);
 void func_800014BC(f32 arg0);
 s8* get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
-void func_8006F64C(s32*, f32, f32, f32, f32*, f32*, f32*);
+void guMtxXFMF(s32*, f32, f32, f32, f32*, f32*, f32*);
 void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);
 void func_8006F870(s32*, s32*);
 s16 func_80029F18(f32, f32, f32);    
@@ -778,7 +778,7 @@ f32 func_80069DC8(f32 arg0, f32 arg1, f32 arg2) {
     f32 sp34;
     f32 sp30;
     f32 returnVal;
-    func_8006F64C(&D_80120F60, arg0, arg1, arg2, &sp34, &sp30, &returnVal);
+    guMtxXFMF(&D_80120F60, arg0, arg1, arg2, &sp34, &sp30, &returnVal);
     return returnVal;
 }
 
@@ -812,8 +812,8 @@ s32 func_8006A10C(void) {
     u8 sp23;
     osCreateMesgQueue(&D_801210E0, &D_801210F8, 1);
     osSetEventMesg(5, &D_801210E0, D_801210FC);
-    func_800CCC20(&D_801210E0, &sp23, &D_80121100);
-    func_800CCFE0(&D_801210E0);
+    osContInit(&D_801210E0, &sp23, &D_80121100);
+    osContStartReadData(&D_801210E0);
     func_8006A434();
     D_800DD300 = 0;
     if ((sp23 & 1) && !(D_80121100[3] & 8)) {
