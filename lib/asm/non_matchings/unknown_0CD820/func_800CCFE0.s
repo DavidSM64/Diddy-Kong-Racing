@@ -4,8 +4,8 @@ glabel func_800CCFE0
 /* 0CDBE8 800CCFE8 AFA40020 */  sw    $a0, 0x20($sp)
 /* 0CDBEC 800CCFEC 0C033594 */  jal   __osSiGetAccess
 /* 0CDBF0 800CCFF0 AFA0001C */   sw    $zero, 0x1c($sp)
-/* 0CDBF4 800CCFF4 3C0E8013 */  lui   $t6, %hi(D_8012CD90) # $t6, 0x8013
-/* 0CDBF8 800CCFF8 91CECD90 */  lbu   $t6, %lo(D_8012CD90)($t6)
+/* 0CDBF4 800CCFF4 3C0E8013 */  lui   $t6, %hi(__osContLastCmd) # $t6, 0x8013
+/* 0CDBF8 800CCFF8 91CECD90 */  lbu   $t6, %lo(__osContLastCmd)($t6)
 /* 0CDBFC 800CCFFC 24010001 */  li    $at, 1
 /* 0CDC00 800CD000 11C1000C */  beq   $t6, $at, .L800CD034
 /* 0CDC04 800CD004 00000000 */   nop   
@@ -41,10 +41,10 @@ glabel func_800CCFE0
 /* 0CDC74 800CD074 0C0335B0 */  jal   __osSiRawStartDma
 /* 0CDC78 800CD078 00002025 */   move  $a0, $zero
 /* 0CDC7C 800CD07C 240A0001 */  li    $t2, 1
-/* 0CDC80 800CD080 3C018013 */  lui   $at, %hi(D_8012CD90) # $at, 0x8013
+/* 0CDC80 800CD080 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
 /* 0CDC84 800CD084 AFA2001C */  sw    $v0, 0x1c($sp)
 /* 0CDC88 800CD088 0C0335A5 */  jal   __osSiRelAccess
-/* 0CDC8C 800CD08C A02ACD90 */   sb    $t2, %lo(D_8012CD90)($at)
+/* 0CDC8C 800CD08C A02ACD90 */   sb    $t2, %lo(__osContLastCmd)($at)
 /* 0CDC90 800CD090 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 0CDC94 800CD094 8FA2001C */  lw    $v0, 0x1c($sp)
 /* 0CDC98 800CD098 27BD0020 */  addiu $sp, $sp, 0x20

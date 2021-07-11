@@ -14,8 +14,8 @@ glabel __osContRamRead
 /* 0CE8D0 800CDCD0 0C033594 */  jal   __osSiGetAccess
 /* 0CE8D4 800CDCD4 AFAF0028 */   sw    $t7, 0x28($sp)
 /* 0CE8D8 800CDCD8 24180002 */  li    $t8, 2
-/* 0CE8DC 800CDCDC 3C018013 */  lui   $at, %hi(D_8012CD90) # $at, 0x8013
-/* 0CE8E0 800CDCE0 A038CD90 */  sb    $t8, %lo(D_8012CD90)($at)
+/* 0CE8DC 800CDCDC 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
+/* 0CE8E0 800CDCE0 A038CD90 */  sb    $t8, %lo(__osContLastCmd)($at)
 /* 0CE8E4 800CDCE4 8FA40064 */  lw    $a0, 0x64($sp)
 /* 0CE8E8 800CDCE8 0C0337B9 */  jal   __osPackRamReadData
 /* 0CE8EC 800CDCEC 97A5006A */   lhu   $a1, 0x6a($sp)

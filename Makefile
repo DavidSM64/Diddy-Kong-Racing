@@ -41,6 +41,23 @@ ifeq ($(DUMMY),FAIL)
   $(error Failed to build tools)
 endif
 
+########## Recomp ##########
+
+# List of IDO tools required for the repo.
+# NOTE: If you are adding a tool here, make sure to update the Makefile in `/tools/ido-static-recomp/`!
+RECOMP_TOOLS := cc cfe uopt ugen as1 ujoin uld usplit umerge
+
+RECOMP_DIR := ./tools/ido5.3_recomp/
+RECOMP_TOOLS_PATHS = $(addprefix $(RECOMP_DIR),$(RECOMP_TOOLS))
+
+# Checks if all the recomp tools exist.
+$(foreach p,$(RECOMP_TOOLS_PATHS),$(if $(wildcard $(p)),,$(info $(p) does not exist!) $(eval runRecomp:=yes)))
+
+# If any of the tools do not exist, then recomp needs to run to build them.
+ifeq ($(runRecomp),yes)
+  DUMMY != make -s -C tools/ido-static-recomp >&2 || echo FAIL
+endif
+
 ######## Extract Assets & Microcode ########
 
 DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION) >&2 || echo FAIL
@@ -66,11 +83,6 @@ endif
 BUILD_DIR = build/$(VERSION)
 
 ##################### Compiler Options #######################
-
-# If the `tools/ido5.3_recomp` directory doesn't exist, then we need to run recomp.
-ifeq ($(wildcard ./tools/ido5.3_recomp/.*),)
-  DUMMY != make -s -C tools/ido-static-recomp >&2 || echo FAIL
-endif 
 
 # Check if a binutils package is installed on the system.
 ifeq ($(shell type mips-linux-gnu-ld >/dev/null 2>/dev/null; echo $$?), 0)
@@ -101,8 +113,8 @@ C_DEFINES := $(foreach d,$(DEFINES),-D$(d))
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
 ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
-INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
-CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(INCLUDE_CFLAGS) $(MIPSISET) $(DEF_INC_CFLAGS)
+INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I .
+CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS)
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -123,7 +135,7 @@ COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 
 LIB_DIRS := lib
 ASM_DIRS := asm asm/boot asm/assets data lib/asm
-SRC_DIRS := src src/mips1 lib/src
+SRC_DIRS := src lib/src lib/src/al lib/src/os
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(wildcard src/*.c lib/src/*.c)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
@@ -246,6 +258,8 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 
 $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
@@ -253,26 +267,11 @@ $(BUILD_DIR)/lib/src/unknown_0D3160.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D3360.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D5EC0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
-$(BUILD_DIR)/lib/src/osCreateThread.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osGetThreadPri.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osGetTime.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osJamMesg.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osPfsFreeBlocks.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osPiGetCmdQueue.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osPiStartDma.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osRecvMesg.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSendMesg.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSetEventMesg.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSetTime.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osEepromWrite.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/osEepromRead.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/__osSiRawReadIo.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/__osSiRawWriteIo.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osStartThread.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osStopThread.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osTimer.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osViBlack.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osViMgr.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/src/osViSwapBuffer.o : OPT_FLAGS := -O1
 
 ######################## Targets #############################
 

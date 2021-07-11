@@ -114,9 +114,9 @@ glabel func_800CCC20
 /* 0CD9D4 800CCDD4 8FA40084 */  lw    $a0, 0x84($sp)
 /* 0CD9D8 800CCDD8 0C033386 */  jal   func_800CCE18
 /* 0CD9DC 800CCDDC 8FA50088 */   lw    $a1, 0x88($sp)
-/* 0CD9E0 800CCDE0 3C018013 */  lui   $at, %hi(D_8012CD90) # $at, 0x8013
+/* 0CD9E0 800CCDE0 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
 /* 0CD9E4 800CCDE4 0C033580 */  jal   __osSiCreateAccessQueue
-/* 0CD9E8 800CCDE8 A020CD90 */   sb    $zero, %lo(D_8012CD90)($at)
+/* 0CD9E8 800CCDE8 A020CD90 */   sb    $zero, %lo(__osContLastCmd)($at)
 /* 0CD9EC 800CCDEC 3C048013 */  lui   $a0, %hi(D_8012CDB8) # $a0, 0x8013
 /* 0CD9F0 800CCDF0 3C058013 */  lui   $a1, %hi(D_8012CDD0) # $a1, 0x8013
 /* 0CD9F4 800CCDF4 24A5CDD0 */  addiu $a1, %lo(D_8012CDD0) # addiu $a1, $a1, -0x3230

@@ -1,8 +1,8 @@
 glabel __osPfsRequestData
 /* 0CE030 800CD430 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 0CE034 800CD434 308400FF */  andi  $a0, $a0, 0xff
-/* 0CE038 800CD438 3C018013 */  lui   $at, %hi(D_8012CD90) # $at, 0x8013
-/* 0CE03C 800CD43C A024CD90 */  sb    $a0, %lo(D_8012CD90)($at)
+/* 0CE038 800CD438 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
+/* 0CE03C 800CD43C A024CD90 */  sb    $a0, %lo(__osContLastCmd)($at)
 /* 0CE040 800CD440 AFA00000 */  sw    $zero, ($sp)
 .L800CD444:
 /* 0CE044 800CD444 8FAE0000 */  lw    $t6, ($sp)

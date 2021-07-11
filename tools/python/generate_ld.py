@@ -28,7 +28,7 @@ LATE_DATA_FILES = [
 
 BSS_LIB_ORDER_FILES = [
     BUILD_DIR + '/lib/src/osViMgr.o',
-    BUILD_DIR + '/lib/src/osSetEventMesg.o',
+    BUILD_DIR + '/lib/src/os/osSetEventMesg.o',
     BUILD_DIR + '/lib/src/unknown_0CD820.o',
     BUILD_DIR + '/lib/src/unknown_0CE200.o'
 ]
@@ -201,7 +201,7 @@ class GenerateLD:
         self.file.write('\n')
         
     def append_files(self, files, extensions, directory, outputDir):
-        filenames = FileUtil.get_filenames_from_directory(directory, extensions)
+        filenames = FileUtil.get_filenames_from_directory_recursive(directory, extensions)
         regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
         for filename in filenames:
             with open(directory + '/' + filename, 'r') as inFile:

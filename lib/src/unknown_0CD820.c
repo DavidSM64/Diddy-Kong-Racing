@@ -8,7 +8,7 @@ s32 D_800E38C0 = 0;
 
 s32 D_8012CD50[15];
 s32 D_8012CD8C;
-s8 D_8012CD90;
+s8 __osContLastCmd;
 s8 __osMaxControllers; // 8012CD91
 s32 D_8012CD94;
 s32 D_8012CD98[6];
