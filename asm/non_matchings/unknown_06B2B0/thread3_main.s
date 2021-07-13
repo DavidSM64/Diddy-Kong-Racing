@@ -23,7 +23,7 @@ glabel thread3_main
 /* 06CF80 8006C380 00000000 */   nop   
 /* 06CF84 8006C384 0C000A9D */  jal   audioStopThread
 /* 06CF88 8006C388 00000000 */   nop   
-/* 06CF8C 8006C38C 0C031CEF */  jal   func_800C73BC
+/* 06CF8C 8006C38C 0C031CEF */  jal   stop_thread30
 /* 06CF90 8006C390 00000000 */   nop   
 /* 06CF94 8006C394 3C0400AA */  lui   $a0, (0x00AAAA82 >> 16) # lui $a0, 0xaa
 /* 06CF98 8006C398 0C033490 */  jal   __osSpSetStatus

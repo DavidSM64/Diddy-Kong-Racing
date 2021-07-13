@@ -62,7 +62,7 @@ glabel menu_game_select_loop
 /* 08D49C 8008C89C AC2CF4B8 */   sw    $t4, %lo(gIsInTracksMode)($at)
 /* 08D4A0 8008C8A0 2404FFFF */  li    $a0, -1
 /* 08D4A4 8008C8A4 2405FFFF */  li    $a1, -1
-/* 08D4A8 8008C8A8 0C01B8BA */  jal   func_8006E2E8
+/* 08D4A8 8008C8A8 0C01B8BA */  jal   load_level_for_menu
 /* 08D4AC 8008C8AC 00003025 */   move  $a2, $zero
 /* 08D4B0 8008C8B0 0C0204F4 */  jal   menu_init
 /* 08D4B4 8008C8B4 2404000F */   li    $a0, 15
@@ -100,7 +100,7 @@ glabel menu_game_select_loop
 /* 08D528 8008C928 38CD0003 */  xori  $t5, $a2, 3
 /* 08D52C 8008C92C 01A03025 */  move  $a2, $t5
 .L8008C930:
-/* 08D530 8008C930 0C01B8BA */  jal   func_8006E2E8
+/* 08D530 8008C930 0C01B8BA */  jal   load_level_for_menu
 /* 08D534 8008C934 2405FFFF */   li    $a1, -1
 /* 08D538 8008C938 00002025 */  move  $a0, $zero
 /* 08D53C 8008C93C 0C022BAD */  jal   func_8008AEB4

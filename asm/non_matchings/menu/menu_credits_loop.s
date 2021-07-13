@@ -24,7 +24,7 @@ glabel menu_credits_loop
 /* 09BF70 8009B370 AFA2005C */  sw    $v0, 0x5c($sp)
 /* 09BF74 8009B374 0C0078A7 */  jal   get_misc_asset
 /* 09BF78 8009B378 24040045 */   li    $a0, 69
-/* 09BF7C 8009B37C 0C031CFC */  jal   func_800C73F0
+/* 09BF7C 8009B37C 0C031CFC */  jal   tick_thread30
 /* 09BF80 8009B380 AFA20060 */   sw    $v0, 0x60($sp)
 /* 09BF84 8009B384 3C0E800E */  lui   $t6, %hi(gMenuDelay) # $t6, 0x800e
 /* 09BF88 8009B388 8DCEF47C */  lw    $t6, %lo(gMenuDelay)($t6)
@@ -529,7 +529,7 @@ glabel L8009BA98
 /* 09C6AC 8009BAAC 016D1021 */  addu  $v0, $t3, $t5
 /* 09C6B0 8009BAB0 80440000 */  lb    $a0, ($v0)
 /* 09C6B4 8009BAB4 80450002 */  lb    $a1, 2($v0)
-/* 09C6B8 8009BAB8 0C031D16 */  jal   func_800C7458
+/* 09C6B8 8009BAB8 0C031D16 */  jal   set_level_to_load_in_background
 /* 09C6BC 8009BABC 00000000 */   nop   
 /* 09C6C0 8009BAC0 240E0001 */  li    $t6, 1
 /* 09C6C4 8009BAC4 AE0E0000 */  sw    $t6, ($s0)
@@ -538,7 +538,7 @@ glabel L8009BA98
 /* 09C6D0 8009BAD0 1000004C */  b     .L8009BC04
 /* 09C6D4 8009BAD4 AC2F63D8 */   sw    $t7, %lo(D_801263D8)($at)
 glabel L8009BAD8
-/* 09C6D8 8009BAD8 0C031CF8 */  jal   func_800C73E0
+/* 09C6D8 8009BAD8 0C031CF8 */  jal   get_thread30_level_id_to_load
 /* 09C6DC 8009BADC 00000000 */   nop   
 /* 09C6E0 8009BAE0 14400048 */  bnez  $v0, .L8009BC04
 /* 09C6E4 8009BAE4 3C038012 */   lui   $v1, %hi(D_801263BC) # $v1, 0x8012
@@ -648,7 +648,7 @@ glabel L8009BB9C
 /* 09C85C 8009BC5C 18400015 */  blez  $v0, .L8009BCB4
 /* 09C860 8009BC60 004FC021 */   addu  $t8, $v0, $t7
 /* 09C864 8009BC64 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
-/* 09C868 8009BC68 0C031CF8 */  jal   func_800C73E0
+/* 09C868 8009BC68 0C031CF8 */  jal   get_thread30_level_id_to_load
 /* 09C86C 8009BC6C AC38F47C */   sw    $t8, %lo(gMenuDelay)($at)
 /* 09C870 8009BC70 14400010 */  bnez  $v0, .L8009BCB4
 /* 09C874 8009BC74 3C19800E */   lui   $t9, %hi(gMenuDelay) # $t9, 0x800e
@@ -663,7 +663,7 @@ glabel L8009BB9C
 /* 09C898 8009BC98 00000000 */   nop   
 /* 09C89C 8009BC9C 24040015 */  li    $a0, 21
 /* 09C8A0 8009BCA0 2405FFFF */  li    $a1, -1
-/* 09C8A4 8009BCA4 0C01B8BA */  jal   func_8006E2E8
+/* 09C8A4 8009BCA4 0C01B8BA */  jal   load_level_for_menu
 /* 09C8A8 8009BCA8 00003025 */   move  $a2, $zero
 /* 09C8AC 8009BCAC 0C0204F4 */  jal   menu_init
 /* 09C8B0 8009BCB0 24040001 */   li    $a0, 1

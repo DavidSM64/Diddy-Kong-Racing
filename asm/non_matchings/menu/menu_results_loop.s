@@ -270,7 +270,7 @@ glabel menu_results_loop
 /* 098284 80097684 2404FFFF */  li    $a0, -1
 /* 098288 80097688 144E0007 */  bne   $v0, $t6, .L800976A8
 /* 09828C 8009768C 2405FFFF */   li    $a1, -1
-/* 098290 80097690 0C01B8BA */  jal   func_8006E2E8
+/* 098290 80097690 0C01B8BA */  jal   load_level_for_menu
 /* 098294 80097694 00003025 */   move  $a2, $zero
 /* 098298 80097698 0C0204F4 */  jal   menu_init
 /* 09829C 8009769C 2404000F */   li    $a0, 15

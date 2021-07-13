@@ -118,7 +118,7 @@ glabel menu_5_init
 /* 093A44 80092E44 24040002 */   li    $a0, 2
 /* 093A48 80092E48 02002025 */  move  $a0, $s0
 /* 093A4C 80092E4C 2405FFFF */  li    $a1, -1
-/* 093A50 80092E50 0C01B8BA */  jal   func_8006E2E8
+/* 093A50 80092E50 0C01B8BA */  jal   load_level_for_menu
 /* 093A54 80092E54 24060001 */   li    $a2, 1
 .L80092E58:
 /* 093A58 80092E58 0C031525 */  jal   func_800C5494

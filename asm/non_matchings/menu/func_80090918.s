@@ -150,7 +150,7 @@ glabel func_80090918
 /* 09174C 80090B4C 00002025 */  move  $a0, $zero
 /* 091750 80090B50 0C019A06 */  jal   func_80066818
 /* 091754 80090B54 00002825 */   move  $a1, $zero
-/* 091758 80090B58 0C031CF8 */  jal   func_800C73E0
+/* 091758 80090B58 0C031CF8 */  jal   get_thread30_level_id_to_load
 /* 09175C 80090B5C 00000000 */   nop   
 /* 091760 80090B60 14400051 */  bnez  $v0, .L80090CA8
 /* 091764 80090B64 3C03800E */   lui   $v1, %hi(gMenuDelay) # $v1, 0x800e

@@ -132,7 +132,7 @@ glabel menu_character_select_loop
 /* 08CB10 8008BF10 00000000 */   nop   
 /* 08CB14 8008BF14 24040027 */  li    $a0, 39
 /* 08CB18 8008BF18 2405FFFF */  li    $a1, -1
-/* 08CB1C 8008BF1C 0C01B8BA */  jal   func_8006E2E8
+/* 08CB1C 8008BF1C 0C01B8BA */  jal   load_level_for_menu
 /* 08CB20 8008BF20 00003025 */   move  $a2, $zero
 /* 08CB24 8008BF24 3C18800E */  lui   $t8, %hi(gNumberOfActivePlayers) # $t8, 0x800e
 /* 08CB28 8008BF28 8F18F4BC */  lw    $t8, %lo(gNumberOfActivePlayers)($t8)

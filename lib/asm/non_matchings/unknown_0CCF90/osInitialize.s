@@ -2,11 +2,11 @@ glabel osInitialize
 /* 0CD1A0 800CC5A0 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 0CD1A4 800CC5A4 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0CD1A8 800CC5A8 240E0001 */  li    $t6, 1
-/* 0CD1AC 800CC5AC 3C018013 */  lui   $at, %hi(D_8012CCC0) # $at, 0x8013
+/* 0CD1AC 800CC5AC 3C018013 */  lui   $at, %hi(gThread30Stack) # $at, 0x8013
 /* 0CD1B0 800CC5B0 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0CD1B4 800CC5B4 AFA00038 */  sw    $zero, 0x38($sp)
 /* 0CD1B8 800CC5B8 0C03515C */  jal   __osGetSR
-/* 0CD1BC 800CC5BC AC2ECCC0 */   sw    $t6, %lo(D_8012CCC0)($at)
+/* 0CD1BC 800CC5BC AC2ECCC0 */   sw    $t6, %lo(gThread30Stack)($at)
 /* 0CD1C0 800CC5C0 00408025 */  move  $s0, $v0
 /* 0CD1C4 800CC5C4 3C012000 */  lui   $at, 0x2000
 /* 0CD1C8 800CC5C8 0C035158 */  jal   __osSetSR

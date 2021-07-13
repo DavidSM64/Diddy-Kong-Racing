@@ -10,7 +10,7 @@ glabel menu_track_select_loop
 /* 08FE54 8008F254 AFA20018 */  sw    $v0, 0x18($sp)
 /* 08FE58 8008F258 01CFC021 */  addu  $t8, $t6, $t7
 /* 08FE5C 8008F25C 3319003F */  andi  $t9, $t8, 0x3f
-/* 08FE60 8008F260 0C031CF8 */  jal   func_800C73E0
+/* 08FE60 8008F260 0C031CF8 */  jal   get_thread30_level_id_to_load
 /* 08FE64 8008F264 AC790000 */   sw    $t9, ($v1)
 /* 08FE68 8008F268 14400011 */  bnez  $v0, .L8008F2B0
 /* 08FE6C 8008F26C 3C03800E */   lui   $v1, %hi(gMenuDelay) # $v1, 0x800e
@@ -134,7 +134,7 @@ glabel menu_track_select_loop
 /* 09001C 8008F41C 38CB0003 */  xori  $t3, $a2, 3
 /* 090020 8008F420 01603025 */  move  $a2, $t3
 .L8008F424:
-/* 090024 8008F424 0C01B8BA */  jal   func_8006E2E8
+/* 090024 8008F424 0C01B8BA */  jal   load_level_for_menu
 /* 090028 8008F428 2405FFFF */   li    $a1, -1
 /* 09002C 8008F42C 00002025 */  move  $a0, $zero
 /* 090030 8008F430 0C022BAD */  jal   func_8008AEB4
@@ -147,7 +147,7 @@ glabel menu_track_select_loop
 /* 090048 8008F448 24040027 */  li    $a0, 39
 .L8008F44C:
 /* 09004C 8008F44C 2405FFFF */  li    $a1, -1
-/* 090050 8008F450 0C01B8BA */  jal   func_8006E2E8
+/* 090050 8008F450 0C01B8BA */  jal   load_level_for_menu
 /* 090054 8008F454 00003025 */   move  $a2, $zero
 /* 090058 8008F458 0C0204F4 */  jal   menu_init
 /* 09005C 8008F45C 24040013 */   li    $a0, 19
