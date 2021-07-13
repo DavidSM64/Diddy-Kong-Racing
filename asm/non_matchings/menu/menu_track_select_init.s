@@ -505,7 +505,7 @@ glabel menu_track_select_init
 /* 08FB30 8008EF30 244263D0 */  addiu $v0, %lo(D_801263D0) # addiu $v0, $v0, 0x63d0
 /* 08FB34 8008EF34 2405FFFF */  li    $a1, -1
 /* 08FB38 8008EF38 24060001 */  li    $a2, 1
-/* 08FB3C 8008EF3C 0C01B8BA */  jal   func_8006E2E8
+/* 08FB3C 8008EF3C 0C01B8BA */  jal   load_level_for_menu
 /* 08FB40 8008EF40 AC440000 */   sw    $a0, ($v0)
 /* 08FB44 8008EF44 240A0001 */  li    $t2, 1
 /* 08FB48 8008EF48 AE0A0000 */  sw    $t2, ($s0)

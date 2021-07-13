@@ -43,7 +43,7 @@ glabel menu_23_loop
 /* 09B998 8009AD98 00000000 */   nop   
 /* 09B99C 8009AD9C 81050001 */  lb    $a1, 1($t0)
 /* 09B9A0 8009ADA0 81060002 */  lb    $a2, 2($t0)
-/* 09B9A4 8009ADA4 0C01B8BA */  jal   func_8006E2E8
+/* 09B9A4 8009ADA4 0C01B8BA */  jal   load_level_for_menu
 /* 09B9A8 8009ADA8 00000000 */   nop   
 /* 09B9AC 8009ADAC 1000000D */  b     .L8009ADE4
 /* 09B9B0 8009ADB0 00000000 */   nop   

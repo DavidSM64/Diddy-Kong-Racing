@@ -15,7 +15,7 @@ OSDevMgr __osViDevMgr = {0};
 #define OS_VIM_STACKSIZE 4096
 u8 viThreadStack[2960]; // viThreadStack[OS_VIM_STACKSIZE];
 
-s32 D_8012CCC0;
+s32 gThread30Stack;
 
 extern OSThread viThread;
 extern OSMesgQueue viEventQueue;

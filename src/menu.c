@@ -2947,7 +2947,7 @@ s32 menu_character_select_loop(s32 arg0) {
             gIsInTracksMode = 1;
             if (phi_t3 >= gNumberOfActivePlayers) {
                 func_80000B18();
-                func_8006E2E8(0x27, -1, 0);
+                load_level_for_menu(0x27, -1, 0);
                 if (gNumberOfActivePlayers == 1 && !gPlayerHasSeenCautionMenu) {
                     menu_init(MENU_CAUTION);
                 } else {
@@ -3314,7 +3314,7 @@ void func_80090ED8(s32 arg0);
 void func_80090F30(s32 arg0);
 void func_80092188(s32 arg0);
 void func_8008E4EC(void);
-s32 func_800C73E0(void);
+s32 get_thread30_level_id_to_load(void);
 void set_relative_volume_for_music(u8 arg0);
 
 s32 menu_track_select_loop(s32 arg0) {
@@ -3324,7 +3324,7 @@ s32 menu_track_select_loop(s32 arg0) {
 
     settings = get_settings();
     D_801263BC = (D_801263BC + arg0) & 0x3F;
-    if (func_800C73E0() == 0 && gMenuDelay != 0) {
+    if (get_thread30_level_id_to_load() == 0 && gMenuDelay != 0) {
         if (gMenuDelay < 0) {
             gMenuDelay -= arg0;
         } else {
@@ -3368,12 +3368,12 @@ s32 menu_track_select_loop(s32 arg0) {
             if (is_tt_unlocked()) {
                 phi_a2 ^= 3;
             }
-            func_8006E2E8(0x16, -1, phi_a2);
+            load_level_for_menu(0x16, -1, phi_a2);
             func_8008AEB4(0, NULL);
             menu_init(MENU_CHARACTER_SELECT);
             return 0;
         }
-        func_8006E2E8(0x27, -1, 0);
+        load_level_for_menu(0x27, -1, 0);
         menu_init(MENU_GAME_SELECT);
         return 0;
     }
@@ -3525,7 +3525,7 @@ block_7:
                     gMenuDelay = 0;
                     D_800E0980 = 0x1E;
                     func_800C4170(2);
-                    func_8006E2E8(temp_s0, -1, 1);
+                    load_level_for_menu(temp_s0, -1, 1);
                 }
             } else {
                 goto block_7;
@@ -3836,7 +3836,7 @@ void menu_trophy_race_round_init(void) {
     }
     
     func_8006DB14(func_8006B0AC(temp));
-    func_8006E2E8(temp, -1, 1);
+    load_level_for_menu(temp, -1, 1);
     
     gMenuDelay = 0;
     D_800E0980 = 10;
@@ -3969,7 +3969,7 @@ void menu_23_init(void) {
         func_8009C674(D_800E1768);
         func_80094604();
     }
-    func_8006E2E8(D_801267EC[0], D_801267EC[1], D_801267EC[2]);
+    load_level_for_menu(D_801267EC[0], D_801267EC[1], D_801267EC[2]);
     gMenuDelay = 0;
     D_801263E0 = 0;
 }

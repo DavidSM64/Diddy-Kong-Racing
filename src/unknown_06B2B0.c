@@ -701,7 +701,7 @@ void thread3_main(s32 arg0) {
         if (func_8006EAC0() != 0) {
             func_80072708();
             audioStopThread();
-            func_800C73BC();
+            stop_thread30();
             __osSpSetStatus(0xAAAA82);
             func_800CD250(0x1D6);
             while(1); // Infinite loop
@@ -767,7 +767,7 @@ void func_8006C3E0(void) {
     func_800C3C00();
     func_80075B18();
     func_80081218();
-    func_800C7350();
+    create_and_start_thread30();
     osCreateMesgQueue(&D_80123548, &D_80123544, 1);
     osScAddClient(&D_80121260, &D_80123538, &D_80123548, 3);
     D_80123560[0] = 0;
@@ -1072,7 +1072,7 @@ void func_8006DBE4(void) {
 }
 
 void func_8006DC58(s32 arg0) {
-    if (func_800C73E0() == 0) {
+    if (get_thread30_level_id_to_load() == 0) {
         func_80010994(arg0);
         gParticlePtrList_flush();
         func_8001BF20();
@@ -1087,17 +1087,17 @@ void func_8006DC58(s32 arg0) {
 // Has a jump table
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006DCF8.s")
 
-void func_8006E2E8(s32 arg0, s32 arg1, s32 arg2) {
+void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (D_80123514 == 0) {
         func_8006DBE4();
-        if (func_800C73E0() == 0) {
+        if (get_thread30_level_id_to_load() == 0) {
             D_801211F8 = D_801211F0[D_801234E8];
             gDPFullSync(D_801211F8++)
             gSPEndDisplayList(D_801211F8++)
         }
     }
-    if (arg0 != -1) {
-        load_level_3(arg0, arg1, 0, 2, arg2);
+    if (levelId != -1) {
+        load_level_3(levelId, numberOfPlayers, 0, 2, cutsceneId);
         D_80123514 = (u8)0;
         return;
     }

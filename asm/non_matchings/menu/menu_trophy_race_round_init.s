@@ -68,7 +68,7 @@ glabel menu_trophy_race_round_init
 /* 098F5C 8009835C 00402025 */   move  $a0, $v0
 /* 098F60 80098360 02002025 */  move  $a0, $s0
 /* 098F64 80098364 2405FFFF */  li    $a1, -1
-/* 098F68 80098368 0C01B8BA */  jal   func_8006E2E8
+/* 098F68 80098368 0C01B8BA */  jal   load_level_for_menu
 /* 098F6C 8009836C 24060001 */   li    $a2, 1
 /* 098F70 80098370 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 098F74 80098374 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
