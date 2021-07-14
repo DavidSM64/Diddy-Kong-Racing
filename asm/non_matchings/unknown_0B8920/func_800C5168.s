@@ -69,7 +69,7 @@ glabel func_800C5168
 /* 0C5E5C 800C525C 27A50040 */  addiu $a1, $sp, 0x40
 /* 0C5E60 800C5260 AFA7003C */  sw    $a3, 0x3c($sp)
 /* 0C5E64 800C5264 AFA80030 */  sw    $t0, 0x30($sp)
-/* 0C5E68 800C5268 0C0317D8 */  jal   func_800C5F60
+/* 0C5E68 800C5268 0C0317D8 */  jal   parse_string_with_number
 /* 0C5E6C 800C526C AFA9002C */   sw    $t1, 0x2c($sp)
 /* 0C5E70 800C5270 8FA80030 */  lw    $t0, 0x30($sp)
 /* 0C5E74 800C5274 8FA5014C */  lw    $a1, 0x14c($sp)
