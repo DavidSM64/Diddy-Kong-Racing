@@ -63,7 +63,7 @@ glabel func_800C5B58
 /* 0C6840 800C5C40 256C0002 */  addiu $t4, $t3, 2
 /* 0C6844 800C5C44 AFAC0010 */  sw    $t4, 0x10($sp)
 /* 0C6848 800C5C48 25070002 */  addiu $a3, $t0, 2
-/* 0C684C 800C5C4C 0C0316A8 */  jal   func_800C5AA0
+/* 0C684C 800C5C4C 0C0316A8 */  jal   render_fill_rectangle
 /* 0C6850 800C5C50 24C6FFFE */   addiu $a2, $a2, -2
 /* 0C6854 800C5C54 10000025 */  b     .L800C5CEC
 /* 0C6858 800C5C58 8E620000 */   lw    $v0, ($s3)
@@ -71,7 +71,7 @@ glabel func_800C5B58
 /* 0C685C 800C5C5C 244DFFFE */  addiu $t5, $v0, -2
 /* 0C6860 800C5C60 AFAD0010 */  sw    $t5, 0x10($sp)
 /* 0C6864 800C5C64 02602025 */  move  $a0, $s3
-/* 0C6868 800C5C68 0C0316A8 */  jal   func_800C5AA0
+/* 0C6868 800C5C68 0C0316A8 */  jal   render_fill_rectangle
 /* 0C686C 800C5C6C 2525FFFE */   addiu $a1, $t1, -2
 /* 0C6870 800C5C70 86300006 */  lh    $s0, 6($s1)
 /* 0C6874 800C5C74 86250004 */  lh    $a1, 4($s1)
@@ -81,7 +81,7 @@ glabel func_800C5B58
 /* 0C6884 800C5C84 02602025 */  move  $a0, $s3
 /* 0C6888 800C5C88 2606FFFE */  addiu $a2, $s0, -2
 /* 0C688C 800C5C8C 24A5FFFE */  addiu $a1, $a1, -2
-/* 0C6890 800C5C90 0C0316A8 */  jal   func_800C5AA0
+/* 0C6890 800C5C90 0C0316A8 */  jal   render_fill_rectangle
 /* 0C6894 800C5C94 24E70002 */   addiu $a3, $a3, 2
 /* 0C6898 800C5C98 86280008 */  lh    $t0, 8($s1)
 /* 0C689C 800C5C9C 862F000A */  lh    $t7, 0xa($s1)
@@ -91,7 +91,7 @@ glabel func_800C5B58
 /* 0C68AC 800C5CAC 02602025 */  move  $a0, $s3
 /* 0C68B0 800C5CB0 2505FFFE */  addiu $a1, $t0, -2
 /* 0C68B4 800C5CB4 25070002 */  addiu $a3, $t0, 2
-/* 0C68B8 800C5CB8 0C0316A8 */  jal   func_800C5AA0
+/* 0C68B8 800C5CB8 0C0316A8 */  jal   render_fill_rectangle
 /* 0C68BC 800C5CBC 24C60002 */   addiu $a2, $a2, 2
 /* 0C68C0 800C5CC0 8622000A */  lh    $v0, 0xa($s1)
 /* 0C68C4 800C5CC4 86250004 */  lh    $a1, 4($s1)
@@ -101,7 +101,7 @@ glabel func_800C5B58
 /* 0C68D4 800C5CD4 02602025 */  move  $a0, $s3
 /* 0C68D8 800C5CD8 2446FFFE */  addiu $a2, $v0, -2
 /* 0C68DC 800C5CDC 24A5FFFE */  addiu $a1, $a1, -2
-/* 0C68E0 800C5CE0 0C0316A8 */  jal   func_800C5AA0
+/* 0C68E0 800C5CE0 0C0316A8 */  jal   render_fill_rectangle
 /* 0C68E4 800C5CE4 24E70002 */   addiu $a3, $a3, 2
 /* 0C68E8 800C5CE8 8E620000 */  lw    $v0, ($s3)
 .L800C5CEC:
@@ -164,7 +164,7 @@ glabel func_800C5B58
 /* 0C69BC 800C5DBC 00000000 */  nop   
 /* 0C69C0 800C5DC0 01591021 */  addu  $v0, $t2, $t9
 .L800C5DC4:
-/* 0C69C4 800C5DC4 0C0316A8 */  jal   func_800C5AA0
+/* 0C69C4 800C5DC4 0C0316A8 */  jal   render_fill_rectangle
 /* 0C69C8 800C5DC8 AFA20010 */   sw    $v0, 0x10($sp)
 /* 0C69CC 800C5DCC 82020005 */  lb    $v0, 5($s0)
 /* 0C69D0 800C5DD0 26100005 */  addiu $s0, $s0, 5
@@ -251,7 +251,7 @@ glabel func_800C5B58
 /* 0C6B00 800C5F00 A22F001D */  sb    $t7, 0x1d($s1)
 /* 0C6B04 800C5F04 92060001 */  lbu   $a2, 1($s0)
 /* 0C6B08 800C5F08 8E040004 */  lw    $a0, 4($s0)
-/* 0C6B0C 800C5F0C 0C0317D8 */  jal   func_800C5F60
+/* 0C6B0C 800C5F0C 0C0317D8 */  jal   parse_string_with_number
 /* 0C6B10 800C5F10 00000000 */   nop   
 /* 0C6B14 800C5F14 02602025 */  move  $a0, $s3
 /* 0C6B18 800C5F18 02202825 */  move  $a1, $s1

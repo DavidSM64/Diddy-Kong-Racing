@@ -36,7 +36,7 @@ Gfx D_800E36C8[][2] = {
 s8 D_800E36E8 = 0;
 
 // Descending powers of 10
-s32 D_800E36EC[9] = {
+s32 gDescPowsOf10[9] = {
     1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10
 }; 
 
@@ -47,13 +47,6 @@ s8 D_800E3710[48] = {
 };
 
 OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL };
-
-s32 pad800E375C = 0; // File boundary?
-
-u8* D_800E3760 = NULL;
-u8* D_800E3764 = NULL;
-u8* gzip_inflate_input = NULL;
-u8* gzip_inflate_output = NULL;
 
 /*******************************/
 
@@ -224,9 +217,6 @@ OSThread piThread; //piThread
 s32 D_8012A9B0[64];
 OSMesgQueue piEventQueue; //piEventQueue
 OSMesg piEventBuf[2]; //piEventBuf
-u32 gzip_bit_buffer;
-u32 gzip_num_bits;
-s32 D_8012AAD8;
 
 /******************************/
 
@@ -281,19 +271,17 @@ void func_800C4404(s32 arg0, s32 arg1, s32 arg2) {
     func_800C45A4(arg0, *D_8012A7E8, arg1, arg2, 1.0f);
 }
 
-void draw_text(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char* text, s32 alignmentFlags) {
     unk8012A7E8 *temp = &(*D_8012A7E8)[0];
-    temp->unk0 = (arg1 == -0x8000) ? temp->unkC >> 1 : arg1;
-    temp->unk2 = (arg2 == -0x8000) ? temp->unkE >> 1 : arg2;
-    func_800C45A4(arg0, temp, arg3, arg4, 1.0f);
+    temp->unk0 = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;
+    temp->unk2 = (ypos == -0x8000) ? temp->unkE >> 1 : ypos;
+    func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
 }
 
 void func_800C44C0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    if (arg1 >= 0) {
-        if(arg1 < 8){
-            unk8012A7E8 *temp = &D_8012A7E8[arg1];
-            func_800C45A4(arg0, temp, arg2, arg3, 1.0f);
-        }
+    if (arg1 >= 0 && arg1 < 8) {
+        unk8012A7E8 *temp = &D_8012A7E8[arg1];
+        func_800C45A4(arg0, temp, arg2, arg3, 1.0f);
     }
 }
 
@@ -306,8 +294,11 @@ void func_800C4510(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     }
 }
 
-// Has a jump table
+//#if 1
+// TODO
+//#else
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C45A4.s")
+//#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4DA0.s")
 
@@ -499,13 +490,9 @@ void func_800C56FC(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C580C.s")
-#else
-
-// sprintf like function, but only for decimal integers (%d).
-void func_800C580C(char** outString, s32 number) {
-    char digit;
+#ifdef NON_MATCHING
+void s32_to_string(char** outString, s32 number) {
+    u8 digit;
     s32 i;
     s32 hasDigit; // boolean
     s32 div;
@@ -519,13 +506,13 @@ void func_800C580C(char** outString, s32 number) {
     
     // Loop through digit places.
     for(i = 0; i < 9; i++){
-        hasDigit = 0;
+        hasDigit = FALSE;
         digit = '0';
-        if (number >= D_800E36EC[i]) {
-            div = number / D_800E36EC[i];
-            hasDigit = 1;
+        if (number >= gDescPowsOf10[i]) {
+            div = number / gDescPowsOf10[i];
+            hasDigit = TRUE;
             digit = '0' + div;
-            number -= div * D_800E36EC[i];
+            number -= div * gDescPowsOf10[i];
         }
         if (hasDigit) {
             **outString = digit;
@@ -537,30 +524,40 @@ void func_800C580C(char** outString, s32 number) {
     **outString = '0' + number;
     (*outString)++;
 }
+#else
+void s32_to_string(char**, s32);
+GLOBAL_ASM("asm/non_matchings/unknown_0B8920/s32_to_string.s")
 #endif
 
-void func_800C5AA0(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+/**
+ * Draws a solid color rectangle at the coordinates specified.
+ * ulx, uly = upper-left position
+ * lrx, lry = lower-right position
+ */
+void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
     u32 temp_v0 = get_video_width_and_height_as_s32();
-    if (arg3 >= 0 && arg1 < (temp_v0 & 0xFFFF) && arg4 >= 0 && arg2 < (temp_v0 >> 16)) {
-        if (arg1 < 0) {
-            arg1 = 0;
+    if (lrx >= 0 && ulx < (temp_v0 & 0xFFFF) && lry >= 0 && uly < (temp_v0 >> 16)) {
+        if (ulx < 0) {
+            ulx = 0;
         }
-        if (arg2 < 0) {
-            arg2 = 0;
+        if (uly < 0) {
+            uly = 0;
         }
-        gDPFillRectangle((*dlist)++, arg1, arg2, arg3, arg4);
+        gDPFillRectangle((*dlist)++, ulx, uly, lrx, lry);
     }
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5B58.s")
 
-void func_800C580C(char**, s32);
-
-void func_800C5F60(unsigned char *input, char *output, s32 number) {
+/**
+ * Takes in a string and a number, and replaces each instance of the 
+ * character '~' with the number.
+ */
+void parse_string_with_number(unsigned char *input, char *output, s32 number) {
     while (*input != '\0') {
         if ('~' == *input) { // ~ is equivalent to a %d.
             // output the number as part of the string
-            func_800C580C(&output, number);
+            s32_to_string(&output, number);
             input++;
         } else {
             *output = *input;
@@ -571,6 +568,7 @@ void func_800C5F60(unsigned char *input, char *output, s32 number) {
     *output = '\0'; // null terminator
 }
 
+// osCreatePiManager is compiled with -mips1, so it does probably belong here.
 void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
 {
 	u32 savedMask;
@@ -608,47 +606,3 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
 		}
 	}
 }
-
-// I would guess that there is a file boundary right here.
-
-void func_800C6170(void) {
-    D_800E3760 = allocate_from_main_pool_safe(0x2800, COLOR_TAG_BLACK);
-    D_800E3764 = allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
-}
-
-/**
- * Converts a little endian value to big endian.
- */
-s32 byteswap32(u8* arg0) {
-    s32 value;
-    value = *arg0++;
-    value |= (*arg0++ << 8);
-    value |= (*arg0++ << 16);
-    value |= (*arg0++ << 24);
-    return value;
-}
-
-/**
- * Returns the uncompressed size of a gzip compressed asset.
- */
-s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
-    load_asset_to_address(assetIndex, D_800E3764, assetOffset, 8);
-    return byteswap32(D_800E3764);
-}
-
-s32 gzip_inflate_block(void);
-
-/**
- * Decompresses gzip data.
- * Returns the pointer to the decompressed data.
- */
-u8* gzip_inflate(u8* compressedInput, u8* decompressedOutput) {
-    gzip_inflate_input = compressedInput + 5; // The compression header is 5 bytes. 
-    gzip_inflate_output = decompressedOutput;
-    gzip_num_bits = 0;
-    gzip_bit_buffer = 0;
-    while(gzip_inflate_block() != 0) {} // Keep calling gzip_inflate_block() until it returns 0.
-    return decompressedOutput;
-}
-
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/gzip_huft_build.s")

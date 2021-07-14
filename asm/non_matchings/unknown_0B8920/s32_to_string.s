@@ -1,4 +1,4 @@
-glabel func_800C580C
+glabel s32_to_string
 /* 0C640C 800C580C 8C820000 */  lw    $v0, ($a0)
 /* 0C6410 800C5810 04A10005 */  bgez  $a1, .L800C5828
 /* 0C6414 800C5814 00001825 */   move  $v1, $zero
@@ -7,8 +7,8 @@ glabel func_800C580C
 /* 0C6420 800C5820 24420001 */  addiu $v0, $v0, 1
 /* 0C6424 800C5824 00052823 */  negu  $a1, $a1
 .L800C5828:
-/* 0C6428 800C5828 3C07800E */  lui   $a3, %hi(D_800E36EC) # $a3, 0x800e
-/* 0C642C 800C582C 8CE736EC */  lw    $a3, %lo(D_800E36EC)($a3)
+/* 0C6428 800C5828 3C07800E */  lui   $a3, %hi(gDescPowsOf10) # $a3, 0x800e
+/* 0C642C 800C582C 8CE736EC */  lw    $a3, %lo(gDescPowsOf10)($a3)
 /* 0C6430 800C5830 24060001 */  li    $a2, 1
 /* 0C6434 800C5834 00A7082A */  slt   $at, $a1, $a3
 /* 0C6438 800C5838 14200015 */  bnez  $at, .L800C5890
@@ -41,8 +41,8 @@ glabel func_800C580C
 /* 0C6498 800C5898 A0490000 */  sb    $t1, ($v0)
 /* 0C649C 800C589C 24420001 */  addiu $v0, $v0, 1
 .L800C58A0:
-/* 0C64A0 800C58A0 3C0D800E */  lui   $t5, %hi(D_800E36EC) # $t5, 0x800e
-/* 0C64A4 800C58A4 25AD36EC */  addiu $t5, %lo(D_800E36EC) # addiu $t5, $t5, 0x36ec
+/* 0C64A0 800C58A0 3C0D800E */  lui   $t5, %hi(gDescPowsOf10) # $t5, 0x800e
+/* 0C64A4 800C58A4 25AD36EC */  addiu $t5, %lo(gDescPowsOf10) # addiu $t5, $t5, 0x36ec
 /* 0C64A8 800C58A8 3C0C800E */  lui   $t4, %hi(D_800E3710) # $t4, 0x800e
 /* 0C64AC 800C58AC 258C3710 */  addiu $t4, %lo(D_800E3710) # addiu $t4, $t4, 0x3710
 /* 0C64B0 800C58B0 032D4021 */  addu  $t0, $t9, $t5
