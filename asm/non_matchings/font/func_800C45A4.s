@@ -20,8 +20,8 @@ glabel func_800C45A4
 /* 0C51D8 800C45D8 10C001E8 */  beqz  $a2, .L800C4D7C
 /* 0C51DC 800C45DC 2414FFFF */   li    $s4, -1
 /* 0C51E0 800C45E0 90AF001D */  lbu   $t7, 0x1d($a1)
-/* 0C51E4 800C45E4 3C198013 */  lui   $t9, %hi(D_8012A7E4) # $t9, 0x8013
-/* 0C51E8 800C45E8 8F39A7E4 */  lw    $t9, %lo(D_8012A7E4)($t9)
+/* 0C51E4 800C45E4 3C198013 */  lui   $t9, %hi(gFonts) # $t9, 0x8013
+/* 0C51E8 800C45E8 8F39A7E4 */  lw    $t9, %lo(gFonts)($t9)
 /* 0C51EC 800C45EC 8C830000 */  lw    $v1, ($a0)
 /* 0C51F0 800C45F0 000FC280 */  sll   $t8, $t7, 0xa
 /* 0C51F4 800C45F4 84B00000 */  lh    $s0, ($a1)

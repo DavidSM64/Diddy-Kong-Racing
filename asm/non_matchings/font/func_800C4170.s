@@ -1,7 +1,7 @@
 glabel func_800C4170
 /* 0C4D70 800C4170 27BDFFD8 */  addiu $sp, $sp, -0x28
-/* 0C4D74 800C4174 3C0E8013 */  lui   $t6, %hi(D_8012A7E0) # $t6, 0x8013
-/* 0C4D78 800C4178 8DCEA7E0 */  lw    $t6, %lo(D_8012A7E0)($t6)
+/* 0C4D74 800C4174 3C0E8013 */  lui   $t6, %hi(gNumberOfFonts) # $t6, 0x8013
+/* 0C4D78 800C4178 8DCEA7E0 */  lw    $t6, %lo(gNumberOfFonts)($t6)
 /* 0C4D7C 800C417C AFBF0024 */  sw    $ra, 0x24($sp)
 /* 0C4D80 800C4180 008E082A */  slt   $at, $a0, $t6
 /* 0C4D84 800C4184 AFB30020 */  sw    $s3, 0x20($sp)
@@ -9,8 +9,8 @@ glabel func_800C4170
 /* 0C4D8C 800C418C AFB10018 */  sw    $s1, 0x18($sp)
 /* 0C4D90 800C4190 1020001F */  beqz  $at, .L800C4210
 /* 0C4D94 800C4194 AFB00014 */   sw    $s0, 0x14($sp)
-/* 0C4D98 800C4198 3C188013 */  lui   $t8, %hi(D_8012A7E4) # $t8, 0x8013
-/* 0C4D9C 800C419C 8F18A7E4 */  lw    $t8, %lo(D_8012A7E4)($t8)
+/* 0C4D98 800C4198 3C188013 */  lui   $t8, %hi(gFonts) # $t8, 0x8013
+/* 0C4D9C 800C419C 8F18A7E4 */  lw    $t8, %lo(gFonts)($t8)
 /* 0C4DA0 800C41A0 00047A80 */  sll   $t7, $a0, 0xa
 /* 0C4DA4 800C41A4 01F81021 */  addu  $v0, $t7, $t8
 /* 0C4DA8 800C41A8 90590028 */  lbu   $t9, 0x28($v0)

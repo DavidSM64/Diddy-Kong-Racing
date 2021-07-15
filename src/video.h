@@ -1,10 +1,15 @@
-#ifndef _UNKNOWN_07AF10_H_
-#define _UNKNOWN_07AF10_H_
+#ifndef _VIDEO_H_
+#define _VIDEO_H_
 
 #include "types.h"
 
 #define REFRESH_50HZ 50
 #define REFRESH_60HZ 60
+
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+#define HIGH_RES_SCREEN_WIDTH 640
+#define HIGH_RES_SCREEN_HEIGHT 480
 
 #define LOW_RES_WIDTH 320.0f
 #define LOW_RES_PAL_HEIGHT 264.0f
