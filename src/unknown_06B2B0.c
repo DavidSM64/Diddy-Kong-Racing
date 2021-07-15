@@ -764,7 +764,7 @@ void func_8006C3E0(void) {
     func_800AB1F0();
     func_8006E3BC();
     func_8006EFDC();
-    func_800C3C00();
+    load_fonts();
     func_80075B18();
     func_80081218();
     create_and_start_thread30();

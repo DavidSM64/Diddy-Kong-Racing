@@ -16,15 +16,15 @@ u16 *gVideoDepthBuffer = NULL;
 s32 D_800DE774 = 0; // Currently unknown, might be a different type.
 s8  D_800DE778 = 2;
 
-VideoModeResolution gVideoModeResolutions[8] = {
-    { 320, 240 },
-    { 320, 240 },
-    { 640, 240 },
-    { 640, 240 },
-    { 640, 480 },
-    { 640, 480 },
-    { 640, 480 },
-    { 640, 480 }
+VideoModeResolution gVideoModeResolutions[] = {
+    {          SCREEN_WIDTH,          SCREEN_HEIGHT }, // 320x240
+    {          SCREEN_WIDTH,          SCREEN_HEIGHT }, // 320x240
+    { HIGH_RES_SCREEN_WIDTH,          SCREEN_HEIGHT }, // 640x240
+    { HIGH_RES_SCREEN_WIDTH,          SCREEN_HEIGHT }, // 640x240
+    { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
+    { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
+    { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
+    { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
 };
 
 s32 D_800DE7BC = 0; // Currently unknown, might be a different type.

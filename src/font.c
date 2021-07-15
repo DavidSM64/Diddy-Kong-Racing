@@ -2,7 +2,9 @@
 /* RAM_POS: 0x800C3C00 */
 
 #include "memory.h"
+#include "video.h"
 
+#include "structs.h"
 #include "types.h"
 #include "macros.h"
 #include "asset_sections.h"
@@ -166,8 +168,25 @@ s32 D_8012A7D0;
 s32 D_8012A7D4;
 s32 D_8012A7D8;
 s32 D_8012A7DC;
-s32 D_8012A7E0;
-s32 D_8012A7E4;
+
+s32 gNumberOfFonts;
+
+/* Size: 8 bytes */
+typedef struct FontCharData {
+    u8 unk0;
+    u8 unk1[7];
+} FontCharData;
+
+/* Size: 0x400 bytes */
+typedef struct FontData {
+    char name[0x28];
+    u8 unk28[24];
+    s16 unk40[32];
+    TextureHeader *texturePointers[32];
+    FontCharData unk100[96];
+} FontData;
+
+FontData* gFonts;
 
 /* Size: 0x28 bytes */
 typedef struct unk8012A7E8_24 {
@@ -179,28 +198,28 @@ typedef struct unk8012A7E8_24 {
 
 /* Size: 0x28 bytes */
 typedef struct unk8012A7E8 {
-    s16 unk0;
-    s16 unk2;
+    s16 xpos;
+    s16 ypos;
     s16 unk4;
     s16 unk6;
     s16 unk8;
     s16 unkA;
     s16 unkC;
     s16 unkE;
-    s8 unk10;
-    s8 unk11;
-    s8 unk12;
-    s8 unk13;
-    s8 unk14;
-    s8 unk15;
-    s8 unk16;
-    s8 unk17;
-    s8 unk18;
-    s8 unk19;
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
-    s8 unk1D;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 colorRed;
+    u8 colorGreen;
+    u8 colorBlue;
+    u8 colorAlpha;
+    u8 bgRed;
+    u8 bgGreen;
+    u8 bgBlue;
+    u8 bgAlpha;
+    u8 opacity;
+    u8 font;
     u16 unk1E;
     s16 unk20;
     s16 unk22;
@@ -208,105 +227,246 @@ typedef struct unk8012A7E8 {
 } unk8012A7E8;
 
 unk8012A7E8 (*D_8012A7E8)[1];
-s32 D_8012A7EC;
+
+/* Size: 0x20 bytes */
+typedef struct unk8012A7EC {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+    u8 unk15;
+    u8 unk16;
+    u8 unk17;
+    s32 unk18;
+    s32 unk1C;
+} unk8012A7EC;
+unk8012A7EC (*D_8012A7EC)[1];
+
 s32 D_8012A7F0;
 s8 D_8012A7F4;
 s32 D_8012A7F8;
 s32 D_8012A7FC;
-OSThread piThread; //piThread
-s32 D_8012A9B0[64];
-OSMesgQueue piEventQueue; //piEventQueue
-OSMesg piEventBuf[2]; //piEventBuf
-
 /******************************/
 
-extern OSMesgQueue piAccessQueue; //piAccessQueue
-extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
-extern OSDevMgr __osPiDevMgr;
-void __osDevMgrMain(void);
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C3C00.s")
-#else
+void func_800C4170(s32 arg0);
 
-extern u32* D_8012A7E4;
-void func_800C3C00(void){
+#define unk8012A7E8_COUNT 8
+#define unk8012A7EC_COUNT 64
+#define unk8012A7E8_TOTAL_SIZE (sizeof(unk8012A7E8) * unk8012A7E8_COUNT)
+#define unk8012A7EC_TOTAL_SIZE (sizeof(unk8012A7EC) * unk8012A7EC_COUNT)
+    
+void load_fonts(void) {
+    u8 *fontAssetData;
     s32 i;
-    D_8012A7E4 = load_asset_section_from_rom(ASSET_BINARY_44);
-    D_8012A7E0 = *(D_8012A7E4++);
-    for(i = 0; i< D_8012A7E0; i++){
-        D_8012A7E0[]
-    }
-}
-#endif
 
+    fontAssetData = load_asset_section_from_rom(ASSET_BINARY_44);
+    
+    gFonts = (FontData*)(fontAssetData); // ???
+    gNumberOfFonts = *((s32*)fontAssetData);
+    gFonts = (FontData*)(fontAssetData + 4);
+    
+    for (i = 0; i < gNumberOfFonts; i++) {
+        gFonts[i].unk28[0] = 0;
+    }
+    
+    D_8012A7E8 = allocate_from_main_pool_safe(unk8012A7E8_TOTAL_SIZE + unk8012A7EC_TOTAL_SIZE, COLOR_TAG_YELLOW);
+    D_8012A7EC = (unk8012A7EC*)((u8*)D_8012A7E8 + unk8012A7E8_TOTAL_SIZE);
+    
+    for (i = 0; i < unk8012A7E8_COUNT; i++) {
+        (*D_8012A7E8)[i].xpos = 0;
+        (*D_8012A7E8)[i].ypos = 0;
+        (*D_8012A7E8)[i].unk4 = 0;
+        (*D_8012A7E8)[i].unk6 = 0;
+        (*D_8012A7E8)[i].unk8 = SCREEN_WIDTH - 1;
+        (*D_8012A7E8)[i].unkA = SCREEN_HEIGHT - 1;
+        (*D_8012A7E8)[i].unkC = SCREEN_WIDTH;
+        (*D_8012A7E8)[i].unkE = SCREEN_HEIGHT;
+        (*D_8012A7E8)[i].unk10 = 0xFF;
+        (*D_8012A7E8)[i].unk11 = 0xFF;
+        (*D_8012A7E8)[i].unk12 = 0xFF;
+        (*D_8012A7E8)[i].unk13 = 0;
+        (*D_8012A7E8)[i].colorRed = 0xFF;
+        (*D_8012A7E8)[i].colorGreen = 0xFF;
+        (*D_8012A7E8)[i].colorBlue = 0xFF;
+        (*D_8012A7E8)[i].colorAlpha = 0;
+        (*D_8012A7E8)[i].bgRed = 0xFF;
+        (*D_8012A7E8)[i].bgGreen = 0xFF;
+        (*D_8012A7E8)[i].bgBlue = 0xFF;
+        (*D_8012A7E8)[i].bgAlpha = 0;
+        (*D_8012A7E8)[i].opacity = 0xFF;
+        (*D_8012A7E8)[i].font = 0xFF;
+        if (i != 0) {
+            (*D_8012A7E8)[i].unk1E = 0x4000;
+        } else {
+            (*D_8012A7E8)[i].unk1E = 0;
+        }
+        (*D_8012A7E8)[i].unk20 = 0;
+        (*D_8012A7E8)[i].unk22 = 0;
+        (*D_8012A7E8)[i].unk24 = 0;
+    }
+    for (i = 0; i < unk8012A7EC_COUNT; i++) {
+        (*D_8012A7EC)[i].unk1 = 0xFF;
+        (*D_8012A7EC)[i].unk4 = 0;
+        (*D_8012A7EC)[i].unk10 = 0xFF;
+        (*D_8012A7EC)[i].unk11 = 0xFF;
+        (*D_8012A7EC)[i].unk12 = 0xFF;
+        (*D_8012A7EC)[i].unk13 = 0;
+        (*D_8012A7EC)[i].unk14 = 0xFF;
+        (*D_8012A7EC)[i].unk15 = 0xFF;
+        (*D_8012A7EC)[i].unk16 = 0xFF;
+        (*D_8012A7EC)[i].unk17 = 0;
+        (*D_8012A7EC)[i].unk1C = 0;
+    }
+    func_800C4170(0);
+    func_800C4170(1);
+    D_8012A7F0 = 0;
+}
 
 void func_800C4164(s32 arg0) {
     D_8012A7F0 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4170.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C422C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/set_text_font.s")
+#ifdef NON_MATCHING
+// Mostly has regalloc issues.
+void func_800C4170(s32 arg0) {
+    if (arg0 < gNumberOfFonts) {
+        FontData *fontData = &gFonts[arg0];
+        fontData->unk28[0]++;
+        if (fontData->unk28[0] == 1) {
+            // Minor issue with this loop.
+            s32 i = 0;
+            while (fontData->unk40[i] != -1) {
+                fontData->texturePointers[i] = func_8007AE74(fontData->unk40[i]);
+                i++;
+                if (i >= 64) {
+                    break;
+                }
+            }
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/font/func_800C4170.s")
+#endif
 
-void set_text_color(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    (*D_8012A7E8)[0].unk14 = arg0;
-    (*D_8012A7E8)[0].unk15 = arg1;
-    (*D_8012A7E8)[0].unk16 = arg2;
-    (*D_8012A7E8)[0].unk17 = arg3;
-    (*D_8012A7E8)[0].unk1C = arg4;
+#ifdef NON_MATCHING
+// Mostly has regalloc issues.
+void func_800C422C(s32 arg0) {
+    if (arg0 < gNumberOfFonts) {
+        FontData *fontData = &gFonts[arg0];
+        if (fontData->unk28[0] > 0) {
+            fontData->unk28[0]--;
+            if ((fontData->unk28[0] & 0xFF) == 0) {
+                // Minor issue with this loop.
+                s32 i = 0;
+                while (fontData->unk40[i] != -1) {
+                    func_8007B2BC(fontData->texturePointers[i]);
+                    fontData->texturePointers[i] = NULL;
+                    i++;
+                    if (i >= 32) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/font/func_800C422C.s")
+#endif
+
+void set_text_font(s32 arg0) {
+    if (arg0 < gNumberOfFonts) {
+        (*D_8012A7E8)[0].font = arg0;
+    }
 }
 
-void set_text_background_color(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    (*D_8012A7E8)[0].unk18 = arg0;
-    (*D_8012A7E8)[0].unk19 = arg1;
-    (*D_8012A7E8)[0].unk1A = arg2;
-    (*D_8012A7E8)[0].unk1B = arg3;
+#ifdef NON_MATCHING
+
+// Unused. Has regalloc issues
+TextureHeader *func_800C4318(s32 font, u8 arg1) {
+    if (font < gNumberOfFonts) {
+        FontData *fontData = &gFonts[font];
+        if (fontData->unk28[0] != 0) {
+            arg1 = fontData->unk100[(arg1 - 32) & 0xFF].unk0;
+            if (arg1 != 0xFF) {
+                return fontData->texturePointers[arg1];
+            }
+            return NULL;
+        }
+    }
+    // @bug: No return statement. The function will return whatever happens to be in v0 
+    //       before this function was called.
+}
+
+#else
+GLOBAL_ASM("asm/non_matchings/font/func_800C4318.s")
+#endif
+
+void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
+    (*D_8012A7E8)[0].colorRed = red;
+    (*D_8012A7E8)[0].colorGreen = green;
+    (*D_8012A7E8)[0].colorBlue = blue;
+    (*D_8012A7E8)[0].colorAlpha = alpha;
+    (*D_8012A7E8)[0].opacity = opacity;
+}
+
+void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
+    (*D_8012A7E8)[0].bgRed = red;
+    (*D_8012A7E8)[0].bgGreen = green;
+    (*D_8012A7E8)[0].bgBlue = blue;
+    (*D_8012A7E8)[0].bgAlpha = alpha;
 }
 
 void func_800C45A4(s32, unk8012A7E8*, s32, s32, f32);
 
 // Unused?
-void func_800C4404(s32 arg0, s32 arg1, s32 arg2) {
-    func_800C45A4(arg0, *D_8012A7E8, arg1, arg2, 1.0f);
+void func_800C4404(Gfx** displayList, char* text, s32 alignmentFlags) {
+    func_800C45A4(displayList, &(*D_8012A7E8)[0], text, alignmentFlags, 1.0f);
 }
 
 void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char* text, s32 alignmentFlags) {
     unk8012A7E8 *temp = &(*D_8012A7E8)[0];
-    temp->unk0 = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;
-    temp->unk2 = (ypos == -0x8000) ? temp->unkE >> 1 : ypos;
+    temp->xpos = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;
+    temp->ypos = (ypos == -0x8000) ? temp->unkE >> 1 : ypos;
     func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
 }
 
-void func_800C44C0(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+// Unused?
+void func_800C44C0(Gfx** displayList, s32 arg1, char* text, s32 alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg1];
-        func_800C45A4(arg0, temp, arg2, arg3, 1.0f);
+        func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
     }
 }
 
-void func_800C4510(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+// Unused?
+void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char* text, s32 alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg1];
-        temp->unk0 = (arg2 == -0x8000) ? temp->unkC >> 1 : arg2;
-        temp->unk2 = (arg3 == -0x8000) ? temp->unkE >> 1 : arg3;
-        func_800C45A4(arg0, temp, arg4, arg5, 1.0f);
+        temp->xpos = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;
+        temp->ypos = (ypos == -0x8000) ? temp->unkE >> 1 : ypos;
+        func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
     }
 }
 
-//#if 1
-// TODO
-//#else
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C45A4.s")
-//#endif
-
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C4DA0.s")
+GLOBAL_ASM("asm/non_matchings/font/func_800C45A4.s")
+GLOBAL_ASM("asm/non_matchings/font/func_800C4DA0.s")
 
 void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 > 0 && arg0 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg0];
-        temp->unk0 = 0;
-        temp->unk2 = 0;
+        temp->xpos = 0;
+        temp->ypos = 0;
         if (arg1 < arg3) {
             temp->unk4 = (s16) arg1;
             temp->unk8 = (s16) arg3;
@@ -326,11 +486,11 @@ void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
 }
 
-void func_800C4F7C(s32 arg0, s32 arg1) {
+void func_800C4F7C(s32 arg0, s32 font) {
     if (arg0 >= 0 && arg0 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg0];
-        if (arg1 < D_8012A7E0) {
-            temp->unk1D = arg1;
+        if (font < gNumberOfFonts) {
+            temp->font = font;
         }
     }
 }
@@ -346,17 +506,17 @@ void func_800C4FBC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
 }
 
-void func_800C5000(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+void func_800C5000(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     unk8012A7E8 *temp;
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
     temp = &D_8012A7E8[arg0];
-    temp->unk14 = arg1;
-    temp->unk15 = arg2;
-    temp->unk16 = arg3;
-    temp->unk17 = arg4;
-    temp->unk1C = arg5;
+    temp->colorRed = red;
+    temp->colorGreen = green;
+    temp->colorBlue = blue;
+    temp->colorAlpha = alpha;
+    temp->opacity = opacity;
 }
 
 void func_800C5050(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
@@ -365,10 +525,10 @@ void func_800C5050(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         return;
     }
     temp = &D_8012A7E8[arg0];
-    temp->unk18 = arg1;
-    temp->unk19 = arg2;
-    temp->unk1A = arg3;
-    temp->unk1B = arg4;
+    temp->bgRed = arg1;
+    temp->bgGreen = arg2;
+    temp->bgBlue = arg3;
+    temp->bgAlpha = arg4;
 }
 
 // Unused?
@@ -395,51 +555,11 @@ void func_800C50D8(s32 arg0) {
 
 // Unused?
 void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    func_800C5168(arg0, (*D_8012A7E8)[arg0].unk0, (*D_8012A7E8)[arg0].unk2, arg1, arg2, arg3);
+    func_800C5168(arg0, (*D_8012A7E8)[arg0].xpos, (*D_8012A7E8)[arg0].ypos, arg1, arg2, arg3);
 }
 
-
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5168.s")
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5494.s")
-#else
-void func_800C5494(s32 arg0){
-    unk8012A7E8 *tmp2 = &(*D_8012A7E8)[arg0];
-    unk8012A7E8_24 *tmp = tmp2->unk24;
-    if(tmp == NULL)
-        return;
-    
-    while(tmp){
-        tmp->unk01 = 255;
-        tmp = tmp->unk1C;
-    }
-    tmp2->unk24 = NULL;
-}
-
-void func_800C54E8(s32 arg0, s16* arg1, u16 arg2, u16 arg3){
-    s16 t4;
-    s16 a3 = arg3;
-    if(arg1 == 0 || (*D_8012A7E8)[arg0].unk19 == 255)
-        return;
-    t4 = arg1[6];
-    switch(arg3){
-        case 4: //L800C55E4;
-            arg1[6] = 0;
-            arg1[7] = 0;
-            return;
-        case 1: //L800C554C;
-            a3 = arg3*1;
-            break;
-        case 2: //L800C5564;
-        default: //L800C5564;
-            break;
-        
-    }
-    arg1[6] += arg2;
-    arg1[7] += a3;
-}
-#endif
-
+GLOBAL_ASM("asm/non_matchings/font/func_800C5168.s")
+GLOBAL_ASM("asm/non_matchings/font/func_800C5494.s")
 
 void func_800C55F4(s32 arg0) {
     (*D_8012A7E8)[arg0].unk1E |= 0x8000;
@@ -526,7 +646,7 @@ void s32_to_string(char** outString, s32 number) {
 }
 #else
 void s32_to_string(char**, s32);
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/s32_to_string.s")
+GLOBAL_ASM("asm/non_matchings/font/s32_to_string.s")
 #endif
 
 /**
@@ -547,7 +667,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800C5B58.s")
+GLOBAL_ASM("asm/non_matchings/font/func_800C5B58.s")
 
 /**
  * Takes in a string and a number, and replaces each instance of the 
@@ -568,7 +688,24 @@ void parse_string_with_number(unsigned char *input, char *output, s32 number) {
     *output = '\0'; // null terminator
 }
 
-// osCreatePiManager is compiled with -mips1, so it does probably belong here.
+
+/*********************************************************************************/
+
+extern OSMesgQueue piAccessQueue; //piAccessQueue
+extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
+extern OSDevMgr __osPiDevMgr;
+void __osDevMgrMain(void);
+
+// bss variables
+OSThread piThread;
+s32 D_8012A9B0[64];
+OSMesgQueue piEventQueue;
+OSMesg piEventBuf[2];
+
+// osCreatePiManager is compiled with -mips1, so it belongs in the source folder.
+// However, I can't just put this in another file because the piThreadStack
+// variable is at the top of this file's bss
+
 void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
 {
 	u32 savedMask;
