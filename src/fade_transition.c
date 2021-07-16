@@ -182,30 +182,29 @@ Gfx D_800E3648[] = {
 
 /************ .bss ************/
 
-// TODO: These are currently defined in font.c; Needs to be moved here.
-extern s32 gCurFaceTransition;
-extern u8 gCurFadeRed;
-extern u8 gCurFadeGreen;
-extern u8 gCurFadeBlue;
-extern u8 gCurFadeAlpha;
-extern s32 gLastFadeRed;
-extern s32 gLastFadeGreen;
-extern s32 gLastFadeBlue;
-extern s32 D_8012A744;
-extern s32 D_8012A748;
-extern s32 D_8012A74C;
-extern f32 D_8012A750;
-extern f32 D_8012A754;
-extern s32 D_8012A758;
-extern s32 D_8012A75C;
-extern s32 D_8012A760;
-extern s32 D_8012A764;
-extern s32 D_8012A768;
-extern s32 D_8012A76C;
-extern s32 D_8012A770;
-extern s32 D_8012A774;
-extern s32 D_8012A778;
-extern s32 D_8012A77C;
+s32 gCurFaceTransition;
+u8 gCurFadeRed;
+u8 gCurFadeGreen;
+u8 gCurFadeBlue;
+u8 gCurFadeAlpha;
+s32 gLastFadeRed;
+s32 gLastFadeGreen;
+s32 gLastFadeBlue;
+s32 D_8012A744;
+s32 D_8012A748;
+s32 D_8012A74C;
+f32 D_8012A750;
+f32 D_8012A754;
+s32 D_8012A758;
+s32 D_8012A75C;
+s32 D_8012A760;
+s32 D_8012A764;
+s32 D_8012A768;
+s32 D_8012A76C;
+s32 D_8012A770;
+s32 D_8012A774;
+s32 D_8012A778;
+s32 D_8012A77C;
 
 /*****************************/
 
