@@ -225,9 +225,9 @@ void func_800B7D20(void) {
     D_800E3188 = NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B7EB4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B8134.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B82B4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800B8134.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
 
 void func_800B8B8C(void) {
     s32 temp_v0;
@@ -244,7 +244,7 @@ void func_800B8B8C(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B8C04.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800B8C04.s")
 
 s32 func_800B9228(unk800DC918_04 * arg0){
     s32 v0 = 0;
@@ -259,13 +259,13 @@ s32 func_800B9228(unk800DC918_04 * arg0){
     return result;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B92F4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B97A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B9C18.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BA288.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BA4B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BA8E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BB2F4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800B92F4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800B97A8.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800B9C18.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BA288.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BA4B8.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")
 
 void func_800BBE08(void);
 void func_800BBF78(s32 arg0);
@@ -275,16 +275,16 @@ void func_800BBDDC(s32 arg0) {
     func_800BBF78(arg0);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BBE08.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BBF78.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BC6C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BCC70.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BDC80.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BE654.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BEEB4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BEFC4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BF3E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BF524.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BF634.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BFE98.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800BFFDC.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BBE08.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BBF78.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BC6C8.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BEEB4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BEFC4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BF3E4.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BF524.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BF634.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BFE98.s")
+GLOBAL_ASM("asm/non_matchings/waves/func_800BFFDC.s")

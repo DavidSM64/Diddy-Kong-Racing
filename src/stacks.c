@@ -4,7 +4,7 @@
 #include "stacks.h"
 
 // This file only contains .bss variables and needs to be located just before 
-// unknown_0B8920.c; that is why this is "located" at 0x800B7D1F.
+// waves.c; that is why this is "located" at 0x800B7D1F.
 
 /************ .bss ************/
 
