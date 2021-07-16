@@ -118,6 +118,8 @@ const char D_800E9260[] = "\nError :: can not add another wave swell, reached li
 
 extern s32 D_8012A0D8;
 extern s32 D_8012A0DC;
+extern s32 D_8012A0E0;
+extern s16 D_8012A1E8[256];
 
 /*****************************/
 
@@ -195,30 +197,18 @@ void func_800B8B8C(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B8C04.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B9228.s")
-#else
-
-extern s32 D_800E30DC;
-extern s32 D_8012A0E0;
-extern s16* D_8012A1E8;
-
 s32 func_800B9228(unk800DC918_04 * arg0){
     s32 v0 = 0;
-    s32 retval = 0;
-    s32 tmp;
+    s32 result = 0;
     while(v0 < D_8012A0E0 && arg0 != D_800E30D8[v0].unk00){
         v0++;
     };
     if(D_800E30D4[D_800E30D8[v0].unk0C]){ 
-        //load array address differently;
-        retval = 1;
-        *(D_8012A1E8 + (tmp = D_800E30DC)) = v0;
-        D_800E30DC = tmp + 1;
+        result = 1;
+        D_8012A1E8[D_800E30DC++] = v0;
     }
-    return retval;
+    return result;
 }
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B92F4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0B8920/func_800B97A8.s")

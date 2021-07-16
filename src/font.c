@@ -56,10 +56,11 @@ OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL };
 
 #define OS_PIM_STACKSIZE	4096
 u8 piThreadStack[256];//piThreadStack[OS_PIM_STACKSIZE];
-
 s32 D_80129BB0[256];
 s32 D_80129FB0[3];
 s32 D_80129FBC;
+
+// Used in unknown_0B8920
 s32 D_80129FC0;
 s32 D_80129FC4;
 s32 D_80129FC8;
