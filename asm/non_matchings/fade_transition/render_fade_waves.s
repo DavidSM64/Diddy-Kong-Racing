@@ -1,4 +1,4 @@
-glabel func_800C23F8
+glabel render_fade_waves
 /* 0C2FF8 800C23F8 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0C2FFC 800C23FC AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0C3000 800C2400 AFB00018 */  sw    $s0, 0x18($sp)

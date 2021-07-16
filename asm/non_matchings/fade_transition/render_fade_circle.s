@@ -1,4 +1,4 @@
-glabel func_800C2274
+glabel render_fade_circle
 /* 0C2E74 800C2274 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0C2E78 800C2278 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C2E7C 800C227C AFA40018 */  sw    $a0, 0x18($sp)

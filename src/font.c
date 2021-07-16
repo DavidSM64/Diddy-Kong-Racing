@@ -113,19 +113,21 @@ s32 D_8012A600[72];
 s32 D_8012A720;
 s32 D_8012A724;
 s32 D_8012A728[2];
-s32 D_8012A730;
-s8 D_8012A734;
-s8 D_8012A735;
-s8 D_8012A736;
-s8 D_8012A737;
-s32 D_8012A738;
-s32 D_8012A73C;
-s32 D_8012A740;
+
+// These should be in fade_transition.c
+s32 gCurFaceTransition;
+u8 gCurFadeRed;
+u8 gCurFadeGreen;
+u8 gCurFadeBlue;
+u8 gCurFadeAlpha;
+s32 gLastFadeRed;
+s32 gLastFadeGreen;
+s32 gLastFadeBlue;
 s32 D_8012A744;
 s32 D_8012A748;
 s32 D_8012A74C;
-s32 D_8012A750;
-s32 D_8012A754;
+f32 D_8012A750;
+f32 D_8012A754;
 s32 D_8012A758;
 s32 D_8012A75C;
 s32 D_8012A760;
@@ -136,6 +138,8 @@ s32 D_8012A770;
 s32 D_8012A774;
 s32 D_8012A778;
 s32 D_8012A77C;
+
+// These should be in game_text.c
 s32 D_8012A780;
 s8 D_8012A784;
 s8 D_8012A785;

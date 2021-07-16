@@ -3,28 +3,28 @@ glabel func_800C27A0
 /* 0C33A4 800C27A4 AFB2000C */  sw    $s2, 0xc($sp)
 /* 0C33A8 800C27A8 AFB00004 */  sw    $s0, 4($sp)
 /* 0C33AC 800C27AC AFB10008 */  sw    $s1, 8($sp)
-/* 0C33B0 800C27B0 3C108013 */  lui   $s0, %hi(D_8012A736) # $s0, 0x8013
+/* 0C33B0 800C27B0 3C108013 */  lui   $s0, %hi(gCurFadeBlue) # $s0, 0x8013
 /* 0C33B4 800C27B4 3C12800E */  lui   $s2, %hi(D_800E31B4) # $s2, 0x800e
-/* 0C33B8 800C27B8 3C0D8013 */  lui   $t5, %hi(D_8012A735) # $t5, 0x8013
-/* 0C33BC 800C27BC 3C0C8013 */  lui   $t4, %hi(D_8012A734) # $t4, 0x8013
+/* 0C33B8 800C27B8 3C0D8013 */  lui   $t5, %hi(gCurFadeGreen) # $t5, 0x8013
+/* 0C33BC 800C27BC 3C0C8013 */  lui   $t4, %hi(gCurFadeRed) # $t4, 0x8013
 /* 0C33C0 800C27C0 3C0B8013 */  lui   $t3, %hi(D_8012A74C) # $t3, 0x8013
-/* 0C33C4 800C27C4 3C0A8013 */  lui   $t2, %hi(D_8012A740) # $t2, 0x8013
+/* 0C33C4 800C27C4 3C0A8013 */  lui   $t2, %hi(gLastFadeBlue) # $t2, 0x8013
 /* 0C33C8 800C27C8 3C098013 */  lui   $t1, %hi(D_8012A748) # $t1, 0x8013
-/* 0C33CC 800C27CC 3C088013 */  lui   $t0, %hi(D_8012A73C) # $t0, 0x8013
+/* 0C33CC 800C27CC 3C088013 */  lui   $t0, %hi(gLastFadeGreen) # $t0, 0x8013
 /* 0C33D0 800C27D0 3C078013 */  lui   $a3, %hi(D_8012A744) # $a3, 0x8013
-/* 0C33D4 800C27D4 3C068013 */  lui   $a2, %hi(D_8012A738) # $a2, 0x8013
+/* 0C33D4 800C27D4 3C068013 */  lui   $a2, %hi(gLastFadeRed) # $a2, 0x8013
 /* 0C33D8 800C27D8 3C05800E */  lui   $a1, %hi(D_800E31B0) # $a1, 0x800e
 /* 0C33DC 800C27DC 24A531B0 */  addiu $a1, %lo(D_800E31B0) # addiu $a1, $a1, 0x31b0
-/* 0C33E0 800C27E0 24C6A738 */  addiu $a2, %lo(D_8012A738) # addiu $a2, $a2, -0x58c8
+/* 0C33E0 800C27E0 24C6A738 */  addiu $a2, %lo(gLastFadeRed) # addiu $a2, $a2, -0x58c8
 /* 0C33E4 800C27E4 24E7A744 */  addiu $a3, %lo(D_8012A744) # addiu $a3, $a3, -0x58bc
-/* 0C33E8 800C27E8 2508A73C */  addiu $t0, %lo(D_8012A73C) # addiu $t0, $t0, -0x58c4
+/* 0C33E8 800C27E8 2508A73C */  addiu $t0, %lo(gLastFadeGreen) # addiu $t0, $t0, -0x58c4
 /* 0C33EC 800C27EC 2529A748 */  addiu $t1, %lo(D_8012A748) # addiu $t1, $t1, -0x58b8
-/* 0C33F0 800C27F0 254AA740 */  addiu $t2, %lo(D_8012A740) # addiu $t2, $t2, -0x58c0
+/* 0C33F0 800C27F0 254AA740 */  addiu $t2, %lo(gLastFadeBlue) # addiu $t2, $t2, -0x58c0
 /* 0C33F4 800C27F4 256BA74C */  addiu $t3, %lo(D_8012A74C) # addiu $t3, $t3, -0x58b4
-/* 0C33F8 800C27F8 258CA734 */  addiu $t4, %lo(D_8012A734) # addiu $t4, $t4, -0x58cc
-/* 0C33FC 800C27FC 25ADA735 */  addiu $t5, %lo(D_8012A735) # addiu $t5, $t5, -0x58cb
+/* 0C33F8 800C27F8 258CA734 */  addiu $t4, %lo(gCurFadeRed) # addiu $t4, $t4, -0x58cc
+/* 0C33FC 800C27FC 25ADA735 */  addiu $t5, %lo(gCurFadeGreen) # addiu $t5, $t5, -0x58cb
 /* 0C3400 800C2800 265231B4 */  addiu $s2, %lo(D_800E31B4) # addiu $s2, $s2, 0x31b4
-/* 0C3404 800C2804 2610A736 */  addiu $s0, %lo(D_8012A736) # addiu $s0, $s0, -0x58ca
+/* 0C3404 800C2804 2610A736 */  addiu $s0, %lo(gCurFadeBlue) # addiu $s0, $s0, -0x58ca
 /* 0C3408 800C2808 3411FFFF */  li    $s1, 65535
 /* 0C340C 800C280C 24020001 */  li    $v0, 1
 .L800C2810:
