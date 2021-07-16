@@ -106,7 +106,7 @@ class ScoreDisplay:
         out += self.makeLine(' ', dashLen, status['Msg'])
         return [out, dashLen]
     
-    def getDisplay(self, advOnePer, advTwoPer, showFlags=3, totalDecompFunctions=0, totalGlobalAsm=0, totalDocumented=0, totalUndocumented=0):
+    def getDisplay(self, advOnePer, advTwoPer, showFlags=3, totalDecompFunctions=0, totalGlobalAsm=0, totalNonMatching=0, totalDocumented=0, totalUndocumented=0):
         advOneStatus = self.getStatus(advOnePer)
         advTwoStatus = self.getStatus(advTwoPer)
         if showFlags == 3:
@@ -129,6 +129,7 @@ class ScoreDisplay:
                 out += self.makeLine('-', dashLen, '{:5.2f}% Complete'.format(advOnePer))
             out += self.makeLine(' ', dashLen, '# Decompiled functions: ' + str(totalDecompFunctions))
             out += self.makeLine(' ', dashLen, '# GLOBAL_ASM remaining: ' + str(totalGlobalAsm))
+            out += self.makeLine(' ', dashLen, '# NON_MATCHING functions: ' + str(totalNonMatching))
             out += advOneGameStatusDisplay[0]
         if showFlags & 2:
             out += self.makeLine('=', dashLen)
