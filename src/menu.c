@@ -3,6 +3,7 @@
 
 #include "menu.h"
 #include "memory.h"
+#include "fade_transition.h"
 
 #include "types.h"
 #include "macros.h"
@@ -349,13 +350,9 @@ s32 D_800DF760 = 0x7F;
 s32 D_800DF764 = 0xFF;
 s32 D_800DF768 = 1;
 
-// Not sure about typing with these arrays.
-s16 D_800DF76C[4] = { 
-    0, 0, 10, -1 
-};
-s16 D_800DF774[4] = { 
-    0, 0, 18, -1 
-};
+FadeTransition D_800DF76C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 10, -1);
+FadeTransition D_800DF774 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 18, -1);
+
 u16 D_800DF77C[12] = { 
     0x8000, 0x0000, 0x0012, 0x0000,
     0x00FF, 0xFFFF, 0x0012, 0xFFFF,
@@ -2023,7 +2020,7 @@ s32 menu_options_loop(s32 arg0) {
         // Leave the option menu
         func_80000C98(-0x80, D_800DF460, analogX);
         gMenuDelay = -1;
-        func_800C01D8(D_800DF774);
+        func_800C01D8(&D_800DF774);
         func_80001D04(0x241, 0);
     } else if ((buttonsPressed & 0x9000) && D_800DF460 >= 2) {
         // Go to a sub-menu
@@ -2193,7 +2190,7 @@ s32 menu_audio_options_loop(s32 arg0) {
         
         if (((sp40 & 0x9000) && (D_801263E0 == gOptionsMenuItemIndex + 1)) || (sp40 & 0x4000)) {
             gMenuDelay = -1;
-            func_800C01D8(D_800DF774);
+            func_800C01D8(&D_800DF774);
             if (D_801263D8 >= 0) {
                 func_80000C98(-0x80);
             }
@@ -2800,7 +2797,7 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
     }
     if (sp48 != 0) {
         gMenuDelay = sp48;
-        func_800C01D8(D_800DF774);
+        func_800C01D8(&D_800DF774);
         func_80001D04(0x241, NULL);
     }
     if (gMenuDelay < -0x1E) {
@@ -3033,7 +3030,7 @@ s32 menu_caution_loop(s32 arg0) {
     } else if (gIgnorePlayerInput <= 0 && get_button_inputs_from_player(0) & 0xD000) {
         func_80001D04(0xEF, NULL);
         gMenuDelay = 1;
-        func_800C01D8(D_800DF774);
+        func_800C01D8(&D_800DF774);
     }
     if (gMenuDelay < 0x14) {
         draw_menu_element(1, D_800DFFD8, 1.0f);

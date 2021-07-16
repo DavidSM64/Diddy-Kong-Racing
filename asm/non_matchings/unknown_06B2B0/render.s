@@ -230,7 +230,7 @@ glabel render
 /* 06D570 8006C970 3C068012 */  lui   $a2, %hi(D_80121218) # $a2, 0x8012
 /* 06D574 8006C974 24C61218 */  addiu $a2, %lo(D_80121218) # addiu $a2, $a2, 0x1218
 /* 06D578 8006C978 24A51208 */  addiu $a1, %lo(D_80121208) # addiu $a1, $a1, 0x1208
-/* 06D57C 8006C97C 0C030172 */  jal   func_800C05C8
+/* 06D57C 8006C97C 0C030172 */  jal   render_fade_transition
 /* 06D580 8006C980 248411F8 */   addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 .L8006C984:
 /* 06D584 8006C984 3C0C8012 */  lui   $t4, %hi(D_80123520) # $t4, 0x8012

@@ -1,0 +1,214 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800C29F0 */
+
+#include "types.h"
+#include "macros.h"
+#include "f3ddkr.h"
+#include "asset_sections.h"
+#include "memory.h"
+
+/************ .data ************/
+
+s8 D_800E3670 = 0;
+s16 D_800E3674 = 0;
+s32 D_800E3678 = 0;
+s32 D_800E367C = 0;
+s32 D_800E3680 = 1;
+
+/*******************************/
+
+/************ .bss ************/
+
+typedef struct unk8012A7C8 {
+    u8 *unk0;
+    u8 *unk4;
+} unk8012A7C8;
+
+typedef struct unk8012A798 {
+    u8 *unk0;
+    u8 *unk4;
+} unk8012A798;
+
+// TODO: These are currently defined in font.c; Needs to be moved here.
+extern u8 *D_8012A780;
+extern s8 D_8012A784;
+extern s8 D_8012A785;
+extern s8 D_8012A786;
+extern s8 D_8012A788;
+extern u8 D_8012A789;
+extern s16 D_8012A78C;
+extern s16 D_8012A790;
+extern unk8012A798 D_8012A798;
+extern s32 D_8012A7A4;
+extern s16 D_8012A7A8;
+extern s16 D_8012A7AA;
+extern s16 D_8012A7AC;
+extern s16 D_8012A7AE;
+extern s16 D_8012A7B0;
+extern s16 D_8012A7B2;
+extern s16 D_8012A7B4;
+extern s16 D_8012A7B6;
+extern s16 D_8012A7BA;
+extern unk8012A7C8 D_8012A7C8;
+extern s32 D_8012A7D4;
+
+/*****************************/
+
+extern u32 osTvType;
+
+void func_800C2F1C(s32);
+void func_8005A3B0(void);
+void func_800C31EC(s32);
+s8 func_8000C8B4(s32);
+
+void func_800C29F0(void) {
+    D_8012A7C8.unk0 = (u8 *)allocate_from_main_pool_safe(0x780, COLOR_TAG_GREEN);
+    D_8012A7C8.unk4 = D_8012A7C8.unk0 + 0x3C0;
+    D_8012A7D4 = 0;
+    D_8012A7B6 = 0;
+    D_8012A7A8 = 0;
+    D_8012A7AA = 0x20;
+    D_8012A7BA = 0;
+    D_8012A7AE = 0x20;
+    D_8012A7B2 = 0x120;
+    if (osTvType == 0) {
+        D_8012A7B0 = 0xE0;
+        D_8012A7B4 = 0xF8;
+    } else {
+        D_8012A7B0 = 0xCA;
+        D_8012A7B4 = 0xDE;
+    }
+    func_800C56D0(6);
+}
+
+void func_800C2AB4(void) {
+    free_from_memory_pool(D_8012A7C8.unk0);
+    D_8012A7B6 = 0;
+    func_800C5620(6);
+    func_800C5494(6);
+}
+
+
+void func_800C2AF4(s32 arg0) {
+    D_800E3680 = arg0;
+}
+
+GLOBAL_ASM("asm/non_matchings/game_text/func_800C2B00.s")
+GLOBAL_ASM("asm/non_matchings/game_text/func_800C2D6C.s")
+
+void func_800C2F1C(s32 arg0) {
+    if (D_800E3680 == 0) {
+        D_8012A7B6 = 0;
+    }
+    if (D_8012A7B6 != 0) {
+        if (D_8012A7AC <= 0) {
+            D_8012A7A8 -= arg0 * D_8012A7AA;
+            if ((s32) D_8012A7A8 < 0) {
+                D_8012A7A8 = 0;
+                D_8012A7B6 = 0;
+                func_800C5620(6);
+                func_800C5494(6);
+            }
+        } else {
+            D_8012A7A8 += arg0 * D_8012A7AA;
+            if (D_8012A7A8 >= 0x101) {
+                D_8012A7A8 = 0x100;
+            }
+            D_8012A7AC -= arg0;
+            if (D_8012A7AC <= 0) {
+                func_800C2D6C(D_8012A7B6);
+            }
+        }
+    }
+    if (D_8012A7B6 != 0) {
+        func_800C2B00(D_8012A7B6);
+    }
+}
+
+void func_800C3048(void) {
+    D_8012A78C = -1;
+    D_8012A780 = (u8*)allocate_from_main_pool_safe(0x800, COLOR_TAG_GREEN);
+    D_8012A798.unk0 = D_8012A780 + 0x80;
+    D_8012A798.unk4 = D_8012A798.unk0 + 0x3C0;
+    D_8012A7A4 = 0;
+    func_800C29F0();
+    D_8012A790 = (get_size_of_asset_section(ASSET_GAME_TEXT_TABLE) >> 2) - 2;
+    D_800E3670 = 1;
+}
+
+void func_800C30CC(void) {
+    s32 i;
+    if (D_800E3670) {
+        free_from_memory_pool(D_8012A780);
+        D_800E3670 = 0;
+        D_8012A789 = 0;
+        for(i = 0; i < 10; i++) {
+            func_8009CFB0();
+        };
+        func_800C2AB4();
+    }
+}
+
+void func_800C3140(s32 arg0) {
+    D_800E3674 = arg0;
+}
+
+void func_800C314C(void) {
+    D_800E3678 = 0;
+}
+
+void func_800C3158(s32 arg0, f32 arg1) {
+    if (osTvType == 0) {
+        D_800E3678 = arg1 * 50.0;
+    } else {
+        D_800E3678 = arg1 * 60.0;
+    }
+    D_800E367C = arg0;
+}
+
+GLOBAL_ASM("asm/non_matchings/game_text/func_800C31EC.s")
+
+s32 func_800C3400(void) {
+    s32 result = 0;
+    if (D_800E3670 != 0) {
+        if (D_8012A789 != 0) {
+            result = 1;
+            if (D_8012A788 != 0) {
+                result = 2;
+            }
+        }
+    }
+    return result;
+}
+
+void func_800C3440(s32 arg0) {
+    if (D_800E3670 != 0) {
+        if (!is_game_paused()) {
+            if (D_800E3678 > 0) {
+                D_800E3678 -= arg0;
+                if (D_800E3678 <= 0) {
+                    func_800C31EC(D_800E367C);
+                    D_800E3678 = 0;
+                }
+            }
+        }
+        func_800C2F1C(arg0);
+        if (D_8012A789 != 0) {
+            func_8005A3B0();
+            if (D_8012A786 != 0) {
+                D_8012A785 -= arg0;
+                while (D_8012A785 < 0) {
+                    D_8012A785 += func_8000C8B4(0x3C);
+                    D_8012A786--;
+                }
+                if (D_8012A786 <= 0) {
+                    D_8012A784 = 1;
+                }
+            }
+            func_8009CFEC(3);
+        }
+    }
+}
+
+GLOBAL_ASM("asm/non_matchings/game_text/func_800C3564.s")
+GLOBAL_ASM("asm/non_matchings/game_text/func_800C38B4.s")

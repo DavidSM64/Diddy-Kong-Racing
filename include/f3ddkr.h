@@ -69,7 +69,29 @@
 
 /****** F3DDKR display list commands ******/
 
+#define G_TRIN  5
 #define G_DMADL 7
+
+#define gDkrVertices(pkt, address, no, v0)                         \
+{                                                                  \
+    Gfx *_g = (Gfx *)(pkt);                                        \
+                                                                   \
+    _g->words.w0 = (_SHIFTL(G_VTX, 24, 8) | _SHIFTL((no), 16, 8) | \
+            _SHIFTL((v0*2), 0, 16));                               \
+    _g->words.w1 = (unsigned int)(address);                        \
+}
+
+#define TRIN_DISABLE_TEXTURE 0
+#define TRIN_ENABLE_TEXTURE 1
+
+#define gDkrTriangles(pkt, address, n, t)                              \
+{                                                                      \
+    Gfx *_g = (Gfx *)(pkt);                                            \
+                                                                       \
+    _g->words.w0 = (_SHIFTL(G_TRIN, 24, 8) | _SHIFTL((n - 1), 20, 4) | \
+            _SHIFTL((t), 16, 4) | _SHIFTL((n*16), 0, 16));             \
+    _g->words.w1 = (unsigned int)(address);                            \
+}
 
 #define numberOfGfxCommands(gfxCmds) (sizeof(gfxCmds) / sizeof(Gwords))
 

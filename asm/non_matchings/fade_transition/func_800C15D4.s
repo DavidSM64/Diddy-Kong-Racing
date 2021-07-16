@@ -25,16 +25,16 @@ glabel func_800C15D4
 /* 0C2230 800C1630 AC8F0004 */  sw    $t7, 4($a0)
 /* 0C2234 800C1634 ACB90000 */  sw    $t9, ($a1)
 /* 0C2238 800C1638 ACAD0004 */  sw    $t5, 4($a1)
-/* 0C223C 800C163C 3C058013 */  lui   $a1, %hi(D_8012A735) # $a1, 0x8013
-/* 0C2240 800C1640 3C048013 */  lui   $a0, %hi(D_8012A734) # $a0, 0x8013
+/* 0C223C 800C163C 3C058013 */  lui   $a1, %hi(gCurFadeGreen) # $a1, 0x8013
+/* 0C2240 800C1640 3C048013 */  lui   $a0, %hi(gCurFadeRed) # $a0, 0x8013
 /* 0C2244 800C1644 3C03800E */  lui   $v1, %hi(D_800E31C0) # $v1, 0x800e
 /* 0C2248 800C1648 3C0A800E */  lui   $t2, %hi(D_800E31C8) # $t2, 0x800e
-/* 0C224C 800C164C 3C068013 */  lui   $a2, %hi(D_8012A736) # $a2, 0x8013
-/* 0C2250 800C1650 24C6A736 */  addiu $a2, %lo(D_8012A736) # addiu $a2, $a2, -0x58ca
+/* 0C224C 800C164C 3C068013 */  lui   $a2, %hi(gCurFadeBlue) # $a2, 0x8013
+/* 0C2250 800C1650 24C6A736 */  addiu $a2, %lo(gCurFadeBlue) # addiu $a2, $a2, -0x58ca
 /* 0C2254 800C1654 254A31C8 */  addiu $t2, %lo(D_800E31C8) # addiu $t2, $t2, 0x31c8
 /* 0C2258 800C1658 246331C0 */  addiu $v1, %lo(D_800E31C0) # addiu $v1, $v1, 0x31c0
-/* 0C225C 800C165C 2484A734 */  addiu $a0, %lo(D_8012A734) # addiu $a0, $a0, -0x58cc
-/* 0C2260 800C1660 24A5A735 */  addiu $a1, %lo(D_8012A735) # addiu $a1, $a1, -0x58cb
+/* 0C225C 800C165C 2484A734 */  addiu $a0, %lo(gCurFadeRed) # addiu $a0, $a0, -0x58cc
+/* 0C2260 800C1660 24A5A735 */  addiu $a1, %lo(gCurFadeGreen) # addiu $a1, $a1, -0x58cb
 /* 0C2264 800C1664 240902D0 */  li    $t1, 720
 /* 0C2268 800C1668 240800FF */  li    $t0, 255
 /* 0C226C 800C166C 00001025 */  move  $v0, $zero

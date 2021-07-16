@@ -172,9 +172,6 @@ extern s32 D_800DF760;
 extern s32 D_800DF764;
 extern s32 D_800DF768;
 
-// Not sure about typing with these arrays.
-extern s16 D_800DF76C[4];
-extern s16 D_800DF774[4];
 extern u16 D_800DF77C[12];
 
 extern s32 D_800DF794;
