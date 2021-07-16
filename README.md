@@ -113,23 +113,24 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of July 10th 2021, this is our current score:
+As of July 15th 2021, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 10.02% Complete -------------------
-               # Decompiled functions: 725
-              # GLOBAL_ASM remaining: 1036
+ ------------------- 10.57% Complete -------------------
+               # Decompiled functions: 742
+              # GLOBAL_ASM remaining: 1020
+              # NON_MATCHING functions: 39
  --------------------- Game Status ---------------------
         Balloons: 6/47, Keys: 1/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4
  -------------------------------------------------------
-        We are racing in Jungle Falls. (Lap 2/3)
+        We are racing in Jungle Falls. (Lap 3/3)
  =======================================================
           ADVENTURE TWO (Cleanup & Documentation)
- -------------------  0.59% Complete -------------------
-               # Documented functions: 47
-             # Undocumented remaining: 1714
+ -------------------  0.69% Complete -------------------
+               # Documented functions: 56
+             # Undocumented remaining: 1706
  --------------------- Game Status ---------------------
         Balloons: 0/47, Keys: 0/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4

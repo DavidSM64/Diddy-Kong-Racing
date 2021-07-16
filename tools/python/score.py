@@ -33,6 +33,7 @@ LIB_SRC_DIRECTORY = './lib/src'
 FUNCTION_REGEX = r'(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#if(?:.|\n)*?(GLOBAL_ASM[(][^)]*[)])(.|\n)*?#endif'
+NON_MATCHING_REGEX = re.compile(r'^#ifdef[ ]+NON_MATCHING', re.MULTILINE)
 
 CODE_START = 0x80000400
 CODE_END = 0x800D75F4
@@ -84,6 +85,7 @@ class ScoreFile:
     def read_file(self):
         with open(self.path, "r") as inFile:
             self.text = inFile.read()
+            self.numNonMatchings = len(re.findall(NON_MATCHING_REGEX, self.text))
             self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\1)", self.text)
             
     def get_matches(self):
@@ -99,7 +101,7 @@ class ScoreFile:
                 self.unfinishedSize += MAP_FILE.functionSizes[groups[0]]
             except Exception:
                 pass
-        
+    
     def get_number_of_documented_functions(self):
         count = 0
         for func in self.functions:
@@ -137,6 +139,7 @@ def main():
     totalNumberOfDecompiledFunctions = 0
     totalNumberOfDocumentedFunctions = 0
     totalNumberOfGlobalAsms = 0
+    totalNumberOfNonMatching = 0
     totalSizeOfDecompiledFunctions = 0
     totalSizeOfDocumentedFunctions = 0
     
@@ -145,6 +148,7 @@ def main():
         scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename)
         totalNumberOfDecompiledFunctions += len(scoreFile.functions)
         totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
+        totalNumberOfNonMatching += scoreFile.numNonMatchings
         totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
         totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
         totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
@@ -169,7 +173,7 @@ def main():
     adventureTwoPercentage = (totalSizeOfDocumentedFunctions / CODE_SIZE) * 100
     
     scoreDisplay = ScoreDisplay()
-    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfDocumentedFunctions, totalNumberOfFunctions - totalNumberOfDocumentedFunctions))
+    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfDocumentedFunctions, totalNumberOfFunctions - totalNumberOfDocumentedFunctions))
     
     if showTopFiles > 0:
         if showTopFiles > len(scoreFiles):
