@@ -1,8 +1,4 @@
-glabel func_800B4A08
-/* 0B5608 800B4A08 3C01800E */  lui   $at, %hi(D_800E2EF0) # $at, 0x800e
-/* 0B560C 800B4A0C 03E00008 */  jr    $ra
-/* 0B5610 800B4A10 AC242EF0 */   sw    $a0, %lo(D_800E2EF0)($at)
-
+glabel func_800B4A14
 /* 0B5614 800B4A14 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0B5618 800B4A18 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0B561C 800B4A1C AFA60028 */  sw    $a2, 0x28($sp)

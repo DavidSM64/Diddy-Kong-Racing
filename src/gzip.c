@@ -251,5 +251,5 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
   return;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0B8920/gzip_huft_build.s")
+GLOBAL_ASM("asm/non_matchings/gzip/gzip_huft_build.s")
 #endif

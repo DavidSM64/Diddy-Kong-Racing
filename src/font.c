@@ -3,6 +3,7 @@
 
 #include "memory.h"
 #include "video.h"
+#include "stacks.h"
 
 #include "structs.h"
 #include "types.h"
@@ -53,125 +54,6 @@ OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL };
 /*******************************/
 
 /************ .bss ************/
-
-#define OS_PIM_STACKSIZE	4096
-u8 piThreadStack[256];//piThreadStack[OS_PIM_STACKSIZE];
-
-s32 D_80129BB0[256];
-s32 D_80129FB0[3];
-s32 D_80129FBC;
-s32 D_80129FC0;
-s32 D_80129FC4;
-s32 D_80129FC8;
-s32 D_80129FCC;
-s32 D_80129FD0[4];
-s32 D_80129FE0[2];
-s32 D_80129FE8;
-s32 D_80129FF0[6];
-s32 D_8012A008;
-s32 D_8012A00C;
-s32 D_8012A010;
-s32 D_8012A014;
-s32 D_8012A018;
-s32 D_8012A01C;
-s32 D_8012A020[2];
-s32 D_8012A028[20];
-s32 D_8012A078;
-s32 D_8012A07C;
-s32 D_8012A080;
-s32 D_8012A084;
-s32 D_8012A088;
-s32 D_8012A08C;
-s32 D_8012A090;
-s32 D_8012A094;
-s32 D_8012A098;
-s32 D_8012A09C;
-s32 D_8012A0A0;
-s32 D_8012A0A4;
-s32 D_8012A0A8;
-s32 D_8012A0AC;
-s32 D_8012A0B0;
-s32 D_8012A0B4;
-s32 D_8012A0B8;
-s32 D_8012A0BC;
-s32 D_8012A0C0;
-s32 D_8012A0C4;
-s32 D_8012A0C8;
-s32 D_8012A0CC;
-s32 D_8012A0D0;
-s32 D_8012A0D4;
-s32 D_8012A0D8;
-s32 D_8012A0DC;
-s32 D_8012A0E0;
-s32 D_8012A0E8[64];
-s32 D_8012A1E8[256];
-s32 D_8012A5E8[3];
-s32 D_8012A5F4;
-s32 D_8012A5F8;
-s32 D_8012A5FC;
-s32 D_8012A600[72];
-s32 D_8012A720;
-s32 D_8012A724;
-s32 D_8012A728[2];
-
-// These should be in fade_transition.c
-s32 gCurFaceTransition;
-u8 gCurFadeRed;
-u8 gCurFadeGreen;
-u8 gCurFadeBlue;
-u8 gCurFadeAlpha;
-s32 gLastFadeRed;
-s32 gLastFadeGreen;
-s32 gLastFadeBlue;
-s32 D_8012A744;
-s32 D_8012A748;
-s32 D_8012A74C;
-f32 D_8012A750;
-f32 D_8012A754;
-s32 D_8012A758;
-s32 D_8012A75C;
-s32 D_8012A760;
-s32 D_8012A764;
-s32 D_8012A768;
-s32 D_8012A76C;
-s32 D_8012A770;
-s32 D_8012A774;
-s32 D_8012A778;
-s32 D_8012A77C;
-
-// These should be in game_text.c
-s32 D_8012A780;
-s8 D_8012A784;
-s8 D_8012A785;
-s8 D_8012A786;
-s8 D_8012A787;
-s8 D_8012A788;
-s8 D_8012A789;
-s8 D_8012A78A;
-s16 D_8012A78C;
-s16 D_8012A78E;
-s32 D_8012A790[2];
-s32 D_8012A798;
-s32 D_8012A79C;
-s32 D_8012A7A0;
-s32 D_8012A7A4;
-s16 D_8012A7A8;
-s16 D_8012A7AA;
-s16 D_8012A7AC;
-s16 D_8012A7AE;
-s16 D_8012A7B0;
-s16 D_8012A7B2;
-s16 D_8012A7B4;
-s16 D_8012A7B6;
-s16 D_8012A7B8;
-s16 D_8012A7BA;
-s32 D_8012A7C0[2];
-s32 D_8012A7C8;
-s32 D_8012A7CC;
-s32 D_8012A7D0;
-s32 D_8012A7D4;
-s32 D_8012A7D8;
-s32 D_8012A7DC;
 
 s32 gNumberOfFonts;
 
@@ -258,6 +140,7 @@ s32 D_8012A7F0;
 s8 D_8012A7F4;
 s32 D_8012A7F8;
 s32 D_8012A7FC;
+
 /******************************/
 
 
@@ -690,60 +573,4 @@ void parse_string_with_number(unsigned char *input, char *output, s32 number) {
         }
     }
     *output = '\0'; // null terminator
-}
-
-
-/*********************************************************************************/
-
-extern OSMesgQueue piAccessQueue; //piAccessQueue
-extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
-extern OSDevMgr __osPiDevMgr;
-void __osDevMgrMain(void);
-
-// bss variables
-OSThread piThread;
-s32 D_8012A9B0[64];
-OSMesgQueue piEventQueue;
-OSMesg piEventBuf[2];
-
-// osCreatePiManager is compiled with -mips1, so it belongs in the source folder.
-// However, I can't just put this in another file because the piThreadStack
-// variable is at the top of this file's bss
-
-void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt)
-{
-	u32 savedMask;
-	OSPri oldPri;
-	OSPri myPri;
-	if (!__osPiDevMgr.active)
-	{
-		osCreateMesgQueue(cmdQ, cmdBuf, cmdMsgCnt);
-		osCreateMesgQueue(&piEventQueue, (OSMesg*)&piEventBuf, 1);
-		if (!__osPiAccessQueueEnabled)
-			__osPiCreateAccessQueue();
-		osSetEventMesg(OS_EVENT_PI, &piEventQueue, (OSMesg)0x22222222);
-		oldPri = -1;
-		myPri = osGetThreadPri(NULL);
-		if (myPri < pri)
-		{
-			oldPri = myPri;
-			osSetThreadPri(NULL, pri);
-		}
-		savedMask = __osDisableInt();
-		__osPiDevMgr.active = 1;
-		__osPiDevMgr.thread = &piThread;
-		__osPiDevMgr.cmdQueue = cmdQ;
-		__osPiDevMgr.evtQueue = &piEventQueue;
-		__osPiDevMgr.acsQueue = &piAccessQueue;
-		__osPiDevMgr.dma = osPiRawStartDma;
-        __osPiDevMgr.edma = osEPiRawStartDma;
-
-		osCreateThread(&piThread, 0, __osDevMgrMain, &__osPiDevMgr, &piThreadStack[OS_PIM_STACKSIZE], pri);
-		osStartThread(&piThread);
-		__osRestoreInt(savedMask);
-		if (oldPri != -1)
-		{
-			osSetThreadPri(NULL, oldPri);
-		}
-	}
 }

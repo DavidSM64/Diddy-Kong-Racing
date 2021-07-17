@@ -330,6 +330,21 @@ typedef struct ObjectModel {
 /* 0x48 */ s16 numberOfAnimations;
 } ObjectModel;
 
+typedef struct LevelModel {
+/* 0x00 */ TextureInfo *textures;
+/* 0x04 */ s32 *segments;
+/* 0x08 */ s32 *segmentsBoundingBoxes;
+/* 0x0C */ s32 unkC;
+/* 0x10 */ s32 *segmentsBitfields;
+/* 0x14 */ s32 *segmentsBspTree;
+/* 0x18 */ s16 numberOfTextures;
+/* 0x1A */ s16 numberOfSegments;
+           u8 pad1C[4];
+/* 0x20 */ s32 unk20;
+           u8 pad24[0x14];
+/* 0x38 */ u32 unk38;
+} LevelModel;
+
 typedef struct Object_3C {
     u8 pad0[0x8];
     s8 unk8;

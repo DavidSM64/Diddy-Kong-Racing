@@ -29,28 +29,38 @@ typedef struct unk8012A798 {
     u8 *unk4;
 } unk8012A798;
 
-// TODO: These are currently defined in font.c; Needs to be moved here.
-extern u8 *D_8012A780;
-extern s8 D_8012A784;
-extern s8 D_8012A785;
-extern s8 D_8012A786;
-extern s8 D_8012A788;
-extern u8 D_8012A789;
-extern s16 D_8012A78C;
-extern s16 D_8012A790;
-extern unk8012A798 D_8012A798;
-extern s32 D_8012A7A4;
-extern s16 D_8012A7A8;
-extern s16 D_8012A7AA;
-extern s16 D_8012A7AC;
-extern s16 D_8012A7AE;
-extern s16 D_8012A7B0;
-extern s16 D_8012A7B2;
-extern s16 D_8012A7B4;
-extern s16 D_8012A7B6;
-extern s16 D_8012A7BA;
-extern unk8012A7C8 D_8012A7C8;
-extern s32 D_8012A7D4;
+u8 *D_8012A780;
+s8 D_8012A784;
+s8 D_8012A785;
+s8 D_8012A786;
+s8 D_8012A787;
+s8 D_8012A788;
+u8 D_8012A789;
+s8 D_8012A78A;
+s16 D_8012A78C;
+s16 D_8012A78E;
+s16 D_8012A790;
+s16 D_8012A792;
+unk8012A798 D_8012A798;
+s32 D_8012A7A0;
+s32 D_8012A7A4;
+s16 D_8012A7A8;
+s16 D_8012A7AA;
+s16 D_8012A7AC;
+s16 D_8012A7AE;
+s16 D_8012A7B0;
+s16 D_8012A7B2;
+s16 D_8012A7B4;
+s16 D_8012A7B6;
+s16 D_8012A7B8;
+s16 D_8012A7BA;
+s16 D_8012A7BE;
+s32 D_8012A7C0;
+unk8012A7C8 D_8012A7C8;
+s32 D_8012A7D0;
+s32 D_8012A7D4;
+s32 D_8012A7D8;
+s32 D_8012A7DC;
 
 /*****************************/
 
