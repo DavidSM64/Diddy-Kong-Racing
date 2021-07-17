@@ -6,9 +6,10 @@
 
 /************ .rodata ************/
 
+// Need to move this to the correct file when we figure out where the lens flare code is.
 const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
 
-// File Boundary! Not sure where the split occurs though.
+// This is most likely a file boundary. Not sure where the split occurs though.
 const int D_800E8838[2] = { 0, 0 };
 
 const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
@@ -281,33 +282,35 @@ void func_800AE490(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AE530.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AE728.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AEE14.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AEEB8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AEF88.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF024.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF0A4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF0F0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF134.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF1E0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF29C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF404.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF52C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF6E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AF714.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AFC3C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800AFE5C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B0010.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B03C0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B0698.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B0BAC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B1130.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B1CB8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B2040.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B2260.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B22FC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B263C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B26E0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B2FBC.s")
+// Particles
+GLOBAL_ASM("asm/non_matchings/particles/func_800AE530.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AE728.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AEE14.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AEEB8.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AEF88.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF024.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF0A4.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF0F0.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF134.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF1E0.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF29C.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF52C.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF6E4.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800AFE5C.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B0010.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B03C0.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B0698.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B1130.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B1CB8.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B2040.s")
+
+GLOBAL_ASM("asm/non_matchings/particles/func_800B2260.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B22FC.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B263C.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B2FBC.s")
 

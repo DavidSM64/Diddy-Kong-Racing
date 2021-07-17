@@ -16,11 +16,6 @@ typedef struct {
     s8 unk4C;
 } unk80126D60;
 
-typedef struct {
-    s16 unk0;
-    s16 unk2;
-} unk80127BF8;
-
 extern u32 osTvType;
 
 /************ .data ************/
@@ -134,10 +129,20 @@ u16 D_800E2684[118] = {
     0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000
 };
 
-// This is probably not right.
-u8 D_800E2770[32] = {
-    0, 0xFD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+/* Size: 0x10 bytes */
+typedef struct unk800E2770 {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+} unk800E2770;
+
+unk800E2770 D_800E2770[2] = {
+    { 0, 0xFD, 0, 0, 0, 0, 0 },
+    { 0, 0xFF, 0, 0, 0, 0, 0 },
 };
 
 s8 D_800E2790 = 1;
@@ -187,182 +192,6 @@ f32 D_800E2838 = 0.0f;
 s32 D_800E283C[5] = {
     0x06FFFFFF, 0x000FFFFF, 0x06000000, 0x0014FFFF, 
     0x00000000
-};
-
-// D_800E28D8 is also unk800E2850
-
-/* Size: 0x2C Bytes */
-typedef struct unk800E2850 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s16 unk24;
-    s16 unk26;
-    s16 unk28;
-    s16 unk2A;
-} unk800E2850;
-
-unk800E2850 D_800E2850[3] = {
-    { 0,  0x40, 0, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
-    { 0, 0x100, 1, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
-    { 0,  0x08, 2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 }
-};
-
-s32 D_800E28D4 = 0;
-
-unk800E2850 D_800E28D8 = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-// Not sure about typing for the following.
-s32 D_800E2904 = 0;
-s32 D_800E2908 = 0;
-s32 D_800E290C = 0;
-s32 D_800E2910 = 0;
-s32 D_800E2914[2] = { 0, 0 };
-s32 D_800E291C = 0;
-s32 D_800E2920[2] = { 0, 0 };
-
-Gfx D_800E2928[] = {
-    gsDPPipeSync(), 
-    gsDPSetCycleType(G_CYC_1CYCLE),
-    gsDPSetTextureLOD(G_TL_TILE),
-    gsDPSetTextureLUT(G_TT_NONE),
-    gsDPSetTextureDetail(G_TD_CLAMP), 
-    gsDPSetTexturePersp(G_TP_NONE),
-    gsDPSetTextureFilter(G_TF_BILERP),
-    gsDPSetTextureConvert(G_TC_FILT), 
-    gsDPSetAlphaCompare(G_AC_NONE), 
-    gsDPSetRenderMode(G_RM_CLD_SURF, G_RM_CLD_SURF2),
-    gsSPEndDisplayList(),
-};
-
-/* Size: 0x10 Bytes */
-typedef struct unk800E2980 {
-    s32 unk0;
-    u16 unk4;
-    u16 unk6;
-    f32 unk8;
-    f32 unkC;
-} unk800E2980;
-
-unk800E2980 D_800E2980[2] = {
-    { 1, 0xFFFF, 0xC090, 3.0f, 0.0f },
-    { 0,      0,      0, 0.0f, 0.0f }
-};
-
-unk800E2980 D_800E29A0[4] = {
-    { 3, 0xFFFF, 0x0090, 0.75f,  -32.0f },
-    { 2, 0x0050, 0xFF60,  0.8f,  -96.0f },
-    { 2, 0x00FF, 0x0090, 0.75f, -192.0f },
-    { 0,      0,      0,  0.0f,    0.0f }
-};
-
-unk800E2980 D_800E29E0[5] = {
-    { 3, 0xFF80, 0x1490, 0.65f,  -64.0f },
-    { 2, 0xFFFF, 0xFF90,  1.0f, -128.0f },
-    { 3, 0xFFFF, 0x8090,  0.5f, -176.0f },
-    { 3, 0xFF28, 0x2890, 0.75f, -224.0f },
-    { 0,      0,      0,  0.0f,    0.0f }
-};
-
-unk800E2980 D_800E2A30[5] = {
-    { 3, 0xFF80, 0xFF80,  0.5f,  -64.0f },
-    { 1, 0xFFFF, 0xC090, 0.75f, -128.0f },
-    { 2, 0xFF28, 0x0080,  0.6f, -176.0f },
-    { 1, 0xFFC0, 0xFF90, 0.75f, -224.0f },
-    { 0,      0,      0,  0.0f,    0.0f }
-};
-
-s32 D_800E2A80 = 0;
-s32 D_800E2A84 = 1;
-s32 D_800E2A88 = 0;
-f32 D_800E2A8C = -200.0f;
-f32 D_800E2A90 = 200.0f;
-f32 D_800E2A94 = 200.0f;
-f32 D_800E2A98 = 200.0f;
-f32 D_800E2A9C = 200.0f;
-f32 D_800E2AA0 = -200.0f;
-f32 D_800E2AA4 = -200.0f;
-f32 D_800E2AA8 = -200.0f;
-
-s16 D_800E2AAC[80] = {
-    0, 0, 0, -1, -1, 0, 0, 0, 
-    -1, -1, 0, 0, 0, -1, -1, 0, 
-    0, 0, -1, -1, 0, 0, 0, -1, 
-    -1, 0, 0, 0, -1, -1, 0, 0, 
-    0, -1, -1, 0, 0, 0, -1, -1, 
-    0, 0, 0, -1, -1, 0, 0, 0, 
-    -1, -1, 0, 0, 0, -1, -1, 0, 
-    0, 0, -1, -1, 0, 0, 0, -1, 
-    -1, 0, 0, 0, -1, -1, 0, 0, 
-    0, -1, -1, 0, 0, 0, -1, -1
-};
-
-/* Size: 0x1C Bytes */
-typedef struct unk800E2B4C {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    s16 unk18;
-    s16 unk1A;
-} unk800E2B4C;
-
-unk800E2B4C D_800E2B4C[8] = {
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }
-};
-
-/* Size: 0x18 Bytes */
-typedef struct unk800E2C2C {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
-    s32 unk8;
-    s32 unkC;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800E2C2C;
-
-unk800E2C2C D_800E2C2C[2] = {
-    { 0, 0x400, 0x400, 0x000AFFC4, 0, 0x80FF, 0xFF80, 0x80FF, 0x8000 },
-    { 0, 0x600, 0x600, 0x0020FF40, 0, 0xFFFF, 0xFF00, 0x80FF, 0xFF00 }
-};
-
-s32 D_800E2C5C = 0;
-s32 D_800E2C60 = 0x00010000;
-s32 D_800E2C64 = 0;
-s32 D_800E2C68 = 0x00010000;
-s32 D_800E2C6C = 0x00010000;
-s32 D_800E2C70 = 0;
-s32 D_800E2C74 = 0x00010000;
-s32 D_800E2C78 = 0;
-s32 D_800E2C7C = 0;
-s32 D_800E2C80 = 0;
-s32 D_800E2C84 = 0;
-s32 D_800E2C88 = 0;
-s32 D_800E2C8C = 0;
-s32 D_800E2C90 = 0;
-s32 D_800E2C94 = 0;
-
-s16 D_800E2C98[4] = {
-    0x40FF, 0xFFFF, 0x0005, 0x0002
 };
 
 /*******************************/
@@ -440,28 +269,12 @@ s32 D_8012718C;
 s32 D_80127190;
 s32 D_80127194;
 s32 D_80127198[6];
+
+// ????
 s32 D_801271B0[640];
-s32 D_80127BB0;
-s32 D_80127BB4;
-s32 D_80127BB8[16];
-unk80127BF8 D_80127BF8;
-s32 D_80127BFC;
-s32 D_80127C00;
-s32 D_80127C04;
-s32 D_80127C08;
-s32 D_80127C0C;
-s32 D_80127C10;
-s32 D_80127C14;
-s32 D_80127C18;
-s32 D_80127C1C;
-s32 D_80127C20;
-s32 D_80127C24;
-s32 D_80127C28;
-s32 D_80127C2C;
-s32 D_80127C30[4];
-s32 D_80127C40[16];
 
 /******************************/
+
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009ECF0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009F034.s")
@@ -472,7 +285,18 @@ u8 func_800A0190(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A01A0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0B74.s")
+
+void func_800A0B74(void) {
+    s32 i;
+    for(i = 0; i < 2; i++) {
+        if (D_800E2770[i].unk4 != 0) {
+            func_8000488C(D_800E2770[i].unk4);
+            D_800E2770[i].unk4 = 0;
+            D_800E2770[i].unk2 = 0;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0BD4.s")
 
 typedef struct {
@@ -605,8 +429,21 @@ GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7520.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7A60.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7B68.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7FBC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A83B4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A8458.s")
+
+void func_800A83B4(LevelModel *model) {
+    s32 sp2C;
+    D_80126D54 = (model->unk38 >> 16) & 0xFF;
+    D_80126D55 = (model->unk38 >> 8) & 0xFF;
+    D_80126D56 = model->unk38 & 0xFF;
+    func_8007C8E0(model->unk20, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
+    func_8007CA68(model->unk20, 0, &D_80126D14, &D_80126D18, &sp2C);
+    model->unk20 = func_8007C12C(model->unk20, 1);
+}
+
+s8 func_800A8458(void) {
+    return D_800E27A4[D_80126D0C];
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A8474.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AA3EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AA600.s")
@@ -627,82 +464,6 @@ void func_800AB1C8(void) {
     D_80126CD4 = 0;
 }
 
-/* Last function of file */
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AB1D4.s")
-//void func_800AB1D4(s32 arg0) {
-//    D_80126CD2 = arg0 - 1;
-//}
-
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AB1F0.s")
-
-void func_800AB308(s16 arg0, s16 arg1) {
-    if (D_80127BF8.unk2 < D_80127BF8.unk0) {
-        D_80127BF8.unk0 = arg0;
-        D_80127BF8.unk2 = arg1;
-    } else {
-        D_80127BF8.unk0 = arg1;
-        D_80127BF8.unk2 = arg0;
-    }
+void func_800AB1D4(u8 arg0) {
+    D_80126CD2 = 1 - arg0;
 }
-
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AB35C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AB4A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ABB34.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ABC5C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ABE68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC0C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC21C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC5A4.s")
-
-void func_800AC880(s32 arg0) {
-    if (arg0 == D_800E2A80) {
-        D_800E2A80 = 0;
-        D_800E2A84 = 1;
-    }
-}
-
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC8A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ACA20.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ACF60.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ACF98.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD030.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD144.s")
-
-void func_800AD220(void) {
-    if (D_800E2C2C[0].unkC != 0) {
-        func_8007B2BC(D_800E2C2C[0].unkC);
-        D_800E2C88 = 0;
-    }
-
-    if (D_800E2C2C[1].unkC != 0) {
-        func_8007B2BC(D_800E2C2C[1].unkC);
-        D_800E2C88 = 0;
-    }
-
-    if (D_800E2C8C != 0) {
-        func_8007CCB0(D_800E2C8C);
-        D_800E2C8C = 0;
-    }
-
-    if (D_800E2C94 != 0) {
-        func_800096F8(D_800E2C94);
-        D_800E2C94 = 0;
-    }
-
-    D_800E2C5C = 0;
-}
-
-void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2) {
-    D_800E2C78 = osTvType == 0 ? 50.0 * arg2 : 60.0 * arg2;
-    D_800E2C68 = arg0;
-    D_800E2C64 = (D_800E2C68 - D_800E2C60) / D_800E2C78;
-    D_800E2C74 = arg1;
-    D_800E2C70 = (D_800E2C74 - D_800E2C6C) / D_800E2C78;
-}
-
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD40C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD4B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD658.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ADAB8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ADBC8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ADCBC.s")

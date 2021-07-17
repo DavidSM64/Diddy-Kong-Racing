@@ -170,7 +170,7 @@ void func_800B6F50(void) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B6F50.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B6F50.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -201,7 +201,7 @@ void thread0(s32 arg0) { // Has regalloc issues
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/thread0.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0.s")
 #endif
 
 /* Unknown Size, might be epcInfo? */
@@ -239,10 +239,10 @@ void func_800B7144(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B71B0.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B71B0.s")
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/func_800B7460.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
 #else
 
 void func_800B7460(s32 *epc, s32 size, s32 mask) {
@@ -322,7 +322,7 @@ void func_800B77D4(s32 arg0) {
 
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0AEE70/render_epc_lock_up_display.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/render_epc_lock_up_display.s")
 #else
 void render_epc_lock_up_display(void) {
     char *sp50[3];
