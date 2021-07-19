@@ -122,7 +122,7 @@ void free_object_model(ObjectModel *model) {
     s32 i;
     for (i = 0; i < model->numberOfTextures; i++) {
         if (model->textures[i].texture != NULL) {
-            func_8007B2BC(model->textures[i].texture);
+            free_texture(model->textures[i].texture);
         }
     }
     if (model->unkC != NULL) {

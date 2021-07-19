@@ -154,7 +154,7 @@ glabel func_800B7EB4
 /* 0B8D04 800B8104 AC79000C */  sw    $t9, 0xc($v1)
 .L800B8108:
 /* 0B8D08 800B8108 8E44002C */  lw    $a0, 0x2c($s2)
-/* 0B8D0C 800B810C 0C01EB9D */  jal   func_8007AE74
+/* 0B8D0C 800B810C 0C01EB9D */  jal   load_texture
 /* 0B8D10 800B8110 00000000 */   nop   
 /* 0B8D14 800B8114 8FBF0024 */  lw    $ra, 0x24($sp)
 /* 0B8D18 800B8118 3C01800E */  lui   $at, %hi(D_800E30D0) # $at, 0x800e

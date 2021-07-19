@@ -219,7 +219,7 @@ void func_800AE2D8(void) {
         phi_s0 = 0;
         if (D_800E2E64 > 0) {
             do {
-                func_8007CCB0(*(D_800E2E60 + phi_s1));
+                free_sprite(*(D_800E2E60 + phi_s1));
                 phi_s0 += 1;
                 phi_s1 += 1;
             } while (phi_s0 < D_800E2E64);

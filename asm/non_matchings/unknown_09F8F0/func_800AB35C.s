@@ -57,7 +57,7 @@ glabel func_800AB35C
 /* 0AC024 800AB424 00000000 */  nop   
 /* 0AC028 800AB428 10800006 */  beqz  $a0, .L800AB444
 /* 0AC02C 800AB42C 00000000 */   nop   
-/* 0AC030 800AB430 0C01ECAF */  jal   func_8007B2BC
+/* 0AC030 800AB430 0C01ECAF */  jal   free_texture
 /* 0AC034 800AB434 00000000 */   nop   
 /* 0AC038 800AB438 3C02800E */  lui   $v0, %hi(D_800E28D8) # $v0, 0x800e
 /* 0AC03C 800AB43C 244228D8 */  addiu $v0, %lo(D_800E28D8) # addiu $v0, $v0, 0x28d8

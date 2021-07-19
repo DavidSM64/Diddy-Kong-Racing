@@ -30,14 +30,14 @@ glabel func_800AD144
 /* 0ADDB4 800AD1B4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0ADDB8 800AD1B8 AC202C90 */  sw    $zero, %lo(D_800E2C90)($at)
 /* 0ADDBC 800AD1BC 8F040004 */  lw    $a0, 4($t8)
-/* 0ADDC0 800AD1C0 0C01EB9D */  jal   func_8007AE74
+/* 0ADDC0 800AD1C0 0C01EB9D */  jal   load_texture
 /* 0ADDC4 800AD1C4 00000000 */   nop   
 /* 0ADDC8 800AD1C8 3C19800E */  lui   $t9, %hi(D_800E291C) # $t9, 0x800e
 /* 0ADDCC 800AD1CC 8F39291C */  lw    $t9, %lo(D_800E291C)($t9)
 /* 0ADDD0 800AD1D0 3C01800E */  lui   $at, %hi(D_800E2C2C+12) # $at, 0x800e
 /* 0ADDD4 800AD1D4 AC222C38 */  sw    $v0, %lo(D_800E2C2C+12)($at)
 /* 0ADDD8 800AD1D8 8F240004 */  lw    $a0, 4($t9)
-/* 0ADDDC 800AD1DC 0C01EB9D */  jal   func_8007AE74
+/* 0ADDDC 800AD1DC 0C01EB9D */  jal   load_texture
 /* 0ADDE0 800AD1E0 00000000 */   nop   
 /* 0ADDE4 800AD1E4 3C08800E */  lui   $t0, %hi(D_800E291C) # $t0, 0x800e
 /* 0ADDE8 800AD1E8 8D08291C */  lw    $t0, %lo(D_800E291C)($t0)

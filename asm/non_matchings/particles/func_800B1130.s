@@ -465,7 +465,7 @@ glabel func_800B1130
 /* 0B23D0 800B17D0 10600044 */  beqz  $v1, .L800B18E4
 /* 0B23D4 800B17D4 83AB0023 */   lb    $t3, 0x23($sp)
 /* 0B23D8 800B17D8 84E40004 */  lh    $a0, 4($a3)
-/* 0B23DC 800B17DC 0C01EB9D */  jal   func_8007AE74
+/* 0B23DC 800B17DC 0C01EB9D */  jal   load_texture
 /* 0B23E0 800B17E0 AFA30030 */   sw    $v1, 0x30($sp)
 /* 0B23E4 800B17E4 8FA30030 */  lw    $v1, 0x30($sp)
 /* 0B23E8 800B17E8 8FA60044 */  lw    $a2, 0x44($sp)

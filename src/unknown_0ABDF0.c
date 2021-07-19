@@ -205,7 +205,7 @@ s32 D_80127C0C;
 s32 D_80127C10;
 s32 D_80127C14;
 s32 D_80127C18;
-s32 D_80127C1C;
+s16 *D_80127C1C;
 s32 D_80127C20;
 s32 D_80127C24;
 s32 D_80127C28;
@@ -259,17 +259,17 @@ GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD144.s")
 
 void func_800AD220(void) {
     if (D_800E2C2C[0].unkC != 0) {
-        func_8007B2BC(D_800E2C2C[0].unkC);
+        free_texture(D_800E2C2C[0].unkC);
         D_800E2C88 = 0;
     }
 
     if (D_800E2C2C[1].unkC != 0) {
-        func_8007B2BC(D_800E2C2C[1].unkC);
+        free_texture(D_800E2C2C[1].unkC);
         D_800E2C88 = 0;
     }
 
     if (D_800E2C8C != 0) {
-        func_8007CCB0(D_800E2C8C);
+        free_sprite(D_800E2C8C);
         D_800E2C8C = 0;
     }
 

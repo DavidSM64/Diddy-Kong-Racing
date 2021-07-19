@@ -11,7 +11,7 @@ glabel func_8000FBCC
 /* 0107F0 8000FBF0 00000000 */   nop   
 /* 0107F4 8000FBF4 84640034 */  lh    $a0, 0x34($v1)
 /* 0107F8 8000FBF8 AFA60018 */  sw    $a2, 0x18($sp)
-/* 0107FC 8000FBFC 0C01EB9D */  jal   func_8007AE74
+/* 0107FC 8000FBFC 0C01EB9D */  jal   load_texture
 /* 010800 8000FC00 AFA5001C */   sw    $a1, 0x1c($sp)
 /* 010804 8000FC04 8FA5001C */  lw    $a1, 0x1c($sp)
 /* 010808 8000FC08 8FA60018 */  lw    $a2, 0x18($sp)

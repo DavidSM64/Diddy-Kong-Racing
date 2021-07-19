@@ -9,6 +9,8 @@
 typedef struct {
     u8 unk0[0x4C4];
     u16 unk4C4;
+    u8 unk4C6[0x1B4];
+    s8 unk67A;
 } unk80126CDC;
 
 typedef struct {
@@ -238,9 +240,9 @@ s32 D_80126D44;
 s32 D_80126D48;
 s32 D_80126D4C;
 s32 D_80126D50;
-u8 D_80126D54;
-u8 D_80126D55;
-u8 D_80126D56;
+u8 gMinimapRed;
+u8 gMinimapGreen;
+u8 gMinimapBlue;
 s32 D_80126D58;
 s32 D_80126D5C;
 unk80126D60* D_80126D60;
@@ -275,6 +277,21 @@ s32 D_801271B0[640];
 
 /******************************/
 
+typedef struct {
+    u8 unk0[0x1D8];
+    s8 unk1D8;
+} unk800A0DC0_2;
+
+typedef struct {
+    u8 unk0[0x64];
+    unk800A0DC0_2* unk64;
+} unk800A0DC0;
+
+void func_80068508(s32);
+void func_800A14F0(unk800A0DC0 *, s32);
+void func_800A3CE4(s32, s32);
+void func_800A7520(unk800A0DC0 *, s32);
+
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009ECF0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009F034.s")
@@ -298,16 +315,6 @@ void func_800A0B74(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0BD4.s")
-
-typedef struct {
-    u8 unk0[0x64];
-    s32* unk64;
-} unk800A0DC0;
-
-typedef struct {
-    u8 unk0[0x1D8];
-    s8 unk1D8;
-} unk800A0DC0_2;
 
 void func_800A0DC0(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
     unk800A0DC0_2* temp = arg1->unk64;
@@ -336,7 +343,25 @@ void func_800A0DC0(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0EB4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1248.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1428.s")
+
+void func_800A1428(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
+    unk800A0DC0_2* temp = arg1->unk64;
+    if (temp->unk1D8 == 0) {
+        func_80068508(1);
+        func_800A3CE4(arg0, arg2);
+        func_800A7520(arg1, arg2);
+        if ((0x7F - (arg2 * 2)) >= D_80126CDC->unk67A) {
+            D_80126CDC->unk67A += (arg2 * 2);
+        } else {
+            D_80126CDC->unk67A = (D_80126CDC->unk67A + (arg2 * 2)) - 0xFF;
+        }
+        if (D_80126D37 != 2) {
+            func_800A14F0(arg1, arg2);
+        }
+        func_80068508(0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A14F0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A19A4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1C04.s")
@@ -432,10 +457,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7FBC.s")
 
 void func_800A83B4(LevelModel *model) {
     s32 sp2C;
-    D_80126D54 = (model->unk38 >> 16) & 0xFF;
-    D_80126D55 = (model->unk38 >> 8) & 0xFF;
-    D_80126D56 = model->unk38 & 0xFF;
-    func_8007C8E0(model->unk20, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
+    gMinimapRed = (model->minimapColor >> 16) & 0xFF;
+    gMinimapGreen = (model->minimapColor >> 8) & 0xFF;
+    gMinimapBlue = model->minimapColor & 0xFF;
+    load_sprite_info(model->unk20, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
     func_8007CA68(model->unk20, 0, &D_80126D14, &D_80126D18, &sp2C);
     model->unk20 = func_8007C12C(model->unk20, 1);
 }

@@ -20,7 +20,7 @@ glabel func_8000FC6C
 /* 0108B4 8000FCB4 00000000 */   nop   
 /* 0108B8 8000FCB8 84440038 */  lh    $a0, 0x38($v0)
 /* 0108BC 8000FCBC AFA60018 */  sw    $a2, 0x18($sp)
-/* 0108C0 8000FCC0 0C01EB9D */  jal   func_8007AE74
+/* 0108C0 8000FCC0 0C01EB9D */  jal   load_texture
 /* 0108C4 8000FCC4 AFA5001C */   sw    $a1, 0x1c($sp)
 /* 0108C8 8000FCC8 8FA5001C */  lw    $a1, 0x1c($sp)
 /* 0108CC 8000FCCC 8FA60018 */  lw    $a2, 0x18($sp)

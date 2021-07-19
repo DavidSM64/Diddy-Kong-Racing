@@ -136,7 +136,7 @@ glabel func_8005F99C
 /* 060790 8005FB90 A3A5003F */  sb    $a1, 0x3f($sp)
 /* 060794 8005FB94 34888000 */  ori   $t0, $a0, 0x8000
 /* 060798 8005FB98 01002025 */  move  $a0, $t0
-/* 06079C 8005FB9C 0C01EB9D */  jal   func_8007AE74
+/* 06079C 8005FB9C 0C01EB9D */  jal   load_texture
 /* 0607A0 8005FBA0 AFA3002C */   sw    $v1, 0x2c($sp)
 /* 0607A4 8005FBA4 8FA3002C */  lw    $v1, 0x2c($sp)
 /* 0607A8 8005FBA8 8E490000 */  lw    $t1, ($s2)

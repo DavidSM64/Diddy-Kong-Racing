@@ -5,18 +5,18 @@ glabel func_8007AC70
 /* 07B87C 8007AC7C 34A5FFFF */  ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 07B880 8007AC80 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B884 8007AC84 240415E0 */   li    $a0, 5600
-/* 07B888 8007AC88 3C018012 */  lui   $at, %hi(D_80126328) # $at, 0x8012
+/* 07B888 8007AC88 3C018012 */  lui   $at, %hi(gTextureCache) # $at, 0x8012
 /* 07B88C 8007AC8C 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
-/* 07B890 8007AC90 AC226328 */  sw    $v0, %lo(D_80126328)($at)
+/* 07B890 8007AC90 AC226328 */  sw    $v0, %lo(gTextureCache)($at)
 /* 07B894 8007AC94 34A5FFFF */  ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 07B898 8007AC98 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B89C 8007AC9C 24040280 */   li    $a0, 640
-/* 07B8A0 8007ACA0 3C018012 */  lui   $at, %hi(D_8012632C) # $at, 0x8012
-/* 07B8A4 8007ACA4 AC22632C */  sw    $v0, %lo(D_8012632C)($at)
-/* 07B8A8 8007ACA8 3C018012 */  lui   $at, %hi(D_80126330) # $at, 0x8012
-/* 07B8AC 8007ACAC AC206330 */  sw    $zero, %lo(D_80126330)($at)
-/* 07B8B0 8007ACB0 3C018012 */  lui   $at, %hi(D_80126340) # $at, 0x8012
-/* 07B8B4 8007ACB4 AC206340 */  sw    $zero, %lo(D_80126340)($at)
+/* 07B8A0 8007ACA0 3C018012 */  lui   $at, %hi(gCiPalettes) # $at, 0x8012
+/* 07B8A4 8007ACA4 AC22632C */  sw    $v0, %lo(gCiPalettes)($at)
+/* 07B8A8 8007ACA8 3C018012 */  lui   $at, %hi(gNumberOfLoadedTextures) # $at, 0x8012
+/* 07B8AC 8007ACAC AC206330 */  sw    $zero, %lo(gNumberOfLoadedTextures)($at)
+/* 07B8B0 8007ACB0 3C018012 */  lui   $at, %hi(gCiPalettesSize) # $at, 0x8012
+/* 07B8B4 8007ACB4 AC206340 */  sw    $zero, %lo(gCiPalettesSize)($at)
 /* 07B8B8 8007ACB8 0C01DB16 */  jal   load_asset_section_from_rom
 /* 07B8BC 8007ACBC 24040005 */   li    $a0, 5
 /* 07B8C0 8007ACC0 3C058012 */  lui   $a1, %hi(D_80126320) # $a1, 0x8012
@@ -60,22 +60,22 @@ glabel func_8007AC70
 /* 07B948 8007AD48 24040320 */  li    $a0, 800
 /* 07B94C 8007AD4C 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B950 8007AD50 34A5FFFF */   ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
-/* 07B954 8007AD54 3C018012 */  lui   $at, %hi(D_8012634C) # $at, 0x8012
+/* 07B954 8007AD54 3C018012 */  lui   $at, %hi(gSpriteCache) # $at, 0x8012
 /* 07B958 8007AD58 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
-/* 07B95C 8007AD5C AC22634C */  sw    $v0, %lo(D_8012634C)($at)
+/* 07B95C 8007AD5C AC22634C */  sw    $v0, %lo(gSpriteCache)($at)
 /* 07B960 8007AD60 34A5FFFF */  ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 07B964 8007AD64 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B968 8007AD68 24040200 */   li    $a0, 512
-/* 07B96C 8007AD6C 3C018012 */  lui   $at, %hi(D_80126350) # $at, 0x8012
-/* 07B970 8007AD70 AC226350 */  sw    $v0, %lo(D_80126350)($at)
+/* 07B96C 8007AD6C 3C018012 */  lui   $at, %hi(gCurrentSprite) # $at, 0x8012
+/* 07B970 8007AD70 AC226350 */  sw    $v0, %lo(gCurrentSprite)($at)
 /* 07B974 8007AD74 3C018012 */  lui   $at, %hi(D_80126358) # $at, 0x8012
 /* 07B978 8007AD78 AC206358 */  sw    $zero, %lo(D_80126358)($at)
 /* 07B97C 8007AD7C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 07B980 8007AD80 2404000D */   li    $a0, 13
-/* 07B984 8007AD84 3C058012 */  lui   $a1, %hi(D_80126348) # $a1, 0x8012
+/* 07B984 8007AD84 3C058012 */  lui   $a1, %hi(gSpriteOffsetTable) # $a1, 0x8012
 /* 07B988 8007AD88 3C068012 */  lui   $a2, %hi(D_80126354) # $a2, 0x8012
 /* 07B98C 8007AD8C 24C66354 */  addiu $a2, %lo(D_80126354) # addiu $a2, $a2, 0x6354
-/* 07B990 8007AD90 24A56348 */  addiu $a1, %lo(D_80126348) # addiu $a1, $a1, 0x6348
+/* 07B990 8007AD90 24A56348 */  addiu $a1, %lo(gSpriteOffsetTable) # addiu $a1, $a1, 0x6348
 /* 07B994 8007AD94 00004080 */  sll   $t0, $zero, 2
 /* 07B998 8007AD98 ACA20000 */  sw    $v0, ($a1)
 /* 07B99C 8007AD9C ACC00000 */  sw    $zero, ($a2)
@@ -101,9 +101,9 @@ glabel func_8007AC70
 /* 07B9E4 8007ADE4 34A5FFFF */  ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 07B9E8 8007ADE8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 07B9EC 8007ADEC 24040028 */   li    $a0, 40
-/* 07B9F0 8007ADF0 3C018012 */  lui   $at, %hi(D_8012636C) # $at, 0x8012
+/* 07B9F0 8007ADF0 3C018012 */  lui   $at, %hi(gTempTextureHeader) # $at, 0x8012
 /* 07B9F4 8007ADF4 8FBF0014 */  lw    $ra, 0x14($sp)
-/* 07B9F8 8007ADF8 AC22636C */  sw    $v0, %lo(D_8012636C)($at)
+/* 07B9F8 8007ADF8 AC22636C */  sw    $v0, %lo(gTempTextureHeader)($at)
 /* 07B9FC 8007ADFC 3C018012 */  lui   $at, %hi(D_80126344) # $at, 0x8012
 /* 07BA00 8007AE00 AC206344 */  sw    $zero, %lo(D_80126344)($at)
 /* 07BA04 8007AE04 03E00008 */  jr    $ra

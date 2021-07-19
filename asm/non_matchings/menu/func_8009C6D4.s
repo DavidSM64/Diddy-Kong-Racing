@@ -61,7 +61,7 @@ glabel func_8009C6D4
 /* 09D3B0 8009C7B0 1541000A */  bne   $t2, $at, .L8009C7DC
 /* 09D3B4 8009C7B4 304C8000 */   andi  $t4, $v0, 0x8000
 /* 09D3B8 8009C7B8 30443FFF */  andi  $a0, $v0, 0x3fff
-/* 09D3BC 8009C7BC 0C01EB9D */  jal   func_8007AE74
+/* 09D3BC 8009C7BC 0C01EB9D */  jal   load_texture
 /* 09D3C0 8009C7C0 AFA70038 */   sw    $a3, 0x38($sp)
 /* 09D3C4 8009C7C4 8FA70038 */  lw    $a3, 0x38($sp)
 /* 09D3C8 8009C7C8 3C018012 */  lui   $at, %hi(D_80126550) # $at, 0x8012

@@ -17,7 +17,7 @@ glabel func_8007CA68
 /* 07D6A4 8007CAA4 AFA7004C */   sw    $a3, 0x4c($sp)
 /* 07D6A8 8007CAA8 3C0E8012 */  lui   $t6, %hi(D_80126354) # $t6, 0x8012
 /* 07D6AC 8007CAAC 8DCE6354 */  lw    $t6, %lo(D_80126354)($t6)
-/* 07D6B0 8007CAB0 3C198012 */  lui   $t9, %hi(D_80126348) # $t9, 0x8012
+/* 07D6B0 8007CAB0 3C198012 */  lui   $t9, %hi(gSpriteOffsetTable) # $t9, 0x8012
 /* 07D6B4 8007CAB4 008E082A */  slt   $at, $a0, $t6
 /* 07D6B8 8007CAB8 14200007 */  bnez  $at, .L8007CAD8
 /* 07D6BC 8007CABC 00104080 */   sll   $t0, $s0, 2
@@ -29,12 +29,12 @@ glabel func_8007CA68
 /* 07D6D0 8007CAD0 1000006B */  b     .L8007CC80
 /* 07D6D4 8007CAD4 AF000000 */   sw    $zero, ($t8)
 .L8007CAD8:
-/* 07D6D8 8007CAD8 8F396348 */  lw    $t9, %lo(D_80126348)($t9)
-/* 07D6DC 8007CADC 3C128012 */  lui   $s2, %hi(D_80126350) # $s2, 0x8012
+/* 07D6D8 8007CAD8 8F396348 */  lw    $t9, %lo(gSpriteOffsetTable)($t9)
+/* 07D6DC 8007CADC 3C128012 */  lui   $s2, %hi(gCurrentSprite) # $s2, 0x8012
 /* 07D6E0 8007CAE0 03281021 */  addu  $v0, $t9, $t0
 /* 07D6E4 8007CAE4 8C460000 */  lw    $a2, ($v0)
 /* 07D6E8 8007CAE8 8C490004 */  lw    $t1, 4($v0)
-/* 07D6EC 8007CAEC 8E526350 */  lw    $s2, %lo(D_80126350)($s2)
+/* 07D6EC 8007CAEC 8E526350 */  lw    $s2, %lo(gCurrentSprite)($s2)
 /* 07D6F0 8007CAF0 2404000C */  li    $a0, 12
 /* 07D6F4 8007CAF4 01263823 */  subu  $a3, $t1, $a2
 /* 07D6F8 8007CAF8 0C01DB9A */  jal   load_asset_to_address
@@ -57,7 +57,7 @@ glabel func_8007CA68
 .L8007CB34:
 /* 07D734 8007CB34 93CD000C */  lbu   $t5, 0xc($fp)
 /* 07D738 8007CB38 864E0000 */  lh    $t6, ($s2)
-/* 07D73C 8007CB3C 0C01EB9D */  jal   func_8007AE74
+/* 07D73C 8007CB3C 0C01EB9D */  jal   load_texture
 /* 07D740 8007CB40 01AE2021 */   addu  $a0, $t5, $t6
 /* 07D744 8007CB44 14400004 */  bnez  $v0, .L8007CB58
 /* 07D748 8007CB48 00408025 */   move  $s0, $v0
@@ -67,7 +67,7 @@ glabel func_8007CA68
 .L8007CB58:
 /* 07D758 8007CB58 93CF000C */  lbu   $t7, 0xc($fp)
 /* 07D75C 8007CB5C 86580000 */  lh    $t8, ($s2)
-/* 07D760 8007CB60 0C01F15F */  jal   func_8007C57C
+/* 07D760 8007CB60 0C01F15F */  jal   get_texture_size_from_id
 /* 07D764 8007CB64 01F82021 */   addu  $a0, $t7, $t8
 /* 07D768 8007CB68 8FB70050 */  lw    $s7, 0x50($sp)
 /* 07D76C 8007CB6C 02002025 */  move  $a0, $s0
@@ -81,7 +81,7 @@ glabel func_8007CA68
 /* 07D78C 8007CB8C 03289823 */  subu  $s3, $t9, $t0
 /* 07D790 8007CB90 012AA023 */  subu  $s4, $t1, $t2
 /* 07D794 8007CB94 0265A821 */  addu  $s5, $s3, $a1
-/* 07D798 8007CB98 0C01ECAF */  jal   func_8007B2BC
+/* 07D798 8007CB98 0C01ECAF */  jal   free_texture
 /* 07D79C 8007CB9C 0286B023 */   subu  $s6, $s4, $a2
 /* 07D7A0 8007CBA0 93D1000C */  lbu   $s1, 0xc($fp)
 /* 07D7A4 8007CBA4 93CB000D */  lbu   $t3, 0xd($fp)
@@ -91,12 +91,12 @@ glabel func_8007CA68
 /* 07D7B4 8007CBB4 8FAC0048 */   lw    $t4, 0x48($sp)
 .L8007CBB8:
 /* 07D7B8 8007CBB8 864C0000 */  lh    $t4, ($s2)
-/* 07D7BC 8007CBBC 0C01EB9D */  jal   func_8007AE74
+/* 07D7BC 8007CBBC 0C01EB9D */  jal   load_texture
 /* 07D7C0 8007CBC0 01912021 */   addu  $a0, $t4, $s1
 /* 07D7C4 8007CBC4 1040FFD3 */  beqz  $v0, .L8007CB14
 /* 07D7C8 8007CBC8 00408025 */   move  $s0, $v0
 /* 07D7CC 8007CBCC 864D0000 */  lh    $t5, ($s2)
-/* 07D7D0 8007CBD0 0C01F15F */  jal   func_8007C57C
+/* 07D7D0 8007CBD0 0C01F15F */  jal   get_texture_size_from_id
 /* 07D7D4 8007CBD4 01B12021 */   addu  $a0, $t5, $s1
 /* 07D7D8 8007CBD8 8EEE0000 */  lw    $t6, ($s7)
 /* 07D7DC 8007CBDC 00000000 */  nop   
@@ -131,7 +131,7 @@ glabel func_8007CA68
 /* 07D844 8007CC44 00000000 */   nop   
 /* 07D848 8007CC48 0080A025 */  move  $s4, $a0
 .L8007CC4C:
-/* 07D84C 8007CC4C 0C01ECAF */  jal   func_8007B2BC
+/* 07D84C 8007CC4C 0C01ECAF */  jal   free_texture
 /* 07D850 8007CC50 02002025 */   move  $a0, $s0
 /* 07D854 8007CC54 93CA000D */  lbu   $t2, 0xd($fp)
 /* 07D858 8007CC58 26310001 */  addiu $s1, $s1, 1

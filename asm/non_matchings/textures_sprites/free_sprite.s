@@ -1,4 +1,4 @@
-glabel func_8007CCB0
+glabel free_sprite
 /* 07D8B0 8007CCB0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 07D8B4 8007CCB4 AFB2001C */  sw    $s2, 0x1c($sp)
 /* 07D8B8 8007CCB8 00809025 */  move  $s2, $a0
@@ -18,8 +18,8 @@ glabel func_8007CCB0
 /* 07D8F0 8007CCF0 8C636358 */  lw    $v1, %lo(D_80126358)($v1)
 /* 07D8F4 8007CCF4 00001025 */  move  $v0, $zero
 /* 07D8F8 8007CCF8 1860002A */  blez  $v1, .L8007CDA4
-/* 07D8FC 8007CCFC 3C048012 */   lui   $a0, %hi(D_8012634C) # $a0, 0x8012
-/* 07D900 8007CD00 8C84634C */  lw    $a0, %lo(D_8012634C)($a0)
+/* 07D8FC 8007CCFC 3C048012 */   lui   $a0, %hi(gSpriteCache) # $a0, 0x8012
+/* 07D900 8007CD00 8C84634C */  lw    $a0, %lo(gSpriteCache)($a0)
 /* 07D904 8007CD04 00000000 */  nop   
 /* 07D908 8007CD08 00409825 */  move  $s3, $v0
 .L8007CD0C:
@@ -38,7 +38,7 @@ glabel func_8007CCB0
 /* 07D938 8007CD38 00000000 */  nop   
 /* 07D93C 8007CD3C 01716021 */  addu  $t4, $t3, $s1
 /* 07D940 8007CD40 8D840000 */  lw    $a0, ($t4)
-/* 07D944 8007CD44 0C01ECAF */  jal   func_8007B2BC
+/* 07D944 8007CD44 0C01ECAF */  jal   free_texture
 /* 07D948 8007CD48 00000000 */   nop   
 /* 07D94C 8007CD4C 864D0002 */  lh    $t5, 2($s2)
 /* 07D950 8007CD50 26100001 */  addiu $s0, $s0, 1
@@ -48,8 +48,8 @@ glabel func_8007CCB0
 .L8007CD60:
 /* 07D960 8007CD60 0C01C450 */  jal   free_from_memory_pool
 /* 07D964 8007CD64 02402025 */   move  $a0, $s2
-/* 07D968 8007CD68 3C028012 */  lui   $v0, %hi(D_8012634C) # $v0, 0x8012
-/* 07D96C 8007CD6C 2442634C */  addiu $v0, %lo(D_8012634C) # addiu $v0, $v0, 0x634c
+/* 07D968 8007CD68 3C028012 */  lui   $v0, %hi(gSpriteCache) # $v0, 0x8012
+/* 07D96C 8007CD6C 2442634C */  addiu $v0, %lo(gSpriteCache) # addiu $v0, $v0, 0x634c
 /* 07D970 8007CD70 8C4E0000 */  lw    $t6, ($v0)
 /* 07D974 8007CD74 2403FFFF */  li    $v1, -1
 /* 07D978 8007CD78 01D37821 */  addu  $t7, $t6, $s3

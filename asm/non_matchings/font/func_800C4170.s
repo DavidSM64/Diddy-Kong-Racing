@@ -28,7 +28,7 @@ glabel func_800C4170
 /* 0C4DD8 800C41D8 86240040 */  lh    $a0, 0x40($s1)
 /* 0C4DDC 800C41DC 004B9021 */  addu  $s2, $v0, $t3
 .L800C41E0:
-/* 0C4DE0 800C41E0 0C01EB9D */  jal   func_8007AE74
+/* 0C4DE0 800C41E0 0C01EB9D */  jal   load_texture
 /* 0C4DE4 800C41E4 00000000 */   nop   
 /* 0C4DE8 800C41E8 26100002 */  addiu $s0, $s0, 2
 /* 0C4DEC 800C41EC 2A010040 */  slti  $at, $s0, 0x40

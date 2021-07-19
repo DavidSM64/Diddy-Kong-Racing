@@ -4312,8 +4312,8 @@ void func_8009C4A8(s16 *arg0) {
     }
 }
 
-void func_8007B2BC(u32 arg0);
-void func_8007CCB0(u32 arg0);
+void free_texture(u32 arg0);
+void free_sprite(u32 arg0);
 void gParticlePtrList_addObject(u32 arg0);
 void func_8005FF40(u32 arg0);
 
@@ -4322,11 +4322,11 @@ void func_8009C508(s32 arg0) {
         if (D_80126550[arg0] != 0) {
             if ((((*D_800DF750)[arg0] & 0xC000) == 0xC000) && (D_80126550[arg0] != 0)) {
                 set_free_queue_state(0);
-                func_8007B2BC((u32)D_80126550[arg0]);
+                free_texture((u32)D_80126550[arg0]);
                 set_free_queue_state(2);
             } else {
                 if ((*D_800DF750)[arg0] & 0x8000) {
-                    func_8007CCB0((u32)D_80126550[arg0]);
+                    free_sprite((u32)D_80126550[arg0]);
                 } else {
                     if ((*D_800DF750)[arg0] & 0x4000) {
                         gParticlePtrList_addObject((u32)D_80126550[arg0]);

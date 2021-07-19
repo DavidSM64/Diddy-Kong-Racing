@@ -1,14 +1,11 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8007AC70 */
 
-#include "unknown_07B870.h"
-
-#include "types.h"
-#include "macros.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 
-u32 D_800DE7C0 = 0xFF00FFFF;
+u32 gTexColorTag = COLOR_TAG_MAGENTA;
 s32 D_800DE7C4 = 1;
 
 // See "include/f3ddkr.h" for the defines
@@ -858,26 +855,84 @@ const char D_800E7C50[] = "TEXSPR Error: Tryed to deallocate non-existent sprite
 
 /*********************************/
 
+/* Size: 8 bytes */
+typedef struct unk8007F1E8_18 {
+    s32 unk0;
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+} unk8007F1E8_18;
+
+/* Size: Variable. */
+typedef struct unk8007F1E8 {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+    u8 unk15;
+    u8 unk16;
+    u8 unk17;
+    unk8007F1E8_18 unk18[1]; // Actual length depends on unk0
+} unk8007F1E8;
+
 /************ .bss ************/
 
-s32 D_80126320[2];
-s32 D_80126328;
-s32 D_8012632C;
-s32 D_80126330[2];
-s32 D_80126338;
-s32 D_8012633C;
-s32 D_80126340;
+s32 *D_80126320[2];
+
+typedef struct TextureCacheEntry {
+    s32 id;
+    TextureHeader *texture;
+} TextureCacheEntry;
+
+TextureCacheEntry *gTextureCache;
+
+u8 *gCiPalettes;
+s32 gNumberOfLoadedTextures;
+s32 D_80126334;
+s32 D_80126338[2];
+s32 gCiPalettesSize;
 s32 D_80126344;
-s32 D_80126348;
-s32 D_8012634C;
-s32 D_80126350;
+s32 *gSpriteOffsetTable;
+
+typedef struct Sprite {
+    s16 baseTextureId;
+    s16 numberOfFrames; // 1 means static texture
+    s16 numberOfInstances;
+    s16 unk6;
+    TextureHeader **frames;
+    u8 unkC[1]; // Actual size varies.
+} Sprite;
+
+typedef struct SpriteCacheEntry {
+    s32 id;
+    Sprite *sprite;
+} SpriteCacheEntry;
+
+SpriteCacheEntry *gSpriteCache;
+
+Sprite *gCurrentSprite;
 s32 D_80126354;
 s32 D_80126358;
 s32 D_8012635C;
 s32 D_80126360;
 s32 D_80126364;
 s32 D_80126368;
-s32 D_8012636C;
+
+/* Size: 0x28 bytes */
+typedef struct TempTexHeader {
+/* 0x00 */ TextureHeader header;
+/* 0x20 */ u32 uncompressedSize; // Little endian
+/* 0x24 */ u8 gzipLevel; // Always 9.
+/* 0x25 */ u8 pad25[3]; // padding
+} TempTexHeader;
+
+TempTexHeader *gTempTextureHeader;
 s32 D_80126370;
 s32 D_80126374;
 s32 D_80126378;
@@ -888,7 +943,7 @@ s16 D_80126384;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007AC70.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007AC70.s")
 
 void func_8007AE0C(s32 arg0) {
     D_80126378 |= arg0;
@@ -900,12 +955,12 @@ void func_8007AE28(s32 arg0) {
 
 /* Unused? */
 s32 func_8007AE44(void) {
-    return D_80126338;
+    return D_80126338[0];
 }
 
 /* Unused? */
 s32 func_8007AE54(void) {
-    return D_8012633C;
+    return D_80126338[1];
 }
 
 /* Unused? */
@@ -913,10 +968,172 @@ s32 func_8007AE64(void) {
     return D_80126354;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007AE74.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B2BC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B374.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B3D0.s")
+#ifdef NON_MATCHING
+// Minor matching issues with loops, but should be functionally the same.
+TextureHeader *load_texture(s32 arg0) {
+    s32 assetSection;
+    s32 assetIndex;
+    s32 assetOffset;
+    s32 assetSize;
+    s32 assetTable;
+    s32 texIndex;
+    s32 temp_a1;
+    s32 paletteOffset;
+    s32 i;
+    u8 *alignedAddress;
+    TextureHeader *tex;
+    TextureHeader *texTemp;
+    s32 numberOfTextures;
+    s32 sp3C;
+    s32 temp_a0;
+    s32 temp_v0_5;
+
+    arg0 &= 0xFFFF;
+    assetIndex = arg0;
+    assetSection = ASSET_TEXTURES_2D;
+    assetTable = 0;
+    if (arg0 & 0x8000) {
+        assetTable = 1;
+        assetIndex = arg0 & 0x7FFF;
+        assetSection = ASSET_TEXTURES_3D;
+    }
+    if ((assetIndex >= D_80126338[assetTable]) || (assetIndex < 0)) {
+        arg0 = 0;
+    }
+    for (i = 0; i < gNumberOfLoadedTextures; i++) {
+        if (arg0 == gTextureCache[i].id) {
+            tex = gTextureCache[i].texture;
+            tex->numberOfInstances++;
+            return tex;
+        }
+    }
+    assetOffset = D_80126320[assetTable][assetIndex];
+    assetSize = D_80126320[assetTable][assetIndex + 1] - assetOffset;
+    load_asset_to_address(assetSection, gTempTextureHeader, assetOffset, 0x28);
+    numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
+    
+    if (!gTempTextureHeader->header.isCompressed) {
+        tex = allocate_from_main_pool((numberOfTextures * 0x60) + assetSize, gTexColorTag);
+        if (tex == NULL) {
+            return NULL;
+        }
+        load_asset_to_address(assetSection, tex, assetOffset, assetSize);
+    } else {
+        temp_v0_5 = byteswap32(&gTempTextureHeader->uncompressedSize);
+        temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
+        sp3C = temp_v0_5 + 0x20;
+        tex = allocate_from_main_pool(temp_a0 + 0x20, gTexColorTag);
+        if (tex == NULL) {
+            return NULL;
+        }
+        temp_a1 = ((s32)tex + sp3C) - assetSize;
+        temp_a1 -= temp_a1 % 0x10;
+        load_asset_to_address(assetSection, temp_a1, assetOffset, assetSize);
+        gzip_inflate(temp_a1 + 0x20, tex);
+        assetSize = sp3C - 0x20;
+    }
+    texIndex = -1;
+    for (i = 0; i < gNumberOfLoadedTextures; i++) {
+        if (gTextureCache[i].id == -1) {
+            texIndex = i;
+        }
+    }
+    if (texIndex == -1) {
+        texIndex = gNumberOfLoadedTextures++;
+    }
+    gTextureCache[texIndex].id = arg0;
+    gTextureCache[texIndex].texture = tex;
+    paletteOffset = -1;
+    if ((tex->format & 0xF) == TEX_FORMAT_CI4) {
+        if (D_80126344 == 0) {
+            load_asset_to_address(ASSET_EMPTY_14, &gCiPalettes[gCiPalettesSize], tex->ciPaletteOffset, 32);
+            tex->ciPaletteOffset = gCiPalettesSize;
+            gCiPalettesSize += 32; // (32 bytes / 2 bytes per color) = 16 colors.
+        }
+        paletteOffset = gCiPalettesSize - 32;
+    }
+    if ((tex->format & 0xF) == TEX_FORMAT_CI8) {
+        if (D_80126344 == 0) {
+            load_asset_to_address(ASSET_EMPTY_14, &gCiPalettesSize[gCiPalettes], tex->ciPaletteOffset, 128);
+            tex->ciPaletteOffset = gCiPalettesSize;
+            gCiPalettesSize += 128; // (128 bytes / 2 bytes per color) = 64 colors.
+        }
+        paletteOffset = gCiPalettesSize - 128;
+    }
+    D_80126344 = 0;
+    texTemp = tex;
+    alignedAddress = align16((u8*)((s32)texTemp + assetSize));
+    for(i = 0; i < numberOfTextures; i++) {
+        build_tex_display_list(texTemp, alignedAddress);
+        if (paletteOffset >= 0) {
+            texTemp->ciPaletteOffset = paletteOffset;
+            alignedAddress += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
+        }
+        alignedAddress += 0x60; // I'm guessing it takes 12 f3d commands to load the texture
+        texTemp = (TextureHeader*)((s32)texTemp + texTemp->textureSize);
+    }
+    if (gCiPalettesSize >= 0x280) {
+        return NULL;
+    }
+    if (gNumberOfLoadedTextures >= 701) {
+        return NULL;
+    }
+    return tex;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
+#endif
+
+#ifdef NON_MATCHING
+void free_texture(TextureHeader *tex) {
+    s32 i;
+    if (tex != NULL) {
+        tex->numberOfInstances--;
+        if ((tex->numberOfInstances & 0xFF) <= 0) {
+            for(i = 0; i < gNumberOfLoadedTextures; i++) {
+                if (tex == gTextureCache[i].texture) {
+                    free_from_memory_pool(tex);
+                    gTextureCache[i].id = -1;
+                    gTextureCache[i].texture = (TextureHeader *)-1;
+                }
+            }
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/free_texture.s")
+#endif
+
+void func_8007B374(s32 arg0) {
+    gTexColorTag = arg0;
+}
+
+#ifdef NON_MATCHING
+// Unused.
+TextureHeader *func_8007B380(s32 arg0) {
+    if ((arg0 < 0) || (arg0 >= gNumberOfLoadedTextures)) {
+        return 0;
+    }
+    // Regalloc issue here
+    if (gTextureCache[arg0].texture == (TextureHeader*)-1) {
+        return 0;
+    }
+    return gTextureCache[arg0].texture;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
+#endif
+
+void func_8007B3D0(Gfx **dlist) {
+    D_8012637C = 0;
+    D_80126374 = 0;
+    D_80126380 = 0;
+    D_80126382 = 1;
+    D_80126378 = 0;
+    D_80126384 = 0;
+    gDPPipeSync((*dlist)++)
+    gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER)
+}
 
 void func_8007B43C(void) {
     D_80126384 = 1;
@@ -928,32 +1145,204 @@ void func_8007B454(void) {
     D_80126382 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B46C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B4C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007B4E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007BA5C.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B46C.s")
+
+void func_8007B4E8(s32, s32, s32, s32);
+void func_8007B4C8(s32 arg0, s32 arg1, s32 arg2) {
+    func_8007B4E8(arg0, arg1, arg2, 0);
+}
+
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B4E8.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BA5C.s")
 
 void func_8007BF1C(s32 arg0) {
     D_800DE7C4 = arg0;
     D_80126382 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007BF34.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007C12C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007C57C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007C8E0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007CA68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007CCB0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007CDC0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007D0F4.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
-s32 func_8007EF64(s16 arg0) {
-    return arg0 + D_8012632C;
+#ifdef NON_MATCHING
+// Mostly has regalloc issues.
+s32 get_texture_size_from_id(s32 arg0) {
+    s32 assetIndex;
+    s32 assetSection;
+    s32 assetTable;
+    s32 start;
+    s32 size;
+
+    assetSection = ASSET_TEXTURES_2D;
+    assetIndex = arg0;
+    assetTable = 0;
+    if (arg0 & 0x8000) {
+        assetIndex = arg0 & 0x7FFF;
+        assetSection = ASSET_TEXTURES_3D;
+        assetTable = 1;
+    }
+    if ((assetIndex >= D_80126338[assetTable]) || (assetIndex < 0)) {
+        return 0;
+    }
+    start = D_80126320[assetTable][assetIndex];
+    size = D_80126320[assetTable][assetIndex + 1] - start;
+    if (gTempTextureHeader->header.isCompressed) {
+        load_asset_to_address(assetSection, gTempTextureHeader, start, 0x28);
+        size = byteswap32(&gTempTextureHeader->uncompressedSize);
+    }
+    return (((gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF) * 0x60) + size;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007EF80.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007F1E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007F24C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007F414.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007F460.s")
-GLOBAL_ASM("asm/non_matchings/unknown_07B870/func_8007F594.s")
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
+#endif
+
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
+
+#ifdef NON_MATCHING
+// Unused
+s32 func_8007C860(s32 spriteIndex) {
+    if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
+        return -1;
+    }
+    // I need to skip a register here.
+    return gSpriteCache[spriteIndex].id;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
+#endif
+
+#ifdef NON_MATCHING
+s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
+    TextureHeader *tex;
+    s32 i, j;
+    s32 start, size;
+
+    if ((spriteIndex < 0) || (spriteIndex >= D_80126354)) {
+        *numFramesOut = 0;
+        *numOfInstancesOut = 0;
+        *unkOut = 0;
+        return;
+    }
+    start = gSpriteOffsetTable[spriteIndex];
+    size = gSpriteOffsetTable[spriteIndex + 1] - start;
+    load_asset_to_address(ASSET_SPRITES, gCurrentSprite, start, size);
+    tex = load_texture(gCurrentSprite->unkC[0] + gCurrentSprite->baseTextureId);
+    if (tex != NULL) {
+        *formatOut = tex->format & 0xF;
+        free_texture(tex);
+        *sizeOut = 0;
+        for (i = 0; i < gCurrentSprite->numberOfFrames; i++) {
+            for (j = gCurrentSprite->unkC[i]; j < gCurrentSprite->unkC[i + 1]; j++) {
+                *sizeOut += get_texture_size_from_id(gCurrentSprite->baseTextureId + j);
+            }
+        }
+        *numFramesOut = gCurrentSprite->numberOfFrames;
+        *numOfInstancesOut = gCurrentSprite->numberOfInstances;
+        *unkOut = gCurrentSprite->unk6;
+        return 1;
+    }
+    *numFramesOut = 0;
+    *numOfInstancesOut = 0;
+    *unkOut = 0;
+    return 0;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/load_sprite_info.s")
+#endif
+
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
+
+#ifdef NON_MATCHING
+void free_sprite(Sprite *sprite) {
+    s32 i, j, index;
+    if (sprite != NULL) {
+        sprite->numberOfInstances--;
+        if (sprite->numberOfInstances <= 0) {
+            for (i = 0; i < D_80126358; i++) {
+                if (sprite == gSpriteCache[i].sprite) {
+                    for (j = 0; j < sprite->numberOfFrames; j++) {
+                        free_texture(sprite->frames[j]);
+                    }
+                    free_from_memory_pool(sprite);
+                    gSpriteCache[i].id = -1;
+                    gSpriteCache[i].sprite = (Sprite *)-1;
+                    break;
+                }
+            }
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/free_sprite.s")
+#endif
+
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/build_tex_display_list.s")
+
+s32 func_8007EF64(s16 arg0) {
+    return arg0 + gCiPalettes;
+}
+
+// There might be a file boundary here.
+
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007EF80.s")
+
+void func_8007F1E8(unk8007F1E8 *arg0) {
+    s32 i;
+
+    arg0->unk4 = 0;
+    arg0->unk8 = 0;
+    arg0->unkC = 0;
+    arg0->unk10 = arg0->unk14;
+    arg0->unk11 = arg0->unk15;
+    arg0->unk12 = arg0->unk16;
+    arg0->unk13 = arg0->unk17;
+    for(i = 0; i < arg0->unk0; i++) {
+        arg0->unkC += arg0->unk18[i].unk0;
+    }
+}
+
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F24C.s")
+
+typedef struct unk8007F414_E {
+    u16 unk0;
+    u16 unk2;
+} unk8007F414_E;
+
+typedef struct unk8007F414 {
+    u16 unk0;
+    u16 unk2;
+    u16 unk4;
+    u16 unk6;
+    s32 unk8;
+    u16 unkC;
+    unk8007F414_E unkE[1];
+} unk8007F414;
+
+void func_8007F414(unk8007F414 *arg0) {
+    s32 i;
+    arg0->unk2 = 0;
+    arg0->unk4 = 0;
+    arg0->unk6 = 0;
+    arg0->unk8 = arg0->unkC;
+    for (i = 0; i < arg0->unk0; i++) {
+        arg0->unk6 += arg0->unkE[i].unk0;
+    }
+}
+
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F460.s")
+
+#ifdef NON_MATCHING
+void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor) {
+    if (index >= 2) {
+        index = 2;
+    }
+    // There are issues with the structure, but this should be equivalent functionality-wise.
+    gSPDisplayList((*dlist)++, D_800DF3A8)
+    gDkrDmaDisplayList((*dlist)++, &D_800DF410[index] + 0x80000000, numberOfGfxCommands(D_800DF410[0]))
+    gDPSetPrimColorRGBA((*dlist)++, primitiveColor)
+    gDPSetEnvColorRGBA((*dlist)++, environmentColor)
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F594.s")
+#endif

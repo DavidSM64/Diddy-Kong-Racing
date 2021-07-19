@@ -1,4 +1,4 @@
-glabel func_8007D0F4
+glabel build_tex_display_list
 /* 07DCF4 8007D0F4 27BDFD80 */  addiu $sp, $sp, -0x280
 /* 07DCF8 8007D0F8 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 07DCFC 8007D0FC AFB10018 */  sw    $s1, 0x18($sp)
