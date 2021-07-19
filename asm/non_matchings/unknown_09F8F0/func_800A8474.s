@@ -129,7 +129,7 @@ glabel func_800A8474
 /* 0A9210 800A8610 00000000 */  nop   
 /* 0A9214 800A8614 01F1C021 */  addu  $t8, $t7, $s1
 /* 0A9218 800A8618 8F040000 */  lw    $a0, ($t8)
-/* 0A921C 800A861C 0C01ECAF */  jal   func_8007B2BC
+/* 0A921C 800A861C 0C01ECAF */  jal   free_texture
 /* 0A9220 800A8620 AFA30144 */   sw    $v1, 0x144($sp)
 /* 0A9224 800A8624 8FA30144 */  lw    $v1, 0x144($sp)
 /* 0A9228 800A8628 1000001F */  b     .L800A86A8
@@ -141,7 +141,7 @@ glabel func_800A8474
 /* 0A923C 800A863C 00000000 */  nop   
 /* 0A9240 800A8640 01515821 */  addu  $t3, $t2, $s1
 /* 0A9244 800A8644 8D640000 */  lw    $a0, ($t3)
-/* 0A9248 800A8648 0C01F32C */  jal   func_8007CCB0
+/* 0A9248 800A8648 0C01F32C */  jal   free_sprite
 /* 0A924C 800A864C AFA30144 */   sw    $v1, 0x144($sp)
 /* 0A9250 800A8650 8FA30144 */  lw    $v1, 0x144($sp)
 /* 0A9254 800A8654 10000014 */  b     .L800A86A8
@@ -1668,14 +1668,14 @@ glabel func_800A8474
 /* 0AA8B4 800A9CB4 3C0EFA00 */  lui   $t6, 0xfa00
 /* 0AA8B8 800A9CB8 250F0008 */  addiu $t7, $t0, 8
 /* 0AA8BC 800A9CBC AE8F0000 */  sw    $t7, ($s4)
-/* 0AA8C0 800A9CC0 3C0B8012 */  lui   $t3, %hi(D_80126D55) # $t3, 0x8012
+/* 0AA8C0 800A9CC0 3C0B8012 */  lui   $t3, %hi(gMinimapGreen) # $t3, 0x8012
 /* 0AA8C4 800A9CC4 AD0E0000 */  sw    $t6, ($t0)
-/* 0AA8C8 800A9CC8 916C6D55 */  lbu   $t4, %lo(D_80126D55)($t3)
-/* 0AA8CC 800A9CCC 3C188012 */  lui   $t8, %hi(D_80126D54) # $t8, 0x8012
-/* 0AA8D0 800A9CD0 93196D54 */  lbu   $t9, %lo(D_80126D54)($t8)
-/* 0AA8D4 800A9CD4 3C0E8012 */  lui   $t6, %hi(D_80126D56) # $t6, 0x8012
+/* 0AA8C8 800A9CC8 916C6D55 */  lbu   $t4, %lo(gMinimapGreen)($t3)
+/* 0AA8CC 800A9CCC 3C188012 */  lui   $t8, %hi(gMinimapRed) # $t8, 0x8012
+/* 0AA8D0 800A9CD0 93196D54 */  lbu   $t9, %lo(gMinimapRed)($t8)
+/* 0AA8D4 800A9CD4 3C0E8012 */  lui   $t6, %hi(gMinimapBlue) # $t6, 0x8012
 /* 0AA8D8 800A9CD8 000C6C00 */  sll   $t5, $t4, 0x10
-/* 0AA8DC 800A9CDC 91D86D56 */  lbu   $t8, %lo(D_80126D56)($t6)
+/* 0AA8DC 800A9CDC 91D86D56 */  lbu   $t8, %lo(gMinimapBlue)($t6)
 /* 0AA8E0 800A9CE0 00195600 */  sll   $t2, $t9, 0x18
 /* 0AA8E4 800A9CE4 8FAC010C */  lw    $t4, 0x10c($sp)
 /* 0AA8E8 800A9CE8 014D7825 */  or    $t7, $t2, $t5

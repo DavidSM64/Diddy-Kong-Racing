@@ -82,7 +82,7 @@ glabel func_8000B020
 /* 00BD5C 8000B15C 0C01F04B */  jal   func_8007C12C
 /* 00BD60 8000B160 00002825 */   move  $a1, $zero
 /* 00BD64 8000B164 8604006E */  lh    $a0, 0x6e($s0)
-/* 00BD68 8000B168 0C01EB9D */  jal   func_8007AE74
+/* 00BD68 8000B168 0C01EB9D */  jal   load_texture
 /* 00BD6C 8000B16C AE020078 */   sw    $v0, 0x78($s0)
 /* 00BD70 8000B170 AE02007C */  sw    $v0, 0x7c($s0)
 /* 00BD74 8000B174 00002025 */  move  $a0, $zero

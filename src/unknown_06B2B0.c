@@ -515,7 +515,7 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         func_800AB308(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
-        gCurrentLevelHeader->unkA4 = func_8007AE74(gCurrentLevelHeader->unkA4);
+        gCurrentLevelHeader->unkA4 = load_texture(gCurrentLevelHeader->unkA4);
         gCurrentLevelHeader->unkA8 = (u16)0;
         gCurrentLevelHeader->unkAA = (u16)0;
     }
@@ -574,7 +574,7 @@ void func_8006BEFC(void) {
         func_800AB35C();
     }
     if (gCurrentLevelHeader->unk49 == 0xFF) {
-       func_8007B2BC(gCurrentLevelHeader->unkA4);
+       free_texture(gCurrentLevelHeader->unkA4);
     }
 }
 

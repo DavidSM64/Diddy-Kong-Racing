@@ -17,7 +17,7 @@ glabel free_object_model
 /* 060C90 80060090 00000000 */  nop   
 /* 060C94 80060094 10800005 */  beqz  $a0, .L800600AC
 /* 060C98 80060098 00000000 */   nop   
-/* 060C9C 8006009C 0C01ECAF */  jal   func_8007B2BC
+/* 060C9C 8006009C 0C01ECAF */  jal   free_texture
 /* 060CA0 800600A0 00000000 */   nop   
 /* 060CA4 800600A4 86420022 */  lh    $v0, 0x22($s2)
 /* 060CA8 800600A8 00000000 */  nop   

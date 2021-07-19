@@ -541,7 +541,42 @@ GLOBAL_ASM("asm/non_matchings/memory/allocate_memory_pool_slot.s")
 #endif
 
 
-GLOBAL_ASM("asm/non_matchings/memory/func_80071850.s")
+/**
+ * Returns the passed in address aligned to the next 16-byte boundary.
+ */
+u8 *align16(u8 *address) {
+    s32 remainder = (s32)address & 0xF;
+    if (remainder > 0) {
+        address = (u8*)(((s32)address - remainder) + 16);
+    }
+    return address;
+}
+
+/**
+ * Returns the passed in address aligned to the next 8-byte boundary.
+ * Unused.
+ */
+u8 *align8(u8 *address) {
+    s32 remainder = (s32)address & 0x7;
+    if (remainder > 0) {
+        address = (u8*)(((s32)address - remainder) + 8);
+    }
+    return address;
+}
+
+/**
+ * Returns the passed in address aligned to the next 4-byte boundary.
+ * Unused.
+ */
+u8 *align4(u8 *address) {
+    s32 remainder = (s32)address & 0x3;
+    if (remainder > 0) {
+        address = (u8*)(((s32)address - remainder) + 4);
+    }
+    return address;
+}
+
+GLOBAL_ASM("asm/non_matchings/memory/func_800718A4.s")
 
 #ifdef NON_MATCHING
 s32 get_memory_color_tag_count(s32 arg0) {
@@ -559,8 +594,8 @@ GLOBAL_ASM("asm/non_matchings/memory/get_memory_color_tag_count.s")
 #endif
 
 /**
- * Unused. 
  * Prints out the counts for each color tag in the main pool.
+ * Unused. 
  */
 void print_memory_color_tags(void) {
     stubbed_printf("RED %d\n", get_memory_color_tag_count(COLOR_TAG_RED));
@@ -575,8 +610,8 @@ void print_memory_color_tags(void) {
 }
 
 /**
- * Unused. 
  * Draws the counts for each color tag in the main pool.
+ * Unused. 
  * See: https://tcrf.net/Diddy_Kong_Racing#Current_Colors
  */
 void render_memory_color_tags(void) {

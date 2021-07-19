@@ -104,4 +104,18 @@
     _g->words.w1 = (unsigned int)(address);                                        \
 }
 
+#define gDPSetPrimColorRGBA(pkt, rgba)             \
+{                                                  \
+    Gfx *_g = (Gfx *)(pkt);                        \
+    _g->words.w0 = _SHIFTL(G_SETPRIMCOLOR, 24, 8); \
+    _g->words.w1 = rgba;                           \
+}
+
+#define gDPSetEnvColorRGBA(pkt, rgba)             \
+{                                                 \
+    Gfx *_g = (Gfx *)(pkt);                       \
+    _g->words.w0 = _SHIFTL(G_SETENVCOLOR, 24, 8); \
+    _g->words.w1 = rgba;                          \
+}
+
 #endif

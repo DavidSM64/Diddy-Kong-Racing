@@ -289,7 +289,7 @@ glabel func_800B0698
 /* 0B16D0 800B0AD0 ACA00000 */   sw    $zero, ($a1)
 .L800B0AD4:
 /* 0B16D4 800B0AD4 AFA3002C */  sw    $v1, 0x2c($sp)
-/* 0B16D8 800B0AD8 0C01EB9D */  jal   func_8007AE74
+/* 0B16D8 800B0AD8 0C01EB9D */  jal   load_texture
 /* 0B16DC 800B0ADC AFA50024 */   sw    $a1, 0x24($sp)
 /* 0B16E0 800B0AE0 8FA50024 */  lw    $a1, 0x24($sp)
 /* 0B16E4 800B0AE4 8FA3002C */  lw    $v1, 0x2c($sp)

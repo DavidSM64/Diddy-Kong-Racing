@@ -327,11 +327,11 @@ void func_8000B290(){
     get_misc_asset(20);
     /*{
         if(D_800DC754->unk7a)
-            func_8007CCB0();
+            free_sprite();
         D_800DC754->unk7a = 0;
 
         if(D_800DC754->unk7C)
-            func_8007B2BC();
+            free_texture();
         D_800DC754->unk7C = 0;
     }*/
     if(D_800DC75C)

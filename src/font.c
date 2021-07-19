@@ -232,7 +232,7 @@ void func_800C4170(s32 arg0) {
             // Minor issue with this loop.
             s32 i = 0;
             while (fontData->unk40[i] != -1) {
-                fontData->texturePointers[i] = func_8007AE74(fontData->unk40[i]);
+                fontData->texturePointers[i] = load_texture(fontData->unk40[i]);
                 i++;
                 if (i >= 64) {
                     break;
@@ -256,7 +256,7 @@ void func_800C422C(s32 arg0) {
                 // Minor issue with this loop.
                 s32 i = 0;
                 while (fontData->unk40[i] != -1) {
-                    func_8007B2BC(fontData->texturePointers[i]);
+                    free_texture(fontData->texturePointers[i]);
                     fontData->texturePointers[i] = NULL;
                     i++;
                     if (i >= 32) {

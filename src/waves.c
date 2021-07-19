@@ -174,7 +174,7 @@ s32 D_8012A728[2];
 
 u8* allocate_from_main_pool_safe(s32 arg0, s32 arg1);
 void free_from_memory_pool(s32* arg0);
-void func_8007B2BC(s32* arg0);
+void free_texture(s32* arg0);
 void func_800C5494(s32 arg0);
 void func_800C5620(s32 arg0);
 
@@ -204,7 +204,7 @@ void func_800B7D20(void) {
         D_800E3080[0] = NULL;
     }
     if (D_800E30D0 != NULL) {
-        func_8007B2BC(D_800E30D0);
+        free_texture(D_800E30D0);
         D_800E30D0 = NULL;
     }
     if (D_800E30D4 != NULL) {

@@ -50,7 +50,7 @@ glabel func_800AA600
 /* 0AB298 800AA698 8FA40038 */  lw    $a0, 0x38($sp)
 /* 0AB29C 800AA69C 00000000 */  nop   
 /* 0AB2A0 800AA6A0 308B3FFF */  andi  $t3, $a0, 0x3fff
-/* 0AB2A4 800AA6A4 0C01EB9D */  jal   func_8007AE74
+/* 0AB2A4 800AA6A4 0C01EB9D */  jal   load_texture
 /* 0AB2A8 800AA6A8 01602025 */   move  $a0, $t3
 /* 0AB2AC 800AA6AC 3C098012 */  lui   $t1, %hi(D_80126CF4) # $t1, 0x8012
 /* 0AB2B0 800AA6B0 860D0006 */  lh    $t5, 6($s0)

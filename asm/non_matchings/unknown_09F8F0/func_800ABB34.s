@@ -64,7 +64,7 @@ glabel func_800ABB34
 /* 0AC81C 800ABC1C 8D29291C */  lw    $t1, %lo(D_800E291C)($t1)
 /* 0AC820 800ABC20 00000000 */  nop   
 /* 0AC824 800ABC24 8D240000 */  lw    $a0, ($t1)
-/* 0AC828 800ABC28 0C01EB9D */  jal   func_8007AE74
+/* 0AC828 800ABC28 0C01EB9D */  jal   load_texture
 /* 0AC82C 800ABC2C 00000000 */   nop   
 /* 0AC830 800ABC30 8FBF0034 */  lw    $ra, 0x34($sp)
 /* 0AC834 800ABC34 AE820008 */  sw    $v0, 8($s4)

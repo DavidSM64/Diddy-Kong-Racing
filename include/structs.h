@@ -32,11 +32,21 @@ typedef struct MenuElement {
   /* 0x1E */ u16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
 } MenuElement;
 
+#define TEX_FORMAT_RGBA32 0
+#define TEX_FORMAT_RGBA16 1
+#define TEX_FORMAT_I8     2
+#define TEX_FORMAT_I4     3
+#define TEX_FORMAT_IA16   4
+#define TEX_FORMAT_IA8    5
+#define TEX_FORMAT_IA4    6
+#define TEX_FORMAT_CI4    7
+#define TEX_FORMAT_CI8    8
+
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
   /* 0x01 */ u8 height;
-  /* 0x02 */ u8 format; // Lower 3 bits determines image format.
+  /* 0x02 */ u8 format; // Lower 4 bits determines image format.
       // 0 = RGBA32 
       // 1 = RGBA16 
       // 2 = I8
@@ -44,24 +54,24 @@ typedef struct TextureHeader {
       // 4 = IA16
       // 5 = IA8
       // 6 = IA4
-      // 7 = CI4 texture
+      // 7 = CI4 (16 colors)
+      // 8 = CI8 (64 colors)
   /* 0x03 */ u8 unk3;
   /* 0x04 */ u8 unk4;
-  /* 0x05 */ u8 unk5; // Always 0x01?
+  /* 0x05 */ u8 numberOfInstances; // Always 1 in the ROM.
   /* 0x06 */ u16 flags;
       // 0x04 = Interlaced texture
       // 0x40 = U clamp flag. 0 = Wrap, 1 = Clamp
       // 0x80 = V clamp flag. 0 = Wrap, 1 = Clamp
-  /* 0x08 */ u16 ci4Palette; // Offset to CI4 palette
+  /* 0x08 */ s16 ciPaletteOffset;
   /* 0x0A */ u8 unkA;
   /* 0x0B */ u8 numberOfCommands; // initialized in RAM; Number of commands in the texture display list. (Usually 0x07)
   /* 0x0C */ s32*  cmd; // initialized in RAM; Pointer to texture display list.
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
-  /* 0x12 */ u8 numOfTextures; // For animated textures, static textures are just 0x01. Each texture has it's own header.
-  /* 0x13 */ u8 unk13;
+  /* 0x12 */ u16 numOfTextures; // For animated textures, static textures are just 0x01. Each texture has it's own header.
   /* 0x14 */ u16 frameAdvanceDelay; // How many frames to delay before moving to the next texture.
-  /* 0x16 */ u16 textureSize; // Size in number of bytes, including the header 
+  /* 0x16 */ s16 textureSize; // Size in number of bytes, including the header 
   /* 0x18 */ u8 unk18;
   /* 0x19 */ u8 unk19;
   /* 0x1A */ u8 unk1A;
@@ -342,7 +352,7 @@ typedef struct LevelModel {
            u8 pad1C[4];
 /* 0x20 */ s32 unk20;
            u8 pad24[0x14];
-/* 0x38 */ u32 unk38;
+/* 0x38 */ u32 minimapColor;
 } LevelModel;
 
 typedef struct Object_3C {

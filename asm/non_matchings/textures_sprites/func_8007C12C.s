@@ -25,8 +25,8 @@ glabel func_8007C12C
 /* 07CD80 8007C180 00008025 */  move  $s0, $zero
 /* 07CD84 8007C184 18800014 */  blez  $a0, .L8007C1D8
 /* 07CD88 8007C188 00004825 */   move  $t1, $zero
-/* 07CD8C 8007C18C 3C028012 */  lui   $v0, %hi(D_8012634C) # $v0, 0x8012
-/* 07CD90 8007C190 8C42634C */  lw    $v0, %lo(D_8012634C)($v0)
+/* 07CD8C 8007C18C 3C028012 */  lui   $v0, %hi(gSpriteCache) # $v0, 0x8012
+/* 07CD90 8007C190 8C42634C */  lw    $v0, %lo(gSpriteCache)($v0)
 /* 07CD94 8007C194 00000000 */  nop   
 /* 07CD98 8007C198 0010C0C0 */  sll   $t8, $s0, 3
 .L8007C19C:
@@ -49,8 +49,8 @@ glabel func_8007C12C
 .L8007C1D8:
 /* 07CDD8 8007C1D8 1880000F */  blez  $a0, .L8007C218
 /* 07CDDC 8007C1DC 2408FFFF */   li    $t0, -1
-/* 07CDE0 8007C1E0 3C028012 */  lui   $v0, %hi(D_8012634C) # $v0, 0x8012
-/* 07CDE4 8007C1E4 8C42634C */  lw    $v0, %lo(D_8012634C)($v0)
+/* 07CDE0 8007C1E0 3C028012 */  lui   $v0, %hi(gSpriteCache) # $v0, 0x8012
+/* 07CDE4 8007C1E4 8C42634C */  lw    $v0, %lo(gSpriteCache)($v0)
 /* 07CDE8 8007C1E8 2403FFFF */  li    $v1, -1
 /* 07CDEC 8007C1EC 001070C0 */  sll   $t6, $s0, 3
 .L8007C1F0:
@@ -68,19 +68,19 @@ glabel func_8007C12C
 .L8007C218:
 /* 07CE18 8007C218 2403FFFF */  li    $v1, -1
 /* 07CE1C 8007C21C 15030005 */  bne   $t0, $v1, .L8007C234
-/* 07CE20 8007C220 3C0B8012 */   lui   $t3, %hi(D_80126348) # $t3, 0x8012
+/* 07CE20 8007C220 3C0B8012 */   lui   $t3, %hi(gSpriteOffsetTable) # $t3, 0x8012
 /* 07CE24 8007C224 24990001 */  addiu $t9, $a0, 1
 /* 07CE28 8007C228 24090001 */  li    $t1, 1
 /* 07CE2C 8007C22C 00804025 */  move  $t0, $a0
 /* 07CE30 8007C230 AD590000 */  sw    $t9, ($t2)
 .L8007C234:
-/* 07CE34 8007C234 8D6B6348 */  lw    $t3, %lo(D_80126348)($t3)
+/* 07CE34 8007C234 8D6B6348 */  lw    $t3, %lo(gSpriteOffsetTable)($t3)
 /* 07CE38 8007C238 00116080 */  sll   $t4, $s1, 2
 /* 07CE3C 8007C23C 016C1021 */  addu  $v0, $t3, $t4
 /* 07CE40 8007C240 8C460000 */  lw    $a2, ($v0)
 /* 07CE44 8007C244 8C4D0004 */  lw    $t5, 4($v0)
-/* 07CE48 8007C248 3C148012 */  lui   $s4, %hi(D_80126350) # $s4, 0x8012
-/* 07CE4C 8007C24C 8E946350 */  lw    $s4, %lo(D_80126350)($s4)
+/* 07CE48 8007C248 3C148012 */  lui   $s4, %hi(gCurrentSprite) # $s4, 0x8012
+/* 07CE4C 8007C24C 8E946350 */  lw    $s4, %lo(gCurrentSprite)($s4)
 /* 07CE50 8007C250 AFB10050 */  sw    $s1, 0x50($sp)
 /* 07CE54 8007C254 A3A90032 */  sb    $t1, 0x32($sp)
 /* 07CE58 8007C258 AFA80044 */  sw    $t0, 0x44($sp)
@@ -102,12 +102,12 @@ glabel func_8007C12C
 /* 07CE98 8007C298 032B8021 */  addu  $s0, $t9, $t3
 /* 07CE9C 8007C29C 00156940 */  sll   $t5, $s5, 5
 /* 07CEA0 8007C2A0 020D8021 */  addu  $s0, $s0, $t5
-/* 07CEA4 8007C2A4 0C01C614 */  jal   func_80071850
+/* 07CEA4 8007C2A4 0C01C614 */  jal   align16
 /* 07CEA8 8007C2A8 02038021 */   addu  $s0, $s0, $v1
 /* 07CEAC 8007C2AC 86840002 */  lh    $a0, 2($s4)
 /* 07CEB0 8007C2B0 02028021 */  addu  $s0, $s0, $v0
 /* 07CEB4 8007C2B4 00047080 */  sll   $t6, $a0, 2
-/* 07CEB8 8007C2B8 0C01C614 */  jal   func_80071850
+/* 07CEB8 8007C2B8 0C01C614 */  jal   align16
 /* 07CEBC 8007C2BC 01C02025 */   move  $a0, $t6
 /* 07CEC0 8007C2C0 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
 /* 07CEC4 8007C2C4 02022021 */  addu  $a0, $s0, $v0
@@ -128,12 +128,12 @@ glabel func_8007C12C
 /* 07CEFC 8007C2FC 00001025 */   move  $v0, $zero
 .L8007C300:
 /* 07CF00 8007C300 24040010 */  li    $a0, 16
-/* 07CF04 8007C304 0C01C614 */  jal   func_80071850
+/* 07CF04 8007C304 0C01C614 */  jal   align16
 /* 07CF08 8007C308 00008025 */   move  $s0, $zero
 /* 07CF0C 8007C30C 86840002 */  lh    $a0, 2($s4)
 /* 07CF10 8007C310 00408825 */  move  $s1, $v0
 /* 07CF14 8007C314 00045880 */  sll   $t3, $a0, 2
-/* 07CF18 8007C318 0C01C614 */  jal   func_80071850
+/* 07CF18 8007C318 0C01C614 */  jal   align16
 /* 07CF1C 8007C31C 01602025 */   move  $a0, $t3
 /* 07CF20 8007C320 00536021 */  addu  $t4, $v0, $s3
 /* 07CF24 8007C324 01916821 */  addu  $t5, $t4, $s1
@@ -159,8 +159,8 @@ glabel func_8007C12C
 /* 07CF74 8007C374 AE780008 */  sw    $t8, 8($s3)
 /* 07CF78 8007C378 1AA0001E */  blez  $s5, .L8007C3F4
 /* 07CF7C 8007C37C 00001825 */   move  $v1, $zero
-/* 07CF80 8007C380 3C12800E */  lui   $s2, %hi(D_800DE7C0) # $s2, 0x800e
-/* 07CF84 8007C384 2652E7C0 */  addiu $s2, %lo(D_800DE7C0) # addiu $s2, $s2, -0x1840
+/* 07CF80 8007C380 3C12800E */  lui   $s2, %hi(gTexColorTag) # $s2, 0x800e
+/* 07CF84 8007C384 2652E7C0 */  addiu $s2, %lo(gTexColorTag) # addiu $s2, $s2, -0x1840
 /* 07CF88 8007C388 00008825 */  move  $s1, $zero
 .L8007C38C:
 /* 07CF8C 8007C38C 3C0B00FF */  lui   $t3, (0x00FF0163 >> 16) # lui $t3, 0xff
@@ -168,7 +168,7 @@ glabel func_8007C12C
 /* 07CF94 8007C394 AE4B0000 */  sw    $t3, ($s2)
 /* 07CF98 8007C398 86990000 */  lh    $t9, ($s4)
 /* 07CF9C 8007C39C A3A30033 */  sb    $v1, 0x33($sp)
-/* 07CFA0 8007C3A0 0C01EB9D */  jal   func_8007AE74
+/* 07CFA0 8007C3A0 0C01EB9D */  jal   load_texture
 /* 07CFA4 8007C3A4 03302021 */   addu  $a0, $t9, $s0
 /* 07CFA8 8007C3A8 8E6C0008 */  lw    $t4, 8($s3)
 /* 07CFAC 8007C3AC 83A30033 */  lb    $v1, 0x33($sp)
@@ -204,7 +204,7 @@ glabel func_8007C12C
 /* 07D018 8007C418 00000000 */  nop   
 /* 07D01C 8007C41C 10800003 */  beqz  $a0, .L8007C42C
 /* 07D020 8007C420 00000000 */   nop   
-/* 07D024 8007C424 0C01ECAF */  jal   func_8007B2BC
+/* 07D024 8007C424 0C01ECAF */  jal   free_texture
 /* 07D028 8007C428 00000000 */   nop   
 .L8007C42C:
 /* 07D02C 8007C42C 26100001 */  addiu $s0, $s0, 1
@@ -249,10 +249,10 @@ glabel func_8007C12C
 .L8007C4B8:
 /* 07D0B8 8007C4B8 3C0E8012 */  lui   $t6, %hi(D_80126358) # $t6, 0x8012
 /* 07D0BC 8007C4BC 8DCE6358 */  lw    $t6, %lo(D_80126358)($t6)
-/* 07D0C0 8007C4C0 3C048012 */  lui   $a0, %hi(D_8012634C) # $a0, 0x8012
+/* 07D0C0 8007C4C0 3C048012 */  lui   $a0, %hi(gSpriteCache) # $a0, 0x8012
 /* 07D0C4 8007C4C4 29C10064 */  slti  $at, $t6, 0x64
 /* 07D0C8 8007C4C8 14200003 */  bnez  $at, .L8007C4D8
-/* 07D0CC 8007C4CC 2484634C */   addiu $a0, %lo(D_8012634C) # addiu $a0, $a0, 0x634c
+/* 07D0CC 8007C4CC 2484634C */   addiu $a0, %lo(gSpriteCache) # addiu $a0, $a0, 0x634c
 /* 07D0D0 8007C4D0 1000000D */  b     .L8007C508
 /* 07D0D4 8007C4D4 00001025 */   move  $v0, $zero
 .L8007C4D8:
@@ -282,7 +282,7 @@ glabel func_8007C12C
 /* 07D12C 8007C52C 04800006 */  bltz  $a0, .L8007C548
 /* 07D130 8007C530 3C0E8012 */   lui   $t6, %hi(D_80126358) # $t6, 0x8012
 /* 07D134 8007C534 8DCE6358 */  lw    $t6, %lo(D_80126358)($t6)
-/* 07D138 8007C538 3C0F8012 */  lui   $t7, %hi(D_8012634C) # $t7, 0x8012
+/* 07D138 8007C538 3C0F8012 */  lui   $t7, %hi(gSpriteCache) # $t7, 0x8012
 /* 07D13C 8007C53C 008E082A */  slt   $at, $a0, $t6
 /* 07D140 8007C540 14200003 */  bnez  $at, .L8007C550
 /* 07D144 8007C544 00000000 */   nop   
@@ -291,7 +291,7 @@ glabel func_8007C12C
 /* 07D14C 8007C54C 00001025 */   move  $v0, $zero
 
 .L8007C550:
-/* 07D150 8007C550 8DEF634C */  lw    $t7, %lo(D_8012634C)($t7)
+/* 07D150 8007C550 8DEF634C */  lw    $t7, %lo(gSpriteCache)($t7)
 /* 07D154 8007C554 0004C8C0 */  sll   $t9, $a0, 3
 /* 07D158 8007C558 01F94021 */  addu  $t0, $t7, $t9
 /* 07D15C 8007C55C 8D030004 */  lw    $v1, 4($t0)

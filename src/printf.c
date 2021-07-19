@@ -119,9 +119,9 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B4A14.s")
 GLOBAL_ASM("asm/non_matchings/printf/sprintf.s")
 
 void func_800B5E88(void) {
-    D_80127CA0 = func_8007AE74(0);
-    D_80127CA4 = func_8007AE74(1);
-    D_80127CA8 = func_8007AE74(2);
+    D_80127CA0 = load_texture(0);
+    D_80127CA4 = load_texture(1);
+    D_80127CA8 = load_texture(2);
     D_801285D8 = &D_80127CD8[0];
 }
 

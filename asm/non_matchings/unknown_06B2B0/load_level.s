@@ -685,7 +685,7 @@ glabel load_level
 /* 06C828 8006BC28 15E1000F */  bne   $t7, $at, .L8006BC68
 /* 06C82C 8006BC2C 00000000 */   nop   
 /* 06C830 8006BC30 8C6400A4 */  lw    $a0, 0xa4($v1)
-/* 06C834 8006BC34 0C01EB9D */  jal   func_8007AE74
+/* 06C834 8006BC34 0C01EB9D */  jal   load_texture
 /* 06C838 8006BC38 00000000 */   nop   
 /* 06C83C 8006BC3C 8E2D0000 */  lw    $t5, ($s1)
 /* 06C840 8006BC40 00000000 */  nop   
