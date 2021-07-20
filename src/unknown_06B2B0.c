@@ -793,10 +793,10 @@ void render(void) {
     
     if (D_800DD380 == 8) {
         D_801211F8 = D_801211F0[D_801234E8];
-        func_8007A2D0(&D_801211F8, 0, 0);
-        func_8007A2D0(&D_801211F8, 1, gVideoCurrFramebuffer);
-        func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
-        func_8007A2D0(&D_801211F8, 4, gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&D_801211F8, 0, 0);
+        set_rsp_segment(&D_801211F8, 1, gVideoCurrFramebuffer);
+        set_rsp_segment(&D_801211F8, 2, gVideoLastDepthBuffer);
+        set_rsp_segment(&D_801211F8, 4, gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
         setupOSTasks(D_801211F0[D_801234E8], D_801211F8, 0);
@@ -812,10 +812,10 @@ void render(void) {
     D_80121218 = D_80121210[D_801234E8];
     D_80121228 = D_80121220[D_801234E8];
     
-    func_8007A2D0(&D_801211F8, 0, 0, &D_801234E8);
-    func_8007A2D0(&D_801211F8, 1, gVideoLastFramebuffer);
-    func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
-    func_8007A2D0(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&D_801211F8, 0, 0, &D_801234E8);
+    set_rsp_segment(&D_801211F8, 1, gVideoLastFramebuffer);
+    set_rsp_segment(&D_801211F8, 2, gVideoLastDepthBuffer);
+    set_rsp_segment(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
     func_800780DC(&D_801211F8);
     func_80078054(&D_801211F8);
     func_80077B9C(&D_801211F8, &D_80121208, 1);

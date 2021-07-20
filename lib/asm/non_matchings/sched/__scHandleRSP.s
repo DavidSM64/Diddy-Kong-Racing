@@ -3,7 +3,7 @@ glabel D_800E796C
 .float 468750.0
 
 .text
-glabel func_80079B44
+glabel __scHandleRSP
 /* 07A744 80079B44 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 07A748 80079B48 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 07A74C 80079B4C AFB00018 */  sw    $s0, 0x18($sp)
@@ -149,4 +149,3 @@ glabel func_80079B44
 /* 07A950 80079D50 8FB00018 */  lw    $s0, 0x18($sp)
 /* 07A954 80079D54 03E00008 */  jr    $ra
 /* 07A958 80079D58 27BD0038 */   addiu $sp, $sp, 0x38
-
