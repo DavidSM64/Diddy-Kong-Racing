@@ -148,7 +148,7 @@ glabel func_80096978
 /* 0977A4 80096BA4 02203825 */  move  $a3, $s1
 /* 0977A8 80096BA8 AFA20018 */  sw    $v0, 0x18($sp)
 /* 0977AC 80096BAC AFA20014 */  sw    $v0, 0x14($sp)
-/* 0977B0 80096BB0 0C01E2AE */  jal   func_80078AB8
+/* 0977B0 80096BB0 0C01E2AE */  jal   render_textured_rectangle
 /* 0977B4 80096BB4 AFA20010 */   sw    $v0, 0x10($sp)
 /* 0977B8 80096BB8 3C08800E */  lui   $t0, %hi(gNumberOfActivePlayers) # $t0, 0x800e
 /* 0977BC 80096BBC 8D08F4BC */  lw    $t0, %lo(gNumberOfActivePlayers)($t0)

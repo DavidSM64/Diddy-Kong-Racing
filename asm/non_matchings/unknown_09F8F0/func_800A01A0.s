@@ -646,7 +646,7 @@ glabel func_800A01A0
 /* 0A1718 800A0B18 AFA90010 */  sw    $t1, 0x10($sp)
 /* 0A171C 800A0B1C 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A1720 800A0B20 00003025 */  move  $a2, $zero
-/* 0A1724 800A0B24 0C01E2AE */  jal   func_80078AB8
+/* 0A1724 800A0B24 0C01E2AE */  jal   render_textured_rectangle
 /* 0A1728 800A0B28 00003825 */   move  $a3, $zero
 .L800A0B2C:
 /* 0A172C 800A0B2C 3C0B8012 */  lui   $t3, %hi(D_80126CFC) # $t3, 0x8012

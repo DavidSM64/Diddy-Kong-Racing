@@ -120,7 +120,7 @@ glabel menu_23_loop
 /* 09BAB4 8009AEB4 AFB90010 */  sw    $t9, 0x10($sp)
 /* 09BAB8 8009AEB8 02A02025 */  move  $a0, $s5
 /* 09BABC 8009AEBC 24060018 */  li    $a2, 24
-/* 09BAC0 8009AEC0 0C01E2AE */  jal   func_80078AB8
+/* 09BAC0 8009AEC0 0C01E2AE */  jal   render_textured_rectangle
 /* 09BAC4 8009AEC4 02403825 */   move  $a3, $s2
 /* 09BAC8 8009AEC8 8E6B0000 */  lw    $t3, ($s3)
 /* 09BACC 8009AECC 26100001 */  addiu $s0, $s0, 1

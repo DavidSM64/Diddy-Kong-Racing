@@ -378,7 +378,7 @@ s16 D_800DF7C4[12] = {
     0x58, 0x59, 0x5A, -1
 };
 
-MenuBootDrawTexture D_800DF7DC[12] = {
+DrawTexture D_800DF7DC[12] = {
     { NULL, -75, -32 },
     { NULL, -60, -32 },
     { NULL, -45, -32 },
@@ -2570,7 +2570,7 @@ s32 menu_boot_loop(s32 arg0) {
     }
     
     if (phi_v1 < 0x12C) {
-        func_80078AB8(&D_801263A0, &D_800DF7DC, 0xA0, phi_v1, 0xFF, 0xFF, 0xFF, 0xFF);
+        render_textured_rectangle(&D_801263A0, &D_800DF7DC, 0xA0, phi_v1, 0xFF, 0xFF, 0xFF, 0xFF);
         func_8007B3D0(&D_801263A0);
     }
     

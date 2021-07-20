@@ -223,7 +223,7 @@ glabel func_8008A56C
 /* 08B4B4 8008A8B4 AFAF0010 */  sw    $t7, 0x10($sp)
 /* 08B4B8 8008A8B8 24A5043C */  addiu $a1, %lo(D_800E043C) # addiu $a1, $a1, 0x43c
 /* 08B4BC 8008A8BC 240600A0 */  li    $a2, 160
-/* 08B4C0 8008A8C0 0C01E2AE */  jal   func_80078AB8
+/* 08B4C0 8008A8C0 0C01E2AE */  jal   render_textured_rectangle
 /* 08B4C4 8008A8C4 26470008 */   addiu $a3, $s2, 8
 .L8008A8C8:
 /* 08B4C8 8008A8C8 8FBF004C */  lw    $ra, 0x4c($sp)

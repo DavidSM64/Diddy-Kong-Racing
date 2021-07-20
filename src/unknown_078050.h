@@ -16,7 +16,6 @@ extern u32 D_800DE4C4;
 extern u32 D_800DE4C8;
 extern s32 D_800DE4CC;
 
-extern u32 D_800DE4D0;
 extern s32 D_800DE4D4;
 extern s32 D_800DE4D8;
 extern s32 D_800DE4DC;

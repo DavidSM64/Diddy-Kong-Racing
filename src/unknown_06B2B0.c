@@ -818,7 +818,7 @@ void render(void) {
     set_rsp_segment(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
     func_800780DC(&D_801211F8);
     func_80078054(&D_801211F8);
-    func_80077B9C(&D_801211F8, &D_80121208, 1);
+    render_background(&D_801211F8, &D_80121208, 1);
     D_800DD37C = func_8006A1C4(D_800DD37C, D_800DD404);
     if (func_800B76DC() != 0) {
         render_epc_lock_up_display();

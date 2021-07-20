@@ -127,7 +127,7 @@ glabel render
 /* 06D3F4 8006C7F4 3C058012 */  lui   $a1, %hi(D_80121208) # $a1, 0x8012
 /* 06D3F8 8006C7F8 24A51208 */  addiu $a1, %lo(D_80121208) # addiu $a1, $a1, 0x1208
 /* 06D3FC 8006C7FC 248411F8 */  addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
-/* 06D400 8006C800 0C01DEE7 */  jal   func_80077B9C
+/* 06D400 8006C800 0C01DEE7 */  jal   render_background
 /* 06D404 8006C804 24060001 */   li    $a2, 1
 /* 06D408 8006C808 3C04800E */  lui   $a0, %hi(D_800DD37C) # $a0, 0x800e
 /* 06D40C 8006C80C 3C05800E */  lui   $a1, %hi(D_800DD404) # $a1, 0x800e

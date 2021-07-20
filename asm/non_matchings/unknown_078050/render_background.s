@@ -1,4 +1,4 @@
-glabel func_80077B9C
+glabel render_background
 /* 07879C 80077B9C 27BDFF60 */  addiu $sp, $sp, -0xa0
 /* 0787A0 80077BA0 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 0787A4 80077BA4 AFB00020 */  sw    $s0, 0x20($sp)

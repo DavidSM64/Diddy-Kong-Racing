@@ -186,20 +186,13 @@ extern s32 D_800DF7AC;
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 extern char gVersionDisplayText[20];
 
-// Probably not unqiue to the boot menu.
-typedef struct MenuBootDrawTexture {
-    u32* texture; // Pointer to texture to draw. TODO: Make structure for texture header.
-    s16 xOffset; // Offset from the center of the screen.
-    s16 yOffset; // Offset from the center of the screen.
-} MenuBootDrawTexture;
-
 extern s16 D_800DF7C4[12];
 
-extern MenuBootDrawTexture D_800DF7DC[12];
+extern DrawTexture D_800DF7DC[12];
 
 /* Size: 0x30 bytes */
 typedef struct unk800DF83C {
-    char* unk0; // Pointer to ascii text.
+    char *unk0; // Pointer to ascii text.
     f32  unk4;
     f32  unk8;
     f32  unkC;

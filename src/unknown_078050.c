@@ -4,6 +4,7 @@
 #include "unknown_078050.h"
 
 #include "types.h"
+#include "structs.h"
 #include "macros.h"
 #include "libultra_internal.h"
 
@@ -24,7 +25,12 @@ u32 D_800DE4C4 = 0;
 u32 D_800DE4C8 = 0;
 s32 D_800DE4CC = 0;
 
-u32 D_800DE4D0 = 0;
+typedef union {
+    void (*function)(Gfx*, s32);
+    void *ptr;
+} unk800DE4D0;
+
+unk800DE4D0 D_800DE4D0 = { 0 };
 s32 D_800DE4D4 = 0;
 s32 D_800DE4D8 = 0;
 s32 D_800DE4DC = 0;
@@ -154,14 +160,14 @@ OSMesg       D_80125EF0;
 s32          D_80125EF8[6];
 OSMesg       D_80125F10;
 s32          D_80125F18[6];
-s8 D_80125F30;
-s8 D_80125F31;
-s8 D_80125F32;
-s8 D_80125F33;
-s8 D_80125F34;
-s8 D_80125F35;
-s8 D_80125F36;
-s8 D_80125F37;
+u8 D_80125F30;
+u8 D_80125F31;
+u8 D_80125F32;
+u8 D_80125F33;
+u8 D_80125F34;
+u8 D_80125F35;
+u8 D_80125F36;
+u8 D_80125F37;
 s32 D_80125F38;
 s32 D_80125F3C;
 s32 D_80125F40[56];
@@ -171,7 +177,23 @@ u32 D_80126100;
 /*******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077A54.s")
+
+s32 func_80077A54(void) {
+    OSMesg *sp1C = NULL;
+    if (D_800DE4DC == 0) {
+        return 0;
+    }
+    osRecvMesg(&D_80125ED8, &sp1C, 1);
+    D_800DE4DC = 0;
+    return sp1C[1];
+}
+
+void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2) {
+    osWritebackDCacheAll();
+    while (func_800D18D0() & 0x100) {}
+    osDpSetNextBuffer(bufPtr, arg1);
+    while (func_800D18D0() & 0x100) {}
+}
 
 void func_80077B34(u8 arg0, u8 arg1, u8 arg2){
     D_800DE4B0 = arg0;
@@ -179,38 +201,90 @@ void func_80077B34(u8 arg0, u8 arg1, u8 arg2){
     D_800DE4B8 = arg2;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077B5C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077B9C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078054.s")
-
-
-
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800780DC.s")
-#else
-typedef struct{
-    u32 unk00;
-    u32* unk04;
-} struct_800780DC_a0;
-
-void func_800780DC(struct_800780DC_a0** arg0){
-    u32* tmp2= D_800DE4E0;
-    struct_800780DC_a0* tmp = *arg0;
-    
-
-    *arg0 = *arg0 + 1;
-    tmp->unk00 = 0x6000000;
-    tmp->unk04 = tmp2;
+void func_80077B5C(s32 red, s32 green, s32 blue) {
+    D_800DE4BC = ((red << 8) & 0xF800) | ((green * 8) & 0x7C0) | ((blue >> 2) & 0x3E) | 1;
+    D_800DE4BC |= (D_800DE4BC << 0x10);
 }
+
+#ifdef NON_MATCHING
+// Stack issues
+void render_background(Gfx **dlist, s32 arg1, s32 arg2) {
+    s32 sp90;
+    s32 sp8C;
+    s32 sp88;
+    s32 sp84;
+    s32 w, h;
+    s32 rgba16Color;
+    s32 widthAndHeight;
+
+    widthAndHeight = get_video_width_and_height_as_s32();
+    w = widthAndHeight & 0xFFFF;
+    h = widthAndHeight >> 0x10;
+    
+    gDPPipeSync((*dlist)++)
+    gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1)
+    gDPSetCycleType((*dlist)++, G_CYC_FILL)
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000)
+    gDPSetFillColor((*dlist)++, 0xFFFCFFFC)
+    gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
+    gDPPipeSync((*dlist)++)
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x01000000)
+    if (arg2) {
+        if (func_80066910(0)) {
+            if (D_800DE4CC) {
+                func_800787FC(dlist);
+            } else if (D_800DE4C4 != 0) {
+                func_80078190(dlist);
+            } else if (D_800DE4D0.ptr != NULL) {
+                D_800DE4D0.function(dlist, arg1);
+            } else {
+                gDPSetFillColor((*dlist)++, D_800DE4BC)
+                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
+            }
+            if (func_80066BA8(0, &sp90, &sp8C, &sp88, &sp84)) {
+                gDPSetCycleType((*dlist)++, G_CYC_1CYCLE)
+                gDPSetPrimColor((*dlist)++, 0, 0, D_800DE4B0, D_800DE4B4, D_800DE4B8, 0xFF)
+                gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE)
+                gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2)
+                gDPFillRectangle((*dlist)++, sp84, sp88, sp8C, sp90)
+            }
+        } else if (D_800DE4CC) {
+            func_800787FC(dlist);
+        } else if (D_800DE4C4 != 0) {
+            func_80078190(dlist);
+        } else if (D_800DE4D0.ptr != NULL) {
+            D_800DE4D0.function(dlist, arg1);
+        } else {
+            // Also has an issue here.
+            rgba16Color = ((D_800DE4B0 << 8) & 0xF800) | ((D_800DE4B4 * 8) & 0x7C0) | ((D_800DE4B8 >> 2) & 0x3E) | 1;
+            rgba16Color |= rgba16Color << 0x10;
+            gDPSetFillColor((*dlist)++, rgba16Color)
+            gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
+        }
+    }
+    gDPPipeSync((*dlist)++)
+    func_80067A3C(dlist);
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
 #endif
 
+void func_80078054(Gfx **dlist) {
+    s32 width = get_video_width_and_height_as_s32() & 0xFFF;
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, 0x01000000)
+    gDPSetDepthImage((*dlist)++, 0x2000000)
+    gSPDisplayList((*dlist)++, D_800DE520)
+}
+
+void func_800780DC(Gfx** dlist){
+    gSPDisplayList((*dlist)++, D_800DE4E0)
+}
 
 void func_80078100(void){
     D_80126100 = func_8007957C();
     osCreateMesgQueue(&D_80125EA0, &D_80125EB8,1);
     osCreateMesgQueue(&D_80125EC0, &D_80125EF0,8);
     osCreateMesgQueue(&D_80125ED8, &D_80125F10,8);
-    
 }
 
 void func_80078170(u32 arg0, u32 arg1, u32 arg2){
@@ -219,13 +293,76 @@ void func_80078170(u32 arg0, u32 arg1, u32 arg2){
     D_800DE4C0 = arg2 << 2;
 }
 
-
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
+
+// Unused
+void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    D_80125F30 = (arg0 >> 24) & 0xFF;
+    D_80125F31 = (arg0 >> 16) & 0xFF;
+    D_80125F32 = (arg0 >> 8) & 0xFF;
+    D_80125F33 = arg0 & 0xFF;
+    D_80125F34 = (arg1 >> 24) & 0xFF;
+    D_80125F35 = (arg1 >> 16) & 0xFF;
+    D_80125F36 = (arg1 >> 8) & 0xFF;
+    D_80125F37 = arg1 & 0xFF;
+    D_80125F38 = arg2;
+    D_80125F3C = arg3;
+    D_800DE4CC = 1;
+}
+
+// Unused
+void func_800787F0(void) {
+    D_800DE4CC = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800787FC.s")
 
 void func_80078AAC(u32 arg0){
-    D_800DE4D0 = arg0;
+    D_800DE4D0.ptr = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078AB8.s")
+#ifdef NON_MATCHING
+
+// Regalloc & stack issues.
+void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha) {
+    TextureHeader *tex;
+    DrawTexture *phi_t2;
+    s32 x0, y0;
+    s32 x1, y1;
+    s32  u,  v;
+
+    gSPDisplayList((*dlist)++, D_800DE628)
+    gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha)
+    tex = arg1->texture;
+    while (tex != NULL) {
+        x0 = (arg1->xOffset * 4) + (arg2 * 4);
+        y0 = (arg1->yOffset * 4) + (arg3 * 4);
+        x1 = (tex->width * 4) + x0;
+        y1 = (tex->height * 4) + y0;
+        if (x1 > 0) {
+            u = 0;
+            if (y1 > 0) {
+                v = 0;
+                if (x0 < 0) {
+                    u = -(x0 * 8);
+                    x0 = 0;
+                }
+                if (y0 < 0) {
+                    v = -(y0 * 8);
+                    y0 = 0;
+                }
+                gDkrDmaDisplayList((*dlist)++, tex->cmd + 0x80000000, tex->numberOfCommands)
+                gSPTextureRectangle((*dlist)++, x0, y0, x1, y1, 0, u, v, 1024, 1024)
+            }
+        }
+        arg1++;
+        tex = arg1->texture;
+    }
+    gDPPipeSync((*dlist)++)
+    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255)
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_078050/render_textured_rectangle.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078D00.s")

@@ -64,9 +64,8 @@ typedef struct TextureHeader {
       // 0x40 = U clamp flag. 0 = Wrap, 1 = Clamp
       // 0x80 = V clamp flag. 0 = Wrap, 1 = Clamp
   /* 0x08 */ s16 ciPaletteOffset;
-  /* 0x0A */ u8 unkA;
-  /* 0x0B */ u8 numberOfCommands; // initialized in RAM; Number of commands in the texture display list. (Usually 0x07)
-  /* 0x0C */ s32*  cmd; // initialized in RAM; Pointer to texture display list.
+  /* 0x0A */ s16 numberOfCommands; // initialized in RAM; Number of commands in the texture display list. (Usually 0x07)
+  /* 0x0C */ s32* cmd; // initialized in RAM; Pointer to texture display list.
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u16 numOfTextures; // For animated textures, static textures are just 0x01. Each texture has it's own header.
@@ -81,6 +80,13 @@ typedef struct TextureHeader {
   /* 0x1E */ u8 unk1E;
   /* 0x1F */ u8 unk1F;
 } TextureHeader;
+
+// Probably not unqiue to the boot menu.
+typedef struct DrawTexture {
+    TextureHeader *texture; // Pointer to texture to draw.
+    s16 xOffset; // Offset from the center of the screen.
+    s16 yOffset; // Offset from the center of the screen.
+} DrawTexture;
 
 /* Size: 0x18 bytes */
 typedef struct Racer {

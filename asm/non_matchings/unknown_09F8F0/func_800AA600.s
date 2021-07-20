@@ -320,7 +320,7 @@ glabel func_800AA600
 /* 0AB694 800AAA94 27A50088 */  addiu $a1, $sp, 0x88
 /* 0AB698 800AAA98 00003025 */  move  $a2, $zero
 /* 0AB69C 800AAA9C 00003825 */  move  $a3, $zero
-/* 0AB6A0 800AAAA0 0C01E2AE */  jal   func_80078AB8
+/* 0AB6A0 800AAAA0 0C01E2AE */  jal   render_textured_rectangle
 /* 0AB6A4 800AAAA4 AFA3001C */   sw    $v1, 0x1c($sp)
 /* 0AB6A8 800AAAA8 1000000A */  b     .L800AAAD4
 /* 0AB6AC 800AAAAC 00000000 */   nop   
@@ -332,7 +332,7 @@ glabel func_800AA600
 /* 0AB6C0 800AAAC0 AFAD0010 */  sw    $t5, 0x10($sp)
 /* 0AB6C4 800AAAC4 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0AB6C8 800AAAC8 AFAE0018 */  sw    $t6, 0x18($sp)
-/* 0AB6CC 800AAACC 0C01E2AE */  jal   func_80078AB8
+/* 0AB6CC 800AAACC 0C01E2AE */  jal   render_textured_rectangle
 /* 0AB6D0 800AAAD0 AFA3001C */   sw    $v1, 0x1c($sp)
 .L800AAAD4:
 /* 0AB6D4 800AAAD4 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
@@ -480,7 +480,7 @@ glabel func_800AA600
 /* 0AB8FC 800AACFC AFAB0014 */  sw    $t3, 0x14($sp)
 /* 0AB900 800AAD00 27A50058 */  addiu $a1, $sp, 0x58
 /* 0AB904 800AAD04 00003025 */  move  $a2, $zero
-/* 0AB908 800AAD08 0C01E2AE */  jal   func_80078AB8
+/* 0AB908 800AAD08 0C01E2AE */  jal   render_textured_rectangle
 /* 0AB90C 800AAD0C 00003825 */   move  $a3, $zero
 /* 0AB910 800AAD10 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
 /* 0AB914 800AAD14 0C01ECF4 */  jal   func_8007B3D0

@@ -111,7 +111,7 @@ glabel menu_boot_loop
 /* 089394 80088794 AFAD0010 */  sw    $t5, 0x10($sp)
 /* 089398 80088798 24A5F7DC */  addiu $a1, %lo(D_800DF7DC) # addiu $a1, $a1, -0x824
 /* 08939C 8008879C 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
-/* 0893A0 800887A0 0C01E2AE */  jal   func_80078AB8
+/* 0893A0 800887A0 0C01E2AE */  jal   render_textured_rectangle
 /* 0893A4 800887A4 240600A0 */   li    $a2, 160
 /* 0893A8 800887A8 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 0893AC 800887AC 0C01ECF4 */  jal   func_8007B3D0

@@ -443,7 +443,7 @@ glabel L80085828
 /* 08663C 80085A3C AFB90010 */  sw    $t9, 0x10($sp)
 /* 086640 80085A40 01402825 */  move  $a1, $t2
 /* 086644 80085A44 24C6003C */  addiu $a2, $a2, 0x3c
-/* 086648 80085A48 0C01E2AE */  jal   func_80078AB8
+/* 086648 80085A48 0C01E2AE */  jal   render_textured_rectangle
 /* 08664C 80085A4C 24E70006 */   addiu $a3, $a3, 6
 .L80085A50:
 /* 086650 80085A50 8FAD0060 */  lw    $t5, 0x60($sp)
