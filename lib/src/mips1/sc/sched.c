@@ -1,10 +1,9 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80079350 */
 
-#include "unknown_079F50.h"
-
 #include "types.h"
 #include "macros.h"
+#include "f3ddkr.h"
 #include "libultra_internal.h"
 
 #define OS_SC_RETRACE_MSG       1
@@ -57,6 +56,7 @@ typedef struct {
     OSScTask    *curRDPTask;
     u32         frameCount;
     s32         doAudio;
+    s32         unk284;
 } OSSched;
 
 typedef struct{
@@ -70,10 +70,10 @@ typedef struct{
 s32 D_800DE730[] = { 0, 0 };
 s32 D_800DE738[] = { 0, 8 };
 
-s32 D_800DE740 = 0; // Currently unknown, might be a different type.
-s32 D_800DE744 = 0; // Currently unknown, might be a different type.
-s32 D_800DE748 = 0; // Currently unknown, might be a different type.
-s32 D_800DE74C = 0; // Currently unknown, might be a different type.
+f32 D_800DE740 = 0;
+f32 D_800DE744 = 0;
+f32 D_800DE748 = 0;
+f32 D_800DE74C = 0;
 
 s32 D_800DE750 = 0; // Currently unknown, might be a different type.
 u32 D_800DE754 = 0;
@@ -109,20 +109,20 @@ const char D_800E7958[] = "\tdata_size\t\t= %u\n";
 
 /*********************************/
 
-extern OSViMode osViModeTable[];//osViModeTable;
+extern OSViMode osViModeTable[];
 
 /************ .bss ************/
 
 s32 D_80126110;
 s32 D_80126114;
-s32 D_80126118;
-s32 D_8012611C;
+OSTime D_80126118;
 s32 D_80126120;
 s32 D_80126124;
 s32 D_80126128[18];
 
 /*******************************/
 
+void func_8007A080(OSSched *sc);
 void __scMain(void);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 
@@ -201,77 +201,46 @@ OSMesgQueue *osScGetCmdQ(OSSched *sc){
     return &sc->cmdQ;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007957C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scMain.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079760.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079818.s")
-
-
-#if 1 
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_80079B44.s")
-#else
-extern f32 D_800DE740;
-extern f32 D_800DE744;
-extern f32 D_800DE748;
-extern f32 D_800DE74C;
-extern u32 D_800DE750;
-extern u32 D_80126124;
-void func_80079B44(OSSched *sc){
-    OSScTask *t, *sp = 0, *dp = 0;
-    s32 state;
-    u32 delta;
-    f32 tmp1;
-
-    
-   //assert(sc->curRSPTask);
-
-    t = sc->curRSPTask;
-    sc->curRSPTask = 0;
-    
-    if (t->list.t.type == 2) {
-        D_80126124 = osGetCount();
-        delta = D_80126124 - D_80126120;
-        tmp1 = (f32) delta;
-        if(delta < 0){
-            tmp1 += 4294967296.0;
-        }
-        D_800DE74C = tmp1*60.0f/468750.0f;
-        D_800DE744 = D_800DE744 + D_800DE74C;
-        if(D_800DE740 < D_800DE74C){
-            D_800DE740 = D_800DE74C;
-        }
-        if(D_800DE750%1000 == 1 || D_800DE750%1000 == 2){
-            D_800DE748 = D_800DE744/500.0f;
-            D_800DE744 = 0.0f;
-            D_800DE740 = 0.0f;
-        }
-    }
-    if(t->state & 0x10){
-        if(osSpTaskYielded(&(t->list))){
-            t->state |= 0x20;
-            if ((t->flags & 0x07) == -3) {
-    
-            /* push the task back on the list */
-                t->next = sc->gfxListHead;
-                sc->gfxListHead = t;
-                if (sc->gfxListTail == 0)
-                    sc->gfxListTail = t;
-            }
-        }
-        else{
-            t->state &= -3;
-        }
-    } 
-    else {
-        t->state &= -3;
-        __scTaskComplete(sc, t);
-    }
-
-    state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
-    if ( (__scSchedule (sc, &sp, &dp, state)) != state)
-        __scExec(sc, sp, dp);
+s32 func_8007957C(s32 arg0) {
+    return arg0 + 0x40;
 }
-#endif
+
+// Unused.
+void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
+    *arg0 = D_800DE740;
+    *arg1 = D_800DE748;
+    *arg2 = D_800DE74C;
+}
+
+GLOBAL_ASM("lib/asm/non_matchings/sched/__scMain.s")
+
+void func_80079760(OSSched *sc) {
+    s32 sp24;
+    s32 sp20;
+    s32 sp1C;
+
+    sp20 = 0;
+    sp1C = 0;
+    if (sc->audioListHead != 0) {
+        sc->unk284 = 1;
+    }
+    if ((sc->unk284 != 0) && (sc->curRSPTask != 0)) {
+        func_8007A080(sc);
+    } else {
+        sp24 = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
+        if (__scSchedule(sc, &sp20, &sp1C, sp24) != sp24) {
+            __scExec(sc, sp20, sp1C);
+        }
+    }
+}
+
+void dummy_80079808() {
+}
+void dummy_80079810() {
+}
+
+GLOBAL_ASM("lib/asm/non_matchings/sched/func_80079818.s")
+GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRSP.s")
 
 void __scHandleRDP(OSSched *sc){
     OSScTask *t, *sp = 0, *dp = 0; 
@@ -306,9 +275,7 @@ OSScTask *__scTaskReady(OSScTask *t){
     return 0;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scTaskComplete.s")
-#else
+#if 0
 s32 __scTaskComplete(OSSched *sc, OSScTask *t) {
     int rv;
     int firsttime = 1;
@@ -343,6 +310,8 @@ s32 __scTaskComplete(OSSched *sc, OSScTask *t) {
     
     return 0;
 }
+#else
+GLOBAL_ASM("lib/asm/non_matchings/sched/__scTaskComplete.s")
 #endif
 
 void __scAppendList(OSSched *sc, OSScTask *t) {
@@ -375,8 +344,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp){
             D_80126120 = osGetCount();
         }
         
-        //sp->state &= ~(OS_SC_YIELD | OS_SC_YIELDED);
-        sp->state &= -49;
+        sp->state &= ~0x30;
         osSpTaskLoad(&sp->list);
         osSpTaskStartGo(&sp->list); 
         D_800DE754 = 0;
@@ -388,25 +356,22 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp){
     }
 
     if (dp && (dp != sp)) {
-        osDpSetNextBuffer(dp->list.t.output_buff,
-                               *dp->list.t.output_buff_size);        
+        osDpSetNextBuffer(dp->list.t.output_buff,  *dp->list.t.output_buff_size);        
         sc->curRDPTask = dp;
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A080.s")
-#else
-extern OSTime D_80126118;
 void func_8007A080(OSSched *sc) {
     if (sc->curRSPTask->list.t.type == M_GFXTASK) {
-
-        //sc->curRSPTask->state |= OS_SC_YIELD;
         sc->curRSPTask->state |= 0x10;
-        D_80126118 = osGetTime(); //TODO extra lui
+        D_80126118 = osGetTime();
         osSpTaskYield();
     } 
 }
-#endif
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/__scSchedule.s")
-GLOBAL_ASM("asm/non_matchings/unknown_079F50/func_8007A2D0.s")
+
+GLOBAL_ASM("lib/asm/non_matchings/sched/__scSchedule.s")
+
+// This might need to be moved into it's own file.
+void set_rsp_segment(Gfx **dlist, s32 segment, s32 base) {
+    gSPSegment((*dlist)++, segment, base + 0x80000000)
+}

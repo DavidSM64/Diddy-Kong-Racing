@@ -14,7 +14,7 @@ FUNCTIONS_TO_CALC = [
     ('func_80019808', 'D_800DC690'),
     ('func_80024D54', 'D_800DCEA0'),
     ('func_8003B4BC', 'D_800DCDD0'),
-    ('func_80068158', 'D_800DD320')
+    ('func_80068158', 'gFunc80068158Checksum')
 ]
 
 def getMatches(string, regex):

@@ -257,10 +257,10 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 ####################### LIBULTRA #########################
 
 $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
@@ -271,6 +271,9 @@ $(BUILD_DIR)/lib/src/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
 $(BUILD_DIR)/lib/src/osEepromWrite.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osEepromRead.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
+
+$(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
 
 # asm-processor currently does not support -O3, so this is my workaround.
 $(BUILD_DIR)/lib/src/al/global_asm/%.o: OPT_FLAGS := -O2

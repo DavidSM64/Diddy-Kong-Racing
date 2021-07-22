@@ -118,7 +118,7 @@ glabel func_80092E94
 /* 093C60 80093060 02402025 */  move  $a0, $s2
 /* 093C64 80093064 240600CC */  li    $a2, 204
 /* 093C68 80093068 AFAA001C */  sw    $t2, 0x1c($sp)
-/* 093C6C 8009306C 0C01E2AE */  jal   func_80078AB8
+/* 093C6C 8009306C 0C01E2AE */  jal   render_textured_rectangle
 /* 093C70 80093070 24E7007A */   addiu $a3, $a3, 0x7a
 .L80093074:
 /* 093C74 80093074 0C0310BB */  jal   set_text_font
@@ -287,7 +287,7 @@ glabel func_80092E94
 /* 093EF8 800932F8 24A505B4 */  addiu $a1, %lo(D_800E05B4) # addiu $a1, $a1, 0x5b4
 /* 093EFC 800932FC 02402025 */  move  $a0, $s2
 /* 093F00 80093300 24060088 */  li    $a2, 136
-/* 093F04 80093304 0C01E2AE */  jal   func_80078AB8
+/* 093F04 80093304 0C01E2AE */  jal   render_textured_rectangle
 /* 093F08 80093308 24E70072 */   addiu $a3, $a3, 0x72
 /* 093F0C 8009330C 8FB90060 */  lw    $t9, 0x60($sp)
 /* 093F10 80093310 00008025 */  move  $s0, $zero
@@ -332,7 +332,7 @@ glabel func_80092E94
 /* 093FA4 800933A4 AFA90010 */  sw    $t1, 0x10($sp)
 /* 093FA8 800933A8 02402025 */  move  $a0, $s2
 /* 093FAC 800933AC 24060068 */  li    $a2, 104
-/* 093FB0 800933B0 0C01E2AE */  jal   func_80078AB8
+/* 093FB0 800933B0 0C01E2AE */  jal   render_textured_rectangle
 /* 093FB4 800933B4 02203825 */   move  $a3, $s1
 /* 093FB8 800933B8 1000000E */  b     .L800933F4
 /* 093FBC 800933BC 26310018 */   addiu $s1, $s1, 0x18
@@ -347,7 +347,7 @@ glabel func_80092E94
 /* 093FDC 800933DC 02402025 */  move  $a0, $s2
 /* 093FE0 800933E0 24060068 */  li    $a2, 104
 /* 093FE4 800933E4 02203825 */  move  $a3, $s1
-/* 093FE8 800933E8 0C01E2AE */  jal   func_80078AB8
+/* 093FE8 800933E8 0C01E2AE */  jal   render_textured_rectangle
 /* 093FEC 800933EC AFA2001C */   sw    $v0, 0x1c($sp)
 /* 093FF0 800933F0 26310018 */  addiu $s1, $s1, 0x18
 .L800933F4:
@@ -378,7 +378,7 @@ glabel func_80092E94
 /* 094050 80093450 AFA90014 */  sw    $t1, 0x14($sp)
 /* 094054 80093454 AFB90010 */  sw    $t9, 0x10($sp)
 /* 094058 80093458 24060095 */  li    $a2, 149
-/* 09405C 8009345C 0C01E2AE */  jal   func_80078AB8
+/* 09405C 8009345C 0C01E2AE */  jal   render_textured_rectangle
 /* 094060 80093460 02203825 */   move  $a3, $s1
 /* 094064 80093464 0C01ECF4 */  jal   func_8007B3D0
 /* 094068 80093468 02402025 */   move  $a0, $s2

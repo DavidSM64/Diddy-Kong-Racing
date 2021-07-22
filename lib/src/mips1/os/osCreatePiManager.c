@@ -1,9 +1,9 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C6000 */
 
-// osCreatePiManager is compiled with -mips1, so it belongs in the source folder I think.
-
-#include "osCreatePiManager.h"
+#include "types.h"
+#include "libultra_internal.h"
+#include "stacks.h"
 
 extern OSMesgQueue piAccessQueue; //piAccessQueue
 extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled

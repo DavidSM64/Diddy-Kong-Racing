@@ -12,7 +12,7 @@ glabel func_80073588
 /* 0741B0 800735B0 0C01B9DC */  jal   func_8006E770
 /* 0741B4 800735B4 AFA5002C */   sw    $a1, 0x2c($sp)
 /* 0741B8 800735B8 27A40040 */  addiu $a0, $sp, 0x40
-/* 0741BC 800735BC 0C01AC89 */  jal   func_8006B224
+/* 0741BC 800735BC 0C01AC89 */  jal   get_number_of_levels_and_worlds
 /* 0741C0 800735C0 27A5003C */   addiu $a1, $sp, 0x3c
 /* 0741C4 800735C4 8FAF002C */  lw    $t7, 0x2c($sp)
 /* 0741C8 800735C8 8FB9004C */  lw    $t9, 0x4c($sp)

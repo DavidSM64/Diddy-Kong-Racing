@@ -57,8 +57,8 @@ glabel func_80065EA0
 /* 066B64 80065F64 AC200D1C */  sw    $zero, %lo(D_80120D1C)($at)
 /* 066B68 80065F68 3C018012 */  lui   $at, %hi(D_80120D20) # $at, 0x8012
 /* 066B6C 80065F6C AC200D20 */  sw    $zero, %lo(D_80120D20)($at)
-/* 066B70 80065F70 3C018012 */  lui   $at, %hi(D_80120CE0) # $at, 0x8012
-/* 066B74 80065F74 AC200CE0 */  sw    $zero, %lo(D_80120CE0)($at)
+/* 066B70 80065F70 3C018012 */  lui   $at, %hi(gNumberOfViewports) # $at, 0x8012
+/* 066B74 80065F74 AC200CE0 */  sw    $zero, %lo(gNumberOfViewports)($at)
 /* 066B78 80065F78 3C018012 */  lui   $at, %hi(D_80120D0C) # $at, 0x8012
 /* 066B7C 80065F7C AC200D0C */  sw    $zero, %lo(D_80120D0C)($at)
 /* 066B80 80065F80 3C018012 */  lui   $at, %hi(D_80120D18) # $at, 0x8012

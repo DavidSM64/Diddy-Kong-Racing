@@ -588,7 +588,7 @@ glabel func_800A01A0
 /* 0A1644 800A0A44 1000001E */  b     .L800A0AC0
 /* 0A1648 800A0A48 00000000 */   nop   
 .L800A0A4C:
-/* 0A164C 800A0A4C 0C019884 */  jal   func_80066210
+/* 0A164C 800A0A4C 0C019884 */  jal   get_viewport_count
 /* 0A1650 800A0A50 00000000 */   nop   
 /* 0A1654 800A0A54 14400017 */  bnez  $v0, .L800A0AB4
 /* 0A1658 800A0A58 8FA40028 */   lw    $a0, 0x28($sp)
@@ -646,7 +646,7 @@ glabel func_800A01A0
 /* 0A1718 800A0B18 AFA90010 */  sw    $t1, 0x10($sp)
 /* 0A171C 800A0B1C 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A1720 800A0B20 00003025 */  move  $a2, $zero
-/* 0A1724 800A0B24 0C01E2AE */  jal   func_80078AB8
+/* 0A1724 800A0B24 0C01E2AE */  jal   render_textured_rectangle
 /* 0A1728 800A0B28 00003825 */   move  $a3, $zero
 .L800A0B2C:
 /* 0A172C 800A0B2C 3C0B8012 */  lui   $t3, %hi(D_80126CFC) # $t3, 0x8012

@@ -22,8 +22,8 @@ glabel D_800E7098
 
 .text
 glabel func_80069F28
-/* 06AB28 80069F28 3C038012 */  lui   $v1, %hi(D_80120CE0) # $v1, 0x8012
-/* 06AB2C 80069F2C 8C630CE0 */  lw    $v1, %lo(D_80120CE0)($v1)
+/* 06AB28 80069F28 3C038012 */  lui   $v1, %hi(gNumberOfViewports) # $v1, 0x8012
+/* 06AB2C 80069F2C 8C630CE0 */  lw    $v1, %lo(gNumberOfViewports)($v1)
 /* 06AB30 80069F30 3C0E8012 */  lui   $t6, %hi(D_80120AC0) # $t6, 0x8012
 /* 06AB34 80069F34 04600009 */  bltz  $v1, .L80069F5C
 /* 06AB38 80069F38 25C20AC0 */   addiu $v0, $t6, %lo(D_80120AC0)

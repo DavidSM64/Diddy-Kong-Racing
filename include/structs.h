@@ -64,9 +64,8 @@ typedef struct TextureHeader {
       // 0x40 = U clamp flag. 0 = Wrap, 1 = Clamp
       // 0x80 = V clamp flag. 0 = Wrap, 1 = Clamp
   /* 0x08 */ s16 ciPaletteOffset;
-  /* 0x0A */ u8 unkA;
-  /* 0x0B */ u8 numberOfCommands; // initialized in RAM; Number of commands in the texture display list. (Usually 0x07)
-  /* 0x0C */ s32*  cmd; // initialized in RAM; Pointer to texture display list.
+  /* 0x0A */ s16 numberOfCommands; // initialized in RAM; Number of commands in the texture display list. (Usually 0x07)
+  /* 0x0C */ s32* cmd; // initialized in RAM; Pointer to texture display list.
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u16 numOfTextures; // For animated textures, static textures are just 0x01. Each texture has it's own header.
@@ -81,6 +80,13 @@ typedef struct TextureHeader {
   /* 0x1E */ u8 unk1E;
   /* 0x1F */ u8 unk1F;
 } TextureHeader;
+
+// Probably not unqiue to the boot menu.
+typedef struct DrawTexture {
+    TextureHeader *texture; // Pointer to texture to draw.
+    s16 xOffset; // Offset from the center of the screen.
+    s16 yOffset; // Offset from the center of the screen.
+} DrawTexture;
 
 /* Size: 0x18 bytes */
 typedef struct Racer {
@@ -157,7 +163,7 @@ typedef struct Settings {
   /* 0x06BA */ u16 courseTimes[3][65];
 } Settings;
 
-/* Size: 0xC8 bytes */
+/* Size: 0xC4 bytes */
 typedef struct LevelHeader {
   /* 0x00 */ s8 world;
   /* 0x01 */ u8 unk1;
@@ -190,8 +196,8 @@ typedef struct LevelHeader {
   /* 0x4A */ u8 unk4A;
   /* 0x4B */ s8 laps;
   /* 0x4C */ s8 race_type;
-  /* 0x4D */ u8 vehicle;
-  /* 0x4E */ u8 available_vehicles;
+  /* 0x4D */ s8 vehicle;
+  /* 0x4E */ s8 available_vehicles;
 
   /* 0x4F */ u8 unk4F[3];
 
@@ -222,7 +228,8 @@ typedef struct LevelHeader {
   /* 0xAA */ u16 unkAA;
   /* 0xAC */ s8 *unkAC;
 
-  /* 0xB0 */ u8 padB0[0x3];
+  /* 0xB0 */ s16 unkB0;
+  /* 0xB2 */ u8 unkB2;
   /* 0xB3 */ u8 unkB3;
   /* 0xB3 */ u8 unkB4;
   /* 0xB3 */ u8 unkB5;
@@ -236,7 +243,6 @@ typedef struct LevelHeader {
   /* 0xC1 */ u8 unkC1;
   /* 0xC2 */ u8 unkC2;
   /* 0xC3 */ u8 unkC3;
-  /* 0xC4 */ u8 padC4[0x4];
 } LevelHeader;
 
 /* Size: 0x50 bytes */

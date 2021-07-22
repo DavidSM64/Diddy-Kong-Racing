@@ -1271,7 +1271,7 @@ glabel func_800A8474
 /* 0AA2FC 800A96FC AFAF0010 */  sw    $t7, 0x10($sp)
 /* 0AA300 800A9700 02802025 */  move  $a0, $s4
 /* 0AA304 800A9704 00003025 */  move  $a2, $zero
-/* 0AA308 800A9708 0C01E2AE */  jal   func_80078AB8
+/* 0AA308 800A9708 0C01E2AE */  jal   render_textured_rectangle
 /* 0AA30C 800A970C 00003825 */   move  $a3, $zero
 .L800A9710:
 /* 0AA310 800A9710 8E8B0000 */  lw    $t3, ($s4)

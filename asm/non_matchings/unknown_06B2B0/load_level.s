@@ -50,8 +50,8 @@ glabel load_level
 /* 06BEF8 8006B2F8 AFA20040 */  sw    $v0, 0x40($sp)
 /* 06BEFC 8006B2FC 0C01DB16 */  jal   load_asset_section_from_rom
 /* 06BF00 8006B300 24040016 */   li    $a0, 22
-/* 06BF04 8006B304 3C098012 */  lui   $t1, %hi(D_80121160) # $t1, 0x8012
-/* 06BF08 8006B308 25291160 */  addiu $t1, %lo(D_80121160) # addiu $t1, $t1, 0x1160
+/* 06BF04 8006B304 3C098012 */  lui   $t1, %hi(gTempAssetTable) # $t1, 0x8012
+/* 06BF08 8006B308 25291160 */  addiu $t1, %lo(gTempAssetTable) # addiu $t1, $t1, 0x1160
 /* 06BF0C 8006B30C AD220000 */  sw    $v0, ($t1)
 /* 06BF10 8006B310 8C4B0000 */  lw    $t3, ($v0)
 /* 06BF14 8006B314 2408FFFF */  li    $t0, -1
@@ -279,8 +279,8 @@ glabel load_level
 /* 06C248 8006B648 00187880 */  sll   $t7, $t8, 2
 /* 06C24C 8006B64C 0C01C450 */  jal   free_from_memory_pool
 /* 06C250 8006B650 AFAF0034 */   sw    $t7, 0x34($sp)
-/* 06C254 8006B654 3C0D8012 */  lui   $t5, %hi(D_80121160) # $t5, 0x8012
-/* 06C258 8006B658 8DAD1160 */  lw    $t5, %lo(D_80121160)($t5)
+/* 06C254 8006B654 3C0D8012 */  lui   $t5, %hi(gTempAssetTable) # $t5, 0x8012
+/* 06C258 8006B658 8DAD1160 */  lw    $t5, %lo(gTempAssetTable)($t5)
 /* 06C25C 8006B65C 8FAB0034 */  lw    $t3, 0x34($sp)
 /* 06C260 8006B660 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 06C264 8006B664 01AB1021 */  addu  $v0, $t5, $t3
@@ -297,8 +297,8 @@ glabel load_level
 /* 06C290 8006B690 0C01DB9A */  jal   load_asset_to_address
 /* 06C294 8006B694 02003025 */   move  $a2, $s0
 .L8006B698:
-/* 06C298 8006B698 3C048012 */  lui   $a0, %hi(D_80121160) # $a0, 0x8012
-/* 06C29C 8006B69C 8C841160 */  lw    $a0, %lo(D_80121160)($a0)
+/* 06C298 8006B698 3C048012 */  lui   $a0, %hi(gTempAssetTable) # $a0, 0x8012
+/* 06C29C 8006B69C 8C841160 */  lw    $a0, %lo(gTempAssetTable)($a0)
 /* 06C2A0 8006B6A0 0C01C450 */  jal   free_from_memory_pool
 /* 06C2A4 8006B6A4 00000000 */   nop   
 /* 06C2A8 8006B6A8 8E240000 */  lw    $a0, ($s1)

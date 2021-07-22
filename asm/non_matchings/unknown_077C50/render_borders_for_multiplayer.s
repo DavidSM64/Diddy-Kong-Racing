@@ -1,4 +1,4 @@
-glabel func_80077050
+glabel render_borders_for_multiplayer
 /* 077C50 80077050 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 077C54 80077054 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 077C58 80077058 AFB00018 */  sw    $s0, 0x18($sp)
@@ -27,7 +27,7 @@ glabel func_80077050
 /* 077CB4 800770B4 000451C2 */  srl   $t2, $a0, 7
 /* 077CB8 800770B8 AFAA0024 */  sw    $t2, 0x24($sp)
 /* 077CBC 800770BC AFA50038 */  sw    $a1, 0x38($sp)
-/* 077CC0 800770C0 0C019884 */  jal   func_80066210
+/* 077CC0 800770C0 0C019884 */  jal   get_viewport_count
 /* 077CC4 800770C4 AFA40034 */   sw    $a0, 0x34($sp)
 /* 077CC8 800770C8 8FA80034 */  lw    $t0, 0x34($sp)
 /* 077CCC 800770CC 8FA90038 */  lw    $t1, 0x38($sp)

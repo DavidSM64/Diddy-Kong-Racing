@@ -51,7 +51,7 @@ glabel func_8002D8DC
 /* 02E59C 8002D99C 3C018012 */  lui   $at, %hi(D_8011D368) # $at, 0x8012
 /* 02E5A0 8002D9A0 AC20D368 */  sw    $zero, %lo(D_8011D368)($at)
 /* 02E5A4 8002D9A4 3C018012 */  lui   $at, %hi(D_8011D36C) # $at, 0x8012
-/* 02E5A8 8002D9A8 0C019884 */  jal   func_80066210
+/* 02E5A8 8002D9A8 0C019884 */  jal   get_viewport_count
 /* 02E5AC 8002D9AC AC20D36C */   sw    $zero, %lo(D_8011D36C)($at)
 /* 02E5B0 8002D9B0 0040B025 */  move  $s6, $v0
 /* 02E5B4 8002D9B4 27A40094 */  addiu $a0, $sp, 0x94

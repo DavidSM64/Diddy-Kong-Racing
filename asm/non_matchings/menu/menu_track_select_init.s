@@ -16,7 +16,7 @@ glabel menu_track_select_init
 /* 08F3D8 8008E7D8 00000000 */   nop   
 /* 08F3DC 8008E7DC 0040A025 */  move  $s4, $v0
 /* 08F3E0 8008E7E0 27A4007C */  addiu $a0, $sp, 0x7c
-/* 08F3E4 8008E7E4 0C01AC89 */  jal   func_8006B224
+/* 08F3E4 8008E7E4 0C01AC89 */  jal   get_number_of_levels_and_worlds
 /* 08F3E8 8008E7E8 27A50078 */   addiu $a1, $sp, 0x78
 /* 08F3EC 8008E7EC 0C0078A7 */  jal   get_misc_asset
 /* 08F3F0 8008E7F0 2404001A */   li    $a0, 26

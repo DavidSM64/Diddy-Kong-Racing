@@ -30,12 +30,15 @@ const char D_800E7148[] = "Swapping\n";
 
 /************ .data ************/
 
-s8  D_800DD310 = 0; // Currently unknown, might be a different type. 
+s8 *D_800DD310 = NULL; // Currently unknown, might be a different type. 
 s8  D_800DD314 = -1;
 s8  D_800DD318 = 0;
 s32 D_800DD31C = 0;
-s32 D_800DD320 = 0x585E;
-s32 D_800DD324 = 0x154;
+
+// Updated automatically from calc_func_checksums.py
+s32 gFunc80068158Checksum = 0x585E;
+s32 gFunc80068158Length = 0x154;
+
 s16 D_800DD328 = 0;
 s16 D_800DD32C = 0;
 
@@ -113,21 +116,25 @@ extern s32 D_800DFD94;
 
 /************ .bss ************/
 
-s32 *D_80121160;
+s32 *gTempAssetTable;
 s32 D_80121164;
 LevelHeader *gCurrentLevelHeader;
-s32 D_8012116C;
-s32 D_80121170;
-s32 D_80121174;
+u8 **D_8012116C;
+s32 gNumberOfLevelHeaders;
+s32 gNumberOfWorlds;
 
-// Unknown size
-typedef struct unk80121178 {
+s8 *D_80121178;
+
+/* Size: 6 bytes */
+typedef struct unk8012117C {
     s8 unk0;
     s8 unk1;
     s8 unk2;
-    s8 pad3[3];
-} unk80121178;
-unk80121178 *D_80121178[2];
+    s8 unk3;
+    s16 unk4;
+} unk8012117C;
+unk8012117C *D_8012117C;
+
 s32 D_80121180[16];
 
 s32 D_801211C0[2];
@@ -207,18 +214,135 @@ void func_80004A60(s32, s32);
 void menu_init(s32);
 void render(void);
 
+Settings *get_settings(void);
+s32 is_in_tracks_mode(void);
+s32 *load_asset_section_from_rom(s32);
+void load_asset_to_address(u32, s32*, s32, s32);
+void free_from_memory_pool(s32*);
+
+#ifdef NON_MATCHING
+
+void func_80068158(Gfx**, s32, s32, s32, s32);
+
+void func_8006A6B0(void) {
+    s32 i, count, checksumCount;
+    s32 temp;
+    u8* sp44;
+    sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOR_TAG_YELLOW);
+    gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+    for(i = 0; i < 16; i++) {
+        D_80121180[i] = 0;
+    }
+    gNumberOfLevelHeaders = 0;
+    while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
+        gNumberOfLevelHeaders++;
+    }
+    gNumberOfLevelHeaders--;
+    D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOR_TAG_YELLOW);
+    gNumberOfWorlds = -1;
+    gCurrentLevelHeader = sp44;
+    for (i = 0; i < gNumberOfLevelHeaders; i++) {
+        load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
+        if (gNumberOfWorlds < gCurrentLevelHeader->world) {
+            gNumberOfWorlds = gCurrentLevelHeader->world;
+        }
+        if (gCurrentLevelHeader->race_type >= 0 && gCurrentLevelHeader->race_type < 16) {
+            D_80121180[gCurrentLevelHeader->race_type]++;
+        }
+        D_8012117C[i].unk0 = gCurrentLevelHeader->world;
+        D_8012117C[i].unk1 = gCurrentLevelHeader->race_type;
+        D_8012117C[i].unk2 = gCurrentLevelHeader->available_vehicles << 4;
+        D_8012117C[i].unk2 |= gCurrentLevelHeader->vehicle & 0xF;
+        D_8012117C[i].unk3 = 1;
+        D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
+    }
+    gNumberOfWorlds++;
+    D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOR_TAG_YELLOW);
+    for (i = 0; i < gNumberOfWorlds; i++) {
+        D_80121178[i] = -1;
+    }
+    for (i = 0; i < gNumberOfLevelHeaders; i++) {
+        if (D_8012117C[i].unk1 == 5) {
+            D_80121178[D_8012117C[i].unk0] = i;
+        }
+    }
+    free_from_memory_pool(gTempAssetTable);
+    free_from_memory_pool(sp44);
+    
+    gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
+    count = 0;
+    while (gTempAssetTable[count] != -1) {
+        count++;
+    }
+    count--;
+    temp = gTempAssetTable[count] - gTempAssetTable[0];
+    // Minor issue here.
+    D_8012116C = allocate_from_main_pool_safe(count * sizeof(s32), COLOR_TAG_YELLOW);
+    D_800DD310 = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
+    load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
+    for(i = 0; i < count; i++) {
+        D_8012116C[i] = &D_800DD310[gTempAssetTable[i]];
+    }
+    free_from_memory_pool(gTempAssetTable);
+    
+    // Anti-piracy/Anti-tamper check.
+    checksumCount = 0;
+    for(i = 0; i < gFunc80068158Length; i++) {
+        checksumCount += ((u8*)&func_80068158)[i];
+    }
+    if (checksumCount != gFunc80068158Checksum) {
+        // Disables button inputs in some parts of the game if the checksum doesn't match.
+        disable_button_mask();
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006A6B0.s")
+#endif
+
+// Unused.
+s16 func_8006ABB4(s32 arg0) {
+    if (arg0 < 0) {
+        return 0xE10;
+    }
+    if (arg0 >= gNumberOfLevelHeaders) {
+        return 0xE10;
+    }
+    return D_8012117C[arg0].unk4;
+}
+
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006AC00.s")
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006AE2C.s")
+
+// Unused.
+s32 func_8006B018(s8 arg0) {
+    if ((arg0 >= 0) && (arg0 < 16)) {
+        return D_80121180[arg0];
+    }
+    return 0;
+}
+
+// Unused.
+s32 func_8006B054(s8 arg0) {
+    s32 out, i;
+    out = 0;
+    for(i = 0; i < gNumberOfLevelHeaders; i++) {
+        if (arg0 == D_8012117C[i].unk0) {
+            out++;
+        }
+    }
+    return out;
+}
 
 s32 func_8006B0AC(s32 arg0) {
-    if (arg0 > 0 && arg0 < D_80121170) {
-        return D_80121178[1][arg0].unk2 & 0xF;
+    if (arg0 > 0 && arg0 < gNumberOfLevelHeaders) {
+        return D_8012117C[arg0].unk2 & 0xF;
     }
     return 0;
 }
 
 s32 func_8006B0F8(s32 arg0) {
-    if (arg0 > 0 && arg0 < D_80121170) {
-        s32 temp = D_80121178[1][arg0].unk2;
+    if (arg0 > 0 && arg0 < gNumberOfLevelHeaders) {
+        s32 temp = D_8012117C[arg0].unk2;
         if(temp != 0) {
             return (temp >> 4) & 0xF;
         }
@@ -227,15 +351,15 @@ s32 func_8006B0F8(s32 arg0) {
 }
 
 s8 func_8006B14C(s32 arg0) {
-    if (arg0 >= 0 && arg0 < D_80121170) {
-        return D_80121178[1][arg0].unk1;
+    if (arg0 >= 0 && arg0 < gNumberOfLevelHeaders) {
+        return D_8012117C[arg0].unk1;
     }
     return -1;
 }
 
 s8 func_8006B190(s32 arg0) {
-    if (arg0 >= 0 && arg0 < D_80121170) {
-        return D_80121178[1][arg0].unk0;
+    if (arg0 >= 0 && arg0 < gNumberOfLevelHeaders) {
+        return D_8012117C[arg0].unk0;
     }
     return 0;
 }
@@ -243,7 +367,7 @@ s8 func_8006B190(s32 arg0) {
 s32 func_8006B1D4(s32 arg0) {
     s8* temp;
     
-    if (arg0 < 0 || arg0 >= D_80121174) {
+    if (arg0 < 0 || arg0 >= gNumberOfWorlds) {
         arg0 = 0;
     }
     temp = get_misc_asset(0x1B);
@@ -251,11 +375,10 @@ s32 func_8006B1D4(s32 arg0) {
     return temp[arg0];
 }
 
-void func_8006B224(s32* arg0, s32* arg1) {
-    *arg0 = D_80121170;
-    *arg1 = D_80121174;
+void get_number_of_levels_and_worlds(s32* outLevelCount, s32* outWorldCount) {
+    *outLevelCount = gNumberOfLevelHeaders;
+    *outWorldCount = gNumberOfWorlds;
 }
-
 
 s32 func_8006B240(void) {
     return D_800DD31C;
@@ -315,17 +438,17 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
     
     settings = get_settings();
-    D_80121160 = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+    gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
     phi_v1 = 0;
-    while (-1 != D_80121160[phi_v1]) {
+    while (-1 != gTempAssetTable[phi_v1]) {
         phi_v1++;
     }
     phi_v1--;
     if (arg0 >= phi_v1) {
         arg0 = 0;
     }
-    offset = D_80121160[arg0];
-    size = D_80121160[arg0 + 1] - offset;
+    offset = gTempAssetTable[arg0];
+    size = gTempAssetTable[arg0 + 1] - offset;
     gCurrentLevelHeader = (LevelHeader*)allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
     load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     D_800DD330 = 0;
@@ -392,12 +515,12 @@ void load_level(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     D_800DD32C = 0;
     if (sp44 != arg0) {
         free_from_memory_pool(gCurrentLevelHeader);
-        offset = D_80121160[arg0];
-        size = D_80121160[arg0 + 1] - offset;
+        offset = gTempAssetTable[arg0];
+        size = gTempAssetTable[arg0 + 1] - offset;
         gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
         load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     }
-    free_from_memory_pool(D_80121160);
+    free_from_memory_pool(gTempAssetTable);
     func_8006BFC8(&gCurrentLevelHeader->unk20);
     func_8000CBC0();
     D_80121164 = arg0;
@@ -553,10 +676,43 @@ LevelHeader* get_current_level_header(void) {
 
 /* Unused? */
 u8 func_8006BDC0(void) {
-    return D_80121170 - 1;
+    return gNumberOfLevelHeaders - 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006BDDC.s")
+u8 *func_8006BDDC(s32 arg0) {
+    u8 *text;
+    u8 numberOfNullPointers = 0;
+    
+    if(arg0 < 0 || arg0 >= gNumberOfLevelHeaders) {
+        return NULL;
+    }
+    
+    text = D_8012116C[arg0];
+    switch(get_language()) {
+        case GERMAN:
+            while(numberOfNullPointers < 1) {
+                if(*(text++) == 0) {
+                    numberOfNullPointers++;
+                }
+            }
+            break;
+        case FRENCH:
+            while(numberOfNullPointers < 2) {
+                if(*(text++) == 0) {
+                    numberOfNullPointers++;
+                }
+            }
+            break;
+        case JAPANESE:
+            while(numberOfNullPointers < 3) {
+                if(*(text++) == 0) {
+                    numberOfNullPointers++;
+                }
+            }
+            break;
+    }
+    return text;
+}
 
 void func_8006BEFC(void) {
     func_8006C164();
@@ -578,23 +734,21 @@ void func_8006BEFC(void) {
     }
 }
 
-Settings *get_settings(void);
-s32 *load_asset_section_from_rom(s32);
-
 #ifdef NON_MATCHING
 void func_8006BFC8(s8 *arg0) {
     s32 temp, temp2;
     s16 phi_v1;
-    s8 phi_s0 = 0;
+    s8 phi_s0;
+    Settings *settings;
+    phi_s0 = 0;
     
     if (!is_in_tracks_mode()) {
-        Settings *settings = get_settings();
-        // Regalloc issue: temp3 should be a3, not v1.
-        s32 temp3 = settings->courseFlagsPtr[settings->courseId];
-        if (temp3 & 2) {
+        settings = get_settings();
+        // Regalloc issue here
+        if (settings->courseFlagsPtr[settings->courseId] & 2) {
             phi_s0 = 1;
         }
-        if (temp3 & 4) {
+        if (settings->courseFlagsPtr[settings->courseId] & 4) {
             phi_s0 = 2;
         }
     } else {
@@ -617,20 +771,20 @@ void func_8006BFC8(s8 *arg0) {
     if (func_8006DA0C() == 1) {
         phi_s0 = 5;
     }
-    D_80121160 = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
+    gTempAssetTable = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
     phi_v1 = 0;
-    while (-1 != (s32)D_80121160[phi_v1]) {
+    while (-1 != (s32)gTempAssetTable[phi_v1]) {
         phi_v1++;
     }
     phi_v1--;
     if (phi_s0 >= phi_v1) {
         phi_s0 = 0;
     }
-    temp2 = D_80121160[phi_s0];
-    temp = D_80121160[phi_s0 + 1] - temp2;
+    temp2 = gTempAssetTable[phi_s0];
+    temp = gTempAssetTable[phi_s0 + 1] - temp2;
     D_801211C0[0] = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
     load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0[0], temp2, temp);
-    free_from_memory_pool(D_80121160);
+    free_from_memory_pool(gTempAssetTable);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006BFC8.s")
@@ -786,17 +940,19 @@ void func_8006C3E0(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006C3E0.s")
 #endif
 
-#ifdef NON_MATCHING
 void render(void) {
     s32 phi_v0;
     s32 phi_v0_2;
+    s32 temp, temp2;
+    
+    osSetTime(0);
     
     if (D_800DD380 == 8) {
         D_801211F8 = D_801211F0[D_801234E8];
-        func_8007A2D0(&D_801211F8, 0, 0);
-        func_8007A2D0(&D_801211F8, 1, gVideoCurrFramebuffer);
-        func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
-        func_8007A2D0(&D_801211F8, 4, gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&D_801211F8, 0, 0);
+        set_rsp_segment(&D_801211F8, 1, gVideoCurrFramebuffer);
+        set_rsp_segment(&D_801211F8, 2, gVideoLastDepthBuffer);
+        set_rsp_segment(&D_801211F8, 4, gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
         setupOSTasks(D_801211F0[D_801234E8], D_801211F8, 0);
@@ -812,13 +968,13 @@ void render(void) {
     D_80121218 = D_80121210[D_801234E8];
     D_80121228 = D_80121220[D_801234E8];
     
-    func_8007A2D0(&D_801211F8, 0, 0, &D_801234E8);
-    func_8007A2D0(&D_801211F8, 1, gVideoLastFramebuffer);
-    func_8007A2D0(&D_801211F8, 2, gVideoLastDepthBuffer);
-    func_8007A2D0(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&D_801211F8, 0, 0, &D_801234E8);
+    set_rsp_segment(&D_801211F8, 1, gVideoLastFramebuffer);
+    set_rsp_segment(&D_801211F8, 2, gVideoLastDepthBuffer);
+    set_rsp_segment(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
     func_800780DC(&D_801211F8);
     func_80078054(&D_801211F8);
-    func_80077B9C(&D_801211F8, &D_80121208, 1);
+    render_background(&D_801211F8, &D_80121208, 1);
     D_800DD37C = func_8006A1C4(D_800DD37C, D_800DD404);
     if (func_800B76DC() != 0) {
         render_epc_lock_up_display();
@@ -838,11 +994,11 @@ void render(void) {
         case -1:
             func_8006F43C();
             break;
-        case 0:
-            func_8006CCF0(D_800DD404);
-            break;
         case 1:
             func_8006DCF8(D_800DD404);
+            break;
+        case 0:
+            func_8006CCF0(D_800DD404);
             break;
         case 5:
             func_800B77D4(D_800DD404);
@@ -888,16 +1044,13 @@ void render(void) {
         func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + phi_v0_2);
     }
     
-    D_800DD404 = func_8007A98C(D_800DD380);
-    
-    // Can't get this to match.
-    if (D_800DD404 >= 7) {
-        D_800DD404 = 6;
+    temp = func_8007A98C(D_800DD380);
+    D_800DD404 = temp;
+    temp2 = 6;
+    if (temp > temp2) {
+        D_800DD404 = temp2;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/render.s")
-#endif
 
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
     D_80123500 = arg0 - 1;
@@ -920,7 +1073,7 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_80065EA0();
     func_800C3048();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, D_80123508);
-    func_8009ECF0(func_80066210());
+    func_8009ECF0(get_viewport_count());
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     func_8001BF20();
     osSetTime(0);
@@ -1050,7 +1203,7 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_80065EA0();
     func_800C3048();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
-    func_8009ECF0(func_80066210());
+    func_8009ECF0(get_viewport_count());
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     func_8001BF20();
     osSetTime(0);
@@ -1079,7 +1232,7 @@ void func_8006DC58(s32 arg0) {
         func_80024D54(&D_801211F8, &D_80121208, &D_80121218, &D_80121228, arg0);
         func_800C3440(arg0);
         func_80078054(&D_801211F8);
-        func_80077050(&D_801211F8);
+        render_borders_for_multiplayer(&D_801211F8);
         func_80077268(&D_801211F8);
     }
 }
@@ -1143,7 +1296,7 @@ void func_8006E994(Settings* settings) {
     s32 sp20;
     s32 sp1C;
 
-    func_8006B224(&sp1C, &sp20);
+    get_number_of_levels_and_worlds(&sp1C, &sp20);
     settings->newGame = 1;
     
     for (i = 0; i < sp20; i++) {
@@ -1257,17 +1410,13 @@ void func_8006ECE0(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006ECFC.s")
 
-#ifdef NON_MATCHING
-extern s32 D_A4000000;
 s32 func_8006EFB8(void) {
-    if (D_A4000000 != -1) { // regalloc issue with D_A4000000
+    // Have to use literal here for this function to match.
+    if (*((s32*)0xA4000000) != -1) {
         return 0;
     }
     return 1;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006EFB8.s")
-#endif
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006EFDC.s")
@@ -1453,14 +1602,10 @@ s32 func_8006F4C8(void) {
     }
 }
 
-#ifdef NON_MATCHING
-extern s32 SP_IMEM;
 s32 func_8006F4EC(void) {
-    if (SP_IMEM != 0x17D7) { // Same regalloc issue as func_8006EFB8
+    // Have to use a literal here for the function to match.
+    if (*((s32*)0xA4001000) != 0x17D7) {
         return 0;
     }
     return 1;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006F4EC.s")
-#endif

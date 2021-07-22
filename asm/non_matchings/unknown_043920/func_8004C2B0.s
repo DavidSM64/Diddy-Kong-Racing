@@ -45,7 +45,7 @@ glabel func_8004C2B0
 /* 04CF1C 8004C31C AFA70058 */  sw    $a3, 0x58($sp)
 /* 04CF20 8004C320 E7AE0034 */  swc1  $f14, 0x34($sp)
 /* 04CF24 8004C324 E7B00020 */  swc1  $f16, 0x20($sp)
-/* 04CF28 8004C328 0C019884 */  jal   func_80066210
+/* 04CF28 8004C328 0C019884 */  jal   get_viewport_count
 /* 04CF2C 8004C32C E7B20030 */   swc1  $f18, 0x30($sp)
 /* 04CF30 8004C330 8FA70058 */  lw    $a3, 0x58($sp)
 /* 04CF34 8004C334 C7AE0034 */  lwc1  $f14, 0x34($sp)
