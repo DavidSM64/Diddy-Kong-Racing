@@ -21,7 +21,7 @@ glabel alSynSetPan
 /* 06676C 80065B6C 032A5821 */  addu  $t3, $t9, $t2
 /* 066770 80065B70 AC4B0004 */  sw    $t3, 4($v0)
 /* 066774 80065B74 93A4002B */  lbu   $a0, 0x2b($sp)
-/* 066778 80065B78 0C0196FB */  jal   func_80065BEC
+/* 066778 80065B78 0C0196FB */  jal   modify_panning
 /* 06677C 80065B7C AFA2001C */   sw    $v0, 0x1c($sp)
 /* 066780 80065B80 8FA6001C */  lw    $a2, 0x1c($sp)
 /* 066784 80065B84 24050003 */  li    $a1, 3

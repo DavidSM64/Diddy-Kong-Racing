@@ -2213,7 +2213,7 @@ s32 menu_audio_options_loop(s32 arg0) {
             if (D_800DFAC8 > 2) {
                 D_800DFAC8 = 0;
             }
-            func_80065BD0(D_800DFAC8);
+            set_stereo_pan_mode(D_800DFAC8);
             sp30 = 1;
         } else if ((phi_a2 >> 2) != 0) {
             if(gOptionsMenuItemIndex == 2) {
