@@ -1843,7 +1843,7 @@ void func_800828B8(void) {
     Settings *settings;
 
     settings = get_settings();
-    func_8006B224(&num, &j);
+    get_number_of_levels_and_worlds(&num, &j);
     
     for(i = 0; i < num; i++) {
         settings->courseFlagsPtr[i] = 0;
@@ -2030,9 +2030,9 @@ s32 menu_options_loop(s32 arg0) {
         // Change language
         s32 temp_v0 = get_language();
         if ((temp_v0 >> 0x1F) == 0 && temp_v0 == 0) {
-            set_language(2); // Sets language to french
+            set_language(FRENCH);
         } else {
-            set_language(0); // Sets language to english
+            set_language(ENGLISH);
         }
         func_80001D04(0xEB, 0);
     } else if (D_800DF460 == 1 && analogX != 0) {
@@ -3156,7 +3156,7 @@ void menu_file_select_init(void) {
     s32 sp38;
     s32 sp34;
 
-    func_8006B224(&sp38, &sp34);
+    get_number_of_levels_and_worlds(&sp38, &sp34);
     func_8009C674(D_800E0398);
     func_8009C8A4(D_800E03A4);
     func_8007FFEC(6);
@@ -4557,16 +4557,16 @@ s64 func_8009EB08(void) {
  * 0 = English, 1 = German, 2 = French, 3 = Japanese
  */
 s32 get_language(void) {
-    s32 language = 0; // English
+    s32 language = ENGLISH;
     switch(D_80126448 & 0xC) {
-        case 4: // German
-            language = 1;
+        case 4:
+            language = GERMAN;
             break;
-        case 8: // French
-            language = 2;
+        case 8:
+            language = FRENCH;
             break;
-        case 12: // "Japanese"
-            language = 3;
+        case 12:
+            language = JAPANESE;
             break;
     }
     return language;
@@ -4581,13 +4581,13 @@ void set_language(s32 language) {
     s64 langFlag = 0; // English
     
     switch(language) {
-        case 1: // German
+        case GERMAN:
             langFlag = 4;
             break;
-        case 2: // French
+        case FRENCH:
             langFlag = 8;
             break;
-        case 3: // "Japanese"
+        case JAPANESE:
             langFlag = 12;
             break;
     }

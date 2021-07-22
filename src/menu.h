@@ -70,6 +70,13 @@ typedef enum MENU_ID {
     MENU_CAUTION
 } MENU_ID;
 
+enum Language {
+    ENGLISH,
+    GERMAN,
+    FRENCH,
+    JAPANESE
+};
+
 extern s8  D_800DF450;
 extern f32 D_800DF454;
 extern s32 D_800DF458;

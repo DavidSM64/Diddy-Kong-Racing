@@ -90,7 +90,7 @@ glabel func_8002E234
 /* 02EF64 8002E364 01F0C021 */  addu  $t8, $t7, $s0
 /* 02EF68 8002E368 13200006 */  beqz  $t9, .L8002E384
 /* 02EF6C 8002E36C A438D0CC */   sh    $t8, %lo(D_8011D0CC)($at)
-/* 02EF70 8002E370 0C019884 */  jal   func_80066210
+/* 02EF70 8002E370 0C019884 */  jal   get_viewport_count
 /* 02EF74 8002E374 E7B2006C */   swc1  $f18, 0x6c($sp)
 /* 02EF78 8002E378 C7B2006C */  lwc1  $f18, 0x6c($sp)
 /* 02EF7C 8002E37C 1C400004 */  bgtz  $v0, .L8002E390

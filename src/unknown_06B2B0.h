@@ -12,12 +12,12 @@ typedef struct unknown800DD408 {
     u16 unk6;
 } unknown800DD408;
 
-extern s8  D_800DD310;
+extern s8 *D_800DD310;
 extern s8  D_800DD314;
 extern s8  D_800DD318;
 extern s32 D_800DD31C;
-extern s32 D_800DD320;
-extern s32 D_800DD324;
+extern s32 gFunc80068158Checksum;
+extern s32 gFunc80068158Length;
 extern s16 D_800DD328;
 extern s16 D_800DD32C;
 
@@ -63,7 +63,6 @@ extern s32 D_800DD3EC;
 
 extern s8  D_800DD3F0;
 extern s16 D_800DD3F4[8];
-extern s32 D_800DD404;
 extern unknown800DD408 D_800DD408;
 extern s32 D_800DD40C;
 

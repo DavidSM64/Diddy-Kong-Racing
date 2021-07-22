@@ -65,7 +65,7 @@ glabel func_800289B8
 .L80028AB4:
 /* 0296B4 80028AB4 AFA30024 */  sw    $v1, 0x24($sp)
 /* 0296B8 80028AB8 A7A40030 */  sh    $a0, 0x30($sp)
-/* 0296BC 80028ABC 0C019884 */  jal   func_80066210
+/* 0296BC 80028ABC 0C019884 */  jal   get_viewport_count
 /* 0296C0 80028AC0 AFA70020 */   sw    $a3, 0x20($sp)
 /* 0296C4 80028AC4 8FA30024 */  lw    $v1, 0x24($sp)
 /* 0296C8 80028AC8 87A40030 */  lh    $a0, 0x30($sp)

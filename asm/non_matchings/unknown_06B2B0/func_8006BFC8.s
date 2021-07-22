@@ -60,8 +60,8 @@ glabel func_8006BFC8
 .L8006C098:
 /* 06CC98 8006C098 0C01DB16 */  jal   load_asset_section_from_rom
 /* 06CC9C 8006C09C 24040001 */   li    $a0, 1
-/* 06CCA0 8006C0A0 3C088012 */  lui   $t0, %hi(D_80121160) # $t0, 0x8012
-/* 06CCA4 8006C0A4 25081160 */  addiu $t0, %lo(D_80121160) # addiu $t0, $t0, 0x1160
+/* 06CCA0 8006C0A0 3C088012 */  lui   $t0, %hi(gTempAssetTable) # $t0, 0x8012
+/* 06CCA4 8006C0A4 25081160 */  addiu $t0, %lo(gTempAssetTable) # addiu $t0, $t0, 0x1160
 /* 06CCA8 8006C0A8 AD020000 */  sw    $v0, ($t0)
 /* 06CCAC 8006C0AC 8C580000 */  lw    $t8, ($v0)
 /* 06CCB0 8006C0B0 2404FFFF */  li    $a0, -1
@@ -104,8 +104,8 @@ glabel func_8006BFC8
 /* 06CD38 8006C138 00002025 */  move  $a0, $zero
 /* 06CD3C 8006C13C 0C01DB9A */  jal   load_asset_to_address
 /* 06CD40 8006C140 00402825 */   move  $a1, $v0
-/* 06CD44 8006C144 3C048012 */  lui   $a0, %hi(D_80121160) # $a0, 0x8012
-/* 06CD48 8006C148 8C841160 */  lw    $a0, %lo(D_80121160)($a0)
+/* 06CD44 8006C144 3C048012 */  lui   $a0, %hi(gTempAssetTable) # $a0, 0x8012
+/* 06CD48 8006C148 8C841160 */  lw    $a0, %lo(gTempAssetTable)($a0)
 /* 06CD4C 8006C14C 0C01C450 */  jal   free_from_memory_pool
 /* 06CD50 8006C150 00000000 */   nop   
 /* 06CD54 8006C154 8FBF001C */  lw    $ra, 0x1c($sp)

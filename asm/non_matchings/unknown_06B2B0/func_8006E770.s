@@ -6,7 +6,7 @@ glabel func_8006E770
 /* 06F380 8006E780 00A08825 */  move  $s1, $a1
 /* 06F384 8006E784 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 06F388 8006E788 27A5003C */  addiu $a1, $sp, 0x3c
-/* 06F38C 8006E78C 0C01AC89 */  jal   func_8006B224
+/* 06F38C 8006E78C 0C01AC89 */  jal   get_number_of_levels_and_worlds
 /* 06F390 8006E790 27A40038 */   addiu $a0, $sp, 0x38
 /* 06F394 8006E794 0C0078A7 */  jal   get_misc_asset
 /* 06F398 8006E798 24040017 */   li    $a0, 23

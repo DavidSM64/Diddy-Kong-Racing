@@ -4,7 +4,7 @@ glabel func_8009ECF0
 /* 09F8F8 8009ECF8 AFB20020 */  sw    $s2, 0x20($sp)
 /* 09F8FC 8009ECFC AFB1001C */  sw    $s1, 0x1c($sp)
 /* 09F900 8009ED00 AFB00018 */  sw    $s0, 0x18($sp)
-/* 09F904 8009ED04 0C019884 */  jal   func_80066210
+/* 09F904 8009ED04 0C019884 */  jal   get_viewport_count
 /* 09F908 8009ED08 AFA40028 */   sw    $a0, 0x28($sp)
 /* 09F90C 8009ED0C 3C038012 */  lui   $v1, %hi(D_80126D0C) # $v1, 0x8012
 /* 09F910 8009ED10 24636D0C */  addiu $v1, %lo(D_80126D0C) # addiu $v1, $v1, 0x6d0c

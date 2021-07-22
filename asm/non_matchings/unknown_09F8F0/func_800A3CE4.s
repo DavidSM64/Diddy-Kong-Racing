@@ -217,7 +217,7 @@ glabel func_800A3CE4
 /* 0A4C30 800A4030 24010004 */  li    $at, 4
 /* 0A4C34 800A4034 15C1001A */  bne   $t6, $at, .L800A40A0
 /* 0A4C38 800A4038 8FB9005C */   lw    $t9, 0x5c($sp)
-/* 0A4C3C 800A403C 0C019884 */  jal   func_80066210
+/* 0A4C3C 800A403C 0C019884 */  jal   get_viewport_count
 /* 0A4C40 800A4040 00000000 */   nop   
 /* 0A4C44 800A4044 28410002 */  slti  $at, $v0, 2
 /* 0A4C48 800A4048 14200006 */  bnez  $at, .L800A4064

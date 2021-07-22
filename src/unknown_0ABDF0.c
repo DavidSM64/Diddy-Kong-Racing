@@ -292,7 +292,7 @@ void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2) {
 #ifdef NON_MATCHING
 void func_800AD40C(void) {
     s16 a, b;
-    if (D_800E2C5C && !func_80066210()) {
+    if (D_800E2C5C && !get_viewport_count()) {
         a = ((-D_800E2C60 * 38) >> 16) + 1018;
         b = ((-D_800E2C60 * 20) >> 16) + 1023;
         func_80030664(0, a, b, 28, 15, 36);

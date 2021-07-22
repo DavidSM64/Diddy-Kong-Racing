@@ -357,7 +357,7 @@ glabel L8006D1C0
 /* 06DDC4 8006D1C4 0C01E015 */  jal   func_80078054
 /* 06DDC8 8006D1C8 248411F8 */   addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06DDCC 8006D1CC 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
-/* 06DDD0 8006D1D0 0C01DC14 */  jal   func_80077050
+/* 06DDD0 8006D1D0 0C01DC14 */  jal   render_borders_for_multiplayer
 /* 06DDD4 8006D1D4 248411F8 */   addiu $a0, %lo(D_801211F8) # addiu $a0, $a0, 0x11f8
 /* 06DDD8 8006D1D8 3C048012 */  lui   $a0, %hi(D_801211F8) # $a0, 0x8012
 /* 06DDDC 8006D1DC 3C058012 */  lui   $a1, %hi(D_80121208) # $a1, 0x8012

@@ -90,7 +90,7 @@ u8 D_800DD2F8[8] = {
 
 s32 D_800DD300 = 0; // Currently unknown, might be a different type.
 
-s16 D_800DD304 = -1;
+s16 gButtonMask = 0xFFFF;
 
 /*******************************/
 
@@ -121,7 +121,7 @@ typedef struct unk80120AC0 {
 } unk80120AC0;
 
 unk80120AC0 D_80120AC0[8];
-s32 D_80120CE0;
+s32 gNumberOfViewports;
 s32 D_80120CE4;
 s32 D_80120CE8;
 s32 D_80120CEC;
@@ -209,7 +209,7 @@ void func_80065EA0(void) {
     D_80120CE4 = 0;
     D_80120D1C = 0;
     D_80120D20[0] = 0;
-    D_80120CE0 = 0;
+    gNumberOfViewports = 0;
     D_80120D0C = 0;
     D_80120D18 = 0;
     D_80120D15 = 0;
@@ -271,8 +271,8 @@ s32* func_80066204(void) {
     return &D_801210A0;
 }
 
-s32 func_80066210(void) {
-    return D_80120CE0;
+s32 get_viewport_count(void) {
+    return gNumberOfViewports;
 }
 
 s32 func_80066220(void) {
@@ -374,21 +374,21 @@ void func_80066520(void) {
 
 s32 func_8006652C(s32 arg0) {
     if ((arg0 >= 0) && (arg0 < 4)) {
-        D_80120CE0 = arg0;
+        gNumberOfViewports = arg0;
     } else {
-        D_80120CE0 = 0;
+        gNumberOfViewports = 0;
     }
-    switch(D_80120CE0) {
-        case 0:
+    switch(gNumberOfViewports) {
+        case VIEWPORTS_COUNT_1_PLAYER:
             D_80120CE8 = 1;
             break;
-        case 1:
+        case VIEWPORTS_COUNT_2_PLAYERS:
             D_80120CE8 = 2;
             break;
-        case 2:
+        case VIEWPORTS_COUNT_3_PLAYERS:
             D_80120CE8 = 3;
             break;
-        case 3:
+        case VIEWPORTS_COUNT_4_PLAYERS:
             D_80120CE8 = 4;
             break;
     }
@@ -573,7 +573,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
     u32 phi_t5;
     u32 phi_t4;
 
-    if (func_8000E184() && !D_80120CE0) {
+    if (func_8000E184() && !gNumberOfViewports) {
         D_80120CE4 = 1;
     }
     widthAndHeight = get_video_width_and_height_as_s32();
@@ -593,8 +593,8 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
         return;
     }
     temp_t1 = widthAndHeight & 0xFFFF;
-    if (D_80120CE0 == 2) {
-        D_80120CE0 = 3;
+    if (gNumberOfViewports == VIEWPORTS_COUNT_3_PLAYERS) {
+        gNumberOfViewports = VIEWPORTS_COUNT_4_PLAYERS;
     }
     temp_a2 = temp_t1 >> 1;
     sp54 = temp_a2;
@@ -603,8 +603,8 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
         sp58 = 0x91;
     }
     
-    switch(D_80120CE0) {
-        case 0:
+    switch(gNumberOfViewports) {
+        case VIEWPORTS_COUNT_1_PLAYER:
             phi_t3 = sp58;
             if (osTvType == 0) {
                 phi_t3 = sp58 - 0x12;
@@ -612,7 +612,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0)
             sp4C = temp_a2;
             break;
-        case 1:
+        case VIEWPORTS_COUNT_2_PLAYERS:
             if (D_80120CE4 == 0) {
                 temp_v0_6 = temp_t0 >> 2;
                 phi_t3 = temp_v0_6;
@@ -626,7 +626,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             }
             sp4C = temp_a2;
             break;
-        case 2:
+        case VIEWPORTS_COUNT_3_PLAYERS:
             if (D_80120CE4 == 0) {
                 gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (temp_t1 >> 8), temp_t0)
                 phi_a1 = temp_t1 >> 2;
@@ -637,7 +637,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             sp4C = phi_a1;
             phi_t3 = sp58;
             break;
-        case 3:
+        case VIEWPORTS_COUNT_4_PLAYERS:
             sp58 = sp58 >> 1;
             sp54 = temp_a2 >> 1;
             switch(D_80120CE4) {
@@ -789,7 +789,7 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
     f32 temp_f2;
     s32 i;
     
-    for (i = 0; i <= D_80120CE0; i++) {
+    for (i = 0; i <= gNumberOfViewports; i++) {
         temp_f0 = arg0 - D_80120AC0[i].x_position;
         temp_f2 = arg1 - D_80120AC0[i].y_position;
         temp_f14 = arg2 - D_80120AC0[i].z_position;
@@ -892,6 +892,7 @@ s32 func_8006A624(s8 arg0) {
     return arg0;
 }
 
-void func_8006A6A0(void) {
-    D_800DD304 = 0;
+// Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
+void disable_button_mask(void) {
+    gButtonMask = 0;
 }

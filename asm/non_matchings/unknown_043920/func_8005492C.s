@@ -213,7 +213,7 @@ glabel func_8005492C
 /* 0557E8 80054BE8 A0A001EE */  sb    $zero, 0x1ee($a1)
 .L80054BEC:
 /* 0557EC 80054BEC AFA5004C */  sw    $a1, 0x4c($sp)
-/* 0557F0 80054BF0 0C019884 */  jal   func_80066210
+/* 0557F0 80054BF0 0C019884 */  jal   get_viewport_count
 /* 0557F4 80054BF4 AFA70048 */   sw    $a3, 0x48($sp)
 /* 0557F8 80054BF8 8FA5004C */  lw    $a1, 0x4c($sp)
 /* 0557FC 80054BFC 8FA70048 */  lw    $a3, 0x48($sp)

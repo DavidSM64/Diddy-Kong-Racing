@@ -6,7 +6,7 @@ glabel func_8006E3BC
 /* 06EFCC 8006E3CC 0C027055 */  jal   reset_character_id_slots
 /* 06EFD0 8006E3D0 00000000 */   nop   
 /* 06EFD4 8006E3D4 27A40018 */  addiu $a0, $sp, 0x18
-/* 06EFD8 8006E3D8 0C01AC89 */  jal   func_8006B224
+/* 06EFD8 8006E3D8 0C01AC89 */  jal   get_number_of_levels_and_worlds
 /* 06EFDC 8006E3DC 27A5001C */   addiu $a1, $sp, 0x1c
 /* 06EFE0 8006E3E0 8FA70018 */  lw    $a3, 0x18($sp)
 /* 06EFE4 8006E3E4 8FAF001C */  lw    $t7, 0x1c($sp)

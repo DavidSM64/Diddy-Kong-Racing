@@ -55,7 +55,7 @@ glabel func_8001F23C
 /* 01FF0C 8001F30C 2673AD3E */   addiu $s3, %lo(D_8011AD3E) # addiu $s3, $s3, -0x52c2
 /* 01FF10 8001F310 8E220064 */  lw    $v0, 0x64($s1)
 /* 01FF14 8001F314 82780000 */  lb    $t8, ($s3)
-/* 01FF18 8001F318 0C019884 */  jal   func_80066210
+/* 01FF18 8001F318 0C019884 */  jal   get_viewport_count
 /* 01FF1C 8001F31C A0580044 */   sb    $t8, 0x44($v0)
 /* 01FF20 8001F320 0C01B067 */  jal   func_8006C19C
 /* 01FF24 8001F324 00409025 */   move  $s2, $v0

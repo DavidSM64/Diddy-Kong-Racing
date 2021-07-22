@@ -31,7 +31,7 @@ glabel func_8004DE38
 /* 04EA40 8004DE40 AFB10028 */  sw    $s1, 0x28($sp)
 /* 04EA44 8004DE44 00808825 */  move  $s1, $a0
 /* 04EA48 8004DE48 AFB00024 */  sw    $s0, 0x24($sp)
-/* 04EA4C 8004DE4C 0C019884 */  jal   func_80066210
+/* 04EA4C 8004DE4C 0C019884 */  jal   get_viewport_count
 /* 04EA50 8004DE50 AFA500B4 */   sw    $a1, 0xb4($sp)
 /* 04EA54 8004DE54 244E0001 */  addiu $t6, $v0, 1
 /* 04EA58 8004DE58 3C01800E */  lui   $at, %hi(D_800DCB98) # $at, 0x800e

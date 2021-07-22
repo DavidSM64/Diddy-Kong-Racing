@@ -103,7 +103,7 @@ glabel func_800BA8E4
 /* 0BB66C 800BAA6C 31CF000F */  andi  $t7, $t6, 0xf
 /* 0BB670 800BAA70 15E00010 */  bnez  $t7, .L800BAAB4
 /* 0BB674 800BAA74 27FF9FC8 */   addiu $ra, %lo(D_80129FC8) # addiu $ra, $ra, -0x6038
-/* 0BB678 800BAA78 0C019884 */  jal   func_80066210
+/* 0BB678 800BAA78 0C019884 */  jal   get_viewport_count
 /* 0BB67C 800BAA7C 00000000 */   nop   
 /* 0BB680 800BAA80 3C1F8013 */  lui   $ra, %hi(D_80129FC8) # $ra, 0x8013
 /* 0BB684 800BAA84 1C40000B */  bgtz  $v0, .L800BAAB4

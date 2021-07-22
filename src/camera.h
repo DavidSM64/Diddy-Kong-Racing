@@ -23,6 +23,13 @@
 #define CAMERA_MAX_FOV 90.0f
 #define CAMERA_SCALE 1.0f
 
+enum ViewportCount {
+    VIEWPORTS_COUNT_1_PLAYER,
+    VIEWPORTS_COUNT_2_PLAYERS,
+    VIEWPORTS_COUNT_3_PLAYERS,
+    VIEWPORTS_COUNT_4_PLAYERS
+};
+
 extern s8 D_800DD060;
 
 /* Size: 0x34 bytes. */
@@ -62,6 +69,6 @@ extern u8 D_800DD2F8[8];
 
 extern s32 D_800DD300;
 
-extern s16 D_800DD304;
+extern s16 gButtonMask;
 
 #endif

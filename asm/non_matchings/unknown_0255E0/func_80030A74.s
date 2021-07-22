@@ -18,7 +18,7 @@ glabel func_80030A74
 /* 0316B4 80030AB4 AFBF0040 */  sw    $ra, 0x40($sp)
 /* 0316B8 80030AB8 0C01A75F */  jal   func_80069D7C
 /* 0316BC 80030ABC AFAB0044 */   sw    $t3, 0x44($sp)
-/* 0316C0 80030AC0 0C019884 */  jal   func_80066210
+/* 0316C0 80030AC0 0C019884 */  jal   get_viewport_count
 /* 0316C4 80030AC4 00409825 */   move  $s3, $v0
 /* 0316C8 80030AC8 8FAB0044 */  lw    $t3, 0x44($sp)
 /* 0316CC 80030ACC 8FBF0040 */  lw    $ra, 0x40($sp)

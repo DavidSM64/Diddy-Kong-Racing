@@ -163,7 +163,7 @@ typedef struct Settings {
   /* 0x06BA */ u16 courseTimes[3][65];
 } Settings;
 
-/* Size: 0xC8 bytes */
+/* Size: 0xC4 bytes */
 typedef struct LevelHeader {
   /* 0x00 */ s8 world;
   /* 0x01 */ u8 unk1;
@@ -196,8 +196,8 @@ typedef struct LevelHeader {
   /* 0x4A */ u8 unk4A;
   /* 0x4B */ s8 laps;
   /* 0x4C */ s8 race_type;
-  /* 0x4D */ u8 vehicle;
-  /* 0x4E */ u8 available_vehicles;
+  /* 0x4D */ s8 vehicle;
+  /* 0x4E */ s8 available_vehicles;
 
   /* 0x4F */ u8 unk4F[3];
 
@@ -228,7 +228,8 @@ typedef struct LevelHeader {
   /* 0xAA */ u16 unkAA;
   /* 0xAC */ s8 *unkAC;
 
-  /* 0xB0 */ u8 padB0[0x3];
+  /* 0xB0 */ s16 unkB0;
+  /* 0xB2 */ u8 unkB2;
   /* 0xB3 */ u8 unkB3;
   /* 0xB3 */ u8 unkB4;
   /* 0xB3 */ u8 unkB5;
@@ -242,7 +243,6 @@ typedef struct LevelHeader {
   /* 0xC1 */ u8 unkC1;
   /* 0xC2 */ u8 unkC2;
   /* 0xC3 */ u8 unkC3;
-  /* 0xC4 */ u8 padC4[0x4];
 } LevelHeader;
 
 /* Size: 0x50 bytes */

@@ -25,7 +25,7 @@ glabel func_8004D590
 /* 04E1E8 8004D5E8 030FC823 */  subu  $t9, $t8, $t7
 /* 04E1EC 8004D5EC A4D90196 */  sh    $t9, 0x196($a2)
 /* 04E1F0 8004D5F0 E7AE0094 */  swc1  $f14, 0x94($sp)
-/* 04E1F4 8004D5F4 0C019884 */  jal   func_80066210
+/* 04E1F4 8004D5F4 0C019884 */  jal   get_viewport_count
 /* 04E1F8 8004D5F8 AFA600B0 */   sw    $a2, 0xb0($sp)
 /* 04E1FC 8004D5FC 24040001 */  li    $a0, 1
 /* 04E200 8004D600 C7AE0094 */  lwc1  $f14, 0x94($sp)

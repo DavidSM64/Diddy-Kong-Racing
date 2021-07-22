@@ -4,7 +4,7 @@ glabel func_800AD40C
 /* 0AE014 800AD414 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0AE018 800AD418 11C00020 */  beqz  $t6, .L800AD49C
 /* 0AE01C 800AD41C AFBF001C */   sw    $ra, 0x1c($sp)
-/* 0AE020 800AD420 0C019884 */  jal   func_80066210
+/* 0AE020 800AD420 0C019884 */  jal   get_viewport_count
 /* 0AE024 800AD424 00000000 */   nop   
 /* 0AE028 800AD428 1440001C */  bnez  $v0, .L800AD49C
 /* 0AE02C 800AD42C 00002025 */   move  $a0, $zero

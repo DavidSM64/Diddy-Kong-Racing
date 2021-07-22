@@ -2,7 +2,7 @@ glabel func_800A26C8
 /* 0A32C8 800A26C8 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0A32CC 800A26CC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0A32D0 800A26D0 AFA40020 */  sw    $a0, 0x20($sp)
-/* 0A32D4 800A26D4 0C019884 */  jal   func_80066210
+/* 0A32D4 800A26D4 0C019884 */  jal   get_viewport_count
 /* 0A32D8 800A26D8 AFA50024 */   sw    $a1, 0x24($sp)
 /* 0A32DC 800A26DC 14400024 */  bnez  $v0, .L800A2770
 /* 0A32E0 800A26E0 8FBF0014 */   lw    $ra, 0x14($sp)

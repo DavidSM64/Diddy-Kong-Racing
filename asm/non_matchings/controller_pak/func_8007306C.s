@@ -8,7 +8,7 @@ glabel func_8007306C
 /* 073C84 80073084 0C01BA65 */  jal   func_8006E994
 /* 073C88 80073088 AFB00018 */   sw    $s0, 0x18($sp)
 /* 073C8C 8007308C 27A40048 */  addiu $a0, $sp, 0x48
-/* 073C90 80073090 0C01AC89 */  jal   func_8006B224
+/* 073C90 80073090 0C01AC89 */  jal   get_number_of_levels_and_worlds
 /* 073C94 80073094 27A50044 */   addiu $a1, $sp, 0x44
 /* 073C98 80073098 3C018012 */  lui   $at, %hi(D_801241EC) # $at, 0x8012
 /* 073C9C 8007309C 3C028012 */  lui   $v0, %hi(D_801241F4) # $v0, 0x8012

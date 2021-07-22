@@ -80,7 +80,7 @@ glabel func_80012F94
 /* 013C88 80013088 AFAA0024 */  sw    $t2, 0x24($sp)
 /* 013C8C 8001308C 0C0078A7 */  jal   get_misc_asset
 /* 013C90 80013090 E7AE002C */   swc1  $f14, 0x2c($sp)
-/* 013C94 80013094 0C019884 */  jal   func_80066210
+/* 013C94 80013094 0C019884 */  jal   get_viewport_count
 /* 013C98 80013098 AFA20038 */   sw    $v0, 0x38($sp)
 /* 013C9C 8001309C 00027880 */  sll   $t7, $v0, 2
 /* 013CA0 800130A0 8FA50038 */  lw    $a1, 0x38($sp)

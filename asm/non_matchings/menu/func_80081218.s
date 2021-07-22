@@ -2,7 +2,7 @@ glabel func_80081218
 /* 081E18 80081218 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 081E1C 8008121C AFBF0014 */  sw    $ra, 0x14($sp)
 /* 081E20 80081220 27A40034 */  addiu $a0, $sp, 0x34
-/* 081E24 80081224 0C01AC89 */  jal   func_8006B224
+/* 081E24 80081224 0C01AC89 */  jal   get_number_of_levels_and_worlds
 /* 081E28 80081228 27A50030 */   addiu $a1, $sp, 0x30
 /* 081E2C 8008122C 8FA20034 */  lw    $v0, 0x34($sp)
 /* 081E30 80081230 8FAF0030 */  lw    $t7, 0x30($sp)
