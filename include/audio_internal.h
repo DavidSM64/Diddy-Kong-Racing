@@ -264,6 +264,7 @@ typedef struct PVoice_s {
     ALResampler         resampler;
     ALEnvMixer		envmixer;
     s32                 offset;
+    s32                 unkDC;
 } PVoice;
 
 #endif

@@ -184,8 +184,8 @@ void audio_init(u32 arg0){
     synth_config.maxPVoices = 40;
     synth_config.maxUpdates = 96;
     synth_config.dmaproc = NULL;
-    synth_config.fxType = 6;
-    synth_config.unk1d = 2;
+    synth_config.fxType[0] = 6;
+    synth_config.fxType[1] = 2;
     synth_config.outputRate = 0;
     synth_config.heap = &gALHeap;
     audioNewThread(&synth_config, 12, arg0);

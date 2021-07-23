@@ -264,8 +264,7 @@ typedef struct {
     void                *dmaproc;
     ALHeap              *heap;
     s32                 outputRate;     /* output sample rate */
-    ALFxId              fxType;
-    u8                  unk1d;
+    ALFxId              fxType[2];
     s32                 *params;
 } ALSynConfig;
 
