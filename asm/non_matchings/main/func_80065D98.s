@@ -1,4 +1,4 @@
-glabel D_80065D98
+glabel func_80065D98
 /* 066998 80065D98 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 06699C 80065D9C AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0669A0 80065DA0 0C02DBD4 */  jal   func_800B6F50

@@ -9,7 +9,7 @@
 enum {
     AL_FILTER_FREE_VOICE,
     AL_FILTER_SET_SOURCE,
-    AL_FILTER_ADD_SOURCE,
+    AL_FILTER_ADD_SOURCE, // 2
     AL_FILTER_ADD_UPDATE,
     AL_FILTER_RESET,
     AL_FILTER_SET_WAVETABLE,
@@ -264,6 +264,7 @@ typedef struct PVoice_s {
     ALResampler         resampler;
     ALEnvMixer		envmixer;
     s32                 offset;
+    s32                 unkDC;
 } PVoice;
 
 #endif

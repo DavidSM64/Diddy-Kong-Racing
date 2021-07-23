@@ -187,7 +187,7 @@ glabel menu_audio_options_loop
 /* 085B18 80084F18 AC400000 */  sw    $zero, ($v0)
 /* 085B1C 80084F1C 00002025 */  move  $a0, $zero
 .L80084F20:
-/* 085B20 80084F20 0C0196F4 */  jal   func_80065BD0
+/* 085B20 80084F20 0C0196F4 */  jal   set_stereo_pan_mode
 /* 085B24 80084F24 00000000 */   nop   
 /* 085B28 80084F28 240E0001 */  li    $t6, 1
 /* 085B2C 80084F2C 10000074 */  b     .L80085100
