@@ -11,4 +11,7 @@ enum StereoPanMode {
     HEADPHONES
 };
 
+void set_stereo_pan_mode(s32 panMode);
+s32 modify_panning(s32 pan);
+
 #endif
