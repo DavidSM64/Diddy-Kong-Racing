@@ -48,11 +48,11 @@ glabel alFxNew
 /* 06569C 80064A9C AED80028 */  sw    $t8, 0x28($s6)
 /* 0656A0 80064AA0 0050C821 */  addu  $t9, $v0, $s0
 /* 0656A4 80064AA4 9328001C */  lbu   $t0, 0x1c($t9)
-/* 0656A8 80064AA8 3C13800E */  lui   $s3, %hi(D_800DD028) # $s3, 0x800e
+/* 0656A8 80064AA8 3C13800E */  lui   $s3, %hi(NULL_PARAMS) # $s3, 0x800e
 /* 0656AC 80064AAC 2509FFFF */  addiu $t1, $t0, -1
 /* 0656B0 80064AB0 2D210006 */  sltiu $at, $t1, 6
 /* 0656B4 80064AB4 1020001C */  beqz  $at, .L80064B28
-/* 0656B8 80064AB8 2673D028 */   addiu $s3, %lo(D_800DD028) # addiu $s3, $s3, -0x2fd8
+/* 0656B8 80064AB8 2673D028 */   addiu $s3, %lo(NULL_PARAMS) # addiu $s3, $s3, -0x2fd8
 /* 0656BC 80064ABC 00094880 */  sll   $t1, $t1, 2
 /* 0656C0 80064AC0 3C01800E */  lui   $at, %hi(jpt_800E6EA0) # $at, 0x800e
 /* 0656C4 80064AC4 00290821 */  addu  $at, $at, $t1
@@ -61,25 +61,25 @@ glabel alFxNew
 /* 0656D0 80064AD0 01200008 */  jr    $t1
 /* 0656D4 80064AD4 00000000 */   nop   
 glabel L80064AD8
-/* 0656D8 80064AD8 3C13800E */  lui   $s3, %hi(D_800DCEC0) # $s3, 0x800e
+/* 0656D8 80064AD8 3C13800E */  lui   $s3, %hi(SMALLROOM_PARAMS) # $s3, 0x800e
 /* 0656DC 80064ADC 10000012 */  b     .L80064B28
-/* 0656E0 80064AE0 2673CEC0 */   addiu $s3, %lo(D_800DCEC0) # addiu $s3, $s3, -0x3140
+/* 0656E0 80064AE0 2673CEC0 */   addiu $s3, %lo(SMALLROOM_PARAMS) # addiu $s3, $s3, -0x3140
 glabel L80064AE4
-/* 0656E4 80064AE4 3C13800E */  lui   $s3, %hi(D_800DCF28) # $s3, 0x800e
+/* 0656E4 80064AE4 3C13800E */  lui   $s3, %hi(BIGROOM_PARAMS) # $s3, 0x800e
 /* 0656E8 80064AE8 1000000F */  b     .L80064B28
-/* 0656EC 80064AEC 2673CF28 */   addiu $s3, %lo(D_800DCF28) # addiu $s3, $s3, -0x30d8
+/* 0656EC 80064AEC 2673CF28 */   addiu $s3, %lo(BIGROOM_PARAMS) # addiu $s3, $s3, -0x30d8
 glabel L80064AF0
-/* 0656F0 80064AF0 3C13800E */  lui   $s3, %hi(D_800DCFB0) # $s3, 0x800e
+/* 0656F0 80064AF0 3C13800E */  lui   $s3, %hi(ECHO_PARAMS) # $s3, 0x800e
 /* 0656F4 80064AF4 1000000C */  b     .L80064B28
-/* 0656F8 80064AF8 2673CFB0 */   addiu $s3, %lo(D_800DCFB0) # addiu $s3, $s3, -0x3050
+/* 0656F8 80064AF8 2673CFB0 */   addiu $s3, %lo(ECHO_PARAMS) # addiu $s3, $s3, -0x3050
 glabel L80064AFC
-/* 0656FC 80064AFC 3C13800E */  lui   $s3, %hi(D_800DCFD8) # $s3, 0x800e
+/* 0656FC 80064AFC 3C13800E */  lui   $s3, %hi(CHORUS_PARAMS) # $s3, 0x800e
 /* 065700 80064B00 10000009 */  b     .L80064B28
-/* 065704 80064B04 2673CFD8 */   addiu $s3, %lo(D_800DCFD8) # addiu $s3, $s3, -0x3028
+/* 065704 80064B04 2673CFD8 */   addiu $s3, %lo(CHORUS_PARAMS) # addiu $s3, $s3, -0x3028
 glabel L80064B08
-/* 065708 80064B08 3C13800E */  lui   $s3, %hi(D_800DD000) # $s3, 0x800e
+/* 065708 80064B08 3C13800E */  lui   $s3, %hi(FLANGE_PARAMS) # $s3, 0x800e
 /* 06570C 80064B0C 10000006 */  b     .L80064B28
-/* 065710 80064B10 2673D000 */   addiu $s3, %lo(D_800DD000) # addiu $s3, $s3, -0x3000
+/* 065710 80064B10 2673D000 */   addiu $s3, %lo(FLANGE_PARAMS) # addiu $s3, $s3, -0x3000
 glabel L80064B14
 /* 065714 80064B14 00105080 */  sll   $t2, $s0, 2
 /* 065718 80064B18 004A5821 */  addu  $t3, $v0, $t2

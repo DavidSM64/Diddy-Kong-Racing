@@ -6,85 +6,67 @@
 #include "libultra_internal.h"
 #include "audio_internal.h"
 
+/*
+ * WARNING: THE FOLLOWING CONSTANT MUST BE KEPT IN SYNC
+ * WITH SCALING IN MICROCODE!!!
+ */
 #define	SCALE 16384
 
-/************ .data ************/
+/*
+ * the following arrays contain default parameters for
+ * a few hopefully useful effects.
+ */
+#define ms *(((s32)((f32)44.1))&~0x7)
 
-// TODO: Figure out what this actually is.
-s32 D_800DCEC0[26] = {
-    0x00000003, 0x00000FA0,
-    0x00000000, 0x00000870,
-    0x00002666, 0xFFFFD99A,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000000,
-    0x000002F8, 0x000005F0,
-    0x00000CCC, 0xFFFFF334,
-    0x00003FFF, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000960,
-    0x00001388, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00005000
+s32 SMALLROOM_PARAMS[26] = {
+    /* sections	   length */
+          3,        100 ms,
+                                      /*       chorus  chorus   filter
+       input  output  fbcoef  ffcoef   gain     rate   depth     coef  */
+           0,   54 ms,  9830,  -9830,      0,      0,      0,      0,
+       19 ms,   38 ms,  3276,  -3276, 0x3fff,      0,      0,      0,
+           0,   60 ms,  5000,      0,      0,      0,      0, 0x5000
 };
 
-// TODO: Figure out what this actually is.
-s32 D_800DCF28[34] = {
-    0x00000004, 0x00000FA0,
-    0x00000000, 0x00000A50,
-    0x00002666, 0xFFFFD99A,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000370, 0x00000870,
-    0x00000CCC, 0xFFFFF334,
-    0x00003FFF, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000A50, 0x00000E38,
-    0x00000CCC, 0xFFFFF334,
-    0x00003FFF, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000EB0,
-    0x00001F40, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00005000
+s32 BIGROOM_PARAMS[34] = {
+    /* sections	   length */
+          4,        100 ms,
+                                      /*       chorus  chorus   filter
+       input  output  fbcoef  ffcoef   gain     rate   depth     coef  */
+           0,   66 ms,  9830,  -9830,      0,      0,      0,      0,
+       22 ms,   54 ms,  3276,  -3276, 0x3fff,      0,      0,      0,
+       66 ms,   91 ms,  3276,  -3276, 0x3fff,      0,      0,      0,
+           0,   94 ms,  8000,      0,      0,      0,      0, 0x5000
 };
 
-// TODO: Figure out what this actually is.
-s32 D_800DCFB0[10] = {
-    0x00000001, 0x00001F40,
-    0x00000000, 0x00001BF8,
-    0x00002EE0, 0x00000000,
-    0x00007FFF, 0x00000000,
-    0x00000000, 0x00000000
+s32 ECHO_PARAMS[10] = {
+    /* sections	   length */
+          1,       200 ms,
+                                      /*       chorus  chorus   filter
+       input  output  fbcoef  ffcoef   gain     rate   depth     coef   */
+           0,  179 ms, 12000,      0, 0x7fff,      0,      0,      0
 };
 
-// TODO: Figure out what this actually is.
-s32 D_800DCFD8[10] = {
-    0x00000001, 0x00000320,
-    0x00000000, 0x000000C8,
-    0x00004000, 0x00000000,
-    0x00007FFF, 0x00001DB0,
-    0x000002BC, 0x00000000
+s32 CHORUS_PARAMS[10] = {
+    /* sections	   length */
+          1,        20 ms,
+                                      /*       chorus  chorus   filter
+       input  output  fbcoef  ffcoef   gain     rate   depth     coef   */
+	  0,   5 ms, 0x4000,      0,  0x7fff,   7600,   700,      0
 };
 
-// TODO: Figure out what this actually is.
-s32 D_800DD000[10] = {
-    0x00000001, 0x00000320,
-    0x00000000, 0x000000C8,
-    0x00000000, 0x00005FFF,
-    0x00007FFF, 0x0000017C,
-    0x000001F4, 0x00000000
+s32 FLANGE_PARAMS[10] = {
+    /* sections	   length */
+          1,        20 ms,
+                                      /*       chorus  chorus   filter
+       input  output  fbcoef  ffcoef   gain     rate   depth     coef   */
+	   0,   5 ms,      0, 0x5fff, 0x7fff,    380,   500,      0
 };
 
-// TODO: Figure out what this actually is.
-s32 D_800DD028[10] = {
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000000,
-    0x00000000, 0x00000000
+s32 NULL_PARAMS[10] = {
+    0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
 };
-
-/*******************************/
 
 extern s32 alAuxBusPull;
 extern s32 alAuxBusParam;
@@ -122,7 +104,7 @@ void init_lpfilter(ALLowPass *lp)
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxNew.s")
+GLOBAL_ASM("lib/asm/non_matchings/alFxNew/alFxNew.s")
 
 void alEnvmixerNew(ALEnvMixer* e, s32 arg1) {
     alFilterNew(e, &alEnvMixerPull, &alEnvmixerParam, 4);

@@ -1,8 +1,6 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80063C30 */
 
-#include "unknown_064830.h"
-
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
@@ -17,7 +15,7 @@ s32 D_800DCEBC = 0x20; // Currently unknown, might be a different type.
 
 /*******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxPull.s")
+GLOBAL_ASM("lib/asm/non_matchings/reverb/alFxPull.s")
 
 s32 alFxParam(void* filter, s32 paramID, void* param) {
     if (paramID == 1) {
@@ -26,8 +24,8 @@ s32 alFxParam(void* filter, s32 paramID, void* param) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_064830/alFxParamHdl.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/_loadOutputBuffer.s")
+GLOBAL_ASM("lib/asm/non_matchings/reverb/alFxParamHdl.s")
+GLOBAL_ASM("lib/asm/non_matchings/reverb/_loadOutputBuffer.s")
 
 /* 
  * This routine is for loading data from the delay line buff. If the
@@ -133,5 +131,5 @@ Acmd *_filterBuffer(ALLowPass *lp, s32 buff, s32 count, Acmd *p)
     return ptr;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_064830/_doModFunc.s")
-GLOBAL_ASM("asm/non_matchings/unknown_064830/func_8006492C.s")
+GLOBAL_ASM("lib/asm/non_matchings/reverb/_doModFunc.s")
+GLOBAL_ASM("lib/asm/non_matchings/reverb/func_8006492C.s")

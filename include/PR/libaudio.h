@@ -704,6 +704,7 @@ typedef struct {
     ALOscInit           initOsc;
     ALOscUpdate         updateOsc;
     ALOscStop           stopOsc;
+    s32                 unk7C;
 } ALCSPlayer;
 
 /* Maintain backwards compatibility with old routine names. */
