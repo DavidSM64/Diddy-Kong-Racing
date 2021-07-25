@@ -4,6 +4,7 @@
 #include "unknown_043920.h"
 #include "memory.h"
 #include "menu.h"
+#include "video.h"
 
 #include "types.h"
 #include "macros.h"
@@ -17,7 +18,7 @@ typedef struct GhostHeader {
     u8  characterID; // 9 = T.T.
     u8  unk3; // Might just be padding?
     s16 time; // In frames, where 60 frames = 1 second.
-    s16 nodeCount; // Maximum of 1080 nodes.
+    s16 nodeCount;
 } GhostHeader;
 
 /* Size: 12 bytes */
@@ -30,8 +31,6 @@ typedef struct GhostNode {
     s16 yRotation;
 } GhostNode;
 
-// This number should be 1080, so every ghost node represents 4 seconds? 
-// 3 minute limit = 180 seconds.
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
 /************ .data ************/
@@ -148,7 +147,8 @@ const char D_800E62A0[] = "Back\n";
 s32 D_8011D4F0[2];
 s32 D_8011D4F8[3];
 s32 D_8011D504;
-s32 D_8011D508[2];
+Object *gCameraObject;
+s32 D_8011D50C;
 
 /* Size: 0x18 bytes */
 typedef struct unk8011D510 {
@@ -538,10 +538,41 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800580B4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800581E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058B84.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058D5C.s")
+
+#ifdef NON_MATCHING
+
+s32 func_8007066C(s32, s32);
+s16 func_80029F18(f32, f32, f32);
+
+void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
+    s32 temp0, temp1;
+    temp0 = (s32)arg0;
+    temp1 = func_8007066C(gCameraObject->x_position - arg1->x_position, gCameraObject->z_position - arg1->z_position);
+    gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
+    gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
+    gCameraObject->unk34_s = func_80029F18(gCameraObject->x_position, arg2->unk3C_f, gCameraObject->z_position);
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058F44.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059080.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059208.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059790.s")
+
+void func_80059790(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
+    s32 temp_lo;
+    s32 temp_lo_2;
+
+    if (gVideoRefreshRate == REFRESH_50HZ) {
+        arg0 = (f32)arg0 * 1.2;
+    }
+    temp_lo = arg0 / 3600;
+    *arg1 = temp_lo;
+    temp_lo_2 = (s32) (arg0 - (temp_lo * 3600)) / 60;
+    *arg2 = temp_lo_2;
+    *arg3 = (s32) ((s32) (((arg0 - (*arg1 * 3600)) - (temp_lo_2 * 60)) * 100) / 60);
+}
 
 void func_800598D0(void) {
     gGhostData[0] = allocate_from_main_pool_safe(0x21C0, COLOR_TAG_RED);

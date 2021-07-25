@@ -1,8 +1,8 @@
 glabel func_80058B84
 /* 059784 80058B84 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 059788 80058B88 AFB00018 */  sw    $s0, 0x18($sp)
-/* 05978C 80058B8C 3C108012 */  lui   $s0, %hi(D_8011D508) # $s0, 0x8012
-/* 059790 80058B90 2610D508 */  addiu $s0, %lo(D_8011D508) # addiu $s0, $s0, -0x2af8
+/* 05978C 80058B8C 3C108012 */  lui   $s0, %hi(gCameraObject) # $s0, 0x8012
+/* 059790 80058B90 2610D508 */  addiu $s0, %lo(gCameraObject) # addiu $s0, $s0, -0x2af8
 /* 059794 80058B94 8E020000 */  lw    $v0, ($s0)
 /* 059798 80058B98 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 05979C 80058B9C E7AC0030 */  swc1  $f12, 0x30($sp)
