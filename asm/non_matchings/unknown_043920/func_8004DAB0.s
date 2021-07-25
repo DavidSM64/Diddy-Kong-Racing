@@ -137,8 +137,8 @@ glabel func_8004DAB0
 /* 04E8C0 8004DCC0 AFA70030 */   sw    $a3, 0x30($sp)
 /* 04E8C4 8004DCC4 0C01A73F */  jal   func_80069CFC
 /* 04E8C8 8004DCC8 00000000 */   nop   
-/* 04E8CC 8004DCCC 3C038012 */  lui   $v1, %hi(D_8011D508) # $v1, 0x8012
-/* 04E8D0 8004DCD0 2463D508 */  addiu $v1, %lo(D_8011D508) # addiu $v1, $v1, -0x2af8
+/* 04E8CC 8004DCCC 3C038012 */  lui   $v1, %hi(gCameraObject) # $v1, 0x8012
+/* 04E8D0 8004DCD0 2463D508 */  addiu $v1, %lo(gCameraObject) # addiu $v1, $v1, -0x2af8
 /* 04E8D4 8004DCD4 AC620000 */  sw    $v0, ($v1)
 /* 04E8D8 8004DCD8 8FA40030 */  lw    $a0, 0x30($sp)
 /* 04E8DC 8004DCDC A4400004 */  sh    $zero, 4($v0)

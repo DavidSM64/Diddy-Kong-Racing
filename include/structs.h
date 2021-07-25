@@ -482,13 +482,19 @@ typedef struct Object {
 
   /* 0x002E */ s16 unk2E;
   /* 0x0030 */ f32 unk30;
-  /* 0x0034 */ f32 unk34;
+  union {
+    /* 0x0034 */ f32 unk34;
+    /* 0x0034 */ s16 unk34_s;
+  };
   /* 0x0038 */ u8 unk38;
 
   /* 0x0039 */ u8 unk39;
   /* 0x003A */ s8 unk3A;
   /* 0x003B */ s8 unk3B;
-  /* 0x003C */ Object_3C* unk3C;
+  union {
+    /* 0x003C */ Object_3C* unk3C;
+    /* 0x003C */ f32 unk3C_f;
+  };
 
   /* 0x0040 */ Object_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;

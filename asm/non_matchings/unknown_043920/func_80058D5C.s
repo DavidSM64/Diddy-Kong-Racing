@@ -14,8 +14,8 @@ glabel func_80058D5C
 /* 05998C 80058D8C 8FA7003C */  lw    $a3, 0x3c($sp)
 /* 059990 80058D90 14400007 */  bnez  $v0, .L80058DB0
 /* 059994 80058D94 00402025 */   move  $a0, $v0
-/* 059998 80058D98 3C108012 */  lui   $s0, %hi(D_8011D508) # $s0, 0x8012
-/* 05999C 80058D9C 2610D508 */  addiu $s0, %lo(D_8011D508) # addiu $s0, $s0, -0x2af8
+/* 059998 80058D98 3C108012 */  lui   $s0, %hi(gCameraObject) # $s0, 0x8012
+/* 05999C 80058D9C 2610D508 */  addiu $s0, %lo(gCameraObject) # addiu $s0, $s0, -0x2af8
 /* 0599A0 80058DA0 8E190000 */  lw    $t9, ($s0)
 /* 0599A4 80058DA4 24180005 */  li    $t8, 5
 /* 0599A8 80058DA8 10000062 */  b     .L80058F34
@@ -23,9 +23,9 @@ glabel func_80058D5C
 .L80058DB0:
 /* 0599B0 80058DB0 8FA80034 */  lw    $t0, 0x34($sp)
 /* 0599B4 80058DB4 8FA90040 */  lw    $t1, 0x40($sp)
-/* 0599B8 80058DB8 3C108012 */  lui   $s0, %hi(D_8011D508) # $s0, 0x8012
+/* 0599B8 80058DB8 3C108012 */  lui   $s0, %hi(gCameraObject) # $s0, 0x8012
 /* 0599BC 80058DBC A12801D0 */  sb    $t0, 0x1d0($t1)
-/* 0599C0 80058DC0 2610D508 */  addiu $s0, %lo(D_8011D508) # addiu $s0, $s0, -0x2af8
+/* 0599C0 80058DC0 2610D508 */  addiu $s0, %lo(gCameraObject) # addiu $s0, $s0, -0x2af8
 /* 0599C4 80058DC4 8E0A0000 */  lw    $t2, ($s0)
 /* 0599C8 80058DC8 C484000C */  lwc1  $f4, 0xc($a0)
 /* 0599CC 80058DCC 00000000 */  nop   
