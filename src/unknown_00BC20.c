@@ -1441,264 +1441,268 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
+<<<<<<< HEAD
 void func_800238BC(Object *arg0) {
+=======
+void func_800238BC(Object *arg0, void *arg1) {
+>>>>>>> Added 2nd argument to func_800238BC.
     arg0->unk48 = arg0->descriptor_ptr->unk54;
     switch (arg0->unk48 - 1) {
         case 0x00:
-            func_8004DAB0(arg0);
+            func_8004DAB0(arg0, arg1);
             break;
         case 0x01:
-            func_80033CC0(arg0);
+            func_80033CC0(arg0, arg1);
             break;
         case 0x02:
-            func_80036C30(arg0);
+            func_80036C30(arg0, arg1);
             break;
         case 0x03:
-            func_800376E0(arg0);
+            func_800376E0(arg0, arg1);
             break;
         case 0x05:
-            func_800389AC(arg0);
+            func_800389AC(arg0, arg1);
             break;
         case 0x18:
-            func_80038A6C(arg0);
+            func_80038A6C(arg0, arg1);
             break;
         case 0x15:
-            func_80038B74(arg0);
+            func_80038B74(arg0, arg1);
             break;
         case 0x06:
-            func_80038E3C(arg0);
+            func_80038E3C(arg0, arg1);
             break;
         case 0x07:
-            func_8003FD68(arg0);
+            func_8003FD68(arg0, arg1);
             break;
         case 0x08:
         case 0x12:
-            func_8003FEF4(arg0);
+            func_8003FEF4(arg0, arg1);
             break;
         case 0x1A:
-            func_8004001C(arg0);
+            func_8004001C(arg0, arg1);
             break;
         case 0x09:
-            func_80039160(arg0);
+            func_80039160(arg0, arg1);
             break;
         case 0x0A:
-            func_80039190(arg0);
+            func_80039190(arg0, arg1);
             break;
         case 0x0B:
-            func_800391C8(arg0);
+            func_800391C8(arg0, arg1);
             break;
         case 0x0C:
-            func_8003ACBC(arg0);
+            func_8003ACBC(arg0, arg1);
             break;
         case 0x1D:
-            func_8003AD34(arg0);
+            func_8003AD34(arg0, arg1);
             break;
         case 0x28:
-            func_8003B058(arg0);
+            func_8003B058(arg0, arg1);
             break;
         case 0x0D:
-            func_8003B7CC(arg0);
+            func_8003B7CC(arg0, arg1);
             break;
         case 0x6E:
-            func_8003C1E0(arg0);
+            func_8003C1E0(arg0, arg1);
             break;
         case 0x0E:
-            func_8003CF18(arg0);
+            func_8003CF18(arg0, arg1);
             break;
         case 0x0F:
-            func_8003CFE0(arg0);
+            func_8003CFE0(arg0, arg1);
             break;
         case 0x10:
-            func_8003DFCC(arg0);
+            func_8003DFCC(arg0, arg1);
             break;
         case 0x16:
-            func_8003E5B0(arg0);
+            func_8003E5B0(arg0, arg1);
             break;
         case 0x04:
         case 0x11:
-            func_8003E5C8(arg0);
+            func_8003E5C8(arg0, arg1);
             break;
         case 0x19:
-            func_8003CF58(arg0);
+            func_8003CF58(arg0, arg1);
             break;
         case 0x1B:
-            func_80034AF0(arg0);
+            func_80034AF0(arg0, arg1);
             break;
         case 0x1C:
-            func_800400A4(arg0);
+            func_800400A4(arg0, arg1);
             break;
         case 0x1E:
-            func_80036194(arg0);
+            func_80036194(arg0, arg1);
             break;
         case 0x1F:
-            func_8003D534(arg0);
+            func_8003D534(arg0, arg1);
             break;
         case 0x20:
-            func_800403A8(arg0);
+            func_800403A8(arg0, arg1);
             break;
         case 0x23:
-            func_800403D8(arg0);
+            func_800403D8(arg0, arg1);
             break;
         case 0x42:
-            func_8004049C(arg0);
+            func_8004049C(arg0, arg1);
             break;
         case 0x24:
-            func_80040800(arg0);
+            func_80040800(arg0, arg1);
             break;
         case 0x25:
-            func_8003C9EC(arg0);
+            func_8003C9EC(arg0, arg1);
             break;
         case 0x26:
-            func_8003CE64(arg0);
+            func_8003CE64(arg0, arg1);
             break;
         case 0x27:
-            func_8003CF00(arg0);
+            func_8003CF00(arg0, arg1);
             break;
         case 0x2A:
-            func_8004092C(arg0);
+            func_8004092C(arg0, arg1);
             break;
         case 0x2B:
-            func_8004094C(arg0);
+            func_8004094C(arg0, arg1);
             break;
         case 0x2C:
-            func_8003522C(arg0);
+            func_8003522C(arg0, arg1);
             break;
         case 0x2D:
-            func_80035640(arg0);
+            func_80035640(arg0, arg1);
             break;
         case 0x2E:
-            func_80035EF8(arg0);
+            func_80035EF8(arg0, arg1);
             break;
         case 0x30:
-            func_80037A18(arg0);
+            func_80037A18(arg0, arg1);
             break;
         case 0x33:
-            func_80038854(arg0);
+            func_80038854(arg0, arg1);
             break;
         case 0x36:
-            func_8003C644(arg0);
+            func_8003C644(arg0, arg1);
             break;
         case 0x38:
         case 0x5C:
-            func_8003588C(arg0);
+            func_8003588C(arg0, arg1);
             break;
         case 0x39:
-            func_80035E20(arg0);
+            func_80035E20(arg0, arg1);
             break;
         case 0x3A:
-            func_800409A4(arg0);
+            func_800409A4(arg0, arg1);
             break;
         case 0x3C:
-            func_800409C8(arg0);
+            func_800409C8(arg0, arg1);
             break;
         case 0x3D:
-            func_800392B8(arg0);
+            func_800392B8(arg0, arg1);
             break;
         case 0x3F:
-            func_8003DE74(arg0);
+            func_8003DE74(arg0, arg1);
             break;
         case 0x40:
-            func_8003D3EC(arg0);
+            func_8003D3EC(arg0, arg1);
             break;
         case 0x41:
-            func_8003D038(arg0);
+            func_8003D038(arg0, arg1);
             break;
         case 0x43:
-            func_80037578(arg0);
+            func_80037578(arg0, arg1);
             break;
         case 0x44:
-            func_80037624(arg0);
+            func_80037624(arg0, arg1);
             break;
         case 0x45:
         case 0x66:
-            func_8003818C(arg0);
+            func_8003818C(arg0, arg1);
             break;
         case 0x47:
         case 0x5E:
         case 0x67:
-            func_800381E0(arg0);
+            func_800381E0(arg0, arg1);
             break;
         case 0x5F:
         case 0x64:
-            func_80038214(arg0);
+            func_80038214(arg0, arg1);
             break;
         case 0x60:
         case 0x65:
-            func_80038248(arg0);
+            func_80038248(arg0, arg1);
             break;
         case 0x46:
-            func_80041A90(arg0);
+            func_80041A90(arg0, arg1);
             break;
         case 0x6F:
-            func_80041E80(arg0);
+            func_80041E80(arg0, arg1);
             break;
         case 0x75:
-            func_80042014(arg0);
+            func_80042014(arg0, arg1);
             break;
         case 0x48:
-            func_80034B68(arg0);
+            func_80034B68(arg0, arg1);
             break;
         case 0x49:
-            func_80034E70(arg0);
+            func_80034E70(arg0, arg1);
             break;
         case 0x4A:
-            func_8004203C(arg0);
+            func_8004203C(arg0, arg1);
             break;
         case 0x4B:
-            func_8003D2AC(arg0);
+            func_8003D2AC(arg0, arg1);
             break;
         case 0x4C:
-            func_8003B368(arg0);
+            func_8003B368(arg0, arg1);
             break;
         case 0x4D:
-            func_80034844(arg0);
+            func_80034844(arg0, arg1);
             break;
         case 0x4E:
-            func_80034530(arg0);
+            func_80034530(arg0, arg1);
             break;
         case 0x51:
-            func_80035AE8(arg0);
+            func_80035AE8(arg0, arg1);
             break;
         case 0x52:
-            func_80037D54(arg0);
+            func_80037D54(arg0, arg1);
             break;
         case 0x53:
-            func_80037D6C(arg0);
+            func_80037D6C(arg0, arg1);
             break;
         case 0x58:
-            func_8004210C(arg0);
+            func_8004210C(arg0, arg1);
             break;
         case 0x57:
-            func_8003DC5C(arg0);
+            func_8003DC5C(arg0, arg1);
             break;
         case 0x59:
-            func_80038AC8(arg0);
+            func_80038AC8(arg0, arg1);
             break;
         case 0x5D:
-            func_80042150(arg0);
+            func_80042150(arg0, arg1);
             break;
         case 0x61:
-            func_80038D58(arg0);
+            func_80038D58(arg0, arg1);
             break;
         case 0x62:
         case 0x63:
-            func_8003572C(arg0);
+            func_8003572C(arg0, arg1);
             break;
         case 0x68:
-            func_8004216C(arg0);
+            func_8004216C(arg0, arg1);
             break;
         case 0x6B:
         case 0x73:
-            func_80033F44(arg0);
+            func_80033F44(arg0, arg1);
             break;
         case 0x6C:
-            func_80042210(arg0);
+            func_80042210(arg0, arg1);
             break;
         case 0x6D:
-            func_8003DBA0(arg0);
+            func_8003DBA0(arg0, arg1);
             break;
         case 0x74:
-            func_80042A1C(arg0);
+            func_80042A1C(arg0, arg1);
             break;
     }
 }
