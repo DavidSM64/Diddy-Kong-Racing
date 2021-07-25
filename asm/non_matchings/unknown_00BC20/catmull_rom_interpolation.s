@@ -1,4 +1,4 @@
-glabel func_80022540
+glabel catmull_rom_interpolation
 /* 023140 80022540 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 023144 80022544 3C013FE0 */  li    $at, 0x3FE00000 # 1.750000
 /* 023148 80022548 00057080 */  sll   $t6, $a1, 2

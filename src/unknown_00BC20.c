@@ -488,7 +488,7 @@ void func_8000C460(void) {
 
 void func_8000C604(void) {
     s32 i, len;
-    func_80059B4C();
+    free_tt_ghost_data();
     D_800DC748 = 0;
     if (D_800DC71C != 0) {
         func_80072298(1);
@@ -1433,11 +1433,11 @@ s8 func_800214C4(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800214E4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021600.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80022540.s")
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/catmull_rom_interpolation.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002263C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002277C.s")
 
-f32 func_80022888(f32 *arg0, u32 arg1, f32 arg2) {
+f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
     f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
     return result;
 }

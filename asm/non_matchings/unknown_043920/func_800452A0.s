@@ -12,8 +12,8 @@ glabel D_800E63A0
 .text
 glabel func_800452A0
 /* 045EA0 800452A0 27BDFF48 */  addiu $sp, $sp, -0xb8
-/* 045EA4 800452A4 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
-/* 045EA8 800452A8 AC20D52C */  sw    $zero, %lo(D_8011D52C)($at)
+/* 045EA4 800452A4 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
+/* 045EA8 800452A8 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
 /* 045EAC 800452AC 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 045EB0 800452B0 AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
 /* 045EB4 800452B4 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
@@ -618,9 +618,9 @@ glabel L80045AF8
 /* 046700 80045B00 44808000 */  mtc1  $zero, $f16
 /* 046704 80045B04 460012A1 */  cvt.d.s $f10, $f2
 /* 046708 80045B08 4630503C */  c.lt.d $f10, $f16
-/* 04670C 80045B0C 3C028012 */  lui   $v0, %hi(D_8011D52C) # $v0, 0x8012
+/* 04670C 80045B0C 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 046710 80045B10 4500003B */  bc1f  .L80045C00
-/* 046714 80045B14 2442D52C */   addiu $v0, %lo(D_8011D52C) # addiu $v0, $v0, -0x2ad4
+/* 046714 80045B14 2442D52C */   addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
 /* 046718 80045B18 A2A001CD */  sb    $zero, 0x1cd($s5)
 /* 04671C 80045B1C 8C4F0000 */  lw    $t7, ($v0)
 /* 046720 80045B20 00000000 */  nop   

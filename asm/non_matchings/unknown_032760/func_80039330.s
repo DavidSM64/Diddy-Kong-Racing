@@ -131,7 +131,7 @@ glabel func_80039330
 /* 03A0CC 800394CC 8FAE0090 */   lw    $t6, 0x90($sp)
 /* 03A0D0 800394D0 8FA40090 */  lw    $a0, 0x90($sp)
 /* 03A0D4 800394D4 8FA50070 */  lw    $a1, 0x70($sp)
-/* 03A0D8 800394D8 0C015A4C */  jal   func_80056930
+/* 03A0D8 800394D8 0C015A4C */  jal   play_char_horn_sound
 /* 03A0DC 800394DC AFA60084 */   sw    $a2, 0x84($sp)
 /* 03A0E0 800394E0 8FA60084 */  lw    $a2, 0x84($sp)
 /* 03A0E4 800394E4 00000000 */  nop   

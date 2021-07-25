@@ -51,12 +51,12 @@ glabel func_80059BF0
 /* 05A8B0 80059CB0 3C0E8012 */  lui   $t6, %hi(D_8011D5A0) # $t6, 0x8012
 /* 05A8B4 80059CB4 25CED5A0 */  addiu $t6, %lo(D_8011D5A0) # addiu $t6, $t6, -0x2a60
 /* 05A8B8 80059CB8 3C0D8012 */  lui   $t5, %hi(D_8011D5A0) # $t5, 0x8012
-/* 05A8BC 80059CBC 3C0C8012 */  lui   $t4, %hi(D_8011D590) # $t4, 0x8012
+/* 05A8BC 80059CBC 3C0C8012 */  lui   $t4, %hi(gGhostData) # $t4, 0x8012
 /* 05A8C0 80059CC0 3C0A8012 */  lui   $t2, %hi(D_8011D59C) # $t2, 0x8012
 /* 05A8C4 80059CC4 0005C840 */  sll   $t9, $a1, 1
 /* 05A8C8 80059CC8 032E1821 */  addu  $v1, $t9, $t6
 /* 05A8CC 80059CCC 254AD59C */  addiu $t2, %lo(D_8011D59C) # addiu $t2, $t2, -0x2a64
-/* 05A8D0 80059CD0 258CD590 */  addiu $t4, %lo(D_8011D590) # addiu $t4, $t4, -0x2a70
+/* 05A8D0 80059CD0 258CD590 */  addiu $t4, %lo(gGhostData) # addiu $t4, $t4, -0x2a70
 /* 05A8D4 80059CD4 25ADD5A0 */  addiu $t5, %lo(D_8011D5A0) # addiu $t5, $t5, -0x2a60
 /* 05A8D8 80059CD8 240B000C */  li    $t3, 12
 .L80059CDC:

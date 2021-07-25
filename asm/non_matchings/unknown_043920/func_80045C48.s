@@ -2,8 +2,8 @@ glabel func_80045C48
 /* 046848 80045C48 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
 /* 04684C 80045C4C 27BDFF18 */  addiu $sp, $sp, -0xe8
 /* 046850 80045C50 AC20D528 */  sw    $zero, %lo(D_8011D528)($at)
-/* 046854 80045C54 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
-/* 046858 80045C58 AC20D52C */  sw    $zero, %lo(D_8011D52C)($at)
+/* 046854 80045C54 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
+/* 046858 80045C58 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
 /* 04685C 80045C5C 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 046860 80045C60 AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
 /* 046864 80045C64 3C018012 */  lui   $at, %hi(D_8011D534) # $at, 0x8012

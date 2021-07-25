@@ -72,19 +72,19 @@ glabel func_80059080
 /* 059D8C 8005918C 46205520 */  cvt.s.d $f20, $f10
 .L80059190:
 /* 059D90 80059190 4406A000 */  mfc1  $a2, $f20
-/* 059D94 80059194 0C008950 */  jal   func_80022540
+/* 059D94 80059194 0C008950 */  jal   catmull_rom_interpolation
 /* 059D98 80059198 02002825 */   move  $a1, $s0
 /* 059D9C 8005919C 8FAE00B0 */  lw    $t6, 0xb0($sp)
 /* 059DA0 800591A0 4406A000 */  mfc1  $a2, $f20
 /* 059DA4 800591A4 27A40070 */  addiu $a0, $sp, 0x70
 /* 059DA8 800591A8 02002825 */  move  $a1, $s0
-/* 059DAC 800591AC 0C008950 */  jal   func_80022540
+/* 059DAC 800591AC 0C008950 */  jal   catmull_rom_interpolation
 /* 059DB0 800591B0 E5C00000 */   swc1  $f0, ($t6)
 /* 059DB4 800591B4 8FAF00B4 */  lw    $t7, 0xb4($sp)
 /* 059DB8 800591B8 4406A000 */  mfc1  $a2, $f20
 /* 059DBC 800591BC 27A4005C */  addiu $a0, $sp, 0x5c
 /* 059DC0 800591C0 02002825 */  move  $a1, $s0
-/* 059DC4 800591C4 0C008950 */  jal   func_80022540
+/* 059DC4 800591C4 0C008950 */  jal   catmull_rom_interpolation
 /* 059DC8 800591C8 E5E00000 */   swc1  $f0, ($t7)
 /* 059DCC 800591CC 8FB800B8 */  lw    $t8, 0xb8($sp)
 /* 059DD0 800591D0 00000000 */  nop   

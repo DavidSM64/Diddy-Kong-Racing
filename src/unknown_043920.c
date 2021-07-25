@@ -3,11 +3,36 @@
 
 #include "unknown_043920.h"
 #include "memory.h"
+#include "menu.h"
 
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
+#include "asset_sections.h"
 
+/* Size: 8 bytes */
+typedef struct GhostHeader {
+    u8  levelID;
+    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+    u8  characterID; // 9 = T.T.
+    u8  unk3; // Might just be padding?
+    s16 time; // In frames, where 60 frames = 1 second.
+    s16 nodeCount; // Maximum of 1080 nodes.
+} GhostHeader;
+
+/* Size: 12 bytes */
+typedef struct GhostNode {
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 zRotation; // This order is correct.
+    s16 xRotation;
+    s16 yRotation;
+} GhostNode;
+
+// This number should be 1080, so every ghost node represents 4 seconds? 
+// 3 minute limit = 180 seconds.
+#define MAX_NUMBER_OF_GHOST_NODES 360
 
 /************ .data ************/
 
@@ -139,7 +164,7 @@ typedef struct unk8011D510 {
 unk8011D510 D_8011D510;
 
 s32 D_8011D528;
-s32 D_8011D52C;
+s32 gActivePlayerButtonPress;
 s32 D_8011D530;
 s32 D_8011D534;
 s32 D_8011D538;
@@ -178,13 +203,12 @@ s8 D_8011D58C;
 s8 D_8011D58D;
 s8 D_8011D58E;
 s8 D_8011D58F;
-u32 D_8011D590[2];
-s32 D_8011D598;
+GhostHeader *gGhostData[3];
 s8 D_8011D59C;
 s8 D_8011D59D;
 s16 D_8011D59E;
 s16 D_8011D5A0[2];
-s32 D_8011D5A4;
+s16 gTTGhostNodeCount; // Gets assigned, but never used?
 s16 D_8011D5A8[2];
 s16 D_8011D5AC;
 s16 D_8011D5AE;
@@ -450,11 +474,13 @@ typedef struct unk80056930 {
 
 void func_80057048(unk800570A4_2 *arg0, s32 arg1);
 
-void func_80056930(unk800570A4_2 *arg0, unk80056930 *arg1) {
-    if ((get_filtered_cheats() & 0x100) != 0) {
+void play_char_horn_sound(Object *arg0, Object_64 *arg1) {
+    if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
+        // Play character voice instead of horn.
         func_800570B8(arg0, 0x162, 8, 0x82);
     } else {
-        func_80057048(arg0, arg1->unk3 + 0x156);
+        // Play character's horn sound
+        func_80057048(arg0, arg1->unk0_b.unk3 + 0x156);
     }
 }
 
@@ -518,9 +544,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059208.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059790.s")
 
 void func_800598D0(void) {
-    D_8011D590[0] = allocate_from_main_pool_safe(0x21C0, COLOR_TAG_RED);
-    D_8011D590[1] = D_8011D590[0] + 0x10E0;
-    D_8011D590[2] = 0;
+    gGhostData[0] = allocate_from_main_pool_safe(0x21C0, COLOR_TAG_RED);
+    gGhostData[1] = (GhostNode*)gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES;
+    gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;
     D_8011D5A0[1] = 0;
     D_8011D5A0[2] = 0;
@@ -552,7 +578,7 @@ s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
     s16 sp2E;
 
     temp_t8 = (D_8011D59C + 1) & 1;
-    temp_v0 = func_80074B34(arg0, (s16)arg1, arg2, arg3, arg4, &sp2E, D_8011D590[temp_t8]);
+    temp_v0 = func_80074B34(arg0, (s16)arg1, arg2, arg3, arg4, &sp2E, gGhostData[temp_t8]);
     if (arg3 != 0) {
         if (temp_v0 == 0) {
             D_8011D5A0[temp_t8] = sp2E;
@@ -565,17 +591,39 @@ s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
     return temp_v0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059A68.s")
-
-void func_80059B4C(void) {
-    if (D_8011D598 != 0) {
-        free_from_memory_pool(D_8011D598);
+/**
+ * Loads T.T. ghost node data into gGhostData[2]. 
+ * Returns 0 if successful, or 1 if an error occured.
+ */
+s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
+    GhostHeader *ghost = allocate_from_main_pool_safe(size, COLOR_TAG_RED);
+    if (ghost != NULL) {
+        load_asset_to_address(ASSET_TTGHOSTS, ghost, ghostOffset, size);
+        if (gGhostData[2] != NULL) {
+            free_from_memory_pool(gGhostData[2]);
+        }
+        gGhostData[2] = allocate_from_main_pool_safe(size - sizeof(GhostHeader), COLOR_TAG_WHITE);
+        if (gGhostData[2] != NULL) {
+            *outTime = ghost->time;
+            gTTGhostNodeCount = ghost->nodeCount;
+            bcopy((u8*)ghost + 8, gGhostData[2], size - sizeof(GhostHeader));
+            free_from_memory_pool(ghost);
+            return 0;
+        }
+        free_from_memory_pool(ghost);
     }
-    D_8011D598 = 0;
+    return 1;
+}
+
+void free_tt_ghost_data(void) {
+    if (gGhostData[2] != NULL) {
+        free_from_memory_pool(gGhostData[2]);
+    }
+    gGhostData[2] = NULL;
 }
 
 void func_80059B7C(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
-    func_80075000(arg0, (s16)arg1, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], D_8011D590[D_8011D59C]);
+    func_80075000(arg0, (s16)arg1, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059BF0.s")
@@ -584,7 +632,7 @@ s16 func_80059E20(void) {
     return D_8011D5A8[D_8011D59C];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059E40.s")
+GLOBAL_ASM("asm/non_matchings/unknown_043920/set_ghost_position_and_rotation.s")
 
 void func_8005A3B0(void) {
     D_8011D584 = 1;

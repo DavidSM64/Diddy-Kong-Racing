@@ -24,4 +24,4 @@ s8 D_8011D611;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F310.s")
+GLOBAL_ASM("asm/non_matchings/unknown_05FF10/func_8005F310.s")

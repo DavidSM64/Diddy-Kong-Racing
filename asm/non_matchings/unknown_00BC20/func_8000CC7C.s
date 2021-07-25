@@ -1022,7 +1022,7 @@ glabel L8000D98C
 .L8000DA9C:
 /* 00E69C 8000DA9C 3C15800E */  lui   $s5, %hi(D_800DC718) # $s5, 0x800e
 /* 00E6A0 8000DAA0 26B5C718 */  addiu $s5, %lo(D_800DC718) # addiu $s5, $s5, -0x38e8
-/* 00E6A4 8000DAA4 0C0166D3 */  jal   func_80059B4C
+/* 00E6A4 8000DAA4 0C0166D3 */  jal   free_tt_ghost_data
 /* 00E6A8 8000DAA8 AEA00000 */   sw    $zero, ($s5)
 /* 00E6AC 8000DAAC 3C118012 */  lui   $s1, %hi(D_8011AD38) # $s1, 0x8012
 /* 00E6B0 8000DAB0 2631AD38 */  addiu $s1, %lo(D_8011AD38) # addiu $s1, $s1, -0x52c8

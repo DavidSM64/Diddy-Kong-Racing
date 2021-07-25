@@ -391,7 +391,15 @@ typedef struct Player_4C {
 } Player_4C;
 
 typedef struct Object_64 {
-    f32 unk0;
+    union {
+        f32 unk0;
+        struct {
+            s8 unk0;
+            s8 unk1;
+            s8 unk2;
+            s8 unk3;
+        } unk0_b;
+    };
     s32 unk4;
     u8 pad8[4];
     union {

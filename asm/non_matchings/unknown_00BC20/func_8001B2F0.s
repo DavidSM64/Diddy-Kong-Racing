@@ -39,7 +39,7 @@ glabel func_8001B2F0
 /* 01BF78 8001B378 8C79000C */  lw    $t9, 0xc($v1)
 /* 01BF7C 8001B37C 3C068012 */  lui   $a2, %hi(D_8011AE80) # $a2, 0x8012
 /* 01BF80 8001B380 24C6AE80 */  addiu $a2, %lo(D_8011AE80) # addiu $a2, $a2, -0x5180
-/* 01BF84 8001B384 0C01669A */  jal   func_80059A68
+/* 01BF84 8001B384 0C01669A */  jal   load_tt_ghost
 /* 01BF88 8001B388 03242823 */   subu  $a1, $t9, $a0
 /* 01BF8C 8001B38C 00402825 */  move  $a1, $v0
 .L8001B390:

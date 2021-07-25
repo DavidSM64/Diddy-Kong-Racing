@@ -13,8 +13,8 @@ glabel D_800E6908
 .text
 glabel func_80057A40
 /* 058640 80057A40 27BDFFC8 */  addiu $sp, $sp, -0x38
-/* 058644 80057A44 3C0E8012 */  lui   $t6, %hi(D_8011D52C) # $t6, 0x8012
-/* 058648 80057A48 8DCED52C */  lw    $t6, %lo(D_8011D52C)($t6)
+/* 058644 80057A44 3C0E8012 */  lui   $t6, %hi(gActivePlayerButtonPress) # $t6, 0x8012
+/* 058648 80057A48 8DCED52C */  lw    $t6, %lo(gActivePlayerButtonPress)($t6)
 /* 05864C 80057A4C AFA5003C */  sw    $a1, 0x3c($sp)
 /* 058650 80057A50 31CF0008 */  andi  $t7, $t6, 8
 /* 058654 80057A54 AFBF0014 */  sw    $ra, 0x14($sp)

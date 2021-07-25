@@ -1077,8 +1077,8 @@ glabel func_80046524
 /* 04800C 8004740C 10A0000B */  beqz  $a1, .L8004743C
 /* 048010 80047410 2401000C */   li    $at, 12
 /* 048014 80047414 15210009 */  bne   $t1, $at, .L8004743C
-/* 048018 80047418 3C0B8012 */   lui   $t3, %hi(D_8011D52C) # $t3, 0x8012
-/* 04801C 8004741C 8D6BD52C */  lw    $t3, %lo(D_8011D52C)($t3)
+/* 048018 80047418 3C0B8012 */   lui   $t3, %hi(gActivePlayerButtonPress) # $t3, 0x8012
+/* 04801C 8004741C 8D6BD52C */  lw    $t3, %lo(gActivePlayerButtonPress)($t3)
 /* 048020 80047420 240F0002 */  li    $t7, 2
 /* 048024 80047424 316E2000 */  andi  $t6, $t3, 0x2000
 /* 048028 80047428 11C00004 */  beqz  $t6, .L8004743C
@@ -2579,15 +2579,15 @@ glabel func_80046524
 .L80048A20:
 /* 049620 80048A20 3C0E8012 */  lui   $t6, %hi(D_8011D540) # $t6, 0x8012
 /* 049624 80048A24 8DCED540 */  lw    $t6, %lo(D_8011D540)($t6)
-/* 049628 80048A28 3C0D8012 */  lui   $t5, %hi(D_8011D52C) # $t5, 0x8012
+/* 049628 80048A28 3C0D8012 */  lui   $t5, %hi(gActivePlayerButtonPress) # $t5, 0x8012
 /* 04962C 80048A2C 11C00007 */  beqz  $t6, .L80048A4C
 /* 049630 80048A30 02202025 */   move  $a0, $s1
-/* 049634 80048A34 3C0F8012 */  lui   $t7, %hi(D_8011D52C) # $t7, 0x8012
-/* 049638 80048A38 8DEFD52C */  lw    $t7, %lo(D_8011D52C)($t7)
+/* 049634 80048A34 3C0F8012 */  lui   $t7, %hi(gActivePlayerButtonPress) # $t7, 0x8012
+/* 049638 80048A38 8DEFD52C */  lw    $t7, %lo(gActivePlayerButtonPress)($t7)
 /* 04963C 80048A3C 2401FFEF */  li    $at, -17
 /* 049640 80048A40 01E1C024 */  and   $t8, $t7, $at
-/* 049644 80048A44 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
-/* 049648 80048A48 AC38D52C */  sw    $t8, %lo(D_8011D52C)($at)
+/* 049644 80048A44 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
+/* 049648 80048A48 AC38D52C */  sw    $t8, %lo(gActivePlayerButtonPress)($at)
 .L80048A4C:
 /* 04964C 80048A4C C60A00C0 */  lwc1  $f10, 0xc0($s0)
 /* 049650 80048A50 00000000 */  nop   
@@ -2602,7 +2602,7 @@ glabel func_80046524
 .L80048A74:
 /* 049674 80048A74 A20001FB */  sb    $zero, 0x1fb($s0)
 .L80048A78:
-/* 049678 80048A78 8DADD52C */  lw    $t5, %lo(D_8011D52C)($t5)
+/* 049678 80048A78 8DADD52C */  lw    $t5, %lo(gActivePlayerButtonPress)($t5)
 /* 04967C 80048A7C 00000000 */  nop   
 /* 049680 80048A80 31AA0010 */  andi  $t2, $t5, 0x10
 /* 049684 80048A84 1140004A */  beqz  $t2, .L80048BB0
