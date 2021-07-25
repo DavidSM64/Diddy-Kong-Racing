@@ -36,8 +36,8 @@ glabel func_8005A424
 /* 05B0A4 8005A4A4 24A5D534 */  addiu $a1, %lo(D_8011D534) # addiu $a1, $a1, -0x2acc
 /* 05B0A8 8005A4A8 00035943 */  sra   $t3, $v1, 5
 /* 05B0AC 8005A4AC ACAB0000 */  sw    $t3, ($a1)
-/* 05B0B0 8005A4B0 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
-/* 05B0B4 8005A4B4 AC20D52C */  sw    $zero, %lo(D_8011D52C)($at)
+/* 05B0B0 8005A4B0 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
+/* 05B0B4 8005A4B4 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
 /* 05B0B8 8005A4B8 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 05B0BC 8005A4BC AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
 /* 05B0C0 8005A4C0 2484D528 */  addiu $a0, %lo(D_8011D528) # addiu $a0, $a0, -0x2ad8

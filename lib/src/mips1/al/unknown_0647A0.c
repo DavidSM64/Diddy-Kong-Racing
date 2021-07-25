@@ -1,10 +1,9 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80063BA0 */
 
-#include "unknown_0647A0.h"
-
 #include "types.h"
 #include "macros.h"
+#include "audio_internal.h"
 
 /* Size: 0x0C bytes */
 typedef struct unk80063BA0 {

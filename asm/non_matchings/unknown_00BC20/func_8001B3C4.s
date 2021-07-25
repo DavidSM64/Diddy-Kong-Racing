@@ -5,7 +5,7 @@ glabel func_8001B3C4
 /* 01BFD0 8001B3D0 3C01800E */  lui   $at, %hi(D_800DC718) # $at, 0x800e
 /* 01BFD4 8001B3D4 00808025 */  move  $s0, $a0
 /* 01BFD8 8001B3D8 AFA50024 */  sw    $a1, 0x24($sp)
-/* 01BFDC 8001B3DC 0C0166D3 */  jal   func_80059B4C
+/* 01BFDC 8001B3DC 0C0166D3 */  jal   free_tt_ghost_data
 /* 01BFE0 8001B3E0 AC20C718 */   sw    $zero, %lo(D_800DC718)($at)
 /* 01BFE4 8001B3E4 3C01800E */  lui   $at, %hi(D_800DC734) # $at, 0x800e
 /* 01BFE8 8001B3E8 A020C734 */  sb    $zero, %lo(D_800DC734)($at)

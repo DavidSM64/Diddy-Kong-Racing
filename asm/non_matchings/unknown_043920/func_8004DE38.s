@@ -614,9 +614,9 @@ glabel func_8004DE38
 /* 04F2BC 8004E6BC 0C01A955 */  jal   get_button_inputs_from_player
 /* 04F2C0 8004E6C0 AC22D528 */   sw    $v0, %lo(D_8011D528)($at)
 /* 04F2C4 8004E6C4 8FA400AC */  lw    $a0, 0xac($sp)
-/* 04F2C8 8004E6C8 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
+/* 04F2C8 8004E6C8 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
 /* 04F2CC 8004E6CC 0C01A95E */  jal   func_8006A578
-/* 04F2D0 8004E6D0 AC22D52C */   sw    $v0, %lo(D_8011D52C)($at)
+/* 04F2D0 8004E6D0 AC22D52C */   sw    $v0, %lo(gActivePlayerButtonPress)($at)
 /* 04F2D4 8004E6D4 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 04F2D8 8004E6D8 10000009 */  b     .L8004E700
 /* 04F2DC 8004E6DC AC22D530 */   sw    $v0, %lo(D_8011D530)($at)
@@ -669,8 +669,8 @@ glabel func_8004DE38
 /* 04F384 8004E784 AC20D538 */  sw    $zero, %lo(D_8011D538)($at)
 /* 04F388 8004E788 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
 /* 04F38C 8004E78C AC20D528 */  sw    $zero, %lo(D_8011D528)($at)
-/* 04F390 8004E790 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
-/* 04F394 8004E794 AC20D52C */  sw    $zero, %lo(D_8011D52C)($at)
+/* 04F390 8004E790 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
+/* 04F394 8004E794 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
 /* 04F398 8004E798 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 04F39C 8004E79C AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
 /* 04F3A0 8004E7A0 86020204 */  lh    $v0, 0x204($s0)
@@ -986,10 +986,10 @@ glabel L8004EBF4
 /* 04F80C 8004EC0C 820A0175 */   lb    $t2, 0x175($s0)
 glabel L8004EC10
 /* 04F810 8004EC10 3C0B8012 */  lui   $t3, %hi(D_8011D528) # $t3, 0x8012
-/* 04F814 8004EC14 3C0D8012 */  lui   $t5, %hi(D_8011D52C) # $t5, 0x8012
+/* 04F814 8004EC14 3C0D8012 */  lui   $t5, %hi(gActivePlayerButtonPress) # $t5, 0x8012
 /* 04F818 8004EC18 3C0C8012 */  lui   $t4, %hi(D_8011D540) # $t4, 0x8012
 /* 04F81C 8004EC1C 258CD540 */  addiu $t4, %lo(D_8011D540) # addiu $t4, $t4, -0x2ac0
-/* 04F820 8004EC20 25ADD52C */  addiu $t5, %lo(D_8011D52C) # addiu $t5, $t5, -0x2ad4
+/* 04F820 8004EC20 25ADD52C */  addiu $t5, %lo(gActivePlayerButtonPress) # addiu $t5, $t5, -0x2ad4
 /* 04F824 8004EC24 256BD528 */  addiu $t3, %lo(D_8011D528) # addiu $t3, $t3, -0x2ad8
 /* 04F828 8004EC28 8FA400B4 */  lw    $a0, 0xb4($sp)
 /* 04F82C 8004EC2C 8FA5009C */  lw    $a1, 0x9c($sp)
@@ -1003,10 +1003,10 @@ glabel L8004EC10
 /* 04F84C 8004EC4C 820A0175 */   lb    $t2, 0x175($s0)
 glabel L8004EC50
 /* 04F850 8004EC50 3C0E8012 */  lui   $t6, %hi(D_8011D528) # $t6, 0x8012
-/* 04F854 8004EC54 3C0F8012 */  lui   $t7, %hi(D_8011D52C) # $t7, 0x8012
+/* 04F854 8004EC54 3C0F8012 */  lui   $t7, %hi(gActivePlayerButtonPress) # $t7, 0x8012
 /* 04F858 8004EC58 3C088012 */  lui   $t0, %hi(D_8011D540) # $t0, 0x8012
 /* 04F85C 8004EC5C 2508D540 */  addiu $t0, %lo(D_8011D540) # addiu $t0, $t0, -0x2ac0
-/* 04F860 8004EC60 25EFD52C */  addiu $t7, %lo(D_8011D52C) # addiu $t7, $t7, -0x2ad4
+/* 04F860 8004EC60 25EFD52C */  addiu $t7, %lo(gActivePlayerButtonPress) # addiu $t7, $t7, -0x2ad4
 /* 04F864 8004EC64 25CED528 */  addiu $t6, %lo(D_8011D528) # addiu $t6, $t6, -0x2ad8
 /* 04F868 8004EC68 8FA400B4 */  lw    $a0, 0xb4($sp)
 /* 04F86C 8004EC6C 8FA5009C */  lw    $a1, 0x9c($sp)
@@ -1037,10 +1037,10 @@ glabel L8004EC90
 /* 04F8CC 8004ECCC 820A0175 */   lb    $t2, 0x175($s0)
 glabel L8004ECD0
 /* 04F8D0 8004ECD0 3C098012 */  lui   $t1, %hi(D_8011D528) # $t1, 0x8012
-/* 04F8D4 8004ECD4 3C0B8012 */  lui   $t3, %hi(D_8011D52C) # $t3, 0x8012
+/* 04F8D4 8004ECD4 3C0B8012 */  lui   $t3, %hi(gActivePlayerButtonPress) # $t3, 0x8012
 /* 04F8D8 8004ECD8 3C0D8012 */  lui   $t5, %hi(D_8011D540) # $t5, 0x8012
 /* 04F8DC 8004ECDC 25ADD540 */  addiu $t5, %lo(D_8011D540) # addiu $t5, $t5, -0x2ac0
-/* 04F8E0 8004ECE0 256BD52C */  addiu $t3, %lo(D_8011D52C) # addiu $t3, $t3, -0x2ad4
+/* 04F8E0 8004ECE0 256BD52C */  addiu $t3, %lo(gActivePlayerButtonPress) # addiu $t3, $t3, -0x2ad4
 /* 04F8E4 8004ECE4 2529D528 */  addiu $t1, %lo(D_8011D528) # addiu $t1, $t1, -0x2ad8
 /* 04F8E8 8004ECE8 8FA400B4 */  lw    $a0, 0xb4($sp)
 /* 04F8EC 8004ECEC 8FA5009C */  lw    $a1, 0x9c($sp)
@@ -1054,10 +1054,10 @@ glabel L8004ECD0
 /* 04F90C 8004ED0C 820A0175 */   lb    $t2, 0x175($s0)
 glabel L8004ED10
 /* 04F910 8004ED10 3C0C8012 */  lui   $t4, %hi(D_8011D528) # $t4, 0x8012
-/* 04F914 8004ED14 3C0E8012 */  lui   $t6, %hi(D_8011D52C) # $t6, 0x8012
+/* 04F914 8004ED14 3C0E8012 */  lui   $t6, %hi(gActivePlayerButtonPress) # $t6, 0x8012
 /* 04F918 8004ED18 3C0F8012 */  lui   $t7, %hi(D_8011D540) # $t7, 0x8012
 /* 04F91C 8004ED1C 25EFD540 */  addiu $t7, %lo(D_8011D540) # addiu $t7, $t7, -0x2ac0
-/* 04F920 8004ED20 25CED52C */  addiu $t6, %lo(D_8011D52C) # addiu $t6, $t6, -0x2ad4
+/* 04F920 8004ED20 25CED52C */  addiu $t6, %lo(gActivePlayerButtonPress) # addiu $t6, $t6, -0x2ad4
 /* 04F924 8004ED24 258CD528 */  addiu $t4, %lo(D_8011D528) # addiu $t4, $t4, -0x2ad8
 /* 04F928 8004ED28 8FA400B4 */  lw    $a0, 0xb4($sp)
 /* 04F92C 8004ED2C 8FA5009C */  lw    $a1, 0x9c($sp)
@@ -1071,10 +1071,10 @@ glabel L8004ED10
 /* 04F94C 8004ED4C 820A0175 */   lb    $t2, 0x175($s0)
 glabel L8004ED50
 /* 04F950 8004ED50 3C088012 */  lui   $t0, %hi(D_8011D528) # $t0, 0x8012
-/* 04F954 8004ED54 3C188012 */  lui   $t8, %hi(D_8011D52C) # $t8, 0x8012
+/* 04F954 8004ED54 3C188012 */  lui   $t8, %hi(gActivePlayerButtonPress) # $t8, 0x8012
 /* 04F958 8004ED58 3C198012 */  lui   $t9, %hi(D_8011D540) # $t9, 0x8012
 /* 04F95C 8004ED5C 2739D540 */  addiu $t9, %lo(D_8011D540) # addiu $t9, $t9, -0x2ac0
-/* 04F960 8004ED60 2718D52C */  addiu $t8, %lo(D_8011D52C) # addiu $t8, $t8, -0x2ad4
+/* 04F960 8004ED60 2718D52C */  addiu $t8, %lo(gActivePlayerButtonPress) # addiu $t8, $t8, -0x2ad4
 /* 04F964 8004ED64 2508D528 */  addiu $t0, %lo(D_8011D528) # addiu $t0, $t0, -0x2ad8
 /* 04F968 8004ED68 8FA400B4 */  lw    $a0, 0xb4($sp)
 /* 04F96C 8004ED6C 8FA5009C */  lw    $a1, 0x9c($sp)
@@ -1130,10 +1130,10 @@ glabel L8004ED88
 /* 04FA1C 8004EE1C 00000000 */   nop   
 /* 04FA20 8004EE20 10400007 */  beqz  $v0, .L8004EE40
 .L8004EE24:
-/* 04FA24 8004EE24 3C058012 */   lui   $a1, %hi(D_8011D52C) # $a1, 0x8012
+/* 04FA24 8004EE24 3C058012 */   lui   $a1, %hi(gActivePlayerButtonPress) # $a1, 0x8012
 /* 04FA28 8004EE28 3C068012 */  lui   $a2, %hi(D_8011D528) # $a2, 0x8012
 /* 04FA2C 8004EE2C 8CC6D528 */  lw    $a2, %lo(D_8011D528)($a2)
-/* 04FA30 8004EE30 8CA5D52C */  lw    $a1, %lo(D_8011D52C)($a1)
+/* 04FA30 8004EE30 8CA5D52C */  lw    $a1, %lo(gActivePlayerButtonPress)($a1)
 /* 04FA34 8004EE34 8FA700B4 */  lw    $a3, 0xb4($sp)
 /* 04FA38 8004EE38 0C001434 */  jal   func_800050D0
 /* 04FA3C 8004EE3C 02202025 */   move  $a0, $s1
@@ -1522,8 +1522,8 @@ glabel L8004ED88
 /* 04FFC4 8004F3C4 00664021 */  addu  $t0, $v1, $a2
 /* 04FFC8 8004F3C8 A608016A */  sh    $t0, 0x16a($s0)
 .L8004F3CC:
-/* 04FFCC 8004F3CC 3C028012 */  lui   $v0, %hi(D_8011D52C) # $v0, 0x8012
-/* 04FFD0 8004F3D0 8C42D52C */  lw    $v0, %lo(D_8011D52C)($v0)
+/* 04FFCC 8004F3CC 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
+/* 04FFD0 8004F3D0 8C42D52C */  lw    $v0, %lo(gActivePlayerButtonPress)($v0)
 /* 04FFD4 8004F3D4 00000000 */  nop   
 /* 04FFD8 8004F3D8 30590010 */  andi  $t9, $v0, 0x10
 /* 04FFDC 8004F3DC 13200008 */  beqz  $t9, .L8004F400

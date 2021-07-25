@@ -16,7 +16,7 @@ glabel func_80035E34
 /* 036A6C 80035E6C 01F8C821 */  addu  $t9, $t7, $t8
 /* 036A70 80035E70 AE190078 */  sw    $t9, 0x78($s0)
 .L80035E74:
-/* 036A74 80035E74 0C016790 */  jal   func_80059E40
+/* 036A74 80035E74 0C016790 */  jal   set_ghost_position_and_rotation
 /* 036A78 80035E78 02002025 */   move  $a0, $s0
 /* 036A7C 80035E7C 8FA50024 */  lw    $a1, 0x24($sp)
 /* 036A80 80035E80 0C02BF0F */  jal   func_800AFC3C

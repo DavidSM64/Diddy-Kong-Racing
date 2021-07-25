@@ -9,8 +9,8 @@ glabel D_800E6350
 
 .text
 glabel func_8004447C
-/* 04507C 8004447C 3C018012 */  lui   $at, %hi(D_8011D52C) # $at, 0x8012
-/* 045080 80044480 AC20D52C */  sw    $zero, %lo(D_8011D52C)($at)
+/* 04507C 8004447C 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
+/* 045080 80044480 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
 /* 045084 80044484 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 045088 80044488 AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
 /* 04508C 8004448C 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012

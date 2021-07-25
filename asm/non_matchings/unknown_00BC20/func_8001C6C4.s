@@ -88,17 +88,17 @@ glabel func_8001C6C4
 /* 01D3DC 8001C7DC E7260000 */   swc1  $f6, ($t9)
 /* 01D3E0 8001C7E0 8E460000 */  lw    $a2, ($s2)
 /* 01D3E4 8001C7E4 02602025 */  move  $a0, $s3
-/* 01D3E8 8001C7E8 0C008950 */  jal   func_80022540
+/* 01D3E8 8001C7E8 0C008950 */  jal   catmull_rom_interpolation
 /* 01D3EC 8001C7EC 00002825 */   move  $a1, $zero
 /* 01D3F0 8001C7F0 E7A000A8 */  swc1  $f0, 0xa8($sp)
 /* 01D3F4 8001C7F4 8E460000 */  lw    $a2, ($s2)
 /* 01D3F8 8001C7F8 02802025 */  move  $a0, $s4
-/* 01D3FC 8001C7FC 0C008950 */  jal   func_80022540
+/* 01D3FC 8001C7FC 0C008950 */  jal   catmull_rom_interpolation
 /* 01D400 8001C800 00002825 */   move  $a1, $zero
 /* 01D404 8001C804 8E460000 */  lw    $a2, ($s2)
 /* 01D408 8001C808 46000786 */  mov.s $f30, $f0
 /* 01D40C 8001C80C 02A02025 */  move  $a0, $s5
-/* 01D410 8001C810 0C008950 */  jal   func_80022540
+/* 01D410 8001C810 0C008950 */  jal   catmull_rom_interpolation
 /* 01D414 8001C814 00002825 */   move  $a1, $zero
 /* 01D418 8001C818 E7A000A0 */  swc1  $f0, 0xa0($sp)
 /* 01D41C 8001C81C C64A0008 */  lwc1  $f10, 8($s2)
@@ -132,17 +132,17 @@ glabel func_8001C6C4
 /* 01D484 8001C884 46205520 */  cvt.s.d $f20, $f10
 .L8001C888:
 /* 01D488 8001C888 4406A000 */  mfc1  $a2, $f20
-/* 01D48C 8001C88C 0C008950 */  jal   func_80022540
+/* 01D48C 8001C88C 0C008950 */  jal   catmull_rom_interpolation
 /* 01D490 8001C890 02202825 */   move  $a1, $s1
 /* 01D494 8001C894 4406A000 */  mfc1  $a2, $f20
 /* 01D498 8001C898 46000586 */  mov.s $f22, $f0
 /* 01D49C 8001C89C 02802025 */  move  $a0, $s4
-/* 01D4A0 8001C8A0 0C008950 */  jal   func_80022540
+/* 01D4A0 8001C8A0 0C008950 */  jal   catmull_rom_interpolation
 /* 01D4A4 8001C8A4 02202825 */   move  $a1, $s1
 /* 01D4A8 8001C8A8 4406A000 */  mfc1  $a2, $f20
 /* 01D4AC 8001C8AC 46000606 */  mov.s $f24, $f0
 /* 01D4B0 8001C8B0 02A02025 */  move  $a0, $s5
-/* 01D4B4 8001C8B4 0C008950 */  jal   func_80022540
+/* 01D4B4 8001C8B4 0C008950 */  jal   catmull_rom_interpolation
 /* 01D4B8 8001C8B8 02202825 */   move  $a1, $s1
 /* 01D4BC 8001C8BC C7B000A8 */  lwc1  $f16, 0xa8($sp)
 /* 01D4C0 8001C8C0 C7B200A0 */  lwc1  $f18, 0xa0($sp)

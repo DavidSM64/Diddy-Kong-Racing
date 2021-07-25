@@ -67,6 +67,8 @@ void func_8005F850(void) {
     D_8011D63C = load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
     D_8011D644 = allocate_from_main_pool_safe(0xC00, COLOR_TAG_GREEN);
     D_8011D640 = 0;
+    
+    // Anti-tamper check.
     checksum = 0;
     for (i = 0; i < D_800DCEA4; i++) {
         checksum += *(u8*)(((s32)&func_80024D54) + i);
@@ -76,8 +78,8 @@ void func_8005F850(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005F99C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005FCD0.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_8005FCD0.s")
 
 #if 0
 void free_object_model(ObjectModel *model);
@@ -113,7 +115,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8005FF40.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_8005FF40.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -144,14 +146,14 @@ void free_object_model(ObjectModel *model) {
     free_from_memory_pool(model);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/free_object_model.s")
+GLOBAL_ASM("asm/non_matchings/object_models/free_object_model.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_8006017C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060910.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060AC8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060C58.s")
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80060EA8.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_8006017C.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_80060910.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_80060AC8.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_80060C58.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_80060EA8.s")
 
 void func_800619F4(s32 arg0) {
     D_8011D640 = arg0;
@@ -159,6 +161,6 @@ void func_800619F4(s32 arg0) {
 
 // s32 func_80061A00(ObjectModel *model, s32 animTableIndex)
 // Returns 0 if successful, or 1 if an error occured.
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80061A00.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_80061A00.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_05F690/func_80061C0C.s")
+GLOBAL_ASM("asm/non_matchings/object_models/func_80061C0C.s")

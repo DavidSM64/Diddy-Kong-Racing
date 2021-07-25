@@ -827,8 +827,8 @@ glabel func_80049794
 /* 04AEDC 8004A2DC 15C00009 */  bnez  $t6, .L8004A304
 /* 04AEE0 8004A2E0 00000000 */   nop   
 /* 04AEE4 8004A2E4 14A10007 */  bne   $a1, $at, .L8004A304
-/* 04AEE8 8004A2E8 3C0F8012 */   lui   $t7, %hi(D_8011D52C) # $t7, 0x8012
-/* 04AEEC 8004A2EC 8DEFD52C */  lw    $t7, %lo(D_8011D52C)($t7)
+/* 04AEE8 8004A2E8 3C0F8012 */   lui   $t7, %hi(gActivePlayerButtonPress) # $t7, 0x8012
+/* 04AEEC 8004A2EC 8DEFD52C */  lw    $t7, %lo(gActivePlayerButtonPress)($t7)
 /* 04AEF0 8004A2F0 24190002 */  li    $t9, 2
 /* 04AEF4 8004A2F4 31F82000 */  andi  $t8, $t7, 0x2000
 /* 04AEF8 8004A2F8 13000002 */  beqz  $t8, .L8004A304

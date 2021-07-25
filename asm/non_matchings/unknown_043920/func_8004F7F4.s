@@ -55,9 +55,9 @@ glabel func_8004F7F4
 /* 05047C 8004F87C 8FBF002C */   lw    $ra, 0x2c($sp)
 .L8004F880:
 /* 050480 8004F880 820901D4 */  lb    $t1, 0x1d4($s0)
-/* 050484 8004F884 3C038012 */  lui   $v1, %hi(D_8011D52C) # $v1, 0x8012
+/* 050484 8004F884 3C038012 */  lui   $v1, %hi(gActivePlayerButtonPress) # $v1, 0x8012
 /* 050488 8004F888 1120000D */  beqz  $t1, .L8004F8C0
-/* 05048C 8004F88C 2463D52C */   addiu $v1, %lo(D_8011D52C) # addiu $v1, $v1, -0x2ad4
+/* 05048C 8004F88C 2463D52C */   addiu $v1, %lo(gActivePlayerButtonPress) # addiu $v1, $v1, -0x2ad4
 /* 050490 8004F890 8C6A0000 */  lw    $t2, ($v1)
 /* 050494 8004F894 2401DFEF */  li    $at, -8209
 /* 050498 8004F898 01415824 */  and   $t3, $t2, $at
