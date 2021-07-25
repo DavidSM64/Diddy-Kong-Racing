@@ -1441,11 +1441,7 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
-<<<<<<< HEAD
-void func_800238BC(Object *arg0) {
-=======
 void func_800238BC(Object *arg0, void *arg1) {
->>>>>>> Added 2nd argument to func_800238BC.
     arg0->unk48 = arg0->descriptor_ptr->unk54;
     switch (arg0->unk48 - 1) {
         case 0x00:
