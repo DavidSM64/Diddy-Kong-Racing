@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "audio_internal.h"
 
 /************ .data ************/
 
@@ -17,6 +18,7 @@ const char D_800E4D18[] = "amAudioLineAddVertex: Exceeded maximum number of line
 const char D_800E4D58[] = "amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
 const char D_800E4DA0[] = "amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n";
 const char D_800E4DE0[] = "amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
+
 const char D_800E4E28[] = "Audio line definition error (less than 2 vertices on line %d)\n";
 const char D_800E4E68[] = "Audio line definition error (line=%d, vertex=%d)\n";
 const char D_800E4E9C[] = "Reverb line definition error (less than 2 vertices on line %d)\n";
@@ -39,6 +41,7 @@ void func_80008168(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008174.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800090C0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800092A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
@@ -54,12 +57,3 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A2E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A414.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__mapVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__unmapVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__lookupVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__lookupSoundQuick.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__vsVol.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__vsDelta.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__vsPan.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__seqpReleaseVoice.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/__voiceNeedsNoteKill.s")
