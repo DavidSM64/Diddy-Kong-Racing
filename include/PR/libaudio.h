@@ -589,6 +589,20 @@ typedef struct {
     f32                 pitchBend;      /* current pitch bend val in cents  */
 } ALChanState;
 
+// Can't just replace the original with this, because alCSPGetChlVol won't match.
+typedef struct {
+    ALInstrument        *instrument;    /* instrument assigned to this chan */
+    s16                 bendRange;      /* pitch bend range in cents        */
+    ALFxId              fxId;           /* type of fx assigned to this chan */
+    ALPan               pan;            /* overall pan for this chan        */
+    u8                  priority;       /* priority for this chan           */
+    u8                  vol;            /* current volume for this chan     */
+    u8                  fxmix;          /* current fx mix for this chan     */
+    u8                  sustain;        /* current sustain pedal state      */
+    f32                 pitchBend;      /* current pitch bend val in cents  */
+    u8                  unk10;
+} ALChanState_Custom;
+
 typedef struct ALSeq_s {
     u8          *base;                  /* ptr to start of sequence file   */
     u8          *trackStart;            /* ptr to first MIDI event         */
@@ -673,6 +687,10 @@ typedef struct {
     ALVoiceState        *vAllocHead;    /* list head for allocated voices   */
     ALVoiceState        *vAllocTail;    /* list tail for allocated voices   */
     ALVoiceState        *vFreeList;     /* list of free voice state structs */
+    u8                  unk70;
+    u8                  unk71;
+    u8                  unk72; // Might just be padding?
+    u8                  unk73; // Might just be padding?
     ALOscInit           initOsc;
     ALOscUpdate         updateOsc;
     ALOscStop           stopOsc;
