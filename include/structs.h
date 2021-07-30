@@ -346,10 +346,35 @@ typedef struct ObjectModel {
 /* 0x48 */ s16 numberOfAnimations;
 } ObjectModel;
 
+typedef struct LevelModelSegment {
+/* 0x00 */ Vertex *vertices;
+/* 0x04 */ Triangle *triangles;
+           u8 pad8[4];
+/* 0x0C */ TriangleBatchInfo *batches;
+           u8 pad10[0x0C];
+/* 0x1C */ s16 numberOfVertices;
+/* 0x1E */ s16 numberOfTriangles;
+/* 0x20 */ s16 numberOfBatches;
+           u8 pad22[0x09];
+/* 0x2B */ s8 unk2B;
+           u8 pad2C[0x14];
+/* 0x40 */ u8 unk40;
+           u8 pad41[0x3];
+} LevelModelSegment;
+
+typedef struct LevelModelSegmentBoundingBox {
+    s16 unk00;
+    s16 unk02;
+    s16 unk04;
+    s16 unk06;
+    s16 unk08;
+    s16 unk0A;
+} LevelModelSegmentBoundingBox;
+
 typedef struct LevelModel {
 /* 0x00 */ TextureInfo *textures;
-/* 0x04 */ s32 *segments;
-/* 0x08 */ s32 *segmentsBoundingBoxes;
+/* 0x04 */ LevelModelSegment *segments;
+/* 0x08 */ LevelModelSegmentBoundingBox *segmentsBoundingBoxes;
 /* 0x0C */ s32 unkC;
 /* 0x10 */ s32 *segmentsBitfields;
 /* 0x14 */ s32 *segmentsBspTree;
@@ -381,15 +406,29 @@ typedef struct Object_40 {
     u8 unk71;
 } Object_40;
 
-typedef struct Player_4C {
-    u8 pad0[0x10];
+typedef struct Object_4C {
+    void *unk0;
+    u8 pad4[0xC];
     u8 unk10;
     u8 unk11;
     u8 unk12;
     u8 unk13;
     u16 unk14;
-} Player_4C;
+} Object_4C;
 
+typedef struct Object_5C {
+    u8 pad0[0x100];
+    void *unk100;
+} Object_5C;
+
+typedef struct Object_60 {
+    s32 unk0;
+    void *unk4; // Object* pointer
+} Object_60;
+
+// This REALLY needs to be refactored at some point.
+// This structure differs based on the type of object being loaded.
+// See functions in unknown_0348C0.c for how these get loaded.
 typedef struct Object_64 {
     union {
         f32 unk0;
@@ -413,7 +452,9 @@ typedef struct Object_64 {
     s8 unkF;
     u8 unk10;
     u8 unk11;
-    u8 pad12[0x0E];
+    u8 pad12[6];
+    u8 unk18;
+    u8 pad19[7];
     u32 unk20;
     u32 unk24;
     s16 unk28;
@@ -461,6 +502,7 @@ typedef struct Object_68{
     u8 pad00[0x20];
     s8 unk20;
  } Object_68;
+ 
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ s16 y_rotation;
@@ -500,13 +542,13 @@ typedef struct Object {
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ s16 unk48;
   /* 0x004A */ s16 unk4A;
-  /* 0x004C */ Player_4C *unk4C; //player + 0x318
+  /* 0x004C */ Object_4C *unk4C; //player + 0x318
   /* 0x0050 */ void *unk50; //player + 0x2F4
   /* 0x0054 */ void *unk54; //player + 0x2C0
   /* 0x0058 */ void *unk58; //player + 0x304
-  /* 0x005C */ u32 unk5C;
+  /* 0x005C */ Object_5C *unk5C;
 
-  /* 0x0060 */ void *unk60; //player + 0x340
+  /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ void *unk6C; //player + 0x370

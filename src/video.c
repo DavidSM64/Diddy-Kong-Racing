@@ -3,13 +3,6 @@
 
 #include "video.h"
 
-#include "types.h"
-#include "macros.h"
-#include "memory.h"
-#include "PR/libultra.h"
-#include "PR/os_message.h"
-#include "PR/os_vi.h"
-
 /************ .data ************/
 
 u16 *gVideoDepthBuffer = NULL;

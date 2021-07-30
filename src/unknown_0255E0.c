@@ -52,7 +52,7 @@ f32 D_800DC8AC[27] = {
     -130.0f, 60.0f, -68.0f
 };
 
-unk800DC918* D_800DC918 = NULL;
+LevelModel* D_800DC918 = NULL;
 LevelHeader *D_800DC91C = NULL;
 
 s32 D_800DC920 = -1;
@@ -252,10 +252,10 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
 
     if(arg2 < 2){
         D_8011D384 = 0;
-        for(i = 0; i < D_800DC918->count; i++){
-            if(D_800DC918->unk04[i].unk2B != 0){
+        for(i = 0; i < D_800DC918->numberOfSegments; i++){
+            if(D_800DC918->segments[i].unk2B != 0){
                 D_8011D384++;
-                D_800DC918->unk04[i].unk2B = 1;
+                D_800DC918->segments[i].unk2B = 1;
             }
         }
     }
@@ -329,26 +329,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026E54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027184.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027568.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800278E8.s")
-#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027E24.s")
-#else
-typedef struct{
-    u32 unk00;
-    u8 pad04[0x10];
-    u32 unk14;
-
-}unk80027E24_sp58;
-
-void func_80027E24(u32 arg0){
-    unk80027E24_sp58 sp58;
-    unk800DC918_04 *s6;
-    unk800DC918_04_0C * s0;
-    unk800DC918_04_0C * s5;
-    unk800DC918_00_00 * tmp_a0;
-    s32 i;//sp_6c
-    s32 j;
-}
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027FC4.s")
 
@@ -421,9 +402,9 @@ func_80029F18(){
 s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
     s32 i;
     s32 cnt = 0;
-    unk800DC918_08 * a0;
-    for(i = 0; i < D_800DC918->count; i++){
-        a0 = D_800DC918->unk08 + i;
+    LevelModelSegmentBoundingBox * a0;
+    for(i = 0; i < D_800DC918->numberOfSegments; i++){
+        a0 = D_800DC918->segmentsBoundingBoxes + i;
         if(arg0 < a0->unk06 + 4 && a0->unk00 - 4 < arg0
         && arg1 < a0->unk0A + 4 && a0->unk04 - 4 < arg1
         ){
@@ -438,11 +419,11 @@ s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A134.s")
 #else
-s32 func_8002A134(s32* arg0, unk800DC918_08 arg1){
+s32 func_8002A134(s32* arg0, LevelModelSegmentBoundingBox arg1){
     s32 i;
-    unk800DC918_08 * a0;
+    LevelModelSegmentBoundingBox * a0;
     s32 cnt = 0;
-    unk800DC918_08 bnd;
+    LevelModelSegmentBoundingBox bnd;
 
     //BAD variable assignments;
     bnd.unk00 = arg1.unk00 - 4;
@@ -453,8 +434,8 @@ s32 func_8002A134(s32* arg0, unk800DC918_08 arg1){
     bnd.unk0A = arg1.unk0A + 4;
 
 
-    for(i = 0; i < D_800DC918->count; i++){
-        a0 = D_800DC918->unk08 + i;
+    for(i = 0; i < D_800DC918->numberOfSegments; i++){
+        a0 = D_800DC918->segmentsBoundingBoxes + i;
         if( a0->unk06 >= bnd.unk00 && bnd.unk06 >= a0->unk00
         &&  a0->unk0A >= bnd.unk04 && bnd.unk0A >= a0->unk04
         &&  a0->unk08 >= bnd.unk02 && bnd.unk08 >= a0->unk02
@@ -468,20 +449,18 @@ s32 func_8002A134(s32* arg0, unk800DC918_08 arg1){
 }
 #endif
 
-unk800DC918_04 *func_8002A2C8(s32 arg0){
-    if(arg0 < 0 || D_800DC918->count < arg0)
+LevelModelSegment *func_8002A2C8(s32 arg0){
+    if(arg0 < 0 || D_800DC918->numberOfSegments < arg0)
         return NULL;
     
-    return D_800DC918->unk04 + arg0;
+    return D_800DC918->segments + arg0;
 }
 
-
-
-unk800DC918_08 *func_8002A2DC(s32 arg0){
-    if(arg0 < 0 || D_800DC918->count < arg0)
+LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0){
+    if(arg0 < 0 || D_800DC918->numberOfSegments < arg0)
         return NULL;
 
-    return D_800DC918->unk08 + arg0;
+    return D_800DC918->segmentsBoundingBoxes + arg0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
@@ -506,7 +485,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002BAB0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C0C4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C71C.s")
 
-unk800DC918* func_8002C7C4(void) {
+LevelModel* func_8002C7C4(void) {
     return D_800DC918;
 }
 

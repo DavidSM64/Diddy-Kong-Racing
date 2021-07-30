@@ -2,6 +2,11 @@
 #define _VIDEO_H_
 
 #include "types.h"
+#include "macros.h"
+#include "memory.h"
+#include "PR/libultra.h"
+#include "PR/os_message.h"
+#include "PR/os_vi.h"
 
 #define REFRESH_50HZ 50
 #define REFRESH_60HZ 60
