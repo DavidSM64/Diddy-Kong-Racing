@@ -717,7 +717,7 @@ void sfxSetPan(ALPan pan){
     return;
 }
 
-void func_80001BC0(u8 arg0){
+void play_sound(u8 arg0){
     D_800DC644 = 1;
     func_800022BC( D_80115D05 = arg0, gSndFxPlayer);
 }
