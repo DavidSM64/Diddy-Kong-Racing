@@ -1798,7 +1798,256 @@ void func_800238BC(Object* arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023E30.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023F48.s")
+
+void run_object_loop_func(Object *obj, s32 arg1) {
+    func_800B76B8(1, obj->unk4A);
+    switch (obj->unk48) {
+    case 2:
+        func_80033DD0(obj, arg1);
+        break;
+    case 3:
+        func_800370D4(obj, arg1);
+        break;
+    case 4:
+        func_800377E4(obj, arg1);
+        break;
+    case 6:
+        func_800389B8(obj, arg1);
+        break;
+    case 25:
+        func_80038A78(obj, arg1);
+        break;
+    case 22:
+        func_80038BF4(obj, arg1);
+        break;
+    case 7:
+        func_80038F58(obj, arg1);
+        break;
+    case 10:
+        func_80039184(obj, arg1);
+        break;
+    case 11:
+        func_800391BC(obj, arg1);
+        break;
+    case 12:
+        func_800391FC(obj, arg1);
+        break;
+    case 13:
+        func_8003AD28(obj, arg1);
+        break;
+    case 30:
+        func_8003AE50(obj, arg1);
+        break;
+    case 41:
+        func_8003B174(obj, arg1);
+        break;
+    case 14:
+        func_8003B988(obj, arg1);
+        break;
+    case 15:
+        func_80030A74(obj);
+        break;
+    case 16:
+        func_8003D02C(obj, arg1);
+        break;
+    case 17:
+        func_8003E140(obj, arg1);
+        break;
+    case 23:
+        func_8003E5BC(obj, arg1);
+        break;
+    case 5:
+    case 18:
+        func_8003E630(obj, arg1);
+        break;
+    case 26:
+        func_8003CF98(obj, arg1);
+        break;
+    case 28:
+        func_80034B4C(obj, arg1);
+        break;
+    case 29:
+        func_80040148(obj, arg1);
+        break;
+    case 31:
+        func_800361E0(obj, arg1);
+        break;
+    case 32:
+        func_8003D5A0(obj, arg1);
+        break;
+    case 36:
+        func_80040448(obj, arg1);
+        break;
+    case 67:
+        func_80040570(obj, arg1);
+        break;
+    case 37:
+        func_80040820(obj, arg1);
+        break;
+    case 38:
+        func_8003CA68(obj, arg1);
+        break;
+    case 39:
+        func_8003CEA0(obj, arg1);
+        break;
+    case 40:
+        func_8003CF0C(obj, arg1);
+        break;
+    case 45:
+        func_80035260(obj, arg1);
+        break;
+    case 46:
+        func_8003564C(obj, arg1);
+        break;
+    case 47:
+        func_80035F6C(obj, arg1);
+        break;
+    case 50:
+    case 81:
+    case 85:
+    case 86:
+        func_80037CE8(obj, arg1);
+        break;
+    case 119:
+        func_80042CD0(obj, arg1);
+        break;
+    case 51:
+        func_80038710(obj, arg1);
+        break;
+    case 52:
+        func_800388D4(obj, arg1);
+        break;
+    case 53:
+        func_800387CC(obj, arg1);
+        break;
+    case 54:
+        func_8003833C(obj, arg1);
+        break;
+    case 55:
+        func_8003C7A4(obj, arg1);
+        break;
+    case 56:
+        func_800380F8(obj, arg1);
+        break;
+    case 57:
+    case 93:
+        func_8003596C(obj, arg1);
+        break;
+    case 58:
+        func_80035E34(obj, arg1);
+        break;
+    case 60:
+        func_800BFFDC(obj);
+        break;
+    case 61:
+        func_80040C54(obj, arg1);
+        break;
+    case 62:
+        func_80039330(obj, arg1);
+        break;
+    case 64:
+        obj_loop_world_key(obj, arg1);
+        break;
+    case 65:
+        func_8003D3FC(obj, arg1);
+        break;
+    case 66:
+        func_8003D058(obj, arg1);
+        break;
+    case 68:
+        func_80037594(obj, arg1);
+        break;
+    case 69:
+        func_8003763C(obj, arg1);
+        break;
+    case 70:
+    case 72:
+    case 103:
+    case 104:
+        func_800381C0(obj, arg1);
+        break;
+    case 96:
+    case 97:
+    case 101:
+    case 102:
+        func_8003827C(obj, arg1);
+        break;
+    case 73:
+        func_80034B74(obj, arg1);
+        break;
+    case 74:
+        func_80034E9C(obj, arg1);
+        break;
+    case 75:
+        func_80042090(obj, arg1);
+        break;
+    case 76:
+        func_8003D2B8(obj, arg1);
+        break;
+    case 77:
+        func_8003B4BC(obj, arg1);
+        break;
+    case 78:
+        func_80034860(obj, arg1);
+        break;
+    case 79:
+        func_800345A0(obj, arg1);
+        break;
+    case 80:
+        func_8003ACA0(obj, arg1);
+        break;
+    case 82:
+        func_80035C50(obj, arg1);
+        break;
+    case 84:
+        func_80037D78(obj, arg1);
+        break;
+    case 88:
+    case 110:
+        func_8003DD14(obj, arg1);
+        break;
+    case 90:
+        func_80038AD4(obj, arg1);
+        break;
+    case 94:
+        func_80042160(obj, arg1);
+        break;
+    case 98:
+        func_80038DC4(obj, arg1);
+        break;
+    case 105:
+        func_80042178(obj, arg1);
+        break;
+    case 100:
+        func_800357D4(obj, arg1);
+        break;
+    case 108:
+    case 116:
+        func_80033F60(obj, arg1);
+        break;
+    case 109:
+        func_800422F0(obj, arg1);
+        break;
+    case 111:
+        func_8003C2E4(obj, arg1);
+        break;
+    case 113:
+        func_80037D08(obj, arg1);
+        break;
+    case 115:
+        func_80042998(obj, arg1);
+        break;
+    case 117:
+        func_80042A90(obj, arg1);
+        break;
+    }
+    func_800B76B8(1, -1);
+}
+
+// Unused
+void func_8002458C(s32 arg0) {
+
+}
 
 s16* func_80024594(s32 *arg0, s32 *arg1) {
     *arg0 = D_800DC700;

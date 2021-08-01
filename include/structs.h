@@ -111,7 +111,7 @@ typedef struct Settings4C {
 
 /* Size: 0x840 bytes */
 typedef struct Settings {
-  /* 0x0000 */ u16 *balloonsPtr;
+  /* 0x0000 */ s16 *balloonsPtr;
   /* 0x0004 */ s32 *courseFlagsPtr;
   /* 0x0008 */ u16 keys;
   /* 0x000A */ u16 unkA;
@@ -199,7 +199,7 @@ typedef struct LevelHeader {
   /* 0x4D */ s8 vehicle;
   /* 0x4E */ s8 available_vehicles;
 
-  /* 0x4F */ u8 unk4F[3];
+  /* 0x4F */ s8 unk4F[3];
 
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
@@ -394,7 +394,9 @@ typedef struct Object_3C {
 } Object_3C;
 
 typedef struct Object_40 {
-    u8 pad0[0xC];
+    u8 pad0[0x4];
+    f32 unk4;
+    f32 unk8;
     f32 unkC;
     u8 pad10[0x43];
     s8 unk53;
@@ -414,6 +416,8 @@ typedef struct Object_4C {
     u8 unk12;
     u8 unk13;
     u16 unk14;
+    s8 unk16;
+    s8 unk17;
 } Object_4C;
 
 typedef struct Object_5C {
