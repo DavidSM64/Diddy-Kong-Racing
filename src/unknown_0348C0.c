@@ -133,9 +133,54 @@ void func_80000FDC(s32, s32, f32);
 void func_80009558(s32, f32, f32, f32, s32, s32*);
 void func_80009968(f32, f32, f32, u8, u8, s32);
 s32 func_8001F460(Object*, s32, Object*);
+f32 func_800707C4(s16);
+f32 func_800707F8(s16);
 
+#ifdef NON_MATCHING
 
+typedef struct LevelObjectEntry80033CC0 {
+    LevelObjectEntryCommon common;
+    u8 unk8;
+    u8 unk9;
+    u8 unkA;
+    u8 unkB;
+} LevelObjectEntry80033CC0;
+
+typedef struct Object_50_80033CC0 {
+    f32 unk0
+} Object_50_80033CC0;
+
+void func_80033CC0(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
+    f32 phi_f0;
+    arg0->unk6 |= 2;
+    phi_f0 = arg1->unk9 & 0xFF;
+    if (phi_f0 < 10) {
+        phi_f0 = 10;
+    }
+    phi_f0 /= 64;
+    arg0->scale = arg0->descriptor_ptr->unkC * phi_f0;
+    ((Object_50_80033CC0*)arg0->unk50)->unk0 = arg0->descriptor_ptr->unk4 * phi_f0;
+    arg0->unk3A = arg1->unk8;
+    arg0->y_rotation = arg1->unkA << 6 << 4;
+    if (arg1->unkB) {
+        // Regalloc issue here
+        arg0->unk4C->unk14 = 1;
+        arg0->unk4C->unk11 = 1;
+        arg0->unk4C->unk10 = 0x14;
+        arg0->unk4C->unk12 = 0;
+        arg0->unk4C->unk16 = -5;
+        arg0->unk4C->unk17 = arg1->unkB;
+    }
+    if (arg0->unk3A >= arg0->descriptor_ptr->unk55) {
+        arg0->unk3A = 0;
+    }
+    arg0->unk78 = 0;
+    arg0->unk7C.word = 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033CC0.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033DD0.s")
 
 void func_80033F44(Object *arg0, s32 arg1) {
@@ -250,7 +295,7 @@ void func_8003564C(Object *arg0, s32 arg1) {
         sp20.unk6 = arg0->z_position;
         sp20.unk1 = 8;
         sp20.unk0 = 0x34;
-        someObj = func_8000EA54(&sp20, 1, arg0);
+        someObj = func_8000EA54(&sp20, 1);
         if (someObj != NULL) {
             Object_64_8003564C *someObj64 = someObj->unk64;
             someObj64->unk4 = arg0;
@@ -404,7 +449,56 @@ void func_80035EF8(Object *arg0, unk80035EF8 *arg1) {
     arg0->scale = (f32) (arg0->descriptor_ptr->unkC * phi_f0);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035F6C.s")
+typedef struct Object_64_80035F6C {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s16 *unk20;
+    u8  *unk24;
+} Object_64_80035F6C;
+
+typedef struct Object_64_80035F6C_2 {
+    u8 pad0[3];
+    s8 unk3;
+} Object_64_80035F6C_2;
+
+void func_80035F6C(Object *obj, s32 arg1) {
+    s32 temp_t4;
+    s32 temp_t5;
+    Object *someObj;
+    Object_64_80035F6C *obj64;
+    Object_64_80035F6C_2 *someObj64;
+
+    if (obj->unk7C.word < 0) {
+        someObj = get_object_struct(obj->unk78);
+        if (someObj != NULL) {
+            obj64 = obj->unk64;
+            someObj64 = someObj->unk64;
+            obj->unk7C.word = someObj64->unk3;
+            if (obj->unk7C.word < 0 || obj->unk7C.word >= 0xA) {
+                obj->unk7C.word = 0;
+            }
+            obj64->unk20 = D_800DC980;
+            obj64->unk24 = obj->unk68[obj->unk7C.word];
+            temp_t4 = (obj64->unk24[0] - 1) << 0x15;
+            temp_t5 = (obj64->unk24[1] - 1) << 5;
+            obj64->unk0 = 0x40000103;
+            obj64->unk4 = 0;
+            obj64->unk8 = temp_t4;
+            obj64->unkC = temp_t5;
+            obj64->unk10 = 0x40010203;
+            obj64->unk14 = temp_t4;
+            obj64->unk18 = (s32) (temp_t4 | temp_t5);
+            obj64->unk1C = temp_t5;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
 void func_80036194(Object *arg0, s32 arg1) {
@@ -474,7 +568,55 @@ void func_80037624(unk80037624 *arg0, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003763C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800376E0.s")
+
+void func_800377E4(Object*, s32);
+
+/* Size: 12 bytes */
+typedef struct LevelObjectEntry800376E0 {
+    LevelObjectEntryCommon common;
+    s8 unk8;
+    s8 unk9;
+    s8 unkA;
+} LevelObjectEntry800376E0;
+
+typedef struct Object_64_800376E0 {
+    s16 segmentId;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+} Object_64_800376E0;
+
+s16 func_80029F18(f32, f32, f32);
+
+void func_800376E0(Object *arg0, LevelObjectEntry800376E0 *arg1, s32 arg2) {
+    Object_64_800376E0 *obj64;
+    LevelModel *levelModel;
+    s16 segmentBatchCount;
+
+    obj64 = arg0->unk64;
+    levelModel = func_8002C7C4();
+    obj64->unk2 = arg1->unk8;
+    obj64->unk4 = arg1->unk9;
+    obj64->unk6 = arg1->unkA;
+    obj64->segmentId = func_80029F18(arg0->x_position, arg0->y_position, arg0->z_position);
+    if (arg2 == 0) {
+        obj64->unk8 = 0;
+        obj64->unkA = 0;
+    }
+    if (obj64->segmentId != -1) {
+        if (obj64->unk2 < 0) {
+            obj64->unk2 = 0;
+        }
+        segmentBatchCount = levelModel->segments[obj64->segmentId].numberOfBatches;
+        if (obj64->unk2 >= segmentBatchCount) {
+            obj64->unk2 = segmentBatchCount - 1;
+        }
+    }
+    func_800377E4(arg0, 0x20000);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800377E4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80037A18.s")
 
@@ -698,7 +840,33 @@ void func_80038854(Object *arg0, u8 *arg1) {
     arg0->y_rotation = arg1[11] << 10; // Not sure about the values here.
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800388D4.s")
+typedef struct Object_64_800388D4 {
+    s16 unk0;
+} Object_64_800388D4;
+
+void func_800388D4(Object *arg0, s32 arg1) {
+    s16 temp_a0;
+    Object_4C *obj4C;
+    Object *playerObj;
+
+    if (arg0->unk7C.word == 0) {
+        arg0->unk6 |= 0x4000;
+    } else {
+        arg0->unk6 &= ~0x4000;
+    }
+    
+    obj4C = arg0->unk4C;
+    if (obj4C->unk13 < ((arg0->unk78 >> 16) & 0xFF)) {
+        playerObj = obj4C->unk0;
+        if (playerObj->descriptor_ptr->unk54 == 1) {
+            Object_64_800388D4* playerObj64 = playerObj->unk64;
+            temp_a0 = playerObj64->unk0;
+            if ((temp_a0 != -1) && (get_button_inputs_from_player(temp_a0) & Z_TRIG)) {
+                func_800C31EC(arg0->unk78 & 0xFF, arg0);
+            }
+        }
+    }
+}
 
 void func_800389AC(s32 arg0, s32 arg1) {
 
@@ -811,7 +979,49 @@ void func_80038DC4(Object *arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038E3C.s")
+typedef struct LevelObjectEntry80038E3C {
+    LevelObjectEntryCommon common;
+    u8 pad8[8];
+    u8 unk10;
+    u8 unk11;
+    u8 pad12[6];
+    s8 unk18;
+} LevelObjectEntry80038E3C;
+
+typedef struct Object_64_80038E3C {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_64_80038E3C;
+
+void func_80038E3C(Object *obj, LevelObjectEntry80038E3C *arg1) {
+    f32 phi_f0;
+    Object_64_80038E3C *obj64;
+    phi_f0 = arg1->unk10 & 0xFF;
+    if (phi_f0 < 5) {
+        phi_f0 = 5;
+    }
+    obj64 = obj->unk64;
+    phi_f0 /= 128;
+    obj->scale = phi_f0;
+    obj->y_rotation = arg1->unk11 << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->y_rotation);
+    obj64->unk4 = 0.0f;
+    obj64->unk8 = func_800707F8(obj->y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->x_position) + (obj64->unk8 * obj->z_position));
+    obj64->unk10 = arg1->unk10;
+    obj64->unk14 = arg1->unk18;
+    obj->unk4C->unk14 = 2;
+    obj->unk4C->unk11 = 0;
+    obj->unk4C->unk10 = arg1->unk10;
+    obj->unk4C->unk12 = 0;
+}
+
+//GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038E3C.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038F58.s")
 
 typedef struct unk80039160 {
@@ -929,15 +1139,129 @@ void func_8003AD28(s32 arg0, s32 arg1) {
 
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003AD34.s")
+typedef struct LevelObjectEntry8003AD34 {
+    LevelObjectEntryCommon common;
+    u8 unk8;
+    u8 unk9;
+    u8 unkA;
+} LevelObjectEntry8003AD34;
+
+typedef struct Object_64_8003AD34 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_64_8003AD34;
+
+void func_8003AD34(Object *obj, LevelObjectEntry8003AD34 *arg1) {
+    f32 phi_f0;
+    Object_64_8003AD34 *obj64;
+    phi_f0 = arg1->unk8 & 0xFF;
+    if (phi_f0 < 5) {
+        phi_f0 = 5;
+    }
+    obj64 = obj->unk64;
+    phi_f0 /= 128;
+    obj->scale = phi_f0;
+    obj->y_rotation = arg1->unk9 << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->y_rotation);
+    obj64->unk4 = 0.0f;
+    obj64->unk8 = func_800707F8(obj->y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->x_position) + (obj64->unk8 * obj->z_position));
+    obj64->unk10 = arg1->unk8;
+    obj64->unk14 = arg1->unkA;
+    obj->unk4C->unk14 = 2;
+    obj->unk4C->unk11 = 0;
+    obj->unk4C->unk10 = arg1->unk8;
+    obj->unk4C->unk12 = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003AE50.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B058.s")
+
+// Exactly the same as func_8003AD34
+void func_8003B058(Object *obj, LevelObjectEntry8003AD34 *arg1) {
+    f32 phi_f0;
+    Object_64_8003AD34 *obj64;
+    phi_f0 = arg1->unk8 & 0xFF;
+    if (phi_f0 < 5) {
+        phi_f0 = 5;
+    }
+    obj64 = obj->unk64;
+    phi_f0 /= 128;
+    obj->scale = phi_f0;
+    obj->y_rotation = arg1->unk9 << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->y_rotation);
+    obj64->unk4 = 0.0f;
+    obj64->unk8 = func_800707F8(obj->y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->x_position) + (obj64->unk8 * obj->z_position));
+    obj64->unk10 = arg1->unk8;
+    obj64->unk14 = arg1->unkA;
+    obj->unk4C->unk14 = 2;
+    obj->unk4C->unk11 = 0;
+    obj->unk4C->unk10 = arg1->unk8;
+    obj->unk4C->unk12 = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B174.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B368.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B4BC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B7CC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B988.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C1E0.s")
+
+typedef struct LevelObjectEntry8003C1E0 {
+    LevelObjectEntryCommon common;
+    u8 unk8;
+    u8 unk9;
+    u8 unkA;
+    u8 unkB;
+    u8 unkC;
+    u8 padD;
+    s8 unkE;
+} LevelObjectEntry8003C1E0;
+
+typedef struct Object_64_8003C1E0 {
+    f32 unk0;
+    u8 pad4[4];
+    s32 unk8;
+    u8 padC[3];
+    s8 unkF;
+    u8 pad10[2];
+    u8 unk12;
+    u8 unk13;
+} Object_64_8003C1E0;
+
+void func_8003C1E0(Object *obj, LevelObjectEntry8003C1E0 *arg1) {
+    f32 temp_f0;
+    Object_64_8003C1E0 *obj64;
+    f32 phi_f0;
+
+    obj->unk3A = 0;
+    obj64 = obj->unk64;
+    obj->y_rotation = arg1->unk8 << 6 << 4;
+    obj64->unkF = arg1->unkE;
+    obj64->unk13 = arg1->unkB;
+    obj64->unk0 = obj->y_position;
+    obj64->unk8 = 0;
+    obj64->unk12 = arg1->unkA;
+    obj->unk78 = obj->y_rotation;
+    obj->unk7C.word = (arg1->unk9 & 0x3F) << 0xA;
+    phi_f0 = arg1->unkC & 0xFF;
+    if (phi_f0 < 10) {
+        phi_f0 = 10;
+    }
+    phi_f0 /= 64;
+    obj->scale = obj->descriptor_ptr->unkC * phi_f0;
+    obj->unk4C->unk14 = 0x21;
+    obj->unk4C->unk11 = 2;
+    obj->unk4C->unk10 = 0x14;
+    obj->unk4C->unk12 = 0;
+    if (obj->unk3A >= obj->descriptor_ptr->unk55) {
+        obj->unk3A = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C2E4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C644.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C7A4.s")
@@ -1212,11 +1536,108 @@ void func_8003F0DC(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F0F8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F2E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FC44.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FD68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FEF4.s")
 
-/* Size: 12 bytes */
+#ifdef NON_MATCHING
+
+typedef struct unk8003FC44 {
+    s8 unk0;
+    s8 unk1;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s8 unk7;
+} unk8003FC44;
+
+// Regalloc issues
+void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s32 arg6) {
+    Object *someObj;
+    unk8003FC44 sp24;
+
+    sp24.unk4 = (s32)arg1 + 0x24;
+    sp24.unk1 = 0xA;
+    sp24.unk2 = arg0;
+    sp24.unk0 = arg3;
+    sp24.unk7 = arg6;
+    sp24.unk6 = arg2;
+    someObj = func_8000EA54(&sp24, 1);
+    if (someObj != NULL) {
+        someObj->scale *= 3.5 * arg5;
+        someObj->unk3C = NULL;
+        someObj->x_velocity = 0.0f;
+        someObj->y_velocity = 0.0f;
+        someObj->z_velocity = 0.0f;
+    }
+    if (arg4 != 0) {
+        func_80009558(arg4, arg0, arg1, arg2, 4, 0);
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FC44.s")
+#endif
+
+GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FD68.s")
+
+void func_800098A4(s32, s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, s32);
+
+typedef struct Object_64_8003FEF4 {
+    u8 unk0;
+    u8 pad1;
+    u16 unk2;
+    u16 unk4;
+    u16 unk6;
+    union {
+        struct {
+            u8 unk8;
+            u8 unk9;
+            u8 unkA;
+            u8 padB;
+        };
+        s32 unk8_word;
+    };
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+} Object_64_8003FEF4;
+
+typedef struct LevelObjectEntry8003FEF4 {
+    LevelObjectEntryCommon common;
+    u8 unk8;
+    u8 unk9;
+    u16 unkA;
+    u8 unkC;
+    u8 unkD;
+    u16 unkE;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+} LevelObjectEntry8003FEF4;
+
+void func_8003FEF4(Object *arg0, LevelObjectEntry8003FEF4 *arg1) {
+    Object_64_8003FEF4 *obj64;
+
+    obj64 = arg0->unk64;
+    obj64->unk0 = arg1->unk8;
+    obj64->unk2 = arg1->unkA;
+    obj64->unkC = arg1->unkC;
+    obj64->unkD = arg1->unkD;
+    obj64->unk8_word = 0;
+    obj64->unk4 = arg1->unkE;
+    obj64->unk11 = arg1->unk12;
+    obj64->unk10 = arg1->unk11;
+    obj64->unkE = arg1->unk9;
+    obj64->unkF = arg1->unk10;
+    obj64->unk12 = arg1->unk13;
+    func_800098A4(obj64->unk0, obj64->unk2, arg1->common.x, arg1->common.y, arg1->common.z,
+                  obj64->unkF, obj64->unkE, obj64->unk10, obj64->unk12, obj64->unk4, obj64->unk11, 
+                  obj64->unkC, obj64->unkD);
+    gParticlePtrList_addObject(arg0);
+}
+
 typedef struct LevelObjectEntry8004001C {
     LevelObjectEntryCommon common;
     u8 unk8;
@@ -1466,7 +1887,56 @@ void func_80042178(Object *obj, s32 arg1) {
     func_800AFC3C(obj, arg1);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042210.s")
+/* Size: 12 bytes */
+typedef struct LevelObjectEntry80042210 {
+    LevelObjectEntryCommon common;
+    s16 unk8;
+    u8 unkA;
+} LevelObjectEntry80042210;
+
+typedef struct Object_64_80042210 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 unk14;
+    u8 unk15;
+    u8 pad16[3];
+    u8 unk19;
+    u8 pad1A[6];
+    f32 unk20;
+    f32 unk24;
+    u8 pad28[8];
+    f32 unk30;
+} Object_64_80042210;
+
+void func_80042210(Object *obj, LevelObjectEntry80042210 *arg1) {
+    Object_64_80042210 *obj64;
+    
+    obj64 = (Object_64_80042210*)obj->unk64;
+    obj64->unk15 = arg1->unkA;
+    obj64->unk0 = obj->x_position;
+    obj64->unk4 = obj->y_position;
+    obj64->unk8 = obj->z_position;
+    obj64->unkC = arg1->unk8;
+    obj64->unk10 = obj64->unkC * obj64->unkC;
+    obj64->unk14 = 0;
+    obj64->unk20 = obj->x_position;
+    obj64->unk24 = obj->z_position;
+    obj64->unk19 = 0;
+    obj64->unk30 = 1.0f;
+    
+    if (obj64->unk15) {
+        obj->unk3A = 1;
+        if (is_drumstick_unlocked() || (get_settings()->trophies & 0xFF) != 0xFF) {
+            gParticlePtrList_addObject(obj);
+        }
+    } else {
+        obj->unk3A = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800422F0.s")
 
 typedef struct Object_64_80042998 {

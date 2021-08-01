@@ -51,7 +51,23 @@ void func_80032398(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032424.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032BAC.s")
+
+void func_80032BAC(TextureHeader *texInput) {
+    TextureHeader *tex = NULL;
+    s32 i;
+    for(i = 0; (i < D_800DC95C) && (tex == NULL); i++) {
+        if (texInput == D_800DC950[i]) {
+            tex = D_800DC950[i];
+        }
+    }
+    if (tex != NULL) {
+        D_800DC95C--;
+        for (i--; i < D_800DC95C; i++) {
+            D_800DC950[i] = D_800DC950[i + 1];
+        }
+        D_800DC950[D_800DC95C] = tex;
+    }
+}
 
 s32 func_80032C6C(void) {
     return D_800DC95C;
