@@ -30,7 +30,7 @@ typedef union {
     void *ptr;
 } unk800DE4D0;
 
-unk800DE4D0 D_800DE4D0 = { 0 };
+unk800DE4D0 D_800DE4D0 = { NULL };
 s32 D_800DE4D4 = 0;
 s32 D_800DE4D8 = 0;
 s32 D_800DE4DC = 0;
@@ -213,9 +213,9 @@ void render_background(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 sp8C;
     s32 sp88;
     s32 sp84;
+    s32 widthAndHeight;
     s32 w, h;
     s32 rgba16Color;
-    s32 widthAndHeight;
 
     widthAndHeight = get_video_width_and_height_as_s32();
     w = widthAndHeight & 0xFFFF;
@@ -246,20 +246,22 @@ void render_background(Gfx **dlist, s32 arg1, s32 arg2) {
                 gDPSetPrimColor((*dlist)++, 0, 0, D_800DE4B0, D_800DE4B4, D_800DE4B8, 0xFF)
                 gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE)
                 gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2)
-                gDPFillRectangle((*dlist)++, sp84, sp88, sp8C, sp90)
+                gDPFillRectangle((*dlist)++, sp90, sp8C, sp88, sp84)
             }
-        } else if (D_800DE4CC) {
-            func_800787FC(dlist);
-        } else if (D_800DE4C4 != 0) {
-            func_80078190(dlist);
-        } else if (D_800DE4D0.ptr != NULL) {
-            D_800DE4D0.function(dlist, arg1);
-        } else {
-            // Also has an issue here.
-            rgba16Color = ((D_800DE4B0 << 8) & 0xF800) | ((D_800DE4B4 * 8) & 0x7C0) | ((D_800DE4B8 >> 2) & 0x3E) | 1;
-            rgba16Color |= rgba16Color << 0x10;
-            gDPSetFillColor((*dlist)++, rgba16Color)
-            gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
+        } else { 
+            if (D_800DE4CC) {
+                func_800787FC(dlist);
+            } else if (D_800DE4C4 != 0) {
+                func_80078190(dlist);
+            } else if (D_800DE4D0.ptr != NULL) {
+                D_800DE4D0.function(dlist, arg1);
+            } else {
+                //Also has an issue here.
+                rgba16Color = ((D_800DE4B0 << 8) & 0xF800) | ((D_800DE4B4 * 8) & 0x7C0) | ((D_800DE4B8 >> 2) & 0x3E) | 1;
+                rgba16Color |= rgba16Color << 0x10;
+                gDPSetFillColor((*dlist)++, rgba16Color)
+                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
+            }
         }
     }
     gDPPipeSync((*dlist)++)
