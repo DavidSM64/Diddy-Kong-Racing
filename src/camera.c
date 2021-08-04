@@ -854,11 +854,11 @@ void func_8006A50C(void) {
     D_80121150[1] = temp;
 }
 
-u16 func_8006A528(s32 arg0) {
+u16 get_buttons_held_from_player(s32 arg0) {
     return D_80121110[D_80121150[arg0]].unk0;
 }
 
-u16 get_button_inputs_from_player(s32 arg0) {
+u16 get_buttons_pressed_from_player(s32 arg0) {
     return D_80121140[D_80121150[arg0]];
 }
 

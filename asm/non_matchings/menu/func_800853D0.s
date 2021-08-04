@@ -46,7 +46,7 @@ glabel L8008541C
 /* 086068 80085468 0C025DBE */  jal   decompress_filename_string
 /* 08606C 8008546C 24060003 */   li    $a2, 3
 /* 086070 80085470 27A40050 */  addiu $a0, $sp, 0x50
-/* 086074 80085474 0C025DF4 */  jal   func_800977D0
+/* 086074 80085474 0C025DF4 */  jal   trim_filename_string
 /* 086078 80085478 00802825 */   move  $a1, $a0
 /* 08607C 8008547C 27AC0050 */  addiu $t4, $sp, 0x50
 /* 086080 80085480 AFAC0064 */  sw    $t4, 0x64($sp)

@@ -39,7 +39,7 @@ glabel func_800890AC
 /* 089D38 80089138 AFA50018 */  sw    $a1, 0x18($sp)
 /* 089D3C 8008913C AFA60040 */  sw    $a2, 0x40($sp)
 /* 089D40 80089140 AFA7003C */  sw    $a3, 0x3c($sp)
-/* 089D44 80089144 0C01A955 */  jal   get_button_inputs_from_player
+/* 089D44 80089144 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 089D48 80089148 AFA80038 */   sw    $t0, 0x38($sp)
 /* 089D4C 8008914C 8FA3001C */  lw    $v1, 0x1c($sp)
 /* 089D50 80089150 8FA50018 */  lw    $a1, 0x18($sp)
@@ -81,15 +81,15 @@ glabel func_800890AC
 /* 089DDC 800891DC 0C0220CB */  jal   func_8008832C
 /* 089DE0 800891E0 00000000 */   nop   
 /* 089DE4 800891E4 14400002 */  bnez  $v0, .L800891F0
-/* 089DE8 800891E8 3C01800E */   lui   $at, %hi(D_800DFD94) # $at, 0x800e
-/* 089DEC 800891EC AC20FD94 */  sw    $zero, %lo(D_800DFD94)($at)
+/* 089DE8 800891E8 3C01800E */   lui   $at, %hi(gShowControllerPakMenu) # $at, 0x800e
+/* 089DEC 800891EC AC20FD94 */  sw    $zero, %lo(gShowControllerPakMenu)($at)
 .L800891F0:
 /* 089DF0 800891F0 3C0E8012 */  lui   $t6, %hi(D_80126BC8) # $t6, 0x8012
 /* 089DF4 800891F4 8DCE6BC8 */  lw    $t6, %lo(D_80126BC8)($t6)
-/* 089DF8 800891F8 3C0F800E */  lui   $t7, %hi(D_800DFD94) # $t7, 0x800e
+/* 089DF8 800891F8 3C0F800E */  lui   $t7, %hi(gShowControllerPakMenu) # $t7, 0x800e
 /* 089DFC 800891FC 15C000C4 */  bnez  $t6, .L80089510
 /* 089E00 80089200 00000000 */   nop   
-/* 089E04 80089204 8DEFFD94 */  lw    $t7, %lo(D_800DFD94)($t7)
+/* 089E04 80089204 8DEFFD94 */  lw    $t7, %lo(gShowControllerPakMenu)($t7)
 /* 089E08 80089208 24180001 */  li    $t8, 1
 /* 089E0C 8008920C 15E000C0 */  bnez  $t7, .L80089510
 /* 089E10 80089210 24190001 */   li    $t9, 1

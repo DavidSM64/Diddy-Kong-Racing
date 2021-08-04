@@ -132,7 +132,7 @@ glabel func_800A01A0
 /* 0A0F8C 800A038C 00000000 */   nop   
 /* 0A0F90 800A0390 3C048012 */  lui   $a0, %hi(D_80126D10) # $a0, 0x8012
 /* 0A0F94 800A0394 8C846D10 */  lw    $a0, %lo(D_80126D10)($a0)
-/* 0A0F98 800A0398 0C01A955 */  jal   get_button_inputs_from_player
+/* 0A0F98 800A0398 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 0A0F9C 800A039C 00000000 */   nop   
 /* 0A0FA0 800A03A0 30590004 */  andi  $t9, $v0, 4
 /* 0A0FA4 800A03A4 13200059 */  beqz  $t9, .L800A050C
@@ -180,7 +180,7 @@ glabel func_800A01A0
 /* 0A1044 800A0444 A02027B8 */   sb    $zero, %lo(D_800E27B8)($at)
 .L800A0448:
 /* 0A1048 800A0448 8C846D10 */  lw    $a0, %lo(D_80126D10)($a0)
-/* 0A104C 800A044C 0C01A955 */  jal   get_button_inputs_from_player
+/* 0A104C 800A044C 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 0A1050 800A0450 00000000 */   nop   
 /* 0A1054 800A0454 30480004 */  andi  $t0, $v0, 4
 /* 0A1058 800A0458 1100002C */  beqz  $t0, .L800A050C
@@ -233,7 +233,7 @@ glabel func_800A01A0
 .L800A050C:
 /* 0A110C 800A050C 3C048012 */  lui   $a0, %hi(D_80126D10) # $a0, 0x8012
 /* 0A1110 800A0510 8C846D10 */  lw    $a0, %lo(D_80126D10)($a0)
-/* 0A1114 800A0514 0C01A955 */  jal   get_button_inputs_from_player
+/* 0A1114 800A0514 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 0A1118 800A0518 00000000 */   nop   
 /* 0A111C 800A051C 3C068012 */  lui   $a2, %hi(D_80126CD0) # $a2, 0x8012
 /* 0A1120 800A0520 30490001 */  andi  $t1, $v0, 1

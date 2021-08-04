@@ -28,7 +28,7 @@ glabel func_80094170
 /* 094DD4 800941D4 15400005 */  bnez  $t2, .L800941EC
 /* 094DD8 800941D8 3C04800E */   lui   $a0, %hi(D_800E098C) # $a0, 0x800e
 /* 094DDC 800941DC 8C84098C */  lw    $a0, %lo(D_800E098C)($a0)
-/* 094DE0 800941E0 0C01A955 */  jal   get_button_inputs_from_player
+/* 094DE0 800941E0 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 094DE4 800941E4 00000000 */   nop   
 /* 094DE8 800941E8 00401825 */  move  $v1, $v0
 .L800941EC:

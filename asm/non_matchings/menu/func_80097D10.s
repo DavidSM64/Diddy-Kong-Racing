@@ -9,7 +9,7 @@ glabel func_80097D10
 /* 098918 80097D18 AFA40030 */  sw    $a0, 0x30($sp)
 /* 09891C 80097D1C E7B50010 */  swc1  $f21, 0x10($sp)
 /* 098920 80097D20 E7B40014 */  swc1  $f20, 0x14($sp)
-/* 098924 80097D24 0C01A955 */  jal   get_button_inputs_from_player
+/* 098924 80097D24 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 098928 80097D28 00002025 */   move  $a0, $zero
 /* 09892C 80097D2C 00002025 */  move  $a0, $zero
 /* 098930 80097D30 0C01A967 */  jal   func_8006A59C

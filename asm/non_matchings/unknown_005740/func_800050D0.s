@@ -30,13 +30,13 @@ glabel func_800050D0
 /* 005D40 80005140 00000000 */  nop   
 /* 005D44 80005144 1081000D */  beq   $a0, $at, .L8000517C
 /* 005D48 80005148 00000000 */   nop   
-/* 005D4C 8000514C 0C01A94A */  jal   func_8006A528
+/* 005D4C 8000514C 0C01A94A */  jal   get_buttons_held_from_player
 /* 005D50 80005150 00000000 */   nop   
 /* 005D54 80005154 3C0A8012 */  lui   $t2, %hi(D_80119C3C) # $t2, 0x8012
 /* 005D58 80005158 8D4A9C3C */  lw    $t2, %lo(D_80119C3C)($t2)
 /* 005D5C 8000515C 00000000 */  nop   
 /* 005D60 80005160 85440000 */  lh    $a0, ($t2)
-/* 005D64 80005164 0C01A955 */  jal   get_button_inputs_from_player
+/* 005D64 80005164 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 005D68 80005168 AFA20028 */   sw    $v0, 0x28($sp)
 /* 005D6C 8000516C 3C058012 */  lui   $a1, %hi(D_80119C38) # $a1, 0x8012
 /* 005D70 80005170 8FA60028 */  lw    $a2, 0x28($sp)

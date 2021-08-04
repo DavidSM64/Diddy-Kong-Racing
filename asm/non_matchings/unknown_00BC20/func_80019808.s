@@ -776,7 +776,7 @@ glabel func_80019808
 /* 01AF10 8001A310 00008025 */  move  $s0, $zero
 .L8001A314:
 /* 01AF14 8001A314 02002025 */  move  $a0, $s0
-/* 01AF18 8001A318 0C01A955 */  jal   get_button_inputs_from_player
+/* 01AF18 8001A318 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 01AF1C 8001A31C AFA50094 */   sw    $a1, 0x94($sp)
 /* 01AF20 8001A320 8FA50094 */  lw    $a1, 0x94($sp)
 /* 01AF24 8001A324 26100001 */  addiu $s0, $s0, 1

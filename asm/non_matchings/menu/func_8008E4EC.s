@@ -46,7 +46,7 @@ glabel func_8008E4EC
 /* 08F198 8008E598 00009825 */  move  $s3, $zero
 /* 08F19C 8008E59C 27B00060 */  addiu $s0, $sp, 0x60
 .L8008E5A0:
-/* 08F1A0 8008E5A0 0C01A94A */  jal   func_8006A528
+/* 08F1A0 8008E5A0 0C01A94A */  jal   get_buttons_held_from_player
 /* 08F1A4 8008E5A4 02602025 */   move  $a0, $s3
 /* 08F1A8 8008E5A8 8FCF0000 */  lw    $t7, ($fp)
 /* 08F1AC 8008E5AC 82830000 */  lb    $v1, ($s4)

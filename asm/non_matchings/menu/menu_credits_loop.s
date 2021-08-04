@@ -499,7 +499,7 @@ glabel menu_credits_loop
 /* 09C640 8009BA40 15200008 */  bnez  $t1, .L8009BA64
 /* 09C644 8009BA44 24110004 */   li    $s1, 4
 .L8009BA48:
-/* 09C648 8009BA48 0C01A955 */  jal   get_button_inputs_from_player
+/* 09C648 8009BA48 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 09C64C 8009BA4C 02002025 */   move  $a0, $s0
 /* 09C650 8009BA50 26100001 */  addiu $s0, $s0, 1
 /* 09C654 8009BA54 1611FFFC */  bne   $s0, $s1, .L8009BA48

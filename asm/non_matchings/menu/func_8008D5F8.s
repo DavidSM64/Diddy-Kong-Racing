@@ -2,7 +2,7 @@ glabel func_8008D5F8
 /* 08E1F8 8008D5F8 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 08E1FC 8008D5FC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 08E200 8008D600 AFA40028 */  sw    $a0, 0x28($sp)
-/* 08E204 8008D604 0C01A955 */  jal   get_button_inputs_from_player
+/* 08E204 8008D604 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08E208 8008D608 00002025 */   move  $a0, $zero
 /* 08E20C 8008D60C 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
 /* 08E210 8008D610 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)
@@ -16,7 +16,7 @@ glabel func_8008D5F8
 /* 08E230 8008D630 24040001 */  li    $a0, 1
 /* 08E234 8008D634 AFA20024 */  sw    $v0, 0x24($sp)
 /* 08E238 8008D638 AFA60020 */  sw    $a2, 0x20($sp)
-/* 08E23C 8008D63C 0C01A955 */  jal   get_button_inputs_from_player
+/* 08E23C 8008D63C 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08E240 8008D640 AFA7001C */   sw    $a3, 0x1c($sp)
 /* 08E244 8008D644 3C0F8012 */  lui   $t7, %hi(gControllersXAxisDirection+1) # $t7, 0x8012
 /* 08E248 8008D648 3C188012 */  lui   $t8, %hi(gControllersYAxisDirection+1) # $t8, 0x8012

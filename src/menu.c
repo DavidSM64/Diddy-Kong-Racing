@@ -5,16 +5,16 @@
 #include "memory.h"
 #include "fade_transition.h"
 
+#include <PR/os_cont.h>
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
+#include "video.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
  */
-
-extern s32 osTvType;
 
 /************ .bss ************/
 
@@ -81,7 +81,18 @@ s32 D_80126490;
 s32 D_80126494;
 s32 D_80126498;
 s32 D_8012649C;
-s32 D_801264A0[12];
+
+/* Size: 0x0C Bytes */
+typedef struct unk801264A0 {
+    u8 unk0;
+    u8 unk1;
+    u16 unk2;
+    char name[4];
+    u32 pad8;
+} unk801264A0;
+
+unk801264A0 D_801264A0[4];
+
 s32 D_801264D0;
 s32 D_801264D4;
 s8 D_801264D8;
@@ -287,7 +298,7 @@ s32 gIsInAdventureTwo = 0;
 s32 gPlayerHasSeenCautionMenu = 0;
 s32 D_800DF49C = 0; // Currently unknown, might be a different type.
 
-unk800DF4A0 *D_800DF4A0 = NULL;
+char **D_800DF4A0 = NULL;
 
 u8 D_800DF4A4 = 0xFF;
 u8 D_800DF4A8 = 0xFF;
@@ -529,7 +540,7 @@ u16 D_800DFCB4[112] = {
     0x0000, 0x0000, 0x0000, 0x0000
 };
 
-s32 D_800DFD94 = 0;
+s32 gShowControllerPakMenu = FALSE;
 
 s32 gActiveMagicCodes = 0;
 s32 gUnlockedMagicCodes = 0;
@@ -650,23 +661,23 @@ s16 D_800E03A4[6] = {
     0x00, 0x0B, 0x0C, 0x0A, -1, 0
 };
 
-u16 D_800E03B0[14] = {
-    0x0000, 0x0000, 0x0000, 0x0000, 
-    0x0000, 0x0000, 0x004C, 0x0070, 
-    0x00F4, 0x0070, 0x004C, 0x00D0, 
-    0x00F4, 0x00D0
+char *D_800E03B0[3] = { 
+    NULL, NULL, NULL
 };
 
-u16 D_800E03CC[24] = {
-    0x0018, 0x0051, 0x0058, 0x0040, 
-    0x0004, 0x0004, 0x4080, 0xFFC0, 
-    0x0074, 0x0051, 0x0058, 0x0040, 
-    0x0004, 0x0004, 0x4080, 0xFFC0, 
-    0x00D0, 0x0051, 0x0058, 0x0040, 
-    0x0004, 0x0004, 0x4080, 0xFFC0
+// Unused?
+u16 D_800E03BC[8] = {
+    0x004C, 0x0070, 0x00F4, 0x0070, 
+    0x004C, 0x00D0, 0x00F4, 0x00D0,
 };
 
-u16 D_800E03FC[10] = {
+unk800E03CC D_800E03CC[3] = {
+    { 0x0018, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 }, 
+    { 0x0074, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 }, 
+    { 0x00D0, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 },
+};
+
+s16 D_800E03FC[10] = {
     0x002C, 0x0036,
     0x0015, 0x0019,
     0x002C, 0x001B,
@@ -1529,6 +1540,12 @@ void func_8009C508(s32 arg0);
 void *allocate_from_main_pool_safe(s32, u32);
 void func_800C4170(s32 arg0);
 void play_music(s32 arg0);
+void func_800C01D8(s32);
+void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha);
+void func_8007B3D0(Gfx **dlist);
+void func_8009BD5C(void);
+void load_level_for_menu(s32, s32, s32);
+void func_8008CACC(void);
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8007F900.s")
 
@@ -1872,13 +1889,13 @@ void func_800829F8(s32 arg0, s32 arg1) {
     if (D_800DF46C & 0x10) {
         func_8007F900(get_language());
         set_text_font(0);
-        set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+        set_text_color(255, 255, 255, 0, 0xFF);
         set_text_background_color(0, 0, 0, 0);
         temp = 0xD0;
         if (osTvType == 0) {
             temp = 0xEA;
         }
-        draw_text(arg0, -0x8000, temp, D_800DF4A0->unk25C, 0xC);
+        draw_text(arg0, -0x8000, temp, D_800DF4A0[151], 0xC);
     }
 }
 
@@ -1951,9 +1968,9 @@ void func_800841B8(s32 arg0) {
     set_text_font(2);
     set_text_background_color(0, 0, 0, 0);
     set_text_color(0, 0, 0, 0xFF, 0x80);
-    draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk90, 0xC);
-    set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
-    draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk90, 0xC);
+    draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0[36], 0xC);
+    set_text_color(255, 255, 255, 0, 0xFF);
+    draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0[36], 0xC);
     
     phi_s1 = 0;
     phi_s2 = 0x4C;
@@ -1969,7 +1986,7 @@ void func_800841B8(s32 arg0) {
         } else {
             phi_a3 = 0;
         }
-        set_text_color(0xFF, 0xFF, 0xFF, phi_a3, 0xFF);
+        set_text_color(255, 255, 255, phi_a3, 0xFF);
         draw_text(&D_801263A0, -0x8000, phi_s2, D_800DFA10[phi_s1], 0xC);
         
         phi_s1++;
@@ -2012,7 +2029,7 @@ s32 menu_options_loop(s32 arg0) {
         for (i = 0; i < 4; i++) {
             analogY += gControllersYAxisDirection[i]; // Y axis (-1 = down, 1 = up) for controller
             analogX += gControllersXAxisDirection[i]; // X axis (-1 = left, 1 = right) for controller
-            buttonsPressed |= get_button_inputs_from_player(i); // Button presses for controller
+            buttonsPressed |= get_buttons_pressed_from_player(i); // Button presses for controller
         }
     }
     
@@ -2041,12 +2058,12 @@ s32 menu_options_loop(s32 arg0) {
             func_80001D04(0xEB, 0);
             func_8009EABC(0, 0x2000000);
             func_800C2AF4(0);
-            D_800DFA10[1] = D_800DF4A0->unk2DC;
+            D_800DFA10[1] = D_800DF4A0[183];
         } else {
             func_80001D04(0xEB, 0);
             func_8009EA78(0, 0x2000000);
             func_800C2AF4(1);
-            D_800DFA10[1] = D_800DF4A0->unk2D8;
+            D_800DFA10[1] = D_800DF4A0[182];
         }
     } else {
         // Move up & down the list
@@ -2169,7 +2186,7 @@ s32 menu_audio_options_loop(s32 arg0) {
         phi_s0 = 0;
         
         while(phi_s0 != 4) {
-            sp40 |= get_button_inputs_from_player(phi_s0);
+            sp40 |= get_buttons_pressed_from_player(phi_s0);
             phi_a2 += func_8006A59C(phi_s0);
             phi_a3 += gControllersYAxisDirection[phi_s0];
             phi_t0 += gControllersXAxisDirection[phi_s0];
@@ -2406,24 +2423,23 @@ void func_800861C8(unk800861C8* arg0, s32 *arg1) {
 GLOBAL_ASM("asm/non_matchings/menu/func_800862C4.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_800867D4.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/func_80086A48.s")
-#else
+#ifdef NON_MATCHING
 void func_80086A48(s32 arg0) {
-    f32 temp, temp2, temp3;
+    f32 temp, temp2;
     temp = D_80126BD4;
     temp2 = D_80126BE4;
     while (arg0 > 0) {
-        temp3 = 0.1f;
         if (D_80126A08 > 0) {
-            D_80126BDC = D_80126BDC + temp3 * (temp - D_80126BDC);
+            D_80126BDC += (temp - D_80126BDC) * 0.1f;
         }
         if (D_801263E0 > 0 && D_80126A00 > 0) {
-            D_80126BEC = D_80126BEC + temp3 * (temp2 - D_80126BEC);
+            D_80126BEC += (temp2 - D_80126BEC) * 0.1f;
         }
         arg0--;
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/menu/func_80086A48.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80086AFC.s")
@@ -2523,23 +2539,35 @@ void menu_boot_init(void) {
 #ifdef NON_MATCHING
 void func_800887E8(void);
 void func_800887C4(void);
+s32 func_800C018C(void);
+s32 func_800890AC(s32);
 
 s32 menu_boot_loop(s32 arg0) {
-    s32 sp2C;
-    s32 phi_v1;
+    // arg0 = sp30
+    s32 out; // sp2C
+    s32 y; // sp28
+    // ra = sp24
 
-    sp2C = 0;
-    phi_v1 = 0x78;
-    if (osTvType == 0) {
-        phi_v1 = 0x84;
+    out = 0;
+    
+    // Regalloc issue.
+    // How do you make this not use a3 without introducing another local variable?
+    y = 120;
+    if (osTvType == TV_TYPE_PAL) {
+        y = 132;
     }
     
+    // You can make it use the correct register if you add in a temp variable like:
+    // temp = y;
+    // Then replace all the `y` instances below with `temp`.
+    // However, this makes the stack too big. There is no room for another local variable. :\
+
     switch(D_80126C20) {
         case 0:
-            if (D_80126C18 < 0x20) {
+            if (D_80126C18 < 32) {
                 D_80126C18 += arg0;
-                if (D_80126C18 >= 0x21) {
-                    D_80126C18 = 0x20;
+                if (D_80126C18 >= 33) {
+                    D_80126C18 = 32;
                 }
             } else {
                 func_800887E8();
@@ -2547,34 +2575,34 @@ s32 menu_boot_loop(s32 arg0) {
             }
             break;
         case 1:
-            if (D_80126C18 < 0x8C) {
+            if (D_80126C18 < 140) {
                 D_80126C18 += arg0;
-                if (D_80126C18 >= 0x8D) {
-                    D_80126C18 = 0x8C;
+                if (D_80126C18 >= 141) {
+                    D_80126C18 = 140;
                 }
             } else {
                 func_800887C4();
                 D_80126C20 = 2;
             }
-            if (D_80126C18 >= 0x81) {
-                phi_v1 = 0x12C;
+            if (D_80126C18 >= 129) {
+                y = 300;
             }
             break;
         case 2:
-            if (gMenuDelay && func_800C018C(arg0, 0x12C) == 0) {
-                func_800C01D8(&D_800DF76C, arg0);
+            if (gMenuDelay && func_800C018C() == 0) {
+                func_800C01D8(&D_800DF76C);
             }
-            sp2C = func_800890AC(arg0);
-            phi_v1 = 0x12C;
+            y = 300;
+            out = func_800890AC(arg0);
             break;
     }
     
-    if (phi_v1 < 0x12C) {
-        render_textured_rectangle(&D_801263A0, &D_800DF7DC, 0xA0, phi_v1, 0xFF, 0xFF, 0xFF, 0xFF);
+    if (y < 300) {
+        render_textured_rectangle(&D_801263A0, &D_800DF7DC, 160, y, 255, 255, 255, 255);
         func_8007B3D0(&D_801263A0);
     }
     
-    return sp2C;
+    return out;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/menu/MenuBootLoop.s")
@@ -2609,7 +2637,7 @@ void func_800887E8(void) {
     } else if (func_8008832C() == 0) {
         gMenuDelay = 0x14;
     }
-    if (D_80126BC8 == 0 && D_800DFD94 == 0) {
+    if (D_80126BC8 == 0 && !gShowControllerPakMenu) {
         gMenuDelay = 0x14;
     }
     D_800DF460 = 0;
@@ -2668,7 +2696,7 @@ void menu_magic_codes_list_init(void) {
     func_8009C6D4(0x3F);
     func_8008E4B0();
     func_800C01D8(D_800DF77C);
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         D_80126C70 = 0xB;
     } else {
         D_80126C70 = 0xA;
@@ -2691,7 +2719,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_magic_codes_list_loop.s")
 extern s16 D_80126C80[0x1E]; // Array of shorts of the unlocked cheat's bit ids.
 void func_8008AD1C(void);
 void func_8008A56C(void);
-s32 get_button_inputs_from_player(s32 arg0);
+s32 get_buttons_pressed_from_player(s32 arg0);
 
 s32 menu_magic_codes_list_loop(s32 arg0) {
     s32 temp_t0;
@@ -2726,7 +2754,7 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
         temp = (s8*)&gControllersYAxisDirection;
         temp2 = (s8*)&gControllersXAxisDirection;
         while(phi_s0 < 4) {
-            phi_s3 |= get_button_inputs_from_player(phi_s0);
+            phi_s3 |= get_buttons_pressed_from_player(phi_s0);
             phi_a2 += *temp;
             phi_s2 += *temp2;
             temp++;
@@ -2863,10 +2891,10 @@ void draw_character_select_text(s32 arg0) {
         set_text_background_color(0, 0, 0, 0);
         set_text_color(0, 0, 0, 0xFF, 0x80);
         // Draw "Object Select" text drop shadow
-        draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0->unk21C, 0xC); 
-        set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+        draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0[135], 0xC); 
+        set_text_color(255, 255, 255, 0, 0xFF);
         // Draw "Object Select" text
-        draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0->unk21C, 0xC); 
+        draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0[135], 0xC); 
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers && gNumberOfActivePlayers > 0) {
             yPos = 0xD0;
             if (osTvType == 0) {
@@ -3027,7 +3055,7 @@ void draw_menu_element(s32, MenuElement*, f32);
 s32 menu_caution_loop(s32 arg0) {
     if (gMenuDelay != 0) {
         gMenuDelay += arg0;
-    } else if (gIgnorePlayerInput <= 0 && get_button_inputs_from_player(0) & 0xD000) {
+    } else if (gIgnorePlayerInput <= 0 && get_buttons_pressed_from_player(0) & 0xD000) {
         func_80001D04(0xEF, NULL);
         gMenuDelay = 1;
         func_800C01D8(&D_800DF774);
@@ -3143,7 +3171,104 @@ void func_8008C698(s32 arg0) {
 }
 #endif
 
+#ifdef NON_MATCHING
+
+s32 menu_game_select_loop(s32 arg0) {
+    s32 playerInputs;
+    s32 playerYDir;
+    s32 charSelectScene;
+    s32 temp;
+    
+    func_8008C168();
+    
+    // Regalloc issue: This needs to use v1, not a2!
+    D_801263BC = (D_801263BC + arg0) & 0x3F;
+    
+    if (D_801263D8 != 0) {
+        D_801263D8++;
+        if (D_801263D8 >= 3) {
+            func_800828B8();
+            D_801263D8 = 0;
+        }
+    }
+    if (gMenuDelay != 0) {
+        if (gMenuDelay < 0) {
+            gMenuDelay -= arg0;
+        } else {
+            gMenuDelay += arg0;
+        }
+    }
+    if (gMenuDelay >= 0x1F) {
+        func_8008CACC();
+        if (D_800DF460 == D_801263E0) {
+            func_80000B28();
+            gIsInTracksMode = TRUE;
+            func_8006E5BC();
+            load_level_for_menu(-1, -1, 0);
+            menu_init(MENU_TRACK_SELECT);
+        } else {
+            gIsInAdventureTwo = D_800DF460;
+            gIsInTracksMode = FALSE;
+            gPlayerSelectVehicle[0] = 0;
+            func_8006DB14(0);
+            menu_init(MENU_FILE_SELECT);
+        }
+        return 0;
+    } else if (gMenuDelay < -0x1E) {
+        func_8008CACC();
+        charSelectScene = 0;
+        if (is_drumstick_unlocked()) {
+            charSelectScene = 1;
+        }
+        if (is_tt_unlocked()) {
+            charSelectScene ^= 3;
+        }
+        load_level_for_menu(0x16, -1, charSelectScene);
+        func_8008AEB4(0, 0);
+        menu_init(MENU_CHARACTER_SELECT);
+        return 0;
+    } else {
+        func_8008C698(arg0, &D_801263D8);
+        if ((gMenuDelay == 0) && (D_801263D8 == 0)) {
+            playerInputs = get_buttons_pressed_from_player(0);
+            playerYDir = gControllersYAxisDirection[0];
+            playerInputs = playerInputs;
+            if (gNumberOfActivePlayers == 2) {
+                playerInputs |= get_buttons_pressed_from_player(1);
+                playerYDir += gControllersYAxisDirection[1];
+            }
+            if (playerInputs & (A_BUTTON | START_BUTTON)) {
+                if (D_800DF460 == D_801263E0) {
+                    func_80000C98(-0x80);
+                }
+                func_800C01D8(&D_800DF774);
+                gMenuDelay = 1;
+                func_80001D04(0xEF, 0);
+            } else if (playerInputs & B_BUTTON) {
+                func_800C01D8(&D_800DF774);
+                gMenuDelay = -1;
+            } else {
+                if (playerYDir < 0) {
+                    if (D_800DF460 < D_801263E0) {
+                        D_800DF460++;
+                        func_80001D04(0xEB, 0);
+                    }
+                }
+                if (playerYDir > 0) {
+                    if (D_800DF460 > 0) {
+                        D_800DF460--;
+                        func_80001D04(0xEB, 0);
+                    }
+                }
+            }
+        }
+        gIgnorePlayerInput = FALSE;
+        return 0;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/menu_game_select_loop.s")
+#endif
 
 void func_8008CACC(void) {
     func_800C422C(2);
@@ -3182,9 +3307,168 @@ void menu_file_select_init(void) {
     func_80000B18();
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008CC28.s")
+void func_8008CC28(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
+    s32 saved0 = D_800DF4A4;
+    s32 saved1 = D_800DF4A8;
+    s32 saved2 = D_800DF4AC;
+    s32 saved3 = D_800DF764;
+    D_800DF4A4 = arg3;
+    D_800DF4A8 = arg4;
+    D_800DF4AC = arg5;
+    D_800DF764 = arg6;
+    D_800DF75C[arg0].unkC = arg1 - 0x9F;
+    D_800DF75C[arg0].unk10 = 0x77 - arg2;
+    func_8009CA60(arg0);
+    D_800DF4A4 = saved0;
+    D_800DF4A8 = saved1;
+    D_800DF4AC = saved2;
+    D_800DF764 = saved3;
+    D_800DF75C[arg0].unkC = arg1 - 0xA1;
+    D_800DF75C[arg0].unk10 = 0x79 - arg2;
+    func_8009CA60(arg0);
+}
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008CD74.s")
+#ifdef NON_MATCHING
+// Shouldn't have any major issues.
+void render_file_select_menu(s32 arg0) {
+    s32 s2;
+    s32 s5;
+    s32 y;
+    s32 phi_v0_2;
+    u8 tempName[8];
+    u32 color;
+    s32 i;
+    
+    if (osTvType == TV_TYPE_PAL) {
+        y = 12;
+    } else {
+        y = 0;
+    }
+    
+    func_8009BD5C();
+    func_80067F2C(&D_801263A0, &D_801263A8);
+    for (i = 0; i < 3; i++) { // 3 files
+        if (D_801264A0[i].unk0 == gIsInAdventureTwo || D_801264A0[i].unk1 == 0) {
+            color = 0xB0E0C0FF;
+        } else {
+            color = 0x6A9073FF;
+        }
+        func_80080580(0, D_800E03CC[i].unk0 - 0xA0, 0x78 - D_800E03CC[i].unk2, D_800E03CC[i].unk4, 
+            D_800E03CC[i].unk6, D_800E03CC[i].unk8, D_800E03CC[i].unkA, color, D_80126550[67]);
+    }
+    func_80080BC8(&D_801263A0);
+    if (D_801263D8 == 0) {
+        set_text_font(2);
+        set_text_background_color(0, 0, 0, 0);
+        s5 = 10;
+        for (i = 0; i < 3; i++) {
+            if (D_801264A0[i].unk1 != 0) {
+                s2 = 0xB;
+                func_8007BF1C(0, 0xFF);
+                if (D_801264A0[i].unk0 != 0) {
+                    s2 = 0xC;
+                }
+                func_8008CC28(s2, D_800E03FC[2] + D_800E03CC[i].unk0, D_800E03FC[3] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
+                func_80068508(1);
+                D_800DF75C->unk18 = D_801264A0[i].unk2 / s5;
+                func_8008CC28(NULL, (D_800E03FC[6] + D_800E03CC[i].unk0) - 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
+                D_800DF75C->unk18 = D_801264A0[i].unk2 % s5;
+                func_8008CC28(NULL, D_800E03FC[6] + D_800E03CC[i].unk0 + 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
+                func_80068508(0);
+                D_800DF4A8 = 0x40;
+                D_800DF4AC = 0x40;
+                func_8008CC28(s5, D_800E03FC[8] + D_800E03CC[i].unk0, D_800E03FC[9] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
+                D_800DF4A8 = 0xFF;
+                D_800DF4AC = 0xFF;
+                func_8007BF1C(1);
+            } else {
+                set_text_color(255, 255, 255, 64, 255);
+                draw_text(&D_801263A0, D_800E03FC[4] + D_800E03CC[i].unk0, D_800E03FC[5] + D_800E03CC[i].unk2 + y, D_800DF4A0[75], 0xC);
+            }
+        }
+    }
+    phi_v0_2 = D_801263BC * 8;
+    if (phi_v0_2 >= 0x100) {
+        phi_v0_2 = 0x1FF - phi_v0_2;
+    }
+    set_text_font(0);
+    set_text_background_color(0, 0, 0, 0);
+    set_text_color(255, 255, 255, 0, 255);
+    for (i = 0; i < 3; i++) {
+        s2 = FALSE;
+        if (D_80126484 != 0) {
+            if (D_80126494 == 0 && i == D_8012648C) {
+                s2 = TRUE;
+            }
+            else if (D_80126494 > 0 && i == D_80126490) {
+                s2 = TRUE;
+            }
+        } else if (D_80126488 != 0 && i == D_8012648C) {
+            s2 = TRUE;
+        } else if (D_801263E0 == 0 && i == gSaveFileIndex) {
+            s2 = TRUE;
+        }
+        if (s2) {
+            s32 temp_t0 = phi_v0_2 | ~0xFF;
+            func_80080E90(&D_801263A0, D_800E03CC[i].unk0, D_800E03CC[i].unk2 + y, D_800E03CC[i].unk4, D_800E03CC[i].unk6, 
+                D_800E03CC[i].unk8, D_800E03CC[i].unkA, temp_t0, temp_t0, temp_t0, temp_t0);
+        }
+        if (D_80126CC0 == 0 || i != gSaveFileIndex) {
+            trim_filename_string(D_801264A0[i].name, tempName);
+            if (D_801264A0[i].unk1 == 0) {
+                trim_filename_string(D_800E03B0[i], tempName);
+            }
+            if (tempName != NULL) {
+                draw_text(&D_801263A0, D_800E03FC[0] + D_800E03CC[i].unk0, D_800E03FC[1] + D_800E03CC[i].unk2 + y, tempName, 0xC);
+            }
+        }
+    }
+    set_text_font(2);
+    set_text_color(0, 0, 0, 255, 128);
+    draw_text(&D_801263A0, 0xA1, 0x13, D_800DF4A0[76], 4);
+    set_text_color(255, 255, 255, 0, 255);
+    draw_text(&D_801263A0, 0xA0, 0x10, D_800DF4A0[76], 4);
+    set_text_color(255, 255, 255, 0, 255);
+    y += 0xBB;
+    if (D_80126484 != 0) {
+        if (D_80126494 == 0) {
+            set_text_font(0);
+            draw_text(&D_801263A0, 0xA0, y, D_800DF4A0[77], 0xC);
+        } else if (D_80126494 == 1) {
+            set_text_font(0);
+            draw_text(&D_801263A0, 0xA0, y, D_800DF4A0[78], 0xC);
+        } else {
+            draw_text(&D_801263A0, 0xA0, y, &D_800E8234, 0xC);
+        }
+        return;
+    }
+    if (D_80126488 != 0) {
+        if (D_80126494 == 0) {
+            set_text_font(0);
+            draw_text(&D_801263A0, 0xA0, y, D_800DF4A0[79], 0xC);
+        } else {
+            draw_text(&D_801263A0, 0xA0, y, &D_800E8238, 0xC);
+        }
+        return;
+    }
+    if (D_80126CC0 == 0) {
+        if (D_801263E0 == 1) {
+            set_text_color(255, 255, 255, phi_v0_2, 255);
+        }
+        draw_text(&D_801263A0, 0x5A, y, D_800DF4A0[80], 0xC);
+        if (D_801263E0 == 2) {
+            set_text_color(255, 255, 255, phi_v0_2, 255);
+        } else {
+            set_text_color(255, 255, 255, 0, 255);
+        }
+        draw_text(&D_801263A0, 0xE6, y, D_800DF4A0[81], 0xC);
+        return;
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/render_file_select_menu.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/menu/func_8008D5F8.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008D8BC.s")
 
@@ -3210,10 +3494,10 @@ void func_8008DC7C(s32 arg0) {
     s32 phi_v1;
     s32 phi_v1_2;
 
-    phi_v1 = get_button_inputs_from_player(0);
+    phi_v1 = get_buttons_pressed_from_player(0);
     temp_a1 = gControllersXAxisDirection;
     if (gNumberOfActivePlayers == 2) {
-        phi_v1 = phi_v1 | get_button_inputs_from_player(1);
+        phi_v1 = phi_v1 | get_buttons_pressed_from_player(1);
         temp_a1 += gControllersXAxisDirection+1;
     }
     
@@ -3641,9 +3925,9 @@ void menu_11_init(void) {
     s8 temp_a2;
 
     settings = get_settings();
-    D_80126BF0[0] = (s32) D_800DF4A0->unk60;
-    D_80126BF0[1] = (s32) D_800DF4A0->unk5C;
-    D_80126BF0[2] = (s32) D_800DF4A0->unk70;
+    D_80126BF0[0] = (s32) D_800DF4A0[24];
+    D_80126BF0[1] = (s32) D_800DF4A0[23];
+    D_80126BF0[2] = (s32) D_800DF4A0[28];
     D_80126C14 = 3;
     
      
@@ -3735,35 +4019,38 @@ s32 compress_filename_string(unsigned char *filename, s32 length) {
     return output;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/func_800977D0.s")
-#else
-s32 func_800977D0(unsigned char *arg0, unsigned char *arg1) {
-    s32 phi_v0 = 0;
-    s32 phi_v1 = 0;
-    while (*arg0 != '\0') {
-        if (*arg0 == ' ') {
-            arg0++;
-            phi_v0++;
-            while (*arg0 == ' ') {
-                arg0++;
-                phi_v0++;
+#ifdef NON_MATCHING
+
+// Not matching, but functionally equivalent.
+// Trims the trailing end of the string, so that spaces won't show up at the end.
+s32 trim_filename_string(u8 *input, u8 *output) {
+    s32 numSpaces, numSpacesProcessed;
+    while (*input != '\0') {
+        numSpaces = 0;
+        numSpacesProcessed = 0;
+        if (*input == ' ') {
+            u8 *temp = input;
+            temp++;
+            numSpaces++;
+            while (*temp == ' ') {
+                temp++;
+                numSpaces++;
             }
-            if (*arg0 != '\0') {
-                while(phi_v1 < phi_v0){
-                    *arg1 = *arg0;
-                    arg0++;
-                    arg1++;
-                    phi_v1++;
-                }
+            if (*temp == '\0') {
+                break;
             }
-            
+            while(numSpacesProcessed < numSpaces){
+                *(output++) = *(input++);
+                numSpacesProcessed++;
+            }
         } else {
-            *(arg1++) = *(arg0++);
+            *(output++) = *(input++);
         }
     }
-    *arg1 = '\0';
+    *output = '\0';
 }
+#else
+GLOBAL_ASM("asm/non_matchings/menu/trim_filename_string.s")
 #endif 
 
 void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6) {
@@ -3863,11 +4150,11 @@ void func_800983C0(s32 arg0) {
     set_text_font(2);
     set_text_color(0, 0, 0, 0xFF, 0x80);
     draw_text(&D_801263A0, 0xA1, 0x23, sp28, 0xC);
-    draw_text(&D_801263A0, 0xA1, 0x43, D_800DF4A0->unk118, 0xC);
-    set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    draw_text(&D_801263A0, 0xA1, 0x43, D_800DF4A0[70], 0xC);
+    set_text_color(255, 255, 255, 0, 0xFF);
     draw_text(&D_801263A0, 0xA0, 0x20, sp28, 0xC);
-    draw_text(&D_801263A0, 0xA0, 0x40, D_800DF4A0->unk118, 0xC);
-    draw_text(&D_801263A0, 0xA0, sp2C + 0xB0, D_800DF4A0->unk228[D_800E0FEC], 0xC);
+    draw_text(&D_801263A0, 0xA0, 0x40, D_800DF4A0[70], 0xC);
+    draw_text(&D_801263A0, 0xA0, sp2C + 0xB0, D_800DF4A0[138 + D_800E0FEC], 0xC);
     draw_text(&D_801263A0, 0xA0, sp2C + 0xD0, sp24, 0xC);
 }
 
@@ -4483,17 +4770,17 @@ s32 func_8009D9F4(void) {
     func_800C4EDC(1, 0x18, 0x10, 0xB8, 0x87);
     func_800C4F7C(1, 0);
     state = 0;
-    playerInput = get_button_inputs_from_player(0);
+    playerInput = get_buttons_pressed_from_player(0);
     D_80126504 = 0;
     D_800DF4DC = 0;
-    func_800C5168(1, -0x8000, 6, D_800DF4A0->unkC4, 1, 4);
-    func_800C5168(1, -0x8000, 0x14, D_800DF4A0->unkC8, 1, 4);
+    func_800C5168(1, -0x8000, 6, D_800DF4A0[49], 1, 4);
+    func_800C5168(1, -0x8000, 0x14, D_800DF4A0[50], 1, 4);
     D_8012650E = 0x32;
-    func_8009D1B8(D_800DF4A0->unk5C, 0x14, 0);
-    func_8009D1B8(D_800DF4A0->unkCC, 0x14, 1);
+    func_8009D1B8(D_800DF4A0[23], 0x14, 0);
+    func_8009D1B8(D_800DF4A0[51], 0x14, 1);
     func_8009D26C();
-    if (playerInput & 0x8000) {
-        func_80001D04(0xEF, NULL);
+    if (playerInput & A_BUTTON) {
+        func_80001D04(0xEF, NULL); 
         switch(D_80126516) {
             case 0:
                 state = 1;

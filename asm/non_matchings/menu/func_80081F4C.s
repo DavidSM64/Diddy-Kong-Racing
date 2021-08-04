@@ -31,7 +31,7 @@ glabel func_80081F4C
 /* 082BC0 80081FC0 1B00000B */  blez  $t8, .L80081FF0
 /* 082BC4 80081FC4 00000000 */   nop   
 .L80081FC8:
-/* 082BC8 80081FC8 0C01A955 */  jal   get_button_inputs_from_player
+/* 082BC8 80081FC8 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 082BCC 80081FCC 02002025 */   move  $a0, $s0
 /* 082BD0 80081FD0 3C19800E */  lui   $t9, %hi(gNumberOfActivePlayers) # $t9, 0x800e
 /* 082BD4 80081FD4 8F39F4BC */  lw    $t9, %lo(gNumberOfActivePlayers)($t9)

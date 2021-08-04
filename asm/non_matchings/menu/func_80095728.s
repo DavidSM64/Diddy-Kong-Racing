@@ -126,7 +126,7 @@ glabel func_80095728
 .L800958E4:
 /* 0964E4 800958E4 AFA30040 */  sw    $v1, 0x40($sp)
 /* 0964E8 800958E8 AFA40048 */  sw    $a0, 0x48($sp)
-/* 0964EC 800958EC 0C01A955 */  jal   get_button_inputs_from_player
+/* 0964EC 800958EC 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 0964F0 800958F0 AFAA0030 */   sw    $t2, 0x30($sp)
 /* 0964F4 800958F4 8FA40048 */  lw    $a0, 0x48($sp)
 /* 0964F8 800958F8 8FA30040 */  lw    $v1, 0x40($sp)

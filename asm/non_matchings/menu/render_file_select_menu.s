@@ -1,4 +1,4 @@
-glabel func_8008CD74
+glabel render_file_select_menu
 /* 08D974 8008CD74 27BDFF78 */  addiu $sp, $sp, -0x88
 /* 08D978 8008CD78 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 08D97C 8008CD7C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
@@ -355,7 +355,7 @@ glabel func_8008CD74
 /* 08DEA0 8008D2A0 000B5880 */  sll   $t3, $t3, 2
 /* 08DEA4 8008D2A4 016C8821 */  addu  $s1, $t3, $t4
 /* 08DEA8 8008D2A8 26240004 */  addiu $a0, $s1, 4
-/* 08DEAC 8008D2AC 0C025DF4 */  jal   func_800977D0
+/* 08DEAC 8008D2AC 0C025DF4 */  jal   trim_filename_string
 /* 08DEB0 8008D2B0 02A02825 */   move  $a1, $s5
 /* 08DEB4 8008D2B4 922D0001 */  lbu   $t5, 1($s1)
 /* 08DEB8 8008D2B8 00137080 */  sll   $t6, $s3, 2
@@ -363,7 +363,7 @@ glabel func_8008CD74
 /* 08DEC0 8008D2C0 3C04800E */   lui   $a0, %hi(D_800E03B0) # $a0, 0x800e
 /* 08DEC4 8008D2C4 008E2021 */  addu  $a0, $a0, $t6
 /* 08DEC8 8008D2C8 8C8403B0 */  lw    $a0, %lo(D_800E03B0)($a0)
-/* 08DECC 8008D2CC 0C025DF4 */  jal   func_800977D0
+/* 08DECC 8008D2CC 0C025DF4 */  jal   trim_filename_string
 /* 08DED0 8008D2D0 02A02825 */   move  $a1, $s5
 .L8008D2D4:
 /* 08DED4 8008D2D4 12A00010 */  beqz  $s5, .L8008D318

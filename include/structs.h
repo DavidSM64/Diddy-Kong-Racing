@@ -109,7 +109,7 @@ typedef struct Settings4C {
     u8 unkF;
 } Settings4C;
 
-/* Size: 0x840 bytes */
+/* Size: 0x118 bytes */
 typedef struct Settings {
   /* 0x0000 */ s16 *balloonsPtr;
   /* 0x0004 */ s32 *courseFlagsPtr;
@@ -140,10 +140,10 @@ typedef struct Settings {
   /* 0x0014 */ u16 tajFlags;
   /* 0x0016 */ u8 ttAmulet;
   /* 0x0017 */ u8 wizpigAmulet;
-  /* 0x0018 */ void *flapInitialsPtr[3];
-  /* 0x0024 */ void *flapTimesPtr[3];
-  /* 0x0030 */ void *courseInitialsPtr[3];
-  /* 0x003C */ void *courseTimesPtr[3];
+  /* 0x0018 */ u16 *flapInitialsPtr[3];
+  /* 0x0024 */ u16 *flapTimesPtr[3];
+  /* 0x0030 */ u16 *courseInitialsPtr[3];
+  /* 0x003C */ u16 *courseTimesPtr[3];
   /* 0x0048 */ u8 worldId;
   /* 0x0049 */ u8 courseId;
   /* 0x004A */ u8 gObjectCount;
@@ -154,13 +154,6 @@ typedef struct Settings {
   /* 0x0114 */ u8 timeTrialRacer;
   /* 0x0115 */ char unk115[2];
   /* 0x0117 */ u8 display_times;
-  /* 0x0118 */ u32 courseFlags[65];
-  /* 0x021C */ u16 balloons;
-  /* 0x021E */ u16 worldBalloons[5];
-  /* 0x0228 */ u16 flapInitials[3][65];
-  /* 0x03AE */ u16 flapTimes[3][65];
-  /* 0x0534 */ u16 courseInitials[3][65];
-  /* 0x06BA */ u16 courseTimes[3][65];
 } Settings;
 
 /* Size: 0xC4 bytes */

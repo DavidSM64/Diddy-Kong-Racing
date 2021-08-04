@@ -98,32 +98,7 @@ extern s32 gIsInAdventureTwo;
 extern s32 gPlayerHasSeenCautionMenu;
 extern s32 D_800DF49C;
 
-typedef struct unk800DF4A0 {
-    u8  pad0[0x5C];
-    s32 unk5C;
-    s32 unk60;
-    u8  unk64[0xC];
-    s32 unk70;
-    u8  pad74[0x1C];
-    s32 unk90;
-    u8  pad94[0x30];
-    s32 unkC4;
-    s32 unkC8;
-    s32 unkCC;
-    u8  padD0[0x48];
-    s32 unk118;
-    u8  pad11C[0x100];
-    s32 unk21C;
-    u8  pad220[0x8];
-    s32 unk228[4];
-    u8  pad238[0x24];
-    s32 unk25C;
-    u8  pad260[0x78];
-    s32 unk2D8;
-    s32 unk2DC;
-} unk800DF4A0;
-
-extern unk800DF4A0* D_800DF4A0;
+extern char **D_800DF4A0;
 
 extern u8 D_800DF4A4;
 extern u8 D_800DF4A8;
@@ -295,7 +270,7 @@ extern s16 D_800DFCAC[4];
 
 extern u16 D_800DFCB4[112];
 
-extern s32 D_800DFD94;
+extern s32 gShowControllerPakMenu;
 
 extern s32 gActiveMagicCodes;
 extern s32 gUnlockedMagicCodes;
@@ -332,11 +307,20 @@ extern s16 D_800E0398[6];
 
 extern s16 D_800E03A4[6];
 
-extern u16 D_800E03B0[14];
+typedef struct unk800E03CC {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} unk800E03CC;
 
-extern u16 D_800E03CC[24];
+extern unk800E03CC D_800E03CC[3];
 
-extern u16 D_800E03FC[10];
+extern s16 D_800E03FC[10];
 
 extern s32 gMultiplayerSelectedNumberOfRacers;
 extern s32 D_800E0414;
