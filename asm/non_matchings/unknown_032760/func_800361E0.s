@@ -128,7 +128,7 @@ glabel func_800361E0
 /* 036F9C 8003639C AE0C007C */  sw    $t4, 0x7c($s0)
 /* 036FA0 800363A0 AFA3005C */  sw    $v1, 0x5c($sp)
 .L800363A4:
-/* 036FA4 800363A4 0C01A955 */  jal   get_button_inputs_from_player
+/* 036FA4 800363A4 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 036FA8 800363A8 00002025 */   move  $a0, $zero
 /* 036FAC 800363AC 8E0D0078 */  lw    $t5, 0x78($s0)
 /* 036FB0 800363B0 8FA3005C */  lw    $v1, 0x5c($sp)

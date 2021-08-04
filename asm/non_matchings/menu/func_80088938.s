@@ -28,7 +28,7 @@ glabel func_80088938
 /* 08959C 8008899C 8F186BC8 */  lw    $t8, %lo(D_80126BC8)($t8)
 /* 0895A0 800889A0 24040001 */  li    $a0, 1
 /* 0895A4 800889A4 13000007 */  beqz  $t8, .L800889C4
-/* 0895A8 800889A8 3C19800E */   lui   $t9, %hi(D_800DFD94) # $t9, 0x800e
+/* 0895A8 800889A8 3C19800E */   lui   $t9, %hi(gShowControllerPakMenu) # $t9, 0x800e
 /* 0895AC 800889AC 3C05800E */  lui   $a1, %hi(D_800DFCB4) # $a1, 0x800e
 /* 0895B0 800889B0 24A5FCB4 */  addiu $a1, %lo(D_800DFCB4) # addiu $a1, $a1, -0x34c
 /* 0895B4 800889B4 0C02087B */  jal   draw_menu_element
@@ -36,7 +36,7 @@ glabel func_80088938
 /* 0895BC 800889BC 100001B1 */  b     .L80089084
 /* 0895C0 800889C0 8FBF0044 */   lw    $ra, 0x44($sp)
 .L800889C4:
-/* 0895C4 800889C4 8F39FD94 */  lw    $t9, %lo(D_800DFD94)($t9)
+/* 0895C4 800889C4 8F39FD94 */  lw    $t9, %lo(gShowControllerPakMenu)($t9)
 /* 0895C8 800889C8 00000000 */  nop   
 /* 0895CC 800889CC 132001AD */  beqz  $t9, .L80089084
 /* 0895D0 800889D0 8FBF0044 */   lw    $ra, 0x44($sp)

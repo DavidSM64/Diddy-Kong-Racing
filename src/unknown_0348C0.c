@@ -339,7 +339,7 @@ void func_800357D4(Object *obj, s32 arg1) {
         temp_v1 = obj->unk4C;
         if (temp_v1->unk13 < 0xC8) {
             if (someObj == temp_v1->unk0) {
-                if ((get_button_inputs_from_player(0) & Z_TRIG) || someObj == obj->unk5C->unk100) {
+                if ((get_buttons_pressed_from_player(0) & Z_TRIG) || someObj == obj->unk5C->unk100) {
                     func_8006F29C();
                 }
             }
@@ -861,7 +861,7 @@ void func_800388D4(Object *arg0, s32 arg1) {
         if (playerObj->descriptor_ptr->unk54 == 1) {
             Object_64_800388D4* playerObj64 = playerObj->unk64;
             temp_a0 = playerObj64->unk0;
-            if ((temp_a0 != -1) && (get_button_inputs_from_player(temp_a0) & Z_TRIG)) {
+            if ((temp_a0 != -1) && (get_buttons_pressed_from_player(temp_a0) & Z_TRIG)) {
                 func_800C31EC(arg0->unk78 & 0xFF, arg0);
             }
         }

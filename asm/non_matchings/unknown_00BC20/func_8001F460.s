@@ -77,7 +77,7 @@ glabel func_8001F460
 /* 020150 8001F550 03004025 */  move  $t0, $t8
 .L8001F554:
 /* 020154 8001F554 02002025 */  move  $a0, $s0
-/* 020158 8001F558 0C01A955 */  jal   get_button_inputs_from_player
+/* 020158 8001F558 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 02015C 8001F55C AFA80174 */   sw    $t0, 0x174($sp)
 /* 020160 8001F560 8FA80174 */  lw    $t0, 0x174($sp)
 /* 020164 8001F564 26100001 */  addiu $s0, $s0, 1

@@ -76,7 +76,7 @@ glabel menu_magic_codes_loop
 /* 08A9E8 80089DE8 AFA70044 */  sw    $a3, 0x44($sp)
 /* 08A9EC 80089DEC AFA80054 */  sw    $t0, 0x54($sp)
 /* 08A9F0 80089DF0 AFA90050 */  sw    $t1, 0x50($sp)
-/* 08A9F4 80089DF4 0C01A955 */  jal   get_button_inputs_from_player
+/* 08A9F4 80089DF4 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08A9F8 80089DF8 AFAA0058 */   sw    $t2, 0x58($sp)
 /* 08A9FC 80089DFC 8FA30020 */  lw    $v1, 0x20($sp)
 /* 08AA00 80089E00 8FA5001C */  lw    $a1, 0x1c($sp)

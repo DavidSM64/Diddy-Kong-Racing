@@ -50,7 +50,7 @@ glabel menu_options_loop
 /* 08500C 8008440C AFA5001C */  sw    $a1, 0x1c($sp)
 /* 085010 80084410 AFA60044 */  sw    $a2, 0x44($sp)
 /* 085014 80084414 AFA70038 */  sw    $a3, 0x38($sp)
-/* 085018 80084418 0C01A955 */  jal   get_button_inputs_from_player
+/* 085018 80084418 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08501C 8008441C AFA80034 */   sw    $t0, 0x34($sp)
 /* 085020 80084420 8FA30020 */  lw    $v1, 0x20($sp)
 /* 085024 80084424 8FA5001C */  lw    $a1, 0x1c($sp)

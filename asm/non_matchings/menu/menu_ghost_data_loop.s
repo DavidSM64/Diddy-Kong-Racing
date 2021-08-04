@@ -52,7 +52,7 @@ glabel menu_ghost_data_loop
 /* 09B48C 8009A88C AFA50024 */  sw    $a1, 0x24($sp)
 /* 09B490 8009A890 AFA6003C */  sw    $a2, 0x3c($sp)
 /* 09B494 8009A894 AFA70040 */  sw    $a3, 0x40($sp)
-/* 09B498 8009A898 0C01A955 */  jal   get_button_inputs_from_player
+/* 09B498 8009A898 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 09B49C 8009A89C AFA80038 */   sw    $t0, 0x38($sp)
 /* 09B4A0 8009A8A0 8FA30028 */  lw    $v1, 0x28($sp)
 /* 09B4A4 8009A8A4 8FA50024 */  lw    $a1, 0x24($sp)

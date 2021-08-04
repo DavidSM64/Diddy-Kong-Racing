@@ -71,22 +71,7 @@ extern s8  D_800DD3A0;
 extern s32 D_800DD3A4;
 extern s32 D_800DD3A8;
 extern s32 D_800DD3AC;
-extern s32 D_800DD3B0;
-extern s32 D_800DD3B4;
-extern s32 D_800DD3B8;
-extern s32 D_800DD3BC;
-extern s32 D_800DD3C0;
-extern s32 D_800DD3C4;
-extern s32 D_800DD3C8;
-extern s32 D_800DD3CC;
-extern s32 D_800DD3D0;
-extern s32 D_800DD3D4;
-extern s32 D_800DD3D8;
-extern s32 D_800DD3DC;
-extern s32 D_800DD3E0;
-extern s32 D_800DD3E4;
-extern s32 D_800DD3E8;
-extern s32 D_800DD3EC;
+
 
 extern s8  D_800DD3F0;
 extern s16 D_800DD3F4[8];

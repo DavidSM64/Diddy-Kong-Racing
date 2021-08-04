@@ -63,7 +63,7 @@ glabel func_8009DB3C
 /* 09E800 8009DC00 0C0313DF */  jal   func_800C4F7C
 /* 09E804 8009DC04 00002825 */   move  $a1, $zero
 /* 09E808 8009DC08 AFA00044 */  sw    $zero, 0x44($sp)
-/* 09E80C 8009DC0C 0C01A955 */  jal   get_button_inputs_from_player
+/* 09E80C 8009DC0C 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 09E810 8009DC10 00002025 */   move  $a0, $zero
 /* 09E814 8009DC14 3C018012 */  lui   $at, %hi(D_80126504) # $at, 0x8012
 /* 09E818 8009DC18 A0206504 */  sb    $zero, %lo(D_80126504)($at)

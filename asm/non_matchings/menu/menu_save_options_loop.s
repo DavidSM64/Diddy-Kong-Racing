@@ -94,7 +94,7 @@ glabel menu_save_options_loop
 /* 08889C 80087C9C 02002025 */  move  $a0, $s0
 /* 0888A0 80087CA0 AFA60030 */  sw    $a2, 0x30($sp)
 /* 0888A4 80087CA4 028CA021 */  addu  $s4, $s4, $t4
-/* 0888A8 80087CA8 0C01A955 */  jal   get_button_inputs_from_player
+/* 0888A8 80087CA8 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 0888AC 80087CAC 026D9821 */   addu  $s3, $s3, $t5
 /* 0888B0 80087CB0 8FA60030 */  lw    $a2, 0x30($sp)
 /* 0888B4 80087CB4 26100001 */  addiu $s0, $s0, 1

@@ -137,7 +137,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099DCC 800991CC AFA5004C */  sw    $a1, 0x4c($sp)
 /* 099DD0 800991D0 AFA70020 */  sw    $a3, 0x20($sp)
 /* 099DD4 800991D4 AFA80044 */  sw    $t0, 0x44($sp)
-/* 099DD8 800991D8 0C01A955 */  jal   get_button_inputs_from_player
+/* 099DD8 800991D8 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 099DDC 800991DC AFAB002C */   sw    $t3, 0x2c($sp)
 /* 099DE0 800991E0 8FA70020 */  lw    $a3, 0x20($sp)
 /* 099DE4 800991E4 8FA80044 */  lw    $t0, 0x44($sp)

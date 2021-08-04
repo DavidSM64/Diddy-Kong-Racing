@@ -121,7 +121,7 @@ glabel menu_game_select_loop
 /* 08D574 8008C974 00000000 */  nop   
 /* 08D578 8008C978 15E0004D */  bnez  $t7, .L8008CAB0
 /* 08D57C 8008C97C 00000000 */   nop   
-/* 08D580 8008C980 0C01A955 */  jal   get_button_inputs_from_player
+/* 08D580 8008C980 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08D584 8008C984 00002025 */   move  $a0, $zero
 /* 08D588 8008C988 3C18800E */  lui   $t8, %hi(gNumberOfActivePlayers) # $t8, 0x800e
 /* 08D58C 8008C98C 8F18F4BC */  lw    $t8, %lo(gNumberOfActivePlayers)($t8)
@@ -132,7 +132,7 @@ glabel menu_game_select_loop
 /* 08D5A0 8008C9A0 00401825 */   move  $v1, $v0
 /* 08D5A4 8008C9A4 24040001 */  li    $a0, 1
 /* 08D5A8 8008C9A8 AFA20024 */  sw    $v0, 0x24($sp)
-/* 08D5AC 8008C9AC 0C01A955 */  jal   get_button_inputs_from_player
+/* 08D5AC 8008C9AC 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08D5B0 8008C9B0 AFA60020 */   sw    $a2, 0x20($sp)
 /* 08D5B4 8008C9B4 3C198012 */  lui   $t9, %hi(gControllersYAxisDirection+1) # $t9, 0x8012
 /* 08D5B8 8008C9B8 8FA30024 */  lw    $v1, 0x24($sp)

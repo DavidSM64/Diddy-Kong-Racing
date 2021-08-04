@@ -12,7 +12,7 @@ glabel func_8009E7E8
 /* 09F410 8009E810 0C0313DF */  jal   func_800C4F7C
 /* 09F414 8009E814 00002825 */   move  $a1, $zero
 /* 09F418 8009E818 AFA00024 */  sw    $zero, 0x24($sp)
-/* 09F41C 8009E81C 0C01A955 */  jal   get_button_inputs_from_player
+/* 09F41C 8009E81C 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 09F420 8009E820 00002025 */   move  $a0, $zero
 /* 09F424 8009E824 3C0F800E */  lui   $t7, %hi(D_800DF4A0) # $t7, 0x800e
 /* 09F428 8009E828 8DEFF4A0 */  lw    $t7, %lo(D_800DF4A0)($t7)

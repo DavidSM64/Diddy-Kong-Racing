@@ -122,7 +122,7 @@ glabel func_80037A18
 /* 0387D4 80037BD4 00000000 */  nop   
 /* 0387D8 80037BD8 11000008 */  beqz  $t0, .L80037BFC
 /* 0387DC 80037BDC 00000000 */   nop   
-/* 0387E0 80037BE0 0C01A955 */  jal   get_button_inputs_from_player
+/* 0387E0 80037BE0 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 0387E4 80037BE4 AFA7002C */   sw    $a3, 0x2c($sp)
 /* 0387E8 80037BE8 8FA7002C */  lw    $a3, 0x2c($sp)
 /* 0387EC 80037BEC 30490001 */  andi  $t1, $v0, 1

@@ -322,7 +322,7 @@ glabel func_8001A8F4
 /* 01B9A4 8001ADA4 0C02AC75 */  jal   func_800AB1D4
 /* 01B9A8 8001ADA8 24040001 */   li    $a0, 1
 .L8001ADAC:
-/* 01B9AC 8001ADAC 0C01A955 */  jal   get_button_inputs_from_player
+/* 01B9AC 8001ADAC 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 01B9B0 8001ADB0 00002025 */   move  $a0, $zero
 /* 01B9B4 8001ADB4 0C01BAA4 */  jal   get_settings
 /* 01B9B8 8001ADB8 30508000 */   andi  $s0, $v0, 0x8000

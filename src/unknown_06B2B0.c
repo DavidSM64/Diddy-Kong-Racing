@@ -11,6 +11,7 @@
 #include "f3ddkr.h"
 #include "asset_sections.h"
 #include "menu.h"
+#include "video.h"
 
 /************ .rodata ************/
 
@@ -45,13 +46,13 @@ s16 D_800DD32C = 0;
 
 s8 D_800DD330 = 0;
 
-// Unused?
+// Unused
 char *D_800DD334[6] = {
     NULL, NULL, NULL, // These could be a file boundary.
     D_800E7110, D_800E7118, D_800E7128
 };
 
-// Unused?
+// Unused
 char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8  D_800DD374 = 0;
@@ -69,22 +70,10 @@ s8  D_800DD3A0 = 0;
 s32 D_800DD3A4 = 0; // Currently unknown, might be a different type. 
 s32 D_800DD3A8 = 0; // Currently unknown, might be a different type. 
 s32 D_800DD3AC = 0; // Currently unknown, might be a different type. 
-s32 D_800DD3B0 = 0x1194;
-s32 D_800DD3B4 = 0x1B58;
-s32 D_800DD3B8 = 0x2AF8;
-s32 D_800DD3BC = 0x2AF8;
-s32 D_800DD3C0 = 0x12C;
-s32 D_800DD3C4 = 0x258;
-s32 D_800DD3C8 = 0x352;
-s32 D_800DD3CC = 0x384;
-s32 D_800DD3D0 = 0x12C;
-s32 D_800DD3D4 = 0x190;
-s32 D_800DD3D8 = 0x226;
-s32 D_800DD3DC = 0x258;
-s32 D_800DD3E0 = 0x14;
-s32 D_800DD3E4 = 0x1E;
-s32 D_800DD3E8 = 0x28;
-s32 D_800DD3EC = 0x32;
+s32 gNumF3dCmdsPerPlayer[4]  = { 4500, 7000, 11000, 11000 };
+s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
+s32 gNumHudMatPerPlayer[4]   = { 300, 400, 550, 600 };
+s32 gNumHudTrisPerPlayer[4]  = { 20, 30, 40, 50 };
 
 s8  D_800DD3F0 = 0;
 s16 D_800DD3F4[8] = {
@@ -113,7 +102,7 @@ s32 D_800DD424[2] = {
 
 /*******************************/
 
-extern s32 D_800DFD94;
+extern s32 gShowControllerPakMenu;
 
 /************ .bss ************/
 
@@ -140,15 +129,15 @@ s32 D_80121180[16];
 
 s32 D_801211C0[2];
 s16 D_801211C8[20];
-Gfx *D_801211F0[2];
-Gfx *D_801211F8;
+Gfx *gDisplayLists[2];
+Gfx *gCurrDisplayList;
 s32 D_801211FC;
-s32 D_80121200[2];
-s32 D_80121208;
-s32 D_80121210[2];
-s32 D_80121218;
-s32 D_80121220[2];
-s32 D_80121228;
+s32 *gHudMatrices[2];
+s32 gCurrHudMat;
+s32 *gHudVertices[2];
+s32 gCurrHudVerts;
+s32 *gHudTriangles[2];
+s32 gCurrHudTris;
 s32 D_80121230[8];
 s8  D_80121250[16];
 s32 D_80121260[2210];
@@ -172,10 +161,10 @@ s32 D_80123520;
 s8  D_80123524;
 s8  D_80123525;
 s8  D_80123526;
-s32 D_80123528;
-s32 D_8012352C;
-s32 D_80123530;
-s32 D_80123534;
+s32 gCurrNumF3dCmdsPerPlayer;
+s32 gCurrNumHudMatPerPlayer;
+s32 gCurrNumHudTrisPerPlayer;
+s32 gCurrNumHudVertsPerPlayer;
 s32 D_80123538[3];
 s32 D_80123544;
 s32 *D_80123548; // This is actually an OSMesgQueue pointer.
@@ -188,7 +177,6 @@ s32 D_80123560[8];
 extern s32 gVideoCurrFramebuffer;
 extern s32 gVideoLastFramebuffer;
 extern s32 gVideoLastDepthBuffer;
-extern s32 osTvType;
 
 void func_8006F43C(void);
 
@@ -231,6 +219,12 @@ void func_80072708(void);
 void update_camera_fov(f32);
 void func_8006BFC8(s8 *arg0);
 void func_80068158(Gfx**, s32, s32, s32, s32);
+s32 get_trophy_race_world_id(void);
+void func_8006DCF8(s32 arg0);
+void func_8006EC48(s32 arg0);
+void calc_and_alloc_heap_for_settings(void);
+void reset_character_id_slots(void);
+void func_8006EFDC(void);
 
 #ifdef NON_MATCHING
 
@@ -320,7 +314,10 @@ s16 func_8006ABB4(s32 arg0) {
     return D_8012117C[arg0].unk4;
 }
 
+// Unused?
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006AC00.s")
+
+// Unused?
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006AE2C.s")
 
 // Unused.
@@ -407,7 +404,6 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     s32 size;
     s32 offset;
     s32 temp;
-    s32 temp2;
     s32 phi_v1_2;
     s32 phi_v0_2;
     s8 *someAsset;
@@ -453,7 +449,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     if (func_8006C2F0() == 0) {
         if (D_800DD32C == 0) {
             if (gCurrentLevelHeader->race_type == RACE_TYPE_BOSS) {
-                phi_v1_2 = settings->courseFlagsPtr[temp2];
+                phi_v1_2 = settings->courseFlagsPtr[levelId];
                 phi_v0_2 = FALSE;
                 if (gCurrentLevelHeader->world == 0 || gCurrentLevelHeader->world == 5) {
                     phi_v0_2 = TRUE;
@@ -730,21 +726,20 @@ void func_8006BEFC(void) {
     }
 }
 
-#ifdef NON_MATCHING
 void func_8006BFC8(s8 *arg0) {
     s32 temp, temp2;
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
-    phi_s0 = 0;
     
+    phi_s0 = 0;
     if (!is_in_tracks_mode()) {
         settings = get_settings();
-        // Regalloc issue here
-        if (settings->courseFlagsPtr[settings->courseId] & 2) {
+        temp = settings->courseFlagsPtr[settings->courseId];
+        if (temp & 2) {
             phi_s0 = 1;
         }
-        if (settings->courseFlagsPtr[settings->courseId] & 4) {
+        if (temp & 4) {
             phi_s0 = 2;
         }
     } else {
@@ -782,9 +777,6 @@ void func_8006BFC8(s8 *arg0) {
     load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0[0], temp2, temp);
     free_from_memory_pool(gTempAssetTable);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006BFC8.s")
-#endif
 
 void func_8006C164(void) {
     free_from_memory_pool(D_801211C0[0]);
@@ -870,15 +862,15 @@ void func_8006C3E0(void) {
     if (func_8006F4EC() != 0) {
         D_800DD374 = FALSE;
     }
-    D_80123514 = 0;
+    D_80123514 = FALSE;
     D_80123518 = 0;
     
-    if (osTvType == 0) {
-        sp24 = 0xE;
-    } else if (osTvType == 1) {
+    if (osTvType == TV_TYPE_PAL) {
+        sp24 = 14;
+    } else if (osTvType == TV_TYPE_NTSC) {
         sp24 = 0;
-    } else if (osTvType == 2) {
-        sp24 = 0x1C;
+    } else if (osTvType == TV_TYPE_MPAL) {
+        sp24 = 28;
     }
     
     osCreateScheduler(&D_80121260, &D_801234E8, 0xD, sp24, 1);
@@ -899,7 +891,7 @@ void func_8006C3E0(void) {
     func_800598D0();
     func_800AE530();
     func_800AB1F0();
-    func_8006E3BC();
+    calc_and_alloc_heap_for_settings();
     func_8006EFDC();
     load_fonts();
     func_80075B18();
@@ -912,9 +904,9 @@ void func_8006C3E0(void) {
     D_80123508 = 0;
     D_801234E8 = 0;
     
-    D_801211F8 = D_801211F0[D_801234E8];
-    gDPFullSync(D_801211F8++)
-    gSPEndDisplayList(D_801211F8++)
+    gCurrDisplayList = gDisplayLists[D_801234E8];
+    gDPFullSync(gCurrDisplayList++)
+    gSPEndDisplayList(gCurrDisplayList++)
     
     osSetTime(0);
 }
@@ -929,14 +921,14 @@ void render(void) {
     osSetTime(0);
     
     if (D_800DD380 == 8) {
-        D_801211F8 = D_801211F0[D_801234E8];
-        set_rsp_segment(&D_801211F8, 0, 0);
-        set_rsp_segment(&D_801211F8, 1, gVideoCurrFramebuffer);
-        set_rsp_segment(&D_801211F8, 2, gVideoLastDepthBuffer);
-        set_rsp_segment(&D_801211F8, 4, gVideoCurrFramebuffer - 0x500);
+        gCurrDisplayList = gDisplayLists[D_801234E8];
+        set_rsp_segment(&gCurrDisplayList, 0, 0);
+        set_rsp_segment(&gCurrDisplayList, 1, gVideoCurrFramebuffer);
+        set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
+        set_rsp_segment(&gCurrDisplayList, 4, gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
-        setupOSTasks(D_801211F0[D_801234E8], D_801211F8, 0);
+        setupOSTasks(gDisplayLists[D_801234E8], gCurrDisplayList, 0);
         D_801234E8 += 1;
         D_801234E8 &= 1;
     }
@@ -944,18 +936,18 @@ void render(void) {
         D_800DD3F0 -= 1;
     }
     
-    D_801211F8 = D_801211F0[D_801234E8];
-    D_80121208 = D_80121200[D_801234E8];
-    D_80121218 = D_80121210[D_801234E8];
-    D_80121228 = D_80121220[D_801234E8];
+    gCurrDisplayList = gDisplayLists[D_801234E8];
+    gCurrHudMat = gHudMatrices[D_801234E8];
+    gCurrHudVerts = gHudVertices[D_801234E8];
+    gCurrHudTris = gHudTriangles[D_801234E8];
     
-    set_rsp_segment(&D_801211F8, 0, 0, &D_801234E8);
-    set_rsp_segment(&D_801211F8, 1, gVideoLastFramebuffer);
-    set_rsp_segment(&D_801211F8, 2, gVideoLastDepthBuffer);
-    set_rsp_segment(&D_801211F8, 4, gVideoLastFramebuffer - 0x500);
-    func_800780DC(&D_801211F8);
-    func_80078054(&D_801211F8);
-    render_background(&D_801211F8, &D_80121208, 1);
+    set_rsp_segment(&gCurrDisplayList, 0, 0, &D_801234E8);
+    set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
+    set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
+    set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
+    func_800780DC(&gCurrDisplayList);
+    func_80078054(&gCurrDisplayList);
+    render_background(&gCurrDisplayList, &gCurrHudMat, 1);
     D_800DD37C = func_8006A1C4(D_800DD37C, D_800DD404);
     if (func_800B76DC() != 0) {
         render_epc_lock_up_display();
@@ -972,7 +964,7 @@ void render(void) {
     }
     
     switch(D_801234EC) {
-        case -1:
+        case -1: // Pre-boot screen
             func_8006F43C();
             break;
         case 1: // In a menu
@@ -981,7 +973,7 @@ void render(void) {
         case 0: // In game (Controlling a character)
             func_8006CCF0(D_800DD404);
             break;
-        case 5:
+        case 5: // EPC (lockup display)
             func_800B77D4(D_800DD404);
             break;
     }
@@ -990,19 +982,19 @@ void render(void) {
     // menus & gameplay.
     
     func_80000D00((u8)D_800DD404);
-    func_800B5F78(&D_801211F8);
-    func_800C56FC(&D_801211F8, &D_80121208, &D_80121218);
+    func_800B5F78(&gCurrDisplayList);
+    func_800C56FC(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     func_800C5620(4);
     func_800C5494(4);
     if (func_800C0494(D_800DD404) != 0) {
-        render_fade_transition(&D_801211F8, &D_80121208, &D_80121218);
+        render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     }
     if ((D_80123520 >= 8) && (func_8006F4C8() != 0)) {
-        func_800829F8(&D_801211F8, D_800DD404);
+        func_800829F8(&gCurrDisplayList, D_800DD404);
     }
     
-    gDPFullSync(D_801211F8++)
-    gSPEndDisplayList(D_801211F8++)
+    gDPFullSync(gCurrDisplayList++)
+    gSPEndDisplayList(gCurrDisplayList++)
     
     func_80066610();
     if (D_800DD3F0 != 1) {
@@ -1014,13 +1006,13 @@ void render(void) {
     }
     D_800DD38C = 0;
     func_80071198();
-    if (gIsPaused == 0) {
+    if (!gIsPaused) {
         func_80066520();
     }
     if (D_800DD3F0 == 2) {
-        phi_v0_2 = 153600;
-        if (osTvType == 0) {
-            phi_v0_2 = 168960;
+        phi_v0_2 = 320 * 240 * 2;
+        if (osTvType == TV_TYPE_PAL) {
+            phi_v0_2 = (s32)((320 * 240 * 2) * 1.1);
         }
         func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + phi_v0_2);
     }
@@ -1075,9 +1067,9 @@ void func_8006CC14(void) {
     func_800AE270();
     func_800A003C();
     func_800C30CC();
-    D_801211F8 = D_801211F0[D_801234E8];
-    gDPFullSync(D_801211F8++)
-    gSPEndDisplayList(D_801211F8++)
+    gCurrDisplayList = gDisplayLists[D_801234E8];
+    gDPFullSync(gCurrDisplayList++)
+    gSPEndDisplayList(gCurrDisplayList++)
     set_free_queue_state(2);
 }
 
@@ -1091,25 +1083,25 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
 
 // Almost matching except for a couple minor issues.
 void func_8006CCF0(s32 arg0) {
-    s32 i, s0, sp40, sp3C, buttonInputs, phi_v1_2;
+    s32 i, buttonHeldInputs, sp40, sp3C, buttonPressedInputs, phi_v1_2;
     
     sp40 = 0;
-    s0 = 0;
-    buttonInputs = 0;
+    buttonHeldInputs = 0;
+    buttonPressedInputs = 0;
     
     for (i = 0; i < func_8009C3D8(); i++) {
-        s0 |= func_8006A528(i);
-        buttonInputs |= get_button_inputs_from_player(i);
+        buttonHeldInputs |= get_buttons_held_from_player(i);
+        buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
     if (D_800DD374) {
-        buttonInputs |= START_BUTTON;
+        buttonPressedInputs |= START_BUTTON;
     }
     if (!gIsPaused) {
         func_80010994(arg0);
         if (func_80066510() == 0 || func_8001139C()) {
-            if ((buttonInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0) 
+            if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0) 
                 && (D_801234EC == 0) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
-                buttonInputs = 0;
+                buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
             }
@@ -1126,15 +1118,16 @@ void func_8006CCF0(s32 arg0) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(&D_801211F8, &D_80121208, &D_80121218, &D_80121228, arg0);
+    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
     if (D_801234EC == 0) {
-        s0 &= ~0x2030;
+        // Ignore the user's L/R/Z buttons.
+        buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
     if (D_80123516 != 0) {
-        i = func_80095728(&D_801211F8, &D_80121208, &D_80121218, arg0);
+        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, arg0);
         switch (i - 1) {
             case 1:
-                s0 |= 0x2020;
+                buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
             case 0:
                 D_80123516 = 0;
@@ -1143,36 +1136,36 @@ void func_8006CCF0(s32 arg0) {
             case 3:
                 func_8006C2E4();
                 D_800DD390 = 0;
-                s0 |= 0x30;
+                buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
             // Issue with the below cases.
             case 4:
                 sp40 = 1;
-                s0 |= 0x20;
+                buttonHeldInputs |= L_TRIG;
                 break;
             case 7:
                 sp40 = 2;
-                s0 |= 0x20;
+                buttonHeldInputs |= L_TRIG;
                 break;
             case 8:
                 sp40 = 3;
-                s0 |= 0x20;
+                buttonHeldInputs |= L_TRIG;
                 break;
             case 9:
                 sp40 = 4;
-                s0 |= 0x20;
+                buttonHeldInputs |= L_TRIG;
                 break;
             case 10:
                 sp40 = 5;
-                s0 |= 0x20;
+                buttonHeldInputs |= L_TRIG;
                 break;
             case 11:
                 sp40 = 6;
-                s0 |= 0x20;
+                buttonHeldInputs |= L_TRIG;
                 break;
             case 12:
                 sp40 = 7;
-                s0 |= 0x20;
+                buttonHeldInputs |= L_TRIG;
                 break;
         }
     }
@@ -1188,7 +1181,7 @@ void func_8006CCF0(s32 arg0) {
         }
     }
     if (gIsPaused) {
-        i = func_80094170(&D_801211F8, arg0);
+        i = func_80094170(&gCurrDisplayList, arg0);
         switch (i - 1) {
         case 0:
             gIsPaused = FALSE;
@@ -1199,7 +1192,7 @@ void func_8006CCF0(s32 arg0) {
             if (func_80023568() != 0 && is_in_two_player_adventure()) {
                 func_8006F398();
             }
-            s0 |= 0x2020;
+            buttonHeldInputs |= (L_TRIG | R_TRIG);
             break;
         case 2:
             func_80001050();
@@ -1207,17 +1200,17 @@ void func_8006CCF0(s32 arg0) {
             if (func_80023568() != 0 && is_in_two_player_adventure()) {
                 func_8006F398();
             }
-            s0 |= 0x20;
+            buttonHeldInputs |= L_TRIG;
             break;
         case 4:
             sp40 = 1;
             func_800C314C();
-            s0 |= 0x20;
+            buttonHeldInputs |= L_TRIG;
             break;
         case 11:
             sp40 = 6;
             func_800C314C();
-            s0 |= 0x20;
+            buttonHeldInputs |= L_TRIG;
             break;
         case 5:
             gIsPaused = FALSE;
@@ -1231,14 +1224,14 @@ void func_8006CCF0(s32 arg0) {
             func_80001050();
             func_800C314C();
             func_8006C2E4();
-            s0 |= 0x30;
+            buttonHeldInputs |= (L_TRIG | R_TRIG);
             break;
         }
     }
-    func_80078054(&D_801211F8);
-    render_borders_for_multiplayer(&D_801211F8);
-    func_800A8474(&D_801211F8, &D_80121208, &D_80121218, arg0);
-    func_80077268(&D_801211F8);
+    func_80078054(&gCurrDisplayList);
+    render_borders_for_multiplayer(&gCurrDisplayList);
+    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, arg0);
+    func_80077268(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
             D_801234F4 = 0x23;
@@ -1260,10 +1253,10 @@ void func_8006CCF0(s32 arg0) {
     if (D_800DD394 > 0) {
         D_800DD394 -= arg0;
         if (D_800DD394 <= 0) {
-            s0 = 0x20;
+            buttonHeldInputs = L_TRIG;
             switch(D_80123524) {
                 case 1:
-                    s0 = 0x2020;
+                    buttonHeldInputs = (L_TRIG | Z_TRIG);
                     break;
                 case 2:
                     sp40 = 3;
@@ -1279,7 +1272,7 @@ void func_8006CCF0(s32 arg0) {
                     D_801234F4 = D_80123525;
                     D_80123504 = 0;
                     D_80123508 = 0;
-                    s0 = 0;
+                    buttonHeldInputs = 0;
                     break;
             }
             D_80123524 = 0;
@@ -1295,17 +1288,17 @@ void func_8006CCF0(s32 arg0) {
                     if (D_801234F4 == -10 && is_in_two_player_adventure()) {
                         func_8006F398();
                     }
-                    s0 |= 0x20;
+                    buttonHeldInputs |= L_TRIG;
                     D_801234FC = 2;
                 } else {
-                    s0 = 0;
+                    buttonHeldInputs = 0;
                     D_801234FC = 1;
                     sp40 = 8;
                 }
             } else {
                 D_801234FC = 0;
                 D_801234F8 = 1;
-                s0 = 0;
+                buttonHeldInputs = 0;
             }
         }
     } else {
@@ -1313,7 +1306,7 @@ void func_8006CCF0(s32 arg0) {
         if (func_8006C2F0() != 0) {
             if (D_800DD394 == 0) {
                 // Minor issue here.
-                if ((func_800214C4() != 0) || ((buttonInputs & A_BUTTON) && (sp3C != 0))) {
+                if ((func_800214C4() != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
                     if (sp3C != 0) {
                         func_80000B28();
                     }
@@ -1324,10 +1317,10 @@ void func_8006CCF0(s32 arg0) {
                             if (D_801234F4 == -10 && is_in_two_player_adventure()) {
                                 func_8006F398();
                             }
-                            s0 |= 0x20;
+                            buttonHeldInputs |= L_TRIG;
                             D_801234FC = 2;
                         } else {
-                            s0 = 0;
+                            buttonHeldInputs = 0;
                             D_801234FC = 1;
                             sp40 = 8;
                         }
@@ -1338,14 +1331,14 @@ void func_8006CCF0(s32 arg0) {
             }
         }
     }
-    if (((s0 & 0x20) && (D_801234EC == 0)) || (D_801234FC != 0)) {
+    if (((buttonHeldInputs & L_TRIG) && (D_801234EC == 0)) || (D_801234FC != 0)) {
         gIsPaused = FALSE;
         D_800DD394 = 0;
         D_80123516 = 0;
         func_8006CC14();
         func_8006EC48(get_save_file_index());
         if (sp40 != 0) {
-            D_80123514 = 0;
+            D_80123514 = FALSE;
             switch (sp40) {
                 case 1:
                     // Go to track select menu from "Select Track" option in tracks menu.
@@ -1377,9 +1370,9 @@ void func_8006CCF0(s32 arg0) {
                     load_menu_with_level_background(MENU_CHARACTER_SELECT, 0x16, i);
                     break;
                 case 7:
-                    D_80123514 = 1;
+                    D_80123514 = TRUE;
                     load_menu_with_level_background(MENU_UNKNOWN_23, -1, 0);
-                    D_80123514 = 0;
+                    D_80123514 = FALSE;
                     break;
                 case 8:
                     load_menu_with_level_background(MENU_CREDITS, -1, 0);
@@ -1389,11 +1382,11 @@ void func_8006CCF0(s32 arg0) {
             if (D_80121250[2] == -1) {
                 load_menu_with_level_background(MENU_UNUSED_8, -1, 0);
             } else {
-                D_80123514 = 1;
+                D_80123514 = TRUE;
                 load_menu_with_level_background(MENU_UNKNOWN_5, -1, -1);
             }
-        } else if (!(s0 & 0x10)) {
-            if (!(s0 & 0x2000)) {
+        } else if (!(buttonHeldInputs & R_TRIG)) {
+            if (!(buttonHeldInputs & Z_TRIG)) {
                 D_801234F4 = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
@@ -1485,10 +1478,10 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_80004A60(2, 0x7FFF);
     func_80065EA0();
     
-    if (D_80123514 == 0) {
-        D_80123514 = 0; // Someone at Rare: "I know I just checked if this was zero, but I need to be sure!"
+    if (!D_80123514) {
+        D_80123514 = FALSE;
         if (levelId < 0) {
-            D_80123514 = 1;
+            D_80123514 = TRUE;
         } else {
             load_level_3(levelId, -1, 0, 2, cutsceneId);
         }
@@ -1529,8 +1522,8 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
 }
 
 void func_8006DBE4(void) {
-    if (D_80123514 == 0) {
-        D_80123514 = 1;
+    if (!D_80123514) {
+        D_80123514 = TRUE;
         set_free_queue_state(0);
         func_8006BEFC();
         func_800C01D8(&D_800DD3F4);
@@ -1539,7 +1532,7 @@ void func_8006DBE4(void) {
         func_800C30CC();
         set_free_queue_state(2);
     }
-    D_80123514 = 0;
+    D_80123514 = FALSE;
 }
 
 void func_8006DC58(s32 arg0) {
@@ -1547,35 +1540,196 @@ void func_8006DC58(s32 arg0) {
         func_80010994(arg0);
         gParticlePtrList_flush();
         func_8001BF20();
-        func_80024D54(&D_801211F8, &D_80121208, &D_80121218, &D_80121228, arg0);
+        func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
         func_800C3440(arg0);
-        func_80078054(&D_801211F8);
-        render_borders_for_multiplayer(&D_801211F8);
-        func_80077268(&D_801211F8);
+        func_80078054(&gCurrDisplayList);
+        render_borders_for_multiplayer(&gCurrDisplayList);
+        func_80077268(&gCurrDisplayList);
     }
 }
 
-// Has a jump table
+#ifdef NON_MATCHING
+// Minor & regalloc issues.
+void func_8006DCF8(s32 arg0) {
+    s32 menuLoopResult, temp, temp2, tempResult;
+    
+    gIsPaused = FALSE;
+    D_80123516 = 0;
+    if (!D_80123514 && D_801234F0) {
+        func_8006DC58(arg0);
+    }
+    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
+    D_801234F0 = TRUE;
+    if (menuLoopResult == -2) {
+        D_801234F0 = FALSE;
+        return;
+    }
+    if ((menuLoopResult != -1) && (menuLoopResult & 0x200)) {
+        func_8006DBE4();
+        gCurrDisplayList = gDisplayLists[D_801234E8];
+        gDPFullSync(gCurrDisplayList++)
+        gSPEndDisplayList(gCurrDisplayList++)
+        D_801234F4 = menuLoopResult & 0x7F;
+        D_80123518 = func_8006B0AC(D_801234F4);
+        D_80123504 = 0;
+        D_80123508 = 0x64;
+        D_801234EC = 0;
+        gIsPaused = FALSE;
+        D_80123516 = 0;
+        load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+        func_8006EC48(get_save_file_index());
+        return;
+    }
+    if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
+        func_8006CC14();
+        gIsPaused = FALSE;
+        D_80123516 = 0;
+        switch (menuLoopResult & 0x7F) {
+            case 5:
+                load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
+                break;
+            case 14:
+                D_801234F4 = 0;
+                D_80123504 = 0;
+                D_80123508 = 0x64;
+                D_801234EC = 0;
+                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                func_8006EC48(get_save_file_index());
+                break;
+            case 1:
+                D_80123504 = 0;
+                D_80123508 = 0x64;
+                D_801234F4 = D_80121250[0];
+                D_801234EC = 0;
+                // Minor issue with these 2 if statements
+                temp2 = D_80121250[D_80121250[1] + 8];
+                temp = D_80121250[15];
+                if (temp >= 0) {
+                    D_80123504 = temp;
+                }
+                if (temp2 >= 0) {
+                    D_80123508 = temp2;
+                }
+                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                func_8006EC48(get_save_file_index());
+                break;
+            case 2:
+                D_801234EC = 0;
+                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                break;
+            case 3:
+                D_801234EC = 0;
+                D_801234F4 = D_80121250[0];
+                D_80123504 = D_80121250[15];
+                D_80123508 = D_80121250[D_80121250[1] + 8];
+                D_80123518 = func_8006B0AC(D_801234F4);
+                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                break;
+            default:
+                load_menu_with_level_background(MENU_TITLE, -1, 0);
+                break;
+        }
+        return;
+    }
+    if ((menuLoopResult & 0x80) && (menuLoopResult != -1)) {
+        func_8006DBE4();
+        // Minor issue here.
+        gCurrDisplayList = gDisplayLists[D_801234E8];
+        gDPFullSync(gCurrDisplayList++)
+        gSPEndDisplayList(gCurrDisplayList++)
+        temp = menuLoopResult & 0x7F;
+        D_80121250[1] = temp;
+        D_80121250[0] = D_801234F4;
+        D_801234F4 = D_80121250[temp + 2];
+        D_80123504 = D_80121250[temp + 4];
+        D_801234EC = 0;
+        D_80123508 = D_80121250[temp + 12];
+        temp = get_player_selected_vehicle(0);
+        D_80123500 = gSettingsPtr->gObjectCount - 1;
+        load_level_2(D_801234F4, D_80123500, D_80123504, temp);
+        D_801234FC = 0;
+        D_80123518 = D_8012351C;
+        return;
+    }
+    if (menuLoopResult > 0) {
+        func_8006DBE4();
+        gCurrDisplayList = gDisplayLists[D_801234E8];
+        gDPFullSync(gCurrDisplayList++)
+        gSPEndDisplayList(gCurrDisplayList++)
+        D_801234EC = 0;
+        func_8006CAE4(menuLoopResult, -1, D_80123518);
+        if (gSettingsPtr->newGame && !is_in_tracks_mode()) {
+            func_80000B28();
+            gSettingsPtr->newGame = FALSE;
+        }
+    }
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006DCF8.s")
+#endif
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
-    if (D_80123514 == 0) {
+    if (!D_80123514) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
-            D_801211F8 = D_801211F0[D_801234E8];
-            gDPFullSync(D_801211F8++)
-            gSPEndDisplayList(D_801211F8++)
+            gCurrDisplayList = gDisplayLists[D_801234E8];
+            gDPFullSync(gCurrDisplayList++)
+            gSPEndDisplayList(gCurrDisplayList++)
         }
     }
     if (levelId != -1) {
         load_level_3(levelId, numberOfPlayers, 0, 2, cutsceneId);
-        D_80123514 = (u8)0;
+        D_80123514 = FALSE;
         return;
     }
-    D_80123514 = (u8)1;
+    D_80123514 = TRUE;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006E3BC.s")
+void calc_and_alloc_heap_for_settings(void) {
+    s32 dataSize;
+    u32 sizes[15];
+    s32 numWorlds, numLevels;
+    
+    func_8006A6B0();
+    reset_character_id_slots();
+    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
+    sizes[0] = sizeof(Settings);
+    sizes[1] = sizes[0] + (numLevels * 4); // balloonsPtr
+    sizes[2] = sizes[1] + (numWorlds * 2); // flapInitialsPtr[0]
+    dataSize = (numLevels * 2);
+    sizes[3] = sizes[2] + dataSize; // flapInitialsPtr[1]
+    sizes[4] = sizes[3] + dataSize; // flapInitialsPtr[2]
+    sizes[5] = sizes[4] + dataSize; // flapTimesPtr[0]
+    sizes[6] = sizes[5] + dataSize; // flapTimesPtr[1]
+    sizes[7] = sizes[6] + dataSize; // flapTimesPtr[2]
+    sizes[8] = sizes[7] + dataSize; // courseInitialsPtr[0]
+    sizes[9] = sizes[8] + dataSize; // courseInitialsPtr[1]
+    sizes[10] = sizes[9] + dataSize; // courseInitialsPtr[2]
+    sizes[11] = sizes[10] + dataSize; // courseTimesPtr[0]
+    sizes[12] = sizes[11] + dataSize; // courseTimesPtr[1]
+    sizes[13] = sizes[12] + dataSize; // courseTimesPtr[2]
+    sizes[14] = sizes[13] + dataSize; // total size
+    
+    gSettingsPtr = allocate_from_main_pool_safe(sizes[14], COLOR_TAG_WHITE);
+    gSettingsPtr->courseFlagsPtr = (u8*)gSettingsPtr + sizes[0];
+    gSettingsPtr->balloonsPtr = (u8*)gSettingsPtr + sizes[1];
+    gSettingsPtr->tajFlags = 0;
+    gSettingsPtr->flapInitialsPtr[0] = (u8*)gSettingsPtr + sizes[2];
+    gSettingsPtr->flapInitialsPtr[1] = (u8*)gSettingsPtr + sizes[3];
+    gSettingsPtr->flapInitialsPtr[2] = (u8*)gSettingsPtr + sizes[4];
+    gSettingsPtr->flapTimesPtr[0] = (u8*)gSettingsPtr + sizes[5];
+    gSettingsPtr->flapTimesPtr[1] = (u8*)gSettingsPtr + sizes[6];
+    gSettingsPtr->flapTimesPtr[2] = (u8*)gSettingsPtr + sizes[7];
+    gSettingsPtr->courseInitialsPtr[0] = (u8*)gSettingsPtr + sizes[8];
+    gSettingsPtr->courseInitialsPtr[1] = (u8*)gSettingsPtr + sizes[9];
+    gSettingsPtr->courseInitialsPtr[2] = (u8*)gSettingsPtr + sizes[10];
+    gSettingsPtr->courseTimesPtr[0] = (u8*)gSettingsPtr + sizes[11];
+    gSettingsPtr->courseTimesPtr[1] = (u8*)gSettingsPtr + sizes[12];
+    gSettingsPtr->courseTimesPtr[2] = (u8*)gSettingsPtr + sizes[13];
+    gSettingsPtr->unk4C = &D_80121250;
+    D_800DD37C = 263;
+}
 
 void func_8006E5BC(void) {
     s32 i, j;
@@ -1607,7 +1761,28 @@ void func_8006E5BC(void) {
     gSettingsPtr->courseId = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006E770.s")
+void func_8006E770(Settings *settings, s32 arg1) {
+    s32 i, j;
+    s32 numWorlds, numLevels;
+    s32 index;
+    u16 *temp_v0;
+    
+    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
+    temp_v0 = (u16*)get_misc_asset(0x17);
+    for (i = 0; i < 3; i++) { // 3 = number of save files?
+        for(j = 0; j < numLevels; j++) {
+            index = (j * 12) + (i * 4);
+            if (arg1 & 1) {
+                settings->flapInitialsPtr[i][j] = temp_v0[index + 3];
+                settings->flapTimesPtr[i][j] = temp_v0[index + 2];
+            }
+            if (arg1 & 2) {
+                settings->courseInitialsPtr[i][j] = temp_v0[index + 1];
+                settings->courseTimesPtr[i][j] = temp_v0[index];
+            }
+        }
+    }
+}
 
 void func_8006E994(Settings* settings) {
     s32 i;
@@ -1736,77 +1911,37 @@ s32 func_8006EFB8(void) {
     return 1;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006EFDC.s")
-#else
-    
-/* Size: 0x40 bytes, I think this might be a 4x4 matrix. */
-typedef struct unk80121200 {
-    u8 pad0[0x40];
-} unk80121200;
+#ifdef NON_MATCHING
 
-/* Size: 10 bytes */
-typedef struct unk80121210 {
-    u8 pad0[10];
-} unk80121210;
-
-/* Size: 16 bytes */
-typedef struct unk80121220 {
-    u8 pad0[16];
-} unk80121220;
-
-extern s32 D_8012350C;
-
-extern s32 D_800DD3BC;
-extern s32 D_800DD3CC;
-extern s32 D_800DD3DC;
-extern s32 D_800DD3EC;
-
-extern s32 D_80123528;
-extern s32 D_8012352C;
-extern s32 D_80123530;
-extern s32 D_80123534;
-
-extern unk80121200 *D_80121200[3];
-extern unk80121210 *D_80121210[3];
-extern unk80121220 *D_80121220[3];
-
-void *allocate_from_main_pool_safe(s32, s32);
-
+// Not close to matching, but should be the same functionality-wise.
 void func_8006EFDC(void) {
-    s32 size;
-    s8* current;
+    s32 size1, size2, size3, size4, totalSize;
 
     D_8012350C = 3;
     
-    size = (D_800DD3EC * sizeof(unk80121220)) + 
-           (D_800DD3BC * sizeof(Gfx)) + 
-           (D_800DD3DC * sizeof(unk80121200)) + 
-           (D_800DD3CC * sizeof(unk80121210));
+    size1 = (gNumF3dCmdsPerPlayer[3] * sizeof(Gwords));
+    size2 = (gNumHudMatPerPlayer[3] * sizeof(Mtx));
+    size3 = (gNumHudVertsPerPlayer[3] * sizeof(Vertex));
+    size4 = (gNumHudTrisPerPlayer[3] * sizeof(Triangle));
+    totalSize = size1 + size2 + size3 + size4;
     
-    current = (s8*)allocate_from_main_pool_safe(size, COLOR_TAG_RED);
-    D_801211F0[0] = (Gfx*)current;
-    current += (D_800DD3BC * sizeof(Gfx));
-    D_80121200[0] = (unk80121200*)current;
-    current += (D_800DD3DC * sizeof(unk80121200));
-    D_80121210[0] = (unk80121210*)current;
-    current += (D_800DD3CC * sizeof(unk80121210));
-    D_80121220[0] = (unk80121220*)current;
+    gDisplayLists[0] = (u8*)allocate_from_main_pool_safe(totalSize, COLOR_TAG_RED);
+    gHudMatrices[0] = (u8*)gDisplayLists[0] + size1;
+    gHudVertices[0] = (u8*)gHudMatrices[0] + size2;
+    gHudTriangles[0] = (u8*)gHudVertices[0] + size3;
     
-    current = (s8*)allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
-    D_801211F0[1] = (Gfx*)current;
-    current += (D_800DD3BC * sizeof(Gfx));
-    D_80121200[1] = (unk80121200*)current;
-    current += (D_800DD3DC * sizeof(unk80121200));
-    D_80121210[1] = (unk80121210*)current;
-    current += (D_800DD3CC * sizeof(unk80121210));
-    D_80121220[1] = (unk80121220*)current;
+    gDisplayLists[1] = (u8*)allocate_from_main_pool_safe(totalSize, COLOR_TAG_YELLOW);
+    gHudMatrices[1] = (u8*)gDisplayLists[1] + size1;
+    gHudVertices[1] = (u8*)gHudMatrices[1] + size2;
+    gHudTriangles[1] = (u8*)gHudVertices[1] + size3;
     
-    D_80123528 = D_800DD3BC;
-    D_8012352C = D_800DD3DC;
-    D_80123530 = D_800DD3EC;
-    D_80123534 = D_800DD3CC;
+    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[3];
+    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[3];
+    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[3];
+    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[3];
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006EFDC.s")
 #endif
 
 void func_8006F140(s32 arg0) {
@@ -1897,18 +2032,18 @@ void func_8006F42C(void) {
 }
 
 void func_8006F43C(void) {
-    s32 phi_s1 = 0;
-    s32 phi_s0 = 0;
-    while(phi_s0 != 4) {
-        phi_s1 |= func_8006A528(phi_s0);
-        phi_s0++;
+    s32 i;
+    s32 buttonInputs = 0;
+    
+    for(i = 0; i < MAXCONTROLLERS; i++) {
+        buttonInputs |= get_buttons_held_from_player(i);
     }
-    if (phi_s1 & 0x1000) {
-        D_800DFD94 = 1;
+    if (buttonInputs & START_BUTTON) {
+        gShowControllerPakMenu = TRUE;
     }
     D_80123520++;
     if (D_80123520 >= 8) {
-        load_menu_with_level_background(0x1A, 0x27, 2);
+        load_menu_with_level_background(MENU_BOOT, 0x27, 2);
     }
 }
 

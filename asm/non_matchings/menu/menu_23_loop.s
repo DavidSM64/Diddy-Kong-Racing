@@ -20,7 +20,7 @@ glabel menu_23_loop
 /* 09B944 8009AD44 19E00008 */  blez  $t7, .L8009AD68
 /* 09B948 8009AD48 00000000 */   nop   
 .L8009AD4C:
-/* 09B94C 8009AD4C 0C01A955 */  jal   get_button_inputs_from_player
+/* 09B94C 8009AD4C 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 09B950 8009AD50 02002025 */   move  $a0, $s0
 /* 09B954 8009AD54 8E380000 */  lw    $t8, ($s1)
 /* 09B958 8009AD58 26100001 */  addiu $s0, $s0, 1

@@ -55,7 +55,7 @@ glabel menu_audio_options_loop
 /* 085938 80084D38 AFA50024 */  sw    $a1, 0x24($sp)
 /* 08593C 80084D3C AFA60034 */  sw    $a2, 0x34($sp)
 /* 085940 80084D40 AFA70038 */  sw    $a3, 0x38($sp)
-/* 085944 80084D44 0C01A955 */  jal   get_button_inputs_from_player
+/* 085944 80084D44 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 085948 80084D48 AFA8003C */   sw    $t0, 0x3c($sp)
 /* 08594C 80084D4C 8FAD0040 */  lw    $t5, 0x40($sp)
 /* 085950 80084D50 02002025 */  move  $a0, $s0

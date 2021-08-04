@@ -487,7 +487,7 @@ glabel func_80010994
 /* 011C8C 8001108C 24100004 */  li    $s0, 4
 .L80011090:
 /* 011C90 80011090 02602025 */  move  $a0, $s3
-/* 011C94 80011094 0C01A955 */  jal   get_button_inputs_from_player
+/* 011C94 80011094 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 011C98 80011098 AFA50054 */   sw    $a1, 0x54($sp)
 /* 011C9C 8001109C 8FA50054 */  lw    $a1, 0x54($sp)
 /* 011CA0 800110A0 26730001 */  addiu $s3, $s3, 1

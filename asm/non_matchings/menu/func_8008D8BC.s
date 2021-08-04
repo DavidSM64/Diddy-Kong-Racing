@@ -4,7 +4,7 @@ glabel func_8008D8BC
 /* 08E4C4 8008D8C4 0C01BAA4 */  jal   get_settings
 /* 08E4C8 8008D8C8 AFA40030 */   sw    $a0, 0x30($sp)
 /* 08E4CC 8008D8CC AFA2001C */  sw    $v0, 0x1c($sp)
-/* 08E4D0 8008D8D0 0C01A955 */  jal   get_button_inputs_from_player
+/* 08E4D0 8008D8D0 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08E4D4 8008D8D4 00002025 */   move  $a0, $zero
 /* 08E4D8 8008D8D8 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
 /* 08E4DC 8008D8DC 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)
@@ -15,7 +15,7 @@ glabel func_8008D8BC
 /* 08E4F0 8008D8F0 00401825 */   move  $v1, $v0
 /* 08E4F4 8008D8F4 24040001 */  li    $a0, 1
 /* 08E4F8 8008D8F8 AFA20028 */  sw    $v0, 0x28($sp)
-/* 08E4FC 8008D8FC 0C01A955 */  jal   get_button_inputs_from_player
+/* 08E4FC 8008D8FC 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08E500 8008D900 AFA50024 */   sw    $a1, 0x24($sp)
 /* 08E504 8008D904 3C0F8012 */  lui   $t7, %hi(gControllersXAxisDirection+1) # $t7, 0x8012
 /* 08E508 8008D908 8FA30028 */  lw    $v1, 0x28($sp)

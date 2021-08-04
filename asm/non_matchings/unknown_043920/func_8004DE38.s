@@ -607,11 +607,11 @@ glabel func_8004DE38
 /* 04F2A0 8004E6A0 AFA600AC */   sw    $a2, 0xac($sp)
 /* 04F2A4 8004E6A4 8FA400AC */  lw    $a0, 0xac($sp)
 /* 04F2A8 8004E6A8 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
-/* 04F2AC 8004E6AC 0C01A94A */  jal   func_8006A528
+/* 04F2AC 8004E6AC 0C01A94A */  jal   get_buttons_held_from_player
 /* 04F2B0 8004E6B0 AC22D538 */   sw    $v0, %lo(D_8011D538)($at)
 /* 04F2B4 8004E6B4 8FA400AC */  lw    $a0, 0xac($sp)
 /* 04F2B8 8004E6B8 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
-/* 04F2BC 8004E6BC 0C01A955 */  jal   get_button_inputs_from_player
+/* 04F2BC 8004E6BC 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 04F2C0 8004E6C0 AC22D528 */   sw    $v0, %lo(D_8011D528)($at)
 /* 04F2C4 8004E6C4 8FA400AC */  lw    $a0, 0xac($sp)
 /* 04F2C8 8004E6C8 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012

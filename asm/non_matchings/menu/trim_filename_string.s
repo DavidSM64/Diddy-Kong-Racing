@@ -1,4 +1,4 @@
-glabel func_800977D0
+glabel trim_filename_string
 /* 0983D0 800977D0 908E0000 */  lbu   $t6, ($a0)
 /* 0983D4 800977D4 00A03825 */  move  $a3, $a1
 /* 0983D8 800977D8 11C00024 */  beqz  $t6, .L8009786C

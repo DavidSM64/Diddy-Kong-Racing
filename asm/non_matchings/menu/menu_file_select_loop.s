@@ -97,7 +97,7 @@ glabel menu_file_select_loop
 /* 08EBD0 8008DFD0 28410015 */   slti  $at, $v0, 0x15
 /* 08EBD4 8008DFD4 10200008 */  beqz  $at, .L8008DFF8
 /* 08EBD8 8008DFD8 00A02025 */   move  $a0, $a1
-/* 08EBDC 8008DFDC 0C02335D */  jal   func_8008CD74
+/* 08EBDC 8008DFDC 0C02335D */  jal   render_file_select_menu
 /* 08EBE0 8008DFE0 AFA80044 */   sw    $t0, 0x44($sp)
 /* 08EBE4 8008DFE4 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 08EBE8 8008DFE8 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
@@ -133,7 +133,7 @@ glabel menu_file_select_loop
 /* 08EC54 8008E054 00002025 */  move  $a0, $zero
 /* 08EC58 8008E058 13000048 */  beqz  $t8, .L8008E17C
 /* 08EC5C 8008E05C 00000000 */   nop   
-/* 08EC60 8008E060 0C01A955 */  jal   get_button_inputs_from_player
+/* 08EC60 8008E060 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 08EC64 8008E064 AFA80044 */   sw    $t0, 0x44($sp)
 /* 08EC68 8008E068 8FA80044 */  lw    $t0, 0x44($sp)
 /* 08EC6C 8008E06C 30594000 */  andi  $t9, $v0, 0x4000
