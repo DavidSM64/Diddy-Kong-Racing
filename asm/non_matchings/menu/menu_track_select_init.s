@@ -458,7 +458,7 @@ glabel menu_track_select_init
 /* 08FA7C 8008EE7C 00000000 */  nop   
 /* 08FA80 8008EE80 A64C0000 */  sh    $t4, ($s2)
 .L8008EE84:
-/* 08FA84 8008EE84 0C027B18 */  jal   func_8009EC60
+/* 08FA84 8008EE84 0C027B18 */  jal   is_adventure_two_unlocked
 /* 08FA88 8008EE88 00000000 */   nop   
 /* 08FA8C 8008EE8C 10400008 */  beqz  $v0, .L8008EEB0
 /* 08FA90 8008EE90 00000000 */   nop   

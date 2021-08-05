@@ -193,7 +193,7 @@ glabel L80086D54
 /* 0879C4 80086DC4 25296BE4 */  addiu $t1, %lo(D_80126BE4) # addiu $t1, $t1, 0x6be4
 /* 0879C8 80086DC8 1180000B */  beqz  $t4, .L80086DF8
 /* 0879CC 80086DCC 25086A04 */   addiu $t0, %lo(D_80126A04) # addiu $t0, $t0, 0x6a04
-/* 0879D0 80086DD0 0C027B18 */  jal   func_8009EC60
+/* 0879D0 80086DD0 0C027B18 */  jal   is_adventure_two_unlocked
 /* 0879D4 80086DD4 AFA60028 */   sw    $a2, 0x28($sp)
 /* 0879D8 80086DD8 8FA60028 */  lw    $a2, 0x28($sp)
 /* 0879DC 80086DDC 3C088012 */  lui   $t0, %hi(D_80126A04) # $t0, 0x8012

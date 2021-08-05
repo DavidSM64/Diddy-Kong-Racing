@@ -6,6 +6,7 @@
 #include "fade_transition.h"
 
 #include <PR/os_cont.h>
+#include "asset_sections.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
@@ -21,6 +22,13 @@
 // The bss section needs to stay above the data section! 
 // Otherwise the bss variables will get reordered, which is bad.
 
+
+typedef struct unk801263C0 {
+    s8 unk0;
+    s8 unk1;
+    s16 unk2;
+} unk801263C0;
+
 unk800DFC10 *D_80126390;
 unk800DFC10 *D_80126394;
 s32 D_80126398;
@@ -30,10 +38,11 @@ s32 D_801263A4;
 s32 *D_801263A8;
 s32 *D_801263AC;
 s32 *D_801263B0;
-s8 D_801263B4;
-s32 D_801263B8;
+unk801263C0 D_801263B4;
+unk801263C0 D_801263B8;
 s32 D_801263BC;
-s32 D_801263C0;
+unk801263C0 D_801263C0;
+
 s32 gIgnorePlayerInput;
 s32 D_801263C8;
 
@@ -148,7 +157,7 @@ s32 D_80126820;
 s32 D_80126824;
 s8  D_80126828;
 s32 D_8012682C;
-s32 D_80126830;
+s16 D_80126830;
 s32 D_80126834;
 s16 D_80126838;
 s16 D_8012683A;
@@ -163,12 +172,12 @@ s32 D_80126858;
 s32 D_8012685C;
 s32 D_80126860;
 s32 D_80126864;
-s32 D_80126868;
+s16 D_80126868;
 s32 D_8012686C;
-s32 D_80126870;
-s32 D_80126874;
+f32 D_80126870;
+s8 *D_80126874;
 s32 D_80126878[24];
-s32 D_801268D8;
+f32 D_801268D8;
 s32 D_801268DC;
 s32 D_801268E0;
 s32 D_801268E4;
@@ -182,9 +191,9 @@ s8 gPlayerSelectVehicle[4]; // Unknown number of entries.
 s32 D_801269C4;
 s32 D_801269C8;
 s32 D_801269CC;
-s32 D_801269D0[3];
+s32 gAudioOutputStrings[3];
 s32 D_801269DC;
-u32 *D_801269E0;
+u32 *gMusicTestString;
 s32 D_801269E4;
 s32 D_801269E8;
 s32 D_801269EC;
@@ -296,9 +305,9 @@ s32 D_800DF48C = 0; // Currently unknown, might be a different type.
 s32 D_800DF490 = 0; // Currently unknown, might be a different type.
 s32 gIsInAdventureTwo = 0;
 s32 gPlayerHasSeenCautionMenu = 0;
-s32 D_800DF49C = 0; // Currently unknown, might be a different type.
+s32 *gMenuTextLangTable = NULL;
 
-char **D_800DF4A0 = NULL;
+char **gMenuText = NULL;
 
 u8 D_800DF4A4 = 0xFF;
 u8 D_800DF4A8 = 0xFF;
@@ -363,21 +372,18 @@ s32 D_800DF768 = 1;
 
 FadeTransition D_800DF76C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 10, -1);
 FadeTransition D_800DF774 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 18, -1);
+FadeTransition D_800DF77C = FADE_TRANSITION(0x80, FADE_COLOR_BLACK, 18, 0);
 
-u16 D_800DF77C[12] = { 
-    0x8000, 0x0000, 0x0012, 0x0000,
-    0x00FF, 0xFFFF, 0x0012, 0xFFFF,
-    0x80FF, 0xFFFF, 0x0012, 0x0000
-};
+// These two are unused?
+FadeTransition D_800DF784 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 18, -1);
+FadeTransition D_800DF78C = FADE_TRANSITION(0x80, FADE_COLOR_WHITE, 18, 0);
 
 s32 D_800DF794 = 4;
 s32 D_800DF798 = 0;
 s32 D_800DF79C = 0;
 
 s32 D_800DF7A0 = 0;
-s32 D_800DF7A4 = 0;
-s32 D_800DF7A8 = 0; // Currently unknown, might be a different type.
-s32 D_800DF7AC = 0; // Currently unknown, might be a different type.
+char *gTitleMenuStrings[3] = {0, 0, 0};
 
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 char gVersionDisplayText[20] = "VERSION XXXXXXXX";
@@ -426,7 +432,7 @@ u16 D_800DF9F8[12] = {
     0x00FF, 0xFF33, 0x0000, 0x0F78
 };
 
-char *D_800DFA10[7] = {
+char *gOptionMenuStrings[7] = {
     NULL, NULL, NULL, NULL, NULL, NULL, NULL
 };
 
@@ -434,7 +440,7 @@ s16 D_800DFA2C[8] = {
     0x3D, 0x3C, 0x3F, 0x3E, 0x44, -1, -1, 0
 };
 
-unk800DFA3C D_800DFA3C[8] = {
+unk800DFA3C gAudioMenuStrings[8] = {
     { 160,  80, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
     { 160, 104, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
     { 160, 144, 0xFF, 0xFF, 0xFF,    0, 0xFF, 0, 0, 12, NULL },
@@ -545,7 +551,7 @@ s32 gShowControllerPakMenu = FALSE;
 s32 gActiveMagicCodes = 0;
 s32 gUnlockedMagicCodes = 0;
 
-s32 D_800DFDA0[5] = { 0, 0, 0, 0, 0 };
+s32 gMagicCodeMenuStrings[5] = { 0, 0, 0, 0, 0 };
 
 u8 D_800DFDB4[10][2] = {
     { 0x0F, 0x64 },
@@ -614,7 +620,7 @@ s32 D_800DFF40[36] = {
 s32 D_800DFFD0 = 0;
 s32 D_800DFFD4 = -1;
 
-MenuElement D_800DFFD8[14] = {
+MenuElement gCautionMenuTextElements[14] = {
     { 161,  35, 161,  35, 161,  35,   0,   0,   0, 255, 128, 2, 12, 0, NULL, 0, 0, 0, 0 },
     { 160,  32, 160,  32, 160,  32, 255, 255, 255,   0, 255, 2, 12, 0, NULL, 0, 0, 0, 0 },
     { 160,  72, 160,  68, 160,  72, 255, 255, 255,   0, 255, 0, 12, 0, NULL, 0, 0, 0, 0 },
@@ -631,7 +637,7 @@ MenuElement D_800DFFD8[14] = {
     {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, NULL, 0, 0, 0, 0 }
 };
                                                                              
-MenuElement D_800E0198[7] = {                                                       
+MenuElement gGameSelectTextElemsNoAdv2[7] = {                                                       
     { 161,  35, 161,  35, 161,  35,   0,   0,   0, 255, 128, 2, 12, 0, NULL,   0,  0, 0, 0 },
     { 160,  32, 160,  32, 160,  32, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
     { -96,  39, -96,  39, -96,  39, 176, 224, 192, 255, 255, 0,  0, 7, NULL, 192, 44, 4, 4 },
@@ -641,7 +647,7 @@ MenuElement D_800E0198[7] = {
     {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, NULL,   0,  0, 0, 0 }
 };   
                                                                         
-MenuElement D_800E0278[9] = { 
+MenuElement gGameSelectTextElemsWithAdv2[9] = { 
     {  161,  35,  161,  35,  161,  35,   0,   0,   0, 255, 128, 2, 12, 0, NULL,   0,  0, 0, 0 },
     {  160,  32,  160,  32,  160,  32, 255, 255, 255,   0, 255, 2, 12, 0, NULL,   0,  0, 0, 0 },
     { -112,  55, -112,  55, -112,  55, 176, 224, 192, 255, 255, 0,  0, 7, NULL, 224, 44, 4, 4 },
@@ -661,7 +667,7 @@ s16 D_800E03A4[6] = {
     0x00, 0x0B, 0x0C, 0x0A, -1, 0
 };
 
-char *D_800E03B0[3] = { 
+char *gFilenames[3] = { 
     NULL, NULL, NULL
 };
 
@@ -1540,14 +1546,171 @@ void func_8009C508(s32 arg0);
 void *allocate_from_main_pool_safe(s32, u32);
 void func_800C4170(s32 arg0);
 void play_music(s32 arg0);
-void func_800C01D8(s32);
+void func_800C01D8(FadeTransition*);
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha);
 void func_8007B3D0(Gfx **dlist);
 void func_8009BD5C(void);
 void load_level_for_menu(s32, s32, s32);
 void func_8008CACC(void);
+void reset_character_id_slots(void);
+void func_80000FDC(s32, s32, f32);
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8007F900.s")
+#ifdef NON_MATCHING
+
+// Should be functionally equivalent?
+void load_menu_text(s32 language) {
+    s32 start, langIndex, i, j;
+    
+    if (gMenuTextLangTable == NULL) {
+        gMenuTextLangTable = load_asset_section_from_rom(ASSET_MENU_TEXT_TABLE);
+    }
+    
+    switch(language) {
+        case JAPANESE:
+            langIndex = 4;
+            break;
+        case GERMAN: 
+            langIndex = 3;
+            break;
+        case FRENCH:
+            langIndex = 2;
+            break;
+        default: // English
+            langIndex = 1;
+            break;
+    }
+    
+    start = gMenuTextLangTable[langIndex];
+    if (gMenuText != NULL) {
+        load_asset_to_address(ASSET_MENU_TEXT, gMenuText, start, gMenuTextLangTable[langIndex + 1] - start);
+        // Fill up the lookup table with proper RAM addresses
+        for (i = 0; i < gMenuTextLangTable[0]; i++) {
+            if ((s32)gMenuText[i] == -1) {
+                gMenuText[i] = NULL;
+            } else {
+                gMenuText[i] = &((u8*)gMenuText)[(s32)gMenuText[i]];
+            }
+        }
+        gAudioOutputStrings[0] = gMenuText[0]; // STEREO
+        gAudioOutputStrings[1] = gMenuText[1]; // MONO
+        gAudioOutputStrings[2] = gMenuText[2]; // HEADPHONES
+        gAudioMenuStrings[1].unkC = gMenuText[3]; // SFX VOLUME
+        gAudioMenuStrings[2].unkC = gMenuText[4]; // MUSIC VOLUME
+        gAudioMenuStrings[3].unkC = gMenuText[5]; // RETURN
+        gAudioMenuStrings[4].unkC = gMenuText[6]; // AUDIO OPTIONS
+        gAudioMenuStrings[5].unkC = gMenuText[6]; // AUDIO OPTIONS
+        gMusicTestString = gMenuText[7]; // MUSIC TEST 00
+        gMagicCodeMenuStrings[0] = gMenuText[14]; // ENTER CODE
+        gMagicCodeMenuStrings[1] = gMenuText[15]; // CLEAR ALL CODES
+        gMagicCodeMenuStrings[2] = gMenuText[16]; // CODE LIST
+        gMagicCodeMenuStrings[3] = gMenuText[5]; // RETURN
+        D_800E0BEC[1].asciiText = gMenuText[29]; // LAP TIMES
+        D_800E0BEC[2].asciiText = gMenuText[30]; // OVERALL TIME
+        D_800E0CEC[8].asciiText = gMenuText[31]; // RACE ORDER
+        D_800E0CEC[9].asciiText = gMenuText[31]; // RACE ORDER
+        D_800E0E4C[0].asciiText = gMenuText[32]; // RECORD TIMES
+        D_800E0E4C[1].asciiText = gMenuText[32]; // RECORD TIMES
+        D_800E0E4C[2].asciiText = gMenuText[9];  // BEST TIME
+        D_800E0E4C[5].asciiText = gMenuText[10]; // BEST LAP
+        gOptionMenuStrings[0] = gMenuText[34]; // ENGLISH
+        if (D_80126448 & 0x2000000) {
+            gOptionMenuStrings[1] = gMenuText[182]; // SUBTITLES ON
+        } else {
+            gOptionMenuStrings[1] = gMenuText[183]; // SUBTITLES OFF
+        }
+        gOptionMenuStrings[2] = gMenuText[6];   // AUDIO OPTIONS
+        gOptionMenuStrings[3] = gMenuText[165]; // SAVE OPTIONS
+        gOptionMenuStrings[4] = gMenuText[17];  // MAGIC CODES
+        gOptionMenuStrings[5] = gMenuText[5];   // RETURN
+        gFilenames[0] = gMenuText[72];  // GAME A
+        gFilenames[1] = gMenuText[73];  // GAME B
+        gFilenames[2] = gMenuText[74];  // GAME C
+        D_800DFAE4[0] = gMenuText[90];  // CONTROLLER PAK ~
+        D_800DFAE4[1] = gMenuText[91];  // IS NOT PRESENT.
+        D_800DFAE4[3] = gMenuText[85];  // CANCEL
+        D_800DFAFC[0] = gMenuText[90];  // CONTROLLER PAK ~
+        D_800DFAFC[1] = gMenuText[93];  // CONTAINS CORRUPT DATA.
+        D_800DFAFC[3] = gMenuText[94];  // ATTEMPT TO REPAIR
+        D_800DFAFC[4] = gMenuText[85];  // CANCEL
+        D_800DFB14[0] = gMenuText[90];  // CONTROLLER PAK ~
+        D_800DFB14[1] = gMenuText[95];  // IRREPARABLY DAMAGED.
+        D_800DFB14[3] = gMenuText[96];  // REFORMAT PAK
+        D_800DFB14[4] = gMenuText[85];  // CANCEL
+        D_800DFB2C[0] = gMenuText[90];  // CONTROLLER PAK ~
+        D_800DFB2C[1] = gMenuText[97];  // FULL.
+        D_800DFB2C[3] = gMenuText[98];  // CONTINUE
+        D_800DFB40[0] = gMenuText[90];  // CONTROLLER PAK ~
+        D_800DFB40[1] = gMenuText[99];  // DIFFERENT CONTROLLER
+        D_800DFB40[2] = gMenuText[100]; // PAK IS INSERTED.
+        D_800DFB40[4] = gMenuText[85];  // CANCEL
+        D_800DFB5C[0] = gMenuText[90];  // CONTROLLER PAK ~
+        D_800DFB5C[1] = gMenuText[102]; // CANNOT STORE ANY
+        D_800DFB5C[2] = gMenuText[103]; // MORE GHOSTS.
+        D_800DFB5C[4] = gMenuText[98];  // CONTINUE
+        D_800DFB74[0] = gMenuText[90];  // CONTROLLER PAK ~
+        D_800DFB74[1] = gMenuText[184]; // CORRUPT DATA.
+        D_800DFB74[3] = gMenuText[23];  // TRY AGAIN
+        D_800DFB74[4] = gMenuText[85];  // CANCEL
+        D_800DFB8C[0] = gMenuText[153]; // Rumble Pak Detected
+        D_800DFB8C[1] = gMenuText[154]; // Insert any Controller Paks
+        D_800DFB8C[2] = gMenuText[155]; // you wish to use now!
+        D_800DFB8C[4] = gMenuText[98];  // CONTINUE
+        D_800DFBA4[0] = gMenuText[156]; // If you wish to use any
+        D_800DFBA4[1] = gMenuText[157]; // Rumble Paks then please
+        D_800DFBA4[2] = gMenuText[158]; // insert them now.
+        D_800DFBA4[4] = gMenuText[98];  // CONTINUE
+        D_800DFBBC[0] = gMenuText[104]; // SORRY, BUT YOU
+        D_800DFBBC[1] = gMenuText[105]; // CAN'T LOAD GAMES
+        D_800DFBBC[2] = gMenuText[106]; // FOR THE SECOND
+        D_800DFBBC[3] = gMenuText[107]; // ADVENTURE UNTIL
+        D_800DFBBC[4] = gMenuText[108]; // YOU HAVE COMPLETED
+        D_800DFBBC[5] = gMenuText[109]; // THE FIRST.
+        D_800DFBBC[7] = gMenuText[98];  // CONTINUE
+        gTitleMenuStrings[0] = gMenuText[137]; // START
+        gTitleMenuStrings[1] = gMenuText[36];  // OPTIONS
+        gGameSelectTextElemsNoAdv2[0].asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsNoAdv2[1].asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsNoAdv2[3].asciiText = gMenuText[142]; // ADVENTURE
+        gGameSelectTextElemsNoAdv2[5].asciiText = gMenuText[144]; // TRACKS
+        gGameSelectTextElemsWithAdv2[0].asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsWithAdv2[1].asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsWithAdv2[3].asciiText = gMenuText[142]; // ADVENTURE
+        gGameSelectTextElemsWithAdv2[5].asciiText = gMenuText[143]; // ADVENTURE TWO
+        gGameSelectTextElemsWithAdv2[7].asciiText = gMenuText[144]; // TRACKS
+        D_800E09B0[0] = gMenuText[69]; // BAD CONTROLLER PAK
+        D_800E09C4[0] = gMenuText[68]; // CONTROLLER PAK FULL
+        D_800E09D8[0] = gMenuText[67]; // NO CONTROLLER PAK
+        D_800E09EC[4] = 0;
+        D_800E09EC[5] = 0;
+        D_800E09EC[0] = gMenuText[184]; // CORRUPT DATA.
+        for (i = 0; i < 2; i++) {
+            D_800E09B0[i + 1] = gMenuText[177 + i];
+            D_800E09C4[i + 1] = gMenuText[177 + i];
+            D_800E09D8[i + 1] = gMenuText[177 + i];
+            D_800E09EC[i + 1] = gMenuText[177 + i];
+        }
+        j = 0;
+        while (D_800E09EC[j] != 0) {
+            j++;
+        }
+        D_800E09EC[j] = gMenuText[185]; // TRY AGAIN!
+        D_800E0A04[0] = gMenuText[159]; // If you wish to use
+        D_800E0A04[1] = gMenuText[160]; // the Controller Pak
+        D_800E0A04[2] = gMenuText[162]; // insert it now!
+        D_800E0A14[0] = gMenuText[159]; // If you wish to use
+        D_800E0A14[1] = gMenuText[161]; // the Rumble Pak
+        D_800E0A14[2] = gMenuText[162]; // insert it now!
+        gCautionMenuTextElements[0].asciiText = gMenuText[152]; // CAUTION
+        gCautionMenuTextElements[1].asciiText = gMenuText[152]; // CAUTION
+        for(i = 2; i < 13; i++) {
+            // Caution message lines starting from gMenuText[166]
+            gCautionMenuTextElements[i].asciiText = gMenuText[166 + (i - 2)]; 
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/load_menu_text.s")
+#endif
 
 void func_8007FF88(void) {
     if (D_800E1DAC[0] != NULL) {
@@ -1887,7 +2050,7 @@ void func_800829F8(s32 arg0, s32 arg1) {
     D_800DF46C += arg1;
     
     if (D_800DF46C & 0x10) {
-        func_8007F900(get_language());
+        load_menu_text(get_language());
         set_text_font(0);
         set_text_color(255, 255, 255, 0, 0xFF);
         set_text_background_color(0, 0, 0, 0);
@@ -1895,7 +2058,7 @@ void func_800829F8(s32 arg0, s32 arg1) {
         if (osTvType == 0) {
             temp = 0xEA;
         }
-        draw_text(arg0, -0x8000, temp, D_800DF4A0[151], 0xC);
+        draw_text(arg0, -0x8000, temp, gMenuText[151], 0xC);
     }
 }
 
@@ -1933,11 +2096,61 @@ void func_80082FAC(void) {
     if ((D_80126448 & 0x2000000) == 0) {
         func_800C2AF4(0);
     }
-    func_8007F900(get_language());
+    load_menu_text(get_language());
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80083098.s")
-GLOBAL_ASM("asm/non_matchings/menu/menu_title_screen_init.s")
+
+void menu_title_screen_init(void) {
+    s32 i;
+    s32 temp;
+    s8 *tempArr;
+    
+    D_800DF488 = 1;
+    D_801263BC = 0;
+    gMenuDelay = 0;
+    reset_character_id_slots();
+    gSaveFileIndex = 0;
+    gTitleScreenCurrentOption = 0;
+    gNumberOfActivePlayers = 4;
+    func_8006A434();
+    play_music(1);
+    D_800DF760 = musicGetRelativeVolume();
+    if (D_800DF458 != 0) {
+        D_8012686C = 0;
+        D_800DF458 = 0;
+    } else {
+        D_8012686C = 1;
+    }
+    D_80126870 = 0;
+    D_801263E0 = 0;
+    func_8009C674(D_800DF7C4);
+    for(i = 0; i < 11; i++) {
+        D_800DF7DC[i].texture = D_80126550[D_800DF7C4[i]];
+    }
+    func_80000BE0(0x1B);
+    func_800660C0();
+    set_text_font(0);
+    func_800C4170(2);
+    func_80000890(0);
+    set_time_trial_enabled(FALSE);
+    D_80126864 = 0;
+    D_80126874 = get_misc_asset(0x42);
+    temp = D_80126874[1];
+    D_80126868 = 0;
+    if (temp == -2) {
+        temp = 0;
+        D_80126868 = 0x258;
+    }
+    load_level_for_menu(D_80126874[0], temp, D_80126874[2]);
+    D_801268D8 = 0;
+    D_801268E0 = 0;
+    D_801268DC = 0;
+    D_800DF9F4 = 0;
+    D_801263D8 = 0;
+    gIsInTracksMode = FALSE;
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_8008377C.s")
 GLOBAL_ASM("asm/non_matchings/menu/menu_title_screen_loop.s")
 
@@ -1952,7 +2165,7 @@ void func_80084118(void) {
 void menu_options_init(void) {
     D_801263BC = 0;
     gMenuDelay = 0;
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     func_800C4170(2);
     set_text_font(2);
     func_80000BE0(0x18);
@@ -1968,16 +2181,16 @@ void func_800841B8(s32 arg0) {
     set_text_font(2);
     set_text_background_color(0, 0, 0, 0);
     set_text_color(0, 0, 0, 0xFF, 0x80);
-    draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0[36], 0xC);
+    draw_text(&D_801263A0, 0xA1, 0x23, gMenuText[36], 0xC);
     set_text_color(255, 255, 255, 0, 0xFF);
-    draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0[36], 0xC);
+    draw_text(&D_801263A0, 0xA0, 0x20, gMenuText[36], 0xC);
     
     phi_s1 = 0;
     phi_s2 = 0x4C;
     
     set_text_font(0);
     
-    while(D_800DFA10[phi_s1] != NULL) {
+    while(gOptionMenuStrings[phi_s1] != NULL) {
         if (phi_s1 == D_800DF460) {
             phi_a3 = D_801263BC * 8;
             if (D_801263BC >= 0x20) {
@@ -1987,7 +2200,7 @@ void func_800841B8(s32 arg0) {
             phi_a3 = 0;
         }
         set_text_color(255, 255, 255, phi_a3, 0xFF);
-        draw_text(&D_801263A0, -0x8000, phi_s2, D_800DFA10[phi_s1], 0xC);
+        draw_text(&D_801263A0, -0x8000, phi_s2, gOptionMenuStrings[phi_s1], 0xC);
         
         phi_s1++;
         phi_s2 += 0x1C;
@@ -2058,12 +2271,12 @@ s32 menu_options_loop(s32 arg0) {
             func_80001D04(0xEB, 0);
             func_8009EABC(0, 0x2000000);
             func_800C2AF4(0);
-            D_800DFA10[1] = D_800DF4A0[183];
+            gOptionMenuStrings[1] = gMenuText[183];
         } else {
             func_80001D04(0xEB, 0);
             func_8009EA78(0, 0x2000000);
             func_800C2AF4(1);
-            D_800DFA10[1] = D_800DF4A0[182];
+            gOptionMenuStrings[1] = gMenuText[182];
         }
     } else {
         // Move up & down the list
@@ -2130,18 +2343,18 @@ void menu_audio_options_init(void) {
     func_8009C674(D_800DFA2C);
     func_8009C8A4(&D_800DFA2C[6]);
     func_8008E4B0();
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     func_8007FFEC(2);
     gMusicVolumeSliderValue = musicGetVolSliderPercentage();
     gSfxVolumeSliderValue = sfxGetVolumeSlider();
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
-        D_800DFA3C[6].unkC = D_801269E0;
-        D_800DFA3C[3].unk2 = 0xD4;
+        gAudioMenuStrings[6].unkC = gMusicTestString;
+        gAudioMenuStrings[3].unk2 = 0xD4;
         func_80000BE0(0x20);
         D_801263E0 = 5;
     } else {
-        D_800DFA3C[6].unkC = NULL;
-        D_800DFA3C[3].unk2 = 0xC0;
+        gAudioMenuStrings[6].unkC = NULL;
+        gAudioMenuStrings[3].unk2 = 0xC0;
         D_801263E0 = 4;
     }
     func_800C4170(2);
@@ -2349,7 +2562,7 @@ void menu_save_options_init(void) {
     D_800DFC60.unk0 = D_80126550[70];
     func_8008E4B0();
     func_8006EBA8();
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_800853D0.s")
@@ -2522,7 +2735,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008832C.s")
 void menu_boot_init(void) {
     s32 i;
 
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     func_80077B34(0, 0, 0);
     func_8009C674(&D_800DF7C4);
     
@@ -2631,7 +2844,7 @@ void func_800887E8(void) {
     D_801263E0 = 0;
     D_801263BC = 0;
     D_80126A68 = -1;
-    func_8007F900(get_language());
+    load_menu_text(get_language());
     if (func_80087F14(&D_80126A68, 0) == 0) {
         gMenuDelay = 0;
     } else if (func_8008832C() == 0) {
@@ -2673,7 +2886,7 @@ void menu_magic_codes_init(void) {
     gMenuDelay = 0;
     D_801263D8 = 0;
     D_801263E0 = 0;
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     func_800C4EDC(7, 0x32, 0x32, 0x10E, 0x84);
     func_800C4FBC(7, 0, 0, 0, 0x80);
     func_800C5494(7);
@@ -2695,7 +2908,7 @@ void menu_magic_codes_list_init(void) {
     func_800C4170(2);
     func_8009C6D4(0x3F);
     func_8008E4B0();
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     if (osTvType == TV_TYPE_PAL) {
         D_80126C70 = 0xB;
     } else {
@@ -2879,10 +3092,63 @@ void set_active_player_index(s32 controllerIndex) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_init.s")
+void menu_character_select_init(void) {
+    s32 breakTheLoop;
+    s32 i;
+    u8 *temp;
+    
+    breakTheLoop = FALSE;
+    func_8006A434();
+    if (is_drumstick_unlocked()) {
+        if (is_tt_unlocked()) {
+            D_801263CC = D_800DFF40;
+        } else {
+            D_801263CC = D_800DFE40;
+        }
+    } else if (is_tt_unlocked()) {
+        D_801263CC = D_800DFEC0;
+    } else {
+        D_801263CC = D_800DFDD0;
+    }
+    for (i = 0; i < 4; i++) {
+        D_801263DC[i] = 0;
+    }
+    gNumberOfReadyPlayers = 0;
+    gMenuDelay = 0;
+    D_801263BC = 0;
+    D_800DF484 = 0;
+    for(i = 0; (i < 4) && (!breakTheLoop); i++) {
+        if (gActivePlayersArray[i] != 0) {
+            breakTheLoop = TRUE;
+            D_801263C0.unk0 = (*D_801263CC)[gPlayersCharacterArray[i]].unkC;
+            D_801263C0.unk2 = 0x7F;
+            D_801263C0.unk1 = 1;
+        }
+    }
+    D_801263B4.unk0 = -1;
+    D_801263B4.unk2 = 0;
+    D_801263B4.unk1 = 0;
+    D_801263B8.unk0 = -1;
+    D_801263B8.unk2 = 0;
+    D_801263B8.unk1 = 0;
+    play_music(0x1A);
+    for(i = 0; i < 10; i++) {
+        temp = D_800DFDB4[i];
+        if (i != D_801263C0.unk0) {
+            func_80001114(temp[0]);
+            func_80001114(temp[1]);
+        }
+    }
+    func_80001114(6);
+    func_80000B18();
+    func_8009C674(D_800DFDC8);
+    func_8009C8A4(D_800DFDCC);
+    func_800C01D8(&D_800DF77C);
+    func_800C4170(2);
+}
 
 /**
- * Draws the "Object Select" and "OK?" text in the character select menu.
+ * Draws the "Player Select" and "OK?" text in the character select menu.
  */
 void draw_character_select_text(s32 arg0) {
     s32 yPos;
@@ -2890,11 +3156,11 @@ void draw_character_select_text(s32 arg0) {
         set_text_font(2); // Set font to the Big Yellow Text
         set_text_background_color(0, 0, 0, 0);
         set_text_color(0, 0, 0, 0xFF, 0x80);
-        // Draw "Object Select" text drop shadow
-        draw_text(&D_801263A0, 0xA1, 0x23, D_800DF4A0[135], 0xC); 
+        // Draw "Player Select" text drop shadow
+        draw_text(&D_801263A0, 0xA1, 0x23, gMenuText[135], 0xC); 
         set_text_color(255, 255, 255, 0, 0xFF);
-        // Draw "Object Select" text
-        draw_text(&D_801263A0, 0xA0, 0x20, D_800DF4A0[135], 0xC); 
+        // Draw "Player Select" text
+        draw_text(&D_801263A0, 0xA0, 0x20, gMenuText[135], 0xC); 
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers && gNumberOfActivePlayers > 0) {
             yPos = 0xD0;
             if (osTvType == 0) {
@@ -3044,7 +3310,7 @@ void menu_caution_init(void) {
     gIgnorePlayerInput = 0x3C;
     gMenuDelay = 0;
     func_800C4170(2);
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     gPlayerHasSeenCautionMenu = 1;
 }
 
@@ -3061,7 +3327,7 @@ s32 menu_caution_loop(s32 arg0) {
         func_800C01D8(&D_800DF774);
     }
     if (gMenuDelay < 0x14) {
-        draw_menu_element(1, D_800DFFD8, 1.0f);
+        draw_menu_element(1, gCautionMenuTextElements, 1.0f);
     }
     if (gMenuDelay >= 0x1F) {
         func_8008C4E8();
@@ -3080,18 +3346,17 @@ void func_8008C4E8(void) {
 #ifdef NON_MATCHING
 
 typedef struct unk80126460 {
-    MenuElement unk0;
-    MenuElement unk20;
+    MenuElement elem[2];
 } unk80126460;
 
 void menu_game_select_init(void) {
-    s32 i, j, index;
+    s32 i;
 
     gMenuDelay = 0;
     D_801263BC = 0;
     D_800DF460 = 0;
     D_801263E0 = 2;
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     func_8006EBA8();
     func_8001B790();
     D_801263D8 = 1;
@@ -3101,7 +3366,7 @@ void menu_game_select_init(void) {
     play_music(0x1A);
     
     for(i = 0; i < 10; i++) {
-        if (i != D_801263B4) {
+        if (i != D_801263B4.unk0) {
             func_80001114(D_800DFDB4[i][0]);
             func_80001114(D_800DFDB4[i][1]);
         }
@@ -3109,17 +3374,18 @@ void menu_game_select_init(void) {
     
     func_80001114(6);
     func_80000B18();
-    if (func_8009EC60()) {
-        D_80126460 = D_800E0278;
+    if (is_adventure_two_unlocked()) {
+        D_80126460 = gGameSelectTextElemsWithAdv2;
         D_801263E0 = 2;
     } else {
-        D_80126460 = D_800E0198;
+        D_80126460 = gGameSelectTextElemsNoAdv2;
         D_801263E0 = 1;
     }
     
     // This loop doesn't match.
     for(i = 0; i <= D_801263E0; i++) {
-        ((unk80126460*)D_80126460 + i + 1)->unk0.texture = D_80126550[67];
+        u8 temp = i; // How do I make this a `mov`?
+        (&((unk80126460*)D_80126460)[temp] + 1)->elem[0].texture = D_80126550[67];
     }
 }
 #else
@@ -3294,11 +3560,11 @@ void menu_file_select_init(void) {
     D_80126484 = 0;
     D_80126488 = 0;
     D_80126CC0 = 0;
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     func_800C4170(2);
     play_music(0x1A);
     for(i = 0; i < 10; i++) {
-        if (i != D_801263B4) {
+        if (i != D_801263B4.unk0) {
             func_80001114(D_800DFDB4[i][0]);
             func_80001114(D_800DFDB4[i][1]);
         }
@@ -3383,7 +3649,7 @@ void render_file_select_menu(s32 arg0) {
                 func_8007BF1C(1);
             } else {
                 set_text_color(255, 255, 255, 64, 255);
-                draw_text(&D_801263A0, D_800E03FC[4] + D_800E03CC[i].unk0, D_800E03FC[5] + D_800E03CC[i].unk2 + y, D_800DF4A0[75], 0xC);
+                draw_text(&D_801263A0, D_800E03FC[4] + D_800E03CC[i].unk0, D_800E03FC[5] + D_800E03CC[i].unk2 + y, gMenuText[75], 0xC);
             }
         }
     }
@@ -3416,7 +3682,7 @@ void render_file_select_menu(s32 arg0) {
         if (D_80126CC0 == 0 || i != gSaveFileIndex) {
             trim_filename_string(D_801264A0[i].name, tempName);
             if (D_801264A0[i].unk1 == 0) {
-                trim_filename_string(D_800E03B0[i], tempName);
+                trim_filename_string(gFilenames[i], tempName);
             }
             if (tempName != NULL) {
                 draw_text(&D_801263A0, D_800E03FC[0] + D_800E03CC[i].unk0, D_800E03FC[1] + D_800E03CC[i].unk2 + y, tempName, 0xC);
@@ -3425,18 +3691,18 @@ void render_file_select_menu(s32 arg0) {
     }
     set_text_font(2);
     set_text_color(0, 0, 0, 255, 128);
-    draw_text(&D_801263A0, 0xA1, 0x13, D_800DF4A0[76], 4);
+    draw_text(&D_801263A0, 0xA1, 0x13, gMenuText[76], 4);
     set_text_color(255, 255, 255, 0, 255);
-    draw_text(&D_801263A0, 0xA0, 0x10, D_800DF4A0[76], 4);
+    draw_text(&D_801263A0, 0xA0, 0x10, gMenuText[76], 4);
     set_text_color(255, 255, 255, 0, 255);
     y += 0xBB;
     if (D_80126484 != 0) {
         if (D_80126494 == 0) {
             set_text_font(0);
-            draw_text(&D_801263A0, 0xA0, y, D_800DF4A0[77], 0xC);
+            draw_text(&D_801263A0, 0xA0, y, gMenuText[77], 0xC);
         } else if (D_80126494 == 1) {
             set_text_font(0);
-            draw_text(&D_801263A0, 0xA0, y, D_800DF4A0[78], 0xC);
+            draw_text(&D_801263A0, 0xA0, y, gMenuText[78], 0xC);
         } else {
             draw_text(&D_801263A0, 0xA0, y, &D_800E8234, 0xC);
         }
@@ -3445,7 +3711,7 @@ void render_file_select_menu(s32 arg0) {
     if (D_80126488 != 0) {
         if (D_80126494 == 0) {
             set_text_font(0);
-            draw_text(&D_801263A0, 0xA0, y, D_800DF4A0[79], 0xC);
+            draw_text(&D_801263A0, 0xA0, y, gMenuText[79], 0xC);
         } else {
             draw_text(&D_801263A0, 0xA0, y, &D_800E8238, 0xC);
         }
@@ -3455,13 +3721,13 @@ void render_file_select_menu(s32 arg0) {
         if (D_801263E0 == 1) {
             set_text_color(255, 255, 255, phi_v0_2, 255);
         }
-        draw_text(&D_801263A0, 0x5A, y, D_800DF4A0[80], 0xC);
+        draw_text(&D_801263A0, 0x5A, y, gMenuText[80], 0xC);
         if (D_801263E0 == 2) {
             set_text_color(255, 255, 255, phi_v0_2, 255);
         } else {
             set_text_color(255, 255, 255, 0, 255);
         }
-        draw_text(&D_801263A0, 0xE6, y, D_800DF4A0[81], 0xC);
+        draw_text(&D_801263A0, 0xE6, y, gMenuText[81], 0xC);
         return;
     }
 }
@@ -3754,78 +4020,180 @@ s32 func_80092BE0(s32 arg0) {
     return temp;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/menu_5_init.s")
-#else
-
-extern s16 D_800E0758[8]; // Unknown number of entries.
-
 void menu_5_init(void) {
-    s32 temp_v0_2;
-    s8 temp_s0;
     Settings *settings;
-
+    s32 result;
+    s32 s0;
+    s32 temp;
+    
     settings = get_settings();
     gTrackIdForPreview = 0;
     D_801263BC = 0;
     gMenuDelay = 0;
-    temp_s0 = settings->unk4C->unk2;
-    gPlayerSelectVehicle = func_8006B0AC(temp_s0);
-    temp_v0_2 = func_8006B14C(temp_s0);
-    if (temp_v0_2 != 5) {
-        if (temp_v0_2 != 8) {
-            if ((temp_v0_2 & 0x40) == 0) {
-                if ((*(settings->courseFlagsPtr + (temp_s0 * 4)) & 2) == 0) {
-block_4:
-                    if (D_800E0758[temp_s0] != -1) {
-                        func_80000FDC(D_800E0758[temp_s0] & 0xFFFF, 0, 0x3F800000);
-                    }
-                    D_801263E0 = -1;
-                } else {
-block_7:
-                    if (D_800E0758[temp_s0] != -1) {
-                        func_80000FDC(D_800E0758[temp_s0] & 0xFFFF, 0, 0x3F000000);
-                    }
-                    func_80000BE0(0x18);
-                    play_music(0x18);
-                    func_80000B18();
-                    D_801263E0 = 0;
-                    func_8009C674(&D_800E0FB4);
-                    func_8009C8A4(&D_800E0FD8);
-                    func_8008E45C();
-                    D_800E04D4 = (s32) D_80126550.unk7C;
-                    D_800E04E4 = (s32) D_80126550.unk78;
-                    D_800E04F4 = (s32) D_80126550.unk84;
-                    D_800E0504 = (s32) D_80126550.unk80;
-                    D_800E0514 = (s32) D_80126550.unk8C;
-                    D_800E0524 = (s32) D_80126550.unk88;
-                    D_800E05B4 = (s32) D_80126550.unkC0;
-                    D_800E0614 = (s32) D_80126550.unk178;
-                    func_800C01D8(D_800DF77C);
-                    D_801263BC = 0;
-                    gMenuDelay = 0;
-                    D_800E0980 = 0x1E;
-                    func_800C4170(2);
-                    load_level_for_menu(temp_s0, -1, 1);
-                }
-            } else {
-                goto block_7;
-            }
-        } else {
-            goto block_4;
+    s0 = settings->unk4C->unk2;
+    gPlayerSelectVehicle[0] = func_8006B0AC(s0);
+    result = func_8006B14C(s0);
+    if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[s0] & 2)))) {
+        temp = D_800E0758[s0];
+        if (temp != -1) {
+            func_80000FDC(temp & 0xFFFF, 0, 1.0f);
         }
+        D_801263E0 = -1;
     } else {
-        goto block_4;
+        temp = D_800E0758[s0];
+        if (temp != -1) {
+            func_80000FDC(temp & 0xFFFF, 0, 0.5f);
+        }
+        func_80000BE0(0x18);
+        play_music(0x18);
+        func_80000B18();
+        D_801263E0 = 0;
+        func_8009C674(&D_800E0FB4);
+        func_8009C8A4(&D_800E0FD8);
+        func_8008E45C();
+        D_800E04D4.unk0 = D_80126550[31];
+        D_800E04E4.unk0 = D_80126550[30];
+        D_800E04F4.unk0 = D_80126550[33];
+        D_800E0504.unk0 = D_80126550[32];
+        D_800E0514.unk0 = D_80126550[35];
+        D_800E0524.unk0 = D_80126550[34];
+        D_800E05B4.unk0 = D_80126550[48];
+        D_800E0614.unk0 = D_80126550[94];
+        func_800C01D8(&D_800DF77C);
+        D_801263BC = 0;
+        gMenuDelay = 0;
+        D_800E0980 = 0x1E;
+        func_800C4170(2);
+        load_level_for_menu(s0, -1, 1);
     }
     func_800C5494(7);
-    if (func_8006B14C(temp_s0) & 0x40) {
-        func_800C31EC(func_8006B190(temp_s0) + 0x3B);
+    if (func_8006B14C(s0) & 0x40) {
+        func_800C31EC(func_8006B190(s0) + 0x3B);
     }
 }
-#endif
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80092E94.s")
+
+
+#ifdef NON_MATCHING
+
+void func_80093A0C(void);
+
+// Regalloc issues
+s32 menu_5_loop(s32 arg0) {
+    s32 temp0;
+    s32 vehicle2;
+    s32 sp30;
+    s32 vehicle;
+    s32 sp28;
+    s32 sp24;
+    s32 sp20;
+    s32 sp1C;
+    Settings *settings;
+    
+    if (D_801263E0 < 0) {
+        return gTrackIdForPreview | 0x80;
+    }
+    settings = get_settings();
+    sp24 = ((Settings4C*)((u8*)settings->unk4C + gTrackIdForPreview))->unk2;
+    sp28 = FALSE;
+    temp0 = settings->courseFlagsPtr[sp24];
+    sp1C = 0;
+    if (temp0 & 2) {
+        sp1C = 1;
+    }
+    if (temp0 & 4) {
+        sp1C = 2;
+    }
+    if (func_8006B14C(sp24) & 0x40) {
+        sp28 = TRUE;
+    }
+    sp20 = FALSE;
+    if (!is_time_trial_enabled()) {
+        if (sp1C == 1) {
+            if (settings->worldId == 5 || (settings->bosses & (1 << settings->worldId))) {
+                sp20 = TRUE;
+            }
+        }
+    }
+    D_801263BC = (D_801263BC + arg0) & 0x3F;
+    func_80092E94(arg0, sp1C, sp20);
+    if (sp1C < 2) {
+        gPlayerSelectVehicle[0] = func_8006B0AC(sp24);
+    }
+    vehicle = gPlayerSelectVehicle[0];
+    sp30 = func_8006B0F8(sp24);
+    vehicle2 = vehicle;
+    func_8008E4EC();
+    if (gMenuDelay == 0) {
+        if ((D_801263E0 != 0) || sp20 || sp28) {
+            if (D_801267D8[0] & 0x9000) {
+                if (sp28) {
+                    func_800C31EC(0x2710);
+                }
+                gMenuDelay = 1;
+                func_800C01D8(&D_800DF774);
+                func_80001D04(0xEF, NULL);
+            } else if (D_801267D8[0] & 0x4000) {
+                func_80001D04(0x241, NULL);
+                if (sp20 || sp28) {
+                    if (sp28) {
+                        func_800C31EC(0x2710);
+                    }
+                    func_800C01D8(&D_800DF774);
+                    gMenuDelay = -1;
+                } else {
+                    D_801263E0 = 0;
+                }
+            }
+        } else {
+            if (D_801267D8[0] & 0x4000) {
+                func_80001D04(0x241, NULL);
+                func_800C01D8(&D_800DF774);
+                gMenuDelay = -1;
+            } else if (D_801267D8[0] & 0x9000) {
+                D_801263E0 = 1;
+                func_80001D04(0x131, NULL);
+            } else if (sp1C >= 2) {
+                if (D_80126830 > 0) {
+                    do {
+                        vehicle--;
+                    } while(!((1 << vehicle) & sp30) && (vehicle >= 0));
+                }
+                if (D_80126830 < 0) {
+                    do {
+                        vehicle++;
+                    } while(!((1 << vehicle) & sp30) && (vehicle < 3));
+                }
+                if ((vehicle < 0) || (vehicle >= 3)) {
+                    vehicle = vehicle2;
+                }
+                if (vehicle != vehicle2) {
+                    func_80001D04(0xEB, NULL);
+                    gPlayerSelectVehicle[0] = vehicle;
+                }
+            }
+        }
+    } else {
+        if (gMenuDelay < 0) {
+            gMenuDelay = gMenuDelay - arg0;
+        } else {
+            gMenuDelay = gMenuDelay + arg0;
+        }
+        if ((gMenuDelay >= 0x1F) || (gMenuDelay < -0x1E)) {
+            func_80093A0C();
+            if (gMenuDelay > 0) {
+                return gTrackIdForPreview | 0x80;
+            }
+            return 0x103;
+        }
+    }
+    gIgnorePlayerInput = 0;
+    return 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/menu_5_loop.s")
+#endif
 
 void func_80093A0C(void) {
     func_8009C4A8((s16*)&D_800E0FB4);
@@ -3925,9 +4293,9 @@ void menu_11_init(void) {
     s8 temp_a2;
 
     settings = get_settings();
-    D_80126BF0[0] = (s32) D_800DF4A0[24];
-    D_80126BF0[1] = (s32) D_800DF4A0[23];
-    D_80126BF0[2] = (s32) D_800DF4A0[28];
+    D_80126BF0[0] = (s32) gMenuText[24];
+    D_80126BF0[1] = (s32) gMenuText[23];
+    D_80126BF0[2] = (s32) gMenuText[28];
     D_80126C14 = 3;
     
      
@@ -3950,7 +4318,7 @@ void menu_11_init(void) {
     func_8009C8A4(D_800E0A40);
     func_80094604();
     func_800C4170(2);
-    func_800C01D8(D_800DF77C);
+    func_800C01D8(&D_800DF77C);
     func_80000BE0(0x18);
     play_music(0x18);
     func_80000C98(0x80);
@@ -4150,11 +4518,11 @@ void func_800983C0(s32 arg0) {
     set_text_font(2);
     set_text_color(0, 0, 0, 0xFF, 0x80);
     draw_text(&D_801263A0, 0xA1, 0x23, sp28, 0xC);
-    draw_text(&D_801263A0, 0xA1, 0x43, D_800DF4A0[70], 0xC);
+    draw_text(&D_801263A0, 0xA1, 0x43, gMenuText[70], 0xC);
     set_text_color(255, 255, 255, 0, 0xFF);
     draw_text(&D_801263A0, 0xA0, 0x20, sp28, 0xC);
-    draw_text(&D_801263A0, 0xA0, 0x40, D_800DF4A0[70], 0xC);
-    draw_text(&D_801263A0, 0xA0, sp2C + 0xB0, D_800DF4A0[138 + D_800E0FEC], 0xC);
+    draw_text(&D_801263A0, 0xA0, 0x40, gMenuText[70], 0xC);
+    draw_text(&D_801263A0, 0xA0, sp2C + 0xB0, gMenuText[138 + D_800E0FEC], 0xC);
     draw_text(&D_801263A0, 0xA0, sp2C + 0xD0, sp24, 0xC);
 }
 
@@ -4773,11 +5141,11 @@ s32 func_8009D9F4(void) {
     playerInput = get_buttons_pressed_from_player(0);
     D_80126504 = 0;
     D_800DF4DC = 0;
-    func_800C5168(1, -0x8000, 6, D_800DF4A0[49], 1, 4);
-    func_800C5168(1, -0x8000, 0x14, D_800DF4A0[50], 1, 4);
+    func_800C5168(1, -0x8000, 6, gMenuText[49], 1, 4);
+    func_800C5168(1, -0x8000, 0x14, gMenuText[50], 1, 4);
     D_8012650E = 0x32;
-    func_8009D1B8(D_800DF4A0[23], 0x14, 0);
-    func_8009D1B8(D_800DF4A0[51], 0x14, 1);
+    func_8009D1B8(gMenuText[23], 0x14, 0);
+    func_8009D1B8(gMenuText[51], 0x14, 1);
     func_8009D26C();
     if (playerInput & A_BUTTON) {
         func_80001D04(0xEF, NULL); 
@@ -4882,11 +5250,11 @@ void set_language(s32 language) {
     D_80126448 &= ~0xC;
     D_80126448 |= langFlag;
     
-    func_8007F900();
+    load_menu_text(language);
     func_8006ECE0();
 }
 
-s32 func_8009EC60(void) {
+s32 is_adventure_two_unlocked(void) {
     return D_80126448 & 1;
 }
 

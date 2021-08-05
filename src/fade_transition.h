@@ -13,6 +13,7 @@
 
 #define FADE_COLOR(red, green, blue) red, green, blue
 #define FADE_COLOR_BLACK FADE_COLOR(0, 0, 0)
+#define FADE_COLOR_WHITE FADE_COLOR(255, 255, 255)
 
 #define FADE_TRANSITION(type, color, duration, unk6) { type, color, duration, unk6 }
 

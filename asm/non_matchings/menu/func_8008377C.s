@@ -88,12 +88,12 @@ glabel func_8008377C
 /* 0844C8 800838C8 00003025 */  move  $a2, $zero
 /* 0844CC 800838CC 0C0310F3 */  jal   set_text_background_color
 /* 0844D0 800838D0 00003825 */   move  $a3, $zero
-/* 0844D4 800838D4 3C0E800E */  lui   $t6, %hi(D_800DF7A4) # $t6, 0x800e
-/* 0844D8 800838D8 8DCEF7A4 */  lw    $t6, %lo(D_800DF7A4)($t6)
+/* 0844D4 800838D4 3C0E800E */  lui   $t6, %hi(gTitleMenuStrings) # $t6, 0x800e
+/* 0844D8 800838D8 8DCEF7A4 */  lw    $t6, %lo(gTitleMenuStrings)($t6)
 /* 0844DC 800838DC 00117880 */  sll   $t7, $s1, 2
 /* 0844E0 800838E0 11C00035 */  beqz  $t6, .L800839B8
-/* 0844E4 800838E4 3C18800E */   lui   $t8, %hi(D_800DF7A4) # $t8, 0x800e
-/* 0844E8 800838E8 2718F7A4 */  addiu $t8, %lo(D_800DF7A4) # addiu $t8, $t8, -0x85c
+/* 0844E4 800838E4 3C18800E */   lui   $t8, %hi(gTitleMenuStrings) # $t8, 0x800e
+/* 0844E8 800838E8 2718F7A4 */  addiu $t8, %lo(gTitleMenuStrings) # addiu $t8, $t8, -0x85c
 /* 0844EC 800838EC 3C148012 */  lui   $s4, %hi(D_801263BC) # $s4, 0x8012
 /* 0844F0 800838F0 3C13800E */  lui   $s3, %hi(gTitleScreenCurrentOption) # $s3, 0x800e
 /* 0844F4 800838F4 2673F45C */  addiu $s3, %lo(gTitleScreenCurrentOption) # addiu $s3, $s3, -0xba4

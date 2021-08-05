@@ -10,12 +10,12 @@ glabel func_8008832C
 /* 088F4C 8008834C 3C118012 */  lui   $s1, %hi(D_80126A3C) # $s1, 0x8012
 /* 088F50 80088350 3C0C8012 */  lui   $t4, %hi(D_80126A60) # $t4, 0x8012
 /* 088F54 80088354 3C0B8012 */  lui   $t3, %hi(D_80126A38) # $t3, 0x8012
-/* 088F58 80088358 3C09800E */  lui   $t1, %hi(D_800DF4A0) # $t1, 0x800e
+/* 088F58 80088358 3C09800E */  lui   $t1, %hi(gMenuText) # $t1, 0x800e
 /* 088F5C 8008835C 3C08800E */  lui   $t0, %hi(D_800DFCB4) # $t0, 0x800e
 /* 088F60 80088360 00001025 */  move  $v0, $zero
 /* 088F64 80088364 ACE00000 */  sw    $zero, ($a3)
 /* 088F68 80088368 2508FCB4 */  addiu $t0, %lo(D_800DFCB4) # addiu $t0, $t0, -0x34c
-/* 088F6C 8008836C 2529F4A0 */  addiu $t1, %lo(D_800DF4A0) # addiu $t1, $t1, -0xb60
+/* 088F6C 8008836C 2529F4A0 */  addiu $t1, %lo(gMenuText) # addiu $t1, $t1, -0xb60
 /* 088F70 80088370 256B6A38 */  addiu $t3, %lo(D_80126A38) # addiu $t3, $t3, 0x6a38
 /* 088F74 80088374 258C6A60 */  addiu $t4, %lo(D_80126A60) # addiu $t4, $t4, 0x6a60
 /* 088F78 80088378 26316A3C */  addiu $s1, %lo(D_80126A3C) # addiu $s1, $s1, 0x6a3c

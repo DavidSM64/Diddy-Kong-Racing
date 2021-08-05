@@ -87,9 +87,9 @@ glabel func_80081218
 /* 081F6C 8008136C 2405FFFF */  li    $a1, -1
 /* 081F70 80081370 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 081F74 80081374 AC386C38 */   sw    $t8, %lo(D_80126C38)($at)
-/* 081F78 80081378 3C01800E */  lui   $at, %hi(D_800DF4A0) # $at, 0x800e
-/* 081F7C 8008137C AC22F4A0 */  sw    $v0, %lo(D_800DF4A0)($at)
-/* 081F80 80081380 0C01FE40 */  jal   func_8007F900
+/* 081F78 80081378 3C01800E */  lui   $at, %hi(gMenuText) # $at, 0x800e
+/* 081F7C 8008137C AC22F4A0 */  sw    $v0, %lo(gMenuText)($at)
+/* 081F80 80081380 0C01FE40 */  jal   load_menu_text
 /* 081F84 80081384 00002025 */   move  $a0, $zero
 /* 081F88 80081388 3C028012 */  lui   $v0, %hi(D_80126550) # $v0, 0x8012
 /* 081F8C 8008138C 3C038012 */  lui   $v1, %hi(D_80126750) # $v1, 0x8012
