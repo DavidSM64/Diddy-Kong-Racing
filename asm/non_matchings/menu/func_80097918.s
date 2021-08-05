@@ -51,8 +51,8 @@ glabel func_80097918
 /* 0985DC 800979DC 00003025 */  move  $a2, $zero
 /* 0985E0 800979E0 0C0310E1 */  jal   set_text_color
 /* 0985E4 800979E4 240700FF */   li    $a3, 255
-/* 0985E8 800979E8 3C11800E */  lui   $s1, %hi(D_800DF4A0) # $s1, 0x800e
-/* 0985EC 800979EC 2631F4A0 */  addiu $s1, %lo(D_800DF4A0) # addiu $s1, $s1, -0xb60
+/* 0985E8 800979E8 3C11800E */  lui   $s1, %hi(gMenuText) # $s1, 0x800e
+/* 0985EC 800979EC 2631F4A0 */  addiu $s1, %lo(gMenuText) # addiu $s1, $s1, -0xb60
 /* 0985F0 800979F0 3C10800E */  lui   $s0, %hi(D_800E0F90) # $s0, 0x800e
 /* 0985F4 800979F4 8E2A0000 */  lw    $t2, ($s1)
 /* 0985F8 800979F8 26100F90 */  addiu $s0, %lo(D_800E0F90) # addiu $s0, $s0, 0xf90

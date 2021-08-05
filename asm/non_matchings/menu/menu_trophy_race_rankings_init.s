@@ -53,8 +53,8 @@ glabel menu_trophy_race_rankings_init
 /* 0996E8 80098AE8 28410004 */  slti  $at, $v0, 4
 /* 0996EC 80098AEC 1020000D */  beqz  $at, .L80098B24
 /* 0996F0 80098AF0 3C038012 */   lui   $v1, %hi(D_80126BF0) # $v1, 0x8012
-/* 0996F4 80098AF4 3C02800E */  lui   $v0, %hi(D_800DF4A0) # $v0, 0x800e
-/* 0996F8 80098AF8 8C42F4A0 */  lw    $v0, %lo(D_800DF4A0)($v0)
+/* 0996F4 80098AF4 3C02800E */  lui   $v0, %hi(gMenuText) # $v0, 0x800e
+/* 0996F8 80098AF8 8C42F4A0 */  lw    $v0, %lo(gMenuText)($v0)
 /* 0996FC 80098AFC 3C038012 */  lui   $v1, %hi(D_80126BF0) # $v1, 0x8012
 /* 099700 80098B00 8C4F0188 */  lw    $t7, 0x188($v0)
 /* 099704 80098B04 24636BF0 */  addiu $v1, %lo(D_80126BF0) # addiu $v1, $v1, 0x6bf0
@@ -66,8 +66,8 @@ glabel menu_trophy_race_rankings_init
 /* 09971C 80098B1C 10000009 */  b     .L80098B44
 /* 099720 80098B20 AC396C14 */   sw    $t9, %lo(D_80126C14)($at)
 .L80098B24:
-/* 099724 80098B24 3C0D800E */  lui   $t5, %hi(D_800DF4A0) # $t5, 0x800e
-/* 099728 80098B28 8DADF4A0 */  lw    $t5, %lo(D_800DF4A0)($t5)
+/* 099724 80098B24 3C0D800E */  lui   $t5, %hi(gMenuText) # $t5, 0x800e
+/* 099728 80098B28 8DADF4A0 */  lw    $t5, %lo(gMenuText)($t5)
 /* 09972C 80098B2C 24636BF0 */  addiu $v1, %lo(D_80126BF0) # addiu $v1, $v1, 0x6bf0
 /* 099730 80098B30 8DAE0244 */  lw    $t6, 0x244($t5)
 /* 099734 80098B34 240F0001 */  li    $t7, 1

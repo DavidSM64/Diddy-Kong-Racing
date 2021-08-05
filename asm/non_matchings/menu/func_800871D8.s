@@ -97,8 +97,8 @@ glabel func_800871D8
 /* 087F44 80087344 240700FF */  li    $a3, 255
 /* 087F48 80087348 0C031400 */  jal   func_800C5000
 /* 087F4C 8008734C AFA00010 */   sw    $zero, 0x10($sp)
-/* 087F50 80087350 3C02800E */  lui   $v0, %hi(D_800DF4A0) # $v0, 0x800e
-/* 087F54 80087354 8C42F4A0 */  lw    $v0, %lo(D_800DF4A0)($v0)
+/* 087F50 80087350 3C02800E */  lui   $v0, %hi(gMenuText) # $v0, 0x800e
+/* 087F54 80087354 8C42F4A0 */  lw    $v0, %lo(gMenuText)($v0)
 /* 087F58 80087358 8E830000 */  lw    $v1, ($s4)
 /* 087F5C 8008735C 3C0D800E */  lui   $t5, %hi(D_800DFB8C) # $t5, 0x800e
 /* 087F60 80087360 25ADFB8C */  addiu $t5, %lo(D_800DFB8C) # addiu $t5, $t5, -0x474

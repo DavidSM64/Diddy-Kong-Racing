@@ -96,9 +96,9 @@ extern s32 D_800DF48C;
 extern s32 D_800DF490;
 extern s32 gIsInAdventureTwo;
 extern s32 gPlayerHasSeenCautionMenu;
-extern s32 D_800DF49C;
+extern s32 *gMenuTextLangTable;
 
-extern char **D_800DF4A0;
+extern char **gMenuText;
 
 extern u8 D_800DF4A4;
 extern u8 D_800DF4A8;
@@ -154,16 +154,12 @@ extern s32 D_800DF760;
 extern s32 D_800DF764;
 extern s32 D_800DF768;
 
-extern u16 D_800DF77C[12];
-
 extern s32 D_800DF794;
 extern s32 D_800DF798;
 extern s32 D_800DF79C;
 
 extern s32 D_800DF7A0;
-extern s32 D_800DF7A4;
-extern s32 D_800DF7A8;
-extern s32 D_800DF7AC;
+extern char *gTitleMenuStrings[3];
 
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 extern char gVersionDisplayText[20];
@@ -194,7 +190,7 @@ extern s32 D_800DF9F4;
 
 extern u16 D_800DF9F8[12];
 
-extern char *D_800DFA10[7];
+extern char *gOptionMenuStrings[7];
 
 extern s16 D_800DFA2C[8];
 
@@ -212,7 +208,7 @@ typedef struct unk800DFA3C {
     u32* unkC;
 } unk800DFA3C;
 
-extern unk800DFA3C D_800DFA3C[8];
+extern unk800DFA3C gAudioMenuStrings[8];
 
 extern s32 D_800DFABC;
 
@@ -275,7 +271,7 @@ extern s32 gShowControllerPakMenu;
 extern s32 gActiveMagicCodes;
 extern s32 gUnlockedMagicCodes;
 
-extern s32 D_800DFDA0[5];
+extern s32 gMagicCodeMenuStrings[5];
 
 extern u8 D_800DFDB4[10][2];
 
@@ -297,11 +293,11 @@ extern s32 D_800DFF40[36];
 extern s32 D_800DFFD0;
 extern s32 D_800DFFD4;
 
-extern MenuElement D_800DFFD8[14];
+extern MenuElement gCautionMenuTextElements[14];
                                                                              
-extern MenuElement D_800E0198[7];
+extern MenuElement gGameSelectTextElemsNoAdv2[7];
                                                                         
-extern MenuElement D_800E0278[9];
+extern MenuElement gGameSelectTextElemsWithAdv2[9];
 
 extern s16 D_800E0398[6];
 

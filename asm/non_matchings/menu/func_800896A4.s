@@ -31,8 +31,8 @@ glabel func_800896A4
 /* 08A318 80089718 00003025 */  move  $a2, $zero
 /* 08A31C 8008971C 0C0310E1 */  jal   set_text_color
 /* 08A320 80089720 240700FF */   li    $a3, 255
-/* 08A324 80089724 3C0F800E */  lui   $t7, %hi(D_800DF4A0) # $t7, 0x800e
-/* 08A328 80089728 8DEFF4A0 */  lw    $t7, %lo(D_800DF4A0)($t7)
+/* 08A324 80089724 3C0F800E */  lui   $t7, %hi(gMenuText) # $t7, 0x800e
+/* 08A328 80089728 8DEFF4A0 */  lw    $t7, %lo(gMenuText)($t7)
 /* 08A32C 8008972C 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 08A330 80089730 2418000C */  li    $t8, 12
 /* 08A334 80089734 8DE70044 */  lw    $a3, 0x44($t7)
@@ -48,8 +48,8 @@ glabel func_800896A4
 /* 08A35C 8008975C 240600FF */  li    $a2, 255
 /* 08A360 80089760 0C0310E1 */  jal   set_text_color
 /* 08A364 80089764 00003825 */   move  $a3, $zero
-/* 08A368 80089768 3C09800E */  lui   $t1, %hi(D_800DF4A0) # $t1, 0x800e
-/* 08A36C 8008976C 8D29F4A0 */  lw    $t1, %lo(D_800DF4A0)($t1)
+/* 08A368 80089768 3C09800E */  lui   $t1, %hi(gMenuText) # $t1, 0x800e
+/* 08A36C 8008976C 8D29F4A0 */  lw    $t1, %lo(gMenuText)($t1)
 /* 08A370 80089770 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 08A374 80089774 240A000C */  li    $t2, 12
 /* 08A378 80089778 8D270044 */  lw    $a3, 0x44($t1)
@@ -198,12 +198,12 @@ glabel func_800896A4
 /* 08A58C 8008998C 24140010 */   li    $s4, 16
 /* 08A590 80089990 24140018 */  li    $s4, 24
 .L80089994:
-/* 08A594 80089994 3C0C800E */  lui   $t4, %hi(D_800DFDA0) # $t4, 0x800e
-/* 08A598 80089998 8D8CFDA0 */  lw    $t4, %lo(D_800DFDA0)($t4)
+/* 08A594 80089994 3C0C800E */  lui   $t4, %hi(gMagicCodeMenuStrings) # $t4, 0x800e
+/* 08A598 80089998 8D8CFDA0 */  lw    $t4, %lo(gMagicCodeMenuStrings)($t4)
 /* 08A59C 8008999C 001E6880 */  sll   $t5, $fp, 2
 /* 08A5A0 800899A0 11800022 */  beqz  $t4, .L80089A2C
-/* 08A5A4 800899A4 3C0E800E */   lui   $t6, %hi(D_800DFDA0) # $t6, 0x800e
-/* 08A5A8 800899A8 25CEFDA0 */  addiu $t6, %lo(D_800DFDA0) # addiu $t6, $t6, -0x260
+/* 08A5A4 800899A4 3C0E800E */   lui   $t6, %hi(gMagicCodeMenuStrings) # $t6, 0x800e
+/* 08A5A8 800899A8 25CEFDA0 */  addiu $t6, %lo(gMagicCodeMenuStrings) # addiu $t6, $t6, -0x260
 /* 08A5AC 800899AC 3C158012 */  lui   $s5, %hi(D_801263E0) # $s5, 0x8012
 /* 08A5B0 800899B0 26B563E0 */  addiu $s5, %lo(D_801263E0) # addiu $s5, $s5, 0x63e0
 /* 08A5B4 800899B4 01AE8821 */  addu  $s1, $t5, $t6
@@ -265,8 +265,8 @@ glabel func_800896A4
 /* 08A684 80089A84 2401FFFF */  li    $at, -1
 /* 08A688 80089A88 1501000D */  bne   $t0, $at, .L80089AC0
 /* 08A68C 80089A8C 3C028012 */   lui   $v0, %hi(gCheatsAssetData) # $v0, 0x8012
-/* 08A690 80089A90 3C0C800E */  lui   $t4, %hi(D_800DF4A0) # $t4, 0x800e
-/* 08A694 80089A94 8D8CF4A0 */  lw    $t4, %lo(D_800DF4A0)($t4)
+/* 08A690 80089A90 3C0C800E */  lui   $t4, %hi(gMenuText) # $t4, 0x800e
+/* 08A694 80089A94 8D8CF4A0 */  lw    $t4, %lo(gMenuText)($t4)
 /* 08A698 80089A98 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 08A69C 80089A9C 240D000C */  li    $t5, 12
 /* 08A6A0 80089AA0 8D870048 */  lw    $a3, 0x48($t4)
@@ -310,8 +310,8 @@ glabel func_800896A4
 .L80089B30:
 /* 08A730 80089B30 1441000A */  bne   $v0, $at, .L80089B5C
 /* 08A734 80089B34 3C048012 */   lui   $a0, %hi(D_801263A0) # $a0, 0x8012
-/* 08A738 80089B38 3C0A800E */  lui   $t2, %hi(D_800DF4A0) # $t2, 0x800e
-/* 08A73C 80089B3C 8D4AF4A0 */  lw    $t2, %lo(D_800DF4A0)($t2)
+/* 08A738 80089B38 3C0A800E */  lui   $t2, %hi(gMenuText) # $t2, 0x800e
+/* 08A73C 80089B3C 8D4AF4A0 */  lw    $t2, %lo(gMenuText)($t2)
 /* 08A740 80089B40 240B000C */  li    $t3, 12
 /* 08A744 80089B44 8D47004C */  lw    $a3, 0x4c($t2)
 /* 08A748 80089B48 AFAB0010 */  sw    $t3, 0x10($sp)
@@ -376,8 +376,8 @@ glabel func_800896A4
 /* 08A818 80089C18 240700FF */  li    $a3, 255
 /* 08A81C 80089C1C 0C031400 */  jal   func_800C5000
 /* 08A820 80089C20 AFB00010 */   sw    $s0, 0x10($sp)
-/* 08A824 80089C24 3C09800E */  lui   $t1, %hi(D_800DF4A0) # $t1, 0x800e
-/* 08A828 80089C28 8D29F4A0 */  lw    $t1, %lo(D_800DF4A0)($t1)
+/* 08A824 80089C24 3C09800E */  lui   $t1, %hi(gMenuText) # $t1, 0x800e
+/* 08A828 80089C28 8D29F4A0 */  lw    $t1, %lo(gMenuText)($t1)
 /* 08A82C 80089C2C 240B0001 */  li    $t3, 1
 /* 08A830 80089C30 01315021 */  addu  $t2, $t1, $s1
 /* 08A834 80089C34 8D470250 */  lw    $a3, 0x250($t2)

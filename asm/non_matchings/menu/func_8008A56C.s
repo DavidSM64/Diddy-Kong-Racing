@@ -25,8 +25,8 @@ glabel func_8008A56C
 /* 08B1C8 8008A5C8 00003025 */  move  $a2, $zero
 /* 08B1CC 8008A5CC 0C0310E1 */  jal   set_text_color
 /* 08B1D0 8008A5D0 240700FF */   li    $a3, 255
-/* 08B1D4 8008A5D4 3C17800E */  lui   $s7, %hi(D_800DF4A0) # $s7, 0x800e
-/* 08B1D8 8008A5D8 26F7F4A0 */  addiu $s7, %lo(D_800DF4A0) # addiu $s7, $s7, -0xb60
+/* 08B1D4 8008A5D4 3C17800E */  lui   $s7, %hi(gMenuText) # $s7, 0x800e
+/* 08B1D8 8008A5D8 26F7F4A0 */  addiu $s7, %lo(gMenuText) # addiu $s7, $s7, -0xb60
 /* 08B1DC 8008A5DC 8EEF0000 */  lw    $t7, ($s7)
 /* 08B1E0 8008A5E0 3C158012 */  lui   $s5, %hi(D_801263A0) # $s5, 0x8012
 /* 08B1E4 8008A5E4 26B563A0 */  addiu $s5, %lo(D_801263A0) # addiu $s5, $s5, 0x63a0

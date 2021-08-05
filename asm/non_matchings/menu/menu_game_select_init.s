@@ -59,22 +59,22 @@ glabel menu_game_select_init
 /* 08D1E4 8008C5E4 24040006 */   li    $a0, 6
 /* 08D1E8 8008C5E8 0C0002C6 */  jal   func_80000B18
 /* 08D1EC 8008C5EC 00000000 */   nop   
-/* 08D1F0 8008C5F0 0C027B18 */  jal   func_8009EC60
+/* 08D1F0 8008C5F0 0C027B18 */  jal   is_adventure_two_unlocked
 /* 08D1F4 8008C5F4 00000000 */   nop   
 /* 08D1F8 8008C5F8 10400009 */  beqz  $v0, .L8008C620
 /* 08D1FC 8008C5FC 3C038012 */   lui   $v1, %hi(D_80126460) # $v1, 0x8012
 /* 08D200 8008C600 3C038012 */  lui   $v1, %hi(D_80126460) # $v1, 0x8012
-/* 08D204 8008C604 3C08800E */  lui   $t0, %hi(D_800E0278) # $t0, 0x800e
+/* 08D204 8008C604 3C08800E */  lui   $t0, %hi(gGameSelectTextElemsWithAdv2) # $t0, 0x800e
 /* 08D208 8008C608 24636460 */  addiu $v1, %lo(D_80126460) # addiu $v1, $v1, 0x6460
-/* 08D20C 8008C60C 25080278 */  addiu $t0, %lo(D_800E0278) # addiu $t0, $t0, 0x278
+/* 08D20C 8008C60C 25080278 */  addiu $t0, %lo(gGameSelectTextElemsWithAdv2) # addiu $t0, $t0, 0x278
 /* 08D210 8008C610 24090002 */  li    $t1, 2
 /* 08D214 8008C614 AC680000 */  sw    $t0, ($v1)
 /* 08D218 8008C618 10000007 */  b     .L8008C638
 /* 08D21C 8008C61C AE890000 */   sw    $t1, ($s4)
 .L8008C620:
-/* 08D220 8008C620 3C0A800E */  lui   $t2, %hi(D_800E0198) # $t2, 0x800e
+/* 08D220 8008C620 3C0A800E */  lui   $t2, %hi(gGameSelectTextElemsNoAdv2) # $t2, 0x800e
 /* 08D224 8008C624 24636460 */  addiu $v1, %lo(D_80126460) # addiu $v1, $v1, 0x6460
-/* 08D228 8008C628 254A0198 */  addiu $t2, %lo(D_800E0198) # addiu $t2, $t2, 0x198
+/* 08D228 8008C628 254A0198 */  addiu $t2, %lo(gGameSelectTextElemsNoAdv2) # addiu $t2, $t2, 0x198
 /* 08D22C 8008C62C 240B0001 */  li    $t3, 1
 /* 08D230 8008C630 AC6A0000 */  sw    $t2, ($v1)
 /* 08D234 8008C634 AE8B0000 */  sw    $t3, ($s4)
