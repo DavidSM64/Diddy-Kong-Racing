@@ -3,7 +3,7 @@ glabel D_800E84F0
 .float 1.2
 
 .text
-glabel func_80090F30
+glabel render_track_select_setup_ui
 /* 091B30 80090F30 27BDFF68 */  addiu $sp, $sp, -0x98
 /* 091B34 80090F34 AFBF0054 */  sw    $ra, 0x54($sp)
 /* 091B38 80090F38 AFBE0050 */  sw    $fp, 0x50($sp)

@@ -125,7 +125,7 @@ glabel func_800A277C
 /* 0A34EC 800A28EC 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A34F0 800A28F0 14400006 */  bnez  $v0, .L800A290C
 /* 0A34F4 800A28F4 240E0010 */   li    $t6, 16
-/* 0A34F8 800A28F8 0C000572 */  jal   musicIsPlaying
+/* 0A34F8 800A28F8 0C000572 */  jal   music_is_playing
 /* 0A34FC 800A28FC AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A3500 800A2900 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A3504 800A2904 14400003 */  bnez  $v0, .L800A2914

@@ -48,7 +48,7 @@ glabel menu_magic_codes_loop
 /* 08A980 80089D80 28410014 */  slti  $at, $v0, 0x14
 /* 08A984 80089D84 10200006 */  beqz  $at, .L80089DA0
 /* 08A988 80089D88 00000000 */   nop   
-/* 08A98C 80089D8C 0C0225A9 */  jal   func_800896A4
+/* 08A98C 80089D8C 0C0225A9 */  jal   render_magic_codes_ui
 /* 08A990 80089D90 AFA70044 */   sw    $a3, 0x44($sp)
 /* 08A994 80089D94 3C0B8012 */  lui   $t3, %hi(D_801263D8) # $t3, 0x8012
 /* 08A998 80089D98 8FA70044 */  lw    $a3, 0x44($sp)
