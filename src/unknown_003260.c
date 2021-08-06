@@ -158,7 +158,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002E38.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003008.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003040.s")
 
-void sfxSetVolumeSlider(u32 arg0) {
+void set_sfx_volume_slider(u32 arg0) {
     if (arg0 > 256) {
         arg0 = 256;
     }

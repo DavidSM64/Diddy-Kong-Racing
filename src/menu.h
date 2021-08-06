@@ -271,7 +271,7 @@ extern s32 gShowControllerPakMenu;
 extern s32 gActiveMagicCodes;
 extern s32 gUnlockedMagicCodes;
 
-extern s32 gMagicCodeMenuStrings[5];
+extern char *gMagicCodeMenuStrings[5];
 
 extern u8 D_800DFDB4[10][2];
 
@@ -376,9 +376,9 @@ extern s16 D_800E06C4[8];
 
 extern s16 D_800E06D4[8];
 
-extern u16 D_800E06E4[14];
+extern s16 D_800E06E4[14];
 
-extern u16 D_800E0700[8];
+extern s16 D_800E0700[8];
 
 extern s16 D_800E0710[16];
 
@@ -409,16 +409,6 @@ extern s32 D_800E098C;
 extern s16 D_800E0990[8];
 
 extern s16 D_800E09A0[8];
-
-// Not sure about typing with these.
-extern s32 D_800E09B0[5];
-extern s32 D_800E09C4[5];
-extern s32 D_800E09D8[5];
-extern s32 D_800E09EC[3];
-extern s32 D_800E09F8[3];
-extern s32 D_800E0A04[3];
-extern s32 D_800E0A10;
-extern s32 D_800E0A14[4];
 
 extern s16 D_800E0A24[14];
 
@@ -588,5 +578,9 @@ extern s8 D_800E1E28;
 extern s16 D_800E1E2C[10];
 
 extern s16 D_800E1E40[10];
+
+typedef struct unk80126460 {
+    MenuElement elem[2];
+} unk80126460;
 
 #endif

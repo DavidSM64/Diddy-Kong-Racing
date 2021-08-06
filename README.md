@@ -32,10 +32,10 @@ You are not required to install a binutils package, but it does speed up the ini
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
 ## Modding
-
-If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.
-
+If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
 Example: `make NON_MATCHING=1 -j4`  
+  
+The `NON_MATCHING` define will include the functions that don't exactly match one-to-one, but should be no different functionality-wise. If you do notice any bugs that occur in a `NON_MATCHING` build that are not in the vanilla game, then please file an issue describing the bug. It would be helpful if you can track down which function is causing the bug, but that is not required.
 
 ## Style Guide
 
@@ -113,14 +113,14 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of July 30th 2021, this is our current score:
+As of August 6th 2021, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 12.14% Complete -------------------
-               # Decompiled functions: 830
-               # GLOBAL_ASM remaining: 938
-              # NON_MATCHING functions: 58
+ ------------------- 13.16% Complete -------------------
+               # Decompiled functions: 852
+               # GLOBAL_ASM remaining: 918
+              # NON_MATCHING functions: 76
  --------------------- Game Status ---------------------
         Balloons: 8/47, Keys: 1/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4
@@ -130,7 +130,7 @@ As of July 30th 2021, this is our current score:
           ADVENTURE TWO (Cleanup & Documentation)
  -------------------  0.75% Complete -------------------
                # Documented functions: 61
-             # Undocumented remaining: 1707
+             # Undocumented remaining: 1709
  --------------------- Game Status ---------------------
         Balloons: 0/47, Keys: 0/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4
@@ -147,7 +147,7 @@ As of July 30th 2021, this is our current score:
 
 What should be focused on.
 
-* Decompiling the asm files into matching c files.
+* Decompiling the non-matching asm files into matching C functions.
 * Documenting variables & functions
 
 ### Minor

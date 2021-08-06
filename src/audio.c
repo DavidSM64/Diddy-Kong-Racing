@@ -561,7 +561,7 @@ s16 musicGetTempo(void) {
     return D_80115D30;
 }
 
-u8 musicIsPlaying(void) {
+u8 music_is_playing(void) {
     return (alCSPGetState(gMusicPlayer) == AL_PLAYING);
 }
 
@@ -687,7 +687,7 @@ void set_relative_volume_for_music(u8 vol){
     alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C*normalized_vol)>>8));
 }
 
-void musicSetVolSlider(u32 slider_val){
+void set_music_volume_slider(u32 slider_val){
     f32 normalized_vol;
     
     slider_val = (slider_val < 0x101)?slider_val:256;

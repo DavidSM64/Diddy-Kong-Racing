@@ -1,4 +1,4 @@
-glabel func_8008AD44
+glabel calculate_and_display_rom_checksum
 /* 08B944 8008AD44 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 08B948 8008AD48 3C0E800E */  lui   $t6, %hi(D_800E1E18) # $t6, 0x800e
 /* 08B94C 8008AD4C 8DCE1E18 */  lw    $t6, %lo(D_800E1E18)($t6)

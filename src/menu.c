@@ -147,10 +147,7 @@ s32 D_801267E8;
 s8* D_801267EC;
 s32 D_801267F0[5];
 s32 D_80126804;
-s32 D_80126808;
-s32 D_8012680C;
-s32 D_80126810;
-s32 D_80126814;
+s32 D_80126808[4];
 s32 D_80126818;
 s32 D_8012681C;
 s32 D_80126820;
@@ -188,7 +185,7 @@ s32 D_80126928;
 s32 D_8012692C;
 s32 D_80126930[36];
 s8 gPlayerSelectVehicle[4]; // Unknown number of entries.
-s32 D_801269C4;
+u8  D_801269C4[4];
 s32 D_801269C8;
 s32 D_801269CC;
 s32 gAudioOutputStrings[3];
@@ -200,7 +197,7 @@ s32 D_801269EC;
 s32 D_801269F0;
 s32 D_801269F4;
 s32 D_801269F8;
-s32 D_801269FC;
+s32 *D_801269FC;
 s32 D_80126A00;
 s32 D_80126A04;
 s32 D_80126A08;
@@ -253,7 +250,7 @@ s32 D_80126BF0[8];
 s32 D_80126C10; 
 s32 D_80126C14;
 s32 D_80126C18;
-s32 D_80126C1C;
+char **D_80126C1C;
 s32 D_80126C20;
 s32 D_80126C24;
 s32 D_80126C28;
@@ -551,7 +548,7 @@ s32 gShowControllerPakMenu = FALSE;
 s32 gActiveMagicCodes = 0;
 s32 gUnlockedMagicCodes = 0;
 
-s32 gMagicCodeMenuStrings[5] = { 0, 0, 0, 0, 0 };
+char *gMagicCodeMenuStrings[5] = { 0, 0, 0, 0, 0 };
 
 u8 D_800DFDB4[10][2] = {
     { 0x0F, 0x64 },
@@ -779,14 +776,14 @@ s16 D_800E06D4[8] = {
     0x0000, 0x004A, 0xFFAB, 0x0000
 };
 
-u16 D_800E06E4[14] = {
+s16 D_800E06E4[14] = {
     0x50, 0x8C, 0xA0, 0x40,
     0x04, 0x04, 0x50, 0x14,
     0x3A, 0x28, 0x50, 0x28,
     0x66, 0x28
 };
 
-u16 D_800E0700[8] = {
+s16 D_800E0700[8] = {
     0x50, 0x98, 0xA0, 0x28,
     0x04, 0x04, 0x50, 0x0E
 };
@@ -913,15 +910,14 @@ s16 D_800E09A0[8] = {
     0x0000, 0xFF60, 0x0000, 0xFF80
 };
 
-// Not sure about typing with these.
-s32 D_800E09B0[5] = { 0, 0, 0, 0, 0 };
-s32 D_800E09C4[5] = { 0, 0, 0, 0, 0 };
-s32 D_800E09D8[5] = { 0, 0, 0, 0, 0 };
-s32 D_800E09EC[3] = { 0, 0, 0 };
-s32 D_800E09F8[3] = { 0, 0, 0 };
-s32 D_800E0A04[3] = { 0, 0, 0 };
-s32 D_800E0A10 = 0;
-s32 D_800E0A14[4] = { 0, 0, 0, 0 };
+char *D_800E09B0[5] = { 0, 0, 0, 0, 0 };
+char *D_800E09C4[5] = { 0, 0, 0, 0, 0 };
+char *D_800E09D8[5] = { 0, 0, 0, 0, 0 };
+char *D_800E09EC[3] = { 0, 0, 0 };
+char *D_800E09F8[3] = { 0, 0, 0 };
+char *D_800E0A04[3] = { 0, 0, 0 };
+s16 D_800E0A10 = 0;
+char *D_800E0A14[4] = { 0, 0, 0, 0 };
 
 s16 D_800E0A24[14] = {
     0x0005, 0x003B, 0x0032, 0x0033, 
@@ -1554,10 +1550,38 @@ void load_level_for_menu(s32, s32, s32);
 void func_8008CACC(void);
 void reset_character_id_slots(void);
 void func_80000FDC(s32, s32, f32);
+void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
+void calculate_and_display_rom_checksum(void);
+void func_800851FC(void);
+void set_music_volume_slider(s32);
+s32 music_is_playing(void);
+
+void reset_controller_sticks(void);
+void menu_logos_screen_init(void);
+void menu_title_screen_init(void);
+void menu_options_init(void);
+void menu_audio_options_init(void);
+void menu_save_options_init(void);
+void menu_magic_codes_init(void);
+void menu_magic_codes_list_init(void);
+void menu_character_select_init(void);
+void menu_game_select_init(void);
+void menu_file_select_init(void);
+void menu_track_select_init(void);
+void menu_5_init(void);
+void menu_11_init(void);
+void menu_trophy_race_round_init(void);
+void menu_trophy_race_rankings_init(void);
+void menu_23_init(void);
+void menu_ghost_data_init(void);
+void menu_credits_init(void);
+void menu_boot_init(void);
+void menu_caution_init(void);
+void func_80001844(void);
 
 #ifdef NON_MATCHING
 
-// Should be functionally equivalent?
+// Should be functionally equivalent
 void load_menu_text(s32 language) {
     s32 start, langIndex, i, j;
     
@@ -1741,41 +1765,22 @@ void func_800813C0(void) {
     D_800DF458 = 1;
 }
 
-#ifdef NON_MATCHING
-void reset_controller_sticks(void);
-void menu_logos_screen_init(void);
-void menu_title_screen_init(void);
-void menu_options_init(void);
-void menu_audio_options_init(void);
-void menu_save_options_init(void);
-void menu_magic_codes_init(void);
-void menu_magic_codes_list_init(void);
-void menu_character_select_init(void);
-void menu_game_select_init(void);
-void menu_file_select_init(void);
-void menu_track_select_init(void);
-void menu_5_init(void);
-void menu_11_init(void);
-void menu_trophy_race_round_init(void);
-void menu_trophy_race_rankings_init(void);
-void menu_23_init(void);
-void menu_ghost_data_init(void);
-void menu_credits_init(void);
-void menu_boot_init(void);
-void menu_caution_init(void);
-
-// Almost close to matching.
 void menu_init(u32 menuId) {
+    s32 i;
+    
     gCurrentMenuId = menuId;
     reset_controller_sticks();
     gIgnorePlayerInput = 1;
     D_801263BC = 0;
     D_801263C8 = 0;
     D_80126828 = 0;
-    D_80126808 = 0;
-    D_8012680C = 0; // This creates an extra lui
-    D_80126810 = 0;
-    D_80126814 = 0; // This creates an extra lui
+    
+    // Does not match with a for loop
+    i = 0; 
+    while(i < 4) { 
+        D_80126808[i++] = 0;
+    }
+    
     func_80001844();
     switch(gCurrentMenuId) {
         case MENU_LOGOS:
@@ -1841,9 +1846,6 @@ void menu_init(u32 menuId) {
     }
     D_80126470 = 0xD000;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_init.s")
-#endif
 
 /**
  * Runs every frame. Calls the loop function of the current menu id
@@ -2207,13 +2209,12 @@ void func_800841B8(s32 arg0) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/menu_options_loop.s")
-#else
+#ifdef NON_MATCHING
 
 void func_80084734(void);
 void set_language(s32 language);
 
+// Should be functionally equivalent
 s32 menu_options_loop(s32 arg0) {
     s32 buttonsPressed;
     s32 analogX;
@@ -2246,7 +2247,7 @@ s32 menu_options_loop(s32 arg0) {
         }
     }
     
-    if ((buttonsPressed & 0x4000) || ((buttonsPressed & 0x9000) && D_800DF460 == 5)) {
+    if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & (A_BUTTON | START_BUTTON)) && D_800DF460 == 5)) {
         // Leave the option menu
         func_80000C98(-0x80, D_800DF460, analogX);
         gMenuDelay = -1;
@@ -2267,7 +2268,7 @@ s32 menu_options_loop(s32 arg0) {
         func_80001D04(0xEB, 0);
     } else if (D_800DF460 == 1 && analogX != 0) {
         // Enable/Disable subtitles.
-        if (D_80126448+4 & 0x2000000) {
+        if (D_80126448 & 0x2000000) {
             func_80001D04(0xEB, 0);
             func_8009EABC(0, 0x2000000);
             func_800C2AF4(0);
@@ -2325,6 +2326,8 @@ s32 menu_options_loop(s32 arg0) {
     gIgnorePlayerInput = 0;
     return 0;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/menu/menu_options_loop.s")
 #endif
 
 
@@ -2338,7 +2341,7 @@ void menu_audio_options_init(void) {
     gOptionsMenuItemIndex = 0;
     D_801263BC = 0;
     gMenuDelay = 0;
-    D_801269FC = 0;
+    D_801269FC = NULL;
     D_801263D8 = -1;
     func_8009C674(D_800DFA2C);
     func_8009C8A4(&D_800DFA2C[6]);
@@ -2362,22 +2365,16 @@ void menu_audio_options_init(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80084854.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/menu_audio_options_loop.s")
-#else
+#ifdef NON_MATCHING
 
-extern s32 D_800DFABC;
-extern s32 D_800DFAC8;
-
-void func_800851FC(void);
-
+// Almost matching, should be functionally equivalent
 s32 menu_audio_options_loop(s32 arg0) {
-    s32 sp40;
+    s32 buttonInputs;
     s32 sp30;
     s32 phi_a2;
-    s32 phi_a3;
-    s32 phi_t0;
-    s32 phi_s0;
+    s32 contY;
+    s32 contX;
+    s32 i;
 
     sp30 = 0;
     D_801263BC = (s32) ((D_801263BC + arg0) & 0x3F);
@@ -2392,18 +2389,17 @@ s32 menu_audio_options_loop(s32 arg0) {
         func_80084854();
     }
     if (gIgnorePlayerInput == 0 && gMenuDelay == 0) {
-        sp40 = 0;
+        buttonInputs = 0;
+        contX = 0;
+        contY = 0;
         phi_a2 = 0;
-        phi_a3 = 0;
-        phi_t0 = 0;
-        phi_s0 = 0;
         
-        while(phi_s0 != 4) {
-            sp40 |= get_buttons_pressed_from_player(phi_s0);
-            phi_a2 += func_8006A59C(phi_s0);
-            phi_a3 += gControllersYAxisDirection[phi_s0];
-            phi_t0 += gControllersXAxisDirection[phi_s0];
-            phi_s0++;
+        // Check all 4 controllers for inputs
+        for(i = 0; i < 4; i++) {
+            buttonInputs |= get_buttons_pressed_from_player(i);
+            phi_a2 += func_8006A59C(i);
+            contY += gControllersYAxisDirection[i];
+            contX += gControllersXAxisDirection[i];
         }
         
         if (phi_a2 < 0) {
@@ -2418,21 +2414,21 @@ s32 menu_audio_options_loop(s32 arg0) {
             }
         }
         
-        if (((sp40 & 0x9000) && (D_801263E0 == gOptionsMenuItemIndex + 1)) || (sp40 & 0x4000)) {
+        if (((buttonInputs & (A_BUTTON | START_BUTTON)) && (D_801263E0 == gOptionsMenuItemIndex + 1)) || (buttonInputs & B_BUTTON)) {
             gMenuDelay = -1;
             func_800C01D8(&D_800DF774);
             if (D_801263D8 >= 0) {
                 func_80000C98(-0x80);
             }
             sp30 = 3;
-        } else if (phi_a3 < 0 && gOptionsMenuItemIndex < D_801263E0 - 1) {
+        } else if (contY < 0 && gOptionsMenuItemIndex < D_801263E0 - 1) {
             gOptionsMenuItemIndex++;
             sp30 = 1;
-        } else if (phi_a3 > 0 && gOptionsMenuItemIndex > 0) {
+        } else if (contY > 0 && gOptionsMenuItemIndex > 0) {
             gOptionsMenuItemIndex--;
             sp30 = 1;
-        } else if (gOptionsMenuItemIndex == 0 && phi_t0 != 0) {
-            if (phi_t0 < 0) {
+        } else if (gOptionsMenuItemIndex == 0 && contX != 0) {
+            if (contX < 0) {
                 D_800DFAC8--;
             } else {
                 D_800DFAC8++;
@@ -2445,16 +2441,16 @@ s32 menu_audio_options_loop(s32 arg0) {
             }
             set_stereo_pan_mode(D_800DFAC8);
             sp30 = 1;
-        } else if ((phi_a2 >> 2) != 0) {
-            if(gOptionsMenuItemIndex == 2) {
+        } else if (((phi_a2 >> 2) != 0) && ((gOptionsMenuItemIndex == 1) || (gOptionsMenuItemIndex == 2))) {
+            if(gOptionsMenuItemIndex == 1) {
                 gSfxVolumeSliderValue += (phi_a2 >> 2);
                 if (gSfxVolumeSliderValue < 0) {
                     gSfxVolumeSliderValue = 0;
                 } else if (gSfxVolumeSliderValue >= 0x101) {
                     gSfxVolumeSliderValue = 0x100;
                 }
-                sfxSetVolumeSlider(gSfxVolumeSliderValue);
-            } else if(gOptionsMenuItemIndex == 1) {
+                set_sfx_volume_slider(gSfxVolumeSliderValue);
+            } else if(gOptionsMenuItemIndex == 2) {
                 gMusicVolumeSliderValue += (phi_a2 >> 2);
                 if (gMusicVolumeSliderValue < 0) {
                     gMusicVolumeSliderValue = 0;
@@ -2463,8 +2459,8 @@ s32 menu_audio_options_loop(s32 arg0) {
                         gMusicVolumeSliderValue = 0x100;
                     }
                 }
-                func_80001A3C(gMusicVolumeSliderValue);
-                if (!musicIsPlaying()) {
+                set_music_volume_slider(gMusicVolumeSliderValue);
+                if (!music_is_playing()) {
                     if (D_801263D8 >= 0) {
                         func_80000B28();
                         play_music((u8)D_800DFABC);
@@ -2476,15 +2472,15 @@ s32 menu_audio_options_loop(s32 arg0) {
                     }
                 }
             }
-        } else if (D_801263E0 >= 5 && gOptionsMenuItemIndex == 1) {
-            if (phi_t0 < 0 && D_800DFABC > 0) {
+        } else if (D_801263E0 >= 5 && gOptionsMenuItemIndex == 3) {
+            if (contX < 0 && D_800DFABC > 0) {
                 D_800DFABC--;
                 sp30 = 1;
-            } else if (phi_t0 > 0 && D_800DFABC < (ALSeqFile_80115CF8_GetSeqCount() - 1)) {
+            } else if (contX > 0 && D_800DFABC < (ALSeqFile_80115CF8_GetSeqCount() - 1)) {
                 D_800DFABC++;
                 sp30 = 1;
             }
-            if (sp40 & 0x9000) {
+            if (buttonInputs & (A_BUTTON | START_BUTTON)) {
                 func_80000B28();
                 func_80000BE0(0x18);
                 play_music((u8)D_800DFABC);
@@ -2492,18 +2488,18 @@ s32 menu_audio_options_loop(s32 arg0) {
             }
         }
         
-        if (gOptionsMenuItemIndex == 1 && D_801269FC == 0) {
+        if (gOptionsMenuItemIndex == 1 && D_801269FC == NULL) {
             func_80001D04(0x19B, &D_801269FC);
-        } else if (D_801269FC != 0) {
-            func_8000488C(D_801269FC);
+        } else if (D_801269FC != NULL) {
+            func_8000488C(&D_801269FC);
         }
         
         if (sp30 == 3) {
-            func_80001D04(0x241, 0);
+            func_80001D04(0x241, NULL);
         } else if (sp30 == 2) {
-            func_80001D04(0xEF, 0);
+            func_80001D04(0xEF, NULL);
         } else if (sp30 == 1) {
-            func_80001D04(0xEB, 0);
+            func_80001D04(0xEB, NULL);
         }
     }
     if (gMenuDelay < -0x1E) {
@@ -2514,11 +2510,12 @@ s32 menu_audio_options_loop(s32 arg0) {
     gIgnorePlayerInput = 0;
     return 0;
 }
-
+#else
+GLOBAL_ASM("asm/non_matchings/menu/menu_audio_options_loop.s")
 #endif
 
 void func_800851FC(void) {
-    if (D_801269FC != 0) {
+    if (D_801269FC != NULL) {
         func_8000488C(D_801269FC);
     }
     if (D_801263D8 >= 0) {
@@ -2893,7 +2890,131 @@ void menu_magic_codes_init(void) {
     func_800C4170(2);
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_800896A4.s")
+#ifdef NON_MATCHING
+
+// Close to matching, but should be functionally equivalent.
+void render_magic_codes_ui(s32 arg0) {
+    s32 xPos, yPos;
+    s32 yIncr;
+    s32 i, j;
+    s32 temp, alpha, green;
+    char c;
+    
+    set_text_background_color(0, 0, 0, 0);
+    func_800C5B58(&D_801263A0, 0, 0, 7);
+    set_text_font(2);
+    set_text_color(0, 0, 0, 0xFF, 0x80);
+    draw_text(&D_801263A0, 0xA1, 0x23, gMenuText[17], 0xC); // gMenuText[17] = "MAGIC CODES"
+    set_text_color(0xFF, 0xFF, 0xFF, NULL, 0xFF);
+    draw_text(&D_801263A0, 0xA0, 0x20, gMenuText[17], 0xC); // gMenuText[17] = "MAGIC CODES"
+    set_text_font(0);
+    set_text_color(0xFF, 0xFF, 0xFF, NULL, 0xFF);
+    
+    c = 'A';
+    yPos = 60;
+    // Draw the input table
+    for(i = 0; i < 4; i++) {
+        for(j = 0; j < 7; j++) {
+            xPos = 64 + (j * 32);
+            if (gOptionsMenuItemIndex == 5 && j == gCheatInputCurrentColumn && i == gCheatInputCurrentRow) {
+                temp = D_801263BC * 8;
+                if (temp >= 0x100) {
+                    temp = 0x1FF - temp;
+                }
+                set_text_color(0x80, 0xFF, 0xC0, (temp >> 1) + 0x80, 0xFF);
+            }
+            if (c < '[') {
+                draw_text(&D_801263A0, xPos, yPos, &c, 0xC); // Draw the character
+            } else if (j == 5) {
+                draw_text(&D_801263A0, xPos, yPos, &D_800E8210, 0xC); // D_800E8210 = "DEL"
+            } else {
+                draw_text(&D_801263A0, xPos, yPos, &D_800E8214, 0xC); // D_800E8214 = "OK"
+            }
+            if ((5 == gOptionsMenuItemIndex) && (j == gCheatInputCurrentColumn) && (i == gCheatInputCurrentRow)) {
+                set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+            }
+            c++;
+            c &= 0xFF;
+        }
+        yPos += 0x16;
+    }
+    
+    temp = D_801263BC * 8;
+    if (temp >= 0x100) {
+        temp = 0x1FF - temp;
+    }
+    
+    set_text_font(0);
+    yPos = 0xA4;
+    yIncr = 16;
+    if (osTvType == TV_TYPE_PAL) {
+        yIncr = 24;
+    }
+    
+    for(i = 0; gMagicCodeMenuStrings[i] != NULL; i++) {
+        alpha = 0;
+        if (i == gOptionsMenuItemIndex && D_801263E0 == 0) {
+            alpha = temp;
+        }
+        set_text_color(0xFF, 0xFF, 0xFF, alpha, 0xFF);
+        draw_text(&D_801263A0, -0x8000, yPos, gMagicCodeMenuStrings[i], 0xC);
+        yPos += yIncr;
+    } 
+    set_text_font(0);
+    set_text_color(0xFF, 0xFF, 0x80, 0x80, 0xFF);
+    set_text_background_color(0, 0, 0x80, 0x80);
+    if (gOptionsMenuItemIndex == 4) {
+        if (D_80126C4C == -1) {
+            draw_text(&D_801263A0, -0x8000, 0x90, gMenuText[18], 0xC); // gMenuText[18] = "Sorry, the code was incorrect"
+        } else {
+            // Draw cheat code name.
+            draw_text(&D_801263A0, -0x8000, 0x90, (char*)(*gCheatsAssetData) + (*gCheatsAssetData + 1)[D_80126C4C + 1], 0xC);
+        }
+    } else if (5 == gOptionsMenuItemIndex) {
+        draw_text(&D_801263A0, -0x8000, 0x90, D_80126C58, 0xC);
+    } else if (gOptionsMenuItemIndex == 6) {
+        draw_text(&D_801263A0, -0x8000, 0x90, gMenuText[19], 0xC); // gMenuText[19] = "All cheats have been deleted"
+    }
+    if (D_801263E0 != 0) {
+        yPos = 0x78;
+        if (osTvType == TV_TYPE_PAL) {
+            yPos = 0x86;
+        }
+        func_800C5494(6);
+        func_800C4F7C(6, 0);
+        func_800C4EDC(6, 0x4C, yPos - 0x1C, 0xF4, yPos + 0x1C);
+        func_800C4FBC(6, 0, 0, 0, 0xA0);
+        yPos = 4;
+        for(i = 0; i < 3; i++) {
+            alpha = 0;
+            green = 0xFF;
+            if (i == 0) {
+                alpha = 64;
+                green = 0;
+            } else if (i == D_801263E0) {
+                alpha = temp;
+            }
+            func_800C5000(6, 0xFF, green, 0xFF, alpha, 0xFF);
+            
+            // gMenuText[148] = "CLEAR ALL CODES?", [149] = "OK", [150] = "CANCEL"
+            func_800C5168(6, -0x8000, yPos, gMenuText[148 + i], 1, 4);
+            
+            if (i != 0) {
+                yPos += 0x10;
+            } else {
+                yPos += 0x14;
+            }
+        }
+        func_800C5B58(&D_801263A0, 0, 0, 6);
+    }
+    if ((get_filtered_cheats() << 3) < 0) {
+        calculate_and_display_rom_checksum();
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/render_magic_codes_ui.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/menu/menu_magic_codes_loop.s")
 
 void func_8008A4C8(void) {
@@ -3056,7 +3177,47 @@ void func_8008AD1C(void) {
     func_800C422C(2);
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008AD44.s")
+#ifdef NON_MATCHING
+
+extern u8 *__ROM_END;
+
+void calculate_and_display_rom_checksum(void) {
+    s32 romOffset, numBytes, numBytesLeft;
+    s32 i;
+    u8 *tempBuffer;
+    if (!D_800E1E18) {
+        numBytesLeft = &__ROM_END;
+        numBytesLeft -= 0x1000;
+        romOffset = 0x1000;
+        tempBuffer = allocate_from_main_pool_safe(0x5000, COLOR_TAG_BLACK);
+        
+        while (numBytesLeft > 0) {
+            numBytes = numBytesLeft;
+            if (numBytesLeft >= 0x5001) {
+                numBytes = 0x5000;
+            }
+            dmacopy(romOffset, tempBuffer, numBytes);
+            numBytesLeft -= numBytes;
+            
+            for(i = 0; i < numBytes; i++) {
+                D_800E1E14 += tempBuffer[i];
+            }
+            
+            romOffset += numBytes;
+        }
+        
+        free_from_memory_pool(tempBuffer);
+        D_800E1E18 = TRUE;
+    }
+    
+    set_render_printf_background_color(0, 0, 0, 0x80);
+    set_render_printf_position(0x20, 0x88);
+    render_printf(D_800E8218, D_800E1E14, &__ROM_END); // D_800E8218 = "ROM checksum %08X,%d\n"
+    
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/calculate_and_display_rom_checksum.s")
+#endif
 
 void func_8008AEB4(s32 arg0, s32 *arg1) {
     switch(arg0) {
@@ -3321,7 +3482,7 @@ void draw_menu_element(s32, MenuElement*, f32);
 s32 menu_caution_loop(s32 arg0) {
     if (gMenuDelay != 0) {
         gMenuDelay += arg0;
-    } else if (gIgnorePlayerInput <= 0 && get_buttons_pressed_from_player(0) & 0xD000) {
+    } else if (gIgnorePlayerInput <= 0 && (get_buttons_pressed_from_player(0) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
         func_80001D04(0xEF, NULL);
         gMenuDelay = 1;
         func_800C01D8(&D_800DF774);
@@ -3344,10 +3505,6 @@ void func_8008C4E8(void) {
 }
 
 #ifdef NON_MATCHING
-
-typedef struct unk80126460 {
-    MenuElement elem[2];
-} unk80126460;
 
 void menu_game_select_init(void) {
     s32 i;
@@ -3392,20 +3549,12 @@ void menu_game_select_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_game_select_init.s")
 #endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/func_8008C698.s")
-#else
-typedef struct unk80126460 {
-    MenuElement textShadow;
-    MenuElement text;
-} unk80126460;
-
-extern unk80126460 *D_80126460[4];
-
+#ifdef NON_MATCHING
 void func_8008C698(s32 arg0) {
     s32 fade;
     s32 i;
     s32 filterAlpha;
+    u8 temp;
 
     if (gMenuDelay >= -21 && gMenuDelay < 22) {
         fade = D_801263BC * 8;
@@ -3420,7 +3569,9 @@ void func_8008C698(s32 arg0) {
             if (i == D_800DF460) {
                 filterAlpha = fade;
             }
-            ((unk80126460*)(*D_80126460 + i + 1))->text.filterAlpha = filterAlpha;
+            // This doesn't match.
+            temp = i; // How do I make this a `mov`?
+            (&((unk80126460*)D_80126460)[temp] + 1)->elem[1].filterAlpha = filterAlpha;
         }
         
         if (osTvType == 0) {
@@ -3431,10 +3582,12 @@ void func_8008C698(s32 arg0) {
             D_800DF7A0 = 0;
         }
         
-        draw_menu_element(1, (MenuElement*)*D_80126460, 1.0f);
+        draw_menu_element(1, (MenuElement*)D_80126460, 1.0f);
         func_80080BC8(&D_801263A0);
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/menu/func_8008C698.s")
 #endif
 
 #ifdef NON_MATCHING
@@ -3494,7 +3647,7 @@ s32 menu_game_select_loop(s32 arg0) {
         menu_init(MENU_CHARACTER_SELECT);
         return 0;
     } else {
-        func_8008C698(arg0, &D_801263D8);
+        func_8008C698(arg0);
         if ((gMenuDelay == 0) && (D_801263D8 == 0)) {
             playerInputs = get_buttons_pressed_from_player(0);
             playerYDir = gControllersYAxisDirection[0];
@@ -3637,9 +3790,9 @@ void render_file_select_menu(s32 arg0) {
                 func_8008CC28(s2, D_800E03FC[2] + D_800E03CC[i].unk0, D_800E03FC[3] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
                 func_80068508(1);
                 D_800DF75C->unk18 = D_801264A0[i].unk2 / s5;
-                func_8008CC28(NULL, (D_800E03FC[6] + D_800E03CC[i].unk0) - 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
+                func_8008CC28(0, (D_800E03FC[6] + D_800E03CC[i].unk0) - 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
                 D_800DF75C->unk18 = D_801264A0[i].unk2 % s5;
-                func_8008CC28(NULL, D_800E03FC[6] + D_800E03CC[i].unk0 + 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
+                func_8008CC28(0, D_800E03FC[6] + D_800E03CC[i].unk0 + 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
                 func_80068508(0);
                 D_800DF4A8 = 0x40;
                 D_800DF4AC = 0x40;
@@ -3858,7 +4011,7 @@ void func_8008FF1C(s32 arg0);
 void func_800904E8(s32 arg0);
 void func_80090918(s32 arg0);
 void func_80090ED8(s32 arg0);
-void func_80090F30(s32 arg0);
+void render_track_select_setup_ui(s32 arg0);
 void func_80092188(s32 arg0);
 void func_8008E4EC(void);
 s32 get_thread30_level_id_to_load(void);
@@ -3890,7 +4043,7 @@ s32 menu_track_select_loop(s32 arg0) {
             break;
         case 1:
             func_80090ED8(arg0);
-            func_80090F30(arg0);
+            render_track_select_setup_ui(arg0);
             func_80092188(arg0);
             break;
     }
@@ -3985,7 +4138,304 @@ void func_80090ED8(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80090F30.s")
+#ifdef NON_MATCHING
+
+// Somewhat close to matching, but should be functionally equivalent.
+void render_track_select_setup_ui(s32 arg0) {
+    s32 sp84;
+    s32 sp80;
+    s32 sp7C;
+    char *sp78;
+    s32 sp74;
+    Settings *settings; // sp70
+    s32 temp;
+    s32 i, j;
+    s32 s3;
+    s32 s4;
+    s32 s7;
+    
+    sp80 = 0;
+    sp78 = NULL;
+    sp74 = FALSE;
+    settings = get_settings();
+    if (osTvType == TV_TYPE_PAL) {
+        sp80 = 12;
+    }
+    if ((gNumberOfActivePlayers == 2) && (D_801269C8 < 4) && (D_801263E0 >= 2)) {
+        sp74 = TRUE;
+    }
+    func_80066894(0, 1);
+    func_8009BD5C();
+    func_80067F2C(&D_801263A0, &D_801263A8);
+    if (gMenuDelay < 0) {
+        if (D_801269F4 == 4) {
+            sp84 = 6;
+        } else if (D_801269F4 == 5) {
+            sp84 = 5;
+        } else {
+            sp84 = 4;
+        }
+        D_800DF75C[sp84].unkC = 0.0f;
+        D_800DF75C[sp84].unk10 = 0.0f;
+        if (osTvType == TV_TYPE_PAL) {
+            D_800DF454 = 1.2f;
+        }
+        func_8009CA60(sp84);
+        D_800DF454 = 1.0f;
+    }
+    if ((gMenuDelay >= -0x16) && (gMenuDelay < 0x1F)) {
+        if (gMenuDelay < 0) {
+            D_800DF764 = (gMenuDelay * 0x10) + 0xFF;
+        } else {
+            D_800DF764 = 0xFF;
+        }
+        if (D_800DF764 < 0) {
+            D_800DF764 = 0;
+        }
+        sp7C = func_8006B0F8(gTrackIdForPreview);
+        set_text_font(2);
+        set_text_color(0xC0, 0xC0, 0xFF, 0, D_800DF764);
+        set_text_background_color(0, 0, 0, 0);
+        draw_text(&D_801263A0, -0x8000, 0x2B, func_8006BDDC(gTrackIdForPreview), 0xC); // Draw track name?
+        sp84 = D_801263BC * 8;
+        if (sp84 >= 0x100) {
+            sp84 = 0x1FF - sp84;
+        }
+        func_800C4FBC(7, 0xFF, sp84, 0, D_800DF764);
+        if ((D_801263E0 == -1) || ((D_801263E0 == 2) && (D_801269C8 == 4) && is_adventure_two_unlocked())) {
+            s4 = func_800C4DA0(gMenuText[146], 0, 0);   // gMenuText[146] = "ADVENTURE"
+            temp = func_800C4DA0(gMenuText[147], 0, 0); // gMenuText[147] = "ADVENTURE TWO"
+            if (s4 < temp) {
+                s4 = temp;
+            }
+            if (s4 < D_800E0700[2]) {
+                s4 = D_800E0700[2];
+            } else {
+                s4 += 0xC;
+            }
+            func_80080580(&D_801263A0, -(s4 >> 1), 0x78 - D_800E0700[1], s4, D_800E0700[3], 
+                D_800E0700[4], D_800E0700[5], D_800DF764 + 0xB0E0C000, D_8012665C);
+            func_80080E6C();
+            set_text_font(0);
+            s7 = D_800E0700[7] + D_800E0700[1] + sp80;
+            s7++;
+            for(i = 0; i < 2; i++) {
+                for(j = 0; j < 4; j += 2) {
+                    if (j == 0) {
+                        set_text_color(0, 0, 0, 0xFF, D_800DF764 >> 1);
+                    } else {
+                        s32 alpha = i;
+                        if (i == D_800E0418) {
+                            alpha = sp84;
+                        }
+                        set_text_color(0xFF, 0xFF, 0xFF, alpha, D_800DF764);
+                    }
+                    // gMenuText[146] = "ADVENTURE", gMenuText[147] = "ADVENTURE TWO"
+                    draw_text(&D_801263A0, 0xA1 - j, s7 - j, gMenuText[146 + i], 0xC);
+                }
+                s7 += 16;
+            }
+        }
+        if (D_801269C8 < 4) {
+            set_text_font(0);
+            set_text_color(0xFF, 0x40, 0x40, 0x60, D_800DF764);
+            draw_text(&D_801263A0, 0x38, 0x48 + sp80, gMenuText[9], 8); // gMenuText[9] = "BEST TIME"
+            draw_text(&D_801263A0, 0x38, 0x5C + sp80, gMenuText[10], 8); // gMenuText[10] = "BEST LAP"
+            set_text_color(0xFF, 0x80, 0xFF, 0x60, D_800DF764);
+            decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], &sp78, 3);
+            draw_text(&D_801263A0, 0xFA, 0x48 + sp80, &sp78, 0xC);
+            decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], &sp78, 3);
+            draw_text(&D_801263A0, 0xFA, 0x5C + sp80, &sp78, 0xC);
+            func_80081800(settings->courseTimesPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], 0x16, 0x35, 0x80, 0xFF, 0xFF, 0);
+            func_80081800(settings->flapTimesPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], 0x16, 0x21, 0xFF, 0xC0, 0xFF, 0);
+            if (D_801263E0 != -1) {
+                if (gNumberOfActivePlayers == 1) {
+                    // Glow effect
+                    func_800C4EDC(7, 0x86, sp80 + 0x70, 0xBA, sp80 + 0x89);
+                    func_800C5B58(&D_801263A0, 0, 0, 7);
+                    if (D_801263E0 <= 0) {
+                        render_textured_rectangle(&D_801263A0, &D_800E05B4, 0x88, sp80 + 0x72, 0xFF, 0xFF, 0xFF, D_800DF764);
+                    } else {
+                        render_textured_rectangle(&D_801263A0, &D_800E05C4, 0x88, sp80 + 0x72, 0xFF, 0xFF, 0xFF, D_800DF764);
+                        for(i = 0; i < 2; i++) {
+                            s32 yTemp = 0x97 + sp80 + (i * 0x18);
+                            if (i == D_800E0414) {
+                                render_textured_rectangle(&D_801263A0, D_800E0648[(i * 3) + 1], 0x68, yTemp, 0xFF, 0xFF, 0xFF, D_800DF764);
+                            } else {
+                                render_textured_rectangle(&D_801263A0, D_800E0648[(i * 3) + 2], 0x68, yTemp, 0xFF, 0xFF, 0xFF, D_800DF764);
+                            }
+                        }
+                    }
+                } else {
+                    if (!sp74) {
+                        s3 = (gNumberOfActivePlayers - 1) * gNumberOfActivePlayers;
+                        for(i = 0; i < gNumberOfActivePlayers; i++) {
+                            
+                            if (((gNumberOfActivePlayers == 1) && (i == D_801263E0)) || ((gNumberOfActivePlayers >= 2) && (D_801269C4[i] == 0))) {
+                                s32 temp_v0_9 = D_800E0688[s3 + (i*2)];
+                                s32 temp_v1 = D_800E0688[s3 + (i*2) + 1] + sp80;
+                                // Glow effect around Player image
+                                func_800C4EDC(7, temp_v0_9 - 2, temp_v1 - 2, temp_v0_9 + 0x32, temp_v1 + 0x17);
+                                func_800C5B58(&D_801263A0, 0, 0, 7);
+                            }
+                            
+                            // "Player" text image
+                            render_textured_rectangle(&D_801263A0, D_800E0660[i], D_800E0688[s3 + (i*2)], D_800E0688[s3 + (i*2) + 1] + sp80, 0xFF, 0xFF, 0xFF, D_800DF764);
+                        }
+                    }
+                }
+                
+                if ((gNumberOfActivePlayers >= 2) || D_801263E0 == 0) {
+                    // Draws "Car", "Hover", "Plane" text choice images.
+                    if (sp74 == 0) {
+                        s32 yTemp = 0x8B + sp80;
+                        s3 = ((gNumberOfActivePlayers - 1) * gNumberOfActivePlayers) / 2;
+                        for(i = 0; i < 3; i++) {
+                            if ((1 << i) & sp7C) {
+                                if (gNumberOfActivePlayers > 0) {
+                                    for (j = 0; j < gNumberOfActivePlayers; j++) {
+                                        if (i == gPlayerSelectVehicle[j]) {
+                                            // Highlighted
+                                            render_textured_rectangle(&D_801263A0, D_800E0624[(i*3) + 1], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, D_800DF764);
+                                        } else if (settings->courseFlagsPtr[gTrackIdForPreview] & 2) {
+                                            // Not highlighted
+                                            render_textured_rectangle(&D_801263A0, D_800E0624[(i*3) + 2], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, D_800DF764);
+                                        } else {
+                                            // Not available (Ghosted out)
+                                            render_textured_rectangle(&D_801263A0, D_800E0624[(i*3) + 2], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, D_800DF764 / 2);
+                                        }
+                                    }
+                                }
+                                yTemp += 0x18;
+                            }
+                        }
+                    }
+                }
+                sp80 += 0x8B;
+                s7 = sp80;
+                if (gPlayerSelectVehicle[0] == 2) {
+                    s7 = sp80 + 2;
+                }
+                if (gNumberOfActivePlayers == 1) {
+                    if (D_801263E0 == 0) {
+                        // Draw vehicle image for one player
+                        render_textured_rectangle(&D_801263A0, D_800E0624[gPlayerSelectVehicle[0] * 3], 0x95, s7, 0xFF, 0xFF, 0xFF, D_800DF764);
+                    } else {
+                        // Draw T.T. image for one player
+                        render_textured_rectangle(&D_801263A0, D_800E0648[D_800E0414 * 3], 0x95, sp80, 0xFF, 0xFF, 0xFF, D_800DF764);
+                    }
+                }
+                if ((gNumberOfActivePlayers == 2) && (!sp74)) {
+                    s7 = sp80;
+                    // Draw vehicle image for first player
+                    render_textured_rectangle(&D_801263A0, D_800E0624[gPlayerSelectVehicle[0] * 3], 0x4F, s7, 0xFF, 0xFF, 0xFF, D_800DF764);
+                    if (gPlayerSelectVehicle[1] == 2) {
+                        s7 = sp80 + 2;
+                    }
+                    // Draw vehicle image for second player
+                    render_textured_rectangle(&D_801263A0, D_800E0624[gPlayerSelectVehicle[1] * 3], 0xB0, s7, 0xFF, 0xFF, 0xFF, D_800DF764);
+                }
+                
+                func_8007B3D0(&D_801263A0);
+                
+                if (gNumberOfActivePlayers < 3) {
+                    // Draw border around vehicle images
+                    if (!sp74) {
+                        D_800DF75C[7].unk10 = -52.0f;
+                        if (gNumberOfActivePlayers == 1) {
+                            D_800DF75C[7].unkC = 21.0f;
+                            func_8009CA60(7);
+                        } else {
+                            D_800DF75C[7].unkC = -48.0f;
+                            func_8009CA60(7);
+                            D_800DF75C[7].unkC = 48.0f;
+                            func_8009CA60(7);
+                        }
+                    }
+                }
+                
+                if (sp74) {
+                    s32 temp_v0_12 = func_800C4DA0(gMenuText[136], 0, 0); // gMenuText[136] = "NUMBER OF RACERS"
+                    if ((D_800E06E4[2] - 0xC) < temp_v0_12) {
+                        s4 = temp_v0_12 + 0xC;
+                    } else {
+                        s4 = D_800E06E4[2];
+                    }
+                    func_80080580(&D_801263A0, -(s4 >> 1), 0x78 - D_800E06E4[1], s4, D_800E06E4[3], 
+                        D_800E06E4[4], D_800E06E4[5], 0xB0E0C0FF, D_8012665C);
+                    func_80080E6C();
+                    set_text_font(0);
+                    set_text_color(0, 0, 0, 0xFF, 0x80);
+                    draw_text(&D_801263A0, D_800E06E4[6] + D_800E06E4[0] + 1, D_800E06E4[7] + D_800E06E4[1] + 1, gMenuText[136], 0xC);
+                    set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+                    draw_text(&D_801263A0, D_800E06E4[6] + D_800E06E4[0] - 1, D_800E06E4[7] + D_800E06E4[1] - 1, gMenuText[136], 0xC);
+                    // gMenuText[136] = "NUMBER OF RACERS"
+                    func_80068508(1);
+                    func_8007BF1C(0);
+                    for(i = 0; i < 3; i++) {
+                        s32 index = i * 2;
+                        if (i == gMultiplayerSelectedNumberOfRacers) {
+                            if (D_801263E0 < 3) {
+                                D_800DF4A8 = 0xFF - sp84;
+                                D_800DF4AC = 0xFF - sp84;
+                            } else {
+                                D_800DF4A8 = 0;
+                                D_800DF4AC = 0;
+                            }
+                        }
+                        // X position
+                        D_800DF75C[0].unkC = (D_800E06E4[index + 8] + D_800E06E4[0]) - 0xA0;
+                        // Y position
+                        D_800DF75C[0].unk10 = (-D_800E06E4[index + 9] - D_800E06E4[1]) + 0x78; 
+                        // Number value to draw.
+                        D_800DF75C[0].unk18 = index + 2;
+                        func_8009CA60(0);
+                        D_800DF4A8 = 0xFF;
+                        D_800DF4AC = 0xFF;
+                    }
+                    func_8007BF1C(1);
+                    func_80068508(0);
+                }
+            }
+        }
+        if (D_801269C8 < 4) {
+            func_8007BF1C(0);
+            i = 11;
+            if (gIsInAdventureTwo) {
+                i = 12;
+            }
+            D_800DF75C[i].unk10 = 42.0f;
+            if ((settings->courseFlagsPtr[gTrackIdForPreview] & 2) || is_adventure_two_unlocked()) {
+                D_800DF75C[i].unkC = -128.0f;
+                func_8009CA60(i);
+            }
+            if ((settings->courseFlagsPtr[gTrackIdForPreview] & 4) || is_adventure_two_unlocked()) {
+                D_800DF75C[i].unkC = 120.0f;
+                func_8009CA60(i);
+            }
+            func_8007BF1C(1);
+        }
+        if ((gNumberOfActivePlayers == 1) && (D_801263E0 >= 0) && (func_80092BE0(gTrackIdForPreview) >= 0)) {
+            // Render small T.T. icon.
+            render_textured_rectangle(&D_801263A0, &D_800E0614, 0xCC, 0x7A, 0xFF, 0xFF, 0xFF, D_800DF764);
+            func_8007B3D0(&D_801263A0);
+        }
+        if (D_801269C8 != 5) {
+            if (((D_801263E0 == 2) && !sp74) || ((D_801263E0 == 3) && sp74) || (D_801263E0 == 4)) {
+                set_text_font(2);
+                set_text_color(0xFF, 0xFF, 0xFF, 0, D_800DF764);
+                if (D_801269C8 >= 4) {
+                    sp80 += 0x18;
+                }
+                draw_text(&D_801263A0, 0xA0, 0xAC, D_800E823C, 0xC); // D_800E823C = "OK?"
+            }
+        }
+        D_800DF764 = 0xFF;
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/render_track_select_setup_ui.s")
+#endif
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80092188.s")
 
@@ -4259,7 +4709,41 @@ void func_80094C14(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80094D28.s")
+
+#ifdef NON_MATCHING
+void func_80095624(s32 arg0) {
+    switch (arg0 & 0xFF) {
+        case 1:
+        case 5:
+            // Two addiu instructions need to swap positions here!
+            D_80126C1C = D_800E09D8;
+            break;
+        case 4:
+        case 6:
+            // Two addiu instructions need to swap positions here!
+            D_80126C1C = D_800E09C4;
+            break;
+        case 7:
+            D_80126C1C = D_800E0A04;
+            break;
+        case 8:
+            D_80126C1C = D_800E0A14;
+            break;
+        case 9:
+            D_80126C1C = D_800E09EC;
+            break;
+        default:
+            D_80126C1C = D_800E09B0;
+            break;
+    }
+    
+    for(D_80126C24 = 0; D_80126C1C[D_80126C24] != 0; D_80126C24++) {
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80095624.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/menu/func_80095728.s")
 
 void func_800981E8(void);
@@ -4535,9 +5019,7 @@ void func_80098754(void) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80098774.s")
 GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_rankings_init.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/func_80098EBC.s")
-#else
+#ifdef NON_MATCHING
 void func_80098EBC(s32 arg0) {
     s32 test;
     s32 fade;
@@ -4558,15 +5040,17 @@ void func_80098EBC(s32 arg0) {
             fade = (test >> 1) + 0x80;
         }
         
-        D_800E1048+64[i][0].filterRed = fade;
-        D_800E1048+64[i][0].filterGreen = fade;
-        D_800E1048+64[i][0].filterBlue = fade;
+        D_800E1048[i][0].filterRed = fade;
+        D_800E1048[i][0].filterGreen = fade;
+        D_800E1048[i][0].filterBlue = fade;
     }
     
     if (D_801263E0 == 2 || D_801263E0 == 3) {
         draw_menu_element(1, &D_800E1048, 1.0f);
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/menu/func_80098EBC.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_rankings_loop.s")
@@ -4701,7 +5185,24 @@ void menu_credits_init(void) {
     func_8006F564(1);
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8009B1E4.s")
+void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    if (arg4 >= 0x100) {
+        arg4 = 0xFF;
+    }
+    if (arg4 < 0) {
+        arg4 = 0;
+    }
+    
+    gSPDisplayList(D_801263A0++, D_800E1780)
+    gDPSetPrimColor(D_801263A0++, 0, 0, 0, 0, 0, arg4)
+    gDPSetCombineMode(D_801263A0++, G_CC_PRIMITIVE, G_CC_PRIMITIVE)
+    gDPFillRectangle(D_801263A0++, arg0, arg1, arg0 + arg2, arg1 + arg3)
+    gDPPipeSync(D_801263A0++)
+    gDPSetPrimColor(D_801263A0++, 0, 0, 255, 255, 255, 255)
+    
+    func_8007B3D0(&D_801263A0);
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
 
 void func_8009BCF0(void) {

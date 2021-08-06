@@ -1,4 +1,4 @@
-glabel func_800896A4
+glabel render_magic_codes_ui
 /* 08A2A4 800896A4 27BDFF80 */  addiu $sp, $sp, -0x80
 /* 08A2A8 800896A8 AFBF0044 */  sw    $ra, 0x44($sp)
 /* 08A2AC 800896AC AFA40080 */  sw    $a0, 0x80($sp)
@@ -410,7 +410,7 @@ glabel func_800896A4
 /* 08A894 80089C94 000268C0 */  sll   $t5, $v0, 3
 /* 08A898 80089C98 05A10004 */  bgez  $t5, .L80089CAC
 /* 08A89C 80089C9C 8FBF0044 */   lw    $ra, 0x44($sp)
-/* 08A8A0 80089CA0 0C022B51 */  jal   func_8008AD44
+/* 08A8A0 80089CA0 0C022B51 */  jal   calculate_and_display_rom_checksum
 /* 08A8A4 80089CA4 00000000 */   nop   
 /* 08A8A8 80089CA8 8FBF0044 */  lw    $ra, 0x44($sp)
 .L80089CAC:

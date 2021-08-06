@@ -69,7 +69,7 @@ glabel menu_track_select_loop
 /* 08FF30 8008F330 0C0243B6 */  jal   func_80090ED8
 /* 08FF34 8008F334 00000000 */   nop   
 /* 08FF38 8008F338 8FA40020 */  lw    $a0, 0x20($sp)
-/* 08FF3C 8008F33C 0C0243CC */  jal   func_80090F30
+/* 08FF3C 8008F33C 0C0243CC */  jal   render_track_select_setup_ui
 /* 08FF40 8008F340 00000000 */   nop   
 /* 08FF44 8008F344 8FA40020 */  lw    $a0, 0x20($sp)
 /* 08FF48 8008F348 0C024862 */  jal   func_80092188

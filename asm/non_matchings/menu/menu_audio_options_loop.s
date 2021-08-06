@@ -218,7 +218,7 @@ glabel menu_audio_options_loop
 /* 085B84 80084F84 24020100 */  li    $v0, 256
 /* 085B88 80084F88 AC620000 */  sw    $v0, ($v1)
 .L80084F8C:
-/* 085B8C 80084F8C 0C000C58 */  jal   sfxSetVolumeSlider
+/* 085B8C 80084F8C 0C000C58 */  jal   set_sfx_volume_slider
 /* 085B90 80084F90 00402025 */   move  $a0, $v0
 /* 085B94 80084F94 1000005A */  b     .L80085100
 /* 085B98 80084F98 00000000 */   nop   
@@ -242,9 +242,9 @@ glabel menu_audio_options_loop
 /* 085BD8 80084FD8 24020100 */  li    $v0, 256
 /* 085BDC 80084FDC AC620000 */  sw    $v0, ($v1)
 .L80084FE0:
-/* 085BE0 80084FE0 0C00068F */  jal   musicSetVolSlider
+/* 085BE0 80084FE0 0C00068F */  jal   set_music_volume_slider
 /* 085BE4 80084FE4 00402025 */   move  $a0, $v0
-/* 085BE8 80084FE8 0C000572 */  jal   musicIsPlaying
+/* 085BE8 80084FE8 0C000572 */  jal   music_is_playing
 /* 085BEC 80084FEC 00000000 */   nop   
 /* 085BF0 80084FF0 14400043 */  bnez  $v0, .L80085100
 /* 085BF4 80084FF4 3C0D8012 */   lui   $t5, %hi(D_801263D8) # $t5, 0x8012
