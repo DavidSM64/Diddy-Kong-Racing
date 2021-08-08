@@ -119,12 +119,6 @@ s16 D_8011D4E2;
 
 /******************************/
 
-/* Size: 8 bytes. */
-typedef struct LevelObjectEntryCommon {
-    u16 id; // Upper 9 bits = Object ID to load, Lower 7 bits = Total entry length.
-    s16 x, y, z; // Position in level
-} LevelObjectEntryCommon;
-
 extern u32 osTvType;
 
 Settings* get_settings();
