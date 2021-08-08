@@ -379,6 +379,12 @@ typedef struct LevelModel {
 /* 0x38 */ u32 minimapColor;
 } LevelModel;
 
+/* Size: 8 bytes. */
+typedef struct LevelObjectEntryCommon {
+    u16 id; // Upper 9 bits = Object ID to load, Lower 7 bits = Total entry length.
+    s16 x, y, z; // Position in level
+} LevelObjectEntryCommon;
+
 typedef struct Object_3C {
     u8 pad0[0x8];
     s8 unk8;
@@ -391,7 +397,9 @@ typedef struct Object_40 {
     f32 unk4;
     f32 unk8;
     f32 unkC;
-    u8 pad10[0x43];
+    u8 pad10[0x2D];
+    u8 unk3D;
+    u8 pad3E[0x15];
     s8 unk53;
     s8 unk54;
     s8 unk55; //size of array pointed by Object->unk68
@@ -412,6 +420,24 @@ typedef struct Object_4C {
     s8 unk16;
     s8 unk17;
 } Object_4C;
+
+typedef struct Object_54 {
+    s32 unk0;
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 unk11;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+} Object_54;
 
 typedef struct Object_5C {
     u8 pad0[0x100];
@@ -541,7 +567,7 @@ typedef struct Object {
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318
   /* 0x0050 */ void *unk50; //player + 0x2F4
-  /* 0x0054 */ void *unk54; //player + 0x2C0
+  /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
   /* 0x0058 */ void *unk58; //player + 0x304
   /* 0x005C */ Object_5C *unk5C;
 
