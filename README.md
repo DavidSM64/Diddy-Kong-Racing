@@ -117,15 +117,15 @@ As of August 14th 2021, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 13.58% Complete -------------------
-               # Decompiled functions: 865
-               # GLOBAL_ASM remaining: 910
+ ------------------- 13.80% Complete -------------------
+               # Decompiled functions: 867
+               # GLOBAL_ASM remaining: 908
               # NON_MATCHING functions: 86
  --------------------- Game Status ---------------------
         Balloons: 8/47, Keys: 1/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4
  -------------------------------------------------------
-       We are racing the dinosaur boss Trickytops
+   We are collecting eggs in Fire Mountain. (0/3 Eggs)
  =======================================================
           ADVENTURE TWO (Cleanup & Documentation)
  -------------------  0.75% Complete -------------------

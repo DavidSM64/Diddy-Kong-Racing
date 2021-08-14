@@ -109,6 +109,14 @@ typedef struct Settings4C {
     u8 unkF;
 } Settings4C;
 
+#define TAJ_FLAGS_CAR_CHAL_UNLOCKED    0x01
+#define TAJ_FLAGS_HOVER_CHAL_UNLOCKED  0x02
+#define TAJ_FLAGS_PLANE_CHAL_UNLOCKED  0x04
+#define TAJ_FLAGS_UNLOCKED_A_CHALLENGE  (TAJ_FLAGS_CAR_CHAL_UNLOCKED | TAJ_FLAGS_HOVER_CHAL_UNLOCKED | TAJ_FLAGS_PLANE_CHAL_UNLOCKED)
+#define TAJ_FLAGS_CAR_CHAL_COMPLETED   0x08
+#define TAJ_FLAGS_HOVER_CHAL_COMPLETED 0x10
+#define TAJ_FLAGS_PLANE_CHAL_COMPLETED 0x20
+
 /* Size: 0x118 bytes */
 typedef struct Settings {
   /* 0x0000 */ s16 *balloonsPtr;
@@ -138,6 +146,14 @@ typedef struct Settings {
    * 0x20000 = Dragon forest key cutscene
    */
   /* 0x0014 */ u16 tajFlags;
+  /* Taj flags:
+   * 0x1  = Car challenge unlocked
+   * 0x2  = Hover challenge unlocked
+   * 0x4  = Plane challenge unlocked
+   * 0x8  = Car challenge completed
+   * 0x10 = Hover challenge completed
+   * 0x20 = Plane challenge completed
+   */
   /* 0x0016 */ u8 ttAmulet;
   /* 0x0017 */ u8 wizpigAmulet;
   /* 0x0018 */ u16 *flapInitialsPtr[3];

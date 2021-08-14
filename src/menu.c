@@ -1566,6 +1566,7 @@ s32 music_is_playing(void);
 void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void func_80082FAC(void);
 void func_8009ABAC(void);
+void func_800C31EC(s32);
 
 void reset_controller_sticks(void);
 void menu_logos_screen_init(void);
@@ -5898,7 +5899,44 @@ void func_8009CFB0(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8009CFEC.s")
+s32 func_8009CFEC(u32 arg0) {
+    s32 result;
+
+    D_800DF4E4[arg0] = 0;
+    if ((func_800C3400() != 0) && (arg0 != 3)) {
+        return 0;
+    }
+    if (D_800DF4E0 != 0) {
+        return 0;
+    }
+    if (arg0 != 3) {
+        func_8006F388(1);
+    }
+    result = 0;
+    func_8009BF20();
+    func_800C5494(1);
+    func_800C55F4(1);
+    func_800C4FBC(1, 0, 0, 0, 0x80);
+    func_8001F450();
+    switch (arg0) {
+        case 0:
+            result = taj_menu_loop(); // Taj menu
+            break;
+        case 2:
+            result = tt_menu_loop(); // T.T. menu
+            break;
+        case 3:
+            result = func_800C3564(); // Taj challenge completed/failed menu
+            break;
+        case 4:
+            result = func_8009E7E8(); // Trophy race cabinet menu
+            break;
+        case 5:
+            result = func_8009D9F4();
+            break;
+    }
+    return result;
+}
 
 void func_8009D118(s32 arg0) {
     if (arg0 == 0) {
@@ -5954,7 +5992,173 @@ void func_8009D33C(s32 arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8009D360.s")
+s32 taj_menu_loop(void) {
+    s32 sp2C;
+    s32 buttonsPressed; // sp28
+    Settings *settings; // sp24
+    
+    settings = get_settings();
+    if ((D_800DF4DC != 0) && (D_801264E2 == 0)) {
+        D_801264E2 = -D_800DF4DC;
+    }
+    if (D_801264E2 == 0) {
+        D_801264E2 = 1;
+    }
+    if ((D_801264E2 > 0) && (D_801264E2 < 4)) {
+        func_800C4EDC(1, 0x18, 0x10, 0xB8, 0x7C);
+        func_800C4F7C(1, 0);
+    }
+    sp2C = 0;
+    buttonsPressed = get_buttons_pressed_from_player(0);
+    D_80126504 = 0;
+    
+    switch(D_801264E2) {
+        case 2:
+        case 0x62:
+            func_800C5168(1, -0x8000, 6, gMenuText[40], 1, 4); // VEHICLE SELECT
+            D_8012650E = 0x1E;
+            func_8009D1B8(gMenuText[41], 0x14, 0); // CAR
+            func_8009D1B8(gMenuText[42], 0x14, 1); // HOVERCRAFT
+            func_8009D1B8(gMenuText[43], 0x14, 2); // PLANE
+            func_8009D1B8(gMenuText[44], 0x14, 3); // MAIN MENU
+            break;
+        case 3:
+        case 0x63:
+            func_800C5168(1, -0x8000, 6, gMenuText[45], 1, 4); // CHALLENGE SELECT
+            D_8012650E = 0x1E;
+            if (settings->tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) {
+                D_800DF4EC = settings->tajFlags & TAJ_FLAGS_CAR_CHAL_COMPLETED;
+                func_8009D1B8(gMenuText[46], 0x14, 0); // CAR CHALLENGE
+            }
+            if (settings->tajFlags & TAJ_FLAGS_HOVER_CHAL_UNLOCKED) {
+                D_800DF4EC = settings->tajFlags & TAJ_FLAGS_HOVER_CHAL_COMPLETED;
+                func_8009D1B8(gMenuText[47], 0x14, 1); // HOVER CHALLENGE
+            }
+            if (settings->tajFlags & TAJ_FLAGS_PLANE_CHAL_UNLOCKED) {
+                D_800DF4EC = settings->tajFlags & TAJ_FLAGS_PLANE_CHAL_COMPLETED;
+                func_8009D1B8(gMenuText[48], 0x14, 2); // PLANE CHALLENGE
+            }
+            func_8009D1B8(gMenuText[44], 0x14, 3); // MAIN MENU
+            break;
+    }
+    
+    switch (D_801264E2) {
+    case 0:
+        func_800C31EC(7);
+        D_801264E2 = 1;
+        D_800DF4D8 = 1;
+        break;
+    case 1:
+        D_800DF4DC = 0;
+        func_800C5168(1, -0x8000, 6, gMenuText[36], 1, 4); // OPTIONS
+        D_8012650E = 0x1E;
+        func_8009D1B8(gMenuText[37], 0x14, 0); // CHANGE VEHICLE
+        if (settings->tajFlags & TAJ_FLAGS_UNLOCKED_A_CHALLENGE) {
+            func_8009D1B8(gMenuText[39], 0x14, 1); // CHALLENGES
+        }
+        func_8009D1B8(gMenuText[5], 0x14, 2); // RETURN
+        func_8009D26C();
+        if (buttonsPressed & B_BUTTON) {
+            sp2C = 3;
+            func_80001D04(0x241, 0);
+        } else if (buttonsPressed & A_BUTTON) {
+            func_80001D04(0xEF, 0);
+            switch(D_80126516) {
+                case 1:
+                    D_801264E2 = 3;
+                    D_801264D8 = 0;
+                    func_8003AC3C(0x239, 1);
+                    break;
+                case 2:
+                    sp2C = 3;
+                    break;
+                case 0:
+                    D_801264E2 = 2;
+                    D_801264D8 = 0;
+                    func_8003AC3C(0x234, 1);
+                    break;
+            }
+        }
+        break;
+    case 2:
+        func_8009D26C();
+        if (buttonsPressed & B_BUTTON) {
+            func_80001D04(0x241, 0);
+            func_8003AC3C(0x238, 1);
+            D_801264E2 = 1;
+            D_801264D8 = 0;
+        } else if (buttonsPressed & A_BUTTON) {
+            if (D_80126516 != 3) {
+                sp2C = D_80126516 | 0x80;
+                D_801264E2 = 0x62;
+            } else {
+                D_801264E2 = 1;
+                D_801264D8 = 0;
+                func_8003AC3C(0x238, 1);
+            }
+        }
+        break;
+    case 3:
+        func_8009D26C();
+        if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & A_BUTTON) && (D_80126516 == 3))) {
+            func_80001D04(0x241, 0);
+            func_8003AC3C(0x23A, 1);
+            D_801264E2 = 1;
+            D_801264D8 = 3;
+        } else if (buttonsPressed & A_BUTTON) {
+            sp2C = D_80126516 | 0x40;
+            func_80001D04(0xEF, 0);
+            D_801264E2 = 0x63;
+        }
+        break;
+    case -3:
+    case -2:
+    case -1:
+        func_800C31EC(8 - D_801264E2);
+        D_801264E2 = 4;
+        break;
+    case -4:
+        func_800C31EC(0x11);
+        D_800DF4DC = 0;
+        D_801264E2 = 1;
+        D_801264D8 = 3;
+        break;
+    case -5:
+        func_800C31EC(0x15);
+        D_800DF4DC = 0;
+        D_801264E2 = 7;
+        D_801264D8 = 0;
+        break;
+    case -8:
+    case -7:
+    case -6:
+        func_800C31EC(0xC - D_801264E2);
+        D_801264E2 = 6;
+        D_801264D8 = 0;
+        break;
+    case 4:
+        sp2C = (D_800DF4DC - 1) | 0x40;
+        D_801264E2 = 5;
+        func_800C5620(1);
+        break;
+    case 5:
+        D_800DF4DC = 0;
+        func_800C5620(1);
+        break;
+    case 6:
+    case 7:
+        sp2C = 4;
+        if (D_801264E2 == 7) {
+            sp2C = 3;
+        }
+        D_800DF4E0 = 0;
+        func_800C5620(1);
+        D_800DF4DC = 0;
+        D_801264E2 = 0;
+        break;
+    }
+    return sp2C;
+}
 
 s32 func_8009D9F4(void) {
     s32 state;
@@ -5966,11 +6170,11 @@ s32 func_8009D9F4(void) {
     playerInput = get_buttons_pressed_from_player(0);
     D_80126504 = 0;
     D_800DF4DC = 0;
-    func_800C5168(1, -0x8000, 6, gMenuText[49], 1, 4);
-    func_800C5168(1, -0x8000, 0x14, gMenuText[50], 1, 4);
+    func_800C5168(1, -0x8000, 6, gMenuText[49], 1, 4);    // BETTER LUCK
+    func_800C5168(1, -0x8000, 0x14, gMenuText[50], 1, 4); // NEXT TIME!
     D_8012650E = 0x32;
-    func_8009D1B8(gMenuText[23], 0x14, 0);
-    func_8009D1B8(gMenuText[51], 0x14, 1);
+    func_8009D1B8(gMenuText[23], 0x14, 0); // TRY AGAIN
+    func_8009D1B8(gMenuText[51], 0x14, 1); // EXIT
     func_8009D26C();
     if (playerInput & A_BUTTON) {
         func_80001D04(0xEF, NULL); 
