@@ -147,7 +147,29 @@ const char D_800E62A0[] = "Back\n";
 s32 D_8011D4F0[2];
 s32 D_8011D4F8[3];
 s32 D_8011D504;
-Object *gCameraObject;
+
+typedef struct ObjectCamera {
+/* 0x0000 */ s16 y_rotation;
+/* 0x0002 */ s16 x_rotation;
+/* 0x0004 */ s16 z_rotation;
+/* 0x0006 */ s16 unk6;
+/* 0x0008 */ f32 scale;
+/* 0x000C */ f32 x_position;
+/* 0x0010 */ f32 y_position;
+/* 0x0014 */ f32 z_position;
+             u8 pad18[0xC];
+/* 0x0024 */ f32 unk24;
+/* 0x0028 */ f32 unk28;
+/* 0x002C */ f32 unk2C;
+/* 0x0030 */ f32 unk30;
+	     s16 unk34;
+/* 0x0036 */ s16 unk36;
+} ObjectCamera;
+
+ObjectCamera *gCameraObject;
+
+
+
 s32 D_8011D50C;
 
 /* Size: 0x18 bytes */
@@ -221,6 +243,9 @@ s8 D_8011D5BC;
 
 /******************************/
 
+void func_80011570(Object *, f32, f32, f32);
+void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80042D20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80043ECC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80044170.s")
@@ -238,12 +263,166 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80048C7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80048E64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800494E0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80049794.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004C0A0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004C140.s")
+
+/* Unknown size */
+typedef struct Object_64_8004C0A0 {
+    u8 pad0[0x1D7];
+    s8 unk1D7;
+    u8 pad1D8[9];
+    s8 unk1E1;
+    u8 pad1E2[0x10];
+    u8 unk1F2;
+} Object_64_8004C0A0;
+
+// Something Plane related.
+void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
+    s32 temp_v1;
+    s32 phi_v0;
+    
+    if (planeObj64->unk1D7 != 10) {
+        //!@bug Typo. Should've been `== 0`, not `= 0`.
+        if (planeObj64->unk1F2 = 0) {
+            return; // This never gets called because of the typo.
+        }
+        phi_v0 = planeObj64->unk1E1;
+        phi_v0 = 40 - (phi_v0 >> 1);
+        if (phi_v0 < 0) {
+            phi_v0 = 0;
+        }
+        if (phi_v0 >= 0x4A) {
+            phi_v0 = 0x49;
+        }
+        temp_v1 = phi_v0 - planeObj->unk18;
+        phi_v0 = 0;
+        if (temp_v1 > 0) {
+            phi_v0 = arg0 * 3;
+            if (temp_v1 < phi_v0) {
+                phi_v0 = temp_v1;
+            }
+        }
+        if (temp_v1 < 0) {
+            phi_v0 = arg0 * -3;
+            if (phi_v0 < temp_v1) {
+                phi_v0 = temp_v1;
+            }
+        }
+        planeObj->unk18 += phi_v0;
+    }
+}
+
+typedef struct Object_64_8004C140 {
+    s16 unk0;
+    u8 pad2[0x183];
+    s8 unk185;
+    u8 unk186;
+    s8 unk187;
+    u8 pad188[4];
+    s16 unk18C;
+    s16 unk18E;
+    u8 pad190[0x39];
+    u8 unk1C9;
+    u8 pad1CA[0xC];
+    s8 unk1D6;
+    u8 pad1D7[4];
+    s8 unk1DB;
+    u8 pad1DC[0x28];
+    s16 unk204;
+} Object_64_8004C140;
+
+void func_800576E0(Object *obj, Object_64_8004C140 *obj64, s32);
+
+void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
+    s8 phi_v1;
+    s8 temp;
+    if (obj64->unk0 == -1) {
+        phi_v1 = 0;
+    } else {
+        phi_v1 = obj64->unk185;
+    }
+    temp = obj64->unk187;
+    if (temp == 0 || obj64->unk18E > 0) {
+        obj64->unk187 = 0;
+        return;
+    }
+    if (temp != 4) {
+        func_800576E0(obj, obj64, 2);
+    }
+    obj64->unk18C = 0x168;
+    if (obj64->unk1C9 == 8) {
+        obj64->unk1C9 = 0;
+    }
+    if (obj64->unk1D6 < 5) {
+        func_800570B8(obj, 0x1C2, 8, 0x81);
+        switch(obj64->unk187) {
+            case 1:
+            case 2:
+                if (phi_v1 != 0) {
+                    obj64->unk1DB = 0x28;
+                } else {
+                    obj64->unk1DB = 0x3C;
+                }
+                break;
+            case 3:
+                if (phi_v1 != 0) {
+                    obj64->unk1DB = 0x28;
+                } else {
+                    obj64->unk1DB = 0x3C;
+                }
+                break;
+            case 6:
+                obj64->unk204 = 0x78;
+                obj->x_velocity *= 0.7;
+                obj->z_velocity *= 0.7;
+                break;
+        }
+        obj64->unk187 = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004C2B0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004CC20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004D590.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004D95C.s")
+
+typedef struct Object_64_8004D95C {
+    u8 unk0[0x118];
+    s32 unk118;
+    u8 unk11C[0x38];
+    Object *someObject;
+    u8 unk158[0x7E];
+    s8 unk1D6;
+    s8 unk1D7;
+} Object_64_8004D95C;
+
+void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
+    s16 sp26;
+    
+    if (obj64->unk118 != 0) {
+        func_80006AC8(obj);
+    }
+    if ((func_8002341C() != 0) && (obj64->unk1D6 == 0xA)) {
+        obj->unk4C->unk14 = 0;
+    }
+    sp26 = obj->unk18;
+    obj64->unk1D6 = 0xA;
+    func_80049794(arg0, arg1, obj, obj64);
+    obj64->unk1D6 = obj64->unk1D7;
+    obj->unk3B = 0;
+    if (obj64->unk1D6 == 0xA) {
+        if (obj64->someObject != NULL) {
+            obj64->someObject->x_position = obj->x_position;
+            obj64->someObject->y_position = obj->y_position;
+            obj64->someObject->z_position = obj->z_position;
+            obj64->someObject->unk2E = obj->unk2E;
+            obj64->someObject->y_rotation = obj->y_rotation;
+            obj64->someObject->x_rotation = obj->x_rotation;
+            obj64->someObject->z_rotation = obj->z_rotation;
+            obj->unk3B = 0;
+            obj->unk18 = sp26 + arg0;
+            func_80061C0C(obj);
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004DAB0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004DE38.s")
 
@@ -277,7 +456,51 @@ void func_8004F77C(unk8004F77C *arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004F7F4.s")
+
+#ifdef NON_MATCHING
+
+typedef struct Object_64_80050754 {
+            u8 unk0[0x2C];
+            f32 unk2C;
+            f32 unk30;
+            u8 unk34[0x114];
+/* 0x148 */ Object *someObj;
+            u8 unk14C[0x54];
+/* 0x1A0 */ s16 unk1A0;
+/* 0x1A2 */ s16 unk1A2;
+/* 0x1A4 */ s16 unk1A4;
+            u8 unk1A6[0x4C];
+/* 0x1F2 */ s8 unk1F2;
+} Object_64_80050754;
+
+// Mainly has regalloc issues.
+void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
+    f32 xDiff, yDiff, zDiff;
+    Object *someObj;
+    
+    obj->unk3B = 0;
+    obj->unk18 = 0x28;
+    someObj = obj64->someObj;
+    xDiff = someObj->x_position - obj->x_position;
+    yDiff = someObj->y_position - obj->y_position;
+    zDiff = someObj->z_position - obj->z_position;
+    func_80011570(obj, xDiff, yDiff, zDiff);
+    obj->y_rotation = obj64->someObj->y_rotation;
+    obj->x_rotation = obj64->someObj->x_rotation;
+    obj->z_rotation = obj64->someObj->z_rotation;
+    obj64->unk1A4 = obj->z_rotation;
+    obj64->unk1A0 = obj->y_rotation;
+    obj->x_velocity = xDiff / arg2;
+    obj->y_velocity = yDiff / arg2;
+    obj->z_velocity = zDiff / arg2;
+    obj64->unk1F2 = 0;
+    obj64->unk2C = 0.0f;
+    obj64->unk30 = 0.0f;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80050754.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80050850.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80050A28.s")
 
@@ -373,8 +596,40 @@ void func_80052988(Object* arg0, Object_64* arg1, s32 arg2, s32 arg3, s32 arg4, 
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052B64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052D7C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80053478.s")
 
+typedef struct Object_64_80053478 {
+    u8 unk0[0x2C];
+    f32 unk2C;
+    u8 unk30[0x1B1];
+    s8 unk1E1;
+    u8 unk1E2[4];
+    s8 unk1E6;
+} Object_64_80053478;
+
+void func_80053478(Object_64_80053478 *obj) {
+    s32 phi_v0;
+    f32 phi_f0 = obj->unk2C;
+    
+    if (phi_f0 < 0.0) {
+        phi_f0 = -phi_f0;
+    }
+    if (phi_f0 > 1.8) {
+        phi_f0 = 1.8f;
+    }
+    phi_f0 -= 0.2;
+    if (phi_f0 < 0.0) {
+        phi_f0 = 0.0f;
+    }
+    if (obj->unk1E6 != 0) {
+        phi_v0 = phi_f0 * 68.0f;
+    } else {
+        phi_v0 = phi_f0 * 58.0f;
+    }
+    D_8011D554 -= (obj->unk1E1 * phi_v0);
+    if (obj->unk2C > 0.0f) {
+        D_8011D554 = -D_8011D554;
+    }
+}
 
 extern unk8011D510 D_8011D510;
 
@@ -502,9 +757,87 @@ void func_800570A4(unk800570A4_2 *arg0, s32 arg1, s32 arg2) {
     temp->unk210 = arg2;
 }
 
+#ifdef NON_MATCHING
+
+void func_80009558(u16, f32, f32, f32, s32, s32 *);
+
+typedef struct Object_64_800570B8 {
+    u8 pad0[3];
+    s8 unk3;
+    u8 pad4[0x20];
+    s32 unk24;
+    u16 unk28;
+    u16 unk2A;
+    u8 pad2C[0xDC];
+    s32 unk108;
+} Object_64_800570B8;
+
+void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
+    s32 phi_t0;
+    Object_64_800570B8 *obj64;
+
+    obj64 = obj->unk64;
+    if ((obj64->unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
+        if (arg3 == 2) {
+            if ((obj64->unk24 != 0) && (arg1 != obj64->unk2A)) {
+                func_800096F8(obj64->unk24);
+                obj64->unk24 = 0;
+            }
+        }
+        if (obj64->unk24 == 0) {
+            if (arg3 != 3 || get_random_number_from_range(0, 1) != 0) {
+                obj64->unk2A = arg1;
+                arg1 += obj64->unk3;
+                arg2--;
+                phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
+                if (arg2 > 0) {
+                    while (phi_t0 == obj64->unk28) {
+                        phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
+                    }
+                }
+                //sp34 = phi_t0;
+                func_80009558(phi_t0, obj->x_position, obj->y_position, obj->z_position, 4, &obj64->unk24);
+                obj64->unk28 = phi_t0;
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800570B8.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057220.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800575EC.s")
+
+/* Unknown size */
+typedef struct Object_64_800575EC {
+    u8 pad0[0x38];
+    f32 unk38;
+    f32 unk3C;
+    f32 unk40;
+    f32 unk44;
+    f32 unk48;
+    f32 unk4C;
+    f32 unk50;
+    f32 unk54;
+    f32 unk58;
+} Object_64_800575EC;
+
+void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
+    f32 sp38[4][4];
+    
+    D_8011D510.unk0 = obj->y_rotation;
+    D_8011D510.unk2 = obj->x_rotation;
+    D_8011D510.unk4 = 0;
+    D_8011D510.unkC = 0.0f;
+    D_8011D510.unk10 = 0.0f;
+    D_8011D510.unk14 = 0.0f;
+    D_8011D510.unk8 = 1.0f;
+    func_8006FC30(&sp38, &D_8011D510);
+    guMtxXFMF(&sp38, 0.0f, 0.0f, 1.0f, &obj64->unk38, &obj64->unk3C, &obj64->unk40);
+    guMtxXFMF(&sp38, 0.0f, 1.0f, 0.0f, &obj64->unk44, &obj64->unk48, &obj64->unk4C);
+    guMtxXFMF(&sp38, 1.0f, 0.0f, 0.0f, &obj64->unk50, &obj64->unk54, &obj64->unk58);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800576E0.s")
 
 extern s32 D_8011D534;
@@ -534,7 +867,33 @@ void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057A40.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800580B4.s")
+
+typedef struct Object_64_800580B4 {
+    u8 unk0[0x1D8];
+    s8 unk1D8;
+} Object_64_800580B4;
+
+void func_80057A40(Object *, Object_64_800580B4 *, f32);
+
+void func_800580B4(Object *arg0, Object_64_800580B4 *arg1, s32 arg2, f32 arg3) {
+    f32 xPos, yPos, zPos;
+    if ((D_8011D55C != -1) && (arg1->unk1D8 != 1)) {
+        if (arg2 != gCameraObject->unk36) {
+            func_80057A40(arg0, arg1, arg3);
+            xPos = gCameraObject->x_position;
+            yPos = gCameraObject->y_position;
+            zPos = gCameraObject->z_position;
+            gCameraObject->unk36 = arg2;
+            func_80057A40(arg0, arg1, arg3);
+            if (D_8011D540 == 0 && D_8011D582 == 0) {
+                gCameraObject->unk24 = xPos - gCameraObject->x_position;
+                gCameraObject->unk28 = yPos - (gCameraObject->y_position + gCameraObject->unk30);
+                gCameraObject->unk2C = zPos - gCameraObject->z_position;
+            }
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800581E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058B84.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058D5C.s")
@@ -550,7 +909,7 @@ void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     temp1 = func_8007066C(gCameraObject->x_position - arg1->x_position, gCameraObject->z_position - arg1->z_position);
     gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
     gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34_s = func_80029F18(gCameraObject->x_position, arg2->unk3C_f, gCameraObject->z_position);
+    gCameraObject->unk34 = func_80029F18(gCameraObject->x_position, arg2->unk3C_f, gCameraObject->z_position);
 }
 
 #else
