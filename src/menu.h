@@ -486,20 +486,6 @@ extern s16 D_800E13A8[138];
 
 extern s16* D_800E14BC[32];
 
-// Not sure what these arrays are supposed to be
-extern s32 D_800E153C[10];
-extern s32 D_800E1564[12];
-extern s32 D_800E1594[10];
-extern s32 D_800E15BC[12];
-extern s32 D_800E15EC[10];
-extern s32 D_800E1614[12];
-extern s32 D_800E1644[10];
-extern s32 D_800E166C[12];
-extern s32 D_800E169C[10];
-extern s32 D_800E16C4[12];
-
-extern s32 *D_800E16F4[5];
-
 extern s16 D_800E1708[34];
 
 extern s16 D_800E174C[4];

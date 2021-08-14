@@ -82,11 +82,11 @@ glabel func_80081218
 /* 081F58 80081358 24636C30 */  addiu $v1, %lo(gCheatsAssetData) # addiu $v1, $v1, 0x6c30
 /* 081F5C 8008135C AC620000 */  sw    $v0, ($v1)
 /* 081F60 80081360 94580000 */  lhu   $t8, ($v0)
-/* 081F64 80081364 3C018012 */  lui   $at, %hi(D_80126C38) # $at, 0x8012
+/* 081F64 80081364 3C018012 */  lui   $at, %hi(gNumberOfCheats) # $at, 0x8012
 /* 081F68 80081368 24041000 */  li    $a0, 4096
 /* 081F6C 8008136C 2405FFFF */  li    $a1, -1
 /* 081F70 80081370 0C01C327 */  jal   allocate_from_main_pool_safe
-/* 081F74 80081374 AC386C38 */   sw    $t8, %lo(D_80126C38)($at)
+/* 081F74 80081374 AC386C38 */   sw    $t8, %lo(gNumberOfCheats)($at)
 /* 081F78 80081378 3C01800E */  lui   $at, %hi(gMenuText) # $at, 0x800e
 /* 081F7C 8008137C AC22F4A0 */  sw    $v0, %lo(gMenuText)($at)
 /* 081F80 80081380 0C01FE40 */  jal   load_menu_text

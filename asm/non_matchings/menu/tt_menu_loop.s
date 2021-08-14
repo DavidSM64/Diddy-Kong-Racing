@@ -5,7 +5,7 @@ glabel jpt_800E860C
 .word L8009E2D0, L8009E2F4, L8009E354, L8009E354, L8009E314, L8009E354, L8009E314, L8009E2E4, L8009E354, L8009E334
 
 .text
-glabel func_8009DB3C
+glabel tt_menu_loop
 /* 09E73C 8009DB3C 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 09E740 8009DB40 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 09E744 8009DB44 0C01BAA4 */  jal   get_settings

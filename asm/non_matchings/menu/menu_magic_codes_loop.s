@@ -274,8 +274,8 @@ glabel menu_magic_codes_loop
 /* 08ACB8 8008A0B8 8D296C30 */  lw    $t1, %lo(gCheatsAssetData)($t1)
 /* 08ACBC 8008A0BC 256B6C4C */  addiu $t3, %lo(D_80126C4C) # addiu $t3, $t3, 0x6c4c
 /* 08ACC0 8008A0C0 A5600000 */  sh    $zero, ($t3)
-/* 08ACC4 8008A0C4 3C0A8012 */  lui   $t2, %hi(D_80126C38) # $t2, 0x8012
-/* 08ACC8 8008A0C8 8D4A6C38 */  lw    $t2, %lo(D_80126C38)($t2)
+/* 08ACC4 8008A0C4 3C0A8012 */  lui   $t2, %hi(gNumberOfCheats) # $t2, 0x8012
+/* 08ACC8 8008A0C8 8D4A6C38 */  lw    $t2, %lo(gNumberOfCheats)($t2)
 /* 08ACCC 8008A0CC 85680000 */  lh    $t0, ($t3)
 /* 08ACD0 8008A0D0 000AC040 */  sll   $t8, $t2, 1
 /* 08ACD4 8008A0D4 0118082A */  slt   $at, $t0, $t8
