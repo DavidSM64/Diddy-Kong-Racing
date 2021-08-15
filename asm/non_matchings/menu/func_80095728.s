@@ -107,7 +107,7 @@ glabel func_80095728
 /* 09649C 8009589C 8FAA0030 */  lw    $t2, 0x30($sp)
 /* 0964A0 800958A0 00000000 */  nop   
 .L800958A4:
-/* 0964A4 800958A4 0C026FC8 */  jal   func_8009BF20
+/* 0964A4 800958A4 0C026FC8 */  jal   update_controller_sticks
 /* 0964A8 800958A8 AFAA0030 */   sw    $t2, 0x30($sp)
 /* 0964AC 800958AC 3C0E8012 */  lui   $t6, %hi(gIgnorePlayerInput) # $t6, 0x8012
 /* 0964B0 800958B0 8DCE63C4 */  lw    $t6, %lo(gIgnorePlayerInput)($t6)

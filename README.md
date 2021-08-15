@@ -113,14 +113,14 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of August 14th 2021, this is our current score:
+As of August 15th 2021, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 13.80% Complete -------------------
-               # Decompiled functions: 867
-               # GLOBAL_ASM remaining: 908
-              # NON_MATCHING functions: 86
+ ------------------- 14.00% Complete -------------------
+               # Decompiled functions: 874
+               # GLOBAL_ASM remaining: 903
+              # NON_MATCHING functions: 92
  --------------------- Game Status ---------------------
         Balloons: 8/47, Keys: 1/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4
@@ -130,7 +130,7 @@ As of August 14th 2021, this is our current score:
           ADVENTURE TWO (Cleanup & Documentation)
  -------------------  0.75% Complete -------------------
                # Documented functions: 61
-             # Undocumented remaining: 1714
+             # Undocumented remaining: 1716
  --------------------- Game Status ---------------------
         Balloons: 0/47, Keys: 0/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4

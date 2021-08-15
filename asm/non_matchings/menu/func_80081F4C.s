@@ -169,7 +169,7 @@ glabel func_80081F4C
 /* 082DA0 800821A0 3C05800E */   lui   $a1, %hi(D_800DF798) # $a1, 0x800e
 /* 082DA4 800821A4 8CA5F798 */  lw    $a1, %lo(D_800DF798)($a1)
 /* 082DA8 800821A8 4406A000 */  mfc1  $a2, $f20
-/* 082DAC 800821AC 0C02087B */  jal   draw_menu_element
+/* 082DAC 800821AC 0C02087B */  jal   draw_menu_elements
 /* 082DB0 800821B0 00E02025 */   move  $a0, $a3
 /* 082DB4 800821B4 AFA00040 */  sw    $zero, 0x40($sp)
 .L800821B8:

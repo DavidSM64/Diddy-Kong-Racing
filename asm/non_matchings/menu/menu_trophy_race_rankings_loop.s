@@ -19,7 +19,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099C18 80099018 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 099C1C 8009901C 00000000 */  nop   
 .L80099020:
-/* 099C20 80099020 0C026FC8 */  jal   func_8009BF20
+/* 099C20 80099020 0C026FC8 */  jal   update_controller_sticks
 /* 099C24 80099024 AFAB002C */   sw    $t3, 0x2c($sp)
 /* 099C28 80099028 3C028012 */  lui   $v0, %hi(D_801263E0) # $v0, 0x8012
 /* 099C2C 8009902C 8C4263E0 */  lw    $v0, %lo(D_801263E0)($v0)
@@ -68,7 +68,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099CD0 800990D0 AC2F63E0 */  sw    $t7, %lo(D_801263E0)($at)
 /* 099CD4 800990D4 24A51048 */  addiu $a1, %lo(D_800E1048) # addiu $a1, $a1, 0x1048
 /* 099CD8 800990D8 24040001 */  li    $a0, 1
-/* 099CDC 800990DC 0C02087B */  jal   draw_menu_element
+/* 099CDC 800990DC 0C02087B */  jal   draw_menu_elements
 /* 099CE0 800990E0 3C063F80 */   lui   $a2, 0x3f80
 /* 099CE4 800990E4 10000141 */  b     .L800995EC
 /* 099CE8 800990E8 8FBF001C */   lw    $ra, 0x1c($sp)

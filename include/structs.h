@@ -7,29 +7,37 @@
 
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
-  /* 0x00 */ s16 unk0; // This is something related to position, not sure what though.
-  /* 0x02 */ s16 unk2; // This is something related to position, not sure what though.
-  /* 0x04 */ s16 screenX;
-  /* 0x06 */ s16 screenY;
-  /* 0x08 */ s16 unk6;
-  /* 0x0A */ s16 unk8;
+  // Element Position
+  /* 0x00 */ s16 left;
+  /* 0x02 */ s16 top;
+  /* 0x04 */ s16 center;
+  /* 0x06 */ s16 middle;
+  /* 0x08 */ s16 right;
+  /* 0x0A */ s16 bottom;
+  // Element Color/Transparency
   /* 0x0C */ u8 filterRed;
   /* 0x0D */ u8 filterGreen;
   /* 0x0E */ u8 filterBlue;
   /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
   /* 0x10 */ u8 opacity;
-  /* 0x11 */ u8 textType;
+  // Element Properties
+  /* 0x11 */ u8 textFont;
   /* 0x12 */ u8 textAlignFlags;
-  /* 0x13 */ u8 unk13; // Source type? 0 = ascii text, 2 = number, 7 = texture
+  // Element Type
+  /* 0x13 */ u8 elementType; // Source type? 0 = ascii text, 2 = number, 7 = texture
   union {
   /* 0x14 */ char* asciiText; // Pointer to ascii text to be displayed on the screen.
   /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
   /* 0x14 */ s32* number;     // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ u16* numberU16;     // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ s32 value;       // Some value for elementType == 5
+  /* 0x14 */ void* element;   // Generic pointer
   };
-  /* 0x18 */ u16 backgroundRed;
-  /* 0x1A */ u16 backgroundGreen;
-  /* 0x1C */ u16 backgroundBlue;
-  /* 0x1E */ u16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
+  // Element Background Color/Transparency
+  /* 0x18 */ s16 backgroundRed;
+  /* 0x1A */ s16 backgroundGreen;
+  /* 0x1C */ s16 backgroundBlue;
+  /* 0x1E */ s16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
 } MenuElement;
 
 #define TEX_FORMAT_RGBA32 0

@@ -36,7 +36,7 @@ glabel menu_magic_codes_list_loop
 /* 08B5A8 8008A9A8 28410014 */  slti  $at, $v0, 0x14
 /* 08B5AC 8008A9AC 10200003 */  beqz  $at, .L8008A9BC
 /* 08B5B0 8008A9B0 00000000 */   nop   
-/* 08B5B4 8008A9B4 0C02295B */  jal   func_8008A56C
+/* 08B5B4 8008A9B4 0C02295B */  jal   render_magic_codes_list_menu_text
 /* 08B5B8 8008A9B8 00000000 */   nop   
 .L8008A9BC:
 /* 08B5BC 8008A9BC 3C0A8012 */  lui   $t2, %hi(gIgnorePlayerInput) # $t2, 0x8012

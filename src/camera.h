@@ -54,16 +54,14 @@ extern ScreenViewport gScreenViewports[4];
 // Not sure about the typing here
 extern s16 D_800DD138[8];
 
-// Not sure about the typing here
-extern s16 D_800DD148[20][8];
+// RSP Viewports
+extern Vp D_800DD148[20]; 
 
 extern f32 D_800DD288[6];
 
 extern f32 D_800DD2A0[6];
 
-extern f32 D_800DD2B8[5];
-
-extern f32 D_800DD2CC[11];
+extern f32 D_800DD2B8[16];
 
 extern u8 D_800DD2F8[8];
 
