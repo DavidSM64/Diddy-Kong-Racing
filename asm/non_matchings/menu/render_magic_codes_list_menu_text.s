@@ -1,4 +1,4 @@
-glabel func_8008A56C
+glabel render_magic_codes_list_menu_text
 /* 08B16C 8008A56C 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 08B170 8008A570 AFBF004C */  sw    $ra, 0x4c($sp)
 /* 08B174 8008A574 AFA40050 */  sw    $a0, 0x50($sp)

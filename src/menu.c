@@ -71,13 +71,13 @@ s32 D_80126434;
 s32 D_80126438[4];
 s64 D_80126448;
 f32 D_80126450;
-u8 gControllersXAxisDelay[4];
-u8 gControllersYAxisDelay[4];
+s8 gControllersXAxisDelay[4];
+s8 gControllersYAxisDelay[4];
 s8 gControllersXAxisDirection[4]; // X axis (-1 = left, 1 = right) for controller
 MenuElement **D_80126460;
 s8 gControllersYAxisDirection[4]; // Y axis (-1 = down, 1 = up) for controller
-u8 gControllersXAxis[4];
-u8 gControllersYAxis[4];
+s8 gControllersXAxis[4];
+s8 gControllersYAxis[4];
 s32 D_80126470;
 s32 D_80126474;
 s32 D_80126478;
@@ -177,7 +177,7 @@ s32 D_80126840;
 s32 D_80126844;
 s32 D_80126848;
 s32 D_8012684C;
-s32 D_80126850;
+s32 *D_80126850;
 s32 D_80126854;
 s32 D_80126858;
 s32 D_8012685C;
@@ -290,7 +290,7 @@ s32 D_80126C70;
 s32 D_80126C74;
 s32 D_80126C78;
 s32 D_80126C7C;
-s32 D_80126C80[16];
+s16 D_80126C80[32];
 s32 D_80126CC0;
 
 /******************************/
@@ -324,7 +324,7 @@ u8 D_800DF4A4 = 0xFF;
 u8 D_800DF4A8 = 0xFF;
 u8 D_800DF4AC = 0xFF;
 
-s32 D_800DF4B0              = 0;
+u8  D_800DF4B0              = 0;
 s32 D_800DF4B4              = 0;
 s32 gIsInTracksMode         = 1;
 s32 gNumberOfActivePlayers  = 1;
@@ -1567,6 +1567,8 @@ void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void func_80082FAC(void);
 void func_8009ABAC(void);
 void func_800C31EC(s32);
+void update_controller_sticks(void);
+void func_80078D00(Gfx**, void *element, s32, s32, f32, f32, u32, s32);
 
 void reset_controller_sticks(void);
 void menu_logos_screen_init(void);
@@ -1905,7 +1907,7 @@ s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 arg4) {
     D_801263A8 = *arg1;
     D_801263AC = *arg2;
     D_801263B0 = *arg3;
-    func_8009BF20();
+    update_controller_sticks();
     switch (gCurrentMenuId) {
         case MENU_LOGOS:
             sp1C = menu_logo_screen_loop(arg4);
@@ -2064,7 +2066,171 @@ void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
 
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80081F4C.s")
-GLOBAL_ASM("asm/non_matchings/menu/draw_menu_element.s")
+
+#ifdef NON_MATCHING
+
+void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
+    s32 s5;
+    s32 tempX, tempY;
+    s32 xPos, yPos;
+    
+    s5 = FALSE;
+    if (arg0 != 4) {
+        func_80067F2C(&D_801263A0, &D_801263A8);
+        while(elem->element != NULL) {
+            if (&D_80126850 != elem->element) {
+                if (arg0 == 0) {
+                    tempX = elem->center - elem->left;
+                    tempX *= arg2;
+                    xPos = tempX + elem->left;
+                    tempY = elem->middle - elem->top;
+                    tempY *= arg2;
+                    yPos = tempY + elem->top;
+                } else if (arg0 == 1) {
+                    xPos = elem->center;
+                    yPos = elem->middle;
+                } else {
+                    tempX = elem->right - elem->center;
+                    tempX *= arg2;
+                    xPos = tempX + elem->center;
+                    tempY = elem->bottom - elem->middle;
+                    tempY *= arg2;
+                    yPos = tempY + elem->middle;
+                }
+                switch (elem->elementType) {
+                    case 0:
+                        set_text_background_color(elem->backgroundRed, elem->backgroundGreen, elem->backgroundBlue, elem->backgroundAlpha);
+                        set_text_color(elem->filterRed, elem->filterGreen, elem->filterBlue, elem->filterAlpha, elem->opacity);
+                        set_text_font(elem->textFont);
+                        draw_text(&D_801263A0, xPos, yPos + D_800DF79C, elem->asciiText, elem->textAlignFlags);
+                        break;
+                    case 1:
+                        if (s5) {
+                            s5 = FALSE;
+                            func_8007B3D0(&D_801263A0);
+                        }
+                        D_800DF764 = elem->opacity;
+                        func_80081800(
+                            *elem->numberU16, 
+                            xPos - 0xA0, 
+                            (-yPos - D_800DF7A0) + 0x78, 
+                            elem->filterRed, 
+                            elem->filterGreen, 
+                            elem->filterBlue, 
+                            elem->textFont
+                        );
+                        break;
+                    case 2:
+                        if (s5) {
+                            s5 = FALSE;
+                            func_8007B3D0(&D_801263A0);
+                        }
+                        func_80081C04(
+                            *elem->number, 
+                            xPos - 0xA0, 
+                            (-yPos - D_800DF7A0) + 0x78, 
+                            elem->filterRed, 
+                            elem->filterGreen, 
+                            elem->filterBlue, 
+                            elem->opacity, 
+                            elem->textFont, 
+                            elem->textAlignFlags
+                        );
+                        break;
+                    case 3:
+                        s5 = TRUE;
+                        render_textured_rectangle(
+                            &D_801263A0, 
+                            elem->texture, 
+                            xPos, 
+                            yPos + D_800DF79C, 
+                            elem->filterRed, 
+                            elem->filterGreen, 
+                            elem->filterBlue, 
+                            elem->opacity
+                        );
+                        break;
+                    case 4:
+                        s5 = TRUE;
+                        func_80078D00(
+                            &D_801263A0, 
+                            elem->element, 
+                            xPos, 
+                            yPos + D_800DF79C, 
+                            elem->backgroundRed / 256.0f, 
+                            elem->backgroundGreen / 256.0f,
+                            (elem->filterRed << 0x18) | (elem->filterGreen << 0x10) | (elem->filterBlue << 8) | elem->opacity, 
+                            elem->textAlignFlags
+                        );
+                        break;
+                    case 5:
+                        if (s5) {
+                            s5 = FALSE;
+                            func_8007B3D0(&D_801263A0);
+                        }
+                        func_80068508(1);
+                        func_8007BF1C(0);
+                        D_800DF75C[elem->value].unkC = xPos - 0xA0;
+                        D_800DF75C[elem->value].unk10 = (-yPos - D_800DF7A0) + 0x78;
+                        D_800DF75C[elem->value].unk18 = elem->textFont;
+                        D_800DF75C[elem->value].unk4 = elem->backgroundRed;
+                        D_800DF75C[elem->value].unk2 = elem->backgroundGreen;
+                        D_800DF75C[elem->value].unk0 = elem->backgroundBlue;
+                        D_800DF75C[elem->value].unk8 = elem->backgroundAlpha / 256.0f;
+                        D_800DF4A4 = elem->filterRed;
+                        D_800DF4A8 = elem->filterGreen;
+                        D_800DF4AC = elem->filterBlue;
+                        D_800DF4B0 = elem->filterAlpha;
+                        D_800DF764 = elem->opacity;
+                        func_8009CA60(elem->value);
+                        func_80068508(0);
+                        func_8007BF1C(1);
+                        break;
+                    case 6:
+                        func_80080E90(
+                            &D_801263A0, 
+                            xPos, 
+                            yPos + D_800DF7A0, 
+                            elem->backgroundRed, 
+                            elem->backgroundGreen, 
+                            elem->backgroundBlue, 
+                            elem->backgroundAlpha, 
+                            elem->filterRed, 
+                            elem->filterGreen, 
+                            elem->filterBlue, 
+                            elem->opacity
+                        );
+                        break;
+                    case 7:
+                        func_80080580(
+                            &D_801263A0, 
+                            xPos, 
+                            yPos + D_800DF7A0, 
+                            elem->backgroundRed, 
+                            elem->backgroundGreen, 
+                            elem->backgroundBlue, 
+                            elem->backgroundAlpha, 
+                            (elem->filterRed << 0x18) | (elem->filterGreen << 0x10) | (elem->filterBlue << 8) | elem->opacity, 
+                            elem->element
+                        );
+                        break;
+                }
+            }
+            elem++; // Go onto the next element.
+        }
+        if (s5) {
+            func_8007B3D0(&D_801263A0);
+        }
+        D_800DF4A4 = 0xFF;
+        D_800DF4A8 = 0xFF;
+        D_800DF4AC = 0xFF;
+        D_800DF4B0 = 0;
+        D_800DF764 = 0xFF;
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/draw_menu_elements.s")
+#endif
 
 void func_800828B8(void) {
     s32 i;
@@ -3141,7 +3307,68 @@ void menu_magic_codes_list_init(void) {
 }
 
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008A56C.s")
+#ifdef NON_MATCHING
+
+// Should be functionally equivalent
+void render_magic_codes_list_menu_text(s32 arg0) {
+    s32 numOfUnlockedCheats;
+    s32 fp;
+    s32 phi_v0;
+    s32 s2;
+    s32 i;
+    
+    set_text_background_color(0, 0, 0, 0);
+    set_text_font(2);
+    set_text_color(0, 0, 0, 0xFF, 0x80);
+    draw_text(&D_801263A0, 0xA1, 0x23, gMenuText[20], 0xC); // MAGIC CODES LIST
+    set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    draw_text(&D_801263A0, 0xA0, 0x20, gMenuText[20], 0xC); // MAGIC CODES LIST
+    numOfUnlockedCheats = 0;
+    phi_v0 = 1;
+    for(i = 0; i < 32; i++) {
+        if (phi_v0 & gUnlockedMagicCodes) {
+            D_80126C80[numOfUnlockedCheats] = i;
+            numOfUnlockedCheats += 1;
+        }
+        phi_v0 <<= 1;
+    }
+    s2 = 0x36;
+    fp = D_801263BC;
+    fp *= 8;
+    if (fp >= 0x100) {
+        fp = 0x1FF - fp;
+    }
+    set_text_font(0);
+    set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    for(i = D_801263E0; (i < D_801263E0 + D_80126C70) && (i < numOfUnlockedCheats); i++) {
+        if (i == gOptionsMenuItemIndex) {
+            set_text_color(0xFF, 0xFF, 0xFF, fp, 0xFF);
+        }
+        draw_text(&D_801263A0, 0x30, s2, (char*)(*gCheatsAssetData) + ((*gCheatsAssetData + 1)[D_80126C80[i]*2+1]), 0);
+        if ((1 << D_80126C80[i]) & gActiveMagicCodes) {
+            draw_text(&D_801263A0, 0x100, s2, gMenuText[21], 0); // ON
+        } else {
+            draw_text(&D_801263A0, 0x100, s2, gMenuText[22], 0); // OFF
+        }
+        if (i == gOptionsMenuItemIndex) {
+            set_text_color(0xFF, 0xFF, 0xFF, 0, 0xFF);
+        }
+        s2 += 0x10;
+    }
+    if (i < D_801263E0 + D_80126C70) {
+        if (numOfUnlockedCheats == gOptionsMenuItemIndex) {
+            set_text_color(0xFF, 0xFF, 0xFF, fp, 0xFF);
+        }
+        draw_text(&D_801263A0, -0x8000, s2, gMenuText[5], 4); // RETURN
+        return;
+    }
+    if (D_801263BC & 8) {
+        render_textured_rectangle(&D_801263A0, &D_800E043C, 0xA0, s2 + 8, 0xFF, 0xFF, 0xFF, 0xFF);
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/render_magic_codes_list_menu_text.s")
+#endif
 
 void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2) {
     if ((arg0 & arg1) && (arg0 & gActiveMagicCodes)) {
@@ -3149,27 +3376,21 @@ void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/menu_magic_codes_list_loop.s")
-#else
+#ifdef NON_MATCHING
 
-extern s16 D_80126C80[0x1E]; // Array of shorts of the unlocked cheat's bit ids.
 void func_8008AD1C(void);
-void func_8008A56C(void);
-s32 get_buttons_pressed_from_player(s32 arg0);
 
 s32 menu_magic_codes_list_loop(s32 arg0) {
-    s32 temp_t0;
     s32 phi_a2;
-    s32 phi_s0;
     s32 sp48;
+    s32 buttonsPressed;
+    s32 xAxis;
+    s32 yAxis;
+    s32 i;
     s32 phi_s1;
-    s32 phi_s2;
-    s32 phi_a3_2;
-    s32 phi_v0_2;
-    s32 phi_s3;
-    s8 *temp, *temp2;
-
+    s32 numUnlockedCodes;
+    s32 code;
+    
     sp48 = 0;
     if (gMenuDelay != 0) {
         if (gMenuDelay > 0) {
@@ -3180,39 +3401,31 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
     }
     D_801263BC = (D_801263BC + arg0) & 0x3F;
     if (gMenuDelay >= -0x13 && gMenuDelay < 0x14) {
-        func_8008A56C();
+        render_magic_codes_list_menu_text(arg0);
     }
     
-    phi_s3 = 0;
-    phi_a2 = 0;
-    phi_s2 = 0;
+    buttonsPressed = 0;
+    xAxis = 0;
+    yAxis = 0;
     if (!gIgnorePlayerInput && gMenuDelay == 0) {
-        phi_s0 = 0; 
-        temp = (s8*)&gControllersYAxisDirection;
-        temp2 = (s8*)&gControllersXAxisDirection;
-        while(phi_s0 < 4) {
-            phi_s3 |= get_buttons_pressed_from_player(phi_s0);
-            phi_a2 += *temp;
-            phi_s2 += *temp2;
-            temp++;
-            temp2++;
-            phi_s0++;
+        for(i = 0; i < 4; i++){
+            buttonsPressed |= get_buttons_pressed_from_player(i);
+            xAxis += gControllersXAxisDirection[i];
+            yAxis += gControllersYAxisDirection[i];
         }
     }
     
-    phi_s0 = 0;
-    phi_s1 = 1;
-    phi_a3_2 = 0;
-    while(phi_s0 < 32) { // 32 is the max number of cheats.
-        if (phi_s1 & gUnlockedMagicCodes) {
-            D_80126C80[phi_a3_2] = phi_s0;
-            phi_a3_2++;
+    code = 1;
+    numUnlockedCodes = 0;
+    for(i = 0; i < 32; i++) { // 32 is the max number of cheats.
+        if (code & gUnlockedMagicCodes) {
+            D_80126C80[numUnlockedCodes] = i;
+            numUnlockedCodes++;
         }
-        phi_s1 <<= 1;
-        phi_s0++;
+        code <<= 1;
     }
     
-    if (((phi_a2 < 0) || (phi_a2 > 0)) && (phi_a3_2 != gOptionsMenuItemIndex)) {
+    if (((xAxis < 0) || (xAxis > 0)) && (numUnlockedCodes != gOptionsMenuItemIndex)) {
         func_80001D04(0xEF, NULL);
         phi_s1 = 1 << D_80126C80[gOptionsMenuItemIndex];
         gActiveMagicCodes ^= phi_s1; // Toggle active cheats?
@@ -3231,13 +3444,13 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
     
     phi_a2 = gOptionsMenuItemIndex;
     
-    if (phi_s2 < 0) {
+    if (yAxis < 0) {
         gOptionsMenuItemIndex++;
-        if (phi_a3_2 < gOptionsMenuItemIndex) {
-            gOptionsMenuItemIndex = phi_a3_2;
+        if (numUnlockedCodes < gOptionsMenuItemIndex) {
+            gOptionsMenuItemIndex = numUnlockedCodes;
         }
     }
-    if (phi_s2 > 0) {
+    if (yAxis > 0) {
         gOptionsMenuItemIndex--;
         if ((s32) gOptionsMenuItemIndex < 0) {
             gOptionsMenuItemIndex = 0;
@@ -3254,10 +3467,10 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
         func_80001D04(0xEB, NULL);
     }
     
-    if ((phi_s3 & 0x9000) && (phi_a3_2 == gOptionsMenuItemIndex)) {
+    if ((buttonsPressed & 0x9000) && (numUnlockedCodes == gOptionsMenuItemIndex)) {
         sp48 = -1;
     }
-    if (phi_s3 & 0x4000) {
+    if (buttonsPressed & 0x4000) {
         sp48 = -1;
     }
     if (sp48 != 0) {
@@ -3273,6 +3486,8 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
     gIgnorePlayerInput = 0;
     return 0;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/menu/menu_magic_codes_list_loop.s")
 #endif
 
 void func_8008AD1C(void) {
@@ -3626,7 +3841,7 @@ void menu_caution_init(void) {
 
 void func_8008C4E8(void);
 
-void draw_menu_element(s32, MenuElement*, f32);
+void draw_menu_elements(s32, MenuElement*, f32);
 
 s32 menu_caution_loop(s32 arg0) {
     if (gMenuDelay != 0) {
@@ -3637,7 +3852,7 @@ s32 menu_caution_loop(s32 arg0) {
         func_800C01D8(&D_800DF774);
     }
     if (gMenuDelay < 0x14) {
-        draw_menu_element(1, gCautionMenuTextElements, 1.0f);
+        draw_menu_elements(1, gCautionMenuTextElements, 1.0f);
     }
     if (gMenuDelay >= 0x1F) {
         func_8008C4E8();
@@ -3731,7 +3946,7 @@ void func_8008C698(s32 arg0) {
             D_800DF7A0 = 0;
         }
         
-        draw_menu_element(1, (MenuElement*)D_80126460, 1.0f);
+        draw_menu_elements(1, (MenuElement*)D_80126460, 1.0f);
         func_80080BC8(&D_801263A0);
     }
 }
@@ -5195,7 +5410,7 @@ void func_80098EBC(s32 arg0) {
     }
     
     if (D_801263E0 == 2 || D_801263E0 == 3) {
-        draw_menu_element(1, &D_800E1048, 1.0f);
+        draw_menu_elements(1, &D_800E1048, 1.0f);
     }
 }
 #else
@@ -5607,7 +5822,65 @@ void reset_controller_sticks(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8009BF20.s")
+#ifdef NON_MATCHING
+
+#define STICK_DEADZONE 35
+#define STICK_DELAY_AMOUNT 15
+
+// Should be functionally equivalent
+void update_controller_sticks(void) {
+    s32 prevXAxis, prevYAxis;
+    s32 i;
+    for(i = 0; i < 4; i++) {
+        prevXAxis = gControllersXAxis[i];
+        prevYAxis = gControllersYAxis[i];
+        gControllersXAxis[i] = func_8006A59C(i);
+        gControllersYAxis[i] = func_8006A5E0(i);
+        gControllersXAxisDirection[i] = 0;
+        gControllersYAxisDirection[i] = 0;
+        if (gControllersXAxis[i] < -STICK_DEADZONE && prevXAxis > -STICK_DEADZONE) {
+            gControllersXAxisDirection[i] = -1;
+            gControllersXAxisDelay[i] = 0;
+        }
+        if (gControllersXAxis[i] > STICK_DEADZONE && prevXAxis < STICK_DEADZONE) {
+            gControllersXAxisDirection[i] = 1;
+            gControllersXAxisDelay[i] = 0;
+        }
+        if (gControllersYAxis[i] < -STICK_DEADZONE && prevYAxis > -STICK_DEADZONE) {
+            gControllersYAxisDirection[i] = -1;
+            gControllersYAxisDelay[i] = 0;
+        }
+        if (gControllersYAxis[i] > STICK_DEADZONE && prevYAxis < STICK_DEADZONE) {
+            gControllersYAxisDirection[i] = 1;
+            gControllersYAxisDelay[i] = 0;
+        }
+        if (gControllersYAxis[i] < -STICK_DEADZONE) {
+            gControllersYAxisDelay[i]++;
+        } else if (gControllersYAxis[i] > STICK_DEADZONE) {
+            gControllersYAxisDelay[i]++;
+        } else {
+            gControllersYAxisDelay[i] = 0;
+        }
+        if (gControllersYAxisDelay[i] > STICK_DELAY_AMOUNT) {
+            gControllersYAxis[i] = 0;
+            gControllersYAxisDelay[i] = 0;
+        }
+        if (gControllersXAxis[i] < -STICK_DEADZONE) {
+            gControllersXAxisDelay[i]++;
+        } else if (gControllersXAxis[i] > STICK_DEADZONE) {
+            gControllersXAxisDelay[i]++;
+        } else {
+            gControllersXAxisDelay[i] = 0;
+        }
+        if (gControllersXAxisDelay[i] > STICK_DELAY_AMOUNT) {
+            gControllersXAxis[i] = 0;
+            gControllersXAxisDelay[i] = 0;
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/update_controller_sticks.s")
+#endif
 
 /**
  * Reset the character id number slots to the default.
@@ -5913,7 +6186,7 @@ s32 func_8009CFEC(u32 arg0) {
         func_8006F388(1);
     }
     result = 0;
-    func_8009BF20();
+    update_controller_sticks();
     func_800C5494(1);
     func_800C55F4(1);
     func_800C4FBC(1, 0, 0, 0, 0x80);
@@ -5929,7 +6202,7 @@ s32 func_8009CFEC(u32 arg0) {
             result = func_800C3564(); // Taj challenge completed/failed menu
             break;
         case 4:
-            result = func_8009E7E8(); // Trophy race cabinet menu
+            result = trophy_race_cabinet_menu_loop(); // Trophy race cabinet menu
             break;
         case 5:
             result = func_8009D9F4();
@@ -6398,9 +6671,40 @@ s32 tt_menu_loop(void) {
 GLOBAL_ASM("asm/non_matchings/menu/tt_menu_loop.s")
 #endif
 
-
 GLOBAL_ASM("asm/non_matchings/menu/func_8009E3D0.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_8009E7E8.s")
+
+s32 trophy_race_cabinet_menu_loop(void) {
+    s32 sp24;
+    s32 buttonsPressed;
+    
+    func_800C4EDC(1, 0x18, 0x10, 0xB8, 0x78);
+    func_800C4F7C(1, 0);
+    sp24 = 0;
+    buttonsPressed = get_buttons_pressed_from_player(0);
+    func_800C5168(1, -0x8000, 6, gMenuText[70], 1, 4); // TROPHY RACE
+    if (gControllersYAxisDirection[0] < 0) {
+        D_801264D8++;
+    } else if (gControllersYAxisDirection[0] > 0) {
+        D_801264D8--;
+    }
+    if (D_801264D8 < 0) {
+        D_801264D8 = 0;
+    }
+    if (D_801264D8 > 1) {
+        D_801264D8 = 1;
+    }
+    func_8009D118(D_801264D8 == 0);
+    func_800C5168(1, -0x8000, 0x1E, gMenuText[180], 1, 4); // ENTER TROPHY RACE
+    func_8009D118(D_801264D8 == 1);
+    func_800C5168(1, -0x8000, 0x32, gMenuText[51], 1, 4); // EXIT
+    if (buttonsPressed & A_BUTTON) {
+        sp24 = D_801264D8 + 1;
+    }
+    if (buttonsPressed & B_BUTTON) {
+        sp24 = 2;
+    }
+    return sp24;
+}
 
 void func_8009E9A0(void) {
 

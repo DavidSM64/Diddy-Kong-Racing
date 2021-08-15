@@ -104,7 +104,7 @@ extern u8 D_800DF4A4;
 extern u8 D_800DF4A8;
 extern u8 D_800DF4AC;
 
-extern s32 D_800DF4B0;
+extern u8 D_800DF4B0;
 extern s32 D_800DF4B4;
 extern s32 gIsInTracksMode;
 extern s32 gNumberOfActivePlayers;

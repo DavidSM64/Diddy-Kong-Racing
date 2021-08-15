@@ -1,4 +1,4 @@
-glabel func_8009BF20
+glabel update_controller_sticks
 /* 09CB20 8009BF20 27BDFFC0 */  addiu $sp, $sp, -0x40
 /* 09CB24 8009BF24 AFB70034 */  sw    $s7, 0x34($sp)
 /* 09CB28 8009BF28 AFB60030 */  sw    $s6, 0x30($sp)

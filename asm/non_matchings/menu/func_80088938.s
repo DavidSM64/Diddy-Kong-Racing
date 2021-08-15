@@ -31,7 +31,7 @@ glabel func_80088938
 /* 0895A8 800889A8 3C19800E */   lui   $t9, %hi(gShowControllerPakMenu) # $t9, 0x800e
 /* 0895AC 800889AC 3C05800E */  lui   $a1, %hi(D_800DFCB4) # $a1, 0x800e
 /* 0895B0 800889B0 24A5FCB4 */  addiu $a1, %lo(D_800DFCB4) # addiu $a1, $a1, -0x34c
-/* 0895B4 800889B4 0C02087B */  jal   draw_menu_element
+/* 0895B4 800889B4 0C02087B */  jal   draw_menu_elements
 /* 0895B8 800889B8 3C063F80 */   lui   $a2, 0x3f80
 /* 0895BC 800889BC 100001B1 */  b     .L80089084
 /* 0895C0 800889C0 8FBF0044 */   lw    $ra, 0x44($sp)

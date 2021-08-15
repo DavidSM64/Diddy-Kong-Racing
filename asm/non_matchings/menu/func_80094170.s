@@ -20,7 +20,7 @@ glabel func_80094170
 /* 094DB4 800941B4 00000000 */  nop   
 /* 094DB8 800941B8 01F8C821 */  addu  $t9, $t7, $t8
 /* 094DBC 800941BC 3329003F */  andi  $t1, $t9, 0x3f
-/* 094DC0 800941C0 0C026FC8 */  jal   func_8009BF20
+/* 094DC0 800941C0 0C026FC8 */  jal   update_controller_sticks
 /* 094DC4 800941C4 AC490000 */   sw    $t1, ($v0)
 /* 094DC8 800941C8 3C0A8012 */  lui   $t2, %hi(gIgnorePlayerInput) # $t2, 0x8012
 /* 094DCC 800941CC 8D4A63C4 */  lw    $t2, %lo(gIgnorePlayerInput)($t2)

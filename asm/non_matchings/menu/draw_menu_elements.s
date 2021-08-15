@@ -3,7 +3,7 @@ glabel jpt_800E836C
 .word L800823E8, L80082454, L800824B8, L80082524, L8008256C, L80082608, L80082760, L800827C0
 
 .text
-glabel draw_menu_element
+glabel draw_menu_elements
 /* 082DEC 800821EC 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 082DF0 800821F0 E7B4003C */  swc1  $f20, 0x3c($sp)
 /* 082DF4 800821F4 4486A000 */  mtc1  $a2, $f20
