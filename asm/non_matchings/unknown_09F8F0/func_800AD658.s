@@ -93,7 +93,7 @@ glabel func_800AD658
 /* 0AE3B8 800AD7B8 C44E0010 */  lwc1  $f14, 0x10($v0)
 /* 0AE3BC 800AD7BC 46083080 */  add.s $f2, $f6, $f8
 /* 0AE3C0 800AD7C0 44061000 */  mfc1  $a2, $f2
-/* 0AE3C4 800AD7C4 0C00A7C6 */  jal   func_80029F18
+/* 0AE3C4 800AD7C4 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 0AE3C8 800AD7C8 E7A20054 */   swc1  $f2, 0x54($sp)
 /* 0AE3CC 800AD7CC 8FA50058 */  lw    $a1, 0x58($sp)
 /* 0AE3D0 800AD7D0 8FA60054 */  lw    $a2, 0x54($sp)

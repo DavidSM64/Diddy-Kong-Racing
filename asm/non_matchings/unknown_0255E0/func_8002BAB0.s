@@ -16,8 +16,8 @@ glabel func_8002BAB0
 /* 02C6E8 8002BAE8 E7B50008 */  swc1  $f21, 8($sp)
 /* 02C6EC 8002BAEC 04800009 */  bltz  $a0, .L8002BB14
 /* 02C6F0 8002BAF0 E7B4000C */   swc1  $f20, 0xc($sp)
-/* 02C6F4 8002BAF4 3C02800E */  lui   $v0, %hi(D_800DC918) # $v0, 0x800e
-/* 02C6F8 8002BAF8 8C42C918 */  lw    $v0, %lo(D_800DC918)($v0)
+/* 02C6F4 8002BAF4 3C02800E */  lui   $v0, %hi(gCurrentLevelModel) # $v0, 0x800e
+/* 02C6F8 8002BAF8 8C42C918 */  lw    $v0, %lo(gCurrentLevelModel)($v0)
 /* 02C6FC 8002BAFC 0004C100 */  sll   $t8, $a0, 4
 /* 02C700 8002BB00 844E001A */  lh    $t6, 0x1a($v0)
 /* 02C704 8002BB04 0304C021 */  addu  $t8, $t8, $a0

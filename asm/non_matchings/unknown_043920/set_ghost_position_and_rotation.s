@@ -304,7 +304,7 @@ glabel set_ghost_position_and_rotation
 /* 05AEA4 8005A2A4 00987021 */  addu  $t6, $a0, $t8
 /* 05AEA8 8005A2A8 A60E0004 */  sh    $t6, 4($s0)
 /* 05AEAC 8005A2AC E7A20094 */  swc1  $f2, 0x94($sp)
-/* 05AEB0 8005A2B0 0C00A7C6 */  jal   func_80029F18
+/* 05AEB0 8005A2B0 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 05AEB4 8005A2B4 AFAD004C */   sw    $t5, 0x4c($sp)
 /* 05AEB8 8005A2B8 8FAD004C */  lw    $t5, 0x4c($sp)
 /* 05AEBC 8005A2BC C7A20094 */  lwc1  $f2, 0x94($sp)

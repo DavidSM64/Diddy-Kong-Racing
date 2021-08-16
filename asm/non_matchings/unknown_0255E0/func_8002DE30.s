@@ -44,9 +44,9 @@ glabel func_8002DE30
 /* 02EAC4 8002DEC4 C6C0000C */  lwc1  $f0, 0xc($s6)
 /* 02EAC8 8002DEC8 C6C20014 */  lwc1  $f2, 0x14($s6)
 /* 02EACC 8002DECC 460C0201 */  sub.s $f8, $f0, $f12
-/* 02EAD0 8002DED0 3C10800E */  lui   $s0, %hi(D_800DC918) # $s0, 0x800e
+/* 02EAD0 8002DED0 3C10800E */  lui   $s0, %hi(gCurrentLevelModel) # $s0, 0x800e
 /* 02EAD4 8002DED4 4458F800 */  cfc1  $t8, $31
-/* 02EAD8 8002DED8 2610C918 */  addiu $s0, %lo(D_800DC918) # addiu $s0, $s0, -0x36e8
+/* 02EAD8 8002DED8 2610C918 */  addiu $s0, %lo(gCurrentLevelModel) # addiu $s0, $s0, -0x36e8
 /* 02EADC 8002DEDC 37010003 */  ori   $at, $t8, 3
 /* 02EAE0 8002DEE0 38210002 */  xori  $at, $at, 2
 /* 02EAE4 8002DEE4 44C1F800 */  ctc1  $at, $31

@@ -1025,7 +1025,7 @@ glabel L8003A0CC
 /* 03ADB0 8003A1B0 46045481 */  sub.s $f18, $f10, $f4
 /* 03ADB4 8003A1B4 E6120014 */  swc1  $f18, 0x14($s0)
 /* 03ADB8 8003A1B8 8E060014 */  lw    $a2, 0x14($s0)
-/* 03ADBC 8003A1BC 0C00A7C6 */  jal   func_80029F18
+/* 03ADBC 8003A1BC 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 03ADC0 8003A1C0 00000000 */   nop   
 /* 03ADC4 8003A1C4 A602002E */  sh    $v0, 0x2e($s0)
 /* 03ADC8 8003A1C8 8FB90090 */  lw    $t9, 0x90($sp)

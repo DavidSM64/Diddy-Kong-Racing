@@ -67,7 +67,7 @@ glabel func_80058F44
 /* 059C48 80059048 C46C000C */  lwc1  $f12, 0xc($v1)
 /* 059C4C 8005904C 8C660014 */  lw    $a2, 0x14($v1)
 /* 059C50 80059050 C72E003C */  lwc1  $f14, 0x3c($t9)
-/* 059C54 80059054 0C00A7C6 */  jal   func_80029F18
+/* 059C54 80059054 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 059C58 80059058 00000000 */   nop   
 /* 059C5C 8005905C 3C078012 */  lui   $a3, %hi(gCameraObject) # $a3, 0x8012
 /* 059C60 80059060 24E7D508 */  addiu $a3, %lo(gCameraObject) # addiu $a3, $a3, -0x2af8

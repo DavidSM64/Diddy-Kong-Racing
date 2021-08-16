@@ -111,7 +111,7 @@ glabel func_80022948
 /* 0236F8 80022AF8 C50E0014 */  lwc1  $f14, 0x14($t0)
 /* 0236FC 80022AFC AFA8007C */  sw    $t0, 0x7c($sp)
 /* 023700 80022B00 44063000 */  mfc1  $a2, $f6
-/* 023704 80022B04 0C00A7C6 */  jal   func_80029F18
+/* 023704 80022B04 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 023708 80022B08 46808320 */   cvt.s.w $f12, $f16
 /* 02370C 80022B0C 87AA005A */  lh    $t2, 0x5a($sp)
 /* 023710 80022B10 87AB005E */  lh    $t3, 0x5e($sp)

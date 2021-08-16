@@ -86,7 +86,7 @@ glabel func_800230D0
 /* 023E0C 8002320C 460A4480 */  add.s $f18, $f8, $f10
 /* 023E10 80023210 E6120014 */  swc1  $f18, 0x14($s0)
 /* 023E14 80023214 8E060014 */  lw    $a2, 0x14($s0)
-/* 023E18 80023218 0C00A7C6 */  jal   func_80029F18
+/* 023E18 80023218 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 023E1C 8002321C AFA8005C */   sw    $t0, 0x5c($sp)
 /* 023E20 80023220 8FA8005C */  lw    $t0, 0x5c($sp)
 /* 023E24 80023224 A602002E */  sh    $v0, 0x2e($s0)

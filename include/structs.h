@@ -374,18 +374,22 @@ typedef struct LevelModelSegment {
 /* 0x20 */ s16 numberOfBatches;
            u8 pad22[0x09];
 /* 0x2B */ s8 unk2B;
-           u8 pad2C[0x14];
+           u8 pad2C[6];
+/* 0x32 */ s16 unk32;
+           s16 *unk34;
+/* 0x38 */ s16 unk38;
+           u8 pad3A[6];
 /* 0x40 */ u8 unk40;
            u8 pad41[0x3];
 } LevelModelSegment;
 
 typedef struct LevelModelSegmentBoundingBox {
-    s16 unk00;
-    s16 unk02;
-    s16 unk04;
-    s16 unk06;
-    s16 unk08;
-    s16 unk0A;
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
 } LevelModelSegmentBoundingBox;
 
 typedef struct LevelModel {

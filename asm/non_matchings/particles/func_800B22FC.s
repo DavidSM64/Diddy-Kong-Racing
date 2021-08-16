@@ -145,7 +145,7 @@ glabel func_800B22FC
 .L800B250C:
 /* 0B310C 800B250C C60E0010 */  lwc1  $f14, 0x10($s0)
 /* 0B3110 800B2510 8E060014 */  lw    $a2, 0x14($s0)
-/* 0B3114 800B2514 0C00A7C6 */  jal   func_80029F18
+/* 0B3114 800B2514 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 0B3118 800B2518 00000000 */   nop   
 /* 0B311C 800B251C 10000007 */  b     .L800B253C
 /* 0B3120 800B2520 A602002E */   sh    $v0, 0x2e($s0)
@@ -153,7 +153,7 @@ glabel func_800B22FC
 /* 0B3124 800B2524 C60C000C */  lwc1  $f12, 0xc($s0)
 /* 0B3128 800B2528 C60E0010 */  lwc1  $f14, 0x10($s0)
 /* 0B312C 800B252C 8E060014 */  lw    $a2, 0x14($s0)
-/* 0B3130 800B2530 0C00A7C6 */  jal   func_80029F18
+/* 0B3130 800B2530 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 0B3134 800B2534 00000000 */   nop   
 /* 0B3138 800B2538 A602002E */  sh    $v0, 0x2e($s0)
 .L800B253C:

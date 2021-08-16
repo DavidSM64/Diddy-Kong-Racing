@@ -6,6 +6,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
+#include "f3ddkr.h"
 
 /* Size: 0x44 bytes */
 typedef struct unk80120AC0 {
@@ -52,7 +53,7 @@ f32 D_800DC8AC[27] = {
     -130.0f, 60.0f, -68.0f
 };
 
-LevelModel* D_800DC918 = NULL;
+LevelModel* gCurrentLevelModel = NULL;
 LevelHeader *D_800DC91C = NULL;
 
 s32 D_800DC920 = -1;
@@ -78,7 +79,7 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 
 /************ .bss ************/
 
-s32 D_8011B0A0;
+Gfx *D_8011B0A0;
 s32 D_8011B0A4;
 s32 D_8011B0A8;
 s32 D_8011B0AC;
@@ -170,7 +171,28 @@ s32 D_8011D378;
 s32 D_8011D37C;
 s32 D_8011D380;
 s32 D_8011D384;
-s32 D_8011D388[56];
+
+/* Size: 0x38 bytes */
+typedef struct unk8011D388 {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    u8  unk28;
+    u8  unk29;
+    u8  unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    s32 unk30;
+    s32 unk34;
+} unk8011D388;
+unk8011D388 D_8011D388[4];
 
 typedef struct{
     s32 unk00;
@@ -203,7 +225,7 @@ s32 D_8011D4BC;
 /******************************/
 
 extern void guMtxXFMF(void*, f32, f32, f32, f32*, f32*, f32*);
-
+f32 func_800BB2F4(s32, f32, f32, f32*);
 
 
 s32 func_800249E0(s32 arg0) {
@@ -252,10 +274,10 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
 
     if(arg2 < 2){
         D_8011D384 = 0;
-        for(i = 0; i < D_800DC918->numberOfSegments; i++){
-            if(D_800DC918->segments[i].unk2B != 0){
+        for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++){
+            if(gCurrentLevelModel->segments[i].unk2B != 0){
                 D_8011D384++;
-                D_800DC918->segments[i].unk2B = 1;
+                gCurrentLevelModel->segments[i].unk2B = 1;
             }
         }
     }
@@ -266,7 +288,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
         tmp_a2++;
     }
     if(D_8011D384){
-        func_800B82B4(D_800DC918, D_800DC91C, tmp_a2);
+        func_800B82B4(gCurrentLevelModel, D_800DC91C, tmp_a2);
     }
     func_8006652C(arg2);
     func_80027FC4(arg1);
@@ -331,7 +353,36 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027568.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800278E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027E24.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027FC4.s")
+typedef struct unk80027FC4 {
+    u8 unk0;
+    u8 unk1;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+} unk80027FC4;
+
+void func_8005A3D0(void);
+Object * func_8000EA54(unk80027FC4*, s32);
+
+void func_80027FC4(s32 arg0) {
+    unk80027FC4 sp20;
+
+    func_8005A3D0();
+    if (arg0 == -1) {
+        D_8011B0B8 = NULL;
+        return;
+    }
+    sp20.unk2 = 0;
+    sp20.unk4 = 0;
+    sp20.unk6 = 0;
+    sp20.unk1 = 8;
+    sp20.unk0 = arg0;
+    D_8011B0B8 = func_8000EA54(&sp20, 2);
+    if (D_8011B0B8 != 0) {
+        D_8011B0B8->unk3C = 0;
+        D_8011B0B8->unk4A = -1;
+    }
+}
 
 void func_80028044(s32 arg0) {
     D_8011B0DC = arg0;
@@ -390,12 +441,42 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029AF8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029D14.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029F18.s")
-#else
-func_80029F18(){
+#ifdef NON_MATCHING
+
+// Has regalloc issues.
+s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
+    LevelModelSegmentBoundingBox *bb;
+    s32 i;
+    s32 minVal;
+    s32 result;
+    s32 heightDiff;
+
+    if (gCurrentLevelModel == NULL) {
+        return -1;
+    }
     
+    minVal = 1000000;
+    result = -1;
+    
+    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
+        bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
+        if (((s32)xPos < bb->unk6) && (bb->unk0 < (s32)xPos) && ((s32)zPos < bb->unkA) && (bb->unk4 < (s32)zPos)) {
+            heightDiff = (s32)yPos - ((bb->unk8 + bb->unk2) >> 1);
+            if (heightDiff < 0) {
+                heightDiff = -heightDiff;
+            }
+            if (heightDiff < minVal) {
+                result = i;
+                minVal = heightDiff;
+            }
+        }
+    }
+    
+    return result;
 }
+
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/get_level_segment_index_from_position.s")
 #endif
 
 
@@ -403,10 +484,10 @@ s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
     s32 i;
     s32 cnt = 0;
     LevelModelSegmentBoundingBox * a0;
-    for(i = 0; i < D_800DC918->numberOfSegments; i++){
-        a0 = D_800DC918->segmentsBoundingBoxes + i;
-        if(arg0 < a0->unk06 + 4 && a0->unk00 - 4 < arg0
-        && arg1 < a0->unk0A + 4 && a0->unk04 - 4 < arg1
+    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++){
+        a0 = gCurrentLevelModel->segmentsBoundingBoxes + i;
+        if(arg0 < a0->unk6 + 4 && a0->unk0 - 4 < arg0
+        && arg1 < a0->unkA + 4 && a0->unk4 - 4 < arg1
         ){
             *arg2 = i;
             cnt++;
@@ -416,51 +497,47 @@ s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
     return cnt;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A134.s")
-#else
-s32 func_8002A134(s32* arg0, LevelModelSegmentBoundingBox arg1){
+s32 func_8002A134(s32 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s16 arg6) {
+    s32 phi_v1;
     s32 i;
-    LevelModelSegmentBoundingBox * a0;
-    s32 cnt = 0;
-    LevelModelSegmentBoundingBox bnd;
-
-    //BAD variable assignments;
-    bnd.unk00 = arg1.unk00 - 4;
-    bnd.unk02 = arg1.unk02 - 4;
-    bnd.unk04 = arg1.unk04 - 4;
-    bnd.unk06 = arg1.unk06 + 4;
-    bnd.unk08 = arg1.unk08 + 4;
-    bnd.unk0A = arg1.unk0A + 4;
-
-
-    for(i = 0; i < D_800DC918->numberOfSegments; i++){
-        a0 = D_800DC918->segmentsBoundingBoxes + i;
-        if( a0->unk06 >= bnd.unk00 && bnd.unk06 >= a0->unk00
-        &&  a0->unk0A >= bnd.unk04 && bnd.unk0A >= a0->unk04
-        &&  a0->unk08 >= bnd.unk02 && bnd.unk08 >= a0->unk02
-        ){
-            *arg0 = i;
-            cnt++;
-            arg0++;
+    LevelModelSegmentBoundingBox *bb;
+    
+    arg1 -= 4;
+    arg2 -= 4;
+    arg3 -= 4;
+    arg4 += 4;
+    arg5 += 4;
+    arg6 += 4;
+    
+    i = 0;
+    phi_v1 = 0;
+    
+    while(i < gCurrentLevelModel->numberOfSegments) {
+        bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
+        if ((bb->unk6 >= arg1) && (arg4 >= bb->unk0) && 
+            (bb->unkA >= arg3) && (arg6 >= bb->unk4) && 
+            (bb->unk8 >= arg2) && (arg5 >= bb->unk2)) {
+            phi_v1++;
+            *arg0++ = i;
         }
+        i++;
     }
-    return cnt;
+    
+    return phi_v1;
 }
-#endif
 
 LevelModelSegment *func_8002A2C8(s32 arg0){
-    if(arg0 < 0 || D_800DC918->numberOfSegments < arg0)
+    if(arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
     
-    return D_800DC918->segments + arg0;
+    return gCurrentLevelModel->segments + arg0;
 }
 
 LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0){
-    if(arg0 < 0 || D_800DC918->numberOfSegments < arg0)
+    if(arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
 
-    return D_800DC918->segmentsBoundingBoxes + arg0;
+    return gCurrentLevelModel->segmentsBoundingBoxes + arg0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
@@ -480,44 +557,83 @@ s32 func_8002ACD4(f32* arg0, f32* arg1, f32* arg2) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002AD08.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002B0F4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002B9BC.s")
+
+s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
+    LevelModelSegment *seg;
+    
+    if (arg2 != NULL) {
+        arg2[0] = 0.0f;
+        arg2[2] = 0.0f;
+        arg2[1] = 1.0f;
+    }
+    if ((obj->unk2E < 0) || (obj->unk2E >= gCurrentLevelModel->numberOfSegments)) {
+        return FALSE;
+    }
+    seg = &gCurrentLevelModel->segments[obj->unk2E];
+    if ((seg->unk2B != 0) && (D_8011D384 != 0) && (arg3 == 1)) {
+        *arg1 = func_800BB2F4(obj->unk2E, obj->x_position, obj->z_position, arg2);
+        return TRUE;
+    } else {
+        *arg1 = seg->unk38;
+        return TRUE;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002BAB0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C0C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C71C.s")
+
+void func_8002C71C(LevelModelSegment *segment) {
+    s32 curVertY;
+    s32 numVerts;
+    s32 i;
+    
+    segment->unk38 = -10000;
+    numVerts = 0;
+    for(i = 0; i < segment->numberOfBatches; i++) {
+        if (segment->batches[i].flags & 0x2000) {
+            segment->unk34[numVerts++] = i;
+            curVertY = segment->vertices[segment->batches[i].verticesOffset].y;
+            if (segment->unk38 == -10000 || segment->unk38 < curVertY) {
+                segment->unk38 = curVertY;
+            }
+        }
+    }
+    segment->unk32 = numVerts;
+}
 
 LevelModel* func_8002C7C4(void) {
-    return D_800DC918;
+    return gCurrentLevelModel;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C7D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C954.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002CC30.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D30C.s")
-#else
+#ifdef NON_MATCHING
 
-typedef struct{
+typedef struct unk8002D30C_a0{
     u8 pad00[0x04];
-    u32 unk04;
-    u32 unk08;
+    struct unk8002D30C_a0* unk04;
+    struct unk8002D30C_a0* unk08;
 }unk8002D30C_a0;
 
-void func_8002D30C(unk8002D30C_a0* arg0, u32 arg1){
-    unk8002D30C_a0* s0 = arg0;
-    while(s0 != NULL){
-        if(s0->unk04){
-            s0->unk04 += arg1;
+void func_8002D30C(unk8002D30C_a0* arg0, s32 arg1) {
+    // Weird issue here with the ra register.
+    while(arg0 != NULL) {
+        if(arg0->unk04) {
+            arg0->unk04 = (unk8002D30C_a0*)((s32)arg0->unk04 + arg1);
         }
 
-        if(s0->unk08){
-            s0->unk08 += arg1;
+        if(arg0->unk08){
+            arg0->unk08 = (unk8002D30C_a0*)((s32)arg0->unk08 + arg1);
         }
 
-        func_8002D30C(s0->unk04, arg1);
-        s0 = s0->unk08;
+        func_8002D30C(arg0->unk04, arg1);
+        arg0 = arg0->unk08;
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D30C.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_floor_decal.s")
@@ -533,11 +649,100 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FA64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FD74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FF6C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800304C8.s")
+
+#ifdef NON_MATCHING
+
+// Should be functionally equivalent.
+void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {
+    s32 max, min;
+
+    max = arg2;
+    min = arg1;
+    if (arg2 < arg1) {
+        max = arg1;
+        min = arg2;
+    }
+    if (max >= 0x400) {
+        max = 0x3FF;
+    }
+    if (min >= max - 5) {
+        min = max - 5;
+    }
+    D_8011D388[arg0].unk20 = 0;
+    D_8011D388[arg0].unk24 = 0;
+    D_8011D388[arg0].unk14 = 0;
+    D_8011D388[arg0].unk18 = 0;
+    D_8011D388[arg0].unk1C = 0;
+    D_8011D388[arg0].unk0 = arg3 << 0x10;
+    D_8011D388[arg0].unk4 = arg4 << 0x10;
+    D_8011D388[arg0].unk8 = arg5 << 0x10;
+    D_8011D388[arg0].unkC = min << 0x10;
+    D_8011D388[arg0].unk10 = max << 0x10;
+    D_8011D388[arg0].unk28 = arg3;
+    D_8011D388[arg0].unk2C = min;
+    D_8011D388[arg0].unk2E = max;
+    D_8011D388[arg0].unk30 = 0;
+    D_8011D388[arg0].unk34 = 0;
+    D_8011D388[arg0].unk29 = arg4;
+    D_8011D388[arg0].unk2A = arg5;
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030664.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030750.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800307BC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030838.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8003093C.s")
+#endif
+
+void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, s8 *arg3, s8 *arg4, s8 *arg5) {
+    *arg1 = D_8011D388[arg0].unkC  >> 0x10;
+    *arg2 = D_8011D388[arg0].unk10 >> 0x10;
+    *arg3 = D_8011D388[arg0].unk0  >> 0x10;
+    *arg4 = D_8011D388[arg0].unk4  >> 0x10;
+    *arg5 = D_8011D388[arg0].unk8  >> 0x10;
+}
+
+void func_800307BC(s32 arg0) {
+    D_8011D388[arg0].unk20 = 0;
+    D_8011D388[arg0].unk24 = 0;
+    D_8011D388[arg0].unk14 = 0;
+    D_8011D388[arg0].unk18 = 0;
+    D_8011D388[arg0].unk1C = 0;
+    D_8011D388[arg0].unkC  = 0x03FA0000;
+    D_8011D388[arg0].unk10 = 0x03FF0000;
+    D_8011D388[arg0].unk28 = D_8011D388[arg0].unk0 >> 0x10;
+    D_8011D388[arg0].unk29 = D_8011D388[arg0].unk4 >> 0x10;
+    D_8011D388[arg0].unk2A = D_8011D388[arg0].unk8 >> 0x10;
+    D_8011D388[arg0].unk2C = 0x03FA;
+    D_8011D388[arg0].unk2E = 0x03FF;
+    D_8011D388[arg0].unk30 = 0;
+    D_8011D388[arg0].unk34 = 0;
+}
+
+void func_80030838(s32 arg0, s32 arg1) {
+    s32 i;
+    for(i = 0; i < arg0; i++) {
+        if (D_8011D388[i].unk30 > 0) {
+            if (arg1 < D_8011D388[i].unk30) {
+                D_8011D388[i].unk0 += D_8011D388[i].unk14 * arg1;
+                D_8011D388[i].unk4 += D_8011D388[i].unk18 * arg1;
+                D_8011D388[i].unk8 += D_8011D388[i].unk1C * arg1;
+                D_8011D388[i].unkC += D_8011D388[i].unk20 * arg1;
+                D_8011D388[i].unk10 += D_8011D388[i].unk24 * arg1;
+                D_8011D388[i].unk30 -= arg1;
+            } else {
+                D_8011D388[i].unk0  = D_8011D388[i].unk28 << 0x10;
+                D_8011D388[i].unk4  = D_8011D388[i].unk29 << 0x10;
+                D_8011D388[i].unk8  = D_8011D388[i].unk2A << 0x10;
+                D_8011D388[i].unkC  = D_8011D388[i].unk2C << 0x10;
+                D_8011D388[i].unk10 = D_8011D388[i].unk2E << 0x10;
+                D_8011D388[i].unk30 = 0;
+            }
+        }
+    }
+}
+
+void func_8003093C(s32 arg0) {
+    gDPSetFogColor(D_8011B0A0++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF)
+    gSPFogPosition(D_8011B0A0++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10)
+}
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030A74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 

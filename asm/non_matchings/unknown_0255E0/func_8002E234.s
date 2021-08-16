@@ -325,8 +325,8 @@ glabel func_8002E234
 /* 02F2E8 8002E6E8 AC23D0EC */  sw    $v1, %lo(D_8011D0EC)($at)
 /* 02F2EC 8002E6EC 1840005C */  blez  $v0, .L8002E860
 /* 02F2F0 8002E6F0 00009025 */   move  $s2, $zero
-/* 02F2F4 8002E6F4 3C13800E */  lui   $s3, %hi(D_800DC918) # $s3, 0x800e
-/* 02F2F8 8002E6F8 2673C918 */  addiu $s3, %lo(D_800DC918) # addiu $s3, $s3, -0x36e8
+/* 02F2F4 8002E6F4 3C13800E */  lui   $s3, %hi(gCurrentLevelModel) # $s3, 0x800e
+/* 02F2F8 8002E6F8 2673C918 */  addiu $s3, %lo(gCurrentLevelModel) # addiu $s3, $s3, -0x36e8
 /* 02F2FC 8002E6FC 27B10078 */  addiu $s1, $sp, 0x78
 /* 02F300 8002E700 24140044 */  li    $s4, 68
 .L8002E704:

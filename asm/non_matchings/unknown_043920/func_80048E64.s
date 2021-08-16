@@ -430,7 +430,7 @@ glabel func_80048E64
 /* 04A0A4 800494A4 C4AC000C */  lwc1  $f12, 0xc($a1)
 /* 04A0A8 800494A8 C4AE0010 */  lwc1  $f14, 0x10($a1)
 /* 04A0AC 800494AC 8CA60014 */  lw    $a2, 0x14($a1)
-/* 04A0B0 800494B0 0C00A7C6 */  jal   func_80029F18
+/* 04A0B0 800494B0 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 04A0B4 800494B4 00000000 */   nop   
 /* 04A0B8 800494B8 2401FFFF */  li    $at, -1
 /* 04A0BC 800494BC 10410005 */  beq   $v0, $at, .L800494D4

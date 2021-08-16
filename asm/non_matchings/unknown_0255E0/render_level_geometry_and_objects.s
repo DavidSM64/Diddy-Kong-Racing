@@ -25,8 +25,8 @@ glabel render_level_geometry_and_objects
 .L80028FF4:
 /* 029BF4 80028FF4 0C005205 */  jal   func_80014814
 /* 029BF8 80028FF8 27A4016C */   addiu $a0, $sp, 0x16c
-/* 029BFC 80028FFC 3C10800E */  lui   $s0, %hi(D_800DC918) # $s0, 0x800e
-/* 029C00 80029000 8E10C918 */  lw    $s0, %lo(D_800DC918)($s0)
+/* 029BFC 80028FFC 3C10800E */  lui   $s0, %hi(gCurrentLevelModel) # $s0, 0x800e
+/* 029C00 80029000 8E10C918 */  lw    $s0, %lo(gCurrentLevelModel)($s0)
 /* 029C04 80029004 AFA20160 */  sw    $v0, 0x160($sp)
 /* 029C08 80029008 8618001A */  lh    $t8, 0x1a($s0)
 /* 029C0C 8002900C 00000000 */  nop   
@@ -42,8 +42,8 @@ glabel render_level_geometry_and_objects
 /* 029C34 80029034 27A700D8 */  addiu $a3, $sp, 0xd8
 /* 029C38 80029038 0C00A6BE */  jal   func_80029AF8
 /* 029C3C 8002903C 24C6FFFF */   addiu $a2, $a2, -1
-/* 029C40 80029040 3C10800E */  lui   $s0, %hi(D_800DC918) # $s0, 0x800e
-/* 029C44 80029044 8E10C918 */  lw    $s0, %lo(D_800DC918)($s0)
+/* 029C40 80029040 3C10800E */  lui   $s0, %hi(gCurrentLevelModel) # $s0, 0x800e
+/* 029C44 80029044 8E10C918 */  lw    $s0, %lo(gCurrentLevelModel)($s0)
 /* 029C48 80029048 10000005 */  b     .L80029060
 /* 029C4C 8002904C 8609001A */   lh    $t1, 0x1a($s0)
 /* 029C50 80029050 24080001 */  li    $t0, 1
@@ -87,8 +87,8 @@ glabel render_level_geometry_and_objects
 /* 029CD4 800290D4 0258082A */  slt   $at, $s2, $t8
 /* 029CD8 800290D8 1420FFF5 */  bnez  $at, .L800290B0
 /* 029CDC 800290DC 00000000 */   nop   
-/* 029CE0 800290E0 3C10800E */  lui   $s0, %hi(D_800DC918) # $s0, 0x800e
-/* 029CE4 800290E4 8E10C918 */  lw    $s0, %lo(D_800DC918)($s0)
+/* 029CE0 800290E0 3C10800E */  lui   $s0, %hi(gCurrentLevelModel) # $s0, 0x800e
+/* 029CE4 800290E4 8E10C918 */  lw    $s0, %lo(gCurrentLevelModel)($s0)
 /* 029CE8 800290E8 00000000 */  nop   
 .L800290EC:
 /* 029CEC 800290EC 8619001A */  lh    $t9, 0x1a($s0)

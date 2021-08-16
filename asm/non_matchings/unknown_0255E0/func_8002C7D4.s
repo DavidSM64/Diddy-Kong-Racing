@@ -15,8 +15,8 @@ glabel func_8002C7D4
 /* 02D408 8002C808 0C02DF48 */  jal   func_800B7D20
 /* 02D40C 8002C80C 00000000 */   nop   
 .L8002C810:
-/* 02D410 8002C810 3C14800E */  lui   $s4, %hi(D_800DC918) # $s4, 0x800e
-/* 02D414 8002C814 2694C918 */  addiu $s4, %lo(D_800DC918) # addiu $s4, $s4, -0x36e8
+/* 02D410 8002C810 3C14800E */  lui   $s4, %hi(gCurrentLevelModel) # $s4, 0x800e
+/* 02D414 8002C814 2694C918 */  addiu $s4, %lo(gCurrentLevelModel) # addiu $s4, $s4, -0x36e8
 /* 02D418 8002C818 8E910000 */  lw    $s1, ($s4)
 /* 02D41C 8002C81C 00008025 */  move  $s0, $zero
 /* 02D420 8002C820 862F0018 */  lh    $t7, 0x18($s1)

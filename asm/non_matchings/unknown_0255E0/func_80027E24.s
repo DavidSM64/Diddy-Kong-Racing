@@ -1,7 +1,7 @@
 glabel func_80027E24
 /* 028A24 80027E24 27BDFF90 */  addiu $sp, $sp, -0x70
-/* 028A28 80027E28 3C05800E */  lui   $a1, %hi(D_800DC918) # $a1, 0x800e
-/* 028A2C 80027E2C 8CA5C918 */  lw    $a1, %lo(D_800DC918)($a1)
+/* 028A28 80027E28 3C05800E */  lui   $a1, %hi(gCurrentLevelModel) # $a1, 0x800e
+/* 028A2C 80027E2C 8CA5C918 */  lw    $a1, %lo(gCurrentLevelModel)($a1)
 /* 028A30 80027E30 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 028A34 80027E34 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 028A38 80027E38 AFB70034 */  sw    $s7, 0x34($sp)
@@ -76,11 +76,11 @@ glabel func_80027E24
 /* 028B40 80027F40 02603825 */   move  $a3, $s3
 .L80027F44:
 /* 028B44 80027F44 8FAA0058 */  lw    $t2, 0x58($sp)
-/* 028B48 80027F48 3C05800E */  lui   $a1, %hi(D_800DC918) # $a1, 0x800e
+/* 028B48 80027F48 3C05800E */  lui   $a1, %hi(gCurrentLevelModel) # $a1, 0x800e
 /* 028B4C 80027F4C 000A6183 */  sra   $t4, $t2, 6
 /* 028B50 80027F50 A20C0007 */  sb    $t4, 7($s0)
 /* 028B54 80027F54 86C30020 */  lh    $v1, 0x20($s6)
-/* 028B58 80027F58 8CA5C918 */  lw    $a1, %lo(D_800DC918)($a1)
+/* 028B58 80027F58 8CA5C918 */  lw    $a1, %lo(gCurrentLevelModel)($a1)
 /* 028B5C 80027F5C 00000000 */  nop   
 .L80027F60:
 /* 028B60 80027F60 26310001 */  addiu $s1, $s1, 1
