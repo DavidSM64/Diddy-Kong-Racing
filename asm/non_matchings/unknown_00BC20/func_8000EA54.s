@@ -115,7 +115,7 @@ glabel func_8000EA54
 /* 00F7E8 8000EBE8 468084A0 */  cvt.s.w $f18, $f16
 /* 00F7EC 8000EBEC E6520014 */  swc1  $f18, 0x14($s2)
 /* 00F7F0 8000EBF0 8E460014 */  lw    $a2, 0x14($s2)
-/* 00F7F4 8000EBF4 0C00A7C6 */  jal   func_80029F18
+/* 00F7F4 8000EBF4 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 00F7F8 8000EBF8 00000000 */   nop   
 /* 00F7FC 8000EBFC A642002E */  sh    $v0, 0x2e($s2)
 /* 00F800 8000EC00 87A8004E */  lh    $t0, 0x4e($sp)

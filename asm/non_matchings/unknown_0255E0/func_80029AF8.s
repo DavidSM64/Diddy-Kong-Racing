@@ -4,7 +4,7 @@ glabel func_80029AF8
 /* 02A700 80029B00 AFB7003C */  sw    $s7, 0x3c($sp)
 /* 02A704 80029B04 AFB3002C */  sw    $s3, 0x2c($sp)
 /* 02A708 80029B08 3C178012 */  lui   $s7, %hi(D_8011B0B0) # $s7, 0x8012
-/* 02A70C 80029B0C 3C1E800E */  lui   $fp, %hi(D_800DC918) # $fp, 0x800e
+/* 02A70C 80029B0C 3C1E800E */  lui   $fp, %hi(gCurrentLevelModel) # $fp, 0x800e
 /* 02A710 80029B10 AFB60038 */  sw    $s6, 0x38($sp)
 /* 02A714 80029B14 AFB50034 */  sw    $s5, 0x34($sp)
 /* 02A718 80029B18 AFB40030 */  sw    $s4, 0x30($sp)
@@ -16,7 +16,7 @@ glabel func_80029AF8
 /* 02A730 80029B30 00A0A025 */  move  $s4, $a1
 /* 02A734 80029B34 00C0A825 */  move  $s5, $a2
 /* 02A738 80029B38 2416FFFF */  li    $s6, -1
-/* 02A73C 80029B3C 27DEC918 */  addiu $fp, %lo(D_800DC918) # addiu $fp, $fp, -0x36e8
+/* 02A73C 80029B3C 27DEC918 */  addiu $fp, %lo(gCurrentLevelModel) # addiu $fp, $fp, -0x36e8
 /* 02A740 80029B40 26F7B0B0 */  addiu $s7, %lo(D_8011B0B0) # addiu $s7, $s7, -0x4f50
 /* 02A744 80029B44 AFBF0044 */  sw    $ra, 0x44($sp)
 /* 02A748 80029B48 AFB00020 */  sw    $s0, 0x20($sp)

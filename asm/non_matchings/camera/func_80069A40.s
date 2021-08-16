@@ -65,7 +65,7 @@ glabel func_80069A40
 /* 06A730 80069B30 8C460014 */  lw    $a2, 0x14($v0)
 /* 06A734 80069B34 C44E0010 */  lwc1  $f14, 0x10($v0)
 /* 06A738 80069B38 C44C000C */  lwc1  $f12, 0xc($v0)
-/* 06A73C 80069B3C 0C00A7C6 */  jal   func_80029F18
+/* 06A73C 80069B3C 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 06A740 80069B40 00000000 */   nop   
 /* 06A744 80069B44 3C198012 */  lui   $t9, %hi(D_80120CE4) # $t9, 0x8012
 /* 06A748 80069B48 8F390CE4 */  lw    $t9, %lo(D_80120CE4)($t9)
@@ -145,7 +145,7 @@ glabel func_80069A40
 /* 06A86C 80069C6C C60E0010 */  lwc1  $f14, 0x10($s0)
 /* 06A870 80069C70 E6080014 */  swc1  $f8, 0x14($s0)
 /* 06A874 80069C74 8E060014 */  lw    $a2, 0x14($s0)
-/* 06A878 80069C78 0C00A7C6 */  jal   func_80029F18
+/* 06A878 80069C78 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 06A87C 80069C7C 00000000 */   nop   
 /* 06A880 80069C80 8E4F0000 */  lw    $t7, ($s2)
 /* 06A884 80069C84 00000000 */  nop   

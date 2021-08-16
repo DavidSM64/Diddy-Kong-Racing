@@ -1,7 +1,7 @@
-glabel func_80029F18
+glabel get_level_segment_index_from_position
 /* 02AB18 80029F18 27BDFFF0 */  addiu $sp, $sp, -0x10
-/* 02AB1C 80029F1C 3C02800E */  lui   $v0, %hi(D_800DC918) # $v0, 0x800e
-/* 02AB20 80029F20 8C42C918 */  lw    $v0, %lo(D_800DC918)($v0)
+/* 02AB1C 80029F1C 3C02800E */  lui   $v0, %hi(gCurrentLevelModel) # $v0, 0x800e
+/* 02AB20 80029F20 8C42C918 */  lw    $v0, %lo(gCurrentLevelModel)($v0)
 /* 02AB24 80029F24 E7B4000C */  swc1  $f20, 0xc($sp)
 /* 02AB28 80029F28 4486A000 */  mtc1  $a2, $f20
 /* 02AB2C 80029F2C 14400003 */  bnez  $v0, .L80029F3C

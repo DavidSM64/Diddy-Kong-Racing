@@ -22,7 +22,7 @@ glabel func_80009B7C
 /* 00A7CC 80009BCC E7B50028 */  swc1  $f21, 0x28($sp)
 /* 00A7D0 80009BD0 AFA400D8 */  sw    $a0, 0xd8($sp)
 /* 00A7D4 80009BD4 4600A386 */  mov.s $f14, $f20
-/* 00A7D8 80009BD8 0C00A7C6 */  jal   func_80029F18
+/* 00A7D8 80009BD8 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 00A7DC 80009BDC 4600B306 */   mov.s $f12, $f22
 /* 00A7E0 80009BE0 3C178012 */  lui   $s7, %hi(D_8011A6D8) # $s7, 0x8012
 /* 00A7E4 80009BE4 AFA200B0 */  sw    $v0, 0xb0($sp)

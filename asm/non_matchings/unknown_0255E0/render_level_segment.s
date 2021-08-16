@@ -1,7 +1,7 @@
 glabel render_level_segment
 /* 02A258 80029658 27BDFF50 */  addiu $sp, $sp, -0xb0
-/* 02A25C 8002965C 3C0E800E */  lui   $t6, %hi(D_800DC918) # $t6, 0x800e
-/* 02A260 80029660 8DCEC918 */  lw    $t6, %lo(D_800DC918)($t6)
+/* 02A25C 8002965C 3C0E800E */  lui   $t6, %hi(gCurrentLevelModel) # $t6, 0x800e
+/* 02A260 80029660 8DCEC918 */  lw    $t6, %lo(gCurrentLevelModel)($t6)
 /* 02A264 80029664 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 02A268 80029668 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 02A26C 8002966C AFB70034 */  sw    $s7, 0x34($sp)
@@ -74,8 +74,8 @@ glabel render_level_segment
 /* 02A364 80029764 1000000B */  b     .L80029794
 /* 02A368 80029768 0000A825 */   move  $s5, $zero
 .L8002976C:
-/* 02A36C 8002976C 3C0E800E */  lui   $t6, %hi(D_800DC918) # $t6, 0x800e
-/* 02A370 80029770 8DCEC918 */  lw    $t6, %lo(D_800DC918)($t6)
+/* 02A36C 8002976C 3C0E800E */  lui   $t6, %hi(gCurrentLevelModel) # $t6, 0x800e
+/* 02A370 80029770 8DCEC918 */  lw    $t6, %lo(gCurrentLevelModel)($t6)
 /* 02A374 80029774 0002C0C0 */  sll   $t8, $v0, 3
 /* 02A378 80029778 8DCF0000 */  lw    $t7, ($t6)
 /* 02A37C 8002977C 00000000 */  nop   

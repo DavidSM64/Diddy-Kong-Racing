@@ -582,7 +582,7 @@ typedef struct Object_64_800376E0 {
     s16 unkA;
 } Object_64_800376E0;
 
-s16 func_80029F18(f32, f32, f32);
+s16 get_level_segment_index_from_position(f32, f32, f32);
 
 void func_800376E0(Object *arg0, LevelObjectEntry800376E0 *arg1, s32 arg2) {
     Object_64_800376E0 *obj64;
@@ -594,7 +594,7 @@ void func_800376E0(Object *arg0, LevelObjectEntry800376E0 *arg1, s32 arg2) {
     obj64->unk2 = arg1->unk8;
     obj64->unk4 = arg1->unk9;
     obj64->unk6 = arg1->unkA;
-    obj64->segmentId = func_80029F18(arg0->x_position, arg0->y_position, arg0->z_position);
+    obj64->segmentId = get_level_segment_index_from_position(arg0->x_position, arg0->y_position, arg0->z_position);
     if (arg2 == 0) {
         obj64->unk8 = 0;
         obj64->unkA = 0;

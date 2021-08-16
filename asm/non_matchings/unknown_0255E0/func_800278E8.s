@@ -335,7 +335,7 @@ glabel func_800278E8
 /* 0289E4 80027DE4 C62E003C */  lwc1  $f14, 0x3c($s1)
 /* 0289E8 80027DE8 C46C000C */  lwc1  $f12, 0xc($v1)
 /* 0289EC 80027DEC 8C660014 */  lw    $a2, 0x14($v1)
-/* 0289F0 80027DF0 0C00A7C6 */  jal   func_80029F18
+/* 0289F0 80027DF0 0C00A7C6 */  jal   get_level_segment_index_from_position
 /* 0289F4 80027DF4 AFA30058 */   sw    $v1, 0x58($sp)
 /* 0289F8 80027DF8 8FA30058 */  lw    $v1, 0x58($sp)
 /* 0289FC 80027DFC 3C018012 */  lui   $at, %hi(D_8011B104) # $at, 0x8012

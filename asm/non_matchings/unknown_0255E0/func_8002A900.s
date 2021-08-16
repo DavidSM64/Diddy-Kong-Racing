@@ -215,8 +215,8 @@ glabel L8002AB58
 /* 02B7F8 8002ABF8 03E00008 */  jr    $ra
 /* 02B7FC 8002ABFC 27BD0058 */   addiu $sp, $sp, 0x58
 
-/* 02B800 8002AC00 3C02800E */  lui   $v0, %hi(D_800DC918) # $v0, 0x800e
-/* 02B804 8002AC04 8C42C918 */  lw    $v0, %lo(D_800DC918)($v0)
+/* 02B800 8002AC00 3C02800E */  lui   $v0, %hi(gCurrentLevelModel) # $v0, 0x800e
+/* 02B804 8002AC04 8C42C918 */  lw    $v0, %lo(gCurrentLevelModel)($v0)
 /* 02B808 8002AC08 00000000 */  nop   
 /* 02B80C 8002AC0C 8443001A */  lh    $v1, 0x1a($v0)
 /* 02B810 8002AC10 00000000 */  nop   

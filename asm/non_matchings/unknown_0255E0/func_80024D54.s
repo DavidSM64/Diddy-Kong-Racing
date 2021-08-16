@@ -213,8 +213,8 @@ glabel func_80024D54
 /* 025C70 80025070 8FA40084 */  lw    $a0, 0x84($sp)
 /* 025C74 80025074 0C02BD01 */  jal   func_800AF404
 /* 025C78 80025078 00000000 */   nop   
-/* 025C7C 8002507C 3C0D800E */  lui   $t5, %hi(D_800DC918) # $t5, 0x800e
-/* 025C80 80025080 8DADC918 */  lw    $t5, %lo(D_800DC918)($t5)
+/* 025C7C 8002507C 3C0D800E */  lui   $t5, %hi(gCurrentLevelModel) # $t5, 0x800e
+/* 025C80 80025080 8DADC918 */  lw    $t5, %lo(gCurrentLevelModel)($t5)
 /* 025C84 80025084 8FA40084 */  lw    $a0, 0x84($sp)
 /* 025C88 80025088 85AE001E */  lh    $t6, 0x1e($t5)
 /* 025C8C 8002508C 00000000 */  nop   

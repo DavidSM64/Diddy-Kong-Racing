@@ -43,8 +43,8 @@ glabel func_800249F0
 /* 02568C 80024A8C 2B010002 */  slti  $at, $t8, 2
 /* 025690 80024A90 1020001E */  beqz  $at, .L80024B0C
 /* 025694 80024A94 AE000000 */   sw    $zero, ($s0)
-/* 025698 80024A98 3C02800E */  lui   $v0, %hi(D_800DC918) # $v0, 0x800e
-/* 02569C 80024A9C 8C42C918 */  lw    $v0, %lo(D_800DC918)($v0)
+/* 025698 80024A98 3C02800E */  lui   $v0, %hi(gCurrentLevelModel) # $v0, 0x800e
+/* 02569C 80024A9C 8C42C918 */  lw    $v0, %lo(gCurrentLevelModel)($v0)
 /* 0256A0 80024AA0 00003025 */  move  $a2, $zero
 /* 0256A4 80024AA4 8444001A */  lh    $a0, 0x1a($v0)
 /* 0256A8 80024AA8 00001825 */  move  $v1, $zero
@@ -63,10 +63,10 @@ glabel func_800249F0
 /* 0256D8 80024AD8 254B0001 */  addiu $t3, $t2, 1
 /* 0256DC 80024ADC AE0B0000 */  sw    $t3, ($s0)
 /* 0256E0 80024AE0 8C4C0004 */  lw    $t4, 4($v0)
-/* 0256E4 80024AE4 3C02800E */  lui   $v0, %hi(D_800DC918) # $v0, 0x800e
+/* 0256E4 80024AE4 3C02800E */  lui   $v0, %hi(gCurrentLevelModel) # $v0, 0x800e
 /* 0256E8 80024AE8 01836821 */  addu  $t5, $t4, $v1
 /* 0256EC 80024AEC A1A5002B */  sb    $a1, 0x2b($t5)
-/* 0256F0 80024AF0 8C42C918 */  lw    $v0, %lo(D_800DC918)($v0)
+/* 0256F0 80024AF0 8C42C918 */  lw    $v0, %lo(gCurrentLevelModel)($v0)
 /* 0256F4 80024AF4 00000000 */  nop   
 /* 0256F8 80024AF8 8444001A */  lh    $a0, 0x1a($v0)
 /* 0256FC 80024AFC 00000000 */  nop   
@@ -99,10 +99,10 @@ glabel func_800249F0
 /* 025750 80024B50 8E180000 */  lw    $t8, ($s0)
 /* 025754 80024B54 00000000 */  nop   
 /* 025758 80024B58 13000006 */  beqz  $t8, .L80024B74
-/* 02575C 80024B5C 3C04800E */   lui   $a0, %hi(D_800DC918) # $a0, 0x800e
+/* 02575C 80024B5C 3C04800E */   lui   $a0, %hi(gCurrentLevelModel) # $a0, 0x800e
 /* 025760 80024B60 3C05800E */  lui   $a1, %hi(D_800DC91C) # $a1, 0x800e
 /* 025764 80024B64 8CA5C91C */  lw    $a1, %lo(D_800DC91C)($a1)
-/* 025768 80024B68 8C84C918 */  lw    $a0, %lo(D_800DC918)($a0)
+/* 025768 80024B68 8C84C918 */  lw    $a0, %lo(gCurrentLevelModel)($a0)
 /* 02576C 80024B6C 0C02E0AD */  jal   func_800B82B4
 /* 025770 80024B70 00000000 */   nop   
 .L80024B74:
