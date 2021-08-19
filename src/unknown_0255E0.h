@@ -23,7 +23,7 @@ extern f32 D_800DC884[10];
 extern f32 D_800DC8AC[27];
 
 extern LevelModel* gCurrentLevelModel;
-extern LevelHeader *D_800DC91C;
+extern LevelHeader *gCurrentLevelHeader;
 
 extern s32 D_800DC920;
 extern s32 D_800DC924;

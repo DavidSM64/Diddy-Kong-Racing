@@ -10,8 +10,8 @@ glabel func_80028050
 /* 028C70 80028070 AFB30020 */  sw    $s3, 0x20($sp)
 /* 028C74 80028074 0C01A748 */  jal   func_80069D20
 /* 028C78 80028078 AFB2001C */   sw    $s2, 0x1c($sp)
-/* 028C7C 8002807C 3C0E800E */  lui   $t6, %hi(D_800DC91C) # $t6, 0x800e
-/* 028C80 80028080 8DCEC91C */  lw    $t6, %lo(D_800DC91C)($t6)
+/* 028C7C 8002807C 3C0E800E */  lui   $t6, %hi(gCurrentLevelHeader2) # $t6, 0x800e
+/* 028C80 80028080 8DCEC91C */  lw    $t6, %lo(gCurrentLevelHeader2)($t6)
 /* 028C84 80028084 00409025 */  move  $s2, $v0
 /* 028C88 80028088 8DC300A4 */  lw    $v1, 0xa4($t6)
 /* 028C8C 8002808C 00000000 */  nop   
@@ -41,10 +41,10 @@ glabel func_80028050
 /* 028CEC 800280EC 46040302 */  mul.s $f12, $f0, $f4
 /* 028CF0 800280F0 C7A6010C */  lwc1  $f6, 0x10c($sp)
 /* 028CF4 800280F4 8FA70074 */  lw    $a3, 0x74($sp)
-/* 028CF8 800280F8 3C04800E */  lui   $a0, %hi(D_800DC91C) # $a0, 0x800e
+/* 028CF8 800280F8 3C04800E */  lui   $a0, %hi(gCurrentLevelHeader2) # $a0, 0x800e
 /* 028CFC 800280FC 46083082 */  mul.s $f2, $f6, $f8
 /* 028D00 80028100 46006487 */  neg.s $f18, $f12
-/* 028D04 80028104 8C84C91C */  lw    $a0, %lo(D_800DC91C)($a0)
+/* 028D04 80028104 8C84C91C */  lw    $a0, %lo(gCurrentLevelHeader2)($a0)
 /* 028D08 80028108 46029200 */  add.s $f8, $f18, $f2
 /* 028D0C 8002810C 46029281 */  sub.s $f10, $f18, $f2
 /* 028D10 80028110 E7A80030 */  swc1  $f8, 0x30($sp)
@@ -325,8 +325,8 @@ glabel func_80028050
 /* 02915C 8002855C 03236021 */  addu  $t4, $t9, $v1
 /* 029160 80028560 0C01A102 */  jal   func_80068408
 /* 029164 80028564 A7AC0124 */   sh    $t4, 0x124($sp)
-/* 029168 80028568 3C04800E */  lui   $a0, %hi(D_800DC91C) # $a0, 0x800e
-/* 02916C 8002856C 8C84C91C */  lw    $a0, %lo(D_800DC91C)($a0)
+/* 029168 80028568 3C04800E */  lui   $a0, %hi(gCurrentLevelHeader2) # $a0, 0x800e
+/* 02916C 8002856C 8C84C91C */  lw    $a0, %lo(gCurrentLevelHeader2)($a0)
 /* 029170 80028570 2403FFFF */  li    $v1, -1
 /* 029174 80028574 8C8A0074 */  lw    $t2, 0x74($a0)
 /* 029178 80028578 2406FFFF */  li    $a2, -1

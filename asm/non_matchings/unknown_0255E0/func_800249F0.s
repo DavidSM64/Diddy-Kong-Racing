@@ -11,8 +11,8 @@ glabel func_800249F0
 /* 025614 80024A14 0C01AF6C */  jal   get_current_level_header
 /* 025618 80024A18 AFA70034 */   sw    $a3, 0x34($sp)
 /* 02561C 80024A1C 3C048012 */  lui   $a0, %hi(D_8011B0F8) # $a0, 0x8012
-/* 025620 80024A20 3C05800E */  lui   $a1, %hi(D_800DC91C) # $a1, 0x800e
-/* 025624 80024A24 24A5C91C */  addiu $a1, %lo(D_800DC91C) # addiu $a1, $a1, -0x36e4
+/* 025620 80024A20 3C05800E */  lui   $a1, %hi(gCurrentLevelHeader2) # $a1, 0x800e
+/* 025624 80024A24 24A5C91C */  addiu $a1, %lo(gCurrentLevelHeader2) # addiu $a1, $a1, -0x36e4
 /* 025628 80024A28 2484B0F8 */  addiu $a0, %lo(D_8011B0F8) # addiu $a0, $a0, -0x4f08
 /* 02562C 80024A2C ACA20000 */  sw    $v0, ($a1)
 /* 025630 80024A30 AC800000 */  sw    $zero, ($a0)
@@ -78,8 +78,8 @@ glabel func_800249F0
 /* 02570C 80024B0C 0C027B20 */  jal   is_in_two_player_adventure
 /* 025710 80024B10 00000000 */   nop   
 /* 025714 80024B14 1040000B */  beqz  $v0, .L80024B44
-/* 025718 80024B18 3C0E800E */   lui   $t6, %hi(D_800DC91C) # $t6, 0x800e
-/* 02571C 80024B1C 8DCEC91C */  lw    $t6, %lo(D_800DC91C)($t6)
+/* 025718 80024B18 3C0E800E */   lui   $t6, %hi(gCurrentLevelHeader2) # $t6, 0x800e
+/* 02571C 80024B1C 8DCEC91C */  lw    $t6, %lo(gCurrentLevelHeader2)($t6)
 /* 025720 80024B20 00000000 */  nop   
 /* 025724 80024B24 81C3004C */  lb    $v1, 0x4c($t6)
 /* 025728 80024B28 00000000 */  nop   
@@ -100,8 +100,8 @@ glabel func_800249F0
 /* 025754 80024B54 00000000 */  nop   
 /* 025758 80024B58 13000006 */  beqz  $t8, .L80024B74
 /* 02575C 80024B5C 3C04800E */   lui   $a0, %hi(gCurrentLevelModel) # $a0, 0x800e
-/* 025760 80024B60 3C05800E */  lui   $a1, %hi(D_800DC91C) # $a1, 0x800e
-/* 025764 80024B64 8CA5C91C */  lw    $a1, %lo(D_800DC91C)($a1)
+/* 025760 80024B60 3C05800E */  lui   $a1, %hi(gCurrentLevelHeader2) # $a1, 0x800e
+/* 025764 80024B64 8CA5C91C */  lw    $a1, %lo(gCurrentLevelHeader2)($a1)
 /* 025768 80024B68 8C84C918 */  lw    $a0, %lo(gCurrentLevelModel)($a0)
 /* 02576C 80024B6C 0C02E0AD */  jal   func_800B82B4
 /* 025770 80024B70 00000000 */   nop   
@@ -204,8 +204,8 @@ glabel func_800249F0
 /* 0258E4 80024CE4 0C00B637 */  jal   func_8002D8DC
 /* 0258E8 80024CE8 00003025 */   move  $a2, $zero
 /* 0258EC 80024CEC AE000000 */  sw    $zero, ($s0)
-/* 0258F0 80024CF0 3C02800E */  lui   $v0, %hi(D_800DC91C) # $v0, 0x800e
-/* 0258F4 80024CF4 8C42C91C */  lw    $v0, %lo(D_800DC91C)($v0)
+/* 0258F0 80024CF0 3C02800E */  lui   $v0, %hi(gCurrentLevelHeader2) # $v0, 0x800e
+/* 0258F4 80024CF4 8C42C91C */  lw    $v0, %lo(gCurrentLevelHeader2)($v0)
 /* 0258F8 80024CF8 3C018012 */  lui   $at, %hi(D_8011B0E1) # $at, 0x8012
 /* 0258FC 80024CFC 904C00B7 */  lbu   $t4, 0xb7($v0)
 /* 025900 80024D00 00000000 */  nop   
