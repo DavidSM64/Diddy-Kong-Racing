@@ -54,7 +54,7 @@ f32 D_800DC8AC[27] = {
 };
 
 LevelModel* gCurrentLevelModel = NULL;
-LevelHeader *D_800DC91C = NULL;
+LevelHeader *gCurrentLevelHeader2 = NULL;
 
 s32 D_800DC920 = -1;
 s32 D_800DC924 = 0;
@@ -84,12 +84,7 @@ s32 D_8011B0A4;
 s32 D_8011B0A8;
 s32 D_8011B0AC;
 
-typedef struct{
-    s16 unk00;
-    s16 unk02;
-    s16 unk04;
-}unk8011B0B0;
-unk8011B0B0 *D_8011B0B0;
+Object *D_8011B0B0; // Camera Object?
 
 s32 D_8011B0B4;
 Object *D_8011B0B8;
@@ -145,7 +140,17 @@ s32 D_8011D0E8;
 s32 D_8011D0EC;
 s32 D_8011D0F0;
 s32 D_8011D0F4;
-s32 D_8011D0F8[12];
+
+/* Size: 0x10 bytes */
+typedef struct unk8011D0F8 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+} unk8011D0F8;
+
+unk8011D0F8 D_8011D0F8[3];
+
 s32 D_8011D128[15];
 s32 D_8011D164;
 s32 D_8011D168[84];
@@ -157,11 +162,37 @@ s32 D_8011D314;
 s32 D_8011D318;
 s32 D_8011D31C;
 s32 D_8011D320[4];
-s32 D_8011D330[2];
+
+
+/* Size: 0x10 bytes */
+typedef struct unk8011D330 {
+    u8 pad0[0x10];
+} unk8011D330;
+
+unk8011D330 *D_8011D330;
+s32 D_8011D334;
+
 s32 D_8011D338[4];
-s32 D_8011D348[2];
+
+/* Size: 0xA bytes */
+typedef struct unk8011D348 {
+    u8 pad0[0x9];
+    u8 unk9;
+} unk8011D348;
+unk8011D348 *D_8011D348;
+
+s32 D_8011D34C;
 s32 D_8011D350[4];
-s32 D_8011D360;
+
+/* Size: 0x8 bytes */
+typedef struct unk8011D360 {
+    u8 pad0[4];
+    s16 unk4;
+    s16 unk6;
+} unk8011D360;
+
+unk8011D360 *D_8011D360;
+
 s32 D_8011D364;
 s32 D_8011D368;
 s32 D_8011D36C;
@@ -169,8 +200,8 @@ s32 D_8011D370;
 s32 D_8011D374;
 s32 D_8011D378;
 s32 D_8011D37C;
-s32 D_8011D380;
-s32 D_8011D384;
+f32 D_8011D380;
+u32 D_8011D384;
 
 /* Size: 0x38 bytes */
 typedef struct unk8011D388 {
@@ -226,6 +257,13 @@ s32 D_8011D4BC;
 
 extern void guMtxXFMF(void*, f32, f32, f32, f32*, f32*, f32*);
 f32 func_800BB2F4(s32, f32, f32, f32*);
+void func_8007B3D0(Gfx**);
+Object *get_object(s32);
+Settings *get_settings();
+void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex);
+s32 func_80014814(s32*);
+void func_80015348(s32, s32);
+void render_level_segment(s32 segmentId, s32 nonOpaque);
 
 
 s32 func_800249E0(s32 arg0) {
@@ -236,38 +274,18 @@ s32 func_800249E0(s32 arg0) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 #else 
-extern u32 D_800DC874;
-extern u32 D_800DC87C;
-extern u32 D_8011B0C8;
-extern u8  D_8011B0E1;
-extern u8  D_8011B0E2;
-extern u8  D_8011B0E3;
-extern u32 D_8011B0F8;
-extern u32 D_8011B100;
-extern u32 D_8011B104;
-extern u32 D_8011B108;
-extern u32 D_8011B10C;
-extern u32 D_8011B110;
-extern u32 D_8011B114;
-extern u32 D_8011D320[4];
-extern u32 D_8011D338[4];
-extern u32 D_8011D348;
-extern u32 D_8011D350[4];
-
-extern u32 D_8011D384;
-
 
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6){
     s32 i;
     s32 tmp_a2;
 
-    D_800DC91C = get_current_level_header();
+    gCurrentLevelHeader2 = get_current_level_header();
     D_8011B0F8 = 0;
     D_8011B100 = 0;
     D_8011B104 = 0;
     D_8011B108 = 0;
     D_8011B10C = 0;
-    if(D_800DC91C->race_type == 6 || D_800DC91C->race_type == 7){
+    if(gCurrentLevelHeader2->race_type == 6 || gCurrentLevelHeader2->race_type == 7){
         D_8011B0F8 = 1;
     }
     func_8002C0C4(arg0);
@@ -281,14 +299,14 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
             }
         }
     }
-    if(is_in_two_player_adventure() && (D_800DC91C->race_type == 0 || D_800DC91C->race_type & 0x40)){
+    if(is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == 0 || gCurrentLevelHeader2->race_type & 0x40)){
         tmp_a2 = 2;
     }else{
         tmp_a2 = arg2;
         tmp_a2++;
     }
     if(D_8011D384){
-        func_800B82B4(gCurrentLevelModel, D_800DC91C, tmp_a2);
+        func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
     }
     func_8006652C(arg2);
     func_80027FC4(arg1);
@@ -322,10 +340,10 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     func_8002D8DC(1,1,0);
     func_8002D8DC(2,2,0);
     D_8011B0C8 = 0;
-    if(D_800DC91C->unkB7){
-        D_8011B0E1 = D_800DC91C->unkB4;
-        D_8011B0E2 = D_800DC91C->unkB5;
-        D_8011B0E3 = D_800DC91C->unkB6;
+    if(gCurrentLevelHeader2->unkB7){
+        D_8011B0E1 = gCurrentLevelHeader2->unkB4;
+        D_8011B0E2 = gCurrentLevelHeader2->unkB5;
+        D_8011B0E3 = gCurrentLevelHeader2->unkB6;
         func_80025510(arg2 + 1);
     }
 }
@@ -394,12 +412,12 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
 #else
 void func_800289B8(void){
-    u8 sp_2f = D_800DC91C->unkC1;
-    u8 sp_2e = D_800DC91C->unkC2;
-    u8 sp_2d = D_800DC91C->unkC3;
-    u8 sp_2c = D_800DC91C->unkBE;
-    u8 sp_2b = D_800DC91C->unkBF;
-    u8 sp_2a = D_800DC91C->unkC0;
+    u8 sp_2f = gCurrentLevelHeader2->unkC1;
+    u8 sp_2e = gCurrentLevelHeader2->unkC2;
+    u8 sp_2d = gCurrentLevelHeader2->unkC3;
+    u8 sp_2c = gCurrentLevelHeader2->unkBE;
+    u8 sp_2b = gCurrentLevelHeader2->unkBF;
+    u8 sp_2a = gCurrentLevelHeader2->unkC0;
     u32 sp_24 = D_8011B0A8;
     func_8007B3D0(&D_8011B0A0);
     func_8007B4C8(&D_8011B0A0, 0, 8);
@@ -413,7 +431,7 @@ void render_skydome(void){
         return;
 
     v0_some_struct = func_80069D20();
-    if(D_800DC91C->unk49 == 0){
+    if(gCurrentLevelHeader2->unk49 == 0){
         D_8011B0B8->x_position = v0_some_struct->x_position;
         D_8011B0B8->y_position = v0_some_struct->y_position;
         D_8011B0B8->z_position = v0_some_struct->z_position;
@@ -435,11 +453,363 @@ void func_80028FA0(s32 arg0) {
     D_8011B0FC = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_geometry_and_objects.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
+#ifdef NON_MATCHING
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029AF8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029D14.s")
+// Regalloc & stack issues.
+void render_level_geometry_and_objects(void) {
+    s32 sp16C;
+    s32 sp168;
+    s32 objFlags;
+    s32 sp160;
+    s32 i;
+    s32 sp158;
+    u8 spD8[128];
+    u8 sp58[128];
+    s32 s0;
+    Object *obj;
+    s32 sp44;
+    
+    func_80012C30();
+    if (get_settings()->courseId == 0x24) { // 0x24 = Opening sequence area
+        D_8011B0FC = 1;
+    }
+    sp160 = func_80014814(&sp16C);
+    if (gCurrentLevelModel->numberOfSegments >= 2) {
+        sp168 = 0;
+        traverse_segments_bsp_tree(0, 0, gCurrentLevelModel->numberOfSegments - 1, &spD8, &sp168);
+    } else {
+        sp168 = 1;
+        spD8[0] = 0;
+    }
+    
+    for (i = 1; i <= gCurrentLevelModel->numberOfSegments; i++) {
+        sp58[i] = FALSE;
+    }
+    sp58[0] = TRUE;
+    
+    if (D_8011B0E0 != 0) {
+        for (i = 0; i < sp168; i++) {
+            render_level_segment(spD8[i], 0);  // Render opaque segments
+            sp58[spD8[i]+1] = TRUE;
+        }
+    }
+    if (gCurrentLevelModel->numberOfSegments < 2) {
+        sp58[1] = TRUE;
+    }
+    func_8007B3D0(&D_8011B0A0);
+    func_80015348(sp160, sp16C - 1);
+    
+    sp158 = 0x200 << (func_80066220() & 1);
+    for (i = sp160; i < sp16C; i++) {
+        obj = get_object(i);
+        s0 = 0xFF;
+        objFlags = obj->unk6;
+        if (objFlags & 0x80) {
+            s0 = 0;
+        }
+        else if (!(objFlags & 0x8000)) {
+            s0 = obj->unk39;
+        }
+        if (objFlags & sp158) {
+            s0 = 0;
+        }
+        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->unk2E + 1]) || (1000.0 < obj->unk34))) {
+            if (obj->unk6 & 0x8000) {
+                func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+            } else if (obj->unk50 != NULL) {
+                render_floor_decal(obj, obj->unk50);
+            }
+            func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+            if ((obj->unk58 != NULL) && (obj->descriptor_ptr->unk30 & 0x10)) {
+                func_8002D670(obj, obj->unk58);
+            }
+        }
+    }
+    
+    i = sp16C - 1;
+    if (i >= sp160) {
+        sp44 = sp160 - 1;
+        do {
+            obj = get_object(i);
+            objFlags = obj->unk6;
+            if (objFlags & sp158) {
+                s0 = FALSE;
+            } else {
+                s0 = TRUE;
+            }
+            if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->unk2E + 1]) && (func_8002A900(obj) != 0)) {
+                if (obj->unk6 & 0x8000) {
+                    func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                } else if (obj->unk50 != NULL) {
+                    render_floor_decal(obj, obj->unk50);
+                }
+                func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                if ((obj->unk58 != NULL) && (obj->descriptor_ptr->unk30 & 0x10)) {
+                    func_8002D670(obj, obj->unk58);
+                }
+            }
+            i--;
+        } while(i != sp44);
+    }
+    i = sp168 - 1;
+    if (D_8011B0E0 != 0) {
+        while (i >= 0) {
+            render_level_segment(spD8[i], 1); // Render transparent segments
+            i--;
+        }
+    }
+    if (D_8011D384 != 0) {
+        func_800BA8E4(&D_8011B0A0, &D_8011B0A4, func_80066220());
+    }
+    func_8007B3D0(&D_8011B0A0);
+    func_8007B4C8(&D_8011B0A0, 0, 0xA);
+    func_80012C3C(&D_8011B0A0);
+    
+    i = sp16C - 1;
+    if (i >= sp160) {
+        sp44 = sp160 - 1;
+        do {
+            obj = get_object(i);
+            s0 = 0xFF;
+            objFlags = obj->unk6;
+            if (objFlags & 0x80) {
+                s0 = 1;
+            } else if (!(objFlags & 0x8000)) {
+                s0 = obj->unk39;
+            }
+            if (objFlags & sp158) {
+                s0 = 0;
+            }
+            if ((obj->unk48 == 1) && (s0 >= 0xFF)) {
+                s0 = 0;
+            }
+            if (obj != NULL && s0 < 0xFF && sp58[obj->unk2E + 1] && func_8002A900(obj)) {
+                if (s0 > 0) {
+                    if (obj->unk6 & 0x8000) {
+                        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                    } else {
+                        if (obj->unk50 != NULL) {
+                            render_floor_decal(obj, obj->unk50);
+                        }
+                        // This is being called when it shouldn't.
+                        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                        if ((obj->unk58 != 0) && (obj->descriptor_ptr->unk30 & 0x10)) {
+                            func_8002D670(obj, obj->unk58);
+                        }
+                    }
+                }
+                if (obj->unk48 == 1) {
+                    func_80013A0C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                    func_80013DCC(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                }
+            }
+            i--;
+        } while(i != sp44);
+    }
+    if (D_800DC924 && func_80027568()) {
+        func_8002581C(&spD8, sp168, func_80066220());
+    }
+    D_8011B0FC = 0;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_geometry_and_objects.s")
+#endif
+
+// *Should* be functionally equivalent.
+#ifdef NON_MATCHING
+// nonOpaque: 0 for solid geometry, 1 for transparent geometry.
+void render_level_segment(s32 segmentId, s32 nonOpaque) {
+    LevelModelSegment *segment = &gCurrentLevelModel->segments[segmentId]; // spAC
+    LevelHeader_70 *lvlHeader70;
+    TriangleBatchInfo *batchInfo;
+    TextureHeader *texture;
+    s32 temp_v0;
+    s32 temp_v1;
+    s32 flags;
+    s32 renderBatch;
+    s32 numberVertices;
+    s32 numberTriangles;
+    s32 vertices;
+    s32 triangles;
+    s32 color;
+    s32 hasTexture;
+    s32 levelHeaderIndex;
+    s32 sp78;
+    s32 i;
+    s32 sp70;
+    s32 textureIndex;
+    s32 textureFlags;
+    s32 temp;
+    
+    if (nonOpaque && (D_8011D384 != 0)) {
+        sp78 = func_800B9228(segment);
+    } else {
+        sp78 = 0;
+    }
+    if (nonOpaque) {
+        sp70 = segment->numberOfBatches;
+        i = segment->unk40;
+    } else {
+        sp70 = segment->unk40;
+        i = 0;
+    }
+    
+    for(; i < sp70; i++) {
+        batchInfo = &segment->batches[i];
+        flags = batchInfo->flags;
+        textureFlags = 0;
+        if (!(flags & 0x100)) { // 0x100 = Is this invisible geometry?
+            textureIndex = batchInfo->textureIndex;
+            renderBatch = FALSE;
+            if (textureIndex == 0xFF) {
+                texture = NULL; // Solid color only
+            } else {
+                texture = gCurrentLevelModel->textures[textureIndex].texture;
+                textureFlags = texture->flags;
+            }
+            flags |= (0x8 | 0x2);
+            if (!(flags & 0x10) && !(flags & 0x800)) { // 0x10 = Depth write
+                flags |= D_8011B0FC;
+            }
+            // textureFlags & 0x04 = Is interlaced texture
+            if ((!(textureFlags & 4) && !(flags & 0x2000)) || (flags & 0x800)) {
+                renderBatch = TRUE;
+            }
+            if (nonOpaque) {
+                renderBatch = (renderBatch + 1) & 1; // Why not just do `renderBatch ^= 1;` or `renderBatch = !renderBatch`?
+            }
+            if (sp78 && (flags & 0x2000)) {
+                renderBatch = FALSE;
+            }
+            if (renderBatch) {
+                temp_v0 = batchInfo->verticesOffset;
+                temp_v1 = batchInfo->facesOffset;
+                numberVertices = (batchInfo + 1)->verticesOffset - temp_v0;
+                numberTriangles = (batchInfo + 1)->facesOffset - temp_v1;
+                vertices = &segment->vertices[temp_v0];
+                triangles = &segment->triangles[temp_v1];
+                levelHeaderIndex = (flags >> 28) & 7;
+                if (levelHeaderIndex != 0) { // This is unused, so this should always be false.
+                    lvlHeader70 = gCurrentLevelHeader2->unk70;//gCurrentLevelHeader2[levelHeaderIndex].unk70;
+                    gDPSetEnvColor(D_8011B0A0++, lvlHeader70->red, lvlHeader70->green, lvlHeader70->blue, lvlHeader70->alpha)
+                } else {
+                    gDPSetEnvColor(D_8011B0A0++, 255, 255, 255, 0)
+                }
+                temp = batchInfo->unk7 << 14;
+                if (flags & 0x40000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
+                    color = gCurrentLevelHeader2->pulseLightData->outColorValue & 0xFF;
+                    gDPSetPrimColor(D_8011B0A0++, 0, 0, color, color, color, color)
+                    func_8007BA5C(&D_8011B0A0, texture, flags, temp);
+                    vertices += 0x80000000;
+                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices)
+                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, TRIN_ENABLE_TEXTURE)
+                    gDPSetPrimColor(D_8011B0A0++, 0, 0, 255, 255, 255, 255) // Reset the primitive color
+                } else {
+                    func_8007B4E8(&D_8011B0A0, texture, flags, temp);
+                    hasTexture = (texture == NULL) ? TRIN_DISABLE_TEXTURE : TRIN_ENABLE_TEXTURE;
+                    vertices += 0x80000000;
+                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices)
+                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, hasTexture)
+                    
+                }
+            }
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
+#endif
+
+#ifdef NON_MATCHING
+
+void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segmentsOrder);
+
+// Regalloc issues.
+void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex) {
+    BspTreeNode *curNode;
+    s32 camValue;
+    
+    while(TRUE) {
+        curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
+        if (curNode->splitType == 0) {
+            camValue = D_8011B0B0->x_position; // Camera X
+        } else if (curNode->splitType == 1) {
+            camValue = D_8011B0B0->y_position; // Camera Y
+        } else {
+            camValue = D_8011B0B0->z_position; // Camera Z
+        }
+        if (camValue < curNode->splitValue) {
+            if (curNode->leftNode != -1) {
+                traverse_segments_bsp_tree(curNode->leftNode, segmentIndex, curNode->segmentIndex - 1, segmentsOrder, segmentsOrderIndex);
+            } else {
+                add_segment_to_order(segmentIndex, segmentsOrderIndex, segmentsOrder);
+            }
+            if (curNode->rightNode != -1) {
+                segmentIndex = curNode->segmentIndex;
+                nodeIndex = curNode->rightNode;
+                continue;
+            }
+            add_segment_to_order(segmentIndex2, segmentsOrderIndex, segmentsOrder);
+            return;
+        }
+        if (curNode->rightNode != -1) {
+            traverse_segments_bsp_tree(curNode->rightNode, curNode->segmentIndex, segmentIndex2, segmentsOrder, segmentsOrderIndex);
+        } else {
+            add_segment_to_order(segmentIndex2, segmentsOrderIndex, segmentsOrder);
+        }
+        nodeIndex = curNode->leftNode;
+        if (nodeIndex == -1) {
+            break;
+        }
+        segmentIndex2 = curNode->segmentIndex;
+        segmentIndex2--;
+    }
+    add_segment_to_order(segmentIndex, segmentsOrderIndex, segmentsOrder);
+}
+
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/traverse_segments_bsp_tree.s")
+#endif
+
+void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segmentsOrder) {
+    u32 temp;
+    if (segmentIndex < gCurrentLevelModel->numberOfSegments) {
+        if (D_8011B0D4 != -1) {
+            temp = gCurrentLevelModel->segmentsBitfields[D_8011B0D4 + (segmentIndex >> 3)];
+            temp >>= segmentIndex & 7;
+            temp &= 0xFF;
+        } else {
+            temp = 1;
+        }
+        if ((temp & 1) && func_8002A5F8(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex])) {
+            segmentsOrder[(*segmentsOrderIndex)++] = segmentIndex;
+        }
+    }
+}
+
+#ifdef NON_MATCHING
+// Unused. Has regalloc issues.
+s32 func_80029DE0(Object *obj, s32 segmentIndex) {
+    LevelModelSegmentBoundingBox* bb;
+    s32 x, y, z;
+    if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
+        return FALSE;
+    }
+    x = obj->x_position;
+    y = obj->y_position;
+    z = obj->z_position;
+    bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
+    if ((x < (bb->unk6 + 25)) && ((bb->unk0 - 25) < x) && 
+        (z < (bb->unkA + 25)) && ((bb->unk4 - 25) < z) && 
+        (y < (bb->unk8 + 25)) && ((bb->unk2 - 25) < y)) {
+        return TRUE;
+    }
+    
+    return FALSE;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029DE0.s")
+#endif
 
 #ifdef NON_MATCHING
 
@@ -541,7 +911,66 @@ LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0){
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
+
+#ifdef NON_MATCHING
+f32 func_80066348(f32, f32, f32);
+
+// Has some minor issues, but should be functionally equivalent.
+s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
+    s64 sp48;
+    s32 i, j;
+    s32 s2;
+    f32 temp0, temp1, temp2, temp3;
+    
+    j = 0;
+    while(TRUE) {
+        temp0 = D_8011D0F8[j].unk0;
+        temp1 = D_8011D0F8[j].unk4;
+        temp2 = D_8011D0F8[j].unk8;
+        temp3 = D_8011D0F8[j].unkC;
+        i = 0;
+        s2 = FALSE;
+        while(i < 8 && !s2) {
+            if (i & 1) {
+                sp48 = bb->unk0 * temp0;
+            } else {
+                sp48 = bb->unk6 * temp0;
+            }
+            if (i & 2) {
+                sp48 += bb->unk2 * temp1;
+            } else {
+                sp48 += bb->unk8 * temp1;
+            }
+            if (i & 4) {
+                sp48 += bb->unk4 * temp2;
+            } else {
+                sp48 += bb->unkA * temp2;
+            }
+            sp48 += temp3;
+            if (sp48 > 0) {
+                s2 = TRUE;
+            }
+            i++;
+        }
+        j++;
+        if (i == 8 && !s2) {
+            return FALSE;
+        }
+        if (j == 3) {
+            D_8011D380 = func_80066348((bb->unk6 + bb->unk0) >> 1, (bb->unk8 + bb->unk2) >> 1, (bb->unkA + bb->unk4) >> 1);
+            if (D_8011D380 < 1000.0) {
+                D_8011B0BC = 1;
+                return TRUE;
+            }
+            D_8011B0BC = 0;
+            return TRUE;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A5F8.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A900.s")
 
 void func_8002ACC8(s32 arg0) {
@@ -637,6 +1066,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D30C.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_floor_decal.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D670.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D8DC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002DE30.s")
@@ -648,6 +1078,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002F440.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FA64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FD74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FF6C.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800304C8.s")
 
 #ifdef NON_MATCHING
@@ -767,9 +1198,9 @@ void func_80031018(void){
     f32 sp_30 = 0.0f;
     f32 sp_2C = -65536.0f;    
     
-    sp_38.unk04 = D_8011B0B0->unk04;
-    sp_38.unk02 = D_8011B0B0->unk02;
-    sp_38.unk00 = D_8011B0B0->unk00;
+    sp_38.unk04 = D_8011B0B0->z_rotation;
+    sp_38.unk02 = D_8011B0B0->x_rotation;
+    sp_38.unk00 = D_8011B0B0->y_rotation;
     sp_38.unk0C = 0.0f;
     sp_38.unk10 = 0.0f;
     sp_38.unk14 = 0.0f;

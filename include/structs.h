@@ -67,7 +67,7 @@ typedef struct TextureHeader {
   /* 0x03 */ u8 unk3;
   /* 0x04 */ u8 unk4;
   /* 0x05 */ u8 numberOfInstances; // Always 1 in the ROM.
-  /* 0x06 */ u16 flags;
+  /* 0x06 */ s16 flags;
       // 0x04 = Interlaced texture
       // 0x40 = U clamp flag. 0 = Wrap, 1 = Clamp
       // 0x80 = V clamp flag. 0 = Wrap, 1 = Clamp
@@ -180,6 +180,30 @@ typedef struct Settings {
   /* 0x0117 */ u8 display_times;
 } Settings;
 
+/* Unknown size */
+typedef struct LevelHeader_70 {
+             u8 pad0[0x10];
+  /* 0x10 */ u8 red;
+  /* 0x11 */ u8 green;
+  /* 0x12 */ u8 blue;
+  /* 0x13 */ u8 alpha;
+} LevelHeader_70;
+
+// Used to update the pulsating lights in Spaceport Alpha
+typedef struct PulsatingLightDataFrame {
+    u16 value;
+    u16 time;
+} PulsatingLightDataFrame;
+
+typedef struct PulsatingLightData {
+    u16 numberFrames;
+    u16 currentFrame;
+    u16 time;
+    u16 totalTime;
+    s32 outColorValue;
+    PulsatingLightDataFrame frames[1]; // Length varies based on numberFrames.
+} PulsatingLightData;
+
 /* Size: 0xC4 bytes */
 typedef struct LevelHeader {
   /* 0x00 */ s8 world;
@@ -222,8 +246,9 @@ typedef struct LevelHeader {
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
 
-  /* 0x56 */ u8 pad56[0x1E];
+  /* 0x56 */ u8 pad56[0x1A];
 
+  /* 0x70 */ LevelHeader_70 *unk70;
   /* 0x74 */ s8 *unk74[7];
 
   // Weather related?
@@ -243,7 +268,7 @@ typedef struct LevelHeader {
   /* 0xA4 */ s32 unkA4;
   /* 0xA8 */ u16 unkA8;
   /* 0xAA */ u16 unkAA;
-  /* 0xAC */ s8 *unkAC;
+  /* 0xAC */ PulsatingLightData *pulseLightData;
 
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
@@ -327,13 +352,20 @@ typedef struct TriangleBatchInfo {
 /* 0x00 */ u8  textureIndex; // 0xFF = No texture
 /* 0x02 */ s16 verticesOffset;
 /* 0x04 */ s16 facesOffset;
-/* 0x06 */ u8  unk6;
+/* 0x06 */ u8  unk6; // 0xFF = vertex colors, otherwise use dynamic lighting normals (Objects only)
+/* 0x07 */ u8  unk7;
 /* 0x08 */ u32 flags;
+    // 0x00000002 = ???
+    // 0x00000008 = ???
     // 0x00000010 = Depth write
     // 0x00000100 = Hidden/Invisible geometry
     // 0x00000200 = ??? Used in func_80060AC8
+    // 0x00000800 = ???
+    // 0x00002000 = ???
     // 0x00008000 = Environment mapping
     // 0x00010000 = Texture is animated
+    // 0x00040000 = Has pulsating light data.
+    // 0x70000000 = bits 28, 29, & 30 are some kind of index. Not used in any levels.
 } TriangleBatchInfo;
 
 /* Size: 8 bytes */
@@ -392,13 +424,22 @@ typedef struct LevelModelSegmentBoundingBox {
     s16 unkA;
 } LevelModelSegmentBoundingBox;
 
+/* Size: 8 bytes */
+typedef struct BspTreeNode {
+    s16 leftNode;   // less than split value
+    s16 rightNode;  // greater or equal to split value?
+    u8  splitType;  // 0 = Camera X, 1 = Camera Y, 2 = Camera Z
+    u8  segmentIndex;
+    s16 splitValue; // Decides left or right
+} BspTreeNode;
+
 typedef struct LevelModel {
 /* 0x00 */ TextureInfo *textures;
 /* 0x04 */ LevelModelSegment *segments;
 /* 0x08 */ LevelModelSegmentBoundingBox *segmentsBoundingBoxes;
 /* 0x0C */ s32 unkC;
-/* 0x10 */ s32 *segmentsBitfields;
-/* 0x14 */ s32 *segmentsBspTree;
+/* 0x10 */ u8 *segmentsBitfields;
+/* 0x14 */ BspTreeNode *segmentsBspTree;
 /* 0x18 */ s16 numberOfTextures;
 /* 0x1A */ s16 numberOfSegments;
            u8 pad1C[4];
@@ -425,7 +466,10 @@ typedef struct Object_40 {
     f32 unk4;
     f32 unk8;
     f32 unkC;
-    u8 pad10[0x2D];
+    u8 pad10[0x20];
+    u16 unk30;
+    s16 unk32;
+    u8 pad34[0x9];
     u8 unk3D;
     u8 pad3E[0x15];
     s8 unk53;
@@ -448,6 +492,12 @@ typedef struct Object_4C {
     s8 unk16;
     s8 unk17;
 } Object_4C;
+
+typedef struct Object_50 {
+    u8 pad0[0x8];
+    s16 unk8;
+    s16 unkA;
+} Object_50;
 
 typedef struct Object_54 {
     s32 unk0;
@@ -559,7 +609,7 @@ typedef struct Object {
   /* 0x0000 */ s16 y_rotation;
   /* 0x0002 */ s16 x_rotation;
   /* 0x0004 */ s16 z_rotation;
-  /* 0x0006 */ s16 unk6;
+  /* 0x0006 */ s16 unk6; // Flags?
   /* 0x0008 */ f32 scale;
   /* 0x000C */ f32 x_position;
   /* 0x0010 */ f32 y_position;
@@ -594,7 +644,7 @@ typedef struct Object {
   /* 0x0048 */ s16 unk48;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318
-  /* 0x0050 */ void *unk50; //player + 0x2F4
+  /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
   /* 0x0058 */ void *unk58; //player + 0x304
   /* 0x005C */ Object_5C *unk5C;

@@ -1,4 +1,4 @@
-glabel func_80029AF8
+glabel traverse_segments_bsp_tree
 /* 02A6F8 80029AF8 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 02A6FC 80029AFC AFBE0040 */  sw    $fp, 0x40($sp)
 /* 02A700 80029B00 AFB7003C */  sw    $s7, 0x3c($sp)
@@ -83,12 +83,12 @@ glabel func_80029AF8
 /* 02A82C 80029C2C AFB30010 */  sw    $s3, 0x10($sp)
 /* 02A830 80029C30 02802825 */  move  $a1, $s4
 /* 02A834 80029C34 02403825 */  move  $a3, $s2
-/* 02A838 80029C38 0C00A6BE */  jal   func_80029AF8
+/* 02A838 80029C38 0C00A6BE */  jal   traverse_segments_bsp_tree
 /* 02A83C 80029C3C 24C6FFFF */   addiu $a2, $a2, -1
 /* 02A840 80029C40 10000004 */  b     .L80029C54
 /* 02A844 80029C44 86040002 */   lh    $a0, 2($s0)
 .L80029C48:
-/* 02A848 80029C48 0C00A745 */  jal   func_80029D14
+/* 02A848 80029C48 0C00A745 */  jal   add_segment_to_order
 /* 02A84C 80029C4C 02802025 */   move  $a0, $s4
 /* 02A850 80029C50 86040002 */  lh    $a0, 2($s0)
 .L80029C54:
@@ -101,7 +101,7 @@ glabel func_80029AF8
 .L80029C6C:
 /* 02A86C 80029C6C 02A02025 */  move  $a0, $s5
 /* 02A870 80029C70 02602825 */  move  $a1, $s3
-/* 02A874 80029C74 0C00A745 */  jal   func_80029D14
+/* 02A874 80029C74 0C00A745 */  jal   add_segment_to_order
 /* 02A878 80029C78 02403025 */   move  $a2, $s2
 /* 02A87C 80029C7C 1000001A */  b     .L80029CE8
 /* 02A880 80029C80 8FBF0044 */   lw    $ra, 0x44($sp)
@@ -113,12 +113,12 @@ glabel func_80029AF8
 /* 02A894 80029C94 92050005 */  lbu   $a1, 5($s0)
 /* 02A898 80029C98 AFB30010 */  sw    $s3, 0x10($sp)
 /* 02A89C 80029C9C 02A03025 */  move  $a2, $s5
-/* 02A8A0 80029CA0 0C00A6BE */  jal   func_80029AF8
+/* 02A8A0 80029CA0 0C00A6BE */  jal   traverse_segments_bsp_tree
 /* 02A8A4 80029CA4 02403825 */   move  $a3, $s2
 /* 02A8A8 80029CA8 10000004 */  b     .L80029CBC
 /* 02A8AC 80029CAC 86040000 */   lh    $a0, ($s0)
 .L80029CB0:
-/* 02A8B0 80029CB0 0C00A745 */  jal   func_80029D14
+/* 02A8B0 80029CB0 0C00A745 */  jal   add_segment_to_order
 /* 02A8B4 80029CB4 02A02025 */   move  $a0, $s5
 /* 02A8B8 80029CB8 86040000 */  lh    $a0, ($s0)
 .L80029CBC:
@@ -131,7 +131,7 @@ glabel func_80029AF8
 .L80029CD4:
 /* 02A8D4 80029CD4 02802025 */  move  $a0, $s4
 /* 02A8D8 80029CD8 02602825 */  move  $a1, $s3
-/* 02A8DC 80029CDC 0C00A745 */  jal   func_80029D14
+/* 02A8DC 80029CDC 0C00A745 */  jal   add_segment_to_order
 /* 02A8E0 80029CE0 02403025 */   move  $a2, $s2
 /* 02A8E4 80029CE4 8FBF0044 */  lw    $ra, 0x44($sp)
 .L80029CE8:

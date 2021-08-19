@@ -711,7 +711,7 @@ glabel load_level
 /* 06C88C 8006BC8C 8E2E0000 */  lw    $t6, ($s1)
 /* 06C890 8006BC90 00000000 */  nop   
 /* 06C894 8006BC94 8DC400AC */  lw    $a0, 0xac($t6)
-/* 06C898 8006BC98 0C01FD05 */  jal   func_8007F414
+/* 06C898 8006BC98 0C01FD05 */  jal   init_pulsating_light_data
 /* 06C89C 8006BC9C 00000000 */   nop   
 /* 06C8A0 8006BCA0 8E230000 */  lw    $v1, ($s1)
 /* 06C8A4 8006BCA4 00000000 */  nop   

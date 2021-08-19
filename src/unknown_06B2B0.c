@@ -632,9 +632,10 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         gCurrentLevelHeader->unkA8 = (u16)0;
         gCurrentLevelHeader->unkAA = (u16)0;
     }
-    if ((s32)gCurrentLevelHeader->unkAC != -1) {
-        gCurrentLevelHeader->unkAC = get_misc_asset((s32)gCurrentLevelHeader->unkAC);
-        func_8007F414(gCurrentLevelHeader->unkAC);
+    if ((s32)gCurrentLevelHeader->pulseLightData != -1) { 
+        // Only used in spaceport alpha for some pulsating lights.
+        gCurrentLevelHeader->pulseLightData = get_misc_asset((s32)gCurrentLevelHeader->pulseLightData);
+        init_pulsating_light_data(gCurrentLevelHeader->pulseLightData);
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
     func_80077B34(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);

@@ -148,9 +148,9 @@ glabel render_level_segment
 /* 02A46C 8002986C 3C19FB00 */  lui   $t9, 0xfb00
 /* 02A470 80029870 260C0008 */  addiu $t4, $s0, 8
 /* 02A474 80029874 AE4C0000 */  sw    $t4, ($s2)
-/* 02A478 80029878 3C0B800E */  lui   $t3, %hi(D_800DC91C) # $t3, 0x800e
+/* 02A478 80029878 3C0B800E */  lui   $t3, %hi(gCurrentLevelHeader2) # $t3, 0x800e
 /* 02A47C 8002987C AE190000 */  sw    $t9, ($s0)
-/* 02A480 80029880 8D6BC91C */  lw    $t3, %lo(D_800DC91C)($t3)
+/* 02A480 80029880 8D6BC91C */  lw    $t3, %lo(gCurrentLevelHeader2)($t3)
 /* 02A484 80029884 00186880 */  sll   $t5, $t8, 2
 /* 02A488 80029888 016D7021 */  addu  $t6, $t3, $t5
 /* 02A48C 8002988C 8DC20070 */  lw    $v0, 0x70($t6)
@@ -179,8 +179,8 @@ glabel render_level_segment
 /* 02A4E0 800298E0 00115B40 */  sll   $t3, $s1, 0xd
 /* 02A4E4 800298E4 05610046 */  bgez  $t3, .L80029A00
 /* 02A4E8 800298E8 02402025 */   move  $a0, $s2
-/* 02A4EC 800298EC 3C19800E */  lui   $t9, %hi(D_800DC91C) # $t9, 0x800e
-/* 02A4F0 800298F0 8F39C91C */  lw    $t9, %lo(D_800DC91C)($t9)
+/* 02A4EC 800298EC 3C19800E */  lui   $t9, %hi(gCurrentLevelHeader2) # $t9, 0x800e
+/* 02A4F0 800298F0 8F39C91C */  lw    $t9, %lo(gCurrentLevelHeader2)($t9)
 /* 02A4F4 800298F4 8E500000 */  lw    $s0, ($s2)
 /* 02A4F8 800298F8 8F2E00AC */  lw    $t6, 0xac($t9)
 /* 02A4FC 800298FC 260F0008 */  addiu $t7, $s0, 8

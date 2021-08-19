@@ -113,24 +113,24 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of August 15th 2021, this is our current score:
+As of August 18th 2021, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 14.00% Complete -------------------
-               # Decompiled functions: 874
-               # GLOBAL_ASM remaining: 903
-              # NON_MATCHING functions: 92
+ ------------------- 14.25% Complete -------------------
+               # Decompiled functions: 884
+               # GLOBAL_ASM remaining: 894
+              # NON_MATCHING functions: 100
  --------------------- Game Status ---------------------
         Balloons: 8/47, Keys: 1/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4
  -------------------------------------------------------
-   We are collecting eggs in Fire Mountain. (0/3 Eggs)
+   We are collecting eggs in Fire Mountain. (1/3 Eggs)
  =======================================================
           ADVENTURE TWO (Cleanup & Documentation)
  -------------------  0.75% Complete -------------------
                # Documented functions: 61
-             # Undocumented remaining: 1716
+             # Undocumented remaining: 1717
  --------------------- Game Status ---------------------
         Balloons: 0/47, Keys: 0/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4

@@ -1304,33 +1304,42 @@ void func_8007F1E8(unk8007F1E8 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F24C.s")
 
-typedef struct unk8007F414_E {
-    u16 unk0;
-    u16 unk2;
-} unk8007F414_E;
-
-typedef struct unk8007F414 {
-    u16 unk0;
-    u16 unk2;
-    u16 unk4;
-    u16 unk6;
-    s32 unk8;
-    u16 unkC;
-    unk8007F414_E unkE[1];
-} unk8007F414;
-
-void func_8007F414(unk8007F414 *arg0) {
+void init_pulsating_light_data(PulsatingLightData *data) {
     s32 i;
-    arg0->unk2 = 0;
-    arg0->unk4 = 0;
-    arg0->unk6 = 0;
-    arg0->unk8 = arg0->unkC;
-    for (i = 0; i < arg0->unk0; i++) {
-        arg0->unk6 += arg0->unkE[i].unk0;
+    data->currentFrame = 0;
+    data->time = 0;
+    data->totalTime = 0;
+    data->outColorValue = data->frames[0].value;
+    for (i = 0; i < data->numberFrames; i++) {
+        data->totalTime += data->frames[i].time;
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F460.s")
+void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta) {
+    s32 thisFrameIndex, nextFrameIndex;
+    
+    if (data->numberFrames > 1) {
+        data->time += timeDelta;
+        while (data->time >= data->totalTime) {
+            data->time -= data->totalTime;
+        }
+        while (data->time >= data->frames[data->currentFrame].time) {
+            data->time -= data->frames[data->currentFrame].time;
+            data->currentFrame++;
+            if (data->currentFrame >= data->numberFrames) {
+                data->currentFrame = 0;
+            }
+        }
+        thisFrameIndex = data->currentFrame;
+        nextFrameIndex = thisFrameIndex + 1;
+        if (nextFrameIndex >= data->numberFrames) {
+            nextFrameIndex = 0;
+        }
+        
+        data->outColorValue = data->frames[thisFrameIndex].value + 
+            ((data->frames[nextFrameIndex].value * data->time) / data->frames[thisFrameIndex].time);
+    }
+}
 
 #ifdef NON_MATCHING
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor) {

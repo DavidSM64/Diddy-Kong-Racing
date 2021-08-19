@@ -1,7 +1,7 @@
 glabel func_800289B8
 /* 0295B8 800289B8 27BDFFC8 */  addiu $sp, $sp, -0x38
-/* 0295BC 800289BC 3C02800E */  lui   $v0, %hi(D_800DC91C) # $v0, 0x800e
-/* 0295C0 800289C0 8C42C91C */  lw    $v0, %lo(D_800DC91C)($v0)
+/* 0295BC 800289BC 3C02800E */  lui   $v0, %hi(gCurrentLevelHeader2) # $v0, 0x800e
+/* 0295C0 800289C0 8C42C91C */  lw    $v0, %lo(gCurrentLevelHeader2)($v0)
 /* 0295C4 800289C4 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0295C8 800289C8 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0295CC 800289CC 904E00C1 */  lbu   $t6, 0xc1($v0)

@@ -40,7 +40,7 @@ glabel render_level_geometry_and_objects
 /* 029C2C 8002902C 00002025 */  move  $a0, $zero
 /* 029C30 80029030 00002825 */  move  $a1, $zero
 /* 029C34 80029034 27A700D8 */  addiu $a3, $sp, 0xd8
-/* 029C38 80029038 0C00A6BE */  jal   func_80029AF8
+/* 029C38 80029038 0C00A6BE */  jal   traverse_segments_bsp_tree
 /* 029C3C 8002903C 24C6FFFF */   addiu $a2, $a2, -1
 /* 029C40 80029040 3C10800E */  lui   $s0, %hi(gCurrentLevelModel) # $s0, 0x800e
 /* 029C44 80029044 8E10C918 */  lw    $s0, %lo(gCurrentLevelModel)($s0)
