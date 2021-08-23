@@ -73,7 +73,7 @@ s32 D_801235C4;
 /* Size: 0x8 bytes */
 typedef struct FreeQueueSlot {
     void *dataAddress;
-    s8 unk4;
+    u8 unk4;
 } FreeQueueSlot;
 
 FreeQueueSlot gFreeQueue[256];
@@ -323,7 +323,29 @@ void free_from_memory_pool(void *data) {
     func_8006F53C(sp1C);
 }
 
-GLOBAL_ASM("asm/non_matchings/memory/func_80071198.s")
+/**
+ * Frees all the addresses in the free queue. 
+ */
+void clear_free_queue(void) {
+    s32 i;
+    s32 *sp28;
+    
+    sp28 = func_8006F510();
+    
+    for(i = 0; i < gFreeQueueCount;) {
+        gFreeQueue[i].unk4--;
+        if (gFreeQueue[i].unk4 == 0) {
+            free_slot_containing_address(gFreeQueue[i].dataAddress);
+            gFreeQueue[i].dataAddress = gFreeQueue[gFreeQueueCount - 1].dataAddress;
+            gFreeQueue[i].unk4 = gFreeQueue[gFreeQueueCount - 1].unk4;
+            gFreeQueueCount--;
+        } else {
+            i++;
+        }
+    }
+    
+    func_8006F53C(sp28);
+}
 
 #ifdef NON_MATCHING
 void free_slot_containing_address(u8 *address) {
@@ -627,9 +649,33 @@ void render_memory_color_tags(void) {
     render_printf("ORANGE %d\n\n", get_memory_color_tag_count(COLOR_TAG_ORANGE));
 }
 
+#ifdef NON_MATCHING
+
+// Unused. Does nothing? 
+void func_80071C74(void) {
+    s32 i, flags;
+    MemoryPool *pool;
+    MemoryPoolSlot *slot;
+    
+    for(i = 0; i <= gNumberOfMemoryPools; i++) {
+        pool = &gMemoryPools[i];
+        slot = &pool->slots[0];
+        while(slot->nextIndex != -1) {
+            if(slot->flags) { // I don't know how to get this to appear.
+                
+            }
+            slot = &pool->slots[slot->nextIndex];
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/memory/func_80071C74.s")
-GLOBAL_ASM("asm/non_matchings/memory/func_80071CE8.s")
-GLOBAL_ASM("asm/non_matchings/memory/func_80071D30.s")
-GLOBAL_ASM("asm/non_matchings/memory/func_80071E58.s")
-GLOBAL_ASM("asm/non_matchings/memory/func_80071F80.s")
-GLOBAL_ASM("asm/non_matchings/memory/func_800720DC.s")
+#endif
+
+// Unused. Does nothing? 
+void func_80071CE8(void) {
+    s32 i;
+    for(i = gNumberOfMemoryPools; i != -1; i--) {
+        // Nothing here. There might've been a printf or something similar.
+    }
+}

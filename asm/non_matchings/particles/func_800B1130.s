@@ -14,8 +14,8 @@ glabel func_800B1130
 /* 0B1D3C 800B113C AFB00014 */  sw    $s0, 0x14($sp)
 /* 0B1D40 800B1140 AFA40040 */  sw    $a0, 0x40($sp)
 /* 0B1D44 800B1144 84AF0008 */  lh    $t7, 8($a1)
-/* 0B1D48 800B1148 3C0E800E */  lui   $t6, %hi(D_800E2CF0) # $t6, 0x800e
-/* 0B1D4C 800B114C 8DCE2CF0 */  lw    $t6, %lo(D_800E2CF0)($t6)
+/* 0B1D48 800B1148 3C0E800E */  lui   $t6, %hi(gParticlesAssetTable) # $t6, 0x800e
+/* 0B1D4C 800B114C 8DCE2CF0 */  lw    $t6, %lo(gParticlesAssetTable)($t6)
 /* 0B1D50 800B1150 000FC080 */  sll   $t8, $t7, 2
 /* 0B1D54 800B1154 01D8C821 */  addu  $t9, $t6, $t8
 /* 0B1D58 800B1158 8F270000 */  lw    $a3, ($t9)

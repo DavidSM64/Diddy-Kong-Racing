@@ -481,6 +481,32 @@ typedef struct Object_40 {
     u8 unk71;
 } Object_40;
 
+typedef struct Object_44_0 {
+    u8 unk0;
+    u8 unk1;
+} Object_44_0;
+
+typedef struct Object_44_C {
+    u8 pad0[0x4];
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    u8  pad10[0x6];
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+} Object_44_C;
+
+typedef struct Object_44 {
+    Object_44_0 *unk0;
+    u8  pad4[8];
+    Object_44_C *unkC;
+} Object_44;
+
 typedef struct Object_4C {
     void *unk0;
     u8 pad4[0xC];
@@ -599,10 +625,17 @@ typedef struct Object_64 {
     u8 unk1F3;
 } Object_64;
 
-typedef struct Object_68{
+typedef struct Object_68 {
     u8 pad00[0x20];
     s8 unk20;
  } Object_68;
+ 
+/* Size: 0x20 bytes */
+typedef struct Object_6C {
+    u8  pad0[0x4];
+    s16 unk4;
+    u8  pad6[0x1A];
+} Object_6C;
  
 /* Size: 0x0630 bytes */
 typedef struct Object {
@@ -615,7 +648,7 @@ typedef struct Object {
   /* 0x0010 */ f32 y_position;
   /* 0x0014 */ f32 z_position;
   /* 0x0018 */ s16 unk18;
-  /* 0x001A */ u16 unk1A;
+  /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
@@ -652,7 +685,7 @@ typedef struct Object {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
-  /* 0x006C */ void *unk6C; //player + 0x370
+  /* 0x006C */ Object_6C *unk6C; //player + 0x370
   /* 0x0070 */ u32 unk70;
 
   /* 0x0074 */ u32 unk74;

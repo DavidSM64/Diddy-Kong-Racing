@@ -1,4 +1,4 @@
-glabel func_800AE530
+glabel init_particle_assets
 /* 0AF130 800AE530 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 0AF134 800AE534 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 0AF138 800AE538 AFB50028 */  sw    $s5, 0x28($sp)
@@ -10,11 +10,11 @@ glabel func_800AE530
 /* 0AF150 800AE550 AFB00014 */   sw    $s0, 0x14($sp)
 /* 0AF154 800AE554 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0AF158 800AE558 24040028 */   li    $a0, 40
-/* 0AF15C 800AE55C 3C05800E */  lui   $a1, %hi(D_800E2CE8) # $a1, 0x800e
+/* 0AF15C 800AE55C 3C05800E */  lui   $a1, %hi(gParticlesAssetTableCount) # $a1, 0x800e
 /* 0AF160 800AE560 2406FFFF */  li    $a2, -1
-/* 0AF164 800AE564 3C12800E */  lui   $s2, %hi(D_800E2CF0) # $s2, 0x800e
-/* 0AF168 800AE568 26522CF0 */  addiu $s2, %lo(D_800E2CF0) # addiu $s2, $s2, 0x2cf0
-/* 0AF16C 800AE56C 24A52CE8 */  addiu $a1, %lo(D_800E2CE8) # addiu $a1, $a1, 0x2ce8
+/* 0AF164 800AE564 3C12800E */  lui   $s2, %hi(gParticlesAssetTable) # $s2, 0x800e
+/* 0AF168 800AE568 26522CF0 */  addiu $s2, %lo(gParticlesAssetTable) # addiu $s2, $s2, 0x2cf0
+/* 0AF16C 800AE56C 24A52CE8 */  addiu $a1, %lo(gParticlesAssetTableCount) # addiu $a1, $a1, 0x2ce8
 /* 0AF170 800AE570 00067080 */  sll   $t6, $a2, 2
 /* 0AF174 800AE574 AE420000 */  sw    $v0, ($s2)
 /* 0AF178 800AE578 ACA60000 */  sw    $a2, ($a1)
@@ -35,11 +35,11 @@ glabel func_800AE530
 .L800AE5B0:
 /* 0AF1B0 800AE5B0 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0AF1B4 800AE5B4 24040029 */   li    $a0, 41
-/* 0AF1B8 800AE5B8 3C05800E */  lui   $a1, %hi(D_800E2CE8) # $a1, 0x800e
-/* 0AF1BC 800AE5BC 24A52CE8 */  addiu $a1, %lo(D_800E2CE8) # addiu $a1, $a1, 0x2ce8
+/* 0AF1B8 800AE5B8 3C05800E */  lui   $a1, %hi(gParticlesAssetTableCount) # $a1, 0x800e
+/* 0AF1BC 800AE5BC 24A52CE8 */  addiu $a1, %lo(gParticlesAssetTableCount) # addiu $a1, $a1, 0x2ce8
 /* 0AF1C0 800AE5C0 8CAB0000 */  lw    $t3, ($a1)
-/* 0AF1C4 800AE5C4 3C03800E */  lui   $v1, %hi(D_800E2CEC) # $v1, 0x800e
-/* 0AF1C8 800AE5C8 24632CEC */  addiu $v1, %lo(D_800E2CEC) # addiu $v1, $v1, 0x2cec
+/* 0AF1C4 800AE5C4 3C03800E */  lui   $v1, %hi(gParticlesAssets) # $v1, 0x800e
+/* 0AF1C8 800AE5C8 24632CEC */  addiu $v1, %lo(gParticlesAssets) # addiu $v1, $v1, 0x2cec
 /* 0AF1CC 800AE5CC AC620000 */  sw    $v0, ($v1)
 /* 0AF1D0 800AE5D0 1960000F */  blez  $t3, .L800AE610
 /* 0AF1D4 800AE5D4 00008825 */   move  $s1, $zero
@@ -62,10 +62,10 @@ glabel func_800AE530
 /* 0AF210 800AE610 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0AF214 800AE614 2404002A */   li    $a0, 42
 /* 0AF218 800AE618 2406FFFF */  li    $a2, -1
-/* 0AF21C 800AE61C 3C12800E */  lui   $s2, %hi(D_800E2CF4) # $s2, 0x800e
-/* 0AF220 800AE620 3C13800E */  lui   $s3, %hi(D_800E2CFC) # $s3, 0x800e
-/* 0AF224 800AE624 26732CFC */  addiu $s3, %lo(D_800E2CFC) # addiu $s3, $s3, 0x2cfc
-/* 0AF228 800AE628 26522CF4 */  addiu $s2, %lo(D_800E2CF4) # addiu $s2, $s2, 0x2cf4
+/* 0AF21C 800AE61C 3C12800E */  lui   $s2, %hi(gParticleBehaviorsAssetTableCount) # $s2, 0x800e
+/* 0AF220 800AE620 3C13800E */  lui   $s3, %hi(gParticleBehaviorsAssetTable) # $s3, 0x800e
+/* 0AF224 800AE624 26732CFC */  addiu $s3, %lo(gParticleBehaviorsAssetTable) # addiu $s3, $s3, 0x2cfc
+/* 0AF228 800AE628 26522CF4 */  addiu $s2, %lo(gParticleBehaviorsAssetTableCount) # addiu $s2, $s2, 0x2cf4
 /* 0AF22C 800AE62C 0006C880 */  sll   $t9, $a2, 2
 /* 0AF230 800AE630 AE620000 */  sw    $v0, ($s3)
 /* 0AF234 800AE634 AE460000 */  sw    $a2, ($s2)
@@ -87,8 +87,8 @@ glabel func_800AE530
 /* 0AF26C 800AE66C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0AF270 800AE670 2404002B */   li    $a0, 43
 /* 0AF274 800AE674 8E4E0000 */  lw    $t6, ($s2)
-/* 0AF278 800AE678 3C15800E */  lui   $s5, %hi(D_800E2CF8) # $s5, 0x800e
-/* 0AF27C 800AE67C 26B52CF8 */  addiu $s5, %lo(D_800E2CF8) # addiu $s5, $s5, 0x2cf8
+/* 0AF278 800AE678 3C15800E */  lui   $s5, %hi(gParticleBehaviorsAssets) # $s5, 0x800e
+/* 0AF27C 800AE67C 26B52CF8 */  addiu $s5, %lo(gParticleBehaviorsAssets) # addiu $s5, $s5, 0x2cf8
 /* 0AF280 800AE680 19C00020 */  blez  $t6, .L800AE704
 /* 0AF284 800AE684 AEA20000 */   sw    $v0, ($s5)
 /* 0AF288 800AE688 00008025 */  move  $s0, $zero

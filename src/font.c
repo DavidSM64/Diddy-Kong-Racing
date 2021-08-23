@@ -44,9 +44,15 @@ s32 gDescPowsOf10[9] = {
 }; 
 
 s8 D_800E3710[48] = {
-    4, 0, 0, 0, 1, 2, 0, 1, 0, 2, 1, 0, 2, 0, 4, 0, 
-    0, 4, 1, -4, 1, 1, -4, 1, -2, 2, 1, -2, 1, -1, 4, 1, 
-    -1, 1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    4,  FALSE,  0, FALSE,  1, 
+    2,  FALSE,  1, FALSE,  2, 
+    1,  FALSE,  2, FALSE,  4, 
+    0,  FALSE,  4,  TRUE, -4, 
+    1,   TRUE, -4,  TRUE, -2, 
+    2,   TRUE, -2,  TRUE, -1, 
+    4,   TRUE, -1,  TRUE,  0, 
+    -1, 0, 0, 0, 0, // End of Data
+    0, 0, 0, 0, 0, 0, 0, 0
 };
 
 OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL };
@@ -60,25 +66,49 @@ s32 gNumberOfFonts;
 /* Size: 8 bytes */
 typedef struct FontCharData {
     u8 unk0;
-    u8 unk1[7];
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
 } FontCharData;
 
 /* Size: 0x400 bytes */
 typedef struct FontData {
-    char name[0x28];
-    u8 unk28[24];
-    s16 unk40[32];
-    TextureHeader *texturePointers[32];
-    FontCharData unk100[96];
+/* 0x000 */ s32 unk0;
+/* 0x004 */ char name[0x1C];
+/* 0x020 */ u16 unk20;
+/* 0x022 */ u16 unk22;
+/* 0x024 */ u16 unk24;
+/* 0x026 */ u16 unk26;
+/* 0x028 */ u8 unk28[24];
+/* 0x040 */ s16 unk40[32];
+/* 0x080 */ TextureHeader *texturePointers[32];
+/* 0x100 */ FontCharData unk100[96];
 } FontData;
 
 FontData* gFonts;
 
-/* Size: 0x28 bytes */
 typedef struct unk8012A7E8_24 {
     u8 unk00;
     u8 unk01;
-    u8 pad02[0x1A];
+    char* unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+    u8 unk15;
+    u8 unk16;
+    u8 unk17;
+    u8 unk18;
+    u8 unk19;
     struct unk8012A7E8_24* unk1C;
 } unk8012A7E8_24;
 
@@ -143,7 +173,8 @@ s32 D_8012A7FC;
 
 /******************************/
 
-
+void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3);
+void parse_string_with_number(unsigned char *input, char *output, s32 number);
 void func_800C4170(s32 arg0);
 
 #define unk8012A7E8_COUNT 8
@@ -314,7 +345,7 @@ void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
     (*D_8012A7E8)[0].bgAlpha = alpha;
 }
 
-void func_800C45A4(s32, unk8012A7E8*, s32, s32, f32);
+void func_800C45A4(Gfx **dlist, unk8012A7E8 *arg1, u8 *text, s32 alignmentFlags, f32 arg4);
 
 // Unused?
 void func_800C4404(Gfx** displayList, char* text, s32 alignmentFlags) {
@@ -347,7 +378,51 @@ void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char* text, 
 }
 
 GLOBAL_ASM("asm/non_matchings/font/func_800C45A4.s")
+
+// Should be functionally equivalent.
+#ifdef NON_MATCHING
+s32 func_800C4DA0(u8 *text, s32 x, s32 font) {
+    s32 diffX, thisDiffX;
+    FontData *fontData;
+    FontCharData *fontCharData;
+    
+    if (text == NULL) {
+        return 0;
+    }
+    diffX = x;
+    if (font < 0) {
+        font = (*D_8012A7E8)[0].font;
+    }
+    fontData = &gFonts[font];
+    while(*text != '\0') {
+        u8 ch = *text;
+        thisDiffX = diffX;
+        if ((ch < 0x21) || (ch >= 0x80)) {
+            if (ch == '\t') { // Tab character
+                diffX = (diffX + fontData->unk26) - (diffX % fontData->unk26);
+            } else {
+                diffX += fontData->unk24;
+            }
+        } else {
+            fontCharData = &fontData->unk100[(ch - 0x20) & 0xFF];
+            if (fontCharData->unk0 != 0xFF) {
+                if (fontData->unk20 == 0) {
+                    diffX += fontCharData->unk1;
+                } else {
+                    diffX += fontData->unk20;
+                }
+            }
+        }
+        if (D_8012A7F0 != 0 && thisDiffX != diffX) {
+            diffX--;
+        }
+        text++;
+    }
+    return diffX - x;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/font/func_800C4DA0.s")
+#endif
 
 void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 > 0 && arg0 < 8) {
@@ -446,7 +521,79 @@ void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 }
 
 GLOBAL_ASM("asm/non_matchings/font/func_800C5168.s")
-GLOBAL_ASM("asm/non_matchings/font/func_800C5494.s")
+
+// Unused
+void func_800C5428(s32 arg0, unk8012A7E8_24 *arg1) {
+    unk8012A7E8 *temp;
+    unk8012A7E8_24 *temp_24;
+    unk8012A7E8_24 **temp_24_ptr;
+    
+    temp = &D_8012A7E8[arg0];
+    temp_24_ptr = &temp->unk24;
+    temp_24 = temp->unk24;
+    while ((temp_24 != NULL) && (temp_24 != arg1)) {
+        temp_24_ptr = &temp_24->unk1C;
+        temp_24 = temp_24->unk1C;
+    }
+    if (temp_24 != NULL) {
+        *temp_24_ptr = temp_24->unk1C;
+        arg1->unk01 = 0xFF;
+    }
+}
+
+void func_800C5494(s32 arg0) {
+    unk8012A7E8 *temp;
+    unk8012A7E8_24 *temp_24, *temp_24_2;
+    
+    temp = &D_8012A7E8[arg0];
+    temp_24 = temp->unk24;
+    if (temp_24 != NULL) {
+        temp_24_2 = temp_24; // This seems redundant. 
+        while (temp_24_2 != NULL) {
+            temp_24_2->unk01 = 0xFF;
+            temp_24_2 = temp_24_2->unk1C;
+        }
+        temp->unk24 = NULL;
+    }
+}
+
+typedef struct unk800C54E8 {
+    u8 pad0[0xC];
+    s16 unkC;
+    s16 unkE;
+    u8 pad10[9];
+    u8 unk19;
+} unk800C54E8;
+
+// Unused
+void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
+    FontData *fontData;
+    unk8012A7E8 *temp;
+    
+    temp = &D_8012A7E8[arg0];
+
+    if(arg1 != NULL){
+        if (arg1->unk19 != 0xFF) {
+            fontData = &gFonts[arg1->unk19];
+            if(arg4 != 4) {
+                switch(arg4) {
+                    case 1:
+                        arg3 *= fontData->unk22;
+                        break;
+                    case 2:
+                        arg3 *= (temp->unkE / fontData->unk22) * fontData->unk22;
+                        break;
+                }
+                arg1->unkC += arg2;
+                arg1->unkE += arg3;
+                return;
+            }
+            arg1->unkC = 0;
+            arg1->unkE = 0;
+            return;
+        }
+    }
+}
 
 void func_800C55F4(s32 arg0) {
     (*D_8012A7E8)[arg0].unk1E |= 0x8000;
@@ -554,7 +701,66 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/font/func_800C5B58.s")
+void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
+    unk8012A7E8 *temp;
+    unk8012A7E8_24 *temp_24;
+    s32 i;
+    s32 x0, x1;
+    char sp6C[256];
+    s32 y0, y1;
+    
+    temp = &D_8012A7E8[arg3];
+    
+    if (temp->unk13 != 0) {
+        gSPDisplayList((*dlist)++, &D_800E3690)
+        gDkrDmaDisplayList((*dlist)++, ((u8*)&D_800E36C8[1]) + 0x80000000, 2)
+        gDPSetEnvColor((*dlist)++, 0, 0, 0, 0)
+        if ((temp->unk8 - temp->unk4) < 10 || (temp->unkA - temp->unk6) < 10) {
+            render_fill_rectangle(dlist, temp->unk4 - 2, temp->unk6 - 2, temp->unk8 + 2, temp->unkA + 2);
+        } else {
+            render_fill_rectangle(dlist, temp->unk4 - 2, temp->unk6 + 2, temp->unk4 + 2, temp->unkA - 2);
+            render_fill_rectangle(dlist, temp->unk4 - 2, temp->unk6 - 2, temp->unk8 + 2, temp->unk6 + 2);
+            render_fill_rectangle(dlist, temp->unk8 - 2, temp->unk6 + 2, temp->unk8 + 2, temp->unkA - 2);
+            render_fill_rectangle(dlist, temp->unk4 - 2, temp->unkA - 2, temp->unk8 + 2, temp->unkA + 2);
+        }
+        gDPPipeSync((*dlist)++)
+        gDPSetEnvColor((*dlist)++, temp->unk10, temp->unk11, temp->unk12, temp->unk13)
+        for (i = 0; D_800E3710[i] >= 0; i += 5) {
+            x0 = D_800E3710[i] + temp->unk4;
+            y0 = (D_800E3710[i + 1]) ? D_800E3710[i + 2] + temp->unkA : D_800E3710[i + 2] + temp->unk6;
+            x1 = temp->unk8 - D_800E3710[i];
+            y1 = (D_800E3710[i + 3]) ? D_800E3710[i + 4] + temp->unkA : D_800E3710[i + 4] + temp->unk6;
+            render_fill_rectangle(dlist, x0, y0, x1, y1);
+        }
+        gDPPipeSync((*dlist)++)
+    }
+    if (arg1 != NULL && arg2 != NULL) {
+        if (!D_800E36E8) {
+            func_8009E9A0();
+            D_800E36E8 = 1;
+        }
+        D_8012A7F4 = 2;
+        func_8009E9B0(temp, dlist, arg1, arg2);
+    }
+    temp_24 = temp->unk24;
+    while (temp_24 != NULL) {
+        temp->xpos = temp_24->unk8 + temp_24->unkC;
+        temp->ypos = temp_24->unkA + temp_24->unkE;
+        temp->colorRed = temp_24->unk10;
+        temp->colorGreen = temp_24->unk11;
+        temp->colorBlue = temp_24->unk12;
+        temp->colorAlpha = temp_24->unk13;
+        temp->bgRed = temp_24->unk14;
+        temp->bgGreen = temp_24->unk15;
+        temp->bgBlue = temp_24->unk16;
+        temp->bgAlpha = temp_24->unk17;
+        temp->opacity = temp_24->unk18;
+        temp->font = temp_24->unk19;
+        parse_string_with_number(temp_24->unk4, &sp6C, temp_24->unk01);
+        func_800C45A4(dlist, temp, &sp6C, 0, 1.0f);
+        temp_24 = temp_24->unk1C;
+    }
+}
 
 /**
  * Takes in a string and a number, and replaces each instance of the 
