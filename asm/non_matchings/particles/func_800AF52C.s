@@ -19,9 +19,9 @@ glabel func_800AF52C
 .L800AF570:
 /* 0B0170 800AF570 30D90400 */  andi  $t9, $a2, 0x400
 /* 0B0174 800AF574 13200030 */  beqz  $t9, .L800AF638
-/* 0B0178 800AF578 3C08800E */   lui   $t0, %hi(D_800E2CF0) # $t0, 0x800e
+/* 0B0178 800AF578 3C08800E */   lui   $t0, %hi(gParticlesAssetTable) # $t0, 0x800e
 /* 0B017C 800AF57C 84490008 */  lh    $t1, 8($v0)
-/* 0B0180 800AF580 8D082CF0 */  lw    $t0, %lo(D_800E2CF0)($t0)
+/* 0B0180 800AF580 8D082CF0 */  lw    $t0, %lo(gParticlesAssetTable)($t0)
 /* 0B0184 800AF584 00095080 */  sll   $t2, $t1, 2
 /* 0B0188 800AF588 010A5821 */  addu  $t3, $t0, $t2
 /* 0B018C 800AF58C 8D6C0000 */  lw    $t4, ($t3)

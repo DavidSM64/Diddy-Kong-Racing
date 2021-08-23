@@ -1,6 +1,6 @@
 glabel func_800AF134
-/* 0AFD34 800AF134 3C0E800E */  lui   $t6, %hi(D_800E2CE8) # $t6, 0x800e
-/* 0AFD38 800AF138 8DCE2CE8 */  lw    $t6, %lo(D_800E2CE8)($t6)
+/* 0AFD34 800AF134 3C0E800E */  lui   $t6, %hi(gParticlesAssetTableCount) # $t6, 0x800e
+/* 0AFD38 800AF138 8DCE2CE8 */  lw    $t6, %lo(gParticlesAssetTableCount)($t6)
 /* 0AFD3C 800AF13C 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0AFD40 800AF140 00CE082A */  slt   $at, $a2, $t6
 /* 0AFD44 800AF144 AFBF001C */  sw    $ra, 0x1c($sp)
@@ -8,15 +8,15 @@ glabel func_800AF134
 /* 0AFD4C 800AF14C AFA7002C */   sw    $a3, 0x2c($sp)
 /* 0AFD50 800AF150 00003025 */  move  $a2, $zero
 .L800AF154:
-/* 0AFD54 800AF154 3C0F800E */  lui   $t7, %hi(D_800E2CF4) # $t7, 0x800e
-/* 0AFD58 800AF158 8DEF2CF4 */  lw    $t7, %lo(D_800E2CF4)($t7)
-/* 0AFD5C 800AF15C 3C18800E */  lui   $t8, %hi(D_800E2CFC) # $t8, 0x800e
+/* 0AFD54 800AF154 3C0F800E */  lui   $t7, %hi(gParticleBehaviorsAssetTableCount) # $t7, 0x800e
+/* 0AFD58 800AF158 8DEF2CF4 */  lw    $t7, %lo(gParticleBehaviorsAssetTableCount)($t7)
+/* 0AFD5C 800AF15C 3C18800E */  lui   $t8, %hi(gParticleBehaviorsAssetTable) # $t8, 0x800e
 /* 0AFD60 800AF160 00AF082A */  slt   $at, $a1, $t7
 /* 0AFD64 800AF164 14200002 */  bnez  $at, .L800AF170
 /* 0AFD68 800AF168 00000000 */   nop   
 /* 0AFD6C 800AF16C 00002825 */  move  $a1, $zero
 .L800AF170:
-/* 0AFD70 800AF170 8F182CFC */  lw    $t8, %lo(D_800E2CFC)($t8)
+/* 0AFD70 800AF170 8F182CFC */  lw    $t8, %lo(gParticleBehaviorsAssetTable)($t8)
 /* 0AFD74 800AF174 0005C880 */  sll   $t9, $a1, 2
 /* 0AFD78 800AF178 84890008 */  lh    $t1, 8($a0)
 /* 0AFD7C 800AF17C 03194021 */  addu  $t0, $t8, $t9

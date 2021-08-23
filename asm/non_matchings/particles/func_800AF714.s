@@ -47,14 +47,14 @@ glabel func_800AF714
 /* 0B03C0 800AF7C0 8662016E */  lh    $v0, 0x16e($s3)
 /* 0B03C4 800AF7C4 00106140 */  sll   $t4, $s0, 5
 /* 0B03C8 800AF7C8 04410002 */  bgez  $v0, .L800AF7D4
-/* 0B03CC 800AF7CC 3C18800E */   lui   $t8, %hi(D_800E2CF0) # $t8, 0x800e
+/* 0B03CC 800AF7CC 3C18800E */   lui   $t8, %hi(gParticlesAssetTable) # $t8, 0x800e
 /* 0B03D0 800AF7D0 00021023 */  negu  $v0, $v0
 .L800AF7D4:
 /* 0B03D4 800AF7D4 2442FFE8 */  addiu $v0, $v0, -0x18
 /* 0B03D8 800AF7D8 1840009E */  blez  $v0, .L800AFA54
 /* 0B03DC 800AF7DC 28410021 */   slti  $at, $v0, 0x21
 /* 0B03E0 800AF7E0 8E59006C */  lw    $t9, 0x6c($s2)
-/* 0B03E4 800AF7E4 8F182CF0 */  lw    $t8, %lo(D_800E2CF0)($t8)
+/* 0B03E4 800AF7E4 8F182CF0 */  lw    $t8, %lo(gParticlesAssetTable)($t8)
 /* 0B03E8 800AF7E8 032C6821 */  addu  $t5, $t9, $t4
 /* 0B03EC 800AF7EC 85AE0008 */  lh    $t6, 8($t5)
 /* 0B03F0 800AF7F0 3C0D800E */  lui   $t5, %hi(D_800E2EC4) # $t5, 0x800e

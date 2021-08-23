@@ -890,7 +890,7 @@ void func_8006C3E0(void) {
     func_8000BF8C();
     func_800B5E88();
     func_800598D0();
-    func_800AE530();
+    init_particle_assets();
     func_800AB1F0();
     calc_and_alloc_heap_for_settings();
     func_8006EFDC();
@@ -1006,7 +1006,7 @@ void render(void) {
         D_800DD3F0 = 0;
     }
     D_800DD38C = 0;
-    func_80071198();
+    clear_free_queue();
     if (!gIsPaused) {
         func_80066520();
     }

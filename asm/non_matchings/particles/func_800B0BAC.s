@@ -3,8 +3,8 @@ glabel func_800B0BAC
 /* 0B17B0 800B0BB0 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0B17B4 800B0BB4 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0B17B8 800B0BB8 84AF0008 */  lh    $t7, 8($a1)
-/* 0B17BC 800B0BBC 3C0E800E */  lui   $t6, %hi(D_800E2CF0) # $t6, 0x800e
-/* 0B17C0 800B0BC0 8DCE2CF0 */  lw    $t6, %lo(D_800E2CF0)($t6)
+/* 0B17BC 800B0BBC 3C0E800E */  lui   $t6, %hi(gParticlesAssetTable) # $t6, 0x800e
+/* 0B17C0 800B0BC0 8DCE2CF0 */  lw    $t6, %lo(gParticlesAssetTable)($t6)
 /* 0B17C4 800B0BC4 000FC080 */  sll   $t8, $t7, 2
 /* 0B17C8 800B0BC8 01D8C821 */  addu  $t9, $t6, $t8
 /* 0B17CC 800B0BCC 8F280000 */  lw    $t0, ($t9)
