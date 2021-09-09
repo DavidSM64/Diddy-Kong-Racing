@@ -61,7 +61,7 @@ const char D_800E7750[] = "warning: corrupt ghost\n";
 
 /************ .bss ************/
 
-s32 D_80124010;
+s32 D_80124010; //OSMesgQueue
 s32 D_80124014;
 
 OSPfs pfs[MAXCONTROLLERS];
