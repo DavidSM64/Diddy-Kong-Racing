@@ -174,7 +174,6 @@ unk80120AC0 *func_80069D20(void);
 void func_800014BC(f32 arg0);
 s8* get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
-void guMtxXFMF(Matrix, f32, f32, f32, f32*, f32*, f32*);
 void func_8006F870(Matrix, Matrix);
 s16 get_level_segment_index_from_position(f32, f32, f32);    
 void func_8006A50C(void);
@@ -888,12 +887,12 @@ Matrix *func_80069DBC(void) {
     return &D_80120F60;
 }
 
-f32 func_80069DC8(f32 arg0, f32 arg1, f32 arg2) {
-    f32 sp34;
-    f32 sp30;
-    f32 returnVal;
-    guMtxXFMF(D_80120F60, arg0, arg1, arg2, &sp34, &sp30, &returnVal);
-    return returnVal;
+f32 func_80069DC8(f32 x, f32 y, f32 z) {
+    f32 ox, oy, oz;
+
+    guMtxXFMF(D_80120F60, x, y, z, &ox, &oy, &oz);
+
+    return oz;
 }
 
 void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
