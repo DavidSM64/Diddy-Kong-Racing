@@ -550,7 +550,7 @@ typedef struct unk800B2260_C {
 } unk800B2260_C;
 
 typedef struct unk800B2260 {
-    s32 unk0;
+    ParticleBehavior *unk0;
     s16 unk4;
     u8  unk6;
     s16 unk8;

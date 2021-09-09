@@ -1556,7 +1556,7 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
     someObj = func_8000EA54(&sp24, 1);
     if (someObj != NULL) {
         someObj->scale *= 3.5 * arg5;
-        someObj->unk3C = NULL;
+        someObj->unk3C_a.unk3C = NULL;
         someObj->x_velocity = 0.0f;
         someObj->y_velocity = 0.0f;
         someObj->z_velocity = 0.0f;

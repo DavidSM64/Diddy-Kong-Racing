@@ -512,7 +512,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & sp158) {
             s0 = 0;
         }
-        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->unk2E + 1]) || (1000.0 < obj->unk34))) {
+        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->unk2E + 1]) || (1000.0 < obj->unk34_a.unk34))) {
             if (obj->unk6 & 0x8000) {
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
             } else if (obj->unk50 != NULL) {
