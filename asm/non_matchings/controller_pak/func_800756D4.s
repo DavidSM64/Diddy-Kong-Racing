@@ -74,7 +74,7 @@ glabel func_800756D4
 /* 0763D0 800757D0 8FA5005C */  lw    $a1, 0x5c($sp)
 /* 0763D4 800757D4 8FA70058 */  lw    $a3, 0x58($sp)
 /* 0763D8 800757D8 00409025 */  move  $s2, $v0
-/* 0763DC 800757DC 0C01D984 */  jal   read_file_from_controller_pak
+/* 0763DC 800757DC 0C01D984 */  jal   read_data_from_controller_pak
 /* 0763E0 800757E0 00403025 */   move  $a2, $v0
 /* 0763E4 800757E4 1440002A */  bnez  $v0, .L80075890
 /* 0763E8 800757E8 AFA20064 */   sw    $v0, 0x64($sp)

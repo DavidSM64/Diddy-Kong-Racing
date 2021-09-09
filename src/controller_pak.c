@@ -399,7 +399,7 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_800762C8.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076388.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_800764E8.s")
 
-s32 read_file_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength) {
+s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength) {
     s32 readResult = osPfsReadWriteFile(&pfs[controllerIndex], fileNum, PFS_READ, 0, dataLength, data);
     //Successful read
     if (readResult == 0) {
@@ -449,7 +449,7 @@ s32 func_80076AF4(s32 controllerIndex, s32 fileNum) {
 
     ret = 6;
     data = allocate_from_main_pool_safe(0x100, COLOR_TAG_BLACK);
-    if (read_file_from_controller_pak(controllerIndex, fileNum, (u8 *)data, 0x100) == 0) {
+    if (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *)data, 0x100) == 0) {
         switch(*data) {
             case 0x47414D44: // GAMD, Game Data?
                 ret = 3;

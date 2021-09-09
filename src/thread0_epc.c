@@ -299,7 +299,7 @@ s32 func_800B76DC(void) {
     } else {
         D_800E3020 = 0;
         if ((func_800758DC(0) == 0) && (func_800764E8(0, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0)
-            && (read_file_from_controller_pak(0, fileNum, &dataFromControllerPak, 0x800) == 0)) {
+            && (read_data_from_controller_pak(0, fileNum, &dataFromControllerPak, 0x800) == 0)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, 0x1B0);
             bcopy(&sp220, &D_801299B0, 0x200);
             bcopy(&sp420, &D_80129BB0, 0x400);
