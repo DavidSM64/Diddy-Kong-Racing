@@ -134,4 +134,22 @@ typedef	struct {
   u8		map[PFS_INODE_DIST_MAP];
 } __OSInodeCache;
 
+/* file system interface */
+
+extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
+extern s32 osPfsRepairId(OSPfs *);
+extern s32 osPfsInit(OSMesgQueue *, OSPfs *, int);
+extern s32 osPfsReFormat(OSPfs *, OSMesgQueue *, int);
+extern s32 osPfsChecker(OSPfs *);
+extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
+extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
+extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
+extern s32 osPfsReadWriteFile(OSPfs *pfs, s32 file_no, u8 flag, int offset, int nbytes, u8 * data_buffer);
+extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
+extern s32 osPfsGetLabel(OSPfs *, u8 *, int *);
+extern s32 osPfsSetLabel(OSPfs *, u8 *);
+extern s32 osPfsIsPlug(OSMesgQueue *, u8 *);
+extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
+extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
+
 #endif

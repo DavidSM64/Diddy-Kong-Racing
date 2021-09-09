@@ -61,7 +61,7 @@ const char D_800E7750[] = "warning: corrupt ghost\n";
 
 /************ .bss ************/
 
-s32 D_80124010; //OSMesgQueue
+OSMesgQueue *D_80124010;
 s32 D_80124014;
 
 OSPfs pfs[MAXCONTROLLERS];
@@ -365,14 +365,15 @@ s32 func_80076194(s32 controllerIndex, s32 *arg1, s32 *arg2) {
 
 #ifdef NON_MATCHING
 // regalloc & stack issues
-s32 func_800762C8(s32 controllerIndex, s32 arg1) {
+// Rename delete_file_from_controller_pak?
+s32 func_800762C8(s32 controllerIndex, s32 fileNum) {
     s16 sp3E;
     s16 sp3A;
     s32 sp30;
     s32 sp34;
     u16 sp38;
     s32 temp_v0;
-    void *temp_a0;
+    OSPfs *temp_a0;
 
     temp_v0 = func_800758DC();
     if (temp_v0 != 0) {
@@ -382,7 +383,7 @@ s32 func_800762C8(s32 controllerIndex, s32 arg1) {
     temp_v0 = controllerIndex << 0x1E;
     temp_a0 = &pfs[controllerIndex];
     temp_v0 |= 9;
-    if (osPfsFileState(temp_a0, arg1, &sp30) == 0) {
+    if (osPfsFileState(temp_a0, fileNum, &sp30) == 0) {
         if (osPfsDeleteFile(temp_a0, sp38, sp34, &sp3E, &sp3A) == 0) {
             temp_v0 = 0;
         }
@@ -398,21 +399,22 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_800762C8.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076388.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_800764E8.s")
 
-s32 func_80076610(s32 controllerIndex, s32 arg1, u8 *data, s32 dataLength) {
-    s32 temp_v0 = osPfsReadWriteFile(&pfs[controllerIndex], arg1, 0, 0, dataLength, data);
-    if (temp_v0 == 0) {
+s32 read_file_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength) {
+    s32 readResult = osPfsReadWriteFile(&pfs[controllerIndex], fileNum, PFS_READ, 0, dataLength, data);
+    //Successful read
+    if (readResult == 0) {
         return 0;
     }
-    if ((temp_v0 == 1) || (temp_v0 == 0xB)) {
+    if ((readResult == PFS_ERR_NOPACK) || (readResult == PFS_ERR_DEVICE)) {
         return 1;
     }
-    if (temp_v0 == 3) {
+    if (readResult == PFS_ERR_INCONSISTENT) {
         return 2;
     }
-    if (temp_v0 == 0xA) {
+    if (readResult == PFS_ERR_ID_FATAL) {
         return 3;
     }
-    if (temp_v0 == 5) {
+    if (readResult == PFS_ERR_INVALID) {
         return 5;
     }
     return 9;
@@ -440,15 +442,15 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076924.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007698C.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076A38.s")
 
-s32 func_80076AF4(s32 controllerIndex, s32 arg1) {
-    s32* temp;
+s32 func_80076AF4(s32 controllerIndex, s32 fileNum) {
+    s32 *data;
     s32 pad;
     s32 ret;
 
     ret = 6;
-    temp = allocate_from_main_pool_safe(0x100, COLOR_TAG_BLACK);
-    if (func_80076610(controllerIndex, arg1, temp, 0x100) == 0) {
-        switch(*temp) {
+    data = allocate_from_main_pool_safe(0x100, COLOR_TAG_BLACK);
+    if (read_file_from_controller_pak(controllerIndex, fileNum, (u8 *)data, 0x100) == 0) {
+        switch(*data) {
             case 0x47414D44: // GAMD, Game Data?
                 ret = 3;
                 break;
@@ -463,6 +465,6 @@ s32 func_80076AF4(s32 controllerIndex, s32 arg1) {
                 break;
         }
     }
-    free_from_memory_pool(temp);
+    free_from_memory_pool(data);
     return ret;
 }

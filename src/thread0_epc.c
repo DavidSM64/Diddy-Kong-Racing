@@ -5,6 +5,7 @@
 #include "macros.h"
 #include "libultra_internal.h"
 #include "menu.h"
+#include "controller_pak.h"
 
 /************ .rodata ************/
 
@@ -286,27 +287,27 @@ void func_800B76B8(s32 arg0, s32 arg1) {
 }
 
 s32 func_800B76DC(void) {
-    s32 sp824;
+    s32 fileNum;
     u8 sp820[4]; // Unused?
     s16 sp420[0x200];
     u8 sp220[0x200];
     u8 sp1D0[0x50]; // Unused?
-    epcInfo sp20;
+    epcInfo dataFromControllerPak;
     
     if (D_800E3020 != -1) {
         return D_800E3020;
     } else {
         D_800E3020 = 0;
-        if ((func_800758DC(0) == 0) && (func_800764E8(0, &D_800E8EF4, &D_800E8EFC, &sp824) == 0) 
-            && (func_80076610(0, sp824, &sp20, 0x800) == 0)) {
-            bcopy(&sp20, &gEpcInfo, 0x1B0);
+        if ((func_800758DC(0) == 0) && (func_800764E8(0, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0)
+            && (read_file_from_controller_pak(0, fileNum, &dataFromControllerPak, 0x800) == 0)) {
+            bcopy(&dataFromControllerPak, &gEpcInfo, 0x1B0);
             bcopy(&sp220, &D_801299B0, 0x200);
             bcopy(&sp420, &D_80129BB0, 0x400);
             D_800E3020 = 1;
         }
         func_80075AEC(0);
         if (D_800E3020 != 0) {
-            func_800762C8(0, sp824);
+            func_800762C8(0, fileNum);
         }
         return D_800E3020;
     }
