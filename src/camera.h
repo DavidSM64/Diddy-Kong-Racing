@@ -61,7 +61,7 @@ extern f32 D_800DD288[6];
 
 extern f32 D_800DD2A0[6];
 
-extern f32 D_800DD2B8[16];
+extern Matrix D_800DD2B8;
 
 extern u8 D_800DD2F8[8];
 

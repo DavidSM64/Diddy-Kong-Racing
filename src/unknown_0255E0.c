@@ -255,7 +255,7 @@ s32 D_8011D4BC;
 
 /******************************/
 
-extern void guMtxXFMF(void*, f32, f32, f32, f32*, f32*, f32*);
+extern void guMtxXFMF(Matrix, f32, f32, f32, f32*, f32*, f32*);
 f32 func_800BB2F4(s32, f32, f32, f32*);
 void func_8007B3D0(Gfx**);
 Object *get_object(s32);
@@ -273,8 +273,7 @@ s32 func_800249E0(s32 arg0) {
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
-#else 
-
+#else
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6){
     s32 i;
     s32 tmp_a2;
@@ -397,7 +396,7 @@ void func_80027FC4(s32 arg0) {
     sp20.unk0 = arg0;
     D_8011B0B8 = func_8000EA54(&sp20, 2);
     if (D_8011B0B8 != 0) {
-        D_8011B0B8->unk3C = 0;
+        D_8011B0B8->unk3C_a.unk3C = 0;
         D_8011B0B8->unk4A = -1;
     }
 }
@@ -1171,17 +1170,15 @@ void func_80030838(s32 arg0, s32 arg1) {
 }
 
 void func_8003093C(s32 arg0) {
-    gDPSetFogColor(D_8011B0A0++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF)
-    gSPFogPosition(D_8011B0A0++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10)
+    gDPSetFogColor(D_8011B0A0++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF);
+    gSPFogPosition(D_8011B0A0++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
 }
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030A74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 
 
 void func_80031018(void){
-    struct {
-        u8 pad00[0x40];
-    } sp_50; //same as unk80535C4_3
+    Matrix sp_50;
 
     struct {
         s16 unk00; //sp_38

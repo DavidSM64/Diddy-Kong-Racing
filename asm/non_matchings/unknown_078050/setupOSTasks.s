@@ -79,9 +79,9 @@ glabel setupOSTasks
 /* 078180 80077580 ACF8000C */  sw    $t8, 0xc($a3)
 /* 078184 80077584 0C034628 */  jal   osWritebackDCacheAll
 /* 078188 80077588 AFA7001C */   sw    $a3, 0x1c($sp)
-/* 07818C 8007758C 3C048012 */  lui   $a0, %hi(D_80126100) # $a0, 0x8012
+/* 07818C 8007758C 3C048012 */  lui   $a0, %hi(osScInterruptQ) # $a0, 0x8012
 /* 078190 80077590 8FA5001C */  lw    $a1, 0x1c($sp)
-/* 078194 80077594 8C846100 */  lw    $a0, %lo(D_80126100)($a0)
+/* 078194 80077594 8C846100 */  lw    $a0, %lo(osScInterruptQ)($a0)
 /* 078198 80077598 0C03238C */  jal   osSendMesg
 /* 07819C 8007759C 24060001 */   li    $a2, 1
 /* 0781A0 800775A0 8FBF0014 */  lw    $ra, 0x14($sp)
@@ -172,9 +172,9 @@ glabel setupOSTasks
 .L800776EC:
 /* 0782EC 800776EC 0C034628 */  jal   osWritebackDCacheAll
 /* 0782F0 800776F0 AFA70024 */   sw    $a3, 0x24($sp)
-/* 0782F4 800776F4 3C048012 */  lui   $a0, %hi(D_80126100) # $a0, 0x8012
+/* 0782F4 800776F4 3C048012 */  lui   $a0, %hi(osScInterruptQ) # $a0, 0x8012
 /* 0782F8 800776F8 8FA50024 */  lw    $a1, 0x24($sp)
-/* 0782FC 800776FC 8C846100 */  lw    $a0, %lo(D_80126100)($a0)
+/* 0782FC 800776FC 8C846100 */  lw    $a0, %lo(osScInterruptQ)($a0)
 /* 078300 80077700 0C03238C */  jal   osSendMesg
 /* 078304 80077704 24060001 */   li    $a2, 1
 /* 078308 80077708 8FA80030 */  lw    $t0, 0x30($sp)
@@ -277,9 +277,9 @@ glabel setupOSTasks
 .L80077880:
 /* 078480 80077880 0C034628 */  jal   osWritebackDCacheAll
 /* 078484 80077884 AFA70024 */   sw    $a3, 0x24($sp)
-/* 078488 80077888 3C048012 */  lui   $a0, %hi(D_80126100) # $a0, 0x8012
+/* 078488 80077888 3C048012 */  lui   $a0, %hi(osScInterruptQ) # $a0, 0x8012
 /* 07848C 8007788C 8FA50024 */  lw    $a1, 0x24($sp)
-/* 078490 80077890 8C846100 */  lw    $a0, %lo(D_80126100)($a0)
+/* 078490 80077890 8C846100 */  lw    $a0, %lo(osScInterruptQ)($a0)
 /* 078494 80077894 0C03238C */  jal   osSendMesg
 /* 078498 80077898 24060001 */   li    $a2, 1
 /* 07849C 8007789C 8FAA0030 */  lw    $t2, 0x30($sp)
@@ -380,9 +380,9 @@ glabel setupOSTasks
 /* 078608 80077A08 ACE00068 */  sw    $zero, 0x68($a3)
 /* 07860C 80077A0C 0C034628 */  jal   osWritebackDCacheAll
 /* 078610 80077A10 AFA70024 */   sw    $a3, 0x24($sp)
-/* 078614 80077A14 3C048012 */  lui   $a0, %hi(D_80126100) # $a0, 0x8012
+/* 078614 80077A14 3C048012 */  lui   $a0, %hi(osScInterruptQ) # $a0, 0x8012
 /* 078618 80077A18 8FA50024 */  lw    $a1, 0x24($sp)
-/* 07861C 80077A1C 8C846100 */  lw    $a0, %lo(D_80126100)($a0)
+/* 07861C 80077A1C 8C846100 */  lw    $a0, %lo(osScInterruptQ)($a0)
 /* 078620 80077A20 0C03238C */  jal   osSendMesg
 /* 078624 80077A24 24060001 */   li    $a2, 1
 /* 078628 80077A28 8FA90030 */  lw    $t1, 0x30($sp)

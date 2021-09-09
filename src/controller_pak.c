@@ -8,6 +8,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "structs.h"
 
 /************ .data ************/
 
@@ -78,7 +79,7 @@ s32 D_801241F4;
 
 /*******************************/
 
-u8 func_8006A4F8(arg0);
+u8 func_8006A4F8(s32 arg0);
 
 u8 func_80072250(s32 arg0) {
     if ((arg0 == 0 || arg0 == 1) && func_8000E158()) {
@@ -161,7 +162,7 @@ s32 func_80073F5C(s32 arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074018.s")
 
-s32 func_80074148(s32 arg0, s32 arg1) {
+s32 func_80074148(s32 arg0, Settings *arg1) {
     u8 *sp2C;
     s32 phi_v1;
     s32 sp24;

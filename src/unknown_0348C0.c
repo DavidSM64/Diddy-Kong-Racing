@@ -141,7 +141,7 @@ typedef struct LevelObjectEntry80033CC0 {
 } LevelObjectEntry80033CC0;
 
 typedef struct Object_50_80033CC0 {
-    f32 unk0
+    f32 unk0;
 } Object_50_80033CC0;
 
 void func_80033CC0(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
@@ -294,7 +294,7 @@ void func_8003564C(Object *arg0, s32 arg1) {
             Object_64_8003564C *someObj64 = someObj->unk64;
             someObj64->unk4 = arg0;
             arg0->unk78 = someObj;
-            someObj->unk3C = 0;
+            someObj->unk3C_a.unk3C = 0;
         }
     }
 }
@@ -503,7 +503,7 @@ void func_80036194(Object *arg0, s32 arg1) {
     arg0->unk4C->unk12 = 0;
     temp = arg0->unk64;
     temp->unkCD.bytes.byteD = 0xFF;
-    temp->unk0 = 0.0f;
+    temp->unk0_a.unk0 = 0.0f;
     D_8011D4D8 = 0;
 }
 
@@ -963,7 +963,7 @@ typedef struct Object_3C_80038DC4 {
 
 void func_80038DC4(Object *arg0, s32 arg1) {
     if (arg0->unk78 != 0) {
-        Object_3C_80038DC4* temp = arg0->unk3C;
+        Object_3C_80038DC4* temp = arg0->unk3C_a.unk3C;
         if(arg0->unk4C->unk13 < 0x78) {
             func_8006F338(temp->unk8);
             arg0->unk78 = 0;
@@ -1085,7 +1085,7 @@ void func_800392B8(Object *arg0, s32 arg1) {
     arg0->unk4C->unk12 = (u8)0;
     temp = arg0->unk64;
     temp->unkCD.bytes.byteD = 0xFF;
-    temp->unk0 = 0.0f;
+    temp->unk0_a.unk0 = 0.0f;
     temp->unk28 = 0;
     temp->unk2C = 0;
     temp->unk34 = 0;
@@ -1264,7 +1264,7 @@ void func_8003C9EC(Object *arg0, u8 *arg1) {
     Object_64 *temp = arg0->unk64;
     arg0->unk3A = arg1[8];
     arg0->y_rotation = arg1[9] << 6 << 4;
-    temp->unk0 = arg0->y_position;
+    temp->unk0_a.unk0 = arg0->y_position;
     arg0->unk4C->unk14 = 0x21;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
@@ -1872,7 +1872,7 @@ void func_80042178(Object *obj, s32 arg1) {
     Object_3C_80042178* obj3C;
     unk80042178 sp20;
 
-    obj3C = obj->unk3C;
+    obj3C = obj->unk3C_a.unk3C;
     if (func_80016DE8(obj->x_position, 0, obj->z_position, (f32) obj3C->unk8, 1, &sp20) > 0) {
         obj->unk74 = obj3C->unkA;
     } else {

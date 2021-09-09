@@ -39,4 +39,6 @@ typedef s32 ptrdiff_t;
 //#include <stddef.h>
 //#endif
 
+typedef float Matrix[4][4];
+
 #endif

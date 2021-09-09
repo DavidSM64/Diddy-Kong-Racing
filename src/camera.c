@@ -1,6 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80065EA0 */
 
+#include "libultra_internal.h"
 #include "camera.h"
 
 extern u32 osTvType;
@@ -75,12 +76,11 @@ f32 D_800DD2A0[6] = {
     0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f
 };
 
-// This is a matrix.
-f32 D_800DD2B8[16] = {  
-    1.0f, 0.0f, 0.0f, 0.0f, 
-    0.0f, 1.0f, 0.0f, 0.0f, 
-    0.0f, 0.0f, 0.0f, 0.0f, 
-    0.0f, 0.0f, 0.0f, 160.0f
+Matrix D_800DD2B8 = {
+    { 1.0f, 0.0f, 0.0f, 0.0f },
+    { 0.0f, 1.0f, 0.0f, 0.0f },
+    { 0.0f, 0.0f, 0.0f, 0.0f },
+    { 0.0f, 0.0f, 0.0f, 160.0f },
 };
 
 u8 D_800DD2F8[8] = {
@@ -135,19 +135,19 @@ s32 D_80120D1C;
 s32 D_80120D20[2];
 s32 D_80120D28[6];
 s32 D_80120D40[6];
-s32 D_80120D58[6];
+u16 *D_80120D58[6];
 Mtx *D_80120D70[6];
 s32 D_80120D88[6];
 Mtx D_80120DA0[5];
-s32 D_80120EE0[16];
-f32 D_80120F20[16]; // Matrix
-s32 D_80120F60[16];
+Matrix D_80120EE0;
+Matrix D_80120F20;
+Matrix D_80120F60;
 s32 D_80120FA0[16];
 s32 D_80120FE0[16];
 s32 D_80121020[16];
-s32 D_80121060[16];
+Matrix D_80121060;
 s32 D_801210A0[16];
-s32 D_801210E0[6];
+OSMesgQueue *D_801210E0[6];
 s32 D_801210F8;
 s32 D_801210FC;
 u8 D_80121100[16];
@@ -174,9 +174,8 @@ unk80120AC0 *func_80069D20(void);
 void func_800014BC(f32 arg0);
 s8* get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
-void guMtxXFMF(s32*, f32, f32, f32, f32*, f32*, f32*);
-void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);
-void func_8006F870(s32*, s32*);
+void guMtxXFMF(Matrix, f32, f32, f32, f32*, f32*, f32*);
+void func_8006F870(Matrix, s32[16]);
 s16 get_level_segment_index_from_position(f32, f32, f32);    
 void func_8006A50C(void);
 void func_800665E8(s32 arg0);
@@ -253,21 +252,21 @@ f32 get_current_camera_fov(void) {
 void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
-        guPerspectiveF(&D_80120EE0, &D_80120D58[5], camFieldOfView, 
+        guPerspectiveF(D_80120EE0, &D_80120D58[5], camFieldOfView,
             CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-        func_8006F870(&D_80120EE0, &D_80120FE0);
+        func_8006F870(D_80120EE0, D_80120FE0);
     }
 }
 
 void func_80066194(void) {
-    guPerspectiveF(&D_80120EE0, &D_80120D58[5], CAMERA_DEFAULT_FOV, 
+    guPerspectiveF(D_80120EE0, &D_80120D58[5], CAMERA_DEFAULT_FOV,
         CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    func_8006F870(&D_80120EE0, &D_80120FE0);
+    func_8006F870(D_80120EE0, D_80120FE0);
 }
 
 /* Unused? */
 s32* func_80066204(void) {
-    return &D_801210A0;
+    return D_801210A0;
 }
 
 s32 get_viewport_count(void) {
@@ -759,12 +758,12 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80067D3C.s")
 
 void func_80067F20(f32 arg0) {
-    D_800DD2B8[5] = arg0;
+    D_800DD2B8[1][1] = arg0;
 }
 
 void func_80067F2C(Gfx **dlist, s32 *arg1) {
     u32 widthAndHeight, width, height;
-    s32 i;
+    s32 i, j;
     
     widthAndHeight = get_video_width_and_height_as_s32();
     height = widthAndHeight >> 0x10;
@@ -780,10 +779,14 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     *arg1 += 0x40;
     D_80120D1C = 0;
     D_80120D08 = 0;
-    
+
     i = 0;
-    while(i < 16) { // for loop doesn't match here.
-        D_80120F20[i] = D_800DD2B8[i];
+    while(i < 4) { // for loop doesn't match here.
+        j = 0;
+        while(j < 4) {
+            D_80120F20[i][j] = D_800DD2B8[i][j];
+            j++;
+        }
         i++;
     }
 }
@@ -793,7 +796,7 @@ void func_8006807C(Gfx **dlist, s32 *arg1) {
     func_8006F768(&D_80121060, &D_80120EE0, &D_80120F20);
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
     func_8006F768(D_80120D70[0], &D_80120F20, &D_80121060);
-    func_8006F870(&D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
+    func_8006F870(D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
     fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000))
     *arg1 += 0x40;
     D_80120D1C = 0;
@@ -836,7 +839,7 @@ void func_800682AC(Gfx **dlist) {
 void func_80068408(Gfx **dlist, s32 *arg1) {
     func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
-    func_8006F870(&D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
+    func_8006F870(D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
     D_80120D88[D_80120D1C] = *arg1;
     
     fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000))
@@ -874,22 +877,22 @@ unk80120AC0 *func_80069D7C(void) {
 }
 
 s32* func_80069DA4(void) {
-    return &D_80120FA0;
+    return D_80120FA0;
 }
 
 s32* func_80069DB0(void) {
-    return &D_80120FE0;
+    return D_80120FE0;
 }
 
 s32* func_80069DBC(void) {
-    return &D_80120F60;
+    return D_80120F60;
 }
 
 f32 func_80069DC8(f32 arg0, f32 arg1, f32 arg2) {
     f32 sp34;
     f32 sp30;
     f32 returnVal;
-    guMtxXFMF(&D_80120F60, arg0, arg1, arg2, &sp34, &sp30, &returnVal);
+    guMtxXFMF(D_80120F60, arg0, arg1, arg2, &sp34, &sp30, &returnVal);
     return returnVal;
 }
 
@@ -951,7 +954,7 @@ void func_8006A03C(f32 *mtx) {
     func_800C9D54("\n");
 }
 
-s32* func_8006A100(void) {
+OSMesgQueue* func_8006A100(void) {
     return &D_801210E0;
 }
 

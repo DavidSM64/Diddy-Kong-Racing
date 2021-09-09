@@ -4,6 +4,7 @@
 #include "unknown_06B2B0.h"
 
 #include <PR/os_cont.h>
+#include <PR/gu.h>
 #include "memory.h"
 #include "types.h"
 #include "macros.h"
@@ -12,6 +13,7 @@
 #include "asset_sections.h"
 #include "menu.h"
 #include "video.h"
+#include "lib/src/mips1/sc/sched.h"
 
 /************ .rodata ************/
 
@@ -140,7 +142,7 @@ s32 *gHudTriangles[2];
 s32 gCurrHudTris;
 s32 D_80121230[8];
 s8  D_80121250[16];
-s32 D_80121260[2210];
+OSSched *D_80121260[2210]; //TODO: This almost definitely isn't an array this large.
 s32 D_801234E8;
 s32 D_801234EC;
 s32 D_801234F0;
@@ -167,7 +169,7 @@ s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 s32 D_80123538[3];
 s32 D_80123544;
-s32 *D_80123548; // This is actually an OSMesgQueue pointer.
+OSMesgQueue *D_80123548;
 s32 D_8012354C;
 s32 D_80123550[4];
 s32 D_80123560[8];
@@ -183,9 +185,7 @@ void func_8006F43C(void);
 void func_800014BC(f32 arg0);
 s8 *get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
-void guMtxXFMF(s32*, f32, f32, f32, f32*, f32*, f32*);
-void guPerspectiveF(s32*, s32*, f32, f32, f32, f32, f32);
-void func_8006F870(s32*, s32*);
+void func_8006F870(Matrix, s32*);
 s16 get_level_segment_index_from_position(f32, f32, f32);    
 void func_8006A50C(void);
 void func_800665E8(s32 arg0);
@@ -203,8 +203,6 @@ void func_80004A60(s32, s32);
 void menu_init(s32);
 void render(void);
 void func_8006C3E0(void);
-void osCreateScheduler(u16*, s32*, s32, u8, s32);
-void osScAddClient(u16*, u8*, s32**, s32);
 Settings *get_settings(void);
 s32 is_in_tracks_mode(void);
 s32 *load_asset_section_from_rom(s32);
@@ -942,7 +940,7 @@ void render(void) {
     gCurrHudVerts = gHudVertices[D_801234E8];
     gCurrHudTris = gHudTriangles[D_801234E8];
     
-    set_rsp_segment(&gCurrDisplayList, 0, 0, &D_801234E8);
+    set_rsp_segment(&gCurrDisplayList, 0, 0);
     set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
     set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);

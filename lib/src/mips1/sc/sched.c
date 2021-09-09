@@ -1,68 +1,11 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80079350 */
 
+#include "sched.h"
 #include "types.h"
 #include "macros.h"
 #include "f3ddkr.h"
 #include "libultra_internal.h"
-
-#define OS_SC_RETRACE_MSG       1
-#define OS_SC_PRE_NMI_MSG       4
-#define OS_SC_MAX_MESGS         8
-
-#define OS_SC_YIELD             2
-
-typedef struct {
-    short type;
-    char  misc[30];
-} OSScMsg;
-
-typedef struct OSScTask_s {
-    struct OSScTask_s   *next;          /* note: this must be first */
-    u32                 state;
-    u32			flags;
-    void		*framebuffer;	/* used by graphics tasks */
-
-    OSTask              list;
-    OSMesgQueue         *msgQ;
-    OSMesg              msg;
-#ifndef _FINALROM                       /* all #ifdef items should    */
-    OSTime              startTime;      /* remain at the end!!, or    */
-    OSTime              totalTime;      /* possible conflict if       */
-#endif                                  /* FINALROM library used with */
-} OSScTask;                             /* non FINALROM code          */
-
-
-typedef struct SCClient_s {
-    u8                  unk0;
-    struct SCClient_s   *next;  /* next client in the list      */
-    OSMesgQueue         *msgQ;  /* where to send the frame msg  */
-} OSScClient;
-
-typedef struct {
-    OSScMsg     retraceMsg;
-    OSScMsg     prenmiMsg;
-    OSMesgQueue interruptQ;
-    OSMesg      intBuf[OS_SC_MAX_MESGS];
-    OSMesgQueue cmdQ;
-    OSMesg      cmdMsgBuf[OS_SC_MAX_MESGS];
-    OSThread    thread;
-    OSScClient  *clientList;
-    OSScTask    *audioListHead;
-    OSScTask    *gfxListHead;
-    OSScTask    *audioListTail;
-    OSScTask    *gfxListTail;
-    OSScTask    *curRSPTask;
-    OSScTask    *curRDPTask;
-    u32         frameCount;
-    s32         doAudio;
-    s32         unk284;
-} OSSched;
-
-typedef struct{
-    u8 pad00[0x50];
-}unk800E3900;
-
 
 /************ .data ************/
 
@@ -106,10 +49,6 @@ const char D_800E7914[] = "\toutput_buff\t\t= %p\n";
 const char D_800E7928[] = "\toutput_buff_size\t\t= %u\n";
 const char D_800E7944[] = "\tdata_ptr\t\t= %p\n";
 const char D_800E7958[] = "\tdata_size\t\t= %u\n";
-
-/*********************************/
-
-extern OSViMode osViModeTable[];
 
 /************ .bss ************/
 
@@ -201,8 +140,8 @@ OSMesgQueue *osScGetCmdQ(OSSched *sc){
     return &sc->cmdQ;
 }
 
-s32 func_8007957C(s32 arg0) {
-    return arg0 + 0x40;
+OSMesgQueue *osScGetInterruptQ(OSSched *sc) {
+    return &sc->interruptQ;
 }
 
 // Unused.

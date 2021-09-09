@@ -2,7 +2,6 @@
 /* RAM_POS: 0x80077450 */
 
 #include "unknown_078050.h"
-
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
@@ -172,7 +171,7 @@ s32 D_80125F38;
 s32 D_80125F3C;
 s32 D_80125F40[56];
 s32 D_80126020[56];
-u32 D_80126100;
+OSMesgQueue *osScInterruptQ;
 
 /*******************************/
 
@@ -282,8 +281,8 @@ void func_800780DC(Gfx** dlist){
     gSPDisplayList((*dlist)++, D_800DE4E0)
 }
 
-void func_80078100(void){
-    D_80126100 = func_8007957C();
+void func_80078100(OSSched *sc){
+    osScInterruptQ = osScGetInterruptQ(sc);
     osCreateMesgQueue(&D_80125EA0, &D_80125EB8,1);
     osCreateMesgQueue(&D_80125EC0, &D_80125EF0,8);
     osCreateMesgQueue(&D_80125ED8, &D_80125F10,8);
