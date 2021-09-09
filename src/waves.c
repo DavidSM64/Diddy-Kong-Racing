@@ -7,21 +7,21 @@
 
 /************ .data ************/
 
-s32* D_800E3040 = NULL;
-s32* D_800E3044 = NULL;
-s32* D_800E3048 = NULL;
-s32* D_800E304C = NULL;
+s32 *D_800E3040 = NULL;
+s32 *D_800E3044 = NULL;
+s32 *D_800E3048 = NULL;
+s32 *D_800E304C = NULL;
 
 // Could be an array of pointers?
 s32 D_800E3050[8] = {
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-s32* D_800E3070[2] = { NULL, NULL };
-s32* D_800E3078[2] = { NULL, NULL };
+s32 *D_800E3070[2] = { NULL, NULL };
+s32 *D_800E3078[2] = { NULL, NULL };
 
 // This could also be D_800E3080[2] + D_800E3088[2]
-s32* D_800E3080[4] = { NULL, NULL, NULL, NULL };
+s32 *D_800E3080[4] = { NULL, NULL, NULL, NULL };
 
 /* Size: 0x10, might just be an array? */
 typedef struct unk800E3090 {
@@ -35,8 +35,8 @@ unk800E3090 D_800E3090[4] = {
     { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0, }
 };
 
-s32* D_800E30D0 = NULL;
-s32* D_800E30D4 = NULL;
+s32 *D_800E30D0 = NULL;
+s32 *D_800E30D4 = NULL;
 
 typedef struct{
     u8 unk00;
@@ -48,7 +48,7 @@ typedef struct{
 
 typedef struct{
     u8 pad00[0x0C];
-    unk800DC918_04_0C* unk0C;
+    unk800DC918_04_0C *unk0C;
     u8 pad0C[0x10];
     s16 unk20;
     u8 pad22[0x09];
@@ -172,9 +172,9 @@ s32 D_8012A728[2];
 
 /*****************************/
 
-u8* allocate_from_main_pool_safe(s32 arg0, s32 arg1);
-void free_from_memory_pool(s32* arg0);
-void free_texture(s32* arg0);
+u8 *allocate_from_main_pool_safe(s32 arg0, s32 arg1);
+void free_from_memory_pool(s32 *arg0);
+void free_texture(s32 *arg0);
 void func_800C5494(s32 arg0);
 void func_800C5620(s32 arg0);
 

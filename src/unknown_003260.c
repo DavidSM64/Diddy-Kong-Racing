@@ -23,7 +23,7 @@ extern u32 func_80003008;
 // This was needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 
 extern s32 D_80115F90;
-extern ALHeap* D_80115F94;
+extern ALHeap *D_80115F94;
 extern s32 D_80115F98[2];
 extern s32 D_80115FA0[3];
 extern OSThread audioThread;
@@ -97,7 +97,7 @@ void    *alHeapDBAlloc(u8 *, s32, ALHeap *, s32, s32);
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #else
-void audioNewThread(ALSynConfig* c, OSPri p, s32 arg2){
+void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2){
     u32     *reg_v0;
     void    *reg_s0;
     u32     tmp_size;
@@ -182,9 +182,9 @@ void func_8000318C(s32 arg0) {
 
 ALMicroTime     _sndpVoiceHandler(void *node);
 
-void alSndPNew(audioMgrConfig* c){
+void alSndPNew(audioMgrConfig *c){
     u32 i;
-    unk800DC6BC_40* tmp1;
+    unk800DC6BC_40 *tmp1;
     ALEvent sp_38;
 
     gAlSndPlayer->unk44 = c->maxChannels;
@@ -261,18 +261,18 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
 
 
-void func_80004604(u8* arg0, u8 arg1){
+void func_80004604(u8 *arg0, u8 arg1){
     if (arg0)
         arg0[0x36]=arg1;
 }
 
-u8 func_8000461C(u8* arg0){
+u8 func_8000461C(u8 *arg0){
     if (arg0)
         return arg0[0x3F];
     return 0;     
 }
 
-void func_80004638(ALBank* bnk, s16 sndIndx, s32 arg2) {
+void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
     func_80004668(bnk, sndIndx, 0, arg2);
 }
 
@@ -280,12 +280,12 @@ void func_80004638(ALBank* bnk, s16 sndIndx, s32 arg2) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
 #else
-void func_80004668(ALBank* bnk, s16 sndIndx, u8, s32){
+void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32){
 }
 #endif
 
 //input typing not right (some type of struct)
-void func_8000488C(u8* arg0){
+void func_8000488C(u8 *arg0){
     ALEvent sp_18;
     sp_18.type = 1024;
     ((u32*)(&sp_18))[1] = (u32) arg0;

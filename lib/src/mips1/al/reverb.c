@@ -17,7 +17,7 @@ s32 D_800DCEBC = 0x20; // Currently unknown, might be a different type.
 
 GLOBAL_ASM("lib/asm/non_matchings/reverb/alFxPull.s")
 
-s32 alFxParam(void* filter, s32 paramID, void* param) {
+s32 alFxParam(void *filter, s32 paramID, void *param) {
     if (paramID == 1) {
         ((ALFilter *)filter)->source = param;
     }

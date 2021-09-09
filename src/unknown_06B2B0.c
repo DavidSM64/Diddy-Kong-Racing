@@ -229,7 +229,7 @@ void func_8006EFDC(void);
 void func_8006A6B0(void) {
     s32 i, count, checksumCount;
     s32 temp;
-    u8* sp44;
+    u8 *sp44;
     sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOR_TAG_YELLOW);
     gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
     for(i = 0; i < 16; i++) {
@@ -370,7 +370,7 @@ s8 func_8006B190(s32 arg0) {
 }
 
 s32 func_8006B1D4(s32 arg0) {
-    s8* temp;
+    s8 *temp;
     
     if (arg0 < 0 || arg0 >= gNumberOfWorlds) {
         arg0 = 0;
@@ -380,7 +380,7 @@ s32 func_8006B1D4(s32 arg0) {
     return temp[arg0];
 }
 
-void get_number_of_levels_and_worlds(s32* outLevelCount, s32* outWorldCount) {
+void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount) {
     *outLevelCount = gNumberOfLevelHeaders;
     *outWorldCount = gNumberOfWorlds;
 }
@@ -661,7 +661,7 @@ u8 get_current_level_race_type(void) {
     return gCurrentLevelHeader->race_type;
 }
 
-LevelHeader* get_current_level_header(void) {
+LevelHeader *get_current_level_header(void) {
     return gCurrentLevelHeader;
 }
 
@@ -1783,7 +1783,7 @@ void func_8006E770(Settings *settings, s32 arg1) {
     }
 }
 
-void func_8006E994(Settings* settings) {
+void func_8006E994(Settings *settings) {
     s32 i;
     s32 sp20;
     s32 sp1C;
@@ -1814,7 +1814,7 @@ void func_8006EA58(void) {
     func_8006E994(gSettingsPtr);
 }
 
-Settings* get_settings(void) {
+Settings *get_settings(void) {
     return gSettingsPtr;
 }
 

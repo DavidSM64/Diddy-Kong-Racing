@@ -109,7 +109,7 @@ void func_800B4A08(s32 arg0) {
 #ifdef NON_MATCHING
 // Unused. 
 // Regalloc issues. I can't get sprintf to work properly.
-void func_800B4A14(char* arg0, s32 arg1, s32 arg2, s32 arg3) {
+void func_800B4A14(char *arg0, s32 arg1, s32 arg2, s32 arg3) {
     sprintf(arg0, &arg2);
 }
 #else

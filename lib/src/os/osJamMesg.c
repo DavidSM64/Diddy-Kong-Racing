@@ -4,7 +4,7 @@
 
 #include "libultra_internal.h"
 
-extern OSThread* __osRunningThread;
+extern OSThread *__osRunningThread;
 
 s32 osJamMesg(OSMesgQueue *mq, OSMesg msg, s32 flag)
 {
