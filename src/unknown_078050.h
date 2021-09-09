@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "f3ddkr.h"
+#include "lib/src/mips1/sc/sched.h"
 
 extern s16 D_800DE490[16];
 

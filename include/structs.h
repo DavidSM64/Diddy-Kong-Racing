@@ -29,10 +29,10 @@ typedef struct MenuElement {
   /* 0x14 */ char* asciiText; // Pointer to ascii text to be displayed on the screen.
   /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
   /* 0x14 */ s32* number;     // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ u16* numberU16;     // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ u16* numberU16;  // Pointer to a number to be displayed on the screen.
   /* 0x14 */ s32 value;       // Some value for elementType == 5
   /* 0x14 */ void* element;   // Generic pointer
-  };
+  } unk14_a;
   // Element Background Color/Transparency
   /* 0x18 */ s16 backgroundRed;
   /* 0x1A */ s16 backgroundGreen;
@@ -565,7 +565,7 @@ typedef struct Object_64 {
             s8 unk2;
             s8 unk3;
         } unk0_b;
-    };
+    } unk0_a;
     s32 unk4;
     u8 pad8[4];
     union {
@@ -661,7 +661,7 @@ typedef struct Object {
   union {
     /* 0x0034 */ f32 unk34;
     /* 0x0034 */ s16 unk34_s;
-  };
+  } unk34_a;
   /* 0x0038 */ u8 unk38;
 
   /* 0x0039 */ u8 unk39;
@@ -670,7 +670,7 @@ typedef struct Object {
   union {
     /* 0x003C */ Object_3C* unk3C;
     /* 0x003C */ f32 unk3C_f;
-  };
+  } unk3C_a;
 
   /* 0x0040 */ Object_40 *descriptor_ptr;
   /* 0x0044 */ void *unk44;

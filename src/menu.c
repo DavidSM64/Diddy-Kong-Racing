@@ -1642,14 +1642,14 @@ void load_menu_text(s32 language) {
         gMagicCodeMenuStrings[1] = gMenuText[15]; // CLEAR ALL CODES
         gMagicCodeMenuStrings[2] = gMenuText[16]; // CODE LIST
         gMagicCodeMenuStrings[3] = gMenuText[5]; // RETURN
-        D_800E0BEC[1].asciiText = gMenuText[29]; // LAP TIMES
-        D_800E0BEC[2].asciiText = gMenuText[30]; // OVERALL TIME
-        D_800E0CEC[8].asciiText = gMenuText[31]; // RACE ORDER
-        D_800E0CEC[9].asciiText = gMenuText[31]; // RACE ORDER
-        D_800E0E4C[0].asciiText = gMenuText[32]; // RECORD TIMES
-        D_800E0E4C[1].asciiText = gMenuText[32]; // RECORD TIMES
-        D_800E0E4C[2].asciiText = gMenuText[9];  // BEST TIME
-        D_800E0E4C[5].asciiText = gMenuText[10]; // BEST LAP
+        D_800E0BEC[1].unk14_a.asciiText = gMenuText[29]; // LAP TIMES
+        D_800E0BEC[2].unk14_a.asciiText = gMenuText[30]; // OVERALL TIME
+        D_800E0CEC[8].unk14_a.asciiText = gMenuText[31]; // RACE ORDER
+        D_800E0CEC[9].unk14_a.asciiText = gMenuText[31]; // RACE ORDER
+        D_800E0E4C[0].unk14_a.asciiText = gMenuText[32]; // RECORD TIMES
+        D_800E0E4C[1].unk14_a.asciiText = gMenuText[32]; // RECORD TIMES
+        D_800E0E4C[2].unk14_a.asciiText = gMenuText[9];  // BEST TIME
+        D_800E0E4C[5].unk14_a.asciiText = gMenuText[10]; // BEST LAP
         gOptionMenuStrings[0] = gMenuText[34]; // ENGLISH
         if (D_80126448 & 0x2000000) {
             gOptionMenuStrings[1] = gMenuText[182]; // SUBTITLES ON
@@ -1706,15 +1706,15 @@ void load_menu_text(s32 language) {
         D_800DFBBC[7] = gMenuText[98];  // CONTINUE
         gTitleMenuStrings[0] = gMenuText[137]; // START
         gTitleMenuStrings[1] = gMenuText[36];  // OPTIONS
-        gGameSelectTextElemsNoAdv2[0].asciiText = gMenuText[76];  // GAME SELECT
-        gGameSelectTextElemsNoAdv2[1].asciiText = gMenuText[76];  // GAME SELECT
-        gGameSelectTextElemsNoAdv2[3].asciiText = gMenuText[142]; // ADVENTURE
-        gGameSelectTextElemsNoAdv2[5].asciiText = gMenuText[144]; // TRACKS
-        gGameSelectTextElemsWithAdv2[0].asciiText = gMenuText[76];  // GAME SELECT
-        gGameSelectTextElemsWithAdv2[1].asciiText = gMenuText[76];  // GAME SELECT
-        gGameSelectTextElemsWithAdv2[3].asciiText = gMenuText[142]; // ADVENTURE
-        gGameSelectTextElemsWithAdv2[5].asciiText = gMenuText[143]; // ADVENTURE TWO
-        gGameSelectTextElemsWithAdv2[7].asciiText = gMenuText[144]; // TRACKS
+        gGameSelectTextElemsNoAdv2[0].unk14_a.asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsNoAdv2[1].unk14_a.asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsNoAdv2[3].unk14_a.asciiText = gMenuText[142]; // ADVENTURE
+        gGameSelectTextElemsNoAdv2[5].unk14_a.asciiText = gMenuText[144]; // TRACKS
+        gGameSelectTextElemsWithAdv2[0].unk14_a.asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsWithAdv2[1].unk14_a.asciiText = gMenuText[76];  // GAME SELECT
+        gGameSelectTextElemsWithAdv2[3].unk14_a.asciiText = gMenuText[142]; // ADVENTURE
+        gGameSelectTextElemsWithAdv2[5].unk14_a.asciiText = gMenuText[143]; // ADVENTURE TWO
+        gGameSelectTextElemsWithAdv2[7].unk14_a.asciiText = gMenuText[144]; // TRACKS
         D_800E09B0[0] = gMenuText[69]; // BAD CONTROLLER PAK
         D_800E09C4[0] = gMenuText[68]; // CONTROLLER PAK FULL
         D_800E09D8[0] = gMenuText[67]; // NO CONTROLLER PAK
@@ -1738,11 +1738,11 @@ void load_menu_text(s32 language) {
         D_800E0A14[0] = gMenuText[159]; // If you wish to use
         D_800E0A14[1] = gMenuText[161]; // the Rumble Pak
         D_800E0A14[2] = gMenuText[162]; // insert it now!
-        gCautionMenuTextElements[0].asciiText = gMenuText[152]; // CAUTION
-        gCautionMenuTextElements[1].asciiText = gMenuText[152]; // CAUTION
+        gCautionMenuTextElements[0].unk14_a.asciiText = gMenuText[152]; // CAUTION
+        gCautionMenuTextElements[1].unk14_a.asciiText = gMenuText[152]; // CAUTION
         for(i = 2; i < 13; i++) {
             // Caution message lines starting from gMenuText[166]
-            gCautionMenuTextElements[i].asciiText = gMenuText[166 + (i - 2)]; 
+            gCautionMenuTextElements[i].unk14_a.asciiText = gMenuText[166 + (i - 2)]; 
         }
     }
 }
@@ -2077,8 +2077,8 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
     s5 = FALSE;
     if (arg0 != 4) {
         func_80067F2C(&D_801263A0, &D_801263A8);
-        while(elem->element != NULL) {
-            if (&D_80126850 != elem->element) {
+        while(elem->unk14_a.element != NULL) {
+            if (&D_80126850 != elem->unk14_a.element) {
                 if (arg0 == 0) {
                     tempX = elem->center - elem->left;
                     tempX *= arg2;
@@ -2102,7 +2102,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         set_text_background_color(elem->backgroundRed, elem->backgroundGreen, elem->backgroundBlue, elem->backgroundAlpha);
                         set_text_color(elem->filterRed, elem->filterGreen, elem->filterBlue, elem->filterAlpha, elem->opacity);
                         set_text_font(elem->textFont);
-                        draw_text(&D_801263A0, xPos, yPos + D_800DF79C, elem->asciiText, elem->textAlignFlags);
+                        draw_text(&D_801263A0, xPos, yPos + D_800DF79C, elem->unk14_a.asciiText, elem->textAlignFlags);
                         break;
                     case 1:
                         if (s5) {
@@ -2111,7 +2111,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         }
                         D_800DF764 = elem->opacity;
                         func_80081800(
-                            *elem->numberU16, 
+                            *elem->unk14_a.numberU16, 
                             xPos - 0xA0, 
                             (-yPos - D_800DF7A0) + 0x78, 
                             elem->filterRed, 
@@ -2126,7 +2126,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             func_8007B3D0(&D_801263A0);
                         }
                         func_80081C04(
-                            *elem->number, 
+                            *elem->unk14_a.number, 
                             xPos - 0xA0, 
                             (-yPos - D_800DF7A0) + 0x78, 
                             elem->filterRed, 
@@ -2141,7 +2141,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         s5 = TRUE;
                         render_textured_rectangle(
                             &D_801263A0, 
-                            elem->texture, 
+                            elem->unk14_a.texture, 
                             xPos, 
                             yPos + D_800DF79C, 
                             elem->filterRed, 
@@ -2154,7 +2154,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         s5 = TRUE;
                         func_80078D00(
                             &D_801263A0, 
-                            elem->element, 
+                            elem->unk14_a.element, 
                             xPos, 
                             yPos + D_800DF79C, 
                             elem->backgroundRed / 256.0f, 
@@ -2170,19 +2170,19 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         }
                         func_80068508(1);
                         func_8007BF1C(0);
-                        D_800DF75C[elem->value].unkC = xPos - 0xA0;
-                        D_800DF75C[elem->value].unk10 = (-yPos - D_800DF7A0) + 0x78;
-                        D_800DF75C[elem->value].unk18 = elem->textFont;
-                        D_800DF75C[elem->value].unk4 = elem->backgroundRed;
-                        D_800DF75C[elem->value].unk2 = elem->backgroundGreen;
-                        D_800DF75C[elem->value].unk0 = elem->backgroundBlue;
-                        D_800DF75C[elem->value].unk8 = elem->backgroundAlpha / 256.0f;
+                        D_800DF75C[elem->unk14_a.value].unkC = xPos - 0xA0;
+                        D_800DF75C[elem->unk14_a.value].unk10 = (-yPos - D_800DF7A0) + 0x78;
+                        D_800DF75C[elem->unk14_a.value].unk18 = elem->textFont;
+                        D_800DF75C[elem->unk14_a.value].unk4 = elem->backgroundRed;
+                        D_800DF75C[elem->unk14_a.value].unk2 = elem->backgroundGreen;
+                        D_800DF75C[elem->unk14_a.value].unk0 = elem->backgroundBlue;
+                        D_800DF75C[elem->unk14_a.value].unk8 = elem->backgroundAlpha / 256.0f;
                         D_800DF4A4 = elem->filterRed;
                         D_800DF4A8 = elem->filterGreen;
                         D_800DF4AC = elem->filterBlue;
                         D_800DF4B0 = elem->filterAlpha;
                         D_800DF764 = elem->opacity;
-                        func_8009CA60(elem->value);
+                        func_8009CA60(elem->unk14_a.value);
                         func_80068508(0);
                         func_8007BF1C(1);
                         break;
@@ -2211,7 +2211,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             elem->backgroundBlue, 
                             elem->backgroundAlpha, 
                             (elem->filterRed << 0x18) | (elem->filterGreen << 0x10) | (elem->filterBlue << 8) | elem->opacity, 
-                            elem->element
+                            elem->unk14_a.element
                         );
                         break;
                 }
@@ -3906,7 +3906,7 @@ void menu_game_select_init(void) {
     // This loop doesn't match.
     for(i = 0; i <= D_801263E0; i++) {
         u8 temp = i; // How do I make this a `mov`?
-        (&((unk80126460*)D_80126460)[temp] + 1)->elem[0].texture = D_80126550[67];
+        (&((unk80126460*)D_80126460)[temp] + 1)->elem[0].unk14_a.texture = D_80126550[67];
     }
 }
 #else

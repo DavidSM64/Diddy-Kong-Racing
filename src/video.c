@@ -60,7 +60,7 @@ void init_framebuffer(s32);
 void func_8007A974(void);
 void swap_framebuffers(void);
 
-void init_video(s32 arg0, s32 arg1) {
+void init_video(s32 arg0, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
         gVideoAspectRatio = ASPECT_RATIO_PAL;
@@ -91,7 +91,7 @@ void init_video(s32 arg0, s32 arg1) {
     gVideoCurrFbIndex = 1;
     swap_framebuffers();
     osCreateMesgQueue(&D_801261A0, &D_80126180, 8);
-    osScAddClient(arg1, &D_80126310, &D_801261A0, 2);
+    osScAddClient(sc, &D_80126310, &D_801261A0, 2);
     init_vi_settings();
     D_801262D0 = 12;
     osViBlack(1);

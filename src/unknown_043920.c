@@ -651,15 +651,10 @@ typedef struct unk800535C4_2 {
     s16 unk1A4;
 } unk800535C4_2;
 
-/* Size: 0x40 Bytes */
-typedef struct unk800535C4_3 {
-    u8 unk0[0x40];
-} unk800535C4_3;
-
-void guMtxXFMF(unk800535C4_3*, f32, f32, f32, s32*, s32*, s32*);
+void guMtxXFMF(Matrix*, f32, f32, f32, s32*, s32*, s32*);
 
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
-    unk800535C4_3 sp30;
+    Matrix sp30;
 
     D_8011D510.unk0 = -arg1->unk1A0;
     D_8011D510.unk2 = -arg0->unk2;
@@ -735,7 +730,7 @@ void play_char_horn_sound(Object *arg0, Object_64 *arg1) {
         func_800570B8(arg0, 0x162, 8, 0x82);
     } else {
         // Play character's horn sound
-        func_80057048(arg0, arg1->unk0_b.unk3 + 0x156);
+        func_80057048(arg0, arg1->unk0_a.unk0_b.unk3 + 0x156);
     }
 }
 
@@ -823,7 +818,7 @@ typedef struct Object_64_800575EC {
 } Object_64_800575EC;
 
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
-    f32 sp38[4][4];
+    Matrix sp38;
     
     D_8011D510.unk0 = obj->y_rotation;
     D_8011D510.unk2 = obj->x_rotation;
@@ -909,7 +904,7 @@ void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     temp1 = func_8007066C(gCameraObject->x_position - arg1->x_position, gCameraObject->z_position - arg1->z_position);
     gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
     gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->unk3C_f, gCameraObject->z_position);
+    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->unk3C_a.unk3C_f, gCameraObject->z_position);
 }
 
 #else

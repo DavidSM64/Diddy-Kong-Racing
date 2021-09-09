@@ -9,7 +9,7 @@ typedef struct unknown800DC874 {
     union {
         s8 unk00;
         s32 dummy_force_alignment; // Not sure of a better way to do this.
-    };
+    } unk00_a;
     u16 unk04;
     s16 unk06;
 } unknown800DC874;
