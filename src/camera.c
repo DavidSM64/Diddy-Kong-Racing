@@ -142,11 +142,11 @@ Mtx D_80120DA0[5];
 Matrix D_80120EE0;
 Matrix D_80120F20;
 Matrix D_80120F60;
-s32 D_80120FA0[16];
-s32 D_80120FE0[16];
-s32 D_80121020[16];
+Matrix D_80120FA0;
+Matrix D_80120FE0;
+Matrix D_80121020;
 Matrix D_80121060;
-s32 D_801210A0[16];
+Matrix D_801210A0;
 OSMesgQueue *D_801210E0[6];
 s32 D_801210F8;
 s32 D_801210FC;
@@ -175,7 +175,7 @@ void func_800014BC(f32 arg0);
 s8* get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
 void guMtxXFMF(Matrix, f32, f32, f32, f32*, f32*, f32*);
-void func_8006F870(Matrix, s32[16]);
+void func_8006F870(Matrix, Matrix);
 s16 get_level_segment_index_from_position(f32, f32, f32);    
 void func_8006A50C(void);
 void func_800665E8(s32 arg0);
@@ -265,8 +265,8 @@ void func_80066194(void) {
 }
 
 /* Unused? */
-s32* func_80066204(void) {
-    return D_801210A0;
+Matrix *func_80066204(void) {
+    return &D_801210A0;
 }
 
 s32 get_viewport_count(void) {
@@ -876,16 +876,16 @@ unk80120AC0 *func_80069D7C(void) {
     return &D_80120AC0[0];
 }
 
-s32* func_80069DA4(void) {
-    return D_80120FA0;
+Matrix *func_80069DA4(void) {
+    return &D_80120FA0;
 }
 
-s32* func_80069DB0(void) {
-    return D_80120FE0;
+Matrix *func_80069DB0(void) {
+    return &D_80120FE0;
 }
 
-s32* func_80069DBC(void) {
-    return D_80120F60;
+Matrix *func_80069DBC(void) {
+    return &D_80120F60;
 }
 
 f32 func_80069DC8(f32 arg0, f32 arg1, f32 arg2) {
@@ -954,7 +954,7 @@ void func_8006A03C(f32 *mtx) {
     func_800C9D54("\n");
 }
 
-OSMesgQueue* func_8006A100(void) {
+OSMesgQueue *func_8006A100(void) {
     return &D_801210E0;
 }
 
