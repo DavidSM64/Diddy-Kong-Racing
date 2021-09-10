@@ -6,6 +6,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "menu.h"
+#include "libultra_internal.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -49,6 +50,39 @@ typedef struct ScreenViewport {
     s32 flags;
 } ScreenViewport;
 
+/* Size: 6 bytes */
+typedef struct unk80121110 {
+    u16 unk0;
+    s8 unk2;
+    s8 unk3;
+    s8 unk4;
+    s8 unk6;
+} unk80121110;
+
+/* Size: 0x44 bytes, might just be Object? */
+typedef struct unk80120AC0 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    u8  pad6[6];
+    f32 x_position;
+    f32 y_position;
+    f32 z_position;
+    f32 pad18;
+    f32 unk1C;
+    f32 pad20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    s16 unk34;
+    s16 pad36;
+    s16 unk38;
+    s8  pad3A;
+    s8  unk3B;
+    u8  pad3C[8];
+} unk80120AC0;
+
 extern ScreenViewport gScreenViewports[4];
 
 // Not sure about the typing here
@@ -68,5 +102,81 @@ extern u8 D_800DD2F8[8];
 extern s32 D_800DD300;
 
 extern s16 gButtonMask;
+
+extern s32 D_A4000000;
+
+extern s32 SP_IMEM;
+
+//TODO: Remove from here once header files for below are created with these signatures.
+    void func_800014BC(f32 arg0); //audio.c
+    s8* get_misc_asset(s32 arg0); //unknown_00BC20
+    void func_8006F870(Matrix, Matrix); //unknown_070110
+    s16 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos); //unknown_0255E0
+    void load_level_2(s32 arg0, s32 arg1, s32 arg2, s32 arg3); //unknown_06B2B0
+    void func_8006C164(void); //unknown_00BC20
+    void func_8000E194(void); //unknown_00BC20
+    void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2); //unknown_00BC20
+    void func_800705F8(s32, f32, f32, f32); //From unknown_070110
+    void func_8006ECFC(s32 arg0); //From unknown_06B2B0
+
+f32 sqrtf(f32); //IDO?
+
+void func_80066060(s32 arg0, s32 arg1);
+void func_80066098(s8 arg0);
+void func_800660C0(void);
+void func_800660D0(void);
+f32 get_current_camera_fov(void);
+void update_camera_fov(f32 camFieldOfView);
+void func_80066194(void);
+Matrix *func_80066204(void);
+s32 get_viewport_count(void);
+s32 func_80066220(void);
+void func_80066CDC(Gfx **dlist, s32 arg1);
+void func_80066230(Gfx **dlist, s32 arg1);
+f32 func_80066348(f32 arg0, f32 arg1, f32 arg2);
+void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
+void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
+void func_80066520(void);
+s8 func_80066510(void);
+s32 func_8006652C(s32 arg0);
+void func_800665E8(s32 arg0);
+void func_80066818(s32 viewPortIndex, s32 arg1);
+void func_80066894(s32 viewPortIndex, s32 arg1);
+s32 func_80066910(s32 viewPortIndex);
+void func_80066940(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void func_80066AA8(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+s32 func_80066BA8(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
+void func_80066C2C(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
+void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3);
+void func_80066CDC(Gfx **dlist, s32 arg1);
+void func_80067F20(f32 arg0);
+void func_80067F2C(Gfx **dlist, s32 *arg1);
+void func_8006807C(Gfx **dlist, s32 *arg1);
+void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void func_800682AC(Gfx **dlist);
+void func_80068408(Gfx **dlist, s32 *arg1);
+void func_80068508(s32 arg0);
+unk80120AC0 *func_80069CFC(void);
+unk80120AC0 *func_80069D20(void);
+unk80120AC0 *func_80069D7C(void);
+Matrix *func_80069DA4(void);
+Matrix *func_80069DB0(void);
+Matrix *func_80069DBC(void);
+f32 func_80069DC8(f32 x, f32 y, f32 z);
+void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
+void func_80069F28(f32 arg0);
+void func_8006A03C(f32 *mtx);
+OSMesgQueue *func_8006A100(void);
+void func_8006A434(void);
+void func_8006A458(s8 *activePlayers);
+u8 func_8006A4F8(s32 arg0);
+void func_8006A50C(void);
+u16 get_buttons_held_from_player(s32 arg0);
+u16 get_buttons_pressed_from_player(s32 arg0);
+u16 func_8006A578(s32 arg0);
+s32 func_8006A59C(s32 arg0);
+s32 func_8006A5E0(s32 arg0);
+s32 func_8006A624(s8 arg0);
+void disable_button_mask(void);
 
 #endif

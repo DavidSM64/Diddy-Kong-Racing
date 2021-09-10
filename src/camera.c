@@ -1,7 +1,6 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80065EA0 */
 
-#include "libultra_internal.h"
 #include "camera.h"
 
 extern u32 osTvType;
@@ -95,30 +94,6 @@ s16 gButtonMask = 0xFFFF;
 
 /************ .bss ************/
 
-/* Size: 0x44 bytes, might just be Object? */
-typedef struct unk80120AC0 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u8  pad6[6];
-    f32 x_position;
-    f32 y_position;
-    f32 z_position;
-    f32 pad18;
-    f32 unk1C;
-    f32 pad20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    s16 unk34;
-    s16 pad36;
-    s16 unk38;
-    s8  pad3A;
-    s8  unk3B;
-    u8  pad3C[8];
-} unk80120AC0;
-
 unk80120AC0 D_80120AC0[8];
 s32 gNumberOfViewports;
 s32 D_80120CE4;
@@ -151,42 +126,12 @@ OSMesgQueue *D_801210E0[6];
 s32 D_801210F8;
 s32 D_801210FC;
 u8 D_80121100[16];
-
-/* Size: 6 bytes */
-typedef struct unk80121110 {
-    u16 unk0;
-    s8 unk2;
-    s8 unk3;
-    s8 unk4;
-    s8 unk6;
-} unk80121110;
 unk80121110 D_80121110[8];
 u16 D_80121140[4];
 u16 D_80121148[4];
 u8 D_80121150[16];
 
 /******************************/
-
-extern s32 D_A4000000;
-extern s32 SP_IMEM;
-
-unk80120AC0 *func_80069D20(void);
-void func_800014BC(f32 arg0);
-s8* get_misc_asset(s32 arg0);
-s32 func_8006A624(s8 arg0);
-void func_8006F870(Matrix, Matrix);
-s16 get_level_segment_index_from_position(f32, f32, f32);    
-void func_8006A50C(void);
-void func_800665E8(s32 arg0);
-void load_level_2(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_8006C164(void);
-void func_8000E194(void);
-f32 sqrtf(f32);
-void osSetTime(u64);
-void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
-void func_800705F8(s32, f32, f32, f32);
-void func_8006ECFC(s32 arg0);
-void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 
 #ifdef NON_MATCHING
 void func_800663DC(s32 x_pos, s32 y_pos, s32 z_pos, s32 arg3, s32 arg4, s32 arg5);
@@ -276,8 +221,6 @@ s32 func_80066220(void) {
     return D_80120CE4;
 }
 
-void func_80066CDC(Gfx **dlist, s32 arg1);
-
 void func_80066230(Gfx **dlist, s32 arg1) {
     unk80120AC0 *someStruct;
     s16 sp2A;
@@ -332,11 +275,11 @@ f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
     return sqrtf((temp_f0 * temp_f0) + ((temp_f2 * temp_f2) + (temp_f14 * temp_f14)));
 }
 
-void func_800663DC(s32 x_pos, s32 y_pos, s32 z_pos, s32 arg3, s32 arg4, s32 arg5) {
+void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
     D_80120AC0[D_80120CE4].unk4 = (s16) (arg3 * 0xB6);
-    D_80120AC0[D_80120CE4].x_position = (f32) x_pos;
-    D_80120AC0[D_80120CE4].y_position = (f32) y_pos;
-    D_80120AC0[D_80120CE4].z_position = (f32) z_pos;
+    D_80120AC0[D_80120CE4].x_position = (f32) xPos;
+    D_80120AC0[D_80120CE4].y_position = (f32) yPos;
+    D_80120AC0[D_80120CE4].z_position = (f32) zPos;
     D_80120AC0[D_80120CE4].unk2 = (s16) (arg4 * 0xB6);
     D_80120AC0[D_80120CE4].unk38 = (u16)0;
     D_80120AC0[D_80120CE4].unk24 = 0.0f;
@@ -348,16 +291,16 @@ void func_800663DC(s32 x_pos, s32 y_pos, s32 z_pos, s32 arg3, s32 arg4, s32 arg5
     D_80120AC0[D_80120CE4].unk3B = D_800DD2F8[D_80120CE4];
 }
 
-void func_80066488(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s16 arg4, s16 arg5, s16 arg6) {
+void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6) {
     arg0 += 4;
     D_80120AC0[arg0].unk38 = 0;
-    D_80120AC0[arg0].x_position = arg1;
-    D_80120AC0[arg0].y_position = arg2;
-    D_80120AC0[arg0].z_position = arg3;
+    D_80120AC0[arg0].x_position = xPos;
+    D_80120AC0[arg0].y_position = yPos;
+    D_80120AC0[arg0].z_position = zPos;
     D_80120AC0[arg0].unk0 = arg4;
     D_80120AC0[arg0].unk2 = arg5;
     D_80120AC0[arg0].unk4 = arg6;
-    D_80120AC0[arg0].unk34 = get_level_segment_index_from_position(arg1, arg2, arg3);
+    D_80120AC0[arg0].unk34 = get_level_segment_index_from_position(xPos, yPos, zPos);
     D_80120D14 = 1;
 }
 
@@ -469,32 +412,32 @@ void func_80066610(void) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80066610.s")
 #endif
 
-void func_80066818(s32 arg0, s32 arg1) {
+void func_80066818(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
-        gScreenViewports[arg0].flags |= 1;
+        gScreenViewports[viewPortIndex].flags |= 1;
     } else {
-        gScreenViewports[arg0].flags |= 2;
+        gScreenViewports[viewPortIndex].flags |= 2;
     }
-    gScreenViewports[arg0].flags &= ~4;
+    gScreenViewports[viewPortIndex].flags &= ~4;
 }
 
-void func_80066894(s32 arg0, s32 arg1) {
+void func_80066894(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
-        gScreenViewports[arg0].flags &= ~1;
+        gScreenViewports[viewPortIndex].flags &= ~1;
     } else {
-        gScreenViewports[arg0].flags |= 4;
+        gScreenViewports[viewPortIndex].flags |= 4;
     }
-    gScreenViewports[arg0].flags &= ~2;
+    gScreenViewports[viewPortIndex].flags &= ~2;
 }
 
-s32 func_80066910(s32 arg0) {
-    return gScreenViewports[arg0].flags & 0x1;
+s32 func_80066910(s32 viewPortIndex) {
+    return gScreenViewports[viewPortIndex].flags & 0x1;
 }
 
 #ifdef NON_MATCHING
 
 // Should be functionally equivalent.
-void func_80066940(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void func_80066940(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 widthAndHeight, width, height;
     s32 phi_a1;
     s32 phi_a2;
@@ -516,84 +459,84 @@ void func_80066940(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         phi_a2 = arg2;
     }
     if ((phi_a1 >= width) || (phi_a3 < 0) || (arg2 >= height) || (phi_a2 < 0)) {
-        gScreenViewports[arg0].unk20 = 0;
-        gScreenViewports[arg0].unk24 = 0;
-        gScreenViewports[arg0].unk28 = 0;
-        gScreenViewports[arg0].unk2C = 0;
+        gScreenViewports[viewPortIndex].unk20 = 0;
+        gScreenViewports[viewPortIndex].unk24 = 0;
+        gScreenViewports[viewPortIndex].unk28 = 0;
+        gScreenViewports[viewPortIndex].unk2C = 0;
     } else {
         if (phi_a1 < 0) {
-            gScreenViewports[arg0].unk20 = 0;
+            gScreenViewports[viewPortIndex].unk20 = 0;
         } else {
-            gScreenViewports[arg0].unk20 = phi_a1;
+            gScreenViewports[viewPortIndex].unk20 = phi_a1;
         }
         if (arg2 < 0) {
-            gScreenViewports[arg0].unk24 = 0;
+            gScreenViewports[viewPortIndex].unk24 = 0;
         } else {
-            gScreenViewports[arg0].unk24 = arg2;
+            gScreenViewports[viewPortIndex].unk24 = arg2;
         }
         if (phi_a3 >= width) {
-            gScreenViewports[arg0].unk28 = width - 1;
+            gScreenViewports[viewPortIndex].unk28 = width - 1;
         } else {
-            gScreenViewports[arg0].unk28 = phi_a3;
+            gScreenViewports[viewPortIndex].unk28 = phi_a3;
         }
         if (phi_a2 >= height) {
-            gScreenViewports[arg0].unk2C = height - 1;
+            gScreenViewports[viewPortIndex].unk2C = height - 1;
         } else {
-            gScreenViewports[arg0].unk2C = phi_a2;
+            gScreenViewports[viewPortIndex].unk2C = phi_a2;
         }
     }
-    gScreenViewports[arg0].unk4 = arg2;
-    gScreenViewports[arg0].unk0 = phi_a1;
-    gScreenViewports[arg0].unk8 = phi_a3;
-    gScreenViewports[arg0].unkC = phi_a2;
+    gScreenViewports[viewPortIndex].unk4 = arg2;
+    gScreenViewports[viewPortIndex].unk0 = phi_a1;
+    gScreenViewports[viewPortIndex].unk8 = phi_a3;
+    gScreenViewports[viewPortIndex].unkC = phi_a2;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/camera/func_80066940.s")
 #endif
 
-void func_80066AA8(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void func_80066AA8(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg1 != 0x8000) {
-        gScreenViewports[arg0].unk10 = arg1;
-        gScreenViewports[arg0].flags |= 8;
+        gScreenViewports[viewPortIndex].unk10 = arg1;
+        gScreenViewports[viewPortIndex].flags |= 8;
     } else {
-        gScreenViewports[arg0].flags &= ~8;
+        gScreenViewports[viewPortIndex].flags &= ~8;
     }
     if (arg2 != 0x8000) {
-        gScreenViewports[arg0].unk10 = arg2;
-        gScreenViewports[arg0].flags |= 0x10;
+        gScreenViewports[viewPortIndex].unk10 = arg2;
+        gScreenViewports[viewPortIndex].flags |= 0x10;
     } else {
-        gScreenViewports[arg0].flags &= ~0x10;
+        gScreenViewports[viewPortIndex].flags &= ~0x10;
     }
     if (arg3 != 0x8000) {
-        gScreenViewports[arg0].unk18 = arg3;
-        gScreenViewports[arg0].flags |= 0x20;
+        gScreenViewports[viewPortIndex].unk18 = arg3;
+        gScreenViewports[viewPortIndex].flags |= 0x20;
     } else {
-        gScreenViewports[arg0].flags &= ~0x20;
+        gScreenViewports[viewPortIndex].flags &= ~0x20;
     }
     if (arg4 != 0x8000) {
-        gScreenViewports[arg0].unk1C = arg4;
-        gScreenViewports[arg0].flags |= 0x40;
+        gScreenViewports[viewPortIndex].unk1C = arg4;
+        gScreenViewports[viewPortIndex].flags |= 0x40;
         return;
     }
-    gScreenViewports[arg0].flags &= ~0x40;
+    gScreenViewports[viewPortIndex].flags &= ~0x40;
 }
 
-s32 func_80066BA8(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
-    *arg1 = gScreenViewports[arg0].unk20;
-    *arg3 = gScreenViewports[arg0].unk28;
-    *arg2 = gScreenViewports[arg0].unk24;
-    *arg4 = gScreenViewports[arg0].unk2C;
+s32 func_80066BA8(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
+    *arg1 = gScreenViewports[viewPortIndex].unk20;
+    *arg3 = gScreenViewports[viewPortIndex].unk28;
+    *arg2 = gScreenViewports[viewPortIndex].unk24;
+    *arg4 = gScreenViewports[viewPortIndex].unk2C;
     if ((*arg1 | *arg3 | *arg2 | *arg4) == 0) {
         return 0;
     }
     return 1;
 }
 
-void func_80066C2C(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
-    *arg1 = gScreenViewports[arg0].unk0;
-    *arg2 = gScreenViewports[arg0].unk4;
-    *arg3 = gScreenViewports[arg0].unk8;
-    *arg4 = gScreenViewports[arg0].unkC;
+void func_80066C2C(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
+    *arg1 = gScreenViewports[viewPortIndex].unk0;
+    *arg2 = gScreenViewports[viewPortIndex].unk4;
+    *arg3 = gScreenViewports[viewPortIndex].unk8;
+    *arg4 = gScreenViewports[viewPortIndex].unkC;
 }
 
 // Unused?
@@ -956,8 +899,6 @@ void func_8006A03C(f32 *mtx) {
 OSMesgQueue *func_8006A100(void) {
     return &D_801210E0;
 }
-
-void func_8006A434(void);
 
 #ifdef NON_MATCHING
 // Has regalloc & stack issues.
