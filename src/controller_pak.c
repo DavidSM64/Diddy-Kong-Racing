@@ -441,7 +441,7 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007698C.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076A38.s")
 
 s32 func_80076AF4(s32 controllerIndex, s32 arg1) {
-    s32* temp;
+    s32 *temp;
     s32 pad;
     s32 ret;
 

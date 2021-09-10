@@ -172,7 +172,7 @@ extern s32 SP_IMEM;
 
 unk80120AC0 *func_80069D20(void);
 void func_800014BC(f32 arg0);
-s8* get_misc_asset(s32 arg0);
+s8 *get_misc_asset(s32 arg0);
 s32 func_8006A624(s8 arg0);
 void guMtxXFMF(Matrix, f32, f32, f32, f32*, f32*, f32*);
 void func_8006F870(Matrix, s32[16]);
@@ -265,7 +265,7 @@ void func_80066194(void) {
 }
 
 /* Unused? */
-s32* func_80066204(void) {
+s32 *func_80066204(void) {
     return D_801210A0;
 }
 
@@ -876,15 +876,15 @@ unk80120AC0 *func_80069D7C(void) {
     return &D_80120AC0[0];
 }
 
-s32* func_80069DA4(void) {
+s32 *func_80069DA4(void) {
     return D_80120FA0;
 }
 
-s32* func_80069DB0(void) {
+s32 *func_80069DB0(void) {
     return D_80120FE0;
 }
 
-s32* func_80069DBC(void) {
+s32 *func_80069DBC(void) {
     return D_80120F60;
 }
 
@@ -954,7 +954,7 @@ void func_8006A03C(f32 *mtx) {
     func_800C9D54("\n");
 }
 
-OSMesgQueue* func_8006A100(void) {
+OSMesgQueue *func_8006A100(void) {
     return &D_801210E0;
 }
 

@@ -106,7 +106,7 @@ void init_lpfilter(ALLowPass *lp)
 
 GLOBAL_ASM("lib/asm/non_matchings/alFxNew/alFxNew.s")
 
-void alEnvmixerNew(ALEnvMixer* e, s32 arg1) {
+void alEnvmixerNew(ALEnvMixer *e, s32 arg1) {
     alFilterNew(e, &alEnvMixerPull, &alEnvmixerParam, 4);
     e->state = alHeapDBAlloc(0, 0, arg1, 1, 0x50);
     e->first = 1;
@@ -128,7 +128,7 @@ void alEnvmixerNew(ALEnvMixer* e, s32 arg1) {
     e->sources = 0;
 }
 
-void alLoadNew(ALLoadFilter* arg0, s32 (*arg1)(s32*), s32 arg2) {
+void alLoadNew(ALLoadFilter *arg0, s32 (*arg1)(s32*), s32 arg2) {
     alFilterNew(arg0, &alLoadPull, &alLoadParam, 0);
     arg0->state = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
     arg0->lstate = alHeapDBAlloc(0, 0, arg2, 1, 0x20);
@@ -138,7 +138,7 @@ void alLoadNew(ALLoadFilter* arg0, s32 (*arg1)(s32*), s32 arg2) {
     arg0->memin = 0;
 }
 
-void alResampleNew(ALResampler* r, ALHeap* hp) {
+void alResampleNew(ALResampler *r, ALHeap *hp) {
     alFilterNew(r, &alResamplePull, &alResampleParam, 1);
     r->state = alHeapDBAlloc(0, 0, hp, 1, 0x20);
     r->first = 1;
@@ -150,21 +150,21 @@ void alResampleNew(ALResampler* r, ALHeap* hp) {
     r->ratio = 1.0f;
 }
 
-void alAuxBusNew(ALAuxBus* m, void* sources, s32 maxSources) {
+void alAuxBusNew(ALAuxBus *m, void *sources, s32 maxSources) {
     alFilterNew(m, &alAuxBusPull, &alAuxBusParam, 6);
     m->sourceCount = 0;
     m->maxSources = maxSources;
     m->sources = sources;
 }
 
-void alMainBusNew(ALMainBus* m, void* sources, s32 maxSources) {
+void alMainBusNew(ALMainBus *m, void *sources, s32 maxSources) {
     alFilterNew(m, &alMainBusPull, &alMainBusParam, 7);
     m->sourceCount = 0;
     m->maxSources = maxSources;
     m->sources = sources;
 }
 
-void alSaveNew(ALSave* f) {
+void alSaveNew(ALSave *f) {
     alFilterNew(f, &alSavePull, &alSaveParam, AL_SAVE);
     f->dramout = 0;
     f->first = 1;

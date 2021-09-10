@@ -121,7 +121,7 @@ s16 D_8011D4E2;
 
 extern u32 osTvType;
 
-Settings* get_settings();
+Settings *get_settings();
 Object_64 *func_800BE654(s16, f32, f32);
 void func_80000FDC(s32, s32, f32);
 void func_80009558(s32, f32, f32, f32, s32, s32*);
@@ -195,7 +195,7 @@ typedef struct unk80034530 {
 } unk80034530;
 
 void func_80034530(Object *arg0, unk80034530 *arg1) {
-    Object_64* temp;
+    Object_64 *temp;
     arg0->unk4C->unk14 = 0x22;
     arg0->unk4C->unk11 = 0;
     temp = arg0->unk64;
@@ -496,7 +496,7 @@ void func_80035F6C(Object *obj, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
 void func_80036194(Object *arg0, s32 arg1) {
-    Object_64* temp;
+    Object_64 *temp;
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x1E;
@@ -625,7 +625,7 @@ typedef struct unk80037D08_arg0_64 {
 
 typedef struct unk80037D08_arg0 {
     u8 pad0[0x64];
-    unk80037D08_arg0_64* unk64;
+    unk80037D08_arg0_64 *unk64;
 } unk80037D08_arg0;
 
 void func_80037D08(unk80037D08_arg0 *arg0, s32 arg1) {
@@ -815,7 +815,7 @@ void func_800387CC(Object *obj, s32 arg1) {
     obj->unk7C.word = func_8001F460(obj, arg1, obj);
     obj->unk6 |= 0x4000;
     if (obj->unk7C.word == 0 && someObj != NULL) {
-        Object_64_800387CC* someObj64 = someObj->unk64;
+        Object_64_800387CC *someObj64 = someObj->unk64;
         someObj64->unk148 = obj;
     }
 }
@@ -853,7 +853,7 @@ void func_800388D4(Object *arg0, s32 arg1) {
     if (obj4C->unk13 < ((arg0->unk78 >> 16) & 0xFF)) {
         playerObj = obj4C->unk0;
         if (playerObj->descriptor_ptr->unk54 == 1) {
-            Object_64_800388D4* playerObj64 = playerObj->unk64;
+            Object_64_800388D4 *playerObj64 = playerObj->unk64;
             temp_a0 = playerObj64->unk0;
             if ((temp_a0 != -1) && (get_buttons_pressed_from_player(temp_a0) & Z_TRIG)) {
                 func_800C31EC(arg0->unk78 & 0xFF, arg0);
@@ -963,7 +963,7 @@ typedef struct Object_3C_80038DC4 {
 
 void func_80038DC4(Object *arg0, s32 arg1) {
     if (arg0->unk78 != 0) {
-        Object_3C_80038DC4* temp = arg0->unk3C_a.unk3C;
+        Object_3C_80038DC4 *temp = arg0->unk3C_a.unk3C;
         if(arg0->unk4C->unk13 < 0x78) {
             func_8006F338(temp->unk8);
             arg0->unk78 = 0;
@@ -1078,7 +1078,7 @@ void func_800391FC(Object *obj, s32 arg1) {
 }
 
 void func_800392B8(Object *arg0, s32 arg1) {
-    Object_64* temp;
+    Object_64 *temp;
     arg0->unk4C->unk14 = (u16)1;
     arg0->unk4C->unk11 = (u8)0;
     arg0->unk4C->unk10 = (u8)0x1E;
@@ -1791,7 +1791,7 @@ typedef struct unk80042014_arg0_64 {
 
 typedef struct unk80042014_arg0 {
     u8 pad0[0x64];
-    unk80042014_arg0_64* unk64;
+    unk80042014_arg0_64 *unk64;
 } unk80042014_arg0;
 
 typedef struct unk80042014_arg1 {
@@ -1802,7 +1802,7 @@ typedef struct unk80042014_arg1 {
 } unk80042014_arg1;
 
 void func_80042014(unk80042014_arg0 *arg0, unk80042014_arg1 *arg1) {
-    unk80042014_arg0_64* temp = arg0->unk64;
+    unk80042014_arg0_64 *temp = arg0->unk64;
     temp->unk0 = arg1->unk8;
     temp->unk2 = arg1->unkA;
     temp->unk3 = arg1->unkB;
@@ -1869,7 +1869,7 @@ typedef struct Object_3C_80042178 {
 
 void func_80042178(Object *obj, s32 arg1) {
     s32 temp;
-    Object_3C_80042178* obj3C;
+    Object_3C_80042178 *obj3C;
     unk80042178 sp20;
 
     obj3C = obj->unk3C_a.unk3C;

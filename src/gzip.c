@@ -20,10 +20,10 @@ typedef struct huft {
 
 /************ .data ************/
 
-huft* D_800E3760 = NULL;
-u8* D_800E3764 = NULL;
-u8* gzip_inflate_input = NULL;
-u8* gzip_inflate_output = NULL;
+huft *D_800E3760 = NULL;
+u8 *D_800E3764 = NULL;
+u8 *gzip_inflate_input = NULL;
+u8 *gzip_inflate_output = NULL;
 
 /*******************************/
 
@@ -43,7 +43,7 @@ void func_800C6170(void) {
 /**
  * Converts a little endian value to big endian.
  */
-s32 byteswap32(u8* arg0) {
+s32 byteswap32(u8 *arg0) {
     s32 value;
     value = *arg0++;
     value |= (*arg0++ << 8);
@@ -66,7 +66,7 @@ s32 gzip_inflate_block(void);
  * Decompresses gzip data.
  * Returns the pointer to the decompressed data.
  */
-u8* gzip_inflate(u8* compressedInput, u8* decompressedOutput) {
+u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput) {
     gzip_inflate_input = compressedInput + 5; // The compression header is 5 bytes. 
     gzip_inflate_output = decompressedOutput;
     gzip_num_bits = 0;

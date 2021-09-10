@@ -100,7 +100,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32, s32, u32);
 
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *arg0, s32 size, s32 numSlots);
 void set_free_queue_state(s32);
-void* allocate_from_main_pool_safe(s32, u32);
+void *allocate_from_main_pool_safe(s32, u32);
 s32 *func_8006F510(void);
 void func_8006F53C(s32*);
 void func_80071440(void *dataAddress);
@@ -251,11 +251,11 @@ void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size) {
 }
 
 #ifdef NON_MATCHING
-void *allocate_at_address_in_main_pool(s32 size, u8* address, u32 colorTag) {
+void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     s32 *sp38;
     s32 s0;
     MemoryPoolSlot *curSlot;
-    MemoryPoolSlot* slots;
+    MemoryPoolSlot *slots;
 
     sp38 = func_8006F510();
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {
@@ -399,7 +399,7 @@ void func_80071314(void) {
 GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
 #endif
 
-void func_80071440(void* data) {
+void func_80071440(void *data) {
     gFreeQueue[gFreeQueueCount].dataAddress = data;
     gFreeQueue[gFreeQueueCount].unk4 = gFreeQueueState;
     gFreeQueueCount++;

@@ -534,7 +534,7 @@ void func_8005234C(unk8005234C *arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052388.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005250C.s")
 
-void func_80052988(Object* arg0, Object_64* arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
     if ((D_8011D55C == -1) && (arg2 >= 3)) {
@@ -713,7 +713,7 @@ typedef struct unk800570A4_2 {
     s32 unk10;
     s32 unk14;
     u8 unk18[0x4C];
-    unk800570A4* unk64;
+    unk800570A4 *unk64;
 } unk800570A4_2;
 
 /* Unknown Size */
@@ -1032,7 +1032,7 @@ void func_8003B4BC(s32 arg0);
 void func_8005A3D0(void) {
     s32 i;
     s32 count = 0;
-    u8* temp = (u8*)&func_8003B4BC;
+    u8 *temp = (u8*)&func_8003B4BC;
 
     for(i = 0; i < D_800DCB50; i++) {
         count += temp[i];

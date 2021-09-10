@@ -147,7 +147,7 @@ s8 D_80126540;
 s8 D_80126541;
 s32 D_80126544;
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
-u32* D_80126550[67]; // lookup table?
+u32 *D_80126550[67]; // lookup table?
 s32 D_8012665C;
 s32 D_80126660;
 s32 D_80126664;
@@ -158,7 +158,7 @@ s32 D_801267D4;
 s32 D_801267D8[3];
 s32 D_801267E4;
 s32 D_801267E8;
-s8* D_801267EC;
+s8 *D_801267EC;
 s32 D_801267F0[5];
 s32 D_80126804;
 s32 D_80126808[4];
@@ -2885,7 +2885,7 @@ typedef struct unk800861C8 {
     u32 unkC;
 } unk800861C8;
 
-void func_800861C8(unk800861C8* arg0, s32 *arg1) {
+void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     s32 i;
     for(i = 0; i < 3; i++) {
         if (D_80126530[i]->newGame != 0) {
@@ -5306,7 +5306,7 @@ void func_80098208(void) {
 }
 
 extern s32 D_800E0980;
-s8* get_misc_asset(s32 arg0);
+s8 *get_misc_asset(s32 arg0);
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_round_init.s")
@@ -5351,7 +5351,7 @@ void func_800983C0(s32 arg0) {
     s32 sp2C;
     s32 sp28;
     s32 sp24;
-    s8* sp20;
+    s8 *sp20;
 
     sp20 = get_misc_asset(0x1A);
     if (osTvType == 0) {
@@ -5947,7 +5947,7 @@ void set_player_selected_vehicle(s32 playerNum, s32 index) {
     gPlayerSelectVehicle[playerNum] = index;
 }
 
-s8* func_8009C274(void) {
+s8 *func_8009C274(void) {
     return D_801263DC;
 }
 
@@ -6728,7 +6728,7 @@ f32 func_8009E9B0(s32 arg0, Gfx **arg1, s32 *arg2, s32 *arg3) {
     return 1.0f;
 }
 
-s64* func_8009EA6C(void) {
+s64 *func_8009EA6C(void) {
     return &D_80126448;
 }
 

@@ -19,7 +19,7 @@ typedef struct unk80063C00 {
 /* Unknown size */
 typedef struct unk80063C00_2 {
     u8  unk00[0x60];
-    unk80063C00* unk60; // Array of unk80063C00, unknown number of elements (At most 256).
+    unk80063C00 *unk60; // Array of unk80063C00, unknown number of elements (At most 256).
 } unk80063C00_2;
 
 u8 func_80063C00(unk80063C00_2 *arg0, u8 arg1) {

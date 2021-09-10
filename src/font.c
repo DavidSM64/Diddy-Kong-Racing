@@ -89,12 +89,12 @@ typedef struct FontData {
 /* 0x100 */ FontCharData unk100[96];
 } FontData;
 
-FontData* gFonts;
+FontData *gFonts;
 
 typedef struct unk8012A7E8_24 {
     u8 unk00;
     u8 unk01;
-    char* unk4;
+    char *unk4;
     s16 unk8;
     s16 unkA;
     s16 unkC;
@@ -109,7 +109,7 @@ typedef struct unk8012A7E8_24 {
     u8 unk17;
     u8 unk18;
     u8 unk19;
-    struct unk8012A7E8_24* unk1C;
+    struct unk8012A7E8_24 *unk1C;
 } unk8012A7E8_24;
 
 /* Size: 0x28 bytes */
@@ -348,11 +348,11 @@ void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
 void func_800C45A4(Gfx **dlist, unk8012A7E8 *arg1, u8 *text, s32 alignmentFlags, f32 arg4);
 
 // Unused?
-void func_800C4404(Gfx** displayList, char* text, s32 alignmentFlags) {
+void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags) {
     func_800C45A4(displayList, &(*D_8012A7E8)[0], text, alignmentFlags, 1.0f);
 }
 
-void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char* text, s32 alignmentFlags) {
+void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
     unk8012A7E8 *temp = &(*D_8012A7E8)[0];
     temp->xpos = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;
     temp->ypos = (ypos == -0x8000) ? temp->unkE >> 1 : ypos;
@@ -360,7 +360,7 @@ void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char* text, s32 alignmentF
 }
 
 // Unused?
-void func_800C44C0(Gfx** displayList, s32 arg1, char* text, s32 alignmentFlags) {
+void func_800C44C0(Gfx** displayList, s32 arg1, char *text, s32 alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg1];
         func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
@@ -368,7 +368,7 @@ void func_800C44C0(Gfx** displayList, s32 arg1, char* text, s32 alignmentFlags) 
 }
 
 // Unused?
-void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char* text, s32 alignmentFlags) {
+void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg1];
         temp->xpos = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;

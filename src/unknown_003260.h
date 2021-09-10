@@ -41,9 +41,9 @@ typedef union {
 typedef struct unk80119240
 {
     ALLink node;
-    u32    unk08;
-    u32    unk0C;
-    void*  unk10;
+    u32 unk08;
+    u32 unk0C;
+    void *unk10;
 } unk80119240;
 
 /* Unknown Size */
