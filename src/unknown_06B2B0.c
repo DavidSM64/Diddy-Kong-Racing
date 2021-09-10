@@ -142,7 +142,8 @@ s32 *gHudTriangles[2];
 s32 gCurrHudTris;
 s32 D_80121230[8];
 s8  D_80121250[16];
-OSSched *D_80121260[2210]; //TODO: This almost definitely isn't an array this large.
+OSSched *D_80121260;
+s32 D_80121268[2208]; //Padding
 s32 D_801234E8;
 s32 D_801234EC;
 s32 D_801234F0;
