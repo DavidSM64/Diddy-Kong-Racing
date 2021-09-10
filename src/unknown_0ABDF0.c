@@ -5,6 +5,7 @@
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
+#include "PR/libultra.h"
 
 typedef struct {
     s16 unk0;
@@ -282,7 +283,7 @@ void func_800AD220(void) {
 }
 
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2) {
-    D_800E2C78 = osTvType == 0 ? 50.0 * arg2 : 60.0 * arg2;
+    D_800E2C78 = osTvType == TV_TYPE_PAL ? 50.0 * arg2 : 60.0 * arg2;
     D_800E2C68 = arg0;
     D_800E2C64 = (D_800E2C68 - D_800E2C60) / D_800E2C78;
     D_800E2C74 = arg1;

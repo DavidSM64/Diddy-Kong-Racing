@@ -48,7 +48,7 @@ s32 D_801262E8[8];
 u8  D_80126308;
 u8  D_80126309;
 s32 D_8012630C;
-s32 D_80126310;
+OSScClient *D_80126310;
 
 /******************************/
 
@@ -60,7 +60,7 @@ void init_framebuffer(s32);
 void func_8007A974(void);
 void swap_framebuffers(void);
 
-void init_video(s32 arg0, OSSched *sc) {
+void init_video(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
         gVideoAspectRatio = ASPECT_RATIO_PAL;
@@ -83,7 +83,7 @@ void init_video(s32 arg0, OSSched *sc) {
     }
     
     func_8007A974();
-    set_video_mode_index(arg0);
+    set_video_mode_index(videoModeIndex);
     gVideoFramebuffers[0] = 0;
     gVideoFramebuffers[1] = 0;
     init_framebuffer(0);

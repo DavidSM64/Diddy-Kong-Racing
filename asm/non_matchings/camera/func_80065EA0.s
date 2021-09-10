@@ -96,10 +96,10 @@ glabel func_80065EA0
 /* 066BF4 80065FF4 C426709C */  lwc1  $f6, %lo(D_800E709C)($at)
 /* 066BF8 80065FF8 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 066BFC 80065FFC 44814000 */  mtc1  $at, $f8
-/* 066C00 80066000 3C058012 */  lui   $a1, %hi(D_80120D58+20) # $a1, 0x8012
+/* 066C00 80066000 3C058012 */  lui   $a1, %hi(perspNorm+20) # $a1, 0x8012
 /* 066C04 80066004 3C073FAA */  lui   $a3, (0x3FAAAAAB >> 16) # lui $a3, 0x3faa
 /* 066C08 80066008 34E7AAAB */  ori   $a3, (0x3FAAAAAB & 0xFFFF) # ori $a3, $a3, 0xaaab
-/* 066C0C 8006600C 24A50D6C */  addiu $a1, %lo(D_80120D58+20) # addiu $a1, $a1, 0xd6c
+/* 066C0C 8006600C 24A50D6C */  addiu $a1, %lo(perspNorm+20) # addiu $a1, $a1, 0xd6c
 /* 066C10 80066010 02002025 */  move  $a0, $s0
 /* 066C14 80066014 3C064270 */  lui   $a2, 0x4270
 /* 066C18 80066018 E7A40010 */  swc1  $f4, 0x10($sp)

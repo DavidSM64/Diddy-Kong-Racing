@@ -641,20 +641,18 @@ typedef struct unk800535C4 {
 
 /* Unknown Size */
 typedef struct unk800535C4_2 {
-    u8 unk0[0x9C];
-    s32 unk9C;
-    s32 unkA0;
-    s32 unkA4;
-    u8 unkA8[0xF8];
-    s16 unk1A0;
-    s16 unk1A2;
-    s16 unk1A4;
+    /* 0x00  */ u8 unk0[0x9C];
+    /* 0x9C  */ f32 oz;
+    /* 0xA0  */ f32 ox;
+    /* 0xA4  */ f32 oy;
+    /* 0xA8  */ u8 unkA8[0xF8];
+    /* 0x1A0 */ s16 unk1A0;
+    /* 0x1A2 */ s16 unk1A2;
+    /* 0x1A4 */ s16 unk1A4;
 } unk800535C4_2;
 
-void guMtxXFMF(Matrix*, f32, f32, f32, s32*, s32*, s32*);
-
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
-    Matrix sp30;
+    Matrix mf;
 
     D_8011D510.unk0 = -arg1->unk1A0;
     D_8011D510.unk2 = -arg0->unk2;
@@ -663,9 +661,9 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     D_8011D510.unk10 = 0;
     D_8011D510.unk14 = 0;
     D_8011D510.unk8 = 1;
-    func_8006FE74(&sp30, &D_8011D510);
+    func_8006FE74(&mf, &D_8011D510);
 
-    guMtxXFMF(&sp30, 0, -1, 0, &arg1->unkA0, &arg1->unkA4, &arg1->unk9C);
+    guMtxXFMF(&mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
 
 void func_80053664(Object_64 *arg0) {
@@ -805,20 +803,20 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057220.s")
 
 /* Unknown size */
 typedef struct Object_64_800575EC {
-    u8 pad0[0x38];
-    f32 unk38;
-    f32 unk3C;
-    f32 unk40;
-    f32 unk44;
-    f32 unk48;
-    f32 unk4C;
-    f32 unk50;
-    f32 unk54;
-    f32 unk58;
+    /* 0x00 */ u8 pad0[0x38];
+    /* 0x38 */ f32 ox1;
+    /* 0x3C */ f32 oy1;
+    /* 0x40 */ f32 oz1;
+    /* 0x44 */ f32 ox2;
+    /* 0x48 */ f32 oy2;
+    /* 0x4C */ f32 oz2;
+    /* 0x50 */ f32 ox3;
+    /* 0x54 */ f32 oy3;
+    /* 0x58 */ f32 oz3;
 } Object_64_800575EC;
 
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
-    Matrix sp38;
+    Matrix mf;
     
     D_8011D510.unk0 = obj->y_rotation;
     D_8011D510.unk2 = obj->x_rotation;
@@ -827,10 +825,10 @@ void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     D_8011D510.unk10 = 0.0f;
     D_8011D510.unk14 = 0.0f;
     D_8011D510.unk8 = 1.0f;
-    func_8006FC30(&sp38, &D_8011D510);
-    guMtxXFMF(&sp38, 0.0f, 0.0f, 1.0f, &obj64->unk38, &obj64->unk3C, &obj64->unk40);
-    guMtxXFMF(&sp38, 0.0f, 1.0f, 0.0f, &obj64->unk44, &obj64->unk48, &obj64->unk4C);
-    guMtxXFMF(&sp38, 1.0f, 0.0f, 0.0f, &obj64->unk50, &obj64->unk54, &obj64->unk58);
+    func_8006FC30(&mf, &D_8011D510);
+    guMtxXFMF(&mf, 0.0f, 0.0f, 1.0f, &obj64->ox1, &obj64->oy1, &obj64->oz1);
+    guMtxXFMF(&mf, 0.0f, 1.0f, 0.0f, &obj64->ox2, &obj64->oy2, &obj64->oz2);
+    guMtxXFMF(&mf, 1.0f, 0.0f, 0.0f, &obj64->ox3, &obj64->oy3, &obj64->oz3);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800576E0.s")

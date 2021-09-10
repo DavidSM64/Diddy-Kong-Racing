@@ -7,6 +7,7 @@
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
+#include "PR/gu.h"
 
 /* Size: 0x44 bytes */
 typedef struct unk80120AC0 {
@@ -225,11 +226,11 @@ typedef struct unk8011D388 {
 } unk8011D388;
 unk8011D388 D_8011D388[4];
 
-typedef struct{
-    s32 unk00;
-    s32 unk04;
-    s32 unk08;
-}unk8011D468;
+typedef struct {
+    /* 0x00 */ s32 x;
+    /* 0x04 */ s32 y;
+    /* 0x08 */ s32 z;
+} unk8011D468;
 unk8011D468 D_8011D468;
 
 s32 D_8011D474;
@@ -255,7 +256,6 @@ s32 D_8011D4BC;
 
 /******************************/
 
-extern void guMtxXFMF(Matrix, f32, f32, f32, f32*, f32*, f32*);
 f32 func_800BB2F4(s32, f32, f32, f32*);
 void func_8007B3D0(Gfx**);
 Object *get_object(s32);
@@ -1177,8 +1177,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030A74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 
 
-void func_80031018(void){
-    Matrix sp_50;
+void func_80031018(void) {
+    Matrix mf;
 
     struct {
         s16 unk00; //sp_38
@@ -1191,9 +1191,9 @@ void func_80031018(void){
         f32 unk14; //sp4C;
     } sp_38;
 
-    f32 sp_34 = 0.0f;
-    f32 sp_30 = 0.0f;
-    f32 sp_2C = -65536.0f;    
+    f32 x = 0.0f;
+    f32 y = 0.0f;
+    f32 z = -65536.0f;
     
     sp_38.unk04 = D_8011B0B0->z_rotation;
     sp_38.unk02 = D_8011B0B0->x_rotation;
@@ -1203,9 +1203,11 @@ void func_80031018(void){
     sp_38.unk14 = 0.0f;
     sp_38.unk08 = 1.0f;
     
-    func_8006FC30(&sp_50, &sp_38);
-    guMtxXFMF(&sp_50, sp_34, sp_30, sp_2C, &sp_34, &sp_30, &sp_2C);
-    D_8011D468.unk00 = sp_34;
-    D_8011D468.unk04 = sp_30;
-    D_8011D468.unk08 = sp_2C;
+    func_8006FC30(&mf, &sp_38);
+    guMtxXFMF(&mf, x, y, z, &x, &y, &z);
+
+    //Store x/y/z as integers
+    D_8011D468.x = (s32) x;
+    D_8011D468.y = (s32) y;
+    D_8011D468.z = (s32) z;
 }

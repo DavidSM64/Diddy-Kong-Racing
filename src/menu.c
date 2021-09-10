@@ -2271,7 +2271,7 @@ void func_800829F8(s32 arg0, s32 arg1) {
         set_text_color(255, 255, 255, 0, 0xFF);
         set_text_background_color(0, 0, 0, 0);
         temp = 0xD0;
-        if (osTvType == 0) {
+        if (osTvType == TV_TYPE_PAL) {
             temp = 0xEA;
         }
         draw_text(arg0, -0x8000, temp, gMenuText[151], 0xC);
@@ -2282,7 +2282,7 @@ void menu_logos_screen_init(void) {
     gMenuDelay = 0;
     D_80126450 = 16.0f; // 16 seconds
     func_80077B5C(0, 0, 0);
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         func_80066940(0, 0, 0x26, 0x140, 0xE0);
         func_80066AA8(0, 0x8000, 0x8000, 0x140, 0x11C);
     } else {
@@ -3123,7 +3123,7 @@ void func_800887E8(void) {
     D_801263D8 = 0;
     func_8009C6D4(0x3F);
     func_8008E4B0();
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         D_80126BB4 = 8;
     } else {
         D_80126BB4 = 7;
@@ -3642,7 +3642,7 @@ void draw_character_select_text(s32 arg0) {
         draw_text(&D_801263A0, 0xA0, 0x20, gMenuText[135], 0xC); 
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers && gNumberOfActivePlayers > 0) {
             yPos = 0xD0;
-            if (osTvType == 0) {
+            if (osTvType == TV_TYPE_PAL) {
                 yPos = 0xEA;
             }
             draw_text(&D_801263A0, 0xA0, yPos, D_800E8230 /* "OK?" */, 0xC);
@@ -3938,7 +3938,7 @@ void func_8008C698(s32 arg0) {
             (&((unk80126460*)D_80126460)[temp] + 1)->elem[1].filterAlpha = filterAlpha;
         }
         
-        if (osTvType == 0) {
+        if (osTvType == TV_TYPE_PAL) {
             D_800DF79C = 0xC;
             D_800DF7A0 = 0;
         } else {
@@ -5354,7 +5354,7 @@ void func_800983C0(s32 arg0) {
     s8 *sp20;
 
     sp20 = get_misc_asset(0x1A);
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         sp2C = 0x12;
     } else {
         sp2C = 0;
@@ -5675,7 +5675,7 @@ void menu_credits_init(void) {
     D_80126BD8 = 0;
     D_80126BE0 = 0;
     func_80077B5C(0, 0, 0);
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         func_80066940(0, 0, 0x26, 0x140, 0xE0);
         func_80066AA8(0, 0x8000, 0x8000, 0x140, 0x11C);
     } else {

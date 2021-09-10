@@ -41,7 +41,7 @@ glabel func_80074018
 /* 074CAC 800740AC 8FA70020 */  lw    $a3, 0x20($sp)
 /* 074CB0 800740B0 AFA2002C */  sw    $v0, 0x2c($sp)
 /* 074CB4 800740B4 02002025 */  move  $a0, $s0
-/* 074CB8 800740B8 0C01D984 */  jal   func_80076610
+/* 074CB8 800740B8 0C01D984 */  jal   read_data_from_controller_pak
 /* 074CBC 800740BC 00403025 */   move  $a2, $v0
 /* 074CC0 800740C0 1440000F */  bnez  $v0, .L80074100
 /* 074CC4 800740C4 00401825 */   move  $v1, $v0

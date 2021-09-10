@@ -6,6 +6,7 @@
 #include "f3ddkr.h"
 #include "asset_sections.h"
 #include "memory.h"
+#include "PR/libultra.h"
 
 /************ .data ************/
 
@@ -81,7 +82,7 @@ void func_800C29F0(void) {
     D_8012A7BA = 0;
     D_8012A7AE = 0x20;
     D_8012A7B2 = 0x120;
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         D_8012A7B0 = 0xE0;
         D_8012A7B4 = 0xF8;
     } else {
@@ -168,7 +169,7 @@ void func_800C314C(void) {
 }
 
 void func_800C3158(s32 arg0, f32 arg1) {
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         D_800E3678 = arg1 * 50.0;
     } else {
         D_800E3678 = arg1 * 60.0;

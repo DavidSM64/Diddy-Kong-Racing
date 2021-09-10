@@ -1,6 +1,8 @@
 #ifndef _MEMORY_H_
 #define _MEMORY_H_
 
+#include "types.h"
+
 // Animation related?
 #define COLOR_TAG_RED 0xFF0000FF
 // Object related?
@@ -21,5 +23,8 @@
 #define COLOR_TAG_ORANGE 0xFF7F7FFF
 // ???
 #define COLOR_TAG_BLACK 0x000000FF
+
+void *allocate_from_main_pool_safe(s32 size, u32 colorTag);
+s32 func_80071478(u8 *address);
 
 #endif

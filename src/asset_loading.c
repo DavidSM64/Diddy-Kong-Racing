@@ -5,7 +5,6 @@
 #include "memory.h"
 
 //#include "assets.h"
-#include "types.h"
 #include "macros.h"
 #include "ultra64.h"
 
@@ -23,16 +22,12 @@ s32 *gAssetsLookupTable;
 
 // These are both defined in the generated dkr.ld file.
 extern u8 __ASSETS_LUT_START, __ASSETS_LUT_END; // __ASSETS_LUT_START = 0xECB60, _END = 0xECC30
-
-void *allocate_from_main_pool_safe(s32, s32);
-s32 func_80071478(s32*);
-void dmacopy(u32 romOffset, u8 *ramAddress, s32 numBytes);
     
 void func_80076BA0(void) {
     u32 assetTableSize;
     osCreateMesgQueue(&D_80124278, &D_80124238, 16);
     osCreateMesgQueue(&D_80124220, &D_80124218, 1);
-    osCreatePiManager(150, &D_80124278, &D_80124238, 16);
+    osCreatePiManager((OSPri) 150, &D_80124278, &D_80124238, 16);
     assetTableSize = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
     gAssetsLookupTable = (s32*)allocate_from_main_pool_safe(assetTableSize, COLOR_TAG_GRAY);
     func_80071478(gAssetsLookupTable);
@@ -180,8 +175,8 @@ s32 get_size_of_asset_section(u32 assetIndex) {
 /**
  * Copies data from the game cartridge to a ram address.
  */
-void dmacopy(u32 romOffset, u8 *ramAddress, s32 numBytes) {
-    s32 sp4C;
+void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
+    OSMesg *sp4C;
     s32 numBytesToDMA;
 
     osInvalDCache(ramAddress, numBytes);

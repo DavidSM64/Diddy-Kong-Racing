@@ -124,7 +124,6 @@ typedef struct audioMgrConfig_s{
 void func_80000968(s32 arg0);
 ALCSPlayer *func_80002224(s32, s32);
 void func_8000B010(ALCSPlayer*, u8);
-void    *allocate_from_main_pool_safe(u32, u32);
 void    *load_asset_section_from_rom(u32);
 void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size);
 
