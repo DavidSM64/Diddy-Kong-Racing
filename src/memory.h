@@ -25,6 +25,7 @@
 #define COLOR_TAG_BLACK 0x000000FF
 
 void *allocate_from_main_pool_safe(s32 size, u32 colorTag);
+void free_from_memory_pool(void *data);
 s32 func_80071478(u8 *address);
 
 #endif

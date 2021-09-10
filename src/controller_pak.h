@@ -2,11 +2,55 @@
 #define _UNKNOWN_072E50_H_
 
 #include "types.h"
+#include "memory.h"
+#include "PR/pfs.h"
+#include "PR/os_cont.h"
+#include "macros.h"
+#include "structs.h"
+#include "camera.h"
 
-extern s32 D_800DE440;
+// Ghost data follows directly after the header
+/* Size: 8 bytes */
+typedef struct GhostHeader {
+    s16 checksum;
+    s8  unk2;
+    s8  unk3;
+    s16 unk4;
+    s16 numberFrames;
+} GhostHeader;
+
+/* Size: 12 bytes */
+typedef struct GhostDataFrame {
+    u8 pad0[12];
+} GhostDataFrame;
+
+extern s32 *D_800DE440;
 extern u8 gN64FontCodes[68];
 extern s32 D_800DE488;
 extern s32 D_800DE48C;
+
+u8 func_80072250(s32 arg0);
+void func_80072298(u8 arg0);
+void func_80072708(void);
+s32 func_80073C4C(void);
+s32 func_80073C54(void);
+s32 func_80073F5C(s32 arg0, s32 arg1);
+s32 func_80074148(s32 arg0, Settings *arg1);
+void func_80074AA8(GhostHeader *ghostHeader, s16 arg1, s16 arg2, s16 numberFrames, u8 *dest);
+s32 func_80075AEC(s32 controllerIndex);
+s32 func_80075D38(s32 controllerIndex);
+s32 func_80075DC4(s32 controllerIndex);
+void func_80076164(void);
+s32 func_80076194(s32 controllerIndex, s32 *arg1, s32 *arg2);
 s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength);
+s32 func_80076AF4(s32 controllerIndex, s32 fileNum);
+
+s32 func_800722E8(s16 arg0); //Non matching
+s32 func_800738A4(Settings *arg0, void *arg1); //Non matching
+s64 func_8007480C(u64 arg0); //Non matching
+s32 func_8007497C(u64 *arg0); //Non matching
+s32 func_80074B1C(void); //Non matching
+s32 func_800762C8(s32 controllerIndex, s32 fileNum); //Non matching
+s32 func_80076924(s32 controllerIndex, s32 arg1, s32 *arg2); //Non matching
 
 #endif
