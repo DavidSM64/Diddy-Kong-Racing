@@ -208,7 +208,6 @@ Settings *get_settings(void);
 s32 is_in_tracks_mode(void);
 s32 *load_asset_section_from_rom(s32);
 void load_asset_to_address(u32, s32*, s32, s32);
-void free_from_memory_pool(s32*);
 void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8006C2E4(void);
 s16 func_8006C2F0(void);

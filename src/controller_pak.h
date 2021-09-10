@@ -9,13 +9,17 @@
 #include "structs.h"
 #include "camera.h"
 
-// Ghost data follows directly after the header
-/* Size: 8 bytes */
+typedef struct GhostHeaderChecksum {
+	u8  levelID;
+    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+} GhostHeaderChecksum;
+
 typedef struct GhostHeader {
+    //GhostHeaderChecksum checksum;
     s16 checksum;
-    s8  unk2;
-    s8  unk3;
-    s16 unk4;
+    u8  characterID; // 9 = T.T.
+    u8  unk3; // Might just be padding?
+    s16 time; // In frames, where 60 frames = 1 second.
     s16 numberFrames;
 } GhostHeader;
 
@@ -36,7 +40,7 @@ s32 func_80073C4C(void);
 s32 func_80073C54(void);
 s32 func_80073F5C(s32 arg0, s32 arg1);
 s32 func_80074148(s32 arg0, Settings *arg1);
-void func_80074AA8(GhostHeader *ghostHeader, s16 arg1, s16 arg2, s16 numberFrames, u8 *dest);
+void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 numberFrames, u8 *dest);
 s32 func_80075AEC(s32 controllerIndex);
 s32 func_80075D38(s32 controllerIndex);
 s32 func_80075DC4(s32 controllerIndex);
@@ -52,5 +56,6 @@ s32 func_8007497C(u64 *arg0); //Non matching
 s32 func_80074B1C(void); //Non matching
 s32 func_800762C8(s32 controllerIndex, s32 fileNum); //Non matching
 s32 func_80076924(s32 controllerIndex, s32 arg1, s32 *arg2); //Non matching
+s16 func_80074A4C(GhostHeader *ghostHeader); //Non matching
 
 #endif

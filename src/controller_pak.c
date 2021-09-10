@@ -203,25 +203,9 @@ s32 func_8007497C(u64 *arg0) {
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007497C.s")
 #endif
 
-
-// Ghost data follows directly after the header
-/* Size: 8 bytes */
-typedef struct GhostHeader {
-    s16 checksum;
-    s8  unk2;
-    s8  unk3;
-    s16 unk4;
-    s16 numberFrames;
-} GhostHeader;
-
-/* Size: 12 bytes */
-typedef struct GhostDataFrame {
-    u8 pad0[12];
-} GhostDataFrame;
-
 #ifdef NON_MATCHING
 // regalloc issues
-s32 func_80074A4C(GhostHeader *ghostHeader) {
+s16 func_80074A4C(GhostHeader *ghostHeader) {
     s16 i;
     s16 len;
     s16 sum;
@@ -235,14 +219,16 @@ s32 func_80074A4C(GhostHeader *ghostHeader) {
     return sum;
 }
 #else
+s16 func_80074A4C(GhostHeader *ghostHeader);
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074A4C.s")
 #endif
 
-void func_80074AA8(GhostHeader *ghostHeader, s16 arg1, s16 arg2, s16 numberFrames, u8 *dest) {
+
+void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 numberFrames, u8 *dest) {
     ghostHeader->checksum = 0;
-    ghostHeader->unk2 = arg1;
+    ghostHeader->characterID = characterID;
     ghostHeader->unk3 = 0;
-    ghostHeader->unk4 = arg2;
+    ghostHeader->time = time;
     ghostHeader->numberFrames = numberFrames;
     bcopy(dest, (u8*)ghostHeader + 8, numberFrames * sizeof(GhostDataFrame));
     ghostHeader->checksum = func_80074A4C(ghostHeader);
