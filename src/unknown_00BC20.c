@@ -601,6 +601,93 @@ void func_8000E1EC(Object *object, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
+<<<<<<< HEAD
+=======
+#else
+typedef struct LevelObjectEntry8000E2B4 {
+    struct LevelObjectEntryCommonSplit {
+        u8 object_id;//2c
+        u8 size;//2d
+        s16 x, y, z;//2e,30,32
+    } common;
+    s16 unk8;//34
+    s16 unkA;//36
+    s16 unkC;//38
+    s16 unkE;//3a
+} LevelObjectEntry8000E2B4;
+
+void func_8000E2B4(void) {
+    LevelObjectEntry8000E2B4 sp2C;
+    Settings *settings;
+    Object *player;
+    Object_64 *player_64;
+<<<<<<< HEAD
+    s16 object_id;
+=======
+    s16 phi_v1;
+>>>>>>> Decompiled func_8000E2B4.
+
+    if (D_8011AD44 == 0) {
+        return;
+    }
+    D_8011AD44 = (s8) (D_8011AD44 - 1);
+    if (D_8011AD44 != 0) {
+        return;
+    }
+    settings = get_settings();
+    sp2C.unkE = 0;
+    sp2C.common.size = 0x10;
+    if (D_8011AD45 < 5) {
+<<<<<<< HEAD
+        object_id = ((s16*)D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
+    } else {
+        object_id = D_800DC800[D_8011AD45 + 37];
+    }
+    func_8006DB14(D_8011AD45);
+    sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
+    sp2C.unkA = 0;
+    sp2C.unk8 = 0;
+    sp2C.common.object_id = (s8) object_id;
+=======
+        phi_v1 = ((s16*)D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
+    } else {
+        phi_v1 = D_800DC800[D_8011AD45 + 37];
+    }
+    func_8006DB14(D_8011AD45);
+    sp2C.common.size = sp2C.common.size | ((s32) (phi_v1 & 0x100) >> 1);
+    sp2C.unkA = 0;
+    sp2C.unk8 = 0;
+    sp2C.common.object_id = (s8) phi_v1;
+>>>>>>> Decompiled func_8000E2B4.
+    sp2C.common.x = D_8011AD46;
+    sp2C.common.y = D_8011AD48;
+    sp2C.common.z = D_8011AD4A;
+    sp2C.unkC = D_8011AD4C;
+    func_800521B8(1);
+    player = func_8000EA54(&sp2C, 0x11);
+    gObjectCount = 1;
+    (*gObjectStructArrayPtr)[0] = (s32) player;
+    *D_8011AEEC = (s32) player;
+    *D_8011AEE8 = (s32) player;
+    player_64 = player->unk64;
+    player_64->unk1D6 = (s8) D_8011AD45;
+    player_64->unk0_a.unk0_b.unk2 = (u8)0;
+    player_64->unk1D7 = (s8) D_8011AD45;
+    player_64->unk0_a.unk0_b.unk0 = (u16)0;
+    player_64->unk118 = 0;
+    player_64->unk0_a.unk0_b.unk3 = (s8) settings->racers[0].character;
+    if ((get_filtered_cheats() & 0x10) != 0) {
+        player->scale *= 1.4f;
+    }
+    if ((get_filtered_cheats() & 0x20) != 0) {
+        player->scale *= 0.714f;
+    }
+    player->unk3C_a.unk3C = 0;
+    player->y_rotation = D_8011AD4C;
+    player->y_position = D_8011AD48;
+}
+#endif
+>>>>>>> c0e8460... Decompiled func_8000E2B4.
 
 /**
  * Enables or Disables time trial mode.
