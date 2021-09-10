@@ -3,8 +3,8 @@
 
 #include "libultra_internal.h"
 
-extern OSThread* __osRunningThread;
-extern OSThread* __RunQueue; //__osRunQueue
+extern OSThread *__osRunningThread;
+extern OSThread *__RunQueue; //__osRunQueue
 
 void osStartThread(OSThread *t)
 {

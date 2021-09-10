@@ -54,7 +54,7 @@ f32 D_800DC8AC[27] = {
     -130.0f, 60.0f, -68.0f
 };
 
-LevelModel* gCurrentLevelModel = NULL;
+LevelModel *gCurrentLevelModel = NULL;
 LevelHeader *gCurrentLevelHeader2 = NULL;
 
 s32 D_800DC920 = -1;
@@ -614,7 +614,7 @@ void render_level_geometry_and_objects(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_geometry_and_objects.s")
 #endif
 
-// *Should* be functionally equivalent.
+// *Should *be functionally equivalent.
 #ifdef NON_MATCHING
 // nonOpaque: 0 for solid geometry, 1 for transparent geometry.
 void render_level_segment(s32 segmentId, s32 nonOpaque) {
@@ -789,7 +789,7 @@ void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segment
 #ifdef NON_MATCHING
 // Unused. Has regalloc issues.
 s32 func_80029DE0(Object *obj, s32 segmentIndex) {
-    LevelModelSegmentBoundingBox* bb;
+    LevelModelSegmentBoundingBox *bb;
     s32 x, y, z;
     if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return FALSE;
@@ -849,7 +849,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/get_level_segment_index_from_positi
 #endif
 
 
-s32 func_8002A05C(s32 arg0, s32 arg1, s32* arg2){
+s32 func_8002A05C(s32 arg0, s32 arg1, s32 *arg2){
     s32 i;
     s32 cnt = 0;
     LevelModelSegmentBoundingBox * a0;
@@ -976,7 +976,7 @@ void func_8002ACC8(s32 arg0) {
     D_8011B0F4 = arg0;
 }
 
-s32 func_8002ACD4(f32* arg0, f32* arg1, f32* arg2) {
+s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2) {
     *arg0 = D_8011B0E4;
     *arg1 = D_8011B0E8;
     *arg2 = D_8011B0EC;
@@ -1029,7 +1029,7 @@ void func_8002C71C(LevelModelSegment *segment) {
     segment->unk32 = numVerts;
 }
 
-LevelModel* func_8002C7C4(void) {
+LevelModel *func_8002C7C4(void) {
     return gCurrentLevelModel;
 }
 
@@ -1041,11 +1041,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002CC30.s")
 
 typedef struct unk8002D30C_a0{
     u8 pad00[0x04];
-    struct unk8002D30C_a0* unk04;
-    struct unk8002D30C_a0* unk08;
+    struct unk8002D30C_a0 *unk04;
+    struct unk8002D30C_a0 *unk08;
 }unk8002D30C_a0;
 
-void func_8002D30C(unk8002D30C_a0* arg0, s32 arg1) {
+void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
     // Weird issue here with the ra register.
     while(arg0 != NULL) {
         if(arg0->unk04) {

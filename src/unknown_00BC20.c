@@ -213,7 +213,7 @@ typedef struct unknown8011AECC {
     s8 unk3A;
     s8 unk3B;
 } unknown8011AECC;
-unknown8011AECC* D_8011AECC; // Array of structs, unknown number of members
+unknown8011AECC *D_8011AECC; // Array of structs, unknown number of members
 s32 D_8011AED0;
 s32 D_8011AED4;
 s16 D_8011AED8;
@@ -242,8 +242,8 @@ s32 D_8011AF68[32];
 /* Size: 0x40 bytes */
 typedef struct unk800179D0 {
     s32 unk0;
-    u32* unk04;
-    u32* unk08;
+    u32 *unk04;
+    u32 *unk08;
     f32 unk0C[12];
     u32 unk3C;
 } unk800179D0;
@@ -257,14 +257,14 @@ s32 D_8011AFE8;
 s16 D_8011AFEC;
 s16 D_8011AFEE;
 s32 D_8011AFF0;
-unk800179D0* D_8011AFF4; 
+unk800179D0 *D_8011AFF4; 
 s32 D_8011AFF8;
 s32 D_8011AFFC;
 s32 D_8011B000;
 s32 D_8011B004;
 s32 D_8011B008;
 s32 D_8011B010[4];
-u32* D_8011B020[10];
+u32 *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
 s32 D_8011B068[4];
@@ -314,8 +314,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
 #else 
 
 extern s32 D_800DC754;
-extern Object* D_800DC75C;
-extern Object* D_800DC764;
+extern Object *D_800DC75C;
+extern Object *D_800DC764;
 
 s32 *get_misc_asset(s32 arg0);
 
@@ -350,7 +350,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B38C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B750.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000BADC.s")
 
-u32* func_8000BF44(s32 arg0) {
+u32 *func_8000BF44(s32 arg0) {
     if (arg0 == -1) {
         arg0 = D_800DC760;
     }
@@ -702,7 +702,7 @@ s32 func_8000E9C0(void) {
     return D_8011AE64;
 }
 
-void func_8000E9D0(Object* arg0){
+void func_8000E9D0(Object *arg0){
     arg0->unk6 |= 0x8000;
     func_800245B4(arg0->unk2C | 0xC000);
     gObjPtrList[objCount++] = arg0;
@@ -728,10 +728,10 @@ typedef struct unk8000FD20_2 {
 /* Unknown Size */
 typedef struct unk8000FD20 {
     u8 unk00[0x4C];
-    unk8000FD20_2* unk4C;
+    unk8000FD20_2 *unk4C;
 } unk8000FD20;
 
-s32 func_8000FD20(unk8000FD20* arg0, unk8000FD20_2* arg1) {
+s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
     arg0->unk4C = arg1;
     arg1->unk13 = 0xFF;
     return 0x28;
@@ -752,7 +752,7 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
 
 
-void gParticlePtrList_addObject(Object* object){
+void gParticlePtrList_addObject(Object *object){
     func_800245B4(object->unk4A | 0x8000);
     gParticlePtrList[gParticleCount] = object;
     gParticleCount++;
@@ -773,7 +773,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/gParticlePtrList_flush.s")
 /*removes objects in particleList from gObjPtrList and frees*/
 void gParticlePtrList_flush(void){
     s32  j, i, search_indx, tmp;
-    Object* searchObj;
+    Object *searchObj;
     
     D_8011AE88 = 0;
     for (i = 0; i < gParticleCount; i++){
@@ -835,7 +835,7 @@ void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
 #else
-void func_80011960(Object* arg0, s32 arg2, u32 arg3, Object_64* arg4
+void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4
                   , u32 arg5 , u32 arg6 , u32 arg7, u32 arg8, f32 arg9)
 {
 
@@ -847,7 +847,7 @@ void func_80011960(Object* arg0, s32 arg2, u32 arg3, Object_64* arg4
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
 #else
 extern f32 D_800E5550;
-void func_80011AD0(Object* this){
+void func_80011AD0(Object *this){
     f32 tmp_f0;
     u32 offset;
     switch(this->unk48){
@@ -1031,7 +1031,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
 void func_800142B8(void){
     s32 i =  D_8011AE60;
     s32 j;
-    Object* currObj;
+    Object *currObj;
     Object_68 *curr_68;
 
     for(; i < objCount; i++){
@@ -1068,7 +1068,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017978.s")
 u32 func_800179D0(void) {
     s16 i = 0;
     while(i < 16) {
-        unk800179D0* temp = &D_8011AFF4[i]; 
+        unk800179D0 *temp = &D_8011AFF4[i]; 
         if (temp->unk0 != 0) {
             temp->unk0--;
         }
@@ -1092,7 +1092,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
 
 Object * func_80018C6C(void){
     s32 i;
-    Object* current_obj;
+    Object *current_obj;
     for(i=D_8011AE60; i < objCount; i++){
         current_obj = gObjPtrList[i];
         if(!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
@@ -1343,9 +1343,9 @@ void func_8001E344(s32 arg0) {
     }
 }
 
-void func_8001E36C(s32 arg0, f32* arg1, f32* arg2, f32* arg3){
+void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3){
     s32 i;
-    Object* current_obj;
+    Object *current_obj;
     *arg1 = -32000.0f;
     *arg2 = -32000.0f;
     *arg3 = -32000.0f;
@@ -1490,10 +1490,10 @@ extern f32 sqrtf(f32);
 
 //bad regalloc
 //finds furthest object (with some additional conditions)
-Object* func_8002342C(f32 x, f32 z){
-    Object* retval = NULL;
+Object *func_8002342C(f32 x, f32 z){
+    Object *retval = NULL;
     s32 i;
-    Object* currObj = NULL;
+    Object *currObj = NULL;
     f32 x;
     f32 z;
     f32 dist;
@@ -1535,7 +1535,7 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
-void func_800238BC(Object* arg0) {
+void func_800238BC(Object *arg0) {
     arg0->unk48 = arg0->descriptor_ptr->unk54;
     switch (arg0->unk48 - 1) {
         case 0x00:
@@ -2049,7 +2049,7 @@ void func_8002458C(s32 arg0) {
 
 }
 
-s16* func_80024594(s32 *arg0, s32 *arg1) {
+s16 *func_80024594(s32 *arg0, s32 *arg1) {
     *arg0 = D_800DC700;
     *arg1 = 0x80;
     return D_8011AC20;

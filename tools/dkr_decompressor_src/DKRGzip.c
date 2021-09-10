@@ -670,12 +670,12 @@ int level = 9;
 u8 outbuf[OUTPUT_BUFFER_SIZE];
 int outcnt; // Bytes in output buffer
 
-u8* inbuf = NULL;
+u8 *inbuf = NULL;
 int inbufSize;
 int incnt;
 #define NO_MORE_INPUT (incnt == inbufSize)
 
-int* method;
+int *method;
 
 u32 crc;
 
@@ -705,7 +705,7 @@ void put_int(int i) {
     outbuf[outcnt++] = (i >> 24) & 0xFF;
 }
 
-u32 updcrc(char* bytes, u32 numBytes) {
+u32 updcrc(char *bytes, u32 numBytes) {
     u32 c;
 
     static u32 crc = 0xffffffff;
@@ -722,7 +722,7 @@ u32 updcrc(char* bytes, u32 numBytes) {
     return c ^ 0xffffffff;
 }
 
-int read_buf(char* buf, u32 size){
+int read_buf(char *buf, u32 size){
     u32 len;
     
     if(incnt + size >= inbufSize) {
@@ -910,7 +910,7 @@ u32 bi_reverse(u32 code, int len) {
  * OUT assertion: the field code is set for all tree elements of non
  *     zero code length.
  */
-void gen_codes (ct_data* tree, int max_code) {
+void gen_codes (ct_data *tree, int max_code) {
     u16 next_code[MAX_BITS+1]; /* next code value for each bit length */
     u16 code = 0;              /* running code value */
     int bits;                  /* bit index */
@@ -980,7 +980,7 @@ void init_block() {
  * when the heap property is re-established (each father smaller than its
  * two sons).
  */
-void pqdownheap(ct_data* tree, int k){
+void pqdownheap(ct_data *tree, int k){
     int v = heap[k];
     int j = k << 1;  /* left son of k */
     while (j <= heap_len) {
@@ -1009,7 +1009,7 @@ void pqdownheap(ct_data* tree, int k){
  *     The length opt_len is updated; static_len is also updated if stree is
  *     not null.
  */
-void gen_bitlen(tree_desc* desc){
+void gen_bitlen(tree_desc *desc){
     ct_data *tree  = desc->dyn_tree;
     int *extra     = desc->extra_bits;
     int base            = desc->extra_base;
@@ -1093,7 +1093,7 @@ void gen_bitlen(tree_desc* desc){
  *     and corresponding code. The length opt_len is updated; static_len is
  *     also updated if stree is not null. The field max_code is set.
  */
-void build_tree_1(tree_desc* desc){
+void build_tree_1(tree_desc *desc){
     ct_data *tree   = desc->dyn_tree;
     ct_data *stree  = desc->static_tree;
     int elems            = desc->elems;
@@ -1178,7 +1178,7 @@ void build_tree_1(tree_desc* desc){
  * counts. (The contribution of the bit length codes will be added later
  * during the construction of bl_tree.)
  */
-void scan_tree (ct_data* tree, int max_code){
+void scan_tree (ct_data *tree, int max_code){
     int n;                     /* iterates over all tree elements */
     int prevlen = -1;          /* last emitted length */
     int curlen;                /* length of current code */
@@ -1219,7 +1219,7 @@ void scan_tree (ct_data* tree, int max_code){
  * Send a literal or distance tree in compressed form, using the codes in
  * bl_tree.
  */
-void send_tree (ct_data* tree, int max_code) {
+void send_tree (ct_data *tree, int max_code) {
     int n;                     /* iterates over all tree elements */
     int prevlen = -1;          /* last emitted length */
     int curlen;                /* length of current code */
@@ -1335,7 +1335,7 @@ void bi_windup()
  * Copy a stored block to the zip file, storing first the length and its
  * one's complement if requested.
  */
-void copy_block(char* buf, u32 len, int header){
+void copy_block(char *buf, u32 len, int header){
     bi_windup();              /* align on byte boundary */
 
     if (header) {
@@ -1350,7 +1350,7 @@ void copy_block(char* buf, u32 len, int header){
 /* 
  * Send the block data compressed using the given Huffman trees
  */
-void compress_block(ct_data* ltree, ct_data* dtree) {
+void compress_block(ct_data *ltree, ct_data *dtree) {
     unsigned dist;      /* distance of matched string */
     int lc;             /* match length or unmatched char (if dist == 0) */
     unsigned lx = 0;    /* running index in l_buf */
@@ -1847,7 +1847,7 @@ void ct_init() {
  * Initialize the "longest match" routines for a new file
  */
 
-void lm_init(u16* flags) {
+void lm_init(u16 *flags) {
     u32 j;
 
     if (level < 1 || level > 9) { 
@@ -1934,7 +1934,7 @@ void zip() {
     return;
 }
 
-unsigned char* dkr_gzip_compress(unsigned char* input, int inputSize, int gzipLevel, int* outputSize) {
+unsigned char *dkr_gzip_compress(unsigned char *input, int inputSize, int gzipLevel, int *outputSize) {
     if(inputSize > OUTPUT_BUFFER_SIZE) {
         printf("rare_gzip Error: Input file is too large, make sure it is under %d MiB.\n", OUTPUT_BUFFER_SIZE / 1024 / 1024);
         return NULL;

@@ -207,7 +207,7 @@ u8 D_80126CD3;
 u8 D_80126CD4;
 u8 D_80126CD5;
 s32 D_80126CD8;
-unk80126CDC* D_80126CDC;
+unk80126CDC *D_80126CDC;
 s32 D_80126CE0;
 s32 D_80126CE4;
 s32 D_80126CE8;
@@ -245,7 +245,7 @@ u8 gMinimapGreen;
 u8 gMinimapBlue;
 s32 D_80126D58;
 s32 D_80126D5C;
-unk80126D60* D_80126D60;
+unk80126D60 *D_80126D60;
 u8 D_80126D64;
 u8 D_80126D65;
 u8 D_80126D66;
@@ -284,7 +284,7 @@ typedef struct {
 
 typedef struct {
     u8 unk0[0x64];
-    unk800A0DC0_2* unk64;
+    unk800A0DC0_2 *unk64;
 } unk800A0DC0;
 
 void func_80068508(s32);
@@ -316,8 +316,8 @@ void func_800A0B74(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0BD4.s")
 
-void func_800A0DC0(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
-    unk800A0DC0_2* temp = arg1->unk64;
+void func_800A0DC0(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
+    unk800A0DC0_2 *temp = arg1->unk64;
 
     func_80068508(1);
     func_800A0EB4(temp, arg2);
@@ -344,8 +344,8 @@ void func_800A0DC0(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0EB4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1248.s")
 
-void func_800A1428(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
-    unk800A0DC0_2* temp = arg1->unk64;
+void func_800A1428(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
+    unk800A0DC0_2 *temp = arg1->unk64;
     if (temp->unk1D8 == 0) {
         func_80068508(1);
         func_800A3CE4(arg0, arg2);
@@ -368,9 +368,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1C04.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1E48.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A22F4.s")
 
-void func_800A258C(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
-    LevelHeader* level;
-    unk800A0DC0_2* temp = arg1->unk64;
+void func_800A258C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
+    LevelHeader *level;
+    unk800A0DC0_2 *temp = arg1->unk64;
 
     func_80068508(1);
     func_800A5A64(temp, arg2);
@@ -388,8 +388,8 @@ void func_800A258C(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
     func_80068508(0);
 }
 
-void func_800A263C(s32 arg0, unk800A0DC0* arg1, s32 arg2) {
-    unk800A0DC0_2* temp = arg1->unk64;
+void func_800A263C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
+    unk800A0DC0_2 *temp = arg1->unk64;
 
     func_80068508(1);
     func_800A5A64(temp, arg2);
@@ -421,8 +421,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A5A64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A5F18.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A6254.s")
 
-void func_800A6DB4(s16* arg0) {
-    Settings* settings = get_settings();
+void func_800A6DB4(s16 *arg0) {
+    Settings *settings = get_settings();
 
     if (arg0 != NULL) {
         if (settings->racers[*arg0].best_times & 0x80) {
