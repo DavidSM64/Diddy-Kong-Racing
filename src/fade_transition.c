@@ -8,6 +8,7 @@
 #include "f3ddkr.h"
 #include "asset_sections.h"
 #include "memory.h"
+#include "PR/libultra.h"
 
 /************ .data ************/
 
@@ -353,7 +354,7 @@ s32 func_800C0494(s32 arg0) {
 
 void render_fade_transition(s32 dlist, s32 arg1, s32 arg2) {
     if (D_800E31AC != 0) {
-        if (osTvType == 0) {
+        if (osTvType == TV_TYPE_PAL) {
             func_80067F20(1.4f);
         } else {
             func_80067F20(1.2f);

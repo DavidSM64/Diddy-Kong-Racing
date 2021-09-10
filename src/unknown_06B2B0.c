@@ -167,8 +167,8 @@ s32 gCurrNumF3dCmdsPerPlayer;
 s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
-s32 D_80123538[3];
-s32 D_80123544;
+OSScClient *D_80123538[3];
+OSMesg *D_80123544;
 OSMesgQueue *D_80123548;
 s32 D_8012354C;
 s32 D_80123550[4];
@@ -853,7 +853,7 @@ void thread3_main(s32 arg0) {
 }
 
 void func_8006C3E0(void) {
-    s32 sp24;
+    s32 mode;
 
     init_main_memory_pool();
     func_800C6170();
@@ -865,14 +865,14 @@ void func_8006C3E0(void) {
     D_80123518 = 0;
     
     if (osTvType == TV_TYPE_PAL) {
-        sp24 = 14;
+        mode = 14;
     } else if (osTvType == TV_TYPE_NTSC) {
-        sp24 = 0;
+        mode = 0;
     } else if (osTvType == TV_TYPE_MPAL) {
-        sp24 = 28;
+        mode = 28;
     }
     
-    osCreateScheduler(&D_80121260, &D_801234E8, 0xD, sp24, 1);
+    osCreateScheduler(&D_80121260, &D_801234E8, /*priority*/ 13, (u8) mode, 1);
     D_800DD3A0 = 0;
     if (func_8006EFB8() == 0) {
         D_800DD3A0 = 1;

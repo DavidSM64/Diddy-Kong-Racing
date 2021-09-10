@@ -597,14 +597,14 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
     temp_a2 = temp_t1 >> 1;
     sp54 = temp_a2;
     sp58 = temp_a3;
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         sp58 = 0x91;
     }
     
     switch(gNumberOfViewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
             phi_t3 = sp58;
-            if (osTvType == 0) {
+            if (osTvType == TV_TYPE_PAL) {
                 phi_t3 = sp58 - 0x12;
             }
             gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0)
@@ -614,7 +614,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             if (D_80120CE4 == 0) {
                 temp_v0_6 = temp_t0 >> 2;
                 phi_t3 = temp_v0_6;
-                if (osTvType == 0) {
+                if (osTvType == TV_TYPE_PAL) {
                     phi_t3 = temp_v0_6 - 0xC;
                 }
                 gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, (temp_a3 - (temp_t0 >> 7)))
@@ -669,7 +669,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             }
             phi_t3 = phi_t5 + sp58;
             sp4C = phi_t4 + sp54;
-            if (osTvType == 0) {
+            if (osTvType == TV_TYPE_PAL) {
                 phi_t3 -= 6;
                 if (D_80120CE4 < 2) {
                     phi_t3 -= 0x14;
@@ -682,7 +682,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             break;
     }
     
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         sp4C -= 4;
     }
     func_80068158(dlist, sp54, sp58, sp4C, phi_t3);
