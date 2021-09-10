@@ -3,6 +3,6 @@
 
 #include "audio_internal.h"
 
-u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan){
+u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan) {
     return seqp->chanState[chan].fxmix;
 }

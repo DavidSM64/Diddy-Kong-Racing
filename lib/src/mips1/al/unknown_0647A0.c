@@ -5,24 +5,14 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-/* Size: 0x0C bytes */
-typedef struct unk80063BA0 {
-    s16 unk0;
-    s16 unk2;
-    s32 unk4;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-} unk80063BA0;
+void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta); //unknown_0C9C90
 
-void func_80063BA0(u32 arg0, u8 arg1, u8 arg2) {
-    s32 unusedVariable;
-    unk80063BA0 unknownStruct;
-    unknownStruct.unk0 = 2;
-    unknownStruct.unk4 = 0;
-    unknownStruct.unk8 = arg1 | 0xB0;
-    unknownStruct.unk9 = 8;
-    unknownStruct.unkA = arg2;
-    alEvtqPostEvent(arg0 + 0x48, &unknownStruct, 0);
+void func_80063BA0(ALCSPlayer *seqp, u8 arg1, u8 arg2) {
+    ALEvent evt;
+    evt.type = 2;
+    evt.msg.midi.ticks = 0;
+    evt.msg.midi.status = arg1 | 0xB0;
+    evt.msg.midi.byte1 = 8;
+    evt.msg.midi.byte2 = arg2;
+    alEvtqPostEvent(&seqp->evtq, &evt, 0);
 }
-

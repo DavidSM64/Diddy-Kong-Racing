@@ -532,9 +532,9 @@ typedef struct {
         ALVolumeEvent   	vol;
         ALSeqpLoopEvent 	loop;
         ALSeqpVolEvent  	spvol;
-	ALSeqpPriorityEvent	sppriority;
-	ALSeqpSeqEvent		spseq;
-	ALSeqpBankEvent		spbank;
+        ALSeqpPriorityEvent	sppriority;
+        ALSeqpSeqEvent		spseq;
+        ALSeqpBankEvent		spbank;
         ALOscEvent      	osc;
     } msg;
 } ALEvent;

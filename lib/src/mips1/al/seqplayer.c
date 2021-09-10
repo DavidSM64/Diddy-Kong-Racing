@@ -305,12 +305,7 @@ void __seqpStopOsc(ALSeqPlayer *seqp, ALVoiceState *vs)
     }
 }
 
-/* Unknown Size */
-typedef struct unk8000B010 {
-    u8 unk00[0x70];
-    s8 unk70;
-} unk8000B010;
-
-void func_8000B010(unk8000B010 *arg0, s8 arg1) {
-    arg0->unk70 = arg1;
+void func_8000B010(ALCSPlayer *arg0, s8 arg1) {
+    //TODO: This doesn't seem to be the write way to do this, but it works for now.
+    (s8) arg0->initOsc = arg1;
 }
