@@ -2,17 +2,10 @@
 /* RAM_POS: 0x80072250 */
 
 #include "controller_pak.h"
-#include "memory.h"
-#include "PR/pfs.h"
-#include "PR/os_cont.h"
-
-#include "types.h"
-#include "macros.h"
-#include "structs.h"
 
 /************ .data ************/
 
-s32 D_800DE440 = 0;
+s32 *D_800DE440 = 0;
 
 u8 gN64FontCodes[68] = "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'*+,-./:=?@";
 
@@ -79,8 +72,6 @@ s32 D_801241F4;
 
 /*******************************/
 
-u8 func_8006A4F8(s32 arg0);
-
 u8 func_80072250(s32 arg0) {
     if ((arg0 == 0 || arg0 == 1) && func_8000E158()) {
         arg0 = 1 - arg0;
@@ -88,7 +79,6 @@ u8 func_80072250(s32 arg0) {
     return func_8006A4F8(arg0);
 }
 
-void func_80072708(void);
 void func_80072298(u8 arg0) {
     D_801241E4 = arg0;
     if (arg0 != 0) {
@@ -140,18 +130,18 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_80073E1C.s")
 
 s32 func_80073F5C(s32 arg0, s32 arg1) {
     s32 temp_v0;
-    s32 sp30;
+    s32 sp30; //Possible epcInfo struct
     u8 *sp2C;
     s32 phi_v1;
-    s32 sp24;
+    s32 size;
 
-    sp24 = func_80073C4C(); // 256 bytes
-    sp2C = allocate_from_main_pool_safe(sp24, COLOR_TAG_WHITE);
-    *((s32*)sp2C) = 0x47414D44; // GAMD
+    size = func_80073C4C(); // 256 bytes
+    sp2C = allocate_from_main_pool_safe(size, COLOR_TAG_WHITE);
+    *((s32*)sp2C) = 'GAMD';
     func_800732E8(arg1, sp2C + 4);
     phi_v1 = func_80073C5C(arg0, 3, &sp30);
     if (phi_v1 == 0) {
-        phi_v1 = func_800766D4(arg0, -1, &D_800E7680, &sp30, sp2C, sp24);
+        phi_v1 = func_800766D4(arg0, -1, &D_800E7680, &sp30, sp2C, size);
     }
     free_from_memory_pool(sp2C);
     if (phi_v1 != 0) {
@@ -167,7 +157,7 @@ s32 func_80074148(s32 arg0, Settings *arg1) {
     s32 phi_v1;
     s32 sp24;
     s32 temp_v0;
-    s32 sp30;
+    s32 sp30; //Possible epcInfo struct
 
     sp24 = func_80073C54(); // 512 bytes
     sp2C = allocate_from_main_pool_safe(sp24, COLOR_TAG_WHITE);
@@ -213,25 +203,9 @@ s32 func_8007497C(u64 *arg0) {
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007497C.s")
 #endif
 
-
-// Ghost data follows directly after the header
-/* Size: 8 bytes */
-typedef struct GhostHeader {
-    s16 checksum;
-    s8  unk2;
-    s8  unk3;
-    s16 unk4;
-    s16 numberFrames;
-} GhostHeader;
-
-/* Size: 12 bytes */
-typedef struct GhostDataFrame {
-    u8 pad0[12];
-} GhostDataFrame;
-
 #ifdef NON_MATCHING
 // regalloc issues
-s32 func_80074A4C(GhostHeader *ghostHeader) {
+s16 func_80074A4C(GhostHeader *ghostHeader) {
     s16 i;
     s16 len;
     s16 sum;
@@ -248,11 +222,11 @@ s32 func_80074A4C(GhostHeader *ghostHeader) {
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074A4C.s")
 #endif
 
-void func_80074AA8(GhostHeader *ghostHeader, s16 arg1, s16 arg2, s16 numberFrames, u8 *dest) {
+void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 numberFrames, u8 *dest) {
     ghostHeader->checksum = 0;
-    ghostHeader->unk2 = arg1;
+    ghostHeader->characterID = characterID;
     ghostHeader->unk3 = 0;
-    ghostHeader->unk4 = arg2;
+    ghostHeader->time = time;
     ghostHeader->numberFrames = numberFrames;
     bcopy(dest, (u8*)ghostHeader + 8, numberFrames * sizeof(GhostDataFrame));
     ghostHeader->checksum = func_80074A4C(ghostHeader);
@@ -451,13 +425,13 @@ s32 func_80076AF4(s32 controllerIndex, s32 fileNum) {
     data = allocate_from_main_pool_safe(0x100, COLOR_TAG_BLACK);
     if (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *)data, 0x100) == 0) {
         switch(*data) {
-            case 0x47414D44: // GAMD, Game Data?
+            case 'GAMD': // Game Data?
                 ret = 3;
                 break;
-            case 0x54494D44: // TIMD, Time Data?
+            case 'TIMD': // Time Data?
                 ret = 4;
                 break;
-            case 0x47485353: // GHSS, Ghosts?
+            case 'GHSS': // Ghosts?
                 ret = 5;
                 break;
             default:
