@@ -1550,7 +1550,6 @@ void func_8009C508(s32 arg0);
 void *allocate_from_main_pool_safe(s32, u32);
 void func_800C4170(s32 arg0);
 void play_music(s32 arg0);
-void func_800C01D8(FadeTransition*);
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha);
 void func_8007B3D0(Gfx **dlist);
 void func_8009BD5C(void);

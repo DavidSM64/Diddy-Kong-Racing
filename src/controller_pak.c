@@ -219,10 +219,8 @@ s16 func_80074A4C(GhostHeader *ghostHeader) {
     return sum;
 }
 #else
-s16 func_80074A4C(GhostHeader *ghostHeader);
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074A4C.s")
 #endif
-
 
 void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 numberFrames, u8 *dest) {
     ghostHeader->checksum = 0;
