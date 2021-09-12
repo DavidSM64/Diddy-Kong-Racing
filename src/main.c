@@ -1,9 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80065D40 */
 
-#include "types.h"
-#include "macros.h"
-#include "libultra_internal.h"
+#include "main.h"
 
 /************ .rodata ************/
 
@@ -16,12 +14,12 @@ const char D_800E6ED0[] = "WARNING: Stack overflow/underflow!!!\n";
 
 /************ .bss ************/
 
-s32 *D_8011D750; // stack pointer for thread 1
+s32 *gThread1StackPointer; // stack pointer for thread 1
 s32 D_8011D754;
 s32 D_8011D758[2048];
 s32 *D_8011F758;
 s32 D_8011F75C;
-OSThread *D_8011F760; // OSThread for thread 1
+OSThread *gThread1; // OSThread for thread 1
 s32 D_8011F764;
 s32 D_8011F768[106];
 OSThread *D_8011F910; // OSThread for thread 3
@@ -30,19 +28,16 @@ s32 D_8011F918[1130];
 
 /******************************/
 
-void func_80065D98(s32 arg0);
-void thread3_main(s32 arg0);
-
 void main(void) {
     osInitialize();
-    osCreateThread(&D_8011F760, 1, &func_80065D98, 0, &D_8011D750, 0);
-    osStartThread(&D_8011F760);
+    osCreateThread(&gThread1, 1, (OSId) &func_80065D98, 0, &gThread1StackPointer, (OSPri) 0);
+    osStartThread(&gThread1);
 }
 
 #ifdef NON_MATCHING
 void func_80065D98(s32 arg0) {
     func_800B6F50();
-    osCreateThread(&D_8011F910, 3, &thread3_main, 0, &D_8011F758, 10);
+    osCreateThread(&D_8011F910, 3, (OSId) &thread3_main, 0, &D_8011F758, (OSPri) 10);
     D_8011D758[2049] = 0;
     D_8011D758[2048] = 0;
     D_8011D758[1] = 0;

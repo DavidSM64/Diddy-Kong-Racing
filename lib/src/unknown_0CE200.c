@@ -4,6 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
+#include "memory.h"
 
 s32 D_800E38D0 = 0;
 
@@ -31,7 +32,7 @@ s32 __osBaseCounter;
 s32 D_8012D22C;     
 s32 D_8012D230[4];     
 s32 D_8012D240[108];     
-s32 D_8012D3F0;    
+MemoryPoolSlot *gMainMemoryPool;    
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiCreateAccessQueue.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiGetAccess.s")

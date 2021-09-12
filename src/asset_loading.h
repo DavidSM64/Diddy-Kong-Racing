@@ -2,6 +2,7 @@
 #define _UNKNOWN_0777A0_H_
 
 #include "types.h"
+#include "gzip.h"
 
 void func_80076BA0(void);
 s32 *load_asset_section_from_rom(u32 assetIndex);
