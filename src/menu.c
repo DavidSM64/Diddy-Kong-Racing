@@ -1565,7 +1565,7 @@ s32 music_is_playing(void);
 void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void func_80082FAC(void);
 void func_8009ABAC(void);
-void func_800C31EC(s32);
+void func_800C31EC(s32); //game_text.h
 void update_controller_sticks(void);
 void func_80078D00(Gfx**, void *element, s32, s32, f32, f32, u32, s32);
 

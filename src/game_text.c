@@ -1,12 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C29F0 */
 
-#include "types.h"
-#include "macros.h"
-#include "f3ddkr.h"
-#include "asset_sections.h"
-#include "memory.h"
-#include "PR/libultra.h"
+#include "game_text.h"
 
 /************ .data ************/
 
@@ -19,16 +14,6 @@ s32 D_800E3680 = 1;
 /*******************************/
 
 /************ .bss ************/
-
-typedef struct unk8012A7C8 {
-    u8 *unk0;
-    u8 *unk4;
-} unk8012A7C8;
-
-typedef struct unk8012A798 {
-    u8 *unk0;
-    u8 *unk4;
-} unk8012A798;
 
 u8 *D_8012A780;
 s8 D_8012A784;
@@ -64,13 +49,6 @@ s32 D_8012A7D8;
 s32 D_8012A7DC;
 
 /*****************************/
-
-extern u32 osTvType;
-
-void func_800C2F1C(s32);
-void func_8005A3B0(void);
-void func_800C31EC(s32);
-s8 func_8000C8B4(s32);
 
 void func_800C29F0(void) {
     D_8012A7C8.unk0 = (u8 *)allocate_from_main_pool_safe(0x780, COLOR_TAG_GREEN);
