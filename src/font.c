@@ -1,16 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C3C00 */
 
-#include "memory.h"
-#include "video.h"
-#include "stacks.h"
-
-#include "structs.h"
-#include "types.h"
-#include "macros.h"
-#include "asset_sections.h"
-#include "libultra_internal.h"
-#include "f3ddkr.h"
+#include "font.h"
 
 /************ .data ************/
 
@@ -40,7 +31,7 @@ s8 D_800E36E8 = 0;
 
 // Descending powers of 10
 s32 gDescPowsOf10[9] = {
-    1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10
+    1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10,
 }; 
 
 s8 D_800E3710[48] = {
@@ -52,145 +43,35 @@ s8 D_800E3710[48] = {
     2,   TRUE, -2,  TRUE, -1, 
     4,   TRUE, -1,  TRUE,  0, 
     -1, 0, 0, 0, 0, // End of Data
-    0, 0, 0, 0, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL };
+OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL, };
 
 /*******************************/
 
 /************ .bss ************/
 
 s32 gNumberOfFonts;
-
-/* Size: 8 bytes */
-typedef struct FontCharData {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-} FontCharData;
-
-/* Size: 0x400 bytes */
-typedef struct FontData {
-/* 0x000 */ s32 unk0;
-/* 0x004 */ char name[0x1C];
-/* 0x020 */ u16 unk20;
-/* 0x022 */ u16 unk22;
-/* 0x024 */ u16 unk24;
-/* 0x026 */ u16 unk26;
-/* 0x028 */ u8 unk28[24];
-/* 0x040 */ s16 unk40[32];
-/* 0x080 */ TextureHeader *texturePointers[32];
-/* 0x100 */ FontCharData unk100[96];
-} FontData;
-
 FontData *gFonts;
-
-typedef struct unk8012A7E8_24 {
-    u8 unk00;
-    u8 unk01;
-    char *unk4;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
-    u8 unk17;
-    u8 unk18;
-    u8 unk19;
-    struct unk8012A7E8_24 *unk1C;
-} unk8012A7E8_24;
-
-/* Size: 0x28 bytes */
-typedef struct unk8012A7E8 {
-    s16 xpos;
-    s16 ypos;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 colorRed;
-    u8 colorGreen;
-    u8 colorBlue;
-    u8 colorAlpha;
-    u8 bgRed;
-    u8 bgGreen;
-    u8 bgBlue;
-    u8 bgAlpha;
-    u8 opacity;
-    u8 font;
-    u16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    unk8012A7E8_24 *unk24;
-} unk8012A7E8;
-
 unk8012A7E8 (*D_8012A7E8)[1];
-
-/* Size: 0x20 bytes */
-typedef struct unk8012A7EC {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
-    u8 unk17;
-    s32 unk18;
-    s32 unk1C;
-} unk8012A7EC;
 unk8012A7EC (*D_8012A7EC)[1];
-
 s32 D_8012A7F0;
 s8 D_8012A7F4;
 s32 D_8012A7F8;
 s32 D_8012A7FC;
 
 /******************************/
-
-void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3);
-void parse_string_with_number(unsigned char *input, char *output, s32 number);
-void func_800C4170(s32 arg0);
-
-#define unk8012A7E8_COUNT 8
-#define unk8012A7EC_COUNT 64
-#define unk8012A7E8_TOTAL_SIZE (sizeof(unk8012A7E8) * unk8012A7E8_COUNT)
-#define unk8012A7EC_TOTAL_SIZE (sizeof(unk8012A7EC) * unk8012A7EC_COUNT)
     
 void load_fonts(void) {
-    u8 *fontAssetData;
+    s32 *fontAssetData;
     s32 i;
 
     fontAssetData = load_asset_section_from_rom(ASSET_BINARY_44);
     
     gFonts = (FontData*)(fontAssetData); // ???
-    gNumberOfFonts = *((s32*)fontAssetData);
-    gFonts = (FontData*)(fontAssetData + 4);
+    gNumberOfFonts = *(fontAssetData);
+    gFonts = (FontData*)(fontAssetData + 1);
     
     for (i = 0; i < gNumberOfFonts; i++) {
         gFonts[i].unk28[0] = 0;
@@ -344,8 +225,6 @@ void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
     (*D_8012A7E8)[0].bgBlue = blue;
     (*D_8012A7E8)[0].bgAlpha = alpha;
 }
-
-void func_800C45A4(Gfx **dlist, unk8012A7E8 *arg1, u8 *text, s32 alignmentFlags, f32 arg4);
 
 // Unused?
 void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags) {
@@ -557,14 +436,6 @@ void func_800C5494(s32 arg0) {
     }
 }
 
-typedef struct unk800C54E8 {
-    u8 pad0[0xC];
-    s16 unkC;
-    s16 unkE;
-    u8 pad10[9];
-    u8 unk19;
-} unk800C54E8;
-
 // Unused
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
     FontData *fontData;
@@ -679,7 +550,6 @@ void s32_to_string(char** outString, s32 number) {
     (*outString)++;
 }
 #else
-void s32_to_string(char**, s32);
 GLOBAL_ASM("asm/non_matchings/font/s32_to_string.s")
 #endif
 
