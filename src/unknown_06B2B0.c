@@ -14,6 +14,7 @@
 #include "menu.h"
 #include "video.h"
 #include "lib/src/mips1/sc/sched.h"
+#include "gzip.h"
 
 /************ .rodata ************/
 

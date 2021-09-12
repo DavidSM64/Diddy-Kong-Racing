@@ -2,6 +2,7 @@
 /* RAM_POS: 0x8007AC70 */
 
 #include "textures_sprites.h"
+#include "gzip.h"
 
 /************ .data ************/
 

@@ -1,22 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C6170 */
 
-#include "memory.h"
-#include "types.h"
-#include "macros.h"
-
-typedef struct huft {
-  u8 e;                /* number of extra bits or operation */
-  u8 b;                /* number of bits in this code or subcode */
-  union {
-    u16 n;              /* literal, length base, or distance base */
-    struct huft *t;     /* pointer to next level of table */
-  } v;
-} huft;
-
-/* If BMAX needs to be larger than 16, then h and x[] should be ulg. */
-#define BMAX 16         /* maximum bit length of any code (16 for explode) */
-#define N_MAX 288       /* maximum number of codes in any set */
+#include "gzip.h"
 
 /************ .data ************/
 
@@ -59,8 +44,6 @@ s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
     load_asset_to_address(assetIndex, D_800E3764, assetOffset, 8);
     return byteswap32(D_800E3764);
 }
-
-s32 gzip_inflate_block(void);
 
 /**
  * Decompresses gzip data.
