@@ -40,7 +40,7 @@ s32 D_80123ED0[64];
 s32 D_80123FD0[8];
 s32 D_80123FF0[8];
 
-extern MemoryPoolSlot D_8012D3F0;
+extern MemoryPoolSlot *gMainMemoryPool;
 
 /******************************/
 
@@ -52,7 +52,7 @@ void init_main_memory_pool(void) {
     gNumberOfMemoryPools = -1;
     if(1) {
         // Create the main memory pool.
-        new_memory_pool(&D_8012D3F0, RAM_END - (s32)(&D_8012D3F0), MAIN_POOL_SLOT_COUNT);
+        new_memory_pool(&gMainMemoryPool, RAM_END - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
     }
     set_free_queue_state(2);
     gFreeQueueCount = 0;
