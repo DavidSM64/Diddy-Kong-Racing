@@ -3,13 +3,6 @@
 
 #include "memory.h"
 
-#include "structs.h"
-#include "types.h"
-#include "macros.h"
-
-#define RAM_END 0x80400000
-#define MAIN_POOL_SLOT_COUNT 1600
-
 /************ .rodata ************/
 
 const char D_800E7210[] = "*** mmAlloc: size = 0 ***\n";
@@ -31,36 +24,6 @@ const char D_800E7488[] = "Unable to record %d slots, colours overflowed table.\
 
 /************ .bss ************/
 
-/* Size: 0x8 bytes */
-typedef struct unk80070BE4_8_0 {
-    s16 unk0;
-    s16 unk2;
-    s32 unk4;
-} unk80070BE4_8_0;
-    
-/* Size: 0x14 bytes */
-typedef struct MemoryPoolSlot {
-/* 0x00 */ unk80070BE4_8_0 *unk0; 
-/* 0x04 */ s32 size;
-/* 0x08 */ s16 flags;
-    // 0x00 = Slot is free 
-    // 0x01 = Slot is being used?
-    // 0x02 = ???
-    // 0x04 = ???
-/* 0x0A */ s16 prevIndex;
-/* 0x0C */ s16 nextIndex;
-/* 0x0E */ s16 index;
-/* 0x10 */ u32 colorTag;
-} MemoryPoolSlot;
-
-/* Size: 0x10 bytes */
-typedef struct MemoryPool {
-/* 0x00 */ s32 maxNumSlots;
-/* 0x04 */ s32 curNumSlots;
-/* 0x08 */ MemoryPoolSlot *slots;
-/* 0x0C */ s32 size;
-} MemoryPool;
-
 MemoryPool gMemoryPools[4];
 
 #ifndef _ALIGN16
@@ -69,15 +32,7 @@ MemoryPool gMemoryPools[4];
 
 s32 gNumberOfMemoryPools;
 s32 D_801235C4;
-
-/* Size: 0x8 bytes */
-typedef struct FreeQueueSlot {
-    void *dataAddress;
-    u8 unk4;
-} FreeQueueSlot;
-
 FreeQueueSlot gFreeQueue[256];
-
 s32 gFreeQueueCount;
 s32 gFreeQueueState;
 s32 D_80123DD0[64];
@@ -88,24 +43,6 @@ s32 D_80123FF0[8];
 extern MemoryPoolSlot D_8012D3F0;
 
 /******************************/
-
-/* Unknown size */
-typedef struct unk800B7D10 {
-    u8 pad0[0x14];
-    s32 unk14;
-} unk800B7D10;
-
-unk800B7D10 *get_stack_pointer(void);
-MemoryPoolSlot *allocate_from_memory_pool(s32, s32, u32);
-
-MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *arg0, s32 size, s32 numSlots);
-void set_free_queue_state(s32);
-void *allocate_from_main_pool_safe(s32, u32);
-s32 *func_8006F510(void);
-void func_8006F53C(s32*);
-void func_80071440(void *dataAddress);
-s32 get_memory_pool_index_containing_address(u8 *address);
-void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
 
 /**
  * Creates the main memory pool. 
@@ -292,8 +229,6 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
 GLOBAL_ASM("asm/non_matchings/memory/allocate_at_address_in_main_pool.s")
 #endif
 
-void free_slot_containing_address(u8 *address);
-
 /**
  * Sets the state of the free queue. State is either 0, 1, or 2.
  * The free queue will get flushed if the state is set to 0.
@@ -399,8 +334,8 @@ void func_80071314(void) {
 GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
 #endif
 
-void func_80071440(void *data) {
-    gFreeQueue[gFreeQueueCount].dataAddress = data;
+void func_80071440(void *dataAddress) {
+    gFreeQueue[gFreeQueueCount].dataAddress = dataAddress;
     gFreeQueue[gFreeQueueCount].unk4 = gFreeQueueState;
     gFreeQueueCount++;
 }
@@ -650,7 +585,6 @@ void render_memory_color_tags(void) {
 }
 
 #ifdef NON_MATCHING
-
 // Unused. Does nothing? 
 void func_80071C74(void) {
     s32 i, flags;

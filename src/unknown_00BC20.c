@@ -9,6 +9,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "asset_sections.h"
+#include "asset_loading.h"
 
 /************ .data ************/
 
@@ -296,10 +297,6 @@ void calc_dynamic_lighting_for_object_1(unk8001D6E4_arg1 *, ObjectModel *, s16, 
 void calc_dynamic_lighting_for_object_2(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
 
 void func_8000C460(void);
-
-void *new_sub_memory_pool(s32, u32);
-void *allocate_from_main_pool_safe(s32, u32);
-s32 *load_asset_section_from_rom(s32);
 void gParticlePtrList_addObject(Object *);
 void gParticlePtrList_flush(void);
 void func_8001D258(f32, f32, s32, s32, s32);
