@@ -683,13 +683,21 @@ u16 func_80001CB8(u16 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/audio/func_80001D04.s")
 
-void func_80001EA8(u16 arg0, unknown_struct_80001EA8 arg1, u32 *arg2) {
-    if(arg2 == NULL){
-        arg2 = &D_80115F84;
+void func_80001EA8(u16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4) {
+    s32 temp;
+
+    //Possible "if (debug)"?
+    if (0) { }
+
+    if (arg4 == NULL) {
+        arg4 = &D_80115F84;
     }
-    func_80001D04(arg0, arg2);
-    if(*arg2){
-        func_80009B7C(*arg2, arg1.unk00, arg1.unk04, arg1.unk08);
+
+    func_80001D04(arg0, arg4);
+    
+    temp = *arg4;
+    if (temp) {
+        func_80009B7C((s32 *)temp, arg1, arg2, arg3);
     }
 }
 
