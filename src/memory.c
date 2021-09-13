@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80070B30 */
 
 #include "memory.h"
+#include "printf.h"
 
 /************ .rodata ************/
 
@@ -40,7 +41,7 @@ s32 D_80123ED0[64];
 s32 D_80123FD0[8];
 s32 D_80123FF0[8];
 
-extern MemoryPoolSlot *gMainMemoryPool;
+extern MemoryPoolSlot gMainMemoryPool;
 
 /******************************/
 

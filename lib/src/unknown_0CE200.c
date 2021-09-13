@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
-#include "memory.h"
+#include "../src/memory.h"
 
 s32 D_800E38D0 = 0;
 

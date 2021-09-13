@@ -3,6 +3,18 @@
 
 #include "types.h"
 #include "structs.h"
+#include "PR/gbi.h"
+
+#define TT_MENU_ROOT              0
+#define TT_MENU_CONT_PAK_ERROR_1  1
+#define TT_MENU_CONT_PAK_ERROR_2  2
+#define TT_MENU_CONT_PAK_ERROR_3  3
+#define TT_MENU_GAME_STATUS       4
+#define TT_MENU_INTRODUCTION      5
+#define TT_MENU_INSERT_CONT_PAK   6
+#define TT_MENU_INSERT_RUMBLE_PAK 7
+#define TT_MENU_SAVE_GHOST        8
+#define TT_MENU_EXIT              10
 
 #define CHEAT(index) 1 << index
 
@@ -77,6 +89,140 @@ enum Language {
     JAPANESE
 };
 
+/* Size: 0x20 bytes */
+typedef struct unk800DF510 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    s16 unk18;
+    s8  unk1A;
+    s8  unk1B;
+    s8  unk1C;
+    s8  unk1D;
+    u8  pad1E[2];
+} unk800DF510;
+
+typedef struct unk80126460 {
+    MenuElement elem[2];
+} unk80126460;
+
+typedef struct unk801263C0 {
+    s8 unk0;
+    s8 unk1;
+    s16 unk2;
+} unk801263C0;
+
+/* Size: 0x30 bytes */
+typedef struct unk800DF83C {
+    char *unk0; // Pointer to ascii text.
+    f32  unk4;
+    f32  unk8;
+    f32  unkC;
+    f32  unk10;
+    f32  unk14;
+    f32  unk18;
+    f32  unk1C;
+    f32  unk20;
+    f32  unk24;
+    f32  unk28;
+} unk800DF83C;
+
+typedef struct unk800DFA3C {
+    s16 unk0;
+    s16 unk2;
+    u8  unk4;
+    u8  unk5;
+    u8  unk6;
+    u8  unk7;
+    u8  unk8;
+    u8  unk9;
+    u8  unkA;
+    u8  unkB;
+    u32* unkC;
+} unk800DFA3C;
+
+typedef struct unk800DFC10 {
+    u32 *unk0;
+    s16 unk4;
+    s16 unk6;
+    u32 *unk8;
+    s32 unkC;
+} unk800DFC10;
+
+typedef struct unk800E03CC {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} unk800E03CC;
+
+/* Size: 0xE bytes. */
+typedef struct unk801263CC {
+    u8 pad0[0xC];
+    s16 unkC;
+} unk801263CC;
+
+/* Size: 0x0C Bytes */
+typedef struct unk801264A0 {
+    u8 unk0;
+    u8 unk1;
+    u16 unk2;
+    char name[4];
+    u32 pad8;
+} unk801264A0;
+
+typedef struct unk800E153C {
+    TextureHeader *texture;
+    u32 unk4; // Flags?
+} unk800E153C;
+
+/* Size: 0x10 Bytes */
+typedef struct unk800860A8 {
+    s8 unk0;
+    u8 pad1[0x5];
+    s8 unk6;
+    u8 pad7[0x5];
+    s32 unkC;
+} unk800860A8;
+
+/* Size: 0x10 bytes */
+typedef struct unk800861C8 {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 pad3;
+    u16 pad4;
+    s8  unk6;
+    s8  pad7;
+    u32 pad8;
+    u32 unkC;
+} unk800861C8;
+
+/* Unknown size */
+typedef struct unk80069D20 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    u8 pad6[6];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+} unk80069D20;
+
+typedef struct unk8006BDB0 {
+    u8 pad[0x4C];
+    s8 unk4C;
+} unk8006BDB0;
+
 extern s8  D_800DF450;
 extern f32 D_800DF454;
 extern s32 D_800DF458;
@@ -125,24 +271,6 @@ extern s8 D_800DF4EC;
 // Unused?
 extern s32 D_800DF4F0[];
 
-/* Size: 0x20 bytes */
-typedef struct unk800DF510 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    s16 unk18;
-    s8  unk1A;
-    s8  unk1B;
-    s8  unk1C;
-    s8  unk1D;
-    u8  pad1E[2];
-} unk800DF510;
-
 extern unk800DF510 D_800DF510[18];
 
 extern s16 *D_800DF750[1];
@@ -168,21 +296,6 @@ extern s16 D_800DF7C4[12];
 
 extern DrawTexture D_800DF7DC[12];
 
-/* Size: 0x30 bytes */
-typedef struct unk800DF83C {
-    char *unk0; // Pointer to ascii text.
-    f32  unk4;
-    f32  unk8;
-    f32  unkC;
-    f32  unk10;
-    f32  unk14;
-    f32  unk18;
-    f32  unk1C;
-    f32  unk20;
-    f32  unk24;
-    f32  unk28;
-} unk800DF83C;
-
 // Title screen cinematic text
 extern unk800DF83C D_800DF83C[10];
 
@@ -193,20 +306,6 @@ extern u16 D_800DF9F8[12];
 extern char *gOptionMenuStrings[7];
 
 extern s16 D_800DFA2C[8];
-
-typedef struct unk800DFA3C {
-    s16 unk0;
-    s16 unk2;
-    u8  unk4;
-    u8  unk5;
-    u8  unk6;
-    u8  unk7;
-    u8  unk8;
-    u8  unk9;
-    u8  unkA;
-    u8  unkB;
-    u32* unkC;
-} unk800DFA3C;
 
 extern unk800DFA3C gAudioMenuStrings[8];
 
@@ -241,14 +340,6 @@ extern s32* D_800DFBE0[10];
 
 extern s32 D_800DFC08;
 extern s32 D_800DFC0C;
-
-typedef struct unk800DFC10 {
-    u32 *unk0;
-    s16 unk4;
-    s16 unk6;
-    u32 *unk8;
-    s32 unkC;
-} unk800DFC10;
 
 extern unk800DFC10 D_800DFC10;
 extern unk800DFC10 D_800DFC20;
@@ -302,17 +393,6 @@ extern MenuElement gGameSelectTextElemsWithAdv2[9];
 extern s16 D_800E0398[6];
 
 extern s16 D_800E03A4[6];
-
-typedef struct unk800E03CC {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} unk800E03CC;
 
 extern unk800E03CC D_800E03CC[3];
 
@@ -565,8 +645,179 @@ extern s16 D_800E1E2C[10];
 
 extern s16 D_800E1E40[10];
 
-typedef struct unk80126460 {
-    MenuElement elem[2];
-} unk80126460;
+Settings *get_settings(void); //src/unknown_06B2B0.c
+s8* get_misc_asset(s32 arg0); //unknown_00BC20
+void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1,
+    s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha); // Non Matching src/unknown_078050.c
+void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId); //src/unknown_06B2B0.c
+void func_80078D00(Gfx**, void *element, s32, s32, f32, f32, u32, s32); //Non Matching src/unknown_078050.c
+s32 get_thread30_level_id_to_load(void); //src/thread30.c
+void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2); //unknown_00BC20
+void gParticlePtrList_addObject(Object *object); //src/unknown_00BC20.c
+s32 get_random_number_from_range(s32, s32); // Non Matching src/unknown_070110.c
+
+void func_8007FF88(void);
+void func_80080E6C(void);
+void func_800813C0(void);
+void menu_init(u32 menuId);
+s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 arg4);
+void func_80081800(s32 arg0, s32 arg1, s32 arg2, u8 arg3, u8 arg4, u8 arg5, u8 arg6);
+void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
+void func_800828B8(void);
+void func_800829F8(s32 arg0, s32 arg1);
+void menu_logos_screen_init(void);
+s32 menu_logo_screen_loop(s32 arg0);
+void func_80082FAC(void);
+void menu_title_screen_init(void);
+void func_80084118(void);
+void menu_options_init(void);
+void func_800841B8(s32 arg0);
+void func_80084734(void);
+void menu_audio_options_init(void);
+void func_800851FC(void);
+void menu_save_options_init(void);
+s32 func_800860A8(s32 arg0, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 arg4);
+void func_800861C8(unk800861C8 *arg0, s32 *arg1);
+s32 func_800874D0(s32 arg0, s32 arg1);
+s32 func_800875E4(s32 arg0, s32 arg1);
+s32 func_800876CC(s32 arg0, s32 arg1);
+void func_80087EB8(void);
+void menu_boot_init(void);
+void func_800887C4(void);
+void func_800887E8(void);
+void func_800895A4(void);
+void func_8008A4C8(void);
+void menu_magic_codes_list_init(void);
+void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2);
+void func_8008AD1C(void);
+void func_8008AEB4(s32 arg0, s32 *arg1);
+void set_active_player_index(s32 controllerIndex);
+void menu_character_select_init(void);
+void draw_character_select_text(s32 arg0);
+void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4);
+void func_8008C128(void);
+void menu_caution_init(void);
+void func_8008C4E8(void);
+void func_8008CACC(void);
+void menu_file_select_init(void);
+void func_8008CC28(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+void func_8008E428(void);
+void func_8008E45C(void);
+void func_8008E4B0(void);
+void func_8008F534(void);
+void func_80090ED8(s32 arg0);
+s32 func_80092BE0(s32 arg0);
+void menu_5_init(void);
+void func_80093A0C(void);
+void n_alSynRemovePlayer(void);
+void n_alSeqpDelete(void);
+void func_80094604(void);
+void func_80094C14(s32 arg0);
+void func_80096790(void);
+void menu_11_init(void);
+void func_800976CC(void);
+void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
+s32 compress_filename_string(unsigned char *filename, s32 length);
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
+void func_800981E8(void);
+void func_80098208(void);
+void func_800983C0(s32 arg0);
+void func_80098754(void);
+void func_80099600(void);
+s32 get_trophy_race_world_id(void);
+void func_8009ABAC(void);
+void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
+void menu_23_init(void);
+void func_8009AF18(void);
+void menu_credits_init(void);
+void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void func_8009BCF0(void);
+void func_8009BD5C(void);
+void func_8009BE54();
+void reset_controller_sticks(void);
+void reset_character_id_slots(void);
+s32 get_save_file_index(void);
+s32 get_track_id_to_load(void);
+s8 get_character_id_from_slot(s32 slot);
+s8 get_character_id_from_slot_unused(s32 slot);
+s8 get_player_selected_vehicle(s32 playerNum);
+void set_player_selected_vehicle(s32 playerNum, s32 index);
+s8 *func_8009C274(void);
+s8 get_player_character(s32 controllerIndex);
+void enable_tracks_mode(s32 boolean);
+s32 is_in_tracks_mode(void);
+void set_magic_code_flags(s32 flags);
+s32 get_filtered_cheats(void);
+s32 get_number_of_active_players(void);
+s32 func_8009C3D8(void);
+s32 get_multiplayer_racer_count(void);
+Settings** func_8009C490(void);
+void func_8009C49C(void);
+void func_8009C4A8(s16 *arg0);
+void func_8009C508(s32 arg0);
+void func_8009C674(s16 *arg0);
+void func_8009C8A4(s16 *arg0);
+void func_8009C904(s32 arg0);
+void func_8009CA58(void);
+void func_8009CF68(s32 arg0);
+void func_8009CFB0(void);
+s32 func_8009CFEC(u32 arg0);
+void func_8009D118(s32 arg0);
+void func_8009D1B8(s32 arg0, s32 arg1, s32 arg2);
+void func_8009D26C(void);
+void func_8009D324(void);
+void func_8009D330(s32 arg0);
+void func_8009D33C(s32 arg0, s32 arg1);
+s32 taj_menu_loop(void);
+s32 func_8009D9F4(void);
+s32 trophy_race_cabinet_menu_loop(void);
+void func_8009E9A0(void);
+void func_8009E9A8(void);
+f32 func_8009E9B0(s32 arg0, Gfx **arg1, s32 *arg2, s32 *arg3);
+s64 *func_8009EA6C(void);
+s32 func_8009EA78(s64 arg0);
+s32 func_8009EABC(s64 arg0);
+s64 func_8009EB08(void);
+s32 get_language(void);
+void set_language(s32 language);
+s32 is_adventure_two_unlocked(void);
+s32 is_in_adventure_two(void);
+s32 is_in_two_player_adventure(void);
+s32 is_tt_unlocked(void);
+s32 is_drumstick_unlocked(void);
+
+// Non Matching functions below here
+void load_menu_text(s32 language); // Non Matching
+void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
+s32 menu_audio_options_loop(s32 arg0);
+s32 menu_options_loop(s32 arg0);
+s32 func_800890AC(s32);
+s32 menu_boot_loop(s32 arg0);
+void menu_magic_codes_init(void);
+void render_magic_codes_list_menu_text(s32 arg0);
+s32 menu_magic_codes_list_loop(s32 arg0);
+void calculate_and_display_rom_checksum(void);
+void randomize_ai_racer_slots(s32 arg0);
+void menu_game_select_init(void);
+void func_8008C698(s32 arg0);
+s32 menu_game_select_loop(s32 arg0);
+void render_file_select_menu(s32 arg0);
+s32 menu_track_select_loop(s32 arg0);
+void func_8008FF1C(s32 arg0);
+void func_800904E8(s32 arg0);
+void func_80090918(s32 arg0);
+void render_track_select_setup_ui(s32 arg0);
+void func_80092188(s32 arg0);
+void func_8008E4EC(void);
+s32 menu_5_loop(s32 arg0);
+void func_80095624(s32 arg0);
+s32 trim_filename_string(u8 *input, u8 *output);
+void menu_trophy_race_round_init(void);
+void menu_ghost_data_init(void);
+s32 menu_ghost_data_loop(s32 arg0);
+void update_controller_sticks(void);
+s32 tt_menu_loop(void);
+void menu_track_select_init(void);
+void menu_trophy_race_rankings_init(void);
 
 #endif

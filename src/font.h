@@ -12,6 +12,7 @@
 #include "asset_sections.h"
 #include "libultra_internal.h"
 #include "f3ddkr.h"
+#include "textures_sprites.h"
 
 typedef struct unk8012A7E8_24 {
     u8 unk00;
@@ -124,9 +125,6 @@ typedef struct FontData {
 #define unk8012A7E8_TOTAL_SIZE (sizeof(unk8012A7E8) * unk8012A7E8_COUNT)
 #define unk8012A7EC_TOTAL_SIZE (sizeof(unk8012A7EC) * unk8012A7EC_COUNT)
 
-f32 func_8009E9B0(s32 arg0, Gfx **arg1, s32 *arg2, s32 *arg3); //menu.c
-void func_8009E9A0(void); //menu.c
-void func_8009E9A8(void); //menu.c
 //TextureHeader *load_texture(s32 arg0); //texture_sprites.c NON_MATCHING
 
 void load_fonts(void);

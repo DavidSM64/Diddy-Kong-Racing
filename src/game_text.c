@@ -2,6 +2,7 @@
 /* RAM_POS: 0x800C29F0 */
 
 #include "game_text.h"
+#include "menu.h"
 
 /************ .data ************/
 

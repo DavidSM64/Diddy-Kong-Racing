@@ -15,6 +15,7 @@
 #include "video.h"
 #include "lib/src/mips1/sc/sched.h"
 #include "gzip.h"
+#include "printf.h"
 
 /************ .rodata ************/
 
@@ -202,7 +203,6 @@ void func_8006ECFC(s32 arg0);
 void load_level_3(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800813C0();
 void func_80004A60(s32, s32);
-void menu_init(s32);
 void render(void);
 void func_8006C3E0(void);
 Settings *get_settings(void);
@@ -1260,7 +1260,7 @@ void func_8006CCF0(s32 arg0) {
                 case 2:
                     sp40 = 3;
                     sp3C = 1;
-                    func_80098208(&D_800DD394);
+                    func_80098208();
                     D_801234FC = 2;
                     break;
                 case 3:

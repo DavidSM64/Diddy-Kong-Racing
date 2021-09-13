@@ -705,22 +705,12 @@ typedef struct unk800570A4 {
 } unk800570A4;
 
 /* Unknown Size */
-typedef struct unk800570A4_2 {
-    u8 unk0[0xC];
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    u8 unk18[0x4C];
-    unk800570A4 *unk64;
-} unk800570A4_2;
-
-/* Unknown Size */
 typedef struct unk80056930 {
     u8 unk0[0x3];
     s8 unk3;
 } unk80056930;
 
-void func_80057048(unk800570A4_2 *arg0, s32 arg1);
+void func_80057048(Object *arg0, s32 arg1);
 
 void play_char_horn_sound(Object *arg0, Object_64 *arg1) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
@@ -735,16 +725,15 @@ void play_char_horn_sound(Object *arg0, Object_64 *arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005698C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80056E2C.s")
 
-
-void func_80057048(unk800570A4_2 *arg0, s32 arg1) {
-    unk800570A4 *temp = arg0->unk64;
-    u16 temp2 = arg1;
-    if (D_8011D55C != -1 && temp->unk108 == 0) {
-        func_80001EA8(temp2, arg0->unkC, arg0->unk10, arg0->unk14, 0);
+void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4);
+void func_80057048(Object *obj, s32 arg1) {
+    unk800570A4 *obj64 = obj->unk64;
+    if (D_8011D55C != -1 && obj64->unk108 == 0) {
+        func_80001EA8(arg1, obj->x_position, obj->y_position, obj->z_position, NULL);
     }
 }
 
-void func_800570A4(unk800570A4_2 *arg0, s32 arg1, s32 arg2) {
+void func_800570A4(Object *arg0, s32 arg1, s32 arg2) {
     unk800570A4 *temp = arg0->unk64;
     temp->unk20E = arg1;
     temp->unk210 = arg2;

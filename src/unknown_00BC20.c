@@ -749,7 +749,7 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
 
 
-void gParticlePtrList_addObject(Object *object){
+void gParticlePtrList_addObject(Object *object) {
     func_800245B4(object->unk4A | 0x8000);
     gParticlePtrList[gParticleCount] = object;
     gParticleCount++;

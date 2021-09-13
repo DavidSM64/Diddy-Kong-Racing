@@ -23,8 +23,6 @@ extern u32 osTvType;
 
 void func_8005A3B0(void); //unknown_043920.c
 s32 func_8000C8B4(s32 arg0); //unknown_00BC20.c
-void func_8009CFB0(void); //menu.c
-s32 func_8009CFEC(u32 arg0); //menu.c
 
 void func_800C29F0(void);
 void func_800C2AB4(void);

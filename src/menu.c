@@ -12,6 +12,13 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "video.h"
+#include "audio.h"
+#include "camera.h"
+#include "font.h"
+#include "game_text.h"
+#include "object_models.h"
+#include "printf.h"
+#include "textures_sprites.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -21,13 +28,6 @@
 
 // The bss section needs to stay above the data section! 
 // Otherwise the bss variables will get reordered, which is bad.
-
-
-typedef struct unk801263C0 {
-    s8 unk0;
-    s8 unk1;
-    s16 unk2;
-} unk801263C0;
 
 unk800DFC10 *D_80126390;
 unk800DFC10 *D_80126394;
@@ -45,12 +45,6 @@ unk801263C0 D_801263C0;
 
 s32 gIgnorePlayerInput;
 s32 D_801263C8;
-
-/* Size: 0xE bytes. */
-typedef struct unk801263CC {
-    u8 pad0[0xC];
-    s16 unkC;
-} unk801263CC;
 unk801263CC (*D_801263CC)[8];
 
 s32 D_801263D0;
@@ -91,15 +85,6 @@ s32 D_80126494;
 s32 D_80126498;
 s32 D_8012649C;
 
-/* Size: 0x0C Bytes */
-typedef struct unk801264A0 {
-    u8 unk0;
-    u8 unk1;
-    u16 unk2;
-    char name[4];
-    u32 pad8;
-} unk801264A0;
-
 unk801264A0 D_801264A0[4];
 
 s32 D_801264D0;
@@ -108,17 +93,6 @@ s8 D_801264D8;
 s32 D_801264DC;
 s8 D_801264E0;
 s8 D_801264E1;
-
-#define TT_MENU_ROOT              0
-#define TT_MENU_CONT_PAK_ERROR_1  1
-#define TT_MENU_CONT_PAK_ERROR_2  2
-#define TT_MENU_CONT_PAK_ERROR_3  3
-#define TT_MENU_GAME_STATUS       4
-#define TT_MENU_INTRODUCTION      5
-#define TT_MENU_INSERT_CONT_PAK   6
-#define TT_MENU_INSERT_RUMBLE_PAK 7
-#define TT_MENU_SAVE_GHOST        8
-#define TT_MENU_EXIT              10
 
 s8 D_801264E2;
 
@@ -1168,11 +1142,6 @@ s16 *D_800E14BC[32] = {
     NULL, NULL, &D_800E13A8[0], &D_800E13A8[48]
 };
 
-typedef struct unk800E153C {
-    TextureHeader *texture;
-    u32 unk4; // Flags?
-} unk800E153C;
-
 unk800E153C D_800E153C[] = {
     { NULL, 0x00000000 }, 
     { NULL, 0x00400000 },
@@ -1538,59 +1507,6 @@ const char D_800E824C[] = "OK";
 const char D_800E8250[] = "loadFrontEndItem() - Item no %d out of range 0-%d\n";
 
 /*********************************/
-
-Settings *get_settings(void);
-void func_8009C4A8(s16 *arg0);
-void func_8009C674(s16 *arg0);
-void func_8008E4B0(void);
-s8 *get_misc_asset(s32 arg0);
-void func_80001D04(s32, s32*);
-void update_camera_fov(f32 arg0);
-void func_8009C508(s32 arg0);
-void *allocate_from_main_pool_safe(s32, u32);
-void func_800C4170(s32 arg0);
-void play_music(s32 arg0);
-void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha);
-void func_8007B3D0(Gfx **dlist);
-void func_8009BD5C(void);
-void load_level_for_menu(s32, s32, s32);
-void func_8008CACC(void);
-void reset_character_id_slots(void);
-void func_80000FDC(s32, s32, f32);
-void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
-void calculate_and_display_rom_checksum(void);
-void func_800851FC(void);
-void set_music_volume_slider(s32);
-s32 music_is_playing(void);
-void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
-void func_80082FAC(void);
-void func_8009ABAC(void);
-void func_800C31EC(s32); //game_text.h
-void update_controller_sticks(void);
-void func_80078D00(Gfx**, void *element, s32, s32, f32, f32, u32, s32);
-
-void reset_controller_sticks(void);
-void menu_logos_screen_init(void);
-void menu_title_screen_init(void);
-void menu_options_init(void);
-void menu_audio_options_init(void);
-void menu_save_options_init(void);
-void menu_magic_codes_init(void);
-void menu_magic_codes_list_init(void);
-void menu_character_select_init(void);
-void menu_game_select_init(void);
-void menu_file_select_init(void);
-void menu_track_select_init(void);
-void menu_5_init(void);
-void menu_11_init(void);
-void menu_trophy_race_round_init(void);
-void menu_trophy_race_rankings_init(void);
-void menu_23_init(void);
-void menu_ghost_data_init(void);
-void menu_credits_init(void);
-void menu_boot_init(void);
-void menu_caution_init(void);
-void func_80001844(void);
 
 #ifdef NON_MATCHING
 
@@ -2349,8 +2265,6 @@ s32 menu_logo_screen_loop(s32 arg0) {
     return 0;
 }
 
-void set_magic_code_flags(s32 flags);
-
 void func_80082FAC(void) {
     if (D_80126448 & 2) {
         set_magic_code_flags(2);
@@ -2478,10 +2392,6 @@ void func_800841B8(s32 arg0) {
 }
 
 #ifdef NON_MATCHING
-
-void func_80084734(void);
-void set_language(s32 language);
-
 // Should be functionally equivalent
 s32 menu_options_loop(s32 arg0) {
     s32 buttonsPressed;
@@ -2517,7 +2427,7 @@ s32 menu_options_loop(s32 arg0) {
     
     if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & (A_BUTTON | START_BUTTON)) && D_800DF460 == 5)) {
         // Leave the option menu
-        func_80000C98(-0x80, D_800DF460, analogX);
+        func_80000C98(-0x80);
         gMenuDelay = -1;
         func_800C01D8(&D_800DF774);
         func_80001D04(0x241, 0);
@@ -2538,12 +2448,12 @@ s32 menu_options_loop(s32 arg0) {
         // Enable/Disable subtitles.
         if (D_80126448 & 0x2000000) {
             func_80001D04(0xEB, 0);
-            func_8009EABC(0, 0x2000000);
+            func_8009EABC(0);
             func_800C2AF4(0);
             gOptionMenuStrings[1] = gMenuText[183];
         } else {
             func_80001D04(0xEB, 0);
-            func_8009EA78(0, 0x2000000);
+            func_8009EA78(0);
             func_800C2AF4(1);
             gOptionMenuStrings[1] = gMenuText[182];
         }
@@ -2602,8 +2512,6 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_options_loop.s")
 void func_80084734(void) {
     func_800C422C(2);
 }
-
-void func_8009C8A4(s16 *arg0);
 
 void menu_audio_options_init(void) {
     gOptionsMenuItemIndex = 0;
@@ -2833,15 +2741,6 @@ void menu_save_options_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/func_800853D0.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80085B9C.s")
 
-/* Size: 0x10 Bytes */
-typedef struct unk800860A8 {
-    s8 unk0;
-    u8 pad1[0x5];
-    s8 unk6;
-    u8 pad7[0x5];
-    s32 unkC;
-} unk800860A8;
-
 s32 func_800860A8(s32 arg0, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 arg4) {
     s32 temp_v1;
     s32 phi_t0;
@@ -2870,19 +2769,6 @@ s32 func_800860A8(s32 arg0, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 arg4) {
     
     return phi_t0;
 }
-
-/* Size: 0x10 bytes */
-typedef struct unk800861C8 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 pad3;
-    u16 pad4;
-    s8  unk6;
-    s8  pad7;
-    u32 pad8;
-    u32 unkC;
-} unk800861C8;
 
 void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     s32 i;
@@ -3015,11 +2901,6 @@ void menu_boot_init(void) {
 }
 
 #ifdef NON_MATCHING
-void func_800887E8(void);
-void func_800887C4(void);
-s32 func_800C018C(void);
-s32 func_800890AC(s32);
-
 s32 menu_boot_loop(s32 arg0) {
     // arg0 = sp30
     s32 out; // sp2C
@@ -3376,9 +3257,6 @@ void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 #ifdef NON_MATCHING
-
-void func_8008AD1C(void);
-
 s32 menu_magic_codes_list_loop(s32 arg0) {
     s32 phi_a2;
     s32 sp48;
@@ -3838,10 +3716,6 @@ void menu_caution_init(void) {
     gPlayerHasSeenCautionMenu = 1;
 }
 
-void func_8008C4E8(void);
-
-void draw_menu_elements(s32, MenuElement*, f32);
-
 s32 menu_caution_loop(s32 arg0) {
     if (gMenuDelay != 0) {
         gMenuDelay += arg0;
@@ -4146,7 +4020,7 @@ void render_file_select_menu(s32 arg0) {
         for (i = 0; i < 3; i++) {
             if (D_801264A0[i].unk1 != 0) {
                 s2 = 0xB;
-                func_8007BF1C(0, 0xFF);
+                func_8007BF1C(0);
                 if (D_801264A0[i].unk0 != 0) {
                     s2 = 0xC;
                 }
@@ -4366,19 +4240,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F00C.s")
 
 #ifdef NON_MATCHING
-
 // Close to done with this function. Just a regalloc issue remains.
-
-void func_8008F534(void);
-void func_8008FF1C(s32 arg0);
-void func_800904E8(s32 arg0);
-void func_80090918(s32 arg0);
-void func_80090ED8(s32 arg0);
-void render_track_select_setup_ui(s32 arg0);
-void func_80092188(s32 arg0);
-void func_8008E4EC(void);
-s32 get_thread30_level_id_to_load(void);
-void set_relative_volume_for_music(u8 arg0);
 
 s32 menu_track_select_loop(s32 arg0) {
     s32 phi_a2;
@@ -4837,7 +4699,7 @@ void menu_5_init(void) {
     Settings *settings;
     s32 result;
     s32 s0;
-    s32 temp;
+    s16 temp;
     
     settings = get_settings();
     gTrackIdForPreview = 0;
@@ -4849,13 +4711,13 @@ void menu_5_init(void) {
     if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[s0] & 2)))) {
         temp = D_800E0758[s0];
         if (temp != -1) {
-            func_80000FDC(temp & 0xFFFF, 0, 1.0f);
+            func_80000FDC(temp, 0, 1.0f);
         }
         D_801263E0 = -1;
     } else {
         temp = D_800E0758[s0];
         if (temp != -1) {
-            func_80000FDC(temp & 0xFFFF, 0, 0.5f);
+            func_80000FDC(temp, 0, 0.5f);
         }
         func_80000BE0(0x18);
         play_music(0x18);
@@ -4889,9 +4751,6 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80092E94.s")
 
 
 #ifdef NON_MATCHING
-
-void func_80093A0C(void);
-
 // Regalloc issues
 s32 menu_5_loop(s32 arg0) {
     s32 temp0;
@@ -5052,13 +4911,13 @@ void func_80094C14(s32 arg0) {
         D_801263D8 += arg0;
         switch(D_800DF460) {
             case 0:
-                if (func_8000C8B4(0xF0, &D_80126A94) < D_801263D8) {
+                if (func_8000C8B4(0xF0) < D_801263D8) {
                     func_80000C98(-0x100);
                     D_800DF460 = 1;
                 }
                 break;
             case 1:
-                if (func_8000C8B4(0x12C, &D_80126A94) < D_801263D8) {
+                if (func_8000C8B4(0x12C) < D_801263D8) {
                     func_80000BE0(0x18);
                     play_music(0x18);
                     func_80000C98(0x100);
@@ -5109,7 +4968,6 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80095624.s")
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80095728.s")
 
-void func_800981E8(void);
 
 void func_80096790(void) {
     s32 temp;
@@ -5304,9 +5162,6 @@ void func_80098208(void) {
     set_time_trial_enabled(0);
 }
 
-extern s32 D_800E0980;
-s8 *get_misc_asset(s32 arg0);
-
 #if 1
 GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_round_init.s")
 #else
@@ -5497,7 +5352,6 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_ghost_data_init.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80099E8C.s")
 
 #ifdef NON_MATCHING
-
 // Regalloc issue: v0 & v1 need to swap!
 s32 menu_ghost_data_loop(s32 arg0) {
     s32 i;
@@ -5754,19 +5608,6 @@ void func_8009BCF0(void) {
     func_8006F564(0);
 }
 
-/* Unknown size */
-typedef struct unk80069D20 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u8 pad6[6];
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk80069D20;
-
-void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
-
 void func_8009BD5C(void) {
     unk80069D20 *temp_v0;
     s16 sp2A;
@@ -6021,11 +5862,6 @@ s32 get_number_of_active_players(void) {
     return gNumberOfActivePlayers;
 }
 
-typedef struct unk8006BDB0 {
-    u8 pad[0x4C];
-    s8 unk4C;
-} unk8006BDB0;
-
 s32 func_8009C3D8(void) {
     unk8006BDB0 *temp = (unk8006BDB0*)get_current_level_header(); 
     if (gIsInTwoPlayerAdventure && !gIsInTracksMode) {
@@ -6064,11 +5900,6 @@ void func_8009C4A8(s16 *arg0) {
         func_8009C508(arg0[index++]);
     }
 }
-
-void free_texture(u32 arg0);
-void free_sprite(u32 arg0);
-void gParticlePtrList_addObject(u32 arg0);
-void func_8005FF40(u32 arg0);
 
 void func_8009C508(s32 arg0) {
     if (D_80126750[arg0] != 0) {
@@ -6116,8 +5947,6 @@ void func_8009C674(s16 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8009C6D4.s")
 
-void func_8009C904(s32 arg0);
-
 void func_8009C8A4(s16 *arg0) {
     s32 index = 0;
     while (arg0[index] != -1) {
@@ -6125,7 +5954,6 @@ void func_8009C8A4(s16 *arg0) {
     }
 }
 
-s32 get_random_number_from_range(s32, s32);
 void func_8009C904(s32 arg0) {
     if (D_800DF75C == NULL) {
         D_800DF75C = allocate_from_main_pool_safe(sizeof(unk800DF510) * 18, COLOR_TAG_RED);

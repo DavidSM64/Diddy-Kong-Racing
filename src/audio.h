@@ -23,12 +23,6 @@ extern s32 D_800DC66C;
 extern u8 D_800DC670;
 extern u8 D_800DC65C;
 
-typedef struct unknown_struct_80001EA8_s{
-    u32    unk00;
-    u32     unk04;
-    u32     unk08;
-}unknown_struct_80001EA8;
-
 /* Size: 0x0A bytes */
 typedef struct unk80115D18 {
     u8 pad0[6];
@@ -112,7 +106,7 @@ void play_sound(u8 arg0);
 u32 func_80001C08(void);
 void func_80001C5C(u16 arg0);
 u16 func_80001CB8(u16 arg0);
-void func_80001EA8(u16 arg0, unknown_struct_80001EA8 arg1, u32 *arg2);
+void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4);
 void func_80001F14(u16 sndIndx, u32 *arg1);
 u16 ALBankFile_80115D14_GetSoundCount(void);
 u8 ALSeqFile_80115CF8_GetSeqCount(void);
@@ -130,5 +124,6 @@ void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Ma
 f32 func_800015F8(void); //Non Matching
 void func_80001FB8(u16 arg0); //Non Matching
 void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); // Non Matching
+void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
 
 #endif

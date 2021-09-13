@@ -1,9 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005F850 */
 
-#include "types.h"
+#include "object_models.h"
 #include "macros.h"
-#include "structs.h"
 #include "memory.h"
 #include "asset_sections.h"
 
@@ -27,12 +26,6 @@ const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n
 
 /************ .bss ************/
 
-/* 8 Bytes */
-typedef struct unk8011D624 {
-    s32 unk0;
-    ObjectModel *model;
-} unk8011D624;
-
 s32 *D_8011D620;
 unk8011D624 *D_8011D624; // Array of unk8011D624
 s32 *D_8011D628;
@@ -46,8 +39,6 @@ s32 D_8011D644;
 s32 D_8011D648[66];
 
 /******************************/
-
-void func_80024D54(void);
 
 void func_8005F850(void) {
     s32 i;

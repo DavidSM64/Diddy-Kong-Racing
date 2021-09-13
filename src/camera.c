@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80065EA0 */
 
 #include "camera.h"
+#include "audio.h"
 
 extern u32 osTvType;
 

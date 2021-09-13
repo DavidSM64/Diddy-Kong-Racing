@@ -1,10 +1,11 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800AE270 */
 
+#include "particles.h"
 #include "types.h"
 #include "macros.h"
-#include "structs.h"
 #include "asset_sections.h"
+#include "memory.h"
 
 /************ .rodata ************/
 
@@ -35,68 +36,6 @@ const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in tr
 
 /*********************************/
 
-/* Size: 0xA0 bytes */
-typedef struct ParticleBehavior {
-    s32 flags;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    u8 pad10[4];
-    s16 unk14;
-    s16 unk16;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    u8 pad28[0x74];
-    s32 *unk9C;
-} ParticleBehavior;
-
-typedef struct unk800AF29C_C_4000 {
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk800AF29C_C_4000;
-
-typedef struct unk800AF29C_C_400 {
-    s32 *unkC;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C_400;
-
-typedef struct unk800AF29C_C {
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C;
-
-typedef struct unk800AF29C {
-    ParticleBehavior *unk0;
-    s16 unk4;
-    u8 unk6;
-    u8 unk7;
-    s16 unk8;
-    s16 unkA;
-    union {
-        unk800AF29C_C_4000 unkC_4000;
-        unk800AF29C_C_400  unkC_400;
-        unk800AF29C_C      unkC;
-    };
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} unk800AF29C;
-
 /************ .data ************/
 
 // I woundn't be suprised if most of these zeroes are really just null pointers.
@@ -121,26 +60,11 @@ s32 *D_800E2CE4 = NULL;
 s32 gParticlesAssetTableCount = 0;
 s32 *gParticlesAssets = NULL;
 
-typedef struct unk800E2CF0 {
-    u8 pad0[8];
-    s16 unk8;
-} unk800E2CF0;
-
 unk800E2CF0 **gParticlesAssetTable = NULL;
 s32 gParticleBehaviorsAssetTableCount = 0;
 s32 *gParticleBehaviorsAssets = NULL;
 ParticleBehavior **gParticleBehaviorsAssetTable = NULL;
 s32 D_800E2D00[2] = { 0, 0 };
-
-/* Size: 0x10 bytes */
-typedef struct unk800E2D08 {
-    s16 unk0, unk2, unk4, unk6, unk8, unkA, unkC, unkE;
-} unk800E2D08;
-
-/* Size: 6 bytes */
-typedef struct unk800E2D58 {
-    s16 unk0, unk2, unk4;
-} unk800E2D58;
 
 // Are these just Triangles?
 unk800E2D08 D_800E2D08[5] = {
@@ -148,7 +72,7 @@ unk800E2D08 D_800E2D08[5] = {
     { 0x4000, 0x0203, 0x0100, 0x0000, 0x0100, 0x01E0, 0x01E0, 0x01E0 },
     { 0x4001, 0x0204, 0x0000, 0x0000, 0x0100, 0x0000, 0x0000, 0x01E0 },
     { 0x4002, 0x0305, 0x0100, 0x0000, 0x01E0, 0x0000, 0x01E0, 0x01E0 },
-    { 0x4000, 0x0103, 0x0100, 0x0000, 0x0000, 0x01E0, 0x01E0, 0x01E0 }
+    { 0x4000, 0x0103, 0x0100, 0x0000, 0x0000, 0x01E0, 0x01E0, 0x01E0 },
 };
 
 unk800E2D58 D_800E2D58[5] = {
@@ -258,11 +182,6 @@ s32 D_801297E8[6];
 
 /******************************/
 
-void func_800AE2D8(void);
-void func_800AE374(void);
-void func_800AE438(void);
-void func_800AE490(void);
-
 void func_800AE270(void) {
     func_800AE374();
     func_800AE438();
@@ -347,15 +266,6 @@ void func_800AE490(void) {
         gParticleBehaviorsAssetTable = NULL;
     }
 }
-
-typedef struct unk800AF024 {
-    u8 pad0[4];
-    s16 unk4;
-    s16 unk6;
-    Vertex *unk8;
-    Triangle *unkC;
-} unk800AF024;
-
 #ifdef NON_MATCHING
 void init_particle_assets(void) {
     s32 i;
@@ -537,29 +447,6 @@ void func_800AF0F0(Object *obj) {
     temp_v1->unk1C = temp_t8;
 }
 
-void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
-
-typedef struct unk800B2260_C {
-    s32 unk0;
-    s32 unk4;
-    u8  pad8[0x32];
-    s16 unk3A;
-    u8  pad3C[0x34];
-    void *unk70; // unk800B2260 *
-    u8 unk74;
-} unk800B2260_C;
-
-typedef struct unk800B2260 {
-    ParticleBehavior *unk0;
-    s16 unk4;
-    u8  unk6;
-    s16 unk8;
-    s16 unkA;
-    unk800B2260_C **unkC;
-} unk800B2260;
-
-void func_800B2260(unk800B2260 *arg0);
-
 #ifdef NON_MATCHING
 void func_800AF134(unk800B2260 *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5) {
     if (arg2 >= gParticlesAssetTableCount) {
@@ -724,4 +611,3 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800B263C.s")
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B2FBC.s")
-
