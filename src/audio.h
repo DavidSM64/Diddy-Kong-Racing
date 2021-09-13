@@ -124,5 +124,6 @@ void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Ma
 f32 func_800015F8(void); //Non Matching
 void func_80001FB8(u16 arg0); //Non Matching
 void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); // Non Matching
+s32 func_80009B7C(s32 *arg0, s32 arg1, s32 arg2, s32 arg3); // Non Matching
 
 #endif

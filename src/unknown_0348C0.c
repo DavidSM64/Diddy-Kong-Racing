@@ -876,7 +876,7 @@ void func_800389B8(Object *obj, s32 arg1) {
     obj->y_position += obj->y_velocity * temp_f2;
     obj->z_position += obj->z_velocity * temp_f2;
     if (obj->unk18 >= 256) {
-        gParticlePtrList_addObject();
+        gParticlePtrList_addObject(obj);
         obj->unk18 = 255;
     }
 }
@@ -885,16 +885,10 @@ void func_80038A6C(s32 arg0, s32 arg1) {
 
 }
 
-// Probably just Object?
-typedef struct unk80038A78 {
-    u8 pad0[0x18];
-    s16 unk18;
-} unk80038A78;
-
-void func_80038A78(unk80038A78 *arg0, s32 arg1) {
+void func_80038A78(Object *arg0, s32 arg1) {
     arg0->unk18 += arg1 * 8;
     if (arg0->unk18 >= 256) {
-        gParticlePtrList_addObject();
+        gParticlePtrList_addObject(arg0);
         arg0->unk18 = 255;
     }
 }
@@ -913,7 +907,7 @@ void func_80038AD4(Object *arg0, s32 arg1) {
     arg0->unk18 += arg1 * 4;
     arg0->y_position += temp_f2 * 0.25;
     if (arg0->unk18 >= 256) {
-        gParticlePtrList_addObject();
+        gParticlePtrList_addObject(arg0);
         arg0->unk18 = 255;
     }
 }

@@ -265,7 +265,7 @@ typedef struct LevelHeader {
   /* 0x9E */ u8 bgColorGreen;
   /* 0x9F */ u8 bgColorBlue;
   /* 0xA0 */ s32 unkA0;
-  /* 0xA4 */ s32 unkA4;
+  /* 0xA4 */ TextureHeader *unkA4;
   /* 0xA8 */ u16 unkA8;
   /* 0xAA */ u16 unkAA;
   /* 0xAC */ PulsatingLightData *pulseLightData;
