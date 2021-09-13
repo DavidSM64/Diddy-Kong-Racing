@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "font.h"
 #include "game_text.h"
+#include "object_models.h"
 
 /**
  * @file Contains all the code used for every menu in the game.

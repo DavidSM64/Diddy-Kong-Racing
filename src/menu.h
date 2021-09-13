@@ -668,7 +668,6 @@ void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2); //unknown_00BC20
 void free_texture(TextureHeader *arg0); //src/texture_sprites.c
 void free_sprite(Sprite *sprite); //src/texture_sprites.c
 void gParticlePtrList_addObject(Object *object); //src/unknown_00BC20.c
-void func_8005FF40(ObjectModel **modelPtr); //src/object_models.c
 s32 get_random_number_from_range(s32, s32); // Non Matching src/unknown_070110.c
 
 void func_8007FF88(void);

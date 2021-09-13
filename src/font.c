@@ -2,6 +2,7 @@
 /* RAM_POS: 0x800C3C00 */
 
 #include "font.h"
+#include "menu.h"
 
 /************ .data ************/
 
