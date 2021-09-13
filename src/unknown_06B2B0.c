@@ -15,6 +15,7 @@
 #include "video.h"
 #include "lib/src/mips1/sc/sched.h"
 #include "gzip.h"
+#include "printf.h"
 
 /************ .rodata ************/
 

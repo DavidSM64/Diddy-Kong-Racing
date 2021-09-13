@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80070B30 */
 
 #include "memory.h"
+#include "printf.h"
 
 /************ .rodata ************/
 

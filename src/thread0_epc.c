@@ -6,6 +6,7 @@
 #include "libultra_internal.h"
 #include "menu.h"
 #include "controller_pak.h"
+#include "printf.h"
 
 /************ .rodata ************/
 
