@@ -12,6 +12,7 @@
 #include "asset_sections.h"
 #include "libultra_internal.h"
 #include "f3ddkr.h"
+#include "textures_sprites.h"
 
 typedef struct unk8012A7E8_24 {
     u8 unk00;

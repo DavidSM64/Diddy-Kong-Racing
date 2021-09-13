@@ -3,6 +3,8 @@
 
 #include "textures_sprites.h"
 #include "gzip.h"
+#include "asset_loading.h"
+#include "memory.h"
 
 /************ .data ************/
 
@@ -856,40 +858,9 @@ const char D_800E7C50[] = "TEXSPR Error: Tryed to deallocate non-existent sprite
 
 /*********************************/
 
-/* Size: 8 bytes */
-typedef struct unk8007F1E8_18 {
-    s32 unk0;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-} unk8007F1E8_18;
-
-/* Size: Variable. */
-typedef struct unk8007F1E8 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
-    u8 unk17;
-    unk8007F1E8_18 unk18[1]; // Actual length depends on unk0
-} unk8007F1E8;
-
 /************ .bss ************/
 
 s32 *D_80126320[2];
-
-typedef struct TextureCacheEntry {
-    s32 id;
-    TextureHeader *texture;
-} TextureCacheEntry;
 
 TextureCacheEntry *gTextureCache;
 
@@ -901,20 +872,6 @@ s32 gCiPalettesSize;
 s32 D_80126344;
 s32 *gSpriteOffsetTable;
 
-typedef struct Sprite {
-    s16 baseTextureId;
-    s16 numberOfFrames; // 1 means static texture
-    s16 numberOfInstances;
-    s16 unk6;
-    TextureHeader **frames;
-    u8 unkC[1]; // Actual size varies.
-} Sprite;
-
-typedef struct SpriteCacheEntry {
-    s32 id;
-    Sprite *sprite;
-} SpriteCacheEntry;
-
 SpriteCacheEntry *gSpriteCache;
 
 Sprite *gCurrentSprite;
@@ -924,14 +881,6 @@ s32 D_8012635C;
 s32 D_80126360;
 s32 D_80126364;
 s32 D_80126368;
-
-/* Size: 0x28 bytes */
-typedef struct TempTexHeader {
-/* 0x00 */ TextureHeader header;
-/* 0x20 */ u32 uncompressedSize; // Little endian
-/* 0x24 */ u8 gzipLevel; // Always 9.
-/* 0x25 */ u8 pad25[3]; // padding
-} TempTexHeader;
 
 TempTexHeader *gTempTextureHeader;
 s32 D_80126370;
@@ -1148,7 +1097,6 @@ void func_8007B454(void) {
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B46C.s")
 
-void func_8007B4E8(s32, s32, s32, s32);
 void func_8007B4C8(s32 arg0, s32 arg1, s32 arg2) {
     func_8007B4E8(arg0, arg1, arg2, 0);
 }

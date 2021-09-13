@@ -18,6 +18,7 @@
 #include "game_text.h"
 #include "object_models.h"
 #include "printf.h"
+#include "textures_sprites.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -4019,7 +4020,7 @@ void render_file_select_menu(s32 arg0) {
         for (i = 0; i < 3; i++) {
             if (D_801264A0[i].unk1 != 0) {
                 s2 = 0xB;
-                func_8007BF1C(0, 0xFF);
+                func_8007BF1C(0);
                 if (D_801264A0[i].unk0 != 0) {
                     s2 = 0xC;
                 }

@@ -645,28 +645,14 @@ extern s16 D_800E1E2C[10];
 
 extern s16 D_800E1E40[10];
 
-//Remove once texture_sprites.h is finished
-typedef struct Sprite {
-    s16 baseTextureId;
-    s16 numberOfFrames; // 1 means static texture
-    s16 numberOfInstances;
-    s16 unk6;
-    TextureHeader **frames;
-    u8 unkC[1]; // Actual size varies.
-} Sprite;
-
-
 Settings *get_settings(void); //src/unknown_06B2B0.c
 s8* get_misc_asset(s32 arg0); //unknown_00BC20
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1,
     s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha); // Non Matching src/unknown_078050.c
-void func_8007B3D0(Gfx **dlist); //src/texture_sprites.c
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId); //src/unknown_06B2B0.c
 void func_80078D00(Gfx**, void *element, s32, s32, f32, f32, u32, s32); //Non Matching src/unknown_078050.c
 s32 get_thread30_level_id_to_load(void); //src/thread30.c
 void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2); //unknown_00BC20
-void free_texture(TextureHeader *arg0); //src/texture_sprites.c
-void free_sprite(Sprite *sprite); //src/texture_sprites.c
 void gParticlePtrList_addObject(Object *object); //src/unknown_00BC20.c
 s32 get_random_number_from_range(s32, s32); // Non Matching src/unknown_070110.c
 
