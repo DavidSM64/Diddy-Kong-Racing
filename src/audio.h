@@ -106,7 +106,7 @@ void play_sound(u8 arg0);
 u32 func_80001C08(void);
 void func_80001C5C(u16 arg0);
 u16 func_80001CB8(u16 arg0);
-void func_80001EA8(u16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4);
+void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4);
 void func_80001F14(u16 sndIndx, u32 *arg1);
 u16 ALBankFile_80115D14_GetSoundCount(void);
 u8 ALSeqFile_80115CF8_GetSeqCount(void);
@@ -124,6 +124,6 @@ void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Ma
 f32 func_800015F8(void); //Non Matching
 void func_80001FB8(u16 arg0); //Non Matching
 void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); // Non Matching
-s32 func_80009B7C(s32 *arg0, s32 arg1, s32 arg2, s32 arg3); // Non Matching
+void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
 
 #endif
