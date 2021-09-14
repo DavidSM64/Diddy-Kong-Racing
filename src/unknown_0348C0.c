@@ -10,6 +10,7 @@
 #include "video.h"
 #include "camera.h"
 #include "menu.h" // For cheats
+#include "unknown_0ABDF0.h"
 
 /************ .data ************/
 
@@ -1763,7 +1764,7 @@ void func_8004092C(s32 arg0, s32 arg1) {
 }
 
 void func_8004094C(Object *arg0, s16 *arg1, s32 arg2) {
-    func_800ACF60();
+    func_800ACF60(arg0);
     arg0->scale = arg1[4];
     arg0->scale /= 40.0f;
 }

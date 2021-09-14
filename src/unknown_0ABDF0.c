@@ -155,7 +155,7 @@ s32 D_80127C24;
 s32 D_80127C28;
 s32 D_80127C2C;
 s32 D_80127C30[4];
-s32 D_80127C40[16];
+Object *D_80127C40[16];
 
 /******************************/
 
@@ -190,7 +190,7 @@ void func_800AC880(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC8A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ACA20.s")
 
-void func_800ACF60(s32 arg0) {
+void func_800ACF60(Object *arg0) {
     if (D_800E2A88 < 0x10) {
         D_80127C40[D_800E2A88] = arg0;
         D_800E2A88++;

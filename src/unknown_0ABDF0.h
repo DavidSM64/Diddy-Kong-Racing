@@ -65,7 +65,7 @@ extern u32 osTvType;
 
 void func_800AB308(s16 arg0, s16 arg1);
 void func_800AC880(s32 arg0);
-void func_800ACF60(s32 arg0);
+void func_800ACF60(Object *arg0);
 void func_800AD220(void);
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2);
 
