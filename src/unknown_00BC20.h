@@ -227,5 +227,8 @@ void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
 void func_80012E28(Object *this);
 void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
+s32 func_80014814(s32 *);
+void func_80015348(s32, s32);
+Object *func_8000EA54(unk80027FC4*, s32);
 
 #endif

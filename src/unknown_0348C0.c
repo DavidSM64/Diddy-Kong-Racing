@@ -775,8 +775,6 @@ typedef struct Object_64_80038710 {
     s8 unk44;
 } Object_64_80038710;
 
-void func_80066488(s32, f32, f32, f32, s16, s16, s16);
-
 void func_80038710(Object *obj, s32 arg1) {
     s32 temp_v0;
     s32 phi_v1;

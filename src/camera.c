@@ -5,6 +5,7 @@
 #include "audio.h"
 #include "unknown_00BC20.h"
 #include "unknown_06B2B0.h"
+#include "unknown_0255E0.h"
 
 extern u32 osTvType;
 
