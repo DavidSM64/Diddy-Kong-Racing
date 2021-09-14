@@ -126,7 +126,7 @@ extern u32 osTvType;
 Settings *get_settings();
 Object_64 *func_800BE654(s16, f32, f32);
 void func_80000FDC(s32, s32, f32);
-void func_80009558(s32, f32, f32, f32, s32, s32*);
+void func_80009558(u16, f32 x, f32 y, f32 z, s32, s32 *); //unknown_008C40
 void func_80009968(f32, f32, f32, u8, u8, s32);
 s32 func_8001F460(Object*, s32, Object*);
 f32 func_800707C4(s16);

@@ -742,7 +742,7 @@ void func_800570A4(Object *arg0, s32 arg1, s32 arg2) {
 
 #ifdef NON_MATCHING
 
-void func_80009558(u16, f32, f32, f32, s32, s32 *);
+void func_80009558(u16, f32 x, f32 y, f32 z, s32, s32 *); //unknown_008C40
 
 typedef struct Object_64_800570B8 {
     u8 pad0[3];
