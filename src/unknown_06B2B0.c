@@ -25,6 +25,13 @@
 #include "unknown_00BC20.h"
 #include "camera.h"
 #include "controller_pak.h"
+#include "unknown_078050.h"
+#include "unknown_003260.h"
+#include "unknown_032760.h"
+#include "textures_sprites.h"
+#include "lib/src/os/__osSpSetStatus.h"
+#include "printf.h"
+#include "fade_transition.h"
 
 /************ .rodata ************/
 
@@ -95,9 +102,7 @@ s16 D_800DD3F4[8] = {
 };
 s32 D_800DD404 = 12;
 
-unknown800DD408 D_800DD408 = {
-    0, 255, 255, 255, 30, 0xFFFF
-};
+FadeTransition D_800DD408 = { 0, 255, 255, 255, 30, 0xFFFF };
 
 // Unused?
 char *D_800DD410[3] = {
@@ -179,12 +184,7 @@ s32 D_80123560[8];
 
 /******************************/
 
-extern s32 gVideoCurrFramebuffer;
-extern s32 gVideoLastFramebuffer;
-extern s32 gVideoLastDepthBuffer;
-
 #ifdef NON_MATCHING
-
 void func_8006A6B0(void) {
     s32 i, count, checksumCount;
     s32 temp;
@@ -869,8 +869,6 @@ void func_8006C3E0(void) {
     osSetTime(0);
 }
 
-void func_8006CCF0(s32 arg0);
-
 void render(void) {
     s32 phi_v0;
     s32 phi_v0_2;
@@ -1032,13 +1030,6 @@ void func_8006CC14(void) {
 }
 
 #ifdef NON_MATCHING
-
-void func_8006EC48(s32 arg0);
-void func_8006F398(void);
-void func_8006F42C(void);
-void func_8006D8F0(s32 arg0);
-void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
-
 // Almost matching except for a couple minor issues.
 void func_8006CCF0(s32 arg0) {
     s32 i, buttonHeldInputs, sp40, sp3C, buttonPressedInputs, phi_v1_2;

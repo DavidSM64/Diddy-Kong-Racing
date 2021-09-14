@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "audio.h"
 #include "unknown_00BC20.h"
+#include "unknown_06B2B0.h"
 
 extern u32 osTvType;
 

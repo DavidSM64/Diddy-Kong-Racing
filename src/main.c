@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "thread0_epc.h"
+#include "unknown_06B2B0.h"
 
 /************ .rodata ************/
 
