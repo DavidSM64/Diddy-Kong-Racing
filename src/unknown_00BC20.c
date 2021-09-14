@@ -10,6 +10,7 @@
 #include "f3ddkr.h"
 #include "asset_sections.h"
 #include "asset_loading.h"
+#include "thread0_epc.h"
 
 /************ .data ************/
 
@@ -277,8 +278,6 @@ s32 D_8011B080[7];
 extern s16 D_8011D5AC;
 
 /******************************/
-
-extern s32 osTvType;
 
 typedef struct unk8001D6E4_arg1_40 {
            u8 pad0[0x71];

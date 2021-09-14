@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80065D40 */
 
 #include "main.h"
+#include "thread0_epc.h"
 
 /************ .rodata ************/
 

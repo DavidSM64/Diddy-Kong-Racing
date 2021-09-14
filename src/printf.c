@@ -5,6 +5,7 @@
 #include "types.h"
 #include "macros.h"
 #include "f3ddkr.h"
+#include "thread0_epc.h"
 
 /************ .data ************/
 

@@ -90,6 +90,6 @@ s32 func_8007C860(s32 spriteIndex); // Non Matching
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut,
 	s32 *numFramesOut, s32 *formatOut, s32 *sizeOut); // Non Matching
 void free_sprite(Sprite *sprite); // Non Matching
-void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor);
+void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
 
 #endif
