@@ -48,4 +48,6 @@ extern VideoModeResolution gVideoModeResolutions[8];
 
 extern s32 D_800DE7BC;
 
+s32 func_8007A98C(s32 arg0);
+
 #endif

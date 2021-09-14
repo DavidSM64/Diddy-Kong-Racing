@@ -81,4 +81,6 @@ typedef struct unk800DC964 {
 
 extern unk800DC950 **D_800DC950;
 
+void func_80031B60(void);
+
 #endif

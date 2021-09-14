@@ -5,17 +5,33 @@
 
 #include <PR/os_cont.h>
 #include <PR/gu.h>
+#include <PR/os_time.h>
 #include "memory.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
 #include "asset_sections.h"
+#include "asset_loading.h"
 #include "menu.h"
 #include "video.h"
 #include "lib/src/mips1/sc/sched.h"
 #include "gzip.h"
 #include "printf.h"
+#include "thread0_epc.h"
+#include "thread30.h"
+#include "unknown_0ABDF0.h"
+#include "audio.h"
+#include "unknown_00BC20.h"
+#include "camera.h"
+#include "controller_pak.h"
+#include "unknown_078050.h"
+#include "unknown_003260.h"
+#include "unknown_032760.h"
+#include "textures_sprites.h"
+#include "lib/src/os/__osSpSetStatus.h"
+#include "printf.h"
+#include "fade_transition.h"
 
 /************ .rodata ************/
 
@@ -62,48 +78,34 @@ char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 s8  D_800DD374 = 0;
 s32 D_800DD378 = 1;
 s32 D_800DD37C = 0;
-s32 D_800DD380 = 0; // Currently unknown, might be a different type. 
+s32 D_800DD380 = 0; // Currently unknown, might be a different type.
 s32 D_800DD384 = 0;
-s32 D_800DD388 = 0; // Currently unknown, might be a different type. 
+s32 D_800DD388 = 0; // Currently unknown, might be a different type.
 s8  D_800DD38C = 0;
 s8  D_800DD390 = 0;
 s16 D_800DD394 = 0;
 s8  D_800DD398 = 0;
 s8  D_800DD39C = 0; 
 s8  D_800DD3A0 = 0;
-s32 D_800DD3A4 = 0; // Currently unknown, might be a different type. 
-s32 D_800DD3A8 = 0; // Currently unknown, might be a different type. 
-s32 D_800DD3AC = 0; // Currently unknown, might be a different type. 
+s32 D_800DD3A4 = 0; // Currently unknown, might be a different type.
+s32 D_800DD3A8 = 0; // Currently unknown, might be a different type.
+s32 D_800DD3AC = 0; // Currently unknown, might be a different type.
 s32 gNumF3dCmdsPerPlayer[4]  = { 4500, 7000, 11000, 11000 };
 s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4]   = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4]  = { 20, 30, 40, 50 };
-
 s8  D_800DD3F0 = 0;
-s16 D_800DD3F4[8] = {
-    -32768, 0, 20, 0,
-    255, -1, 20, -1
-};
+FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
+// Unused?
+FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 D_800DD404 = 12;
-
-unknown800DD408 D_800DD408 = {
-    0, 255, 255, 255, 30, 0xFFFF
-};
-
+FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 char *D_800DD410[3] = {
     D_800E713C, D_800E7140, D_800E7144
 };
-
-// Not sure if this is an array or a struct.
-s32 D_800DD41C[2] = { 
-    0, 0x001EFFFF
-};
-
-s32 D_800DD424[2] = { 
-    0, 0x0104FFFF
-};
-
+FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
 
 extern s32 gShowControllerPakMenu;
@@ -118,15 +120,6 @@ s32 gNumberOfLevelHeaders;
 s32 gNumberOfWorlds;
 
 s8 *D_80121178;
-
-/* Size: 6 bytes */
-typedef struct unk8012117C {
-    s8 unk0;
-    s8 unk1;
-    s8 unk2;
-    s8 unk3;
-    s16 unk4;
-} unk8012117C;
 unk8012117C *D_8012117C;
 
 s32 D_80121180[16];
@@ -179,53 +172,7 @@ s32 D_80123560[8];
 
 /******************************/
 
-extern s32 gVideoCurrFramebuffer;
-extern s32 gVideoLastFramebuffer;
-extern s32 gVideoLastDepthBuffer;
-
-void func_8006F43C(void);
-
-void func_800014BC(f32 arg0);
-s8 *get_misc_asset(s32 arg0);
-s32 func_8006A624(s8 arg0);
-void func_8006F870(Matrix, s32*);
-s16 get_level_segment_index_from_position(f32, f32, f32);    
-void func_8006A50C(void);
-void func_800665E8(s32 arg0);
-void load_level_2(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_8006C164(void);
-void func_8000E194(void);
-f32 sqrtf(f32);
-void osSetTime(u64);
-void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
-void func_800705F8(s32, f32, f32, f32);
-void func_8006ECFC(s32 arg0);
-void load_level_3(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800813C0();
-void func_80004A60(s32, s32);
-void render(void);
-void func_8006C3E0(void);
-Settings *get_settings(void);
-s32 is_in_tracks_mode(void);
-s32 *load_asset_section_from_rom(s32);
-void load_asset_to_address(u32, s32*, s32, s32);
-void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_8006C2E4(void);
-s16 func_8006C2F0(void);
-void func_8006DB20(s32 arg0);
-void func_80072708(void);
-void update_camera_fov(f32);
-void func_8006BFC8(s8 *arg0);
-void func_80068158(Gfx**, s32, s32, s32, s32);
-s32 get_trophy_race_world_id(void);
-void func_8006DCF8(s32 arg0);
-void func_8006EC48(s32 arg0);
-void calc_and_alloc_heap_for_settings(void);
-void reset_character_id_slots(void);
-void func_8006EFDC(void);
-
 #ifdef NON_MATCHING
-
 void func_8006A6B0(void) {
     s32 i, count, checksumCount;
     s32 temp;
@@ -910,8 +857,6 @@ void func_8006C3E0(void) {
     osSetTime(0);
 }
 
-void func_8006CCF0(s32 arg0);
-
 void render(void) {
     s32 phi_v0;
     s32 phi_v0_2;
@@ -1073,13 +1018,6 @@ void func_8006CC14(void) {
 }
 
 #ifdef NON_MATCHING
-
-void func_8006EC48(s32 arg0);
-void func_8006F398(void);
-void func_8006F42C(void);
-void func_8006D8F0(s32 arg0);
-void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
-
 // Almost matching except for a couple minor issues.
 void func_8006CCF0(s32 arg0) {
     s32 i, buttonHeldInputs, sp40, sp3C, buttonPressedInputs, phi_v1_2;
@@ -1496,8 +1434,8 @@ void func_8006DB14(s32 arg0) {
     D_80123518 = arg0;
 }
 
-void func_8006DB20(s32 arg0) {
-    D_8012351C = arg0;
+void func_8006DB20(s32 vehicleId) {
+    D_8012351C = vehicleId;
 }
 
 s32 func_8006DB2C(void) {

@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C7350 */
 
-#include "types.h"
+#include "thread30.h"
 #include "macros.h"
 #include "libultra_internal.h"
 
@@ -30,8 +30,6 @@ s32 D_8012ACC0[1305]; // Unused? Might be another stack.
 extern void *gThread30Stack; 
 
 /*****************************/
-
-void thread30(void *arg);
 
 /**
  * Initalizes and starts thread30()

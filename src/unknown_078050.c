@@ -194,7 +194,8 @@ void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2) {
     while (func_800D18D0() & 0x100) {}
 }
 
-void func_80077B34(u8 arg0, u8 arg1, u8 arg2){
+//Probable red, green, blue
+void func_80077B34(u8 arg0, u8 arg1, u8 arg2) {
     D_800DE4B0 = arg0;
     D_800DE4B4 = arg1;
     D_800DE4B8 = arg2;

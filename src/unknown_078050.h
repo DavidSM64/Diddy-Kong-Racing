@@ -21,4 +21,7 @@ extern s32 D_800DE4D4;
 extern s32 D_800DE4D8;
 extern s32 D_800DE4DC;
 
+void func_80077B34(u8 arg0, u8 arg1, u8 arg2);
+s32 func_80077A54(void);
+
 #endif

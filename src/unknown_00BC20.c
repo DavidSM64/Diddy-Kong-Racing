@@ -7,9 +7,11 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "f3ddkr.h"
 #include "asset_sections.h"
 #include "asset_loading.h"
+#include "thread0_epc.h"
+#include "controller_pak.h"
+#include "unknown_06B2B0.h"
 
 /************ .data ************/
 
@@ -207,13 +209,6 @@ s32 gAssetsLvlObjTranslationTableLength;
 s32 D_8011AEC0;
 Object **gParticlePtrList;
 s32 gParticleCount;
-
-/* Size: 0x3C bytes */
-typedef struct unknown8011AECC {
-    u8 unk00[0x3A];
-    s8 unk3A;
-    s8 unk3B;
-} unknown8011AECC;
 unknown8011AECC *D_8011AECC; // Array of structs, unknown number of members
 s32 D_8011AED0;
 s32 D_8011AED4;
@@ -239,21 +234,6 @@ s32 D_8011AF2C;
 s32 D_8011AF30[12];
 s32 D_8011AF60[2];
 s32 D_8011AF68[32];
-
-/* Size: 0x40 bytes */
-typedef struct unk800179D0 {
-    s32 unk0;
-    u32 *unk04;
-    u32 *unk08;
-    f32 unk0C[12];
-    u32 unk3C;
-} unk800179D0;
-
-/* Unknown Size */
-typedef struct unk800179D0_2 {
-    s32 unk04; 
-} unk800179D0_2;
-
 s32 D_8011AFE8;
 s16 D_8011AFEC;
 s16 D_8011AFEE;
@@ -278,45 +258,18 @@ extern s16 D_8011D5AC;
 
 /******************************/
 
-extern s32 osTvType;
-
-typedef struct unk8001D6E4_arg1_40 {
-           u8 pad0[0x71];
-/* 0x71 */ u8 unk71;
-} unk8001D6E4_arg1_40;
-
-typedef struct unk8001D6E4_arg1 {
-/* 0x00 */ s16 unk0;
-/* 0x02 */ s16 unk2;
-/* 0x04 */ s16 unk4;
-           u8  pad6[0x3A];
-/* 0x40 */ unk8001D6E4_arg1_40 *unk40;
-} unk8001D6E4_arg1;
-
-void calc_dynamic_lighting_for_object_1(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
-void calc_dynamic_lighting_for_object_2(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
-
-void func_8000C460(void);
-void gParticlePtrList_addObject(Object *);
-void gParticlePtrList_flush(void);
-void func_8001D258(f32, f32, s32, s32, s32);
-
-extern void func_800245B4(s16);
-
-
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B020.s")
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
 #else 
-
 extern s32 D_800DC754;
 extern Object *D_800DC75C;
 extern Object *D_800DC764;
 
 s32 *get_misc_asset(s32 arg0);
 
-void func_8000B290(){
+void func_8000B290() {
 
     if(D_800DC754){
         free_from_memory_pool();
@@ -357,38 +310,36 @@ u32 *func_8000BF44(s32 arg0) {
     return D_8011B020[arg0];
 }
 
-void decrypt_magic_codes(u8 *arg0, s32 length);
-
 void func_8000BF8C(void) {
     s32 i;
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
-    D_8011AE68 = (s32*)new_sub_memory_pool(0x15800, 0x200);
+    D_8011AE68 = (s32 *)new_sub_memory_pool(0x15800, 0x200);
     gParticlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
-    D_8011AE6C = (s32*)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
-    D_8011AE74 = (s32*)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
-    D_8011AECC = (unknown8011AECC*)allocate_from_main_pool_safe(0xE10, COLOR_TAG_BLUE);
-    D_8011AEDC = (s32*)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
-    gObjectStructArrayPtr = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AEEC = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AEE8 = (s32*)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AF04 = (s32*)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
-    D_8011ADCC = (s32*)allocate_from_main_pool_safe(8, COLOR_TAG_BLUE);
-    D_8011AFF4 = (s32*)allocate_from_main_pool_safe(0x400, COLOR_TAG_BLUE);
-    gAssetsLvlObjTranslationTable = (s32*)load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
+    D_8011AE6C = (s32 *)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
+    D_8011AE74 = (s32 *)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
+    D_8011AECC = (unknown8011AECC *)allocate_from_main_pool_safe(0xE10, COLOR_TAG_BLUE);
+    D_8011AEDC = (u32 *)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
+    gObjectStructArrayPtr = (Object *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
+    D_8011AEEC = (s32 *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
+    D_8011AEE8 = (s32 *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
+    D_8011AF04 = (u32 *)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
+    D_8011ADCC = (s8 *)allocate_from_main_pool_safe(8, COLOR_TAG_BLUE);
+    D_8011AFF4 = (unk800179D0 *)allocate_from_main_pool_safe(0x400, COLOR_TAG_BLUE);
+    gAssetsLvlObjTranslationTable = (s16 *)load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
     gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    D_8011AD58 = (s32*)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    D_8011AD58 = (s32 *)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
     gAssetsObjectHeadersTable = load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = (s32*)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOR_TAG_WHITE);
-    D_8011AE4C = (s32*)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOR_TAG_WHITE);
+    D_8011AE48 = (s32 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOR_TAG_WHITE);
+    D_8011AE4C = (u8 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOR_TAG_WHITE);
     
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
         (*D_8011AE4C)[i] = 0;
@@ -402,7 +353,7 @@ void func_8000BF8C(void) {
     }
     
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
-    gObjPtrList = (Object**)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
@@ -665,7 +616,7 @@ u8 is_time_trial_enabled() {
     return gTimeTrialEnabled;
 }
 
-u8 func_8000E4D8(void){
+u8 func_8000E4D8(void) {
     return D_8011AEF5;
 }
 
@@ -699,7 +650,7 @@ s32 func_8000E9C0(void) {
     return D_8011AE64;
 }
 
-void func_8000E9D0(Object *arg0){
+void func_8000E9D0(Object *arg0) {
     arg0->unk6 |= 0x8000;
     func_800245B4(arg0->unk2C | 0xC000);
     gObjPtrList[objCount++] = arg0;
@@ -716,29 +667,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FAC4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FBCC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FC6C.s")
 
-/* Unknown Size */
-typedef struct unk8000FD20_2 {
-    u8 unk00[0x13];
-    u8 unk13;
-} unk8000FD20_2;
-
-/* Unknown Size */
-typedef struct unk8000FD20 {
-    u8 unk00[0x4C];
-    unk8000FD20_2 *unk4C;
-} unk8000FD20;
-
 s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
     arg0->unk4C = arg1;
     arg1->unk13 = 0xFF;
     return 0x28;
 }
-
-/* Unknown Size. This might just be unk8000FD20. */
-typedef struct unk8000FD34 {
-    u8 unk00[0x5C];
-    s32 unk5C;
-} unk8000FD34;
 
 s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
     arg0->unk5C = arg1;
@@ -755,11 +688,11 @@ void gParticlePtrList_addObject(Object *object) {
     gParticleCount++;
 }
 
-s32 func_80010018(void){
+s32 func_80010018(void) {
     return gAssetsLvlObjTranslationTableLength;
 }
 
-s32 func_80010028(s32 arg0){
+s32 func_80010028(s32 arg0) {
     return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
 
@@ -768,7 +701,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/gParticlePtrList_flush.s")
 #else
 //bad regalloc; swap s2 = s3
 /*removes objects in particleList from gObjPtrList and frees*/
-void gParticlePtrList_flush(void){
+void gParticlePtrList_flush(void) {
     s32  j, i, search_indx, tmp;
     Object *searchObj;
     
@@ -828,7 +761,7 @@ void func_80011560(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
-void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
+
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
 #else
@@ -844,7 +777,7 @@ void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
 #else
 extern f32 D_800E5550;
-void func_80011AD0(Object *this){
+void func_80011AD0(Object *this) {
     f32 tmp_f0;
     u32 offset;
     switch(this->unk48){
@@ -897,7 +830,7 @@ void func_80012C30(void) {
     D_8011ADA4 = 0;
 }
 
-void func_80012C3C(Gfx** dlist){
+void func_80012C3C(Gfx** dlist) {
     s32 i;
     Gfx *tmp;
     for(i = 0; i<D_8011ADA4; i++){
@@ -920,9 +853,7 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void render_object(Object *);
-
-func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object){
+void func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object) {
     f32 scale;
     u32 tmp2;
     u32 tmp3;
@@ -941,11 +872,10 @@ func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object){
     func_800B76B8(2, -1);
 }
 
-extern f32 func_800707F8(s16);
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
 #else
-void func_80012E28(Object *this){
+void func_80012E28(Object *this) {
     s32         unused1;
     Object_64  *sp_20;
     f32         tmp_f2;
@@ -979,7 +909,6 @@ void func_80012E28(Object *this){
 }
 #endif
 
-
 void func_80012F30(Object *arg0) {
     if (arg0->unk48 == 1) {
         Object_64 *object_64 = arg0->unk64;
@@ -992,10 +921,7 @@ void func_80012F30(Object *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
 
-
-void func_80013548(Object *arg0);
-
-void render_object(Object *this){
+void render_object(Object *this) {
     func_80012F94(this);
     if(this->unk6 & 0x8000){
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
@@ -1025,7 +951,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013A0C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013DCC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
 
-void func_800142B8(void){
+void func_800142B8(void) {
     s32 i =  D_8011AE60;
     s32 j;
     Object *currObj;
@@ -1087,7 +1013,7 @@ s16 func_80017E88(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
 
-Object * func_80018C6C(void){
+Object *func_80018C6C(void) {
     s32 i;
     Object *current_obj;
     for(i=D_8011AE60; i < objCount; i++){
@@ -1133,7 +1059,6 @@ s32 func_8001B288(void) {
     }
 }
 
-
 s32 func_8001B2E0() {
     return D_8011AD34;
 }
@@ -1157,8 +1082,8 @@ s32 func_8001B650(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B668.s")
 
-void func_8001B738(s32 arg0) {
-    func_80059B7C(arg0, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
+s32 func_8001B738(s32 arg0) {
+    return func_80059B7C(arg0, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
 }
 
 u8 func_8001B780() {
@@ -1340,7 +1265,7 @@ void func_8001E344(s32 arg0) {
     }
 }
 
-void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3){
+void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
     s32 i;
     Object *current_obj;
     *arg1 = -32000.0f;

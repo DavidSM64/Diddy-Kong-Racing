@@ -6,6 +6,9 @@
 #include "structs.h"
 #include "types.h"
 #include "macros.h"
+#include "audio.h"
+#include "unknown_00BC20.h"
+#include "unknown_005740.h"
 
 /************ .data ************/
 
@@ -13,7 +16,7 @@ s16 D_800DCDE0[16] = {
     0x022B, 0x00A3, 0x00A4, 0x00B3,
     0x00B4, 0x00F0, 0x00F1, 0x00F6, 
     0x00F7, 0x0225, 0x0226, 0x002E, 
-    0x002F, 0x0030, 0x0000, 0x0000
+    0x002F, 0x0030, 0x0000, 0x0000,
 };
 
 /*******************************/
@@ -26,17 +29,6 @@ u16 *D_8011D5C8;
 s32 D_8011D5CC;
 
 /******************************/
-
-void func_80009558(u16, f32, f32, f32, s32, s32);
-s32 get_random_number_from_range(s32, s32);
-
-/* Unknown size */
-typedef struct unk8005C2F0 {
-    u8 pad0[0xC];
-    f32 unkC;
-    u8 pad10[0x108];
-    s32 unk118;
-} unk8005C2F0;
 
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
     object->unk4C->unk14 = 5;
@@ -57,13 +49,13 @@ void func_8005CA78(s32 arg0) {
     D_8011D5C8 = arg0;
 }
 
-void func_8005CA84(f32 arg0, f32 arg1, f32 arg2, s32 arg3) {
+void func_8005CA84(f32 x, f32 y, f32 z, s32 arg3) {
     s8 phi_v1 = get_random_number_from_range(0, 1);
     if (arg3 == 0) {
         phi_v1 = 0;
     }
     arg3 += phi_v1;
-    func_80009558(D_8011D5C8[arg3], arg0, arg1, arg2, 4, 0);
+    func_80009558(D_8011D5C8[arg3], x, y, z, 4, 0);
 }
 
 void func_8005CB04(s32 arg0) {
@@ -76,12 +68,6 @@ void func_8005CB04(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
-
-/* Unknown size */
-typedef struct unk8005D048 {
-    u8 pad0[0x1F7];
-    u8 unk1F7;
-} unk8005D048;
 
 void func_8005D048(Object *object, unk8005D048 *arg1, s32 arg2) {
     Object *sp1C = get_object_struct(0);

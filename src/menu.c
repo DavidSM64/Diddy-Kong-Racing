@@ -19,6 +19,9 @@
 #include "object_models.h"
 #include "printf.h"
 #include "textures_sprites.h"
+#include "thread30.h"
+#include "unknown_00BC20.h"
+#include "unknown_06B2B0.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -1455,12 +1458,12 @@ s16 D_800E1DC8[16] = {
     1, -1, -1, -1, 1, 1, 1, -1
 };
 
-s16 D_800E1DE8[4] = { 
-    0, 0, 0x78, -1 
-};
+FadeTransition D_800E1DE8 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 120, -1);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
+//Probably a FadeTransition, but that won't be certain
+//FadeTransition D_800E1E08 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 52, -1);
 s16 D_800E1E08[4] = { 
     0, 0, 0x34, -1 
 };
@@ -2149,17 +2152,17 @@ GLOBAL_ASM("asm/non_matchings/menu/draw_menu_elements.s")
 
 void func_800828B8(void) {
     s32 i;
-    s32 j;
-    s32 num;
+    s32 numWorlds;
+    s32 numLevels;
     Settings *settings;
 
     settings = get_settings();
-    get_number_of_levels_and_worlds(&num, &j);
+    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     
-    for(i = 0; i < num; i++) {
+    for(i = 0; i < numLevels; i++) {
         settings->courseFlagsPtr[i] = 0;
-        for(j = 0; j < 3; j++) {
-            settings->courseFlagsPtr[i] |= D_80126530[j]->courseFlagsPtr[i];
+        for(numWorlds = 0; numWorlds < 3; numWorlds++) {
+            settings->courseFlagsPtr[i] |= D_80126530[numWorlds]->courseFlagsPtr[i];
         }
     }
     
@@ -3934,10 +3937,10 @@ void func_8008CACC(void) {
 
 void menu_file_select_init(void) {
     s32 i;
-    s32 sp38;
-    s32 sp34;
+    s32 numLevels;
+    s32 numWorlds;
 
-    get_number_of_levels_and_worlds(&sp38, &sp34);
+    get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     func_8009C674(D_800E0398);
     func_8009C8A4(D_800E03A4);
     func_8007FFEC(6);
@@ -5480,7 +5483,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
         arg0++;
     }
     
-    if ((phi_v1 == 0) && (get_misc_asset(0x19) == arg0)) {
+    if ((phi_v1 == 0) && (get_misc_asset(0x19) == (s32 *)arg0)) {
         D_8012684C = 1;
     } else {
         D_8012684C = 0;
