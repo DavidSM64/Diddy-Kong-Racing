@@ -19,6 +19,7 @@
 #include "object_models.h"
 #include "printf.h"
 #include "textures_sprites.h"
+#include "thread30.h"
 
 /**
  * @file Contains all the code used for every menu in the game.

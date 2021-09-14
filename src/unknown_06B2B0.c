@@ -17,6 +17,7 @@
 #include "gzip.h"
 #include "printf.h"
 #include "thread0_epc.h"
+#include "thread30.h"
 
 /************ .rodata ************/
 
