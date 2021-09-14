@@ -1458,12 +1458,12 @@ s16 D_800E1DC8[16] = {
     1, -1, -1, -1, 1, 1, 1, -1
 };
 
-s16 D_800E1DE8[4] = { 
-    0, 0, 0x78, -1 
-};
+FadeTransition D_800E1DE8 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 120, -1);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
+//Probably a FadeTransition, but that won't be certain
+//FadeTransition D_800E1E08 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 52, -1);
 s16 D_800E1E08[4] = { 
     0, 0, 0x34, -1 
 };

@@ -95,18 +95,17 @@ s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4]   = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4]  = { 20, 30, 40, 50 };
 s8  D_800DD3F0 = 0;
-FadeTransition D_800DD3F4 = { 128, 0, 0, 0, 20, 0 };
+FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
 // Unused?
-FadeTransition D_800DD3FC = { 0, 255, 255, 255, 20, -1 };
+FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 D_800DD404 = 12;
-FadeTransition D_800DD408 = { 0, 255, 255, 255, 30, -1 };
+FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 char *D_800DD410[3] = {
     D_800E713C, D_800E7140, D_800E7144
 };
-FadeTransition D_800DD41C = { 0, 0, 0, 0, 30,  -1 };
-FadeTransition D_800DD424 = { 0, 0, 0, 0, 260, -1 };
-
+FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
 
 extern s32 gShowControllerPakMenu;

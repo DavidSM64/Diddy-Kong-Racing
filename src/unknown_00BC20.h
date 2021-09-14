@@ -118,7 +118,6 @@ extern u16 D_800DC864;
 
 void free_tt_ghost_data(void); //unknown_043920.c
 f32 func_800707F8(s16); //?
-void func_8006C164(void); //unknown_06B2B0
 
 u32 *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);
