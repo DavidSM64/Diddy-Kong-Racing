@@ -1,42 +1,20 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800AB1F0 */
 
+#include "unknown_0ABDF0.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
 #include "PR/libultra.h"
-
-typedef struct {
-    s16 unk0;
-    s16 unk2;
-} unk80127BF8;
-
-extern u32 osTvType;
+#include "camera.h"
 
 /************ .data ************/
-
-/* Size: 0x2C Bytes */
-typedef struct unk800E2850 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s16 unk24;
-    s16 unk26;
-    s16 unk28;
-    s16 unk2A;
-} unk800E2850;
 
 unk800E2850 D_800E2850[3] = {
     { 0,  0x40, 0, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
     { 0, 0x100, 1, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
-    { 0,  0x08, 2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 }
+    { 0,  0x08, 2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
 };
 
 s32 D_800E28D4 = 0;
@@ -66,25 +44,16 @@ Gfx D_800E2928[] = {
     gsSPEndDisplayList(),
 };
 
-/* Size: 0x10 Bytes */
-typedef struct unk800E2980 {
-    s32 unk0;
-    u16 unk4;
-    u16 unk6;
-    f32 unk8;
-    f32 unkC;
-} unk800E2980;
-
 unk800E2980 D_800E2980[2] = {
     { 1, 0xFFFF, 0xC090, 3.0f, 0.0f },
-    { 0,      0,      0, 0.0f, 0.0f }
+    { 0,      0,      0, 0.0f, 0.0f },
 };
 
 unk800E2980 D_800E29A0[4] = {
     { 3, 0xFFFF, 0x0090, 0.75f,  -32.0f },
     { 2, 0x0050, 0xFF60,  0.8f,  -96.0f },
     { 2, 0x00FF, 0x0090, 0.75f, -192.0f },
-    { 0,      0,      0,  0.0f,    0.0f }
+    { 0,      0,      0,  0.0f,    0.0f },
 };
 
 unk800E2980 D_800E29E0[5] = {
@@ -92,7 +61,7 @@ unk800E2980 D_800E29E0[5] = {
     { 2, 0xFFFF, 0xFF90,  1.0f, -128.0f },
     { 3, 0xFFFF, 0x8090,  0.5f, -176.0f },
     { 3, 0xFF28, 0x2890, 0.75f, -224.0f },
-    { 0,      0,      0,  0.0f,    0.0f }
+    { 0,      0,      0,  0.0f,    0.0f },
 };
 
 unk800E2980 D_800E2A30[5] = {
@@ -100,7 +69,7 @@ unk800E2980 D_800E2A30[5] = {
     { 1, 0xFFFF, 0xC090, 0.75f, -128.0f },
     { 2, 0xFF28, 0x0080,  0.6f, -176.0f },
     { 1, 0xFFC0, 0xFF90, 0.75f, -224.0f },
-    { 0,      0,      0,  0.0f,    0.0f }
+    { 0,      0,      0,  0.0f,    0.0f },
 };
 
 s32 D_800E2A80 = 0;
@@ -128,19 +97,6 @@ s16 D_800E2AAC[80] = {
     0, -1, -1, 0, 0, 0, -1, -1
 };
 
-/* Size: 0x1C Bytes */
-typedef struct unk800E2B4C {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    s16 unk18;
-    s16 unk1A;
-} unk800E2B4C;
-
 unk800E2B4C D_800E2B4C[8] = {
     { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
     { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
@@ -149,21 +105,8 @@ unk800E2B4C D_800E2B4C[8] = {
     { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
     { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
     { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }
+    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
 };
-
-/* Size: 0x18 Bytes */
-typedef struct unk800E2C2C {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
-    s32 unk8;
-    s32 unkC;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800E2C2C;
 
 unk800E2C2C D_800E2C2C[2] = {
     { 0, 0x400, 0x400, 0x000AFFC4, 0, 0x80FF, 0xFF80, 0x80FF, 0x8000 },
@@ -182,7 +125,7 @@ s32 D_800E2C7C = 0;
 s32 D_800E2C80 = 0;
 s32 D_800E2C84 = 0;
 s32 D_800E2C88 = 0;
-s32 D_800E2C8C = 0;
+Sprite *D_800E2C8C = 0;
 s32 D_800E2C90 = 0;
 s32 D_800E2C94 = 0;
 
@@ -259,17 +202,17 @@ GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD030.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD144.s")
 
 void func_800AD220(void) {
-    if (D_800E2C2C[0].unkC != 0) {
+    if (D_800E2C2C[0].unkC != NULL) {
         free_texture(D_800E2C2C[0].unkC);
         D_800E2C88 = 0;
     }
 
-    if (D_800E2C2C[1].unkC != 0) {
+    if (D_800E2C2C[1].unkC != NULL) {
         free_texture(D_800E2C2C[1].unkC);
         D_800E2C88 = 0;
     }
 
-    if (D_800E2C8C != 0) {
+    if (D_800E2C8C != NULL) {
         free_sprite(D_800E2C8C);
         D_800E2C8C = 0;
     }
