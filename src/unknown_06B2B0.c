@@ -32,6 +32,7 @@
 #include "lib/src/os/__osSpSetStatus.h"
 #include "printf.h"
 #include "fade_transition.h"
+#include "unknown_077C50.h"
 
 /************ .rodata ************/
 
