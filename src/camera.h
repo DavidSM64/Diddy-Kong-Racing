@@ -108,13 +108,9 @@ extern s32 D_A4000000;
 extern s32 SP_IMEM;
 
 //TODO: Remove from here once header files for below are created with these signatures.
-    s8* get_misc_asset(s32 arg0); //unknown_00BC20
     void func_8006F870(Matrix, Matrix); //unknown_070110
     s16 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos); //unknown_0255E0
     void load_level_2(s32 arg0, s32 arg1, s32 arg2, s32 arg3); //unknown_06B2B0
-    void func_8006C164(void); //unknown_00BC20
-    void func_8000E194(void); //unknown_00BC20
-    void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2); //unknown_00BC20
     void func_800705F8(s32, f32, f32, f32); //From unknown_070110
     void func_8006ECFC(s32 arg0); //From unknown_06B2B0
 

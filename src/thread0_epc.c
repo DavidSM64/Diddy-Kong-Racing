@@ -7,6 +7,7 @@
 #include "menu.h"
 #include "controller_pak.h"
 #include "printf.h"
+#include "unknown_00BC20.h"
 
 /************ .rodata ************/
 

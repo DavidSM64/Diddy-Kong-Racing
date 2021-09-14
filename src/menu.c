@@ -20,6 +20,7 @@
 #include "printf.h"
 #include "textures_sprites.h"
 #include "thread30.h"
+#include "unknown_00BC20.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -5481,7 +5482,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
         arg0++;
     }
     
-    if ((phi_v1 == 0) && (get_misc_asset(0x19) == arg0)) {
+    if ((phi_v1 == 0) && (get_misc_asset(0x19) == (s32 *)arg0)) {
         D_8012684C = 1;
     } else {
         D_8012684C = 0;

@@ -69,8 +69,6 @@ typedef struct unk800D2470 {
 /* 0x118 */ s32 unk118;
 } unk800D2470;
 
-s16 *func_80024594(s32 *arg0, s32 *arg1); //unknown_00BC20.c
-
 void func_800B6E50(void);
 void func_800B6EE0(void);
 void func_800B6F04(void);
@@ -81,7 +79,6 @@ void func_800B7144(void);
 void func_800B76B8(s32 arg0, s32 arg1);
 s32 func_800B76DC(void);
 void func_800B77D4(s32 arg0);
-
 
 void func_800B6F50(void); // Non Matching
 void thread0(s32 arg0); // Non Matching

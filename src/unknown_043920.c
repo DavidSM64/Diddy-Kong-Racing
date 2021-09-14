@@ -10,6 +10,7 @@
 #include "macros.h"
 #include "structs.h"
 #include "asset_sections.h"
+//#include "controller_pak.h"
 
 /* Size: 8 bytes */
 typedef struct GhostHeader {
@@ -994,8 +995,8 @@ void free_tt_ghost_data(void) {
     gGhostData[2] = NULL;
 }
 
-void func_80059B7C(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
-    func_80075000(arg0, (s16)arg1, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
+s32 func_80059B7C(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    return func_80075000(arg0, (s16)arg1, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059BF0.s")
