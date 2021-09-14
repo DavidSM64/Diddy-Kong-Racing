@@ -78,45 +78,34 @@ char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 s8  D_800DD374 = 0;
 s32 D_800DD378 = 1;
 s32 D_800DD37C = 0;
-s32 D_800DD380 = 0; // Currently unknown, might be a different type. 
+s32 D_800DD380 = 0; // Currently unknown, might be a different type.
 s32 D_800DD384 = 0;
-s32 D_800DD388 = 0; // Currently unknown, might be a different type. 
+s32 D_800DD388 = 0; // Currently unknown, might be a different type.
 s8  D_800DD38C = 0;
 s8  D_800DD390 = 0;
 s16 D_800DD394 = 0;
 s8  D_800DD398 = 0;
 s8  D_800DD39C = 0; 
 s8  D_800DD3A0 = 0;
-s32 D_800DD3A4 = 0; // Currently unknown, might be a different type. 
-s32 D_800DD3A8 = 0; // Currently unknown, might be a different type. 
-s32 D_800DD3AC = 0; // Currently unknown, might be a different type. 
+s32 D_800DD3A4 = 0; // Currently unknown, might be a different type.
+s32 D_800DD3A8 = 0; // Currently unknown, might be a different type.
+s32 D_800DD3AC = 0; // Currently unknown, might be a different type.
 s32 gNumF3dCmdsPerPlayer[4]  = { 4500, 7000, 11000, 11000 };
 s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4]   = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4]  = { 20, 30, 40, 50 };
-
 s8  D_800DD3F0 = 0;
-s16 D_800DD3F4[8] = {
-    -32768, 0, 20, 0,
-    255, -1, 20, -1
-};
+FadeTransition D_800DD3F4 = { 128, 0, 0, 0, 20, 0 };
+// Unused?
+FadeTransition D_800DD3FC = { 0, 255, 255, 255, 20, -1 };
 s32 D_800DD404 = 12;
-
-FadeTransition D_800DD408 = { 0, 255, 255, 255, 30, 0xFFFF };
-
+FadeTransition D_800DD408 = { 0, 255, 255, 255, 30, -1 };
 // Unused?
 char *D_800DD410[3] = {
     D_800E713C, D_800E7140, D_800E7144
 };
-
-// Not sure if this is an array or a struct.
-s32 D_800DD41C[2] = { 
-    0, 0x001EFFFF
-};
-
-s32 D_800DD424[2] = { 
-    0, 0x0104FFFF
-};
+FadeTransition D_800DD41C = { 0, 0, 0, 0, 30,  -1 };
+FadeTransition D_800DD424 = { 0, 0, 0, 0, 260, -1 };
 
 /*******************************/
 

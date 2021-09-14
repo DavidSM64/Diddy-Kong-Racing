@@ -76,18 +76,15 @@ extern s32 D_800DD3AC;
 
 
 extern s8  D_800DD3F0;
-extern s16 D_800DD3F4[8];
+extern FadeTransition D_800DD3F4;
 extern FadeTransition D_800DD408;
-extern s32 D_800DD40C;
+// Unused?
+extern FadeTransition D_800DD3FC;
 
 // Unused?
 extern char *D_800DD410[3];
-
-// Not sure if this is an array or a struct.
-extern s32 D_800DD41C[2];
-
-extern s32 D_800DD424[2];
-
+extern FadeTransition D_800DD41C;
+extern FadeTransition D_800DD424;
 extern s32 gVideoCurrFramebuffer;
 extern s32 gVideoLastFramebuffer;
 extern s32 gVideoLastDepthBuffer;
