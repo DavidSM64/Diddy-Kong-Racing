@@ -2,6 +2,7 @@
 #define _UNKNOWN_06B2B0_H_
 
 #include "types.h"
+#include "structs.h"
 
 typedef struct unknown800DD408 {
     u8 unk0;
@@ -11,6 +12,15 @@ typedef struct unknown800DD408 {
     u16 unk4;
     u16 unk6;
 } unknown800DD408;
+
+/* Size: 6 bytes */
+typedef struct unk8012117C {
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+    s8 unk3;
+    s16 unk4;
+} unk8012117C;
 
 enum NumberOfPlayers {
     ZERO_PLAYERS  = -1, // A.I. Only
@@ -85,5 +95,29 @@ extern char *D_800DD410[3];
 extern s32 D_800DD41C[2];
 
 extern s32 D_800DD424[2];
+
+void func_8006F870(Matrix, Matrix); //unknown_070110
+void func_800705F8(s32, f32, f32, f32); //From unknown_070110
+f32 sqrtf(f32); //IDO?
+
+void func_8006F43C(void);
+void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId);
+void func_8006C164(void);
+void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId);
+void render(void);
+void func_8006C3E0(void);
+Settings *get_settings(void);
+void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_8006C2E4(void);
+s16 func_8006C2F0(void);
+void func_8006DB20(s32 vehicleId);
+void func_8006BFC8(s8 *arg0);
+void func_8006EC48(s32 arg0);
+void calc_and_alloc_heap_for_settings(void);
+
+//Non Matching
+void func_8006ECFC(s32 arg0);
+void func_8006DCF8(s32 arg0);
+void func_8006EFDC(void);
 
 #endif
