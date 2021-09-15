@@ -245,7 +245,7 @@ s32 D_8011B000;
 s32 D_8011B004;
 s32 D_8011B008;
 s32 D_8011B010[4];
-u32 *D_8011B020[10];
+Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
 s32 D_8011B068[4];
@@ -300,7 +300,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B38C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B750.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000BADC.s")
 
-u32 *func_8000BF44(s32 arg0) {
+Object *func_8000BF44(s32 arg0) {
     if (arg0 == -1) {
         arg0 = D_800DC760;
     }
@@ -1868,7 +1868,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
         func_80039330(obj, arg1);
         break;
     case 64:
-        obj_loop_world_key(obj, arg1);
+        obj_loop_world_key(obj, arg1); //arg1=speed
         break;
     case 65:
         func_8003D3FC(obj, arg1);

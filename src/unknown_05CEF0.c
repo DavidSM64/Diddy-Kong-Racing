@@ -9,6 +9,7 @@
 #include "audio.h"
 #include "unknown_00BC20.h"
 #include "unknown_005740.h"
+#include "unknown_008C40.h"
 
 /************ .data ************/
 

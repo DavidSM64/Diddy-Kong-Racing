@@ -9,7 +9,7 @@
 #include "asset_sections.h"
 #include "asset_loading.h"
 #include "audio_internal.h"
-
+#include "unknown_003260.h"
 
 /* Size: 0x08 bytes */
 typedef struct unk80115D48 {
@@ -99,14 +99,6 @@ u32 D_80115F84;
 u32 D_80115F88;
 
 /******************************/
-
-typedef struct audioMgrConfig_s{
-    u32 unk00;
-    u32 unk04;
-    u32 maxChannels;
-    ALHeap *hp;
-    u16  unk10;
-} audioMgrConfig;
 
 void audio_init(u32 arg0) {
     s32 iCnt;

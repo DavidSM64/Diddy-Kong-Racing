@@ -8,30 +8,12 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "PR/gu.h"
-
-/* Size: 0x44 bytes */
-typedef struct unk80120AC0 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u8  pad6[6];
-    f32 x_position;
-    f32 y_position;
-    f32 z_position;
-    f32 pad18;
-    f32 unk1C;
-    f32 pad20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    s16 unk34;
-    s16 pad36;
-    s16 unk38;
-    s8  pad3A;
-    s8  unk3B;
-    u8  pad3C[8];
-} unk80120AC0;
+#include "textures_sprites.h"
+#include "unknown_00BC20.h"
+#include "unknown_06B2B0.h"
+#include "memory.h"
+#include "unknown_043920.h"
+#include "camera.h"
 
 /************ .data ************/
 
@@ -141,17 +123,7 @@ s32 D_8011D0E8;
 s32 D_8011D0EC;
 s32 D_8011D0F0;
 s32 D_8011D0F4;
-
-/* Size: 0x10 bytes */
-typedef struct unk8011D0F8 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-} unk8011D0F8;
-
 unk8011D0F8 D_8011D0F8[3];
-
 s32 D_8011D128[15];
 s32 D_8011D164;
 s32 D_8011D168[84];
@@ -163,37 +135,13 @@ s32 D_8011D314;
 s32 D_8011D318;
 s32 D_8011D31C;
 s32 D_8011D320[4];
-
-
-/* Size: 0x10 bytes */
-typedef struct unk8011D330 {
-    u8 pad0[0x10];
-} unk8011D330;
-
 unk8011D330 *D_8011D330;
 s32 D_8011D334;
-
 s32 D_8011D338[4];
-
-/* Size: 0xA bytes */
-typedef struct unk8011D348 {
-    u8 pad0[0x9];
-    u8 unk9;
-} unk8011D348;
 unk8011D348 *D_8011D348;
-
 s32 D_8011D34C;
 s32 D_8011D350[4];
-
-/* Size: 0x8 bytes */
-typedef struct unk8011D360 {
-    u8 pad0[4];
-    s16 unk4;
-    s16 unk6;
-} unk8011D360;
-
 unk8011D360 *D_8011D360;
-
 s32 D_8011D364;
 s32 D_8011D368;
 s32 D_8011D36C;
@@ -203,36 +151,8 @@ s32 D_8011D378;
 s32 D_8011D37C;
 f32 D_8011D380;
 u32 D_8011D384;
-
-/* Size: 0x38 bytes */
-typedef struct unk8011D388 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    u8  unk28;
-    u8  unk29;
-    u8  unk2A;
-    s16 unk2C;
-    s16 unk2E;
-    s32 unk30;
-    s32 unk34;
-} unk8011D388;
 unk8011D388 D_8011D388[4];
-
-typedef struct {
-    /* 0x00 */ s32 x;
-    /* 0x04 */ s32 y;
-    /* 0x08 */ s32 z;
-} unk8011D468;
 unk8011D468 D_8011D468;
-
 s32 D_8011D474;
 s32 D_8011D478;
 s32 D_8011D47C;
@@ -256,16 +176,6 @@ s32 D_8011D4BC;
 
 /******************************/
 
-f32 func_800BB2F4(s32, f32, f32, f32*);
-void func_8007B3D0(Gfx**);
-Object *get_object(s32);
-Settings *get_settings();
-void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex);
-s32 func_80014814(s32*);
-void func_80015348(s32, s32);
-void render_level_segment(s32 segmentId, s32 nonOpaque);
-
-
 s32 func_800249E0(s32 arg0) {
     D_8011D37C = arg0;
     return 0;
@@ -274,7 +184,7 @@ s32 func_800249E0(s32 arg0) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 #else
-void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6){
+void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;
 
@@ -370,17 +280,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027568.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800278E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027E24.s")
 
-typedef struct unk80027FC4 {
-    u8 unk0;
-    u8 unk1;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-} unk80027FC4;
-
-void func_8005A3D0(void);
-Object * func_8000EA54(unk80027FC4*, s32);
-
 void func_80027FC4(s32 arg0) {
     unk80027FC4 sp20;
 
@@ -424,7 +323,7 @@ void func_800289B8(void){
 }
 #endif
 
-void render_skydome(void){
+void render_skydome(void) {
     unk80120AC0 * v0_some_struct;
     if(D_8011B0B8 == NULL)
         return;
@@ -720,9 +619,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
 #endif
 
 #ifdef NON_MATCHING
-
-void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segmentsOrder);
-
 // Regalloc issues.
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex) {
     BspTreeNode *curNode;
@@ -811,7 +707,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029DE0.s")
 #endif
 
 #ifdef NON_MATCHING
-
 // Has regalloc issues.
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     LevelModelSegmentBoundingBox *bb;
@@ -843,13 +738,12 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     
     return result;
 }
-
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/get_level_segment_index_from_position.s")
 #endif
 
 
-s32 func_8002A05C(s32 arg0, s32 arg1, s32 *arg2){
+s32 func_8002A05C(s32 arg0, s32 arg1, s32 *arg2) {
     s32 i;
     s32 cnt = 0;
     LevelModelSegmentBoundingBox * a0;
@@ -895,14 +789,14 @@ s32 func_8002A134(s32 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s
     return phi_v1;
 }
 
-LevelModelSegment *func_8002A2C8(s32 arg0){
+LevelModelSegment *func_8002A2C8(s32 arg0) {
     if(arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
     
     return gCurrentLevelModel->segments + arg0;
 }
 
-LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0){
+LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0) {
     if(arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
 
@@ -912,8 +806,6 @@ LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0){
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
 
 #ifdef NON_MATCHING
-f32 func_80066348(f32, f32, f32);
-
 // Has some minor issues, but should be functionally equivalent.
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
     s64 sp48;

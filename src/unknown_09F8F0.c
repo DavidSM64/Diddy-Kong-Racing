@@ -1,22 +1,12 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8009ECF0 */
 
+#include "unknown_09F8F0.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
-
-typedef struct {
-    u8 unk0[0x4C4];
-    u16 unk4C4;
-    u8 unk4C6[0x1B4];
-    s8 unk67A;
-} unk80126CDC;
-
-typedef struct {
-    u8 unk0[0x4C];
-    s8 unk4C;
-} unk80126D60;
+#include "camera.h"
 
 extern u32 osTvType;
 
@@ -24,17 +14,6 @@ extern u32 osTvType;
 
 // Unused?
 s32 D_800E1E60 = 0;
-
-typedef struct unk800E1E64 {
-    s32 unk0;
-    s32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-} unk800E1E64;
 
 unk800E1E64 D_800E1E64[59] = {
     { 0, 0, 1.0f, 53.0f, 16.0f, 0, 127, 0 },
@@ -130,17 +109,6 @@ u16 D_800E2684[118] = {
     0x0003, 0x0047, 0x0013, 0x0037, 0x0033, 0x003C, 0x0014, 0x003C, 
     0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000
 };
-
-/* Size: 0x10 bytes */
-typedef struct unk800E2770 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-} unk800E2770;
 
 unk800E2770 D_800E2770[2] = {
     { 0, 0xFD, 0, 0, 0, 0, 0 },
@@ -276,22 +244,6 @@ s32 D_80127198[6];
 s32 D_801271B0[640];
 
 /******************************/
-
-typedef struct {
-    u8 unk0[0x1D8];
-    s8 unk1D8;
-} unk800A0DC0_2;
-
-typedef struct {
-    u8 unk0[0x64];
-    unk800A0DC0_2 *unk64;
-} unk800A0DC0;
-
-void func_80068508(s32);
-void func_800A14F0(unk800A0DC0 *, s32);
-void func_800A3CE4(s32, s32);
-void func_800A7520(unk800A0DC0 *, s32);
-
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009ECF0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009F034.s")

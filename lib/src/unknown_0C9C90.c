@@ -143,7 +143,7 @@ ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt) {
 }
 
 
-void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount){
+void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount) {
     s32 i;
     
     evtq->eventCount     = 0;

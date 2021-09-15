@@ -905,4 +905,36 @@ typedef struct Object {
   u32 unk378[174]; // Not an array. Unknown values.
 } Object;
 
+/* Size: 0x44 bytes, might just be Object? */
+typedef struct unk80120AC0 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    u8  pad6[6];
+    f32 x_position;
+    f32 y_position;
+    f32 z_position;
+    f32 pad18;
+    f32 unk1C;
+    f32 pad20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    s16 unk34;
+    s16 pad36;
+    s16 unk38;
+    s8  pad3A;
+    s8  unk3B;
+    u8  pad3C[8];
+} unk80120AC0;
+
+typedef struct unk80027FC4 {
+    u8 unk0;
+    u8 unk1;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+} unk80027FC4;
+
 #endif
