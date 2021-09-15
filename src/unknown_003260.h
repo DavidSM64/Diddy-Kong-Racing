@@ -83,5 +83,7 @@ extern s32 sfxVolumeSlider;
 extern s32 D_800DC6C4;
 
 void func_800049D8(void);
+//Causes issues with its type
+//void func_8000488C(u8 *arg0);
 
 #endif

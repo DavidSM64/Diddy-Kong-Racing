@@ -285,7 +285,7 @@ void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32){
 #endif
 
 //input typing not right (some type of struct)
-void func_8000488C(u8 *arg0){
+void func_8000488C(u8 *arg0) {
     ALEvent sp_18;
     sp_18.type = 1024;
     ((u32*)(&sp_18))[1] = (u32) arg0;

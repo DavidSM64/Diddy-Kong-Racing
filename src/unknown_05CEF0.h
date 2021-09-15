@@ -20,7 +20,6 @@ typedef struct unk8005D048 {
 
 extern s16 D_800DCDE0[16];
 
-void func_80009558(u16, f32 x, f32 y, f32 z, s32, s32 *); //unknown_008C40
 s32 get_random_number_from_range(s32, s32); //?
 
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1);

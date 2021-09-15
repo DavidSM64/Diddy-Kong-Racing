@@ -119,7 +119,7 @@ extern u16 D_800DC864;
 void free_tt_ghost_data(void); //unknown_043920.c
 f32 func_800707F8(s16); //?
 
-u32 *func_8000BF44(s32 arg0);
+Object *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);
 void func_8000C460(void);
 void func_8000C604(void);
@@ -211,6 +211,7 @@ void func_800228EC(s32 arg0);
 s8 func_8002341C(void);
 s32 func_80023568(void);
 s8 func_800235C0(void);
+void func_800235D0(s32 arg0);
 void func_800238BC(Object *arg0);
 void run_object_loop_func(Object *obj, s32 arg1);
 void func_8002458C(s32 arg0);
@@ -230,5 +231,6 @@ void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *func_8000EA54(unk80027FC4*, s32);
+s32 func_8001F460(Object*, s32, Object*);
 
 #endif
