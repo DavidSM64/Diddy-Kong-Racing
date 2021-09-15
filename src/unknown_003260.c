@@ -4,19 +4,6 @@
 #include "unknown_003260.h"
 #include "memory.h"
 
-#define AL_SNDP_PLAY_EVT (1 << 0)
-#define AL_SNDP_STOP_EVT (1 << 1)
-#define AL_SNDP_PAN_EVT (1 << 2)
-#define AL_SNDP_VOL_EVT (1 << 3)
-#define AL_SNDP_PITCH_EVT (1 << 4)
-#define AL_SNDP_API_EVT (1 << 5)
-#define AL_SNDP_DECAY_EVT (1 << 6)
-#define AL_SNDP_END_EVT (1 << 7)
-#define AL_SNDP_FX_EVT (1 << 8)
-
-extern void func_80002A98(void*);
-extern u32 func_80003008;
-
 /************ .bss ************/
 
 // All of these are defined in unknown_003260_bss.c
@@ -45,7 +32,6 @@ extern OSMesgQueue D_80119AF0;
 extern OSMesg D_80119B08[50];
 extern unk800DC6BC D_80119BD0;
 extern u16 *D_80119C28;
-
 extern f32 gVideoRefreshRate;
 
 /******************************/
@@ -92,12 +78,10 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /*********************************/
 
-void    *alHeapDBAlloc(u8 *, s32, ALHeap *, s32, s32);
-
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #else
-void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2){
+void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2) {
     u32     *reg_v0;
     void    *reg_s0;
     u32     tmp_size;
@@ -178,11 +162,7 @@ void func_8000318C(s32 arg0) {
     }
 }
 
-
-
-ALMicroTime     _sndpVoiceHandler(void *node);
-
-void alSndPNew(audioMgrConfig *c){
+void alSndPNew(audioMgrConfig *c) {
     u32 i;
     unk800DC6BC_40 *tmp1;
     ALEvent sp_38;
@@ -220,7 +200,7 @@ void alSndPNew(audioMgrConfig *c){
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
 #else  
-ALMicroTime     _sndpVoiceHandler(void *node){
+ALMicroTime     _sndpVoiceHandler(void *node) {
     unk800DC6BC *sndp = (unk800DC6BC *) node;
     ALSndpEvent evt;
 
@@ -244,29 +224,20 @@ ALMicroTime     _sndpVoiceHandler(void *node){
 }
 #endif
 
-#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
-#else
-
-#endif
-
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000410C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000418C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800042CC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
-
-
-
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
 
-
-void func_80004604(u8 *arg0, u8 arg1){
+void func_80004604(u8 *arg0, u8 arg1) {
     if (arg0)
         arg0[0x36]=arg1;
 }
 
-u8 func_8000461C(u8 *arg0){
+u8 func_8000461C(u8 *arg0) {
     if (arg0)
         return arg0[0x3F];
     return 0;     
@@ -276,11 +247,10 @@ void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
     func_80004668(bnk, sndIndx, 0, arg2);
 }
 
-
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
 #else
-void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32){
+void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32) {
 }
 #endif
 
@@ -300,7 +270,7 @@ void func_800049D8(void) {
     func_800048D8(3);
 }
 
-void func_800049F8(void * sndState,s16 type, u32 arg2){
+void func_800049F8(void * sndState,s16 type, u32 arg2) {
     ALSndpEvent sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = sndState;
