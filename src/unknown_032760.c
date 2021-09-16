@@ -28,12 +28,6 @@ f32 D_8011D4CC;
 
 /*******************************/
 
-f32 func_800707F8(s16);
-f32 sqrtf(f32);
-
-void func_800337E4(void);
-f32 func_80033A14(unk800DC950 *arg0);
-f32 func_80033C08(unk800DC950 *arg0);
 
 void func_80031B60(void) {
     if (D_800DC950 != NULL) {
