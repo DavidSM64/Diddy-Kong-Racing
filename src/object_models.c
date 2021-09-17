@@ -5,6 +5,8 @@
 #include "macros.h"
 #include "memory.h"
 #include "asset_sections.h"
+#include "unknown_0255E0.h"
+#include "unknown_043920.h"
 
 /************ .data ************/
 

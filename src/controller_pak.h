@@ -9,25 +9,6 @@
 #include "structs.h"
 #include "camera.h"
 
-typedef struct GhostHeaderChecksum {
-	u8  levelID;
-    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
-} GhostHeaderChecksum;
-
-typedef struct GhostHeader {
-    //GhostHeaderChecksum checksum;
-    s16 checksum;
-    u8  characterID; // 9 = T.T.
-    u8  unk3; // Might just be padding?
-    s16 time; // In frames, where 60 frames = 1 second.
-    s16 numberFrames;
-} GhostHeader;
-
-/* Size: 12 bytes */
-typedef struct GhostDataFrame {
-    u8 pad0[12];
-} GhostDataFrame;
-
 extern s32 *D_800DE440;
 extern u8 gN64FontCodes[68];
 extern s32 D_800DE488;
@@ -40,7 +21,7 @@ s32 func_80073C4C(void);
 s32 func_80073C54(void);
 s32 func_80073F5C(s32 arg0, s32 arg1);
 s32 func_80074148(s32 arg0, Settings *arg1);
-void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 numberFrames, u8 *dest);
+void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 nodeCount, u8 *dest);
 s32 func_80075AEC(s32 controllerIndex);
 s32 func_80075D38(s32 controllerIndex);
 s32 func_80075DC4(s32 controllerIndex);

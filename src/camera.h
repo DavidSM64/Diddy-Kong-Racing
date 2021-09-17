@@ -67,9 +67,9 @@ extern s16 D_800DD138[8];
 // RSP Viewports
 extern Vp D_800DD148[20]; 
 
-extern f32 D_800DD288[6];
+extern unk8011D510 D_800DD288;
 
-extern f32 D_800DD2A0[6];
+extern unk8011D510 D_800DD2A0;
 
 extern Matrix D_800DD2B8;
 
@@ -83,9 +83,11 @@ extern s32 D_A4000000;
 
 extern s32 SP_IMEM;
 
-//TODO: Remove from here once header files for below are created with these signatures.
+//TODO: Figure out where these functions live: unknown_070110?
     void func_8006F870(Matrix, Matrix); //unknown_070110
     void func_800705F8(s32, f32, f32, f32); //From unknown_070110
+    void func_8006FE74(Matrix *, unk8011D510 *); // Non Matching unknown_070110?
+    void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
 
 f32 sqrtf(f32); //IDO?
 

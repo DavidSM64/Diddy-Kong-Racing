@@ -281,7 +281,7 @@ void func_800049F8(void * sndState,s16 type, u32 arg2) {
 
 }
 
-u16 func_80004A3C(u8 arg0){
+u16 func_80004A3C(u8 arg0) {
     return D_80119C28[arg0];
 }
 

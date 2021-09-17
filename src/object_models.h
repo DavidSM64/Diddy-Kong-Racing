@@ -14,9 +14,6 @@ typedef struct unk8011D624 {
 extern s32 D_800DCEA0;
 extern s32 D_800DCEA4;
 
-void func_80024D54(Gfx *, s32, s32, s32, s32); //Non Matching src/unknown_0255E0.c
-void func_8005C25C(void); //src/unkown_043920.c
-
 void func_8005F850(void);
 void func_800619F4(s32 arg0);
 

@@ -10,28 +10,11 @@
 #include "macros.h"
 #include "structs.h"
 #include "asset_sections.h"
-//#include "controller_pak.h"
+#include "controller_pak.h"
 #include "unknown_008C40.h"
-
-/* Size: 8 bytes */
-typedef struct GhostHeader {
-    u8  levelID;
-    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
-    u8  characterID; // 9 = T.T.
-    u8  unk3; // Might just be padding?
-    s16 time; // In frames, where 60 frames = 1 second.
-    s16 nodeCount;
-} GhostHeader;
-
-/* Size: 12 bytes */
-typedef struct GhostNode {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 zRotation; // This order is correct.
-    s16 xRotation;
-    s16 yRotation;
-} GhostNode;
+#include "unknown_00BC20.h"
+#include "audio.h"
+#include "unknown_0348C0.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -47,7 +30,7 @@ f32 D_800DCB60[14] = {
     -10.0f, 5.0f, 0.0f, 0.0f,
     10.0f, 5.0f, 0.0f, 0.0f,
     -10.0f, 10.0f, 0.0f, 0.0f, 
-    10.0f, 10.0f
+    10.0f, 10.0f,
 };
 
 s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
@@ -56,7 +39,7 @@ f32 D_800DCB9C[19] = {
     0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f, 
     0.0099999999f, 0.0099999999f, 0.004f, 0.004f, 
     0.004f, 0.004f, 0.004f, 0.004f, 
-    0.004f, 0.004f, 0.004f
+    0.004f, 0.004f, 0.004f,
 };
 
 f32 D_800DCBE8[19] = {
@@ -64,25 +47,25 @@ f32 D_800DCBE8[19] = {
     0.5f, 0.5f, 0.5f, 0.5f,
     0.5f, 0.5f, 0.5f, 0.8f,
     0.8f, 0.84f, 0.8f, 0.8f,
-    0.8f, 0.8f, 0.8f
+    0.8f, 0.8f, 0.8f,
 };
 
 // Unused? Not sure if this is actually an array or just some random data.
 s32 D_800DCC34[19] = {
     0, 1, 1, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0
+    0, 0, 0,
 };
 
 s32 D_800DCC80[13] = {
     0, 26, 27, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0
+    0, 0, 0, 0, 0,
 };
 
 // Unused?
 s16 D_800DCCB4[12] = {
     0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0,
 };
 
 u16 D_800DCCCC[20] = {
@@ -90,7 +73,7 @@ u16 D_800DCCCC[20] = {
     0x010C, 0x010C, 0x010C, 0x010C, 
     0x010C, 0x010C, 0x010C, 0x0005, 
     0x010C, 0x010C, 0x010C, 0x010C, 
-    0x010C, 0x010C, 0x010C, 0x0000
+    0x010C, 0x010C, 0x010C, 0x0000,
 };
 
 s32 D_800DCCF4[19] = {
@@ -101,12 +84,12 @@ s32 D_800DCCF4[19] = {
 s32 D_800DCD40[20] = {
     0, 4, 16, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0x100, 0, 0, 0, 0,
-    0, 0
+    0, 0,
 };
 
 s8 D_800DCD90[15] = {
     1, 1, 2, 2, 4, 3, 0, 6,
-    4, 3, 2, 2, 5, 5, 5
+    4, 3, 2, 2, 5, 5, 5,
 };
 
 // Unused?
@@ -115,7 +98,7 @@ s8 D_800DCDA0[8] = {
 };
 
 s8 D_800DCDA8[8] = {
-    1, 1, 1, 2, 3, 2, 3, 2 
+    1, 1, 1, 2, 3, 2, 3, 2 ,
 };
 
 // Unused?
@@ -123,7 +106,7 @@ s16 D_800DCDB0[16] = {
     0x02FE, 0x03FE, 0x02FC, 0x02FB,
     0x02FB, 0x02FE, 0x02FD, 0x02FE,
     0x03FD, 0x05FC, 0x04FE, 0x02FE,
-    0x02FA, 0x02FE, 0x08F8, 0x03FD
+    0x02FA, 0x02FE, 0x08F8, 0x03FD,
 };
 
 // Checksum count for func_8003B4BC
@@ -149,44 +132,9 @@ const char D_800E62A0[] = "Back\n";
 s32 D_8011D4F0[2];
 s32 D_8011D4F8[3];
 s32 D_8011D504;
-
-typedef struct ObjectCamera {
-/* 0x0000 */ s16 y_rotation;
-/* 0x0002 */ s16 x_rotation;
-/* 0x0004 */ s16 z_rotation;
-/* 0x0006 */ s16 unk6;
-/* 0x0008 */ f32 scale;
-/* 0x000C */ f32 x_position;
-/* 0x0010 */ f32 y_position;
-/* 0x0014 */ f32 z_position;
-             u8 pad18[0xC];
-/* 0x0024 */ f32 unk24;
-/* 0x0028 */ f32 unk28;
-/* 0x002C */ f32 unk2C;
-/* 0x0030 */ f32 unk30;
-	     s16 unk34;
-/* 0x0036 */ s16 unk36;
-} ObjectCamera;
-
 ObjectCamera *gCameraObject;
-
-
-
 s32 D_8011D50C;
-
-/* Size: 0x18 bytes */
-typedef struct unk8011D510 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u16 unk6;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk8011D510;
 unk8011D510 D_8011D510;
-
 s32 D_8011D528;
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
@@ -245,9 +193,6 @@ s8 D_8011D5BC;
 
 /******************************/
 
-void func_80011570(Object *, f32, f32, f32);
-void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
-
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80042D20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80043ECC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80044170.s")
@@ -265,16 +210,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80048C7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80048E64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800494E0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80049794.s")
-
-/* Unknown size */
-typedef struct Object_64_8004C0A0 {
-    u8 pad0[0x1D7];
-    s8 unk1D7;
-    u8 pad1D8[9];
-    s8 unk1E1;
-    u8 pad1E2[0x10];
-    u8 unk1F2;
-} Object_64_8004C0A0;
 
 // Something Plane related.
 void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
@@ -311,27 +246,6 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
         planeObj->unk18 += phi_v0;
     }
 }
-
-typedef struct Object_64_8004C140 {
-    s16 unk0;
-    u8 pad2[0x183];
-    s8 unk185;
-    u8 unk186;
-    s8 unk187;
-    u8 pad188[4];
-    s16 unk18C;
-    s16 unk18E;
-    u8 pad190[0x39];
-    u8 unk1C9;
-    u8 pad1CA[0xC];
-    s8 unk1D6;
-    u8 pad1D7[4];
-    s8 unk1DB;
-    u8 pad1DC[0x28];
-    s16 unk204;
-} Object_64_8004C140;
-
-void func_800576E0(Object *obj, Object_64_8004C140 *obj64, s32);
 
 void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
     s8 phi_v1;
@@ -385,16 +299,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004C2B0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004CC20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004D590.s")
 
-typedef struct Object_64_8004D95C {
-    u8 unk0[0x118];
-    s32 unk118;
-    u8 unk11C[0x38];
-    Object *someObject;
-    u8 unk158[0x7E];
-    s8 unk1D6;
-    s8 unk1D7;
-} Object_64_8004D95C;
-
 void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     s16 sp26;
     
@@ -427,11 +331,6 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004DAB0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004DE38.s")
-
-typedef struct unk8004F77C {
-    u8 unk0[0x20A];
-    u8 unk20A;
-} unk8004F77C;
 
 void func_8004F77C(unk8004F77C *arg0) {
     s32 temp;
@@ -520,12 +419,6 @@ void func_800521B8(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800521C4.s")
 
-/* Unknown Size */
-typedef struct unk8005234C {
-    u8 unk0[0x16C];
-    s16 unk16C;
-} unk8005234C;
-
 void func_8005234C(unk8005234C *arg0) {
     arg0->unk16C -= arg0->unk16C >> 3;
     if (arg0->unk16C >= -9 && arg0->unk16C < 10) { // Deadzone?
@@ -599,15 +492,6 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052B64.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052D7C.s")
 
-typedef struct Object_64_80053478 {
-    u8 unk0[0x2C];
-    f32 unk2C;
-    u8 unk30[0x1B1];
-    s8 unk1E1;
-    u8 unk1E2[4];
-    s8 unk1E6;
-} Object_64_80053478;
-
 void func_80053478(Object_64_80053478 *obj) {
     s32 phi_v0;
     f32 phi_f0 = obj->unk2C;
@@ -632,26 +516,6 @@ void func_80053478(Object_64_80053478 *obj) {
         D_8011D554 = -D_8011D554;
     }
 }
-
-extern unk8011D510 D_8011D510;
-
-/* Unknown Size */
-typedef struct unk800535C4 {
-    s16 unk0;
-    s16 unk2;
-} unk800535C4;
-
-/* Unknown Size */
-typedef struct unk800535C4_2 {
-    /* 0x00  */ u8 unk0[0x9C];
-    /* 0x9C  */ f32 oz;
-    /* 0xA0  */ f32 ox;
-    /* 0xA4  */ f32 oy;
-    /* 0xA8  */ u8 unkA8[0xF8];
-    /* 0x1A0 */ s16 unk1A0;
-    /* 0x1A2 */ s16 unk1A2;
-    /* 0x1A4 */ s16 unk1A4;
-} unk800535C4_2;
 
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     Matrix mf;
@@ -697,46 +561,28 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80054FD0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80055A84.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80055EC0.s")
 
-/* Unknown Size */
-typedef struct unk800570A4 {
-    u8 unk0[0x108];
-    s32 unk108;
-    u8 unk10C[0x102];
-    s16 unk20E;
-    s8 unk210;
-} unk800570A4;
-
-/* Unknown Size */
-typedef struct unk80056930 {
-    u8 unk0[0x3];
-    s8 unk3;
-} unk80056930;
-
-void func_80057048(Object *arg0, s32 arg1);
-
-void play_char_horn_sound(Object *arg0, Object_64 *arg1) {
+void play_char_horn_sound(Object *obj, Object_64 *obj64) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
         // Play character voice instead of horn.
-        func_800570B8(arg0, 0x162, 8, 0x82);
+        func_800570B8(obj, 0x162, 8, 0x82);
     } else {
         // Play character's horn sound
-        func_80057048(arg0, arg1->unk0_a.unk0_b.unk3 + 0x156);
+        func_80057048(obj, obj64->unk0_a.unk0_b.unk3 + 0x156);
     }
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005698C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80056E2C.s")
 
-void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4);
 void func_80057048(Object *obj, s32 arg1) {
-    unk800570A4 *obj64 = obj->unk64;
+    Object_64 *obj64 = obj->unk64;
     if (D_8011D55C != -1 && obj64->unk108 == 0) {
         func_80001EA8(arg1, obj->x_position, obj->y_position, obj->z_position, NULL);
     }
 }
 
-void func_800570A4(Object *arg0, s32 arg1, s32 arg2) {
-    unk800570A4 *temp = arg0->unk64;
+void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
+    Object_64_unk800570A4 *temp = obj->unk64;
     temp->unk20E = arg1;
     temp->unk210 = arg2;
 }
@@ -789,20 +635,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800570B8.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057220.s")
 
-/* Unknown size */
-typedef struct Object_64_800575EC {
-    /* 0x00 */ u8 pad0[0x38];
-    /* 0x38 */ f32 ox1;
-    /* 0x3C */ f32 oy1;
-    /* 0x40 */ f32 oz1;
-    /* 0x44 */ f32 ox2;
-    /* 0x48 */ f32 oy2;
-    /* 0x4C */ f32 oz2;
-    /* 0x50 */ f32 ox3;
-    /* 0x54 */ f32 oy3;
-    /* 0x58 */ f32 oz3;
-} Object_64_800575EC;
-
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     Matrix mf;
     
@@ -820,14 +652,6 @@ void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800576E0.s")
-
-extern s32 D_8011D534;
-
-/* Unknown Size */
-typedef struct unk800579B0 {
-    u8 unk0[0x1E1];
-    s8 unk1E1;
-} unk800579B0;
 
 void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
     s32 temp, temp2;
@@ -849,23 +673,16 @@ void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057A40.s")
 
-typedef struct Object_64_800580B4 {
-    u8 unk0[0x1D8];
-    s8 unk1D8;
-} Object_64_800580B4;
-
-void func_80057A40(Object *, Object_64_800580B4 *, f32);
-
-void func_800580B4(Object *arg0, Object_64_800580B4 *arg1, s32 arg2, f32 arg3) {
+void func_800580B4(Object *obj, Object_64_800580B4 *obj64, s32 arg2, f32 arg3) {
     f32 xPos, yPos, zPos;
-    if ((D_8011D55C != -1) && (arg1->unk1D8 != 1)) {
+    if ((D_8011D55C != -1) && (obj64->unk1D8 != 1)) {
         if (arg2 != gCameraObject->unk36) {
-            func_80057A40(arg0, arg1, arg3);
+            func_80057A40(obj, obj64, arg3);
             xPos = gCameraObject->x_position;
             yPos = gCameraObject->y_position;
             zPos = gCameraObject->z_position;
             gCameraObject->unk36 = arg2;
-            func_80057A40(arg0, arg1, arg3);
+            func_80057A40(obj, obj64, arg3);
             if (D_8011D540 == 0 && D_8011D582 == 0) {
                 gCameraObject->unk24 = xPos - gCameraObject->x_position;
                 gCameraObject->unk28 = yPos - (gCameraObject->y_position + gCameraObject->unk30);
@@ -934,7 +751,7 @@ void func_80059984(s32 arg0) {
     D_8011D5AC = arg0;
 }
 
-s16 func_800599A8(void) {
+s32 func_800599A8(void) {
     return D_8011D5AC;
 }
 
@@ -1008,8 +825,6 @@ void func_8005A3C0(void) {
     D_8011D583 = 1;
 }
 
-void func_8003B4BC(s32 arg0);
-
 void func_8005A3D0(void) {
     s32 i;
     s32 count = 0;
@@ -1032,14 +847,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005B818.s")
 void func_8005C25C(void) {
     D_800DCB9C[0] = 0.05f;
 }
-
-/* Unknown Size */
-typedef struct unk8005C270 {
-    u8 unk0[0x190];
-    s16 unk190;
-    s8 unk192;
-    s8 unk193;
-} unk8005C270;
 
 void func_8005C270(unk8005C270 *arg0) {
     s32 temp = func_8001BA64();

@@ -115,10 +115,10 @@ void func_800049D8(void);
 void func_800049F8(void * sndState,s16 type, u32 arg2);
 u16 func_80004A3C(u8 arg0);
 
-
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
 void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2);
+void func_80004A60(u8, u16); //Could be s32, s32
 
 #endif

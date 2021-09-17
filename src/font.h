@@ -125,8 +125,6 @@ typedef struct FontData {
 #define unk8012A7E8_TOTAL_SIZE (sizeof(unk8012A7E8) * unk8012A7E8_COUNT)
 #define unk8012A7EC_TOTAL_SIZE (sizeof(unk8012A7EC) * unk8012A7EC_COUNT)
 
-//TextureHeader *load_texture(s32 arg0); //texture_sprites.c NON_MATCHING
-
 void load_fonts(void);
 void func_800C4164(s32 arg0);
 void set_text_font(s32 arg0);

@@ -116,7 +116,6 @@ extern s32 D_800DC85C;
 extern u8 D_800DC860;
 extern u16 D_800DC864;
 
-void free_tt_ghost_data(void); //unknown_043920.c
 f32 func_800707F8(s16); //?
 
 Object *func_8000BF44(s32 arg0);
@@ -232,5 +231,8 @@ s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *func_8000EA54(unk80027FC4*, s32);
 s32 func_8001F460(Object*, s32, Object*);
+void func_80011570(Object *, f32, f32, f32);
+s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
+
 
 #endif
