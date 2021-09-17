@@ -5,6 +5,8 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
+#include "memory.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 
@@ -15,7 +17,7 @@ s32 *D_800E304C = NULL;
 
 // Could be an array of pointers?
 s32 D_800E3050[8] = {
-    0, 0, 0, 0, 0, 0, 0, 0
+    0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 s32 *D_800E3070[2] = { NULL, NULL };
@@ -33,41 +35,12 @@ unk800E3090 D_800E3090[4] = {
     { 0x4000, 0x0201, 0, 0, 0, 0, 0, 0, },
     { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0, },
     { 0x4000, 0x0201, 0, 0, 0, 0, 0, 0, },
-    { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0, }
+    { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0, },
 };
 
-s32 *D_800E30D0 = NULL;
+TextureHeader *D_800E30D0 = NULL;
 s32 *D_800E30D4 = NULL;
-
-typedef struct{
-    u8 unk00;
-    u8 pad01[0x05];
-    u8  unk06;
-    u8  unk07;
-    u32 unk08;  
-} unk800DC918_04_0C; //copied from unknown_0255E0.c
-
-typedef struct{
-    u8 pad00[0x0C];
-    unk800DC918_04_0C *unk0C;
-    u8 pad0C[0x10];
-    s16 unk20;
-    u8 pad22[0x09];
-    s8 unk2B;
-    u8 pad2C[0x14];
-    u8 unk40;
-    u8 pad41[0x3];
-} unk800DC918_04; //copied from unknown_0255E0.c
-
-typedef struct{
-    unk800DC918_04 * unk00;
-    u8 pad04[0x8];
-    u32 unk0C;
-    u8 pad10[0xC];
-}unk800E30D8;
-
-
-unk800E30D8 *D_800E30D8 = NULL;
+LevelModel_Alternate *D_800E30D8 = NULL;
 s32 D_800E30DC = 0;
 s32 D_800E30E0 = 0;
 s32 D_800E30E4 = 0;
@@ -173,12 +146,6 @@ s32 D_8012A728[2];
 
 /*****************************/
 
-u8 *allocate_from_main_pool_safe(s32 arg0, s32 arg1);
-void free_from_memory_pool(s32 *arg0);
-void free_texture(s32 *arg0);
-void func_800C5494(s32 arg0);
-void func_800C5620(s32 arg0);
-
 void func_800B7D20(void) {
     if (D_800E3040 != NULL) {
         free_from_memory_pool(D_800E3040);
@@ -247,7 +214,7 @@ void func_800B8B8C(void) {
 
 GLOBAL_ASM("asm/non_matchings/waves/func_800B8C04.s")
 
-s32 func_800B9228(unk800DC918_04 * arg0){
+s32 func_800B9228(LevelModelSegment *arg0) {
     s32 v0 = 0;
     s32 result = 0;
     while(v0 < D_8012A0E0 && arg0 != D_800E30D8[v0].unk00){
@@ -267,9 +234,6 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BA288.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA4B8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")
-
-void func_800BBE08(void);
-void func_800BBF78(s32 arg0);
 
 void func_800BBDDC(s32 arg0) {
     func_800BBE08();

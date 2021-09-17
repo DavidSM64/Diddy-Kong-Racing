@@ -14,6 +14,7 @@
 #include "memory.h"
 #include "unknown_043920.h"
 #include "camera.h"
+#include "waves.h"
 
 /************ .data ************/
 
