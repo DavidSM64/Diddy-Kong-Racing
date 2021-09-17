@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
+#include "f3ddkr.h"
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC874 {
@@ -84,8 +85,6 @@ extern s32 D_800DC928;
 
 extern s8 D_800DC92C[24];
 
-f32 func_800BB2F4(s32, f32, f32, f32*); //waves.c //Non Matching
-
 s32 func_800249E0(s32 arg0);
 void func_800257D0(void);
 void func_80027FC4(s32 arg0);
@@ -117,5 +116,6 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb);
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
+void func_80024D54(Gfx *, s32, s32, s32, s32);
 
 #endif

@@ -646,7 +646,7 @@ extern s16 D_800E1E2C[10];
 
 extern s16 D_800E1E40[10];
 
-s32 get_random_number_from_range(s32, s32); // Non Matching src/unknown_070110.c
+s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
 void func_8007FF88(void);
 void func_80080E6C(void);

@@ -980,4 +980,8 @@ typedef struct unk8011D510 {
     /* 0x14 */ f32 unk14;
 } unk8011D510;
 
+typedef struct unk80042178 {
+    u8 pad0[0x20];
+} unk80042178;
+
 #endif

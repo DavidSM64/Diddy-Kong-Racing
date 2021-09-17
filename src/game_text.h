@@ -21,8 +21,6 @@ typedef struct unk8012A798 {
 
 extern u32 osTvType;
 
-void func_8005A3B0(void); //unknown_043920.c
-
 void func_800C29F0(void);
 void func_800C2AB4(void);
 void func_800C2AF4(s32 arg0);

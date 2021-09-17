@@ -20,5 +20,6 @@ Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 f32 func_800BEEB4(Object_64 *); // Non Matching
 void func_800BBE08(void); // Non Matching
 void func_800BBF78(s32 arg0); // Non Matching
+f32 func_800BB2F4(s32, f32, f32, f32*);
 
 #endif

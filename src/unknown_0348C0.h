@@ -382,10 +382,6 @@ typedef struct unk8004210C {
     s32 unk64;
 } unk8004210C;
 
-typedef struct unk80042178 {
-    u8 pad0[0x20];
-} unk80042178;
-
 typedef struct Object_3C_80042178 {
     u8 pad0[8];
     u16 unk8;
@@ -466,9 +462,6 @@ f32 func_800707C4(s16); // No idea where it's located
 f32 func_800707F8(s16); // No idea where it's located
 s32 get_random_number_from_range(s32, s32); // Non Matching src/unknown_070110.c
 s32 func_8007066C(s32, s32); // Non Matching src/unknown_070110.c
-s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178*); //unknown_00BC20.c Non Matching
-// Yeah this one seems excessive, and it's Non Matching from src/unknown_008C40.c
-void func_800098A4(s32, s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, s32);
 
 void func_80033F44(Object *arg0, s32 arg1);
 void func_80034530(Object *arg0, unk80034530 *arg1);
