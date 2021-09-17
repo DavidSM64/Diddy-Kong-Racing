@@ -52,14 +52,6 @@ OSScClient *D_80126310;
 
 /******************************/
 
-extern OSViMode D_800E4620, D_800E4670, D_800E46C0, D_800E4760, D_800E4710, D_800E47B0;
-
-void set_video_mode_index(s32);
-void init_vi_settings(void);
-void init_framebuffer(s32);
-void func_8007A974(void);
-void swap_framebuffers(void);
-
 void init_video(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
@@ -99,8 +91,8 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     D_801262E4 = 3;
 }
 
-void set_video_mode_index(s32 arg0) {
-    gVideoModeIndex = arg0;
+void set_video_mode_index(s32 videoModeIndex) {
+    gVideoModeIndex = videoModeIndex;
 }
 
 /* Unused? */
@@ -109,16 +101,14 @@ s32 get_video_mode_index(void) {
 }
 
 /* Unused? */
-void set_video_width_and_height_from_index(s32 arg0) {
-    gVideoFbWidths[arg0] = gVideoModeResolutions[gVideoModeIndex & 0x07].width;
-    gVideoFbHeights[arg0] = gVideoModeResolutions[gVideoModeIndex & 0x07].height;
+void set_video_width_and_height_from_index(s32 fbIndex) {
+    gVideoFbWidths[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].width;
+    gVideoFbHeights[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].height;
 }
 
 s32 get_video_width_and_height_as_s32(void) {
     return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
 }
-
-void memory_copy(u8 *src, u8 *dst, s32 numBytes);
 
 void init_vi_settings(void) {
     s32 viModeTableIndex;
@@ -206,25 +196,25 @@ void init_vi_settings(void) {
     osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
 }
 
-void init_framebuffer(s32 arg0) {
-    if (gVideoFramebuffers[arg0] != 0) {
-        func_80071538(gVideoFramebuffers[arg0]);
-        free_from_memory_pool(gVideoFramebuffers[arg0]);
+void init_framebuffer(s32 index) {
+    if (gVideoFramebuffers[index] != 0) {
+        func_80071538(gVideoFramebuffers[index]);
+        free_from_memory_pool(gVideoFramebuffers[index]);
     }
-    gVideoFbWidths[arg0] = gVideoModeResolutions[gVideoModeIndex & 7].width;
-    gVideoFbHeights[arg0] = gVideoModeResolutions[gVideoModeIndex & 7].height;
+    gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
+    gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
     if (gVideoModeIndex >= 2) {
-        gVideoFramebuffers[arg0] = allocate_from_main_pool_safe((640 * 480 * 2) + 0x30, COLOR_TAG_WHITE);
-        gVideoFramebuffers[arg0] = ((s32)gVideoFramebuffers[arg0] + 0x3F) & ~0x3F;
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((640 * 480 * 2) + 0x30, COLOR_TAG_WHITE);
+        gVideoFramebuffers[index] = ((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F;
         if (gVideoDepthBuffer == NULL) {
             gVideoDepthBuffer = allocate_from_main_pool_safe((640 * 480 * 2) + 0x30, COLOR_TAG_WHITE);
             gVideoDepthBuffer = ((s32)gVideoDepthBuffer + 0x3F) & ~0x3F;
         }
     } else {
-        gVideoFramebuffers[arg0] = allocate_from_main_pool_safe((gVideoFbWidths[arg0] * gVideoFbHeights[arg0] * 2) + 0x30, COLOR_TAG_WHITE);
-        gVideoFramebuffers[arg0] = ((s32)gVideoFramebuffers[arg0] + 0x3F) & ~0x3F;
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOR_TAG_WHITE);
+        gVideoFramebuffers[index] = ((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F;
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((gVideoFbWidths[arg0] * gVideoFbHeights[arg0] * 2) + 0x30, COLOR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOR_TAG_WHITE);
             gVideoDepthBuffer = ((s32)gVideoDepthBuffer + 0x3F) & ~0x3F;
         }
     }

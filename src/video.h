@@ -38,6 +38,8 @@ extern u16 *gVideoDepthBuffer;
 extern s32 D_800DE774;
 extern s8  D_800DE778;
 
+extern OSViMode D_800E4620, D_800E4670, D_800E46C0, D_800E4760, D_800E4710, D_800E47B0;
+
 /* Size: 0x08 bytes */
 typedef struct VideoModeResolution {
     /* 0x00 */ s32 width;
@@ -48,6 +50,20 @@ extern VideoModeResolution gVideoModeResolutions[8];
 
 extern s32 D_800DE7BC;
 
+void init_video(s32 videoModeIndex, OSSched *sc);
+void set_video_mode_index(s32 videoModeIndex);
+s32 get_video_mode_index(void);
+void set_video_width_and_height_from_index(s32 fbIndex);
+s32 get_video_width_and_height_as_s32(void);
+void init_vi_settings(void);
+void init_framebuffer(s32 index);
+void func_8007A974(void);
+void func_8007AB24(s8 arg0);
+s32 func_8007AB34(void);
+void swap_framebuffers(void);
+
+//Non Matching
+void memory_copy(u8 *src, u8 *dst, s32 numBytes);
 s32 func_8007A98C(s32 arg0);
 
 #endif
