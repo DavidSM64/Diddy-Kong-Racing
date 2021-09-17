@@ -232,5 +232,6 @@ s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *func_8000EA54(unk80027FC4*, s32);
 s32 func_8001F460(Object*, s32, Object*);
+void func_80011570(Object *, f32, f32, f32);
 
 #endif

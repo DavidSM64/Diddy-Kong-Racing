@@ -583,5 +583,6 @@ void func_80037594(Object *obj, s32 arg1);
 void func_800377E4(Object *obj, s32 arg1);
 void func_800380F8(Object *obj, s32 arg1);
 void func_8003827C(Object *obj, s32 arg1);
+void func_8003B4BC(s32 arg0);
 
 #endif

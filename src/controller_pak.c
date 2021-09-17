@@ -212,7 +212,7 @@ s16 func_80074A4C(GhostHeader *ghostHeader) {
     s32 temp;
     
     sum = 0;
-    len = (ghostHeader->numberFrames * sizeof(GhostDataFrame)) + sizeof(GhostHeader);
+    len = (ghostHeader->nodeCount * sizeof(GhostDataFrame)) + sizeof(GhostHeader);
     for(i = sizeof(GhostHeader); i < len; i++) {
         sum += ((u8*)ghostHeader)[i];
     }
@@ -222,13 +222,13 @@ s16 func_80074A4C(GhostHeader *ghostHeader) {
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074A4C.s")
 #endif
 
-void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 numberFrames, u8 *dest) {
+void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 nodeCount, u8 *dest) {
     ghostHeader->checksum = 0;
     ghostHeader->characterID = characterID;
     ghostHeader->unk3 = 0;
     ghostHeader->time = time;
-    ghostHeader->numberFrames = numberFrames;
-    bcopy(dest, (u8*)ghostHeader + 8, numberFrames * sizeof(GhostDataFrame));
+    ghostHeader->nodeCount = nodeCount;
+    bcopy(dest, (u8*)ghostHeader + 8, nodeCount * sizeof(GhostDataFrame));
     ghostHeader->checksum = func_80074A4C(ghostHeader);
 }
 
