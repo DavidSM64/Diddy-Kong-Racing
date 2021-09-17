@@ -5,7 +5,7 @@
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
-#include "libultra_internal.h"
+//#include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
 
@@ -23,11 +23,6 @@ u32 D_800DE4C0 = 0x40;
 u32 D_800DE4C4 = 0;
 u32 D_800DE4C8 = 0;
 s32 D_800DE4CC = 0;
-
-typedef union {
-    void (*function)(Gfx*, s32);
-    void *ptr;
-} unk800DE4D0;
 
 unk800DE4D0 D_800DE4D0 = { NULL };
 s32 D_800DE4D4 = 0;
@@ -123,7 +118,7 @@ Gfx D_800DE6A8[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
-    }
+    },
 };
 
 Gfx D_800DE6E8[][2] = {
@@ -142,7 +137,7 @@ Gfx D_800DE6E8[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
-    }
+    },
 };
 
 /*******************************/
@@ -208,7 +203,7 @@ void func_80077B5C(s32 red, s32 green, s32 blue) {
 
 #ifdef NON_MATCHING
 // Stack issues
-void render_background(Gfx **dlist, s32 arg1, s32 arg2) {
+void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
     s32 sp90;
     s32 sp8C;
     s32 sp88;
@@ -278,18 +273,18 @@ void func_80078054(Gfx **dlist) {
     gSPDisplayList((*dlist)++, D_800DE520)
 }
 
-void func_800780DC(Gfx** dlist){
+void func_800780DC(Gfx **dlist) {
     gSPDisplayList((*dlist)++, D_800DE4E0)
 }
 
-void func_80078100(OSSched *sc){
+void func_80078100(OSSched *sc) {
     osScInterruptQ = osScGetInterruptQ(sc);
     osCreateMesgQueue(&D_80125EA0, &D_80125EB8,1);
     osCreateMesgQueue(&D_80125EC0, &D_80125EF0,8);
     osCreateMesgQueue(&D_80125ED8, &D_80125F10,8);
 }
 
-void func_80078170(u32 arg0, u32 arg1, u32 arg2){
+void func_80078170(u32 arg0, u32 arg1, u32 arg2) {
     D_800DE4C4 = arg0;
     D_800DE4C8 = arg1;
     D_800DE4C0 = arg2 << 2;

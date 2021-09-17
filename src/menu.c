@@ -22,6 +22,7 @@
 #include "thread30.h"
 #include "unknown_00BC20.h"
 #include "unknown_06B2B0.h"
+#include "unknown_078050.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
