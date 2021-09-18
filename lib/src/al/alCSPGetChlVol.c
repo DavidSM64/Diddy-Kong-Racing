@@ -3,6 +3,6 @@
 
 #include "audio_internal.h"
 
-u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan){
+u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan) {
     return seqp->chanState[chan].vol;
 }

@@ -139,7 +139,6 @@ u8 D_80121150[16];
 /******************************/
 
 #ifdef NON_MATCHING
-void func_800663DC(s32 x_pos, s32 y_pos, s32 z_pos, s32 arg3, s32 arg4, s32 arg5);
 extern s32 D_A4600010;
 extern s32 D_B0000578;
 
@@ -166,8 +165,8 @@ void func_80065EA0(void) {
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         D_800DD060 = 1;
     }
-    guPerspectiveF(&D_80120EE0, &perspNorm[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    func_8006F870(&D_80120EE0, &D_80120FE0);
+    guPerspectiveF(D_80120EE0, perspNorm[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    func_8006F870(D_80120EE0, D_80120FE0);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 #else
@@ -305,7 +304,7 @@ void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s
     D_80120AC0[arg0].unk0 = arg4;
     D_80120AC0[arg0].unk2 = arg5;
     D_80120AC0[arg0].unk4 = arg6;
-    D_80120AC0[arg0].unk34 = get_level_segment_index_from_position(xPos, yPos, zPos);
+    D_80120AC0[arg0].levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
     D_80120D14 = 1;
 }
 
@@ -464,30 +463,30 @@ void func_80066940(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         phi_a2 = arg2;
     }
     if ((phi_a1 >= width) || (phi_a3 < 0) || (arg2 >= height) || (phi_a2 < 0)) {
-        gScreenViewports[viewPortIndex].unk20 = 0;
-        gScreenViewports[viewPortIndex].unk24 = 0;
-        gScreenViewports[viewPortIndex].unk28 = 0;
-        gScreenViewports[viewPortIndex].unk2C = 0;
+        gScreenViewports[viewPortIndex].upperLeftX = 0;
+        gScreenViewports[viewPortIndex].upperLeftY = 0;
+        gScreenViewports[viewPortIndex].lowerRightX = 0;
+        gScreenViewports[viewPortIndex].lowerRightY = 0;
     } else {
         if (phi_a1 < 0) {
-            gScreenViewports[viewPortIndex].unk20 = 0;
+            gScreenViewports[viewPortIndex].upperLeftX = 0;
         } else {
-            gScreenViewports[viewPortIndex].unk20 = phi_a1;
+            gScreenViewports[viewPortIndex].upperLeftX = phi_a1;
         }
         if (arg2 < 0) {
-            gScreenViewports[viewPortIndex].unk24 = 0;
+            gScreenViewports[viewPortIndex].upperLeftY = 0;
         } else {
-            gScreenViewports[viewPortIndex].unk24 = arg2;
+            gScreenViewports[viewPortIndex].upperLeftY = arg2;
         }
         if (phi_a3 >= width) {
-            gScreenViewports[viewPortIndex].unk28 = width - 1;
+            gScreenViewports[viewPortIndex].lowerRightX = width - 1;
         } else {
-            gScreenViewports[viewPortIndex].unk28 = phi_a3;
+            gScreenViewports[viewPortIndex].lowerRightX = phi_a3;
         }
         if (phi_a2 >= height) {
-            gScreenViewports[viewPortIndex].unk2C = height - 1;
+            gScreenViewports[viewPortIndex].lowerRightY = height - 1;
         } else {
-            gScreenViewports[viewPortIndex].unk2C = phi_a2;
+            gScreenViewports[viewPortIndex].lowerRightY = phi_a2;
         }
     }
     gScreenViewports[viewPortIndex].unk4 = arg2;
@@ -526,12 +525,13 @@ void func_80066AA8(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     gScreenViewports[viewPortIndex].flags &= ~0x40;
 }
 
-s32 func_80066BA8(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4) {
-    *arg1 = gScreenViewports[viewPortIndex].unk20;
-    *arg3 = gScreenViewports[viewPortIndex].unk28;
-    *arg2 = gScreenViewports[viewPortIndex].unk24;
-    *arg4 = gScreenViewports[viewPortIndex].unk2C;
-    if ((*arg1 | *arg3 | *arg2 | *arg4) == 0) {
+s32 func_80066BA8(s32 viewPortIndex, s32 *upperLeftX, s32 *upperLeftY, s32 *lowerRightX, s32 *lowerRightY) {
+    //gDPFillRectangle values
+    *upperLeftX = gScreenViewports[viewPortIndex].upperLeftX;
+    *lowerRightX = gScreenViewports[viewPortIndex].lowerRightX;
+    *upperLeftY = gScreenViewports[viewPortIndex].upperLeftY;
+    *lowerRightY = gScreenViewports[viewPortIndex].lowerRightY;
+    if ((*upperLeftX | *lowerRightX | *upperLeftY | *lowerRightY) == 0) {
         return 0;
     }
     return 1;
@@ -552,7 +552,6 @@ void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
     *arg2 = temp_v0 & 0xFFFF;
     *arg3 = (u32) (temp_v0 >> 0x10);
 }
-
 
 #ifdef NON_MATCHING
 
@@ -584,10 +583,10 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
     temp_a3 = temp_t0 >> 1;
     if (gScreenViewports[D_80120CE4].flags & 1) {
         gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 
-            gScreenViewports[D_80120CE4].unk20, 
-            gScreenViewports[D_80120CE4].unk24, 
-            gScreenViewports[D_80120CE4].unk28, 
-            gScreenViewports[D_80120CE4].unk2C
+            gScreenViewports[D_80120CE4].upperLeftX, 
+            gScreenViewports[D_80120CE4].upperLeftY, 
+            gScreenViewports[D_80120CE4].lowerRightX, 
+            gScreenViewports[D_80120CE4].lowerRightY
         )
         func_80068158(dlist, 0, 0, 0, 0);
         if (arg1 != 0) {

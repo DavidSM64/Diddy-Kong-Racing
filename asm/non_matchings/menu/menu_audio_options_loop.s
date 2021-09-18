@@ -264,7 +264,7 @@ glabel menu_audio_options_loop
 .L8008502C:
 /* 085C2C 8008502C 0C0002CA */  jal   func_80000B28
 /* 085C30 80085030 00000000 */   nop   
-/* 085C34 80085034 0C0002F8 */  jal   func_80000BE0
+/* 085C34 80085034 0C0002F8 */  jal   set_music_player_voice_limit
 /* 085C38 80085038 24040018 */   li    $a0, 24
 /* 085C3C 8008503C 0C0002CD */  jal   play_music
 /* 085C40 80085040 24040018 */   li    $a0, 24
@@ -310,7 +310,7 @@ glabel menu_audio_options_loop
 /* 085CD4 800850D4 00000000 */   nop   
 /* 085CD8 800850D8 0C0002CA */  jal   func_80000B28
 /* 085CDC 800850DC 00000000 */   nop   
-/* 085CE0 800850E0 0C0002F8 */  jal   func_80000BE0
+/* 085CE0 800850E0 0C0002F8 */  jal   set_music_player_voice_limit
 /* 085CE4 800850E4 24040018 */   li    $a0, 24
 /* 085CE8 800850E8 92040003 */  lbu   $a0, 3($s0)
 /* 085CEC 800850EC 0C0002CD */  jal   play_music

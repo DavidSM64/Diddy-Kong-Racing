@@ -484,7 +484,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     if (noPlayers && gCurrentLevelHeader->race_type != RACE_TYPE_CUTSCENE_2) {
         gCurrentLevelHeader->race_type = RACE_TYPE_CUTSCENE_1;
     }
-    func_80000BE0(gCurrentLevelHeader->unkB3);
+    set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
     func_80000CBC();
     func_80031BB8(0x20);
     vehicle = VEHICLE_CAR;

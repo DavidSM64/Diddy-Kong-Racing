@@ -397,7 +397,7 @@ glabel load_level
 /* 06C400 8006B800 00000000 */  nop   
 .L8006B804:
 /* 06C404 8006B804 906400B3 */  lbu   $a0, 0xb3($v1)
-/* 06C408 8006B808 0C0002F8 */  jal   func_80000BE0
+/* 06C408 8006B808 0C0002F8 */  jal   set_music_player_voice_limit
 /* 06C40C 8006B80C 00000000 */   nop   
 /* 06C410 8006B810 0C00032F */  jal   func_80000CBC
 /* 06C414 8006B814 00000000 */   nop   

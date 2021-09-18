@@ -272,7 +272,7 @@ typedef struct LevelHeader {
 
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
-  /* 0xB3 */ u8 unkB3;
+  /* 0xB3 */ u8 voiceLimit;
   /* 0xB3 */ u8 unkB4;
   /* 0xB3 */ u8 unkB5;
   /* 0xB3 */ u8 unkB6;
@@ -921,7 +921,7 @@ typedef struct unk80120AC0 {
     f32 unk28;
     f32 unk2C;
     f32 unk30;
-    s16 unk34;
+    s16 levelSegmentIndex;
     s16 pad36;
     s16 unk38;
     s8  pad3A;

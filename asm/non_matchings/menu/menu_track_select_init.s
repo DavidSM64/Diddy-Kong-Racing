@@ -525,7 +525,7 @@ glabel menu_track_select_init
 /* 08FB7C 8008EF7C 2610F760 */  addiu $s0, %lo(D_800DF760) # addiu $s0, $s0, -0x8a0
 /* 08FB80 8008EF80 AC206848 */  sw    $zero, %lo(D_80126848)($at)
 /* 08FB84 8008EF84 AE000000 */  sw    $zero, ($s0)
-/* 08FB88 8008EF88 0C0002F8 */  jal   func_80000BE0
+/* 08FB88 8008EF88 0C0002F8 */  jal   set_music_player_voice_limit
 /* 08FB8C 8008EF8C 24040018 */   li    $a0, 24
 /* 08FB90 8008EF90 0C000307 */  jal   func_80000C1C
 /* 08FB94 8008EF94 00000000 */   nop   

@@ -35,19 +35,19 @@ extern s8 D_800DD060;
 
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    s32 unk28;
-    s32 unk2C;
-    s32 flags;
+    /* 0x00 */ s32 unk0;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+    /* 0x10 */ s32 unk10;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ s32 unk1C;
+    /* 0x20 */ s32 upperLeftX; //gDPFillRectangle values
+    /* 0x24 */ s32 upperLeftY;
+    /* 0x28 */ s32 lowerRightX;
+    /* 0x2C */ s32 lowerRightY;
+    /* 0x30 */ s32 flags;
 } ScreenViewport;
 
 /* Size: 6 bytes */
@@ -115,7 +115,7 @@ void func_80066894(s32 viewPortIndex, s32 arg1);
 s32 func_80066910(s32 viewPortIndex);
 void func_80066940(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80066AA8(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-s32 func_80066BA8(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
+s32 func_80066BA8(s32 viewPortIndex, s32 *upperLeftX, s32 *upperLeftY, s32 *lowerRightX, s32 *lowerRightY);
 void func_80066C2C(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
 void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3);
 void func_80066CDC(Gfx **dlist, s32 arg1);
