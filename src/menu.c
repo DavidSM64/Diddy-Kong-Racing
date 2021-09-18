@@ -2782,7 +2782,7 @@ void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
             arg0[*arg1].unk1 = 0;
             arg0[*arg1].unk2 = 0;
             arg0[*arg1].unk6 = i;
-            arg0[*arg1].unkC = func_80073C4C();
+            arg0[*arg1].unkC = get_s32_256();
             (*arg1)++;
         }
     }

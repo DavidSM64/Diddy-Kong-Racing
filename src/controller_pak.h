@@ -2,12 +2,7 @@
 #define _UNKNOWN_072E50_H_
 
 #include "types.h"
-#include "memory.h"
-#include "PR/pfs.h"
-#include "PR/os_cont.h"
-#include "macros.h"
 #include "structs.h"
-#include "camera.h"
 
 extern s32 *D_800DE440;
 extern u8 gN64FontCodes[68];
@@ -17,8 +12,8 @@ extern s32 D_800DE48C;
 u8 func_80072250(s32 arg0);
 void func_80072298(u8 arg0);
 void func_80072708(void);
-s32 func_80073C4C(void);
-s32 func_80073C54(void);
+s32 get_s32_256(void);
+s32 get_s32_512(void);
 s32 func_80073F5C(s32 arg0, s32 arg1);
 s32 func_80074148(s32 arg0, Settings *arg1);
 void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 nodeCount, u8 *dest);
