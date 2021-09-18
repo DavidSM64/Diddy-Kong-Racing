@@ -744,7 +744,7 @@ u8 ALBankFile_80115D14_GetSoundDecayTime(u16 sndIndx) {
 }
 
 ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
-    ALCSPlayer *cseqp;
+    ALCSPlayer_Custom *cseqp;
     ALSeqpConfig config;
     
     config.maxVoices = _max_voices;
@@ -756,7 +756,7 @@ ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
     config.updateOsc = NULL;
     config.stopOsc = NULL;
 
-    cseqp = (ALCSPlayer *) alHeapDBAlloc(NULL, 0, &gALHeap, 1, sizeof(ALCSPlayer));
+    cseqp = (ALCSPlayer_Custom *) alHeapDBAlloc(NULL, 0, &gALHeap, 1, sizeof(ALCSPlayer_Custom));
     alCSPNew(cseqp, &config);
     alCSPSetBank(cseqp, ALBankFile_80115D10->bankArray[0]);
     cseqp->unk36 = 0x7F;

@@ -673,7 +673,9 @@ typedef ALMicroTime   (*ALOscInit)(void **oscState,f32 *initVal, u8 oscType,
 typedef ALMicroTime   (*ALOscUpdate)(void *oscState, f32 *updateVal);
 typedef void          (*ALOscStop)(void *oscState);
 
-/* Size: 0x8C bytes */
+/**
+ * Has an extra two bytes for the voice limit not found in standard implementations
+ * Size: 0x92 */
 typedef struct {
     /* 0x00 */ ALPlayer            node;           /* note: must be first in structure */
     /* 0x14 */ ALSynth             *drvr;          /* reference to the client driver   */
@@ -696,8 +698,7 @@ typedef struct {
     /* 0x6C */ ALVoiceState        *vFreeList;     /* list of free voice state structs */
     /* 0x70 */ u8                  voiceLimit;
     /* 0x71 */ u8                  mappedVoices;
-    /* 0x72 */ u8                  unk72; // Might just be padding?
-    /* 0x73 */ u8                  unk73; // Might just be padding?
+    /* 0x72 */ u16                 unk72;          /* Might just be padding?           */
     /* 0x74 */ ALOscInit           initOsc;
     /* 0x78 */ ALOscUpdate         updateOsc;
     /* 0x7C */ ALOscStop           stopOsc;
@@ -706,7 +707,39 @@ typedef struct {
     /* 0x88 */ s32                 loopCount;      /* -1 = loop forever, 0 = no loop   */
 } ALSeqPlayer;
 
-/* Size: 0x80 bytes */
+/**
+ * This has an extra padded 4 bytes at the end for some reason.
+ * Size: 0x80 bytes */
+typedef struct {
+    ALPlayer            node;           /* note: must be first in structure */
+    ALSynth             *drvr;          /* reference to the client driver   */
+    ALCSeq              *target;        /* current sequence                 */
+    ALMicroTime         curTime;
+    ALBank              *bank;          /* current ALBank                   */
+    s32                 uspt;           /* microseconds per tick            */
+    s32                 nextDelta;      /* microseconds to next callback    */
+    s32                 state;
+    u16                 chanMask;       /* active channels                  */
+    s16                 vol;            /* overall sequence volume          */
+    u8                  maxChannels;    /* number of MIDI channels          */
+    u8                  debugFlags;     /* control which error get reported */
+    ALEvent             nextEvent;
+    ALEventQueue        evtq;
+    ALMicroTime         frameTime;
+    ALChanState         *chanState;     /* 16 channels for MIDI             */
+    ALVoiceState        *vAllocHead;    /* list head for allocated voices   */
+    ALVoiceState        *vAllocTail;    /* list tail for allocated voices   */
+    ALVoiceState        *vFreeList;     /* list of free voice state structs */
+    ALOscInit           initOsc;
+    ALOscUpdate         updateOsc;
+    ALOscStop           stopOsc;
+    s32                 unk7C;          /* Padded to match ALCSPlayer_Custom */
+} ALCSPlayer;
+
+/**
+ * This custom struct has a unk36 byte that is set to 0x7F in func_80002224.
+ * It is otherwise identical to the ALCSPlayer above, but we need to pad it's size to match
+ * Size: 0x80 bytes */
 typedef struct {
     /* 0x00 */ ALPlayer            node;           /* note: must be first in structure */
     /* 0x14 */ ALSynth             *drvr;          /* reference to the client driver   */
@@ -721,9 +754,7 @@ typedef struct {
     /* 0x34 */ u8                  maxChannels;    /* number of MIDI channels          */
     /* 0x35 */ u8                  debugFlags;     /* control which error get reported */
     /* 0x36 */ u8                  unk36;
-    /* 0x37 */ u8                  unk37;
-    /* 0x38 */ u8                  unk38; // Might just be padding?
-    /* 0x39 */ u8                  unk39; // Might just be padding?
+    /* 0x37 */ u8                  unk37[3];       /* Padded to match ALCSPlayer       */
     /* 0x40 */ ALEvent             nextEvent;
     /* 0x4C */ ALEventQueue        evtq;
     /* 0x60 */ ALMicroTime         frameTime;
@@ -734,7 +765,7 @@ typedef struct {
     /* 0x74 */ ALOscInit           initOsc;
     /* 0x78 */ ALOscUpdate         updateOsc;
     /* 0x7C */ ALOscStop           stopOsc;
-} ALCSPlayer;
+} ALCSPlayer_Custom;
 
 /* Maintain backwards compatibility with old routine names. */
 #define alSeqpSetProgram		alSeqpSetChlProgram
