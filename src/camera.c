@@ -6,6 +6,7 @@
 #include "unknown_00BC20.h"
 #include "unknown_06B2B0.h"
 #include "unknown_0255E0.h"
+#include "video.h"
 
 extern u32 osTvType;
 
@@ -128,9 +129,10 @@ Matrix D_80121020;
 Matrix D_80121060;
 Matrix D_801210A0;
 OSMesgQueue *D_801210E0[6];
-s32 D_801210F8;
-s32 D_801210FC;
-u8 D_80121100[16];
+OSMesg *D_801210F8;
+OSMesg D_801210FC;
+OSContStatus  status;
+s32 D_80121108[2]; //Padding?
 unk80121110 D_80121110[8];
 u16 D_80121140[4];
 u16 D_80121148[4];
@@ -550,7 +552,7 @@ void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
     *arg0 = 0;
     *arg1 = 0;
     *arg2 = temp_v0 & 0xFFFF;
-    *arg3 = (u32) (temp_v0 >> 0x10);
+    *arg3 = temp_v0 >> 0x10;
 }
 
 #ifdef NON_MATCHING
@@ -708,13 +710,14 @@ void func_80067F20(f32 arg0) {
 }
 
 void func_80067F2C(Gfx **dlist, s32 *arg1) {
-    u32 widthAndHeight, width, height;
+    u32 widthAndHeight;
+    s32 width, height;
     s32 i, j;
     
     widthAndHeight = get_video_width_and_height_as_s32();
     height = widthAndHeight >> 0x10;
     width = widthAndHeight & 0xFFFF;
-    func_8006F870(&D_800DD2B8, *arg1);
+    func_8006F870(D_800DD2B8, *arg1);
     D_80120D88[0] = *arg1;
     D_800DD148[D_80120CE4 + 5].vp.vscale[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vscale[1] = width * 2;
@@ -904,25 +907,29 @@ OSMesgQueue *func_8006A100(void) {
     return &D_801210E0;
 }
 
-#ifdef NON_MATCHING
-// Has regalloc & stack issues.
 s32 func_8006A10C(void) {
-    u8 sp23;
+    s32 *temp1;
+    u8 bitpattern;
+    s32 *temp2;
+
     osCreateMesgQueue(&D_801210E0, &D_801210F8, 1);
-    osSetEventMesg(5, &D_801210E0, D_801210FC);
-    osContInit(&D_801210E0, &sp23, &D_80121100);
+    osSetEventMesg(OS_EVENT_SI, &D_801210E0, D_801210FC);
+    osContInit(&D_801210E0, &bitpattern, &status);
     osContStartReadData(&D_801210E0);
     func_8006A434();
+
     D_800DD300 = 0;
-    if ((sp23 & 1) && !(D_80121100[3] & 8)) {
+
+    if ((bitpattern & CONT_ABSOLUTE) && (!(status.errno & CONT_NO_RESPONSE_ERROR))) {
         return 0;
     }
+
+    if (!bitpattern) { }
+
     D_800DD300 = 1;
+
     return -1;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_8006A10C.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
 

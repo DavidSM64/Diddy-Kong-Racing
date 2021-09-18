@@ -149,4 +149,7 @@ s32 func_8006A5E0(s32 arg0);
 s32 func_8006A624(s8 arg0);
 void disable_button_mask(void);
 
+// Non Matching
+void func_80067A3C(Gfx **dlist);
+
 #endif
