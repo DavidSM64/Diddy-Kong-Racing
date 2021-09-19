@@ -1,0 +1,1 @@
+python3 tools/python/first_diff.py
