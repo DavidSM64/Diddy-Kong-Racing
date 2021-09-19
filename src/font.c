@@ -3,6 +3,7 @@
 
 #include "font.h"
 #include "menu.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 

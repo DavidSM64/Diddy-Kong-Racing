@@ -6545,7 +6545,7 @@ void func_8009E9A8(void) {
 
 }
 
-f32 func_8009E9B0(s32 arg0, Gfx **arg1, s32 *arg2, s32 *arg3) {
+f32 func_8009E9B0(unk8012A7E8 *arg0, Gfx **arg1, s32 *arg2, s32 *arg3) {
     D_801263A0 = *arg1;
     D_801263A8 = *arg2;
     D_801263AC = *arg3;

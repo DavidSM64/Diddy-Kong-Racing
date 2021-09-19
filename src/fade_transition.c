@@ -9,6 +9,8 @@
 #include "asset_sections.h"
 #include "memory.h"
 #include "PR/libultra.h"
+#include "video.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 
@@ -457,7 +459,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 #if 0 // This doesn't work properly.
 void render_fade_waves(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 i;
-    func_8007B3D0();
+    func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, D_800E3648)
     for(i = 0; i < 6; i++) {
         s32 index = D_800E31D0[0] + i;
