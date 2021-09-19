@@ -3,6 +3,14 @@
 
 #include "types.h"
 #include "macros.h"
+#include "stdarg.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA940/func_800C9D40.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA940/func_800C9D54.s")
+s32 get_true(s32 arg0, s32 arg1, s32 arg2) {
+    return TRUE;
+}
+
+void func_800C9D54(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    _Printf(get_true, 0, format, args);
+}
