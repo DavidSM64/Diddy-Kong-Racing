@@ -21,7 +21,8 @@ DATA_DIR = ROOT_DIR + '/data'
 BUILD_DIR = 'build/' + VERSION
 
 LATE_DATA_FILES = [ 
-    BUILD_DIR + '/lib/src/unknown_0D43F0.o',
+    BUILD_DIR + '/lib/src/alCopy.o',
+    BUILD_DIR + '/lib/src/printf.o',
     BUILD_DIR + '/lib/src/os/osTimer.o',
     BUILD_DIR + '/lib/src/unknown_0D3020.o'
 ]

@@ -1,12 +1,3 @@
-.rdata
-glabel D_800E96C0
-.asciz "hlL"
-glabel D_800E96C4
-.asciz " +-#0"
-.ascii "\0\0" # padding
-glabel D_800E96CC
-.word 1, 2, 4, 8, 16, 0
-
 .text
 glabel _Printf
 /* 0D4B10 800D3F10 27BDFF20 */  addiu $sp, $sp, -0xe0
@@ -17,9 +8,9 @@ glabel _Printf
 /* 0D4B24 800D3F24 AFB40028 */  sw    $s4, 0x28($sp)
 /* 0D4B28 800D3F28 AFB30024 */  sw    $s3, 0x24($sp)
 /* 0D4B2C 800D3F2C AFA700EC */  sw    $a3, 0xec($sp)
-/* 0D4B30 800D3F30 3C15800E */  lui   $s5, %hi(D_800E48E4) # $s5, 0x800e
-/* 0D4B34 800D3F34 3C16800F */  lui   $s6, %hi(D_800E96C4) # $s6, 0x800f
-/* 0D4B38 800D3F38 3C17800E */  lui   $s7, %hi(D_800E48C0) # $s7, 0x800e
+/* 0D4B30 800D3F30 3C15800E */  lui   $s5, %hi(_zeroes) # $s5, 0x800e
+/* 0D4B34 800D3F34 3C16800F */  lui   $s6, %hi(flags_str) # $s6, 0x800f
+/* 0D4B38 800D3F38 3C17800E */  lui   $s7, %hi(_spaces) # $s7, 0x800e
 /* 0D4B3C 800D3F3C 00C03825 */  move  $a3, $a2
 /* 0D4B40 800D3F40 00A09825 */  move  $s3, $a1
 /* 0D4B44 800D3F44 0080A025 */  move  $s4, $a0
@@ -29,9 +20,9 @@ glabel _Printf
 /* 0D4B54 800D3F54 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0D4B58 800D3F58 AFA600E8 */  sw    $a2, 0xe8($sp)
 /* 0D4B5C 800D3F5C AFA000D4 */  sw    $zero, 0xd4($sp)
-/* 0D4B60 800D3F60 26F748C0 */  addiu $s7, %lo(D_800E48C0) # addiu $s7, $s7, 0x48c0
-/* 0D4B64 800D3F64 26D696C4 */  addiu $s6, %lo(D_800E96C4) # addiu $s6, $s6, -0x693c
-/* 0D4B68 800D3F68 26B548E4 */  addiu $s5, %lo(D_800E48E4) # addiu $s5, $s5, 0x48e4
+/* 0D4B60 800D3F60 26F748C0 */  addiu $s7, %lo(_spaces) # addiu $s7, $s7, 0x48c0
+/* 0D4B64 800D3F64 26D696C4 */  addiu $s6, %lo(flags_str) # addiu $s6, $s6, -0x693c
+/* 0D4B68 800D3F68 26B548E4 */  addiu $s5, %lo(_zeroes) # addiu $s5, $s5, 0x48e4
 /* 0D4B6C 800D3F6C 241E000A */  li    $fp, 10
 .L800D3F70:
 /* 0D4B70 800D3F70 90F00000 */  lbu   $s0, ($a3)
@@ -80,9 +71,9 @@ glabel _Printf
 .L800D4004:
 /* 0D4C04 800D4004 0216C823 */  subu  $t9, $s0, $s6
 /* 0D4C08 800D4008 00197080 */  sll   $t6, $t9, 2
-/* 0D4C0C 800D400C 3C0F800F */  lui   $t7, %hi(D_800E96CC) # $t7, 0x800f
+/* 0D4C0C 800D400C 3C0F800F */  lui   $t7, %hi(flags_arr) # $t7, 0x800f
 /* 0D4C10 800D4010 01EE7821 */  addu  $t7, $t7, $t6
-/* 0D4C14 800D4014 8DEF96CC */  lw    $t7, %lo(D_800E96CC)($t7)
+/* 0D4C14 800D4014 8DEF96CC */  lw    $t7, %lo(flags_arr)($t7)
 /* 0D4C18 800D4018 8FB800D8 */  lw    $t8, 0xd8($sp)
 /* 0D4C1C 800D401C 26520001 */  addiu $s2, $s2, 1
 /* 0D4C20 800D4020 02C02025 */  move  $a0, $s6
@@ -97,7 +88,7 @@ glabel _Printf
 /* 0D4C40 800D4040 2402002A */  li    $v0, 42
 /* 0D4C44 800D4044 8FB800EC */  lw    $t8, 0xec($sp)
 /* 0D4C48 800D4048 144E0011 */  bne   $v0, $t6, .L800D4090
-/* 0D4C4C 800D404C 3C04800F */   lui   $a0, %hi(D_800E96C0) # $a0, 0x800f
+/* 0D4C4C 800D404C 3C04800F */   lui   $a0, %hi(length_str) # $a0, 0x800f
 /* 0D4C50 800D4050 270F0003 */  addiu $t7, $t8, 3
 /* 0D4C54 800D4054 2401FFFC */  li    $at, -4
 /* 0D4C58 800D4058 01E1C824 */  and   $t9, $t7, $at
@@ -192,7 +183,7 @@ glabel _Printf
 /* 0D4D94 800D4194 8FB900CC */   lw    $t9, 0xcc($sp)
 .L800D4198:
 /* 0D4D98 800D4198 0C033871 */  jal   strchr
-/* 0D4D9C 800D419C 248496C0 */   addiu $a0, %lo(D_800E96C0) # addiu $a0, $a0, -0x6940
+/* 0D4D9C 800D419C 248496C0 */   addiu $a0, %lo(length_str) # addiu $a0, $a0, -0x6940
 /* 0D4DA0 800D41A0 10400005 */  beqz  $v0, .L800D41B8
 /* 0D4DA4 800D41A4 27B000A8 */   addiu $s0, $sp, 0xa8
 /* 0D4DA8 800D41A8 92590000 */  lbu   $t9, ($s2)
