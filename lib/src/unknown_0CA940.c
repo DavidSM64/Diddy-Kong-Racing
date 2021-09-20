@@ -13,4 +13,5 @@ void func_800C9D54(const char *format, ...) {
     va_list args;
     va_start(args, format);
     _Printf(get_true, 0, format, args);
+    va_end(args);
 }
