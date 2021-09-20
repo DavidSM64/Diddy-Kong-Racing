@@ -4,6 +4,8 @@
 /* Internal functions used by the operating system */
 /* Do not include this header in application code */
 
+#include "os_thread.h"
+
 /* Variables */
 
 //extern u64 osClockRate;

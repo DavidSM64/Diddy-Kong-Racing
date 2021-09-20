@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
-#include "hardware.h"
+#include "PR/rcp.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDisableInt.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osRestoreInt.s")
@@ -13,7 +13,7 @@ s32 osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size)
 {
     register int status;
     status = HW_REG(PI_STATUS_REG, u32);
-    while (status & (PI_STATUS_BUSY | PI_STATUS_IOBUSY | PI_STATUS_ERROR)) {
+    while (status & (PI_STATUS_DMA_BUSY | PI_STATUS_IO_BUSY | PI_STATUS_ERROR)) {
         status = HW_REG(PI_STATUS_REG, u32);
     }
 

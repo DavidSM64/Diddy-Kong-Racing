@@ -68,6 +68,7 @@ The Indy development board use cartridge domain 1:
 
 **************************************************************************/
 
+#define HW_REG(reg, type) *(volatile type *)(u32*)(reg | 0xa0000000)
 
 /*************************************************************************
  * RDRAM Memory (Assumes that maximum size is 4 MB)
@@ -735,7 +736,7 @@ The Indy development board use cartridge domain 1:
  *	Bit 1: IO busy  - set when IO is in progress
  *	Bit 2: Error    - set when CPU issues IO request while DMA is busy
  */
-#define	PI_STATUS_ERROR		0x04
+#define	PI_STATUS_ERROR		0x03
 #define	PI_STATUS_IO_BUSY	0x02
 #define	PI_STATUS_DMA_BUSY	0x01
 

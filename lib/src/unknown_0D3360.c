@@ -4,7 +4,6 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
-#include "hardware.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDevMgrMain.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osViInit.s")
