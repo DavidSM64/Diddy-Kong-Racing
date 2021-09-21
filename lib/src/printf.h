@@ -24,7 +24,7 @@ typedef struct {
     /* 28 */ int width;
     /* 2c */ unsigned int size;
     /* 30 */ unsigned int flags;
-    /* 34 */ char length;
+    /* 34 */ unsigned char length;
 } printf_struct;
 
 #define isdigit(x) ((x >= '0' && x <= '9'))

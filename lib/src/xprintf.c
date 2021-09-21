@@ -7,6 +7,9 @@
 #include "stdarg.h"
 #include "printf.h"
 
+/**
+ * This gets called insdie of _PrintF, but it is just hardcoded to return true.
+ */
 char *prout_xprintf(char *dst, const char *src, size_t count) {
     return TRUE;
 }
