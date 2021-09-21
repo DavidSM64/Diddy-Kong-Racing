@@ -15,9 +15,6 @@ char _spaces[] = "                                ";
 char _zeroes[] = "00000000000000000000000000000000";
 
 static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff);
-//Has Regalloc issues. This is a hybrid of SM64, and libreultra.
-//libreultra just doesn't match, but it had some cleaner code
-//so I copied it where I could.
 s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args) {
     printf_struct x;
     const u8 *fmt_ptr;
