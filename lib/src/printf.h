@@ -3,57 +3,60 @@
 #include "types.h"
 #include <stdarg.h>
 
-typedef struct
-{
+/**
+ * This is a definition for a function that gets passed to and
+ * will get called inside _PrintF
+ */
+typedef char *outfun(char *dst, const char *src, size_t count);
+typedef struct {
     union {
-        /* 00 */ s64 s64;
-        u64 u64;
-        f64 f64;
-        u32 u32;
-        u16 u16;
+        /* 00 */ long long s64;
+        double f64;
     } value;
     /* 08 */ char *buff;
-    /* 0c */ s32 part1_len;
-    /* 10 */ s32 num_leading_zeros;
-    /* 14 */ s32 part2_len;
-    /* 18 */ s32 num_mid_zeros;
-    /* 1c */ s32 part3_len;
-    /* 20 */ s32 num_trailing_zeros;
-    /* 24 */ s32 precision;
-    /* 28 */ s32 width;
-    /* 2c */ u32 size;
-    /* 30 */ u32 flags;
-    /* 34 */ u8 length;
+    /* 0c */ int n0;
+    /* 10 */ int num_leading_zeros;
+    /* 14 */ int part2_len;
+    /* 18 */ int num_mid_zeros;
+    /* 1c */ int part3_len;
+    /* 20 */ int num_trailing_zeros;
+    /* 24 */ int precision;
+    /* 28 */ int width;
+    /* 2c */ unsigned int size;
+    /* 30 */ unsigned int flags;
+    /* 34 */ char length;
 } printf_struct;
 
-#define ATOI(i, a)                                                                                     \
-    for (i = 0; *a >= '0' && *a <= '9'; a++)                                                           \
-        if (i < 999)                                                                                   \
-            i = *a + i * 10 - '0';
-#define _PROUT(dst, fmt, _size)                                                                        \
-    if (_size > 0) {                                                                                   \
-        dst = prout(dst, fmt, _size);                                                                  \
-        if (dst != 0)                                                                                  \
-            sp78.size += _size;                                                                        \
-        else                                                                                           \
-            return sp78.size;                                                                          \
+#define isdigit(x) ((x >= '0' && x <= '9'))
+#define LDSIGN(x) (((unsigned short *)&(x))[0] & 0x8000)
+#define ATOI(dst, src)                                        \
+    for (dst = 0; isdigit(*src); ++src)  {                    \
+        if (dst < 999)                                        \
+            dst = dst * 10 + *src - '0';                      \
     }
-#define _PAD(i, m, c, src, extracond)                                                                  \
-    if (extracond && m > 0)                                                                            \
-        for (i = m; i > 0; i -= c) {                                                                   \
-            if ((u32) i > 32)                                                                          \
-                c = 32;                                                                                \
-            else                                                                                       \
-                c = i;                                                                                 \
-            _PROUT(dst, src, c);                                                                       \
-        }
-
+#define _PROUT(fmt, _size)                                    \
+    if (_size > 0) {                                          \
+        dst = (*prout)(dst, fmt, _size);                      \
+        if (dst != 0)                                         \
+            x.size += _size;                                  \
+        else                                                  \
+            return x.size;                                    \
+    }
+#define MAX_PAD ((sizeof(_spaces) - 1))
+#define _PAD(s, n)                                            \
+    if (0 < (n)) {                                            \
+        int i, j = (n);                                       \
+        for (; 0 < j; j -= i) {                               \
+            i = MAX_PAD < (unsigned int)j ? (int)MAX_PAD : j; \
+            _PROUT(s, i);                                     \
+        }                                                     \
+    }
 #define FLAGS_SPACE 1
-#define FLAGS_PLUS 2
+#define FLAGS_PLUS  2
 #define FLAGS_MINUS 4
-#define FLAGS_HASH 8
-#define FLAGS_ZERO 16
-s32 _Printf(char *(*prout)(char *, const char *, size_t), char *dst, const char *fmt, va_list args);
+#define FLAGS_HASH  8
+#define FLAGS_ZERO  16
+s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
 void _Litob(printf_struct *args, u8 type);
 void _Ldtob(printf_struct *args, u8 type);
 #endif

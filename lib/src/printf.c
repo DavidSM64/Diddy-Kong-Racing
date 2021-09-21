@@ -16,13 +16,13 @@ char _zeroes[] = "00000000000000000000000000000000";
 
 #ifdef NON_MATCHING
 static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff) {
-    a0->part1_len = a0->num_leading_zeros = a0->part2_len = a0->num_mid_zeros = a0->part3_len =
+    a0->n0 = a0->num_leading_zeros = a0->part2_len = a0->num_mid_zeros = a0->part3_len =
         a0->num_trailing_zeros = 0;
 
     switch (type) {
 
         case 'c':
-            buff[a0->part1_len++] = va_arg(*args, u32);
+            buff[a0->n0++] = va_arg(*args, u32);
             break;
 
         case 'd':
@@ -40,14 +40,14 @@ static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff) {
             }
 
             if (a0->value.s64 < 0) {
-                buff[a0->part1_len++] = '-';
+                buff[a0->n0++] = '-';
             } else if (a0->flags & FLAGS_PLUS) {
-                buff[a0->part1_len++] = '+';
+                buff[a0->n0++] = '+';
             } else if (a0->flags & FLAGS_SPACE) {
-                buff[a0->part1_len++] = ' ';
+                buff[a0->n0++] = ' ';
             }
 
-            a0->buff = (char *) &buff[a0->part1_len];
+            a0->buff = (char *) &buff[a0->n0];
 
             _Litob(a0, type);
             break;
@@ -71,13 +71,13 @@ static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff) {
             }
 
             if (a0->flags & FLAGS_HASH) {
-                buff[a0->part1_len++] = '0';
+                buff[a0->n0++] = '0';
                 if (type == 'x' || type == 'X') {
 
-                    buff[a0->part1_len++] = type;
+                    buff[a0->n0++] = type;
                 }
             }
-            a0->buff = (char *) &buff[a0->part1_len];
+            a0->buff = (char *) &buff[a0->n0];
             _Litob(a0, type);
             break;
 
@@ -89,17 +89,17 @@ static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff) {
             //... okay?
             a0->value.f64 = a0->length == 'L' ? va_arg(*args, f64) : va_arg(*args, f64);
 
-            if (a0->value.u16 & 0x8000) {
-                buff[a0->part1_len++] = '-';
+            if (LDSIGN(a0->value.f64)) {
+                buff[a0->n0++] = '-';
             } else {
                 if (a0->flags & FLAGS_PLUS) {
-                    buff[a0->part1_len++] = '+';
+                    buff[a0->n0++] = '+';
                 } else if (a0->flags & FLAGS_SPACE) {
-                    buff[a0->part1_len++] = ' ';
+                    buff[a0->n0++] = ' ';
                 }
             }
 
-            a0->buff = (char *) &buff[a0->part1_len];
+            a0->buff = (char *) &buff[a0->n0];
             _Ldtob(a0, type);
             break;
 
@@ -117,7 +117,7 @@ static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff) {
 
         case 'p':
             a0->value.s64 = (intptr_t) va_arg(*args, void *);
-            a0->buff = (char *) &buff[a0->part1_len];
+            a0->buff = (char *) &buff[a0->n0];
             _Litob(a0, 'x');
             break;
 
@@ -130,11 +130,11 @@ static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff) {
             break;
 
         case '%':
-            buff[a0->part1_len++] = '%';
+            buff[a0->n0++] = '%';
             break;
 
         default:
-            buff[a0->part1_len++] = type;
+            buff[a0->n0++] = type;
             break;
     }
 }
@@ -142,15 +142,14 @@ static void _Putfld(printf_struct *a0, va_list *args, u8 type, u8 *buff) {
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D43F0/_Putfld.s")
 #endif
 
-#ifdef NON_MATCHING
-s32 _Printf(char *(*prout)(char *, const char *, size_t), char *dst, const char *fmt, va_list args) {
-    printf_struct sp78;
+#if 1
+s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args) {
+    printf_struct x;
     const u8 *fmt_ptr;
     u8 c;
     const char *flag_index;
-    u8 sp4c[0x20]; // probably a buffer?
-    s32 sp48, sp44, sp40, sp3c, sp38, sp34, sp30, sp2c, sp28, sp24;
-    sp78.size = 0;
+    u8 ac[0x20]; // probably a buffer?
+    x.size = 0;
     while (TRUE) {
         fmt_ptr = (u8 *) fmt;
         while ((c = *fmt_ptr++) > 0) {
@@ -159,57 +158,59 @@ s32 _Printf(char *(*prout)(char *, const char *, size_t), char *dst, const char 
                 break;
             }
         }
-        _PROUT(dst, fmt, fmt_ptr - (u8 *) fmt);
+        _PROUT(fmt, fmt_ptr - (u8 *) fmt);
         if (c == 0) {
-            return sp78.size;
+            return x.size;
         }
         fmt = (char *) ++fmt_ptr;
-        sp78.flags = 0;
+        x.flags = 0;
         for (; (flag_index = strchr(flags_str, *fmt_ptr)) != NULL; fmt_ptr++) {
-            sp78.flags |= flags_arr[flag_index - flags_str];
+            x.flags |= flags_arr[flag_index - flags_str];
         }
         if (*fmt_ptr == '*') {
-            sp78.width = va_arg(args, s32);
-            if (sp78.width < 0) {
-                sp78.width = -sp78.width;
-                sp78.flags |= FLAGS_MINUS;
+            x.width = va_arg(args, s32);
+            if (x.width < 0) {
+                x.width = -x.width;
+                x.flags |= FLAGS_MINUS;
             }
             fmt_ptr++;
         } else {
-            ATOI(sp78.width, fmt_ptr);
+            ATOI(x.width, fmt_ptr);
         }
         if (*fmt_ptr != '.') {
-            sp78.precision = -1;
+            x.precision = -1;
         } else {
             fmt_ptr++;
             if (*fmt_ptr == '*') {
-                sp78.precision = va_arg(args, s32);
+                x.precision = va_arg(args, s32);
                 fmt_ptr++;
             } else {
-                ATOI(sp78.precision, fmt_ptr);
+                ATOI(x.precision, fmt_ptr);
             }
         }
         if (strchr(length_str, *fmt_ptr) != NULL) {
-            sp78.length = *fmt_ptr++;
+            x.length = *fmt_ptr++;
         } else {
-            sp78.length = 0;
+            x.length = 0;
         }
 
-        if (sp78.length == 'l' && *fmt_ptr == 'l') {
-            sp78.length = 'L';
+        if (x.length == 'l' && *fmt_ptr == 'l') {
+            x.length = 'L';
             fmt_ptr++;
         }
-        _Putfld(&sp78, &args, *fmt_ptr, sp4c);
-        sp78.width -= sp78.part1_len + sp78.num_leading_zeros + sp78.part2_len + sp78.num_mid_zeros
-                      + sp78.part3_len + sp78.num_trailing_zeros;
-        _PAD(sp44, sp78.width, sp48, _spaces, !(sp78.flags & FLAGS_MINUS));
-        _PROUT(dst, (char *) sp4c, sp78.part1_len);
-        _PAD(sp3c, sp78.num_leading_zeros, sp40, _zeroes, 1);
-        _PROUT(dst, sp78.buff, sp78.part2_len);
-        _PAD(sp34, sp78.num_mid_zeros, sp38, _zeroes, 1);
-        _PROUT(dst, (char *) (&sp78.buff[sp78.part2_len]), sp78.part3_len)
-        _PAD(sp2c, sp78.num_trailing_zeros, sp30, _zeroes, 1);
-        _PAD(sp24, sp78.width, sp28, _spaces, sp78.flags & FLAGS_MINUS);
+        _Putfld(&x, &args, *fmt_ptr, ac);
+        x.width -= x.n0 + x.num_leading_zeros + x.part2_len + x.num_mid_zeros
+                      + x.part3_len + x.num_trailing_zeros;
+        if (!(x.flags & FLAGS_MINUS))
+            _PAD(_spaces, x.width);
+        _PROUT((char *) ac, x.n0);
+        _PAD(_zeroes, x.num_leading_zeros);
+        _PROUT(x.buff, x.part2_len);
+        _PAD(_zeroes, x.num_mid_zeros);
+        _PROUT((char *) (&x.buff[x.part2_len]), x.part3_len)
+        _PAD(_zeroes, x.num_trailing_zeros);
+        if (x.flags & FLAGS_MINUS)
+            _PAD(_spaces, x.width);
         fmt = (char *) fmt_ptr + 1;
     }
 }
