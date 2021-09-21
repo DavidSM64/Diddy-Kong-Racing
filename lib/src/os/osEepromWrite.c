@@ -6,8 +6,6 @@
 #include "controller.h"
 #include "siint.h"
 
-extern s32 D_8012CE7C;
-
 void __osPackEepWriteData(u8 address, u8 *buffer);
 s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer)
 {
@@ -46,7 +44,7 @@ s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer)
         __osEepPifRam.ramarray[i] = 255;
     }
     
-    D_8012CE7C = 0;
+    __osEepPifRam.pifstatus = 0;
     ret = __osSiRawStartDma(OS_READ, &__osEepPifRam); //recv response
     __osContLastCmd = CONT_CMD_WRITE_EEPROM;
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
@@ -92,9 +90,6 @@ void __osPackEepWriteData(u8 address, u8 *buffer)
     ptr[0] = CONT_CMD_END;
 }
 
-#ifdef NON_MATCHING
-
-// This should match! I don't know where the regalloc issue could possibly be.
 s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data)
 {
     s32 ret;
@@ -145,7 +140,3 @@ s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data)
         return data->errno;
     return 0;
 }
-
-#else
-GLOBAL_ASM("lib/asm/non_matchings/osEepromWrite/__osEepStatus.s")
-#endif

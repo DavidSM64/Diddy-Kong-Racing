@@ -11,6 +11,10 @@ char *prout_xprintf(char *dst, const char *src, size_t count) {
     return TRUE;
 }
 
+/**
+ * Like sprintf, but simpler. It just hardcodes 0 for the dst,
+ * and calls a function that just haardcodes a return of TRUE.
+ */
 s32 xprintf(const char *format, ...) {
     s32 written;
     va_list args;
