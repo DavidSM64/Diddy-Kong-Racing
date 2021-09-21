@@ -7,6 +7,7 @@
 #include "unknown_06B2B0.h"
 #include "unknown_0255E0.h"
 #include "video.h"
+#include "lib/src/xprintf.h"
 
 extern u32 osTvType;
 
@@ -878,13 +879,13 @@ void func_80069F64(s16 *mtx) {
     for(i = 0; i < 4; i++) {
         for(j = 0; j < 4; j++) {
             val = mtx[i * 4 + j];
-            func_800C9D54("%x.", val);
+            xprintf("%x.", val);
             val = mtx[((i + 4) * 4 + j)]; // Issue here.
-            func_800C9D54("%x  ", (u16)val);
+            xprintf("%x  ", (u16)val);
         }
-        func_800C9D54("\n");
+        xprintf("\n");
     }
-    func_800C9D54("\n");
+    xprintf("\n");
 }
 #else
 GLOBAL_ASM("asm/non_matchings/camera/func_80069F64.s")
@@ -896,11 +897,11 @@ void func_8006A03C(f32 *mtx) {
     
     for(i = 0; i < 4; i++) {
         for(j = 0; j < 4; j++) {
-            func_800C9D54("%f  ", mtx[i * 4 + j]);
+            xprintf("%f  ", mtx[i * 4 + j]);
         }
-        func_800C9D54("\n");
+        xprintf("\n");
     }
-    func_800C9D54("\n");
+    xprintf("\n");
 }
 
 OSMesgQueue *func_8006A100(void) {

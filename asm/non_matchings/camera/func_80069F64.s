@@ -40,24 +40,24 @@ glabel func_80069F64
 /* 06ABB8 80069FB8 02E08025 */  move  $s0, $s7
 .L80069FBC:
 /* 06ABBC 80069FBC 86050000 */  lh    $a1, ($s0)
-/* 06ABC0 80069FC0 0C032755 */  jal   func_800C9D54
+/* 06ABC0 80069FC0 0C032755 */  jal   xprintf
 /* 06ABC4 80069FC4 02602025 */   move  $a0, $s3
 /* 06ABC8 80069FC8 86050020 */  lh    $a1, 0x20($s0)
 /* 06ABCC 80069FCC 02802025 */  move  $a0, $s4
 /* 06ABD0 80069FD0 30AEFFFF */  andi  $t6, $a1, 0xffff
-/* 06ABD4 80069FD4 0C032755 */  jal   func_800C9D54
+/* 06ABD4 80069FD4 0C032755 */  jal   xprintf
 /* 06ABD8 80069FD8 01C02825 */   move  $a1, $t6
 /* 06ABDC 80069FDC 26310002 */  addiu $s1, $s1, 2
 /* 06ABE0 80069FE0 1635FFF6 */  bne   $s1, $s5, .L80069FBC
 /* 06ABE4 80069FE4 26100002 */   addiu $s0, $s0, 2
-/* 06ABE8 80069FE8 0C032755 */  jal   func_800C9D54
+/* 06ABE8 80069FE8 0C032755 */  jal   xprintf
 /* 06ABEC 80069FEC 03C02025 */   move  $a0, $fp
 /* 06ABF0 80069FF0 26D60004 */  addiu $s6, $s6, 4
 /* 06ABF4 80069FF4 24010010 */  li    $at, 16
 /* 06ABF8 80069FF8 16C1FFEE */  bne   $s6, $at, .L80069FB4
 /* 06ABFC 80069FFC 26F70008 */   addiu $s7, $s7, 8
 /* 06AC00 8006A000 3C04800E */  lui   $a0, %hi(D_800E7088) # $a0, 0x800e
-/* 06AC04 8006A004 0C032755 */  jal   func_800C9D54
+/* 06AC04 8006A004 0C032755 */  jal   xprintf
 /* 06AC08 8006A008 24847088 */   addiu $a0, %lo(D_800E7088) # addiu $a0, $a0, 0x7088
 /* 06AC0C 8006A00C 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 06AC10 8006A010 8FB00018 */  lw    $s0, 0x18($sp)

@@ -21,7 +21,7 @@ glabel func_80065E30
 /* 066A7C 80065E7C 132B0003 */  beq   $t9, $t3, .L80065E8C
 .L80065E80:
 /* 066A80 80065E80 3C04800E */   lui   $a0, %hi(D_800E6ED0) # $a0, 0x800e
-/* 066A84 80065E84 0C032755 */  jal   func_800C9D54
+/* 066A84 80065E84 0C032755 */  jal   xprintf
 /* 066A88 80065E88 24846ED0 */   addiu $a0, %lo(D_800E6ED0) # addiu $a0, $a0, 0x6ed0
 .L80065E8C:
 /* 066A8C 80065E8C 8FBF0014 */  lw    $ra, 0x14($sp)

@@ -288,7 +288,7 @@ glabel func_8002C0C4
 /* 02D0FC 8002C4FC 14200004 */  bnez  $at, .L8002C510
 /* 02D100 8002C500 3C04800E */   lui   $a0, %hi(D_800E5E38) # $a0, 0x800e
 /* 02D104 8002C504 24845E38 */  addiu $a0, %lo(D_800E5E38) # addiu $a0, $a0, 0x5e38
-/* 02D108 8002C508 0C032755 */  jal   func_800C9D54
+/* 02D108 8002C508 0C032755 */  jal   xprintf
 /* 02D10C 8002C50C 02602825 */   move  $a1, $s3
 .L8002C510:
 /* 02D110 8002C510 0C01C42C */  jal   set_free_queue_state
