@@ -68,10 +68,10 @@ void osCreateViManager(OSPri pri) {
 void __osTimerInterrupt(void);
 //Fails due to how retrace is declared. Not sure how to fix it.
 void viMgrMain(void *arg) {
-    static u16 retrace;
     __OSViContext *vc;
     OSDevMgr *dm;
     OSIoMesg *mesg;
+    static u16 retrace;
     s32 first;
     u32 count;
 
@@ -86,7 +86,7 @@ void viMgrMain(void *arg) {
     dm = (OSDevMgr *)arg;
 
     while (TRUE) {
-        osRecvMesg(dm->evtQueue, &mesg, OS_MESG_BLOCK);
+        osRecvMesg(dm->evtQueue, (OSMesg *)&mesg, OS_MESG_BLOCK);
         switch (mesg->hdr.type) {
             case OS_MESG_TYPE_VRETRACE:
                 __osViSwapContext();

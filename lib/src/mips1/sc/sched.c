@@ -93,7 +93,7 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     osSetEventMesg(OS_EVENT_DP, &sc->interruptQ, (OSMesg)668);    
     osSetEventMesg(OS_EVENT_PRENMI, &sc->interruptQ, (OSMesg)669);    
 
-    osViSetEventMsg(&sc->interruptQ, (OSMesg)666, numFields);    
+    osViSetEvent(&sc->interruptQ, (OSMesg)666, numFields);
 
 
     osCreateThread(&sc->thread, 5, __scMain, (void *)sc, stack, priority);
