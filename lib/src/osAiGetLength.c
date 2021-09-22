@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "PR/rcp.h"
 
 // This probably does not belong here. Please move it to the appropriate place!
 #define EQPOWER_LENGTH 128
@@ -31,4 +32,6 @@ s16 eqpower[ EQPOWER_LENGTH ] = {
     405,      0
 };
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9A20/func_800C8E20.s")
+u32 osAiGetLength(void) {
+    return IO_READ(AI_LEN_REG);
+}

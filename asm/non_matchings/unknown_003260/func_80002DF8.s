@@ -1,7 +1,7 @@
 glabel func_80002DF8
 /* 0039F8 80002DF8 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0039FC 80002DFC AFBF0014 */  sw    $ra, 0x14($sp)
-/* 003A00 80002E00 0C032388 */  jal   func_800C8E20
+/* 003A00 80002E00 0C032388 */  jal   osAiGetLength
 /* 003A04 80002E04 AFA40018 */   sw    $a0, 0x18($sp)
 /* 003A08 80002E08 00027082 */  srl   $t6, $v0, 2
 /* 003A0C 80002E0C 15C00006 */  bnez  $t6, .L80002E28
