@@ -23,7 +23,7 @@ typedef struct {
     s32 sectorNum;     // 8
     uintptr_t devAddr; // c
 #if defined(VERSION_EU) || defined(VERSION_SH)
-    u32 unk10; //error status added moved to blockinfo
+    u32 errStatus; //error status added moved to blockinfo
 #endif
     u32 bmCtlShadow;        // 10
     u32 seqCtlShadow;       // 14
