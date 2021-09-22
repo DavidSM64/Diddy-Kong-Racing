@@ -8,72 +8,64 @@
 #include "controller.h"
 #include "siint.h"
 
-typedef struct {
-    u16 unk00;
-    u8 unk02;
-    u8 unk03;
-} unkStruct;
-typedef struct {
-    u8 unk00;
-    u8 unk01;
-    u8 unk02;
-    u8 unk03;
-    u8 unk04;
-    u8 unk05;
-    u8 unk06;
-    u8 unk07;
-} unkStruct3;
-
-typedef struct {
-    u8 unk00;
-    u8 unk01;
-    u8 unk02;
-    u8 unk03;
-    unkStruct3 unk04;
-} unkStruct2;
 extern u8 __osContLastCmd;
 extern OSPifRam __osEepPifRam;
 s32 osEepromRead(OSMesgQueue *mq, u8 address, u8 *buffer) {
     s32 ret;
     s32 i;
-    u8 *sp2c;
-    unkStruct sp28;
-    unkStruct2 sp20;
+    u8 *ptr;
+    OSContStatus sdata;
+    __OSContEepromFormat eepromformat;
+
     ret = 0;
     i = 0;
-    sp2c = (u8 *) &__osEepPifRam.ramarray;
+    ptr = (u8 *)&__osEepPifRam.ramarray;
+
     if (address > 0x40) {
         return -1;
     }
-    __osSiGetAccess();
-    ret = __osEepStatus(mq, &sp28);
-    if (ret != 0 || sp28.unk00 != 0x8000) {
 
-        return 8;
+    __osSiGetAccess();
+    ret = __osEepStatus(mq, &sdata);
+
+    if (ret != 0 || sdata.type != CONT_EEPROM) {
+        return CONT_NO_RESPONSE_ERROR;
     }
-    while (sp28.unk02 & 0x80) {
-        __osEepStatus(mq, &sp28);
+
+    while (sdata.status & CONT_EEPROM_BUSY) {
+        __osEepStatus(mq, &sdata);
     }
+
     __osPackEepReadData(address);
     ret = __osSiRawStartDma(OS_WRITE, &__osEepPifRam.ramarray);
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
-    for (i = 0; i < 0x10; i++) {
-        __osEepPifRam.ramarray[i] = 255;
+
+    for (i = 0; i <= ARRLEN(__osEepPifRam.ramarray); i++) {
+        __osEepPifRam.ramarray[i] = CONT_CMD_NOP;
     }
+
     __osEepPifRam.pifstatus = 0;
+
     ret = __osSiRawStartDma(OS_READ, __osEepPifRam.ramarray);
-    __osContLastCmd = 4;
+
+    __osContLastCmd = CONT_CMD_READ_EEPROM;
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
+
+    //skip the first 4 bytes
     for (i = 0; i < 4; i++) {
-        sp2c++;
+        ptr++;
     }
-    sp20 = *(unkStruct2 *) sp2c;
-    ret = (sp20.unk01 & 0xc0) >> 4;
+
+    eepromformat = *(__OSContEepromFormat *) ptr;
+    ret = CHNL_ERR(eepromformat);
+
     if (ret == 0) {
-        for (i = 0; i < 8; i++) {
-            *buffer++ = ((u8 *) &sp20.unk04)[i];
+        for (i = 0; i < ARRLEN(eepromformat.data); i++) {
+            *buffer++ = eepromformat.data[i];
         }
     }
+
     __osSiRelAccess();
+
     return ret;
 }
