@@ -68,8 +68,6 @@ The Indy development board use cartridge domain 1:
 
 **************************************************************************/
 
-#define HW_REG(reg, type) *(volatile type *)(u32*)(reg | 0xa0000000)
-
 /*************************************************************************
  * RDRAM Memory (Assumes that maximum size is 4 MB)
  */

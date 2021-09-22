@@ -9,24 +9,22 @@
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDisableInt.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osRestoreInt.s")
 
-s32 osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size)
-{
+s32 osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size) {
     register int status;
-    status = HW_REG(PI_STATUS_REG, u32);
+    status = IO_READ(PI_STATUS_REG);
     while (status & (PI_STATUS_DMA_BUSY | PI_STATUS_IO_BUSY | PI_STATUS_ERROR)) {
-        status = HW_REG(PI_STATUS_REG, u32);
+        status = IO_READ(PI_STATUS_REG);
     }
 
-    HW_REG(PI_DRAM_ADDR_REG, void *) = (void *) osVirtualToPhysical(dramAddr);
-
-    HW_REG(PI_CART_ADDR_REG, void *) = (void *) (((uintptr_t) osRomBase | devAddr) & 0x1fffffff);
+    IO_WRITE(PI_DRAM_ADDR_REG, osVirtualToPhysical(dramAddr));
+    IO_WRITE(PI_CART_ADDR_REG, K1_TO_PHYS(osRomBase | devAddr));
 
     switch (direction) {
         case OS_READ:
-            HW_REG(PI_WR_LEN_REG, u32) = size - 1;
+            IO_WRITE(PI_WR_LEN_REG, size - 1);
             break;
         case OS_WRITE:
-            HW_REG(PI_RD_LEN_REG, u32) = size - 1;
+            IO_WRITE(PI_RD_LEN_REG, size - 1);
             break;
         default:
             return -1;
