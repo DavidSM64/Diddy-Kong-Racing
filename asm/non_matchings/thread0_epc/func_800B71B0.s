@@ -1,7 +1,7 @@
 glabel func_800B71B0
 /* 0B7DB0 800B71B0 27BDF7B8 */  addiu $sp, $sp, -0x848
 /* 0B7DB4 800B71B4 AFBF001C */  sw    $ra, 0x1c($sp)
-/* 0B7DB8 800B71B8 0C03491C */  jal   func_800D2470
+/* 0B7DB8 800B71B8 0C03491C */  jal   __osGetActiveQueue
 /* 0B7DBC 800B71BC 00000000 */   nop   
 /* 0B7DC0 800B71C0 8C4E0004 */  lw    $t6, 4($v0)
 /* 0B7DC4 800B71C4 2404FFFF */  li    $a0, -1

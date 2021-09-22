@@ -5,7 +5,15 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
+#ifdef NON_MATCHING
+//Only fails because it doesn't generate a NOP after this. Maybe -01?
+extern OSThread *__osActiveQueue;
+OSThread *__osGetActiveQueue(void) {
+    return __osActiveQueue;
+}
+#else
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/func_800D2470.s")
+#endif
 
 #define PI_Q_BUF_LEN 1
 extern u32 __osPiAccessQueueEnabled;//__osPiAccessQueueEnabled

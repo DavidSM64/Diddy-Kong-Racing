@@ -144,27 +144,24 @@ GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0.s")
 #endif
 
 void func_800B70D0(void) {
-    unk800D2470 *node = func_800D2470(); //Might be epcInfo?
-    while(node->unk4 != -1) {
-        if (node->unk4 == 0) {
-            node->unk118 &= 0xFFFF00FE;
-            node->unk118 |= 0x6C01;
-            return;
+    OSThread *node = __osGetActiveQueue();
+    while(node->priority != -1) {
+        if (node->priority == 0) {
+            node->context.sr &= 0xFFFF00FE;
+            node->context.sr |= 0x6C01;
+            break;
         }
-        node = node->next;
+        node = node->tlnext;
     }
 }
 
 void func_800B7144(void) {
-    s32 temp_v0_2;
-    s32 phi_v0;
-    s32 phi_return;
-    unk800D2470 *node = func_800D2470();
-    while (node->unk4 != -1) {
-        if ((node->unk4 > 0) && (node->unk4 < 0x80)) {
-            osStopThread(&node->thread);
+    OSThread *node = __osGetActiveQueue();
+    while (node->priority != -1) {
+        if ((node->priority > 0) && (node->priority < 128)) {
+            osStopThread(&node->next);
         }
-        node = node->next;
+        node = node->tlnext;
     }
 }
 
