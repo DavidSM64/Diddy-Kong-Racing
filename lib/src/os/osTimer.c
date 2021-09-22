@@ -15,7 +15,7 @@ extern u32 D_8012D230;
 
 OSTime __osInsertTimer(OSTimer *t);
 
-#if NON_MATCHING
+#ifdef NON_MATCHING
 void __osTimerServicesInit(void)
 {
     __osCurrentTime = 0;
