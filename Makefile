@@ -272,7 +272,6 @@ $(BUILD_DIR)/lib/src/osEepromWrite.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osEepromRead.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/osVirtualToPhysical.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/unknown_0CF070.o: OPT_FLAGS := -O1
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
