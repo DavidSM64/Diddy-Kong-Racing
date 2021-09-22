@@ -13,13 +13,13 @@ glabel viMgrMain
 /* 0D2734 800D1B34 0C035820 */  jal   __osViGetCurrentContext
 /* 0D2738 800D1B38 AFA00044 */   sw    $zero, 0x44($sp)
 /* 0D273C 800D1B3C 94430002 */  lhu   $v1, 2($v0)
-/* 0D2740 800D1B40 3C018013 */  lui   $at, %hi(D_8012D190) # $at, 0x8013
+/* 0D2740 800D1B40 3C018013 */  lui   $at, %hi(retrace) # $at, 0x8013
 /* 0D2744 800D1B44 2416000E */  li    $s6, 14
 /* 0D2748 800D1B48 14600004 */  bnez  $v1, .L800D1B5C
-/* 0D274C 800D1B4C A423D190 */   sh    $v1, %lo(D_8012D190)($at)
+/* 0D274C 800D1B4C A423D190 */   sh    $v1, %lo(retrace)($at)
 /* 0D2750 800D1B50 24030001 */  li    $v1, 1
-/* 0D2754 800D1B54 3C018013 */  lui   $at, %hi(D_8012D190) # $at, 0x8013
-/* 0D2758 800D1B58 A423D190 */  sh    $v1, %lo(D_8012D190)($at)
+/* 0D2754 800D1B54 3C018013 */  lui   $at, %hi(retrace) # $at, 0x8013
+/* 0D2758 800D1B58 A423D190 */  sh    $v1, %lo(retrace)($at)
 .L800D1B5C:
 /* 0D275C 800D1B5C 3C138013 */  lui   $s3, %hi(__osViIntrCount) # $s3, 0x8013
 /* 0D2760 800D1B60 3C128013 */  lui   $s2, %hi(__osBaseCounter) # $s2, 0x8013
@@ -46,13 +46,13 @@ glabel viMgrMain
 .L800D1BAC:
 /* 0D27AC 800D1BAC 0C035824 */  jal   __osViSwapContext
 /* 0D27B0 800D1BB0 00000000 */   nop   
-/* 0D27B4 800D1BB4 3C038013 */  lui   $v1, %hi(D_8012D190) # $v1, 0x8013
-/* 0D27B8 800D1BB8 9463D190 */  lhu   $v1, %lo(D_8012D190)($v1)
-/* 0D27BC 800D1BBC 3C018013 */  lui   $at, %hi(D_8012D190) # $at, 0x8013
+/* 0D27B4 800D1BB4 3C038013 */  lui   $v1, %hi(retrace) # $v1, 0x8013
+/* 0D27B8 800D1BB8 9463D190 */  lhu   $v1, %lo(retrace)($v1)
+/* 0D27BC 800D1BBC 3C018013 */  lui   $at, %hi(retrace) # $at, 0x8013
 /* 0D27C0 800D1BC0 2463FFFF */  addiu $v1, $v1, -1
 /* 0D27C4 800D1BC4 306FFFFF */  andi  $t7, $v1, 0xffff
 /* 0D27C8 800D1BC8 15E0000E */  bnez  $t7, .L800D1C04
-/* 0D27CC 800D1BCC A42FD190 */   sh    $t7, %lo(D_8012D190)($at)
+/* 0D27CC 800D1BCC A42FD190 */   sh    $t7, %lo(retrace)($at)
 /* 0D27D0 800D1BD0 0C035820 */  jal   __osViGetCurrentContext
 /* 0D27D4 800D1BD4 00000000 */   nop   
 /* 0D27D8 800D1BD8 8C580010 */  lw    $t8, 0x10($v0)
@@ -65,8 +65,8 @@ glabel viMgrMain
 /* 0D27F4 800D1BF4 8C450014 */   lw    $a1, 0x14($v0)
 /* 0D27F8 800D1BF8 96030002 */  lhu   $v1, 2($s0)
 .L800D1BFC:
-/* 0D27FC 800D1BFC 3C018013 */  lui   $at, %hi(D_8012D190) # $at, 0x8013
-/* 0D2800 800D1C00 A423D190 */  sh    $v1, %lo(D_8012D190)($at)
+/* 0D27FC 800D1BFC 3C018013 */  lui   $at, %hi(retrace) # $at, 0x8013
+/* 0D2800 800D1C00 A423D190 */  sh    $v1, %lo(retrace)($at)
 .L800D1C04:
 /* 0D2804 800D1C04 8E790000 */  lw    $t9, ($s3)
 /* 0D2808 800D1C08 8E500000 */  lw    $s0, ($s2)

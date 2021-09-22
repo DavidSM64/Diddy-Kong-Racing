@@ -21,9 +21,11 @@ s32 viEventQueue[6];
 s32 viEventBuf[6]; 
 s32 viRetraceMsg[6];
 s32 viCounterMsg[6];
-s32 D_8012D190[4];     
+u16 retrace; //Used in viMgrMain, but it's supposed to be static in that function
+u16 D_8012D192;
+s32 D_8012D194[2];
 s32 D_8012D1A0[16];
-s32 D_8012D1E0[2];     
+s32 D_8012D1E0[2];
 s32 piAccessQueue[6];  
 OSTimer D_8012D200;
 OSTime __osCurrentTime;
