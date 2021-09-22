@@ -8,7 +8,7 @@
 
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
-extern u32 D_8012D22C; //__osViIntrCount
+extern u32 __osViIntrCount; //__osViIntrCount
 
 OSDevMgr __osViDevMgr = {0};
 
