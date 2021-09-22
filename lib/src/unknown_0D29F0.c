@@ -131,4 +131,3 @@ void osSpTaskStartGo(OSTask *tp){
 
 	__osSpSetStatus(SP_SET_INTR_BREAK | SP_CLR_SSTEP | SP_CLR_BROKE | SP_CLR_HALT);
 }
-

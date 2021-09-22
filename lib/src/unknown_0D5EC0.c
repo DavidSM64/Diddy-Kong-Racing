@@ -19,4 +19,3 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osDpDeviceBusy.s")
 __OSViContext *__osViGetCurrentContext(void){
     return __osViCurr;
 }
-

@@ -1546,9 +1546,7 @@ OSViMode osViModeTable[42] = {
       }}},
 };
 
-
 // TODO: Convert the following arrays into OSViMode structs.
-
 s32 D_800E4620[20] = {
     0x00000000, 0x0000320E, 0x00000140, 0x03E52239, 
     0x0000020D, 0x00000C15, 0x0C150C15, 0x006C02EC, 
