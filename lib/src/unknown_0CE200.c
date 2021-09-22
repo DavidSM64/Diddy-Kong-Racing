@@ -29,7 +29,8 @@ OSTimer D_8012D200;
 OSTime __osCurrentTime;
 s32 __osBaseCounter;
 s32 __osViIntrCount;
-s32 D_8012D230[4];     
+u32 __osTimerCounter;
+u32 D_8012D234[2];
 s32 D_8012D240[108];     
 MemoryPoolSlot *gMainMemoryPool;    
 

@@ -10,7 +10,7 @@ OSTimer *__osTimerList = &D_8012D200;
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
 extern u32 __osViIntrCount;
-extern u32 D_8012D230;
+extern u32 __osTimerCounter;
 
 
 OSTime __osInsertTimer(OSTimer *t);
@@ -43,12 +43,12 @@ void __osTimerInterrupt(void) {
         t = __osTimerList->next;
         if (t == __osTimerList){
             __osSetCompare(0);
-            D_8012D230 = 0;
+            __osTimerCounter = 0;
             break;
         }
         count = osGetCount();
-        elapsed_cycles = count - D_8012D230;
-        D_8012D230 = count;
+        elapsed_cycles = count - __osTimerCounter;
+        __osTimerCounter = count;
         if (elapsed_cycles < t->remaining){
             t->remaining -= elapsed_cycles;
             __osSetTimerIntr(t->remaining);
@@ -76,8 +76,8 @@ void __osSetTimerIntr(OSTime tim) {
     OSTime NewTime;
     u32 savedMask;
     savedMask = __osDisableInt();
-    D_8012D230 = osGetCount();
-    NewTime = tim + D_8012D230;
+    __osTimerCounter = osGetCount();
+    NewTime = tim + __osTimerCounter;
     __osSetCompare(NewTime);
     __osRestoreInt(savedMask);
 }
