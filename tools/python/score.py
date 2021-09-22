@@ -92,7 +92,10 @@ class ScoreFile:
         matches = re.finditer(FUNCTION_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
-            self.functions.append(ScoreFileMatch(groups[0], groups[2]))
+            #TODO: This function is static, and thus doesn't appear in the map.
+            #Hardcoding it to be ignore works for now, but it's hacky
+            if groups[2] != "_Putfld":
+                self.functions.append(ScoreFileMatch(groups[0], groups[2]))
         matches = re.finditer(GLOBAL_ASM_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
