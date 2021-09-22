@@ -6,6 +6,7 @@
 
 extern OSTimer *__osTimerList;
 OSTime __osInsertTimer(OSTimer *t);
+void __osSetTimerIntr(OSTime tim);
 
 s32 osSetTimer(OSTimer *t, OSTime value, OSTime interval, OSMesgQueue *mq, OSMesg msg) {
     OSTime time;

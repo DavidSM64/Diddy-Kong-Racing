@@ -16,6 +16,7 @@ extern u32 __osTimerCounter;
 OSTime __osInsertTimer(OSTimer *t);
 
 #ifdef NON_MATCHING
+//Seems to be a mistmatch based on where __osCurrentTime is defined and set.
 void __osTimerServicesInit(void)
 {
     __osCurrentTime = 0;
@@ -31,7 +32,8 @@ void __osTimerServicesInit(void)
 #else
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osTimerServicesInit.s")
 #endif
-
+void __osSetTimerIntr(OSTime tim);
+void __osSetCompare(u32);
 void __osTimerInterrupt(void) {
     OSTimer *t;
     u32 count;
@@ -69,9 +71,6 @@ void __osTimerInterrupt(void) {
     }
 }
 
-#if 1
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s")
-#else
 void __osSetTimerIntr(OSTime tim) {
     OSTime NewTime;
     u32 savedMask;
@@ -81,8 +80,6 @@ void __osSetTimerIntr(OSTime tim) {
     __osSetCompare(NewTime);
     __osRestoreInt(savedMask);
 }
-#endif
-
 
 OSTime __osInsertTimer(OSTimer *t) {
     OSTimer *timep;
