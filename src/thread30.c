@@ -4,6 +4,7 @@
 #include "thread30.h"
 #include "macros.h"
 #include "libultra_internal.h"
+#include "unknown_06B2B0.h"
 
 /************ .data ************/
 
@@ -21,7 +22,8 @@ s32 D_8012AAE0[4];
 
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
-OSMesg gThread30Messages[2];
+OSMesg gThread30Message;
+s32 gPadding; //Unused?
 
 s32 D_8012ACC0[1305]; // Unused? Might be another stack.
 
@@ -35,7 +37,7 @@ extern void *gThread30Stack;
  * Initalizes and starts thread30()
  */
 void create_and_start_thread30(void) {
-    osCreateMesgQueue(&gThread30MesgQueue, &gThread30Messages, 2);
+    osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message, 2);
     osCreateThread(&gThread30, 30, &thread30, NULL, &gThread30Stack, 8);
     osStartThread(&gThread30);
 }
@@ -64,7 +66,7 @@ void tick_thread30(void) {
         gThread30LoadDelay--;
         if (gThread30LoadDelay == 0) {
             // Signal thread30 that the level needs to load.
-            osSendMesg(&gThread30MesgQueue, OS_MESG_TYPE_LOOPBACK, 0);
+            osSendMesg(&gThread30MesgQueue, (OSMesg *)OS_MESG_TYPE_LOOPBACK, 0);
         }
     }
 }
@@ -102,7 +104,8 @@ void thread30(void *arg) {
         do {
             osRecvMesg(&gThread30MesgQueue, &mesg, 1);
         } while(mesg != (OSMesg)OS_MESG_TYPE_LOOPBACK);
-        load_level_for_menu(gThread30LevelIdToLoad, -1, gThread30CutsceneIdToLoad); // -1 means there won't be any racers loaded.
+        // -1 means there won't be any racers loaded.
+        load_level_for_menu(gThread30LevelIdToLoad, -1, gThread30CutsceneIdToLoad);
         gThread30NeedToLoadLevel = FALSE;
     }
 }
