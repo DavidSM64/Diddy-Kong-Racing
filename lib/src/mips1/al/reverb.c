@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "libultra_internal.h"
 #include "audio_internal.h"
-#include "../../osVirtualToPhysical.h"
+#include "../../os/osVirtualToPhysical.h"
 
 /************ .data ************/
 

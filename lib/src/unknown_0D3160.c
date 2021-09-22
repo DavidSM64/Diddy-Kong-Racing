@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "libultra_internal.h"
 #include "PR/rcp.h"
-#include "osVirtualToPhysical.h"
+#include "os/osVirtualToPhysical.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osDisableInt.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3160/__osRestoreInt.s")

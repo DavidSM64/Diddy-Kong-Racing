@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
-#include "osVirtualToPhysical.h"
+#include "os/osVirtualToPhysical.h"
 
 typedef struct
 {
