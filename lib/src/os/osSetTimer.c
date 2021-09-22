@@ -10,8 +10,7 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osSetTimer.s")
 
 extern OSTimer *D_800E4910;
 
-u32 osSetTimer(OSTimer *t, OSTime value, OSTime interval, OSMesgQueue *mq, OSMesg msg)
-{
+u32 osSetTimer(OSTimer *t, OSTime value, OSTime interval, OSMesgQueue *mq, OSMesg msg) {
     OSTime time;
     t->next = NULL;
     t->prev = NULL;

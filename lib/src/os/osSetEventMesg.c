@@ -3,16 +3,13 @@
 
 #include "libultra_internal.h"
 
-typedef struct __OSEventState
-{
+typedef struct __OSEventState {
     OSMesgQueue *messageQueue;
     OSMesg message;
 } __OSEventState;
 
-
 __OSEventState __osEventStateTab[15]; // __osEventStateTab[OS_NUM_EVENTS];
-void osSetEventMesg(OSEvent event, OSMesgQueue *mq, OSMesg msg)
-{
+void osSetEventMesg(OSEvent event, OSMesgQueue *mq, OSMesg msg) {
 	register u32 saveMask = __osDisableInt();
 	__OSEventState *es;
 

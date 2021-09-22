@@ -33,15 +33,14 @@ void __osTimerServicesInit(void)
 }
 #endif
 
-void __osTimerInterrupt(void)
-{
+void __osTimerInterrupt(void) {
 	OSTimer *t;
 	u32 count;
 	u32 elapsed_cycles;
 
 	if (D_800E4910->next == D_800E4910)
 		return;
-	while (1){
+	while (1) {
 		t = D_800E4910->next;
 		if (t == D_800E4910){
 			__osSetCompare(0);
@@ -55,8 +54,7 @@ void __osTimerInterrupt(void)
 			t->remaining -= elapsed_cycles;
 			__osSetTimerIntr(t->remaining);
 			return;
-		}
-		else{
+		} else {
 			t->prev->next = t->next;
 			t->next->prev = t->prev;
 			t->next = NULL;
@@ -75,8 +73,7 @@ void __osTimerInterrupt(void)
 #if 1
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetTimerIntr.s")
 #else
-void __osSetTimerIntr(OSTime tim)
-{
+void __osSetTimerIntr(OSTime tim) {
 	OSTime NewTime;
 	u32 savedMask;
 	savedMask = __osDisableInt();
@@ -88,16 +85,14 @@ void __osSetTimerIntr(OSTime tim)
 #endif
 
 
-OSTime __osInsertTimer(OSTimer *t)
-{
+OSTime __osInsertTimer(OSTimer *t) {
 	OSTimer *timep;
 	OSTime tim;
 	u32 savedMask;
 	savedMask = __osDisableInt();
 	for (timep = D_800E4910->next, tim = t->remaining;
 		 timep != D_800E4910 && tim > timep->remaining;
-		 tim -= timep->remaining, timep = timep->next)
-	{
+		 tim -= timep->remaining, timep = timep->next) {
 		;
 	}
 	t->remaining = tim;

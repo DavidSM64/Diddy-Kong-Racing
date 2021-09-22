@@ -5,6 +5,6 @@
 
 extern OSTime __osCurrentTime;
 
-void osSetTime(OSTime time){
+void osSetTime(OSTime time) {
     __osCurrentTime = time;
 }

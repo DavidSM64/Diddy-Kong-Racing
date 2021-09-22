@@ -25,13 +25,11 @@ extern OSIoMesg viCounterMsg; //viCounterMsg
 
 void viMgrMain(void *arg);
 
-void osCreateViManager(OSPri pri)
-{
+void osCreateViManager(OSPri pri) {
 	u32 savedMask;
 	OSPri oldPri;
 	OSPri myPri;
-	if (__osViDevMgr.active == 0)
-	{
+	if (__osViDevMgr.active == 0) {
 		__osTimerServicesInit();
 		osCreateMesgQueue(&viEventQueue, viEventBuf, 5);
 		viRetraceMsg.hdr.type = OS_MESG_TYPE_VRETRACE;
@@ -44,8 +42,7 @@ void osCreateViManager(OSPri pri)
 		osSetEventMesg(OS_EVENT_COUNTER, &viEventQueue, &viCounterMsg);
 		oldPri = -1;
 		myPri = osGetThreadPri(NULL);
-		if (myPri < pri)
-		{
+		if (myPri < pri) {
 			oldPri = myPri;
 			osSetThreadPri(NULL, pri);
 		}
@@ -61,8 +58,7 @@ void osCreateViManager(OSPri pri)
 		__osViInit();
 		osStartThread(&viThread);
 		__osRestoreInt(savedMask);
-		if (oldPri != -1)
-		{
+		if (oldPri != -1) {
 			osSetThreadPri(0, oldPri);
 		}
 	}
