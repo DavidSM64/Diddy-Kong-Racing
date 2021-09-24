@@ -32,8 +32,8 @@ glabel __osEnqueueAndYield
 /* 0D3F40 800D3340 3369FF00 */  andi  $t1, $k1, 0xff00
 /* 0D3F44 800D3344 1120000D */  beqz  $t1, .L800D337C
 /* 0D3F48 800D3348 00000000 */   nop   
-/* 0D3F4C 800D334C 3C08800E */  lui   $t0, %hi(D_800E38AC) # $t0, 0x800e
-/* 0D3F50 800D3350 250838AC */  addiu $t0, %lo(D_800E38AC) # addiu $t0, $t0, 0x38ac
+/* 0D3F4C 800D334C 3C08800E */  lui   $t0, %hi(__OSGlobalIntMask) # $t0, 0x800e
+/* 0D3F50 800D3350 250838AC */  addiu $t0, %lo(__OSGlobalIntMask) # addiu $t0, $t0, 0x38ac
 /* 0D3F54 800D3354 8D080000 */  lw    $t0, ($t0)
 /* 0D3F58 800D3358 2401FFFF */  li    $at, -1
 /* 0D3F5C 800D335C 01014026 */  xor   $t0, $t0, $at
@@ -49,8 +49,8 @@ glabel __osEnqueueAndYield
 /* 0D3F80 800D3380 8F7B000C */  lw    $k1, %lo(D_A430000C)($k1)
 /* 0D3F84 800D3384 1360000B */  beqz  $k1, .L800D33B4
 /* 0D3F88 800D3388 00000000 */   nop   
-/* 0D3F8C 800D338C 3C1A800E */  lui   $k0, %hi(D_800E38AC) # $k0, 0x800e
-/* 0D3F90 800D3390 275A38AC */  addiu $k0, %lo(D_800E38AC) # addiu $k0, $k0, 0x38ac
+/* 0D3F8C 800D338C 3C1A800E */  lui   $k0, %hi(__OSGlobalIntMask) # $k0, 0x800e
+/* 0D3F90 800D3390 275A38AC */  addiu $k0, %lo(__OSGlobalIntMask) # addiu $k0, $k0, 0x38ac
 /* 0D3F94 800D3394 8F5A0000 */  lw    $k0, ($k0)
 /* 0D3F98 800D3398 8CA80128 */  lw    $t0, 0x128($a1)
 /* 0D3F9C 800D339C 2401FFFF */  li    $at, -1

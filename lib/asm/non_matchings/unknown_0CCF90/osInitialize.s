@@ -109,16 +109,16 @@ glabel osInitialize
 /* 0CD33C 800CC73C 0101C824 */  and   $t9, $t0, $at
 /* 0CD340 800CC740 13200006 */  beqz  $t9, .L800CC75C
 /* 0CD344 800CC744 AFB90038 */   sw    $t9, 0x38($sp)
-/* 0CD348 800CC748 3C01800E */  lui   $at, %hi(D_800E38A4) # $at, 0x800e
+/* 0CD348 800CC748 3C01800E */  lui   $at, %hi(osClockRate) # $at, 0x800e
 /* 0CD34C 800CC74C 03205825 */  move  $t3, $t9
 /* 0CD350 800CC750 240A0000 */  li    $t2, 0
-/* 0CD354 800CC754 AC2A38A0 */  sw    $t2, %lo(D_800E38A0)($at)
-/* 0CD358 800CC758 AC2B38A4 */  sw    $t3, %lo(D_800E38A4)($at)
+/* 0CD354 800CC754 AC2A38A0 */  sw    $t2, %lo(osClockRate)($at)
+/* 0CD358 800CC758 AC2B38A4 */  sw    $t3, %lo(osClockRate+4)($at)
 .L800CC75C:
-/* 0CD35C 800CC75C 3C04800E */  lui   $a0, %hi(D_800E38A0) # $a0, 0x800e
-/* 0CD360 800CC760 3C05800E */  lui   $a1, %hi(D_800E38A4) # $a1, 0x800e
-/* 0CD364 800CC764 8CA538A4 */  lw    $a1, %lo(D_800E38A4)($a1)
-/* 0CD368 800CC768 8C8438A0 */  lw    $a0, %lo(D_800E38A0)($a0)
+/* 0CD35C 800CC75C 3C04800E */  lui   $a0, %hi(osClockRate) # $a0, 0x800e
+/* 0CD360 800CC760 3C05800E */  lui   $a1, %hi(osClockRate+4) # $a1, 0x800e
+/* 0CD364 800CC764 8CA538A4 */  lw    $a1, %lo(osClockRate+4)($a1)
+/* 0CD368 800CC768 8C8438A0 */  lw    $a0, %lo(osClockRate)($a0)
 /* 0CD36C 800CC76C 24060000 */  li    $a2, 0
 /* 0CD370 800CC770 0C033AF2 */  jal   __ll_mul
 /* 0CD374 800CC774 24070003 */   li    $a3, 3
@@ -131,10 +131,10 @@ glabel osInitialize
 /* 0CD390 800CC790 24070004 */   li    $a3, 4
 /* 0CD394 800CC794 3C098000 */  lui   $t1, %hi(osResetType) # $t1, 0x8000
 /* 0CD398 800CC798 8D29030C */  lw    $t1, %lo(osResetType)($t1)
-/* 0CD39C 800CC79C 3C01800E */  lui   $at, %hi(D_800E38A4) # $at, 0x800e
-/* 0CD3A0 800CC7A0 AC2238A0 */  sw    $v0, %lo(D_800E38A0)($at)
+/* 0CD39C 800CC79C 3C01800E */  lui   $at, %hi(osClockRate) # $at, 0x800e
+/* 0CD3A0 800CC7A0 AC2238A0 */  sw    $v0, %lo(osClockRate)($at)
 /* 0CD3A4 800CC7A4 15200005 */  bnez  $t1, .L800CC7BC
-/* 0CD3A8 800CC7A8 AC2338A4 */   sw    $v1, %lo(D_800E38A4)($at)
+/* 0CD3A8 800CC7A8 AC2338A4 */   sw    $v1, %lo(osClockRate+4)($at)
 /* 0CD3AC 800CC7AC 3C048000 */  lui   $a0, %hi(osAppNMIBuffer) # $a0, 0x8000
 /* 0CD3B0 800CC7B0 2484031C */  addiu $a0, %lo(osAppNMIBuffer) # addiu $a0, $a0, 0x31c
 /* 0CD3B4 800CC7B4 0C034138 */  jal   memzero
