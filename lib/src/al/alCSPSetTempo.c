@@ -5,12 +5,7 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-
-#if 1
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C85E0/alCSPSetTempo.s")
-#else
-void alCSPSetTempo(ALCSPlayer *seqp, s32 tempo)
-{
+void alCSPSetTempo(ALCSPlayer *seqp, s32 tempo) {
     ALEvent       evt;
     
     evt.type             = AL_SEQP_META_EVT;
@@ -22,4 +17,3 @@ void alCSPSetTempo(ALCSPlayer *seqp, s32 tempo)
     
     alEvtqPostEvent(&seqp->evtq, &evt, 0);
 }
-#endif
