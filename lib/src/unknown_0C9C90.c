@@ -8,27 +8,27 @@
 
 void alEvtqFlushType(ALEventQueue *evtq, s16 type)
 {
-    ALLink      	*thisNode;
-    ALLink      	*nextNode;
+    ALLink          *thisNode;
+    ALLink          *nextNode;
     ALEventListItem     *thisItem, *nextItem;
-    OSIntMask   	mask;
+    OSIntMask       mask;
 
     mask = osSetIntMask(OS_IM_NONE);
 
     thisNode = evtq->allocList.next;
     while( thisNode != 0 )
     {
-	nextNode = thisNode->next;
-	thisItem = (ALEventListItem *)thisNode;
-	nextItem = (ALEventListItem *)nextNode;
-	if (thisItem->evt.type == type)
-	{
-	    if (nextItem)
-		nextItem->delta += thisItem->delta;
-	    alUnlink(thisNode);
-	    alLink(thisNode, &evtq->freeList);
-	}
-	thisNode = nextNode;
+    nextNode = thisNode->next;
+    thisItem = (ALEventListItem *)thisNode;
+    nextItem = (ALEventListItem *)nextNode;
+    if (thisItem->evt.type == type)
+    {
+        if (nextItem)
+        nextItem->delta += thisItem->delta;
+        alUnlink(thisNode);
+        alLink(thisNode, &evtq->freeList);
+    }
+    thisNode = nextNode;
     }
 
     osSetIntMask(mask);
@@ -44,10 +44,10 @@ void alEvtqFlush(ALEventQueue *evtq)
 
     thisNode = evtq->allocList.next;
     while( thisNode != 0 ) {
-	nextNode = thisNode->next;
-	alUnlink(thisNode);
-	alLink(thisNode, &evtq->freeList);
-	thisNode = nextNode;
+    nextNode = thisNode->next;
+    alUnlink(thisNode);
+    alLink(thisNode, &evtq->freeList);
+    thisNode = nextNode;
     }
     
     osSetIntMask(mask);
@@ -119,22 +119,19 @@ ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt) {
     
     item = (ALEventListItem *)evtq->allocList.next;
 
-    if (item)
-    {
+    if (item) {
         alUnlink((ALLink *)item);
         alCopy(&item->evt, evt, sizeof(*evt));
         alLink((ALLink *)item, &evtq->freeList);
-	delta = item->delta;
-    }
-    else
-    {
+        delta = item->delta;
+    } else {
         /* sct 11/28/95 - If we get here, most like we overflowed the event queue */
-	/* with non-self-perpetuating events.  Eg. if we filled the evtq with volume */
-	/* events, then when the seqp is told to play it will handle all the events */
-	/* at once completely emptying out the queue.  At this point this problem */
-	/* must be treated as an out of resource error and the evtq should be increased. */
-	evt->type = -1;
-	delta = 0;	    
+        /* with non-self-perpetuating events.  Eg. if we filled the evtq with volume */
+        /* events, then when the seqp is told to play it will handle all the events */
+        /* at once completely emptying out the queue.  At this point this problem */
+        /* must be treated as an out of resource error and the evtq should be increased. */
+        evt->type = -1;
+        delta = 0;
     }
 
     osSetIntMask(mask);
@@ -157,8 +154,7 @@ void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount) {
     }
 }
 
-void alSynAddPlayer(ALSynth *drvr, ALPlayer *client)
-{
+void alSynAddPlayer(ALSynth *drvr, ALPlayer *client) {
     OSIntMask mask = osSetIntMask(OS_IM_NONE);
 
     client->samplesLeft = drvr->curSamples;
@@ -205,8 +201,8 @@ s32 _allocatePVoice(ALSynth *drvr, PVoice **pvoice, s16 priority)
 }
 #endif
 
-s32 alSynAllocVoice(ALSynth *drvr, ALVoice *voice, ALVoiceConfig *vc)
-{
+ALParam  *__allocParam(void);
+s32 alSynAllocVoice(ALSynth *drvr, ALVoice *voice, ALVoiceConfig *vc) {
     PVoice  *pvoice = 0;
     ALFilter *f;
     ALParam *update;
