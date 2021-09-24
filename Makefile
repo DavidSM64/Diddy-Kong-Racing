@@ -257,6 +257,7 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 
 $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/gu/guPerspectiveF.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2
