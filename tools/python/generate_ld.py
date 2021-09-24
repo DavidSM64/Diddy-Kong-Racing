@@ -31,7 +31,7 @@ BSS_LIB_ORDER_FILES = [
     BUILD_DIR + '/lib/src/os/osViMgr.o',
     BUILD_DIR + '/lib/src/os/osSetEventMesg.o',
     BUILD_DIR + '/lib/src/os/unknown_0CD820.o',
-    BUILD_DIR + '/lib/src/unknown_0CE200.o'
+    BUILD_DIR + '/lib/src/os/unknown_0CE200.o'
 ]
 
 class GenerateLD:
