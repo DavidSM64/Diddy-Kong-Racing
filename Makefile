@@ -268,9 +268,6 @@ $(BUILD_DIR)/lib/src/unknown_0D3160.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D3360.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D5EC0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
-$(BUILD_DIR)/lib/src/osEepromWrite.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osEepromRead.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
