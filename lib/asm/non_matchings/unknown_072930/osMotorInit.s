@@ -1,4 +1,4 @@
-glabel func_800720DC
+glabel osMotorInit
 /* 072CDC 800720DC 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 072CE0 800720E0 AFB00020 */  sw    $s0, 0x20($sp)
 /* 072CE4 800720E4 AFBF0024 */  sw    $ra, 0x24($sp)
@@ -79,7 +79,7 @@ glabel func_800720DC
 /* 072DF8 800721F8 AFA2002C */  sw    $v0, 0x2c($sp)
 /* 072DFC 800721FC 24C63FF0 */  addiu $a2, %lo(D_80123FF0) # addiu $a2, $a2, 0x3ff0
 /* 072E00 80072200 02002025 */  move  $a0, $s0
-/* 072E04 80072204 0C01C7E0 */  jal   func_80071F80
+/* 072E04 80072204 0C01C7E0 */  jal   _MakeMotorData
 /* 072E08 80072208 24050600 */   li    $a1, 1536
 /* 072E0C 8007220C 8FA2002C */  lw    $v0, 0x2c($sp)
 /* 072E10 80072210 3C188012 */  lui   $t8, %hi(D_80123DD0) # $t8, 0x8012
@@ -88,7 +88,7 @@ glabel func_800720DC
 /* 072E1C 8007221C 24C63FD0 */  addiu $a2, %lo(D_80123FD0) # addiu $a2, $a2, 0x3fd0
 /* 072E20 80072220 02002025 */  move  $a0, $s0
 /* 072E24 80072224 24050600 */  li    $a1, 1536
-/* 072E28 80072228 0C01C7E0 */  jal   func_80071F80
+/* 072E28 80072228 0C01C7E0 */  jal   _MakeMotorData
 /* 072E2C 8007222C 00583821 */   addu  $a3, $v0, $t8
 /* 072E30 80072230 00001025 */  move  $v0, $zero
 .L80072234:

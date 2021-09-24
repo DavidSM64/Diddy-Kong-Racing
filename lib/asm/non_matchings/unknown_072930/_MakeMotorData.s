@@ -1,4 +1,4 @@
-glabel func_80071F80
+glabel _MakeMotorData
 /* 072B80 80071F80 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 072B84 80071F84 AFB00018 */  sw    $s0, 0x18($sp)
 /* 072B88 80071F88 00808025 */  move  $s0, $a0

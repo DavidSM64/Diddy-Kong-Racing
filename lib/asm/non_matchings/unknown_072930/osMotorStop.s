@@ -1,4 +1,4 @@
-glabel func_80071D30
+glabel osMotorStop
 /* 072930 80071D30 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 072934 80071D34 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 072938 80071D38 0C033594 */  jal   __osSiGetAccess

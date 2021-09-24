@@ -1,4 +1,4 @@
-glabel func_80071E58
+glabel osMotorStart
 /* 072A58 80071E58 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 072A5C 80071E5C AFBF0014 */  sw    $ra, 0x14($sp)
 /* 072A60 80071E60 0C033594 */  jal   __osSiGetAccess
