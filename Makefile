@@ -261,7 +261,6 @@ $(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/printf.o : OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D3360.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0

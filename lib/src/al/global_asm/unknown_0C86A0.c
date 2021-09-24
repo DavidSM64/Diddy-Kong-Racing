@@ -14,8 +14,7 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/__alCSeqGetTrackEvent.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqNew.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C86A0/alCSeqNewMarker.s")
 
-s32 alCSeqGetTicks(ALCSeq *seq)
-{
+s32 alCSeqGetTicks(ALCSeq *seq) {
     return seq->lastTicks; 
 }
 
