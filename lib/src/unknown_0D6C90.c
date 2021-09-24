@@ -12,7 +12,7 @@ struct __osThreadTail
 } __osThreadTail;
 
 struct __osThreadTail __osThreadTail = {0, -1};
-OSThread *__RunQueue = &__osThreadTail.next;
+OSThread *__osRunQueue = &__osThreadTail.next;
 OSThread *__osActiveQueue = &__osThreadTail.next;
 
 extern OSThread *__osRunningThread = NULL;
@@ -31,7 +31,7 @@ extern void		__osRestoreInt(u32);
 void osYieldThread(void){
     register u32 saveMask = __osDisableInt();
     __osRunningThread->state = OS_STATE_RUNNABLE;
-    __osEnqueueAndYield(&__RunQueue);
+    __osEnqueueAndYield(&__osRunQueue);
     __osRestoreInt(saveMask);
 }*/
 

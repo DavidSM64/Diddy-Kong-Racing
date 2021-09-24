@@ -1,7 +1,7 @@
 glabel __osDispatchThread
-/* 0D4024 800D3424 3C04800E */  lui   $a0, %hi(__RunQueue) # $a0, 0x800e
+/* 0D4024 800D3424 3C04800E */  lui   $a0, %hi(__osRunQueue) # $a0, 0x800e
 /* 0D4028 800D3428 0C034D05 */  jal   __osPopThread
-/* 0D402C 800D342C 24844888 */   addiu $a0, %lo(__RunQueue) # addiu $a0, $a0, 0x4888
+/* 0D402C 800D342C 24844888 */   addiu $a0, %lo(__osRunQueue) # addiu $a0, $a0, 0x4888
 /* 0D4030 800D3430 3C01800E */  lui   $at, %hi(__osRunningThread) # $at, 0x800e
 /* 0D4034 800D3434 AC224890 */  sw    $v0, %lo(__osRunningThread)($at)
 /* 0D4038 800D3438 24080004 */  li    $t0, 4

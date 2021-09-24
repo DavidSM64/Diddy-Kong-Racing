@@ -1,7 +1,25 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800CC840 */
 
-#include "types.h"
-#include "macros.h"
+#include "libultra_internal.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CCF90/osSetThreadPri.s")
+extern OSThread *__osRunningThread;
+extern OSThread *__osRunQueue;
+
+void osSetThreadPri(OSThread *t, OSPri pri) {
+    register u32 saveMask = __osDisableInt();
+    if (t == NULL)
+        t = __osRunningThread;
+    if (t->priority != pri) {
+        t->priority = pri;
+        if (t != __osRunningThread && t->state != OS_STATE_STOPPED) {
+            __osDequeueThread(t->queue, t);
+            __osEnqueueThread(t->queue, t);
+        }
+        if (__osRunningThread->priority < __osRunQueue->priority) {
+            __osRunningThread->state = OS_STATE_RUNNABLE;
+            __osEnqueueAndYield(&__osRunQueue);
+        }
+    }
+    __osRestoreInt(saveMask);
+}

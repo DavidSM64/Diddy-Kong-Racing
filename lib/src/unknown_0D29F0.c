@@ -31,6 +31,7 @@ __OSViContext vi[2] = {0};
 __OSViContext *__osViCurr = &vi[0];
 __OSViContext *__osViNext = &vi[1];
 
+//TODO: This should be defined above osInitialize
 #define VI_NTSC_CLOCK 48681812
 s32 osViClock = VI_NTSC_CLOCK;
 
