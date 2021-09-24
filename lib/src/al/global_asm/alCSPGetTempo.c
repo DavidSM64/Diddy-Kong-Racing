@@ -5,4 +5,3 @@
 #include "macros.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8490/alCSPGetTempo.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C8490/osGetCount.s")
