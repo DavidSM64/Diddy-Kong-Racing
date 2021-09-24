@@ -792,7 +792,7 @@ void thread3_main(s32 arg0) {
             audioStopThread();
             stop_thread30();
             __osSpSetStatus(0xAAAA82);
-            func_800CD250(0x1D6);
+            osDpSetStatus(0x1D6);
             while(1); // Infinite loop
         }
         render();

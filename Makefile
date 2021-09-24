@@ -264,6 +264,8 @@ $(BUILD_DIR)/lib/src/printf.o : OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/unknown_0D3360.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
+#$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
+#$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 32
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1

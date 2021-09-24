@@ -9,7 +9,7 @@ glabel osContStartReadData
 /* 0CDBFC 800CCFFC 24010001 */  li    $at, 1
 /* 0CDC00 800CD000 11C1000C */  beq   $t6, $at, .L800CD034
 /* 0CDC04 800CD004 00000000 */   nop   
-/* 0CDC08 800CD008 0C033453 */  jal   func_800CD14C
+/* 0CDC08 800CD008 0C033453 */  jal   __osPackReadData
 /* 0CDC0C 800CD00C 00000000 */   nop   
 /* 0CDC10 800CD010 3C058013 */  lui   $a1, %hi(D_8012CD50) # $a1, 0x8013
 /* 0CDC14 800CD014 24A5CD50 */  addiu $a1, %lo(D_8012CD50) # addiu $a1, $a1, -0x32b0

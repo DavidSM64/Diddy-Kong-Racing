@@ -1,4 +1,4 @@
-glabel func_800CD14C
+glabel __osPackReadData
 /* 0CDD4C 800CD14C 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 0CDD50 800CD150 3C0E8013 */  lui   $t6, %hi(D_8012CD50) # $t6, 0x8013
 /* 0CDD54 800CD154 25CECD50 */  addiu $t6, %lo(D_8012CD50) # addiu $t6, $t6, -0x32b0
