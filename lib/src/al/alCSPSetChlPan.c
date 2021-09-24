@@ -5,11 +5,7 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-#if 1
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C84E0/alCSPSetChlPan.s")
-#else 
-void alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan)
-{
+void alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan) {
     ALEvent       evt;
 
     evt.type            = AL_SEQP_MIDI_EVT;
@@ -20,4 +16,3 @@ void alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan)
                     
     alEvtqPostEvent(&seqp->evtq, &evt, 0);
 }
-#endif
