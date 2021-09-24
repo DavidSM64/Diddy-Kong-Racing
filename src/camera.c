@@ -7,7 +7,7 @@
 #include "unknown_06B2B0.h"
 #include "unknown_0255E0.h"
 #include "video.h"
-#include "lib/src/xprintf.h"
+#include "lib/src/libc/xprintf.h"
 
 extern u32 osTvType;
 
