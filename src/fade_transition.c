@@ -219,21 +219,16 @@ void func_800C0180(void) {
     D_800E31A0 = 0;
 }
 
-#ifdef NON_MATCHING
-// Regalloc issues. Uses v1 instead of v0.
-s32 func_800C018C(void) {
-    s32 phi_v0 = (D_800E31B0 != 0);
+//@bug: This doesn't seem to guarantee a return.
+u32 func_800C018C(void) {
+    u32 phi_v0 = (D_800E31B0 != 0);
     if (phi_v0 == 0) {
         phi_v0 = (D_800E31B4 != 0);
         if (phi_v0 != 0) {
-            phi_v0 = (D_800E31BC != 0);
+            return (D_800E31BC != 0);
         }
     }
-    return phi_v0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C018C.s")
-#endif
 
 #ifdef NON_MATCHING
 
