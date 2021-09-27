@@ -7,5 +7,4 @@
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D0130/osPfsChecker.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D0130/corrupted_init.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D0130/corrupted.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D0130/osPfsReFormat.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D0130/osPfsNumFiles.s")
+
