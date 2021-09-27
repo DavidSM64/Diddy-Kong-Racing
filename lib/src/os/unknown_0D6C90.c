@@ -36,9 +36,3 @@ void osYieldThread(void){
 }*/
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osDestroyThread.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Litob.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Genld.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/_Ldtob.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osSetCompare.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/lldiv.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/ldiv.s")

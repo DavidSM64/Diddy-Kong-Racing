@@ -3,5 +3,8 @@
 
 #include "types.h"
 #include "macros.h"
+#include "libultra_internal.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D24D0/func_800D18D0.s")
+u32 osDpGetStatus(){
+    return IO_READ(DPC_STATUS_REG);
+}

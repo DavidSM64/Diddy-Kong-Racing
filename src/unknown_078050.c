@@ -184,9 +184,9 @@ s32 func_80077A54(void) {
 
 void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2) {
     osWritebackDCacheAll();
-    while (func_800D18D0() & 0x100) {}
+    while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
     osDpSetNextBuffer(bufPtr, arg1);
-    while (func_800D18D0() & 0x100) {}
+    while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
 }
 
 //Probable red, green, blue
