@@ -137,7 +137,7 @@ glabel osInitialize
 /* 0CD3A8 800CC7A8 AC2338A4 */   sw    $v1, %lo(osClockRate+4)($at)
 /* 0CD3AC 800CC7AC 3C048000 */  lui   $a0, %hi(osAppNMIBuffer) # $a0, 0x8000
 /* 0CD3B0 800CC7B0 2484031C */  addiu $a0, %lo(osAppNMIBuffer) # addiu $a0, $a0, 0x31c
-/* 0CD3B4 800CC7B4 0C034138 */  jal   memzero
+/* 0CD3B4 800CC7B4 0C034138 */  jal   bzero
 /* 0CD3B8 800CC7B8 24050040 */   li    $a1, 64
 .L800CC7BC:
 /* 0CD3BC 800CC7BC 3C0DA460 */  lui   $t5, %hi(D_A4600010) # $t5, 0xa460

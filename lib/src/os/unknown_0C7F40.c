@@ -1,7 +1,10 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800D04E0 */
+/* RAM_POS: 0x800C7340 */
 
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D10E0/memzero.s")
+//Called only in osInitialize
+s32 func_800C7340(void) {
+    return 0;
+}

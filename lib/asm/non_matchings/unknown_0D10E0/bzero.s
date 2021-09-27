@@ -1,4 +1,4 @@
-glabel memzero
+glabel bzero
 /* 0D10E0 800D04E0 28A1000C */  slti  $at, $a1, 0xc
 /* 0D10E4 800D04E4 1420001D */  bnez  $at, .L800D055C
 /* 0D10E8 800D04E8 00041823 */   negu  $v1, $a0

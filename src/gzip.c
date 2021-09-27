@@ -88,7 +88,7 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
 
 
   /* Generate counts for each bit length */
-  memzero(c, sizeof(c));
+  bzero(c, sizeof(c));
   p = b;  i = n;
   do {
     c[*p]++;                    /* assume all entries <= BMAX */
