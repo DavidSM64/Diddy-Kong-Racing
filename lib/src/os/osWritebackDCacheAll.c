@@ -4,4 +4,5 @@
 #include "types.h"
 #include "macros.h"
 
+//Likely hand written and impossible to decomp
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D24A0/osWritebackDCacheAll.s")
