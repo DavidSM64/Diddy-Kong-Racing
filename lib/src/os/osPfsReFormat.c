@@ -36,14 +36,14 @@ s32 osPfsReFormat(OSPfs *pfs, OSMesgQueue *queue, int channel) {
         ERRCK(__osContRamWrite(queue, channel, pfs->dir_table + j, tmp_data, FALSE));
     }
 
-    for (j = 0; j < pfs->inodeStartPage; j++)
-        inode.inodePage[j].ipage = 0;
+    for (j = 0; j < pfs->inode_start_page; j++)
+        inode.inode_page[j].ipage = 0;
 
-    for (j = pfs->inodeStartPage; j < ARRLEN(inode.inodePage); j++)
-        inode.inodePage[j].ipage = 3;
+    for (j = pfs->inode_start_page; j < ARRLEN(inode.inode_page); j++)
+        inode.inode_page[j].ipage = 3;
 
-    inode.inodePage[0].ipage = __osSumcalc((u8*)&inode.inodePage[pfs->inodeStartPage],
-                                            sizeof(__OSInodeUnit) * -pfs->inodeStartPage + sizeof(inode.inodePage));
+    inode.inode_page[0].ipage = __osSumcalc((u8*)&inode.inode_page[pfs->inode_start_page],
+                                            sizeof(__OSInodeUnit) * -pfs->inode_start_page + sizeof(inode.inode_page));
     ptr = (u8 *)&inode;
 
     for (j = 0; j < PFS_ONE_PAGE; j++){
@@ -52,9 +52,9 @@ s32 osPfsReFormat(OSPfs *pfs, OSMesgQueue *queue, int channel) {
     }
 
     for (i = 1; i < pfs->banks; i++) {
-        for (j = 1; j < ARRLEN(inode.inodePage); j++)
-            inode.inodePage[j].ipage = 3;
-        inode.inodePage[0].ipage = __osSumcalc((u8*)&inode.inodePage[1], -sizeof(__OSInodeUnit) + sizeof(inode.inodePage));
+        for (j = 1; j < ARRLEN(inode.inode_page); j++)
+            inode.inode_page[j].ipage = 3;
+        inode.inode_page[0].ipage = __osSumcalc((u8*)&inode.inode_page[1], -sizeof(__OSInodeUnit) + sizeof(inode.inode_page));
         ptr = (u8 *)&inode;
         for (j = 0; j < PFS_ONE_PAGE; j++) {
             ERRCK(__osContRamWrite(queue, channel, pfs->inode_table + i * PFS_ONE_PAGE + j, ptr + j * BLOCKSIZE, FALSE));

@@ -20,9 +20,9 @@ s32 osPfsFreeBlocks(OSPfs *pfs, s32 *bytes_not_used) {
         if (bank > 0)
             offset = 1;
         else
-            offset = pfs->inodeStartPage;
-        for (j = offset; j < ARRLEN(inode.inodePage); j++) {
-            if (inode.inodePage[j].ipage == 3)
+            offset = pfs->inode_start_page;
+        for (j = offset; j < ARRLEN(inode.inode_page); j++) {
+            if (inode.inode_page[j].ipage == 3)
                 pages++;
         }
     }

@@ -80,7 +80,7 @@ typedef struct {
 	int		inode_table;		/* block location */
 	int		minode_table;		/* mirrioring inode_table */
 	int		dir_table;		    /* block location */
-	int		inodeStartPage;	/* page # */
+	int		inode_start_page;	/* page # */
 	u8		banks;
 	u8		activebank;
 } OSPfs;
@@ -102,7 +102,7 @@ typedef union {
 } __OSInodeUnit;
 
 typedef struct {
-	__OSInodeUnit	inodePage[128];
+	__OSInodeUnit	inode_page[128];
 } __OSInode;
 
 typedef struct {
