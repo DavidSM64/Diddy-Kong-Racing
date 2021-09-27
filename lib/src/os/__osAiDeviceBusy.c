@@ -1,7 +1,13 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800D3670 */
 
-#include "types.h"
-#include "macros.h"
+#include "libultra_internal.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D4270/__osAiDeviceBusy.s")
+s32 __osAiDeviceBusy(void) {
+    register s32 status = IO_READ(AI_STATUS_REG);
+    if (status & AI_STATUS_FIFO_FULL)
+
+        return 1;
+
+    return 0;
+}
