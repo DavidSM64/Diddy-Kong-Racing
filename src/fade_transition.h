@@ -32,6 +32,7 @@ extern u32 osTvType;
 
 void func_800C0170(void);
 void func_800C0180(void);
+u32 func_800C018C(void);
 void func_800C0724(void);
 s32 func_800C0494(s32 arg0);
 void render_fade_transition(s32 dlist, s32 arg1, s32 arg2);
@@ -51,7 +52,6 @@ void func_800C27A0(s32 arg0); //Non Matching
 void func_800C0B00(FadeTransition *transition, s32, s32, s16*, s8*, s8*, s8*, s8*, s8*); //Non Matching
 void func_800C15D4(FadeTransition *transition); //Non Matching
 void func_800C2640(FadeTransition *transition); //Non Matching
-s32 func_800C018C(void); //Non Matching
 s32 func_800C01D8(FadeTransition *transition); //Non Matching
 
 #endif
