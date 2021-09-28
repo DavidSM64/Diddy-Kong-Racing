@@ -1,14 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800D2240 */
+/* RAM_POS: 0x800D2260 */
 
-#include "types.h"
-#include "macros.h"
 #include "libultra_internal.h"
 #include "viint.h"
-
-void osSpTaskYield(void) {
-    __osSpSetStatus(SPSTATUS_SET_SIGNAL0);
-}
 
 void osViSetSpecialFeatures(u32 func) {    
     register u32 saveMask;
