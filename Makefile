@@ -43,11 +43,18 @@ endif
 
 ########## Recomp ##########
 
+RECOMP_PROJECT := ./tools/ido-static-recomp/
+
+DUMMY != ls $(RECOMP_PROJECT) >/dev/null || echo FAIL
+ifeq ($(DUMMY),FAIL)
+  $(error Missing submodule ido-static-recomp. Please run 'git submodule update --init')
+endif
+
 # List of IDO tools required for the repo.
 # NOTE: If you are adding a tool here, make sure to update the Makefile in `/tools/ido-static-recomp/`!
 RECOMP_TOOLS := cc cfe uopt ugen as1 ujoin uld usplit umerge
 
-RECOMP_DIR := ./tools/ido5.3_recomp/
+RECOMP_DIR := $(RECOMP_PROJECT)build5.3/out/
 RECOMP_TOOLS_PATHS = $(addprefix $(RECOMP_DIR),$(RECOMP_TOOLS))
 
 # Checks if all the recomp tools exist.
@@ -55,7 +62,7 @@ $(foreach p,$(RECOMP_TOOLS_PATHS),$(if $(wildcard $(p)),,$(info $(p) does not ex
 
 # If any of the tools do not exist, then recomp needs to run to build them.
 ifeq ($(runRecomp),yes)
-  DUMMY != make -s -C tools/ido-static-recomp >&2 || echo FAIL
+  DUMMY != cd $(RECOMP_PROJECT) && python3 build.py ido/5.3 -O2 && cd ../../ >&2 || echo FAIL
 endif
 
 ######## Extract Assets & Microcode ########
@@ -100,7 +107,7 @@ endif
 endif
 
 AS = $(CROSS)as
-CC := tools/ido5.3_recomp/cc
+CC := $(RECOMP_DIR)cc
 CPP := cpp -P -Wno-trigraphs
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
