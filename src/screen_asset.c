@@ -2,7 +2,7 @@
 /* RAM_POS: 0x8007F640 */
 
 #include "screen_asset.h"
-#include "lib/src/libc/simplesprintf.h"
+#include "lib/src/libc/rmonPrintf.h"
 
 // Render settings for the screens
 Gfx gRdpSetModeScreenAsset[] = {
@@ -36,7 +36,7 @@ u8 *load_screen(s32 screenIndex) {
         return 0x80100000;
     } else {
         if (screenIndex < 0 || screenIndex >= screenTableCount) {
-            simple_sprintf("SCREEN: No out of range!!\n");
+            rmonPrintf("SCREEN: No out of range!!\n");
             screenIndex = 0;
         }
         

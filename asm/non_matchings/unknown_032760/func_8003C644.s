@@ -26,7 +26,7 @@ glabel func_8003C644
 /* 03D288 8003C688 2401FFFF */  li    $at, -1
 /* 03D28C 8003C68C 15C10003 */  bne   $t6, $at, .L8003C69C
 /* 03D290 8003C690 3C04800E */   lui   $a0, %hi(D_800E5FC8) # $a0, 0x800e
-/* 03D294 8003C694 0C032755 */  jal   simple_sprintf
+/* 03D294 8003C694 0C032755 */  jal   rmonPrintf
 /* 03D298 8003C698 24845FC8 */   addiu $a0, %lo(D_800E5FC8) # addiu $a0, $a0, 0x5fc8
 .L8003C69C:
 /* 03D29C 8003C69C 92380008 */  lbu   $t8, 8($s1)

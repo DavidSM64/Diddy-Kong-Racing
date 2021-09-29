@@ -46,7 +46,7 @@ glabel func_8003B7CC
 /* 03C460 8003B860 15210007 */  bne   $t1, $at, .L8003B880
 /* 03C464 8003B864 A0680012 */   sb    $t0, 0x12($v1)
 /* 03C468 8003B868 AFA30024 */  sw    $v1, 0x24($sp)
-/* 03C46C 8003B86C 0C032755 */  jal   simple_sprintf
+/* 03C46C 8003B86C 0C032755 */  jal   rmonPrintf
 /* 03C470 8003B870 AFA6002C */   sw    $a2, 0x2c($sp)
 /* 03C474 8003B874 8FA30024 */  lw    $v1, 0x24($sp)
 /* 03C478 8003B878 8FA6002C */  lw    $a2, 0x2c($sp)

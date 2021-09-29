@@ -7,7 +7,7 @@
 #include "unknown_06B2B0.h"
 #include "unknown_0255E0.h"
 #include "video.h"
-#include "lib/src/libc/simplesprintf.h"
+#include "lib/src/libc/rmonPrintf.h"
 
 extern u32 osTvType;
 
@@ -879,13 +879,13 @@ void func_80069F64(s16 *mtx) {
     for(i = 0; i < 4; i++) {
         for(j = 0; j < 4; j++) {
             val = mtx[i * 4 + j];
-            simple_sprintf("%x.", val);
+            rmonPrintf("%x.", val);
             val = mtx[((i + 4) * 4 + j)]; // Issue here.
-            simple_sprintf("%x  ", (u16)val);
+            rmonPrintf("%x  ", (u16)val);
         }
-        simple_sprintf("\n");
+        rmonPrintf("\n");
     }
-    simple_sprintf("\n");
+    rmonPrintf("\n");
 }
 #else
 GLOBAL_ASM("asm/non_matchings/camera/func_80069F64.s")
@@ -897,11 +897,11 @@ void func_8006A03C(f32 *mtx) {
     
     for(i = 0; i < 4; i++) {
         for(j = 0; j < 4; j++) {
-            simple_sprintf("%f  ", mtx[i * 4 + j]);
+            rmonPrintf("%f  ", mtx[i * 4 + j]);
         }
-        simple_sprintf("\n");
+        rmonPrintf("\n");
     }
-    simple_sprintf("\n");
+    rmonPrintf("\n");
 }
 
 OSMesgQueue *func_8006A100(void) {

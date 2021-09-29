@@ -4,7 +4,7 @@
 #include "main.h"
 #include "thread0_epc.h"
 #include "unknown_06B2B0.h"
-#include "lib/src/libc/simplesprintf.h"
+#include "lib/src/libc/rmonPrintf.h"
 
 /************ .rodata ************/
 
@@ -65,7 +65,7 @@ void func_80065E30(void) {
     D_8011D758[1] = temp3;
     D_8011D758[0] = temp4;
     if ((temp2 != temp4) || (temp != temp3)) {
-        simple_sprintf("WARNING: Stack overflow/underflow!!!\n");
+        rmonPrintf("WARNING: Stack overflow/underflow!!!\n");
     }
 }
 #else
