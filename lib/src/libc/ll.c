@@ -4,15 +4,8 @@
 #include "types.h"
 #include "macros.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rshift.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rem.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_div.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_lshift.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_div.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_mul.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_divremi.s")
-
-/*
+#ifdef NON_MATCHING
+//Thse need to be compiled with -mips3, and linked differently
 unsigned long long __ull_rshift(unsigned long long a0, unsigned long long a1)
 {
     return a0 >> a1;
@@ -66,4 +59,12 @@ long long __ll_rshift(long long a0, long long a1)
 {
     return a0 >> a1;
 }
-*/
+#else
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rshift.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_rem.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_div.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_lshift.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_div.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ll_mul.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__ull_divremi.s")
+#endif

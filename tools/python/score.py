@@ -30,7 +30,7 @@ for folder in ASM_FOLDERS:
 BUILD_DIRECTORY = './build/us_1.0'
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './lib/src'
-FUNCTION_REGEX = r'(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64)(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
+FUNCTION_REGEX = r'(?<!static\s)(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(void|s64|s32|s16|s8|u64|u32|u16|u8|f32|f64|int|char|short|long)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#if(?:.|\n)*?(GLOBAL_ASM[(][^)]*[)])(.|\n)*?#endif'
 NON_MATCHING_REGEX = re.compile(r'^#ifdef[ ]+NON_MATCHING', re.MULTILINE)
@@ -92,10 +92,7 @@ class ScoreFile:
         matches = re.finditer(FUNCTION_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()
-            #TODO: This function is static, and thus doesn't appear in the map.
-            #Hardcoding it to be ignore works for now, but it's hacky
-            if groups[2] != "_Putfld":
-                self.functions.append(ScoreFileMatch(groups[0], groups[2]))
+            self.functions.append(ScoreFileMatch(groups[0], groups[2]))
         matches = re.finditer(GLOBAL_ASM_REGEX, self.text, re.MULTILINE)
         for matchNum, match in enumerate(matches, start=1):
             groups = match.groups()

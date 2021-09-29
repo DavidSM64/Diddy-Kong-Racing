@@ -16,7 +16,8 @@ static void *is_proutSyncPrintf(void *str, const char *buf, size_t n) {
 
 /**
  * Like sprintf, but simpler. It just hardcodes NULL for the dst,
- * and calls a function that just hardcodes a fake pointer
+ * and calls a function that just hardcodes a fake pointer.
+ * Could still be an earlier version of osSyncPrintf
  */
 void rmonPrintf(const char *format, ...) {
     s32 written;
