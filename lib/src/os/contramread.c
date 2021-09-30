@@ -6,10 +6,6 @@
 #include "controller.h"
 #include "siint.h"
 
-#if 0
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s")
-#else
 extern s32 D_8012CE1C;
 static void __osPackRamReadData(int channel, u16 address);
 s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer) {
@@ -94,4 +90,3 @@ static void __osPackRamReadData(int channel, u16 address) {
     ptr += sizeof(__OSContRamReadFormat);
     ptr[0] = CONT_CMD_END;
 }
-#endif
