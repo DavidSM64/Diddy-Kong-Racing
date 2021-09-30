@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "printf.h"
 #include "thread0_epc.h"
+#include "controller.h"
 
 /************ .rodata ************/
 
@@ -37,10 +38,10 @@ s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
 s32 gFreeQueueState;
-s32 D_80123DD0[64];
-s32 D_80123ED0[64];
-s32 D_80123FD0[8];
-s32 D_80123FF0[8];
+OSPifRam _MotorStopData[MAXCONTROLLERS];
+OSPifRam _MotorStartData[MAXCONTROLLERS];
+u8 _motorstopbuf[32];
+u8 _motorstartbuf[32];
 
 extern MemoryPoolSlot gMainMemoryPool;
 

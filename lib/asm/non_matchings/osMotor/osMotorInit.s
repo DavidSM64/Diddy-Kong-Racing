@@ -49,15 +49,15 @@ glabel osMotorInit
 .L8007218C:
 /* 072D8C 8007218C 24010080 */  li    $at, 128
 /* 072D90 80072190 11C10003 */  beq   $t6, $at, .L800721A0
-/* 072D94 80072194 3C048012 */   lui   $a0, %hi(D_80123FF0) # $a0, 0x8012
+/* 072D94 80072194 3C048012 */   lui   $a0, %hi(_motorstartbuf) # $a0, 0x8012
 /* 072D98 80072198 10000026 */  b     .L80072234
 /* 072D9C 8007219C 2402000B */   li    $v0, 11
 .L800721A0:
-/* 072DA0 800721A0 3C038012 */  lui   $v1, %hi(D_80123FD0) # $v1, 0x8012
-/* 072DA4 800721A4 3C058012 */  lui   $a1, %hi(D_80123FF0) # $a1, 0x8012
-/* 072DA8 800721A8 24A53FF0 */  addiu $a1, %lo(D_80123FF0) # addiu $a1, $a1, 0x3ff0
-/* 072DAC 800721AC 24633FD0 */  addiu $v1, %lo(D_80123FD0) # addiu $v1, $v1, 0x3fd0
-/* 072DB0 800721B0 24843FF0 */  addiu $a0, %lo(D_80123FF0) # addiu $a0, $a0, 0x3ff0
+/* 072DA0 800721A0 3C038012 */  lui   $v1, %hi(_motorstopbuf) # $v1, 0x8012
+/* 072DA4 800721A4 3C058012 */  lui   $a1, %hi(_motorstartbuf) # $a1, 0x8012
+/* 072DA8 800721A8 24A53FF0 */  addiu $a1, %lo(_motorstartbuf) # addiu $a1, $a1, 0x3ff0
+/* 072DAC 800721AC 24633FD0 */  addiu $v1, %lo(_motorstopbuf) # addiu $v1, $v1, 0x3fd0
+/* 072DB0 800721B0 24843FF0 */  addiu $a0, %lo(_motorstartbuf) # addiu $a0, $a0, 0x3ff0
 /* 072DB4 800721B4 24020001 */  li    $v0, 1
 .L800721B8:
 /* 072DB8 800721B8 24630004 */  addiu $v1, $v1, 4
@@ -71,21 +71,21 @@ glabel osMotorInit
 /* 072DD8 800721D8 A082FFFC */  sb    $v0, -4($a0)
 /* 072DDC 800721DC 1465FFF6 */  bne   $v1, $a1, .L800721B8
 /* 072DE0 800721E0 A060FFFC */   sb    $zero, -4($v1)
-/* 072DE4 800721E4 3C0F8012 */  lui   $t7, %hi(D_80123ED0) # $t7, 0x8012
-/* 072DE8 800721E8 25EF3ED0 */  addiu $t7, %lo(D_80123ED0) # addiu $t7, $t7, 0x3ed0
-/* 072DEC 800721EC 3C068012 */  lui   $a2, %hi(D_80123FF0) # $a2, 0x8012
+/* 072DE4 800721E4 3C0F8012 */  lui   $t7, %hi(_MotorStartData) # $t7, 0x8012
+/* 072DE8 800721E8 25EF3ED0 */  addiu $t7, %lo(_MotorStartData) # addiu $t7, $t7, 0x3ed0
+/* 072DEC 800721EC 3C068012 */  lui   $a2, %hi(_motorstartbuf) # $a2, 0x8012
 /* 072DF0 800721F0 00101180 */  sll   $v0, $s0, 6
 /* 072DF4 800721F4 004F3821 */  addu  $a3, $v0, $t7
 /* 072DF8 800721F8 AFA2002C */  sw    $v0, 0x2c($sp)
-/* 072DFC 800721FC 24C63FF0 */  addiu $a2, %lo(D_80123FF0) # addiu $a2, $a2, 0x3ff0
+/* 072DFC 800721FC 24C63FF0 */  addiu $a2, %lo(_motorstartbuf) # addiu $a2, $a2, 0x3ff0
 /* 072E00 80072200 02002025 */  move  $a0, $s0
 /* 072E04 80072204 0C01C7E0 */  jal   _MakeMotorData
 /* 072E08 80072208 24050600 */   li    $a1, 1536
 /* 072E0C 8007220C 8FA2002C */  lw    $v0, 0x2c($sp)
-/* 072E10 80072210 3C188012 */  lui   $t8, %hi(D_80123DD0) # $t8, 0x8012
-/* 072E14 80072214 27183DD0 */  addiu $t8, %lo(D_80123DD0) # addiu $t8, $t8, 0x3dd0
-/* 072E18 80072218 3C068012 */  lui   $a2, %hi(D_80123FD0) # $a2, 0x8012
-/* 072E1C 8007221C 24C63FD0 */  addiu $a2, %lo(D_80123FD0) # addiu $a2, $a2, 0x3fd0
+/* 072E10 80072210 3C188012 */  lui   $t8, %hi(_MotorStopData) # $t8, 0x8012
+/* 072E14 80072214 27183DD0 */  addiu $t8, %lo(_MotorStopData) # addiu $t8, $t8, 0x3dd0
+/* 072E18 80072218 3C068012 */  lui   $a2, %hi(_motorstopbuf) # $a2, 0x8012
+/* 072E1C 8007221C 24C63FD0 */  addiu $a2, %lo(_motorstopbuf) # addiu $a2, $a2, 0x3fd0
 /* 072E20 80072220 02002025 */  move  $a0, $s0
 /* 072E24 80072224 24050600 */  li    $a1, 1536
 /* 072E28 80072228 0C01C7E0 */  jal   _MakeMotorData

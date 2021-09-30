@@ -8,8 +8,8 @@ glabel osMotorStart
 /* 072A70 80071E70 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
 /* 072A74 80071E74 A02ECD90 */  sb    $t6, %lo(__osContLastCmd)($at)
 /* 072A78 80071E78 8DF80008 */  lw    $t8, 8($t7)
-/* 072A7C 80071E7C 3C088012 */  lui   $t0, %hi(D_80123ED0) # $t0, 0x8012
-/* 072A80 80071E80 25083ED0 */  addiu $t0, %lo(D_80123ED0) # addiu $t0, $t0, 0x3ed0
+/* 072A7C 80071E7C 3C088012 */  lui   $t0, %hi(_MotorStartData) # $t0, 0x8012
+/* 072A80 80071E80 25083ED0 */  addiu $t0, %lo(_MotorStartData) # addiu $t0, $t0, 0x3ed0
 /* 072A84 80071E84 0018C980 */  sll   $t9, $t8, 6
 /* 072A88 80071E88 03282821 */  addu  $a1, $t9, $t0
 /* 072A8C 80071E8C 0C0335B0 */  jal   __osSiRawStartDma
