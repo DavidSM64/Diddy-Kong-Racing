@@ -5,7 +5,6 @@
 #include "macros.h"
 #include "libultra_internal.h"
 #include "PR/rcp.h"
-#include "osVirtualToPhysical.h"
 
 s32 osPiRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size) {
     register int status;

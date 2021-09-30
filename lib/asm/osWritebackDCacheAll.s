@@ -1,3 +1,12 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800D18A0 */
+
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
 glabel osWritebackDCacheAll
 /* 0D24A0 800D18A0 3C088000 */  lui   $t0, 0x8000
 /* 0D24A4 800D18A4 240A2000 */  li    $t2, 8192

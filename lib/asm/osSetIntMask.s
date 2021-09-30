@@ -1,3 +1,12 @@
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800C9A30 */
+
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
 glabel osSetIntMask
 /* 0CA630 800C9A30 400C6000 */  mfc0  $t4, $12
 /* 0CA634 800C9A34 3182FF01 */  andi  $v0, $t4, 0xff01

@@ -2,9 +2,7 @@
 /* RAM_POS: 0x800C8D70 */
 
 #include "types.h"
-#include <PR/os_internal.h>
-#include <PR/rcp.h>
-#include "osVirtualToPhysical.h"
+#include "libultra_internal.h"
 
 u8 hdwrBugFlag = 0;
 

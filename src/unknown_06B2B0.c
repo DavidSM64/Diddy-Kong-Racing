@@ -29,7 +29,7 @@
 #include "unknown_003260.h"
 #include "unknown_032760.h"
 #include "textures_sprites.h"
-#include "lib/src/os/__osSpSetStatus.h"
+#include "PR/os_internal.h"
 #include "printf.h"
 #include "fade_transition.h"
 #include "unknown_077C50.h"
