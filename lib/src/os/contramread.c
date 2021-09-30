@@ -23,10 +23,10 @@ s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer) {
     ret = __osSiRawStartDma(OS_WRITE, &__osPfsPifRam);
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
     do {
-		for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
-			__osPfsPifRam.ramarray[i] = 0xFFU;
-		}
-		D_8012CE1C = 0;
+        for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
+            __osPfsPifRam.ramarray[i] = 0xFFU;
+        }
+        D_8012CE1C = 0;
         ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
         osRecvMesg(mq, NULL, OS_MESG_BLOCK);
         ptr = (u8 *)&__osPfsPifRam;
@@ -70,7 +70,7 @@ static void __osPackRamReadData(int channel, u16 address) {
     for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
         __osPfsPifRam.ramarray[i] = 0;
     }
-	
+    
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
     ramreadformat.dummy = CONT_CMD_NOP;
     ramreadformat.txsize = CONT_CMD_READ_MEMPACK_TX;

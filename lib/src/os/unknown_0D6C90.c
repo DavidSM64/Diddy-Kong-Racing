@@ -27,7 +27,7 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osResetGlobalIntMask.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osEPiRawWriteIo.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/osYieldThread.s")
 /*extern void __osEnqueueAndYield(OSThread **);
-extern void		__osRestoreInt(u32);
+extern void   __osRestoreInt(u32);
 void osYieldThread(void){
     register u32 saveMask = __osDisableInt();
     __osRunningThread->state = OS_STATE_RUNNABLE;

@@ -10,20 +10,20 @@ extern u32 __osPiAccessQueueEnabled;//__osPiAccessQueueEnabled
 extern OSMesg D_8012D1E0[PI_Q_BUF_LEN];//piAccessBuf
 extern OSMesgQueue piAccessQueue; //__osPiAccessQueue
 void __osPiCreateAccessQueue(void) {
-	__osPiAccessQueueEnabled = 1;
-	osCreateMesgQueue(&piAccessQueue, D_8012D1E0, PI_Q_BUF_LEN);
-	osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
+    __osPiAccessQueueEnabled = 1;
+    osCreateMesgQueue(&piAccessQueue, D_8012D1E0, PI_Q_BUF_LEN);
+    osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
 }
 
 void __osPiGetAccess(void) {
-	OSMesg dummyMesg;
-	if (!__osPiAccessQueueEnabled)
-		__osPiCreateAccessQueue();
-	osRecvMesg(&piAccessQueue, &dummyMesg, OS_MESG_BLOCK);
+    OSMesg dummyMesg;
+    if (!__osPiAccessQueueEnabled)
+        __osPiCreateAccessQueue();
+    osRecvMesg(&piAccessQueue, &dummyMesg, OS_MESG_BLOCK);
 }
 
 void __osPiRelAccess(void) {
-	osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
+    osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
 }
 
 /**********************************************************************/

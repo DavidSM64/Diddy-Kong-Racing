@@ -150,7 +150,7 @@ s32 corrupted_init(OSPfs *pfs, __OSInodeCache *cache) {
             }
         }
     }
-	
+
     return 0;
 }
 
