@@ -95,8 +95,8 @@ glabel __osException
 /* 0D39D0 800D2DD0 0369D825 */  or    $k1, $k1, $t1
 /* 0D39D4 800D2DD4 AF5B0118 */  sw    $k1, 0x118($k0)
 .L800D2DD8:
-/* 0D39D8 800D2DD8 3C09A430 */  lui   $t1, %hi(D_A430000C) # $t1, 0xa430
-/* 0D39DC 800D2DDC 8D29000C */  lw    $t1, %lo(D_A430000C)($t1)
+/* 0D39D8 800D2DD8 3C09A430 */  lui   $t1, %hi(MI_INTR_MASK_REG) # $t1, 0xa430
+/* 0D39DC 800D2DDC 8D29000C */  lw    $t1, %lo(MI_INTR_MASK_REG)($t1)
 /* 0D39E0 800D2DE0 1120000B */  beqz  $t1, .L800D2E10
 /* 0D39E4 800D2DE4 00000000 */   nop   
 /* 0D39E8 800D2DE8 3C08800E */  lui   $t0, %hi(__OSGlobalIntMask) # $t0, 0x800e
@@ -211,21 +211,21 @@ glabel __osException
 /* 0D3B74 800D2F74 3C08800E */  lui   $t0, %hi(__OSGlobalIntMask) # $t0, 0x800e
 /* 0D3B78 800D2F78 250838AC */  addiu $t0, %lo(__OSGlobalIntMask) # addiu $t0, $t0, 0x38ac
 /* 0D3B7C 800D2F7C 8D080000 */  lw    $t0, ($t0)
-/* 0D3B80 800D2F80 3C11A430 */  lui   $s1, %hi(D_A4300008) # $s1, 0xa430
-/* 0D3B84 800D2F84 8E310008 */  lw    $s1, %lo(D_A4300008)($s1)
+/* 0D3B80 800D2F80 3C11A430 */  lui   $s1, %hi(MI_INTR_REG) # $s1, 0xa430
+/* 0D3B84 800D2F84 8E310008 */  lw    $s1, %lo(MI_INTR_REG)($s1)
 /* 0D3B88 800D2F88 00084402 */  srl   $t0, $t0, 0x10
 /* 0D3B8C 800D2F8C 02288824 */  and   $s1, $s1, $t0
 /* 0D3B90 800D2F90 32290001 */  andi  $t1, $s1, 1
 /* 0D3B94 800D2F94 11200013 */  beqz  $t1, .L800D2FE4
 /* 0D3B98 800D2F98 00000000 */   nop   
-/* 0D3B9C 800D2F9C 3C0CA404 */  lui   $t4, %hi(D_A4040010) # $t4, 0xa404
-/* 0D3BA0 800D2FA0 8D8C0010 */  lw    $t4, %lo(D_A4040010)($t4)
+/* 0D3B9C 800D2F9C 3C0CA404 */  lui   $t4, %hi(SP_STATUS_REG) # $t4, 0xa404
+/* 0D3BA0 800D2FA0 8D8C0010 */  lw    $t4, %lo(SP_STATUS_REG)($t4)
 /* 0D3BA4 800D2FA4 24090008 */  li    $t1, 8
-/* 0D3BA8 800D2FA8 3C01A404 */  lui   $at, %hi(D_A4040010) # $at, 0xa404
+/* 0D3BA8 800D2FA8 3C01A404 */  lui   $at, %hi(SP_STATUS_REG) # $at, 0xa404
 /* 0D3BAC 800D2FAC 318C0300 */  andi  $t4, $t4, 0x300
 /* 0D3BB0 800D2FB0 3231003E */  andi  $s1, $s1, 0x3e
 /* 0D3BB4 800D2FB4 11800007 */  beqz  $t4, .L800D2FD4
-/* 0D3BB8 800D2FB8 AC290010 */   sw    $t1, %lo(D_A4040010)($at)
+/* 0D3BB8 800D2FB8 AC290010 */   sw    $t1, %lo(SP_STATUS_REG)($at)
 /* 0D3BBC 800D2FBC 0C034C79 */  jal   send_mesg
 /* 0D3BC0 800D2FC0 24040020 */   li    $a0, 32
 /* 0D3BC4 800D2FC4 12200038 */  beqz  $s1, .L800D30A8
@@ -240,9 +240,9 @@ glabel __osException
 .L800D2FE4:
 /* 0D3BE4 800D2FE4 32290008 */  andi  $t1, $s1, 8
 /* 0D3BE8 800D2FE8 11200007 */  beqz  $t1, .L800D3008
-/* 0D3BEC 800D2FEC 3C01A440 */   lui   $at, %hi(D_A4400010) # $at, 0xa440
+/* 0D3BEC 800D2FEC 3C01A440 */   lui   $at, %hi(VI_CURRENT_REG) # $at, 0xa440
 /* 0D3BF0 800D2FF0 32310037 */  andi  $s1, $s1, 0x37
-/* 0D3BF4 800D2FF4 AC200010 */  sw    $zero, %lo(D_A4400010)($at)
+/* 0D3BF4 800D2FF4 AC200010 */  sw    $zero, %lo(VI_CURRENT_REG)($at)
 /* 0D3BF8 800D2FF8 0C034C79 */  jal   send_mesg
 /* 0D3BFC 800D2FFC 24040038 */   li    $a0, 56
 /* 0D3C00 800D3000 12200029 */  beqz  $s1, .L800D30A8
@@ -252,9 +252,9 @@ glabel __osException
 /* 0D3C0C 800D300C 11200009 */  beqz  $t1, .L800D3034
 /* 0D3C10 800D3010 00000000 */   nop   
 /* 0D3C14 800D3014 24090001 */  li    $t1, 1
-/* 0D3C18 800D3018 3C01A450 */  lui   $at, %hi(D_A450000C) # $at, 0xa450
+/* 0D3C18 800D3018 3C01A450 */  lui   $at, %hi(AI_STATUS_REG) # $at, 0xa450
 /* 0D3C1C 800D301C 3231003B */  andi  $s1, $s1, 0x3b
-/* 0D3C20 800D3020 AC29000C */  sw    $t1, %lo(D_A450000C)($at)
+/* 0D3C20 800D3020 AC29000C */  sw    $t1, %lo(AI_STATUS_REG)($at)
 /* 0D3C24 800D3024 0C034C79 */  jal   send_mesg
 /* 0D3C28 800D3028 24040030 */   li    $a0, 48
 /* 0D3C2C 800D302C 1220001E */  beqz  $s1, .L800D30A8
@@ -262,9 +262,9 @@ glabel __osException
 .L800D3034:
 /* 0D3C34 800D3034 32290002 */  andi  $t1, $s1, 2
 /* 0D3C38 800D3038 11200007 */  beqz  $t1, .L800D3058
-/* 0D3C3C 800D303C 3C01A480 */   lui   $at, %hi(D_A4800018) # $at, 0xa480
+/* 0D3C3C 800D303C 3C01A480 */   lui   $at, %hi(SI_STATUS_REG) # $at, 0xa480
 /* 0D3C40 800D3040 3231003D */  andi  $s1, $s1, 0x3d
-/* 0D3C44 800D3044 AC200018 */  sw    $zero, %lo(D_A4800018)($at)
+/* 0D3C44 800D3044 AC200018 */  sw    $zero, %lo(SI_STATUS_REG)($at)
 /* 0D3C48 800D3048 0C034C79 */  jal   send_mesg
 /* 0D3C4C 800D304C 24040028 */   li    $a0, 40
 /* 0D3C50 800D3050 12200015 */  beqz  $s1, .L800D30A8
@@ -274,9 +274,9 @@ glabel __osException
 /* 0D3C5C 800D305C 11200009 */  beqz  $t1, .L800D3084
 /* 0D3C60 800D3060 00000000 */   nop   
 /* 0D3C64 800D3064 24090002 */  li    $t1, 2
-/* 0D3C68 800D3068 3C01A460 */  lui   $at, %hi(D_A4600010) # $at, 0xa460
+/* 0D3C68 800D3068 3C01A460 */  lui   $at, %hi(PI_STATUS_REG) # $at, 0xa460
 /* 0D3C6C 800D306C 3231002F */  andi  $s1, $s1, 0x2f
-/* 0D3C70 800D3070 AC290010 */  sw    $t1, %lo(D_A4600010)($at)
+/* 0D3C70 800D3070 AC290010 */  sw    $t1, %lo(PI_STATUS_REG)($at)
 /* 0D3C74 800D3074 0C034C79 */  jal   send_mesg
 /* 0D3C78 800D3078 24040040 */   li    $a0, 64
 /* 0D3C7C 800D307C 1220000A */  beqz  $s1, .L800D30A8

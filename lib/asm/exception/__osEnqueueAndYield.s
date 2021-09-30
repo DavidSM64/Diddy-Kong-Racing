@@ -45,8 +45,8 @@ glabel __osEnqueueAndYield
 /* 0D3F74 800D3374 0369D825 */  or    $k1, $k1, $t1
 /* 0D3F78 800D3378 ACBB0118 */  sw    $k1, 0x118($a1)
 .L800D337C:
-/* 0D3F7C 800D337C 3C1BA430 */  lui   $k1, %hi(D_A430000C) # $k1, 0xa430
-/* 0D3F80 800D3380 8F7B000C */  lw    $k1, %lo(D_A430000C)($k1)
+/* 0D3F7C 800D337C 3C1BA430 */  lui   $k1, %hi(MI_INTR_MASK_REG) # $k1, 0xa430
+/* 0D3F80 800D3380 8F7B000C */  lw    $k1, %lo(MI_INTR_MASK_REG)($k1)
 /* 0D3F84 800D3384 1360000B */  beqz  $k1, .L800D33B4
 /* 0D3F88 800D3388 00000000 */   nop   
 /* 0D3F8C 800D338C 3C1A800E */  lui   $k0, %hi(__OSGlobalIntMask) # $k0, 0x800e

@@ -1,6 +1,6 @@
 glabel __osSiDeviceBusy
-/* 0D5EC0 800D52C0 3C0EA480 */  lui   $t6, %hi(D_A4800018) # $t6, 0xa480
-/* 0D5EC4 800D52C4 8DC40018 */  lw    $a0, %lo(D_A4800018)($t6)
+/* 0D5EC0 800D52C0 3C0EA480 */  lui   $t6, %hi(SI_STATUS_REG) # $t6, 0xa480
+/* 0D5EC4 800D52C4 8DC40018 */  lw    $a0, %lo(SI_STATUS_REG)($t6)
 /* 0D5EC8 800D52C8 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0D5ECC 800D52CC 308F0003 */  andi  $t7, $a0, 3
 /* 0D5ED0 800D52D0 11E00003 */  beqz  $t7, .L800D52E0

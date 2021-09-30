@@ -1,6 +1,6 @@
 glabel __osAiDeviceBusy
-/* 0D4270 800D3670 3C0EA450 */  lui   $t6, %hi(D_A450000C) # $t6, 0xa450
-/* 0D4274 800D3674 8DC4000C */  lw    $a0, %lo(D_A450000C)($t6)
+/* 0D4270 800D3670 3C0EA450 */  lui   $t6, %hi(AI_STATUS_REG) # $t6, 0xa450
+/* 0D4274 800D3674 8DC4000C */  lw    $a0, %lo(AI_STATUS_REG)($t6)
 /* 0D4278 800D3678 3C018000 */  lui   $at, 0x8000
 /* 0D427C 800D367C 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0D4280 800D3680 00817824 */  and   $t7, $a0, $at

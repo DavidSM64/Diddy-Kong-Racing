@@ -6,9 +6,9 @@ glabel __osViSwapContext
 /* 0D6CA0 800D60A0 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0D6CA4 800D60A4 AFA00030 */  sw    $zero, 0x30($sp)
 /* 0D6CA8 800D60A8 3C11800E */  lui   $s1, %hi(__osViNext) # $s1, 0x800e
-/* 0D6CAC 800D60AC 3C0EA440 */  lui   $t6, %hi(D_A4400010) # $t6, 0xa440
+/* 0D6CAC 800D60AC 3C0EA440 */  lui   $t6, %hi(VI_CURRENT_REG) # $t6, 0xa440
 /* 0D6CB0 800D60B0 8E314874 */  lw    $s1, %lo(__osViNext)($s1)
-/* 0D6CB4 800D60B4 8DCF0010 */  lw    $t7, %lo(D_A4400010)($t6)
+/* 0D6CB4 800D60B4 8DCF0010 */  lw    $t7, %lo(VI_CURRENT_REG)($t6)
 /* 0D6CB8 800D60B8 8E300008 */  lw    $s0, 8($s1)
 /* 0D6CBC 800D60BC 31F80001 */  andi  $t8, $t7, 1
 /* 0D6CC0 800D60C0 AFB80030 */  sw    $t8, 0x30($sp)
@@ -150,43 +150,43 @@ glabel __osViSwapContext
 /* 0D6EB8 800D62B8 AFA2003C */  sw    $v0, 0x3c($sp)
 .L800D62BC:
 /* 0D6EBC 800D62BC 8FAA003C */  lw    $t2, 0x3c($sp)
-/* 0D6EC0 800D62C0 3C0BA440 */  lui   $t3, %hi(D_A4400020) # $t3, 0xa440
-/* 0D6EC4 800D62C4 3C08A440 */  lui   $t0, %hi(D_A440002C) # $t0, 0xa440
-/* 0D6EC8 800D62C8 AD6A0004 */  sw    $t2, %lo(D_A4400004)($t3)
+/* 0D6EC0 800D62C0 3C0BA440 */  lui   $t3, %hi(VI_LEAP_REG) # $t3, 0xa440
+/* 0D6EC4 800D62C4 3C08A440 */  lui   $t0, %hi(VI_V_BURST_REG) # $t0, 0xa440
+/* 0D6EC8 800D62C8 AD6A0004 */  sw    $t2, %lo(VI_ORIGIN_REG)($t3)
 /* 0D6ECC 800D62CC 8E0C0008 */  lw    $t4, 8($s0)
-/* 0D6ED0 800D62D0 3C0FA440 */  lui   $t7, %hi(D_A4400014) # $t7, 0xa440
-/* 0D6ED4 800D62D4 3C18A440 */  lui   $t8, %hi(D_A4400018) # $t8, 0xa440
-/* 0D6ED8 800D62D8 AD0C0008 */  sw    $t4, %lo(D_A4400008)($t0)
+/* 0D6ED0 800D62D0 3C0FA440 */  lui   $t7, %hi(VI_BURST_REG) # $t7, 0xa440
+/* 0D6ED4 800D62D4 3C18A440 */  lui   $t8, %hi(VI_V_SYNC_REG) # $t8, 0xa440
+/* 0D6ED8 800D62D8 AD0C0008 */  sw    $t4, %lo(VI_WIDTH_REG)($t0)
 /* 0D6EDC 800D62DC 8E0D000C */  lw    $t5, 0xc($s0)
-/* 0D6EE0 800D62E0 3C09A440 */  lui   $t1, %hi(D_A440001C) # $t1, 0xa440
+/* 0D6EE0 800D62E0 3C09A440 */  lui   $t1, %hi(VI_H_SYNC_REG) # $t1, 0xa440
 /* 0D6EE4 800D62E4 3C01800E */  lui   $at, %hi(__osViNext) # $at, 0x800e
-/* 0D6EE8 800D62E8 ADED0014 */  sw    $t5, %lo(D_A4400014)($t7)
+/* 0D6EE8 800D62E8 ADED0014 */  sw    $t5, %lo(VI_BURST_REG)($t7)
 /* 0D6EEC 800D62EC 8E0E0010 */  lw    $t6, 0x10($s0)
-/* 0D6EF0 800D62F0 AF0E0018 */  sw    $t6, %lo(D_A4400018)($t8)
+/* 0D6EF0 800D62F0 AF0E0018 */  sw    $t6, %lo(VI_V_SYNC_REG)($t8)
 /* 0D6EF4 800D62F4 8E190014 */  lw    $t9, 0x14($s0)
-/* 0D6EF8 800D62F8 AD39001C */  sw    $t9, %lo(D_A440001C)($t1)
+/* 0D6EF8 800D62F8 AD39001C */  sw    $t9, %lo(VI_H_SYNC_REG)($t1)
 /* 0D6EFC 800D62FC 8E0A0018 */  lw    $t2, 0x18($s0)
-/* 0D6F00 800D6300 3C19A440 */  lui   $t9, %hi(D_A440000C) # $t9, 0xa440
-/* 0D6F04 800D6304 AD6A0020 */  sw    $t2, %lo(D_A4400020)($t3)
+/* 0D6F00 800D6300 3C19A440 */  lui   $t9, %hi(VI_INTR_REG) # $t9, 0xa440
+/* 0D6F04 800D6304 AD6A0020 */  sw    $t2, %lo(VI_LEAP_REG)($t3)
 /* 0D6F08 800D6308 8FAC0038 */  lw    $t4, 0x38($sp)
-/* 0D6F0C 800D630C AD0C0024 */  sw    $t4, %lo(D_A4400024)($t0)
+/* 0D6F0C 800D630C AD0C0024 */  sw    $t4, %lo(VI_H_START_REG)($t0)
 /* 0D6F10 800D6310 8FAD0030 */  lw    $t5, 0x30($sp)
 /* 0D6F14 800D6314 000D7880 */  sll   $t7, $t5, 2
 /* 0D6F18 800D6318 01ED7821 */  addu  $t7, $t7, $t5
 /* 0D6F1C 800D631C 000F7880 */  sll   $t7, $t7, 2
 /* 0D6F20 800D6320 020F7021 */  addu  $t6, $s0, $t7
 /* 0D6F24 800D6324 8DD80030 */  lw    $t8, 0x30($t6)
-/* 0D6F28 800D6328 AF380028 */  sw    $t8, %lo(D_A4400028)($t9)
+/* 0D6F28 800D6328 AF380028 */  sw    $t8, %lo(VI_V_START_REG)($t9)
 /* 0D6F2C 800D632C 8FA90030 */  lw    $t1, 0x30($sp)
 /* 0D6F30 800D6330 00095080 */  sll   $t2, $t1, 2
 /* 0D6F34 800D6334 01495021 */  addu  $t2, $t2, $t1
 /* 0D6F38 800D6338 000A5080 */  sll   $t2, $t2, 2
 /* 0D6F3C 800D633C 020A5821 */  addu  $t3, $s0, $t2
 /* 0D6F40 800D6340 8D6C0034 */  lw    $t4, 0x34($t3)
-/* 0D6F44 800D6344 3C0AA440 */  lui   $t2, %hi(D_A4400030) # $t2, 0xa440
-/* 0D6F48 800D6348 AD0C002C */  sw    $t4, %lo(D_A440002C)($t0)
+/* 0D6F44 800D6344 3C0AA440 */  lui   $t2, %hi(VI_X_SCALE_REG) # $t2, 0xa440
+/* 0D6F48 800D6348 AD0C002C */  sw    $t4, %lo(VI_V_BURST_REG)($t0)
 /* 0D6F4C 800D634C 8FAD0030 */  lw    $t5, 0x30($sp)
-/* 0D6F50 800D6350 3C0CA440 */  lui   $t4, %hi(D_A4400034) # $t4, 0xa440
+/* 0D6F50 800D6350 3C0CA440 */  lui   $t4, %hi(VI_Y_SCALE_REG) # $t4, 0xa440
 /* 0D6F54 800D6354 000D7880 */  sll   $t7, $t5, 2
 /* 0D6F58 800D6358 01ED7821 */  addu  $t7, $t7, $t5
 /* 0D6F5C 800D635C 000F7880 */  sll   $t7, $t7, 2
@@ -194,13 +194,13 @@ glabel __osViSwapContext
 /* 0D6F64 800D6364 8DD80038 */  lw    $t8, 0x38($t6)
 /* 0D6F68 800D6368 3C0DA440 */  lui   $t5, 0xa440
 /* 0D6F6C 800D636C 3C0F800E */  lui   $t7, %hi(__osViCurr) # $t7, 0x800e
-/* 0D6F70 800D6370 AF38000C */  sw    $t8, %lo(D_A440000C)($t9)
+/* 0D6F70 800D6370 AF38000C */  sw    $t8, %lo(VI_INTR_REG)($t9)
 /* 0D6F74 800D6374 8E290020 */  lw    $t1, 0x20($s1)
 /* 0D6F78 800D6378 3C18800E */  lui   $t8, %hi(__osViCurr) # $t8, 0x800e
 /* 0D6F7C 800D637C 3C0E800E */  lui   $t6, %hi(__osViNext) # $t6, 0x800e
-/* 0D6F80 800D6380 AD490030 */  sw    $t1, %lo(D_A4400030)($t2)
+/* 0D6F80 800D6380 AD490030 */  sw    $t1, %lo(VI_X_SCALE_REG)($t2)
 /* 0D6F84 800D6384 8E2B002C */  lw    $t3, 0x2c($s1)
-/* 0D6F88 800D6388 AD8B0034 */  sw    $t3, %lo(D_A4400034)($t4)
+/* 0D6F88 800D6388 AD8B0034 */  sw    $t3, %lo(VI_Y_SCALE_REG)($t4)
 /* 0D6F8C 800D638C 8E28000C */  lw    $t0, 0xc($s1)
 /* 0D6F90 800D6390 ADA80000 */  sw    $t0, ($t5)
 /* 0D6F94 800D6394 8DEF4870 */  lw    $t7, %lo(__osViCurr)($t7)

@@ -65,17 +65,17 @@ glabel __osViInit
 /* 0D3800 800D2C00 3C0C800E */  lui   $t4, %hi(__osViNext) # $t4, 0x800e
 /* 0D3804 800D2C04 A56A0000 */  sh    $t2, ($t3)
 /* 0D3808 800D2C08 8D8C4874 */  lw    $t4, %lo(__osViNext)($t4)
-/* 0D380C 800D2C0C 3C18A440 */  lui   $t8, %hi(D_A4400010) # $t8, 0xa440
+/* 0D380C 800D2C0C 3C18A440 */  lui   $t8, %hi(VI_CURRENT_REG) # $t8, 0xa440
 /* 0D3810 800D2C10 8D8D0008 */  lw    $t5, 8($t4)
 /* 0D3814 800D2C14 8DAF0004 */  lw    $t7, 4($t5)
 /* 0D3818 800D2C18 AD8F000C */  sw    $t7, 0xc($t4)
-/* 0D381C 800D2C1C 8F0E0010 */  lw    $t6, %lo(D_A4400010)($t8)
+/* 0D381C 800D2C1C 8F0E0010 */  lw    $t6, %lo(VI_CURRENT_REG)($t8)
 /* 0D3820 800D2C20 2DC1000B */  sltiu $at, $t6, 0xb
 /* 0D3824 800D2C24 14200006 */  bnez  $at, .L800D2C40
 /* 0D3828 800D2C28 00000000 */   nop   
 .L800D2C2C:
-/* 0D382C 800D2C2C 3C19A440 */  lui   $t9, %hi(D_A4400010) # $t9, 0xa440
-/* 0D3830 800D2C30 8F280010 */  lw    $t0, %lo(D_A4400010)($t9)
+/* 0D382C 800D2C2C 3C19A440 */  lui   $t9, %hi(VI_CURRENT_REG) # $t9, 0xa440
+/* 0D3830 800D2C30 8F280010 */  lw    $t0, %lo(VI_CURRENT_REG)($t9)
 /* 0D3834 800D2C34 2D01000B */  sltiu $at, $t0, 0xb
 /* 0D3838 800D2C38 1020FFFC */  beqz  $at, .L800D2C2C
 /* 0D383C 800D2C3C 00000000 */   nop   

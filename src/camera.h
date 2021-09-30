@@ -79,10 +79,6 @@ extern s32 D_800DD300;
 
 extern s16 gButtonMask;
 
-extern s32 D_A4000000;
-
-extern s32 SP_IMEM;
-
 //TODO: Figure out where these functions live: unknown_070110?
     void func_8006F870(Matrix, Matrix); //unknown_070110
     void func_800705F8(s32, f32, f32, f32); //From unknown_070110

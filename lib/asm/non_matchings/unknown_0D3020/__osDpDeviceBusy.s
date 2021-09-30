@@ -1,6 +1,6 @@
 glabel __osDpDeviceBusy
-/* 0D6C50 800D6050 3C0EA410 */  lui   $t6, %hi(D_A410000C) # $t6, 0xa410
-/* 0D6C54 800D6054 8DC4000C */  lw    $a0, %lo(D_A410000C)($t6)
+/* 0D6C50 800D6050 3C0EA410 */  lui   $t6, %hi(DPC_STATUS_REG) # $t6, 0xa410
+/* 0D6C54 800D6054 8DC4000C */  lw    $a0, %lo(DPC_STATUS_REG)($t6)
 /* 0D6C58 800D6058 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0D6C5C 800D605C 308F0100 */  andi  $t7, $a0, 0x100
 /* 0D6C60 800D6060 11E00003 */  beqz  $t7, .L800D6070

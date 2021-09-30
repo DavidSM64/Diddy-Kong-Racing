@@ -7,11 +7,11 @@
 
 #define PI_Q_BUF_LEN 1
 extern u32 __osPiAccessQueueEnabled;//__osPiAccessQueueEnabled
-extern OSMesg D_8012D1E0[PI_Q_BUF_LEN];//piAccessBuf
+extern OSMesg piAccessBuf[PI_Q_BUF_LEN];//piAccessBuf
 extern OSMesgQueue piAccessQueue; //__osPiAccessQueue
 void __osPiCreateAccessQueue(void) {
     __osPiAccessQueueEnabled = 1;
-    osCreateMesgQueue(&piAccessQueue, D_8012D1E0, PI_Q_BUF_LEN);
+    osCreateMesgQueue(&piAccessQueue, piAccessBuf, PI_Q_BUF_LEN);
     osSendMesg(&piAccessQueue, NULL, OS_MESG_NOBLOCK);
 }
 

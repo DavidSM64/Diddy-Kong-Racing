@@ -1,6 +1,6 @@
 glabel __osSpSetPc
-/* 0D7000 800D6400 3C0EA404 */  lui   $t6, %hi(D_A4040010) # $t6, 0xa404
-/* 0D7004 800D6404 8DC50010 */  lw    $a1, %lo(D_A4040010)($t6)
+/* 0D7000 800D6400 3C0EA404 */  lui   $t6, %hi(SP_STATUS_REG) # $t6, 0xa404
+/* 0D7004 800D6404 8DC50010 */  lw    $a1, %lo(SP_STATUS_REG)($t6)
 /* 0D7008 800D6408 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0D700C 800D640C 30AF0001 */  andi  $t7, $a1, 1
 /* 0D7010 800D6410 15E00003 */  bnez  $t7, .L800D6420
