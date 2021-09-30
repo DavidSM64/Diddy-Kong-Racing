@@ -26,7 +26,7 @@ u16 D_8012D192;
 s32 D_8012D194[2];
 s32 D_8012D1A0[16];
 s32 piAccessBuf[2]; //Should be static, but this works for now
-s32 piAccessQueue[6];
+s32 __osPiAccessQueue[6];
 OSTimer D_8012D200;
 OSTime __osCurrentTime;
 s32 __osBaseCounter;

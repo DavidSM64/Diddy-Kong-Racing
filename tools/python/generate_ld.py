@@ -24,7 +24,7 @@ LATE_DATA_FILES = [
     BUILD_DIR + '/lib/src/al/alCopy.o',
     BUILD_DIR + '/lib/src/libc/xprintf.o',
     BUILD_DIR + '/lib/src/os/osTimer.o',
-    BUILD_DIR + '/lib/src/unknown_0D3020.o'
+    BUILD_DIR + '/lib/src/os/piacs.o'
 ]
 
 BSS_LIB_ORDER_FILES = [

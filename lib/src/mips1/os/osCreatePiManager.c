@@ -5,8 +5,8 @@
 #include "libultra_internal.h"
 #include "stacks.h"
 
-extern OSMesgQueue piAccessQueue; //piAccessQueue
-extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
+extern OSMesgQueue __osPiAccessQueue;
+extern u32 __osPiAccessQueueEnabled;
 extern OSDevMgr __osPiDevMgr;
 void __osDevMgrMain(void);
 
@@ -39,7 +39,7 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
         __osPiDevMgr.thread = &piThread;
         __osPiDevMgr.cmdQueue = cmdQ;
         __osPiDevMgr.evtQueue = &piEventQueue;
-        __osPiDevMgr.acsQueue = &piAccessQueue;
+        __osPiDevMgr.acsQueue = &__osPiAccessQueue;
         __osPiDevMgr.dma = osPiRawStartDma;
         __osPiDevMgr.edma = osEPiRawStartDma;
 
