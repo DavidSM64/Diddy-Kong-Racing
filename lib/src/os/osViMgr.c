@@ -8,20 +8,20 @@
 
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
-extern u32 __osViIntrCount; //__osViIntrCount
+extern u32 __osViIntrCount;
 
 OSDevMgr __osViDevMgr = {0};
 
 #define OS_VIM_STACKSIZE 4096
-u8 viThreadStack[2960]; // viThreadStack[OS_VIM_STACKSIZE];
+u8 viThreadStack[2960]; // Should be OS_VIM_STACKSIZE?
 
 s32 gThread30Stack;
 
 extern OSThread viThread;
 extern OSMesgQueue viEventQueue;
-extern OSMesg viEventBuf[5]; //viEventBuf;
-extern OSIoMesg viRetraceMsg; //viRetraceMsg
-extern OSIoMesg viCounterMsg; //viCounterMsg
+extern OSMesg viEventBuf[5];
+extern OSIoMesg viRetraceMsg;
+extern OSIoMesg viCounterMsg;
 
 void viMgrMain(void *arg);
 

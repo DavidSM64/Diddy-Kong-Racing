@@ -2,7 +2,6 @@
 /* RAM_POS: 0x800CD8F0 */
 
 #include "libultra_internal.h"
-#include "macros.h"
 #include "controller.h"
 #include "siint.h"
 

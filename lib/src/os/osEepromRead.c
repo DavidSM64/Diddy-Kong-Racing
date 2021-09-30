@@ -1,8 +1,6 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800CE280 */
 
-#include "types.h"
-#include "macros.h"
 #include "libultra_internal.h"
 #include "PR/rcp.h"
 #include "controller.h"

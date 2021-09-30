@@ -2,7 +2,6 @@
 /* RAM_POS: 0x800C8D70 */
 
 #include "types.h"
-#include "macros.h"
 #include <PR/os_internal.h>
 #include <PR/rcp.h>
 #include "osVirtualToPhysical.h"

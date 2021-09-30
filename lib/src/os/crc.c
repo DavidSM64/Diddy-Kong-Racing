@@ -2,7 +2,6 @@
 /* RAM_POS: 0x800CD770 */
 
 #include "types.h"
-#include "macros.h"
 
 u8 __osContAddressCrc(u16 addr) {
     u8 temp;

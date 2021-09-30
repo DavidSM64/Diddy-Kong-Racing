@@ -1,7 +1,6 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800D18A0 */
 
-#include "types.h"
 #include "macros.h"
 
 //Likely hand written and impossible to decomp

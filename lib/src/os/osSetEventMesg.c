@@ -8,7 +8,7 @@ typedef struct __OSEventState {
     OSMesg message;
 } __OSEventState;
 
-__OSEventState __osEventStateTab[15]; // __osEventStateTab[OS_NUM_EVENTS];
+__OSEventState __osEventStateTab[15]; //OS_NUM_EVENTS = 15
 void osSetEventMesg(OSEvent event, OSMesgQueue *mq, OSMesg msg) {
     register u32 saveMask = __osDisableInt();
     __OSEventState *es;

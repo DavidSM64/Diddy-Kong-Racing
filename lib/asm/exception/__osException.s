@@ -188,9 +188,9 @@ glabel __osException
 /* 0D3B20 800D2F20 2401F7FF */  li    $at, -2049
 /* 0D3B24 800D2F24 02018024 */  and   $s0, $s0, $at
 /* 0D3B28 800D2F28 240A0004 */  li    $t2, 4
-/* 0D3B2C 800D2F2C 3C01800E */  lui   $at, %hi(D_800E48A0) # $at, 0x800e
+/* 0D3B2C 800D2F2C 3C01800E */  lui   $at, %hi(__osHwIntTable) # $at, 0x800e
 /* 0D3B30 800D2F30 002A0821 */  addu  $at, $at, $t2
-/* 0D3B34 800D2F34 8C2A48A0 */  lw    $t2, %lo(D_800E48A0)($at)
+/* 0D3B34 800D2F34 8C2A48A0 */  lw    $t2, %lo(__osHwIntTable)($at)
 /* 0D3B38 800D2F38 3C1D8013 */  lui   $sp, %hi(D_8012AAE0) # $sp, 0x8013
 /* 0D3B3C 800D2F3C 27BDAAE0 */  addiu $sp, %lo(D_8012AAE0) # addiu $sp, $sp, -0x5520
 /* 0D3B40 800D2F40 24040010 */  li    $a0, 16
