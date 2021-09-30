@@ -121,11 +121,11 @@ GLOBAL_ASM("asm/non_matchings/memory/new_memory_pool.s")
 void *allocate_from_main_pool_safe(s32 size, u32 colorTag) {
     void *temp_v0;
     if (size == 0) {
-        func_800B7460(*(s32 *)((u8 *)get_stack_pointer() + 0x14), size, colorTag);
+        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colorTag);
     }
     temp_v0 = allocate_from_memory_pool(0, size, colorTag);
     if (temp_v0 == (void *)NULL) {
-        func_800B7460(*(s32 *)((u8 *)get_stack_pointer() + 0x14), size, colorTag);
+        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colorTag);
     }
     return temp_v0;
 }

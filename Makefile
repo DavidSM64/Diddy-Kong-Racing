@@ -141,7 +141,7 @@ TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 
 LIB_DIRS := lib/
-ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/
+ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/ lib/asm/non_decompilable
 SRC_DIRS := $(sort $(dir $(wildcard src/* src/**/*))) $(sort $(dir $(wildcard lib/src/* lib/src/**/* lib/src/**/**/*)))
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(SRC_DIRS)
