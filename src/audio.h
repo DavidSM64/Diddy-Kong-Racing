@@ -4,8 +4,8 @@
 #include "types.h"
 #include "audio_internal.h"
 
-extern ALCSPlayer* gMusicPlayer;
-extern ALCSPlayer* gSndFxPlayer;
+extern ALSeqPlayer* gMusicPlayer;
+extern ALSeqPlayer* gSndFxPlayer;
 extern u8 musicRelativeVolume;
 extern u8 sfxRelativeVolume;
 extern u8 D_800DC640;
@@ -30,38 +30,48 @@ typedef struct unk80115D18 {
     u8 pad8[2];
 } unk80115D18;
 
-/* Size: 3 bytes */
+/* Size: 0x03 bytes */
 typedef struct unk80115D1C {
     u8 unk0;
     u8 unk1;
     u8 unk2;
 } unk80115D1C;
 
+/* Size: 0x08 bytes */
+typedef struct unk80115D48 {
+    /* 0x00 */ u16 unk0;
+    /* 0x02 */ s16 unk2;
+    /* 0x04 */ s32 unk4;
+} unk80115D48;
+
 void  alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *config); //lib/src/al/csplayer.c
 void  alCSPSetBank(ALCSPlayer *seqp, ALBank *b); //lib/src/unknown_0C8660.c
-void func_8000B010(ALCSPlayer *, u8); //lib/src/mips1/alseqplayer.c
+void set_voice_limit(ALSeqPlayer *seqp, u8 voiceLimit); //lib/src/mips1/alseqplayer.c
 void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al/alHeapDBAlloc.c
 s32 alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0C84E0.c
 void alCSPSetChlVol(ALCSPlayer *, u8 chan, u8 vol); //lib/src/unknown_0C84E0.c
-s32 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan); //lib/src/al
+u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan); //lib/src/al
 void func_80063BA0(ALCSPlayer *seqp, u8 arg1, u8 arg2); //lib/src/unknown_0647A0.c
 u8 func_80063C00(ALCSPlayer *seqp, u8 arg1); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan); //lib/src/al/alSeqpGetChlFXMix.c
 void func_8006492C(u8 arg0); //lib/src/mips1/al/reverb.c
+void alHeapInit(ALHeap *hp, u8 *base, s32 len); //lib/src/al/alHeapInit.c
+void alBnkfNew(ALBankFile *ctl, u8 *tbl); //lib/src/al/global_asm.c
+void alCSPSetVol(ALCSPlayer *seqp, s16 vol); //lib/src/al/alCSPSetVol.c
+void alCSPStop(ALCSPlayer *seqp); //lib/src/al/unknown_0C91A0.c
+void func_80063B44(u32 arg0, u8 arg1); //lib/src/al/unknown_0646F0.c
+s32  alCSPGetState(ALCSPlayer *seqp); //lib/src/unknown_0C8650.c
 
-ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events);
 void audio_init(u32 arg0);
-void set_relative_volume_for_music(u8 vol);
 void func_80000890(u8 arg0);
 void func_80000968(s32 arg0);
 void func_80000B18(void);
 void func_80000B28(void);
-void func_800022BC(u8 arg0, ALCSPlayer *arg1);
 void play_music(u8 arg0);
-void func_80000BE0(u8 arg0);
+void set_music_player_voice_limit(u8 voiceLimit);
 void func_80000C1C(void);
 void func_80000C2C(void);
-void func_80000C38(u8 arg0);
+void set_sndfx_player_voice_limit(u8 voiceLimit);
 void func_80000C68(u8 arg0);
 void func_80000C98(s32 arg0);
 void func_80000CBC(void);
@@ -112,17 +122,16 @@ u8 ALSeqFile_80115CF8_GetSeqCount(void);
 void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2);
 void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2);
 u8 ALBankFile_80115D14_GetSoundDecayTime(u16 sndIndx);
-ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events);
-void func_800022BC(u8 arg0, ALCSPlayer *arg1);
-void func_80002570(ALCSPlayer *seqp);
+ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events);
+void func_800022BC(u8 arg0, ALSeqPlayer *arg1);
+void func_80002570(ALSeqPlayer *seqp);
 void func_80002608(u8 arg0);
 u8 func_80002630(void);
 
 void func_80001D04(u16, s32*); //Non matching.
-void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Matching
+void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Matching
 f32 func_800015F8(void); //Non Matching
 void func_80001FB8(u16 arg0); //Non Matching
-void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); // Non Matching
 void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
 
 #endif

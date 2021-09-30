@@ -1,8 +1,8 @@
 glabel osSetIntMask
 /* 0CA630 800C9A30 400C6000 */  mfc0  $t4, $12
 /* 0CA634 800C9A34 3182FF01 */  andi  $v0, $t4, 0xff01
-/* 0CA638 800C9A38 3C08800E */  lui   $t0, %hi(D_800E38AC) # $t0, 0x800e
-/* 0CA63C 800C9A3C 250838AC */  addiu $t0, %lo(D_800E38AC) # addiu $t0, $t0, 0x38ac
+/* 0CA638 800C9A38 3C08800E */  lui   $t0, %hi(__OSGlobalIntMask) # $t0, 0x800e
+/* 0CA63C 800C9A3C 250838AC */  addiu $t0, %lo(__OSGlobalIntMask) # addiu $t0, $t0, 0x38ac
 /* 0CA640 800C9A40 8D0B0000 */  lw    $t3, ($t0)
 /* 0CA644 800C9A44 2401FFFF */  li    $at, -1
 /* 0CA648 800C9A48 01614026 */  xor   $t0, $t3, $at

@@ -2,12 +2,11 @@
 /* RAM_POS: 0x800D2420 */
 
 #include "libultra_internal.h"
+#include "viint.h"
 
-extern OSViContext *__osViNext;
-
-void osViSwapBuffer(void *frameBufPtr){
+void osViSwapBuffer(void *frameBufPtr) {
     u32 saveMask = __osDisableInt();
-    __osViNext->buffer = frameBufPtr;
-    __osViNext->unk00 |= 0x10;
+    __osViNext->framep = frameBufPtr;
+    __osViNext->state |= VI_STATE_10;
     __osRestoreInt(saveMask);
 }

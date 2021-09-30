@@ -2,14 +2,15 @@
 /* RAM_POS: 0x800D4590 */
 
 #include "types.h"
+#include "siint.h"
+#include "PR/rcp.h"
 
-#define	PHYS_TO_K1(x)	((u32)(x)|0xA0000000)	/* physical to kseg1 */
-#define	IO_READ(addr)		(*(vu32 *)PHYS_TO_K1(addr))
-
-s32 __osSiRawReadIo(u32 devAddr, u32 *data)
-{
-    if (__osSiDeviceBusy())
+s32 __osSiRawReadIo(u32 devAddr, u32 *data) {
+    if (__osSiDeviceBusy()) {
         return -1;
+    }
+
     *data = IO_READ(devAddr);
+
     return 0;
 }

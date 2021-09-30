@@ -303,7 +303,7 @@ glabel menu_trophy_race_rankings_init
 .L80098E5C:
 /* 099A5C 80098E5C 0C03105C */  jal   func_800C4170
 /* 099A60 80098E60 24040002 */   li    $a0, 2
-/* 099A64 80098E64 0C0002F8 */  jal   func_80000BE0
+/* 099A64 80098E64 0C0002F8 */  jal   set_music_player_voice_limit
 /* 099A68 80098E68 24040018 */   li    $a0, 24
 /* 099A6C 80098E6C 0C0002CD */  jal   play_music
 /* 099A70 80098E70 24040018 */   li    $a0, 24

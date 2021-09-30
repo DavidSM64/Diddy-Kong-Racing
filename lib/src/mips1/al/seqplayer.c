@@ -15,8 +15,8 @@ ALVoiceState *__mapVoice(ALSeqPlayer *seqp, u8 key, u8 vel, u8 channel)
 {
     ALVoiceState  *vs = seqp->vFreeList;
     
-    if(seqp->unk70 < seqp->unk71) {
-        stubbed_printf("Exceeded voice limit of %d (%d)\n", seqp->unk70, seqp->unk71);
+    if(seqp->voiceLimit < seqp->mappedVoices) {
+        stubbed_printf("Exceeded voice limit of %d (%d)\n", seqp->voiceLimit, seqp->mappedVoices);
         return NULL;
     }
 
@@ -37,7 +37,7 @@ ALVoiceState *__mapVoice(ALSeqPlayer *seqp, u8 key, u8 vel, u8 channel)
         vs->key                 = key;
         vs->velocity            = vel;
         vs->voice.clientPrivate = vs;
-        seqp->unk71++;
+        seqp->mappedVoices++;
     }
     
     return vs;
@@ -61,7 +61,7 @@ void __unmapVoice(ALSeqPlayer *seqp, ALVoice *voice)
 
             vs->next = seqp->vFreeList;
             seqp->vFreeList = vs;
-            seqp->unk71--;
+            seqp->mappedVoices--;
             return;
 
         }
@@ -305,7 +305,9 @@ void __seqpStopOsc(ALSeqPlayer *seqp, ALVoiceState *vs)
     }
 }
 
-void func_8000B010(ALCSPlayer *arg0, s8 arg1) {
-    //TODO: This doesn't seem to be the write way to do this, but it works for now.
-    (s8) arg0->initOsc = arg1;
+/**
+ * The voice limit bytes seem to be unique to this game.
+ */
+void set_voice_limit(ALSeqPlayer *seqp, s8 voiceLimit) {
+    seqp->voiceLimit = voiceLimit;
 }

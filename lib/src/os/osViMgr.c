@@ -4,11 +4,11 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
-
+#include "viint.h"
 
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
-extern u32 D_8012D22C; //__osViIntrCount
+extern u32 __osViIntrCount; //__osViIntrCount
 
 OSDevMgr __osViDevMgr = {0};
 
@@ -25,13 +25,11 @@ extern OSIoMesg viCounterMsg; //viCounterMsg
 
 void viMgrMain(void *arg);
 
-void osCreateViManager(OSPri pri)
-{
+void osCreateViManager(OSPri pri) {
 	u32 savedMask;
 	OSPri oldPri;
 	OSPri myPri;
-	if (__osViDevMgr.active == 0)
-	{
+	if (__osViDevMgr.active == 0) {
 		__osTimerServicesInit();
 		osCreateMesgQueue(&viEventQueue, viEventBuf, 5);
 		viRetraceMsg.hdr.type = OS_MESG_TYPE_VRETRACE;
@@ -44,8 +42,7 @@ void osCreateViManager(OSPri pri)
 		osSetEventMesg(OS_EVENT_COUNTER, &viEventQueue, &viCounterMsg);
 		oldPri = -1;
 		myPri = osGetThreadPri(NULL);
-		if (myPri < pri)
-		{
+		if (myPri < pri) {
 			oldPri = myPri;
 			osSetThreadPri(NULL, pri);
 		}
@@ -57,14 +54,68 @@ void osCreateViManager(OSPri pri)
 		__osViDevMgr.acsQueue = NULL;
 		__osViDevMgr.dma = NULL;
 		__osViDevMgr.edma = NULL;
-		osCreateThread(&viThread, 0, viMgrMain, &__osViDevMgr, &viThreadStack[OS_VIM_STACKSIZE], pri); //TODO give 0x8012C130 a proper symbol
+		osCreateThread(&viThread, 0, viMgrMain, &__osViDevMgr, &viThreadStack[OS_VIM_STACKSIZE], pri);
 		__osViInit();
 		osStartThread(&viThread);
 		__osRestoreInt(savedMask);
-		if (oldPri != -1)
-		{
+		if (oldPri != -1) {
 			osSetThreadPri(0, oldPri);
 		}
 	}
 }
+
+#ifdef NON_MATCHING
+void __osTimerInterrupt(void);
+//Fails due to how retrace is declared. Not sure how to fix it.
+void viMgrMain(void *arg) {
+    __OSViContext *vc;
+    OSDevMgr *dm;
+    OSIoMesg *mesg;
+    static u16 retrace;
+    s32 first;
+    u32 count;
+
+    mesg = NULL;
+    first = FALSE;
+    vc = __osViGetCurrentContext();
+	retrace = vc->retraceCount;
+
+    if (retrace == 0)
+        retrace = 1;
+
+    dm = (OSDevMgr *)arg;
+
+    while (TRUE) {
+        osRecvMesg(dm->evtQueue, (OSMesg *)&mesg, OS_MESG_BLOCK);
+        switch (mesg->hdr.type) {
+            case OS_MESG_TYPE_VRETRACE:
+                __osViSwapContext();
+				retrace--;
+                if (retrace == 0) {
+                    vc = __osViGetCurrentContext();
+                    if (vc->msgq != NULL) {
+                        osSendMesg(vc->msgq, vc->msg, OS_MESG_NOBLOCK);
+                    }
+                    retrace = vc->retraceCount;
+                }
+                __osViIntrCount++;
+                if (first) {
+                    count = osGetCount();
+                    __osCurrentTime = count;
+                    first = FALSE;
+                }
+                count = __osBaseCounter;
+                __osBaseCounter = osGetCount();
+                count = __osBaseCounter - count;
+                __osCurrentTime = __osCurrentTime + count;
+                break;
+
+            case OS_MESG_TYPE_COUNTER:
+                __osTimerInterrupt();
+                break;
+        }
+    }
+}
+#else
 GLOBAL_ASM("lib/asm/non_matchings/osViMgr_0D2590/viMgrMain.s")
+#endif

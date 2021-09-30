@@ -2316,7 +2316,7 @@ void menu_title_screen_init(void) {
     for(i = 0; i < 11; i++) {
         D_800DF7DC[i].texture = D_80126550[D_800DF7C4[i]];
     }
-    func_80000BE0(0x1B);
+    set_music_player_voice_limit(0x1B);
     func_800660C0();
     set_text_font(0);
     func_800C4170(2);
@@ -2344,7 +2344,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_title_screen_loop.s")
 
 void func_80084118(void) {
     func_8009C4A8(D_800DF7C4);
-    func_80000BE0(0x10);
+    set_music_player_voice_limit(0x10);
     func_800660D0();
     func_800C422C(2);
     func_80000890(1);
@@ -2356,7 +2356,7 @@ void menu_options_init(void) {
     func_800C01D8(&D_800DF77C);
     func_800C4170(2);
     set_text_font(2);
-    func_80000BE0(0x18);
+    set_music_player_voice_limit(0x18);
     play_music(0x18);
     func_80000B18();
 }
@@ -2533,7 +2533,7 @@ void menu_audio_options_init(void) {
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
         gAudioMenuStrings[6].unkC = gMusicTestString;
         gAudioMenuStrings[3].unk2 = 0xD4;
-        func_80000BE0(0x20);
+        set_music_player_voice_limit(0x20);
         D_801263E0 = 5;
     } else {
         gAudioMenuStrings[6].unkC = NULL;
@@ -2646,7 +2646,7 @@ s32 menu_audio_options_loop(s32 arg0) {
                         play_music((u8)D_800DFABC);
                     } else {
                         func_80000B28();
-                        func_80000BE0(0x18);
+                        set_music_player_voice_limit(0x18);
                         play_music(0x18);
                         func_80000B18();
                     }
@@ -2662,7 +2662,7 @@ s32 menu_audio_options_loop(s32 arg0) {
             }
             if (buttonInputs & (A_BUTTON | START_BUTTON)) {
                 func_80000B28();
-                func_80000BE0(0x18);
+                set_music_player_voice_limit(0x18);
                 play_music((u8)D_800DFABC);
                 D_801263D8 = D_800DFABC;
             }
@@ -2699,7 +2699,7 @@ void func_800851FC(void) {
         func_8000488C(D_801269FC);
     }
     if (D_801263D8 >= 0) {
-        func_80000BE0(0x18);
+        set_music_player_voice_limit(0x18);
         play_music(0x18);
         func_80000C98(0x100);
         func_80000B18();
@@ -2782,7 +2782,7 @@ void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
             arg0[*arg1].unk1 = 0;
             arg0[*arg1].unk2 = 0;
             arg0[*arg1].unk6 = i;
-            arg0[*arg1].unkC = func_80073C4C();
+            arg0[*arg1].unkC = get_s32_256();
             (*arg1)++;
         }
     }
@@ -4723,7 +4723,7 @@ void menu_5_init(void) {
         if (temp != -1) {
             func_80000FDC(temp, 0, 0.5f);
         }
-        func_80000BE0(0x18);
+        set_music_player_voice_limit(0x18);
         play_music(0x18);
         func_80000B18();
         D_801263E0 = 0;
@@ -4922,7 +4922,7 @@ void func_80094C14(s32 arg0) {
                 break;
             case 1:
                 if (func_8000C8B4(0x12C) < D_801263D8) {
-                    func_80000BE0(0x18);
+                    set_music_player_voice_limit(0x18);
                     play_music(0x18);
                     func_80000C98(0x100);
                 }
@@ -5028,7 +5028,7 @@ void menu_11_init(void) {
     func_80094604();
     func_800C4170(2);
     func_800C01D8(&D_800DF77C);
-    func_80000BE0(0x18);
+    set_music_player_voice_limit(0x18);
     play_music(0x18);
     func_80000C98(0x80);
 }
@@ -5199,7 +5199,7 @@ void menu_trophy_race_round_init(void) {
     gMenuDelay = 0;
     D_800E0980 = 10;
     func_800C4170(2);
-    func_80000BE0(0x18);
+    set_music_player_voice_limit(0x18);
     play_music(0x18);
     func_80000C98(0x100);
 }
@@ -5545,7 +5545,7 @@ void menu_credits_init(void) {
     func_8009C8A4(D_800E17F0);
     func_80094604();
     func_800C4170(2);
-    func_80000BE0(0x18);
+    set_music_player_voice_limit(0x18);
     D_800E18F8 = (u16)0x1000;
     if (gViewingCreditsFromCheat) {
         play_music(8);
@@ -5603,7 +5603,7 @@ void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
 
 void func_8009BCF0(void) {
-    func_80000BE0(0x12);
+    set_music_player_voice_limit(0x12);
     func_800C0180();
     func_80066894(0, 0);
     func_80066AA8(0, 0x8000, 0x8000, 0x8000, 0x8000);
@@ -6545,7 +6545,7 @@ void func_8009E9A8(void) {
 
 }
 
-f32 func_8009E9B0(s32 arg0, Gfx **arg1, s32 *arg2, s32 *arg3) {
+f32 func_8009E9B0(unk8012A7E8 *arg0, Gfx **arg1, s32 *arg2, s32 *arg3) {
     D_801263A0 = *arg1;
     D_801263A8 = *arg2;
     D_801263AC = *arg3;

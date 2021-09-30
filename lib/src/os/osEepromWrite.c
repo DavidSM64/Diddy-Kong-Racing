@@ -6,12 +6,8 @@
 #include "controller.h"
 #include "siint.h"
 
-extern s32 D_8012CE7C;
-
 void __osPackEepWriteData(u8 address, u8 *buffer);
-s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer)
-{
-
+s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer) {
     s32 ret;
     int i;
     u8 *ptr;
@@ -30,12 +26,10 @@ s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer)
     ret = __osEepStatus(mq, &sdata);
 
 
-    if (ret != 0 || sdata.type != CONT_EEPROM)
-    {
+    if (ret != 0 || sdata.type != CONT_EEPROM) {
         return CONT_NO_RESPONSE_ERROR;
     }
-    while (sdata.status & CONT_EEPROM_BUSY)
-    {
+    while (sdata.status & CONT_EEPROM_BUSY) {
         __osEepStatus(mq, &sdata);
     }
     __osPackEepWriteData(address, buffer);
@@ -46,12 +40,12 @@ s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer)
         __osEepPifRam.ramarray[i] = 255;
     }
     
-    D_8012CE7C = 0;
+    __osEepPifRam.pifstatus = 0;
     ret = __osSiRawStartDma(OS_READ, &__osEepPifRam); //recv response
     __osContLastCmd = CONT_CMD_WRITE_EEPROM;
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
-    for (i = 0; i < 4; i++) //skip the first 4 bytes
-    {
+    //skip the first 4 bytes
+    for (i = 0; i < 4; i++) {
         ptr++;
     }
     eepromformat = *(__OSContEepromFormat *)ptr;
@@ -63,14 +57,12 @@ s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer)
     return ret;
 }
 
-void __osPackEepWriteData(u8 address, u8 *buffer)
-{
+void __osPackEepWriteData(u8 address, u8 *buffer) {
     u8 *ptr;
     __OSContEepromFormat eepromformat;
     int i;
     ptr = (u8 *)&__osEepPifRam.ramarray;
-    for (i = 0; i < ARRLEN(__osEepPifRam.ramarray) + 1; i++)
-    {
+    for (i = 0; i < ARRLEN(__osEepPifRam.ramarray) + 1; i++) {
         __osEepPifRam.ramarray[i] = CONT_CMD_NOP;
     }
     __osEepPifRam.pifstatus = CONT_CMD_EXE;
@@ -79,12 +71,11 @@ void __osPackEepWriteData(u8 address, u8 *buffer)
     eepromformat.rxsize = CONT_CMD_WRITE_EEPROM_RX;
     eepromformat.cmd = CONT_CMD_WRITE_EEPROM;
     eepromformat.address = address;
-    for (i = 0; i < ARRLEN(eepromformat.data); i++)
-    {
+    for (i = 0; i < ARRLEN(eepromformat.data); i++) {
         eepromformat.data[i] = *buffer++;
     }
-    for (i = 0; i < 4; i++) //skip the first 4 bytes
-    {
+    //skip the first 4 bytes
+    for (i = 0; i < 4; i++) {
         *ptr++ = 0;
     }
     *(__OSContEepromFormat *)(ptr) = eepromformat;
@@ -92,11 +83,7 @@ void __osPackEepWriteData(u8 address, u8 *buffer)
     ptr[0] = CONT_CMD_END;
 }
 
-#ifdef NON_MATCHING
-
-// This should match! I don't know where the regalloc issue could possibly be.
-s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data)
-{
+s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data) {
     s32 ret;
     s32 i;
     u8 *ptr;
@@ -104,8 +91,7 @@ s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data)
 
     ret = 0;
     ptr = (u8 *)__osEepPifRam.ramarray;
-    for (i = 0; i < ARRLEN(__osEepPifRam.ramarray) + 1; i++)
-    {
+    for (i = 0; i < ARRLEN(__osEepPifRam.ramarray) + 1; i++) {
         __osEepPifRam.ramarray[i] = 0;
     }
     __osEepPifRam.pifstatus = CONT_CMD_EXE;
@@ -145,7 +131,3 @@ s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data)
         return data->errno;
     return 0;
 }
-
-#else
-GLOBAL_ASM("lib/asm/non_matchings/osEepromWrite/__osEepStatus.s")
-#endif

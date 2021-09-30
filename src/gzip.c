@@ -2,11 +2,12 @@
 /* RAM_POS: 0x800C6170 */
 
 #include "gzip.h"
+#include "asset_loading.h"
 
 /************ .data ************/
 
 huft *D_800E3760 = NULL;
-u8 *D_800E3764 = NULL;
+s32 *gAssetAddress = NULL;
 u8 *gzip_inflate_input = NULL;
 u8 *gzip_inflate_output = NULL;
 
@@ -22,7 +23,7 @@ s32 D_8012AAD8;
 
 void func_800C6170(void) {
     D_800E3760 = (huft*)allocate_from_main_pool_safe(0x2800, COLOR_TAG_BLACK);
-    D_800E3764 = (u8*)allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
+    gAssetAddress = (s32*)allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
 }
 
 /**
@@ -41,8 +42,8 @@ s32 byteswap32(u8 *arg0) {
  * Returns the uncompressed size of a gzip compressed asset.
  */
 s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
-    load_asset_to_address(assetIndex, D_800E3764, assetOffset, 8);
-    return byteswap32(D_800E3764);
+    load_asset_to_address(assetIndex, gAssetAddress, assetOffset, 8);
+    return byteswap32((u8 *)gAssetAddress);
 }
 
 /**
@@ -87,7 +88,7 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
 
 
   /* Generate counts for each bit length */
-  memzero(c, sizeof(c));
+  bzero(c, sizeof(c));
   p = b;  i = n;
   do {
     c[*p]++;                    /* assume all entries <= BMAX */

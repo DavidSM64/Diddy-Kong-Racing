@@ -100,6 +100,28 @@ typedef struct
 #define DIR_STATUS_UNKNOWN 1
 #define DIR_STATUS_OCCUPIED 2
 
+extern s32 __osEepStatus(OSMesgQueue *, OSContStatus *);
+u16 __osSumcalc(u8 *ptr, int length);
+s32 __osIdCheckSum(u16 *ptr, u16 *csum, u16 *icsum);
+s32 __osRepairPackId(OSPfs *pfs, __OSPackId *badid, __OSPackId *newid);
+s32 __osCheckPackId(OSPfs *pfs, __OSPackId *temp);
+s32 __osGetId(OSPfs *pfs);
+s32 __osCheckId(OSPfs *pfs);
+s32 __osPfsRWInode(OSPfs *pfs, __OSInode *inode, u8 flag, u8 bank);
+s32 __osPfsSelectBank(OSPfs *pfs);
+s32 __osPfsDeclearPage(OSPfs *pfs, __OSInode *inode, int file_size_in_pages, int *first_page, u8 bank, int *decleared, int *last_page);
+s32 __osPfsReleasePages(OSPfs *pfs, __OSInode *inode, u8 start_page, u16 *sum, u8 bank, __OSInodeUnit *last_page, int flag);
+s32 __osBlockSum(OSPfs *pfs, u8 page_no, u16 *sum, u8 bank);
+s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer);
+s32 __osContRamWrite(OSMesgQueue *mq, int channel, u16 address, u8 *buffer, int force);
+void __osContGetInitData(u8 *pattern, OSContStatus *data);
+void __osPackRequestData(u8 cmd);
+void __osPfsRequestData(u8 cmd);
+void __osPfsGetInitData(u8* pattern, OSContStatus* data);
+u8 __osContAddressCrc(u16 addr);
+u8 __osContDataCrc(u8 *data);
+s32 __osPfsGetStatus(OSMesgQueue *queue, int channel);
+
 extern u8 __osContLastCmd;
 extern OSTimer __osEepromTimer;
 extern OSMesg __osEepromTimerMsg;

@@ -187,7 +187,7 @@ typedef struct {
 
 /* Controller interface */
 
-extern s32		osContInit(OSMesgQueue *, u8 *, OSContStatus *);
+extern s32		osContInit(OSMesgQueue *mq, u8 *bitpattern, OSContStatus *status);
 extern s32		osContReset(OSMesgQueue *, OSContStatus *);
 extern s32		osContStartQuery(OSMesgQueue *);
 extern s32		osContStartReadData(OSMesgQueue *mq);

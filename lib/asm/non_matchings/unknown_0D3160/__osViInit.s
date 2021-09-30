@@ -3,7 +3,7 @@ glabel __osViInit
 /* 0D3714 800D2B14 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0D3718 800D2B18 3C04800E */  lui   $a0, %hi(vi) # $a0, 0x800e
 /* 0D371C 800D2B1C 24844810 */  addiu $a0, %lo(vi) # addiu $a0, $a0, 0x4810
-/* 0D3720 800D2B20 0C034138 */  jal   memzero
+/* 0D3720 800D2B20 0C034138 */  jal   bzero
 /* 0D3724 800D2B24 24050060 */   li    $a1, 96
 /* 0D3728 800D2B28 3C0E800E */  lui   $t6, %hi(vi) # $t6, 0x800e
 /* 0D372C 800D2B2C 25CE4810 */  addiu $t6, %lo(vi) # addiu $t6, $t6, 0x4810

@@ -144,27 +144,24 @@ GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0.s")
 #endif
 
 void func_800B70D0(void) {
-    unk800D2470 *node = func_800D2470(); //Might be epcInfo?
-    while(node->unk4 != -1) {
-        if (node->unk4 == 0) {
-            node->unk118 &= 0xFFFF00FE;
-            node->unk118 |= 0x6C01;
-            return;
+    OSThread *node = __osGetActiveQueue();
+    while(node->priority != -1) {
+        if (node->priority == 0) {
+            node->context.sr &= 0xFFFF00FE;
+            node->context.sr |= 0x6C01;
+            break;
         }
-        node = node->next;
+        node = node->tlnext;
     }
 }
 
 void func_800B7144(void) {
-    s32 temp_v0_2;
-    s32 phi_v0;
-    s32 phi_return;
-    unk800D2470 *node = func_800D2470();
-    while (node->unk4 != -1) {
-        if ((node->unk4 > 0) && (node->unk4 < 0x80)) {
-            osStopThread(&node->thread);
+    OSThread *node = __osGetActiveQueue();
+    while (node->priority != -1) {
+        if ((node->priority > 0) && (node->priority < 128)) {
+            osStopThread(&node->next);
         }
-        node = node->next;
+        node = node->tlnext;
     }
 }
 
@@ -184,7 +181,7 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
     s32 i;
 
     if ((get_filtered_cheats() << 4) < 0) { // This is checking if the EPC cheat is active
-        memzero(&sp840, 0x1B0);
+        bzero(&sp840, 0x1B0);
         sp840.a0 = size;
         sp840.a1 = mask;
         sp840.epc = epc;
@@ -193,7 +190,7 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
         sp840.unk134 = D_80129FB0[1];
         sp840.unk138 = D_80129FB0[2];
         bcopy(&sp840, &sp40, 0x1B0);
-        memzero(&sp240, 0x200);
+        bzero(&sp240, 0x200);
         v0 = func_80024594(&sp38, &size);
         for (i = 0; i < size; i++) {
             sp440[i] = v0[sp38];

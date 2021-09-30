@@ -2,14 +2,12 @@
 
 def add_custom_arguments(parser):
     group = parser.add_mutually_exclusive_group(required=False)
-    # group.add_argument('-j', dest='version', action='store_const', const='jp',
-    #         help="Set version to JP.")
-    # group.add_argument('-u', dest='version', action='store_const', const='us',
-    #         help="Set version to US.")
-    # group.add_argument('-e', dest='version', action='store_const', const='eu',
-    #         help="Set version to EU.")
-    # group.add_argument('-s', dest='version', action='store_const', const='sh',
-    #         help="Set version to SH.")
+    group.add_argument('-jp', dest='version', action='store_const', const='jp',
+            help="Set version to JP.")
+    group.add_argument('-us', dest='version', action='store_const', const='us',
+            help="Set version to US.")
+    group.add_argument('-eu', dest='version', action='store_const', const='eu',
+            help="Set version to EU.")
 
 def apply(config, args):
     version = 'us_1.0' # Right now only us_1.0 is supported

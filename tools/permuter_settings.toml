@@ -1,0 +1,7 @@
+[preserve_macros]
+"g[DS]P.*" = "void"
+"gDma.*" = "void"
+"_SHIFTL" = "unsigned int"
+
+[decompme.compilers]
+"tools/ido5.3_recomp/cc" = "ido5.3"

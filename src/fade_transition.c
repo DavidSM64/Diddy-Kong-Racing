@@ -9,6 +9,8 @@
 #include "asset_sections.h"
 #include "memory.h"
 #include "PR/libultra.h"
+#include "video.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 
@@ -217,21 +219,16 @@ void func_800C0180(void) {
     D_800E31A0 = 0;
 }
 
-#ifdef NON_MATCHING
-// Regalloc issues. Uses v1 instead of v0.
-s32 func_800C018C(void) {
-    s32 phi_v0 = (D_800E31B0 != 0);
+//@bug: This doesn't seem to guarantee a return.
+u32 func_800C018C(void) {
+    u32 phi_v0 = (D_800E31B0 != 0);
     if (phi_v0 == 0) {
         phi_v0 = (D_800E31B4 != 0);
         if (phi_v0 != 0) {
-            phi_v0 = (D_800E31BC != 0);
+            return (D_800E31BC != 0);
         }
     }
-    return phi_v0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C018C.s")
-#endif
 
 #ifdef NON_MATCHING
 
@@ -457,7 +454,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 #if 0 // This doesn't work properly.
 void render_fade_waves(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 i;
-    func_8007B3D0();
+    func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, D_800E3648)
     for(i = 0; i < 6; i++) {
         s32 index = D_800E31D0[0] + i;

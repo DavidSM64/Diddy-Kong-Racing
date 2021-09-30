@@ -3,8 +3,8 @@ glabel __osInsertTimer
 /* 0D5D3C 800D513C AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0D5D40 800D5140 0C034958 */  jal   __osDisableInt
 /* 0D5D44 800D5144 AFA40038 */   sw    $a0, 0x38($sp)
-/* 0D5D48 800D5148 3C0E800E */  lui   $t6, %hi(D_800E4910) # $t6, 0x800e
-/* 0D5D4C 800D514C 8DCE4910 */  lw    $t6, %lo(D_800E4910)($t6)
+/* 0D5D48 800D5148 3C0E800E */  lui   $t6, %hi(__osTimerList) # $t6, 0x800e
+/* 0D5D4C 800D514C 8DCE4910 */  lw    $t6, %lo(__osTimerList)($t6)
 /* 0D5D50 800D5150 AFA20024 */  sw    $v0, 0x24($sp)
 /* 0D5D54 800D5154 8FB80038 */  lw    $t8, 0x38($sp)
 /* 0D5D58 800D5158 8DCF0000 */  lw    $t7, ($t6)
@@ -31,7 +31,7 @@ glabel __osInsertTimer
 /* 0D5DA8 800D51A8 8F2C0000 */  lw    $t4, ($t9)
 /* 0D5DAC 800D51AC 8F0F0014 */  lw    $t7, 0x14($t8)
 /* 0D5DB0 800D51B0 8F0E0010 */  lw    $t6, 0x10($t8)
-/* 0D5DB4 800D51B4 3C18800E */  lui   $t8, %hi(D_800E4910) # $t8, 0x800e
+/* 0D5DB4 800D51B4 3C18800E */  lui   $t8, %hi(__osTimerList) # $t8, 0x800e
 /* 0D5DB8 800D51B8 01AF082B */  sltu  $at, $t5, $t7
 /* 0D5DBC 800D51BC 018E4023 */  subu  $t0, $t4, $t6
 /* 0D5DC0 800D51C0 01014023 */  subu  $t0, $t0, $at
@@ -39,7 +39,7 @@ glabel __osInsertTimer
 /* 0D5DC8 800D51C8 AF290004 */  sw    $t1, 4($t9)
 /* 0D5DCC 800D51CC AF280000 */  sw    $t0, ($t9)
 /* 0D5DD0 800D51D0 8FAA0034 */  lw    $t2, 0x34($sp)
-/* 0D5DD4 800D51D4 8F184910 */  lw    $t8, %lo(D_800E4910)($t8)
+/* 0D5DD4 800D51D4 8F184910 */  lw    $t8, %lo(__osTimerList)($t8)
 /* 0D5DD8 800D51D8 8D4B0000 */  lw    $t3, ($t2)
 /* 0D5DDC 800D51DC 1178000D */  beq   $t3, $t8, .L800D5214
 /* 0D5DE0 800D51E0 AFAB0034 */   sw    $t3, 0x34($sp)
@@ -59,10 +59,10 @@ glabel __osInsertTimer
 /* 0D5E14 800D5214 8FB90038 */  lw    $t9, 0x38($sp)
 /* 0D5E18 800D5218 8FA80028 */  lw    $t0, 0x28($sp)
 /* 0D5E1C 800D521C 8FA9002C */  lw    $t1, 0x2c($sp)
-/* 0D5E20 800D5220 3C18800E */  lui   $t8, %hi(D_800E4910) # $t8, 0x800e
+/* 0D5E20 800D5220 3C18800E */  lui   $t8, %hi(__osTimerList) # $t8, 0x800e
 /* 0D5E24 800D5224 AF280010 */  sw    $t0, 0x10($t9)
 /* 0D5E28 800D5228 AF290014 */  sw    $t1, 0x14($t9)
-/* 0D5E2C 800D522C 8F184910 */  lw    $t8, %lo(D_800E4910)($t8)
+/* 0D5E2C 800D522C 8F184910 */  lw    $t8, %lo(__osTimerList)($t8)
 /* 0D5E30 800D5230 8FAA0034 */  lw    $t2, 0x34($sp)
 /* 0D5E34 800D5234 1158000D */  beq   $t2, $t8, .L800D526C
 /* 0D5E38 800D5238 00000000 */   nop   

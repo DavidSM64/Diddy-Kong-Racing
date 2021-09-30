@@ -30,7 +30,7 @@ glabel func_8003B368
 /* 03BFBC 8003B3BC 15C10006 */  bne   $t6, $at, .L8003B3D8
 /* 03BFC0 8003B3C0 3C04800E */   lui   $a0, %hi(D_800E5FA0) # $a0, 0x800e
 /* 03BFC4 8003B3C4 24845FA0 */  addiu $a0, %lo(D_800E5FA0) # addiu $a0, $a0, 0x5fa0
-/* 03BFC8 8003B3C8 0C032755 */  jal   func_800C9D54
+/* 03BFC8 8003B3C8 0C032755 */  jal   rmonPrintf
 /* 03BFCC 8003B3CC AFA60024 */   sw    $a2, 0x24($sp)
 /* 03BFD0 8003B3D0 8FA60024 */  lw    $a2, 0x24($sp)
 /* 03BFD4 8003B3D4 00000000 */  nop   

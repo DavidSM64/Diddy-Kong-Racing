@@ -6,10 +6,10 @@ glabel __osSetTimerIntr
 /* 0D5CD4 800D50D4 AFA5002C */   sw    $a1, 0x2c($sp)
 /* 0D5CD8 800D50D8 0C031E34 */  jal   osGetCount
 /* 0D5CDC 800D50DC AFA2001C */   sw    $v0, 0x1c($sp)
-/* 0D5CE0 800D50E0 3C018013 */  lui   $at, %hi(D_8012D230) # $at, 0x8013
-/* 0D5CE4 800D50E4 AC22D230 */  sw    $v0, %lo(D_8012D230)($at)
-/* 0D5CE8 800D50E8 3C0E8013 */  lui   $t6, %hi(D_8012D230) # $t6, 0x8013
-/* 0D5CEC 800D50EC 8DCED230 */  lw    $t6, %lo(D_8012D230)($t6)
+/* 0D5CE0 800D50E0 3C018013 */  lui   $at, %hi(__osTimerCounter) # $at, 0x8013
+/* 0D5CE4 800D50E4 AC22D230 */  sw    $v0, %lo(__osTimerCounter)($at)
+/* 0D5CE8 800D50E8 3C0E8013 */  lui   $t6, %hi(__osTimerCounter) # $t6, 0x8013
+/* 0D5CEC 800D50EC 8DCED230 */  lw    $t6, %lo(__osTimerCounter)($t6)
 /* 0D5CF0 800D50F0 8FA9002C */  lw    $t1, 0x2c($sp)
 /* 0D5CF4 800D50F4 8FA80028 */  lw    $t0, 0x28($sp)
 /* 0D5CF8 800D50F8 01C0C825 */  move  $t9, $t6

@@ -272,7 +272,7 @@ typedef struct LevelHeader {
 
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
-  /* 0xB3 */ u8 unkB3;
+  /* 0xB3 */ u8 voiceLimit;
   /* 0xB3 */ u8 unkB4;
   /* 0xB3 */ u8 unkB5;
   /* 0xB3 */ u8 unkB6;
@@ -921,7 +921,7 @@ typedef struct unk80120AC0 {
     f32 unk28;
     f32 unk2C;
     f32 unk30;
-    s16 unk34;
+    s16 levelSegmentIndex;
     s16 pad36;
     s16 unk38;
     s8  pad3A;
@@ -983,5 +983,56 @@ typedef struct unk8011D510 {
 typedef struct unk80042178 {
     u8 pad0[0x20];
 } unk80042178;
+
+typedef struct unk8012A7E8_24 {
+    u8 unk00;
+    u8 unk01;
+    char *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+    u8 unk15;
+    u8 unk16;
+    u8 unk17;
+    u8 unk18;
+    u8 unk19;
+    struct unk8012A7E8_24 *unk1C;
+} unk8012A7E8_24;
+
+/* Size: 0x28 bytes */
+typedef struct unk8012A7E8 {
+    s16 xpos;
+    s16 ypos;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 colorRed;
+    u8 colorGreen;
+    u8 colorBlue;
+    u8 colorAlpha;
+    u8 bgRed;
+    u8 bgGreen;
+    u8 bgBlue;
+    u8 bgAlpha;
+    u8 opacity;
+    u8 font;
+    u16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    unk8012A7E8_24 *unk24;
+} unk8012A7E8;
 
 #endif

@@ -22,7 +22,7 @@ glabel func_800A497C
 /* 0A55CC 800A49CC 10000074 */  b     .L800A4BA0
 /* 0A55D0 800A49D0 83AD0027 */   lb    $t5, 0x27($sp)
 .L800A49D4:
-/* 0A55D4 800A49D4 0C0002F8 */  jal   func_80000BE0
+/* 0A55D4 800A49D4 0C0002F8 */  jal   set_music_player_voice_limit
 /* 0A55D8 800A49D8 AFA7002C */   sw    $a3, 0x2c($sp)
 /* 0A55DC 800A49DC 0C0002CD */  jal   play_music
 /* 0A55E0 800A49E0 24040019 */   li    $a0, 25

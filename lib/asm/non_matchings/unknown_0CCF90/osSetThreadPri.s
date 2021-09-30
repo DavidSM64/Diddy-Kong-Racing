@@ -37,8 +37,8 @@ glabel osSetThreadPri
 /* 0CD4C8 800CC8C8 01802825 */   move  $a1, $t4
 .L800CC8CC:
 /* 0CD4CC 800CC8CC 3C0D800E */  lui   $t5, %hi(__osRunningThread) # $t5, 0x800e
-/* 0CD4D0 800CC8D0 3C0F800E */  lui   $t7, %hi(__RunQueue) # $t7, 0x800e
-/* 0CD4D4 800CC8D4 8DEF4888 */  lw    $t7, %lo(__RunQueue)($t7)
+/* 0CD4D0 800CC8D0 3C0F800E */  lui   $t7, %hi(__osRunQueue) # $t7, 0x800e
+/* 0CD4D4 800CC8D4 8DEF4888 */  lw    $t7, %lo(__osRunQueue)($t7)
 /* 0CD4D8 800CC8D8 8DAD4890 */  lw    $t5, %lo(__osRunningThread)($t5)
 /* 0CD4DC 800CC8DC 8DF90004 */  lw    $t9, 4($t7)
 /* 0CD4E0 800CC8E0 8DAE0004 */  lw    $t6, 4($t5)
@@ -46,10 +46,10 @@ glabel osSetThreadPri
 /* 0CD4E8 800CC8E8 10200006 */  beqz  $at, .L800CC904
 /* 0CD4EC 800CC8EC 00000000 */   nop   
 /* 0CD4F0 800CC8F0 24080002 */  li    $t0, 2
-/* 0CD4F4 800CC8F4 3C04800E */  lui   $a0, %hi(__RunQueue) # $a0, 0x800e
+/* 0CD4F4 800CC8F4 3C04800E */  lui   $a0, %hi(__osRunQueue) # $a0, 0x800e
 /* 0CD4F8 800CC8F8 A5A80010 */  sh    $t0, 0x10($t5)
 /* 0CD4FC 800CC8FC 0C034CB3 */  jal   __osEnqueueAndYield
-/* 0CD500 800CC900 24844888 */   addiu $a0, %lo(__RunQueue) # addiu $a0, $a0, 0x4888
+/* 0CD500 800CC900 24844888 */   addiu $a0, %lo(__osRunQueue) # addiu $a0, $a0, 0x4888
 .L800CC904:
 /* 0CD504 800CC904 0C034960 */  jal   __osRestoreInt
 /* 0CD508 800CC908 02002025 */   move  $a0, $s0

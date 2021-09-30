@@ -11,17 +11,10 @@
 #include "audio_internal.h"
 #include "unknown_003260.h"
 
-/* Size: 0x08 bytes */
-typedef struct unk80115D48 {
-    /* 0x00 */ u16 unk0;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s32 unk4;
-} unk80115D48;
-
 /************ .data ************/
 
-ALCSPlayer *gMusicPlayer = NULL;
-ALCSPlayer *gSndFxPlayer = NULL;
+ALSeqPlayer *gMusicPlayer = NULL;
+ALSeqPlayer *gSndFxPlayer = NULL;
 u8 musicRelativeVolume = 0x7F;
 u8 sfxRelativeVolume = 0x7F;
 u8 D_800DC640 = 1;
@@ -162,7 +155,7 @@ void audio_init(u32 arg0) {
     synth_config.heap = &gALHeap;
     audioNewThread(&synth_config, 12, arg0);
     gMusicPlayer = func_80002224(24, 120);
-    func_8000B010(gMusicPlayer, 18);
+    set_voice_limit(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
     D_80115CFC = allocate_from_main_pool_safe( seq_max_len, COLOR_TAG_CYAN);
     D_80115D00 = allocate_from_main_pool_safe( seq_max_len, COLOR_TAG_CYAN);
@@ -255,9 +248,9 @@ void play_music(u8 arg0) {
     }
 }
 
-void func_80000BE0(u8 arg0) {
+void set_music_player_voice_limit(u8 voiceLimit) {
     if (D_800DC670 == 0) {
-        func_8000B010(gMusicPlayer, arg0);
+        set_voice_limit(gMusicPlayer, voiceLimit);
     }
 }
 
@@ -269,8 +262,8 @@ void func_80000C2C(void) {
     D_800DC670 = 0;
 }
 
-void func_80000C38(u8 arg0) {
-    func_8000B010(gSndFxPlayer, arg0);
+void set_sndfx_player_voice_limit(u8 voiceLimit) {
+    set_voice_limit(gSndFxPlayer, voiceLimit);
 }
 
 /* Unused? */
@@ -750,8 +743,8 @@ u8 ALBankFile_80115D14_GetSoundDecayTime(u16 sndIndx) {
     return ((u32)(1+ ALBankFile_80115D14->bankArray[0]->instArray[0]->soundArray[sndIndx-1]->envelope->decayTime) == 0);
 }
 
-ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
-    ALCSPlayer *cseqp;
+ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
+    ALCSPlayer_Custom *cseqp;
     ALSeqpConfig config;
     
     config.maxVoices = _max_voices;
@@ -763,15 +756,15 @@ ALCSPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
     config.updateOsc = NULL;
     config.stopOsc = NULL;
 
-    
-    cseqp = (ALCSPlayer *) alHeapDBAlloc(NULL, 0, &gALHeap, 1, 128);
+    cseqp = (ALCSPlayer_Custom *) alHeapDBAlloc(NULL, 0, &gALHeap, 1, sizeof(ALCSPlayer_Custom));
     alCSPNew(cseqp, &config);
     alCSPSetBank(cseqp, ALBankFile_80115D10->bankArray[0]);
-    ((u8*) cseqp)[0x36]= 0x7F; //this member doesn't exist in ALCSPlayer 
+    cseqp->unk36 = 0x7F;
+
     return cseqp;
 }
 
-void func_800022BC(u8 arg0, ALCSPlayer *arg1) {
+void func_800022BC(u8 arg0, ALSeqPlayer *arg1) {
     func_80002570(arg1);
     if (arg0 < ALSeqFile_80115CF8->seqCount) {
         if (arg1 == gMusicPlayer) {
@@ -785,7 +778,7 @@ void func_800022BC(u8 arg0, ALCSPlayer *arg1) {
 #if 1
 GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
 #else
-void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq){
+void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq){
     if(alCSPGetState(seqp) == AL_STOPPED && *arg2){
         /*load_asset_to_address(ASSET_AUDIO, ptr, 
             (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - get_rom_offset_of_asset(ASSET_AUDIO,0),
@@ -802,7 +795,7 @@ void func_8000232C(ALCSPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq){
 }
 #endif
 
-void func_80002570(ALCSPlayer *seqp) {
+void func_80002570(ALSeqPlayer *seqp) {
     if(gMusicPlayer == seqp && D_80115D40 != 0){
         alCSPStop(seqp);
         D_80115D40 = 0;

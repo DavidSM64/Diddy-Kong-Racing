@@ -16,12 +16,12 @@ glabel osContInit
 /* 0CD854 800CCC54 0C03486C */  jal   osGetTime
 /* 0CD858 800CCC58 AC2F38C0 */   sw    $t7, %lo(D_800E38C0)($at)
 /* 0CD85C 800CCC5C 3C050007 */  lui   $a1, (0x0007A120 >> 16) # lui $a1, 7
-/* 0CD860 800CCC60 3C06800E */  lui   $a2, %hi(D_800E38A0) # $a2, 0x800e
-/* 0CD864 800CCC64 3C07800E */  lui   $a3, %hi(D_800E38A4) # $a3, 0x800e
+/* 0CD860 800CCC60 3C06800E */  lui   $a2, %hi(osClockRate) # $a2, 0x800e
+/* 0CD864 800CCC64 3C07800E */  lui   $a3, %hi(osClockRate+4) # $a3, 0x800e
 /* 0CD868 800CCC68 AFA20070 */  sw    $v0, 0x70($sp)
 /* 0CD86C 800CCC6C AFA30074 */  sw    $v1, 0x74($sp)
-/* 0CD870 800CCC70 8CE738A4 */  lw    $a3, %lo(D_800E38A4)($a3)
-/* 0CD874 800CCC74 8CC638A0 */  lw    $a2, %lo(D_800E38A0)($a2)
+/* 0CD870 800CCC70 8CE738A4 */  lw    $a3, %lo(osClockRate+4)($a3)
+/* 0CD874 800CCC74 8CC638A0 */  lw    $a2, %lo(osClockRate)($a2)
 /* 0CD878 800CCC78 34A5A120 */  ori   $a1, (0x0007A120 & 0xFFFF) # ori $a1, $a1, 0xa120
 /* 0CD87C 800CCC7C 0C033AF2 */  jal   __ll_mul
 /* 0CD880 800CCC80 24040000 */   li    $a0, 0
@@ -48,10 +48,10 @@ glabel osContInit
 /* 0CD8D0 800CCCD0 0C032208 */  jal   osCreateMesgQueue
 /* 0CD8D4 800CCCD4 24060001 */   li    $a2, 1
 /* 0CD8D8 800CCCD8 3C050007 */  lui   $a1, (0x0007A120 >> 16) # lui $a1, 7
-/* 0CD8DC 800CCCDC 3C06800E */  lui   $a2, %hi(D_800E38A0) # $a2, 0x800e
-/* 0CD8E0 800CCCE0 3C07800E */  lui   $a3, %hi(D_800E38A4) # $a3, 0x800e
-/* 0CD8E4 800CCCE4 8CE738A4 */  lw    $a3, %lo(D_800E38A4)($a3)
-/* 0CD8E8 800CCCE8 8CC638A0 */  lw    $a2, %lo(D_800E38A0)($a2)
+/* 0CD8DC 800CCCDC 3C06800E */  lui   $a2, %hi(osClockRate) # $a2, 0x800e
+/* 0CD8E0 800CCCE0 3C07800E */  lui   $a3, %hi(osClockRate) # $a3, 0x800e
+/* 0CD8E4 800CCCE4 8CE738A4 */  lw    $a3, %lo(osClockRate+4)($a3)
+/* 0CD8E8 800CCCE8 8CC638A0 */  lw    $a2, %lo(osClockRate)($a2)
 /* 0CD8EC 800CCCEC 34A5A120 */  ori   $a1, (0x0007A120 & 0xFFFF) # ori $a1, $a1, 0xa120
 /* 0CD8F0 800CCCF0 0C033AF2 */  jal   __ll_mul
 /* 0CD8F4 800CCCF4 24040000 */   li    $a0, 0

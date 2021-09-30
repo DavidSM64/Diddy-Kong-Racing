@@ -43,11 +43,18 @@ endif
 
 ########## Recomp ##########
 
+RECOMP_PROJECT := ./tools/ido-static-recomp/
+
+DUMMY != ls $(RECOMP_PROJECT)ido >/dev/null || echo FAIL
+ifeq ($(DUMMY),FAIL)
+  $(error Missing submodule ido-static-recomp. Please run 'git submodule update --init')
+endif
+
 # List of IDO tools required for the repo.
 # NOTE: If you are adding a tool here, make sure to update the Makefile in `/tools/ido-static-recomp/`!
 RECOMP_TOOLS := cc cfe uopt ugen as1 ujoin uld usplit umerge
 
-RECOMP_DIR := ./tools/ido5.3_recomp/
+RECOMP_DIR := $(RECOMP_PROJECT)build5.3/out/
 RECOMP_TOOLS_PATHS = $(addprefix $(RECOMP_DIR),$(RECOMP_TOOLS))
 
 # Checks if all the recomp tools exist.
@@ -55,7 +62,7 @@ $(foreach p,$(RECOMP_TOOLS_PATHS),$(if $(wildcard $(p)),,$(info $(p) does not ex
 
 # If any of the tools do not exist, then recomp needs to run to build them.
 ifeq ($(runRecomp),yes)
-  DUMMY != make -s -C tools/ido-static-recomp >&2 || echo FAIL
+  DUMMY != cd $(RECOMP_PROJECT) && python3 build.py ido/5.3 -O2 && cd ../../ >&2 || echo FAIL
 endif
 
 ######## Extract Assets & Microcode ########
@@ -100,7 +107,7 @@ endif
 endif
 
 AS = $(CROSS)as
-CC := tools/ido5.3_recomp/cc
+CC := $(RECOMP_DIR)cc
 CPP := cpp -P -Wno-trigraphs
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
@@ -113,7 +120,7 @@ C_DEFINES := $(foreach d,$(DEFINES),-D$(d))
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
 ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
-INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I .
+INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I . -I include/libc
 CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS)
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
@@ -260,16 +267,10 @@ $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/src/unknown_0C91A0.o : OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/unknown_0D29F0.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/unknown_0CDE90.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/unknown_0D3160.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/unknown_0D3360.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/unknown_0D5EC0.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
-$(BUILD_DIR)/lib/src/osEepromWrite.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osEepromRead.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/osSetTimer.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
+#$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
+#$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 32
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1

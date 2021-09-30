@@ -1,15 +1,15 @@
 glabel __osDispatchThread
-/* 0D4024 800D3424 3C04800E */  lui   $a0, %hi(__RunQueue) # $a0, 0x800e
+/* 0D4024 800D3424 3C04800E */  lui   $a0, %hi(__osRunQueue) # $a0, 0x800e
 /* 0D4028 800D3428 0C034D05 */  jal   __osPopThread
-/* 0D402C 800D342C 24844888 */   addiu $a0, %lo(__RunQueue) # addiu $a0, $a0, 0x4888
+/* 0D402C 800D342C 24844888 */   addiu $a0, %lo(__osRunQueue) # addiu $a0, $a0, 0x4888
 /* 0D4030 800D3430 3C01800E */  lui   $at, %hi(__osRunningThread) # $at, 0x800e
 /* 0D4034 800D3434 AC224890 */  sw    $v0, %lo(__osRunningThread)($at)
 /* 0D4038 800D3438 24080004 */  li    $t0, 4
 /* 0D403C 800D343C A4480010 */  sh    $t0, 0x10($v0)
 /* 0D4040 800D3440 0040D025 */  move  $k0, $v0
-/* 0D4044 800D3444 3C08800E */  lui   $t0, %hi(D_800E38AC) # $t0, 0x800e
+/* 0D4044 800D3444 3C08800E */  lui   $t0, %hi(__OSGlobalIntMask) # $t0, 0x800e
 /* 0D4048 800D3448 8F5B0118 */  lw    $k1, 0x118($k0)
-/* 0D404C 800D344C 250838AC */  addiu $t0, %lo(D_800E38AC) # addiu $t0, $t0, 0x38ac
+/* 0D404C 800D344C 250838AC */  addiu $t0, %lo(__OSGlobalIntMask) # addiu $t0, $t0, 0x38ac
 /* 0D4050 800D3450 8D080000 */  lw    $t0, ($t0)
 /* 0D4054 800D3454 3C01FFFF */  lui   $at, (0xFFFF00FF >> 16) # lui $at, 0xffff
 /* 0D4058 800D3458 3369FF00 */  andi  $t1, $k1, 0xff00
@@ -77,8 +77,8 @@ glabel __osDispatchThread
 /* 0D4150 800D3550 D75E01A8 */  ldc1  $f30, 0x1a8($k0)
 .L800D3554:
 /* 0D4154 800D3554 8F5B0128 */  lw    $k1, 0x128($k0)
-/* 0D4158 800D3558 3C1A800E */  lui   $k0, %hi(D_800E38AC) # $k0, 0x800e
-/* 0D415C 800D355C 275A38AC */  addiu $k0, %lo(D_800E38AC) # addiu $k0, $k0, 0x38ac
+/* 0D4158 800D3558 3C1A800E */  lui   $k0, %hi(__OSGlobalIntMask) # $k0, 0x800e
+/* 0D415C 800D355C 275A38AC */  addiu $k0, %lo(__OSGlobalIntMask) # addiu $k0, $k0, 0x38ac
 /* 0D4160 800D3560 8F5A0000 */  lw    $k0, ($k0)
 /* 0D4164 800D3564 001AD402 */  srl   $k0, $k0, 0x10
 /* 0D4168 800D3568 037AD824 */  and   $k1, $k1, $k0

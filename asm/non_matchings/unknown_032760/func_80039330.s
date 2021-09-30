@@ -189,7 +189,7 @@ glabel func_80039330
 .L800395A0:
 /* 03A1A0 800395A0 0C0004BA */  jal   func_800012E8
 /* 03A1A4 800395A4 AFA60084 */   sw    $a2, 0x84($sp)
-/* 03A1A8 800395A8 0C0002F8 */  jal   func_80000BE0
+/* 03A1A8 800395A8 0C0002F8 */  jal   set_music_player_voice_limit
 /* 03A1AC 800395AC 24040018 */   li    $a0, 24
 /* 03A1B0 800395B0 0C0002CD */  jal   play_music
 /* 03A1B4 800395B4 24040020 */   li    $a0, 32
@@ -661,7 +661,7 @@ glabel L80039BB8
 /* 03A85C 80039C5C 8FA90064 */  lw    $t1, 0x64($sp)
 /* 03A860 80039C60 00000000 */  nop   
 /* 03A864 80039C64 912400B3 */  lbu   $a0, 0xb3($t1)
-/* 03A868 80039C68 0C0002F8 */  jal   func_80000BE0
+/* 03A868 80039C68 0C0002F8 */  jal   set_music_player_voice_limit
 /* 03A86C 80039C6C 00000000 */   nop   
 /* 03A870 80039C70 8FAA0064 */  lw    $t2, 0x64($sp)
 /* 03A874 80039C74 00000000 */  nop   
@@ -1135,7 +1135,7 @@ glabel L8003A268
 /* 03AF4C 8003A34C 8FAD0064 */  lw    $t5, 0x64($sp)
 /* 03AF50 8003A350 00000000 */  nop   
 /* 03AF54 8003A354 91A400B3 */  lbu   $a0, 0xb3($t5)
-/* 03AF58 8003A358 0C0002F8 */  jal   func_80000BE0
+/* 03AF58 8003A358 0C0002F8 */  jal   set_music_player_voice_limit
 /* 03AF5C 8003A35C 00000000 */   nop   
 /* 03AF60 8003A360 8FAE0064 */  lw    $t6, 0x64($sp)
 /* 03AF64 8003A364 00000000 */  nop   

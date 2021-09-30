@@ -6,22 +6,21 @@
 
 /* Types */
 
-typedef struct OSTimer_str
-{
-    struct OSTimer_str *next;
-    struct OSTimer_str *prev;
-    u64 interval;
-    u64 remaining;
+typedef u64 OSTime;
+
+typedef struct OSTimer_s {
+    struct OSTimer_s *next;
+    struct OSTimer_s *prev;
+    OSTime interval;
+    OSTime remaining;
     OSMesgQueue *mq;
     OSMesg *msg;
 } OSTimer;
-
-typedef u64 OSTime;
 
 /* Functions */
 
 OSTime osGetTime(void);
 void osSetTime(OSTime time);
-u32 osSetTimer(OSTimer *, OSTime, u64, OSMesgQueue *, OSMesg);
+s32 osSetTimer(OSTimer *t, OSTime value, OSTime interval, OSMesgQueue *mq, OSMesg msg);
 
 #endif
