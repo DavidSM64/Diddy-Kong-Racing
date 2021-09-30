@@ -45,7 +45,7 @@ endif
 
 RECOMP_PROJECT := ./tools/ido-static-recomp/
 
-DUMMY != ls $(RECOMP_PROJECT) >/dev/null || echo FAIL
+DUMMY != ls $(RECOMP_PROJECT)ido >/dev/null || echo FAIL
 ifeq ($(DUMMY),FAIL)
   $(error Missing submodule ido-static-recomp. Please run 'git submodule update --init')
 endif
