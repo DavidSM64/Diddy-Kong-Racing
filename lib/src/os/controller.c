@@ -20,10 +20,8 @@
 // OSMesg __osEepromTimerMsg;
 // OSPifRam __osPfsPifRam; // 8012CDE0
 
-s32 D_800E38C0 = 0;
-
-s32 D_8012CD50[15];
-s32 D_8012CD8C;
+u32 __osContinitialized = 0;
+OSPifRam __osContPifRam;
 u8 __osContLastCmd;
 u8 __osMaxControllers; // 8012CD91
 s32 D_8012CD94;

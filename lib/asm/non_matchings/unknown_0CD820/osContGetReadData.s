@@ -1,9 +1,9 @@
 glabel osContGetReadData
 /* 0CDCA4 800CD0A4 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
 /* 0CDCA8 800CD0A8 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
-/* 0CDCAC 800CD0AC 3C0E8013 */  lui   $t6, %hi(D_8012CD50) # $t6, 0x8013
+/* 0CDCAC 800CD0AC 3C0E8013 */  lui   $t6, %hi(__osContPifRam) # $t6, 0x8013
 /* 0CDCB0 800CD0B0 27BDFFF0 */  addiu $sp, $sp, -0x10
-/* 0CDCB4 800CD0B4 25CECD50 */  addiu $t6, %lo(D_8012CD50) # addiu $t6, $t6, -0x32b0
+/* 0CDCB4 800CD0B4 25CECD50 */  addiu $t6, %lo(__osContPifRam) # addiu $t6, $t6, -0x32b0
 /* 0CDCB8 800CD0B8 AFAE000C */  sw    $t6, 0xc($sp)
 /* 0CDCBC 800CD0BC 19E00021 */  blez  $t7, .L800CD144
 /* 0CDCC0 800CD0C0 AFA00000 */   sw    $zero, ($sp)

@@ -5,20 +5,20 @@ glabel __osPackRequestData
 .L800CCEF4:
 /* 0CDAF4 800CCEF4 8FAE0000 */  lw    $t6, ($sp)
 /* 0CDAF8 800CCEF8 8FB80000 */  lw    $t8, ($sp)
-/* 0CDAFC 800CCEFC 3C018013 */  lui   $at, %hi(D_8012CD50) # $at, 0x8013
+/* 0CDAFC 800CCEFC 3C018013 */  lui   $at, %hi(__osContPifRam) # $at, 0x8013
 /* 0CDB00 800CCF00 000E7880 */  sll   $t7, $t6, 2
 /* 0CDB04 800CCF04 002F0821 */  addu  $at, $at, $t7
-/* 0CDB08 800CCF08 AC20CD50 */  sw    $zero, %lo(D_8012CD50)($at)
+/* 0CDB08 800CCF08 AC20CD50 */  sw    $zero, %lo(__osContPifRam)($at)
 /* 0CDB0C 800CCF0C 27190001 */  addiu $t9, $t8, 1
 /* 0CDB10 800CCF10 2B210010 */  slti  $at, $t9, 0x10
 /* 0CDB14 800CCF14 1420FFF7 */  bnez  $at, .L800CCEF4
 /* 0CDB18 800CCF18 AFB90000 */   sw    $t9, ($sp)
 /* 0CDB1C 800CCF1C 3C198013 */  lui   $t9, %hi(__osMaxControllers) # $t9, 0x8013
 /* 0CDB20 800CCF20 9339CD91 */  lbu   $t9, %lo(__osMaxControllers)($t9)
-/* 0CDB24 800CCF24 3C098013 */  lui   $t1, %hi(D_8012CD50) # $t1, 0x8013
+/* 0CDB24 800CCF24 3C098013 */  lui   $t1, %hi(__osContPifRam) # $t1, 0x8013
 /* 0CDB28 800CCF28 24080001 */  li    $t0, 1
-/* 0CDB2C 800CCF2C 3C018013 */  lui   $at, %hi(D_8012CD8C) # $at, 0x8013
-/* 0CDB30 800CCF30 2529CD50 */  addiu $t1, %lo(D_8012CD50) # addiu $t1, $t1, -0x32b0
+/* 0CDB2C 800CCF2C 3C018013 */  lui   $at, %hi(__osContPifRam) # $at, 0x8013
+/* 0CDB30 800CCF30 2529CD50 */  addiu $t1, %lo(__osContPifRam) # addiu $t1, $t1, -0x32b0
 /* 0CDB34 800CCF34 240A00FF */  li    $t2, 255
 /* 0CDB38 800CCF38 240B0001 */  li    $t3, 1
 /* 0CDB3C 800CCF3C 240C0003 */  li    $t4, 3
@@ -26,7 +26,7 @@ glabel __osPackRequestData
 /* 0CDB44 800CCF44 240E00FF */  li    $t6, 255
 /* 0CDB48 800CCF48 240F00FF */  li    $t7, 255
 /* 0CDB4C 800CCF4C 241800FF */  li    $t8, 255
-/* 0CDB50 800CCF50 AC28CD8C */  sw    $t0, %lo(D_8012CD8C)($at)
+/* 0CDB50 800CCF50 AC28CD8C */  sw    $t0, %lo(__osContPifRam+60)($at)
 /* 0CDB54 800CCF54 AFA9000C */  sw    $t1, 0xc($sp)
 /* 0CDB58 800CCF58 A3AA0004 */  sb    $t2, 4($sp)
 /* 0CDB5C 800CCF5C A3AB0005 */  sb    $t3, 5($sp)

@@ -1,16 +1,16 @@
 glabel __osPackReadData
 /* 0CDD4C 800CD14C 27BDFFF0 */  addiu $sp, $sp, -0x10
-/* 0CDD50 800CD150 3C0E8013 */  lui   $t6, %hi(D_8012CD50) # $t6, 0x8013
-/* 0CDD54 800CD154 25CECD50 */  addiu $t6, %lo(D_8012CD50) # addiu $t6, $t6, -0x32b0
+/* 0CDD50 800CD150 3C0E8013 */  lui   $t6, %hi(__osContPifRam) # $t6, 0x8013
+/* 0CDD54 800CD154 25CECD50 */  addiu $t6, %lo(__osContPifRam) # addiu $t6, $t6, -0x32b0
 /* 0CDD58 800CD158 AFAE000C */  sw    $t6, 0xc($sp)
 /* 0CDD5C 800CD15C AFA00000 */  sw    $zero, ($sp)
 .L800CD160:
 /* 0CDD60 800CD160 8FAF0000 */  lw    $t7, ($sp)
 /* 0CDD64 800CD164 8FB90000 */  lw    $t9, ($sp)
-/* 0CDD68 800CD168 3C018013 */  lui   $at, %hi(D_8012CD50) # $at, 0x8013
+/* 0CDD68 800CD168 3C018013 */  lui   $at, %hi(__osContPifRam) # $at, 0x8013
 /* 0CDD6C 800CD16C 000FC080 */  sll   $t8, $t7, 2
 /* 0CDD70 800CD170 00380821 */  addu  $at, $at, $t8
-/* 0CDD74 800CD174 AC20CD50 */  sw    $zero, %lo(D_8012CD50)($at)
+/* 0CDD74 800CD174 AC20CD50 */  sw    $zero, %lo(__osContPifRam)($at)
 /* 0CDD78 800CD178 27280001 */  addiu $t0, $t9, 1
 /* 0CDD7C 800CD17C 29010010 */  slti  $at, $t0, 0x10
 /* 0CDD80 800CD180 1420FFF7 */  bnez  $at, .L800CD160
@@ -18,7 +18,7 @@ glabel __osPackReadData
 /* 0CDD88 800CD188 3C198013 */  lui   $t9, %hi(__osMaxControllers) # $t9, 0x8013
 /* 0CDD8C 800CD18C 9339CD91 */  lbu   $t9, %lo(__osMaxControllers)($t9)
 /* 0CDD90 800CD190 24090001 */  li    $t1, 1
-/* 0CDD94 800CD194 3C018013 */  lui   $at, %hi(D_8012CD8C) # $at, 0x8013
+/* 0CDD94 800CD194 3C018013 */  lui   $at, %hi(__osContPifRam) # $at, 0x8013
 /* 0CDD98 800CD198 240A00FF */  li    $t2, 255
 /* 0CDD9C 800CD19C 240B0001 */  li    $t3, 1
 /* 0CDDA0 800CD1A0 240C0004 */  li    $t4, 4
@@ -26,7 +26,7 @@ glabel __osPackReadData
 /* 0CDDA8 800CD1A8 340EFFFF */  li    $t6, 65535
 /* 0CDDAC 800CD1AC 240FFFFF */  li    $t7, -1
 /* 0CDDB0 800CD1B0 2418FFFF */  li    $t8, -1
-/* 0CDDB4 800CD1B4 AC29CD8C */  sw    $t1, %lo(D_8012CD8C)($at)
+/* 0CDDB4 800CD1B4 AC29CD8C */  sw    $t1, %lo(__osContPifRam+60)($at)
 /* 0CDDB8 800CD1B8 A3AA0004 */  sb    $t2, 4($sp)
 /* 0CDDBC 800CD1BC A3AB0005 */  sb    $t3, 5($sp)
 /* 0CDDC0 800CD1C0 A3AC0006 */  sb    $t4, 6($sp)

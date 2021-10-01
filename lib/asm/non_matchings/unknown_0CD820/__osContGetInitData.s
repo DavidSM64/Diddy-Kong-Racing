@@ -2,8 +2,8 @@ glabel __osContGetInitData
 /* 0CDA18 800CCE18 3C0F8013 */  lui   $t7, %hi(__osMaxControllers) # $t7, 0x8013
 /* 0CDA1C 800CCE1C 91EFCD91 */  lbu   $t7, %lo(__osMaxControllers)($t7)
 /* 0CDA20 800CCE20 27BDFFE8 */  addiu $sp, $sp, -0x18
-/* 0CDA24 800CCE24 3C0E8013 */  lui   $t6, %hi(D_8012CD50) # $t6, 0x8013
-/* 0CDA28 800CCE28 25CECD50 */  addiu $t6, %lo(D_8012CD50) # addiu $t6, $t6, -0x32b0
+/* 0CDA24 800CCE24 3C0E8013 */  lui   $t6, %hi(__osContPifRam) # $t6, 0x8013
+/* 0CDA28 800CCE28 25CECD50 */  addiu $t6, %lo(__osContPifRam) # addiu $t6, $t6, -0x32b0
 /* 0CDA2C 800CCE2C A3A00007 */  sb    $zero, 7($sp)
 /* 0CDA30 800CCE30 AFAE0014 */  sw    $t6, 0x14($sp)
 /* 0CDA34 800CCE34 19E00028 */  blez  $t7, .L800CCED8
