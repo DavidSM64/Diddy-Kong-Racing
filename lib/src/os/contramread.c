@@ -5,7 +5,6 @@
 #include "controller.h"
 #include "siint.h"
 
-extern s32 D_8012CE1C;
 static void __osPackRamReadData(int channel, u16 address);
 s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer) {
     s32 ret;
@@ -25,7 +24,7 @@ s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer) {
         for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
             __osPfsPifRam.ramarray[i] = 0xFFU;
         }
-        D_8012CE1C = 0;
+        __osPfsPifRam.pifstatus = 0;
         ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
         osRecvMesg(mq, NULL, OS_MESG_BLOCK);
         ptr = (u8 *)&__osPfsPifRam;
