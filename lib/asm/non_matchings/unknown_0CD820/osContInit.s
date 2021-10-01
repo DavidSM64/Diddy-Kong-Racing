@@ -117,10 +117,10 @@ glabel osContInit
 /* 0CD9E0 800CCDE0 3C018013 */  lui   $at, %hi(__osContLastCmd) # $at, 0x8013
 /* 0CD9E4 800CCDE4 0C033580 */  jal   __osSiCreateAccessQueue
 /* 0CD9E8 800CCDE8 A020CD90 */   sb    $zero, %lo(__osContLastCmd)($at)
-/* 0CD9EC 800CCDEC 3C048013 */  lui   $a0, %hi(D_8012CDB8) # $a0, 0x8013
-/* 0CD9F0 800CCDF0 3C058013 */  lui   $a1, %hi(D_8012CDD0) # $a1, 0x8013
-/* 0CD9F4 800CCDF4 24A5CDD0 */  addiu $a1, %lo(D_8012CDD0) # addiu $a1, $a1, -0x3230
-/* 0CD9F8 800CCDF8 2484CDB8 */  addiu $a0, %lo(D_8012CDB8) # addiu $a0, $a0, -0x3248
+/* 0CD9EC 800CCDEC 3C048013 */  lui   $a0, %hi(__osEepromTimerQ) # $a0, 0x8013
+/* 0CD9F0 800CCDF0 3C058013 */  lui   $a1, %hi(__osEepromTimerMsg) # $a1, 0x8013
+/* 0CD9F4 800CCDF4 24A5CDD0 */  addiu $a1, %lo(__osEepromTimerMsg) # addiu $a1, $a1, -0x3230
+/* 0CD9F8 800CCDF8 2484CDB8 */  addiu $a0, %lo(__osEepromTimerQ) # addiu $a0, $a0, -0x3248
 /* 0CD9FC 800CCDFC 0C032208 */  jal   osCreateMesgQueue
 /* 0CDA00 800CCE00 24060001 */   li    $a2, 1
 /* 0CDA04 800CCE04 8FA20078 */  lw    $v0, 0x78($sp)

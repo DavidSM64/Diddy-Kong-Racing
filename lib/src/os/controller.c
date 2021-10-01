@@ -8,31 +8,15 @@
 
 #define HALF_A_SECOND OS_USEC_TO_CYCLES(500000)
 
-// u32 __osContinitialized = 0;
-// OSPifRam __osContPifRam;
-// u8 __osContLastCmd;
-// u8 __osMaxControllers; // 8012CD91
-// s32 D_8012CD94;
-// s32 D_8012CD98[6];
-// s32 D_8012CDB0;
-// s32 D_8012CDB4;
-// OSMesgQueue __osEepromTimerQ;
-// OSMesg __osEepromTimerMsg;
-// OSPifRam __osPfsPifRam; // 8012CDE0
-
 u32 __osContinitialized = 0;
 OSPifRam __osContPifRam;
 u8 __osContLastCmd;
-u8 __osMaxControllers; // 8012CD91
-s32 D_8012CD94;
-s32 D_8012CD98[6];
-s32 D_8012CDB0;
-s32 D_8012CDB4;
-s32 D_8012CDB8;
-s32 D_8012CDBC;
-s32 D_8012CDC0[4];
-s32 D_8012CDD0[4];
-OSPifRam __osPfsPifRam; // 8012CDE0
+u8 __osMaxControllers;
+OSTimer __osEepromTimer;
+OSMesgQueue __osEepromTimerQ;
+OSMesg __osEepromTimerMsg;
+s32 D_8012CDD4[2]; //Padding?
+OSPifRam __osPfsPifRam;
 
 #if 1
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CD820/osContInit.s")
