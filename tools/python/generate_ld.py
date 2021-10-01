@@ -30,7 +30,7 @@ LATE_DATA_FILES = [
 BSS_LIB_ORDER_FILES = [
     BUILD_DIR + '/lib/src/os/osViMgr.o',
     BUILD_DIR + '/lib/src/os/osSetEventMesg.o',
-    BUILD_DIR + '/lib/src/os/unknown_0CD820.o',
+    BUILD_DIR + '/lib/src/os/controller.o',
     BUILD_DIR + '/lib/src/os/unknown_0CE200.o'
 ]
 
