@@ -19,7 +19,7 @@ s32 gThread30LoadDelay = 0;
 /************ .bss ************/
 
 // Used for __osException, but .bss file order is weird. Need to fix later.
-u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something..
+u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something. This is something like 4096 in libreultra...
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
 OSMesg gThread30Message;
