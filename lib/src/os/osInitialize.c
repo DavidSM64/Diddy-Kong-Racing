@@ -15,7 +15,7 @@ typedef struct
 } __osExceptionVector;
 extern __osExceptionVector __osExceptionPreamble;
 
-u64 osClockRate = OS_CLOCK_RATE;
+OSTime osClockRate = OS_CLOCK_RATE;
 u32 __osShutdown = 0;
 u32 __OSGlobalIntMask = OS_IM_ALL;
 s32 D_800E38B0 = 0; // 64DD flag? (Hints from SM64 code)
