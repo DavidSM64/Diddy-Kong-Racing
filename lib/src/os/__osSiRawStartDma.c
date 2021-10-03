@@ -2,7 +2,7 @@
 /* RAM_POS: 0x800CD6C0 */
 
 #include "libultra_internal.h"
-#include "src/memory.h"
+#include "siint.h"
 
 s32 __osSiRawStartDma(s32 direction, void *dramAddr) {
     if (__osSiDeviceBusy())

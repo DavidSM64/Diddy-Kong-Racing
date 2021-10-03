@@ -32,7 +32,7 @@ s32 __osBaseCounter;
 s32 __osViIntrCount;
 u32 __osTimerCounter;
 u32 D_8012D234[2];
-s32 D_8012D240[108];
+OSThread gInterruptedThread;
 MemoryPoolSlot *gMainMemoryPool;
 
 void __osSiCreateAccessQueue(void) {

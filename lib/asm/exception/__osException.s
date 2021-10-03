@@ -1,6 +1,6 @@
 .section .rodata
 
-glabel D_800E9670
+glabel __osIntOffTable
 .word 0x00141818
 .word 0x1C1C1C1C
 .word 0x20202020
@@ -10,7 +10,7 @@ glabel D_800E9670
 .word 0x10101010
 .word 0x10101010
 
-glabel D_800E9690
+glabel __osIntTable
 .word .L800D3168
 .word .L800D3130
 .word .L800D3110
@@ -24,8 +24,8 @@ glabel D_800E9690
 .section .text
 
 glabel __osException
-/* 0D38C0 800D2CC0 3C1A8013 */  lui   $k0, %hi(D_8012D240) # $k0, 0x8013
-/* 0D38C4 800D2CC4 275AD240 */  addiu $k0, %lo(D_8012D240) # addiu $k0, $k0, -0x2dc0
+/* 0D38C0 800D2CC0 3C1A8013 */  lui   $k0, %hi(gInterruptedThread) # $k0, 0x8013
+/* 0D38C4 800D2CC4 275AD240 */  addiu $k0, %lo(gInterruptedThread) # addiu $k0, $k0, -0x2dc0
 /* 0D38C8 800D2CC8 FF410020 */  sd    $at, 0x20($k0)
 /* 0D38CC 800D2CCC 401B6000 */  mfc0  $k1, $12
 /* 0D38D0 800D2CD0 AF5B0118 */  sw    $k1, 0x118($k0)
@@ -159,12 +159,12 @@ glabel __osException
 /* 0D3AC0 800D2EC0 00095202 */  srl   $t2, $t1, 8
 /* 0D3AC4 800D2EC4 214A0010 */  addi  $t2, $t2, 0x10
 .L800D2EC8:
-/* 0D3AC8 800D2EC8 3C01800F */  lui   $at, %hi(D_800E9670) # $at, 0x800f
+/* 0D3AC8 800D2EC8 3C01800F */  lui   $at, %hi(__osIntOffTable) # $at, 0x800f
 /* 0D3ACC 800D2ECC 002A0821 */  addu  $at, $at, $t2
-/* 0D3AD0 800D2ED0 902A9670 */  lbu   $t2, %lo(D_800E9670)($at)
-/* 0D3AD4 800D2ED4 3C01800F */  lui   $at, %hi(D_800E9690) # $at, 0x800f
+/* 0D3AD0 800D2ED0 902A9670 */  lbu   $t2, %lo(__osIntOffTable)($at)
+/* 0D3AD4 800D2ED4 3C01800F */  lui   $at, %hi(__osIntTable) # $at, 0x800f
 /* 0D3AD8 800D2ED8 002A0821 */  addu  $at, $at, $t2
-/* 0D3ADC 800D2EDC 8C2A9690 */  lw    $t2, %lo(D_800E9690)($at)
+/* 0D3ADC 800D2EDC 8C2A9690 */  lw    $t2, %lo(__osIntTable)($at)
 /* 0D3AE0 800D2EE0 01400008 */  jr    $t2
 /* 0D3AE4 800D2EE4 00000000 */   nop   
 .L800D2EE8:
@@ -191,8 +191,8 @@ glabel __osException
 /* 0D3B2C 800D2F2C 3C01800E */  lui   $at, %hi(__osHwIntTable) # $at, 0x800e
 /* 0D3B30 800D2F30 002A0821 */  addu  $at, $at, $t2
 /* 0D3B34 800D2F34 8C2A48A0 */  lw    $t2, %lo(__osHwIntTable)($at)
-/* 0D3B38 800D2F38 3C1D8013 */  lui   $sp, %hi(D_8012AAE0) # $sp, 0x8013
-/* 0D3B3C 800D2F3C 27BDAAE0 */  addiu $sp, %lo(D_8012AAE0) # addiu $sp, $sp, -0x5520
+/* 0D3B38 800D2F38 3C1D8013 */  lui   $sp, %hi(leoDiskStack) # $sp, 0x8013
+/* 0D3B3C 800D2F3C 27BDAAE0 */  addiu $sp, %lo(leoDiskStack) # addiu $sp, $sp, -0x5520
 /* 0D3B40 800D2F40 24040010 */  li    $a0, 16
 /* 0D3B44 800D2F44 11400007 */  beqz  $t2, .L800D2F64
 /* 0D3B48 800D2F48 27BD0FF0 */   addiu $sp, $sp, 0xff0
