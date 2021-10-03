@@ -1,8 +1,6 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800CD600 */
 
-#include "types.h"
-#include "macros.h"
 #include "libultra_internal.h"
 #include "controller.h"
 #include "src/memory.h"
@@ -51,5 +49,3 @@ void __osSiGetAccess(void) {
 void __osSiRelAccess(void) {
 	osSendMesg(&__osSiAccessQueue, NULL, OS_MESG_NOBLOCK);
 }
-
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s")
