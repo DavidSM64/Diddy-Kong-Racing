@@ -8,7 +8,7 @@
 
 #define HALF_MIL_CYLCES 500000U
 #define ONE_MIL_CYLCES 1000000U
-#define HALF_SECOND HALF_MIL_CYLCES * osClockRate / ONE_MIL_CYLCES
+#define HALF_A_SECOND HALF_MIL_CYLCES * osClockRate / ONE_MIL_CYLCES
 
 u32 __osContinitialized = 0;
 OSPifRam __osContPifRam;
@@ -33,9 +33,9 @@ s32 osContInit(OSMesgQueue *mq, u8 *bitpattern, OSContStatus *data) {
     }
     __osContinitialized = TRUE;
     t = osGetTime();
-    if (HALF_SECOND > t) {
+    if (HALF_A_SECOND > t) {
         osCreateMesgQueue(&timerMesgQueue, &dummy, 1);
-        osSetTimer(&mytimer,  HALF_SECOND - t, 0, &timerMesgQueue, &dummy);
+        osSetTimer(&mytimer,  HALF_A_SECOND - t, 0, &timerMesgQueue, &dummy);
         osRecvMesg(&timerMesgQueue, &dummy, OS_MESG_BLOCK);
     }
     __osMaxControllers = MAXCONTROLLERS;

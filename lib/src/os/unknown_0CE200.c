@@ -4,18 +4,18 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
+#include "controller.h"
 #include "src/memory.h"
 
-s32 D_800E38D0 = 0;
+u32 __osSiAccessQueueEnabled = 0;
 
 // Ok, so I completely gave up on the rest of these bss variables.
 // This is probably not the right place for them, but we can always 
 // fix that later.
-
-s32 D_8012CE20[2];
-s32 D_8012CE28[6];
-s32 __osEepPifRam[15];
-s32 D_8012CE7C; //__osEepPifRam.pifstatus
+#define SI_Q_BUF_LEN 1
+static OSMesg siAccessBuf[SI_Q_BUF_LEN];
+OSMesgQueue __osSiAccessQueue;
+OSPifRam __osEepPifRam;
 s32 viThread[172];
 s32 viEventQueue[6];
 s32 viEventBuf[6];
@@ -25,7 +25,8 @@ u16 retrace; //Used in viMgrMain, but it's supposed to be static in that functio
 u16 D_8012D192;
 s32 D_8012D194[2];
 s32 D_8012D1A0[16];
-s32 piAccessBuf[2]; //Should be static, but this works for now
+#define PI_Q_BUF_LEN 1
+OSMesg piAccessBuf[PI_Q_BUF_LEN]; //Should be static, but this works for now
 s32 __osPiAccessQueue[6];
 OSTimer D_8012D200;
 OSTime __osCurrentTime;
@@ -36,7 +37,19 @@ u32 D_8012D234[2];
 s32 D_8012D240[108];
 MemoryPoolSlot *gMainMemoryPool;
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiCreateAccessQueue.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiGetAccess.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiRelAccess.s")
+void __osSiCreateAccessQueue(void) {
+	__osSiAccessQueueEnabled = 1;
+	osCreateMesgQueue(&__osSiAccessQueue, siAccessBuf, SI_Q_BUF_LEN);
+	osSendMesg(&__osSiAccessQueue, NULL, OS_MESG_NOBLOCK);
+}
+void __osSiGetAccess(void) {
+	OSMesg dummyMesg;
+	if (!__osSiAccessQueueEnabled)
+		__osSiCreateAccessQueue();
+	osRecvMesg(&__osSiAccessQueue, &dummyMesg, OS_MESG_BLOCK);
+}
+void __osSiRelAccess(void) {
+	osSendMesg(&__osSiAccessQueue, NULL, OS_MESG_NOBLOCK);
+}
+
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE200/__osSiRawStartDma.s")
