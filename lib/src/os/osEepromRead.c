@@ -46,7 +46,7 @@ s32 osEepromRead(OSMesgQueue *mq, u8 address, u8 *buffer) {
         __osEepPifRam.ramarray[i] = CONT_CMD_NOP;
     }
 
-    __osEepPifRam.pifstatus = 0;
+    __osEepPifRam.pifstatus = CONT_CMD_REQUEST_STATUS;
 
     ret = __osSiRawStartDma(OS_READ, __osEepPifRam.ramarray);
 

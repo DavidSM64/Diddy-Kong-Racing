@@ -36,11 +36,11 @@ s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer) {
     ret = __osSiRawStartDma(OS_WRITE, &__osEepPifRam); //send command to pif
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
     
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i <= ARRLEN(__osEepPifRam.ramarray); i++) {
         __osEepPifRam.ramarray[i] = 255;
     }
     
-    __osEepPifRam.pifstatus = 0;
+    __osEepPifRam.pifstatus = CONT_CMD_REQUEST_STATUS;
     ret = __osSiRawStartDma(OS_READ, &__osEepPifRam); //recv response
     __osContLastCmd = CONT_CMD_WRITE_EEPROM;
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);

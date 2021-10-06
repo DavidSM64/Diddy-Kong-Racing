@@ -28,7 +28,7 @@ s32 __osContRamWrite(OSMesgQueue *mq, int channel, u16 address, u8 *buffer, int 
         for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
             __osPfsPifRam.ramarray[i] = 0xFFU;
         }
-        __osPfsPifRam.pifstatus = 0;
+        __osPfsPifRam.pifstatus = CONT_CMD_REQUEST_STATUS;
         ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
         osRecvMesg(mq, NULL, OS_MESG_BLOCK);
         ptr = (u8 *)&__osPfsPifRam;
