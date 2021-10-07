@@ -7,8 +7,6 @@
 #include "os_thread.h"
 
 /* Variables */
-
-extern u64 osClockRate;
 /*
  * CPU counter increments at 3/4 of bus clock rate:
  *

@@ -181,7 +181,8 @@ void dummy_80079810() {
 
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRetrace_Maybe.s")
 
-#ifdef NON_MATCHING
+#if 1
+#define OS_CPU_COUNTER_F (f32)(OS_CPU_COUNTER / 100.0f)
 void __scHandleRSP(OSSched *sc) {
     OSScTask *t, *sp = 0, *dp = 0;
     s32 state;
@@ -192,7 +193,7 @@ void __scHandleRSP(OSSched *sc) {
 
     if (t->list.t.type == M_AUDTASK) {
         D_80126124 = osGetCount();
-        D_800DE74C = (f32) (((f32) (D_80126124 - D_80126120) * 60.0f) / 468750.0f);
+        D_800DE74C = (f32) (((f32) (D_80126124 - D_80126120) * 60.0f) / OS_CPU_COUNTER_F);
         D_800DE744 = (f32) (D_800DE744 + D_800DE74C);
         if (D_800DE740 < D_800DE74C) {
             D_800DE740 = D_800DE74C;
@@ -217,8 +218,11 @@ void __scHandleRSP(OSSched *sc) {
             }
         } else {
             t->state &= ~OS_SC_NEEDS_RSP;
+    /* BEGIN TODO: This just feels wrong, but it matches */
+            while(0){}
         }
         if ((t->flags & OS_SC_TYPE_MASK) != OS_SC_XBUS){}
+    /* END TODO */
     } else {
         t->state &= ~OS_SC_NEEDS_RSP;
         __scTaskComplete(sc, t);
@@ -325,7 +329,7 @@ void __scAppendList(OSSched *sc, OSScTask *t) {
     t->state = t->flags & 0x03;
 }
 
-void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp){
+void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
 
     if (sp) {
         if (sp->list.t.type == M_AUDTASK) {
