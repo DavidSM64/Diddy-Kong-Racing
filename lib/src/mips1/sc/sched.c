@@ -23,8 +23,7 @@ u32 D_800DE754 = 0;
 u32 D_800DE758 = 0;
 s32 D_800DE75C = 0; // Currently unknown, might be a different type.
 
-s32 D_800DE760 = 0; // Currently unknown, might be a different type.
-s32 D_800DE764 = 0; // Currently unknown, might be a different type.
+u64 D_800DE760 = 0;
 
 /*******************************/
 
@@ -179,10 +178,124 @@ void dummy_80079808() {
 void dummy_80079810() {
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRetrace_Maybe.s")
+#if 0
+void __scHandleRetrace(OSSched *sc) {
+    void *sp44;
+    OSScTask *sp38;
+    OSScTask *sp34;
+    u8 sp32;
+    OSMesgQueue *sp28;
+    OSMesgQueue *temp_a0;
+    OSMesgQueue *temp_a0_2;
+    OSScClient *temp_s0_2;
+    OSScClient *temp_s0_3;
+    OSScTask *temp_v0;
+    OSScTask *temp_v0_2;
+    s32 temp_s0;
+    s32 temp_t2;
+    s32 temp_t7;
+    OSScTask *temp_v1;
+    u64 temp_ret;
+    u8 temp_v0_3;
+    s32 phi_s0;
+    OSScClient *phi_s0_2;
 
-#if 1
+    sp44 = NULL;
+    sp38 = NULL;
+    sp34 = NULL;
+    sp32 = 0;
+    phi_s0 = 0;
+    if (sc->curRSPTask != 0) {
+        D_800DE754 = (s32) (D_800DE754 + 1);
+    }
+    if (sc->curRDPTask != 0) {
+        D_800DE758 = (s32) (D_800DE758 + 1);
+    }
+    temp_v0 = sc->curRSPTask;
+    if ((D_800DE754 >= 0xB) && (temp_v0 != 0)) {
+        D_800DE754 = 0;
+        __osSpSetStatus(0xAAAA82U);
+        phi_s0 = 1;
+    } else if (temp_v0 != 0) {
+        D_80126110 = 1;
+    }
+    temp_v0_2 = sc->curRDPTask;
+    if ((D_800DE758 >= 0xB) && (temp_v0_2 != 0)) {
+        if (temp_v0_2->unk68 == 0) {
+            osSendMesg(temp_v0_2->msgQ, &D_800DE738, 1);
+        }
+        sp32 = 1;
+        sc->doAudio = 0;
+        D_800DE758 = 0;
+        __osSpSetStatus(0xAAAA82U);
+        osDpSetStatus(0x1D6U);
+    } else if (temp_v0_2 != 0) {
+        D_80126114 = 1;
+    }
+    temp_a0 = &sc->cmdQ;
+    if (phi_s0 != 0) {
+        sc->curRSPTask = NULL;
+    }
+    if (sp32 != 0) {
+        sc->curRDPTask = NULL;
+    }
+    sp28 = temp_a0;
+    if (osRecvMesg(temp_a0, &sp44, 0) != -1) {
+        do {
+            __scAppendList(sc, (OSScTask *) sp44);
+        } while (osRecvMesg(sp28, &sp44, 0) != -1);
+    }
+    temp_s0 = ((sc->curRSPTask == 0) * 2) | (sc->curRDPTask == 0);
+    if (__scSchedule(sc, &sp38, &sp34, temp_s0) != temp_s0) {
+        __scExec(sc, sp38, sp34);
+    }
+    temp_t7 = D_800DE760 + 1;
+    D_800DE760 = (s32) (D_800DE760 + (temp_t7 == 0));
+    D_800DE760 = temp_t7;
+    D_800DE750 = (s32) (D_800DE750 + 1);
+    temp_v1 = sc->curRDPTask;
+    temp_t2 = sc->doAudio + 1;
+    sc->doAudio = temp_t2;
+    if ((temp_v1 != 0) && ((u32) temp_t2 >= 2U)) {
+        temp_a0_2 = temp_v1->msgQ;
+        if (temp_a0_2 != 0) {
+            if ((temp_v1->unk68 != 0) || (temp_v1->msgQ != 0)) {
+                osSendMesg(temp_a0_2, temp_v1->msgQ, 1);
+            } else {
+                osSendMesg(temp_a0_2, &D_800DE730, 1);
+            }
+        }
+        sc->doAudio = 0;
+        sc->frameCount = 0;
+    }
+    temp_s0_2 = sc->clientList;
+    phi_s0_2 = temp_s0_2;
+    if (temp_s0_2 != 0) {
+        do {
+            temp_v0_3 = phi_s0_2->unk0;
+            if (temp_v0_3 == 1) {
+                temp_ret = D_800DE760 % 2;//__ull_rem(D_800DE760, D_800DE764, 0, 2);
+                if ((temp_ret == 0)) {
+                    osSendMesg(phi_s0_2->msgQ, (void *) sc, 0);
+                    if (sc->audioListHead != 0) {
+                        func_80079760(sc);
+                    }
+                }
+            } else if (temp_v0_3 == 2) {
+                osSendMesg(phi_s0_2->msgQ, (void *) sc, 0);
+            }
+            temp_s0_3 = phi_s0_2->next;
+            phi_s0_2 = temp_s0_3;
+        } while (temp_s0_3 != 0);
+    }
+}
+#else
+GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRetrace.s")
+#endif
+
+//Keeping this defined here because it seems too specific to this function
 #define OS_CPU_COUNTER_F (f32)(OS_CPU_COUNTER / 100.0f)
+
 void __scHandleRSP(OSSched *sc) {
     OSScTask *t, *sp = 0, *dp = 0;
     s32 state;
@@ -191,6 +304,8 @@ void __scHandleRSP(OSSched *sc) {
     t = sc->curRSPTask;
     sc->curRSPTask = NULL;
 
+    //Rare seems to have edited this function, most specifically here.
+    //Still need to do better for a match, but this does work
     if (t->list.t.type == M_AUDTASK) {
         D_80126124 = osGetCount();
         D_800DE74C = (f32) (((f32) (D_80126124 - D_80126120) * 60.0f) / OS_CPU_COUNTER_F);
@@ -232,9 +347,6 @@ void __scHandleRSP(OSSched *sc) {
     if ( (__scSchedule (sc, &sp, &dp, state)) != state)
         __scExec(sc, sp, dp);
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRSP.s")
-#endif
 
 void __scHandleRDP(OSSched *sc) {
     OSScTask *t, *sp = 0, *dp = 0; 
