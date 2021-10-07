@@ -1,4 +1,4 @@
-glabel func_80079818
+glabel __scHandleRetrace
 /* 07A418 80079818 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 07A41C 8007981C AFBF001C */  sw    $ra, 0x1c($sp)
 /* 07A420 80079820 AFB10018 */  sw    $s1, 0x18($sp)

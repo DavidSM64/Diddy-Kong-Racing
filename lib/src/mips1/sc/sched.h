@@ -9,7 +9,7 @@
 #define OS_SC_PRE_NMI_MSG       4
 #define OS_SC_MAX_MESGS         8
 
-#define OS_SC_YIELD             2
+#define OS_SC_YIELD             0x10
 
 typedef struct {
     short type;
@@ -67,7 +67,7 @@ extern OSViMode osViModeTable[];
 
 /*******************************/
 
-void func_8007A080(OSSched *sc);
+void __scYield(OSSched *sc);
 void __scMain(void);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields);
@@ -82,8 +82,5 @@ OSScTask *__scTaskReady(OSScTask *t);
 s32 __scTaskComplete(OSSched *sc, OSScTask *t);
 void __scAppendList(OSSched *sc, OSScTask *t);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
-void func_8007A080(OSSched *sc);
-// This might need to be moved into it's own file.
-void set_rsp_segment(Gfx **dlist, s32 segment, s32 base);
 
 #endif

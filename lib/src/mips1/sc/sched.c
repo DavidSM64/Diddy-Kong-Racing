@@ -54,14 +54,14 @@ const char D_800E7958[] = "\tdata_size\t\t= %u\n";
 
 s32 D_80126110;
 s32 D_80126114;
-OSTime D_80126118;
+OSTime gYieldTime;
 s32 D_80126120;
 s32 D_80126124;
 s32 D_80126128[18];
 
 /*******************************/
 
-void func_8007A080(OSSched *sc);
+void __scYield(OSSched *sc);
 void __scMain(void);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 
@@ -153,6 +153,7 @@ void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
 
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scMain.s")
 
+//__scHandleRetrace equivalent for unk284?
 void func_80079760(OSSched *sc) {
     s32 sp24;
     s32 sp20;
@@ -164,7 +165,7 @@ void func_80079760(OSSched *sc) {
         sc->unk284 = 1;
     }
     if ((sc->unk284 != 0) && (sc->curRSPTask != 0)) {
-        func_8007A080(sc);
+        __scYield(sc);
     } else {
         sp24 = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
         if (__scSchedule(sc, &sp20, &sp1C, sp24) != sp24) {
@@ -178,10 +179,10 @@ void dummy_80079808() {
 void dummy_80079810() {
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/sched/func_80079818.s")
+GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRetrace.s")
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRSP.s")
 
-void __scHandleRDP(OSSched *sc){
+void __scHandleRDP(OSSched *sc) {
     OSScTask *t, *sp = 0, *dp = 0; 
     s32 state;
     
@@ -198,7 +199,7 @@ void __scHandleRDP(OSSched *sc){
 }
 
 
-OSScTask *__scTaskReady(OSScTask *t){
+OSScTask *__scTaskReady(OSScTask *t) {
     if (t) {    
         /*
          * If there is a pending swap bail out til later (next
@@ -255,15 +256,14 @@ GLOBAL_ASM("lib/asm/non_matchings/sched/__scTaskComplete.s")
 
 void __scAppendList(OSSched *sc, OSScTask *t) {
    u32 tmp = t->list.t.type;
-   if (tmp == 2){
+   if (tmp == 2) {
         if(sc->audioListTail)
             sc->audioListTail->next = t;
         else
             sc->audioListHead = t;
 
         sc->audioListTail = t;
-   }
-   else{
+   } else {
         if(sc->gfxListTail)
             sc->gfxListTail->next = t;
         else
@@ -300,17 +300,12 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp){
     }
 }
 
-void func_8007A080(OSSched *sc) {
+void __scYield(OSSched *sc) {
     if (sc->curRSPTask->list.t.type == M_GFXTASK) {
-        sc->curRSPTask->state |= 0x10;
-        D_80126118 = osGetTime();
+        sc->curRSPTask->state |= OS_SC_YIELD;
+        gYieldTime = osGetTime();
         osSpTaskYield();
     } 
 }
 
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scSchedule.s")
-
-// This might need to be moved into it's own file.
-void set_rsp_segment(Gfx **dlist, s32 segment, s32 base) {
-    gSPSegment((*dlist)++, segment, base + 0x80000000)
-}

@@ -15,7 +15,7 @@
 #include "asset_loading.h"
 #include "menu.h"
 #include "video.h"
-#include "lib/src/mips1/sc/sched.h"
+#include "set_rsp_segment.h"
 #include "gzip.h"
 #include "printf.h"
 #include "thread0_epc.h"
