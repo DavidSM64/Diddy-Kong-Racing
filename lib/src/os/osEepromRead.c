@@ -23,7 +23,7 @@ s32 osEepromRead(OSMesgQueue *mq, u8 address, u8 *buffer) {
     i = 0;
     ptr = (u8 *)&__osEepPifRam.ramarray;
 
-    if (address > 0x40) {
+    if (address > EEPROM_MAXBLOCKS) {
         return -1;
     }
 
@@ -54,7 +54,7 @@ s32 osEepromRead(OSMesgQueue *mq, u8 address, u8 *buffer) {
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
 
     //skip the first 4 bytes
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         ptr++;
     }
 
@@ -92,7 +92,7 @@ s32 __osPackEepReadData(u8 address) {
         eepromformat.data[i] = 0;
     }
     //skip the first 4 bytes
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         *ptr++ = 0;
     }
     *(__OSContEepromFormat *)ptr = eepromformat;

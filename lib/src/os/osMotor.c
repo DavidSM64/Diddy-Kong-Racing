@@ -5,12 +5,16 @@
 #include "controller.h"
 #include "siint.h"
 
+#define MOTOR_RAM_ADDRESS 0x400
+#define MOTOR_DATA_ADDRESS 0x600
+#define MOTOR_DEFAULT_BANK 128
+
 static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata);
 //TODO: These should really be declared here instead of somewhere else
 extern OSPifRam _MotorStopData[MAXCONTROLLERS];
 extern OSPifRam _MotorStartData[MAXCONTROLLERS];
-extern u8 _motorstopbuf[32];
-extern u8 _motorstartbuf[32];
+extern u8 _motorstopbuf[BLOCKSIZE];
+extern u8 _motorstartbuf[BLOCKSIZE];
 s32 osMotorStop(OSPfs *pfs) {
     int i;
     s32 ret;
@@ -97,29 +101,29 @@ static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata
 s32 osMotorInit(OSMesgQueue *mq, OSPfs *pfs, int channel) {
     int i;
     s32 ret;
-    u8 temp[32];
+    u8 temp[BLOCKSIZE];
     pfs->queue = mq;
     pfs->channel = channel;
     pfs->status = 0;
-    pfs->activebank = 128;
+    pfs->activebank = MOTOR_DEFAULT_BANK;
 
     for (i = 0; i < ARRLEN(temp); i++)
-        temp[i] = 128;
+        temp[i] = MOTOR_DEFAULT_BANK;
 
-    ret = __osContRamWrite(mq, channel, 1024, temp, FALSE);
+    ret = __osContRamWrite(mq, channel, MOTOR_RAM_ADDRESS, temp, FALSE);
 
     if (ret == PFS_ERR_NEW_PACK)
-        ret = __osContRamWrite(mq, channel, 1024, temp, FALSE);
+        ret = __osContRamWrite(mq, channel, MOTOR_RAM_ADDRESS, temp, FALSE);
 
     if (ret != 0)
         return ret;
 
-    ret = __osContRamRead(mq, channel, 1024, temp);
+    ret = __osContRamRead(mq, channel, MOTOR_RAM_ADDRESS, temp);
 
     if (ret != 0)
         return ret;
 
-    if (temp[31] != 128) {
+    if (temp[ARRLEN(temp) - 1] != MOTOR_DEFAULT_BANK) {
         return PFS_ERR_DEVICE;
     }
 
@@ -128,8 +132,8 @@ s32 osMotorInit(OSMesgQueue *mq, OSPfs *pfs, int channel) {
         _motorstopbuf[i] = 0;
     }
 
-    _MakeMotorData(channel, 1536, _motorstartbuf, &_MotorStartData[channel]);
-    _MakeMotorData(channel, 1536, _motorstopbuf, &_MotorStopData[channel]);
+    _MakeMotorData(channel, MOTOR_DATA_ADDRESS, _motorstartbuf, &_MotorStartData[channel]);
+    _MakeMotorData(channel, MOTOR_DATA_ADDRESS, _motorstopbuf, &_MotorStopData[channel]);
 
     return 0;
 }

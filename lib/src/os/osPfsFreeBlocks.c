@@ -26,6 +26,6 @@ s32 osPfsFreeBlocks(OSPfs *pfs, s32 *bytes_not_used) {
                 pages++;
         }
     }
-    *bytes_not_used = pages * 8 * 32;
+    *bytes_not_used = pages * PFS_ONE_PAGE * BLOCKSIZE;
     return 0;
 }

@@ -16,15 +16,13 @@ s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer) {
 
     ret = 0;
     ptr = (u8 *)&__osEepPifRam.ramarray;
-    
-    if (address > 0x40) 
-    {
+
+    if (address > EEPROM_MAXBLOCKS)  {
         return -1;
     }
-    
+
     __osSiGetAccess();
     ret = __osEepStatus(mq, &sdata);
-
 
     if (ret != 0 || sdata.type != CONT_EEPROM) {
         return CONT_NO_RESPONSE_ERROR;
@@ -35,17 +33,17 @@ s32 osEepromWrite(OSMesgQueue *mq, u8 address, u8 *buffer) {
     __osPackEepWriteData(address, buffer);
     ret = __osSiRawStartDma(OS_WRITE, &__osEepPifRam); //send command to pif
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
-    
+
     for (i = 0; i <= ARRLEN(__osEepPifRam.ramarray); i++) {
         __osEepPifRam.ramarray[i] = 255;
     }
-    
+
     __osEepPifRam.pifstatus = CONT_CMD_REQUEST_STATUS;
     ret = __osSiRawStartDma(OS_READ, &__osEepPifRam); //recv response
     __osContLastCmd = CONT_CMD_WRITE_EEPROM;
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
     //skip the first 4 bytes
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         ptr++;
     }
     eepromformat = *(__OSContEepromFormat *)ptr;
@@ -75,7 +73,7 @@ void __osPackEepWriteData(u8 address, u8 *buffer) {
         eepromformat.data[i] = *buffer++;
     }
     //skip the first 4 bytes
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         *ptr++ = 0;
     }
     *(__OSContEepromFormat *)(ptr) = eepromformat;
@@ -96,7 +94,7 @@ s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data) {
     }
     __osEepPifRam.pifstatus = CONT_CMD_EXE;
     ptr = (u8 *)__osEepPifRam.ramarray;
-    for (i = 0; i < 4; i++) //zero 4 bytes?
+    for (i = 0; i < MAXCONTROLLERS; i++) //zero 4 bytes?
         *ptr++ = 0;
     requestformat.dummy = CONT_CMD_NOP;
     requestformat.txsize = CONT_CMD_REQUEST_STATUS_TX;
@@ -120,7 +118,7 @@ s32 __osEepStatus(OSMesgQueue *mq, OSContStatus *data) {
         return ret;
 
     ptr = (u8 *)&__osEepPifRam;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < MAXCONTROLLERS; i++)
         *ptr++ = 0;
 
     requestformat = *(__OSContRequesFormat *)ptr;

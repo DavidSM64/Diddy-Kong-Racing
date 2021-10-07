@@ -21,7 +21,7 @@ s32 osContStartReadData(OSMesgQueue *mq) {
     }
 
 	for (i = 0; i <= ARRLEN(__osContPifRam.ramarray); i++) {
-        __osContPifRam.ramarray[i] = 255;
+        __osContPifRam.ramarray[i] = CONT_CMD_RESET;
     }
 
 	__osContPifRam.pifstatus = CONT_CMD_REQUEST_STATUS;
