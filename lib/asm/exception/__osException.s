@@ -369,8 +369,8 @@ glabel __osException
 /* 0D3DB0 800D31B0 AD3A0000 */   sw    $k0, ($t1)
 
 .L800D31B4:
-/* 0D3DB4 800D31B4 3C01800E */  lui   $at, %hi(D_800E4894) # $at, 0x800e
-/* 0D3DB8 800D31B8 AC3A4894 */  sw    $k0, %lo(D_800E4894)($at)
+/* 0D3DB4 800D31B4 3C01800E */  lui   $at, %hi(__osFaultedThread) # $at, 0x800e
+/* 0D3DB8 800D31B8 AC3A4894 */  sw    $k0, %lo(__osFaultedThread)($at)
 /* 0D3DBC 800D31BC 24090001 */  li    $t1, 1
 /* 0D3DC0 800D31C0 A7490010 */  sh    $t1, 0x10($k0)
 /* 0D3DC4 800D31C4 24090002 */  li    $t1, 2
