@@ -9,7 +9,35 @@
 #define OS_SC_PRE_NMI_MSG       4
 #define OS_SC_MAX_MESGS         8
 
-#define OS_SC_YIELD             0x10
+/*
+ * OSScTask state
+ */
+#define OS_SC_DP                0x0001  /* set if still needs dp        */
+#define OS_SC_SP                0x0002  /* set if still needs sp        */
+#define OS_SC_YIELD             0x0010  /* set if yield requested       */
+#define OS_SC_YIELDED           0x0020  /* set if yield completed       */
+
+/*
+ * OSScTask->flags type identifier
+ */
+#define OS_SC_XBUS      (OS_SC_SP | OS_SC_DP)
+#define OS_SC_DRAM      (OS_SC_SP | OS_SC_DP | OS_SC_DRAM_DLIST)
+#define OS_SC_DP_XBUS   (OS_SC_SP)
+#define OS_SC_DP_DRAM   (OS_SC_SP | OS_SC_DRAM_DLIST)
+#define OS_SC_SP_XBUS   (OS_SC_DP)
+#define OS_SC_SP_DRAM   (OS_SC_DP | OS_SC_DRAM_DLIST)
+/*
+ * OSScTask flags:
+ */
+#define OS_SC_NEEDS_RDP	        0x0001	/* uses the RDP */
+#define OS_SC_NEEDS_RSP	        0x0002  /* uses the RSP */
+#define OS_SC_DRAM_DLIST        0x0004  /* SP & DP communicate through DRAM */
+#define OS_SC_PARALLEL_TASK     0x0010	/* must be first gfx task on list */
+#define OS_SC_LAST_TASK	        0x0020	/* last task in queue for frame */
+#define OS_SC_SWAPBUFFER        0x0040	/* swapbuffers when gfx task done */
+
+#define OS_SC_RCP_MASK		0x0003	/* mask for needs bits */
+#define OS_SC_TYPE_MASK		0x0007	/* complete type mask */
 
 typedef struct {
     short type;
@@ -30,7 +58,6 @@ typedef struct OSScTask_s {
     OSTime              totalTime;      /* possible conflict if       */
 #endif                                  /* FINALROM library used with */
 } OSScTask;                             /* non FINALROM code          */
-
 
 typedef struct SCClient_s {
     u8                  unk0;

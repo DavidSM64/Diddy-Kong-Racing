@@ -56,7 +56,7 @@ s32 D_80126110;
 s32 D_80126114;
 OSTime gYieldTime;
 s32 D_80126120;
-s32 D_80126124;
+u32 D_80126124;
 s32 D_80126128[18];
 
 /*******************************/
@@ -179,8 +179,58 @@ void dummy_80079808() {
 void dummy_80079810() {
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRetrace.s")
+GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRetrace_Maybe.s")
+
+#ifdef NON_MATCHING
+void __scHandleRSP(OSSched *sc) {
+    OSScTask *t, *sp = 0, *dp = 0;
+    s32 state;
+    s32 temp_hi;
+
+    t = sc->curRSPTask;
+    sc->curRSPTask = NULL;
+
+    if (t->list.t.type == M_AUDTASK) {
+        D_80126124 = osGetCount();
+        D_800DE74C = (f32) (((f32) (D_80126124 - D_80126120) * 60.0f) / 468750.0f);
+        D_800DE744 = (f32) (D_800DE744 + D_800DE74C);
+        if (D_800DE740 < D_800DE74C) {
+            D_800DE740 = D_800DE74C;
+        }
+        temp_hi = (s32) D_800DE750 % 1000;
+        if ((temp_hi == 1) || (temp_hi == 2)) {
+            D_800DE748 = (f32) (D_800DE744 / 500.0f);
+            D_800DE744 = 0.0f;
+            D_800DE740 = 0.0f;
+        }
+    }
+
+    if ((t->state & OS_SC_YIELD)) {
+        if (osSpTaskYielded(&t->list)) {
+            t->state |= OS_SC_YIELDED;
+            if ((t->flags & OS_SC_TYPE_MASK) == OS_SC_XBUS) {
+                /* push the task back on the list */
+                t->next = sc->gfxListHead;
+                sc->gfxListHead = t;
+                if (sc->gfxListTail == 0)
+                    sc->gfxListTail = t;
+            }
+        } else {
+            t->state &= ~OS_SC_NEEDS_RSP;
+        }
+        if ((t->flags & OS_SC_TYPE_MASK) != OS_SC_XBUS){}
+    } else {
+        t->state &= ~OS_SC_NEEDS_RSP;
+        __scTaskComplete(sc, t);
+    }
+
+    state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
+    if ( (__scSchedule (sc, &sp, &dp, state)) != state)
+        __scExec(sc, sp, dp);
+}
+#else
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRSP.s")
+#endif
 
 void __scHandleRDP(OSSched *sc) {
     OSScTask *t, *sp = 0, *dp = 0; 
