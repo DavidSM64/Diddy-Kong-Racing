@@ -26,51 +26,35 @@ s32 osPfsInit(OSMesgQueue *queue, OSPfs *pfs, int channel) {
     return ret;
 }
 
-#if 1
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CF330/__osPfsGetStatus.s")
-#else
-s32 osPfsIsPlug(OSMesgQueue *queue, u8 *pattern)
-{
+//I would think this should be in it's own file, but it only works here
+s32 __osPfsGetStatus(OSMesgQueue *queue, int channel) {
     s32 ret;
     OSMesg dummy;
-    u8 bitpattern;
+    u8 pattern;
     OSContStatus data[MAXCONTROLLERS];
-    int channel;
-    u8 bits;
-    int crc_error_cnt;
-    ret = 0;
-    bits = 0;
-    crc_error_cnt = 3;
-    __osSiGetAccess();
-    while (TRUE)
-    {
-        __osPfsRequestData(CONT_CMD_REQUEST_STATUS);
-        ret = __osSiRawStartDma(OS_WRITE, &__osPfsPifRam);
-        osRecvMesg(queue, &dummy, OS_MESG_BLOCK);
-        ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
-        osRecvMesg(queue, &dummy, OS_MESG_BLOCK);
-        __osPfsGetInitData(&bitpattern, data);
-        for (channel = 0; channel < __osMaxControllers; channel++)
-        {
-            if ((data[channel].status & CONT_ADDR_CRC_ER) == 0)
-            {
-                crc_error_cnt--;
-                break;
-            }
-        }
-        if (__osMaxControllers == channel)
-            crc_error_cnt = 0;
-        if (crc_error_cnt < 1)
-        {
-            for (channel = 0; channel < __osMaxControllers; channel++)
-            {
-                if (data[channel].errno == 0 && (data[channel].status & CONT_CARD_ON) != 0)
-                    bits |= 1 << channel;
-            }
-            __osSiRelAccess();
-            *pattern = bits;
-            return ret;
-        }
+	
+	ret = 0;
+    __osPfsRequestData(0);
+    
+	ret = __osSiRawStartDma(OS_WRITE, &__osPfsPifRam);
+    osRecvMesg(queue, &dummy, OS_MESG_BLOCK);
+    
+	ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
+    osRecvMesg(queue, &dummy, OS_MESG_BLOCK);
+    
+	__osPfsGetInitData(&pattern, data);
+
+    if (data[channel].status & CONT_CARD_ON && data[channel].status & CONT_CARD_PULL) {
+        return PFS_ERR_NEW_PACK;
     }
+    
+	if (data[channel].errno || !(data[channel].status & CONT_CARD_ON)) {
+        return PFS_ERR_NOPACK;
+    }
+    
+	if (data[channel].status & CONT_ADDR_CRC_ER) {
+        return PFS_ERR_CONTRFAIL;
+    }
+
+    return ret;
 }
-#endif
