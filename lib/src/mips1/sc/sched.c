@@ -68,10 +68,6 @@ s32 D_80126128[18];
 
 /*******************************/
 
-void __scYield(OSSched *sc);
-void __scMain(void);
-void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
-
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields) {
     sc->curRSPTask      = 0;
     sc->curRDPTask      = 0;
@@ -154,7 +150,63 @@ void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
     *arg2 = D_800DE74C;
 }
 
+#ifdef NON_MATCHING
+static void __scMain(void *arg) {
+    OSMesg msg = NULL;
+    OSSched *sc = (OSSched *)arg;
+    OSScClient *client;
+    //static int count = 0;
+    s32 state = 0;
+    OSScTask *sp = 0;
+    OSScTask *dp = 0;
+
+    while (1) {
+        loop1:
+        do {
+            osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
+
+            switch ((int) msg) {
+                case (VIDEO_MSG):
+                    __scHandleRetrace(sc);
+                    goto loop1;
+                    break;
+
+                case (RSP_DONE_MSG):
+                    __scHandleRSP(sc);
+                    goto loop1;
+                    break;
+
+                case (RDP_DONE_MSG):
+                    __scHandleRDP(sc);
+                    goto loop1;
+                    break;
+
+                case (99):
+                    func_80079760(sc);
+                    goto loop1;
+                    break;
+
+                case (PRE_NMI_MSG):
+                /*
+                * notify audio and graphics threads to fade out
+                */
+                    for (client = sc->clientList; client != 0; client = client->next) {
+                        osSendMesg(client->msgQ, (OSMesg) &sc->prenmiMsg,
+                                    OS_MESG_NOBLOCK);
+                    }
+                    goto loop1;
+                    break;
+            }
+            __scAppendList(sc, (OSScTask *) msg);
+            state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
+        } while (__scSchedule(sc, &sp, &dp, state) == state);
+         __scExec(sc, sp, dp);
+         goto loop1;
+    }
+}
+#else
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scMain.s")
+#endif
 
 void func_80079760(OSSched *sc) {
     s32 state;

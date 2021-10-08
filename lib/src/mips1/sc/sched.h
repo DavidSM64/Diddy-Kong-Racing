@@ -99,7 +99,11 @@ extern OSViMode osViModeTable[];
 /*******************************/
 
 void __scYield(OSSched *sc);
-void __scMain(void);
+#ifdef NON_MATCHING
+static void __scMain(void *arg);
+#else
+void __scMain(void *arg);
+#endif
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields);
 void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 arg3);
@@ -109,9 +113,11 @@ OSMesgQueue *osScGetInterruptQ(OSSched *sc);
 void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2);
 void func_80079760(OSSched *sc);
 void __scHandleRDP(OSSched *sc);
+void __scHandleRSP(OSSched *sc);
 OSScTask *__scTaskReady(OSScTask *t);
 s32 __scTaskComplete(OSSched *sc, OSScTask *t);
 void __scAppendList(OSSched *sc, OSScTask *t);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
+void __scHandleRetrace(OSSched *sc);
 
 #endif
