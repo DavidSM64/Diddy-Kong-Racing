@@ -76,13 +76,12 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     sc->curRSPTask      = 0;
     sc->curRDPTask      = 0;
     sc->clientList      = 0;
-    
     sc->audioListHead   = 0;
     sc->gfxListHead     = 0;
     sc->audioListTail   = 0;
     sc->gfxListTail     = 0;
-    sc->doAudio         = 0;
     sc->frameCount      = 0;
+    sc->unkTask         = 0;
     sc->retraceMsg.type = OS_SC_RETRACE_MSG;  /* sent to apps */
     sc->prenmiMsg.type  = OS_SC_PRE_NMI_MSG;
     
@@ -92,16 +91,13 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     osCreateViManager(OS_PRIORITY_VIMGR);    
     osViSetMode(&osViModeTable[mode]);
     osViBlack(TRUE);
-
     osCreateMesgQueue(&sc->interruptQ, sc->intBuf, OS_SC_MAX_MESGS);
     osCreateMesgQueue(&sc->cmdQ, sc->cmdMsgBuf, OS_SC_MAX_MESGS);
-    
     osSetEventMesg(OS_EVENT_SP, &sc->interruptQ, (OSMesg)RSP_DONE_MSG);
     osSetEventMesg(OS_EVENT_DP, &sc->interruptQ, (OSMesg)RDP_DONE_MSG);
     osSetEventMesg(OS_EVENT_PRENMI, &sc->interruptQ, (OSMesg)PRE_NMI_MSG);
 
     osViSetEvent(&sc->interruptQ, (OSMesg)VIDEO_MSG, numFields);
-
 
     osCreateThread(&sc->thread, 5, __scMain, (void *)sc, stack, priority);
     osStartThread(&sc->thread);
@@ -160,7 +156,7 @@ void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
 
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scMain.s")
 
-void func_80079760(OSSched_Rare *sc) {
+void func_80079760(OSSched *sc) {
     s32 state;
     OSScTask *sp = 0;
     OSScTask *dp = 0;
@@ -183,8 +179,8 @@ void dummy_80079808() {
 void dummy_80079810() {
 }
 
-#if 0
-void __scHandleRetrace(OSSched_Rare *sc) {
+#ifdef NON_MATCHING
+void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
     OSScClient *client;
     s32 i;
