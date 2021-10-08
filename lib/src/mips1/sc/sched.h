@@ -57,10 +57,13 @@ typedef struct OSScTask_s {
     OSTime              startTime;      /* remain at the end!!, or    */
     OSTime              totalTime;      /* possible conflict if       */
 #endif                                  /* FINALROM library used with */
-} OSScTask;                             /* non FINALROM code          */
+                                        /* non FINALROM code          */
+
+    s32                 unk68;          /* Added by Rare?             */
+} OSScTask;
 
 typedef struct SCClient_s {
-    u8                  unk0;
+    u8                  unk0;   /* Added by Rare?               */
     struct SCClient_s   *next;  /* next client in the list      */
     OSMesgQueue         *msgQ;  /* where to send the frame msg  */
 } OSScClient;
@@ -83,8 +86,28 @@ typedef struct {
   /* 0x660 */ OSScTask    *curRDPTask;
   /* 0x710 */ u32         frameCount;
   /* 0x714 */ s32         doAudio;
-  /* 0x718 */ s32         unk284;
 } OSSched;
+
+/* 0x7C8 bytes */
+typedef struct {
+  /* 0x00 */  OSScMsg     retraceMsg;
+  /* 0x20 */  OSScMsg     prenmiMsg;
+  /* 0x40 */  OSMesgQueue interruptQ;
+  /* 0x68 */  OSMesg      intBuf[OS_SC_MAX_MESGS]; //0x8 per OsMesg
+  /* 0xA8 */  OSMesgQueue cmdQ;
+  /* 0xD0 */  OSMesg      cmdMsgBuf[OS_SC_MAX_MESGS]; //0x8 per OsMesg
+  /* 0x110 */ OSThread    thread;
+  /* 0x2D8 */ OSScClient  *clientList;
+  /* 0x2F0 */ OSScTask    *audioListHead;
+  /* 0x3A0 */ OSScTask    *gfxListHead;
+  /* 0x450 */ OSScTask    *audioListTail;
+  /* 0x500 */ OSScTask    *gfxListTail;
+  /* 0x5B0 */ OSScTask    *curRSPTask;
+  /* 0x660 */ OSScTask    *curRDPTask;
+  /* 0x710 */ OSScTask    *unkTask; //Rare added?
+  /* 0x7C0 */ u32         frameCount;
+  /* 0x7C4 */ s32         doAudio;
+} OSSched_Rare;
 
 typedef struct{
     u8 pad00[0x50];
@@ -103,7 +126,7 @@ void osScRemoveClient(OSSched *sc, OSScClient *c);
 OSMesgQueue *osScGetCmdQ(OSSched *sc);
 OSMesgQueue *osScGetInterruptQ(OSSched *sc);
 void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2);
-void func_80079760(OSSched *sc);
+void func_80079760(OSSched_Rare *sc);
 void __scHandleRDP(OSSched *sc);
 OSScTask *__scTaskReady(OSScTask *t);
 s32 __scTaskComplete(OSSched *sc, OSScTask *t);

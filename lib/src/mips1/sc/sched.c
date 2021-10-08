@@ -7,6 +7,14 @@
 #include "f3ddkr.h"
 #include "libultra_internal.h"
 
+/*
+ * private typedefs and defines
+ */
+#define VIDEO_MSG       666
+#define RSP_DONE_MSG    667
+#define RDP_DONE_MSG    668
+#define PRE_NMI_MSG     669
+
 /************ .data ************/
 
 // Unsure about if this is an array or struct.
@@ -64,7 +72,7 @@ void __scYield(OSSched *sc);
 void __scMain(void);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 
-void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields){
+void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields) {
     sc->curRSPTask      = 0;
     sc->curRDPTask      = 0;
     sc->clientList      = 0;
@@ -88,11 +96,11 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     osCreateMesgQueue(&sc->interruptQ, sc->intBuf, OS_SC_MAX_MESGS);
     osCreateMesgQueue(&sc->cmdQ, sc->cmdMsgBuf, OS_SC_MAX_MESGS);
     
-    osSetEventMesg(OS_EVENT_SP, &sc->interruptQ, (OSMesg)667);
-    osSetEventMesg(OS_EVENT_DP, &sc->interruptQ, (OSMesg)668);    
-    osSetEventMesg(OS_EVENT_PRENMI, &sc->interruptQ, (OSMesg)669);    
+    osSetEventMesg(OS_EVENT_SP, &sc->interruptQ, (OSMesg)RSP_DONE_MSG);
+    osSetEventMesg(OS_EVENT_DP, &sc->interruptQ, (OSMesg)RDP_DONE_MSG);
+    osSetEventMesg(OS_EVENT_PRENMI, &sc->interruptQ, (OSMesg)PRE_NMI_MSG);
 
-    osViSetEvent(&sc->interruptQ, (OSMesg)666, numFields);
+    osViSetEvent(&sc->interruptQ, (OSMesg)VIDEO_MSG, numFields);
 
 
     osCreateThread(&sc->thread, 5, __scMain, (void *)sc, stack, priority);
@@ -122,10 +130,10 @@ void osScRemoveClient(OSSched *sc, OSScClient *c)
     
     while (client != 0) {
         if (client == c) {
-	    if(prev)
-		prev->next = c->next;
-	    else
-		sc->clientList = c->next;
+        if(prev)
+        prev->next = c->next;
+        else
+        sc->clientList = c->next;
             break;
         }
         prev   = client;
@@ -152,23 +160,20 @@ void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
 
 GLOBAL_ASM("lib/asm/non_matchings/sched/__scMain.s")
 
-//__scHandleRetrace equivalent for unk284?
-void func_80079760(OSSched *sc) {
-    s32 sp24;
-    s32 sp20;
-    s32 sp1C;
+void func_80079760(OSSched_Rare *sc) {
+    s32 state;
+    OSScTask *sp = 0;
+    OSScTask *dp = 0;
 
-    sp20 = 0;
-    sp1C = 0;
-    if (sc->audioListHead != 0) {
-        sc->unk284 = 1;
+    if (sc->audioListHead) {
+        sc->doAudio = 1;
     }
-    if ((sc->unk284 != 0) && (sc->curRSPTask != 0)) {
+    if (sc->doAudio && sc->curRSPTask) {
         __scYield(sc);
     } else {
-        sp24 = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
-        if (__scSchedule(sc, &sp20, &sp1C, sp24) != sp24) {
-            __scExec(sc, sp20, sp1C);
+        state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
+        if (__scSchedule(sc, &sp, &dp, state) != state) {
+            __scExec(sc, sp, dp);
         }
     }
 }
@@ -179,114 +184,95 @@ void dummy_80079810() {
 }
 
 #if 0
-void __scHandleRetrace(OSSched *sc) {
-    void *sp44;
-    OSScTask *sp38;
-    OSScTask *sp34;
-    u8 sp32;
-    OSMesgQueue *sp28;
-    OSMesgQueue *temp_a0;
-    OSMesgQueue *temp_a0_2;
-    OSScClient *temp_s0_2;
-    OSScClient *temp_s0_3;
-    OSScTask *temp_v0;
-    OSScTask *temp_v0_2;
-    s32 temp_s0;
-    s32 temp_t2;
-    s32 temp_t7;
-    OSScTask *temp_v1;
-    u64 temp_ret;
-    u8 temp_v0_3;
-    s32 phi_s0;
-    OSScClient *phi_s0_2;
+void __scHandleRetrace(OSSched_Rare *sc) {
+    OSScTask *rspTask = NULL;
+    OSScClient *client;
+    s32 i;
+    s32 availRPC;
+    OSScTask *sp = 0;
+    OSScTask *dp = 0;
+    u8 set_curRSPTask_NULL = FALSE;
+    u8 set_curRDPTask_NULL = FALSE;
 
-    sp44 = NULL;
-    sp38 = NULL;
-    sp34 = NULL;
-    sp32 = 0;
-    phi_s0 = 0;
-    if (sc->curRSPTask != 0) {
-        D_800DE754 = (s32) (D_800DE754 + 1);
+    if (sc->curRSPTask) {
+        D_800DE754++;
     }
-    if (sc->curRDPTask != 0) {
-        D_800DE758 = (s32) (D_800DE758 + 1);
+
+    if (sc->curRDPTask) {
+        D_800DE758++;
     }
-    temp_v0 = sc->curRSPTask;
-    if ((D_800DE754 >= 0xB) && (temp_v0 != 0)) {
+
+    if (((s32)D_800DE754 > (s32)10) && (sc->curRSPTask)) {
         D_800DE754 = 0;
-        __osSpSetStatus(0xAAAA82U);
-        phi_s0 = 1;
-    } else if (temp_v0 != 0) {
+        set_curRSPTask_NULL = TRUE;
+
+        __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_SIG0 |
+            SP_CLR_SIG1 | SP_CLR_SIG2 | SP_CLR_SIG3 | SP_CLR_SIG4 |
+            SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
+    } else if (sc->curRSPTask) {
         D_80126110 = 1;
     }
-    temp_v0_2 = sc->curRDPTask;
-    if ((D_800DE758 >= 0xB) && (temp_v0_2 != 0)) {
-        if (temp_v0_2->unk68 == 0) {
-            osSendMesg(temp_v0_2->msgQ, &D_800DE738, 1);
+
+    if (((s32)D_800DE758 > (s32)10) && (sc->curRDPTask)) {
+        if (sc->curRDPTask->unk68 == 0) {
+            osSendMesg(sc->curRDPTask->msgQ, &D_800DE738, OS_MESG_BLOCK);
         }
-        sp32 = 1;
-        sc->doAudio = 0;
+
+        set_curRDPTask_NULL = TRUE;
+        sc->frameCount = 0;
         D_800DE758 = 0;
-        __osSpSetStatus(0xAAAA82U);
-        osDpSetStatus(0x1D6U);
-    } else if (temp_v0_2 != 0) {
+
+        __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_SIG0 |
+            SP_CLR_SIG1 | SP_CLR_SIG2 | SP_CLR_SIG3 | SP_CLR_SIG4 |
+            SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
+
+        osDpSetStatus(DPC_SET_XBUS_DMEM_DMA | DPC_CLR_FREEZE | DPC_CLR_FLUSH |
+            DPC_CLR_TMEM_CTR | DPC_CLR_PIPE_CTR | DPC_CLR_CMD_CTR);
+    } else if (sc->curRDPTask) {
         D_80126114 = 1;
     }
-    temp_a0 = &sc->cmdQ;
-    if (phi_s0 != 0) {
+
+    if (set_curRSPTask_NULL) {
         sc->curRSPTask = NULL;
     }
-    if (sp32 != 0) {
+    if (set_curRDPTask_NULL) {
         sc->curRDPTask = NULL;
     }
-    sp28 = temp_a0;
-    if (osRecvMesg(temp_a0, &sp44, 0) != -1) {
-        do {
-            __scAppendList(sc, (OSScTask *) sp44);
-        } while (osRecvMesg(sp28, &sp44, 0) != -1);
-    }
-    temp_s0 = ((sc->curRSPTask == 0) * 2) | (sc->curRDPTask == 0);
-    if (__scSchedule(sc, &sp38, &sp34, temp_s0) != temp_s0) {
-        __scExec(sc, sp38, sp34);
-    }
-    temp_t7 = D_800DE760 + 1;
-    D_800DE760 = (s32) (D_800DE760 + (temp_t7 == 0));
-    D_800DE760 = temp_t7;
-    D_800DE750 = (s32) (D_800DE750 + 1);
-    temp_v1 = sc->curRDPTask;
-    temp_t2 = sc->doAudio + 1;
-    sc->doAudio = temp_t2;
-    if ((temp_v1 != 0) && ((u32) temp_t2 >= 2U)) {
-        temp_a0_2 = temp_v1->msgQ;
-        if (temp_a0_2 != 0) {
-            if ((temp_v1->unk68 != 0) || (temp_v1->msgQ != 0)) {
-                osSendMesg(temp_a0_2, temp_v1->msgQ, 1);
+
+    while (osRecvMesg(&sc->cmdQ, (OSMesg *)&rspTask, OS_MESG_NOBLOCK) != -1)
+        __scAppendList(sc, rspTask);
+
+    availRPC = ((sc->curRSPTask == NULL) << 1) | (sc->curRDPTask == NULL);
+    if (__scSchedule(sc, &sp, &dp, availRPC) != availRPC)
+        __scExec(sc, sp, dp);
+
+    D_800DE760++;
+    D_800DE750++;
+    sc->frameCount++;
+
+    if ((sc->unkTask) && (sc->frameCount >= 2)) {
+        if (sc->unkTask->msgQ) {
+            if ((sc->unkTask->unk68) || (sc->unkTask->msg)) {
+                osSendMesg(sc->unkTask->msgQ, sc->unkTask->msg, OS_MESG_BLOCK);
             } else {
-                osSendMesg(temp_a0_2, &D_800DE730, 1);
+                osSendMesg(sc->unkTask->msgQ, &D_800DE730, OS_MESG_BLOCK);
             }
         }
-        sc->doAudio = 0;
         sc->frameCount = 0;
+        sc->unkTask = 0;
     }
-    temp_s0_2 = sc->clientList;
-    phi_s0_2 = temp_s0_2;
-    if (temp_s0_2 != 0) {
-        do {
-            temp_v0_3 = phi_s0_2->unk0;
-            if (temp_v0_3 == 1) {
-                temp_ret = D_800DE760 % 2;//__ull_rem(D_800DE760, D_800DE764, 0, 2);
-                if ((temp_ret == 0)) {
-                    osSendMesg(phi_s0_2->msgQ, (void *) sc, 0);
-                    if (sc->audioListHead != 0) {
-                        func_80079760(sc);
-                    }
+
+    for (client = sc->clientList; client != 0; client = client->next) {
+        if (client->unk0 == 1) {
+            if (D_800DE760 % 2 == 0) {
+                osSendMesg(client->msgQ, sc, OS_MESG_NOBLOCK);
+                if (sc->audioListHead) {
+                    func_80079760(sc);
                 }
-            } else if (temp_v0_3 == 2) {
-                osSendMesg(phi_s0_2->msgQ, (void *) sc, 0);
             }
-            temp_s0_3 = phi_s0_2->next;
-            phi_s0_2 = temp_s0_3;
-        } while (temp_s0_3 != 0);
+        } else if (client->unk0 == 2) {
+            osSendMesg(client->msgQ, sc, OS_MESG_NOBLOCK);
+        }
     }
 }
 #else
