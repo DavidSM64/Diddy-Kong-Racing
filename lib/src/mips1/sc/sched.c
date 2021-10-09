@@ -150,63 +150,52 @@ void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
     *arg2 = D_800DE74C;
 }
 
-#ifdef NON_MATCHING
 static void __scMain(void *arg) {
     OSMesg msg = NULL;
     OSSched *sc = (OSSched *)arg;
     OSScClient *client;
-    //static int count = 0;
     s32 state = 0;
     OSScTask *sp = 0;
     OSScTask *dp = 0;
 
     while (1) {
-        loop1:
-        do {
-            osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
+        osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
+        switch ((int) msg) {
+            case (VIDEO_MSG):
+                __scHandleRetrace(sc);
+                break;
 
-            switch ((int) msg) {
-                case (VIDEO_MSG):
-                    __scHandleRetrace(sc);
-                    goto loop1;
-                    break;
+            case (RSP_DONE_MSG):
+                __scHandleRSP(sc);
+                break;
 
-                case (RSP_DONE_MSG):
-                    __scHandleRSP(sc);
-                    goto loop1;
-                    break;
+            case (RDP_DONE_MSG):
+                __scHandleRDP(sc);
+                break;
 
-                case (RDP_DONE_MSG):
-                    __scHandleRDP(sc);
-                    goto loop1;
-                    break;
+            case (99):
+                func_80079760(sc);
+                break;
 
-                case (99):
-                    func_80079760(sc);
-                    goto loop1;
-                    break;
-
-                case (PRE_NMI_MSG):
+            case (PRE_NMI_MSG):
                 /*
                 * notify audio and graphics threads to fade out
                 */
-                    for (client = sc->clientList; client != 0; client = client->next) {
-                        osSendMesg(client->msgQ, (OSMesg) &sc->prenmiMsg,
-                                    OS_MESG_NOBLOCK);
-                    }
-                    goto loop1;
-                    break;
-            }
-            __scAppendList(sc, (OSScTask *) msg);
-            state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
-        } while (__scSchedule(sc, &sp, &dp, state) == state);
-         __scExec(sc, sp, dp);
-         goto loop1;
+                for (client = sc->clientList; client != 0; client = client->next) {
+                    osSendMesg(client->msgQ, (OSMesg) &sc->prenmiMsg,
+                                OS_MESG_NOBLOCK);
+                };
+                break;
+
+            default:
+                __scAppendList(sc, (OSScTask *) msg);
+                state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
+                if (__scSchedule(sc, &sp, &dp, state) != state)
+                    __scExec(sc, sp, dp);
+                break;
+        }
     }
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/sched/__scMain.s")
-#endif
 
 void func_80079760(OSSched *sc) {
     s32 state;
@@ -416,38 +405,42 @@ OSScTask *__scTaskReady(OSScTask *t) {
 }
 
 #if 0
+/*
+ * __scTaskComplete checks to see if the task is complete (all RCP
+ * operations have been performed) and sends the done message to the
+ * client if it is.
+ */
 s32 __scTaskComplete(OSSched *sc, OSScTask *t) {
     int rv;
-    int firsttime = 1;
+    static int firsttime = 1;
 
-    if ((t->state & 0x03) == 0) { /* none of the needs bits set */
+    if ((t->state & OS_SC_RCP_MASK) == 0) { /* none of the needs bits set */
 
-        assert (t->msgQ);
-        if(t->msgQ){
 
-            //rv = osSendMesg(t->msgQ, &t->msg, OS_MESG_BLOCK);
+#ifndef _FINALROM
+	t->totalTime += osGetTime() - t->startTime;
+#endif
 
-            //if (t->list.t.type == M_GFXTASK) {
-                    if ((t->flags & 0x20) /*&& (t->flags & OS_SC_LAST_TASK)*/){
-                        if(sc->doAudio < 2){
-                            sc->frameCount = t;
-                        }
-                        else{
-                            if(t->startTime == 0){
-                                osSendMesg(t->msgQ, t->msg, 1);
-                            }
-                        }
-                        //if (firsttime) {
-                         //       osViBlack(FALSE);
-                          //  firsttime = 0;
-                        //}
-                        //osViSwapBuffer(t->framebuffer);
-                    }
-            //}
-        }
+#ifdef SC_LOGGING
+        osLogEvent(l, 504, 1, t);
+#endif
+        rv = osSendMesg(t->msgQ, t->msg, OS_MESG_BLOCK);
+
+	if (t->list.t.type == M_GFXTASK) {
+            if ((t->flags & OS_SC_SWAPBUFFER) && (t->flags & OS_SC_LAST_TASK)){
+		if (firsttime) {
+                osViBlack(FALSE);
+		    firsttime = 0;
+		}
+                osViSwapBuffer(t->framebuffer);
+#ifdef SC_LOGGING
+            osLogEvent(l, 525, 1, t->framebuffer);
+#endif
+            }
+	}
         return 1;
     }
-    
+
     return 0;
 }
 #else

@@ -99,7 +99,7 @@ extern OSViMode osViModeTable[];
 /*******************************/
 
 void __scYield(OSSched *sc);
-#ifdef NON_MATCHING
+#if 1
 static void __scMain(void *arg);
 #else
 void __scMain(void *arg);
