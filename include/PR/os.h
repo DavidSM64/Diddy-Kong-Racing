@@ -6,6 +6,16 @@
 
 #include "os_thread.h"
 
+/*
+ * Leo Disk
+ */
+
+/* transfer mode */
+
+#define LEO_BLOCK_MODE	1
+#define LEO_TRACK_MODE	2
+#define LEO_SECTOR_MODE	3
+
 /* Variables */
 /*
  * CPU counter increments at 3/4 of bus clock rate:
