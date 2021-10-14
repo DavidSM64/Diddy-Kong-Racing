@@ -27,8 +27,8 @@ f32 D_800DE748 = 0;
 f32 D_800DE74C = 0;
 
 s32 D_800DE750 = 0; // Currently unknown, might be a different type.
-u32 D_800DE754 = 0;
-u32 D_800DE758 = 0;
+s32 D_800DE754 = 0;
+s32 D_800DE758 = 0;
 s32 D_800DE75C = 0; // Currently unknown, might be a different type.
 
 u64 D_800DE760 = 0;
@@ -226,12 +226,12 @@ void dummy_80079810() {
 void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
     OSScClient *client;
-    s32 i;
-    s32 availRPC;
+    s32 state;
     OSScTask *sp = 0;
     OSScTask *dp = 0;
     u8 set_curRSPTask_NULL = FALSE;
     u8 set_curRDPTask_NULL = FALSE;
+    s32 i;
 
     if (sc->curRSPTask) {
         D_800DE754++;
@@ -241,7 +241,7 @@ void __scHandleRetrace(OSSched *sc) {
         D_800DE758++;
     }
 
-    if (((s32)D_800DE754 > (s32)10) && (sc->curRSPTask)) {
+    if ((D_800DE754 > 10) && (sc->curRSPTask)) {
         D_800DE754 = 0;
         set_curRSPTask_NULL = TRUE;
 
@@ -252,7 +252,7 @@ void __scHandleRetrace(OSSched *sc) {
         D_80126110 = 1;
     }
 
-    if (((s32)D_800DE758 > (s32)10) && (sc->curRDPTask)) {
+    if ((D_800DE758 > 10) && (sc->curRDPTask)) {
         if (sc->curRDPTask->unk68 == 0) {
             osSendMesg(sc->curRDPTask->msgQ, &D_800DE738, OS_MESG_BLOCK);
         }
@@ -281,8 +281,8 @@ void __scHandleRetrace(OSSched *sc) {
     while (osRecvMesg(&sc->cmdQ, (OSMesg *)&rspTask, OS_MESG_NOBLOCK) != -1)
         __scAppendList(sc, rspTask);
 
-    availRPC = ((sc->curRSPTask == NULL) << 1) | (sc->curRDPTask == NULL);
-    if (__scSchedule(sc, &sp, &dp, availRPC) != availRPC)
+    state = ((sc->curRSPTask == NULL) << 1) | (sc->curRDPTask == NULL);
+    if (__scSchedule(sc, &sp, &dp, state) != state)
         __scExec(sc, sp, dp);
 
     D_800DE760++;
@@ -406,79 +406,69 @@ OSScTask *__scTaskReady(OSScTask *t) {
     return 0;
 }
 
-#if 0
 /*
  * __scTaskComplete checks to see if the task is complete (all RCP
  * operations have been performed) and sends the done message to the
  * client if it is.
  */
 s32 __scTaskComplete(OSSched *sc, OSScTask *t) {
-    int rv;
-    static int firsttime = 1;
-
-    if ((t->state & OS_SC_RCP_MASK) == 0) { /* none of the needs bits set */
-
-
-#ifndef _FINALROM
-	t->totalTime += osGetTime() - t->startTime;
-#endif
-
-#ifdef SC_LOGGING
-        osLogEvent(l, 504, 1, t);
-#endif
-        rv = osSendMesg(t->msgQ, t->msg, OS_MESG_BLOCK);
-
-	if (t->list.t.type == M_GFXTASK) {
-            if ((t->flags & OS_SC_SWAPBUFFER) && (t->flags & OS_SC_LAST_TASK)){
-		if (firsttime) {
-                osViBlack(FALSE);
-		    firsttime = 0;
-		}
-                osViSwapBuffer(t->framebuffer);
-#ifdef SC_LOGGING
-            osLogEvent(l, 525, 1, t->framebuffer);
-#endif
+    if ((t->state & OS_SC_RCP_MASK) == 0) {
+        if (t->msgQ) {
+            if (t->flags & OS_SC_LAST_TASK) {
+                if (sc->frameCount <= 1) {
+                    sc->unkTask = t;
+                    return 1;
+                }
+                if (t->unk68 || t->msg) {
+                    osSendMesg(t->msgQ, t->msg, OS_MESG_BLOCK);
+                } else {
+                    osSendMesg(t->msgQ, &D_800DE730, OS_MESG_BLOCK);
+                }
+                sc->frameCount = 0;
+                return 1;
             }
-	}
+            if (t->unk68 || t->msg) {
+                osSendMesg(t->msgQ, t->msg, OS_MESG_BLOCK);
+                return 1;
+            }
+            osSendMesg(t->msgQ, &D_800DE730, OS_MESG_BLOCK);
+        }
         return 1;
     }
-
     return 0;
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/sched/__scTaskComplete.s")
-#endif
 
 void __scAppendList(OSSched *sc, OSScTask *t) {
-   u32 tmp = t->list.t.type;
-   if (tmp == 2) {
+    long type = t->list.t.type;
+
+    if (type == M_AUDTASK) {
         if(sc->audioListTail)
             sc->audioListTail->next = t;
         else
             sc->audioListHead = t;
 
         sc->audioListTail = t;
-   } else {
+    } else {
         if(sc->gfxListTail)
             sc->gfxListTail->next = t;
         else
             sc->gfxListHead = t;
 
         sc->gfxListTail = t;
-   }
+    }
+
     t->next = NULL;
-    t->state = t->flags & 0x03;
+    t->state = t->flags & OS_SC_RCP_MASK;
 }
 
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
-
     if (sp) {
         if (sp->list.t.type == M_AUDTASK) {
             osWritebackDCacheAll();  /* flush the cache */
             D_80126120 = osGetCount();
         }
         
-        sp->state &= ~0x30;
+        sp->state &= ~(OS_SC_YIELD | OS_SC_YIELDED);
         osSpTaskLoad(&sp->list);
         osSpTaskStartGo(&sp->list); 
         D_800DE754 = 0;
@@ -506,7 +496,7 @@ void __scYield(OSSched *sc) {
 /*
  * Schedules the tasks to be run on the RCP
  */
-s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)  {
+static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)  {
     s32 avail = availRCP;
     OSScTask *gfx = sc->gfxListHead;
     OSScTask *audio = sc->audioListHead;
