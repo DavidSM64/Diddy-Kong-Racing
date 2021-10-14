@@ -10,6 +10,7 @@
 /*
  * private typedefs and defines
  */
+#define UNK_MSG         99
 #define VIDEO_MSG       666
 #define RSP_DONE_MSG    667
 #define RDP_DONE_MSG    668
@@ -31,7 +32,7 @@ s32 D_800DE754 = 0;
 s32 D_800DE758 = 0;
 s32 D_800DE75C = 0; // Currently unknown, might be a different type.
 
-u64 D_800DE760 = 0;
+u64 gRetraceCount = 0;
 
 /*******************************/
 
@@ -112,8 +113,7 @@ void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 arg3){
     osSetIntMask(mask);
 }
 
-void osScRemoveClient(OSSched *sc, OSScClient *c)
-{
+void osScRemoveClient(OSSched *sc, OSScClient *c) {
     OSScClient *client = sc->clientList; 
     OSScClient *prev   = 0;
     OSIntMask  mask;
@@ -122,10 +122,10 @@ void osScRemoveClient(OSSched *sc, OSScClient *c)
     
     while (client != 0) {
         if (client == c) {
-        if(prev)
-        prev->next = c->next;
-        else
-        sc->clientList = c->next;
+            if(prev)
+                prev->next = c->next;
+            else
+                sc->clientList = c->next;
             break;
         }
         prev   = client;
@@ -135,7 +135,7 @@ void osScRemoveClient(OSSched *sc, OSScClient *c)
     osSetIntMask(mask);
 }
 
-OSMesgQueue *osScGetCmdQ(OSSched *sc){
+OSMesgQueue *osScGetCmdQ(OSSched *sc) {
     return &sc->cmdQ;
 }
 
@@ -175,7 +175,7 @@ static void __scMain(void *arg) {
                 __scHandleRDP(sc);
                 break;
 
-            case (99):
+            case (UNK_MSG):
                 func_80079760(sc);
                 break;
 
@@ -217,12 +217,11 @@ void func_80079760(OSSched *sc) {
     }
 }
 
-void dummy_80079808() {
-}
-void dummy_80079810() {
-}
+void dummy_80079808() {}
+void dummy_80079810() {}
 
 #ifdef NON_MATCHING
+//Down to a single regalloc
 void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
     OSScClient *client;
@@ -285,7 +284,7 @@ void __scHandleRetrace(OSSched *sc) {
     if (__scSchedule(sc, &sp, &dp, state) != state)
         __scExec(sc, sp, dp);
 
-    D_800DE760++;
+    gRetraceCount++;
     D_800DE750++;
     sc->frameCount++;
 
@@ -303,7 +302,8 @@ void __scHandleRetrace(OSSched *sc) {
 
     for (client = sc->clientList; client != 0; client = client->next) {
         if (client->unk0 == 1) {
-            if (D_800DE760 % 2 == 0) {
+            //Only run this on even calls to this function
+            if (gRetraceCount % 2 == 0) {
                 osSendMesg(client->msgQ, sc, OS_MESG_NOBLOCK);
                 if (sc->audioListHead) {
                     func_80079760(sc);
