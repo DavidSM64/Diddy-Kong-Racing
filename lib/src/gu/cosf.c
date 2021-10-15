@@ -5,4 +5,3 @@
 #include "macros.h"
 
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/cosf.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/sinf.s")

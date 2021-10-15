@@ -29,83 +29,75 @@ void __osPiRelAccess(void) {
 /**********************************************************************/
 
 // Please move these later!
-
+#include "lib/src/gu/guint.h"
 // Used with cosf
 
-const int D_800E97C0[5][2] = {
-    { 0x3FF00000, 0x00000000 },
-    { 0xBFC55554, 0xBC83656D },
-    { 0x3F8110ED, 0x3804C2A0 },
-    { 0xBF29F6FF, 0xEEA56814 },
-    { 0x3EC5DBDF, 0x0E314BFE }
+/* coefficients for polynomial approximation of cos on +/- pi/2 */
+
+const du	P_cosf[] =
+{
+{0x3ff00000,	0x00000000},
+{0xbfc55554,	0xbc83656d},
+{0x3f8110ed,	0x3804c2a0},
+{0xbf29f6ff,	0xeea56814},
+{0x3ec5dbdf,	0x0e314bfe},
 };
 
-const int D_800E97E8[2] = {
-    0x3FD45F30, 0x6DC9C883
-};
-const int D_800E97F0[2] = {
-    0x400921FB, 0x50000000
-};
-const int D_800E97F8[2] = {
-    0x3E6110B4, 0x611A6263
-};
-const int D_800E9800[1] = {
-    0x00000000
-};
+const du	rpi_cosf =
+{0x3fd45f30,	0x6dc9c883};
+
+const du	pihi_cosf =
+{0x400921fb,	0x50000000};
+
+const du	pilo_cosf =
+{0x3e6110b4,	0x611a6263};
+
+const fu	zero_cosf = {0x00000000};
 
 const int COSF_FILE_PADDING[3] = { 0 };
 
 // Used with sinf
+/* coefficients for polynomial approximation of sin on +/- pi/2 */
 
-const int D_800E9810[5][2] = {
-    { 0x3FF00000, 0x00000000 },
-    { 0xBFC55554, 0xBC83656D },
-    { 0x3F8110ED, 0x3804C2A0 },
-    { 0xBF29F6FF, 0xEEA56814 },
-    { 0x3EC5DBDF, 0x0E314BFE }
+const du	P_sinf[] =
+{
+{0x3ff00000,	0x00000000},
+{0xbfc55554,	0xbc83656d},
+{0x3f8110ed,	0x3804c2a0},
+{0xbf29f6ff,	0xeea56814},
+{0x3ec5dbdf,	0x0e314bfe},
 };
 
-const int D_800E9838[2] = {
-    0x3FD45F30, 0x6DC9C883
-};
+const du	rpi_sinf =
+{0x3fd45f30,	0x6dc9c883};
 
-const int D_800E9840[2] = {
-    0x400921FB, 0x50000000
-};
+const du	pihi_sinf =
+{0x400921fb,	0x50000000};
 
-const int D_800E9848[2] = {
-    0x3E6110B4, 0x611A6263
-};
+const du	pilo_sinf =
+{0x3e6110b4,	0x611a6263};
 
-const int D_800E9850[1] = {
-    0x00000000
-};
+const fu	zero_sinf = {0x00000000};
 
 const int SINF_FILE_PADDING[3] = { 0 };
 
 // Used with _Litob
+char ldigs[] = "0123456789abcdef"; // lowercase hex digits
+char udigs[] = "0123456789ABCDEF"; // uppercase hex digits
 
-char D_800E4920[20] = "0123456789abcdef"; // lowercase hex digits
-char D_800E4934[20] = "0123456789ABCDEF"; // uppercase hex digits
+// Powers for _Ldtob
+const double pows[] = {10e0L, 10e1L, 10e3L, 10e7L, 10e15L, 10e31L, 10e63L, 10e127L, 10e255L};
 
-// Powers
-const double D_800E9860[] = { 
-    10e0L, 10e1L, 10e3L, 10e7L, 
-    10e15L, 10e31L, 10e63L, 10e127L, 
-    10e255L 
-};
+const char Ldtob_NaN[] = "NaN";
+const char Ldtob_Inf[] = "Inf";
 
-const char D_800E98A8[] = "NaN";
-const char D_800E98AC[] = "Inf";
+//_Genld
+const char _Genld_0_string[] = "0";
 
-const int D_800E98B0[2] = {
-    0x30000000, 0x00000000
-};
+//_Ldtob
+const double _Ldtob_1e8[] = {1.0e8};
 
-const int D_800E98B8[2] = {
-    0x4197D784, 0x00000000
-};
-
-const int D_800E98C0[2] = {
+//sinf and cosf - supposed to be defined by libm_vals.s
+const int __libm_qnan_f[] = {
     0x7F810000, 0x00000000
 };
