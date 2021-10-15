@@ -219,8 +219,6 @@ void func_80079760(OSSched *sc) {
 void dummy_80079808() {}
 void dummy_80079810() {}
 
-#ifdef NON_MATCHING
-//Down to single stack pointer value being 0x24 instead of 0x28
 void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
     OSScClient *client;
@@ -229,7 +227,6 @@ void __scHandleRetrace(OSSched *sc) {
     OSScTask *dp = 0;
     u8 set_curRSPTask_NULL = FALSE;
     u8 set_curRDPTask_NULL = FALSE;
-    s32 i;
     OSScTask *unkTask;
 
     if (sc->curRSPTask) {
@@ -315,9 +312,6 @@ void __scHandleRetrace(OSSched *sc) {
         }
     }
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/sched/__scHandleRetrace.s")
-#endif
 
 //Keeping this defined here because it seems too specific to this function
 #define OS_CPU_COUNTER_F (f32)(OS_CPU_COUNTER / 100.0f)
