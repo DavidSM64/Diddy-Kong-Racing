@@ -125,18 +125,18 @@ glabel __scHandleRetrace
 /* 07A5D8 800799D8 0C01E7EA */  jal   __scExec
 /* 07A5DC 800799DC 02202025 */  move  $a0, $s1
 .L800799E0:
-/* 07A5E0 800799E0 3C0D800E */  lui   $t5, %hi(gRetraceCount) # $t5, 0x800e
-/* 07A5E4 800799E4 8DADE764 */  lw    $t5, %lo(gRetraceCount+4)($t5)
-/* 07A5E8 800799E8 3C0C800E */  lui   $t4, %hi(gRetraceCount) # $t4, 0x800e
-/* 07A5EC 800799EC 8D8CE760 */  lw    $t4, %lo(gRetraceCount)($t4)
+/* 07A5E0 800799E0 3C0D800E */  lui   $t5, %hi(gRetraceCounter64) # $t5, 0x800e
+/* 07A5E4 800799E4 8DADE764 */  lw    $t5, %lo(gRetraceCounter64+4)($t5)
+/* 07A5E8 800799E8 3C0C800E */  lui   $t4, %hi(gRetraceCounter64) # $t4, 0x800e
+/* 07A5EC 800799EC 8D8CE760 */  lw    $t4, %lo(gRetraceCounter64)($t4)
 /* 07A5F0 800799F0 25AF0001 */  addiu $t7, $t5, 1
 /* 07A5F4 800799F4 2DE10001 */  sltiu $at, $t7, 1
 /* 07A5F8 800799F8 01817021 */  addu  $t6, $t4, $at
-/* 07A5FC 800799FC 3C01800E */  lui   $at, %hi(gRetraceCount) # $at, 0x800e
-/* 07A600 80079A00 3C02800E */  lui   $v0, %hi(D_800DE750) # $v0, 0x800e
-/* 07A604 80079A04 2442E750 */  addiu $v0, %lo(D_800DE750) # addiu $v0, $v0, -0x18b0
-/* 07A608 80079A08 AC2EE760 */  sw    $t6, %lo(gRetraceCount)($at)
-/* 07A60C 80079A0C AC2FE764 */  sw    $t7, %lo(gRetraceCount+4)($at)
+/* 07A5FC 800799FC 3C01800E */  lui   $at, %hi(gRetraceCounter64) # $at, 0x800e
+/* 07A600 80079A00 3C02800E */  lui   $v0, %hi(gRetraceCounter32) # $v0, 0x800e
+/* 07A604 80079A04 2442E750 */  addiu $v0, %lo(gRetraceCounter32) # addiu $v0, $v0, -0x18b0
+/* 07A608 80079A08 AC2EE760 */  sw    $t6, %lo(gRetraceCounter64)($at)
+/* 07A60C 80079A0C AC2FE764 */  sw    $t7, %lo(gRetraceCounter64+4)($at)
 /* 07A610 80079A10 8C580000 */  lw    $t8, ($v0)
 /* 07A614 80079A14 00000000 */  nop
 /* 07A618 80079A18 27190001 */  addiu $t9, $t8, 1
@@ -183,10 +183,10 @@ glabel __scHandleRetrace
 /* 07A6A4 80079AA4 92020000 */  lbu   $v0, ($s0)
 /* 07A6A8 80079AA8 24010001 */  li    $at, 1
 /* 07A6AC 80079AAC 14410016 */  bne   $v0, $at, .L80079B08
-/* 07A6B0 80079AB0 3C04800E */  lui   $a0, %hi(gRetraceCount) # $a0, 0x800e
-/* 07A6B4 80079AB4 3C05800E */  lui   $a1, %hi(gRetraceCount) # $a1, 0x800e
-/* 07A6B8 80079AB8 8CA5E764 */  lw    $a1, %lo(gRetraceCount+4)($a1)
-/* 07A6BC 80079ABC 8C84E760 */  lw    $a0, %lo(gRetraceCount)($a0)
+/* 07A6B0 80079AB0 3C04800E */  lui   $a0, %hi(gRetraceCounter64) # $a0, 0x800e
+/* 07A6B4 80079AB4 3C05800E */  lui   $a1, %hi(gRetraceCounter64) # $a1, 0x800e
+/* 07A6B8 80079AB8 8CA5E764 */  lw    $a1, %lo(gRetraceCounter64+4)($a1)
+/* 07A6BC 80079ABC 8C84E760 */  lw    $a0, %lo(gRetraceCounter64)($a0)
 /* 07A6C0 80079AC0 24060000 */  li    $a2, 0
 /* 07A6C4 80079AC4 0C033AA3 */  jal   __ull_rem
 /* 07A6C8 80079AC8 24070002 */  li    $a3, 2

@@ -27,12 +27,11 @@ f32 D_800DE744 = 0;
 f32 D_800DE748 = 0;
 f32 D_800DE74C = 0;
 
-s32 D_800DE750 = 0; // Currently unknown, might be a different type.
+u32 gRetraceCounter32 = 0;
 s32 gCurRSPTaskCounter = 0;
 s32 gCurRDPTaskCounter = 0;
-s32 D_800DE75C = 0;
-
-u64 gRetraceCount = 0;
+static u32 gUnusedVar = 0;
+u64 gRetraceCounter64 = 0;
 
 /*******************************/
 
@@ -64,7 +63,7 @@ s32 gCurRSPTaskIsSet;
 s32 gCurRDPTaskIsSet;
 OSTime gYieldTime;
 s32 D_80126120;
-u32 D_80126124;
+u32 gRSPAudTaskCount;
 s32 D_80126128[18];
 
 /*******************************/
@@ -221,7 +220,7 @@ void dummy_80079808() {}
 void dummy_80079810() {}
 
 #ifdef NON_MATCHING
-//Down to a single regalloc
+//Down to single stack pointer value being 0x24 instead of 0x28
 void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
     OSScClient *client;
@@ -231,6 +230,7 @@ void __scHandleRetrace(OSSched *sc) {
     u8 set_curRSPTask_NULL = FALSE;
     u8 set_curRDPTask_NULL = FALSE;
     s32 i;
+    OSScTask *unkTask;
 
     if (sc->curRSPTask) {
         gCurRSPTaskCounter++;
@@ -284,16 +284,17 @@ void __scHandleRetrace(OSSched *sc) {
     if (__scSchedule(sc, &sp, &dp, state) != state)
         __scExec(sc, sp, dp);
 
-    gRetraceCount++;
-    D_800DE750++;
+    gRetraceCounter64++;
+    gRetraceCounter32++;
     sc->frameCount++;
 
     if ((sc->unkTask) && (sc->frameCount >= 2)) {
-        if (sc->unkTask->msgQ) {
-            if ((sc->unkTask->unk68) || (sc->unkTask->msg)) {
-                osSendMesg(sc->unkTask->msgQ, sc->unkTask->msg, OS_MESG_BLOCK);
+        unkTask = sc->unkTask;
+        if (unkTask->msgQ) {
+            if ((unkTask->unk68) || (unkTask->msg)) {
+                osSendMesg(unkTask->msgQ, unkTask->msg, OS_MESG_BLOCK);
             } else {
-                osSendMesg(sc->unkTask->msgQ, &D_800DE730, OS_MESG_BLOCK);
+                osSendMesg(unkTask->msgQ, &D_800DE730, OS_MESG_BLOCK);
             }
         }
         sc->frameCount = 0;
@@ -303,7 +304,7 @@ void __scHandleRetrace(OSSched *sc) {
     for (client = sc->clientList; client != 0; client = client->next) {
         if (client->unk0 == 1) {
             //Only run this on even calls to this function
-            if (gRetraceCount % 2 == 0) {
+            if (gRetraceCounter64 % 2 == 0) {
                 osSendMesg(client->msgQ, sc, OS_MESG_NOBLOCK);
                 if (sc->audioListHead) {
                     func_80079760(sc);
@@ -332,13 +333,13 @@ void __scHandleRSP(OSSched *sc) {
     //Rare seems to have edited this function, most specifically here.
     //Still need to do better for a match, but this does work
     if (t->list.t.type == M_AUDTASK) {
-        D_80126124 = osGetCount();
-        D_800DE74C = (f32) (((f32) (D_80126124 - D_80126120) * 60.0f) / OS_CPU_COUNTER_F);
+        gRSPAudTaskCount = osGetCount();
+        D_800DE74C = (f32) (((f32) (gRSPAudTaskCount - D_80126120) * 60.0f) / OS_CPU_COUNTER_F);
         D_800DE744 = (f32) (D_800DE744 + D_800DE74C);
         if (D_800DE740 < D_800DE74C) {
             D_800DE740 = D_800DE74C;
         }
-        temp_hi = (s32) D_800DE750 % 1000;
+        temp_hi = (s32) gRetraceCounter32 % 1000;
         if ((temp_hi == 1) || (temp_hi == 2)) {
             D_800DE748 = (f32) (D_800DE744 / 500.0f);
             D_800DE744 = 0.0f;
@@ -480,7 +481,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
     }
 
     if (dp && (dp != sp)) {
-        osDpSetNextBuffer(dp->list.t.output_buff,  *dp->list.t.output_buff_size);        
+        osDpSetNextBuffer(dp->list.t.output_buff, *dp->list.t.output_buff_size);
         sc->curRDPTask = dp;
     }
 }
