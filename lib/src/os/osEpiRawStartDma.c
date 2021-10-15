@@ -1,11 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800D2680 */
 
-#include "types.h"
-#include "macros.h"
 #include "libultra_internal.h"
 #include "PR/rcp.h"
-#include "osVirtualToPhysical.h"
 
 s32 osEPiRawStartDma(OSPiHandle *pihandle, s32 dir, u32 cart_addr, void *dram_addr, u32 size) {
     register int status;

@@ -91,6 +91,12 @@
 #define LEO_ERROR_24 24 //no reference position found?
 #define LEO_ERROR_29 29 //
 
+/*
+ * PI/EPI
+ */
+#define PI_DOMAIN1      0
+#define PI_DOMAIN2      1
+
 extern OSDevMgr __osPiDevMgr;
 extern OSPiHandle *__osCurrentHandle[2];
 extern OSPiHandle CartRomHandle;

@@ -142,7 +142,6 @@ u8 D_80121150[16];
 /******************************/
 
 #ifdef NON_MATCHING
-extern s32 D_A4600010;
 extern s32 D_B0000578;
 
 void func_80065EA0(void) {
@@ -163,7 +162,7 @@ void func_80065EA0(void) {
     D_80120D18 = 0;
     D_80120D15 = 0;
     D_800DD060 = 0;
-    while (D_A4600010 & 3) {
+    while (IO_READ(PI_STATUS_REG) & 3) {
     }
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         D_800DD060 = 1;

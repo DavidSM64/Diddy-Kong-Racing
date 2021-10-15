@@ -2,9 +2,8 @@
 /* RAM_POS: 0x800D18E0 */
 
 #include "libultra_internal.h"
-#include "osVirtualToPhysical.h"
 
-int __osDpDeviceBusy(void);
+s32 __osDpDeviceBusy(void);
 s32 osDpSetNextBuffer(void *bufPtr, u64 size) {
     register u32 stat;
 

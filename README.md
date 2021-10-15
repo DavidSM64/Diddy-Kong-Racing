@@ -113,30 +113,30 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of September 27th 2021, this is our current score:
+As of October 15th 2021, this is our current score:
 ```
- ================================================================== 
-               ADVENTURE ONE (ASM -> C Decompilation)               
- ------------------------ 16.16% Complete ------------------------- 
-                    # Decompiled functions: 934                     
-                    # GLOBAL_ASM remaining: 848                     
-                   # NON_MATCHING functions: 104                    
- -------------------------- Game Status --------------------------- 
-              Balloons: 8/47, Keys: 1/4, Trophies: 0/5              
-               T.T. Amulets: 1/4, Wizpig Amulets: 0/4               
- ------------------------------------------------------------------ 
- We are collecting silver coins in Ancient Lake. (5/8 silver coins) 
- ================================================================== 
-               ADVENTURE TWO (Cleanup & Documentation)              
- ------------------------  0.80% Complete ------------------------- 
-                     # Documented functions: 65                     
-                   # Undocumented remaining: 1717                   
- -------------------------- Game Status --------------------------- 
-              Balloons: 0/47, Keys: 0/4, Trophies: 0/5              
-               T.T. Amulets: 0/4, Wizpig Amulets: 0/4               
- ------------------------------------------------------------------ 
-      We are collecting the first balloon on Timber's Island.       
- ================================================================== 
+ =================================================================== 
+               ADVENTURE ONE (ASM -> C Decompilation)                
+ ------------------------- 17.77% Complete ------------------------- 
+                     # Decompiled functions: 972                     
+                     # GLOBAL_ASM remaining: 786                     
+                    # NON_MATCHING functions: 104                    
+ --------------------------- Game Status --------------------------- 
+              Balloons: 9/47, Keys: 1/4, Trophies: 0/5               
+               T.T. Amulets: 1/4, Wizpig Amulets: 0/4                
+ ------------------------------------------------------------------- 
+ We are collecting silver coins in Fossil Canyon. (6/8 silver coins) 
+ =================================================================== 
+                ADVENTURE TWO (Cleanup & Documentation)              
+ -------------------------  0.80% Complete ------------------------- 
+                     # Documented functions: 65                      
+                   # Undocumented remaining: 1693                    
+ --------------------------- Game Status --------------------------- 
+              Balloons: 0/47, Keys: 0/4, Trophies: 0/5               
+               T.T. Amulets: 0/4, Wizpig Amulets: 0/4                
+ ------------------------------------------------------------------- 
+       We are collecting the first balloon on Timber's Island.       
+ =================================================================== 
 
 ```
 

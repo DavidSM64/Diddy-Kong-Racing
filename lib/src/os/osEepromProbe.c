@@ -12,7 +12,7 @@ s32 osEepromProbe(OSMesgQueue *mq) {
     __osSiGetAccess();
     ret = __osEepStatus(mq, &sdata);
     if (ret == 0 && (sdata.type & CONT_EEPROM) != 0) {
-        ret = 1;
+        ret = EEPROM_TYPE_4K;
     } else {
         ret = 0;
     }

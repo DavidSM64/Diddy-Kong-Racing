@@ -32,5 +32,6 @@
 #include <PR/libultra.h>
 #include <PR/pfs.h>
 #include <PR/rcp.h>
+#include <PR/os.h>
 
 #endif

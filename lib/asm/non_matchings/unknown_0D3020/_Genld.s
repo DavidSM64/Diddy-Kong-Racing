@@ -11,8 +11,8 @@ glabel _Genld
 /* 0D75C4 800D69C4 01C0A025 */  move  $s4, $t6
 /* 0D75C8 800D69C8 1E600004 */  bgtz  $s3, .L800D69DC
 /* 0D75CC 800D69CC AFBF0014 */   sw    $ra, 0x14($sp)
-/* 0D75D0 800D69D0 3C11800F */  lui   $s1, %hi(D_800E98B0) # $s1, 0x800f
-/* 0D75D4 800D69D4 263198B0 */  addiu $s1, %lo(D_800E98B0) # addiu $s1, $s1, -0x6750
+/* 0D75D0 800D69D0 3C11800F */  lui   $s1, %hi(_Genld_0_string) # $s1, 0x800f
+/* 0D75D4 800D69D4 263198B0 */  addiu $s1, %lo(_Genld_0_string) # addiu $s1, $s1, -0x6750
 /* 0D75D8 800D69D8 24130001 */  li    $s3, 1
 .L800D69DC:
 /* 0D75DC 800D69DC 24020066 */  li    $v0, 102

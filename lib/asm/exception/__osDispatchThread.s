@@ -87,8 +87,8 @@ glabel __osDispatchThread
 /* 0D4174 800D3574 275A94D0 */  addiu $k0, %lo(D_800E94D0) # addiu $k0, $k0, -0x6b30
 /* 0D4178 800D3578 037AD821 */  addu  $k1, $k1, $k0
 /* 0D417C 800D357C 977B0000 */  lhu   $k1, ($k1)
-/* 0D4180 800D3580 3C1AA430 */  lui   $k0, %hi(D_A430000C) # $k0, 0xa430
-/* 0D4184 800D3584 275A000C */  addiu $k0, %lo(D_A430000C) # addiu $k0, $k0, 0xc
+/* 0D4180 800D3580 3C1AA430 */  lui   $k0, %hi(MI_INTR_MASK_REG) # $k0, 0xa430
+/* 0D4184 800D3584 275A000C */  addiu $k0, %lo(MI_INTR_MASK_REG) # addiu $k0, $k0, 0xc
 /* 0D4188 800D3588 AF5B0000 */  sw    $k1, ($k0)
 /* 0D418C 800D358C 00000000 */  nop   
 /* 0D4190 800D3590 00000000 */  nop   

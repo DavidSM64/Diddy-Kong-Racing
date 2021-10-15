@@ -1,8 +1,6 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800CE280 */
 
-#include "types.h"
-#include "macros.h"
 #include "libultra_internal.h"
 #include "PR/rcp.h"
 #include "controller.h"
@@ -25,7 +23,7 @@ s32 osEepromRead(OSMesgQueue *mq, u8 address, u8 *buffer) {
     i = 0;
     ptr = (u8 *)&__osEepPifRam.ramarray;
 
-    if (address > 0x40) {
+    if (address > EEPROM_MAXBLOCKS) {
         return -1;
     }
 
@@ -48,7 +46,7 @@ s32 osEepromRead(OSMesgQueue *mq, u8 address, u8 *buffer) {
         __osEepPifRam.ramarray[i] = CONT_CMD_NOP;
     }
 
-    __osEepPifRam.pifstatus = 0;
+    __osEepPifRam.pifstatus = CONT_CMD_REQUEST_STATUS;
 
     ret = __osSiRawStartDma(OS_READ, __osEepPifRam.ramarray);
 
@@ -56,7 +54,7 @@ s32 osEepromRead(OSMesgQueue *mq, u8 address, u8 *buffer) {
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
 
     //skip the first 4 bytes
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         ptr++;
     }
 
@@ -94,7 +92,7 @@ s32 __osPackEepReadData(u8 address) {
         eepromformat.data[i] = 0;
     }
     //skip the first 4 bytes
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         *ptr++ = 0;
     }
     *(__OSContEepromFormat *)ptr = eepromformat;

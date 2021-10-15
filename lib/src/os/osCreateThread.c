@@ -4,8 +4,8 @@
 #include "libultra_internal.h"
 #include "PR/R4300.h"
 
-extern OSThread *__osActiveQueue; //__osActiveQueue;
-void __osCleanupThread(void); //__osCleanupThread
+extern OSThread *__osActiveQueue;
+void __osCleanupThread(void);
 
 void osCreateThread(OSThread *t, OSId id, void (*entry)(void *), void *arg, void *sp, OSPri p) {
     register u32 saveMask;

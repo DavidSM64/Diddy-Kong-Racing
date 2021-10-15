@@ -11,8 +11,8 @@ glabel sinf
 /* 0D5844 800D4C44 14200014 */  bnez  $at, .L800D4C98
 /* 0D5848 800D4C48 460020A1 */   cvt.d.s $f2, $f4
 /* 0D584C 800D4C4C 46221302 */  mul.d $f12, $f2, $f2
-/* 0D5850 800D4C50 3C03800F */  lui   $v1, %hi(D_800E9810) # $v1, 0x800f
-/* 0D5854 800D4C54 24639810 */  addiu $v1, %lo(D_800E9810) # addiu $v1, $v1, -0x67f0
+/* 0D5850 800D4C50 3C03800F */  lui   $v1, %hi(P_sinf) # $v1, 0x800f
+/* 0D5854 800D4C54 24639810 */  addiu $v1, %lo(P_sinf) # addiu $v1, $v1, -0x67f0
 /* 0D5858 800D4C58 D4660020 */  ldc1  $f6, 0x20($v1)
 /* 0D585C 800D4C5C D46A0018 */  ldc1  $f10, 0x18($v1)
 /* 0D5860 800D4C60 D4640010 */  ldc1  $f4, 0x10($v1)
@@ -39,8 +39,8 @@ glabel sinf
 /* 0D58A4 800D4CA4 10200044 */  beqz  $at, .L800D4DB8
 /* 0D58A8 800D4CA8 C7A40000 */   lwc1  $f4, ($sp)
 /* 0D58AC 800D4CAC C7A60000 */  lwc1  $f6, ($sp)
-/* 0D58B0 800D4CB0 3C01800F */  lui   $at, %hi(D_800E9838) # $at, 0x800f
-/* 0D58B4 800D4CB4 D42A9838 */  ldc1  $f10, %lo(D_800E9838)($at)
+/* 0D58B0 800D4CB0 3C01800F */  lui   $at, %hi(rpi_sinf) # $at, 0x800f
+/* 0D58B4 800D4CB4 D42A9838 */  ldc1  $f10, %lo(rpi_sinf)($at)
 /* 0D58B8 800D4CB8 460030A1 */  cvt.d.s $f2, $f6
 /* 0D58BC 800D4CBC 44804800 */  mtc1  $zero, $f9
 /* 0D58C0 800D4CC0 462A1002 */  mul.d $f0, $f2, $f10
@@ -69,13 +69,13 @@ glabel sinf
 /* 0D5918 800D4D18 00000000 */  nop   
 /* 0D591C 800D4D1C 44828000 */  mtc1  $v0, $f16
 .L800D4D20:
-/* 0D5920 800D4D20 3C01800F */  lui   $at, %hi(D_800E9840) # $at, 0x800f
-/* 0D5924 800D4D24 D4329840 */  ldc1  $f18, %lo(D_800E9840)($at)
+/* 0D5920 800D4D20 3C01800F */  lui   $at, %hi(pihi_sinf) # $at, 0x800f
+/* 0D5924 800D4D24 D4329840 */  ldc1  $f18, %lo(pihi_sinf)($at)
 /* 0D5928 800D4D28 46808021 */  cvt.d.w $f0, $f16
-/* 0D592C 800D4D2C 3C01800F */  lui   $at, %hi(D_800E9848) # $at, 0x800f
-/* 0D5930 800D4D30 D4269848 */  ldc1  $f6, %lo(D_800E9848)($at)
-/* 0D5934 800D4D34 3C03800F */  lui   $v1, %hi(D_800E9810) # $v1, 0x800f
-/* 0D5938 800D4D38 24639810 */  addiu $v1, %lo(D_800E9810) # addiu $v1, $v1, -0x67f0
+/* 0D592C 800D4D2C 3C01800F */  lui   $at, %hi(pilo_sinf) # $at, 0x800f
+/* 0D5930 800D4D30 D4269848 */  ldc1  $f6, %lo(pilo_sinf)($at)
+/* 0D5934 800D4D34 3C03800F */  lui   $v1, %hi(P_sinf) # $v1, 0x800f
+/* 0D5938 800D4D38 24639810 */  addiu $v1, %lo(P_sinf) # addiu $v1, $v1, -0x67f0
 /* 0D593C 800D4D3C 46320102 */  mul.d $f4, $f0, $f18
 /* 0D5940 800D4D40 D4680020 */  ldc1  $f8, 0x20($v1)
 /* 0D5944 800D4D44 D4720018 */  ldc1  $f18, 0x18($v1)
@@ -112,15 +112,15 @@ glabel sinf
 
 .L800D4DB8:
 /* 0D59B8 800D4DB8 46042032 */  c.eq.s $f4, $f4
-/* 0D59BC 800D4DBC 3C01800F */  lui   $at, %hi(D_800E9850) # $at, 0x800f
+/* 0D59BC 800D4DBC 3C01800F */  lui   $at, %hi(zero_sinf) # $at, 0x800f
 /* 0D59C0 800D4DC0 45010004 */  bc1t  .L800D4DD4
 /* 0D59C4 800D4DC4 00000000 */   nop   
-/* 0D59C8 800D4DC8 3C01800F */  lui   $at, %hi(D_800E98C0) # $at, 0x800f
+/* 0D59C8 800D4DC8 3C01800F */  lui   $at, %hi(__libm_qnan_f) # $at, 0x800f
 /* 0D59CC 800D4DCC 03E00008 */  jr    $ra
-/* 0D59D0 800D4DD0 C42098C0 */   lwc1  $f0, %lo(D_800E98C0)($at)
+/* 0D59D0 800D4DD0 C42098C0 */   lwc1  $f0, %lo(__libm_qnan_f)($at)
 
 .L800D4DD4:
-/* 0D59D4 800D4DD4 C4209850 */  lwc1  $f0, %lo(D_800E9850)($at)
+/* 0D59D4 800D4DD4 C4209850 */  lwc1  $f0, %lo(zero_sinf)($at)
 /* 0D59D8 800D4DD8 03E00008 */  jr    $ra
 /* 0D59DC 800D4DDC 00000000 */   nop   
 

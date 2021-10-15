@@ -1,16 +1,10 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800CDCA0 */
 
-#include "macros.h"
 #include "libultra_internal.h"
 #include "controller.h"
 #include "siint.h"
 
-#if 0
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osContRamRead.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CE8A0/__osPackRamReadData.s")
-#else
-extern s32 D_8012CE1C;
 static void __osPackRamReadData(int channel, u16 address);
 s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer) {
     s32 ret;
@@ -27,10 +21,10 @@ s32 __osContRamRead(OSMesgQueue *mq, int channel, u16 address, u8 *buffer) {
     ret = __osSiRawStartDma(OS_WRITE, &__osPfsPifRam);
     osRecvMesg(mq, NULL, OS_MESG_BLOCK);
     do {
-		for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
-			__osPfsPifRam.ramarray[i] = 0xFFU;
-		}
-		D_8012CE1C = 0;
+        for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
+            __osPfsPifRam.ramarray[i] = 0xFFU;
+        }
+        __osPfsPifRam.pifstatus = CONT_CMD_REQUEST_STATUS;
         ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
         osRecvMesg(mq, NULL, OS_MESG_BLOCK);
         ptr = (u8 *)&__osPfsPifRam;
@@ -74,7 +68,7 @@ static void __osPackRamReadData(int channel, u16 address) {
     for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) { // also clear pifstatus
         __osPfsPifRam.ramarray[i] = 0;
     }
-	
+    
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
     ramreadformat.dummy = CONT_CMD_NOP;
     ramreadformat.txsize = CONT_CMD_READ_MEMPACK_TX;
@@ -94,4 +88,3 @@ static void __osPackRamReadData(int channel, u16 address) {
     ptr += sizeof(__OSContRamReadFormat);
     ptr[0] = CONT_CMD_END;
 }
-#endif

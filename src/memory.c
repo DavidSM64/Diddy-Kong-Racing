@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "printf.h"
 #include "thread0_epc.h"
+#include "controller.h"
 
 /************ .rodata ************/
 
@@ -37,10 +38,10 @@ s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
 s32 gFreeQueueState;
-s32 D_80123DD0[64];
-s32 D_80123ED0[64];
-s32 D_80123FD0[8];
-s32 D_80123FF0[8];
+OSPifRam _MotorStopData[MAXCONTROLLERS];
+OSPifRam _MotorStartData[MAXCONTROLLERS];
+u8 _motorstopbuf[BLOCKSIZE];
+u8 _motorstartbuf[BLOCKSIZE];
 
 extern MemoryPoolSlot gMainMemoryPool;
 
@@ -121,11 +122,11 @@ GLOBAL_ASM("asm/non_matchings/memory/new_memory_pool.s")
 void *allocate_from_main_pool_safe(s32 size, u32 colorTag) {
     void *temp_v0;
     if (size == 0) {
-        func_800B7460(*(s32 *)((u8 *)get_stack_pointer() + 0x14), size, colorTag);
+        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colorTag);
     }
     temp_v0 = allocate_from_memory_pool(0, size, colorTag);
     if (temp_v0 == (void *)NULL) {
-        func_800B7460(*(s32 *)((u8 *)get_stack_pointer() + 0x14), size, colorTag);
+        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colorTag);
     }
     return temp_v0;
 }

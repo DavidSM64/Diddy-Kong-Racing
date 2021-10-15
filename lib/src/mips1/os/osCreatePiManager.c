@@ -5,14 +5,14 @@
 #include "libultra_internal.h"
 #include "stacks.h"
 
-extern OSMesgQueue piAccessQueue; //piAccessQueue
-extern u32 __osPiAccessQueueEnabled; //__osPiAccessQueueEnabled
+extern OSMesgQueue __osPiAccessQueue;
+extern u32 __osPiAccessQueueEnabled;
 extern OSDevMgr __osPiDevMgr;
 void __osDevMgrMain(void);
 
 // bss variables
 OSThread piThread;
-s32 D_8012A9B0[64];
+u8 piThreadStack_2[256]; // piThreadStack[OS_PIM_STACKSIZE]; Shouldn't this be piThreadStack?
 OSMesgQueue piEventQueue;
 OSMesg piEventBuf[2];
 
@@ -20,8 +20,7 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
     u32 savedMask;
     OSPri oldPri;
     OSPri myPri;
-    if (!__osPiDevMgr.active)
-    {
+    if (!__osPiDevMgr.active) {
         osCreateMesgQueue(cmdQ, cmdBuf, cmdMsgCnt);
         osCreateMesgQueue(&piEventQueue, (OSMesg*)&piEventBuf, 1);
         if (!__osPiAccessQueueEnabled)
@@ -29,8 +28,7 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
         osSetEventMesg(OS_EVENT_PI, &piEventQueue, (OSMesg)0x22222222);
         oldPri = -1;
         myPri = osGetThreadPri(NULL);
-        if (myPri < pri)
-        {
+        if (myPri < pri) {
             oldPri = myPri;
             osSetThreadPri(NULL, pri);
         }
@@ -39,15 +37,14 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
         __osPiDevMgr.thread = &piThread;
         __osPiDevMgr.cmdQueue = cmdQ;
         __osPiDevMgr.evtQueue = &piEventQueue;
-        __osPiDevMgr.acsQueue = &piAccessQueue;
+        __osPiDevMgr.acsQueue = &__osPiAccessQueue;
         __osPiDevMgr.dma = osPiRawStartDma;
         __osPiDevMgr.edma = osEPiRawStartDma;
 
         osCreateThread(&piThread, 0, __osDevMgrMain, &__osPiDevMgr, &piThreadStack[OS_PIM_STACKSIZE], pri);
         osStartThread(&piThread);
         __osRestoreInt(savedMask);
-        if (oldPri != -1)
-        {
+        if (oldPri != -1) {
             osSetThreadPri(NULL, oldPri);
         }
     }

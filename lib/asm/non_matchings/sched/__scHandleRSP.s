@@ -17,8 +17,8 @@ glabel __scHandleRSP
 /* 07A76C 80079B6C 00808025 */   move  $s0, $a0
 /* 07A770 80079B70 0C031E34 */  jal   osGetCount
 /* 07A774 80079B74 AFA50034 */   sw    $a1, 0x34($sp)
-/* 07A778 80079B78 3C038012 */  lui   $v1, %hi(D_80126124) # $v1, 0x8012
-/* 07A77C 80079B7C 24636124 */  addiu $v1, %lo(D_80126124) # addiu $v1, $v1, 0x6124
+/* 07A778 80079B78 3C038012 */  lui   $v1, %hi(gRSPAudTaskCount) # $v1, 0x8012
+/* 07A77C 80079B7C 24636124 */  addiu $v1, %lo(gRSPAudTaskCount) # addiu $v1, $v1, 0x6124
 /* 07A780 80079B80 AC620000 */  sw    $v0, ($v1)
 /* 07A784 80079B84 3C188012 */  lui   $t8, %hi(D_80126120) # $t8, 0x8012
 /* 07A788 80079B88 8F186120 */  lw    $t8, %lo(D_80126120)($t8)
@@ -46,7 +46,7 @@ glabel __scHandleRSP
 /* 07A7DC 80079BDC C4EA0000 */  lwc1  $f10, ($a3)
 /* 07A7E0 80079BE0 C4C80000 */  lwc1  $f8, ($a2)
 /* 07A7E4 80079BE4 46128103 */  div.s $f4, $f16, $f18
-/* 07A7E8 80079BE8 3C02800E */  lui   $v0, %hi(D_800DE750) # $v0, 0x800e
+/* 07A7E8 80079BE8 3C02800E */  lui   $v0, %hi(gRetraceCounter32) # $v0, 0x800e
 /* 07A7EC 80079BEC E4840000 */  swc1  $f4, ($a0)
 /* 07A7F0 80079BF0 C4800000 */  lwc1  $f0, ($a0)
 /* 07A7F4 80079BF4 00000000 */  nop   
@@ -56,7 +56,7 @@ glabel __scHandleRSP
 /* 07A804 80079C04 E4C60000 */   swc1  $f6, ($a2)
 /* 07A808 80079C08 E4E00000 */  swc1  $f0, ($a3)
 .L80079C0C:
-/* 07A80C 80079C0C 8C42E750 */  lw    $v0, %lo(D_800DE750)($v0)
+/* 07A80C 80079C0C 8C42E750 */  lw    $v0, %lo(gRetraceCounter32)($v0)
 /* 07A810 80079C10 240103E8 */  li    $at, 1000
 /* 07A814 80079C14 0041001A */  div   $zero, $v0, $at
 /* 07A818 80079C18 24010001 */  li    $at, 1

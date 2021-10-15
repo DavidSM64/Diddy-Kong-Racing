@@ -141,7 +141,7 @@ TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
 COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
 
 LIB_DIRS := lib/
-ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/
+ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/ lib/asm/non_decompilable
 SRC_DIRS := $(sort $(dir $(wildcard src/* src/**/*))) $(sort $(dir $(wildcard lib/src/* lib/src/**/* lib/src/**/**/*)))
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(SRC_DIRS)
@@ -267,6 +267,7 @@ $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O2
 $(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
@@ -274,6 +275,7 @@ $(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
+$(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips1
 
 # asm-processor currently does not support -O3, so this is my workaround.
 $(BUILD_DIR)/lib/src/al/global_asm/%.o: OPT_FLAGS := -O2

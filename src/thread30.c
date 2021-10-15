@@ -5,6 +5,7 @@
 #include "macros.h"
 #include "libultra_internal.h"
 #include "unknown_06B2B0.h"
+#include "stacks.h"
 
 /************ .data ************/
 
@@ -18,8 +19,7 @@ s32 gThread30LoadDelay = 0;
 /************ .bss ************/
 
 // Used for __osException, but .bss file order is weird. Need to fix later.
-s32 D_8012AAE0[4];
-
+u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something. This is something like 4096 in libreultra...
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
 OSMesg gThread30Message;

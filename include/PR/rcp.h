@@ -52,17 +52,17 @@
 0x0800_0000 .. 0x0fff_ffff	cartridge domain 2
 0x1000_0000 .. 0x1fbf_ffff	cartridge domain 1
 
-0x1fc0_0000 .. 0x1fc0_07bf      PIF Boot Rom (1984 bytes)
-0x1fc0_07c0 .. 0x1fc0_07ff      PIF (JoyChannel) RAM (64 bytes)
-0x1fc0_0800 .. 0x1fcf_ffff      Reserved
-0x1fd0_0000 .. 0x7fff_ffff      cartridge domain 1
-0x8000_0000 .. 0xffff_ffff      external SysAD device
+0x1fc0_0000 .. 0x1fc0_07bf	PIF Boot Rom (1984 bytes)
+0x1fc0_07c0 .. 0x1fc0_07ff	PIF (JoyChannel) RAM (64 bytes)
+0x1fc0_0800 .. 0x1fcf_ffff	Reserved
+0x1fd0_0000 .. 0x7fff_ffff	cartridge domain 1
+0x8000_0000 .. 0xffff_ffff	external SysAD device
 
 The Indy development board use cartridge domain 1:
 0x1000_0000 .. 0x10ff_ffff	RAMROM
-0x1800_0000 .. 0x1800_0003	GIO interrupt (6 bits valid in 4 bytes)	
-0x1800_0400 .. 0x1800_0403	GIO sync (6 bits valid in 4 bytes)	
-0x1800_0800 .. 0x1800_0803	CART interrupt (6 bits valid in 4 bytes)	
+0x1800_0000 .. 0x1800_0003	GIO interrupt (6 bits valid in 4 bytes)
+0x1800_0400 .. 0x1800_0403	GIO sync (6 bits valid in 4 bytes)
+0x1800_0800 .. 0x1800_0803	CART interrupt (6 bits valid in 4 bytes)
 
 
 
@@ -109,9 +109,9 @@ The Indy development board use cartridge domain 1:
 #define RDRAM_0_DEVICE_ID	0
 #define RDRAM_1_DEVICE_ID	1
 
-#define RDRAM_RESET_MODE        0
-#define RDRAM_ACTIVE_MODE       1
-#define RDRAM_STANDBY_MODE      2
+#define RDRAM_RESET_MODE	0
+#define RDRAM_ACTIVE_MODE	1
+#define RDRAM_STANDBY_MODE	2
 
 #define RDRAM_LENGTH		(2*512*2048)
 #define RDRAM_0_BASE_ADDRESS	(RDRAM_0_DEVICE_ID*RDRAM_LENGTH)
@@ -125,7 +125,7 @@ The Indy development board use cartridge domain 1:
 /*************************************************************************
  * PIF Physical memory map (total size = 2 KB)
  *
- *			  Size	    Description     Mode
+ *			  Size     Description     Mode
  *	1FC007FF	+-------+-----------------+-----+
  *			|  64 B | JoyChannel RAM  | R/W |
  *	1FC007C0	+-------+-----------------+-----+
@@ -177,7 +177,7 @@ The Indy development board use cartridge domain 1:
 
 /* SP memory address (R/W): [11:0] DMEM/IMEM address; [12] 0=DMEM,1=IMEM */
 #define SP_MEM_ADDR_REG		(SP_BASE_REG+0x00)	/* Master */
-						
+
 /* SP DRAM DMA address (R/W): [23:0] RDRAM address */
 #define SP_DRAM_ADDR_REG	(SP_BASE_REG+0x04)	/* Slave */
 
@@ -212,31 +212,31 @@ The Indy development board use cartridge domain 1:
 /*
  * Values to clear/set bit in status reg (SP_STATUS_REG - write)
  */
-#define SP_CLR_HALT		0x00001	    /* Bit  0: clear halt */
-#define SP_SET_HALT		0x00002	    /* Bit  1: set halt */
-#define SP_CLR_BROKE		0x00004	    /* Bit  2: clear broke */
-#define SP_CLR_INTR		0x00008	    /* Bit  3: clear intr */
-#define SP_SET_INTR		0x00010	    /* Bit  4: set intr */
-#define SP_CLR_SSTEP		0x00020	    /* Bit  5: clear sstep */
-#define SP_SET_SSTEP		0x00040	    /* Bit  6: set sstep */
-#define SP_CLR_INTR_BREAK	0x00080	    /* Bit  7: clear intr on break */
-#define SP_SET_INTR_BREAK	0x00100	    /* Bit  8: set intr on break */
-#define SP_CLR_SIG0		0x00200	    /* Bit  9: clear signal 0 */
-#define SP_SET_SIG0		0x00400	    /* Bit 10: set signal 0 */
-#define SP_CLR_SIG1		0x00800	    /* Bit 11: clear signal 1 */
-#define SP_SET_SIG1		0x01000	    /* Bit 12: set signal 1 */
-#define SP_CLR_SIG2		0x02000	    /* Bit 13: clear signal 2 */
-#define SP_SET_SIG2		0x04000	    /* Bit 14: set signal 2 */
-#define SP_CLR_SIG3		0x08000	    /* Bit 15: clear signal 3 */
-#define SP_SET_SIG3		0x10000	    /* Bit 16: set signal 3 */
-#define SP_CLR_SIG4		0x20000	    /* Bit 17: clear signal 4 */
-#define SP_SET_SIG4		0x40000	    /* Bit 18: set signal 4 */
-#define SP_CLR_SIG5		0x80000	    /* Bit 19: clear signal 5 */
-#define SP_SET_SIG5	       0x100000	    /* Bit 20: set signal 5 */
-#define SP_CLR_SIG6	       0x200000	    /* Bit 21: clear signal 6 */
-#define SP_SET_SIG6	       0x400000	    /* Bit 22: set signal 6 */
-#define SP_CLR_SIG7	       0x800000	    /* Bit 23: clear signal 7 */
-#define SP_SET_SIG7	      0x1000000	    /* Bit 24: set signal 7 */
+#define SP_CLR_HALT		0x00001		/* Bit  0: clear halt */
+#define SP_SET_HALT		0x00002		/* Bit  1: set halt */
+#define SP_CLR_BROKE		0x00004		/* Bit  2: clear broke */
+#define SP_CLR_INTR		0x00008		/* Bit  3: clear intr */
+#define SP_SET_INTR		0x00010		/* Bit  4: set intr */
+#define SP_CLR_SSTEP		0x00020		/* Bit  5: clear sstep */
+#define SP_SET_SSTEP		0x00040		/* Bit  6: set sstep */
+#define SP_CLR_INTR_BREAK	0x00080		/* Bit  7: clear intr on break */
+#define SP_SET_INTR_BREAK	0x00100		/* Bit  8: set intr on break */
+#define SP_CLR_SIG0		0x00200		/* Bit  9: clear signal 0 */
+#define SP_SET_SIG0		0x00400		/* Bit 10: set signal 0 */
+#define SP_CLR_SIG1		0x00800		/* Bit 11: clear signal 1 */
+#define SP_SET_SIG1		0x01000		/* Bit 12: set signal 1 */
+#define SP_CLR_SIG2		0x02000		/* Bit 13: clear signal 2 */
+#define SP_SET_SIG2		0x04000		/* Bit 14: set signal 2 */
+#define SP_CLR_SIG3		0x08000		/* Bit 15: clear signal 3 */
+#define SP_SET_SIG3		0x10000		/* Bit 16: set signal 3 */
+#define SP_CLR_SIG4		0x20000		/* Bit 17: clear signal 4 */
+#define SP_SET_SIG4		0x40000		/* Bit 18: set signal 4 */
+#define SP_CLR_SIG5		0x80000		/* Bit 19: clear signal 5 */
+#define SP_SET_SIG5		0x100000	/* Bit 20: set signal 5 */
+#define SP_CLR_SIG6		0x200000	/* Bit 21: clear signal 6 */
+#define SP_SET_SIG6		0x400000	/* Bit 22: set signal 6 */
+#define SP_CLR_SIG7		0x800000	/* Bit 23: clear signal 7 */
+#define SP_SET_SIG7		0x1000000	/* Bit 24: set signal 7 */
 
 /*
  * Patterns to interpret status reg (SP_STATUS_REG - read)
@@ -253,28 +253,28 @@ The Indy development board use cartridge domain 1:
 #define SP_STATUS_SIG2		0x200		/* Bit  9: signal 2 set */
 #define SP_STATUS_SIG3		0x400		/* Bit 10: signal 3 set */
 #define SP_STATUS_SIG4		0x800		/* Bit 11: signal 4 set */
-#define SP_STATUS_SIG5	       0x1000		/* Bit 12: signal 5 set */
-#define SP_STATUS_SIG6	       0x2000		/* Bit 13: signal 6 set */
-#define SP_STATUS_SIG7	       0x4000		/* Bit 14: signal 7 set */
+#define SP_STATUS_SIG5		0x1000		/* Bit 12: signal 5 set */
+#define SP_STATUS_SIG6		0x2000		/* Bit 13: signal 6 set */
+#define SP_STATUS_SIG7		0x4000		/* Bit 14: signal 7 set */
 
 /* 
  * Use of SIG bits
  */
-#define SP_CLR_YIELD		SP_CLR_SIG0
-#define SP_SET_YIELD		SP_SET_SIG0
-#define SP_STATUS_YIELD		SP_STATUS_SIG0
-#define SP_CLR_YIELDED		SP_CLR_SIG1
-#define SP_SET_YIELDED		SP_SET_SIG1
-#define SP_STATUS_YIELDED	SP_STATUS_SIG1
-#define SP_CLR_TASKDONE		SP_CLR_SIG2
-#define SP_SET_TASKDONE		SP_SET_SIG2
-#define SP_STATUS_TASKDONE	SP_STATUS_SIG2
-#define	SP_CLR_RSPSIGNAL	SP_CLR_SIG3
-#define	SP_SET_RSPSIGNAL	SP_SET_SIG3
-#define	SP_STATUS_RSPSIGNAL	SP_STATUS_SIG3
-#define	SP_CLR_CPUSIGNAL	SP_CLR_SIG4
-#define	SP_SET_CPUSIGNAL	SP_SET_SIG4
-#define	SP_STATUS_CPUSIGNAL	SP_STATUS_SIG4
+#define SP_CLR_YIELD		SP_CLR_SIG0	/* Bit  9 */
+#define SP_SET_YIELD		SP_SET_SIG0	/* Bit 10 */
+#define SP_STATUS_YIELD		SP_STATUS_SIG0	/* Bit  7 */
+#define SP_CLR_YIELDED		SP_CLR_SIG1	/* Bit 11 */
+#define SP_SET_YIELDED		SP_SET_SIG1	/* Bit 12 */
+#define SP_STATUS_YIELDED	SP_STATUS_SIG1	/* Bit  8 */
+#define SP_CLR_TASKDONE		SP_CLR_SIG2	/* Bit 13 */
+#define SP_SET_TASKDONE		SP_SET_SIG2	/* Bit 14 */
+#define SP_STATUS_TASKDONE	SP_STATUS_SIG2	/* Bit  9 */
+#define SP_CLR_RSPSIGNAL	SP_CLR_SIG3	/* Bit 15 */
+#define SP_SET_RSPSIGNAL	SP_SET_SIG3	/* Bit 16 */
+#define SP_STATUS_RSPSIGNAL	SP_STATUS_SIG3	/* Bit 10 */
+#define SP_CLR_CPUSIGNAL	SP_CLR_SIG4	/* Bit 17 */
+#define SP_SET_CPUSIGNAL	SP_SET_SIG4	/* Bit 18 */
+#define SP_STATUS_CPUSIGNAL	SP_STATUS_SIG4	/* Bit 11 */
 
 /* SP IMEM BIST REG (R/W): [6:0] BIST status bits; see below for detail */
 #define SP_IBIST_REG	0x04080004
@@ -308,13 +308,13 @@ The Indy development board use cartridge domain 1:
 #define DPC_END_REG		(DPC_BASE_REG+0x04)
 
 /* DP CMD DMA end (R): [23:0] DMEM/RDRAM current address */
-#define DPC_CURRENT_REG		(DPC_BASE_REG+0x08)	
+#define DPC_CURRENT_REG		(DPC_BASE_REG+0x08)
 
 /* DP CMD status (R/W): [9:0] valid bits - see below for definitions */
 #define DPC_STATUS_REG		(DPC_BASE_REG+0x0C)
 
 /* DP clock counter (R): [23:0] clock counter */
-#define DPC_CLOCK_REG		(DPC_BASE_REG+0x10)	
+#define DPC_CLOCK_REG		(DPC_BASE_REG+0x10)
 
 /* DP buffer busy counter (R): [23:0] clock counter */
 #define DPC_BUFBUSY_REG		(DPC_BASE_REG+0x14)
@@ -482,9 +482,9 @@ The Indy development board use cartridge domain 1:
 /* VI status/control (R/W): [15-0] valid bits: 
  *	[1:0]   = type[1:0] (pixel size) 
  *			0: blank (no data, no sync)
- *                      1: reserved
- *                      2: 5/5/5/3 ("16" bit)
- *                      3: 8/8/8/8 (32 bit)
+ *			1: reserved
+ *			2: 5/5/5/3 ("16" bit)
+ *			3: 8/8/8/8 (32 bit)
  *	[2]     = gamma_dither_enable (normally on, unless "special effect")
  *	[3]     = gamma_enable (normally on, unless MPEG/JPEG)
  *	[4]     = divot_enable (normally on if antialiased, unless decal lines)
@@ -508,11 +508,11 @@ The Indy development board use cartridge domain 1:
 #define VI_DRAM_ADDR_REG	VI_ORIGIN_REG
 
 /* VI width (R/W): [11:0] frame buffer line width in pixels */
-#define VI_WIDTH_REG		(VI_BASE_REG+0x08)	
+#define VI_WIDTH_REG		(VI_BASE_REG+0x08)
 #define VI_H_WIDTH_REG		VI_WIDTH_REG
 
 /* VI vertical intr (R/W): [9:0] interrupt when current half-line = V_INTR */
-#define VI_INTR_REG		(VI_BASE_REG+0x0C)	
+#define VI_INTR_REG		(VI_BASE_REG+0x0C)
 #define VI_V_INTR_REG		VI_INTR_REG
 
 /* 
@@ -520,9 +520,9 @@ The Indy development board use cartridge domain 1:
  *	line (the lsb of V_CURRENT is constant within a field, and in
  *	interlaced modes gives the field number - which is constant for non-
  *	interlaced modes)
- * 	- Any write to this register will clear interrupt line
+ *	- Any write to this register will clear interrupt line
  */
-#define VI_CURRENT_REG		(VI_BASE_REG+0x10)	
+#define VI_CURRENT_REG		(VI_BASE_REG+0x10)
 #define VI_V_CURRENT_LINE_REG	VI_CURRENT_REG
 
 /* 
@@ -531,23 +531,23 @@ The Indy development board use cartridge domain 1:
  *                        [19:16] vertical sync width in half lines,   
  *			  [29:20] start of color burst in pixels from h-sync
  */
-#define VI_BURST_REG		(VI_BASE_REG+0x14)	
+#define VI_BURST_REG		(VI_BASE_REG+0x14)
 #define VI_TIMING_REG		VI_BURST_REG
 
 /* VI vertical sync (R/W): [9:0] number of half-lines per field */
-#define VI_V_SYNC_REG		(VI_BASE_REG+0x18)	
+#define VI_V_SYNC_REG		(VI_BASE_REG+0x18)
 
 /* VI horizontal sync (R/W): [11: 0] total duration of a line in 1/4 pixel 
  *			     [20:16] a 5-bit leap pattern used for PAL only 
  *				     (h_sync_period)
  */
-#define VI_H_SYNC_REG		(VI_BASE_REG+0x1C)	
+#define VI_H_SYNC_REG		(VI_BASE_REG+0x1C)
 
 /* 
  * VI horizontal sync leap (R/W): [11: 0] identical to h_sync_period
  *                                [27:16] identical to h_sync_period
  */
-#define VI_LEAP_REG		(VI_BASE_REG+0x20)	
+#define VI_LEAP_REG		(VI_BASE_REG+0x20)
 #define VI_H_SYNC_LEAP_REG	VI_LEAP_REG
 
 /* 
@@ -568,17 +568,17 @@ The Indy development board use cartridge domain 1:
  * VI vertical burst (R/W): [ 9: 0] end of color burst enable in half-lines
  *                        : [25:16] start of color burst enable in half-lines
  */
-#define VI_V_BURST_REG		(VI_BASE_REG+0x2C)	
+#define VI_V_BURST_REG		(VI_BASE_REG+0x2C)
 
 /* VI x-scale (R/W): [11: 0] 1/horizontal scale up factor (2.10 format)
  *		     [27:16] horizontal subpixel offset (2.10 format)
  */
-#define VI_X_SCALE_REG		(VI_BASE_REG+0x30)	
+#define VI_X_SCALE_REG		(VI_BASE_REG+0x30)
 
 /* VI y-scale (R/W): [11: 0] 1/vertical scale up factor (2.10 format)
  *		     [27:16] vertical subpixel offset (2.10 format)
  */
-#define VI_Y_SCALE_REG		(VI_BASE_REG+0x34)	
+#define VI_Y_SCALE_REG		(VI_BASE_REG+0x34)
 
 /*
  * Patterns to interpret VI_CONTROL_REG

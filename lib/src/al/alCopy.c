@@ -5,7 +5,7 @@
 #include "macros.h"
 
 //TODO: This probably belongs somewhere else
-s32 D_800E48A0[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+s32 __osHwIntTable[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 void alCopy(void *src, void *dest, s32 len) {
     s32  i;

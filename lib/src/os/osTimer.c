@@ -18,8 +18,7 @@ OSTime __osInsertTimer(OSTimer *t);
 #ifdef NON_MATCHING
 //Seems to be a mistmatch based on where __osCurrentTime is defined.
 //Scratch proving that: https://decomp.me/scratch/OB3iP
-void __osTimerServicesInit(void)
-{
+void __osTimerServicesInit(void) {
     __osCurrentTime = 0;
     __osBaseCounter = 0;
     __osViIntrCount = 0;
