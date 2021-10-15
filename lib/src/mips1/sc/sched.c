@@ -28,9 +28,9 @@ f32 D_800DE748 = 0;
 f32 D_800DE74C = 0;
 
 s32 D_800DE750 = 0; // Currently unknown, might be a different type.
-s32 D_800DE754 = 0;
-s32 D_800DE758 = 0;
-s32 D_800DE75C = 0; // Currently unknown, might be a different type.
+s32 gCurRSPTaskCounter = 0;
+s32 gCurRDPTaskCounter = 0;
+s32 D_800DE75C = 0;
 
 u64 gRetraceCount = 0;
 
@@ -60,8 +60,8 @@ const char D_800E7958[] = "\tdata_size\t\t= %u\n";
 
 /************ .bss ************/
 
-s32 D_80126110;
-s32 D_80126114;
+s32 gCurRSPTaskIsSet;
+s32 gCurRDPTaskIsSet;
 OSTime gYieldTime;
 s32 D_80126120;
 u32 D_80126124;
@@ -233,32 +233,32 @@ void __scHandleRetrace(OSSched *sc) {
     s32 i;
 
     if (sc->curRSPTask) {
-        D_800DE754++;
+        gCurRSPTaskCounter++;
     }
 
     if (sc->curRDPTask) {
-        D_800DE758++;
+        gCurRDPTaskCounter++;
     }
 
-    if ((D_800DE754 > 10) && (sc->curRSPTask)) {
-        D_800DE754 = 0;
+    if ((gCurRSPTaskCounter > 10) && (sc->curRSPTask)) {
+        gCurRSPTaskCounter = 0;
         set_curRSPTask_NULL = TRUE;
 
         __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_SIG0 |
             SP_CLR_SIG1 | SP_CLR_SIG2 | SP_CLR_SIG3 | SP_CLR_SIG4 |
             SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
     } else if (sc->curRSPTask) {
-        D_80126110 = 1;
+        gCurRSPTaskIsSet = TRUE;
     }
 
-    if ((D_800DE758 > 10) && (sc->curRDPTask)) {
+    if ((gCurRDPTaskCounter > 10) && (sc->curRDPTask)) {
         if (sc->curRDPTask->unk68 == 0) {
             osSendMesg(sc->curRDPTask->msgQ, &D_800DE738, OS_MESG_BLOCK);
         }
 
         set_curRDPTask_NULL = TRUE;
         sc->frameCount = 0;
-        D_800DE758 = 0;
+        gCurRDPTaskCounter = 0;
 
         __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_SIG0 |
             SP_CLR_SIG1 | SP_CLR_SIG2 | SP_CLR_SIG3 | SP_CLR_SIG4 |
@@ -267,7 +267,7 @@ void __scHandleRetrace(OSSched *sc) {
         osDpSetStatus(DPC_SET_XBUS_DMEM_DMA | DPC_CLR_FREEZE | DPC_CLR_FLUSH |
             DPC_CLR_TMEM_CTR | DPC_CLR_PIPE_CTR | DPC_CLR_CMD_CTR);
     } else if (sc->curRDPTask) {
-        D_80126114 = 1;
+        gCurRDPTaskIsSet = TRUE;
     }
 
     if (set_curRSPTask_NULL) {
@@ -471,8 +471,8 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
         sp->state &= ~(OS_SC_YIELD | OS_SC_YIELDED);
         osSpTaskLoad(&sp->list);
         osSpTaskStartGo(&sp->list); 
-        D_800DE754 = 0;
-        D_800DE758 = 0;
+        gCurRSPTaskCounter = 0;
+        gCurRDPTaskCounter = 0;
         sc->curRSPTask = sp;
 
         if (sp == dp)

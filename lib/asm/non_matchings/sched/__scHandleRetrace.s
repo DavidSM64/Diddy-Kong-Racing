@@ -11,22 +11,22 @@ glabel __scHandleRetrace
 /* 07A43C 8007983C 00808825 */  move  $s1, $a0
 /* 07A440 80079840 11C00007 */  beqz  $t6, .L80079860
 /* 07A444 80079844 00008025 */  move  $s0, $zero
-/* 07A448 80079848 3C03800E */  lui   $v1, %hi(D_800DE754) # $v1, 0x800e
-/* 07A44C 8007984C 2463E754 */  addiu $v1, %lo(D_800DE754) # addiu $v1, $v1, -0x18ac
+/* 07A448 80079848 3C03800E */  lui   $v1, %hi(gCurRSPTaskCounter) # $v1, 0x800e
+/* 07A44C 8007984C 2463E754 */  addiu $v1, %lo(gCurRSPTaskCounter) # addiu $v1, $v1, -0x18ac
 /* 07A450 80079850 8C6F0000 */  lw    $t7, ($v1)
 /* 07A454 80079854 00000000 */  nop   
 /* 07A458 80079858 25F80001 */  addiu $t8, $t7, 1
 /* 07A45C 8007985C AC780000 */  sw    $t8, ($v1)
 .L80079860:
 /* 07A460 80079860 8E390278 */  lw    $t9, 0x278($s1)
-/* 07A464 80079864 3C03800E */  lui   $v1, %hi(D_800DE754) # $v1, 0x800e
+/* 07A464 80079864 3C03800E */  lui   $v1, %hi(gCurRSPTaskCounter) # $v1, 0x800e
 /* 07A468 80079868 13200006 */  beqz  $t9, .L80079884
-/* 07A46C 8007986C 2463E754 */  addiu $v1, %lo(D_800DE754) # addiu $v1, $v1, -0x18ac
-/* 07A470 80079870 3C08800E */  lui   $t0, %hi(D_800DE758) # $t0, 0x800e
-/* 07A474 80079874 8D08E758 */  lw    $t0, %lo(D_800DE758)($t0)
-/* 07A478 80079878 3C01800E */  lui   $at, %hi(D_800DE758) # $at, 0x800e
+/* 07A46C 8007986C 2463E754 */  addiu $v1, %lo(gCurRSPTaskCounter) # addiu $v1, $v1, -0x18ac
+/* 07A470 80079870 3C08800E */  lui   $t0, %hi(gCurRDPTaskCounter) # $t0, 0x800e
+/* 07A474 80079874 8D08E758 */  lw    $t0, %lo(gCurRDPTaskCounter)($t0)
+/* 07A478 80079878 3C01800E */  lui   $at, %hi(gCurRDPTaskCounter) # $at, 0x800e
 /* 07A47C 8007987C 25090001 */  addiu $t1, $t0, 1
-/* 07A480 80079880 AC29E758 */  sw    $t1, %lo(D_800DE758)($at)
+/* 07A480 80079880 AC29E758 */  sw    $t1, %lo(gCurRDPTaskCounter)($at)
 .L80079884:
 /* 07A484 80079884 8C6A0000 */  lw    $t2, ($v1)
 /* 07A488 80079888 8E220274 */  lw    $v0, 0x274($s1)
@@ -44,11 +44,11 @@ glabel __scHandleRetrace
 .L800798B8:
 /* 07A4B8 800798B8 10400003 */  beqz  $v0, .L800798C8
 /* 07A4BC 800798BC 240B0001 */  li    $t3, 1
-/* 07A4C0 800798C0 3C018012 */  lui   $at, %hi(D_80126110) # $at, 0x8012
-/* 07A4C4 800798C4 AC2B6110 */  sw    $t3, %lo(D_80126110)($at)
+/* 07A4C0 800798C0 3C018012 */  lui   $at, %hi(gCurRSPTaskIsSet) # $at, 0x8012
+/* 07A4C4 800798C4 AC2B6110 */  sw    $t3, %lo(gCurRSPTaskIsSet)($at)
 .L800798C8:
-/* 07A4C8 800798C8 3C0C800E */  lui   $t4, %hi(D_800DE758) # $t4, 0x800e
-/* 07A4CC 800798CC 8D8CE758 */  lw    $t4, %lo(D_800DE758)($t4)
+/* 07A4C8 800798C8 3C0C800E */  lui   $t4, %hi(gCurRDPTaskCounter) # $t4, 0x800e
+/* 07A4CC 800798CC 8D8CE758 */  lw    $t4, %lo(gCurRDPTaskCounter)($t4)
 /* 07A4D0 800798D0 8E220278 */  lw    $v0, 0x278($s1)
 /* 07A4D4 800798D4 2981000B */  slti  $at, $t4, 0xb
 /* 07A4D8 800798D8 14200016 */  bnez  $at, .L80079934
@@ -66,9 +66,9 @@ glabel __scHandleRetrace
 /* 07A504 80079904 240E0001 */  li    $t6, 1
 /* 07A508 80079908 A3AE0032 */  sb    $t6, 0x32($sp)
 /* 07A50C 8007990C AE200280 */  sw    $zero, 0x280($s1)
-/* 07A510 80079910 3C01800E */  lui   $at, %hi(D_800DE758) # $at, 0x800e
+/* 07A510 80079910 3C01800E */  lui   $at, %hi(gCurRDPTaskCounter) # $at, 0x800e
 /* 07A514 80079914 3C0400AA */  lui   $a0, (0x00AAAA82 >> 16) # lui $a0, 0xaa
-/* 07A518 80079918 AC20E758 */  sw    $zero, %lo(D_800DE758)($at)
+/* 07A518 80079918 AC20E758 */  sw    $zero, %lo(gCurRDPTaskCounter)($at)
 /* 07A51C 8007991C 0C033490 */  jal   __osSpSetStatus
 /* 07A520 80079920 3484AA82 */  ori   $a0, (0x00AAAA82 & 0xFFFF) # ori $a0, $a0, 0xaa82
 /* 07A524 80079924 0C033494 */  jal   osDpSetStatus
@@ -78,8 +78,8 @@ glabel __scHandleRetrace
 .L80079934:
 /* 07A534 80079934 10400003 */  beqz  $v0, .L80079944
 /* 07A538 80079938 240F0001 */  li    $t7, 1
-/* 07A53C 8007993C 3C018012 */  lui   $at, %hi(D_80126114) # $at, 0x8012
-/* 07A540 80079940 AC2F6114 */  sw    $t7, %lo(D_80126114)($at)
+/* 07A53C 8007993C 3C018012 */  lui   $at, %hi(gCurRDPTaskIsSet) # $at, 0x8012
+/* 07A540 80079940 AC2F6114 */  sw    $t7, %lo(gCurRDPTaskIsSet)($at)
 .L80079944:
 /* 07A544 80079944 12000002 */  beqz  $s0, .L80079950
 /* 07A548 80079948 26240078 */  addiu $a0, $s1, 0x78
