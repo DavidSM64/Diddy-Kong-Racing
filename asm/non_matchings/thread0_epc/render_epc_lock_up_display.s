@@ -116,9 +116,9 @@ glabel render_epc_lock_up_display
 /* 0B8494 800B7894 00000000 */   nop   
 glabel L800B7898
 /* 0B8498 800B7898 444AF800 */  cfc1  $t2, $31
-/* 0B849C 800B789C 3C038013 */  lui   $v1, %hi(gThread0Context) # $v1, 0x8013
+/* 0B849C 800B789C 3C038013 */  lui   $v1, %hi(gEpcInfo) # $v1, 0x8013
 /* 0B84A0 800B78A0 35410003 */  ori   $at, $t2, 3
-/* 0B84A4 800B78A4 24639800 */  addiu $v1, %lo(gThread0Context) # addiu $v1, $v1, -0x6800
+/* 0B84A4 800B78A4 24639800 */  addiu $v1, %lo(gEpcInfo) # addiu $v1, $v1, -0x6800
 /* 0B84A8 800B78A8 38210002 */  xori  $at, $at, 2
 /* 0B84AC 800B78AC 44C1F800 */  ctc1  $at, $31
 /* 0B84B0 800B78B0 C4640130 */  lwc1  $f4, 0x130($v1)
@@ -150,15 +150,15 @@ glabel L800B7898
 /* 0B8518 800B7918 44D9F800 */  ctc1  $t9, $31
 /* 0B851C 800B791C 15C1002F */  bne   $t6, $at, .L800B79DC
 /* 0B8520 800B7920 AC580008 */   sw    $t8, 8($v0)
-/* 0B8524 800B7924 3C058013 */  lui   $a1, %hi(gThread0Context+0x11C) # $a1, 0x8013
-/* 0B8528 800B7928 8CA5991C */  lw    $a1, %lo(gThread0Context+0x11C)($a1)
+/* 0B8524 800B7924 3C058013 */  lui   $a1, %hi(gEpcInfo+0x11C) # $a1, 0x8013
+/* 0B8528 800B7928 8CA5991C */  lw    $a1, %lo(gEpcInfo+0x11C)($a1)
 /* 0B852C 800B792C 3C04800F */  lui   $a0, %hi(D_800E8F18) # $a0, 0x800f
 /* 0B8530 800B7930 0C02D7B7 */  jal   render_printf
 /* 0B8534 800B7934 24848F18 */   addiu $a0, %lo(D_800E8F18) # addiu $a0, $a0, -0x70e8
-/* 0B8538 800B7938 3C098013 */  lui   $t1, %hi(gThread0Context+0x3C) # $t1, 0x8013
-/* 0B853C 800B793C 3C0B8013 */  lui   $t3, %hi(gThread0Context+0x44) # $t3, 0x8013
-/* 0B8540 800B7940 8D669844 */  lw    $a2, %lo(gThread0Context+0x44)($t3)
-/* 0B8544 800B7944 8D25983C */  lw    $a1, %lo(gThread0Context+0x3C)($t1)
+/* 0B8538 800B7938 3C098013 */  lui   $t1, %hi(gEpcInfo+0x3C) # $t1, 0x8013
+/* 0B853C 800B793C 3C0B8013 */  lui   $t3, %hi(gEpcInfo+0x44) # $t3, 0x8013
+/* 0B8540 800B7940 8D669844 */  lw    $a2, %lo(gEpcInfo+0x44)($t3)
+/* 0B8544 800B7944 8D25983C */  lw    $a1, %lo(gEpcInfo+0x3C)($t1)
 /* 0B8548 800B7948 3C04800F */  lui   $a0, %hi(D_800E8F28) # $a0, 0x800f
 /* 0B854C 800B794C 0C02D7B7 */  jal   render_printf
 /* 0B8550 800B7950 24848F28 */   addiu $a0, %lo(D_800E8F28) # addiu $a0, $a0, -0x70d8
@@ -204,23 +204,23 @@ glabel L800B7898
 /* 0B85E0 800B79E0 8C650014 */  lw    $a1, 0x14($v1)
 /* 0B85E4 800B79E4 0C02D7B7 */  jal   render_printf
 /* 0B85E8 800B79E8 24848F6C */   addiu $a0, %lo(D_800E8F6C) # addiu $a0, $a0, -0x7094
-/* 0B85EC 800B79EC 3C058013 */  lui   $a1, %hi(gThread0Context+0x11C) # $a1, 0x8013
-/* 0B85F0 800B79F0 8CA5991C */  lw    $a1, %lo(gThread0Context+0x11C)($a1)
+/* 0B85EC 800B79EC 3C058013 */  lui   $a1, %hi(gEpcInfo+0x11C) # $a1, 0x8013
+/* 0B85F0 800B79F0 8CA5991C */  lw    $a1, %lo(gEpcInfo+0x11C)($a1)
 /* 0B85F4 800B79F4 3C04800F */  lui   $a0, %hi(D_800E8F84) # $a0, 0x800f
 /* 0B85F8 800B79F8 0C02D7B7 */  jal   render_printf
 /* 0B85FC 800B79FC 24848F84 */   addiu $a0, %lo(D_800E8F84) # addiu $a0, $a0, -0x707c
-/* 0B8600 800B7A00 3C058013 */  lui   $a1, %hi(gThread0Context+0x120) # $a1, 0x8013
-/* 0B8604 800B7A04 8CA59920 */  lw    $a1, %lo(gThread0Context+0x120)($a1)
+/* 0B8600 800B7A00 3C058013 */  lui   $a1, %hi(gEpcInfo+0x120) # $a1, 0x8013
+/* 0B8604 800B7A04 8CA59920 */  lw    $a1, %lo(gEpcInfo+0x120)($a1)
 /* 0B8608 800B7A08 3C04800F */  lui   $a0, %hi(D_800E8F94) # $a0, 0x800f
 /* 0B860C 800B7A0C 0C02D7B7 */  jal   render_printf
 /* 0B8610 800B7A10 24848F94 */   addiu $a0, %lo(D_800E8F94) # addiu $a0, $a0, -0x706c
-/* 0B8614 800B7A14 3C058013 */  lui   $a1, %hi(gThread0Context+0x118) # $a1, 0x8013
-/* 0B8618 800B7A18 8CA59918 */  lw    $a1, %lo(gThread0Context+0x118)($a1)
+/* 0B8614 800B7A14 3C058013 */  lui   $a1, %hi(gEpcInfo+0x118) # $a1, 0x8013
+/* 0B8618 800B7A18 8CA59918 */  lw    $a1, %lo(gEpcInfo+0x118)($a1)
 /* 0B861C 800B7A1C 3C04800F */  lui   $a0, %hi(D_800E8FA4) # $a0, 0x800f
 /* 0B8620 800B7A20 0C02D7B7 */  jal   render_printf
 /* 0B8624 800B7A24 24848FA4 */   addiu $a0, %lo(D_800E8FA4) # addiu $a0, $a0, -0x705c
-/* 0B8628 800B7A28 3C058013 */  lui   $a1, %hi(gThread0Context+0x124) # $a1, 0x8013
-/* 0B862C 800B7A2C 8CA59924 */  lw    $a1, %lo(gThread0Context+0x124)($a1)
+/* 0B8628 800B7A28 3C058013 */  lui   $a1, %hi(gEpcInfo+0x124) # $a1, 0x8013
+/* 0B862C 800B7A2C 8CA59924 */  lw    $a1, %lo(gEpcInfo+0x124)($a1)
 /* 0B8630 800B7A30 3C04800F */  lui   $a0, %hi(D_800E8FB4) # $a0, 0x800f
 /* 0B8634 800B7A34 0C02D7B7 */  jal   render_printf
 /* 0B8638 800B7A38 24848FB4 */   addiu $a0, %lo(D_800E8FB4) # addiu $a0, $a0, -0x704c
@@ -256,91 +256,91 @@ glabel L800B7898
 /* 0B86A4 800B7AA4 3C04800F */  lui   $a0, %hi(D_800E8FDC) # $a0, 0x800f
 /* 0B86A8 800B7AA8 0C02D7B7 */  jal   render_printf
 /* 0B86AC 800B7AAC 24848FDC */   addiu $a0, %lo(D_800E8FDC) # addiu $a0, $a0, -0x7024
-/* 0B86B0 800B7AB0 3C198013 */  lui   $t9, %hi(gThread0Context+0x24) # $t9, 0x8013
-/* 0B86B4 800B7AB4 3C0F8013 */  lui   $t7, %hi(gThread0Context+0x2C) # $t7, 0x8013
-/* 0B86B8 800B7AB8 3C098013 */  lui   $t1, %hi(gThread0Context+0x34) # $t1, 0x8013
-/* 0B86BC 800B7ABC 8D279834 */  lw    $a3, %lo(gThread0Context+0x34)($t1)
-/* 0B86C0 800B7AC0 8DE6982C */  lw    $a2, %lo(gThread0Context+0x2C)($t7)
-/* 0B86C4 800B7AC4 8F259824 */  lw    $a1, %lo(gThread0Context+0x24)($t9)
+/* 0B86B0 800B7AB0 3C198013 */  lui   $t9, %hi(gEpcInfo+0x24) # $t9, 0x8013
+/* 0B86B4 800B7AB4 3C0F8013 */  lui   $t7, %hi(gEpcInfo+0x2C) # $t7, 0x8013
+/* 0B86B8 800B7AB8 3C098013 */  lui   $t1, %hi(gEpcInfo+0x34) # $t1, 0x8013
+/* 0B86BC 800B7ABC 8D279834 */  lw    $a3, %lo(gEpcInfo+0x34)($t1)
+/* 0B86C0 800B7AC0 8DE6982C */  lw    $a2, %lo(gEpcInfo+0x2C)($t7)
+/* 0B86C4 800B7AC4 8F259824 */  lw    $a1, %lo(gEpcInfo+0x24)($t9)
 /* 0B86C8 800B7AC8 3C04800F */  lui   $a0, %hi(D_800E8FE0) # $a0, 0x800f
 /* 0B86CC 800B7ACC 0C02D7B7 */  jal   render_printf
 /* 0B86D0 800B7AD0 24848FE0 */   addiu $a0, %lo(D_800E8FE0) # addiu $a0, $a0, -0x7020
-/* 0B86D4 800B7AD4 3C0B8013 */  lui   $t3, %hi(gThread0Context+0x3C) # $t3, 0x8013
-/* 0B86D8 800B7AD8 3C0D8013 */  lui   $t5, %hi(gThread0Context+0x44) # $t5, 0x8013
-/* 0B86DC 800B7ADC 3C198013 */  lui   $t9, %hi(gThread0Context+0x4C) # $t9, 0x8013
-/* 0B86E0 800B7AE0 8F27984C */  lw    $a3, %lo(gThread0Context+0x4C)($t9)
-/* 0B86E4 800B7AE4 8DA69844 */  lw    $a2, %lo(gThread0Context+0x44)($t5)
-/* 0B86E8 800B7AE8 8D65983C */  lw    $a1, %lo(gThread0Context+0x3C)($t3)
+/* 0B86D4 800B7AD4 3C0B8013 */  lui   $t3, %hi(gEpcInfo+0x3C) # $t3, 0x8013
+/* 0B86D8 800B7AD8 3C0D8013 */  lui   $t5, %hi(gEpcInfo+0x44) # $t5, 0x8013
+/* 0B86DC 800B7ADC 3C198013 */  lui   $t9, %hi(gEpcInfo+0x4C) # $t9, 0x8013
+/* 0B86E0 800B7AE0 8F27984C */  lw    $a3, %lo(gEpcInfo+0x4C)($t9)
+/* 0B86E4 800B7AE4 8DA69844 */  lw    $a2, %lo(gEpcInfo+0x44)($t5)
+/* 0B86E8 800B7AE8 8D65983C */  lw    $a1, %lo(gEpcInfo+0x3C)($t3)
 /* 0B86EC 800B7AEC 3C04800F */  lui   $a0, %hi(D_800E9000) # $a0, 0x800f
 /* 0B86F0 800B7AF0 0C02D7B7 */  jal   render_printf
 /* 0B86F4 800B7AF4 24849000 */   addiu $a0, %lo(D_800E9000) # addiu $a0, $a0, -0x7000
-/* 0B86F8 800B7AF8 3C0F8013 */  lui   $t7, %hi(gThread0Context+0x54) # $t7, 0x8013
-/* 0B86FC 800B7AFC 3C098013 */  lui   $t1, %hi(gThread0Context+0x5C) # $t1, 0x8013
-/* 0B8700 800B7B00 3C0B8013 */  lui   $t3, %hi(gThread0Context+0x64) # $t3, 0x8013
-/* 0B8704 800B7B04 8D679864 */  lw    $a3, %lo(gThread0Context+0x64)($t3)
-/* 0B8708 800B7B08 8D26985C */  lw    $a2, %lo(gThread0Context+0x5C)($t1)
-/* 0B870C 800B7B0C 8DE59854 */  lw    $a1, %lo(gThread0Context+0x54)($t7)
+/* 0B86F8 800B7AF8 3C0F8013 */  lui   $t7, %hi(gEpcInfo+0x54) # $t7, 0x8013
+/* 0B86FC 800B7AFC 3C098013 */  lui   $t1, %hi(gEpcInfo+0x5C) # $t1, 0x8013
+/* 0B8700 800B7B00 3C0B8013 */  lui   $t3, %hi(gEpcInfo+0x64) # $t3, 0x8013
+/* 0B8704 800B7B04 8D679864 */  lw    $a3, %lo(gEpcInfo+0x64)($t3)
+/* 0B8708 800B7B08 8D26985C */  lw    $a2, %lo(gEpcInfo+0x5C)($t1)
+/* 0B870C 800B7B0C 8DE59854 */  lw    $a1, %lo(gEpcInfo+0x54)($t7)
 /* 0B8710 800B7B10 3C04800F */  lui   $a0, %hi(D_800E9020) # $a0, 0x800f
 /* 0B8714 800B7B14 0C02D7B7 */  jal   render_printf
 /* 0B8718 800B7B18 24849020 */   addiu $a0, %lo(D_800E9020) # addiu $a0, $a0, -0x6fe0
-/* 0B871C 800B7B1C 3C0D8013 */  lui   $t5, %hi(gThread0Context+0x6C) # $t5, 0x8013
-/* 0B8720 800B7B20 3C198013 */  lui   $t9, %hi(gThread0Context+0x74) # $t9, 0x8013
-/* 0B8724 800B7B24 3C0F8013 */  lui   $t7, %hi(gThread0Context+0x7C) # $t7, 0x8013
-/* 0B8728 800B7B28 8DE7987C */  lw    $a3, %lo(gThread0Context+0x7C)($t7)
-/* 0B872C 800B7B2C 8F269874 */  lw    $a2, %lo(gThread0Context+0x74)($t9)
-/* 0B8730 800B7B30 8DA5986C */  lw    $a1, %lo(gThread0Context+0x6C)($t5)
+/* 0B871C 800B7B1C 3C0D8013 */  lui   $t5, %hi(gEpcInfo+0x6C) # $t5, 0x8013
+/* 0B8720 800B7B20 3C198013 */  lui   $t9, %hi(gEpcInfo+0x74) # $t9, 0x8013
+/* 0B8724 800B7B24 3C0F8013 */  lui   $t7, %hi(gEpcInfo+0x7C) # $t7, 0x8013
+/* 0B8728 800B7B28 8DE7987C */  lw    $a3, %lo(gEpcInfo+0x7C)($t7)
+/* 0B872C 800B7B2C 8F269874 */  lw    $a2, %lo(gEpcInfo+0x74)($t9)
+/* 0B8730 800B7B30 8DA5986C */  lw    $a1, %lo(gEpcInfo+0x6C)($t5)
 /* 0B8734 800B7B34 3C04800F */  lui   $a0, %hi(D_800E9040) # $a0, 0x800f
 /* 0B8738 800B7B38 0C02D7B7 */  jal   render_printf
 /* 0B873C 800B7B3C 24849040 */   addiu $a0, %lo(D_800E9040) # addiu $a0, $a0, -0x6fc0
-/* 0B8740 800B7B40 3C098013 */  lui   $t1, %hi(gThread0Context+0x84) # $t1, 0x8013
-/* 0B8744 800B7B44 3C0B8013 */  lui   $t3, %hi(gThread0Context+0x8C) # $t3, 0x8013
-/* 0B8748 800B7B48 3C0D8013 */  lui   $t5, %hi(gThread0Context+0x94) # $t5, 0x8013
-/* 0B874C 800B7B4C 8DA79894 */  lw    $a3, %lo(gThread0Context+0x94)($t5)
-/* 0B8750 800B7B50 8D66988C */  lw    $a2, %lo(gThread0Context+0x8C)($t3)
-/* 0B8754 800B7B54 8D259884 */  lw    $a1, %lo(gThread0Context+0x84)($t1)
+/* 0B8740 800B7B40 3C098013 */  lui   $t1, %hi(gEpcInfo+0x84) # $t1, 0x8013
+/* 0B8744 800B7B44 3C0B8013 */  lui   $t3, %hi(gEpcInfo+0x8C) # $t3, 0x8013
+/* 0B8748 800B7B48 3C0D8013 */  lui   $t5, %hi(gEpcInfo+0x94) # $t5, 0x8013
+/* 0B874C 800B7B4C 8DA79894 */  lw    $a3, %lo(gEpcInfo+0x94)($t5)
+/* 0B8750 800B7B50 8D66988C */  lw    $a2, %lo(gEpcInfo+0x8C)($t3)
+/* 0B8754 800B7B54 8D259884 */  lw    $a1, %lo(gEpcInfo+0x84)($t1)
 /* 0B8758 800B7B58 3C04800F */  lui   $a0, %hi(D_800E9060) # $a0, 0x800f
 /* 0B875C 800B7B5C 0C02D7B7 */  jal   render_printf
 /* 0B8760 800B7B60 24849060 */   addiu $a0, %lo(D_800E9060) # addiu $a0, $a0, -0x6fa0
-/* 0B8764 800B7B64 3C198013 */  lui   $t9, %hi(gThread0Context+0x9C) # $t9, 0x8013
-/* 0B8768 800B7B68 3C0F8013 */  lui   $t7, %hi(gThread0Context+0xA4) # $t7, 0x8013
-/* 0B876C 800B7B6C 3C098013 */  lui   $t1, %hi(gThread0Context+0xAC) # $t1, 0x8013
-/* 0B8770 800B7B70 8D2798AC */  lw    $a3, %lo(gThread0Context+0xAC)($t1)
-/* 0B8774 800B7B74 8DE698A4 */  lw    $a2, %lo(gThread0Context+0xA4)($t7)
-/* 0B8778 800B7B78 8F25989C */  lw    $a1, %lo(gThread0Context+0x9C)($t9)
+/* 0B8764 800B7B64 3C198013 */  lui   $t9, %hi(gEpcInfo+0x9C) # $t9, 0x8013
+/* 0B8768 800B7B68 3C0F8013 */  lui   $t7, %hi(gEpcInfo+0xA4) # $t7, 0x8013
+/* 0B876C 800B7B6C 3C098013 */  lui   $t1, %hi(gEpcInfo+0xAC) # $t1, 0x8013
+/* 0B8770 800B7B70 8D2798AC */  lw    $a3, %lo(gEpcInfo+0xAC)($t1)
+/* 0B8774 800B7B74 8DE698A4 */  lw    $a2, %lo(gEpcInfo+0xA4)($t7)
+/* 0B8778 800B7B78 8F25989C */  lw    $a1, %lo(gEpcInfo+0x9C)($t9)
 /* 0B877C 800B7B7C 3C04800F */  lui   $a0, %hi(D_800E9080) # $a0, 0x800f
 /* 0B8780 800B7B80 0C02D7B7 */  jal   render_printf
 /* 0B8784 800B7B84 24849080 */   addiu $a0, %lo(D_800E9080) # addiu $a0, $a0, -0x6f80
-/* 0B8788 800B7B88 3C0B8013 */  lui   $t3, %hi(gThread0Context+0xB4) # $t3, 0x8013
-/* 0B878C 800B7B8C 3C0D8013 */  lui   $t5, %hi(gThread0Context+0xBC) # $t5, 0x8013
-/* 0B8790 800B7B90 3C198013 */  lui   $t9, %hi(gThread0Context+0xC4) # $t9, 0x8013
-/* 0B8794 800B7B94 8F2798C4 */  lw    $a3, %lo(gThread0Context+0xC4)($t9)
-/* 0B8798 800B7B98 8DA698BC */  lw    $a2, %lo(gThread0Context+0xBC)($t5)
-/* 0B879C 800B7B9C 8D6598B4 */  lw    $a1, %lo(gThread0Context+0xB4)($t3)
+/* 0B8788 800B7B88 3C0B8013 */  lui   $t3, %hi(gEpcInfo+0xB4) # $t3, 0x8013
+/* 0B878C 800B7B8C 3C0D8013 */  lui   $t5, %hi(gEpcInfo+0xBC) # $t5, 0x8013
+/* 0B8790 800B7B90 3C198013 */  lui   $t9, %hi(gEpcInfo+0xC4) # $t9, 0x8013
+/* 0B8794 800B7B94 8F2798C4 */  lw    $a3, %lo(gEpcInfo+0xC4)($t9)
+/* 0B8798 800B7B98 8DA698BC */  lw    $a2, %lo(gEpcInfo+0xBC)($t5)
+/* 0B879C 800B7B9C 8D6598B4 */  lw    $a1, %lo(gEpcInfo+0xB4)($t3)
 /* 0B87A0 800B7BA0 3C04800F */  lui   $a0, %hi(D_800E90A0) # $a0, 0x800f
 /* 0B87A4 800B7BA4 0C02D7B7 */  jal   render_printf
 /* 0B87A8 800B7BA8 248490A0 */   addiu $a0, %lo(D_800E90A0) # addiu $a0, $a0, -0x6f60
-/* 0B87AC 800B7BAC 3C0F8013 */  lui   $t7, %hi(gThread0Context+0xCC) # $t7, 0x8013
-/* 0B87B0 800B7BB0 3C098013 */  lui   $t1, %hi(gThread0Context+0xD4) # $t1, 0x8013
-/* 0B87B4 800B7BB4 3C0B8013 */  lui   $t3, %hi(gThread0Context+0xDC) # $t3, 0x8013
-/* 0B87B8 800B7BB8 8D6798DC */  lw    $a3, %lo(gThread0Context+0xDC)($t3)
-/* 0B87BC 800B7BBC 8D2698D4 */  lw    $a2, %lo(gThread0Context+0xD4)($t1)
-/* 0B87C0 800B7BC0 8DE598CC */  lw    $a1, %lo(gThread0Context+0xCC)($t7)
+/* 0B87AC 800B7BAC 3C0F8013 */  lui   $t7, %hi(gEpcInfo+0xCC) # $t7, 0x8013
+/* 0B87B0 800B7BB0 3C098013 */  lui   $t1, %hi(gEpcInfo+0xD4) # $t1, 0x8013
+/* 0B87B4 800B7BB4 3C0B8013 */  lui   $t3, %hi(gEpcInfo+0xDC) # $t3, 0x8013
+/* 0B87B8 800B7BB8 8D6798DC */  lw    $a3, %lo(gEpcInfo+0xDC)($t3)
+/* 0B87BC 800B7BBC 8D2698D4 */  lw    $a2, %lo(gEpcInfo+0xD4)($t1)
+/* 0B87C0 800B7BC0 8DE598CC */  lw    $a1, %lo(gEpcInfo+0xCC)($t7)
 /* 0B87C4 800B7BC4 3C04800F */  lui   $a0, %hi(D_800E90C0) # $a0, 0x800f
 /* 0B87C8 800B7BC8 0C02D7B7 */  jal   render_printf
 /* 0B87CC 800B7BCC 248490C0 */   addiu $a0, %lo(D_800E90C0) # addiu $a0, $a0, -0x6f40
-/* 0B87D0 800B7BD0 3C0D8013 */  lui   $t5, %hi(gThread0Context+0xE4) # $t5, 0x8013
-/* 0B87D4 800B7BD4 3C198013 */  lui   $t9, %hi(gThread0Context+0xEC) # $t9, 0x8013
-/* 0B87D8 800B7BD8 3C0F8013 */  lui   $t7, %hi(gThread0Context+0xF4) # $t7, 0x8013
-/* 0B87DC 800B7BDC 8DE798F4 */  lw    $a3, %lo(gThread0Context+0xF4)($t7)
-/* 0B87E0 800B7BE0 8F2698EC */  lw    $a2, %lo(gThread0Context+0xEC)($t9)
-/* 0B87E4 800B7BE4 8DA598E4 */  lw    $a1, %lo(gThread0Context+0xE4)($t5)
+/* 0B87D0 800B7BD0 3C0D8013 */  lui   $t5, %hi(gEpcInfo+0xE4) # $t5, 0x8013
+/* 0B87D4 800B7BD4 3C198013 */  lui   $t9, %hi(gEpcInfo+0xEC) # $t9, 0x8013
+/* 0B87D8 800B7BD8 3C0F8013 */  lui   $t7, %hi(gEpcInfo+0xF4) # $t7, 0x8013
+/* 0B87DC 800B7BDC 8DE798F4 */  lw    $a3, %lo(gEpcInfo+0xF4)($t7)
+/* 0B87E0 800B7BE0 8F2698EC */  lw    $a2, %lo(gEpcInfo+0xEC)($t9)
+/* 0B87E4 800B7BE4 8DA598E4 */  lw    $a1, %lo(gEpcInfo+0xE4)($t5)
 /* 0B87E8 800B7BE8 3C04800F */  lui   $a0, %hi(D_800E90E0) # $a0, 0x800f
 /* 0B87EC 800B7BEC 0C02D7B7 */  jal   render_printf
 /* 0B87F0 800B7BF0 248490E0 */   addiu $a0, %lo(D_800E90E0) # addiu $a0, $a0, -0x6f20
-/* 0B87F4 800B7BF4 3C098013 */  lui   $t1, %hi(gThread0Context+0xFC) # $t1, 0x8013
-/* 0B87F8 800B7BF8 3C0B8013 */  lui   $t3, %hi(gThread0Context+0x104) # $t3, 0x8013
-/* 0B87FC 800B7BFC 8D669904 */  lw    $a2, %lo(gThread0Context+0x104)($t3)
-/* 0B8800 800B7C00 8D2598FC */  lw    $a1, %lo(gThread0Context+0xFC)($t1)
+/* 0B87F4 800B7BF4 3C098013 */  lui   $t1, %hi(gEpcInfo+0xFC) # $t1, 0x8013
+/* 0B87F8 800B7BF8 3C0B8013 */  lui   $t3, %hi(gEpcInfo+0x104) # $t3, 0x8013
+/* 0B87FC 800B7BFC 8D669904 */  lw    $a2, %lo(gEpcInfo+0x104)($t3)
+/* 0B8800 800B7C00 8D2598FC */  lw    $a1, %lo(gEpcInfo+0xFC)($t1)
 /* 0B8804 800B7C04 3C04800F */  lui   $a0, %hi(D_800E9100) # $a0, 0x800f
 /* 0B8808 800B7C08 0C02D7B7 */  jal   render_printf
 /* 0B880C 800B7C0C 24849100 */   addiu $a0, %lo(D_800E9100) # addiu $a0, $a0, -0x6f00
