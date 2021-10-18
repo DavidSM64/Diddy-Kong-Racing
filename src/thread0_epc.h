@@ -81,7 +81,7 @@ s32 func_800B76DC(void);
 void func_800B77D4(s32 arg0);
 
 void func_800B6F50(void); // Non Matching
-void thread0(s32 arg0); // Non Matching
+void thread0_Main(s32 arg0); // Non Matching
 void func_800B7460(s32 *epc, s32 size, s32 mask); // Non Matching
 void render_epc_lock_up_display(void); // Non Matching
 void func_800B71B0(void); // Non Matching

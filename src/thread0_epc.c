@@ -8,6 +8,7 @@
 #include "controller_pak.h"
 #include "printf.h"
 #include "unknown_00BC20.h"
+#include "controller.h"
 
 /************ .rodata ************/
 
@@ -37,7 +38,8 @@ char *D_800E302C[3] = {
 
 /************ .bss ************/
 
-epcInfo gEpcInfo;
+__OSThreadContext gThread0Context; //Was epcInfo
+s32 D_80129990[8];
 s32 D_801299B0[64];
 
 extern s32 D_80129BB0[256];
@@ -100,7 +102,7 @@ void func_800B6F50(void) {
     
     // Almost matching, just have an issue with argument 4.
     // The -O2 compiler is too smart. :(
-    osCreateThread(&D_801295E0, 0, &thread0, 0, &D_801295E0, 255);
+    osCreateThread(&D_801295E0, 0, thread0_Main, 0, &D_801295E0, 255);
     
     osStartThread(&D_801295E0);
     
@@ -113,7 +115,7 @@ GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B6F50.s")
 #endif
 
 #ifdef NON_MATCHING
-void thread0(s32 arg0) { // Has regalloc issues
+void thread0_Main(s32 arg0) { // Has regalloc issues
     s32 sp34;
     s32 s0 = 0;
     
@@ -140,7 +142,7 @@ void thread0(s32 arg0) { // Has regalloc issues
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0_Main.s")
 #endif
 
 void func_800B70D0(void) {
@@ -214,26 +216,28 @@ void func_800B76B8(s32 arg0, s32 arg1) {
 //Called as a check to see if render_epc_lock_up_display should be called.
 s32 func_800B76DC(void) {
     s32 fileNum;
-    u8 sp820[4]; // Unused?
-    s16 sp420[0x200];
-    u8 sp220[0x200];
-    u8 sp1D0[0x50]; // Unused?
-    epcInfo dataFromControllerPak;
+    s32 controllerIndex = 0;
+    u8 *sp420[256];
+    u8 *sp220[128];
+    u8 *dataFromControllerPak[128];
     
     if (D_800E3020 != -1) {
         return D_800E3020;
     } else {
         D_800E3020 = 0;
-        if ((func_800758DC(0) == 0) && (func_800764E8(0, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0)
-            && (read_data_from_controller_pak(0, fileNum, &dataFromControllerPak, 0x800) == 0)) {
-            bcopy(&dataFromControllerPak, &gEpcInfo, 0x1B0);
-            bcopy(&sp220, &D_801299B0, 0x200);
-            bcopy(&sp420, &D_80129BB0, 0x400);
+        if ((func_800758DC(controllerIndex) == 0) && //Rumble pack check?
+            (func_800764E8(controllerIndex, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0) &&
+            (read_data_from_controller_pak(controllerIndex, fileNum, &dataFromControllerPak,
+                sizeof(dataFromControllerPak) * MAXCONTROLLERS) == 0))
+        {
+            bcopy(&dataFromControllerPak, &gThread0Context, sizeof(dataFromControllerPak) - 80); //Why less 80 (0x50)?
+            bcopy(&sp220, &D_801299B0, sizeof(sp220));
+            bcopy(&sp420, &D_80129BB0, sizeof(sp420));
             D_800E3020 = 1;
         }
-        func_80075AEC(0);
+        func_80075AEC(controllerIndex);
         if (D_800E3020 != 0) {
-            func_800762C8(0, fileNum);
+            func_800762C8(controllerIndex, fileNum);
         }
         return D_800E3020;
     }
@@ -266,15 +270,15 @@ void render_epc_lock_up_display(void) {
     
     switch (D_800E3024) {
         case 0:
-            D_80129FB0[0] = gEpcInfo.unk130;
-            D_80129FB0[1] = gEpcInfo.unk134;
-            D_80129FB0[2] = gEpcInfo.unk138;
-            if (gEpcInfo.cause != -1) {
-                render_printf(" Fault in thread %d\n", gEpcInfo.thread);
-                render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
-                render_printf(" cause\t\t0x%08x\n", gEpcInfo.cause);
-                render_printf(" sr\t\t0x%08x\n", gEpcInfo.sr);
-                render_printf(" badvaddr\t0x%08x\n", gEpcInfo.badvaddr);
+            D_80129FB0[0] = gThread0Context.unk130;
+            D_80129FB0[1] = gThread0Context.unk134;
+            D_80129FB0[2] = gThread0Context.unk138;
+            if (gThread0Context.cause != -1) {
+                render_printf(" Fault in thread %d\n", gThread0Context.thread);
+                render_printf(" epc\t\t0x%08x\n", gThread0Context.epc);
+                render_printf(" cause\t\t0x%08x\n", gThread0Context.cause);
+                render_printf(" sr\t\t0x%08x\n", gThread0Context.sr);
+                render_printf(" badvaddr\t0x%08x\n", gThread0Context.badvaddr);
                 for(i = 0; i < 3; i++) {
                     if (D_80129FB0[i] != -1) {
                         if (s3 == 0) {
@@ -285,19 +289,19 @@ void render_epc_lock_up_display(void) {
                     }
                 }
                 render_printf("\n");
-                render_printf(" at 0x%08x v0 0x%08x v1 0x%08x\n", gEpcInfo.at, gEpcInfo.v0, gEpcInfo.v1);
-                render_printf(" a0 0x%08x a1 0x%08x a2 0x%08x\n", gEpcInfo.a0, gEpcInfo.a1, gEpcInfo.a2);
-                render_printf(" a3 0x%08x t0 0x%08x t1 0x%08x\n", gEpcInfo.a3, gEpcInfo.t0, gEpcInfo.t1);
-                render_printf(" t2 0x%08x t3 0x%08x t4 0x%08x\n", gEpcInfo.t2, gEpcInfo.t3, gEpcInfo.t4);
-                render_printf(" t5 0x%08x t6 0x%08x t7 0x%08x\n", gEpcInfo.t5, gEpcInfo.t6, gEpcInfo.t7);
-                render_printf(" s0 0x%08x s1 0x%08x s2 0x%08x\n", gEpcInfo.s0, gEpcInfo.s1, gEpcInfo.s2);
-                render_printf(" s3 0x%08x s4 0x%08x s5 0x%08x\n", gEpcInfo.s3, gEpcInfo.s4, gEpcInfo.s5);
-                render_printf(" s6 0x%08x s7 0x%08x t8 0x%08x\n", gEpcInfo.s6, gEpcInfo.s7, gEpcInfo.t8);
-                render_printf(" t9 0x%08x gp 0x%08x sp 0x%08x\n", gEpcInfo.t9, gEpcInfo.gp, gEpcInfo.sp);
-                render_printf(" s8 0x%08x ra 0x%08x\n\n", gEpcInfo.s8, gEpcInfo.ra);
-            } else { // gEpcInfo.cause == -1
-                render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
-                render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", gEpcInfo.a0, gEpcInfo.a1);
+                render_printf(" at 0x%08x v0 0x%08x v1 0x%08x\n", gThread0Context.at, gThread0Context.v0, gThread0Context.v1);
+                render_printf(" a0 0x%08x a1 0x%08x a2 0x%08x\n", gThread0Context.a0, gThread0Context.a1, gThread0Context.a2);
+                render_printf(" a3 0x%08x t0 0x%08x t1 0x%08x\n", gThread0Context.a3, gThread0Context.t0, gThread0Context.t1);
+                render_printf(" t2 0x%08x t3 0x%08x t4 0x%08x\n", gThread0Context.t2, gThread0Context.t3, gThread0Context.t4);
+                render_printf(" t5 0x%08x t6 0x%08x t7 0x%08x\n", gThread0Context.t5, gThread0Context.t6, gThread0Context.t7);
+                render_printf(" s0 0x%08x s1 0x%08x s2 0x%08x\n", gThread0Context.s0, gThread0Context.s1, gThread0Context.s2);
+                render_printf(" s3 0x%08x s4 0x%08x s5 0x%08x\n", gThread0Context.s3, gThread0Context.s4, gThread0Context.s5);
+                render_printf(" s6 0x%08x s7 0x%08x t8 0x%08x\n", gThread0Context.s6, gThread0Context.s7, gThread0Context.t8);
+                render_printf(" t9 0x%08x gp 0x%08x sp 0x%08x\n", gThread0Context.t9, gThread0Context.gp, gThread0Context.sp);
+                render_printf(" s8 0x%08x ra 0x%08x\n\n", gThread0Context.s8, gThread0Context.ra);
+            } else { // gThread0Context.cause == -1
+                render_printf(" epc\t\t0x%08x\n", gThread0Context.epc);
+                render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", gThread0Context.a0, gThread0Context.a1);
                 for(i = 0; i < 3; i++) {
                     if (D_80129FB0[i] != -1) {
                         if (s3 == 0) {
@@ -309,7 +313,7 @@ void render_epc_lock_up_display(void) {
                 }
                 render_printf("\n");
                 render_printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                render_printf(" s8 0x%08x ra 0x%08x\n\n", gEpcInfo.s8, gEpcInfo.ra);
+                render_printf(" s8 0x%08x ra 0x%08x\n\n", gThread0Context.s8, gThread0Context.ra);
                 render_printf("\n");
             }
             break;
