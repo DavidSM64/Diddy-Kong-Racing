@@ -61,9 +61,9 @@ const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Pri
 
 /************ .bss ************/
 
-extern s32 D_80127CA0;
-extern s32 D_80127CA4;
-extern s32 D_80127CA8;
+extern TextureHeader *gTexture0;
+extern TextureHeader *gTexture1;
+extern TextureHeader *gTexture2;
 extern u8 D_80127CD8;
 extern u8 *D_801285D8;
 
@@ -94,9 +94,9 @@ void func_800B4A14(char *s, char *format, ...) {
 GLOBAL_ASM("asm/non_matchings/printf/sprintf.s")
 
 void func_800B5E88(void) {
-    D_80127CA0 = load_texture(0);
-    D_80127CA4 = load_texture(1);
-    D_80127CA8 = load_texture(2);
+    gTexture0 = load_texture(0);
+    gTexture1 = load_texture(1);
+    gTexture2 = load_texture(2);
     D_801285D8 = &D_80127CD8;
 }
 

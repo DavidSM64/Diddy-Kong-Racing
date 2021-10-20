@@ -155,9 +155,9 @@ s32 D_800E2EEC = 0x100;
 s32 D_80127C80;
 s32 D_80127C84;
 s32 D_80127C88[6];
-s32 D_80127CA0;
-s32 D_80127CA4;
-s32 D_80127CA8;
+TextureHeader *gTexture0;
+TextureHeader *gTexture1;
+TextureHeader *gTexture2;
 s16 D_80127CAC;
 s16 D_80127CAE;
 s16 D_80127CB0;
@@ -498,9 +498,9 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
     if (flags & 0x4000) {
         arg0->unk4 = 0x4000;
         arg0->unk6 = 0;
-        arg0->unkC_4000.unkC = 0.0f;
-        arg0->unkC_4000.unk10 = 0.0f;
-        arg0->unkC_4000.unk14 = 0.0f;
+        arg0->unkB.unkC_4000.unkC = 0.0f;
+        arg0->unkB.unkC_4000.unk10 = 0.0f;
+        arg0->unkB.unkC_4000.unk14 = 0.0f;
     } else if (flags & 0x400) {
         arg0->unk6 = 0;
         arg0->unk4 = 0x400;
@@ -510,19 +510,19 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
         } else {
             arg0->unk7 = 0xFF;
         }
-        arg0->unkC_400.unkC = (s32*)allocate_from_main_pool_safe(arg0->unk7 * 4, 0x80808080);
-        arg0->unkC_400.unk10 = temp_v1->unk14;
-        arg0->unkC_400.unk12 = temp_v1->unk16;
-        arg0->unkC_400.unk14 = temp_v1->unk22;
-        arg0->unkC_400.unk16 = temp_v1->unk24;
+        arg0->unkB.unkC_400.unkC = (s32*)allocate_from_main_pool_safe(arg0->unk7 * 4, 0x80808080);
+        arg0->unkB.unkC_400.unk10 = temp_v1->unk14;
+        arg0->unkB.unkC_400.unk12 = temp_v1->unk16;
+        arg0->unkB.unkC_400.unk14 = temp_v1->unk22;
+        arg0->unkB.unkC_400.unk16 = temp_v1->unk24;
     } else {
         arg0->unk4 = 0;
-        arg0->unkC.unkC = temp_v1->unk14;
-        arg0->unkC.unkE = temp_v1->unk16;
-        arg0->unkC.unk10 = temp_v1->unk18;
-        arg0->unkC.unk12 = temp_v1->unk22;
-        arg0->unkC.unk14 = temp_v1->unk24;
-        arg0->unkC.unk16 = temp_v1->unk26;
+        arg0->unkB.unkC.unkC = temp_v1->unk14;
+        arg0->unkB.unkC.unkE = temp_v1->unk16;
+        arg0->unkB.unkC.unk10 = temp_v1->unk18;
+        arg0->unkB.unkC.unk12 = temp_v1->unk22;
+        arg0->unkB.unkC.unk14 = temp_v1->unk24;
+        arg0->unkB.unkC.unk16 = temp_v1->unk26;
     }
 }
 
