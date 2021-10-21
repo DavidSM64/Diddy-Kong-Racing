@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-//Called only in osInitialize
-s32 func_800C7340(void) {
+//This has been blanked out for some reason
+s32 __osLeoInterrupt(void) {
     return 0;
 }
