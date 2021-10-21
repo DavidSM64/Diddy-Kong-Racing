@@ -61,6 +61,3 @@ s32 osPfsFileState(OSPfs *pfs, s32 file_no, OSPfsState *state)
         state->ext_name[j] = dir.ext_name[j];
     return 0;
 }
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/osPfsDeleteFile.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/__osPfsReleasePages.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D1180/__osBlockSum.s")
