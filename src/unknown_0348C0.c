@@ -1292,7 +1292,7 @@ void func_8003FEF4(Object *arg0, LevelObjectEntry8003FEF4 *arg1) {
     obj64->unk2 = arg1->unkA;
     obj64->unkC = arg1->unkC;
     obj64->unkD = arg1->unkD;
-    obj64->unk8_word = 0;
+    obj64->unk_union.unk8_word = 0;
     obj64->unk4 = arg1->unkE;
     obj64->unk11 = arg1->unk12;
     obj64->unk10 = arg1->unk11;

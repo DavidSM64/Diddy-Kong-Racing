@@ -19,6 +19,15 @@ ifeq ($(NON_MATCHING),1)
   DEFINES += NON_MATCHING=1
 endif
 
+# Whether to hide commands or not
+VERBOSE ?= 0
+ifeq ($(VERBOSE),0)
+  V := @
+endif
+
+# Whether to colorize build messages
+COLOR ?= 1
+
 ############################ Setup ###########################
 
 # Don't do setup checks if cleaning.
@@ -40,6 +49,22 @@ DUMMY != make -s -C tools >&2 || echo FAIL
 ifeq ($(DUMMY),FAIL)
   $(error Failed to build tools)
 endif
+
+PRINT = printf
+
+ifeq ($(COLOR),1)
+NO_COL  := \033[0m
+RED     := \033[0;31m
+GREEN   := \033[0;32m
+BLUE    := \033[0;34m
+YELLOW  := \033[0;33m
+BLINK   := \033[33;5m
+endif
+
+# Common build print status function
+define print
+  @$(PRINT) "$(GREEN)$(1) $(YELLOW)$(2)$(GREEN) -> $(BLUE)$(3)$(NO_COL)\n"
+endef
 
 ########## Recomp ##########
 
@@ -410,10 +435,12 @@ $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 ###############################
 
 $(BUILD_DIR)/%.o: %.s | $(ALL_ASSETS_BUILT)
-	$(AS) $(ASFLAGS) -o $@ $<
+	$(call print,Compiling:,$<,$@)
+	$(V)$(AS) $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/%.o: %.c | $(ALL_ASSETS_BUILT)
-	$(CC) $(CFLAGS) -o $@ $<
+	$(call print,Compiling:,$<,$@)
+	$(V)$(CC) $(CFLAGS) -o $@ $<
 
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
 	$(CPP) $(VERSION_CFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
