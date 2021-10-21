@@ -309,14 +309,14 @@ else
 endif 
     
 clean_lib:
-ifneq ($(wildcard $(BUILD_DIR)/lib/.*),) 
-	rm -r $(BUILD_DIR)/lib/src/*.o
+ifneq ($(wildcard $(BUILD_DIR)/lib/.*),)
+	rm -r $(BUILD_DIR)/lib/src/*/*.o
 else 
 	@echo "build lib directory has already been deleted." 
 endif 
 
 clean_src: clean_lib
-ifneq ($(wildcard ./build/src/.*),) 
+ifneq ($(wildcard $(BUILD_DIR)/src/.*),)
 	rm -r $(BUILD_DIR)/src/*.o
 else 
 	@echo "/build/lib directory has already been deleted." 
