@@ -38,7 +38,7 @@ extern u16 *gVideoDepthBuffer;
 extern s32 D_800DE774;
 extern s8  D_800DE778;
 
-extern OSViMode D_800E4620, D_800E4670, D_800E46C0, D_800E4760, D_800E4710, D_800E47B0;
+extern OSViMode D_800E4620, D_800E4670, D_800E46C0, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 
 /* Size: 0x08 bytes */
 typedef struct VideoModeResolution {

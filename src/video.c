@@ -161,11 +161,11 @@ void init_vi_settings(void) {
             break;
         case 3:
             stubbed_printf("640 by 240 Anti-aliased, Non interlaced.\n");
-            tvViMode = &D_800E4710;
+            tvViMode = &osViModeNtscLan1;
             if (osTvType == TV_TYPE_PAL) {
-                tvViMode = &D_800E4760;
+                tvViMode = &osViModePalLan1;
             } else if (osTvType == TV_TYPE_MPAL) {
-                tvViMode = &D_800E47B0;
+                tvViMode = &osViModeMpalLan1;
             }
             memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
             D_80126260.comRegs.width = 0x280;

@@ -46,7 +46,7 @@ void osInitialize() {
    osMapTLBRdb();
    osPiRawReadIo(4, &clock); //TODO: remove magic constant;
    clock &= ~0xf;            //clear lower 4 bits
-   if (clock != 0) {
+   if (clock) {
       osClockRate = clock;
    }
    osClockRate = osClockRate * 3 / 4;

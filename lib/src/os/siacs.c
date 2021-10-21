@@ -26,7 +26,7 @@ OSTask tmp_task; //Supposed to be statically declared in sptask.c
 #define PI_Q_BUF_LEN 1
 OSMesg piAccessBuf[PI_Q_BUF_LEN]; //Should be static, but this works for now
 s32 __osPiAccessQueue[6];
-OSTimer D_8012D200;
+OSTimer __osBaseTimer;
 OSTime __osCurrentTime;
 s32 __osBaseCounter;
 s32 __osViIntrCount;

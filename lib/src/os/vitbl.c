@@ -1571,29 +1571,114 @@ s32 D_800E46C0[20] = {
     0x00000400, 0x002501FF, 0x000E0204, 0x00000002
 };
 
-s32 D_800E4710[20] = {
-    0x02000000, 0x0000311E, 0x00000140, 0x03E52239, 
-    0x0000020D, 0x00000C15, 0x0C150C15, 0x006C02EC, 
-    0x00000200, 0x00000000, 0x00000280, 0x00000400, 
-    0x002501FF, 0x000E0204, 0x00000002, 0x00000280, 
-    0x00000400, 0x002501FF, 0x000E0204, 0x00000002
-};
+OSViMode osViModeNtscLan1 = {
+    OS_VI_NTSC_LAN1,  // type
+    {
+        // comRegs
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | 0x3000,  // ctrl
+        WIDTH(320),                                                // width
+        BURST(57, 34, 5, 62),                                      // burst
+        VSYNC(525),                                                // vSync
+        HSYNC(3093, 0),                                            // hSync
+        LEAP(3093, 3093),                                          // leap
+        HSTART(108, 748),                                          // hStart
+        SCALE(2, 0),                                               // xScale
+        VCURRENT(0),                                               // vCurrent
+    },
+    {// fldRegs
+     {
+         //[0]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     },
+     {
+         //[1]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     }}};
 
-s32 D_800E4760[20] = {
+s32 osViModePalLan1[20] = {
     0x10000000, 0x0000311E, 0x00000140, 0x0404233A, 
     0x00000271, 0x00150C69, 0x0C6F0C6E, 0x00800300, 
     0x00000200, 0x00000000, 0x00000280, 0x00000400, 
     0x005F0239, 0x0009026B, 0x00000002, 0x00000280, 
     0x00000400, 0x005F0239, 0x0009026B, 0x00000002
 };
+/*
+//TODO: Figure out why this doesn't match from libreultra
+OSViMode osViModePalLan1 = {
+    OS_VI_PAL_LAN1,  // type
+    {
+        // comRegs
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | 0x3000,  // ctrl
+        WIDTH(320),                                                // width
+        BURST(58, 30, 4, 69),                                      // burst
+        VSYNC(625),                                                // vSync
+        HSYNC(3177, 23),                                           // hSync
+        LEAP(3183, 3181),                                          // leap
+        HSTART(128, 768),                                          // hStart
+        SCALE(2, 0),                                               // xScale
+        VCURRENT(0),                                               // vCurrent
+    },
+    {// fldRegs
+     {
+         //[0]
+         ORIGIN(640),          // origin
+         SCALE(1, 0),          // yScale
+         HSTART(95, 569),      // vStart
+         BURST(107, 2, 9, 0),  // vBurst
+         VINTR(2),             // vIntr
+     },
+     {
+         //[1]
+         ORIGIN(640),          // origin
+         SCALE(1, 0),          // yScale
+         HSTART(95, 569),      // vStart
+         BURST(107, 2, 9, 0),  // vBurst
+         VINTR(2),             // vIntr
+     }}};
+*/
 
-s32 D_800E47B0[20] = {
-    0x1E000000, 0x0000311E, 0x00000140, 0x04651E39, 
-    0x0000020D, 0x00040C11, 0x0C190C1A, 0x006C02EC, 
-    0x00000200, 0x00000000, 0x00000280, 0x00000400, 
-    0x002501FF, 0x000E0204, 0x00000002, 0x00000280, 
-    0x00000400, 0x002501FF, 0x000E0204, 0x00000002
-};
+OSViMode osViModeMpalLan1 = {
+    OS_VI_MPAL_LAN1,  // type
+    {
+        // comRegs
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | 0x3000,  // ctrl
+        WIDTH(320),                                                // width
+        BURST(57, 30, 5, 70),                                      // burst
+        VSYNC(525),                                                // vSync
+        HSYNC(3089, 4),                                            // hSync
+        LEAP(3097, 3098),                                          // leap
+        HSTART(108, 748),                                          // hStart
+        SCALE(2, 0),                                               // xScale
+        VCURRENT(0),                                               // vCurrent
+    },
+    {// fldRegs
+     {
+         //[0]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     },
+     {
+         //[1]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     }}};
 
 // This needs to be moved.
 u32 __osPiAccessQueueEnabled = 0;
