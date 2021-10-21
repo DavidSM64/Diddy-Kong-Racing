@@ -3,10 +3,11 @@
 
 #include "macros.h"
 #include "libultra_internal.h"
-#include "viint.h"
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0D3020/__osDpDeviceBusy.s")
-
-__OSViContext *__osViGetCurrentContext(void){
-    return __osViCurr;
+int __osDpDeviceBusy(void) {
+    register u32 stat;
+    stat = IO_READ(DPC_STATUS_REG);
+    if (stat & DPC_STATUS_DMA_BUSY)
+        return 1;
+    return 0;
 }
