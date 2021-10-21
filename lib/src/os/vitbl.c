@@ -1604,8 +1604,7 @@ OSViMode osViModeNtscLan1 = {
          VINTR(2),            // vIntr
      }}};
 
-//TODO: Figure out why this doesn't match from libreultra
-#ifdef NON_MATCHING
+//TODO: Figure out the BURST/HSYNC/LEAP values
 OSViMode osViModePalLan1 = {
     OS_VI_PAL_LAN1,  // type
     {
@@ -1613,10 +1612,13 @@ OSViMode osViModePalLan1 = {
         VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
             VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | 0x3000,  // ctrl
         WIDTH(320),                                                // width
-        BURST(58, 30, 4, 69),                                      // burst
+        //BURST(58, 30, 4, 69),                                      // burst
+        67380026,
         VSYNC(625),                                                // vSync
-        HSYNC(3177, 23),                                           // hSync
-        LEAP(3183, 3181),                                          // leap
+        //HSYNC(3177, 23),                                           // hSync
+        1379433,
+        //LEAP(3183, 3181),                                          // leap
+        208604270,
         HSTART(128, 768),                                          // hStart
         SCALE(2, 0),                                               // xScale
         VCURRENT(0),                                               // vCurrent
@@ -1638,15 +1640,6 @@ OSViMode osViModePalLan1 = {
          BURST(107, 2, 9, 0),  // vBurst
          VINTR(2),             // vIntr
      }}};
-#else
-s32 osViModePalLan1[20] = {
-    0x10000000, 0x0000311E, 0x00000140, 0x0404233A,
-    0x00000271, 0x00150C69, 0x0C6F0C6E, 0x00800300,
-    0x00000200, 0x00000000, 0x00000280, 0x00000400,
-    0x005F0239, 0x0009026B, 0x00000002, 0x00000280,
-    0x00000400, 0x005F0239, 0x0009026B, 0x00000002
-};
-#endif
 
 OSViMode osViModeMpalLan1 = {
     OS_VI_MPAL_LAN1,  // type
