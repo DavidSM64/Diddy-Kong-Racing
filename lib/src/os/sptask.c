@@ -1,52 +1,9 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800D1DF0 */
+/* RAM_POS: 0x800D1EF0 */
 
 #include "libultra_internal.h"
 #include "viint.h"
-
-__OSViContext vi[2] = {0};
-__OSViContext *__osViCurr = &vi[0];
-__OSViContext *__osViNext = &vi[1];
-
-//TODO: This should be defined above osInitialize
-#define OS_TASK_YIELDED 0x0001
-#define OS_TASK_DP_WAIT	0x0002
-s32 osViClock = VI_NTSC_CLOCK;
-
-OSYieldResult osSpTaskYielded(OSTask *tp) {
-    u32 status;
-    OSYieldResult result;
-    status = __osSpGetStatus();
-    if (status & SP_STATUS_YIELDED)
-        result = OS_TASK_YIELDED;
-    else
-        result = 0;
-    if (status & SP_STATUS_YIELD) {
-        tp->t.flags |= result;
-        tp->t.flags &= ~(OS_TASK_DP_WAIT);
-    }
-    return result;
-}
-
-void *osViGetCurrentFramebuffer(void){
-    register u32 saveMask;
-    void *framep;
-
-    saveMask = __osDisableInt();
-    framep = __osViCurr->framep;
-    __osRestoreInt(saveMask);
-    return framep;
-}
-
-void *osViGetNextFramebuffer(void){
-    register u32 saveMask;
-    void *framep;
-
-    saveMask = __osDisableInt();
-    framep = __osViNext->framep;
-    __osRestoreInt(saveMask);
-    return framep;
-}
+#include "PR/sptask.h"
 
 #define _osVirtualToPhysical(ptr)               \
     if (ptr != NULL) {                          \
@@ -54,7 +11,7 @@ void *osViGetNextFramebuffer(void){
     }
 
 extern OSTask tmp_task;
-OSTask *_VirtualToPhysicalTask(OSTask *intp) {
+static OSTask *_VirtualToPhysicalTask(OSTask *intp) {
     OSTask *tp;
     tp = &tmp_task;
     bcopy(intp, tp, sizeof(OSTask));

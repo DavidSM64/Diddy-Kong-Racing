@@ -36,7 +36,7 @@ s32 osPfsDeleteFile(OSPfs *pfs, u16 company_code, u32 game_code, u8 *game_name,
         ERRCK(__osPfsRWInode(pfs, &inode, OS_READ, bank));
         ERRCK(__osPfsReleasePages(pfs, &inode, startpage, &sum, bank, &last_page, 1)); //TODO: magic constant
         ERRCK(__osPfsRWInode(pfs, &inode, OS_WRITE, bank));
-        if (last_page.ipage == 1)
+        if (last_page.ipage == PFS_EOF)
             break;
         bank = last_page.inode_t.bank;
         startpage = last_page.inode_t.page;

@@ -46,10 +46,10 @@ s32 osPfsFileState(OSPfs *pfs, s32 file_no, OSPfsState *state)
                 break;
             }
         }
-        if (next_page.ipage == 1)
+        if (next_page.ipage == PFS_EOF)
             break;
     }
-    if (next_page.ipage != 1)
+    if (next_page.ipage != PFS_EOF)
         return PFS_ERR_INCONSISTENT;
 
     state->file_size = pages << PFS_ONE_PAGE;
