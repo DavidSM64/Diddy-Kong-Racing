@@ -1604,7 +1604,6 @@ OSViMode osViModeNtscLan1 = {
          VINTR(2),            // vIntr
      }}};
 
-//TODO: Figure out the BURST/HSYNC/LEAP values
 OSViMode osViModePalLan1 = {
     OS_VI_PAL_LAN1,  // type
     {
@@ -1612,13 +1611,10 @@ OSViMode osViModePalLan1 = {
         VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
             VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | 0x3000,  // ctrl
         WIDTH(320),                                                // width
-        //BURST(58, 30, 4, 69),                                      // burst
-        67380026,
+        BURST(58, 35, 4, 64),                                      // burst
         VSYNC(625),                                                // vSync
-        //HSYNC(3177, 23),                                           // hSync
-        1379433,
-        //LEAP(3183, 3181),                                          // leap
-        208604270,
+        HSYNC(3177, 21),                                           // hSync
+        LEAP(3183, 3182),                                          // leap
         HSTART(128, 768),                                          // hStart
         SCALE(2, 0),                                               // xScale
         VCURRENT(0),                                               // vCurrent
