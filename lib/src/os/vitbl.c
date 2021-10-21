@@ -1604,15 +1604,8 @@ OSViMode osViModeNtscLan1 = {
          VINTR(2),            // vIntr
      }}};
 
-s32 osViModePalLan1[20] = {
-    0x10000000, 0x0000311E, 0x00000140, 0x0404233A, 
-    0x00000271, 0x00150C69, 0x0C6F0C6E, 0x00800300, 
-    0x00000200, 0x00000000, 0x00000280, 0x00000400, 
-    0x005F0239, 0x0009026B, 0x00000002, 0x00000280, 
-    0x00000400, 0x005F0239, 0x0009026B, 0x00000002
-};
-/*
 //TODO: Figure out why this doesn't match from libreultra
+#ifdef NON_MATCHING
 OSViMode osViModePalLan1 = {
     OS_VI_PAL_LAN1,  // type
     {
@@ -1645,7 +1638,15 @@ OSViMode osViModePalLan1 = {
          BURST(107, 2, 9, 0),  // vBurst
          VINTR(2),             // vIntr
      }}};
-*/
+#else
+s32 osViModePalLan1[20] = {
+    0x10000000, 0x0000311E, 0x00000140, 0x0404233A,
+    0x00000271, 0x00150C69, 0x0C6F0C6E, 0x00800300,
+    0x00000200, 0x00000000, 0x00000280, 0x00000400,
+    0x005F0239, 0x0009026B, 0x00000002, 0x00000280,
+    0x00000400, 0x005F0239, 0x0009026B, 0x00000002
+};
+#endif
 
 OSViMode osViModeMpalLan1 = {
     OS_VI_MPAL_LAN1,  // type
