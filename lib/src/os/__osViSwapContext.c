@@ -13,8 +13,8 @@ struct __osThreadTail
 } __osThreadTail;
 
 struct __osThreadTail __osThreadTail = {0, -1};
-OSThread *__osRunQueue = &__osThreadTail.next;
-OSThread *__osActiveQueue = &__osThreadTail.next;
+OSThread *__osRunQueue = (OSThread *)&__osThreadTail;
+OSThread *__osActiveQueue = (OSThread *)&__osThreadTail;
 
 extern OSThread *__osRunningThread = NULL;
 extern OSThread *__osFaultedThread = NULL;
