@@ -2,6 +2,7 @@
 /* RAM_POS: 0x8007A310 */
 
 #include "video.h"
+#include "viint.h"
 
 /************ .data ************/
 
@@ -32,7 +33,7 @@ f32 gVideoHeightRatio;
 s32 D_8012617C;
 OSMesg D_80126180[8];
 OSMesgQueue D_801261A0[8];
-OSViMode D_80126260;
+OSViMode gTvViMode;
 s32 gVideoFbWidths[2];
 s32 gVideoFbHeights[2];
 u16 *gVideoFramebuffers[2];
@@ -127,6 +128,10 @@ void init_vi_settings(void) {
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
         case 1:
+            //@bug: The video mode being set here is Point sampled
+            //but the printf implies it was intended to be Anti-aliased.
+            //By my understanding, this is the case we will always hit in code,
+            //So maybe it was swapped out late in development?
             stubbed_printf("320 by 240 Anti-aliased, Non interlaced.\n");
             tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
@@ -134,14 +139,15 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLpn1;
             }
-            memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
+            memory_copy(tvViMode, &gTvViMode, sizeof(OSViMode));
             if (osTvType == TV_TYPE_PAL) {
-                D_80126260.fldRegs[0].vStart -= 0x180000; //0x18 << 16
-                D_80126260.fldRegs[1].vStart -= 0x180000; //0x18 << 16
-                D_80126260.fldRegs[0].vStart += 0x18;
-                D_80126260.fldRegs[1].vStart += 0x18;
+                //TODO: Figure out what the 0x18 is for
+                gTvViMode.fldRegs[0].vStart -= (0x18 << 16);
+                gTvViMode.fldRegs[1].vStart -= (0x18 << 16);
+                gTvViMode.fldRegs[0].vStart += 0x18;
+                gTvViMode.fldRegs[1].vStart += 0x18;
             }
-            osViSetMode(&D_80126260);
+            osViSetMode(&gTvViMode);
             break;
         case 2:
             stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
@@ -152,12 +158,12 @@ void init_vi_settings(void) {
                 tvViMode = &osViModeMpalLpn1;
             }
             
-            memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
-            D_80126260.comRegs.width = 0x280;
-            D_80126260.comRegs.xScale = 0x400;
-            D_80126260.fldRegs[0].origin = 0x500;
-            D_80126260.fldRegs[1].origin = 0x500;
-            osViSetMode(&D_80126260);
+            memory_copy(tvViMode, &gTvViMode, sizeof(OSViMode));
+            gTvViMode.comRegs.width = WIDTH(640);
+            gTvViMode.comRegs.xScale = SCALE(1, 0);
+            gTvViMode.fldRegs[0].origin = ORIGIN(1280);
+            gTvViMode.fldRegs[1].origin = ORIGIN(1280);
+            osViSetMode(&gTvViMode);
             break;
         case 3:
             stubbed_printf("640 by 240 Anti-aliased, Non interlaced.\n");
@@ -167,28 +173,28 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLan1;
             }
-            memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
-            D_80126260.comRegs.width = 0x280;
-            D_80126260.comRegs.xScale = 0x400;
-            D_80126260.fldRegs[0].origin = 0x500;
-            D_80126260.fldRegs[1].origin = 0x500;
-            osViSetMode(&D_80126260);
+            memory_copy(tvViMode, &gTvViMode, sizeof(OSViMode));
+            gTvViMode.comRegs.width = WIDTH(640);
+            gTvViMode.comRegs.xScale = SCALE(1, 0);
+            gTvViMode.fldRegs[0].origin = ORIGIN(1280);
+            gTvViMode.fldRegs[1].origin = ORIGIN(1280);
+            osViSetMode(&gTvViMode);
             break;
         case 4:
             stubbed_printf("640 by 480 Point sampled, Interlaced.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 8]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPN1]);
             break;
         case 5:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 10]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAN1]);
             break;
         case 6:
             stubbed_printf("640 by 480 Point sampled, Interlaced, De-flickered.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 9]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPF1]);
             break;
         case 7:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced, De-flickered.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 11]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
             break;
     }
     osViSetSpecialFeatures(OS_VI_DIVOT_ON);
