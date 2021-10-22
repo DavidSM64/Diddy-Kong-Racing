@@ -206,20 +206,20 @@ int main(int argc, char **argv) {
 		printf("%sUnable to calculate CRC%s\n",RED, NO_COL);
 	}
 	else {
-		printf("%sCRC 1: %s0x%08X%s ", GREEN, BLUE, BYTES2LONG(&buffer[N64_CRC1]), NO_COL);
+		printf("%sCRC 1: %s0x%08X%s ", GREEN, YELLOW, BYTES2LONG(&buffer[N64_CRC1]), NO_COL);
 		if (crc[0] == (unsigned int) BYTES2LONG(&buffer[N64_CRC1])) {
 			printf("%sCalculated: %s0x%08X%s ",GREEN, YELLOW, crc[0], NO_COL);
 			printf("%s(Good)%s\n",GREEN, NO_COL);
 		}
 		else {
-			printf("%sCalculated: %s0x%08X%s ",GREEN, RED, crc[0],  NO_COL);
+			printf("%sCalculated: %s0x%08X%s ",GREEN, RED, crc[0], NO_COL);
 			Write32(buffer, N64_CRC1, crc[0]);
 			fseek(fin, N64_CRC1, SEEK_SET);
 			fwrite(&buffer[N64_CRC1], 1, 4, fin);
 			printf("%s(Bad, fixed)%s\n",RED, NO_COL);
 		}
 
-		printf("%sCRC 2: %s0x%08X%s ",GREEN, BLUE, BYTES2LONG(&buffer[N64_CRC2]), NO_COL);
+		printf("%sCRC 2: %s0x%08X%s ",GREEN, YELLOW, BYTES2LONG(&buffer[N64_CRC2]), NO_COL);
 		if (crc[1] == (unsigned int) BYTES2LONG(&buffer[N64_CRC2])) {
 			printf("%sCalculated: %s0x%08X%s ",GREEN, YELLOW, crc[1], NO_COL);
 			printf("%s(Good)%s\n", GREEN, NO_COL);
