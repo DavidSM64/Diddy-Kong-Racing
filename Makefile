@@ -485,7 +485,7 @@ $(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
 	$(V)$(FIXCHECKSUMS)
 	$(V)$(N64CRC) $@
 ifeq ($(NON_MATCHING),0)
-	sha1sum -c sha1/dkr.$(VERSION).sha1
+	$(V)sha1sum -c --quiet sha1/dkr.$(VERSION).sha1
 else
 	@echo "Build complete!"
 endif
