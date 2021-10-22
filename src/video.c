@@ -139,13 +139,13 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLpn1;
             }
-            memory_copy(tvViMode, &gTvViMode, sizeof(OSViMode));
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
             if (osTvType == TV_TYPE_PAL) {
-                //TODO: Figure out what the 0x18 is for
-                gTvViMode.fldRegs[0].vStart -= (0x18 << 16);
-                gTvViMode.fldRegs[1].vStart -= (0x18 << 16);
-                gTvViMode.fldRegs[0].vStart += 0x18;
-                gTvViMode.fldRegs[1].vStart += 0x18;
+                //A simple osViExtendVStart to add an additional 24 scanlines?
+                gTvViMode.fldRegs[0].vStart -= (24 << 16);
+                gTvViMode.fldRegs[1].vStart -= (24 << 16);
+                gTvViMode.fldRegs[0].vStart += 24;
+                gTvViMode.fldRegs[1].vStart += 24;
             }
             osViSetMode(&gTvViMode);
             break;
@@ -158,7 +158,7 @@ void init_vi_settings(void) {
                 tvViMode = &osViModeMpalLpn1;
             }
             
-            memory_copy(tvViMode, &gTvViMode, sizeof(OSViMode));
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
             gTvViMode.comRegs.width = WIDTH(640);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
             gTvViMode.fldRegs[0].origin = ORIGIN(1280);
@@ -173,7 +173,7 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLan1;
             }
-            memory_copy(tvViMode, &gTvViMode, sizeof(OSViMode));
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
             gTvViMode.comRegs.width = WIDTH(640);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
             gTvViMode.fldRegs[0].origin = ORIGIN(1280);
@@ -204,7 +204,7 @@ void init_vi_settings(void) {
 
 void init_framebuffer(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
-        func_80071538(gVideoFramebuffers[index]);
+        func_80071538((u8 *)gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
