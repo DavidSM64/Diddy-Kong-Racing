@@ -198,38 +198,38 @@ int main(int argc, char **argv) {
 
 	//Check CIC BootChip
 	cic = N64GetCIC(buffer);
-	printf(GREEN "BootChip: " NO_COL);
+	printf("%sBootChip:%s ",GREEN, NO_COL);
 	printf((cic ? YELLOW "CIC-NUS-%d\n" NO_COL : RED "Unknown\n" NO_COL), cic);
 
 	//Calculate CRC
 	if (N64CalcCRC(crc, buffer)) {
-		printf(RED "Unable to calculate CRC\n" NO_COL);
+		printf("%sUnable to calculate CRC%s\n",RED, NO_COL);
 	}
 	else {
-		printf(GREEN "CRC 1: %s0x%08X  " NO_COL, YELLOW, BYTES2LONG(&buffer[N64_CRC1]));
-		if (crc[0] == BYTES2LONG(&buffer[N64_CRC1])) {
-			printf(GREEN "Calculated: %s0x%08X " NO_COL, YELLOW, crc[0]);
-			printf(BLUE "(Good)\n" NO_COL);
+		printf("%sCRC 1: %s0x%08X%s ", GREEN, BLUE, BYTES2LONG(&buffer[N64_CRC1]), NO_COL);
+		if (crc[0] == (unsigned int) BYTES2LONG(&buffer[N64_CRC1])) {
+			printf("%sCalculated: %s0x%08X%s ",GREEN, YELLOW, crc[0], NO_COL);
+			printf("%s(Good)%s\n",GREEN, NO_COL);
 		}
 		else {
-			printf(GREEN "Calculated: %s0x%08X " NO_COL, RED, crc[0]);
+			printf("%sCalculated: %s0x%08X%s ",GREEN, RED, crc[0],  NO_COL);
 			Write32(buffer, N64_CRC1, crc[0]);
 			fseek(fin, N64_CRC1, SEEK_SET);
 			fwrite(&buffer[N64_CRC1], 1, 4, fin);
-			printf(RED "(Bad, fixed)\n" NO_COL);
+			printf("%s(Bad, fixed)%s\n",RED, NO_COL);
 		}
 
-		printf(GREEN "CRC 2: %s0x%08X  " NO_COL, YELLOW, BYTES2LONG(&buffer[N64_CRC2]));
-		if (crc[1] == BYTES2LONG(&buffer[N64_CRC2])) {
-			printf(GREEN "Calculated: %s0x%08X " NO_COL, YELLOW, crc[1]);
-			printf(BLUE "(Good)\n" NO_COL);
+		printf("%sCRC 2: %s0x%08X%s ",GREEN, BLUE, BYTES2LONG(&buffer[N64_CRC2]), NO_COL);
+		if (crc[1] == (unsigned int) BYTES2LONG(&buffer[N64_CRC2])) {
+			printf("%sCalculated: %s0x%08X%s ",GREEN, YELLOW, crc[1], NO_COL);
+			printf("%s(Good)%s\n", GREEN, NO_COL);
 		}
 		else {
 			printf(GREEN "Calculated: %s0x%08X " NO_COL, RED, crc[1]);
 			Write32(buffer, N64_CRC2, crc[1]);
 			fseek(fin, N64_CRC2, SEEK_SET);
 			fwrite(&buffer[N64_CRC2], 1, 4, fin);
-			printf(RED "(Bad, fixed)\n" NO_COL);
+			printf("%s(Bad, fixed)%s\n", RED, NO_COL);
 		}
 	}
 
