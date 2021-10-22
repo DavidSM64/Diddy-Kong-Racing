@@ -57,30 +57,30 @@
 /*
  * Video Interface (VI) special features
  */
-#define	OS_VI_GAMMA_ON			0x0001
-#define	OS_VI_GAMMA_OFF			0x0002
+#define	OS_VI_GAMMA_ON			    0x0001
+#define	OS_VI_GAMMA_OFF			    0x0002
 #define	OS_VI_GAMMA_DITHER_ON		0x0004
 #define	OS_VI_GAMMA_DITHER_OFF		0x0008
-#define	OS_VI_DIVOT_ON			0x0010
-#define	OS_VI_DIVOT_OFF			0x0020
+#define	OS_VI_DIVOT_ON			    0x0010
+#define	OS_VI_DIVOT_OFF			    0x0020
 #define	OS_VI_DITHER_FILTER_ON		0x0040
 #define	OS_VI_DITHER_FILTER_OFF		0x0080
 
 /*
  * Video Interface (VI) mode attribute bit
  */
-#define OS_VI_BIT_NONINTERLACE		0x0001          /* lo-res */
-#define OS_VI_BIT_INTERLACE		0x0002          /* lo-res */
+#define OS_VI_BIT_NONINTERLACE	    0x0001          /* lo-res */
+#define OS_VI_BIT_INTERLACE		    0x0002          /* lo-res */
 #define OS_VI_BIT_NORMALINTERLACE	0x0004          /* hi-res */
 #define OS_VI_BIT_DEFLICKINTERLACE	0x0008          /* hi-res */
-#define OS_VI_BIT_ANTIALIAS		0x0010
-#define OS_VI_BIT_POINTSAMPLE		0x0020
-#define OS_VI_BIT_16PIXEL		0x0040
-#define OS_VI_BIT_32PIXEL		0x0080
-#define OS_VI_BIT_LORES			0x0100
-#define OS_VI_BIT_HIRES			0x0200
-#define OS_VI_BIT_NTSC			0x0400
-#define OS_VI_BIT_PAL			0x0800
+#define OS_VI_BIT_ANTIALIAS		    0x0010
+#define OS_VI_BIT_POINTSAMPLE	    0x0020
+#define OS_VI_BIT_16PIXEL		    0x0040
+#define OS_VI_BIT_32PIXEL		    0x0080
+#define OS_VI_BIT_LORES			    0x0100
+#define OS_VI_BIT_HIRES			    0x0200
+#define OS_VI_BIT_NTSC			    0x0400
+#define OS_VI_BIT_PAL			    0x0800
 
 OSViMode osViModeTable[42] = {
     {OS_VI_NTSC_LPN1, //type
@@ -1546,30 +1546,104 @@ OSViMode osViModeTable[42] = {
       }}},
 };
 
-// TODO: Convert the following arrays into OSViMode structs.
-s32 D_800E4620[20] = {
-    0x00000000, 0x0000320E, 0x00000140, 0x03E52239, 
-    0x0000020D, 0x00000C15, 0x0C150C15, 0x006C02EC, 
-    0x00000200, 0x00000000, 0x00000280, 0x00000400, 
-    0x002501FF, 0x000E0204, 0x00000002, 0x00000280,
-    0x00000400, 0x002501FF, 0x000E0204, 0x00000002
-};
+OSViMode osViModeNtscLpn1 = {
+    OS_VI_NTSC_LPN1,  // type
+    {
+        // comRegs
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_ANTIALIAS_MODE_2 | 0x3000,                     // ctrl
+        WIDTH(320),                                                // width
+        BURST(57, 34, 5, 62),                                      // burst
+        VSYNC(525),                                                // vSync
+        HSYNC(3093, 0),                                            // hSync
+        LEAP(3093, 3093),                                          // leap
+        HSTART(108, 748),                                          // hStart
+        SCALE(2, 0),                                               // xScale
+        VCURRENT(0),                                               // vCurrent
+    },
+    {// fldRegs
+     {
+         //[0]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     },
+     {
+         //[1]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     }}};
 
-s32 D_800E4670[20] = {
-    0x0E000000, 0x0000320E, 0x00000140, 0x0404233A, 
-    0x00000271, 0x00150C69, 0x0C6F0C6E, 0x00800300, 
-    0x00000200, 0x00000000, 0x00000280, 0x00000400, 
-    0x005F0239, 0x0009026B, 0x00000002, 0x00000280, 
-    0x00000400, 0x005F0239, 0x0009026B, 0x00000002
-};
+OSViMode osViModePalLpn1 = {
+    OS_VI_PAL_LPN1,  // type
+    {
+        // comRegs
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_ANTIALIAS_MODE_2 | 0x3000,                     // ctrl
+        WIDTH(320),                                                // width
+        BURST(58, 35, 4, 64),                                      // burst
+        VSYNC(625),                                                // vSync
+        HSYNC(3177, 21),                                           // hSync
+        LEAP(3183, 3182),                                          // leap
+        HSTART(128, 768),                                          // hStart
+        SCALE(2, 0),                                               // xScale
+        VCURRENT(0),                                               // vCurrent
+    },
+    {// fldRegs
+     {
+         //[0]
+         ORIGIN(640),          // origin
+         SCALE(1, 0),          // yScale
+         HSTART(95, 569),      // vStart
+         BURST(107, 2, 9, 0),  // vBurst
+         VINTR(2),             // vIntr
+     },
+     {
+         //[1]
+         ORIGIN(640),          // origin
+         SCALE(1, 0),          // yScale
+         HSTART(95, 569),      // vStart
+         BURST(107, 2, 9, 0),  // vBurst
+         VINTR(2),             // vIntr
+     }}};
 
-s32 D_800E46C0[20] = {
-    0x1C000000, 0x0000320E, 0x00000140, 0x04651E39, 
-    0x0000020D, 0x00040C11, 0x0C190C1A, 0x006C02EC, 
-    0x00000200, 0x00000000, 0x00000280, 0x00000400, 
-    0x002501FF, 0x000E0204, 0x00000002, 0x00000280, 
-    0x00000400, 0x002501FF, 0x000E0204, 0x00000002
-};
+OSViMode osViModeMpalLpn1 = {
+    OS_VI_MPAL_LPN1,  // type
+    {
+        // comRegs
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_ANTIALIAS_MODE_2 | 0x3000,                     // ctrl
+        WIDTH(320),                                                // width
+        BURST(57, 30, 5, 70),                                      // burst
+        VSYNC(525),                                                // vSync
+        HSYNC(3089, 4),                                            // hSync
+        LEAP(3097, 3098),                                          // leap
+        HSTART(108, 748),                                          // hStart
+        SCALE(2, 0),                                               // xScale
+        VCURRENT(0),                                               // vCurrent
+    },
+    {// fldRegs
+     {
+         //[0]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     },
+     {
+         //[1]
+         ORIGIN(640),         // origin
+         SCALE(1, 0),         // yScale
+         HSTART(37, 511),     // vStart
+         BURST(4, 2, 14, 0),  // vBurst
+         VINTR(2),            // vIntr
+     }}};
 
 OSViMode osViModeNtscLan1 = {
     OS_VI_NTSC_LAN1,  // type

@@ -128,28 +128,28 @@ void init_vi_settings(void) {
             break;
         case 1:
             stubbed_printf("320 by 240 Anti-aliased, Non interlaced.\n");
-            tvViMode = &D_800E4620;
+            tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
-                tvViMode = &D_800E4670;
+                tvViMode = &osViModePalLpn1;
             } else if (osTvType == TV_TYPE_MPAL) {
-                tvViMode = &D_800E46C0;
+                tvViMode = &osViModeMpalLpn1;
             }
             memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
             if (osTvType == TV_TYPE_PAL) {
-                D_80126260.fldRegs[0].vStart -= 0x180000;
-                D_80126260.fldRegs[1].vStart -= 0x180000;
-                D_80126260.fldRegs[0].vStart += 24;
-                D_80126260.fldRegs[1].vStart += 24;
+                D_80126260.fldRegs[0].vStart -= 0x180000; //0x18 << 16
+                D_80126260.fldRegs[1].vStart -= 0x180000; //0x18 << 16
+                D_80126260.fldRegs[0].vStart += 0x18;
+                D_80126260.fldRegs[1].vStart += 0x18;
             }
             osViSetMode(&D_80126260);
             break;
         case 2:
             stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
-            tvViMode = &D_800E4620;
+            tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
-                tvViMode = &D_800E4670;
+                tvViMode = &osViModePalLpn1;
             } else if (osTvType == TV_TYPE_MPAL) {
-                tvViMode = &D_800E46C0;
+                tvViMode = &osViModeMpalLpn1;
             }
             
             memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
