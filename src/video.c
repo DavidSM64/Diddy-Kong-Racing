@@ -31,10 +31,8 @@ s32 gVideoRefreshRate;
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
 s32 D_8012617C;
-OSMesg D_80126180;
-s32 D_80126188[6]; //Padding?
-OSMesgQueue D_801261A0;
-s32 D_801261B8[41]; //Padding?
+OSMesg D_80126180[8];
+OSMesgQueue D_801261A0[8];
 OSViMode gTvViMode;
 s32 gVideoFbWidths[2];
 s32 gVideoFbHeights[2];
@@ -84,11 +82,11 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     init_framebuffer(1);
     gVideoCurrFbIndex = 1;
     swap_framebuffers();
-    osCreateMesgQueue(&D_801261A0, &D_80126180, 8);
-    osScAddClient(sc, &D_80126310, &D_801261A0, 2);
+    osCreateMesgQueue((OSMesgQueue *)&D_801261A0, (OSMesg *)&D_80126180, 8);
+    osScAddClient(sc, &D_80126310, (OSMesgQueue *)&D_801261A0, 2);
     init_vi_settings();
     D_801262D0 = 12;
-    osViBlack(1);
+    osViBlack(TRUE);
     D_80126308 = 0;
     D_801262E4 = 3;
 }
@@ -242,7 +240,7 @@ s32 func_8007A98C(s32 arg0) {
     if (D_801262D0 != 0) {
         D_801262D0--;
         if (D_801262D0 == 0) {
-            osViBlack(0);
+            osViBlack(FALSE);
         }
     }
     if (arg0 != 8) {
