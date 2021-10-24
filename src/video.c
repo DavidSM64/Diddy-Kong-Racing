@@ -31,8 +31,10 @@ s32 gVideoRefreshRate;
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
 s32 D_8012617C;
-OSMesg D_80126180[8];
-OSMesgQueue D_801261A0[8];
+OSMesg D_80126180;
+s32 D_80126188[6]; //Padding?
+OSMesgQueue D_801261A0;
+s32 D_801261B8[41]; //Padding?
 OSViMode gTvViMode;
 s32 gVideoFbWidths[2];
 s32 gVideoFbHeights[2];
@@ -49,10 +51,9 @@ s32 D_801262E8[8];
 u8  D_80126308;
 u8  D_80126309;
 s32 D_8012630C;
-OSScClient *D_80126310;
+OSScClient D_80126310;
 
 /******************************/
-
 void init_video(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
@@ -142,10 +143,10 @@ void init_vi_settings(void) {
             memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
             if (osTvType == TV_TYPE_PAL) {
                 //A simple osViExtendVStart to add an additional 24 scanlines?
-                gTvViMode.fldRegs[0].vStart -= (24 << 16);
-                gTvViMode.fldRegs[1].vStart -= (24 << 16);
-                gTvViMode.fldRegs[0].vStart += 24;
-                gTvViMode.fldRegs[1].vStart += 24;
+                gTvViMode.fldRegs[0].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
+                gTvViMode.fldRegs[1].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
+                gTvViMode.fldRegs[0].vStart += PAL_HEIGHT_DIFFERENCE;
+                gTvViMode.fldRegs[1].vStart += PAL_HEIGHT_DIFFERENCE;
             }
             osViSetMode(&gTvViMode);
             break;
@@ -296,16 +297,10 @@ void swap_framebuffers(void) {
     gVideoCurrDepthBuffer = gVideoDepthBuffer;
 }
 
-#ifdef NON_MATCHING
-// regalloc issues
-void memory_copy(u8 *src, u8 *dst, s32 numBytes) {
+void memory_copy(u8 *src, u8 *dest, s32 len) {
     s32 i;
-    for(i = 0; i < numBytes; i++){
-        dst[i] = src[i];
+
+    for(i = 0; i < len; i++) {
+        *dest++ =  *src++;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/video/memory_copy.s")
-#endif
-
-

@@ -63,7 +63,7 @@ s32 func_8007AB34(void);
 void swap_framebuffers(void);
 
 //Non Matching
-void memory_copy(u8 *src, u8 *dst, s32 numBytes);
+void memory_copy(u8 *src, u8 *dest, s32 len);
 s32 func_8007A98C(s32 arg0);
 
 #endif
