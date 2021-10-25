@@ -49,22 +49,14 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800096D8.s")
 void func_800096F8(s32 arg0) {
-    s32 temp_a1;
-    s32* phi_v0;
-    s32 phi_a1;
-
-    phi_v0 = D_80119C44;
-    phi_a1 = 0;
-    while (1) {
-        if (arg0 == *phi_v0) {
-            func_8000A2E8(phi_a1);
-            return;
+    s32 i;
+    s32 *v0 = D_80119C44;
+    for (i = 0; i < 40; i++) {
+        if (arg0 == *v0) {
+            func_8000A2E8(i);
+            break;
         }
-        phi_v0++;
-        phi_a1++;
-        if (phi_a1 == 0x28) {
-            return;
-        }
+        v0++;
     }
 }
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000974C.s")
