@@ -16,6 +16,7 @@ dkr.ld
 # CTX files for mips2c should be ignored as we generate those
 ctx.c
 ctx_includes.c
+ctx.c.m2c
 
 # Misc stuff that should be ignored.
 .*/
