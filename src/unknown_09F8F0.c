@@ -354,15 +354,15 @@ void func_800A263C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     func_80068508(0);
 }
 
-void func_800A26C8(Object *arg0, s32 arg1) {
-    Object_64 *sp1C;
+void func_800A26C8(Object *obj, s32 arg1) {
+    Object_64 *obj64;
     unk800A26C8 *temp_a3;
 
     if (get_viewport_count() == 0) {
-        sp1C = arg0->unk64;
+        obj64 = obj->unk64;
         func_80068508(1);
-        func_800A718C(sp1C);
-        func_800A3884(arg0, arg1);
+        func_800A718C(obj64);
+        func_800A3884(obj, arg1);
         if (is_in_two_player_adventure()) {
             temp_a3 = D_80126CDC + 1;
             temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
