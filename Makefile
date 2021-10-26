@@ -485,9 +485,12 @@ $(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
 	$(V)$(FIXCHECKSUMS)
 	$(V)$(N64CRC) $@
 ifeq ($(NON_MATCHING),0)
-	$(V)sha1sum -c --quiet sha1/dkr.$(VERSION).sha1
+	@(sha1sum -c --quiet sha1/dkr.$(VERSION).sha1 \
+	&& $(PRINT) "$(BLUE)$@$(NO_COL)\
+	: $(GREEN)OK$(NO_COL)\n")
+	@$(PRINT) "$(YELLOW)    __\n .\`_  _\`.\n| | \`| | |\n| |_|._| |\n \`. __ .\'$(NO_COL)\n\n"
 else
-	@echo "Build complete!"
+	@$(PRINT) "$(GREEN)Build Complete!$(NO_COL)\n"
 endif
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
