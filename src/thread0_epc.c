@@ -8,6 +8,7 @@
 #include "controller_pak.h"
 #include "printf.h"
 #include "unknown_00BC20.h"
+#include "controller.h"
 
 /************ .rodata ************/
 
@@ -37,7 +38,7 @@ char *D_800E302C[3] = {
 
 /************ .bss ************/
 
-epcInfo gEpcInfo;
+epcInfo gEpcInfo; //Very similar to __OSThreadContext
 s32 D_801299B0[64];
 
 extern s32 D_80129BB0[256];
@@ -100,7 +101,7 @@ void func_800B6F50(void) {
     
     // Almost matching, just have an issue with argument 4.
     // The -O2 compiler is too smart. :(
-    osCreateThread(&D_801295E0, 0, &thread0, 0, &D_801295E0, 255);
+    osCreateThread(&D_801295E0, 0, thread0_Main, 0, &D_801295E0, 255);
     
     osStartThread(&D_801295E0);
     
@@ -113,7 +114,7 @@ GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B6F50.s")
 #endif
 
 #ifdef NON_MATCHING
-void thread0(s32 arg0) { // Has regalloc issues
+void thread0_Main(s32 arg0) { // Has regalloc issues
     s32 sp34;
     s32 s0 = 0;
     
@@ -140,7 +141,7 @@ void thread0(s32 arg0) { // Has regalloc issues
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0_Main.s")
 #endif
 
 void func_800B70D0(void) {
@@ -214,26 +215,28 @@ void func_800B76B8(s32 arg0, s32 arg1) {
 //Called as a check to see if render_epc_lock_up_display should be called.
 s32 func_800B76DC(void) {
     s32 fileNum;
-    u8 sp820[4]; // Unused?
-    s16 sp420[0x200];
-    u8 sp220[0x200];
-    u8 sp1D0[0x50]; // Unused?
-    epcInfo dataFromControllerPak;
+    s32 controllerIndex = 0;
+    u8 *sp420[256];
+    u8 *sp220[128];
+    u8 *dataFromControllerPak[128];
     
     if (D_800E3020 != -1) {
         return D_800E3020;
     } else {
         D_800E3020 = 0;
-        if ((func_800758DC(0) == 0) && (func_800764E8(0, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0)
-            && (read_data_from_controller_pak(0, fileNum, &dataFromControllerPak, 0x800) == 0)) {
-            bcopy(&dataFromControllerPak, &gEpcInfo, 0x1B0);
-            bcopy(&sp220, &D_801299B0, 0x200);
-            bcopy(&sp420, &D_80129BB0, 0x400);
+        if ((func_800758DC(controllerIndex) == 0) && //Rumble pack check?
+            (func_800764E8(controllerIndex, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0) &&
+            (read_data_from_controller_pak(controllerIndex, fileNum, &dataFromControllerPak,
+                sizeof(dataFromControllerPak) * MAXCONTROLLERS) == 0))
+        {
+            bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(dataFromControllerPak) - 80); //Why less 80 (0x50)?
+            bcopy(&sp220, &D_801299B0, sizeof(sp220));
+            bcopy(&sp420, &D_80129BB0, sizeof(sp420));
             D_800E3020 = 1;
         }
-        func_80075AEC(0);
+        func_80075AEC(controllerIndex);
         if (D_800E3020 != 0) {
-            func_800762C8(0, fileNum);
+            func_800762C8(controllerIndex, fileNum);
         }
         return D_800E3020;
     }

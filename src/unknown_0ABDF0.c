@@ -8,6 +8,8 @@
 #include "f3ddkr.h"
 #include "PR/libultra.h"
 #include "camera.h"
+#include "unknown_0255E0.h"
+#include "unknown_008C40.h"
 
 /************ .data ************/
 
@@ -233,13 +235,12 @@ void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2) {
     D_800E2C70 = (D_800E2C74 - D_800E2C6C) / D_800E2C78;
 }
 
-#ifdef NON_MATCHING
 void func_800AD40C(void) {
-    s16 a, b;
+    s32 a, b;
     if (D_800E2C5C && !get_viewport_count()) {
-        a = ((-D_800E2C60 * 38) >> 16) + 1018;
-        b = ((-D_800E2C60 * 20) >> 16) + 1023;
-        func_80030664(0, a, b, 28, 15, 36);
+        a = ((D_800E2C60 * -38) >> 16) + 0x3FA;
+        b = ((D_800E2C60 * -20) >> 16) + 0x3FF;
+        func_80030664(0, a, b, 0x1CU, 0xFU, 0x24U);
     }
 }
 
@@ -247,9 +248,6 @@ void func_800AD40C(void) {
 void func_800AD4AC(s32 arg0) {
     D_800E2C6C = arg0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD40C.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD4B8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD658.s")

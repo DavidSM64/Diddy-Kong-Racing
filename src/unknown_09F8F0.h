@@ -5,10 +5,14 @@
 #include "structs.h"
 
 typedef struct {
-    u8 unk0[0x4C4];
+    u8 unk0[0x6];
+    s16 unk6;
+    u8 unk8[0x4BC];
     u16 unk4C4;
     u8 unk4C6[0x1B4];
     s8 unk67A;
+    s8 unk67B[0xA4];
+    s8 unk720;
 } unk80126CDC;
 
 typedef struct {
@@ -48,7 +52,6 @@ typedef struct {
     u8 unk0[0x64];
     unk800A0DC0_2 *unk64;
 } unk800A0DC0;
-
 
 u8 func_800A0190(void);
 void func_800A0B74(void);

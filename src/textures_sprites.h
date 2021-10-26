@@ -81,7 +81,7 @@ void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 
-//TextureHeader *load_texture(s32 arg0); // Non Matching
+TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching
 TextureHeader *func_8007B380(s32 arg0); // Non Matching
 void func_8007B4E8(s32, s32, s32, s32); // Non Matching

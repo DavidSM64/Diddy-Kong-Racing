@@ -1,10 +1,9 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800CC5A0 */
 
-#include "types.h"
-#include "macros.h"
-#include "ultra64.h"
+#include "libultra_internal.h"
 #include "viint.h"
+#include "piint.h"
 
 typedef struct
 {
@@ -18,28 +17,26 @@ extern __osExceptionVector __osExceptionPreamble;
 OSTime osClockRate = OS_CLOCK_RATE;
 u32 __osShutdown = 0;
 u32 __OSGlobalIntMask = OS_IM_ALL;
-s32 D_800E38B0 = 0; // 64DD flag? (Hints from SM64 code)
+s32 gLeoFound = FALSE;
+s32 __osLeoInterrupt(void);
 
-#if 0
-//Declaring this variable breaks things right away
 extern s32 osViClock; //This is defined in another file somehow
-u32 __osFinalrom;
-void osInitialize()
-{
+extern s32 gThread30Stack; //TODO: This should be __osFinalrom. Is this reused?
+//u32 __osFinalrom;
+void osInitialize() {
    u32 pifdata;
    u32 clock = 0;
-   __osFinalrom = TRUE;
+   u32 leostatus;
+   u32 pistatus;
+   //__osFinalrom = TRUE;
+   gThread30Stack = TRUE; //TODO: This should be __osFinalrom. Is this reused?
    __osSetSR(__osGetSR() | SR_CU1);    //enable fpu
    __osSetFpcCsr(FPCSR_FS | FPCSR_EV); //flush denorm to zero, enable invalid operation
 
    while (__osSiRawReadIo(PIF_RAM_END - 3, &pifdata)) //last byte of joychannel ram
-   {
-      ;
-   }
+   {;}
    while (__osSiRawWriteIo(PIF_RAM_END - 3, pifdata | 8))
-   {
-      ; //todo: magic contant
-   }
+   {;} //todo: magic contant
    *(__osExceptionVector *)UT_VEC = __osExceptionPreamble;
    *(__osExceptionVector *)XUT_VEC = __osExceptionPreamble;
    *(__osExceptionVector *)ECC_VEC = __osExceptionPreamble;
@@ -49,27 +46,21 @@ void osInitialize()
    osMapTLBRdb();
    osPiRawReadIo(4, &clock); //TODO: remove magic constant;
    clock &= ~0xf;            //clear lower 4 bits
-   if (clock != 0)
-   {
+   if (clock) {
       osClockRate = clock;
    }
    osClockRate = osClockRate * 3 / 4;
-   if (osResetType == 0 /*cold reset */)
-   {
+   if (osResetType == 0 /*cold reset */) {
       bzero(osAppNmiBuffer, sizeof(osAppNmiBuffer));
    }
-   if (osTvType == OS_TV_TYPE_PAL) {
-      osViClock = VI_PAL_CLOCK;
-   }
-   else if (osTvType == OS_TV_TYPE_MPAL)
-   {
-      osViClock = VI_MPAL_CLOCK;
-   }
-   else
-   {
-      osViClock = VI_NTSC_CLOCK;
+   pistatus = IO_READ(PI_STATUS_REG);
+   while (pistatus & PI_STATUS_ERROR) {
+      pistatus = IO_READ(PI_STATUS_REG);
+   };
+   if (!((leostatus = IO_READ(LEO_STATUS)) & LEO_STATUS_PRESENCE_MASK)) {
+      gLeoFound = TRUE;
+      __osSetHWIntrRoutine(1, __osLeoInterrupt);
+   } else {
+      gLeoFound = FALSE;
    }
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CCF90/osInitialize.s")
-#endif

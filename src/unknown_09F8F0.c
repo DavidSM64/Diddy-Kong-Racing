@@ -7,6 +7,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "camera.h"
+#include "unknown_06B2B0.h"
 
 extern u32 osTvType;
 
@@ -353,7 +354,24 @@ void func_800A263C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     func_80068508(0);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A26C8.s")
+void func_800A26C8(Object *obj, s32 arg1) {
+    Object_64 *obj64;
+    unk80126CDC *temp_a3;
+
+    if (get_viewport_count() == 0) {
+        obj64 = obj->unk64;
+        func_80068508(1);
+        func_800A718C(obj64);
+        func_800A3884(obj, arg1);
+        if (is_in_two_player_adventure()) {
+            temp_a3 = &D_80126CDC[1];
+            temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
+            func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_a3);
+        }
+        func_80068508(0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A277C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A36CC.s")
 

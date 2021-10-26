@@ -19,6 +19,15 @@ ifeq ($(NON_MATCHING),1)
   DEFINES += NON_MATCHING=1
 endif
 
+# Whether to hide commands or not
+VERBOSE ?= 0
+ifeq ($(VERBOSE),0)
+  V := @
+endif
+
+# Whether to colorize build messages
+COLOR ?= 1
+
 ############################ Setup ###########################
 
 # Don't do setup checks if cleaning.
@@ -40,6 +49,22 @@ DUMMY != make -s -C tools >&2 || echo FAIL
 ifeq ($(DUMMY),FAIL)
   $(error Failed to build tools)
 endif
+
+PRINT = printf
+
+ifeq ($(COLOR),1)
+NO_COL  := \033[0m
+RED     := \033[0;31m
+GREEN   := \033[0;32m
+BLUE    := \033[0;34m
+YELLOW  := \033[0;33m
+BLINK   := \033[33;5m
+endif
+
+# Common build print status function
+define print
+  @$(PRINT) "$(GREEN)$(1) $(YELLOW)$(2)$(GREEN) -> $(BLUE)$(3)$(NO_COL)\n"
+endef
 
 ########## Recomp ##########
 
@@ -309,21 +334,22 @@ else
 endif 
     
 clean_lib:
-ifneq ($(wildcard $(BUILD_DIR)/lib/.*),) 
-	rm -r $(BUILD_DIR)/lib/src/*.o
+ifneq ($(wildcard $(BUILD_DIR)/lib/.*),)
+	rm -r $(BUILD_DIR)/lib/src/*/*.o
 else 
 	@echo "build lib directory has already been deleted." 
 endif 
 
 clean_src: clean_lib
-ifneq ($(wildcard ./build/src/.*),) 
+ifneq ($(wildcard $(BUILD_DIR)/src/.*),)
 	rm -r $(BUILD_DIR)/src/*.o
 else 
 	@echo "/build/lib directory has already been deleted." 
 endif 
 
 $(BUILD_DIR):
-	mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
+	@$(PRINT) "$(GREEN)Making Build Directory: $(BLUE)$@ $(NO_COL)\n"
+	$(V)mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
 
 # Helps fix an issue with parallel jobs.
 $(ALL_ASSETS_BUILT): | $(BUILD_DIR)
@@ -335,103 +361,136 @@ dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 
 # All assets should output a .bin file
 
-$(AUDIO_OUT_DIR)/%.bin: $(AUDIO_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(AUDIO_OUT_DIR)/%.bin: $(AUDIO_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
-$(BIN_OUT_DIR)/%.bin: $(BIN_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(BIN_OUT_DIR)/%.bin: $(BIN_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(FONTS_OUT_DIR)/%.bin: $(FONTS_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(FONTS_OUT_DIR)/%.bin: $(FONTS_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(IDS_OUT_DIR)/%.bin: $(IDS_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(IDS_OUT_DIR)/%.bin: $(IDS_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(LEVEL_HEADERS_OUT_DIR)/%.bin: $(LEVEL_HEADERS_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(LEVEL_HEADERS_OUT_DIR)/%.bin: $(LEVEL_HEADERS_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
-$(LEVEL_MODELS_OUT_DIR)/%.bin: $(LEVEL_MODELS_IN_DIR)/%.cbin 
-	$(COMPRESS) $^ $@
+$(LEVEL_MODELS_OUT_DIR)/%.bin: $(LEVEL_MODELS_IN_DIR)/%.cbin
+	$(call print,Compressing:,$<,$@)
+	$(V)$(COMPRESS) $^ $@
     
-$(LEVEL_NAMES_OUT_DIR)/%.bin: $(LEVEL_NAMES_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(LEVEL_NAMES_OUT_DIR)/%.bin: $(LEVEL_NAMES_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
-$(LEVEL_OBJMAPS_OUT_DIR)/%.bin: $(LEVEL_OBJMAPS_IN_DIR)/%.cbin 
-	$(COMPRESS) $^ $@
+$(LEVEL_OBJMAPS_OUT_DIR)/%.bin: $(LEVEL_OBJMAPS_IN_DIR)/%.cbin
+	$(call print,Compressing:,$<,$@)
+	$(V)$(COMPRESS) $^ $@
 
-$(MISC_OUT_DIR)/%.bin: $(MISC_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(MISC_OUT_DIR)/%.bin: $(MISC_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
-$(OBJECT_ANIMS_OUT_DIR)/%.bin: $(OBJECT_ANIMS_IN_DIR)/%.cbin 
-	$(COMPRESS) $^ $@
+$(OBJECT_ANIMS_OUT_DIR)/%.bin: $(OBJECT_ANIMS_IN_DIR)/%.cbin
+	$(call print,Compressing:,$<,$@)
+	$(V)$(COMPRESS) $^ $@
     
-$(OBJECT_HEADERS_OUT_DIR)/%.bin: $(OBJECT_HEADERS_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(OBJECT_HEADERS_OUT_DIR)/%.bin: $(OBJECT_HEADERS_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
-$(OBJECT_MODELS_OUT_DIR)/%.bin: $(OBJECT_MODELS_IN_DIR)/%.cbin 
-	$(COMPRESS) $^ $@
+$(OBJECT_MODELS_OUT_DIR)/%.bin: $(OBJECT_MODELS_IN_DIR)/%.cbin
+	$(call print,Compressing:,$<,$@)
+	$(V)$(COMPRESS) $^ $@
     
-$(PART_BEHAVIORS_OUT_DIR)/%.bin: $(PART_BEHAVIORS_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(PART_BEHAVIORS_OUT_DIR)/%.bin: $(PART_BEHAVIORS_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(PART_PARTICLES_OUT_DIR)/%.bin: $(PART_PARTICLES_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(PART_PARTICLES_OUT_DIR)/%.bin: $(PART_PARTICLES_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(SPRITES_OUT_DIR)/%.bin: $(SPRITES_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(SPRITES_OUT_DIR)/%.bin: $(SPRITES_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(TEXT_GAME_OUT_DIR)/%.bin: $(TEXT_GAME_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(TEXT_GAME_OUT_DIR)/%.bin: $(TEXT_GAME_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
 $(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png
-	$(TEXBUILDER) $^ $@ 
+	$(call print,Building Texture:,$<,$@)
+	$(V)$(TEXBUILDER) $^ $@
 
 $(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png
-	$(TEXBUILDER) $^ $@ 
+	$(call print,Building Texture:,$<,$@)
+	$(V)$(TEXBUILDER) $^ $@
 
-$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
-$(TT_GHOSTS_OUT_DIR)/%.bin: $(TT_GHOSTS_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(TT_GHOSTS_OUT_DIR)/%.bin: $(TT_GHOSTS_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
 
-$(UNKNOWN_0_OUT_DIR)/%.bin: $(UNKNOWN_0_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(UNKNOWN_0_OUT_DIR)/%.bin: $(UNKNOWN_0_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
-$(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin 
-	$(ASSETS_COPY) $^ $@
+$(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
+	$(call print,Copying:,$<,$@)
+	$(V)$(ASSETS_COPY) $^ $@
     
 ###############################
 
 $(BUILD_DIR)/%.o: %.s | $(ALL_ASSETS_BUILT)
-	$(AS) $(ASFLAGS) -o $@ $<
+	$(call print,Assembling:,$<,$@)
+	$(V)$(AS) $(ASFLAGS) -o $@ $<
 
 $(BUILD_DIR)/%.o: %.c | $(ALL_ASSETS_BUILT)
-	$(CC) $(CFLAGS) -o $@ $<
+	$(call print,Compiling:,$<,$@)
+	$(V)$(CC) $(CFLAGS) -o $@ $<
 
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
-	$(CPP) $(VERSION_CFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
+	$(call print,Preprocessing linker script:,$<,$@)
+	$(V)$(CPP) $(VERSION_CFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
 
 $(BUILD_DIR)/$(TARGET).elf: $(O_FILES) $(BUILD_DIR)/$(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
-	$(LD) $(LDFLAGS) -o $@ $(O_FILES) $(LIBS)
+	@$(PRINT) "$(GREEN)Linking ELF file: $(BLUE)$@ $(NO_COL)\n"
+	$(V)$(LD) $(LDFLAGS) -o $@ $(O_FILES) $(LIBS)
 
 $(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)/$(TARGET).elf | $(ALL_ASSETS_BUILT)
-	$(OBJCOPY) $< $@ -O binary
+	$(call print,Making .bin:,$<,$@)
+	$(V)$(OBJCOPY) $< $@ -O binary
 
 $(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
-	cp $< $@
-	$(FIXCHECKSUMS)
-	$(N64CRC) $@
+	$(call print,Making final z64 ROM:,$<,$@)
+	$(V)cp $< $@
+	$(V)$(FIXCHECKSUMS)
+	$(V)$(N64CRC) $@
 ifeq ($(NON_MATCHING),0)
-	sha1sum -c sha1/dkr.$(VERSION).sha1
+	@(sha1sum -c --quiet sha1/dkr.$(VERSION).sha1 \
+	&& $(PRINT) "$(BLUE)$@$(NO_COL)\
+	: $(GREEN)OK$(NO_COL)\n")
+	@$(PRINT) "$(YELLOW)    __\n .\`_  _\`.\n| | \`| | |\n| |_|._| |\n \`. __ .\'$(NO_COL)\n\n"
 else
-	@echo "Build complete!"
+	@$(PRINT) "$(GREEN)Build Complete!$(NO_COL)\n"
 endif
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64

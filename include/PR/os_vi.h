@@ -4,22 +4,33 @@
 /* Ultra64 Video Interface */
 
 
-/* Special Features */
-#define OS_VI_GAMMA_ON 0x0001
-#define OS_VI_GAMMA_OFF 0x0002
-#define OS_VI_GAMMA_DITHER_ON 0x0004
-#define OS_VI_GAMMA_DITHER_OFF 0x0008
-#define OS_VI_DIVOT_ON 0x0010
-#define OS_VI_DIVOT_OFF 0x0020
-#define OS_VI_DITHER_FILTER_ON 0x0040
-#define OS_VI_DITHER_FILTER_OFF 0x0080
+/*
+ * Video Interface (VI) special features
+ */
+#define	OS_VI_GAMMA_ON			    0x0001
+#define	OS_VI_GAMMA_OFF			    0x0002
+#define	OS_VI_GAMMA_DITHER_ON		0x0004
+#define	OS_VI_GAMMA_DITHER_OFF		0x0008
+#define	OS_VI_DIVOT_ON			    0x0010
+#define	OS_VI_DIVOT_OFF			    0x0020
+#define	OS_VI_DITHER_FILTER_ON		0x0040
+#define	OS_VI_DITHER_FILTER_OFF		0x0080
 
-#define OS_VI_GAMMA 0x08
-#define OS_VI_GAMMA_DITHER 0x04
-#define OS_VI_DIVOT 0x10
-#define OS_VI_DITHER_FILTER 0x10000
-#define OS_VI_UNK200 0x200
-#define OS_VI_UNK100 0x100
+/*
+ * Video Interface (VI) mode attribute bit
+ */
+#define OS_VI_BIT_NONINTERLACE		0x0001          /* lo-res */
+#define OS_VI_BIT_INTERLACE		    0x0002          /* lo-res */
+#define OS_VI_BIT_NORMALINTERLACE	0x0004          /* hi-res */
+#define OS_VI_BIT_DEFLICKINTERLACE	0x0008          /* hi-res */
+#define OS_VI_BIT_ANTIALIAS		    0x0010
+#define OS_VI_BIT_POINTSAMPLE		0x0020
+#define OS_VI_BIT_16PIXEL		    0x0040
+#define OS_VI_BIT_32PIXEL		    0x0080
+#define OS_VI_BIT_LORES			    0x0100
+#define OS_VI_BIT_HIRES			    0x0200
+#define OS_VI_BIT_NTSC			    0x0400
+#define OS_VI_BIT_PAL			    0x0800
 
 
 /* Types */

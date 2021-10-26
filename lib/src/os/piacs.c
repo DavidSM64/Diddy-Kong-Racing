@@ -98,6 +98,4 @@ const char _Genld_0_string[] = "0";
 const double _Ldtob_1e8[] = {1.0e8};
 
 //sinf and cosf - supposed to be defined by libm_vals.s
-const int __libm_qnan_f[] = {
-    0x7F810000, 0x00000000
-};
+const fu __libm_qnan_f = { 0x7f810000 };

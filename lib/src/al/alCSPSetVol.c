@@ -11,4 +11,3 @@ void alCSPSetVol(ALCSPlayer *seqp, s16 vol) {
     
     alEvtqPostEvent(&seqp->evtq, &evt, 0);
 }
-

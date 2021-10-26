@@ -116,16 +116,17 @@ typedef struct {
 	u8	    		game_name[PFS_FILE_NAME_LEN];
 } __OSDir;
 
-typedef struct {
-	u32	repaired;
-	u32	random;
-	u64	serialMid;
-	u64	serialLow;
-	u16	deviceid;
-	u8	banks;
-	u8	version;
-	u16	checksum;
-	u16	invertedChecksum;
+typedef struct
+{
+    /* 0x0 */ u32 repaired;
+    /* 0x4 */ u32 random;
+    /* 0x8 */ u64 serial_mid;
+    /* 0x10 */ u64 serial_low;
+    /* 0x18 */ u16 deviceid;
+    /* 0x1A */ u8 banks;
+    /* 0x1B */ u8 version;
+    /* 0x1C */ u16 checksum;
+    /* 0x1E */ u16 inverted_checksum;
 } __OSPackId;
 
 typedef	struct {

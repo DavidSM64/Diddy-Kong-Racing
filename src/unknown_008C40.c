@@ -48,7 +48,17 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800092A8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800096D8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800096F8.s")
+void func_800096F8(s32 arg0) {
+    s32 i;
+    s32 *v0 = D_80119C44;
+    for (i = 0; i < 40; i++) {
+        if (arg0 == *v0) {
+            func_8000A2E8(i);
+            break;
+        }
+        v0++;
+    }
+}
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000974C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800098A4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")

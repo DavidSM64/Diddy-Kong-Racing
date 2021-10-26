@@ -4,8 +4,8 @@
 #include "macros.h"
 #include "libultra_internal.h"
 
-extern OSTimer D_8012D200;
-OSTimer *__osTimerList = &D_8012D200;
+extern OSTimer __osBaseTimer;
+OSTimer *__osTimerList = &__osBaseTimer;
 
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
@@ -16,7 +16,7 @@ extern u32 __osTimerCounter;
 OSTime __osInsertTimer(OSTimer *t);
 
 #ifdef NON_MATCHING
-//Seems to be a mistmatch based on where __osCurrentTime is defined.
+//Seems to be a mismatch based on where __osCurrentTime is defined.
 //Scratch proving that: https://decomp.me/scratch/OB3iP
 void __osTimerServicesInit(void) {
     __osCurrentTime = 0;

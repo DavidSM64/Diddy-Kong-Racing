@@ -59,7 +59,7 @@ typedef struct unk800AF29C {
         unk800AF29C_C_4000 unkC_4000;
         unk800AF29C_C_400  unkC_400;
         unk800AF29C_C      unkC;
-    };
+    } unkB;
     s16 unk18;
     s16 unk1A;
     s16 unk1C;

@@ -100,9 +100,9 @@ typedef struct DrawTexture {
 typedef struct Racer {
   /* 0x00 */ u32 trophy_points;
   /* 0x04 */ s8 best_times;
-  /* 0x05 */ u8 character;
+  /* 0x05 */ s8 character;
   /* 0x06 */ s8 starting_position;
-  /* 0x07 */ char unk7;
+  /* 0x07 */ s8 unk7;
   /* 0x08 */ u16 placements[4];
   /* 0x10 */ u16 course_time;
   /* 0x12 */ u16 lap_times[3];

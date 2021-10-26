@@ -2,6 +2,7 @@
 /* RAM_POS: 0x8007A310 */
 
 #include "video.h"
+#include "viint.h"
 
 /************ .data ************/
 
@@ -32,7 +33,7 @@ f32 gVideoHeightRatio;
 s32 D_8012617C;
 OSMesg D_80126180[8];
 OSMesgQueue D_801261A0[8];
-OSViMode D_80126260;
+OSViMode gTvViMode;
 s32 gVideoFbWidths[2];
 s32 gVideoFbHeights[2];
 u16 *gVideoFramebuffers[2];
@@ -48,10 +49,9 @@ s32 D_801262E8[8];
 u8  D_80126308;
 u8  D_80126309;
 s32 D_8012630C;
-OSScClient *D_80126310;
+OSScClient D_80126310;
 
 /******************************/
-
 void init_video(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
@@ -82,11 +82,11 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     init_framebuffer(1);
     gVideoCurrFbIndex = 1;
     swap_framebuffers();
-    osCreateMesgQueue(&D_801261A0, &D_80126180, 8);
-    osScAddClient(sc, &D_80126310, &D_801261A0, 2);
+    osCreateMesgQueue((OSMesgQueue *)&D_801261A0, (OSMesg *)&D_80126180, 8);
+    osScAddClient(sc, &D_80126310, (OSMesgQueue *)&D_801261A0, 2);
     init_vi_settings();
     D_801262D0 = 12;
-    osViBlack(1);
+    osViBlack(TRUE);
     D_80126308 = 0;
     D_801262E4 = 3;
 }
@@ -127,68 +127,73 @@ void init_vi_settings(void) {
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
         case 1:
+            //@bug: The video mode being set here is Point sampled
+            //but the printf implies it was intended to be Anti-aliased.
+            //By my understanding, this is the case we will always hit in code,
+            //So maybe it was swapped out late in development?
             stubbed_printf("320 by 240 Anti-aliased, Non interlaced.\n");
-            tvViMode = &D_800E4620;
+            tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
-                tvViMode = &D_800E4670;
+                tvViMode = &osViModePalLpn1;
             } else if (osTvType == TV_TYPE_MPAL) {
-                tvViMode = &D_800E46C0;
+                tvViMode = &osViModeMpalLpn1;
             }
-            memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
             if (osTvType == TV_TYPE_PAL) {
-                D_80126260.fldRegs[0].vStart -= 0x180000;
-                D_80126260.fldRegs[1].vStart -= 0x180000;
-                D_80126260.fldRegs[0].vStart += 24;
-                D_80126260.fldRegs[1].vStart += 24;
+                //A simple osViExtendVStart to add an additional 24 scanlines?
+                gTvViMode.fldRegs[0].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
+                gTvViMode.fldRegs[1].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
+                gTvViMode.fldRegs[0].vStart += PAL_HEIGHT_DIFFERENCE;
+                gTvViMode.fldRegs[1].vStart += PAL_HEIGHT_DIFFERENCE;
             }
-            osViSetMode(&D_80126260);
+            osViSetMode(&gTvViMode);
             break;
         case 2:
             stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
-            tvViMode = &D_800E4620;
+            tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
-                tvViMode = &D_800E4670;
+                tvViMode = &osViModePalLpn1;
             } else if (osTvType == TV_TYPE_MPAL) {
-                tvViMode = &D_800E46C0;
+                tvViMode = &osViModeMpalLpn1;
             }
             
-            memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
-            D_80126260.comRegs.width = 0x280;
-            D_80126260.comRegs.xScale = 0x400;
-            D_80126260.fldRegs[0].origin = 0x500;
-            D_80126260.fldRegs[1].origin = 0x500;
-            osViSetMode(&D_80126260);
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            gTvViMode.comRegs.width = WIDTH(640);
+            gTvViMode.comRegs.xScale = SCALE(1, 0);
+            gTvViMode.fldRegs[0].origin = ORIGIN(1280);
+            gTvViMode.fldRegs[1].origin = ORIGIN(1280);
+            osViSetMode(&gTvViMode);
             break;
         case 3:
             stubbed_printf("640 by 240 Anti-aliased, Non interlaced.\n");
-            tvViMode = &D_800E4710;
+            tvViMode = &osViModeNtscLan1;
             if (osTvType == TV_TYPE_PAL) {
-                tvViMode = &D_800E4760;
+                tvViMode = &osViModePalLan1;
             } else if (osTvType == TV_TYPE_MPAL) {
-                tvViMode = &D_800E47B0;
+                tvViMode = &osViModeMpalLan1;
             }
-            memory_copy(tvViMode, &D_80126260, sizeof(OSViMode));
-            D_80126260.comRegs.width = 0x280;
-            D_80126260.comRegs.xScale = 0x400;
-            D_80126260.fldRegs[0].origin = 0x500;
-            D_80126260.fldRegs[1].origin = 0x500;
-            osViSetMode(&D_80126260);
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            gTvViMode.comRegs.width = WIDTH(640);
+            gTvViMode.comRegs.xScale = SCALE(1, 0);
+            gTvViMode.fldRegs[0].origin = ORIGIN(1280);
+            gTvViMode.fldRegs[1].origin = ORIGIN(1280);
+            osViSetMode(&gTvViMode);
             break;
         case 4:
             stubbed_printf("640 by 480 Point sampled, Interlaced.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 8]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPN1]);
             break;
         case 5:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 10]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAN1]);
             break;
         case 6:
             stubbed_printf("640 by 480 Point sampled, Interlaced, De-flickered.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 9]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPF1]);
             break;
         case 7:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced, De-flickered.\n");
-            osViSetMode(&osViModeTable[viModeTableIndex + 11]);
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
             break;
     }
     osViSetSpecialFeatures(OS_VI_DIVOT_ON);
@@ -198,7 +203,7 @@ void init_vi_settings(void) {
 
 void init_framebuffer(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
-        func_80071538(gVideoFramebuffers[index]);
+        func_80071538((u8 *)gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
@@ -235,7 +240,7 @@ s32 func_8007A98C(s32 arg0) {
     if (D_801262D0 != 0) {
         D_801262D0--;
         if (D_801262D0 == 0) {
-            osViBlack(0);
+            osViBlack(FALSE);
         }
     }
     if (arg0 != 8) {
@@ -290,16 +295,10 @@ void swap_framebuffers(void) {
     gVideoCurrDepthBuffer = gVideoDepthBuffer;
 }
 
-#ifdef NON_MATCHING
-// regalloc issues
-void memory_copy(u8 *src, u8 *dst, s32 numBytes) {
+void memory_copy(u8 *src, u8 *dest, s32 len) {
     s32 i;
-    for(i = 0; i < numBytes; i++){
-        dst[i] = src[i];
+
+    for(i = 0; i < len; i++) {
+        *dest++ =  *src++;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/video/memory_copy.s")
-#endif
-
-

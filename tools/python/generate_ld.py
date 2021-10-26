@@ -36,7 +36,7 @@ BSS_LIB_ORDER_FILES = [
 
 class GenerateLD:
     def __init__(self, file):
-        print('Generating linker file...')
+        print('\x1B[32mGenerating linker file: \x1B[0m', end='')
         self.assets = GenerateAssets(ROOT_DIR, VERSION)
         self.files = self.get_code_files()
         self.indentLevel = 0
@@ -47,7 +47,7 @@ class GenerateLD:
         self.gen_line('OUTPUT_ARCH (mips)')
         self.gen_newline()
         self.gen_sections()
-        print('New linker file created!')
+        print('\x1B[33m New linker file created!\x1B[0m')
         
     def gen_sections(self):
         self.gen_line('SECTIONS')

@@ -287,9 +287,9 @@ typedef struct Object_64_8003FEF4 {
             u8 unk9;
             u8 unkA;
             u8 padB;
-        };
+        } unk_struct;
         s32 unk8_word;
-    };
+    } unk_union;
     u8 unkC;
     u8 unkD;
     u8 unkE;

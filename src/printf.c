@@ -6,6 +6,9 @@
 #include "macros.h"
 #include "f3ddkr.h"
 #include "thread0_epc.h"
+#include "stdarg.h"
+#include "textures_sprites.h"
+#include "stdio.h"
 
 /************ .data ************/
 
@@ -58,10 +61,10 @@ const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Pri
 
 /************ .bss ************/
 
-extern s32 D_80127CA0;
-extern s32 D_80127CA4;
-extern s32 D_80127CA8;
-extern u8 D_80127CD8[576];
+extern TextureHeader *gTexture0;
+extern TextureHeader *gTexture1;
+extern TextureHeader *gTexture2;
+extern u8 D_80127CD8;
 extern u8 *D_801285D8;
 
 /******************************/
@@ -81,26 +84,41 @@ void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
 
-#ifdef NON_MATCHING
-// Unused. 
-// Regalloc issues. I can't get sprintf to work properly.
-void func_800B4A14(char *arg0, s32 arg1, s32 arg2, s32 arg3) {
-    sprintf(arg0, &arg2);
+void func_800B4A14(char *s, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    sprintf(s, format, args);
+    va_end(args);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/printf/func_800B4A14.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/printf/sprintf.s")
 
 void func_800B5E88(void) {
-    D_80127CA0 = load_texture(0);
-    D_80127CA4 = load_texture(1);
-    D_80127CA8 = load_texture(2);
-    D_801285D8 = &D_80127CD8[0];
+    gTexture0 = load_texture(0);
+    gTexture1 = load_texture(1);
+    gTexture2 = load_texture(2);
+    D_801285D8 = &D_80127CD8;
 }
 
+#if 0
+s32 render_printf(const char *format, ...) {
+    s32 written;
+    va_list args;
+    va_start(args, format);
+    if ((D_801285D8 - &D_80127CD8) >= 0x801) {
+        return -1;
+    }
+    func_800B4A08(1);
+    written = sprintf(D_801285D8, format, args);
+    func_800B4A08(0);
+    if (written > 0) {
+        D_801285D8 = &D_801285D8[written] + 1;
+    }
+    return 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
+#endif
 GLOBAL_ASM("asm/non_matchings/printf/func_800B5F78.s")
 
 void set_render_printf_color(u8 red, u8 green, u8 blue, u8 alpha) {
