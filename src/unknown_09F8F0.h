@@ -9,6 +9,8 @@ typedef struct {
     u16 unk4C4;
     u8 unk4C6[0x1B4];
     s8 unk67A;
+    s8 unk67B[0xA4];
+    s8 unk720;
 } unk80126CDC;
 
 typedef struct {
@@ -49,6 +51,10 @@ typedef struct {
     unk800A0DC0_2 *unk64;
 } unk800A0DC0;
 
+typedef struct {
+    u8 pad[0x5];
+    s16 unk6;
+} unk800A26C8;
 
 u8 func_800A0190(void);
 void func_800A0B74(void);
