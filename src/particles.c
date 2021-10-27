@@ -451,25 +451,20 @@ void func_800AF0F0(Object *obj) {
     temp_v1->unk1C = temp_t8;
 }
 
-#ifdef NON_MATCHING
 void func_800AF134(unk800B2260 *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    ParticleBehavior *temp;
     if (arg2 >= gParticlesAssetTableCount) {
         arg2 = 0;
     }
     if (arg1 >= gParticleBehaviorsAssetTableCount) {
         arg1 = 0;
     }
-    // Minor issue with these if statements.
-    if (arg0->unk8 == arg2) {
-        if(arg0->unk0 != gParticleBehaviorsAssetTable[arg1]) {
-            func_800B2260(arg0);
-            func_800AF29C(arg0, arg1, arg2, arg3, arg4, arg5);
-        }
+    temp = gParticleBehaviorsAssetTable[arg1];
+    if ((arg0->unk8 != arg2) || (temp != arg0->unk0)) {
+        func_800B2260(arg0);
+        func_800AF29C(arg0, arg1, arg2, arg3, arg4, arg5);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/particles/func_800AF134.s")
-#endif
 
 void func_800AF1E0(unk800AF29C *arg0, s32 arg1, s32 arg2) {
     ParticleBehavior *temp_v0;
