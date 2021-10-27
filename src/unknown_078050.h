@@ -4,7 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "f3ddkr.h"
-#include "lib/src/mips1/sc/sched.h"
+#include "sched.h"
 #include "libultra_internal.h"
 
 typedef union {
