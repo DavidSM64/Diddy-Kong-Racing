@@ -589,7 +589,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             gScreenViewports[D_80120CE4].upperLeftY, 
             gScreenViewports[D_80120CE4].lowerRightX, 
             gScreenViewports[D_80120CE4].lowerRightY
-        )
+        );
         func_80068158(dlist, 0, 0, 0, 0);
         if (arg1 != 0) {
             func_80067D3C(dlist, arg1);
@@ -613,7 +613,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             if (osTvType == TV_TYPE_PAL) {
                 phi_t3 = sp58 - 0x12;
             }
-            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0)
+            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0);
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
@@ -623,19 +623,19 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
                 if (osTvType == TV_TYPE_PAL) {
                     phi_t3 = temp_v0_6 - 0xC;
                 }
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, (temp_a3 - (temp_t0 >> 7)))
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, (temp_a3 - (temp_t0 >> 7)));
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), temp_t1, (temp_t0 - (temp_t0 >> 7)))
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), temp_t1, (temp_t0 - (temp_t0 >> 7)));
                 phi_t3 = temp_a3 + (temp_t0 >> 2);
             }
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
             if (D_80120CE4 == 0) {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (temp_t1 >> 8), temp_t0)
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (temp_t1 >> 8), temp_t0);
                 phi_a1 = temp_t1 >> 2;
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), 0, temp_t1 - (temp_t1 >> 8), temp_t0)
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), 0, temp_t1 - (temp_t1 >> 8), temp_t0);
                 phi_a1 = temp_a2 + (temp_t1 >> 2);
             }
             sp4C = phi_a1;
@@ -647,24 +647,24 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             switch(D_80120CE4) {
                 case 0:
                     gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, 
-                        (temp_a2 - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)))
+                        (temp_a2 - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = 0;
                 case 1:
                     gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (temp_a2 + (temp_t1 >> 8)), 0, 
-                        ((temp_a2 * 2) - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)))
+                        ((temp_a2 * 2) - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = temp_a2;
                     break;
                 case 2:
                     gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, temp_a3 + (temp_t0 >> 7), 
-                        temp_a2 - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7))
+                        temp_a2 - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = 0;
                     break;
                 case 3:
                     gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), temp_a3 + (temp_t0 >> 7), 
-                        (temp_a2 * 2) - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7))
+                        (temp_a2 * 2) - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = temp_a2;
                     break;
@@ -723,8 +723,8 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     D_800DD148[D_80120CE4 + 5].vp.vscale[1] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[1] = height * 2;
-    gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4 + 5] + 0x80000000)
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000))
+    gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4 + 5] + 0x80000000);
+    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
     *arg1 += 0x40;
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -746,7 +746,7 @@ void func_8006807C(Gfx **dlist, s32 *arg1) {
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
     func_8006F768(D_80120D70[0], &D_80120F20, &D_80121060);
     func_8006F870(D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000))
+    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
     *arg1 += 0x40;
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -763,9 +763,9 @@ void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         D_800DD148[D_80120CE4].vp.vtrans[1] = arg4 * 4;
         D_800DD148[D_80120CE4].vp.vscale[0] = tempArg1 * 4;
         D_800DD148[D_80120CE4].vp.vscale[1] = arg2 * 4;
-        gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4] + 0x80000000)
+        gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4] + 0x80000000);
     } else {
-        gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)] + 0x80000000)
+        gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)] + 0x80000000);
     }
 }
 
@@ -776,7 +776,7 @@ void func_800682AC(Gfx **dlist) {
     height = widthAndHeight >> 0x10;
     width = widthAndHeight & 0xFFFF;
     if (!(gScreenViewports[D_80120CE4].flags & 1)) {
-        gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1)
+        gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
         func_80067A3C(dlist);
@@ -791,7 +791,7 @@ void func_80068408(Gfx **dlist, s32 *arg1) {
     func_8006F870(D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
     D_80120D88[D_80120D1C] = *arg1;
     
-    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000))
+    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000));
     
     *arg1 += 0x40;
 }

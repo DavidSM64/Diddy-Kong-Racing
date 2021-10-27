@@ -590,25 +590,25 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                 levelHeaderIndex = (flags >> 28) & 7;
                 if (levelHeaderIndex != 0) { // This is unused, so this should always be false.
                     lvlHeader70 = gCurrentLevelHeader2->unk70;//gCurrentLevelHeader2[levelHeaderIndex].unk70;
-                    gDPSetEnvColor(D_8011B0A0++, lvlHeader70->red, lvlHeader70->green, lvlHeader70->blue, lvlHeader70->alpha)
+                    gDPSetEnvColor(D_8011B0A0++, lvlHeader70->red, lvlHeader70->green, lvlHeader70->blue, lvlHeader70->alpha);
                 } else {
-                    gDPSetEnvColor(D_8011B0A0++, 255, 255, 255, 0)
+                    gDPSetEnvColor(D_8011B0A0++, 255, 255, 255, 0);
                 }
                 temp = batchInfo->unk7 << 14;
                 if (flags & 0x40000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
                     color = gCurrentLevelHeader2->pulseLightData->outColorValue & 0xFF;
-                    gDPSetPrimColor(D_8011B0A0++, 0, 0, color, color, color, color)
+                    gDPSetPrimColor(D_8011B0A0++, 0, 0, color, color, color, color);
                     func_8007BA5C(&D_8011B0A0, texture, flags, temp);
                     vertices += 0x80000000;
-                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices)
-                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, TRIN_ENABLE_TEXTURE)
-                    gDPSetPrimColor(D_8011B0A0++, 0, 0, 255, 255, 255, 255) // Reset the primitive color
+                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices);
+                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, TRIN_ENABLE_TEXTURE);
+                    gDPSetPrimColor(D_8011B0A0++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
                 } else {
                     func_8007B4E8(&D_8011B0A0, texture, flags, temp);
                     hasTexture = (texture == NULL) ? TRIN_DISABLE_TEXTURE : TRIN_ENABLE_TEXTURE;
                     vertices += 0x80000000;
-                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices)
-                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, hasTexture)
+                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices);
+                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, hasTexture);
                     
                 }
             }

@@ -1081,8 +1081,8 @@ void func_8007B3D0(Gfx **dlist) {
     D_80126382 = 1;
     D_80126378 = 0;
     D_80126384 = 0;
-    gDPPipeSync((*dlist)++)
-    gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER)
+    gDPPipeSync((*dlist)++);
+    gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER);
 }
 
 void func_8007B43C(void) {
@@ -1296,10 +1296,10 @@ void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentCo
         index = 2;
     }
     // There are issues with the structure, but this should be equivalent functionality-wise.
-    gSPDisplayList((*dlist)++, D_800DF3A8)
-    gDkrDmaDisplayList((*dlist)++, &D_800DF410[index] + 0x80000000, numberOfGfxCommands(D_800DF410[0]))
-    gDPSetPrimColorRGBA((*dlist)++, primitiveColor)
-    gDPSetEnvColorRGBA((*dlist)++, environmentColor)
+    gSPDisplayList((*dlist)++, D_800DF3A8);
+    gDkrDmaDisplayList((*dlist)++, &D_800DF410[index] + 0x80000000, numberOfGfxCommands(D_800DF410[0]));
+    gDPSetPrimColorRGBA((*dlist)++, primitiveColor);
+    gDPSetEnvColorRGBA((*dlist)++, environmentColor);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F594.s")

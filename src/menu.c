@@ -5590,12 +5590,12 @@ void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         arg4 = 0;
     }
     
-    gSPDisplayList(D_801263A0++, D_800E1780)
-    gDPSetPrimColor(D_801263A0++, 0, 0, 0, 0, 0, arg4)
-    gDPSetCombineMode(D_801263A0++, G_CC_PRIMITIVE, G_CC_PRIMITIVE)
-    gDPFillRectangle(D_801263A0++, arg0, arg1, arg0 + arg2, arg1 + arg3)
-    gDPPipeSync(D_801263A0++)
-    gDPSetPrimColor(D_801263A0++, 0, 0, 255, 255, 255, 255)
+    gSPDisplayList(D_801263A0++, D_800E1780);
+    gDPSetPrimColor(D_801263A0++, 0, 0, 0, 0, 0, arg4);
+    gDPSetCombineMode(D_801263A0++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPFillRectangle(D_801263A0++, arg0, arg1, arg0 + arg2, arg1 + arg3);
+    gDPPipeSync(D_801263A0++);
+    gDPSetPrimColor(D_801263A0++, 0, 0, 255, 255, 255, 255);
     
     func_8007B3D0(&D_801263A0);
 }

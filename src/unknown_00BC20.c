@@ -835,21 +835,21 @@ void func_80012C3C(Gfx** dlist) {
     s32 i;
     Gfx *tmp;
     for(i = 0; i<D_8011ADA4; i++){
-        gSPDisplayList((*dlist)++, D_8011AD78[i])
+        gSPDisplayList((*dlist)++, D_8011AD78[i]);
     }
 }
 
 void func_80012C98(Gfx **dlist) {
     if (D_8011ADA4 < 9) {
-        gSPNoOp((*dlist)++) // Placeholder instruction?
+        gSPNoOp((*dlist)++); // Placeholder instruction?
         D_8011AD78[D_8011ADA4] = *dlist;
     }
 }
 
 void func_80012CE8(Gfx **dlist) {
     if (D_8011ADA4 < 9) {
-        gSPEndDisplayList((*dlist)++)
-        gSPBranchList(D_8011AD78[D_8011ADA4] - 1, (u32)*dlist)
+        gSPEndDisplayList((*dlist)++);
+        gSPBranchList(D_8011AD78[D_8011ADA4] - 1, (u32)*dlist);
         D_8011ADA4++;
     }
 }

@@ -59,7 +59,7 @@ void render_screen(Gfx **dlist, u8 *screenAddress) {
     s32 y_pos;
     
     gDkrDmaDisplayList((*dlist)++, (u32)&gRdpSetModeScreenAsset + 0x80000000, 
-        numberOfGfxCommands(gRdpSetModeScreenAsset))
+        numberOfGfxCommands(gRdpSetModeScreenAsset));
     
     // Screen header is 16 bytes.
     screenAddress += 16;
@@ -69,11 +69,11 @@ void render_screen(Gfx **dlist, u8 *screenAddress) {
     while(y_pos != SCREEN_HEIGHT) {
         // Load the texture.
         gDPLoadTextureBlockS((*dlist)++, screenAddress + 0x80000000, G_IM_FMT_RGBA, G_IM_SIZ_16b, 
-            SCREEN_WIDTH, SCREEN_HEIGHT_PART, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0)
+            SCREEN_WIDTH, SCREEN_HEIGHT_PART, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
             
         // Draw the texture.
         gSPTextureRectangle((*dlist)++, 0, ((y_pos) << 2), SCREEN_WIDTH << 2, 
-            ((y_pos + SCREEN_HEIGHT_PART) << 2), 0, 0, 0, 1 << 12, 1 << 10)
+            ((y_pos + SCREEN_HEIGHT_PART) << 2), 0, 0, 0, 1 << 12, 1 << 10);
             
         // Advance to the next slice.
         screenAddress += SCREEN_WIDTH * SCREEN_HEIGHT_PART * 2;

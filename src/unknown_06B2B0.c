@@ -852,8 +852,8 @@ void func_8006C3E0(void) {
     D_801234E8 = 0;
     
     gCurrDisplayList = gDisplayLists[D_801234E8];
-    gDPFullSync(gCurrDisplayList++)
-    gSPEndDisplayList(gCurrDisplayList++)
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
     
     osSetTime(0);
 }
@@ -938,8 +938,8 @@ void render(void) {
         func_800829F8(&gCurrDisplayList, D_800DD404);
     }
     
-    gDPFullSync(gCurrDisplayList++)
-    gSPEndDisplayList(gCurrDisplayList++)
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
     
     func_80066610();
     if (D_800DD3F0 != 1) {
@@ -1013,8 +1013,8 @@ void func_8006CC14(void) {
     func_800A003C();
     func_800C30CC();
     gCurrDisplayList = gDisplayLists[D_801234E8];
-    gDPFullSync(gCurrDisplayList++)
-    gSPEndDisplayList(gCurrDisplayList++)
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
     set_free_queue_state(2);
 }
 
@@ -1505,8 +1505,8 @@ void func_8006DCF8(s32 arg0) {
     if ((menuLoopResult != -1) && (menuLoopResult & 0x200)) {
         func_8006DBE4();
         gCurrDisplayList = gDisplayLists[D_801234E8];
-        gDPFullSync(gCurrDisplayList++)
-        gSPEndDisplayList(gCurrDisplayList++)
+        gDPFullSync(gCurrDisplayList++);
+        gSPEndDisplayList(gCurrDisplayList++);
         D_801234F4 = menuLoopResult & 0x7F;
         D_80123518 = func_8006B0AC(D_801234F4);
         D_80123504 = 0;
@@ -1573,8 +1573,8 @@ void func_8006DCF8(s32 arg0) {
         func_8006DBE4();
         // Minor issue here.
         gCurrDisplayList = gDisplayLists[D_801234E8];
-        gDPFullSync(gCurrDisplayList++)
-        gSPEndDisplayList(gCurrDisplayList++)
+        gDPFullSync(gCurrDisplayList++);
+        gSPEndDisplayList(gCurrDisplayList++);
         temp = menuLoopResult & 0x7F;
         D_80121250[1] = temp;
         D_80121250[0] = D_801234F4;
@@ -1592,8 +1592,8 @@ void func_8006DCF8(s32 arg0) {
     if (menuLoopResult > 0) {
         func_8006DBE4();
         gCurrDisplayList = gDisplayLists[D_801234E8];
-        gDPFullSync(gCurrDisplayList++)
-        gSPEndDisplayList(gCurrDisplayList++)
+        gDPFullSync(gCurrDisplayList++);
+        gSPEndDisplayList(gCurrDisplayList++);
         D_801234EC = 0;
         func_8006CAE4(menuLoopResult, -1, D_80123518);
         if (gSettingsPtr->newGame && !is_in_tracks_mode()) {
@@ -1612,8 +1612,8 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
             gCurrDisplayList = gDisplayLists[D_801234E8];
-            gDPFullSync(gCurrDisplayList++)
-            gSPEndDisplayList(gCurrDisplayList++)
+            gDPFullSync(gCurrDisplayList++);
+            gSPEndDisplayList(gCurrDisplayList++);
         }
     }
     if (levelId != -1) {

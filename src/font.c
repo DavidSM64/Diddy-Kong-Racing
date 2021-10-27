@@ -584,9 +584,9 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
     temp = &D_8012A7E8[arg3];
     
     if (temp->unk13 != 0) {
-        gSPDisplayList((*dlist)++, &D_800E3690)
-        gDkrDmaDisplayList((*dlist)++, ((u8*)&D_800E36C8[1]) + 0x80000000, 2)
-        gDPSetEnvColor((*dlist)++, 0, 0, 0, 0)
+        gSPDisplayList((*dlist)++, &D_800E3690);
+        gDkrDmaDisplayList((*dlist)++, ((u8*)&D_800E36C8[1]) + 0x80000000, 2);
+        gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
         if ((temp->unk8 - temp->unk4) < 10 || (temp->unkA - temp->unk6) < 10) {
             render_fill_rectangle(dlist, temp->unk4 - 2, temp->unk6 - 2, temp->unk8 + 2, temp->unkA + 2);
         } else {
@@ -595,8 +595,8 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
             render_fill_rectangle(dlist, temp->unk8 - 2, temp->unk6 + 2, temp->unk8 + 2, temp->unkA - 2);
             render_fill_rectangle(dlist, temp->unk4 - 2, temp->unkA - 2, temp->unk8 + 2, temp->unkA + 2);
         }
-        gDPPipeSync((*dlist)++)
-        gDPSetEnvColor((*dlist)++, temp->unk10, temp->unk11, temp->unk12, temp->unk13)
+        gDPPipeSync((*dlist)++);
+        gDPSetEnvColor((*dlist)++, temp->unk10, temp->unk11, temp->unk12, temp->unk13);
         for (i = 0; D_800E3710[i] >= 0; i += 5) {
             x0 = D_800E3710[i] + temp->unk4;
             y0 = (D_800E3710[i + 1]) ? D_800E3710[i + 2] + temp->unkA : D_800E3710[i + 2] + temp->unk6;
@@ -604,7 +604,7 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
             y1 = (D_800E3710[i + 3]) ? D_800E3710[i + 4] + temp->unkA : D_800E3710[i + 4] + temp->unk6;
             render_fill_rectangle(dlist, x0, y0, x1, y1);
         }
-        gDPPipeSync((*dlist)++)
+        gDPPipeSync((*dlist)++);
     }
     if (arg1 != NULL && arg2 != NULL) {
         if (!D_800E36E8) {
