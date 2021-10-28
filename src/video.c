@@ -158,10 +158,10 @@ void init_vi_settings(void) {
             }
 
             memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
-            gTvViMode.comRegs.width = WIDTH(640);
+            gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
-            gTvViMode.fldRegs[0].origin = ORIGIN(1280);
-            gTvViMode.fldRegs[1].origin = ORIGIN(1280);
+            gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
+            gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
             osViSetMode(&gTvViMode);
             break;
         case 3:
@@ -173,10 +173,10 @@ void init_vi_settings(void) {
                 tvViMode = &osViModeMpalLan1;
             }
             memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
-            gTvViMode.comRegs.width = WIDTH(640);
+            gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
-            gTvViMode.fldRegs[0].origin = ORIGIN(1280);
-            gTvViMode.fldRegs[1].origin = ORIGIN(1280);
+            gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
+            gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
             osViSetMode(&gTvViMode);
             break;
         case 4:
@@ -209,10 +209,10 @@ void init_framebuffer(s32 index) {
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
     if (gVideoModeIndex >= 2) {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((640 * 480 * 2) + 0x30, COLOR_TAG_WHITE);
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOR_TAG_WHITE);
         gVideoFramebuffers[index] = ((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F;
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((640 * 480 * 2) + 0x30, COLOR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOR_TAG_WHITE);
             gVideoDepthBuffer = ((s32)gVideoDepthBuffer + 0x3F) & ~0x3F;
         }
     } else {

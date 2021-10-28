@@ -20,12 +20,12 @@ const char D_800E6ED0[] = "WARNING: Stack overflow/underflow!!!\n";
 s32 *gThread1StackPointer; // stack pointer for thread 1
 s32 D_8011D754;
 s32 D_8011D758[2048];
-s32 *D_8011F758;
+s32 *gThread3StackPointer; // stack pointer for thread 3
 s32 D_8011F75C;
 OSThread *gThread1; // OSThread for thread 1
 s32 D_8011F764;
 s32 D_8011F768[106];
-OSThread *D_8011F910; // OSThread for thread 3
+OSThread *gThread3; // OSThread for thread 3
 s32 D_8011F914;
 s32 D_8011F918[1130];
 
@@ -40,12 +40,12 @@ void main(void) {
 #ifdef NON_MATCHING
 void func_80065D98(s32 arg0) {
     func_800B6F50();
-    osCreateThread(&D_8011F910, 3, (OSId)&thread3_main, 0, &D_8011F758, (OSPri)10);
+    osCreateThread(&gThread3, 3, (OSId)&thread3_main, 0, &gThread3StackPointer, (OSPri)10);
     D_8011D758[2049] = 0;
     D_8011D758[2048] = 0;
     D_8011D758[1] = 0;
     D_8011D758[0] = 0;
-    osStartThread(&D_8011F910);
+    osStartThread(&gThread3);
     osSetThreadPri(NULL, 0);
     while (1) {}
 }
