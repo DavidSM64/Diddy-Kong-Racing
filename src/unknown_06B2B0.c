@@ -167,8 +167,10 @@ s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 OSScClient *D_80123538[3];
-OSMesg *D_80123544;
+OSMesg D_80123544[1];
 OSMesgQueue *D_80123548;
+// These values are almost definitely the values in the OSMesgQueue above
+// I just haven't figured out how to do it properly yet.
 s32 D_8012354C;
 s32 D_80123550[4];
 s32 D_80123560[8];
@@ -845,7 +847,7 @@ void func_8006C3E0(void) {
     func_80075B18();
     func_80081218();
     create_and_start_thread30();
-    osCreateMesgQueue(&D_80123548, &D_80123544, 1);
+    osCreateMesgQueue(&D_80123548, D_80123544, ARRAY_COUNT(D_80123544));
     osScAddClient(&D_80121260, &D_80123538, &D_80123548, 3);
     D_80123560[0] = 0;
     D_80123504 = 0;

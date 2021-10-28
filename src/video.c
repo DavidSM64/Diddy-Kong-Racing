@@ -82,7 +82,7 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     init_framebuffer(1);
     gVideoCurrFbIndex = 1;
     swap_framebuffers();
-    osCreateMesgQueue((OSMesgQueue *)&D_801261A0, (OSMesg *)&D_80126180, 8);
+    osCreateMesgQueue((OSMesgQueue *)&D_801261A0, D_80126180, ARRAY_COUNT(D_80126180));
     osScAddClient(sc, &D_80126310, (OSMesgQueue *)&D_801261A0, 2);
     init_vi_settings();
     D_801262D0 = 12;
