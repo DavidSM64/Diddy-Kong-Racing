@@ -790,10 +790,11 @@ void thread3_main(s32 arg0) {
             func_80072708();
             audioStopThread();
             stop_thread30();
-            __osSpSetStatus(0xAAAA82);
-            osDpSetStatus(0x1D6);
-            while (1)
-                ; // Infinite loop
+            __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE | SP_CLR_RSPSIGNAL
+                            | SP_CLR_CPUSIGNAL | SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
+            osDpSetStatus(DPC_SET_XBUS_DMEM_DMA | DPC_CLR_FREEZE | DPC_CLR_FLUSH | DPC_CLR_TMEM_CTR | DPC_CLR_PIPE_CTR
+                            | DPC_CLR_CMD_CTR | DPC_CLR_CMD_CTR);
+            while (1); // Infinite loop
         }
         render();
         func_80065E30();
@@ -1842,8 +1843,8 @@ void func_8006ECE0(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006ECFC.s")
 
 s32 func_8006EFB8(void) {
-    // Have to use literal here for this function to match.
-    if (*((s32 *)0xA4000000) != -1) {
+    //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
+    if (IO_READ(SP_DMEM_START) != -1) {
         return 0;
     }
     return 1;
@@ -1994,8 +1995,9 @@ s32 func_8006F4C8(void) {
 }
 
 s32 func_8006F4EC(void) {
-    // Have to use a literal here for the function to match.
-    if (*((s32 *)0xA4001000) != 0x17D7) {
+    if (IO_READ(SP_IMEM_START) !=
+        (SP_STATUS_HALT | SP_STATUS_BROKE | SP_STATUS_DMA_BUSY | SP_STATUS_IO_FULL | SP_STATUS_INTR_BREAK | SP_STATUS_YIELD |
+            SP_STATUS_YIELDED | SP_STATUS_TASKDONE | SP_STATUS_TASKDONE | SP_STATUS_RSPSIGNAL | SP_STATUS_SIG5)) {
         return 0;
     }
     return 1;
