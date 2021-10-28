@@ -33,21 +33,21 @@ s32 D_8011F918[1130];
 
 void main(void) {
     osInitialize();
-    osCreateThread(&gThread1, 1, (OSId) &func_80065D98, 0, &gThread1StackPointer, (OSPri) 0);
+    osCreateThread(&gThread1, 1, (OSId)&func_80065D98, 0, &gThread1StackPointer, (OSPri)0);
     osStartThread(&gThread1);
 }
 
 #ifdef NON_MATCHING
 void func_80065D98(s32 arg0) {
     func_800B6F50();
-    osCreateThread(&D_8011F910, 3, (OSId) &thread3_main, 0, &D_8011F758, (OSPri) 10);
+    osCreateThread(&D_8011F910, 3, (OSId)&thread3_main, 0, &D_8011F758, (OSPri)10);
     D_8011D758[2049] = 0;
     D_8011D758[2048] = 0;
     D_8011D758[1] = 0;
     D_8011D758[0] = 0;
     osStartThread(&D_8011F910);
     osSetThreadPri(NULL, 0);
-    while(1){}
+    while (1) {}
 }
 #else
 GLOBAL_ASM("asm/non_matchings/main/func_80065D98.s")
@@ -71,5 +71,3 @@ void func_80065E30(void) {
 #else
 GLOBAL_ASM("asm/non_matchings/main/func_80065E30.s")
 #endif
-
-

@@ -60,11 +60,11 @@ void func_8005F850(void) {
     D_8011D63C = load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
     D_8011D644 = allocate_from_main_pool_safe(0xC00, COLOR_TAG_GREEN);
     D_8011D640 = 0;
-    
+
     // Anti-tamper check.
     checksum = 0;
     for (i = 0; i < D_800DCEA4; i++) {
-        checksum += *(u8*)(((s32)&func_80024D54) + i);
+        checksum += *(u8 *)(((s32)&func_80024D54) + i);
     }
     if (checksum != D_800DCEA0) {
         func_8005C25C();

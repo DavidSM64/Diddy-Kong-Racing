@@ -38,18 +38,18 @@ extern f32 gVideoRefreshRate;
 
 /************ .data ************/
 
-s32 D_800DC680 = 0; // Currently unknown, might be a different type.
-s32 D_800DC684 = 0; // Currently unknown, might be a different type.
-s32 D_800DC688 = 0; // Currently unknown, might be a different type.
-s32 D_800DC68C = 0; // Currently unknown, might be a different type.
+s32 D_800DC680 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC684 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC688 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC68C = 0;       // Currently unknown, might be a different type.
 s32 D_800DC690 = 0x35281; // Checksum of func_80019808
-s32 D_800DC694 = 0xFD0; // Size of func_80019808 (for checksum).
-s32 D_800DC698 = 0; // Currently unknown, might be a different type.
-s32 D_800DC69C = 0; // Currently unknown, might be a different type.
-s32 D_800DC6A0 = 1; // Currently unknown, might be a different type.
-s32 D_800DC6A4 = 0; // Currently unknown, might be a different type.
-s32 D_800DC6A8 = 0; // Currently unknown, might be a different type.
-s32 D_800DC6AC = 0; // Currently unknown, might be a different type.
+s32 D_800DC694 = 0xFD0;   // Size of func_80019808 (for checksum).
+s32 D_800DC698 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC69C = 0;       // Currently unknown, might be a different type.
+s32 D_800DC6A0 = 1;       // Currently unknown, might be a different type.
+s32 D_800DC6A4 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC6A8 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC6AC = 0;       // Currently unknown, might be a different type.
 
 s32 D_800DC6B0 = 0; // Currently unknown, might be a different type.
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
@@ -82,42 +82,40 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #else
 void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2) {
-    u32     *reg_v0;
-    void    *reg_s0;
-    u32     tmp_size;
-    s32     tmp;
+    u32 *reg_v0;
+    void *reg_s0;
+    u32 tmp_size;
+    s32 tmp;
     s32 i;
     D_80115F90 = arg2;
     D_80115F94 = c->heap;
     c->dmaproc = &func_80003008;
     c->outputRate = osAiSetFrequency(22050);
-    D_8011962C = (((f32) c->outputRate)*2.0f)/gVideoRefreshRate;
-    if(D_8011962C < 0){
+    D_8011962C = (((f32)c->outputRate) * 2.0f) / gVideoRefreshRate;
+    if (D_8011962C < 0) {
     }
 
-    if(c->fxType == AL_FX_CUSTOM){
+    if (c->fxType == AL_FX_CUSTOM) {
         reg_v0 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
-        tmp_size = reg_v0[9]-reg_v0[8];
+        tmp_size = reg_v0[9] - reg_v0[8];
         reg_s0 = allocate_from_main_pool_safe(tmp_size, COLOR_TAG_CYAN);
-        load_asset_to_address(39,reg_s0, reg_v0[8],tmp_size);
+        load_asset_to_address(39, reg_s0, reg_v0[8], tmp_size);
         c->params = reg_s0;
         c[1].maxVVoices = 0;
         alInit(&ALGlobals_801161D0, c);
         free_from_memory_pool(reg_s0);
-    }
-    else{
+    } else {
         alInit(&ALGlobals_801161D0, c);
     }
     D_80119240[0].node.next = NULL;
     D_80119240[0].node.prev = NULL;
 
-    for(i=0; i< 0x30; i++){
-        alLink(&(D_80119240[i+1].node), &(D_80119240[i].node));
-        D_80119240[i].unk10 = alHeapDBAlloc(0,0,c->heap, 1, 0x400);
+    for (i = 0; i < 0x30; i++) {
+        alLink(&(D_80119240[i + 1].node), &(D_80119240[i].node));
+        D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
     }
-    D_80119240[i].unk10 = alHeapDBAlloc(0,0, c->heap, 1, 0x400);
-    alHeapDBAlloc(0,0, c->heap, 1, 120);
-
+    D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
+    alHeapDBAlloc(0, 0, c->heap, 1, 120);
 
     osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
     osCreateMesgQueue(&OSMesgQueue_80116160, &D_80116178, 8);
@@ -146,7 +144,7 @@ void set_sfx_volume_slider(u32 arg0) {
     if (arg0 > 256) {
         arg0 = 256;
     }
-    
+
     sfxVolumeSlider = arg0;
 }
 
@@ -171,26 +169,25 @@ void alSndPNew(audioMgrConfig *c) {
     gAlSndPlayer->unk48 = c->maxChannels;
     gAlSndPlayer->unk3C = 0;
     gAlSndPlayer->frameTime = 33000;
-    gAlSndPlayer->unk40 = (unk800DC6BC_40 *) alHeapDBAlloc(0, 0, c->hp, 1, (c->unk00) << 6);
-    alEvtqNew(&(gAlSndPlayer->evtq), alHeapDBAlloc(0,0,c->hp,1, (c->unk04)*28), c->unk04);
+    gAlSndPlayer->unk40 = (unk800DC6BC_40 *)alHeapDBAlloc(0, 0, c->hp, 1, (c->unk00) << 6);
+    alEvtqNew(&(gAlSndPlayer->evtq), alHeapDBAlloc(0, 0, c->hp, 1, (c->unk04) * 28), c->unk04);
     D_800DC6B8 = gAlSndPlayer->unk40;
-    i=1;
-    for(i=1; i < c->unk00; i++){
+    i = 1;
+    for (i = 1; i < c->unk00; i++) {
         tmp1 = gAlSndPlayer->unk40;
-        alLink( i + tmp1, i + tmp1 - 1);
+        alLink(i + tmp1, i + tmp1 - 1);
     }
 
-    D_80119C28 = alHeapDBAlloc(0,0,c->hp, 2, c->unk10);
-    for (i=0; i < c->unk10; i++){
+    D_80119C28 = alHeapDBAlloc(0, 0, c->hp, 2, c->unk10);
+    for (i = 0; i < c->unk10; i++) {
         D_80119C28[i] = 32767;
     }
-
 
     gAlSndPlayer->drvr = alGlobals;
     gAlSndPlayer->node.next = NULL;
     gAlSndPlayer->node.handler = &_sndpVoiceHandler;
     gAlSndPlayer->node.clientData = gAlSndPlayer;
-    
+
     alSynAddPlayer(gAlSndPlayer->drvr, gAlSndPlayer);
     sp_38.type = 32;
     alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_38, gAlSndPlayer->frameTime);
@@ -199,9 +196,9 @@ void alSndPNew(audioMgrConfig *c) {
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
-#else  
-ALMicroTime     _sndpVoiceHandler(void *node) {
-    unk800DC6BC *sndp = (unk800DC6BC *) node;
+#else
+ALMicroTime _sndpVoiceHandler(void *node) {
+    unk800DC6BC *sndp = (unk800DC6BC *)node;
     ALSndpEvent evt;
 
     do {
@@ -211,13 +208,13 @@ ALMicroTime     _sndpVoiceHandler(void *node) {
                 evt.snd_event.type = AL_SNDP_API_EVT;
                 alEvtqPostEvent(&sndp->evtq, (ALEvent *)&evt, sndp->frameTime);
                 break;
-            
+
             default:
                 _handleEvent(sndp, (ALSndpEvent *)&sndp->nextEvent);
                 break;
         }
         sndp->nextDelta = alEvtqNextEvent(&sndp->evtq, &sndp->nextEvent);
-        
+
     } while (sndp->nextDelta == 0);
     sndp->curTime += sndp->nextDelta;
     return sndp->nextDelta;
@@ -234,13 +231,13 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
 
 void func_80004604(u8 *arg0, u8 arg1) {
     if (arg0)
-        arg0[0x36]=arg1;
+        arg0[0x36] = arg1;
 }
 
 u8 func_8000461C(u8 *arg0) {
     if (arg0)
         return arg0[0x3F];
-    return 0;     
+    return 0;
 }
 
 void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
@@ -258,9 +255,9 @@ void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32) {
 void func_8000488C(u8 *arg0) {
     ALEvent sp_18;
     sp_18.type = 1024;
-    ((u32*)(&sp_18))[1] = (u32) arg0;
-    if(arg0){
-        arg0[0x3e] &= ~(1<<4);
+    ((u32 *)(&sp_18))[1] = (u32)arg0;
+    if (arg0) {
+        arg0[0x3e] &= ~(1 << 4);
         alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_18, 0);
     }
 }
@@ -270,15 +267,14 @@ void func_800049D8(void) {
     func_800048D8(3);
 }
 
-void func_800049F8(void * sndState,s16 type, u32 arg2) {
+void func_800049F8(void *sndState, s16 type, u32 arg2) {
     ALSndpEvent sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = sndState;
     sndEvt.snd_event.unk04 = arg2;
-    if(sndState){
-        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sndEvt,0);
+    if (sndState) {
+        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sndEvt, 0);
     }
-
 }
 
 u16 func_80004A3C(u8 arg0) {

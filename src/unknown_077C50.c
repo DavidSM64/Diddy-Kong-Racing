@@ -23,7 +23,7 @@ void render_borders_for_multiplayer(Gfx **dlist) {
     temp1 = height >> 7;
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetFillColor((*dlist)++, 0x00010001); // Black fill color
-    switch(get_viewport_count()){
+    switch (get_viewport_count()) {
         case VIEWPORTS_COUNT_2_PLAYERS:
             // Draws a solid horizontal black line in the middle of the screen.
             gDPFillRectangle((*dlist)++, 0, (height >> 1) - temp1, width, ((height >> 1) - temp1) + temp1);

@@ -28,7 +28,6 @@ f32 D_8011D4CC;
 
 /*******************************/
 
-
 void func_80031B60(void) {
     if (D_800DC950 != NULL) {
         free_from_memory_pool(D_800DC950);
@@ -47,7 +46,7 @@ void func_80031BB8(s32 count) {
     s32 i;
     func_80031B60();
     D_800DC958 = count;
-    D_800DC950 = allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32*) + sizeof(unk800DC954) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOR_TAG_MAGENTA);
+    D_800DC950 = allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC954) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOR_TAG_MAGENTA);
     D_800DC954 = &D_800DC950[D_800DC958];
     D_800DC960 = &D_800DC954[D_800DC958];
     D_800DC964 = &D_800DC960[D_800DC958];
@@ -118,7 +117,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032424.s")
 void func_80032BAC(unk800DC950 *arg0) {
     unk800DC950 *entry = NULL;
     s32 i;
-    for(i = 0; (i < D_800DC95C) && (entry == NULL); i++) {
+    for (i = 0; (i < D_800DC95C) && (entry == NULL); i++) {
         if (arg0 == D_800DC950[i]) {
             entry = D_800DC950[i];
         }
@@ -136,7 +135,6 @@ s32 func_80032C6C(void) {
     return D_800DC95C;
 }
 
-
 #ifdef NON_MATCHING
 
 // Close to matching. Should be functionally equivalent.
@@ -150,10 +148,10 @@ void func_80032C7C(Object *object) {
     f32 temp;
     s16 phi_a0, phi_a1;
     unk800DC950 *entry;
-    
+
     if (object->descriptor_ptr->unk3D == 0) {
-        switch(object->descriptor_ptr->unk53) { // Model type
-            case 0: // 3D Model
+        switch (object->descriptor_ptr->unk53) { // Model type
+            case 0:                              // 3D Model
                 sp64 = 2;
                 break;
             case 1: // 2D Billboard
@@ -165,15 +163,15 @@ void func_80032C7C(Object *object) {
                 sp64 = 0;
                 break;
         }
-        
+
         sp82 = object->x_position;
         sp80 = object->y_position;
         sp7E = object->z_position;
         D_800DC968 = 0;
         for (i = 0; i < D_800DC95C; i++) {
             entry = D_800DC950[i];
-            if ((entry->unk2 & sp64) && (entry->unk4 == 1) && (sp82 >= entry->unk50) && 
-                (entry->unk56 >= sp82) && (sp80 >= entry->unk52) && (entry->unk58 >= sp80) && 
+            if ((entry->unk2 & sp64) && (entry->unk4 == 1) && (sp82 >= entry->unk50) &&
+                (entry->unk56 >= sp82) && (sp80 >= entry->unk52) && (entry->unk58 >= sp80) &&
                 (sp7E >= entry->unk54) && (entry->unk5A >= sp7E)) {
                 if (entry->unk0 == 0) {
                     if (entry->unk28 >= 0x10000) {
@@ -228,7 +226,7 @@ void func_80032C7C(Object *object) {
                 }
             }
         }
-        
+
         if (object->descriptor_ptr->unk71 != 0) {
             if (D_800DC968 == 0) {
                 object->unk54->unk7 = 0;
@@ -250,7 +248,7 @@ void func_80032C7C(Object *object) {
                     phi_a0 = 1;
                     phi_a1 = 0;
                 }
-                for(i = 2; i < D_800DC968; i++) {
+                for (i = 2; i < D_800DC968; i++) {
                     if (D_800DC960[phi_a1].unk10 < D_800DC960[i + 2].unk10) {
                         if (D_800DC960[phi_a0].unk10 < D_800DC960[i + 2].unk10) {
                             phi_a1 = phi_a0;
@@ -303,13 +301,13 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032C7C.s")
 void func_800337E4(void) {
     s32 i;
     s32 temp;
-    
-    for(i = 1; i < D_800DC968; i++) {
+
+    for (i = 1; i < D_800DC968; i++) {
         if (D_800DC960[i].unk10 >= 2) {
             if (D_800DC960[0].unk10 >= D_800DC960[i].unk10) {
                 temp = (D_800DC960[i].unk10 << 0x10);
                 temp /= D_800DC960[0].unk10;
-                D_800DC960[0].unk4 = D_800DC960[0].unk4 + ((D_800DC960[i].unk4 * temp) >> 0x10);;
+                D_800DC960[0].unk4 = D_800DC960[0].unk4 + ((D_800DC960[i].unk4 * temp) >> 0x10);
                 D_800DC960[0].unk8 = D_800DC960[0].unk8 + ((D_800DC960[i].unk8 * temp) >> 0x10);
                 D_800DC960[0].unkC = D_800DC960[0].unkC + ((D_800DC960[i].unkC * temp) >> 0x10);
             } else {
@@ -339,7 +337,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800337E4.s")
 f32 func_80033A14(unk800DC950 *arg0) {
     f32 out;
     f32 temp;
-    
+
     out = arg0->unk28 / 65536.0f;
     switch (arg0->unk3) {
         case 1:

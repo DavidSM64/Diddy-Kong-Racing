@@ -98,14 +98,14 @@ void func_800B6F40(s32 arg0, s32 arg1, s32 arg2) {
 #ifdef NON_MATCHING
 void func_800B6F50(void) {
     s32 i;
-    
+
     // Almost matching, just have an issue with argument 4.
     // The -O2 compiler is too smart. :(
     osCreateThread(&D_801295E0, 0, thread0_Main, 0, &D_801295E0, 255);
-    
+
     osStartThread(&D_801295E0);
-    
-    for(i = 0; i < 3; i++) {
+
+    for (i = 0; i < 3; i++) {
         D_80129FB0[i] = -1;
     }
 }
@@ -117,14 +117,14 @@ GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B6F50.s")
 void thread0_Main(s32 arg0) { // Has regalloc issues
     s32 sp34;
     s32 s0 = 0;
-    
+
     osCreateMesgQueue(&D_80129790, &D_801297A8, 8);
     osSetEventMesg(12, &D_80129790, 8);
     osSetEventMesg(10, &D_80129790, 2);
     osCreatePiManager(150, &D_801297E8, &D_801297C8, 8);
-    
-    while(1) {
-        while(1) {
+
+    while (1) {
+        while (1) {
             osRecvMesg(&D_80129790, &sp34, 1);
             if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
                 continue;
@@ -146,7 +146,7 @@ GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0_Main.s")
 
 void func_800B70D0(void) {
     OSThread *node = __osGetActiveQueue();
-    while(node->priority != -1) {
+    while (node->priority != -1) {
         if (node->priority == 0) {
             node->context.sr &= 0xFFFF00FE;
             node->context.sr |= 0x6C01;
@@ -201,7 +201,7 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
             }
         }
         func_800766D4(0, -1, &D_800E8EE8, &D_800E8EF0, &sp40, 0x800);
-        while(1); // Infinite loop; waiting for the player to reset the console?
+        while (1); // Infinite loop; waiting for the player to reset the console?
     }
 }
 #endif
@@ -219,7 +219,7 @@ s32 func_800B76DC(void) {
     u8 *sp420[256];
     u8 *sp220[128];
     u8 *dataFromControllerPak[128];
-    
+
     if (D_800E3020 != -1) {
         return D_800E3020;
     } else {
@@ -227,8 +227,7 @@ s32 func_800B76DC(void) {
         if ((func_800758DC(controllerIndex) == 0) && //Rumble pack check?
             (func_800764E8(controllerIndex, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0) &&
             (read_data_from_controller_pak(controllerIndex, fileNum, &dataFromControllerPak,
-                sizeof(dataFromControllerPak) * MAXCONTROLLERS) == 0))
-        {
+                sizeof(dataFromControllerPak) * MAXCONTROLLERS) == 0)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(dataFromControllerPak) - 80); //Why less 80 (0x50)?
             bcopy(&sp220, &D_801299B0, sizeof(sp220));
             bcopy(&sp420, &D_80129BB0, sizeof(sp420));
@@ -250,7 +249,6 @@ void func_800B77D4(s32 arg0) {
     }
 }
 
-
 #if 1
 GLOBAL_ASM("asm/non_matchings/thread0_epc/render_epc_lock_up_display.s")
 #else
@@ -262,11 +260,11 @@ void render_epc_lock_up_display(void) {
     sp50[0] = D_800E302C[0]; // "setup"
     sp50[1] = D_800E302C[1]; // "control"
     sp50[2] = D_800E302C[2]; // "print"
-    
+
     s3 = 0;
-    
+
     set_render_printf_position(0x10, 0x20);
-    
+
     switch (D_800E3024) {
         case 0:
             D_80129FB0[0] = gEpcInfo.unk130;
@@ -278,7 +276,7 @@ void render_epc_lock_up_display(void) {
                 render_printf(" cause\t\t0x%08x\n", gEpcInfo.cause);
                 render_printf(" sr\t\t0x%08x\n", gEpcInfo.sr);
                 render_printf(" badvaddr\t0x%08x\n", gEpcInfo.badvaddr);
-                for(i = 0; i < 3; i++) {
+                for (i = 0; i < 3; i++) {
                     if (D_80129FB0[i] != -1) {
                         if (s3 == 0) {
                             s3 = 1;
@@ -301,7 +299,7 @@ void render_epc_lock_up_display(void) {
             } else { // gEpcInfo.cause == -1
                 render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", gEpcInfo.a0, gEpcInfo.a1);
-                for(i = 0; i < 3; i++) {
+                for (i = 0; i < 3; i++) {
                     if (D_80129FB0[i] != -1) {
                         if (s3 == 0) {
                             s3 = 1;
@@ -318,8 +316,10 @@ void render_epc_lock_up_display(void) {
             break;
         default:
             for (i = 0; i < 16; i++) {
-                render_printf("   %08x %08x %08x\n", 
-                    D_801299B0[i - 1], D_801299B0[i - 1 + 16], D_801299B0[i - 1 + 32]);
+                render_printf("   %08x %08x %08x\n",
+                              D_801299B0[i - 1],
+                              D_801299B0[i - 1 + 16],
+                              D_801299B0[i - 1 + 32]);
             }
             break;
         case 4:

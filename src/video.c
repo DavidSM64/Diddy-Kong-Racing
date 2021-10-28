@@ -8,7 +8,7 @@
 
 u16 *gVideoDepthBuffer = NULL;
 s32 D_800DE774 = 0; // Currently unknown, might be a different type.
-s8  D_800DE778 = 2;
+s8 D_800DE778 = 2;
 
 VideoModeResolution gVideoModeResolutions[] = {
     {          SCREEN_WIDTH,          SCREEN_HEIGHT }, // 320x240
@@ -46,8 +46,8 @@ u16 *gVideoCurrDepthBuffer;
 u16 *gVideoLastDepthBuffer;
 u8 D_801262E4;
 s32 D_801262E8[8];
-u8  D_80126308;
-u8  D_80126309;
+u8 D_80126308;
+u8 D_80126309;
 s32 D_8012630C;
 OSScClient D_80126310;
 
@@ -66,14 +66,14 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
         gVideoAspectRatio = ASPECT_RATIO_NTSC;
         gVideoHeightRatio = HEIGHT_RATIO_NTSC;
     }
-    
+
     if (osTvType == TV_TYPE_PAL) {
         s32 i;
-        for(i = 0; i < 8; i++) {
+        for (i = 0; i < 8; i++) {
             gVideoModeResolutions[i].height += PAL_HEIGHT_DIFFERENCE;
         }
     }
-    
+
     func_8007A974();
     set_video_mode_index(videoModeIndex);
     gVideoFramebuffers[0] = 0;
@@ -113,15 +113,15 @@ s32 get_video_width_and_height_as_s32(void) {
 void init_vi_settings(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
-    
+
     viModeTableIndex = OS_VI_NTSC_LPN1;
     if (osTvType == TV_TYPE_PAL) {
         viModeTableIndex = OS_VI_PAL_LPN1;
     } else if (osTvType == TV_TYPE_MPAL) {
         viModeTableIndex = OS_VI_MPAL_LPN1;
     }
-    
-    switch(gVideoModeIndex & 7) {
+
+    switch (gVideoModeIndex & 7) {
         case 0:
             stubbed_printf("320 by 240 Point sampled, Non interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex]);
@@ -156,7 +156,7 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLpn1;
             }
-            
+
             memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
             gTvViMode.comRegs.width = WIDTH(640);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
@@ -223,7 +223,6 @@ void init_framebuffer(s32 index) {
             gVideoDepthBuffer = ((s32)gVideoDepthBuffer + 0x3F) & ~0x3F;
         }
     }
-    
 }
 
 void func_8007A974(void) {
@@ -250,7 +249,7 @@ s32 func_8007A98C(s32 arg0) {
         s0 += 1;
         s0 &= 0xFF;
     }
-    
+
     if (s0 < D_80126309) {
         if (D_80126308 < 0x14) {
             D_80126308++;
@@ -298,7 +297,7 @@ void swap_framebuffers(void) {
 void memory_copy(u8 *src, u8 *dest, s32 len) {
     s32 i;
 
-    for(i = 0; i < len; i++) {
-        *dest++ =  *src++;
+    for (i = 0; i < len; i++) {
+        *dest++ = *src++;
     }
 }

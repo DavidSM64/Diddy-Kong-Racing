@@ -8,17 +8,17 @@
 /************ .data ************/
 
 Gfx D_800E3690[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
-    gsSPClearGeometryMode(G_ZBUFFER | G_FOG), 
-    gsDPPipeSync(), 
+    gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
+    gsDPPipeSync(),
     gsSPEndDisplayList(),
 };
 
 // Unused?
-Gfx D_800E36C8[][2] = {    
+Gfx D_800E36C8[][2] = {
     {
         gsDPSetCombineMode(DKR_CC_UNK11, DKR_CC_UNK11),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
@@ -33,8 +33,16 @@ s8 D_800E36E8 = 0;
 
 // Descending powers of 10
 s32 gDescPowsOf10[9] = {
-    1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10,
-}; 
+    1000000000,
+    100000000,
+    10000000,
+    1000000,
+    100000,
+    10000,
+    1000,
+    100,
+    10,
+};
 
 s8 D_800E3710[48] = {
     4,  FALSE,  0, FALSE,  1, 
@@ -64,24 +72,24 @@ s32 D_8012A7F8;
 s32 D_8012A7FC;
 
 /******************************/
-    
+
 void load_fonts(void) {
     s32 *fontAssetData;
     s32 i;
 
     fontAssetData = load_asset_section_from_rom(ASSET_BINARY_44);
-    
-    gFonts = (FontData*)(fontAssetData); // ???
+
+    gFonts = (FontData *)(fontAssetData); // ???
     gNumberOfFonts = *(fontAssetData);
-    gFonts = (FontData*)(fontAssetData + 1);
-    
+    gFonts = (FontData *)(fontAssetData + 1);
+
     for (i = 0; i < gNumberOfFonts; i++) {
         gFonts[i].unk28[0] = 0;
     }
-    
+
     D_8012A7E8 = allocate_from_main_pool_safe(unk8012A7E8_TOTAL_SIZE + unk8012A7EC_TOTAL_SIZE, COLOR_TAG_YELLOW);
-    D_8012A7EC = (unk8012A7EC*)((u8*)D_8012A7E8 + unk8012A7E8_TOTAL_SIZE);
-    
+    D_8012A7EC = (unk8012A7EC *)((u8 *)D_8012A7E8 + unk8012A7E8_TOTAL_SIZE);
+
     for (i = 0; i < unk8012A7E8_COUNT; i++) {
         (*D_8012A7E8)[i].xpos = 0;
         (*D_8012A7E8)[i].ypos = 0;
@@ -205,7 +213,7 @@ TextureHeader *func_800C4318(s32 font, u8 arg1) {
             return NULL;
         }
     }
-    // @bug: No return statement. The function will return whatever happens to be in v0 
+    // @bug: No return statement. The function will return whatever happens to be in v0
     //       before this function was called.
 }
 
@@ -229,11 +237,11 @@ void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
 }
 
 // Unused?
-void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags) {
+void func_800C4404(Gfx **displayList, char *text, s32 alignmentFlags) {
     func_800C45A4(displayList, &(*D_8012A7E8)[0], text, alignmentFlags, 1.0f);
 }
 
-void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
+void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
     unk8012A7E8 *temp = &(*D_8012A7E8)[0];
     temp->xpos = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;
     temp->ypos = (ypos == -0x8000) ? temp->unkE >> 1 : ypos;
@@ -241,7 +249,7 @@ void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, s32 alignmentF
 }
 
 // Unused?
-void func_800C44C0(Gfx** displayList, s32 arg1, char *text, s32 alignmentFlags) {
+void func_800C44C0(Gfx **displayList, s32 arg1, char *text, s32 alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg1];
         func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
@@ -249,7 +257,7 @@ void func_800C44C0(Gfx** displayList, s32 arg1, char *text, s32 alignmentFlags) 
 }
 
 // Unused?
-void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
+void func_800C4510(Gfx **displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         unk8012A7E8 *temp = &D_8012A7E8[arg1];
         temp->xpos = (xpos == -0x8000) ? temp->unkC >> 1 : xpos;
@@ -266,7 +274,7 @@ s32 func_800C4DA0(u8 *text, s32 x, s32 font) {
     s32 diffX, thisDiffX;
     FontData *fontData;
     FontCharData *fontCharData;
-    
+
     if (text == NULL) {
         return 0;
     }
@@ -275,7 +283,7 @@ s32 func_800C4DA0(u8 *text, s32 x, s32 font) {
         font = (*D_8012A7E8)[0].font;
     }
     fontData = &gFonts[font];
-    while(*text != '\0') {
+    while (*text != '\0') {
         u8 ch = *text;
         thisDiffX = diffX;
         if ((ch < 0x21) || (ch >= 0x80)) {
@@ -311,18 +319,18 @@ void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         temp->xpos = 0;
         temp->ypos = 0;
         if (arg1 < arg3) {
-            temp->unk4 = (s16) arg1;
-            temp->unk8 = (s16) arg3;
+            temp->unk4 = (s16)arg1;
+            temp->unk8 = (s16)arg3;
         } else {
-            temp->unk8 = (s16) arg1;
-            temp->unk4 = (s16) arg3;
+            temp->unk8 = (s16)arg1;
+            temp->unk4 = (s16)arg3;
         }
         if (arg2 < arg4) {
-            temp->unk6 = (s16) arg2;
-            temp->unkA = (s16) arg4;
+            temp->unk6 = (s16)arg2;
+            temp->unkA = (s16)arg4;
         } else {
-            temp->unkA = (s16) arg2;
-            temp->unk6 = (s16) arg4;
+            temp->unkA = (s16)arg2;
+            temp->unk6 = (s16)arg4;
         }
         temp->unkC = (temp->unk8 - temp->unk4) + 1;
         temp->unkE = (temp->unkA - temp->unk6) + 1;
@@ -337,7 +345,6 @@ void func_800C4F7C(s32 arg0, s32 font) {
         }
     }
 }
-
 
 void func_800C4FBC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 > 0 && arg0 < 8) {
@@ -408,7 +415,7 @@ void func_800C5428(s32 arg0, unk8012A7E8_24 *arg1) {
     unk8012A7E8 *temp;
     unk8012A7E8_24 *temp_24;
     unk8012A7E8_24 **temp_24_ptr;
-    
+
     temp = &D_8012A7E8[arg0];
     temp_24_ptr = &temp->unk24;
     temp_24 = temp->unk24;
@@ -425,11 +432,11 @@ void func_800C5428(s32 arg0, unk8012A7E8_24 *arg1) {
 void func_800C5494(s32 arg0) {
     unk8012A7E8 *temp;
     unk8012A7E8_24 *temp_24, *temp_24_2;
-    
+
     temp = &D_8012A7E8[arg0];
     temp_24 = temp->unk24;
     if (temp_24 != NULL) {
-        temp_24_2 = temp_24; // This seems redundant. 
+        temp_24_2 = temp_24; // This seems redundant.
         while (temp_24_2 != NULL) {
             temp_24_2->unk01 = 0xFF;
             temp_24_2 = temp_24_2->unk1C;
@@ -442,14 +449,14 @@ void func_800C5494(s32 arg0) {
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
     FontData *fontData;
     unk8012A7E8 *temp;
-    
+
     temp = &D_8012A7E8[arg0];
 
-    if(arg1 != NULL){
+    if (arg1 != NULL) {
         if (arg1->unk19 != 0xFF) {
             fontData = &gFonts[arg1->unk19];
-            if(arg4 != 4) {
-                switch(arg4) {
+            if (arg4 != 4) {
+                switch (arg4) {
                     case 1:
                         arg3 *= fontData->unk22;
                         break;
@@ -505,8 +512,8 @@ void func_800C56FC(s32 arg0, s32 arg1, s32 arg2) {
             D_800E36E8 = 0;
         }
     }
-    
-    for(i = 1; i < 8; i++) {
+
+    for (i = 1; i < 8; i++) {
         if ((*D_8012A7E8)[i].unk1E & 0x8000) {
             if ((*D_8012A7E8)[i].unk1E & 0x4000) {
                 func_800C5B58(arg0, arg1, arg2, i);
@@ -518,21 +525,21 @@ void func_800C56FC(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 #ifdef NON_MATCHING
-void s32_to_string(char** outString, s32 number) {
+void s32_to_string(char **outString, s32 number) {
     u8 digit;
     s32 i;
     s32 hasDigit; // boolean
     s32 div;
-    
+
     // Check for a negative number
-    if (number < 0) { 
+    if (number < 0) {
         **outString = '-';
         number = -number;
         (*outString)++;
     }
-    
+
     // Loop through digit places.
-    for(i = 0; i < 9; i++){
+    for (i = 0; i < 9; i++) {
         hasDigit = FALSE;
         digit = '0';
         if (number >= gDescPowsOf10[i]) {
@@ -580,12 +587,12 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
     s32 x0, x1;
     char sp6C[256];
     s32 y0, y1;
-    
+
     temp = &D_8012A7E8[arg3];
-    
+
     if (temp->unk13 != 0) {
         gSPDisplayList((*dlist)++, &D_800E3690);
-        gDkrDmaDisplayList((*dlist)++, ((u8*)&D_800E36C8[1]) + 0x80000000, 2);
+        gDkrDmaDisplayList((*dlist)++, ((u8 *)&D_800E36C8[1]) + 0x80000000, 2);
         gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
         if ((temp->unk8 - temp->unk4) < 10 || (temp->unkA - temp->unk6) < 10) {
             render_fill_rectangle(dlist, temp->unk4 - 2, temp->unk6 - 2, temp->unk8 + 2, temp->unkA + 2);

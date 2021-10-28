@@ -48,20 +48,20 @@ s32 D_800DC764 = 0; // Currently unknown, might be a different type.
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
 f32 D_800DC76C[15] = { 
-    1.0f, 0.70711f, 0.70711f, 1.0f, 
+    1.0f, 0.70711f, 0.70711f, 1.0f,
     0.0f, 0.70711f, -0.70711f, 0.0f,
     -1.0f, -0.70711f, -0.70711f, -1.0f,
-    0.0f, -0.70711f, 0.70711f
+    0.0f, -0.70711f, 0.70711f,
 };
 
-u16 D_800DC7A8[8] = { 
-    0x0001, 0x0002, 0x0003, 0x0004, 
-    0x0051, 0x0054, 0x0055, 0x0056
+u16 D_800DC7A8[8] = {
+    0x0001, 0x0002, 0x0003, 0x0004,
+    0x0051, 0x0054, 0x0055, 0x0056,
 };
 
 s16 D_800DC7B8[52] = {
-    0x00ED, 0x00FF, 0x0037, 0x0038, 
-    0x0039, 0x003A, 0x0057, 0x0058, 
+    0x00ED, 0x00FF, 0x0037, 0x0038,
+    0x0039, 0x003A, 0x0057, 0x0058,
     0x0059, 0x005A, 0x00F3, 0x00FD,
     0x0042, 0x0043, 0x0044, 0x0045,
     0x005B, 0x005C, 0x005D, 0x005E,
@@ -72,24 +72,25 @@ s16 D_800DC7B8[52] = {
     0x0051, 0x0054, 0x0055, 0x0056,
     0x00ED, 0x00FF, 0x00D9, 0x00DF,
     0x00E0, 0x0105, 0x008A, 0x00DA,
-    0x00E8, 0x0115, 0x0118, 0x0000
+    0x00E8, 0x0115, 0x0118, 0x0000,
 };
 
 s16 D_800DC820[16] = {
     0x0005, 0x0106, 0x0207, 0x0005,
     0x0106, 0x010B, 0x010B, 0x0207,
     0x000C, 0x020D, 0x0101, 0x0101,
-    0x0101, 0x0101, 0x0101, 0x0000
+    0x0101, 0x0101, 0x0101, 0x0000,
 };
-
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
 s8 D_800DC848 = 0;
-s32 D_800DC84C[3] = {         // Currently unknown, might be a different type.
-    0xFF401000, 0x1040FF00, 0x10FF4000
+s32 D_800DC84C[3] = { // Currently unknown, might be a different type.
+    0xFF401000,
+    0x1040FF00,
+    0x10FF4000,
 };
-s32 D_800DC858 = 0;           // Currently unknown, might be a different type.
-s32 D_800DC85C = 0x0028FFFF;  // Currently unknown, might be a different type.
+s32 D_800DC858 = 0;          // Currently unknown, might be a different type.
+s32 D_800DC85C = 0x0028FFFF; // Currently unknown, might be a different type.
 
 u8 D_800DC860 = 0x80;
 u16 D_800DC864 = 0x0028;
@@ -178,7 +179,7 @@ s8 D_8011AE02;
 s8 D_8011AE03;
 u32 *D_8011AE08[16];
 s32 (*D_8011AE48)[8]; // Unknown number of entries.
-u8 (*D_8011AE4C)[8]; // Unknown number of entries.
+u8 (*D_8011AE4C)[8];  // Unknown number of entries.
 s32 D_8011AE50;
 s32 D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
@@ -239,7 +240,7 @@ s32 D_8011AFE8;
 s16 D_8011AFEC;
 s16 D_8011AFEE;
 s32 D_8011AFF0;
-unk800179D0 *D_8011AFF4; 
+unk800179D0 *D_8011AFF4;
 s32 D_8011AFF8;
 s32 D_8011AFFC;
 s32 D_8011B000;
@@ -263,7 +264,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B020.s")
 
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
-#else 
+#else
 extern s32 D_800DC754;
 extern Object *D_800DC75C;
 extern Object *D_800DC764;
@@ -272,7 +273,7 @@ s32 *get_misc_asset(s32 arg0);
 
 void func_8000B290() {
 
-    if(D_800DC754){
+    if (D_800DC754) {
         free_from_memory_pool();
     }
     get_misc_asset(20);
@@ -285,11 +286,11 @@ void func_8000B290() {
             free_texture();
         D_800DC754->unk7C = 0;
     }*/
-    if(D_800DC75C)
+    if (D_800DC75C)
         gParticlePtrList_addObject(D_800DC75C);
     D_800DC75C = NULL;
-    
-    if(D_800DC764)
+
+    if (D_800DC764)
         gParticlePtrList_addObject(D_800DC764);
     D_800DC764 = NULL;
 
@@ -341,18 +342,18 @@ void func_8000BF8C(void) {
     gAssetsObjectHeadersTableLength--;
     D_8011AE48 = (s32 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOR_TAG_WHITE);
     D_8011AE4C = (u8 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOR_TAG_WHITE);
-    
+
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
         (*D_8011AE4C)[i] = 0;
     }
-    
+
     gAssetsMiscSection = load_asset_section_from_rom(ASSET_MISC);
     gAssetsMiscTable = load_asset_section_from_rom(ASSET_MISC_TABLE);
     gAssetsMiscTableLength = 0;
     while (-1 != gAssetsMiscTable[gAssetsMiscTableLength]) {
         gAssetsMiscTableLength++;
     }
-    
+
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
     gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
     D_8011ADC4 = 0;
@@ -375,7 +376,7 @@ void decrypt_magic_codes(u8 *data, s32 length) {
     s32 i;
 
     //numWords = length / 4;
-    
+
     for (i = 0; i < length; i++) {
         sp0 = ((data[i + 3] & 0xC0) >> 6) | (data[i + 0] & 0xC0) | ((data[i + 1] & 0xC0) >> 2) | ((data[i + 2] & 0xC0) >> 4);
         sp1 = ((data[i + 3] & 0x30) >> 4) | ((data[i + 0] & 0x30) << 2) | (data[i + 1] & 0x30) | ((data[i + 2] & 0x30) >> 2);
@@ -391,7 +392,7 @@ void decrypt_magic_codes(u8 *data, s32 length) {
 
 void func_8000C460(void) {
     s32 i;
-    
+
     D_8011AD26[0] = 1;
     D_8011AD5C = 0;
     D_8011AD60 = 0;
@@ -404,7 +405,7 @@ void func_8000C460(void) {
     D_8011AD20[1] = 0;
     D_8011AD22[0] = 0;
     D_8011AD22[1] = 0;
-    
+
     for (i = 0; i < 0x80; i++) {
         (*D_8011AF04)[i] = 0;
     }
@@ -414,7 +415,7 @@ void func_8000C460(void) {
     for (i = 0; i < 0x10; i++) {
         D_8011AFF4[i].unk0 = 0;
     }
-    
+
     D_8011AF08[0] = 0xFF;
     D_8011AF08[1] = 0xFF;
     objCount = 0;
@@ -474,8 +475,7 @@ void func_8000C844(s32 arg0) {
 s32 func_8000C8B4(s32 arg0) {
     if (osTvType != 0 || arg0 < 0) {
         return arg0;
-    }
-    else {
+    } else {
         return (arg0 * 5) / 6;
     }
 }
@@ -484,7 +484,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C8F8.s")
 
 void func_8000CBC0(void) {
     s32 i = 0;
-    while(i < 16){ // For some odd reason, using a for loop here makes this not match.
+    while (i < 16) { // For some odd reason, using a for loop here makes this not match.
         D_8011AE08[i] = NULL;
         i++;
     }
@@ -501,7 +501,7 @@ void func_8000CBF0(u32 *arg0, s32 arg1) {
         return; // I can't get this second return to appear.
     }
     D_8011AE08[arg1] = arg0;
-    return; 
+    return;
 }
 #endif
 
@@ -510,7 +510,7 @@ s32 func_8000CC20(u32 *arg0) {
     s32 phi_v1;
 
     phi_v1 = -1;
-    for(i = 0; i < 0x10; i++){
+    for (i = 0; i < 0x10; i++) {
         if (D_8011AE08[i] == 0) {
             phi_v1 = i;
             i = 0x10;
@@ -526,7 +526,7 @@ s32 func_8000CC20(u32 *arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CC7C.s")
 
 u32 func_8000E0B0(void) {
-    switch(D_8011AD38) {
+    switch (D_8011AD38) {
         case 1:
             return -1;
         case 7:
@@ -561,8 +561,7 @@ s8 func_8000E148() {
 s8 func_8000E158(void) {
     if (D_800DC740 != 0) {
         return D_800DC73C;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -627,7 +626,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E5EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E79C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E898.s")
 
-
 Object *get_object(s32 index) {
     if (index < 0 || index >= objCount) {
         return 0;
@@ -655,9 +653,9 @@ void func_8000E9D0(Object *arg0) {
     arg0->unk6 |= 0x8000;
     func_800245B4(arg0->unk2C | 0xC000);
     gObjPtrList[objCount++] = arg0;
-    if(1);
+    if (1);
     D_8011AE64++;
-}    
+}
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000EA54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F648.s")
@@ -682,7 +680,6 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
 
-
 void gParticlePtrList_addObject(Object *object) {
     func_800245B4(object->unk4A | 0x8000);
     gParticlePtrList[gParticleCount] = object;
@@ -703,36 +700,35 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/gParticlePtrList_flush.s")
 //bad regalloc; swap s2 = s3
 /*removes objects in particleList from gObjPtrList and frees*/
 void gParticlePtrList_flush(void) {
-    s32  j, i, search_indx, tmp;
+    s32 j, i, search_indx, tmp;
     Object *searchObj;
-    
+
     D_8011AE88 = 0;
-    for (i = 0; i < gParticleCount; i++){
+    for (i = 0; i < gParticleCount; i++) {
         search_indx = -1;
         searchObj = gParticlePtrList[i];
-        
-        for(j = 0; j < objCount; j++){
-            if(searchObj == gObjPtrList[j])
+
+        for (j = 0; j < objCount; j++) {
+            if (searchObj == gObjPtrList[j])
                 search_indx = j;
         }
 
         //if object found
-        if(search_indx != -1){
+        if (search_indx != -1) {
             tmp = D_8011AE7C;
-            if(search_indx < D_8011AE7C)
-                D_8011AE7C = tmp-1; 
-            
+            if (search_indx < D_8011AE7C)
+                D_8011AE7C = tmp - 1;
+
             objCount--;
-            for(j = search_indx; j < objCount; j++){
-                gObjPtrList[j] = gObjPtrList[j+1];
+            for (j = search_indx; j < objCount; j++) {
+                gObjPtrList[j] = gObjPtrList[j + 1];
             }
         }
-        func_800101AC(searchObj,0);
+        func_800101AC(searchObj, 0);
     }
     gParticleCount = 0;
 }
 #endif
-
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800101AC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80010994.s")
@@ -766,11 +762,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
 #else
-void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4
-                  , u32 arg5 , u32 arg6 , u32 arg7, u32 arg8, f32 arg9)
-{
-
-
+void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
+                    u32 arg5, u32 arg6, u32 arg7, u32 arg8, f32 arg9) {
 }
 #endif
 
@@ -781,46 +774,44 @@ extern f32 D_800E5550;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
     u32 offset;
-    switch(this->unk48){
+    switch (this->unk48) {
         case 47:
             //L80011B10
-            if(this->unk7C.word < 0)
+            if (this->unk7C.word < 0)
                 break;
-            func_80011960( this, this->unk64->unk20, 4, this->unk64
-                            , 2, this->unk64->unk24, 11, 0, 1.0f);
+            func_80011960(this, this->unk64->unk20, 4, this->unk64,
+                            2, this->unk64->unk24, 11, 0, 1.0f);
             break;
 
         case 61:
             //L80011B58
-            offset = (this->unk64->unkFC*6);
+            offset = (this->unk64->unkFC * 6);
             offset *= 5;
-            offset = offset*2 + 0x80;
-            func_80011960(this, offset, 6, this->unk64
-                            , 8, this->unk64->unkF8, 10, 0, 1.0f);
+            offset = offset * 2 + 0x80;
+            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->unkF8, 10, 0, 1.0f);
             break;
 
-        case 3://L80011BB4
-            tmp_f0 = (f32) this->unk3C->unkD;
-            if(this->unk3C->unkD < 0){
+        case 3: //L80011BB4
+            tmp_f0 = (f32)this->unk3C->unkD;
+            if (this->unk3C->unkD < 0) {
                 tmp_f0 += 4294967296.0f;
             }
-            offset = (this->unk64->unkFC*6);
+            offset = (this->unk64->unkFC * 6);
             offset *= 5;
-            offset = offset*2 + 0x80;
-            func_80011960(this, offset, 6, this->unk64
-                            , 8, this->unk64->unkF8, 26, 0, tmp_f0 * D_800E5550);
+            offset = offset * 2 + 0x80;
+            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->unkF8, 26, 0, tmp_f0 * D_800E5550);
             break;
 
         case 89: //L80011C38
-            if(this->unk78 == 0)
+            if (this->unk78 == 0)
                 break;
-            if(this->unk64->unk70 > 0 || 0.0f < this->unk64->unk74){
+            if (this->unk64->unk70 > 0 || 0.0f < this->unk64->unk74) {
                 func_800135B8(this);
             }
             break;
         default:
             break;
-    }//L80011C88
+    } //L80011C88
 }
 #endif
 
@@ -831,10 +822,10 @@ void func_80012C30(void) {
     D_8011ADA4 = 0;
 }
 
-void func_80012C3C(Gfx** dlist) {
+void func_80012C3C(Gfx **dlist) {
     s32 i;
     Gfx *tmp;
-    for(i = 0; i<D_8011ADA4; i++){
+    for (i = 0; i < D_8011ADA4; i++) {
         gSPDisplayList((*dlist)++, D_8011AD78[i]);
     }
 }
@@ -858,7 +849,7 @@ void func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object) {
     f32 scale;
     u32 tmp2;
     u32 tmp3;
-    if(object->unk6 & 0x5000)
+    if (object->unk6 & 0x5000)
         return;
     func_800B76B8(2, object->unk4A);
     D_8011AE8C = *arg0;
@@ -877,30 +868,29 @@ void func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
 #else
 void func_80012E28(Object *this) {
-    s32         unused1;
-    Object_64  *sp_20;
-    f32         tmp_f2;
-    f32         sp_1c;
-    f32         tmp_f0;
-    
+    s32 unused1;
+    Object_64 *sp_20;
+    f32 tmp_f2;
+    f32 sp_1c;
+    f32 tmp_f0;
 
-    if(this->unk48 == 1){
-        
+    if (this->unk48 == 1) {
+
         sp_20 = this->unk64;
         this->y_rotation += sp_20->unk160;
         this->x_rotation += sp_20->unk162;
         this->z_rotation += sp_20->unk164;
         sp_1c = 0.0f;
-        if(sp_20->unk1D7 < 5) {
-            
+        if (sp_20->unk1D7 < 5) {
+
             sp_1c = func_800707F8(sp_20->unk164);
             tmp_f2 = sp_1c;
-            tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166)*tmp_f2;
-            
+            tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166) * tmp_f2;
+
             //bad regalloc of 0.0f
-            tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0*tmp_f0;
-            
-            sp_1c = (1.0f - tmp_f0)*24.0f + sp_20->unkD0;
+            tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
+
+            sp_1c = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
         }
         //L80012F0C
         this->y_position = this->y_position + sp_1c;
@@ -924,15 +914,14 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
 
 void render_object(Object *this) {
     func_80012F94(this);
-    if(this->unk6 & 0x8000){
+    if (this->unk6 & 0x8000) {
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
-    }
-    else{
-        if(this->descriptor_ptr->unk53 == 0)
+    } else {
+        if (this->descriptor_ptr->unk53 == 0)
             render_3d_model(this);
-        else if(this->descriptor_ptr->unk53 == 1)
+        else if (this->descriptor_ptr->unk53 == 1)
             render_3d_billboard(this);
-        else if(this->descriptor_ptr->unk53 == 4)
+        else if (this->descriptor_ptr->unk53 == 4)
             func_80011AD0(this);
     }
     func_80013548(this);
@@ -953,23 +942,22 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013DCC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
 
 void func_800142B8(void) {
-    s32 i =  D_8011AE60;
+    s32 i = D_8011AE60;
     s32 j;
     Object *currObj;
     Object_68 *curr_68;
 
-    for(; i < objCount; i++){
+    for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if( (currObj->unk6 & 0x8000) == 0  && currObj->descriptor_ptr->unk53 == 0){
-            for(j=0; j<currObj->descriptor_ptr->unk55; j++){
+        if ((currObj->unk6 & 0x8000) == 0 && currObj->descriptor_ptr->unk53 == 0) {
+            for (j = 0; j < currObj->descriptor_ptr->unk55; j++) {
                 curr_68 = currObj->unk68[j];
-                if( curr_68 != NULL && curr_68->unk20 > 0){
+                if (curr_68 != NULL && curr_68->unk20 > 0) {
                     curr_68->unk20 = curr_68->unk20-- & 0x03;
                 }
             }
         }
     }
-
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800143A8.s")
@@ -991,8 +979,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017978.s")
 
 u32 func_800179D0(void) {
     s16 i = 0;
-    while(i < 16) {
-        unk800179D0 *temp = &D_8011AFF4[i]; 
+    while (i < 16) {
+        unk800179D0 *temp = &D_8011AFF4[i];
         if (temp->unk0 != 0) {
             temp->unk0--;
         }
@@ -1017,9 +1005,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
 Object *func_80018C6C(void) {
     s32 i;
     Object *current_obj;
-    for(i=D_8011AE60; i < objCount; i++){
+    for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if(!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
+        if (!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
             return current_obj;
     }
     return NULL;
@@ -1108,7 +1096,7 @@ unknown8011AECC *func_8001BA00(s32 arg0) {
 unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1) {
     unknown8011AECC *val = &D_8011AECC[arg0];
     if (arg1 != 0 && val->unk3A != -1) {
-       val = &D_8011AECC[val->unk3A];
+        val = &D_8011AECC[val->unk3A];
     }
     return val;
 }
@@ -1136,7 +1124,7 @@ Object *get_object_struct(s32 indx) {
     if (gObjectCount == 0) {
         return NULL;
     }
-    if(indx < 0 || indx >= gObjectCount) {
+    if (indx < 0 || indx >= gObjectCount) {
         return NULL;
     }
     return (*gObjectStructArrayPtr)[indx];
@@ -1146,11 +1134,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB18.s")
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB68.s")
 
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BC54.s")
-
 
 u32 func_8001BD94(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011AEE0) {
@@ -1192,7 +1178,6 @@ u32 func_8001D214(s32 arg0) {
 }
 
 void func_8001D23C(s32 arg0, s32 arg1, s32 arg2) {
-    
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D258.s")
@@ -1204,10 +1189,10 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
     s16 environmentMappingEnabled;
     s32 dynamicLightingEnabled;
     s16 i;
-    
+
     dynamicLightingEnabled = 0;
     environmentMappingEnabled = 0;
-    
+
     for (i = 0; i < model->numberOfBatches; i++) {
         if (model->batches[i].unk6 != 0xFF) {
             dynamicLightingEnabled = -1; // This is a bit weird, but I guess it works.
@@ -1216,7 +1201,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
             environmentMappingEnabled = -1;
         }
     }
-    
+
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
         if (object->descriptor_ptr->unk71 != 0) {
@@ -1227,7 +1212,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
             calc_dynamic_lighting_for_object_2(object, model, arg2, arg3);
         }
     }
-    
+
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
         calc_env_mapping_for_object(model, object->z_rotation, object->x_rotation, object->y_rotation);
@@ -1246,7 +1231,7 @@ s32 *get_misc_asset(s32 index) {
     if (index < 0 || index >= gAssetsMiscTableLength) {
         return gAssetsMiscSection;
     }
-    return (s32*)&gAssetsMiscSection[gAssetsMiscTable[index]];
+    return (s32 *)&gAssetsMiscSection[gAssetsMiscTable[index]];
 }
 
 s32 func_8001E2EC(s32 arg0) {
@@ -1272,14 +1257,13 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
     *arg1 = -32000.0f;
     *arg2 = -32000.0f;
     *arg3 = -32000.0f;
-    for(i=0; i<objCount; i++){
+    for (i = 0; i < objCount; i++) {
         current_obj = gObjPtrList[i];
 
-        if( current_obj != NULL
-        && (current_obj->unk6 & 0x8000) == 0 
-        &&  current_obj->unk48 == 39
-        &&  current_obj->unk78 == arg0
-        ){
+        if (current_obj != NULL
+        && (current_obj->unk6 & 0x8000) == 0
+        && current_obj->unk48 == 39
+        && current_obj->unk78 == arg0) {
             *arg1 = current_obj->x_position;
             *arg2 = current_obj->y_position;
             *arg3 = current_obj->z_position;
@@ -1381,7 +1365,6 @@ f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
 
 // Unused?
 void func_800228DC(s32 arg0, s32 arg1, s32 arg2) {
-
 }
 
 void func_800228EC(s32 arg0) {
@@ -1405,7 +1388,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800230D0.s")
 s8 func_8002341C(void) {
     return D_8011AEF6;
 }
-#if 1 
+#if 1
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002342C.s")
 #else
 
@@ -1413,7 +1396,7 @@ extern f32 sqrtf(f32);
 
 //bad regalloc
 //finds furthest object (with some additional conditions)
-Object *func_8002342C(f32 x, f32 z){
+Object *func_8002342C(f32 x, f32 z) {
     Object *retval = NULL;
     s32 i;
     Object *currObj = NULL;
@@ -1421,15 +1404,15 @@ Object *func_8002342C(f32 x, f32 z){
     f32 z;
     f32 dist;
     f32 max = 0.0f;
-    
-    for(i=0; i<objCount; i++){
+
+    for (i = 0; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if((currObj->unk6 & 0x8000) == 0 && currObj->unk48 == 87){
+        if ((currObj->unk6 & 0x8000) == 0 && currObj->unk48 == 87) {
             x = currObj->x_position - x;
             z = currObj->z_position - z;
-            dist = sqrtf(x*x + z*z);
+            dist = sqrtf(x * x + z * z);
 
-            if(max < dist){
+            if (max < dist) {
                 max = dist;
                 retval = currObj;
             }
@@ -1725,251 +1708,250 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023E30.s")
 void run_object_loop_func(Object *obj, s32 arg1) {
     func_800B76B8(1, obj->unk4A);
     switch (obj->unk48) {
-    case 2:
-        func_80033DD0(obj, arg1);
-        break;
-    case 3:
-        func_800370D4(obj, arg1);
-        break;
-    case 4:
-        func_800377E4(obj, arg1);
-        break;
-    case 6:
-        func_800389B8(obj, arg1);
-        break;
-    case 25:
-        func_80038A78(obj, arg1);
-        break;
-    case 22:
-        func_80038BF4(obj, arg1);
-        break;
-    case 7:
-        func_80038F58(obj, arg1);
-        break;
-    case 10:
-        func_80039184(obj, arg1);
-        break;
-    case 11:
-        func_800391BC(obj, arg1);
-        break;
-    case 12:
-        func_800391FC(obj, arg1);
-        break;
-    case 13:
-        func_8003AD28(obj, arg1);
-        break;
-    case 30:
-        func_8003AE50(obj, arg1);
-        break;
-    case 41:
-        func_8003B174(obj, arg1);
-        break;
-    case 14:
-        func_8003B988(obj, arg1);
-        break;
-    case 15:
-        func_80030A74(obj);
-        break;
-    case 16:
-        func_8003D02C(obj, arg1);
-        break;
-    case 17:
-        func_8003E140(obj, arg1);
-        break;
-    case 23:
-        func_8003E5BC(obj, arg1);
-        break;
-    case 5:
-    case 18:
-        func_8003E630(obj, arg1);
-        break;
-    case 26:
-        func_8003CF98(obj, arg1);
-        break;
-    case 28:
-        func_80034B4C(obj, arg1);
-        break;
-    case 29:
-        func_80040148(obj, arg1);
-        break;
-    case 31:
-        func_800361E0(obj, arg1);
-        break;
-    case 32:
-        func_8003D5A0(obj, arg1);
-        break;
-    case 36:
-        func_80040448(obj, arg1);
-        break;
-    case 67:
-        func_80040570(obj, arg1);
-        break;
-    case 37:
-        func_80040820(obj, arg1);
-        break;
-    case 38:
-        func_8003CA68(obj, arg1);
-        break;
-    case 39:
-        func_8003CEA0(obj, arg1);
-        break;
-    case 40:
-        func_8003CF0C(obj, arg1);
-        break;
-    case 45:
-        func_80035260(obj, arg1);
-        break;
-    case 46:
-        func_8003564C(obj, arg1);
-        break;
-    case 47:
-        func_80035F6C(obj, arg1);
-        break;
-    case 50:
-    case 81:
-    case 85:
-    case 86:
-        func_80037CE8(obj, arg1);
-        break;
-    case 119:
-        func_80042CD0(obj, arg1);
-        break;
-    case 51:
-        func_80038710(obj, arg1);
-        break;
-    case 52:
-        func_800388D4(obj, arg1);
-        break;
-    case 53:
-        func_800387CC(obj, arg1);
-        break;
-    case 54:
-        func_8003833C(obj, arg1);
-        break;
-    case 55:
-        func_8003C7A4(obj, arg1);
-        break;
-    case 56:
-        func_800380F8(obj, arg1);
-        break;
-    case 57:
-    case 93:
-        func_8003596C(obj, arg1);
-        break;
-    case 58:
-        func_80035E34(obj, arg1);
-        break;
-    case 60:
-        func_800BFFDC(obj);
-        break;
-    case 61:
-        func_80040C54(obj, arg1);
-        break;
-    case 62:
-        func_80039330(obj, arg1);
-        break;
-    case 64:
-        obj_loop_world_key(obj, arg1); //arg1=speed
-        break;
-    case 65:
-        func_8003D3FC(obj, arg1);
-        break;
-    case 66:
-        func_8003D058(obj, arg1);
-        break;
-    case 68:
-        func_80037594(obj, arg1);
-        break;
-    case 69:
-        func_8003763C(obj, arg1);
-        break;
-    case 70:
-    case 72:
-    case 103:
-    case 104:
-        func_800381C0(obj, arg1);
-        break;
-    case 96:
-    case 97:
-    case 101:
-    case 102:
-        func_8003827C(obj, arg1);
-        break;
-    case 73:
-        func_80034B74(obj, arg1);
-        break;
-    case 74:
-        func_80034E9C(obj, arg1);
-        break;
-    case 75:
-        func_80042090(obj, arg1);
-        break;
-    case 76:
-        func_8003D2B8(obj, arg1);
-        break;
-    case 77:
-        func_8003B4BC(obj, arg1);
-        break;
-    case 78:
-        func_80034860(obj, arg1);
-        break;
-    case 79:
-        func_800345A0(obj, arg1);
-        break;
-    case 80:
-        func_8003ACA0(obj, arg1);
-        break;
-    case 82:
-        func_80035C50(obj, arg1);
-        break;
-    case 84:
-        func_80037D78(obj, arg1);
-        break;
-    case 88:
-    case 110:
-        func_8003DD14(obj, arg1);
-        break;
-    case 90:
-        func_80038AD4(obj, arg1);
-        break;
-    case 94:
-        func_80042160(obj, arg1);
-        break;
-    case 98:
-        func_80038DC4(obj, arg1);
-        break;
-    case 105:
-        func_80042178(obj, arg1);
-        break;
-    case 100:
-        func_800357D4(obj, arg1);
-        break;
-    case 108:
-    case 116:
-        func_80033F60(obj, arg1);
-        break;
-    case 109:
-        func_800422F0(obj, arg1);
-        break;
-    case 111:
-        func_8003C2E4(obj, arg1);
-        break;
-    case 113:
-        func_80037D08(obj, arg1);
-        break;
-    case 115:
-        func_80042998(obj, arg1);
-        break;
-    case 117:
-        func_80042A90(obj, arg1);
-        break;
+        case 2:
+            func_80033DD0(obj, arg1);
+            break;
+        case 3:
+            func_800370D4(obj, arg1);
+            break;
+        case 4:
+            func_800377E4(obj, arg1);
+            break;
+        case 6:
+            func_800389B8(obj, arg1);
+            break;
+        case 25:
+            func_80038A78(obj, arg1);
+            break;
+        case 22:
+            func_80038BF4(obj, arg1);
+            break;
+        case 7:
+            func_80038F58(obj, arg1);
+            break;
+        case 10:
+            func_80039184(obj, arg1);
+            break;
+        case 11:
+            func_800391BC(obj, arg1);
+            break;
+        case 12:
+            func_800391FC(obj, arg1);
+            break;
+        case 13:
+            func_8003AD28(obj, arg1);
+            break;
+        case 30:
+            func_8003AE50(obj, arg1);
+            break;
+        case 41:
+            func_8003B174(obj, arg1);
+            break;
+        case 14:
+            func_8003B988(obj, arg1);
+            break;
+        case 15:
+            func_80030A74(obj);
+            break;
+        case 16:
+            func_8003D02C(obj, arg1);
+            break;
+        case 17:
+            func_8003E140(obj, arg1);
+            break;
+        case 23:
+            func_8003E5BC(obj, arg1);
+            break;
+        case 5:
+        case 18:
+            func_8003E630(obj, arg1);
+            break;
+        case 26:
+            func_8003CF98(obj, arg1);
+            break;
+        case 28:
+            func_80034B4C(obj, arg1);
+            break;
+        case 29:
+            func_80040148(obj, arg1);
+            break;
+        case 31:
+            func_800361E0(obj, arg1);
+            break;
+        case 32:
+            func_8003D5A0(obj, arg1);
+            break;
+        case 36:
+            func_80040448(obj, arg1);
+            break;
+        case 67:
+            func_80040570(obj, arg1);
+            break;
+        case 37:
+            func_80040820(obj, arg1);
+            break;
+        case 38:
+            func_8003CA68(obj, arg1);
+            break;
+        case 39:
+            func_8003CEA0(obj, arg1);
+            break;
+        case 40:
+            func_8003CF0C(obj, arg1);
+            break;
+        case 45:
+            func_80035260(obj, arg1);
+            break;
+        case 46:
+            func_8003564C(obj, arg1);
+            break;
+        case 47:
+            func_80035F6C(obj, arg1);
+            break;
+        case 50:
+        case 81:
+        case 85:
+        case 86:
+            func_80037CE8(obj, arg1);
+            break;
+        case 119:
+            func_80042CD0(obj, arg1);
+            break;
+        case 51:
+            func_80038710(obj, arg1);
+            break;
+        case 52:
+            func_800388D4(obj, arg1);
+            break;
+        case 53:
+            func_800387CC(obj, arg1);
+            break;
+        case 54:
+            func_8003833C(obj, arg1);
+            break;
+        case 55:
+            func_8003C7A4(obj, arg1);
+            break;
+        case 56:
+            func_800380F8(obj, arg1);
+            break;
+        case 57:
+        case 93:
+            func_8003596C(obj, arg1);
+            break;
+        case 58:
+            func_80035E34(obj, arg1);
+            break;
+        case 60:
+            func_800BFFDC(obj);
+            break;
+        case 61:
+            func_80040C54(obj, arg1);
+            break;
+        case 62:
+            func_80039330(obj, arg1);
+            break;
+        case 64:
+            obj_loop_world_key(obj, arg1); //arg1=speed
+            break;
+        case 65:
+            func_8003D3FC(obj, arg1);
+            break;
+        case 66:
+            func_8003D058(obj, arg1);
+            break;
+        case 68:
+            func_80037594(obj, arg1);
+            break;
+        case 69:
+            func_8003763C(obj, arg1);
+            break;
+        case 70:
+        case 72:
+        case 103:
+        case 104:
+            func_800381C0(obj, arg1);
+            break;
+        case 96:
+        case 97:
+        case 101:
+        case 102:
+            func_8003827C(obj, arg1);
+            break;
+        case 73:
+            func_80034B74(obj, arg1);
+            break;
+        case 74:
+            func_80034E9C(obj, arg1);
+            break;
+        case 75:
+            func_80042090(obj, arg1);
+            break;
+        case 76:
+            func_8003D2B8(obj, arg1);
+            break;
+        case 77:
+            func_8003B4BC(obj, arg1);
+            break;
+        case 78:
+            func_80034860(obj, arg1);
+            break;
+        case 79:
+            func_800345A0(obj, arg1);
+            break;
+        case 80:
+            func_8003ACA0(obj, arg1);
+            break;
+        case 82:
+            func_80035C50(obj, arg1);
+            break;
+        case 84:
+            func_80037D78(obj, arg1);
+            break;
+        case 88:
+        case 110:
+            func_8003DD14(obj, arg1);
+            break;
+        case 90:
+            func_80038AD4(obj, arg1);
+            break;
+        case 94:
+            func_80042160(obj, arg1);
+            break;
+        case 98:
+            func_80038DC4(obj, arg1);
+            break;
+        case 105:
+            func_80042178(obj, arg1);
+            break;
+        case 100:
+            func_800357D4(obj, arg1);
+            break;
+        case 108:
+        case 116:
+            func_80033F60(obj, arg1);
+            break;
+        case 109:
+            func_800422F0(obj, arg1);
+            break;
+        case 111:
+            func_8003C2E4(obj, arg1);
+            break;
+        case 113:
+            func_80037D08(obj, arg1);
+            break;
+        case 115:
+            func_80042998(obj, arg1);
+            break;
+        case 117:
+            func_80042A90(obj, arg1);
+            break;
     }
     func_800B76B8(1, -1);
 }
 
 // Unused
 void func_8002458C(s32 arg0) {
-
 }
 
 s16 *func_80024594(s32 *arg0, s32 *arg1) {
@@ -1984,4 +1966,3 @@ void func_800245B4(s16 arg0) {
         D_800DC700 = 0;
     }
 }
-

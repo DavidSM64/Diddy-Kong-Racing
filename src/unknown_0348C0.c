@@ -27,25 +27,25 @@
 /************ .data ************/
 
 // Unsure about the signed/unsigned with these arrays.
-u16 D_800DC970[4] = { 
-    0x40FF, 0xFFFF, 0x0007, 0x0003 
-}; 
-u16 D_800DC978[4] = { 
-    0x0000, 0x0000, 0x001E, 0xFFFF 
+u16 D_800DC970[4] = {
+    0x40FF, 0xFFFF, 0x0007, 0x0003
+};
+u16 D_800DC978[4] = {
+    0x0000, 0x0000, 0x001E, 0xFFFF
 };
 u16 D_800DC980[20] = {
     0xFF00, 0x0100, 0x0000, 0xFFFF,
     0xFFFF, 0x0100, 0x0100, 0x0000,
     0xFFFF, 0xFFFF, 0x0100, 0xFF00,
     0x0000, 0xFFFF, 0xFFFF, 0xFF00,
-    0xFF00, 0x0000, 0xFFFF, 0xFFFF
+    0xFF00, 0x0000, 0xFFFF, 0xFFFF,
 };
 u16 D_800DC9A8[20] = {
     0x0000, 0x0040, 0xFFC0, 0x0000,
     0xFFC0, 0xFFC0, 0x0000, 0x0040,
     0x0020, 0x0000, 0xFFC0, 0x0020,
     0x0000, 0x0040, 0x0040, 0x0000,
-    0xFFC0, 0x0040, 0x0000, 0x0000
+    0xFFC0, 0x0040, 0x0000, 0x0000,
 };
 u16 D_800DC9D0[64] = {
     0x0000, 0x0301, 0x0004, 0x0000,
@@ -63,7 +63,7 @@ u16 D_800DC9D0[64] = {
     0x0002, 0x0305, 0x0001, 0x0000,
     0x0001, 0x0004, 0x0000, 0x0004,
     0x0002, 0x0504, 0x0001, 0x0000,
-    0x0000, 0x0004, 0x0000, 0x0000
+    0x0000, 0x0004, 0x0000, 0x0000,
 };
 s8 D_800DCA50[8] = {
     2, 5, 6, 3, 10, 8, 7, 9
@@ -89,10 +89,8 @@ s8 D_800DCA94[8] = {
 };
 
 s8 D_800DCA9C[12] = {
-    0x00, 0x01, 0x01, 0x02, 0x02, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00
+    0x00, 0x01, 0x01, 0x02, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
-
 u16 D_800DCAA8[64] = {
     0x0000, 0x0301, 0x0000, 0x0000,
     0xFFFF, 0xFFFF, 0x0000, 0xFFFF,
@@ -109,14 +107,14 @@ u16 D_800DCAA8[64] = {
     0x0002, 0x0305, 0xFFFF, 0x0000,
     0xFFFF, 0xFFFF, 0x0000, 0xFFFF,
     0x0002, 0x0504, 0xFFFF, 0x0000,
-    0x0000, 0xFFFF, 0x0000, 0x0000
+    0x0000, 0xFFFF, 0x0000, 0x0000,
 };
 u16 D_800DCB28[20] = {
     0xFFC0, 0x0000, 0x0020, 0xFFC0,
     0x0000, 0xFFE0, 0x0000, 0x0000,
     0x0020, 0x0000, 0x0000, 0xFFE0,
     0x0040, 0x0000, 0x0020, 0x0040,
-    0x0000, 0xFFE0, 0x0000, 0x0000
+    0x0000, 0xFFE0, 0x0000, 0x0000,
 };
 
 /*******************************/
@@ -154,7 +152,7 @@ void func_80033CC0(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
     }
     phi_f0 /= 64;
     arg0->scale = arg0->descriptor_ptr->unkC * phi_f0;
-    ((Object_50_80033CC0*)arg0->unk50)->unk0 = arg0->descriptor_ptr->unk4 * phi_f0;
+    ((Object_50_80033CC0 *)arg0->unk50)->unk0 = arg0->descriptor_ptr->unk4 * phi_f0;
     arg0->unk3A = arg1->unk8;
     arg0->y_rotation = arg1->unkA << 6 << 4;
     if (arg1->unkB) {
@@ -224,7 +222,6 @@ void func_80034B4C(unk80034B4C *arg0, s32 arg1) {
 }
 
 void func_80034B68(s32 arg0, s32 arg1) {
-
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034B74.s")
@@ -247,7 +244,6 @@ void func_8003522C(Object *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035260.s")
 
 void func_80035640(s32 arg0, s32 arg1) {
-
 }
 
 void func_8003564C(Object *arg0, s32 arg1) {
@@ -357,7 +353,7 @@ void func_80035E34(Object *obj, s32 arg1) {
     if (obj60->unk0 == 1) {
         s8 temp = someOtherObj64->unk1D6;
         if ((temp == 1) || (temp == 2)) {
-            someObj = (Object*)obj60->unk4;
+            someObj = (Object *)obj60->unk4;
             someObj->y_rotation = 0x4000;
             someObj->unk3A++;
             someObj->unk3A &= 1;
@@ -367,15 +363,15 @@ void func_80035E34(Object *obj, s32 arg1) {
 
 void func_80035EF8(Object *arg0, unk80035EF8 *arg1) {
     f32 phi_f0;
-    arg0->unk78 = (s32) arg1->unkE;
+    arg0->unk78 = (s32)arg1->unkE;
     arg0->unk7C.word = -1;
     arg0->y_rotation = arg1->unkC << 6 << 4; // Not sure about the values here.
-    phi_f0 = (f32) (arg1->unkA & 0xFF);
+    phi_f0 = (f32)(arg1->unkA & 0xFF);
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    arg0->scale = (f32) (arg0->descriptor_ptr->unkC * phi_f0);
+    arg0->scale = (f32)(arg0->descriptor_ptr->unkC * phi_f0);
 }
 
 void func_80035F6C(Object *obj, s32 arg1) {
@@ -404,7 +400,7 @@ void func_80035F6C(Object *obj, s32 arg1) {
             obj64->unkC = temp_t5;
             obj64->unk10 = 0x40010203;
             obj64->unk14 = temp_t4;
-            obj64->unk18 = (s32) (temp_t4 | temp_t5);
+            obj64->unk18 = (s32)(temp_t4 | temp_t5);
             obj64->unk1C = temp_t5;
         }
     }
@@ -516,16 +512,13 @@ void func_80037D08(unk80037D08_arg0 *arg0, s32 arg1) {
 }
 
 void func_80037D54(s32 arg0, s32 arg1) {
-
 }
 
 /* Unused? */
 void func_80037D60(s32 arg0, s32 arg1) {
-
 }
 
 void func_80037D6C(s32 arg0, s32 arg1) {
-
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80037D78.s")
@@ -598,7 +591,7 @@ void func_8003827C(Object *obj, s32 arg1) {
     Object_64_8003827C *obj64 = obj->unk64;
     if (obj64->unk24 == 0) {
         if (obj64->unk38 != 0) {
-            obj64->unk24 = (s16) (obj64->unk38 & 0xFF);
+            obj64->unk24 = (s16)(obj64->unk38 & 0xFF);
         }
     }
     if (obj64->unk24 != 0) {
@@ -685,7 +678,7 @@ void func_800388D4(Object *arg0, s32 arg1) {
     } else {
         arg0->unk6 &= ~0x4000;
     }
-    
+
     obj4C = arg0->unk4C;
     if (obj4C->unk13 < ((arg0->unk78 >> 16) & 0xFF)) {
         playerObj = obj4C->unk0;
@@ -700,7 +693,6 @@ void func_800388D4(Object *arg0, s32 arg1) {
 }
 
 void func_800389AC(s32 arg0, s32 arg1) {
-
 }
 
 void func_800389B8(Object *obj, s32 arg1) {
@@ -719,7 +711,6 @@ void func_800389B8(Object *obj, s32 arg1) {
 }
 
 void func_80038A6C(s32 arg0, s32 arg1) {
-
 }
 
 void func_80038A78(Object *arg0, s32 arg1) {
@@ -731,13 +722,12 @@ void func_80038A78(Object *arg0, s32 arg1) {
 }
 
 void func_80038AC8(s32 arg0, s32 arg1) {
-
 }
 
 void func_80038AD4(Object *arg0, s32 arg1) {
     f32 temp_f2;
 
-    temp_f2 = (f32) arg1;
+    temp_f2 = (f32)arg1;
     if (osTvType == TV_TYPE_PAL) {
         temp_f2 *= 1.2;
     }
@@ -784,7 +774,7 @@ void func_80038D58(Object *arg0, s32 arg1) {
 void func_80038DC4(Object *arg0, s32 arg1) {
     if (arg0->unk78 != 0) {
         Object_3C_80038DC4 *temp = arg0->unk3C_a.unk3C;
-        if(arg0->unk4C->unk13 < 0x78) {
+        if (arg0->unk4C->unk13 < 0x78) {
             func_8006F338(temp->unk8);
             arg0->unk78 = 0;
             func_80001D04(0x30, 0);
@@ -826,7 +816,6 @@ void func_80039160(unk80039160 *arg0, s8 *arg1) {
 }
 
 void func_80039184(s32 arg0, s32 arg1) {
-
 }
 
 void func_80039190(unk80039190 *arg0, u8 *arg1) {
@@ -837,7 +826,6 @@ void func_80039190(unk80039190 *arg0, u8 *arg1) {
 }
 
 void func_800391BC(s32 arg0, s32 arg1) {
-
 }
 
 void func_800391C8(Object *arg0, s32 arg1) {
@@ -849,7 +837,7 @@ void func_800391C8(Object *arg0, s32 arg1) {
 
 void func_800391FC(Object *obj, s32 arg1) {
     s32 sp2C;
-    
+
     if (obj->unk78 > 0) {
         obj->unk78 -= arg1;
         arg1 *= 2;
@@ -901,7 +889,6 @@ void func_8003AC3C(u16 arg0, s32 arg1) {
 }
 
 void func_8003ACA0(s32 arg0, s32 arg1) {
-
 }
 
 f32 func_8003ACAC(void) {
@@ -920,7 +907,6 @@ void func_8003ACBC(Object *arg0, u8 *arg1, s32 arg2) {
 }
 
 void func_8003AD28(s32 arg0, s32 arg1) {
-
 }
 
 void func_8003AD34(Object *obj, LevelObjectEntry8003AD34 *arg1) {
@@ -1045,11 +1031,9 @@ void func_8003CEA0(Object *arg0, s32 arg1) {
 }
 
 void func_8003CF00(s32 arg0, s32 arg1) {
-
 }
 
 void func_8003CF0C(s32 arg0, s32 arg1) {
-
 }
 
 void func_8003CF18(unk8003CF18 *arg0, u8 *arg1) {
@@ -1082,7 +1066,6 @@ void func_8003CFE0(s32 arg0, u8 *arg1) {
 }
 
 void func_8003D02C(s32 arg0, s32 arg1) {
-
 }
 
 void func_8003D038(unk8003D038 *arg0, s8 *arg1) {
@@ -1093,7 +1076,6 @@ void func_8003D038(unk8003D038 *arg0, s8 *arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D058.s")
 
 void func_8003D2AC(s32 arg0, s32 arg1) {
-
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D2B8.s")
@@ -1123,7 +1105,7 @@ void func_8003DBA0(Object *obj, s32 arg1) {
     obj->unk4C->unk10 = 0x1E;
     obj->unk78 = 3;
     obj->unk7C.word = 16;
-    if(!is_in_tracks_mode()) {
+    if (!is_in_tracks_mode()) {
         if (func_8000E1DC() && is_in_adventure_two()) {
             obj->unk78 = 0;
         } else {
@@ -1142,7 +1124,7 @@ void func_8003DC5C(Object *obj, s32 arg1) {
     obj->unk4C->unk10 = 0x1E;
     obj->unk78 = 3;
     obj->unk7C.word = 0;
-    if(!is_in_tracks_mode()) {
+    if (!is_in_tracks_mode()) {
         if (func_8000E1DC() && !is_in_adventure_two()) {
             obj->unk78 = 0;
         } else {
@@ -1177,11 +1159,11 @@ void func_8003DE74(Object *obj, unk8003DE74 *arg1) {
 void obj_loop_world_key(Object *worldKeyObj, s32 speed) {
     Settings *settings;
     Object *playerObj;
-    
+
     // Check if the player is near the key
     // "worldKeyObj->unk4C->unk13" is the player's distance from the key (Up to 255).
     if (worldKeyObj->unk4C->unk13 < WORLD_KEY_GRAB_CHECK_RADIUS) {
-        // "worldKeyObj->unk4C->unk0" is only set when the player is within 255 units of 
+        // "worldKeyObj->unk4C->unk0" is only set when the player is within 255 units of
         // the key object, otherwise it is NULL.
         playerObj = worldKeyObj->unk4C->unk0;
         if (playerObj != NULL) {
@@ -1192,13 +1174,13 @@ void obj_loop_world_key(Object *worldKeyObj, s32 speed) {
                     play_sound(SOUND_WORLD_KEY_GRAB);
                     settings = get_settings();
                     settings->keys |= 1 << worldKeyObj->unk78; // Set key flag
-                    gParticlePtrList_addObject(worldKeyObj); // Makes the key unload.
+                    gParticlePtrList_addObject(worldKeyObj);   // Makes the key unload.
                 }
             }
         }
     }
-    
-    // Rotate world key 
+
+    // Rotate world key
     worldKeyObj->y_rotation += speed * 256;
 }
 
@@ -1206,11 +1188,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003DFCC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E140.s")
 
 void func_8003E5B0(s32 arg0, s32 arg1) {
-
 }
 
 void func_8003E5BC(s32 arg0, s32 arg1) {
-
 }
 
 void func_8003E5C8(Object *arg0, s32 arg1) {
@@ -1307,7 +1287,7 @@ void func_8003FEF4(Object *arg0, LevelObjectEntry8003FEF4 *arg1) {
 
 void func_8004001C(Object *arg0, LevelObjectEntry8004001C *entry) {
     s32 temp;
-    Object_64_8004001C *obj64 = (Object_64_8004001C*)arg0->unk64;
+    Object_64_8004001C *obj64 = (Object_64_8004001C *)arg0->unk64;
     obj64->unk2 = entry->unk8;
     temp = entry->unk9;
     obj64->unk4 = temp & 0xFF;
@@ -1331,8 +1311,8 @@ void func_800400A4(Object *obj, LevelObjectEntry800400A4 *arg1, s32 arg2) {
     if (obj64->unk0 >= numberOfTexturesInLevel) {
         obj64->unk0 = numberOfTexturesInLevel - 1;
     }
-    obj64->unk4 = (s16) arg1->unkA;
-    obj64->unk6 = (s16) arg1->unkB;
+    obj64->unk4 = (s16)arg1->unkA;
+    obj64->unk6 = (s16)arg1->unkB;
     if (arg2 == 0) {
         obj64->unk8 = 0;
         obj64->unkA = 0;
@@ -1434,15 +1414,12 @@ void func_8004210C(unk8004210C *arg0, s8 *arg1) {
 }
 
 void func_80042150(s32 arg0, s32 arg1, s32 arg2) {
-
 }
 
 void func_80042160(s32 arg0, s32 arg1) {
-
 }
 
 void func_8004216C(s32 arg0, s32 arg1) {
-
 }
 
 void func_80042178(Object *obj, s32 arg1) {
@@ -1451,7 +1428,7 @@ void func_80042178(Object *obj, s32 arg1) {
     unk80042178 sp20;
 
     obj3C = obj->unk3C_a.unk3C;
-    if (func_80016DE8(obj->x_position, 0, obj->z_position, (f32) obj3C->unk8, 1, &sp20) > 0) {
+    if (func_80016DE8(obj->x_position, 0, obj->z_position, (f32)obj3C->unk8, 1, &sp20) > 0) {
         obj->unk74 = obj3C->unkA;
     } else {
         obj->unk74 = 0;
@@ -1461,8 +1438,8 @@ void func_80042178(Object *obj, s32 arg1) {
 
 void func_80042210(Object *obj, LevelObjectEntry80042210 *arg1) {
     Object_64_80042210 *obj64;
-    
-    obj64 = (Object_64_80042210*)obj->unk64;
+
+    obj64 = (Object_64_80042210 *)obj->unk64;
     obj64->unk15 = arg1->unkA;
     obj64->unk0 = obj->x_position;
     obj64->unk4 = obj->y_position;
@@ -1474,7 +1451,7 @@ void func_80042210(Object *obj, LevelObjectEntry80042210 *arg1) {
     obj64->unk24 = obj->z_position;
     obj64->unk19 = 0;
     obj64->unk30 = 1.0f;
-    
+
     if (obj64->unk15) {
         obj->unk3A = 1;
         if (is_drumstick_unlocked() || (get_settings()->trophies & 0xFF) != 0xFF) {
@@ -1493,7 +1470,7 @@ void func_80042998(s32 arg0, s32 arg1) {
 
     func_8001F460(arg0, arg1, arg0);
     obj = func_8000BF44(-1);
-    
+
     if (obj != NULL) {
         obj64 = obj->unk64;
         obj->unk78 = 0;

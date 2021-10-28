@@ -31,15 +31,15 @@ u8 D_800E2EF4[196] = {
 };
 
 Gfx D_800E2FB8[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
-    gsDPSetTextureDetail(G_TD_CLAMP), 
+    gsDPSetTextureDetail(G_TD_CLAMP),
     gsDPSetTexturePersp(G_TP_NONE),
     gsDPSetTextureFilter(G_TF_BILERP),
-    gsDPSetTextureConvert(G_TC_FILT), 
-    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetPrimColor(0, 0, 0, 0, 0, 0),

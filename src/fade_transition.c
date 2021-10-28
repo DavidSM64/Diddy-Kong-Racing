@@ -27,15 +27,15 @@ s32 *D_800E31C8[2] = { NULL, NULL };
 s32 D_800E31D0[2] = { 0, 0 };
 
 Gfx D_800E31D8[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
-    gsDPSetTextureDetail(G_TD_CLAMP), 
+    gsDPSetTextureDetail(G_TD_CLAMP),
     gsDPSetTexturePersp(G_TP_NONE),
     gsDPSetTextureFilter(G_TF_BILERP),
-    gsDPSetTextureConvert(G_TC_FILT), 
-    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetRenderMode(G_RM_CLD_SURF, G_RM_CLD_SURF2),
     gsSPEndDisplayList(),
 };
@@ -295,7 +295,7 @@ s32 func_800C0494(s32 arg0) {
     } else if (arg0 >= 6) {
         arg0 = 5;
     }
-    
+
     if (D_800E31AC != 0) {
         if (D_800E31B0 == 0) {
             D_800E31AC = -1;
@@ -360,7 +360,7 @@ void render_fade_transition(s32 dlist, s32 arg1, s32 arg2) {
                 render_fade_disabled(dlist, arg1, arg2);
                 break;
         }
-        
+
         func_80066CDC(dlist, arg1);
     }
 }
@@ -380,10 +380,10 @@ void func_800C0724(void) {
 void func_800C0780(FadeTransition *transition) {
     if (transition->type & 0x80) {
         D_8012A750 = 255.0f;
-        D_8012A754 = -255.0f / (f32) D_800E31B0;
+        D_8012A754 = -255.0f / (f32)D_800E31B0;
     } else {
         D_8012A750 = 0.0f;
-        D_8012A754 = 255.0f / (f32) D_800E31B0;
+        D_8012A754 = 255.0f / (f32)D_800E31B0;
     }
     D_800E31AC = 1;
 }
@@ -429,7 +429,7 @@ void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
     u8 *addr, *addr2;
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, D_800E3648);
-    addr  = (D_800E31C0[D_800E31D0[0]] + 0x80000000);
+    addr = (D_800E31C0[D_800E31D0[0]] + 0x80000000);
     addr2 = (D_800E31C8[D_800E31D0[0]] + 0x80000000);
     gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
     gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
@@ -486,27 +486,27 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C2640.s")
 #ifdef NON_MATCHING
 void func_800C27A0(s32 arg0) {
     //do {
-        if (D_800E31B0 > 0) {
-            gLastFadeRed += D_8012A744 * arg0;
-            gLastFadeGreen += D_8012A748 * arg0;
-            gLastFadeBlue += D_8012A74C * arg0;
-            if (arg0 >= D_800E31B0) {
-                gLastFadeRed = gCurFadeRed << 16;
-                gLastFadeGreen = gCurFadeGreen << 16;
-                gLastFadeBlue = gCurFadeBlue << 16;
-                D_800E31B0 = 0;
-                arg0 -= D_800E31B0;
-            } else {
-                D_800E31B0 -= arg0;
-            }
+    if (D_800E31B0 > 0) {
+        gLastFadeRed += D_8012A744 * arg0;
+        gLastFadeGreen += D_8012A748 * arg0;
+        gLastFadeBlue += D_8012A74C * arg0;
+        if (arg0 >= D_800E31B0) {
+            gLastFadeRed = gCurFadeRed << 16;
+            gLastFadeGreen = gCurFadeGreen << 16;
+            gLastFadeBlue = gCurFadeBlue << 16;
+            D_800E31B0 = 0;
+            arg0 -= D_800E31B0;
         } else {
-            D_800E31B4 -= arg0;
-            if (D_800E31B4 != 0xFFFF) {
-                if ((D_800E31B4 & 0xFFFF) <= 0) {
-                    D_800E31B4 = 0;
-                }
+            D_800E31B0 -= arg0;
+        }
+    } else {
+        D_800E31B4 -= arg0;
+        if (D_800E31B4 != 0xFFFF) {
+            if ((D_800E31B4 & 0xFFFF) <= 0) {
+                D_800E31B4 = 0;
             }
         }
+    }
     //} while(1 == 0);
 }
 #else

@@ -22,8 +22,8 @@ s32 D_8012AAD8;
 /******************************/
 
 void func_800C6170(void) {
-    D_800E3760 = (huft*)allocate_from_main_pool_safe(0x2800, COLOR_TAG_BLACK);
-    gAssetAddress = (s32*)allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
+    D_800E3760 = (huft *)allocate_from_main_pool_safe(0x2800, COLOR_TAG_BLACK);
+    gAssetAddress = (s32 *)allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
 }
 
 /**
@@ -51,11 +51,11 @@ s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
  * Returns the pointer to the decompressed data.
  */
 u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput) {
-    gzip_inflate_input = compressedInput + 5; // The compression header is 5 bytes. 
+    gzip_inflate_input = compressedInput + 5; // The compression header is 5 bytes.
     gzip_inflate_output = decompressedOutput;
     gzip_num_bits = 0;
     gzip_bit_buffer = 0;
-    while(gzip_inflate_block() != 0) {} // Keep calling gzip_inflate_block() until it returns 0.
+    while (gzip_inflate_block() != 0) {} // Keep calling gzip_inflate_block() until it returns 0.
     return decompressedOutput;
 }
 

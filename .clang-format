@@ -1,14 +1,14 @@
 IndentWidth: 4
 Language: Cpp
 UseTab: Never
-ColumnLimit: 132
+ColumnLimit: 0
 PointerAlignment: Right
 BreakBeforeBraces: Attach
 SpaceAfterCStyleCast: false
 Cpp11BracedListStyle: false
 IndentCaseLabels: true
-BinPackArguments: true
-BinPackParameters: true
+BinPackArguments: false
+BinPackParameters: false
 AlignAfterOpenBracket: Align
 AlignOperands: true
 BreakBeforeTernaryOperators: true

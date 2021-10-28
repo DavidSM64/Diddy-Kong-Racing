@@ -22,19 +22,18 @@ s32 D_800DC870 = 0; // Currently unknown, might be a different type.
 unknown800DC874 D_800DC874 = { -128, 40, -1 };
 unknown800DC874 D_800DC87C = { -125, 70, -1 };
 
-f32 D_800DC884[10] = { 
-    0.0f, 0.125f, 0.25f, 0.375f,
-    0.5f, 0.625f, 0.75f, 0.875f
+f32 D_800DC884[10] = {
+    0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
 };
 
 f32 D_800DC8AC[27] = {
-    50.0f, 0.0f, 32.0f, -50.0f, 
-    0.0f, 32.0f, -50.0f, 100.0f, 
-    32.0f, 0.0f, 0.0f, 32.0f, 
-    130.0f, 60.0f, -68.0f, 130.0f, 
-    -60.0f, -68.0f, 0.0f, 0.0f, 
-    32.0f, -130.0f, -60.0f, -68.0f, 
-    -130.0f, 60.0f, -68.0f
+    50.0f, 0.0f, 32.0f, -50.0f,
+    0.0f, 32.0f, -50.0f, 100.0f,
+    32.0f, 0.0f, 0.0f, 32.0f,
+    130.0f, 60.0f, -68.0f, 130.0f,
+    -60.0f, -68.0f, 0.0f, 0.0f,
+    32.0f, -130.0f, -60.0f, -68.0f,
+    -130.0f, 60.0f, -68.0f,
 };
 
 LevelModel *gCurrentLevelModel = NULL;
@@ -44,10 +43,8 @@ s32 D_800DC920 = -1;
 s32 D_800DC924 = 0;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
-s8 D_800DC92C[24] = { 
-    0, 1, 4, 1, 2, 4, 2, 3, 
-    4, 3, 0, 4, 5, 6, 1, 1, 
-    0, 5, 3, 2, 7, 7, 8, 3
+s8 D_800DC92C[24] = {
+    0, 1, 4, 1, 2, 4, 2, 3, 4, 3, 0, 4, 5, 6, 1, 1, 0, 5, 3, 2, 7, 7, 8, 3
     // There may or may not be extra zeroes here.
 };
 
@@ -174,7 +171,6 @@ s16 D_8011D4B8;
 s16 D_8011D4BA;
 s32 D_8011D4BC;
 
-
 /******************************/
 
 s32 func_800249E0(s32 arg0) {
@@ -195,27 +191,27 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     D_8011B104 = 0;
     D_8011B108 = 0;
     D_8011B10C = 0;
-    if(gCurrentLevelHeader2->race_type == 6 || gCurrentLevelHeader2->race_type == 7){
+    if (gCurrentLevelHeader2->race_type == 6 || gCurrentLevelHeader2->race_type == 7) {
         D_8011B0F8 = 1;
     }
     func_8002C0C4(arg0);
 
-    if(arg2 < 2){
+    if (arg2 < 2) {
         D_8011D384 = 0;
-        for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++){
-            if(gCurrentLevelModel->segments[i].unk2B != 0){
+        for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
+            if (gCurrentLevelModel->segments[i].unk2B != 0) {
                 D_8011D384++;
                 gCurrentLevelModel->segments[i].unk2B = 1;
             }
         }
     }
-    if(is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == 0 || gCurrentLevelHeader2->race_type & 0x40)){
+    if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == 0 || gCurrentLevelHeader2->race_type & 0x40)) {
         tmp_a2 = 2;
-    }else{
+    } else {
         tmp_a2 = arg2;
         tmp_a2++;
     }
-    if(D_8011D384){
+    if (D_8011D384) {
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
     }
     func_8006652C(arg2);
@@ -223,34 +219,33 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     func_80011390();
-    func_8000C8F8(arg6,0);
-    func_8000C8F8(arg5,1);
+    func_8000C8F8(arg6, 0);
+    func_8000C8F8(arg5, 1);
     D_8011D37C = arg2;
     func_8000CC7C(arg3, arg4, arg2);
     func_8000B020(72, 64);
-    if(arg0 == 0 && arg4 == 0){
+    if (arg0 == 0 && arg4 == 0) {
         func_800C01D8(&D_800DC87C);
-    }
-    else{
+    } else {
         func_800C01D8(&D_800DC874);
     }
     func_8006652C(D_8011D37C);
     D_8011B0FC = 0;
     i = 0;
-    do{
+    do {
         D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOR_TAG_YELLOW);
         D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOR_TAG_YELLOW);
         D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOR_TAG_YELLOW);
-    }while(&D_8011D338[++i] != &D_8011D348);
-    
+    } while (&D_8011D338[++i] != &D_8011D348);
+
     D_8011B0C8 = 0;
-    func_8002D8DC(1,1,0);
-    func_8002D8DC(2,2,0);
+    func_8002D8DC(1, 1, 0);
+    func_8002D8DC(2, 2, 0);
     D_8011B0C8 = 1;
-    func_8002D8DC(1,1,0);
-    func_8002D8DC(2,2,0);
+    func_8002D8DC(1, 1, 0);
+    func_8002D8DC(2, 2, 0);
     D_8011B0C8 = 0;
-    if(gCurrentLevelHeader2->unkB7){
+    if (gCurrentLevelHeader2->unkB7) {
         D_8011B0E1 = gCurrentLevelHeader2->unkB4;
         D_8011B0E2 = gCurrentLevelHeader2->unkB5;
         D_8011B0E3 = gCurrentLevelHeader2->unkB6;
@@ -258,7 +253,6 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     }
 }
 #endif
-
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80024D54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
@@ -310,7 +304,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
 #else
-void func_800289B8(void){
+void func_800289B8(void) {
     u8 sp_2f = gCurrentLevelHeader2->unkC1;
     u8 sp_2e = gCurrentLevelHeader2->unkC2;
     u8 sp_2d = gCurrentLevelHeader2->unkC3;
@@ -325,19 +319,19 @@ void func_800289B8(void){
 #endif
 
 void render_skydome(void) {
-    unk80120AC0 * v0_some_struct;
-    if(D_8011B0B8 == NULL)
+    unk80120AC0 *v0_some_struct;
+    if (D_8011B0B8 == NULL)
         return;
 
     v0_some_struct = func_80069D20();
-    if(gCurrentLevelHeader2->unk49 == 0){
+    if (gCurrentLevelHeader2->unk49 == 0) {
         D_8011B0B8->x_position = v0_some_struct->x_position;
         D_8011B0B8->y_position = v0_some_struct->y_position;
         D_8011B0B8->z_position = v0_some_struct->z_position;
     }
 
     func_80068408(&D_8011B0A0, &D_8011B0A4);
-    if(D_8011B0DC){
+    if (D_8011B0DC) {
         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8);
     }
 }
@@ -346,7 +340,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028CD0.s")
 #else
 
 #endif
-
 
 void func_80028FA0(s32 arg0) {
     D_8011B0FC = arg0;
@@ -367,7 +360,7 @@ void render_level_geometry_and_objects(void) {
     s32 s0;
     Object *obj;
     s32 sp44;
-    
+
     func_80012C30();
     if (get_settings()->courseId == 0x24) { // 0x24 = Opening sequence area
         D_8011B0FC = 1;
@@ -380,16 +373,16 @@ void render_level_geometry_and_objects(void) {
         sp168 = 1;
         spD8[0] = 0;
     }
-    
+
     for (i = 1; i <= gCurrentLevelModel->numberOfSegments; i++) {
         sp58[i] = FALSE;
     }
     sp58[0] = TRUE;
-    
+
     if (D_8011B0E0 != 0) {
         for (i = 0; i < sp168; i++) {
-            render_level_segment(spD8[i], 0);  // Render opaque segments
-            sp58[spD8[i]+1] = TRUE;
+            render_level_segment(spD8[i], 0); // Render opaque segments
+            sp58[spD8[i] + 1] = TRUE;
         }
     }
     if (gCurrentLevelModel->numberOfSegments < 2) {
@@ -397,7 +390,7 @@ void render_level_geometry_and_objects(void) {
     }
     func_8007B3D0(&D_8011B0A0);
     func_80015348(sp160, sp16C - 1);
-    
+
     sp158 = 0x200 << (func_80066220() & 1);
     for (i = sp160; i < sp16C; i++) {
         obj = get_object(i);
@@ -405,8 +398,7 @@ void render_level_geometry_and_objects(void) {
         objFlags = obj->unk6;
         if (objFlags & 0x80) {
             s0 = 0;
-        }
-        else if (!(objFlags & 0x8000)) {
+        } else if (!(objFlags & 0x8000)) {
             s0 = obj->unk39;
         }
         if (objFlags & sp158) {
@@ -424,7 +416,7 @@ void render_level_geometry_and_objects(void) {
             }
         }
     }
-    
+
     i = sp16C - 1;
     if (i >= sp160) {
         sp44 = sp160 - 1;
@@ -448,7 +440,7 @@ void render_level_geometry_and_objects(void) {
                 }
             }
             i--;
-        } while(i != sp44);
+        } while (i != sp44);
     }
     i = sp168 - 1;
     if (D_8011B0E0 != 0) {
@@ -463,7 +455,7 @@ void render_level_geometry_and_objects(void) {
     func_8007B3D0(&D_8011B0A0);
     func_8007B4C8(&D_8011B0A0, 0, 0xA);
     func_80012C3C(&D_8011B0A0);
-    
+
     i = sp16C - 1;
     if (i >= sp160) {
         sp44 = sp160 - 1;
@@ -503,7 +495,7 @@ void render_level_geometry_and_objects(void) {
                 }
             }
             i--;
-        } while(i != sp44);
+        } while (i != sp44);
     }
     if (D_800DC924 && func_80027568()) {
         func_8002581C(&spD8, sp168, func_80066220());
@@ -539,7 +531,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 textureIndex;
     s32 textureFlags;
     s32 temp;
-    
+
     if (nonOpaque && (D_8011D384 != 0)) {
         sp78 = func_800B9228(segment);
     } else {
@@ -552,8 +544,8 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         sp70 = segment->unk40;
         i = 0;
     }
-    
-    for(; i < sp70; i++) {
+
+    for (; i < sp70; i++) {
         batchInfo = &segment->batches[i];
         flags = batchInfo->flags;
         textureFlags = 0;
@@ -588,8 +580,8 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                 vertices = &segment->vertices[temp_v0];
                 triangles = &segment->triangles[temp_v1];
                 levelHeaderIndex = (flags >> 28) & 7;
-                if (levelHeaderIndex != 0) { // This is unused, so this should always be false.
-                    lvlHeader70 = gCurrentLevelHeader2->unk70;//gCurrentLevelHeader2[levelHeaderIndex].unk70;
+                if (levelHeaderIndex != 0) {                   // This is unused, so this should always be false.
+                    lvlHeader70 = gCurrentLevelHeader2->unk70; //gCurrentLevelHeader2[levelHeaderIndex].unk70;
                     gDPSetEnvColor(D_8011B0A0++, lvlHeader70->red, lvlHeader70->green, lvlHeader70->blue, lvlHeader70->alpha);
                 } else {
                     gDPSetEnvColor(D_8011B0A0++, 255, 255, 255, 0);
@@ -609,7 +601,6 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                     vertices += 0x80000000;
                     gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices);
                     gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, hasTexture);
-                    
                 }
             }
         }
@@ -624,8 +615,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex) {
     BspTreeNode *curNode;
     s32 camValue;
-    
-    while(TRUE) {
+
+    while (TRUE) {
         curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
         if (curNode->splitType == 0) {
             camValue = D_8011B0B0->x_position; // Camera X
@@ -695,12 +686,12 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     y = obj->y_position;
     z = obj->z_position;
     bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
-    if ((x < (bb->unk6 + 25)) && ((bb->unk0 - 25) < x) && 
-        (z < (bb->unkA + 25)) && ((bb->unk4 - 25) < z) && 
+    if ((x < (bb->unk6 + 25)) && ((bb->unk0 - 25) < x) &&
+        (z < (bb->unkA + 25)) && ((bb->unk4 - 25) < z) &&
         (y < (bb->unk8 + 25)) && ((bb->unk2 - 25) < y)) {
         return TRUE;
     }
-    
+
     return FALSE;
 }
 #else
@@ -719,11 +710,11 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     if (gCurrentLevelModel == NULL) {
         return -1;
     }
-    
+
     minVal = 1000000;
     result = -1;
-    
-    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
+
+    for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
         if (((s32)xPos < bb->unk6) && (bb->unk0 < (s32)xPos) && ((s32)zPos < bb->unkA) && (bb->unk4 < (s32)zPos)) {
             heightDiff = (s32)yPos - ((bb->unk8 + bb->unk2) >> 1);
@@ -736,23 +727,21 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
             }
         }
     }
-    
+
     return result;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/get_level_segment_index_from_position.s")
 #endif
 
-
 s32 func_8002A05C(s32 arg0, s32 arg1, s32 *arg2) {
     s32 i;
     s32 cnt = 0;
-    LevelModelSegmentBoundingBox * a0;
-    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++){
+    LevelModelSegmentBoundingBox *a0;
+    for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
         a0 = gCurrentLevelModel->segmentsBoundingBoxes + i;
-        if(arg0 < a0->unk6 + 4 && a0->unk0 - 4 < arg0
-        && arg1 < a0->unkA + 4 && a0->unk4 - 4 < arg1
-        ){
+        if (arg0 < a0->unk6 + 4 && a0->unk0 - 4 < arg0
+         && arg1 < a0->unkA + 4 && a0->unk4 - 4 < arg1) {
             *arg2 = i;
             cnt++;
             arg2++;
@@ -765,40 +754,40 @@ s32 func_8002A134(s32 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s
     s32 phi_v1;
     s32 i;
     LevelModelSegmentBoundingBox *bb;
-    
+
     arg1 -= 4;
     arg2 -= 4;
     arg3 -= 4;
     arg4 += 4;
     arg5 += 4;
     arg6 += 4;
-    
+
     i = 0;
     phi_v1 = 0;
-    
-    while(i < gCurrentLevelModel->numberOfSegments) {
+
+    while (i < gCurrentLevelModel->numberOfSegments) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
-        if ((bb->unk6 >= arg1) && (arg4 >= bb->unk0) && 
-            (bb->unkA >= arg3) && (arg6 >= bb->unk4) && 
+        if ((bb->unk6 >= arg1) && (arg4 >= bb->unk0) &&
+            (bb->unkA >= arg3) && (arg6 >= bb->unk4) &&
             (bb->unk8 >= arg2) && (arg5 >= bb->unk2)) {
             phi_v1++;
             *arg0++ = i;
         }
         i++;
     }
-    
+
     return phi_v1;
 }
 
 LevelModelSegment *func_8002A2C8(s32 arg0) {
-    if(arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
+    if (arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
-    
+
     return gCurrentLevelModel->segments + arg0;
 }
 
 LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0) {
-    if(arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
+    if (arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
 
     return gCurrentLevelModel->segmentsBoundingBoxes + arg0;
@@ -813,16 +802,16 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
     s32 i, j;
     s32 s2;
     f32 temp0, temp1, temp2, temp3;
-    
+
     j = 0;
-    while(TRUE) {
+    while (TRUE) {
         temp0 = D_8011D0F8[j].unk0;
         temp1 = D_8011D0F8[j].unk4;
         temp2 = D_8011D0F8[j].unk8;
         temp3 = D_8011D0F8[j].unkC;
         i = 0;
         s2 = FALSE;
-        while(i < 8 && !s2) {
+        while (i < 8 && !s2) {
             if (i & 1) {
                 sp48 = bb->unk0 * temp0;
             } else {
@@ -881,7 +870,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002B0F4.s")
 
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     LevelModelSegment *seg;
-    
+
     if (arg2 != NULL) {
         arg2[0] = 0.0f;
         arg2[2] = 0.0f;
@@ -907,10 +896,10 @@ void func_8002C71C(LevelModelSegment *segment) {
     s32 curVertY;
     s32 numVerts;
     s32 i;
-    
+
     segment->unk38 = -10000;
     numVerts = 0;
-    for(i = 0; i < segment->numberOfBatches; i++) {
+    for (i = 0; i < segment->numberOfBatches; i++) {
         if (segment->batches[i].flags & 0x2000) {
             segment->unk34[numVerts++] = i;
             curVertY = segment->vertices[segment->batches[i].verticesOffset].y;
@@ -932,21 +921,21 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002CC30.s")
 
 #ifdef NON_MATCHING
 
-typedef struct unk8002D30C_a0{
+typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];
     struct unk8002D30C_a0 *unk04;
     struct unk8002D30C_a0 *unk08;
-}unk8002D30C_a0;
+} unk8002D30C_a0;
 
 void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
     // Weird issue here with the ra register.
-    while(arg0 != NULL) {
-        if(arg0->unk04) {
-            arg0->unk04 = (unk8002D30C_a0*)((s32)arg0->unk04 + arg1);
+    while (arg0 != NULL) {
+        if (arg0->unk04) {
+            arg0->unk04 = (unk8002D30C_a0 *)((s32)arg0->unk04 + arg1);
         }
 
-        if(arg0->unk08){
-            arg0->unk08 = (unk8002D30C_a0*)((s32)arg0->unk08 + arg1);
+        if (arg0->unk08) {
+            arg0->unk08 = (unk8002D30C_a0 *)((s32)arg0->unk08 + arg1);
         }
 
         func_8002D30C(arg0->unk04, arg1);
@@ -1015,11 +1004,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030664.s")
 #endif
 
 void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, s8 *arg3, s8 *arg4, s8 *arg5) {
-    *arg1 = D_8011D388[arg0].unkC  >> 0x10;
+    *arg1 = D_8011D388[arg0].unkC >> 0x10;
     *arg2 = D_8011D388[arg0].unk10 >> 0x10;
-    *arg3 = D_8011D388[arg0].unk0  >> 0x10;
-    *arg4 = D_8011D388[arg0].unk4  >> 0x10;
-    *arg5 = D_8011D388[arg0].unk8  >> 0x10;
+    *arg3 = D_8011D388[arg0].unk0 >> 0x10;
+    *arg4 = D_8011D388[arg0].unk4 >> 0x10;
+    *arg5 = D_8011D388[arg0].unk8 >> 0x10;
 }
 
 void func_800307BC(s32 arg0) {
@@ -1028,7 +1017,7 @@ void func_800307BC(s32 arg0) {
     D_8011D388[arg0].unk14 = 0;
     D_8011D388[arg0].unk18 = 0;
     D_8011D388[arg0].unk1C = 0;
-    D_8011D388[arg0].unkC  = 0x03FA0000;
+    D_8011D388[arg0].unkC = 0x03FA0000;
     D_8011D388[arg0].unk10 = 0x03FF0000;
     D_8011D388[arg0].unk28 = D_8011D388[arg0].unk0 >> 0x10;
     D_8011D388[arg0].unk29 = D_8011D388[arg0].unk4 >> 0x10;
@@ -1041,7 +1030,7 @@ void func_800307BC(s32 arg0) {
 
 void func_80030838(s32 arg0, s32 arg1) {
     s32 i;
-    for(i = 0; i < arg0; i++) {
+    for (i = 0; i < arg0; i++) {
         if (D_8011D388[i].unk30 > 0) {
             if (arg1 < D_8011D388[i].unk30) {
                 D_8011D388[i].unk0 += D_8011D388[i].unk14 * arg1;
@@ -1051,10 +1040,10 @@ void func_80030838(s32 arg0, s32 arg1) {
                 D_8011D388[i].unk10 += D_8011D388[i].unk24 * arg1;
                 D_8011D388[i].unk30 -= arg1;
             } else {
-                D_8011D388[i].unk0  = D_8011D388[i].unk28 << 0x10;
-                D_8011D388[i].unk4  = D_8011D388[i].unk29 << 0x10;
-                D_8011D388[i].unk8  = D_8011D388[i].unk2A << 0x10;
-                D_8011D388[i].unkC  = D_8011D388[i].unk2C << 0x10;
+                D_8011D388[i].unk0 = D_8011D388[i].unk28 << 0x10;
+                D_8011D388[i].unk4 = D_8011D388[i].unk29 << 0x10;
+                D_8011D388[i].unk8 = D_8011D388[i].unk2A << 0x10;
+                D_8011D388[i].unkC = D_8011D388[i].unk2C << 0x10;
                 D_8011D388[i].unk10 = D_8011D388[i].unk2E << 0x10;
                 D_8011D388[i].unk30 = 0;
             }
@@ -1068,7 +1057,6 @@ void func_8003093C(s32 arg0) {
 }
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030A74.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
-
 
 void func_80031018(void) {
     Matrix mf;
@@ -1087,7 +1075,7 @@ void func_80031018(void) {
     f32 x = 0.0f;
     f32 y = 0.0f;
     f32 z = -65536.0f;
-    
+
     sp_38.unk04 = D_8011B0B0->z_rotation;
     sp_38.unk02 = D_8011B0B0->x_rotation;
     sp_38.unk00 = D_8011B0B0->y_rotation;
@@ -1095,12 +1083,12 @@ void func_80031018(void) {
     sp_38.unk10 = 0.0f;
     sp_38.unk14 = 0.0f;
     sp_38.unk08 = 1.0f;
-    
+
     func_8006FC30(&mf, &sp_38);
     guMtxXFMF(&mf, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
-    D_8011D468.x = (s32) x;
-    D_8011D468.y = (s32) y;
-    D_8011D468.z = (s32) z;
+    D_8011D468.x = (s32)x;
+    D_8011D468.y = (s32)y;
+    D_8011D468.z = (s32)z;
 }
