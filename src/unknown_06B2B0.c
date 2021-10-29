@@ -1773,7 +1773,7 @@ s8 func_8006EAB0(void) {
 
 s32 func_8006EAC0(void) {
     if (D_80123560[0] == 0) {
-        D_80123560[0] = (s32)((osRecvMesg(&D_80123548, NULL, 0) + 1) != 0);
+        D_80123560[0] = (s32)((osRecvMesg(&D_80123548, NULL, OS_MESG_NOBLOCK) + 1) != 0);
     }
     return D_80123560[0];
 }

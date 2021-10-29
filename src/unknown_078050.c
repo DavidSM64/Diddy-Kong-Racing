@@ -177,7 +177,7 @@ s32 func_80077A54(void) {
     if (D_800DE4DC == 0) {
         return 0;
     }
-    osRecvMesg(&D_80125ED8, &sp1C, 1);
+    osRecvMesg(&D_80125ED8, &sp1C, OS_MESG_BLOCK);
     D_800DE4DC = 0;
     return sp1C[1];
 }
@@ -314,7 +314,7 @@ void func_800787F0(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800787FC.s")
 
-void func_80078AAC(u32 arg0) {
+void func_80078AAC(void *arg0) {
     D_800DE4D0.ptr = arg0;
 }
 

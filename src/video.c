@@ -208,19 +208,21 @@ void init_framebuffer(s32 index) {
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
+    // TODO: All of the gVideoFramebuffers values are suspicious and probably not the right code.
+    // The 0x3F is coincidentally sizeof(gVideoModeResolutions) - 1, but that might just be a coincidence
     if (gVideoModeIndex >= 2) {
         gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOR_TAG_WHITE);
-        gVideoFramebuffers[index] = ((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F;
+        gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
             gVideoDepthBuffer = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOR_TAG_WHITE);
-            gVideoDepthBuffer = ((s32)gVideoDepthBuffer + 0x3F) & ~0x3F;
+            gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     } else {
         gVideoFramebuffers[index] = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOR_TAG_WHITE);
-        gVideoFramebuffers[index] = ((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F;
+        gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
             gVideoDepthBuffer = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOR_TAG_WHITE);
-            gVideoDepthBuffer = ((s32)gVideoDepthBuffer + 0x3F) & ~0x3F;
+            gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     }
 }
@@ -245,7 +247,7 @@ s32 func_8007A98C(s32 arg0) {
     if (arg0 != 8) {
         swap_framebuffers();
     }
-    while (osRecvMesg(&D_801261A0, NULL, 0) != -1) {
+    while (osRecvMesg(&D_801261A0, NULL, OS_MESG_NOBLOCK) != -1) {
         s0 += 1;
         s0 &= 0xFF;
     }
@@ -265,12 +267,12 @@ s32 func_8007A98C(s32 arg0) {
         }
     }
     while (s0 < D_80126309) {
-        osRecvMesg(&D_801261A0, NULL, 1);
+        osRecvMesg(&D_801261A0, NULL, OS_MESG_BLOCK);
         s0 += 1;
         s0 &= 0xFF;
     }
     osViSwapBuffer(gVideoLastFramebuffer);
-    osRecvMesg(&D_801261A0, NULL, 1);
+    osRecvMesg(&D_801261A0, NULL, OS_MESG_BLOCK);
     return s0;
 }
 #else
