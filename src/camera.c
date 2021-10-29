@@ -45,7 +45,7 @@ ScreenViewport gScreenViewports[4] = {
 s32 D_800DD134 = 0;
 
 // Not sure about the typing here
-s16 D_800DD138[8] = { 
+s16 D_800DD138[8] = {
     0, 0, 0, -1, -1, 0, 0, 0
 };
 
@@ -72,7 +72,6 @@ Vp D_800DD148[20] = {
     { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
     { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
 };
-
 
 unk8011D510 D_800DD288 = {  
     0, 0, 0, 0, 1.0f, 0.0f, 0.0f, -281.0f,
@@ -110,8 +109,8 @@ s32 D_80120CF0[6];
 s32 D_80120D08;
 s32 D_80120D0C;
 f32 gCurCamFOV;
-s8  D_80120D14;
-u8  D_80120D15;
+s8 D_80120D14;
+u8 D_80120D15;
 s32 D_80120D18;
 s32 D_80120D1C;
 s32 D_80120D20[2];
@@ -132,7 +131,7 @@ Matrix D_801210A0;
 OSMesgQueue *D_801210E0[6];
 OSMesg *D_801210F8;
 OSMesg D_801210FC;
-OSContStatus  status;
+OSContStatus status;
 s32 D_80121108[2]; //Padding?
 unk80121110 D_80121110[8];
 u16 D_80121140[4];
@@ -146,10 +145,10 @@ extern s32 D_B0000578;
 
 void func_80065EA0(void) {
     s32 i, j;
-    for(i = 0; i < 5; i++) {
+    for (i = 0; i < 5; i++) {
         D_80120D70[i] = &D_80120DA0[i];
     };
-    for(j = 0; j < 8; j++) {
+    for (j = 0; j < 8; j++) {
         D_80120CE4 = j;
         func_800663DC(200, 200, 200, 0, 0, 180);
     };
@@ -202,15 +201,13 @@ f32 get_current_camera_fov(void) {
 void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
-        guPerspectiveF(D_80120EE0, &perspNorm[5], camFieldOfView,
-            CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+        guPerspectiveF(D_80120EE0, &perspNorm[5], camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
         func_8006F870(D_80120EE0, D_80120FE0);
     }
 }
 
 void func_80066194(void) {
-    guPerspectiveF(D_80120EE0, &perspNorm[5], CAMERA_DEFAULT_FOV,
-        CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    guPerspectiveF(D_80120EE0, &perspNorm[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     func_8006F870(D_80120EE0, D_80120FE0);
 }
 
@@ -270,11 +267,11 @@ f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
     f32 temp_f2, temp_f0, temp_f14;
 
     phi_v1 = D_80120CE4;
-    
+
     if (D_80120D14 != 0) {
         phi_v1 += 4;
     }
-    
+
     temp_f0 = arg2 - D_80120AC0[phi_v1].z_position;
     temp_f2 = arg0 - D_80120AC0[phi_v1].x_position;
     temp_f14 = arg1 - D_80120AC0[phi_v1].y_position;
@@ -282,18 +279,18 @@ f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
-    D_80120AC0[D_80120CE4].unk4 = (s16) (arg3 * 0xB6);
-    D_80120AC0[D_80120CE4].x_position = (f32) xPos;
-    D_80120AC0[D_80120CE4].y_position = (f32) yPos;
-    D_80120AC0[D_80120CE4].z_position = (f32) zPos;
-    D_80120AC0[D_80120CE4].unk2 = (s16) (arg4 * 0xB6);
+    D_80120AC0[D_80120CE4].unk4 = (s16)(arg3 * 0xB6);
+    D_80120AC0[D_80120CE4].x_position = (f32)xPos;
+    D_80120AC0[D_80120CE4].y_position = (f32)yPos;
+    D_80120AC0[D_80120CE4].z_position = (f32)zPos;
+    D_80120AC0[D_80120CE4].unk2 = (s16)(arg4 * 0xB6);
     D_80120AC0[D_80120CE4].unk38 = (u16)0;
     D_80120AC0[D_80120CE4].unk24 = 0.0f;
     D_80120AC0[D_80120CE4].unk28 = 0.0f;
     D_80120AC0[D_80120CE4].unk2C = 0.0f;
     D_80120AC0[D_80120CE4].unk30 = 0.0f;
     D_80120AC0[D_80120CE4].unk1C = 160.0f;
-    D_80120AC0[D_80120CE4].unk0 = (s16) (arg5 * 0xB6);
+    D_80120AC0[D_80120CE4].unk0 = (s16)(arg5 * 0xB6);
     D_80120AC0[D_80120CE4].unk3B = D_800DD2F8[D_80120CE4];
 }
 
@@ -324,7 +321,7 @@ s32 func_8006652C(s32 arg0) {
     } else {
         gNumberOfViewports = 0;
     }
-    switch(gNumberOfViewports) {
+    switch (gNumberOfViewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
             D_80120CE8 = 1;
             break;
@@ -364,7 +361,7 @@ void func_80066610(void) {
     s32 i;
 
     D_800DD134 = 1 - D_800DD134;
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         if (gScreenViewports[i].flags & 4) {
             gScreenViewports[i].flags &= ~1;
         } else if (gScreenViewports[i].flags & 2) {
@@ -448,7 +445,7 @@ void func_80066940(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 phi_a1;
     s32 phi_a2;
     s32 phi_a3;
-    
+
     widthAndHeight = get_video_width_and_height_as_s32();
     width = widthAndHeight & 0xFFFF;
     // Placement issues with the height variable.
@@ -589,7 +586,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             gScreenViewports[D_80120CE4].upperLeftY, 
             gScreenViewports[D_80120CE4].lowerRightX, 
             gScreenViewports[D_80120CE4].lowerRightY
-        )
+        );
         func_80068158(dlist, 0, 0, 0, 0);
         if (arg1 != 0) {
             func_80067D3C(dlist, arg1);
@@ -606,14 +603,14 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
     if (osTvType == TV_TYPE_PAL) {
         sp58 = 0x91;
     }
-    
-    switch(gNumberOfViewports) {
+
+    switch (gNumberOfViewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
             phi_t3 = sp58;
             if (osTvType == TV_TYPE_PAL) {
                 phi_t3 = sp58 - 0x12;
             }
-            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0)
+            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0);
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
@@ -623,19 +620,19 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
                 if (osTvType == TV_TYPE_PAL) {
                     phi_t3 = temp_v0_6 - 0xC;
                 }
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, (temp_a3 - (temp_t0 >> 7)))
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, (temp_a3 - (temp_t0 >> 7)));
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), temp_t1, (temp_t0 - (temp_t0 >> 7)))
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), temp_t1, (temp_t0 - (temp_t0 >> 7)));
                 phi_t3 = temp_a3 + (temp_t0 >> 2);
             }
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
             if (D_80120CE4 == 0) {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (temp_t1 >> 8), temp_t0)
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (temp_t1 >> 8), temp_t0);
                 phi_a1 = temp_t1 >> 2;
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), 0, temp_t1 - (temp_t1 >> 8), temp_t0)
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), 0, temp_t1 - (temp_t1 >> 8), temp_t0);
                 phi_a1 = temp_a2 + (temp_t1 >> 2);
             }
             sp4C = phi_a1;
@@ -644,27 +641,23 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
         case VIEWPORTS_COUNT_4_PLAYERS:
             sp58 = sp58 >> 1;
             sp54 = temp_a2 >> 1;
-            switch(D_80120CE4) {
+            switch (D_80120CE4) {
                 case 0:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, 
-                        (temp_a2 - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)))
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, (temp_a2 - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = 0;
                 case 1:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (temp_a2 + (temp_t1 >> 8)), 0, 
-                        ((temp_a2 * 2) - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)))
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (temp_a2 + (temp_t1 >> 8)), 0, ((temp_a2 * 2) - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = temp_a2;
                     break;
                 case 2:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, temp_a3 + (temp_t0 >> 7), 
-                        temp_a2 - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7))
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, temp_a3 + (temp_t0 >> 7), temp_a2 - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = 0;
                     break;
                 case 3:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), temp_a3 + (temp_t0 >> 7), 
-                        (temp_a2 * 2) - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7))
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), temp_a3 + (temp_t0 >> 7), (temp_a2 * 2) - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = temp_a2;
                     break;
@@ -687,7 +680,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             phi_t3 = sp54;
             break;
     }
-    
+
     if (osTvType == TV_TYPE_PAL) {
         sp4C -= 4;
     }
@@ -701,7 +694,6 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
-
 GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80067D3C.s")
 
@@ -713,7 +705,7 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
-    
+
     widthAndHeight = get_video_width_and_height_as_s32();
     height = widthAndHeight >> 0x10;
     width = widthAndHeight & 0xFFFF;
@@ -723,16 +715,16 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     D_800DD148[D_80120CE4 + 5].vp.vscale[1] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[1] = height * 2;
-    gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4 + 5] + 0x80000000)
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000))
+    gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4 + 5] + 0x80000000);
+    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
     *arg1 += 0x40;
     D_80120D1C = 0;
     D_80120D08 = 0;
 
     i = 0;
-    while(i < 4) { // for loop doesn't match here.
+    while (i < 4) { // for loop doesn't match here.
         j = 0;
-        while(j < 4) {
+        while (j < 4) {
             D_80120F20[i][j] = D_800DD2B8[i][j];
             j++;
         }
@@ -745,8 +737,8 @@ void func_8006807C(Gfx **dlist, s32 *arg1) {
     func_8006F768(&D_80121060, &D_80120EE0, &D_80120F20);
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
     func_8006F768(D_80120D70[0], &D_80120F20, &D_80121060);
-    func_8006F870(D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000))
+    func_8006F870(D_80121060, (s32 *)*arg1); // This doesn't look right. Need to check this!
+    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
     *arg1 += 0x40;
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -763,9 +755,9 @@ void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         D_800DD148[D_80120CE4].vp.vtrans[1] = arg4 * 4;
         D_800DD148[D_80120CE4].vp.vscale[0] = tempArg1 * 4;
         D_800DD148[D_80120CE4].vp.vscale[1] = arg2 * 4;
-        gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4] + 0x80000000)
+        gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4] + 0x80000000);
     } else {
-        gSPViewport((*dlist)++, (u8*)&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)] + 0x80000000)
+        gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)] + 0x80000000);
     }
 }
 
@@ -776,7 +768,7 @@ void func_800682AC(Gfx **dlist) {
     height = widthAndHeight >> 0x10;
     width = widthAndHeight & 0xFFFF;
     if (!(gScreenViewports[D_80120CE4].flags & 1)) {
-        gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1)
+        gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
         func_80067A3C(dlist);
@@ -788,11 +780,11 @@ void func_800682AC(Gfx **dlist) {
 void func_80068408(Gfx **dlist, s32 *arg1) {
     func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
-    func_8006F870(D_80121060, (s32*)*arg1); // This doesn't look right. Need to check this!
+    func_8006F870(D_80121060, (s32 *)*arg1); // This doesn't look right. Need to check this!
     D_80120D88[D_80120D1C] = *arg1;
-    
-    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000))
-    
+
+    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000));
+
     *arg1 += 0x40;
 }
 
@@ -851,7 +843,7 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
     f32 temp_f14;
     f32 temp_f2;
     s32 i;
-    
+
     for (i = 0; i <= gNumberOfViewports; i++) {
         temp_f0 = arg0 - D_80120AC0[i].x_position;
         temp_f2 = arg1 - D_80120AC0[i].y_position;
@@ -865,7 +857,7 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
 
 void func_80069F28(f32 arg0) {
     s32 i;
-    for(i = 0; i <= gNumberOfViewports; i++) {
+    for (i = 0; i <= gNumberOfViewports; i++) {
         D_80120AC0[i].unk30 = arg0;
     }
 }
@@ -875,8 +867,8 @@ void func_80069F28(f32 arg0) {
 void func_80069F64(s16 *mtx) {
     s32 i, j;
     s32 val;
-    for(i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
             val = mtx[i * 4 + j];
             rmonPrintf("%x.", val);
             val = mtx[((i + 4) * 4 + j)]; // Issue here.
@@ -893,9 +885,9 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80069F64.s")
 // Unused. Prints/Displays a 4x4 floating-point matrix.
 void func_8006A03C(f32 *mtx) {
     s32 i, j;
-    
-    for(i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
+
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
             rmonPrintf("%f  ", mtx[i * 4 + j]);
         }
         rmonPrintf("\n");
@@ -924,7 +916,7 @@ s32 func_8006A10C(void) {
         return 0;
     }
 
-    if (!bitpattern) { }
+    if (!bitpattern) {}
 
     D_800DD300 = 1;
 
@@ -935,7 +927,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
 
 void func_8006A434(void) {
     s32 i;
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         D_80121150[i] = i;
     }
 }
@@ -943,12 +935,12 @@ void func_8006A434(void) {
 void func_8006A458(s8 *activePlayers) {
     s32 i;
     s32 temp = 0;
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         if (activePlayers[i]) {
             D_80121150[temp++] = i;
         }
     }
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         if (!activePlayers[i]) {
             D_80121150[temp++] = i;
         }

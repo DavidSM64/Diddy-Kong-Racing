@@ -8,7 +8,7 @@
 
 /************ .data ************/
 
-s8 D_800DC6D0 = 1; // Currently unknown, might be a u8.
+s8 D_800DC6D0 = 1;  // Currently unknown, might be a u8.
 s32 D_800DC6D4 = 0; // Currently unknown, might be a different type.
 s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 

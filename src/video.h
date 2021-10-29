@@ -7,7 +7,7 @@
 #include "PR/libultra.h"
 #include "PR/os_message.h"
 #include "PR/os_vi.h"
-#include "lib/src/mips1/sc/sched.h"
+#include "sched.h"
 
 #define REFRESH_50HZ 50
 #define REFRESH_60HZ 60

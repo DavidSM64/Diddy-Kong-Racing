@@ -27,15 +27,15 @@ s32 *D_800E31C8[2] = { NULL, NULL };
 s32 D_800E31D0[2] = { 0, 0 };
 
 Gfx D_800E31D8[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
-    gsDPSetTextureDetail(G_TD_CLAMP), 
+    gsDPSetTextureDetail(G_TD_CLAMP),
     gsDPSetTexturePersp(G_TP_NONE),
     gsDPSetTextureFilter(G_TF_BILERP),
-    gsDPSetTextureConvert(G_TC_FILT), 
-    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetRenderMode(G_RM_CLD_SURF, G_RM_CLD_SURF2),
     gsSPEndDisplayList(),
 };
@@ -295,7 +295,7 @@ s32 func_800C0494(s32 arg0) {
     } else if (arg0 >= 6) {
         arg0 = 5;
     }
-    
+
     if (D_800E31AC != 0) {
         if (D_800E31B0 == 0) {
             D_800E31AC = -1;
@@ -360,7 +360,7 @@ void render_fade_transition(s32 dlist, s32 arg1, s32 arg2) {
                 render_fade_disabled(dlist, arg1, arg2);
                 break;
         }
-        
+
         func_80066CDC(dlist, arg1);
     }
 }
@@ -380,10 +380,10 @@ void func_800C0724(void) {
 void func_800C0780(FadeTransition *transition) {
     if (transition->type & 0x80) {
         D_8012A750 = 255.0f;
-        D_8012A754 = -255.0f / (f32) D_800E31B0;
+        D_8012A754 = -255.0f / (f32)D_800E31B0;
     } else {
         D_8012A750 = 0.0f;
-        D_8012A754 = 255.0f / (f32) D_800E31B0;
+        D_8012A754 = 255.0f / (f32)D_800E31B0;
     }
     D_800E31AC = 1;
 }
@@ -392,10 +392,10 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0834.s")
 
 void render_fade_fullscreen(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 screenSize = get_video_width_and_height_as_s32();
-    gSPDisplayList((*dlist)++, D_800E31D8)
-    gDPSetPrimColor((*dlist)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha)
-    gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE)
-    gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF)
+    gSPDisplayList((*dlist)++, D_800E31D8);
+    gDPSetPrimColor((*dlist)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
+    gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
     func_8007B3D0(dlist);
 }
 
@@ -404,20 +404,20 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1130.s")
 
 void render_fade_barndoor_horizontal(Gfx **dlist, s32 arg1, s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, D_800E3648)
+    gSPDisplayList((*dlist)++, D_800E3648);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70)
-    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE)
+    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 
 // This is exactly the same as render_fade_barndoor_horizontal; I wonder what gets changed then?
 void render_fade_barndoor_vertical(Gfx **dlist, s32 arg1, s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, D_800E3648)
+    gSPDisplayList((*dlist)++, D_800E3648);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70)
-    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE)
+    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 
@@ -428,23 +428,23 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
     u8 *addr, *addr2;
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, D_800E3648)
-    addr  = (D_800E31C0[D_800E31D0[0]] + 0x80000000);
+    gSPDisplayList((*dlist)++, D_800E3648);
+    addr = (D_800E31C0[D_800E31D0[0]] + 0x80000000);
     addr2 = (D_800E31C8[D_800E31D0[0]] + 0x80000000);
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6)
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE)
+    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6)
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE)
+    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6)
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE)
+    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6)
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE)
+    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 #else
@@ -455,15 +455,15 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 void render_fade_waves(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 i;
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, D_800E3648)
+    gSPDisplayList((*dlist)++, D_800E3648);
     for(i = 0; i < 6; i++) {
         s32 index = D_800E31D0[0] + i;
         if(i != 1 && i != 4) {
-            gDkrVertices((*dlist)++, (s32)D_800E31C0[index] + 0x80000000, (((s32)D_800E31C0[index] + 0x80000000) & 6) | 0x78, 0x94)
-            gDkrTriangles((*dlist)++, (s32)D_800E31C8[index] + 0x80000000, 14, TRIN_DISABLE_TEXTURE)
+            gDkrVertices((*dlist)++, (s32)D_800E31C0[index] + 0x80000000, (((s32)D_800E31C0[index] + 0x80000000) & 6) | 0x78, 0x94);
+            gDkrTriangles((*dlist)++, (s32)D_800E31C8[index] + 0x80000000, 14, TRIN_DISABLE_TEXTURE);
         } else {
-            gDkrVertices((*dlist)++, (s32)D_800E31C0[index] + 0x80000000, (((s32)D_800E31C0[index] + 0x80000000) & 6) | 0x68, 0x82)
-            gDkrTriangles((*dlist)++, (s32)D_800E31C8[index] + 0x80000000, 12, TRIN_DISABLE_TEXTURE)
+            gDkrVertices((*dlist)++, (s32)D_800E31C0[index] + 0x80000000, (((s32)D_800E31C0[index] + 0x80000000) & 6) | 0x68, 0x82);
+            gDkrTriangles((*dlist)++, (s32)D_800E31C8[index] + 0x80000000, 12, TRIN_DISABLE_TEXTURE);
         }
     }
     func_8007B3D0(dlist);
@@ -474,10 +474,10 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_waves.s")
 
 void render_fade_barndoor_diagonal(Gfx **dlist, s32 arg1, s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, D_800E3648)
+    gSPDisplayList((*dlist)++, D_800E3648);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x48, 0x5E)
-    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 6, TRIN_DISABLE_TEXTURE)
+    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x48, 0x5E);
+    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 6, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 
@@ -486,27 +486,27 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C2640.s")
 #ifdef NON_MATCHING
 void func_800C27A0(s32 arg0) {
     //do {
-        if (D_800E31B0 > 0) {
-            gLastFadeRed += D_8012A744 * arg0;
-            gLastFadeGreen += D_8012A748 * arg0;
-            gLastFadeBlue += D_8012A74C * arg0;
-            if (arg0 >= D_800E31B0) {
-                gLastFadeRed = gCurFadeRed << 16;
-                gLastFadeGreen = gCurFadeGreen << 16;
-                gLastFadeBlue = gCurFadeBlue << 16;
-                D_800E31B0 = 0;
-                arg0 -= D_800E31B0;
-            } else {
-                D_800E31B0 -= arg0;
-            }
+    if (D_800E31B0 > 0) {
+        gLastFadeRed += D_8012A744 * arg0;
+        gLastFadeGreen += D_8012A748 * arg0;
+        gLastFadeBlue += D_8012A74C * arg0;
+        if (arg0 >= D_800E31B0) {
+            gLastFadeRed = gCurFadeRed << 16;
+            gLastFadeGreen = gCurFadeGreen << 16;
+            gLastFadeBlue = gCurFadeBlue << 16;
+            D_800E31B0 = 0;
+            arg0 -= D_800E31B0;
         } else {
-            D_800E31B4 -= arg0;
-            if (D_800E31B4 != 0xFFFF) {
-                if ((D_800E31B4 & 0xFFFF) <= 0) {
-                    D_800E31B4 = 0;
-                }
+            D_800E31B0 -= arg0;
+        }
+    } else {
+        D_800E31B4 -= arg0;
+        if (D_800E31B4 != 0xFFFF) {
+            if ((D_800E31B4 & 0xFFFF) <= 0) {
+                D_800E31B4 = 0;
             }
         }
+    }
     //} while(1 == 0);
 }
 #else
@@ -515,9 +515,9 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C27A0.s")
 
 void render_fade_disabled(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 screenSize = get_video_width_and_height_as_s32();
-    gSPDisplayList((*dlist)++, D_800E31D8)
-    gDPSetPrimColor((*dlist)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255)
-    gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE)
-    gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF)
+    gSPDisplayList((*dlist)++, D_800E31D8);
+    gDPSetPrimColor((*dlist)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);
+    gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
     func_8007B3D0(dlist);
 }

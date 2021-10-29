@@ -29,16 +29,16 @@ s32 D_800DCB5C = 0; // Currently unknown, might be a different type.
 f32 D_800DCB60[14] = {
     -10.0f, 5.0f, 0.0f, 0.0f,
     10.0f, 5.0f, 0.0f, 0.0f,
-    -10.0f, 10.0f, 0.0f, 0.0f, 
+    -10.0f, 10.0f, 0.0f, 0.0f,
     10.0f, 10.0f,
 };
 
 s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
 f32 D_800DCB9C[19] = { 
-    0.004f, 0.007f, 0.0099999999f, 0.004f, 
-    0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f, 
-    0.0099999999f, 0.0099999999f, 0.004f, 0.004f, 
-    0.004f, 0.004f, 0.004f, 0.004f, 
+    0.004f, 0.007f, 0.0099999999f, 0.004f,
+    0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f,
+    0.0099999999f, 0.0099999999f, 0.004f, 0.004f,
+    0.004f, 0.004f, 0.004f, 0.004f,
     0.004f, 0.004f, 0.004f,
 };
 
@@ -52,8 +52,8 @@ f32 D_800DCBE8[19] = {
 
 // Unused? Not sure if this is actually an array or just some random data.
 s32 D_800DCC34[19] = {
-    0, 1, 1, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0,
 };
 
@@ -70,15 +70,15 @@ s16 D_800DCCB4[12] = {
 
 u16 D_800DCCCC[20] = {
     0x010C, 0x010B, 0x0009, 0x010C,
-    0x010C, 0x010C, 0x010C, 0x010C, 
-    0x010C, 0x010C, 0x010C, 0x0005, 
-    0x010C, 0x010C, 0x010C, 0x010C, 
+    0x010C, 0x010C, 0x010C, 0x010C,
+    0x010C, 0x010C, 0x010C, 0x0005,
+    0x010C, 0x010C, 0x010C, 0x010C,
     0x010C, 0x010C, 0x010C, 0x0000,
 };
 
 s32 D_800DCCF4[19] = {
     1, 4, 16, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 0x100, 1, 1, 1, 1, 1, 
+    1, 1, 1, 0x100, 1, 1, 1, 1, 1,
 };
 
 s32 D_800DCD40[20] = {
@@ -98,7 +98,7 @@ s8 D_800DCDA0[8] = {
 };
 
 s8 D_800DCDA8[8] = {
-    1, 1, 1, 2, 3, 2, 3, 2 ,
+    1, 1, 1, 2, 3, 2, 3, 2,
 };
 
 // Unused?
@@ -215,7 +215,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80049794.s")
 void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
     s32 temp_v1;
     s32 phi_v0;
-    
+
     if (planeObj64->unk1D7 != 10) {
         //!@bug Typo. Should've been `== 0`, not `= 0`.
         if (planeObj64->unk1F2 = 0) {
@@ -269,7 +269,7 @@ void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
     }
     if (obj64->unk1D6 < 5) {
         func_800570B8(obj, 0x1C2, 8, 0x81);
-        switch(obj64->unk187) {
+        switch (obj64->unk187) {
             case 1:
             case 2:
                 if (phi_v1 != 0) {
@@ -301,7 +301,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004D590.s")
 
 void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     s16 sp26;
-    
+
     if (obj64->unk118 != 0) {
         func_80006AC8(obj);
     }
@@ -378,7 +378,7 @@ typedef struct Object_64_80050754 {
 void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
     f32 xDiff, yDiff, zDiff;
     Object *someObj;
-    
+
     obj->unk3B = 0;
     obj->unk18 = 0x28;
     someObj = obj64->someObj;
@@ -495,7 +495,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052D7C.s")
 void func_80053478(Object_64_80053478 *obj) {
     s32 phi_v0;
     f32 phi_f0 = obj->unk2C;
-    
+
     if (phi_f0 < 0.0) {
         phi_f0 = -phi_f0;
     }
@@ -637,7 +637,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057220.s")
 
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     Matrix mf;
-    
+
     D_8011D510.unk0 = obj->y_rotation;
     D_8011D510.unk2 = obj->x_rotation;
     D_8011D510.unk4 = 0;
@@ -721,14 +721,14 @@ void func_80059790(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
     }
     temp_lo = arg0 / 3600;
     *arg1 = temp_lo;
-    temp_lo_2 = (s32) (arg0 - (temp_lo * 3600)) / 60;
+    temp_lo_2 = (s32)(arg0 - (temp_lo * 3600)) / 60;
     *arg2 = temp_lo_2;
-    *arg3 = (s32) ((s32) (((arg0 - (*arg1 * 3600)) - (temp_lo_2 * 60)) * 100) / 60);
+    *arg3 = (s32)((s32)(((arg0 - (*arg1 * 3600)) - (temp_lo_2 * 60)) * 100) / 60);
 }
 
 void func_800598D0(void) {
     gGhostData[0] = allocate_from_main_pool_safe(0x21C0, COLOR_TAG_RED);
-    gGhostData[1] = (GhostNode*)gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES;
+    gGhostData[1] = (GhostNode *)gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES;
     gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;
     D_8011D5A0[1] = 0;
@@ -747,7 +747,7 @@ void func_80059944(void) {
 }
 
 void func_80059984(s32 arg0) {
-    D_8011D59D = (s8) ((D_8011D59C + 1) & 1);
+    D_8011D59D = (s8)((D_8011D59C + 1) & 1);
     D_8011D5AC = arg0;
 }
 
@@ -789,7 +789,7 @@ s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
         if (gGhostData[2] != NULL) {
             *outTime = ghost->time;
             gTTGhostNodeCount = ghost->nodeCount;
-            bcopy((u8*)ghost + 8, gGhostData[2], size - sizeof(GhostHeader));
+            bcopy((u8 *)ghost + 8, gGhostData[2], size - sizeof(GhostHeader));
             free_from_memory_pool(ghost);
             return 0;
         }
@@ -828,9 +828,9 @@ void func_8005A3C0(void) {
 void func_8005A3D0(void) {
     s32 i;
     s32 count = 0;
-    u8 *temp = (u8*)&func_8003B4BC;
+    u8 *temp = (u8 *)&func_8003B4BC;
 
-    for(i = 0; i < D_800DCB50; i++) {
+    for (i = 0; i < D_800DCB50; i++) {
         count += temp[i];
     }
 
@@ -854,7 +854,7 @@ void func_8005C270(unk8005C270 *arg0) {
     arg0->unk192--;
     if (arg0->unk192 < 0) {
         arg0->unk192 += temp;
-        if(arg0->unk193 > 0){
+        if (arg0->unk193 > 0) {
             arg0->unk193--;
         }
     }

@@ -81,7 +81,6 @@ void func_800C2AB4(void) {
     func_800C5494(6);
 }
 
-
 void func_800C2AF4(s32 arg0) {
     D_800E3680 = arg0;
 }
@@ -96,7 +95,7 @@ void func_800C2F1C(s32 arg0) {
     if (D_8012A7B6 != 0) {
         if (D_8012A7AC <= 0) {
             D_8012A7A8 -= arg0 * D_8012A7AA;
-            if ((s32) D_8012A7A8 < 0) {
+            if ((s32)D_8012A7A8 < 0) {
                 D_8012A7A8 = 0;
                 D_8012A7B6 = 0;
                 func_800C5620(6);
@@ -120,7 +119,7 @@ void func_800C2F1C(s32 arg0) {
 
 void func_800C3048(void) {
     D_8012A78C = -1;
-    D_8012A780 = (u8*)allocate_from_main_pool_safe(0x800, COLOR_TAG_GREEN);
+    D_8012A780 = (u8 *)allocate_from_main_pool_safe(0x800, COLOR_TAG_GREEN);
     D_8012A798.unk0 = D_8012A780 + 0x80;
     D_8012A798.unk4 = D_8012A798.unk0 + 0x3C0;
     D_8012A7A4 = 0;
@@ -135,7 +134,7 @@ void func_800C30CC(void) {
         free_from_memory_pool(D_8012A780);
         D_800E3670 = 0;
         D_8012A789 = 0;
-        for(i = 0; i < 10; i++) {
+        for (i = 0; i < 10; i++) {
             func_8009CFB0();
         };
         func_800C2AB4();

@@ -52,53 +52,53 @@ Gfx D_800DE520[] = {
     gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
     gsDPSetColorDither(G_CD_MAGICSQ),
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsSPEndDisplayList(),
 };
 
 Gfx D_800DE598[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
     gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
     gsSPEndDisplayList(),
 };
 
 Gfx D_800DE5E0[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE),
     gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
     gsSPEndDisplayList(),
 };
 
 Gfx D_800DE628[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
     gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
     gsSPEndDisplayList(),
 };
 
 Gfx D_800DE670[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsSPEndDisplayList(),
 };
 
@@ -146,14 +146,14 @@ Gfx D_800DE6E8[][2] = {
 
 s32 D_801242A0[256];
 s32 D_801246A0[1536];
-OSMesgQueue  D_80125EA0;
-OSMesg       D_80125EB8;
-OSMesgQueue  D_80125EC0;
-OSMesgQueue  D_80125ED8;
-OSMesg       D_80125EF0;
-s32          D_80125EF8[6];
-OSMesg       D_80125F10;
-s32          D_80125F18[6];
+OSMesgQueue D_80125EA0;
+OSMesg D_80125EB8;
+OSMesgQueue D_80125EC0;
+OSMesgQueue D_80125ED8;
+OSMesg D_80125EF0;
+s32 D_80125EF8[6];
+OSMesg D_80125F10;
+s32 D_80125F18[6];
 u8 D_80125F30;
 u8 D_80125F31;
 u8 D_80125F32;
@@ -215,15 +215,15 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
     widthAndHeight = get_video_width_and_height_as_s32();
     w = widthAndHeight & 0xFFFF;
     h = widthAndHeight >> 0x10;
-    
-    gDPPipeSync((*dlist)++)
-    gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1)
-    gDPSetCycleType((*dlist)++, G_CYC_FILL)
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000)
-    gDPSetFillColor((*dlist)++, 0xFFFCFFFC)
-    gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
-    gDPPipeSync((*dlist)++)
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x01000000)
+
+    gDPPipeSync((*dlist)++);
+    gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
+    gDPSetCycleType((*dlist)++, G_CYC_FILL);
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000);
+    gDPSetFillColor((*dlist)++, 0xFFFCFFFC);
+    gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
+    gDPPipeSync((*dlist)++);
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x01000000);
     if (arg2) {
         if (func_80066910(0)) {
             if (D_800DE4CC) {
@@ -233,17 +233,17 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
             } else if (D_800DE4D0.ptr != NULL) {
                 D_800DE4D0.function(dlist, arg1);
             } else {
-                gDPSetFillColor((*dlist)++, D_800DE4BC)
-                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
+                gDPSetFillColor((*dlist)++, D_800DE4BC);
+                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
             if (func_80066BA8(0, &sp90, &sp8C, &sp88, &sp84)) {
-                gDPSetCycleType((*dlist)++, G_CYC_1CYCLE)
-                gDPSetPrimColor((*dlist)++, 0, 0, D_800DE4B0, D_800DE4B4, D_800DE4B8, 0xFF)
-                gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE)
-                gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2)
-                gDPFillRectangle((*dlist)++, sp90, sp8C, sp88, sp84)
+                gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
+                gDPSetPrimColor((*dlist)++, 0, 0, D_800DE4B0, D_800DE4B4, D_800DE4B8, 0xFF);
+                gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+                gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+                gDPFillRectangle((*dlist)++, sp90, sp8C, sp88, sp84);
             }
-        } else { 
+        } else {
             if (D_800DE4CC) {
                 func_800787FC(dlist);
             } else if (D_800DE4C4 != 0) {
@@ -254,12 +254,12 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
                 //Also has an issue here.
                 rgba16Color = ((D_800DE4B0 << 8) & 0xF800) | ((D_800DE4B4 * 8) & 0x7C0) | ((D_800DE4B8 >> 2) & 0x3E) | 1;
                 rgba16Color |= rgba16Color << 0x10;
-                gDPSetFillColor((*dlist)++, rgba16Color)
-                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1)
+                gDPSetFillColor((*dlist)++, rgba16Color);
+                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
         }
     }
-    gDPPipeSync((*dlist)++)
+    gDPPipeSync((*dlist)++);
     func_80067A3C(dlist);
 }
 #else
@@ -268,20 +268,20 @@ GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
 
 void func_80078054(Gfx **dlist) {
     s32 width = get_video_width_and_height_as_s32() & 0xFFF;
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, 0x01000000)
-    gDPSetDepthImage((*dlist)++, 0x2000000)
-    gSPDisplayList((*dlist)++, D_800DE520)
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, 0x01000000);
+    gDPSetDepthImage((*dlist)++, 0x2000000);
+    gSPDisplayList((*dlist)++, D_800DE520);
 }
 
 void func_800780DC(Gfx **dlist) {
-    gSPDisplayList((*dlist)++, D_800DE4E0)
+    gSPDisplayList((*dlist)++, D_800DE4E0);
 }
 
 void func_80078100(OSSched *sc) {
     osScInterruptQ = osScGetInterruptQ(sc);
-    osCreateMesgQueue(&D_80125EA0, &D_80125EB8,1);
-    osCreateMesgQueue(&D_80125EC0, &D_80125EF0,8);
-    osCreateMesgQueue(&D_80125ED8, &D_80125F10,8);
+    osCreateMesgQueue(&D_80125EA0, &D_80125EB8, 1);
+    osCreateMesgQueue(&D_80125EC0, &D_80125EF0, 8);
+    osCreateMesgQueue(&D_80125ED8, &D_80125F10, 8);
 }
 
 void func_80078170(u32 arg0, u32 arg1, u32 arg2) {
@@ -314,7 +314,7 @@ void func_800787F0(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800787FC.s")
 
-void func_80078AAC(u32 arg0){
+void func_80078AAC(u32 arg0) {
     D_800DE4D0.ptr = arg0;
 }
 
@@ -326,10 +326,10 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg
     DrawTexture *phi_t2;
     s32 x0, y0;
     s32 x1, y1;
-    s32  u,  v;
+    s32 u, v;
 
-    gSPDisplayList((*dlist)++, D_800DE628)
-    gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha)
+    gSPDisplayList((*dlist)++, D_800DE628);
+    gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
     tex = arg1->texture;
     while (tex != NULL) {
         x0 = (arg1->xOffset * 4) + (arg2 * 4);
@@ -348,15 +348,15 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg
                     v = -(y0 * 8);
                     y0 = 0;
                 }
-                gDkrDmaDisplayList((*dlist)++, tex->cmd + 0x80000000, tex->numberOfCommands)
-                gSPTextureRectangle((*dlist)++, x0, y0, x1, y1, 0, u, v, 1024, 1024)
+                gDkrDmaDisplayList((*dlist)++, tex->cmd + 0x80000000, tex->numberOfCommands);
+                gSPTextureRectangle((*dlist)++, x0, y0, x1, y1, 0, u, v, 1024, 1024);
             }
         }
         arg1++;
         tex = arg1->texture;
     }
-    gDPPipeSync((*dlist)++)
-    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255)
+    gDPPipeSync((*dlist)++);
+    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_078050/render_textured_rectangle.s")

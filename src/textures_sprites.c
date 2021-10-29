@@ -681,7 +681,7 @@ Gfx D_800DF1A8[][2] = {
         gsDPSetCombineMode(DKR_CC_UNK7, DKR_CC_UNK8),
         gsDPSetOtherMode(DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_NOOP | G_RM_OPA_SURF2),
     },
-    { 
+    {
         gsDPSetCombineMode(DKR_CC_UNK7, DKR_CC_UNK8),
         gsDPSetOtherMode(DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_NOOP | G_RM_AA_OPA_SURF2),
     },
@@ -793,7 +793,7 @@ Gfx D_800DF1A8[][2] = {
         gsDPSetCombineMode(DKR_CC_UNK7, DKR_CC_UNK8),
         gsDPSetOtherMode(DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_XLU_SURF2),
     },
-    { 
+    {
         gsDPSetCombineMode(DKR_CC_UNK7, DKR_CC_UNK8),
         gsDPSetOtherMode(DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_FOG_SHADE_A | G_RM_AA_XLU_SURF2),
     },
@@ -808,7 +808,7 @@ Gfx D_800DF1A8[][2] = {
 };
 
 Gfx D_800DF3A8[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
@@ -817,7 +817,7 @@ Gfx D_800DF3A8[] = {
 };
 
 Gfx D_800DF3D8[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetAlphaCompare(G_AC_NONE),
@@ -836,13 +836,12 @@ Gfx D_800DF410[][2] = {
         gsDPSetOtherMode(DKR_OMH_1CYC_BILERP, DKR_OML_COMMON | G_RM_ZB_CLD_SURF | G_RM_ZB_CLD_SURF2),
     },
     {
-        gsDPSetCombineMode(DKR_CC_UNK9, G_CC_PASS2), 
+        gsDPSetCombineMode(DKR_CC_UNK9, G_CC_PASS2),
         gsDPSetOtherMode(DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_ZB_CLD_SURF | G_RM_ZB_CLD_SURF2),
     },
 };
 
 /*******************************/
-
 
 /************ .rodata ************/
 
@@ -961,7 +960,7 @@ TextureHeader *load_texture(s32 arg0) {
     assetSize = D_80126320[assetTable][assetIndex + 1] - assetOffset;
     load_asset_to_address(assetSection, gTempTextureHeader, assetOffset, 0x28);
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
-    
+
     if (!gTempTextureHeader->header.isCompressed) {
         tex = allocate_from_main_pool((numberOfTextures * 0x60) + assetSize, gTexColorTag);
         if (tex == NULL) {
@@ -1012,15 +1011,15 @@ TextureHeader *load_texture(s32 arg0) {
     }
     D_80126344 = 0;
     texTemp = tex;
-    alignedAddress = align16((u8*)((s32)texTemp + assetSize));
-    for(i = 0; i < numberOfTextures; i++) {
+    alignedAddress = align16((u8 *)((s32)texTemp + assetSize));
+    for (i = 0; i < numberOfTextures; i++) {
         build_tex_display_list(texTemp, alignedAddress);
         if (paletteOffset >= 0) {
             texTemp->ciPaletteOffset = paletteOffset;
             alignedAddress += 0x30; // I'm guessing it takes 6 f3d commands to load the palette
         }
         alignedAddress += 0x60; // I'm guessing it takes 12 f3d commands to load the texture
-        texTemp = (TextureHeader*)((s32)texTemp + texTemp->textureSize);
+        texTemp = (TextureHeader *)((s32)texTemp + texTemp->textureSize);
     }
     if (gCiPalettesSize >= 0x280) {
         return NULL;
@@ -1040,7 +1039,7 @@ void free_texture(TextureHeader *tex) {
     if (tex != NULL) {
         tex->numberOfInstances--;
         if ((tex->numberOfInstances & 0xFF) <= 0) {
-            for(i = 0; i < gNumberOfLoadedTextures; i++) {
+            for (i = 0; i < gNumberOfLoadedTextures; i++) {
                 if (tex == gTextureCache[i].texture) {
                     free_from_memory_pool(tex);
                     gTextureCache[i].id = -1;
@@ -1065,7 +1064,7 @@ TextureHeader *func_8007B380(s32 arg0) {
         return 0;
     }
     // Regalloc issue here
-    if (gTextureCache[arg0].texture == (TextureHeader*)-1) {
+    if (gTextureCache[arg0].texture == (TextureHeader *)-1) {
         return 0;
     }
     return gTextureCache[arg0].texture;
@@ -1081,8 +1080,8 @@ void func_8007B3D0(Gfx **dlist) {
     D_80126382 = 1;
     D_80126378 = 0;
     D_80126384 = 0;
-    gDPPipeSync((*dlist)++)
-    gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER)
+    gDPPipeSync((*dlist)++);
+    gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER);
 }
 
 void func_8007B43C(void) {
@@ -1246,7 +1245,7 @@ void func_8007F1E8(unk8007F1E8 *arg0) {
     arg0->unk11 = arg0->unk15;
     arg0->unk12 = arg0->unk16;
     arg0->unk13 = arg0->unk17;
-    for(i = 0; i < arg0->unk0; i++) {
+    for (i = 0; i < arg0->unk0; i++) {
         arg0->unkC += arg0->unk18[i].unk0;
     }
 }
@@ -1266,7 +1265,7 @@ void init_pulsating_light_data(PulsatingLightData *data) {
 
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta) {
     s32 thisFrameIndex, nextFrameIndex;
-    
+
     if (data->numberFrames > 1) {
         data->time += timeDelta;
         while (data->time >= data->totalTime) {
@@ -1284,9 +1283,9 @@ void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta) {
         if (nextFrameIndex >= data->numberFrames) {
             nextFrameIndex = 0;
         }
-        
-        data->outColorValue = data->frames[thisFrameIndex].value + 
-            ((data->frames[nextFrameIndex].value * data->time) / data->frames[thisFrameIndex].time);
+
+        data->outColorValue = data->frames[thisFrameIndex].value +
+                              ((data->frames[nextFrameIndex].value * data->time) / data->frames[thisFrameIndex].time);
     }
 }
 
@@ -1296,10 +1295,10 @@ void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentCo
         index = 2;
     }
     // There are issues with the structure, but this should be equivalent functionality-wise.
-    gSPDisplayList((*dlist)++, D_800DF3A8)
-    gDkrDmaDisplayList((*dlist)++, &D_800DF410[index] + 0x80000000, numberOfGfxCommands(D_800DF410[0]))
-    gDPSetPrimColorRGBA((*dlist)++, primitiveColor)
-    gDPSetEnvColorRGBA((*dlist)++, environmentColor)
+    gSPDisplayList((*dlist)++, D_800DF3A8);
+    gDkrDmaDisplayList((*dlist)++, &D_800DF410[index] + 0x80000000, numberOfGfxCommands(D_800DF410[0]));
+    gDPSetPrimColorRGBA((*dlist)++, primitiveColor);
+    gDPSetEnvColorRGBA((*dlist)++, environmentColor);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F594.s")

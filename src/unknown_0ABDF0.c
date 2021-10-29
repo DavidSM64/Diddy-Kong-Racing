@@ -33,15 +33,15 @@ s32 D_800E291C = 0;
 s32 D_800E2920[2] = { 0, 0 };
 
 Gfx D_800E2928[] = {
-    gsDPPipeSync(), 
+    gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
-    gsDPSetTextureDetail(G_TD_CLAMP), 
+    gsDPSetTextureDetail(G_TD_CLAMP),
     gsDPSetTexturePersp(G_TP_NONE),
     gsDPSetTextureFilter(G_TF_BILERP),
-    gsDPSetTextureConvert(G_TC_FILT), 
-    gsDPSetAlphaCompare(G_AC_NONE), 
+    gsDPSetTextureConvert(G_TC_FILT),
+    gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetRenderMode(G_RM_CLD_SURF, G_RM_CLD_SURF2),
     gsSPEndDisplayList(),
 };
