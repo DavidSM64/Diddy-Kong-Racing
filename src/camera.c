@@ -116,7 +116,7 @@ s32 D_80120D1C;
 s32 D_80120D20[2];
 s32 D_80120D28[6];
 s32 D_80120D40[6];
-u16 *perspNorm[6];
+u16 perspNorm[12];
 Mtx *D_80120D70[6];
 s32 D_80120D88[6];
 Mtx D_80120DA0[5];
@@ -128,8 +128,8 @@ Matrix D_80120FE0;
 Matrix D_80121020;
 Matrix D_80121060;
 Matrix D_801210A0;
-OSMesgQueue *D_801210E0[6];
-OSMesg *D_801210F8;
+OSMesgQueue D_801210E0;
+OSMesg D_801210F8;
 OSMesg D_801210FC;
 OSContStatus status;
 s32 D_80121108[2]; //Padding?
@@ -166,7 +166,7 @@ void func_80065EA0(void) {
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         D_800DD060 = 1;
     }
-    guPerspectiveF(D_80120EE0, perspNorm[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    guPerspectiveF(D_80120EE0, perspNorm[10], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     func_8006F870(D_80120EE0, D_80120FE0);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
@@ -201,13 +201,13 @@ f32 get_current_camera_fov(void) {
 void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
-        guPerspectiveF(D_80120EE0, &perspNorm[5], camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+        guPerspectiveF(D_80120EE0, &perspNorm[10], camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
         func_8006F870(D_80120EE0, D_80120FE0);
     }
 }
 
 void func_80066194(void) {
-    guPerspectiveF(D_80120EE0, &perspNorm[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    guPerspectiveF(D_80120EE0, &perspNorm[10], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     func_8006F870(D_80120EE0, D_80120FE0);
 }
 
