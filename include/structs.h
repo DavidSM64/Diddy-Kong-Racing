@@ -450,7 +450,8 @@ typedef struct LevelModel {
 
 /* Size: 8 bytes. */
 typedef struct LevelObjectEntryCommon {
-    u16 id; // Upper 9 bits = Object ID to load, Lower 7 bits = Total entry length.
+    u8 object_id; // 9-bit object ID to load (uses size'a MSB).
+    u8 size; // 7-bit total entry length (MSB is used in object_id).
     s16 x, y, z; // Position in level
 } LevelObjectEntryCommon;
 

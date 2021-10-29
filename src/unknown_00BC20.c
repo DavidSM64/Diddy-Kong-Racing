@@ -600,20 +600,20 @@ void func_8000E1EC(Object *object, s32 arg1) {
     gObjectCount = 0;
 }
 
+<<<<<<< HEAD
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
 <<<<<<< HEAD
 =======
 #else
+=======
+#ifdef NON_MATCHING
+>>>>>>> 935635f... Decompiled non-matching func_8000E2B4.
 typedef struct LevelObjectEntry8000E2B4 {
-    struct LevelObjectEntryCommonSplit {
-        u8 object_id;//2c
-        u8 size;//2d
-        s16 x, y, z;//2e,30,32
-    } common;
-    s16 unk8;//34
-    s16 unkA;//36
-    s16 unkC;//38
-    s16 unkE;//3a
+    LevelObjectEntryCommon common;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
 } LevelObjectEntry8000E2B4;
 
 void func_8000E2B4(void) {
@@ -641,7 +641,7 @@ void func_8000E2B4(void) {
 <<<<<<< HEAD
         object_id = ((s16*)D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
     } else {
-        object_id = D_800DC800[D_8011AD45 + 37];
+        object_id = D_800DC7B8[D_8011AD45 + 37];
     }
     func_8006DB14(D_8011AD45);
     sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
@@ -686,6 +686,8 @@ void func_8000E2B4(void) {
     player->y_rotation = D_8011AD4C;
     player->y_position = D_8011AD48;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
 #endif
 >>>>>>> c0e8460... Decompiled func_8000E2B4.
 
