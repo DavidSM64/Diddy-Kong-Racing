@@ -81,7 +81,7 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #else
-void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2) {
+void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     u32 *reg_v0;
     void *reg_s0;
     u32 tmp_size;

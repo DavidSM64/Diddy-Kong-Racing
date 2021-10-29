@@ -69,7 +69,7 @@ typedef struct SCClient_s {
     OSMesgQueue         *msgQ;  /* where to send the frame msg  */
 } OSScClient;
 
-/* 0x7C8 bytes */
+/* 0x7C8 bytes - Side note, I'm seeing 0x288 now... */
 typedef struct {
   /* 0x00 */  OSScMsg     retraceMsg;
   /* 0x20 */  OSScMsg     prenmiMsg;

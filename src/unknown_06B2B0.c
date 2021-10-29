@@ -104,6 +104,7 @@ FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 D_800DD404 = 12;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
+// CAR / HOV / PLN - So this is vehicle type?
 char *D_800DD410[3] = {
     D_800E713C, D_800E7140, D_800E7144
 };
@@ -140,8 +141,8 @@ s32 *gHudTriangles[2];
 s32 gCurrHudTris;
 s32 D_80121230[8];
 s8 D_80121250[16];
-OSSched *D_80121260;
-s32 D_80121268[2208]; //Padding
+OSSched D_80121260; // 0x288 / 648 bytes
+s8 D_80121268[8192]; // 0x2000 / 8192 bytes Padding?
 s32 D_801234E8;
 s32 D_801234EC;
 s32 D_801234F0;
@@ -168,11 +169,7 @@ s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 OSScClient *D_80123538[3];
 OSMesg D_80123544[1];
-OSMesgQueue *D_80123548;
-// These values are almost definitely the values in the OSMesgQueue above
-// I just haven't figured out how to do it properly yet.
-s32 D_8012354C;
-s32 D_80123550[4];
+OSMesgQueue D_80123548;
 s32 D_80123560[8];
 
 /******************************/

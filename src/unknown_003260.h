@@ -6,6 +6,7 @@
 #include "audio_internal.h"
 #include "asset_sections.h"
 #include "libultra_internal.h"
+#include "sched.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_STOP_EVT (1 << 1)
@@ -118,7 +119,7 @@ u16 func_80004A3C(u8 arg0);
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
-void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2);
+void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
 void func_80004A60(u8, u16); //Could be s32, s32
 
 #endif
