@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
-#ifdef NON_MATCHING
+#if 00
 //Thse need to be compiled with -mips3, and linked differently
 unsigned long long __ull_rshift(unsigned long long a0, unsigned long long a1)
 {

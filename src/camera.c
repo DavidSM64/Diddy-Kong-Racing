@@ -140,7 +140,7 @@ u8 D_80121150[16];
 
 /******************************/
 
-#ifdef NON_MATCHING
+#if 00
 extern s32 D_B0000578;
 
 void func_80065EA0(void) {
