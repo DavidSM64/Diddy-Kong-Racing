@@ -140,7 +140,7 @@ u8 D_80121150[16];
 
 /******************************/
 
-#if 00
+#ifdef NON_MATCHING
 extern s32 D_B0000578;
 
 void func_80065EA0(void) {
@@ -166,7 +166,7 @@ void func_80065EA0(void) {
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         D_800DD060 = 1;
     }
-    guPerspectiveF(D_80120EE0, perspNorm[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    guPerspectiveF(D_80120EE0, &perspNorm[5], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     func_8006F870(D_80120EE0, D_80120FE0);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }

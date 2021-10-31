@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 
-#if 00
+#if 0
 //Thse need to be compiled with -mips3, and linked differently
 unsigned long long __ull_rshift(unsigned long long a0, unsigned long long a1)
 {
@@ -49,7 +49,6 @@ long long __ll_mod(long long a0, long long a1)
     long long tmp = a0 % a1;
     if ((tmp < 0 && a1 > 0) || (tmp > 0 && a1 < 0))
     {
-
         tmp += a1; 
     }
     return tmp;
