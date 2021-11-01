@@ -5,7 +5,7 @@
 
 // This file is needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 
-s32 D_80115F90;
+OSSched *D_80115F90;
 ALHeap *D_80115F94;
 s32 D_80115F98[2];
 s32 D_80115FA0[3];
