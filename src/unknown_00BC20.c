@@ -600,14 +600,7 @@ void func_8000E1EC(Object *object, s32 arg1) {
     gObjectCount = 0;
 }
 
-<<<<<<< HEAD
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
-<<<<<<< HEAD
-=======
-#else
-=======
 #ifdef NON_MATCHING
->>>>>>> 935635f... Decompiled non-matching func_8000E2B4.
 typedef struct LevelObjectEntry8000E2B4 {
     LevelObjectEntryCommon common;
     s16 unk8;
@@ -621,11 +614,7 @@ void func_8000E2B4(void) {
     Settings *settings;
     Object *player;
     Object_64 *player_64;
-<<<<<<< HEAD
     s16 object_id;
-=======
-    s16 phi_v1;
->>>>>>> Decompiled func_8000E2B4.
 
     if (D_8011AD44 == 0) {
         return;
@@ -638,7 +627,6 @@ void func_8000E2B4(void) {
     sp2C.unkE = 0;
     sp2C.common.size = 0x10;
     if (D_8011AD45 < 5) {
-<<<<<<< HEAD
         object_id = ((s16*)D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
     } else {
         object_id = D_800DC7B8[D_8011AD45 + 37];
@@ -648,17 +636,6 @@ void func_8000E2B4(void) {
     sp2C.unkA = 0;
     sp2C.unk8 = 0;
     sp2C.common.object_id = (s8) object_id;
-=======
-        phi_v1 = ((s16*)D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
-    } else {
-        phi_v1 = D_800DC800[D_8011AD45 + 37];
-    }
-    func_8006DB14(D_8011AD45);
-    sp2C.common.size = sp2C.common.size | ((s32) (phi_v1 & 0x100) >> 1);
-    sp2C.unkA = 0;
-    sp2C.unk8 = 0;
-    sp2C.common.object_id = (s8) phi_v1;
->>>>>>> Decompiled func_8000E2B4.
     sp2C.common.x = D_8011AD46;
     sp2C.common.y = D_8011AD48;
     sp2C.common.z = D_8011AD4A;
@@ -689,7 +666,6 @@ void func_8000E2B4(void) {
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
 #endif
->>>>>>> c0e8460... Decompiled func_8000E2B4.
 
 /**
  * Enables or Disables time trial mode.
