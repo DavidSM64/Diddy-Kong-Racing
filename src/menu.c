@@ -89,7 +89,7 @@ s32 D_80126494;
 s32 D_80126498;
 s32 D_8012649C;
 
-unk801264A0 D_801264A0[4];
+SavefileInfo gSavefileInfo[4];
 
 s32 D_801264D0;
 s32 D_801264D4;
@@ -3963,7 +3963,7 @@ void render_file_select_menu(s32 arg0) {
     func_8009BD5C();
     func_80067F2C(&D_801263A0, &D_801263A8);
     for (i = 0; i < 3; i++) { // 3 files
-        if (D_801264A0[i].unk0 == gIsInAdventureTwo || D_801264A0[i].unk1 == 0) {
+        if (gSavefileInfo[i].unk0 == gIsInAdventureTwo || gSavefileInfo[i].unk1 == 0) {
             color = 0xB0E0C0FF;
         } else {
             color = 0x6A9073FF;
@@ -3977,17 +3977,17 @@ void render_file_select_menu(s32 arg0) {
         set_text_background_color(0, 0, 0, 0);
         s5 = 10;
         for (i = 0; i < 3; i++) {
-            if (D_801264A0[i].unk1 != 0) {
+            if (gSavefileInfo[i].unk1 != 0) {
                 s2 = 0xB;
                 func_8007BF1C(0);
-                if (D_801264A0[i].unk0 != 0) {
+                if (gSavefileInfo[i].unk0 != 0) {
                     s2 = 0xC;
                 }
                 func_8008CC28(s2, D_800E03FC[2] + D_800E03CC[i].unk0, D_800E03FC[3] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
                 func_80068508(1);
-                D_800DF75C->unk18 = D_801264A0[i].unk2 / s5;
+                D_800DF75C->unk18 = gSavefileInfo[i].unk2 / s5;
                 func_8008CC28(0, (D_800E03FC[6] + D_800E03CC[i].unk0) - 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
-                D_800DF75C->unk18 = D_801264A0[i].unk2 % s5;
+                D_800DF75C->unk18 = gSavefileInfo[i].unk2 % s5;
                 func_8008CC28(0, D_800E03FC[6] + D_800E03CC[i].unk0 + 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
                 func_80068508(0);
                 D_800DF4A8 = 0x40;
@@ -4028,8 +4028,8 @@ void render_file_select_menu(s32 arg0) {
                 D_800E03CC[i].unk8, D_800E03CC[i].unkA, temp_t0, temp_t0, temp_t0, temp_t0);
         }
         if (D_80126CC0 == 0 || i != gSaveFileIndex) {
-            trim_filename_string(D_801264A0[i].name, tempName);
-            if (D_801264A0[i].unk1 == 0) {
+            trim_filename_string(gSavefileInfo[i].name, tempName);
+            if (gSavefileInfo[i].unk1 == 0) {
                 trim_filename_string(gFilenames[i], tempName);
             }
             if (tempName != NULL) {
@@ -4090,15 +4090,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008D8BC.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008DC7C.s")
 #else
 /* Size: 0x0C Bytes */
-typedef struct unk801264A0 {
-    u8 unk0;
-    u8 unk1;
-    u16 unk2;
-    char name[4];
-    u32 pad8;
-} unk801264A0;
-
-extern unk801264A0 D_801264A0[3]; // Filename structs?
+extern SavefileInfo gSavefileInfo[3]; // Filename structs?
 extern s32 D_80126494;
 extern s32 D_8012648C;
 
@@ -4120,7 +4112,7 @@ void func_8008DC7C(s32 arg0) {
             func_80001D04(0x241, NULL);
             D_80126488 = 0;
         } else if (phi_v1 & 0x9000) {
-            if (D_801264A0[D_8012648C].unk0 == 0) {
+            if (gSavefileInfo[D_8012648C].unk0 == 0) {
                 func_80001D04(0x241, NULL);
             }
             func_80001D04(0xEF, NULL);
@@ -4151,13 +4143,13 @@ void func_8008DC7C(s32 arg0) {
         if (phi_v1 & 0x9000) {
             func_80001D04(0xEF, NULL);
             func_8006ECAC(D_8012648C);
-            D_801264A0[D_8012648C].unk0 = 0;
-            D_801264A0[D_8012648C].unk1 = 0;
-            D_801264A0[D_8012648C].unk2 = 0;
-            D_801264A0[D_8012648C].name[0] = 'D';
-            D_801264A0[D_8012648C].name[1] = 'K';
-            D_801264A0[D_8012648C].name[2] = 'R';
-            D_801264A0[D_8012648C].name[3] = '\0';
+            gSavefileInfo[D_8012648C].unk0 = 0;
+            gSavefileInfo[D_8012648C].unk1 = 0;
+            gSavefileInfo[D_8012648C].unk2 = 0;
+            gSavefileInfo[D_8012648C].name[0] = 'D';
+            gSavefileInfo[D_8012648C].name[1] = 'K';
+            gSavefileInfo[D_8012648C].name[2] = 'R';
+            gSavefileInfo[D_8012648C].name[3] = '\0';
             gSaveFileIndex = (s32)D_8012648C;
             D_801263E0 = 0;
             D_80126488 = 0;
