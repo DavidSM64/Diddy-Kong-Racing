@@ -176,7 +176,7 @@ s32 D_8011ADD8[10];
 s8 D_8011AE00;
 s8 D_8011AE01;
 s8 D_8011AE02;
-s8 D_8011AE03;
+s8 gIsSilverCoinRace;
 u32 *D_8011AE08[16];
 s32 (*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8];  // Unknown number of entries.
@@ -585,7 +585,7 @@ s8 func_8000E1CC(void) {
 }
 
 s8 func_8000E1DC() {
-    return D_8011AE03;
+    return gIsSilverCoinRace;
 }
 
 void func_8000E1EC(Object *object, s32 arg1) {
