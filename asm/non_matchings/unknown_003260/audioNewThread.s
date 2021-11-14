@@ -27,11 +27,11 @@ glabel audioNewThread
 /* 0032C4 800026C4 44814000 */  mtc1  $at, $f8
 /* 0032C8 800026C8 44988000 */  mtc1  $t8, $f16
 /* 0032CC 800026CC 46083282 */  mul.s $f10, $f6, $f8
-/* 0032D0 800026D0 3C048012 */  lui   $a0, %hi(D_8011962C) # $a0, 0x8012
-/* 0032D4 800026D4 2484962C */  addiu $a0, %lo(D_8011962C) # addiu $a0, $a0, -0x69d4
-/* 0032D8 800026D8 3C148012 */  lui   $s4, %hi(D_80119630) # $s4, 0x8012
+/* 0032D0 800026D0 3C048012 */  lui   $a0, %hi(framesize) # $a0, 0x8012
+/* 0032D4 800026D4 2484962C */  addiu $a0, %lo(framesize) # addiu $a0, $a0, -0x69d4
+/* 0032D8 800026D8 3C148012 */  lui   $s4, %hi(maxFrameSize) # $s4, 0x8012
 /* 0032DC 800026DC 468084A0 */  cvt.s.w $f18, $f16
-/* 0032E0 800026E0 26949630 */  addiu $s4, %lo(D_80119630) # addiu $s4, $s4, -0x69d0
+/* 0032E0 800026E0 26949630 */  addiu $s4, %lo(maxFrameSize) # addiu $s4, $s4, -0x69d0
 /* 0032E4 800026E4 46125003 */  div.s $f0, $f10, $f18
 /* 0032E8 800026E8 4459F800 */  cfc1  $t9, $31
 /* 0032EC 800026EC 00000000 */  nop   
@@ -66,8 +66,8 @@ glabel audioNewThread
 /* 003358 80002758 AC830000 */  sw    $v1, ($a0)
 .L8000275C:
 /* 00335C 8000275C 246EFFF0 */  addiu $t6, $v1, -0x10
-/* 003360 80002760 3C018012 */  lui   $at, %hi(D_80119628) # $at, 0x8012
-/* 003364 80002764 AC2E9628 */  sw    $t6, %lo(D_80119628)($at)
+/* 003360 80002760 3C018012 */  lui   $at, %hi(minFrameSize) # $at, 0x8012
+/* 003364 80002764 AC2E9628 */  sw    $t6, %lo(minFrameSize)($at)
 /* 003368 80002768 246F0070 */  addiu $t7, $v1, 0x70
 /* 00336C 8000276C AE8F0000 */  sw    $t7, ($s4)
 /* 003370 80002770 9278001C */  lbu   $t8, 0x1c($s3)
@@ -236,10 +236,10 @@ glabel audioNewThread
 /* 0035DC 800029DC 24846160 */  addiu $a0, %lo(OSMesgQueue_80116160) # addiu $a0, $a0, 0x6160
 /* 0035E0 800029E0 0C032208 */  jal   osCreateMesgQueue
 /* 0035E4 800029E4 24060008 */   li    $a2, 8
-/* 0035E8 800029E8 3C048012 */  lui   $a0, %hi(D_80119AF0) # $a0, 0x8012
-/* 0035EC 800029EC 3C058012 */  lui   $a1, %hi(D_80119B08) # $a1, 0x8012
-/* 0035F0 800029F0 24A59B08 */  addiu $a1, %lo(D_80119B08) # addiu $a1, $a1, -0x64f8
-/* 0035F4 800029F4 24849AF0 */  addiu $a0, %lo(D_80119AF0) # addiu $a0, $a0, -0x6510
+/* 0035E8 800029E8 3C048012 */  lui   $a0, %hi(audDMAMessageQ) # $a0, 0x8012
+/* 0035EC 800029EC 3C058012 */  lui   $a1, %hi(audDMAMessageBuf) # $a1, 0x8012
+/* 0035F0 800029F0 24A59B08 */  addiu $a1, %lo(audDMAMessageBuf) # addiu $a1, $a1, -0x64f8
+/* 0035F4 800029F4 24849AF0 */  addiu $a0, %lo(audDMAMessageQ) # addiu $a0, $a0, -0x6510
 /* 0035F8 800029F8 0C032208 */  jal   osCreateMesgQueue
 /* 0035FC 800029FC 24060032 */   li    $a2, 50
 /* 003600 80002A00 8FB9004C */  lw    $t9, 0x4c($sp)

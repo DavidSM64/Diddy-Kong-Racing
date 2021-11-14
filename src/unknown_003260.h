@@ -18,6 +18,9 @@
 #define AL_SNDP_END_EVT (1 << 7)
 #define AL_SNDP_FX_EVT (1 << 8)
 
+#define AUDIO_STACKSIZE 0x3010
+#define NUM_DMA_MESSAGES 50
+
 typedef struct unk800DC6BC_40 {
     ALLink node;
     u8 pad0C[0x38];
@@ -49,12 +52,12 @@ typedef union {
 
 }ALSndpEvent;
 
-typedef struct AMDMABuffer
+typedef struct
 {
-    ALLink node;
-    u32 unk08;
-    u32 unk0C;
-    void *unk10;
+    ALLink      node;
+    u32         startAddr;
+    u32         lastFrame;
+    char        *ptr;
 } AMDMABuffer;
 
 /* Unknown Size */
@@ -74,12 +77,11 @@ typedef struct audioMgrConfig_s{
 
 typedef struct {
     u8 initialized;
-    u8 unk1[3];
     AMDMABuffer *firstUsed;
     AMDMABuffer *firstFree;
 } AMDMAState;
 
-extern s32 D_800DC680;
+extern u32 audFrameCt;
 extern s32 D_800DC684;
 extern s32 D_800DC688;
 extern s32 D_800DC68C;

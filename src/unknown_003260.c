@@ -19,17 +19,19 @@ extern OSMesg D_80116178[8];
 extern OSMesgQueue D_80116198;
 extern OSMesg D_801161B0[8];
 extern ALGlobals ALGlobals_801161D0;
-extern s32 D_80116220[3076];
+extern u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
 extern AMDMAState dmaState;
 extern AMDMABuffer dmaBuffs[50];
-extern s32 D_80119628;
-extern s32 D_8011962C;
-extern s32 D_80119630;
-extern s32 D_80119634;
-extern s32 D_80119638[2];
-extern s32 D_80119640[300];
-extern OSMesgQueue D_80119AF0;
-extern OSMesg D_80119B08[50];
+extern u32 minFrameSize;
+extern u32 framesize;
+extern u32 maxFrameSize;
+extern u32 nextDMA;
+extern u32 frameSize;
+extern u32 D_8011963c;
+extern u32 maxRSPCmds;
+extern OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
+extern OSMesgQueue audDMAMessageQ;
+extern OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
 extern unk800DC6BC D_80119BD0;
 extern u16 *D_80119C28;
 extern f32 gVideoRefreshRate;
@@ -38,7 +40,7 @@ extern f32 gVideoRefreshRate;
 
 /************ .data ************/
 
-s32 D_800DC680 = 0;       // Currently unknown, might be a different type.
+u32 audFrameCt = 0;       // Currently unknown, might be a different type.
 s32 D_800DC684 = 0;       // Currently unknown, might be a different type.
 s32 D_800DC688 = 0;       // Currently unknown, might be a different type.
 s32 D_800DC68C = 0;       // Currently unknown, might be a different type.
@@ -93,8 +95,8 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     D_80115F94 = c->heap;
     c->dmaproc = &__amDmaNew;
     c->outputRate = osAiSetFrequency(22050);
-    D_8011962C = (((f32)c->outputRate) * 2.0f) / gVideoRefreshRate;
-    if (D_8011962C < 0) {
+    framesize = (((f32)c->outputRate) * 2.0f) / gVideoRefreshRate;
+    if (framesize < 0) {
     }
 
     if (c->fxType == AL_FX_CUSTOM) {
@@ -121,7 +123,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
 
     osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
     osCreateMesgQueue(&OSMesgQueue_80116160, &D_80116178, 8);
-    osCreateMesgQueue(&D_80119AF0, &D_80119B08, 50);
+    osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, 50);
 
     osCreateThread(&audioThread, 4, &func_80002A98, NULL, &dmaState, p);
 }
@@ -138,8 +140,118 @@ void audioStopThread(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002A98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/__amDMA.s")
 
+/******************************************************************************
+ *
+ * __amDMA This routine handles the dma'ing of samples from rom to ram.
+ * First it checks the current buffers to see if the samples needed are
+ * already in place. Because buffers are linked sequentially by the
+ * addresses where the samples are on rom, it doesn't need to check all
+ * of them, only up to the address that it needs. If it finds one, it
+ * returns the address of that buffer. If it doesn't find the samples
+ * that it needs, it will initiate a DMA of the samples that it needs.
+ * In either case, it updates the lastFrame variable, to indicate that
+ * this buffer was last used in this frame. This is important for the
+ * __clearAudioDMA routine.
+ *
+ *****************************************************************************/
+#if 0
+#define DMA_BUFFER_LENGTH 0x400
+s32 __amDMA(s32 addr, s32 len, void *state)
+{
+    void            *foundBuffer;
+    s32             delta, addrEnd, buffEnd;
+    AMDMABuffer     *dmaPtr, *lastDmaPtr;
+
+    lastDmaPtr = 0;
+    dmaPtr = dmaState.firstUsed;
+    addrEnd = addr+len;
+
+    /* first check to see if a currently existing buffer contains the
+       sample that you need.  */
+
+    while(dmaPtr)
+    {
+        buffEnd = dmaPtr->startAddr + DMA_BUFFER_LENGTH;
+        if(dmaPtr->startAddr > addr) /* since buffers are ordered */
+            break;                   /* abort if past possible */
+
+        else if(addrEnd <= buffEnd) /* yes, found a buffer with samples */
+        {
+            dmaPtr->lastFrame = audFrameCt; /* mark it used */
+            foundBuffer = dmaPtr->ptr + addr - dmaPtr->startAddr;
+            return (int) osVirtualToPhysical(foundBuffer);
+        }
+        lastDmaPtr = dmaPtr;
+        dmaPtr = (AMDMABuffer*)dmaPtr->node.next;
+    }
+
+    /* get here, and you didn't find a buffer, so dma a new one */
+
+    /* get a buffer from the free list */
+    dmaPtr = dmaState.firstFree;
+
+    /*
+     * if you get here and dmaPtr is null, send back the a bogus
+     * pointer, it's better than nothing
+     */
+    if(!dmaPtr)
+	return osVirtualToPhysical(dmaState.firstUsed);
+
+    dmaState.firstFree = (AMDMABuffer*)dmaPtr->node.next;
+    alUnlink((ALLink*)dmaPtr);
+
+    /* add it to the used list */
+    if(lastDmaPtr) /* if you have other dmabuffers used, add this one */
+    {              /* to the list, after the last one checked above */
+        alLink((ALLink*)dmaPtr,(ALLink*)lastDmaPtr);
+    }
+    else if(dmaState.firstUsed) /* if this buffer is before any others */
+    {                           /* jam at begining of list */ 
+        lastDmaPtr = dmaState.firstUsed;
+        dmaState.firstUsed = dmaPtr;
+        dmaPtr->node.next = (ALLink*)lastDmaPtr;
+        dmaPtr->node.prev = 0;
+        lastDmaPtr->node.prev = (ALLink*)dmaPtr;
+    }
+    else /* no buffers in list, this is the first one */
+    {
+        dmaState.firstUsed = dmaPtr;
+        dmaPtr->node.next = 0;
+        dmaPtr->node.prev = 0;
+    }
+
+    foundBuffer = dmaPtr->ptr;
+    delta = addr & 0x1;
+    addr -= delta;
+    dmaPtr->startAddr = addr;
+    dmaPtr->lastFrame = audFrameCt;  /* mark it */
+
+    audDMAIOMesgBuf[nextDMA].hdr.pri      = OS_MESG_PRI_NORMAL;
+    audDMAIOMesgBuf[nextDMA].hdr.retQueue = &audDMAMessageQ;
+    audDMAIOMesgBuf[nextDMA].dramAddr     = foundBuffer;
+    audDMAIOMesgBuf[nextDMA].devAddr      = (u32)addr;
+    audDMAIOMesgBuf[nextDMA].size         = DMA_BUFFER_LENGTH;
+
+    osPiStartDma(&audDMAIOMesgBuf[nextDMA++], 1, 0, addr, foundBuffer, 0x400U, &audDMAMessageQ);
+
+    return (int) osVirtualToPhysical(foundBuffer) + delta;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_003260/__amDMA.s")
+#endif
+
+/******************************************************************************
+ *
+ * __amDmaNew.  Initialize the dma buffers and return the address of the
+ * procedure that will be used to dma the samples from rom to ram. This
+ * routine will be called once for each physical voice that is created.
+ * In this case, because we know where all the buffers are, and since
+ * they are not attached to a specific voice, we will only really do any
+ * initialization the first time. After that we just return the address
+ * to the dma routine.
+ *
+ *****************************************************************************/
 ALDMAproc __amDmaNew(AMDMAState **state) {
     int         i;
 

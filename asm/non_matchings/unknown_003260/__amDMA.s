@@ -22,8 +22,8 @@ glabel __amDMA
 /* 003A84 80002E84 1420000A */  bnez  $at, .L80002EB0
 /* 003A88 80002E88 02003025 */   move  $a2, $s0
 /* 003A8C 80002E8C 8E180010 */  lw    $t8, 0x10($s0)
-/* 003A90 80002E90 3C0F800E */  lui   $t7, %hi(D_800DC680) # $t7, 0x800e
-/* 003A94 80002E94 8DEFC680 */  lw    $t7, %lo(D_800DC680)($t7)
+/* 003A90 80002E90 3C0F800E */  lui   $t7, %hi(audFrameCt) # $t7, 0x800e
+/* 003A94 80002E94 8DEFC680 */  lw    $t7, %lo(audFrameCt)($t7)
 /* 003A98 80002E98 0307C821 */  addu  $t9, $t8, $a3
 /* 003A9C 80002E9C 03222023 */  subu  $a0, $t9, $v0
 /* 003AA0 80002EA0 0C03233C */  jal   osVirtualToPhysical
@@ -87,22 +87,22 @@ glabel __amDMA
 .L80002F70:
 /* 003B70 80002F70 8FAC0048 */  lw    $t4, 0x48($sp)
 .L80002F74:
-/* 003B74 80002F74 3C0D800E */  lui   $t5, %hi(D_800DC680) # $t5, 0x800e
+/* 003B74 80002F74 3C0D800E */  lui   $t5, %hi(audFrameCt) # $t5, 0x800e
 /* 003B78 80002F78 00EC3823 */  subu  $a3, $a3, $t4
 /* 003B7C 80002F7C AE070008 */  sw    $a3, 8($s0)
-/* 003B80 80002F80 8DADC680 */  lw    $t5, %lo(D_800DC680)($t5)
+/* 003B80 80002F80 8DADC680 */  lw    $t5, %lo(audFrameCt)($t5)
 /* 003B84 80002F84 3C08800E */  lui   $t0, %hi(D_800DC684) # $t0, 0x800e
 /* 003B88 80002F88 2508C684 */  addiu $t0, %lo(D_800DC684) # addiu $t0, $t0, -0x397c
 /* 003B8C 80002F8C AE0D000C */  sw    $t5, 0xc($s0)
 /* 003B90 80002F90 8E030010 */  lw    $v1, 0x10($s0)
 /* 003B94 80002F94 8D020000 */  lw    $v0, ($t0)
-/* 003B98 80002F98 3C0F8012 */  lui   $t7, %hi(D_80119640) # $t7, 0x8012
+/* 003B98 80002F98 3C0F8012 */  lui   $t7, %hi(audDMAIOMesgBuf) # $t7, 0x8012
 /* 003B9C 80002F9C 00027080 */  sll   $t6, $v0, 2
-/* 003BA0 80002FA0 3C198012 */  lui   $t9, %hi(D_80119AF0) # $t9, 0x8012
+/* 003BA0 80002FA0 3C198012 */  lui   $t9, %hi(audDMAMessageQ) # $t9, 0x8012
 /* 003BA4 80002FA4 01C27023 */  subu  $t6, $t6, $v0
 /* 003BA8 80002FA8 000E70C0 */  sll   $t6, $t6, 3
-/* 003BAC 80002FAC 27399AF0 */  addiu $t9, %lo(D_80119AF0) # addiu $t9, $t9, -0x6510
-/* 003BB0 80002FB0 25EF9640 */  addiu $t7, %lo(D_80119640) # addiu $t7, $t7, -0x69c0
+/* 003BAC 80002FAC 27399AF0 */  addiu $t9, %lo(audDMAMessageQ) # addiu $t9, $t9, -0x6510
+/* 003BB0 80002FB0 25EF9640 */  addiu $t7, %lo(audDMAIOMesgBuf) # addiu $t7, $t7, -0x69c0
 /* 003BB4 80002FB4 24180400 */  li    $t8, 1024
 /* 003BB8 80002FB8 244B0001 */  addiu $t3, $v0, 1
 /* 003BBC 80002FBC AD0B0000 */  sw    $t3, ($t0)
