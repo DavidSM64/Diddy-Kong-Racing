@@ -20,8 +20,8 @@ extern OSMesgQueue D_80116198;
 extern OSMesg D_801161B0[8];
 extern ALGlobals ALGlobals_801161D0;
 extern s32 D_80116220[3076];
-extern s32 D_80119230[3];
-extern unk80119240 D_80119240[50];
+extern AMDMAState dmaState;
+extern AMDMABuffer dmaBuffs[50];
 extern s32 D_80119628;
 extern s32 D_8011962C;
 extern s32 D_80119630;
@@ -78,6 +78,8 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /*********************************/
 
+s32 __amDMA(s32 addr, s32 len, void *state);
+
 #if 1
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #else
@@ -89,7 +91,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     s32 i;
     D_80115F90 = arg2;
     D_80115F94 = c->heap;
-    c->dmaproc = &func_80003008;
+    c->dmaproc = &__amDmaNew;
     c->outputRate = osAiSetFrequency(22050);
     D_8011962C = (((f32)c->outputRate) * 2.0f) / gVideoRefreshRate;
     if (D_8011962C < 0) {
@@ -121,7 +123,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     osCreateMesgQueue(&OSMesgQueue_80116160, &D_80116178, 8);
     osCreateMesgQueue(&D_80119AF0, &D_80119B08, 50);
 
-    osCreateThread(&audioThread, 4, &func_80002A98, NULL, &D_80119230, p);
+    osCreateThread(&audioThread, 4, &func_80002A98, NULL, &dmaState, p);
 }
 #endif
 
@@ -136,8 +138,22 @@ void audioStopThread(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002A98.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002E38.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003008.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/__amDMA.s")
+
+ALDMAproc __amDmaNew(AMDMAState **state) {
+    int         i;
+
+    if(!dmaState.initialized) {  /* only do this once */
+        dmaState.firstUsed = 0;
+        dmaState.firstFree = &dmaBuffs[0];
+        dmaState.initialized = 1;
+    }
+
+    *state = &dmaState;  /* state is never used in this case */
+
+    return __amDMA;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003040.s")
 
 void set_sfx_volume_slider(u32 arg0) {

@@ -2,7 +2,6 @@
 /* RAM_POS: 0x80002660 */
 
 #include "unknown_003260.h"
-
 // This file is needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 
 OSSched *D_80115F90;
@@ -16,8 +15,8 @@ OSMesgQueue D_80116198;
 OSMesg D_801161B0[8];
 ALGlobals ALGlobals_801161D0;
 s32 D_80116220[3076];
-s32 D_80119230[3];
-unk80119240 D_80119240[50];
+AMDMAState dmaState;
+AMDMABuffer dmaBuffs[50];
 s32 D_80119628;
 s32 D_8011962C;
 s32 D_80119630;

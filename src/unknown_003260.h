@@ -49,13 +49,13 @@ typedef union {
 
 }ALSndpEvent;
 
-typedef struct unk80119240
+typedef struct AMDMABuffer
 {
     ALLink node;
     u32 unk08;
     u32 unk0C;
     void *unk10;
-} unk80119240;
+} AMDMABuffer;
 
 /* Unknown Size */
 /*typedef struct unk800DC6B0 {
@@ -71,6 +71,13 @@ typedef struct audioMgrConfig_s{
     ALHeap *hp;
     u16  unk10;
 } audioMgrConfig;
+
+typedef struct {
+    u8 initialized;
+    u8 unk1[3];
+    AMDMABuffer *firstUsed;
+    AMDMABuffer *firstFree;
+} AMDMAState;
 
 extern s32 D_800DC680;
 extern s32 D_800DC684;
@@ -94,7 +101,6 @@ extern s32 sfxVolumeSlider;
 extern s32 D_800DC6C4;
 
 extern void func_80002A98(void*);
-extern u32 func_80003008;
 void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al
 void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount); //lib/src/unknown_0C9C90.c
 ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt); //lib/src/unknown_0C9C90.c
