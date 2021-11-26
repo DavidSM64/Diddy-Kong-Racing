@@ -6,7 +6,7 @@ glabel func_800B5F78
 /* 0B6B88 800B5F88 AFB40030 */  sw    $s4, 0x30($sp)
 /* 0B6B8C 800B5F8C AFB20028 */  sw    $s2, 0x28($sp)
 /* 0B6B90 800B5F90 AFB10024 */  sw    $s1, 0x24($sp)
-/* 0B6B94 800B5F94 0C01E015 */  jal   func_80078054
+/* 0B6B94 800B5F94 0C01E015 */  jal   init_rdp_and_framebuffer
 /* 0B6B98 800B5F98 AFB00020 */   sw    $s0, 0x20($sp)
 /* 0B6B9C 800B5F9C 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 0B6BA0 800B5FA0 00000000 */   nop   

@@ -93,21 +93,21 @@ unk801264A0 D_801264A0[4];
 
 s32 D_801264D0;
 s32 D_801264D4;
-s8 D_801264D8;
+s8 sDialogueOption;
 s32 D_801264DC;
 s8 D_801264E0;
 s8 D_801264E1;
 
-s8 D_801264E2;
+s8 sCurrentMenuID;
 
-s8 D_801264E2;
+s8 sCurrentMenuID;
 s32 D_801264E4;
 s32 D_801264E8;
 s32 D_801264EC;
 s32 D_801264F0[2];
 s32 D_801264F8[2];
 s32 D_80126500;
-s8 D_80126504;
+s8 sDialogueOptionMax;
 s32 D_80126508;
 s16 D_8012650C;
 s8 D_8012650E;
@@ -2140,10 +2140,10 @@ void func_800828B8(void) {
     }
 }
 
-void func_800829F8(s32 arg0, s32 arg1) {
+void func_800829F8(Gfx *dl, s32 mulFactor) {
     s32 temp;
 
-    D_800DF46C += arg1;
+    D_800DF46C += mulFactor;
 
     if (D_800DF46C & 0x10) {
         load_menu_text(get_language());
@@ -2154,7 +2154,7 @@ void func_800829F8(s32 arg0, s32 arg1) {
         if (osTvType == TV_TYPE_PAL) {
             temp = 0xEA;
         }
-        draw_text(arg0, -0x8000, temp, gMenuText[151], 0xC);
+        draw_text(dl, -0x8000, temp, gMenuText[151], 0xC);
     }
 }
 
@@ -5935,8 +5935,8 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8009CD7C.s")
 void func_8009CF68(s32 arg0) {
     if (D_800DF4E4[arg0] == 0) {
         if (arg0 != 3) {
-            D_801264E2 = 0;
-            D_801264D8 = 0;
+            sCurrentMenuID = 0;
+            sDialogueOption = 0;
         }
         D_800DF4E0 = 1;
         D_800DF4E4[arg0] = 1;
@@ -5971,19 +5971,19 @@ s32 func_8009CFEC(u32 arg0) {
     func_800C4FBC(1, 0, 0, 0, 0x80);
     func_8001F450();
     switch (arg0) {
-        case 0:
+        case DIALOG_TAJ:
             result = taj_menu_loop(); // Taj menu
             break;
-        case 2:
+        case DIALOG_TT:
             result = tt_menu_loop(); // T.T. menu
             break;
-        case 3:
+        case DIALOG_CHALLENGE:
             result = func_800C3564(); // Taj challenge completed/failed menu
             break;
-        case 4:
+        case DIALOG_TROPHY:
             result = trophy_race_cabinet_menu_loop(); // Trophy race cabinet menu
             break;
-        case 5:
+        case DIALOG_RACERESULT:
             result = func_8009D9F4();
             break;
     }
@@ -6003,30 +6003,30 @@ void func_8009D118(s32 arg0) {
 }
 
 void func_8009D1B8(s32 arg0, s32 arg1, s32 arg2) {
-    func_8009D118(D_801264D8 == D_80126504);
-    if (D_801264D8 == D_80126504) {
+    func_8009D118(sDialogueOption == sDialogueOptionMax);
+    if (sDialogueOption == sDialogueOptionMax) {
         D_80126516 = arg2;
     }
     func_800C5168(1, -0x8000, D_8012650E, arg0, 1, 4);
     D_8012650E = (s8)(D_8012650E + arg1);
-    D_80126504 = (s8)(D_80126504 + 1);
+    sDialogueOptionMax = (s8)(sDialogueOptionMax + 1);
 }
 
 void func_8009D26C(void) {
     if (gControllersYAxisDirection[0] < 0) {
-        D_801264D8 = D_801264D8 + 1;
+        sDialogueOption = sDialogueOption + 1;
         func_80001D04(0xB2, NULL);
     } else if (gControllersYAxisDirection[0] > 0) {
-        D_801264D8 = D_801264D8 - 1;
+        sDialogueOption = sDialogueOption - 1;
         func_80001D04(0xB2, NULL);
     }
 
-    if (D_801264D8 < 0) {
-        D_801264D8 = D_80126504 - 1;
+    if (sDialogueOption < 0) {
+        sDialogueOption = sDialogueOptionMax - 1;
     }
 
-    if (D_801264D8 >= D_80126504) {
-        D_801264D8 = 0;
+    if (sDialogueOption >= sDialogueOptionMax) {
+        sDialogueOption = 0;
     }
 }
 
@@ -6039,8 +6039,8 @@ void func_8009D330(s32 arg0) {
 }
 
 void func_8009D33C(s32 arg0, s32 arg1) {
-    if (D_801264E2 == arg0) {
-        D_801264E2 = arg1;
+    if (sCurrentMenuID == arg0) {
+        sCurrentMenuID = arg1;
     }
 }
 
@@ -6050,21 +6050,21 @@ s32 taj_menu_loop(void) {
     Settings *settings; // sp24
 
     settings = get_settings();
-    if ((D_800DF4DC != 0) && (D_801264E2 == 0)) {
-        D_801264E2 = -D_800DF4DC;
+    if ((D_800DF4DC != 0) && (sCurrentMenuID == 0)) {
+        sCurrentMenuID = -D_800DF4DC;
     }
-    if (D_801264E2 == 0) {
-        D_801264E2 = 1;
+    if (sCurrentMenuID == 0) {
+        sCurrentMenuID = 1;
     }
-    if ((D_801264E2 > 0) && (D_801264E2 < 4)) {
+    if ((sCurrentMenuID > 0) && (sCurrentMenuID < 4)) {
         func_800C4EDC(1, 0x18, 0x10, 0xB8, 0x7C);
         func_800C4F7C(1, 0);
     }
     sp2C = 0;
     buttonsPressed = get_buttons_pressed_from_player(0);
-    D_80126504 = 0;
+    sDialogueOptionMax = 0;
 
-    switch (D_801264E2) {
+    switch (sCurrentMenuID) {
         case 2:
         case 0x62:
             func_800C5168(1, -0x8000, 6, gMenuText[40], 1, 4); // VEHICLE SELECT
@@ -6094,10 +6094,10 @@ s32 taj_menu_loop(void) {
             break;
     }
 
-    switch (D_801264E2) {
+    switch (sCurrentMenuID) {
         case 0:
             func_800C31EC(7);
-            D_801264E2 = 1;
+            sCurrentMenuID = 1;
             D_800DF4D8 = 1;
             break;
         case 1:
@@ -6117,16 +6117,16 @@ s32 taj_menu_loop(void) {
                 func_80001D04(0xEF, 0);
                 switch (D_80126516) {
                     case 1:
-                        D_801264E2 = 3;
-                        D_801264D8 = 0;
+                        sCurrentMenuID = 3;
+                        sDialogueOption = 0;
                         func_8003AC3C(0x239, 1);
                         break;
                     case 2:
                         sp2C = 3;
                         break;
                     case 0:
-                        D_801264E2 = 2;
-                        D_801264D8 = 0;
+                        sCurrentMenuID = 2;
+                        sDialogueOption = 0;
                         func_8003AC3C(0x234, 1);
                         break;
                 }
@@ -6137,15 +6137,15 @@ s32 taj_menu_loop(void) {
             if (buttonsPressed & B_BUTTON) {
                 func_80001D04(0x241, 0);
                 func_8003AC3C(0x238, 1);
-                D_801264E2 = 1;
-                D_801264D8 = 0;
+                sCurrentMenuID = 1;
+                sDialogueOption = 0;
             } else if (buttonsPressed & A_BUTTON) {
                 if (D_80126516 != 3) {
                     sp2C = D_80126516 | 0x80;
-                    D_801264E2 = 0x62;
+                    sCurrentMenuID = 0x62;
                 } else {
-                    D_801264E2 = 1;
-                    D_801264D8 = 0;
+                    sCurrentMenuID = 1;
+                    sDialogueOption = 0;
                     func_8003AC3C(0x238, 1);
                 }
             }
@@ -6155,42 +6155,42 @@ s32 taj_menu_loop(void) {
             if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & A_BUTTON) && (D_80126516 == 3))) {
                 func_80001D04(0x241, 0);
                 func_8003AC3C(0x23A, 1);
-                D_801264E2 = 1;
-                D_801264D8 = 3;
+                sCurrentMenuID = 1;
+                sDialogueOption = 3;
             } else if (buttonsPressed & A_BUTTON) {
                 sp2C = D_80126516 | 0x40;
                 func_80001D04(0xEF, 0);
-                D_801264E2 = 0x63;
+                sCurrentMenuID = 0x63;
             }
             break;
         case -3:
         case -2:
         case -1:
-            func_800C31EC(8 - D_801264E2);
-            D_801264E2 = 4;
+            func_800C31EC(8 - sCurrentMenuID);
+            sCurrentMenuID = 4;
             break;
         case -4:
             func_800C31EC(0x11);
             D_800DF4DC = 0;
-            D_801264E2 = 1;
-            D_801264D8 = 3;
+            sCurrentMenuID = 1;
+            sDialogueOption = 3;
             break;
         case -5:
             func_800C31EC(0x15);
             D_800DF4DC = 0;
-            D_801264E2 = 7;
-            D_801264D8 = 0;
+            sCurrentMenuID = 7;
+            sDialogueOption = 0;
             break;
         case -8:
         case -7:
         case -6:
-            func_800C31EC(0xC - D_801264E2);
-            D_801264E2 = 6;
-            D_801264D8 = 0;
+            func_800C31EC(0xC - sCurrentMenuID);
+            sCurrentMenuID = 6;
+            sDialogueOption = 0;
             break;
         case 4:
             sp2C = (D_800DF4DC - 1) | 0x40;
-            D_801264E2 = 5;
+            sCurrentMenuID = 5;
             func_800C5620(1);
             break;
         case 5:
@@ -6200,13 +6200,13 @@ s32 taj_menu_loop(void) {
         case 6:
         case 7:
             sp2C = 4;
-            if (D_801264E2 == 7) {
+            if (sCurrentMenuID == 7) {
                 sp2C = 3;
             }
             D_800DF4E0 = 0;
             func_800C5620(1);
             D_800DF4DC = 0;
-            D_801264E2 = 0;
+            sCurrentMenuID = 0;
             break;
     }
     return sp2C;
@@ -6220,7 +6220,7 @@ s32 func_8009D9F4(void) {
     func_800C4F7C(1, 0);
     state = 0;
     playerInput = get_buttons_pressed_from_player(0);
-    D_80126504 = 0;
+    sDialogueOptionMax = 0;
     D_800DF4DC = 0;
     func_800C5168(1, -0x8000, 6, gMenuText[49], 1, 4);    // BETTER LUCK
     func_800C5168(1, -0x8000, 0x14, gMenuText[50], 1, 4); // NEXT TIME!
@@ -6247,7 +6247,7 @@ s32 func_8009D9F4(void) {
 // Has a couple minor issues, but should be functionally equivalent.
 s32 tt_menu_loop(void) {
     Settings *settings;
-    s32 sp44;
+    s32 currentOption;
     s32 buttonsPressed; // sp40
     s32 sp3C;
     s32 sp38;
@@ -6261,23 +6261,23 @@ s32 tt_menu_loop(void) {
         settings->cutsceneFlags |= 2;
     }
     if (!(settings->cutsceneFlags & 2)) {
-        D_801264E2 = TT_MENU_INTRODUCTION;
+        sCurrentMenuID = TT_MENU_INTRODUCTION;
     }
-    if ((D_801264E2 != TT_MENU_GAME_STATUS) && (D_801264E2 != TT_MENU_INTRODUCTION)) {
-        sp44 = 0x78;
+    if ((sCurrentMenuID != TT_MENU_GAME_STATUS) && (sCurrentMenuID != TT_MENU_INTRODUCTION)) {
+        currentOption = 0x78;
         if (func_8001B780() != 0) {
-            sp44 = 0x88;
+            currentOption = 0x88;
         }
-        func_800C4EDC(1, 0x18, 0x10, 0xC0, sp44);
+        func_800C4EDC(1, 0x18, 0x10, 0xC0, currentOption);
     } else {
         func_800C4EDC(1, 0x18, 0x10, 0xB8, 0xDC);
     }
     func_800C4F7C(1, 0);
-    sp44 = 0;
+    currentOption = 0;
     buttonsPressed = get_buttons_pressed_from_player(0);
-    D_80126504 = 0;
+    sDialogueOptionMax = 0;
     D_8012650E = 0x20;
-    switch (D_801264E2) {
+    switch (sCurrentMenuID) {
         case TT_MENU_ROOT:
         case TT_MENU_EXIT:
             func_800C5168(1, -0x8000, 6, gMenuText[36], 1, 4); // OPTIONS
@@ -6307,13 +6307,13 @@ s32 tt_menu_loop(void) {
                     set_time_trial_enabled(FALSE);
                 }
             }
-            if ((buttonsPressed & A_BUTTON) && (D_801264E2 != TT_MENU_EXIT)) {
+            if ((buttonsPressed & A_BUTTON) && (sCurrentMenuID != TT_MENU_EXIT)) {
                 switch (D_80126516) {
                     case 1:
                         func_80001D04(0xEF, 0);
                         D_80126398 = 0;
                         D_8012639C = TT_MENU_ROOT;
-                        D_801264E2 = TT_MENU_SAVE_GHOST;
+                        sCurrentMenuID = TT_MENU_SAVE_GHOST;
                         break;
                     case 3:
                         func_80001D04(0xEF, 0);
@@ -6321,22 +6321,22 @@ s32 tt_menu_loop(void) {
                         func_8009C674(&D_800E1E2C);
                         func_8009C8A4(&D_800E1E40);
                         D_800E1E28 = 1;
-                        D_801264E2 = TT_MENU_GAME_STATUS;
+                        sCurrentMenuID = TT_MENU_GAME_STATUS;
                         break;
                 }
-                sp44 = D_80126516 + 1;
+                currentOption = D_80126516 + 1;
             } else if (buttonsPressed & B_BUTTON) {
                 func_80001D04(0x241, 0);
-                sp44 = 3;
+                currentOption = 3;
             }
-            if (D_801264E2 == TT_MENU_GAME_STATUS) {
-                sp44 = 0;
+            if (sCurrentMenuID == TT_MENU_GAME_STATUS) {
+                currentOption = 0;
             }
-            if (sp44 == 3) {
-                D_801264E2 = TT_MENU_EXIT;
+            if (currentOption == 3) {
+                sCurrentMenuID = TT_MENU_EXIT;
             }
-            if (D_801264E2 == TT_MENU_EXIT) {
-                sp44 = 3;
+            if (sCurrentMenuID == TT_MENU_EXIT) {
+                currentOption = 3;
             }
             break;
         case TT_MENU_CONT_PAK_ERROR_1:
@@ -6356,12 +6356,12 @@ s32 tt_menu_loop(void) {
                 }
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
-                D_801264E2 = TT_MENU_ROOT;
+                sCurrentMenuID = TT_MENU_ROOT;
             }
             break;
         case TT_MENU_GAME_STATUS:
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
-                D_801264E2 = TT_MENU_ROOT;
+                sCurrentMenuID = TT_MENU_ROOT;
                 D_800E1E28 = 0;
                 func_8009C4A8(&D_800E1E2C);
                 func_80036BCC(0x22F, 1);
@@ -6375,7 +6375,7 @@ s32 tt_menu_loop(void) {
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
                 settings->cutsceneFlags |= 2;
-                D_801264E2 = TT_MENU_ROOT;
+                sCurrentMenuID = TT_MENU_ROOT;
             }
             break;
         case TT_MENU_INSERT_CONT_PAK:
@@ -6386,10 +6386,10 @@ s32 tt_menu_loop(void) {
                 func_80001D04(0xEF, 0);
                 D_80126398 = 0;
                 D_8012639C = TT_MENU_INSERT_RUMBLE_PAK;
-                D_801264E2 = TT_MENU_SAVE_GHOST;
+                sCurrentMenuID = TT_MENU_SAVE_GHOST;
             } else if (buttonsPressed & B_BUTTON) {
                 func_80001D04(0x241, 0);
-                D_801264E2 = TT_MENU_ROOT;
+                sCurrentMenuID = TT_MENU_ROOT;
             }
             break;
         case TT_MENU_INSERT_RUMBLE_PAK:
@@ -6397,7 +6397,7 @@ s32 tt_menu_loop(void) {
             func_800C5168(1, -0x8000, 0x32, gMenuText[161], 1, 4); // the Rumble Pak
             func_800C5168(1, -0x8000, 0x42, gMenuText[162], 1, 4); // insert it now!
             if (buttonsPressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
-                D_801264E2 = TT_MENU_ROOT;
+                sCurrentMenuID = TT_MENU_ROOT;
             }
             break;
         case TT_MENU_SAVE_GHOST:
@@ -6410,41 +6410,42 @@ s32 tt_menu_loop(void) {
                 }
                 switch (result) {
                     case 0:
-                        D_801264E2 = D_8012639C;
+                        sCurrentMenuID = D_8012639C;
                         break;
                     case 7:
-                        D_801264E2 = TT_MENU_INSERT_CONT_PAK;
+                        sCurrentMenuID = TT_MENU_INSERT_CONT_PAK;
                         break;
                     case 1:
                         D_801263A4 = &D_800E09D8;
-                        D_801264E2 = TT_MENU_CONT_PAK_ERROR_1;
+                        sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case 4:
                     case 6:
                         D_801263A4 = &D_800E09C4;
-                        D_801264E2 = TT_MENU_CONT_PAK_ERROR_1;
+                        sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case 9:
                         D_801263A4 = &D_800E09EC;
-                        D_801264E2 = TT_MENU_CONT_PAK_ERROR_1;
+                        sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case 2:
                     case 3:
                     case 5:
                     case 8:
                         D_801263A4 = &D_800E09B0;
-                        D_801264E2 = TT_MENU_CONT_PAK_ERROR_1;
+                        sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                 }
             }
             break;
     }
-    if ((D_801264E2 == TT_MENU_CONT_PAK_ERROR_1) ||
-        (D_801264E2 == TT_MENU_CONT_PAK_ERROR_2) ||
-        (D_801264E2 == TT_MENU_CONT_PAK_ERROR_3)) {
+    if ((sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_1) ||
+        (sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_2) ||
+        (sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_3)) {
         func_800C5168(1, -0x8000, 6, gMenuText[64], 1, 4); // PAK ERROR
     }
-    return sp44;
+
+    return currentOption;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/menu/tt_menu_loop.s")
@@ -6453,36 +6454,36 @@ GLOBAL_ASM("asm/non_matchings/menu/tt_menu_loop.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8009E3D0.s")
 
 s32 trophy_race_cabinet_menu_loop(void) {
-    s32 sp24;
+    s32 currentOption;
     s32 buttonsPressed;
 
     func_800C4EDC(1, 0x18, 0x10, 0xB8, 0x78);
     func_800C4F7C(1, 0);
-    sp24 = 0;
+    currentOption = 0;
     buttonsPressed = get_buttons_pressed_from_player(0);
     func_800C5168(1, -0x8000, 6, gMenuText[70], 1, 4); // TROPHY RACE
     if (gControllersYAxisDirection[0] < 0) {
-        D_801264D8++;
+        sDialogueOption++;
     } else if (gControllersYAxisDirection[0] > 0) {
-        D_801264D8--;
+        sDialogueOption--;
     }
-    if (D_801264D8 < 0) {
-        D_801264D8 = 0;
+    if (sDialogueOption < 0) {
+        sDialogueOption = 0;
     }
-    if (D_801264D8 > 1) {
-        D_801264D8 = 1;
+    if (sDialogueOption > 1) {
+        sDialogueOption = 1;
     }
-    func_8009D118(D_801264D8 == 0);
+    func_8009D118(sDialogueOption == 0);
     func_800C5168(1, -0x8000, 0x1E, gMenuText[180], 1, 4); // ENTER TROPHY RACE
-    func_8009D118(D_801264D8 == 1);
+    func_8009D118(sDialogueOption == 1);
     func_800C5168(1, -0x8000, 0x32, gMenuText[51], 1, 4); // EXIT
     if (buttonsPressed & A_BUTTON) {
-        sp24 = D_801264D8 + 1;
+        currentOption = sDialogueOption + 1;
     }
     if (buttonsPressed & B_BUTTON) {
-        sp24 = 2;
+        currentOption = 2;
     }
-    return sp24;
+    return currentOption;
 }
 
 void func_8009E9A0(void) {
@@ -6496,7 +6497,7 @@ f32 func_8009E9B0(unk8012A7E8 *arg0, Gfx **arg1, s32 *arg2, s32 *arg3) {
     D_801263A8 = *arg2;
     D_801263AC = *arg3;
     func_80067F2C(&D_801263A0, &D_801263A8);
-    if (D_800E1E28 != 0 && D_801264E2 == 4) {
+    if (D_800E1E28 != 0 && sCurrentMenuID == 4) {
         func_8009E3D0();
     }
     *arg1 = D_801263A0;

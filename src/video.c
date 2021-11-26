@@ -233,9 +233,9 @@ void func_8007A974(void) {
 #ifdef NON_MATCHING
 // regalloc & stack issues
 s32 func_8007A98C(s32 arg0) {
-    s32 s0;
+    s32 tempMulFactor;
 
-    s0 = 1;
+    tempMulFactor = 1;
     if (D_801262D0 != 0) {
         D_801262D0--;
         if (D_801262D0 == 0) {
@@ -250,28 +250,28 @@ s32 func_8007A98C(s32 arg0) {
         s0 &= 0xFF;
     }
 
-    if (s0 < D_80126309) {
+    if (tempMulFactor < D_80126309) {
         if (D_80126308 < 0x14) {
             D_80126308++;
         }
         if (D_80126308 == 0x14) {
-            D_80126309 = s0;
+            D_80126309 = tempMulFactor;
             D_80126308 = 0;
         }
     } else {
         D_80126308 = 0;
-        if ((D_80126309 >= s0) || (D_801262E4 > s0)) {
-            D_80126309 = s0;
+        if ((D_80126309 >= tempMulFactor) || (D_801262E4 > tempMulFactor)) {
+            D_80126309 = tempMulFactor;
         }
     }
-    while (s0 < D_80126309) {
+    while (tempMulFactor < D_80126309) {
         osRecvMesg(&D_801261A0, NULL, 1);
-        s0 += 1;
-        s0 &= 0xFF;
+        tempMulFactor += 1;
+        tempMulFactor &= 0xFF;
     }
     osViSwapBuffer(gVideoLastFramebuffer);
     osRecvMesg(&D_801261A0, NULL, 1);
-    return s0;
+    return tempMulFactor;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/video/func_8007A98C.s")

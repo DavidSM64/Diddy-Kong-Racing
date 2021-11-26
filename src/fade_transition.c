@@ -288,12 +288,12 @@ s32 func_800C01D8(FadeTransition *transition) {
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C01D8.s")
 #endif
 
-s32 func_800C0494(s32 arg0) {
+s32 func_800C0494(s32 mulFactor) {
     if (D_800E31A4 != 0) {
         D_800E31A4 = D_800E31A4 - 1;
-        arg0 = 0;
-    } else if (arg0 >= 6) {
-        arg0 = 5;
+        mulFactor = 0;
+    } else if (mulFactor >= 6) {
+        mulFactor = 5;
     }
 
     if (D_800E31AC != 0) {
@@ -308,19 +308,19 @@ s32 func_800C0494(s32 arg0) {
             }
             switch (gCurFaceTransition) {
                 case FADE_FULLSCREEN:
-                    func_800C0834(arg0);
+                    func_800C0834(mulFactor);
                     break;
                 case FADE_BARNDOOR_HORIZONTAL:
                 case FADE_BARNDOOR_VERTICAL:
                 case FADE_WAVES:
                 case FADE_BARNDOOR_DIAGONAL:
-                    func_800C1130(arg0);
+                    func_800C1130(mulFactor);
                     break;
                 case FADE_CIRCLE:
-                    func_800C1EE8(arg0);
+                    func_800C1EE8(mulFactor);
                     break;
                 case FADE_DISABLED:
-                    func_800C27A0(arg0);
+                    func_800C27A0(mulFactor);
                     break;
             }
         }
