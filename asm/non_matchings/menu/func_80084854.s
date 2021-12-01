@@ -132,14 +132,14 @@ glabel func_80084854
 /* 085640 80084A40 24040007 */  li    $a0, 7
 /* 085644 80084A44 00002825 */  move  $a1, $zero
 /* 085648 80084A48 00003025 */  move  $a2, $zero
-/* 08564C 80084A4C 0C0313EF */  jal   func_800C4FBC
+/* 08564C 80084A4C 0C0313EF */  jal   set_current_dialogue_background_colour
 /* 085650 80084A50 00003825 */   move  $a3, $zero
 /* 085654 80084A54 240B007B */  li    $t3, 123
 /* 085658 80084A58 AFAB0010 */  sw    $t3, 0x10($sp)
 /* 08565C 80084A5C 24040007 */  li    $a0, 7
 /* 085660 80084A60 2405005E */  li    $a1, 94
 /* 085664 80084A64 24060075 */  li    $a2, 117
-/* 085668 80084A68 0C0313B7 */  jal   set_dialogue_box_coords
+/* 085668 80084A68 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 08566C 80084A6C 240700E2 */   li    $a3, 226
 /* 085670 80084A70 02402025 */  move  $a0, $s2
 /* 085674 80084A74 00002825 */  move  $a1, $zero
@@ -151,7 +151,7 @@ glabel func_80084854
 /* 08568C 80084A8C 24040007 */  li    $a0, 7
 /* 085690 80084A90 2405005E */  li    $a1, 94
 /* 085694 80084A94 2406009D */  li    $a2, 157
-/* 085698 80084A98 0C0313B7 */  jal   set_dialogue_box_coords
+/* 085698 80084A98 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 08569C 80084A9C 240700E2 */   li    $a3, 226
 /* 0856A0 80084AA0 02402025 */  move  $a0, $s2
 /* 0856A4 80084AA4 00002825 */  move  $a1, $zero

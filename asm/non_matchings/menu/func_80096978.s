@@ -424,13 +424,13 @@ glabel func_80096978
 /* 097BC4 80096FC4 24C600C4 */  addiu $a2, $a2, 0xc4
 /* 097BC8 80096FC8 AFB80010 */  sw    $t8, 0x10($sp)
 /* 097BCC 80096FCC 24050050 */  li    $a1, 80
-/* 097BD0 80096FD0 0C0313B7 */  jal   set_dialogue_box_coords
+/* 097BD0 80096FD0 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 097BD4 80096FD4 240700F0 */   li    $a3, 240
 /* 097BD8 80096FD8 24040007 */  li    $a0, 7
 /* 097BDC 80096FDC 24050040 */  li    $a1, 64
 /* 097BE0 80096FE0 24060040 */  li    $a2, 64
 /* 097BE4 80096FE4 240700FF */  li    $a3, 255
-/* 097BE8 80096FE8 0C0313EF */  jal   func_800C4FBC
+/* 097BE8 80096FE8 0C0313EF */  jal   set_current_dialogue_background_colour
 /* 097BEC 80096FEC AFA00010 */   sw    $zero, 0x10($sp)
 /* 097BF0 80096FF0 24040007 */  li    $a0, 7
 /* 097BF4 80096FF4 0C0313DF */  jal   set_dialogue_font
@@ -439,7 +439,7 @@ glabel func_80096978
 /* 097C00 80097000 00002825 */  move  $a1, $zero
 /* 097C04 80097004 00003025 */  move  $a2, $zero
 /* 097C08 80097008 00003825 */  move  $a3, $zero
-/* 097C0C 8009700C 0C031414 */  jal   func_800C5050
+/* 097C0C 8009700C 0C031414 */  jal   set_current_text_background_colour
 /* 097C10 80097010 AFA00010 */   sw    $zero, 0x10($sp)
 /* 097C14 80097014 3C028012 */  lui   $v0, %hi(D_801263BC) # $v0, 0x8012
 /* 097C18 80097018 8C4263BC */  lw    $v0, %lo(D_801263BC)($v0)
@@ -481,7 +481,7 @@ glabel func_80096978
 /* 097CA4 800970A4 240500FF */  li    $a1, 255
 /* 097CA8 800970A8 240600FF */  li    $a2, 255
 /* 097CAC 800970AC 240700FF */  li    $a3, 255
-/* 097CB0 800970B0 0C031400 */  jal   set_text_colour
+/* 097CB0 800970B0 0C031400 */  jal   set_current_text_colour
 /* 097CB4 800970B4 AFB80010 */   sw    $t8, 0x10($sp)
 /* 097CB8 800970B8 10000008 */  b     .L800970DC
 /* 097CBC 800970BC 00000000 */   nop   
@@ -491,7 +491,7 @@ glabel func_80096978
 /* 097CC8 800970C8 240500FF */  li    $a1, 255
 /* 097CCC 800970CC 240600FF */  li    $a2, 255
 /* 097CD0 800970D0 240700FF */  li    $a3, 255
-/* 097CD4 800970D4 0C031400 */  jal   set_text_colour
+/* 097CD4 800970D4 0C031400 */  jal   set_current_text_colour
 /* 097CD8 800970D8 AFA00010 */   sw    $zero, 0x10($sp)
 .L800970DC:
 /* 097CDC 800970DC 3C0A800E */  lui   $t2, %hi(gMenuText) # $t2, 0x800e
@@ -517,7 +517,7 @@ glabel func_80096978
 /* 097D2C 8009712C 240500FF */  li    $a1, 255
 /* 097D30 80097130 240600FF */  li    $a2, 255
 /* 097D34 80097134 240700FF */  li    $a3, 255
-/* 097D38 80097138 0C031400 */  jal   set_text_colour
+/* 097D38 80097138 0C031400 */  jal   set_current_text_colour
 /* 097D3C 8009713C AFAC0010 */   sw    $t4, 0x10($sp)
 /* 097D40 80097140 10000008 */  b     .L80097164
 /* 097D44 80097144 00000000 */   nop   
@@ -527,7 +527,7 @@ glabel func_80096978
 /* 097D50 80097150 240500FF */  li    $a1, 255
 /* 097D54 80097154 240600FF */  li    $a2, 255
 /* 097D58 80097158 240700FF */  li    $a3, 255
-/* 097D5C 8009715C 0C031400 */  jal   set_text_colour
+/* 097D5C 8009715C 0C031400 */  jal   set_current_text_colour
 /* 097D60 80097160 AFA00010 */   sw    $zero, 0x10($sp)
 .L80097164:
 /* 097D64 80097164 3C18800E */  lui   $t8, %hi(gMenuText) # $t8, 0x800e
@@ -566,7 +566,7 @@ glabel func_80096978
 /* 097DE0 800971E0 240600FF */  li    $a2, 255
 /* 097DE4 800971E4 240700FF */  li    $a3, 255
 /* 097DE8 800971E8 AFA20010 */  sw    $v0, 0x10($sp)
-/* 097DEC 800971EC 0C031400 */  jal   set_text_colour
+/* 097DEC 800971EC 0C031400 */  jal   set_current_text_colour
 /* 097DF0 800971F0 AFA200A0 */   sw    $v0, 0xa0($sp)
 /* 097DF4 800971F4 1000000A */  b     .L80097220
 /* 097DF8 800971F8 8FA600A8 */   lw    $a2, 0xa8($sp)
@@ -577,7 +577,7 @@ glabel func_80096978
 /* 097E08 80097208 240600FF */  li    $a2, 255
 /* 097E0C 8009720C 240700FF */  li    $a3, 255
 /* 097E10 80097210 AFA00010 */  sw    $zero, 0x10($sp)
-/* 097E14 80097214 0C031400 */  jal   set_text_colour
+/* 097E14 80097214 0C031400 */  jal   set_current_text_colour
 /* 097E18 80097218 AFA200A0 */   sw    $v0, 0xa0($sp)
 /* 097E1C 8009721C 8FA600A8 */  lw    $a2, 0xa8($sp)
 .L80097220:
@@ -598,7 +598,7 @@ glabel func_80096978
 /* 097E58 80097258 1420FFD9 */  bnez  $at, .L800971C0
 /* 097E5C 8009725C AFA900A8 */   sw    $t1, 0xa8($sp)
 .L80097260:
-/* 097E60 80097260 0C03157D */  jal   func_800C55F4
+/* 097E60 80097260 0C03157D */  jal   open_dialogue_box
 /* 097E64 80097264 24040007 */   li    $a0, 7
 .L80097268:
 /* 097E68 80097268 8FBF005C */  lw    $ra, 0x5c($sp)

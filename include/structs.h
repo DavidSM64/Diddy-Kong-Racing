@@ -1017,24 +1017,24 @@ typedef struct DialogueBoxBackground {
     s16 y2;
     s16 width;
     s16 height;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 colorRed;
-    u8 colorGreen;
-    u8 colorBlue;
-    u8 colorAlpha;
-    u8 bgRed;
-    u8 bgGreen;
-    u8 bgBlue;
-    u8 bgAlpha;
+    u8 backgroundColourR;
+    u8 backgroundColourG;
+    u8 backgroundColourB;
+    u8 backgroundColourA;
+    u8 textColourR;
+    u8 textColourG;
+    u8 textColourB;
+    u8 textColourA;
+    u8 textBGColourR;
+    u8 textBGColourG;
+    u8 textBGColourB;
+    u8 textBGColourA;
     u8 opacity;
     u8 font;
-    u16 unk1E;
+    u16 flags;
     s16 unk20;
     s16 unk22;
-    DialogueBox *unk24;
+    DialogueBox *text;
 } DialogueBoxBackground;
 
 #endif

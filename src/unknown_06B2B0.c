@@ -930,7 +930,7 @@ void render(void) {
     func_80000D00((u8)sLogicMulFactor);
     func_800B5F78(&gCurrDisplayList);
     func_800C56FC(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
-    func_800C5620(4);
+    close_dialogue_box(4);
     func_800C5494(4);
     if (func_800C0494(sLogicMulFactor) != 0) {
         render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);

@@ -2994,8 +2994,8 @@ void menu_magic_codes_init(void) {
     D_801263D8 = 0;
     D_801263E0 = 0;
     func_800C01D8(&D_800DF77C);
-    set_dialogue_box_coords(7, 0x32, 0x32, 0x10E, 0x84);
-    func_800C4FBC(7, 0, 0, 0, 0x80);
+    set_current_dialogue_box_coords(7, 0x32, 0x32, 0x10E, 0x84);
+    set_current_dialogue_background_colour(7, 0, 0, 0, 0x80);
     func_800C5494(7);
     func_800C4170(2);
 }
@@ -3092,8 +3092,8 @@ void render_magic_codes_ui(s32 arg0) {
         }
         func_800C5494(6);
         set_dialogue_font(6, FONT_COLOURFUL);
-        set_dialogue_box_coords(6, 0x4C, yPos - 0x1C, 0xF4, yPos + 0x1C);
-        func_800C4FBC(6, 0, 0, 0, 0xA0);
+        set_current_dialogue_box_coords(6, 0x4C, yPos - 0x1C, 0xF4, yPos + 0x1C);
+        set_current_dialogue_background_colour(6, 0, 0, 0, 0xA0);
         yPos = 4;
         for (i = 0; i < 3; i++) {
             alpha = 0;
@@ -3104,7 +3104,7 @@ void render_magic_codes_ui(s32 arg0) {
             } else if (i == D_801263E0) {
                 alpha = temp;
             }
-            set_text_colour(6, 0xFF, green, 0xFF, alpha, 0xFF);
+            set_current_text_colour(6, 0xFF, green, 0xFF, alpha, 0xFF);
 
             // gMenuText[148] = "CLEAR ALL CODES?", [149] = "OK", [150] = "CANCEL"
             render_dialogue_text(6, POS_X_CENTRED, yPos, gMenuText[148 + i], 1, 4);
@@ -4384,7 +4384,7 @@ void render_track_select_setup_ui(s32 arg0) {
         if (sp84 >= 0x100) {
             sp84 = 0x1FF - sp84;
         }
-        func_800C4FBC(7, 0xFF, sp84, 0, D_800DF764);
+        set_current_dialogue_background_colour(7, 0xFF, sp84, 0, D_800DF764);
         if ((D_801263E0 == -1) || ((D_801263E0 == 2) && (D_801269C8 == 4) && is_adventure_two_unlocked())) {
             s4 = func_800C4DA0(gMenuText[146], 0, 0);   // gMenuText[146] = "ADVENTURE"
             temp = func_800C4DA0(gMenuText[147], 0, 0); // gMenuText[147] = "ADVENTURE TWO"
@@ -4434,7 +4434,7 @@ void render_track_select_setup_ui(s32 arg0) {
             if (D_801263E0 != -1) {
                 if (gNumberOfActivePlayers == 1) {
                     // Glow effect
-                    set_dialogue_box_coords(7, 0x86, sp80 + 0x70, 0xBA, sp80 + 0x89);
+                    set_current_dialogue_box_coords(7, 0x86, sp80 + 0x70, 0xBA, sp80 + 0x89);
                     func_800C5B58(&D_801263A0, 0, 0, 7);
                     if (D_801263E0 <= 0) {
                         render_textured_rectangle(&D_801263A0, &D_800E05B4, 0x88, sp80 + 0x72, 0xFF, 0xFF, 0xFF, D_800DF764);
@@ -4458,7 +4458,7 @@ void render_track_select_setup_ui(s32 arg0) {
                                 s32 temp_v0_9 = D_800E0688[s3 + (i * 2)];
                                 s32 temp_v1 = D_800E0688[s3 + (i * 2) + 1] + sp80;
                                 // Glow effect around Player image
-                                set_dialogue_box_coords(7, temp_v0_9 - 2, temp_v1 - 2, temp_v0_9 + 0x32, temp_v1 + 0x17);
+                                set_current_dialogue_box_coords(7, temp_v0_9 - 2, temp_v1 - 2, temp_v0_9 + 0x32, temp_v1 + 0x17);
                                 func_800C5B58(&D_801263A0, 0, 0, 7);
                             }
 
@@ -4835,7 +4835,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80094170.s")
 
 void n_alSynRemovePlayer(void) {
     func_80072298(1);
-    func_800C5620(7);
+    close_dialogue_box(7);
     func_800C5494(7);
     D_800E0984 = 0;
 }
@@ -5946,7 +5946,7 @@ void func_8009CF68(s32 arg0) {
 void func_8009CFB0(void) {
     if (D_800DF4E0 != 0) {
         D_800DF4E0 = 0;
-        func_800C5620(1);
+        close_dialogue_box(1);
         reset_controller_sticks();
     }
 }
@@ -5967,8 +5967,8 @@ s32 func_8009CFEC(u32 arg0) {
     result = 0;
     update_controller_sticks();
     func_800C5494(1);
-    func_800C55F4(1);
-    func_800C4FBC(1, 0, 0, 0, 0x80);
+    open_dialogue_box(1);
+    set_current_dialogue_background_colour(1, 0, 0, 0, 0x80);
     func_8001F450();
     switch (arg0) {
         case DIALOG_TAJ:
@@ -5996,12 +5996,12 @@ s32 func_8009CFEC(u32 arg0) {
  */
 void set_option_text_colour(s32 condition) {
     if (condition == FALSE) {
-        set_text_colour(1, 0, 0, 0x7F, 0x5A, 0xFF); // Normal
+        set_current_text_colour(1, 0, 0, 0x7F, 0x5A, 0xFF); // Normal
         if (gDialogOptionTangible != FALSE) {
-            set_text_colour(1, 0, 0, 0x7F, 0x5A, 0x78); //Locked
+            set_current_text_colour(1, 0, 0, 0x7F, 0x5A, 0x78); //Locked
         }
     } else {
-        set_text_colour(1, 0xCF, 0xCF, 0xCF, 0x5A, 0xFF); // Selected Option
+        set_current_text_colour(1, 0xCF, 0xCF, 0xCF, 0x5A, 0xFF); // Selected Option
     }
     gDialogOptionTangible = (u8)FALSE;
 }
@@ -6061,7 +6061,7 @@ s32 taj_menu_loop(void) {
         sCurrentMenuID = 1;
     }
     if ((sCurrentMenuID > 0) && (sCurrentMenuID < 4)) {
-        set_dialogue_box_coords(1, 24, 16, 184, 124);
+        set_current_dialogue_box_coords(1, 24, 16, 184, 124);
         set_dialogue_font(1, FONT_COLOURFUL);
     }
     sp2C = 0;
@@ -6195,11 +6195,11 @@ s32 taj_menu_loop(void) {
         case 4:
             sp2C = (D_800DF4DC - 1) | 0x40;
             sCurrentMenuID = 5;
-            func_800C5620(1);
+            close_dialogue_box(1);
             break;
         case 5:
             D_800DF4DC = 0;
-            func_800C5620(1);
+            close_dialogue_box(1);
             break;
         case 6:
         case 7:
@@ -6208,7 +6208,7 @@ s32 taj_menu_loop(void) {
                 sp2C = 3;
             }
             D_800DF4E0 = 0;
-            func_800C5620(1);
+            close_dialogue_box(1);
             D_800DF4DC = 0;
             sCurrentMenuID = 0;
             break;
@@ -6220,7 +6220,7 @@ s32 func_8009D9F4(void) {
     s32 state;
     s32 playerInput;
 
-    set_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0x87);
+    set_current_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0x87);
     set_dialogue_font(1, FONT_COLOURFUL);
     state = 0;
     playerInput = get_buttons_pressed_from_player(0);
@@ -6272,9 +6272,9 @@ s32 tt_menu_loop(void) {
         if (func_8001B780() != 0) {
             currentOption = 0x88;
         }
-        set_dialogue_box_coords(1, 0x18, 0x10, 0xC0, currentOption);
+        set_current_dialogue_box_coords(1, 0x18, 0x10, 0xC0, currentOption);
     } else {
-        set_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0xDC);
+        set_current_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0xDC);
     }
     set_dialogue_font(1, FONT_COLOURFUL);
     currentOption = 0;
@@ -6461,7 +6461,7 @@ s32 trophy_race_cabinet_menu_loop(void) {
     s32 currentOption;
     s32 buttonsPressed;
 
-    set_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0x78);
+    set_current_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0x78);
     set_dialogue_font(1, FONT_COLOURFUL);
     currentOption = 0;
     buttonsPressed = get_buttons_pressed_from_player(0);

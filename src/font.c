@@ -45,13 +45,13 @@ s32 gDescPowsOf10[9] = {
 };
 
 s8 D_800E3710[48] = {
-    4,  FALSE,  0, FALSE,  1, 
-    2,  FALSE,  1, FALSE,  2, 
-    1,  FALSE,  2, FALSE,  4, 
-    0,  FALSE,  4,  TRUE, -4, 
-    1,   TRUE, -4,  TRUE, -2, 
-    2,   TRUE, -2,  TRUE, -1, 
-    4,   TRUE, -1,  TRUE,  0, 
+    4,  FALSE,  0, FALSE,  1,
+    2,  FALSE,  1, FALSE,  2,
+    1,  FALSE,  2, FALSE,  4,
+    0,  FALSE,  4,  TRUE, -4,
+    1,   TRUE, -4,  TRUE, -2,
+    2,   TRUE, -2,  TRUE, -1,
+    4,   TRUE, -1,  TRUE,  0,
     -1, 0, 0, 0, 0, // End of Data
     0, 0, 0, 0, 0, 0, 0, 0,
 };
@@ -99,28 +99,28 @@ void load_fonts(void) {
         (*gDialogueBoxBackground)[i].y2 = SCREEN_HEIGHT - 1;
         (*gDialogueBoxBackground)[i].width = SCREEN_WIDTH;
         (*gDialogueBoxBackground)[i].height = SCREEN_HEIGHT;
-        (*gDialogueBoxBackground)[i].unk10 = 0xFF;
-        (*gDialogueBoxBackground)[i].unk11 = 0xFF;
-        (*gDialogueBoxBackground)[i].unk12 = 0xFF;
-        (*gDialogueBoxBackground)[i].unk13 = 0;
-        (*gDialogueBoxBackground)[i].colorRed = 0xFF;
-        (*gDialogueBoxBackground)[i].colorGreen = 0xFF;
-        (*gDialogueBoxBackground)[i].colorBlue = 0xFF;
-        (*gDialogueBoxBackground)[i].colorAlpha = 0;
-        (*gDialogueBoxBackground)[i].bgRed = 0xFF;
-        (*gDialogueBoxBackground)[i].bgGreen = 0xFF;
-        (*gDialogueBoxBackground)[i].bgBlue = 0xFF;
-        (*gDialogueBoxBackground)[i].bgAlpha = 0;
+        (*gDialogueBoxBackground)[i].backgroundColourR = 0xFF;
+        (*gDialogueBoxBackground)[i].backgroundColourG = 0xFF;
+        (*gDialogueBoxBackground)[i].backgroundColourB = 0xFF;
+        (*gDialogueBoxBackground)[i].backgroundColourA = 0;
+        (*gDialogueBoxBackground)[i].textColourR = 0xFF;
+        (*gDialogueBoxBackground)[i].textColourG = 0xFF;
+        (*gDialogueBoxBackground)[i].textColourB = 0xFF;
+        (*gDialogueBoxBackground)[i].textColourA = 0;
+        (*gDialogueBoxBackground)[i].textBGColourR = 0xFF;
+        (*gDialogueBoxBackground)[i].textBGColourG = 0xFF;
+        (*gDialogueBoxBackground)[i].textBGColourB = 0xFF;
+        (*gDialogueBoxBackground)[i].textBGColourA = 0;
         (*gDialogueBoxBackground)[i].opacity = 0xFF;
         (*gDialogueBoxBackground)[i].font = 0xFF;
         if (i != 0) {
-            (*gDialogueBoxBackground)[i].unk1E = 0x4000;
+            (*gDialogueBoxBackground)[i].flags = DIALOGUE_BOX_UNK_01;
         } else {
-            (*gDialogueBoxBackground)[i].unk1E = 0;
+            (*gDialogueBoxBackground)[i].flags = 0;
         }
         (*gDialogueBoxBackground)[i].unk20 = 0;
         (*gDialogueBoxBackground)[i].unk22 = 0;
-        (*gDialogueBoxBackground)[i].unk24 = 0;
+        (*gDialogueBoxBackground)[i].text = 0;
     }
     for (i = 0; i < unk8012A7EC_COUNT; i++) {
         (*D_8012A7EC)[i].unk1 = 0xFF;
@@ -222,18 +222,18 @@ GLOBAL_ASM("asm/non_matchings/font/func_800C4318.s")
 #endif
 
 void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
-    (*gDialogueBoxBackground)[0].colorRed = red;
-    (*gDialogueBoxBackground)[0].colorGreen = green;
-    (*gDialogueBoxBackground)[0].colorBlue = blue;
-    (*gDialogueBoxBackground)[0].colorAlpha = alpha;
+    (*gDialogueBoxBackground)[0].textColourR = red;
+    (*gDialogueBoxBackground)[0].textColourG = green;
+    (*gDialogueBoxBackground)[0].textColourB = blue;
+    (*gDialogueBoxBackground)[0].textColourA = alpha;
     (*gDialogueBoxBackground)[0].opacity = opacity;
 }
 
 void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
-    (*gDialogueBoxBackground)[0].bgRed = red;
-    (*gDialogueBoxBackground)[0].bgGreen = green;
-    (*gDialogueBoxBackground)[0].bgBlue = blue;
-    (*gDialogueBoxBackground)[0].bgAlpha = alpha;
+    (*gDialogueBoxBackground)[0].textBGColourR = red;
+    (*gDialogueBoxBackground)[0].textBGColourG = green;
+    (*gDialogueBoxBackground)[0].textBGColourB = blue;
+    (*gDialogueBoxBackground)[0].textBGColourA = alpha;
 }
 
 // Unused?
@@ -313,7 +313,7 @@ s32 func_800C4DA0(u8 *text, s32 x, s32 font) {
 GLOBAL_ASM("asm/non_matchings/font/func_800C4DA0.s")
 #endif
 
-void set_dialogue_box_coords(s32 arg0, s32 x1, s32 y1, s32 x2, s32 y2) {
+void set_current_dialogue_box_coords(s32 arg0, s32 x1, s32 y1, s32 x2, s32 y2) {
     if (arg0 > 0 && arg0 < 8) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[arg0];
         temp->xpos = 0;
@@ -346,39 +346,39 @@ void set_dialogue_font(s32 arg0, s32 font) {
     }
 }
 
-void func_800C4FBC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void set_current_dialogue_background_colour(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (arg0 > 0 && arg0 < 8) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[arg0];
-        temp->unk10 = arg1;
-        temp->unk11 = arg2;
-        temp->unk12 = arg3;
-        temp->unk13 = arg4;
+        temp->backgroundColourR = arg1;
+        temp->backgroundColourG = arg2;
+        temp->backgroundColourB = arg3;
+        temp->backgroundColourA = arg4;
     }
 }
 
-void set_text_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
+void set_current_text_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     DialogueBoxBackground *temp;
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
     temp = &gDialogueBoxBackground[arg0];
-    temp->colorRed = red;
-    temp->colorGreen = green;
-    temp->colorBlue = blue;
-    temp->colorAlpha = alpha;
+    temp->textColourR = red;
+    temp->textColourG = green;
+    temp->textColourB = blue;
+    temp->textColourA = alpha;
     temp->opacity = opacity;
 }
 
-void func_800C5050(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void set_current_text_background_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha) {
     DialogueBoxBackground *temp;
     if (arg0 <= 0 || arg0 >= 8) {
         return;
     }
     temp = &gDialogueBoxBackground[arg0];
-    temp->bgRed = arg1;
-    temp->bgGreen = arg2;
-    temp->bgBlue = arg3;
-    temp->bgAlpha = arg4;
+    temp->textBGColourR = red;
+    temp->textBGColourG = green;
+    temp->textBGColourB = blue;
+    temp->textBGColourA = alpha;
 }
 
 // Unused?
@@ -417,8 +417,8 @@ void func_800C5428(s32 arg0, DialogueBox *arg1) {
     DialogueBox **temp_24_ptr;
 
     temp = &gDialogueBoxBackground[arg0];
-    temp_24_ptr = &temp->unk24;
-    temp_24 = temp->unk24;
+    temp_24_ptr = &temp->text;
+    temp_24 = temp->text;
     while ((temp_24 != NULL) && (temp_24 != arg1)) {
         temp_24_ptr = &temp_24->unk1C;
         temp_24 = temp_24->unk1C;
@@ -434,14 +434,14 @@ void func_800C5494(s32 arg0) {
     DialogueBox *temp_24, *temp_24_2;
 
     temp = &gDialogueBoxBackground[arg0];
-    temp_24 = temp->unk24;
+    temp_24 = temp->text;
     if (temp_24 != NULL) {
         temp_24_2 = temp_24; // This seems redundant.
         while (temp_24_2 != NULL) {
             temp_24_2->unk01 = 0xFF;
             temp_24_2 = temp_24_2->unk1C;
         }
-        temp->unk24 = NULL;
+        temp->text = NULL;
     }
 }
 
@@ -475,31 +475,31 @@ void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
     }
 }
 
-void func_800C55F4(s32 arg0) {
-    (*gDialogueBoxBackground)[arg0].unk1E |= 0x8000;
+void open_dialogue_box(s32 arg0) {
+    (*gDialogueBoxBackground)[arg0].flags |= DIALOGUE_BOX_OPEN;
 }
 
-void func_800C5620(s32 arg0) {
-    (*gDialogueBoxBackground)[arg0].unk1E &= 0x7FFF;
+void close_dialogue_box(s32 arg0) {
+    (*gDialogueBoxBackground)[arg0].flags &= DIALOGUE_BOX_CLOSED;
 }
 
 // Unused?
 void func_800C564C(s32 arg0) {
-    (*gDialogueBoxBackground)[arg0].unk1E |= 0x0001;
+    (*gDialogueBoxBackground)[arg0].flags |= DIALOGUE_BOX_UNUSED_01;
 }
 
 // Unused?
 void func_800C5678(s32 arg0) {
-    (*gDialogueBoxBackground)[arg0].unk1E &= 0xFFFE;
+    (*gDialogueBoxBackground)[arg0].flags &= DIALOGUE_BOX_UNUSED_02;
 }
 
 // Unused?
 void func_800C56A4(s32 arg0) {
-    (*gDialogueBoxBackground)[arg0].unk1E |= 0x4000;
+    (*gDialogueBoxBackground)[arg0].flags |= DIALOGUE_BOX_UNK_01;
 }
 
 void func_800C56D0(s32 arg0) {
-    (*gDialogueBoxBackground)[arg0].unk1E &= 0xBFFF;
+    (*gDialogueBoxBackground)[arg0].flags &= DIALOGUE_BOX_UNK_02;
 }
 
 void func_800C56FC(s32 arg0, s32 arg1, s32 arg2) {
@@ -514,8 +514,8 @@ void func_800C56FC(s32 arg0, s32 arg1, s32 arg2) {
     }
 
     for (i = 1; i < 8; i++) {
-        if ((*gDialogueBoxBackground)[i].unk1E & 0x8000) {
-            if ((*gDialogueBoxBackground)[i].unk1E & 0x4000) {
+        if ((*gDialogueBoxBackground)[i].flags & DIALOGUE_BOX_OPEN) {
+            if ((*gDialogueBoxBackground)[i].flags & DIALOGUE_BOX_UNK_01) {
                 func_800C5B58(arg0, arg1, arg2, i);
             } else {
                 func_800C5B58(arg0, 0, 0, i);
@@ -590,7 +590,7 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
 
     temp = &gDialogueBoxBackground[arg3];
 
-    if (temp->unk13 != 0) {
+    if (temp->backgroundColourA != 0) {
         gSPDisplayList((*dlist)++, &D_800E3690);
         gDkrDmaDisplayList((*dlist)++, ((u8 *)&D_800E36C8[1]) + 0x80000000, 2);
         gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
@@ -603,7 +603,7 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
             render_fill_rectangle(dlist, temp->x1 - 2, temp->y2 - 2, temp->x2 + 2, temp->y2 + 2);
         }
         gDPPipeSync((*dlist)++);
-        gDPSetEnvColor((*dlist)++, temp->unk10, temp->unk11, temp->unk12, temp->unk13);
+        gDPSetEnvColor((*dlist)++, temp->backgroundColourR, temp->backgroundColourG, temp->backgroundColourB, temp->backgroundColourA);
         for (i = 0; D_800E3710[i] >= 0; i += 5) {
             x0 = D_800E3710[i] + temp->x1;
             y0 = (D_800E3710[i + 1]) ? D_800E3710[i + 2] + temp->y2 : D_800E3710[i + 2] + temp->y1;
@@ -621,18 +621,18 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
         D_8012A7F4 = 2;
         func_8009E9B0(temp, dlist, arg1, arg2);
     }
-    temp_24 = temp->unk24;
+    temp_24 = temp->text;
     while (temp_24 != NULL) {
         temp->xpos = temp_24->unk8 + temp_24->unkC;
         temp->ypos = temp_24->unkA + temp_24->unkE;
-        temp->colorRed = temp_24->unk10;
-        temp->colorGreen = temp_24->unk11;
-        temp->colorBlue = temp_24->unk12;
-        temp->colorAlpha = temp_24->unk13;
-        temp->bgRed = temp_24->unk14;
-        temp->bgGreen = temp_24->unk15;
-        temp->bgBlue = temp_24->unk16;
-        temp->bgAlpha = temp_24->unk17;
+        temp->textColourR = temp_24->unk10;
+        temp->textColourG = temp_24->unk11;
+        temp->textColourB = temp_24->unk12;
+        temp->textColourA = temp_24->unk13;
+        temp->textBGColourR = temp_24->unk14;
+        temp->textBGColourG = temp_24->unk15;
+        temp->textBGColourB = temp_24->unk16;
+        temp->textBGColourA = temp_24->unk17;
         temp->opacity = temp_24->unk18;
         temp->font = temp_24->unk19;
         parse_string_with_number(temp_24->unk4, &sp6C, temp_24->unk01);
@@ -642,7 +642,7 @@ void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3) {
 }
 
 /**
- * Takes in a string and a number, and replaces each instance of the 
+ * Takes in a string and a number, and replaces each instance of the
  * character '~' with the number.
  */
 void parse_string_with_number(unsigned char *input, char *output, s32 number) {

@@ -21,6 +21,15 @@ enum TextFonts {
     FONT_SMALL,
 };
 
+enum DialogueFlags {
+    DIALOGUE_BOX_UNUSED_01 = 0x0001,
+    DIALOGUE_BOX_UNK_01 = 0x4000,
+    DIALOGUE_BOX_CLOSED =    0x7FFF,
+    DIALOGUE_BOX_OPEN =      0x8000,
+    DIALOGUE_BOX_UNK_02 =    0xBFFF,
+    DIALOGUE_BOX_UNUSED_02 = 0xFFFE,
+};
+
 /* Size: 0x20 bytes */
 typedef struct unk8012A7EC {
     u8 unk0;
@@ -91,19 +100,19 @@ void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags);
 void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags);
 void func_800C44C0(Gfx** displayList, s32 arg1, char *text, s32 alignmentFlags);
 void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags);
-void set_dialogue_box_coords(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void set_current_dialogue_box_coords(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void set_dialogue_font(s32 arg0, s32 font);
-void func_800C4FBC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void set_text_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
-void func_800C5050(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void set_current_dialogue_background_colour(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void set_current_text_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
+void set_current_text_background_colour(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800C5094(s32 arg0, s32 arg1, s32 arg2);
 void func_800C50D8(s32 arg0);
 void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_800C5428(s32 arg0, DialogueBox *arg1);
 void func_800C5494(s32 arg0);
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800C55F4(s32 arg0);
-void func_800C5620(s32 arg0);
+void open_dialogue_box(s32 arg0);
+void close_dialogue_box(s32 arg0);
 void func_800C564C(s32 arg0);
 void func_800C5678(s32 arg0);
 void func_800C56A4(s32 arg0);

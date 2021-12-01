@@ -48,7 +48,7 @@ glabel tt_menu_loop
 /* 09E7CC 8009DBCC 24050018 */  li    $a1, 24
 /* 09E7D0 8009DBD0 24060010 */  li    $a2, 16
 /* 09E7D4 8009DBD4 240700C0 */  li    $a3, 192
-/* 09E7D8 8009DBD8 0C0313B7 */  jal   set_dialogue_box_coords
+/* 09E7D8 8009DBD8 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 09E7DC 8009DBDC AFAC0010 */   sw    $t4, 0x10($sp)
 /* 09E7E0 8009DBE0 10000007 */  b     .L8009DC00
 /* 09E7E4 8009DBE4 24040001 */   li    $a0, 1
@@ -56,7 +56,7 @@ glabel tt_menu_loop
 /* 09E7E8 8009DBE8 240D00DC */  li    $t5, 220
 /* 09E7EC 8009DBEC AFAD0010 */  sw    $t5, 0x10($sp)
 /* 09E7F0 8009DBF0 24060010 */  li    $a2, 16
-/* 09E7F4 8009DBF4 0C0313B7 */  jal   set_dialogue_box_coords
+/* 09E7F4 8009DBF4 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 09E7F8 8009DBF8 240700B8 */   li    $a3, 184
 /* 09E7FC 8009DBFC 24040001 */  li    $a0, 1
 .L8009DC00:
