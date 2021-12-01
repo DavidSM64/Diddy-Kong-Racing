@@ -14,6 +14,13 @@
 #include "f3ddkr.h"
 #include "textures_sprites.h"
 
+#define POS_X_CENTRED -0x8000
+
+enum TextFonts {
+    FONT_COLOURFUL,
+    FONT_SMALL,
+};
+
 /* Size: 0x20 bytes */
 typedef struct unk8012A7EC {
     u8 unk0;
@@ -69,9 +76,9 @@ typedef struct FontData {
 /* 0x100 */ FontCharData unk100[96];
 } FontData;
 
-#define unk8012A7E8_COUNT 8
+#define DIALOGUEBOXBACKGROUND_COUNT 8
 #define unk8012A7EC_COUNT 64
-#define unk8012A7E8_TOTAL_SIZE (sizeof(unk8012A7E8) * unk8012A7E8_COUNT)
+#define DIALOGUEBOXBACKGROUND_TOTAL_SIZE (sizeof(DialogueBoxBackground) * DIALOGUEBOXBACKGROUND_COUNT)
 #define unk8012A7EC_TOTAL_SIZE (sizeof(unk8012A7EC) * unk8012A7EC_COUNT)
 
 void load_fonts(void);
@@ -84,15 +91,15 @@ void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags);
 void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags);
 void func_800C44C0(Gfx** displayList, s32 arg1, char *text, s32 alignmentFlags);
 void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags);
-void func_800C4EDC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800C4F7C(s32 arg0, s32 font);
+void set_dialogue_box_coords(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void set_dialogue_font(s32 arg0, s32 font);
 void func_800C4FBC(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800C5000(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
+void set_text_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void func_800C5050(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800C5094(s32 arg0, s32 arg1, s32 arg2);
 void func_800C50D8(s32 arg0);
 void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_800C5428(s32 arg0, unk8012A7E8_24 *arg1);
+void func_800C5428(s32 arg0, DialogueBox *arg1);
 void func_800C5494(s32 arg0);
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800C55F4(s32 arg0);
@@ -110,8 +117,8 @@ void s32_to_string(char** outString, s32 number); //Non Matching
 TextureHeader *func_800C4318(s32 font, u8 arg1); //Non Matching
 void func_800C4170(s32 arg0); //Non Matching
 void func_800C422C(s32 arg0); //Non Matching
-void func_800C45A4(Gfx **dlist, unk8012A7E8 *arg1, u8 *text, s32 alignmentFlags, f32 arg4); //Non Matching
+void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, u8 *text, s32 alignmentFlags, f32 arg4); //Non Matching
 s32 func_800C4DA0(u8 *text, s32 x, s32 font); //Non Matching
-//void func_800C5168(s32, s16, s16, s32, s32, s32); //Non Matching
+//void render_dialogue_text(s32 unk01, s16 posX, s16 posY, s32 text, s32 unk01, s32 unk02); //Non Matching
 
 #endif

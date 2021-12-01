@@ -7,8 +7,8 @@ glabel func_800C4DA0
 .L800C4DB0:
 /* 0C59B0 800C4DB0 04C10006 */  bgez  $a2, .L800C4DCC
 /* 0C59B4 800C4DB4 00A01825 */   move  $v1, $a1
-/* 0C59B8 800C4DB8 3C0E8013 */  lui   $t6, %hi(D_8012A7E8) # $t6, 0x8013
-/* 0C59BC 800C4DBC 8DCEA7E8 */  lw    $t6, %lo(D_8012A7E8)($t6)
+/* 0C59B8 800C4DB8 3C0E8013 */  lui   $t6, %hi(gDialogueBoxBackground) # $t6, 0x8013
+/* 0C59BC 800C4DBC 8DCEA7E8 */  lw    $t6, %lo(gDialogueBoxBackground)($t6)
 /* 0C59C0 800C4DC0 00000000 */  nop   
 /* 0C59C4 800C4DC4 91C6001D */  lbu   $a2, 0x1d($t6)
 /* 0C59C8 800C4DC8 00000000 */  nop   

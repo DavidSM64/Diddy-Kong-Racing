@@ -55,8 +55,8 @@ typedef struct TextureHeader {
   /* 0x00 */ u8 width;
   /* 0x01 */ u8 height;
   /* 0x02 */ u8 format; // Lower 4 bits determines image format.
-      // 0 = RGBA32 
-      // 1 = RGBA16 
+      // 0 = RGBA32
+      // 1 = RGBA16
       // 2 = I8
       // 3 = I4
       // 4 = IA16
@@ -78,7 +78,7 @@ typedef struct TextureHeader {
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u16 numOfTextures; // For animated textures, static textures are just 0x01. Each texture has it's own header.
   /* 0x14 */ u16 frameAdvanceDelay; // How many frames to delay before moving to the next texture.
-  /* 0x16 */ s16 textureSize; // Size in number of bytes, including the header 
+  /* 0x16 */ s16 textureSize; // Size in number of bytes, including the header
   /* 0x18 */ u8 unk18;
   /* 0x19 */ u8 unk19;
   /* 0x1A */ u8 unk1A;
@@ -629,14 +629,14 @@ typedef struct Object_68 {
     u8 pad00[0x20];
     s8 unk20;
  } Object_68;
- 
+
 /* Size: 0x20 bytes */
 typedef struct Object_6C {
     u8  pad0[0x4];
     s16 unk4;
     u8  pad6[0x1A];
 } Object_6C;
- 
+
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ s16 y_rotation;
@@ -984,7 +984,8 @@ typedef struct unk80042178 {
     u8 pad0[0x20];
 } unk80042178;
 
-typedef struct unk8012A7E8_24 {
+//Dialogue Box text (Including background struct)
+typedef struct DialogueBox {
     u8 unk00;
     u8 unk01;
     char *unk4;
@@ -1002,19 +1003,20 @@ typedef struct unk8012A7E8_24 {
     u8 unk17;
     u8 unk18;
     u8 unk19;
-    struct unk8012A7E8_24 *unk1C;
-} unk8012A7E8_24;
+    struct DialogueBox *unk1C;
+} DialogueBox;
 
 /* Size: 0x28 bytes */
-typedef struct unk8012A7E8 {
+// Dialogue Box background
+typedef struct DialogueBoxBackground {
     s16 xpos;
     s16 ypos;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
+    s16 x1;
+    s16 y1;
+    s16 x2;
+    s16 y2;
+    s16 width;
+    s16 height;
     u8 unk10;
     u8 unk11;
     u8 unk12;
@@ -1032,7 +1034,7 @@ typedef struct unk8012A7E8 {
     u16 unk1E;
     s16 unk20;
     s16 unk22;
-    unk8012A7E8_24 *unk24;
-} unk8012A7E8;
+    DialogueBox *unk24;
+} DialogueBoxBackground;
 
 #endif
