@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_060450_H_
-#define _UNKNOWN_060450_H_
+#ifndef _OBJECT_MODELS_H_
+#define _OBJECT_MODELS_H_
 
 #include "types.h"
 #include "PR/gbi.h"

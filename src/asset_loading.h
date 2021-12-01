@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_0777A0_H_
-#define _UNKNOWN_0777A0_H_
+#ifndef _ASSET_LOADING_H_
+#define _ASSET_LOADING_H_
 
 #include "types.h"
 #include "gzip.h"

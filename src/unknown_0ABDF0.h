@@ -1,5 +1,5 @@
-#ifndef _THREAD30_H_
-#define _THREAD30_H_
+#ifndef _UNKNOWN_0ABDF0_H_
+#define _UNKNOWN_0ABDF0_H_
 
 #include "types.h"
 #include "textures_sprites.h"

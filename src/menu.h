@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_080500_H_
-#define _UNKNOWN_080500_H_
+#ifndef _MENU_H_
+#define _MENU_H_
 
 #include "types.h"
 #include "structs.h"

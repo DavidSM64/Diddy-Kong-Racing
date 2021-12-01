@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_07B870_H_
-#define _UNKNOWN_07B870_H_
+#ifndef _TEXTURES_SPRITES_H_
+#define _TEXTURES_SPRITES_H_
 
 #include "asset_sections.h"
 #include "types.h"
