@@ -77,7 +77,7 @@ void func_800C29F0(void) {
 void func_800C2AB4(void) {
     free_from_memory_pool(D_8012A7C8.unk0);
     D_8012A7B6 = 0;
-    func_800C5620(6);
+    close_dialogue_box(6);
     func_800C5494(6);
 }
 
@@ -98,7 +98,7 @@ void func_800C2F1C(s32 arg0) {
             if ((s32)D_8012A7A8 < 0) {
                 D_8012A7A8 = 0;
                 D_8012A7B6 = 0;
-                func_800C5620(6);
+                close_dialogue_box(6);
                 func_800C5494(6);
             }
         } else {

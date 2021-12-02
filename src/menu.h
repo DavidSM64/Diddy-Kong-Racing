@@ -17,6 +17,15 @@
 #define TT_MENU_SAVE_GHOST        8
 #define TT_MENU_EXIT              10
 
+enum DialogueMenuCases {
+    DIALOG_TAJ,
+    DIALOG_UNK_01,
+    DIALOG_TT,
+    DIALOG_CHALLENGE,
+    DIALOG_TROPHY,
+    DIALOG_RACERESULT,
+};
+
 #define CHEAT(index) 1 << index
 
 typedef enum Cheats {
@@ -267,7 +276,7 @@ extern s8 D_800DF4DC;
 extern s8 D_800DF4E0;
 extern s8 D_800DF4E4[4];
 extern s32 D_800DF4E8;
-extern s8 D_800DF4EC;
+extern s8 gDialogOptionTangible;
 
 // Unused?
 extern s32 D_800DF4F0[];
@@ -656,7 +665,7 @@ s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 arg4);
 void func_80081800(s32 arg0, s32 arg1, s32 arg2, u8 arg3, u8 arg4, u8 arg5, u8 arg6);
 void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
-void func_800829F8(s32 arg0, s32 arg1);
+void func_800829F8(Gfx *dl, s32 updateRate);
 void menu_logos_screen_init(void);
 s32 menu_logo_screen_loop(s32 arg0);
 void func_80082FAC(void);
@@ -754,8 +763,8 @@ void func_8009CA58(void);
 void func_8009CF68(s32 arg0);
 void func_8009CFB0(void);
 s32 func_8009CFEC(u32 arg0);
-void func_8009D118(s32 arg0);
-void func_8009D1B8(s32 arg0, s32 arg1, s32 arg2);
+void set_option_text_colour(s32 condition);
+void render_dialogue_option(char *text, s32 yOffset, s32 optionID);
 void func_8009D26C(void);
 void func_8009D324(void);
 void func_8009D330(s32 arg0);
@@ -765,7 +774,7 @@ s32 func_8009D9F4(void);
 s32 trophy_race_cabinet_menu_loop(void);
 void func_8009E9A0(void);
 void func_8009E9A8(void);
-f32 func_8009E9B0(unk8012A7E8 *arg0, Gfx **arg1, s32 *arg2, s32 *arg3);
+f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **arg1, s32 *arg2, s32 *arg3);
 s64 *func_8009EA6C(void);
 s32 func_8009EA78(s64 arg0);
 s32 func_8009EABC(s64 arg0);

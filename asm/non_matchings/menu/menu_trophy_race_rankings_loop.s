@@ -236,7 +236,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099F38 80099338 ACAE0000 */   sw    $t6, ($a1)
 /* 099F3C 8009933C 0C026580 */  jal   func_80099600
 /* 099F40 80099340 AFAB002C */   sw    $t3, 0x2c($sp)
-/* 099F44 80099344 0C031588 */  jal   func_800C5620
+/* 099F44 80099344 0C031588 */  jal   close_dialogue_box
 /* 099F48 80099348 24040007 */   li    $a0, 7
 /* 099F4C 8009934C 0C031525 */  jal   func_800C5494
 /* 099F50 80099350 24040007 */   li    $a0, 7

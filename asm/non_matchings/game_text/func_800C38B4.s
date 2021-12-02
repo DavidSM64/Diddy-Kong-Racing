@@ -50,7 +50,7 @@ glabel L800C3958
 /* 0C4558 800C3958 92050001 */  lbu   $a1, 1($s0)
 /* 0C455C 800C395C 26310002 */  addiu $s1, $s1, 2
 /* 0C4560 800C3960 24040001 */  li    $a0, 1
-/* 0C4564 800C3964 0C0313DF */  jal   func_800C4F7C
+/* 0C4564 800C3964 0C0313DF */  jal   set_dialogue_font
 /* 0C4568 800C3968 AE450000 */   sw    $a1, ($s2)
 /* 0C456C 800C396C 8E790000 */  lw    $t9, ($s3)
 /* 0C4570 800C3970 00000000 */  nop   
@@ -96,7 +96,7 @@ glabel L800C3984
 /* 0C4604 800C3A04 26310005 */  addiu $s1, $s1, 5
 /* 0C4608 800C3A08 01E2C021 */  addu  $t8, $t7, $v0
 /* 0C460C 800C3A0C AE580010 */  sw    $t8, 0x10($s2)
-/* 0C4610 800C3A10 0C0313B7 */  jal   func_800C4EDC
+/* 0C4610 800C3A10 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 0C4614 800C3A14 AFB80010 */   sw    $t8, 0x10($sp)
 /* 0C4618 800C3A18 8E680000 */  lw    $t0, ($s3)
 /* 0C461C 800C3A1C 00000000 */  nop   
@@ -127,7 +127,7 @@ glabel L800C3A30
 /* 0C467C 800C3A7C 26310005 */  addiu $s1, $s1, 5
 /* 0C4680 800C3A80 AE480020 */  sw    $t0, 0x20($s2)
 /* 0C4684 800C3A84 AFAA0014 */  sw    $t2, 0x14($sp)
-/* 0C4688 800C3A88 0C031400 */  jal   func_800C5000
+/* 0C4688 800C3A88 0C031400 */  jal   set_current_text_colour
 /* 0C468C 800C3A8C AFA80010 */   sw    $t0, 0x10($sp)
 /* 0C4690 800C3A90 8E6B0000 */  lw    $t3, ($s3)
 /* 0C4694 800C3A94 00000000 */  nop   

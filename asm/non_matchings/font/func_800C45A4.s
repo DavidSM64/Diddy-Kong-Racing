@@ -32,10 +32,10 @@ glabel func_800C45A4
 /* 0C5208 800C4608 3C18800E */  lui   $t8, %hi(D_800E3690) # $t8, 0x800e
 /* 0C520C 800C460C 27183690 */  addiu $t8, %lo(D_800E3690) # addiu $t8, $t8, 0x3690
 /* 0C5210 800C4610 3C0F0600 */  lui   $t7, 0x600
-/* 0C5214 800C4614 3C198013 */  lui   $t9, %hi(D_8012A7E8) # $t9, 0x8013
+/* 0C5214 800C4614 3C198013 */  lui   $t9, %hi(gDialogueBoxBackground) # $t9, 0x8013
 /* 0C5218 800C4618 AC6F0000 */  sw    $t7, ($v1)
 /* 0C521C 800C461C AC780004 */  sw    $t8, 4($v1)
-/* 0C5220 800C4620 8F39A7E8 */  lw    $t9, %lo(D_8012A7E8)($t9)
+/* 0C5220 800C4620 8F39A7E8 */  lw    $t9, %lo(gDialogueBoxBackground)($t9)
 /* 0C5224 800C4624 3C014080 */  li    $at, 0x40800000 # 4.000000
 /* 0C5228 800C4628 10B9005B */  beq   $a1, $t9, .L800C4798
 /* 0C522C 800C462C 326E0005 */   andi  $t6, $s3, 5
@@ -518,10 +518,10 @@ glabel L800C4AE8
 /* 0C592C 800C4D2C 3C18E700 */  lui   $t8, 0xe700
 /* 0C5930 800C4D30 246F0008 */  addiu $t7, $v1, 8
 /* 0C5934 800C4D34 AE2F0000 */  sw    $t7, ($s1)
-/* 0C5938 800C4D38 3C0E8013 */  lui   $t6, %hi(D_8012A7E8) # $t6, 0x8013
+/* 0C5938 800C4D38 3C0E8013 */  lui   $t6, %hi(gDialogueBoxBackground) # $t6, 0x8013
 /* 0C593C 800C4D3C AC600004 */  sw    $zero, 4($v1)
 /* 0C5940 800C4D40 AC780000 */  sw    $t8, ($v1)
-/* 0C5944 800C4D44 8DCEA7E8 */  lw    $t6, %lo(D_8012A7E8)($t6)
+/* 0C5944 800C4D44 8DCEA7E8 */  lw    $t6, %lo(gDialogueBoxBackground)($t6)
 /* 0C5948 800C4D48 00000000 */  nop   
 /* 0C594C 800C4D4C 124E0003 */  beq   $s2, $t6, .L800C4D5C
 /* 0C5950 800C4D50 00000000 */   nop   

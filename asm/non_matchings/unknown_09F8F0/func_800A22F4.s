@@ -40,7 +40,7 @@ glabel func_800A22F4
 /* 0A2F88 800A2388 3C018012 */  lui   $at, %hi(D_80126CD5) # $at, 0x8012
 /* 0A2F8C 800A238C 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
 /* 0A2F90 800A2390 A0206CD5 */  sb    $zero, %lo(D_80126CD5)($at)
-/* 0A2F94 800A2394 0C01E015 */  jal   func_80078054
+/* 0A2F94 800A2394 0C01E015 */  jal   init_rdp_and_framebuffer
 /* 0A2F98 800A2398 24846CFC */   addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A2F9C 800A239C 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
 /* 0A2FA0 800A23A0 0C01ECF4 */  jal   func_8007B3D0

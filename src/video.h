@@ -32,6 +32,21 @@
 #define HEIGHT_RATIO_NTSC (LOW_RES_NTSC_HEIGHT / LOW_RES_NTSC_HEIGHT)
 #define HEIGHT_RATIO_MPAL (LOW_RES_MPAL_HEIGHT / LOW_RES_NTSC_HEIGHT)
 
+/**
+ * Values for the rate game logic will work depending on the framerate. Vanilla DKR will default to LOGIC_30FPS (2)
+ */
+
+enum LogicUpdateRates {
+    LOGIC_NULL,
+    LOGIC_60FPS,
+    LOGIC_30FPS,
+    LOGIC_20FPS,
+    LOGIC_15FPS,
+    LOGIC_12FPS,
+    LOGIC_10FPS,
+    LOGIC_5FPS = 12,
+};
+
 extern s32 gVideoRefreshRate;
 
 extern u16 *gVideoDepthBuffer;

@@ -101,7 +101,7 @@ s8 D_800DD3F0 = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
 // Unused?
 FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
-s32 D_800DD404 = 12;
+s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 char *D_800DD410[3] = {
@@ -140,10 +140,10 @@ s32 *gHudTriangles[2];
 s32 gCurrHudTris;
 s32 D_80121230[8];
 s8 D_80121250[16];
-OSSched *D_80121260;
-s32 D_80121268[2208]; //Padding
-s32 D_801234E8;
-s32 D_801234EC;
+OSSched gMainSched; // 0x288 / 648 bytes
+s8 D_80121268[8192]; // 0x2000 / 8192 bytes Padding?
+s32 gSPTaskNum;
+s32 sRenderContext;
 s32 D_801234F0;
 s32 D_801234F4;
 s32 D_801234F8;
@@ -166,9 +166,9 @@ s32 gCurrNumF3dCmdsPerPlayer;
 s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
-OSScClient *D_80123538[3];
-OSMesg *D_80123544;
-OSMesgQueue *D_80123548;
+OSScClient *gNMISched[3];
+OSMesg *gNMIMesgBuf;
+OSMesgQueue *gNMIMesgQueue;
 s32 D_8012354C;
 s32 D_80123550[4];
 s32 D_80123560[8];
@@ -706,7 +706,7 @@ void func_8006BFC8(s8 *arg0) {
     if ((get_filtered_cheats() << 6) < 0) {
         phi_s0 = 9;
     }
-    if (func_8006DA0C() == 1) {
+    if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
     gTempAssetTable = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
@@ -784,9 +784,9 @@ void thread3_main(s32 arg0) {
     func_8006C3E0();
     D_800DD37C = func_8006A1C4(D_800DD37C, 0);
     D_80123520 = 0;
-    D_801234EC = -1;
+    sRenderContext = DRAW_INTRO;
     while (1) {
-        if (func_8006EAC0() != 0) {
+        if (is_reset_pressed()) {
             func_80072708();
             audioStopThread();
             stop_thread30();
@@ -821,15 +821,15 @@ void func_8006C3E0(void) {
         mode = 28;
     }
 
-    osCreateScheduler(&D_80121260, &D_801234E8, /*priority*/ 13, (u8)mode, 1);
+    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8)mode, 1);
     D_800DD3A0 = 0;
     if (func_8006EFB8() == 0) {
         D_800DD3A0 = 1;
     }
-    init_video(1, &D_80121260);
+    init_video(1, &gMainSched);
     func_80076BA0();
-    func_80078100(&D_80121260);
-    audio_init(&D_80121260);
+    func_80078100(&gMainSched);
+    audio_init(&gMainSched);
     func_80008040();
     D_800DD384 = func_8006A10C();
     func_8007AC70();
@@ -845,14 +845,14 @@ void func_8006C3E0(void) {
     func_80075B18();
     func_80081218();
     create_and_start_thread30();
-    osCreateMesgQueue(&D_80123548, &D_80123544, 1);
-    osScAddClient(&D_80121260, &D_80123538, &D_80123548, 3);
+    osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
+    osScAddClient(&gMainSched, &gNMISched, &gNMIMesgQueue, 3);
     D_80123560[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
-    D_801234E8 = 0;
+    gSPTaskNum = 0;
 
-    gCurrDisplayList = gDisplayLists[D_801234E8];
+    gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
 
@@ -862,42 +862,42 @@ void func_8006C3E0(void) {
 void render(void) {
     s32 phi_v0;
     s32 phi_v0_2;
-    s32 temp, temp2;
+    s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 
     osSetTime(0);
 
     if (D_800DD380 == 8) {
-        gCurrDisplayList = gDisplayLists[D_801234E8];
+        gCurrDisplayList = gDisplayLists[gSPTaskNum];
         set_rsp_segment(&gCurrDisplayList, 0, 0);
         set_rsp_segment(&gCurrDisplayList, 1, gVideoCurrFramebuffer);
         set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
         set_rsp_segment(&gCurrDisplayList, 4, gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
-        setupOSTasks(gDisplayLists[D_801234E8], gCurrDisplayList, 0);
-        D_801234E8 += 1;
-        D_801234E8 &= 1;
+        setupOSTasks(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+        gSPTaskNum += 1;
+        gSPTaskNum &= 1;
     }
     if (D_800DD3F0 != 0) {
         D_800DD3F0 -= 1;
     }
 
-    gCurrDisplayList = gDisplayLists[D_801234E8];
-    gCurrHudMat = gHudMatrices[D_801234E8];
-    gCurrHudVerts = gHudVertices[D_801234E8];
-    gCurrHudTris = gHudTriangles[D_801234E8];
+    gCurrDisplayList = gDisplayLists[gSPTaskNum];
+    gCurrHudMat = gHudMatrices[gSPTaskNum];
+    gCurrHudVerts = gHudVertices[gSPTaskNum];
+    gCurrHudTris = gHudTriangles[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
     set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
     set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
-    func_800780DC(&gCurrDisplayList);
-    func_80078054(&gCurrDisplayList);
+    init_rsp(&gCurrDisplayList);
+    init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, &gCurrHudMat, 1);
-    D_800DD37C = func_8006A1C4(D_800DD37C, D_800DD404);
+    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (func_800B76DC() != 0) {
         render_epc_lock_up_display();
-        D_801234EC = 5;
+        sRenderContext = DRAW_CRASH_SCREEN;
     }
     if (D_800DD3A0 != 0) {
         phi_v0 = 0;
@@ -909,34 +909,34 @@ void render(void) {
         }
     }
 
-    switch (D_801234EC) {
-        case -1: // Pre-boot screen
+    switch (sRenderContext) {
+        case DRAW_INTRO: // Pre-boot screen
             func_8006F43C();
             break;
-        case 1: // In a menu
-            func_8006DCF8(D_800DD404);
+        case DRAW_MENU: // In a menu
+            func_8006DCF8(sLogicUpdateRate);
             break;
-        case 0: // In game (Controlling a character)
-            func_8006CCF0(D_800DD404);
+        case DRAW_GAME: // In game (Controlling a character)
+            func_8006CCF0(sLogicUpdateRate);
             break;
-        case 5: // EPC (lockup display)
-            func_800B77D4(D_800DD404);
+        case DRAW_CRASH_SCREEN: // EPC (lockup display)
+            func_800B77D4(sLogicUpdateRate);
             break;
     }
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
 
-    func_80000D00((u8)D_800DD404);
+    func_80000D00((u8)sLogicUpdateRate);
     func_800B5F78(&gCurrDisplayList);
     func_800C56FC(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
-    func_800C5620(4);
+    close_dialogue_box(4);
     func_800C5494(4);
-    if (func_800C0494(D_800DD404) != 0) {
+    if (func_800C0494(sLogicUpdateRate) != 0) {
         render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     }
     if ((D_80123520 >= 8) && (func_8006F4C8() != 0)) {
-        func_800829F8(&gCurrDisplayList, D_800DD404);
+        func_800829F8(&gCurrDisplayList, sLogicUpdateRate);
     }
 
     gDPFullSync(gCurrDisplayList++);
@@ -962,12 +962,15 @@ void render(void) {
         }
         func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + phi_v0_2);
     }
-
-    temp = func_8007A98C(D_800DD380);
-    D_800DD404 = temp;
-    temp2 = 6;
-    if (temp > temp2) {
-        D_800DD404 = temp2;
+    // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
+    // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
+    // affects frameskipping, to maintain consistent game speed, through the (many)
+    // dropped frames in DKR.
+    tempLogicUpdateRate = func_8007A98C(D_800DD380);
+    sLogicUpdateRate = tempLogicUpdateRate;
+    tempLogicUpdateRateMax = LOGIC_10FPS;
+    if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
+        sLogicUpdateRate = tempLogicUpdateRateMax;
     }
 }
 
@@ -982,7 +985,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 /**
- * Calls load_level() with the same arguments except for the cutsceneId, 
+ * Calls load_level() with the same arguments except for the cutsceneId,
  * which is the value at D_80123508. Also does some other stuff.
  * Needs a better name!
  */
@@ -1013,7 +1016,7 @@ void func_8006CC14(void) {
     func_800AE270();
     func_800A003C();
     func_800C30CC();
-    gCurrDisplayList = gDisplayLists[D_801234E8];
+    gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
     set_free_queue_state(2);
@@ -1021,7 +1024,7 @@ void func_8006CC14(void) {
 
 #ifdef NON_MATCHING
 // Almost matching except for a couple minor issues.
-void func_8006CCF0(s32 arg0) {
+void func_8006CCF0(s32 updateRate) {
     s32 i, buttonHeldInputs, sp40, sp3C, buttonPressedInputs, phi_v1_2;
 
     sp40 = 0;
@@ -1036,10 +1039,10 @@ void func_8006CCF0(s32 arg0) {
         buttonPressedInputs |= START_BUTTON;
     }
     if (!gIsPaused) {
-        func_80010994(arg0);
+        func_80010994(updateRate);
         if (func_80066510() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
-                && (D_801234EC == 0) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
+                && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
@@ -1048,7 +1051,7 @@ void func_8006CCF0(s32 arg0) {
     } else {
         func_80028FA0(1);
     }
-    D_800DD398 -= arg0;
+    D_800DD398 -= updateRate;
     if (D_800DD398 < 0) {
         D_800DD398 = 0;
     }
@@ -1057,13 +1060,13 @@ void func_8006CCF0(s32 arg0) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
-    if (D_801234EC == 0) {
+    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
     if (D_80123516 != 0) {
-        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, arg0);
+        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
         switch (i - 1) {
             case 1:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
@@ -1108,7 +1111,7 @@ void func_8006CCF0(s32 arg0) {
                 break;
         }
     }
-    func_800C3440(arg0);
+    func_800C3440(updateRate);
     i = func_800C3400();
     if (i != 0) {
         if (i == 2) {
@@ -1120,7 +1123,7 @@ void func_8006CCF0(s32 arg0) {
         }
     }
     if (gIsPaused) {
-        i = func_80094170(&gCurrDisplayList, arg0);
+        i = func_80094170(&gCurrDisplayList, updateRate);
         switch (i - 1) {
             case 0:
                 gIsPaused = FALSE;
@@ -1167,9 +1170,9 @@ void func_8006CCF0(s32 arg0) {
                 break;
         }
     }
-    func_80078054(&gCurrDisplayList);
+    init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
-    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, arg0);
+    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
     func_80077268(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
@@ -1181,7 +1184,7 @@ void func_8006CCF0(s32 arg0) {
     }
     phi_v1_2 = FALSE;
     if (D_800DD390 != 0) {
-        D_800DD390 -= arg0;
+        D_800DD390 -= updateRate;
         if (D_800DD390 <= 0) {
             D_800DD390 = 0;
             func_8006C1AC(0, 0, 0, 0);
@@ -1190,7 +1193,7 @@ void func_8006CCF0(s32 arg0) {
         }
     }
     if (D_800DD394 > 0) {
-        D_800DD394 -= arg0;
+        D_800DD394 -= updateRate;
         if (D_800DD394 <= 0) {
             buttonHeldInputs = L_TRIG;
             switch (D_80123524) {
@@ -1270,7 +1273,7 @@ void func_8006CCF0(s32 arg0) {
             }
         }
     }
-    if (((buttonHeldInputs & L_TRIG) && (D_801234EC == 0)) || (D_801234FC != 0)) {
+    if (((buttonHeldInputs & L_TRIG) && (sRenderContext == DRAW_GAME)) || (D_801234FC != 0)) {
         gIsPaused = FALSE;
         D_800DD394 = 0;
         D_80123516 = 0;
@@ -1364,9 +1367,9 @@ void func_8006D8E0(s32 arg0) {
     D_80123516 = arg0 + 1;
 }
 
-void func_8006D8F0(s32 arg0) {
+void func_8006D8F0(UNUSED s32 arg0) {
     s32 temp;
-    if (D_801234EC != 4) {
+    if (sRenderContext != DRAW_UNK_04) {
         D_801234F4 = D_80121250[0];
         D_80123504 = 0;
         D_80123508 = 0x64;
@@ -1383,7 +1386,7 @@ void func_8006D8F0(s32 arg0) {
 
 void func_8006D968(s8 *arg0) {
     s32 i;
-    if (D_801234EC != 4) {
+    if (sRenderContext != DRAW_UNK_04) {
         D_80121250[0] = D_801234F4;
         for (i = 0; i < 2; i++) {
             D_80121250[i + 2] = arg0[i + 8];
@@ -1399,18 +1402,18 @@ void func_8006D968(s8 *arg0) {
     }
 }
 
-s32 func_8006DA0C(void) {
-    return D_801234EC;
+s32 get_render_context(void) {
+    return sRenderContext;
 }
 
-/* Unused? */
-void func_8006DA1C(s32 arg0) {
-    D_801234EC = arg0;
+/* Unused function used to set the render context from outside this file */
+UNUSED void set_render_context(s32 changeTo) {
+    sRenderContext = changeTo;
 }
 
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_8006ECFC(0);
-    D_801234EC = 1;
+    sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
     func_80004A60(0, 0x7FFF);
     func_80004A60(1, 0x7FFF);
@@ -1481,7 +1484,7 @@ void func_8006DC58(s32 arg0) {
         func_8001BF20();
         func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
         func_800C3440(arg0);
-        func_80078054(&gCurrDisplayList);
+        init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
         func_80077268(&gCurrDisplayList);
     }
@@ -1489,15 +1492,15 @@ void func_8006DC58(s32 arg0) {
 
 #ifdef NON_MATCHING
 // Minor & regalloc issues.
-void func_8006DCF8(s32 arg0) {
+void func_8006DCF8(s32 updateRate) {
     s32 menuLoopResult, temp, temp2, tempResult;
 
     gIsPaused = FALSE;
     D_80123516 = 0;
     if (!D_80123514 && D_801234F0) {
-        func_8006DC58(arg0);
+        func_8006DC58(updateRate);
     }
-    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
+    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
     D_801234F0 = TRUE;
     if (menuLoopResult == -2) {
         D_801234F0 = FALSE;
@@ -1505,14 +1508,14 @@ void func_8006DCF8(s32 arg0) {
     }
     if ((menuLoopResult != -1) && (menuLoopResult & 0x200)) {
         func_8006DBE4();
-        gCurrDisplayList = gDisplayLists[D_801234E8];
+        gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
         D_801234F4 = menuLoopResult & 0x7F;
         D_80123518 = func_8006B0AC(D_801234F4);
         D_80123504 = 0;
         D_80123508 = 0x64;
-        D_801234EC = 0;
+        sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
         D_80123516 = 0;
         load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
@@ -1531,7 +1534,7 @@ void func_8006DCF8(s32 arg0) {
                 D_801234F4 = 0;
                 D_80123504 = 0;
                 D_80123508 = 0x64;
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
                 func_8006EC48(get_save_file_index());
                 break;
@@ -1539,7 +1542,7 @@ void func_8006DCF8(s32 arg0) {
                 D_80123504 = 0;
                 D_80123508 = 0x64;
                 D_801234F4 = D_80121250[0];
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 // Minor issue with these 2 if statements
                 temp2 = D_80121250[D_80121250[1] + 8];
                 temp = D_80121250[15];
@@ -1553,11 +1556,11 @@ void func_8006DCF8(s32 arg0) {
                 func_8006EC48(get_save_file_index());
                 break;
             case 2:
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
                 break;
             case 3:
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 D_801234F4 = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
@@ -1573,7 +1576,7 @@ void func_8006DCF8(s32 arg0) {
     if ((menuLoopResult & 0x80) && (menuLoopResult != -1)) {
         func_8006DBE4();
         // Minor issue here.
-        gCurrDisplayList = gDisplayLists[D_801234E8];
+        gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
         temp = menuLoopResult & 0x7F;
@@ -1581,7 +1584,7 @@ void func_8006DCF8(s32 arg0) {
         D_80121250[0] = D_801234F4;
         D_801234F4 = D_80121250[temp + 2];
         D_80123504 = D_80121250[temp + 4];
-        D_801234EC = 0;
+        sRenderContext = DRAW_GAME;
         D_80123508 = D_80121250[temp + 12];
         temp = get_player_selected_vehicle(0);
         D_80123500 = gSettingsPtr->gObjectCount - 1;
@@ -1592,10 +1595,10 @@ void func_8006DCF8(s32 arg0) {
     }
     if (menuLoopResult > 0) {
         func_8006DBE4();
-        gCurrDisplayList = gDisplayLists[D_801234E8];
+        gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
-        D_801234EC = 0;
+        sRenderContext = DRAW_GAME;
         func_8006CAE4(menuLoopResult, -1, D_80123518);
         if (gSettingsPtr->newGame && !is_in_tracks_mode()) {
             func_80000B28();
@@ -1612,7 +1615,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!D_80123514) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
-            gCurrDisplayList = gDisplayLists[D_801234E8];
+            gCurrDisplayList = gDisplayLists[gSPTaskNum];
             gDPFullSync(gCurrDisplayList++);
             gSPEndDisplayList(gCurrDisplayList++);
         }
@@ -1769,9 +1772,9 @@ s8 func_8006EAB0(void) {
     return D_80123516;
 }
 
-s32 func_8006EAC0(void) {
+s32 is_reset_pressed(void) {
     if (D_80123560[0] == 0) {
-        D_80123560[0] = (s32)((osRecvMesg(&D_80123548, NULL, 0) + 1) != 0);
+        D_80123560[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, 0) + 1) != 0);
     }
     return D_80123560[0];
 }
@@ -1821,7 +1824,7 @@ void func_8006EC18(s32 arg0) {
 }
 
 void func_8006EC48(s32 arg0) {
-    if (D_801234EC == 0 && !is_in_tracks_mode()) {
+    if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
         D_800DD37C &= -0xC01;
         D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
     }
