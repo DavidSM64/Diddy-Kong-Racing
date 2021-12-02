@@ -136,10 +136,17 @@ CC := $(RECOMP_DIR)cc
 CPP := cpp -P -Wno-trigraphs
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
-OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
+# Pad to 12MB if matching, otherwise build to a necessary minimum of 1.04KB
+ifeq ($(NON_MATCHING),0)
+  OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
+else
+  OBJCOPY = $(CROSS)objcopy --pad-to=0x101000 --gap-fill=0xFF
+endif
 
 MIPSISET := -mips1
 OPT_FLAGS := -O2
+
+INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src include/libc .
 
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d))
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
@@ -178,6 +185,13 @@ C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)*.c))
 # Object files
 O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
             $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file:.c=.o))
+			
+# Automatic dependency files
+DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
+			
+# Check code syntax with host compiler
+CC_CHECK := gcc
+CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(CC_CFLAGS) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -m32 -D_LANGUAGE_C
 
 ####################### ASSETS #########################
 
@@ -461,11 +475,17 @@ $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 
 $(BUILD_DIR)/%.o: %.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling:,$<,$@)
-	$(V)$(AS) $(ASFLAGS) -o $@ $<
-
+	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
+	
 $(BUILD_DIR)/%.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
-	$(V)$(CC) $(CFLAGS) -o $@ $<
+	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CC) -c $(CFLAGS) -o $@ $<
+	
+$(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c | $(ALL_ASSETS_BUILT)
+	$(call print,Compiling:,$<,$@)
+	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CC) -c $(CFLAGS) -o $@ $<
 
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
 	$(call print,Preprocessing linker script:,$<,$@)
@@ -511,3 +531,5 @@ load: $(BUILD_DIR)/$(TARGET).z64
 
 # Remove built-in rules, to improve performance
 MAKEFLAGS += --no-builtin-rules
+
+-include $(DEP_FILES)
