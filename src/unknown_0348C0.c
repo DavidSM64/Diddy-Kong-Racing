@@ -1202,15 +1202,15 @@ void func_8003DFCC(Object *arg0, unknown_struct_8003DFCC *arg1) {
     arg0->unk4C->unk11 = 4;
     arg0->unk4C->unk10 = 0x14;
     temp_v0 = get_filtered_cheats();
-    if (temp_v0 & 0x20000) {
+    if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_BLUE) {
         arg1->unk9 = 0U;
-    } else if (temp_v0 & 0x08000) {
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_RED) {
         arg1->unk9 = 1U;
-    } else if (temp_v0 & 0x10000) {
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_GREEN) {
         arg1->unk9 = 2U;
-    } else if (temp_v0 & 0x40000) {
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_YELLOW) {
         arg1->unk9 = 3U;
-    } else if (temp_v0 & 0x80000) {
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_RAINBOW) {
         arg1->unk9 = 4U;
     }
     if ((s32) arg1->unk8 >= 6) {
@@ -1230,7 +1230,7 @@ void func_8003DFCC(Object *arg0, unknown_struct_8003DFCC *arg1) {
     arg0->unk64->unk4 = 0;
     arg0->unk64->unk0_a.unk0 = arg0->scale;
     arg0->unk7C.word = 0;
-    if ((get_filtered_cheats() & 0x800) != 0) {
+    if (get_filtered_cheats() & CHEAT_DISABLE_WEAPONS) {
         gParticlePtrList_addObject(arg0);
     }
 }

@@ -656,7 +656,7 @@ void func_8000E2B4(void) {
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
         player->scale *= 1.4f;
     }
-    if ((get_filtered_cheats() & 0x20) != 0) {
+    if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
         player->scale *= 0.714f;
     }
     player->unk3C_a.unk3C = 0;
