@@ -70,25 +70,25 @@ typedef struct SCClient_s {
     OSMesgQueue         *msgQ;  /* where to send the frame msg  */
 } OSScClient;
 
-/* 0x7C8 bytes - Side note, I'm seeing 0x288 now... */
+/* 0x288 bytes */
 typedef struct {
   /* 0x00 */  OSScMsg     retraceMsg;
   /* 0x20 */  OSScMsg     prenmiMsg;
   /* 0x40 */  OSMesgQueue interruptQ;
-  /* 0x68 */  OSMesg      intBuf[OS_SC_MAX_MESGS]; //0x8 per OsMesg
-  /* 0xA8 */  OSMesgQueue cmdQ;
-  /* 0xD0 */  OSMesg      cmdMsgBuf[OS_SC_MAX_MESGS]; //0x8 per OsMesg
-  /* 0x110 */ OSThread    thread;
-  /* 0x2D8 */ OSScClient  *clientList;
-  /* 0x2F0 */ OSScTask    *audioListHead;
-  /* 0x3A0 */ OSScTask    *gfxListHead;
-  /* 0x450 */ OSScTask    *audioListTail;
-  /* 0x500 */ OSScTask    *gfxListTail;
-  /* 0x5B0 */ OSScTask    *curRSPTask;
-  /* 0x660 */ OSScTask    *curRDPTask;
-  /* 0x710 */ OSScTask    *unkTask; //Rare added?
-  /* 0x7C0 */ u32         frameCount;
-  /* 0x7C4 */ s32         doAudio;
+  /* 0x58 */  OSMesg      intBuf[OS_SC_MAX_MESGS]; //0x8 per OSMesg
+  /* 0x78 */  OSMesgQueue cmdQ;
+  /* 0x90 */  OSMesg      cmdMsgBuf[OS_SC_MAX_MESGS]; //0x8 per OSMesg
+  /* 0xB0 */  OSThread    thread;
+  /* 0x260 */ OSScClient  *clientList;
+  /* 0x264 */ OSScTask    *audioListHead;
+  /* 0x268 */ OSScTask    *gfxListHead;
+  /* 0x26C */ OSScTask    *audioListTail;
+  /* 0x270 */ OSScTask    *gfxListTail;
+  /* 0x274 */ OSScTask    *curRSPTask;
+  /* 0x278 */ OSScTask    *curRDPTask;
+  /* 0x27C */ OSScTask    *unkTask; //Rare added?
+  /* 0x280 */ u32         frameCount;
+  /* 0x284 */ s32         doAudio;
 } OSSched;
 
 typedef struct{

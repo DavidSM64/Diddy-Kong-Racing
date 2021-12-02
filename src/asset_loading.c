@@ -11,7 +11,7 @@
 /************ .bss ************/
 
 OSIoMesg gAssetsDmaIoMesg;
-OSMesg gDmaMesgBuf[1];
+OSMesg gDmaMesgBuf[1]; //Seems to only work as an array of 1 for some reason.
 OSMesgQueue gDmaMesgQueue;
 OSMesg gPIMesgBuf[16];
 OSMesgQueue gPIMesgQueue;
@@ -175,7 +175,7 @@ s32 get_size_of_asset_section(u32 assetIndex) {
  * Copies data from the game cartridge to a ram address.
  */
 void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
-    OSMesg dmaMesgBuf[1];
+    OSMesg dmaMesgBuf[1]; //Seems to only work as an array of 1 for some reason.
     s32 numBytesToDMA;
 
     osInvalDCache(ramAddress, numBytes);

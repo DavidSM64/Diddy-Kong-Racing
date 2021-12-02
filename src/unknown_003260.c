@@ -157,8 +157,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
  *****************************************************************************/
 #if 0
 #define DMA_BUFFER_LENGTH 0x400
-s32 __amDMA(s32 addr, s32 len, void *state)
-{
+s32 __amDMA(s32 addr, s32 len, void *state) {
     void            *foundBuffer;
     s32             delta, addrEnd, buffEnd;
     AMDMABuffer     *dmaPtr, *lastDmaPtr;
@@ -170,14 +169,12 @@ s32 __amDMA(s32 addr, s32 len, void *state)
     /* first check to see if a currently existing buffer contains the
        sample that you need.  */
 
-    while(dmaPtr)
-    {
+    while(dmaPtr) {
         buffEnd = dmaPtr->startAddr + DMA_BUFFER_LENGTH;
         if(dmaPtr->startAddr > addr) /* since buffers are ordered */
             break;                   /* abort if past possible */
 
-        else if(addrEnd <= buffEnd) /* yes, found a buffer with samples */
-        {
+        else if(addrEnd <= buffEnd) { /* yes, found a buffer with samples */
             dmaPtr->lastFrame = audFrameCt; /* mark it used */
             foundBuffer = dmaPtr->ptr + addr - dmaPtr->startAddr;
             return (int) osVirtualToPhysical(foundBuffer);
@@ -195,27 +192,27 @@ s32 __amDMA(s32 addr, s32 len, void *state)
      * if you get here and dmaPtr is null, send back the a bogus
      * pointer, it's better than nothing
      */
-    if(!dmaPtr)
-	return osVirtualToPhysical(dmaState.firstUsed);
+    if(!dmaPtr) {
+	    return osVirtualToPhysical(dmaState.firstUsed);
+    }
 
     dmaState.firstFree = (AMDMABuffer*)dmaPtr->node.next;
     alUnlink((ALLink*)dmaPtr);
 
     /* add it to the used list */
-    if(lastDmaPtr) /* if you have other dmabuffers used, add this one */
-    {              /* to the list, after the last one checked above */
+    if(lastDmaPtr) { /* if you have other dmabuffers used, add this one */
+                     /* to the list, after the last one checked above */
         alLink((ALLink*)dmaPtr,(ALLink*)lastDmaPtr);
     }
-    else if(dmaState.firstUsed) /* if this buffer is before any others */
-    {                           /* jam at begining of list */ 
+    else if(dmaState.firstUsed) { /* if this buffer is before any others */
+                                  /* jam at begining of list */
         lastDmaPtr = dmaState.firstUsed;
         dmaState.firstUsed = dmaPtr;
         dmaPtr->node.next = (ALLink*)lastDmaPtr;
         dmaPtr->node.prev = 0;
         lastDmaPtr->node.prev = (ALLink*)dmaPtr;
     }
-    else /* no buffers in list, this is the first one */
-    {
+    else { /* no buffers in list, this is the first one */
         dmaState.firstUsed = dmaPtr;
         dmaPtr->node.next = 0;
         dmaPtr->node.prev = 0;

@@ -208,8 +208,6 @@ void init_framebuffer(s32 index) {
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
-    // TODO: All of the gVideoFramebuffers values are suspicious and probably not the right code.
-    // The 0x3F is coincidentally sizeof(gVideoModeResolutions) - 1, but that might just be a coincidence
     if (gVideoModeIndex >= 2) {
         gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
