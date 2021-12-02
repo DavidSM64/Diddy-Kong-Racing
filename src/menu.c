@@ -3963,7 +3963,7 @@ void render_file_select_menu(s32 arg0) {
     func_8009BD5C();
     func_80067F2C(&D_801263A0, &D_801263A8);
     for (i = 0; i < 3; i++) { // 3 files
-        if (gSavefileInfo[i].unk0 == gIsInAdventureTwo || gSavefileInfo[i].unk1 == 0) {
+        if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
             color = 0xB0E0C0FF;
         } else {
             color = 0x6A9073FF;
@@ -3977,17 +3977,17 @@ void render_file_select_menu(s32 arg0) {
         set_text_background_color(0, 0, 0, 0);
         s5 = 10;
         for (i = 0; i < 3; i++) {
-            if (gSavefileInfo[i].unk1 != 0) {
+            if (gSavefileInfo[i].isStarted != 0) {
                 s2 = 0xB;
                 func_8007BF1C(0);
-                if (gSavefileInfo[i].unk0 != 0) {
+                if (gSavefileInfo[i].isAdventure2 != 0) {
                     s2 = 0xC;
                 }
                 func_8008CC28(s2, D_800E03FC[2] + D_800E03CC[i].unk0, D_800E03FC[3] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
                 func_80068508(1);
-                D_800DF75C->unk18 = gSavefileInfo[i].unk2 / s5;
+                D_800DF75C->unk18 = gSavefileInfo[i].balloonCount / s5;
                 func_8008CC28(0, (D_800E03FC[6] + D_800E03CC[i].unk0) - 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
-                D_800DF75C->unk18 = gSavefileInfo[i].unk2 % s5;
+                D_800DF75C->unk18 = gSavefileInfo[i].balloonCount % s5;
                 func_8008CC28(0, D_800E03FC[6] + D_800E03CC[i].unk0 + 6, D_800E03FC[7] + D_800E03CC[i].unk2, 0, 0, 0, 0x80);
                 func_80068508(0);
                 D_800DF4A8 = 0x40;
@@ -4029,7 +4029,7 @@ void render_file_select_menu(s32 arg0) {
         }
         if (D_80126CC0 == 0 || i != gSaveFileIndex) {
             trim_filename_string(gSavefileInfo[i].name, tempName);
-            if (gSavefileInfo[i].unk1 == 0) {
+            if (gSavefileInfo[i].isStarted == 0) {
                 trim_filename_string(gFilenames[i], tempName);
             }
             if (tempName != NULL) {
