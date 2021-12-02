@@ -350,7 +350,7 @@ s32 func_8007497C(u64 *arg0) {
     *arg0 <<= 8;
     *arg0 >>= 8;
     *arg0 |= (s64)((s32)func_8007480C(*arg0)) << 56;
-    if (check_reset_pressed() == 0) {
+    if (is_reset_pressed() == 0) {
         osEepromWrite(func_8006A100(), 0xF, (u8 *)arg0);
     }
     return 1;

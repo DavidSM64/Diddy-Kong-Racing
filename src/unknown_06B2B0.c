@@ -101,7 +101,7 @@ s8 D_800DD3F0 = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
 // Unused?
 FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
-s32 sLogicMulFactor = 12;
+s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 char *D_800DD410[3] = {
@@ -786,7 +786,7 @@ void thread3_main(s32 arg0) {
     D_80123520 = 0;
     sRenderContext = DRAW_INTRO;
     while (1) {
-        if (check_reset_pressed() != 0) {
+        if (is_reset_pressed()) {
             func_80072708();
             audioStopThread();
             stop_thread30();
@@ -862,7 +862,7 @@ void func_8006C3E0(void) {
 void render(void) {
     s32 phi_v0;
     s32 phi_v0_2;
-    s32 tempLogicMulFactor, tempLogicMulFactorMax;
+    s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 
     osSetTime(0);
 
@@ -894,7 +894,7 @@ void render(void) {
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, &gCurrHudMat, 1);
-    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicMulFactor);
+    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (func_800B76DC() != 0) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
@@ -914,29 +914,29 @@ void render(void) {
             func_8006F43C();
             break;
         case DRAW_MENU: // In a menu
-            func_8006DCF8(sLogicMulFactor);
+            func_8006DCF8(sLogicUpdateRate);
             break;
         case DRAW_GAME: // In game (Controlling a character)
-            func_8006CCF0(sLogicMulFactor);
+            func_8006CCF0(sLogicUpdateRate);
             break;
         case DRAW_CRASH_SCREEN: // EPC (lockup display)
-            func_800B77D4(sLogicMulFactor);
+            func_800B77D4(sLogicUpdateRate);
             break;
     }
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
 
-    func_80000D00((u8)sLogicMulFactor);
+    func_80000D00((u8)sLogicUpdateRate);
     func_800B5F78(&gCurrDisplayList);
     func_800C56FC(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     close_dialogue_box(4);
     func_800C5494(4);
-    if (func_800C0494(sLogicMulFactor) != 0) {
+    if (func_800C0494(sLogicUpdateRate) != 0) {
         render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     }
     if ((D_80123520 >= 8) && (func_8006F4C8() != 0)) {
-        func_800829F8(&gCurrDisplayList, sLogicMulFactor);
+        func_800829F8(&gCurrDisplayList, sLogicUpdateRate);
     }
 
     gDPFullSync(gCurrDisplayList++);
@@ -962,15 +962,15 @@ void render(void) {
         }
         func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + phi_v0_2);
     }
-    // tempLogicMulFactor will be set to a value 2 or higher, based on the framerate.
+    // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
-    tempLogicMulFactor = func_8007A98C(D_800DD380);
-    sLogicMulFactor = tempLogicMulFactor;
-    tempLogicMulFactorMax = 6;
-    if (tempLogicMulFactor > tempLogicMulFactorMax) {
-        sLogicMulFactor = tempLogicMulFactorMax;
+    tempLogicUpdateRate = func_8007A98C(D_800DD380);
+    sLogicUpdateRate = tempLogicUpdateRate;
+    tempLogicUpdateRateMax = LOGIC_10FPS;
+    if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
+        sLogicUpdateRate = tempLogicUpdateRateMax;
     }
 }
 
@@ -985,7 +985,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 /**
- * Calls load_level() with the same arguments except for the cutsceneId, 
+ * Calls load_level() with the same arguments except for the cutsceneId,
  * which is the value at D_80123508. Also does some other stuff.
  * Needs a better name!
  */
@@ -1024,7 +1024,7 @@ void func_8006CC14(void) {
 
 #ifdef NON_MATCHING
 // Almost matching except for a couple minor issues.
-void func_8006CCF0(s32 mulFactor) {
+void func_8006CCF0(s32 updateRate) {
     s32 i, buttonHeldInputs, sp40, sp3C, buttonPressedInputs, phi_v1_2;
 
     sp40 = 0;
@@ -1039,7 +1039,7 @@ void func_8006CCF0(s32 mulFactor) {
         buttonPressedInputs |= START_BUTTON;
     }
     if (!gIsPaused) {
-        func_80010994(mulFactor);
+        func_80010994(updateRate);
         if (func_80066510() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
                 && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
@@ -1051,7 +1051,7 @@ void func_8006CCF0(s32 mulFactor) {
     } else {
         func_80028FA0(1);
     }
-    D_800DD398 -= mulFactor;
+    D_800DD398 -= updateRate;
     if (D_800DD398 < 0) {
         D_800DD398 = 0;
     }
@@ -1060,13 +1060,13 @@ void func_8006CCF0(s32 mulFactor) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, mulFactor);
+    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
     if (D_80123516 != 0) {
-        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, mulFactor);
+        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
         switch (i - 1) {
             case 1:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
@@ -1111,7 +1111,7 @@ void func_8006CCF0(s32 mulFactor) {
                 break;
         }
     }
-    func_800C3440(mulFactor);
+    func_800C3440(updateRate);
     i = func_800C3400();
     if (i != 0) {
         if (i == 2) {
@@ -1123,7 +1123,7 @@ void func_8006CCF0(s32 mulFactor) {
         }
     }
     if (gIsPaused) {
-        i = func_80094170(&gCurrDisplayList, mulFactor);
+        i = func_80094170(&gCurrDisplayList, updateRate);
         switch (i - 1) {
             case 0:
                 gIsPaused = FALSE;
@@ -1172,7 +1172,7 @@ void func_8006CCF0(s32 mulFactor) {
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
-    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, mulFactor);
+    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
     func_80077268(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
@@ -1184,7 +1184,7 @@ void func_8006CCF0(s32 mulFactor) {
     }
     phi_v1_2 = FALSE;
     if (D_800DD390 != 0) {
-        D_800DD390 -= mulFactor;
+        D_800DD390 -= updateRate;
         if (D_800DD390 <= 0) {
             D_800DD390 = 0;
             func_8006C1AC(0, 0, 0, 0);
@@ -1193,7 +1193,7 @@ void func_8006CCF0(s32 mulFactor) {
         }
     }
     if (D_800DD394 > 0) {
-        D_800DD394 -= mulFactor;
+        D_800DD394 -= updateRate;
         if (D_800DD394 <= 0) {
             buttonHeldInputs = L_TRIG;
             switch (D_80123524) {
@@ -1492,15 +1492,15 @@ void func_8006DC58(s32 arg0) {
 
 #ifdef NON_MATCHING
 // Minor & regalloc issues.
-void func_8006DCF8(s32 mulFactor) {
+void func_8006DCF8(s32 updateRate) {
     s32 menuLoopResult, temp, temp2, tempResult;
 
     gIsPaused = FALSE;
     D_80123516 = 0;
     if (!D_80123514 && D_801234F0) {
-        func_8006DC58(mulFactor);
+        func_8006DC58(updateRate);
     }
-    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, mulFactor);
+    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
     D_801234F0 = TRUE;
     if (menuLoopResult == -2) {
         D_801234F0 = FALSE;
@@ -1772,7 +1772,7 @@ s8 func_8006EAB0(void) {
     return D_80123516;
 }
 
-s32 check_reset_pressed(void) {
+s32 is_reset_pressed(void) {
     if (D_80123560[0] == 0) {
         D_80123560[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, 0) + 1) != 0);
     }

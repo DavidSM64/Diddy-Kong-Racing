@@ -243,8 +243,8 @@ void func_800C4404(Gfx **displayList, char *text, s32 alignmentFlags) {
 
 void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
     DialogueBoxBackground *temp = &(*gDialogueBoxBackground)[0];
-    temp->xpos = (xpos == POS_X_CENTRED) ? temp->width >> 1 : xpos;
-    temp->ypos = (ypos == POS_X_CENTRED) ? temp->height >> 1 : ypos;
+    temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
+    temp->ypos = (ypos == POS_CENTRED) ? temp->height >> 1 : ypos;
     func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
 }
 
@@ -260,8 +260,8 @@ void func_800C44C0(Gfx **displayList, s32 arg1, char *text, s32 alignmentFlags) 
 void func_800C4510(Gfx **displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[arg1];
-        temp->xpos = (xpos == POS_X_CENTRED) ? temp->width >> 1 : xpos;
-        temp->ypos = (ypos == POS_X_CENTRED) ? temp->height >> 1 : ypos;
+        temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
+        temp->ypos = (ypos == POS_CENTRED) ? temp->height >> 1 : ypos;
         func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
     }
 }

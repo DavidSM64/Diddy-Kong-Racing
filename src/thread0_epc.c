@@ -241,8 +241,8 @@ s32 func_800B76DC(void) {
     }
 }
 
-void func_800B77D4(s32 mulFactor) {
-    D_800E3028 += mulFactor;
+void func_800B77D4(s32 updateRate) {
+    D_800E3028 += updateRate;
     if (D_800E3028 >= 0x3D) {
         D_800E3028 = 0;
         D_800E3024++;

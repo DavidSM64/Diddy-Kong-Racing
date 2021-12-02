@@ -14,7 +14,7 @@
 #include "f3ddkr.h"
 #include "textures_sprites.h"
 
-#define POS_X_CENTRED -0x8000
+#define POS_CENTRED -0x8000
 
 enum TextFonts {
     FONT_COLOURFUL,

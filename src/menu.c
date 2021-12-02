@@ -2140,10 +2140,10 @@ void func_800828B8(void) {
     }
 }
 
-void func_800829F8(Gfx *dl, s32 mulFactor) {
+void func_800829F8(Gfx *dl, s32 updateRate) {
     s32 temp;
 
-    D_800DF46C += mulFactor;
+    D_800DF46C += updateRate;
 
     if (D_800DF46C & 0x10) {
         load_menu_text(get_language());
@@ -2154,7 +2154,7 @@ void func_800829F8(Gfx *dl, s32 mulFactor) {
         if (osTvType == TV_TYPE_PAL) {
             temp = 0xEA;
         }
-        draw_text(dl, POS_X_CENTRED, temp, gMenuText[151], 0xC);
+        draw_text(dl, POS_CENTRED, temp, gMenuText[151], 0xC);
     }
 }
 
@@ -2215,8 +2215,8 @@ s32 menu_logo_screen_loop(s32 arg0) {
             set_text_color(0xFF, 0xFF, 0, 0xFF, phi_v0);
             draw_text(&D_801263A0, 0x9F, yOffset + 0xD4, gRareCopyrightString, 0xC);
             draw_text(&D_801263A0, 0xA1, yOffset + 0xD4, gRareCopyrightString, 0xC);
-            draw_text(&D_801263A0, POS_X_CENTRED, yOffset + 0xD3, gRareCopyrightString, 0xC);
-            draw_text(&D_801263A0, POS_X_CENTRED, yOffset + 0xD5, gRareCopyrightString, 0xC);
+            draw_text(&D_801263A0, POS_CENTRED, yOffset + 0xD3, gRareCopyrightString, 0xC);
+            draw_text(&D_801263A0, POS_CENTRED, yOffset + 0xD5, gRareCopyrightString, 0xC);
         }
         sp20 = yOffset + 0xD4;
         if (D_80126450 > 8.0) {
@@ -2225,7 +2225,7 @@ s32 menu_logo_screen_loop(s32 arg0) {
             phi_v0 = 0xFF;
         }
         set_text_color(0xFF, 0xFF, 0xFF, 0xFF, phi_v0);
-        draw_text(&D_801263A0, POS_X_CENTRED, sp20, gRareCopyrightString, 0xC);
+        draw_text(&D_801263A0, POS_CENTRED, sp20, gRareCopyrightString, 0xC);
     }
     return 0;
 }
@@ -2349,7 +2349,7 @@ void func_800841B8(s32 arg0) {
             phi_a3 = 0;
         }
         set_text_color(255, 255, 255, phi_a3, 0xFF);
-        draw_text(&D_801263A0, POS_X_CENTRED, phi_s2, gOptionMenuStrings[phi_s1], 0xC);
+        draw_text(&D_801263A0, POS_CENTRED, phi_s2, gOptionMenuStrings[phi_s1], 0xC);
 
         phi_s1++;
         phi_s2 += 0x1C;
@@ -3067,7 +3067,7 @@ void render_magic_codes_ui(s32 arg0) {
             alpha = temp;
         }
         set_text_color(0xFF, 0xFF, 0xFF, alpha, 0xFF);
-        draw_text(&D_801263A0, POS_X_CENTRED, yPos, gMagicCodeMenuStrings[i], 0xC);
+        draw_text(&D_801263A0, POS_CENTRED, yPos, gMagicCodeMenuStrings[i], 0xC);
         yPos += yIncr;
     }
     set_text_font(0);
@@ -3075,15 +3075,15 @@ void render_magic_codes_ui(s32 arg0) {
     set_text_background_color(0, 0, 0x80, 0x80);
     if (gOptionsMenuItemIndex == 4) {
         if (D_80126C4C == -1) {
-            draw_text(&D_801263A0, POS_X_CENTRED, 0x90, gMenuText[18], 0xC); // gMenuText[18] = "Sorry, the code was incorrect"
+            draw_text(&D_801263A0, POS_CENTRED, 0x90, gMenuText[18], 0xC); // gMenuText[18] = "Sorry, the code was incorrect"
         } else {
             // Draw cheat code name.
-            draw_text(&D_801263A0, POS_X_CENTRED, 0x90, (char *)(*gCheatsAssetData) + (*gCheatsAssetData + 1)[D_80126C4C + 1], 0xC);
+            draw_text(&D_801263A0, POS_CENTRED, 0x90, (char *)(*gCheatsAssetData) + (*gCheatsAssetData + 1)[D_80126C4C + 1], 0xC);
         }
     } else if (5 == gOptionsMenuItemIndex) {
-        draw_text(&D_801263A0, POS_X_CENTRED, 0x90, D_80126C58, 0xC);
+        draw_text(&D_801263A0, POS_CENTRED, 0x90, D_80126C58, 0xC);
     } else if (gOptionsMenuItemIndex == 6) {
-        draw_text(&D_801263A0, POS_X_CENTRED, 0x90, gMenuText[19], 0xC); // gMenuText[19] = "All cheats have been deleted"
+        draw_text(&D_801263A0, POS_CENTRED, 0x90, gMenuText[19], 0xC); // gMenuText[19] = "All cheats have been deleted"
     }
     if (D_801263E0 != 0) {
         yPos = 0x78;
@@ -3107,7 +3107,7 @@ void render_magic_codes_ui(s32 arg0) {
             set_current_text_colour(6, 0xFF, green, 0xFF, alpha, 0xFF);
 
             // gMenuText[148] = "CLEAR ALL CODES?", [149] = "OK", [150] = "CANCEL"
-            render_dialogue_text(6, POS_X_CENTRED, yPos, gMenuText[148 + i], 1, 4);
+            render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[148 + i], 1, 4);
 
             if (i != 0) {
                 yPos += 0x10;
@@ -3199,7 +3199,7 @@ void render_magic_codes_list_menu_text(s32 arg0) {
         if (numOfUnlockedCheats == gOptionsMenuItemIndex) {
             set_text_color(0xFF, 0xFF, 0xFF, fp, 0xFF);
         }
-        draw_text(&D_801263A0, POS_X_CENTRED, s2, gMenuText[5], 4); // RETURN
+        draw_text(&D_801263A0, POS_CENTRED, s2, gMenuText[5], 4); // RETURN
         return;
     }
     if (D_801263BC & 8) {
@@ -4379,7 +4379,7 @@ void render_track_select_setup_ui(s32 arg0) {
         set_text_font(2);
         set_text_color(0xC0, 0xC0, 0xFF, 0, D_800DF764);
         set_text_background_color(0, 0, 0, 0);
-        draw_text(&D_801263A0, POS_X_CENTRED, 0x2B, func_8006BDDC(gTrackIdForPreview), 0xC); // Draw track name?
+        draw_text(&D_801263A0, POS_CENTRED, 0x2B, func_8006BDDC(gTrackIdForPreview), 0xC); // Draw track name?
         sp84 = D_801263BC * 8;
         if (sp84 >= 0x100) {
             sp84 = 0x1FF - sp84;
@@ -5951,17 +5951,17 @@ void func_8009CFB0(void) {
     }
 }
 
-s32 func_8009CFEC(u32 arg0) {
+s32 func_8009CFEC(u32 dialogueOption) {
     s32 result;
 
-    D_800DF4E4[arg0] = 0;
-    if ((func_800C3400() != 0) && (arg0 != 3)) {
+    D_800DF4E4[dialogueOption] = 0;
+    if ((func_800C3400() != 0) && (dialogueOption != DIALOG_CHALLENGE)) {
         return 0;
     }
     if (D_800DF4E0 != 0) {
         return 0;
     }
-    if (arg0 != 3) {
+    if (dialogueOption != 3) {
         func_8006F388(1);
     }
     result = 0;
@@ -5970,7 +5970,7 @@ s32 func_8009CFEC(u32 arg0) {
     open_dialogue_box(1);
     set_current_dialogue_background_colour(1, 0, 0, 0, 0x80);
     func_8001F450();
-    switch (arg0) {
+    switch (dialogueOption) {
         case DIALOG_TAJ:
             result = taj_menu_loop(); // Taj menu
             break;
@@ -6011,7 +6011,7 @@ void render_dialogue_option(char *text, s32 yOffset, s32 optionID) {
     if (sDialogueOption == sDialogueOptionMax) {
         D_80126516 = optionID;
     }
-    render_dialogue_text(1, POS_X_CENTRED, gDialogOptionYOffset, text, 1, 4);
+    render_dialogue_text(1, POS_CENTRED, gDialogOptionYOffset, text, 1, 4);
     gDialogOptionYOffset = (s8)(gDialogOptionYOffset + yOffset);
     sDialogueOptionMax = (s8)(sDialogueOptionMax + 1);
 }
@@ -6071,7 +6071,7 @@ s32 taj_menu_loop(void) {
     switch (sCurrentMenuID) {
         case 2:
         case 0x62:
-            render_dialogue_text(1, POS_X_CENTRED, 6, gMenuText[40], 1, 4); // VEHICLE SELECT
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[40], 1, 4); // VEHICLE SELECT
             gDialogOptionYOffset = 30;
             render_dialogue_option(gMenuText[41], 20, 0); // CAR
             render_dialogue_option(gMenuText[42], 20, 1); // HOVERCRAFT
@@ -6080,7 +6080,7 @@ s32 taj_menu_loop(void) {
             break;
         case 3:
         case 0x63:
-            render_dialogue_text(1, POS_X_CENTRED, 6, gMenuText[45], 1, 4); // CHALLENGE SELECT
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[45], 1, 4); // CHALLENGE SELECT
             gDialogOptionYOffset = 30;
             if (settings->tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) {
                 gDialogOptionTangible = settings->tajFlags & TAJ_FLAGS_CAR_CHAL_COMPLETED;
@@ -6106,7 +6106,7 @@ s32 taj_menu_loop(void) {
             break;
         case 1:
             D_800DF4DC = 0;
-            render_dialogue_text(1, POS_X_CENTRED, 6, gMenuText[36], 1, 4); // OPTIONS
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[36], 1, 4); // OPTIONS
             gDialogOptionYOffset = 30;
             render_dialogue_option(gMenuText[37], 0x14, 0); // CHANGE VEHICLE
             if (settings->tajFlags & TAJ_FLAGS_UNLOCKED_A_CHALLENGE) {
@@ -6226,8 +6226,8 @@ s32 func_8009D9F4(void) {
     playerInput = get_buttons_pressed_from_player(0);
     sDialogueOptionMax = 0;
     D_800DF4DC = 0;
-    render_dialogue_text(1, POS_X_CENTRED, 6, gMenuText[49], 1, 4);    // BETTER LUCK
-    render_dialogue_text(1, POS_X_CENTRED, 20, gMenuText[50], 1, 4); // NEXT TIME!
+    render_dialogue_text(1, POS_CENTRED, 6, gMenuText[49], 1, 4);    // BETTER LUCK
+    render_dialogue_text(1, POS_CENTRED, 20, gMenuText[50], 1, 4); // NEXT TIME!
     gDialogOptionYOffset = 50;
     render_dialogue_option(gMenuText[23], 20, 0); // TRY AGAIN
     render_dialogue_option(gMenuText[51], 20, 1); // EXIT
@@ -6284,7 +6284,7 @@ s32 tt_menu_loop(void) {
     switch (sCurrentMenuID) {
         case TT_MENU_ROOT:
         case TT_MENU_EXIT:
-            render_dialogue_text(1, POS_X_CENTRED, 6, gMenuText[36], 1, 4); // OPTIONS
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[36], 1, 4); // OPTIONS
             render_dialogue_option(gMenuText[71], 0x14, 3);             // STATUS
             if (!is_in_two_player_adventure()) {
                 if (is_time_trial_enabled()) {
@@ -6354,7 +6354,7 @@ s32 tt_menu_loop(void) {
                 sp38 -= sp24 * 8;
                 sp24 = 0;
                 while (D_801263A4[sp24] != NULL) {
-                    render_dialogue_text(1, POS_X_CENTRED, sp38, D_801263A4[sp24], 1, 4);
+                    render_dialogue_text(1, POS_CENTRED, sp38, D_801263A4[sp24], 1, 4);
                     sp38 += 0x10;
                     sp24++;
                 }
@@ -6374,7 +6374,7 @@ s32 tt_menu_loop(void) {
         case TT_MENU_INTRODUCTION:
             sp20 = 6;
             for (i = 52; gMenuText[i] != NULL; i++) {
-                render_dialogue_text(1, POS_X_CENTRED, sp20, gMenuText[i], 1, 4);
+                render_dialogue_text(1, POS_CENTRED, sp20, gMenuText[i], 1, 4);
                 sp20 += 0x10;
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
@@ -6383,9 +6383,9 @@ s32 tt_menu_loop(void) {
             }
             break;
         case TT_MENU_INSERT_CONT_PAK:
-            render_dialogue_text(1, POS_X_CENTRED, 34, gMenuText[159], 1, 4); // If you wish to use
-            render_dialogue_text(1, POS_X_CENTRED, 50, gMenuText[160], 1, 4); // the Controller Pak
-            render_dialogue_text(1, POS_X_CENTRED, 66, gMenuText[162], 1, 4); // insert it now!
+            render_dialogue_text(1, POS_CENTRED, 34, gMenuText[159], 1, 4); // If you wish to use
+            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[160], 1, 4); // the Controller Pak
+            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[162], 1, 4); // insert it now!
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
                 func_80001D04(0xEF, 0);
                 D_80126398 = 0;
@@ -6397,15 +6397,15 @@ s32 tt_menu_loop(void) {
             }
             break;
         case TT_MENU_INSERT_RUMBLE_PAK:
-            render_dialogue_text(1, POS_X_CENTRED, 34, gMenuText[159], 1, 4); // If you wish to use
-            render_dialogue_text(1, POS_X_CENTRED, 50, gMenuText[161], 1, 4); // the Rumble Pak
-            render_dialogue_text(1, POS_X_CENTRED, 66, gMenuText[162], 1, 4); // insert it now!
+            render_dialogue_text(1, POS_CENTRED, 34, gMenuText[159], 1, 4); // If you wish to use
+            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[161], 1, 4); // the Rumble Pak
+            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[162], 1, 4); // insert it now!
             if (buttonsPressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 sCurrentMenuID = TT_MENU_ROOT;
             }
             break;
         case TT_MENU_SAVE_GHOST:
-            render_dialogue_text(1, POS_X_CENTRED, 50, gMenuText[124], 1, 4); // PLEASE WAIT
+            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[124], 1, 4); // PLEASE WAIT
             D_80126398++;
             if (D_80126398 >= 5) {
                 s32 result = func_8001B738(0) & 0xFF;
@@ -6446,7 +6446,7 @@ s32 tt_menu_loop(void) {
     if ((sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_1) ||
         (sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_2) ||
         (sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_3)) {
-        render_dialogue_text(1, POS_X_CENTRED, 6, gMenuText[64], 1, 4); // PAK ERROR
+        render_dialogue_text(1, POS_CENTRED, 6, gMenuText[64], 1, 4); // PAK ERROR
     }
 
     return currentOption;
@@ -6465,7 +6465,7 @@ s32 trophy_race_cabinet_menu_loop(void) {
     set_dialogue_font(1, FONT_COLOURFUL);
     currentOption = 0;
     buttonsPressed = get_buttons_pressed_from_player(0);
-    render_dialogue_text(1, POS_X_CENTRED, 6, gMenuText[70], 1, 4); // TROPHY RACE
+    render_dialogue_text(1, POS_CENTRED, 6, gMenuText[70], 1, 4); // TROPHY RACE
     if (gControllersYAxisDirection[0] < 0) {
         sDialogueOption++;
     } else if (gControllersYAxisDirection[0] > 0) {
@@ -6478,9 +6478,9 @@ s32 trophy_race_cabinet_menu_loop(void) {
         sDialogueOption = 1;
     }
     set_option_text_colour(sDialogueOption == 0);
-    render_dialogue_text(1, POS_X_CENTRED, 30, gMenuText[180], 1, 4); // ENTER TROPHY RACE
+    render_dialogue_text(1, POS_CENTRED, 30, gMenuText[180], 1, 4); // ENTER TROPHY RACE
     set_option_text_colour(sDialogueOption == 1);
-    render_dialogue_text(1, POS_X_CENTRED, 50, gMenuText[51], 1, 4); // EXIT
+    render_dialogue_text(1, POS_CENTRED, 50, gMenuText[51], 1, 4); // EXIT
     if (buttonsPressed & A_BUTTON) {
         currentOption = sDialogueOption + 1;
     }
