@@ -29,8 +29,8 @@ glabel func_800C45A4
 /* 0C51FC 800C45FC 03195821 */  addu  $t3, $t8, $t9
 /* 0C5200 800C4600 246E0008 */  addiu $t6, $v1, 8
 /* 0C5204 800C4604 AC8E0000 */  sw    $t6, ($a0)
-/* 0C5208 800C4608 3C18800E */  lui   $t8, %hi(D_800E3690) # $t8, 0x800e
-/* 0C520C 800C460C 27183690 */  addiu $t8, %lo(D_800E3690) # addiu $t8, $t8, 0x3690
+/* 0C5208 800C4608 3C18800E */  lui   $t8, %hi(dl_dialogue_box_begin) # $t8, 0x800e
+/* 0C520C 800C460C 27183690 */  addiu $t8, %lo(dl_dialogue_box_begin) # addiu $t8, $t8, 0x3690
 /* 0C5210 800C4610 3C0F0600 */  lui   $t7, 0x600
 /* 0C5214 800C4614 3C198013 */  lui   $t9, %hi(gDialogueBoxBackground) # $t9, 0x8013
 /* 0C5218 800C4618 AC6F0000 */  sw    $t7, ($v1)
@@ -201,9 +201,9 @@ glabel func_800C45A4
 /* 0C5494 800C4894 24790008 */  addiu $t9, $v1, 8
 /* 0C5498 800C4898 AE390000 */  sw    $t9, ($s1)
 /* 0C549C 800C489C 3C180702 */  lui   $t8, (0x07020010 >> 16) # lui $t8, 0x702
-                                             # D_800E3690 - 0x7FFFFFB8 = 0xE36D8
-/* 0C54A0 800C48A0 3C0E000E */  lui   $t6, %hi(D_800E3690 - 0x7FFFFFB8) # $t6, 0xe
-/* 0C54A4 800C48A4 25CE36D8 */  addiu $t6, %lo(D_800E3690 - 0x7FFFFFB8) # addiu $t6, $t6, 0x36d8
+                                             # dl_dialogue_box_begin - 0x7FFFFFB8 = 0xE36D8
+/* 0C54A0 800C48A0 3C0E000E */  lui   $t6, %hi(dl_dialogue_box_begin - 0x7FFFFFB8) # $t6, 0xe
+/* 0C54A4 800C48A4 25CE36D8 */  addiu $t6, %lo(dl_dialogue_box_begin - 0x7FFFFFB8) # addiu $t6, $t6, 0x36d8
 /* 0C54A8 800C48A8 37180010 */  ori   $t8, (0x07020010 & 0xFFFF) # ori $t8, $t8, 0x10
 /* 0C54AC 800C48AC AC780000 */  sw    $t8, ($v1)
 /* 0C54B0 800C48B0 AC6E0004 */  sw    $t6, 4($v1)
@@ -272,14 +272,14 @@ glabel func_800C45A4
 /* 0C55A8 800C49A8 032FC025 */  or    $t8, $t9, $t7
 /* 0C55AC 800C49AC AC780004 */  sw    $t8, 4($v1)
 /* 0C55B0 800C49B0 8E230000 */  lw    $v1, ($s1)
-                                             # D_800E3690 - 0x7FFFFFC8 = 0xE36C8
-/* 0C55B4 800C49B4 3C0F000E */  lui   $t7, %hi(D_800E3690 - 0x7FFFFFC8) # $t7, 0xe
+                                             # dl_dialogue_box_begin - 0x7FFFFFC8 = 0xE36C8
+/* 0C55B4 800C49B4 3C0F000E */  lui   $t7, %hi(dl_dialogue_box_begin - 0x7FFFFFC8) # $t7, 0xe
 /* 0C55B8 800C49B8 246E0008 */  addiu $t6, $v1, 8
 /* 0C55BC 800C49BC AE2E0000 */  sw    $t6, ($s1)
 /* 0C55C0 800C49C0 3C190702 */  lui   $t9, (0x07020010 >> 16) # lui $t9, 0x702
 /* 0C55C4 800C49C4 37390010 */  ori   $t9, (0x07020010 & 0xFFFF) # ori $t9, $t9, 0x10
-                                             # D_800E3690 - 0x7FFFFFC8 = 0xE36C8
-/* 0C55C8 800C49C8 25EF36C8 */  addiu $t7, %lo(D_800E3690 - 0x7FFFFFC8) # addiu $t7, $t7, 0x36c8
+                                             # dl_dialogue_box_begin - 0x7FFFFFC8 = 0xE36C8
+/* 0C55C8 800C49C8 25EF36C8 */  addiu $t7, %lo(dl_dialogue_box_begin - 0x7FFFFFC8) # addiu $t7, $t7, 0x36c8
 /* 0C55CC 800C49CC AC6F0004 */  sw    $t7, 4($v1)
 /* 0C55D0 800C49D0 AC790000 */  sw    $t9, ($v1)
 /* 0C55D4 800C49D4 8E230000 */  lw    $v1, ($s1)

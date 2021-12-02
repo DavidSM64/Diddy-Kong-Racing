@@ -16,9 +16,12 @@
 
 #define POS_CENTRED -0x8000
 
+#define DIALOGUE_NUM_NULL 0xFF
+
 enum TextFonts {
     FONT_COLOURFUL,
     FONT_SMALL,
+    FONT_UNK01 = 255,
 };
 
 enum DialogueFlags {
@@ -39,14 +42,8 @@ typedef struct unk8012A7EC {
     s32 unk4;
     s32 unk8;
     s32 unkC;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
-    u8 unk17;
+    u8 textColour[4];
+    u8 textBGColour[4];
     s32 unk18;
     s32 unk1C;
 } unk8012A7EC;
@@ -85,6 +82,47 @@ typedef struct FontData {
 /* 0x100 */ FontCharData unk100[96];
 } FontData;
 
+//Dialogue Box text linked list (Including background struct)
+typedef struct DialogueBox {
+    u8 unk00; // Unused
+    u8 textNum; // A number that is drawn with the text, like a balloon door telling you how many more you need.
+    char *text; // Pointer to the text array
+    s16 x1; // Left position of the text
+    s16 y1; // Top portion of the text
+    s16 x2; // Right portion of the text
+    s16 y2; // Bottom portion of the text
+    u8 textColour[4];
+    u8 textBGColour[4];
+    u8 opacity;
+    u8 font;
+    struct DialogueBox *nextBox;
+} DialogueBox;
+
+/* Size: 0x28 bytes */
+// Dialogue Box background
+typedef struct DialogueBoxBackground {
+    s16 xpos;
+    s16 ypos;
+    s16 x1;
+    s16 y1;
+    s16 x2;
+    s16 y2;
+    s16 width;
+    s16 height;
+    u8 backgroundColourR; //Ideally should also be an array like the rest, but doesn't currently match.
+    u8 backgroundColourG;
+    u8 backgroundColourB;
+    u8 backgroundColourA;
+    u8 textColour[4];
+    u8 textBGColour[4];
+    u8 opacity;
+    u8 font;
+    u16 flags;
+    s16 unk20; // Functionally Unused
+    s16 unk22; // Functionally Unused
+    DialogueBox *textBox;
+} DialogueBoxBackground;
+
 #define DIALOGUEBOXBACKGROUND_COUNT 8
 #define unk8012A7EC_COUNT 64
 #define DIALOGUEBOXBACKGROUND_TOTAL_SIZE (sizeof(DialogueBoxBackground) * DIALOGUEBOXBACKGROUND_COUNT)
@@ -93,7 +131,7 @@ typedef struct FontData {
 void load_fonts(void);
 void func_800C4164(s32 arg0);
 void set_text_font(s32 arg0);
-void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3);
+void render_dialogue_box(Gfx **dlist, Gfx *mat, Vtx *verts, s32 index);
 void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha);
 void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags);
@@ -108,18 +146,18 @@ void set_current_text_background_colour(s32 arg0, s32 arg1, s32 arg2, s32 arg3, 
 void func_800C5094(s32 arg0, s32 arg1, s32 arg2);
 void func_800C50D8(s32 arg0);
 void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_800C5428(s32 arg0, DialogueBox *arg1);
-void func_800C5494(s32 arg0);
+void move_dialogue_box_to_front(s32 arg0, DialogueBox *arg1);
+void assign_dialogue_box_id(s32 arg0);
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4);
-void open_dialogue_box(s32 arg0);
-void close_dialogue_box(s32 arg0);
-void func_800C564C(s32 arg0);
-void func_800C5678(s32 arg0);
-void func_800C56A4(s32 arg0);
-void func_800C56D0(s32 arg0);
-void func_800C56FC(s32 arg0, s32 arg1, s32 arg2);
+void open_dialogue_box(s32 dialogueBoxID);
+void close_dialogue_box(s32 dialogueBoxID);
+UNUSED void func_800C564C(s32 dialogueBoxID);
+UNUSED void func_800C5678(s32 dialogueBoxID);
+UNUSED void func_800C56A4(s32 dialogueBoxID);
+void func_800C56D0(s32 dialogueBoxID);
+void render_dialogue_boxes(Gfx *dlist, Gfx *mat, Vtx *verts);
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry);
-void func_800C5B58(Gfx **dlist, s32 *arg1, s32 *arg2, s32 arg3);
+void render_dialogue_box(Gfx **dlist, Gfx *mat, Vtx *verts, s32 index);
 void parse_string_with_number(unsigned char *input, char *output, s32 number);
 
 void s32_to_string(char** outString, s32 number); //Non Matching

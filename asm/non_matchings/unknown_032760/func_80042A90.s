@@ -84,7 +84,7 @@ glabel func_80042A90
 /* 0437CC 80042BCC AFA8004C */  sw    $t0, 0x4c($sp)
 /* 0437D0 80042BD0 AFA90044 */  sw    $t1, 0x44($sp)
 .L80042BD4:
-/* 0437D4 80042BD4 0C031525 */  jal   func_800C5494
+/* 0437D4 80042BD4 0C031525 */  jal   assign_dialogue_box_id
 /* 0437D8 80042BD8 24040004 */   li    $a0, 4
 /* 0437DC 80042BDC 8FAA0044 */  lw    $t2, 0x44($sp)
 /* 0437E0 80042BE0 8FA50050 */  lw    $a1, 0x50($sp)

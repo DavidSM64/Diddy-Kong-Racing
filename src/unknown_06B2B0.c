@@ -132,12 +132,12 @@ s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 s32 D_801211FC;
-s32 *gHudMatrices[2];
-s32 gCurrHudMat;
-s32 *gHudVertices[2];
-s32 gCurrHudVerts;
-s32 *gHudTriangles[2];
-s32 gCurrHudTris;
+Mtx *gHudMatrices[2];
+Gfx *gCurrHudMat;
+Vtx *gHudVertices[2];
+Vtx *gCurrHudVerts;
+Gfx *gHudTriangles[2];
+Gfx *gCurrHudTris;
 s32 D_80121230[8];
 s8 D_80121250[16];
 OSSched gMainSched; // 0x288 / 648 bytes
@@ -929,9 +929,9 @@ void render(void) {
 
     func_80000D00((u8)sLogicUpdateRate);
     func_800B5F78(&gCurrDisplayList);
-    func_800C56FC(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+    render_dialogue_boxes(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     close_dialogue_box(4);
-    func_800C5494(4);
+    assign_dialogue_box_id(4);
     if (func_800C0494(sLogicUpdateRate) != 0) {
         render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     }

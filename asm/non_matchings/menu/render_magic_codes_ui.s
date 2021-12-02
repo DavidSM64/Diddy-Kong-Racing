@@ -20,7 +20,7 @@ glabel render_magic_codes_ui
 /* 08A2EC 800896EC 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 08A2F0 800896F0 00002825 */  move  $a1, $zero
 /* 08A2F4 800896F4 00003025 */  move  $a2, $zero
-/* 08A2F8 800896F8 0C0316D6 */  jal   func_800C5B58
+/* 08A2F8 800896F8 0C0316D6 */  jal   render_dialogue_box
 /* 08A2FC 800896FC 24070007 */   li    $a3, 7
 /* 08A300 80089700 0C0310BB */  jal   set_text_font
 /* 08A304 80089704 24040002 */   li    $a0, 2
@@ -332,7 +332,7 @@ glabel render_magic_codes_ui
 /* 08A77C 80089B7C 10000001 */  b     .L80089B84
 /* 08A780 80089B80 24130086 */   li    $s3, 134
 .L80089B84:
-/* 08A784 80089B84 0C031525 */  jal   func_800C5494
+/* 08A784 80089B84 0C031525 */  jal   assign_dialogue_box_id
 /* 08A788 80089B88 24040006 */   li    $a0, 6
 /* 08A78C 80089B8C 24040006 */  li    $a0, 6
 /* 08A790 80089B90 0C0313DF */  jal   set_dialogue_font
@@ -402,7 +402,7 @@ glabel render_magic_codes_ui
 /* 08A878 80089C78 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 08A87C 80089C7C 00002825 */  move  $a1, $zero
 /* 08A880 80089C80 00003025 */  move  $a2, $zero
-/* 08A884 80089C84 0C0316D6 */  jal   func_800C5B58
+/* 08A884 80089C84 0C0316D6 */  jal   render_dialogue_box
 /* 08A888 80089C88 24070006 */   li    $a3, 6
 .L80089C8C:
 /* 08A88C 80089C8C 0C0270C3 */  jal   get_filtered_cheats

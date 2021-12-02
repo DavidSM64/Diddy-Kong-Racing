@@ -78,7 +78,7 @@ void func_800C2AB4(void) {
     free_from_memory_pool(D_8012A7C8.unk0);
     D_8012A7B6 = 0;
     close_dialogue_box(6);
-    func_800C5494(6);
+    assign_dialogue_box_id(6);
 }
 
 void func_800C2AF4(s32 arg0) {
@@ -99,7 +99,7 @@ void func_800C2F1C(s32 arg0) {
                 D_8012A7A8 = 0;
                 D_8012A7B6 = 0;
                 close_dialogue_box(6);
-                func_800C5494(6);
+                assign_dialogue_box_id(6);
             }
         } else {
             D_8012A7A8 += arg0 * D_8012A7AA;

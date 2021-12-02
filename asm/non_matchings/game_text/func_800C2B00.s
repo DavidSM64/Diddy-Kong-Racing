@@ -10,7 +10,7 @@ glabel func_800C2B00
 /* 0C3720 800C2B20 AFB20028 */  sw    $s2, 0x28($sp)
 /* 0C3724 800C2B24 AFB10024 */  sw    $s1, 0x24($sp)
 /* 0C3728 800C2B28 AFB00020 */  sw    $s0, 0x20($sp)
-/* 0C372C 800C2B2C 0C031525 */  jal   func_800C5494
+/* 0C372C 800C2B2C 0C031525 */  jal   assign_dialogue_box_id
 /* 0C3730 800C2B30 24040006 */   li    $a0, 6
 /* 0C3734 800C2B34 3C118013 */  lui   $s1, %hi(D_8012A7B4) # $s1, 0x8013
 /* 0C3738 800C2B38 2631A7B4 */  addiu $s1, %lo(D_8012A7B4) # addiu $s1, $s1, -0x584c
