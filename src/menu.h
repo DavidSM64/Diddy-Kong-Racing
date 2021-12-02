@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_080500_H_
-#define _UNKNOWN_080500_H_
+#ifndef _MENU_H_
+#define _MENU_H_
 
 #include "types.h"
 #include "structs.h"
@@ -182,13 +182,13 @@ typedef struct unk801263CC {
 } unk801263CC;
 
 /* Size: 0x0C Bytes */
-typedef struct unk801264A0 {
-    u8 unk0;
-    u8 unk1;
-    u16 unk2;
+typedef struct SavefileInfo {
+    u8 isAdventure2;
+    u8 isStarted;
+    u16 balloonCount;
     char name[4];
     u32 pad8;
-} unk801264A0;
+} SavefileInfo;
 
 typedef struct unk800E153C {
     TextureHeader *texture;

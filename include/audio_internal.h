@@ -1,5 +1,5 @@
-#ifndef _AUDIO_INTERNAL_H
-#define _AUDIO_INTERNAL_H
+#ifndef _AUDIO_INTERNAL_H_
+#define _AUDIO_INTERNAL_H_
 
 #include "PR/libaudio.h"
 

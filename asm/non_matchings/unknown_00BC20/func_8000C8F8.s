@@ -24,8 +24,8 @@ glabel func_8000C8F8
 /* 00D550 8000C950 0003702B */  sltu  $t6, $zero, $v1
 /* 00D554 8000C954 01C01825 */  move  $v1, $t6
 .L8000C958:
-/* 00D558 8000C958 3C108012 */  lui   $s0, %hi(D_8011AE03) # $s0, 0x8012
-/* 00D55C 8000C95C 2610AE03 */  addiu $s0, %lo(D_8011AE03) # addiu $s0, $s0, -0x51fd
+/* 00D558 8000C958 3C108012 */  lui   $s0, %hi(gIsSilverCoinRace) # $s0, 0x8012
+/* 00D55C 8000C95C 2610AE03 */  addiu $s0, %lo(gIsSilverCoinRace) # addiu $s0, $s0, -0x51fd
 /* 00D560 8000C960 A2030000 */  sb    $v1, ($s0)
 /* 00D564 8000C964 904F0049 */  lbu   $t7, 0x49($v0)
 /* 00D568 8000C968 8C580004 */  lw    $t8, 4($v0)

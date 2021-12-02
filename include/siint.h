@@ -1,5 +1,6 @@
-#ifndef _SIINT_H
-#define _SIINT_H
+#ifndef _SIINT_H_
+#define _SIINT_H_
+
 #include "PR/os_internal.h"
 #include "PR/rcp.h"
 

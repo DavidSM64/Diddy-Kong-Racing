@@ -26,7 +26,7 @@ glabel render_file_select_menu
 /* 08D9CC 8008CDCC 24A563A8 */  addiu $a1, %lo(D_801263A8) # addiu $a1, $a1, 0x63a8
 /* 08D9D0 8008CDD0 0C019FCB */  jal   func_80067F2C
 /* 08D9D4 8008CDD4 02E02025 */   move  $a0, $s7
-/* 08D9D8 8008CDD8 3C118012 */  lui   $s1, %hi(D_801264A0) # $s1, 0x8012
+/* 08D9D8 8008CDD8 3C118012 */  lui   $s1, %hi(gSavefileInfo) # $s1, 0x8012
 /* 08D9DC 8008CDDC 3C10800E */  lui   $s0, %hi(D_800E03CC) # $s0, 0x800e
 /* 08D9E0 8008CDE0 3C158012 */  lui   $s5, %hi(D_80126550) # $s5, 0x8012
 /* 08D9E4 8008CDE4 3C13B0E0 */  lui   $s3, (0xB0E0C0FF >> 16) # lui $s3, 0xb0e0
@@ -35,7 +35,7 @@ glabel render_file_select_menu
 /* 08D9F0 8008CDF0 3673C0FF */  ori   $s3, (0xB0E0C0FF & 0xFFFF) # ori $s3, $s3, 0xc0ff
 /* 08D9F4 8008CDF4 26B56550 */  addiu $s5, %lo(D_80126550) # addiu $s5, $s5, 0x6550
 /* 08D9F8 8008CDF8 261003CC */  addiu $s0, %lo(D_800E03CC) # addiu $s0, $s0, 0x3cc
-/* 08D9FC 8008CDFC 263164A0 */  addiu $s1, %lo(D_801264A0) # addiu $s1, $s1, 0x64a0
+/* 08D9FC 8008CDFC 263164A0 */  addiu $s1, %lo(gSavefileInfo) # addiu $s1, $s1, 0x64a0
 /* 08DA00 8008CE00 24140078 */  li    $s4, 120
 .L8008CE04:
 /* 08DA04 8008CE04 8E4F0000 */  lw    $t7, ($s2)
@@ -86,14 +86,14 @@ glabel render_file_select_menu
 /* 08DAB0 8008CEB0 00003025 */  move  $a2, $zero
 /* 08DAB4 8008CEB4 0C0310F3 */  jal   set_text_background_color
 /* 08DAB8 8008CEB8 00003825 */   move  $a3, $zero
-/* 08DABC 8008CEBC 3C118012 */  lui   $s1, %hi(D_801264A0) # $s1, 0x8012
+/* 08DABC 8008CEBC 3C118012 */  lui   $s1, %hi(gSavefileInfo) # $s1, 0x8012
 /* 08DAC0 8008CEC0 3C10800E */  lui   $s0, %hi(D_800E03CC) # $s0, 0x800e
 /* 08DAC4 8008CEC4 3C14800E */  lui   $s4, %hi(D_800E03FC) # $s4, 0x800e
 /* 08DAC8 8008CEC8 3C13800E */  lui   $s3, %hi(D_800DF75C) # $s3, 0x800e
 /* 08DACC 8008CECC 2673F75C */  addiu $s3, %lo(D_800DF75C) # addiu $s3, $s3, -0x8a4
 /* 08DAD0 8008CED0 269403FC */  addiu $s4, %lo(D_800E03FC) # addiu $s4, $s4, 0x3fc
 /* 08DAD4 8008CED4 261003CC */  addiu $s0, %lo(D_800E03CC) # addiu $s0, $s0, 0x3cc
-/* 08DAD8 8008CED8 263164A0 */  addiu $s1, %lo(D_801264A0) # addiu $s1, $s1, 0x64a0
+/* 08DAD8 8008CED8 263164A0 */  addiu $s1, %lo(gSavefileInfo) # addiu $s1, $s1, 0x64a0
 /* 08DADC 8008CEDC 2415000A */  li    $s5, 10
 .L8008CEE0:
 /* 08DAE0 8008CEE0 922F0001 */  lbu   $t7, 1($s1)
@@ -350,8 +350,8 @@ glabel render_file_select_menu
 /* 08DE90 8008D290 126A0021 */  beq   $s3, $t2, .L8008D318
 .L8008D294:
 /* 08DE94 8008D294 01735823 */   subu  $t3, $t3, $s3
-/* 08DE98 8008D298 3C0C8012 */  lui   $t4, %hi(D_801264A0) # $t4, 0x8012
-/* 08DE9C 8008D29C 258C64A0 */  addiu $t4, %lo(D_801264A0) # addiu $t4, $t4, 0x64a0
+/* 08DE98 8008D298 3C0C8012 */  lui   $t4, %hi(gSavefileInfo) # $t4, 0x8012
+/* 08DE9C 8008D29C 258C64A0 */  addiu $t4, %lo(gSavefileInfo) # addiu $t4, $t4, 0x64a0
 /* 08DEA0 8008D2A0 000B5880 */  sll   $t3, $t3, 2
 /* 08DEA4 8008D2A4 016C8821 */  addu  $s1, $t3, $t4
 /* 08DEA8 8008D2A8 26240004 */  addiu $a0, $s1, 4

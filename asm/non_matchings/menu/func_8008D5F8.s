@@ -47,11 +47,11 @@ glabel func_8008D5F8
 /* 08E2A8 8008D6A8 00000000 */   nop   
 .L8008D6AC:
 /* 08E2AC 8008D6AC 8D6C0000 */  lw    $t4, ($t3)
-/* 08E2B0 8008D6B0 3C0E8012 */  lui   $t6, %hi(D_801264A0) # $t6, 0x8012
+/* 08E2B0 8008D6B0 3C0E8012 */  lui   $t6, %hi(gSavefileInfo) # $t6, 0x8012
 /* 08E2B4 8008D6B4 000C6880 */  sll   $t5, $t4, 2
 /* 08E2B8 8008D6B8 01AC6823 */  subu  $t5, $t5, $t4
 /* 08E2BC 8008D6BC 000D6880 */  sll   $t5, $t5, 2
-/* 08E2C0 8008D6C0 25CE64A0 */  addiu $t6, %lo(D_801264A0) # addiu $t6, $t6, 0x64a0
+/* 08E2C0 8008D6C0 25CE64A0 */  addiu $t6, %lo(gSavefileInfo) # addiu $t6, $t6, 0x64a0
 /* 08E2C4 8008D6C4 01AE1021 */  addu  $v0, $t5, $t6
 /* 08E2C8 8008D6C8 904F0001 */  lbu   $t7, 1($v0)
 /* 08E2CC 8008D6CC 3C18800E */  lui   $t8, %hi(gIsInAdventureTwo) # $t8, 0x800e
