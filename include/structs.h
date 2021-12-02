@@ -608,7 +608,9 @@ typedef struct Object_64 {
     u8 unkFC;
     u8 padFD[0xB];
     s32 unk108;
-    u8 pad10C[0x54];
+    u8 pad10C[0xC];
+    s32 unk118;
+    u8 pad11C[0x44];
     s16 unk160;
     s16 unk162;
     s16 unk164;
@@ -619,7 +621,8 @@ typedef struct Object_64 {
     u8 unk193;
     u8 pad194[0x26];
     u16 unk1BA;
-    u8 pad1BC[0x1B];
+    u8 pad1BC[0x1A];
+    s8 unk1D6;
     s8 unk1D7;
     u8 pad1D8[0x1A];
     u8 unk1F2;

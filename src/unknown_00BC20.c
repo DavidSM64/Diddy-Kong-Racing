@@ -11,6 +11,7 @@
 #include "asset_loading.h"
 #include "thread0_epc.h"
 #include "controller_pak.h"
+#include "menu.h"
 #include "unknown_06B2B0.h"
 #include "unknown_043920.h"
 
