@@ -1184,7 +1184,60 @@ void obj_loop_world_key(Object *worldKeyObj, s32 speed) {
     worldKeyObj->y_rotation += speed * 256;
 }
 
+#ifdef NON_MATCHING
+typedef struct unknown_struct_8003DFCC {
+    u8 pad0[8];
+    u8 unk8;
+    u8 unk9;
+    u8 unkA;
+} unknown_struct_8003DFCC;
+
+void func_8003DFCC(Object *arg0, unknown_struct_8003DFCC *arg1) {
+    f32 temp_f0;
+    s32 temp_v0;
+    Object_64 *temp_v0_2;
+    f32 phi_f0;
+
+    arg0->unk4C->unk14 = 2;
+    arg0->unk4C->unk11 = 4;
+    arg0->unk4C->unk10 = 0x14;
+    temp_v0 = get_filtered_cheats();
+    if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_BLUE) {
+        arg1->unk9 = 0U;
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_RED) {
+        arg1->unk9 = 1U;
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_GREEN) {
+        arg1->unk9 = 2U;
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_YELLOW) {
+        arg1->unk9 = 3U;
+    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_RAINBOW) {
+        arg1->unk9 = 4U;
+    }
+    if ((s32) arg1->unk8 >= 6) {
+        arg1->unk8 = 0U;
+    }
+    if ((s32) arg0->unk3A >= (s32) arg0->descriptor_ptr->unk55) {
+        arg0->unk3A = 0;
+    }
+    arg0->unk3A = (s8) arg1->unk9;
+    arg0->unk78 = (s32) arg0->unk3A;
+    phi_f0 = arg1->unkA;
+    if (arg1->unkA < 10.0f) {
+        phi_f0 = 10.0f;
+    }
+    temp_f0 = phi_f0 / 64.0f;
+    arg0->scale = (f32) (arg0->descriptor_ptr->unkC * temp_f0);
+    arg0->unk64->unk4 = 0;
+    arg0->unk64->unk0_a.unk0 = arg0->scale;
+    arg0->unk7C.word = 0;
+    if (get_filtered_cheats() & CHEAT_DISABLE_WEAPONS) {
+        gParticlePtrList_addObject(arg0);
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003DFCC.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E140.s")
 
 void func_8003E5B0(s32 arg0, s32 arg1) {
