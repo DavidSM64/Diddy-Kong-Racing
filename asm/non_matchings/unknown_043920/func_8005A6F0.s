@@ -37,7 +37,7 @@ glabel func_8005A6F0
 /* 05B308 8005A708 AFA400A0 */  sw    $a0, 0xa0($sp)
 /* 05B30C 8005A70C AFA600A8 */  sw    $a2, 0xa8($sp)
 /* 05B310 8005A710 AFA700AC */  sw    $a3, 0xac($sp)
-/* 05B314 8005A714 0C01B683 */  jal   func_8006DA0C
+/* 05B314 8005A714 0C01B683 */  jal   get_render_context
 /* 05B318 8005A718 AC2ED55C */   sw    $t6, %lo(D_8011D55C)($at)
 /* 05B31C 8005A71C 0C01AF6C */  jal   get_current_level_header
 /* 05B320 8005A720 AFA20094 */   sw    $v0, 0x94($sp)

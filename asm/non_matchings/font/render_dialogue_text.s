@@ -1,4 +1,4 @@
-glabel func_800C5168
+glabel render_dialogue_text
 /* 0C5D68 800C5168 27BDFEB8 */  addiu $sp, $sp, -0x148
 /* 0C5D6C 800C516C AFB00018 */  sw    $s0, 0x18($sp)
 /* 0C5D70 800C5170 00808025 */  move  $s0, $a0
@@ -34,8 +34,8 @@ glabel func_800C5168
 /* 0C5DD8 800C51D8 10E0008E */  beqz  $a3, .L800C5414
 /* 0C5DDC 800C51DC 240500FF */   li    $a1, 255
 /* 0C5DE0 800C51E0 00105080 */  sll   $t2, $s0, 2
-/* 0C5DE4 800C51E4 3C0B8013 */  lui   $t3, %hi(D_8012A7E8) # $t3, 0x8013
-/* 0C5DE8 800C51E8 8D6BA7E8 */  lw    $t3, %lo(D_8012A7E8)($t3)
+/* 0C5DE4 800C51E4 3C0B8013 */  lui   $t3, %hi(gDialogueBoxBackground) # $t3, 0x8013
+/* 0C5DE8 800C51E8 8D6BA7E8 */  lw    $t3, %lo(gDialogueBoxBackground)($t3)
 /* 0C5DEC 800C51EC 8FAC014C */  lw    $t4, 0x14c($sp)
 /* 0C5DF0 800C51F0 01505021 */  addu  $t2, $t2, $s0
 /* 0C5DF4 800C51F4 24028000 */  li    $v0, -32768

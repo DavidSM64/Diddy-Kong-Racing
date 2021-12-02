@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_066AA0_H_
-#define _UNKNOWN_066AA0_H_
+#ifndef _CAMERA_H_
+#define _CAMERA_H_
 
 #include "types.h"
 #include "macros.h"

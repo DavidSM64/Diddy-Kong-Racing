@@ -11,6 +11,7 @@
 #include "asset_loading.h"
 #include "thread0_epc.h"
 #include "controller_pak.h"
+#include "menu.h"
 #include "unknown_06B2B0.h"
 #include "unknown_043920.h"
 
@@ -176,7 +177,7 @@ s32 D_8011ADD8[10];
 s8 D_8011AE00;
 s8 D_8011AE01;
 s8 D_8011AE02;
-s8 D_8011AE03;
+s8 gIsSilverCoinRace;
 u32 *D_8011AE08[16];
 s32 (*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8];  // Unknown number of entries.
@@ -585,7 +586,7 @@ s8 func_8000E1CC(void) {
 }
 
 s8 func_8000E1DC() {
-    return D_8011AE03;
+    return gIsSilverCoinRace;
 }
 
 void func_8000E1EC(Object *object, s32 arg1) {
@@ -600,7 +601,72 @@ void func_8000E1EC(Object *object, s32 arg1) {
     gObjectCount = 0;
 }
 
+#ifdef NON_MATCHING
+typedef struct LevelObjectEntry8000E2B4 {
+    LevelObjectEntryCommon common;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} LevelObjectEntry8000E2B4;
+
+void func_8000E2B4(void) {
+    LevelObjectEntry8000E2B4 sp2C;
+    Settings *settings;
+    Object *player;
+    Object_64 *player_64;
+    s16 object_id;
+
+    if (D_8011AD44 == 0) {
+        return;
+    }
+    D_8011AD44 = (s8) (D_8011AD44 - 1);
+    if (D_8011AD44 != 0) {
+        return;
+    }
+    settings = get_settings();
+    sp2C.unkE = 0;
+    sp2C.common.size = 0x10;
+    if (D_8011AD45 < 5) {
+        object_id = ((s16*)D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
+    } else {
+        object_id = D_800DC7B8[D_8011AD45 + 37];
+    }
+    func_8006DB14(D_8011AD45);
+    sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
+    sp2C.unkA = 0;
+    sp2C.unk8 = 0;
+    sp2C.common.object_id = (s8) object_id;
+    sp2C.common.x = D_8011AD46;
+    sp2C.common.y = D_8011AD48;
+    sp2C.common.z = D_8011AD4A;
+    sp2C.unkC = D_8011AD4C;
+    func_800521B8(1);
+    player = func_8000EA54(&sp2C, 0x11);
+    gObjectCount = 1;
+    (*gObjectStructArrayPtr)[0] = (s32) player;
+    *D_8011AEEC = (s32) player;
+    *D_8011AEE8 = (s32) player;
+    player_64 = player->unk64;
+    player_64->unk1D6 = (s8) D_8011AD45;
+    player_64->unk0_a.unk0_b.unk2 = (u8)0;
+    player_64->unk1D7 = (s8) D_8011AD45;
+    player_64->unk0_a.unk0_b.unk0 = (u16)0;
+    player_64->unk118 = 0;
+    player_64->unk0_a.unk0_b.unk3 = (s8) settings->racers[0].character;
+    if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
+        player->scale *= 1.4f;
+    }
+    if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
+        player->scale *= 0.714f;
+    }
+    player->unk3C_a.unk3C = 0;
+    player->y_rotation = D_8011AD4C;
+    player->y_position = D_8011AD48;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
+#endif
 
 /**
  * Enables or Disables time trial mode.
@@ -1284,7 +1350,7 @@ void func_8001E45C(s32 arg0) {
         D_8011AE7A = arg0;
         D_8011ADAC = 0;
         D_8011AE7E = (u8)1;
-        if (func_8006DA0C() == 1) {
+        if (get_render_context() == DRAW_MENU) {
             func_8006F42C();
         }
     }
@@ -1441,269 +1507,373 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
-void func_800238BC(Object *arg0) {
+void func_800238BC(Object *arg0, void *arg1) {
     arg0->unk48 = arg0->descriptor_ptr->unk54;
     switch (arg0->unk48 - 1) {
         case 0x00:
-            func_8004DAB0(arg0);
+            func_8004DAB0(arg0, arg1);
             break;
         case 0x01:
-            func_80033CC0(arg0);
+            func_80033CC0(arg0, arg1);
             break;
         case 0x02:
-            func_80036C30(arg0);
+            func_80036C30(arg0, arg1);
             break;
         case 0x03:
-            func_800376E0(arg0);
+            func_800376E0(arg0, arg1);
             break;
         case 0x05:
-            func_800389AC(arg0);
+            func_800389AC(arg0, arg1);
             break;
         case 0x18:
-            func_80038A6C(arg0);
+            func_80038A6C(arg0, arg1);
             break;
         case 0x15:
-            func_80038B74(arg0);
+            func_80038B74(arg0, arg1);
             break;
         case 0x06:
-            func_80038E3C(arg0);
+            func_80038E3C(arg0, arg1);
             break;
         case 0x07:
-            func_8003FD68(arg0);
+            func_8003FD68(arg0, arg1);
             break;
         case 0x08:
         case 0x12:
-            func_8003FEF4(arg0);
+            func_8003FEF4(arg0, arg1);
             break;
         case 0x1A:
-            func_8004001C(arg0);
+            func_8004001C(arg0, arg1);
             break;
         case 0x09:
-            func_80039160(arg0);
+            func_80039160(arg0, arg1);
             break;
         case 0x0A:
-            func_80039190(arg0);
+            func_80039190(arg0, arg1);
             break;
         case 0x0B:
-            func_800391C8(arg0);
+            func_800391C8(arg0, arg1);
             break;
         case 0x0C:
-            func_8003ACBC(arg0);
+            func_8003ACBC(arg0, arg1);
             break;
         case 0x1D:
-            func_8003AD34(arg0);
+            func_8003AD34(arg0, arg1);
             break;
         case 0x28:
-            func_8003B058(arg0);
+            func_8003B058(arg0, arg1);
             break;
         case 0x0D:
-            func_8003B7CC(arg0);
+            func_8003B7CC(arg0, arg1);
             break;
         case 0x6E:
-            func_8003C1E0(arg0);
+            func_8003C1E0(arg0, arg1);
             break;
         case 0x0E:
-            func_8003CF18(arg0);
+            func_8003CF18(arg0, arg1);
             break;
         case 0x0F:
-            func_8003CFE0(arg0);
+            func_8003CFE0(arg0, arg1);
             break;
         case 0x10:
-            func_8003DFCC(arg0);
+            func_8003DFCC(arg0, arg1);
             break;
         case 0x16:
-            func_8003E5B0(arg0);
+            func_8003E5B0(arg0, arg1);
             break;
         case 0x04:
         case 0x11:
-            func_8003E5C8(arg0);
+            func_8003E5C8(arg0, arg1);
             break;
         case 0x19:
-            func_8003CF58(arg0);
+            func_8003CF58(arg0, arg1);
             break;
         case 0x1B:
-            func_80034AF0(arg0);
+            func_80034AF0(arg0, arg1);
             break;
         case 0x1C:
-            func_800400A4(arg0);
+            func_800400A4(arg0, arg1);
             break;
         case 0x1E:
-            func_80036194(arg0);
+            func_80036194(arg0, arg1);
             break;
         case 0x1F:
-            func_8003D534(arg0);
+            func_8003D534(arg0, arg1);
             break;
         case 0x20:
-            func_800403A8(arg0);
+            func_800403A8(arg0, arg1);
             break;
         case 0x23:
-            func_800403D8(arg0);
+            func_800403D8(arg0, arg1);
             break;
         case 0x42:
-            func_8004049C(arg0);
+            func_8004049C(arg0, arg1);
             break;
         case 0x24:
-            func_80040800(arg0);
+            func_80040800(arg0, arg1);
             break;
         case 0x25:
-            func_8003C9EC(arg0);
+            func_8003C9EC(arg0, arg1);
             break;
         case 0x26:
-            func_8003CE64(arg0);
+            func_8003CE64(arg0, arg1);
             break;
         case 0x27:
-            func_8003CF00(arg0);
+            func_8003CF00(arg0, arg1);
             break;
         case 0x2A:
-            func_8004092C(arg0);
+            func_8004092C(arg0, arg1);
             break;
         case 0x2B:
-            func_8004094C(arg0);
+            func_8004094C(arg0, arg1);
             break;
         case 0x2C:
-            func_8003522C(arg0);
+            func_8003522C(arg0, arg1);
             break;
         case 0x2D:
-            func_80035640(arg0);
+            func_80035640(arg0, arg1);
             break;
         case 0x2E:
-            func_80035EF8(arg0);
+            func_80035EF8(arg0, arg1);
             break;
         case 0x30:
-            func_80037A18(arg0);
+            func_80037A18(arg0, arg1);
             break;
         case 0x33:
-            func_80038854(arg0);
+            func_80038854(arg0, arg1);
             break;
         case 0x36:
-            func_8003C644(arg0);
+            func_8003C644(arg0, arg1);
             break;
         case 0x38:
         case 0x5C:
-            func_8003588C(arg0);
+            func_8003588C(arg0, arg1);
             break;
         case 0x39:
-            func_80035E20(arg0);
+            func_80035E20(arg0, arg1);
             break;
         case 0x3A:
-            func_800409A4(arg0);
+            func_800409A4(arg0, arg1);
             break;
         case 0x3C:
-            func_800409C8(arg0);
+            func_800409C8(arg0, arg1);
             break;
         case 0x3D:
-            func_800392B8(arg0);
+            func_800392B8(arg0, arg1);
             break;
         case 0x3F:
-            func_8003DE74(arg0);
+            func_8003DE74(arg0, arg1);
             break;
         case 0x40:
-            func_8003D3EC(arg0);
+            func_8003D3EC(arg0, arg1);
             break;
         case 0x41:
-            func_8003D038(arg0);
+            func_8003D038(arg0, arg1);
             break;
         case 0x43:
-            func_80037578(arg0);
+            func_80037578(arg0, arg1);
             break;
         case 0x44:
-            func_80037624(arg0);
+            func_80037624(arg0, arg1);
             break;
         case 0x45:
         case 0x66:
-            func_8003818C(arg0);
+            func_8003818C(arg0, arg1);
             break;
         case 0x47:
         case 0x5E:
         case 0x67:
-            func_800381E0(arg0);
+            func_800381E0(arg0, arg1);
             break;
         case 0x5F:
         case 0x64:
-            func_80038214(arg0);
+            func_80038214(arg0, arg1);
             break;
         case 0x60:
         case 0x65:
-            func_80038248(arg0);
+            func_80038248(arg0, arg1);
             break;
         case 0x46:
-            func_80041A90(arg0);
+            func_80041A90(arg0, arg1);
             break;
         case 0x6F:
-            func_80041E80(arg0);
+            func_80041E80(arg0, arg1);
             break;
         case 0x75:
-            func_80042014(arg0);
+            func_80042014(arg0, arg1);
             break;
         case 0x48:
-            func_80034B68(arg0);
+            func_80034B68(arg0, arg1);
             break;
         case 0x49:
-            func_80034E70(arg0);
+            func_80034E70(arg0, arg1);
             break;
         case 0x4A:
-            func_8004203C(arg0);
+            func_8004203C(arg0, arg1);
             break;
         case 0x4B:
-            func_8003D2AC(arg0);
+            func_8003D2AC(arg0, arg1);
             break;
         case 0x4C:
-            func_8003B368(arg0);
+            func_8003B368(arg0, arg1);
             break;
         case 0x4D:
-            func_80034844(arg0);
+            func_80034844(arg0, arg1);
             break;
         case 0x4E:
-            func_80034530(arg0);
+            func_80034530(arg0, arg1);
             break;
         case 0x51:
-            func_80035AE8(arg0);
+            func_80035AE8(arg0, arg1);
             break;
         case 0x52:
-            func_80037D54(arg0);
+            func_80037D54(arg0, arg1);
             break;
         case 0x53:
-            func_80037D6C(arg0);
+            func_80037D6C(arg0, arg1);
             break;
         case 0x58:
-            func_8004210C(arg0);
+            func_8004210C(arg0, arg1);
             break;
         case 0x57:
-            func_8003DC5C(arg0);
+            func_8003DC5C(arg0, arg1);
             break;
         case 0x59:
-            func_80038AC8(arg0);
+            func_80038AC8(arg0, arg1);
             break;
         case 0x5D:
-            func_80042150(arg0);
+            func_80042150(arg0, arg1);
             break;
         case 0x61:
-            func_80038D58(arg0);
+            func_80038D58(arg0, arg1);
             break;
         case 0x62:
         case 0x63:
-            func_8003572C(arg0);
+            func_8003572C(arg0, arg1);
             break;
         case 0x68:
-            func_8004216C(arg0);
+            func_8004216C(arg0, arg1);
             break;
         case 0x6B:
         case 0x73:
-            func_80033F44(arg0);
+            func_80033F44(arg0, arg1);
             break;
         case 0x6C:
-            func_80042210(arg0);
+            func_80042210(arg0, arg1);
             break;
         case 0x6D:
-            func_8003DBA0(arg0);
+            func_8003DBA0(arg0, arg1);
             break;
         case 0x74:
-            func_80042A1C(arg0);
+            func_80042A1C(arg0, arg1);
             break;
     }
 }
 
+#ifdef NON_MATCHING
+s32 func_80023E30(s32 arg0) {
+    switch (arg0 - 1) {
+        case 0x00:
+            return 0x1F;
+        case 0x01:
+            return 0x13;
+        case 0x04:
+            return 0x16;
+        case 0x0B:
+            return 0x1B;
+        case 0x0D:
+        case 0x6E:
+            return 0x30;
+        case 0x10:
+        case 0x4C:
+            return 0x12;
+        case 0x45:
+        case 0x47:
+        case 0x5F:
+        case 0x60:
+            return 0x3B;
+        case 0x64:
+        case 0x65:
+        case 0x66:
+        case 0x67:
+            return 0x3A;
+        case 0x17:
+            return 0x04;
+        case 0x1E:
+            return 0x1B;
+        case 0x1F:
+        case 0x3F:
+        case 0x57:
+        case 0x6D:
+            return 0x12;
+        case 0x42:
+            return 0x30;
+        case 0x25:
+            return 0x39;
+        case 0x26:
+            return 0x12;
+        case 0x27:
+            return 0x09;
+        case 0x2C:
+            return 0x12;
+        case 0x2F:
+            return 0x09;
+        case 0x3E:
+            return 0x09;
+        case 0x31:
+        case 0x37:
+        case 0x4F:
+        case 0x53:
+        case 0x55:
+        case 0x72:
+            return 0x0B;
+        case 0x35:
+            return 0x0B;
+        case 0x49:
+        case 0x5E:
+        case 0x62:
+        case 0x63:
+            return 0x31;
+        case 0x5A:
+            return 0x01;
+        case 0x50:
+            return 0x0A;
+        case 0x06:
+        case 0x0C:
+        case 0x11:
+        case 0x19:
+        case 0x1D:
+        case 0x23:
+        case 0x28:
+        case 0x33:
+        case 0x36:
+        case 0x38:
+        case 0x43:
+        case 0x4D:
+        case 0x4E:
+        case 0x5C:
+        case 0x61:
+        case 0x6B:
+        case 0x73:
+            return 0x10;
+        case 0x51:
+            return 0x12;
+        case 0x30:
+        case 0x32:
+        case 0x3C:
+            return 0x02;
+        case 0x3D:
+            return 0x1B;
+        case 0x6C:
+            return 0x0B;
+        case 0x71:
+            return 0x01;
+        default:
+            return 0x00;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023E30.s")
+#endif
 
 void run_object_loop_func(Object *obj, s32 arg1) {
     func_800B76B8(1, obj->unk4A);

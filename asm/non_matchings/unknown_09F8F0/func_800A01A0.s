@@ -45,7 +45,7 @@ glabel func_800A01A0
 /* 0A0E40 800A0240 314B0002 */  andi  $t3, $t2, 2
 /* 0A0E44 800A0244 15600248 */  bnez  $t3, .L800A0B68
 /* 0A0E48 800A0248 8FBF0024 */   lw    $ra, 0x24($sp)
-/* 0A0E4C 800A024C 0C01B683 */  jal   func_8006DA0C
+/* 0A0E4C 800A024C 0C01B683 */  jal   get_render_context
 /* 0A0E50 800A0250 00000000 */   nop   
 /* 0A0E54 800A0254 24030001 */  li    $v1, 1
 /* 0A0E58 800A0258 10430242 */  beq   $v0, $v1, .L800A0B64
@@ -323,10 +323,10 @@ glabel func_800A01A0
 /* 0A1258 800A0658 244E0008 */  addiu $t6, $v0, 8
 /* 0A125C 800A065C AC8E0000 */  sw    $t6, ($a0)
 /* 0A1260 800A0660 AC400004 */  sw    $zero, 4($v0)
-/* 0A1264 800A0664 0C01E037 */  jal   func_800780DC
+/* 0A1264 800A0664 0C01E037 */  jal   init_rsp
 /* 0A1268 800A0668 AC580000 */   sw    $t8, ($v0)
 /* 0A126C 800A066C 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
-/* 0A1270 800A0670 0C01E015 */  jal   func_80078054
+/* 0A1270 800A0670 0C01E015 */  jal   init_rdp_and_framebuffer
 /* 0A1274 800A0674 24846CFC */   addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A1278 800A0678 0C01EB8A */  jal   func_8007AE28
 /* 0A127C 800A067C 2404FFFF */   li    $a0, -1

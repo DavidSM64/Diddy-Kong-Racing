@@ -260,7 +260,7 @@ glabel func_8004DE38
 /* 04ED84 8004E184 3C018012 */   lui   $at, %hi(D_8011D586) # $at, 0x8012
 /* 04ED88 8004E188 A420D586 */  sh    $zero, %lo(D_8011D586)($at)
 .L8004E18C:
-/* 04ED8C 8004E18C 0C01B683 */  jal   func_8006DA0C
+/* 04ED8C 8004E18C 0C01B683 */  jal   get_render_context
 /* 04ED90 8004E190 00000000 */   nop   
 /* 04ED94 8004E194 3C0D8012 */  lui   $t5, %hi(D_8011D540) # $t5, 0x8012
 /* 04ED98 8004E198 8DADD540 */  lw    $t5, %lo(D_8011D540)($t5)

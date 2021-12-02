@@ -29,7 +29,7 @@ s32 D_800DE4D4 = 0;
 s32 D_800DE4D8 = 0;
 s32 D_800DE4DC = 0;
 
-Gfx D_800DE4E0[] = {
+Gfx dl_rsp_init[] = {
     gsSPClearGeometryMode(0x001F3204),
     gsSPTexture(0, 0, 0, 0, 0),
     gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE),
@@ -38,7 +38,7 @@ Gfx D_800DE4E0[] = {
 };
 
 // Default RDP settings
-Gfx D_800DE520[] = {
+Gfx dl_rdp_init[] = {
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPPipelineMode(G_PM_1PRIMITIVE),
     gsDPSetTextureLOD(G_TL_TILE),
@@ -266,15 +266,15 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
 #endif
 
-void func_80078054(Gfx **dlist) {
+void init_rdp_and_framebuffer(Gfx **dlist) {
     s32 width = get_video_width_and_height_as_s32() & 0xFFF;
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, 0x01000000);
     gDPSetDepthImage((*dlist)++, 0x2000000);
-    gSPDisplayList((*dlist)++, D_800DE520);
+    gSPDisplayList((*dlist)++, dl_rdp_init);
 }
 
-void func_800780DC(Gfx **dlist) {
-    gSPDisplayList((*dlist)++, D_800DE4E0);
+void init_rsp(Gfx **dlist) {
+    gSPDisplayList((*dlist)++, dl_rsp_init);
 }
 
 void func_80078100(OSSched *sc) {

@@ -137,8 +137,8 @@ glabel func_8006ECFC
 /* 06FB08 8006EF08 0C01C42C */  jal   set_free_queue_state
 /* 06FB0C 8006EF0C AC2E3534 */   sw    $t6, %lo(gCurrNumHudVertsPerPlayer)($at)
 .L8006EF10:
-/* 06FB10 8006EF10 3C038012 */  lui   $v1, %hi(D_801234E8) # $v1, 0x8012
-/* 06FB14 8006EF14 8C6334E8 */  lw    $v1, %lo(D_801234E8)($v1)
+/* 06FB10 8006EF10 3C038012 */  lui   $v1, %hi(gSPTaskNum) # $v1, 0x8012
+/* 06FB14 8006EF14 8C6334E8 */  lw    $v1, %lo(gSPTaskNum)($v1)
 /* 06FB18 8006EF18 3C118012 */  lui   $s1, %hi(gDisplayLists) # $s1, 0x8012
 /* 06FB1C 8006EF1C 263111F0 */  addiu $s1, %lo(gDisplayLists) # addiu $s1, $s1, 0x11f0
 /* 06FB20 8006EF20 00037880 */  sll   $t7, $v1, 2

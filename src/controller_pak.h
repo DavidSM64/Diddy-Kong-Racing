@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_072E50_H_
-#define _UNKNOWN_072E50_H_
+#ifndef _CONTROLLER_PAK_H_
+#define _CONTROLLER_PAK_H_
 
 #include "types.h"
 #include "structs.h"

@@ -1,5 +1,6 @@
-#ifndef _CONTROLLER_H
-#define _CONTROLLER_H
+#ifndef _CONTROLLER_H_
+#define _CONTROLLER_H_
+
 #include "libultra_internal.h"
 //#include <rcp.h>
 

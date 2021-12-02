@@ -75,10 +75,10 @@ glabel func_8006CCF0
 /* 06D9E0 8006CDE0 14400018 */  bnez  $v0, .L8006CE44
 /* 06D9E4 8006CDE4 3C19800E */   lui   $t9, %hi(D_800DD390) # $t9, 0x800e
 /* 06D9E8 8006CDE8 8339D390 */  lb    $t9, %lo(D_800DD390)($t9)
-/* 06D9EC 8006CDEC 3C098012 */  lui   $t1, %hi(D_801234EC) # $t1, 0x8012
+/* 06D9EC 8006CDEC 3C098012 */  lui   $t1, %hi(sRenderContext) # $t1, 0x8012
 /* 06D9F0 8006CDF0 17200014 */  bnez  $t9, .L8006CE44
 /* 06D9F4 8006CDF4 00000000 */   nop   
-/* 06D9F8 8006CDF8 8D2934EC */  lw    $t1, %lo(D_801234EC)($t1)
+/* 06D9F8 8006CDF8 8D2934EC */  lw    $t1, %lo(sRenderContext)($t1)
 /* 06D9FC 8006CDFC 3C0A8012 */  lui   $t2, %hi(D_80123516) # $t2, 0x8012
 /* 06DA00 8006CE00 15200010 */  bnez  $t1, .L8006CE44
 /* 06DA04 8006CE04 00000000 */   nop   
@@ -144,8 +144,8 @@ glabel func_8006CCF0
 /* 06DAE0 8006CEE0 248411F8 */  addiu $a0, %lo(gCurrDisplayList) # addiu $a0, $a0, 0x11f8
 /* 06DAE4 8006CEE4 0C009355 */  jal   func_80024D54
 /* 06DAE8 8006CEE8 AFB90010 */   sw    $t9, 0x10($sp)
-/* 06DAEC 8006CEEC 3C098012 */  lui   $t1, %hi(D_801234EC) # $t1, 0x8012
-/* 06DAF0 8006CEF0 8D2934EC */  lw    $t1, %lo(D_801234EC)($t1)
+/* 06DAEC 8006CEEC 3C098012 */  lui   $t1, %hi(sRenderContext) # $t1, 0x8012
+/* 06DAF0 8006CEF0 8D2934EC */  lw    $t1, %lo(sRenderContext)($t1)
 /* 06DAF4 8006CEF4 2401DFCF */  li    $at, -8241
 /* 06DAF8 8006CEF8 15200003 */  bnez  $t1, .L8006CF08
 /* 06DAFC 8006CEFC 3C0B8012 */   lui   $t3, %hi(D_80123516) # $t3, 0x8012
@@ -354,7 +354,7 @@ glabel L8006D19C
 .L8006D1C0:
 glabel L8006D1C0
 /* 06DDC0 8006D1C0 3C048012 */  lui   $a0, %hi(gCurrDisplayList) # $a0, 0x8012
-/* 06DDC4 8006D1C4 0C01E015 */  jal   func_80078054
+/* 06DDC4 8006D1C4 0C01E015 */  jal   init_rdp_and_framebuffer
 /* 06DDC8 8006D1C8 248411F8 */   addiu $a0, %lo(gCurrDisplayList) # addiu $a0, $a0, 0x11f8
 /* 06DDCC 8006D1CC 3C048012 */  lui   $a0, %hi(gCurrDisplayList) # $a0, 0x8012
 /* 06DDD0 8006D1D0 0C01DC14 */  jal   render_borders_for_multiplayer
@@ -608,8 +608,8 @@ glabel L8006D1C0
 /* 06E160 8006D560 320C0020 */  andi  $t4, $s0, 0x20
 .L8006D564:
 /* 06E164 8006D564 11800004 */  beqz  $t4, .L8006D578
-/* 06E168 8006D568 3C0D8012 */   lui   $t5, %hi(D_801234EC) # $t5, 0x8012
-/* 06E16C 8006D56C 8DAD34EC */  lw    $t5, %lo(D_801234EC)($t5)
+/* 06E168 8006D568 3C0D8012 */   lui   $t5, %hi(sRenderContext) # $t5, 0x8012
+/* 06E16C 8006D56C 8DAD34EC */  lw    $t5, %lo(sRenderContext)($t5)
 /* 06E170 8006D570 00000000 */  nop   
 /* 06E174 8006D574 11A00004 */  beqz  $t5, .L8006D588
 .L8006D578:

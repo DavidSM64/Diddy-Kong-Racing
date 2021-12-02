@@ -5,6 +5,16 @@
 #include "structs.h"
 #include "fade_transition.h"
 
+enum RenderContext {
+    DRAW_INTRO = -1,
+    DRAW_GAME,
+    DRAW_MENU,
+    DRAW_UNK_02,
+    DRAW_UNK_03,
+    DRAW_UNK_04,
+    DRAW_CRASH_SCREEN,
+};
+
 /* Size: 6 bytes */
 typedef struct unk8012117C {
     s8 unk0;
@@ -129,8 +139,8 @@ void func_8006D8A4(void);
 void func_8006D8E0(s32 arg0);
 void func_8006D8F0(s32 arg0);
 void func_8006D968(s8 *arg0);
-s32 func_8006DA0C(void);
-void func_8006DA1C(s32 arg0);
+s32 get_render_context(void);
+UNUSED void func_8006DA1C(s32 arg0);
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
 void func_8006DB14(s32 arg0);
 void func_8006DB20(s32 vehicleId);
@@ -147,7 +157,7 @@ void func_8006EA58(void);
 Settings *get_settings(void);
 s8 is_game_paused(void);
 s8 func_8006EAB0(void);
-s32 func_8006EAC0(void);
+s32 is_reset_pressed(void);
 s32 func_8006EB14(void);
 void func_8006EB24(void);
 void func_8006EB40(void);

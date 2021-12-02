@@ -173,7 +173,7 @@ glabel render_track_select_setup_ui
 /* 091D9C 8009119C 240500FF */  li    $a1, 255
 /* 091DA0 800911A0 00003825 */  move  $a3, $zero
 /* 091DA4 800911A4 AFA60084 */  sw    $a2, 0x84($sp)
-/* 091DA8 800911A8 0C0313EF */  jal   func_800C4FBC
+/* 091DA8 800911A8 0C0313EF */  jal   set_current_dialogue_background_colour
 /* 091DAC 800911AC AFAF0010 */   sw    $t7, 0x10($sp)
 /* 091DB0 800911B0 3C028012 */  lui   $v0, %hi(D_801263E0) # $v0, 0x8012
 /* 091DB4 800911B4 8C4263E0 */  lw    $v0, %lo(D_801263E0)($v0)
@@ -451,7 +451,7 @@ glabel render_track_select_setup_ui
 /* 0921CC 800915CC 270E0089 */  addiu $t6, $t8, 0x89
 /* 0921D0 800915D0 AFAE0010 */  sw    $t6, 0x10($sp)
 /* 0921D4 800915D4 240700BA */  li    $a3, 186
-/* 0921D8 800915D8 0C0313B7 */  jal   func_800C4EDC
+/* 0921D8 800915D8 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 0921DC 800915DC 27060070 */   addiu $a2, $t8, 0x70
 /* 0921E0 800915E0 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 0921E4 800915E4 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
@@ -593,7 +593,7 @@ glabel render_track_select_setup_ui
 /* 0923E0 800917E0 2466FFFE */  addiu $a2, $v1, -2
 /* 0923E4 800917E4 24040007 */  li    $a0, 7
 /* 0923E8 800917E8 2445FFFE */  addiu $a1, $v0, -2
-/* 0923EC 800917EC 0C0313B7 */  jal   func_800C4EDC
+/* 0923EC 800917EC 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 0923F0 800917F0 24470032 */   addiu $a3, $v0, 0x32
 /* 0923F4 800917F4 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 0923F8 800917F8 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
