@@ -653,7 +653,7 @@ void func_8000E2B4(void) {
     player_64->unk0_a.unk0_b.unk0 = (u16)0;
     player_64->unk118 = 0;
     player_64->unk0_a.unk0_b.unk3 = (s8) settings->racers[0].character;
-    if ((get_filtered_cheats() & 0x10) != 0) {
+    if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
         player->scale *= 1.4f;
     }
     if ((get_filtered_cheats() & 0x20) != 0) {
