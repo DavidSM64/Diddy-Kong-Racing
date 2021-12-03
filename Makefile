@@ -187,11 +187,15 @@ O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
             $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 			
 # Automatic dependency files
-DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
+DEP_FILES := $(O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
 			
 # Check code syntax with host compiler
 CC_CHECK := gcc
-CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(CC_CFLAGS) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -m32 -D_LANGUAGE_C
+ifeq ($(shell getconf LONG_BIT), 64)
+  # Ensure that gcc treats the code as 32-bit
+  CC_CHECK_CFLAGS += -m32
+endif
+CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C
 
 ####################### ASSETS #########################
 
