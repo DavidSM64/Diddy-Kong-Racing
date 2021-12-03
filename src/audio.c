@@ -10,6 +10,7 @@
 #include "asset_loading.h"
 #include "audio_internal.h"
 #include "unknown_003260.h"
+#include "sched.h"
 
 /************ .data ************/
 
@@ -93,7 +94,7 @@ u32 D_80115F88;
 
 /******************************/
 
-void audio_init(u32 arg0) {
+void audio_init(OSSched *arg0) {
     s32 iCnt;
     ALSynConfig synth_config;
     s32 *reg_s2;

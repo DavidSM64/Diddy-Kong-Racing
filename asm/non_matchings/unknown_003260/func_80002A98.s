@@ -5,7 +5,7 @@ glabel func_80002A98
 /* 0036A4 80002AA4 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 0036A8 80002AA8 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0036AC 80002AAC 8C845F90 */  lw    $a0, %lo(D_80115F90)($a0)
-/* 0036B0 80002AB0 3C058011 */  lui   $a1, %hi(D_80116220) # $a1, 0x8011
+/* 0036B0 80002AB0 3C058011 */  lui   $a1, %hi(audioStack) # $a1, 0x8011
 /* 0036B4 80002AB4 3C068011 */  lui   $a2, %hi(OSMesgQueue_80116160) # $a2, 0x8011
 /* 0036B8 80002AB8 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 0036BC 80002ABC AFB70034 */  sw    $s7, 0x34($sp)
@@ -19,14 +19,14 @@ glabel func_80002A98
 /* 0036DC 80002ADC AFA00048 */  sw    $zero, 0x48($sp)
 /* 0036E0 80002AE0 AFA00044 */  sw    $zero, 0x44($sp)
 /* 0036E4 80002AE4 24C66160 */  addiu $a2, %lo(OSMesgQueue_80116160) # addiu $a2, $a2, 0x6160
-/* 0036E8 80002AE8 24A56220 */  addiu $a1, %lo(D_80116220) # addiu $a1, $a1, 0x6220
+/* 0036E8 80002AE8 24A56220 */  addiu $a1, %lo(audioStack) # addiu $a1, $a1, 0x6220
 /* 0036EC 80002AEC 0C01E520 */  jal   osScAddClient
 /* 0036F0 80002AF0 24070001 */   li    $a3, 1
 /* 0036F4 80002AF4 3C1E8011 */  lui   $fp, %hi(D_80116198) # $fp, 0x8011
-/* 0036F8 80002AF8 3C16800E */  lui   $s6, %hi(D_800DC680) # $s6, 0x800e
+/* 0036F8 80002AF8 3C16800E */  lui   $s6, %hi(audFrameCt) # $s6, 0x800e
 /* 0036FC 80002AFC 3C158011 */  lui   $s5, %hi(D_80115F98) # $s5, 0x8011
 /* 003700 80002B00 26B55F98 */  addiu $s5, %lo(D_80115F98) # addiu $s5, $s5, 0x5f98
-/* 003704 80002B04 26D6C680 */  addiu $s6, %lo(D_800DC680) # addiu $s6, $s6, -0x3980
+/* 003704 80002B04 26D6C680 */  addiu $s6, %lo(audFrameCt) # addiu $s6, $s6, -0x3980
 /* 003708 80002B08 27DE6198 */  addiu $fp, %lo(D_80116198) # addiu $fp, $fp, 0x6198
 /* 00370C 80002B0C 24170003 */  li    $s7, 3
 /* 003710 80002B10 2414000A */  li    $s4, 10

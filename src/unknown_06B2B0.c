@@ -104,6 +104,7 @@ FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
+// CAR / HOV / PLN - So this is vehicle type?
 char *D_800DD410[3] = {
     D_800E713C, D_800E7140, D_800E7144
 };
@@ -1774,7 +1775,7 @@ s8 func_8006EAB0(void) {
 
 s32 is_reset_pressed(void) {
     if (D_80123560[0] == 0) {
-        D_80123560[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, 0) + 1) != 0);
+        D_80123560[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
     }
     return D_80123560[0];
 }

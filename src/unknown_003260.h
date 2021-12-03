@@ -6,6 +6,7 @@
 #include "audio_internal.h"
 #include "asset_sections.h"
 #include "libultra_internal.h"
+#include "sched.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_STOP_EVT (1 << 1)
@@ -16,6 +17,9 @@
 #define AL_SNDP_DECAY_EVT (1 << 6)
 #define AL_SNDP_END_EVT (1 << 7)
 #define AL_SNDP_FX_EVT (1 << 8)
+
+#define AUDIO_STACKSIZE 0x3010
+#define NUM_DMA_MESSAGES 50
 
 typedef struct unk800DC6BC_40 {
     ALLink node;
@@ -48,13 +52,13 @@ typedef union {
 
 }ALSndpEvent;
 
-typedef struct unk80119240
+typedef struct
 {
-    ALLink node;
-    u32 unk08;
-    u32 unk0C;
-    void *unk10;
-} unk80119240;
+    ALLink      node;
+    u32         startAddr;
+    u32         lastFrame;
+    char        *ptr;
+} AMDMABuffer;
 
 /* Unknown Size */
 /*typedef struct unk800DC6B0 {
@@ -71,7 +75,13 @@ typedef struct audioMgrConfig_s{
     u16  unk10;
 } audioMgrConfig;
 
-extern s32 D_800DC680;
+typedef struct {
+    u8 initialized;
+    AMDMABuffer *firstUsed;
+    AMDMABuffer *firstFree;
+} AMDMAState;
+
+extern u32 audFrameCt;
 extern s32 D_800DC684;
 extern s32 D_800DC688;
 extern s32 D_800DC68C;
@@ -93,7 +103,6 @@ extern s32 sfxVolumeSlider;
 extern s32 D_800DC6C4;
 
 extern void func_80002A98(void*);
-extern u32 func_80003008;
 void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al
 void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount); //lib/src/unknown_0C9C90.c
 ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt); //lib/src/unknown_0C9C90.c
@@ -118,7 +127,7 @@ u16 func_80004A3C(u8 arg0);
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
-void audioNewThread(ALSynConfig *c, OSPri p, s32 arg2);
+void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
 void func_80004A60(u8, u16); //Could be s32, s32
 
 #endif
