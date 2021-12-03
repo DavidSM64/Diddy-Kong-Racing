@@ -34,7 +34,7 @@ f32 D_800DCB60[14] = {
 };
 
 s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
-f32 D_800DCB9C[19] = { 
+f32 D_800DCB9C[19] = {
     0.004f, 0.007f, 0.0099999999f, 0.004f,
     0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f,
     0.0099999999f, 0.0099999999f, 0.004f, 0.004f,
@@ -142,7 +142,7 @@ s32 D_8011D534;
 s32 D_8011D538;
 s32 D_8011D53C;
 s32 D_8011D540;
-s32 D_8011D544;
+f32 D_8011D544;
 s32 D_8011D548;
 s32 D_8011D54C;
 s16 D_8011D550;
@@ -195,7 +195,98 @@ s8 D_8011D5BC;
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80042D20.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80043ECC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80044170.s")
+
+typedef struct Object_64_80044170 {
+    char unk0[0x2C];
+    f32 unk2C;
+    char unk30[0x124];
+    s32 unk154;
+    char unk158[0x72];
+    s8 unk1CA;
+    char unk1CB[0x3];
+    u8 unk1CE;
+    char unk1CF[0x13];
+    s8 unk1E2;
+    char unk1E3[0x30];
+    s8 unk213;
+    s8 unk214;
+    s8 unk215;
+} Object_64_80044170;
+
+void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
+    s32 raceType;
+
+    raceType = get_current_level_race_type();
+
+    switch (raceType) {
+        case 0x40:
+        case 0x41:
+            func_8004447C(arg0, arg1, arg2);
+            break;
+        case 0x42:
+            func_800452A0(arg0, arg1, arg2);
+            break;
+        default:
+            // last argument was required for match, might not really exist
+            func_80045C48(arg0, arg1, arg2, raceType);
+            break;
+    }
+
+    if (arg1->unk214 == 0 && arg1->unk2C < -0.5) {
+        arg1->unk215 -= arg2;
+        if (arg1->unk215 < 0) {
+            arg1->unk215 = 0;
+        }
+    }
+
+    if (arg1->unk2C > -1.0 && arg1->unk214 == 0 && D_8011D540 == 0 && D_8011D544 == 0.0f && arg1->unk1E2 != 0 && arg1->unk215 == 0) {
+        arg1->unk213 += arg2;
+
+        if (arg1->unk213 > 0x3C) {
+            arg1->unk213 = 0;
+            arg1->unk214 = 0x3C;
+            arg1->unk215 = 0x78;
+
+            if ((raceType & 0x40) == 0) {
+                arg1->unk1CA = (arg1->unk1CA + 1) & 3;
+            } else if (raceType == 0x40 || raceType == 0x41) {
+                if (arg1->unk1CE != 0xFF) {
+                    arg1->unk154 = func_8001D214(arg1->unk1CE);
+                }
+            }
+        }
+    } else {
+        arg1->unk214 -= arg2;
+        arg1->unk213 = 0;
+
+        if (arg1->unk214 < 0) {
+            arg1->unk214 = 0;
+        }
+    }
+
+    if (arg1->unk214 != 0) {
+        D_8011D534 *= -1;
+        D_8011D528 &= ~0x8000;
+        D_8011D538 = -0x32;
+        D_8011D528 |= 0x4000;
+    }
+
+    if (D_8011D534 > 0x4B) {
+        D_8011D534 = 0x4B;
+    }
+
+    if (D_8011D534 < -0x4B) {
+        D_8011D534 = -0x4B;
+    }
+
+    if (D_8011D538 > 0x4B) {
+        D_8011D538 = 0x4B;
+    }
+
+    if (D_8011D538 < -0x4B) {
+        D_8011D538 = -0x4B;
+    }
+}
 
 s32 func_80044450(s32 arg0) {
     return get_random_number_from_range(0, 99) < arg0;
@@ -775,7 +866,7 @@ s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
 }
 
 /**
- * Loads T.T. ghost node data into gGhostData[2]. 
+ * Loads T.T. ghost node data into gGhostData[2].
  * Returns 0 if successful, or 1 if an error occured.
  */
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
