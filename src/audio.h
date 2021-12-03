@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "audio_internal.h"
+#include "sched.h"
 
 extern ALSeqPlayer* gMusicPlayer;
 extern ALSeqPlayer* gSndFxPlayer;
@@ -62,7 +63,7 @@ void alCSPStop(ALCSPlayer *seqp); //lib/src/al/unknown_0C91A0.c
 void func_80063B44(u32 arg0, u8 arg1); //lib/src/al/unknown_0646F0.c
 s32  alCSPGetState(ALCSPlayer *seqp); //lib/src/unknown_0C8650.c
 
-void audio_init(u32 arg0);
+void audio_init(OSSched *arg0);
 void func_80000890(u8 arg0);
 void func_80000968(s32 arg0);
 void func_80000B18(void);

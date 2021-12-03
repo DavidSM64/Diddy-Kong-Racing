@@ -102,7 +102,7 @@ void thread30(void *arg) {
     while (TRUE) {
         // Wait for a signal from the main thread
         do {
-            osRecvMesg(&gThread30MesgQueue, &mesg, 1);
+            osRecvMesg(&gThread30MesgQueue, &mesg, OS_MESG_BLOCK);
         } while (mesg != (OSMesg)OS_MESG_TYPE_LOOPBACK);
         // -1 means there won't be any racers loaded.
         load_level_for_menu(gThread30LevelIdToLoad, -1, gThread30CutsceneIdToLoad);
