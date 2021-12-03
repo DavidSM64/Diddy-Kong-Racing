@@ -11,7 +11,7 @@
 /************ .bss ************/
 
 OSIoMesg gAssetsDmaIoMesg;
-OSMesg gDmaMesgBuf[1]; //Seems to only work as an array of 1 for some reason.
+OSMesg gDmaMesg;
 OSMesgQueue gDmaMesgQueue;
 OSMesg gPIMesgBuf[16];
 OSMesgQueue gPIMesgQueue;
@@ -25,7 +25,7 @@ extern u8 __ASSETS_LUT_START, __ASSETS_LUT_END; // __ASSETS_LUT_START = 0xECB60,
 void func_80076BA0(void) {
     u32 assetTableSize;
     osCreateMesgQueue(&gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
-    osCreateMesgQueue(&gDmaMesgQueue, gDmaMesgBuf, ARRAY_COUNT(gDmaMesgBuf));
+    osCreateMesgQueue(&gDmaMesgQueue, &gDmaMesg, 1);
     osCreatePiManager((OSPri)150, &gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
     assetTableSize = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
     gAssetsLookupTable = (s32 *)allocate_from_main_pool_safe(assetTableSize, COLOR_TAG_GRAY);
@@ -175,7 +175,7 @@ s32 get_size_of_asset_section(u32 assetIndex) {
  * Copies data from the game cartridge to a ram address.
  */
 void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
-    OSMesg dmaMesgBuf[1]; //Seems to only work as an array of 1 for some reason.
+    OSMesg dmaMesg;
     s32 numBytesToDMA;
 
     osInvalDCache(ramAddress, numBytes);
@@ -185,7 +185,7 @@ void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
             numBytesToDMA = numBytes;
         }
         osPiStartDma(&gAssetsDmaIoMesg, OS_MESG_PRI_NORMAL, OS_READ, romOffset, ramAddress, numBytesToDMA, &gDmaMesgQueue);
-        osRecvMesg(&gDmaMesgQueue, dmaMesgBuf, ARRAY_COUNT(dmaMesgBuf));
+        osRecvMesg(&gDmaMesgQueue, &dmaMesg, 1);
         numBytes -= numBytesToDMA;
         romOffset += numBytesToDMA;
         ramAddress += numBytesToDMA;
