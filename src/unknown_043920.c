@@ -15,6 +15,7 @@
 #include "unknown_00BC20.h"
 #include "audio.h"
 #include "unknown_0348C0.h"
+#include "unknown_06B2B0.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -219,11 +220,11 @@ void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
     raceType = get_current_level_race_type();
 
     switch (raceType) {
-        case 0x40:
-        case 0x41:
+        case RACE_TYPE_CHALLENGE_BATTLE:
+        case RACE_TYPE_CHALLENGE_BANANAS:
             func_8004447C(arg0, arg1, arg2);
             break;
-        case 0x42:
+        case RACE_TYPE_CHALLENGE_EGGS:
             func_800452A0(arg0, arg1, arg2);
             break;
         default:
@@ -242,14 +243,14 @@ void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
     if (arg1->unk2C > -1.0 && arg1->unk214 == 0 && D_8011D540 == 0 && D_8011D544 == 0.0f && arg1->unk1E2 != 0 && arg1->unk215 == 0) {
         arg1->unk213 += arg2;
 
-        if (arg1->unk213 > 0x3C) {
+        if (arg1->unk213 > 60) {
             arg1->unk213 = 0;
-            arg1->unk214 = 0x3C;
-            arg1->unk215 = 0x78;
+            arg1->unk214 = 60;
+            arg1->unk215 = 120;
 
-            if ((raceType & 0x40) == 0) {
+            if ((raceType & RACE_TYPE_CHALLENGE) == 0) {
                 arg1->unk1CA = (arg1->unk1CA + 1) & 3;
-            } else if (raceType == 0x40 || raceType == 0x41) {
+            } else if (raceType == RACE_TYPE_CHALLENGE_BATTLE || raceType == RACE_TYPE_CHALLENGE_BANANAS) {
                 if (arg1->unk1CE != 0xFF) {
                     arg1->unk154 = func_8001D214(arg1->unk1CE);
                 }
@@ -267,24 +268,24 @@ void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
     if (arg1->unk214 != 0) {
         D_8011D534 *= -1;
         D_8011D528 &= ~0x8000;
-        D_8011D538 = -0x32;
+        D_8011D538 = -50;
         D_8011D528 |= 0x4000;
     }
 
-    if (D_8011D534 > 0x4B) {
-        D_8011D534 = 0x4B;
+    if (D_8011D534 > 75) {
+        D_8011D534 = 75;
     }
 
-    if (D_8011D534 < -0x4B) {
-        D_8011D534 = -0x4B;
+    if (D_8011D534 < -75) {
+        D_8011D534 = -75;
     }
 
-    if (D_8011D538 > 0x4B) {
-        D_8011D538 = 0x4B;
+    if (D_8011D538 > 75) {
+        D_8011D538 = 75;
     }
 
-    if (D_8011D538 < -0x4B) {
-        D_8011D538 = -0x4B;
+    if (D_8011D538 < -75) {
+        D_8011D538 = -75;
     }
 }
 
