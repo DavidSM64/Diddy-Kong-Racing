@@ -119,7 +119,7 @@ s32 render_printf(const char *format, ...) {
 #else
 GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 #endif
-GLOBAL_ASM("asm/non_matchings/printf/func_800B5F78.s")
+GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
 
 void set_render_printf_color(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_COLOR(red, green, blue, alpha)

@@ -288,7 +288,7 @@ s32 func_800C01D8(FadeTransition *transition) {
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C01D8.s")
 #endif
 
-s32 func_800C0494(s32 updateRate) {
+s32 handle_transitions(s32 updateRate) {
     if (D_800E31A4 != 0) {
         D_800E31A4 = D_800E31A4 - 1;
         updateRate = LOGIC_NULL;

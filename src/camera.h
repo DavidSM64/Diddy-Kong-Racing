@@ -24,6 +24,9 @@
 #define CAMERA_MAX_FOV 90.0f
 #define CAMERA_SCALE 1.0f
 
+#define CONTROLLER_MISSING -1
+#define CONTROLLER_EXISTS   0
+
 enum ViewportCount {
     VIEWPORTS_COUNT_1_PLAYER,
     VIEWPORTS_COUNT_2_PLAYERS,
@@ -65,7 +68,7 @@ extern ScreenViewport gScreenViewports[4];
 extern s16 D_800DD138[8];
 
 // RSP Viewports
-extern Vp D_800DD148[20]; 
+extern Vp D_800DD148[20];
 
 extern unk8011D510 D_800DD288;
 

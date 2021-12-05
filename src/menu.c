@@ -2140,8 +2140,8 @@ void func_800828B8(void) {
     }
 }
 
-void func_800829F8(Gfx *dl, s32 updateRate) {
-    s32 temp;
+void print_missing_controller_text(Gfx *dl, s32 updateRate) {
+    s32 posY;
 
     D_800DF46C += updateRate;
 
@@ -2150,11 +2150,11 @@ void func_800829F8(Gfx *dl, s32 updateRate) {
         set_text_font(0);
         set_text_color(255, 255, 255, 0, 0xFF);
         set_text_background_color(0, 0, 0, 0);
-        temp = 0xD0;
+        posY = 208;
         if (osTvType == TV_TYPE_PAL) {
-            temp = 0xEA;
+            posY = 234;
         }
-        draw_text(dl, POS_CENTRED, temp, gMenuText[151], 0xC);
+        draw_text(dl, POS_CENTRED, posY, gMenuText[151], 0xC);
     }
 }
 
@@ -5998,6 +5998,9 @@ void set_option_text_colour(s32 condition) {
     gDialogOptionTangible = (u8)FALSE;
 }
 
+/**
+ * Render a line of text at a given Y position, and pass through the text ID and option ID.
+ */
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID) {
     set_option_text_colour(sDialogueOption == sDialogueOptionMax);
     if (sDialogueOption == sDialogueOptionMax) {
@@ -6040,6 +6043,9 @@ void func_8009D33C(s32 arg0, s32 arg1) {
     }
 }
 
+/**
+ * Handles all of the rendering and logic of Taj's dialogue menu.
+ */
 s32 taj_menu_loop(void) {
     s32 sp2C;
     s32 buttonsPressed; // sp28
@@ -6452,7 +6458,6 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8009E3D0.s")
 /**
  * Dialogue menu for the trophy cabinets in each world hub.
  */
-
 s32 trophy_race_cabinet_menu_loop(void) {
     s32 currentOption;
     s32 buttonsPressed;
@@ -6586,8 +6591,11 @@ void set_language(s32 language) {
     func_8006ECE0();
 }
 
+/**
+ * Returns TRUE if the player has adventure two unlocked.
+ */
 s32 is_adventure_two_unlocked(void) {
-    return D_80126448 & 1;
+    return D_80126448 & TRUE;
 }
 
 /**
@@ -6603,7 +6611,7 @@ s32 is_in_adventure_two(void) {
  */
 s32 is_in_two_player_adventure(void) {
     if (is_in_tracks_mode()) {
-        return 0;
+        return FALSE;
     }
     return gIsInTwoPlayerAdventure;
 }
@@ -6612,7 +6620,7 @@ s32 is_in_two_player_adventure(void) {
  * Returns 1 if T.T. is avaliable to use, or 0 if not.
  */
 s32 is_tt_unlocked(void) {
-    return gActiveMagicCodes & 1;
+    return gActiveMagicCodes & TRUE;
 }
 
 /**

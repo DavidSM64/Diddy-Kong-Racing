@@ -81,6 +81,9 @@ s32 D_8012A7FC;
 
 /******************************/
 
+/**
+ * Loads the text asset data and sets the default values for each dialogue box in the list.
+ */
 void load_fonts(void) {
     s32 *fontAssetData;
     s32 i;
@@ -201,9 +204,12 @@ void func_800C422C(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/font/func_800C422C.s")
 #endif
 
-void set_text_font(s32 arg0) {
-    if (arg0 < gNumberOfFonts) {
-        (*gDialogueBoxBackground)[0].font = arg0;
+/**
+ * Set the font of the current dialogue box's text.
+ */
+void set_text_font(s32 fontID) {
+    if (fontID < gNumberOfFonts) {
+        (*gDialogueBoxBackground)[0].font = fontID;
     }
 }
 
@@ -229,6 +235,9 @@ TextureHeader *func_800C4318(s32 font, u8 arg1) {
 GLOBAL_ASM("asm/non_matchings/font/func_800C4318.s")
 #endif
 
+/**
+ * Sets the colour of the current dialogue box's text.
+ */
 void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     (*gDialogueBoxBackground)[0].textColour[0] = red;
     (*gDialogueBoxBackground)[0].textColour[1] = green;
@@ -237,6 +246,9 @@ void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     (*gDialogueBoxBackground)[0].opacity = opacity;
 }
 
+/**
+ * Sets the colour of the current dialogue box's text background.
+ */
 void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
     (*gDialogueBoxBackground)[0].textBGColour[0] = red;
     (*gDialogueBoxBackground)[0].textBGColour[1] = green;
@@ -249,6 +261,9 @@ void func_800C4404(Gfx **displayList, char *text, s32 alignmentFlags) {
     func_800C45A4(displayList, &(*gDialogueBoxBackground)[0], text, alignmentFlags, 1.0f);
 }
 
+/**
+ * Builds the background settings, then renders the given text at a given position.
+ */
 void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
     DialogueBoxBackground *temp = &(*gDialogueBoxBackground)[0];
     temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
@@ -550,7 +565,7 @@ void render_dialogue_boxes(Gfx *dlist, Gfx *mat, Vtx *verts) {
 
     for (i = 1; i < 8; i++) {
         if ((*gDialogueBoxBackground)[i].flags & DIALOGUE_BOX_OPEN) {
-                render_printf("%X\n", (*gDialogueBoxBackground)[i].flags);
+                //render_printf("%X\n", (*gDialogueBoxBackground)[i].flags);
             if ((*gDialogueBoxBackground)[i].flags & DIALOGUE_BOX_UNK_01) {
                 render_dialogue_box(dlist, mat, verts, i);
             } else {

@@ -213,7 +213,7 @@ void func_800B76B8(s32 arg0, s32 arg1) {
 }
 
 //Called as a check to see if render_epc_lock_up_display should be called.
-s32 func_800B76DC(void) {
+s32 get_crash_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
     u8 *sp420[256];

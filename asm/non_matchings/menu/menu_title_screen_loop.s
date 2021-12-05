@@ -374,7 +374,7 @@ glabel menu_title_screen_loop
 /* 084B40 80083F40 00000000 */  nop   
 /* 084B44 80083F44 15A00041 */  bnez  $t5, .L8008404C
 /* 084B48 80083F48 00000000 */   nop   
-/* 084B4C 80083F4C 0C01BD32 */  jal   func_8006F4C8
+/* 084B4C 80083F4C 0C01BD32 */  jal   is_controller_missing
 /* 084B50 80083F50 00000000 */   nop   
 /* 084B54 80083F54 1440003D */  bnez  $v0, .L8008404C
 /* 084B58 80083F58 3C038012 */   lui   $v1, %hi(D_80126838) # $v1, 0x8012

@@ -282,7 +282,7 @@ void func_80000CBC(void) {
     set_relative_volume_for_music(musicRelativeVolume);
 }
 
-void func_80000D00(u8 updateRate) {
+void process_audio(u8 updateRate) {
     s32 reg_s2;
     s32 j;
     if (D_80115D3C > 0) {

@@ -1,4 +1,4 @@
-glabel func_800B5F78
+glabel print_debug_strings
 /* 0B6B78 800B5F78 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 0B6B7C 800B5F7C AFBF0034 */  sw    $ra, 0x34($sp)
 /* 0B6B80 800B5F80 AFB3002C */  sw    $s3, 0x2c($sp)

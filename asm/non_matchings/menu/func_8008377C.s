@@ -70,7 +70,7 @@ glabel func_8008377C
 /* 084488 80083888 0C01E2AE */  jal   render_textured_rectangle
 /* 08448C 8008388C 24070034 */   li    $a3, 52
 .L80083890:
-/* 084490 80083890 0C01BD32 */  jal   func_8006F4C8
+/* 084490 80083890 0C01BD32 */  jal   is_controller_missing
 /* 084494 80083894 00000000 */   nop   
 /* 084498 80083898 14400047 */  bnez  $v0, .L800839B8
 /* 08449C 8008389C 3C0D8000 */   lui   $t5, %hi(osTvType) # $t5, 0x8000
