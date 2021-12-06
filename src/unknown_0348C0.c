@@ -440,24 +440,19 @@ void func_80037578(unk80037578 *arg0, u8 *arg1) {
     arg0->unk7C = arg1[8];
 }
 
-#ifdef NON_MATCHING
-// Regalloc issues
 void func_80037594(Object *obj, s32 arg1) {
     if (obj->unk78 > 0) {
         obj->unk78 -= arg1;
         obj->unk6 |= 0x4000;
     } else {
+        obj->unk6 &= ~0x4000;
         obj->unk18 += arg1 * 4;
-        obj->unk6 &= 0xBFFF;
         if (obj->unk18 >= 256) {
             obj->unk18 = 0;
             obj->unk78 = get_random_number_from_range(0, 30) + obj->unk7C.word;
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80037594.s")
-#endif
 
 void func_80037624(unk80037624 *arg0, s32 arg1) {
     arg0->unk6 |= 0x4000;
@@ -523,8 +518,6 @@ void func_80037D6C(s32 arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80037D78.s")
 
-#ifdef NON_MATCHING
-// Regalloc issues
 void func_800380F8(Object *obj, s32 arg1) {
     Object_60_800380F8 *obj60;
     Object *someObj;
@@ -533,22 +526,15 @@ void func_800380F8(Object *obj, s32 arg1) {
     obj60 = obj->unk60;
     if (obj60 != NULL) {
         if (obj60->unk0 > 0) {
-            if (obj60->unk0 == 3) {
-                someObj = obj60->unkC;
-            } else {
-                someObj = obj60->unk4;
-            }
-            someObj->unk3A++;
+            someObj = obj60->unk0 == 3 ? obj60->unkC : obj60->unk4;
             someObj->y_rotation = 0x4000;
-            if (someObj->descriptor_ptr->unk55 == someObj->unk3A) {
+            someObj->unk3A++;
+            if (someObj->unk3A == someObj->descriptor_ptr->unk55) {
                 someObj->unk3A = 0;
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800380F8.s")
-#endif
 
 void func_8003818C(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 0x81;
@@ -805,8 +791,6 @@ void func_80038E3C(Object *obj, LevelObjectEntry80038E3C *arg1) {
     obj->unk4C->unk10 = arg1->unk10;
     obj->unk4C->unk12 = 0;
 }
-
-//GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038E3C.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038F58.s")
 
@@ -1333,7 +1317,7 @@ void func_8003FEF4(Object *arg0, LevelObjectEntry8003FEF4 *arg1) {
     obj64->unkF = arg1->unk10;
     obj64->unk12 = arg1->unk13;
     func_800098A4(obj64->unk0, obj64->unk2, arg1->common.x, arg1->common.y, arg1->common.z,
-                  obj64->unkF, obj64->unkE, obj64->unk10, obj64->unk12, obj64->unk4, obj64->unk11, 
+                  obj64->unkF, obj64->unkE, obj64->unk10, obj64->unk12, obj64->unk4, obj64->unk11,
                   obj64->unkC, obj64->unkD);
     gParticlePtrList_addObject(arg0);
 }
