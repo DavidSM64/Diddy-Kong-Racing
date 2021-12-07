@@ -1,6 +1,8 @@
 import re
 import os
 import sys
+import os.path
+import hashlib
 
 from file_util import FileUtil
 from generate_assets import GenerateAssets
@@ -20,7 +22,7 @@ LIB_SRC_DIR = ROOT_DIR + '/lib/src'
 DATA_DIR = ROOT_DIR + '/data'
 BUILD_DIR = 'build/' + VERSION
 
-LATE_DATA_FILES = [ 
+LATE_DATA_FILES = [
     BUILD_DIR + '/lib/src/al/alCopy.o',
     BUILD_DIR + '/lib/src/libc/xprintf.o',
     BUILD_DIR + '/lib/src/os/osTimer.o',
@@ -48,7 +50,7 @@ class GenerateLD:
         self.gen_newline()
         self.gen_sections()
         print('\x1B[33m New linker file created!\x1B[0m')
-        
+
     def gen_sections(self):
         self.gen_line('SECTIONS')
         self.gen_open_block()
@@ -69,7 +71,7 @@ class GenerateLD:
         self.gen_newline()
         self.gen_discard()
         self.gen_close_block()
-    
+
     def gen_boot_section(self):
         self.gen_line('.boot 0 : AT(romPos)')
         self.gen_open_block()
@@ -78,7 +80,7 @@ class GenerateLD:
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.boot);')
         self.gen_newline()
-    
+
     def gen_main_section(self):
         self.gen_line('.main __FUNC_RAM_START : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
@@ -87,7 +89,7 @@ class GenerateLD:
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.main);')
         self.gen_newline()
-        
+
     def gen_ucode_text_section(self):
         self.gen_line('.ucodeText . : AT(romPos)')
         self.gen_open_block()
@@ -95,7 +97,7 @@ class GenerateLD:
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.ucodeText);')
         self.gen_newline()
-        
+
     def gen_data_section(self):
         self.gen_line('.data . : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
@@ -107,7 +109,7 @@ class GenerateLD:
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.data);')
         self.gen_newline()
-        
+
     def gen_rodata_section(self):
         self.gen_line('.rodata . : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
@@ -128,7 +130,7 @@ class GenerateLD:
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.rodata);')
         self.gen_newline()
-        
+
     def gen_ucode_data_section(self):
         self.gen_line('.ucodeData . : AT(romPos)')
         self.gen_open_block()
@@ -136,7 +138,7 @@ class GenerateLD:
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.ucodeData);')
         self.gen_newline()
-    
+
     def gen_bss_section(self):
         self.gen_line('__BSS_SECTION_SIZE = SIZEOF(.bss.noload) - 0x10;')
         self.gen_newline()
@@ -149,7 +151,7 @@ class GenerateLD:
             self.gen_line(file + '(.bss);')
         self.gen_close_block()
         self.gen_newline()
-        
+
     def gen_assets_section(self):
         self.gen_line('__ASSETS_LUT_START = romPos;');
         self.gen_line('__ASSETS_LUT_END = __ASSETS_LUT_START + ' + hex((((self.assets.numAssets + 2) * 4) + 15) & 0xFFFFFFF0) + ';');
@@ -160,28 +162,28 @@ class GenerateLD:
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.assets);')
         self.gen_newline()
-        
+
     def gen_discard(self):
         self.gen_comment('Discard everything not specifically mentioned above.')
         self.gen_line('/DISCARD/ :')
         self.gen_open_block()
         self.gen_line('*(*);')
         self.gen_close_block()
-    
+
     def increase_indent(self):
         self.indentLevel += 1
-    
+
     def decrease_indent(self):
         self.indentLevel -= 1
-        
+
     def gen_open_block(self):
         self.gen_line('{')
         self.increase_indent()
-        
+
     def gen_close_block(self):
         self.decrease_indent()
         self.gen_line('}')
-    
+
     def gen_line(self, text):
         spaces = 4 * self.indentLevel
         while spaces > 0:
@@ -189,7 +191,7 @@ class GenerateLD:
             spaces -= 1
         self.file.write(text)
         self.gen_newline()
-        
+
     def gen_comment(self, text):
         spaces = 4 * self.indentLevel
         while spaces > 0:
@@ -197,10 +199,10 @@ class GenerateLD:
             spaces -= 1
         self.file.write('/* ' + text + ' */')
         self.gen_newline()
-        
+
     def gen_newline(self):
         self.file.write('\n')
-        
+
     def append_files(self, files, extensions, directory, outputDir):
         filenames = FileUtil.get_filenames_from_directory_recursive(directory, extensions)
         regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
@@ -226,5 +228,15 @@ class GenerateLD:
         files.sort(key = lambda x: (x[2], x[3])) # Sort tuples by RAM address and prioritize src files first.
         return files
 
-with open(LD_NAME, 'w') as ldFile:
-    GenerateLD(ldFile)
+if os.path.exists('./assets/' + VERSION + '/md5.txt'):
+    with open('./assets/' + VERSION + '/md5.txt', "rt") as a_file:
+        with open('./assets/' + VERSION + '/assets.json',"rb") as f:
+            bytes = f.read() # read file as bytes
+            readable_hash = hashlib.md5(bytes).hexdigest();
+            compare_hash = a_file.read().rstrip()
+            if compare_hash != readable_hash:
+                with open(LD_NAME, 'w') as ldFile:
+                    GenerateLD(ldFile)
+else:
+    with open(LD_NAME, 'w') as ldFile:
+        GenerateLD(ldFile)
