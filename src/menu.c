@@ -6595,7 +6595,7 @@ void set_language(s32 language) {
  * Returns TRUE if the player has adventure two unlocked.
  */
 s32 is_adventure_two_unlocked(void) {
-    return D_80126448 & TRUE;
+    return D_80126448 & 1;
 }
 
 /**
