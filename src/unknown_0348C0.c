@@ -12,7 +12,7 @@
 #include "menu.h" // For cheats
 #include "unknown_0ABDF0.h"
 #include "unknown_043920.h"
-#include "thread3_main.h"
+#include "unknown_06B2B0.h"
 #include "audio.h"
 #include "unknown_008C40.h"
 #include "unknown_00BC20.h"
