@@ -131,7 +131,7 @@ typedef struct DialogueBoxBackground {
 void load_fonts(void);
 void func_800C4164(s32 arg0);
 void set_text_font(s32 arg0);
-void render_dialogue_box(Gfx **dlist, Gfx *mat, Vtx *verts, s32 index);
+void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 index);
 void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha);
 void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags);
@@ -155,9 +155,9 @@ UNUSED void func_800C564C(s32 dialogueBoxID);
 UNUSED void func_800C5678(s32 dialogueBoxID);
 UNUSED void func_800C56A4(s32 dialogueBoxID);
 void func_800C56D0(s32 dialogueBoxID);
-void render_dialogue_boxes(Gfx *dlist, Gfx *mat, Vtx *verts);
+void render_dialogue_boxes(Gfx *dlist, Gfx *mat, VertexList *verts);
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry);
-void render_dialogue_box(Gfx **dlist, Gfx *mat, Vtx *verts, s32 index);
+void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 index);
 void parse_string_with_number(unsigned char *input, char *output, s32 number);
 
 void s32_to_string(char** outString, s32 number); //Non Matching

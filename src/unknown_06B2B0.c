@@ -135,10 +135,10 @@ Gfx *gCurrDisplayList;
 s32 D_801211FC;
 Mtx *gHudMatrices[2];
 Gfx *gCurrHudMat;
-Vtx *gHudVertices[2];
-Vtx *gCurrHudVerts;
-Gfx *gHudTriangles[2];
-Gfx *gCurrHudTris;
+VertexList *gHudVertices[2];
+VertexList *gCurrHudVerts;
+TriangleList *gHudTriangles[2];
+TriangleList *gCurrHudTris;
 s32 D_80121230[8];
 s8 D_80121250[16];
 OSSched gMainSched; // 0x288 / 648 bytes

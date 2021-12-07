@@ -40,7 +40,7 @@ s32 D_8012639C;
 Gfx *D_801263A0;
 s32 **D_801263A4;
 Gfx *D_801263A8;
-Vtx *D_801263AC;
+VertexList *D_801263AC;
 s32 *D_801263B0;
 unk801263C0 D_801263B4;
 unk801263C0 D_801263B8;
@@ -6510,7 +6510,7 @@ void dialogue_close_stub(void) {
  * Return value goes completely unused.
  */
 
-f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Gfx **mat, Vtx **verts) {
+f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Gfx **mat, VertexList **verts) {
     D_801263A0 = *dlist;
     D_801263A8 = *mat;
     D_801263AC = *verts;

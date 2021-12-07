@@ -40,7 +40,9 @@ typedef s32 ptrdiff_t;
 //#endif
 
 typedef float Matrix[4][4];
+typedef s16 VertexList;
+typedef s8 TriangleList;
 
-#define stubbed_printf 
+#define stubbed_printf
 
 #endif

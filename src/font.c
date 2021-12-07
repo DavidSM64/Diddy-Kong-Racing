@@ -552,7 +552,7 @@ void func_800C56D0(s32 dialogueBoxID) {
  * Contains a timer that counts down two frames before closing a dialogue box
  * when the player exits out of one.
  */
-void render_dialogue_boxes(Gfx *dlist, Gfx *mat, Vtx *verts) {
+void render_dialogue_boxes(Gfx *dlist, Gfx *mat, VertexList *verts) {
     s32 i;
 
     if (sDialogueBoxIsOpen) {
@@ -634,7 +634,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
 /**
  * Render the selected dialogue box. Background first, then text.
  */
-void render_dialogue_box(Gfx **dlist, Gfx *mat, Vtx *verts, s32 dialogueBoxID) {
+void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox;
     s32 i;

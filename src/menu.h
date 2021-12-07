@@ -775,7 +775,7 @@ s32 func_8009D9F4(void);
 s32 trophy_race_cabinet_menu_loop(void);
 void dialogue_open_stub(void);
 void dialogue_close_stub(void);
-f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Gfx **mat, Vtx **vtx);
+f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Gfx **mat, VertexList **vtx);
 s64 *func_8009EA6C(void);
 s32 func_8009EA78(s64 arg0);
 s32 func_8009EABC(s64 arg0);

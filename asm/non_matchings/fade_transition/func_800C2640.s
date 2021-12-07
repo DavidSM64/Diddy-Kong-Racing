@@ -20,16 +20,16 @@ glabel func_800C2640
 /* 0C3288 800C2688 A02AA737 */  sb    $t2, %lo(gCurFadeAlpha)($at)
 /* 0C328C 800C268C 3C01437F */  li    $at, 0x437F0000 # 255.000000
 /* 0C3290 800C2690 44812000 */  mtc1  $at, $f4
-/* 0C3294 800C2694 3C018013 */  lui   $at, %hi(D_8012A750) # $at, 0x8013
+/* 0C3294 800C2694 3C018013 */  lui   $at, %hi(sTransitionOpacity) # $at, 0x8013
 /* 0C3298 800C2698 44803000 */  mtc1  $zero, $f6
-/* 0C329C 800C269C E424A750 */  swc1  $f4, %lo(D_8012A750)($at)
+/* 0C329C 800C269C E424A750 */  swc1  $f4, %lo(sTransitionOpacity)($at)
 /* 0C32A0 800C26A0 3C018013 */  lui   $at, %hi(D_8012A754) # $at, 0x8013
 /* 0C32A4 800C26A4 3C0B8013 */  lui   $t3, %hi(gCurFadeRed) # $t3, 0x8013
 /* 0C32A8 800C26A8 916BA734 */  lbu   $t3, %lo(gCurFadeRed)($t3)
 /* 0C32AC 800C26AC E426A754 */  swc1  $f6, %lo(D_8012A754)($at)
 /* 0C32B0 800C26B0 8C6D0000 */  lw    $t5, ($v1)
-/* 0C32B4 800C26B4 3C02800E */  lui   $v0, %hi(D_800E31B0) # $v0, 0x800e
-/* 0C32B8 800C26B8 944231B0 */  lhu   $v0, %lo(D_800E31B0)($v0)
+/* 0C32B4 800C26B4 3C02800E */  lui   $v0, %hi(sTransitionFadeTimer) # $v0, 0x800e
+/* 0C32B8 800C26B8 944231B0 */  lhu   $v0, %lo(sTransitionFadeTimer)($v0)
 /* 0C32BC 800C26BC 000B6400 */  sll   $t4, $t3, 0x10
 /* 0C32C0 800C26C0 018D7023 */  subu  $t6, $t4, $t5
 /* 0C32C4 800C26C4 01C2001A */  div   $zero, $t6, $v0
@@ -90,7 +90,7 @@ glabel func_800C2640
 /* 0C3388 800C2788 3C018013 */  lui   $at, %hi(D_8012A74C) # $at, 0x8013
 /* 0C338C 800C278C 00007812 */  mflo  $t7
 /* 0C3390 800C2790 AC2FA74C */  sw    $t7, %lo(D_8012A74C)($at)
-/* 0C3394 800C2794 3C01800E */  lui   $at, %hi(D_800E31AC) # $at, 0x800e
+/* 0C3394 800C2794 3C01800E */  lui   $at, %hi(sTransitionStatus) # $at, 0x800e
 /* 0C3398 800C2798 03E00008 */  jr    $ra
-/* 0C339C 800C279C AC3831AC */   sw    $t8, %lo(D_800E31AC)($at)
+/* 0C339C 800C279C AC3831AC */   sw    $t8, %lo(sTransitionStatus)($at)
 
