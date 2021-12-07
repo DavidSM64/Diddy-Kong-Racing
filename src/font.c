@@ -44,7 +44,7 @@ s32 gDescPowsOf10[9] = {
 };
 
 // The dialogue box will draw in pieces, using properties from each line. It starts with a box
-// and goes inwards or outwards depending on
+// and goes inwards or outwards depending on the direction, set by the define.
 
 #define INWARDS  0
 #define OUTWARDS 1
@@ -114,16 +114,16 @@ void load_fonts(void) {
         (*gDialogueBoxBackground)[i].backgroundColourG = 0xFF;
         (*gDialogueBoxBackground)[i].backgroundColourB = 0xFF;
         (*gDialogueBoxBackground)[i].backgroundColourA = 0;
-        (*gDialogueBoxBackground)[i].textColour[0] = 0xFF;
-        (*gDialogueBoxBackground)[i].textColour[1] = 0xFF;
-        (*gDialogueBoxBackground)[i].textColour[2] = 0xFF;
-        (*gDialogueBoxBackground)[i].textColour[3] = 0;
-        (*gDialogueBoxBackground)[i].textBGColour[0] = 0xFF;
-        (*gDialogueBoxBackground)[i].textBGColour[1] = 0xFF;
-        (*gDialogueBoxBackground)[i].textBGColour[2] = 0xFF;
-        (*gDialogueBoxBackground)[i].textBGColour[3] = 0;
+        (*gDialogueBoxBackground)[i].textColourR = 0xFF;
+        (*gDialogueBoxBackground)[i].textColourG = 0xFF;
+        (*gDialogueBoxBackground)[i].textColourB = 0xFF;
+        (*gDialogueBoxBackground)[i].textColourA = 0;
+        (*gDialogueBoxBackground)[i].textBGColourR = 0xFF;
+        (*gDialogueBoxBackground)[i].textBGColourG = 0xFF;
+        (*gDialogueBoxBackground)[i].textBGColourB = 0xFF;
+        (*gDialogueBoxBackground)[i].textBGColourA = 0;
         (*gDialogueBoxBackground)[i].opacity = 0xFF;
-        (*gDialogueBoxBackground)[i].font = FONT_UNK01;
+        (*gDialogueBoxBackground)[i].font = FONT_UNK_FF;
         if (i != 0) {
             (*gDialogueBoxBackground)[i].flags = DIALOGUE_BOX_UNK_01;
         } else {
@@ -136,14 +136,14 @@ void load_fonts(void) {
     for (i = 0; i < unk8012A7EC_COUNT; i++) {
         (*D_8012A7EC)[i].unk1 = 0xFF;
         (*D_8012A7EC)[i].unk4 = 0;
-        (*D_8012A7EC)[i].textColour[0] = 0xFF;
-        (*D_8012A7EC)[i].textColour[1] = 0xFF;
-        (*D_8012A7EC)[i].textColour[2] = 0xFF;
-        (*D_8012A7EC)[i].textColour[3] = 0;
-        (*D_8012A7EC)[i].textBGColour[0] = 0xFF;
-        (*D_8012A7EC)[i].textBGColour[1] = 0xFF;
-        (*D_8012A7EC)[i].textBGColour[2] = 0xFF;
-        (*D_8012A7EC)[i].textBGColour[3] = 0;
+        (*D_8012A7EC)[i].textColourR = 0xFF;
+        (*D_8012A7EC)[i].textColourG = 0xFF;
+        (*D_8012A7EC)[i].textColourB = 0xFF;
+        (*D_8012A7EC)[i].textColourA = 0;
+        (*D_8012A7EC)[i].textBGColourR = 0xFF;
+        (*D_8012A7EC)[i].textBGColourG = 0xFF;
+        (*D_8012A7EC)[i].textBGColourB = 0xFF;
+        (*D_8012A7EC)[i].textBGColourA = 0;
         (*D_8012A7EC)[i].unk1C = 0;
     }
     func_800C4170(0);
@@ -239,10 +239,10 @@ GLOBAL_ASM("asm/non_matchings/font/func_800C4318.s")
  * Sets the colour of the current dialogue box's text.
  */
 void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
-    (*gDialogueBoxBackground)[0].textColour[0] = red;
-    (*gDialogueBoxBackground)[0].textColour[1] = green;
-    (*gDialogueBoxBackground)[0].textColour[2] = blue;
-    (*gDialogueBoxBackground)[0].textColour[3] = alpha;
+    (*gDialogueBoxBackground)[0].textColourR = red;
+    (*gDialogueBoxBackground)[0].textColourG = green;
+    (*gDialogueBoxBackground)[0].textColourB = blue;
+    (*gDialogueBoxBackground)[0].textColourA = alpha;
     (*gDialogueBoxBackground)[0].opacity = opacity;
 }
 
@@ -250,10 +250,10 @@ void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
  * Sets the colour of the current dialogue box's text background.
  */
 void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
-    (*gDialogueBoxBackground)[0].textBGColour[0] = red;
-    (*gDialogueBoxBackground)[0].textBGColour[1] = green;
-    (*gDialogueBoxBackground)[0].textBGColour[2] = blue;
-    (*gDialogueBoxBackground)[0].textBGColour[3] = alpha;
+    (*gDialogueBoxBackground)[0].textBGColourR = red;
+    (*gDialogueBoxBackground)[0].textBGColourG = green;
+    (*gDialogueBoxBackground)[0].textBGColourB = blue;
+    (*gDialogueBoxBackground)[0].textBGColourA = alpha;
 }
 
 // Unused?
@@ -385,10 +385,10 @@ void set_current_text_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, 
         return;
     }
     temp = &gDialogueBoxBackground[arg0];
-    temp->textColour[0] = red;
-    temp->textColour[1] = green;
-    temp->textColour[2] = blue;
-    temp->textColour[3] = alpha;
+    temp->textColourR = red;
+    temp->textColourG = green;
+    temp->textColourB = blue;
+    temp->textColourA = alpha;
     temp->opacity = opacity;
 }
 
@@ -398,10 +398,10 @@ void set_current_text_background_colour(s32 arg0, s32 red, s32 green, s32 blue, 
         return;
     }
     dialogueBox = &gDialogueBoxBackground[arg0];
-    dialogueBox->textBGColour[0] = red;
-    dialogueBox->textBGColour[1] = green;
-    dialogueBox->textBGColour[2] = blue;
-    dialogueBox->textBGColour[3] = alpha;
+    dialogueBox->textBGColourR = red;
+    dialogueBox->textBGColourG = green;
+    dialogueBox->textBGColourB = blue;
+    dialogueBox->textBGColourA = alpha;
 }
 
 // Unused?
@@ -683,14 +683,14 @@ void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 dialogueB
     while (dialogueTextBox != NULL) {
         dialogueBox->xpos = dialogueTextBox->x1 + dialogueTextBox->x2;
         dialogueBox->ypos = dialogueTextBox->y1 + dialogueTextBox->y2;
-        dialogueBox->textColour[0] = dialogueTextBox->textColour[0];
-        dialogueBox->textColour[1] = dialogueTextBox->textColour[1];
-        dialogueBox->textColour[2] = dialogueTextBox->textColour[2];
-        dialogueBox->textColour[3] = dialogueTextBox->textColour[3];
-        dialogueBox->textBGColour[0] = dialogueTextBox->textBGColour[0];
-        dialogueBox->textBGColour[1] = dialogueTextBox->textBGColour[1];
-        dialogueBox->textBGColour[2] = dialogueTextBox->textBGColour[2];
-        dialogueBox->textBGColour[3] = dialogueTextBox->textBGColour[3];
+        dialogueBox->textColourR = dialogueTextBox->textColourR;
+        dialogueBox->textColourG = dialogueTextBox->textColourG;
+        dialogueBox->textColourB = dialogueTextBox->textColourB;
+        dialogueBox->textColourA = dialogueTextBox->textColourA;
+        dialogueBox->textBGColourR = dialogueTextBox->textBGColourR;
+        dialogueBox->textBGColourG = dialogueTextBox->textBGColourG;
+        dialogueBox->textBGColourB = dialogueTextBox->textBGColourB;
+        dialogueBox->textBGColourA = dialogueTextBox->textBGColourA;
         dialogueBox->opacity = dialogueTextBox->opacity;
         dialogueBox->font = dialogueTextBox->font;
         parse_string_with_number(dialogueTextBox->text, &text, dialogueTextBox->textNum);

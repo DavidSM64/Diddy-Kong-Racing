@@ -21,7 +21,7 @@
 enum TextFonts {
     FONT_COLOURFUL,
     FONT_SMALL,
-    FONT_UNK01 = 255,
+    FONT_UNK_FF = 255,
 };
 
 enum DialogueFlags {
@@ -42,8 +42,14 @@ typedef struct unk8012A7EC {
     s32 unk4;
     s32 unk8;
     s32 unkC;
-    u8 textColour[4];
-    u8 textBGColour[4];
+    u8 textColourR;
+    u8 textColourG;
+    u8 textColourB;
+    u8 textColourA;
+    u8 textBGColourR;
+    u8 textBGColourG;
+    u8 textBGColourB;
+    u8 textBGColourA;
     s32 unk18;
     s32 unk1C;
 } unk8012A7EC;
@@ -91,12 +97,25 @@ typedef struct DialogueBox {
     s16 y1; // Top portion of the text
     s16 x2; // Right portion of the text
     s16 y2; // Bottom portion of the text
-    u8 textColour[4];
-    u8 textBGColour[4];
+    u8 textColourR;
+    u8 textColourG;
+    u8 textColourB;
+    u8 textColourA;
+    u8 textBGColourR;
+    u8 textBGColourG;
+    u8 textBGColourB;
+    u8 textBGColourA;
     u8 opacity;
     u8 font;
     struct DialogueBox *nextBox;
 } DialogueBox;
+
+typedef struct {
+    u8 r;
+    u8 b;
+    u8 g;
+    u8 a;
+} ColourRGBA;
 
 /* Size: 0x28 bytes */
 // Dialogue Box background
@@ -113,8 +132,15 @@ typedef struct DialogueBoxBackground {
     u8 backgroundColourG;
     u8 backgroundColourB;
     u8 backgroundColourA;
-    u8 textColour[4];
-    u8 textBGColour[4];
+    //ColourRGBA textColour;
+    u8 textColourR;
+    u8 textColourG;
+    u8 textColourB;
+    u8 textColourA;
+    u8 textBGColourR;
+    u8 textBGColourG;
+    u8 textBGColourB;
+    u8 textBGColourA;
     u8 opacity;
     u8 font;
     u16 flags;

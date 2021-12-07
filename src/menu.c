@@ -6620,7 +6620,7 @@ s32 is_in_two_player_adventure(void) {
  * Returns 1 if T.T. is avaliable to use, or 0 if not.
  */
 s32 is_tt_unlocked(void) {
-    return gActiveMagicCodes & TRUE;
+    return gActiveMagicCodes & 1;
 }
 
 /**
