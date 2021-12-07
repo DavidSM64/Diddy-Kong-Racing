@@ -59,7 +59,7 @@ glabel func_800871D8
 /* 087EAC 800872AC 8CB80000 */  lw    $t8, ($a1)
 /* 087EB0 800872B0 24040007 */  li    $a0, 7
 /* 087EB4 800872B4 2719FFFF */  addiu $t9, $t8, -1
-/* 087EB8 800872B8 0C031525 */  jal   func_800C5494
+/* 087EB8 800872B8 0C031525 */  jal   assign_dialogue_box_id
 /* 087EBC 800872BC AC396A78 */   sw    $t9, %lo(D_80126A78)($at)
 /* 087EC0 800872C0 00101100 */  sll   $v0, $s0, 4
 /* 087EC4 800872C4 2442002C */  addiu $v0, $v0, 0x2c

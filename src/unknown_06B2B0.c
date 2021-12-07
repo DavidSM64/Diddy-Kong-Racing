@@ -82,14 +82,14 @@ s8 D_800DD374 = 0;
 s32 D_800DD378 = 1;
 s32 D_800DD37C = 0;
 s32 D_800DD380 = 0; // Currently unknown, might be a different type.
-s32 D_800DD384 = 0;
+s32 sControllerStatus = 0;
 s32 D_800DD388 = 0; // Currently unknown, might be a different type.
 s8 D_800DD38C = 0;
 s8 D_800DD390 = 0;
 s16 D_800DD394 = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
-s8 D_800DD3A0 = 0;
+s8 D_800DD3A0 = FALSE;
 s32 D_800DD3A4 = 0; // Currently unknown, might be a different type.
 s32 D_800DD3A8 = 0; // Currently unknown, might be a different type.
 s32 D_800DD3AC = 0; // Currently unknown, might be a different type.
@@ -133,12 +133,12 @@ s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 s32 D_801211FC;
-s32 *gHudMatrices[2];
-s32 gCurrHudMat;
-s32 *gHudVertices[2];
-s32 gCurrHudVerts;
-s32 *gHudTriangles[2];
-s32 gCurrHudTris;
+Mtx *gHudMatrices[2];
+Gfx *gCurrHudMat;
+VertexList *gHudVertices[2];
+VertexList *gCurrHudVerts;
+TriangleList *gHudTriangles[2];
+TriangleList *gCurrHudTris;
 s32 D_80121230[8];
 s8 D_80121250[16];
 OSSched gMainSched; // 0x288 / 648 bytes
@@ -159,7 +159,7 @@ s8 gIsPaused;
 s8 D_80123516;
 s32 D_80123518;
 s32 D_8012351C;
-s32 D_80123520;
+s32 sBootDelayTimer;
 s8 D_80123524;
 s8 D_80123525;
 s8 D_80123526;
@@ -781,10 +781,14 @@ s32 func_8006C300(void) {
     }
 }
 
+/**
+ * Main looping function for the main thread.
+ */
+
 void thread3_main(s32 arg0) {
-    func_8006C3E0();
+    init_game();
     D_800DD37C = func_8006A1C4(D_800DD37C, 0);
-    D_80123520 = 0;
+    sBootDelayTimer = 0;
     sRenderContext = DRAW_INTRO;
     while (1) {
         if (is_reset_pressed()) {
@@ -797,12 +801,17 @@ void thread3_main(s32 arg0) {
                             | DPC_CLR_CMD_CTR | DPC_CLR_CMD_CTR);
             while (1); // Infinite loop
         }
-        render();
+        main_game_loop();
         func_80065E30();
     }
 }
 
-void func_8006C3E0(void) {
+/**
+ * Setup all of the necessary pieces required for the game to function.
+ * This includes the memory pool. controllers, video, audio, core assets and more.
+ */
+
+void init_game(void) {
     s32 mode;
 
     init_main_memory_pool();
@@ -823,16 +832,16 @@ void func_8006C3E0(void) {
     }
 
     osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8)mode, 1);
-    D_800DD3A0 = 0;
-    if (func_8006EFB8() == 0) {
-        D_800DD3A0 = 1;
+    D_800DD3A0 = FALSE;
+    if (!func_8006EFB8()) {
+        D_800DD3A0 = TRUE;
     }
     init_video(1, &gMainSched);
     func_80076BA0();
     func_80078100(&gMainSched);
     audio_init(&gMainSched);
     func_80008040();
-    D_800DD384 = func_8006A10C();
+    sControllerStatus = init_controllers();
     func_8007AC70();
     func_8005F850();
     func_8000BF8C();
@@ -860,9 +869,14 @@ void func_8006C3E0(void) {
     osSetTime(0);
 }
 
-void render(void) {
-    s32 phi_v0;
-    s32 phi_v0_2;
+/**
+ * The main gameplay loop.
+ * Contains all game logic, audio and graphics processing.
+ */
+
+void main_game_loop(void) {
+    s32 debugLoopCounter;
+    s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 
     osSetTime(0);
@@ -896,23 +910,23 @@ void render(void) {
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, &gCurrHudMat, 1);
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
-    if (func_800B76DC() != 0) {
+    if (get_crash_status()) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
     }
-    if (D_800DD3A0 != 0) {
-        phi_v0 = 0;
-        while (phi_v0 != 10000000) {
-            phi_v0 += 1;
+    if (D_800DD3A0) {
+        debugLoopCounter = 0;
+        while (debugLoopCounter != 10000000) {
+            debugLoopCounter += 1;
         }
-        if (phi_v0 >= 20000001) { // This shouldn't ever be true?
+        if (debugLoopCounter >= 20000001) { // This shouldn't ever be true?
             render_printf(D_800E7134 /* "BBB\n" */);
         }
     }
 
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
-            func_8006F43C();
+            pre_intro_loop();
             break;
         case DRAW_MENU: // In a menu
             func_8006DCF8(sLogicUpdateRate);
@@ -928,16 +942,17 @@ void render(void) {
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
 
-    func_80000D00((u8)sLogicUpdateRate);
-    func_800B5F78(&gCurrDisplayList);
-    func_800C56FC(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+    process_audio(sLogicUpdateRate);
+    print_debug_strings(&gCurrDisplayList);
+    render_dialogue_boxes(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     close_dialogue_box(4);
-    func_800C5494(4);
-    if (func_800C0494(sLogicUpdateRate) != 0) {
+    assign_dialogue_box_id(4);
+    // handle_transitions will perform the logic of transitions and return the transition ID.
+    if (handle_transitions(sLogicUpdateRate)) {
         render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     }
-    if ((D_80123520 >= 8) && (func_8006F4C8() != 0)) {
-        func_800829F8(&gCurrDisplayList, sLogicUpdateRate);
+    if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
+        print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
     }
 
     gDPFullSync(gCurrDisplayList++);
@@ -957,11 +972,11 @@ void render(void) {
         func_80066520();
     }
     if (D_800DD3F0 == 2) {
-        phi_v0_2 = 320 * 240 * 2;
+        framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
         if (osTvType == TV_TYPE_PAL) {
-            phi_v0_2 = (s32)((320 * 240 * 2) * 1.1);
+            framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
-        func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + phi_v0_2);
+        func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
@@ -1773,6 +1788,9 @@ s8 func_8006EAB0(void) {
     return D_80123516;
 }
 
+/**
+ * Sets and returns (nonzero) the message set when pressing the reset button.
+ */
 s32 is_reset_pressed(void) {
     if (D_80123560[0] == 0) {
         D_80123560[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
@@ -1849,9 +1867,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006ECFC.s")
 s32 func_8006EFB8(void) {
     //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
     if (IO_READ(SP_DMEM_START) != -1) {
-        return 0;
+        return FALSE;
     }
-    return 1;
+    return TRUE;
 }
 
 #ifdef NON_MATCHING
@@ -1974,7 +1992,11 @@ void func_8006F42C(void) {
     D_800DD3F0 = 2;
 }
 
-void func_8006F43C(void) {
+/**
+ * Give the player 8 frames to enter the CPak menu with start, then load the intro sequence.
+ */
+
+void pre_intro_loop(void) {
     s32 i;
     s32 buttonInputs = 0;
 
@@ -1984,17 +2006,21 @@ void func_8006F43C(void) {
     if (buttonInputs & START_BUTTON) {
         gShowControllerPakMenu = TRUE;
     }
-    D_80123520++;
-    if (D_80123520 >= 8) {
+    sBootDelayTimer++;
+    if (sBootDelayTimer >= 8) {
         load_menu_with_level_background(MENU_BOOT, 0x27, 2);
     }
 }
 
-s32 func_8006F4C8(void) {
-    if (D_800DD384 == -1) {
-        return 1;
+/**
+ * Returns TRUE if the game doesn't detect any controllers.
+ */
+
+s32 is_controller_missing(void) {
+    if (sControllerStatus == CONTROLLER_MISSING) {
+        return TRUE;
     } else {
-        return 0;
+        return FALSE;
     }
 }
 

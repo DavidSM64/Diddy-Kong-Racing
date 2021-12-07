@@ -18,6 +18,12 @@
 
 #define FADE_TRANSITION(type, color, duration, unk6) { type, color, duration, unk6 }
 
+enum TransitionStatus {
+    TRANSITION_LEVELSWAP = -1,
+    TRANSITION_NONE,
+    TRANSITION_ACTIVE,
+};
+
 /* Size: 8 bytes */
 typedef struct FadeTransition {
     u8 type; // top 2 bits also act as flags
@@ -33,8 +39,8 @@ extern u32 osTvType;
 void func_800C0170(void);
 void func_800C0180(void);
 u32 func_800C018C(void);
-void func_800C0724(void);
-s32 func_800C0494(s32 arg0);
+void transition_end(void);
+s32 handle_transitions(s32 updateRate);
 void render_fade_transition(s32 dlist, s32 arg1, s32 arg2);
 void render_fade_fullscreen(Gfx **dlist, s32 arg1, s32 arg2);
 void render_fade_barndoor_horizontal(Gfx **dlist, s32 arg1, s32 arg2);

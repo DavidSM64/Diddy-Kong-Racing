@@ -272,7 +272,7 @@ glabel func_80092E94
 /* 093EBC 800932BC 02402025 */  move  $a0, $s2
 /* 093EC0 800932C0 00002825 */  move  $a1, $zero
 /* 093EC4 800932C4 00003025 */  move  $a2, $zero
-/* 093EC8 800932C8 0C0316D6 */  jal   func_800C5B58
+/* 093EC8 800932C8 0C0316D6 */  jal   render_dialogue_box
 /* 093ECC 800932CC 24070007 */   li    $a3, 7
 /* 093ED0 800932D0 8FA70060 */  lw    $a3, 0x60($sp)
 /* 093ED4 800932D4 3C05800E */  lui   $a1, %hi(D_800E05B4) # $a1, 0x800e

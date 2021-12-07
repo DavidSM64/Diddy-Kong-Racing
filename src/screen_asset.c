@@ -15,7 +15,7 @@ Gfx gRdpSetModeScreenAsset[] = {
  * Returns the address of the screen asset, or 0x80100000 if no screen assets were found.
  * Unused.
  */
-u8 *load_screen(s32 screenIndex) {
+UNUSED u8 *load_screen(s32 screenIndex) {
     u8 *someAddr;
     s32 screenTableCount, start, size;
     s32 *screenTable;
@@ -55,7 +55,7 @@ u8 *load_screen(s32 screenIndex) {
  * Renders a 320x240 RGBA16 screen asset.
  * Unused.
  */
-void render_screen(Gfx **dlist, u8 *screenAddress) {
+UNUSED void render_screen(Gfx **dlist, u8 *screenAddress) {
     s32 y_pos;
 
     gDkrDmaDisplayList((*dlist)++, (u32)&gRdpSetModeScreenAsset + 0x80000000, numberOfGfxCommands(gRdpSetModeScreenAsset));

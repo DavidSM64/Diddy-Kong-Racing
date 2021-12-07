@@ -73,11 +73,11 @@ Vp D_800DD148[20] = {
     { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
 };
 
-unk8011D510 D_800DD288 = {  
+unk8011D510 D_800DD288 = {
     0, 0, 0, 0, 1.0f, 0.0f, 0.0f, -281.0f,
 };
 
-unk8011D510 D_800DD2A0 = {  
+unk8011D510 D_800DD2A0 = {
     0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f,
 };
 
@@ -581,10 +581,10 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
     temp_t0 = widthAndHeight >> 16;
     temp_a3 = temp_t0 >> 1;
     if (gScreenViewports[D_80120CE4].flags & 1) {
-        gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 
-            gScreenViewports[D_80120CE4].upperLeftX, 
-            gScreenViewports[D_80120CE4].upperLeftY, 
-            gScreenViewports[D_80120CE4].lowerRightX, 
+        gDPSetScissor((*dlist)++, SCISSOR_INTERLACE,
+            gScreenViewports[D_80120CE4].upperLeftX,
+            gScreenViewports[D_80120CE4].upperLeftY,
+            gScreenViewports[D_80120CE4].lowerRightX,
             gScreenViewports[D_80120CE4].lowerRightY
         );
         func_80068158(dlist, 0, 0, 0, 0);
@@ -899,10 +899,14 @@ OSMesgQueue *func_8006A100(void) {
     return &D_801210E0;
 }
 
-s32 func_8006A10C(void) {
-    s32 *temp1;
+/**
+ * Initialise the player controllers, and return the status when finished.
+ */
+
+s32 init_controllers(void) {
+    s32 *temp1; // Unused
     u8 bitpattern;
-    s32 *temp2;
+    s32 *temp2; // Unused
 
     osCreateMesgQueue(&D_801210E0, &D_801210F8, 1);
     osSetEventMesg(OS_EVENT_SI, &D_801210E0, D_801210FC);
@@ -913,14 +917,14 @@ s32 func_8006A10C(void) {
     D_800DD300 = 0;
 
     if ((bitpattern & CONT_ABSOLUTE) && (!(status.errno & CONT_NO_RESPONSE_ERROR))) {
-        return 0;
+        return CONTROLLER_EXISTS;
     }
 
     if (!bitpattern) {}
 
     D_800DD300 = 1;
 
-    return -1;
+    return CONTROLLER_MISSING;
 }
 
 GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")

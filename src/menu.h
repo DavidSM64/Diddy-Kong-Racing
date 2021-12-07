@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "PR/gbi.h"
 #include "fade_transition.h"
+#include "font.h"
 
 #define TT_MENU_ROOT              0
 #define TT_MENU_CONT_PAK_ERROR_1  1
@@ -395,9 +396,9 @@ extern s32 D_800DFFD0;
 extern s32 D_800DFFD4;
 
 extern MenuElement gCautionMenuTextElements[14];
-                                                                             
+
 extern MenuElement gGameSelectTextElemsNoAdv2[7];
-                                                                        
+
 extern MenuElement gGameSelectTextElemsWithAdv2[9];
 
 extern s16 D_800E0398[6];
@@ -665,7 +666,7 @@ s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 arg4);
 void func_80081800(s32 arg0, s32 arg1, s32 arg2, u8 arg3, u8 arg4, u8 arg5, u8 arg6);
 void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
-void func_800829F8(Gfx *dl, s32 updateRate);
+void print_missing_controller_text(Gfx *dl, s32 updateRate);
 void menu_logos_screen_init(void);
 s32 menu_logo_screen_loop(s32 arg0);
 void func_80082FAC(void);
@@ -772,9 +773,9 @@ void func_8009D33C(s32 arg0, s32 arg1);
 s32 taj_menu_loop(void);
 s32 func_8009D9F4(void);
 s32 trophy_race_cabinet_menu_loop(void);
-void func_8009E9A0(void);
-void func_8009E9A8(void);
-f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **arg1, s32 *arg2, s32 *arg3);
+void dialogue_open_stub(void);
+void dialogue_close_stub(void);
+f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Gfx **mat, VertexList **vtx);
 s64 *func_8009EA6C(void);
 s32 func_8009EA78(s64 arg0);
 s32 func_8009EABC(s64 arg0);

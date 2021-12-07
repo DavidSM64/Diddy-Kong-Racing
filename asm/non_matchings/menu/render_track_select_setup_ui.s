@@ -457,7 +457,7 @@ glabel render_track_select_setup_ui
 /* 0921E4 800915E4 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 0921E8 800915E8 00002825 */  move  $a1, $zero
 /* 0921EC 800915EC 00003025 */  move  $a2, $zero
-/* 0921F0 800915F0 0C0316D6 */  jal   func_800C5B58
+/* 0921F0 800915F0 0C0316D6 */  jal   render_dialogue_box
 /* 0921F4 800915F4 24070007 */   li    $a3, 7
 /* 0921F8 800915F8 3C0F8012 */  lui   $t7, %hi(D_801263E0) # $t7, 0x8012
 /* 0921FC 800915FC 8DEF63E0 */  lw    $t7, %lo(D_801263E0)($t7)
@@ -599,7 +599,7 @@ glabel render_track_select_setup_ui
 /* 0923F8 800917F8 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 0923FC 800917FC 00002825 */  move  $a1, $zero
 /* 092400 80091800 00003025 */  move  $a2, $zero
-/* 092404 80091804 0C0316D6 */  jal   func_800C5B58
+/* 092404 80091804 0C0316D6 */  jal   render_dialogue_box
 /* 092408 80091808 24070007 */   li    $a3, 7
 .L8009180C:
 /* 09240C 8009180C 86180002 */  lh    $t8, 2($s0)

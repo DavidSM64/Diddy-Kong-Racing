@@ -5,8 +5,8 @@ glabel D_800E932C
 .text
 glabel func_800C1EE8
 /* 0C2AE8 800C1EE8 27BDFFB0 */  addiu $sp, $sp, -0x50
-/* 0C2AEC 800C1EEC 3C03800E */  lui   $v1, %hi(D_800E31B0) # $v1, 0x800e
-/* 0C2AF0 800C1EF0 246331B0 */  addiu $v1, %lo(D_800E31B0) # addiu $v1, $v1, 0x31b0
+/* 0C2AEC 800C1EEC 3C03800E */  lui   $v1, %hi(sTransitionFadeTimer) # $v1, 0x800e
+/* 0C2AF0 800C1EF0 246331B0 */  addiu $v1, %lo(sTransitionFadeTimer) # addiu $v1, $v1, 0x31b0
 /* 0C2AF4 800C1EF4 44842000 */  mtc1  $a0, $f4
 /* 0C2AF8 800C1EF8 94620000 */  lhu   $v0, ($v1)
 /* 0C2AFC 800C1EFC AFBF004C */  sw    $ra, 0x4c($sp)
@@ -61,11 +61,11 @@ glabel func_800C1EE8
 /* 0C2BBC 800C1FBC E7D00000 */  swc1  $f16, ($fp)
 .L800C1FC0:
 /* 0C2BC0 800C1FC0 3C01800F */  lui   $at, %hi(D_800E932C) # $at, 0x800f
-/* 0C2BC4 800C1FC4 3C11800E */  lui   $s1, %hi(D_800E31D0) # $s1, 0x800e
-/* 0C2BC8 800C1FC8 3C10800E */  lui   $s0, %hi(D_800E31C0) # $s0, 0x800e
+/* 0C2BC4 800C1FC4 3C11800E */  lui   $s1, %hi(sTransitionTaskNum) # $s1, 0x800e
+/* 0C2BC8 800C1FC8 3C10800E */  lui   $s0, %hi(sTransitionVtx) # $s0, 0x800e
 /* 0C2BCC 800C1FCC C436932C */  lwc1  $f22, %lo(D_800E932C)($at)
-/* 0C2BD0 800C1FD0 261031C0 */  addiu $s0, %lo(D_800E31C0) # addiu $s0, $s0, 0x31c0
-/* 0C2BD4 800C1FD4 263131D0 */  addiu $s1, %lo(D_800E31D0) # addiu $s1, $s1, 0x31d0
+/* 0C2BD0 800C1FD0 261031C0 */  addiu $s0, %lo(sTransitionVtx) # addiu $s0, $s0, 0x31c0
+/* 0C2BD4 800C1FD4 263131D0 */  addiu $s1, %lo(sTransitionTaskNum) # addiu $s1, $s1, 0x31d0
 /* 0C2BD8 800C1FD8 00009025 */  move  $s2, $zero
 /* 0C2BDC 800C1FDC 24160009 */  li    $s6, 9
 /* 0C2BE0 800C1FE0 2415000A */  li    $s5, 10
@@ -208,8 +208,8 @@ glabel func_800C1EE8
 /* 0C2E00 800C2200 1000000D */  b     .L800C2238
 /* 0C2E04 800C2204 8FBF004C */   lw    $ra, 0x4c($sp)
 .L800C2208:
-/* 0C2E08 800C2208 3C03800E */  lui   $v1, %hi(D_800E31B4) # $v1, 0x800e
-/* 0C2E0C 800C220C 246331B4 */  addiu $v1, %lo(D_800E31B4) # addiu $v1, $v1, 0x31b4
+/* 0C2E08 800C2208 3C03800E */  lui   $v1, %hi(sTransitionFlags) # $v1, 0x800e
+/* 0C2E0C 800C220C 246331B4 */  addiu $v1, %lo(sTransitionFlags) # addiu $v1, $v1, 0x31b4
 /* 0C2E10 800C2210 94620000 */  lhu   $v0, ($v1)
 /* 0C2E14 800C2214 3401FFFF */  li    $at, 65535
 /* 0C2E18 800C2218 10410006 */  beq   $v0, $at, .L800C2234

@@ -6,20 +6,20 @@ glabel render_fade_waves
 /* 0C3008 800C2408 AFA50024 */  sw    $a1, 0x24($sp)
 /* 0C300C 800C240C 0C01ECF4 */  jal   func_8007B3D0
 /* 0C3010 800C2410 AFA60028 */   sw    $a2, 0x28($sp)
-/* 0C3014 800C2414 3C03800E */  lui   $v1, %hi(D_800E31D0) # $v1, 0x800e
+/* 0C3014 800C2414 3C03800E */  lui   $v1, %hi(sTransitionTaskNum) # $v1, 0x800e
 /* 0C3018 800C2418 8FAE0020 */  lw    $t6, 0x20($sp)
-/* 0C301C 800C241C 8C6331D0 */  lw    $v1, %lo(D_800E31D0)($v1)
+/* 0C301C 800C241C 8C6331D0 */  lw    $v1, %lo(sTransitionTaskNum)($v1)
 /* 0C3020 800C2420 8DC20000 */  lw    $v0, ($t6)
 /* 0C3024 800C2424 00037880 */  sll   $t7, $v1, 2
-/* 0C3028 800C2428 3C06800E */  lui   $a2, %hi(D_800E31C0) # $a2, 0x800e
-/* 0C302C 800C242C 3C07800E */  lui   $a3, %hi(D_800E31C8) # $a3, 0x800e
+/* 0C3028 800C2428 3C06800E */  lui   $a2, %hi(sTransitionVtx) # $a2, 0x800e
+/* 0C302C 800C242C 3C07800E */  lui   $a3, %hi(sTransitionTris) # $a3, 0x800e
 /* 0C3030 800C2430 00CF3021 */  addu  $a2, $a2, $t7
 /* 0C3034 800C2434 00EF3821 */  addu  $a3, $a3, $t7
 /* 0C3038 800C2438 00402025 */  move  $a0, $v0
-/* 0C303C 800C243C 8CC631C0 */  lw    $a2, %lo(D_800E31C0)($a2)
-/* 0C3040 800C2440 8CE731C8 */  lw    $a3, %lo(D_800E31C8)($a3)
-/* 0C3044 800C2444 3C19800E */  lui   $t9, %hi(D_800E3648) # $t9, 0x800e
-/* 0C3048 800C2448 27393648 */  addiu $t9, %lo(D_800E3648) # addiu $t9, $t9, 0x3648
+/* 0C303C 800C243C 8CC631C0 */  lw    $a2, %lo(sTransitionVtx)($a2)
+/* 0C3040 800C2440 8CE731C8 */  lw    $a3, %lo(sTransitionTris)($a3)
+/* 0C3044 800C2444 3C19800E */  lui   $t9, %hi(dl_transition_shape_settings) # $t9, 0x800e
+/* 0C3048 800C2448 27393648 */  addiu $t9, %lo(dl_transition_shape_settings) # addiu $t9, $t9, 0x3648
 /* 0C304C 800C244C 3C180600 */  lui   $t8, 0x600
 /* 0C3050 800C2450 3C1005D0 */  lui   $s0, (0x05D000E0 >> 16) # lui $s0, 0x5d0
 /* 0C3054 800C2454 3C0D05B0 */  lui   $t5, (0x05B000C0 >> 16) # lui $t5, 0x5b0

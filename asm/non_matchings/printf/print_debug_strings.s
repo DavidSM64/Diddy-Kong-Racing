@@ -1,4 +1,4 @@
-glabel func_800B5F78
+glabel print_debug_strings
 /* 0B6B78 800B5F78 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 0B6B7C 800B5F7C AFBF0034 */  sw    $ra, 0x34($sp)
 /* 0B6B80 800B5F80 AFB3002C */  sw    $s3, 0x2c($sp)
@@ -69,10 +69,10 @@ glabel func_800B5F78
 /* 0B6C7C 800B607C 0C02DB94 */  jal   func_800B6E50
 /* 0B6C80 800B6080 AC790004 */   sw    $t9, 4($v1)
 /* 0B6C84 800B6084 8E710000 */  lw    $s1, ($s3)
-/* 0B6C88 800B6088 3C0A800E */  lui   $t2, %hi(D_800E2FB8) # $t2, 0x800e
+/* 0B6C88 800B6088 3C0A800E */  lui   $t2, %hi(dl_debug_font_settings) # $t2, 0x800e
 /* 0B6C8C 800B608C 26280008 */  addiu $t0, $s1, 8
 /* 0B6C90 800B6090 AE680000 */  sw    $t0, ($s3)
-/* 0B6C94 800B6094 254A2FB8 */  addiu $t2, %lo(D_800E2FB8) # addiu $t2, $t2, 0x2fb8
+/* 0B6C94 800B6094 254A2FB8 */  addiu $t2, %lo(dl_debug_font_settings) # addiu $t2, $t2, 0x2fb8
 /* 0B6C98 800B6098 3C090600 */  lui   $t1, 0x600
 /* 0B6C9C 800B609C 3C108012 */  lui   $s0, %hi(D_80127CD8) # $s0, 0x8012
 /* 0B6CA0 800B60A0 26107CD8 */  addiu $s0, %lo(D_80127CD8) # addiu $s0, $s0, 0x7cd8

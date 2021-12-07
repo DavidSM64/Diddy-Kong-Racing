@@ -76,7 +76,7 @@ void set_sndfx_player_voice_limit(u8 voiceLimit);
 void func_80000C68(u8 arg0);
 void func_80000C98(s32 arg0);
 void func_80000CBC(void);
-void func_80000D00(u8 arg0);
+void process_audio(u8 arg0);
 void func_80000FDC(u16 arg0, s32 arg1, f32 arg2);
 void func_80001050(void);
 u16 musicGetChanMask(void);

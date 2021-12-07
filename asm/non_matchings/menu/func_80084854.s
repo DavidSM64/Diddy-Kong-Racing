@@ -125,7 +125,7 @@ glabel func_80084854
 /* 085624 80084A24 AFA80020 */   sw    $t0, 0x20($sp)
 /* 085628 80084A28 0C0202F2 */  jal   func_80080BC8
 /* 08562C 80084A2C 02402025 */   move  $a0, $s2
-/* 085630 80084A30 0C031525 */  jal   func_800C5494
+/* 085630 80084A30 0C031525 */  jal   assign_dialogue_box_id
 /* 085634 80084A34 24040007 */   li    $a0, 7
 /* 085638 80084A38 240900FF */  li    $t1, 255
 /* 08563C 80084A3C AFA90010 */  sw    $t1, 0x10($sp)
@@ -144,7 +144,7 @@ glabel func_80084854
 /* 085670 80084A70 02402025 */  move  $a0, $s2
 /* 085674 80084A74 00002825 */  move  $a1, $zero
 /* 085678 80084A78 00003025 */  move  $a2, $zero
-/* 08567C 80084A7C 0C0316D6 */  jal   func_800C5B58
+/* 08567C 80084A7C 0C0316D6 */  jal   render_dialogue_box
 /* 085680 80084A80 24070007 */   li    $a3, 7
 /* 085684 80084A84 240A00A3 */  li    $t2, 163
 /* 085688 80084A88 AFAA0010 */  sw    $t2, 0x10($sp)
@@ -156,7 +156,7 @@ glabel func_80084854
 /* 0856A0 80084AA0 02402025 */  move  $a0, $s2
 /* 0856A4 80084AA4 00002825 */  move  $a1, $zero
 /* 0856A8 80084AA8 00003025 */  move  $a2, $zero
-/* 0856AC 80084AAC 0C0316D6 */  jal   func_800C5B58
+/* 0856AC 80084AAC 0C0316D6 */  jal   render_dialogue_box
 /* 0856B0 80084AB0 24070007 */   li    $a3, 7
 /* 0856B4 80084AB4 3C06800E */  lui   $a2, %hi(gSfxVolumeSliderValue) # $a2, 0x800e
 /* 0856B8 80084AB8 8CC6FAC0 */  lw    $a2, %lo(gSfxVolumeSliderValue)($a2)

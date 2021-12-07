@@ -77,7 +77,7 @@ glabel func_80088938
 /* 08965C 80088A5C 0C031110 */  jal   draw_text
 /* 089660 80088A60 2406001E */   li    $a2, 30
 /* 089664 80088A64 24150030 */  li    $s5, 48
-/* 089668 80088A68 0C031525 */  jal   func_800C5494
+/* 089668 80088A68 0C031525 */  jal   assign_dialogue_box_id
 /* 08966C 80088A6C 24040006 */   li    $a0, 6
 /* 089670 80088A70 26AE001E */  addiu $t6, $s5, 0x1e
 /* 089674 80088A74 AFAE0010 */  sw    $t6, 0x10($sp)
@@ -155,7 +155,7 @@ glabel func_80088938
 /* 08978C 80088B8C 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 089790 80088B90 00002825 */  move  $a1, $zero
 /* 089794 80088B94 00003025 */  move  $a2, $zero
-/* 089798 80088B98 0C0316D6 */  jal   func_800C5B58
+/* 089798 80088B98 0C0316D6 */  jal   render_dialogue_box
 /* 08979C 80088B9C 24070006 */   li    $a3, 6
 /* 0897A0 80088BA0 26B50022 */  addiu $s5, $s5, 0x22
 /* 0897A4 80088BA4 24040006 */  li    $a0, 6
@@ -173,7 +173,7 @@ glabel func_80088938
 /* 0897D4 80088BD4 04400077 */  bltz  $v0, .L80088DB4
 /* 0897D8 80088BD8 00000000 */   nop   
 .L80088BDC:
-/* 0897DC 80088BDC 0C031525 */  jal   func_800C5494
+/* 0897DC 80088BDC 0C031525 */  jal   assign_dialogue_box_id
 /* 0897E0 80088BE0 24040006 */   li    $a0, 6
 /* 0897E4 80088BE4 26A9000E */  addiu $t1, $s5, 0xe
 /* 0897E8 80088BE8 AFA90010 */  sw    $t1, 0x10($sp)
@@ -287,7 +287,7 @@ glabel func_80088938
 /* 089988 80088D88 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 08998C 80088D8C 00002825 */  move  $a1, $zero
 /* 089990 80088D90 00003025 */  move  $a2, $zero
-/* 089994 80088D94 0C0316D6 */  jal   func_800C5B58
+/* 089994 80088D94 0C0316D6 */  jal   render_dialogue_box
 /* 089998 80088D98 24070006 */   li    $a3, 6
 /* 08999C 80088D9C 3C028012 */  lui   $v0, %hi(D_80126BB4) # $v0, 0x8012
 /* 0899A0 80088DA0 8C426BB4 */  lw    $v0, %lo(D_80126BB4)($v0)
@@ -377,7 +377,7 @@ glabel func_80088938
 /* 089ADC 80088EDC 10000001 */  b     .L80088EE4
 /* 089AE0 80088EE0 24150086 */   li    $s5, 134
 .L80088EE4:
-/* 089AE4 80088EE4 0C031525 */  jal   func_800C5494
+/* 089AE4 80088EE4 0C031525 */  jal   assign_dialogue_box_id
 /* 089AE8 80088EE8 24040006 */   li    $a0, 6
 /* 089AEC 80088EEC 24040006 */  li    $a0, 6
 /* 089AF0 80088EF0 0C0313DF */  jal   set_dialogue_font
@@ -463,7 +463,7 @@ glabel func_80088938
 /* 089C18 80089018 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 089C1C 8008901C 00002825 */  move  $a1, $zero
 /* 089C20 80089020 00003025 */  move  $a2, $zero
-/* 089C24 80089024 0C0316D6 */  jal   func_800C5B58
+/* 089C24 80089024 0C0316D6 */  jal   render_dialogue_box
 /* 089C28 80089028 24070006 */   li    $a3, 6
 .L8008902C:
 /* 089C2C 8008902C 3C0F8012 */  lui   $t7, %hi(D_80126C10) # $t7, 0x8012

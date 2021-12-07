@@ -43,8 +43,8 @@ glabel s32_to_string
 .L800C58A0:
 /* 0C64A0 800C58A0 3C0D800E */  lui   $t5, %hi(gDescPowsOf10) # $t5, 0x800e
 /* 0C64A4 800C58A4 25AD36EC */  addiu $t5, %lo(gDescPowsOf10) # addiu $t5, $t5, 0x36ec
-/* 0C64A8 800C58A8 3C0C800E */  lui   $t4, %hi(D_800E3710) # $t4, 0x800e
-/* 0C64AC 800C58AC 258C3710 */  addiu $t4, %lo(D_800E3710) # addiu $t4, $t4, 0x3710
+/* 0C64A8 800C58A8 3C0C800E */  lui   $t4, %hi(sDialogueBoxDimensions) # $t4, 0x800e
+/* 0C64AC 800C58AC 258C3710 */  addiu $t4, %lo(sDialogueBoxDimensions) # addiu $t4, $t4, 0x3710
 /* 0C64B0 800C58B0 032D4021 */  addu  $t0, $t9, $t5
 .L800C58B4:
 /* 0C64B4 800C58B4 8D060000 */  lw    $a2, ($t0)

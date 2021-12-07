@@ -30,7 +30,7 @@ u8 D_800E2EF4[196] = {
     0x00, 0x00, 0x00, 0x00
 };
 
-Gfx D_800E2FB8[] = {
+Gfx dl_debug_font_settings[] = {
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
@@ -119,12 +119,18 @@ s32 render_printf(const char *format, ...) {
 #else
 GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 #endif
-GLOBAL_ASM("asm/non_matchings/printf/func_800B5F78.s")
+GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
 
+/**
+ * Set the colour of the current debug text.
+ */
 void set_render_printf_color(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_COLOR(red, green, blue, alpha)
 }
 
+/**
+ * Set the background colour of the current debug text.
+ */
 void set_render_printf_background_color(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha)
 }

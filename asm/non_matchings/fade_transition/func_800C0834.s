@@ -3,16 +3,16 @@ glabel func_800C0834
 /* 0C1438 800C0838 3C0C8013 */  lui   $t4, %hi(D_8012A754) # $t4, 0x8013
 /* 0C143C 800C083C 3C0B800E */  lui   $t3, %hi(D_800E31B8) # $t3, 0x800e
 /* 0C1440 800C0840 3C0A800E */  lui   $t2, %hi(D_800E31A8) # $t2, 0x800e
-/* 0C1444 800C0844 3C09800E */  lui   $t1, %hi(D_800E31B4) # $t1, 0x800e
+/* 0C1444 800C0844 3C09800E */  lui   $t1, %hi(sTransitionFlags) # $t1, 0x800e
 /* 0C1448 800C0848 3C078013 */  lui   $a3, %hi(gCurFadeAlpha) # $a3, 0x8013
-/* 0C144C 800C084C 3C068013 */  lui   $a2, %hi(D_8012A750) # $a2, 0x8013
-/* 0C1450 800C0850 3C05800E */  lui   $a1, %hi(D_800E31B0) # $a1, 0x800e
+/* 0C144C 800C084C 3C068013 */  lui   $a2, %hi(sTransitionOpacity) # $a2, 0x8013
+/* 0C1450 800C0850 3C05800E */  lui   $a1, %hi(sTransitionFadeTimer) # $a1, 0x800e
 /* 0C1454 800C0854 44816000 */  mtc1  $at, $f12
 /* 0C1458 800C0858 44801000 */  mtc1  $zero, $f2
-/* 0C145C 800C085C 24A531B0 */  addiu $a1, %lo(D_800E31B0) # addiu $a1, $a1, 0x31b0
-/* 0C1460 800C0860 24C6A750 */  addiu $a2, %lo(D_8012A750) # addiu $a2, $a2, -0x58b0
+/* 0C145C 800C085C 24A531B0 */  addiu $a1, %lo(sTransitionFadeTimer) # addiu $a1, $a1, 0x31b0
+/* 0C1460 800C0860 24C6A750 */  addiu $a2, %lo(sTransitionOpacity) # addiu $a2, $a2, -0x58b0
 /* 0C1464 800C0864 24E7A737 */  addiu $a3, %lo(gCurFadeAlpha) # addiu $a3, $a3, -0x58c9
-/* 0C1468 800C0868 252931B4 */  addiu $t1, %lo(D_800E31B4) # addiu $t1, $t1, 0x31b4
+/* 0C1468 800C0868 252931B4 */  addiu $t1, %lo(sTransitionFlags) # addiu $t1, $t1, 0x31b4
 /* 0C146C 800C086C 254A31A8 */  addiu $t2, %lo(D_800E31A8) # addiu $t2, $t2, 0x31a8
 /* 0C1470 800C0870 256B31B8 */  addiu $t3, %lo(D_800E31B8) # addiu $t3, $t3, 0x31b8
 /* 0C1474 800C0874 258CA754 */  addiu $t4, %lo(D_8012A754) # addiu $t4, $t4, -0x58ac

@@ -1,6 +1,6 @@
 glabel func_800C1130
-/* 0C1D30 800C1130 3C07800E */  lui   $a3, %hi(D_800E31B0) # $a3, 0x800e
-/* 0C1D34 800C1134 24E731B0 */  addiu $a3, %lo(D_800E31B0) # addiu $a3, $a3, 0x31b0
+/* 0C1D30 800C1130 3C07800E */  lui   $a3, %hi(sTransitionFadeTimer) # $a3, 0x800e
+/* 0C1D34 800C1134 24E731B0 */  addiu $a3, %lo(sTransitionFadeTimer) # addiu $a3, $a3, 0x31b0
 /* 0C1D38 800C1138 44842000 */  mtc1  $a0, $f4
 /* 0C1D3C 800C113C 94E20000 */  lhu   $v0, ($a3)
 /* 0C1D40 800C1140 3C03800E */  lui   $v1, 0x800e
@@ -105,10 +105,10 @@ glabel func_800C1130
 .L800C12B8:
 /* 0C1EB8 800C12B8 18A00048 */  blez  $a1, .L800C13DC
 /* 0C1EBC 800C12BC 00001025 */   move  $v0, $zero
-/* 0C1EC0 800C12C0 3C06800E */  lui   $a2, %hi(D_800E31D0) # $a2, 0x800e
-/* 0C1EC4 800C12C4 3C05800E */  lui   $a1, %hi(D_800E31C0) # $a1, 0x800e
-/* 0C1EC8 800C12C8 24A531C0 */  addiu $a1, %lo(D_800E31C0) # addiu $a1, $a1, 0x31c0
-/* 0C1ECC 800C12CC 24C631D0 */  addiu $a2, %lo(D_800E31D0) # addiu $a2, $a2, 0x31d0
+/* 0C1EC0 800C12C0 3C06800E */  lui   $a2, %hi(sTransitionTaskNum) # $a2, 0x800e
+/* 0C1EC4 800C12C4 3C05800E */  lui   $a1, %hi(sTransitionVtx) # $a1, 0x800e
+/* 0C1EC8 800C12C8 24A531C0 */  addiu $a1, %lo(sTransitionVtx) # addiu $a1, $a1, 0x31c0
+/* 0C1ECC 800C12CC 24C631D0 */  addiu $a2, %lo(sTransitionTaskNum) # addiu $a2, $a2, 0x31d0
 /* 0C1ED0 800C12D0 00002025 */  move  $a0, $zero
 .L800C12D4:
 /* 0C1ED4 800C12D4 4459F800 */  cfc1  $t9, $31
@@ -169,7 +169,7 @@ glabel func_800C1130
 /* 0C1FB0 800C13B0 00000000 */   nop   
 
 .L800C13B4:
-/* 0C1FB4 800C13B4 246331B4 */  addiu $v1, $v1, %lo(D_800E31B4)# 0x31b4
+/* 0C1FB4 800C13B4 246331B4 */  addiu $v1, $v1, %lo(sTransitionFlags)# 0x31b4
 /* 0C1FB8 800C13B8 94620000 */  lhu   $v0, ($v1)
 /* 0C1FBC 800C13BC 3401FFFF */  li    $at, 65535
 /* 0C1FC0 800C13C0 10410006 */  beq   $v0, $at, .L800C13DC

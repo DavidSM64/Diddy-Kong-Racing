@@ -514,7 +514,7 @@ glabel menu_track_select_init
 /* 08FB54 8008EF54 3C018012 */  lui   $at, %hi(D_801269F8) # $at, 0x8012
 /* 08FB58 8008EF58 AC2069F8 */  sw    $zero, %lo(D_801269F8)($at)
 .L8008EF5C:
-/* 08FB5C 8008EF5C 0C031525 */  jal   func_800C5494
+/* 08FB5C 8008EF5C 0C031525 */  jal   assign_dialogue_box_id
 /* 08FB60 8008EF60 24040007 */   li    $a0, 7
 /* 08FB64 8008EF64 0C01FFFB */  jal   func_8007FFEC
 /* 08FB68 8008EF68 24040002 */   li    $a0, 2
