@@ -228,6 +228,11 @@ class GenerateLD:
         files.sort(key = lambda x: (x[2], x[3])) # Sort tuples by RAM address and prioritize src files first.
         return files
 
+if os.path.exists('./dkr.ld'):
+    print("")
+else:
+    os.remove('./assets/' + VERSION + '/md5.txt')
+
 if os.path.exists('./assets/' + VERSION + '/md5.txt'):
     with open('./assets/' + VERSION + '/md5.txt', "rt") as a_file:
         with open('./assets/' + VERSION + '/assets.json',"rb") as f:
