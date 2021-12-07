@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8006A6B0 */
 
-#include "unknown_06B2B0.h"
+#include "thread3_main.h"
 
 #include <PR/os_cont.h>
 #include <PR/gu.h>
@@ -249,7 +249,7 @@ void func_8006A6B0(void) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006A6B0.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/func_8006A6B0.s")
 #endif
 
 // Unused.
@@ -264,10 +264,10 @@ s16 func_8006ABB4(s32 arg0) {
 }
 
 // Unused?
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006AC00.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/func_8006AC00.s")
 
 // Unused?
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006AE2C.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/func_8006AE2C.s")
 
 // Unused.
 s32 func_8006B018(s8 arg0) {
@@ -590,7 +590,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/load_level.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/load_level.s")
 #endif
 
 void func_8006BD10(f32 arg0) {
@@ -1369,7 +1369,7 @@ void func_8006CCF0(s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006CCF0.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/func_8006CCF0.s")
 #endif
 
 void func_8006D8A4(void) {
@@ -1624,7 +1624,7 @@ void func_8006DCF8(s32 updateRate) {
 }
 
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006DCF8.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/func_8006DCF8.s")
 #endif
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
@@ -1862,7 +1862,7 @@ void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006ECFC.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/func_8006ECFC.s")
 
 s32 func_8006EFB8(void) {
     //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
@@ -1902,7 +1902,7 @@ void func_8006EFDC(void) {
     gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[3];
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_06B2B0/func_8006EFDC.s")
+GLOBAL_ASM("asm/non_matchings/thread3_main/func_8006EFDC.s")
 #endif
 
 void func_8006F140(s32 arg0) {

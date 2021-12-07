@@ -5,7 +5,7 @@
 #include "menu.h"
 #include "unknown_00BC20.h"
 #include "unknown_043920.h"
-#include "unknown_06B2B0.h"
+#include "thread3_main.h"
 
 /************ .data ************/
 

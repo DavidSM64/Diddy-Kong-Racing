@@ -7,7 +7,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "camera.h"
-#include "unknown_06B2B0.h"
+#include "thread3_main.h"
 
 extern u32 osTvType;
 

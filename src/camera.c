@@ -4,7 +4,7 @@
 #include "camera.h"
 #include "audio.h"
 #include "unknown_00BC20.h"
-#include "unknown_06B2B0.h"
+#include "thread3_main.h"
 #include "unknown_0255E0.h"
 #include "video.h"
 #include "lib/src/libc/rmonPrintf.h"

@@ -52,6 +52,11 @@ s32 D_8012630C;
 OSScClient D_80126310;
 
 /******************************/
+
+/**
+ * Set up the framebuffers and the VI.
+ * Framebuffers are allocated at runtime.
+ */
 void init_video(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
         gVideoRefreshRate = REFRESH_50HZ;
@@ -91,25 +96,43 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     D_801262E4 = 3;
 }
 
+/**
+ * Set the current video mode to the id specified.
+ */
 void set_video_mode_index(s32 videoModeIndex) {
     gVideoModeIndex = videoModeIndex;
 }
 
-/* Unused? */
-s32 get_video_mode_index(void) {
+/**
+ * Unused function that would return the current video mode index.
+ */
+UNUSED s32 get_video_mode_index(void) {
     return gVideoModeIndex;
 }
 
-/* Unused? */
-void set_video_width_and_height_from_index(s32 fbIndex) {
+/**
+ * Unused function that would change the framebuffer dimensions.
+ * Since only one kind of video mode is ever used, this function is never called.
+ */
+UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
     gVideoFbWidths[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].height;
 }
 
+/**
+ * Return the current framebuffer dimenions as a single s32 value.
+ * The high 16 bits are the height of the frame, and the low 16 bits are the width.
+ */
 s32 get_video_width_and_height_as_s32(void) {
     return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
 }
 
+/**
+ * Initialise the VI settings.
+ * It first checks the TV type ad then will set the properties of the VI
+ * depending on the gVideoModeIndex value.
+ * Most of these go unused, as the value is always 1.
+ */
 void init_vi_settings(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
@@ -201,6 +224,10 @@ void init_vi_settings(void) {
     osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
 }
 
+/**
+ * Allocate the selected framebuffer index from the main pool.
+ * Will also allocate the depthbuffer if it does not already exist.
+ */
 void init_framebuffer(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
         func_80071538((u8 *)gVideoFramebuffers[index]);
@@ -286,6 +313,10 @@ s32 func_8007AB34(void) {
     return (s32)((f32)gVideoRefreshRate / (f32)D_80126309);
 }
 
+/**
+ * Flips the current framebuffer index, swapping to the other framebuffer
+ * for the next frame, then update the current and previous framebuffer pointers.
+ */
 void swap_framebuffers(void) {
     gVideoLastFramebuffer = gVideoFramebuffers[gVideoCurrFbIndex];
     gVideoLastDepthBuffer = gVideoDepthBuffer;
@@ -294,6 +325,9 @@ void swap_framebuffers(void) {
     gVideoCurrDepthBuffer = gVideoDepthBuffer;
 }
 
+/**
+ * Copy byte-by-byte a region from one address to another.
+ */
 void memory_copy(u8 *src, u8 *dest, s32 len) {
     s32 i;
 
