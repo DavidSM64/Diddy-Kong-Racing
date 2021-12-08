@@ -16,20 +16,20 @@
 
 ALSeqPlayer *gMusicPlayer = NULL;
 ALSeqPlayer *gSndFxPlayer = NULL;
-u8 musicRelativeVolume = 0x7F;
-u8 sfxRelativeVolume = 0x7F;
+u8 musicRelativeVolume = 127;
+u8 sfxRelativeVolume = 127;
 u8 D_800DC640 = 1;
 u8 D_800DC644 = 0;
 s32 D_800DC648 = 0;
 s32 audioPrevCount = 0;
 f32 sMusicFadeVolume = 1.0f;
-s32 musicVolumeSliderPercentage = 0x100;
+s32 musicVolumeSliderPercentage = 256;
 s32 D_800DC658 = 0;
 u8 D_800DC65C = 0;
 u8 D_800DC660 = 0;
 s32 D_800DC664 = 0; // Currently unknown, might be a different type.
 s32 D_800DC668 = 0; // Currently unknown, might be a different type.
-s32 D_800DC66C = 0x100;
+s32 sMusicVolumeMultiplier = 256; // This is never not 256...
 u8 D_800DC670 = 0;
 
 /*******************************/
@@ -76,7 +76,7 @@ s32 D_80115D20;
 s32 D_80115D24;
 u32 D_80115D28;
 u32 D_80115D2C;
-s16 D_80115D30;
+s16 sMusicTempo;
 f32 D_80115D34;
 s32 sMusicDelayTimer;
 s32 sMusicDelayLength;
@@ -167,7 +167,7 @@ void audio_init(OSSched *arg0) {
     audioStartThread();
     func_80000968(0);
     free_from_memory_pool(reg_s2);
-    func_8000318C(10);
+    set_sound_channel_count(10);
     D_800DC648 = 0;
     D_80115D40 = 0;
     D_80115D41 = 0;
@@ -181,12 +181,12 @@ void func_80000890(u8 arg0) {
     if (!D_80115F79) {
         D_80115F78 = arg0;
         if (D_80115F78 == 0) {
-            D_800DC66C = 256;
+            sMusicVolumeMultiplier = 256;
             set_relative_volume_for_music(musicRelativeVolume);
-            func_80004A60(0, D_800DC66C * 128 - 1);
-            func_80004A60(1, D_800DC66C * 128 - 1);
-            func_80004A60(2, D_800DC66C * 128 - 1);
-            func_80004A60(4, D_800DC66C * 128 - 1);
+            func_80004A60(0, sMusicVolumeMultiplier * 128 - 1);
+            func_80004A60(1, sMusicVolumeMultiplier * 128 - 1);
+            func_80004A60(2, sMusicVolumeMultiplier * 128 - 1);
+            func_80004A60(4, sMusicVolumeMultiplier * 128 - 1);
         }
     }
 }
@@ -195,7 +195,7 @@ void func_80000968(s32 arg0) {
     switch (arg0) {
         case 1:
             func_80004A60(0, 0);
-            func_80004A60(1, 0x7FFF);
+            func_80004A60(1, 32767);
             func_80004A60(2, 0);
             func_80004A60(4, 0);
             alCSPSetVol(gMusicPlayer, (s16)(musicRelativeVolume * musicVolumeSliderPercentage >> 2));
@@ -203,21 +203,21 @@ void func_80000968(s32 arg0) {
             break;
         case 2:
             func_80004A60(0, 0);
-            func_80004A60(1, 0x7FFF);
-            func_80004A60(2, 0x7FFF);
-            func_80004A60(4, 0x7FFF);
+            func_80004A60(1, 32767);
+            func_80004A60(2, 32767);
+            func_80004A60(4, 32767);
             break;
         case 3:
             func_80004A60(0, 0);
-            func_80004A60(1, 0x7FFF);
+            func_80004A60(1, 32767);
             func_80004A60(2, 0);
             func_80004A60(4, 0);
             break;
         default:
-            func_80004A60(0, 0x7FFF);
-            func_80004A60(1, 0x7FFF);
-            func_80004A60(2, 0x7FFF);
-            func_80004A60(4, 0x7FFF);
+            func_80004A60(0, 32767);
+            func_80004A60(1, 32767);
+            func_80004A60(2, 32767);
+            func_80004A60(4, 32767);
             alCSPSetVol(gMusicPlayer, (s16)(musicRelativeVolume * musicVolumeSliderPercentage));
             alCSPSetVol(gSndFxPlayer, (s16)(sfxGetVolumeSlider() * sfxRelativeVolume));
             break;
@@ -337,8 +337,8 @@ void handle_music_fade(u8 updateRate) {
 
     func_8000232C(gMusicPlayer, D_80115CFC, &D_800DC65C, &D_80115D88);
     func_8000232C(gSndFxPlayer, D_80115D00, &D_800DC660, &D_80115E80);
-    if (D_80115D30 == -1 && gMusicPlayer->target) {
-        D_80115D30 = 0x03938700 / alCSPGetTempo(gMusicPlayer);
+    if (sMusicTempo == -1 && gMusicPlayer->target) {
+        sMusicTempo = 60000000 / alCSPGetTempo(gMusicPlayer);
     }
 }
 
@@ -478,16 +478,22 @@ void func_800014BC(f32 arg0) {
     musicSetTempo((s32)((f32)(u32)(musicGetTempo() & 0xFF) * arg0));
 }
 
+/**
+ * Set the tempo of the current playing background music.
+ */
 void musicSetTempo(s32 tempo) {
     if (tempo != 0) {
         f32 inv_tempo = (1.0f / tempo);
         alCSPSetTempo(gMusicPlayer, (s32)(inv_tempo * 60000000.0f));
-        D_80115D30 = tempo;
+        sMusicTempo = tempo;
     }
 }
 
+/**
+ * Return the tempo of the current playing background music.
+ */
 s16 musicGetTempo(void) {
-    return D_80115D30;
+    return sMusicTempo;
 }
 
 u8 music_is_playing(void) {
@@ -519,9 +525,9 @@ f32 func_800015F8(void) {
         *tmp2 = delta_f / D_800E49E0 + D_80115D34;
     }
     if (D_80115D40 == 0) {
-        D_80115D30 = 182;
+        sMusicTempo = 182;
     }
-    tmp = D_800E49E8 / (f32)D_80115D30;
+    tmp = D_800E49E8 / (f32)sMusicTempo;
     while (D_80115D34 > tmp) {
         D_80115D34 -= tmp;
     }
@@ -601,16 +607,16 @@ void set_relative_volume_for_music(u8 vol) {
 
     musicRelativeVolume = vol;
     normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * sMusicFadeVolume;
-    alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C * normalized_vol) >> 8));
+    alCSPSetVol(gMusicPlayer, (s16)((s32)(sMusicVolumeMultiplier * normalized_vol) >> 8));
 }
 
 void set_music_volume_slider(u32 slider_val) {
     f32 normalized_vol;
 
-    slider_val = (slider_val < 0x101) ? slider_val : 256;
+    slider_val = (slider_val <= 256) ? slider_val : 256;
     musicVolumeSliderPercentage = slider_val;
     normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * sMusicFadeVolume;
-    alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C * normalized_vol) >> 8));
+    alCSPSetVol(gMusicPlayer, (s16)((s32)(sMusicVolumeMultiplier * normalized_vol) >> 8));
 }
 
 u8 musicGetRelativeVolume(void) {

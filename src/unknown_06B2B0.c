@@ -369,11 +369,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         noPlayers = FALSE;
     }
     if (numberOfPlayers == ONE_PLAYER) {
-        func_8000318C(8);
+        set_sound_channel_count(8);
     } else if (numberOfPlayers == TWO_PLAYERS) {
-        func_8000318C(12);
+        set_sound_channel_count(12);
     } else {
-        func_8000318C(16);
+        set_sound_channel_count(16);
     }
 
     settings = get_settings();
@@ -873,7 +873,6 @@ void init_game(void) {
  * The main gameplay loop.
  * Contains all game logic, audio and graphics processing.
  */
-
 void main_game_loop(void) {
     s32 debugLoopCounter;
     s32 framebufferSize;
@@ -1431,9 +1430,9 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_8006ECFC(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
-    func_80004A60(0, 0x7FFF);
-    func_80004A60(1, 0x7FFF);
-    func_80004A60(2, 0x7FFF);
+    func_80004A60(0, 32767);
+    func_80004A60(1, 32767);
+    func_80004A60(2, 32767);
     func_80065EA0();
 
     if (!D_80123514) {

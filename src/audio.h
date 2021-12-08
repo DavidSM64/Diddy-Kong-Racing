@@ -20,7 +20,7 @@ extern u8 D_800DC65C;
 extern u8  D_800DC660;
 extern s32 D_800DC664;
 extern s32 D_800DC668;
-extern s32 D_800DC66C;
+extern s32 sMusicVolumeMultiplier;
 extern u8 D_800DC670;
 extern u8 D_800DC65C;
 
@@ -74,7 +74,7 @@ void func_80000C1C(void);
 void func_80000C2C(void);
 void set_sndfx_player_voice_limit(u8 voiceLimit);
 void func_80000C68(u8 arg0);
-void set_music_fade_timer(s32 arg0);
+void set_music_fade_timer(s32 time);
 void func_80000CBC(void);
 void handle_music_fade(u8 updateRate);
 void func_80000FDC(u16 arg0, s32 arg1, f32 arg2);
