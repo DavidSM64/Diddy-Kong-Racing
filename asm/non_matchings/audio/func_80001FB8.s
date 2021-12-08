@@ -2,8 +2,8 @@ glabel func_80001FB8
 /* 002BB8 80001FB8 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 002BBC 80001FBC 308EFFFF */  andi  $t6, $a0, 0xffff
 /* 002BC0 80001FC0 000EC880 */  sll   $t9, $t6, 2
-/* 002BC4 80001FC4 3C188011 */  lui   $t8, %hi(D_80115D18) # $t8, 0x8011
-/* 002BC8 80001FC8 8F185D18 */  lw    $t8, %lo(D_80115D18)($t8)
+/* 002BC4 80001FC4 3C188011 */  lui   $t8, %hi(sSoundEffectsPool) # $t8, 0x8011
+/* 002BC8 80001FC8 8F185D18 */  lw    $t8, %lo(sSoundEffectsPool)($t8)
 /* 002BCC 80001FCC 032EC821 */  addu  $t9, $t9, $t6
 /* 002BD0 80001FD0 0019C840 */  sll   $t9, $t9, 1
 /* 002BD4 80001FD4 AFBF0014 */  sw    $ra, 0x14($sp)
