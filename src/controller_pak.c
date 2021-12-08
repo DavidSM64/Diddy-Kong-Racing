@@ -83,7 +83,7 @@ u8 func_80072250(s32 arg0) {
     if ((arg0 == 0 || arg0 == 1) && func_8000E158()) {
         arg0 = 1 - arg0;
     }
-    return func_8006A4F8(arg0);
+    return get_player_id(arg0);
 }
 
 void func_80072298(u8 arg0) {

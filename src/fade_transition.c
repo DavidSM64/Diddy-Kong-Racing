@@ -334,15 +334,19 @@ s32 handle_transitions(s32 updateRate) {
     return sTransitionStatus;
 }
 
+/**
+ * The rendering portion of transitions.
+ * First establishes an orthogonal matrix, then renders a transition effect onscreen.
+ */
 void render_fade_transition(s32 dlist, s32 arg1, s32 arg2) {
     if (sTransitionStatus != TRANSITION_NONE) {
         if (osTvType == TV_TYPE_PAL) {
-            func_80067F20(1.4f);
+            set_ortho_matrix_height(1.4f);
         } else {
-            func_80067F20(1.2f);
+            set_ortho_matrix_height(1.2f);
         }
         func_80067F2C(dlist, arg1);
-        func_80067F20(1.0f);
+        set_ortho_matrix_height(1.0f);
         switch (gCurFaceTransition) {
             case FADE_FULLSCREEN:
                 render_fade_fullscreen(dlist, arg1, arg2);

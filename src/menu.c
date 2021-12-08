@@ -1787,7 +1787,7 @@ void menu_init(u32 menuId) {
 /**
  * Runs every frame. Calls the loop function of the current menu id
  */
-s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 arg4) {
+s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 updateRate) {
     s32 sp1C;
 
     D_801263A0 = *arg0;
@@ -1797,64 +1797,64 @@ s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 arg4) {
     update_controller_sticks();
     switch (gCurrentMenuId) {
         case MENU_LOGOS:
-            sp1C = menu_logo_screen_loop(arg4);
+            sp1C = menu_logo_screen_loop(updateRate);
             break;
         case MENU_TITLE:
-            sp1C = menu_title_screen_loop(arg4);
+            sp1C = menu_title_screen_loop(updateRate);
             break;
         case MENU_OPTIONS:
-            sp1C = menu_options_loop(arg4);
+            sp1C = menu_options_loop(updateRate);
             break;
         case MENU_AUDIO_OPTIONS:
-            sp1C = menu_audio_options_loop(arg4);
+            sp1C = menu_audio_options_loop(updateRate);
             break;
         case MENU_SAVE_OPTIONS:
-            sp1C = menu_save_options_loop(arg4);
+            sp1C = menu_save_options_loop(updateRate);
             break;
         case MENU_MAGIC_CODES:
-            sp1C = menu_magic_codes_loop(arg4);
+            sp1C = menu_magic_codes_loop(updateRate);
             break;
         case MENU_MAGIC_CODES_LIST:
-            sp1C = menu_magic_codes_list_loop(arg4);
+            sp1C = menu_magic_codes_list_loop(updateRate);
             break;
         case MENU_CHARACTER_SELECT:
-            sp1C = menu_character_select_loop(arg4);
+            sp1C = menu_character_select_loop(updateRate);
             break;
         case MENU_FILE_SELECT:
-            sp1C = menu_file_select_loop(arg4);
+            sp1C = menu_file_select_loop(updateRate);
             break;
         case MENU_GAME_SELECT:
-            sp1C = menu_game_select_loop(arg4);
+            sp1C = menu_game_select_loop(updateRate);
             break;
         case MENU_TRACK_SELECT:
-            sp1C = menu_track_select_loop(arg4);
+            sp1C = menu_track_select_loop(updateRate);
             break;
         case MENU_UNKNOWN_5:
-            sp1C = menu_5_loop(arg4);
+            sp1C = menu_5_loop(updateRate);
             break;
         case MENU_RESULTS:
-            sp1C = menu_results_loop(arg4);
+            sp1C = menu_results_loop(updateRate);
             break;
         case MENU_TROPHY_RACE_ROUND:
-            sp1C = menu_trophy_race_round_loop(arg4);
+            sp1C = menu_trophy_race_round_loop(updateRate);
             break;
         case MENU_TROPHY_RACE_RANKINGS:
-            sp1C = menu_trophy_race_rankings_loop(arg4);
+            sp1C = menu_trophy_race_rankings_loop(updateRate);
             break;
         case MENU_UNKNOWN_23:
-            sp1C = menu_23_loop(arg4);
+            sp1C = menu_23_loop(updateRate);
             break;
         case MENU_GHOST_DATA:
-            sp1C = menu_ghost_data_loop(arg4);
+            sp1C = menu_ghost_data_loop(updateRate);
             break;
         case MENU_CREDITS:
-            sp1C = menu_credits_loop(arg4);
+            sp1C = menu_credits_loop(updateRate);
             break;
         case MENU_BOOT:
-            sp1C = menu_boot_loop(arg4);
+            sp1C = menu_boot_loop(updateRate);
             break;
         case MENU_CAUTION:
-            sp1C = menu_caution_loop(arg4);
+            sp1C = menu_caution_loop(updateRate);
             break;
     }
     *arg0 = (Gfx *)D_801263A0;
@@ -2173,7 +2173,7 @@ void menu_logos_screen_init(void) {
     func_80066818(0, 1);
 }
 
-s32 menu_logo_screen_loop(s32 arg0) {
+s32 menu_logo_screen_loop(s32 updateRate) {
     s32 phi_v0;  // sp24?
     s32 yOffset; // sp28
     s32 sp20;
@@ -2184,14 +2184,14 @@ s32 menu_logo_screen_loop(s32 arg0) {
             func_800C01D8(&D_800E1DE8);
             gMenuDelay = 1;
         }
-        D_80126450 -= arg0 / 50.0f;
+        D_80126450 -= updateRate / 50.0f;
     } else {
         yOffset = 0;
         if (D_80126450 < 2.17f && gMenuDelay == 0) {
             func_800C01D8(&D_800E1DE8);
             gMenuDelay = 1;
         }
-        D_80126450 -= arg0 / 60.0f;
+        D_80126450 -= updateRate / 60.0f;
     }
     if (D_80126450 <= 0.0f) {
         func_80066894(0, 0);
@@ -2262,7 +2262,7 @@ void menu_title_screen_init(void) {
     gSaveFileIndex = 0;
     gTitleScreenCurrentOption = 0;
     gNumberOfActivePlayers = 4;
-    func_8006A434();
+    initialise_player_ids();
     play_music(1);
     D_800DF760 = musicGetRelativeVolume();
     if (D_800DF458 != 0) {
@@ -2537,7 +2537,7 @@ s32 menu_audio_options_loop(s32 arg0) {
         // Check all 4 controllers for inputs
         for (i = 0; i < 4; i++) {
             buttonInputs |= get_buttons_pressed_from_player(i);
-            phi_a2 += func_8006A59C(i);
+            phi_a2 += clamp_joystick_x_axis(i);
             contY += gControllersYAxisDirection[i];
             contX += gControllersXAxisDirection[i];
         }
@@ -3413,7 +3413,7 @@ void menu_character_select_init(void) {
     u8 *temp;
 
     breakTheLoop = FALSE;
-    func_8006A434();
+    initialise_player_ids();
     if (is_drumstick_unlocked()) {
         if (is_tt_unlocked()) {
             D_801263CC = D_800DFF40;
@@ -3545,14 +3545,14 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_loop.s")
 
 void func_8008C128(void);
 
-s32 menu_character_select_loop(s32 arg0) {
+s32 menu_character_select_loop(s32 updateRate) {
     s32 i;
     s32 phi_a0;
     s32 phi_t3;
     s8 activePlayers[4];
 
-    draw_character_select_text(arg0);
-    func_8008C168(arg0);
+    draw_character_select_text(updateRate);
+    func_8008C168(updateRate);
     func_8008E4EC();
 
     for (i = 0; i < 4; i++) {
@@ -3574,7 +3574,7 @@ s32 menu_character_select_loop(s32 arg0) {
         }
         return 0; // This return needs to be here.
     } else if (gMenuDelay > 0) {
-        gMenuDelay += arg0;
+        gMenuDelay += updateRate;
         if (gMenuDelay >= 0x1F) {
             phi_t3 = 0;
             if (D_800DFFD0 == 0) {
@@ -3594,7 +3594,7 @@ s32 menu_character_select_loop(s32 arg0) {
                 }
             }
             randomize_ai_racer_slots(phi_a0);
-            func_8006A458(gActivePlayersArray);
+            assign_player_ids(gActivePlayersArray);
 
             gIsInTracksMode = 1;
             if (phi_t3 >= gNumberOfActivePlayers) {
@@ -3613,7 +3613,7 @@ s32 menu_character_select_loop(s32 arg0) {
             }
         }
     } else if (gMenuDelay < 0) {
-        gMenuDelay -= arg0;
+        gMenuDelay -= updateRate;
         if (gMenuDelay < -0x1E) {
             func_80000B28();
             func_8008C128();
@@ -3675,9 +3675,9 @@ void menu_caution_init(void) {
     gPlayerHasSeenCautionMenu = 1;
 }
 
-s32 menu_caution_loop(s32 arg0) {
+s32 menu_caution_loop(s32 updateRate) {
     if (gMenuDelay != 0) {
-        gMenuDelay += arg0;
+        gMenuDelay += updateRate;
     } else if (gIgnorePlayerInput <= 0 && (get_buttons_pressed_from_player(0) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
         func_80001D04(0xEF, NULL);
         gMenuDelay = 1;
@@ -3691,7 +3691,7 @@ s32 menu_caution_loop(s32 arg0) {
         menu_init(MENU_GAME_SELECT);
     }
     if (gIgnorePlayerInput > 0) {
-        gIgnorePlayerInput -= arg0;
+        gIgnorePlayerInput -= updateRate;
     }
     return 0;
 }
@@ -5618,8 +5618,8 @@ void update_controller_sticks(void) {
     for (i = 0; i < 4; i++) {
         prevXAxis = gControllersXAxis[i];
         prevYAxis = gControllersYAxis[i];
-        gControllersXAxis[i] = func_8006A59C(i);
-        gControllersYAxis[i] = func_8006A5E0(i);
+        gControllersXAxis[i] = clamp_joystick_x_axis(i);
+        gControllersYAxis[i] = clamp_joystick_y_axis(i);
         gControllersXAxisDirection[i] = 0;
         gControllersYAxisDirection[i] = 0;
         if (gControllersXAxis[i] < -STICK_DEADZONE && prevXAxis > -STICK_DEADZONE) {

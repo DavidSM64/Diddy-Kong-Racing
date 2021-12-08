@@ -935,7 +935,7 @@ void main_game_loop(void) {
             func_8006CCF0(sLogicUpdateRate);
             break;
         case DRAW_CRASH_SCREEN: // EPC (lockup display)
-            func_800B77D4(sLogicUpdateRate);
+            lockup_screen_loop(sLogicUpdateRate);
             break;
     }
 
@@ -1975,7 +1975,7 @@ void func_8006F398(void) {
     u8 *first_racer_data;
     u8 *second_racer_data;
 
-    func_8006A50C();
+    swap_player_1_and_2_ids();
     func_8000E194();
 
     first_racer_data = (u8 *)(gSettingsPtr->racers);

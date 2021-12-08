@@ -27,6 +27,9 @@
 #define CONTROLLER_MISSING -1
 #define CONTROLLER_EXISTS   0
 
+#define JOYSTICK_DEADZONE 8
+#define JOYSTICK_MAX_RANGE 70
+
 enum ViewportCount {
     VIEWPORTS_COUNT_1_PLAYER,
     VIEWPORTS_COUNT_2_PLAYERS,
@@ -54,13 +57,13 @@ typedef struct ScreenViewport {
 } ScreenViewport;
 
 /* Size: 6 bytes */
-typedef struct unk80121110 {
-    u16 unk0;
-    s8 unk2;
-    s8 unk3;
+typedef struct ControllerData {
+    u16 buttonData; // Buttons
+    s8 rawStickX;
+    s8 rawStickY;
     s8 unk4;
     s8 unk6;
-} unk80121110;
+} ControllerData;
 
 extern ScreenViewport gScreenViewports[4];
 
@@ -74,7 +77,7 @@ extern unk8011D510 D_800DD288;
 
 extern unk8011D510 D_800DD2A0;
 
-extern Matrix D_800DD2B8;
+extern Matrix gOrthoMatrix;
 
 extern u8 D_800DD2F8[8];
 
@@ -118,7 +121,7 @@ s32 func_80066BA8(s32 viewPortIndex, s32 *upperLeftX, s32 *upperLeftY, s32 *lowe
 void func_80066C2C(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
 void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3);
 void func_80066CDC(Gfx **dlist, s32 arg1);
-void func_80067F20(f32 arg0);
+void set_ortho_matrix_height(f32 value);
 void func_80067F2C(Gfx **dlist, s32 *arg1);
 void func_8006807C(Gfx **dlist, s32 *arg1);
 void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
@@ -134,18 +137,18 @@ Matrix *func_80069DBC(void);
 f32 func_80069DC8(f32 x, f32 y, f32 z);
 void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void func_80069F28(f32 arg0);
-void func_8006A03C(f32 *mtx);
+UNUSED void debug_print_float_matrix_values(f32 *mtx);
 OSMesgQueue *func_8006A100(void);
-void func_8006A434(void);
-void func_8006A458(s8 *activePlayers);
-u8 func_8006A4F8(s32 arg0);
-void func_8006A50C(void);
-u16 get_buttons_held_from_player(s32 arg0);
-u16 get_buttons_pressed_from_player(s32 arg0);
-u16 func_8006A578(s32 arg0);
-s32 func_8006A59C(s32 arg0);
-s32 func_8006A5E0(s32 arg0);
-s32 func_8006A624(s8 arg0);
+void initialise_player_ids(void);
+void assign_player_ids(s8 *activePlayers);
+u8 get_player_id(s32 player);
+void swap_player_1_and_2_ids(void);
+u16 get_buttons_held_from_player(s32 player);
+u16 get_buttons_pressed_from_player(s32 player);
+UNUSED u16 get_buttons_released_from_player(s32 player);
+s32 clamp_joystick_x_axis(s32 player);
+s32 clamp_joystick_y_axis(s32 player);
+s32 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 
 // Non Matching

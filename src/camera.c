@@ -51,26 +51,26 @@ s16 D_800DD138[8] = {
 
 // RSP Viewports
 Vp D_800DD148[20] = {
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
-    { 0, 0, 0x01FF, 0, 0, 0, 0x01FF, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { 0, 0, 511, 0, 0, 0, 511, 0 },
 };
 
 unk8011D510 D_800DD288 = {
@@ -81,7 +81,7 @@ unk8011D510 D_800DD2A0 = {
     0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f,
 };
 
-Matrix D_800DD2B8 = {
+Matrix gOrthoMatrix = {
     { 1.0f, 0.0f, 0.0f, 0.0f },
     { 0.0f, 1.0f, 0.0f, 0.0f },
     { 0.0f, 0.0f, 0.0f, 0.0f },
@@ -128,15 +128,15 @@ Matrix D_80120FE0;
 Matrix D_80121020;
 Matrix D_80121060;
 Matrix D_801210A0;
-OSMesgQueue D_801210E0;
-OSMesg D_801210F8;
+OSMesgQueue sSIMesgQueue;
+OSMesg sSIMesgBuf;
 OSMesg D_801210FC;
 OSContStatus status;
 s32 D_80121108[2]; //Padding?
-unk80121110 D_80121110[8];
-u16 D_80121140[4];
+ControllerData sControllerData[8];
+u16 sControllerButtonsPressed[4];
 u16 D_80121148[4];
-u8 D_80121150[16];
+u8 sPlayerID[16];
 
 /******************************/
 
@@ -697,8 +697,13 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80067D3C.s")
 
-void func_80067F20(f32 arg0) {
-    D_800DD2B8[1][1] = arg0;
+/**
+ * Sets the Y value of the Y axis in the matrix to the passed value.
+ * This is used to vertically scale ortho geometry to look identical across NTSC and PAL systems.
+ */
+
+void set_ortho_matrix_height(f32 value) {
+    gOrthoMatrix[1][1] = value;
 }
 
 void func_80067F2C(Gfx **dlist, s32 *arg1) {
@@ -709,7 +714,7 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     widthAndHeight = get_video_width_and_height_as_s32();
     height = widthAndHeight >> 0x10;
     width = widthAndHeight & 0xFFFF;
-    func_8006F870(D_800DD2B8, *arg1);
+    func_8006F870(gOrthoMatrix, *arg1);
     D_80120D88[0] = *arg1;
     D_800DD148[D_80120CE4 + 5].vp.vscale[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vscale[1] = width * 2;
@@ -725,7 +730,7 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     while (i < 4) { // for loop doesn't match here.
         j = 0;
         while (j < 4) {
-            D_80120F20[i][j] = D_800DD2B8[i][j];
+            D_80120F20[i][j] = gOrthoMatrix[i][j];
             j++;
         }
         i++;
@@ -863,7 +868,10 @@ void func_80069F28(f32 arg0) {
 }
 
 #ifdef NON_MATCHING
-// Unused. Prints/Displays a 4x4 fixed-point RSP matrix.
+/**
+ * Unused function that prints out the passed matrix values to the debug output.
+ * This function prints in fixed point.
+ */
 void func_80069F64(s16 *mtx) {
     s32 i, j;
     s32 val;
@@ -882,8 +890,11 @@ void func_80069F64(s16 *mtx) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80069F64.s")
 #endif
 
-// Unused. Prints/Displays a 4x4 floating-point matrix.
-void func_8006A03C(f32 *mtx) {
+/**
+ * Unused function that prints out the passed matrix values to the debug output.
+ * This function prints in floating point.
+ */
+UNUSED void debug_print_float_matrix_values(f32 *mtx) {
     s32 i, j;
 
     for (i = 0; i < 4; i++) {
@@ -896,23 +907,22 @@ void func_8006A03C(f32 *mtx) {
 }
 
 OSMesgQueue *func_8006A100(void) {
-    return &D_801210E0;
+    return &sSIMesgQueue;
 }
 
 /**
  * Initialise the player controllers, and return the status when finished.
  */
-
 s32 init_controllers(void) {
     s32 *temp1; // Unused
     u8 bitpattern;
     s32 *temp2; // Unused
 
-    osCreateMesgQueue(&D_801210E0, &D_801210F8, 1);
-    osSetEventMesg(OS_EVENT_SI, &D_801210E0, D_801210FC);
-    osContInit(&D_801210E0, &bitpattern, &status);
-    osContStartReadData(&D_801210E0);
-    func_8006A434();
+    osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
+    osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, D_801210FC);
+    osContInit(&sSIMesgQueue, &bitpattern, &status);
+    osContStartReadData(&sSIMesgQueue);
+    initialise_player_ids();
 
     D_800DD300 = 0;
 
@@ -920,7 +930,7 @@ s32 init_controllers(void) {
         return CONTROLLER_EXISTS;
     }
 
-    if (!bitpattern) {}
+    if (!bitpattern) {} // Fakematch
 
     D_800DD300 = 1;
 
@@ -929,77 +939,112 @@ s32 init_controllers(void) {
 
 GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
 
-void func_8006A434(void) {
+/**
+ * Set the first 4 player ID's to the controller numbers, so players can input in the menus after boot.
+ */
+void initialise_player_ids(void) {
     s32 i;
     for (i = 0; i < 4; i++) {
-        D_80121150[i] = i;
+        sPlayerID[i] = i;
     }
 }
 
-void func_8006A458(s8 *activePlayers) {
+/**
+ * Assign the first four player ID's to the index of the connected players.
+ * Assign the next four player ID's to the index of the players who are not connected.
+ */
+void assign_player_ids(s8 *activePlayers) {
     s32 i;
     s32 temp = 0;
     for (i = 0; i < 4; i++) {
         if (activePlayers[i]) {
-            D_80121150[temp++] = i;
+            sPlayerID[temp++] = i;
         }
     }
     for (i = 0; i < 4; i++) {
         if (!activePlayers[i]) {
-            D_80121150[temp++] = i;
+            sPlayerID[temp++] = i;
         }
     }
 }
 
-u8 func_8006A4F8(s32 arg0) {
-    return D_80121150[arg0];
+/**
+ * Returns the id of the selected index.
+ */
+u8 get_player_id(s32 player) {
+    return sPlayerID[player];
 }
 
-void func_8006A50C(void) {
-    u8 temp = D_80121150[0];
-    D_80121150[0] = D_80121150[1];
-    D_80121150[1] = temp;
+/**
+ * Swaps the ID's of the first two indexes.
+ * This applies in 2 player adventure, so that player 2 can control the car in the overworld.
+ */
+void swap_player_1_and_2_ids(void) {
+    u8 tempID = sPlayerID[0];
+    sPlayerID[0] = sPlayerID[1];
+    sPlayerID[1] = tempID;
 }
 
-u16 get_buttons_held_from_player(s32 arg0) {
-    return D_80121110[D_80121150[arg0]].unk0;
+/**
+ * Returns the buttons that are currently pressed down on the controller.
+ */
+u16 get_buttons_held_from_player(s32 player) {
+    return sControllerData[sPlayerID[player]].buttonData;
 }
 
-u16 get_buttons_pressed_from_player(s32 arg0) {
-    return D_80121140[D_80121150[arg0]];
+/**
+ * Returns the buttons that are newly pressed during that frame.
+ */
+u16 get_buttons_pressed_from_player(s32 player) {
+    return sControllerButtonsPressed[sPlayerID[player]];
 }
 
-u16 func_8006A578(s32 arg0) {
-    return D_80121148[D_80121150[arg0]];
+/**
+ * Unused function that returns the buttons that are no longer pressed in that frame.
+ */
+UNUSED u16 get_buttons_released_from_player(s32 player) {
+    return D_80121148[sPlayerID[player]];
 }
 
-s32 func_8006A59C(s32 arg0) {
-    func_8006A624(D_80121110[D_80121150[arg0]].unk2);
+/**
+ * Clamps the X joystick axis of the selected player to 70 and returns it.
+ */
+s32 clamp_joystick_x_axis(s32 player) {
+    return clamp_joystick(sControllerData[sPlayerID[player]].rawStickX);
 }
 
-s32 func_8006A5E0(s32 arg0) {
-    func_8006A624(D_80121110[D_80121150[arg0]].unk3);
+/**
+ * Clamps the Y joystick axis of the selected player to 70 and returns it.
+ */
+s32 clamp_joystick_y_axis(s32 player) {
+    return clamp_joystick(sControllerData[sPlayerID[player]].rawStickY);
 }
 
-s32 func_8006A624(s8 arg0) {
-    if (arg0 < 8 && arg0 >= -7) {
+/**
+ * Keeps the joysticks axis reads no higher than 70 (of a possible 127 or -128)
+ * Will also pull the reading towards the centre.
+ */
+s32 clamp_joystick(s8 stickMag) {
+    if (stickMag < JOYSTICK_DEADZONE && stickMag > -JOYSTICK_DEADZONE) {
         return 0;
     }
-    if (arg0 > 0) {
-        arg0 -= 8;
-        if (arg0 >= 0x47) {
-            arg0 = 0x46;
+    if (stickMag > 0) {
+        stickMag -= 8;
+        if (stickMag > JOYSTICK_MAX_RANGE) {
+            stickMag = JOYSTICK_MAX_RANGE;
         }
     } else {
-        arg0 += 8;
-        if (arg0 < -0x46) {
-            arg0 = -0x46;
+        stickMag += 8;
+        if (stickMag < -JOYSTICK_MAX_RANGE) {
+            stickMag = -JOYSTICK_MAX_RANGE;
         }
     }
-    return arg0;
+    return stickMag;
 }
 
-// Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
+/**
+ * Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
+ */
 void disable_button_mask(void) {
     gButtonMask = 0;
 }

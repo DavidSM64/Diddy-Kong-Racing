@@ -25,10 +25,10 @@ glabel update_controller_sticks
 /* 09CB7C 8009BF7C 0000A825 */  move  $s5, $zero
 /* 09CB80 8009BF80 241EFFFF */  li    $fp, -1
 .L8009BF84:
-/* 09CB84 8009BF84 0C01A967 */  jal   func_8006A59C
+/* 09CB84 8009BF84 0C01A967 */  jal   clamp_joystick_x_axis
 /* 09CB88 8009BF88 02A02025 */   move  $a0, $s5
 /* 09CB8C 8009BF8C 0040A025 */  move  $s4, $v0
-/* 09CB90 8009BF90 0C01A978 */  jal   func_8006A5E0
+/* 09CB90 8009BF90 0C01A978 */  jal   clamp_joystick_y_axis
 /* 09CB94 8009BF94 02A02025 */   move  $a0, $s5
 /* 09CB98 8009BF98 2A81FFDD */  slti  $at, $s4, -0x23
 /* 09CB9C 8009BF9C A2C00000 */  sb    $zero, ($s6)

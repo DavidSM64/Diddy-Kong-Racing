@@ -101,8 +101,8 @@ glabel render_epc_lock_up_display
 /* 0B8458 800B7858 ADC10008 */  sw    $at, 8($t6)
 /* 0B845C 800B785C 0C02D8D7 */  jal   set_render_printf_position
 /* 0B8460 800B7860 ADC80004 */   sw    $t0, 4($t6)
-/* 0B8464 800B7864 3C03800E */  lui   $v1, %hi(D_800E3024) # $v1, 0x800e
-/* 0B8468 800B7868 24633024 */  addiu $v1, %lo(D_800E3024) # addiu $v1, $v1, 0x3024
+/* 0B8464 800B7864 3C03800E */  lui   $v1, %hi(sLockupPage) # $v1, 0x800e
+/* 0B8468 800B7868 24633024 */  addiu $v1, %lo(sLockupPage) # addiu $v1, $v1, 0x3024
 /* 0B846C 800B786C 8C620000 */  lw    $v0, ($v1)
 /* 0B8470 800B7870 00000000 */  nop   
 /* 0B8474 800B7874 2C410006 */  sltiu $at, $v0, 6

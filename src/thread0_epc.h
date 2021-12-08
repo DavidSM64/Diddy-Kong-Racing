@@ -78,7 +78,7 @@ void func_800B70D0(void);
 void func_800B7144(void);
 void func_800B76B8(s32 arg0, s32 arg1);
 s32 get_crash_status(void);
-void func_800B77D4(s32 arg0);
+void lockup_screen_loop(s32 arg0);
 
 void func_800B6F50(void); // Non Matching
 void thread0_Main(s32 arg0); // Non Matching

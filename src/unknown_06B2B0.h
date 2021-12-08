@@ -32,11 +32,12 @@ enum NumberOfPlayers {
     FOUR_PLAYERS  = 3
 };
 
-#define NUMBER_OF_VEHICLE_TYPES 3
 enum Vehicle {
     VEHICLE_CAR,
     VEHICLE_HOVERCRAFT,
-    VEHICLE_PLANE
+    VEHICLE_PLANE,
+
+    NUMBER_OF_VEHICLE_TYPES,
 };
 
 enum RaceType {

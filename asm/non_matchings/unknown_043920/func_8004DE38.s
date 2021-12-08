@@ -588,7 +588,7 @@ glabel func_8004DE38
 /* 04F25C 8004E65C 01E63023 */  subu  $a2, $t7, $a2
 .L8004E660:
 /* 04F260 8004E660 00C02025 */  move  $a0, $a2
-/* 04F264 8004E664 0C01A967 */  jal   func_8006A59C
+/* 04F264 8004E664 0C01A967 */  jal   clamp_joystick_x_axis
 /* 04F268 8004E668 AFA600AC */   sw    $a2, 0xac($sp)
 /* 04F26C 8004E66C 3C018012 */  lui   $at, %hi(D_8011D534) # $at, 0x8012
 /* 04F270 8004E670 0C0270C3 */  jal   get_filtered_cheats
@@ -603,7 +603,7 @@ glabel func_8004DE38
 /* 04F294 8004E694 0018C823 */  negu  $t9, $t8
 /* 04F298 8004E698 AC39D534 */  sw    $t9, %lo(D_8011D534)($at)
 .L8004E69C:
-/* 04F29C 8004E69C 0C01A978 */  jal   func_8006A5E0
+/* 04F29C 8004E69C 0C01A978 */  jal   clamp_joystick_y_axis
 /* 04F2A0 8004E6A0 AFA600AC */   sw    $a2, 0xac($sp)
 /* 04F2A4 8004E6A4 8FA400AC */  lw    $a0, 0xac($sp)
 /* 04F2A8 8004E6A8 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
@@ -615,7 +615,7 @@ glabel func_8004DE38
 /* 04F2C0 8004E6C0 AC22D528 */   sw    $v0, %lo(D_8011D528)($at)
 /* 04F2C4 8004E6C4 8FA400AC */  lw    $a0, 0xac($sp)
 /* 04F2C8 8004E6C8 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
-/* 04F2CC 8004E6CC 0C01A95E */  jal   func_8006A578
+/* 04F2CC 8004E6CC 0C01A95E */  jal   get_buttons_released_from_player
 /* 04F2D0 8004E6D0 AC22D52C */   sw    $v0, %lo(gActivePlayerButtonPress)($at)
 /* 04F2D4 8004E6D4 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 04F2D8 8004E6D8 10000009 */  b     .L8004E700

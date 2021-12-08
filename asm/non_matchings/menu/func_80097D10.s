@@ -12,7 +12,7 @@ glabel func_80097D10
 /* 098924 80097D24 0C01A955 */  jal   get_buttons_pressed_from_player
 /* 098928 80097D28 00002025 */   move  $a0, $zero
 /* 09892C 80097D2C 00002025 */  move  $a0, $zero
-/* 098930 80097D30 0C01A967 */  jal   func_8006A59C
+/* 098930 80097D30 0C01A967 */  jal   clamp_joystick_x_axis
 /* 098934 80097D34 AFA20024 */   sw    $v0, 0x24($sp)
 /* 098938 80097D38 8FA80024 */  lw    $t0, 0x24($sp)
 /* 09893C 80097D3C 2841FFDE */  slti  $at, $v0, -0x22

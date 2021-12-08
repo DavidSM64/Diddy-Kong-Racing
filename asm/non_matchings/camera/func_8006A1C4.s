@@ -4,20 +4,20 @@ glabel func_8006A1C4
 /* 06ADCC 8006A1CC 00809025 */  move  $s2, $a0
 /* 06ADD0 8006A1D0 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 06ADD4 8006A1D4 AFA5005C */  sw    $a1, 0x5c($sp)
-/* 06ADD8 8006A1D8 3C048012 */  lui   $a0, %hi(D_801210E0) # $a0, 0x8012
+/* 06ADD8 8006A1D8 3C048012 */  lui   $a0, %hi(sSIMesgQueue) # $a0, 0x8012
 /* 06ADDC 8006A1DC AFB1001C */  sw    $s1, 0x1c($sp)
 /* 06ADE0 8006A1E0 AFB00018 */  sw    $s0, 0x18($sp)
-/* 06ADE4 8006A1E4 248410E0 */  addiu $a0, %lo(D_801210E0) # addiu $a0, $a0, 0x10e0
+/* 06ADE4 8006A1E4 248410E0 */  addiu $a0, %lo(sSIMesgQueue) # addiu $a0, $a0, 0x10e0
 /* 06ADE8 8006A1E8 27A50050 */  addiu $a1, $sp, 0x50
 /* 06ADEC 8006A1EC 0C0322EC */  jal   osRecvMesg
 /* 06ADF0 8006A1F0 00003025 */   move  $a2, $zero
 /* 06ADF4 8006A1F4 1440005D */  bnez  $v0, .L8006A36C
-/* 06ADF8 8006A1F8 3C068012 */   lui   $a2, %hi(D_80121110+24) # $a2, 0x8012
-/* 06ADFC 8006A1FC 3C028012 */  lui   $v0, %hi(D_80121110) # $v0, 0x8012
-/* 06AE00 8006A200 3C038012 */  lui   $v1, %hi(D_80121110+24) # $v1, 0x8012
-/* 06AE04 8006A204 24631128 */  addiu $v1, %lo(D_80121110+24) # addiu $v1, $v1, 0x1128
-/* 06AE08 8006A208 24421110 */  addiu $v0, %lo(D_80121110) # addiu $v0, $v0, 0x1110
-/* 06AE0C 8006A20C 24C61128 */  addiu $a2, %lo(D_80121110+24) # addiu $a2, $a2, 0x1128
+/* 06ADF8 8006A1F8 3C068012 */   lui   $a2, %hi(sControllerData+24) # $a2, 0x8012
+/* 06ADFC 8006A1FC 3C028012 */  lui   $v0, %hi(sControllerData) # $v0, 0x8012
+/* 06AE00 8006A200 3C038012 */  lui   $v1, %hi(sControllerData+24) # $v1, 0x8012
+/* 06AE04 8006A204 24631128 */  addiu $v1, %lo(sControllerData+24) # addiu $v1, $v1, 0x1128
+/* 06AE08 8006A208 24421110 */  addiu $v0, %lo(sControllerData) # addiu $v0, $v0, 0x1110
+/* 06AE0C 8006A20C 24C61128 */  addiu $a2, %lo(sControllerData+24) # addiu $a2, $a2, 0x1128
 .L8006A210:
 /* 06AE10 8006A210 88410000 */  lwl   $at, ($v0)
 /* 06AE14 8006A214 98410003 */  lwr   $at, 3($v0)
@@ -30,9 +30,9 @@ glabel func_8006A1C4
 /* 06AE30 8006A230 0043082B */  sltu  $at, $v0, $v1
 /* 06AE34 8006A234 1420FFF6 */  bnez  $at, .L8006A210
 /* 06AE38 8006A238 00000000 */   nop   
-/* 06AE3C 8006A23C 3C048012 */  lui   $a0, %hi(D_80121110) # $a0, 0x8012
+/* 06AE3C 8006A23C 3C048012 */  lui   $a0, %hi(sControllerData) # $a0, 0x8012
 /* 06AE40 8006A240 0C033429 */  jal   osContGetReadData
-/* 06AE44 8006A244 24841110 */   addiu $a0, %lo(D_80121110) # addiu $a0, $a0, 0x1110
+/* 06AE44 8006A244 24841110 */   addiu $a0, %lo(sControllerData) # addiu $a0, $a0, 0x1110
 /* 06AE48 8006A248 12400043 */  beqz  $s2, .L8006A358
 /* 06AE4C 8006A24C 8FA4005C */   lw    $a0, 0x5c($sp)
 /* 06AE50 8006A250 0C01BAA4 */  jal   get_settings
@@ -113,24 +113,24 @@ glabel func_8006A1C4
 .L8006A358:
 /* 06AF58 8006A358 0C01C9C6 */  jal   func_80072718
 /* 06AF5C 8006A35C 00000000 */   nop   
-/* 06AF60 8006A360 3C048012 */  lui   $a0, %hi(D_801210E0) # $a0, 0x8012
+/* 06AF60 8006A360 3C048012 */  lui   $a0, %hi(sSIMesgQueue) # $a0, 0x8012
 /* 06AF64 8006A364 0C0333F8 */  jal   osContStartReadData
-/* 06AF68 8006A368 248410E0 */   addiu $a0, %lo(D_801210E0) # addiu $a0, $a0, 0x10e0
+/* 06AF68 8006A368 248410E0 */   addiu $a0, %lo(sSIMesgQueue) # addiu $a0, $a0, 0x10e0
 .L8006A36C:
 /* 06AF6C 8006A36C 3C0A800E */  lui   $t2, %hi(D_800DD300) # $t2, 0x800e
 /* 06AF70 8006A370 3C09800E */  lui   $t1, %hi(gButtonMask) # $t1, 0x800e
-/* 06AF74 8006A374 3C068012 */  lui   $a2, %hi(D_80121110+24) # $a2, 0x8012
-/* 06AF78 8006A378 3C028012 */  lui   $v0, %hi(D_80121110) # $v0, 0x8012
-/* 06AF7C 8006A37C 3C088012 */  lui   $t0, %hi(D_80121140) # $t0, 0x8012
+/* 06AF74 8006A374 3C068012 */  lui   $a2, %hi(sControllerData+24) # $a2, 0x8012
+/* 06AF78 8006A378 3C028012 */  lui   $v0, %hi(sControllerData) # $v0, 0x8012
+/* 06AF7C 8006A37C 3C088012 */  lui   $t0, %hi(sControllerButtonsPressed) # $t0, 0x8012
 /* 06AF80 8006A380 3C078012 */  lui   $a3, %hi(D_80121148) # $a3, 0x8012
-/* 06AF84 8006A384 3C0B8012 */  lui   $t3, %hi(D_80121150) # $t3, 0x8012
+/* 06AF84 8006A384 3C0B8012 */  lui   $t3, %hi(sPlayerID) # $t3, 0x8012
 /* 06AF88 8006A388 9529D304 */  lhu   $t1, %lo(gButtonMask)($t1)
 /* 06AF8C 8006A38C 8D4AD300 */  lw    $t2, %lo(D_800DD300)($t2)
-/* 06AF90 8006A390 256B1150 */  addiu $t3, %lo(D_80121150) # addiu $t3, $t3, 0x1150
+/* 06AF90 8006A390 256B1150 */  addiu $t3, %lo(sPlayerID) # addiu $t3, $t3, 0x1150
 /* 06AF94 8006A394 24E71148 */  addiu $a3, %lo(D_80121148) # addiu $a3, $a3, 0x1148
-/* 06AF98 8006A398 25081140 */  addiu $t0, %lo(D_80121140) # addiu $t0, $t0, 0x1140
-/* 06AF9C 8006A39C 24421110 */  addiu $v0, %lo(D_80121110) # addiu $v0, $v0, 0x1110
-/* 06AFA0 8006A3A0 24C61128 */  addiu $a2, %lo(D_80121110+24) # addiu $a2, $a2, 0x1128
+/* 06AF98 8006A398 25081140 */  addiu $t0, %lo(sControllerButtonsPressed) # addiu $t0, $t0, 0x1140
+/* 06AF9C 8006A39C 24421110 */  addiu $v0, %lo(sControllerData) # addiu $v0, $v0, 0x1110
+/* 06AFA0 8006A3A0 24C61128 */  addiu $a2, %lo(sControllerData+24) # addiu $a2, $a2, 0x1128
 .L8006A3A4:
 /* 06AFA4 8006A3A4 11400002 */  beqz  $t2, .L8006A3B0
 /* 06AFA8 8006A3A8 00000000 */   nop   

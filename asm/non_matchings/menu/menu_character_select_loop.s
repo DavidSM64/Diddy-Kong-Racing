@@ -117,7 +117,7 @@ glabel menu_character_select_loop
 /* 08CAD4 8008BED4 0C022ECF */  jal   randomize_ai_racer_slots
 /* 08CAD8 8008BED8 AFAB0024 */   sw    $t3, 0x24($sp)
 /* 08CADC 8008BEDC 3C048012 */  lui   $a0, %hi(gActivePlayersArray) # $a0, 0x8012
-/* 08CAE0 8008BEE0 0C01A916 */  jal   func_8006A458
+/* 08CAE0 8008BEE0 0C01A916 */  jal   assign_player_ids
 /* 08CAE4 8008BEE4 248463D4 */   addiu $a0, %lo(gActivePlayersArray) # addiu $a0, $a0, 0x63d4
 /* 08CAE8 8008BEE8 3C0C800E */  lui   $t4, %hi(gNumberOfActivePlayers) # $t4, 0x800e
 /* 08CAEC 8008BEEC 8FAB0024 */  lw    $t3, 0x24($sp)

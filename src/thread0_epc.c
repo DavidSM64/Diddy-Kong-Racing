@@ -9,6 +9,7 @@
 #include "printf.h"
 #include "unknown_00BC20.h"
 #include "controller.h"
+#include "unknown_06B2B0.h"
 
 /************ .rodata ************/
 
@@ -27,8 +28,8 @@ const u8 D_800E8EFC[4] = { 0, 0, 0, 0 };
 /************ .data ************/
 
 s32 D_800E3020 = -1;
-s32 D_800E3024 = 0;
-s32 D_800E3028 = 0;
+s32 sLockupPage = 0;
+s32 sLockupDelay = 0;
 
 char *D_800E302C[3] = {
     "setup", "control", "print"
@@ -241,11 +242,11 @@ s32 get_crash_status(void) {
     }
 }
 
-void func_800B77D4(s32 updateRate) {
-    D_800E3028 += updateRate;
-    if (D_800E3028 >= 0x3D) {
-        D_800E3028 = 0;
-        D_800E3024++;
+void lockup_screen_loop(s32 updateRate) {
+    sLockupDelay += updateRate;
+    if (sLockupDelay >= 61) {
+        sLockupDelay = 0;
+        sLockupPage++;
     }
 }
 
@@ -265,7 +266,7 @@ void render_epc_lock_up_display(void) {
 
     set_render_printf_position(0x10, 0x20);
 
-    switch (D_800E3024) {
+    switch (sLockupPage) {
         case 0:
             D_80129FB0[0] = gEpcInfo.unk130;
             D_80129FB0[1] = gEpcInfo.unk134;
@@ -332,7 +333,7 @@ void render_epc_lock_up_display(void) {
             }
             break;
         case 5:
-            D_800E3024 = 0;
+            sLockupPage = 0;
             break;
     }
 }
