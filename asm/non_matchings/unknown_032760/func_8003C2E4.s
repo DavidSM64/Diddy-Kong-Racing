@@ -80,7 +80,7 @@ glabel func_8003C2E4
 /* 03D010 8003C410 00000000 */  nop   
 /* 03D014 8003C414 1540000F */  bnez  $t2, .L8003C454
 /* 03D018 8003C418 240D012C */   li    $t5, 300
-/* 03D01C 8003C41C 0C000326 */  jal   func_80000C98
+/* 03D01C 8003C41C 0C000326 */  jal   set_music_fade_timer
 /* 03D020 8003C420 2404FFF8 */   li    $a0, -8
 /* 03D024 8003C424 240B008C */  li    $t3, 140
 /* 03D028 8003C428 AE0B0008 */  sw    $t3, 8($s0)
@@ -120,7 +120,7 @@ glabel func_8003C2E4
 /* 03D0A4 8003C4A4 10000005 */  b     .L8003C4BC
 /* 03D0A8 8003C4A8 AE180008 */   sw    $t8, 8($s0)
 .L8003C4AC:
-/* 03D0AC 8003C4AC 0C000326 */  jal   func_80000C98
+/* 03D0AC 8003C4AC 0C000326 */  jal   set_music_fade_timer
 /* 03D0B0 8003C4B0 AE000008 */   sw    $zero, 8($s0)
 /* 03D0B4 8003C4B4 0C00030E */  jal   set_sndfx_player_voice_limit
 /* 03D0B8 8003C4B8 24040006 */   li    $a0, 6

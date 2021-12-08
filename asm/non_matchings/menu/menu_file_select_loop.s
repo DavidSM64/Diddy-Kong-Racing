@@ -197,7 +197,7 @@ glabel menu_file_select_loop
 /* 08ED4C 8008E14C 8C84F4CC */  lw    $a0, %lo(gSaveFileIndex)($a0)
 /* 08ED50 8008E150 0C01BADE */  jal   func_8006EB78
 /* 08ED54 8008E154 00000000 */   nop   
-/* 08ED58 8008E158 0C000326 */  jal   func_80000C98
+/* 08ED58 8008E158 0C000326 */  jal   set_music_fade_timer
 /* 08ED5C 8008E15C 2404FF80 */   li    $a0, -128
 /* 08ED60 8008E160 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
 /* 08ED64 8008E164 0C030076 */  jal   func_800C01D8
@@ -231,7 +231,7 @@ glabel menu_file_select_loop
 /* 08EDD0 8008E1D0 8C84F4CC */  lw    $a0, %lo(gSaveFileIndex)($a0)
 /* 08EDD4 8008E1D4 0C01BADE */  jal   func_8006EB78
 /* 08EDD8 8008E1D8 00000000 */   nop   
-/* 08EDDC 8008E1DC 0C000326 */  jal   func_80000C98
+/* 08EDDC 8008E1DC 0C000326 */  jal   set_music_fade_timer
 /* 08EDE0 8008E1E0 2404FF80 */   li    $a0, -128
 /* 08EDE4 8008E1E4 10000021 */  b     .L8008E26C
 /* 08EDE8 8008E1E8 8FB80040 */   lw    $t8, 0x40($sp)

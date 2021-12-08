@@ -2392,7 +2392,7 @@ s32 menu_options_loop(s32 arg0) {
 
     if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & (A_BUTTON | START_BUTTON)) && D_800DF460 == 5)) {
         // Leave the option menu
-        func_80000C98(-0x80);
+        set_music_fade_timer(-0x80);
         gMenuDelay = -1;
         func_800C01D8(&D_800DF774);
         func_80001D04(0x241, 0);
@@ -2558,7 +2558,7 @@ s32 menu_audio_options_loop(s32 arg0) {
             gMenuDelay = -1;
             func_800C01D8(&D_800DF774);
             if (D_801263D8 >= 0) {
-                func_80000C98(-0x80);
+                set_music_fade_timer(-0x80);
             }
             sp30 = 3;
         } else if (contY < 0 && gOptionsMenuItemIndex < D_801263E0 - 1) {
@@ -2661,7 +2661,7 @@ void func_800851FC(void) {
     if (D_801263D8 >= 0) {
         set_music_player_voice_limit(0x18);
         play_music(0x18);
-        func_80000C98(0x100);
+        set_music_fade_timer(0x100);
         func_80000B18();
     }
     func_8009C4A8(D_800DFA2C);
@@ -3854,7 +3854,7 @@ s32 menu_game_select_loop(s32 arg0) {
             }
             if (playerInputs & (A_BUTTON | START_BUTTON)) {
                 if (D_800DF460 == D_801263E0) {
-                    func_80000C98(-0x80);
+                    set_music_fade_timer(-0x80);
                 }
                 func_800C01D8(&D_800DF774);
                 gMenuDelay = 1;
@@ -4860,7 +4860,7 @@ void func_80094C14(s32 arg0) {
         switch (D_800DF460) {
             case 0:
                 if (func_8000C8B4(0xF0) < D_801263D8) {
-                    func_80000C98(-0x100);
+                    set_music_fade_timer(-0x100);
                     D_800DF460 = 1;
                 }
                 break;
@@ -4868,7 +4868,7 @@ void func_80094C14(s32 arg0) {
                 if (func_8000C8B4(0x12C) < D_801263D8) {
                     set_music_player_voice_limit(0x18);
                     play_music(0x18);
-                    func_80000C98(0x100);
+                    set_music_fade_timer(0x100);
                 }
                 break;
         }
@@ -4972,7 +4972,7 @@ void menu_11_init(void) {
     func_800C01D8(&D_800DF77C);
     set_music_player_voice_limit(0x18);
     play_music(0x18);
-    func_80000C98(0x80);
+    set_music_fade_timer(0x80);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80096978.s")
@@ -5142,7 +5142,7 @@ void menu_trophy_race_round_init(void) {
     func_800C4170(2);
     set_music_player_voice_limit(0x18);
     play_music(0x18);
-    func_80000C98(0x100);
+    set_music_fade_timer(0x100);
 }
 #endif
 

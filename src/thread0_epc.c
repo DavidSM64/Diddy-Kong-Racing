@@ -27,7 +27,7 @@ const u8 D_800E8EFC[4] = { 0, 0, 0, 0 };
 
 /************ .data ************/
 
-s32 D_800E3020 = -1;
+s32 sLockupStatus = -1;
 s32 sLockupPage = 0;
 s32 sLockupDelay = 0;
 
@@ -214,17 +214,17 @@ void func_800B76B8(s32 arg0, s32 arg1) {
 }
 
 //Called as a check to see if render_epc_lock_up_display should be called.
-s32 get_crash_status(void) {
+s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
-    u8 *sp420[256];
-    u8 *sp220[128];
+    char *sp420[256];
+    char *sp220[128];
     u8 dataFromControllerPak[512];
 
-    if (D_800E3020 != -1) {
-        return D_800E3020;
+    if (sLockupStatus != -1) {
+        return sLockupStatus;
     } else {
-        D_800E3020 = 0;
+        sLockupStatus = 0;
         if ((func_800758DC(controllerIndex) == 0) && //Rumble pack check?
             (func_800764E8(controllerIndex, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0) &&
             (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *)&dataFromControllerPak,
@@ -232,13 +232,13 @@ s32 get_crash_status(void) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(dataFromControllerPak) - 80); //Why less 80 (0x50)?
             bcopy(&sp220, &D_801299B0, sizeof(sp220));
             bcopy(&sp420, &D_80129BB0, sizeof(sp420));
-            D_800E3020 = 1;
+            sLockupStatus = 1;
         }
         func_80075AEC(controllerIndex);
-        if (D_800E3020 != 0) {
+        if (sLockupStatus) {
             func_800762C8(controllerIndex, fileNum);
         }
-        return D_800E3020;
+        return sLockupStatus;
     }
 }
 

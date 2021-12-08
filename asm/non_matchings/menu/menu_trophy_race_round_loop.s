@@ -77,7 +77,7 @@ glabel menu_trophy_race_round_loop
 /* 0992B8 800986B8 24090001 */  li    $t1, 1
 /* 0992BC 800986BC 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 0992C0 800986C0 AC29F47C */  sw    $t1, %lo(gMenuDelay)($at)
-/* 0992C4 800986C4 0C000326 */  jal   func_80000C98
+/* 0992C4 800986C4 0C000326 */  jal   set_music_fade_timer
 /* 0992C8 800986C8 2404FF80 */   li    $a0, -128
 .L800986CC:
 /* 0992CC 800986CC 3C03800E */  lui   $v1, %hi(gMenuDelay) # $v1, 0x800e

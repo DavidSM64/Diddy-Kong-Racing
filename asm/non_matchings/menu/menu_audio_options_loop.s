@@ -122,7 +122,7 @@ glabel menu_audio_options_loop
 /* 085A30 80084E30 00000000 */  nop   
 /* 085A34 80084E34 07200004 */  bltz  $t9, .L80084E48
 /* 085A38 80084E38 240A0003 */   li    $t2, 3
-/* 085A3C 80084E3C 0C000326 */  jal   func_80000C98
+/* 085A3C 80084E3C 0C000326 */  jal   set_music_fade_timer
 /* 085A40 80084E40 2404FF80 */   li    $a0, -128
 /* 085A44 80084E44 240A0003 */  li    $t2, 3
 .L80084E48:

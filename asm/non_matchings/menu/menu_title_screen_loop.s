@@ -94,7 +94,7 @@ glabel menu_title_screen_loop
 /* 084724 80083B24 29E1003C */  slti  $at, $t7, 0x3c
 /* 084728 80083B28 1420000B */  bnez  $at, .L80083B58
 /* 08472C 80083B2C 2404FD00 */   li    $a0, -768
-/* 084730 80083B30 0C000326 */  jal   func_80000C98
+/* 084730 80083B30 0C000326 */  jal   set_music_fade_timer
 /* 084734 80083B34 AFA00028 */   sw    $zero, 0x28($sp)
 /* 084738 80083B38 3C04800E */  lui   $a0, %hi(D_800E1E08) # $a0, 0x800e
 /* 08473C 80083B3C 0C030076 */  jal   func_800C01D8

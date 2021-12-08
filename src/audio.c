@@ -22,7 +22,7 @@ u8 D_800DC640 = 1;
 u8 D_800DC644 = 0;
 s32 D_800DC648 = 0;
 s32 audioPrevCount = 0;
-f32 D_800DC650 = 1.0;
+f32 sMusicFadeVolume = 1.0f;
 s32 musicVolumeSliderPercentage = 0x100;
 s32 D_800DC658 = 0;
 u8 D_800DC65C = 0;
@@ -78,8 +78,8 @@ u32 D_80115D28;
 u32 D_80115D2C;
 s16 D_80115D30;
 f32 D_80115D34;
-s32 D_80115D38;
-s32 D_80115D3C;
+s32 sMusicDelayTimer;
+s32 sMusicDelayLength;
 u8 D_80115D40;
 u8 D_80115D41;
 unk80115D48 D_80115D48[8];
@@ -270,40 +270,44 @@ void func_80000C68(u8 arg0) {
     func_80063A90(gMusicPlayer, arg0);
 }
 
-void func_80000C98(s32 arg0) {
-    D_80115D38 = 0;
-    D_80115D3C = (arg0 * 0x3C) >> 8;
+/**
+ * Enables the timer to start fading in or out the background music.
+ * Give it a positive number to fade in, otherwise, give it a negative one to fade out.
+ */
+void set_music_fade_timer(s32 time) {
+    sMusicDelayTimer = 0;
+    sMusicDelayLength = (time * 60) >> 8;
 }
 
 void func_80000CBC(void) {
-    D_80115D38 = 0;
-    D_80115D3C = 0;
-    D_800DC650 = 1.0f;
+    sMusicDelayTimer = 0;
+    sMusicDelayLength = 0;
+    sMusicFadeVolume = 1.0f;
     set_relative_volume_for_music(musicRelativeVolume);
 }
 
-void process_audio(u8 updateRate) {
+void handle_music_fade(u8 updateRate) {
     s32 reg_s2;
     s32 j;
-    if (D_80115D3C > 0) {
+    if (sMusicDelayLength > 0) {
 
-        D_80115D38 += updateRate;
-        D_800DC650 = ((f32)D_80115D38) / ((f32)D_80115D3C);
+        sMusicDelayTimer += updateRate;
+        sMusicFadeVolume = ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
 
-        if ((f64)D_800DC650 > 1.0f) {
-            D_80115D38 = 0;
-            D_80115D3C = 0;
-            D_800DC650 = 1.0f;
+        if ((f64)sMusicFadeVolume > 1.0f) {
+            sMusicDelayTimer = 0;
+            sMusicDelayLength = 0;
+            sMusicFadeVolume = 1.0f;
         }
         set_relative_volume_for_music(musicRelativeVolume);
-    } else if (D_80115D3C < 0) {
+    } else if (sMusicDelayLength < 0) {
 
-        D_80115D38 -= updateRate;
-        D_800DC650 = 1.0f - ((f32)D_80115D38) / ((f32)D_80115D3C);
-        if ((f64)D_800DC650 < 0) {
-            D_80115D38 = 0;
-            D_80115D3C = 0;
-            D_800DC650 = 0.0f;
+        sMusicDelayTimer -= updateRate;
+        sMusicFadeVolume = 1.0f - ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
+        if ((f64)sMusicFadeVolume < 0) {
+            sMusicDelayTimer = 0;
+            sMusicDelayLength = 0;
+            sMusicFadeVolume = 0.0f;
         }
         set_relative_volume_for_music(musicRelativeVolume);
     }
@@ -596,7 +600,7 @@ void set_relative_volume_for_music(u8 vol) {
     f32 normalized_vol;
 
     musicRelativeVolume = vol;
-    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * D_800DC650;
+    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * sMusicFadeVolume;
     alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C * normalized_vol) >> 8));
 }
 
@@ -605,7 +609,7 @@ void set_music_volume_slider(u32 slider_val) {
 
     slider_val = (slider_val < 0x101) ? slider_val : 256;
     musicVolumeSliderPercentage = slider_val;
-    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * D_800DC650;
+    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * sMusicFadeVolume;
     alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C * normalized_vol) >> 8));
 }
 
@@ -770,7 +774,7 @@ GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
 #else
 void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq) {
     if (alCSPGetState(seqp) == AL_STOPPED && *arg2) {
-        /*load_asset_to_address(ASSET_AUDIO, ptr, 
+        /*load_asset_to_address(ASSET_AUDIO, ptr,
             (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - get_rom_offset_of_asset(ASSET_AUDIO,0),
             *((u32*)(((*arg2) << 3) + D_80115D0C)));*/
         alCSeqNew(seq, ptr);
