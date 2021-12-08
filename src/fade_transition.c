@@ -26,7 +26,7 @@ VertexList *sTransitionVtx[2] = { NULL, NULL };
 TriangleList *sTransitionTris[2] = { NULL, NULL };
 s32 sTransitionTaskNum[2] = { 0, 0 }; // The second index goes unused. Is it even an array at all?
 
-Gfx dl_fade_transition_settings[] = {
+Gfx dTransitionFadeSettings[] = {
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
@@ -173,7 +173,7 @@ TriangleList D_800E3554[244] = {
     0, 0, 0, 0,
 };
 
-Gfx dl_transition_shape_settings[] = {
+Gfx dTransitionShapeSettings[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_FOG),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
@@ -402,7 +402,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0834.s")
 
 void render_fade_fullscreen(Gfx **dlist, UNUSED s32 arg1, UNUSED s32 arg2) {
     s32 screenSize = get_video_width_and_height_as_s32();
-    gSPDisplayList((*dlist)++, dl_fade_transition_settings);
+    gSPDisplayList((*dlist)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dlist)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
     gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
@@ -414,7 +414,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1130.s")
 
 void render_fade_barndoor_horizontal(Gfx **dlist, UNUSED s32 arg1, UNUSED s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, dl_transition_shape_settings);
+    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
     gDkrVertices((*dlist)++, (s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000, (((s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000) & 6) | 0x58, 0x70);
     gDkrTriangles((*dlist)++, (s32)sTransitionTris[sTransitionTaskNum[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
@@ -424,7 +424,7 @@ void render_fade_barndoor_horizontal(Gfx **dlist, UNUSED s32 arg1, UNUSED s32 ar
 // This is exactly the same as render_fade_barndoor_horizontal; I wonder what gets changed then?
 void render_fade_barndoor_vertical(Gfx **dlist, UNUSED s32 arg1, UNUSED s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, dl_transition_shape_settings);
+    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
     gDkrVertices((*dlist)++, (s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000, (((s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000) & 6) | 0x58, 0x70);
     gDkrTriangles((*dlist)++, (s32)sTransitionTris[sTransitionTaskNum[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
@@ -438,7 +438,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
     u8 *addr, *addr2;
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, dl_transition_shape_settings);
+    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     addr = (sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000);
     addr2 = (sTransitionTris[sTransitionTaskNum[0]] + 0x80000000);
     gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
@@ -465,7 +465,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 void render_fade_waves(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 i;
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, dl_transition_shape_settings);
+    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     for(i = 0; i < 6; i++) {
         s32 index = sTransitionTaskNum[0] + i;
         if(i != 1 && i != 4) {
@@ -484,7 +484,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_waves.s")
 
 void render_fade_barndoor_diagonal(Gfx **dlist, s32 arg1, s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, dl_transition_shape_settings);
+    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
     gDkrVertices((*dlist)++, (s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000, (((s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000) & 6) | 0x48, 0x5E);
     gDkrTriangles((*dlist)++, (s32)sTransitionTris[sTransitionTaskNum[0]] + 0x80000000, 6, TRIN_DISABLE_TEXTURE);
@@ -525,7 +525,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C27A0.s")
 
 void render_fade_disabled(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 screenSize = get_video_width_and_height_as_s32();
-    gSPDisplayList((*dlist)++, dl_fade_transition_settings);
+    gSPDisplayList((*dlist)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dlist)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);
     gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);

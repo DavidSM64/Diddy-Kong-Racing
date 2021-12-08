@@ -18,8 +18,8 @@ glabel render_fade_waves
 /* 0C3038 800C2438 00402025 */  move  $a0, $v0
 /* 0C303C 800C243C 8CC631C0 */  lw    $a2, %lo(sTransitionVtx)($a2)
 /* 0C3040 800C2440 8CE731C8 */  lw    $a3, %lo(sTransitionTris)($a3)
-/* 0C3044 800C2444 3C19800E */  lui   $t9, %hi(dl_transition_shape_settings) # $t9, 0x800e
-/* 0C3048 800C2448 27393648 */  addiu $t9, %lo(dl_transition_shape_settings) # addiu $t9, $t9, 0x3648
+/* 0C3044 800C2444 3C19800E */  lui   $t9, %hi(dTransitionShapeSettings) # $t9, 0x800e
+/* 0C3048 800C2448 27393648 */  addiu $t9, %lo(dTransitionShapeSettings) # addiu $t9, $t9, 0x3648
 /* 0C304C 800C244C 3C180600 */  lui   $t8, 0x600
 /* 0C3050 800C2450 3C1005D0 */  lui   $s0, (0x05D000E0 >> 16) # lui $s0, 0x5d0
 /* 0C3054 800C2454 3C0D05B0 */  lui   $t5, (0x05B000C0 >> 16) # lui $t5, 0x5b0

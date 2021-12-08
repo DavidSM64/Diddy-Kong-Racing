@@ -7,7 +7,7 @@
 
 /************ .data ************/
 
-Gfx dl_dialogue_box_begin[] = {
+Gfx dDialogueBoxBegin[] = {
     gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
@@ -17,7 +17,7 @@ Gfx dl_dialogue_box_begin[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx dl_dialogue_box_drawmodes[][2] = {
+Gfx dDialogueBoxDrawModes[][2] = {
     {
         gsDPSetCombineMode(DKR_CC_UNK11, DKR_CC_UNK11),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
@@ -646,8 +646,8 @@ void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 dialogueB
 
     // Render dialogue box background.
     if (dialogueBox->backgroundColourA != 0) {
-        gSPDisplayList((*dlist)++, dl_dialogue_box_begin);
-        gDkrDmaDisplayList((*dlist)++, ((u8 *)&dl_dialogue_box_drawmodes[1]) + 0x80000000, 2);
+        gSPDisplayList((*dlist)++, dDialogueBoxBegin);
+        gDkrDmaDisplayList((*dlist)++, ((u8 *)&dDialogueBoxDrawModes[1]) + 0x80000000, 2);
         gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
         if ((dialogueBox->x2 - dialogueBox->x1) < 10 || (dialogueBox->y2 - dialogueBox->y1) < 10) {
             render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2, dialogueBox->y2 + 2);

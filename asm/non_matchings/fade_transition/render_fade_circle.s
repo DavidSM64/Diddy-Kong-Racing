@@ -16,9 +16,9 @@ glabel render_fade_circle
 /* 0C2EAC 800C22AC 8CE731C0 */  lw    $a3, %lo(sTransitionVtx)($a3)
 /* 0C2EB0 800C22B0 010F4021 */  addu  $t0, $t0, $t7
 /* 0C2EB4 800C22B4 8D0831C8 */  lw    $t0, %lo(sTransitionTris)($t0)
-/* 0C2EB8 800C22B8 3C19800E */  lui   $t9, %hi(dl_transition_shape_settings) # $t9, 0x800e
+/* 0C2EB8 800C22B8 3C19800E */  lui   $t9, %hi(dTransitionShapeSettings) # $t9, 0x800e
 /* 0C2EBC 800C22BC 00402025 */  move  $a0, $v0
-/* 0C2EC0 800C22C0 27393648 */  addiu $t9, %lo(dl_transition_shape_settings) # addiu $t9, $t9, 0x3648
+/* 0C2EC0 800C22C0 27393648 */  addiu $t9, %lo(dTransitionShapeSettings) # addiu $t9, $t9, 0x3648
 /* 0C2EC4 800C22C4 3C180600 */  lui   $t8, 0x600
 /* 0C2EC8 800C22C8 AC980000 */  sw    $t8, ($a0)
 /* 0C2ECC 800C22CC AC990004 */  sw    $t9, 4($a0)
