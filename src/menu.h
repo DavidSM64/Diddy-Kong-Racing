@@ -751,7 +751,7 @@ s32 is_in_tracks_mode(void);
 void set_magic_code_flags(s32 flags);
 s32 get_filtered_cheats(void);
 s32 get_number_of_active_players(void);
-s32 func_8009C3D8(void);
+s32 get_active_player_count(void);
 s32 get_multiplayer_racer_count(void);
 Settings** func_8009C490(void);
 void func_8009C49C(void);

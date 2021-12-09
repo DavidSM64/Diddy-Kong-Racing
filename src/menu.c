@@ -5806,7 +5806,12 @@ s32 get_number_of_active_players(void) {
     return gNumberOfActivePlayers;
 }
 
-s32 func_8009C3D8(void) {
+/**
+ * Returns the number of active players.
+ * However, it will explicitly return 2 players if you're on a track in 2 player adventure mode,
+ * as it would otherwise return 1.
+ */
+s32 get_active_player_count(void) {
     unk8006BDB0 *temp = (unk8006BDB0 *)get_current_level_header();
     if (gIsInTwoPlayerAdventure && !gIsInTracksMode) {
         if (temp->unk4C == 0 || (temp->unk4C & 0x40) != 0) {

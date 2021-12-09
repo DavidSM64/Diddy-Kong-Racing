@@ -69,7 +69,7 @@ extern char *D_800DD334[6];
 // Unused?
 extern char gBuildString[40];
 
-extern s8  D_800DD374;
+extern s8  sAntiPiracyTriggered;
 extern s32 D_800DD378;
 extern s32 D_800DD37C;
 extern s32 D_800DD380;
@@ -184,7 +184,7 @@ void func_8006F398(void);
 void func_8006F42C(void);
 void pre_intro_loop(void);
 s32 is_controller_missing(void);
-s32 func_8006F4EC(void);
+s32 check_imem_validity(void);
 
 //Non Matching
 void func_8006ECFC(s32 numberOfPlayers);

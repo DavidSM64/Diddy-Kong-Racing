@@ -12,7 +12,7 @@ glabel func_80093A40
 /* 094668 80093A68 240EFFFF */  li    $t6, -1
 /* 09466C 80093A6C AFA20024 */  sw    $v0, 0x24($sp)
 /* 094670 80093A70 AE2E0000 */  sw    $t6, ($s1)
-/* 094674 80093A74 0C0270F6 */  jal   func_8009C3D8
+/* 094674 80093A74 0C0270F6 */  jal   get_active_player_count
 /* 094678 80093A78 00008025 */   move  $s0, $zero
 /* 09467C 80093A7C 18400014 */  blez  $v0, .L80093AD0
 /* 094680 80093A80 00000000 */   nop   
@@ -28,7 +28,7 @@ glabel func_80093A40
 /* 0946A4 80093AA4 00000000 */   nop   
 /* 0946A8 80093AA8 AE300000 */  sw    $s0, ($s1)
 .L80093AAC:
-/* 0946AC 80093AAC 0C0270F6 */  jal   func_8009C3D8
+/* 0946AC 80093AAC 0C0270F6 */  jal   get_active_player_count
 /* 0946B0 80093AB0 26100001 */   addiu $s0, $s0, 1
 /* 0946B4 80093AB4 0202082A */  slt   $at, $s0, $v0
 /* 0946B8 80093AB8 10200005 */  beqz  $at, .L80093AD0

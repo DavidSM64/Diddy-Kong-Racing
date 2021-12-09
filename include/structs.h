@@ -225,8 +225,8 @@ typedef struct LevelHeader {
   /* 0x38 */ s16 skybox;
 
   // Fog related?
-  /* 0x3A */ s16 unk3A;
-  /* 0x3C */ s16 unk3C;
+  /* 0x3A */ s16 fogNear;
+  /* 0x3C */ s16 fogFar;
   /* 0x3E */ s16 fogR;
   /* 0x40 */ s16 fogG;
   /* 0x42 */ s16 fogB;
