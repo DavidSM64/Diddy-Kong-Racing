@@ -81,7 +81,7 @@ glabel menu_trophy_race_round_init
 /* 098F90 80098390 24040018 */   li    $a0, 24
 /* 098F94 80098394 0C0002CD */  jal   play_music
 /* 098F98 80098398 24040018 */   li    $a0, 24
-/* 098F9C 8009839C 0C000326 */  jal   func_80000C98
+/* 098F9C 8009839C 0C000326 */  jal   set_music_fade_timer
 /* 098FA0 800983A0 24040100 */   li    $a0, 256
 /* 098FA4 800983A4 8FBF0024 */  lw    $ra, 0x24($sp)
 /* 098FA8 800983A8 8FB00014 */  lw    $s0, 0x14($sp)

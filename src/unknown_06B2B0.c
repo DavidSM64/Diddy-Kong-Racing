@@ -78,7 +78,7 @@ char *D_800DD334[6] = {
 // Unused
 char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
-s8 D_800DD374 = 0;
+s8 sAntiPiracyTriggered = 0;
 s32 D_800DD378 = 1;
 s32 D_800DD37C = 0;
 s32 D_800DD380 = 0; // Currently unknown, might be a different type.
@@ -369,11 +369,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         noPlayers = FALSE;
     }
     if (numberOfPlayers == ONE_PLAYER) {
-        func_8000318C(8);
+        set_sound_channel_count(8);
     } else if (numberOfPlayers == TWO_PLAYERS) {
-        func_8000318C(12);
+        set_sound_channel_count(12);
     } else {
-        func_8000318C(16);
+        set_sound_channel_count(16);
     }
 
     settings = get_settings();
@@ -549,13 +549,13 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     }
     func_8001E450(cutsceneId);
     func_800249F0(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, numberOfPlayers, vehicleId, entranceId, gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
-    if (gCurrentLevelHeader->unk3A == 0 && gCurrentLevelHeader->unk3C == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
+    if (gCurrentLevelHeader->fogNear == 0 && gCurrentLevelHeader->fogFar == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
         for (i = 0; i < 4; i++) {
             func_800307BC(i);
         }
     } else {
         for (i = 0; i < 4; i++) {
-            func_80030664(i, gCurrentLevelHeader->unk3A, gCurrentLevelHeader->unk3C, (u8)gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
+            func_80030664(i, gCurrentLevelHeader->fogNear, gCurrentLevelHeader->fogFar, (u8)gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
         }
     }
     settings = get_settings();
@@ -816,9 +816,9 @@ void init_game(void) {
 
     init_main_memory_pool();
     func_800C6170();
-    D_800DD374 = TRUE;
-    if (func_8006F4EC() != 0) {
-        D_800DD374 = FALSE;
+    sAntiPiracyTriggered = TRUE;
+    if (check_imem_validity()) {
+        sAntiPiracyTriggered = FALSE;
     }
     D_80123514 = FALSE;
     D_80123518 = 0;
@@ -873,7 +873,6 @@ void init_game(void) {
  * The main gameplay loop.
  * Contains all game logic, audio and graphics processing.
  */
-
 void main_game_loop(void) {
     s32 debugLoopCounter;
     s32 framebufferSize;
@@ -910,7 +909,7 @@ void main_game_loop(void) {
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, &gCurrHudMat, 1);
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
-    if (get_crash_status()) {
+    if (get_lockup_status()) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
     }
@@ -935,14 +934,14 @@ void main_game_loop(void) {
             func_8006CCF0(sLogicUpdateRate);
             break;
         case DRAW_CRASH_SCREEN: // EPC (lockup display)
-            func_800B77D4(sLogicUpdateRate);
+            lockup_screen_loop(sLogicUpdateRate);
             break;
     }
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
 
-    process_audio(sLogicUpdateRate);
+    handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
     render_dialogue_boxes(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     close_dialogue_box(4);
@@ -1047,11 +1046,11 @@ void func_8006CCF0(s32 updateRate) {
     buttonHeldInputs = 0;
     buttonPressedInputs = 0;
 
-    for (i = 0; i < func_8009C3D8(); i++) {
+    for (i = 0; i < get_active_player_count(); i++) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
-    if (D_800DD374) {
+    if (sAntiPiracyTriggered) {
         buttonPressedInputs |= START_BUTTON;
     }
     if (!gIsPaused) {
@@ -1431,9 +1430,9 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_8006ECFC(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
-    func_80004A60(0, 0x7FFF);
-    func_80004A60(1, 0x7FFF);
-    func_80004A60(2, 0x7FFF);
+    func_80004A60(0, 32767);
+    func_80004A60(1, 32767);
+    func_80004A60(2, 32767);
     func_80065EA0();
 
     if (!D_80123514) {
@@ -1493,13 +1492,13 @@ void func_8006DBE4(void) {
     D_80123514 = FALSE;
 }
 
-void func_8006DC58(s32 arg0) {
+void func_8006DC58(s32 updateRate) {
     if (get_thread30_level_id_to_load() == 0) {
-        func_80010994(arg0);
+        func_80010994(updateRate);
         gParticlePtrList_flush();
         func_8001BF20();
-        func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
-        func_800C3440(arg0);
+        func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+        func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
         func_80077268(&gCurrDisplayList);
@@ -1975,7 +1974,7 @@ void func_8006F398(void) {
     u8 *first_racer_data;
     u8 *second_racer_data;
 
-    func_8006A50C();
+    swap_player_1_and_2_ids();
     func_8000E194();
 
     first_racer_data = (u8 *)(gSettingsPtr->racers);
@@ -1995,7 +1994,6 @@ void func_8006F42C(void) {
 /**
  * Give the player 8 frames to enter the CPak menu with start, then load the intro sequence.
  */
-
 void pre_intro_loop(void) {
     s32 i;
     s32 buttonInputs = 0;
@@ -2015,7 +2013,6 @@ void pre_intro_loop(void) {
 /**
  * Returns TRUE if the game doesn't detect any controllers.
  */
-
 s32 is_controller_missing(void) {
     if (sControllerStatus == CONTROLLER_MISSING) {
         return TRUE;
@@ -2024,11 +2021,16 @@ s32 is_controller_missing(void) {
     }
 }
 
-s32 func_8006F4EC(void) {
-    if (IO_READ(SP_IMEM_START) !=
-        (SP_STATUS_HALT | SP_STATUS_BROKE | SP_STATUS_DMA_BUSY | SP_STATUS_IO_FULL | SP_STATUS_INTR_BREAK | SP_STATUS_YIELD |
-            SP_STATUS_YIELDED | SP_STATUS_TASKDONE | SP_STATUS_TASKDONE | SP_STATUS_RSPSIGNAL | SP_STATUS_SIG5)) {
-        return 0;
+/**
+ * Ran on boot, will make sure the CIC chip (CIC6103) is to spec. Will return true if it's all good, otherwise it returns false.
+ * The intention of this function, is an attempt to check that the cartridge is a legitimate copy.
+ * A false read, meaning you're caught running an illegitimate copy, will force the game to pause when you enter the world.
+ */
+s32 check_imem_validity(void) {
+    /*(SP_STATUS_HALT | SP_STATUS_BROKE | SP_STATUS_DMA_BUSY | SP_STATUS_IO_FULL | SP_STATUS_INTR_BREAK | SP_STATUS_YIELD |
+    SP_STATUS_YIELDED | SP_STATUS_TASKDONE | SP_STATUS_TASKDONE | SP_STATUS_RSPSIGNAL | SP_STATUS_SIG5))*/
+    if (IO_READ(SP_IMEM_START) != 0x17D7) {
+        return FALSE;
     }
-    return 1;
+    return TRUE;
 }

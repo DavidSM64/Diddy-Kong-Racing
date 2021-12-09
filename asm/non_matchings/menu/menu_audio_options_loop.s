@@ -60,7 +60,7 @@ glabel menu_audio_options_loop
 /* 08594C 80084D4C 8FAD0040 */  lw    $t5, 0x40($sp)
 /* 085950 80084D50 02002025 */  move  $a0, $s0
 /* 085954 80084D54 01A27025 */  or    $t6, $t5, $v0
-/* 085958 80084D58 0C01A967 */  jal   func_8006A59C
+/* 085958 80084D58 0C01A967 */  jal   clamp_joystick_x_axis
 /* 08595C 80084D5C AFAE0040 */   sw    $t6, 0x40($sp)
 /* 085960 80084D60 8FA30028 */  lw    $v1, 0x28($sp)
 /* 085964 80084D64 8FA50024 */  lw    $a1, 0x24($sp)
@@ -122,7 +122,7 @@ glabel menu_audio_options_loop
 /* 085A30 80084E30 00000000 */  nop   
 /* 085A34 80084E34 07200004 */  bltz  $t9, .L80084E48
 /* 085A38 80084E38 240A0003 */   li    $t2, 3
-/* 085A3C 80084E3C 0C000326 */  jal   func_80000C98
+/* 085A3C 80084E3C 0C000326 */  jal   set_music_fade_timer
 /* 085A40 80084E40 2404FF80 */   li    $a0, -128
 /* 085A44 80084E44 240A0003 */  li    $t2, 3
 .L80084E48:

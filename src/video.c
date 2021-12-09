@@ -308,8 +308,12 @@ void func_8007AB24(s8 arg0) {
     D_801262E4 = arg0;
 }
 
-// Unused?
-s32 func_8007AB34(void) {
+/**
+ * Unused function that returns the refresh rate, after performance.
+ * A fully performant game would return 60.
+ * Perhaps may have been used originally to calculate the factor in which to handle frameskipping with.
+ */
+UNUSED s32 get_video_refresh_speed(void) {
     return (s32)((f32)gVideoRefreshRate / (f32)D_80126309);
 }
 

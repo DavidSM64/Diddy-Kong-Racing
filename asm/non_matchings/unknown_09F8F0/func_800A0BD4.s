@@ -109,7 +109,7 @@ glabel func_800A0BD4
 /* 0A1960 800A0D60 24010001 */  li    $at, 1
 /* 0A1964 800A0D64 14410006 */  bne   $v0, $at, .L800A0D80
 /* 0A1968 800A0D68 24010002 */   li    $at, 2
-/* 0A196C 800A0D6C 0C000C63 */  jal   func_8000318C
+/* 0A196C 800A0D6C 0C000C63 */  jal   set_sound_channel_count
 /* 0A1970 800A0D70 24040008 */   li    $a0, 8
 /* 0A1974 800A0D74 1000000B */  b     .L800A0DA4
 /* 0A1978 800A0D78 8FBF002C */   lw    $ra, 0x2c($sp)
@@ -117,12 +117,12 @@ glabel func_800A0BD4
 .L800A0D80:
 /* 0A1980 800A0D80 14410005 */  bne   $v0, $at, .L800A0D98
 /* 0A1984 800A0D84 00000000 */   nop   
-/* 0A1988 800A0D88 0C000C63 */  jal   func_8000318C
+/* 0A1988 800A0D88 0C000C63 */  jal   set_sound_channel_count
 /* 0A198C 800A0D8C 2404000C */   li    $a0, 12
 /* 0A1990 800A0D90 10000004 */  b     .L800A0DA4
 /* 0A1994 800A0D94 8FBF002C */   lw    $ra, 0x2c($sp)
 .L800A0D98:
-/* 0A1998 800A0D98 0C000C63 */  jal   func_8000318C
+/* 0A1998 800A0D98 0C000C63 */  jal   set_sound_channel_count
 /* 0A199C 800A0D9C 24040010 */   li    $a0, 16
 /* 0A19A0 800A0DA0 8FBF002C */  lw    $ra, 0x2c($sp)
 .L800A0DA4:

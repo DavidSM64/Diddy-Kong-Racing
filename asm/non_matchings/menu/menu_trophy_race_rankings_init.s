@@ -307,7 +307,7 @@ glabel menu_trophy_race_rankings_init
 /* 099A68 80098E68 24040018 */   li    $a0, 24
 /* 099A6C 80098E6C 0C0002CD */  jal   play_music
 /* 099A70 80098E70 24040018 */   li    $a0, 24
-/* 099A74 80098E74 0C000326 */  jal   func_80000C98
+/* 099A74 80098E74 0C000326 */  jal   set_music_fade_timer
 /* 099A78 80098E78 24040100 */   li    $a0, 256
 /* 099A7C 80098E7C 0C0261DD */  jal   func_80098774
 /* 099A80 80098E80 00002025 */   move  $a0, $zero

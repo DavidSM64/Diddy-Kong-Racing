@@ -28,7 +28,7 @@ glabel load_level
 /* 06BEAC 8006B2AC 00000000 */  nop   
 /* 06BEB0 8006B2B0 17200006 */  bnez  $t9, .L8006B2CC
 /* 06BEB4 8006B2B4 8FAA0064 */   lw    $t2, 0x64($sp)
-/* 06BEB8 8006B2B8 0C000C63 */  jal   func_8000318C
+/* 06BEB8 8006B2B8 0C000C63 */  jal   set_sound_channel_count
 /* 06BEBC 8006B2BC 24040008 */   li    $a0, 8
 /* 06BEC0 8006B2C0 1000000B */  b     .L8006B2F0
 /* 06BEC4 8006B2C4 00000000 */   nop   
@@ -37,12 +37,12 @@ glabel load_level
 /* 06BECC 8006B2CC 24010001 */  li    $at, 1
 /* 06BED0 8006B2D0 15410005 */  bne   $t2, $at, .L8006B2E8
 /* 06BED4 8006B2D4 00000000 */   nop   
-/* 06BED8 8006B2D8 0C000C63 */  jal   func_8000318C
+/* 06BED8 8006B2D8 0C000C63 */  jal   set_sound_channel_count
 /* 06BEDC 8006B2DC 2404000C */   li    $a0, 12
 /* 06BEE0 8006B2E0 10000003 */  b     .L8006B2F0
 /* 06BEE4 8006B2E4 00000000 */   nop   
 .L8006B2E8:
-/* 06BEE8 8006B2E8 0C000C63 */  jal   func_8000318C
+/* 06BEE8 8006B2E8 0C000C63 */  jal   set_sound_channel_count
 /* 06BEEC 8006B2EC 24040010 */   li    $a0, 16
 .L8006B2F0:
 /* 06BEF0 8006B2F0 0C01BAA4 */  jal   get_settings

@@ -74,7 +74,7 @@ void init_vi_settings(void);
 void init_framebuffer(s32 index);
 void func_8007A974(void);
 void func_8007AB24(s8 arg0);
-s32 func_8007AB34(void);
+s32 get_video_refresh_speed(void);
 void swap_framebuffers(void);
 void memory_copy(u8 *src, u8 *dest, s32 len);
 

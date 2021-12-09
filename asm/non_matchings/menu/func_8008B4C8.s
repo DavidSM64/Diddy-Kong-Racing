@@ -103,7 +103,7 @@ glabel func_8008B4C8
 /* 08C244 8008B644 164C0039 */  bne   $s2, $t4, .L8008B72C
 /* 08C248 8008B648 8FBF003C */   lw    $ra, 0x3c($sp)
 .L8008B64C:
-/* 08C24C 8008B64C 0C000326 */  jal   func_80000C98
+/* 08C24C 8008B64C 0C000326 */  jal   set_music_fade_timer
 /* 08C250 8008B650 2404FF80 */   li    $a0, -128
 /* 08C254 8008B654 10000035 */  b     .L8008B72C
 /* 08C258 8008B658 8FBF003C */   lw    $ra, 0x3c($sp)

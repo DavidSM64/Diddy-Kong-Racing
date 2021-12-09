@@ -30,7 +30,7 @@ u8 D_800E2EF4[196] = {
     0x00, 0x00, 0x00, 0x00
 };
 
-Gfx dl_debug_font_settings[] = {
+Gfx dDebugFontSettings[] = {
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),

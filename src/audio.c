@@ -16,20 +16,20 @@
 
 ALSeqPlayer *gMusicPlayer = NULL;
 ALSeqPlayer *gSndFxPlayer = NULL;
-u8 musicRelativeVolume = 0x7F;
-u8 sfxRelativeVolume = 0x7F;
+u8 musicRelativeVolume = 127;
+u8 sfxRelativeVolume = 127;
 u8 D_800DC640 = 1;
 u8 D_800DC644 = 0;
 s32 D_800DC648 = 0;
 s32 audioPrevCount = 0;
-f32 D_800DC650 = 1.0;
-s32 musicVolumeSliderPercentage = 0x100;
+f32 sMusicFadeVolume = 1.0f;
+s32 musicVolumeSliderPercentage = 256;
 s32 D_800DC658 = 0;
 u8 D_800DC65C = 0;
 u8 D_800DC660 = 0;
 s32 D_800DC664 = 0; // Currently unknown, might be a different type.
 s32 D_800DC668 = 0; // Currently unknown, might be a different type.
-s32 D_800DC66C = 0x100;
+s32 sMusicVolumeMultiplier = 256; // This is never not 256...
 u8 D_800DC670 = 0;
 
 /*******************************/
@@ -37,9 +37,9 @@ u8 D_800DC670 = 0;
 /************ .rodata ************/
 
 // Debug strings
-const char D_800E4950[] = "amSndPlay: Illegal sound effects table index\n";
-const char D_800E4980[] = "amSndPlayDirect: Somebody tried to play illegal sound %d\n";
-const char D_800E49BC[] = "Invalid midi sequence index\n";
+UNUSED const char sAudioErrorString_01[] = "amSndPlay: Illegal sound effects table index\n";
+UNUSED const char sAudioErrorString_02[] = "amSndPlayDirect: Somebody tried to play illegal sound %d\n";
+UNUSED const char sAudioErrorString_03[] = "Invalid midi sequence index\n";
 
 /*********************************/
 
@@ -66,20 +66,20 @@ u8 D_80115D04;
 u8 D_80115D05;
 s32 musicTempo;
 u32 *D_80115D0C;
-ALBankFile *ALBankFile_80115D10;
-ALBankFile *ALBankFile_80115D14;
+ALBankFile *ALBankFile_80115D10; // And I have reason to believe these are voice clips.
+ALBankFile *ALBankFile_80115D14; // These are sound effects, I do not know if it is ALL the sound effects.
 
-unk80115D18 *D_80115D18;
-unk80115D1C *D_80115D1C;
+unk80115D18 *sSoundEffectsPool;
+unk80115D1C *sMusicPool;
 
 s32 D_80115D20;
 s32 D_80115D24;
-u32 D_80115D28;
-u32 D_80115D2C;
-s16 D_80115D30;
+u32 sSoundEffectsPoolSize;
+u32 sMusicPoolSize;
+s16 sMusicTempo;
 f32 D_80115D34;
-s32 D_80115D38;
-s32 D_80115D3C;
+s32 sMusicDelayTimer;
+s32 sMusicDelayLength;
 u8 D_80115D40;
 u8 D_80115D41;
 unk80115D48 D_80115D48[8];
@@ -97,7 +97,7 @@ u32 D_80115F88;
 void audio_init(OSSched *arg0) {
     s32 iCnt;
     ALSynConfig synth_config;
-    s32 *reg_s2;
+    s32 *addrPtr;
     u32 seqfSize;
     u32 seq_max_len;
     u32 tmp2;
@@ -106,31 +106,31 @@ void audio_init(OSSched *arg0) {
     seq_max_len = 0;
     alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
 
-    reg_s2 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
-    ALBankFile_80115D14 = (ALBankFile *)allocate_from_main_pool_safe(reg_s2[2] - reg_s2[1], COLOR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D14, reg_s2[1], reg_s2[2] - reg_s2[1]);
-    alBnkfNew(ALBankFile_80115D14, get_rom_offset_of_asset(ASSET_AUDIO, reg_s2[2]));
+    addrPtr = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
+    ALBankFile_80115D14 = (ALBankFile *)allocate_from_main_pool_safe(addrPtr[2] - addrPtr[1], COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D14, addrPtr[1], addrPtr[2] - addrPtr[1]);
+    alBnkfNew(ALBankFile_80115D14, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[2]));
 
-    D_80115D28 = reg_s2[7] - reg_s2[6];
-    D_80115D18 = (unk80115D18 *)allocate_from_main_pool_safe(D_80115D28, COLOR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, D_80115D18, reg_s2[6], D_80115D28);
-    D_80115D20 = D_80115D28 / 10;
+    sSoundEffectsPoolSize = addrPtr[7] - addrPtr[6];
+    sSoundEffectsPool = (unk80115D18 *)allocate_from_main_pool_safe(sSoundEffectsPoolSize, COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, sSoundEffectsPool, addrPtr[6], sSoundEffectsPoolSize);
+    D_80115D20 = sSoundEffectsPoolSize / 10;
 
-    D_80115D2C = reg_s2[6] - reg_s2[5];
-    D_80115D1C = (unk80115D1C *)allocate_from_main_pool_safe(D_80115D2C, COLOR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, D_80115D1C, reg_s2[5], D_80115D2C);
-    D_80115D24 = D_80115D2C / 3;
+    sMusicPoolSize = addrPtr[6] - addrPtr[5];
+    sMusicPool = (unk80115D1C *)allocate_from_main_pool_safe(sMusicPoolSize, COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, sMusicPool, addrPtr[5], sMusicPoolSize);
+    D_80115D24 = sMusicPoolSize / 3;
 
-    ALBankFile_80115D10 = (ALBankFile *)allocate_from_main_pool_safe(reg_s2[0], COLOR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D10, 0, reg_s2[0]);
-    alBnkfNew(ALBankFile_80115D10, get_rom_offset_of_asset(ASSET_AUDIO, reg_s2[0]));
+    ALBankFile_80115D10 = (ALBankFile *)allocate_from_main_pool_safe(addrPtr[0], COLOR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D10, 0, addrPtr[0]);
+    alBnkfNew(ALBankFile_80115D10, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[0]));
     ALSeqFile_80115CF8 = (ALSeqFile *)alHeapDBAlloc(0, 0, &gALHeap, 1, 4);
-    load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, reg_s2[4], 4);
+    load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, addrPtr[4], 4);
 
     seqfSize = (ALSeqFile_80115CF8->seqCount) * 8 + 4;
     ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, COLOR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, reg_s2[4], seqfSize);
-    alSeqFileNew(ALSeqFile_80115CF8, get_rom_offset_of_asset(ASSET_AUDIO, reg_s2[4]));
+    load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, addrPtr[4], seqfSize);
+    alSeqFileNew(ALSeqFile_80115CF8, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[4]));
     D_80115D0C = (u32 *)allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOR_TAG_CYAN);
 
     for (iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++) {
@@ -166,8 +166,8 @@ void audio_init(OSSched *arg0) {
     alSndPNew(&audConfig);
     audioStartThread();
     func_80000968(0);
-    free_from_memory_pool(reg_s2);
-    func_8000318C(10);
+    free_from_memory_pool(addrPtr);
+    set_sound_channel_count(10);
     D_800DC648 = 0;
     D_80115D40 = 0;
     D_80115D41 = 0;
@@ -181,12 +181,12 @@ void func_80000890(u8 arg0) {
     if (!D_80115F79) {
         D_80115F78 = arg0;
         if (D_80115F78 == 0) {
-            D_800DC66C = 256;
+            sMusicVolumeMultiplier = 256;
             set_relative_volume_for_music(musicRelativeVolume);
-            func_80004A60(0, D_800DC66C * 128 - 1);
-            func_80004A60(1, D_800DC66C * 128 - 1);
-            func_80004A60(2, D_800DC66C * 128 - 1);
-            func_80004A60(4, D_800DC66C * 128 - 1);
+            func_80004A60(0, sMusicVolumeMultiplier * 128 - 1);
+            func_80004A60(1, sMusicVolumeMultiplier * 128 - 1);
+            func_80004A60(2, sMusicVolumeMultiplier * 128 - 1);
+            func_80004A60(4, sMusicVolumeMultiplier * 128 - 1);
         }
     }
 }
@@ -195,7 +195,7 @@ void func_80000968(s32 arg0) {
     switch (arg0) {
         case 1:
             func_80004A60(0, 0);
-            func_80004A60(1, 0x7FFF);
+            func_80004A60(1, 32767);
             func_80004A60(2, 0);
             func_80004A60(4, 0);
             alCSPSetVol(gMusicPlayer, (s16)(musicRelativeVolume * musicVolumeSliderPercentage >> 2));
@@ -203,21 +203,21 @@ void func_80000968(s32 arg0) {
             break;
         case 2:
             func_80004A60(0, 0);
-            func_80004A60(1, 0x7FFF);
-            func_80004A60(2, 0x7FFF);
-            func_80004A60(4, 0x7FFF);
+            func_80004A60(1, 32767);
+            func_80004A60(2, 32767);
+            func_80004A60(4, 32767);
             break;
         case 3:
             func_80004A60(0, 0);
-            func_80004A60(1, 0x7FFF);
+            func_80004A60(1, 32767);
             func_80004A60(2, 0);
             func_80004A60(4, 0);
             break;
         default:
-            func_80004A60(0, 0x7FFF);
-            func_80004A60(1, 0x7FFF);
-            func_80004A60(2, 0x7FFF);
-            func_80004A60(4, 0x7FFF);
+            func_80004A60(0, 32767);
+            func_80004A60(1, 32767);
+            func_80004A60(2, 32767);
+            func_80004A60(4, 32767);
             alCSPSetVol(gMusicPlayer, (s16)(musicRelativeVolume * musicVolumeSliderPercentage));
             alCSPSetVol(gSndFxPlayer, (s16)(sfxGetVolumeSlider() * sfxRelativeVolume));
             break;
@@ -270,40 +270,44 @@ void func_80000C68(u8 arg0) {
     func_80063A90(gMusicPlayer, arg0);
 }
 
-void func_80000C98(s32 arg0) {
-    D_80115D38 = 0;
-    D_80115D3C = (arg0 * 0x3C) >> 8;
+/**
+ * Enables the timer to start fading in or out the background music.
+ * Give it a positive number to fade in, otherwise, give it a negative one to fade out.
+ */
+void set_music_fade_timer(s32 time) {
+    sMusicDelayTimer = 0;
+    sMusicDelayLength = (time * 60) >> 8;
 }
 
 void func_80000CBC(void) {
-    D_80115D38 = 0;
-    D_80115D3C = 0;
-    D_800DC650 = 1.0f;
+    sMusicDelayTimer = 0;
+    sMusicDelayLength = 0;
+    sMusicFadeVolume = 1.0f;
     set_relative_volume_for_music(musicRelativeVolume);
 }
 
-void process_audio(u8 updateRate) {
+void handle_music_fade(u8 updateRate) {
     s32 reg_s2;
     s32 j;
-    if (D_80115D3C > 0) {
+    if (sMusicDelayLength > 0) {
 
-        D_80115D38 += updateRate;
-        D_800DC650 = ((f32)D_80115D38) / ((f32)D_80115D3C);
+        sMusicDelayTimer += updateRate;
+        sMusicFadeVolume = ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
 
-        if ((f64)D_800DC650 > 1.0f) {
-            D_80115D38 = 0;
-            D_80115D3C = 0;
-            D_800DC650 = 1.0f;
+        if ((f64)sMusicFadeVolume > 1.0f) {
+            sMusicDelayTimer = 0;
+            sMusicDelayLength = 0;
+            sMusicFadeVolume = 1.0f;
         }
         set_relative_volume_for_music(musicRelativeVolume);
-    } else if (D_80115D3C < 0) {
+    } else if (sMusicDelayLength < 0) {
 
-        D_80115D38 -= updateRate;
-        D_800DC650 = 1.0f - ((f32)D_80115D38) / ((f32)D_80115D3C);
-        if ((f64)D_800DC650 < 0) {
-            D_80115D38 = 0;
-            D_80115D3C = 0;
-            D_800DC650 = 0.0f;
+        sMusicDelayTimer -= updateRate;
+        sMusicFadeVolume = 1.0f - ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
+        if ((f64)sMusicFadeVolume < 0) {
+            sMusicDelayTimer = 0;
+            sMusicDelayLength = 0;
+            sMusicFadeVolume = 0.0f;
         }
         set_relative_volume_for_music(musicRelativeVolume);
     }
@@ -333,8 +337,8 @@ void process_audio(u8 updateRate) {
 
     func_8000232C(gMusicPlayer, D_80115CFC, &D_800DC65C, &D_80115D88);
     func_8000232C(gSndFxPlayer, D_80115D00, &D_800DC660, &D_80115E80);
-    if (D_80115D30 == -1 && gMusicPlayer->target) {
-        D_80115D30 = 0x03938700 / alCSPGetTempo(gMusicPlayer);
+    if (sMusicTempo == -1 && gMusicPlayer->target) {
+        sMusicTempo = 60000000 / alCSPGetTempo(gMusicPlayer);
     }
 }
 
@@ -474,16 +478,22 @@ void func_800014BC(f32 arg0) {
     musicSetTempo((s32)((f32)(u32)(musicGetTempo() & 0xFF) * arg0));
 }
 
+/**
+ * Set the tempo of the current playing background music.
+ */
 void musicSetTempo(s32 tempo) {
     if (tempo != 0) {
         f32 inv_tempo = (1.0f / tempo);
         alCSPSetTempo(gMusicPlayer, (s32)(inv_tempo * 60000000.0f));
-        D_80115D30 = tempo;
+        sMusicTempo = tempo;
     }
 }
 
+/**
+ * Return the tempo of the current playing background music.
+ */
 s16 musicGetTempo(void) {
-    return D_80115D30;
+    return sMusicTempo;
 }
 
 u8 music_is_playing(void) {
@@ -515,9 +525,9 @@ f32 func_800015F8(void) {
         *tmp2 = delta_f / D_800E49E0 + D_80115D34;
     }
     if (D_80115D40 == 0) {
-        D_80115D30 = 182;
+        sMusicTempo = 182;
     }
-    tmp = D_800E49E8 / (f32)D_80115D30;
+    tmp = D_800E49E8 / (f32)sMusicTempo;
     while (D_80115D34 > tmp) {
         D_80115D34 -= tmp;
     }
@@ -527,9 +537,9 @@ f32 func_800015F8(void) {
 #endif
 
 void func_80001728(u8 arg0, u8 *arg1, u8 *arg2, u8 *arg3) {
-    *arg1 = D_80115D1C[arg0].unk1;
-    *arg2 = D_80115D1C[arg0].unk0;
-    *arg3 = D_80115D1C[arg0].unk2;
+    *arg1 = sMusicPool[arg0].unk1;
+    *arg2 = sMusicPool[arg0].unk0;
+    *arg3 = sMusicPool[arg0].unk2;
 }
 
 void func_80001784(u8 a0) {
@@ -596,17 +606,17 @@ void set_relative_volume_for_music(u8 vol) {
     f32 normalized_vol;
 
     musicRelativeVolume = vol;
-    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * D_800DC650;
-    alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C * normalized_vol) >> 8));
+    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * sMusicFadeVolume;
+    alCSPSetVol(gMusicPlayer, (s16)((s32)(sMusicVolumeMultiplier * normalized_vol) >> 8));
 }
 
 void set_music_volume_slider(u32 slider_val) {
     f32 normalized_vol;
 
-    slider_val = (slider_val < 0x101) ? slider_val : 256;
+    slider_val = (slider_val <= 256) ? slider_val : 256;
     musicVolumeSliderPercentage = slider_val;
-    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * D_800DC650;
-    alCSPSetVol(gMusicPlayer, (s16)((s32)(D_800DC66C * normalized_vol) >> 8));
+    normalized_vol = musicVolumeSliderPercentage * musicRelativeVolume * sMusicFadeVolume;
+    alCSPSetVol(gMusicPlayer, (s16)((s32)(sMusicVolumeMultiplier * normalized_vol) >> 8));
 }
 
 u8 musicGetRelativeVolume(void) {
@@ -654,7 +664,7 @@ u16 func_80001CB8(u16 arg0) {
     if (D_80115D20 < arg0) {
         return 0;
     }
-    return D_80115D18[arg0].unk6;
+    return sSoundEffectsPool[arg0].unk6;
 }
 
 GLOBAL_ASM("asm/non_matchings/audio/func_80001D04.s")
@@ -689,7 +699,7 @@ void func_80001F14(u16 sndIndx, u32 *arg1) {
 GLOBAL_ASM("asm/non_matchings/audio/func_80001FB8.s")
 #else
 void func_80001FB8(u16 arg0) {
-    arg0 * 10 + D_80115D18[0].unk00;
+    arg0 * 10 + sSoundEffectsPool[0].unk00;
 }
 #endif
 
@@ -703,10 +713,10 @@ u8 ALSeqFile_80115CF8_GetSeqCount(void) {
 
 void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2) {
     if (arg0 != NULL) {
-        *arg0 = D_80115D18;
+        *arg0 = sSoundEffectsPool;
     }
     if (arg1 != NULL) {
-        *arg1 = D_80115D28;
+        *arg1 = sSoundEffectsPoolSize;
     }
     if (arg2 != NULL) {
         *arg2 = D_80115D20;
@@ -716,10 +726,10 @@ void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2) {
 /* Unused? */
 void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
     if (arg0 != NULL) {
-        *arg0 = D_80115D1C;
+        *arg0 = sMusicPool;
     }
     if (arg1 != NULL) {
-        *arg1 = D_80115D2C;
+        *arg1 = sMusicPoolSize;
     }
     if (arg2 != NULL) {
         *arg2 = D_80115D24;
@@ -770,14 +780,14 @@ GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
 #else
 void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq) {
     if (alCSPGetState(seqp) == AL_STOPPED && *arg2) {
-        /*load_asset_to_address(ASSET_AUDIO, ptr, 
+        /*load_asset_to_address(ASSET_AUDIO, ptr,
             (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - get_rom_offset_of_asset(ASSET_AUDIO,0),
             *((u32*)(((*arg2) << 3) + D_80115D0C)));*/
         alCSeqNew(seq, ptr);
         alCSPSetSeq(seqp, seq);
         alCSPPlay(seqp);
         if (seqp == gMusicPlayer) {
-            set_relative_volume_for_music(*((u8 *)((*arg2) * 3 + D_80115D1C->unk0)));
+            set_relative_volume_for_music(*((u8 *)((*arg2) * 3 + sMusicPool->unk0)));
         } else {
         }
     }
@@ -803,5 +813,5 @@ void func_80002608(u8 arg0) {
 }
 
 u8 func_80002630(void) {
-    return D_80115D1C[D_80115D04].unk2;
+    return sMusicPool[D_80115D04].unk2;
 }

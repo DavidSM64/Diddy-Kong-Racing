@@ -58,7 +58,7 @@ s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
 unk800DC6BC_40 *D_800DC6B8 = NULL;
 unk800DC6BC *gAlSndPlayer = &D_80119BD0;
 
-s32 sfxVolumeSlider = 0x100;
+s32 sfxVolumeSlider = 256;
 s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
 
 /*******************************/
@@ -265,23 +265,26 @@ ALDMAproc __amDmaNew(AMDMAState **state) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003040.s")
 
-void set_sfx_volume_slider(u32 arg0) {
-    if (arg0 > 256) {
-        arg0 = 256;
+void set_sfx_volume_slider(u32 volume) {
+    if (volume > 256) {
+        volume = 256;
     }
 
-    sfxVolumeSlider = arg0;
+    sfxVolumeSlider = volume;
 }
 
 s32 sfxGetVolumeSlider(void) {
     return sfxVolumeSlider;
 }
 
-void func_8000318C(s32 arg0) {
-    if (gAlSndPlayer->unk44 >= arg0) {
-        gAlSndPlayer->unk48 = arg0;
+/**
+ * Sets the number of active sound channels to either the passed number, or the maximum amount, whichever's lower.
+ */
+void set_sound_channel_count(s32 numChannels) {
+    if (gAlSndPlayer->soundChannelsMax >= numChannels) {
+        gAlSndPlayer->soundChannels = numChannels;
     } else {
-        gAlSndPlayer->unk48 = gAlSndPlayer->unk44;
+        gAlSndPlayer->soundChannels = gAlSndPlayer->soundChannelsMax;
     }
 }
 
@@ -290,8 +293,8 @@ void alSndPNew(audioMgrConfig *c) {
     unk800DC6BC_40 *tmp1;
     ALEvent sp_38;
 
-    gAlSndPlayer->unk44 = c->maxChannels;
-    gAlSndPlayer->unk48 = c->maxChannels;
+    gAlSndPlayer->soundChannelsMax = c->maxChannels;
+    gAlSndPlayer->soundChannels = c->maxChannels;
     gAlSndPlayer->unk3C = 0;
     gAlSndPlayer->frameTime = 33000;
     gAlSndPlayer->unk40 = (unk800DC6BC_40 *)alHeapDBAlloc(0, 0, c->hp, 1, (c->unk00) << 6);

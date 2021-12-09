@@ -151,7 +151,7 @@ glabel menu_game_select_loop
 /* 08D5E8 8008C9E8 00000000 */  nop   
 /* 08D5EC 8008C9EC 152A0003 */  bne   $t1, $t2, .L8008C9FC
 /* 08D5F0 8008C9F0 00000000 */   nop   
-/* 08D5F4 8008C9F4 0C000326 */  jal   func_80000C98
+/* 08D5F4 8008C9F4 0C000326 */  jal   set_music_fade_timer
 /* 08D5F8 8008C9F8 2404FF80 */   li    $a0, -128
 .L8008C9FC:
 /* 08D5FC 8008C9FC 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e

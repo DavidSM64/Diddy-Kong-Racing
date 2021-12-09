@@ -63,7 +63,7 @@ glabel func_80093D40
 /* 094A20 80093E20 3C11800E */  lui   $s1, %hi(D_800E098C) # $s1, 0x800e
 /* 094A24 80093E24 2631098C */  addiu $s1, %lo(D_800E098C) # addiu $s1, $s1, 0x98c
 /* 094A28 80093E28 8E240000 */  lw    $a0, ($s1)
-/* 094A2C 80093E2C 0C01A93E */  jal   func_8006A4F8
+/* 094A2C 80093E2C 0C01A93E */  jal   get_player_id
 /* 094A30 80093E30 00000000 */   nop   
 /* 094A34 80093E34 3C09800E */  lui   $t1, %hi(D_800E0990) # $t1, 0x800e
 /* 094A38 80093E38 25290990 */  addiu $t1, %lo(D_800E0990) # addiu $t1, $t1, 0x990
@@ -86,7 +86,7 @@ glabel func_80093D40
 /* 094A7C 80093E7C 0C031414 */  jal   set_current_text_background_colour
 /* 094A80 80093E80 AFA00010 */   sw    $zero, 0x10($sp)
 /* 094A84 80093E84 8E240000 */  lw    $a0, ($s1)
-/* 094A88 80093E88 0C01A93E */  jal   func_8006A4F8
+/* 094A88 80093E88 0C01A93E */  jal   get_player_id
 /* 094A8C 80093E8C 00000000 */   nop   
 /* 094A90 80093E90 3C0C800E */  lui   $t4, %hi(D_800E09A0) # $t4, 0x800e
 /* 094A94 80093E94 258C09A0 */  addiu $t4, %lo(D_800E09A0) # addiu $t4, $t4, 0x9a0
