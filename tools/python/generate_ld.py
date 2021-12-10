@@ -231,7 +231,8 @@ class GenerateLD:
 if os.path.exists('./dkr.ld'):
     print("")
 else:
-    os.remove('./assets/' + VERSION + '/md5.txt')
+    if os.path.exists('./assets/' + VERSION + '/md5.txt'):
+        os.remove('./assets/' + VERSION + '/md5.txt')
 
 if os.path.exists('./assets/' + VERSION + '/md5.txt'):
     with open('./assets/' + VERSION + '/md5.txt', "rt") as a_file:
