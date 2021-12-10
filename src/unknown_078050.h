@@ -14,10 +14,10 @@ typedef union {
 
 extern s16 D_800DE490[16];
 
-extern u8 D_800DE4B0;
-extern u8 D_800DE4B4;
-extern u8 D_800DE4B8;
-extern s32 D_800DE4BC;
+extern u8 sBackgroundPrimColourR;
+extern u8 sBackgroundPrimColourG;
+extern u8 sBackgroundPrimColourB;
+extern s32 sBackgroundFillColour;
 
 extern u32 D_800DE4C0;
 extern u32 D_800DE4C4;
@@ -30,8 +30,8 @@ extern s32 D_800DE4DC;
 
 s32 func_80077A54(void);
 void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2);
-void func_80077B34(u8 arg0, u8 arg1, u8 arg2);
-void func_80077B5C(s32 red, s32 green, s32 blue);
+void set_background_prim_colour(u8 arg0, u8 arg1, u8 arg2);
+void set_background_fill_colour(s32 red, s32 green, s32 blue);
 void init_rdp_and_framebuffer(Gfx **dlist);
 void init_rsp(Gfx **dlist);
 void func_80078100(OSSched *sc);

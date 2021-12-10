@@ -21,6 +21,7 @@
 enum TextFonts {
     FONT_COLOURFUL,
     FONT_SMALL,
+    FONT_LARGE,
     FONT_UNK_FF = 255,
 };
 

@@ -90,14 +90,14 @@ glabel menu_track_select_init
 /* 08F4FC 8008E8FC 3C018012 */  lui   $at, %hi(D_801267D0) # $at, 0x8012
 /* 08F500 8008E900 0C023C03 */  jal   func_8008F00C
 /* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(D_801267D0)($at)
-/* 08F508 8008E908 3C04800E */  lui   $a0, %hi(D_800DF77C) # $a0, 0x800e
+/* 08F508 8008E908 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 08F50C 8008E90C 0C030076 */  jal   func_800C01D8
-/* 08F510 8008E910 2484F77C */   addiu $a0, %lo(D_800DF77C) # addiu $a0, $a0, -0x884
+/* 08F510 8008E910 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
 /* 08F514 8008E914 0C03005C */  jal   func_800C0170
 /* 08F518 8008E918 00000000 */   nop   
 /* 08F51C 8008E91C 24040032 */  li    $a0, 50
 /* 08F520 8008E920 24050069 */  li    $a1, 105
-/* 08F524 8008E924 0C01DED7 */  jal   func_80077B5C
+/* 08F524 8008E924 0C01DED7 */  jal   set_background_fill_colour
 /* 08F528 8008E928 240600DF */   li    $a2, 223
 /* 08F52C 8008E92C 3C11800E */  lui   $s1, %hi(D_800E0710) # $s1, 0x800e
 /* 08F530 8008E930 3C168012 */  lui   $s6, %hi(D_80126550) # $s6, 0x8012
@@ -334,7 +334,7 @@ glabel menu_track_select_init
 /* 08F8B0 8008ECB0 0C02719D */  jal   func_8009C674
 /* 08F8B4 8008ECB4 248407C4 */   addiu $a0, %lo(D_800E07C4) # addiu $a0, $a0, 0x7c4
 /* 08F8B8 8008ECB8 3C04800E */  lui   $a0, %hi(D_800E07E0) # $a0, 0x800e
-/* 08F8BC 8008ECBC 0C027229 */  jal   func_8009C8A4
+/* 08F8BC 8008ECBC 0C027229 */  jal   allocate_menu_images
 /* 08F8C0 8008ECC0 248407E0 */   addiu $a0, %lo(D_800E07E0) # addiu $a0, $a0, 0x7e0
 /* 08F8C4 8008ECC4 0C02392C */  jal   func_8008E4B0
 /* 08F8C8 8008ECC8 00000000 */   nop   
@@ -520,9 +520,9 @@ glabel menu_track_select_init
 /* 08FB68 8008EF68 24040002 */   li    $a0, 2
 /* 08FB6C 8008EF6C 3C018012 */  lui   $at, %hi(D_80126840) # $at, 0x8012
 /* 08FB70 8008EF70 AC206840 */  sw    $zero, %lo(D_80126840)($at)
-/* 08FB74 8008EF74 3C10800E */  lui   $s0, %hi(D_800DF760) # $s0, 0x800e
+/* 08FB74 8008EF74 3C10800E */  lui   $s0, %hi(sMenuMusicVolume) # $s0, 0x800e
 /* 08FB78 8008EF78 3C018012 */  lui   $at, %hi(D_80126848) # $at, 0x8012
-/* 08FB7C 8008EF7C 2610F760 */  addiu $s0, %lo(D_800DF760) # addiu $s0, $s0, -0x8a0
+/* 08FB7C 8008EF7C 2610F760 */  addiu $s0, %lo(sMenuMusicVolume) # addiu $s0, $s0, -0x8a0
 /* 08FB80 8008EF80 AC206848 */  sw    $zero, %lo(D_80126848)($at)
 /* 08FB84 8008EF84 AE000000 */  sw    $zero, ($s0)
 /* 08FB88 8008EF88 0C0002F8 */  jal   set_music_player_voice_limit

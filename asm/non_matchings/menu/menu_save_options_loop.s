@@ -224,11 +224,11 @@ glabel L80087E1C
 .L80087E70:
 /* 088A70 80087E70 3C08800E */  lui   $t0, %hi(gMenuDelay) # $t0, 0x800e
 /* 088A74 80087E74 8D08F47C */  lw    $t0, %lo(gMenuDelay)($t0)
-/* 088A78 80087E78 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 088A78 80087E78 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 088A7C 80087E7C 11000003 */  beqz  $t0, .L80087E8C
 /* 088A80 80087E80 00000000 */   nop   
 /* 088A84 80087E84 0C030076 */  jal   func_800C01D8
-/* 088A88 80087E88 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 088A88 80087E88 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 .L80087E8C:
 /* 088A8C 80087E8C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
 /* 088A90 80087E90 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)

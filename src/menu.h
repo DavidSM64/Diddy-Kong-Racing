@@ -101,14 +101,15 @@ enum Language {
 };
 
 /* Size: 0x20 bytes */
+// So this is looking to be a struct for menu images.
 typedef struct unk800DF510 {
-    s16 unk0;
-    s16 unk2;
+    s16 unk0; //X1
+    s16 unk2; //Y1
     s16 unk4;
     s16 unk6;
     f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 unkC; // X offset
+    f32 unk10; // Y offset
     f32 unk14;
     s16 unk18;
     s8  unk1A;
@@ -257,9 +258,9 @@ extern s32 *gMenuTextLangTable;
 
 extern char **gMenuText;
 
-extern u8 D_800DF4A4;
-extern u8 D_800DF4A8;
-extern u8 D_800DF4AC;
+extern u8 sMenuGuiColourR;
+extern u8 sMenuGuiColourG;
+extern u8 sMenuGuiColourB;
 
 extern u8 D_800DF4B0;
 extern s32 D_800DF4B4;
@@ -282,15 +283,15 @@ extern s8 gDialogOptionTangible;
 // Unused?
 extern s32 D_800DF4F0[];
 
-extern unk800DF510 D_800DF510[18];
+extern unk800DF510 sMenuImageProperties[18];
 
 extern s16 *D_800DF750[1];
 extern s16 D_800DF754;
 extern s16 D_800DF758;
-extern unk800DF510 *D_800DF75C;
+extern unk800DF510 *gMenuImageStack;
 
-extern s32 D_800DF760;
-extern s32 D_800DF764;
+extern s32 sMenuMusicVolume;
+extern s32 sMenuGuiOpacity;
 extern s32 D_800DF768;
 
 extern s32 D_800DF794;
@@ -303,9 +304,9 @@ extern char *gTitleMenuStrings[3];
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 extern char gVersionDisplayText[20];
 
-extern s16 D_800DF7C4[12];
+extern s16 sGameTitleTileTextures[12];
 
-extern DrawTexture D_800DF7DC[12];
+extern DrawTexture sGameTitleTileOffsets[12];
 
 // Title screen cinematic text
 extern unk800DF83C D_800DF83C[10];
@@ -316,7 +317,7 @@ extern u16 D_800DF9F8[12];
 
 extern char *gOptionMenuStrings[7];
 
-extern s16 D_800DFA2C[8];
+extern s16 gOptionMenuTextures[8];
 
 extern unk800DFA3C gAudioMenuStrings[8];
 
@@ -613,7 +614,7 @@ extern s32 gViewingCreditsFromCheat;
 
 extern MenuElement D_800E1B50[9];
 
-//extern u32 D_800E1C70[24];
+//extern u32 dMenuHudSettings[24];
 
 extern s8 D_800E1CD0[32];
 
@@ -669,7 +670,7 @@ void func_800828B8(void);
 void print_missing_controller_text(Gfx *dl, s32 updateRate);
 void menu_logos_screen_init(void);
 s32 menu_logo_screen_loop(s32 arg0);
-void func_80082FAC(void);
+void init_title_screen_variables(void);
 void menu_title_screen_init(void);
 void func_80084118(void);
 void menu_options_init(void);
@@ -699,10 +700,10 @@ void draw_character_select_text(s32 arg0);
 void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4);
 void func_8008C128(void);
 void menu_caution_init(void);
-void func_8008C4E8(void);
+void unload_large_font(void);
 void func_8008CACC(void);
 void menu_file_select_init(void);
-void func_8008CC28(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+void render_menu_image(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_8008E428(void);
 void func_8008E45C(void);
 void func_8008E4B0(void);
@@ -758,20 +759,20 @@ void func_8009C49C(void);
 void func_8009C4A8(s16 *arg0);
 void func_8009C508(s32 arg0);
 void func_8009C674(s16 *arg0);
-void func_8009C8A4(s16 *arg0);
-void func_8009C904(s32 arg0);
+void allocate_menu_images(s16 *imageSet);
+void allocate_and_set_menu_image_properties(s32 imageID);
 void func_8009CA58(void);
 void func_8009CF68(s32 arg0);
 void func_8009CFB0(void);
 s32 func_8009CFEC(u32 arg0);
 void set_option_text_colour(s32 condition);
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID);
-void func_8009D26C(void);
+void handle_menu_joystick_input(void);
 void func_8009D324(void);
 void func_8009D330(s32 arg0);
-void func_8009D33C(s32 arg0, s32 arg1);
+void set_menu_id_if_option_equal(s32 IDToCheck, s32 IDToSet);
 s32 taj_menu_loop(void);
-s32 func_8009D9F4(void);
+s32 dialogue_race_defeat(void);
 s32 trophy_race_cabinet_menu_loop(void);
 void dialogue_open_stub(void);
 void dialogue_close_stub(void);

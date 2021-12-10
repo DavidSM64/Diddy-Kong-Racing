@@ -154,7 +154,7 @@ glabel func_8008FA54
 /* 090880 8008FC80 00002025 */  move  $a0, $zero
 /* 090884 8008FC84 27A50068 */  addiu $a1, $sp, 0x68
 /* 090888 8008FC88 27A60064 */  addiu $a2, $sp, 0x64
-/* 09088C 8008FC8C 0C019B0B */  jal   func_80066C2C
+/* 09088C 8008FC8C 0C019B0B */  jal   copy_viewport_frame_size_to_coords
 /* 090890 8008FC90 27A70060 */   addiu $a3, $sp, 0x60
 /* 090894 8008FC94 8FA20068 */  lw    $v0, 0x68($sp)
 /* 090898 8008FC98 8FAB0060 */  lw    $t3, 0x60($sp)
@@ -230,10 +230,10 @@ glabel func_8008FA54
 .L8008FDA0:
 /* 0909A0 8008FDA0 8FAD0080 */  lw    $t5, 0x80($sp)
 .L8008FDA4:
-/* 0909A4 8008FDA4 3C03800E */  lui   $v1, %hi(D_800DF75C) # $v1, 0x800e
+/* 0909A4 8008FDA4 3C03800E */  lui   $v1, %hi(gMenuImageStack) # $v1, 0x800e
 /* 0909A8 8008FDA8 448D3000 */  mtc1  $t5, $f6
 /* 0909AC 8008FDAC 8FA40094 */  lw    $a0, 0x94($sp)
-/* 0909B0 8008FDB0 2463F75C */  addiu $v1, %lo(D_800DF75C) # addiu $v1, $v1, -0x8a4
+/* 0909B0 8008FDB0 2463F75C */  addiu $v1, %lo(gMenuImageStack) # addiu $v1, $v1, -0x8a4
 /* 0909B4 8008FDB4 46803220 */  cvt.s.w $f8, $f6
 /* 0909B8 8008FDB8 8C6E0000 */  lw    $t6, ($v1)
 /* 0909BC 8008FDBC 00041140 */  sll   $v0, $a0, 5

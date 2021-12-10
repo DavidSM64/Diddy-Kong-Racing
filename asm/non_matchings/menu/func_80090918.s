@@ -129,11 +129,11 @@ glabel func_80090918
 /* 0916FC 80090AFC 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 091700 80090B00 44818000 */  mtc1  $at, $f16
 /* 091704 80090B04 460A2203 */  div.s $f8, $f4, $f10
-/* 091708 80090B08 3C03800E */  lui   $v1, %hi(D_800DF510) # $v1, 0x800e
-/* 09170C 80090B0C 2463F510 */  addiu $v1, %lo(D_800DF510) # addiu $v1, $v1, -0xaf0
+/* 091708 80090B08 3C03800E */  lui   $v1, %hi(sMenuImageProperties) # $v1, 0x800e
+/* 09170C 80090B0C 2463F510 */  addiu $v1, %lo(sMenuImageProperties) # addiu $v1, $v1, -0xaf0
 /* 091710 80090B10 C4720088 */  lwc1  $f18, 0x88($v1)
-/* 091714 80090B14 3C02800E */  lui   $v0, %hi(D_800DF75C) # $v0, 0x800e
-/* 091718 80090B18 2442F75C */  addiu $v0, %lo(D_800DF75C) # addiu $v0, $v0, -0x8a4
+/* 091714 80090B14 3C02800E */  lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
+/* 091718 80090B18 2442F75C */  addiu $v0, %lo(gMenuImageStack) # addiu $v0, $v0, -0x8a4
 /* 09171C 80090B1C 8C580000 */  lw    $t8, ($v0)
 /* 091720 80090B20 46088000 */  add.s $f0, $f16, $f8
 /* 091724 80090B24 46009182 */  mul.s $f6, $f18, $f0
@@ -158,9 +158,9 @@ glabel func_80090918
 /* 09176C 80090B6C 3C0A8012 */  lui   $t2, %hi(D_801269C8) # $t2, 0x8012
 /* 091770 80090B70 04610008 */  bgez  $v1, .L80090B94
 /* 091774 80090B74 254A69C8 */   addiu $t2, %lo(D_801269C8) # addiu $t2, $t2, 0x69c8
-/* 091778 80090B78 3C02800E */  lui   $v0, %hi(D_800DF760) # $v0, 0x800e
+/* 091778 80090B78 3C02800E */  lui   $v0, %hi(sMenuMusicVolume) # $v0, 0x800e
 /* 09177C 80090B7C 8FAF0048 */  lw    $t7, 0x48($sp)
-/* 091780 80090B80 2442F760 */  addiu $v0, %lo(D_800DF760) # addiu $v0, $v0, -0x8a0
+/* 091780 80090B80 2442F760 */  addiu $v0, %lo(sMenuMusicVolume) # addiu $v0, $v0, -0x8a0
 /* 091784 80090B84 8C4E0000 */  lw    $t6, ($v0)
 /* 091788 80090B88 000FC080 */  sll   $t8, $t7, 2
 /* 09178C 80090B8C 01D8C823 */  subu  $t9, $t6, $t8
@@ -287,9 +287,9 @@ glabel func_80090918
 /* 09193C 80090D3C 3C048012 */   lui   $a0, %hi(D_80126820) # $a0, 0x8012
 /* 091940 80090D40 0C030060 */  jal   func_800C0180
 /* 091944 80090D44 00000000 */   nop   
-/* 091948 80090D48 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 091948 80090D48 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 09194C 80090D4C 0C030076 */  jal   func_800C01D8
-/* 091950 80090D50 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 091950 80090D50 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 091954 80090D54 0C03005C */  jal   func_800C0170
 /* 091958 80090D58 00000000 */   nop   
 /* 09195C 80090D5C 240FFFFF */  li    $t7, -1

@@ -90,7 +90,7 @@ glabel func_80081C04
 .L80081D40:
 /* 082940 80081D40 304B0008 */  andi  $t3, $v0, 8
 /* 082944 80081D44 11600003 */  beqz  $t3, .L80081D54
-/* 082948 80081D48 3C01800E */   lui   $at, %hi(D_800DF4A4) # $at, 0x800e
+/* 082948 80081D48 3C01800E */   lui   $at, %hi(sMenuGuiColourR) # $at, 0x800e
 /* 08294C 80081D4C 10000005 */  b     .L80081D64
 /* 082950 80081D50 24C60007 */   addiu $a2, $a2, 7
 .L80081D54:
@@ -101,24 +101,24 @@ glabel func_80081C04
 .L80081D64:
 /* 082964 80081D64 8FAD0070 */  lw    $t5, 0x70($sp)
 .L80081D68:
-/* 082968 80081D68 A027F4A4 */  sb    $a3, %lo(D_800DF4A4)($at)
-/* 08296C 80081D6C 3C01800E */  lui   $at, %hi(D_800DF4A8) # $at, 0x800e
+/* 082968 80081D68 A027F4A4 */  sb    $a3, %lo(sMenuGuiColourR)($at)
+/* 08296C 80081D6C 3C01800E */  lui   $at, %hi(sMenuGuiColourG) # $at, 0x800e
 /* 082970 80081D70 8FAE0074 */  lw    $t6, 0x74($sp)
-/* 082974 80081D74 A02DF4A8 */  sb    $t5, %lo(D_800DF4A8)($at)
-/* 082978 80081D78 3C01800E */  lui   $at, %hi(D_800DF4AC) # $at, 0x800e
+/* 082974 80081D74 A02DF4A8 */  sb    $t5, %lo(sMenuGuiColourG)($at)
+/* 082978 80081D78 3C01800E */  lui   $at, %hi(sMenuGuiColourB) # $at, 0x800e
 /* 08297C 80081D7C 8FAF0078 */  lw    $t7, 0x78($sp)
-/* 082980 80081D80 A02EF4AC */  sb    $t6, %lo(D_800DF4AC)($at)
-/* 082984 80081D84 3C01800E */  lui   $at, %hi(D_800DF764) # $at, 0x800e
+/* 082980 80081D80 A02EF4AC */  sb    $t6, %lo(sMenuGuiColourB)($at)
+/* 082984 80081D84 3C01800E */  lui   $at, %hi(sMenuGuiOpacity) # $at, 0x800e
 /* 082988 80081D88 00002025 */  move  $a0, $zero
 /* 08298C 80081D8C AFA60068 */  sw    $a2, 0x68($sp)
 /* 082990 80081D90 0C01EFC7 */  jal   func_8007BF1C
-/* 082994 80081D94 AC2FF764 */   sw    $t7, %lo(D_800DF764)($at)
+/* 082994 80081D94 AC2FF764 */   sw    $t7, %lo(sMenuGuiOpacity)($at)
 /* 082998 80081D98 0C01A142 */  jal   func_80068508
 /* 08299C 80081D9C 24040001 */   li    $a0, 1
 /* 0829A0 80081DA0 8FA60068 */  lw    $a2, 0x68($sp)
-/* 0829A4 80081DA4 3C12800E */  lui   $s2, %hi(D_800DF75C) # $s2, 0x800e
+/* 0829A4 80081DA4 3C12800E */  lui   $s2, %hi(gMenuImageStack) # $s2, 0x800e
 /* 0829A8 80081DA8 44862000 */  mtc1  $a2, $f4
-/* 0829AC 80081DAC 2652F75C */  addiu $s2, %lo(D_800DF75C) # addiu $s2, $s2, -0x8a4
+/* 0829AC 80081DAC 2652F75C */  addiu $s2, %lo(gMenuImageStack) # addiu $s2, $s2, -0x8a4
 /* 0829B0 80081DB0 468021A0 */  cvt.s.w $f6, $f4
 /* 0829B4 80081DB4 8E580000 */  lw    $t8, ($s2)
 /* 0829B8 80081DB8 00008025 */  move  $s0, $zero
@@ -145,21 +145,21 @@ glabel func_80081C04
 /* 082A04 80081E04 0C01A142 */  jal   func_80068508
 /* 082A08 80081E08 00002025 */   move  $a0, $zero
 /* 082A0C 80081E0C 240200FF */  li    $v0, 255
-/* 082A10 80081E10 3C01800E */  lui   $at, %hi(D_800DF4A4) # $at, 0x800e
-/* 082A14 80081E14 A022F4A4 */  sb    $v0, %lo(D_800DF4A4)($at)
-/* 082A18 80081E18 3C01800E */  lui   $at, %hi(D_800DF4A8) # $at, 0x800e
-/* 082A1C 80081E1C A022F4A8 */  sb    $v0, %lo(D_800DF4A8)($at)
-/* 082A20 80081E20 3C01800E */  lui   $at, %hi(D_800DF4AC) # $at, 0x800e
+/* 082A10 80081E10 3C01800E */  lui   $at, %hi(sMenuGuiColourR) # $at, 0x800e
+/* 082A14 80081E14 A022F4A4 */  sb    $v0, %lo(sMenuGuiColourR)($at)
+/* 082A18 80081E18 3C01800E */  lui   $at, %hi(sMenuGuiColourG) # $at, 0x800e
+/* 082A1C 80081E1C A022F4A8 */  sb    $v0, %lo(sMenuGuiColourG)($at)
+/* 082A20 80081E20 3C01800E */  lui   $at, %hi(sMenuGuiColourB) # $at, 0x800e
 /* 082A24 80081E24 8FBF002C */  lw    $ra, 0x2c($sp)
-/* 082A28 80081E28 A022F4AC */  sb    $v0, %lo(D_800DF4AC)($at)
-/* 082A2C 80081E2C 3C01800E */  lui   $at, %hi(D_800DF764) # $at, 0x800e
+/* 082A28 80081E28 A022F4AC */  sb    $v0, %lo(sMenuGuiColourB)($at)
+/* 082A2C 80081E2C 3C01800E */  lui   $at, %hi(sMenuGuiOpacity) # $at, 0x800e
 /* 082A30 80081E30 240B00FF */  li    $t3, 255
 /* 082A34 80081E34 8FB00018 */  lw    $s0, 0x18($sp)
 /* 082A38 80081E38 8FB1001C */  lw    $s1, 0x1c($sp)
 /* 082A3C 80081E3C 8FB20020 */  lw    $s2, 0x20($sp)
 /* 082A40 80081E40 8FB30024 */  lw    $s3, 0x24($sp)
 /* 082A44 80081E44 8FB40028 */  lw    $s4, 0x28($sp)
-/* 082A48 80081E48 AC2BF764 */  sw    $t3, %lo(D_800DF764)($at)
+/* 082A48 80081E48 AC2BF764 */  sw    $t3, %lo(sMenuGuiOpacity)($at)
 /* 082A4C 80081E4C 03E00008 */  jr    $ra
 /* 082A50 80081E50 27BD0060 */   addiu $sp, $sp, 0x60
 

@@ -180,9 +180,9 @@ GLOBAL_ASM("asm/non_matchings/font/func_800C4170.s")
 
 #ifdef NON_MATCHING
 // Mostly has regalloc issues.
-void func_800C422C(s32 arg0) {
-    if (arg0 < gNumberOfFonts) {
-        FontData *fontData = &gFonts[arg0];
+void func_800C422C(s32 fontID) {
+    if (fontID < gNumberOfFonts) {
+        FontData *fontData = &gFonts[fontID];
         if (fontData->unk28[0] > 0) {
             fontData->unk28[0]--;
             if ((fontData->unk28[0] & 0xFF) == 0) {

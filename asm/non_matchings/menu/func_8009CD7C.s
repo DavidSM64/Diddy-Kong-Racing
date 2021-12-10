@@ -1,7 +1,7 @@
 glabel func_8009CD7C
 /* 09D97C 8009CD7C 27BDFF90 */  addiu $sp, $sp, -0x70
-/* 09D980 8009CD80 3C0F800E */  lui   $t7, %hi(D_800DF764) # $t7, 0x800e
-/* 09D984 8009CD84 8DEFF764 */  lw    $t7, %lo(D_800DF764)($t7)
+/* 09D980 8009CD80 3C0F800E */  lui   $t7, %hi(sMenuGuiOpacity) # $t7, 0x800e
+/* 09D984 8009CD84 8DEFF764 */  lw    $t7, %lo(sMenuGuiOpacity)($t7)
 /* 09D988 8009CD88 AFB5002C */  sw    $s5, 0x2c($sp)
 /* 09D98C 8009CD8C 240E0009 */  li    $t6, 9
 /* 09D990 8009CD90 240100FF */  li    $at, 255

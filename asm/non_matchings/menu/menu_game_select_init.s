@@ -11,14 +11,14 @@ glabel menu_game_select_init
 /* 08D12C 8008C52C AFBF002C */  sw    $ra, 0x2c($sp)
 /* 08D130 8008C530 AC20F460 */  sw    $zero, %lo(D_800DF460)($at)
 /* 08D134 8008C534 240E0002 */  li    $t6, 2
-/* 08D138 8008C538 3C04800E */  lui   $a0, %hi(D_800DF77C) # $a0, 0x800e
+/* 08D138 8008C538 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 08D13C 8008C53C AFB30024 */  sw    $s3, 0x24($sp)
 /* 08D140 8008C540 AFB20020 */  sw    $s2, 0x20($sp)
 /* 08D144 8008C544 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 08D148 8008C548 AFB00018 */  sw    $s0, 0x18($sp)
 /* 08D14C 8008C54C AE8E0000 */  sw    $t6, ($s4)
 /* 08D150 8008C550 0C030076 */  jal   func_800C01D8
-/* 08D154 8008C554 2484F77C */   addiu $a0, %lo(D_800DF77C) # addiu $a0, $a0, -0x884
+/* 08D154 8008C554 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
 /* 08D158 8008C558 0C01BAEA */  jal   func_8006EBA8
 /* 08D15C 8008C55C 00000000 */   nop   
 /* 08D160 8008C560 0C006DE4 */  jal   func_8001B790

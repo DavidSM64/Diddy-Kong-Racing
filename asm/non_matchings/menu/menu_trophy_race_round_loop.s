@@ -68,12 +68,12 @@ glabel menu_trophy_race_round_loop
 /* 099294 80098694 00000000 */   nop   
 /* 099298 80098698 3C198012 */  lui   $t9, %hi(D_801267E8) # $t9, 0x8012
 /* 09929C 8009869C 8F3967E8 */  lw    $t9, %lo(D_801267E8)($t9)
-/* 0992A0 800986A0 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 0992A0 800986A0 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 0992A4 800986A4 33289000 */  andi  $t0, $t9, 0x9000
 /* 0992A8 800986A8 11000008 */  beqz  $t0, .L800986CC
 /* 0992AC 800986AC 00000000 */   nop   
 /* 0992B0 800986B0 0C030076 */  jal   func_800C01D8
-/* 0992B4 800986B4 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 0992B4 800986B4 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0992B8 800986B8 24090001 */  li    $t1, 1
 /* 0992BC 800986BC 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 0992C0 800986C0 AC29F47C */  sw    $t1, %lo(gMenuDelay)($at)

@@ -272,7 +272,7 @@ glabel func_800904E8
 /* 0914E8 800908E8 00002025 */  move  $a0, $zero
 /* 0914EC 800908EC 27A50044 */  addiu $a1, $sp, 0x44
 /* 0914F0 800908F0 27A60040 */  addiu $a2, $sp, 0x40
-/* 0914F4 800908F4 0C019AEA */  jal   func_80066BA8
+/* 0914F4 800908F4 0C019AEA */  jal   copy_viewport_background_size_to_coords
 /* 0914F8 800908F8 27A7003C */   addiu $a3, $sp, 0x3c
 /* 0914FC 800908FC 00002025 */  move  $a0, $zero
 /* 091500 80090900 0C019A06 */  jal   func_80066818

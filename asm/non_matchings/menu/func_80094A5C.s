@@ -19,7 +19,7 @@ glabel func_80094A5C
 /* 09569C 80094A9C 14810052 */  bne   $a0, $at, .L80094BE8
 /* 0956A0 80094AA0 00000000 */   nop   
 /* 0956A4 80094AA4 3C04800E */  lui   $a0, %hi(D_800E0A40) # $a0, 0x800e
-/* 0956A8 80094AA8 0C027229 */  jal   func_8009C8A4
+/* 0956A8 80094AA8 0C027229 */  jal   allocate_menu_images
 /* 0956AC 80094AAC 24840A40 */   addiu $a0, %lo(D_800E0A40) # addiu $a0, $a0, 0xa40
 /* 0956B0 80094AB0 0C025181 */  jal   func_80094604
 /* 0956B4 80094AB4 00000000 */   nop   
