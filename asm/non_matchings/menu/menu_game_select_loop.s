@@ -154,9 +154,9 @@ glabel menu_game_select_loop
 /* 08D5F4 8008C9F4 0C000326 */  jal   set_music_fade_timer
 /* 08D5F8 8008C9F8 2404FF80 */   li    $a0, -128
 .L8008C9FC:
-/* 08D5FC 8008C9FC 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 08D5FC 8008C9FC 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 08D600 8008CA00 0C030076 */  jal   func_800C01D8
-/* 08D604 8008CA04 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 08D604 8008CA04 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 08D608 8008CA08 240B0001 */  li    $t3, 1
 /* 08D60C 8008CA0C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 08D610 8008CA10 AC2BF47C */  sw    $t3, %lo(gMenuDelay)($at)
@@ -167,9 +167,9 @@ glabel menu_game_select_loop
 /* 08D624 8008CA24 00000000 */   nop   
 .L8008CA28:
 /* 08D628 8008CA28 11800007 */  beqz  $t4, .L8008CA48
-/* 08D62C 8008CA2C 3C04800E */   lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 08D62C 8008CA2C 3C04800E */   lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 08D630 8008CA30 0C030076 */  jal   func_800C01D8
-/* 08D634 8008CA34 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 08D634 8008CA34 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 08D638 8008CA38 240DFFFF */  li    $t5, -1
 /* 08D63C 8008CA3C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 08D640 8008CA40 1000001B */  b     .L8008CAB0

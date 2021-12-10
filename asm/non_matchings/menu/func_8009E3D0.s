@@ -27,7 +27,7 @@ glabel func_8009E3D0
 /* 09F030 8009E430 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 09F034 8009E434 8FB80048 */  lw    $t8, 0x48($sp)
 /* 09F038 8009E438 15E00003 */  bnez  $t7, .L8009E448
-/* 09F03C 8009E43C 3C12800E */   lui   $s2, %hi(D_800DF75C) # $s2, 0x800e
+/* 09F03C 8009E43C 3C12800E */   lui   $s2, %hi(gMenuImageStack) # $s2, 0x800e
 /* 09F040 8009E440 10000002 */  b     .L8009E44C
 /* 09F044 8009E444 2415000A */   li    $s5, 10
 .L8009E448:
@@ -37,7 +37,7 @@ glabel func_8009E3D0
 /* 09F050 8009E450 24130008 */  li    $s3, 8
 /* 09F054 8009E454 33280004 */  andi  $t0, $t9, 4
 /* 09F058 8009E458 11000002 */  beqz  $t0, .L8009E464
-/* 09F05C 8009E45C 2652F75C */   addiu $s2, %lo(D_800DF75C) # addiu $s2, $s2, -0x8a4
+/* 09F05C 8009E45C 2652F75C */   addiu $s2, %lo(gMenuImageStack) # addiu $s2, $s2, -0x8a4
 /* 09F060 8009E460 24130009 */  li    $s3, 9
 .L8009E464:
 /* 09F064 8009E464 2409FFB6 */  li    $t1, -74

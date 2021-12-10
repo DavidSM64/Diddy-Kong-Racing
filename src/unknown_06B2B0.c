@@ -585,7 +585,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         init_pulsating_light_data(gCurrentLevelHeader->pulseLightData);
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
-    func_80077B34(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
+    set_background_prim_colour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
     func_8007A974();
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
@@ -656,7 +656,7 @@ u8 *func_8006BDDC(s32 arg0) {
 
 void func_8006BEFC(void) {
     func_8006C164();
-    func_80077B34(0, 0, 0);
+    set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
     func_80001844();
@@ -1964,8 +1964,8 @@ void func_8006F338(s32 arg0) {
     }
 }
 
-void func_8006F388(u8 arg0) {
-    D_800DD398 = arg0;
+void func_8006F388(u8 time) {
+    D_800DD398 = time;
 }
 
 void func_8006F398(void) {

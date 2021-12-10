@@ -9,10 +9,10 @@ glabel func_80080BC8
 /* 0817E4 80080BE4 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 0817E8 80080BE8 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0817EC 80080BEC 8C820000 */  lw    $v0, ($a0)
-/* 0817F0 80080BF0 3C18800E */  lui   $t8, %hi(D_800E1C70) # $t8, 0x800e
+/* 0817F0 80080BF0 3C18800E */  lui   $t8, %hi(dMenuHudSettings) # $t8, 0x800e
 /* 0817F4 80080BF4 244E0008 */  addiu $t6, $v0, 8
 /* 0817F8 80080BF8 AC8E0000 */  sw    $t6, ($a0)
-/* 0817FC 80080BFC 27181C70 */  addiu $t8, %lo(D_800E1C70) # addiu $t8, $t8, 0x1c70
+/* 0817FC 80080BFC 27181C70 */  addiu $t8, %lo(dMenuHudSettings) # addiu $t8, $t8, 0x1c70
 /* 081800 80080C00 3C0F0600 */  lui   $t7, 0x600
 /* 081804 80080C04 3C09800E */  lui   $t1, %hi(D_800E1DB8) # $t1, 0x800e
 /* 081808 80080C08 AC4F0000 */  sw    $t7, ($v0)
@@ -23,20 +23,20 @@ glabel func_80080BC8
 /* 08181C 80080C1C 00006825 */  move  $t5, $zero
 /* 081820 80080C20 1920007E */  blez  $t1, .L80080E1C
 /* 081824 80080C24 00003825 */   move  $a3, $zero
-                                             # D_800E1C70 - 0x7FFFFFD0 = 0xE1CA0
-/* 081828 80080C28 3C16000E */  lui   $s6, %hi(D_800E1C70 - 0x7FFFFFD0) # $s6, 0xe
-                                             # D_800E1C70 - 0x7FFFFFC0 = 0xE1CB0
-/* 08182C 80080C2C 3C11000E */  lui   $s1, %hi(D_800E1C70 - 0x7FFFFFC0) # $s1, 0xe
+                                             # dMenuHudSettings - 0x7FFFFFD0 = 0xE1CA0
+/* 081828 80080C28 3C16000E */  lui   $s6, %hi(dMenuHudSettings - 0x7FFFFFD0) # $s6, 0xe
+                                             # dMenuHudSettings - 0x7FFFFFC0 = 0xE1CB0
+/* 08182C 80080C2C 3C11000E */  lui   $s1, %hi(dMenuHudSettings - 0x7FFFFFC0) # $s1, 0xe
 /* 081830 80080C30 3C1F0702 */  lui   $ra, (0x07020010 >> 16) # lui $ra, 0x702
 /* 081834 80080C34 3C0B8012 */  lui   $t3, %hi(D_80126C2C) # $t3, 0x8012
 /* 081838 80080C38 3C0A800E */  lui   $t2, %hi(D_800E1DB4) # $t2, 0x800e
 /* 08183C 80080C3C 254A1DB4 */  addiu $t2, %lo(D_800E1DB4) # addiu $t2, $t2, 0x1db4
 /* 081840 80080C40 256B6C2C */  addiu $t3, %lo(D_80126C2C) # addiu $t3, $t3, 0x6c2c
 /* 081844 80080C44 37FF0010 */  ori   $ra, (0x07020010 & 0xFFFF) # ori $ra, $ra, 0x10
-                                             # D_800E1C70 - 0x7FFFFFC0 = 0xE1CB0
-/* 081848 80080C48 26311CB0 */  addiu $s1, %lo(D_800E1C70 - 0x7FFFFFC0) # addiu $s1, $s1, 0x1cb0
-                                             # D_800E1C70 - 0x7FFFFFD0 = 0xE1CA0
-/* 08184C 80080C4C 26D61CA0 */  addiu $s6, %lo(D_800E1C70 - 0x7FFFFFD0) # addiu $s6, $s6, 0x1ca0
+                                             # dMenuHudSettings - 0x7FFFFFC0 = 0xE1CB0
+/* 081848 80080C48 26311CB0 */  addiu $s1, %lo(dMenuHudSettings - 0x7FFFFFC0) # addiu $s1, $s1, 0x1cb0
+                                             # dMenuHudSettings - 0x7FFFFFD0 = 0xE1CA0
+/* 08184C 80080C4C 26D61CA0 */  addiu $s6, %lo(dMenuHudSettings - 0x7FFFFFD0) # addiu $s6, $s6, 0x1ca0
 /* 081850 80080C50 3C150500 */  lui   $s5, 0x500
 /* 081854 80080C54 3C140400 */  lui   $s4, 0x400
 /* 081858 80080C58 3C13E700 */  lui   $s3, 0xe700

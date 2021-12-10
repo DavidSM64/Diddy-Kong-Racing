@@ -113,10 +113,10 @@ glabel menu_audio_options_loop
 /* 085A10 80084E10 2418FFFF */  li    $t8, -1
 .L80084E14:
 /* 085A14 80084E14 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
-/* 085A18 80084E18 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 085A18 80084E18 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 085A1C 80084E1C AC38F47C */  sw    $t8, %lo(gMenuDelay)($at)
 /* 085A20 80084E20 0C030076 */  jal   func_800C01D8
-/* 085A24 80084E24 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 085A24 80084E24 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 085A28 80084E28 3C198012 */  lui   $t9, %hi(D_801263D8) # $t9, 0x8012
 /* 085A2C 80084E2C 8F3963D8 */  lw    $t9, %lo(D_801263D8)($t9)
 /* 085A30 80084E30 00000000 */  nop   

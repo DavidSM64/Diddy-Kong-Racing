@@ -20,7 +20,7 @@ glabel menu_trophy_race_rankings_init
 /* 09966C 80098A6C 0C02719D */  jal   func_8009C674
 /* 099670 80098A70 24841024 */   addiu $a0, %lo(D_800E1024) # addiu $a0, $a0, 0x1024
 /* 099674 80098A74 3C04800E */  lui   $a0, %hi(D_800E1040) # $a0, 0x800e
-/* 099678 80098A78 0C027229 */  jal   func_8009C8A4
+/* 099678 80098A78 0C027229 */  jal   allocate_menu_images
 /* 09967C 80098A7C 24841040 */   addiu $a0, %lo(D_800E1040) # addiu $a0, $a0, 0x1040
 /* 099680 80098A80 3C03800E */  lui   $v1, %hi(D_800E0FEC) # $v1, 0x800e
 /* 099684 80098A84 24630FEC */  addiu $v1, %lo(D_800E0FEC) # addiu $v1, $v1, 0xfec

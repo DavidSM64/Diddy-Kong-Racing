@@ -11,22 +11,22 @@ glabel func_80080E90
 /* 081AB4 80080EB4 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 081AB8 80080EB8 AFB00018 */  sw    $s0, 0x18($sp)
 /* 081ABC 80080EBC 8C830000 */  lw    $v1, ($a0)
-/* 081AC0 80080EC0 3C18800E */  lui   $t8, %hi(D_800E1C70) # $t8, 0x800e
+/* 081AC0 80080EC0 3C18800E */  lui   $t8, %hi(dMenuHudSettings) # $t8, 0x800e
 /* 081AC4 80080EC4 246E0008 */  addiu $t6, $v1, 8
 /* 081AC8 80080EC8 AC8E0000 */  sw    $t6, ($a0)
-/* 081ACC 80080ECC 27181C70 */  addiu $t8, %lo(D_800E1C70) # addiu $t8, $t8, 0x1c70
+/* 081ACC 80080ECC 27181C70 */  addiu $t8, %lo(dMenuHudSettings) # addiu $t8, $t8, 0x1c70
 /* 081AD0 80080ED0 3C0F0600 */  lui   $t7, 0x600
 /* 081AD4 80080ED4 AC6F0000 */  sw    $t7, ($v1)
 /* 081AD8 80080ED8 AC780004 */  sw    $t8, 4($v1)
 /* 081ADC 80080EDC 8C830000 */  lw    $v1, ($a0)
-                                             # D_800E1C70 - 0x7FFFFFB0 = 0xE1CC0
-/* 081AE0 80080EE0 3C0F000E */  lui   $t7, %hi(D_800E1C70 - 0x7FFFFFB0) # $t7, 0xe
+                                             # dMenuHudSettings - 0x7FFFFFB0 = 0xE1CC0
+/* 081AE0 80080EE0 3C0F000E */  lui   $t7, %hi(dMenuHudSettings - 0x7FFFFFB0) # $t7, 0xe
 /* 081AE4 80080EE4 24790008 */  addiu $t9, $v1, 8
 /* 081AE8 80080EE8 AC990000 */  sw    $t9, ($a0)
 /* 081AEC 80080EEC 3C0E0702 */  lui   $t6, (0x07020010 >> 16) # lui $t6, 0x702
 /* 081AF0 80080EF0 35CE0010 */  ori   $t6, (0x07020010 & 0xFFFF) # ori $t6, $t6, 0x10
-                                             # D_800E1C70 - 0x7FFFFFB0 = 0xE1CC0
-/* 081AF4 80080EF4 25EF1CC0 */  addiu $t7, %lo(D_800E1C70 - 0x7FFFFFB0) # addiu $t7, $t7, 0x1cc0
+                                             # dMenuHudSettings - 0x7FFFFFB0 = 0xE1CC0
+/* 081AF4 80080EF4 25EF1CC0 */  addiu $t7, %lo(dMenuHudSettings - 0x7FFFFFB0) # addiu $t7, $t7, 0x1cc0
 /* 081AF8 80080EF8 AC6F0004 */  sw    $t7, 4($v1)
 /* 081AFC 80080EFC AC6E0000 */  sw    $t6, ($v1)
 /* 081B00 80080F00 8FB70058 */  lw    $s7, 0x58($sp)

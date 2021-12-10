@@ -81,8 +81,8 @@ glabel menu_boot_loop
 /* 08932C 8008872C AFA50030 */   sw    $a1, 0x30($sp)
 /* 089330 80088730 8FA50030 */  lw    $a1, 0x30($sp)
 /* 089334 80088734 14400006 */  bnez  $v0, .L80088750
-/* 089338 80088738 3C04800E */   lui   $a0, %hi(D_800DF76C) # $a0, 0x800e
-/* 08933C 8008873C 2484F76C */  addiu $a0, %lo(D_800DF76C) # addiu $a0, $a0, -0x894
+/* 089338 80088738 3C04800E */   lui   $a0, %hi(sMenuTransitionFadeInFast) # $a0, 0x800e
+/* 08933C 8008873C 2484F76C */  addiu $a0, %lo(sMenuTransitionFadeInFast) # addiu $a0, $a0, -0x894
 /* 089340 80088740 0C030076 */  jal   func_800C01D8
 /* 089344 80088744 AFA50030 */   sw    $a1, 0x30($sp)
 /* 089348 80088748 8FA50030 */  lw    $a1, 0x30($sp)
@@ -100,7 +100,7 @@ glabel menu_boot_loop
 .L8008876C:
 /* 08936C 8008876C 10200011 */  beqz  $at, .L800887B4
 /* 089370 80088770 3C048012 */   lui   $a0, %hi(D_801263A0) # $a0, 0x8012
-/* 089374 80088774 3C05800E */  lui   $a1, %hi(D_800DF7DC) # $a1, 0x800e
+/* 089374 80088774 3C05800E */  lui   $a1, %hi(sGameTitleTileOffsets) # $a1, 0x800e
 /* 089378 80088778 240D00FF */  li    $t5, 255
 /* 08937C 8008877C 240E00FF */  li    $t6, 255
 /* 089380 80088780 240F00FF */  li    $t7, 255
@@ -109,7 +109,7 @@ glabel menu_boot_loop
 /* 08938C 8008878C AFAF0018 */  sw    $t7, 0x18($sp)
 /* 089390 80088790 AFAE0014 */  sw    $t6, 0x14($sp)
 /* 089394 80088794 AFAD0010 */  sw    $t5, 0x10($sp)
-/* 089398 80088798 24A5F7DC */  addiu $a1, %lo(D_800DF7DC) # addiu $a1, $a1, -0x824
+/* 089398 80088798 24A5F7DC */  addiu $a1, %lo(sGameTitleTileOffsets) # addiu $a1, $a1, -0x824
 /* 08939C 8008879C 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 0893A0 800887A0 0C01E2AE */  jal   render_textured_rectangle
 /* 0893A4 800887A4 240600A0 */   li    $a2, 160
