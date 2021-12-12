@@ -68,7 +68,7 @@ glabel func_8008F00C
 /* 08FD00 8008F100 0C02719D */  jal   func_8009C674
 /* 08FD04 8008F104 248407E8 */   addiu $a0, %lo(D_800E07E8) # addiu $a0, $a0, 0x7e8
 /* 08FD08 8008F108 3C04800E */  lui   $a0, %hi(D_800E0830) # $a0, 0x800e
-/* 08FD0C 8008F10C 0C027229 */  jal   func_8009C8A4
+/* 08FD0C 8008F10C 0C027229 */  jal   allocate_menu_images
 /* 08FD10 8008F110 24840830 */   addiu $a0, %lo(D_800E0830) # addiu $a0, $a0, 0x830
 /* 08FD14 8008F114 0C023917 */  jal   func_8008E45C
 /* 08FD18 8008F118 00000000 */   nop   

@@ -128,10 +128,10 @@ glabel func_8008B758
 /* 08C534 8008B934 A24B0000 */   sb    $t3, ($s2)
 /* 08C538 8008B938 240FFFFF */  li    $t7, -1
 /* 08C53C 8008B93C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
-/* 08C540 8008B940 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 08C540 8008B940 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 08C544 8008B944 AC2FF47C */  sw    $t7, %lo(gMenuDelay)($at)
 /* 08C548 8008B948 0C030076 */  jal   func_800C01D8
-/* 08C54C 8008B94C 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 08C54C 8008B94C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 08C550 8008B950 1000006A */  b     .L8008BAFC
 /* 08C554 8008B954 8FA2004C */   lw    $v0, 0x4c($sp)
 .L8008B958:

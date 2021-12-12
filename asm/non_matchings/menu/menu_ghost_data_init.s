@@ -31,7 +31,7 @@ glabel menu_ghost_data_init
 /* 09A6CC 80099ACC 0C02719D */  jal   func_8009C674
 /* 09A6D0 80099AD0 24841708 */   addiu $a0, %lo(D_800E1708) # addiu $a0, $a0, 0x1708
 /* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(D_800E174C) # $a0, 0x800e
-/* 09A6D8 80099AD8 0C027229 */  jal   func_8009C8A4
+/* 09A6D8 80099AD8 0C027229 */  jal   allocate_menu_images
 /* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(D_800E174C) # addiu $a0, $a0, 0x174c
 /* 09A6E0 80099AE0 0C03105C */  jal   func_800C4170
 /* 09A6E4 80099AE4 24040002 */   li    $a0, 2
@@ -249,9 +249,9 @@ glabel menu_ghost_data_init
 /* 09AA34 80099E34 3C018012 */  lui   $at, %hi(D_80126498) # $at, 0x8012
 /* 09AA38 80099E38 17200006 */  bnez  $t9, .L80099E54
 /* 09AA3C 80099E3C AC206498 */   sw    $zero, %lo(D_80126498)($at)
-/* 09AA40 80099E40 3C04800E */  lui   $a0, %hi(D_800DF77C) # $a0, 0x800e
+/* 09AA40 80099E40 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
 /* 09AA44 80099E44 0C030076 */  jal   func_800C01D8
-/* 09AA48 80099E48 2484F77C */   addiu $a0, %lo(D_800DF77C) # addiu $a0, $a0, -0x884
+/* 09AA48 80099E48 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
 /* 09AA4C 80099E4C 10000004 */  b     .L80099E60
 /* 09AA50 80099E50 8FBF0044 */   lw    $ra, 0x44($sp)
 .L80099E54:

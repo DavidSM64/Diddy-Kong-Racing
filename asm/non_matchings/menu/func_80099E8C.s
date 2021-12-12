@@ -345,10 +345,10 @@ glabel func_80099E8C
 /* 09AF98 8009A398 0C01ECF4 */  jal   func_8007B3D0
 /* 09AF9C 8009A39C 02E02025 */   move  $a0, $s7
 /* 09AFA0 8009A3A0 8638000C */  lh    $t8, 0xc($s1)
-/* 09AFA4 8009A3A4 3C02800E */  lui   $v0, %hi(D_800DF75C) # $v0, 0x800e
+/* 09AFA4 8009A3A4 3C02800E */  lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
 /* 09AFA8 8009A3A8 2719FF88 */  addiu $t9, $t8, -0x78
 /* 09AFAC 8009A3AC 44993000 */  mtc1  $t9, $f6
-/* 09AFB0 8009A3B0 2442F75C */  addiu $v0, %lo(D_800DF75C) # addiu $v0, $v0, -0x8a4
+/* 09AFB0 8009A3B0 2442F75C */  addiu $v0, %lo(gMenuImageStack) # addiu $v0, $v0, -0x8a4
 /* 09AFB4 8009A3B4 46803220 */  cvt.s.w $f8, $f6
 /* 09AFB8 8009A3B8 8C490000 */  lw    $t1, ($v0)
 /* 09AFBC 8009A3BC 3C01800F */  lui   $at, %hi(D_800E8570) # $at, 0x800f
@@ -369,8 +369,8 @@ glabel func_80099E8C
 /* 09AFF8 8009A3F8 0C027298 */  jal   func_8009CA60
 /* 09AFFC 8009A3FC E73200E8 */   swc1  $f18, 0xe8($t9)
 /* 09B000 8009A400 24090080 */  li    $t1, 128
-/* 09B004 8009A404 3C01800E */  lui   $at, %hi(D_800DF764) # $at, 0x800e
-/* 09B008 8009A408 AC29F764 */  sw    $t1, %lo(D_800DF764)($at)
+/* 09B004 8009A404 3C01800E */  lui   $at, %hi(sMenuGuiOpacity) # $at, 0x800e
+/* 09B008 8009A408 AC29F764 */  sw    $t1, %lo(sMenuGuiOpacity)($at)
 /* 09B00C 8009A40C 862B0012 */  lh    $t3, 0x12($s1)
 /* 09B010 8009A410 8FAA006C */  lw    $t2, 0x6c($sp)
 /* 09B014 8009A414 8FAE00D0 */  lw    $t6, 0xd0($sp)
@@ -387,8 +387,8 @@ glabel func_80099E8C
 /* 09B040 8009A440 0C020600 */  jal   func_80081800
 /* 09B044 8009A444 24A5FF89 */   addiu $a1, $a1, -0x77
 /* 09B048 8009A448 240F00FF */  li    $t7, 255
-/* 09B04C 8009A44C 3C01800E */  lui   $at, %hi(D_800DF764) # $at, 0x800e
-/* 09B050 8009A450 AC2FF764 */  sw    $t7, %lo(D_800DF764)($at)
+/* 09B04C 8009A44C 3C01800E */  lui   $at, %hi(sMenuGuiOpacity) # $at, 0x800e
+/* 09B050 8009A450 AC2FF764 */  sw    $t7, %lo(sMenuGuiOpacity)($at)
 /* 09B054 8009A454 86390012 */  lh    $t9, 0x12($s1)
 /* 09B058 8009A458 8FB8006C */  lw    $t8, 0x6c($sp)
 /* 09B05C 8009A45C 8FAB00D0 */  lw    $t3, 0xd0($sp)

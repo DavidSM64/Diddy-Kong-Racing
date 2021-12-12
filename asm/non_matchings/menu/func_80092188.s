@@ -116,11 +116,11 @@ glabel func_80092188
 /* 092F24 80092324 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 092F28 80092328 44818000 */  mtc1  $at, $f16
 /* 092F2C 8009232C 46083283 */  div.s $f10, $f6, $f8
-/* 092F30 80092330 3C04800E */  lui   $a0, %hi(D_800DF510) # $a0, 0x800e
-/* 092F34 80092334 2484F510 */  addiu $a0, %lo(D_800DF510) # addiu $a0, $a0, -0xaf0
+/* 092F30 80092330 3C04800E */  lui   $a0, %hi(sMenuImageProperties) # $a0, 0x800e
+/* 092F34 80092334 2484F510 */  addiu $a0, %lo(sMenuImageProperties) # addiu $a0, $a0, -0xaf0
 /* 092F38 80092338 C4920088 */  lwc1  $f18, 0x88($a0)
-/* 092F3C 8009233C 3C03800E */  lui   $v1, %hi(D_800DF75C) # $v1, 0x800e
-/* 092F40 80092340 2463F75C */  addiu $v1, %lo(D_800DF75C) # addiu $v1, $v1, -0x8a4
+/* 092F3C 8009233C 3C03800E */  lui   $v1, %hi(gMenuImageStack) # $v1, 0x800e
+/* 092F40 80092340 2463F75C */  addiu $v1, %lo(gMenuImageStack) # addiu $v1, $v1, -0x8a4
 /* 092F44 80092344 8C6E0000 */  lw    $t6, ($v1)
 /* 092F48 80092348 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 092F4C 8009234C 460A8000 */  add.s $f0, $f16, $f10
@@ -139,9 +139,9 @@ glabel func_80092188
 .L80092380:
 /* 092F80 80092380 18400008 */  blez  $v0, .L800923A4
 /* 092F84 80092384 28410029 */   slti  $at, $v0, 0x29
-/* 092F88 80092388 3C03800E */  lui   $v1, %hi(D_800DF760) # $v1, 0x800e
+/* 092F88 80092388 3C03800E */  lui   $v1, %hi(sMenuMusicVolume) # $v1, 0x800e
 /* 092F8C 8009238C 8FAE0058 */  lw    $t6, 0x58($sp)
-/* 092F90 80092390 2463F760 */  addiu $v1, %lo(D_800DF760) # addiu $v1, $v1, -0x8a0
+/* 092F90 80092390 2463F760 */  addiu $v1, %lo(sMenuMusicVolume) # addiu $v1, $v1, -0x8a0
 /* 092F94 80092394 8C790000 */  lw    $t9, ($v1)
 /* 092F98 80092398 000E7880 */  sll   $t7, $t6, 2
 /* 092F9C 8009239C 032FC023 */  subu  $t8, $t9, $t7
@@ -577,9 +577,9 @@ glabel L8009287C
 /* 0935A8 800929A8 3C01800E */  lui   $at, %hi(D_800E097C) # $at, 0x800e
 /* 0935AC 800929AC 0C030060 */  jal   func_800C0180
 /* 0935B0 800929B0 AC20097C */   sw    $zero, %lo(D_800E097C)($at)
-/* 0935B4 800929B4 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 0935B4 800929B4 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 0935B8 800929B8 0C030076 */  jal   func_800C01D8
-/* 0935BC 800929BC 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 0935BC 800929BC 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0935C0 800929C0 3C198012 */  lui   $t9, %hi(D_801269C8) # $t9, 0x8012
 /* 0935C4 800929C4 8F3969C8 */  lw    $t9, %lo(D_801269C8)($t9)
 /* 0935C8 800929C8 24010005 */  li    $at, 5

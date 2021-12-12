@@ -75,8 +75,8 @@ glabel menu_track_select_loop
 /* 08FF48 8008F348 0C024862 */  jal   func_80092188
 /* 08FF4C 8008F34C 00000000 */   nop   
 .L8008F350:
-/* 08FF50 8008F350 3C03800E */  lui   $v1, %hi(D_800DF760) # $v1, 0x800e
-/* 08FF54 8008F354 2463F760 */  addiu $v1, %lo(D_800DF760) # addiu $v1, $v1, -0x8a0
+/* 08FF50 8008F350 3C03800E */  lui   $v1, %hi(sMenuMusicVolume) # $v1, 0x800e
+/* 08FF54 8008F354 2463F760 */  addiu $v1, %lo(sMenuMusicVolume) # addiu $v1, $v1, -0x8a0
 /* 08FF58 8008F358 8C620000 */  lw    $v0, ($v1)
 /* 08FF5C 8008F35C 8FAF0020 */  lw    $t7, 0x20($sp)
 /* 08FF60 8008F360 04410005 */  bgez  $v0, .L8008F378

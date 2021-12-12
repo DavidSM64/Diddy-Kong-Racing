@@ -141,7 +141,7 @@ glabel L8009DC60
 /* 09E928 8009DD28 8DC40014 */  lw    $a0, 0x14($t6)
 /* 09E92C 8009DD2C 0C02746E */  jal   render_dialogue_option
 /* 09E930 8009DD30 24060002 */   li    $a2, 2
-/* 09E934 8009DD34 0C02749B */  jal   func_8009D26C
+/* 09E934 8009DD34 0C02749B */  jal   handle_menu_joystick_input
 /* 09E938 8009DD38 00000000 */   nop   
 /* 09E93C 8009DD3C 3C0F8012 */  lui   $t7, %hi(D_80126516) # $t7, 0x8012
 /* 09E940 8009DD40 81EF6516 */  lb    $t7, %lo(D_80126516)($t7)
@@ -220,7 +220,7 @@ glabel L8009DC60
 /* 09EA4C 8009DE4C 0C02719D */  jal   func_8009C674
 /* 09EA50 8009DE50 24841E2C */   addiu $a0, %lo(D_800E1E2C) # addiu $a0, $a0, 0x1e2c
 /* 09EA54 8009DE54 3C04800E */  lui   $a0, %hi(D_800E1E40) # $a0, 0x800e
-/* 09EA58 8009DE58 0C027229 */  jal   func_8009C8A4
+/* 09EA58 8009DE58 0C027229 */  jal   allocate_menu_images
 /* 09EA5C 8009DE5C 24841E40 */   addiu $a0, %lo(D_800E1E40) # addiu $a0, $a0, 0x1e40
 /* 09EA60 8009DE60 240B0001 */  li    $t3, 1
 /* 09EA64 8009DE64 3C01800E */  lui   $at, %hi(D_800E1E28) # $at, 0x800e

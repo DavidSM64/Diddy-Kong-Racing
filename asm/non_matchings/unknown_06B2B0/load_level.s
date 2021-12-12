@@ -726,7 +726,7 @@ glabel load_level
 /* 06C8C4 8006BCC4 9064009D */  lbu   $a0, 0x9d($v1)
 /* 06C8C8 8006BCC8 9065009E */  lbu   $a1, 0x9e($v1)
 /* 06C8CC 8006BCCC 9066009F */  lbu   $a2, 0x9f($v1)
-/* 06C8D0 8006BCD0 0C01DECD */  jal   func_80077B34
+/* 06C8D0 8006BCD0 0C01DECD */  jal   set_background_prim_colour
 /* 06C8D4 8006BCD4 00000000 */   nop   
 /* 06C8D8 8006BCD8 0C01EA5D */  jal   func_8007A974
 /* 06C8DC 8006BCDC 00000000 */   nop   

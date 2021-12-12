@@ -113,10 +113,10 @@ glabel menu_ghost_data_loop
 /* 09B574 8009A974 1540000A */  bnez  $t2, .L8009A9A0
 .L8009A978:
 /* 09B578 8009A978 24030001 */   li    $v1, 1
-/* 09B57C 8009A97C 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 09B57C 8009A97C 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 09B580 8009A980 AD230000 */  sw    $v1, ($t1)
 /* 09B584 8009A984 0C030076 */  jal   func_800C01D8
-/* 09B588 8009A988 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 09B588 8009A988 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 09B58C 8009A98C 24040241 */  li    $a0, 577
 /* 09B590 8009A990 0C000741 */  jal   func_80001D04
 /* 09B594 8009A994 00002825 */   move  $a1, $zero
@@ -213,10 +213,10 @@ glabel menu_ghost_data_loop
 /* 09B6DC 8009AADC 24C663E0 */   addiu $a2, %lo(D_801263E0) # addiu $a2, $a2, 0x63e0
 .L8009AAE0:
 /* 09B6E0 8009AAE0 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
-/* 09B6E4 8009AAE4 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 09B6E4 8009AAE4 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 09B6E8 8009AAE8 AC23F47C */  sw    $v1, %lo(gMenuDelay)($at)
 /* 09B6EC 8009AAEC 0C030076 */  jal   func_800C01D8
-/* 09B6F0 8009AAF0 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 09B6F0 8009AAF0 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 09B6F4 8009AAF4 24040241 */  li    $a0, 577
 /* 09B6F8 8009AAF8 0C000741 */  jal   func_80001D04
 /* 09B6FC 8009AAFC 00002825 */   move  $a1, $zero
