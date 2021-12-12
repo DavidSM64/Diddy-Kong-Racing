@@ -506,8 +506,8 @@ void render_level_geometry_and_objects(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_geometry_and_objects.s")
 #endif
 
-// *Should *be functionally equivalent.
-#ifdef NON_MATCHING
+// Breaks on everdrive.
+#if 0
 // nonOpaque: 0 for solid geometry, 1 for transparent geometry.
 void render_level_segment(s32 segmentId, s32 nonOpaque) {
     LevelModelSegment *segment = &gCurrentLevelModel->segments[segmentId]; // spAC
