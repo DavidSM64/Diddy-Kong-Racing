@@ -33,6 +33,15 @@
 #define HEIGHT_RATIO_MPAL (LOW_RES_MPAL_HEIGHT / LOW_RES_NTSC_HEIGHT)
 
 /**
+ * The video width is the lower 16 bits of the returned 32 bit value
+ */
+#define GET_VIDEO_WIDTH(width_and_height) (width_and_height & 0xFFFF)
+/**
+ * The video width is the higher 16 bits of the returned 32 bit value
+ */
+#define GET_VIDEO_HEIGHT(width_and_height) (width_and_height >> 16)
+
+/**
  * Values for the rate game logic will work depending on the framerate. Vanilla DKR will default to LOGIC_30FPS (2)
  */
 

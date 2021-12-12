@@ -619,8 +619,11 @@ GLOBAL_ASM("asm/non_matchings/font/s32_to_string.s")
  * lrx, lry = lower-right position
  */
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
-    u32 temp_v0 = get_video_width_and_height_as_s32();
-    if (lrx >= 0 && ulx < (temp_v0 & 0xFFFF) && lry >= 0 && uly < (temp_v0 >> 16)) {
+    u32 widthAndHeight = get_video_width_and_height_as_s32();
+    u32 width = GET_VIDEO_WIDTH(widthAndHeight);
+    u32 height = GET_VIDEO_HEIGHT(widthAndHeight);
+
+    if (lrx >= 0 && ulx < width && lry >= 0 && uly < height) {
         if (ulx < 0) {
             ulx = 0;
         }
