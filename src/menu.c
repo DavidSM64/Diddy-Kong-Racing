@@ -2170,10 +2170,10 @@ void menu_logos_screen_init(void) {
     sBootScreenTimer = 16.0f;
     set_background_fill_colour(0, 0, 0);
     if (osTvType == TV_TYPE_PAL) {
-        func_80066940(0, 0, 38, SCREEN_WIDTH, 224);
+        func_80066940(0, 0, 38, SCREEN_WIDTH, SCREEN_HEIGHT - 16);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT + 44);
     } else {
-        func_80066940(0, 0, 40, SCREEN_WIDTH, 196);
+        func_80066940(0, 0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 44);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     func_80066610();

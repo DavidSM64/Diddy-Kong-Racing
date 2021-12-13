@@ -54,8 +54,8 @@ extern s8 D_800DD060;
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
     /* 0x00 */ s32 x1;
-    /* 0x04 */ s32 x2;
-    /* 0x08 */ s32 y1;
+    /* 0x04 */ s32 y1;
+    /* 0x08 */ s32 x2;
     /* 0x0C */ s32 y2;
     /* 0x10 */ s32 posX;
     /* 0x14 */ s32 posY;
@@ -127,7 +127,7 @@ void func_800665E8(s32 arg0);
 void func_80066818(s32 viewPortIndex, s32 arg1);
 void func_80066894(s32 viewPortIndex, s32 arg1);
 s32 func_80066910(s32 viewPortIndex);
-void func_80066940(s32 viewPortIndex, s32 posX, s32 posY, s32 width, s32 height);
+void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
 void set_viewport_properties(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2);
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
