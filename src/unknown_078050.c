@@ -5,6 +5,7 @@
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
+#include "video.h"
 //#include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
@@ -277,7 +278,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
  * afterwards, alls the draw command that initialises all the rendermodes, ready for use.
  */
 void init_rdp_and_framebuffer(Gfx **dlist) {
-    s32 width = get_video_width_and_height_as_s32() & 0xFFF;
+    s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, 0x01000000);
     gDPSetDepthImage((*dlist)++, 0x2000000);
     gSPDisplayList((*dlist)++, dRdpInit);

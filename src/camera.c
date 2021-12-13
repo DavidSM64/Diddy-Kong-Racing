@@ -29,6 +29,10 @@ const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
 
 s8 D_800DD060 = 0;
 
+// x1, y1, x2, y2
+// posX, posY, width, height
+// scissorX1, scissorY1, scissorX2, scissorY2
+// flags
 #define DEFAULT_VIEWPORT                                                \
     0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,                                  \
     SCREEN_WIDTH_HALF, SCREEN_HEIGHT_HALF, SCREEN_WIDTH, SCREEN_HEIGHT, \
@@ -161,7 +165,7 @@ void func_80065EA0(void) {
     D_80120D18 = 0;
     D_80120D15 = 0;
     D_800DD060 = 0;
-    while (IO_READ(PI_STATUS_REG) & 3) {
+    while (IO_READ(PI_STATUS_REG) & PI_STATUS_ERROR) {
     }
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         D_800DD060 = 1;
@@ -447,66 +451,58 @@ s32 func_80066910(s32 viewPortIndex) {
     return gScreenViewports[viewPortIndex].flags & VIEWPORT_UNK_01;
 }
 
-#ifdef NON_MATCHING
-
-// Should be functionally equivalent.
-// proposed name: reesize_viewport
-void func_80066940(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2) {
+// proposed name: resize_viewport
+void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
     s32 widthAndHeight, width, height;
-    s32 tempX1;
-    s32 tempY2;
-    s32 tempX2;
+    s32 temp;
 
     widthAndHeight = get_video_width_and_height_as_s32();
-    width = widthAndHeight & 0xFFFF;
-    // Placement issues with the height variable.
-    height = (widthAndHeight >> 0x10) & 0xFFFF;
-    tempY2 = y2;
-    tempX2 = x2;
-    tempX1 = x1;
+    height = GET_VIDEO_HEIGHT(widthAndHeight) & 0xFFFF;
+    width = GET_VIDEO_WIDTH(widthAndHeight);
+
     if (x2 < x1) {
-        tempX1 = x2;
-        tempX2 = x1;
+        temp = x1;
+        x1 = x2;
+        x2 = temp;
     }
     if (y2 < y1) {
+        temp = y1;
         y1 = y2;
-        tempY2 = y1;
+        y2 = temp;
     }
-    if ((tempX1 >= width) || (tempX2 < 0) || (y1 >= height) || (tempY2 < 0)) {
+
+    if ((x1 >= width) || (x2 < 0) || (y1 >= height) || (y2 < 0)) {
         gScreenViewports[viewPortIndex].scissorX1 = 0;
         gScreenViewports[viewPortIndex].scissorY1 = 0;
         gScreenViewports[viewPortIndex].scissorX2 = 0;
         gScreenViewports[viewPortIndex].scissorY2 = 0;
     } else {
-        if (tempX1 < 0) {
+        if (x1 < 0) {
             gScreenViewports[viewPortIndex].scissorX1 = 0;
         } else {
-            gScreenViewports[viewPortIndex].scissorX1 = tempX1;
+            gScreenViewports[viewPortIndex].scissorX1 = x1;
         }
         if (y1 < 0) {
             gScreenViewports[viewPortIndex].scissorY1 = 0;
         } else {
             gScreenViewports[viewPortIndex].scissorY1 = y1;
         }
-        if (tempX2 >= width) {
+        if (x2 >= width) {
             gScreenViewports[viewPortIndex].scissorX2 = width - 1;
         } else {
-            gScreenViewports[viewPortIndex].scissorX2 = tempX2;
+            gScreenViewports[viewPortIndex].scissorX2 = x2;
         }
-        if (tempY2 >= height) {
+        if (y2 >= height) {
             gScreenViewports[viewPortIndex].scissorY2 = height - 1;
         } else {
-            gScreenViewports[viewPortIndex].scissorY2 = tempY2;
+            gScreenViewports[viewPortIndex].scissorY2 = y2;
         }
     }
     gScreenViewports[viewPortIndex].y1 = y1;
-    gScreenViewports[viewPortIndex].x1 = tempX1;
-    gScreenViewports[viewPortIndex].x2 = tempX2;
-    gScreenViewports[viewPortIndex].y2 = tempY2;
+    gScreenViewports[viewPortIndex].x1 = x1;
+    gScreenViewports[viewPortIndex].x2 = x2;
+    gScreenViewports[viewPortIndex].y2 = y2;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80066940.s")
-#endif
 
 /**
  * Set the selected viewport's coordinate offsets and view size.
@@ -562,8 +558,8 @@ s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1,
  */
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
     *x1 = gScreenViewports[viewPortIndex].x1;
-    *y1 = gScreenViewports[viewPortIndex].x2;
-    *x2 = gScreenViewports[viewPortIndex].y1;
+    *y1 = gScreenViewports[viewPortIndex].y1;
+    *x2 = gScreenViewports[viewPortIndex].x2;
     *y2 = gScreenViewports[viewPortIndex].y2;
 }
 
@@ -571,11 +567,11 @@ void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32
  * Unused function that sets the passed values to the framebuffer's size in coordinates.
  */
 UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
-    u32 width = get_video_width_and_height_as_s32();
+    u32 widthAndHeight = get_video_width_and_height_as_s32();
     *x1 = 0;
     *y1 = 0;
-    *x2 = width & 0xFFFF;
-    *y2 = width >> 16;
+    *x2 = GET_VIDEO_WIDTH(widthAndHeight);
+    *y2 = GET_VIDEO_HEIGHT(widthAndHeight);
 }
 
 #ifdef NON_MATCHING
@@ -592,7 +588,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
     u32 temp_a2;
     u32 temp_a3;
     u32 temp_t0;
-    u32 temp_t1;
+    u32 width;
     u32 widthAndHeight;
     u32 temp_v0_6;
     u32 phi_a1;
@@ -619,11 +615,11 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
         }
         return;
     }
-    temp_t1 = widthAndHeight & 0xFFFF;
+    width = GET_VIDEO_WIDTH(widthAndHeight);
     if (gNumberOfViewports == VIEWPORTS_COUNT_3_PLAYERS) {
         gNumberOfViewports = VIEWPORTS_COUNT_4_PLAYERS;
     }
-    temp_a2 = temp_t1 >> 1;
+    temp_a2 = width >> 1;
     sp54 = temp_a2;
     sp58 = temp_a3;
     if (osTvType == TV_TYPE_PAL) {
@@ -636,7 +632,7 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             if (osTvType == TV_TYPE_PAL) {
                 phi_t3 = sp58 - 0x12;
             }
-            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, temp_t0);
+            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, width, temp_t0);
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
@@ -646,20 +642,20 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
                 if (osTvType == TV_TYPE_PAL) {
                     phi_t3 = temp_v0_6 - 0xC;
                 }
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_t1, (temp_a3 - (temp_t0 >> 7)));
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, width, (temp_a3 - (temp_t0 >> 7)));
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), temp_t1, (temp_t0 - (temp_t0 >> 7)));
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), width, (temp_t0 - (temp_t0 >> 7)));
                 phi_t3 = temp_a3 + (temp_t0 >> 2);
             }
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
             if (D_80120CE4 == 0) {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (temp_t1 >> 8), temp_t0);
-                phi_a1 = temp_t1 >> 2;
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (width >> 8), temp_t0);
+                phi_a1 = width >> 2;
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), 0, temp_t1 - (temp_t1 >> 8), temp_t0);
-                phi_a1 = temp_a2 + (temp_t1 >> 2);
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (width >> 8), 0, width - (width >> 8), temp_t0);
+                phi_a1 = temp_a2 + (width >> 2);
             }
             sp4C = phi_a1;
             phi_t3 = sp58;
@@ -669,21 +665,21 @@ void func_80066CDC(Gfx **dlist, s32 arg1) {
             sp54 = temp_a2 >> 1;
             switch (D_80120CE4) {
                 case 0:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, (temp_a2 - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, (temp_a2 - (width >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = 0;
                 case 1:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (temp_a2 + (temp_t1 >> 8)), 0, ((temp_a2 * 2) - (temp_t1 >> 8)), (temp_a3 - (temp_t0 >> 7)));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (temp_a2 + (width >> 8)), 0, ((temp_a2 * 2) - (width >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = temp_a2;
                     break;
                 case 2:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, temp_a3 + (temp_t0 >> 7), temp_a2 - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, temp_a3 + (temp_t0 >> 7), temp_a2 - (width >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = 0;
                     break;
                 case 3:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (temp_t1 >> 8), temp_a3 + (temp_t0 >> 7), (temp_a2 * 2) - (temp_t1 >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (width >> 8), temp_a3 + (temp_t0 >> 7), (temp_a2 * 2) - (width >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = temp_a2;
                     break;
@@ -738,8 +734,8 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     s32 i, j;
 
     widthAndHeight = get_video_width_and_height_as_s32();
-    height = widthAndHeight >> 0x10;
-    width = widthAndHeight & 0xFFFF;
+    height = GET_VIDEO_HEIGHT(widthAndHeight);
+    width = GET_VIDEO_WIDTH(widthAndHeight);
     func_8006F870(gOrthoMatrix, *arg1);
     D_80120D88[0] = *arg1;
     D_800DD148[D_80120CE4 + 5].vp.vscale[0] = width * 2;
@@ -796,8 +792,8 @@ void func_800682AC(Gfx **dlist) {
     u32 widthAndHeight, width, height;
     D_80120CE4 = 4;
     widthAndHeight = get_video_width_and_height_as_s32();
-    height = widthAndHeight >> 0x10;
-    width = widthAndHeight & 0xFFFF;
+    height = GET_VIDEO_HEIGHT(widthAndHeight);
+    width = GET_VIDEO_WIDTH(widthAndHeight);
     if (!(gScreenViewports[D_80120CE4].flags & VIEWPORT_UNK_01)) {
         gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
