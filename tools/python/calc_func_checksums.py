@@ -11,10 +11,11 @@ MAP_FILEPATH = BUILD_DIR + '/dkr.map'
 ROM_FILEPATH = BUILD_DIR + '/dkr.z64'
 
 FUNCTIONS_TO_CALC = [
-    ('func_80019808', 'D_800DC690'),
-    ('func_80024D54', 'D_800DCEA0'),
-    ('func_8003B4BC', 'D_800DCDD0'),
-    ('func_80068158', 'gFunc80068158Checksum')
+    # function         checksum      func size
+    ('func_80019808', 'D_800DC690', 'D_800DC694'),
+    ('func_80024D54', 'D_800DCEA0', 'D_800DCEA4'),
+    ('func_8003B4BC', 'D_800DCDD0', 'D_800DCB50'),
+    ('func_80068158', 'gFunc80068158Checksum', 'gFunc80068158Length')
 ]
 
 def getMatches(string, regex):
@@ -30,18 +31,20 @@ rom = FileUtil.get_bytes_from_file(ROM_FILEPATH)
 mapFile = {}
 RAM_TO_ROM = None
 
-def write_checksum_to_rom(romOffset, value):
+def write_word_to_rom(romOffset, value):
     global rom
     rom[romOffset + 0] = (value >> 24) & 0xFF
     rom[romOffset + 1] = (value >> 16) & 0xFF
     rom[romOffset + 2] = (value >> 8) & 0xFF
     rom[romOffset + 3] = value & 0xFF
     
-def calculate_checksum_for_function(funcLabel, varLabel):
+def calculate_checksum_for_function(funcLabel, varLabel, funcSizeLabel):
     if funcLabel not in mapFile:
         raise Exception('Label "' + funcLabel + '" does not exist in the map file!')
     if varLabel not in mapFile:
         raise Exception('Label "' + varLabel + '" does not exist in the map file!')
+    if funcSizeLabel not in mapFile:
+        raise Exception('Label "' + funcSizeLabel + '" does not exist in the map file!')
     funcEntry = mapFile[funcLabel]
     funcAddress = funcEntry['value']
     funcLength = funcEntry['length']
@@ -49,11 +52,16 @@ def calculate_checksum_for_function(funcLabel, varLabel):
     count = 0
     for i in range(0, funcLength):
         count += rom[funcRomOffset + i]
+    # Save checksum.
     varEntry = mapFile[varLabel]
     varAddress = varEntry['value']
     varRomOffset = varAddress - RAM_TO_ROM
-    write_checksum_to_rom(varRomOffset, count)
-    # print('The checksum count for "' + funcLabel + '" is: ' + hex(count))
+    write_word_to_rom(varRomOffset, count)
+    # Save function size.
+    sizeEntry = mapFile[funcSizeLabel]
+    sizeAddress = sizeEntry['value']
+    sizeRomOffset = sizeAddress - RAM_TO_ROM
+    write_word_to_rom(sizeRomOffset, funcLength)
 
 def calculate_matches():
     global mapFile, RAM_TO_ROM
@@ -71,7 +79,7 @@ def calculate_matches():
 def main():
     calculate_matches()
     for entry in FUNCTIONS_TO_CALC:
-        calculate_checksum_for_function(entry[0], entry[1])
+        calculate_checksum_for_function(entry[0], entry[1], entry[2])
     FileUtil.write_bytes_to_file(ROM_FILEPATH, rom)
 
 main()
