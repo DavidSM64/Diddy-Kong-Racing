@@ -68,4 +68,6 @@ extern __OSViContext *__osViCurr;
 extern __OSViContext *__osViNext;
 __OSViContext *__osViGetCurrentContext(void);
 void __osViInit(void);
+void *osViGetCurrentFramebuffer(void);
+void *osViGetNextFramebuffer(void);
 #endif

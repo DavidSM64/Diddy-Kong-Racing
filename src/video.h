@@ -53,7 +53,7 @@ enum LogicUpdateRates {
     LOGIC_15FPS,
     LOGIC_12FPS,
     LOGIC_10FPS,
-    LOGIC_5FPS = 12,
+    LOGIC_5FPS = 12
 };
 
 extern s32 gVideoRefreshRate;
