@@ -11,10 +11,10 @@ MAP_FILEPATH = BUILD_DIR + '/dkr.map'
 ROM_FILEPATH = BUILD_DIR + '/dkr.z64'
 
 FUNCTIONS_TO_CALC = [
-    # function         checksum      func size
-    ('func_80019808', 'D_800DC690', 'D_800DC694'),
-    ('func_80024D54', 'D_800DCEA0', 'D_800DCEA4'),
-    ('func_8003B4BC', 'D_800DCDD0', 'D_800DCB50'),
+    # function         checksum variable        func size variable
+    ('func_80019808', 'gFunc80019808Checksum', 'gFunc80019808Length'),
+    ('func_80024D54', 'gFunc80024D54Checksum', 'gFunc80024D54Length'),
+    ('func_8003B4BC', 'gFunc8003B4BCChecksum', 'gFunc8003B4BCLength'),
     ('func_80068158', 'gFunc80068158Checksum', 'gFunc80068158Length')
 ]
 
@@ -52,7 +52,7 @@ def calculate_checksum_for_function(funcLabel, varLabel, funcSizeLabel):
     count = 0
     for i in range(0, funcLength):
         count += rom[funcRomOffset + i]
-    # Save checksum.
+    # Save function checksum.
     varEntry = mapFile[varLabel]
     varAddress = varEntry['value']
     varRomOffset = varAddress - RAM_TO_ROM

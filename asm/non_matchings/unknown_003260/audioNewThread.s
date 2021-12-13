@@ -150,8 +150,8 @@ glabel audioNewThread
 /* 003498 80002898 AE420010 */  sw    $v0, 0x10($s2)
 /* 00349C 8000289C 25AD9808 */  addiu $t5, %lo(func_80019808) # addiu $t5, $t5, -0x67f8
 /* 0034A0 800028A0 A1000000 */  sb    $zero, ($t0)
-/* 0034A4 800028A4 3C05800E */  lui   $a1, %hi(D_800DC694) # $a1, 0x800e
-/* 0034A8 800028A8 8CA5C694 */  lw    $a1, %lo(D_800DC694)($a1)
+/* 0034A4 800028A4 3C05800E */  lui   $a1, %hi(gFunc80019808Length) # $a1, 0x800e
+/* 0034A8 800028A8 8CA5C694 */  lw    $a1, %lo(gFunc80019808Length)($a1)
 /* 0034AC 800028AC 01A61823 */  subu  $v1, $t5, $a2
 /* 0034B0 800028B0 00C33821 */  addu  $a3, $a2, $v1
 /* 0034B4 800028B4 00008825 */  move  $s1, $zero
@@ -169,8 +169,8 @@ glabel audioNewThread
 /* 0034E0 800028E0 1420FFF8 */  bnez  $at, .L800028C4
 /* 0034E4 800028E4 006E1821 */   addu  $v1, $v1, $t6
 .L800028E8:
-/* 0034E8 800028E8 3C19800E */  lui   $t9, %hi(D_800DC690) # $t9, 0x800e
-/* 0034EC 800028EC 8F39C690 */  lw    $t9, %lo(D_800DC690)($t9)
+/* 0034E8 800028E8 3C19800E */  lui   $t9, %hi(gFunc80019808Checksum) # $t9, 0x800e
+/* 0034EC 800028EC 8F39C690 */  lw    $t9, %lo(gFunc80019808Checksum)($t9)
 /* 0034F0 800028F0 3C108011 */  lui   $s0, %hi(D_80115F98) # $s0, 0x8011
 /* 0034F4 800028F4 10790003 */  beq   $v1, $t9, .L80002904
 /* 0034F8 800028F8 26105F98 */   addiu $s0, %lo(D_80115F98) # addiu $s0, $s0, 0x5f98
