@@ -21,7 +21,7 @@
 
 /************ .data ************/
 
-s32 D_800DCB50 = 0x310;
+s32 gFunc8003B4BCLength = 0x310;
 s16 D_800DCB54 = 0;
 s32 D_800DCB58 = 0; // Currently unknown, might be a different type.
 s32 D_800DCB5C = 0; // Currently unknown, might be a different type.
@@ -111,7 +111,7 @@ s16 D_800DCDB0[16] = {
 };
 
 // Checksum count for func_8003B4BC
-s32 D_800DCDD0 = 42391;
+s32 gFunc8003B4BCChecksum = 42391;
 
 s16 D_800DCDD4[4] = {
     0, 0, 0x32, -1
@@ -922,11 +922,11 @@ void func_8005A3D0(void) {
     s32 count = 0;
     u8 *temp = (u8 *)&func_8003B4BC;
 
-    for (i = 0; i < D_800DCB50; i++) {
+    for (i = 0; i < gFunc8003B4BCLength; i++) {
         count += temp[i];
     }
 
-    if (count != D_800DCDD0) {
+    if (count != gFunc8003B4BCChecksum) {
         D_800DCB54 = 0x800;
     }
 }
