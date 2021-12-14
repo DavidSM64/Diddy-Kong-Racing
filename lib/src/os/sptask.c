@@ -5,6 +5,7 @@
 #include "viint.h"
 #include "PR/sptask.h"
 #include "osint.h"
+#include "macros.h"
 
 #define _osVirtualToPhysical(ptr)               \
     if (ptr != NULL) {                          \
@@ -53,7 +54,7 @@ void osSpTaskLoad(OSTask *intp) {
         ;
 }
 
-void osSpTaskStartGo(OSTask *tp) {
+void osSpTaskStartGo(UNUSED OSTask *tp) {
     while (__osSpDeviceBusy());
 
     __osSpSetStatus(SP_SET_INTR_BREAK | SP_CLR_SSTEP | SP_CLR_BROKE | SP_CLR_HALT);

@@ -1,4 +1,4 @@
-glabel alLoadPull
+glabel alAdpcmPull
 /* 0CC7EC 800CBBEC 27BDFF50 */  addiu $sp, $sp, -0xb0
 /* 0CC7F0 800CBBF0 AFB70044 */  sw    $s7, 0x44($sp)
 /* 0CC7F4 800CBBF4 AFA700BC */  sw    $a3, 0xbc($sp)

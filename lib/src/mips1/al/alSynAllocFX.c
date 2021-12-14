@@ -6,7 +6,6 @@
 #include "audio_internal.h"
 
 #ifdef NON_MATCHING
-void alFxNew(ALFx *r, ALSynConfig *c, s16 bus);
 s32 alFxParam(void *filter, s32 paramID, void *param);
 s32 alMainBusParam(void *filter, s32 paramID, void *param);
 // This is very close to matching.
