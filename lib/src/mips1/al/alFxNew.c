@@ -25,6 +25,7 @@
 #include "libultra_internal.h"
 #include "audio_internal.h"
 #include "audio.h"
+#include "src/memory.h"
 
 /*
  * WARNING: THE FOLLOWING CONSTANT MUST BE KEPT IN SYNC
@@ -112,43 +113,32 @@ void init_lpfilter(ALLowPass *lp) {
     }
 }
 
-#if 1
-GLOBAL_ASM("lib/asm/non_matchings/alFxNew/alFxNew.s")
-#else
-//This function differs from libreultra's
-void alFxNew(ALFx *r, ALSynConfig *c, ALHeap *hp) {
+//This function differs from libreultra's, but still mostly the same
+void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
     u16		i, j, k;
     s32		*param = 0;
     ALFilter	*f = (ALFilter *) r;
     ALDelay	*d;
-
     alFilterNew(f, 0, alFxParam, AL_FX);
     f->handler = alFxPull;
     r->paramHdl = (ALSetFXParam)alFxParamHdl;
-
-    switch (c->fxType[0]) {
+    switch (c->fxType[bus]) {
       case AL_FX_SMALLROOM:	param = SMALLROOM_PARAMS;	break;
       case AL_FX_BIGROOM:	param = BIGROOM_PARAMS;		break;
       case AL_FX_ECHO:		param = ECHO_PARAMS;		break;
       case AL_FX_CHORUS:	param = CHORUS_PARAMS;		break;
-      case AL_FX_FLANGE:	param = FLANGE_PARAMS;		break;
-      case AL_FX_CUSTOM:	param = c->params;		break;
+      case AL_FX_FLANGE:	param = FLANGE_PARAMS;  	break;
+      case AL_FX_CUSTOM:	param = (&c->params)[bus];	break;
       default:			param = NULL_PARAMS;		break;
     }
-
-
     j = 0;
-
     r->section_count = param[j++];
     r->length 	     = param[j++];
-
-    r->delay = alHeapAlloc(hp, r->section_count, sizeof(ALDelay));
-    r->base = alHeapAlloc(hp, r->length, sizeof(s16));
+    r->delay = allocate_from_main_pool_safe(sizeof(ALDelay) * r->section_count, 0xFFFFFFU);
+    r->base = allocate_from_main_pool_safe(sizeof(s16) * r->length, 0xFFFFFFU);
     r->input = r->base;
-
     for ( k=0; k < r->length; k++)
 	r->base[k] = 0;
-
     for ( i=0; i<r->section_count; i++ ) {
         d = &r->delay[i];
         d->input  = param[j++];
@@ -156,12 +146,10 @@ void alFxNew(ALFx *r, ALSynConfig *c, ALHeap *hp) {
         d->fbcoef = param[j++];
         d->ffcoef = param[j++];
         d->gain   = param[j++];
-
         if (param[j]) {
     #define RANGE 2.0
-    /*	    d->rsinc     = ((f32) param[j++])/0xffffff; */
+            //d->rsinc     = ((f32) param[j++])/0xffffff;
             d->rsinc = ((((f32)param[j++])/1000) * RANGE)/c->outputRate;
-
             /*
             * the following constant is derived from:
             *
@@ -179,8 +167,8 @@ void alFxNew(ALFx *r, ALSynConfig *c, ALHeap *hp) {
             d->rsgain 	 = (((f32) param[j++])/CONVERT) * LENGTH;
             d->rsval	 = 1.0;
             d->rsdelta	 = 0.0;
-            d->rs 	 = alHeapAlloc(hp, 1, sizeof(ALResampler));
-            d->rs->state = alHeapAlloc(hp, 1, sizeof(RESAMPLE_STATE));
+            d->rs 	 = allocate_from_main_pool_safe(sizeof(ALResampler), 0xFFFFFFU);
+            d->rs->state = allocate_from_main_pool_safe(sizeof(RESAMPLE_STATE), 0xFFFFFFU);
             d->rs->delta = 0.0;
             d->rs->first = 1;
         } else {
@@ -188,10 +176,9 @@ void alFxNew(ALFx *r, ALSynConfig *c, ALHeap *hp) {
             j++;
             j++;
         }
-
         if (param[j]) {
-            d->lp = alHeapAlloc(hp, 1, sizeof(ALLowPass));
-            d->lp->fstate = alHeapAlloc(hp, 1, sizeof(POLEF_STATE));
+            d->lp = allocate_from_main_pool_safe(sizeof(ALLowPass), 0xFFFFFFU);
+            d->lp->fstate = allocate_from_main_pool_safe(sizeof(POLEF_STATE), 0xFFFFFFU);
             d->lp->fc = param[j++];
             init_lpfilter(d->lp);
         } else {
@@ -200,7 +187,6 @@ void alFxNew(ALFx *r, ALSynConfig *c, ALHeap *hp) {
         }
     }
 }
-#endif
 
 void alEnvmixerNew(ALEnvMixer *e, ALHeap *hp) {
     alFilterNew((ALFilter *) e, alEnvmixerPull, alEnvmixerParam, AL_ENVMIX);
