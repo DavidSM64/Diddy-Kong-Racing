@@ -134,8 +134,8 @@ void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
     j = 0;
     r->section_count = param[j++];
     r->length 	     = param[j++];
-    r->delay = allocate_from_main_pool_safe(sizeof(ALDelay) * r->section_count, 0xFFFFFFU);
-    r->base = allocate_from_main_pool_safe(sizeof(s16) * r->length, 0xFFFFFFU);
+    r->delay = allocate_from_main_pool_safe(sizeof(ALDelay) * r->section_count, COLOR_TAG_CYAN);
+    r->base = allocate_from_main_pool_safe(sizeof(s16) * r->length, COLOR_TAG_CYAN);
     r->input = r->base;
     for ( k=0; k < r->length; k++)
 	r->base[k] = 0;
@@ -167,8 +167,8 @@ void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
             d->rsgain 	 = (((f32) param[j++])/CONVERT) * LENGTH;
             d->rsval	 = 1.0;
             d->rsdelta	 = 0.0;
-            d->rs 	 = allocate_from_main_pool_safe(sizeof(ALResampler), 0xFFFFFFU);
-            d->rs->state = allocate_from_main_pool_safe(sizeof(RESAMPLE_STATE), 0xFFFFFFU);
+            d->rs 	 = allocate_from_main_pool_safe(sizeof(ALResampler), COLOR_TAG_CYAN);
+            d->rs->state = allocate_from_main_pool_safe(sizeof(RESAMPLE_STATE), COLOR_TAG_CYAN);
             d->rs->delta = 0.0;
             d->rs->first = 1;
         } else {
@@ -177,8 +177,8 @@ void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
             j++;
         }
         if (param[j]) {
-            d->lp = allocate_from_main_pool_safe(sizeof(ALLowPass), 0xFFFFFFU);
-            d->lp->fstate = allocate_from_main_pool_safe(sizeof(POLEF_STATE), 0xFFFFFFU);
+            d->lp = allocate_from_main_pool_safe(sizeof(ALLowPass), COLOR_TAG_CYAN);
+            d->lp->fstate = allocate_from_main_pool_safe(sizeof(POLEF_STATE), COLOR_TAG_CYAN);
             d->lp->fc = param[j++];
             init_lpfilter(d->lp);
         } else {
