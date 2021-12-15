@@ -450,7 +450,7 @@ void func_8004F77C(unk8004F77C *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004F7F4.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 typedef struct Object_64_80050754 {
             u8 unk0[0x2C];
@@ -679,7 +679,7 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
     temp->unk210 = arg2;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 typedef struct Object_64_800570B8 {
     u8 pad0[3];
     s8 unk3;
@@ -788,7 +788,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800581E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058B84.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058D5C.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     s32 temp0, temp1;
     temp0 = (s32)arg0;

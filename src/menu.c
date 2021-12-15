@@ -1479,7 +1479,7 @@ const char D_800E8250[] = "loadFrontEndItem() - Item no %d out of range 0-%d\n";
 
 /*********************************/
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent
 void load_menu_text(s32 language) {
@@ -1660,7 +1660,7 @@ void func_80080E6C(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80080E90.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Should be functionally equivalent.
 void func_80081218(void) {
     s32 numLevels; // sp34
@@ -1956,7 +1956,7 @@ void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80081F4C.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
     s32 s5;
@@ -2370,7 +2370,7 @@ void func_800841B8(s32 arg0) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Should be functionally equivalent
 s32 menu_options_loop(s32 arg0) {
     s32 buttonsPressed;
@@ -2519,7 +2519,7 @@ void menu_audio_options_init(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80084854.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Almost matching, should be functionally equivalent
 s32 menu_audio_options_loop(s32 arg0) {
@@ -2765,7 +2765,7 @@ void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
 GLOBAL_ASM("asm/non_matchings/menu/func_800862C4.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_800867D4.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80086A48(s32 arg0) {
     f32 temp, temp2;
     temp = D_80126BD4;
@@ -2875,7 +2875,7 @@ void menu_boot_init(void) {
     D_80126C18 = 0; // D_80126C18 is a timer for the boot screen, counts up to 0x8C frames.
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 menu_boot_loop(s32 arg0) {
     // arg0 = sp30
     s32 out; // sp2C
@@ -3014,7 +3014,7 @@ void menu_magic_codes_init(void) {
     func_800C4170(2);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Close to matching, but should be functionally equivalent.
 void render_magic_codes_ui(s32 arg0) {
@@ -3161,7 +3161,7 @@ void menu_magic_codes_list_init(void) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent
 void render_magic_codes_list_menu_text(s32 arg0) {
@@ -3230,7 +3230,7 @@ void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 menu_magic_codes_list_loop(s32 arg0) {
     s32 phi_a2;
     s32 sp48;
@@ -3346,7 +3346,7 @@ void func_8008AD1C(void) {
     func_800C422C(2);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 extern u8 *__ROM_END;
 
@@ -3506,7 +3506,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008B358.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008B4C8.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008B758.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent
 void randomize_ai_racer_slots(s32 arg0) {
@@ -3725,7 +3725,7 @@ void unload_large_font(void) {
     func_800C422C(FONT_LARGE);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 void menu_game_select_init(void) {
     s32 i;
@@ -3770,7 +3770,7 @@ void menu_game_select_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_game_select_init.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_8008C698(s32 arg0) {
     s32 fade;
     s32 i;
@@ -3811,7 +3811,7 @@ void func_8008C698(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/func_8008C698.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 s32 menu_game_select_loop(s32 arg0) {
     s32 playerInputs;
@@ -3974,7 +3974,7 @@ void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green
     func_8009CA60(imageID);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Shouldn't have any major issues.
 void render_file_select_menu(UNUSED s32 updateRate) {
     s32 s2;
@@ -4220,7 +4220,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008E4EC.s")
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F00C.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Close to done with this function. Just a regalloc issue remains.
 
 s32 menu_track_select_loop(s32 arg0) {
@@ -4344,7 +4344,7 @@ void func_80090ED8(s32 arg0) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Somewhat close to matching, but should be functionally equivalent.
 void render_track_select_setup_ui(s32 arg0) {
@@ -4729,7 +4729,7 @@ void menu_5_init(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80092E94.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues
 s32 menu_5_loop(s32 arg0) {
     s32 temp0;
@@ -4911,7 +4911,7 @@ void func_80094C14(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80094D28.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80095624(s32 arg0) {
     switch (arg0 & 0xFF) {
         case 1:
@@ -5069,7 +5069,7 @@ s32 compress_filename_string(unsigned char *filename, s32 length) {
     return output;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Not matching, but functionally equivalent.
 // Trims the trailing end of the string, so that spaces won't show up at the end.
@@ -5213,7 +5213,7 @@ void func_80098754(void) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80098774.s")
 GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_rankings_init.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80098EBC(s32 arg0) {
     s32 test;
     s32 fade;
@@ -5261,7 +5261,7 @@ s32 get_trophy_race_world_id(void) {
 GLOBAL_ASM("asm/non_matchings/menu/func_8009963C.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_800998E0.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent
 void menu_ghost_data_init(void) {
@@ -5327,7 +5327,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_ghost_data_init.s")
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80099E8C.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issue: v0 & v1 need to swap!
 s32 menu_ghost_data_loop(s32 arg0) {
     s32 i;
@@ -5637,7 +5637,7 @@ void reset_controller_sticks(void) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 #define STICK_DEADZONE 35
 #define STICK_DELAY_AMOUNT 15
@@ -6291,7 +6291,7 @@ s32 dialogue_race_defeat(void) {
     return state;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Has a couple minor issues, but should be functionally equivalent.
 s32 tt_menu_loop(void) {

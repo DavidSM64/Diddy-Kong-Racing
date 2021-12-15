@@ -130,7 +130,7 @@ s16 D_8011D4E2;
 
 /******************************/
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 typedef struct LevelObjectEntry80033CC0 {
     LevelObjectEntryCommon common;
     u8 unk8;
@@ -571,7 +571,7 @@ void func_80038248(Object *arg0, s32 arg1) {
     arg0->unk4C->unk12 = 0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues
 void func_8003827C(Object *obj, s32 arg1) {
     Object_64_8003827C *obj64 = obj->unk64;
@@ -725,7 +725,7 @@ void func_80038AD4(Object *arg0, s32 arg1) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // regalloc issues
 void func_80038B74(Object *obj, unk80038B74 *arg1) {
     s32 temp;
@@ -1278,7 +1278,7 @@ void func_8003F0DC(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F0F8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F2E8.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues
 void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s32 arg6) {
     Object *someObj;

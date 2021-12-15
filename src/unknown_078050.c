@@ -208,7 +208,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
     sBackgroundFillColour |= (sBackgroundFillColour << 16);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Stack issues
 void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
     s32 x1;
@@ -332,7 +332,7 @@ void func_80078AAC(void *arg0) {
     D_800DE4D0.ptr = arg0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Regalloc & stack issues.
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha) {
