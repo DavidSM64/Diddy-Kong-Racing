@@ -4,6 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "libultra_internal.h"
+#include "osint.h"
 
 extern OSThread *__osRunningThread;
 

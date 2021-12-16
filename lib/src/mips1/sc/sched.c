@@ -1,11 +1,13 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80079350 */
 
+#include <assert.h>
 #include "sched.h"
 #include "types.h"
 #include "macros.h"
 #include "f3ddkr.h"
 #include "libultra_internal.h"
+#include "viint.h"
 
 /*
  * private typedefs and defines
@@ -67,6 +69,9 @@ u32 gRSPAudTaskCount;
 s32 D_80126128[18];
 
 /*******************************/
+
+static void __scMain(void *arg);
+static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP);
 
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields) {
     sc->curRSPTask      = 0;
@@ -542,7 +547,7 @@ static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                               *dp = gfx;
                               avail &= ~OS_SC_DP;
 
-                              if (avail & OS_SC_DP == 0)
+                              if ((avail & OS_SC_DP) == 0)
                                   assert(sc->curRDPTask == gfx);
 
                           }

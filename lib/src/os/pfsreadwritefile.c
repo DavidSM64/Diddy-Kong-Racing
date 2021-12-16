@@ -64,8 +64,9 @@ s32 osPfsReadWriteFile(OSPfs *pfs, s32 file_no, u8 flag, int offset, int size_in
         return PFS_ERR_INCONSISTENT;
     }
 
-    if (flag == PFS_READ && (dir.status & DIR_STATUS_OCCUPIED) == 0)
+    if (flag == PFS_READ && (dir.status & DIR_STATUS_OCCUPIED) == 0) {
         return PFS_ERR_BAD_DATA;
+    }
 
 	bank = -1;
     cur_block = offset / BLOCKSIZE;

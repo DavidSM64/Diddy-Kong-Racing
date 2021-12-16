@@ -39,7 +39,7 @@ void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
     arg1->unkC = 0.0f;
     D_8011D5C0 = object->y_position;
     if (arg1->unk118 != 0) {
-        func_80006AC8();
+        func_80006AC8(object);
     }
     D_8011D5C4 = 0;
 }

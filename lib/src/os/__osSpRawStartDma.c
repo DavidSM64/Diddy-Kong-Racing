@@ -2,6 +2,7 @@
 /* RAM_POS: 0x800D6440 */
 
 #include "libultra_internal.h"
+#include "osint.h"
 
 s32 __osSpRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size) {
     if (__osSpDeviceBusy())

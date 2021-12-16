@@ -100,7 +100,6 @@ extern OSViMode osViModeTable[];
 /*******************************/
 
 void __scYield(OSSched *sc);
-static void __scMain(void *arg);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields);
 void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 arg3);
@@ -116,6 +115,5 @@ s32 __scTaskComplete(OSSched *sc, OSScTask *t);
 void __scAppendList(OSSched *sc, OSScTask *t);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 void __scHandleRetrace(OSSched *sc);
-static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP);
 
 #endif

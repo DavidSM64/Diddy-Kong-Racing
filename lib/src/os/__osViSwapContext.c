@@ -16,8 +16,8 @@ struct __osThreadTail __osThreadTail = {0, -1};
 OSThread *__osRunQueue = (OSThread *)&__osThreadTail;
 OSThread *__osActiveQueue = (OSThread *)&__osThreadTail;
 
-extern OSThread *__osRunningThread = NULL;
-extern OSThread *__osFaultedThread = NULL;
+OSThread *__osRunningThread = NULL;
+OSThread *__osFaultedThread = NULL;
 
 void __osViSwapContext() {
     register OSViMode *vm;

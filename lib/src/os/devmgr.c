@@ -3,6 +3,7 @@
 
 #include "libultra_internal.h"
 #include "piint.h"
+#include "osint.h"
 
 void __osDevMgrMain(void *args) {
     OSIoMesg *mb;
