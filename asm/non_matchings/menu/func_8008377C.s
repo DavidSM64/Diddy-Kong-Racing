@@ -26,10 +26,10 @@ glabel func_8008377C
 /* 0843DC 800837DC 44822000 */  mtc1  $v0, $f4
 /* 0843E0 800837E0 44814000 */  mtc1  $at, $f8
 /* 0843E4 800837E4 468021A0 */  cvt.s.w $f6, $f4
-/* 0843E8 800837E8 3C17800E */  lui   $s7, %hi(D_800DF764) # $s7, 0x800e
+/* 0843E8 800837E8 3C17800E */  lui   $s7, %hi(sMenuGuiOpacity) # $s7, 0x800e
 /* 0843EC 800837EC 000278C0 */  sll   $t7, $v0, 3
 /* 0843F0 800837F0 46083002 */  mul.s $f0, $f6, $f8
-/* 0843F4 800837F4 26F7F764 */  addiu $s7, %lo(D_800DF764) # addiu $s7, $s7, -0x89c
+/* 0843F4 800837F4 26F7F764 */  addiu $s7, %lo(sMenuGuiOpacity) # addiu $s7, $s7, -0x89c
 /* 0843F8 800837F8 25F8FFFF */  addiu $t8, $t7, -1
 /* 0843FC 800837FC AEF80000 */  sw    $t8, ($s7)
 /* 084400 80083800 E7A00048 */  swc1  $f0, 0x48($sp)
@@ -38,17 +38,17 @@ glabel func_8008377C
 /* 08440C 8008380C 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 084410 80083810 C7A00048 */  lwc1  $f0, 0x48($sp)
 /* 084414 80083814 44815000 */  mtc1  $at, $f10
-/* 084418 80083818 3C05800E */  lui   $a1, %hi(D_800DF7DC) # $a1, 0x800e
+/* 084418 80083818 3C05800E */  lui   $a1, %hi(sGameTitleTileOffsets) # $a1, 0x800e
 /* 08441C 8008381C 460A0032 */  c.eq.s $f0, $f10
-/* 084420 80083820 24A5F7DC */  addiu $a1, %lo(D_800DF7DC) # addiu $a1, $a1, -0x824
+/* 084420 80083820 24A5F7DC */  addiu $a1, %lo(sGameTitleTileOffsets) # addiu $a1, $a1, -0x824
 /* 084424 80083824 4501000F */  bc1t  .L80083864
 /* 084428 80083828 02C02025 */   move  $a0, $s6
-/* 08442C 8008382C 3C05800E */  lui   $a1, %hi(D_800DF7DC) # $a1, 0x800e
+/* 08442C 8008382C 3C05800E */  lui   $a1, %hi(sGameTitleTileOffsets) # $a1, 0x800e
 /* 084430 80083830 2419FFFE */  li    $t9, -2
 /* 084434 80083834 24080001 */  li    $t0, 1
 /* 084438 80083838 AFA8001C */  sw    $t0, 0x1c($sp)
 /* 08443C 8008383C AFB90018 */  sw    $t9, 0x18($sp)
-/* 084440 80083840 24A5F7DC */  addiu $a1, %lo(D_800DF7DC) # addiu $a1, $a1, -0x824
+/* 084440 80083840 24A5F7DC */  addiu $a1, %lo(sGameTitleTileOffsets) # addiu $a1, $a1, -0x824
 /* 084444 80083844 02C02025 */  move  $a0, $s6
 /* 084448 80083848 3C064320 */  lui   $a2, 0x4320
 /* 08444C 8008384C 3C074250 */  lui   $a3, 0x4250

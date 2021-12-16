@@ -57,9 +57,9 @@ glabel render_track_select_setup_ui
 /* 091BF0 80090FF0 248463A0 */   addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
 /* 091BF4 80090FF4 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 091BF8 80090FF8 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
-/* 091BFC 80090FFC 3C03800E */  lui   $v1, %hi(D_800DF75C) # $v1, 0x800e
+/* 091BFC 80090FFC 3C03800E */  lui   $v1, %hi(gMenuImageStack) # $v1, 0x800e
 /* 091C00 80091000 04410029 */  bgez  $v0, .L800910A8
-/* 091C04 80091004 2463F75C */   addiu $v1, %lo(D_800DF75C) # addiu $v1, $v1, -0x8a4
+/* 091C04 80091004 2463F75C */   addiu $v1, %lo(gMenuImageStack) # addiu $v1, $v1, -0x8a4
 /* 091C08 80091008 3C028012 */  lui   $v0, %hi(D_801269F4) # $v0, 0x8012
 /* 091C0C 8009100C 8C4269F4 */  lw    $v0, %lo(D_801269F4)($v0)
 /* 091C10 80091010 24010004 */  li    $at, 4
@@ -111,15 +111,15 @@ glabel render_track_select_setup_ui
 /* 091CB4 800910B4 10200428 */  beqz  $at, .L80092158
 /* 091CB8 800910B8 3C04800E */   lui   $a0, %hi(gTrackIdForPreview) # $a0, 0x800e
 /* 091CBC 800910BC 04410006 */  bgez  $v0, .L800910D8
-/* 091CC0 800910C0 3C1E800E */   lui   $fp, %hi(D_800DF764) # $fp, 0x800e
+/* 091CC0 800910C0 3C1E800E */   lui   $fp, %hi(sMenuGuiOpacity) # $fp, 0x800e
 /* 091CC4 800910C4 0002C900 */  sll   $t9, $v0, 4
 /* 091CC8 800910C8 272800FF */  addiu $t0, $t9, 0xff
-/* 091CCC 800910CC 27DEF764 */  addiu $fp, %lo(D_800DF764) # addiu $fp, $fp, -0x89c
+/* 091CCC 800910CC 27DEF764 */  addiu $fp, %lo(sMenuGuiOpacity) # addiu $fp, $fp, -0x89c
 /* 091CD0 800910D0 10000005 */  b     .L800910E8
 /* 091CD4 800910D4 AFC80000 */   sw    $t0, ($fp)
 .L800910D8:
-/* 091CD8 800910D8 3C1E800E */  lui   $fp, %hi(D_800DF764) # $fp, 0x800e
-/* 091CDC 800910DC 27DEF764 */  addiu $fp, %lo(D_800DF764) # addiu $fp, $fp, -0x89c
+/* 091CD8 800910D8 3C1E800E */  lui   $fp, %hi(sMenuGuiOpacity) # $fp, 0x800e
+/* 091CDC 800910DC 27DEF764 */  addiu $fp, %lo(sMenuGuiOpacity) # addiu $fp, $fp, -0x89c
 /* 091CE0 800910E0 240900FF */  li    $t1, 255
 /* 091CE4 800910E4 AFC90000 */  sw    $t1, ($fp)
 .L800910E8:
@@ -880,8 +880,8 @@ glabel render_track_select_setup_ui
 /* 092814 80091C14 10200022 */  beqz  $at, .L80091CA0
 /* 092818 80091C18 8FAC0074 */   lw    $t4, 0x74($sp)
 /* 09281C 80091C1C 15E0001F */  bnez  $t7, .L80091C9C
-/* 092820 80091C20 3C02800E */   lui   $v0, %hi(D_800DF75C) # $v0, 0x800e
-/* 092824 80091C24 2442F75C */  addiu $v0, %lo(D_800DF75C) # addiu $v0, $v0, -0x8a4
+/* 092820 80091C20 3C02800E */   lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
+/* 092824 80091C24 2442F75C */  addiu $v0, %lo(gMenuImageStack) # addiu $v0, $v0, -0x8a4
 /* 092828 80091C28 3C01C250 */  li    $at, 0xC2500000 # -52.000000
 /* 09282C 80091C2C 44814000 */  mtc1  $at, $f8
 /* 092830 80091C30 8C590000 */  lw    $t9, ($v0)
@@ -906,8 +906,8 @@ glabel render_track_select_setup_ui
 /* 092878 80091C78 0C027298 */  jal   func_8009CA60
 /* 09287C 80091C7C E51000EC */   swc1  $f16, 0xec($t0)
 /* 092880 80091C80 3C014240 */  li    $at, 0x42400000 # 48.000000
-/* 092884 80091C84 3C0B800E */  lui   $t3, %hi(D_800DF75C) # $t3, 0x800e
-/* 092888 80091C88 8D6BF75C */  lw    $t3, %lo(D_800DF75C)($t3)
+/* 092884 80091C84 3C0B800E */  lui   $t3, %hi(gMenuImageStack) # $t3, 0x800e
+/* 092888 80091C88 8D6BF75C */  lw    $t3, %lo(gMenuImageStack)($t3)
 /* 09288C 80091C8C 44819000 */  mtc1  $at, $f18
 /* 092890 80091C90 24040007 */  li    $a0, 7
 /* 092894 80091C94 0C027298 */  jal   func_8009CA60
@@ -1014,10 +1014,10 @@ glabel render_track_select_setup_ui
 /* 092A18 80091E18 0C01EFC7 */  jal   func_8007BF1C
 /* 092A1C 80091E1C 00002025 */   move  $a0, $zero
 /* 092A20 80091E20 3C15800E */  lui   $s5, %hi(gMultiplayerSelectedNumberOfRacers) # $s5, 0x800e
-/* 092A24 80091E24 3C11800E */  lui   $s1, %hi(D_800DF4AC) # $s1, 0x800e
-/* 092A28 80091E28 3C10800E */  lui   $s0, %hi(D_800DF4A8) # $s0, 0x800e
-/* 092A2C 80091E2C 2610F4A8 */  addiu $s0, %lo(D_800DF4A8) # addiu $s0, $s0, -0xb58
-/* 092A30 80091E30 2631F4AC */  addiu $s1, %lo(D_800DF4AC) # addiu $s1, $s1, -0xb54
+/* 092A24 80091E24 3C11800E */  lui   $s1, %hi(sMenuGuiColourB) # $s1, 0x800e
+/* 092A28 80091E28 3C10800E */  lui   $s0, %hi(sMenuGuiColourG) # $s0, 0x800e
+/* 092A2C 80091E2C 2610F4A8 */  addiu $s0, %lo(sMenuGuiColourG) # addiu $s0, $s0, -0xb58
+/* 092A30 80091E30 2631F4AC */  addiu $s1, %lo(sMenuGuiColourB) # addiu $s1, $s1, -0xb54
 /* 092A34 80091E34 26B50410 */  addiu $s5, %lo(gMultiplayerSelectedNumberOfRacers) # addiu $s5, $s5, 0x410
 /* 092A38 80091E38 0000A025 */  move  $s4, $zero
 /* 092A3C 80091E3C 241300FF */  li    $s3, 255
@@ -1045,11 +1045,11 @@ glabel render_track_select_setup_ui
 /* 092A84 80091E84 02581821 */  addu  $v1, $s2, $t8
 /* 092A88 80091E88 846F0010 */  lh    $t7, 0x10($v1)
 /* 092A8C 80091E8C 864E0000 */  lh    $t6, ($s2)
-/* 092A90 80091E90 3C05800E */  lui   $a1, %hi(D_800DF75C) # $a1, 0x800e
+/* 092A90 80091E90 3C05800E */  lui   $a1, %hi(gMenuImageStack) # $a1, 0x800e
 /* 092A94 80091E94 01EEC821 */  addu  $t9, $t7, $t6
 /* 092A98 80091E98 2729FF60 */  addiu $t1, $t9, -0xa0
 /* 092A9C 80091E9C 44892000 */  mtc1  $t1, $f4
-/* 092AA0 80091EA0 24A5F75C */  addiu $a1, %lo(D_800DF75C) # addiu $a1, $a1, -0x8a4
+/* 092AA0 80091EA0 24A5F75C */  addiu $a1, %lo(gMenuImageStack) # addiu $a1, $a1, -0x8a4
 /* 092AA4 80091EA4 468021A0 */  cvt.s.w $f6, $f4
 /* 092AA8 80091EA8 8CAA0000 */  lw    $t2, ($a1)
 /* 092AAC 80091EAC 244E0002 */  addiu $t6, $v0, 2
@@ -1091,8 +1091,8 @@ glabel render_track_select_setup_ui
 /* 092B38 80091F38 3C014228 */   li    $at, 0x42280000 # 42.000000
 /* 092B3C 80091F3C 2415000C */  li    $s5, 12
 .L80091F40:
-/* 092B40 80091F40 3C08800E */  lui   $t0, %hi(D_800DF75C) # $t0, 0x800e
-/* 092B44 80091F44 8D08F75C */  lw    $t0, %lo(D_800DF75C)($t0)
+/* 092B40 80091F40 3C08800E */  lui   $t0, %hi(gMenuImageStack) # $t0, 0x800e
+/* 092B44 80091F44 8D08F75C */  lw    $t0, %lo(gMenuImageStack)($t0)
 /* 092B48 80091F48 44818000 */  mtc1  $at, $f16
 /* 092B4C 80091F4C 00158140 */  sll   $s0, $s5, 5
 /* 092B50 80091F50 01105821 */  addu  $t3, $t0, $s0
@@ -1112,8 +1112,8 @@ glabel render_track_select_setup_ui
 /* 092B88 80091F88 00000000 */   nop   
 /* 092B8C 80091F8C 10400008 */  beqz  $v0, .L80091FB0
 .L80091F90:
-/* 092B90 80091F90 3C0A800E */   lui   $t2, %hi(D_800DF75C) # $t2, 0x800e
-/* 092B94 80091F94 8D4AF75C */  lw    $t2, %lo(D_800DF75C)($t2)
+/* 092B90 80091F90 3C0A800E */   lui   $t2, %hi(gMenuImageStack) # $t2, 0x800e
+/* 092B94 80091F94 8D4AF75C */  lw    $t2, %lo(gMenuImageStack)($t2)
 /* 092B98 80091F98 3C01C300 */  li    $at, 0xC3000000 # -128.000000
 /* 092B9C 80091F9C 44819000 */  mtc1  $at, $f18
 /* 092BA0 80091FA0 01504021 */  addu  $t0, $t2, $s0
@@ -1136,8 +1136,8 @@ glabel render_track_select_setup_ui
 /* 092BE0 80091FE0 00000000 */   nop   
 /* 092BE4 80091FE4 10400008 */  beqz  $v0, .L80092008
 .L80091FE8:
-/* 092BE8 80091FE8 3C09800E */   lui   $t1, %hi(D_800DF75C) # $t1, 0x800e
-/* 092BEC 80091FEC 8D29F75C */  lw    $t1, %lo(D_800DF75C)($t1)
+/* 092BE8 80091FE8 3C09800E */   lui   $t1, %hi(gMenuImageStack) # $t1, 0x800e
+/* 092BEC 80091FEC 8D29F75C */  lw    $t1, %lo(gMenuImageStack)($t1)
 /* 092BF0 80091FF0 3C0142F0 */  li    $at, 0x42F00000 # 120.000000
 /* 092BF4 80091FF4 44812000 */  mtc1  $at, $f4
 /* 092BF8 80091FF8 01305021 */  addu  $t2, $t1, $s0

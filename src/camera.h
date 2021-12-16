@@ -30,6 +30,8 @@
 #define JOYSTICK_DEADZONE 8
 #define JOYSTICK_MAX_RANGE 70
 
+#define VIEWPORT_AUTO 0x8000
+
 enum ViewportCount {
     VIEWPORTS_COUNT_1_PLAYER,
     VIEWPORTS_COUNT_2_PLAYERS,
@@ -37,22 +39,32 @@ enum ViewportCount {
     VIEWPORTS_COUNT_4_PLAYERS
 };
 
+enum ViewPortFlags {
+    VIEWPORT_UNK_01        = 0x0001,
+    VIEWPORT_UNK_02        = 0x0002,
+    VIEWPORT_UNK_04        = 0x0004,
+    VIEWPORT_X_CUSTOM      = 0x0008,
+    VIEWPORT_Y_CUSTOM      = 0x0010,
+    VIEWPORT_WIDTH_CUSTOM  = 0x0020,
+    VIEWPORT_HEIGHT_CUSTOM = 0x0040,
+};
+
 extern s8 D_800DD060;
 
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ s32 unkC;
-    /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 upperLeftX; //gDPFillRectangle values
-    /* 0x24 */ s32 upperLeftY;
-    /* 0x28 */ s32 lowerRightX;
-    /* 0x2C */ s32 lowerRightY;
+    /* 0x00 */ s32 x1;
+    /* 0x04 */ s32 y1;
+    /* 0x08 */ s32 x2;
+    /* 0x0C */ s32 y2;
+    /* 0x10 */ s32 posX;
+    /* 0x14 */ s32 posY;
+    /* 0x18 */ s32 width;
+    /* 0x1C */ s32 height;
+    /* 0x20 */ s32 scissorX1;
+    /* 0x24 */ s32 scissorY1;
+    /* 0x28 */ s32 scissorX2;
+    /* 0x2C */ s32 scissorY2;
     /* 0x30 */ s32 flags;
 } ScreenViewport;
 
@@ -97,9 +109,9 @@ void func_80066060(s32 arg0, s32 arg1);
 void func_80066098(s8 arg0);
 void func_800660C0(void);
 void func_800660D0(void);
-f32 get_current_camera_fov(void);
+UNUSED f32 get_current_camera_fov(void);
 void update_camera_fov(f32 camFieldOfView);
-void func_80066194(void);
+UNUSED void calculate_camera_perspective(void);
 Matrix *func_80066204(void);
 s32 get_viewport_count(void);
 s32 func_80066220(void);
@@ -115,11 +127,11 @@ void func_800665E8(s32 arg0);
 void func_80066818(s32 viewPortIndex, s32 arg1);
 void func_80066894(s32 viewPortIndex, s32 arg1);
 s32 func_80066910(s32 viewPortIndex);
-void func_80066940(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_80066AA8(s32 viewPortIndex, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-s32 func_80066BA8(s32 viewPortIndex, s32 *upperLeftX, s32 *upperLeftY, s32 *lowerRightX, s32 *lowerRightY);
-void func_80066C2C(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
-void func_80066C80(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3);
+void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
+void set_viewport_properties(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2);
+s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
+void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
+void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void func_80066CDC(Gfx **dlist, s32 arg1);
 void set_ortho_matrix_height(f32 value);
 void func_80067F2C(Gfx **dlist, s32 *arg1);

@@ -96,7 +96,7 @@ void func_80072298(u8 arg0) {
     func_80072708();
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Unused. Has regalloc issues.
 s32 func_800722E8(s16 arg0) {
     if (arg0 < 0 || arg0 >= 4) {
@@ -118,7 +118,7 @@ void func_80072708(void) {
 
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80072718.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 func_80072C54(s32 arg0) {
     // v0 v1 a1 a2 a3 t0 t1 t2 t3 t4 t5 t6 t7 t8
     u32 v0;
@@ -340,7 +340,7 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007480C.s")
 
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074874.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s64 func_8007480C(u64 arg0);
 // regalloc issues
 s32 func_8007497C(u64 *arg0) {
@@ -359,7 +359,7 @@ s32 func_8007497C(u64 *arg0) {
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007497C.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // regalloc issues
 s16 func_80074A4C(GhostHeader *ghostHeader) {
     s16 i;
@@ -388,7 +388,7 @@ void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 node
     ghostHeader->checksum = func_80074A4C(ghostHeader);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 func_80074B1C(void) {
     return (0x1100 * 6) + 0x100; // -O2 optimizes this down to "return 0x6700;".
 }
@@ -493,7 +493,7 @@ s32 func_80076194(s32 controllerIndex, s32 *arg1, s32 *arg2) {
     return phi_v1;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // regalloc & stack issues
 // Rename delete_file_from_controller_pak?
 s32 func_800762C8(s32 controllerIndex, s32 fileNum) {

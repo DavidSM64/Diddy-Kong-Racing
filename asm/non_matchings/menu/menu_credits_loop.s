@@ -634,9 +634,9 @@ glabel L8009BB9C
 /* 09C828 8009BC28 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 09C82C 8009BC2C 0C030060 */  jal   func_800C0180
 /* 09C830 8009BC30 AC2EF47C */   sw    $t6, %lo(gMenuDelay)($at)
-/* 09C834 8009BC34 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 09C834 8009BC34 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 09C838 8009BC38 0C030076 */  jal   func_800C01D8
-/* 09C83C 8009BC3C 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 09C83C 8009BC3C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 09C840 8009BC40 0C03005C */  jal   func_800C0170
 /* 09C844 8009BC44 00000000 */   nop   
 /* 09C848 8009BC48 0C000326 */  jal   set_music_fade_timer

@@ -155,7 +155,7 @@ void func_800C4164(s32 arg0) {
     D_8012A7F0 = arg0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
 void func_800C4170(s32 arg0) {
     if (arg0 < gNumberOfFonts) {
@@ -178,11 +178,11 @@ void func_800C4170(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/font/func_800C4170.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
-void func_800C422C(s32 arg0) {
-    if (arg0 < gNumberOfFonts) {
-        FontData *fontData = &gFonts[arg0];
+void func_800C422C(s32 fontID) {
+    if (fontID < gNumberOfFonts) {
+        FontData *fontData = &gFonts[fontID];
         if (fontData->unk28[0] > 0) {
             fontData->unk28[0]--;
             if ((fontData->unk28[0] & 0xFF) == 0) {
@@ -213,7 +213,7 @@ void set_text_font(s32 fontID) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Unused. Has regalloc issues
 TextureHeader *func_800C4318(s32 font, u8 arg1) {
@@ -292,7 +292,7 @@ void func_800C4510(Gfx **displayList, s32 arg1, s32 xpos, s32 ypos, char *text, 
 GLOBAL_ASM("asm/non_matchings/font/func_800C45A4.s")
 
 // Should be functionally equivalent.
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 func_800C4DA0(u8 *text, s32 x, s32 font) {
     s32 diffX, thisDiffX;
     FontData *fontData;
@@ -575,7 +575,7 @@ void render_dialogue_boxes(Gfx *dlist, Gfx *mat, VertexList *verts) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void s32_to_string(char **outString, s32 number) {
     u8 digit;
     s32 i;
@@ -619,8 +619,11 @@ GLOBAL_ASM("asm/non_matchings/font/s32_to_string.s")
  * lrx, lry = lower-right position
  */
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
-    u32 temp_v0 = get_video_width_and_height_as_s32();
-    if (lrx >= 0 && ulx < (temp_v0 & 0xFFFF) && lry >= 0 && uly < (temp_v0 >> 16)) {
+    u32 widthAndHeight = get_video_width_and_height_as_s32();
+    u32 width = GET_VIDEO_WIDTH(widthAndHeight);
+    u32 height = GET_VIDEO_HEIGHT(widthAndHeight);
+
+    if (lrx >= 0 && ulx < width && lry >= 0 && uly < height) {
         if (ulx < 0) {
             ulx = 0;
         }

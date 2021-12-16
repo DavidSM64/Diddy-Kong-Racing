@@ -120,7 +120,7 @@ UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
 }
 
 /**
- * Return the current framebuffer dimenions as a single s32 value.
+ * Return the current framebuffer dimensions as a single s32 value.
  * The high 16 bits are the height of the frame, and the low 16 bits are the width.
  */
 s32 get_video_width_and_height_as_s32(void) {
@@ -257,7 +257,7 @@ void func_8007A974(void) {
     D_80126309 = 2;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // regalloc & stack issues
 s32 func_8007A98C(s32 arg0) {
     s32 tempUpdateRate;

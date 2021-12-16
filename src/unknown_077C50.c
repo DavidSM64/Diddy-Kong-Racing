@@ -9,7 +9,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Draws the borders/negative space for multiplayer. Has regalloc issues
 void render_borders_for_multiplayer(Gfx **dlist) {

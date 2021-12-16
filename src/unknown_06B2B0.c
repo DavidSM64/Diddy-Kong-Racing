@@ -176,7 +176,7 @@ s32 D_80123560[8];
 
 /******************************/
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_8006A6B0(void) {
     s32 i, count, checksumCount;
     s32 temp;
@@ -341,7 +341,7 @@ s32 func_8006B240(void) {
 }
 
 // This isn't matching, but there shouldn't be any issues (hopefully).
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
     s32 maxLevelCount;
@@ -585,7 +585,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         init_pulsating_light_data(gCurrentLevelHeader->pulseLightData);
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
-    func_80077B34(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
+    set_background_prim_colour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
     func_8007A974();
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
@@ -656,7 +656,7 @@ u8 *func_8006BDDC(s32 arg0) {
 
 void func_8006BEFC(void) {
     func_8006C164();
-    func_80077B34(0, 0, 0);
+    set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
     func_80001844();
@@ -1037,7 +1037,7 @@ void func_8006CC14(void) {
     set_free_queue_state(2);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Almost matching except for a couple minor issues.
 void func_8006CCF0(s32 updateRate) {
     s32 i, buttonHeldInputs, sp40, sp3C, buttonPressedInputs, phi_v1_2;
@@ -1505,7 +1505,7 @@ void func_8006DC58(s32 updateRate) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Minor & regalloc issues.
 void func_8006DCF8(s32 updateRate) {
     s32 menuLoopResult, temp, temp2, tempResult;
@@ -1871,7 +1871,7 @@ s32 func_8006EFB8(void) {
     return TRUE;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Not close to matching, but should be the same functionality-wise.
 void func_8006EFDC(void) {
@@ -1964,8 +1964,8 @@ void func_8006F338(s32 arg0) {
     }
 }
 
-void func_8006F388(u8 arg0) {
-    D_800DD398 = arg0;
+void func_8006F388(u8 time) {
+    D_800DD398 = time;
 }
 
 void func_8006F398(void) {

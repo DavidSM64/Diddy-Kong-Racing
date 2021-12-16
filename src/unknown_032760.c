@@ -40,7 +40,7 @@ void func_80031B60(void) {
     D_800DC958 = 0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues
 void func_80031BB8(s32 count) {
     s32 i;
@@ -135,7 +135,7 @@ s32 func_80032C6C(void) {
     return D_800DC95C;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Close to matching. Should be functionally equivalent.
 void func_80032C7C(Object *object) {
@@ -295,7 +295,7 @@ void func_80032C7C(Object *object) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032C7C.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Has regalloc issues
 void func_800337E4(void) {

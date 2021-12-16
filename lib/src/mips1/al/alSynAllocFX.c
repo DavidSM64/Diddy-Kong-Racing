@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void alFxNew(ALFx *r, ALSynConfig *c, s16 bus);
 s32 alFxParam(void *filter, s32 paramID, void *param);
 s32 alMainBusParam(void *filter, s32 paramID, void *param);

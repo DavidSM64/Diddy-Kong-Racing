@@ -5,6 +5,7 @@
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
+#include "video.h"
 //#include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
@@ -14,10 +15,10 @@ s16 D_800DE490[16] = {
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-u8 D_800DE4B0 = 0;
-u8 D_800DE4B4 = 0;
-u8 D_800DE4B8 = 0;
-s32 D_800DE4BC = 0x00010001;
+u8 sBackgroundPrimColourR = 0;
+u8 sBackgroundPrimColourG = 0;
+u8 sBackgroundPrimColourB = 0;
+s32 sBackgroundFillColour = 0x00010001;
 
 u32 D_800DE4C0 = 0x40;
 u32 D_800DE4C4 = 0;
@@ -189,25 +190,31 @@ void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2) {
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
 }
 
-//Probable red, green, blue
-void func_80077B34(u8 arg0, u8 arg1, u8 arg2) {
-    D_800DE4B0 = arg0;
-    D_800DE4B4 = arg1;
-    D_800DE4B8 = arg2;
+/**
+ * Sets the primitive colour for the cyclemode fillrect background.
+ */
+void set_background_prim_colour(u8 red, u8 green, u8 blue) {
+    sBackgroundPrimColourR = red;
+    sBackgroundPrimColourG = green;
+    sBackgroundPrimColourB = blue;
 }
 
-void func_80077B5C(s32 red, s32 green, s32 blue) {
-    D_800DE4BC = ((red << 8) & 0xF800) | ((green * 8) & 0x7C0) | ((blue >> 2) & 0x3E) | 1;
-    D_800DE4BC |= (D_800DE4BC << 0x10);
+/**
+ * Sets the fill colour for the fillmode fillrect background.
+ * Uses RGBA5551
+ */
+void set_background_fill_colour(s32 red, s32 green, s32 blue) {
+    sBackgroundFillColour = ((red << 8) & 0xF800) | ((green * 8) & 0x7C0) | ((blue >> 2) & 0x3E) | 1;
+    sBackgroundFillColour |= (sBackgroundFillColour << 16);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Stack issues
 void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
-    s32 sp90;
-    s32 sp8C;
-    s32 sp88;
-    s32 sp84;
+    s32 x1;
+    s32 y1;
+    s32 x2;
+    s32 y2;
     s32 widthAndHeight;
     s32 w, h;
     s32 rgba16Color;
@@ -233,15 +240,15 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
             } else if (D_800DE4D0.ptr != NULL) {
                 D_800DE4D0.function(dlist, arg1);
             } else {
-                gDPSetFillColor((*dlist)++, D_800DE4BC);
+                gDPSetFillColor((*dlist)++, sBackgroundFillColour);
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
-            if (func_80066BA8(0, &sp90, &sp8C, &sp88, &sp84)) {
+            if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dlist)++, 0, 0, D_800DE4B0, D_800DE4B4, D_800DE4B8, 0xFF);
+                gDPSetPrimColor((*dlist)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 0xFF);
                 gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
-                gDPFillRectangle((*dlist)++, sp90, sp8C, sp88, sp84);
+                gDPFillRectangle((*dlist)++, x1, y1, x2, y2);
             }
         } else {
             if (D_800DE4CC) {
@@ -252,7 +259,7 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
                 D_800DE4D0.function(dlist, arg1);
             } else {
                 //Also has an issue here.
-                rgba16Color = ((D_800DE4B0 << 8) & 0xF800) | ((D_800DE4B4 * 8) & 0x7C0) | ((D_800DE4B8 >> 2) & 0x3E) | 1;
+                rgba16Color = ((sBackgroundPrimColourR << 8) & 0xF800) | ((sBackgroundPrimColourG * 8) & 0x7C0) | ((sBackgroundPrimColourB >> 2) & 0x3E) | 1;
                 rgba16Color |= rgba16Color << 0x10;
                 gDPSetFillColor((*dlist)++, rgba16Color);
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
@@ -266,13 +273,20 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
 #endif
 
+/**
+ * Gets the framebuffer height, then points to the start of segment 0x01 in memory.
+ * afterwards, alls the draw command that initialises all the rendermodes, ready for use.
+ */
 void init_rdp_and_framebuffer(Gfx **dlist) {
-    s32 width = get_video_width_and_height_as_s32() & 0xFFF;
+    s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, 0x01000000);
     gDPSetDepthImage((*dlist)++, 0x2000000);
     gSPDisplayList((*dlist)++, dRdpInit);
 }
 
+/**
+ * Calls the draw command that sets all the OtherModes, ready for use.
+ */
 void init_rsp(Gfx **dlist) {
     gSPDisplayList((*dlist)++, dRspInit);
 }
@@ -318,7 +332,7 @@ void func_80078AAC(void *arg0) {
     D_800DE4D0.ptr = arg0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Regalloc & stack issues.
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha) {

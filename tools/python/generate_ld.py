@@ -228,13 +228,12 @@ class GenerateLD:
         files.sort(key = lambda x: (x[2], x[3])) # Sort tuples by RAM address and prioritize src files first.
         return files
 
-if os.path.exists('./dkr.ld'):
-    print("")
-else:
-    os.remove('./assets/' + VERSION + '/md5.txt')
+checksum_file = './assets/' + VERSION + '/md5.txt'
+if not os.path.exists('./dkr.ld') and os.path.exists(checksum_file):
+    os.remove(checksum_file)
 
-if os.path.exists('./assets/' + VERSION + '/md5.txt'):
-    with open('./assets/' + VERSION + '/md5.txt', "rt") as a_file:
+if os.path.exists(checksum_file):
+    with open(checksum_file, "rt") as a_file:
         with open('./assets/' + VERSION + '/assets.json',"rb") as f:
             bytes = f.read() # read file as bytes
             readable_hash = hashlib.md5(bytes).hexdigest();

@@ -129,10 +129,10 @@ glabel menu_5_loop
 /* 0943DC 800937DC 24C6F47C */  addiu $a2, %lo(gMenuDelay) # addiu $a2, $a2, -0xb84
 /* 0943E0 800937E0 240B0001 */  li    $t3, 1
 .L800937E4:
-/* 0943E4 800937E4 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 0943E4 800937E4 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 0943E8 800937E8 ACCB0000 */  sw    $t3, ($a2)
 /* 0943EC 800937EC 0C030076 */  jal   func_800C01D8
-/* 0943F0 800937F0 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 0943F0 800937F0 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0943F4 800937F4 240400EF */  li    $a0, 239
 /* 0943F8 800937F8 0C000741 */  jal   func_80001D04
 /* 0943FC 800937FC 00002825 */   move  $a1, $zero
@@ -157,9 +157,9 @@ glabel menu_5_loop
 /* 094440 80093840 0C030C7B */  jal   func_800C31EC
 /* 094444 80093844 24042710 */   li    $a0, 10000
 .L80093848:
-/* 094448 80093848 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 094448 80093848 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 09444C 8009384C 0C030076 */  jal   func_800C01D8
-/* 094450 80093850 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 094450 80093850 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 094454 80093854 2418FFFF */  li    $t8, -1
 /* 094458 80093858 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 09445C 8009385C 10000064 */  b     .L800939F0
@@ -177,9 +177,9 @@ glabel menu_5_loop
 /* 094484 80093884 24040241 */  li    $a0, 577
 /* 094488 80093888 0C000741 */  jal   func_80001D04
 /* 09448C 8009388C 00002825 */   move  $a1, $zero
-/* 094490 80093890 3C04800E */  lui   $a0, %hi(D_800DF774) # $a0, 0x800e
+/* 094490 80093890 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 094494 80093894 0C030076 */  jal   func_800C01D8
-/* 094498 80093898 2484F774 */   addiu $a0, %lo(D_800DF774) # addiu $a0, $a0, -0x88c
+/* 094498 80093898 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 09449C 8009389C 2419FFFF */  li    $t9, -1
 /* 0944A0 800938A0 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 0944A4 800938A4 10000052 */  b     .L800939F0
