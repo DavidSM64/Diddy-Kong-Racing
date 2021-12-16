@@ -3,7 +3,7 @@
 
 #include "macros.h"
 #include <stdlib.h>
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 //This needs to be compiled with mips3, which isn't yet supported
 ldiv_t ldiv(long num, long denom)
 {

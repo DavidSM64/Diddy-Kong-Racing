@@ -257,7 +257,7 @@ void func_8007A974(void) {
     D_80126309 = 2;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // regalloc & stack issues
 s32 func_8007A98C(s32 arg0) {
     s32 tempUpdateRate;

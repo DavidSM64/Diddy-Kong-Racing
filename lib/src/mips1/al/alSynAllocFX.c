@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // This is very close to matching.
 ALFxRef *alSynAllocFX(ALSynth *s, s16 bus, ALSynConfig *c, ALHeap *hp)
 {

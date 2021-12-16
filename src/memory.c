@@ -78,7 +78,7 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     return newPool;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots) {
     s32 i;
     MemoryPool *pool;
@@ -138,7 +138,7 @@ MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colorTag) {
     return allocate_from_memory_pool(0, size, colorTag);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colorTag) {
     MemoryPool *pool;
     MemoryPoolSlot *curSlot;
@@ -190,7 +190,7 @@ void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size) {
     return (void *)NULL;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     s32 *sp38;
     s32 s0;
@@ -285,7 +285,7 @@ void clear_free_queue(void) {
     func_8006F53C(sp28);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void free_slot_containing_address(u8 *address) {
     s32 poolIndex;
     s32 slotIndex;
@@ -410,7 +410,7 @@ s32 get_memory_pool_index_containing_address(u8 *address) {
     return i;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     s32 nextIndex, prevIndex, tempNextIndex;
@@ -463,7 +463,7 @@ MemoryPoolSlot *func_80071774(s32 poolIndex) {
 GLOBAL_ASM("asm/non_matchings/memory/free_memory_pool_slot.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colorTag) {
     s32 slotSize;
     s32 newIndex;
@@ -537,7 +537,7 @@ u8 *align4(u8 *address) {
 
 GLOBAL_ASM("asm/non_matchings/memory/func_800718A4.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 get_memory_color_tag_count(s32 arg0) {
     s32 i, count;
     count = 0;
@@ -586,7 +586,7 @@ void render_memory_color_tags(void) {
     render_printf("ORANGE %d\n\n", get_memory_color_tag_count(COLOR_TAG_ORANGE));
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Unused. Does nothing?
 void func_80071C74(void) {
     s32 i, flags;

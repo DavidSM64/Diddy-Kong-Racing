@@ -65,7 +65,7 @@ void osCreateViManager(OSPri pri) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void __osTimerInterrupt(void);
 //Fails due to how retrace is declared. Not sure how to fix it.
 void viMgrMain(void *arg) {

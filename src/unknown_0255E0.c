@@ -345,7 +345,7 @@ void func_80028FA0(s32 arg0) {
     D_8011B0FC = arg0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Regalloc & stack issues.
 void render_level_geometry_and_objects(void) {
@@ -506,8 +506,7 @@ void render_level_geometry_and_objects(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_geometry_and_objects.s")
 #endif
 
-// *Should *be functionally equivalent.
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // nonOpaque: 0 for solid geometry, 1 for transparent geometry.
 void render_level_segment(s32 segmentId, s32 nonOpaque) {
     LevelModelSegment *segment = &gCurrentLevelModel->segments[segmentId]; // spAC
@@ -610,7 +609,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues.
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex) {
     BspTreeNode *curNode;
@@ -674,7 +673,7 @@ void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segment
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Unused. Has regalloc issues.
 s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     LevelModelSegmentBoundingBox *bb;
@@ -698,7 +697,7 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029DE0.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Has regalloc issues.
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     LevelModelSegmentBoundingBox *bb;
@@ -795,7 +794,7 @@ LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Has some minor issues, but should be functionally equivalent.
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
     s64 sp48;
@@ -919,7 +918,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C7D4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C954.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002CC30.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];
@@ -962,7 +961,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FF6C.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800304C8.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent.
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {

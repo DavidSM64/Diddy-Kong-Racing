@@ -96,7 +96,7 @@ void func_800B6F30(s32 arg0, s32 arg1, s32 arg2) {
 void func_800B6F40(s32 arg0, s32 arg1, s32 arg2) {
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_800B6F50(void) {
     s32 i;
 
@@ -114,7 +114,7 @@ void func_800B6F50(void) {
 GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B6F50.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void thread0_Main(s32 arg0) { // Has regalloc issues
     s32 sp34;
     s32 s0 = 0;

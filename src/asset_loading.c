@@ -56,7 +56,7 @@ s32 *load_asset_section_from_rom(u32 assetIndex) {
     return out;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Unused.
 // This has regalloc & stack issues.
 u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 arg1) {

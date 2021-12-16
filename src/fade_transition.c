@@ -230,7 +230,7 @@ u32 func_800C018C(void) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Regalloc issue.
 s32 func_800C01D8(FadeTransition *transition) {
@@ -438,7 +438,7 @@ void render_fade_barndoor_vertical(Gfx **dlist, UNUSED s32 arg1, UNUSED s32 arg2
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
     u8 *addr, *addr2;
     func_8007B3D0(dlist);
@@ -497,7 +497,7 @@ void render_fade_barndoor_diagonal(Gfx **dlist, s32 arg1, s32 arg2) {
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C2640.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_800C27A0(s32 updateRate) {
     //do {
     if (sTransitionFadeTimer > 0) {

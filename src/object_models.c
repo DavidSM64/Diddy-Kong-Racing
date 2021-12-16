@@ -10,8 +10,8 @@
 
 /************ .data ************/
 
-s32 D_800DCEA0 = 116315; //func_80024D54 checksum
-s32 D_800DCEA4 = 1980;
+s32 gFunc80024D54Checksum = 116315;
+s32 gFunc80024D54Length = 1980;
 
 /*******************************/
 
@@ -63,10 +63,10 @@ void func_8005F850(void) {
 
     // Anti-tamper check.
     checksum = 0;
-    for (i = 0; i < D_800DCEA4; i++) {
+    for (i = 0; i < gFunc80024D54Length; i++) {
         checksum += *(u8 *)(((s32)&func_80024D54) + i);
     }
-    if (checksum != D_800DCEA0) {
+    if (checksum != gFunc80024D54Checksum) {
         func_8005C25C();
     }
 }
@@ -111,7 +111,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FF40.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues.
 void free_object_model(ObjectModel *model) {
     s32 i;
