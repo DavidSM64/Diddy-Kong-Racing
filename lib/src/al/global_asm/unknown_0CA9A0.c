@@ -41,8 +41,8 @@ GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CB2D4.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CB498.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alLoadParam.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alRaw16Pull.s")
-//Called by alLoadPull
+//Called by alAdpcmPull. _decodeChunk?
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/func_800CBAC0.s")
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alLoadPull.s")
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alAdpcmPull.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alResampleParam.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alResamplePull.s")

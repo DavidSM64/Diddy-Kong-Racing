@@ -130,7 +130,7 @@ s16 D_8011D4E2;
 
 /******************************/
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 typedef struct LevelObjectEntry80033CC0 {
     LevelObjectEntryCommon common;
     u8 unk8;
@@ -571,7 +571,7 @@ void func_80038248(Object *arg0, s32 arg1) {
     arg0->unk4C->unk12 = 0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues
 void func_8003827C(Object *obj, s32 arg1) {
     Object_64_8003827C *obj64 = obj->unk64;
@@ -725,7 +725,7 @@ void func_80038AD4(Object *arg0, s32 arg1) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // regalloc issues
 void func_80038B74(Object *obj, unk80038B74 *arg1) {
     s32 temp;
@@ -1168,59 +1168,66 @@ void obj_loop_world_key(Object *worldKeyObj, s32 speed) {
     worldKeyObj->y_rotation += speed * 256;
 }
 
-#ifdef NON_MATCHING
-typedef struct unknown_struct_8003DFCC {
-    u8 pad0[8];
+typedef struct Object_64_8003DFCC {
+    f32 unk0;
+    s16 unk4;
+    char unk6[0x2];
     u8 unk8;
     u8 unk9;
     u8 unkA;
-} unknown_struct_8003DFCC;
+} Object_64_8003DFCC;
 
-void func_8003DFCC(Object *arg0, unknown_struct_8003DFCC *arg1) {
-    f32 temp_f0;
-    s32 temp_v0;
-    Object_64 *temp_v0_2;
-    f32 phi_f0;
+void func_8003DFCC(Object *arg0, Object_64_8003DFCC *arg1) {
+    s32 cheats;
+    Object_64_8003DFCC *obj;
+    f32 temp;
 
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 4;
     arg0->unk4C->unk10 = 0x14;
-    temp_v0 = get_filtered_cheats();
-    if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_BLUE) {
-        arg1->unk9 = 0U;
-    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_RED) {
-        arg1->unk9 = 1U;
-    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_GREEN) {
-        arg1->unk9 = 2U;
-    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_YELLOW) {
-        arg1->unk9 = 3U;
-    } else if (temp_v0 & CHEAT_ALL_BALLOONS_ARE_RAINBOW) {
-        arg1->unk9 = 4U;
+
+    cheats = get_filtered_cheats();
+
+    if (cheats & CHEAT_ALL_BALLOONS_ARE_BLUE) {
+        arg1->unk9 = 0;
+    } else if (cheats & CHEAT_ALL_BALLOONS_ARE_RED) {
+        arg1->unk9 = 1;
+    } else if (cheats & CHEAT_ALL_BALLOONS_ARE_GREEN) {
+        arg1->unk9 = 2;
+    } else if (cheats & CHEAT_ALL_BALLOONS_ARE_YELLOW) {
+        arg1->unk9 = 3;
+    } else if (cheats & CHEAT_ALL_BALLOONS_ARE_RAINBOW) {
+        arg1->unk9 = 4;
     }
-    if ((s32) arg1->unk8 >= 6) {
-        arg1->unk8 = 0U;
+
+    if (arg1->unk8 >= 6) {
+        arg1->unk8 = 0;
     }
-    if ((s32) arg0->unk3A >= (s32) arg0->descriptor_ptr->unk55) {
+
+    if (arg0->unk3A >= arg0->descriptor_ptr->unk55) {
         arg0->unk3A = 0;
     }
-    arg0->unk3A = (s8) arg1->unk9;
-    arg0->unk78 = (s32) arg0->unk3A;
-    phi_f0 = arg1->unkA;
-    if (arg1->unkA < 10.0f) {
-        phi_f0 = 10.0f;
+
+    arg0->unk3A = arg1->unk9;
+    arg0->unk78 = arg0->unk3A;
+
+    temp = arg1->unkA & 0xFF;
+    if (temp < 10) {
+        temp = 10;
     }
-    temp_f0 = phi_f0 / 64.0f;
-    arg0->scale = (f32) (arg0->descriptor_ptr->unkC * temp_f0);
-    arg0->unk64->unk4 = 0;
-    arg0->unk64->unk0_a.unk0 = arg0->scale;
+    temp /= 64;
+
+    obj = (Object_64_8003DFCC*)arg0->unk64;
+
+    arg0->scale = arg0->descriptor_ptr->unkC * temp;
+    obj->unk0 = arg0->scale;
+    obj->unk4 = 0;
     arg0->unk7C.word = 0;
+
     if (get_filtered_cheats() & CHEAT_DISABLE_WEAPONS) {
         gParticlePtrList_addObject(arg0);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003DFCC.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E140.s")
 
@@ -1271,7 +1278,7 @@ void func_8003F0DC(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F0F8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F2E8.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues
 void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s32 arg6) {
     Object *someObj;

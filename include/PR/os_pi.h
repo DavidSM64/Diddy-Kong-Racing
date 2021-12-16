@@ -94,4 +94,6 @@ s32 osPiRawReadIo(u32 devAddr, u32 *data);
 
 s32 osPiRawStartDma(s32 dir, u32 cart_addr, void *dram_addr, size_t size);
 s32 osEPiRawStartDma(OSPiHandle *piHandle, s32 dir, u32 cart_addr, void *dram_addr, size_t size);
+s32 osEPiRawWriteIo(OSPiHandle *, u32 , u32);
+
 #endif

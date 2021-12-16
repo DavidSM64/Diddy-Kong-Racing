@@ -11,7 +11,7 @@
 
 #define SCREEN_HEIGHT_PART 6
 
-UNUSED u8 *load_screen(s32 screenIndex);
+UNUSED void *load_screen(s32 screenIndex);
 UNUSED void render_screen(Gfx **dlist, u8 *screenAddress);
 
 #endif

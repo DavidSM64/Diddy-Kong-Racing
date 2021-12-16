@@ -144,7 +144,7 @@ u8 sPlayerID[16];
 
 /******************************/
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 extern s32 D_B0000578;
 
 void func_80065EA0(void) {
@@ -362,7 +362,7 @@ void func_800665E8(s32 arg0) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Has regalloc/stack issues
 // Proposed name: init_viewports
@@ -574,10 +574,10 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
     *y2 = GET_VIDEO_HEIGHT(widthAndHeight);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Still a work-in-progress but it doesn't seem to cause any problems,
-// which is why it is labeled under NON_MATCHING
+// which is why it is labeled under NON_EQUIVALENT
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
@@ -889,7 +889,7 @@ void func_80069F28(f32 arg0) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 /**
  * Unused function that prints out the passed matrix values to the debug output.
  * This function prints in fixed point.

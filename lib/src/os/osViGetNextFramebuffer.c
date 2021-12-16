@@ -4,7 +4,7 @@
 #include "libultra_internal.h"
 #include "viint.h"
 
-void *osViGetNextFramebuffer(void){
+void *osViGetNextFramebuffer(void) {
     register u32 saveMask;
     void *framep;
 

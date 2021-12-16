@@ -4,6 +4,8 @@
 #include "libultra_internal.h"
 #include "viint.h"
 #include "PR/sptask.h"
+#include "osint.h"
+#include "macros.h"
 
 #define _osVirtualToPhysical(ptr)               \
     if (ptr != NULL) {                          \
@@ -40,19 +42,19 @@ void osSpTaskLoad(OSTask *intp) {
     while (__osSpSetPc(SP_IMEM_START) == -1)
         ;
 
-    while (__osSpRawStartDma(1, (SP_IMEM_START - sizeof(*tp)), tp,
+    while (__osSpRawStartDma(OS_WRITE, (SP_IMEM_START - sizeof(*tp)), tp,
                              sizeof(OSTask)) == -1)
         ;
 
     while (__osSpDeviceBusy())
         ;
 
-    while (__osSpRawStartDma(1, SP_IMEM_START, tp->t.ucode_boot,
+    while (__osSpRawStartDma(OS_WRITE, SP_IMEM_START, tp->t.ucode_boot,
                              tp->t.ucode_boot_size) == -1)
         ;
 }
 
-void osSpTaskStartGo(OSTask *tp) {
+void osSpTaskStartGo(UNUSED OSTask *tp) {
     while (__osSpDeviceBusy());
 
     __osSpSetStatus(SP_SET_INTR_BREAK | SP_CLR_SSTEP | SP_CLR_BROKE | SP_CLR_HALT);

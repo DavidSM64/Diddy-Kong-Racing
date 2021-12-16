@@ -15,12 +15,12 @@ Gfx gRdpSetModeScreenAsset[] = {
  * Returns the address of the screen asset, or 0x80100000 if no screen assets were found.
  * Unused.
  */
-UNUSED u8 *load_screen(s32 screenIndex) {
-    u8 *someAddr;
+UNUSED void *load_screen(s32 screenIndex) {
+    s32 *someAddr;
     s32 screenTableCount, start, size;
     s32 *screenTable;
 
-    screenTable = (u8 *)load_asset_section_from_rom(ASSET_SCREENS_TABLE);
+    screenTable = load_asset_section_from_rom(ASSET_SCREENS_TABLE);
     screenTableCount = 0;
 
     while (screenTable[screenTableCount] != -1) {
@@ -33,7 +33,7 @@ UNUSED u8 *load_screen(s32 screenIndex) {
     // since there are no screen assets in the ROM.
     if (screenTableCount == 0) {
         free_from_memory_pool(screenTable);
-        return 0x80100000;
+        return (void *)0x80100000;
     } else {
         if (screenIndex < 0 || screenIndex >= screenTableCount) {
             rmonPrintf("SCREEN: No out of range!!\n");

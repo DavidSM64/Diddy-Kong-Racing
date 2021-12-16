@@ -2,6 +2,7 @@
 /* RAM_POS: 0x800CC840 */
 
 #include "libultra_internal.h"
+#include "osint.h"
 
 extern OSThread *__osRunningThread;
 extern OSThread *__osRunQueue;

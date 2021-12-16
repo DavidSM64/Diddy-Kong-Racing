@@ -270,7 +270,7 @@ void func_800AE490(void) {
         gParticleBehaviorsAssetTable = NULL;
     }
 }
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void init_particle_assets(void) {
     s32 i;
 
@@ -521,7 +521,7 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent.
 void func_800AF404(s32 arg0) {
@@ -584,7 +584,7 @@ void func_800B2260(unk800B2260 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B22FC.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Has regalloc issues.
 void func_800B263C(unk800B2260_C *arg0) {

@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800C8E30 */
 #include "libultra_internal.h"
-
+#include "osint.h"
 
 extern OSThread *__osRunningThread;
 s32 osSendMesg(OSMesgQueue *mq, OSMesg msg, s32 flags) {

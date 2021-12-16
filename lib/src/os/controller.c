@@ -5,6 +5,7 @@
 #include "macros.h"
 #include "libultra_internal.h"
 #include "controller.h"
+#include "siint.h"
 
 #define HALF_MIL_CYLCES 500000U
 #define ONE_MIL_CYLCES 1000000U

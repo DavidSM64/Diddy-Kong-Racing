@@ -155,7 +155,7 @@ void func_800C4164(s32 arg0) {
     D_8012A7F0 = arg0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
 void func_800C4170(s32 arg0) {
     if (arg0 < gNumberOfFonts) {
@@ -178,7 +178,7 @@ void func_800C4170(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/font/func_800C4170.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
 void func_800C422C(s32 fontID) {
     if (fontID < gNumberOfFonts) {
@@ -213,7 +213,7 @@ void set_text_font(s32 fontID) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Unused. Has regalloc issues
 TextureHeader *func_800C4318(s32 font, u8 arg1) {
@@ -292,7 +292,7 @@ void func_800C4510(Gfx **displayList, s32 arg1, s32 xpos, s32 ypos, char *text, 
 GLOBAL_ASM("asm/non_matchings/font/func_800C45A4.s")
 
 // Should be functionally equivalent.
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 func_800C4DA0(u8 *text, s32 x, s32 font) {
     s32 diffX, thisDiffX;
     FontData *fontData;
@@ -575,7 +575,7 @@ void render_dialogue_boxes(Gfx *dlist, Gfx *mat, VertexList *verts) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void s32_to_string(char **outString, s32 number) {
     u8 digit;
     s32 i;

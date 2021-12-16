@@ -153,7 +153,7 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
 ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I . -I include/libc
-CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS)
+CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -DNDEBUG $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS)
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -195,7 +195,10 @@ ifeq ($(shell getconf LONG_BIT), 64)
   # Ensure that gcc treats the code as 32-bit
   CC_CHECK_CFLAGS += -m32
 endif
-CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C
+CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C -DNDEBUG
+
+#Warnings to ignore
+CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast
 
 ####################### ASSETS #########################
 

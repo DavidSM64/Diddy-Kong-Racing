@@ -87,6 +87,7 @@ void osViSetEvent(OSMesgQueue *mq, OSMesg msg, u32 retraceCount);
 void osViBlack(u8 active);
 void osViSetSpecialFeatures(u32 func);
 void osViSwapBuffer(void *vaddr);
+void osYieldThread(void);
 
 
 #define OS_VI_NTSC_LPN1		0	/* NTSC */

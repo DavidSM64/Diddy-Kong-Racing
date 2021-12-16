@@ -6,6 +6,7 @@
 #include "structs.h"
 #include "macros.h"
 #include "video.h"
+#include "camera.h"
 //#include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
@@ -204,11 +205,11 @@ void set_background_prim_colour(u8 red, u8 green, u8 blue) {
  * Uses RGBA5551
  */
 void set_background_fill_colour(s32 red, s32 green, s32 blue) {
-    sBackgroundFillColour = ((red << 8) & 0xF800) | ((green * 8) & 0x7C0) | ((blue >> 2) & 0x3E) | 1;
+    sBackgroundFillColour = GPACK_RGBA5551(red, green, blue, 1);
     sBackgroundFillColour |= (sBackgroundFillColour << 16);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Stack issues
 void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
     s32 x1;
@@ -220,8 +221,8 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
     s32 rgba16Color;
 
     widthAndHeight = get_video_width_and_height_as_s32();
-    w = widthAndHeight & 0xFFFF;
-    h = widthAndHeight >> 0x10;
+    w = GET_VIDEO_WIDTH(widthAndHeight);
+    h = GET_VIDEO_HEIGHT(widthAndHeight);
 
     gDPPipeSync((*dlist)++);
     gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
@@ -259,8 +260,8 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
                 D_800DE4D0.function(dlist, arg1);
             } else {
                 //Also has an issue here.
-                rgba16Color = ((sBackgroundPrimColourR << 8) & 0xF800) | ((sBackgroundPrimColourG * 8) & 0x7C0) | ((sBackgroundPrimColourB >> 2) & 0x3E) | 1;
-                rgba16Color |= rgba16Color << 0x10;
+                rgba16Color = GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1);
+                rgba16Color |= rgba16Color << 16;
                 gDPSetFillColor((*dlist)++, rgba16Color);
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
@@ -332,7 +333,7 @@ void func_80078AAC(void *arg0) {
     D_800DE4D0.ptr = arg0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 // Regalloc & stack issues.
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha) {

@@ -4,11 +4,11 @@
 #include "types.h"
 #include "libultra_internal.h"
 #include "stacks.h"
+#include "lib/src/os/piint.h"
 
 extern OSMesgQueue __osPiAccessQueue;
 extern u32 __osPiAccessQueueEnabled;
 extern OSDevMgr __osPiDevMgr;
-void __osDevMgrMain(void);
 
 // bss variables
 OSThread piThread;
