@@ -67,7 +67,17 @@ s8 D_80126430;
 s8 D_80126431;
 s32 D_80126434;
 s32 D_80126438[4];
+
+//Seems to be a set of flags
+//bit 0 = Adventure Two is Unlocked
+//bit 1 = Used to set the CHEAT_MIRRORED_TRACKS magic code flag
+//bits 2-3 = Current language value
+//bits 4-23 = Used to set the CHEAT_CONTROL_DRUMSTICK magic code flag
+//bit 24 = Unknown
+//bit 25 = Seems to be a flag for whether subtitles are enabled or not.
+//bits 26-63 = Unknown
 s64 D_80126448;
+
 f32 sBootScreenTimer;
 s8 gControllersXAxisDelay[4];
 s8 gControllersYAxisDelay[4];

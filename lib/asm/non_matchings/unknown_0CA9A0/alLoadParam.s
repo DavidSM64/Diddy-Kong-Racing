@@ -10,7 +10,7 @@ glabel alLoadParam
 /* 0CC160 800CB560 AC860028 */  sw    $a2, 0x28($a0)
 /* 0CC164 800CB564 8CCE0000 */  lw    $t6, ($a2)
 /* 0CC168 800CB568 AC800038 */  sw    $zero, 0x38($a0)
-/* 0CC16C 800CB56C 3C0F800D */  lui   $t7, %hi(alLoadPull) # $t7, 0x800d
+/* 0CC16C 800CB56C 3C0F800D */  lui   $t7, %hi(alAdpcmPull) # $t7, 0x800d
 /* 0CC170 800CB570 AC8E0044 */  sw    $t6, 0x44($a0)
 /* 0CC174 800CB574 90C20008 */  lbu   $v0, 8($a2)
 /* 0CC178 800CB578 50400007 */  beql  $v0, $zero, .L800CB598
@@ -22,7 +22,7 @@ glabel alLoadParam
 /* 0CC190 800CB590 8FBF0014 */   lw    $ra, 0x14($sp)
 /* 0CC194 800CB594 8CE20028 */  lw    $v0, 0x28($a3)
 .L800CB598:
-/* 0CC198 800CB598 25EFBBEC */  addiu $t7, %lo(alLoadPull) # addiu $t7, $t7, -0x4414
+/* 0CC198 800CB598 25EFBBEC */  addiu $t7, %lo(alAdpcmPull) # addiu $t7, $t7, -0x4414
 /* 0CC19C 800CB59C ACEF0004 */  sw    $t7, 4($a3)
 /* 0CC1A0 800CB5A0 8C580004 */  lw    $t8, 4($v0)
 /* 0CC1A4 800CB5A4 24050009 */  li    $a1, 9
