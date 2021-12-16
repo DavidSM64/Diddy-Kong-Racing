@@ -552,22 +552,16 @@ s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s3
 
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_800766D4.s")
 
-#ifdef NON_EQUIVALENT
-// Stack issues
 s32 func_80076924(s32 controllerIndex, s32 arg1, s32 *arg2) {
-    s32 sp18;
+    OSPfsState state;
 
     *arg2 = 0;
-    if (!osPfsFileState(&pfs[controllerIndex], arg1, &sp18)) {
-        *arg2 = sp18;
+    if (osPfsFileState(&pfs[controllerIndex], arg1, &state) == 0) {
+        *arg2 = state.file_size;
         return 0;
     }
     return 9;
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076924.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007698C.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076A38.s")
