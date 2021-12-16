@@ -8,7 +8,7 @@
 
 /************ .rodata ************/
 
-#ifndef NON_MATCHING
+#ifndef NON_EQUIVALENT
 // Remove this when func_80065E30 is matching.
 const char D_800E6ED0[] = "WARNING: Stack overflow/underflow!!!\n";
 #endif
@@ -37,7 +37,7 @@ void main(void) {
     osStartThread(&gThread1);
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80065D98(s32 arg0) {
     func_800B6F50();
     osCreateThread(&gThread3, 3, (OSId)&thread3_main, 0, &gThread3StackPointer, (OSPri)10);
@@ -53,7 +53,7 @@ void func_80065D98(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/main/func_80065D98.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80065E30(void) {
     s32 temp, temp2, temp3, temp4;
     temp = D_8011D758[2049] + 1;

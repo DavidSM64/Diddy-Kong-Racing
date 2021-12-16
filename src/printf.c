@@ -135,7 +135,7 @@ void set_render_printf_background_color(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha)
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void set_render_printf_position(u16 xpos, u16 ypos) {
     RENDER_PRINTF_CMD_SET_POSITION(xpos, ypos)
 }

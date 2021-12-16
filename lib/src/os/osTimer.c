@@ -15,7 +15,7 @@ extern u32 __osTimerCounter;
 
 OSTime __osInsertTimer(OSTimer *t);
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 //Seems to be a mismatch based on where __osCurrentTime is defined.
 //Scratch proving that: https://decomp.me/scratch/OB3iP
 void __osTimerServicesInit(void) {

@@ -917,7 +917,7 @@ s32 func_8007AE64(void) {
     return D_80126354;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Minor matching issues with loops, but should be functionally the same.
 TextureHeader *load_texture(s32 arg0) {
     s32 assetSection;
@@ -1033,7 +1033,7 @@ TextureHeader *load_texture(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void free_texture(TextureHeader *tex) {
     s32 i;
     if (tex != NULL) {
@@ -1057,7 +1057,7 @@ void func_8007B374(s32 arg0) {
     gTexColorTag = arg0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Unused.
 TextureHeader *func_8007B380(s32 arg0) {
     if ((arg0 < 0) || (arg0 >= gNumberOfLoadedTextures)) {
@@ -1111,7 +1111,7 @@ void func_8007BF1C(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
 s32 get_texture_size_from_id(s32 arg0) {
     s32 assetIndex;
@@ -1146,7 +1146,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Unused
 s32 func_8007C860(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
@@ -1159,7 +1159,7 @@ s32 func_8007C860(s32 spriteIndex) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
     TextureHeader *tex;
     s32 i, j;
@@ -1200,7 +1200,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/load_sprite_info.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void free_sprite(Sprite *sprite) {
     s32 i, j, index;
     if (sprite != NULL) {
@@ -1289,7 +1289,7 @@ void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor) {
     if (index >= 2) {
         index = 2;

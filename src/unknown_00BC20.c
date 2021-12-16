@@ -601,7 +601,7 @@ void func_8000E1EC(Object *object, s32 arg1) {
     gObjectCount = 0;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 typedef struct LevelObjectEntry8000E2B4 {
     LevelObjectEntryCommon common;
     s16 unk8;
@@ -1769,7 +1769,7 @@ void func_800238BC(Object *arg0, void *arg1) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 s32 func_80023E30(s32 arg0) {
     switch (arg0 - 1) {
         case 0x00:

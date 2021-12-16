@@ -5,7 +5,7 @@
 #include "audio_internal.h"
 #include "macros.h"
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 
 s32 __nextSampleTime(ALSynth *drvr, ALPlayer **client);
 s32 _timeToSamplesNoRound(ALSynth *ALSynth, s32 micros);

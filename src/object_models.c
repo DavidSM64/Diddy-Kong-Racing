@@ -111,7 +111,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FF40.s")
 #endif
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Regalloc issues.
 void free_object_model(ObjectModel *model) {
     s32 i;
