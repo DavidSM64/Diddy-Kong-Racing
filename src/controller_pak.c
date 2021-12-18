@@ -493,38 +493,28 @@ s32 func_80076194(s32 controllerIndex, s32 *arg1, s32 *arg2) {
     return phi_v1;
 }
 
-#ifdef NON_EQUIVALENT
-// regalloc & stack issues
-// Rename delete_file_from_controller_pak?
 s32 func_800762C8(s32 controllerIndex, s32 fileNum) {
-    s16 sp3E;
-    s16 sp3A;
-    s32 sp30;
-    s32 sp34;
-    u16 sp38;
-    s32 temp_v0;
-    OSPfs *temp_a0;
+    OSPfsState state;
+    s32 ret;
 
-    temp_v0 = func_800758DC();
-    if (temp_v0 != 0) {
+    ret = func_800758DC(controllerIndex);
+    if (ret != 0) {
         func_80075AEC(controllerIndex);
-        return (controllerIndex << 0x1E) | temp_v0;
+        return (controllerIndex << 0x1E) | ret;
     }
-    temp_v0 = controllerIndex << 0x1E;
-    temp_a0 = &pfs[controllerIndex];
-    temp_v0 |= 9;
-    if (osPfsFileState(temp_a0, fileNum, &sp30) == 0) {
-        if (osPfsDeleteFile(temp_a0, sp38, sp34, &sp3E, &sp3A) == 0) {
-            temp_v0 = 0;
+
+    ret = (controllerIndex << 0x1E) | 9;
+
+    if (osPfsFileState(&pfs[controllerIndex], fileNum, &state) == 0) {
+        if (osPfsDeleteFile(&pfs[controllerIndex], state.company_code, state.game_code, state.game_name, state.ext_name) == 0) {
+            ret = 0;
         }
     }
-    func_80075AEC(controllerIndex);
-    return temp_v0;
-}
 
-#else
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_800762C8.s")
-#endif
+    func_80075AEC(controllerIndex);
+
+    return ret;
+}
 
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076388.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_800764E8.s")
