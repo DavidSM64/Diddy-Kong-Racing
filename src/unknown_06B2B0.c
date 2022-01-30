@@ -852,7 +852,7 @@ void init_game(void) {
     calc_and_alloc_heap_for_settings();
     func_8006EFDC();
     load_fonts();
-    func_80075B18();
+    init_controller_paks();
     func_80081218();
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);

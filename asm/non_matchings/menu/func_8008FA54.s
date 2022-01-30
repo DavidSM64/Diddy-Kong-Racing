@@ -197,7 +197,7 @@ glabel func_8008FA54
 /* 090924 8008FD24 E7A20010 */  swc1  $f2, 0x10($sp)
 /* 090928 8008FD28 E7A00014 */  swc1  $f0, 0x14($sp)
 /* 09092C 8008FD2C E7A00054 */  swc1  $f0, 0x54($sp)
-/* 090930 8008FD30 0C01E340 */  jal   func_80078D00
+/* 090930 8008FD30 0C01E340 */  jal   render_texture_rectangle_scaled
 /* 090934 8008FD34 E7A20058 */   swc1  $f2, 0x58($sp)
 /* 090938 8008FD38 C7A00054 */  lwc1  $f0, 0x54($sp)
 /* 09093C 8008FD3C C7A20058 */  lwc1  $f2, 0x58($sp)
@@ -222,7 +222,7 @@ glabel func_8008FA54
 /* 090984 8008FD84 AFAC0018 */  sw    $t4, 0x18($sp)
 /* 090988 8008FD88 E7A20010 */  swc1  $f2, 0x10($sp)
 /* 09098C 8008FD8C E7A00014 */  swc1  $f0, 0x14($sp)
-/* 090990 8008FD90 0C01E340 */  jal   func_80078D00
+/* 090990 8008FD90 0C01E340 */  jal   render_texture_rectangle_scaled
 /* 090994 8008FD94 AFA0001C */   sw    $zero, 0x1c($sp)
 .L8008FD98:
 /* 090998 8008FD98 0C01ECF4 */  jal   func_8007B3D0

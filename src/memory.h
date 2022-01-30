@@ -38,7 +38,7 @@ typedef struct unk80070BE4_8_0 {
     
 /* Size: 0x14 bytes */
 typedef struct MemoryPoolSlot {
-/* 0x00 */ unk80070BE4_8_0 *unk0; 
+/* 0x00 */ u8 *data; 
 /* 0x04 */ s32 size;
 /* 0x08 */ s16 flags;
     // 0x00 = Slot is free 

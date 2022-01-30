@@ -195,7 +195,7 @@ s16 D_8011AE78;
 s16 D_8011AE7A;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
-s16 D_8011AE80;
+s16 D_8011AE80; // TT Ghost outTime at least
 s16 D_8011AE82;
 s32 D_8011AE84;
 s32 D_8011AE88;
@@ -247,7 +247,7 @@ s32 D_8011AFFC;
 s32 D_8011B000;
 s32 D_8011B004;
 s32 D_8011B008;
-s32 D_8011B010[4];
+s32 D_8011B010[4]; //Possibly Misc Asset 20 pointers
 Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
@@ -1137,8 +1137,8 @@ s32 func_8001B650(void) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B668.s")
 
-s32 func_8001B738(s32 arg0) {
-    return func_80059B7C(arg0, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
+s32 func_8001B738(s32 controllerIndex) {
+    return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
 }
 
 u8 func_8001B780() {

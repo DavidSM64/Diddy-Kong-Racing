@@ -79,7 +79,7 @@ glabel func_80074EB8
 /* 075BD0 80074FD0 24E77778 */  addiu $a3, %lo(D_800E7778) # addiu $a3, $a3, 0x7778
 /* 075BD4 80074FD4 24C67768 */  addiu $a2, %lo(D_800E7768) # addiu $a2, $a2, 0x7768
 /* 075BD8 80074FD8 2405FFFF */  li    $a1, -1
-/* 075BDC 80074FDC 0C01D9B5 */  jal   func_800766D4
+/* 075BDC 80074FDC 0C01D9B5 */  jal   write_controller_pak_file
 /* 075BE0 80074FE0 AFAD0010 */   sw    $t5, 0x10($sp)
 /* 075BE4 80074FE4 8FA40038 */  lw    $a0, 0x38($sp)
 /* 075BE8 80074FE8 0C01C450 */  jal   free_from_memory_pool

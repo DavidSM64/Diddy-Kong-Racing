@@ -21,7 +21,7 @@ extern "C" {
 /*	The copyright notice above does not evidence any   	*/
 /*	actual or intended publication of such source code.	*/
 
-#ident "$Revision: 1.17 $"
+//#ident "$Revision: 1.17 $"
 
 /* ANSI C Notes:
  *

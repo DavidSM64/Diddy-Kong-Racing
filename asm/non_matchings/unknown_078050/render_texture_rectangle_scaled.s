@@ -1,4 +1,4 @@
-glabel func_80078D00
+glabel render_texture_rectangle_scaled
 /* 079900 80078D00 27BDFF50 */  addiu $sp, $sp, -0xb0
 /* 079904 80078D04 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 079908 80078D08 AFB20020 */  sw    $s2, 0x20($sp)

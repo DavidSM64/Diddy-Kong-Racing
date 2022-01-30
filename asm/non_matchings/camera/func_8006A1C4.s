@@ -41,7 +41,7 @@ glabel func_8006A1C4
 /* 06AE5C 8006A25C 10600004 */  beqz  $v1, .L8006A270
 /* 06AE60 8006A260 AFA2004C */   sw    $v0, 0x4c($sp)
 /* 06AE64 8006A264 00402025 */  move  $a0, $v0
-/* 06AE68 8006A268 0C01D174 */  jal   func_800745D0
+/* 06AE68 8006A268 0C01D174 */  jal   read_eeprom_data
 /* 06AE6C 8006A26C 306500FF */   andi  $a1, $v1, 0xff
 .L8006A270:
 /* 06AE70 8006A270 32580008 */  andi  $t8, $s2, 8
@@ -73,7 +73,7 @@ glabel func_8006A1C4
 /* 06AECC 8006A2CC 11A00005 */  beqz  $t5, .L8006A2E4
 /* 06AED0 8006A2D0 324E0040 */   andi  $t6, $s2, 0x40
 /* 06AED4 8006A2D4 8FA4004C */  lw    $a0, 0x4c($sp)
-/* 06AED8 8006A2D8 0C01D1BC */  jal   func_800746F0
+/* 06AED8 8006A2D8 0C01D1BC */  jal   write_eeprom_data
 /* 06AEDC 8006A2DC 31A500FF */   andi  $a1, $t5, 0xff
 /* 06AEE0 8006A2E0 324E0040 */  andi  $t6, $s2, 0x40
 .L8006A2E4:
@@ -81,7 +81,7 @@ glabel func_8006A1C4
 /* 06AEE8 8006A2E8 00122283 */   sra   $a0, $s2, 0xa
 /* 06AEEC 8006A2EC 308F0003 */  andi  $t7, $a0, 3
 /* 06AEF0 8006A2F0 8FA5004C */  lw    $a1, 0x4c($sp)
-/* 06AEF4 8006A2F4 0C01D137 */  jal   func_800744DC
+/* 06AEF4 8006A2F4 0C01D137 */  jal   write_save_data
 /* 06AEF8 8006A2F8 01E02025 */   move  $a0, $t7
 .L8006A2FC:
 /* 06AEFC 8006A2FC 32580080 */  andi  $t8, $s2, 0x80
@@ -97,7 +97,7 @@ glabel func_8006A1C4
 /* 06AF20 8006A320 324D0200 */   andi  $t5, $s2, 0x200
 /* 06AF24 8006A324 0C027A9B */  jal   func_8009EA6C
 /* 06AF28 8006A328 00000000 */   nop   
-/* 06AF2C 8006A32C 0C01D21D */  jal   func_80074874
+/* 06AF2C 8006A32C 0C01D21D */  jal   read_eeprom_settings
 /* 06AF30 8006A330 00402025 */   move  $a0, $v0
 /* 06AF34 8006A334 324D0200 */  andi  $t5, $s2, 0x200
 .L8006A338:
@@ -105,7 +105,7 @@ glabel func_8006A1C4
 /* 06AF3C 8006A33C 00009025 */   move  $s2, $zero
 /* 06AF40 8006A340 0C027A9B */  jal   func_8009EA6C
 /* 06AF44 8006A344 00000000 */   nop   
-/* 06AF48 8006A348 0C01D25F */  jal   func_8007497C
+/* 06AF48 8006A348 0C01D25F */  jal   write_eeprom_settings
 /* 06AF4C 8006A34C 00402025 */   move  $a0, $v0
 /* 06AF50 8006A350 00009025 */  move  $s2, $zero
 .L8006A354:
@@ -117,7 +117,7 @@ glabel func_8006A1C4
 /* 06AF64 8006A364 0C0333F8 */  jal   osContStartReadData
 /* 06AF68 8006A368 248410E0 */   addiu $a0, %lo(sSIMesgQueue) # addiu $a0, $a0, 0x10e0
 .L8006A36C:
-/* 06AF6C 8006A36C 3C0A800E */  lui   $t2, %hi(D_800DD300) # $t2, 0x800e
+/* 06AF6C 8006A36C 3C0A800E */  lui   $t2, %hi(sNoControllerPluggedIn) # $t2, 0x800e
 /* 06AF70 8006A370 3C09800E */  lui   $t1, %hi(gButtonMask) # $t1, 0x800e
 /* 06AF74 8006A374 3C068012 */  lui   $a2, %hi(sControllerData+24) # $a2, 0x8012
 /* 06AF78 8006A378 3C028012 */  lui   $v0, %hi(sControllerData) # $v0, 0x8012
@@ -125,7 +125,7 @@ glabel func_8006A1C4
 /* 06AF80 8006A380 3C078012 */  lui   $a3, %hi(D_80121148) # $a3, 0x8012
 /* 06AF84 8006A384 3C0B8012 */  lui   $t3, %hi(sPlayerID) # $t3, 0x8012
 /* 06AF88 8006A388 9529D304 */  lhu   $t1, %lo(gButtonMask)($t1)
-/* 06AF8C 8006A38C 8D4AD300 */  lw    $t2, %lo(D_800DD300)($t2)
+/* 06AF8C 8006A38C 8D4AD300 */  lw    $t2, %lo(sNoControllerPluggedIn)($t2)
 /* 06AF90 8006A390 256B1150 */  addiu $t3, %lo(sPlayerID) # addiu $t3, $t3, 0x1150
 /* 06AF94 8006A394 24E71148 */  addiu $a3, %lo(D_80121148) # addiu $a3, $a3, 0x1148
 /* 06AF98 8006A398 25081140 */  addiu $t0, %lo(sControllerButtonsPressed) # addiu $t0, $t0, 0x1140
