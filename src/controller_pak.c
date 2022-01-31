@@ -1564,17 +1564,49 @@ u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength) {
         stringLength--;
         index = *inString;
     }
+
+    //Pad any extra characters with NULL font code
     while (stringLength != 0) {
         *outString = 0;
         stringLength--;
         outString++;
     }
+    
     *outString = 0;
     return ret;
 }
 
 //Seems to be the same as above, with maybe minor changes
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076A38.s")
+//I think it gets the index value of the fontCode rather that the value?
+u8 *func_80076A38(u8 *inString, u8 *outString, s32 stringLength) {
+    s32 i;
+    u8 currentChar;
+    u8 *ret = outString;
+
+    while (*inString != 0 && stringLength != 0) {
+        *outString = 0;
+        for (i = 0; i != 0x41; i++) {
+            currentChar = *inString;
+            if (currentChar == gN64FontCodes[i]) {
+                *outString = i;
+                outString++;
+                break;
+            }
+        }
+
+        inString++;
+        stringLength--;
+    }
+
+    while (stringLength != 0) {
+        *outString = 0;
+        stringLength--;
+        outString++;
+    }
+    
+    *outString = 0;
+    return ret;
+}
 
 /**
  * For the given controller, and file, this will return a value for which type of file it is.
