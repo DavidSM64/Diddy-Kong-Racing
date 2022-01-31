@@ -61,7 +61,7 @@ s32 start_reading_controller_data(s32 controllerIndex);
 s32 check_for_rumble_pak(s32 controllerIndex);
 s32 repair_controller_pak(s32 controllerIndex);
 s32 reformat_controller_pak(s32 controllerIndex);
-s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, u8 **fileExtensions, u32 *fileSize, u8 *fileType);
+s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes);
 void func_80076164(void);
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree);
 s32 delete_file(s32 controllerIndex, s32 fileNum);
@@ -70,7 +70,7 @@ s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNum
 s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength);
 s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize);
 s32 get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
-s8 *string_to_font_codes(u8 *inString, s8 *outString, s32 stringLength);
+u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength);
 s32 get_file_type(s32 controllerIndex, s32 fileNum);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
@@ -84,6 +84,7 @@ u8 func_80074204(s32 arg0, Settings *arg1); //Non Matching
 void func_8007431C(s32 arg0, Settings *arg1); //Non Matching
 s32 func_80072E28(s32, s32); //Non Matching arg2 seems to be many different types
 void init_controller_paks(void); //Non Matching
+u8 *func_80076A38(u8 *inString, u8 *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.
 s32 func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);

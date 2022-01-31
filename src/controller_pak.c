@@ -366,7 +366,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
         return (controllerIndex << 30) | ret;
     }
     //D_800E7670 = "DKRACING-ADV"
-    ret = get_file_number(controllerIndex, D_800E7670, fileExt, &fileNumber);
+    ret = get_file_number(controllerIndex, (u8 *)D_800E7670, fileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -378,7 +378,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
 
             if (ret == CONTROLLER_PAK_GOOD) {
                 if (*alloc == GAMD) {
-                    func_8007306C(settings, (alloc + 1));
+                    func_8007306C(settings, (s32) (alloc + 1));
                     if (settings->newGame != 0) {
                         ret = CONTROLLER_PAK_CHANGED;
                     }
@@ -436,7 +436,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
     }
 
     //D_800E7690 = DKRACING-TIMES
-    status = get_file_number(controllerIndex, D_800E7690, fileExt, &fileNumber);
+    status = get_file_number(controllerIndex, (u8 *)D_800E7690, fileExt, &fileNumber);
     if (status == CONTROLLER_PAK_GOOD) {
         status = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -727,7 +727,7 @@ s32 write_eeprom_data(Settings *arg0, u8 arg1) {
 
     alloc = allocate_from_main_pool_safe(0x200, COLOR_TAG_WHITE);
 
-    func_800738A4(arg0, alloc);
+    func_800738A4(arg0, (u8 *)alloc);
 
     if (arg1 & 1) {
         s32 size = 24;
@@ -1196,7 +1196,7 @@ s32 reformat_controller_pak(s32 controllerIndex) {
     return ret;
 }
 
-s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, u8 **fileExtensions, u32 *fileSize, u8 *fileType) {
+s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes) {
     OSPfsState state;
     s32 ret;
     s32 max_files;
@@ -1237,20 +1237,21 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, 
     bzero(D_800DE440, files_used);
     temp_D_800DE440 = D_800DE440;
     
+    //TODO: There's probably an unidentified struct here
     for (i = 0; i < max_files; i++) {
-        fileNames[i] = (s32) temp_D_800DE440;
+        fileNames[i] = (u8 *) temp_D_800DE440;
         temp_D_800DE440 += 0x12;
-        fileExtensions[i] = (s32) temp_D_800DE440;
-        fileSize[i] = 0;
-        fileType[i] = -1;
+        fileExtensions[i] = (u8 *) temp_D_800DE440;
+        fileSizes[i] = 0;
+        fileTypes[i] = -1;
         temp_D_800DE440 += 6;
     }
     
     while (i < arg1) {
         fileExtensions[i] = 0;
         fileNames[i] = 0;
-        fileSize[i] = 0;
-        fileType[i] = -1;
+        fileSizes[i] = 0;
+        fileTypes[i] = -1;
         i++;
     }
     
@@ -1266,13 +1267,13 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, 
             return CONTROLLER_PAK_BAD_DATA;
         }
         
-        string_to_font_codes((u8 *)&state.game_name, (s8 *)fileNames[i], PFS_FILE_NAME_LEN);
-        string_to_font_codes((u8 *)&state.ext_name, (s8 *)fileExtensions[i], PFS_FILE_EXT_LEN);
-        fileSize[i] = state.file_size;
-        fileType[i] = 6; // Unknown file type? Possibly from another game? 
+        string_to_font_codes((u8 *)&state.game_name, (u8 *)fileNames[i], PFS_FILE_NAME_LEN);
+        string_to_font_codes((u8 *)&state.ext_name, (u8 *)fileExtensions[i], PFS_FILE_EXT_LEN);
+        fileSizes[i] = state.file_size;
+        fileTypes[i] = 6; // Unknown file type? Possibly from another game?
         
         if ((state.game_code == gameCode) && (state.company_code == COMPANY_CODE)) {
-            fileType[i] = get_file_type(controllerIndex, i);
+            fileTypes[i] = get_file_type(controllerIndex, i);
         }
     }
     
@@ -1349,13 +1350,10 @@ s32 delete_file(s32 controllerIndex, s32 fileNum) {
 
 // Copies a file from one controller pak to the other
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex) {
-    u8 *padding1;
-    u8 *padding2;
-    u8 *padding3;
-    u8 *padding4;
-    u8 *fileName;
-    u8 *padding5;
-    u8 *fileExt;
+    UNUSED s32 pad;
+    u8 fileName[PFS_FILE_NAME_LEN];
+    UNUSED s32 pad2;
+    u8 fileExt[PFS_FILE_EXT_LEN];
     OSPfsState state;
     s32 status;
     u8 *alloc;
@@ -1380,10 +1378,10 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
         return (controllerIndex << 30) | status;
     }
 
-    string_to_font_codes(&state.game_name, &fileName, PFS_FILE_NAME_LEN);
-    string_to_font_codes(&state.ext_name, &fileExt, PFS_FILE_EXT_LEN);
+    string_to_font_codes((u8 *)&state.game_name, fileName, PFS_FILE_NAME_LEN);
+    string_to_font_codes((u8 *)&state.ext_name, fileExt, PFS_FILE_EXT_LEN);
 
-    status = write_controller_pak_file(secondControllerIndex, -1, &fileName, &fileExt, alloc, state.file_size);
+    status = write_controller_pak_file(secondControllerIndex, -1, fileName, fileExt, alloc, state.file_size);
     if (status != CONTROLLER_PAK_GOOD) {
         status |= (secondControllerIndex << 30);
     }
@@ -1392,16 +1390,21 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
     return status;
 }
 
+// There is likely a struct that looks like this in here.
+// typedef struct fileStruct {
+//     s32 fileType;
+//     u8 game_name[PFS_FILE_NAME_LEN];
+// } fileStruct;
 s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNumber) {
     u32 gameCode;
-    char game_name[PFS_FILE_NAME_LEN];
+    u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
     UNUSED s32 pad;
-    char ext_name[PFS_FILE_EXT_LEN];
+    u8 fileExtAsFontCodes[PFS_FILE_EXT_LEN];
     UNUSED s32 pad2;
     s32 ret;
 
-    func_80076A38(fileName, &game_name, PFS_FILE_NAME_LEN);
-    func_80076A38(fileExt, &ext_name, PFS_FILE_EXT_LEN);
+    func_80076A38(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
+    func_80076A38(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
 
     if (get_language() == JAPANESE) {
         gameCode = JPN_GAME_CODE;
@@ -1411,7 +1414,7 @@ s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNum
         gameCode = NTSC_GAME_CODE;
     }
 
-    ret = osPfsFindFile(&pfs[controllerIndex], COMPANY_CODE, gameCode, (u8 *)game_name, (u8 *)ext_name, fileNumber);
+    ret = osPfsFindFile(&pfs[controllerIndex], COMPANY_CODE, gameCode, (u8 *)fileNameAsFontCodes, (u8 *)fileExtAsFontCodes, fileNumber);
     if (ret == 0) {
         return CONTROLLER_PAK_GOOD;
     }
@@ -1456,9 +1459,9 @@ s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s3
 //If fileNumber -1, it creates a new file?
 s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize) {
     s32 temp;
-    char game_name[PFS_FILE_NAME_LEN];
+    u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
     UNUSED s32 temp2;
-    char ext_name[PFS_FILE_EXT_LEN];
+    u8 fileExtAsFontCodes[PFS_FILE_EXT_LEN];
     s32 ret;
     s32 file_number;
     s32 bytesToSave;
@@ -1476,8 +1479,8 @@ s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName,
         bytesToSave = (fileSize - temp) + 0x100;
     }
 
-    func_80076A38(fileName, &game_name, PFS_FILE_NAME_LEN);
-    func_80076A38(fileExt, &ext_name, PFS_FILE_EXT_LEN);
+    func_80076A38(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
+    func_80076A38(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
 
     if (get_language() == JAPANESE) {
         game_code = JPN_GAME_CODE;
@@ -1496,7 +1499,7 @@ s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName,
         if (fileNumber != -1) {
             ret = CONTROLLER_PAK_BAD_DATA;
         } else {
-            temp = osPfsAllocateFile(&pfs[controllerIndex], COMPANY_CODE, game_code, (u8 *)&game_name, (u8 *)&ext_name, bytesToSave, &file_number);
+            temp = osPfsAllocateFile(&pfs[controllerIndex], COMPANY_CODE, game_code, fileNameAsFontCodes, fileExtAsFontCodes, bytesToSave, &file_number);
             if (temp == 0) {
                 ret = CONTROLLER_PAK_GOOD;
             } else if (temp == PFS_DATA_FULL || temp == PFS_DIR_FULL) {
@@ -1541,16 +1544,19 @@ s32 get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
 }
 
 //Converts strings into N64 Font codes for controller pak file names
-s8 *string_to_font_codes(u8 *inString, s8 *outString, s32 stringLength) {
+u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength) {
     s32 index = *inString;
-    s8 *ret = outString;
+    u8 *ret = outString;
 
     while (index != 0 && stringLength != 0) {
-        if (index <= 65) { //Less than 'A'?
+        // Less than sizeof(gN64FontCodes) - 3.
+        // So basically make sure it's a valid font code value
+        if (index <= 65) {
             *outString = gN64FontCodes[index];
             outString++;
         } else {
-            *outString = 45; //'-'?
+            //Replace invalid characters with a hyphen
+            *outString = '-';
             outString++;
         }
         inString++;
@@ -1566,7 +1572,7 @@ s8 *string_to_font_codes(u8 *inString, s8 *outString, s32 stringLength) {
     return ret;
 }
 
-//Seems to be the same as above, with maybe minor changes?
+//Seems to be the same as above, with maybe minor changes
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076A38.s")
 
 /**
@@ -1574,7 +1580,7 @@ GLOBAL_ASM("asm/non_matchings/controller_pak/func_80076A38.s")
  * 3 = GAMD / Game Data
  * 4 = TIMD / Time Data
  * 5 = GHSS / Ghost Data
- * 6 = Unknown? Possibly from another game? 
+ * 6 = Unknown? Possibly from another game?
  */
 s32 get_file_type(s32 controllerIndex, s32 fileNum) {
     s32 *data;
