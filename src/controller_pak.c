@@ -1414,6 +1414,7 @@ s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNum
         gameCode = NTSC_GAME_CODE;
     }
 
+
     ret = osPfsFindFile(&pfs[controllerIndex], COMPANY_CODE, gameCode, (u8 *)fileNameAsFontCodes, (u8 *)fileExtAsFontCodes, fileNumber);
     if (ret == 0) {
         return CONTROLLER_PAK_GOOD;
