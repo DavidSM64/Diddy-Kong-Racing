@@ -1043,7 +1043,7 @@ s32 get_si_device_status(s32 controllerIndex) {
 
     //Couldn't get a for loop to match this
     i = 0;
-    while (sControllerMesgQueue->validCount != 0 && i != 10) {
+    while (sControllerMesgQueue->validCount != 0 && i < 10) {
         osRecvMesg(sControllerMesgQueue, &unusedMsg, OS_MESG_NOBLOCK);
         i++;
     }
@@ -1560,6 +1560,7 @@ u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength) {
             *outString = '-';
             outString++;
         }
+
         inString++;
         stringLength--;
         index = *inString;
@@ -1584,7 +1585,7 @@ u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength) {
 
     while (*inString != 0 && stringLength != 0) {
         *outString = 0;
-        for (i = 0; i != 0x41; i++) {
+        for (i = 0; i < 65; i++) {
             currentChar = *inString;
             if (currentChar == gN64FontCodes[i]) {
                 *outString = i;

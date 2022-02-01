@@ -95,7 +95,7 @@ glabel func_8006A1C4
 /* 06AF18 8006A318 324C0100 */  andi  $t4, $s2, 0x100
 /* 06AF1C 8006A31C 11800006 */  beqz  $t4, .L8006A338
 /* 06AF20 8006A320 324D0200 */   andi  $t5, $s2, 0x200
-/* 06AF24 8006A324 0C027A9B */  jal   func_8009EA6C
+/* 06AF24 8006A324 0C027A9B */  jal   get_eeprom_settings_pointer
 /* 06AF28 8006A328 00000000 */   nop   
 /* 06AF2C 8006A32C 0C01D21D */  jal   read_eeprom_settings
 /* 06AF30 8006A330 00402025 */   move  $a0, $v0
@@ -103,7 +103,7 @@ glabel func_8006A1C4
 .L8006A338:
 /* 06AF38 8006A338 11A00006 */  beqz  $t5, .L8006A354
 /* 06AF3C 8006A33C 00009025 */   move  $s2, $zero
-/* 06AF40 8006A340 0C027A9B */  jal   func_8009EA6C
+/* 06AF40 8006A340 0C027A9B */  jal   get_eeprom_settings_pointer
 /* 06AF44 8006A344 00000000 */   nop   
 /* 06AF48 8006A348 0C01D25F */  jal   write_eeprom_settings
 /* 06AF4C 8006A34C 00402025 */   move  $a0, $v0

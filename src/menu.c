@@ -71,15 +71,19 @@ s8 D_80126431;
 s32 D_80126434;
 s32 D_80126438[4];
 
-//Seems to be a set of flags
-//bit 0 = Adventure Two is Unlocked
-//bit 1 = Used to set the CHEAT_MIRRORED_TRACKS magic code flag
-//bits 2-3 = Current language value
-//bits 4-23 = Used to set the CHEAT_CONTROL_DRUMSTICK magic code flag
-//bit 24 = Unknown
-//bit 25 = Seems to be a flag for whether subtitles are enabled or not.
-//bits 26-63 = Unknown
-s64 sEepromSettings;
+//Eeeprom save data bits stored at address 0xF
+//bit 0      = Adventure Two is Unlocked
+//bit 1      = Used to set the CHEAT_MIRRORED_TRACKS magic code flag
+//bits 2-3   = Current language value
+//bits 4-23  = Used to set the CHEAT_CONTROL_DRUMSTICK magic code flag
+//bit 24     = Unknown, but it's set as a default high bit.
+//bit 25     = Seems to be a flag for whether subtitles are enabled or not.
+//bits 26-55 = Unknown, but it could be a set of flags for unlocked tracks
+//bits 56-63 = Checksum bits. These are calculated from the previous bits, 
+//             and validated using calculate_eeprom_settings_checksum.
+//             If the checksum fails, the settings are reset to just 
+//             bits 24/25 being high.
+u64 sEepromSettings;
 
 f32 sBootScreenTimer;
 s8 gControllersXAxisDelay[4];
@@ -2417,12 +2421,12 @@ s32 menu_options_loop(s32 arg0) {
         // Enable/Disable subtitles.
         if (sEepromSettings & 0x2000000) {
             func_80001D04(0xEB, NULL);
-            func_8009EABC(0);
+            unset_eeprom_settings_value(0);
             func_800C2AF4(0);
             gOptionMenuStrings[1] = gMenuText[183];
         } else {
             func_80001D04(0xEB, 0);
-            func_8009EA78(0);
+            set_eeprom_settings_value(0);
             func_800C2AF4(1);
             gOptionMenuStrings[1] = gMenuText[182];
         }
@@ -4917,7 +4921,7 @@ s32 func_80092BE0(s32 arg0) {
     }
 
     if (temp >= 0) {
-        s64 temp2 = 0x10 << temp;
+        u64 temp2 = 0x10 << temp;
         if ((temp2 & sEepromSettings) == 0) {
             temp = -1;
         }
@@ -6819,23 +6823,23 @@ f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Gfx **mat,
     return TRUE;
 }
 
-s64 *func_8009EA6C(void) {
+u64 *get_eeprom_settings_pointer(void) {
     return &sEepromSettings;
 }
 
-s32 func_8009EA78(s64 arg0) {
-    sEepromSettings |= arg0;
+s32 set_eeprom_settings_value(u64 valueToSet) {
+    sEepromSettings |= valueToSet;
     func_8006ECE0();
     return 1;
 }
 
-s32 func_8009EABC(s64 arg0) {
-    sEepromSettings &= ~arg0;
+s32 unset_eeprom_settings_value(u64 valueToUnset) {
+    sEepromSettings &= ~valueToUnset;
     func_8006ECE0();
     return 1;
 }
 
-s64 func_8009EB08(void) {
+u64 get_eeprom_settings(void) {
     return sEepromSettings;
 }
 
@@ -6865,7 +6869,7 @@ s32 get_language(void) {
  * tried to switch to it, all you would see is the word "Japanese" used everywhere as a placeholder.
  */
 void set_language(s32 language) {
-    s64 langFlag = 0; // English
+    u64 langFlag = 0; // English
 
     switch (language) {
         case GERMAN:
@@ -6879,8 +6883,8 @@ void set_language(s32 language) {
             break;
     }
 
-    sEepromSettings &= ~0xC;
-    sEepromSettings |= langFlag;
+    sEepromSettings &= ~0xC; //Set bits 3 and 4 low first
+    sEepromSettings |= langFlag; //Then set them according to the selected lang
 
     load_menu_text(language);
     func_8006ECE0();

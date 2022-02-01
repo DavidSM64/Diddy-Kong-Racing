@@ -58,7 +58,7 @@ glabel func_8001B4FC
 /* 01C1D0 8001B5D0 018B082A */  slt   $at, $t4, $t3
 /* 01C1D4 8001B5D4 14200015 */  bnez  $at, .L8001B62C
 /* 01C1D8 8001B5D8 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 01C1DC 8001B5DC 0C027AC2 */  jal   func_8009EB08
+/* 01C1DC 8001B5DC 0C027AC2 */  jal   get_eeprom_settings
 /* 01C1E0 8001B5E0 AFA6002C */   sw    $a2, 0x2c($sp)
 /* 01C1E4 8001B5E4 8FA6002C */  lw    $a2, 0x2c($sp)
 /* 01C1E8 8001B5E8 240E0010 */  li    $t6, 16

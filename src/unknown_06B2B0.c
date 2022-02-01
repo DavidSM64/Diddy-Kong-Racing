@@ -1857,6 +1857,7 @@ void func_8006ECC4(void) {
     D_800DD37C |= 0x100;
 }
 
+//Always called after updating a value in sEepromSettings
 void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
 }

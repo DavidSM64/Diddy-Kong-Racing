@@ -156,7 +156,7 @@ glabel L80086CDC
 /* 087938 80086D38 00000000 */   nop   
 /* 08793C 80086D3C 3C0500FF */  lui   $a1, (0x00FFFFF0 >> 16) # lui $a1, 0xff
 /* 087940 80086D40 34A5FFF0 */  ori   $a1, (0x00FFFFF0 & 0xFFFF) # ori $a1, $a1, 0xfff0
-/* 087944 80086D44 0C027AAF */  jal   func_8009EABC
+/* 087944 80086D44 0C027AAF */  jal   unset_eeprom_settings_value
 /* 087948 80086D48 24040000 */   li    $a0, 0
 /* 08794C 80086D4C 1000011F */  b     .L800871CC
 /* 087950 80086D50 8FBF0014 */   lw    $ra, 0x14($sp)
@@ -449,7 +449,7 @@ glabel L80087158
 /* 087D80 80087180 15410011 */  bne   $t2, $at, .L800871C8
 /* 087D84 80087184 24040000 */   li    $a0, 0
 /* 087D88 80087188 3C0500FF */  lui   $a1, (0x00FFFFF3 >> 16) # lui $a1, 0xff
-/* 087D8C 8008718C 0C027AAF */  jal   func_8009EABC
+/* 087D8C 8008718C 0C027AAF */  jal   unset_eeprom_settings_value
 /* 087D90 80087190 34A5FFF3 */   ori   $a1, (0x00FFFFF3 & 0xFFFF) # ori $a1, $a1, 0xfff3
 /* 087D94 80087194 3C03800E */  lui   $v1, %hi(gActiveMagicCodes) # $v1, 0x800e
 /* 087D98 80087198 3C05800E */  lui   $a1, %hi(gUnlockedMagicCodes) # $a1, 0x800e

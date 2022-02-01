@@ -123,7 +123,7 @@ glabel func_8005CB68
 /* 05D92C 8005CD2C 150B001A */  bne   $t0, $t3, .L8005CD98
 /* 05D930 8005CD30 2404FFF6 */   li    $a0, -10
 /* 05D934 8005CD34 24040000 */  li    $a0, 0
-/* 05D938 8005CD38 0C027A9E */  jal   func_8009EA78
+/* 05D938 8005CD38 0C027A9E */  jal   set_eeprom_settings_value
 /* 05D93C 8005CD3C 24050001 */   li    $a1, 1
 /* 05D940 8005CD40 2404FFFE */  li    $a0, -2
 /* 05D944 8005CD44 00002825 */  move  $a1, $zero

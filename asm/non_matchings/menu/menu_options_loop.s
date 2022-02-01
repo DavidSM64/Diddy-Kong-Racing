@@ -157,7 +157,7 @@ glabel menu_options_loop
 /* 08519C 8008459C 0C000741 */  jal   func_80001D04
 /* 0851A0 800845A0 00002825 */   move  $a1, $zero
 /* 0851A4 800845A4 24040000 */  li    $a0, 0
-/* 0851A8 800845A8 0C027AAF */  jal   func_8009EABC
+/* 0851A8 800845A8 0C027AAF */  jal   unset_eeprom_settings_value
 /* 0851AC 800845AC 3C050200 */   lui   $a1, 0x200
 /* 0851B0 800845B0 0C030ABD */  jal   func_800C2AF4
 /* 0851B4 800845B4 00002025 */   move  $a0, $zero
@@ -171,7 +171,7 @@ glabel menu_options_loop
 /* 0851D0 800845D0 0C000741 */  jal   func_80001D04
 /* 0851D4 800845D4 00002825 */   move  $a1, $zero
 /* 0851D8 800845D8 24040000 */  li    $a0, 0
-/* 0851DC 800845DC 0C027A9E */  jal   func_8009EA78
+/* 0851DC 800845DC 0C027A9E */  jal   set_eeprom_settings_value
 /* 0851E0 800845E0 3C050200 */   lui   $a1, 0x200
 /* 0851E4 800845E4 0C030ABD */  jal   func_800C2AF4
 /* 0851E8 800845E8 24040001 */   li    $a0, 1
