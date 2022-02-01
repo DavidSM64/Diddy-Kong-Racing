@@ -1267,8 +1267,8 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, 
             return CONTROLLER_PAK_BAD_DATA;
         }
         
-        string_to_font_codes((u8 *)&state.game_name, (u8 *)fileNames[i], PFS_FILE_NAME_LEN);
-        string_to_font_codes((u8 *)&state.ext_name, (u8 *)fileExtensions[i], PFS_FILE_EXT_LEN);
+        font_codes_to_string((u8 *)&state.game_name, (u8 *)fileNames[i], PFS_FILE_NAME_LEN);
+        font_codes_to_string((u8 *)&state.ext_name, (u8 *)fileExtensions[i], PFS_FILE_EXT_LEN);
         fileSizes[i] = state.file_size;
         fileTypes[i] = 6; // Unknown file type? Possibly from another game?
         
@@ -1378,8 +1378,8 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
         return (controllerIndex << 30) | status;
     }
 
-    string_to_font_codes((u8 *)&state.game_name, fileName, PFS_FILE_NAME_LEN);
-    string_to_font_codes((u8 *)&state.ext_name, fileExt, PFS_FILE_EXT_LEN);
+    font_codes_to_string((u8 *)&state.game_name, fileName, PFS_FILE_NAME_LEN);
+    font_codes_to_string((u8 *)&state.ext_name, fileExt, PFS_FILE_EXT_LEN);
 
     status = write_controller_pak_file(secondControllerIndex, -1, fileName, fileExt, alloc, state.file_size);
     if (status != CONTROLLER_PAK_GOOD) {
@@ -1545,7 +1545,7 @@ s32 get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
 }
 
 //Converts strings into N64 Font codes for controller pak file names
-u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength) {
+u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength) {
     s32 index = *inString;
     u8 *ret = outString;
 

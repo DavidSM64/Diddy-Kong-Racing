@@ -70,7 +70,7 @@ s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNum
 s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength);
 s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize);
 s32 get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
-u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength);
+u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength);
 s32 get_file_type(s32 controllerIndex, s32 fileNum);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
