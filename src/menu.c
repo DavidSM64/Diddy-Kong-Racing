@@ -41,7 +41,7 @@ DrawTexture *D_80126394;
 s32 D_80126398;
 s32 D_8012639C;
 Gfx *D_801263A0;
-s32 **D_801263A4;
+char **D_801263A4;
 Gfx *D_801263A8;
 VertexList *D_801263AC;
 s32 *D_801263B0;
@@ -114,8 +114,6 @@ s8 sDialogueOption;
 s32 D_801264DC;
 s8 D_801264E0;
 s8 D_801264E1;
-
-s8 sCurrentMenuID;
 
 s8 sCurrentMenuID;
 s32 D_801264E4;
@@ -6546,18 +6544,17 @@ s32 dialogue_race_defeat(void) {
     return state;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 
 // Has a couple minor issues, but should be functionally equivalent.
 s32 tt_menu_loop(void) {
-    Settings *settings;
     s32 currentOption;
-    s32 buttonsPressed; // sp40
-    s32 sp3C;
-    s32 sp38;
-    s32 sp24;
-    s32 sp20;
+    s32 buttonsPressed;
     s32 i;
+    s32 yPos1;
+    s32 yPos2;
+    Settings *settings;
+    s32 result;
 
     settings = get_settings();
 
@@ -6622,8 +6619,8 @@ s32 tt_menu_loop(void) {
                     case 3:
                         func_80001D04(0xEF, 0);
                         func_80036BCC(0x22E, 1);
-                        func_8009C674(&D_800E1E2C);
-                        allocate_menu_images(&D_800E1E40);
+                        func_8009C674(D_800E1E2C);
+                        allocate_menu_images(D_800E1E40);
                         D_800E1E28 = 1;
                         sCurrentMenuID = TT_MENU_GAME_STATUS;
                         break;
@@ -6637,6 +6634,8 @@ s32 tt_menu_loop(void) {
                 currentOption = 0;
             }
             if (currentOption == 3) {
+                //FAKEMATCH?
+                //if ((gControllersXAxisDirection && gControllersXAxisDirection) && gControllersXAxisDirection){}
                 sCurrentMenuID = TT_MENU_EXIT;
             }
             if (sCurrentMenuID == TT_MENU_EXIT) {
@@ -6644,19 +6643,19 @@ s32 tt_menu_loop(void) {
             }
             break;
         case TT_MENU_CONT_PAK_ERROR_1:
-            sp24 = 0;
-            while (D_801263A4[sp24] != NULL) {
-                sp24++;
+            i = 0;
+            while (D_801263A4[i] != NULL) {
+                i++;
             }
-            sp38 = 0x3A;
-            if (sp24 > 0) {
-                sp24--;
-                sp38 -= sp24 * 8;
-                sp24 = 0;
-                while (D_801263A4[sp24] != NULL) {
-                    render_dialogue_text(1, POS_CENTRED, sp38, D_801263A4[sp24], 1, 4);
-                    sp38 += 0x10;
-                    sp24++;
+            yPos1 = 58;
+            if (i > 0) {
+                i--;
+                yPos1 -= (i * 8);
+                i = 0;
+                while (D_801263A4[i] != NULL) {
+                    render_dialogue_text(1, POS_CENTRED, yPos1, D_801263A4[i], 1, 4);
+                    yPos1 += 16;
+                    i++;
                 }
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
@@ -6667,15 +6666,18 @@ s32 tt_menu_loop(void) {
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
                 sCurrentMenuID = TT_MENU_ROOT;
                 D_800E1E28 = 0;
-                func_8009C4A8(&D_800E1E2C);
+                func_8009C4A8(D_800E1E2C);
                 func_80036BCC(0x22F, 1);
             }
             break;
         case TT_MENU_INTRODUCTION:
-            sp20 = 6;
-            for (i = 52; gMenuText[i] != NULL; i++) {
-                render_dialogue_text(1, POS_CENTRED, sp20, gMenuText[i], 1, 4);
-                sp20 += 0x10;
+            // RIGHT HERE is where I to swap the timing of assignment of these two vars
+            yPos2 = 6;
+            i = 52;
+            while (gMenuText[i] != NULL) {
+                render_dialogue_text(1, POS_CENTRED, yPos2, gMenuText[i], 1, 4);
+                yPos2 += 16;
+                i++;
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
                 settings->cutsceneFlags |= 2;
@@ -6708,35 +6710,45 @@ s32 tt_menu_loop(void) {
             render_dialogue_text(1, POS_CENTRED, 50, gMenuText[124], 1, 4); // PLEASE WAIT
             D_80126398++;
             if (D_80126398 >= 5) {
-                s32 result = func_8001B738(0) & 0xFF;
-                if (result == 5) {
+                result = func_8001B738(0) & 0xFF;
+                if (result == CONTROLLER_PAK_CHANGED) {
                     result = func_8001B738(0) & 0xFF;
                 }
                 switch (result) {
-                    case 0:
+                    case CONTROLLER_PAK_GOOD:
                         sCurrentMenuID = D_8012639C;
                         break;
-                    case 7:
+                    case RUMBLE_PAK:
                         sCurrentMenuID = TT_MENU_INSERT_CONT_PAK;
                         break;
-                    case 1:
-                        D_801263A4 = &D_800E09D8;
+                    case NO_CONTROLLER_PAK:
+                        // NO CONTROLLER PAK
+                        // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
+                        D_801263A4 = D_800E09D8;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
-                    case 4:
-                    case 6:
-                        D_801263A4 = &D_800E09C4;
+                    case CONTROLLER_PAK_FULL:
+                    case UNK6:
+                        // CONTROLLER PAK FULL
+                        // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
+                        D_801263A4 = D_800E09C4;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
-                    case 9:
-                        D_801263A4 = &D_800E09EC;
+                    case CONTROLLER_PAK_BAD_DATA:
+                        // CORRUPT DATA.
+                        // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
+                        // TRY AGAIN!
+                        D_801263A4 = D_800E09EC;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
-                    case 2:
-                    case 3:
-                    case 5:
-                    case 8:
-                        D_801263A4 = &D_800E09B0;
+                    case CONTROLLER_PAK_INCONSISTENT:
+                    case CONTROLLER_PAK_WITH_BAD_ID:
+                    case CONTROLLER_PAK_CHANGED:
+                    case UNK8:
+                    default:
+                        // BAD CONTROLLER PAK
+                        // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
+                        D_801263A4 = D_800E09B0;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                 }

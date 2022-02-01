@@ -25,8 +25,8 @@ enum SIDeviceStatus {
     CONTROLLER_PAK_INCONSISTENT,
 	CONTROLLER_PAK_WITH_BAD_ID,
 	CONTROLLER_PAK_FULL,
-	CONTROLLER_PAK_CHANGED, // Also used when there's no free space
-	UNK6,
+	CONTROLLER_PAK_CHANGED,
+	UNK6, //Could be another way to mark as full according to tt_menu_loop
 	RUMBLE_PAK,
 	UNK8, // func_80074B34 Sets this
 	CONTROLLER_PAK_BAD_DATA,
