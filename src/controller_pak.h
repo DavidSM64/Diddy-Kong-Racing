@@ -84,7 +84,7 @@ u8 func_80074204(s32 arg0, Settings *arg1); //Non Matching
 void func_8007431C(s32 arg0, Settings *arg1); //Non Matching
 s32 func_80072E28(s32, s32); //Non Matching arg2 seems to be many different types
 void init_controller_paks(void); //Non Matching
-u8 *func_80076A38(u8 *inString, u8 *outString, s32 stringLength);
+u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.
 s32 func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);

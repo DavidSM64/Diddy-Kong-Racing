@@ -1403,8 +1403,8 @@ s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNum
     UNUSED s32 pad2;
     s32 ret;
 
-    func_80076A38(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
-    func_80076A38(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
+    string_to_font_codes(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
+    string_to_font_codes(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
 
     if (get_language() == JAPANESE) {
         gameCode = JPN_GAME_CODE;
@@ -1480,8 +1480,8 @@ s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName,
         bytesToSave = (fileSize - temp) + 0x100;
     }
 
-    func_80076A38(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
-    func_80076A38(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
+    string_to_font_codes(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
+    string_to_font_codes(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
 
     if (get_language() == JAPANESE) {
         game_code = JPN_GAME_CODE;
@@ -1544,7 +1544,7 @@ s32 get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
     return CONTROLLER_PAK_BAD_DATA;
 }
 
-//Converts strings into N64 Font codes for controller pak file names
+//Converts N64 Font codes used in controller pak file names, into C ASCII a coded string
 u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength) {
     s32 index = *inString;
     u8 *ret = outString;
@@ -1576,9 +1576,8 @@ u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength) {
     return ret;
 }
 
-//Seems to be the same as above, with maybe minor changes
-//I think it gets the index value of the fontCode rather that the value?
-u8 *func_80076A38(u8 *inString, u8 *outString, s32 stringLength) {
+//Converts a C ASCII string into N64 Font codes for controller pak file names
+u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength) {
     s32 i;
     u8 currentChar;
     u8 *ret = outString;
