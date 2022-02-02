@@ -89,7 +89,7 @@ typedef struct TextureHeader {
   /* 0x1F */ u8 unk1F;
 } TextureHeader;
 
-// Probably not unique to the boot menu.
+// Probably not unqiue to the boot menu.
 typedef struct DrawTexture {
     TextureHeader *texture; // Pointer to texture to draw.
     s16 xOffset; // Offset from the center of the screen.
@@ -941,28 +941,20 @@ typedef struct unk80027FC4 {
     s16 unk6;
 } unk80027FC4;
 
-typedef struct GhostLocationVehicle {
-	/* 0x00 */ u8  levelID;
-    /* 0x01 */ u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
-} GhostLocationVehicle;
-
-typedef struct GhostCharacter {
-    /* 0x02 */ u8  ID; // 9 = T.T.
-    /* 0x03 */ u8  unk3; // Might just be padding?
-} GhostCharacter;
+// Unused
+typedef struct GhostHeaderChecksum {
+	u8  levelID;
+    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+} GhostHeaderChecksum;
 
 /* Size: 8 bytes */
 typedef struct GhostHeader {
-    union {
-        /* 0x00 */ s16 checksum;
-        /* 0x00 */ GhostLocationVehicle location;
-    } FirstPair;
-    union {
-        /* 0x02 */ GhostCharacter character;
-        /* 0x02 */ s16 unk2;
-    } SecondPair;
-    /* 0x04 */ s16 time; // In frames, where 60 frames = 1 second.
-    /* 0x06 */ s16 nodeCount;
+    //GhostHeaderChecksum checksum;
+    s16 checksum;
+    u8  characterID; // 9 = T.T.
+    u8  unk3; // Might just be padding?
+    s16 time; // In frames, where 60 frames = 1 second.
+    s16 nodeCount;
 } GhostHeader;
 
 /* Size: 12 bytes */

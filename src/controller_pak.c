@@ -490,150 +490,8 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     return ret;
 }
 
-#ifdef MIPS_TO_C
-u8 func_80074204(s32 arg0, Settings *arg1) {
-    s32 sp2C;
-    s32 temp_s0;
-    u8 temp_v1;
-    void *temp_s2;
-    s32 phi_v1;
-    s32 phi_s1;
-    s32 phi_s0;
-    u8 phi_v0;
-
-    if (osEepromProbe(get_si_mesg_queue()) == 0) {
-        return -1U;
-    }
-    if (arg0 != 0) {
-        if (arg0 != 1) {
-            phi_v1 = 0xA;
-            if (arg0 != 2) {
-
-            }
-        } else {
-            phi_v1 = 5;
-        }
-    } else {
-        phi_v1 = 0;
-    }
-    sp2C = phi_v1;
-    temp_s2 = allocate_from_main_pool_safe(0x28, -1U);
-    phi_s1 = sp2C;
-    phi_s0 = 0;
-    do {
-        osEepromRead(get_si_mesg_queue(), phi_s1 & 0xFF, (phi_s0 * 8) + temp_s2);
-        temp_s0 = phi_s0 + 1;
-        phi_s1 += 1;
-        phi_s0 = temp_s0;
-    } while (temp_s0 != 5);
-    func_8007306C(arg1, (s32) temp_s2);
-    free_from_memory_pool(temp_s2);
-    temp_v1 = arg1->newGame;
-    phi_v0 = temp_v1;
-    if (temp_v1 != 0) {
-        func_8007431C(arg0, arg1);
-        phi_v0 = arg1->newGame;
-    }
-    return phi_v0;
-}
-#else
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074204.s")
-#endif
-
-#ifdef MIPS_TO_C
-void func_8007431C(s32 arg0, Settings *arg1) {
-    s32 sp54;
-    s32 sp44;
-    s32 sp40;
-    s32 temp_s0;
-    s32 temp_s0_2;
-    s32 temp_s0_3;
-    s32 temp_s0_4;
-    void *temp_s3;
-    void *temp_v0;
-    s32 phi_v0;
-    s32 phi_s0;
-    s32 phi_v0_2;
-    s32 phi_s0_2;
-    s32 phi_a2;
-    void *phi_v1;
-    s32 phi_s0_3;
-    s32 phi_s1;
-    s32 phi_s0_4;
-    s32 phi_s0_5;
-
-    if (osEepromProbe(get_si_mesg_queue()) != 0) {
-        get_number_of_levels_and_worlds(&sp44, &sp40);
-        phi_s0 = 0;
-        phi_s0_4 = 0;
-        phi_s0_5 = 0;
-        if (sp44 > 0) {
-            phi_v0 = 0;
-            do {
-                temp_s0 = phi_s0 + 1;
-                *(arg1->courseFlagsPtr + phi_v0) = 0;
-                phi_v0 += 4;
-                phi_s0 = temp_s0;
-            } while (temp_s0 < sp44);
-        }
-        phi_s0_2 = 0;
-        phi_s0_5 = 0;
-        if (sp40 > 0) {
-            phi_v0_2 = 0;
-            do {
-                temp_s0_2 = phi_s0_2 + 1;
-                *(arg1->balloonsPtr + phi_v0_2) = 0;
-                phi_v0_2 += 2;
-                phi_s0_2 = temp_s0_2;
-            } while (temp_s0_2 < sp40);
-        }
-        arg1->trophies = 0;
-        arg1->bosses = 0;
-        arg1->tajFlags = 0;
-        arg1->cutsceneFlags = 0;
-        arg1->newGame = 1;
-        phi_s0_3 = phi_s0_5;
-        if (arg0 != 0) {
-            if (arg0 != 1) {
-                phi_a2 = 0xA;
-                if (arg0 != 2) {
-
-                }
-            } else {
-                phi_a2 = 5;
-            }
-        } else {
-            phi_a2 = 0;
-        }
-        sp54 = phi_a2;
-        temp_v0 = allocate_from_main_pool_safe(0x28, -1U);
-        temp_s3 = temp_v0;
-        phi_v1 = temp_v0 + phi_s0_5;
-        do {
-            temp_s0_3 = phi_s0_3 + 4;
-            phi_v1->unk0 = 0xFF;
-            phi_v1->unk1 = 0xFF;
-            phi_v1->unk2 = 0xFF;
-            phi_v1->unk3 = 0xFF;
-            phi_v1 += 4;
-            phi_s0_3 = temp_s0_3;
-        } while (temp_s0_3 != (5 * 8));
-        sp54 = phi_a2;
-        if (is_reset_pressed() == 0) {
-            phi_s1 = phi_a2;
-            do {
-                osEepromWrite(get_si_mesg_queue(), phi_s1 & 0xFF, (phi_s0_4 * 8) + temp_s3);
-                temp_s0_4 = phi_s0_4 + 1;
-                phi_s1 += 1;
-                phi_s0_4 = temp_s0_4;
-            } while (temp_s0_4 != 5);
-        }
-        free_from_memory_pool(temp_s3);
-    }
-}
-#else
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007431C.s")
-#endif
 
 // Writes Eeprom in 5 block chunks of data starting at either 0x0, 0x5, or 0xA
 // Educated guess says this might be for one of three save files
@@ -815,13 +673,13 @@ s16 calculate_ghost_header_checksum(GhostHeader *ghostHeader) {
 }
 
 void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 nodeCount, u8 *dest) {
-    ghostHeader->FirstPair.checksum = 0;
-    ghostHeader->SecondPair.character.ID = characterID;
-    ghostHeader->SecondPair.character.unk3 = 0;
+    ghostHeader->checksum = 0;
+    ghostHeader->characterID = characterID;
+    ghostHeader->unk3 = 0;
     ghostHeader->time = time;
     ghostHeader->nodeCount = nodeCount;
     bcopy(dest, (u8 *)ghostHeader + 8, nodeCount * sizeof(GhostDataFrame));
-    ghostHeader->FirstPair.checksum = calculate_ghost_header_checksum(ghostHeader);
+    ghostHeader->checksum = calculate_ghost_header_checksum(ghostHeader);
 }
 
 //Seems to only be called when used as an argument for func_800860A8. Effectively just returns 0x6700
@@ -833,203 +691,13 @@ s32 func_80074B1C(void) {
     return (&x)[0] * 6 + 0x100;
 }
 
-#ifdef MIPS_TO_C
-//The GhostHeader might have an alternate version where the checksum is u8 levelId, u8 vehicleId, and the chararcter ID is an s16 or something?
-s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCharacterID, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *arg6) {
-    GhostHeader *sp50;
-    s32 sp4C;
-    s32 sp48;
-    s32 sp40;
-    s32 sp3C;
-    u32 sp38;
-    s32 sp34;
-    OSPfs *sp30;
-    OSPfs *temp_t4;
-    s16 temp_t3;
-    s32 temp_v0;
-    s32 temp_v0_2;
-    s32 temp_v0_3;
-    s32 temp_v1;
-    GhostHeader *temp_a1;
-    u8 *temp_v0_5;
-    void *temp_v0_4;
-    GhostHeader *phi_v0;
-    s32 phi_v1;
-    s32 phi_a3;
-    s32 phi_a3_2;
-    s32 phi_a3_3;
-    s32 phi_v0_2;
-
-    sp40 = 0;
-    temp_v0 = get_si_device_status(controllerIndex);
-    if (temp_v0 != CONTROLLER_PAK_GOOD) {
-        sp4C = temp_v0;
-        start_reading_controller_data(controllerIndex);
-        return temp_v0;
-    }
-    if (ghostCharacterID != 0) {
-        *ghostTime = -1;
-        *ghostCharacterID = -1;
-    }
-    temp_v0_2 = get_file_number(controllerIndex, (u8 *) D_800E773C, D_800E774C, &sp48);
-    phi_a3_3 = temp_v0_2;
-    if (temp_v0_2 == 0) {
-        temp_t4 = &pfs[controllerIndex];
-        sp50 = allocate_from_main_pool_safe(0x100, 0xFFU);
-        sp30 = temp_t4;
-        if ((temp_t4->status & 1) == 0) {
-            osPfsInit(sControllerMesgQueue, temp_t4, controllerIndex);
-        }
-        temp_v0_3 = read_data_from_controller_pak(controllerIndex, sp48, sp50, 0x100);
-        phi_a3 = temp_v0_3;
-        if (temp_v0_3 == 0) {
-            temp_a1 = sp50 + 4;
-            if (sp50->checksum == GHSS) {
-                phi_v0 = temp_a1;
-                phi_v1 = 0;
-loop_10:
-                temp_v1 = phi_v1 + 4;
-                phi_v1 = temp_v1;
-                //This could mean the GhostHeader can be seperated by levelId, and vehicleID u8s?
-                if ((levelID == phi_v0->levelID) && (vehicleID == phi_v0->vehicleID)) {
-                    temp_t3 = phi_v0->unk2;
-                    sp40 = (s32) temp_t3;
-                    sp3C = phi_v0->nodeCount - temp_t3;
-                } else {
-                    phi_v0 += 4;
-                    if (temp_v1 < 0x18) {
-                        goto loop_10;
-                    }
-                }
-                if (sp40 == 0) {
-                    phi_a3 = 6;
-                    if (sp50[4] == 0xFF) {
-                        phi_a3 = 8;
-                    }
-                    temp_v0_4 = temp_a1 + (2 * 4);
-                    if (sp50[4].unk4 == 0xFF) {
-                        phi_a3 = 8;
-                    }
-                    if (temp_v0_4->unk0 == 0xFF) {
-                        phi_a3 = 8;
-                    }
-                    if (temp_v0_4->unk4 == 0xFF) {
-                        phi_a3 = 8;
-                    }
-                    if (temp_v0_4->unk8 == 0xFF) {
-                        phi_a3 = 8;
-                    }
-                    if (temp_v0_4->unkC == 0xFF) {
-                        phi_a3 = 8;
-                    }
-                }
-            } else {
-                phi_a3 = 9;
-            }
-        }
-        sp4C = phi_a3;
-        free_from_memory_pool(sp50);
-        phi_a3_3 = phi_a3;
-        phi_a3_3 = phi_a3;
-        if (sp40 != 0) {
-            if (ghostCharacterId != 0) {
-                temp_v0_5 = allocate_from_main_pool_safe(sp3C + 0x100, 0xFFU);
-                sp50 = temp_v0_5;
-                phi_a3_2 = 9;
-                if (osPfsReadWriteFile(sp30, sp48, 0U, sp40, sp3C, temp_v0_5) == 0) {
-                    if (calculate_ghost_header_checksum((GhostHeader *) sp50) == (s16) sp50->checksum) {
-                        *ghostCharacterId = (s16) sp50->characterID;
-                        *ghostTime = sp50->time;
-                        *ghostNodeCount = sp50->nodeCount;
-                        bcopy(sp50 + 8, arg6, *ghostNodeCount * 0xC);
-                        phi_a3_2 = 0;
-                    }
-                }
-                sp4C = phi_a3_2;
-                free_from_memory_pool(sp50);
-                phi_a3_3 = phi_a3_2;
-            }
-        }
-        if ((sp40 != 0) && (ghostCharacterID == 0)) {
-            phi_a3_3 = 0;
-        }
-    }
-    sp4C = phi_a3_3;
-    start_reading_controller_data(controllerIndex);
-    if (phi_a3_3 == 5) {
-        sp4C = phi_a3_3;
-        if (get_free_space(controllerIndex, &sp38, &sp34) == 0) {
-            sp4C = sp4C;
-            if (((s32) sp38 < func_80074B1C()) || (phi_v0_2 = sp4C, (sp34 == 0))) {
-                return 4;
-            }
-            /* Duplicate return node #48. Try simplifying control flow for better match */
-            return phi_v0_2;
-        }
-        return 9;
-    }
-    phi_v0_2 = phi_a3_3;
-    return phi_v0_2;
-}
-#else
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074B34.s")
-#endif
-
-#ifdef MIPS_TO_C
-static u8 D_800E7778 = 0;                           /* const */
-
-s32 func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest) {
-    u8 *sp38;
-    s32 sp30;
-    s32 sp28;
-    s32 sp24;
-    s32 temp_v0;
-    s32 temp_v0_2;
-    u8 *temp_v0_3;
-    void *temp_v0_4;
-    void *temp_v0_5;
-    void *temp_v1;
-
-    temp_v0_2 = 0x1100 * 6;
-    sp24 = temp_v0_2;
-    sp30 = 0x1100;
-    temp_v0_3 = allocate_from_main_pool_safe(temp_v0_2 + 0x200, 0xFFU);
-    temp_v0_3->unk0 = 0x47485353;
-    temp_v0_3->unk4 = (s8) arg1;
-    temp_v0_3->unk6 = 0x100;
-    temp_v1 = temp_v0_3 + 4;
-    temp_v0_3->unkA = (s16) (temp_v0_3->unk6 + 0x1100);
-    temp_v0_3->unk5 = (s8) arg2;
-    temp_v0_4 = temp_v1 + 4;
-    temp_v0_4->unk0 = 0xFF;
-    temp_v0_4->unk4 = 0xFF;
-    temp_v0_4->unk2 = (s16) temp_v1->unk6;
-    temp_v0_4->unk6 = (s16) temp_v1->unk6;
-    temp_v0_5 = temp_v1 + (3 * 4);
-    temp_v0_5->unk0 = 0xFF;
-    temp_v0_5->unk4 = 0xFF;
-    temp_v0_5->unk2 = (s16) temp_v1->unk6;
-    temp_v0_5->unk8 = 0xFF;
-    temp_v0_5->unk6 = (s16) temp_v1->unk6;
-    temp_v0_5->unkC = 0xFF;
-    temp_v0_5->unkA = (s16) temp_v1->unk6;
-    temp_v0_5->unkE = (s16) temp_v1->unk6;
-    sp38 = temp_v0_3;
-    func_80074AA8((GhostHeader *) &temp_v0_3[temp_v1->unk2], ghostCharacterId, ghostTime, ghostNodeCount, dest);
-    temp_v0 = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", &D_800E7778, sp38, sp24 + 0x100);
-    sp28 = temp_v0;
-    free_from_memory_pool(sp38);
-    return temp_v0;
-}
-#else
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074EB8.s")
-#endif
-
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_80075000.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_800753D8.s")
 GLOBAL_ASM("asm/non_matchings/controller_pak/func_800756D4.s")
 
-s32 get_si_device_status(s32 controllerIndex) {
+SIDeviceStatus get_si_device_status(s32 controllerIndex) {
     OSMesg unusedMsg;
     s32 ret;
     s32 bytes_not_used;
@@ -1143,7 +811,7 @@ void init_controller_paks(void) {
 GLOBAL_ASM("asm/non_matchings/controller_pak/init_controller_paks.s")
 #endif
 
-UNUSED s32 check_for_rumble_pak(s32 controllerIndex) {
+UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
     s32 ret;
 
     ret = get_si_device_status(controllerIndex);
@@ -1157,7 +825,7 @@ UNUSED s32 check_for_rumble_pak(s32 controllerIndex) {
 }
 
 //Inspects and repairs the Controller Pak's file system
-s32 repair_controller_pak(s32 controllerIndex) {
+SIDeviceStatus repair_controller_pak(s32 controllerIndex) {
     s32 ret;
     s32 status = get_si_device_status(controllerIndex);
     if (status == CONTROLLER_PAK_GOOD || status == CONTROLLER_PAK_INCONSISTENT) {
@@ -1177,7 +845,7 @@ s32 repair_controller_pak(s32 controllerIndex) {
 }
 
 //Reformat Controller Pak
-s32 reformat_controller_pak(s32 controllerIndex) {
+SIDeviceStatus reformat_controller_pak(s32 controllerIndex) {
     s32 ret;
     s32 status = get_si_device_status(controllerIndex);
     if (status == CONTROLLER_PAK_GOOD || status == CONTROLLER_PAK_INCONSISTENT || status == CONTROLLER_PAK_WITH_BAD_ID) {
@@ -1395,7 +1063,7 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
 //     s32 fileType;
 //     u8 game_name[PFS_FILE_NAME_LEN];
 // } fileStruct;
-s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNumber) {
+SIDeviceStatus get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNumber) {
     u32 gameCode;
     u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
     UNUSED s32 pad;
@@ -1435,7 +1103,7 @@ s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNum
     return CONTROLLER_PAK_BAD_DATA;
 }
 
-s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength) {
+SIDeviceStatus read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength) {
     s32 readResult = osPfsReadWriteFile(&pfs[controllerIndex], fileNum, PFS_READ, 0, dataLength, data);
 
     if (readResult == 0) {
@@ -1458,7 +1126,7 @@ s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s3
 }
 
 //If fileNumber -1, it creates a new file?
-s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize) {
+SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize) {
     s32 temp;
     u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
     UNUSED s32 temp2;
@@ -1533,7 +1201,7 @@ s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName,
 }
 
 //Get File size for given controller's Control Pak
-s32 get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
+SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
     OSPfsState state;
 
     *fileSize = 0;

@@ -19,18 +19,18 @@
 
 #define COMPANY_CODE 0x3459
 
-enum SIDeviceStatus {
+typedef enum {
     CONTROLLER_PAK_GOOD,
-	NO_CONTROLLER_PAK,
+    NO_CONTROLLER_PAK,
     CONTROLLER_PAK_INCONSISTENT,
-	CONTROLLER_PAK_WITH_BAD_ID,
-	CONTROLLER_PAK_FULL,
-	CONTROLLER_PAK_CHANGED,
-	UNK6, //Could be another way to mark as full according to tt_menu_loop
-	RUMBLE_PAK,
-	UNK8, // func_80074B34 Sets this
-	CONTROLLER_PAK_BAD_DATA,
-};
+    CONTROLLER_PAK_WITH_BAD_ID,
+    CONTROLLER_PAK_FULL,
+    CONTROLLER_PAK_CHANGED,
+    UNK6, //Could be another way to mark as full according to tt_menu_loop
+    RUMBLE_PAK,
+    UNK8, // func_80074B34 Sets this
+    CONTROLLER_PAK_BAD_DATA,
+} SIDeviceStatus;
 
 extern s8 *D_800DE440;
 extern u8 gN64FontCodes[68];
@@ -56,20 +56,20 @@ s32 write_eeprom_settings(u64 *eepromSettings);
 s16 calculate_ghost_header_checksum(GhostHeader *ghostHeader);
 void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 nodeCount, u8 *dest);
 s32 func_80074B1C(void);
-s32 get_si_device_status(s32 controllerIndex);
+SIDeviceStatus get_si_device_status(s32 controllerIndex);
 s32 start_reading_controller_data(s32 controllerIndex);
-s32 check_for_rumble_pak(s32 controllerIndex);
-s32 repair_controller_pak(s32 controllerIndex);
-s32 reformat_controller_pak(s32 controllerIndex);
+SIDeviceStatus check_for_rumble_pak(s32 controllerIndex);
+SIDeviceStatus repair_controller_pak(s32 controllerIndex);
+SIDeviceStatus reformat_controller_pak(s32 controllerIndex);
 s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes);
 void func_80076164(void);
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree);
 s32 delete_file(s32 controllerIndex, s32 fileNum);
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex);
-s32 get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNumber);
-s32 read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength);
-s32 write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize);
-s32 get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
+SIDeviceStatus get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNumber);
+SIDeviceStatus read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength);
+SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize);
+SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
 u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength);
 s32 get_file_type(s32 controllerIndex, s32 fileNum);
 
