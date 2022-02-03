@@ -6,17 +6,19 @@
 #include "PR/pfs.h"
 #include "PR/os_cont.h"
 
-#define GAMD 0x47414D44 // Game Data?
-#define TIMD 0x54494D44 // Time Data?
-#define GHSS 0x47485353 // Ghosts?
+#define GAMD 0x47414D44 // 'GAMD' ASCII - Game Data?
+#define TIMD 0x54494D44 // 'TIMD' ASCII - Time Data?
+#define GHSS 0x47485353 // 'GHSS' ASCII - Ghosts?
 
-#define NDYJ 0x4E44594A //NDYJ
-#define NDYP 0x4E445950 //NDYP
-#define NDYE 0x4E445945 //NDYE
+// These are the unique game codes assigned to DKR
+#define NDYJ 0x4E44594A // 'NDYJ' ASCII
+#define NDYP 0x4E445950 // 'NDYP' ASCII
+#define NDYE 0x4E445945 // 'NDYE' ASCII
 #define JPN_GAME_CODE NDYJ
 #define PAL_GAME_CODE NDYP
 #define NTSC_GAME_CODE NDYE
 
+// This is RARE's unique code
 #define COMPANY_CODE 0x3459
 
 typedef enum {

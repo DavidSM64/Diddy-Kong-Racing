@@ -6728,7 +6728,7 @@ s32 tt_menu_loop(void) {
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case CONTROLLER_PAK_FULL:
-                    case UNK6:
+                    case CONTROLLER_PAK_UNK6:
                         // CONTROLLER PAK FULL
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
                         D_801263A4 = D_800E09C4;
@@ -6744,7 +6744,7 @@ s32 tt_menu_loop(void) {
                     case CONTROLLER_PAK_INCONSISTENT:
                     case CONTROLLER_PAK_WITH_BAD_ID:
                     case CONTROLLER_PAK_CHANGED:
-                    case UNK8:
+                    case CONTROLLER_PAK_UNK8:
                     default:
                         // BAD CONTROLLER PAK
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.

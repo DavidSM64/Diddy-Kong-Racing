@@ -93,8 +93,6 @@ extern Matrix gOrthoMatrix;
 
 extern u8 D_800DD2F8[8];
 
-extern s32 sNoControllerPluggedIn;
-
 extern s16 gButtonMask;
 
 //TODO: Figure out where these functions live: unknown_070110?

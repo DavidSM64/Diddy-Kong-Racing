@@ -103,7 +103,7 @@ s32 *sUnkMiscAsset19; //Misc Asset 19
 u8 D_801241E4;
 u8 sRumblePaksPresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4. 1 if a rumble pak is present
 u8 D_801241E6;
-volatile u8 D_801241E7;
+u8 D_801241E7;
 s32 D_801241E8;
 s8 *D_801241EC;
 s32 D_801241F0;
@@ -759,6 +759,9 @@ s32 start_reading_controller_data(UNUSED s32 controllerIndex) {
 }
 
 #ifdef NON_MATCHING
+// For some reason it seems likely that D_801241E7 is volatile.
+// Still needs matching though to prove that.
+// volatile u8 D_801241E7;
 void init_controller_paks(void) {
     s32 controllerIndex;
     s32 ret;
