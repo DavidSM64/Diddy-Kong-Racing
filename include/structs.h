@@ -89,7 +89,7 @@ typedef struct TextureHeader {
   /* 0x1F */ u8 unk1F;
 } TextureHeader;
 
-// Probably not unqiue to the boot menu.
+// Probably not unique to the boot menu.
 typedef struct DrawTexture {
     TextureHeader *texture; // Pointer to texture to draw.
     s16 xOffset; // Offset from the center of the screen.
