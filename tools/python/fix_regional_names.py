@@ -31,7 +31,34 @@ def precheckForErrors(version):
         return None
     return symMapPath
 
-def filterSymMapText(symMapText)
+def filterSymMapText(symMapText):
+    newSymMapText = ''
+
+    lines = symMapText.split('\n')
+
+    state = 0 
+        # 0 = Looking for .main section
+        # 1 = Looking for file section
+        # 2 = Processing file section
+
+    for i in range(0, len(lines)):
+        line = lines[i]
+        if state == 0:
+            if line.startswith('.main'):
+                state = 1
+        elif state == 1:
+            if line.startswith(' build/'):
+                if '/lib/' not in line:
+                    state = 2
+        elif state == 2:
+            if line.startswith(' build/'):
+                if '/lib/' in line:
+                    state = 1
+                    continue
+            if line.startswith('/DISCARD/'):
+                break
+            newSymMapText += line + '\n'
+    return newSymMapText
 
 def getSymbolsFromMapText(symMapText):
     symbols = set()
