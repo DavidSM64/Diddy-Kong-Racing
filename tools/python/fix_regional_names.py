@@ -18,7 +18,7 @@ TERMINAL_COLOR_RESET = "\033[0m"
 REGIONAL_NAMES_JSON_PATH = 'tools/python/regional_names.json'
 
 # Note: All names MUST be lowercase
-diffMap = json.loads(FileUtil.readAllText(REGIONAL_NAMES_JSON_PATH))
+diffMap = json.loads(FileUtil.get_text_from_file(REGIONAL_NAMES_JSON_PATH))['diffMap']
 
 def precheckForErrors(version):
     versionBuildPath = 'build/' + version
@@ -31,8 +31,11 @@ def precheckForErrors(version):
         return None
     return symMapPath
 
+def filterSymMapText(symMapText)
+
 def getSymbolsFromMapText(symMapText):
     symbols = set()
+
 
     matches = re.finditer(REGEX_MAP_SYMBOL, symMapText, re.MULTILINE)
 
@@ -122,7 +125,7 @@ def convertName(convertTo, version):
     symMapPath = precheckForErrors(version)
     if symMapPath is None:
         return
-    symMapText = FileUtil.get_text_from_file(symMapPath)
+    symMapText = filterSymMapText(FileUtil.get_text_from_file(symMapPath))
     symbols = getSymbolsFromMapText(symMapText)
     symbolReplaces = filterOutSymbols(symbols, convertTo)
     validReplaces = validateReplaces(symbolReplaces)

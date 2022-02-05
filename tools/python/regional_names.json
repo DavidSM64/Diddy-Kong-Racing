@@ -1,5 +1,12 @@
-[
-    { "us": "color",  "uk": "colour" },
-    { "us": "gray",   "uk": "grey" },
-    { "us": "dialog", "uk": "dialogue" }
-]
+{
+    "note": "All names must be lower case!",
+    "diffMap": [
+        { "us": "color",      "uk": "colour" },
+        { "us": "gray",       "uk": "grey" },
+        { "us": "dialog",     "uk": "dialogue" },
+        { "us": "dialogs",     "uk": "dialogues" },
+        { "us": "initialize", "uk": "initialise" }
+    ]
+}
+
+
