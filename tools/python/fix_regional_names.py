@@ -63,7 +63,6 @@ def filterSymMapText(symMapText):
 def getSymbolsFromMapText(symMapText):
     symbols = set()
 
-
     matches = re.finditer(REGEX_MAP_SYMBOL, symMapText, re.MULTILINE)
 
     for matchNum, match in enumerate(matches, start=1):
@@ -71,9 +70,7 @@ def getSymbolsFromMapText(symMapText):
 
     return list(symbols)
 
-def getReplaceProperties(string, diffMapIndex, symbol, index, convertTo):
-    #print(string, symbol, index)
-    subsymbol = symbol[index:index+len(string)]
+def getReplaceProperties(diffMapIndex, subsymbol, convertTo):
     replaceWith = subsymbol
     if subsymbol.islower():
         replaceWith = diffMap[diffMapIndex][convertTo].lower()
@@ -87,31 +84,57 @@ def getReplaceProperties(string, diffMapIndex, symbol, index, convertTo):
         "replaceWith": replaceWith
     }
 
+def breakDownSymbol(symbolName):
+    form = 'unknown'
+
+    if symbolName.islower():
+        form = 'snakeLower'
+    elif symbolName.isupper():
+        form = 'snakeUpper'
+    elif symbolName[0].islower():
+        form = 'camelCase'
+    elif symbolName[0].isupper():
+        form = 'pascalCase'
+
+    if form == 'unknown':
+        return None
+
+    parts = []
+
+    if form == 'snakeLower' or form == 'snakeUpper':
+        parts = symbolName.split('_')
+    elif form == 'camelCase' or form == 'pascalCase':
+        start = 0
+        for i in range(1, len(symbolName)):
+            if symbolName[i].isupper():
+                parts.append(symbolName[start:i])
+                start = i
+        parts.append(symbolName[start:])
+
+    return parts
+
 def filterOutSymbols(symbols, convertTo):
+    print('Filtering out symbols. This may take a minute...')
+
     convertFrom = 'us' if (convertTo == 'uk') else 'uk'
 
     validSymbols = {}
 
     for symbol in symbols:
-        lowerSymbol = symbol.lower()
-        #for diff in diffMap:
+        symbolParts = breakDownSymbol(symbol)
+
+        if symbolParts is None:
+            # Symbol can't be processed, so just skip it.
+            continue
+
         for i in range(0, len(diffMap)):
-            #check = diff[convertFrom]
             check = diffMap[i][convertFrom]
-            if check in lowerSymbol:
-                checkIndex = lowerSymbol.index(check)
-
-                # Checks to make sure a short word did not sneak in.
-                try:
-                    if len(check) < len(diffMap[i][convertTo]) and lowerSymbol.index(diffMap[i][convertTo]) == checkIndex:
-                        continue
-                except:
-                    pass
-
-                if symbol not in validSymbols:
-                    validSymbols[symbol] = []
-
-                validSymbols[symbol].append(getReplaceProperties(check, i, symbol, checkIndex, convertTo))
+            for part in symbolParts:
+                lowerPart = part.lower()
+                if lowerPart == check:
+                    if symbol not in validSymbols:
+                        validSymbols[symbol] = []
+                    validSymbols[symbol].append(getReplaceProperties(i, part, convertTo))
 
     return validSymbols
 
