@@ -89,6 +89,9 @@ def filterOutSymbols(symbols, convertTo):
 def validateReplaces(symbolReplaces):
     validatedReplaces = []
 
+    if len(symbolReplaces) == 0:
+        return validatedReplaces
+
     print("Enter 'y' or nothing to accept change, 'n' to discard change, 'x' to abort")
 
     for symbol in symbolReplaces:
@@ -127,8 +130,12 @@ def convertName(convertTo, version):
     if validReplaces is None:
         print("Name conversion has been aborted. No changes were made.")
         return
+    if len(validReplaces) == 0:
+        print("No symbols can be converted. No changes were made.")
+        return
     for entry in validReplaces:
-        os.system('./replace.sh ' + entry["old"] + ' ' + entry["new"])
+        os.system('./rename.sh ' + entry["old"] + ' ' + entry["new"])
+    os.system('make clean')
     print(str(len(validReplaces)) + " symbols were replaced.")
 
 def main():
