@@ -1,0 +1,5 @@
+[
+    { "us": "color",  "uk": "colour" },
+    { "us": "gray",   "uk": "grey" },
+    { "us": "dialog", "uk": "dialogue" }
+]

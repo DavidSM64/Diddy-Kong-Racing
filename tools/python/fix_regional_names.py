@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import re
 import os
 
@@ -14,12 +15,10 @@ TERMINAL_COLOR_GREEN = "\033[32m"
 TERMINAL_COLOR_YELLOW = "\033[33m"
 TERMINAL_COLOR_RESET = "\033[0m"
 
+REGIONAL_NAMES_JSON_PATH = 'tools/python/regional_names.json'
+
 # Note: All names MUST be lowercase
-diffMap = [
-    { "us": "color",  "uk": "colour" },
-    { "us": "gray",   "uk": "grey" },
-    { "us": "dialog", "uk": "dialogue" },
-]
+diffMap = json.loads(FileUtil.readAllText(REGIONAL_NAMES_JSON_PATH))
 
 def precheckForErrors(version):
     versionBuildPath = 'build/' + version
