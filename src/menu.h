@@ -476,10 +476,6 @@ extern s32 D_800E0984;
 extern s32 D_800E0988;
 extern s32 D_800E098C;
 
-extern s16 D_800E0990[8];
-
-extern s16 D_800E09A0[8];
-
 extern s16 D_800E0A24[14];
 
 extern s16 D_800E0A40[8];
