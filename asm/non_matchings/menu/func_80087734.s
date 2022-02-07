@@ -224,7 +224,7 @@ glabel L800879BC
 .L80087A2C:
 /* 08862C 80087A2C 3C04800E */  lui   $a0, %hi(D_800DFAE0) # $a0, 0x800e
 /* 088630 80087A30 8C84FAE0 */  lw    $a0, %lo(D_800DFAE0)($a0)
-/* 088634 80087A34 0C01D771 */  jal   func_80075DC4
+/* 088634 80087A34 0C01D771 */  jal   reformat_controller_pak
 /* 088638 80087A38 AFA8001C */   sw    $t0, 0x1c($sp)
 /* 08863C 80087A3C 8FA8001C */  lw    $t0, 0x1c($sp)
 /* 088640 80087A40 24020004 */  li    $v0, 4
@@ -240,7 +240,7 @@ glabel L800879BC
 /* 088664 80087A64 AC206A18 */   sw    $zero, %lo(D_80126A18)($at)
 .L80087A68:
 /* 088668 80087A68 8C84FAE0 */  lw    $a0, %lo(D_800DFAE0)($a0)
-/* 08866C 80087A6C 0C01D74E */  jal   func_80075D38
+/* 08866C 80087A6C 0C01D74E */  jal   repair_controller_pak
 /* 088670 80087A70 AFA8001C */   sw    $t0, 0x1c($sp)
 /* 088674 80087A74 8FA8001C */  lw    $t0, 0x1c($sp)
 /* 088678 80087A78 24020004 */  li    $v0, 4

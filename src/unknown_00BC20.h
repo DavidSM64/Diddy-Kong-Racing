@@ -173,7 +173,7 @@ s32 func_8001B2E0();
 s32 func_8001B3AC(s32 arg0);
 s32 func_8001B640();
 s32 func_8001B650(void);
-s32 func_8001B738(s32 arg0);
+s32 func_8001B738(s32 controllerIndex);
 u8 func_8001B780();
 void func_8001B790(void);
 unknown8011AECC *func_8001BA00(s32 arg0);

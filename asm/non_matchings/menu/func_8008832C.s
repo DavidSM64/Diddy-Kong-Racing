@@ -2,23 +2,23 @@ glabel func_8008832C
 /* 088F2C 8008832C 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 088F30 80088330 AFB10008 */  sw    $s1, 8($sp)
 /* 088F34 80088334 3C078012 */  lui   $a3, %hi(D_80126BC8) # $a3, 0x8012
-/* 088F38 80088338 3C0E8012 */  lui   $t6, %hi(D_80126A34) # $t6, 0x8012
+/* 088F38 80088338 3C0E8012 */  lui   $t6, %hi(sControllerPakFatalErrorFound) # $t6, 0x8012
 /* 088F3C 8008833C 24E76BC8 */  addiu $a3, %lo(D_80126BC8) # addiu $a3, $a3, 0x6bc8
 /* 088F40 80088340 AFB2000C */  sw    $s2, 0xc($sp)
 /* 088F44 80088344 AFB00004 */  sw    $s0, 4($sp)
-/* 088F48 80088348 25CE6A34 */  addiu $t6, %lo(D_80126A34) # addiu $t6, $t6, 0x6a34
-/* 088F4C 8008834C 3C118012 */  lui   $s1, %hi(D_80126A3C) # $s1, 0x8012
-/* 088F50 80088350 3C0C8012 */  lui   $t4, %hi(D_80126A60) # $t4, 0x8012
-/* 088F54 80088354 3C0B8012 */  lui   $t3, %hi(D_80126A38) # $t3, 0x8012
+/* 088F48 80088348 25CE6A34 */  addiu $t6, %lo(sControllerPakFatalErrorFound) # addiu $t6, $t6, 0x6a34
+/* 088F4C 8008834C 3C118012 */  lui   $s1, %hi(sControllerPakBadData) # $s1, 0x8012
+/* 088F50 80088350 3C0C8012 */  lui   $t4, %hi(sControllerPakDataPresent) # $t4, 0x8012
+/* 088F54 80088354 3C0B8012 */  lui   $t3, %hi(sControllerPakNoFreeSpace) # $t3, 0x8012
 /* 088F58 80088358 3C09800E */  lui   $t1, %hi(gMenuText) # $t1, 0x800e
 /* 088F5C 8008835C 3C08800E */  lui   $t0, %hi(D_800DFCB4) # $t0, 0x800e
 /* 088F60 80088360 00001025 */  move  $v0, $zero
 /* 088F64 80088364 ACE00000 */  sw    $zero, ($a3)
 /* 088F68 80088368 2508FCB4 */  addiu $t0, %lo(D_800DFCB4) # addiu $t0, $t0, -0x34c
 /* 088F6C 8008836C 2529F4A0 */  addiu $t1, %lo(gMenuText) # addiu $t1, $t1, -0xb60
-/* 088F70 80088370 256B6A38 */  addiu $t3, %lo(D_80126A38) # addiu $t3, $t3, 0x6a38
-/* 088F74 80088374 258C6A60 */  addiu $t4, %lo(D_80126A60) # addiu $t4, $t4, 0x6a60
-/* 088F78 80088378 26316A3C */  addiu $s1, %lo(D_80126A3C) # addiu $s1, $s1, 0x6a3c
+/* 088F70 80088370 256B6A38 */  addiu $t3, %lo(sControllerPakNoFreeSpace) # addiu $t3, $t3, 0x6a38
+/* 088F74 80088374 258C6A60 */  addiu $t4, %lo(sControllerPakDataPresent) # addiu $t4, $t4, 0x6a60
+/* 088F78 80088378 26316A3C */  addiu $s1, %lo(sControllerPakBadData) # addiu $s1, $s1, 0x6a3c
 /* 088F7C 8008837C 000E2021 */  addu  $a0, $zero, $t6
 /* 088F80 80088380 24100002 */  li    $s0, 2
 /* 088F84 80088384 24120003 */  li    $s2, 3

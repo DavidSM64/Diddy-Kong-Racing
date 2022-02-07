@@ -1,4 +1,4 @@
-glabel func_80075B18
+glabel init_controller_paks
 /* 076718 80075B18 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 07671C 80075B1C AFBF003C */  sw    $ra, 0x3c($sp)
 /* 076720 80075B20 AFBE0038 */  sw    $fp, 0x38($sp)
@@ -9,15 +9,15 @@ glabel func_80075B18
 /* 076734 80075B34 AFB30024 */  sw    $s3, 0x24($sp)
 /* 076738 80075B38 AFB20020 */  sw    $s2, 0x20($sp)
 /* 07673C 80075B3C AFB1001C */  sw    $s1, 0x1c($sp)
-/* 076740 80075B40 0C01A840 */  jal   func_8006A100
+/* 076740 80075B40 0C01A840 */  jal   get_si_mesg_queue
 /* 076744 80075B44 AFB00018 */   sw    $s0, 0x18($sp)
-/* 076748 80075B48 3C148012 */  lui   $s4, %hi(D_80124010) # $s4, 0x8012
-/* 07674C 80075B4C 26944010 */  addiu $s4, %lo(D_80124010) # addiu $s4, $s4, 0x4010
+/* 076748 80075B48 3C148012 */  lui   $s4, %hi(sControllerMesgQueue) # $s4, 0x8012
+/* 07674C 80075B4C 26944010 */  addiu $s4, %lo(sControllerMesgQueue) # addiu $s4, $s4, 0x4010
 /* 076750 80075B50 AE820000 */  sw    $v0, ($s4)
 /* 076754 80075B54 0C0078A7 */  jal   get_misc_asset
 /* 076758 80075B58 24040013 */   li    $a0, 19
-/* 07675C 80075B5C 3C018012 */  lui   $at, %hi(D_801241E0) # $at, 0x8012
-/* 076760 80075B60 AC2241E0 */  sw    $v0, %lo(D_801241E0)($at)
+/* 07675C 80075B5C 3C018012 */  lui   $at, %hi(sUnkMiscAsset19) # $at, 0x8012
+/* 076760 80075B60 AC2241E0 */  sw    $v0, %lo(sUnkMiscAsset19)($at)
 /* 076764 80075B64 3C038012 */  lui   $v1, %hi(D_801241E7) # $v1, 0x8012
 /* 076768 80075B68 246341E7 */  addiu $v1, %lo(D_801241E7) # addiu $v1, $v1, 0x41e7
 /* 07676C 80075B6C 240F000F */  li    $t7, 15
@@ -31,11 +31,11 @@ glabel func_80075B18
 /* 07678C 80075B8C AC2041E8 */  sw    $zero, %lo(D_801241E8)($at)
 /* 076790 80075B90 3C01800E */  lui   $at, %hi(D_800DE48C) # $at, 0x800e
 /* 076794 80075B94 24190001 */  li    $t9, 1
-/* 076798 80075B98 3C158012 */  lui   $s5, %hi(D_801241E5) # $s5, 0x8012
-/* 07679C 80075B9C 3C16800E */  lui   $s6, %hi(D_800DE488) # $s6, 0x800e
+/* 076798 80075B98 3C158012 */  lui   $s5, %hi(sRumblePaksPresent) # $s5, 0x8012
+/* 07679C 80075B9C 3C16800E */  lui   $s6, %hi(sControllerPaksPresent) # $s6, 0x800e
 /* 0767A0 80075BA0 AC39E48C */  sw    $t9, %lo(D_800DE48C)($at)
-/* 0767A4 80075BA4 26D6E488 */  addiu $s6, %lo(D_800DE488) # addiu $s6, $s6, -0x1b78
-/* 0767A8 80075BA8 26B541E5 */  addiu $s5, %lo(D_801241E5) # addiu $s5, $s5, 0x41e5
+/* 0767A4 80075BA4 26D6E488 */  addiu $s6, %lo(sControllerPaksPresent) # addiu $s6, $s6, -0x1b78
+/* 0767A8 80075BA8 26B541E5 */  addiu $s5, %lo(sRumblePaksPresent) # addiu $s5, $s5, 0x41e5
 /* 0767AC 80075BAC 8E840000 */  lw    $a0, ($s4)
 /* 0767B0 80075BB0 A2A00000 */  sb    $zero, ($s5)
 /* 0767B4 80075BB4 A2C00000 */  sb    $zero, ($s6)
@@ -118,28 +118,3 @@ glabel func_80075B18
 /* 0768D4 80075CD4 8FBE0038 */  lw    $fp, 0x38($sp)
 /* 0768D8 80075CD8 03E00008 */  jr    $ra
 /* 0768DC 80075CDC 27BD0058 */   addiu $sp, $sp, 0x58
-
-/* 0768E0 80075CE0 27BDFFE0 */  addiu $sp, $sp, -0x20
-/* 0768E4 80075CE4 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0768E8 80075CE8 0C01D637 */  jal   func_800758DC
-/* 0768EC 80075CEC AFA40020 */   sw    $a0, 0x20($sp)
-/* 0768F0 80075CF0 8FA40020 */  lw    $a0, 0x20($sp)
-/* 0768F4 80075CF4 0C01D6BB */  jal   func_80075AEC
-/* 0768F8 80075CF8 AFA2001C */   sw    $v0, 0x1c($sp)
-/* 0768FC 80075CFC 8FA3001C */  lw    $v1, 0x1c($sp)
-/* 076900 80075D00 24010007 */  li    $at, 7
-/* 076904 80075D04 14610008 */  bne   $v1, $at, .L80075D28
-/* 076908 80075D08 3C028012 */   lui   $v0, %hi(D_801241E5) # $v0, 0x8012
-/* 07690C 80075D0C 8FAF0020 */  lw    $t7, 0x20($sp)
-/* 076910 80075D10 244241E5 */  addiu $v0, %lo(D_801241E5) # addiu $v0, $v0, 0x41e5
-/* 076914 80075D14 904E0000 */  lbu   $t6, ($v0)
-/* 076918 80075D18 24180001 */  li    $t8, 1
-/* 07691C 80075D1C 01F8C804 */  sllv  $t9, $t8, $t7
-/* 076920 80075D20 01D94025 */  or    $t0, $t6, $t9
-/* 076924 80075D24 A0480000 */  sb    $t0, ($v0)
-.L80075D28:
-/* 076928 80075D28 8FBF0014 */  lw    $ra, 0x14($sp)
-/* 07692C 80075D2C 27BD0020 */  addiu $sp, $sp, 0x20
-/* 076930 80075D30 03E00008 */  jr    $ra
-/* 076934 80075D34 00601025 */   move  $v0, $v1
-

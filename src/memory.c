@@ -30,7 +30,8 @@ const char D_800E7488[] = "Unable to record %d slots, colours overflowed table.\
 MemoryPool gMemoryPools[4];
 
 #ifndef _ALIGN16
-#define _ALIGN16(val) ((val)&0xFFFFFFF0) + 0x10
+#define _ALIGN16(a) (((u32) (a) & ~0xF) + 0x10)
+//#define _ALIGN16(val) ((val)&0xFFFFFFF0) + 0x10
 #endif
 
 s32 gNumberOfMemoryPools;
@@ -78,31 +79,39 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     return newPool;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
+//Match found in Dinosaur Planet, and it's *really* close, but not yet there.
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots) {
-    s32 i;
-    MemoryPool *pool;
     MemoryPoolSlot *firstSlot;
-    unk80070BE4_8_0 *temp3;
+    MemoryPool *pool;
+    s32 i;
+    s32 len;
 
-    pool = &gMemoryPools[++gNumberOfMemoryPools];
+    //The comma seperation seems to generate a better match
+    len = gNumberOfMemoryPools++, pool = &gMemoryPools[len];
+
+    len = numSlots * sizeof(MemoryPoolSlot);
     pool->maxNumSlots = numSlots;
     pool->curNumSlots = 0;
     pool->slots = slots;
     pool->size = poolSize;
 
+    firstSlot = slots;
+
     for (i = 0; i < pool->maxNumSlots; i++) {
-        slots[i].index = i;
+        firstSlot->index = i;
+        firstSlot++;
     }
 
-    firstSlot = pool->slots;
-    temp3 = (unk80070BE4_8_0 *)&slots[numSlots];
-    if ((s32)temp3 & 0xF) {
-        firstSlot->unk0 = (unk80070BE4_8_0 *)_ALIGN16((s32)temp3);
+    firstSlot = &pool->slots[0];
+    slots += numSlots;
+    if (((s32)slots & 0xF) != 0) {
+        firstSlot->data = _ALIGN16(slots);
     } else {
-        firstSlot->unk0 = temp3;
+        firstSlot->data = slots;
     }
-    firstSlot->size = poolSize - (numSlots * sizeof(MemoryPoolSlot));
+
+    firstSlot->size = poolSize - len;
     firstSlot->flags = 0;
     firstSlot->prevIndex = -1;
     firstSlot->nextIndex = -1;
@@ -170,7 +179,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 col
         if (phi_s0 != -1) {
             allocate_memory_pool_slot(memoryPoolIndex, phi_s0, size, TRUE, FALSE, colorTag);
             func_8006F53C(sp28);
-            return pool->slots[phi_s0].unk0;
+            return pool->slots[phi_s0].data;
         }
         func_8006F53C(sp28);
     }
@@ -209,16 +218,16 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
         while (s0 != -1) {
             curSlot = &slots[s0];
             if (curSlot->flags == 0) {
-                if ((address >= (u8 *)curSlot->unk0) && (((u8 *)curSlot->unk0 + curSlot->size) >= (address + size))) {
-                    if (address == (u8 *)curSlot->unk0) {
+                if ((address >= (u8 *)curSlot->data) && (((u8 *)curSlot->data + curSlot->size) >= (address + size))) {
+                    if (address == (u8 *)curSlot->data) {
                         allocate_memory_pool_slot(0, s0, size, 1, 0, colorTag);
                         func_8006F53C(sp38);
-                        return curSlot->unk0;
+                        return curSlot->data;
                     } else {
-                        s0 = allocate_memory_pool_slot(0, s0, address - (u8 *)curSlot->unk0, 0, 1, colorTag);
+                        s0 = allocate_memory_pool_slot(0, s0, address - (u8 *)curSlot->data, 0, 1, colorTag);
                         allocate_memory_pool_slot(0, s0, size, 1, 0, colorTag);
                         func_8006F53C(sp38);
-                        return slots[s0].unk0;
+                        return slots[s0].data;
                     }
                 }
             }
@@ -296,7 +305,7 @@ void free_slot_containing_address(u8 *address) {
     slots = gMemoryPools[poolIndex].slots;
     for (slotIndex = 0; slotIndex != -1; slotIndex = slot->nextIndex) {
         slot = &slots[slotIndex];
-        if (address == (u8 *)slot->unk0) {
+        if (address == (u8 *)slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
                 free_memory_pool_slot(poolIndex, slotIndex);
             }
@@ -354,7 +363,7 @@ s32 func_80071478(u8 *address) {
     slotIndex = 0;
     while (slotIndex != -1) {
         slot = slotIndex + pool->slots; // `slot = &pool->slots[slotIndex];` does not match.
-        if (address == (u8 *)slot->unk0) {
+        if (address == (u8 *)slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
                 slot->flags |= 2;
                 func_8006F53C(sp18);
@@ -378,7 +387,7 @@ s32 func_80071538(u8 *address) {
     slotIndex = 0;
     while (slotIndex != -1) {
         slot = slotIndex + pool->slots; // `slot = &pool->slots[slotIndex];` does not match.
-        if (address == (u8 *)slot->unk0) {
+        if (address == (u8 *)slot->data) {
             if (slot->flags & 2) {
                 slot->flags ^= 2;
                 func_8006F53C(sp18);
@@ -455,13 +464,14 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     }
 }
 
+#else
+GLOBAL_ASM("asm/non_matchings/memory/free_memory_pool_slot.s")
+#endif
+
 // Unused?
 MemoryPoolSlot *func_80071774(s32 poolIndex) {
     return gMemoryPools[poolIndex].slots;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/memory/free_memory_pool_slot.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colorTag) {
@@ -482,7 +492,7 @@ s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 
         newIndex = pool->slots[pool->curNumSlots].index;
         pool->curNumSlots++;
         newSlot = &pool->slots[newIndex];
-        newSlot->unk0 = ((u8 *)slot->unk0) + size;
+        newSlot->data = ((u8 *)slot->data) + size;
         newSlot->size = slotSize - size;
         newSlot->flags = newSlotIsTaken;
         futureIndex = slot->nextIndex;

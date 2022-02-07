@@ -168,7 +168,7 @@ glabel func_800B71B0
 /* 0B8018 800B7418 24C68EDC */  addiu $a2, %lo(D_800E8EDC) # addiu $a2, $a2, -0x7124
 /* 0B801C 800B741C 00002025 */  move  $a0, $zero
 /* 0B8020 800B7420 2405FFFF */  li    $a1, -1
-/* 0B8024 800B7424 0C01D9B5 */  jal   func_800766D4
+/* 0B8024 800B7424 0C01D9B5 */  jal   write_controller_pak_file
 /* 0B8028 800B7428 24E78EE4 */   addiu $a3, %lo(D_800E8EE4) # addiu $a3, $a3, -0x711c
 .L800B742C:
 /* 0B802C 800B742C 1000FFFF */  b     .L800B742C

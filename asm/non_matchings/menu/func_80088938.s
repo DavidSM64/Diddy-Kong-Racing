@@ -141,8 +141,8 @@ glabel func_80088938
 /* 089754 80088B54 0C03145A */  jal   render_dialogue_text
 /* 089758 80088B58 24060002 */   li    $a2, 2
 /* 08975C 80088B5C 8EF80000 */  lw    $t8, ($s7)
-/* 089760 80088B60 3C198012 */  lui   $t9, %hi(D_80126BB0) # $t9, 0x8012
-/* 089764 80088B64 8F396BB0 */  lw    $t9, %lo(D_80126BB0)($t9)
+/* 089760 80088B60 3C198012 */  lui   $t9, %hi(sCurrentControllerPakFreeSpace) # $t9, 0x8012
+/* 089764 80088B64 8F396BB0 */  lw    $t9, %lo(sCurrentControllerPakFreeSpace)($t9)
 /* 089768 80088B68 8F0701C8 */  lw    $a3, 0x1c8($t8)
 /* 08976C 80088B6C 24080004 */  li    $t0, 4
 /* 089770 80088B70 AFA80014 */  sw    $t0, 0x14($sp)
@@ -251,11 +251,11 @@ glabel func_80088938
 /* 0898FC 80088CFC 3C108012 */  lui   $s0, %hi(D_80126AA0) # $s0, 0x8012
 /* 089900 80088D00 01B11821 */  addu  $v1, $t5, $s1
 /* 089904 80088D04 00031080 */  sll   $v0, $v1, 2
-/* 089908 80088D08 3C138012 */  lui   $s3, %hi(D_80126B70) # $s3, 0x8012
+/* 089908 80088D08 3C138012 */  lui   $s3, %hi(sCurrentControllerPakAllFileSizes) # $s3, 0x8012
 /* 08990C 80088D0C 02028021 */  addu  $s0, $s0, $v0
 /* 089910 80088D10 02629821 */  addu  $s3, $s3, $v0
 /* 089914 80088D14 8E106AA0 */  lw    $s0, %lo(D_80126AA0)($s0)
-/* 089918 80088D18 8E736B70 */  lw    $s3, %lo(D_80126B70)($s3)
+/* 089918 80088D18 8E736B70 */  lw    $s3, %lo(sCurrentControllerPakAllFileSizes)($s3)
 /* 08991C 80088D1C 00000000 */  nop   
 .L80088D20:
 /* 089920 80088D20 246E0001 */  addiu $t6, $v1, 1

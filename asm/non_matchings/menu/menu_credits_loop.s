@@ -444,7 +444,7 @@ glabel menu_credits_loop
 /* 09C57C 8009B97C 0014C140 */  sll   $t8, $s4, 5
 /* 09C580 8009B980 03194821 */  addu  $t1, $t8, $t9
 # Setting D_800E1B50[1].source? Not sure why adding $t1 then
-/* 09C584 8009B984 3C01800E */  lui   $at, 0x800e
+/* 09C584 8009B984 3C01800E */  lui   $at, %hi(D_800E1B50+0x34)
 /* 09C588 8009B988 448A8000 */  mtc1  $t2, $f16
 /* 09C58C 8009B98C 00290821 */  addu  $at, $at, $t1
 /* 09C590 8009B990 AC201B84 */  sw    $zero, %lo(D_800E1B50+0x34)($at)

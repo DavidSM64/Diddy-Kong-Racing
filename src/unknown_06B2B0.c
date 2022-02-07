@@ -852,7 +852,7 @@ void init_game(void) {
     calc_and_alloc_heap_for_settings();
     func_8006EFDC();
     load_fonts();
-    func_80075B18();
+    init_controller_paks();
     func_80081218();
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
@@ -1857,6 +1857,7 @@ void func_8006ECC4(void) {
     D_800DD37C |= 0x100;
 }
 
+//Always called after updating a value in sEepromSettings
 void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
 }

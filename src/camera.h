@@ -93,8 +93,6 @@ extern Matrix gOrthoMatrix;
 
 extern u8 D_800DD2F8[8];
 
-extern s32 D_800DD300;
-
 extern s16 gButtonMask;
 
 //TODO: Figure out where these functions live: unknown_070110?
@@ -150,7 +148,7 @@ f32 func_80069DC8(f32 x, f32 y, f32 z);
 void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void func_80069F28(f32 arg0);
 UNUSED void debug_print_float_matrix_values(f32 *mtx);
-OSMesgQueue *func_8006A100(void);
+OSMesgQueue *get_si_mesg_queue(void);
 void initialise_player_ids(void);
 void assign_player_ids(s8 *activePlayers);
 u8 get_player_id(s32 player);

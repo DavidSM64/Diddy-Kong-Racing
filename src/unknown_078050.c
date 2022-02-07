@@ -377,4 +377,4 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg
 GLOBAL_ASM("asm/non_matchings/unknown_078050/render_textured_rectangle.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078D00.s")
+GLOBAL_ASM("asm/non_matchings/unknown_078050/render_texture_rectangle_scaled.s")

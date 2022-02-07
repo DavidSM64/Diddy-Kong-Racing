@@ -20,7 +20,7 @@ glabel func_80073C5C
 /* 0748A4 80073CA4 AFAE0010 */  sw    $t6, 0x10($sp)
 /* 0748A8 80073CA8 27A60100 */  addiu $a2, $sp, 0x100
 /* 0748AC 80073CAC 24050010 */  li    $a1, 16
-/* 0748B0 80073CB0 0C01D798 */  jal   func_80075E60
+/* 0748B0 80073CB0 0C01D798 */  jal   get_controller_pak_file_list
 /* 0748B4 80073CB4 27A700C0 */   addiu $a3, $sp, 0xc0
 /* 0748B8 80073CB8 1440004B */  bnez  $v0, .L80073DE8
 /* 0748BC 80073CBC AFA20060 */   sw    $v0, 0x60($sp)

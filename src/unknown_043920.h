@@ -222,7 +222,7 @@ s32 func_800599A8(void);
 s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4);
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime);
 void free_tt_ghost_data(void);
-s32 func_80059B7C(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4);
+s32 func_80059B7C(s32 controllerIndex, s32 arg1, s16 arg2, s16 arg3, s16 arg4);
 s16 func_80059E20(void);
 void func_8005A3B0(void);
 void func_8005A3C0(void);

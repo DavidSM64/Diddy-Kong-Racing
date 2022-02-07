@@ -193,6 +193,6 @@ void func_800C4170(s32 arg0); //Non Matching
 void func_800C422C(s32 arg0); //Non Matching
 void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, u8 *text, s32 alignmentFlags, f32 arg4); //Non Matching
 s32 func_800C4DA0(u8 *text, s32 x, s32 font); //Non Matching
-//void render_dialogue_text(s32 unk01, s16 posX, s16 posY, s32 text, s32 unk01, s32 unk02); //Non Matching
+void *render_dialogue_text(s32 arg0, s32 posX, s32 posY, char *text, s32 arg4, s32 arg5); //Non Matching
 
 #endif
