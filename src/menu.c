@@ -2852,7 +2852,7 @@ void func_80087EB8(void) {
 
 #ifdef NON_EQUIVALENT
 //Nearly complete
-s32 func_80087F14(s32 *controllerIndex, s32 arg1) {
+SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
     s32 ret;
     s32 j = 0;
     s32 k = 0;
@@ -3802,12 +3802,7 @@ void randomize_ai_racer_slots(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/randomize_ai_racer_slots.s")
 #endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_loop.s")
-#else
-
-void func_8008C128(void);
-
+#ifdef NON_EQUIVALENT
 s32 menu_character_select_loop(s32 updateRate) {
     s32 i;
     s32 phi_a0;
@@ -3886,7 +3881,8 @@ s32 menu_character_select_loop(s32 updateRate) {
     }
     return 0;
 }
-
+#else
+GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_loop.s")
 #endif
 
 void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
