@@ -218,7 +218,7 @@ u8 sControllerPakIssueNotFound[MAXCONTROLLERS]; //Flag to see if there's no know
 u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; //Flag to see if there's a fatal error for the given controller pak
 u8 sControllerPakNoFreeSpace[MAXCONTROLLERS]; //Flag to see if there's no free space for the given controller pak
 u8 sControllerPakBadData[MAXCONTROLLERS]; //Flag to see if there's bad data for the given controller pak
-s32 D_80126A40[8];
+u8 *D_80126A40[8]; //Menu Text
 u8 sControllerPakDataPresent[MAXCONTROLLERS]; //Flag to see if there's data present for the given controller pak? Not sure
 s32 D_80126A64;
 s32 D_80126A68;
@@ -861,14 +861,20 @@ s32 D_800E097C = 0;
 s32 D_800E0980 = 0;
 s32 D_800E0984 = 0;
 s32 D_800E0988 = 0;
-s32 D_800E098C = 0;
+s32 D_800E098C = 0; //Player ID or controllerIndex maybe?
 
-s16 D_800E0990[8] = {
-    0x4040, 0xFFA0, 0xFF40, 0x40A0, 0xD0C0, 0x20B0, 0x20C0, 0x40B0
+ColourRGBA D_800E0990[4] = {
+    {  64,  64, 255, 160 },
+    { 255,  64,  64, 160 },
+    { 208, 192,  32, 176 },
+    {  32, 192,  64, 176 },
 };
 
-s16 D_800E09A0[8] = {
-    0x00FF, 0x0080, 0x00FF, 0x0060, 0x0000, 0xFF60, 0x0000, 0xFF80
+ColourRGBA D_800E09A0[4] = {
+    {   0, 255,   0, 128 },
+    {   0, 255,   0,  96 },
+    {   0,   0, 255,  96 },
+    {   0,   0, 255, 128 },
 };
 
 char *D_800E09B0[5] = { 0, 0, 0, 0, 0 };
@@ -5106,7 +5112,93 @@ void func_80093A0C(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80093A40.s")
+
+#ifdef NON_EQUIVALENT
+// In the right ballpark, but not right.
+void func_80093D40(s32 arg0) {
+    s32 yOffset;
+    s32 i;
+    s32 xOffset;
+    s32 x;
+    ColourRGBA *colours;
+    s32 xPos;
+    s32 baseYPos;
+    s32 alpha;
+
+    i = 0;
+    xPos = 160;
+    if (D_800E0984 > 0) {
+        do {
+            //func_800C4DA0(text, x, font) x = diffX - x
+            x = func_800C4DA0(&D_80126A40[i], 0, 0) + 8;
+            if (xPos < x) {
+                xPos = x;
+            }
+            i++;
+        } while (i < D_800E0984);
+    }
+    if (osTvType == TV_TYPE_PAL) {
+        baseYPos = 132;
+    } else {
+        baseYPos = 120;
+    }
+    func_800C56D0(7);
+    assign_dialogue_box_id(7);
+    yOffset = (s32) ((D_800E0984 * 16) + 28) >> 1;
+    xOffset = xPos >> 1;
+    set_current_dialogue_box_coords(7, 160 - xOffset, baseYPos - yOffset, xOffset + 160, yOffset + baseYPos);
+    colours = &D_800E0990[get_player_id(D_800E098C)];
+    set_current_dialogue_background_colour(7, colours->r, colours->g, colours->b, colours->a);
+    set_dialogue_font(7, 0);
+    set_current_text_background_colour(7, 128, 128, 255, 0);
+    colours = &D_800E09A0[get_player_id(D_800E098C)];
+    set_current_text_colour(7, colours->r, colours->g, colours->b, colours->a, 255);
+    alpha = D_801263BC * 8;
+    if (alpha >= 256) {
+        alpha = 511 - alpha;
+    }
+    if (D_800E0988 != 0) {
+        if (gTrophyRaceWorldId != 0) {
+            i = yOffset - 26;
+            render_dialogue_text(7, POS_CENTRED, i + 8, gMenuText[130], 1, 12); // QUIT TROPHY RACE?
+        } else {
+            i = yOffset - 26;
+            render_dialogue_text(7, POS_CENTRED, i + 8, gMenuText[132], 1, 12); // QUIT GAME?
+        }
+        if (D_800E0988 == 1) {
+            set_current_text_colour(7, 255, 255, 255, alpha, 255);
+        } else {
+            set_current_text_colour(7, 255, 255, 255, 0, 255);
+        }
+        render_dialogue_text(7, POS_CENTRED, i + 28, gMenuText[134], 1, 12); // OK
+        if (D_800E0988 == 2) {
+            set_current_text_colour(7, 255, 255, 255, alpha, 255);
+        } else {
+            set_current_text_colour(7, 255, 255, 255, 0, 255);
+        }
+        render_dialogue_text(7, POS_CENTRED, i + 44, gMenuText[85], 1, 12); // CANCEL
+    } else {
+        render_dialogue_text(7, POS_CENTRED, 12, gMenuText[133], D_800E098C + 1, 12); // PAUSE OPTIONS
+        baseYPos = 32;
+        if (D_800E0984 > 0) {
+            do {
+                if (i == D_80126A68) {
+                    set_current_text_colour(7, 255, 255, 255, alpha, 255);
+                } else {
+                    set_current_text_colour(7, 255, 255, 255, 0, 255);
+                }
+                render_dialogue_text(7, POS_CENTRED, baseYPos, &D_80126A40[i], 1, 12);
+                i++;
+                baseYPos += 16;
+            } while (i < D_800E0984);
+        }
+    }
+    open_dialogue_box(7);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80093D40.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/menu/func_80094170.s")
 
 void n_alSynRemovePlayer(void) {
