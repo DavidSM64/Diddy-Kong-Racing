@@ -338,10 +338,15 @@ typedef struct TexCoords {
 
 /* Size: 16 bytes */
 typedef struct Triangle {
-/* 0x00 */ u8 drawBackface; // 0x40 = Draw backface, 0x00 = Cull backface
-/* 0x01 */ u8 vi0;          // First vertex index
-/* 0x02 */ u8 vi1;          // Second vertex index
-/* 0x03 */ u8 vi2;          // Third vertex index
+    union {
+        struct {
+            /* 0x00 */ u8 drawBackface; // 0x40 = Draw backface, 0x00 = Cull backface
+            /* 0x01 */ u8 vi0;          // First vertex index
+            /* 0x02 */ u8 vi1;          // Second vertex index
+            /* 0x03 */ u8 vi2;          // Third vertex index
+        };
+    /* 0x00 */ u32 vertices; // For convenience?
+    };
 /* 0x04 */ TexCoords uv0;   // Texture coordinates for the first vertex
 /* 0x08 */ TexCoords uv1;   // Texture coordinates for the second vertex
 /* 0x0C */ TexCoords uv2;   // Texture coordinates for the third vertex

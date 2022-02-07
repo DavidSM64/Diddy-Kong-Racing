@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "textures_sprites.h"
+#include "audio.h"
 
 /* Size: 0x2C Bytes */
 typedef struct unk800E2850 {
@@ -45,15 +46,21 @@ typedef struct unk800E2B4C {
 
 /* Size: 0x18 Bytes */
 typedef struct unk800E2C2C {
-    s32 unk0;
+    s16 unk0;
+    s16 unk2;
     s16 unk4;
     s16 unk6;
-    s32 unk8;
-    TextureHeader *unkC;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
+    s16 unk8;
+    s16 unkA;
+    TextureHeader *tex;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+    u8 unk15;
+    u8 unk16;
+    u8 unk17;
 } unk800E2C2C;
 
 typedef struct {
@@ -69,5 +76,12 @@ void func_800ACF60(Object *arg0);
 void func_800AD220(void);
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2);
 void func_800AD40C(void);
+void func_800ADBC8(s32);
+void func_800AD658(s32);
+void func_800ADAB8(s32);
+void func_800ADCBC(unk800E2C2C*, s32);
+
+f32 func_800707C4(s16);
+f32 func_800707F8(s16);
 
 #endif
