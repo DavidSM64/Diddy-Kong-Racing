@@ -306,7 +306,7 @@ void func_800AD4B8(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD658.s")
 
-void func_800ADAB8(UNUSED s32 arg0) {
+void func_800ADAB8(s32 arg0) {
     if (D_800E2C80 > 0) {
         D_800E2C80 -= arg0;
         if (D_800E2C80 <= 0) {
