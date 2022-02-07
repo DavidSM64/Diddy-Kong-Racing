@@ -6,6 +6,9 @@ import os
 
 from file_util import FileUtil
 
+# Make sure this gets run in the project's base directory.
+FileUtil.set_working_dir_to_project_base()
+
 # This script converts all symbol names between US and UK english.
 
 REGEX_MAP_SYMBOL = r"[ ]{16}0x[0-9A-Fa-f]{16}[ ]{16}([a-zA-Z_][a-zA-Z0-9_]*)\n"
@@ -17,7 +20,7 @@ TERMINAL_COLOR_RESET = "\033[0m"
 
 REGIONAL_NAMES_JSON_PATH = 'tools/python/regional_names.json'
 
-# Note: All names MUST be lowercase
+# Note: All words MUST be lowercase
 diffMap = json.loads(FileUtil.get_text_from_file(REGIONAL_NAMES_JSON_PATH))['diffMap']
 convertRegion = 'to_uk'
 
@@ -26,11 +29,7 @@ def precheckForErrors(version):
     if not FileUtil.does_file_exist(versionBuildPath):
         print('Error: "' + versionBuildPath + '" could not be found. You should have an OK build before running this script!')
         return None
-    symMapPath = versionBuildPath + '/dkr.map'
-    if not FileUtil.does_file_exist(symMapPath):
-        print('Error: "' + symMapPath + '" could not be found. Make sure this script is running from the root directory of the repo.')
-        return None
-    return symMapPath
+    return versionBuildPath + '/dkr.map'
 
 def filterSymMapText(symMapText):
     newSymMapText = ''
@@ -44,16 +43,13 @@ def filterSymMapText(symMapText):
 
     for i in range(0, len(lines)):
         line = lines[i]
-        if state == 0:
-            if line.startswith('.main'):
-                state = 1
+        if state == 0 and line.startswith('.main'):
+            state = 1
         elif state == 1:
-            if line.startswith(' build/'):
-                if '/lib/' not in line:
+            if line.startswith(' build/') and '/lib/' not in line:
                     state = 2
         elif state == 2:
-            if line.startswith(' build/'):
-                if '/lib/' in line:
+            if line.startswith(' build/') and '/lib/' in line:
                     state = 1
                     continue
             if line.startswith('/DISCARD/'):
@@ -124,7 +120,6 @@ def filterOutSymbols(symbols):
             # Symbol can't be processed, so just skip it.
             continue
 
-        #for i in range(0, len(diffMap)):
         for part in symbolParts:
             lowerPart = part.lower()
             if lowerPart in diffMap[convertRegion]:
@@ -143,7 +138,6 @@ def validateReplaces(symbolReplaces):
     print(TERMINAL_COLOR_YELLOW + "Enter 'y' or nothing to accept change, 'n' to discard change, 'x' to abort" + TERMINAL_COLOR_RESET)
 
     for symbol in symbolReplaces:
-        #entry = symbolReplaces[symbol][0]
         oldSymbol = symbol
         for entry in symbolReplaces[symbol]:
             oldWord = entry["subsymbol"]
@@ -201,3 +195,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
