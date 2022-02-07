@@ -940,7 +940,7 @@ glabel func_800A277C
 /* 0A40F0 800A34F0 00002025 */  move  $a0, $zero
 /* 0A40F4 800A34F4 00002825 */  move  $a1, $zero
 /* 0A40F8 800A34F8 00003025 */  move  $a2, $zero
-/* 0A40FC 800A34FC 0C0310E1 */  jal   set_text_color
+/* 0A40FC 800A34FC 0C0310E1 */  jal   set_text_colour
 /* 0A4100 800A3500 240700FF */   li    $a3, 255
 /* 0A4104 800A3504 3C108012 */  lui   $s0, %hi(D_8012718C) # $s0, 0x8012
 /* 0A4108 800A3508 3C118012 */  lui   $s1, %hi(D_80126D24) # $s1, 0x8012
@@ -998,7 +998,7 @@ glabel func_800A277C
 /* 0A41D8 800A35D8 90440010 */  lbu   $a0, 0x10($v0)
 /* 0A41DC 800A35DC 90450011 */  lbu   $a1, 0x11($v0)
 /* 0A41E0 800A35E0 90460012 */  lbu   $a2, 0x12($v0)
-/* 0A41E4 800A35E4 0C0310E1 */  jal   set_text_color
+/* 0A41E4 800A35E4 0C0310E1 */  jal   set_text_colour
 /* 0A41E8 800A35E8 AFAE0010 */   sw    $t6, 0x10($sp)
 /* 0A41EC 800A35EC 8E190000 */  lw    $t9, ($s0)
 /* 0A41F0 800A35F0 8E2B0000 */  lw    $t3, ($s1)

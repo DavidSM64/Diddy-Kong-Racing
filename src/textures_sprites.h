@@ -7,7 +7,7 @@
 #include "structs.h"
 #include "macros.h"
 
-extern u32 gTexColorTag;
+extern u32 gTexColourTag;
 extern s32 D_800DE7C4;
 
 /* Size: 8 bytes */

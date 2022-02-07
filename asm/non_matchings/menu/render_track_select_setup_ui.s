@@ -144,12 +144,12 @@ glabel render_track_select_setup_ui
 /* 091D2C 8009112C 240500C0 */  li    $a1, 192
 /* 091D30 80091130 240600FF */  li    $a2, 255
 /* 091D34 80091134 00003825 */  move  $a3, $zero
-/* 091D38 80091138 0C0310E1 */  jal   set_text_color
+/* 091D38 80091138 0C0310E1 */  jal   set_text_colour
 /* 091D3C 8009113C AFAB0010 */   sw    $t3, 0x10($sp)
 /* 091D40 80091140 00002025 */  move  $a0, $zero
 /* 091D44 80091144 00002825 */  move  $a1, $zero
 /* 091D48 80091148 00003025 */  move  $a2, $zero
-/* 091D4C 8009114C 0C0310F3 */  jal   set_text_background_color
+/* 091D4C 8009114C 0C0310F3 */  jal   set_text_background_colour
 /* 091D50 80091150 00003825 */   move  $a3, $zero
 /* 091D54 80091154 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
 /* 091D58 80091158 240C000C */  li    $t4, 12
@@ -267,7 +267,7 @@ glabel render_track_select_setup_ui
 /* 091EFC 800912FC AFAC0010 */  sw    $t4, 0x10($sp)
 /* 091F00 80091300 00002825 */  move  $a1, $zero
 /* 091F04 80091304 00003025 */  move  $a2, $zero
-/* 091F08 80091308 0C0310E1 */  jal   set_text_color
+/* 091F08 80091308 0C0310E1 */  jal   set_text_colour
 /* 091F0C 8009130C 240700FF */   li    $a3, 255
 /* 091F10 80091310 1000000C */  b     .L80091344
 /* 091F14 80091314 00000000 */   nop   
@@ -282,7 +282,7 @@ glabel render_track_select_setup_ui
 /* 091F30 80091330 8FCE0000 */  lw    $t6, ($fp)
 /* 091F34 80091334 240600FF */  li    $a2, 255
 /* 091F38 80091338 02A03825 */  move  $a3, $s5
-/* 091F3C 8009133C 0C0310E1 */  jal   set_text_color
+/* 091F3C 8009133C 0C0310E1 */  jal   set_text_colour
 /* 091F40 80091340 AFAE0010 */   sw    $t6, 0x10($sp)
 .L80091344:
 /* 091F44 80091344 3C0F800E */  lui   $t7, %hi(gMenuText) # $t7, 0x800e
@@ -319,7 +319,7 @@ glabel render_track_select_setup_ui
 /* 091FBC 800913BC 24050040 */  li    $a1, 64
 /* 091FC0 800913C0 24060040 */  li    $a2, 64
 /* 091FC4 800913C4 24070060 */  li    $a3, 96
-/* 091FC8 800913C8 0C0310E1 */  jal   set_text_color
+/* 091FC8 800913C8 0C0310E1 */  jal   set_text_colour
 /* 091FCC 800913CC AFAA0010 */   sw    $t2, 0x10($sp)
 /* 091FD0 800913D0 3C09800E */  lui   $t1, %hi(gMenuText) # $t1, 0x800e
 /* 091FD4 800913D4 8D29F4A0 */  lw    $t1, %lo(gMenuText)($t1)
@@ -350,7 +350,7 @@ glabel render_track_select_setup_ui
 /* 092038 80091438 24050080 */  li    $a1, 128
 /* 09203C 8009143C 240600FF */  li    $a2, 255
 /* 092040 80091440 24070060 */  li    $a3, 96
-/* 092044 80091444 0C0310E1 */  jal   set_text_color
+/* 092044 80091444 0C0310E1 */  jal   set_text_colour
 /* 092048 80091448 AFAE0010 */   sw    $t6, 0x10($sp)
 /* 09204C 8009144C 3C188012 */  lui   $t8, %hi(gPlayerSelectVehicle) # $t8, 0x8012
 /* 092050 80091450 831869C0 */  lb    $t8, %lo(gPlayerSelectVehicle)($t8)
@@ -964,7 +964,7 @@ glabel render_track_select_setup_ui
 /* 092950 80091D50 00002025 */  move  $a0, $zero
 /* 092954 80091D54 00002825 */  move  $a1, $zero
 /* 092958 80091D58 00003025 */  move  $a2, $zero
-/* 09295C 80091D5C 0C0310E1 */  jal   set_text_color
+/* 09295C 80091D5C 0C0310E1 */  jal   set_text_colour
 /* 092960 80091D60 240700FF */   li    $a3, 255
 /* 092964 80091D64 864F000E */  lh    $t7, 0xe($s2)
 /* 092968 80091D68 864E0002 */  lh    $t6, 2($s2)
@@ -989,7 +989,7 @@ glabel render_track_select_setup_ui
 /* 0929B4 80091DB4 240400FF */  li    $a0, 255
 /* 0929B8 80091DB8 240500FF */  li    $a1, 255
 /* 0929BC 80091DBC 240600FF */  li    $a2, 255
-/* 0929C0 80091DC0 0C0310E1 */  jal   set_text_color
+/* 0929C0 80091DC0 0C0310E1 */  jal   set_text_colour
 /* 0929C4 80091DC4 00003825 */   move  $a3, $zero
 /* 0929C8 80091DC8 8658000E */  lh    $t8, 0xe($s2)
 /* 0929CC 80091DCC 864F0002 */  lh    $t7, 2($s2)
@@ -1212,7 +1212,7 @@ glabel render_track_select_setup_ui
 /* 092CF4 800920F4 240500FF */  li    $a1, 255
 /* 092CF8 800920F8 240600FF */  li    $a2, 255
 /* 092CFC 800920FC 00003825 */  move  $a3, $zero
-/* 092D00 80092100 0C0310E1 */  jal   set_text_color
+/* 092D00 80092100 0C0310E1 */  jal   set_text_colour
 /* 092D04 80092104 AFAA0010 */   sw    $t2, 0x10($sp)
 /* 092D08 80092108 3C088012 */  lui   $t0, %hi(D_801269C8) # $t0, 0x8012
 /* 092D0C 8009210C 8D0869C8 */  lw    $t0, %lo(D_801269C8)($t0)

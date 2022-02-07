@@ -548,7 +548,7 @@ u8 *align4(u8 *address) {
 GLOBAL_ASM("asm/non_matchings/memory/func_800718A4.s")
 
 #ifdef NON_EQUIVALENT
-s32 get_memory_color_tag_count(s32 arg0) {
+s32 get_memory_colour_tag_count(s32 arg0) {
     s32 i, count;
     count = 0;
     for (i = 0; i < 80; i++) { // Issue with this loop
@@ -559,23 +559,23 @@ s32 get_memory_color_tag_count(s32 arg0) {
     return count;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/memory/get_memory_color_tag_count.s")
+GLOBAL_ASM("asm/non_matchings/memory/get_memory_colour_tag_count.s")
 #endif
 
 /**
  * Prints out the counts for each color tag in the main pool.
  * Unused. 
  */
-void print_memory_color_tags(void) {
-    stubbed_printf("RED %d\n", get_memory_color_tag_count(COLOR_TAG_RED));
-    stubbed_printf("GREEN %d\n", get_memory_color_tag_count(COLOR_TAG_GREEN));
-    stubbed_printf("BLUE %d\n", get_memory_color_tag_count(COLOR_TAG_BLUE));
-    stubbed_printf("YELLOW %d\n", get_memory_color_tag_count(COLOR_TAG_YELLOW));
-    stubbed_printf("MAGENTA %d\n", get_memory_color_tag_count(COLOR_TAG_MAGENTA));
-    stubbed_printf("CYAN %d\n", get_memory_color_tag_count(COLOR_TAG_CYAN));
-    stubbed_printf("WHITE %d\n", get_memory_color_tag_count(COLOR_TAG_WHITE));
-    stubbed_printf("GREY %d\n", get_memory_color_tag_count(COLOR_TAG_GRAY));
-    stubbed_printf("ORANGE %d\n\n", get_memory_color_tag_count(COLOR_TAG_ORANGE));
+void print_memory_colour_tags(void) {
+    stubbed_printf("RED %d\n", get_memory_colour_tag_count(COLOR_TAG_RED));
+    stubbed_printf("GREEN %d\n", get_memory_colour_tag_count(COLOR_TAG_GREEN));
+    stubbed_printf("BLUE %d\n", get_memory_colour_tag_count(COLOR_TAG_BLUE));
+    stubbed_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOR_TAG_YELLOW));
+    stubbed_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOR_TAG_MAGENTA));
+    stubbed_printf("CYAN %d\n", get_memory_colour_tag_count(COLOR_TAG_CYAN));
+    stubbed_printf("WHITE %d\n", get_memory_colour_tag_count(COLOR_TAG_WHITE));
+    stubbed_printf("GREY %d\n", get_memory_colour_tag_count(COLOR_TAG_GRAY));
+    stubbed_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOR_TAG_ORANGE));
 }
 
 /**
@@ -583,17 +583,17 @@ void print_memory_color_tags(void) {
  * Unused. 
  * See: https://tcrf.net/Diddy_Kong_Racing#Current_Colors
  */
-void render_memory_color_tags(void) {
-    set_render_printf_background_color(0, 0, 0, 128);
-    render_printf("RED %d\n", get_memory_color_tag_count(COLOR_TAG_RED));
-    render_printf("GREEN %d\n", get_memory_color_tag_count(COLOR_TAG_GREEN));
-    render_printf("BLUE %d\n", get_memory_color_tag_count(COLOR_TAG_BLUE));
-    render_printf("YELLOW %d\n", get_memory_color_tag_count(COLOR_TAG_YELLOW));
-    render_printf("MAGENTA %d\n", get_memory_color_tag_count(COLOR_TAG_MAGENTA));
-    render_printf("CYAN %d\n", get_memory_color_tag_count(COLOR_TAG_CYAN));
-    render_printf("WHITE %d\n", get_memory_color_tag_count(COLOR_TAG_WHITE));
-    render_printf("GREY %d\n", get_memory_color_tag_count(COLOR_TAG_GRAY));
-    render_printf("ORANGE %d\n\n", get_memory_color_tag_count(COLOR_TAG_ORANGE));
+void render_memory_colour_tags(void) {
+    set_render_printf_background_colour(0, 0, 0, 128);
+    render_printf("RED %d\n", get_memory_colour_tag_count(COLOR_TAG_RED));
+    render_printf("GREEN %d\n", get_memory_colour_tag_count(COLOR_TAG_GREEN));
+    render_printf("BLUE %d\n", get_memory_colour_tag_count(COLOR_TAG_BLUE));
+    render_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOR_TAG_YELLOW));
+    render_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOR_TAG_MAGENTA));
+    render_printf("CYAN %d\n", get_memory_colour_tag_count(COLOR_TAG_CYAN));
+    render_printf("WHITE %d\n", get_memory_colour_tag_count(COLOR_TAG_WHITE));
+    render_printf("GREY %d\n", get_memory_colour_tag_count(COLOR_TAG_GRAY));
+    render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOR_TAG_ORANGE));
 }
 
 #ifdef NON_EQUIVALENT
