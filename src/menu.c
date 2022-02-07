@@ -3007,26 +3007,19 @@ void menu_boot_init(void) {
     D_80126C18 = 0; // D_80126C18 is a timer for the boot screen, counts up to 0x8C frames.
 }
 
-#ifdef NON_EQUIVALENT
 s32 menu_boot_loop(s32 arg0) {
-    // arg0 = sp30
-    s32 out; // sp2C
-    s32 y;   // sp28
-    // ra = sp24
+    s32 out;
+    s32 temp;
+    s32 y;
 
     out = 0;
 
-    // Regalloc issue.
-    // How do you make this not use a3 without introducing another local variable?
     y = 120;
     if (osTvType == TV_TYPE_PAL) {
         y = 132;
     }
-
-    // You can make it use the correct register if you add in a temp variable like:
-    // temp = y;
-    // Then replace all the `y` instances below with `temp`.
-    // However, this makes the stack too big. There is no room for another local variable.
+    
+    temp = y;
 
     switch (D_80126C20) {
         case 0:
@@ -3051,28 +3044,25 @@ s32 menu_boot_loop(s32 arg0) {
                 D_80126C20 = 2;
             }
             if (D_80126C18 >= 129) {
-                y = 300;
+                temp = 300;
             }
             break;
         case 2:
             if (gMenuDelay && func_800C018C() == 0) {
                 func_800C01D8(&sMenuTransitionFadeInFast);
             }
-            y = 300;
+            temp = 300;
             out = func_800890AC(arg0);
             break;
     }
 
-    if (y < 300) {
-        render_textured_rectangle(&D_801263A0, &sGameTitleTileOffsets, 160, y, 255, 255, 255, 255);
+    if (temp < 300) {
+        render_textured_rectangle(&D_801263A0, &sGameTitleTileOffsets, 160, temp, 255, 255, 255, 255);
         func_8007B3D0(&D_801263A0);
     }
 
     return out;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/MenuBootLoop.s")
-#endif
 
 void func_800887C4(void) {
     func_8009C4A8((s16 *)sGameTitleTileTextures);
