@@ -19,6 +19,7 @@ REGIONAL_NAMES_JSON_PATH = 'tools/python/regional_names.json'
 
 # Note: All names MUST be lowercase
 diffMap = json.loads(FileUtil.get_text_from_file(REGIONAL_NAMES_JSON_PATH))['diffMap']
+convertRegion = 'to_uk'
 
 def precheckForErrors(version):
     versionBuildPath = 'build/' + version
@@ -70,14 +71,14 @@ def getSymbolsFromMapText(symMapText):
 
     return list(symbols)
 
-def getReplaceProperties(diffMapIndex, subsymbol, convertTo):
+def getReplaceProperties(subsymbol, convertTo):
     replaceWith = subsymbol
     if subsymbol.islower():
-        replaceWith = diffMap[diffMapIndex][convertTo].lower()
+        replaceWith = convertTo.lower()
     elif subsymbol.isupper():
-        replaceWith = diffMap[diffMapIndex][convertTo].upper()
+        replaceWith = convertTo.upper()
     elif subsymbol.istitle():
-        replaceWith = diffMap[diffMapIndex][convertTo].title()
+        replaceWith = convertTo.title()
 
     return {
         "subsymbol": subsymbol,
@@ -113,11 +114,7 @@ def breakDownSymbol(symbolName):
 
     return parts
 
-def filterOutSymbols(symbols, convertTo):
-    print('Filtering out symbols. This may take a minute...')
-
-    convertFrom = 'us' if (convertTo == 'uk') else 'uk'
-
+def filterOutSymbols(symbols):
     validSymbols = {}
 
     for symbol in symbols:
@@ -127,14 +124,13 @@ def filterOutSymbols(symbols, convertTo):
             # Symbol can't be processed, so just skip it.
             continue
 
-        for i in range(0, len(diffMap)):
-            check = diffMap[i][convertFrom]
-            for part in symbolParts:
-                lowerPart = part.lower()
-                if lowerPart == check:
-                    if symbol not in validSymbols:
-                        validSymbols[symbol] = []
-                    validSymbols[symbol].append(getReplaceProperties(i, part, convertTo))
+        #for i in range(0, len(diffMap)):
+        for part in symbolParts:
+            lowerPart = part.lower()
+            if lowerPart in diffMap[convertRegion]:
+                if symbol not in validSymbols:
+                    validSymbols[symbol] = []
+                validSymbols[symbol].append(getReplaceProperties(part, diffMap[convertRegion][lowerPart]))
 
     return validSymbols
 
@@ -144,7 +140,7 @@ def validateReplaces(symbolReplaces):
     if len(symbolReplaces) == 0:
         return validatedReplaces
 
-    print("Enter 'y' or nothing to accept change, 'n' to discard change, 'x' to abort")
+    print(TERMINAL_COLOR_YELLOW + "Enter 'y' or nothing to accept change, 'n' to discard change, 'x' to abort" + TERMINAL_COLOR_RESET)
 
     for symbol in symbolReplaces:
         #entry = symbolReplaces[symbol][0]
@@ -169,15 +165,13 @@ def validateReplaces(symbolReplaces):
         
     return validatedReplaces 
 
-def convertName(convertTo, version):
-    #print("Parameters: " + convertTo + ", " + version)
-    print(TERMINAL_COLOR_YELLOW + "Converting to " + convertTo + " english; DKR version: " + version + TERMINAL_COLOR_RESET)
+def convertName(version):
     symMapPath = precheckForErrors(version)
     if symMapPath is None:
         return
     symMapText = filterSymMapText(FileUtil.get_text_from_file(symMapPath))
     symbols = getSymbolsFromMapText(symMapText)
-    symbolReplaces = filterOutSymbols(symbols, convertTo)
+    symbolReplaces = filterOutSymbols(symbols)
     validReplaces = validateReplaces(symbolReplaces)
     if validReplaces is None:
         print("Name conversion has been aborted. No changes were made.")
@@ -191,12 +185,19 @@ def convertName(convertTo, version):
     print(str(len(validReplaces)) + " symbols were replaced.")
 
 def main():
+    global convertRegion
     parser = argparse.ArgumentParser(description="Converts all symbol names between US and UK naming.")
     parser.add_argument("-c", "--convertTo", help="Either 'uk' or 'us'", choices=['uk', 'us'], default='uk')
     parser.add_argument("-v", "--version", help="DKR Version", 
         choices=['us_1.0', 'us_1.1', 'eu_1.0', 'eu_1.1', 'jp'], default='us_1.0')
     args = parser.parse_args()
-    convertName(args.convertTo, args.version)
+
+    if args.convertTo == 'uk':
+        convertRegion = 'to_uk'
+    else:
+        convertRegion = 'to_us'
+
+    convertName(args.version)
 
 if __name__ == "__main__":
     main()
