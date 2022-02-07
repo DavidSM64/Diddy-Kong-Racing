@@ -99,9 +99,9 @@ glabel func_80087F14
 /* 088C78 80088078 24020001 */   li    $v0, 1
 .L8008807C:
 /* 088C7C 8008807C 8FB90090 */  lw    $t9, 0x90($sp)
-/* 088C80 80088080 3C068012 */  lui   $a2, %hi(D_80126AE0) # $a2, 0x8012
+/* 088C80 80088080 3C068012 */  lui   $a2, %hi(sCurrentControllerPakAllFileNames) # $a2, 0x8012
 /* 088C84 80088084 8F220000 */  lw    $v0, ($t9)
-/* 088C88 80088088 24C66AE0 */  addiu $a2, %lo(D_80126AE0) # addiu $a2, $a2, 0x6ae0
+/* 088C88 80088088 24C66AE0 */  addiu $a2, %lo(sCurrentControllerPakAllFileNames) # addiu $a2, $a2, 0x6ae0
 /* 088C8C 8008808C 0441000F */  bgez  $v0, .L800880CC
 /* 088C90 80088090 00408825 */   move  $s1, $v0
 /* 088C94 80088094 3C0E8012 */  lui   $t6, %hi(sControllerPakIssueNotFound) # $t6, 0x8012
@@ -168,22 +168,22 @@ glabel func_80087F14
 /* 088D5C 8008815C 3C198012 */  lui   $t9, %hi(sCurrentControllerPakAllFileTypes) # $t9, 0x8012
 /* 088D60 80088160 27396B60 */  addiu $t9, %lo(sCurrentControllerPakAllFileTypes) # addiu $t9, $t9, 0x6b60
 /* 088D64 80088164 27186B70 */  addiu $t8, %lo(sCurrentControllerPakAllFileSizes) # addiu $t8, $t8, 0x6b70
-/* 088D68 80088168 3C078012 */  lui   $a3, %hi(D_80126B20) # $a3, 0x8012
+/* 088D68 80088168 3C078012 */  lui   $a3, %hi(sCurrentControllerPakAllFileExtensions) # $a3, 0x8012
 /* 088D6C 8008816C ADF10000 */  sw    $s1, ($t7)
 /* 088D70 80088170 AFB90014 */  sw    $t9, 0x14($sp)
 /* 088D74 80088174 AFB80010 */  sw    $t8, 0x10($sp)
-/* 088D78 80088178 24E76B20 */  addiu $a3, %lo(D_80126B20) # addiu $a3, $a3, 0x6b20
+/* 088D78 80088178 24E76B20 */  addiu $a3, %lo(sCurrentControllerPakAllFileExtensions) # addiu $a3, $a3, 0x6b20
 /* 088D7C 8008817C 0C01D798 */  jal   get_controller_pak_file_list
 /* 088D80 80088180 02202025 */   move  $a0, $s1
 /* 088D84 80088184 1440005C */  bnez  $v0, .L800882F8
 /* 088D88 80088188 00405025 */   move  $t2, $v0
 /* 088D8C 8008818C 3C098012 */  lui   $t1, %hi(sCurrentControllerPakAllFileSizes) # $t1, 0x8012
-/* 088D90 80088190 3C088012 */  lui   $t0, %hi(D_80126AE0) # $t0, 0x8012
+/* 088D90 80088190 3C088012 */  lui   $t0, %hi(sCurrentControllerPakAllFileNames) # $t0, 0x8012
 /* 088D94 80088194 3C058012 */  lui   $a1, %hi(D_80126AA0) # $a1, 0x8012
-/* 088D98 80088198 3C1F8012 */  lui   $ra, %hi(D_80126AE0) # $ra, 0x8012
-/* 088D9C 8008819C 27FF6AE0 */  addiu $ra, %lo(D_80126AE0) # addiu $ra, $ra, 0x6ae0
+/* 088D98 80088198 3C1F8012 */  lui   $ra, %hi(sCurrentControllerPakAllFileNames) # $ra, 0x8012
+/* 088D9C 8008819C 27FF6AE0 */  addiu $ra, %lo(sCurrentControllerPakAllFileNames) # addiu $ra, $ra, 0x6ae0
 /* 088DA0 800881A0 24A56AA0 */  addiu $a1, %lo(D_80126AA0) # addiu $a1, $a1, 0x6aa0
-/* 088DA4 800881A4 25086AE0 */  addiu $t0, %lo(D_80126AE0) # addiu $t0, $t0, 0x6ae0
+/* 088DA4 800881A4 25086AE0 */  addiu $t0, %lo(sCurrentControllerPakAllFileNames) # addiu $t0, $t0, 0x6ae0
 /* 088DA8 800881A8 25296B70 */  addiu $t1, %lo(sCurrentControllerPakAllFileSizes) # addiu $t1, $t1, 0x6b70
 /* 088DAC 800881AC 00005825 */  move  $t3, $zero
 /* 088DB0 800881B0 240D002D */  li    $t5, 45
@@ -196,8 +196,8 @@ glabel func_80087F14
 /* 088DC8 800881C8 10E00030 */  beqz  $a3, .L8008828C
 /* 088DCC 800881CC 00002025 */   move  $a0, $zero
 /* 088DD0 800881D0 90F90000 */  lbu   $t9, ($a3)
-/* 088DD4 800881D4 3C188012 */  lui   $t8, %hi(D_80126B20) # $t8, 0x8012
-/* 088DD8 800881D8 27186B20 */  addiu $t8, %lo(D_80126B20) # addiu $t8, $t8, 0x6b20
+/* 088DD4 800881D4 3C188012 */  lui   $t8, %hi(sCurrentControllerPakAllFileExtensions) # $t8, 0x8012
+/* 088DD8 800881D8 27186B20 */  addiu $t8, %lo(sCurrentControllerPakAllFileExtensions) # addiu $t8, $t8, 0x6b20
 /* 088DDC 800881DC 00001025 */  move  $v0, $zero
 /* 088DE0 800881E0 1320000D */  beqz  $t9, .L80088218
 /* 088DE4 800881E4 01783021 */   addu  $a2, $t3, $t8

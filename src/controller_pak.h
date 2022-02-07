@@ -63,7 +63,7 @@ s32 start_reading_controller_data(s32 controllerIndex);
 SIDeviceStatus check_for_rumble_pak(s32 controllerIndex);
 SIDeviceStatus repair_controller_pak(s32 controllerIndex);
 SIDeviceStatus reformat_controller_pak(s32 controllerIndex);
-s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes);
+s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes);
 void func_80076164(void);
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree);
 s32 delete_file(s32 controllerIndex, s32 fileNum);

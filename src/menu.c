@@ -232,9 +232,9 @@ s32 D_80126A90;
 s32 D_80126A94;
 s32 D_80126A98;
 s32 D_80126A9C;
-char *D_80126AA0[16]; //Text to render
-char *D_80126AE0[16]; //Something from all files on controller pak. Possible font characters.
-char *D_80126B20[16]; //Something from all files on controller pak  Possible font characters.
+u8 *D_80126AA0[16]; //Text to render
+u8 *sCurrentControllerPakAllFileNames[16]; //Every file name on the controller pak
+u8 *sCurrentControllerPakAllFileExtensions[16]; //Every file extension on the controller pak
 u8  sCurrentControllerPakAllFileTypes[16]; //File type of all files on controller pak
 u32 sCurrentControllerPakAllFileSizes[16]; //File size of all files on controller pak
 u32 sCurrentControllerPakFreeSpace; //Space available in current controller pak
@@ -2872,7 +2872,7 @@ s32 func_80087F14(s32 *controllerIndex, s32 arg1) {
         sControllerPakBadData[i] = 0;
         ret = get_free_space(i, &bytesFree, &notesFree);
         pakStatus = ret & 0xFF; //Upper 2 bits are controller index
-        if (ret == 0) {
+        if (ret == CONTROLLER_PAK_GOOD) {
             sControllerPakIssueNotFound[i] = 1;
             if (bytesFree == 0 || notesFree == 0) {
                 sControllerPakNoFreeSpace[i] = 1;
@@ -2884,17 +2884,17 @@ s32 func_80087F14(s32 *controllerIndex, s32 arg1) {
         } else {
             sControllerPakIssueNotFound[i] = 0;
             //Bad data
-            if (pakStatus == 9) {
+            if (pakStatus == CONTROLLER_PAK_BAD_DATA) {
                 sControllerPakBadData[i] = 1;
                 pakStatusError9++;
             }
             //Error inconsistent
-            if (pakStatus == 2) {
+            if (pakStatus == CONTROLLER_PAK_INCONSISTENT) {
                 //Repair file system
                 repair_controller_pak(i);
             }
             //fatal error
-            if (pakStatus == 3) {
+            if (pakStatus == CONTROLLER_PAK_WITH_BAD_ID) {
                 sControllerPakFatalErrorFound[i] = 1;
                 pakStatusError3++;
             }
@@ -2904,7 +2904,7 @@ s32 func_80087F14(s32 *controllerIndex, s32 arg1) {
         || (pakStatusError3  != 0) 
         || (pakStatusErrorNoFreeSpace != 0) 
         || (pakStatusError9 != 0)) {
-        return 1; // Return unsuccessfully?
+        return NO_CONTROLLER_PAK; // Return unsuccessfully?
     }
     
     controllerIndexVal = *controllerIndex;
@@ -2941,25 +2941,25 @@ s32 func_80087F14(s32 *controllerIndex, s32 arg1) {
     }
     
     *controllerIndex = controllerIndexVal;
-    ret = get_controller_pak_file_list(controllerIndexVal, 16, &D_80126AE0, &D_80126B20, &sCurrentControllerPakAllFileSizes, &sCurrentControllerPakAllFileTypes);
+    ret = get_controller_pak_file_list(controllerIndexVal, 16, &sCurrentControllerPakAllFileNames, &sCurrentControllerPakAllFileExtensions, &sCurrentControllerPakAllFileSizes, &sCurrentControllerPakAllFileTypes);
 
-    if (ret == 0) {
+    if (ret == CONTROLLER_PAK_GOOD) {
         i = 0;
         j = 0;
         do {
             sCurrentControllerPakAllFileSizes[i] = sCurrentControllerPakAllFileSizes[i] / 256;
-            if (D_80126AE0[i] != 0) {
+            if (sCurrentControllerPakAllFileNames[i] != 0) {
                 k = 0;
-                for (; D_80126AE0[i][k] != 0; j++, k++) {
-                    D_80126AA0[i][j] = D_80126AE0[i][k];
+                for (; sCurrentControllerPakAllFileNames[i][k] != 0; j++, k++) {
+                    D_80126AA0[i][j] = sCurrentControllerPakAllFileNames[i][k];
                 }
                 
-                if ((D_80126B20[i] != 0) && (*D_80126B20[i] != 0)) {
+                if ((sCurrentControllerPakAllFileExtensions[i] != 0) && (*sCurrentControllerPakAllFileExtensions[i] != 0)) {
                     D_80126AA0[i][j] = '.';
                     j++;
                     k = 0;
-                    for (; D_80126B20[i][k] != 0; j++, k++) {
-                        D_80126AA0[i][j] = D_80126B20[i][k];
+                    for (; sCurrentControllerPakAllFileExtensions[i][k] != 0; j++, k++) {
+                        D_80126AA0[i][j] = sCurrentControllerPakAllFileExtensions[i][k];
                     }
                 }
             }
@@ -2969,7 +2969,7 @@ s32 func_80087F14(s32 *controllerIndex, s32 arg1) {
             }
             i++;
             D_80126AA0[i - 1][j] = 0;
-        } while (&D_80126AA0 != &D_80126AE0);
+        } while (&D_80126AA0 != &sCurrentControllerPakAllFileNames);
 
         func_80076164(); //Free D_800DE440 from memory
         get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL); //Get Available Space in Controller Pak

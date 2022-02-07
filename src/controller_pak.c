@@ -867,10 +867,10 @@ SIDeviceStatus reformat_controller_pak(s32 controllerIndex) {
     return ret;
 }
 
-s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes) {
+s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes) {
     OSPfsState state;
     s32 ret;
-    s32 max_files;
+    s32 maxNumOfFilesOnCpak;
     s32 files_used;
     s8 *temp_D_800DE440;
     s32 i;
@@ -882,7 +882,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, 
         return (controllerIndex << 30) | ret;
     }
 
-    if (osPfsNumFiles(&pfs[controllerIndex], &max_files, &files_used) != 0) {
+    if (osPfsNumFiles(&pfs[controllerIndex], &maxNumOfFilesOnCpak, &files_used) != 0) {
         start_reading_controller_data(controllerIndex);
         return (controllerIndex << 30) | CONTROLLER_PAK_BAD_DATA;
     }
@@ -895,21 +895,21 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, 
         gameCode = NTSC_GAME_CODE;
     }
     
-    if (arg1 < max_files) {
-        max_files = arg1;
+    if (maxNumOfFilesToGet < maxNumOfFilesOnCpak) {
+        maxNumOfFilesOnCpak = maxNumOfFilesToGet;
     }
     
     if (D_800DE440 != NULL) {
         free_from_memory_pool(D_800DE440);
     }
     
-    files_used = max_files * 24;
+    files_used = maxNumOfFilesOnCpak * 24;
     D_800DE440 = allocate_from_main_pool_safe(files_used, COLOR_TAG_BLACK);
     bzero(D_800DE440, files_used);
     temp_D_800DE440 = D_800DE440;
     
     //TODO: There's probably an unidentified struct here
-    for (i = 0; i < max_files; i++) {
+    for (i = 0; i < maxNumOfFilesOnCpak; i++) {
         fileNames[i] = (u8 *) temp_D_800DE440;
         temp_D_800DE440 += 0x12;
         fileExtensions[i] = (u8 *) temp_D_800DE440;
@@ -918,7 +918,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, 
         temp_D_800DE440 += 6;
     }
     
-    while (i < arg1) {
+    while (i < maxNumOfFilesToGet) {
         fileExtensions[i] = 0;
         fileNames[i] = 0;
         fileSizes[i] = 0;
@@ -926,7 +926,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 arg1, u8 **fileNames, 
         i++;
     }
     
-    for (i = 0; i < max_files; i++) {
+    for (i = 0; i < maxNumOfFilesOnCpak; i++) {
         ret = osPfsFileState(&pfs[controllerIndex], i, &state);
         if (ret == PFS_ERR_INVALID) {
             fileNames[i] = 0;
