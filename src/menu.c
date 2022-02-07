@@ -3802,7 +3802,6 @@ void randomize_ai_racer_slots(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/randomize_ai_racer_slots.s")
 #endif
 
-#ifdef NON_EQUIVALENT
 s32 menu_character_select_loop(s32 updateRate) {
     s32 i;
     s32 phi_a0;
@@ -3814,16 +3813,14 @@ s32 menu_character_select_loop(s32 updateRate) {
     func_8008E4EC();
 
     for (i = 0; i < 4; i++) {
-        if (1 == D_801263DC[i]) {
+        if (D_801263DC[i] == 1) {
             D_801263DC[i] = 2;
         }
     }
     gIgnorePlayerInput = 0;
     if (gMenuDelay == 0) {
-        // Issue: this loop unrolls weirdly.
-        for (i = 0; i < 4; i++) {
-            activePlayers[i] = gActivePlayersArray[i];
-        }
+        // THIS MUST BE ON ONE LINE!
+        for (i = 0; i < 4; i++) { activePlayers[i] = gActivePlayersArray[i]; }
         func_8008B358();
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers) {
             func_8008B4C8(); // Cancel/Confirm selected character?
@@ -3833,7 +3830,7 @@ s32 menu_character_select_loop(s32 updateRate) {
         return 0; // This return needs to be here.
     } else if (gMenuDelay > 0) {
         gMenuDelay += updateRate;
-        if (gMenuDelay >= 0x1F) {
+        if (gMenuDelay >= 31) {
             phi_t3 = 0;
             if (D_800DFFD0 == 0) {
                 phi_t3++;
@@ -3843,15 +3840,14 @@ s32 menu_character_select_loop(s32 updateRate) {
             }
             func_8008C128();
 
-            // Regalloc issue: gActivePlayersArray and phi_a0 need to switch registers.
-            phi_a0 = 0;
-            for (i = 0; i < 4; i++) {
-                if (gActivePlayersArray[i]) {
-                    gCharacterIdSlots[phi_a0] = (*D_801263CC)[gPlayersCharacterArray[i]].unkC;
-                    phi_a0++;
+            i = 0;
+            for (phi_a0 = 0; phi_a0 < 4; phi_a0++) {
+                if (gActivePlayersArray[phi_a0]) {
+                    gCharacterIdSlots[i] = (*D_801263CC)[gPlayersCharacterArray[phi_a0]].unkC;
+                    i++;
                 }
             }
-            randomize_ai_racer_slots(phi_a0);
+            randomize_ai_racer_slots(i);
             assign_player_ids(gActivePlayersArray);
 
             gIsInTracksMode = 1;
@@ -3872,7 +3868,7 @@ s32 menu_character_select_loop(s32 updateRate) {
         }
     } else if (gMenuDelay < 0) {
         gMenuDelay -= updateRate;
-        if (gMenuDelay < -0x1E) {
+        if (gMenuDelay < -30) {
             func_80000B28();
             func_8008C128();
             gNumberOfActivePlayers = 1;
@@ -3881,9 +3877,6 @@ s32 menu_character_select_loop(s32 updateRate) {
     }
     return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_character_select_loop.s")
-#endif
 
 void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
     s32 someBool;
