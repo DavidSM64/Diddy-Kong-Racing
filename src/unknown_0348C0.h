@@ -7,6 +7,12 @@
 #define WORLD_KEY_GRAB_CHECK_RADIUS 50
 #define SOUND_WORLD_KEY_GRAB 54
 
+typedef struct Object78_80033DD0 {
+	s32 *unk0;
+	s16 unk4;
+	s16 unk6;
+} Object78_80033DD0;
+
 typedef struct unk80034530 {
     u8 pad0[0x8];
     u8 unk8;

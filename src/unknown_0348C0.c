@@ -174,7 +174,38 @@ void func_80033CC0(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033CC0.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033DD0.s")
+void func_80033DD0(Object *obj, s32 arg1) {
+	Object78_80033DD0 *obj78;
+	s32 temp_v0;
+	
+    if (obj->unk4C != NULL) {
+        obj78 = &obj->unk78;
+        if (obj->unk7C.half.upper > 0) {
+            obj78->unk4 -= arg1;
+        }
+        if ((obj->unk4C->unk14 & 0x40) && ((s32) obj78->unk4 <= 0)) {
+            func_80009558(316, obj->x_position, obj->y_position, obj->z_position, 4, NULL);
+            obj78->unk0 = (s32*) obj->unk4C->unk0;
+            obj78->unk6 = 1820;
+            obj78->unk4 = 10;
+            if (get_number_of_active_players() < 2) {
+                if (obj->descriptor_ptr->unk57 > 0) {
+                    if (obj->descriptor_ptr->unk57 == 1) {
+                        temp_v0 = 0;
+                    } else {
+                        temp_v0 = get_random_number_from_range(0, obj->descriptor_ptr->unk57 - 1);
+                    }
+                    obj->unk74 = 1 << temp_v0;
+                    func_800AFC3C(obj, 2);
+                }
+            }
+        } else if (obj78->unk4 <= 0) {
+            obj78->unk0 = 0;
+        }
+        obj->z_rotation = (s16) obj78->unk6;
+        obj78->unk6 = (obj78->unk6 * -200) >> 8;
+    }
+}
 
 void func_80033F44(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;

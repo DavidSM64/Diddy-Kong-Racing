@@ -113,19 +113,20 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of Feburary 7th, 2022, this is our current score:
+As of Feburary 8th, 2022, this is our current score:
 ```
  ===================================================================== 
                 ADVENTURE ONE (ASM -> C Decompilation)                 
- -------------------------- 19.81% Complete -------------------------- 
-                     # Decompiled functions: 1023                      
-                      # GLOBAL_ASM remaining: 725                      
+ -------------------------- 20.02% Complete -------------------------- 
+                     # Decompiled functions: 1026                      
+                      # GLOBAL_ASM remaining: 722                      
                       # NON_MATCHING functions: 3                      
+                  # NON_EQUIVALENT WIP functions: 93                   
  ---------------------------- Game Status ---------------------------- 
                Balloons: 11/47, Keys: 1/4, Trophies: 0/5               
                 T.T. Amulets: 1/4, Wizpig Amulets: 0/4                 
  --------------------------------------------------------------------- 
- We are collecting silver coins in Hot Top Volcano. (0/8 silver coins) 
+ We are collecting silver coins in Hot Top Volcano. (1/8 silver coins) 
  ===================================================================== 
                  ADVENTURE TWO (Cleanup & Documentation)               
  --------------------------  2.54% Complete -------------------------- 
@@ -136,7 +137,7 @@ As of Feburary 7th, 2022, this is our current score:
                 T.T. Amulets: 0/4, Wizpig Amulets: 0/4                 
  --------------------------------------------------------------------- 
        We are collecting the second balloon on Timber's Island.        
- ===================================================================== 
+ =====================================================================
 ```
 
 ---

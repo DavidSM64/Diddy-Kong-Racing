@@ -481,7 +481,8 @@ typedef struct Object_40 {
     s8 unk53;
     s8 unk54;
     s8 unk55; //size of array pointed by Object->unk68
-    u8 pad56[0x02];
+    u8 pad56;
+    s8 unk57;
     u8 pad58[0x18];
     u8 unk70;
     u8 unk71;
@@ -520,7 +521,7 @@ typedef struct Object_4C {
     u8 unk11;
     u8 unk12;
     u8 unk13;
-    u16 unk14;
+    s16 unk14;
     s8 unk16;
     s8 unk17;
 } Object_4C;
