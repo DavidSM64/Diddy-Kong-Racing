@@ -238,7 +238,7 @@ GLOBAL_ASM("asm/non_matchings/font/func_800C4318.s")
 /**
  * Sets the colour of the current dialogue box's text.
  */
-void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
+void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     (*gDialogueBoxBackground)[0].textColourR = red;
     (*gDialogueBoxBackground)[0].textColourG = green;
     (*gDialogueBoxBackground)[0].textColourB = blue;
@@ -249,7 +249,7 @@ void set_text_color(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
 /**
  * Sets the colour of the current dialogue box's text background.
  */
-void set_text_background_color(s32 red, s32 green, s32 blue, s32 alpha) {
+void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha) {
     (*gDialogueBoxBackground)[0].textBGColourR = red;
     (*gDialogueBoxBackground)[0].textBGColourG = green;
     (*gDialogueBoxBackground)[0].textBGColourB = blue;

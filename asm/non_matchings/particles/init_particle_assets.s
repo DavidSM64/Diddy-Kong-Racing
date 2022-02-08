@@ -62,10 +62,10 @@ glabel init_particle_assets
 /* 0AF210 800AE610 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0AF214 800AE614 2404002A */   li    $a0, 42
 /* 0AF218 800AE618 2406FFFF */  li    $a2, -1
-/* 0AF21C 800AE61C 3C12800E */  lui   $s2, %hi(gParticleBehaviorsAssetTableCount) # $s2, 0x800e
-/* 0AF220 800AE620 3C13800E */  lui   $s3, %hi(gParticleBehaviorsAssetTable) # $s3, 0x800e
-/* 0AF224 800AE624 26732CFC */  addiu $s3, %lo(gParticleBehaviorsAssetTable) # addiu $s3, $s3, 0x2cfc
-/* 0AF228 800AE628 26522CF4 */  addiu $s2, %lo(gParticleBehaviorsAssetTableCount) # addiu $s2, $s2, 0x2cf4
+/* 0AF21C 800AE61C 3C12800E */  lui   $s2, %hi(gParticleBehavioursAssetTableCount) # $s2, 0x800e
+/* 0AF220 800AE620 3C13800E */  lui   $s3, %hi(gParticleBehavioursAssetTable) # $s3, 0x800e
+/* 0AF224 800AE624 26732CFC */  addiu $s3, %lo(gParticleBehavioursAssetTable) # addiu $s3, $s3, 0x2cfc
+/* 0AF228 800AE628 26522CF4 */  addiu $s2, %lo(gParticleBehavioursAssetTableCount) # addiu $s2, $s2, 0x2cf4
 /* 0AF22C 800AE62C 0006C880 */  sll   $t9, $a2, 2
 /* 0AF230 800AE630 AE620000 */  sw    $v0, ($s3)
 /* 0AF234 800AE634 AE460000 */  sw    $a2, ($s2)
@@ -87,8 +87,8 @@ glabel init_particle_assets
 /* 0AF26C 800AE66C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 0AF270 800AE670 2404002B */   li    $a0, 43
 /* 0AF274 800AE674 8E4E0000 */  lw    $t6, ($s2)
-/* 0AF278 800AE678 3C15800E */  lui   $s5, %hi(gParticleBehaviorsAssets) # $s5, 0x800e
-/* 0AF27C 800AE67C 26B52CF8 */  addiu $s5, %lo(gParticleBehaviorsAssets) # addiu $s5, $s5, 0x2cf8
+/* 0AF278 800AE678 3C15800E */  lui   $s5, %hi(gParticleBehavioursAssets) # $s5, 0x800e
+/* 0AF27C 800AE67C 26B52CF8 */  addiu $s5, %lo(gParticleBehavioursAssets) # addiu $s5, $s5, 0x2cf8
 /* 0AF280 800AE680 19C00020 */  blez  $t6, .L800AE704
 /* 0AF284 800AE684 AEA20000 */   sw    $v0, ($s5)
 /* 0AF288 800AE688 00008025 */  move  $s0, $zero

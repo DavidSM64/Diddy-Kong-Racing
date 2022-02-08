@@ -270,7 +270,7 @@ extern s8 D_800DF4DC;
 extern s8 D_800DF4E0;
 extern s8 D_800DF4E4[4];
 extern s32 D_800DF4E8;
-extern s8 gDialogOptionTangible;
+extern s8 gDialogueOptionTangible;
 
 // Unused?
 extern s32 D_800DF4F0[];
@@ -774,7 +774,7 @@ void menu_magic_codes_init(void);
 void render_magic_codes_list_menu_text(s32 arg0);
 s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
-void randomize_ai_racer_slots(s32 arg0);
+void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void func_8008C698(s32 arg0);
 s32 menu_game_select_loop(s32 arg0);

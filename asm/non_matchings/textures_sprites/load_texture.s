@@ -80,8 +80,8 @@ glabel load_texture
 /* 07BB94 8007AF94 01608825 */   move  $s1, $t3
 /* 07BB98 8007AF98 000B6880 */  sll   $t5, $t3, 2
 /* 07BB9C 8007AF9C 01AB6823 */  subu  $t5, $t5, $t3
-/* 07BBA0 8007AFA0 3C05800E */  lui   $a1, %hi(gTexColorTag) # $a1, 0x800e
-/* 07BBA4 8007AFA4 8CA5E7C0 */  lw    $a1, %lo(gTexColorTag)($a1)
+/* 07BBA0 8007AFA0 3C05800E */  lui   $a1, %hi(gTexColourTag) # $a1, 0x800e
+/* 07BBA4 8007AFA4 8CA5E7C0 */  lw    $a1, %lo(gTexColourTag)($a1)
 /* 07BBA8 8007AFA8 000D6940 */  sll   $t5, $t5, 5
 /* 07BBAC 8007AFAC 01AE2021 */  addu  $a0, $t5, $t6
 /* 07BBB0 8007AFB0 0C01C344 */  jal   allocate_from_main_pool
@@ -105,9 +105,9 @@ glabel load_texture
 /* 07BBF0 8007AFF0 0011C080 */  sll   $t8, $s1, 2
 /* 07BBF4 8007AFF4 0311C023 */  subu  $t8, $t8, $s1
 /* 07BBF8 8007AFF8 0018C140 */  sll   $t8, $t8, 5
-/* 07BBFC 8007AFFC 3C05800E */  lui   $a1, %hi(gTexColorTag) # $a1, 0x800e
+/* 07BBFC 8007AFFC 3C05800E */  lui   $a1, %hi(gTexColourTag) # $a1, 0x800e
 /* 07BC00 8007B000 244F0020 */  addiu $t7, $v0, 0x20
-/* 07BC04 8007B004 8CA5E7C0 */  lw    $a1, %lo(gTexColorTag)($a1)
+/* 07BC04 8007B004 8CA5E7C0 */  lw    $a1, %lo(gTexColourTag)($a1)
 /* 07BC08 8007B008 03022021 */  addu  $a0, $t8, $v0
 /* 07BC0C 8007B00C AFAF003C */  sw    $t7, 0x3c($sp)
 /* 07BC10 8007B010 24840020 */  addiu $a0, $a0, 0x20

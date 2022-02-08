@@ -1,4 +1,4 @@
-glabel get_memory_color_tag_count
+glabel get_memory_colour_tag_count
 /* 072624 80071A24 3C028012 */  lui   $v0, %hi(gMemoryPools+8) # $v0, 0x8012
 /* 072628 80071A28 8C423588 */  lw    $v0, %lo(gMemoryPools+8)($v0)
 /* 07262C 80071A2C 00001825 */  move  $v1, $zero

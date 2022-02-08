@@ -80,7 +80,7 @@ glabel calculate_and_display_rom_checksum
 /* 08BA5C 8008AE5C 00002025 */  move  $a0, $zero
 /* 08BA60 8008AE60 00002825 */  move  $a1, $zero
 /* 08BA64 8008AE64 00003025 */  move  $a2, $zero
-/* 08BA68 8008AE68 0C02D8AD */  jal   set_render_printf_background_color
+/* 08BA68 8008AE68 0C02D8AD */  jal   set_render_printf_background_colour
 /* 08BA6C 8008AE6C 24070080 */   li    $a3, 128
 /* 08BA70 8008AE70 24040020 */  li    $a0, 32
 /* 08BA74 8008AE74 0C02D8D7 */  jal   set_render_printf_position
