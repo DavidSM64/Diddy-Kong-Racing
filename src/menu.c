@@ -4056,7 +4056,7 @@ s32 menu_game_select_loop(s32 arg0) {
     s32 playerYDir;
     s32 charSelectScene;
 
-    func_8008C168();
+    func_8008C168(arg0);
 
     D_801263BC = (D_801263BC + arg0) & 0x3F;
 
