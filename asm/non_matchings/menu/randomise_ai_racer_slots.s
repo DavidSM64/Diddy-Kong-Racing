@@ -1,4 +1,4 @@
-glabel randomize_ai_racer_slots
+glabel randomise_ai_racer_slots
 /* 08C73C 8008BB3C 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 08C740 8008BB40 AFBF0034 */  sw    $ra, 0x34($sp)
 /* 08C744 8008BB44 AFB60030 */  sw    $s6, 0x30($sp)

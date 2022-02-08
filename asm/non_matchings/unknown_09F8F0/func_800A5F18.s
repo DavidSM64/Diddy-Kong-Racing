@@ -72,7 +72,7 @@ glabel func_800A5F18
 /* 0A6C00 800A6000 240400FF */  li    $a0, 255
 /* 0A6C04 800A6004 240500FF */  li    $a1, 255
 /* 0A6C08 800A6008 240600FF */  li    $a2, 255
-/* 0A6C0C 800A600C 0C0310E1 */  jal   set_text_color
+/* 0A6C0C 800A600C 0C0310E1 */  jal   set_text_colour
 /* 0A6C10 800A6010 00003825 */   move  $a3, $zero
 /* 0A6C14 800A6014 3C028012 */  lui   $v0, %hi(D_80126CDC) # $v0, 0x8012
 /* 0A6C18 800A6018 8C426CDC */  lw    $v0, %lo(D_80126CDC)($v0)

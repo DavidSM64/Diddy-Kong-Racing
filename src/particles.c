@@ -61,9 +61,9 @@ s32 gParticlesAssetTableCount = 0;
 s32 *gParticlesAssets = NULL;
 
 unk800E2CF0 **gParticlesAssetTable = NULL;
-s32 gParticleBehaviorsAssetTableCount = 0;
-s32 *gParticleBehaviorsAssets = NULL;
-ParticleBehavior **gParticleBehaviorsAssetTable = NULL;
+s32 gParticleBehavioursAssetTableCount = 0;
+s32 *gParticleBehavioursAssets = NULL;
+ParticleBehavior **gParticleBehavioursAssetTable = NULL;
 s32 D_800E2D00[2] = { 0, 0 };
 
 // Are these just Triangles?
@@ -261,13 +261,13 @@ void func_800AE490(void) {
         free_from_memory_pool(gParticlesAssetTable);
         gParticlesAssetTable = NULL;
     }
-    if (gParticleBehaviorsAssets != NULL) {
-        free_from_memory_pool(gParticleBehaviorsAssets);
-        gParticleBehaviorsAssets = NULL;
+    if (gParticleBehavioursAssets != NULL) {
+        free_from_memory_pool(gParticleBehavioursAssets);
+        gParticleBehavioursAssets = NULL;
     }
-    if (gParticleBehaviorsAssetTable != NULL) {
-        free_from_memory_pool(gParticleBehaviorsAssetTable);
-        gParticleBehaviorsAssetTable = NULL;
+    if (gParticleBehavioursAssetTable != NULL) {
+        free_from_memory_pool(gParticleBehavioursAssetTable);
+        gParticleBehavioursAssetTable = NULL;
     }
 }
 #ifdef NON_EQUIVALENT
@@ -283,14 +283,14 @@ void init_particle_assets(void) {
     for (i = 0; i < gParticlesAssetTableCount; i++) {
         gParticlesAssetTable[i] = (u8 *)gParticlesAssets + (s32)gParticlesAssetTable[i];
     }
-    gParticleBehaviorsAssetTable = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
-    for (gParticleBehaviorsAssetTableCount = -1; (s32)gParticleBehaviorsAssetTable[gParticleBehaviorsAssetTableCount + 1] != -1; gParticleBehaviorsAssetTableCount++) {
+    gParticleBehavioursAssetTable = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
+    for (gParticleBehavioursAssetTableCount = -1; (s32)gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1] != -1; gParticleBehavioursAssetTableCount++) {
     }
-    gParticleBehaviorsAssets = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
-    for (i = 0; i < gParticleBehaviorsAssetTableCount; i++) {
-        gParticleBehaviorsAssetTable[i] = (u8 *)gParticleBehaviorsAssets + (s32)gParticleBehaviorsAssetTable[i];
-        if ((s32)gParticleBehaviorsAssetTable[i]->unk9C != -1) {
-            gParticleBehaviorsAssetTable[i]->unk9C = get_misc_asset(gParticleBehaviorsAssetTable[i]->unk9C);
+    gParticleBehavioursAssets = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
+    for (i = 0; i < gParticleBehavioursAssetTableCount; i++) {
+        gParticleBehavioursAssetTable[i] = (u8 *)gParticleBehavioursAssets + (s32)gParticleBehavioursAssetTable[i];
+        if ((s32)gParticleBehavioursAssetTable[i]->unk9C != -1) {
+            gParticleBehavioursAssetTable[i]->unk9C = get_misc_asset(gParticleBehavioursAssetTable[i]->unk9C);
         }
     }
 }
@@ -456,10 +456,10 @@ void func_800AF134(unk800B2260 *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
     if (arg2 >= gParticlesAssetTableCount) {
         arg2 = 0;
     }
-    if (arg1 >= gParticleBehaviorsAssetTableCount) {
+    if (arg1 >= gParticleBehavioursAssetTableCount) {
         arg1 = 0;
     }
-    temp = gParticleBehaviorsAssetTable[arg1];
+    temp = gParticleBehavioursAssetTable[arg1];
     if ((arg0->unk8 != arg2) || (temp != arg0->unk0)) {
         func_800B2260(arg0);
         func_800AF29C(arg0, arg1, arg2, arg3, arg4, arg5);
@@ -469,8 +469,8 @@ void func_800AF134(unk800B2260 *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
 void func_800AF1E0(unk800AF29C *arg0, s32 arg1, s32 arg2) {
     ParticleBehavior *temp_v0;
 
-    if (arg1 < gParticleBehaviorsAssetTableCount) {
-        temp_v0 = (ParticleBehavior *)gParticleBehaviorsAssetTable[arg1];
+    if (arg1 < gParticleBehavioursAssetTableCount) {
+        temp_v0 = (ParticleBehavior *)gParticleBehavioursAssetTable[arg1];
         func_800AF29C(arg0, arg1, arg2, temp_v0->unk4, temp_v0->unk8, temp_v0->unkC);
     }
 }
@@ -480,7 +480,7 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
     s32 temp_v0_2;
     s32 flags;
 
-    temp_v1 = gParticleBehaviorsAssetTable[arg1];
+    temp_v1 = gParticleBehavioursAssetTable[arg1];
     arg0->unk8 = arg2;
     arg0->unk18 = arg3;
     arg0->unk0 = temp_v1;

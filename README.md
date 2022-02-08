@@ -39,7 +39,7 @@ The `NON_MATCHING` define will include the functions that don't exactly match on
 
 ## Style Guide
 
-This repo is following the same style guide as the SM64 decomp project, which can be found here: https://docs.google.com/document/d/1T_6dUj32QOscrMOMDsr7bY0esohswEAstKCO4gFn6t0
+The style guide for the project can be found here: https://docs.google.com/document/d/1euQf8nwynGcCZL1MfoMaLs-XRvx3ejjj8fIfykUZ-NQ
 
 If you see variables/functions/structs/etc. that doesn't follow these rules, then file an issue and we'll try to fix them.
 
@@ -113,32 +113,30 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of October 25th 2021, this is our current score:
+As of Feburary 7th, 2022, this is our current score:
 ```
- ================================================================== 
-               ADVENTURE ONE (ASM -> C Decompilation)               
- ------------------------ 18.87% Complete ------------------------- 
-                    # Decompiled functions: 996                     
-                    # GLOBAL_ASM remaining: 760                     
-                   # NON_MATCHING functions: 101                    
- -------------------------- Game Status --------------------------- 
-             Balloons: 10/47, Keys: 1/4, Trophies: 0/5              
-               T.T. Amulets: 1/4, Wizpig Amulets: 0/4               
- ------------------------------------------------------------------ 
- We are collecting silver coins in Jungle Falls. (4/8 silver coins) 
- ================================================================== 
-               ADVENTURE TWO (Cleanup & Documentation)              
- ------------------------  0.80% Complete ------------------------- 
-                     # Documented functions: 65                     
-                   # Undocumented remaining: 1691                   
- -------------------------- Game Status --------------------------- 
-              Balloons: 0/47, Keys: 0/4, Trophies: 0/5              
-               T.T. Amulets: 0/4, Wizpig Amulets: 0/4               
- ------------------------------------------------------------------ 
-      We are collecting the first balloon on Timber's Island.       
- ================================================================== 
-
-
+ ===================================================================== 
+                ADVENTURE ONE (ASM -> C Decompilation)                 
+ -------------------------- 19.81% Complete -------------------------- 
+                     # Decompiled functions: 1023                      
+                      # GLOBAL_ASM remaining: 725                      
+                      # NON_MATCHING functions: 3                      
+ ---------------------------- Game Status ---------------------------- 
+               Balloons: 11/47, Keys: 1/4, Trophies: 0/5               
+                T.T. Amulets: 1/4, Wizpig Amulets: 0/4                 
+ --------------------------------------------------------------------- 
+ We are collecting silver coins in Hot Top Volcano. (0/8 silver coins) 
+ ===================================================================== 
+                 ADVENTURE TWO (Cleanup & Documentation)               
+ --------------------------  2.54% Complete -------------------------- 
+                      # Documented functions: 134                      
+                    # Undocumented remaining: 1614                     
+ ---------------------------- Game Status ---------------------------- 
+               Balloons: 1/47, Keys: 0/4, Trophies: 0/5                
+                T.T. Amulets: 0/4, Wizpig Amulets: 0/4                 
+ --------------------------------------------------------------------- 
+       We are collecting the second balloon on Timber's Island.        
+ ===================================================================== 
 ```
 
 ---
