@@ -4056,17 +4056,13 @@ void func_8008C698(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/func_8008C698.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-
 s32 menu_game_select_loop(s32 arg0) {
     s32 playerInputs;
     s32 playerYDir;
     s32 charSelectScene;
-    s32 temp;
 
     func_8008C168();
 
-    // Regalloc issue: This needs to use v1, not a2!
     D_801263BC = (D_801263BC + arg0) & 0x3F;
 
     if (D_801263D8 != 0) {
@@ -4151,9 +4147,6 @@ s32 menu_game_select_loop(s32 arg0) {
         return 0;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_game_select_loop.s")
-#endif
 
 void func_8008CACC(void) {
     func_800C422C(2);

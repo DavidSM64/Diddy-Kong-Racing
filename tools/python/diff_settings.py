@@ -14,7 +14,6 @@ def apply(config, args):
     config['mapfile'] = f'build/' + version + '/dkr.map'
     config['myimg'] = f'build/' + version + '/dkr.z64'
     config['baseimg'] = find_baserom(version)
-    config['makeflags'] = [f'']
     config['source_directories'] = ['src']
 
 ########################################################################################
