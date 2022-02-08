@@ -191,8 +191,8 @@ glabel __osException
 /* 0D3B2C 800D2F2C 3C01800E */  lui   $at, %hi(__osHwIntTable) # $at, 0x800e
 /* 0D3B30 800D2F30 002A0821 */  addu  $at, $at, $t2
 /* 0D3B34 800D2F34 8C2A48A0 */  lw    $t2, %lo(__osHwIntTable)($at)
-/* 0D3B38 800D2F38 3C1D8013 */  lui   $sp, %hi(leoDiscStack) # $sp, 0x8013
-/* 0D3B3C 800D2F3C 27BDAAE0 */  addiu $sp, %lo(leoDiscStack) # addiu $sp, $sp, -0x5520
+/* 0D3B38 800D2F38 3C1D8013 */  lui   $sp, %hi(leoDiskStack) # $sp, 0x8013
+/* 0D3B3C 800D2F3C 27BDAAE0 */  addiu $sp, %lo(leoDiskStack) # addiu $sp, $sp, -0x5520
 /* 0D3B40 800D2F40 24040010 */  li    $a0, 16
 /* 0D3B44 800D2F44 11400007 */  beqz  $t2, .L800D2F64
 /* 0D3B48 800D2F48 27BD0FF0 */   addiu $sp, $sp, 0xff0
