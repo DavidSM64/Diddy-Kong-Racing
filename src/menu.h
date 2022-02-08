@@ -798,5 +798,6 @@ void menu_track_select_init(void);
 void menu_trophy_race_rankings_init(void);
 void func_8009E3D0(void);
 s32 func_800C3564(void);
+void func_8008C168(void);
 
 #endif
