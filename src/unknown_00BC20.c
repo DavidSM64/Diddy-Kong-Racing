@@ -7,6 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
+#include "level_object_entries.h"
 #include "asset_sections.h"
 #include "asset_loading.h"
 #include "thread0_epc.h"
@@ -1510,260 +1511,260 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 void func_800238BC(Object *arg0, void *arg1) {
     arg0->unk48 = arg0->descriptor_ptr->unk54;
     switch (arg0->unk48 - 1) {
-        case 0x00:
+        case 0:
             func_8004DAB0(arg0, arg1);
             break;
-        case 0x01:
+        case 1:
             func_80033CC0(arg0, arg1);
             break;
-        case 0x02:
+        case 2:
             func_80036C30(arg0, arg1);
             break;
-        case 0x03:
+        case 3:
             func_800376E0(arg0, arg1);
             break;
-        case 0x05:
+        case 5:
             func_800389AC(arg0, arg1);
             break;
-        case 0x18:
+        case 24:
             func_80038A6C(arg0, arg1);
             break;
-        case 0x15:
+        case 21:
             func_80038B74(arg0, arg1);
             break;
-        case 0x06:
+        case 6:
             func_80038E3C(arg0, arg1);
             break;
-        case 0x07:
+        case 7:
             func_8003FD68(arg0, arg1);
             break;
-        case 0x08:
-        case 0x12:
+        case 8:
+        case 18:
             func_8003FEF4(arg0, arg1);
             break;
-        case 0x1A:
+        case 26:
             func_8004001C(arg0, arg1);
             break;
-        case 0x09:
+        case 9:
             func_80039160(arg0, arg1);
             break;
-        case 0x0A:
+        case 10:
             func_80039190(arg0, arg1);
             break;
-        case 0x0B:
+        case 11:
             func_800391C8(arg0, arg1);
             break;
-        case 0x0C:
+        case 12:
             func_8003ACBC(arg0, arg1);
             break;
-        case 0x1D:
+        case 29:
             func_8003AD34(arg0, arg1);
             break;
-        case 0x28:
+        case 40:
             func_8003B058(arg0, arg1);
             break;
-        case 0x0D:
+        case 13:
             func_8003B7CC(arg0, arg1);
             break;
-        case 0x6E:
+        case 110:
             func_8003C1E0(arg0, arg1);
             break;
-        case 0x0E:
+        case 14:
             func_8003CF18(arg0, arg1);
             break;
-        case 0x0F:
+        case 15:
             func_8003CFE0(arg0, arg1);
             break;
-        case 0x10:
+        case 16:
             func_8003DFCC(arg0, arg1);
             break;
-        case 0x16:
+        case 22:
             func_8003E5B0(arg0, arg1);
             break;
-        case 0x04:
-        case 0x11:
+        case 4:
+        case 17:
             func_8003E5C8(arg0, arg1);
             break;
-        case 0x19:
+        case 25:
             func_8003CF58(arg0, arg1);
             break;
-        case 0x1B:
+        case 27:
             func_80034AF0(arg0, arg1);
             break;
-        case 0x1C:
+        case 28:
             func_800400A4(arg0, arg1);
             break;
-        case 0x1E:
+        case 30:
             func_80036194(arg0, arg1);
             break;
-        case 0x1F:
+        case 31:
             func_8003D534(arg0, arg1);
             break;
-        case 0x20:
+        case 32:
             func_800403A8(arg0, arg1);
             break;
-        case 0x23:
+        case 35:
             func_800403D8(arg0, arg1);
             break;
-        case 0x42:
+        case 66:
             func_8004049C(arg0, arg1);
             break;
-        case 0x24:
+        case 36:
             func_80040800(arg0, arg1);
             break;
-        case 0x25:
+        case 37:
             func_8003C9EC(arg0, arg1);
             break;
-        case 0x26:
+        case 38:
             func_8003CE64(arg0, arg1);
             break;
-        case 0x27:
+        case 39:
             func_8003CF00(arg0, arg1);
             break;
-        case 0x2A:
+        case 42:
             func_8004092C(arg0, arg1);
             break;
-        case 0x2B:
+        case 43:
             func_8004094C(arg0, arg1);
             break;
-        case 0x2C:
+        case 44:
             func_8003522C(arg0, arg1);
             break;
-        case 0x2D:
+        case 45:
             func_80035640(arg0, arg1);
             break;
-        case 0x2E:
+        case 46:
             func_80035EF8(arg0, arg1);
             break;
-        case 0x30:
+        case 48:
             func_80037A18(arg0, arg1);
             break;
-        case 0x33:
+        case 51:
             func_80038854(arg0, arg1);
             break;
-        case 0x36:
+        case 54:
             func_8003C644(arg0, arg1);
             break;
-        case 0x38:
-        case 0x5C:
+        case 56:
+        case 92:
             func_8003588C(arg0, arg1);
             break;
-        case 0x39:
+        case 57:
             func_80035E20(arg0, arg1);
             break;
-        case 0x3A:
+        case 58:
             func_800409A4(arg0, arg1);
             break;
-        case 0x3C:
+        case 60:
             func_800409C8(arg0, arg1);
             break;
-        case 0x3D:
+        case 61:
             func_800392B8(arg0, arg1);
             break;
-        case 0x3F:
+        case 63:
             func_8003DE74(arg0, arg1);
             break;
-        case 0x40:
+        case 64:
             func_8003D3EC(arg0, arg1);
             break;
-        case 0x41:
+        case 65:
             func_8003D038(arg0, arg1);
             break;
-        case 0x43:
+        case 67:
             func_80037578(arg0, arg1);
             break;
-        case 0x44:
+        case 68:
             func_80037624(arg0, arg1);
             break;
-        case 0x45:
-        case 0x66:
+        case 69:
+        case 102:
             func_8003818C(arg0, arg1);
             break;
-        case 0x47:
-        case 0x5E:
-        case 0x67:
+        case 71:
+        case 94:
+        case 103:
             func_800381E0(arg0, arg1);
             break;
-        case 0x5F:
-        case 0x64:
+        case 95:
+        case 100:
             func_80038214(arg0, arg1);
             break;
-        case 0x60:
-        case 0x65:
+        case 96:
+        case 101:
             func_80038248(arg0, arg1);
             break;
-        case 0x46:
+        case 70:
             func_80041A90(arg0, arg1);
             break;
-        case 0x6F:
+        case 111:
             func_80041E80(arg0, arg1);
             break;
-        case 0x75:
+        case 117:
             func_80042014(arg0, arg1);
             break;
-        case 0x48:
+        case 72:
             func_80034B68(arg0, arg1);
             break;
-        case 0x49:
+        case 73:
             func_80034E70(arg0, arg1);
             break;
-        case 0x4A:
+        case 74:
             func_8004203C(arg0, arg1);
             break;
-        case 0x4B:
+        case 75:
             func_8003D2AC(arg0, arg1);
             break;
-        case 0x4C:
+        case 76:
             func_8003B368(arg0, arg1);
             break;
-        case 0x4D:
+        case 77:
             func_80034844(arg0, arg1);
             break;
-        case 0x4E:
+        case 78:
             func_80034530(arg0, arg1);
             break;
-        case 0x51:
+        case 81:
             func_80035AE8(arg0, arg1);
             break;
-        case 0x52:
+        case 82:
             func_80037D54(arg0, arg1);
             break;
-        case 0x53:
+        case 83:
             func_80037D6C(arg0, arg1);
             break;
-        case 0x58:
+        case 88:
             func_8004210C(arg0, arg1);
             break;
-        case 0x57:
+        case 87:
             func_8003DC5C(arg0, arg1);
             break;
-        case 0x59:
+        case 89:
             func_80038AC8(arg0, arg1);
             break;
-        case 0x5D:
+        case 93:
             func_80042150(arg0, arg1);
             break;
-        case 0x61:
+        case 97:
             func_80038D58(arg0, arg1);
             break;
-        case 0x62:
-        case 0x63:
+        case 98:
+        case 99:
             func_8003572C(arg0, arg1);
             break;
-        case 0x68:
+        case 104:
             func_8004216C(arg0, arg1);
             break;
-        case 0x6B:
-        case 0x73:
+        case 107:
+        case 115:
             func_80033F44(arg0, arg1);
             break;
-        case 0x6C:
+        case 108:
             func_80042210(arg0, arg1);
             break;
-        case 0x6D:
+        case 109:
             func_8003DBA0(arg0, arg1);
             break;
-        case 0x74:
+        case 116:
             func_80042A1C(arg0, arg1);
             break;
     }

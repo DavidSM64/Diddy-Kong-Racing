@@ -453,13 +453,6 @@ typedef struct LevelModel {
 /* 0x38 */ u32 minimapColor;
 } LevelModel;
 
-/* Size: 8 bytes. */
-typedef struct LevelObjectEntryCommon {
-    u8 object_id; // 9-bit object ID to load (uses size'a MSB).
-    u8 size; // 7-bit total entry length (MSB is used in object_id).
-    s16 x, y, z; // Position in level
-} LevelObjectEntryCommon;
-
 typedef struct Object_3C {
     u8 pad0[0x2];
     s16 unk2;

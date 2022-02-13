@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
+#include "level_object_entries.h"
 
 #define WORLD_KEY_GRAB_CHECK_RADIUS 50
 #define SOUND_WORLD_KEY_GRAB 54
