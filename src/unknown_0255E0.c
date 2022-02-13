@@ -12,7 +12,7 @@
 #include "unknown_00BC20.h"
 #include "unknown_06B2B0.h"
 #include "memory.h"
-#include "unknown_043920.h"
+#include "racer.h"
 #include "camera.h"
 #include "waves.h"
 

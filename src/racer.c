@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80042D20 */
 
-#include "unknown_043920.h"
+#include "racer.h"
 #include "memory.h"
 #include "menu.h"
 #include "video.h"
@@ -194,8 +194,8 @@ s8 D_8011D5BC;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80042D20.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80043ECC.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80043ECC.s")
 
 typedef struct Object_64_80044170 {
     char unk0[0x2C];
@@ -293,15 +293,15 @@ s32 func_80044450(s32 arg0) {
     return get_random_number_from_range(0, 99) < arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004447C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80045128.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800452A0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80045C48.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80046524.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80048C7C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80048E64.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800494E0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80049794.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8004447C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80045128.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80046524.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80048C7C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80048E64.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
 // Something Plane related.
 void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
@@ -387,9 +387,9 @@ void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004C2B0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004CC20.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004D590.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8004C2B0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8004D590.s")
 
 void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     s16 sp26;
@@ -421,8 +421,8 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/obj_init_racer.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004DE38.s")
+GLOBAL_ASM("asm/non_matchings/racer/obj_init_racer.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8004DE38.s")
 
 void func_8004F77C(unk8004F77C *arg0) {
     s32 temp;
@@ -448,7 +448,7 @@ void func_8004F77C(unk8004F77C *arg0) {
     arg0->unk20A = (arg0->unk20A & 0xFFF0) | temp;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004F7F4.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
 
 #ifdef NON_EQUIVALENT
 
@@ -491,11 +491,11 @@ void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
     obj64->unk30 = 0.0f;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80050754.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80050850.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80050A28.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80050850.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80050A28.s")
 
 s32 func_80052188(void) {
     if (D_8011D582 == 2) {
@@ -509,7 +509,7 @@ void func_800521B8(s32 arg0) {
     D_8011D582 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800521C4.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_800521C4.s")
 
 void func_8005234C(unk8005234C *arg0) {
     arg0->unk16C -= arg0->unk16C >> 3;
@@ -518,8 +518,8 @@ void func_8005234C(unk8005234C *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052388.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005250C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80052388.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 
 void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
@@ -581,8 +581,8 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052B64.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052D7C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80052B64.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80052D7C.s")
 
 void func_80053478(Object_64_80053478 *obj) {
     s32 phi_v0;
@@ -645,13 +645,13 @@ void func_80053664(Object_64 *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80053750.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80053E9C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80054110.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005492C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80054FD0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80055A84.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80055EC0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80053750.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80053E9C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80054110.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8005492C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80055A84.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80055EC0.s")
 
 void play_char_horn_sound(Object *obj, Object_64 *obj64) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
@@ -663,8 +663,8 @@ void play_char_horn_sound(Object *obj, Object_64 *obj64) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005698C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80056E2C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8005698C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
 
 void func_80057048(Object *obj, s32 arg1) {
     Object_64 *obj64 = obj->unk64;
@@ -722,10 +722,10 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800570B8.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_800570B8.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057220.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
 
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     Matrix mf;
@@ -743,7 +743,7 @@ void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     guMtxXFMF(&mf, 1.0f, 0.0f, 0.0f, &obj64->ox3, &obj64->oy3, &obj64->oz3);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800576E0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
 
 void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
     s32 temp, temp2;
@@ -763,7 +763,7 @@ void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
     arg0->unk1E1 = arg0->unk1E1 + temp2;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057A40.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80057A40.s")
 
 void func_800580B4(Object *obj, Object_64_800580B4 *obj64, s32 arg2, f32 arg3) {
     f32 xPos, yPos, zPos;
@@ -784,9 +784,9 @@ void func_800580B4(Object *obj, Object_64_800580B4 *obj64, s32 arg2, f32 arg3) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_800581E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058B84.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058D5C.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_800581E8.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80058B84.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
 
 #ifdef NON_EQUIVALENT
 void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
@@ -798,11 +798,11 @@ void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->unk3C_a.unk3C_f, gCameraObject->z_position);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058F44.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059080.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059208.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80059080.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80059208.s")
 
 void func_80059790(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
     s32 temp_lo;
@@ -901,13 +901,13 @@ s32 func_80059B7C(s32 controllerIndex, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     return func_80075000(controllerIndex, (s16)arg1, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80059BF0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_80059BF0.s")
 
 s16 func_80059E20(void) {
     return D_8011D5A8[D_8011D59C];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/set_ghost_position_and_rotation.s")
+GLOBAL_ASM("asm/non_matchings/racer/set_ghost_position_and_rotation.s")
 
 void func_8005A3B0(void) {
     D_8011D584 = 1;
@@ -931,9 +931,9 @@ void func_8005A3D0(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005A424.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005A6F0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8005B818.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8005A424.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8005A6F0.s")
+GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 
 // This gets called if an anti-piracy checksum fails in func_8005F850.
 void func_8005C25C(void) {

@@ -11,7 +11,7 @@
 #include "camera.h"
 #include "menu.h" // For cheats
 #include "unknown_0ABDF0.h"
-#include "unknown_043920.h"
+#include "racer.h"
 #include "unknown_06B2B0.h"
 #include "audio.h"
 #include "unknown_008C40.h"
