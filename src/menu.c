@@ -24,7 +24,7 @@
 #include "unknown_06B2B0.h"
 #include "unknown_078050.h"
 #include "controller_pak.h"
-#include "unknown_0348C0.h"
+#include "object_functions.h"
 #include "unknown_003260.h"
 
 /**

@@ -565,7 +565,7 @@ typedef struct Object_60 {
 
 // This REALLY needs to be refactored at some point.
 // This structure differs based on the type of object being loaded.
-// See functions in unknown_0348C0.c for how these get loaded.
+// See functions in object_functions.c for how these get loaded.
 typedef struct Object_64 {
     union {
         f32 unk0;
