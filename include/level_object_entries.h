@@ -9,12 +9,16 @@ typedef struct LevelObjectEntryCommon {
 } LevelObjectEntryCommon;
 
 typedef struct LevelObjectEntry_1 {
-/* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x00 */ LevelObjectEntryCommon common;
 } LevelObjectEntry_1;
 
-typedef struct LevelObjectEntry_2 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_2;
+typedef struct LevelObjectEntry_Scenery {
+    /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ u8 unkA;
+    /* 0x0B */ u8 unkB;
+} LevelObjectEntry_Scenery;
 
 typedef struct LevelObjectEntry_3 {
 /* 0x00 */ LevelObjectEntryCommon common;
@@ -72,9 +76,18 @@ typedef struct LevelObjectEntry_16 {
 /* 0x00 */ LevelObjectEntryCommon common;
 } LevelObjectEntry_16;
 
-typedef struct LevelObjectEntry_17 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_17;
+#define BALLOON_TYPE_BOOST   0
+#define BALLOON_TYPE_MISSILE 1
+#define BALLOON_TYPE_TRAP    2
+#define BALLOON_TYPE_SHIELD  3
+#define BALLOON_TYPE_MAGNET  4
+
+typedef struct LevelObjectEntry_WeaponBalloon {
+    /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 unk8; // Unused?
+    /* 0x09 */ u8 balloonType;
+    /* 0x0A */ u8 scale; // This is divided by 64 to get actual scale.
+} LevelObjectEntry_WeaponBalloon;
 
 typedef struct LevelObjectEntry_18 {
 /* 0x00 */ LevelObjectEntryCommon common;
@@ -104,9 +117,11 @@ typedef struct LevelObjectEntry_27 {
 /* 0x00 */ LevelObjectEntryCommon common;
 } LevelObjectEntry_27;
 
-typedef struct LevelObjectEntry_28 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_28;
+typedef struct LevelObjectEntry_Torch_Mist {
+    /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+} LevelObjectEntry_Torch_Mist;
 
 typedef struct LevelObjectEntry_29 {
 /* 0x00 */ LevelObjectEntryCommon common;
@@ -260,13 +275,19 @@ typedef struct LevelObjectEntry_77 {
 /* 0x00 */ LevelObjectEntryCommon common;
 } LevelObjectEntry_77;
 
-typedef struct LevelObjectEntry_78 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_78;
+typedef struct LevelObjectEntry_Laserbolt {
+    /* 0x00 */ LevelObjectEntryCommon common;
+} LevelObjectEntry_Laserbolt;
 
-typedef struct LevelObjectEntry_79 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_79;
+typedef struct LevelObjectEntry_Lasergun {
+    /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ s8 unkA;
+    /* 0x0B */ s8 unkB;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+} LevelObjectEntry_Lasergun;
 
 typedef struct LevelObjectEntry_82 {
 /* 0x00 */ LevelObjectEntryCommon common;
@@ -344,9 +365,9 @@ typedef struct LevelObjectEntry_105 {
 /* 0x00 */ LevelObjectEntryCommon common;
 } LevelObjectEntry_105;
 
-typedef struct LevelObjectEntry_108 {
+typedef struct LevelObjectEntry_Fireball_Octoweapon {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_108;
+} LevelObjectEntry_Fireball_Octoweapon;
 
 typedef struct LevelObjectEntry_109 {
 /* 0x00 */ LevelObjectEntryCommon common;

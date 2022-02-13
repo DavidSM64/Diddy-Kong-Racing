@@ -1508,264 +1508,264 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
-void run_object_init_func(Object *arg0, void *arg1) {
-    arg0->behaviorId = arg0->header->behaviorId;
-    switch (arg0->behaviorId - 1) { // Why the minus 1?
+void run_object_init_func(Object *obj, void *entry) {
+    obj->behaviorId = obj->header->behaviorId;
+    switch (obj->behaviorId - 1) { // Why the minus 1?
         case 0:
-            obj_init_racer(arg0, arg1);
+            obj_init_racer(obj, entry);
             break;
         case 1:
-            obj_init_scenery(arg0, arg1);
+            obj_init_scenery(obj, (LevelObjectEntry_Scenery*)entry);
             break;
         case 2:
-            obj_init_fish(arg0, arg1);
+            obj_init_fish(obj, entry);
             break;
         case 3:
-            obj_init_animator(arg0, arg1);
+            obj_init_animator(obj, entry);
             break;
         case 5:
-            obj_init_smoke(arg0, arg1);
+            obj_init_smoke(obj, entry);
             break;
         case 24:
-            obj_init_unknown25(arg0, arg1);
+            obj_init_unknown25(obj, entry);
             break;
         case 21:
-            obj_init_bombexplosion(arg0, arg1);
+            obj_init_bombexplosion(obj, entry);
             break;
         case 6:
-            obj_init_exit(arg0, arg1);
+            obj_init_exit(obj, entry);
             break;
         case 7:
-            obj_init_audio(arg0, arg1);
+            obj_init_audio(obj, entry);
             break;
         case 8:
         case 18:
-            obj_init_audioline(arg0, arg1);
+            obj_init_audioline(obj, entry);
             break;
         case 26:
-            obj_init_audioreverb(arg0, arg1);
+            obj_init_audioreverb(obj, entry);
             break;
         case 9:
-            obj_init_cameracontrol(arg0, arg1);
+            obj_init_cameracontrol(obj, entry);
             break;
         case 10:
-            obj_init_setuppoint(arg0, arg1);
+            obj_init_setuppoint(obj, entry);
             break;
         case 11:
-            obj_init_dino_whale(arg0, arg1);
+            obj_init_dino_whale(obj, entry);
             break;
         case 12:
-            obj_init_checkpoint(arg0, arg1);
+            obj_init_checkpoint(obj, entry);
             break;
         case 29:
-            obj_init_modechange(arg0, arg1);
+            obj_init_modechange(obj, entry);
             break;
         case 40:
-            obj_init_bonus(arg0, arg1);
+            obj_init_bonus(obj, entry);
             break;
         case 13:
-            obj_init_door(arg0, arg1);
+            obj_init_door(obj, entry);
             break;
         case 110:
-            obj_init_ttdoor(arg0, arg1);
+            obj_init_ttdoor(obj, entry);
             break;
         case 14:
-            obj_init_fogchanger(arg0, arg1);
+            obj_init_fogchanger(obj, entry);
             break;
         case 15:
-            obj_init_ainode(arg0, arg1);
+            obj_init_ainode(obj, entry);
             break;
         case 16:
-            obj_init_weaponballoon(arg0, arg1);
+            obj_init_weaponballoon(obj, entry);
             break;
         case 22:
-            obj_init_wballoonpop(arg0, arg1);
+            obj_init_wballoonpop(obj, entry);
             break;
         case 4:
         case 17:
-            obj_init_weapon(arg0, arg1);
+            obj_init_weapon(obj, entry);
             break;
         case 25:
-            obj_init_skycontrol(arg0, arg1);
+            obj_init_skycontrol(obj, entry);
             break;
         case 27:
-            obj_init_torch_mist(arg0, arg1);
+            obj_init_torch_mist(obj, entry);
             break;
         case 28:
-            obj_init_texscroll(arg0, arg1);
+            obj_init_texscroll(obj, entry);
             break;
         case 30:
-            obj_init_stopwatchman(arg0, arg1);
+            obj_init_stopwatchman(obj, entry);
             break;
         case 31:
-            obj_init_coin(arg0, arg1);
+            obj_init_coin(obj, entry);
             break;
         case 32:
-            obj_init_rgbalight(arg0, arg1);
+            obj_init_rgbalight(obj, entry);
             break;
         case 35:
-            obj_init_buoy_pirateship(arg0, arg1);
+            obj_init_buoy_pirateship(obj, entry);
             break;
         case 66:
-            obj_init_log(arg0, arg1);
+            obj_init_log(obj, entry);
             break;
         case 36:
-            obj_init_weather(arg0, arg1);
+            obj_init_weather(obj, entry);
             break;
         case 37:
-            obj_init_bridge_whaleramp(arg0, arg1);
+            obj_init_bridge_whaleramp(obj, entry);
             break;
         case 38:
-            obj_init_rampswitch(arg0, arg1);
+            obj_init_rampswitch(obj, entry);
             break;
         case 39:
-            obj_init_seamonster(arg0, arg1);
+            obj_init_seamonster(obj, entry);
             break;
         case 42:
-            obj_init_lensflare(arg0, arg1);
+            obj_init_lensflare(obj, entry);
             break;
         case 43:
-            obj_init_lensflareswitch(arg0, arg1);
+            obj_init_lensflareswitch(obj, entry);
             break;
         case 44:
-            obj_init_collectegg(arg0, arg1);
+            obj_init_collectegg(obj, entry);
             break;
         case 45:
-            obj_init_eggcreator(arg0, arg1);
+            obj_init_eggcreator(obj, entry);
             break;
         case 46:
-            obj_init_characterflag(arg0, arg1);
+            obj_init_characterflag(obj, entry);
             break;
         case 48:
-            obj_init_animation(arg0, arg1);
+            obj_init_animation(obj, entry);
             break;
         case 51:
-            obj_init_infopoint(arg0, arg1);
+            obj_init_infopoint(obj, entry);
             break;
         case 54:
-            obj_init_trigger(arg0, arg1);
+            obj_init_trigger(obj, entry);
             break;
         case 56:
         case 92:
-            obj_init_airzippers_waterzippers(arg0, arg1);
+            obj_init_airzippers_waterzippers(obj, entry);
             break;
         case 57:
-            obj_init_unknown58(arg0, arg1);
+            obj_init_unknown58(obj, entry);
             break;
         case 58:
-            obj_init_wavegenerator(arg0, arg1);
+            obj_init_wavegenerator(obj, entry);
             break;
         case 60:
-            obj_init_butterfly(arg0, arg1);
+            obj_init_butterfly(obj, entry);
             break;
         case 61:
-            obj_init_parkwarden(arg0, arg1);
+            obj_init_parkwarden(obj, entry);
             break;
         case 63:
-            obj_init_worldkey(arg0, arg1);
+            obj_init_worldkey(obj, entry);
             break;
         case 64:
-            obj_init_coincreator(arg0, arg1);
+            obj_init_coincreator(obj, entry);
             break;
         case 65:
-            obj_init_treasuresucker(arg0, arg1);
+            obj_init_treasuresucker(obj, entry);
             break;
         case 67:
-            obj_init_lavaspurt(arg0, arg1);
+            obj_init_lavaspurt(obj, entry);
             break;
         case 68:
-            obj_init_posarrow(arg0, arg1);
+            obj_init_posarrow(obj, entry);
             break;
         case 69:
         case 102:
-            obj_init_hittester(arg0, arg1);
+            obj_init_hittester(obj, entry);
             break;
         case 71:
         case 94:
         case 103:
-            obj_init_dynamic_lighting_object(arg0, arg1);
+            obj_init_dynamic_lighting_object(obj, entry);
             break;
         case 95:
         case 100:
-            obj_init_unknown96(arg0, arg1);
+            obj_init_unknown96(obj, entry);
             break;
         case 96:
         case 101:
-            obj_init_snowball(arg0, arg1);
+            obj_init_snowball(obj, entry);
             break;
         case 70:
-            obj_init_midifade(arg0, arg1);
+            obj_init_midifade(obj, entry);
             break;
         case 111:
-            obj_init_midifadepoint(arg0, arg1);
+            obj_init_midifadepoint(obj, entry);
             break;
         case 117:
-            obj_init_midichset(arg0, arg1);
+            obj_init_midichset(obj, entry);
             break;
         case 72:
-            obj_init_effectbox(arg0, arg1);
+            obj_init_effectbox(obj, entry);
             break;
         case 73:
-            obj_init_trophycab(arg0, arg1);
+            obj_init_trophycab(obj, entry);
             break;
         case 74:
-            obj_init_bubbler(arg0, arg1);
+            obj_init_bubbler(obj, entry);
             break;
         case 75:
-            obj_init_flycoin(arg0, arg1);
+            obj_init_flycoin(obj, entry);
             break;
         case 76:
-            obj_init_goldenballoon(arg0, arg1);
+            obj_init_goldenballoon(obj, entry);
             break;
         case 77:
-            obj_init_laserbolt(arg0, arg1);
+            obj_init_laserbolt(obj, entry);
             break;
         case 78:
-            obj_init_lasergun(arg0, arg1);
+            obj_init_lasergun(obj, entry);
             break;
         case 81:
-            obj_init_groundzipper(arg0, arg1);
+            obj_init_groundzipper(obj, entry);
             break;
         case 82:
-            obj_init_overridepos(arg0, arg1);
+            obj_init_overridepos(obj, entry);
             break;
         case 83:
-            obj_init_wizpigship(arg0, arg1);
+            obj_init_wizpigship(obj, entry);
             break;
         case 88:
-            obj_init_boost(arg0, arg1);
+            obj_init_boost(obj, entry);
             break;
         case 87:
-            obj_init_silvercoin(arg0, arg1);
+            obj_init_silvercoin(obj, entry);
             break;
         case 89:
-            obj_init_wardensmoke(arg0, arg1);
+            obj_init_wardensmoke(obj, entry);
             break;
         case 93:
-            obj_init_unknown94(arg0, arg1);
+            obj_init_unknown94(obj, entry);
             break;
         case 97:
-            obj_init_teleport(arg0, arg1);
+            obj_init_teleport(obj, entry);
             break;
         case 98:
         case 99:
-            obj_init_lighthouse_rocketsignpost(arg0, arg1);
+            obj_init_lighthouse_rocketsignpost(obj, entry);
             break;
         case 104:
-            obj_init_rangetrigger(arg0, arg1);
+            obj_init_rangetrigger(obj, entry);
             break;
         case 107:
         case 115:
-            obj_init_fireball_octoweapon(arg0, arg1);
+            obj_init_fireball_octoweapon(obj, entry);
             break;
         case 108:
-            obj_init_frog(arg0, arg1);
+            obj_init_frog(obj, entry);
             break;
         case 109:
-            obj_init_silvercoin_adv2(arg0, arg1);
+            obj_init_silvercoin_adv2(obj, entry);
             break;
         case 116:
-            obj_init_levelname(arg0, arg1);
+            obj_init_levelname(obj, entry);
             break;
     }
 }

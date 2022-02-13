@@ -131,57 +131,49 @@ s16 D_8011D4E2;
 /******************************/
 
 #ifdef NON_EQUIVALENT
-typedef struct LevelObjectEntry80033CC0 {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-    u8 unkB;
-} LevelObjectEntry80033CC0;
-
 typedef struct Object_50_80033CC0 {
     f32 unk0;
 } Object_50_80033CC0;
 
-void obj_init_scenery(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
+void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     f32 phi_f0;
-    arg0->unk6 |= 2;
-    phi_f0 = arg1->unk9 & 0xFF;
+    obj->unk6 |= 2;
+    phi_f0 = entry->unk9 & 0xFF;
     if (phi_f0 < 10) {
         phi_f0 = 10;
     }
     phi_f0 /= 64;
-    arg0->scale = arg0->header->scale * phi_f0;
-    ((Object_50_80033CC0 *)arg0->unk50)->unk0 = arg0->header->unk4 * phi_f0;
-    arg0->unk3A = arg1->unk8;
-    arg0->y_rotation = arg1->unkA << 6 << 4;
-    if (arg1->unkB) {
+    obj->scale = obj->header->scale * phi_f0;
+    ((Object_50_80033CC0 *)obj->unk50)->unk0 = obj->header->unk4 * phi_f0;
+    obj->unk3A = entry->unk8;
+    obj->y_rotation = entry->unkA << 6 << 4;
+    if (entry->unkB) {
         // Regalloc issue here
-        arg0->unk4C->unk14 = 1;
-        arg0->unk4C->unk11 = 1;
-        arg0->unk4C->unk10 = 0x14;
-        arg0->unk4C->unk12 = 0;
-        arg0->unk4C->unk16 = -5;
-        arg0->unk4C->unk17 = arg1->unkB;
+        obj->unk4C->unk14 = 1;
+        obj->unk4C->unk11 = 1;
+        obj->unk4C->unk10 = 0x14;
+        obj->unk4C->unk12 = 0;
+        obj->unk4C->unk16 = -5;
+        obj->unk4C->unk17 = entry->unkB;
     }
-    if (arg0->unk3A >= arg0->header->numberOfModelIds) {
-        arg0->unk3A = 0;
+    if (obj->unk3A >= obj->header->numberOfModelIds) {
+        obj->unk3A = 0;
     }
-    arg0->unk78 = 0;
-    arg0->unk7C.word = 0;
+    obj->unk78 = 0;
+    obj->unk7C.word = 0;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_scenery.s")
 #endif
 
-void obj_loop_scenery(Object *obj, s32 arg1) {
+void obj_loop_scenery(Object *obj, s32 speed) {
 	Object78_80033DD0 *obj78;
 	s32 temp_v0;
 	
     if (obj->unk4C != NULL) {
         obj78 = &obj->unk78;
         if (obj->unk7C.half.upper > 0) {
-            obj78->unk4 -= arg1;
+            obj78->unk4 -= speed;
         }
         if ((obj->unk4C->unk14 & 0x40) && ((s32) obj78->unk4 <= 0)) {
             func_80009558(316, obj->x_position, obj->y_position, obj->z_position, 4, NULL);
@@ -207,7 +199,7 @@ void obj_loop_scenery(Object *obj, s32 arg1) {
     }
 }
 
-void obj_init_fireball_octoweapon(Object *arg0, s32 arg1) {
+void obj_init_fireball_octoweapon(Object *arg0, LevelObjectEntry_Fireball_Octoweapon *arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
 }
@@ -359,7 +351,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fireball_octoweapon.s")
 #endif
 
-void obj_init_lasergun(Object *arg0, unk80034530 *arg1) {
+void obj_init_lasergun(Object *arg0, LevelObjectEntry_Lasergun *arg1) {
     Object_64 *temp;
     arg0->unk4C->unk14 = 0x22;
     arg0->unk4C->unk11 = 0;
@@ -375,8 +367,7 @@ void obj_init_lasergun(Object *arg0, unk80034530 *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_lasergun.s")
 
-// Literally the same function as obj_init_fireball_octoweapon()
-void obj_init_laserbolt(Object *arg0, s32 arg1) {
+void obj_init_laserbolt(Object *arg0, LevelObjectEntry_Laserbolt *arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
 }
@@ -464,18 +455,18 @@ void obj_loop_laserbolt(Object *obj, s32 arg1) {
     }
 }
 
-void obj_init_torch_mist(Object *arg0, u8 *arg1) {
-    f32 phi_f0 = (s32)(arg1[9] & 0xFF);
+void obj_init_torch_mist(Object *obj, LevelObjectEntry_Torch_Mist *entry) {
+    f32 phi_f0 = (s32)(entry->unk9 & 0xFF);
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    arg0->scale = arg0->header->scale * phi_f0;
-    arg0->unk78 = arg1[8];
+    obj->scale = obj->header->scale * phi_f0;
+    obj->unk78 = entry->unk8;
 }
 
-void obj_loop_torch_mist(unk80034B4C *arg0, s32 arg1) {
-    arg0->unk18 += arg0->unk78 * arg1;
+void obj_loop_torch_mist(Object *obj, s32 speed) {
+    obj->unk18 += obj->unk78 * speed;
 }
 
 void obj_init_effectbox(s32 arg0, s32 arg1) {
@@ -1654,61 +1645,59 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 speed) {
 typedef struct Object_64_8003DFCC {
     f32 unk0;
     s16 unk4;
-    char unk6[0x2];
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
+    s8 unk6[0x2];
 } Object_64_8003DFCC;
 
-void obj_init_weaponballoon(Object *arg0, Object_64_8003DFCC *arg1) {
+void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) {
     s32 cheats;
-    Object_64_8003DFCC *obj;
-    f32 temp;
+    Object_64_8003DFCC *obj64;
+    f32 scalef;
 
-    arg0->unk4C->unk14 = 2;
-    arg0->unk4C->unk11 = 4;
-    arg0->unk4C->unk10 = 0x14;
+    obj->unk4C->unk14 = 2;
+    obj->unk4C->unk11 = 4;
+    obj->unk4C->unk10 = 0x14;
 
     cheats = get_filtered_cheats();
 
     if (cheats & CHEAT_ALL_BALLOONS_ARE_BLUE) {
-        arg1->unk9 = 0;
+        entry->balloonType = BALLOON_TYPE_BOOST;
     } else if (cheats & CHEAT_ALL_BALLOONS_ARE_RED) {
-        arg1->unk9 = 1;
+        entry->balloonType = BALLOON_TYPE_MISSILE;
     } else if (cheats & CHEAT_ALL_BALLOONS_ARE_GREEN) {
-        arg1->unk9 = 2;
+        entry->balloonType = BALLOON_TYPE_TRAP;
     } else if (cheats & CHEAT_ALL_BALLOONS_ARE_YELLOW) {
-        arg1->unk9 = 3;
+        entry->balloonType = BALLOON_TYPE_SHIELD;
     } else if (cheats & CHEAT_ALL_BALLOONS_ARE_RAINBOW) {
-        arg1->unk9 = 4;
+        entry->balloonType = BALLOON_TYPE_MAGNET;
     }
 
-    if (arg1->unk8 >= 6) {
-        arg1->unk8 = 0;
+    // I guess unk8 is unused?
+    if (entry->unk8 >= 6) {
+        entry->unk8 = 0;
     }
 
-    if (arg0->unk3A >= arg0->header->numberOfModelIds) {
-        arg0->unk3A = 0;
+    if (obj->unk3A >= obj->header->numberOfModelIds) {
+        obj->unk3A = 0;
     }
 
-    arg0->unk3A = arg1->unk9;
-    arg0->unk78 = arg0->unk3A;
+    obj->unk3A = entry->balloonType;
+    obj->unk78 = obj->unk3A;
 
-    temp = arg1->unkA & 0xFF;
-    if (temp < 10) {
-        temp = 10;
+    scalef = entry->scale & 0xFF;
+    if (scalef < 10) {
+        scalef = 10;
     }
-    temp /= 64;
+    scalef /= 64;
 
-    obj = (Object_64_8003DFCC*)arg0->unk64;
+    obj64 = (Object_64_8003DFCC*)obj->unk64;
 
-    arg0->scale = arg0->header->scale * temp;
-    obj->unk0 = arg0->scale;
-    obj->unk4 = 0;
-    arg0->unk7C.word = 0;
+    obj->scale = obj->header->scale * scalef;
+    obj64->unk0 = obj->scale;
+    obj64->unk4 = 0;
+    obj->unk7C.word = 0;
 
     if (get_filtered_cheats() & CHEAT_DISABLE_WEAPONS) {
-        gParticlePtrList_addObject(arg0);
+        gParticlePtrList_addObject(obj);
     }
 }
 
@@ -1729,8 +1718,8 @@ void obj_init_weapon(Object *arg0, s32 arg1) {
     arg0->unk7C.word = 0;
 }
 
-void obj_loop_weapon(Object *arg0) {
-    Object_64 *obj64 = arg0->unk64;
+void obj_loop_weapon(Object *obj) {
+    Object_64 *obj64 = obj->unk64;
     switch (obj64->unk18) {
         case 0:
         case 1:
