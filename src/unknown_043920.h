@@ -147,7 +147,7 @@ typedef struct unk8005C270 {
     s8 unk193;
 } unk8005C270;
 
-extern s32 gFunc8003B4BCLength;
+extern s32 gObjLoopGoldenBalloonLength;
 extern s16 D_800DCB54;
 extern s32 D_800DCB58;
 extern s32 D_800DCB5C;
@@ -185,7 +185,7 @@ extern s8 D_800DCDA8[8];
 // Unused?
 extern s16 D_800DCDB0[16];
 
-extern s32 gFunc8003B4BCChecksum;
+extern s32 gObjLoopGoldenBalloonChecksum;
 
 extern s16 D_800DCDD4[4];
 

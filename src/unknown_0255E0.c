@@ -1054,7 +1054,7 @@ void func_8003093C(s32 arg0) {
     gDPSetFogColor(D_8011B0A0++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF);
     gSPFogPosition(D_8011B0A0++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
 }
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030A74.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/obj_loop_fogchanger.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 
 void func_80031018(void) {

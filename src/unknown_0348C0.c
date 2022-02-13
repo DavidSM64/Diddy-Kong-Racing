@@ -143,7 +143,7 @@ typedef struct Object_50_80033CC0 {
     f32 unk0;
 } Object_50_80033CC0;
 
-void func_80033CC0(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
+void obj_init_scenery(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
     f32 phi_f0;
     arg0->unk6 |= 2;
     phi_f0 = arg1->unk9 & 0xFF;
@@ -171,10 +171,10 @@ void func_80033CC0(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
     arg0->unk7C.word = 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033CC0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_scenery.s")
 #endif
 
-void func_80033DD0(Object *obj, s32 arg1) {
+void obj_loop_scenery(Object *obj, s32 arg1) {
 	Object78_80033DD0 *obj78;
 	s32 temp_v0;
 	
@@ -207,7 +207,7 @@ void func_80033DD0(Object *obj, s32 arg1) {
     }
 }
 
-void func_80033F44(Object *arg0, s32 arg1) {
+void obj_init_fireball_octoweapon(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
 }
@@ -241,7 +241,7 @@ void func_800AFC3C(Object *, s32);
 void gParticlePtrList_addObject(Object *);      
 f32 sqrtf(f32);                                
 
-void func_80033F60(Object *obj, s32 arg1) {
+void obj_loop_fireball_octoweapon(Object *obj, s32 arg1) {
 	Object *obj78;
 	Object_4C *obj4C;
 	f32 sp7C;
@@ -356,10 +356,10 @@ void func_80033F60(Object *obj, s32 arg1) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033F60.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fireball_octoweapon.s")
 #endif
 
-void func_80034530(Object *arg0, unk80034530 *arg1) {
+void obj_init_lasergun(Object *arg0, unk80034530 *arg1) {
     Object_64 *temp;
     arg0->unk4C->unk14 = 0x22;
     arg0->unk4C->unk11 = 0;
@@ -373,10 +373,10 @@ void func_80034530(Object *arg0, unk80034530 *arg1) {
     arg0->x_rotation = arg1->unk9 << 4 << 4; // just needs to be 2 left shifts that add up to 8.
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800345A0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_lasergun.s")
 
-// Literally the same function as func_80033F44()
-void func_80034844(Object *arg0, s32 arg1) {
+// Literally the same function as obj_init_fireball_octoweapon()
+void obj_init_laserbolt(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
 }
@@ -396,7 +396,7 @@ typedef struct Object_64_80034860 {
 	s8  unk187;
 } Object_64_80034860;
 
-void func_80034860(Object *obj, s32 arg1) {
+void obj_loop_laserbolt(Object *obj, s32 arg1) {
 	f32 sp5C;
 
 	Object *obj4C_obj;
@@ -464,7 +464,7 @@ void func_80034860(Object *obj, s32 arg1) {
     }
 }
 
-void func_80034AF0(Object *arg0, u8 *arg1) {
+void obj_init_torch_mist(Object *arg0, u8 *arg1) {
     f32 phi_f0 = (s32)(arg1[9] & 0xFF);
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
@@ -474,11 +474,11 @@ void func_80034AF0(Object *arg0, u8 *arg1) {
     arg0->unk78 = arg1[8];
 }
 
-void func_80034B4C(unk80034B4C *arg0, s32 arg1) {
+void obj_loop_torch_mist(unk80034B4C *arg0, s32 arg1) {
     arg0->unk18 += arg0->unk78 * arg1;
 }
 
-void func_80034B68(s32 arg0, s32 arg1) {
+void obj_init_effectbox(s32 arg0, s32 arg1) {
 }
 
 #ifdef NON_EQUIVALENT
@@ -489,7 +489,7 @@ f32 func_800707C4(s16);
 f32 func_800707F8(s16);
 Object **get_object_struct_array(s32 *count);
 
-void func_80034B74(Object *obj, s32 arg1) {
+void obj_loop_effectbox(Object *obj, s32 arg1) {
     Object **objList;
     Object_3C_80034B74 *obj3C;
     Object_64_80034B74 *curObj64;
@@ -546,10 +546,10 @@ void func_80034B74(Object *obj, s32 arg1) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034B74.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_effectbox.s")
 #endif
 
-void func_80034E70(Object *arg0, u8 *arg1) {
+void obj_init_trophycab(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 2;
     arg0->y_rotation = arg1[8] << 6 << 4; // Not sure about the values here.
@@ -594,7 +594,7 @@ typedef struct Object_54_80034E9C {
 // Has regalloc & stack issues.
 
 // Trophy Cabinet behavior loop
-void func_80034E9C(Object *obj, s32 arg1) {
+void obj_loop_trophycab(Object *obj, s32 arg1) {
     s32 sp34;
     s32 isTrophyRaceAvaliable;
     s32 raceType;
@@ -715,22 +715,22 @@ void func_80034E9C(Object *obj, s32 arg1) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034E9C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trophycab.s")
 #endif
 
-void func_8003522C(Object *arg0, s32 arg1) {
+void obj_init_collectegg(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x14;
     arg0->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035260.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_collectegg.s")
 
-void func_80035640(s32 arg0, s32 arg1) {
+void obj_init_eggcreator(s32 arg0, s32 arg1) {
 }
 
-void func_8003564C(Object *arg0, s32 arg1) {
+void obj_loop_eggcreator(Object *arg0, s32 arg1) {
     unk8003564C sp20;
     Object *someObj;
 
@@ -750,7 +750,7 @@ void func_8003564C(Object *arg0, s32 arg1) {
     }
 }
 
-void func_8003572C(Object *arg0, LevelObjectEntry8003572C *arg1) {
+void obj_init_lighthouse_rocketsignpost(Object *arg0, LevelObjectEntry8003572C *arg1) {
     f32 phi_f0 = arg1->unk9 & 0xFF;
     if (phi_f0 < 10) {
         phi_f0 = 10;
@@ -767,7 +767,7 @@ void func_8003572C(Object *arg0, LevelObjectEntry8003572C *arg1) {
     arg0->unk4C->unk12 = 0;
 }
 
-void func_800357D4(Object *obj, s32 arg1) {
+void obj_loop_rocketsignpost(Object *obj, s32 arg1) {
     Object *someObj;
     Object_4C *temp_v1;
 
@@ -785,8 +785,8 @@ void func_800357D4(Object *obj, s32 arg1) {
     obj->unk4C->unk13 = 0xFF;
 }
 
-void func_8003588C(Object *arg0, LevelObjectEntry8003588C *arg1) {
-    Object_40 *obj40;
+void obj_init_airzippers_waterzippers(Object *arg0, LevelObjectEntry8003588C *arg1) {
+    ObjectHeader *obj40;
     f32 phi_f0;
 
     phi_f0 = arg1->unk9 & 0xFF;
@@ -809,16 +809,16 @@ void func_8003588C(Object *arg0, LevelObjectEntry8003588C *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003596C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035AE8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80035C50.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_airzippers_waterzippers.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_groundzipper.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_groundzipper.s")
 
-void func_80035E20(unk80035E20 *arg0, s32 arg1) {
+void obj_init_unknown58(unk80035E20 *arg0, s32 arg1) {
     arg0->unk78 = 0;
     arg0->unk7C = arg0->unk40;
 }
 
-void func_80035E34(Object *obj, s32 arg1) {
+void obj_loop_unknown58(Object *obj, s32 arg1) {
     Object *someObj;
     Object *someOtherObj;
     Object_64_80035E34 *someOtherObj64;
@@ -845,7 +845,7 @@ void func_80035E34(Object *obj, s32 arg1) {
     }
 }
 
-void func_80035EF8(Object *arg0, unk80035EF8 *arg1) {
+void obj_init_characterflag(Object *arg0, unk80035EF8 *arg1) {
     f32 phi_f0;
     arg0->unk78 = (s32)arg1->unkE;
     arg0->unk7C.word = -1;
@@ -858,7 +858,7 @@ void func_80035EF8(Object *arg0, unk80035EF8 *arg1) {
     arg0->scale = (f32)(arg0->descriptor_ptr->unkC * phi_f0);
 }
 
-void func_80035F6C(Object *obj, s32 arg1) {
+void obj_loop_characterflag(Object *obj, s32 arg1) {
     s32 temp_t4;
     s32 temp_t5;
     Object *someObj;
@@ -892,7 +892,7 @@ void func_80035F6C(Object *obj, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
-void func_80036194(Object *arg0, s32 arg1) {
+void obj_init_stopwatchman(Object *arg0, s32 arg1) {
     Object_64 *temp;
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 0;
@@ -904,7 +904,7 @@ void func_80036194(Object *arg0, s32 arg1) {
     D_8011D4D8 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800361E0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_stopwatchman.s")
 
 void func_80036BCC(u16 arg0, s32 arg1) {
     if ((D_8011D4D8 != 0) && (arg1 & 1)) {
@@ -916,15 +916,15 @@ void func_80036BCC(u16 arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036C30.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800370D4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_fish.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fish.s")
 
-void func_80037578(unk80037578 *arg0, u8 *arg1) {
+void obj_init_lavaspurt(unk80037578 *arg0, u8 *arg1) {
     arg0->unk78 = arg1[9] * 2;
     arg0->unk7C = arg1[8];
 }
 
-void func_80037594(Object *obj, s32 arg1) {
+void obj_loop_lavaspurt(Object *obj, s32 arg1) {
     if (obj->unk78 > 0) {
         obj->unk78 -= arg1;
         obj->unk6 |= 0x4000;
@@ -938,13 +938,13 @@ void func_80037594(Object *obj, s32 arg1) {
     }
 }
 
-void func_80037624(unk80037624 *arg0, s32 arg1) {
+void obj_init_posarrow(unk80037624 *arg0, s32 arg1) {
     arg0->unk6 |= 0x4000;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003763C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_posarrow.s")
 
-void func_800376E0(Object *arg0, LevelObjectEntry800376E0 *arg1, s32 arg2) {
+void obj_init_animator(Object *arg0, LevelObjectEntry800376E0 *arg1, s32 arg2) {
     Object_64_800376E0 *obj64;
     LevelModel *levelModel;
     s16 segmentBatchCount;
@@ -968,17 +968,17 @@ void func_800376E0(Object *arg0, LevelObjectEntry800376E0 *arg1, s32 arg2) {
             obj64->unk2 = segmentBatchCount - 1;
         }
     }
-    func_800377E4(arg0, 0x20000);
+    obj_loop_animator(arg0, 0x20000);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800377E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80037A18.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_animator.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_animation.s")
 
-void func_80037CE8(s32 arg0, s32 arg1) {
+void obj_loop_animobject(s32 arg0, s32 arg1) {
     func_8001F460(arg0, arg1, arg0);
 }
 
-void func_80037D08(unk80037D08_arg0 *arg0, s32 arg1) {
+void obj_loop_dooropener(unk80037D08_arg0 *arg0, s32 arg1) {
     s32 phi_a0;
     unk80037D08_arg0_64 *sp18;
 
@@ -990,19 +990,19 @@ void func_80037D08(unk80037D08_arg0 *arg0, s32 arg1) {
     func_800235D0(phi_a0);
 }
 
-void func_80037D54(s32 arg0, s32 arg1) {
+void obj_init_overridepos(s32 arg0, s32 arg1) {
 }
 
 /* Unused? */
 void func_80037D60(s32 arg0, s32 arg1) {
 }
 
-void func_80037D6C(s32 arg0, s32 arg1) {
+void obj_init_wizpigship(s32 arg0, s32 arg1) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80037D78.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_wizpigship.s")
 
-void func_800380F8(Object *obj, s32 arg1) {
+void obj_loop_vehicleanim(Object *obj, s32 arg1) {
     Object_60_800380F8 *obj60;
     Object *someObj;
 
@@ -1020,35 +1020,35 @@ void func_800380F8(Object *obj, s32 arg1) {
     }
 }
 
-void func_8003818C(Object *arg0, s32 arg1) {
+void obj_init_hittester(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 0x81;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
     arg0->unk4C->unk12 = 0;
 }
 
-// Literally the same as func_80037CE8()
-void func_800381C0(s32 arg0, s32 arg1) {
+// Literally the same as obj_loop_animobject()
+void obj_loop_hittester(s32 arg0, s32 arg1) {
     func_8001F460(arg0, arg1, arg0);
 }
 
-void func_800381E0(Object *arg0, s32 arg1) {
+void obj_init_dynamic_lighting_object(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
     arg0->unk4C->unk12 = 0;
 }
 
-// Literally the same as func_8003818C()
-void func_80038214(Object *arg0, s32 arg1) {
+// Literally the same as obj_init_hittester()
+void obj_init_unknown96(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 0x81;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
     arg0->unk4C->unk12 = 0;
 }
 
-// Literally the same as func_800381E0()
-void func_80038248(Object *arg0, s32 arg1) {
+// Literally the same as obj_init_dynamic_lighting_object()
+void obj_init_snowball(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 2;
     arg0->unk4C->unk10 = 0x14;
@@ -1057,7 +1057,7 @@ void func_80038248(Object *arg0, s32 arg1) {
 
 #ifdef NON_EQUIVALENT
 // Regalloc issues
-void func_8003827C(Object *obj, s32 arg1) {
+void obj_loop_snowball(Object *obj, s32 arg1) {
     Object_64_8003827C *obj64 = obj->unk64;
     if (obj64->unk24 == 0) {
         if (obj64->unk38 != 0) {
@@ -1075,16 +1075,16 @@ void func_8003827C(Object *obj, s32 arg1) {
 }
 
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003827C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_snowball.s")
 #endif
 
 // Unused
 void func_80038330(Object *obj, s32 arg1) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003833C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_char_select.s")
 
-void func_80038710(Object *obj, s32 arg1) {
+void obj_loop_animcamera(Object *obj, s32 arg1) {
     s32 temp_v0;
     s32 phi_v1;
     Object_64_80038710 *obj64;
@@ -1108,7 +1108,7 @@ void func_80038710(Object *obj, s32 arg1) {
 void func_800387C0(Object *obj, s32 arg1) {
 }
 
-void func_800387CC(Object *obj, s32 arg1) {
+void obj_loop_animcar(Object *obj, s32 arg1) {
     Object *someObj;
     s32 temp_v0;
     temp_v0 = obj->unk78;
@@ -1124,7 +1124,7 @@ void func_800387CC(Object *obj, s32 arg1) {
     }
 }
 
-void func_80038854(Object *arg0, u8 *arg1) {
+void obj_init_infopoint(Object *arg0, u8 *arg1) {
     if (arg1[9] != 0) {
         arg0->unk4C->unk14 = 0x21;
     } else {
@@ -1138,7 +1138,7 @@ void func_80038854(Object *arg0, u8 *arg1) {
     arg0->y_rotation = arg1[11] << 10; // Not sure about the values here.
 }
 
-void func_800388D4(Object *arg0, s32 arg1) {
+void obj_loop_infopoint(Object *arg0, s32 arg1) {
     s16 temp_a0;
     Object_4C *obj4C;
     Object *playerObj;
@@ -1162,10 +1162,10 @@ void func_800388D4(Object *arg0, s32 arg1) {
     }
 }
 
-void func_800389AC(s32 arg0, s32 arg1) {
+void obj_init_smoke(s32 arg0, s32 arg1) {
 }
 
-void func_800389B8(Object *obj, s32 arg1) {
+void obj_loop_smoke(Object *obj, s32 arg1) {
     f32 temp_f2 = arg1;
     if (osTvType == TV_TYPE_PAL) {
         temp_f2 *= 1.2;
@@ -1180,10 +1180,10 @@ void func_800389B8(Object *obj, s32 arg1) {
     }
 }
 
-void func_80038A6C(s32 arg0, s32 arg1) {
+void obj_init_unknown25(s32 arg0, s32 arg1) {
 }
 
-void func_80038A78(Object *arg0, s32 arg1) {
+void obj_loop_unknown25(Object *arg0, s32 arg1) {
     arg0->unk18 += arg1 * 8;
     if (arg0->unk18 >= 256) {
         gParticlePtrList_addObject(arg0);
@@ -1191,10 +1191,10 @@ void func_80038A78(Object *arg0, s32 arg1) {
     }
 }
 
-void func_80038AC8(s32 arg0, s32 arg1) {
+void obj_init_wardensmoke(s32 arg0, s32 arg1) {
 }
 
-void func_80038AD4(Object *arg0, s32 arg1) {
+void obj_loop_wardensmoke(Object *arg0, s32 arg1) {
     f32 temp_f2;
 
     temp_f2 = (f32)arg1;
@@ -1211,7 +1211,7 @@ void func_80038AD4(Object *arg0, s32 arg1) {
 
 #ifdef NON_EQUIVALENT
 // regalloc issues
-void func_80038B74(Object *obj, unk80038B74 *arg1) {
+void obj_init_bombexplosion(Object *obj, unk80038B74 *arg1) {
     s32 temp;
     obj->unk18 = 0;
     obj->scale = 0.5f;
@@ -1226,12 +1226,12 @@ void func_80038B74(Object *obj, unk80038B74 *arg1) {
 }
 
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038B74.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_bombexplosion.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038BF4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bombexplosion.s")
 
-void func_80038D58(Object *arg0, s32 arg1) {
+void obj_init_teleport(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0xF;
@@ -1241,7 +1241,7 @@ void func_80038D58(Object *arg0, s32 arg1) {
     }
 }
 
-void func_80038DC4(Object *arg0, s32 arg1) {
+void obj_loop_teleport(Object *arg0, s32 arg1) {
     if (arg0->unk78 != 0) {
         Object_3C_80038DC4 *temp = arg0->unk3C_a.unk3C;
         if (arg0->unk4C->unk13 < 0x78) {
@@ -1253,7 +1253,7 @@ void func_80038DC4(Object *arg0, s32 arg1) {
     }
 }
 
-void func_80038E3C(Object *obj, LevelObjectEntry80038E3C *arg1) {
+void obj_init_exit(Object *obj, LevelObjectEntry80038E3C *arg1) {
     f32 phi_f0;
     Object_64_80038E3C *obj64;
     phi_f0 = arg1->unk10 & 0xFF;
@@ -1276,34 +1276,34 @@ void func_80038E3C(Object *obj, LevelObjectEntry80038E3C *arg1) {
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80038F58.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_exit.s")
 
-void func_80039160(unk80039160 *arg0, s8 *arg1) {
+void obj_init_cameracontrol(unk80039160 *arg0, s8 *arg1) {
     arg0->unk78 = arg1[8];
     func_80011390();
 }
 
-void func_80039184(s32 arg0, s32 arg1) {
+void obj_loop_cameracontrol(s32 arg0, s32 arg1) {
 }
 
-void func_80039190(unk80039190 *arg0, u8 *arg1) {
+void obj_init_setuppoint(unk80039190 *arg0, u8 *arg1) {
     s32 temp;
     arg0->unk78 = arg1[8];
     arg0->unk7C = arg1[9];
     arg0->unk0 = arg1[10] << 6 << 4; // Not sure about the values here.
 }
 
-void func_800391BC(s32 arg0, s32 arg1) {
+void obj_loop_setuppoint(s32 arg0, s32 arg1) {
 }
 
-void func_800391C8(Object *arg0, s32 arg1) {
+void obj_init_dino_whale(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 3;
     arg0->unk4C->unk10 = 0x14;
     arg0->unk4C->unk12 = 0;
 }
 
-void func_800391FC(Object *obj, s32 arg1) {
+void obj_loop_dino_whale(Object *obj, s32 arg1) {
     s32 sp2C;
 
     if (obj->unk78 > 0) {
@@ -1323,7 +1323,7 @@ void func_800391FC(Object *obj, s32 arg1) {
     }
 }
 
-void func_800392B8(Object *arg0, s32 arg1) {
+void obj_init_parkwarden(Object *arg0, s32 arg1) {
     Object_64 *temp;
     arg0->unk4C->unk14 = (u16)1;
     arg0->unk4C->unk11 = (u8)0;
@@ -1344,7 +1344,7 @@ void func_80039320(s16 arg0) {
     D_8011D4E2 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80039330.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_parkwarden.s")
 
 void func_8003AC3C(u16 arg0, s32 arg1) {
     if ((D_8011D4D4 != 0) && (arg1 & 1)) {
@@ -1356,14 +1356,14 @@ void func_8003AC3C(u16 arg0, s32 arg1) {
     }
 }
 
-void func_8003ACA0(s32 arg0, s32 arg1) {
+void obj_loop_gbparkwarden(s32 arg0, s32 arg1) {
 }
 
 f32 func_8003ACAC(void) {
     return D_8011D4D0;
 }
 
-void func_8003ACBC(Object *arg0, u8 *arg1, s32 arg2) {
+void obj_init_checkpoint(Object *arg0, u8 *arg1, s32 arg2) {
     f32 phi_f0 = (s32)(arg1[8] & 0xFF);
     if (phi_f0 < 5.0f) {
         phi_f0 = 5.0f;
@@ -1374,10 +1374,10 @@ void func_8003ACBC(Object *arg0, u8 *arg1, s32 arg2) {
     func_80011390();
 }
 
-void func_8003AD28(s32 arg0, s32 arg1) {
+void obj_loop_checkpoint(s32 arg0, s32 arg1) {
 }
 
-void func_8003AD34(Object *obj, LevelObjectEntry8003AD34 *arg1) {
+void obj_init_modechange(Object *obj, LevelObjectEntry8003AD34 *arg1) {
     f32 phi_f0;
     Object_64_8003AD34 *obj64;
     phi_f0 = arg1->unk8 & 0xFF;
@@ -1400,10 +1400,10 @@ void func_8003AD34(Object *obj, LevelObjectEntry8003AD34 *arg1) {
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003AE50.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_modechange.s")
 
-// Exactly the same as func_8003AD34
-void func_8003B058(Object *obj, LevelObjectEntry8003AD34 *arg1) {
+// Exactly the same as obj_init_modechange
+void obj_init_bonus(Object *obj, LevelObjectEntry8003AD34 *arg1) {
     f32 phi_f0;
     Object_64_8003AD34 *obj64;
     phi_f0 = arg1->unk8 & 0xFF;
@@ -1426,13 +1426,13 @@ void func_8003B058(Object *obj, LevelObjectEntry8003AD34 *arg1) {
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B174.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B368.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B4BC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B7CC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003B988.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bonus.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_goldenballoon.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_goldenballoon.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_door.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_door.s")
 
-void func_8003C1E0(Object *obj, LevelObjectEntry8003C1E0 *arg1) {
+void obj_init_ttdoor(Object *obj, LevelObjectEntry8003C1E0 *arg1) {
     f32 temp_f0;
     Object_64_8003C1E0 *obj64;
     f32 phi_f0;
@@ -1462,11 +1462,11 @@ void func_8003C1E0(Object *obj, LevelObjectEntry8003C1E0 *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C2E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C644.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003C7A4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_ttdoor.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_trigger.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trigger.s")
 
-void func_8003C9EC(Object *arg0, u8 *arg1) {
+void obj_init_bridge_whaleramp(Object *arg0, u8 *arg1) {
     Object_64 *temp = arg0->unk64;
     arg0->unk3A = arg1[8];
     arg0->y_rotation = arg1[9] << 6 << 4;
@@ -1481,9 +1481,9 @@ void func_8003C9EC(Object *arg0, u8 *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003CA68.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bridge_whaleramp.s")
 
-void func_8003CE64(Object *arg0, u8 *arg1) {
+void obj_init_rampswitch(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x14;
@@ -1491,27 +1491,27 @@ void func_8003CE64(Object *arg0, u8 *arg1) {
     arg0->unk78 = arg1[8];
 }
 
-void func_8003CEA0(Object *arg0, s32 arg1) {
+void obj_loop_rampswitch(Object *arg0, s32 arg1) {
     if (arg0->unk4C->unk13 < 0x2D) {
         func_8001E344(arg0->unk78);
     }
     arg0->unk4C->unk13 = (u8)0xFF;
 }
 
-void func_8003CF00(s32 arg0, s32 arg1) {
+void obj_init_seamonster(s32 arg0, s32 arg1) {
 }
 
-void func_8003CF0C(s32 arg0, s32 arg1) {
+void obj_loop_seamonster(s32 arg0, s32 arg1) {
 }
 
-void func_8003CF18(unk8003CF18 *arg0, u8 *arg1) {
+void obj_init_fogchanger(unk8003CF18 *arg0, u8 *arg1) {
     f32 temp_f0;
     temp_f0 = arg1[8] * 8.0f;
     temp_f0 = temp_f0 * temp_f0;
     arg0->unk78 = temp_f0;
 }
 
-void func_8003CF58(Object *arg0, u8 *arg1) {
+void obj_init_skycontrol(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = arg1[9];
@@ -1519,13 +1519,13 @@ void func_8003CF58(Object *arg0, u8 *arg1) {
     arg0->unk7C.word = arg1[9];
 }
 
-void func_8003CF98(Object *arg0, s32 arg1) {
+void obj_loop_skycontrol(Object *arg0, s32 arg1) {
     if (arg0->unk4C->unk13 < arg0->unk7C.word) {
         func_80028044(arg0->unk78);
     }
 }
 
-void func_8003CFE0(s32 arg0, u8 *arg1) {
+void obj_init_ainode(s32 arg0, u8 *arg1) {
     if (arg1[9] == 0xFF) {
         arg1[9] = func_8001C48C(arg0) & 0xFF;
     }
@@ -1533,28 +1533,28 @@ void func_8003CFE0(s32 arg0, u8 *arg1) {
     func_8001D1AC();
 }
 
-void func_8003D02C(s32 arg0, s32 arg1) {
+void obj_loop_ainode(s32 arg0, s32 arg1) {
 }
 
-void func_8003D038(unk8003D038 *arg0, s8 *arg1) {
+void obj_init_treasuresucker(unk8003D038 *arg0, s8 *arg1) {
     arg0->unk18 = 0x78;
     arg0->unk78 = (arg1[8] - 1) & 3;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D058.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_treasuresucker.s")
 
-void func_8003D2AC(s32 arg0, s32 arg1) {
+void obj_init_flycoin(s32 arg0, s32 arg1) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D2B8.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_flycoin.s")
 
-void func_8003D3EC(unk8003D3EC *arg0, s32 arg1) {
+void obj_init_coincreator(unk8003D3EC *arg0, s32 arg1) {
     arg0->unk18 = 0x64;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D3FC.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_coincreator.s")
 
-void func_8003D534(Object *arg0, s32 arg1) {
+void obj_init_coin(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x1E;
@@ -1565,9 +1565,9 @@ void func_8003D534(Object *arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003D5A0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_coin.s")
 
-void func_8003DBA0(Object *obj, s32 arg1) {
+void obj_init_silvercoin_adv2(Object *obj, s32 arg1) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -1586,7 +1586,7 @@ void func_8003DBA0(Object *obj, s32 arg1) {
     }
 }
 
-void func_8003DC5C(Object *obj, s32 arg1) {
+void obj_init_silvercoin(Object *obj, s32 arg1) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -1605,9 +1605,9 @@ void func_8003DC5C(Object *obj, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003DD14.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_silvercoin.s")
 
-void func_8003DE74(Object *obj, unk8003DE74 *arg1) {
+void obj_init_worldkey(Object *obj, unk8003DE74 *arg1) {
     Settings *settings;
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
@@ -1624,7 +1624,7 @@ void func_8003DE74(Object *obj, unk8003DE74 *arg1) {
 /**
  * Rotates the key and checks to see if the player grabbed it.
  */
-void obj_loop_world_key(Object *worldKeyObj, s32 speed) {
+void obj_loop_worldkey(Object *worldKeyObj, s32 speed) {
     Settings *settings;
     Object *playerObj;
 
@@ -1661,7 +1661,7 @@ typedef struct Object_64_8003DFCC {
     u8 unkA;
 } Object_64_8003DFCC;
 
-void func_8003DFCC(Object *arg0, Object_64_8003DFCC *arg1) {
+void obj_init_weaponballoon(Object *arg0, Object_64_8003DFCC *arg1) {
     s32 cheats;
     Object_64_8003DFCC *obj;
     f32 temp;
@@ -1713,15 +1713,15 @@ void func_8003DFCC(Object *arg0, Object_64_8003DFCC *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E140.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weaponballoon.s")
 
-void func_8003E5B0(s32 arg0, s32 arg1) {
+void obj_init_wballoonpop(s32 arg0, s32 arg1) {
 }
 
-void func_8003E5BC(s32 arg0, s32 arg1) {
+void obj_loop_wballoonpop(s32 arg0, s32 arg1) {
 }
 
-void func_8003E5C8(Object *arg0, s32 arg1) {
+void obj_init_weapon(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
     arg0->unk4C->unk11 = 0;
     arg0->unk4C->unk10 = 0x18;
@@ -1730,7 +1730,7 @@ void func_8003E5C8(Object *arg0, s32 arg1) {
     arg0->unk7C.word = 0;
 }
 
-void func_8003E630(Object *arg0) {
+void obj_loop_weapon(Object *arg0) {
     Object_64 *temp = arg0->unk64;
     switch (temp->unk18) {
         case 0:
@@ -1790,9 +1790,9 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FC44.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FD68.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_audio.s")
 
-void func_8003FEF4(Object *arg0, LevelObjectEntry8003FEF4 *arg1) {
+void obj_init_audioline(Object *arg0, LevelObjectEntry8003FEF4 *arg1) {
     Object_64_8003FEF4 *obj64;
 
     obj64 = arg0->unk64;
@@ -1813,7 +1813,7 @@ void func_8003FEF4(Object *arg0, LevelObjectEntry8003FEF4 *arg1) {
     gParticlePtrList_addObject(arg0);
 }
 
-void func_8004001C(Object *arg0, LevelObjectEntry8004001C *entry) {
+void obj_init_audioreverb(Object *arg0, LevelObjectEntry8004001C *entry) {
     s32 temp;
     Object_64_8004001C *obj64 = (Object_64_8004001C *)arg0->unk64;
     obj64->unk2 = entry->unk8;
@@ -1824,7 +1824,7 @@ void func_8004001C(Object *arg0, LevelObjectEntry8004001C *entry) {
     gParticlePtrList_addObject(arg0);
 }
 
-void func_800400A4(Object *obj, LevelObjectEntry800400A4 *arg1, s32 arg2) {
+void obj_init_texscroll(Object *obj, LevelObjectEntry800400A4 *arg1, s32 arg2) {
     Object_64_800400A4 *obj64;
     LevelModel *levelModel;
     s16 numberOfTexturesInLevel;
@@ -1847,13 +1847,13 @@ void func_800400A4(Object *obj, LevelObjectEntry800400A4 *arg1, s32 arg2) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80040148.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_texscroll.s")
 
-void func_800403A8(Object *arg0, s32 arg1, s32 arg2) {
+void obj_init_rgbalight(Object *arg0, s32 arg1, s32 arg2) {
     arg0->unk64 = func_80031CAC(arg0, arg1);
 }
 
-void func_800403D8(Object *arg0, s32 arg1, s32 arg2) {
+void obj_init_buoy_pirateship(Object *arg0, s32 arg1, s32 arg2) {
     arg0->unk64 = func_800BE654(arg0->unk2E, arg0->x_position, arg0->z_position);
     arg0->unk4C->unk14 = 1;
     arg0->unk4C->unk11 = 0;
@@ -1861,14 +1861,14 @@ void func_800403D8(Object *arg0, s32 arg1, s32 arg2) {
     arg0->unk4C->unk12 = 0;
 }
 
-void func_80040448(Object *arg0, s32 arg1) {
+void obj_loop_buoy_pirateship(Object *arg0, s32 arg1) {
     if (arg0->unk64 != NULL) {
         arg0->y_position = func_800BEEB4(arg0->unk64);
     }
     arg0->unk18 += arg1 * 8;
 }
 
-void func_8004049C(Object *arg0, LevelObjectEntry8004049C *arg1, s32 arg2) {
+void obj_init_log(Object *arg0, LevelObjectEntry8004049C *arg1, s32 arg2) {
     f32 phi_f0;
     arg0->unk64 = func_800BE654(arg0->unk2E, arg0->x_position, arg0->z_position);
     arg0->unk4C->unk14 = 1;
@@ -1884,48 +1884,48 @@ void func_8004049C(Object *arg0, LevelObjectEntry8004049C *arg1, s32 arg2) {
     arg0->y_rotation = arg1->unkA << 6 << 4;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80040570.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_log.s")
 
-void func_80040800(unk80040800 *arg0, s16 *arg1) {
+void obj_init_weather(unk80040800 *arg0, s16 *arg1) {
     f32 temp = arg1[4];
     temp *= temp;
     arg0->unk78 = temp;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80040820.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weather.s")
 
-void func_8004092C(s32 arg0, s32 arg1) {
+void obj_init_lensflare(s32 arg0, s32 arg1) {
     func_800AC8A8(arg0);
 }
 
-void func_8004094C(Object *arg0, s16 *arg1, s32 arg2) {
+void obj_init_lensflareswitch(Object *arg0, s16 *arg1, s32 arg2) {
     func_800ACF60(arg0);
     arg0->scale = arg1[4];
     arg0->scale /= 40.0f;
 }
 
-void func_800409A4(s32 arg0, s32 arg1, s32 arg2) {
+void obj_init_wavegenerator(s32 arg0, s32 arg1, s32 arg2) {
     func_800BF524(arg0); //waves.c
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800409C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80040C54.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80041A90.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80041E80.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_butterfly.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_butterfly.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_midifade.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_midifadepoint.s")
 
-void func_80042014(unk80042014_arg0 *arg0, unk80042014_arg1 *arg1) {
+void obj_init_midichset(unk80042014_arg0 *arg0, unk80042014_arg1 *arg1) {
     unk80042014_arg0_64 *temp = arg0->unk64;
     temp->unk0 = arg1->unk8;
     temp->unk2 = arg1->unkA;
     temp->unk3 = arg1->unkB;
 }
 
-void func_8004203C(Object *arg0, unk8004203C_arg1 *arg1) {
+void obj_init_bubbler(Object *arg0, unk8004203C_arg1 *arg1) {
     func_800AF134(arg0->unk6C, arg1->unk9, arg1->unk8, 0, 0, 0);
     arg0->unk78 = arg1->unkA;
 }
 
-void func_80042090(Object *arg0, s32 arg1) {
+void obj_loop_bubbler(Object *arg0, s32 arg1) {
     if (arg0->unk78 >= get_random_number_from_range(0, 0x400)) {
         arg0->unk74 = 1;
     } else {
@@ -1936,21 +1936,21 @@ void func_80042090(Object *arg0, s32 arg1) {
     }
 }
 
-void func_8004210C(unk8004210C *arg0, s8 *arg1) {
+void obj_init_boost(unk8004210C *arg0, s8 *arg1) {
     arg0->unk64 = (s32)get_misc_asset(0x14) + (arg1[8] << 7);
     arg0->unk3C = 0;
 }
 
-void func_80042150(s32 arg0, s32 arg1, s32 arg2) {
+void obj_init_unknown94(s32 arg0, s32 arg1, s32 arg2) {
 }
 
-void func_80042160(s32 arg0, s32 arg1) {
+void obj_loop_unknown94(s32 arg0, s32 arg1) {
 }
 
-void func_8004216C(s32 arg0, s32 arg1) {
+void obj_init_rangetrigger(s32 arg0, s32 arg1) {
 }
 
-void func_80042178(Object *obj, s32 arg1) {
+void obj_loop_rangetrigger(Object *obj, s32 arg1) {
     s32 temp;
     Object_3C_80042178 *obj3C;
     unk80042178 sp20;
@@ -1964,7 +1964,7 @@ void func_80042178(Object *obj, s32 arg1) {
     func_800AFC3C(obj, arg1);
 }
 
-void func_80042210(Object *obj, LevelObjectEntry80042210 *arg1) {
+void obj_init_frog(Object *obj, LevelObjectEntry80042210 *arg1) {
     Object_64_80042210 *obj64;
 
     obj64 = (Object_64_80042210 *)obj->unk64;
@@ -1990,9 +1990,9 @@ void func_80042210(Object *obj, LevelObjectEntry80042210 *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800422F0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_frog.s")
 
-void func_80042998(s32 arg0, s32 arg1) {
+void obj_loop_pigrocketeer(s32 arg0, s32 arg1) {
     Object *obj;
     Object_64_80042998 *obj64;
 
@@ -2011,7 +2011,7 @@ void func_80042998(s32 arg0, s32 arg1) {
     }
 }
 
-void func_80042A1C(unk80042A1C *arg0, s8 *arg1) {
+void obj_init_levelname(unk80042A1C *arg0, s8 *arg1) {
     arg0->unk78 = arg1[9] * 8.0f;
     arg0->unk78 *= arg0->unk78;
     arg0->unk7C = arg1[8];
@@ -2022,9 +2022,10 @@ void func_80042A1C(unk80042A1C *arg0, s8 *arg1) {
     func_800C56D0(4);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80042A90.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_levelname.s")
 
-void func_80042CD0(unk80042CD0 *arg0, s32 arg1) {
+void obj_init_wizghosts(unk80042CD0 *arg0, s32 arg1) {
     func_8001F460(arg0, arg1, arg0);
     arg0->unk18 = (arg0->unk18 + (arg1 * 8)) & 0xFF;
 }
+

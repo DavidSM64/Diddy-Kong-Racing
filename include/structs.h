@@ -463,7 +463,7 @@ typedef struct Object_3C {
     u8 unkD;
 } Object_3C;
 
-typedef struct Object_40 {
+typedef struct ObjectHeader {
     u8 pad0[0x4];
     f32 unk4;
     f32 unk8;
@@ -476,13 +476,13 @@ typedef struct Object_40 {
     u8 pad3E[0x15];
     s8 unk53;
     s8 unk54;
-    s8 unk55; //size of array pointed by Object->unk68
+    s8 unk55; // size of array pointed by Object->unk68
     u8 pad56;
     s8 unk57;
     u8 pad58[0x18];
     u8 unk70;
     u8 unk71;
-} Object_40;
+} ObjectHeader;
 
 typedef struct Object_44_0 {
     u8 unk0;
@@ -678,7 +678,7 @@ typedef struct Object {
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
-  /* 0x0040 */ Object_40 *descriptor_ptr;
+  /* 0x0040 */ ObjectHeader *descriptor_ptr;
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ s16 unk48;
   /* 0x004A */ s16 unk4A;

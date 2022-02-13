@@ -14,7 +14,7 @@ FUNCTIONS_TO_CALC = [
     # function         checksum variable        func size variable
     ('func_80019808', 'gFunc80019808Checksum', 'gFunc80019808Length'),
     ('func_80024D54', 'gFunc80024D54Checksum', 'gFunc80024D54Length'),
-    ('func_8003B4BC', 'gFunc8003B4BCChecksum', 'gFunc8003B4BCLength'),
+    ('obj_loop_goldenballoon', 'gObjLoopGoldenBalloonChecksum', 'gObjLoopGoldenBalloonLength'),
     ('func_80068158', 'gFunc80068158Checksum', 'gFunc80068158Length')
 ]
 

@@ -21,7 +21,7 @@
 
 /************ .data ************/
 
-s32 gFunc8003B4BCLength = 0x310;
+s32 gObjLoopGoldenBalloonLength = 0x310;
 s16 D_800DCB54 = 0;
 s32 D_800DCB58 = 0; // Currently unknown, might be a different type.
 s32 D_800DCB5C = 0; // Currently unknown, might be a different type.
@@ -110,8 +110,8 @@ s16 D_800DCDB0[16] = {
     0x02FA, 0x02FE, 0x08F8, 0x03FD,
 };
 
-// Checksum count for func_8003B4BC
-s32 gFunc8003B4BCChecksum = 42391;
+// Checksum count for obj_loop_goldenballoon
+s32 gObjLoopGoldenBalloonChecksum = 42391;
 
 s16 D_800DCDD4[4] = {
     0, 0, 0x32, -1
@@ -421,7 +421,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004DAB0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_043920/obj_init_racer.s")
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004DE38.s")
 
 void func_8004F77C(unk8004F77C *arg0) {
@@ -920,13 +920,13 @@ void func_8005A3C0(void) {
 void func_8005A3D0(void) {
     s32 i;
     s32 count = 0;
-    u8 *temp = (u8 *)&func_8003B4BC;
+    u8 *temp = (u8 *)&obj_loop_goldenballoon;
 
-    for (i = 0; i < gFunc8003B4BCLength; i++) {
+    for (i = 0; i < gObjLoopGoldenBalloonLength; i++) {
         count += temp[i];
     }
 
-    if (count != gFunc8003B4BCChecksum) {
+    if (count != gObjLoopGoldenBalloonChecksum) {
         D_800DCB54 = 0x800;
     }
 }
