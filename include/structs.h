@@ -463,25 +463,32 @@ typedef struct Object_3C {
     u8 unkD;
 } Object_3C;
 
+#define OBJECT_MODEL_TYPE_3D_MODEL         0
+#define OBJECT_MODEL_TYPE_SPRITE_BILLBOARD 1
+#define OBJECT_MODEL_TYPE_VEHICLE_PART     2
+#define OBJECT_MODEL_TYPE_UNKNOWN4         4
+
 typedef struct ObjectHeader {
-    u8 pad0[0x4];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    u8 pad10[0x20];
-    u16 unk30;
-    s16 unk32;
-    u8 pad34[0x9];
-    u8 unk3D;
-    u8 pad3E[0x15];
-    s8 unk53;
-    s8 unk54;
-    s8 unk55; // size of array pointed by Object->unk68
-    u8 pad56;
-    s8 unk57;
-    u8 pad58[0x18];
-    u8 unk70;
-    u8 unk71;
+             u8 pad0[0x4];
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 scale;
+             u8 pad10[0x20];
+  /* 0x30 */ u16 unk30;
+  /* 0x32 */ s16 unk32;
+             u8 pad34[0x9];
+  /* 0x3D */ u8 unk3D;
+             u8 pad3E[0x15];
+  /* 0x53 */ s8 modelType;
+  /* 0x54 */ s8 behaviorId;
+  /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
+             u8 pad56;
+  /* 0x57 */ s8 unk57;
+             u8 pad58[0x8];
+  /* 0x60 */ char internalName[16];
+  /* 0x70 */ u8 unk70;
+  /* 0x71 */ u8 unk71;
+             u8 pad72[0x6];
 } ObjectHeader;
 
 typedef struct Object_44_0 {
@@ -678,9 +685,9 @@ typedef struct Object {
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
-  /* 0x0040 */ ObjectHeader *descriptor_ptr;
+  /* 0x0040 */ ObjectHeader *header;
   /* 0x0044 */ void *unk44;
-  /* 0x0048 */ s16 unk48;
+  /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318
   /* 0x0050 */ Object_50 *unk50; //player + 0x2F4

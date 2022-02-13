@@ -841,7 +841,7 @@ extern f32 D_800E5550;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
     u32 offset;
-    switch (this->unk48) {
+    switch (this->behaviorId) {
         case 47:
             //L80011B10
             if (this->unk7C.word < 0)
@@ -941,7 +941,7 @@ void func_80012E28(Object *this) {
     f32 sp_1c;
     f32 tmp_f0;
 
-    if (this->unk48 == 1) {
+    if (this->behaviorId == 1) {
 
         sp_20 = this->unk64;
         this->y_rotation += sp_20->unk160;
@@ -968,7 +968,7 @@ void func_80012E28(Object *this) {
 #endif
 
 void func_80012F30(Object *arg0) {
-    if (arg0->unk48 == 1) {
+    if (arg0->behaviorId == 1) {
         Object_64 *object_64 = arg0->unk64;
         arg0->y_rotation -= object_64->unk160;
         arg0->x_rotation -= object_64->unk162;
@@ -984,18 +984,18 @@ void render_object(Object *this) {
     if (this->unk6 & 0x8000) {
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
     } else {
-        if (this->descriptor_ptr->unk53 == 0)
+        if (this->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
-        else if (this->descriptor_ptr->unk53 == 1)
+        else if (this->header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD)
             render_3d_billboard(this);
-        else if (this->descriptor_ptr->unk53 == 4)
+        else if (this->header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4)
             func_80011AD0(this);
     }
     func_80013548(this);
 }
 
 void func_80013548(Object *arg0) {
-    if ((arg0->unk6 & 0x8000) == 0 && arg0->descriptor_ptr->unk54 == 1) {
+    if ((arg0->unk6 & 0x8000) == 0 && arg0->header->behaviorId == 1) {
         arg0->x_position -= arg0->unk64->unk78;
         arg0->y_position -= arg0->unk64->unk7C;
         arg0->z_position -= arg0->unk64->unk80;
@@ -1016,8 +1016,8 @@ void func_800142B8(void) {
 
     for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->descriptor_ptr->unk53 == 0) {
-            for (j = 0; j < currObj->descriptor_ptr->unk55; j++) {
+        if ((currObj->unk6 & 0x8000) == 0 && currObj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+            for (j = 0; j < currObj->header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
                     curr_68->unk20 = curr_68->unk20-- & 0x03;
@@ -1074,7 +1074,7 @@ Object *func_80018C6C(void) {
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
+        if (!(current_obj->unk6 & 0x8000) && (current_obj->behaviorId == 62))
             return current_obj;
     }
     return NULL;
@@ -1271,7 +1271,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
-        if (object->descriptor_ptr->unk71 != 0) {
+        if (object->header->unk71 != 0) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
             calc_dynamic_lighting_for_object_1(object, model, arg2, object, arg3, 1.0f);
         } else {
@@ -1329,7 +1329,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
 
         if (current_obj != NULL
         && (current_obj->unk6 & 0x8000) == 0
-        && current_obj->unk48 == 39
+        && current_obj->behaviorId == 39
         && current_obj->unk78 == arg0) {
             *arg1 = current_obj->x_position;
             *arg2 = current_obj->y_position;
@@ -1474,7 +1474,7 @@ Object *func_8002342C(f32 x, f32 z) {
 
     for (i = 0; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->unk48 == 87) {
+        if ((currObj->unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
             x = currObj->x_position - x;
             z = currObj->z_position - z;
             dist = sqrtf(x * x + z * z);
@@ -1509,8 +1509,8 @@ void func_800235D0(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
 void run_object_init_func(Object *arg0, void *arg1) {
-    arg0->unk48 = arg0->descriptor_ptr->unk54;
-    switch (arg0->unk48 - 1) {
+    arg0->behaviorId = arg0->header->behaviorId;
+    switch (arg0->behaviorId - 1) { // Why the minus 1?
         case 0:
             obj_init_racer(arg0, arg1);
             break;
@@ -1903,7 +1903,7 @@ s32 func_80023E30(s32 arg0){
 
 void run_object_loop_func(Object *obj, s32 arg1) {
     func_800B76B8(1, obj->unk4A);
-    switch (obj->unk48) {
+    switch (obj->behaviorId) {
         case 2:
             obj_loop_scenery(obj, arg1);
             break;

@@ -411,7 +411,7 @@ void render_level_geometry_and_objects(void) {
                 render_floor_decal(obj, obj->unk50);
             }
             func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-            if ((obj->unk58 != NULL) && (obj->descriptor_ptr->unk30 & 0x10)) {
+            if ((obj->unk58 != NULL) && (obj->header->unk30 & 0x10)) {
                 func_8002D670(obj, obj->unk58);
             }
         }
@@ -435,7 +435,7 @@ void render_level_geometry_and_objects(void) {
                     render_floor_decal(obj, obj->unk50);
                 }
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                if ((obj->unk58 != NULL) && (obj->descriptor_ptr->unk30 & 0x10)) {
+                if ((obj->unk58 != NULL) && (obj->header->unk30 & 0x10)) {
                     func_8002D670(obj, obj->unk58);
                 }
             }
@@ -484,7 +484,7 @@ void render_level_geometry_and_objects(void) {
                         }
                         // This is being called when it shouldn't.
                         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                        if ((obj->unk58 != 0) && (obj->descriptor_ptr->unk30 & 0x10)) {
+                        if ((obj->unk58 != 0) && (obj->header->unk30 & 0x10)) {
                             func_8002D670(obj, obj->unk58);
                         }
                     }

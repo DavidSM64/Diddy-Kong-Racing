@@ -151,8 +151,8 @@ void obj_init_scenery(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
         phi_f0 = 10;
     }
     phi_f0 /= 64;
-    arg0->scale = arg0->descriptor_ptr->unkC * phi_f0;
-    ((Object_50_80033CC0 *)arg0->unk50)->unk0 = arg0->descriptor_ptr->unk4 * phi_f0;
+    arg0->scale = arg0->header->scale * phi_f0;
+    ((Object_50_80033CC0 *)arg0->unk50)->unk0 = arg0->header->unk4 * phi_f0;
     arg0->unk3A = arg1->unk8;
     arg0->y_rotation = arg1->unkA << 6 << 4;
     if (arg1->unkB) {
@@ -164,7 +164,7 @@ void obj_init_scenery(Object *arg0, LevelObjectEntry80033CC0 *arg1) {
         arg0->unk4C->unk16 = -5;
         arg0->unk4C->unk17 = arg1->unkB;
     }
-    if (arg0->unk3A >= arg0->descriptor_ptr->unk55) {
+    if (arg0->unk3A >= arg0->header->numberOfModelIds) {
         arg0->unk3A = 0;
     }
     arg0->unk78 = 0;
@@ -189,11 +189,11 @@ void obj_loop_scenery(Object *obj, s32 arg1) {
             obj78->unk6 = 1820;
             obj78->unk4 = 10;
             if (get_number_of_active_players() < 2) {
-                if (obj->descriptor_ptr->unk57 > 0) {
-                    if (obj->descriptor_ptr->unk57 == 1) {
+                if (obj->header->unk57 > 0) {
+                    if (obj->header->unk57 == 1) {
                         temp_v0 = 0;
                     } else {
-                        temp_v0 = get_random_number_from_range(0, obj->descriptor_ptr->unk57 - 1);
+                        temp_v0 = get_random_number_from_range(0, obj->header->unk57 - 1);
                     }
                     obj->unk74 = 1 << temp_v0;
                     func_800AFC3C(obj, 2);
@@ -259,7 +259,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 arg1) {
         sp7C *= 1.2;
     }
 	
-    if ((obj->unk48 == 116) && (obj->unk7C.word < 0)) {
+    if ((obj->behaviorId == 116) && (obj->unk7C.word < 0)) {
         obj->x_position = 0.0f;
         obj->y_position = 0.0f;
         obj->z_position = 0.0f;
@@ -303,10 +303,10 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 arg1) {
     obj64 = obj->unk64;
     obj4C = obj->unk4C;
     obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
-    if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->descriptor_ptr->unk54 == 1)) {
+    if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->header->behaviorId == 1)) {
         obj4C_obj64 = obj4C_obj->unk64;
         if (obj4C_obj64->unk0 != -1) {
-            if (obj->unk48 == 108) {
+            if (obj->behaviorId == 108) {
                 obj4C_obj64->unk187 = 1;
                 obj->unk7C.word = 20;
                 func_8003FC44(obj->x_position, obj->y_position, obj->z_position, 44, 17, 1.0f, 1);
@@ -319,7 +319,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 arg1) {
             }
         }
     }
-    if (obj->unk48 == 108) {
+    if (obj->behaviorId == 108) {
         obj->unk74 = 1;
         func_800AFC3C(obj, arg1);
         obj->unk7C.word -= arg1;
@@ -445,7 +445,7 @@ void obj_loop_laserbolt(Object *obj, s32 arg1) {
 	
     if (obj->unk4C->unk13 < 80) {
         obj4C_obj = (Object*)obj->unk4C->unk0;
-        if (obj4C_obj && (obj4C_obj->unk48 == 1)) {
+        if (obj4C_obj && (obj4C_obj->behaviorId == 1)) {
             obj4C_obj64 = obj4C_obj->unk64;
             sp4F = TRUE;
             if (obj4C_obj64->unk0 != -1) {
@@ -470,7 +470,7 @@ void obj_init_torch_mist(Object *arg0, u8 *arg1) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    arg0->scale = arg0->descriptor_ptr->unkC * phi_f0;
+    arg0->scale = arg0->header->scale * phi_f0;
     arg0->unk78 = arg1[8];
 }
 
@@ -593,7 +593,6 @@ typedef struct Object_54_80034E9C {
 
 // Has regalloc & stack issues.
 
-// Trophy Cabinet behavior loop
 void obj_loop_trophycab(Object *obj, s32 arg1) {
     s32 sp34;
     s32 isTrophyRaceAvaliable;
@@ -756,9 +755,9 @@ void obj_init_lighthouse_rocketsignpost(Object *arg0, LevelObjectEntry8003572C *
         phi_f0 = 10;
     }
     phi_f0 /= 64;
-    arg0->scale = arg0->descriptor_ptr->unkC * phi_f0;
+    arg0->scale = arg0->header->scale * phi_f0;
     arg0->y_rotation = arg1->unkA << 6 << 4;
-    if (arg0->unk3A >= arg0->descriptor_ptr->unk55) {
+    if (arg0->unk3A >= arg0->header->numberOfModelIds) {
         arg0->unk3A = 0;
     }
     arg0->unk4C->unk14 = 1;
@@ -786,18 +785,18 @@ void obj_loop_rocketsignpost(Object *obj, s32 arg1) {
 }
 
 void obj_init_airzippers_waterzippers(Object *arg0, LevelObjectEntry8003588C *arg1) {
-    ObjectHeader *obj40;
+    ObjectHeader *objHeader;
     f32 phi_f0;
 
     phi_f0 = arg1->unk9 & 0xFF;
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
     }
-    obj40 = arg0->descriptor_ptr;
+    objHeader = arg0->header;
     phi_f0 /= 64;
-    arg0->scale = obj40->unkC * phi_f0;
+    arg0->scale = objHeader->scale * phi_f0;
     arg0->y_rotation = arg1->unkA << 6 << 4;
-    if (arg0->unk3A >= obj40->unk55) {
+    if (arg0->unk3A >= objHeader->numberOfModelIds) {
         arg0->unk3A = 0;
     }
     arg0->unk4C->unk14 = 2;
@@ -855,7 +854,7 @@ void obj_init_characterflag(Object *arg0, unk80035EF8 *arg1) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    arg0->scale = (f32)(arg0->descriptor_ptr->unkC * phi_f0);
+    arg0->scale = (f32)(arg0->header->scale * phi_f0);
 }
 
 void obj_loop_characterflag(Object *obj, s32 arg1) {
@@ -1013,7 +1012,7 @@ void obj_loop_vehicleanim(Object *obj, s32 arg1) {
             someObj = obj60->unk0 == 3 ? obj60->unkC : obj60->unk4;
             someObj->y_rotation = 0x4000;
             someObj->unk3A++;
-            if (someObj->unk3A == someObj->descriptor_ptr->unk55) {
+            if (someObj->unk3A == someObj->header->numberOfModelIds) {
                 someObj->unk3A = 0;
             }
         }
@@ -1152,7 +1151,7 @@ void obj_loop_infopoint(Object *arg0, s32 arg1) {
     obj4C = arg0->unk4C;
     if (obj4C->unk13 < ((arg0->unk78 >> 16) & 0xFF)) {
         playerObj = obj4C->unk0;
-        if (playerObj->descriptor_ptr->unk54 == 1) {
+        if (playerObj->header->behaviorId == 1) {
             Object_64_800388D4 *playerObj64 = playerObj->unk64;
             temp_a0 = playerObj64->unk0;
             if ((temp_a0 != -1) && (get_buttons_pressed_from_player(temp_a0) & Z_TRIG)) {
@@ -1215,7 +1214,7 @@ void obj_init_bombexplosion(Object *obj, unk80038B74 *arg1) {
     s32 temp;
     obj->unk18 = 0;
     obj->scale = 0.5f;
-    obj->unk3A = get_random_number_from_range(0, obj->descriptor_ptr->unk55 - 1);
+    obj->unk3A = get_random_number_from_range(0, obj->header->numberOfModelIds - 1);
     obj->unk78 = 0;
     obj->unk7C.word = 0xFF;
     temp = (s32)arg1->unk8;
@@ -1452,12 +1451,12 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry8003C1E0 *arg1) {
         phi_f0 = 10;
     }
     phi_f0 /= 64;
-    obj->scale = obj->descriptor_ptr->unkC * phi_f0;
+    obj->scale = obj->header->scale * phi_f0;
     obj->unk4C->unk14 = 0x21;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
     obj->unk4C->unk12 = 0;
-    if (obj->unk3A >= obj->descriptor_ptr->unk55) {
+    if (obj->unk3A >= obj->header->numberOfModelIds) {
         obj->unk3A = 0;
     }
 }
@@ -1476,7 +1475,7 @@ void obj_init_bridge_whaleramp(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk10 = 0x14;
     arg0->unk4C->unk12 = 0;
     temp->unk4 = 0;
-    if (arg0->unk3A >= arg0->descriptor_ptr->unk55) {
+    if (arg0->unk3A >= arg0->header->numberOfModelIds) {
         arg0->unk3A = 0;
     }
 }
@@ -1635,7 +1634,7 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 speed) {
         // the key object, otherwise it is NULL.
         playerObj = worldKeyObj->unk4C->unk0;
         if (playerObj != NULL) {
-            if (playerObj->descriptor_ptr->unk54 == 1) {
+            if (playerObj->header->behaviorId == 1) {
                 Object_64_8003DF08 *obj64 = playerObj->unk64;
                 if (obj64->unk0 != -1) {
                     // Player has grabbed the key!
@@ -1688,7 +1687,7 @@ void obj_init_weaponballoon(Object *arg0, Object_64_8003DFCC *arg1) {
         arg1->unk8 = 0;
     }
 
-    if (arg0->unk3A >= arg0->descriptor_ptr->unk55) {
+    if (arg0->unk3A >= arg0->header->numberOfModelIds) {
         arg0->unk3A = 0;
     }
 
@@ -1703,7 +1702,7 @@ void obj_init_weaponballoon(Object *arg0, Object_64_8003DFCC *arg1) {
 
     obj = (Object_64_8003DFCC*)arg0->unk64;
 
-    arg0->scale = arg0->descriptor_ptr->unkC * temp;
+    arg0->scale = arg0->header->scale * temp;
     obj->unk0 = arg0->scale;
     obj->unk4 = 0;
     arg0->unk7C.word = 0;
@@ -1731,8 +1730,8 @@ void obj_init_weapon(Object *arg0, s32 arg1) {
 }
 
 void obj_loop_weapon(Object *arg0) {
-    Object_64 *temp = arg0->unk64;
-    switch (temp->unk18) {
+    Object_64 *obj64 = arg0->unk64;
+    switch (obj64->unk18) {
         case 0:
         case 1:
             func_8003E694();
@@ -1879,7 +1878,7 @@ void obj_init_log(Object *arg0, LevelObjectEntry8004049C *arg1, s32 arg2) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    arg0->scale = arg0->descriptor_ptr->unkC * phi_f0;
+    arg0->scale = arg0->header->scale * phi_f0;
     arg0->unk3A = arg1->unk8;
     arg0->y_rotation = arg1->unkA << 6 << 4;
 }
