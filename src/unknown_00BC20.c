@@ -819,7 +819,7 @@ s32 func_800113BC() {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800113CC.s")
 
-void func_80011560(void) {
+s32 func_80011560(void) {
     D_800DC848 = 1;
 }
 
@@ -1769,111 +1769,136 @@ void func_800238BC(Object *arg0, void *arg1) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-s32 func_80023E30(s32 arg0) {
-    switch (arg0 - 1) {
-        case 0x00:
-            return 0x1F;
-        case 0x01:
-            return 0x13;
-        case 0x04:
-            return 0x16;
-        case 0x0B:
-            return 0x1B;
-        case 0x0D:
-        case 0x6E:
-            return 0x30;
-        case 0x10:
-        case 0x4C:
-            return 0x12;
-        case 0x45:
-        case 0x47:
-        case 0x5F:
-        case 0x60:
-            return 0x3B;
-        case 0x64:
-        case 0x65:
-        case 0x66:
-        case 0x67:
-            return 0x3A;
-        case 0x17:
-            return 0x04;
-        case 0x1E:
-            return 0x1B;
-        case 0x1F:
-        case 0x3F:
-        case 0x57:
-        case 0x6D:
-            return 0x12;
-        case 0x42:
-            return 0x30;
-        case 0x25:
-            return 0x39;
-        case 0x26:
-            return 0x12;
-        case 0x27:
-            return 0x09;
-        case 0x2C:
-            return 0x12;
-        case 0x2F:
-            return 0x09;
-        case 0x3E:
-            return 0x09;
-        case 0x31:
-        case 0x37:
-        case 0x4F:
-        case 0x53:
-        case 0x55:
-        case 0x72:
-            return 0x0B;
-        case 0x35:
-            return 0x0B;
-        case 0x49:
-        case 0x5E:
-        case 0x62:
-        case 0x63:
-            return 0x31;
-        case 0x5A:
-            return 0x01;
-        case 0x50:
-            return 0x0A;
-        case 0x06:
-        case 0x0C:
-        case 0x11:
-        case 0x19:
-        case 0x1D:
-        case 0x23:
-        case 0x28:
-        case 0x33:
-        case 0x36:
-        case 0x38:
-        case 0x43:
-        case 0x4D:
-        case 0x4E:
-        case 0x5C:
-        case 0x61:
-        case 0x6B:
-        case 0x73:
-            return 0x10;
-        case 0x51:
-            return 0x12;
-        case 0x30:
-        case 0x32:
-        case 0x3C:
-            return 0x02;
-        case 0x3D:
-            return 0x1B;
-        case 0x6C:
-            return 0x0B;
-        case 0x71:
-            return 0x01;
-        default:
-            return 0x00;
-    }
+s32 func_80023E30(s32 arg0){
+  s32 value = 0;
+  switch (arg0 - 1){
+    case 0x00:
+      value = 0x1F;
+      break;
+    case 0x01:
+      value = 0x13;
+      break;
+    case 0x04:
+      value = 0x16;
+      break;
+    case 0x0B:
+      value = 0x1B;
+      break;
+    case 0x0D:
+    case 0x6E:
+      value = 0x30;
+      break;
+    case 0x10:
+    case 0x4C:
+      value = 0x12;
+      break;
+    case 0x45:
+    case 0x47:
+    case 0x5F:
+    case 0x60:
+      value = 0x3B;
+      break;
+    case 0x64:
+    case 0x65:
+    case 0x66:
+    case 0x67:
+      value = 0x3A;
+      break;
+    case 0x17:
+      value = 0x04;
+      break;
+    case 0x1E:
+      value = 0x1B;
+      break;
+    case 0x1F:
+    case 0x3F:
+    case 0x57:
+    case 0x6D:
+      value = 0x12;
+      break;
+    case 0x42:
+      value = 0x30;
+      break;
+    case 0x25:
+      value = 0x39;
+      break;
+    case 0x26:
+      value = 0x12;
+      break;
+    case 0x27:
+      value = 0x09;
+      break;
+    case 0x2C:
+      value = 0x12;
+      break;
+    case 0x2F:
+      value = 0x09;
+      break;
+    case 0x3E:
+      value = 0x09;
+      break;
+    case 0x31:
+    case 0x37:
+    case 0x4F:
+    case 0x53:
+    case 0x55:
+    case 0x72:
+      value = 0x0B;
+      break;
+    case 0x35:
+      value = 0x0B;
+      break;
+    case 0x49:
+    case 0x5E:
+    case 0x62:
+    case 0x63:
+      value = 0x31;
+      break;
+    case 0x5A:
+      value = 0x01;
+      break;
+    case 0x50:
+      value = 0x0A;
+      break;
+    case 0x06:
+    case 0x0C:
+    case 0x11:
+    case 0x19:
+    case 0x1D:
+    case 0x23:
+    case 0x28:
+    case 0x33:
+    case 0x36:
+    case 0x38:
+    case 0x43:
+    case 0x4D:
+    case 0x4E:
+    case 0x5C:
+    case 0x61:
+    case 0x6B:
+    case 0x73:
+      value = 0x10;
+      break;
+    case 0x51:
+      value = 0x12;
+      break;
+    case 0x30:
+    case 0x32:
+    case 0x3C:
+      value = 0x02;
+      break;
+    case 0x3D:
+      value = 0x1B;
+      break;
+    case 0x6C:
+      value = 0x0B;
+      break;
+    case 0x71:
+      value = 0x01;
+      break;
+  }
+  return value;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023E30.s")
-#endif
 
 void run_object_loop_func(Object *obj, s32 arg1) {
     func_800B76B8(1, obj->unk4A);

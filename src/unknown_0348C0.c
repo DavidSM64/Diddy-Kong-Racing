@@ -212,7 +212,152 @@ void func_80033F44(Object *arg0, s32 arg1) {
     arg0->unk4C->unk11 = 0;
 }
 
+#ifdef NON_MATCHING
+// Has a minor regalloc issue with obj4C_obj.
+
+typedef struct Object80033F60_64 {
+	u8 pad0[0x1C];
+	s32 *unk1C;
+	u8 pad20[0x8];
+	s32 unk28;
+} Object80033F60_64;
+
+typedef struct Object80033F60_4C_64 {
+	s16 unk0;
+	u8 pad2[0x185];
+	s8 unk187;
+	u8 pad188[0x7C];
+	s16 unk204;
+} Object80033F60_4C_64;
+
+s32 func_80011560(void);
+void func_80011570(Object*, f32, f32, f32);
+void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
+s16 func_80070750(f32, f32);
+s32 func_8002AD08(f32, f32**, s32);
+void func_80001D04(u16, s32 *);               
+void func_8000488C(s32);                                                     
+void func_800AFC3C(Object *, s32);                 
+void gParticlePtrList_addObject(Object *);      
+f32 sqrtf(f32);                                
+
+void func_80033F60(Object *obj, s32 arg1) {
+	Object *obj78;
+	Object_4C *obj4C;
+	f32 sp7C;
+	Object80033F60_4C_64 *obj4C_obj64;
+	Object80033F60_64 *obj64;
+	Object *obj4C_obj;
+	f32 phi_f2;
+    s32* temp;
+	f32 sp4C[7];
+
+    obj78 = (Object*)obj->unk78;
+	
+    sp7C = arg1;
+    if (osTvType == TV_TYPE_PAL) {
+        sp7C *= 1.2;
+    }
+	
+    if ((obj->unk48 == 116) && (obj->unk7C.word < 0)) {
+        obj->x_position = 0.0f;
+        obj->y_position = 0.0f;
+        obj->z_position = 0.0f;
+        func_80011560();
+        func_80011570(obj, obj78->x_position, obj78->y_position, obj78->z_position);
+    } else {
+        phi_f2 = (obj78->x_position - obj->x_position) * 0.1;
+        if (phi_f2 > 10.0) {
+            phi_f2 = 10.0f;
+        }
+        if (phi_f2 < -10.0) {
+            phi_f2 = -10.0f;
+        }
+        obj->x_velocity += (phi_f2 - obj->x_velocity) * 0.125 * sp7C;
+        phi_f2 = (obj78->y_position - obj->y_position) * 0.1;
+        if (phi_f2 > 10.0) {
+            phi_f2 = 10.0f;
+        }
+        if (phi_f2 < -10.0) {
+            phi_f2 = -10.0f;
+        }
+        obj->y_velocity += (phi_f2 - obj->y_velocity) * 0.125 * sp7C;
+        phi_f2 = (obj78->z_position - obj->z_position) * 0.1;
+        if (phi_f2 > 10.0) {
+            phi_f2 = 10.0f;
+        }
+        if (phi_f2 < -10.0) {
+            phi_f2 = -10.0f;
+        }
+        obj->z_velocity += (phi_f2 - obj->z_velocity) * 0.125 * sp7C;
+        if (sqrtf((obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity)) > 0.5) {
+            obj->y_rotation = func_80070750(obj->x_velocity, obj->z_velocity);
+            obj->x_rotation -= arg1 << 9;
+        }
+        func_80011570(obj, obj->x_velocity * sp7C, obj->y_velocity * sp7C, obj->z_velocity * sp7C);
+        if (obj->unk4A == 298 && func_8002AD08(obj->y_position, &sp4C, 0)) {
+			obj->y_position = sp4C[0];
+        }
+    }
+    obj->unk18 += arg1 * 10;
+    obj64 = obj->unk64;
+    obj4C = obj->unk4C;
+    obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
+    if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->descriptor_ptr->unk54 == 1)) {
+        obj4C_obj64 = obj4C_obj->unk64;
+        if (obj4C_obj64->unk0 != -1) {
+            if (obj->unk48 == 108) {
+                obj4C_obj64->unk187 = 1;
+                obj->unk7C.word = 20;
+                func_8003FC44(obj->x_position, obj->y_position, obj->z_position, 44, 17, 1.0f, 1);
+                gParticlePtrList_addObject(obj);
+            } else if (obj->unk7C.word > 0) {
+                obj4C_obj64->unk204 = 60;
+                obj->unk7C.word = -60;
+                obj->unk78 = obj4C_obj;
+                func_80001D04(586, &obj64->unk1C);
+            }
+        }
+    }
+    if (obj->unk48 == 108) {
+        obj->unk74 = 1;
+        func_800AFC3C(obj, arg1);
+        obj->unk7C.word -= arg1;
+        if (obj->unk7C.word < 0) {
+            if (obj->unk4A == 298) {
+                gParticlePtrList_addObject(obj);
+                func_8003FC44(obj->x_position, obj->y_position, obj->z_position, 44, 17, 1.0f, 1);
+            }
+            obj->scale *= 0.9;
+            if (obj->scale < 0.5) {
+                gParticlePtrList_addObject(obj);
+            }
+        }
+    } else {
+        if (obj->unk7C.word < 0) {
+            obj->unk7C.word += arg1;
+            if (obj->unk7C.word >= 0) {
+                obj->unk7C.word = 0;
+            }
+        } else {
+            obj->unk7C.word -= arg1;
+            if (obj->unk7C.word <= 0) {
+                obj->unk7C.word = 0;
+            }
+        }
+        if (obj->unk7C.word == 0) {
+            temp = obj64->unk1C;
+            if (temp != 0) {
+                func_8000488C(temp);
+            }
+            func_80009558(341, obj->x_position, obj->y_position, obj->z_position, 4, 0);
+            gParticlePtrList_addObject(obj);
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80033F60.s")
+#endif
 
 void func_80034530(Object *arg0, unk80034530 *arg1) {
     Object_64 *temp;
@@ -236,7 +381,88 @@ void func_80034844(Object *arg0, s32 arg1) {
     arg0->unk4C->unk11 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034860.s")
+void func_80031130(s32, f32*, f32*, s32);
+void func_80031600(f32*, f32*, f32*, s8*, s32, s8*);
+void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s32 arg6);
+
+typedef struct Object_7C_80034860 {
+	u8 pad0[0xC];
+	s16 unkC;
+} Object_7C_80034860;
+
+typedef struct Object_64_80034860 {
+	s16 unk0;
+	u8  unk4[0x185];
+	s8  unk187;
+} Object_64_80034860;
+
+void func_80034860(Object *obj, s32 arg1) {
+	f32 sp5C;
+
+	Object *obj4C_obj;
+
+	Object_7C_80034860 *obj7C;
+	Object_64_80034860 *obj4C_obj64;
+
+	s8 sp4F; // Boolean
+	s8 sp4E;
+	f32 sp48;
+	f32 sp44;
+	f32 sp40;
+	f32 sp3C;
+	s32 sp38; // Boolean
+
+	
+    sp4F = FALSE;
+    sp5C = arg1;
+    if (osTvType == TV_TYPE_PAL) {
+        sp5C *= 1.2;
+    }
+    sp40 = obj->x_position + (obj->x_velocity * sp5C);
+    sp44 = obj->y_position + (obj->y_velocity * sp5C);
+    sp48 = obj->z_position + (obj->z_velocity * sp5C);
+    sp3C = 9.0f;
+
+    func_80031130(1, &obj->x_position, &sp40, -1);
+    sp38 = FALSE;
+    func_80031600(&obj->x_position, &sp40, &sp3C, &sp4E, 1, &sp38);
+    if (sp38) {
+        obj->x_velocity = (sp40 - obj->x_position) / sp5C;
+        obj->y_velocity = (sp44 - obj->y_position) / sp5C;
+        obj->z_velocity = (sp48 - obj->z_position) / sp5C;
+    }
+    func_80011570(obj, obj->x_velocity * sp5C, obj->y_velocity * sp5C, obj->z_velocity * sp5C);
+    if (sp38) {
+        func_8003FC44(obj->x_position, obj->y_position - 36.0f, obj->z_position, 44, 0, 0.2, 0);
+        sp4F = TRUE;
+    }
+	
+    if (obj->unk78 > 0) {
+        obj->unk78 -= arg1;
+    } else {
+        sp4F = TRUE;
+    }
+	
+    if (obj->unk4C->unk13 < 80) {
+        obj4C_obj = (Object*)obj->unk4C->unk0;
+        if (obj4C_obj && (obj4C_obj->unk48 == 1)) {
+            obj4C_obj64 = obj4C_obj->unk64;
+            sp4F = TRUE;
+            if (obj4C_obj64->unk0 != -1) {
+                obj4C_obj64->unk187 = 1;
+            }
+            obj7C = (Object_7C_80034860 *)obj->unk7C.word;
+            if (obj7C) {
+                obj7C->unkC = 180;
+            }
+            sp4F = TRUE;
+            func_8003FC44(obj->x_position, obj->y_position - 36.0f, obj->z_position, 44, 17, 0.5, 0);
+        }
+    }
+    if (sp4F) {
+        gParticlePtrList_addObject(obj);
+    }
+}
 
 void func_80034AF0(Object *arg0, u8 *arg1) {
     f32 phi_f0 = (s32)(arg1[9] & 0xFF);
@@ -255,7 +481,73 @@ void func_80034B4C(unk80034B4C *arg0, s32 arg1) {
 void func_80034B68(s32 arg0, s32 arg1) {
 }
 
+#ifdef NON_EQUIVALENT
+
+// Has regalloc & stack issues.
+
+f32 func_800707C4(s16);
+f32 func_800707F8(s16);
+Object **get_object_struct_array(s32 *count);
+
+void func_80034B74(Object *obj, s32 arg1) {
+    Object **objList;
+    Object_3C_80034B74 *obj3C;
+    Object_64_80034B74 *curObj64;
+    s32 i;
+    s32 numberOfObjects;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    f32 temp0;
+    f32 temp1;
+    f32 temp2;
+    f32 temp3;
+    f32 temp4;
+    f32 temp5;
+    f32 tempf0;
+    u8 new_var2;
+
+    obj3C = obj->unk3C_a.unk3C;
+    objList = get_object_struct_array(&numberOfObjects);
+    temp0 = func_800707F8((((0, obj3C->unkB)) << 8) * (-1));
+    temp1 = func_800707C4((obj3C->unkB << 8) * (-1));
+    temp2 = obj3C->unk8 * 3;
+    temp3 = obj3C->unk9 * 3;
+    temp4 = obj3C->unkA * 3;
+    for (i = 0; i < numberOfObjects; i++)
+    {
+        xDiff = objList[i]->x_position - obj->x_position;
+        yDiff = objList[i]->y_position - obj->y_position;
+        zDiff = objList[i]->z_position - obj->z_position;
+        if (((-temp3) < yDiff) && (yDiff < temp3))
+        {
+            temp5 = (xDiff * temp0) + (zDiff * temp1);
+            if (((-temp2) < temp5) && (temp5 < temp2))
+            {
+                temp5 = ((-xDiff) * temp1) + (zDiff * temp0);
+                if (((-temp4) < (((-xDiff) * temp1) + (zDiff * temp0))) && (temp5 < temp4))
+                {
+                    temp5 = temp3 / 2;
+                    curObj64 = objList[i]->unk64;
+                    curObj64->unk1FE = obj3C->unkC;
+                    curObj64->unk1FF = obj3C->unkD;
+                    if ((temp5 < yDiff) && (curObj64->unk1FE == 1))
+                    {
+                        new_var2 = curObj64->unk1FF;
+                        tempf0 = (new_var2 & 0xFF) * ((f32) (1.0 - ((yDiff - temp5) / temp5)));
+                        curObj64->unk1FF = new_var2 * ((f32) (1.0 - ((yDiff - temp5) / temp5)));
+                        if (tempf0 < 0.0f)
+                        {
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034B74.s")
+#endif
 
 void func_80034E70(Object *arg0, u8 *arg1) {
     arg0->unk4C->unk14 = 1;
@@ -263,7 +555,168 @@ void func_80034E70(Object *arg0, u8 *arg1) {
     arg0->y_rotation = arg1[8] << 6 << 4; // Not sure about the values here.
 }
 
+#ifdef NON_EQUIVALENT
+
+void func_80001D04(u16, s32 *);
+f32 sqrtf(f32);
+void func_80001D04(u16, s32 *);
+f32 sqrtf(f32);
+u32 func_80001C08(void);
+void func_80001D04(u16, s32 *);
+Object *func_8000EA54(unk80027FC4 *, s32);
+void func_8005A3B0(void);
+void func_8006F254(void);
+void func_8009CF68(s32 arg0);
+s32 func_8009CFEC(u32 arg0);
+void func_800A3870(void);
+void func_800AB1AC(s32 arg0);
+void func_800AB1D4(u8 arg0);
+void func_800C31EC(s32);
+s32 func_800C3400(void);
+LevelHeader *get_current_level_header(void);
+Settings *get_settings(void);
+void play_sound(u8 arg0);
+void set_music_fade_timer(s32 time);
+void set_sndfx_player_voice_limit(u8 voiceLimit);
+f32 sqrtf(f32);
+
+typedef struct Object_64_80034E9C {
+    s32 unk0;
+    s16 unk4;
+} Object_64_80034E9C;
+
+typedef struct Object_54_80034E9C {
+    u8 pad0[0x28];
+    f32 unk28;
+    f32 unk2C;
+} Object_54_80034E9C;
+
+// Has regalloc & stack issues.
+
+// Trophy Cabinet behavior loop
+void func_80034E9C(Object *obj, s32 arg1) {
+    s32 sp34;
+    s32 isTrophyRaceAvaliable;
+    s32 raceType;
+    unk80027FC4 sp44;
+    Settings *settings;
+    LevelHeader *curLevelHeader;
+    Object_64_80034E9C *obj64;
+    Object *trophyObj;
+    Object *playerObj;
+    f32 xDiff;
+    f32 zDiff;
+    s32 new_var2;
+    
+    settings = get_settings();
+    curLevelHeader = get_current_level_header();
+    obj64 = obj->unk64;
+    
+    // Show trophy inside the cabinet
+    if (obj->unk7C.word == 0) {
+        raceType = curLevelHeader->race_type;
+        if ((raceType != 7) && (raceType != 6)) { // Make sure the current level is not a cutscene.
+            obj->unk7C.word = 1;
+            if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) {
+                sp44.unk0 = 128;
+                sp44.unk2 = obj->unk3C_a.unk3C->unk2;
+                sp44.unk4 = obj->unk3C_a.unk3C->unk4;
+                sp44.unk6 = obj->unk3C_a.unk3C->unk6;
+                sp44.unk1 = 8;
+                trophyObj = func_8000EA54(&sp44, 1);
+                if (trophyObj) {
+                    trophyObj->unk3C_a.unk3C = (void *) 0;
+                    trophyObj->y_rotation = obj->y_rotation;
+                }
+            }
+        }
+    }
+    
+    ((Object_54_80034E9C *) obj->unk54)->unk2C = 0.612f;
+    ((Object_54_80034E9C *) obj->unk54)->unk28 = 0.0f;
+    
+    playerObj = get_object_struct(0);
+    if (playerObj) {
+        xDiff = obj->x_position - playerObj->x_position;
+        zDiff = playerObj->z_position - obj->z_position;
+        sqrtf((xDiff * xDiff) + (zDiff * zDiff)); // Distance on X & Z axes. Not used?
+    
+        new_var2 = settings->bosses;
+        new_var2 |= 0x800; // Why OR with 0x800?
+    
+        // Check if all the balloons have been collected.
+        isTrophyRaceAvaliable = (settings->balloonsPtr[settings->worldId] < 8) ^ 1;
+        if (isTrophyRaceAvaliable) {
+            isTrophyRaceAvaliable = ((1 << (settings->worldId + 6)) & new_var2) != 0;
+        }
+    
+        // Hit detection between cabinet & player?
+        if ((((obj->unk78 == 0) && (!func_800C3400())) && obj->unk5C->unk100) && (obj64->unk4 == 0)) {
+            // A hit has been detected at this point.
+            if (isTrophyRaceAvaliable) {
+                obj->unk78 = 1;
+                func_80001D04(303, 0);
+                func_800A3870();
+            }
+            else
+            {
+                func_800C31EC(4);
+                obj64->unk4 = 180;
+                obj64->unk0 = 140;
+                set_sndfx_player_voice_limit(16);
+                set_music_fade_timer(-8);
+                play_sound(17);
+            }
+        }
+        if ((obj64->unk0 != 0) && (func_80001C08() == 0)) {
+            if (arg1 < obj64->unk0) {
+                obj64->unk0 -= arg1;
+            }
+            else
+            {
+                obj64->unk0 = 0;
+                set_music_fade_timer(8);
+                set_sndfx_player_voice_limit(6);
+            }
+        }
+        if (obj->unk5C->unk100 || func_800C3400()) {
+            obj64->unk4 = 180;
+        }
+        if (obj64->unk4 > 0) {
+            obj64->unk4 -= arg1;
+        }
+        else
+        {
+            obj64->unk4 = 0;
+        }
+        if (obj->unk78 == 1) {
+            func_800AB1AC(3);
+            func_800AB1D4(0);
+            sp34 = func_8009CFEC(4);
+            if (sp34 != 0) {
+                obj->unk78 = 0;
+                func_8009CF68(4);
+                if (sp34 == 1) {
+                    func_8006F254();
+                    obj->unk78 = 2;
+                }
+                else
+                {
+                    func_800AB1D4(1);
+                }
+            }
+            func_8005A3B0();
+        }
+        obj->unk5C->unk100 = NULL;
+        if (isTrophyRaceAvaliable) {
+            // Changes lighting/color of the cabinet?
+            ((Object_54_80034E9C *) obj->unk54)->unk28 = 0.552f;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80034E9C.s")
+#endif
 
 void func_8003522C(Object *arg0, s32 arg1) {
     arg0->unk4C->unk14 = 2;
@@ -703,7 +1156,7 @@ void func_800388D4(Object *arg0, s32 arg1) {
             Object_64_800388D4 *playerObj64 = playerObj->unk64;
             temp_a0 = playerObj64->unk0;
             if ((temp_a0 != -1) && (get_buttons_pressed_from_player(temp_a0) & Z_TRIG)) {
-                func_800C31EC(arg0->unk78 & 0xFF, arg0);
+                func_800C31EC(arg0->unk78 & 0xFF);
             }
         }
     }

@@ -461,7 +461,10 @@ typedef struct LevelObjectEntryCommon {
 } LevelObjectEntryCommon;
 
 typedef struct Object_3C {
-    u8 pad0[0x8];
+    u8 pad0[0x2];
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
     s8 unk8;
     u8 pad9[0x4];
     u8 unkD;

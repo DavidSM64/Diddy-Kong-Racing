@@ -30,6 +30,22 @@ typedef struct unk80034B4C {
     s32 unk78;
 } unk80034B4C;
 
+typedef struct Object_3C_80034B74 {
+    u8 pad0[0x8];
+    u8 unk8;
+    u8 unk9;
+    u8 unkA;
+    u8 unkB;
+    u8 unkC;
+    u8 unkD;
+} Object_3C_80034B74;
+
+typedef struct Object_64_80034B74 {
+    u8 pad0[0x1FE];
+    u8 unk1FE;
+    u8 unk1FF;
+} Object_64_80034B74;
+
 typedef struct unk8003564C {
     s8 unk0;
     s8 unk1;

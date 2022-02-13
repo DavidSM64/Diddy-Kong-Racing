@@ -151,7 +151,7 @@ void func_80011390(void);
 s32 func_8001139C();
 s32 func_800113AC();
 s32 func_800113BC();
-void func_80011560(void);
+s32 func_80011560(void);
 void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
