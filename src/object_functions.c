@@ -12,7 +12,7 @@
 #include "menu.h" // For cheats
 #include "unknown_0ABDF0.h"
 #include "racer.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "audio.h"
 #include "unknown_008C40.h"
 #include "unknown_00BC20.h"
@@ -20,7 +20,7 @@
 #include "unknown_0255E0.h"
 #include "font.h"
 #include "unknown_032760.h"
-#include "unknown_09F8F0.h"
+#include "game_ui.h"
 #include "waves.h"
 #include "unknown_003260.h"
 

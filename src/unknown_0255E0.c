@@ -10,7 +10,7 @@
 #include "PR/gu.h"
 #include "textures_sprites.h"
 #include "unknown_00BC20.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "memory.h"
 #include "racer.h"
 #include "camera.h"

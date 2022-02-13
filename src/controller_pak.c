@@ -9,7 +9,7 @@
 #include "structs.h"
 #include "camera.h"
 #include "unknown_00BC20.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "unknown_0CEC50.h"
 
 /************ .data ************/

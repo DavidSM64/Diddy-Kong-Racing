@@ -15,7 +15,7 @@
 #include "unknown_00BC20.h"
 #include "audio.h"
 #include "object_functions.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 

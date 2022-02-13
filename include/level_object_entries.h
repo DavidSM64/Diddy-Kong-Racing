@@ -85,7 +85,7 @@ typedef struct LevelObjectEntry_16 {
 typedef struct LevelObjectEntry_WeaponBalloon {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8; // Unused?
-    /* 0x09 */ u8 balloonType;
+    /* 0x09 */ u8 balloonType; 
     /* 0x0A */ u8 scale; // This is divided by 64 to get actual scale.
 } LevelObjectEntry_WeaponBalloon;
 

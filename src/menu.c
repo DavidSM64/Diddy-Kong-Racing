@@ -21,7 +21,7 @@
 #include "textures_sprites.h"
 #include "thread30.h"
 #include "unknown_00BC20.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "unknown_078050.h"
 #include "controller_pak.h"
 #include "object_functions.h"

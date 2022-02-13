@@ -9,7 +9,7 @@
 #include "printf.h"
 #include "unknown_00BC20.h"
 #include "controller.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 
 /************ .rodata ************/
 

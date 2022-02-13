@@ -1,13 +1,13 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8009ECF0 */
 
-#include "unknown_09F8F0.h"
+#include "game_ui.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
 #include "camera.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 
 extern u32 osTvType;
 
@@ -243,15 +243,15 @@ s32 D_801271B0[640];
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009ECF0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_8009F034.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A003C.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_8009ECF0.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_8009F034.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A003C.s")
 
 u8 func_800A0190(void) {
     return D_80126D34;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A01A0.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A01A0.s")
 
 void func_800A0B74(void) {
     s32 i;
@@ -264,7 +264,7 @@ void func_800A0B74(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0BD4.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A0BD4.s")
 
 void func_800A0DC0(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     unk800A0DC0_2 *temp = arg1->unk64;
@@ -291,8 +291,8 @@ void func_800A0DC0(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     func_80068508(0);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A0EB4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1248.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A0EB4.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1248.s")
 
 void func_800A1428(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     unk800A0DC0_2 *temp = arg1->unk64;
@@ -312,11 +312,11 @@ void func_800A1428(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A14F0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A19A4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1C04.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A1E48.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A22F4.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A14F0.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A19A4.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1C04.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
 
 void func_800A258C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     LevelHeader *level;
@@ -369,24 +369,24 @@ void func_800A26C8(Object *obj, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A277C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A36CC.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
 
 void func_800A3870(void) {
     D_80126CDC->unk4C4 = 0x6490;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A3884.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A3CE4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A4154.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A45F0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A47A0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A497C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A4C44.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A4F50.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A5A64.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A5F18.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A6254.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A3884.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A3CE4.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4154.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A45F0.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A497C.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5A64.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5F18.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6254.s")
 
 void func_800A6DB4(s16 *arg0) {
     Settings *settings = get_settings();
@@ -400,8 +400,8 @@ void func_800A6DB4(s16 *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A6E30.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A718C.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6E30.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A718C.s")
 
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2) {
     if (D_80126D74 == 0) {
@@ -417,10 +417,10 @@ void func_800A74EC(u16 arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7520.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7A60.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7B68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A7FBC.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7520.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7A60.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7B68.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7FBC.s")
 
 void func_800A83B4(LevelModel *model) {
     s32 sp2C;
@@ -436,10 +436,10 @@ s8 func_800A8458(void) {
     return D_800E27A4[D_80126D0C];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800A8474.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AA3EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AA600.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AAFD0.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A8474.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA3EC.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA600.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AAFD0.s")
 
 void func_800AB194(s32 arg0) {
     D_80126CD1 = 1;

@@ -5,7 +5,7 @@
 #include "menu.h"
 #include "unknown_00BC20.h"
 #include "racer.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 
 /************ .data ************/
 

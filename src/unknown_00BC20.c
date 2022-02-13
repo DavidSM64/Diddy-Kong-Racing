@@ -13,7 +13,7 @@
 #include "thread0_epc.h"
 #include "controller_pak.h"
 #include "menu.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "racer.h"
 
 /************ .data ************/

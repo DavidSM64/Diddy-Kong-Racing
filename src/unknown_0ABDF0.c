@@ -166,7 +166,7 @@ Object *D_80127C40[16];
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AB1F0.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AB1F0.s")
 
 void func_800AB308(s16 arg0, s16 arg1) {
     if (D_80127BF8.unk2 < D_80127BF8.unk0) {
@@ -178,14 +178,14 @@ void func_800AB308(s16 arg0, s16 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AB35C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AB4A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ABB34.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ABC5C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ABE68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC0C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC21C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC5A4.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AB35C.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AB4A8.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800ABB34.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800ABC5C.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800ABE68.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC5A4.s")
 
 void func_800AC880(s32 arg0) {
     if (arg0 == D_800E2A80) {
@@ -194,8 +194,8 @@ void func_800AC880(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AC8A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ACA20.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC8A8.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800ACA20.s")
 
 void func_800ACF60(Object *arg0) {
     if (D_800E2A88 < 0x10) {
@@ -224,8 +224,8 @@ void func_800ACF98(Object* arg0) {
 
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD030.s")
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD144.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD030.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD144.s")
 
 void func_800AD220(void) {
     if (D_800E2C2C[0].tex != NULL) {
@@ -304,7 +304,7 @@ void func_800AD4B8(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800AD658.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD658.s")
 
 void func_800ADAB8(s32 arg0) {
     if (D_800E2C80 > 0) {
@@ -348,4 +348,4 @@ void func_800ADBC8(UNUSED s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_09F8F0/func_800ADCBC.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800ADCBC.s")
