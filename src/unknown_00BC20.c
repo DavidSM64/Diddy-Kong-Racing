@@ -11,7 +11,7 @@
 #include "asset_sections.h"
 #include "asset_loading.h"
 #include "thread0_epc.h"
-#include "controller_pak.h"
+#include "save_data.h"
 #include "menu.h"
 #include "game.h"
 #include "racer.h"

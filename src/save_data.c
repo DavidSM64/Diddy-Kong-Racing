@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80072250 */
 
-#include "controller_pak.h"
+#include "save_data.h"
 #include "memory.h"
 #include "PR/pfs.h"
 #include "PR/os_cont.h"
@@ -168,18 +168,18 @@ void func_80072348(s16 arg0, u8 arg1) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80072348.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80072348.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80072424.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80072578.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80072424.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80072578.s")
 
 void func_80072708(void) {
     D_800DE48C = 3;
 }
 
 //Rumbles controller?
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80072718.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80072718.s")
 
 #ifdef NON_EQUIVALENT
 u16 func_80072C54(s32 arg0) {
@@ -327,18 +327,18 @@ u16 func_80072C54(s32 arg0) {
     return v1;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80072C54.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80072C54.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80072E28.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007306C.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_800732E8.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80072E28.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_8007306C.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
 
 //arg1 is eepromData, from read_eeprom_data
 //arg2 seems to be a flag for either lap times or course initials?
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80073588.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80073588.s")
 
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_800738A4.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
 
 s32 get_game_data_file_size(void) {
     return 256;
@@ -350,7 +350,7 @@ s32 get_time_data_file_size(void) {
 
 //Probably get_file_extension
 //func_80073C5C(s32 controllerIndex, s32 fileType, u8 **fileExt);
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80073C5C.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80073C5C.s")
 
 //Read DKRACING-ADV data into settings?
 s32 read_game_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Settings *settings) {
@@ -490,8 +490,8 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     return ret;
 }
 
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074204.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_8007431C.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80074204.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_8007431C.s")
 
 // Writes Eeprom in 5 block chunks of data starting at either 0x0, 0x5, or 0xA
 // Educated guess says this might be for one of three save files
@@ -691,11 +691,11 @@ s32 func_80074B1C(void) {
     return (&x)[0] * 6 + 0x100;
 }
 
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074B34.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80074EB8.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_80075000.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_800753D8.s")
-GLOBAL_ASM("asm/non_matchings/controller_pak/func_800756D4.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
+GLOBAL_ASM("asm/non_matchings/save_data/func_800756D4.s")
 
 SIDeviceStatus get_si_device_status(s32 controllerIndex) {
     OSMesg unusedMsg;
@@ -811,7 +811,7 @@ void init_controller_paks(void) {
     osContStartReadData(sControllerMesgQueue);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/controller_pak/init_controller_paks.s")
+GLOBAL_ASM("asm/non_matchings/save_data/init_controller_paks.s")
 #endif
 
 UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
