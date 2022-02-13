@@ -11,10 +11,10 @@
 
 static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata);
 //TODO: These should really be declared here instead of somewhere else
-extern OSPifRam _MotorStopData[MAXCONTROLLERS];
-extern OSPifRam _MotorStartData[MAXCONTROLLERS];
-extern u8 _motorstopbuf[BLOCKSIZE];
-extern u8 _motorstartbuf[BLOCKSIZE];
+OSPifRam _MotorStopData[MAXCONTROLLERS];
+OSPifRam _MotorStartData[MAXCONTROLLERS];
+u8 _motorstopbuf[BLOCKSIZE];
+u8 _motorstartbuf[BLOCKSIZE];
 s32 osMotorStop(OSPfs *pfs) {
     int i;
     s32 ret;

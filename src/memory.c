@@ -39,10 +39,6 @@ s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
 s32 gFreeQueueState;
-OSPifRam _MotorStopData[MAXCONTROLLERS];
-OSPifRam _MotorStartData[MAXCONTROLLERS];
-u8 _motorstopbuf[BLOCKSIZE];
-u8 _motorstartbuf[BLOCKSIZE];
 
 extern MemoryPoolSlot gMainMemoryPool;
 
