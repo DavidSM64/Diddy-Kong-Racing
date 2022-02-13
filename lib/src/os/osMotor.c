@@ -10,7 +10,6 @@
 #define MOTOR_DEFAULT_BANK 128
 
 static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata);
-//TODO: These should really be declared here instead of somewhere else
 OSPifRam _MotorStopData[MAXCONTROLLERS];
 OSPifRam _MotorStartData[MAXCONTROLLERS];
 u8 _motorstopbuf[BLOCKSIZE];

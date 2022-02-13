@@ -8,9 +8,9 @@ typedef struct LevelObjectEntryCommon {
     s16 x, y, z; // Position in level
 } LevelObjectEntryCommon;
 
-typedef struct LevelObjectEntry_1 {
+typedef struct LevelObjectEntry_Racer {
     /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_1;
+} LevelObjectEntry_Racer;
 
 typedef struct LevelObjectEntry_Scenery {
     /* 0x00 */ LevelObjectEntryCommon common;
@@ -20,61 +20,61 @@ typedef struct LevelObjectEntry_Scenery {
     /* 0x0B */ u8 unkB;
 } LevelObjectEntry_Scenery;
 
-typedef struct LevelObjectEntry_3 {
+typedef struct LevelObjectEntry_Fish {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_3;
+} LevelObjectEntry_Fish;
 
-typedef struct LevelObjectEntry_4 {
+typedef struct LevelObjectEntry_Animator {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_4;
+} LevelObjectEntry_Animator;
 
-typedef struct LevelObjectEntry_5 {
+typedef struct LevelObjectEntry_Weapon {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_5;
+} LevelObjectEntry_Weapon;
 
-typedef struct LevelObjectEntry_6 {
+typedef struct LevelObjectEntry_Smoke {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_6;
+} LevelObjectEntry_Smoke;
 
-typedef struct LevelObjectEntry_7 {
+typedef struct LevelObjectEntry_Exit {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_7;
+} LevelObjectEntry_Exit;
 
-typedef struct LevelObjectEntry_8 {
+typedef struct LevelObjectEntry_Audio {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_8;
+} LevelObjectEntry_Audio;
 
-typedef struct LevelObjectEntry_9 {
+typedef struct LevelObjectEntry_Audioline {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_9;
+} LevelObjectEntry_Audioline;
 
-typedef struct LevelObjectEntry_10 {
+typedef struct LevelObjectEntry_CameraControl {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_10;
+} LevelObjectEntry_CameraControl;
 
-typedef struct LevelObjectEntry_11 {
+typedef struct LevelObjectEntry_Setuppoint {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_11;
+} LevelObjectEntry_Setuppoint;
 
-typedef struct LevelObjectEntry_12 {
+typedef struct LevelObjectEntry_DinoWhale {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_12;
+} LevelObjectEntry_DinoWhale;
 
-typedef struct LevelObjectEntry_13 {
+typedef struct LevelObjectEntry_Checkpoint {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_13;
+} LevelObjectEntry_Checkpoint;
 
-typedef struct LevelObjectEntry_14 {
+typedef struct LevelObjectEntry_Door {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_14;
+} LevelObjectEntry_Door;
 
-typedef struct LevelObjectEntry_15 {
+typedef struct LevelObjectEntry_FogChanger {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_15;
+} LevelObjectEntry_FogChanger;
 
-typedef struct LevelObjectEntry_16 {
+typedef struct LevelObjectEntry_AiNode {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_16;
+} LevelObjectEntry_AiNode;
 
 #define BALLOON_TYPE_BOOST   0
 #define BALLOON_TYPE_MISSILE 1
@@ -89,33 +89,29 @@ typedef struct LevelObjectEntry_WeaponBalloon {
     /* 0x0A */ u8 scale; // This is divided by 64 to get actual scale.
 } LevelObjectEntry_WeaponBalloon;
 
-typedef struct LevelObjectEntry_18 {
+typedef struct LevelObjectEntry_AudioSeqLine {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_18;
+} LevelObjectEntry_AudioSeqLine;
 
-typedef struct LevelObjectEntry_19 {
+typedef struct LevelObjectEntry_BombExplosion {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_19;
+} LevelObjectEntry_BombExplosion;
 
-typedef struct LevelObjectEntry_22 {
+typedef struct LevelObjectEntry_WBalloonPop {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_22;
+} LevelObjectEntry_WBalloonPop;
 
-typedef struct LevelObjectEntry_23 {
+typedef struct LevelObjectEntry_Unknown25 {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_23;
+} LevelObjectEntry_Unknown25;
 
-typedef struct LevelObjectEntry_25 {
+typedef struct LevelObjectEntry_SkyControl {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_25;
+} LevelObjectEntry_SkyControl;
 
-typedef struct LevelObjectEntry_26 {
+typedef struct LevelObjectEntry_AudioReverb {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_26;
-
-typedef struct LevelObjectEntry_27 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_27;
+} LevelObjectEntry_AudioReverb;
 
 typedef struct LevelObjectEntry_Torch_Mist {
     /* 0x00 */ LevelObjectEntryCommon common;
@@ -123,157 +119,158 @@ typedef struct LevelObjectEntry_Torch_Mist {
     /* 0x09 */ u8 unk9;
 } LevelObjectEntry_Torch_Mist;
 
-typedef struct LevelObjectEntry_29 {
+typedef struct LevelObjectEntry_TexScroll {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_29;
+} LevelObjectEntry_TexScroll;
 
-typedef struct LevelObjectEntry_30 {
+typedef struct LevelObjectEntry_ModeChange {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_30;
+} LevelObjectEntry_ModeChange;
 
-typedef struct LevelObjectEntry_31 {
+typedef struct LevelObjectEntry_StopWatchMan {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_31;
+} LevelObjectEntry_StopWatchMan;
 
-typedef struct LevelObjectEntry_32 {
+typedef struct LevelObjectEntry_Banana {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_32;
+} LevelObjectEntry_Banana;
 
-typedef struct LevelObjectEntry_33 {
+typedef struct LevelObjectEntry_RgbaLight {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_33;
+} LevelObjectEntry_RgbaLight;
 
-typedef struct LevelObjectEntry_36 {
+typedef struct LevelObjectEntry_Bouy_PirateShip {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_36;
+} LevelObjectEntry_Bouy_PirateShip;
 
-typedef struct LevelObjectEntry_37 {
+typedef struct LevelObjectEntry_Weather {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_37;
+} LevelObjectEntry_Weather;
 
-typedef struct LevelObjectEntry_38 {
+typedef struct LevelObjectEntry_Bridge_WhaleRamp {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_38;
+} LevelObjectEntry_Bridge_WhaleRamp;
 
-typedef struct LevelObjectEntry_39 {
+typedef struct LevelObjectEntry_RampSwitch {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_39;
+} LevelObjectEntry_RampSwitch;
 
-typedef struct LevelObjectEntry_40 {
+typedef struct LevelObjectEntry_SeaMonster {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_40;
+} LevelObjectEntry_SeaMonster;
 
-typedef struct LevelObjectEntry_41 {
+typedef struct LevelObjectEntry_Bonus {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_41;
+} LevelObjectEntry_Bonus;
 
-typedef struct LevelObjectEntry_43 {
+typedef struct LevelObjectEntry_LensFlare {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_43;
+} LevelObjectEntry_LensFlare;
 
-typedef struct LevelObjectEntry_44 {
+typedef struct LevelObjectEntry_LensFlareSwitch {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_44;
+} LevelObjectEntry_LensFlareSwitch;
 
-typedef struct LevelObjectEntry_45 {
+typedef struct LevelObjectEntry_CollectEgg {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_45;
+} LevelObjectEntry_CollectEgg;
 
-typedef struct LevelObjectEntry_46 {
+typedef struct LevelObjectEntry_EggCreator {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_46;
+} LevelObjectEntry_EggCreator;
 
-typedef struct LevelObjectEntry_47 {
+typedef struct LevelObjectEntry_CharacterFlag {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_47;
+} LevelObjectEntry_CharacterFlag;
 
-typedef struct LevelObjectEntry_49 {
+typedef struct LevelObjectEntry_Animation {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_49;
+} LevelObjectEntry_Animation;
 
-typedef struct LevelObjectEntry_52 {
+typedef struct LevelObjectEntry_InfoPoint {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_52;
+} LevelObjectEntry_InfoPoint;
 
-typedef struct LevelObjectEntry_55 {
+typedef struct LevelObjectEntry_Trigger {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_55;
+} LevelObjectEntry_Trigger;
 
-typedef struct LevelObjectEntry_57 {
+typedef struct LevelObjectEntry_AirZippers_WaterZippers {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_57;
+} LevelObjectEntry_AirZippers_WaterZippers;
 
-typedef struct LevelObjectEntry_58 {
+typedef struct LevelObjectEntry_Unknown58 {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_58;
+} LevelObjectEntry_Unknown58;
 
-typedef struct LevelObjectEntry_59 {
+typedef struct LevelObjectEntry_WaveGenerator {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_59;
+} LevelObjectEntry_WaveGenerator;
 
-typedef struct LevelObjectEntry_61 {
+typedef struct LevelObjectEntry_Butterfly {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_61;
+} LevelObjectEntry_Butterfly;
 
-typedef struct LevelObjectEntry_62 {
+typedef struct LevelObjectEntry_Parkwarden {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_62;
+} LevelObjectEntry_Parkwarden;
 
-typedef struct LevelObjectEntry_64 {
+typedef struct LevelObjectEntry_WorldKey {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_64;
+} LevelObjectEntry_WorldKey;
 
-typedef struct LevelObjectEntry_65 {
+typedef struct LevelObjectEntry_BananaCreator {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_65;
+} LevelObjectEntry_BananaCreator;
 
-typedef struct LevelObjectEntry_66 {
+typedef struct LevelObjectEntry_TreasureSucker {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_66;
+} LevelObjectEntry_TreasureSucker;
 
-typedef struct LevelObjectEntry_67 {
+typedef struct LevelObjectEntry_Log {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_67;
+} LevelObjectEntry_Log;
 
-typedef struct LevelObjectEntry_68 {
+typedef struct LevelObjectEntry_LavaSpurt {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_68;
+} LevelObjectEntry_LavaSpurt;
 
-typedef struct LevelObjectEntry_69 {
+typedef struct LevelObjectEntry_PosArrow {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_69;
+} LevelObjectEntry_PosArrow;
 
-typedef struct LevelObjectEntry_70 {
+typedef struct LevelObjectEntry_HitTester {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_70;
+} LevelObjectEntry_HitTester;
 
-typedef struct LevelObjectEntry_71 {
+typedef struct LevelObjectEntry_MidiFade {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_71;
+} LevelObjectEntry_MidiFade;
 
-typedef struct LevelObjectEntry_72 {
+typedef struct LevelObjectEntry_DynamicLightingObject {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_72;
+} LevelObjectEntry_DynamicLightingObject;
 
-typedef struct LevelObjectEntry_73 {
+typedef struct LevelObjectEntry_EffectBox {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_73;
+} LevelObjectEntry_EffectBox;
 
-typedef struct LevelObjectEntry_74 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_74;
+typedef struct LevelObjectEntry_TrophyCab {
+    /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 rotation;
+} LevelObjectEntry_TrophyCab;
 
-typedef struct LevelObjectEntry_75 {
+typedef struct LevelObjectEntry_Bubbler {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_75;
+} LevelObjectEntry_Bubbler;
 
-typedef struct LevelObjectEntry_76 {
+typedef struct LevelObjectEntry_FlyCoin {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_76;
+} LevelObjectEntry_FlyCoin;
 
-typedef struct LevelObjectEntry_77 {
+typedef struct LevelObjectEntry_GoldenBalloon {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_77;
+} LevelObjectEntry_GoldenBalloon;
 
 typedef struct LevelObjectEntry_Laserbolt {
     /* 0x00 */ LevelObjectEntryCommon common;
@@ -289,112 +286,88 @@ typedef struct LevelObjectEntry_Lasergun {
     /* 0x0D */ u8 unkD;
 } LevelObjectEntry_Lasergun;
 
-typedef struct LevelObjectEntry_82 {
+typedef struct LevelObjectEntry_GroundZipper {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_82;
+} LevelObjectEntry_GroundZipper;
 
-typedef struct LevelObjectEntry_83 {
+typedef struct LevelObjectEntry_OverRidePos {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_83;
+} LevelObjectEntry_OverRidePos;
 
-typedef struct LevelObjectEntry_84 {
+typedef struct LevelObjectEntry_WizpigShip {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_84;
+} LevelObjectEntry_WizpigShip;
 
-typedef struct LevelObjectEntry_88 {
+typedef struct LevelObjectEntry_SilverCoin {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_88;
+} LevelObjectEntry_SilverCoin;
 
-typedef struct LevelObjectEntry_89 {
+typedef struct LevelObjectEntry_Boost {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_89;
+} LevelObjectEntry_Boost;
 
-typedef struct LevelObjectEntry_90 {
+typedef struct LevelObjectEntry_WardenSmoke {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_90;
+} LevelObjectEntry_WardenSmoke;
 
-typedef struct LevelObjectEntry_93 {
+typedef struct LevelObjectEntry_Unknown94 {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_93;
+} LevelObjectEntry_Unknown94;
 
-typedef struct LevelObjectEntry_94 {
+typedef struct LevelObjectEntry_Unknown96 {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_94;
+} LevelObjectEntry_Unknown96;
 
-typedef struct LevelObjectEntry_95 {
+typedef struct LevelObjectEntry_Snowball {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_95;
+} LevelObjectEntry_Snowball;
 
-typedef struct LevelObjectEntry_96 {
+typedef struct LevelObjectEntry_Teleport {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_96;
+} LevelObjectEntry_Teleport;
 
-typedef struct LevelObjectEntry_97 {
+typedef struct LevelObjectEntry_Lighthouse_RocketSignpost {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_97;
+} LevelObjectEntry_Lighthouse;
 
-typedef struct LevelObjectEntry_98 {
+typedef struct LevelObjectEntry_Windsail {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_98;
+} LevelObjectEntry_Windsail;
 
-typedef struct LevelObjectEntry_99 {
+typedef struct LevelObjectEntry_RangeTrigger {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_99;
-
-typedef struct LevelObjectEntry_100 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_100;
-
-typedef struct LevelObjectEntry_101 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_101;
-
-typedef struct LevelObjectEntry_102 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_102;
-
-typedef struct LevelObjectEntry_103 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_103;
-
-typedef struct LevelObjectEntry_104 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_104;
-
-typedef struct LevelObjectEntry_105 {
-/* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_105;
+} LevelObjectEntry_RangeTrigger;
 
 typedef struct LevelObjectEntry_Fireball_Octoweapon {
 /* 0x00 */ LevelObjectEntryCommon common;
 } LevelObjectEntry_Fireball_Octoweapon;
 
-typedef struct LevelObjectEntry_109 {
+typedef struct LevelObjectEntry_Frog {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_109;
+} LevelObjectEntry_Frog;
 
-typedef struct LevelObjectEntry_110 {
+typedef struct LevelObjectEntry_SilverCoinAdv2 {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_110;
+} LevelObjectEntry_SilverCoinAdv2;
 
-typedef struct LevelObjectEntry_111 {
+typedef struct LevelObjectEntry_TTDoor {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_111;
+} LevelObjectEntry_TTDoor;
 
-typedef struct LevelObjectEntry_112 {
+typedef struct LevelObjectEntry_MidiFadePoint {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_112;
+} LevelObjectEntry_MidiFadePoint;
 
-typedef struct LevelObjectEntry_116 {
+typedef struct LevelObjectEntry_OctoBubble {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_116;
+} LevelObjectEntry_OctoBubble;
 
-typedef struct LevelObjectEntry_117 {
+typedef struct LevelObjectEntry_LevelName {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_117;
+} LevelObjectEntry_LevelName;
 
-typedef struct LevelObjectEntry_118 {
+typedef struct LevelObjectEntry_Midichset {
 /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_118;
+} LevelObjectEntry_Midichset;
 
 #endif
