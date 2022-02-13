@@ -2011,7 +2011,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
             obj_loop_animobject(obj, arg1);
             break;
         case 119:
-            obj_init_wizghosts(obj, arg1);
+            obj_loop_wizghosts(obj, arg1);
             break;
         case 51:
             obj_loop_animcamera(obj, arg1);

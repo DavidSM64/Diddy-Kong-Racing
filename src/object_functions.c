@@ -469,7 +469,7 @@ void obj_loop_torch_mist(Object *obj, s32 speed) {
     obj->unk18 += obj->unk78 * speed;
 }
 
-void obj_init_effectbox(Object *obj, s32 entry) {
+void obj_init_effectbox(Object *obj, u8 *entry) {
 }
 
 #ifdef NON_EQUIVALENT
@@ -708,7 +708,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trophycab.s")
 #endif
 
-void obj_init_collectegg(Object *obj, s32 entry) {
+void obj_init_collectegg(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x14;
@@ -717,7 +717,7 @@ void obj_init_collectegg(Object *obj, s32 entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_collectegg.s")
 
-void obj_init_eggcreator(Object *obj, s32 entry) {
+void obj_init_eggcreator(Object *obj, u8 *entry) {
 }
 
 void obj_loop_eggcreator(Object *obj, s32 speed) {
@@ -803,7 +803,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_airzippers_waterzippers.s"
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_groundzipper.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_groundzipper.s")
 
-void obj_init_unknown58(Object *obj, s32 entry) {
+void obj_init_unknown58(Object *obj, u8 *entry) {
     obj->unk78 = 0;
     obj->unk7C.word = obj->header;
 }
@@ -882,7 +882,7 @@ void obj_loop_characterflag(Object *obj, s32 speed) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
-void obj_init_stopwatchman(Object *obj, s32 entry) {
+void obj_init_stopwatchman(Object *obj, u8 *entry) {
     Object_64 *temp;
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 0;
@@ -928,7 +928,7 @@ void obj_loop_lavaspurt(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_posarrow(Object *obj, s32 entry) {
+void obj_init_posarrow(Object *obj, u8 *entry) {
     obj->unk6 |= 0x4000;
 }
 
@@ -980,14 +980,14 @@ void obj_loop_dooropener(Object *obj, s32 speed) {
     func_800235D0(phi_a0);
 }
 
-void obj_init_overridepos(Object *obj, s32 entry) {
+void obj_init_overridepos(Object *obj, u8 *entry) {
 }
 
 /* Unused? */
 void func_80037D60(s32 arg0, s32 arg1) {
 }
 
-void obj_init_wizpigship(Object *obj, s32 entry) {
+void obj_init_wizpigship(Object *obj, u8 *entry) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_wizpigship.s")
@@ -1010,7 +1010,7 @@ void obj_loop_vehicleanim(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_hittester(Object *obj, s32 entry) {
+void obj_init_hittester(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 0x81;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
@@ -1021,21 +1021,21 @@ void obj_loop_hittester(Object *obj, s32 speed) {
     func_8001F460(obj, speed, obj);
 }
 
-void obj_init_dynamic_lighting_object(Object *obj, s32 entry) {
+void obj_init_dynamic_lighting_object(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
     obj->unk4C->unk12 = 0;
 }
 
-void obj_init_unknown96(Object *obj, s32 entry) {
+void obj_init_unknown96(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 0x81;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
     obj->unk4C->unk12 = 0;
 }
 
-void obj_init_snowball(Object *obj, s32 entry) {
+void obj_init_snowball(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
@@ -1149,7 +1149,7 @@ void obj_loop_infopoint(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_smoke(Object *obj, s32 entry) {
+void obj_init_smoke(Object *obj, u8 *entry) {
 }
 
 void obj_loop_smoke(Object *obj, s32 speed) {
@@ -1167,7 +1167,7 @@ void obj_loop_smoke(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_unknown25(Object *obj, s32 entry) {
+void obj_init_unknown25(Object *obj, u8 *entry) {
 }
 
 void obj_loop_unknown25(Object *obj, s32 speed) {
@@ -1178,7 +1178,7 @@ void obj_loop_unknown25(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_wardensmoke(Object *obj, s32 entry) {
+void obj_init_wardensmoke(Object *obj, u8 *entry) {
 }
 
 void obj_loop_wardensmoke(Object *obj, s32 speed) {
@@ -1218,7 +1218,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_bombexplosion.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bombexplosion.s")
 
-void obj_init_teleport(Object *obj, s32 entry) {
+void obj_init_teleport(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0xF;
@@ -1283,7 +1283,7 @@ void obj_init_setuppoint(Object *obj, u8 *entry) {
 void obj_loop_setuppoint(Object *obj, s32 speed) {
 }
 
-void obj_init_dino_whale(Object *obj, s32 entry) {
+void obj_init_dino_whale(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 3;
     obj->unk4C->unk10 = 0x14;
@@ -1310,7 +1310,7 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_parkwarden(Object *obj, s32 entry) {
+void obj_init_parkwarden(Object *obj, u8 *entry) {
     Object_64 *temp;
     obj->unk4C->unk14 = (u16)1;
     obj->unk4C->unk11 = (u8)0;
@@ -1485,7 +1485,7 @@ void obj_loop_rampswitch(Object *obj, s32 speed) {
     obj->unk4C->unk13 = (u8)0xFF;
 }
 
-void obj_init_seamonster(Object *obj, s32 entry) {
+void obj_init_seamonster(Object *obj, u8 *entry) {
 }
 
 void obj_loop_seamonster(Object *obj, s32 speed) {
@@ -1530,18 +1530,18 @@ void obj_init_treasuresucker(Object *obj, s8 *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_treasuresucker.s")
 
-void obj_init_flycoin(Object *obj, s32 entry) {
+void obj_init_flycoin(Object *obj, u8 *entry) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_flycoin.s")
 
-void obj_init_coincreator(Object *obj, s32 entry) {
+void obj_init_coincreator(Object *obj, u8 *entry) {
     obj->unk18 = 0x64;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_coincreator.s")
 
-void obj_init_coin(Object *obj, s32 entry) {
+void obj_init_coin(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -1554,7 +1554,7 @@ void obj_init_coin(Object *obj, s32 entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_coin.s")
 
-void obj_init_silvercoin_adv2(Object *obj, s32 entry) {
+void obj_init_silvercoin_adv2(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -1573,7 +1573,7 @@ void obj_init_silvercoin_adv2(Object *obj, s32 entry) {
     }
 }
 
-void obj_init_silvercoin(Object *obj, s32 entry) {
+void obj_init_silvercoin(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -1700,13 +1700,13 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weaponballoon.s")
 
-void obj_init_wballoonpop(Object *obj, s32 entry) {
+void obj_init_wballoonpop(Object *obj, u8 *entry) {
 }
 
 void obj_loop_wballoonpop(Object *obj, s32 speed) {
 }
 
-void obj_init_weapon(Object *obj, s32 entry) {
+void obj_init_weapon(Object *obj, u8 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x18;
@@ -1834,11 +1834,11 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry800400A4 *entry, s32 arg2) 
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_texscroll.s")
 
-void obj_init_rgbalight(Object *obj, s32 entry, s32 arg2) {
+void obj_init_rgbalight(Object *obj, u8 *entry, s32 arg2) {
     obj->unk64 = func_80031CAC(obj, entry);
 }
 
-void obj_init_buoy_pirateship(Object *obj, s32 entry, s32 arg2) {
+void obj_init_buoy_pirateship(Object *obj, u8 *entry, s32 arg2) {
     obj->unk64 = func_800BE654(obj->unk2E, obj->x_position, obj->z_position);
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 0;
@@ -1879,7 +1879,7 @@ void obj_init_weather(Object *obj, s16 *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weather.s")
 
-void obj_init_lensflare(Object *obj, s32 entry) {
+void obj_init_lensflare(Object *obj, u8 *entry) {
     func_800AC8A8(obj);
 }
 
@@ -1889,7 +1889,7 @@ void obj_init_lensflareswitch(Object *obj, s16 *entry, s32 arg2) {
     obj->scale /= 40.0f;
 }
 
-void obj_init_wavegenerator(Object *obj, s32 entry, s32 arg2) {
+void obj_init_wavegenerator(Object *obj, u8 *entry, s32 arg2) {
     func_800BF524(obj); //waves.c
 }
 
@@ -1926,13 +1926,13 @@ void obj_init_boost(Object *obj, s8 *entry) {
     obj->unk3C_a.unk3C = NULL;
 }
 
-void obj_init_unknown94(Object *obj, s32 entry, s32 arg2) {
+void obj_init_unknown94(Object *obj, u8 *entry, s32 arg2) {
 }
 
 void obj_loop_unknown94(Object *obj, s32 speed) {
 }
 
-void obj_init_rangetrigger(Object *obj, s32 entry) {
+void obj_init_rangetrigger(Object *obj, u8 *entry) {
 }
 
 void obj_loop_rangetrigger(Object *obj, s32 speed) {
@@ -2009,8 +2009,8 @@ void obj_init_levelname(Object *obj, s8 *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_levelname.s")
 
-void obj_init_wizghosts(Object *obj, s32 entry) {
-    func_8001F460(obj, entry, obj);
-    obj->unk18 = (obj->unk18 + (entry * 8)) & 0xFF;
+void obj_loop_wizghosts(Object *obj, s32 speed) {
+    func_8001F460(obj, speed, obj);
+    obj->unk18 = (obj->unk18 + (speed * 8)) & 0xFF;
 }
 
