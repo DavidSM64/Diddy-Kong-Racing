@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_0348C0_H_
-#define _UNKNOWN_0348C0_H_
+#ifndef _OBJECT_FUNCTIONS_H_
+#define _OBJECT_FUNCTIONS_H_
 
 #include "types.h"
 #include "structs.h"

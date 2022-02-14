@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_043920_H_
-#define _UNKNOWN_043920_H_
+#ifndef _RACER_H_
+#define _RACER_H_
 
 #include "types.h"
 #include "structs.h"

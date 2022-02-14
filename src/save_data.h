@@ -1,5 +1,5 @@
-#ifndef _CONTROLLER_PAK_H_
-#define _CONTROLLER_PAK_H_
+#ifndef _SAVE_DATA_H_
+#define _SAVE_DATA_H_
 
 #include "types.h"
 #include "structs.h"

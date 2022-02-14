@@ -1770,7 +1770,7 @@ void run_object_init_func(Object *obj, void *entry) {
     }
 }
 
-s32 func_80023E30(s32 arg0){
+s32 func_80023E30(s32 arg0) {
   s32 value = 0;
   switch (arg0 - 1){
     case 0x00:

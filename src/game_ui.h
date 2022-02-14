@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_09F8F0_H_
-#define _UNKNOWN_09F8F0_H_
+#ifndef _GAME_UI_H_
+#define _GAME_UI_H_
 
 #include "types.h"
 #include "structs.h"
