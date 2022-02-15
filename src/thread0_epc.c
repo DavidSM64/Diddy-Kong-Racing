@@ -5,11 +5,11 @@
 #include "types.h"
 #include "macros.h"
 #include "menu.h"
-#include "controller_pak.h"
+#include "save_data.h"
 #include "printf.h"
 #include "unknown_00BC20.h"
 #include "controller.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 
 /************ .rodata ************/
 
@@ -201,7 +201,7 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
                 sp38 += size;
             }
         }
-        func_800766D4(0, -1, &D_800E8EE8, &D_800E8EF0, &sp40, 0x800);
+        write_controller_pak_file(0, -1, &D_800E8EE8, &D_800E8EF0, &sp40, 0x800);
         while (1); // Infinite loop; waiting for the player to reset the console?
     }
 }
@@ -225,8 +225,8 @@ s32 get_lockup_status(void) {
         return sLockupStatus;
     } else {
         sLockupStatus = 0;
-        if ((func_800758DC(controllerIndex) == 0) && //Rumble pack check?
-            (func_800764E8(controllerIndex, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0) &&
+        if ((get_si_device_status(controllerIndex) == 0) && //Rumble pack check?
+            (get_file_number(controllerIndex, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0) &&
             (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *)&dataFromControllerPak,
                 sizeof(dataFromControllerPak) * MAXCONTROLLERS) == 0)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(dataFromControllerPak) - 80); //Why less 80 (0x50)?
@@ -234,9 +234,9 @@ s32 get_lockup_status(void) {
             bcopy(&sp420, &D_80129BB0, sizeof(sp420));
             sLockupStatus = 1;
         }
-        func_80075AEC(controllerIndex);
+        start_reading_controller_data(controllerIndex);
         if (sLockupStatus) {
-            func_800762C8(controllerIndex, fileNum);
+            delete_file(controllerIndex, fileNum);
         }
         return sLockupStatus;
     }

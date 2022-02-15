@@ -667,6 +667,7 @@ u16 func_80001CB8(u16 arg0) {
     return sSoundEffectsPool[arg0].unk6;
 }
 
+//Play Sound effect?
 GLOBAL_ASM("asm/non_matchings/audio/func_80001D04.s")
 
 void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4) {

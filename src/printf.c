@@ -124,14 +124,14 @@ GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
 /**
  * Set the colour of the current debug text.
  */
-void set_render_printf_color(u8 red, u8 green, u8 blue, u8 alpha) {
+void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_COLOR(red, green, blue, alpha)
 }
 
 /**
  * Set the background colour of the current debug text.
  */
-void set_render_printf_background_color(u8 red, u8 green, u8 blue, u8 alpha) {
+void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha)
 }
 

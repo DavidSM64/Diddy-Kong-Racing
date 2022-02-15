@@ -43,6 +43,6 @@ void func_800787F0(void);
 void render_background(Gfx **dlist, s32 *arg1, s32 arg2);
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1,
 	s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha);
-void func_80078D00(Gfx**, void *element, s32, s32, f32, f32, u32, s32);
+void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 x, f32 y, f32 x_scale, f32 y_scale, u32 color, s32 flip);
 
 #endif

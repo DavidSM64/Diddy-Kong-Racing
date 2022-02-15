@@ -9,10 +9,10 @@ glabel func_80087F14
 /* 088B30 80087F30 AFB60038 */  sw    $s6, 0x38($sp)
 /* 088B34 80087F34 AFB50034 */  sw    $s5, 0x34($sp)
 /* 088B38 80087F38 AFB10024 */  sw    $s1, 0x24($sp)
-/* 088B3C 80087F3C 3C108012 */  lui   $s0, %hi(D_80126A30) # $s0, 0x8012
-/* 088B40 80087F40 3C128012 */  lui   $s2, %hi(D_80126A34) # $s2, 0x8012
-/* 088B44 80087F44 3C138012 */  lui   $s3, %hi(D_80126A38) # $s3, 0x8012
-/* 088B48 80087F48 3C148012 */  lui   $s4, %hi(D_80126A3C) # $s4, 0x8012
+/* 088B3C 80087F3C 3C108012 */  lui   $s0, %hi(sControllerPakIssueNotFound) # $s0, 0x8012
+/* 088B40 80087F40 3C128012 */  lui   $s2, %hi(sControllerPakFatalErrorFound) # $s2, 0x8012
+/* 088B44 80087F44 3C138012 */  lui   $s3, %hi(sControllerPakNoFreeSpace) # $s3, 0x8012
+/* 088B48 80087F48 3C148012 */  lui   $s4, %hi(sControllerPakBadData) # $s4, 0x8012
 /* 088B4C 80087F4C AFBF0044 */  sw    $ra, 0x44($sp)
 /* 088B50 80087F50 AFA40090 */  sw    $a0, 0x90($sp)
 /* 088B54 80087F54 AFA50094 */  sw    $a1, 0x94($sp)
@@ -20,10 +20,10 @@ glabel func_80087F14
 /* 088B5C 80087F5C 0000B825 */  move  $s7, $zero
 /* 088B60 80087F60 00001825 */  move  $v1, $zero
 /* 088B64 80087F64 0000F025 */  move  $fp, $zero
-/* 088B68 80087F68 26946A3C */  addiu $s4, %lo(D_80126A3C) # addiu $s4, $s4, 0x6a3c
-/* 088B6C 80087F6C 26736A38 */  addiu $s3, %lo(D_80126A38) # addiu $s3, $s3, 0x6a38
-/* 088B70 80087F70 26526A34 */  addiu $s2, %lo(D_80126A34) # addiu $s2, $s2, 0x6a34
-/* 088B74 80087F74 26106A30 */  addiu $s0, %lo(D_80126A30) # addiu $s0, $s0, 0x6a30
+/* 088B68 80087F68 26946A3C */  addiu $s4, %lo(sControllerPakBadData) # addiu $s4, $s4, 0x6a3c
+/* 088B6C 80087F6C 26736A38 */  addiu $s3, %lo(sControllerPakNoFreeSpace) # addiu $s3, $s3, 0x6a38
+/* 088B70 80087F70 26526A34 */  addiu $s2, %lo(sControllerPakFatalErrorFound) # addiu $s2, $s2, 0x6a34
+/* 088B74 80087F74 26106A30 */  addiu $s0, %lo(sControllerPakIssueNotFound) # addiu $s0, $s0, 0x6a30
 /* 088B78 80087F78 00008825 */  move  $s1, $zero
 /* 088B7C 80087F7C 24150001 */  li    $s5, 1
 .L80087F80:
@@ -33,7 +33,7 @@ glabel func_80087F14
 /* 088B8C 80087F8C 02202025 */  move  $a0, $s1
 /* 088B90 80087F90 27A50074 */  addiu $a1, $sp, 0x74
 /* 088B94 80087F94 27A60070 */  addiu $a2, $sp, 0x70
-/* 088B98 80087F98 0C01D865 */  jal   func_80076194
+/* 088B98 80087F98 0C01D865 */  jal   get_free_space
 /* 088B9C 80087F9C AFA30064 */   sw    $v1, 0x64($sp)
 /* 088BA0 80087FA0 8FA30064 */  lw    $v1, 0x64($sp)
 /* 088BA4 80087FA4 14400012 */  bnez  $v0, .L80087FF0
@@ -41,7 +41,7 @@ glabel func_80087F14
 /* 088BAC 80087FAC 8FAE0074 */  lw    $t6, 0x74($sp)
 /* 088BB0 80087FB0 A2150000 */  sb    $s5, ($s0)
 /* 088BB4 80087FB4 11C00005 */  beqz  $t6, .L80087FCC
-/* 088BB8 80087FB8 3C188012 */   lui   $t8, %hi(D_80126A60) # $t8, 0x8012
+/* 088BB8 80087FB8 3C188012 */   lui   $t8, %hi(sControllerPakDataPresent) # $t8, 0x8012
 /* 088BBC 80087FBC 8FAF0070 */  lw    $t7, 0x70($sp)
 /* 088BC0 80087FC0 00000000 */  nop   
 /* 088BC4 80087FC4 15E00008 */  bnez  $t7, .L80087FE8
@@ -49,7 +49,7 @@ glabel func_80087F14
 .L80087FCC:
 /* 088BCC 80087FCC A2750000 */  sb    $s5, ($s3)
 /* 088BD0 80087FD0 0311C021 */  addu  $t8, $t8, $s1
-/* 088BD4 80087FD4 93186A60 */  lbu   $t8, %lo(D_80126A60)($t8)
+/* 088BD4 80087FD4 93186A60 */  lbu   $t8, %lo(sControllerPakDataPresent)($t8)
 /* 088BD8 80087FD8 00000000 */  nop   
 /* 088BDC 80087FDC 17000002 */  bnez  $t8, .L80087FE8
 /* 088BE0 80087FE0 00000000 */   nop   
@@ -68,7 +68,7 @@ glabel func_80087F14
 /* 088C08 80088008 15410007 */  bne   $t2, $at, .L80088028
 /* 088C0C 8008800C 02202025 */   move  $a0, $s1
 /* 088C10 80088010 AFA30064 */  sw    $v1, 0x64($sp)
-/* 088C14 80088014 0C01D74E */  jal   func_80075D38
+/* 088C14 80088014 0C01D74E */  jal   repair_controller_pak
 /* 088C18 80088018 AFAA0078 */   sw    $t2, 0x78($sp)
 /* 088C1C 8008801C 8FA30064 */  lw    $v1, 0x64($sp)
 /* 088C20 80088020 8FAA0078 */  lw    $t2, 0x78($sp)
@@ -99,13 +99,13 @@ glabel func_80087F14
 /* 088C78 80088078 24020001 */   li    $v0, 1
 .L8008807C:
 /* 088C7C 8008807C 8FB90090 */  lw    $t9, 0x90($sp)
-/* 088C80 80088080 3C068012 */  lui   $a2, %hi(D_80126AE0) # $a2, 0x8012
+/* 088C80 80088080 3C068012 */  lui   $a2, %hi(sCurrentControllerPakAllFileNames) # $a2, 0x8012
 /* 088C84 80088084 8F220000 */  lw    $v0, ($t9)
-/* 088C88 80088088 24C66AE0 */  addiu $a2, %lo(D_80126AE0) # addiu $a2, $a2, 0x6ae0
+/* 088C88 80088088 24C66AE0 */  addiu $a2, %lo(sCurrentControllerPakAllFileNames) # addiu $a2, $a2, 0x6ae0
 /* 088C8C 8008808C 0441000F */  bgez  $v0, .L800880CC
 /* 088C90 80088090 00408825 */   move  $s1, $v0
-/* 088C94 80088094 3C0E8012 */  lui   $t6, %hi(D_80126A30) # $t6, 0x8012
-/* 088C98 80088098 25CE6A30 */  addiu $t6, %lo(D_80126A30) # addiu $t6, $t6, 0x6a30
+/* 088C94 80088094 3C0E8012 */  lui   $t6, %hi(sControllerPakIssueNotFound) # $t6, 0x8012
+/* 088C98 80088098 25CE6A30 */  addiu $t6, %lo(sControllerPakIssueNotFound) # addiu $t6, $t6, 0x6a30
 /* 088C9C 8008809C 022E8021 */  addu  $s0, $s1, $t6
 .L800880A0:
 /* 088CA0 800880A0 26310001 */  addiu $s1, $s1, 1
@@ -121,15 +121,15 @@ glabel func_80087F14
 /* 088CC4 800880C4 10000024 */  b     .L80088158
 /* 088CC8 800880C8 8FAF0090 */   lw    $t7, 0x90($sp)
 .L800880CC:
-/* 088CCC 800880CC 3C188012 */  lui   $t8, %hi(D_80126A30) # $t8, 0x8012
+/* 088CCC 800880CC 3C188012 */  lui   $t8, %hi(sControllerPakIssueNotFound) # $t8, 0x8012
 /* 088CD0 800880D0 0302C021 */  addu  $t8, $t8, $v0
-/* 088CD4 800880D4 93186A30 */  lbu   $t8, %lo(D_80126A30)($t8)
+/* 088CD4 800880D4 93186A30 */  lbu   $t8, %lo(sControllerPakIssueNotFound)($t8)
 /* 088CD8 800880D8 8FB90094 */  lw    $t9, 0x94($sp)
 /* 088CDC 800880DC 13000002 */  beqz  $t8, .L800880E8
-/* 088CE0 800880E0 3C0E8012 */   lui   $t6, %hi(D_80126A30) # $t6, 0x8012
+/* 088CE0 800880E0 3C0E8012 */   lui   $t6, %hi(sControllerPakIssueNotFound) # $t6, 0x8012
 /* 088CE4 800880E4 1B20000D */  blez  $t9, .L8008811C
 .L800880E8:
-/* 088CE8 800880E8 25CE6A30 */   addiu $t6, %lo(D_80126A30) # addiu $t6, $t6, 0x6a30
+/* 088CE8 800880E8 25CE6A30 */   addiu $t6, %lo(sControllerPakIssueNotFound) # addiu $t6, $t6, 0x6a30
 /* 088CEC 800880EC 022E8021 */  addu  $s0, $s1, $t6
 .L800880F0:
 /* 088CF0 800880F0 26310001 */  addiu $s1, $s1, 1
@@ -146,9 +146,9 @@ glabel func_80087F14
 /* 088D18 80088118 8FAF0090 */   lw    $t7, 0x90($sp)
 .L8008811C:
 /* 088D1C 8008811C 8FB80094 */  lw    $t8, 0x94($sp)
-/* 088D20 80088120 3C198012 */  lui   $t9, %hi(D_80126A30) # $t9, 0x8012
+/* 088D20 80088120 3C198012 */  lui   $t9, %hi(sControllerPakIssueNotFound) # $t9, 0x8012
 /* 088D24 80088124 0701000B */  bgez  $t8, .L80088154
-/* 088D28 80088128 27396A30 */   addiu $t9, %lo(D_80126A30) # addiu $t9, $t9, 0x6a30
+/* 088D28 80088128 27396A30 */   addiu $t9, %lo(sControllerPakIssueNotFound) # addiu $t9, $t9, 0x6a30
 /* 088D2C 8008812C 02398021 */  addu  $s0, $s1, $t9
 .L80088130:
 /* 088D30 80088130 2631FFFF */  addiu $s1, $s1, -1
@@ -164,27 +164,27 @@ glabel func_80087F14
 .L80088154:
 /* 088D54 80088154 8FAF0090 */  lw    $t7, 0x90($sp)
 .L80088158:
-/* 088D58 80088158 3C188012 */  lui   $t8, %hi(D_80126B70) # $t8, 0x8012
-/* 088D5C 8008815C 3C198012 */  lui   $t9, %hi(D_80126B60) # $t9, 0x8012
-/* 088D60 80088160 27396B60 */  addiu $t9, %lo(D_80126B60) # addiu $t9, $t9, 0x6b60
-/* 088D64 80088164 27186B70 */  addiu $t8, %lo(D_80126B70) # addiu $t8, $t8, 0x6b70
-/* 088D68 80088168 3C078012 */  lui   $a3, %hi(D_80126B20) # $a3, 0x8012
+/* 088D58 80088158 3C188012 */  lui   $t8, %hi(sCurrentControllerPakAllFileSizes) # $t8, 0x8012
+/* 088D5C 8008815C 3C198012 */  lui   $t9, %hi(sCurrentControllerPakAllFileTypes) # $t9, 0x8012
+/* 088D60 80088160 27396B60 */  addiu $t9, %lo(sCurrentControllerPakAllFileTypes) # addiu $t9, $t9, 0x6b60
+/* 088D64 80088164 27186B70 */  addiu $t8, %lo(sCurrentControllerPakAllFileSizes) # addiu $t8, $t8, 0x6b70
+/* 088D68 80088168 3C078012 */  lui   $a3, %hi(sCurrentControllerPakAllFileExtensions) # $a3, 0x8012
 /* 088D6C 8008816C ADF10000 */  sw    $s1, ($t7)
 /* 088D70 80088170 AFB90014 */  sw    $t9, 0x14($sp)
 /* 088D74 80088174 AFB80010 */  sw    $t8, 0x10($sp)
-/* 088D78 80088178 24E76B20 */  addiu $a3, %lo(D_80126B20) # addiu $a3, $a3, 0x6b20
-/* 088D7C 8008817C 0C01D798 */  jal   func_80075E60
+/* 088D78 80088178 24E76B20 */  addiu $a3, %lo(sCurrentControllerPakAllFileExtensions) # addiu $a3, $a3, 0x6b20
+/* 088D7C 8008817C 0C01D798 */  jal   get_controller_pak_file_list
 /* 088D80 80088180 02202025 */   move  $a0, $s1
 /* 088D84 80088184 1440005C */  bnez  $v0, .L800882F8
 /* 088D88 80088188 00405025 */   move  $t2, $v0
-/* 088D8C 8008818C 3C098012 */  lui   $t1, %hi(D_80126B70) # $t1, 0x8012
-/* 088D90 80088190 3C088012 */  lui   $t0, %hi(D_80126AE0) # $t0, 0x8012
+/* 088D8C 8008818C 3C098012 */  lui   $t1, %hi(sCurrentControllerPakAllFileSizes) # $t1, 0x8012
+/* 088D90 80088190 3C088012 */  lui   $t0, %hi(sCurrentControllerPakAllFileNames) # $t0, 0x8012
 /* 088D94 80088194 3C058012 */  lui   $a1, %hi(D_80126AA0) # $a1, 0x8012
-/* 088D98 80088198 3C1F8012 */  lui   $ra, %hi(D_80126AE0) # $ra, 0x8012
-/* 088D9C 8008819C 27FF6AE0 */  addiu $ra, %lo(D_80126AE0) # addiu $ra, $ra, 0x6ae0
+/* 088D98 80088198 3C1F8012 */  lui   $ra, %hi(sCurrentControllerPakAllFileNames) # $ra, 0x8012
+/* 088D9C 8008819C 27FF6AE0 */  addiu $ra, %lo(sCurrentControllerPakAllFileNames) # addiu $ra, $ra, 0x6ae0
 /* 088DA0 800881A0 24A56AA0 */  addiu $a1, %lo(D_80126AA0) # addiu $a1, $a1, 0x6aa0
-/* 088DA4 800881A4 25086AE0 */  addiu $t0, %lo(D_80126AE0) # addiu $t0, $t0, 0x6ae0
-/* 088DA8 800881A8 25296B70 */  addiu $t1, %lo(D_80126B70) # addiu $t1, $t1, 0x6b70
+/* 088DA4 800881A4 25086AE0 */  addiu $t0, %lo(sCurrentControllerPakAllFileNames) # addiu $t0, $t0, 0x6ae0
+/* 088DA8 800881A8 25296B70 */  addiu $t1, %lo(sCurrentControllerPakAllFileSizes) # addiu $t1, $t1, 0x6b70
 /* 088DAC 800881AC 00005825 */  move  $t3, $zero
 /* 088DB0 800881B0 240D002D */  li    $t5, 45
 /* 088DB4 800881B4 240C002E */  li    $t4, 46
@@ -196,8 +196,8 @@ glabel func_80087F14
 /* 088DC8 800881C8 10E00030 */  beqz  $a3, .L8008828C
 /* 088DCC 800881CC 00002025 */   move  $a0, $zero
 /* 088DD0 800881D0 90F90000 */  lbu   $t9, ($a3)
-/* 088DD4 800881D4 3C188012 */  lui   $t8, %hi(D_80126B20) # $t8, 0x8012
-/* 088DD8 800881D8 27186B20 */  addiu $t8, %lo(D_80126B20) # addiu $t8, $t8, 0x6b20
+/* 088DD4 800881D4 3C188012 */  lui   $t8, %hi(sCurrentControllerPakAllFileExtensions) # $t8, 0x8012
+/* 088DD8 800881D8 27186B20 */  addiu $t8, %lo(sCurrentControllerPakAllFileExtensions) # addiu $t8, $t8, 0x6b20
 /* 088DDC 800881DC 00001025 */  move  $v0, $zero
 /* 088DE0 800881E0 1320000D */  beqz  $t9, .L80088218
 /* 088DE4 800881E4 01783021 */   addu  $a2, $t3, $t8
@@ -264,11 +264,11 @@ glabel func_80087F14
 /* 088EC4 800882C4 0C01D859 */  jal   func_80076164
 /* 088EC8 800882C8 AFAA0078 */   sw    $t2, 0x78($sp)
 /* 088ECC 800882CC 8FAE0090 */  lw    $t6, 0x90($sp)
-/* 088ED0 800882D0 3C108012 */  lui   $s0, %hi(D_80126BB0) # $s0, 0x8012
-/* 088ED4 800882D4 26106BB0 */  addiu $s0, %lo(D_80126BB0) # addiu $s0, $s0, 0x6bb0
+/* 088ED0 800882D0 3C108012 */  lui   $s0, %hi(sCurrentControllerPakFreeSpace) # $s0, 0x8012
+/* 088ED4 800882D4 26106BB0 */  addiu $s0, %lo(sCurrentControllerPakFreeSpace) # addiu $s0, $s0, 0x6bb0
 /* 088ED8 800882D8 8DC40000 */  lw    $a0, ($t6)
 /* 088EDC 800882DC 02002825 */  move  $a1, $s0
-/* 088EE0 800882E0 0C01D865 */  jal   func_80076194
+/* 088EE0 800882E0 0C01D865 */  jal   get_free_space
 /* 088EE4 800882E4 00003025 */   move  $a2, $zero
 /* 088EE8 800882E8 8E0F0000 */  lw    $t7, ($s0)
 /* 088EEC 800882EC 8FAA0078 */  lw    $t2, 0x78($sp)

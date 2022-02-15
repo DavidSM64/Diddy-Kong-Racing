@@ -3,7 +3,7 @@
 
 #include "main.h"
 #include "thread0_epc.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "lib/src/libc/rmonPrintf.h"
 
 /************ .rodata ************/

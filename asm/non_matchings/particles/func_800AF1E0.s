@@ -1,12 +1,12 @@
 glabel func_800AF1E0
-/* 0AFDE0 800AF1E0 3C0E800E */  lui   $t6, %hi(gParticleBehaviorsAssetTableCount) # $t6, 0x800e
-/* 0AFDE4 800AF1E4 8DCE2CF4 */  lw    $t6, %lo(gParticleBehaviorsAssetTableCount)($t6)
+/* 0AFDE0 800AF1E0 3C0E800E */  lui   $t6, %hi(gParticleBehavioursAssetTableCount) # $t6, 0x800e
+/* 0AFDE4 800AF1E4 8DCE2CF4 */  lw    $t6, %lo(gParticleBehavioursAssetTableCount)($t6)
 /* 0AFDE8 800AF1E8 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0AFDEC 800AF1EC 00AE082A */  slt   $at, $a1, $t6
 /* 0AFDF0 800AF1F0 10200026 */  beqz  $at, .L800AF28C
 /* 0AFDF4 800AF1F4 AFBF001C */   sw    $ra, 0x1c($sp)
-/* 0AFDF8 800AF1F8 3C0F800E */  lui   $t7, %hi(gParticleBehaviorsAssetTable) # $t7, 0x800e
-/* 0AFDFC 800AF1FC 8DEF2CFC */  lw    $t7, %lo(gParticleBehaviorsAssetTable)($t7)
+/* 0AFDF8 800AF1F8 3C0F800E */  lui   $t7, %hi(gParticleBehavioursAssetTable) # $t7, 0x800e
+/* 0AFDFC 800AF1FC 8DEF2CFC */  lw    $t7, %lo(gParticleBehavioursAssetTable)($t7)
 /* 0AFE00 800AF200 4448F800 */  cfc1  $t0, $31
 /* 0AFE04 800AF204 0005C080 */  sll   $t8, $a1, 2
 /* 0AFE08 800AF208 01F8C821 */  addu  $t9, $t7, $t8

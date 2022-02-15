@@ -68,10 +68,10 @@ glabel tt_menu_loop
 /* 09E814 8009DC14 3C018012 */  lui   $at, %hi(sDialogueOptionMax) # $at, 0x8012
 /* 09E818 8009DC18 A0206504 */  sb    $zero, %lo(sDialogueOptionMax)($at)
 /* 09E81C 8009DC1C 3C088012 */  lui   $t0, %hi(sCurrentMenuID) # $t0, 0x8012
-/* 09E820 8009DC20 3C018012 */  lui   $at, %hi(gDialogOptionYOffset) # $at, 0x8012
+/* 09E820 8009DC20 3C018012 */  lui   $at, %hi(gDialogueOptionYOffset) # $at, 0x8012
 /* 09E824 8009DC24 240E0020 */  li    $t6, 32
 /* 09E828 8009DC28 250864E2 */  addiu $t0, %lo(sCurrentMenuID) # addiu $t0, $t0, 0x64e2
-/* 09E82C 8009DC2C A02E650E */  sb    $t6, %lo(gDialogOptionYOffset)($at)
+/* 09E82C 8009DC2C A02E650E */  sb    $t6, %lo(gDialogueOptionYOffset)($at)
 /* 09E830 8009DC30 81030000 */  lb    $v1, ($t0)
 /* 09E834 8009DC34 00402025 */  move  $a0, $v0
 /* 09E838 8009DC38 2C61000B */  sltiu $at, $v1, 0xb

@@ -158,14 +158,6 @@ typedef struct unk800DFA3C {
     u32* unkC;
 } unk800DFA3C;
 
-typedef struct unk800DFC10 {
-    u32 *unk0;
-    s16 unk4;
-    s16 unk6;
-    u32 *unk8;
-    s32 unkC;
-} unk800DFC10;
-
 typedef struct unk800E03CC {
     s16 unk0;
     s16 unk2;
@@ -203,7 +195,7 @@ typedef struct unk800860A8 {
     u8 pad1[0x5];
     s8 unk6;
     u8 pad7[0x5];
-    s32 unkC;
+    s32 unkC; //Used for bytes free in controller pak at one point.
 } unk800860A8;
 
 /* Size: 0x10 bytes */
@@ -278,7 +270,7 @@ extern s8 D_800DF4DC;
 extern s8 D_800DF4E0;
 extern s8 D_800DF4E4[4];
 extern s32 D_800DF4E8;
-extern s8 gDialogOptionTangible;
+extern s8 gDialogueOptionTangible;
 
 // Unused?
 extern s32 D_800DF4F0[];
@@ -353,21 +345,12 @@ extern s32* D_800DFBE0[10];
 extern s32 D_800DFC08;
 extern s32 D_800DFC0C;
 
-extern unk800DFC10 D_800DFC10;
-extern unk800DFC10 D_800DFC20;
-extern unk800DFC10 D_800DFC30;
-extern unk800DFC10 D_800DFC40;
-extern unk800DFC10 D_800DFC50;
-extern unk800DFC10 D_800DFC60;
-
 // Unused?
 extern u8 D_800DFC70[8];
 
 extern s16 D_800DFC78[26];
 
-extern s16 D_800DFCAC[4];
-
-extern u16 D_800DFCB4[112];
+extern MenuElement D_800DFCB4[7];
 
 extern s32 gShowControllerPakMenu;
 
@@ -414,51 +397,46 @@ extern s32 gMultiplayerSelectedNumberOfRacers;
 extern s32 D_800E0414;
 extern s32 D_800E0418;
 
-extern unk800DFC10 D_800E041C;
-extern unk800DFC10 D_800E042C;
-extern unk800DFC10 D_800E043C;
-extern unk800DFC10 D_800E044C;
+extern DrawTexture D_800E041C[2];
+extern DrawTexture D_800E042C[2];
+extern DrawTexture D_800E043C[2];
+extern DrawTexture D_800E044C[2];
 
-extern unk800DFC10 D_800E045C;
-extern s32 D_800E046C[2];
-extern unk800DFC10 D_800E0474;
-extern s32 D_800E0484[2];
-extern unk800DFC10 D_800E048C;
-extern s32 D_800E049C[2];
-extern unk800DFC10 D_800E04A4;
-extern s32 D_800E04B4[2];
-extern unk800DFC10 D_800E04BC;
-extern s32 D_800E04CC[2];
-extern unk800DFC10 D_800E04D4;
-extern unk800DFC10 D_800E04E4;
-extern unk800DFC10 D_800E04F4;
-extern unk800DFC10 D_800E0504;
-extern unk800DFC10 D_800E0514;
-extern unk800DFC10 D_800E0524;
-extern unk800DFC10 D_800E0534;
-extern unk800DFC10 D_800E0544;
-extern unk800DFC10 D_800E0554;
-extern unk800DFC10 D_800E0564;
-extern unk800DFC10 D_800E0574;
-extern unk800DFC10 D_800E0584;
-extern unk800DFC10 D_800E0594;
-extern unk800DFC10 D_800E05A4;
-extern unk800DFC10 D_800E05B4;
-extern unk800DFC10 D_800E05C4;
+extern DrawTexture D_800E045C[3];
+extern DrawTexture D_800E0474[3];
+extern DrawTexture D_800E048C[3];
+extern DrawTexture D_800E04A4[3];
+extern DrawTexture D_800E04BC[3];
+extern DrawTexture D_800E04D4[2];
+extern DrawTexture D_800E04E4[2];
+extern DrawTexture D_800E04F4[2];
+extern DrawTexture D_800E0504[2];
+extern DrawTexture D_800E0514[2];
+extern DrawTexture D_800E0524[2];
+extern DrawTexture D_800E0534[2];
+extern DrawTexture D_800E0544[2];
+extern DrawTexture D_800E0554[2];
+extern DrawTexture D_800E0564[2];
+extern DrawTexture D_800E0574[2];
+extern DrawTexture D_800E0584[2];
+extern DrawTexture D_800E0594[2];
+extern DrawTexture D_800E05A4[2];
+extern DrawTexture D_800E05B4[2];
+extern DrawTexture D_800E05C4[2];
 
 // These are probably structs
 extern s32 D_800E05D4[8];
 extern s32 D_800E05F4[8];
 
-extern unk800DFC10 D_800E0614;
+extern DrawTexture D_800E0614[2];
 
-extern unk800DFC10 *D_800E0624[9];
+extern DrawTexture *D_800E0624[9];
 
-extern unk800DFC10 *D_800E0648[6];
+extern DrawTexture *D_800E0648[6];
 
-extern unk800DFC10 *D_800E0660[6];
+extern DrawTexture *D_800E0660[6];
 
-extern unk800DFC10 *D_800E0678[4];
+extern DrawTexture *D_800E0678[4];
 
 extern u16 D_800E0688[20];
 
@@ -498,26 +476,22 @@ extern s32 D_800E0984;
 extern s32 D_800E0988;
 extern s32 D_800E098C;
 
-extern s16 D_800E0990[8];
-
-extern s16 D_800E09A0[8];
-
 extern s16 D_800E0A24[14];
 
 extern s16 D_800E0A40[8];
 
-extern unk800DFC10 D_800E0A50;
-extern unk800DFC10 D_800E0A60;
-extern unk800DFC10 D_800E0A70;
-extern unk800DFC10 D_800E0A90;
-extern unk800DFC10 D_800E0A80;
-extern unk800DFC10 D_800E0AA0;
-extern unk800DFC10 D_800E0AB0;
-extern unk800DFC10 D_800E0AC0;
-extern unk800DFC10 D_800E0AD0;
-extern unk800DFC10 D_800E0AE0;
+extern DrawTexture D_800E0A50[2];
+extern DrawTexture D_800E0A60[2];
+extern DrawTexture D_800E0A70[2];
+extern DrawTexture D_800E0A90[2];
+extern DrawTexture D_800E0A80[2];
+extern DrawTexture D_800E0AA0[2];
+extern DrawTexture D_800E0AB0[2];
+extern DrawTexture D_800E0AC0[2];
+extern DrawTexture D_800E0AD0[2];
+extern DrawTexture D_800E0AE0[2];
 
-extern unk800DFC10* D_800E0AF0[10];
+extern DrawTexture* D_800E0AF0[10];
 
 extern s16 D_800E0B18[74];
 
@@ -643,7 +617,7 @@ extern char gRareCopyrightString[24];
 //extern FadeTransition D_800E1E08;
 extern s16 D_800E1E08[4];
 
-extern s32 *D_800E1E10;
+extern char *D_800E1E10;
 
 extern s32 D_800E1E14;
 extern s32 D_800E1E18;
@@ -679,11 +653,11 @@ void func_80084734(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
 void menu_save_options_init(void);
-s32 func_800860A8(s32 arg0, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 arg4);
+s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 arg4);
 void func_800861C8(unk800861C8 *arg0, s32 *arg1);
-s32 func_800874D0(s32 arg0, s32 arg1);
-s32 func_800875E4(s32 arg0, s32 arg1);
-s32 func_800876CC(s32 arg0, s32 arg1);
+s32 func_800874D0(s32 buttonsPressed, s32 arg1);
+s32 func_800875E4(s32 buttonsPressed, s32 arg1);
+s32 func_800876CC(s32 buttonsPressed, s32 arg1);
 void func_80087EB8(void);
 void menu_boot_init(void);
 void func_800887C4(void);
@@ -777,10 +751,10 @@ s32 trophy_race_cabinet_menu_loop(void);
 void dialogue_open_stub(void);
 void dialogue_close_stub(void);
 f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Gfx **mat, VertexList **vtx);
-s64 *func_8009EA6C(void);
-s32 func_8009EA78(s64 arg0);
-s32 func_8009EABC(s64 arg0);
-s64 func_8009EB08(void);
+u64 *get_eeprom_settings_pointer(void);
+s32 set_eeprom_settings_value(u64 valueToSet);
+s32 unset_eeprom_settings_value(u64 valueToUnset);
+u64 get_eeprom_settings(void);
 s32 get_language(void);
 void set_language(s32 language);
 s32 is_adventure_two_unlocked(void);
@@ -800,7 +774,7 @@ void menu_magic_codes_init(void);
 void render_magic_codes_list_menu_text(s32 arg0);
 s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
-void randomize_ai_racer_slots(s32 arg0);
+void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void func_8008C698(s32 arg0);
 s32 menu_game_select_loop(s32 arg0);
@@ -822,5 +796,8 @@ void update_controller_sticks(void);
 s32 tt_menu_loop(void);
 void menu_track_select_init(void);
 void menu_trophy_race_rankings_init(void);
+void func_8009E3D0(void);
+s32 func_800C3564(void);
+void func_8008C168(s32);
 
 #endif

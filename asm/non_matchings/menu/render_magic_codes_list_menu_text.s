@@ -14,7 +14,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B19C 8008A59C 00002025 */  move  $a0, $zero
 /* 08B1A0 8008A5A0 00002825 */  move  $a1, $zero
 /* 08B1A4 8008A5A4 00003025 */  move  $a2, $zero
-/* 08B1A8 8008A5A8 0C0310F3 */  jal   set_text_background_color
+/* 08B1A8 8008A5A8 0C0310F3 */  jal   set_text_background_colour
 /* 08B1AC 8008A5AC 00003825 */   move  $a3, $zero
 /* 08B1B0 8008A5B0 0C0310BB */  jal   set_text_font
 /* 08B1B4 8008A5B4 24040002 */   li    $a0, 2
@@ -23,7 +23,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B1C0 8008A5C0 00002025 */  move  $a0, $zero
 /* 08B1C4 8008A5C4 00002825 */  move  $a1, $zero
 /* 08B1C8 8008A5C8 00003025 */  move  $a2, $zero
-/* 08B1CC 8008A5CC 0C0310E1 */  jal   set_text_color
+/* 08B1CC 8008A5CC 0C0310E1 */  jal   set_text_colour
 /* 08B1D0 8008A5D0 240700FF */   li    $a3, 255
 /* 08B1D4 8008A5D4 3C17800E */  lui   $s7, %hi(gMenuText) # $s7, 0x800e
 /* 08B1D8 8008A5D8 26F7F4A0 */  addiu $s7, %lo(gMenuText) # addiu $s7, $s7, -0xb60
@@ -42,7 +42,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B20C 8008A60C 240400FF */  li    $a0, 255
 /* 08B210 8008A610 240500FF */  li    $a1, 255
 /* 08B214 8008A614 240600FF */  li    $a2, 255
-/* 08B218 8008A618 0C0310E1 */  jal   set_text_color
+/* 08B218 8008A618 0C0310E1 */  jal   set_text_colour
 /* 08B21C 8008A61C 00003825 */   move  $a3, $zero
 /* 08B220 8008A620 8EE80000 */  lw    $t0, ($s7)
 /* 08B224 8008A624 2409000C */  li    $t1, 12
@@ -89,7 +89,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B2BC 8008A6BC 240400FF */  li    $a0, 255
 /* 08B2C0 8008A6C0 240500FF */  li    $a1, 255
 /* 08B2C4 8008A6C4 240600FF */  li    $a2, 255
-/* 08B2C8 8008A6C8 0C0310E1 */  jal   set_text_color
+/* 08B2C8 8008A6C8 0C0310E1 */  jal   set_text_colour
 /* 08B2CC 8008A6CC 00003825 */   move  $a3, $zero
 /* 08B2D0 8008A6D0 3C038012 */  lui   $v1, %hi(D_801263E0) # $v1, 0x8012
 /* 08B2D4 8008A6D4 3C198012 */  lui   $t9, %hi(D_80126C70) # $t9, 0x8012
@@ -118,7 +118,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B32C 8008A72C 240B00FF */  li    $t3, 255
 /* 08B330 8008A730 AFAB0010 */  sw    $t3, 0x10($sp)
 /* 08B334 8008A734 240600FF */  li    $a2, 255
-/* 08B338 8008A738 0C0310E1 */  jal   set_text_color
+/* 08B338 8008A738 0C0310E1 */  jal   set_text_colour
 /* 08B33C 8008A73C 03C03825 */   move  $a3, $fp
 .L8008A740:
 /* 08B340 8008A740 862D0000 */  lh    $t5, ($s1)
@@ -165,7 +165,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B3DC 8008A7DC 241800FF */  li    $t8, 255
 /* 08B3E0 8008A7E0 AFB80010 */  sw    $t8, 0x10($sp)
 /* 08B3E4 8008A7E4 240600FF */  li    $a2, 255
-/* 08B3E8 8008A7E8 0C0310E1 */  jal   set_text_color
+/* 08B3E8 8008A7E8 0C0310E1 */  jal   set_text_colour
 /* 08B3EC 8008A7EC 00003825 */   move  $a3, $zero
 .L8008A7F0:
 /* 08B3F0 8008A7F0 3C198012 */  lui   $t9, %hi(D_801263E0) # $t9, 0x8012
@@ -193,7 +193,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B444 8008A844 240A00FF */  li    $t2, 255
 /* 08B448 8008A848 AFAA0010 */  sw    $t2, 0x10($sp)
 /* 08B44C 8008A84C 240600FF */  li    $a2, 255
-/* 08B450 8008A850 0C0310E1 */  jal   set_text_color
+/* 08B450 8008A850 0C0310E1 */  jal   set_text_colour
 /* 08B454 8008A854 03C03825 */   move  $a3, $fp
 .L8008A858:
 /* 08B458 8008A858 8EEB0000 */  lw    $t3, ($s7)

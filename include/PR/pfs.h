@@ -152,5 +152,6 @@ extern s32 osPfsSetLabel(OSPfs *, u8 *);
 extern s32 osPfsIsPlug(OSMesgQueue *, u8 *);
 extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
 extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
+extern s32 osMotorInit(OSMesgQueue *mq, OSPfs *pfs, int channel);
 
 #endif

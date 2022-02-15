@@ -159,8 +159,8 @@ glabel func_8007C12C
 /* 07CF74 8007C374 AE780008 */  sw    $t8, 8($s3)
 /* 07CF78 8007C378 1AA0001E */  blez  $s5, .L8007C3F4
 /* 07CF7C 8007C37C 00001825 */   move  $v1, $zero
-/* 07CF80 8007C380 3C12800E */  lui   $s2, %hi(gTexColorTag) # $s2, 0x800e
-/* 07CF84 8007C384 2652E7C0 */  addiu $s2, %lo(gTexColorTag) # addiu $s2, $s2, -0x1840
+/* 07CF80 8007C380 3C12800E */  lui   $s2, %hi(gTexColourTag) # $s2, 0x800e
+/* 07CF84 8007C384 2652E7C0 */  addiu $s2, %lo(gTexColourTag) # addiu $s2, $s2, -0x1840
 /* 07CF88 8007C388 00008825 */  move  $s1, $zero
 .L8007C38C:
 /* 07CF8C 8007C38C 3C0B00FF */  lui   $t3, (0x00FF0163 >> 16) # lui $t3, 0xff

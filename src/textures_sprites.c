@@ -8,7 +8,7 @@
 
 /************ .data ************/
 
-u32 gTexColorTag = COLOR_TAG_MAGENTA;
+u32 gTexColourTag = COLOR_TAG_MAGENTA;
 s32 D_800DE7C4 = 1;
 
 // See "include/f3ddkr.h" for the defines
@@ -962,7 +962,7 @@ TextureHeader *load_texture(s32 arg0) {
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
     if (!gTempTextureHeader->header.isCompressed) {
-        tex = allocate_from_main_pool((numberOfTextures * 0x60) + assetSize, gTexColorTag);
+        tex = allocate_from_main_pool((numberOfTextures * 0x60) + assetSize, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
@@ -971,7 +971,7 @@ TextureHeader *load_texture(s32 arg0) {
         temp_v0_5 = byteswap32(&gTempTextureHeader->uncompressedSize);
         temp_a0 = (numberOfTextures * 0x60) + temp_v0_5;
         sp3C = temp_v0_5 + 0x20;
-        tex = allocate_from_main_pool(temp_a0 + 0x20, gTexColorTag);
+        tex = allocate_from_main_pool(temp_a0 + 0x20, gTexColourTag);
         if (tex == NULL) {
             return NULL;
         }
@@ -1054,7 +1054,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/free_texture.s")
 #endif
 
 void func_8007B374(s32 arg0) {
-    gTexColorTag = arg0;
+    gTexColourTag = arg0;
 }
 
 #ifdef NON_EQUIVALENT

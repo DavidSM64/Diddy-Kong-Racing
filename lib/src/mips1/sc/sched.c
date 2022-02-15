@@ -359,7 +359,7 @@ void __scHandleRSP(OSSched *sc) {
         } else {
             t->state &= ~OS_SC_NEEDS_RSP;
     /* BEGIN TODO: This just feels wrong, but it matches */
-            while(0){}
+            do{} while(0);
         }
         if ((t->flags & OS_SC_TYPE_MASK) != OS_SC_XBUS){}
     /* END TODO */

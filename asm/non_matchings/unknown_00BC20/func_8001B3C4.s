@@ -37,9 +37,9 @@ glabel func_8001B3C4
 /* 01C048 8001B448 240A0010 */  li    $t2, 16
 /* 01C04C 8001B44C 11200024 */  beqz  $t1, .L8001B4E0
 /* 01C050 8001B450 00CA2804 */   sllv  $a1, $t2, $a2
-/* 01C054 8001B454 0C027A9E */  jal   func_8009EA78
+/* 01C054 8001B454 0C027A9E */  jal   set_eeprom_settings_value
 /* 01C058 8001B458 000527C3 */   sra   $a0, $a1, 0x1f
-/* 01C05C 8001B45C 0C027AC2 */  jal   func_8009EB08
+/* 01C05C 8001B45C 0C027AC2 */  jal   get_eeprom_settings
 /* 01C060 8001B460 00000000 */   nop   
 /* 01C064 8001B464 3C0100FF */  lui   $at, (0x00FFFFF0 >> 16) # lui $at, 0xff
 /* 01C068 8001B468 3421FFF0 */  ori   $at, (0x00FFFFF0 & 0xFFFF) # ori $at, $at, 0xfff0

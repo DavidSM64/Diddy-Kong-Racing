@@ -38,7 +38,7 @@ typedef struct unk80070BE4_8_0 {
     
 /* Size: 0x14 bytes */
 typedef struct MemoryPoolSlot {
-/* 0x00 */ unk80070BE4_8_0 *unk0; 
+/* 0x00 */ u8 *data; 
 /* 0x04 */ s32 size;
 /* 0x08 */ s16 flags;
     // 0x00 = Slot is free 
@@ -91,8 +91,8 @@ s32 get_memory_pool_index_containing_address(u8 *address);
 u8 *align16(u8 *address);
 u8 *align8(u8 *address);
 u8 *align4(u8 *address);
-void print_memory_color_tags(void);
-void render_memory_color_tags(void);
+void print_memory_colour_tags(void);
+void render_memory_colour_tags(void);
 void func_80071CE8(void);
 
 MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colorTag); // Non Matching
@@ -100,6 +100,6 @@ MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlot
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex); // Non Matching
 void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag); // Non Matching
 void free_slot_containing_address(u8 *address); // Non Matching
-s32 get_memory_color_tag_count(s32 arg0); // Non Matching
+s32 get_memory_colour_tag_count(s32 arg0); // Non Matching
 
 #endif

@@ -4,7 +4,7 @@
 #include "thread30.h"
 #include "macros.h"
 #include "libultra_internal.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "stacks.h"
 
 /************ .data ************/

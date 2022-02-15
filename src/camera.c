@@ -4,7 +4,7 @@
 #include "camera.h"
 #include "audio.h"
 #include "unknown_00BC20.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "unknown_0255E0.h"
 #include "video.h"
 #include "lib/src/libc/rmonPrintf.h"
@@ -96,7 +96,7 @@ u8 D_800DD2F8[8] = {
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-s32 D_800DD300 = 0; // Currently unknown, might be a different type.
+s32 sNoControllerPluggedIn = FALSE; // Looks to be a boolean for whether a controller is plugged in. FALSE if plugged in, and TRUE if not.
 
 s16 gButtonMask = 0xFFFF;
 
@@ -928,7 +928,7 @@ UNUSED void debug_print_float_matrix_values(f32 *mtx) {
     rmonPrintf("\n");
 }
 
-OSMesgQueue *func_8006A100(void) {
+OSMesgQueue *get_si_mesg_queue(void) {
     return &sSIMesgQueue;
 }
 
@@ -936,9 +936,9 @@ OSMesgQueue *func_8006A100(void) {
  * Initialise the player controllers, and return the status when finished.
  */
 s32 init_controllers(void) {
-    s32 *temp1; // Unused
+    UNUSED s32 *temp1; // Unused
     u8 bitpattern;
-    s32 *temp2; // Unused
+    UNUSED s32 *temp2; // Unused
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, D_801210FC);
@@ -946,7 +946,7 @@ s32 init_controllers(void) {
     osContStartReadData(&sSIMesgQueue);
     initialise_player_ids();
 
-    D_800DD300 = 0;
+    sNoControllerPluggedIn = FALSE;
 
     if ((bitpattern & CONT_ABSOLUTE) && (!(status.errno & CONT_NO_RESPONSE_ERROR))) {
         return CONTROLLER_EXISTS;
@@ -954,7 +954,7 @@ s32 init_controllers(void) {
 
     if (!bitpattern) {} // Fakematch
 
-    D_800DD300 = 1;
+    sNoControllerPluggedIn = TRUE;
 
     return CONTROLLER_MISSING;
 }
@@ -966,7 +966,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
  */
 void initialise_player_ids(void) {
     s32 i;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         sPlayerID[i] = i;
     }
 }
@@ -978,12 +978,12 @@ void initialise_player_ids(void) {
 void assign_player_ids(s8 *activePlayers) {
     s32 i;
     s32 temp = 0;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         if (activePlayers[i]) {
             sPlayerID[temp++] = i;
         }
     }
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         if (!activePlayers[i]) {
             sPlayerID[temp++] = i;
         }
