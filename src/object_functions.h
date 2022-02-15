@@ -50,22 +50,6 @@ typedef struct Object_64_8003564C {
     Object *unk4;
 } Object_64_8003564C;
 
-/* Size: 12 bytes */
-typedef struct LevelObjectEntry8003572C {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-} LevelObjectEntry8003572C;
-
-/* Size: 12 bytes */
-typedef struct LevelObjectEntry8003588C {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-} LevelObjectEntry8003588C;
-
 typedef struct unk80035E20 {
     u8 pad0[0x40];
     s32 unk40;
@@ -78,13 +62,6 @@ typedef struct Object_64_80035E34 {
     u8 pad0[0x1D6];
     s8 unk1D6;
 } Object_64_80035E34;
-
-typedef struct unk80035EF8 {
-    u8 pad0[0xA];
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} unk80035EF8;
 
 typedef struct Object_64_80035F6C {
     s32 unk0;
@@ -184,15 +161,6 @@ typedef struct Object_3C_80038DC4 {
     s8 unk8;
 } Object_3C_80038DC4;
 
-typedef struct LevelObjectEntry80038E3C {
-    LevelObjectEntryCommon common;
-    u8 pad8[8];
-    u8 unk10;
-    u8 unk11;
-    u8 pad12[6];
-    s8 unk18;
-} LevelObjectEntry80038E3C;
-
 typedef struct Object_64_80038E3C {
     f32 unk0;
     f32 unk4;
@@ -214,13 +182,6 @@ typedef struct unk80039190 {
     s32 unk7C;
 } unk80039190;
 
-typedef struct LevelObjectEntry8003AD34 {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-} LevelObjectEntry8003AD34;
-
 typedef struct Object_64_8003AD34 {
     f32 unk0;
     f32 unk4;
@@ -229,17 +190,6 @@ typedef struct Object_64_8003AD34 {
     s32 unk10;
     s8 unk14;
 } Object_64_8003AD34;
-
-typedef struct LevelObjectEntry8003C1E0 {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 padD;
-    s8 unkE;
-} LevelObjectEntry8003C1E0;
 
 typedef struct Object_64_8003C1E0 {
     f32 unk0;
@@ -268,11 +218,6 @@ typedef struct unk8003D3EC {
     u8 pad0[0x18];
     u16 unk18;
 } unk8003D3EC;
-
-typedef struct unk8003DE74 {
-    u8 pad0[8];
-    u8 unk8;
-} unk8003DE74;
 
 typedef struct Object_64_8003DF08 {
     s16 unk0;
@@ -340,14 +285,6 @@ typedef struct Object_64_8004001C {
     u8 unk5;
 } Object_64_8004001C;
 
-/* Size: 12 bytes */
-typedef struct LevelObjectEntry800400A4 {
-    LevelObjectEntryCommon common;
-    s16 unk8;
-    s8 unkA;
-    s8 unkB;
-} LevelObjectEntry800400A4;
-
 typedef struct Object_64_800400A4 {
     s16 unk0;
     s16 pad2;
@@ -356,14 +293,6 @@ typedef struct Object_64_800400A4 {
     s16 unk8;
     s16 unkA;
 } Object_64_800400A4;
-
-/* Size: 12 bytes */
-typedef struct LevelObjectEntry8004049C {
-    LevelObjectEntryCommon common;
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-} LevelObjectEntry8004049C;
 
 typedef struct unk80040800 {
     u8 pad0[0x78];
@@ -400,20 +329,6 @@ typedef struct Object_3C_80042178 {
     u16 unk8;
     u16 unkA;
 } Object_3C_80042178;
-
-typedef struct unk8004203C_arg1 {
-    u8 pad0[0x8];
-    u8 unk8;
-    u8 unk9;
-    u16 unkA;
-} unk8004203C_arg1;
-
-/* Size: 12 bytes */
-typedef struct LevelObjectEntry80042210 {
-    LevelObjectEntryCommon common;
-    s16 unk8;
-    u8 unkA;
-} LevelObjectEntry80042210;
 
 typedef struct Object_64_80042210 {
     f32 unk0;
@@ -481,107 +396,107 @@ void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry);
 void obj_init_laserbolt(Object *obj, LevelObjectEntry_Laserbolt *entry);
 void obj_init_torch_mist(Object *obj, LevelObjectEntry_Torch_Mist *entry);
 void obj_loop_torch_mist(Object *obj, s32 speed);
-void obj_init_effectbox(Object *obj, u8 *entry);
+void obj_init_effectbox(Object *obj, LevelObjectEntry_EffectBox *entry);
 void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry);
-void obj_init_collectegg(Object *obj, u8 *entry);
-void obj_init_eggcreator(Object *obj, u8 *entry);
+void obj_init_collectegg(Object *obj, LevelObjectEntry_CollectEgg *entry);
+void obj_init_eggcreator(Object *obj, LevelObjectEntry_EggCreator *entry);
 void obj_loop_eggcreator(Object *obj, s32 speed);
-void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry8003572C *entry);
+void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse_RocketSignpost *entry);
 void obj_loop_rocketsignpost(Object *obj, s32 speed);
-void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry8003588C *entry);
-void obj_init_unknown58(Object *obj, u8 *entry);
+void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_WaterZippers *entry);
+void obj_init_unknown58(Object *obj, LevelObjectEntry_Unknown58 *entry);
 void obj_loop_unknown58(Object *obj, s32 speed);
-void obj_init_characterflag(Object *obj, unk80035EF8 *entry);
+void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry);
 void obj_loop_characterflag(Object *obj, s32 speed);
-void obj_init_stopwatchman(Object *obj, u8 *entry);
+void obj_init_stopwatchman(Object *obj, LevelObjectEntry_StopWatchMan *entry);
 void func_80036BCC(u16 arg0, s32 arg1);
-void obj_init_lavaspurt(Object *obj, u8 *entry);
-void obj_init_posarrow(Object *obj, u8 *entry);
-void obj_init_animator(Object *obj, LevelObjectEntry800376E0 *entry, s32 arg2);
+void obj_init_lavaspurt(Object *obj, LevelObjectEntry_LavaSpurt *entry);
+void obj_init_posarrow(Object *obj, LevelObjectEntry_PosArrow *entry);
+void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2);
 void obj_loop_animobject(Object *obj, s32 speed);
 void obj_loop_dooropener(Object *obj, s32 speed);
-void obj_init_overridepos(Object *obj, u8 *entry);
+void obj_init_overridepos(Object *obj, LevelObjectEntry_OverridePos *entry);
 void func_80037D60(s32 arg0, s32 arg1);
-void obj_init_wizpigship(Object *obj, u8 *entry);
-void obj_init_hittester(Object *obj, u8 *entry);
+void obj_init_wizpigship(Object *obj, LevelObjectEntry_WizpigShip *entry);
+void obj_init_hittester(Object *obj, LevelObjectEntry_HitTester *entry);
 void obj_loop_hittester(Object *obj, s32 speed);
-void obj_init_dynamic_lighting_object(Object *obj, u8 *entry);
-void obj_init_unknown96(Object *obj, u8 *entry);
-void obj_init_snowball(Object *obj, u8 *entry);
+void obj_init_dynamic_lighting_object(Object *obj, LevelObjectEntry_DynamicLightingObject *entry);
+void obj_init_unknown96(Object *obj, LevelObjectEntry_Unknown96 *entry);
+void obj_init_snowball(Object *obj, LevelObjectEntry_Snowball *entry);
 void func_80038330(s32 arg0, s32 arg1);
 void obj_loop_animcamera(Object *obj, s32 speed);
 void func_800387C0(s32 arg0, s32 arg1);
 void obj_loop_animcar(Object *obj, s32 speed);
-void obj_init_infopoint(Object *obj, u8 *entry);
+void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry);
 void obj_loop_infopoint(Object *obj, s32 speed);
-void obj_init_smoke(Object *obj, u8 *entry);
+void obj_init_smoke(Object *obj, LevelObjectEntry_Smoke *entry);
 void obj_loop_smoke(Object *obj, s32 speed);
-void obj_init_unknown25(Object *obj, u8 *entry);
+void obj_init_unknown25(Object *obj, LevelObjectEntry_Unknown25 *entry);
 void obj_loop_unknown25(Object *obj, s32 speed);
-void obj_init_wardensmoke(Object *obj, u8 *entry);
+void obj_init_wardensmoke(Object *obj, LevelObjectEntry_WardenSmoke *entry);
 void obj_loop_wardensmoke(Object *obj, s32 speed);
-void obj_init_teleport(Object *obj, u8 *entry);
+void obj_init_teleport(Object *obj, LevelObjectEntry_Teleport *entry);
 void obj_loop_teleport(Object *obj, s32 speed);
-void obj_init_exit(Object *obj, LevelObjectEntry80038E3C *entry);
-void obj_init_cameracontrol(Object *obj, s8 *entry);
+void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry);
+void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry);
 void obj_loop_cameracontrol(Object *obj, s32 speed);
-void obj_init_setuppoint(Object *obj, u8 *entry);
+void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry);
 void obj_loop_setuppoint(Object *obj, s32 speed);
-void obj_init_dino_whale(Object *obj, u8 *entry);
+void obj_init_dino_whale(Object *obj, LevelObjectEntry_Dino_Whale *entry);
 void obj_loop_dino_whale(Object *obj, s32 speed);
-void obj_init_parkwarden(Object *obj, u8 *entry);
+void obj_init_parkwarden(Object *obj, LevelObjectEntry_Parkwarden *entry);
 void func_80039320(s16 arg0);
 void func_8003AC3C(u16 arg0, s32 arg1);
 void obj_loop_gbparkwarden(Object *obj, s32 speed);
 f32 func_8003ACAC(void);
-void obj_init_checkpoint(Object *obj, u8 *entry, s32 arg2);
+void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, s32 arg2);
 void obj_loop_checkpoint(Object *obj, s32 speed);
-void obj_init_modechange(Object *obj, LevelObjectEntry8003AD34 *entry);
-void obj_init_bonus(Object *obj, LevelObjectEntry8003AD34 *entry);
-void obj_init_ttdoor(Object *obj, LevelObjectEntry8003C1E0 *entry);
-void obj_init_bridge_whaleramp(Object *obj, u8 *entry);
-void obj_init_rampswitch(Object *obj, u8 *entry);
+void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry);
+void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry);
+void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry);
+void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry);
+void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry);
 void obj_loop_rampswitch(Object *obj, s32 speed);
-void obj_init_seamonster(Object *obj, u8 *entry);
+void obj_init_seamonster(Object *obj, LevelObjectEntry_SeaMonster *entry);
 void obj_loop_seamonster(Object *obj, s32 speed);
-void obj_init_fogchanger(Object *obj, u8 *entry);
-void obj_init_skycontrol(Object *obj, u8 *entry);
+void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry);
+void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry);
 void obj_loop_skycontrol(Object *obj, s32 speed);
-void obj_init_ainode(Object *obj, u8 *entry);
+void obj_init_ainode(Object *obj, LevelObjectEntry_AiNode *entry);
 void obj_loop_ainode(Object *obj, s32 speed);
-void obj_init_treasuresucker(Object *obj, s8 *entry);
-void obj_init_flycoin(Object *obj, u8 *entry);
-void obj_init_coincreator(Object *obj, u8 *entry);
-void obj_init_coin(Object *obj, u8 *entry);
-void obj_init_silvercoin_adv2(Object *obj, u8 *entry);
-void obj_init_silvercoin(Object *obj, u8 *entry);
-void obj_init_worldkey(Object *obj, unk8003DE74 *entry);
+void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry);
+void obj_init_flycoin(Object *obj, LevelObjectEntry_FlyCoin *entry);
+void obj_init_coincreator(Object *obj, LevelObjectEntry_BananaCreator *entry);
+void obj_init_coin(Object *obj, LevelObjectEntry_Banana *entry);
+void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entry);
+void obj_init_silvercoin(Object *obj, LevelObjectEntry_SilverCoin *entry);
+void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry);
 void obj_loop_worldkey(Object *worldKeyObj, s32 speed);
-void obj_init_wballoonpop(Object *obj, u8 *entry);
+void obj_init_wballoonpop(Object *obj, LevelObjectEntry_WBalloonPop *entry);
 void obj_loop_wballoonpop(Object *obj, s32 speed);
-void obj_init_weapon(Object *obj, u8 *entry);
-void obj_loop_weapon(Object *obj);
+void obj_init_weapon(Object *obj, LevelObjectEntry_Weapon *entry);
+void obj_loop_weapon(Object *obj, s32 speed);
 void func_8003F0D0(void);
 void func_8003F0DC(void);
-void obj_init_audioline(Object *obj, LevelObjectEntry8003FEF4 *entry);
-void obj_init_audioreverb(Object *obj, LevelObjectEntry8004001C *entry);
-void obj_init_texscroll(Object *obj, LevelObjectEntry800400A4 *entry, s32 arg2);
-void obj_init_rgbalight(Object *obj, u8 *entry, s32 arg2);
-void obj_init_buoy_pirateship(Object *obj, u8 *entry, s32 arg2);
+void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry);
+void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry);
+void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2);
+void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, s32 arg2);
+void obj_init_buoy_pirateship(Object *obj, LevelObjectEntry_Buoy_PirateShip *entry, s32 arg2);
 void obj_loop_buoy_pirateship(Object *obj, s32 speed);
-void obj_init_log(Object *obj, LevelObjectEntry8004049C *entry, s32 arg2);
-void obj_init_wavegenerator(Object *obj, u8 *entry, s32 arg2);
-void obj_init_midichset(Object *obj, unk80042014_arg1 *entry);
-void obj_init_bubbler(Object *obj, unk8004203C_arg1 *entry);
+void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, s32 arg2);
+void obj_init_wavegenerator(Object *obj, LevelObjectEntry_WaveGenerator *entry, s32 arg2);
+void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry);
+void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry);
 void obj_loop_bubbler(Object *obj, s32 speed);
-void obj_init_boost(Object *obj, s8 *entry);
-void obj_init_unknown94(Object *obj, u8 *entry, s32 arg2);
+void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry);
+void obj_init_unknown94(Object *obj, LevelObjectEntry_Unknown94 *entry, s32 arg2);
 void obj_loop_unknown94(Object *obj, s32 speed);
-void obj_init_rangetrigger(Object *obj, u8 *entry);
+void obj_init_rangetrigger(Object *obj, LevelObjectEntry_RangeTrigger *entry);
 void obj_loop_rangetrigger(Object *obj, s32 speed);
-void obj_init_frog(Object *obj, LevelObjectEntry80042210 *entry);
+void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry);
 void obj_loop_pigrocketeer(Object *obj, s32 speed);
-void obj_init_levelname(Object *obj, s8 *entry);
+void obj_init_levelname(Object *obj, LevelObjectEntry_LevelName *entry);
 void obj_loop_wizghosts(Object *obj, s32 speed);
 
 //Non Matching

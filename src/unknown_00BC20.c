@@ -820,8 +820,9 @@ s32 func_800113BC() {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800113CC.s")
 
-s32 func_80011560(void) {
+s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
     D_800DC848 = 1;
+    // No return value!
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
@@ -1508,264 +1509,264 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
-void run_object_init_func(Object *obj, void *entry) {
+void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     obj->behaviorId = obj->header->behaviorId;
     switch (obj->behaviorId - 1) { // Why the minus 1?
         case 0:
-            obj_init_racer(obj, entry);
+            obj_init_racer(obj, (LevelObjectEntry_Racer *)entry);
             break;
         case 1:
             obj_init_scenery(obj, (LevelObjectEntry_Scenery*)entry);
             break;
         case 2:
-            obj_init_fish(obj, entry);
+            obj_init_fish(obj, (LevelObjectEntry_Fish *)entry);
             break;
         case 3:
-            obj_init_animator(obj, entry);
+            obj_init_animator(obj, (LevelObjectEntry_Animator *)entry, arg2);
             break;
         case 5:
-            obj_init_smoke(obj, entry);
+            obj_init_smoke(obj, (LevelObjectEntry_Smoke *)entry);
             break;
         case 24:
-            obj_init_unknown25(obj, entry);
+            obj_init_unknown25(obj, (LevelObjectEntry_Unknown25 *)entry);
             break;
         case 21:
-            obj_init_bombexplosion(obj, entry);
+            obj_init_bombexplosion(obj, (LevelObjectEntry_BombExplosion *)entry);
             break;
         case 6:
-            obj_init_exit(obj, entry);
+            obj_init_exit(obj, (LevelObjectEntry_Exit *)entry);
             break;
         case 7:
-            obj_init_audio(obj, entry);
+            obj_init_audio(obj, (LevelObjectEntry_Audio *)entry);
             break;
         case 8:
         case 18:
-            obj_init_audioline(obj, entry);
+            obj_init_audioline(obj, (LevelObjectEntry_AudioLine *)entry);
             break;
         case 26:
-            obj_init_audioreverb(obj, entry);
+            obj_init_audioreverb(obj, (LevelObjectEntry_AudioReverb *)entry);
             break;
         case 9:
-            obj_init_cameracontrol(obj, entry);
+            obj_init_cameracontrol(obj, (LevelObjectEntry_CameraControl *)entry);
             break;
         case 10:
-            obj_init_setuppoint(obj, entry);
+            obj_init_setuppoint(obj, (LevelObjectEntry_SetupPoint *)entry);
             break;
         case 11:
-            obj_init_dino_whale(obj, entry);
+            obj_init_dino_whale(obj, (LevelObjectEntry_Dino_Whale *)entry);
             break;
         case 12:
-            obj_init_checkpoint(obj, entry);
+            obj_init_checkpoint(obj, (LevelObjectEntry_Checkpoint *)entry, arg2);
             break;
         case 29:
-            obj_init_modechange(obj, entry);
+            obj_init_modechange(obj, (LevelObjectEntry_ModeChange *)entry);
             break;
         case 40:
-            obj_init_bonus(obj, entry);
+            obj_init_bonus(obj, (LevelObjectEntry_Bonus *)entry);
             break;
         case 13:
-            obj_init_door(obj, entry);
+            obj_init_door(obj, (LevelObjectEntry_Door *)entry);
             break;
         case 110:
-            obj_init_ttdoor(obj, entry);
+            obj_init_ttdoor(obj, (LevelObjectEntry_TTDoor *)entry);
             break;
         case 14:
-            obj_init_fogchanger(obj, entry);
+            obj_init_fogchanger(obj, (LevelObjectEntry_FogChanger *)entry);
             break;
         case 15:
-            obj_init_ainode(obj, entry);
+            obj_init_ainode(obj, (LevelObjectEntry_AiNode *)entry);
             break;
         case 16:
-            obj_init_weaponballoon(obj, entry);
+            obj_init_weaponballoon(obj, (LevelObjectEntry_WeaponBalloon *)entry);
             break;
         case 22:
-            obj_init_wballoonpop(obj, entry);
+            obj_init_wballoonpop(obj, (LevelObjectEntry_WBalloonPop *)entry);
             break;
         case 4:
         case 17:
-            obj_init_weapon(obj, entry);
+            obj_init_weapon(obj, (LevelObjectEntry_Weapon *)entry);
             break;
         case 25:
-            obj_init_skycontrol(obj, entry);
+            obj_init_skycontrol(obj, (LevelObjectEntry_SkyControl *)entry);
             break;
         case 27:
-            obj_init_torch_mist(obj, entry);
+            obj_init_torch_mist(obj, (LevelObjectEntry_Torch_Mist *)entry);
             break;
         case 28:
-            obj_init_texscroll(obj, entry);
+            obj_init_texscroll(obj, (LevelObjectEntry_TexScroll *)entry, arg2);
             break;
         case 30:
-            obj_init_stopwatchman(obj, entry);
+            obj_init_stopwatchman(obj, (LevelObjectEntry_StopWatchMan *)entry);
             break;
         case 31:
-            obj_init_coin(obj, entry);
+            obj_init_coin(obj, (LevelObjectEntry_Banana *)entry);
             break;
         case 32:
-            obj_init_rgbalight(obj, entry);
+            obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *)entry, arg2);
             break;
         case 35:
-            obj_init_buoy_pirateship(obj, entry);
+            obj_init_buoy_pirateship(obj, (LevelObjectEntry_Buoy_PirateShip *)entry, arg2);
             break;
         case 66:
-            obj_init_log(obj, entry);
+            obj_init_log(obj, (LevelObjectEntry_Log *)entry, arg2);
             break;
         case 36:
-            obj_init_weather(obj, entry);
+            obj_init_weather(obj, (LevelObjectEntry_Weather *)entry);
             break;
         case 37:
-            obj_init_bridge_whaleramp(obj, entry);
+            obj_init_bridge_whaleramp(obj, (LevelObjectEntry_Bridge_WhaleRamp *)entry);
             break;
         case 38:
-            obj_init_rampswitch(obj, entry);
+            obj_init_rampswitch(obj, (LevelObjectEntry_RampSwitch *)entry);
             break;
         case 39:
-            obj_init_seamonster(obj, entry);
+            obj_init_seamonster(obj, (LevelObjectEntry_SeaMonster *)entry);
             break;
         case 42:
-            obj_init_lensflare(obj, entry);
+            obj_init_lensflare(obj, (LevelObjectEntry_LensFlare *)entry);
             break;
         case 43:
-            obj_init_lensflareswitch(obj, entry);
+            obj_init_lensflareswitch(obj, (LevelObjectEntry_LensFlareSwitch *)entry);
             break;
         case 44:
-            obj_init_collectegg(obj, entry);
+            obj_init_collectegg(obj, (LevelObjectEntry_CollectEgg *)entry);
             break;
         case 45:
-            obj_init_eggcreator(obj, entry);
+            obj_init_eggcreator(obj, (LevelObjectEntry_EggCreator *)entry);
             break;
         case 46:
-            obj_init_characterflag(obj, entry);
+            obj_init_characterflag(obj, (LevelObjectEntry_CharacterFlag *)entry);
             break;
         case 48:
-            obj_init_animation(obj, entry);
+            obj_init_animation(obj, (LevelObjectEntry_Animation *)entry);
             break;
         case 51:
-            obj_init_infopoint(obj, entry);
+            obj_init_infopoint(obj, (LevelObjectEntry_InfoPoint *)entry);
             break;
         case 54:
-            obj_init_trigger(obj, entry);
+            obj_init_trigger(obj, (LevelObjectEntry_Trigger *)entry);
             break;
         case 56:
         case 92:
-            obj_init_airzippers_waterzippers(obj, entry);
+            obj_init_airzippers_waterzippers(obj, (LevelObjectEntry_AirZippers_WaterZippers *)entry);
             break;
         case 57:
-            obj_init_unknown58(obj, entry);
+            obj_init_unknown58(obj, (LevelObjectEntry_Unknown58 *)entry);
             break;
         case 58:
-            obj_init_wavegenerator(obj, entry);
+            obj_init_wavegenerator(obj, (LevelObjectEntry_WaveGenerator *)entry, arg2);
             break;
         case 60:
-            obj_init_butterfly(obj, entry);
+            obj_init_butterfly(obj, (LevelObjectEntry_Butterfly *)entry);
             break;
         case 61:
-            obj_init_parkwarden(obj, entry);
+            obj_init_parkwarden(obj, (LevelObjectEntry_Parkwarden *)entry);
             break;
         case 63:
-            obj_init_worldkey(obj, entry);
+            obj_init_worldkey(obj, (LevelObjectEntry_WorldKey *)entry);
             break;
         case 64:
-            obj_init_coincreator(obj, entry);
+            obj_init_coincreator(obj, (LevelObjectEntry_BananaCreator *)entry);
             break;
         case 65:
-            obj_init_treasuresucker(obj, entry);
+            obj_init_treasuresucker(obj, (LevelObjectEntry_TreasureSucker *)entry);
             break;
         case 67:
-            obj_init_lavaspurt(obj, entry);
+            obj_init_lavaspurt(obj, (LevelObjectEntry_LavaSpurt *)entry);
             break;
         case 68:
-            obj_init_posarrow(obj, entry);
+            obj_init_posarrow(obj, (LevelObjectEntry_PosArrow *)entry);
             break;
         case 69:
         case 102:
-            obj_init_hittester(obj, entry);
+            obj_init_hittester(obj, (LevelObjectEntry_HitTester *)entry);
             break;
         case 71:
         case 94:
         case 103:
-            obj_init_dynamic_lighting_object(obj, entry);
+            obj_init_dynamic_lighting_object(obj, (LevelObjectEntry_DynamicLightingObject *)entry);
             break;
         case 95:
         case 100:
-            obj_init_unknown96(obj, entry);
+            obj_init_unknown96(obj, (LevelObjectEntry_Unknown96 *)entry);
             break;
         case 96:
         case 101:
-            obj_init_snowball(obj, entry);
+            obj_init_snowball(obj, (LevelObjectEntry_Snowball *)entry);
             break;
         case 70:
-            obj_init_midifade(obj, entry);
+            obj_init_midifade(obj, (LevelObjectEntry_MidiFade *)entry);
             break;
         case 111:
-            obj_init_midifadepoint(obj, entry);
+            obj_init_midifadepoint(obj, (LevelObjectEntry_MidiFadePoint *)entry);
             break;
         case 117:
-            obj_init_midichset(obj, entry);
+            obj_init_midichset(obj, (LevelObjectEntry_Midichset *)entry);
             break;
         case 72:
-            obj_init_effectbox(obj, entry);
+            obj_init_effectbox(obj, (LevelObjectEntry_EffectBox *)entry);
             break;
         case 73:
-            obj_init_trophycab(obj, entry);
+            obj_init_trophycab(obj, (LevelObjectEntry_TrophyCab *)entry);
             break;
         case 74:
-            obj_init_bubbler(obj, entry);
+            obj_init_bubbler(obj, (LevelObjectEntry_Bubbler *)entry);
             break;
         case 75:
-            obj_init_flycoin(obj, entry);
+            obj_init_flycoin(obj, (LevelObjectEntry_FlyCoin *)entry);
             break;
         case 76:
-            obj_init_goldenballoon(obj, entry);
+            obj_init_goldenballoon(obj, (LevelObjectEntry_GoldenBalloon *)entry);
             break;
         case 77:
-            obj_init_laserbolt(obj, entry);
+            obj_init_laserbolt(obj, (LevelObjectEntry_Laserbolt *)entry);
             break;
         case 78:
-            obj_init_lasergun(obj, entry);
+            obj_init_lasergun(obj, (LevelObjectEntry_Lasergun *)entry);
             break;
         case 81:
-            obj_init_groundzipper(obj, entry);
+            obj_init_groundzipper(obj, (LevelObjectEntry_GroundZipper *)entry);
             break;
         case 82:
-            obj_init_overridepos(obj, entry);
+            obj_init_overridepos(obj, (LevelObjectEntry_OverridePos *)entry);
             break;
         case 83:
-            obj_init_wizpigship(obj, entry);
+            obj_init_wizpigship(obj, (LevelObjectEntry_WizpigShip *)entry);
             break;
         case 88:
-            obj_init_boost(obj, entry);
+            obj_init_boost(obj, (LevelObjectEntry_Boost *)entry);
             break;
         case 87:
-            obj_init_silvercoin(obj, entry);
+            obj_init_silvercoin(obj, (LevelObjectEntry_SilverCoin *)entry);
             break;
         case 89:
-            obj_init_wardensmoke(obj, entry);
+            obj_init_wardensmoke(obj, (LevelObjectEntry_WardenSmoke *)entry);
             break;
         case 93:
-            obj_init_unknown94(obj, entry);
+            obj_init_unknown94(obj, (LevelObjectEntry_Unknown94 *)entry, arg2);
             break;
         case 97:
-            obj_init_teleport(obj, entry);
+            obj_init_teleport(obj, (LevelObjectEntry_Teleport *)entry);
             break;
         case 98:
         case 99:
-            obj_init_lighthouse_rocketsignpost(obj, entry);
+            obj_init_lighthouse_rocketsignpost(obj, (LevelObjectEntry_Lighthouse_RocketSignpost *)entry);
             break;
         case 104:
-            obj_init_rangetrigger(obj, entry);
+            obj_init_rangetrigger(obj, (LevelObjectEntry_RangeTrigger *)entry);
             break;
         case 107:
         case 115:
-            obj_init_fireball_octoweapon(obj, entry);
+            obj_init_fireball_octoweapon(obj, (LevelObjectEntry_Fireball_Octoweapon *)entry);
             break;
         case 108:
-            obj_init_frog(obj, entry);
+            obj_init_frog(obj, (LevelObjectEntry_Frog *)entry);
             break;
         case 109:
-            obj_init_silvercoin_adv2(obj, entry);
+            obj_init_silvercoin_adv2(obj, (LevelObjectEntry_SilverCoinAdv2 *)entry);
             break;
         case 116:
-            obj_init_levelname(obj, entry);
+            obj_init_levelname(obj, (LevelObjectEntry_LevelName *)entry);
             break;
     }
 }
