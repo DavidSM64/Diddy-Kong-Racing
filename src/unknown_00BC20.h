@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "f3ddkr.h"
+#include "object_functions.h"
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
@@ -151,7 +152,7 @@ void func_80011390(void);
 s32 func_8001139C();
 s32 func_800113AC();
 s32 func_800113BC();
-void func_80011560(void);
+s32 func_80011560(void);
 void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
@@ -211,7 +212,7 @@ s8 func_8002341C(void);
 s32 func_80023568(void);
 s8 func_800235C0(void);
 void func_800235D0(s32 arg0);
-void func_800238BC(Object *arg0, void *arg1);
+void run_object_init_func(Object *arg0, void *arg1, s32 arg2);
 void run_object_loop_func(Object *obj, s32 arg1);
 void func_8002458C(s32 arg0);
 s16 *func_80024594(s32 *arg0, s32 *arg1);

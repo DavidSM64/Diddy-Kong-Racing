@@ -10,9 +10,9 @@
 #include "PR/gu.h"
 #include "textures_sprites.h"
 #include "unknown_00BC20.h"
-#include "unknown_06B2B0.h"
+#include "game.h"
 #include "memory.h"
-#include "unknown_043920.h"
+#include "racer.h"
 #include "camera.h"
 #include "waves.h"
 
@@ -411,7 +411,7 @@ void render_level_geometry_and_objects(void) {
                 render_floor_decal(obj, obj->unk50);
             }
             func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-            if ((obj->unk58 != NULL) && (obj->descriptor_ptr->unk30 & 0x10)) {
+            if ((obj->unk58 != NULL) && (obj->header->unk30 & 0x10)) {
                 func_8002D670(obj, obj->unk58);
             }
         }
@@ -435,7 +435,7 @@ void render_level_geometry_and_objects(void) {
                     render_floor_decal(obj, obj->unk50);
                 }
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                if ((obj->unk58 != NULL) && (obj->descriptor_ptr->unk30 & 0x10)) {
+                if ((obj->unk58 != NULL) && (obj->header->unk30 & 0x10)) {
                     func_8002D670(obj, obj->unk58);
                 }
             }
@@ -484,7 +484,7 @@ void render_level_geometry_and_objects(void) {
                         }
                         // This is being called when it shouldn't.
                         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                        if ((obj->unk58 != 0) && (obj->descriptor_ptr->unk30 & 0x10)) {
+                        if ((obj->unk58 != 0) && (obj->header->unk30 & 0x10)) {
                             func_8002D670(obj, obj->unk58);
                         }
                     }
@@ -1054,7 +1054,7 @@ void func_8003093C(s32 arg0) {
     gDPSetFogColor(D_8011B0A0++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF);
     gSPFogPosition(D_8011B0A0++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
 }
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030A74.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/obj_loop_fogchanger.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 
 void func_80031018(void) {

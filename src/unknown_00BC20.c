@@ -7,13 +7,14 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
+#include "level_object_entries.h"
 #include "asset_sections.h"
 #include "asset_loading.h"
 #include "thread0_epc.h"
-#include "controller_pak.h"
+#include "save_data.h"
 #include "menu.h"
-#include "unknown_06B2B0.h"
-#include "unknown_043920.h"
+#include "game.h"
+#include "racer.h"
 
 /************ .data ************/
 
@@ -819,8 +820,9 @@ s32 func_800113BC() {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800113CC.s")
 
-void func_80011560(void) {
+s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
     D_800DC848 = 1;
+    // No return value!
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
@@ -840,7 +842,7 @@ extern f32 D_800E5550;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
     u32 offset;
-    switch (this->unk48) {
+    switch (this->behaviorId) {
         case 47:
             //L80011B10
             if (this->unk7C.word < 0)
@@ -940,7 +942,7 @@ void func_80012E28(Object *this) {
     f32 sp_1c;
     f32 tmp_f0;
 
-    if (this->unk48 == 1) {
+    if (this->behaviorId == 1) {
 
         sp_20 = this->unk64;
         this->y_rotation += sp_20->unk160;
@@ -967,7 +969,7 @@ void func_80012E28(Object *this) {
 #endif
 
 void func_80012F30(Object *arg0) {
-    if (arg0->unk48 == 1) {
+    if (arg0->behaviorId == 1) {
         Object_64 *object_64 = arg0->unk64;
         arg0->y_rotation -= object_64->unk160;
         arg0->x_rotation -= object_64->unk162;
@@ -983,18 +985,18 @@ void render_object(Object *this) {
     if (this->unk6 & 0x8000) {
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
     } else {
-        if (this->descriptor_ptr->unk53 == 0)
+        if (this->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
-        else if (this->descriptor_ptr->unk53 == 1)
+        else if (this->header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD)
             render_3d_billboard(this);
-        else if (this->descriptor_ptr->unk53 == 4)
+        else if (this->header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4)
             func_80011AD0(this);
     }
     func_80013548(this);
 }
 
 void func_80013548(Object *arg0) {
-    if ((arg0->unk6 & 0x8000) == 0 && arg0->descriptor_ptr->unk54 == 1) {
+    if ((arg0->unk6 & 0x8000) == 0 && arg0->header->behaviorId == 1) {
         arg0->x_position -= arg0->unk64->unk78;
         arg0->y_position -= arg0->unk64->unk7C;
         arg0->z_position -= arg0->unk64->unk80;
@@ -1015,8 +1017,8 @@ void func_800142B8(void) {
 
     for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->descriptor_ptr->unk53 == 0) {
-            for (j = 0; j < currObj->descriptor_ptr->unk55; j++) {
+        if ((currObj->unk6 & 0x8000) == 0 && currObj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+            for (j = 0; j < currObj->header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
                     curr_68->unk20 = curr_68->unk20-- & 0x03;
@@ -1073,7 +1075,7 @@ Object *func_80018C6C(void) {
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->unk6 & 0x8000) && (current_obj->unk48 == 62))
+        if (!(current_obj->unk6 & 0x8000) && (current_obj->behaviorId == 62))
             return current_obj;
     }
     return NULL;
@@ -1270,7 +1272,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
-        if (object->descriptor_ptr->unk71 != 0) {
+        if (object->header->unk71 != 0) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
             calc_dynamic_lighting_for_object_1(object, model, arg2, object, arg3, 1.0f);
         } else {
@@ -1328,7 +1330,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
 
         if (current_obj != NULL
         && (current_obj->unk6 & 0x8000) == 0
-        && current_obj->unk48 == 39
+        && current_obj->behaviorId == 39
         && current_obj->unk78 == arg0) {
             *arg1 = current_obj->x_position;
             *arg2 = current_obj->y_position;
@@ -1473,7 +1475,7 @@ Object *func_8002342C(f32 x, f32 z) {
 
     for (i = 0; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->unk48 == 87) {
+        if ((currObj->unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
             x = currObj->x_position - x;
             z = currObj->z_position - z;
             dist = sqrtf(x * x + z * z);
@@ -1507,614 +1509,639 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
 
-void func_800238BC(Object *arg0, void *arg1) {
-    arg0->unk48 = arg0->descriptor_ptr->unk54;
-    switch (arg0->unk48 - 1) {
-        case 0x00:
-            func_8004DAB0(arg0, arg1);
+void run_object_init_func(Object *obj, void *entry, s32 arg2) {
+    obj->behaviorId = obj->header->behaviorId;
+    switch (obj->behaviorId - 1) { // Why the minus 1?
+        case 0:
+            obj_init_racer(obj, (LevelObjectEntry_Racer *)entry);
             break;
-        case 0x01:
-            func_80033CC0(arg0, arg1);
+        case 1:
+            obj_init_scenery(obj, (LevelObjectEntry_Scenery*)entry);
             break;
-        case 0x02:
-            func_80036C30(arg0, arg1);
+        case 2:
+            obj_init_fish(obj, (LevelObjectEntry_Fish *)entry);
             break;
-        case 0x03:
-            func_800376E0(arg0, arg1);
+        case 3:
+            obj_init_animator(obj, (LevelObjectEntry_Animator *)entry, arg2);
             break;
-        case 0x05:
-            func_800389AC(arg0, arg1);
+        case 5:
+            obj_init_smoke(obj, (LevelObjectEntry_Smoke *)entry);
             break;
-        case 0x18:
-            func_80038A6C(arg0, arg1);
+        case 24:
+            obj_init_unknown25(obj, (LevelObjectEntry_Unknown25 *)entry);
             break;
-        case 0x15:
-            func_80038B74(arg0, arg1);
+        case 21:
+            obj_init_bombexplosion(obj, (LevelObjectEntry_BombExplosion *)entry);
             break;
-        case 0x06:
-            func_80038E3C(arg0, arg1);
+        case 6:
+            obj_init_exit(obj, (LevelObjectEntry_Exit *)entry);
             break;
-        case 0x07:
-            func_8003FD68(arg0, arg1);
+        case 7:
+            obj_init_audio(obj, (LevelObjectEntry_Audio *)entry);
             break;
-        case 0x08:
-        case 0x12:
-            func_8003FEF4(arg0, arg1);
+        case 8:
+        case 18:
+            obj_init_audioline(obj, (LevelObjectEntry_AudioLine *)entry);
             break;
-        case 0x1A:
-            func_8004001C(arg0, arg1);
+        case 26:
+            obj_init_audioreverb(obj, (LevelObjectEntry_AudioReverb *)entry);
             break;
-        case 0x09:
-            func_80039160(arg0, arg1);
+        case 9:
+            obj_init_cameracontrol(obj, (LevelObjectEntry_CameraControl *)entry);
             break;
-        case 0x0A:
-            func_80039190(arg0, arg1);
+        case 10:
+            obj_init_setuppoint(obj, (LevelObjectEntry_SetupPoint *)entry);
             break;
-        case 0x0B:
-            func_800391C8(arg0, arg1);
+        case 11:
+            obj_init_dino_whale(obj, (LevelObjectEntry_Dino_Whale *)entry);
             break;
-        case 0x0C:
-            func_8003ACBC(arg0, arg1);
+        case 12:
+            obj_init_checkpoint(obj, (LevelObjectEntry_Checkpoint *)entry, arg2);
             break;
-        case 0x1D:
-            func_8003AD34(arg0, arg1);
+        case 29:
+            obj_init_modechange(obj, (LevelObjectEntry_ModeChange *)entry);
             break;
-        case 0x28:
-            func_8003B058(arg0, arg1);
+        case 40:
+            obj_init_bonus(obj, (LevelObjectEntry_Bonus *)entry);
             break;
-        case 0x0D:
-            func_8003B7CC(arg0, arg1);
+        case 13:
+            obj_init_door(obj, (LevelObjectEntry_Door *)entry);
             break;
-        case 0x6E:
-            func_8003C1E0(arg0, arg1);
+        case 110:
+            obj_init_ttdoor(obj, (LevelObjectEntry_TTDoor *)entry);
             break;
-        case 0x0E:
-            func_8003CF18(arg0, arg1);
+        case 14:
+            obj_init_fogchanger(obj, (LevelObjectEntry_FogChanger *)entry);
             break;
-        case 0x0F:
-            func_8003CFE0(arg0, arg1);
+        case 15:
+            obj_init_ainode(obj, (LevelObjectEntry_AiNode *)entry);
             break;
-        case 0x10:
-            func_8003DFCC(arg0, arg1);
+        case 16:
+            obj_init_weaponballoon(obj, (LevelObjectEntry_WeaponBalloon *)entry);
             break;
-        case 0x16:
-            func_8003E5B0(arg0, arg1);
+        case 22:
+            obj_init_wballoonpop(obj, (LevelObjectEntry_WBalloonPop *)entry);
             break;
-        case 0x04:
-        case 0x11:
-            func_8003E5C8(arg0, arg1);
+        case 4:
+        case 17:
+            obj_init_weapon(obj, (LevelObjectEntry_Weapon *)entry);
             break;
-        case 0x19:
-            func_8003CF58(arg0, arg1);
+        case 25:
+            obj_init_skycontrol(obj, (LevelObjectEntry_SkyControl *)entry);
             break;
-        case 0x1B:
-            func_80034AF0(arg0, arg1);
+        case 27:
+            obj_init_torch_mist(obj, (LevelObjectEntry_Torch_Mist *)entry);
             break;
-        case 0x1C:
-            func_800400A4(arg0, arg1);
+        case 28:
+            obj_init_texscroll(obj, (LevelObjectEntry_TexScroll *)entry, arg2);
             break;
-        case 0x1E:
-            func_80036194(arg0, arg1);
+        case 30:
+            obj_init_stopwatchman(obj, (LevelObjectEntry_StopWatchMan *)entry);
             break;
-        case 0x1F:
-            func_8003D534(arg0, arg1);
+        case 31:
+            obj_init_coin(obj, (LevelObjectEntry_Banana *)entry);
             break;
-        case 0x20:
-            func_800403A8(arg0, arg1);
+        case 32:
+            obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *)entry, arg2);
             break;
-        case 0x23:
-            func_800403D8(arg0, arg1);
+        case 35:
+            obj_init_buoy_pirateship(obj, (LevelObjectEntry_Buoy_PirateShip *)entry, arg2);
             break;
-        case 0x42:
-            func_8004049C(arg0, arg1);
+        case 66:
+            obj_init_log(obj, (LevelObjectEntry_Log *)entry, arg2);
             break;
-        case 0x24:
-            func_80040800(arg0, arg1);
+        case 36:
+            obj_init_weather(obj, (LevelObjectEntry_Weather *)entry);
             break;
-        case 0x25:
-            func_8003C9EC(arg0, arg1);
+        case 37:
+            obj_init_bridge_whaleramp(obj, (LevelObjectEntry_Bridge_WhaleRamp *)entry);
             break;
-        case 0x26:
-            func_8003CE64(arg0, arg1);
+        case 38:
+            obj_init_rampswitch(obj, (LevelObjectEntry_RampSwitch *)entry);
             break;
-        case 0x27:
-            func_8003CF00(arg0, arg1);
+        case 39:
+            obj_init_seamonster(obj, (LevelObjectEntry_SeaMonster *)entry);
             break;
-        case 0x2A:
-            func_8004092C(arg0, arg1);
+        case 42:
+            obj_init_lensflare(obj, (LevelObjectEntry_LensFlare *)entry);
             break;
-        case 0x2B:
-            func_8004094C(arg0, arg1);
+        case 43:
+            obj_init_lensflareswitch(obj, (LevelObjectEntry_LensFlareSwitch *)entry);
             break;
-        case 0x2C:
-            func_8003522C(arg0, arg1);
+        case 44:
+            obj_init_collectegg(obj, (LevelObjectEntry_CollectEgg *)entry);
             break;
-        case 0x2D:
-            func_80035640(arg0, arg1);
+        case 45:
+            obj_init_eggcreator(obj, (LevelObjectEntry_EggCreator *)entry);
             break;
-        case 0x2E:
-            func_80035EF8(arg0, arg1);
+        case 46:
+            obj_init_characterflag(obj, (LevelObjectEntry_CharacterFlag *)entry);
             break;
-        case 0x30:
-            func_80037A18(arg0, arg1);
+        case 48:
+            obj_init_animation(obj, (LevelObjectEntry_Animation *)entry);
             break;
-        case 0x33:
-            func_80038854(arg0, arg1);
+        case 51:
+            obj_init_infopoint(obj, (LevelObjectEntry_InfoPoint *)entry);
             break;
-        case 0x36:
-            func_8003C644(arg0, arg1);
+        case 54:
+            obj_init_trigger(obj, (LevelObjectEntry_Trigger *)entry);
             break;
-        case 0x38:
-        case 0x5C:
-            func_8003588C(arg0, arg1);
+        case 56:
+        case 92:
+            obj_init_airzippers_waterzippers(obj, (LevelObjectEntry_AirZippers_WaterZippers *)entry);
             break;
-        case 0x39:
-            func_80035E20(arg0, arg1);
+        case 57:
+            obj_init_unknown58(obj, (LevelObjectEntry_Unknown58 *)entry);
             break;
-        case 0x3A:
-            func_800409A4(arg0, arg1);
+        case 58:
+            obj_init_wavegenerator(obj, (LevelObjectEntry_WaveGenerator *)entry, arg2);
             break;
-        case 0x3C:
-            func_800409C8(arg0, arg1);
+        case 60:
+            obj_init_butterfly(obj, (LevelObjectEntry_Butterfly *)entry);
             break;
-        case 0x3D:
-            func_800392B8(arg0, arg1);
+        case 61:
+            obj_init_parkwarden(obj, (LevelObjectEntry_Parkwarden *)entry);
             break;
-        case 0x3F:
-            func_8003DE74(arg0, arg1);
+        case 63:
+            obj_init_worldkey(obj, (LevelObjectEntry_WorldKey *)entry);
             break;
-        case 0x40:
-            func_8003D3EC(arg0, arg1);
+        case 64:
+            obj_init_coincreator(obj, (LevelObjectEntry_BananaCreator *)entry);
             break;
-        case 0x41:
-            func_8003D038(arg0, arg1);
+        case 65:
+            obj_init_treasuresucker(obj, (LevelObjectEntry_TreasureSucker *)entry);
             break;
-        case 0x43:
-            func_80037578(arg0, arg1);
+        case 67:
+            obj_init_lavaspurt(obj, (LevelObjectEntry_LavaSpurt *)entry);
             break;
-        case 0x44:
-            func_80037624(arg0, arg1);
+        case 68:
+            obj_init_posarrow(obj, (LevelObjectEntry_PosArrow *)entry);
             break;
-        case 0x45:
-        case 0x66:
-            func_8003818C(arg0, arg1);
+        case 69:
+        case 102:
+            obj_init_hittester(obj, (LevelObjectEntry_HitTester *)entry);
             break;
-        case 0x47:
-        case 0x5E:
-        case 0x67:
-            func_800381E0(arg0, arg1);
+        case 71:
+        case 94:
+        case 103:
+            obj_init_dynamic_lighting_object(obj, (LevelObjectEntry_DynamicLightingObject *)entry);
             break;
-        case 0x5F:
-        case 0x64:
-            func_80038214(arg0, arg1);
+        case 95:
+        case 100:
+            obj_init_unknown96(obj, (LevelObjectEntry_Unknown96 *)entry);
             break;
-        case 0x60:
-        case 0x65:
-            func_80038248(arg0, arg1);
+        case 96:
+        case 101:
+            obj_init_snowball(obj, (LevelObjectEntry_Snowball *)entry);
             break;
-        case 0x46:
-            func_80041A90(arg0, arg1);
+        case 70:
+            obj_init_midifade(obj, (LevelObjectEntry_MidiFade *)entry);
             break;
-        case 0x6F:
-            func_80041E80(arg0, arg1);
+        case 111:
+            obj_init_midifadepoint(obj, (LevelObjectEntry_MidiFadePoint *)entry);
             break;
-        case 0x75:
-            func_80042014(arg0, arg1);
+        case 117:
+            obj_init_midichset(obj, (LevelObjectEntry_Midichset *)entry);
             break;
-        case 0x48:
-            func_80034B68(arg0, arg1);
+        case 72:
+            obj_init_effectbox(obj, (LevelObjectEntry_EffectBox *)entry);
             break;
-        case 0x49:
-            func_80034E70(arg0, arg1);
+        case 73:
+            obj_init_trophycab(obj, (LevelObjectEntry_TrophyCab *)entry);
             break;
-        case 0x4A:
-            func_8004203C(arg0, arg1);
+        case 74:
+            obj_init_bubbler(obj, (LevelObjectEntry_Bubbler *)entry);
             break;
-        case 0x4B:
-            func_8003D2AC(arg0, arg1);
+        case 75:
+            obj_init_flycoin(obj, (LevelObjectEntry_FlyCoin *)entry);
             break;
-        case 0x4C:
-            func_8003B368(arg0, arg1);
+        case 76:
+            obj_init_goldenballoon(obj, (LevelObjectEntry_GoldenBalloon *)entry);
             break;
-        case 0x4D:
-            func_80034844(arg0, arg1);
+        case 77:
+            obj_init_laserbolt(obj, (LevelObjectEntry_Laserbolt *)entry);
             break;
-        case 0x4E:
-            func_80034530(arg0, arg1);
+        case 78:
+            obj_init_lasergun(obj, (LevelObjectEntry_Lasergun *)entry);
             break;
-        case 0x51:
-            func_80035AE8(arg0, arg1);
+        case 81:
+            obj_init_groundzipper(obj, (LevelObjectEntry_GroundZipper *)entry);
             break;
-        case 0x52:
-            func_80037D54(arg0, arg1);
+        case 82:
+            obj_init_overridepos(obj, (LevelObjectEntry_OverridePos *)entry);
             break;
-        case 0x53:
-            func_80037D6C(arg0, arg1);
+        case 83:
+            obj_init_wizpigship(obj, (LevelObjectEntry_WizpigShip *)entry);
             break;
-        case 0x58:
-            func_8004210C(arg0, arg1);
+        case 88:
+            obj_init_boost(obj, (LevelObjectEntry_Boost *)entry);
             break;
-        case 0x57:
-            func_8003DC5C(arg0, arg1);
+        case 87:
+            obj_init_silvercoin(obj, (LevelObjectEntry_SilverCoin *)entry);
             break;
-        case 0x59:
-            func_80038AC8(arg0, arg1);
+        case 89:
+            obj_init_wardensmoke(obj, (LevelObjectEntry_WardenSmoke *)entry);
             break;
-        case 0x5D:
-            func_80042150(arg0, arg1);
+        case 93:
+            obj_init_unknown94(obj, (LevelObjectEntry_Unknown94 *)entry, arg2);
             break;
-        case 0x61:
-            func_80038D58(arg0, arg1);
+        case 97:
+            obj_init_teleport(obj, (LevelObjectEntry_Teleport *)entry);
             break;
-        case 0x62:
-        case 0x63:
-            func_8003572C(arg0, arg1);
+        case 98:
+        case 99:
+            obj_init_lighthouse_rocketsignpost(obj, (LevelObjectEntry_Lighthouse_RocketSignpost *)entry);
             break;
-        case 0x68:
-            func_8004216C(arg0, arg1);
+        case 104:
+            obj_init_rangetrigger(obj, (LevelObjectEntry_RangeTrigger *)entry);
             break;
-        case 0x6B:
-        case 0x73:
-            func_80033F44(arg0, arg1);
+        case 107:
+        case 115:
+            obj_init_fireball_octoweapon(obj, (LevelObjectEntry_Fireball_Octoweapon *)entry);
             break;
-        case 0x6C:
-            func_80042210(arg0, arg1);
+        case 108:
+            obj_init_frog(obj, (LevelObjectEntry_Frog *)entry);
             break;
-        case 0x6D:
-            func_8003DBA0(arg0, arg1);
+        case 109:
+            obj_init_silvercoin_adv2(obj, (LevelObjectEntry_SilverCoinAdv2 *)entry);
             break;
-        case 0x74:
-            func_80042A1C(arg0, arg1);
+        case 116:
+            obj_init_levelname(obj, (LevelObjectEntry_LevelName *)entry);
             break;
     }
 }
 
-#ifdef NON_EQUIVALENT
 s32 func_80023E30(s32 arg0) {
-    switch (arg0 - 1) {
-        case 0x00:
-            return 0x1F;
-        case 0x01:
-            return 0x13;
-        case 0x04:
-            return 0x16;
-        case 0x0B:
-            return 0x1B;
-        case 0x0D:
-        case 0x6E:
-            return 0x30;
-        case 0x10:
-        case 0x4C:
-            return 0x12;
-        case 0x45:
-        case 0x47:
-        case 0x5F:
-        case 0x60:
-            return 0x3B;
-        case 0x64:
-        case 0x65:
-        case 0x66:
-        case 0x67:
-            return 0x3A;
-        case 0x17:
-            return 0x04;
-        case 0x1E:
-            return 0x1B;
-        case 0x1F:
-        case 0x3F:
-        case 0x57:
-        case 0x6D:
-            return 0x12;
-        case 0x42:
-            return 0x30;
-        case 0x25:
-            return 0x39;
-        case 0x26:
-            return 0x12;
-        case 0x27:
-            return 0x09;
-        case 0x2C:
-            return 0x12;
-        case 0x2F:
-            return 0x09;
-        case 0x3E:
-            return 0x09;
-        case 0x31:
-        case 0x37:
-        case 0x4F:
-        case 0x53:
-        case 0x55:
-        case 0x72:
-            return 0x0B;
-        case 0x35:
-            return 0x0B;
-        case 0x49:
-        case 0x5E:
-        case 0x62:
-        case 0x63:
-            return 0x31;
-        case 0x5A:
-            return 0x01;
-        case 0x50:
-            return 0x0A;
-        case 0x06:
-        case 0x0C:
-        case 0x11:
-        case 0x19:
-        case 0x1D:
-        case 0x23:
-        case 0x28:
-        case 0x33:
-        case 0x36:
-        case 0x38:
-        case 0x43:
-        case 0x4D:
-        case 0x4E:
-        case 0x5C:
-        case 0x61:
-        case 0x6B:
-        case 0x73:
-            return 0x10;
-        case 0x51:
-            return 0x12;
-        case 0x30:
-        case 0x32:
-        case 0x3C:
-            return 0x02;
-        case 0x3D:
-            return 0x1B;
-        case 0x6C:
-            return 0x0B;
-        case 0x71:
-            return 0x01;
-        default:
-            return 0x00;
-    }
+  s32 value = 0;
+  switch (arg0 - 1){
+    case 0x00:
+      value = 0x1F;
+      break;
+    case 0x01:
+      value = 0x13;
+      break;
+    case 0x04:
+      value = 0x16;
+      break;
+    case 0x0B:
+      value = 0x1B;
+      break;
+    case 0x0D:
+    case 0x6E:
+      value = 0x30;
+      break;
+    case 0x10:
+    case 0x4C:
+      value = 0x12;
+      break;
+    case 0x45:
+    case 0x47:
+    case 0x5F:
+    case 0x60:
+      value = 0x3B;
+      break;
+    case 0x64:
+    case 0x65:
+    case 0x66:
+    case 0x67:
+      value = 0x3A;
+      break;
+    case 0x17:
+      value = 0x04;
+      break;
+    case 0x1E:
+      value = 0x1B;
+      break;
+    case 0x1F:
+    case 0x3F:
+    case 0x57:
+    case 0x6D:
+      value = 0x12;
+      break;
+    case 0x42:
+      value = 0x30;
+      break;
+    case 0x25:
+      value = 0x39;
+      break;
+    case 0x26:
+      value = 0x12;
+      break;
+    case 0x27:
+      value = 0x09;
+      break;
+    case 0x2C:
+      value = 0x12;
+      break;
+    case 0x2F:
+      value = 0x09;
+      break;
+    case 0x3E:
+      value = 0x09;
+      break;
+    case 0x31:
+    case 0x37:
+    case 0x4F:
+    case 0x53:
+    case 0x55:
+    case 0x72:
+      value = 0x0B;
+      break;
+    case 0x35:
+      value = 0x0B;
+      break;
+    case 0x49:
+    case 0x5E:
+    case 0x62:
+    case 0x63:
+      value = 0x31;
+      break;
+    case 0x5A:
+      value = 0x01;
+      break;
+    case 0x50:
+      value = 0x0A;
+      break;
+    case 0x06:
+    case 0x0C:
+    case 0x11:
+    case 0x19:
+    case 0x1D:
+    case 0x23:
+    case 0x28:
+    case 0x33:
+    case 0x36:
+    case 0x38:
+    case 0x43:
+    case 0x4D:
+    case 0x4E:
+    case 0x5C:
+    case 0x61:
+    case 0x6B:
+    case 0x73:
+      value = 0x10;
+      break;
+    case 0x51:
+      value = 0x12;
+      break;
+    case 0x30:
+    case 0x32:
+    case 0x3C:
+      value = 0x02;
+      break;
+    case 0x3D:
+      value = 0x1B;
+      break;
+    case 0x6C:
+      value = 0x0B;
+      break;
+    case 0x71:
+      value = 0x01;
+      break;
+  }
+  return value;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80023E30.s")
-#endif
 
 void run_object_loop_func(Object *obj, s32 arg1) {
     func_800B76B8(1, obj->unk4A);
-    switch (obj->unk48) {
+    switch (obj->behaviorId) {
         case 2:
-            func_80033DD0(obj, arg1);
+            obj_loop_scenery(obj, arg1);
             break;
         case 3:
-            func_800370D4(obj, arg1);
+            obj_loop_fish(obj, arg1);
             break;
         case 4:
-            func_800377E4(obj, arg1);
+            obj_loop_animator(obj, arg1);
             break;
         case 6:
-            func_800389B8(obj, arg1);
+            obj_loop_smoke(obj, arg1);
             break;
         case 25:
-            func_80038A78(obj, arg1);
+            obj_loop_unknown25(obj, arg1);
             break;
         case 22:
-            func_80038BF4(obj, arg1);
+            obj_loop_bombexplosion(obj, arg1);
             break;
         case 7:
-            func_80038F58(obj, arg1);
+            obj_loop_exit(obj, arg1);
             break;
         case 10:
-            func_80039184(obj, arg1);
+            obj_loop_cameracontrol(obj, arg1);
             break;
         case 11:
-            func_800391BC(obj, arg1);
+            obj_loop_setuppoint(obj, arg1);
             break;
         case 12:
-            func_800391FC(obj, arg1);
+            obj_loop_dino_whale(obj, arg1);
             break;
         case 13:
-            func_8003AD28(obj, arg1);
+            obj_loop_checkpoint(obj, arg1);
             break;
         case 30:
-            func_8003AE50(obj, arg1);
+            obj_loop_modechange(obj, arg1);
             break;
         case 41:
-            func_8003B174(obj, arg1);
+            obj_loop_bonus(obj, arg1);
             break;
         case 14:
-            func_8003B988(obj, arg1);
+            obj_loop_door(obj, arg1);
             break;
         case 15:
-            func_80030A74(obj);
+            obj_loop_fogchanger(obj);
             break;
         case 16:
-            func_8003D02C(obj, arg1);
+            obj_loop_ainode(obj, arg1);
             break;
         case 17:
-            func_8003E140(obj, arg1);
+            obj_loop_weaponballoon(obj, arg1);
             break;
         case 23:
-            func_8003E5BC(obj, arg1);
+            obj_loop_wballoonpop(obj, arg1);
             break;
         case 5:
         case 18:
-            func_8003E630(obj, arg1);
+            obj_loop_weapon(obj, arg1);
             break;
         case 26:
-            func_8003CF98(obj, arg1);
+            obj_loop_skycontrol(obj, arg1);
             break;
         case 28:
-            func_80034B4C(obj, arg1);
+            obj_loop_torch_mist(obj, arg1);
             break;
         case 29:
-            func_80040148(obj, arg1);
+            obj_loop_texscroll(obj, arg1);
             break;
         case 31:
-            func_800361E0(obj, arg1);
+            obj_loop_stopwatchman(obj, arg1);
             break;
         case 32:
-            func_8003D5A0(obj, arg1);
+            obj_loop_coin(obj, arg1);
             break;
         case 36:
-            func_80040448(obj, arg1);
+            obj_loop_buoy_pirateship(obj, arg1);
             break;
         case 67:
-            func_80040570(obj, arg1);
+            obj_loop_log(obj, arg1);
             break;
         case 37:
-            func_80040820(obj, arg1);
+            obj_loop_weather(obj, arg1);
             break;
         case 38:
-            func_8003CA68(obj, arg1);
+            obj_loop_bridge_whaleramp(obj, arg1);
             break;
         case 39:
-            func_8003CEA0(obj, arg1);
+            obj_loop_rampswitch(obj, arg1);
             break;
         case 40:
-            func_8003CF0C(obj, arg1);
+            obj_loop_seamonster(obj, arg1);
             break;
         case 45:
-            func_80035260(obj, arg1);
+            obj_loop_collectegg(obj, arg1);
             break;
         case 46:
-            func_8003564C(obj, arg1);
+            obj_loop_eggcreator(obj, arg1);
             break;
         case 47:
-            func_80035F6C(obj, arg1);
+            obj_loop_characterflag(obj, arg1);
             break;
         case 50:
         case 81:
         case 85:
         case 86:
-            func_80037CE8(obj, arg1);
+            obj_loop_animobject(obj, arg1);
             break;
         case 119:
-            func_80042CD0(obj, arg1);
+            obj_loop_wizghosts(obj, arg1);
             break;
         case 51:
-            func_80038710(obj, arg1);
+            obj_loop_animcamera(obj, arg1);
             break;
         case 52:
-            func_800388D4(obj, arg1);
+            obj_loop_infopoint(obj, arg1);
             break;
         case 53:
-            func_800387CC(obj, arg1);
+            obj_loop_animcar(obj, arg1);
             break;
         case 54:
-            func_8003833C(obj, arg1);
+            obj_loop_char_select(obj, arg1);
             break;
         case 55:
-            func_8003C7A4(obj, arg1);
+            obj_loop_trigger(obj, arg1);
             break;
         case 56:
-            func_800380F8(obj, arg1);
+            obj_loop_vehicleanim(obj, arg1);
             break;
         case 57:
         case 93:
-            func_8003596C(obj, arg1);
+            obj_loop_airzippers_waterzippers(obj, arg1);
             break;
         case 58:
-            func_80035E34(obj, arg1);
+            obj_loop_unknown58(obj, arg1);
             break;
         case 60:
-            func_800BFFDC(obj);
+            obj_loop_wavepower(obj);
             break;
         case 61:
-            func_80040C54(obj, arg1);
+            obj_loop_butterfly(obj, arg1);
             break;
         case 62:
-            func_80039330(obj, arg1);
+            obj_loop_parkwarden(obj, arg1);
             break;
         case 64:
-            obj_loop_world_key(obj, arg1); //arg1=speed
+            obj_loop_worldkey(obj, arg1); //arg1=speed
             break;
         case 65:
-            func_8003D3FC(obj, arg1);
+            obj_loop_coincreator(obj, arg1);
             break;
         case 66:
-            func_8003D058(obj, arg1);
+            obj_loop_treasuresucker(obj, arg1);
             break;
         case 68:
-            func_80037594(obj, arg1);
+            obj_loop_lavaspurt(obj, arg1);
             break;
         case 69:
-            func_8003763C(obj, arg1);
+            obj_loop_posarrow(obj, arg1);
             break;
         case 70:
         case 72:
         case 103:
         case 104:
-            func_800381C0(obj, arg1);
+            obj_loop_hittester(obj, arg1);
             break;
         case 96:
         case 97:
         case 101:
         case 102:
-            func_8003827C(obj, arg1);
+            obj_loop_snowball(obj, arg1);
             break;
         case 73:
-            func_80034B74(obj, arg1);
+            obj_loop_effectbox(obj, arg1);
             break;
         case 74:
-            func_80034E9C(obj, arg1);
+            obj_loop_trophycab(obj, arg1);
             break;
         case 75:
-            func_80042090(obj, arg1);
+            obj_loop_bubbler(obj, arg1);
             break;
         case 76:
-            func_8003D2B8(obj, arg1);
+            obj_loop_flycoin(obj, arg1);
             break;
         case 77:
-            func_8003B4BC(obj, arg1);
+            obj_loop_goldenballoon(obj, arg1);
             break;
         case 78:
-            func_80034860(obj, arg1);
+            obj_loop_laserbolt(obj, arg1);
             break;
         case 79:
-            func_800345A0(obj, arg1);
+            obj_loop_lasergun(obj, arg1);
             break;
         case 80:
-            func_8003ACA0(obj, arg1);
+            obj_loop_gbparkwarden(obj, arg1);
             break;
         case 82:
-            func_80035C50(obj, arg1);
+            obj_loop_groundzipper(obj, arg1);
             break;
         case 84:
-            func_80037D78(obj, arg1);
+            obj_loop_wizpigship(obj, arg1);
             break;
         case 88:
         case 110:
-            func_8003DD14(obj, arg1);
+            obj_loop_silvercoin(obj, arg1);
             break;
         case 90:
-            func_80038AD4(obj, arg1);
+            obj_loop_wardensmoke(obj, arg1);
             break;
         case 94:
-            func_80042160(obj, arg1);
+            obj_loop_unknown94(obj, arg1);
             break;
         case 98:
-            func_80038DC4(obj, arg1);
+            obj_loop_teleport(obj, arg1);
             break;
         case 105:
-            func_80042178(obj, arg1);
+            obj_loop_rangetrigger(obj, arg1);
             break;
         case 100:
-            func_800357D4(obj, arg1);
+            obj_loop_rocketsignpost(obj, arg1);
             break;
         case 108:
         case 116:
-            func_80033F60(obj, arg1);
+            obj_loop_fireball_octoweapon(obj, arg1);
             break;
         case 109:
-            func_800422F0(obj, arg1);
+            obj_loop_frog(obj, arg1);
             break;
         case 111:
-            func_8003C2E4(obj, arg1);
+            obj_loop_ttdoor(obj, arg1);
             break;
         case 113:
-            func_80037D08(obj, arg1);
+            obj_loop_dooropener(obj, arg1);
             break;
         case 115:
-            func_80042998(obj, arg1);
+            obj_loop_pigrocketeer(obj, arg1);
             break;
         case 117:
-            func_80042A90(obj, arg1);
+            obj_loop_levelname(obj, arg1);
             break;
     }
     func_800B76B8(1, -1);

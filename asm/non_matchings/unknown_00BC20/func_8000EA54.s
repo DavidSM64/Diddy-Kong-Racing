@@ -752,7 +752,7 @@ glabel L8000EDE0
 .L8000F500:
 /* 010100 8000F500 3C108012 */  lui   $s0, %hi(objCount) # $s0, 0x8012
 /* 010104 8000F504 8FA50068 */  lw    $a1, 0x68($sp)
-/* 010108 8000F508 0C008E2F */  jal   func_800238BC
+/* 010108 8000F508 0C008E2F */  jal   run_object_init_func
 /* 01010C 8000F50C 2610AE5C */   addiu $s0, %lo(objCount) # addiu $s0, $s0, -0x51a4
 /* 010110 8000F510 8E42004C */  lw    $v0, 0x4c($s2)
 /* 010114 8000F514 00000000 */  nop   

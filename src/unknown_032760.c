@@ -149,8 +149,8 @@ void func_80032C7C(Object *object) {
     s16 phi_a0, phi_a1;
     unk800DC950 *entry;
 
-    if (object->descriptor_ptr->unk3D == 0) {
-        switch (object->descriptor_ptr->unk53) { // Model type
+    if (object->header->unk3D == 0) {
+        switch (object->header->unk53) { // Model type
             case 0:                              // 3D Model
                 sp64 = 2;
                 break;
@@ -199,7 +199,7 @@ void func_80032C7C(Object *object) {
                         if (f20 > 0.0f) {
                             f20 *= func_80033A14(entry);
                             if (f20 > 0.0f) {
-                                if (object->descriptor_ptr->unk71 != 0) {
+                                if (object->header->unk71 != 0) {
                                     if (D_8011D4C0 > 0.0f) {
                                         temp = 1.0f / sqrtf(D_8011D4C0);
                                         D_8011D4C4 *= temp;
@@ -227,7 +227,7 @@ void func_80032C7C(Object *object) {
             }
         }
 
-        if (object->descriptor_ptr->unk71 != 0) {
+        if (object->header->unk71 != 0) {
             if (D_800DC968 == 0) {
                 object->unk54->unk7 = 0;
                 object->unk54->unk11 = 0;

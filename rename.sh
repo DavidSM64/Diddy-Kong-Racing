@@ -9,7 +9,7 @@ then
 fi
 
 # Rename all instances within text files.
-grep -rl "$1" asm/**/*.s src/**/*.{c,h} lib/**/*.{c,s} include/*.h undefined_syms.txt | xargs sed -i "s/\b$1\b/$2/g"
+grep -rl "$1" asm/**/*.s src/**/*.{c,h} lib/**/*.{c,s} include/*.h undefined_syms.txt dkr.ld | xargs sed -i "s/\b$1\b/$2/g"
 
 # Rename filenames & directories.
 python3 ./tools/python/rename_file.py "$1" "$2"

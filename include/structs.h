@@ -453,40 +453,43 @@ typedef struct LevelModel {
 /* 0x38 */ u32 minimapColor;
 } LevelModel;
 
-/* Size: 8 bytes. */
-typedef struct LevelObjectEntryCommon {
-    u8 object_id; // 9-bit object ID to load (uses size'a MSB).
-    u8 size; // 7-bit total entry length (MSB is used in object_id).
-    s16 x, y, z; // Position in level
-} LevelObjectEntryCommon;
-
 typedef struct Object_3C {
-    u8 pad0[0x8];
+    u8 pad0[0x2];
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
     s8 unk8;
     u8 pad9[0x4];
     u8 unkD;
 } Object_3C;
 
-typedef struct Object_40 {
-    u8 pad0[0x4];
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    u8 pad10[0x20];
-    u16 unk30;
-    s16 unk32;
-    u8 pad34[0x9];
-    u8 unk3D;
-    u8 pad3E[0x15];
-    s8 unk53;
-    s8 unk54;
-    s8 unk55; //size of array pointed by Object->unk68
-    u8 pad56;
-    s8 unk57;
-    u8 pad58[0x18];
-    u8 unk70;
-    u8 unk71;
-} Object_40;
+#define OBJECT_MODEL_TYPE_3D_MODEL         0
+#define OBJECT_MODEL_TYPE_SPRITE_BILLBOARD 1
+#define OBJECT_MODEL_TYPE_VEHICLE_PART     2
+#define OBJECT_MODEL_TYPE_UNKNOWN4         4
+
+typedef struct ObjectHeader {
+             u8 pad0[0x4];
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 scale;
+             u8 pad10[0x20];
+  /* 0x30 */ u16 unk30;
+  /* 0x32 */ s16 unk32;
+             u8 pad34[0x9];
+  /* 0x3D */ u8 unk3D;
+             u8 pad3E[0x15];
+  /* 0x53 */ s8 modelType;
+  /* 0x54 */ s8 behaviorId;
+  /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
+             u8 pad56;
+  /* 0x57 */ s8 unk57;
+             u8 pad58[0x8];
+  /* 0x60 */ char internalName[16];
+  /* 0x70 */ u8 unk70;
+  /* 0x71 */ u8 unk71;
+             u8 pad72[0x6];
+} ObjectHeader;
 
 typedef struct Object_44_0 {
     u8 unk0;
@@ -562,7 +565,7 @@ typedef struct Object_60 {
 
 // This REALLY needs to be refactored at some point.
 // This structure differs based on the type of object being loaded.
-// See functions in unknown_0348C0.c for how these get loaded.
+// See functions in object_functions.c for how these get loaded.
 typedef struct Object_64 {
     union {
         f32 unk0;
@@ -682,9 +685,9 @@ typedef struct Object {
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
-  /* 0x0040 */ Object_40 *descriptor_ptr;
+  /* 0x0040 */ ObjectHeader *header;
   /* 0x0044 */ void *unk44;
-  /* 0x0048 */ s16 unk48;
+  /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318
   /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
@@ -699,7 +702,11 @@ typedef struct Object {
   /* 0x0070 */ u32 unk70;
 
   /* 0x0074 */ u32 unk74;
+
+  union {
   /* 0x0078 */ s32 unk78;
+  /* 0x0078 */ f32 unk78f;
+  };
 
   union {
       struct {
