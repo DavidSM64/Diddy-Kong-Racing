@@ -241,7 +241,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
 	Object80033F60_64 *obj64;
 	Object *obj4C_obj;
 	f32 phi_f2;
-    s32* temp;
+    s32 *temp;
 	f32 sp4C[7];
 
     obj78 = (Object*)obj->unk78;
@@ -806,9 +806,113 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_airzippers_waterzippers.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_groundzipper.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_groundzipper.s")
+
+void obj_loop_airzippers_waterzippers(Object *obj, s32 speed) {
+    Object *curRacerObj;
+    Object_64_Racer *racerObj64;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    s32 numObjects;
+    Object** racerObjs;
+    s32 i;
+
+    if (func_8000E1CC() == 0) {
+        obj->unk6 |= 0x4000;
+    } else {
+        obj->unk6 &= 0xBFFF;
+    }
+    if ((obj->unk4C->unk13 < 100) && !(obj->unk6 & 0x4000)) {
+        racerObjs = get_object_struct_array(&numObjects);
+        for(i = 0; i < numObjects; i++){
+            curRacerObj = racerObjs[i];
+            racerObj64 = (Object_64_Racer*)curRacerObj->unk64;
+            if ((racerObj64->unk1F5 == 0) && (racerObj64->unk1D3 < 15)) {
+                xDiff = curRacerObj->x_position - obj->x_position;
+                yDiff = curRacerObj->y_position - obj->y_position;
+                zDiff = curRacerObj->z_position - obj->z_position;
+                if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < 100) {
+                    racerObj64->unk1F5 = 1;
+                    racerObj64->unk14C = obj;
+                }
+            }
+        }
+    }
+}
+
+void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
+    ObjectHeader *header;
+    f32 objScale;
+
+    objScale = entry->scale & 0xFF;
+    if (objScale < 10.0f) {
+        objScale = 10.0f;
+    }
+    objScale /= 64;
+    header = arg0->header;
+    arg0->scale = header->scale * objScale;
+    arg0->unk50->unk0 = header->unk4 * objScale;
+    arg0->y_rotation = entry->rotation << 6 << 4;
+    if (arg0->unk3A >= arg0->header->numberOfModelIds) {
+        arg0->unk3A = 0;
+    }
+    arg0->unk78 = (s32)(28.0f * objScale) + 15;
+    if (arg0->unk78 < 0) {
+        arg0->unk78 = 0;
+    }
+    if (arg0->unk78 >= 0x100) {
+        arg0->unk78 = 0xFF;
+    }
+    arg0->unk4C->unk14 = 2;
+    arg0->unk4C->unk11 = 0;
+    arg0->unk4C->unk10 = 0x14;
+    arg0->unk4C->unk12 = 0;
+    arg0->unk4C->unk16 = -0x64;
+    arg0->unk4C->unk17 = 0x64;
+    if (get_filtered_cheats() & 0x200000) {
+        gParticlePtrList_addObject(arg0);
+    }
+}
+
+void obj_loop_groundzipper(Object *obj, s32 speed) {
+    Object *curRacerObj;
+    Object_64_Racer *racerObj64;
+    f32 xDiff;
+    f32 yDiff;
+    s32 numObjects;
+    f32 zDiff;
+    Object** racerObjs;
+    s32 i;
+
+    obj->unk6 &= 0xBFFF;
+    obj->unk6 |= 0x1000;
+    get_object_struct(0); // Unused. I guess the developers forgot to remove this?
+    if ((s32) obj->unk4C->unk13 < obj->unk78) {
+        racerObjs = get_object_struct_array(&numObjects);
+        for(i = 0; i < numObjects; i++){
+            curRacerObj = racerObjs[i];
+            racerObj64 = (Object_64_Racer*)curRacerObj->unk64;
+            if ((racerObj64->unk1D3 < 15) && (racerObj64->unk1E2 != 0)) {
+                xDiff = curRacerObj->x_position - obj->x_position;
+                yDiff = curRacerObj->y_position - obj->y_position;
+                zDiff = curRacerObj->z_position - obj->z_position;
+                if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < obj->unk78) {
+                    if (racerObj64->unk0 != -1) {
+                        func_80001EA8(263, curRacerObj->x_position, curRacerObj->y_position, curRacerObj->z_position, NULL);
+                    }
+                    racerObj64->unk1D3 = func_8000C8B4(45);
+                    racerObj64->unk203 = 2;
+                    if (racerObj64->unk20C) {
+                        racerObj64->unk203 |= 4;
+                    }
+                    if (racerObj64->unk1D8 == 0) {
+                        func_80072348(racerObj64->unk0, 8);
+                    }
+                }
+            }
+        }
+    }
+}
 
 void obj_init_unknown58(Object *obj, LevelObjectEntry_Unknown58 *entry) {
     obj->unk78 = 0;
@@ -1270,7 +1374,54 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_exit.s")
+void obj_loop_exit(Object *obj, s32 speed) {
+    Object *racerObj;
+    Object_64_Racer *racerObj64;
+    s32 numberOfRacers;
+    Settings *settings;
+    f32 xDiff;
+    f32 zDiff;
+    f32 dist;
+    f32 yDiff;
+    Object_64_Exit *obj64;
+    s32 someBool;
+    Object** racerObjects;
+    s32 i;
+    f32 temp;
+
+    obj64 = (Object_64_Exit*)obj->unk64;
+    someBool = TRUE;
+    settings = get_settings();
+    if ((obj64->unk14 == 0) && (settings->balloonsPtr[settings->worldId] == 8)) {
+        someBool = FALSE;
+    }
+    if ((obj64->unk14 == 1) && (settings->balloonsPtr[settings->worldId] < 8)) {
+        someBool = FALSE;
+    }
+    if (someBool) {
+        if (obj->unk4C->unk13 < obj64->unk10) {
+            dist = obj64->unk10;
+            racerObjects = get_object_struct_array(&numberOfRacers);
+            for(i = 0; i < numberOfRacers; i++) {
+                    racerObj = racerObjects[i];
+                    racerObj64 = (Object_64_Racer*)racerObj->unk64;
+                    if ((racerObj64->unk0 != -1) && (racerObj64->unk108 == 0)) {
+                        xDiff = racerObj->x_position - obj->x_position;
+                        yDiff = racerObj->y_position - obj->y_position;
+                        zDiff = racerObj->z_position - obj->z_position;
+                        if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
+                            temp = (obj64->unk0 * racerObj->x_position) + (obj64->unk8 * racerObj->z_position) + obj64->unkC;
+                            if (temp < 0.0f) {
+                                racerObj64->unk108 = obj;
+                                racerObj64->unk200 = -120;
+                            }
+                        }
+                    }
+            }
+        }
+    }
+}
+
 
 void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry) {
     obj->unk78 = entry->unk8;
@@ -1373,7 +1524,7 @@ void obj_loop_checkpoint(Object *obj, s32 speed) {
 
 void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     f32 phi_f0;
-    Object_64_8003AD34 *obj64;
+    Object_64_ModeChange *obj64;
     phi_f0 = entry->unk8 & 0xFF;
     if (phi_f0 < 5) {
         phi_f0 = 5;
@@ -1398,7 +1549,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_modechange.s")
 
 void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     f32 phi_f0;
-    Object_64_8003AD34 *obj64;
+    Object_64_Bonus *obj64;
     phi_f0 = entry->unk8 & 0xFF;
     if (phi_f0 < 5) {
         phi_f0 = 5;
@@ -1419,10 +1570,215 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bonus.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_goldenballoon.s")
+void obj_loop_bonus(Object *obj, s32 speed) {
+    Object *racerObj;
+    Object_64_Racer *racerObj64;
+    s32 numberOfRacers;
+    f32 xDiff;
+    f32 yDiff;
+    f32 halfDist;
+    f32 dist;
+    f32 zDiff;
+    Object_64_Bonus *obj64;
+    Object **racerObjects;
+    s32 i;
+
+    obj64 = (Object_64_Bonus *)obj->unk64;
+    if (obj->unk4C->unk13 < obj64->unk10) {
+        dist = obj64->unk10;
+        halfDist = dist * 0.5;
+        racerObjects = get_object_struct_array(&numberOfRacers);
+        for(i = 0; i < numberOfRacers; i++) {
+            racerObj = racerObjects[i];
+            racerObj64 = (Object_64_Racer *)racerObj->unk64;
+            yDiff = racerObj->y_position - obj->y_position;
+            if ((yDiff < halfDist) && (-halfDist < yDiff)) {
+                xDiff = racerObj->x_position - obj->x_position;
+                zDiff = racerObj->z_position - obj->z_position;
+                if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
+                    f32 temp = (obj64->unk0 * racerObj->x_position) + (obj64->unk8 * racerObj->z_position) + obj64->unkC;
+                    if (temp < 0.0f) {
+                        if ((s32) racerObj64->unk185 < 10) {
+                            racerObj64->unk185 = 10;
+                            func_80009558(34, racerObj->x_position, racerObj->y_position, racerObj->z_position, 4, NULL);
+                            func_80001EA8(racerObj64->unk3 + 123, racerObj->x_position, racerObj->y_position, racerObj->z_position, NULL);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) {
+    Object_64_GoldenBalloon *obj64;
+    f32 scalef;
+
+    if (entry->unk8 == -1) {
+        entry->unk8 = func_8000CC20(obj);
+    } else {
+        func_8000CBF0(obj, entry->unk8);
+    }
+    if (entry->unk8 == -1) {
+        rmonPrintf("Illegal door no!!!\n"); // Did the devs just copy-paste the door init function?
+    }
+    obj->unk4C->unk14 = 2;
+    obj->unk4C->unk11 = 4;
+    obj->unk4C->unk10 = 20;
+    obj->unk4C->unk12 = 0;
+    scalef = entry->scale & 0xFF;
+    if (scalef < 10.0f) {
+        scalef = 10.0f;
+    }
+    scalef /= 64;
+    obj->scale = obj->header->scale * scalef;
+    obj64 = obj->unk64;
+    obj64->unkD = 255;
+    obj64->unk0 = 0.0f;
+    obj->unk78 = 0;
+    if (entry->unkA != 0) {
+        if ((get_settings()->tajFlags & (1 << (entry->unkA + 2))) != 0) {
+            obj->unk78 = 0;
+        } else {
+            obj->unk78 = 1;
+        }
+    }
+}
+
+
+#ifdef NON_EQUIVALENT
+
+// Has regalloc issues.
+
+void obj_loop_goldenballoon(Object *obj, s32 speed) {
+    s32 padding[1];
+    Object_3C *obj3C;
+    Object_4C *obj4C;
+    Object_64_GoldenBalloon *obj64;
+    Settings *settings;
+    s32 flag;
+    s32 doubleSpeed;
+    Object *racerObj;
+    f32 sp2C;
+    f32 speedf;
+    s32 someBool;
+
+    sp2C = speed;
+    if (osTvType == TV_TYPE_PAL) {
+        sp2C *= 1.2;
+    }
+    someBool = FALSE;
+    if ((*(s32*)0xA0000284) != 0x240B17D7) {
+        someBool = TRUE;
+    }
+    speedf = sp2C;
+    settings = get_settings();
+    obj3C = obj->unk3C_a.unk3C;
+    flag = 0x10000 << obj3C->unk8;
+    if (settings->courseFlagsPtr[settings->courseId] & flag) {
+        if (obj->unk7C.word > 0) {
+            obj->unk74 = 2;
+            func_800AFC3C(obj, speed);
+            obj->unk7C.word -= speed;
+        } else {
+            gParticlePtrList_addObject(obj);
+        }
+    } else {
+        obj->unk6 |= 0x4000;
+        if (obj->unk78 == 0) {
+            obj->unk6 &= 0xBFFF;
+            doubleSpeed = speed * 2;
+            if (obj->unk39 < (255 - doubleSpeed)) {
+                obj->unk39 += doubleSpeed;
+            } else {
+                obj->unk39 = 255;
+            }
+            obj4C = obj->unk4C;
+            if ((obj4C->unk13 < 45) && (someBool == FALSE)) {
+                racerObj = obj4C->unk0;
+                if (racerObj && (racerObj->header->behaviorId == 1) && (((Object_64_Racer *)racerObj->unk64)->unk0 == 0)) {
+                    settings->balloonsPtr[settings->worldId]++;
+                    if (settings->worldId != 0) {
+                        settings->balloonsPtr[0]++;
+                    }
+                    settings->courseFlagsPtr[settings->courseId] |=  flag;
+                    func_80001EA8(573, obj->x_position, obj->y_position, obj->z_position, NULL);
+                    obj->unk7C.word = 16;
+                    obj->unk74 = 2;
+                    obj->unk6 |= 0x4000;
+                    func_800AFC3C(obj, speed);
+                }
+            }
+            obj64 = (Object_64_GoldenBalloon *)obj->unk64;
+            obj->unk3B = 0;
+            obj64->unk14 = 0.0f;
+            if (obj->unk39 < 255) {
+                speedf = 0.0f;
+            } else {
+                speedf = 1.0f;
+            }
+            if (obj64->unkD == 255) {
+                obj64->unkD = func_8001C524(obj->x_position, obj->y_position, obj->z_position, 0);
+                if (obj64->unkD != 255) {
+                    obj64->unkE = func_8001CC48(obj64->unkD, -1, 0);
+                    obj64->unkF = func_8001CC48(obj64->unkE, obj64->unkD, 0);
+                    obj64->unk10 = func_8001CC48(obj64->unkF, obj64->unkE, 0);
+                    obj64->unkC = obj64->unkD;
+                }
+            } else {
+                func_8001C6C4(obj64, obj, sp2C, speedf, 0);
+            }
+        }
+    }
+}
+
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_goldenballoon.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_door.s")
+#endif
+
+void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
+    Object_64_Door *obj64;
+    f32 phi_f0;
+
+    obj64 = (Object_64_Door *)obj->unk64;
+    if (entry->unkC == -1) {
+        entry->unkC = func_8000CC20(obj);
+    } else {
+        func_8000CBF0(obj, entry->unkC);
+    }
+    obj64->unkE = entry->unkC;
+    obj64->unkF = entry->unkE;
+    obj64->unk11 = entry->numBalloonsToOpen;
+    obj64->unk10 = entry->numBalloonsToOpen;
+    obj64->unk12 = entry->distanceToOpen;
+    if (obj64->unkE == -1) {
+        rmonPrintf("Illegal door no!!!\n");
+    }
+    obj->unk3A = entry->modelIndex;
+    obj->y_rotation = entry->closedRotation << 6 << 4;
+    obj64->unk0 = obj->y_position;
+    obj64->unk8 = 0;
+    obj->unk78 = obj->y_rotation;
+    obj->unk7C.word = (s32) ((entry->openRotation & 0x3F) << 10);
+    phi_f0 = entry->scale & 0xFF;
+    if (phi_f0 < 10.0f) {
+        phi_f0 = 10.0f;
+    }
+    phi_f0 /= 64;
+    obj->scale = obj->header->scale * phi_f0;
+    obj64->unk13 = (u8) entry->unkF;
+    obj64->unk14 = (s8) entry->unk11;
+    obj->unk4C->unk14 = 0x21;
+    obj->unk4C->unk11 = 2;
+    obj->unk4C->unk10 = 0x14;
+    obj->unk4C->unk12 = 0;
+    if (obj->unk3A >= obj->header->numberOfModelIds) {
+        obj->unk3A = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_door.s")
 
 void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
@@ -1456,7 +1812,41 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_ttdoor.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_trigger.s")
+
+//GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_trigger.s")
+void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
+    f32 phi_f0;
+    Object_64_Trigger *obj64;
+
+    if (entry->unk9 == -1) {
+        entry->unk9 = func_8000CC20(obj);
+    } else {
+        func_8000CBF0(obj, entry->unk9);
+    }
+    if (entry->unk9 == -1) {
+        rmonPrintf("Illegal door no!!!\n");
+    }
+    phi_f0 = (s32)entry->scale & 0xFF;
+    if (phi_f0 < 5.0f) {
+        phi_f0 = 5.0f;
+    }
+    obj64 = (Object_64_Trigger*)obj->unk64;
+    phi_f0 /= 128;
+    obj->scale = phi_f0;
+    obj->y_rotation = entry->rotation << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->y_rotation);
+    obj64->unk4 = 0.0f;
+    obj64->unk8 = func_800707F8(obj->y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->x_position) + (obj64->unk8 * obj->z_position));
+    obj64->unk10 = entry->scale;
+    obj64->unk14 = entry->unkD;
+    obj->unk4C->unk14 = 2;
+    obj->unk4C->unk11 = 0;
+    obj->unk4C->unk10 = entry->scale;
+    obj->unk4C->unk12 = 0;
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trigger.s")
 
 void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry) {
