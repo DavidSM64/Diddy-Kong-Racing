@@ -56,7 +56,7 @@ glabel obj_loop_levelname
 /* 043760 80042B60 18400058 */  blez  $v0, .L80042CC4
 /* 043764 80042B64 8FBF0024 */   lw    $ra, 0x24($sp)
 /* 043768 80042B68 86040004 */  lh    $a0, 4($s0)
-/* 04376C 80042B6C 0C01AF77 */  jal   func_8006BDDC
+/* 04376C 80042B6C 0C01AF77 */  jal   get_level_name
 /* 043770 80042B70 00000000 */   nop   
 /* 043774 80042B74 AFA2002C */  sw    $v0, 0x2c($sp)
 /* 043778 80042B78 00402025 */  move  $a0, $v0

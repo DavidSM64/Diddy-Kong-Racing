@@ -101,9 +101,9 @@ glabel menu_23_loop
 /* 09BA6C 8009AE6C 128E001D */  beq   $s4, $t6, .L8009AEE4
 /* 09BA70 8009AE70 00008025 */   move  $s0, $zero
 /* 09BA74 8009AE74 3C16800E */  lui   $s6, %hi(D_800E0AF0) # $s6, 0x800e
-/* 09BA78 8009AE78 3C158012 */  lui   $s5, %hi(D_801263A0) # $s5, 0x8012
+/* 09BA78 8009AE78 3C158012 */  lui   $s5, %hi(sMenuCurrDisplayList) # $s5, 0x8012
 /* 09BA7C 8009AE7C 80510000 */  lb    $s1, ($v0)
-/* 09BA80 8009AE80 26B563A0 */  addiu $s5, %lo(D_801263A0) # addiu $s5, $s5, 0x63a0
+/* 09BA80 8009AE80 26B563A0 */  addiu $s5, %lo(sMenuCurrDisplayList) # addiu $s5, $s5, 0x63a0
 /* 09BA84 8009AE84 26D60AF0 */  addiu $s6, %lo(D_800E0AF0) # addiu $s6, $s6, 0xaf0
 /* 09BA88 8009AE88 24120010 */  li    $s2, 16
 /* 09BA8C 8009AE8C 00117880 */  sll   $t7, $s1, 2

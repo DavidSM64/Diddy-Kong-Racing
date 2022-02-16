@@ -24,8 +24,8 @@ glabel func_8009CD7C
 /* 09D9D0 8009CDD0 0000B025 */  move  $s6, $zero
 /* 09D9D4 8009CDD4 18C00058 */  blez  $a2, .L8009CF38
 /* 09D9D8 8009CDD8 0000B825 */   move  $s7, $zero
-/* 09D9DC 8009CDDC 3C118012 */  lui   $s1, %hi(D_801263A0) # $s1, 0x8012
-/* 09D9E0 8009CDE0 263163A0 */  addiu $s1, %lo(D_801263A0) # addiu $s1, $s1, 0x63a0
+/* 09D9DC 8009CDDC 3C118012 */  lui   $s1, %hi(sMenuCurrDisplayList) # $s1, 0x8012
+/* 09D9E0 8009CDE0 263163A0 */  addiu $s1, %lo(sMenuCurrDisplayList) # addiu $s1, $s1, 0x63a0
 .L8009CDE4:
 /* 09D9E4 8009CDE4 8EB90038 */  lw    $t9, 0x38($s5)
 /* 09D9E8 8009CDE8 2401FFFF */  li    $at, -1

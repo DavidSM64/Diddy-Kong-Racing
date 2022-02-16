@@ -1,6 +1,6 @@
 glabel func_8009C6D4
-/* 09D2D4 8009C6D4 3C08800E */  lui   $t0, %hi(D_800DF750) # $t0, 0x800e
-/* 09D2D8 8009C6D8 2508F750 */  addiu $t0, %lo(D_800DF750) # addiu $t0, $t0, -0x8b0
+/* 09D2D4 8009C6D4 3C08800E */  lui   $t0, %hi(gAssetsMenuElementIds) # $t0, 0x800e
+/* 09D2D8 8009C6D8 2508F750 */  addiu $t0, %lo(gAssetsMenuElementIds) # addiu $t0, $t0, -0x8b0
 /* 09D2DC 8009C6DC 8D060000 */  lw    $a2, ($t0)
 /* 09D2E0 8009C6E0 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 09D2E4 8009C6E4 AFBF0014 */  sw    $ra, 0x14($sp)
@@ -13,8 +13,8 @@ glabel func_8009C6D4
 /* 09D300 8009C700 24A5F754 */  addiu $a1, %lo(D_800DF754) # addiu $a1, $a1, -0x8ac
 /* 09D304 8009C704 A4A00000 */  sh    $zero, ($a1)
 /* 09D308 8009C708 84A30000 */  lh    $v1, ($a1)
-/* 09D30C 8009C70C 3C08800E */  lui   $t0, %hi(D_800DF750) # $t0, 0x800e
-/* 09D310 8009C710 2508F750 */  addiu $t0, %lo(D_800DF750) # addiu $t0, $t0, -0x8b0
+/* 09D30C 8009C70C 3C08800E */  lui   $t0, %hi(gAssetsMenuElementIds) # $t0, 0x800e
+/* 09D310 8009C710 2508F750 */  addiu $t0, %lo(gAssetsMenuElementIds) # addiu $t0, $t0, -0x8b0
 /* 09D314 8009C714 00037040 */  sll   $t6, $v1, 1
 /* 09D318 8009C718 AD020000 */  sw    $v0, ($t0)
 /* 09D31C 8009C71C 004E7821 */  addu  $t7, $v0, $t6

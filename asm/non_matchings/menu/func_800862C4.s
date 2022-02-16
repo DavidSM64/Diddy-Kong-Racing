@@ -140,8 +140,8 @@ glabel func_800862C4
 /* 0870D4 800864D4 1420008B */  bnez  $at, .L80086704
 /* 0870D8 800864D8 28410007 */   slti  $at, $v0, 7
 /* 0870DC 800864DC 10200089 */  beqz  $at, .L80086704
-/* 0870E0 800864E0 3C048012 */   lui   $a0, %hi(D_80126A20) # $a0, 0x8012
-/* 0870E4 800864E4 24846A20 */  addiu $a0, %lo(D_80126A20) # addiu $a0, $a0, 0x6a20
+/* 0870E0 800864E0 3C048012 */   lui   $a0, %hi(sControllerPakNotesFree) # $a0, 0x8012
+/* 0870E4 800864E4 24846A20 */  addiu $a0, %lo(sControllerPakNotesFree) # addiu $a0, $a0, 0x6a20
 /* 0870E8 800864E8 8C8B0000 */  lw    $t3, ($a0)
 /* 0870EC 800864EC 8E590000 */  lw    $t9, ($s2)
 /* 0870F0 800864F0 8E8C0000 */  lw    $t4, ($s4)

@@ -20,10 +20,10 @@ glabel render_file_select_menu
 .L8008CDB8:
 /* 08D9B8 8008CDB8 0C026F57 */  jal   func_8009BD5C
 /* 08D9BC 8008CDBC 00000000 */   nop   
-/* 08D9C0 8008CDC0 3C178012 */  lui   $s7, %hi(D_801263A0) # $s7, 0x8012
-/* 08D9C4 8008CDC4 26F763A0 */  addiu $s7, %lo(D_801263A0) # addiu $s7, $s7, 0x63a0
-/* 08D9C8 8008CDC8 3C058012 */  lui   $a1, %hi(D_801263A8) # $a1, 0x8012
-/* 08D9CC 8008CDCC 24A563A8 */  addiu $a1, %lo(D_801263A8) # addiu $a1, $a1, 0x63a8
+/* 08D9C0 8008CDC0 3C178012 */  lui   $s7, %hi(sMenuCurrDisplayList) # $s7, 0x8012
+/* 08D9C4 8008CDC4 26F763A0 */  addiu $s7, %lo(sMenuCurrDisplayList) # addiu $s7, $s7, 0x63a0
+/* 08D9C8 8008CDC8 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
+/* 08D9CC 8008CDCC 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
 /* 08D9D0 8008CDD0 0C019FCB */  jal   func_80067F2C
 /* 08D9D4 8008CDD4 02E02025 */   move  $a0, $s7
 /* 08D9D8 8008CDD8 3C118012 */  lui   $s1, %hi(gSavefileInfo) # $s1, 0x8012

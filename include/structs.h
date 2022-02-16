@@ -26,12 +26,12 @@ typedef struct MenuElement {
   // Element Type
   /* 0x13 */ u8 elementType; // Source type? 0 = ascii text, 2 = number, 7 = texture
   union {
-  /* 0x14 */ char* asciiText; // Pointer to ascii text to be displayed on the screen.
-  /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
-  /* 0x14 */ s32* number;     // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ u16* numberU16;  // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ void *element;   // Generic pointer
+  /* 0x14 */ char *asciiText; // Pointer to ascii text to be displayed on the screen.
+  /* 0x14 */ u32 *texture;    // Pointer to texture to be displayed on the screen.
+  /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
   /* 0x14 */ s32 value;       // Some value for elementType == 5
-  /* 0x14 */ void* element;   // Generic pointer
   } unk14_a;
   // Element Background Color/Transparency
   /* 0x18 */ s16 backgroundRed;

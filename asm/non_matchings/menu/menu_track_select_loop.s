@@ -34,8 +34,8 @@ glabel menu_track_select_loop
 .L8008F2B0:
 /* 08FEB0 8008F2B0 0C02393B */  jal   func_8008E4EC
 /* 08FEB4 8008F2B4 00000000 */   nop   
-/* 08FEB8 8008F2B8 3C058012 */  lui   $a1, %hi(D_801263A0) # $a1, 0x8012
-/* 08FEBC 8008F2BC 24A563A0 */  addiu $a1, %lo(D_801263A0) # addiu $a1, $a1, 0x63a0
+/* 08FEB8 8008F2B8 3C058012 */  lui   $a1, %hi(sMenuCurrDisplayList) # $a1, 0x8012
+/* 08FEBC 8008F2BC 24A563A0 */  addiu $a1, %lo(sMenuCurrDisplayList) # addiu $a1, $a1, 0x63a0
 /* 08FEC0 8008F2C0 8CA30000 */  lw    $v1, ($a1)
 /* 08FEC4 8008F2C4 3C0DB600 */  lui   $t5, 0xb600
 /* 08FEC8 8008F2C8 246C0008 */  addiu $t4, $v1, 8
@@ -196,8 +196,8 @@ glabel menu_track_select_loop
 /* 0900F8 8008F4F8 AC2A0FE8 */  sw    $t2, %lo(gTrophyRaceWorldId)($at)
 /* 0900FC 8008F4FC 3C01800E */  lui   $at, %hi(D_800DF450) # $at, 0x800e
 /* 090100 8008F500 A020F450 */  sb    $zero, %lo(D_800DF450)($at)
-/* 090104 8008F504 3C01800E */  lui   $at, %hi(D_800E0FEC) # $at, 0x800e
-/* 090108 8008F508 AC200FEC */  sw    $zero, %lo(D_800E0FEC)($at)
+/* 090104 8008F504 3C01800E */  lui   $at, %hi(gTrophyRaceRound) # $at, 0x800e
+/* 090108 8008F508 AC200FEC */  sw    $zero, %lo(gTrophyRaceRound)($at)
 /* 09010C 8008F50C 0C0204F4 */  jal   menu_init
 /* 090110 8008F510 24040014 */   li    $a0, 20
 /* 090114 8008F514 10000003 */  b     .L8008F524

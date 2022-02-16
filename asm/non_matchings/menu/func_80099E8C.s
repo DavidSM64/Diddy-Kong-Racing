@@ -6,11 +6,11 @@ glabel D_800E8570
 glabel func_80099E8C
 /* 09AA8C 80099E8C 27BDFF10 */  addiu $sp, $sp, -0xf0
 /* 09AA90 80099E90 AFB70054 */  sw    $s7, 0x54($sp)
-/* 09AA94 80099E94 3C178012 */  lui   $s7, %hi(D_801263A0) # $s7, 0x8012
-/* 09AA98 80099E98 26F763A0 */  addiu $s7, %lo(D_801263A0) # addiu $s7, $s7, 0x63a0
+/* 09AA94 80099E94 3C178012 */  lui   $s7, %hi(sMenuCurrDisplayList) # $s7, 0x8012
+/* 09AA98 80099E98 26F763A0 */  addiu $s7, %lo(sMenuCurrDisplayList) # addiu $s7, $s7, 0x63a0
 /* 09AA9C 80099E9C AFBF005C */  sw    $ra, 0x5c($sp)
 /* 09AAA0 80099EA0 AFA400F0 */  sw    $a0, 0xf0($sp)
-/* 09AAA4 80099EA4 3C058012 */  lui   $a1, %hi(D_801263A8) # $a1, 0x8012
+/* 09AAA4 80099EA4 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
 /* 09AAA8 80099EA8 AFBE0058 */  sw    $fp, 0x58($sp)
 /* 09AAAC 80099EAC AFB60050 */  sw    $s6, 0x50($sp)
 /* 09AAB0 80099EB0 AFB5004C */  sw    $s5, 0x4c($sp)
@@ -19,7 +19,7 @@ glabel func_80099E8C
 /* 09AABC 80099EBC AFB20040 */  sw    $s2, 0x40($sp)
 /* 09AAC0 80099EC0 AFB1003C */  sw    $s1, 0x3c($sp)
 /* 09AAC4 80099EC4 AFB00038 */  sw    $s0, 0x38($sp)
-/* 09AAC8 80099EC8 24A563A8 */  addiu $a1, %lo(D_801263A8) # addiu $a1, $a1, 0x63a8
+/* 09AAC8 80099EC8 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
 /* 09AACC 80099ECC 0C019FCB */  jal   func_80067F2C
 /* 09AAD0 80099ED0 02E02025 */   move  $a0, $s7
 /* 09AAD4 80099ED4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
@@ -159,7 +159,7 @@ glabel func_80099E8C
 /* 09ACD4 8009A0D4 00004025 */  move  $t0, $zero
 .L8009A0D8:
 /* 09ACD8 8009A0D8 93C40000 */  lbu   $a0, ($fp)
-/* 09ACDC 8009A0DC 0C01AF77 */  jal   func_8006BDDC
+/* 09ACDC 8009A0DC 0C01AF77 */  jal   get_level_name
 /* 09ACE0 8009A0E0 AFA800EC */   sw    $t0, 0xec($sp)
 /* 09ACE4 8009A0E4 904E0000 */  lbu   $t6, ($v0)
 /* 09ACE8 8009A0E8 8FA800EC */  lw    $t0, 0xec($sp)

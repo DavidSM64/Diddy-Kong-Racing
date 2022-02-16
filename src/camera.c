@@ -581,7 +581,7 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
-void func_80066CDC(Gfx **dlist, s32 arg1) {
+void func_80066CDC(Gfx **dlist, Gfx **arg1) {
     u32 sp58;
     u32 sp54;
     u32 sp4C;
@@ -1016,8 +1016,9 @@ u16 get_buttons_held_from_player(s32 player) {
 
 /**
  * Returns the buttons that are newly pressed during that frame.
+ * NOTE: This was a u16, but we only got a match in menu_ghost_data_loop when it was a u32 for some reason
  */
-u16 get_buttons_pressed_from_player(s32 player) {
+u32 get_buttons_pressed_from_player(s32 player) {
     return sControllerButtonsPressed[sPlayerID[player]];
 }
 
