@@ -824,7 +824,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, s32 speed) {
     }
     if ((obj->unk4C->unk13 < 100) && !(obj->unk6 & 0x4000)) {
         racerObjs = get_object_struct_array(&numObjects);
-        for(i = 0; i < numObjects; i++){
+        for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
             racerObj64 = (Object_64_Racer*)curRacerObj->unk64;
             if ((racerObj64->unk1F5 == 0) && (racerObj64->unk1D3 < 15)) {
