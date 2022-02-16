@@ -1402,21 +1402,21 @@ void obj_loop_exit(Object *obj, s32 speed) {
         if (obj->unk4C->unk13 < obj64->unk10) {
             dist = obj64->unk10;
             racerObjects = get_object_struct_array(&numberOfRacers);
-            for(i = 0; i < numberOfRacers; i++) {
-                    racerObj = racerObjects[i];
-                    racerObj64 = (Object_64_Racer*)racerObj->unk64;
-                    if ((racerObj64->unk0 != -1) && (racerObj64->unk108 == 0)) {
-                        xDiff = racerObj->x_position - obj->x_position;
-                        yDiff = racerObj->y_position - obj->y_position;
-                        zDiff = racerObj->z_position - obj->z_position;
-                        if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
-                            temp = (obj64->unk0 * racerObj->x_position) + (obj64->unk8 * racerObj->z_position) + obj64->unkC;
-                            if (temp < 0.0f) {
-                                racerObj64->unk108 = obj;
-                                racerObj64->unk200 = -120;
-                            }
+            for (i = 0; i < numberOfRacers; i++) {
+                racerObj = racerObjects[i];
+                racerObj64 = (Object_64_Racer*)racerObj->unk64;
+                if ((racerObj64->unk0 != -1) && (racerObj64->unk108 == 0)) {
+                    xDiff = racerObj->x_position - obj->x_position;
+                    yDiff = racerObj->y_position - obj->y_position;
+                    zDiff = racerObj->z_position - obj->z_position;
+                    if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
+                        temp = (obj64->unk0 * racerObj->x_position) + (obj64->unk8 * racerObj->z_position) + obj64->unkC;
+                        if (temp < 0.0f) {
+                            racerObj64->unk108 = obj;
+                            racerObj64->unk200 = -120;
                         }
                     }
+                }
             }
         }
     }
