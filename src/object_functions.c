@@ -1609,8 +1609,6 @@ void obj_loop_bonus(Object *obj, s32 speed) {
         }
     }
 }
-
-
 void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) {
     Object_64_GoldenBalloon *obj64;
     f32 scalef;
