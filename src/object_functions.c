@@ -1702,7 +1702,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                     if (settings->worldId != 0) {
                         settings->balloonsPtr[0]++;
                     }
-                    settings->courseFlagsPtr[settings->courseId] |=  flag;
+                    settings->courseFlagsPtr[settings->courseId] |= flag;
                     func_80001EA8(573, obj->x_position, obj->y_position, obj->z_position, NULL);
                     obj->unk7C.word = 16;
                     obj->unk74 = 2;
