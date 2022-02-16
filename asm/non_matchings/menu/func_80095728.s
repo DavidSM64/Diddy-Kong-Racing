@@ -15,15 +15,15 @@ glabel func_80095728
 /* 096348 80095748 AFA0004C */  sw    $zero, 0x4c($sp)
 /* 09634C 8009574C AFA00044 */  sw    $zero, 0x44($sp)
 /* 096350 80095750 8C8F0000 */  lw    $t7, ($a0)
-/* 096354 80095754 3C018012 */  lui   $at, %hi(D_801263A0) # $at, 0x8012
-/* 096358 80095758 AC2F63A0 */  sw    $t7, %lo(D_801263A0)($at)
+/* 096354 80095754 3C018012 */  lui   $at, %hi(sMenuCurrDisplayList) # $at, 0x8012
+/* 096358 80095758 AC2F63A0 */  sw    $t7, %lo(sMenuCurrDisplayList)($at)
 /* 09635C 8009575C 8CB90000 */  lw    $t9, ($a1)
-/* 096360 80095760 3C018012 */  lui   $at, %hi(D_801263A8) # $at, 0x8012
-/* 096364 80095764 AC3963A8 */  sw    $t9, %lo(D_801263A8)($at)
+/* 096360 80095760 3C018012 */  lui   $at, %hi(sMenuCurrHudMat) # $at, 0x8012
+/* 096364 80095764 AC3963A8 */  sw    $t9, %lo(sMenuCurrHudMat)($at)
 /* 096368 80095768 8CCD0000 */  lw    $t5, ($a2)
-/* 09636C 8009576C 3C018012 */  lui   $at, %hi(D_801263AC) # $at, 0x8012
+/* 09636C 8009576C 3C018012 */  lui   $at, %hi(sMenuCurrHudVerts) # $at, 0x8012
 /* 096370 80095770 0C01BAA4 */  jal   get_settings
-/* 096374 80095774 AC2D63AC */   sw    $t5, %lo(D_801263AC)($at)
+/* 096374 80095774 AC2D63AC */   sw    $t5, %lo(sMenuCurrHudVerts)($at)
 /* 096378 80095778 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 09637C 8009577C 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
 /* 096380 80095780 AFA2002C */  sw    $v0, 0x2c($sp)
@@ -559,8 +559,8 @@ glabel L80095EC8
 /* 096B48 80095F48 3C048012 */  lui   $a0, %hi(D_80126C1C) # $a0, 0x8012
 /* 096B4C 80095F4C 24846C1C */  addiu $a0, %lo(D_80126C1C) # addiu $a0, $a0, 0x6c1c
 /* 096B50 80095F50 8C8E0000 */  lw    $t6, ($a0)
-/* 096B54 80095F54 3C0F800E */  lui   $t7, %hi(D_800E0A04) # $t7, 0x800e
-/* 096B58 80095F58 25EF0A04 */  addiu $t7, %lo(D_800E0A04) # addiu $t7, $t7, 0xa04
+/* 096B54 80095F54 3C0F800E */  lui   $t7, %hi(sInsertControllerPakMenuText) # $t7, 0x800e
+/* 096B58 80095F58 25EF0A04 */  addiu $t7, %lo(sInsertControllerPakMenuText) # addiu $t7, $t7, 0xa04
 /* 096B5C 80095F5C 15CF0006 */  bne   $t6, $t7, .L80095F78
 /* 096B60 80095F60 00000000 */   nop   
 /* 096B64 80095F64 0C025589 */  jal   func_80095624
@@ -597,9 +597,9 @@ glabel L80095EC8
 /* 096BD0 80095FD0 30789000 */  andi  $t8, $v1, 0x9000
 /* 096BD4 80095FD4 1300000B */  beqz  $t8, .L80096004
 /* 096BD8 80095FD8 306C4000 */   andi  $t4, $v1, 0x4000
-/* 096BDC 80095FDC 3C19800E */  lui   $t9, %hi(D_800E0A04) # $t9, 0x800e
+/* 096BDC 80095FDC 3C19800E */  lui   $t9, %hi(sInsertControllerPakMenuText) # $t9, 0x800e
 /* 096BE0 80095FE0 240D0001 */  li    $t5, 1
-/* 096BE4 80095FE4 27390A04 */  addiu $t9, %lo(D_800E0A04) # addiu $t9, $t9, 0xa04
+/* 096BE4 80095FE4 27390A04 */  addiu $t9, %lo(sInsertControllerPakMenuText) # addiu $t9, $t9, 0xa04
 /* 096BE8 80095FE8 14590004 */  bne   $v0, $t9, .L80095FFC
 /* 096BEC 80095FEC AFAD0050 */   sw    $t5, 0x50($sp)
 /* 096BF0 80095FF0 24070001 */  li    $a3, 1
@@ -1117,7 +1117,7 @@ glabel L800964DC
 .L80096714:
 /* 097314 80096714 3C028012 */  lui   $v0, %hi(gIgnorePlayerInput) # $v0, 0x8012
 /* 097318 80096718 8C4263C4 */  lw    $v0, %lo(gIgnorePlayerInput)($v0)
-/* 09731C 8009671C 3C0D8012 */  lui   $t5, %hi(D_801263A0) # $t5, 0x8012
+/* 09731C 8009671C 3C0D8012 */  lui   $t5, %hi(sMenuCurrDisplayList) # $t5, 0x8012
 /* 097320 80096720 1840000B */  blez  $v0, .L80096750
 /* 097324 80096724 00000000 */   nop   
 /* 097328 80096728 8FAE0064 */  lw    $t6, 0x64($sp)
@@ -1131,16 +1131,16 @@ glabel L800964DC
 /* 097348 80096748 00000000 */   nop   
 /* 09734C 8009674C AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
 .L80096750:
-/* 097350 80096750 8DAD63A0 */  lw    $t5, %lo(D_801263A0)($t5)
+/* 097350 80096750 8DAD63A0 */  lw    $t5, %lo(sMenuCurrDisplayList)($t5)
 /* 097354 80096754 8FB90058 */  lw    $t9, 0x58($sp)
-/* 097358 80096758 3C0C8012 */  lui   $t4, %hi(D_801263A8) # $t4, 0x8012
+/* 097358 80096758 3C0C8012 */  lui   $t4, %hi(sMenuCurrHudMat) # $t4, 0x8012
 /* 09735C 8009675C AF2D0000 */  sw    $t5, ($t9)
 /* 097360 80096760 8FAE005C */  lw    $t6, 0x5c($sp)
-/* 097364 80096764 8D8C63A8 */  lw    $t4, %lo(D_801263A8)($t4)
-/* 097368 80096768 3C0F8012 */  lui   $t7, %hi(D_801263AC) # $t7, 0x8012
+/* 097364 80096764 8D8C63A8 */  lw    $t4, %lo(sMenuCurrHudMat)($t4)
+/* 097368 80096768 3C0F8012 */  lui   $t7, %hi(sMenuCurrHudVerts) # $t7, 0x8012
 /* 09736C 8009676C ADCC0000 */  sw    $t4, ($t6)
 /* 097370 80096770 8FB80060 */  lw    $t8, 0x60($sp)
-/* 097374 80096774 8DEF63AC */  lw    $t7, %lo(D_801263AC)($t7)
+/* 097374 80096774 8DEF63AC */  lw    $t7, %lo(sMenuCurrHudVerts)($t7)
 /* 097378 80096778 00000000 */  nop   
 /* 09737C 8009677C AF0F0000 */  sw    $t7, ($t8)
 /* 097380 80096780 8FBF0024 */  lw    $ra, 0x24($sp)

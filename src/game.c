@@ -119,7 +119,7 @@ extern s32 gShowControllerPakMenu;
 s32 *gTempAssetTable;
 s32 D_80121164;
 LevelHeader *gCurrentLevelHeader;
-u8 **D_8012116C;
+u8 **gLevelNames;
 s32 gNumberOfLevelHeaders;
 s32 gNumberOfWorlds;
 
@@ -230,11 +230,11 @@ void func_8006A6B0(void) {
     count--;
     temp = gTempAssetTable[count] - gTempAssetTable[0];
     // Minor issue here.
-    D_8012116C = allocate_from_main_pool_safe(count * sizeof(s32), COLOR_TAG_YELLOW);
+    gLevelNames = allocate_from_main_pool_safe(count * sizeof(s32), COLOR_TAG_YELLOW);
     D_800DD310 = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
     load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
     for (i = 0; i < count; i++) {
-        D_8012116C[i] = &D_800DD310[gTempAssetTable[i]];
+        gLevelNames[i] = &D_800DD310[gTempAssetTable[i]];
     }
     free_from_memory_pool(gTempAssetTable);
 
@@ -320,15 +320,15 @@ s8 func_8006B190(s32 arg0) {
     return 0;
 }
 
-s32 func_8006B1D4(s32 arg0) {
-    s8 *temp;
+s32 get_hub_area_id(s32 worldId) {
+    s8 *hubAreaIds;
 
-    if (arg0 < 0 || arg0 >= gNumberOfWorlds) {
-        arg0 = 0;
+    if (worldId < 0 || worldId >= gNumberOfWorlds) {
+        worldId = 0;
     }
-    temp = get_misc_asset(0x1B);
+    hubAreaIds = get_misc_asset(27); //hub_area_ids
 
-    return temp[arg0];
+    return hubAreaIds[worldId];
 }
 
 void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount) {
@@ -619,39 +619,42 @@ u8 func_8006BDC0(void) {
     return gNumberOfLevelHeaders - 1;
 }
 
-u8 *func_8006BDDC(s32 arg0) {
-    u8 *text;
+/**
+ * Returns the name of the level from the passed ID
+ */
+u8 *get_level_name(s32 levelId) {
+    u8 *levelName;
     u8 numberOfNullPointers = 0;
 
-    if (arg0 < 0 || arg0 >= gNumberOfLevelHeaders) {
+    if (levelId < 0 || levelId >= gNumberOfLevelHeaders) {
         return NULL;
     }
 
-    text = D_8012116C[arg0];
+    levelName = gLevelNames[levelId];
     switch (get_language()) {
         case GERMAN:
             while (numberOfNullPointers < 1) {
-                if (*(text++) == 0) {
+                if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
         case FRENCH:
             while (numberOfNullPointers < 2) {
-                if (*(text++) == 0) {
+                if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
         case JAPANESE:
             while (numberOfNullPointers < 3) {
-                if (*(text++) == 0) {
+                if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
     }
-    return text;
+    return levelName;
 }
 
 void func_8006BEFC(void) {

@@ -493,8 +493,13 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074204.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_8007431C.s")
 
-// Writes Eeprom in 5 block chunks of data starting at either 0x0, 0x5, or 0xA
-// Educated guess says this might be for one of three save files
+/**
+ * Writes Eeprom in 5 block chunks of data starting at either 0x0, 0x5, or 0xA
+ * In Save File:
+ * 0x00 - 0x27 Save 1
+ * 0x28 - 0x4F Save 2
+ * 0x50 - 0x77 Save 3
+ */
 s32 write_save_data(s32 saveFileNum, Settings *settings) {
     s32 startingAddress;
     u64 *alloc;
@@ -536,11 +541,13 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
     return 0;
 }
 
-// Read Eeprom Data for addresses 0x10 - 0x39
-// arg1 is a flag
-// arg1 is descended from (D_800DD37C & 3) so the first 2 bits of that value.
-// bit 1 is for 0x10 - 0x27
-// bit 2 is for 0x28 - 0x39
+/**
+ * Read Eeprom Data for addresses 0x10 - 0x39
+ * arg1 is a flag
+ * arg1 is descended from (D_800DD37C & 3) so the first 2 bits of that value.
+ * bit 1 is for 0x10 - 0x27
+ * bit 2 is for 0x28 - 0x39
+ */
 s32 read_eeprom_data(Settings *arg0, u8 arg1) {
     u64 *alloc;
     s32 i;
@@ -571,10 +578,13 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
     return 0;
 }
 
-// Write Eeprom Data for addresses 0x10 - 0x39
-// arg1 is a flag
-// bit 1 is for 0x10 - 0x27
-// bit 2 is for 0x28 - 0x39
+/**
+ * Write Eeprom Data for addresses 0x10 - 0x39
+ * 0x80 - 0x1C8 in file
+ * arg1 is a flag
+ * bit 1 is for 0x10 - 0x27
+ * bit 2 is for 0x28 - 0x39
+ */
 s32 write_eeprom_data(Settings *arg0, u8 arg1) {
     u64 *alloc;
     s32 i;
@@ -610,6 +620,10 @@ s32 write_eeprom_data(Settings *arg0, u8 arg1) {
     return 0;
 }
 
+/**
+ * Calculates a checksum for the game settings, and compares
+ * against this to validate the data on load.
+ */
 s32 calculate_eeprom_settings_checksum(u64 eepromSettings) {
     s32 ret;
     s32 i;
@@ -621,7 +635,11 @@ s32 calculate_eeprom_settings_checksum(u64 eepromSettings) {
     return ret;
 }
 
-// Reads eeprom address 0xF (15)
+/**
+ * Reads eeprom address 0xF (15)
+ * This contains the settings data, and global unlocks like characters
+ * Address (0xF * sizeof(u64)) = 0x78 - 0x80 of the actual save data file
+ */
 s32 read_eeprom_settings(u64 *eepromSettings) {
     s32 temp;
     s32 sp20;
@@ -645,7 +663,11 @@ s32 read_eeprom_settings(u64 *eepromSettings) {
     return 1;
 }
 
-//Writes eeprom address 0xF (15)
+/**
+ * Writes eeprom address 0xF (15)
+ * This contains the settings data, and global unlocks like characters
+ * Address (0xF * sizeof(u64)) = 0x78 - 0x80 of the actual save data file
+ */
 s32 write_eeprom_settings(u64 *eepromSettings) {
     if (osEepromProbe(get_si_mesg_queue()) == 0) {
         return -1;

@@ -103,9 +103,9 @@ glabel func_8008FF1C
 /* 090C98 80090098 0014A180 */  sll   $s4, $s4, 6
 /* 090C9C 8009009C 01098821 */  addu  $s1, $t0, $t1
 /* 090CA0 800900A0 26640001 */  addiu $a0, $s3, 1
-/* 090CA4 800900A4 0C01AC75 */  jal   func_8006B1D4
+/* 090CA4 800900A4 0C01AC75 */  jal   get_hub_area_id
 /* 090CA8 800900A8 0013A823 */   negu  $s5, $s3
-/* 090CAC 800900AC 0C01AF77 */  jal   func_8006BDDC
+/* 090CAC 800900AC 0C01AF77 */  jal   get_level_name
 /* 090CB0 800900B0 00402025 */   move  $a0, $v0
 /* 090CB4 800900B4 862A0000 */  lh    $t2, ($s1)
 /* 090CB8 800900B8 2401FFFF */  li    $at, -1
@@ -118,7 +118,7 @@ glabel func_8008FF1C
 /* 090CD4 800900D4 01726021 */  addu  $t4, $t3, $s2
 /* 090CD8 800900D8 018D8821 */  addu  $s1, $t4, $t5
 /* 090CDC 800900DC 82240000 */  lb    $a0, ($s1)
-/* 090CE0 800900E0 0C01AF77 */  jal   func_8006BDDC
+/* 090CE0 800900E0 0C01AF77 */  jal   get_level_name
 /* 090CE4 800900E4 00000000 */   nop   
 /* 090CE8 800900E8 1657000B */  bne   $s2, $s7, .L80090118
 /* 090CEC 800900EC AE020004 */   sw    $v0, 4($s0)
@@ -312,10 +312,10 @@ glabel func_8008FF1C
 /* 090FA4 800903A4 24050001 */   li    $a1, 1
 /* 090FA8 800903A8 0C026F57 */  jal   func_8009BD5C
 /* 090FAC 800903AC 00000000 */   nop   
-/* 090FB0 800903B0 3C118012 */  lui   $s1, %hi(D_801263A0) # $s1, 0x8012
-/* 090FB4 800903B4 263163A0 */  addiu $s1, %lo(D_801263A0) # addiu $s1, $s1, 0x63a0
-/* 090FB8 800903B8 3C058012 */  lui   $a1, %hi(D_801263A8) # $a1, 0x8012
-/* 090FBC 800903BC 24A563A8 */  addiu $a1, %lo(D_801263A8) # addiu $a1, $a1, 0x63a8
+/* 090FB0 800903B0 3C118012 */  lui   $s1, %hi(sMenuCurrDisplayList) # $s1, 0x8012
+/* 090FB4 800903B4 263163A0 */  addiu $s1, %lo(sMenuCurrDisplayList) # addiu $s1, $s1, 0x63a0
+/* 090FB8 800903B8 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
+/* 090FBC 800903BC 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
 /* 090FC0 800903C0 0C019FCB */  jal   func_80067F2C
 /* 090FC4 800903C4 02202025 */   move  $a0, $s1
 /* 090FC8 800903C8 0C01ECF4 */  jal   func_8007B3D0

@@ -17,45 +17,45 @@ glabel func_80095624
 /* 09624C 8009564C 00000000 */   nop   
 glabel L80095650
 /* 096250 80095650 3C048012 */  lui   $a0, %hi(D_80126C1C) # $a0, 0x8012
-/* 096254 80095654 3C18800E */  lui   $t8, %hi(D_800E09D8) # $t8, 0x800e
-/* 096258 80095658 271809D8 */  addiu $t8, %lo(D_800E09D8) # addiu $t8, $t8, 0x9d8
+/* 096254 80095654 3C18800E */  lui   $t8, %hi(sNoControllerPakMenuText) # $t8, 0x800e
+/* 096258 80095658 271809D8 */  addiu $t8, %lo(sNoControllerPakMenuText) # addiu $t8, $t8, 0x9d8
 /* 09625C 8009565C 24846C1C */  addiu $a0, %lo(D_80126C1C) # addiu $a0, $a0, 0x6c1c
 /* 096260 80095660 1000001E */  b     .L800956DC
 /* 096264 80095664 AC980000 */   sw    $t8, ($a0)
 glabel L80095668
 /* 096268 80095668 3C048012 */  lui   $a0, %hi(D_80126C1C) # $a0, 0x8012
-/* 09626C 8009566C 3C19800E */  lui   $t9, %hi(D_800E09C4) # $t9, 0x800e
-/* 096270 80095670 273909C4 */  addiu $t9, %lo(D_800E09C4) # addiu $t9, $t9, 0x9c4
+/* 09626C 8009566C 3C19800E */  lui   $t9, %hi(sControllerPakFullMenuText) # $t9, 0x800e
+/* 096270 80095670 273909C4 */  addiu $t9, %lo(sControllerPakFullMenuText) # addiu $t9, $t9, 0x9c4
 /* 096274 80095674 24846C1C */  addiu $a0, %lo(D_80126C1C) # addiu $a0, $a0, 0x6c1c
 /* 096278 80095678 10000018 */  b     .L800956DC
 /* 09627C 8009567C AC990000 */   sw    $t9, ($a0)
 glabel L80095680
 /* 096280 80095680 3C048012 */  lui   $a0, %hi(D_80126C1C) # $a0, 0x8012
-/* 096284 80095684 3C08800E */  lui   $t0, %hi(D_800E0A04) # $t0, 0x800e
+/* 096284 80095684 3C08800E */  lui   $t0, %hi(sInsertControllerPakMenuText) # $t0, 0x800e
 /* 096288 80095688 24846C1C */  addiu $a0, %lo(D_80126C1C) # addiu $a0, $a0, 0x6c1c
-/* 09628C 8009568C 25080A04 */  addiu $t0, %lo(D_800E0A04) # addiu $t0, $t0, 0xa04
+/* 09628C 8009568C 25080A04 */  addiu $t0, %lo(sInsertControllerPakMenuText) # addiu $t0, $t0, 0xa04
 /* 096290 80095690 10000012 */  b     .L800956DC
 /* 096294 80095694 AC880000 */   sw    $t0, ($a0)
 glabel L80095698
 /* 096298 80095698 3C048012 */  lui   $a0, %hi(D_80126C1C) # $a0, 0x8012
-/* 09629C 8009569C 3C09800E */  lui   $t1, %hi(D_800E0A14) # $t1, 0x800e
+/* 09629C 8009569C 3C09800E */  lui   $t1, %hi(sInsertRumblePakMenuText) # $t1, 0x800e
 /* 0962A0 800956A0 24846C1C */  addiu $a0, %lo(D_80126C1C) # addiu $a0, $a0, 0x6c1c
-/* 0962A4 800956A4 25290A14 */  addiu $t1, %lo(D_800E0A14) # addiu $t1, $t1, 0xa14
+/* 0962A4 800956A4 25290A14 */  addiu $t1, %lo(sInsertRumblePakMenuText) # addiu $t1, $t1, 0xa14
 /* 0962A8 800956A8 1000000C */  b     .L800956DC
 /* 0962AC 800956AC AC890000 */   sw    $t1, ($a0)
 glabel L800956B0
 /* 0962B0 800956B0 3C048012 */  lui   $a0, %hi(D_80126C1C) # $a0, 0x8012
-/* 0962B4 800956B4 3C0A800E */  lui   $t2, %hi(D_800E09EC) # $t2, 0x800e
+/* 0962B4 800956B4 3C0A800E */  lui   $t2, %hi(sCorruptDataMenuText) # $t2, 0x800e
 /* 0962B8 800956B8 24846C1C */  addiu $a0, %lo(D_80126C1C) # addiu $a0, $a0, 0x6c1c
-/* 0962BC 800956BC 254A09EC */  addiu $t2, %lo(D_800E09EC) # addiu $t2, $t2, 0x9ec
+/* 0962BC 800956BC 254A09EC */  addiu $t2, %lo(sCorruptDataMenuText) # addiu $t2, $t2, 0x9ec
 /* 0962C0 800956C0 10000006 */  b     .L800956DC
 /* 0962C4 800956C4 AC8A0000 */   sw    $t2, ($a0)
 .L800956C8:
 glabel L800956C8
 /* 0962C8 800956C8 3C048012 */  lui   $a0, %hi(D_80126C1C) # $a0, 0x8012
-/* 0962CC 800956CC 3C0B800E */  lui   $t3, %hi(D_800E09B0) # $t3, 0x800e
+/* 0962CC 800956CC 3C0B800E */  lui   $t3, %hi(sBadControllerPakMenuText) # $t3, 0x800e
 /* 0962D0 800956D0 24846C1C */  addiu $a0, %lo(D_80126C1C) # addiu $a0, $a0, 0x6c1c
-/* 0962D4 800956D4 256B09B0 */  addiu $t3, %lo(D_800E09B0) # addiu $t3, $t3, 0x9b0
+/* 0962D4 800956D4 256B09B0 */  addiu $t3, %lo(sBadControllerPakMenuText) # addiu $t3, $t3, 0x9b0
 /* 0962D8 800956D8 AC8B0000 */  sw    $t3, ($a0)
 .L800956DC:
 /* 0962DC 800956DC 8C820000 */  lw    $v0, ($a0)

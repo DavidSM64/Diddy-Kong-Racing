@@ -19,8 +19,8 @@ glabel func_80092E94
 /* 093AD4 80092ED4 3C18800E */  lui   $t8, %hi(gTrackIdForPreview) # $t8, 0x800e
 /* 093AD8 80092ED8 8F18F4C4 */  lw    $t8, %lo(gTrackIdForPreview)($t8)
 /* 093ADC 80092EDC 8C8F004C */  lw    $t7, 0x4c($a0)
-/* 093AE0 80092EE0 3C128012 */  lui   $s2, %hi(D_801263A0) # $s2, 0x8012
-/* 093AE4 80092EE4 265263A0 */  addiu $s2, %lo(D_801263A0) # addiu $s2, $s2, 0x63a0
+/* 093AE0 80092EE0 3C128012 */  lui   $s2, %hi(sMenuCurrDisplayList) # $s2, 0x8012
+/* 093AE4 80092EE4 265263A0 */  addiu $s2, %lo(sMenuCurrDisplayList) # addiu $s2, $s2, 0x63a0
 /* 093AE8 80092EE8 01F8C821 */  addu  $t9, $t7, $t8
 /* 093AEC 80092EEC 83280002 */  lb    $t0, 2($t9)
 /* 093AF0 80092EF0 8E430000 */  lw    $v1, ($s2)
@@ -34,8 +34,8 @@ glabel func_80092E94
 /* 093B10 80092F10 AFA50060 */  sw    $a1, 0x60($sp)
 /* 093B14 80092F14 0C026F57 */  jal   func_8009BD5C
 /* 093B18 80092F18 AFA40050 */   sw    $a0, 0x50($sp)
-/* 093B1C 80092F1C 3C058012 */  lui   $a1, %hi(D_801263A8) # $a1, 0x8012
-/* 093B20 80092F20 24A563A8 */  addiu $a1, %lo(D_801263A8) # addiu $a1, $a1, 0x63a8
+/* 093B1C 80092F1C 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
+/* 093B20 80092F20 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
 /* 093B24 80092F24 0C019FCB */  jal   func_80067F2C
 /* 093B28 80092F28 02402025 */   move  $a0, $s2
 /* 093B2C 80092F2C 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
@@ -50,7 +50,7 @@ glabel func_80092E94
 /* 093B50 80092F50 0C01AC3E */  jal   func_8006B0F8
 /* 093B54 80092F54 00000000 */   nop   
 /* 093B58 80092F58 8FA40058 */  lw    $a0, 0x58($sp)
-/* 093B5C 80092F5C 0C01AF77 */  jal   func_8006BDDC
+/* 093B5C 80092F5C 0C01AF77 */  jal   get_level_name
 /* 093B60 80092F60 AFA2005C */   sw    $v0, 0x5c($sp)
 /* 093B64 80092F64 00408025 */  move  $s0, $v0
 /* 093B68 80092F68 0C0310BB */  jal   set_text_font

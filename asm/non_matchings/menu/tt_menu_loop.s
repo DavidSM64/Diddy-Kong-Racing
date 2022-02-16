@@ -542,8 +542,8 @@ glabel L8009E2E4
 /* 09EEEC 8009E2EC 10000020 */  b     .L8009E370
 /* 09EEF0 8009E2F0 A02E64E2 */   sb    $t6, %lo(sCurrentMenuID)($at)
 glabel L8009E2F4
-/* 09EEF4 8009E2F4 3C0B800E */  lui   $t3, %hi(D_800E09D8) # $t3, 0x800e
-/* 09EEF8 8009E2F8 256B09D8 */  addiu $t3, %lo(D_800E09D8) # addiu $t3, $t3, 0x9d8
+/* 09EEF4 8009E2F4 3C0B800E */  lui   $t3, %hi(sNoControllerPakMenuText) # $t3, 0x800e
+/* 09EEF8 8009E2F8 256B09D8 */  addiu $t3, %lo(sNoControllerPakMenuText) # addiu $t3, $t3, 0x9d8
 /* 09EEFC 8009E2FC 3C018012 */  lui   $at, %hi(D_801263A4) # $at, 0x8012
 /* 09EF00 8009E300 AC2B63A4 */  sw    $t3, %lo(D_801263A4)($at)
 /* 09EF04 8009E304 3C018012 */  lui   $at, %hi(sCurrentMenuID) # $at, 0x8012
@@ -551,8 +551,8 @@ glabel L8009E2F4
 /* 09EF0C 8009E30C 10000018 */  b     .L8009E370
 /* 09EF10 8009E310 A02D64E2 */   sb    $t5, %lo(sCurrentMenuID)($at)
 glabel L8009E314
-/* 09EF14 8009E314 3C0F800E */  lui   $t7, %hi(D_800E09C4) # $t7, 0x800e
-/* 09EF18 8009E318 25EF09C4 */  addiu $t7, %lo(D_800E09C4) # addiu $t7, $t7, 0x9c4
+/* 09EF14 8009E314 3C0F800E */  lui   $t7, %hi(sControllerPakFullMenuText) # $t7, 0x800e
+/* 09EF18 8009E318 25EF09C4 */  addiu $t7, %lo(sControllerPakFullMenuText) # addiu $t7, $t7, 0x9c4
 /* 09EF1C 8009E31C 3C018012 */  lui   $at, %hi(D_801263A4) # $at, 0x8012
 /* 09EF20 8009E320 AC2F63A4 */  sw    $t7, %lo(D_801263A4)($at)
 /* 09EF24 8009E324 3C018012 */  lui   $at, %hi(sCurrentMenuID) # $at, 0x8012
@@ -560,8 +560,8 @@ glabel L8009E314
 /* 09EF2C 8009E32C 10000010 */  b     .L8009E370
 /* 09EF30 8009E330 A03864E2 */   sb    $t8, %lo(sCurrentMenuID)($at)
 glabel L8009E334
-/* 09EF34 8009E334 3C19800E */  lui   $t9, %hi(D_800E09EC) # $t9, 0x800e
-/* 09EF38 8009E338 273909EC */  addiu $t9, %lo(D_800E09EC) # addiu $t9, $t9, 0x9ec
+/* 09EF34 8009E334 3C19800E */  lui   $t9, %hi(sCorruptDataMenuText) # $t9, 0x800e
+/* 09EF38 8009E338 273909EC */  addiu $t9, %lo(sCorruptDataMenuText) # addiu $t9, $t9, 0x9ec
 /* 09EF3C 8009E33C 3C018012 */  lui   $at, %hi(D_801263A4) # $at, 0x8012
 /* 09EF40 8009E340 AC3963A4 */  sw    $t9, %lo(D_801263A4)($at)
 /* 09EF44 8009E344 3C018012 */  lui   $at, %hi(sCurrentMenuID) # $at, 0x8012
@@ -570,8 +570,8 @@ glabel L8009E334
 /* 09EF50 8009E350 A02964E2 */   sb    $t1, %lo(sCurrentMenuID)($at)
 .L8009E354:
 glabel L8009E354
-/* 09EF54 8009E354 3C0A800E */  lui   $t2, %hi(D_800E09B0) # $t2, 0x800e
-/* 09EF58 8009E358 254A09B0 */  addiu $t2, %lo(D_800E09B0) # addiu $t2, $t2, 0x9b0
+/* 09EF54 8009E354 3C0A800E */  lui   $t2, %hi(sBadControllerPakMenuText) # $t2, 0x800e
+/* 09EF58 8009E358 254A09B0 */  addiu $t2, %lo(sBadControllerPakMenuText) # addiu $t2, $t2, 0x9b0
 /* 09EF5C 8009E35C 3C018012 */  lui   $at, %hi(D_801263A4) # $at, 0x8012
 /* 09EF60 8009E360 AC2A63A4 */  sw    $t2, %lo(D_801263A4)($at)
 /* 09EF64 8009E364 3C018012 */  lui   $at, %hi(sCurrentMenuID) # $at, 0x8012
