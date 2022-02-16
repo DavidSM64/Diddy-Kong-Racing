@@ -869,7 +869,7 @@ void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
     arg0->unk4C->unk12 = 0;
     arg0->unk4C->unk16 = -0x64;
     arg0->unk4C->unk17 = 0x64;
-    if (get_filtered_cheats() & 0x200000) {
+    if (get_filtered_cheats() & CHEAT_TURN_OFF_ZIPPERS) {
         gParticlePtrList_addObject(arg0);
     }
 }
