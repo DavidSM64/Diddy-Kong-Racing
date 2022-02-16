@@ -257,14 +257,14 @@ void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha) {
 }
 
 // Unused?
-void func_800C4404(Gfx **displayList, char *text, s32 alignmentFlags) {
+void func_800C4404(Gfx **displayList, char *text, AlignmentFlags alignmentFlags) {
     func_800C45A4(displayList, &(*gDialogueBoxBackground)[0], text, alignmentFlags, 1.0f);
 }
 
 /**
  * Builds the background settings, then renders the given text at a given position.
  */
-void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
+void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
     DialogueBoxBackground *temp = &(*gDialogueBoxBackground)[0];
     temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
     temp->ypos = (ypos == POS_CENTRED) ? temp->height >> 1 : ypos;
@@ -272,7 +272,7 @@ void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, s32 alignmentF
 }
 
 // Unused?
-void func_800C44C0(Gfx **displayList, s32 arg1, char *text, s32 alignmentFlags) {
+void func_800C44C0(Gfx **displayList, s32 arg1, char *text, AlignmentFlags alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[arg1];
         func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
@@ -280,7 +280,7 @@ void func_800C44C0(Gfx **displayList, s32 arg1, char *text, s32 alignmentFlags) 
 }
 
 // Unused?
-void func_800C4510(Gfx **displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags) {
+void func_800C4510(Gfx **displayList, s32 arg1, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
     if (arg1 >= 0 && arg1 < 8) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[arg1];
         temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
