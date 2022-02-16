@@ -889,7 +889,7 @@ void obj_loop_groundzipper(Object *obj, s32 speed) {
     get_object_struct(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->unk4C->unk13 < obj->unk78) {
         racerObjs = get_object_struct_array(&numObjects);
-        for(i = 0; i < numObjects; i++){
+        for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
             racerObj64 = (Object_64_Racer*)curRacerObj->unk64;
             if ((racerObj64->unk1D3 < 15) && (racerObj64->unk1E2 != 0)) {
