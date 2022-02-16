@@ -1810,8 +1810,6 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_ttdoor.s")
-
-//GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_trigger.s")
 void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     f32 phi_f0;
     Object_64_Trigger *obj64;
