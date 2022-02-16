@@ -1588,7 +1588,7 @@ void obj_loop_bonus(Object *obj, s32 speed) {
         dist = obj64->unk10;
         halfDist = dist * 0.5;
         racerObjects = get_object_struct_array(&numberOfRacers);
-        for(i = 0; i < numberOfRacers; i++) {
+        for (i = 0; i < numberOfRacers; i++) {
             racerObj = racerObjects[i];
             racerObj64 = (Object_64_Racer *)racerObj->unk64;
             yDiff = racerObj->y_position - obj->y_position;
