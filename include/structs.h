@@ -530,7 +530,8 @@ typedef struct Object_4C {
 } Object_4C;
 
 typedef struct Object_50 {
-    u8 pad0[0x8];
+    f32 unk0;
+    u8 pad4[0x4];
     s16 unk8;
     s16 unkA;
 } Object_50;

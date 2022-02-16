@@ -91,6 +91,17 @@ typedef struct LevelObjectEntry_Checkpoint {
 
 typedef struct LevelObjectEntry_Door {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 closedRotation;
+    /* 0x09 */ u8 openRotation;
+    /* 0x0A */ u8 modelIndex;
+    /* 0x0B */ u8 distanceToOpen;
+    /* 0x0C */ s8 unkC;
+    /* 0x0D */ u8 numBalloonsToOpen;
+    /* 0x0E */ u8 unkE;
+    /* 0x0F */ u8 unkF;
+    /* 0x10 */ u8 unk10;
+    /* 0x11 */ s8 unk11;
+    /* 0x12 */ u8 scale;
 } LevelObjectEntry_Door;
 
 typedef struct LevelObjectEntry_FogChanger {
@@ -246,6 +257,12 @@ typedef struct LevelObjectEntry_InfoPoint {
 
 typedef struct LevelObjectEntry_Trigger {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 scale;
+    /* 0x09 */ s8 unk9;
+    /* 0x0A */ u8 rotation;
+    /* 0x0B */ u8 unkB;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
 } LevelObjectEntry_Trigger;
 
 typedef struct LevelObjectEntry_AirZippers_WaterZippers {
@@ -336,6 +353,9 @@ typedef struct LevelObjectEntry_FlyCoin {
 
 typedef struct LevelObjectEntry_GoldenBalloon {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ s8 unk8;
+    /* 0x09 */ u8 scale;
+    /* 0x0A */ s8 unkA;
 } LevelObjectEntry_GoldenBalloon;
 
 typedef struct LevelObjectEntry_Laserbolt {
@@ -354,6 +374,9 @@ typedef struct LevelObjectEntry_Lasergun {
 
 typedef struct LevelObjectEntry_GroundZipper {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 scale;
+    /* 0x0A */ u8 rotation;
 } LevelObjectEntry_GroundZipper;
 
 typedef struct LevelObjectEntry_OverridePos {

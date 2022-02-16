@@ -182,15 +182,6 @@ typedef struct unk80039190 {
     s32 unk7C;
 } unk80039190;
 
-typedef struct Object_64_8003AD34 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
-} Object_64_8003AD34;
-
 typedef struct Object_64_8003C1E0 {
     f32 unk0;
     u8 pad4[4];
@@ -368,6 +359,97 @@ typedef struct unk80042CD0 {
     s16 unk18;
 } unk80042CD0;
 
+//void func_80072348(s16 obj, u8 arg1);
+
+typedef struct Object_64_Exit {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_64_Exit;
+
+typedef struct Object_64_Racer {
+    s16 unk0;
+    u8 pad2;
+    s8 unk3;
+    u8 pad4[0x104];
+    s32 unk108;
+    u8 pad10C[0x40];
+    Object *unk14C;
+    u8 pad150[0x33];
+    s8 unk183;
+    s8 pad184;
+    s8 unk185;
+    u8 pad186[0x4D];
+    s8 unk1D3;
+    u8 pad1D4[0x4];
+    s8 unk1D8;
+    u8 pad1D9[0x9];
+    s8 unk1E2;
+    u8 pad1E3[0x12];
+    u8 unk1F5;
+    u8 pad1F6[0xA];
+    s8 unk200;
+    u8 pad201[0x2];
+    s8 unk203;
+    u8 pad204[0x8];
+    u8 unk20C;
+} Object_64_Racer;
+
+typedef struct Object_64_Bonus {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_64_Bonus;
+
+typedef struct Object_64_ModeChange {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_64_ModeChange;
+
+typedef struct Object_64_GoldenBalloon {
+    f32 unk0;
+    u8 pad4[0x8];
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    s8 unk10;
+    f32 unk14;
+} Object_64_GoldenBalloon;
+
+typedef struct Object_64_Door {
+    f32 unk0;
+    u8 pad4[0x4];
+    s32 unk8;
+    s16 padA;
+    s8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+} Object_64_Door;
+
+typedef struct Object_64_Trigger {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_64_Trigger;
+
 // Unsure about the signed/unsigned with these arrays.
 extern u16 D_800DC970[4];
 extern u16 D_800DC978[4];
@@ -505,5 +587,10 @@ void obj_loop_animator(Object *obj, s32 speed);
 void obj_loop_vehicleanim(Object *obj, s32 speed);
 void obj_loop_snowball(Object *obj, s32 speed);
 void obj_loop_goldenballoon(Object *obj, s32 speed);
+
+s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
+s32 func_8001CC48(s32, s32, s32);
+void func_8001C6C4(Object_64_GoldenBalloon *obj64, Object *obj, f32, f32, s32);
+void func_8000CBF0(Object*, s32);
 
 #endif
