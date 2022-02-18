@@ -109,6 +109,10 @@ typedef struct unk800B2260 {
     unk800B2260_C **unkC;
 } unk800B2260;
 
+typedef struct XYStruct {
+    s16 x, y;
+} XYStruct;
+
 void func_800AE270(void);
 void func_800AE2A0(void);
 void func_800AE2D8(void);
