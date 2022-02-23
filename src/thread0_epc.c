@@ -169,9 +169,7 @@ void func_800B7144(void) {
 
 GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B71B0.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
-#else
+#ifdef NON_EQUIVALENT
 //Rename mask to colorTag?
 void func_800B7460(s32 *epc, s32 size, s32 mask) {
     epcInfo sp840;
@@ -205,6 +203,8 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
         while (1); // Infinite loop; waiting for the player to reset the console?
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
 #endif
 
 void func_800B76B8(s32 arg0, s32 arg1) {
@@ -250,9 +250,7 @@ void lockup_screen_loop(s32 updateRate) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/thread0_epc/render_epc_lock_up_display.s")
-#else
+#ifdef NON_EQUIVALENT
 void render_epc_lock_up_display(void) {
     char *sp50[3];
     s32 s3;
@@ -337,4 +335,6 @@ void render_epc_lock_up_display(void) {
             break;
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/thread0_epc/render_epc_lock_up_display.s")
 #endif

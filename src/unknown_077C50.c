@@ -8,47 +8,48 @@
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
+#include "video.h"
+#include "game.h"
+#include "game_ui.h"
 
-#ifdef NON_EQUIVALENT
-
-// Draws the borders/negative space for multiplayer. Has regalloc issues
+// Draws the borders/negative space for multiplayer.
 void render_borders_for_multiplayer(Gfx **dlist) {
     u32 widthAndHeight, width, height;
-    u32 temp0, temp1, temp2, temp3;
+    u32 y, x, xOffset, yOffset;
     LevelHeader *levelHeader;
+    
     widthAndHeight = get_video_width_and_height_as_s32();
-    width = widthAndHeight & 0xFFFF;
-    temp0 = width >> 8;
-    height = widthAndHeight >> 16;
-    temp1 = height >> 7;
+    width = GET_VIDEO_WIDTH(widthAndHeight);
+    height = GET_VIDEO_HEIGHT(widthAndHeight);
+    xOffset = width >> 8;
+    width += 0; //Fake match?
+    yOffset = height >> 7;
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetFillColor((*dlist)++, 0x00010001); // Black fill color
     switch (get_viewport_count()) {
         case VIEWPORTS_COUNT_2_PLAYERS:
             // Draws a solid horizontal black line in the middle of the screen.
-            gDPFillRectangle((*dlist)++, 0, (height >> 1) - temp1, width, ((height >> 1) - temp1) + temp1);
+            y = (height >> 1) - yOffset;
+            gDPFillRectangle((*dlist)++, height * 0, y, width, y + yOffset);
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
             levelHeader = get_current_level_header();
             // Draw black square in the bottom-right corner.
-            if (func_800A8458() || (levelHeader->race_type & 0x40)) {
+            if (func_800A8458() || (levelHeader->race_type & RACE_TYPE_CHALLENGE)) {
                 gDPFillRectangle((*dlist)++, width >> 1, height >> 1, width, height);
             }
             // There is no break statement here. This is intentional.
         case VIEWPORTS_COUNT_4_PLAYERS:
-            temp2 = (width >> 1) - temp0;
+            x = (width >> 1) - xOffset;
             // Draws 2 black lines in the middle of the screen. One vertical, another horizontal.
-            gDPFillRectangle((*dlist)++, 0, (height >> 1) - temp1, width, ((height >> 1) - temp1) + temp1);
-            gDPFillRectangle((*dlist)++, temp2, 0, temp2 + temp0, height);
+            gDPFillRectangle((*dlist)++, height * 0, (height >> 1) - yOffset, width, ((height >> 1) - yOffset) + yOffset);
+            gDPFillRectangle((*dlist)++, x, 0, x + xOffset, height);
             break;
     }
     return;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_077C50/render_borders_for_multiplayer.s")
-#endif
 
-#if 0
+#ifdef NON_EQUIVALENT
 void func_80077268(Gfx **dlist) {
     u32 temp_a2_2;
     u32 temp_v0_3;
@@ -60,8 +61,8 @@ void func_80077268(Gfx **dlist) {
     u32 ra;
 
     widthAndHeight = get_video_width_and_height_as_s32();
-    height = widthAndHeight >> 16;
-    width = widthAndHeight & 0xFFFF;
+    height = GET_VIDEO_HEIGHT(widthAndHeight);
+    width = GET_VIDEO_WIDTH(widthAndHeight);
     gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
     gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPSetRenderMode((*dlist)++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
@@ -81,7 +82,6 @@ void func_80077268(Gfx **dlist) {
             break;
     }
 }
-
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_077C50/func_80077268.s")
 #endif

@@ -264,9 +264,7 @@ extern s16 D_8011D5AC;
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000B020.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/func_8000B290.s")
-#else
+#ifdef NON_EQUIVALENT
 extern s32 D_800DC754;
 extern Object *D_800DC75C;
 extern Object *D_800DC764;
@@ -298,6 +296,8 @@ void func_8000B290() {
 
     gParticlePtrList_flush();
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B290.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000B38C.s")
@@ -365,9 +365,7 @@ void func_8000BF8C(void) {
     func_8000C460();
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
-#else
+#ifdef NON_EQUIVALENT
 // Decrypts cheats
 void decrypt_magic_codes(u8 *data, s32 length) {
     u8 sp3;
@@ -390,6 +388,8 @@ void decrypt_magic_codes(u8 *data, s32 length) {
         data[i + 3] = ((sp3 & 0x55) << 1) | ((sp3 & 0xAA) >> 1);
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
 #endif
 
 void func_8000C460(void) {
@@ -492,9 +492,7 @@ void func_8000CBC0(void) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/func_8000CBF0.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_8000CBF0(u32 *arg0, s32 arg1) {
     u32 **temp = &D_8011AE08[arg1];
     u32 *temp2;
@@ -505,6 +503,8 @@ void func_8000CBF0(u32 *arg0, s32 arg1) {
     D_8011AE08[arg1] = arg0;
     return;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_8000CBF0.s")
 #endif
 
 s32 func_8000CC20(u32 *arg0) {
@@ -762,9 +762,7 @@ s32 func_80010028(s32 arg0) {
     return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/gParticlePtrList_flush.s")
-#else
+#ifdef NON_EQUIVALENT
 //bad regalloc; swap s2 = s3
 /*removes objects in particleList from gObjPtrList and frees*/
 void gParticlePtrList_flush(void) {
@@ -796,6 +794,8 @@ void gParticlePtrList_flush(void) {
     }
     gParticleCount = 0;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/gParticlePtrList_flush.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
@@ -828,17 +828,15 @@ s32 func_80011560(void) { //! @bug The developers probably intended this to be a
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80011570.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/func_80011960.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
                     u32 arg5, u32 arg6, u32 arg7, u32 arg8, f32 arg9) {
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_80011960.s")
 #endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
-#else
+#ifdef NON_EQUIVALENT
 extern f32 D_800E5550;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
@@ -882,6 +880,8 @@ void func_80011AD0(Object *this) {
             break;
     } //L80011C88
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/objects/render_3d_billboard.s")
@@ -933,9 +933,7 @@ void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
     func_800B76B8(2, -1);
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/func_80012E28.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_80012E28(Object *this) {
     s32 unused1;
     Object_64 *sp_20;
@@ -946,9 +944,9 @@ void func_80012E28(Object *this) {
     if (this->behaviorId == 1) {
 
         sp_20 = this->unk64;
-        this->y_rotation += sp_20->unk160;
-        this->x_rotation += sp_20->unk162;
-        this->z_rotation += sp_20->unk164;
+        this->trans.y_rotation += sp_20->unk160;
+        this->trans.x_rotation += sp_20->unk162;
+        this->trans.z_rotation += sp_20->unk164;
         sp_1c = 0.0f;
         if (sp_20->unk1D7 < 5) {
 
@@ -962,11 +960,13 @@ void func_80012E28(Object *this) {
             sp_1c = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
         }
         //L80012F0C
-        this->y_position = this->y_position + sp_1c;
+        this->trans.y_position = this->trans.y_position + sp_1c;
         D_8011ADD0 = sp_1c;
     }
     //L80012F20
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_80012E28.s")
 #endif
 
 void func_80012F30(Object *arg0) {
@@ -1418,9 +1418,7 @@ f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
     return result;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/func_800228B0.s")
-#else
+#ifdef NON_EQUIVALENT
 f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
     f32 temp_f12;
     f32 temp_f2;
@@ -1430,6 +1428,8 @@ f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
     *arg3 = arg0[arg1 + 2] - arg0[arg1 + 1];
     return temp_f12 + temp_f2;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_800228B0.s")
 #endif
 
 // Unused?
@@ -1457,10 +1457,8 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 s8 func_8002341C(void) {
     return D_8011AEF6;
 }
-#if 1
-GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
-#else
 
+#ifdef NON_EQUIVALENT
 extern f32 sqrtf(f32);
 
 //bad regalloc
@@ -1476,9 +1474,9 @@ Object *func_8002342C(f32 x, f32 z) {
 
     for (i = 0; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
-            x = currObj->x_position - x;
-            z = currObj->z_position - z;
+        if ((currObj->trans.unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
+            x = currObj->trans.x_position - x;
+            z = currObj->trans.z_position - z;
             dist = sqrtf(x * x + z * z);
 
             if (max < dist) {
@@ -1489,6 +1487,8 @@ Object *func_8002342C(f32 x, f32 z) {
     }
     return retval;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
 #endif
 
 s32 func_80023568(void) {

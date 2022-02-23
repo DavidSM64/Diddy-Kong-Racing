@@ -74,7 +74,7 @@ void func_8005F850(void) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FCD0.s")
 
-#if 0
+#ifdef NON_EQUIVALENT
 void free_object_model(ObjectModel *model);
 void free_from_memory_pool(void*);
 

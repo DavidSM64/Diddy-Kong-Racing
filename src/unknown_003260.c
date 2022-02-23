@@ -82,9 +82,7 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 s32 __amDMA(s32 addr, s32 len, void *state);
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
-#else
+#ifdef NON_EQUIVALENT
 void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     u32 *reg_v0;
     void *reg_s0;
@@ -127,6 +125,8 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
 
     osCreateThread(&audioThread, 4, &func_80002A98, NULL, &dmaState, p);
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
 #endif
 
 void audioStartThread(void) {
@@ -155,7 +155,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
  * __clearAudioDMA routine.
  *
  *****************************************************************************/
-#if 0
+#ifdef NON_EQUIVALENT
 #define DMA_BUFFER_LENGTH 0x400
 s32 __amDMA(s32 addr, s32 len, void *state) {
     void            *foundBuffer;
@@ -322,9 +322,7 @@ void alSndPNew(audioMgrConfig *c) {
     gAlSndPlayer->nextDelta = alEvtqNextEvent(&(gAlSndPlayer->evtq), &(gAlSndPlayer->nextEvent));
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
-#else
+#ifdef NON_EQUIVALENT
 ALMicroTime _sndpVoiceHandler(void *node) {
     unk800DC6BC *sndp = (unk800DC6BC *)node;
     ALSndpEvent evt;
@@ -347,6 +345,8 @@ ALMicroTime _sndpVoiceHandler(void *node) {
     sndp->curTime += sndp->nextDelta;
     return sndp->nextDelta;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
@@ -372,11 +372,11 @@ void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
     func_80004668(bnk, sndIndx, 0, arg2);
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
-#else
-void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32) {
+#ifdef NON_EQUIVALENT
+void func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, s32 arg3) {
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
 #endif
 
 //input typing not right (some type of struct)
@@ -389,6 +389,7 @@ void func_8000488C(u8 *arg0) {
         alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_18, 0);
     }
 }
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
 
 void func_800049D8(void) {

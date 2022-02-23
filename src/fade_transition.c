@@ -465,7 +465,8 @@ void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 #endif
 
-#if 0 // This doesn't work properly.
+#ifdef NON_EQUIVALENT
+// This doesn't work properly.
 void render_fade_waves(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 i;
     func_8007B3D0(dlist);

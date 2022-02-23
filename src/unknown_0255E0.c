@@ -178,9 +178,7 @@ s32 func_800249E0(s32 arg0) {
     return 0;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;
@@ -252,6 +250,8 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
         func_80025510(arg2 + 1);
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80024D54.s")
@@ -301,9 +301,7 @@ void func_80028044(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_800289B8(void) {
     u8 sp_2f = gCurrentLevelHeader2->unkC1;
     u8 sp_2e = gCurrentLevelHeader2->unkC2;
@@ -316,6 +314,8 @@ void func_800289B8(void) {
     func_8007B4C8(&D_8011B0A0, 0, 8);
     D_8011B0A0 += 8;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
 #endif
 
 void render_skydome(void) {
@@ -335,18 +335,14 @@ void render_skydome(void) {
         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8);
     }
 }
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028CD0.s")
-#else
 
-#endif
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028CD0.s")
 
 void func_80028FA0(s32 arg0) {
     D_8011B0FC = arg0;
 }
 
 #ifdef NON_EQUIVALENT
-
 // Regalloc & stack issues.
 void render_level_geometry_and_objects(void) {
     s32 sp16C;
