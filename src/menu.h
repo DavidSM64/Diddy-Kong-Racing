@@ -209,7 +209,7 @@ typedef struct unk800861C8 {
     s8  unk6;
     s8  pad7;
     u32 pad8;
-    u32 unkC;
+    u32 unkC; // Game Data File Size
 } unk800861C8;
 
 /* Unknown size */

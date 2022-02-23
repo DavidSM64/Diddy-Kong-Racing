@@ -8,6 +8,8 @@
 #include "f3ddkr.h"
 #include "camera.h"
 #include "game.h"
+#include "audio.h"
+#include "textures_sprites.h"
 
 extern u32 osTvType;
 
@@ -181,9 +183,9 @@ s32 D_80126CEC;
 s32 D_80126CF0;
 s32 D_80126CF4;
 s32 D_80126CF8;
-s32 D_80126CFC;
-s32 D_80126D00;
-s32 D_80126D04;
+Gfx *D_80126CFC;
+u32 D_80126D00;
+u32 D_80126D04;
 s32 D_80126D08;
 s32 D_80126D0C;
 s32 D_80126D10;
@@ -266,8 +268,8 @@ void func_800A0B74(void) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A0BD4.s")
 
-void func_800A0DC0(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
-    unk800A0DC0_2 *temp = arg1->unk64;
+void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
+    Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
     func_800A0EB4(temp, arg2);
@@ -294,8 +296,8 @@ void func_800A0DC0(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A0EB4.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1248.s")
 
-void func_800A1428(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
-    unk800A0DC0_2 *temp = arg1->unk64;
+void func_800A1428(s32 arg0, Object *arg1, s32 arg2) {
+    Object_64 *temp = arg1->unk64;
     if (temp->unk1D8 == 0) {
         func_80068508(1);
         func_800A3CE4(arg0, arg2);
@@ -318,9 +320,9 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1C04.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
 
-void func_800A258C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
+void func_800A258C(s32 arg0, Object *arg1, s32 arg2) {
     LevelHeader *level;
-    unk800A0DC0_2 *temp = arg1->unk64;
+    Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
     func_800A5A64(temp, arg2);
@@ -338,8 +340,8 @@ void func_800A258C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
     func_80068508(0);
 }
 
-void func_800A263C(s32 arg0, unk800A0DC0 *arg1, s32 arg2) {
-    unk800A0DC0_2 *temp = arg1->unk64;
+void func_800A263C(s32 arg0, Object *arg1, s32 arg2) {
+    Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
     func_800A5A64(temp, arg2);
@@ -429,7 +431,7 @@ void func_800A83B4(LevelModel *model) {
     gMinimapBlue = model->minimapColor & 0xFF;
     load_sprite_info(model->unk20, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
     func_8007CA68(model->unk20, 0, &D_80126D14, &D_80126D18, &sp2C);
-    model->unk20 = func_8007C12C(model->unk20, 1);
+    model->unk20 = (s32)func_8007C12C(model->unk20, 1);
 }
 
 s8 func_800A8458(void) {

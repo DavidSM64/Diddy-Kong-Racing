@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
+#include "libultra_internal.h"
 
 typedef struct {
     u8 unk0[0x6];
@@ -42,23 +43,12 @@ typedef struct unk800E2770 {
     s32 unkC;
 } unk800E2770;
 
-typedef struct {
-    u8 unk0[0x1D8];
-    s8 unk1D8;
-} unk800A0DC0_2;
-
-//Probably Object
-typedef struct {
-    u8 unk0[0x64];
-    unk800A0DC0_2 *unk64;
-} unk800A0DC0;
-
 u8 func_800A0190(void);
 void func_800A0B74(void);
-void func_800A0DC0(s32 arg0, unk800A0DC0 *arg1, s32 arg2);
-void func_800A1428(s32 arg0, unk800A0DC0 *arg1, s32 arg2);
-void func_800A258C(s32 arg0, unk800A0DC0 *arg1, s32 arg2);
-void func_800A263C(s32 arg0, unk800A0DC0 *arg1, s32 arg2);
+void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2);
+void func_800A1428(s32 arg0, Object *arg1, s32 arg2);
+void func_800A258C(s32 arg0, Object *arg1, s32 arg2);
+void func_800A263C(s32 arg0, Object *arg1, s32 arg2);
 void func_800A3870(void);
 void func_800A6DB4(s16 *arg0);
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2);
@@ -71,8 +61,18 @@ void func_800AB1C8(void);
 void func_800AB1D4(u8 arg0);
 
 // Non Matching
-void func_800A14F0(unk800A0DC0 *, s32);
+void func_800A14F0(Object *, s32);
 void func_800A3CE4(s32, s32);
-void func_800A7520(unk800A0DC0 *, s32);
+void func_800A7520(Object *, s32);
+void func_800A0EB4(Object_64 *arg0, s32 arg1);
+void func_800A5A64(Object_64 *arg0, s32 arg1);
+void func_800A4F50(Object_64 *arg0, s32 arg1);
+void func_800A4154(Object_64 *arg0, s32 arg1);
+void func_800A7B68(Object_64 *arg0, s32 arg1);
+void func_800A4C44(Object_64 *arg0, s32 arg1);
+void func_800A3884(Object *arg0, s32 arg1);
+void func_800A47A0(Object_64 *arg0, s32 arg1);
+void func_800A718C(Object_64 *);
+void func_800AA600(Gfx **arg0, u32 *arg1, u32 *arg2, unk80126CDC *arg3);
 
 #endif

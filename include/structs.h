@@ -448,7 +448,7 @@ typedef struct LevelModel {
 /* 0x18 */ s16 numberOfTextures;
 /* 0x1A */ s16 numberOfSegments;
            u8 pad1C[4];
-/* 0x20 */ s32 unk20;
+/* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
 /* 0x38 */ u32 minimapColor;
 } LevelModel;
@@ -634,7 +634,8 @@ typedef struct Object_64 {
     u8 pad1BC[0x1A];
     s8 unk1D6;
     s8 unk1D7;
-    u8 pad1D8[0x1A];
+    s8 unk1D8;
+    u8 pad1D9[0x19];
     u8 unk1F2;
     u8 unk1F3;
 } Object_64;
