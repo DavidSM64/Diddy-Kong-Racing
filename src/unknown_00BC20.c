@@ -132,7 +132,7 @@ f32 D_8011AD28;
 s32 D_8011AD2C;
 f32 D_8011AD30;
 s32 D_8011AD34;
-s32 D_8011AD38;
+s32 D_8011AD38; //D_8011AD38 is ultimately set by func_80074B34, and is almost definitely SIDeviceStatus
 s8 D_8011AD3C;
 s8 D_8011AD3D;
 s8 D_8011AD3E;
@@ -528,20 +528,21 @@ s32 func_8000CC20(u32 *arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CC7C.s")
 
 u32 func_8000E0B0(void) {
+    // D_8011AD38 is likely an SIDeviceStatus value, but not 100% sure yet.
     switch (D_8011AD38) {
-        case 1:
+        case 1: //NO_CONTROLLER_PAK
             return -1;
-        case 7:
+        case 7: //RUMBLE_PAK
             return 0;
-        case 2:
-        case 3:
+        case 2: //CONTROLLER_PAK_INCONSISTENT
+        case 3: //CONTROLLER_PAK_WITH_BAD_ID
             return 3;
-        case 4:
-        case 6:
+        case 4: //CONTROLLER_PAK_FULL
+        case 6: //CONTROLLER_PAK_UNK6
             return 2;
-        case 0:
-        case 5:
-        case 8:
+        case 0: //CONTROLLER_PAK_GOOD
+        case 5: //CONTROLLER_PAK_CHANGED
+        case 8: //CONTROLLER_PAK_UNK8
             return func_80059E20();
         default:
             return 0;
