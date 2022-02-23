@@ -8,6 +8,7 @@
 
 /************ .data ************/
 
+//sSoundEffectsPool index values?
 s16 D_800DCE80[14] = {
     0x022C, 0x00A5, 0x00A6, 0x0057,
     0x0051, 0x006D, 0x0052, 0x00F8,

@@ -463,10 +463,13 @@ typedef struct Object_3C {
     u8 unkD;
 } Object_3C;
 
-#define OBJECT_MODEL_TYPE_3D_MODEL         0
-#define OBJECT_MODEL_TYPE_SPRITE_BILLBOARD 1
-#define OBJECT_MODEL_TYPE_VEHICLE_PART     2
-#define OBJECT_MODEL_TYPE_UNKNOWN4         4
+typedef enum {
+    OBJECT_MODEL_TYPE_3D_MODEL         = 0,
+    OBJECT_MODEL_TYPE_SPRITE_BILLBOARD = 1,
+    OBJECT_MODEL_TYPE_VEHICLE_PART     = 2,
+    OBJECT_MODEL_TYPE_UNKNOWN3         = 3,
+    OBJECT_MODEL_TYPE_UNKNOWN4         = 4,
+} ObjectModelType;
 
 typedef struct ObjectHeader {
              u8 pad0[0x4];
