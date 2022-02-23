@@ -7,7 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "audio.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "unknown_005740.h"
 #include "unknown_008C40.h"
 

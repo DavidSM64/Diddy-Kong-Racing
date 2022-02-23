@@ -3,7 +3,7 @@
 
 #include "game_text.h"
 #include "menu.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "racer.h"
 #include "game.h"
 

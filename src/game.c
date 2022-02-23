@@ -22,7 +22,7 @@
 #include "thread30.h"
 #include "unknown_0ABDF0.h"
 #include "audio.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "camera.h"
 #include "save_data.h"
 #include "unknown_078050.h"

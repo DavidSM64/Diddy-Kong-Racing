@@ -1282,7 +1282,7 @@ glabel L8004ED88
 /* 04FC5C 8004F05C A3AF0065 */  sb    $t7, 0x65($sp)
 /* 04FC60 8004F060 27A40064 */  addiu $a0, $sp, 0x64
 /* 04FC64 8004F064 24050001 */  li    $a1, 1
-/* 04FC68 8004F068 0C003A95 */  jal   func_8000EA54
+/* 04FC68 8004F068 0C003A95 */  jal   spawn_object
 /* 04FC6C 8004F06C AFA20078 */   sw    $v0, 0x78($sp)
 /* 04FC70 8004F070 8FA30078 */  lw    $v1, 0x78($sp)
 /* 04FC74 8004F074 10400005 */  beqz  $v0, .L8004F08C

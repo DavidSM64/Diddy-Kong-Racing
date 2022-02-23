@@ -38,7 +38,7 @@ glabel func_8003FC44
 /* 0408D4 8003FCD4 24050001 */  li    $a1, 1
 /* 0408D8 8003FCD8 A7AF0026 */  sh    $t7, 0x26($sp)
 /* 0408DC 8003FCDC A3AE002C */  sb    $t6, 0x2c($sp)
-/* 0408E0 8003FCE0 0C003A95 */  jal   func_8000EA54
+/* 0408E0 8003FCE0 0C003A95 */  jal   spawn_object
 /* 0408E4 8003FCE4 A7AC002A */   sh    $t4, 0x2a($sp)
 /* 0408E8 8003FCE8 10400011 */  beqz  $v0, .L8003FD30
 /* 0408EC 8003FCEC 3C01400C */   li    $at, 0x400C0000 # 2.187500
