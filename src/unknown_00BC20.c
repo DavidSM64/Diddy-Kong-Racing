@@ -594,10 +594,10 @@ void func_8000E1EC(Object *object, s32 arg1) {
     D_8011AD40 = object;
     D_8011AD44 = 4;
     D_8011AD45 = arg1;
-    D_8011AD46 = object->x_position;
-    D_8011AD48 = object->y_position;
-    D_8011AD4A = object->z_position;
-    D_8011AD4C = object->y_rotation;
+    D_8011AD46 = object->objXYZ.x_position;
+    D_8011AD48 = object->objXYZ.y_position;
+    D_8011AD4A = object->objXYZ.z_position;
+    D_8011AD4C = object->objXYZ.y_rotation;
     gParticlePtrList_addObject(object);
     gObjectCount = 0;
 }
@@ -656,14 +656,14 @@ void func_8000E2B4(void) {
     player_64->unk118 = 0;
     player_64->unk0_a.unk0_b.unk3 = (s8) settings->racers[0].character;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
-        player->scale *= 1.4f;
+        player->objXYZ.scale *= 1.4f;
     }
     if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
-        player->scale *= 0.714f;
+        player->objXYZ.scale *= 0.714f;
     }
     player->unk3C_a.unk3C = 0;
-    player->y_rotation = D_8011AD4C;
-    player->y_position = D_8011AD48;
+    player->objXYZ.y_rotation = D_8011AD4C;
+    player->objXYZ.y_position = D_8011AD48;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
@@ -717,7 +717,7 @@ s32 func_8000E9C0(void) {
 }
 
 void func_8000E9D0(Object *arg0) {
-    arg0->unk6 |= 0x8000;
+    arg0->objXYZ.unk6 |= 0x8000;
     func_800245B4(arg0->unk2C | 0xC000);
     gObjPtrList[objCount++] = arg0;
     if (1);
@@ -917,15 +917,15 @@ void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
     f32 scale;
     u32 tmp2;
     u32 tmp3;
-    if (object->unk6 & 0x5000)
+    if (object->objXYZ.unk6 & 0x5000)
         return;
     func_800B76B8(2, object->unk4A);
     D_8011AE8C = *arg0;
     D_8011AE90 = *arg1;
     D_8011AE94 = *arg2;
-    scale = object->scale;
+    scale = object->objXYZ.scale;
     render_object(object);
-    object->scale = scale;
+    object->objXYZ.scale = scale;
     *arg0 = D_8011AE8C;
     *arg1 = D_8011AE90;
     *arg2 = D_8011AE94;
@@ -971,10 +971,10 @@ void func_80012E28(Object *this) {
 void func_80012F30(Object *arg0) {
     if (arg0->behaviorId == 1) {
         Object_64 *object_64 = arg0->unk64;
-        arg0->y_rotation -= object_64->unk160;
-        arg0->x_rotation -= object_64->unk162;
-        arg0->z_rotation -= object_64->unk164;
-        arg0->y_position -= D_8011ADD0;
+        arg0->objXYZ.y_rotation -= object_64->unk160;
+        arg0->objXYZ.x_rotation -= object_64->unk162;
+        arg0->objXYZ.z_rotation -= object_64->unk164;
+        arg0->objXYZ.y_position -= D_8011ADD0;
     }
 }
 
@@ -982,7 +982,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
 
 void render_object(Object *this) {
     func_80012F94(this);
-    if (this->unk6 & 0x8000) {
+    if (this->objXYZ.unk6 & 0x8000) {
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
     } else {
         if (this->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
@@ -996,10 +996,10 @@ void render_object(Object *this) {
 }
 
 void func_80013548(Object *arg0) {
-    if ((arg0->unk6 & 0x8000) == 0 && arg0->header->behaviorId == 1) {
-        arg0->x_position -= arg0->unk64->unk78;
-        arg0->y_position -= arg0->unk64->unk7C;
-        arg0->z_position -= arg0->unk64->unk80;
+    if ((arg0->objXYZ.unk6 & 0x8000) == 0 && arg0->header->behaviorId == 1) {
+        arg0->objXYZ.x_position -= arg0->unk64->unk78;
+        arg0->objXYZ.y_position -= arg0->unk64->unk7C;
+        arg0->objXYZ.z_position -= arg0->unk64->unk80;
     }
 }
 
@@ -1017,7 +1017,7 @@ void func_800142B8(void) {
 
     for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        if ((currObj->objXYZ.unk6 & 0x8000) == 0 && currObj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             for (j = 0; j < currObj->header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
@@ -1075,7 +1075,7 @@ Object *func_80018C6C(void) {
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->unk6 & 0x8000) && (current_obj->behaviorId == 62))
+        if (!(current_obj->objXYZ.unk6 & 0x8000) && (current_obj->behaviorId == 62))
             return current_obj;
     }
     return NULL;
@@ -1283,7 +1283,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
-        calc_env_mapping_for_object(model, object->z_rotation, object->x_rotation, object->y_rotation);
+        calc_env_mapping_for_object(model, object->objXYZ.z_rotation, object->objXYZ.x_rotation, object->objXYZ.y_rotation);
     }
 }
 
@@ -1329,12 +1329,12 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         current_obj = gObjPtrList[i];
 
         if (current_obj != NULL
-        && (current_obj->unk6 & 0x8000) == 0
+        && (current_obj->objXYZ.unk6 & 0x8000) == 0
         && current_obj->behaviorId == 39
         && current_obj->unk78 == arg0) {
-            *arg1 = current_obj->x_position;
-            *arg2 = current_obj->y_position;
-            *arg3 = current_obj->z_position;
+            *arg1 = current_obj->objXYZ.x_position;
+            *arg2 = current_obj->objXYZ.y_position;
+            *arg3 = current_obj->objXYZ.z_position;
         }
     }
 }
