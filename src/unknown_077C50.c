@@ -25,7 +25,7 @@ void render_borders_for_multiplayer(Gfx **dlist) {
     width += 0; //Fake match?
     yOffset = height >> 7;
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
-    gDPSetFillColor((*dlist)++, 0x00010001); // Black fill color
+    gDPSetFillColor((*dlist)++, GPACK_RGBA5551(0, 0, 0, 1) << 16 | GPACK_RGBA5551(0, 0, 0, 1)); // Black fill color
     switch (get_viewport_count()) {
         case VIEWPORTS_COUNT_2_PLAYERS:
             // Draws a solid horizontal black line in the middle of the screen.
