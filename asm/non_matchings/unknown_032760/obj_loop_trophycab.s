@@ -52,7 +52,7 @@ glabel obj_loop_trophycab
 /* 035B48 80034F48 85390006 */  lh    $t9, 6($t1)
 /* 035B4C 80034F4C A3AA0045 */  sb    $t2, 0x45($sp)
 /* 035B50 80034F50 AFA30054 */  sw    $v1, 0x54($sp)
-/* 035B54 80034F54 0C003A95 */  jal   func_8000EA54
+/* 035B54 80034F54 0C003A95 */  jal   spawn_object
 /* 035B58 80034F58 A7B9004A */   sh    $t9, 0x4a($sp)
 /* 035B5C 80034F5C 8FA30054 */  lw    $v1, 0x54($sp)
 /* 035B60 80034F60 10400005 */  beqz  $v0, .L80034F78

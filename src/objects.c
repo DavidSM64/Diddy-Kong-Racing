@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8000B020 */
 
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "memory.h"
 
 #include "types.h"
@@ -262,10 +262,10 @@ extern s16 D_8011D5AC;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B020.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B020.s")
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B290.s")
 #else
 extern s32 D_800DC754;
 extern Object *D_800DC75C;
@@ -300,9 +300,9 @@ void func_8000B290() {
 }
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B38C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B750.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000BADC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B38C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B750.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000BADC.s")
 
 Object *func_8000BF44(s32 arg0) {
     if (arg0 == -1) {
@@ -366,7 +366,7 @@ void func_8000BF8C(void) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/decrypt_magic_codes.s")
+GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
 #else
 // Decrypts cheats
 void decrypt_magic_codes(u8 *data, s32 length) {
@@ -463,7 +463,7 @@ void func_8000C604(void) {
     free_from_memory_pool(D_8011AEB0[1]);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C718.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000C718.s")
 
 void func_8000C844(s32 arg0) {
     if ((*D_8011AE4C)[arg0] != 0) {
@@ -482,7 +482,7 @@ s32 func_8000C8B4(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C8F8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
 
 void func_8000CBC0(void) {
     s32 i = 0;
@@ -493,7 +493,7 @@ void func_8000CBC0(void) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CBF0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000CBF0.s")
 #else
 void func_8000CBF0(u32 *arg0, s32 arg1) {
     u32 **temp = &D_8011AE08[arg1];
@@ -525,7 +525,7 @@ s32 func_8000CC20(u32 *arg0) {
 }
 
 // Has a jump table
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CC7C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
 
 u32 func_8000E0B0(void) {
     // D_8011AD38 is likely an SIDeviceStatus value, but not 100% sure yet.
@@ -644,7 +644,7 @@ void func_8000E2B4(void) {
     sp2C.common.z = D_8011AD4A;
     sp2C.unkC = D_8011AD4C;
     func_800521B8(1);
-    player = func_8000EA54(&sp2C, 0x11);
+    player = spawn_object(&sp2C, 0x11);
     gObjectCount = 1;
     (*gObjectStructArrayPtr)[0] = (s32) player;
     *D_8011AEEC = (s32) player;
@@ -667,7 +667,7 @@ void func_8000E2B4(void) {
     player->objXYZ.y_position = D_8011AD48;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E2B4.s")
 #endif
 
 /**
@@ -688,11 +688,11 @@ u8 func_8000E4D8(void) {
     return D_8011AEF5;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E4E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E558.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E5EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E79C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E898.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E4E8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E558.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E5EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E79C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E898.s")
 
 Object *get_object(s32 index) {
     if (index < 0 || index >= objCount) {
@@ -725,14 +725,14 @@ void func_8000E9D0(Object *arg0) {
     D_8011AE64++;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000EA54.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F648.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F758.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F7EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F99C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FAC4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FBCC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FC6C.s")
+GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F648.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F758.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F7EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F99C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FAC4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FBCC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FC6C.s")
 
 s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
     arg0->unk4C = arg1;
@@ -746,7 +746,7 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
     return 0x10C;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
 
 void gParticlePtrList_addObject(Object *object) {
     func_800245B4(object->unk4A | 0x8000);
@@ -763,7 +763,7 @@ s32 func_80010028(s32 arg0) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/gParticlePtrList_flush.s")
+GLOBAL_ASM("asm/non_matchings/objects/gParticlePtrList_flush.s")
 #else
 //bad regalloc; swap s2 = s3
 /*removes objects in particleList from gObjPtrList and frees*/
@@ -798,10 +798,10 @@ void gParticlePtrList_flush(void) {
 }
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800101AC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80010994.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011134.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011264.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
 
 void func_80011390(void) {
     D_8011ADAC = 0;
@@ -819,17 +819,17 @@ s32 func_800113BC() {
     return D_8011ADBC;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800113CC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800113CC.s")
 
 s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
     D_800DC848 = 1;
     // No return value!
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011570.s")
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011960.s")
 #else
 void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
                     u32 arg5, u32 arg6, u32 arg7, u32 arg8, f32 arg9) {
@@ -837,7 +837,7 @@ void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
 #endif
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
 #else
 extern f32 D_800E5550;
 void func_80011AD0(Object *this) {
@@ -884,8 +884,8 @@ void func_80011AD0(Object *this) {
 }
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/render_3d_billboard.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/render_3d_model.s")
+GLOBAL_ASM("asm/non_matchings/objects/render_3d_billboard.s")
+GLOBAL_ASM("asm/non_matchings/objects/render_3d_model.s")
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
@@ -934,7 +934,7 @@ void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80012E28.s")
 #else
 void func_80012E28(Object *this) {
     s32 unused1;
@@ -979,7 +979,7 @@ void func_80012F30(Object *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 
 void render_object(Object *this) {
     func_80012F94(this);
@@ -1004,11 +1004,11 @@ void func_80013548(Object *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800135B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800138A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013A0C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013DCC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80013A0C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80013DCC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
 
 void func_800142B8(void) {
     s32 i = D_8011AE60;
@@ -1029,22 +1029,22 @@ void func_800142B8(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800143A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014814.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014B50.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80015348.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800155B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800159C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016500.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016748.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016BC4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016C68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016DE8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001709C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017248.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001790C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800143A8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800155B8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016BC4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001709C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017248.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001790C.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017978.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017978.s")
 
 u32 func_800179D0(void) {
     s16 i = 0;
@@ -1057,7 +1057,7 @@ u32 func_800179D0(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017A18.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017A18.s")
 
 void func_80017E74(s32 arg0) {
     D_8011AED8 = arg0;
@@ -1068,8 +1068,8 @@ s16 func_80017E88(void) {
     return D_8011AED8;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017E98.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 
 Object *func_80018C6C(void) {
     s32 i;
@@ -1082,10 +1082,10 @@ Object *func_80018C6C(void) {
     return NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80018CE0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001955C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80019808.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001A7D8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001955C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001A7D8.s")
 
 void func_8001A8D4(s32 arg0) {
     D_8011AD4E = 0x12C;
@@ -1093,7 +1093,7 @@ void func_8001A8D4(s32 arg0) {
     D_8011AD52 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001A8F4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001A8F4.s")
 
 s16 func_8001AE44() {
     return D_8011AD4E;
@@ -1103,7 +1103,7 @@ s32 func_8001AE54() {
     return D_8011ADC8;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001AE64.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
 
 s32 func_8001B288(void) {
     if (func_800599A8() != func_8006BD88()) {
@@ -1121,14 +1121,14 @@ s32 func_8001B2E0() {
     return D_8011AD34;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B2F0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B2F0.s")
 
 s32 func_8001B3AC(s32 arg0) {
     return arg0 == D_800DC718;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B3C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B4FC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B3C4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
 s32 func_8001B640() {
     return D_800DC718;
@@ -1138,7 +1138,7 @@ s32 func_8001B650(void) {
     return D_800DC738 == 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B668.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B668.s")
 
 s32 func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
@@ -1153,9 +1153,9 @@ void func_8001B790(void) {
     D_800DC730 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B7A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B834.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B974.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B7A8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B834.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B974.s")
 
 // Returns a pointer to some struct that is 0x3C bytes long.
 unknown8011AECC *func_8001BA00(s32 arg0) {
@@ -1184,8 +1184,8 @@ s32 *func_8001BA90(s32 *arg0) {
     return D_8011AEEC;
 }
 
-s32 *func_8001BAAC(s32 *arg0) {
-    *arg0 = gObjectCount;
+Object **func_8001BAAC(s32 *numberOfObjects) {
+    *numberOfObjects = gObjectCount;
     return D_8011AEE8;
 }
 
@@ -1199,13 +1199,13 @@ Object *get_object_struct(s32 indx) {
     return (*gObjectStructArrayPtr)[indx];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB18.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB68.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BB18.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
 
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BC54.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
 
 u32 func_8001BD94(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011AEE0) {
@@ -1214,14 +1214,14 @@ u32 func_8001BD94(s32 arg0) {
     return D_8011AEDC[0][arg0];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BDD4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BF20.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C418.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C48C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C524.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C6C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001CC48.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001CD28.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C418.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C48C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C524.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C6C4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
 
 void func_8001D1AC(void) {
     D_8011AF10[0] = 1;
@@ -1249,10 +1249,10 @@ u32 func_8001D214(s32 arg0) {
 void func_8001D23C(s32 arg0, s32 arg1, s32 arg2) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D258.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D258.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D2A0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D5E0.s")
 
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 arg3) {
     s16 environmentMappingEnabled;
@@ -1288,9 +1288,9 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_dynamic_lighting_for_object_1.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_env_mapping_for_object.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E13C.s")
+GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")
+GLOBAL_ASM("asm/non_matchings/objects/calc_env_mapping_for_object.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E13C.s")
 
 /**
  * Returns a pointer to the asset in the misc. section. If index is out of range, then this
@@ -1364,13 +1364,13 @@ s32 func_8001E4B4(void) {
     return D_8011AE60;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E4C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E6EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E89C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E93C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001EE74.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001EFA4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001F23C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E6EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E89C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001EE74.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001EFA4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001F23C.s")
 
 s8 func_8001F3B8(void) {
     return D_8011ADD4;
@@ -1383,13 +1383,13 @@ void func_8001F3C8(s32 arg0) {
     D_8011ADD4 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001F3EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001F3EC.s")
 
 void func_8001F450(void) {
     D_8011AD53 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001F460.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001F460.s")
 
 s32 func_800210CC(s8 arg0) {
     if (arg0 >= D_8011AD3D) {
@@ -1399,19 +1399,19 @@ s32 func_800210CC(s8 arg0) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021104.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002125C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021400.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80021104.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8002125C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80021400.s")
 
 s8 func_800214C4(void) {
     return D_8011AD22[1 - D_8011AD20[1]];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800214E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021600.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/catmull_rom_interpolation.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002263C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002277C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800214E4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
+GLOBAL_ASM("asm/non_matchings/objects/catmull_rom_interpolation.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8002263C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8002277C.s")
 
 f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
     f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
@@ -1419,7 +1419,7 @@ f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
 }
 
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800228B0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800228B0.s")
 #else
 f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
     f32 temp_f12;
@@ -1449,16 +1449,16 @@ void func_800228EC(s32 arg0) {
     func_8006F388(10);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80022948.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80022CFC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80022E18.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800230D0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80022948.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80022CFC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80022E18.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 
 s8 func_8002341C(void) {
     return D_8011AEF6;
 }
 #if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002342C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
 #else
 
 extern f32 sqrtf(f32);
@@ -1508,7 +1508,7 @@ void func_800235D0(s32 arg0) {
     D_8011ADD5 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
 
 void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     obj->behaviorId = obj->header->behaviorId;
@@ -1600,7 +1600,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_stopwatchman(obj, (LevelObjectEntry_StopWatchMan *)entry);
             break;
         case 31:
-            obj_init_coin(obj, (LevelObjectEntry_Banana *)entry);
+            obj_init_banana(obj, (LevelObjectEntry_Banana *)entry);
             break;
         case 32:
             obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *)entry, arg2);
@@ -1667,7 +1667,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_worldkey(obj, (LevelObjectEntry_WorldKey *)entry);
             break;
         case 64:
-            obj_init_coincreator(obj, (LevelObjectEntry_BananaCreator *)entry);
+            obj_init_bananacreator(obj, (LevelObjectEntry_BananaCreator *)entry);
             break;
         case 65:
             obj_init_treasuresucker(obj, (LevelObjectEntry_TreasureSucker *)entry);
@@ -1977,7 +1977,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
             obj_loop_stopwatchman(obj, arg1);
             break;
         case 32:
-            obj_loop_coin(obj, arg1);
+            obj_loop_banana(obj, arg1);
             break;
         case 36:
             obj_loop_buoy_pirateship(obj, arg1);
@@ -2053,7 +2053,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
             obj_loop_worldkey(obj, arg1); //arg1=speed
             break;
         case 65:
-            obj_loop_coincreator(obj, arg1);
+            obj_loop_bananacreator(obj, arg1);
             break;
         case 66:
             obj_loop_treasuresucker(obj, arg1);

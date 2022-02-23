@@ -73,7 +73,7 @@ glabel func_8000E2B4
 /* 00EFA8 8000E3A8 0C01486E */  jal   func_800521B8
 /* 00EFAC 8000E3AC A7AA0038 */   sh    $t2, 0x38($sp)
 /* 00EFB0 8000E3B0 27A4002C */  addiu $a0, $sp, 0x2c
-/* 00EFB4 8000E3B4 0C003A95 */  jal   func_8000EA54
+/* 00EFB4 8000E3B4 0C003A95 */  jal   spawn_object
 /* 00EFB8 8000E3B8 24050011 */   li    $a1, 17
 /* 00EFBC 8000E3BC 3C0C8012 */  lui   $t4, %hi(gObjectStructArrayPtr) # $t4, 0x8012
 /* 00EFC0 8000E3C0 8D8CAEE4 */  lw    $t4, %lo(gObjectStructArrayPtr)($t4)

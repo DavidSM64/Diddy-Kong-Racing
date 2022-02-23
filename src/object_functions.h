@@ -8,6 +8,9 @@
 #define WORLD_KEY_GRAB_CHECK_RADIUS 50
 #define SOUND_WORLD_KEY_GRAB 54
 
+#define TIME_JIFFIES_PER_SECOND 60
+#define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;
@@ -127,13 +130,13 @@ typedef struct Object_60_800380F8 {
     Object *unkC;
 } Object_60_800380F8;
 
-typedef struct Object_64_8003827C {
+typedef struct Object_64_Snowball {
     u8 pad0[0x20];
-    s32 unk20;
+    u32 unk20;
     s16 unk24;
     u8 pad28[0x12];
     s8 unk38;
-} Object_64_8003827C;
+} Object_64_Snowball;
 
 typedef struct Object_64_80038710 {
     u8 pad0[0x30];
@@ -359,6 +362,10 @@ typedef struct unk80042CD0 {
     s16 unk18;
 } unk80042CD0;
 
+typedef struct Object_50_Scenery {
+    f32 unk0;
+} Object_50_Scenery;
+
 //void func_80072348(s16 obj, u8 arg1);
 
 typedef struct Object_64_Exit {
@@ -450,6 +457,69 @@ typedef struct Object_64_Trigger {
     s8 unk14;
 } Object_64_Trigger;
 
+typedef Object Object_64_Animation;
+
+typedef struct Object_64_Audio {
+    /* 0x00 */ u16 unk0;
+    /* 0x02 */ u16 unk2;
+    /* 0x04 */ u8 unk4;
+    /* 0x05 */ u8 unk5;
+    /* 0x06 */ u8 unk6;
+    /* 0x07 */ u8 unk7;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+} Object_64_Audio;
+
+typedef struct Object_64_MidiFade {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    u8 unk2F[16];
+    u8 unk40;
+} Object_64_MidiFade;
+
+typedef struct unk80041A90_MidiFade {
+    s16 unk0; // Y rotation
+    s16 unk2; // X rotation
+    s16 unk4; // Z rotation
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+} unk80041A90_MidiFade;
+
+typedef struct Object_64_MidiFadePoint {
+    u16 unk0;
+    u16 unk2;
+    f32 unk4;
+    f32 unk8;
+    u8 unkC[16];
+    u8 unk1C;
+} Object_64_MidiFadePoint;
+
+typedef struct Object_64_PosArrow {
+    s16 unk0;
+    u8 pad4[0x14E];
+    Object *unk150;
+} Object_64_PosArrow;
+
+typedef struct Object_64_Banana {
+    u8 pad0[4];
+    Object *spawner;
+} Object_64_Banana;
+
 // Unsure about the signed/unsigned with these arrays.
 extern u16 D_800DC970[4];
 extern u16 D_800DC978[4];
@@ -464,8 +534,15 @@ extern s32 D_800DCA7C[3];
 extern s32 D_800DCA88[3];
 extern s8 D_800DCA94[8];
 extern s8 D_800DCA9C[12];
-extern u16 D_800DCAA8[64];
-extern u16 D_800DCB28[20];
+
+typedef struct VertexPosition {
+/* 0x00 */ s16 x;
+/* 0x02 */ s16 y;
+/* 0x04 */ s16 z;
+} VertexPosition;
+
+extern Triangle D_800DCAA8[8];
+extern VertexPosition D_800DCB28[6];
 extern u32 osTvType;
 
 f32 func_800707C4(s16); // No idea where it's located
@@ -548,8 +625,8 @@ void obj_init_ainode(Object *obj, LevelObjectEntry_AiNode *entry);
 void obj_loop_ainode(Object *obj, s32 speed);
 void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry);
 void obj_init_flycoin(Object *obj, LevelObjectEntry_FlyCoin *entry);
-void obj_init_coincreator(Object *obj, LevelObjectEntry_BananaCreator *entry);
-void obj_init_coin(Object *obj, LevelObjectEntry_Banana *entry);
+void obj_init_bananacreator(Object *obj, LevelObjectEntry_BananaCreator *entry);
+void obj_init_banana(Object *obj, LevelObjectEntry_Banana *entry);
 void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entry);
 void obj_init_silvercoin(Object *obj, LevelObjectEntry_SilverCoin *entry);
 void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry);
@@ -592,5 +669,14 @@ s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
 s32 func_8001CC48(s32, s32, s32);
 void func_8001C6C4(Object_64_GoldenBalloon *obj64, Object *obj, f32, f32, s32);
 void func_8000CBF0(Object*, s32);
+
+
+void func_8001EE74();
+void func_8001EFA4(Object*, Object_64_Animation*);
+void func_8001F23C(Object *obj, LevelObjectEntry_Animation *entry);
+s32 func_8001F3EC(s32);
+s32 func_80021600(s32);
+
+void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
 
 #endif

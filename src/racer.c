@@ -12,7 +12,7 @@
 #include "asset_sections.h"
 #include "save_data.h"
 #include "unknown_008C40.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "audio.h"
 #include "object_functions.h"
 #include "game.h"

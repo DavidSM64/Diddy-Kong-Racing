@@ -164,7 +164,7 @@ glabel func_80022948
 /* 0237C4 80022BC4 0C01867D */  jal   func_800619F4
 /* 0237C8 80022BC8 A7B90064 */   sh    $t9, 0x64($sp)
 /* 0237CC 80022BCC 27A40058 */  addiu $a0, $sp, 0x58
-/* 0237D0 80022BD0 0C003A95 */  jal   func_8000EA54
+/* 0237D0 80022BD0 0C003A95 */  jal   spawn_object
 /* 0237D4 80022BD4 24050001 */   li    $a1, 1
 /* 0237D8 80022BD8 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
 /* 0237DC 80022BDC 8D6BAEE4 */  lw    $t3, %lo(gObjectStructArrayPtr)($t3)

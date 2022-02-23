@@ -7,7 +7,7 @@ glabel D_800E61A0
 .float -10000.0
 
 .text
-glabel obj_loop_coin
+glabel obj_loop_banana
 /* 03E1A0 8003D5A0 44852000 */  mtc1  $a1, $f4
 /* 03E1A4 8003D5A4 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 03E1A8 8003D5A8 468020A0 */  cvt.s.w $f2, $f4

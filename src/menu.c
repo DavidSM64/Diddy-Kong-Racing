@@ -20,7 +20,7 @@
 #include "printf.h"
 #include "textures_sprites.h"
 #include "thread30.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "game.h"
 #include "unknown_078050.h"
 #include "save_data.h"

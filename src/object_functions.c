@@ -15,7 +15,7 @@
 #include "game.h"
 #include "audio.h"
 #include "unknown_008C40.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "particles.h"
 #include "unknown_0255E0.h"
 #include "font.h"
@@ -91,31 +91,26 @@ s8 D_800DCA94[8] = {
 s8 D_800DCA9C[12] = {
     0x00, 0x01, 0x01, 0x02, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
-u16 D_800DCAA8[64] = {
-    0x0000, 0x0301, 0x0000, 0x0000,
-    0xFFFF, 0xFFFF, 0x0000, 0xFFFF,
-    0x0000, 0x0203, 0x0000, 0x0000,
-    0xFFFF, 0x0000, 0xFFFF, 0xFFFF,
-    0x0002, 0x0503, 0xFFFF, 0x0000,
-    0x0000, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x0002, 0x0405, 0xFFFF, 0x0000,
-    0x0000, 0x0000, 0x0000, 0xFFFF,
-    0x0000, 0x0103, 0x0000, 0x0000,
-    0x0000, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x0000, 0x0302, 0x0000, 0x0000,
-    0xFFFF, 0xFFFF, 0xFFFF, 0x0000,
-    0x0002, 0x0305, 0xFFFF, 0x0000,
-    0xFFFF, 0xFFFF, 0x0000, 0xFFFF,
-    0x0002, 0x0504, 0xFFFF, 0x0000,
-    0x0000, 0xFFFF, 0x0000, 0x0000,
+
+Triangle D_800DCAA8[8] = {
+    { 0, 0, 3, 1,  0, 0, -1, -1,  0, -1 },
+    { 0, 0, 2, 3,  0, 0, -1,  0, -1, -1 },
+    { 0, 2, 5, 3, -1, 0,  0, -1, -1, -1 },
+    { 0, 2, 4, 5, -1, 0,  0,  0,  0, -1 },
+    { 0, 0, 1, 3,  0, 0,  0, -1, -1, -1 },
+    { 0, 0, 3, 2,  0, 0, -1, -1, -1,  0 },
+    { 0, 2, 3, 5, -1, 0, -1, -1,  0, -1 },
+    { 0, 2, 5, 4, -1, 0,  0, -1,  0,  0 },
 };
-u16 D_800DCB28[20] = {
-    0xFFC0, 0x0000, 0x0020, 0xFFC0,
-    0x0000, 0xFFE0, 0x0000, 0x0000,
-    0x0020, 0x0000, 0x0000, 0xFFE0,
-    0x0040, 0x0000, 0x0020, 0x0040,
-    0x0000, 0xFFE0, 0x0000, 0x0000,
-};
+
+VertexPosition D_800DCB28[6] = {
+    { -64, 0,  32 },
+    { -64, 0, -32 },
+    {   0, 0,  32 },
+    {   0, 0, -32 },
+    {  64, 0,  32 },
+    {  64, 0, -32 },
+}; 
 
 /*******************************/
 
@@ -130,11 +125,6 @@ s16 D_8011D4E2;
 
 /******************************/
 
-#ifdef NON_EQUIVALENT
-typedef struct Object_50_80033CC0 {
-    f32 unk0;
-} Object_50_80033CC0;
-
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     f32 phi_f0;
     obj->objXYZ.unk6 |= 2;
@@ -144,14 +134,13 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     }
     phi_f0 /= 64;
     obj->objXYZ.scale = obj->header->scale * phi_f0;
-    ((Object_50_80033CC0 *)obj->unk50)->unk0 = obj->header->unk4 * phi_f0;
+    ((Object_50_Scenery *)obj->unk50)->unk0 = obj->header->unk4 * phi_f0;
     obj->unk3A = entry->unk8;
     obj->objXYZ.y_rotation = entry->unkA << 6 << 4;
     if (entry->unkB) {
-        // Regalloc issue here
         obj->unk4C->unk14 = 1;
         obj->unk4C->unk11 = 1;
-        obj->unk4C->unk10 = 0x14;
+        obj->unk4C->unk10 = 20;
         obj->unk4C->unk12 = 0;
         obj->unk4C->unk16 = -5;
         obj->unk4C->unk17 = entry->unkB;
@@ -162,9 +151,6 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     obj->unk78 = 0;
     obj->unk7C.word = 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_scenery.s")
-#endif
 
 void obj_loop_scenery(Object *obj, s32 speed) {
 	Object78_80033DD0 *obj78;
@@ -554,7 +540,7 @@ void func_80001D04(u16, s32 *);
 f32 sqrtf(f32);
 u32 func_80001C08(void);
 void func_80001D04(u16, s32 *);
-Object *func_8000EA54(unk80027FC4 *, s32);
+Object *spawn_object(unk80027FC4 *, s32);
 void func_8005A3B0(void);
 void func_8006F254(void);
 void func_8009CF68(s32 arg0);
@@ -613,7 +599,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
                 sp44.unk4 = obj->unk3C_a.unk3C->unk4;
                 sp44.unk6 = obj->unk3C_a.unk3C->unk6;
                 sp44.unk1 = 8;
-                trophyObj = func_8000EA54(&sp44, 1);
+                trophyObj = spawn_object(&sp44, 1);
                 if (trophyObj) {
                     trophyObj->unk3C_a.unk3C = (void *) 0;
                     trophyObj->objXYZ.y_rotation = obj->objXYZ.y_rotation;
@@ -736,7 +722,7 @@ void obj_loop_eggcreator(Object *obj, s32 speed) {
         sp20.unk6 = obj->objXYZ.z_position;
         sp20.unk1 = 8;
         sp20.unk0 = 0x34;
-        someObj = func_8000EA54(&sp20, 1);
+        someObj = spawn_object(&sp20, 1);
         if (someObj != NULL) {
             Object_64_8003564C *someObj64 = someObj->unk64;
             someObj64->unk4 = obj;
@@ -1043,7 +1029,24 @@ void obj_init_posarrow(Object *obj, LevelObjectEntry_PosArrow *entry) {
     obj->objXYZ.unk6 |= 0x4000;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_posarrow.s")
+void obj_loop_posarrow(Object *obj, s32 speed) {
+    Object_64_PosArrow *someObj64;
+    Object **someObjList;
+    Object *someObj;
+    s32 numberOfObjects;
+
+    obj->objXYZ.unk6 |= 0x4000;
+    someObjList = func_8001BAAC(&numberOfObjects);
+    if (obj->unk78 < numberOfObjects) {
+        someObj = someObjList[obj->unk78];
+        someObj64 = someObj->unk64;
+        if (someObj64->unk0 == -1) {
+            obj->objXYZ.unk6 &= ~0x4000;
+            someObj64->unk150 = obj;
+        }
+        obj->unk18 = obj->unk78 * 127;
+    }
+}
 
 void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) {
     Object_64_800376E0 *obj64;
@@ -1072,8 +1075,168 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
     obj_loop_animator(obj, 0x20000);
 }
 
+#ifdef NON_EQUIVALENT
+
+typedef struct Object_64_Animator {
+    /* 0x00 */ s16 segmentId;
+    /* 0x02 */ s16 batchId;
+    /* 0x04 */ s16 xSpeedFactor;
+    /* 0x06 */ s16 ySpeedFactor;
+    /* 0x08 */ s16 xSpeed;
+    /* 0x0A */ s16 ySpeed;
+} Object_64_Animator;
+
+#define TEX_INDEX_NO_TEXTURE 255
+
+// Has minor issues
+
+void obj_loop_animator(Object* obj, s32 speed) {
+    Object_64_Animator* obj64; // 3C
+    s32 sp20;
+    s32 sp1C;
+    LevelModel* levelModel;
+    s32 temp, temp2, segmentId, batchId;
+    s32 i;
+    s32 nextFacesOffset;
+    s32 curFacesOffset;
+    s32 texUVSpeed;
+    s32 texIndex;
+    TextureInfo *texInfo;
+    TriangleBatchInfo *triangleBatchInfo;
+    LevelModelSegment *levelModelSegment;
+    Triangle* triangle;
+    TextureHeader *tex;
+    s32 maxSpeed;
+
+    obj64 = (Object_64_Animator*)obj->unk64;
+    
+    temp = obj64->xSpeedFactor * speed;
+    obj64->xSpeed += temp << 4;
+    sp20 = obj64->xSpeed >> 4;
+    obj64->xSpeed &= 0xF;
+
+    temp2 = obj64->ySpeedFactor * speed;
+    obj64->ySpeed += temp2 << 4;
+    sp1C = obj64->ySpeed >> 4;
+    obj64->ySpeed &= 0xF;
+
+    segmentId = obj64->segmentId;
+
+    if (obj64->segmentId != -1) {
+        levelModel = func_8002C7C4();
+        levelModelSegment = &levelModel->segments[segmentId];
+        batchId = obj64->batchId;
+        triangleBatchInfo = &levelModelSegment->batches[batchId];
+        texIndex = triangleBatchInfo->textureIndex;
+        curFacesOffset = triangleBatchInfo->facesOffset;
+        nextFacesOffset = triangleBatchInfo[1].facesOffset;
+        if (texIndex != TEX_INDEX_NO_TEXTURE) {
+            texUVSpeed = levelModel->textures[texIndex].texture->width << 7;
+            maxSpeed = texUVSpeed * 2;
+            for (i = curFacesOffset; i < nextFacesOffset; i++) {
+                triangle = &levelModelSegment->triangles[i];
+                if (!(triangle->drawBackface & 0x80)) {
+                    if (maxSpeed < triangle->uv0.v) {
+                        triangle->uv0.v -= texUVSpeed;
+                        triangle->uv1.v -= texUVSpeed;
+                        triangle->uv2.v -= texUVSpeed;
+                    }
+                    if (triangle->uv0.v < 0) {
+                        triangle->uv0.v += texUVSpeed;
+                        triangle->uv1.v += texUVSpeed;
+                        triangle->uv2.v += texUVSpeed;
+                    }
+                    if (maxSpeed < triangle->uv0.u) {
+                        triangle->uv0.u -= texUVSpeed;
+                        triangle->uv1.u -= texUVSpeed;
+                        triangle->uv2.u -= texUVSpeed;
+                    }
+                    if (triangle->uv0.u < 0) {
+                        triangle->uv0.u += texUVSpeed;
+                        triangle->uv1.u += texUVSpeed;
+                        triangle->uv2.u += texUVSpeed;
+                    }
+                    triangle->uv0.v += sp1C;
+                    triangle->uv1.v += sp1C;
+                    triangle->uv2.v += sp1C;
+                    triangle->uv0.u += sp20;
+                    triangle->uv1.u += sp20;
+                    triangle->uv2.u += sp20;
+                }
+            }
+        }
+    }
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_animator.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_animation.s")
+#endif
+
+void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2) {
+    Object_64_Animation* obj64;
+    Object* sp24;
+    s8 tempOrderIndex;
+    f32 scalef;
+
+    scalef = entry->scale & 0xFF;
+    if (scalef < 1.0f) {
+        scalef = 1.0f;
+    }
+    scalef /= 64;
+    obj->objXYZ.scale = obj->header->scale * scalef;
+    obj->objXYZ.y_rotation = entry->y_rotation << 8;
+    obj->objXYZ.x_rotation = entry->x_rotation << 8;
+    obj->objXYZ.z_rotation = entry->z_rotation << 8;
+    if (entry->actorIndex == -2) {
+        entry->actorIndex = func_8001F3B8();
+    } else {
+        if (entry->actorIndex < 0 && entry->actorIndex >= -2) {
+            entry->actorIndex = 0;
+        }
+        func_8001F3C8(entry->actorIndex);
+    }
+    if (entry->channel == -1) {
+        entry->channel = func_8001E440();
+    }
+    if (entry->channel == 20) {
+        entry->actorIndex |= 0x80;
+    }
+    tempOrderIndex = func_8001F3EC(entry->actorIndex);
+    if (entry->order == -2) {
+        entry->order = tempOrderIndex;
+        if (entry->order < 0) {
+            entry->order = 0;
+        }
+    } else {
+        if ((tempOrderIndex >= 0) && (entry->order >= tempOrderIndex)) {
+            entry->order = tempOrderIndex;
+        }
+        if (entry->order < 0) {
+            entry->order = 0;
+        }
+    }
+    func_80011390();
+    obj->unk7C.word = entry->actorIndex;
+    obj->unk78 = arg2;
+    if (arg2 != 0 && (get_buttons_pressed_from_player(0) & R_CBUTTONS)) {
+        obj->unk78 = 2;
+    }
+    if (((func_8001E440() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) && (entry->objectIdToSpawn != -1)) {
+        func_8001F23C(obj, entry);
+    }
+    obj64 = (Object_64_Animation*)obj->unk64;
+    if (obj->unk64 != 0) { 
+        func_8001EFA4(obj, obj64);
+        if (entry->order != 0 || obj64->unk4A != entry->objectIdToSpawn) {
+            gParticlePtrList_addObject(obj64);
+            obj->unk64 = NULL;
+        }
+    }
+    if (func_80021600(obj->unk7C.word)) {
+        func_8001EE74();
+    }
+}
+
 
 void obj_loop_animobject(Object *obj, s32 speed) {
     func_8001F460(obj, speed, obj);
@@ -1153,10 +1316,8 @@ void obj_init_snowball(Object *obj, LevelObjectEntry_Snowball *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-#ifdef NON_EQUIVALENT
-// Regalloc issues
 void obj_loop_snowball(Object *obj, s32 speed) {
-    Object_64_8003827C *obj64 = obj->unk64;
+    Object_64_Snowball *obj64 = obj->unk64;
     if (obj64->unk24 == 0) {
         if (obj64->unk38 != 0) {
             obj64->unk24 = (s16)(obj64->unk38 & 0xFF);
@@ -1164,17 +1325,13 @@ void obj_loop_snowball(Object *obj, s32 speed) {
     }
     if (obj64->unk24 != 0) {
         if (obj64->unk20 == 0) {
-            func_80009558(obj64->unk24 & 0xFFFF, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 1, &obj64->unk20);
+            func_80009558(obj64->unk24, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 1, &obj64->unk20);
         } else {
             func_800096D8(obj64->unk20, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position);
         }
     }
     func_8001F460(obj, speed, obj);
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_snowball.s")
-#endif
 
 // Unused
 void func_80038330(s32 arg0, s32 arg1) {
@@ -1307,25 +1464,19 @@ void obj_loop_wardensmoke(Object *obj, s32 speed) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-// regalloc issues
-void obj_init_bombexplosion(Object *obj, unk80038B74 *entry) {
-    s32 temp;
+void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) {
+    LevelObjectEntry_BombExplosion *entry2;
     obj->unk18 = 0;
     obj->objXYZ.scale = 0.5f;
     obj->unk3A = get_random_number_from_range(0, obj->header->numberOfModelIds - 1);
+    entry2 = entry; // Needed for a match.
     obj->unk78 = 0;
     obj->unk7C.word = 0xFF;
-    temp = entry->unk8;
-    if (temp != 0) {
-        obj->unk7C.word |= (temp << 8) & 0xFF00;
+    if (entry->unk8) {
+        obj->unk7C.word |= (entry2->unk8 << 8) & 0xFF00;
     }
     obj->unk74 = 1;
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_bombexplosion.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bombexplosion.s")
 
@@ -1927,13 +2078,40 @@ void obj_init_flycoin(Object *obj, LevelObjectEntry_FlyCoin *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_flycoin.s")
 
-void obj_init_coincreator(Object *obj, LevelObjectEntry_BananaCreator *entry) {
-    obj->unk18 = 0x64;
+void obj_init_bananacreator(Object *obj, LevelObjectEntry_BananaCreator *entry) {
+    obj->unk18 = 100;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_coincreator.s")
+void obj_loop_bananacreator(Object *obj, s32 speed) {
+  LevelObjectEntryCommon newEntry;
+  Object *newBananaObj;
+  Object_64_Banana *newBananaObj64;
 
-void obj_init_coin(Object *obj, LevelObjectEntry_Banana *entry) {
+  if (obj->unk7C.word != 0) {
+    obj->unk78 -= speed;
+  }
+
+  if (obj->unk78 <= 0) {
+    newEntry.x = (s32) obj->objXYZ.x_position;
+    newEntry.y = ((s32) ((s16) obj->objXYZ.y_position)) - 3;
+    newEntry.z = (s32) obj->objXYZ.z_position;
+    newEntry.size = 8;
+    newEntry.object_id = 83;
+    newBananaObj = spawn_object(&newEntry, 1);
+    obj->unk7C.word = 1;
+    if (newBananaObj) {
+      newBananaObj->unk3C_a.unk3C = 0;
+      newBananaObj64 = (Object_64_Banana *) newBananaObj->unk64;
+      newBananaObj64->spawner = obj;
+      func_8003FC44(obj->objXYZ.x_position, obj->objXYZ.y_position - 14.0f, obj->objXYZ.z_position, 44, 34, 0.25f, 0);
+      obj->unk7C.word = 0;
+    }
+    obj->unk78 = TIME_SECONDS(20); // Set delay to respawn banana to 20 seconds.
+  }
+}
+
+
+void obj_init_banana(Object *obj, LevelObjectEntry_Banana *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -1944,7 +2122,7 @@ void obj_init_coin(Object *obj, LevelObjectEntry_Banana *entry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_coin.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_banana.s")
 
 void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entry) {
     obj->unk4C->unk14 = 2;
@@ -2151,7 +2329,7 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
     sp24.unk0 = arg3;
     sp24.unk7 = arg6;
     sp24.unk6 = arg2;
-    someObj = func_8000EA54(&sp24, 1);
+    someObj = spawn_object(&sp24, 1);
     if (someObj != NULL) {
         someObj->objXYZ.scale *= 3.5 * arg5;
         someObj->unk3C_a.unk3C = NULL;
@@ -2167,7 +2345,29 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FC44.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_audio.s")
+void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
+    Object_64_Audio *obj64;
+
+    obj64 = (Object_64_Audio*)obj->unk64;
+    obj64->unk0 = entry->unk8;
+    obj64->unk2 = entry->unkA;
+    obj64->unkC = entry->unkF;
+    obj64->unk6 = entry->unkE;
+    obj64->unk4 = entry->unkC;
+    obj64->unk5 = entry->unkD;
+    obj64->unkD = entry->unk10;
+    obj64->unk8 = 0;
+    if (ALBankFile_80115D14_GetSoundDecayTime(obj64->unk0)) {
+        func_8000974C(obj64->unk0, entry->common.x, entry->common.y, entry->common.z,
+            9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC, 
+            obj64->unk6, obj64->unkD, &obj64->unk8);
+    } else {
+        func_8000974C(obj64->unk0, entry->common.x, entry->common.y, entry->common.z, 
+            10, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC, 
+            obj64->unk6, obj64->unkD, &obj64->unk8);
+    }
+    gParticlePtrList_addObject(obj);
+}
 
 void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
     Object_64_8003FEF4 *obj64;
@@ -2269,7 +2469,61 @@ void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
     obj->unk78f = temp;
 }
 
+
+#ifdef NON_EQUIVALENT
+void func_800ABC5C(s32, s32, s32, s32, s32, s32); /* extern */
+
+typedef struct Object_3C_Weather {
+    u8 pad0[0x2];
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s8 unk8;
+    u8 unk9;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    u8 unk10;
+    u8 unk11;
+    s16 unk12;
+} Object_3C_Weather;
+
+// Has stack & regalloc issues.
+void obj_loop_weather(Object *obj, s32 speed) {
+  s32 sp54;
+  s32 numberOfObjects;
+  Object_64_Racer *curObj64;
+  Object **objects;
+  Object **lastObj;
+  Object *curObj;
+  Object_3C_Weather *obj3c;
+  f32 temp_f0;
+  f32 new_var;
+  f32 temp_f2;
+  s32 i;
+  s32 temp[3];
+  sp54 = func_80066220();
+  objects = get_object_struct_array(&numberOfObjects);
+  if (numberOfObjects != 0) {
+    lastObj = &objects[numberOfObjects - 1];
+    objects--;
+    do {
+      curObj = objects[1];
+      curObj64 = (Object_64_Racer *) curObj->unk64;
+    } while (((++objects) < lastObj) && (sp54 != curObj64->unk0));
+    temp_f0 = obj->objXYZ.x_position - curObj->objXYZ.x_position;
+    temp_f2 = obj->objXYZ.z_position - curObj->objXYZ.z_position;
+    new_var = obj->unk78f;
+    obj3c = obj->unk3C_a.unk3C;
+    if (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) <= (new_var * 1.0f)){
+      func_800ABC5C(obj3c->unkA * 256, obj3c->unkC * 256, obj3c->unkE * 256, obj3c->unk10 * 257, obj3c->unk11 * 257, (s32) obj3c->unk12);
+    }
+  }
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weather.s")
+#endif
 
 void obj_init_lensflare(Object *obj, LevelObjectEntry_LensFlare *entry) {
     func_800AC8A8(obj);
@@ -2285,10 +2539,133 @@ void obj_init_wavegenerator(Object *obj, LevelObjectEntry_WaveGenerator *entry, 
     func_800BF524(obj); //waves.c
 }
 
+#ifdef NON_EQUIVALENT
+
+typedef struct Object_64_Butterfly {
+/* 0x00  */ Triangle triangles[8];
+/* 0x80  */ Vertex vertices[12];
+/* 0xF8  */ TextureHeader *texture;
+/* 0xFC  */ u8 unkFC;
+/* 0xFD  */ u8 unkFD;
+/* 0xFE  */ u8 unkFE;
+/* 0xFF  */ u8 unkFF;
+/* 0x100 */ s32 unk100;
+/* 0x104 */ s16 unk104;
+/* 0x106 */ s16 unk106;
+/* 0x108 */ f32 unk108;
+} Object_64_Butterfly;
+
+void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2) {
+    Object_64_Butterfly *obj64;
+    s32 i, j;
+    s32 uMask, vMask;
+
+    obj64 = (Object_64_Butterfly*)obj->unk64;
+    if (arg2 == 0) {
+        obj->y_velocity = 0.0f;
+        obj64->unkFE = 0;
+        obj64->unk100 = 0;
+        obj64->unk104 = 0;
+        obj64->unkFD = 0;
+        obj64->unk106 = 384;
+        obj64->unk108 = 0.0f;
+        // This loop is okay
+        for(i = 0; i < 8; i++) {
+            obj64->triangles[i].drawBackface = D_800DCAA8[i].drawBackface;
+            obj64->triangles[i].vi0 = D_800DCAA8[i].vi0;
+            obj64->triangles[i].vi1 = D_800DCAA8[i].vi1;
+            obj64->triangles[i].vi2 = D_800DCAA8[i].vi2;
+        }
+        // This loop is not.
+        for(i = 0; i < 6; i++) {
+            //u32 j = i + 6;
+            obj64->vertices[i].x = D_800DCB28[i].x;
+            obj64->vertices[i].y = D_800DCB28[i+1].y;
+            obj64->vertices[i].z = D_800DCB28[i+1].z;
+            obj64->vertices[i].r = 255;
+            obj64->vertices[i].g = 255;
+            obj64->vertices[i].b = 255;
+            obj64->vertices[i].a = 255;
+            obj64->vertices[(u32)(i+6)].x = D_800DCB28[i+1].x;
+            obj64->vertices[i+6].y = D_800DCB28[i].y;
+            obj64->vertices[i+6].z = D_800DCB28[i].z;
+            obj64->vertices[i+6].r = 255;
+            obj64->vertices[i+6].g = 255;
+            obj64->vertices[i+6].b = 255;
+            obj64->vertices[i+6].a = 255;
+        }
+        obj64->unkFC = 1;
+    }
+    obj->objXYZ.scale = entry->unkB * 0.01f;
+    if (entry->unkA < obj->header->numberOfModelIds) {
+        obj64->texture = (TextureHeader*)obj->unk68[entry->unkA];
+    } else {
+        obj64->texture = (TextureHeader*)obj->unk68[0];
+    }
+    
+    if (obj64->texture) {
+        uMask = (obj64->texture->width - 1) << 5;
+        vMask = (obj64->texture->height - 1) << 5;
+    } else {
+        uMask = 0;
+        vMask = 0;
+    }
+    for(i = 0; i < 8; i++) {
+        obj64->triangles[i].uv0.u = D_800DCAA8[i].uv0.u & uMask;
+        obj64->triangles[i].uv0.v = D_800DCAA8[i].uv0.v & vMask;
+        obj64->triangles[i].uv1.u = D_800DCAA8[i].uv1.u & uMask;
+        obj64->triangles[i].uv1.v = D_800DCAA8[i].uv1.v & vMask;
+        obj64->triangles[i].uv2.u = D_800DCAA8[i].uv2.u & uMask;
+        obj64->triangles[i].uv2.v = D_800DCAA8[i].uv2.v & vMask;
+    }
+}
+
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_butterfly.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_butterfly.s")
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_midifade.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_midifadepoint.s")
+
+void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) {
+  Object_64_MidiFadePoint *obj64;
+  ObjectModel **models;
+  ObjectModel *objModel;
+  Vertex *vertex;
+  s32 i;
+  f32 x;
+  f32 y;
+  f32 z;
+  f32 dist;
+
+  obj64 = (LevelObjectEntry_MidiFadePoint *) obj->unk64;
+  obj64->unk2 = entry->unkA;
+  obj64->unk0 = entry->unk8;
+  obj64->unk1C = entry->unk1C;
+  if (obj64->unk2 < obj64->unk0) {
+    obj64->unk2 = obj64->unk0 + 10;
+  }
+  obj->objXYZ.z_rotation = 0;
+  obj->objXYZ.x_rotation = 0;
+  obj->objXYZ.y_rotation = 0;
+
+  for (i = 0; i < 15; i++) {
+    obj64->unkC[i] = entry->unkC[i];
+  }
+
+  models = *((ObjectModel ***) obj->unk68);
+  objModel = models[0];
+  vertex = objModel->vertices + 1;
+  x = vertex->x;
+  y = vertex->y;
+  z = vertex->z;
+  dist = sqrtf(((x * x) + (y * y)) + (z * z));
+  obj64->unk4 = entry->unk8 / dist;
+  obj64->unk8 = entry->unkA / dist;
+  obj->objXYZ.scale = obj64->unk8;
+}
 
 void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
     unk80042014_arg0_64 *temp = obj->unk64;

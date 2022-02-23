@@ -3,7 +3,7 @@
 
 #include "camera.h"
 #include "audio.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "game.h"
 #include "unknown_0255E0.h"
 #include "video.h"

@@ -113,31 +113,31 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of Feburary 15th, 2022, this is our current score:
+As of Feburary 23rd, 2022, this is our current score:
 ```
  ===================================================================== 
                 ADVENTURE ONE (ASM -> C Decompilation)                 
- -------------------------- 20.51% Complete -------------------------- 
-                     # Decompiled functions: 1036                      
-                      # GLOBAL_ASM remaining: 713                      
-                      # NON_MATCHING functions: 4                      
-                  # NON_EQUIVALENT WIP functions: 95                   
+ -------------------------- 21.15% Complete -------------------------- 
+                     # Decompiled functions: 1048                      
+                      # GLOBAL_ASM remaining: 699                      
+                      # NON_MATCHING functions: 6                      
+                  # NON_EQUIVALENT WIP functions: 91                   
  ---------------------------- Game Status ---------------------------- 
                Balloons: 11/47, Keys: 1/4, Trophies: 0/5               
                 T.T. Amulets: 1/4, Wizpig Amulets: 0/4                 
  --------------------------------------------------------------------- 
- We are collecting silver coins in Hot Top Volcano. (4/8 silver coins) 
+ We are collecting silver coins in Hot Top Volcano. (8/8 silver coins) 
  ===================================================================== 
                  ADVENTURE TWO (Cleanup & Documentation)               
- --------------------------  2.54% Complete -------------------------- 
-                      # Documented functions: 134                      
-                    # Undocumented remaining: 1615                     
+ --------------------------  2.73% Complete -------------------------- 
+                      # Documented functions: 141                      
+                    # Undocumented remaining: 1606                     
  ---------------------------- Game Status ---------------------------- 
                Balloons: 1/47, Keys: 0/4, Trophies: 0/5                
                 T.T. Amulets: 0/4, Wizpig Amulets: 0/4                 
  --------------------------------------------------------------------- 
        We are collecting the second balloon on Timber's Island.        
- =====================================================================
+ ===================================================================== 
 ```
 
 ---
