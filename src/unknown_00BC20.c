@@ -913,7 +913,7 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object) {
+void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
     f32 scale;
     u32 tmp2;
     u32 tmp3;

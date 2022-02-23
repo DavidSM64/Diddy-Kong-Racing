@@ -652,6 +652,17 @@ typedef struct Object_6C {
     u8  pad6[0x1A];
 } Object_6C;
 
+typedef struct Object_XYZ {
+  /* 0x0000 */ s16 y_rotation;
+  /* 0x0002 */ s16 x_rotation;
+  /* 0x0004 */ s16 z_rotation;
+  /* 0x0006 */ s16 unk6; // Flags?
+  /* 0x0008 */ f32 scale;
+  /* 0x000C */ f32 x_position;
+  /* 0x0010 */ f32 y_position;
+  /* 0x0014 */ f32 z_position;
+} Object_XYZ;
+
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ s16 y_rotation;

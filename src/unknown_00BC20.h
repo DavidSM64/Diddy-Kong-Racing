@@ -157,7 +157,7 @@ void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
-void func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object);
+void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object);
 void func_80012F30(Object *arg0);
 void render_object(Object *this);
 void func_80013548(Object *arg0);

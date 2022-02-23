@@ -80,7 +80,6 @@ extern LevelModel* gCurrentLevelModel;
 extern LevelHeader *gCurrentLevelHeader;
 
 extern s32 D_800DC920;
-extern s32 D_800DC924;
 extern s32 D_800DC928;
 
 extern s8 D_800DC92C[24];

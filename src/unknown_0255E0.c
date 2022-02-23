@@ -19,8 +19,8 @@
 /************ .data ************/
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
-unknown800DC874 D_800DC874 = { -128, 40, -1 };
-unknown800DC874 D_800DC87C = { -125, 70, -1 };
+unknown800DC874 D_800DC874 = { { -128 }, 40, -1 };
+unknown800DC874 D_800DC87C = { { -125 }, 70, -1 };
 
 f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
@@ -40,7 +40,7 @@ LevelModel *gCurrentLevelModel = NULL;
 LevelHeader *gCurrentLevelHeader2 = NULL;
 
 s32 D_800DC920 = -1;
-s32 D_800DC924 = 0;
+s32 *D_800DC924 = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
 s8 D_800DC92C[24] = {
@@ -61,8 +61,8 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 /************ .bss ************/
 
 Gfx *D_8011B0A0;
-s32 D_8011B0A4;
-s32 D_8011B0A8;
+u32 D_8011B0A4;
+u32 D_8011B0A8;
 s32 D_8011B0AC;
 
 Object *D_8011B0B0; // Camera Object?
@@ -151,7 +151,7 @@ f32 D_8011D380;
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
 unk8011D468 D_8011D468;
-s32 D_8011D474;
+s32 *D_8011D474;
 s32 D_8011D478;
 s32 D_8011D47C;
 s32 D_8011D480[2];
@@ -471,7 +471,7 @@ void render_level_geometry_and_objects(void) {
             if (objFlags & sp158) {
                 s0 = 0;
             }
-            if ((obj->unk48 == 1) && (s0 >= 0xFF)) {
+            if ((obj->behaviorId == 1) && (s0 >= 0xFF)) {
                 s0 = 0;
             }
             if (obj != NULL && s0 < 0xFF && sp58[obj->unk2E + 1] && func_8002A900(obj)) {
@@ -489,7 +489,7 @@ void render_level_geometry_and_objects(void) {
                         }
                     }
                 }
-                if (obj->unk48 == 1) {
+                if (obj->behaviorId == 1) {
                     func_80013A0C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                     func_80013DCC(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                 }
@@ -1059,31 +1059,21 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 
 void func_80031018(void) {
     Matrix mf;
-
-    struct {
-        s16 unk00; //sp_38
-        s16 unk02; //sp_3A
-        s16 unk04; //sp_3C
-        u8 pad06[0x02];
-        f32 unk08; //sp40;
-        f32 unk0C; //sp44;
-        f32 unk10; //sp48;
-        f32 unk14; //sp4C;
-    } sp_38;
+    Object_XYZ objXYZ;
 
     f32 x = 0.0f;
     f32 y = 0.0f;
     f32 z = -65536.0f;
 
-    sp_38.unk04 = D_8011B0B0->z_rotation;
-    sp_38.unk02 = D_8011B0B0->x_rotation;
-    sp_38.unk00 = D_8011B0B0->y_rotation;
-    sp_38.unk0C = 0.0f;
-    sp_38.unk10 = 0.0f;
-    sp_38.unk14 = 0.0f;
-    sp_38.unk08 = 1.0f;
+    objXYZ.z_rotation = D_8011B0B0->z_rotation;
+    objXYZ.x_rotation = D_8011B0B0->x_rotation;
+    objXYZ.y_rotation = D_8011B0B0->y_rotation;
+    objXYZ.x_position = 0.0f;
+    objXYZ.y_position = 0.0f;
+    objXYZ.z_position = 0.0f;
+    objXYZ.scale = 1.0f;
 
-    func_8006FC30(&mf, &sp_38);
+    func_8006FC30(&mf, &objXYZ);
     guMtxXFMF(&mf, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers

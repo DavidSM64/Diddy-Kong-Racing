@@ -135,7 +135,7 @@ s32 D_8011D4F8[3];
 s32 D_8011D504;
 ObjectCamera *gCameraObject;
 s32 D_8011D50C;
-unk8011D510 D_8011D510;
+Object_XYZ D_8011D510;
 s32 D_8011D528;
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
@@ -612,13 +612,13 @@ void func_80053478(Object_64_80053478 *obj) {
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     Matrix mf;
 
-    D_8011D510.unk0 = -arg1->unk1A0;
-    D_8011D510.unk2 = -arg0->unk2;
-    D_8011D510.unk4 = -arg1->unk1A4;
-    D_8011D510.unkC = 0;
-    D_8011D510.unk10 = 0;
-    D_8011D510.unk14 = 0;
-    D_8011D510.unk8 = 1;
+    D_8011D510.y_rotation = -arg1->unk1A0;
+    D_8011D510.x_rotation = -arg0->unk2;
+    D_8011D510.z_rotation = -arg1->unk1A4;
+    D_8011D510.x_position = 0;
+    D_8011D510.y_position = 0;
+    D_8011D510.z_position = 0;
+    D_8011D510.scale = 1;
     func_8006FE74(&mf, &D_8011D510);
 
     guMtxXFMF(&mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
@@ -730,13 +730,13 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     Matrix mf;
 
-    D_8011D510.unk0 = obj->y_rotation;
-    D_8011D510.unk2 = obj->x_rotation;
-    D_8011D510.unk4 = 0;
-    D_8011D510.unkC = 0.0f;
-    D_8011D510.unk10 = 0.0f;
-    D_8011D510.unk14 = 0.0f;
-    D_8011D510.unk8 = 1.0f;
+    D_8011D510.y_rotation = obj->y_rotation;
+    D_8011D510.x_rotation = obj->x_rotation;
+    D_8011D510.z_rotation = 0;
+    D_8011D510.x_position = 0.0f;
+    D_8011D510.y_position = 0.0f;
+    D_8011D510.z_position = 0.0f;
+    D_8011D510.scale = 1.0f;
     func_8006FC30(&mf, &D_8011D510);
     guMtxXFMF(&mf, 0.0f, 0.0f, 1.0f, &obj64->ox1, &obj64->oy1, &obj64->oz1);
     guMtxXFMF(&mf, 0.0f, 1.0f, 0.0f, &obj64->ox2, &obj64->oy2, &obj64->oz2);
