@@ -7,7 +7,7 @@
 #include "menu.h"
 #include "save_data.h"
 #include "printf.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "controller.h"
 #include "game.h"
 

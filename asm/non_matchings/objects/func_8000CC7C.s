@@ -797,7 +797,7 @@ glabel func_8000CC7C
 /* 00E37C 8000D77C 02C02025 */  move  $a0, $s6
 /* 00E380 8000D780 02202825 */  move  $a1, $s1
 /* 00E384 8000D784 AFA60054 */  sw    $a2, 0x54($sp)
-/* 00E388 8000D788 0C003A95 */  jal   func_8000EA54
+/* 00E388 8000D788 0C003A95 */  jal   spawn_object
 /* 00E38C 8000D78C AFA7005C */   sw    $a3, 0x5c($sp)
 /* 00E390 8000D790 8FB80044 */  lw    $t8, 0x44($sp)
 /* 00E394 8000D794 8FA60054 */  lw    $a2, 0x54($sp)
@@ -1083,7 +1083,7 @@ glabel L8000D98C
 /* 00E788 8000DB88 00000000 */  nop   
 /* 00E78C 8000DB8C A6CF0006 */  sh    $t7, 6($s6)
 /* 00E790 8000DB90 8FAD0094 */  lw    $t5, 0x94($sp)
-/* 00E794 8000DB94 0C003A95 */  jal   func_8000EA54
+/* 00E794 8000DB94 0C003A95 */  jal   spawn_object
 /* 00E798 8000DB98 A6CD000C */   sh    $t5, 0xc($s6)
 /* 00E79C 8000DB9C 2418003A */  li    $t8, 58
 /* 00E7A0 8000DBA0 AC40003C */  sw    $zero, 0x3c($v0)
@@ -1130,7 +1130,7 @@ glabel L8000D98C
 /* 00E840 8000DC40 00000000 */  nop   
 /* 00E844 8000DC44 A6CF0006 */  sh    $t7, 6($s6)
 /* 00E848 8000DC48 8FAD0094 */  lw    $t5, 0x94($sp)
-/* 00E84C 8000DC4C 0C003A95 */  jal   func_8000EA54
+/* 00E84C 8000DC4C 0C003A95 */  jal   spawn_object
 /* 00E850 8000DC50 A6CD000C */   sh    $t5, 0xc($s6)
 /* 00E854 8000DC54 2418003A */  li    $t8, 58
 /* 00E858 8000DC58 AC40003C */  sw    $zero, 0x3c($v0)
@@ -1313,7 +1313,7 @@ glabel L8000D98C
 /* 00EADC 8000DEDC A6C00004 */  sh    $zero, 4($s6)
 /* 00EAE0 8000DEE0 A6C00006 */  sh    $zero, 6($s6)
 /* 00EAE4 8000DEE4 02C02025 */  move  $a0, $s6
-/* 00EAE8 8000DEE8 0C003A95 */  jal   func_8000EA54
+/* 00EAE8 8000DEE8 0C003A95 */  jal   spawn_object
 /* 00EAEC 8000DEEC 24050001 */   li    $a1, 1
 /* 00EAF0 8000DEF0 AC520078 */  sw    $s2, 0x78($v0)
 /* 00EAF4 8000DEF4 26520001 */  addiu $s2, $s2, 1

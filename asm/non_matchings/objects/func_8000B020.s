@@ -64,7 +64,7 @@ glabel func_8000B020
 /* 00BD14 8000B114 A7A0005E */  sh    $zero, 0x5e($sp)
 /* 00BD18 8000B118 A3B20060 */  sb    $s2, 0x60($sp)
 /* 00BD1C 8000B11C 02E02025 */  move  $a0, $s7
-/* 00BD20 8000B120 0C003A95 */  jal   func_8000EA54
+/* 00BD20 8000B120 0C003A95 */  jal   spawn_object
 /* 00BD24 8000B124 24050001 */   li    $a1, 1
 /* 00BD28 8000B128 1040001B */  beqz  $v0, .L8000B198
 /* 00BD2C 8000B12C AE220000 */   sw    $v0, ($s1)
@@ -112,7 +112,7 @@ glabel func_8000B020
 /* 00BDD0 8000B1D0 A7A0005C */  sh    $zero, 0x5c($sp)
 /* 00BDD4 8000B1D4 A7A0005E */  sh    $zero, 0x5e($sp)
 /* 00BDD8 8000B1D8 02E02025 */  move  $a0, $s7
-/* 00BDDC 8000B1DC 0C003A95 */  jal   func_8000EA54
+/* 00BDDC 8000B1DC 0C003A95 */  jal   spawn_object
 /* 00BDE0 8000B1E0 00002825 */   move  $a1, $zero
 /* 00BDE4 8000B1E4 3C01800E */  lui   $at, %hi(D_800DC75C) # $at, 0x800e
 /* 00BDE8 8000B1E8 3C108012 */  lui   $s0, %hi(D_8011B078) # $s0, 0x8012
@@ -141,7 +141,7 @@ glabel func_8000B020
 /* 00BE40 8000B240 A7A0005C */  sh    $zero, 0x5c($sp)
 /* 00BE44 8000B244 A7A0005E */  sh    $zero, 0x5e($sp)
 /* 00BE48 8000B248 02E02025 */  move  $a0, $s7
-/* 00BE4C 8000B24C 0C003A95 */  jal   func_8000EA54
+/* 00BE4C 8000B24C 0C003A95 */  jal   spawn_object
 /* 00BE50 8000B250 00002825 */   move  $a1, $zero
 /* 00BE54 8000B254 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 00BE58 8000B258 3C01800E */  lui   $at, %hi(D_800DC764) # $at, 0x800e

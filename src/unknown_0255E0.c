@@ -9,7 +9,7 @@
 #include "f3ddkr.h"
 #include "PR/gu.h"
 #include "textures_sprites.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "game.h"
 #include "memory.h"
 #include "racer.h"
@@ -288,7 +288,7 @@ void func_80027FC4(s32 arg0) {
     sp20.unk6 = 0;
     sp20.unk1 = 8;
     sp20.unk0 = arg0;
-    D_8011B0B8 = func_8000EA54(&sp20, 2);
+    D_8011B0B8 = spawn_object(&sp20, 2);
     if (D_8011B0B8 != 0) {
         D_8011B0B8->unk3C_a.unk3C = 0;
         D_8011B0B8->unk4A = -1;
