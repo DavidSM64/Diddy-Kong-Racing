@@ -1599,7 +1599,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_stopwatchman(obj, (LevelObjectEntry_StopWatchMan *)entry);
             break;
         case 31:
-            obj_init_coin(obj, (LevelObjectEntry_Banana *)entry);
+            obj_init_banana(obj, (LevelObjectEntry_Banana *)entry);
             break;
         case 32:
             obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *)entry, arg2);
@@ -1666,7 +1666,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_worldkey(obj, (LevelObjectEntry_WorldKey *)entry);
             break;
         case 64:
-            obj_init_coincreator(obj, (LevelObjectEntry_BananaCreator *)entry);
+            obj_init_bananacreator(obj, (LevelObjectEntry_BananaCreator *)entry);
             break;
         case 65:
             obj_init_treasuresucker(obj, (LevelObjectEntry_TreasureSucker *)entry);
@@ -1976,7 +1976,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
             obj_loop_stopwatchman(obj, arg1);
             break;
         case 32:
-            obj_loop_coin(obj, arg1);
+            obj_loop_banana(obj, arg1);
             break;
         case 36:
             obj_loop_buoy_pirateship(obj, arg1);
@@ -2052,7 +2052,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
             obj_loop_worldkey(obj, arg1); //arg1=speed
             break;
         case 65:
-            obj_loop_coincreator(obj, arg1);
+            obj_loop_bananacreator(obj, arg1);
             break;
         case 66:
             obj_loop_treasuresucker(obj, arg1);

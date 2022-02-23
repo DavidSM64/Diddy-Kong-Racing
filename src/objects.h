@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_00BC20_H_
-#define _UNKNOWN_00BC20_H_
+#ifndef _OBJECTS_H_
+#define _OBJECTS_H_
 
 #include "types.h"
 #include "structs.h"

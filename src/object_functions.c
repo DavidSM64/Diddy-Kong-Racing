@@ -1041,7 +1041,7 @@ void obj_loop_posarrow(Object *obj, s32 speed) {
         someObj = someObjList[obj->unk78];
         someObj64 = someObj->unk64;
         if (someObj64->unk0 == -1) {
-            obj->unk6 &= 0xBFFF;
+            obj->unk6 &= ~0x4000;
             someObj64->unk150 = obj;
         }
         obj->unk18 = obj->unk78 * 127;
@@ -1129,7 +1129,7 @@ void obj_loop_animator(Object* obj, s32 speed) {
         triangleBatchInfo = &levelModelSegment->batches[batchId];
         texIndex = triangleBatchInfo->textureIndex;
         curFacesOffset = triangleBatchInfo->facesOffset;
-        nextFacesOffset = (triangleBatchInfo + 1)->facesOffset;
+        nextFacesOffset = triangleBatchInfo[1].facesOffset;
         if (texIndex != TEX_INDEX_NO_TEXTURE) {
             texUVSpeed = levelModel->textures[texIndex].texture->width << 7;
             maxSpeed = texUVSpeed * 2;
@@ -2078,11 +2078,11 @@ void obj_init_flycoin(Object *obj, LevelObjectEntry_FlyCoin *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_flycoin.s")
 
-void obj_init_coincreator(Object *obj, LevelObjectEntry_BananaCreator *entry) {
+void obj_init_bananacreator(Object *obj, LevelObjectEntry_BananaCreator *entry) {
     obj->unk18 = 100;
 }
 
-void obj_loop_coincreator(Object *obj, s32 speed) {
+void obj_loop_bananacreator(Object *obj, s32 speed) {
   LevelObjectEntryCommon newEntry;
   Object *newBananaObj;
   Object_64_Banana *newBananaObj64;
@@ -2111,7 +2111,7 @@ void obj_loop_coincreator(Object *obj, s32 speed) {
 }
 
 
-void obj_init_coin(Object *obj, LevelObjectEntry_Banana *entry) {
+void obj_init_banana(Object *obj, LevelObjectEntry_Banana *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -2122,7 +2122,7 @@ void obj_init_coin(Object *obj, LevelObjectEntry_Banana *entry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_coin.s")
+GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_banana.s")
 
 void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entry) {
     obj->unk4C->unk14 = 2;
@@ -2629,7 +2629,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_butterfly.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_midifade.s")
 
-void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry){
+void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) {
   Object_64_MidiFadePoint *obj64;
   ObjectModel **models;
   ObjectModel *objModel;
@@ -2644,8 +2644,7 @@ void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry){
   obj64->unk2 = entry->unkA;
   obj64->unk0 = entry->unk8;
   obj64->unk1C = entry->unk1C;
-  if (obj64->unk2 < obj64->unk0)
-  {
+  if (obj64->unk2 < obj64->unk0) {
     obj64->unk2 = obj64->unk0 + 10;
   }
   obj->z_rotation = 0;

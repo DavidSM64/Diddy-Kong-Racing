@@ -462,13 +462,13 @@ typedef Object Object_64_Animation;
 typedef struct Object_64_Audio {
     /* 0x00 */ u16 unk0;
     /* 0x02 */ u16 unk2;
-    /* 0x02 */ u8 unk4;
-    /* 0x02 */ u8 unk5;
-    /* 0x02 */ u8 unk6;
-    /* 0x02 */ u8 unk7;
-    /* 0x02 */ s32 unk8;
-    /* 0x02 */ u8 unkC;
-    /* 0x02 */ u8 unkD;
+    /* 0x04 */ u8 unk4;
+    /* 0x05 */ u8 unk5;
+    /* 0x06 */ u8 unk6;
+    /* 0x07 */ u8 unk7;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
 } Object_64_Audio;
 
 typedef struct Object_64_MidiFade {
@@ -625,8 +625,8 @@ void obj_init_ainode(Object *obj, LevelObjectEntry_AiNode *entry);
 void obj_loop_ainode(Object *obj, s32 speed);
 void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry);
 void obj_init_flycoin(Object *obj, LevelObjectEntry_FlyCoin *entry);
-void obj_init_coincreator(Object *obj, LevelObjectEntry_BananaCreator *entry);
-void obj_init_coin(Object *obj, LevelObjectEntry_Banana *entry);
+void obj_init_bananacreator(Object *obj, LevelObjectEntry_BananaCreator *entry);
+void obj_init_banana(Object *obj, LevelObjectEntry_Banana *entry);
 void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entry);
 void obj_init_silvercoin(Object *obj, LevelObjectEntry_SilverCoin *entry);
 void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry);
