@@ -6,6 +6,7 @@
 #include "macros.h"
 #include "asset_sections.h"
 #include "memory.h"
+#include "textures_sprites.h"
 
 /************ .rodata ************/
 
@@ -117,20 +118,20 @@ s32 D_800E2E50 = 0;
 s32 D_800E2E54 = 0;
 s32 D_800E2E58 = 0;
 s32 D_800E2E5C = 0;
-s32 *D_800E2E60 = NULL;
+Sprite **D_800E2E60 = NULL;
 s32 D_800E2E64 = 0;
 
-s16 D_800E2E68[6] = {
-     0,  8,
-     7, -4,
-    -7, -4,
+XYStruct D_800E2E68[3] = {
+    { 0,  8 },
+    { 7, -4 },
+    { -7, -4 },
 };
 
-s16 D_800E2E74[8] = {
-    -6,  6, 
-     6,  6, 
-     6, -6, 
-    -6, -6,
+XYStruct D_800E2E74[4] = {
+    { -6,  6 },
+    { 6,  6 },
+    { 6, -6 },
+    { -6, -6 },
 };
 
 s32 D_800E2E84[16] = {
@@ -200,18 +201,11 @@ void func_800AE2A0(void) {
 }
 
 void func_800AE2D8(void) {
-    s32 phi_s1;
-    s32 phi_s0;
+    s32 i;
 
     if (D_800E2E60 != NULL) {
-        phi_s1 = 0;
-        phi_s0 = 0;
-        if (D_800E2E64 > 0) {
-            do {
-                free_sprite(*(D_800E2E60 + phi_s1));
-                phi_s0 += 1;
-                phi_s1 += 1;
-            } while (phi_s0 < D_800E2E64);
+        for (i = 0; i < D_800E2E64; i++) {
+            free_sprite(D_800E2E60[i]);
         }
         free_from_memory_pool(D_800E2E60);
         D_800E2E60 = 0;
@@ -305,16 +299,16 @@ void func_800AEE14(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     s16 i;
     Vertex *temp;
     Triangle *tri;
-    s16 *temp2;
+    XYStruct *temp2;
 
     arg0->unk4 = 3;
     arg0->unk8 = *arg1;
     temp = *arg1;
-    temp2 = &D_800E2E68;
+    temp2 = &D_800E2E68[0];
     for (i = 0; i < 3; i++) {
-        temp->x = temp2[0];
-        temp->y = temp2[1];
-        temp2 += 2;
+        temp->x = temp2->x;
+        temp->y = temp2->y;
+        temp2 += 1;
         temp->z = 0;
         temp->r = 255;
         temp->g = 255;
@@ -338,16 +332,16 @@ void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     s16 i;
     Vertex *temp;
     Triangle *tri;
-    s16 *temp2;
+    XYStruct *temp2;
 
     arg0->unk4 = 4;
     arg0->unk8 = *arg1;
     temp = *arg1;
-    temp2 = &D_800E2E74;
+    temp2 = &D_800E2E74[0];
     for (i = 0; i < 4; i++) {
-        temp->x = temp2[0];
-        temp->y = temp2[1];
-        temp2 += 2;
+        temp->x = temp2->x;
+        temp->y = temp2->y;
+        temp2 += 1;
         temp->z = 0;
         temp->r = 255;
         temp->g = 255;
