@@ -653,7 +653,7 @@ typedef struct Object_6C {
 } Object_6C;
 
 /* Size: 0x018 bytes */
-typedef struct Object_XYZ {
+typedef struct ObjectTransform {
   /* 0x0000 */ s16 y_rotation;
   /* 0x0002 */ s16 x_rotation;
   /* 0x0004 */ s16 z_rotation;
@@ -662,11 +662,11 @@ typedef struct Object_XYZ {
   /* 0x000C */ f32 x_position;
   /* 0x0010 */ f32 y_position;
   /* 0x0014 */ f32 z_position;
-} Object_XYZ;
+} ObjectTransform;
 
 /* Size: 0x0630 bytes */
 typedef struct Object {
-  /* 0x0000 */ Object_XYZ objXYZ;
+  /* 0x0000 */ ObjectTransform trans;
   /* 0x0018 */ s16 unk18;
   /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;

@@ -135,7 +135,7 @@ s32 D_8011D4F8[3];
 s32 D_8011D504;
 ObjectCamera *gCameraObject;
 s32 D_8011D50C;
-Object_XYZ D_8011D510;
+ObjectTransform D_8011D510;
 s32 D_8011D528;
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
@@ -407,13 +407,13 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     obj->unk3B = 0;
     if (obj64->unk1D6 == 0xA) {
         if (obj64->someObject != NULL) {
-            obj64->someObject->objXYZ.x_position = obj->objXYZ.x_position;
-            obj64->someObject->objXYZ.y_position = obj->objXYZ.y_position;
-            obj64->someObject->objXYZ.z_position = obj->objXYZ.z_position;
+            obj64->someObject->trans.x_position = obj->trans.x_position;
+            obj64->someObject->trans.y_position = obj->trans.y_position;
+            obj64->someObject->trans.z_position = obj->trans.z_position;
             obj64->someObject->unk2E = obj->unk2E;
-            obj64->someObject->objXYZ.y_rotation = obj->objXYZ.y_rotation;
-            obj64->someObject->objXYZ.x_rotation = obj->objXYZ.x_rotation;
-            obj64->someObject->objXYZ.z_rotation = obj->objXYZ.z_rotation;
+            obj64->someObject->trans.y_rotation = obj->trans.y_rotation;
+            obj64->someObject->trans.x_rotation = obj->trans.x_rotation;
+            obj64->someObject->trans.z_rotation = obj->trans.z_rotation;
             obj->unk3B = 0;
             obj->unk18 = sp26 + arg0;
             func_80061C0C(obj);
@@ -474,15 +474,15 @@ void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
     obj->unk3B = 0;
     obj->unk18 = 0x28;
     someObj = obj64->someObj;
-    xDiff = someObj->objXYZ.x_position - obj->objXYZ.x_position;
-    yDiff = someObj->objXYZ.y_position - obj->objXYZ.y_position;
-    zDiff = someObj->objXYZ.z_position - obj->objXYZ.z_position;
+    xDiff = someObj->trans.x_position - obj->trans.x_position;
+    yDiff = someObj->trans.y_position - obj->trans.y_position;
+    zDiff = someObj->trans.z_position - obj->trans.z_position;
     func_80011570(obj, xDiff, yDiff, zDiff);
-    obj->objXYZ.y_rotation = obj64->someObj->objXYZ.y_rotation;
-    obj->objXYZ.x_rotation = obj64->someObj->objXYZ.x_rotation;
-    obj->objXYZ.z_rotation = obj64->someObj->objXYZ.z_rotation;
-    obj64->unk1A4 = obj->objXYZ.z_rotation;
-    obj64->unk1A0 = obj->objXYZ.y_rotation;
+    obj->trans.y_rotation = obj64->someObj->trans.y_rotation;
+    obj->trans.x_rotation = obj64->someObj->trans.x_rotation;
+    obj->trans.z_rotation = obj64->someObj->trans.z_rotation;
+    obj64->unk1A4 = obj->trans.z_rotation;
+    obj64->unk1A0 = obj->trans.y_rotation;
     obj->x_velocity = xDiff / arg2;
     obj->y_velocity = yDiff / arg2;
     obj->z_velocity = zDiff / arg2;
@@ -669,7 +669,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
 void func_80057048(Object *obj, s32 arg1) {
     Object_64 *obj64 = obj->unk64;
     if (D_8011D55C != -1 && obj64->unk108 == 0) {
-        func_80001EA8(arg1, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, NULL);
+        func_80001EA8(arg1, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, NULL);
     }
 }
 
@@ -715,7 +715,7 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
                     }
                 }
                 //sp34 = phi_t0;
-                func_80009558(phi_t0, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 4, &obj64->unk24);
+                func_80009558(phi_t0, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 4, &obj64->unk24);
                 obj64->unk28 = phi_t0;
             }
         }
@@ -730,8 +730,8 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     Matrix mf;
 
-    D_8011D510.y_rotation = obj->objXYZ.y_rotation;
-    D_8011D510.x_rotation = obj->objXYZ.x_rotation;
+    D_8011D510.y_rotation = obj->trans.y_rotation;
+    D_8011D510.x_rotation = obj->trans.x_rotation;
     D_8011D510.z_rotation = 0;
     D_8011D510.x_position = 0.0f;
     D_8011D510.y_position = 0.0f;
@@ -792,7 +792,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
 void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     s32 temp0, temp1;
     temp0 = (s32)arg0;
-    temp1 = func_8007066C(gCameraObject->x_position - arg1->objXYZ.x_position, gCameraObject->z_position - arg1->objXYZ.z_position);
+    temp1 = func_8007066C(gCameraObject->x_position - arg1->trans.x_position, gCameraObject->z_position - arg1->trans.z_position);
     gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
     gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
     gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->unk3C_a.unk3C_f, gCameraObject->z_position);

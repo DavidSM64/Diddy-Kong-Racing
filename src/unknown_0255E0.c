@@ -325,9 +325,9 @@ void render_skydome(void) {
 
     v0_some_struct = func_80069D20();
     if (gCurrentLevelHeader2->unk49 == 0) {
-        D_8011B0B8->objXYZ.x_position = v0_some_struct->x_position;
-        D_8011B0B8->objXYZ.y_position = v0_some_struct->y_position;
-        D_8011B0B8->objXYZ.z_position = v0_some_struct->z_position;
+        D_8011B0B8->trans.x_position = v0_some_struct->x_position;
+        D_8011B0B8->trans.y_position = v0_some_struct->y_position;
+        D_8011B0B8->trans.z_position = v0_some_struct->z_position;
     }
 
     func_80068408(&D_8011B0A0, &D_8011B0A4);
@@ -395,7 +395,7 @@ void render_level_geometry_and_objects(void) {
     for (i = sp160; i < sp16C; i++) {
         obj = get_object(i);
         s0 = 0xFF;
-        objFlags = obj->objXYZ.unk6;
+        objFlags = obj->trans.unk6;
         if (objFlags & 0x80) {
             s0 = 0;
         } else if (!(objFlags & 0x8000)) {
@@ -405,7 +405,7 @@ void render_level_geometry_and_objects(void) {
             s0 = 0;
         }
         if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->unk2E + 1]) || (1000.0 < obj->unk34_a.unk34))) {
-            if (obj->objXYZ.unk6 & 0x8000) {
+            if (obj->trans.unk6 & 0x8000) {
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
             } else if (obj->unk50 != NULL) {
                 render_floor_decal(obj, obj->unk50);
@@ -422,14 +422,14 @@ void render_level_geometry_and_objects(void) {
         sp44 = sp160 - 1;
         do {
             obj = get_object(i);
-            objFlags = obj->objXYZ.unk6;
+            objFlags = obj->trans.unk6;
             if (objFlags & sp158) {
                 s0 = FALSE;
             } else {
                 s0 = TRUE;
             }
             if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->unk2E + 1]) && (func_8002A900(obj) != 0)) {
-                if (obj->objXYZ.unk6 & 0x8000) {
+                if (obj->trans.unk6 & 0x8000) {
                     func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                 } else if (obj->unk50 != NULL) {
                     render_floor_decal(obj, obj->unk50);
@@ -462,7 +462,7 @@ void render_level_geometry_and_objects(void) {
         do {
             obj = get_object(i);
             s0 = 0xFF;
-            objFlags = obj->objXYZ.unk6;
+            objFlags = obj->trans.unk6;
             if (objFlags & 0x80) {
                 s0 = 1;
             } else if (!(objFlags & 0x8000)) {
@@ -476,7 +476,7 @@ void render_level_geometry_and_objects(void) {
             }
             if (obj != NULL && s0 < 0xFF && sp58[obj->unk2E + 1] && func_8002A900(obj)) {
                 if (s0 > 0) {
-                    if (obj->objXYZ.unk6 & 0x8000) {
+                    if (obj->trans.unk6 & 0x8000) {
                         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                     } else {
                         if (obj->unk50 != NULL) {
@@ -618,11 +618,11 @@ void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentInde
     while (TRUE) {
         curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
         if (curNode->splitType == 0) {
-            camValue = D_8011B0B0->objXYZ.x_position; // Camera X
+            camValue = D_8011B0B0->trans.x_position; // Camera X
         } else if (curNode->splitType == 1) {
-            camValue = D_8011B0B0->objXYZ.y_position; // Camera Y
+            camValue = D_8011B0B0->trans.y_position; // Camera Y
         } else {
-            camValue = D_8011B0B0->objXYZ.z_position; // Camera Z
+            camValue = D_8011B0B0->trans.z_position; // Camera Z
         }
         if (camValue < curNode->splitValue) {
             if (curNode->leftNode != -1) {
@@ -681,9 +681,9 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return FALSE;
     }
-    x = obj->objXYZ.x_position;
-    y = obj->objXYZ.y_position;
-    z = obj->objXYZ.z_position;
+    x = obj->trans.x_position;
+    y = obj->trans.y_position;
+    z = obj->trans.z_position;
     bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
     if ((x < (bb->unk6 + 25)) && ((bb->unk0 - 25) < x) &&
         (z < (bb->unkA + 25)) && ((bb->unk4 - 25) < z) &&
@@ -880,7 +880,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     }
     seg = &gCurrentLevelModel->segments[obj->unk2E];
     if ((seg->unk2B != 0) && (D_8011D384 != 0) && (arg3 == 1)) {
-        *arg1 = func_800BB2F4(obj->unk2E, obj->objXYZ.x_position, obj->objXYZ.z_position, arg2);
+        *arg1 = func_800BB2F4(obj->unk2E, obj->trans.x_position, obj->trans.z_position, arg2);
         return TRUE;
     } else {
         *arg1 = seg->unk38;
@@ -1059,21 +1059,21 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 
 void func_80031018(void) {
     Matrix mf;
-    Object_XYZ objXYZ;
+    ObjectTransform trans;
 
     f32 x = 0.0f;
     f32 y = 0.0f;
     f32 z = -65536.0f;
 
-    objXYZ.z_rotation = D_8011B0B0->objXYZ.z_rotation;
-    objXYZ.x_rotation = D_8011B0B0->objXYZ.x_rotation;
-    objXYZ.y_rotation = D_8011B0B0->objXYZ.y_rotation;
-    objXYZ.x_position = 0.0f;
-    objXYZ.y_position = 0.0f;
-    objXYZ.z_position = 0.0f;
-    objXYZ.scale = 1.0f;
+    trans.z_rotation = D_8011B0B0->trans.z_rotation;
+    trans.x_rotation = D_8011B0B0->trans.x_rotation;
+    trans.y_rotation = D_8011B0B0->trans.y_rotation;
+    trans.x_position = 0.0f;
+    trans.y_position = 0.0f;
+    trans.z_position = 0.0f;
+    trans.scale = 1.0f;
 
-    func_8006FC30(&mf, &objXYZ);
+    func_8006FC30(&mf, &trans);
     guMtxXFMF(&mf, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers

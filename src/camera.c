@@ -77,11 +77,11 @@ Vp D_800DD148[20] = {
     { 0, 0, 511, 0, 0, 0, 511, 0 },
 };
 
-Object_XYZ D_800DD288 = {
+ObjectTransform D_800DD288 = {
     0, 0, 0, 0, 1.0f, 0.0f, 0.0f, -281.0f,
 };
 
-Object_XYZ D_800DD2A0 = {
+ObjectTransform D_800DD2A0 = {
     0, 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f,
 };
 

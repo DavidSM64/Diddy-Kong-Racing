@@ -189,12 +189,12 @@ extern s32 gObjLoopGoldenBalloonChecksum;
 
 extern s16 D_800DCDD4[4];
 
-extern Object_XYZ D_8011D510;
+extern ObjectTransform D_8011D510;
 
 extern s32 D_8011D534;
 
 s32 get_random_number_from_range(s32, s32); //?
-void func_8006FE74(Matrix *, Object_XYZ *); // Non Matching ?
+void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching ?
 
 s32 func_80044450(s32 arg0);
 void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64);

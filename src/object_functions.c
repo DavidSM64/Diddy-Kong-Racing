@@ -127,16 +127,16 @@ s16 D_8011D4E2;
 
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     f32 phi_f0;
-    obj->objXYZ.unk6 |= 2;
+    obj->trans.unk6 |= 2;
     phi_f0 = entry->unk9 & 0xFF;
     if (phi_f0 < 10) {
         phi_f0 = 10;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = obj->header->scale * phi_f0;
+    obj->trans.scale = obj->header->scale * phi_f0;
     ((Object_50_Scenery *)obj->unk50)->unk0 = obj->header->unk4 * phi_f0;
     obj->unk3A = entry->unk8;
-    obj->objXYZ.y_rotation = entry->unkA << 6 << 4;
+    obj->trans.y_rotation = entry->unkA << 6 << 4;
     if (entry->unkB) {
         obj->unk4C->unk14 = 1;
         obj->unk4C->unk11 = 1;
@@ -162,7 +162,7 @@ void obj_loop_scenery(Object *obj, s32 speed) {
             obj78->unk4 -= speed;
         }
         if ((obj->unk4C->unk14 & 0x40) && ((s32) obj78->unk4 <= 0)) {
-            func_80009558(316, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 4, NULL);
+            func_80009558(316, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 4, NULL);
             obj78->unk0 = (s32*) obj->unk4C->unk0;
             obj78->unk6 = 1820;
             obj78->unk4 = 10;
@@ -180,7 +180,7 @@ void obj_loop_scenery(Object *obj, s32 speed) {
         } else if (obj78->unk4 <= 0) {
             obj78->unk0 = 0;
         }
-        obj->objXYZ.z_rotation = (s16) obj78->unk6;
+        obj->trans.z_rotation = (s16) obj78->unk6;
         obj78->unk6 = (obj78->unk6 * -200) >> 8;
     }
 }
@@ -238,13 +238,13 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
     }
 	
     if ((obj->behaviorId == 116) && (obj->unk7C.word < 0)) {
-        obj->objXYZ.x_position = 0.0f;
-        obj->objXYZ.y_position = 0.0f;
-        obj->objXYZ.z_position = 0.0f;
+        obj->trans.x_position = 0.0f;
+        obj->trans.y_position = 0.0f;
+        obj->trans.z_position = 0.0f;
         func_80011560();
-        func_80011570(obj, obj78->objXYZ.x_position, obj78->objXYZ.y_position, obj78->objXYZ.z_position);
+        func_80011570(obj, obj78->trans.x_position, obj78->trans.y_position, obj78->trans.z_position);
     } else {
-        phi_f2 = (obj78->objXYZ.x_position - obj->objXYZ.x_position) * 0.1;
+        phi_f2 = (obj78->trans.x_position - obj->trans.x_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -252,7 +252,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             phi_f2 = -10.0f;
         }
         obj->x_velocity += (phi_f2 - obj->x_velocity) * 0.125 * sp7C;
-        phi_f2 = (obj78->objXYZ.y_position - obj->objXYZ.y_position) * 0.1;
+        phi_f2 = (obj78->trans.y_position - obj->trans.y_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -260,7 +260,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             phi_f2 = -10.0f;
         }
         obj->y_velocity += (phi_f2 - obj->y_velocity) * 0.125 * sp7C;
-        phi_f2 = (obj78->objXYZ.z_position - obj->objXYZ.z_position) * 0.1;
+        phi_f2 = (obj78->trans.z_position - obj->trans.z_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -269,12 +269,12 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         }
         obj->z_velocity += (phi_f2 - obj->z_velocity) * 0.125 * sp7C;
         if (sqrtf((obj->x_velocity * obj->x_velocity) + (obj->z_velocity * obj->z_velocity)) > 0.5) {
-            obj->objXYZ.y_rotation = func_80070750(obj->x_velocity, obj->z_velocity);
-            obj->objXYZ.x_rotation -= speed << 9;
+            obj->trans.y_rotation = func_80070750(obj->x_velocity, obj->z_velocity);
+            obj->trans.x_rotation -= speed << 9;
         }
         func_80011570(obj, obj->x_velocity * sp7C, obj->y_velocity * sp7C, obj->z_velocity * sp7C);
-        if (obj->unk4A == 298 && func_8002AD08(obj->objXYZ.y_position, &sp4C, 0)) {
-			obj->objXYZ.y_position = sp4C[0];
+        if (obj->unk4A == 298 && func_8002AD08(obj->trans.y_position, &sp4C, 0)) {
+			obj->trans.y_position = sp4C[0];
         }
     }
     obj->unk18 += speed * 10;
@@ -287,7 +287,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             if (obj->behaviorId == 108) {
                 obj4C_obj64->unk187 = 1;
                 obj->unk7C.word = 20;
-                func_8003FC44(obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 44, 17, 1.0f, 1);
+                func_8003FC44(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 44, 17, 1.0f, 1);
                 gParticlePtrList_addObject(obj);
             } else if (obj->unk7C.word > 0) {
                 obj4C_obj64->unk204 = 60;
@@ -304,10 +304,10 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         if (obj->unk7C.word < 0) {
             if (obj->unk4A == 298) {
                 gParticlePtrList_addObject(obj);
-                func_8003FC44(obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 44, 17, 1.0f, 1);
+                func_8003FC44(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 44, 17, 1.0f, 1);
             }
-            obj->objXYZ.scale *= 0.9;
-            if (obj->objXYZ.scale < 0.5) {
+            obj->trans.scale *= 0.9;
+            if (obj->trans.scale < 0.5) {
                 gParticlePtrList_addObject(obj);
             }
         }
@@ -328,7 +328,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             if (temp != 0) {
                 func_8000488C(temp);
             }
-            func_80009558(341, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 4, 0);
+            func_80009558(341, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 4, 0);
             gParticlePtrList_addObject(obj);
         }
     }
@@ -347,8 +347,8 @@ void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
     obj64->unk10 = entry->unkC;
     obj64->unk11 = entry->unkD;
     obj64->unkCD.half = obj64->unkF;
-    obj->objXYZ.y_rotation = entry->unk8 << 4 << 4; // Not sure about the shift amounts here, but it
-    obj->objXYZ.x_rotation = entry->unk9 << 4 << 4; // just needs to be 2 left shifts that add up to 8.
+    obj->trans.y_rotation = entry->unk8 << 4 << 4; // Not sure about the shift amounts here, but it
+    obj->trans.x_rotation = entry->unk9 << 4 << 4; // just needs to be 2 left shifts that add up to 8.
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_lasergun.s")
@@ -395,22 +395,22 @@ void obj_loop_laserbolt(Object *obj, s32 speed) {
     if (osTvType == TV_TYPE_PAL) {
         sp5C *= 1.2;
     }
-    sp40 = obj->objXYZ.x_position + (obj->x_velocity * sp5C);
-    sp44 = obj->objXYZ.y_position + (obj->y_velocity * sp5C);
-    sp48 = obj->objXYZ.z_position + (obj->z_velocity * sp5C);
+    sp40 = obj->trans.x_position + (obj->x_velocity * sp5C);
+    sp44 = obj->trans.y_position + (obj->y_velocity * sp5C);
+    sp48 = obj->trans.z_position + (obj->z_velocity * sp5C);
     sp3C = 9.0f;
 
-    func_80031130(1, &obj->objXYZ.x_position, &sp40, -1);
+    func_80031130(1, &obj->trans.x_position, &sp40, -1);
     sp38 = FALSE;
-    func_80031600(&obj->objXYZ.x_position, &sp40, &sp3C, &sp4E, 1, &sp38);
+    func_80031600(&obj->trans.x_position, &sp40, &sp3C, &sp4E, 1, &sp38);
     if (sp38) {
-        obj->x_velocity = (sp40 - obj->objXYZ.x_position) / sp5C;
-        obj->y_velocity = (sp44 - obj->objXYZ.y_position) / sp5C;
-        obj->z_velocity = (sp48 - obj->objXYZ.z_position) / sp5C;
+        obj->x_velocity = (sp40 - obj->trans.x_position) / sp5C;
+        obj->y_velocity = (sp44 - obj->trans.y_position) / sp5C;
+        obj->z_velocity = (sp48 - obj->trans.z_position) / sp5C;
     }
     func_80011570(obj, obj->x_velocity * sp5C, obj->y_velocity * sp5C, obj->z_velocity * sp5C);
     if (sp38) {
-        func_8003FC44(obj->objXYZ.x_position, obj->objXYZ.y_position - 36.0f, obj->objXYZ.z_position, 44, 0, 0.2, 0);
+        func_8003FC44(obj->trans.x_position, obj->trans.y_position - 36.0f, obj->trans.z_position, 44, 0, 0.2, 0);
         sp4F = TRUE;
     }
 	
@@ -433,7 +433,7 @@ void obj_loop_laserbolt(Object *obj, s32 speed) {
                 obj7C->unkC = 180;
             }
             sp4F = TRUE;
-            func_8003FC44(obj->objXYZ.x_position, obj->objXYZ.y_position - 36.0f, obj->objXYZ.z_position, 44, 17, 0.5, 0);
+            func_8003FC44(obj->trans.x_position, obj->trans.y_position - 36.0f, obj->trans.z_position, 44, 17, 0.5, 0);
         }
     }
     if (sp4F) {
@@ -447,7 +447,7 @@ void obj_init_torch_mist(Object *obj, LevelObjectEntry_Torch_Mist *entry) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = obj->header->scale * phi_f0;
+    obj->trans.scale = obj->header->scale * phi_f0;
     obj->unk78 = entry->unk8;
 }
 
@@ -493,9 +493,9 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     temp4 = obj3C->unkA * 3;
     for (i = 0; i < numberOfObjects; i++)
     {
-        xDiff = objList[i]->objXYZ.x_position - obj->objXYZ.x_position;
-        yDiff = objList[i]->objXYZ.y_position - obj->objXYZ.y_position;
-        zDiff = objList[i]->objXYZ.z_position - obj->objXYZ.z_position;
+        xDiff = objList[i]->trans.x_position - obj->trans.x_position;
+        yDiff = objList[i]->trans.y_position - obj->trans.y_position;
+        zDiff = objList[i]->trans.z_position - obj->trans.z_position;
         if (((-temp3) < yDiff) && (yDiff < temp3))
         {
             temp5 = (xDiff * temp0) + (zDiff * temp1);
@@ -529,7 +529,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_effectbox.s")
 void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 2;
-    obj->objXYZ.y_rotation = entry->rotation << 6 << 4; // Not sure about the values here.
+    obj->trans.y_rotation = entry->rotation << 6 << 4; // Not sure about the values here.
 }
 
 #ifdef NON_EQUIVALENT
@@ -602,7 +602,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
                 trophyObj = spawn_object(&sp44, 1);
                 if (trophyObj) {
                     trophyObj->unk3C_a.unk3C = (void *) 0;
-                    trophyObj->objXYZ.y_rotation = obj->objXYZ.y_rotation;
+                    trophyObj->trans.y_rotation = obj->trans.y_rotation;
                 }
             }
         }
@@ -613,8 +613,8 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
     
     playerObj = get_object_struct(0);
     if (playerObj) {
-        xDiff = obj->objXYZ.x_position - playerObj->objXYZ.x_position;
-        zDiff = playerObj->objXYZ.z_position - obj->objXYZ.z_position;
+        xDiff = obj->trans.x_position - playerObj->trans.x_position;
+        zDiff = playerObj->trans.z_position - obj->trans.z_position;
         sqrtf((xDiff * xDiff) + (zDiff * zDiff)); // Distance on X & Z axes. Not used?
     
         new_var2 = settings->bosses;
@@ -717,9 +717,9 @@ void obj_loop_eggcreator(Object *obj, s32 speed) {
     Object *someObj;
 
     if (obj->unk78 == 0) {
-        sp20.unk2 = obj->objXYZ.x_position;
-        sp20.unk4 = obj->objXYZ.y_position;
-        sp20.unk6 = obj->objXYZ.z_position;
+        sp20.unk2 = obj->trans.x_position;
+        sp20.unk4 = obj->trans.y_position;
+        sp20.unk6 = obj->trans.z_position;
         sp20.unk1 = 8;
         sp20.unk0 = 0x34;
         someObj = spawn_object(&sp20, 1);
@@ -738,8 +738,8 @@ void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse
         phi_f0 = 10;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = obj->header->scale * phi_f0;
-    obj->objXYZ.y_rotation = entry->unkA << 6 << 4;
+    obj->trans.scale = obj->header->scale * phi_f0;
+    obj->trans.y_rotation = entry->unkA << 6 << 4;
     if (obj->unk3A >= obj->header->numberOfModelIds) {
         obj->unk3A = 0;
     }
@@ -778,8 +778,8 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
     }
     objHeader = obj->header;
     phi_f0 /= 64;
-    obj->objXYZ.scale = objHeader->scale * phi_f0;
-    obj->objXYZ.y_rotation = entry->unkA << 6 << 4;
+    obj->trans.scale = objHeader->scale * phi_f0;
+    obj->trans.y_rotation = entry->unkA << 6 << 4;
     if (obj->unk3A >= objHeader->numberOfModelIds) {
         obj->unk3A = 0;
     }
@@ -804,19 +804,19 @@ void obj_loop_airzippers_waterzippers(Object *obj, s32 speed) {
     s32 i;
 
     if (func_8000E1CC() == 0) {
-        obj->objXYZ.unk6 |= 0x4000;
+        obj->trans.unk6 |= 0x4000;
     } else {
-        obj->objXYZ.unk6 &= 0xBFFF;
+        obj->trans.unk6 &= 0xBFFF;
     }
-    if ((obj->unk4C->unk13 < 100) && !(obj->objXYZ.unk6 & 0x4000)) {
+    if ((obj->unk4C->unk13 < 100) && !(obj->trans.unk6 & 0x4000)) {
         racerObjs = get_object_struct_array(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
             racerObj64 = (Object_64_Racer*)curRacerObj->unk64;
             if ((racerObj64->unk1F5 == 0) && (racerObj64->unk1D3 < 15)) {
-                xDiff = curRacerObj->objXYZ.x_position - obj->objXYZ.x_position;
-                yDiff = curRacerObj->objXYZ.y_position - obj->objXYZ.y_position;
-                zDiff = curRacerObj->objXYZ.z_position - obj->objXYZ.z_position;
+                xDiff = curRacerObj->trans.x_position - obj->trans.x_position;
+                yDiff = curRacerObj->trans.y_position - obj->trans.y_position;
+                zDiff = curRacerObj->trans.z_position - obj->trans.z_position;
                 if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < 100) {
                     racerObj64->unk1F5 = 1;
                     racerObj64->unk14C = obj;
@@ -836,9 +836,9 @@ void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
     }
     objScale /= 64;
     header = arg0->header;
-    arg0->objXYZ.scale = header->scale * objScale;
+    arg0->trans.scale = header->scale * objScale;
     arg0->unk50->unk0 = header->unk4 * objScale;
-    arg0->objXYZ.y_rotation = entry->rotation << 6 << 4;
+    arg0->trans.y_rotation = entry->rotation << 6 << 4;
     if (arg0->unk3A >= arg0->header->numberOfModelIds) {
         arg0->unk3A = 0;
     }
@@ -870,8 +870,8 @@ void obj_loop_groundzipper(Object *obj, s32 speed) {
     Object** racerObjs;
     s32 i;
 
-    obj->objXYZ.unk6 &= 0xBFFF;
-    obj->objXYZ.unk6 |= 0x1000;
+    obj->trans.unk6 &= 0xBFFF;
+    obj->trans.unk6 |= 0x1000;
     get_object_struct(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->unk4C->unk13 < obj->unk78) {
         racerObjs = get_object_struct_array(&numObjects);
@@ -879,12 +879,12 @@ void obj_loop_groundzipper(Object *obj, s32 speed) {
             curRacerObj = racerObjs[i];
             racerObj64 = (Object_64_Racer*)curRacerObj->unk64;
             if ((racerObj64->unk1D3 < 15) && (racerObj64->unk1E2 != 0)) {
-                xDiff = curRacerObj->objXYZ.x_position - obj->objXYZ.x_position;
-                yDiff = curRacerObj->objXYZ.y_position - obj->objXYZ.y_position;
-                zDiff = curRacerObj->objXYZ.z_position - obj->objXYZ.z_position;
+                xDiff = curRacerObj->trans.x_position - obj->trans.x_position;
+                yDiff = curRacerObj->trans.y_position - obj->trans.y_position;
+                zDiff = curRacerObj->trans.z_position - obj->trans.z_position;
                 if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < obj->unk78) {
                     if (racerObj64->unk0 != -1) {
-                        func_80001EA8(263, curRacerObj->objXYZ.x_position, curRacerObj->objXYZ.y_position, curRacerObj->objXYZ.z_position, NULL);
+                        func_80001EA8(263, curRacerObj->trans.x_position, curRacerObj->trans.y_position, curRacerObj->trans.z_position, NULL);
                     }
                     racerObj64->unk1D3 = func_8000C8B4(45);
                     racerObj64->unk203 = 2;
@@ -925,7 +925,7 @@ void obj_loop_unknown58(Object *obj, s32 speed) {
         s8 temp = someOtherObj64->unk1D6;
         if ((temp == 1) || (temp == 2)) {
             someObj = (Object *)obj60->unk4;
-            someObj->objXYZ.y_rotation = 0x4000;
+            someObj->trans.y_rotation = 0x4000;
             someObj->unk3A++;
             someObj->unk3A &= 1;
         }
@@ -936,13 +936,13 @@ void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry) 
     f32 phi_f0;
     obj->unk78 = (s32)entry->unkE;
     obj->unk7C.word = -1;
-    obj->objXYZ.y_rotation = entry->unkC << 6 << 4; // Not sure about the values here.
+    obj->trans.y_rotation = entry->unkC << 6 << 4; // Not sure about the values here.
     phi_f0 = (f32)(entry->unkA & 0xFF);
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = (f32)(obj->header->scale * phi_f0);
+    obj->trans.scale = (f32)(obj->header->scale * phi_f0);
 }
 
 void obj_loop_characterflag(Object *obj, s32 speed) {
@@ -1014,9 +1014,9 @@ void obj_init_lavaspurt(Object *obj, LevelObjectEntry_LavaSpurt *entry) {
 void obj_loop_lavaspurt(Object *obj, s32 speed) {
     if (obj->unk78 > 0) {
         obj->unk78 -= speed;
-        obj->objXYZ.unk6 |= 0x4000;
+        obj->trans.unk6 |= 0x4000;
     } else {
-        obj->objXYZ.unk6 &= ~0x4000;
+        obj->trans.unk6 &= ~0x4000;
         obj->unk18 += speed * 4;
         if (obj->unk18 >= 256) {
             obj->unk18 = 0;
@@ -1026,7 +1026,7 @@ void obj_loop_lavaspurt(Object *obj, s32 speed) {
 }
 
 void obj_init_posarrow(Object *obj, LevelObjectEntry_PosArrow *entry) {
-    obj->objXYZ.unk6 |= 0x4000;
+    obj->trans.unk6 |= 0x4000;
 }
 
 void obj_loop_posarrow(Object *obj, s32 speed) {
@@ -1035,13 +1035,13 @@ void obj_loop_posarrow(Object *obj, s32 speed) {
     Object *someObj;
     s32 numberOfObjects;
 
-    obj->objXYZ.unk6 |= 0x4000;
+    obj->trans.unk6 |= 0x4000;
     someObjList = func_8001BAAC(&numberOfObjects);
     if (obj->unk78 < numberOfObjects) {
         someObj = someObjList[obj->unk78];
         someObj64 = someObj->unk64;
         if (someObj64->unk0 == -1) {
-            obj->objXYZ.unk6 &= ~0x4000;
+            obj->trans.unk6 &= ~0x4000;
             someObj64->unk150 = obj;
         }
         obj->unk18 = obj->unk78 * 127;
@@ -1058,7 +1058,7 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
     obj64->unk2 = entry->unk8;
     obj64->unk4 = entry->unk9;
     obj64->unk6 = entry->unkA;
-    obj64->segmentId = get_level_segment_index_from_position(obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position);
+    obj64->segmentId = get_level_segment_index_from_position(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
     if (arg2 == 0) {
         obj64->unk8 = 0;
         obj64->unkA = 0;
@@ -1183,10 +1183,10 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
         scalef = 1.0f;
     }
     scalef /= 64;
-    obj->objXYZ.scale = obj->header->scale * scalef;
-    obj->objXYZ.y_rotation = entry->y_rotation << 8;
-    obj->objXYZ.x_rotation = entry->x_rotation << 8;
-    obj->objXYZ.z_rotation = entry->z_rotation << 8;
+    obj->trans.scale = obj->header->scale * scalef;
+    obj->trans.y_rotation = entry->y_rotation << 8;
+    obj->trans.x_rotation = entry->x_rotation << 8;
+    obj->trans.z_rotation = entry->z_rotation << 8;
     if (entry->actorIndex == -2) {
         entry->actorIndex = func_8001F3B8();
     } else {
@@ -1275,7 +1275,7 @@ void obj_loop_vehicleanim(Object *obj, s32 speed) {
     if (obj60 != NULL) {
         if (obj60->unk0 > 0) {
             someObj = obj60->unk0 == 3 ? obj60->unkC : obj60->unk4;
-            someObj->objXYZ.y_rotation = 0x4000;
+            someObj->trans.y_rotation = 0x4000;
             someObj->unk3A++;
             if (someObj->unk3A == someObj->header->numberOfModelIds) {
                 someObj->unk3A = 0;
@@ -1325,9 +1325,9 @@ void obj_loop_snowball(Object *obj, s32 speed) {
     }
     if (obj64->unk24 != 0) {
         if (obj64->unk20 == 0) {
-            func_80009558(obj64->unk24, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 1, &obj64->unk20);
+            func_80009558(obj64->unk24, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 1, &obj64->unk20);
         } else {
-            func_800096D8(obj64->unk20, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position);
+            func_800096D8(obj64->unk20, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position);
         }
     }
     func_8001F460(obj, speed, obj);
@@ -1345,7 +1345,7 @@ void obj_loop_animcamera(Object *obj, s32 speed) {
     Object_64_80038710 *obj64;
 
     temp_v0 = func_8001F460(obj, speed, obj);
-    obj->objXYZ.unk6 |= 0x4000;
+    obj->trans.unk6 |= 0x4000;
     obj64 = obj->unk64;
     if (temp_v0 == 0) {
         if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
@@ -1354,7 +1354,7 @@ void obj_loop_animcamera(Object *obj, s32 speed) {
             phi_v1 = 1;
         }
         if (phi_v1) {
-            func_80066488(obj64->unk30, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 0x8000 - obj->objXYZ.y_rotation, -obj->objXYZ.x_rotation, obj->objXYZ.z_rotation);
+            func_80066488(obj64->unk30, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 0x8000 - obj->trans.y_rotation, -obj->trans.x_rotation, obj->trans.z_rotation);
         }
     }
 }
@@ -1372,7 +1372,7 @@ void obj_loop_animcar(Object *obj, s32 speed) {
         someObj = get_object_struct(temp_v0 - 1);
     }
     obj->unk7C.word = func_8001F460(obj, speed, obj);
-    obj->objXYZ.unk6 |= 0x4000;
+    obj->trans.unk6 |= 0x4000;
     if (obj->unk7C.word == 0 && someObj != NULL) {
         Object_64_800387CC *someObj64 = someObj->unk64;
         someObj64->unk148 = obj;
@@ -1390,7 +1390,7 @@ void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
     obj->unk4C->unk12 = 0;
     obj->unk78 = (entry->unk8[2] << 16) | entry->unk8[0]; // Not sure about the values here.
     obj->unk7C.word = entry->unk8[1];
-    obj->objXYZ.y_rotation = entry->unkB << 10; // Not sure about the values here.
+    obj->trans.y_rotation = entry->unkB << 10; // Not sure about the values here.
 }
 
 void obj_loop_infopoint(Object *obj, s32 speed) {
@@ -1399,9 +1399,9 @@ void obj_loop_infopoint(Object *obj, s32 speed) {
     Object *playerObj;
 
     if (obj->unk7C.word == 0) {
-        obj->objXYZ.unk6 |= 0x4000;
+        obj->trans.unk6 |= 0x4000;
     } else {
-        obj->objXYZ.unk6 &= ~0x4000;
+        obj->trans.unk6 &= ~0x4000;
     }
 
     obj4C = obj->unk4C;
@@ -1425,10 +1425,10 @@ void obj_loop_smoke(Object *obj, s32 speed) {
     if (osTvType == TV_TYPE_PAL) {
         temp_f2 *= 1.2;
     }
-    obj->objXYZ.x_position += obj->x_velocity * temp_f2;
+    obj->trans.x_position += obj->x_velocity * temp_f2;
     obj->unk18 += speed * 16;
-    obj->objXYZ.y_position += obj->y_velocity * temp_f2;
-    obj->objXYZ.z_position += obj->z_velocity * temp_f2;
+    obj->trans.y_position += obj->y_velocity * temp_f2;
+    obj->trans.z_position += obj->z_velocity * temp_f2;
     if (obj->unk18 >= 256) {
         gParticlePtrList_addObject(obj);
         obj->unk18 = 255;
@@ -1457,7 +1457,7 @@ void obj_loop_wardensmoke(Object *obj, s32 speed) {
         temp_f2 *= 1.2;
     }
     obj->unk18 += speed * 4;
-    obj->objXYZ.y_position += temp_f2 * 0.25;
+    obj->trans.y_position += temp_f2 * 0.25;
     if (obj->unk18 >= 256) {
         gParticlePtrList_addObject(obj);
         obj->unk18 = 255;
@@ -1467,7 +1467,7 @@ void obj_loop_wardensmoke(Object *obj, s32 speed) {
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) {
     LevelObjectEntry_BombExplosion *entry2;
     obj->unk18 = 0;
-    obj->objXYZ.scale = 0.5f;
+    obj->trans.scale = 0.5f;
     obj->unk3A = get_random_number_from_range(0, obj->header->numberOfModelIds - 1);
     entry2 = entry; // Needed for a match.
     obj->unk78 = 0;
@@ -1511,12 +1511,12 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     }
     obj64 = obj->unk64;
     phi_f0 /= 128;
-    obj->objXYZ.scale = phi_f0;
-    obj->objXYZ.y_rotation = entry->unk11 << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->objXYZ.y_rotation);
+    obj->trans.scale = phi_f0;
+    obj->trans.y_rotation = entry->unk11 << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->objXYZ.y_rotation);
-    obj64->unkC = -((obj64->unk0 * obj->objXYZ.x_position) + (obj64->unk8 * obj->objXYZ.z_position));
+    obj64->unk8 = func_800707F8(obj->trans.y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->trans.x_position) + (obj64->unk8 * obj->trans.z_position));
     obj64->unk10 = entry->unk10;
     obj64->unk14 = entry->unk18;
     obj->unk4C->unk14 = 2;
@@ -1557,11 +1557,11 @@ void obj_loop_exit(Object *obj, s32 speed) {
                 racerObj = racerObjects[i];
                 racerObj64 = (Object_64_Racer*)racerObj->unk64;
                 if ((racerObj64->unk0 != -1) && (racerObj64->unk108 == 0)) {
-                    xDiff = racerObj->objXYZ.x_position - obj->objXYZ.x_position;
-                    yDiff = racerObj->objXYZ.y_position - obj->objXYZ.y_position;
-                    zDiff = racerObj->objXYZ.z_position - obj->objXYZ.z_position;
+                    xDiff = racerObj->trans.x_position - obj->trans.x_position;
+                    yDiff = racerObj->trans.y_position - obj->trans.y_position;
+                    zDiff = racerObj->trans.z_position - obj->trans.z_position;
                     if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
-                        temp = (obj64->unk0 * racerObj->objXYZ.x_position) + (obj64->unk8 * racerObj->objXYZ.z_position) + obj64->unkC;
+                        temp = (obj64->unk0 * racerObj->trans.x_position) + (obj64->unk8 * racerObj->trans.z_position) + obj64->unkC;
                         if (temp < 0.0f) {
                             racerObj64->unk108 = obj;
                             racerObj64->unk200 = -120;
@@ -1586,7 +1586,7 @@ void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
     s32 temp;
     obj->unk78 = entry->unk8;
     obj->unk7C.word = entry->unk9;
-    obj->objXYZ.y_rotation = entry->unkA << 6 << 4; // Not sure about the values here.
+    obj->trans.y_rotation = entry->unkA << 6 << 4; // Not sure about the values here.
 }
 
 void obj_loop_setuppoint(Object *obj, s32 speed) {
@@ -1614,7 +1614,7 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
     if (obj->unk4C->unk13 < 0xFF) {
         if (obj->unk78 == 0) {
             obj->unk78 = 0x3C;
-            func_80009558(0x23B, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 4, NULL);
+            func_80009558(0x23B, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 4, NULL);
         }
     }
 }
@@ -1665,8 +1665,8 @@ void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, s32 ar
         phi_f0 = 5.0f;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = phi_f0;
-    obj->objXYZ.y_rotation = entry->unkA << 6 << 4; // Not sure about the values here.
+    obj->trans.scale = phi_f0;
+    obj->trans.y_rotation = entry->unkA << 6 << 4; // Not sure about the values here.
     func_80011390();
 }
 
@@ -1682,12 +1682,12 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     }
     obj64 = obj->unk64;
     phi_f0 /= 128;
-    obj->objXYZ.scale = phi_f0;
-    obj->objXYZ.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->objXYZ.y_rotation);
+    obj->trans.scale = phi_f0;
+    obj->trans.y_rotation = entry->unk9 << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->objXYZ.y_rotation);
-    obj64->unkC = -((obj64->unk0 * obj->objXYZ.x_position) + (obj64->unk8 * obj->objXYZ.z_position));
+    obj64->unk8 = func_800707F8(obj->trans.y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->trans.x_position) + (obj64->unk8 * obj->trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
     obj->unk4C->unk14 = 2;
@@ -1707,12 +1707,12 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     }
     obj64 = obj->unk64;
     phi_f0 /= 128;
-    obj->objXYZ.scale = phi_f0;
-    obj->objXYZ.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->objXYZ.y_rotation);
+    obj->trans.scale = phi_f0;
+    obj->trans.y_rotation = entry->unk9 << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->objXYZ.y_rotation);
-    obj64->unkC = -((obj64->unk0 * obj->objXYZ.x_position) + (obj64->unk8 * obj->objXYZ.z_position));
+    obj64->unk8 = func_800707F8(obj->trans.y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->trans.x_position) + (obj64->unk8 * obj->trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
     obj->unk4C->unk14 = 2;
@@ -1742,17 +1742,17 @@ void obj_loop_bonus(Object *obj, s32 speed) {
         for (i = 0; i < numberOfRacers; i++) {
             racerObj = racerObjects[i];
             racerObj64 = (Object_64_Racer *)racerObj->unk64;
-            yDiff = racerObj->objXYZ.y_position - obj->objXYZ.y_position;
+            yDiff = racerObj->trans.y_position - obj->trans.y_position;
             if ((yDiff < halfDist) && (-halfDist < yDiff)) {
-                xDiff = racerObj->objXYZ.x_position - obj->objXYZ.x_position;
-                zDiff = racerObj->objXYZ.z_position - obj->objXYZ.z_position;
+                xDiff = racerObj->trans.x_position - obj->trans.x_position;
+                zDiff = racerObj->trans.z_position - obj->trans.z_position;
                 if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
-                    f32 temp = (obj64->unk0 * racerObj->objXYZ.x_position) + (obj64->unk8 * racerObj->objXYZ.z_position) + obj64->unkC;
+                    f32 temp = (obj64->unk0 * racerObj->trans.x_position) + (obj64->unk8 * racerObj->trans.z_position) + obj64->unkC;
                     if (temp < 0.0f) {
                         if ((s32) racerObj64->unk185 < 10) {
                             racerObj64->unk185 = 10;
-                            func_80009558(34, racerObj->objXYZ.x_position, racerObj->objXYZ.y_position, racerObj->objXYZ.z_position, 4, NULL);
-                            func_80001EA8(racerObj64->unk3 + 123, racerObj->objXYZ.x_position, racerObj->objXYZ.y_position, racerObj->objXYZ.z_position, NULL);
+                            func_80009558(34, racerObj->trans.x_position, racerObj->trans.y_position, racerObj->trans.z_position, 4, NULL);
+                            func_80001EA8(racerObj64->unk3 + 123, racerObj->trans.x_position, racerObj->trans.y_position, racerObj->trans.z_position, NULL);
                         }
                     }
                 }
@@ -1781,7 +1781,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
         scalef = 10.0f;
     }
     scalef /= 64;
-    obj->objXYZ.scale = obj->header->scale * scalef;
+    obj->trans.scale = obj->header->scale * scalef;
     obj64 = obj->unk64;
     obj64->unkD = 255;
     obj64->unk0 = 0.0f;
@@ -1834,9 +1834,9 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
             gParticlePtrList_addObject(obj);
         }
     } else {
-        obj->objXYZ.unk6 |= 0x4000;
+        obj->trans.unk6 |= 0x4000;
         if (obj->unk78 == 0) {
-            obj->objXYZ.unk6 &= 0xBFFF;
+            obj->trans.unk6 &= 0xBFFF;
             doubleSpeed = speed * 2;
             if (obj->unk39 < (255 - doubleSpeed)) {
                 obj->unk39 += doubleSpeed;
@@ -1852,10 +1852,10 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                         settings->balloonsPtr[0]++;
                     }
                     settings->courseFlagsPtr[settings->courseId] |= flag;
-                    func_80001EA8(573, obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, NULL);
+                    func_80001EA8(573, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, NULL);
                     obj->unk7C.word = 16;
                     obj->unk74 = 2;
-                    obj->objXYZ.unk6 |= 0x4000;
+                    obj->trans.unk6 |= 0x4000;
                     func_800AFC3C(obj, speed);
                 }
             }
@@ -1868,7 +1868,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                 speedf = 1.0f;
             }
             if (obj64->unkD == 255) {
-                obj64->unkD = func_8001C524(obj->objXYZ.x_position, obj->objXYZ.y_position, obj->objXYZ.z_position, 0);
+                obj64->unkD = func_8001C524(obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 0);
                 if (obj64->unkD != 255) {
                     obj64->unkE = func_8001CC48(obj64->unkD, -1, 0);
                     obj64->unkF = func_8001CC48(obj64->unkE, obj64->unkD, 0);
@@ -1906,17 +1906,17 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
         rmonPrintf("Illegal door no!!!\n");
     }
     obj->unk3A = entry->modelIndex;
-    obj->objXYZ.y_rotation = entry->closedRotation << 6 << 4;
-    obj64->unk0 = obj->objXYZ.y_position;
+    obj->trans.y_rotation = entry->closedRotation << 6 << 4;
+    obj64->unk0 = obj->trans.y_position;
     obj64->unk8 = 0;
-    obj->unk78 = obj->objXYZ.y_rotation;
+    obj->unk78 = obj->trans.y_rotation;
     obj->unk7C.word = (s32) ((entry->openRotation & 0x3F) << 10);
     phi_f0 = entry->scale & 0xFF;
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = obj->header->scale * phi_f0;
+    obj->trans.scale = obj->header->scale * phi_f0;
     obj64->unk13 = (u8) entry->unkF;
     obj64->unk14 = (s8) entry->unk11;
     obj->unk4C->unk14 = 0x21;
@@ -1937,20 +1937,20 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
 
     obj->unk3A = 0;
     obj64 = obj->unk64;
-    obj->objXYZ.y_rotation = entry->unk8 << 6 << 4;
+    obj->trans.y_rotation = entry->unk8 << 6 << 4;
     obj64->unkF = entry->unkE;
     obj64->unk13 = entry->unkB;
-    obj64->unk0 = obj->objXYZ.y_position;
+    obj64->unk0 = obj->trans.y_position;
     obj64->unk8 = 0;
     obj64->unk12 = entry->unkA;
-    obj->unk78 = obj->objXYZ.y_rotation;
+    obj->unk78 = obj->trans.y_rotation;
     obj->unk7C.word = (entry->unk9 & 0x3F) << 0xA;
     phi_f0 = entry->unkC & 0xFF;
     if (phi_f0 < 10) {
         phi_f0 = 10;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = obj->header->scale * phi_f0;
+    obj->trans.scale = obj->header->scale * phi_f0;
     obj->unk4C->unk14 = 0x21;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
@@ -1979,12 +1979,12 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     }
     obj64 = (Object_64_Trigger*)obj->unk64;
     phi_f0 /= 128;
-    obj->objXYZ.scale = phi_f0;
-    obj->objXYZ.y_rotation = entry->rotation << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->objXYZ.y_rotation);
+    obj->trans.scale = phi_f0;
+    obj->trans.y_rotation = entry->rotation << 6 << 4;
+    obj64->unk0 = func_800707C4(obj->trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->objXYZ.y_rotation);
-    obj64->unkC = -((obj64->unk0 * obj->objXYZ.x_position) + (obj64->unk8 * obj->objXYZ.z_position));
+    obj64->unk8 = func_800707F8(obj->trans.y_rotation);
+    obj64->unkC = -((obj64->unk0 * obj->trans.x_position) + (obj64->unk8 * obj->trans.z_position));
     obj64->unk10 = entry->scale;
     obj64->unk14 = entry->unkD;
     obj->unk4C->unk14 = 2;
@@ -1999,8 +1999,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trigger.s")
 void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry) {
     Object_64 *temp = obj->unk64;
     obj->unk3A = entry->unk8;
-    obj->objXYZ.y_rotation = entry->unk9 << 6 << 4;
-    temp->unk0_a.unk0 = obj->objXYZ.y_position;
+    obj->trans.y_rotation = entry->unk9 << 6 << 4;
+    temp->unk0_a.unk0 = obj->trans.y_position;
     obj->unk4C->unk14 = 0x21;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
@@ -2092,9 +2092,9 @@ void obj_loop_bananacreator(Object *obj, s32 speed) {
   }
 
   if (obj->unk78 <= 0) {
-    newEntry.x = (s32) obj->objXYZ.x_position;
-    newEntry.y = ((s32) ((s16) obj->objXYZ.y_position)) - 3;
-    newEntry.z = (s32) obj->objXYZ.z_position;
+    newEntry.x = (s32) obj->trans.x_position;
+    newEntry.y = ((s32) ((s16) obj->trans.y_position)) - 3;
+    newEntry.z = (s32) obj->trans.z_position;
     newEntry.size = 8;
     newEntry.object_id = 83;
     newBananaObj = spawn_object(&newEntry, 1);
@@ -2103,7 +2103,7 @@ void obj_loop_bananacreator(Object *obj, s32 speed) {
       newBananaObj->unk3C_a.unk3C = 0;
       newBananaObj64 = (Object_64_Banana *) newBananaObj->unk64;
       newBananaObj64->spawner = obj;
-      func_8003FC44(obj->objXYZ.x_position, obj->objXYZ.y_position - 14.0f, obj->objXYZ.z_position, 44, 34, 0.25f, 0);
+      func_8003FC44(obj->trans.x_position, obj->trans.y_position - 14.0f, obj->trans.z_position, 44, 34, 0.25f, 0);
       obj->unk7C.word = 0;
     }
     obj->unk78 = TIME_SECONDS(20); // Set delay to respawn banana to 20 seconds.
@@ -2138,7 +2138,7 @@ void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entr
         }
     }
     if (obj->unk78 == 3) {
-        obj->objXYZ.unk6 |= 0x600;
+        obj->trans.unk6 |= 0x600;
         gParticlePtrList_addObject(obj);
     }
 }
@@ -2157,7 +2157,7 @@ void obj_init_silvercoin(Object *obj, LevelObjectEntry_SilverCoin *entry) {
         }
     }
     if (obj->unk78 == 3) {
-        obj->objXYZ.unk6 |= 0x600;
+        obj->trans.unk6 |= 0x600;
         gParticlePtrList_addObject(obj);
     }
 }
@@ -2206,7 +2206,7 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 speed) {
     }
 
     // Rotate world key
-    worldKeyObj->objXYZ.y_rotation += speed * 256;
+    worldKeyObj->trans.y_rotation += speed * 256;
 }
 
 typedef struct Object_64_8003DFCC {
@@ -2258,8 +2258,8 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
 
     obj64 = (Object_64_8003DFCC*)obj->unk64;
 
-    obj->objXYZ.scale = obj->header->scale * scalef;
-    obj64->unk0 = obj->objXYZ.scale;
+    obj->trans.scale = obj->header->scale * scalef;
+    obj64->unk0 = obj->trans.scale;
     obj64->unk4 = 0;
     obj->unk7C.word = 0;
 
@@ -2331,7 +2331,7 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
     sp24.unk6 = arg2;
     someObj = spawn_object(&sp24, 1);
     if (someObj != NULL) {
-        someObj->objXYZ.scale *= 3.5 * arg5;
+        someObj->trans.scale *= 3.5 * arg5;
         someObj->unk3C_a.unk3C = NULL;
         someObj->x_velocity = 0.0f;
         someObj->y_velocity = 0.0f;
@@ -2431,7 +2431,7 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, s32 arg2
 }
 
 void obj_init_buoy_pirateship(Object *obj, LevelObjectEntry_Buoy_PirateShip *entry, s32 arg2) {
-    obj->unk64 = func_800BE654(obj->unk2E, obj->objXYZ.x_position, obj->objXYZ.z_position);
+    obj->unk64 = func_800BE654(obj->unk2E, obj->trans.x_position, obj->trans.z_position);
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -2440,14 +2440,14 @@ void obj_init_buoy_pirateship(Object *obj, LevelObjectEntry_Buoy_PirateShip *ent
 
 void obj_loop_buoy_pirateship(Object *obj, s32 speed) {
     if (obj->unk64 != NULL) {
-        obj->objXYZ.y_position = func_800BEEB4(obj->unk64);
+        obj->trans.y_position = func_800BEEB4(obj->unk64);
     }
     obj->unk18 += speed * 8;
 }
 
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, s32 arg2) {
     f32 phi_f0;
-    obj->unk64 = func_800BE654(obj->unk2E, obj->objXYZ.x_position, obj->objXYZ.z_position);
+    obj->unk64 = func_800BE654(obj->unk2E, obj->trans.x_position, obj->trans.z_position);
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x1E;
@@ -2456,9 +2456,9 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, s32 arg2) {
         phi_f0 = 10.0f;
     }
     phi_f0 /= 64;
-    obj->objXYZ.scale = obj->header->scale * phi_f0;
+    obj->trans.scale = obj->header->scale * phi_f0;
     obj->unk3A = entry->unk8;
-    obj->objXYZ.y_rotation = entry->unkA << 6 << 4;
+    obj->trans.y_rotation = entry->unkA << 6 << 4;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_log.s")
@@ -2511,8 +2511,8 @@ void obj_loop_weather(Object *obj, s32 speed) {
       curObj = objects[1];
       curObj64 = (Object_64_Racer *) curObj->unk64;
     } while (((++objects) < lastObj) && (sp54 != curObj64->unk0));
-    temp_f0 = obj->objXYZ.x_position - curObj->objXYZ.x_position;
-    temp_f2 = obj->objXYZ.z_position - curObj->objXYZ.z_position;
+    temp_f0 = obj->trans.x_position - curObj->trans.x_position;
+    temp_f2 = obj->trans.z_position - curObj->trans.z_position;
     new_var = obj->unk78f;
     obj3c = obj->unk3C_a.unk3C;
     if (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) <= (new_var * 1.0f)){
@@ -2531,8 +2531,8 @@ void obj_init_lensflare(Object *obj, LevelObjectEntry_LensFlare *entry) {
 
 void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, s32 arg2) {
     func_800ACF60(obj);
-    obj->objXYZ.scale = entry->unk8;
-    obj->objXYZ.scale /= 40.0f;
+    obj->trans.scale = entry->unk8;
+    obj->trans.scale /= 40.0f;
 }
 
 void obj_init_wavegenerator(Object *obj, LevelObjectEntry_WaveGenerator *entry, s32 arg2) {
@@ -2596,7 +2596,7 @@ void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2
         }
         obj64->unkFC = 1;
     }
-    obj->objXYZ.scale = entry->unkB * 0.01f;
+    obj->trans.scale = entry->unkB * 0.01f;
     if (entry->unkA < obj->header->numberOfModelIds) {
         obj64->texture = (TextureHeader*)obj->unk68[entry->unkA];
     } else {
@@ -2647,9 +2647,9 @@ void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) 
   if (obj64->unk2 < obj64->unk0) {
     obj64->unk2 = obj64->unk0 + 10;
   }
-  obj->objXYZ.z_rotation = 0;
-  obj->objXYZ.x_rotation = 0;
-  obj->objXYZ.y_rotation = 0;
+  obj->trans.z_rotation = 0;
+  obj->trans.x_rotation = 0;
+  obj->trans.y_rotation = 0;
 
   for (i = 0; i < 15; i++) {
     obj64->unkC[i] = entry->unkC[i];
@@ -2664,7 +2664,7 @@ void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) 
   dist = sqrtf(((x * x) + (y * y)) + (z * z));
   obj64->unk4 = entry->unk8 / dist;
   obj64->unk8 = entry->unkA / dist;
-  obj->objXYZ.scale = obj64->unk8;
+  obj->trans.scale = obj64->unk8;
 }
 
 void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
@@ -2710,7 +2710,7 @@ void obj_loop_rangetrigger(Object *obj, s32 speed) {
     unk80042178 sp20;
 
     obj3C = obj->unk3C_a.unk3C;
-    if (func_80016DE8(obj->objXYZ.x_position, 0, obj->objXYZ.z_position, (f32)obj3C->unk8, 1, &sp20) > 0) {
+    if (func_80016DE8(obj->trans.x_position, 0, obj->trans.z_position, (f32)obj3C->unk8, 1, &sp20) > 0) {
         obj->unk74 = obj3C->unkA;
     } else {
         obj->unk74 = 0;
@@ -2723,14 +2723,14 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry) {
 
     obj64 = (Object_64_80042210 *)obj->unk64;
     obj64->unk15 = entry->unkA;
-    obj64->unk0 = obj->objXYZ.x_position;
-    obj64->unk4 = obj->objXYZ.y_position;
-    obj64->unk8 = obj->objXYZ.z_position;
+    obj64->unk0 = obj->trans.x_position;
+    obj64->unk4 = obj->trans.y_position;
+    obj64->unk8 = obj->trans.z_position;
     obj64->unkC = entry->unk8;
     obj64->unk10 = obj64->unkC * obj64->unkC;
     obj64->unk14 = 0;
-    obj64->unk20 = obj->objXYZ.x_position;
-    obj64->unk24 = obj->objXYZ.z_position;
+    obj64->unk20 = obj->trans.x_position;
+    obj64->unk24 = obj->trans.z_position;
     obj64->unk19 = 0;
     obj64->unk30 = 1.0f;
 

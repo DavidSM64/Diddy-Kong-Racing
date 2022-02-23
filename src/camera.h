@@ -85,9 +85,9 @@ extern s16 D_800DD138[8];
 // RSP Viewports
 extern Vp D_800DD148[20];
 
-extern Object_XYZ D_800DD288;
+extern ObjectTransform D_800DD288;
 
-extern Object_XYZ D_800DD2A0;
+extern ObjectTransform D_800DD2A0;
 
 extern Matrix gOrthoMatrix;
 
@@ -98,7 +98,7 @@ extern s16 gButtonMask;
 //TODO: Figure out where these functions live: unknown_070110?
     void func_8006F870(Matrix, Matrix); //unknown_070110
     void func_800705F8(s32, f32, f32, f32); //From unknown_070110
-    void func_8006FE74(Matrix *, Object_XYZ *); // Non Matching unknown_070110?
+    void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching unknown_070110?
     void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
 
 f32 sqrtf(f32); //IDO?
