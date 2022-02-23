@@ -144,16 +144,19 @@ else
 endif
 
 MIPSISET := -mips1
-OPT_FLAGS := -O2
+OPT_FLAGS := -O2 -Xfullwarn #include -Xfullwarn here since it's not supported with -O3
 
 INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src include/libc .
 
 C_DEFINES := $(foreach d,$(DEFINES),-D$(d))
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
+
+#IDO Warnings to Ignore. These are coding style warnings we don't follow
+IDO_IGNORE_WARNINGS = -woff 838,649,624
 ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I . -I include/libc
-CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -Xfullwarn -signed -DNDEBUG $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS)
+CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -signed -DNDEBUG $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) $(IDO_IGNORE_WARNINGS)
 LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
@@ -308,14 +311,14 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 
 ####################### LIBULTRA #########################
 
-$(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1
-$(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1 -Xfullwarn
+$(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2 -Xfullwarn
+$(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2 -Xfullwarn
+$(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
+$(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Xfullwarn -Wo,-loopunroll,0
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 32
 
@@ -324,7 +327,7 @@ $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
 $(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips1
 
 # asm-processor currently does not support -O3, so this is my workaround.
-$(BUILD_DIR)/lib/src/al/global_asm/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/lib/src/al/global_asm/%.o: OPT_FLAGS := -O2 -Xfullwarn
 
 ######################## Targets #############################
 
