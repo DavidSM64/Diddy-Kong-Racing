@@ -6,8 +6,8 @@
 #include "libultra_internal.h"
 
 void main(void);
+void thread1_main(void *);
 
-void func_80065D98(s32 arg0); //Non Matching
 //void func_80065E30(void); //Non Matching
 
 #endif

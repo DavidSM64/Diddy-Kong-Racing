@@ -19,39 +19,30 @@ const char D_800E6ED0[] = "WARNING: Stack overflow/underflow!!!\n";
 
 s32 *gThread1StackPointer; // stack pointer for thread 1
 s32 D_8011D754;
-s32 D_8011D758[2048];
+s64 D_8011D758[1024];
 s32 *gThread3StackPointer; // stack pointer for thread 3
 s32 D_8011F75C;
-OSThread *gThread1; // OSThread for thread 1
-s32 D_8011F764;
-s32 D_8011F768[106];
-OSThread *gThread3; // OSThread for thread 3
-s32 D_8011F914;
-s32 D_8011F918[1130];
+OSThread gThread1; // OSThread for thread 1
+OSThread gThread3; // OSThread for thread 3
+s32 D_8011FAC0[1024];
 
 /******************************/
 
 void main(void) {
     osInitialize();
-    osCreateThread(&gThread1, 1, (OSId)&func_80065D98, 0, &gThread1StackPointer, (OSPri)0);
+    osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1StackPointer, 0);
     osStartThread(&gThread1);
 }
 
-#ifdef NON_EQUIVALENT
-void func_80065D98(s32 arg0) {
+void thread1_main(UNUSED void *unused) {
     func_800B6F50();
-    osCreateThread(&gThread3, 3, (OSId)&thread3_main, 0, &gThread3StackPointer, (OSPri)10);
-    D_8011D758[2049] = 0;
-    D_8011D758[2048] = 0;
-    D_8011D758[1] = 0;
+    osCreateThread(&gThread3, 3, &thread3_main, 0, &gThread3StackPointer, 10);
+    D_8011D758[1024] = 0;
     D_8011D758[0] = 0;
     osStartThread(&gThread3);
     osSetThreadPri(NULL, 0);
     while (1) {}
 }
-#else
-GLOBAL_ASM("asm/non_matchings/main/func_80065D98.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 void func_80065E30(void) {

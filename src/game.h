@@ -130,7 +130,7 @@ void func_8006C22C(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3);
 void func_8006C2E4(void);
 s16 func_8006C2F0(void);
 s32 func_8006C300(void);
-void thread3_main(s32 arg0);
+void thread3_main(UNUSED void *unused);
 void init_game(void);
 void main_game_loop(void);
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2);

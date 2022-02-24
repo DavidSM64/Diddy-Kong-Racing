@@ -786,7 +786,7 @@ s32 func_8006C300(void) {
  * Main looping function for the main thread.
  */
 
-void thread3_main(s32 arg0) {
+void thread3_main(UNUSED void *unused) {
     init_game();
     D_800DD37C = func_8006A1C4(D_800DD37C, 0);
     sBootDelayTimer = 0;
