@@ -85,7 +85,7 @@ s32 D_8012A7FC;
  * Loads the text asset data and sets the default values for each dialogue box in the list.
  */
 void load_fonts(void) {
-    s32 *fontAssetData;
+    u32 *fontAssetData;
     s32 i;
 
     fontAssetData = load_asset_section_from_rom(ASSET_BINARY_44);
@@ -427,8 +427,8 @@ void func_800C50D8(s32 arg0) {
 }
 
 // Unused?
-void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    render_dialogue_text(arg0, (*gDialogueBoxBackground)[arg0].xpos, (*gDialogueBoxBackground)[arg0].ypos, arg1, arg2, arg3);
+void func_800C510C(s32 arg0, char *text, s32 arg2, s32 arg3) {
+    render_dialogue_text(arg0, (*gDialogueBoxBackground)[arg0].xpos, (*gDialogueBoxBackground)[arg0].ypos, text, arg2, arg3);
 }
 
 GLOBAL_ASM("asm/non_matchings/font/render_dialogue_text.s")
@@ -552,7 +552,7 @@ void func_800C56D0(s32 dialogueBoxID) {
  * Contains a timer that counts down two frames before closing a dialogue box
  * when the player exits out of one.
  */
-void render_dialogue_boxes(Gfx *dlist, Gfx *mat, VertexList *verts) {
+void render_dialogue_boxes(Gfx **dlist, Gfx **mat, VertexList **verts) {
     s32 i;
 
     if (sDialogueBoxIsOpen) {
@@ -569,7 +569,7 @@ void render_dialogue_boxes(Gfx *dlist, Gfx *mat, VertexList *verts) {
             if ((*gDialogueBoxBackground)[i].flags & DIALOGUE_BOX_UNK_01) {
                 render_dialogue_box(dlist, mat, verts, i);
             } else {
-                render_dialogue_box(dlist, 0, 0, i);
+                render_dialogue_box(dlist, NULL, NULL, i);
             }
         }
     }
@@ -623,7 +623,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
     u32 width = GET_VIDEO_WIDTH(widthAndHeight);
     u32 height = GET_VIDEO_HEIGHT(widthAndHeight);
 
-    if (lrx >= 0 && ulx < width && lry >= 0 && uly < height) {
+    if (lrx >= 0 && (u32)ulx < width && lry >= 0 && (u32)uly < height) {
         if (ulx < 0) {
             ulx = 0;
         }
@@ -637,7 +637,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
 /**
  * Render the selected dialogue box. Background first, then text.
  */
-void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 dialogueBoxID) {
+void render_dialogue_box(Gfx **dlist, Gfx **mat, VertexList **verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox;
     s32 i;
@@ -696,8 +696,8 @@ void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 dialogueB
         dialogueBox->textBGColourA = dialogueTextBox->textBGColourA;
         dialogueBox->opacity = dialogueTextBox->opacity;
         dialogueBox->font = dialogueTextBox->font;
-        parse_string_with_number(dialogueTextBox->text, &text, dialogueTextBox->textNum);
-        func_800C45A4(dlist, dialogueBox, &text, 0, 1.0f);
+        parse_string_with_number(dialogueTextBox->text, text, dialogueTextBox->textNum);
+        func_800C45A4(dlist, dialogueBox, text, 0, 1.0f);
         dialogueTextBox = dialogueTextBox->nextBox;
     }
 }

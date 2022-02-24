@@ -36,9 +36,9 @@ void func_80076BA0(void) {
 /**
  * Returns the memory address containing an asset section loaded from ROM.
  */
-u32 load_asset_section_from_rom(u32 assetIndex) {
+u32 *load_asset_section_from_rom(u32 assetIndex) {
     u32 *index;
-    u32 out;
+    u32 *out;
     s32 size;
     u32 start;
     if (gAssetsLookupTable[0] < assetIndex) {
@@ -48,11 +48,11 @@ u32 load_asset_section_from_rom(u32 assetIndex) {
     index = assetIndex + gAssetsLookupTable;
     start = *index;
     size = *(index + 1) - start;
-    out = (u32)allocate_from_main_pool_safe(size, COLOR_TAG_GRAY);
+    out = (u32 *)allocate_from_main_pool_safe(size, COLOR_TAG_GRAY);
     if (out == 0) {
         return 0;
     }
-    dmacopy((u32)(start + &__ASSETS_LUT_END), out, size);
+    dmacopy((u32)(start + &__ASSETS_LUT_END), (u32)out, size);
     return out;
 }
 
