@@ -19,12 +19,12 @@ u64 D_8011FAC0[512]; //Thread1 stack?
 
 void main(void) {
     osInitialize();
-    osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1StackPointer, 0);
+    osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1StackPointer, OS_PRIORITY_IDLE);
     osStartThread(&gThread1);
 }
 
 void thread1_main(UNUSED void *unused) {
-    func_800B6F50();
+    thread0_create();
     osCreateThread(&gThread3, 3, &thread3_main, 0, &gThread3StackPointer, 10);
     gThread3Stack[1024] = 0;
     gThread3Stack[0] = 0;
