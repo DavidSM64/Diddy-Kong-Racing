@@ -152,10 +152,8 @@ OSMesgQueue D_80125EA0;
 OSMesg D_80125EB8;
 OSMesgQueue D_80125EC0;
 OSMesgQueue D_80125ED8;
-OSMesg D_80125EF0;
-s32 D_80125EF8[6];
-OSMesg D_80125F10;
-s32 D_80125F18[6];
+OSMesg D_80125EF0[8];
+OSMesg D_80125F10[8];
 u8 D_80125F30;
 u8 D_80125F31;
 u8 D_80125F32;
@@ -228,7 +226,7 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
     gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000);
-    gDPSetFillColor((*dlist)++, 0xFFFCFFFC);
+    gDPSetFillColor((*dlist)++, GPACK_RGBA5551(255, 255, 255, 128) << 16 | GPACK_RGBA5551(255, 255, 255, 128));
     gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
     gDPPipeSync((*dlist)++);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x01000000);
@@ -246,7 +244,7 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
             }
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dlist)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 0xFF);
+                gDPSetPrimColor((*dlist)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
                 gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
                 gDPFillRectangle((*dlist)++, x1, y1, x2, y2);
@@ -295,8 +293,8 @@ void init_rsp(Gfx **dlist) {
 void func_80078100(OSSched *sc) {
     osScInterruptQ = osScGetInterruptQ(sc);
     osCreateMesgQueue(&D_80125EA0, &D_80125EB8, 1);
-    osCreateMesgQueue(&D_80125EC0, &D_80125EF0, 8);
-    osCreateMesgQueue(&D_80125ED8, &D_80125F10, 8);
+    osCreateMesgQueue(&D_80125EC0, D_80125EF0, 8);
+    osCreateMesgQueue(&D_80125ED8, D_80125F10, 8);
 }
 
 void func_80078170(u32 arg0, u32 arg1, u32 arg2) {
