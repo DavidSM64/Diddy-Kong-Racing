@@ -7,7 +7,6 @@
 
 void main(void);
 void thread1_main(void *);
-
-//void func_80065E30(void); //Non Matching
+void thread3_verify_stack(void);
 
 #endif

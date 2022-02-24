@@ -803,7 +803,7 @@ void thread3_main(UNUSED void *unused) {
             while (1); // Infinite loop
         }
         main_game_loop();
-        func_80065E30();
+        thread3_verify_stack();
     }
 }
 
