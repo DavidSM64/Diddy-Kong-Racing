@@ -55,26 +55,26 @@ s16 D_800DD138[8] = {
 
 // RSP Viewports
 Vp D_800DD148[20] = {
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
-    { 0, 0, 511, 0, 0, 0, 511, 0 },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
 };
 
 ObjectTransform D_800DD288 = {
@@ -121,9 +121,9 @@ s32 D_80120D20[2];
 s32 D_80120D28[6];
 s32 D_80120D40[6];
 u16 perspNorm[12];
-Mtx *D_80120D70[6];
+Matrix *D_80120D70[6];
 s32 D_80120D88[6];
-Mtx D_80120DA0[5];
+Matrix D_80120DA0[5];
 Matrix D_80120EE0; // Perspective matrix?
 Matrix D_80120F20;
 Matrix D_80120F60;
@@ -212,7 +212,7 @@ void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
         guPerspectiveF(D_80120EE0, &perspNorm[10], camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-        func_8006F870(D_80120EE0, D_80120FE0);
+        func_8006F870(&D_80120EE0, &D_80120FE0);
     }
 }
 
@@ -221,7 +221,7 @@ void update_camera_fov(f32 camFieldOfView) {
  */
 UNUSED void calculate_camera_perspective(void) {
     guPerspectiveF(D_80120EE0, &perspNorm[10], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    func_8006F870(D_80120EE0, D_80120FE0);
+    func_8006F870(&D_80120EE0, &D_80120FE0);
 }
 
 /* Unused? */
@@ -237,7 +237,7 @@ s32 func_80066220(void) {
     return D_80120CE4;
 }
 
-void func_80066230(Gfx **dlist, s32 arg1) {
+void func_80066230(Gfx **dlist, Gfx **arg1) {
     unk80120AC0 *someStruct;
     s16 sp2A;
     s16 sp28;
@@ -736,7 +736,7 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
-    func_8006F870(gOrthoMatrix, *arg1);
+    func_8006F870(&gOrthoMatrix, (Matrix *)*arg1);
     D_80120D88[0] = *arg1;
     D_800DD148[D_80120CE4 + 5].vp.vscale[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vscale[1] = width * 2;
@@ -764,7 +764,7 @@ void func_8006807C(Gfx **dlist, s32 *arg1) {
     func_8006F768(&D_80121060, &D_80120EE0, &D_80120F20);
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
     func_8006F768(D_80120D70[0], &D_80120F20, &D_80121060);
-    func_8006F870(D_80121060, (s32 *)*arg1); // This doesn't look right. Need to check this!
+    func_8006F870(&D_80121060, (Matrix *)*arg1);
     fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
     *arg1 += 0x40;
     D_80120D1C = 0;
@@ -807,7 +807,7 @@ void func_800682AC(Gfx **dlist) {
 void func_80068408(Gfx **dlist, s32 *arg1) {
     func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
-    func_8006F870(D_80121060, (s32 *)*arg1); // This doesn't look right. Need to check this!
+    func_8006F870(&D_80121060, (Matrix *)*arg1);
     D_80120D88[D_80120D1C] = *arg1;
 
     fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000));

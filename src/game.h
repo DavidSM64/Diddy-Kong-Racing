@@ -100,8 +100,8 @@ extern s32 gVideoCurrFramebuffer;
 extern s32 gVideoLastFramebuffer;
 extern s32 gVideoLastDepthBuffer;
 
-void func_8006F870(Matrix, Matrix); //unknown_070110
-void func_800705F8(s32, f32, f32, f32); //From unknown_070110
+void func_8006F870(Matrix *, Matrix *); //unknown_070110
+void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
 f32 sqrtf(f32); //IDO?
 
 s16 func_8006ABB4(s32 arg0);
