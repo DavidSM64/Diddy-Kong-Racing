@@ -175,19 +175,19 @@ OSMesgQueue *osScInterruptQ;
 GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
 
 s32 func_80077A54(void) {
-    OSMesg *sp1C = NULL;
+    s32 *sp1C = NULL;
     if (D_800DE4DC == 0) {
         return 0;
     }
-    osRecvMesg(&D_80125ED8, &sp1C, OS_MESG_BLOCK);
+    osRecvMesg(&D_80125ED8, (OSMesg)&sp1C, OS_MESG_BLOCK);
     D_800DE4DC = 0;
     return sp1C[1];
 }
 
-void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2) {
+void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
     osWritebackDCacheAll();
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
-    osDpSetNextBuffer(bufPtr, arg1);
+    osDpSetNextBuffer(bufPtr, bufSize);
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
 }
 

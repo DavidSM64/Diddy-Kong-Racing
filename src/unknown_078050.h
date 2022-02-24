@@ -29,7 +29,7 @@ extern s32 D_800DE4D8;
 extern s32 D_800DE4DC;
 
 s32 func_80077A54(void);
-void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2);
+void func_80077AAC(void *bufPtr, s32 arg1, UNUSED s32 arg2);
 void set_background_prim_colour(u8 arg0, u8 arg1, u8 arg2);
 void set_background_fill_colour(s32 red, s32 green, s32 blue);
 void init_rdp_and_framebuffer(Gfx **dlist);
