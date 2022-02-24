@@ -194,6 +194,7 @@ extern ObjectTransform D_8011D510;
 extern s32 D_8011D534;
 
 s32 get_random_number_from_range(s32, s32); //?
+void func_8006FC30(Matrix, ObjectTransform *); // asm func
 void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching ?
 
 s32 func_80044450(s32 arg0);

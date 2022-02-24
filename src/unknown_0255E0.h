@@ -76,13 +76,15 @@ extern f32 D_800DC884[10];
 
 extern f32 D_800DC8AC[27];
 
-extern LevelModel* gCurrentLevelModel;
+extern LevelModel *gCurrentLevelModel;
 extern LevelHeader *gCurrentLevelHeader;
 
 extern s32 D_800DC920;
 extern s32 D_800DC928;
 
 extern s8 D_800DC92C[24];
+
+void func_8006FC30(Matrix, ObjectTransform *); // asm func
 
 s32 func_800249E0(s32 arg0);
 void func_800257D0(void);

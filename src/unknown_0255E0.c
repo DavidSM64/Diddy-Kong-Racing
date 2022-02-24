@@ -330,7 +330,7 @@ void render_skydome(void) {
         D_8011B0B8->trans.z_position = v0_some_struct->z_position;
     }
 
-    func_80068408(&D_8011B0A0, &D_8011B0A4);
+    func_80068408(&D_8011B0A0, (s32 *)&D_8011B0A4);
     if (D_8011B0DC) {
         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8);
     }
@@ -1069,8 +1069,8 @@ void func_80031018(void) {
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
 
-    func_8006FC30(&mf, &trans);
-    guMtxXFMF(&mf, x, y, z, &x, &y, &z);
+    func_8006FC30(mf, &trans);
+    guMtxXFMF(mf, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
     D_8011D468.x = (s32)x;
