@@ -140,7 +140,7 @@ VertexList *gCurrHudVerts;
 TriangleList *gHudTriangles[2];
 TriangleList *gCurrHudTris;
 s32 D_80121230[8];
-s8 D_80121250[16];
+s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
 s8 D_80121268[8192]; // 0x2000 / 8192 bytes Padding?
 s32 gSPTaskNum;
@@ -169,9 +169,7 @@ s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 OSScClient *gNMISched[3];
 OSMesg *gNMIMesgBuf;
-OSMesgQueue *gNMIMesgQueue;
-s32 D_8012354C;
-s32 D_80123550[4];
+OSMesgQueue gNMIMesgQueue;
 s32 D_80123560[8];
 
 /******************************/
@@ -1869,7 +1867,7 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
 
 s32 func_8006EFB8(void) {
     //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
-    if (IO_READ(SP_DMEM_START) != -1) {
+    if (IO_READ(SP_DMEM_START) != -1U) {
         return FALSE;
     }
     return TRUE;
@@ -1984,7 +1982,7 @@ void func_8006F398(void) {
     first_racer_data = (u8 *)(gSettingsPtr->racers);
     second_racer_data = (u8 *)(gSettingsPtr->racers + 1);
 
-    for (i = 0; i < sizeof(Racer); i++) {
+    for (i = 0; i < (s32)sizeof(Racer); i++) {
         temp = first_racer_data[i];
         first_racer_data[i] = second_racer_data[i];
         second_racer_data[i] = temp;
