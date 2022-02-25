@@ -159,10 +159,13 @@ s32 clamp_joystick_x_axis(s32 player);
 s32 clamp_joystick_y_axis(s32 player);
 s32 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
+s32 init_controllers(void);
 
 // Non Matching
 void func_80067A3C(Gfx **dlist);
 void func_80066610(void);
 void func_80066CDC(Gfx **dlist, Gfx **arg1);
+void func_80065EA0(void);
+s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
 
 #endif

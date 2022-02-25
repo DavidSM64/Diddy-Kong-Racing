@@ -830,5 +830,6 @@ void func_8006F564(s8 arg0);
 void func_80099E8C(s32 updateRate);
 void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
+void func_80081218(void);
 
 #endif

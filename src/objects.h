@@ -234,6 +234,6 @@ Object *spawn_object(void *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 void func_80011570(Object *, f32, f32, f32);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
-
+void func_8001BF20(void);
 
 #endif

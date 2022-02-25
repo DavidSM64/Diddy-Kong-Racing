@@ -74,5 +74,7 @@ void func_800A3884(Object *arg0, s32 arg1);
 void func_800A47A0(Object_64 *arg0, s32 arg1);
 void func_800A718C(Object_64 *);
 void func_800AA600(Gfx **arg0, u32 *arg1, u32 *arg2, unk80126CDC *arg3);
+void func_8009ECF0(s32 viewPortCount);
+void func_800A003C(void);
 
 #endif

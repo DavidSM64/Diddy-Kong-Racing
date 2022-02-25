@@ -134,5 +134,7 @@ void func_800AF134(unk800B2260 *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
 void func_800AF404(s32 arg0); // Non Matching
 void func_800B263C(unk800B2260_C *arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
+void init_particle_assets(void); // Non Matching
+void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 
 #endif

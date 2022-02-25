@@ -94,5 +94,6 @@ void free_sprite(Sprite *sprite); // Non Matching
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
 void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
 MemoryPoolSlot *func_8007C12C(s32 arg0, s32 arg1); // Non Matching
+void func_8007AC70(void); // Non Matching
 
 #endif

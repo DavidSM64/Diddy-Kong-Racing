@@ -117,6 +117,7 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb);
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
-void func_80024D54(Gfx *, s32, s32, s32, s32);
+void func_80024D54(Gfx *, Mtx *, VertexList *, TriangleList *, s32);
+void func_8002C7D4(void);
 
 #endif
