@@ -78,7 +78,96 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008174.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800090C0.s")
+
+#ifdef NON_EQUIVALENT
+f32 sqrtf(f32);
+typedef struct floatXYZVals {
+    f32 x1;
+    f32 y1;
+    f32 z1;
+    f32 x2;
+    f32 y2;
+    f32 z2;
+} floatXYZVals;
+s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
+    f32 XToSquare;
+    f32 YToSquare;
+    f32 ZToSquare;
+    f32 X2LessX1;
+    f32 Y2LessY1;
+    f32 Z2LessZ1;
+    f32 x1;
+    f32 y1;
+    f32 x2;
+    f32 y2;
+    f32 z2;
+    f32 z1;
+    f32 ret;
+
+    x1 = floatXYZ->x1;
+    y1 = floatXYZ->y1;
+    z1 = floatXYZ->z1;
+    x2 = floatXYZ->x2;
+    y2 = floatXYZ->y2;
+    z2 = floatXYZ->z2;
+
+    X2LessX1 = x2 - x1;
+    Y2LessY1 = y2 - y1;
+    Z2LessZ1 = z2 - z1;
+
+    if (X2LessX1 == 0.0 && Y2LessY1 == 0.0 && Z2LessZ1 == 0.0) {
+        ret = 0.0f;
+    } else {
+        ret = (
+                ((inX - x1) * X2LessX1) +
+                ((inY - y1) * Y2LessY1) +
+                ((inZ - z1) * Z2LessZ1)
+            ) /
+            (
+                (X2LessX1 * X2LessX1) +
+                (Y2LessY1 * Y2LessY1) +
+                (Z2LessZ1 * Z2LessZ1)
+            );
+    }
+
+    if (ret < 0.0f) {
+        *outX = x1;
+        *outY = y1;
+        *outZ = z1;
+        XToSquare = x1 - inX;
+        YToSquare = y1 - inY;
+        ZToSquare = z1 - inZ;
+        ret = sqrtf((XToSquare * XToSquare) + (YToSquare * YToSquare) + (ZToSquare * ZToSquare));
+    } else if (ret > 1.0f) {
+        *outX = x2;
+        *outY = y2;
+        *outZ = z2;
+        XToSquare = x2 - inX;
+        YToSquare = y2 - inY;
+        ZToSquare = z2 - inZ;
+        ret = sqrtf((XToSquare * XToSquare) + (YToSquare * YToSquare) + (ZToSquare * ZToSquare));
+    } else {
+        *outX = (ret * X2LessX1) + x1;
+        *outY = (ret * Y2LessY1) + y1;
+        *outZ = (ret * Z2LessZ1) + z1;
+        XToSquare = *outX - inX;
+        YToSquare = *outY - inY;
+        ZToSquare = *outZ - inZ;
+
+        // You'd think this is X Y Z pattern like above, but X Z Y seems to match better.
+        //ret = sqrtf((XToSquare * XToSquare) + (YToSquare * YToSquare) + (ZToSquare * ZToSquare));
+        //ret = sqrtf((XToSquare * XToSquare) + (ZToSquare * ZToSquare) + (YToSquare * YToSquare));
+
+        // M2C thinks it's Z X Y.
+        ret = sqrtf((ZToSquare * ZToSquare) + (XToSquare * XToSquare) + (YToSquare * YToSquare));
+    }
+
+    return ret;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800092A8.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800096D8.s")
