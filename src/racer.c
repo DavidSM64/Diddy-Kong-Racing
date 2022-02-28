@@ -310,7 +310,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
 
     if (planeObj64->unk1D7 != 10) {
         //!@bug Typo. Should've been `== 0`, not `= 0`.
-        if (planeObj64->unk1F2 = 0) {
+        if ((planeObj64->unk1F2 = 0)) {
             return; // This never gets called because of the typo.
         }
         phi_v0 = planeObj64->unk1E1;
@@ -621,7 +621,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     D_8011D510.scale = 1;
     func_8006FE74(&mf, &D_8011D510);
 
-    guMtxXFMF(&mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
+    guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
 
 void func_80053664(Object_64 *arg0) {
@@ -737,15 +737,15 @@ void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     D_8011D510.y_position = 0.0f;
     D_8011D510.z_position = 0.0f;
     D_8011D510.scale = 1.0f;
-    func_8006FC30(&mf, &D_8011D510);
-    guMtxXFMF(&mf, 0.0f, 0.0f, 1.0f, &obj64->ox1, &obj64->oy1, &obj64->oz1);
-    guMtxXFMF(&mf, 0.0f, 1.0f, 0.0f, &obj64->ox2, &obj64->oy2, &obj64->oz2);
-    guMtxXFMF(&mf, 1.0f, 0.0f, 0.0f, &obj64->ox3, &obj64->oy3, &obj64->oz3);
+    func_8006FC30(mf, &D_8011D510);
+    guMtxXFMF(mf, 0.0f, 0.0f, 1.0f, &obj64->ox1, &obj64->oy1, &obj64->oz1);
+    guMtxXFMF(mf, 0.0f, 1.0f, 0.0f, &obj64->ox2, &obj64->oy2, &obj64->oz2);
+    guMtxXFMF(mf, 1.0f, 0.0f, 0.0f, &obj64->ox3, &obj64->oy3, &obj64->oz3);
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
 
-void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2) {
+void func_800579B0(unk800579B0 *arg0, UNUSED s32 arg1, f32 arg2) {
     s32 temp, temp2;
 
     temp = D_8011D534 - arg0->unk1E1;
@@ -847,7 +847,7 @@ s32 func_800599A8(void) {
     return D_8011D5AC;
 }
 
-s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
+s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s16 *arg3, s16 *arg4) {
     s32 temp_v0;
     s32 temp_t8;
     s16 sp2E;
