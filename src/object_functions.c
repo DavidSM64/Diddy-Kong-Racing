@@ -1838,10 +1838,10 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
         if (obj->unk78 == 0) {
             obj->trans.unk6 &= 0xBFFF;
             doubleSpeed = speed * 2;
-            if (obj->unk39 < (255 - doubleSpeed)) {
-                obj->unk39 += doubleSpeed;
+            if (obj->unk38.half.lower < (255 - doubleSpeed)) {
+                obj->unk38.half.lower += doubleSpeed;
             } else {
-                obj->unk39 = 255;
+                obj->unk38.half.lower = 255;
             }
             obj4C = obj->unk4C;
             if ((obj4C->unk13 < 45) && (someBool == FALSE)) {
@@ -1862,7 +1862,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
             obj64 = (Object_64_GoldenBalloon *)obj->unk64;
             obj->unk3B = 0;
             obj64->unk14 = 0.0f;
-            if (obj->unk39 < 255) {
+            if (obj->unk38.half.lower < 255) {
                 speedf = 0.0f;
             } else {
                 speedf = 1.0f;
@@ -2431,7 +2431,7 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, s32 arg2
 }
 
 void obj_init_buoy_pirateship(Object *obj, LevelObjectEntry_Buoy_PirateShip *entry, s32 arg2) {
-    obj->unk64 = func_800BE654(obj->unk2E, obj->trans.x_position, obj->trans.z_position);
+    obj->unk64 = func_800BE654(obj->unk2C.half.lower, obj->trans.x_position, obj->trans.z_position);
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -2447,7 +2447,7 @@ void obj_loop_buoy_pirateship(Object *obj, s32 speed) {
 
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, s32 arg2) {
     f32 phi_f0;
-    obj->unk64 = func_800BE654(obj->unk2E, obj->trans.x_position, obj->trans.z_position);
+    obj->unk64 = func_800BE654(obj->unk2C.half.lower, obj->trans.x_position, obj->trans.z_position);
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x1E;

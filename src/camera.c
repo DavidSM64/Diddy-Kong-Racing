@@ -104,7 +104,7 @@ s16 gButtonMask = 0xFFFF;
 
 /************ .bss ************/
 
-unk80120AC0 D_80120AC0[8];
+ObjectSegment D_80120AC0[8];
 s32 gNumberOfViewports;
 s32 D_80120CE4;
 s32 D_80120CE8;
@@ -238,7 +238,7 @@ s32 func_80066220(void) {
 }
 
 void func_80066230(Gfx **dlist, Gfx **arg1) {
-    unk80120AC0 *someStruct;
+    ObjectSegment *someStruct;
     s16 sp2A;
     s16 sp28;
     s16 sp26;
@@ -250,29 +250,29 @@ void func_80066230(Gfx **dlist, Gfx **arg1) {
     func_8006652C(0);
     func_800665E8(0);
     someStruct = func_80069D20();
-    sp2A = someStruct->unk0;
-    sp28 = someStruct->unk2;
-    sp26 = someStruct->unk4;
-    sp20 = someStruct->x_position;
-    sp1C = someStruct->y_position;
-    sp18 = someStruct->z_position;
-    sp24 = someStruct->unk38;
-    someStruct->unk4 = 0;
-    someStruct->unk2 = 0;
-    someStruct->unk0 = -0x8000;
-    someStruct->unk38 = 0;
-    someStruct->x_position = 0.0f;
-    someStruct->y_position = 0.0f;
-    someStruct->z_position = 0.0f;
+    sp2A = someStruct->trans.y_rotation;
+    sp28 = someStruct->trans.x_rotation;
+    sp26 = someStruct->trans.z_rotation;
+    sp20 = someStruct->trans.x_position;
+    sp1C = someStruct->trans.y_position;
+    sp18 = someStruct->trans.z_position;
+    sp24 = someStruct->unk38.word;
+    someStruct->trans.z_rotation = 0;
+    someStruct->trans.x_rotation = 0;
+    someStruct->trans.y_rotation = -0x8000;
+    someStruct->unk38.word = 0;
+    someStruct->trans.x_position = 0.0f;
+    someStruct->trans.y_position = 0.0f;
+    someStruct->trans.z_position = 0.0f;
     func_8001D5E0(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, arg1);
-    someStruct->unk38 = sp24;
-    someStruct->unk0 = sp2A;
-    someStruct->unk2 = sp28;
-    someStruct->unk4 = sp26;
-    someStruct->x_position = sp20;
-    someStruct->y_position = sp1C;
-    someStruct->z_position = sp18;
+    someStruct->unk38.word = sp24;
+    someStruct->trans.y_rotation = sp2A;
+    someStruct->trans.x_rotation = sp28;
+    someStruct->trans.z_rotation = sp26;
+    someStruct->trans.x_position = sp20;
+    someStruct->trans.y_position = sp1C;
+    someStruct->trans.z_position = sp18;
 }
 
 f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
@@ -285,38 +285,38 @@ f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
         phi_v1 += 4;
     }
 
-    temp_f0 = arg2 - D_80120AC0[phi_v1].z_position;
-    temp_f2 = arg0 - D_80120AC0[phi_v1].x_position;
-    temp_f14 = arg1 - D_80120AC0[phi_v1].y_position;
+    temp_f0 = arg2 - D_80120AC0[phi_v1].trans.z_position;
+    temp_f2 = arg0 - D_80120AC0[phi_v1].trans.x_position;
+    temp_f14 = arg1 - D_80120AC0[phi_v1].trans.y_position;
     return sqrtf((temp_f0 * temp_f0) + ((temp_f2 * temp_f2) + (temp_f14 * temp_f14)));
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
-    D_80120AC0[D_80120CE4].unk4 = (s16)(arg3 * 0xB6);
-    D_80120AC0[D_80120CE4].x_position = (f32)xPos;
-    D_80120AC0[D_80120CE4].y_position = (f32)yPos;
-    D_80120AC0[D_80120CE4].z_position = (f32)zPos;
-    D_80120AC0[D_80120CE4].unk2 = (s16)(arg4 * 0xB6);
-    D_80120AC0[D_80120CE4].unk38 = (u16)0;
-    D_80120AC0[D_80120CE4].unk24 = 0.0f;
+    D_80120AC0[D_80120CE4].trans.z_rotation = (s16)(arg3 * 0xB6);
+    D_80120AC0[D_80120CE4].trans.x_position = (f32)xPos;
+    D_80120AC0[D_80120CE4].trans.y_position = (f32)yPos;
+    D_80120AC0[D_80120CE4].trans.z_position = (f32)zPos;
+    D_80120AC0[D_80120CE4].trans.x_rotation = (s16)(arg4 * 0xB6);
+    D_80120AC0[D_80120CE4].unk38.word = (s16)0;
+    D_80120AC0[D_80120CE4].z_velocity = 0.0f;
     D_80120AC0[D_80120CE4].unk28 = 0.0f;
-    D_80120AC0[D_80120CE4].unk2C = 0.0f;
+    D_80120AC0[D_80120CE4].unk2C.word = 0.0f;
     D_80120AC0[D_80120CE4].unk30 = 0.0f;
-    D_80120AC0[D_80120CE4].unk1C = 160.0f;
-    D_80120AC0[D_80120CE4].unk0 = (s16)(arg5 * 0xB6);
+    D_80120AC0[D_80120CE4].x_velocity = 160.0f;
+    D_80120AC0[D_80120CE4].trans.y_rotation = (s16)(arg5 * 0xB6);
     D_80120AC0[D_80120CE4].unk3B = D_800DD2F8[D_80120CE4];
 }
 
 void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6) {
     arg0 += 4;
-    D_80120AC0[arg0].unk38 = 0;
-    D_80120AC0[arg0].x_position = xPos;
-    D_80120AC0[arg0].y_position = yPos;
-    D_80120AC0[arg0].z_position = zPos;
-    D_80120AC0[arg0].unk0 = arg4;
-    D_80120AC0[arg0].unk2 = arg5;
-    D_80120AC0[arg0].unk4 = arg6;
-    D_80120AC0[arg0].levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
+    D_80120AC0[arg0].unk38.word = 0;
+    D_80120AC0[arg0].trans.x_position = xPos;
+    D_80120AC0[arg0].trans.y_position = yPos;
+    D_80120AC0[arg0].trans.z_position = zPos;
+    D_80120AC0[arg0].trans.y_rotation = arg4;
+    D_80120AC0[arg0].trans.x_rotation = arg5;
+    D_80120AC0[arg0].trans.z_rotation = arg6;
+    D_80120AC0[arg0].unk34_a.levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
     D_80120D14 = 1;
 }
 
@@ -826,18 +826,18 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069A40.s")
 
-unk80120AC0 *func_80069CFC(void) {
+ObjectSegment *func_80069CFC(void) {
     return &D_80120AC0[D_80120CE4];
 }
 
-unk80120AC0 *func_80069D20(void) {
+ObjectSegment *func_80069D20(void) {
     if (D_80120D14 != 0) {
         return &D_80120AC0[D_80120CE4 + 4];
     }
     return &D_80120AC0[D_80120CE4];
 }
 
-unk80120AC0 *func_80069D7C(void) {
+ObjectSegment *func_80069D7C(void) {
     if (D_80120D14 != 0) {
         return &D_80120AC0[4];
     }
@@ -872,9 +872,9 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
     s32 i;
 
     for (i = 0; i <= gNumberOfViewports; i++) {
-        temp_f0 = arg0 - D_80120AC0[i].x_position;
-        temp_f2 = arg1 - D_80120AC0[i].y_position;
-        temp_f14 = arg2 - D_80120AC0[i].z_position;
+        temp_f0 = arg0 - D_80120AC0[i].trans.x_position;
+        temp_f2 = arg1 - D_80120AC0[i].trans.y_position;
+        temp_f14 = arg2 - D_80120AC0[i].trans.z_position;
         temp_f0_2 = sqrtf(((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) + (temp_f14 * temp_f14));
         if (temp_f0_2 < arg3) {
             D_80120AC0[i].unk30 = ((arg3 - temp_f0_2) * arg4) / arg3;

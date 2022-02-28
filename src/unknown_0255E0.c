@@ -319,15 +319,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
 #endif
 
 void render_skydome(void) {
-    unk80120AC0 *v0_some_struct;
+    Object *v0_some_struct;
     if (D_8011B0B8 == NULL)
         return;
 
     v0_some_struct = func_80069D20();
     if (gCurrentLevelHeader2->unk49 == 0) {
-        D_8011B0B8->trans.x_position = v0_some_struct->x_position;
-        D_8011B0B8->trans.y_position = v0_some_struct->y_position;
-        D_8011B0B8->trans.z_position = v0_some_struct->z_position;
+        D_8011B0B8->trans.x_position = v0_some_struct->trans.x_position;
+        D_8011B0B8->trans.y_position = v0_some_struct->trans.y_position;
+        D_8011B0B8->trans.z_position = v0_some_struct->trans.z_position;
     }
 
     func_80068408(&D_8011B0A0, (s32 *)&D_8011B0A4);
@@ -395,12 +395,12 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & 0x80) {
             s0 = 0;
         } else if (!(objFlags & 0x8000)) {
-            s0 = obj->unk39;
+            s0 = obj->unk38.half.lower;
         }
         if (objFlags & sp158) {
             s0 = 0;
         }
-        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->unk2E + 1]) || (1000.0 < obj->unk34_a.unk34))) {
+        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->unk2C.half.lower + 1]) || (1000.0 < obj->unk34_a.unk34))) {
             if (obj->trans.unk6 & 0x8000) {
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
             } else if (obj->unk50 != NULL) {
@@ -424,7 +424,7 @@ void render_level_geometry_and_objects(void) {
             } else {
                 s0 = TRUE;
             }
-            if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->unk2E + 1]) && (func_8002A900(obj) != 0)) {
+            if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->unk2C.half.lower + 1]) && (func_8002A900(obj) != 0)) {
                 if (obj->trans.unk6 & 0x8000) {
                     func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                 } else if (obj->unk50 != NULL) {
@@ -462,7 +462,7 @@ void render_level_geometry_and_objects(void) {
             if (objFlags & 0x80) {
                 s0 = 1;
             } else if (!(objFlags & 0x8000)) {
-                s0 = obj->unk39;
+                s0 = obj->unk38.half.lower;
             }
             if (objFlags & sp158) {
                 s0 = 0;
@@ -470,7 +470,7 @@ void render_level_geometry_and_objects(void) {
             if ((obj->behaviorId == 1) && (s0 >= 0xFF)) {
                 s0 = 0;
             }
-            if (obj != NULL && s0 < 0xFF && sp58[obj->unk2E + 1] && func_8002A900(obj)) {
+            if (obj != NULL && s0 < 0xFF && sp58[obj->unk2C.half.lower + 1] && func_8002A900(obj)) {
                 if (s0 > 0) {
                     if (obj->trans.unk6 & 0x8000) {
                         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
@@ -871,12 +871,12 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
         arg2[2] = 0.0f;
         arg2[1] = 1.0f;
     }
-    if ((obj->unk2E < 0) || (obj->unk2E >= gCurrentLevelModel->numberOfSegments)) {
+    if ((obj->unk2C.half.lower < 0) || (obj->unk2C.half.lower >= gCurrentLevelModel->numberOfSegments)) {
         return FALSE;
     }
-    seg = &gCurrentLevelModel->segments[obj->unk2E];
+    seg = &gCurrentLevelModel->segments[obj->unk2C.half.lower];
     if ((seg->unk2B != 0) && (D_8011D384 != 0) && (arg3 == 1)) {
-        *arg1 = func_800BB2F4(obj->unk2E, obj->trans.x_position, obj->trans.z_position, arg2);
+        *arg1 = func_800BB2F4(obj->unk2C.half.lower, obj->trans.x_position, obj->trans.z_position, arg2);
         return TRUE;
     } else {
         *arg1 = seg->unk38;

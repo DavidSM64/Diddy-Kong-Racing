@@ -719,7 +719,7 @@ s32 func_8000E9C0(void) {
 
 void func_8000E9D0(Object *arg0) {
     arg0->trans.unk6 |= 0x8000;
-    func_800245B4(arg0->unk2C | 0xC000);
+    func_800245B4(arg0->unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
     if (1);
     D_8011AE64++;
@@ -859,8 +859,8 @@ void func_80011AD0(Object *this) {
             break;
 
         case 3: //L80011BB4
-            tmp_f0 = (f32)this->unk3C->unkD;
-            if (this->unk3C->unkD < 0) {
+            tmp_f0 = (f32)this->unk3C_a.unk3C->unkD;
+            if (this->unk3C_a.unk3C->unkD < 0) {
                 tmp_f0 += 4294967296.0f;
             }
             offset = (this->unk64->unkFC * 6);

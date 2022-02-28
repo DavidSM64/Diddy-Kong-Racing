@@ -667,6 +667,50 @@ typedef struct ObjectTransform {
   /* 0x0014 */ f32 z_position;
 } ObjectTransform;
 
+/* Size: 0x44 bytes Seems to be the upper 90 of Object? Should this be included in it? */
+typedef struct ObjectSegment {
+  /* 0x0000 */ ObjectTransform trans;
+  /* 0x0018 */ s16 unk18;
+  /* 0x001A */ s16 unk1A;
+  /* 0x001C */ f32 x_velocity;
+  /* 0x0020 */ f32 y_velocity;
+  /* 0x0024 */ f32 z_velocity;
+  /* 0x0028 */ f32 unk28;
+
+  union {
+      struct {
+          /* 0x002C */ s16 upper;
+          /* 0x002E */ s16 lower;
+      } half;
+      /* 0x002C */ f32 word;
+  } unk2C;
+
+  /* 0x0030 */ f32 unk30;
+
+  union {
+    /* 0x0034 */ f32 unk34;
+    /* 0x0034 */ s16 levelSegmentIndex;
+  } unk34_a;
+
+  union {
+      struct {
+          /* 0x0038 */ u8 upper;
+          /* 0x0039 */ u8 lower;
+      } half;
+      /* 0x0038 */ s16 word;
+  } unk38;
+
+  /* 0x003A */ s8 unk3A;
+  /* 0x003B */ s8 unk3B;
+
+  union {
+    /* 0x003C */ Object_3C* unk3C;
+    /* 0x003C */ f32 unk3C_f;
+  } unk3C_a;
+
+  /* 0x0040 */ ObjectHeader *header;
+} ObjectSegment;
+
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectTransform trans;
@@ -675,21 +719,34 @@ typedef struct Object {
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
-  /* 0x0028 */ u32 unk28;
+  /* 0x0028 */ f32 unk28;
 
-  /* 0x002C */ s16 unk2C;
+  union {
+      struct {
+          /* 0x002C */ s16 upper;
+          /* 0x002E */ s16 lower;
+      } half;
+      /* 0x002C */ f32 word;
+  } unk2C;
 
-  /* 0x002E */ s16 unk2E;
   /* 0x0030 */ f32 unk30;
+
   union {
     /* 0x0034 */ f32 unk34;
-    /* 0x0034 */ s16 unk34_s;
+    /* 0x0034 */ s16 levelSegmentIndex;
   } unk34_a;
-  /* 0x0038 */ u8 unk38;
 
-  /* 0x0039 */ u8 unk39;
+  union {
+      struct {
+          /* 0x0038 */ u8 upper;
+          /* 0x0039 */ u8 lower;
+      } half;
+      /* 0x0038 */ s16 word;
+  } unk38;
+
   /* 0x003A */ s8 unk3A;
   /* 0x003B */ s8 unk3B;
+
   union {
     /* 0x003C */ Object_3C* unk3C;
     /* 0x003C */ f32 unk3C_f;
@@ -931,30 +988,6 @@ typedef struct Object {
 
   u32 unk378[174]; // Not an array. Unknown values.
 } Object;
-
-/* Size: 0x44 bytes, might just be Object? */
-typedef struct unk80120AC0 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u8  pad6[6];
-    f32 x_position;
-    f32 y_position;
-    f32 z_position;
-    f32 pad18;
-    f32 unk1C;
-    f32 pad20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    s16 levelSegmentIndex;
-    s16 pad36;
-    s16 unk38;
-    s8  pad3A;
-    s8  unk3B;
-    u8  pad3C[8];
-} unk80120AC0;
 
 typedef struct unk80027FC4 {
     u8 unk0;

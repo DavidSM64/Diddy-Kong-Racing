@@ -410,7 +410,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
             obj64->someObject->trans.x_position = obj->trans.x_position;
             obj64->someObject->trans.y_position = obj->trans.y_position;
             obj64->someObject->trans.z_position = obj->trans.z_position;
-            obj64->someObject->unk2E = obj->unk2E;
+            obj64->someObject->unk2C.half.lower = obj->unk2C.half.lower;
             obj64->someObject->trans.y_rotation = obj->trans.y_rotation;
             obj64->someObject->trans.x_rotation = obj->trans.x_rotation;
             obj64->someObject->trans.z_rotation = obj->trans.z_rotation;
