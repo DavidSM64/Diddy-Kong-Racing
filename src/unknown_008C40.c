@@ -5,6 +5,9 @@
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
+#include "unknown_005740.h"
+#include "memory.h"
+#include "audio.h"
 
 /************ .data ************/
 
@@ -33,8 +36,39 @@ extern s8 D_8011AC18;
 
 /*******************************/
 
+#ifdef NON_EQUIVALENT
+void func_80008040(void) {
+    u32 temp_v1;
+    //? *phi_v1;
+    s32 i;
+
+    func_80002128(&D_80119C40, NULL, NULL);
+    D_80119C48 = allocate_from_main_pool_safe(1440, COLOR_TAG_CYAN);
+    D_80119C50 = allocate_from_main_pool_safe(160, COLOR_TAG_CYAN);
+    D_80119C44 = allocate_from_main_pool_safe(160, COLOR_TAG_CYAN);
+    D_800DC6E0 = 0;
+    // phi_v1 = &D_80119C58;
+    // do {
+    //     temp_v1 = phi_v1 + 0x180;
+    //     temp_v1->unk-8 = 0;
+    //     phi_v1 = (? *) temp_v1;
+    // } while (temp_v1 < (u32) &D_8011A6D8);
+    for (i = 0; i < 384; i++) {
+        D_80119C48[i]->unk18 = 0;
+        D_80119C48[i]->unk3C = 0;
+        D_80119C48[i]->unk60 = 0;
+        D_80119C48[i]->unk84 = 0;
+    }
+    func_80008174();
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008040.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008140.s")
+#endif
+
+void func_80008140(void) {
+    func_800018E0();
+    D_8011AC18 = 1;
+}
 
 void func_80008168(void) {
     D_8011AC18 = 0;
