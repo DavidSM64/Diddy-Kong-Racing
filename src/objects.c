@@ -44,9 +44,9 @@ s32 D_800DC74C = 0; // Currently unknown, might be a different type.
 s32 D_800DC750 = 0; // Currently unknown, might be a different type.
 s32 D_800DC754 = 0; // Currently unknown, might be a different type.
 s32 D_800DC758 = 0; // Currently unknown, might be a different type.
-s32 D_800DC75C = 0; // Currently unknown, might be a different type.
+Object *D_800DC75C = NULL; // Currently unknown, might be a different type.
 s32 D_800DC760 = 9; // Currently unknown, might be a different type.
-s32 D_800DC764 = 0; // Currently unknown, might be a different type.
+Object *D_800DC764 = NULL; // Currently unknown, might be a different type.
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
 f32 D_800DC76C[15] = { 
@@ -271,10 +271,12 @@ extern Object *D_800DC764;
 
 s32 *get_misc_asset(s32 arg0);
 
-void func_8000B290() {
+// Not positive about the data argument.
+// It just made sense since there seemed to be nothing else to pass to free_from_memory_pool
+void func_8000B290(void *data) {
 
     if (D_800DC754) {
-        free_from_memory_pool();
+        free_from_memory_pool(data);
     }
     get_misc_asset(20);
     /*{
@@ -493,7 +495,7 @@ void func_8000CBC0(void) {
 }
 
 #ifdef NON_EQUIVALENT
-void func_8000CBF0(u32 *arg0, s32 arg1) {
+void func_8000CBF0(Object *arg0, s32 arg1) {
     u32 **temp = &D_8011AE08[arg1];
     u32 *temp2;
     temp2 = *temp;
@@ -837,7 +839,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80011960.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-extern f32 D_800E5550;
+f32 D_800E5550 = 0.01f;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
     u32 offset;
@@ -1467,8 +1469,8 @@ Object *func_8002342C(f32 x, f32 z) {
     Object *retval = NULL;
     s32 i;
     Object *currObj = NULL;
-    f32 x;
-    f32 z;
+    //f32 x; // Why redeclared?
+    //f32 z; // Why redeclared?
     f32 dist;
     f32 max = 0.0f;
 

@@ -94,9 +94,7 @@ extern s32 D_800DC74C;
 extern s32 D_800DC750;
 extern s32 D_800DC754;
 extern s32 D_800DC758;
-extern s32 D_800DC75C;
 extern s32 D_800DC760;
-extern s32 D_800DC764;
 extern s32 D_800DC768;
 
 extern f32 D_800DC76C[15];

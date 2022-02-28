@@ -97,26 +97,26 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     if (framesize < 0) {
     }
 
-    if (c->fxType == AL_FX_CUSTOM) {
-        reg_v0 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
-        tmp_size = reg_v0[9] - reg_v0[8];
-        reg_s0 = allocate_from_main_pool_safe(tmp_size, COLOR_TAG_CYAN);
-        load_asset_to_address(39, reg_s0, reg_v0[8], tmp_size);
-        c->params = reg_s0;
-        c[1].maxVVoices = 0;
-        alInit(&ALGlobals_801161D0, c);
-        free_from_memory_pool(reg_s0);
-    } else {
-        alInit(&ALGlobals_801161D0, c);
-    }
-    D_80119240[0].node.next = NULL;
-    D_80119240[0].node.prev = NULL;
+    // if (c->fxType == AL_FX_CUSTOM) {
+    //     reg_v0 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
+    //     tmp_size = reg_v0[9] - reg_v0[8];
+    //     reg_s0 = allocate_from_main_pool_safe(tmp_size, COLOR_TAG_CYAN);
+    //     load_asset_to_address(39, reg_s0, reg_v0[8], tmp_size);
+    //     c->params = reg_s0;
+    //     c[1].maxVVoices = 0;
+    //     alInit(&ALGlobals_801161D0, c);
+    //     free_from_memory_pool(reg_s0);
+    // } else {
+    //     alInit(&ALGlobals_801161D0, c);
+    // }
+    // D_80119240[0].node.next = NULL;
+    // D_80119240[0].node.prev = NULL;
 
-    for (i = 0; i < 0x30; i++) {
-        alLink(&(D_80119240[i + 1].node), &(D_80119240[i].node));
-        D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
-    }
-    D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
+    // for (i = 0; i < 0x30; i++) {
+    //     alLink(&(D_80119240[i + 1].node), &(D_80119240[i].node));
+    //     D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
+    // }
+    // D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
     alHeapDBAlloc(0, 0, c->heap, 1, 120);
 
     osCreateMesgQueue(&D_80116198, &D_801161B0, 8);

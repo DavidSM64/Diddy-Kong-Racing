@@ -501,6 +501,9 @@ u8 music_is_playing(void) {
 }
 
 #ifdef NON_EQUIVALENT
+f32 D_800E49E0 = 46875.0f;
+f32 D_800E49E4 = 46875.0f;
+f32 D_800E49E8 = 120000.0f;
 f32 func_800015F8(void) {
     u32 current_cnt = osGetCount();
     u32 delta;
@@ -698,7 +701,7 @@ void func_80001F14(u16 sndIndx, u32 *arg1) {
 
 #ifdef NON_EQUIVALENT
 void func_80001FB8(u16 arg0) {
-    arg0 * 10 + sSoundEffectsPool[0].unk00;
+    arg0 * 10 + sSoundEffectsPool[0].pad0;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/audio/func_80001FB8.s")

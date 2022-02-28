@@ -540,7 +540,7 @@ void func_80001D04(u16, s32 *);
 f32 sqrtf(f32);
 u32 func_80001C08(void);
 void func_80001D04(u16, s32 *);
-Object *spawn_object(unk80027FC4 *, s32);
+Object *spawn_object(void *, s32);
 void func_8005A3B0(void);
 void func_8006F254(void);
 void func_8009CF68(s32 arg0);
