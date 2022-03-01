@@ -101,6 +101,7 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     x2 = floatXYZ->x2;
     y2 = floatXYZ->y2;
     z2 = floatXYZ->z2;
+    temp = 0.0f;
 
     dx = x2 - x1;
     yx = y2 - y1;
@@ -110,7 +111,7 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
         temp = 0.0f;
     } else {
         temp = ((inX - x1) * dx + (inY - y1) * yx + (inZ - z1) * zx) /
-                (dx * dx +  yx  * yx +  zx  * zx);
+                (dx * dx + yx * yx + zx * zx);
     }
 
     if (temp < 0.0f) {
@@ -130,14 +131,12 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
         zx = z2 - inZ;
         ret = sqrtf(dx * dx + yx * yx + zx * zx);
     } else {
-        *outX = temp * dx + x1;
-        *outY = temp * yx + y1;
+        *outX = temp * dx + x1,
+        *outY = temp * yx + y1,
         *outZ = temp * zx + z1;
-        zx = *outZ - inZ;
-        if (1) {
-            dx = *outX - inX;
-            yx = *outY - inY;
-        }
+        zx = *outZ - inZ, // Comma required here as this was likely all one line.
+        dx = *outX - inX;
+        yx = *outY - inY;
 
         // This one is subtly different than above. Note the bracket placements
         ret = sqrtf(zx * zx + (dx * dx + yx * yx));
