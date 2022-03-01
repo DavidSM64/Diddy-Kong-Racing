@@ -79,29 +79,20 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800090C0.s")
 
-#ifdef NON_EQUIVALENT
-f32 sqrtf(f32);
-typedef struct floatXYZVals {
-    f32 x1;
-    f32 y1;
-    f32 z1;
-    f32 x2;
-    f32 y2;
-    f32 z2;
-} floatXYZVals;
+#ifdef NON_MATCHING
+//Just a couple of regalloc differences
+//Best I can figure, this measures the distance between XYZ values.
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
-    f32 XToSquare;
-    f32 YToSquare;
-    f32 ZToSquare;
-    f32 X2LessX1;
-    f32 Y2LessY1;
-    f32 Z2LessZ1;
+    f32 dx;
+    f32 yx;
+    f32 zx;
     f32 x1;
     f32 y1;
+    f32 z1;
     f32 x2;
     f32 y2;
     f32 z2;
-    f32 z1;
+    f32 temp;
     f32 ret;
 
     x1 = floatXYZ->x1;
@@ -111,55 +102,45 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     y2 = floatXYZ->y2;
     z2 = floatXYZ->z2;
 
-    X2LessX1 = x2 - x1;
-    Y2LessY1 = y2 - y1;
-    Z2LessZ1 = z2 - z1;
+    dx = x2 - x1;
+    yx = y2 - y1;
+    zx = z2 - z1;
 
-    if (X2LessX1 == 0.0 && Y2LessY1 == 0.0 && Z2LessZ1 == 0.0) {
-        ret = 0.0f;
+    if (dx == 0.0 && yx == 0.0 && zx == 0.0) {
+        temp = 0.0f;
     } else {
-        ret = (
-                ((inX - x1) * X2LessX1) +
-                ((inY - y1) * Y2LessY1) +
-                ((inZ - z1) * Z2LessZ1)
-            ) /
-            (
-                (X2LessX1 * X2LessX1) +
-                (Y2LessY1 * Y2LessY1) +
-                (Z2LessZ1 * Z2LessZ1)
-            );
+        temp = ((inX - x1) * dx + (inY - y1) * yx + (inZ - z1) * zx) /
+                (dx * dx +  yx  * yx +  zx  * zx);
     }
 
-    if (ret < 0.0f) {
+    if (temp < 0.0f) {
         *outX = x1;
         *outY = y1;
         *outZ = z1;
-        XToSquare = x1 - inX;
-        YToSquare = y1 - inY;
-        ZToSquare = z1 - inZ;
-        ret = sqrtf((XToSquare * XToSquare) + (YToSquare * YToSquare) + (ZToSquare * ZToSquare));
-    } else if (ret > 1.0f) {
+        dx = x1 - inX;
+        yx = y1 - inY;
+        zx = z1 - inZ;
+        ret = sqrtf(dx * dx + yx * yx + zx * zx);
+    } else if (temp > 1.0f) {
         *outX = x2;
         *outY = y2;
         *outZ = z2;
-        XToSquare = x2 - inX;
-        YToSquare = y2 - inY;
-        ZToSquare = z2 - inZ;
-        ret = sqrtf((XToSquare * XToSquare) + (YToSquare * YToSquare) + (ZToSquare * ZToSquare));
+        dx = x2 - inX;
+        yx = y2 - inY;
+        zx = z2 - inZ;
+        ret = sqrtf(dx * dx + yx * yx + zx * zx);
     } else {
-        *outX = (ret * X2LessX1) + x1;
-        *outY = (ret * Y2LessY1) + y1;
-        *outZ = (ret * Z2LessZ1) + z1;
-        XToSquare = *outX - inX;
-        YToSquare = *outY - inY;
-        ZToSquare = *outZ - inZ;
+        *outX = temp * dx + x1;
+        *outY = temp * yx + y1;
+        *outZ = temp * zx + z1;
+        zx = *outZ - inZ;
+        if (1) {
+            dx = *outX - inX;
+            yx = *outY - inY;
+        }
 
-        // You'd think this is X Y Z pattern like above, but X Z Y seems to match better.
-        //ret = sqrtf((XToSquare * XToSquare) + (YToSquare * YToSquare) + (ZToSquare * ZToSquare));
-        //ret = sqrtf((XToSquare * XToSquare) + (ZToSquare * ZToSquare) + (YToSquare * YToSquare));
-
-        // M2C thinks it's Z X Y.
-        ret = sqrtf((ZToSquare * ZToSquare) + (XToSquare * XToSquare) + (YToSquare * YToSquare));
+        // This one is subtly different than above. Note the bracket placements
+        ret = sqrtf(zx * zx + (dx * dx + yx * yx));
     }
 
     return ret;
