@@ -79,19 +79,12 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800090C0.s")
 
-#ifdef NON_MATCHING
-//Just a couple of regalloc differences
 //Best I can figure, this measures the distance between XYZ values.
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
-    f32 dx;
-    f32 yx;
-    f32 zx;
-    f32 x1;
-    f32 y1;
-    f32 z1;
-    f32 x2;
-    f32 y2;
-    f32 z2;
+    f32 dx, dy, dz;
+    f32 x1, y1, z1;
+    f32 x2, y2, z2;
+
     f32 temp;
     f32 ret;
 
@@ -104,14 +97,14 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     temp = 0.0f;
 
     dx = x2 - x1;
-    yx = y2 - y1;
-    zx = z2 - z1;
+    dy = y2 - y1;
+    dz = z2 - z1;
 
-    if (dx == 0.0 && yx == 0.0 && zx == 0.0) {
+    if (dx == 0.0 && dy == 0.0 && dz == 0.0) {
         temp = 0.0f;
     } else {
-        temp = ((inX - x1) * dx + (inY - y1) * yx + (inZ - z1) * zx) /
-                (dx * dx + yx * yx + zx * zx);
+        temp = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) /
+                (dx * dx + dy * dy + dz * dz);
     }
 
     if (temp < 0.0f) {
@@ -119,34 +112,27 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
         *outY = y1;
         *outZ = z1;
         dx = x1 - inX;
-        yx = y1 - inY;
-        zx = z1 - inZ;
-        ret = sqrtf(dx * dx + yx * yx + zx * zx);
+        dy = y1 - inY;
+        dz = z1 - inZ;
+        ret = sqrtf(dx * dx + dy * dy + dz * dz);
     } else if (temp > 1.0f) {
         *outX = x2;
         *outY = y2;
         *outZ = z2;
         dx = x2 - inX;
-        yx = y2 - inY;
-        zx = z2 - inZ;
-        ret = sqrtf(dx * dx + yx * yx + zx * zx);
+        dy = y2 - inY;
+        dz = z2 - inZ;
+        ret = sqrtf(dx * dx + dy * dy + dz * dz);
     } else {
-        *outX = temp * dx + x1,
-        *outY = temp * yx + y1,
-        *outZ = temp * zx + z1;
-        zx = *outZ - inZ, // Comma required here as this was likely all one line.
-        dx = *outX - inX;
-        yx = *outY - inY;
+        *outX = temp * dx + x1, // Comma required here as this was likely all one line.
+        *outY = temp * dy + y1,
+        *outZ = temp * dz + z1;
 
-        // This one is subtly different than above. Note the bracket placements
-        ret = sqrtf(zx * zx + (dx * dx + yx * yx));
+        ret = sqrtf((*outX - inX) * (*outX - inX) + (*outY - inY) * (*outY - inY) + (*outZ - inZ) * (*outZ - inZ));
     }
 
     return ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800092A8.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
