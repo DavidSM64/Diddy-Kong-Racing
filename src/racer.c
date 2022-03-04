@@ -804,18 +804,14 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80059080.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80059208.s")
 
-void func_80059790(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
-    s32 temp_lo;
-    s32 temp_lo_2;
-
+void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths) {
     if (gVideoRefreshRate == REFRESH_50HZ) {
-        arg0 = (f32)arg0 * 1.2;
+        frameCount = (f32)frameCount * 1.2;
     }
-    temp_lo = arg0 / 3600;
-    *arg1 = temp_lo;
-    temp_lo_2 = (s32)(arg0 - (temp_lo * 3600)) / 60;
-    *arg2 = temp_lo_2;
-    *arg3 = (s32)((s32)(((arg0 - (*arg1 * 3600)) - (temp_lo_2 * 60)) * 100) / 60);
+    // (REFRESH_60HZ * 60) is just frames per minute basically
+    *minutes = frameCount / (REFRESH_60HZ * 60);
+    *seconds = (frameCount - (*minutes * (REFRESH_60HZ * 60))) / REFRESH_60HZ;
+    *hundredths = (((frameCount - (*minutes * (REFRESH_60HZ * 60))) - (*seconds * REFRESH_60HZ)) * 100) / REFRESH_60HZ;
 }
 
 void func_800598D0(void) {

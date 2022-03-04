@@ -415,7 +415,7 @@ glabel render_track_select_setup_ui
 /* 09213C 8009153C AFA00018 */  sw    $zero, 0x18($sp)
 /* 092140 80091540 24050016 */  li    $a1, 22
 /* 092144 80091544 24060035 */  li    $a2, 53
-/* 092148 80091548 0C020600 */  jal   func_80081800
+/* 092148 80091548 0C020600 */  jal   show_timestamp
 /* 09214C 8009154C 24070080 */   li    $a3, 128
 /* 092150 80091550 3C0D8012 */  lui   $t5, %hi(gPlayerSelectVehicle) # $t5, 0x8012
 /* 092154 80091554 81AD69C0 */  lb    $t5, %lo(gPlayerSelectVehicle)($t5)
@@ -435,7 +435,7 @@ glabel render_track_select_setup_ui
 /* 09218C 8009158C AFA00018 */  sw    $zero, 0x18($sp)
 /* 092190 80091590 24050016 */  li    $a1, 22
 /* 092194 80091594 24060021 */  li    $a2, 33
-/* 092198 80091598 0C020600 */  jal   func_80081800
+/* 092198 80091598 0C020600 */  jal   show_timestamp
 /* 09219C 8009159C 240700FF */   li    $a3, 255
 /* 0921A0 800915A0 3C0D8012 */  lui   $t5, %hi(D_801263E0) # $t5, 0x8012
 /* 0921A4 800915A4 8DAD63E0 */  lw    $t5, %lo(D_801263E0)($t5)

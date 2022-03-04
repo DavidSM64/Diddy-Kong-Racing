@@ -334,7 +334,7 @@ void func_80078AAC(void *arg0) {
 #ifdef NON_EQUIVALENT
 
 // Regalloc & stack issues.
-void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha) {
+void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
     DrawTexture *phi_t2;
     s32 x0, y0;
@@ -345,8 +345,8 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg
     gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
     tex = arg1->texture;
     while (tex != NULL) {
-        x0 = (arg1->xOffset * 4) + (arg2 * 4);
-        y0 = (arg1->yOffset * 4) + (arg3 * 4);
+        x0 = (arg1->xOffset * 4) + (xPos * 4);
+        y0 = (arg1->yOffset * 4) + (yPos * 4);
         x1 = (tex->width * 4) + x0;
         y1 = (tex->height * 4) + y0;
         if (x1 > 0) {

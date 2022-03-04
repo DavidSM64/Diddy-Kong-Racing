@@ -130,7 +130,7 @@ glabel func_800A7B68
 /* 0A8948 800A7D48 27A50054 */  addiu $a1, $sp, 0x54
 /* 0A894C 800A7D4C 27A60050 */  addiu $a2, $sp, 0x50
 /* 0A8950 800A7D50 27A7004C */  addiu $a3, $sp, 0x4c
-/* 0A8954 800A7D54 0C0165E4 */  jal   func_80059790
+/* 0A8954 800A7D54 0C0165E4 */  jal   get_timestamp_from_frames
 /* 0A8958 800A7D58 AFA90044 */   sw    $t1, 0x44($sp)
 /* 0A895C 800A7D5C 8FB80048 */  lw    $t8, 0x48($sp)
 /* 0A8960 800A7D60 8FA90044 */  lw    $t1, 0x44($sp)
