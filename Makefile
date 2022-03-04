@@ -90,7 +90,7 @@ $(foreach p,$(RECOMP_TOOLS_PATHS),$(if $(wildcard $(p)),,$(info $(p) does not ex
 
 # If any of the tools do not exist, then recomp needs to run to build them.
 ifeq ($(runRecomp),yes)
-  DUMMY != cd $(RECOMP_PROJECT) && python3 build.py ido/5.3 -O2 && cd ../../ >&2 || echo FAIL
+  DUMMY != cd $(RECOMP_PROJECT) && python3 build.py ido/5.3 -O2 && cp build5.3/out/usr/bin/cc build5.3/out/cc && cp build5.3/out/usr/lib/* build5.3/out/ && cd ../../ >&2 || echo FAIL
 endif
 
 ######## Extract Assets & Microcode ########
