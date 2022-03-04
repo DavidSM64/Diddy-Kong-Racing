@@ -1032,14 +1032,14 @@ UNUSED u16 get_buttons_released_from_player(s32 player) {
 /**
  * Clamps the X joystick axis of the selected player to 70 and returns it.
  */
-s32 clamp_joystick_x_axis(s32 player) {
+s8 clamp_joystick_x_axis(s32 player) {
     return clamp_joystick(sControllerData[sPlayerID[player]].rawStickX);
 }
 
 /**
  * Clamps the Y joystick axis of the selected player to 70 and returns it.
  */
-s32 clamp_joystick_y_axis(s32 player) {
+s8 clamp_joystick_y_axis(s32 player) {
     return clamp_joystick(sControllerData[sPlayerID[player]].rawStickY);
 }
 
@@ -1047,7 +1047,7 @@ s32 clamp_joystick_y_axis(s32 player) {
  * Keeps the joysticks axis reads no higher than 70 (of a possible 127 or -128)
  * Will also pull the reading towards the centre.
  */
-s32 clamp_joystick(s8 stickMag) {
+s8 clamp_joystick(s8 stickMag) {
     if (stickMag < JOYSTICK_DEADZONE && stickMag > -JOYSTICK_DEADZONE) {
         return 0;
     }

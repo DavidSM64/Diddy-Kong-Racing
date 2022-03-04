@@ -6005,38 +6005,36 @@ void reset_controller_sticks(void) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
 #define STICK_DEADZONE 35
 #define STICK_DELAY_AMOUNT 15
 
-// Should be functionally equivalent
 void update_controller_sticks(void) {
-    s32 prevXAxis, prevYAxis;
+    s32 XClamp, YClamp;
     s32 i;
     for (i = 0; i < 4; i++) {
-        prevXAxis = gControllersXAxis[i];
-        prevYAxis = gControllersYAxis[i];
-        gControllersXAxis[i] = clamp_joystick_x_axis(i);
-        gControllersYAxis[i] = clamp_joystick_y_axis(i);
+        XClamp = clamp_joystick_x_axis(i);
+        YClamp = clamp_joystick_y_axis(i);
         gControllersXAxisDirection[i] = 0;
         gControllersYAxisDirection[i] = 0;
-        if (gControllersXAxis[i] < -STICK_DEADZONE && prevXAxis > -STICK_DEADZONE) {
+
+        if (XClamp < -STICK_DEADZONE && gControllersXAxis[i] >= -STICK_DEADZONE) {
             gControllersXAxisDirection[i] = -1;
             gControllersXAxisDelay[i] = 0;
         }
-        if (gControllersXAxis[i] > STICK_DEADZONE && prevXAxis < STICK_DEADZONE) {
+        if (XClamp > STICK_DEADZONE && gControllersXAxis[i] <= STICK_DEADZONE) {
             gControllersXAxisDirection[i] = 1;
             gControllersXAxisDelay[i] = 0;
         }
-        if (gControllersYAxis[i] < -STICK_DEADZONE && prevYAxis > -STICK_DEADZONE) {
+        if (YClamp < -STICK_DEADZONE && gControllersYAxis[i] >= -STICK_DEADZONE) {
             gControllersYAxisDirection[i] = -1;
             gControllersYAxisDelay[i] = 0;
         }
-        if (gControllersYAxis[i] > STICK_DEADZONE && prevYAxis < STICK_DEADZONE) {
+        if (YClamp > STICK_DEADZONE && gControllersYAxis[i] <= STICK_DEADZONE) {
             gControllersYAxisDirection[i] = 1;
             gControllersYAxisDelay[i] = 0;
         }
+
+        gControllersYAxis[i] = YClamp;
         if (gControllersYAxis[i] < -STICK_DEADZONE) {
             gControllersYAxisDelay[i]++;
         } else if (gControllersYAxis[i] > STICK_DEADZONE) {
@@ -6044,10 +6042,13 @@ void update_controller_sticks(void) {
         } else {
             gControllersYAxisDelay[i] = 0;
         }
+
         if (gControllersYAxisDelay[i] > STICK_DELAY_AMOUNT) {
             gControllersYAxis[i] = 0;
             gControllersYAxisDelay[i] = 0;
         }
+
+        gControllersXAxis[i] = XClamp;
         if (gControllersXAxis[i] < -STICK_DEADZONE) {
             gControllersXAxisDelay[i]++;
         } else if (gControllersXAxis[i] > STICK_DEADZONE) {
@@ -6055,15 +6056,13 @@ void update_controller_sticks(void) {
         } else {
             gControllersXAxisDelay[i] = 0;
         }
+
         if (gControllersXAxisDelay[i] > STICK_DELAY_AMOUNT) {
             gControllersXAxis[i] = 0;
             gControllersXAxisDelay[i] = 0;
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/update_controller_sticks.s")
-#endif
 
 /**
  * Reset the character id number slots to the default.

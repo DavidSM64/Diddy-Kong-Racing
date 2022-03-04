@@ -155,9 +155,9 @@ void swap_player_1_and_2_ids(void);
 u16 get_buttons_held_from_player(s32 player);
 u32 get_buttons_pressed_from_player(s32 player);
 UNUSED u16 get_buttons_released_from_player(s32 player);
-s32 clamp_joystick_x_axis(s32 player);
-s32 clamp_joystick_y_axis(s32 player);
-s32 clamp_joystick(s8 stickMag);
+s8 clamp_joystick_x_axis(s32 player);
+s8 clamp_joystick_y_axis(s32 player);
+s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
 
