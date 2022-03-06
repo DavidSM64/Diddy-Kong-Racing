@@ -12,6 +12,13 @@ VERSION := us_1.0
 NON_MATCHING ?= 0
 $(eval $(call validate-option,NON_MATCHING,0 1))
 
+COMPILE_ASSETS ?= 0
+$(eval $(call validate-option,COMPILE_ASSETS,0 1))
+
+ifeq ($(COMPILE_ASSETS),1)
+  DUMMY != ./tools/dkr_assets_tool -c ./assets $(VERSION)
+endif
+
 ifeq ($(VERSION),us_1.0)
   DEFINES += VERSION_US_1_0=1
 endif
@@ -169,8 +176,8 @@ FixPath = $(subst /,,$1)
 
 N64CRC = $(TOOLS_DIR)/n64crc
 FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
-TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
-COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
+COMPRESS = $(TOOLS_DIR)/dkr_assets_tool -fc
+BUILDER = $(TOOLS_DIR)/dkr_assets_tool -b ./assets/$(VERSION) 
 
 LIB_DIRS := lib/
 ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/ lib/asm/non_decompilable
@@ -205,6 +212,7 @@ CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -W
 # TODO: Clean this up if possible
 
 # All the asset subfolders to create in the build folder.
+# All the asset subfolders to create in the build folder.
 ASSETS_DIRS := audio bin fonts ids levels levels/headers levels/models levels/names levels/objectMaps misc objects objects/animations objects/headers objects/models particles particles/behaviors particles/particles sprites text text/game text/menu textures textures/2d textures/3d tt_ghosts unknown_0 ucode
 
 ASSETS_DIR = assets/$(VERSION)
@@ -222,6 +230,7 @@ ALL_ASSETS_BUILT += $(patsubst $(BIN_IN_DIR)/%.bin,$(BIN_OUT_DIR)/%.bin,$(wildca
 
 FONTS_IN_DIR = $(ASSETS_DIR)/fonts
 FONTS_OUT_DIR = $(BUILD_DIR)/fonts
+ALL_ASSETS_BUILT += $(patsubst $(FONTS_IN_DIR)/%.json,$(FONTS_OUT_DIR)/%.bin,$(wildcard $(FONTS_IN_DIR)/*.json))
 ALL_ASSETS_BUILT += $(patsubst $(FONTS_IN_DIR)/%.bin,$(FONTS_OUT_DIR)/%.bin,$(wildcard $(FONTS_IN_DIR)/*.bin))
 
 IDS_IN_DIR = $(ASSETS_DIR)/ids
@@ -238,9 +247,9 @@ LEVEL_NAMES_IN_DIR = $(LEVELS_IN_DIR)/names
 LEVEL_NAMES_OUT_DIR = $(LEVELS_OUT_DIR)/names
 LEVEL_OBJMAPS_IN_DIR = $(LEVELS_IN_DIR)/objectMaps
 LEVEL_OBJMAPS_OUT_DIR = $(LEVELS_OUT_DIR)/objectMaps
-ALL_ASSETS_BUILT += $(patsubst $(LEVEL_HEADERS_IN_DIR)/%.bin,$(LEVEL_HEADERS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_HEADERS_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(LEVEL_HEADERS_IN_DIR)/%.json,$(LEVEL_HEADERS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_HEADERS_IN_DIR)/*.json))
 ALL_ASSETS_BUILT += $(patsubst $(LEVEL_MODELS_IN_DIR)/%.cbin,$(LEVEL_MODELS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_MODELS_IN_DIR)/*.cbin))
-ALL_ASSETS_BUILT += $(patsubst $(LEVEL_NAMES_IN_DIR)/%.bin,$(LEVEL_NAMES_OUT_DIR)/%.bin,$(wildcard $(LEVEL_NAMES_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(LEVEL_NAMES_IN_DIR)/%.json,$(LEVEL_NAMES_OUT_DIR)/%.bin,$(wildcard $(LEVEL_NAMES_IN_DIR)/*.json))
 ALL_ASSETS_BUILT += $(patsubst $(LEVEL_OBJMAPS_IN_DIR)/%.cbin,$(LEVEL_OBJMAPS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_OBJMAPS_IN_DIR)/*.cbin))
 
 MISC_IN_DIR = $(ASSETS_DIR)/misc
@@ -271,7 +280,7 @@ ALL_ASSETS_BUILT += $(patsubst $(PART_PARTICLES_IN_DIR)/%.bin,$(PART_PARTICLES_O
 
 SPRITES_IN_DIR = $(ASSETS_DIR)/sprites
 SPRITES_OUT_DIR = $(BUILD_DIR)/sprites
-ALL_ASSETS_BUILT += $(patsubst $(SPRITES_IN_DIR)/%.bin,$(SPRITES_OUT_DIR)/%.bin,$(wildcard $(SPRITES_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(SPRITES_IN_DIR)/%.json,$(SPRITES_OUT_DIR)/%.bin,$(wildcard $(SPRITES_IN_DIR)/*.json))
 
 TEXT_IN_DIR = $(ASSETS_DIR)/text
 TEXT_OUT_DIR = $(BUILD_DIR)/text
@@ -279,8 +288,8 @@ TEXT_GAME_IN_DIR = $(TEXT_IN_DIR)/game
 TEXT_GAME_OUT_DIR = $(TEXT_OUT_DIR)/game
 TEXT_MENU_IN_DIR = $(TEXT_IN_DIR)/menu
 TEXT_MENU_OUT_DIR = $(TEXT_OUT_DIR)/menu
-ALL_ASSETS_BUILT += $(patsubst $(TEXT_GAME_IN_DIR)/%.bin,$(TEXT_GAME_OUT_DIR)/%.bin,$(wildcard $(TEXT_GAME_IN_DIR)/*.bin))
-ALL_ASSETS_BUILT += $(patsubst $(TEXT_MENU_IN_DIR)/%.bin,$(TEXT_MENU_OUT_DIR)/%.bin,$(wildcard $(TEXT_MENU_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(TEXT_GAME_IN_DIR)/%.json,$(TEXT_GAME_OUT_DIR)/%.bin,$(wildcard $(TEXT_GAME_IN_DIR)/*.json))
+ALL_ASSETS_BUILT += $(patsubst $(TEXT_MENU_IN_DIR)/%.json,$(TEXT_MENU_OUT_DIR)/%.bin,$(wildcard $(TEXT_MENU_IN_DIR)/*.json))
 
 TEXTURES_IN_DIR = $(ASSETS_DIR)/textures
 TEXTURES_OUT_DIR = $(BUILD_DIR)/textures
@@ -288,12 +297,12 @@ TEXTURES_2D_IN_DIR = $(TEXTURES_IN_DIR)/2d
 TEXTURES_2D_OUT_DIR = $(TEXTURES_OUT_DIR)/2d
 TEXTURES_3D_IN_DIR = $(TEXTURES_IN_DIR)/3d
 TEXTURES_3D_OUT_DIR = $(TEXTURES_OUT_DIR)/3d
-ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.png,$(TEXTURES_2D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_2D_IN_DIR)/*.png))
-ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.png,$(TEXTURES_3D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_3D_IN_DIR)/*.png))
+ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.json,$(TEXTURES_2D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_2D_IN_DIR)/*.json))
+ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.json,$(TEXTURES_3D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_3D_IN_DIR)/*.json))
 
 TT_GHOSTS_IN_DIR = $(ASSETS_DIR)/tt_ghosts
 TT_GHOSTS_OUT_DIR = $(BUILD_DIR)/tt_ghosts
-ALL_ASSETS_BUILT += $(patsubst $(TT_GHOSTS_IN_DIR)/%.bin,$(TT_GHOSTS_OUT_DIR)/%.bin,$(wildcard $(TT_GHOSTS_IN_DIR)/*.bin))
+ALL_ASSETS_BUILT += $(patsubst $(TT_GHOSTS_IN_DIR)/%.json,$(TT_GHOSTS_OUT_DIR)/%.bin,$(wildcard $(TT_GHOSTS_IN_DIR)/*.json))
 
 UNKNOWN_0_IN_DIR = $(ASSETS_DIR)/unknown_0
 UNKNOWN_0_OUT_DIR = $(BUILD_DIR)/unknown_0
@@ -303,7 +312,6 @@ UCODE_IN_DIR = $(UCODE_DIR)
 UCODE_OUT_DIR = $(BUILD_DIR)/ucode
 UCODE = $(wildcard $(UCODE_IN_DIR)/*.bin)
 ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
-
 #ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(FONTS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT) $(LUT_BUILT)
 
 ####################### LIBULTRA #########################
@@ -393,22 +401,26 @@ $(BIN_OUT_DIR)/%.bin: $(BIN_IN_DIR)/%.bin
 $(FONTS_OUT_DIR)/%.bin: $(FONTS_IN_DIR)/%.bin
 	$(call print,Copying:,$<,$@)
 	$(V)$(ASSETS_COPY) $^ $@
+
+$(FONTS_OUT_DIR)/%.bin: $(FONTS_IN_DIR)/%.json 
+	$(call print,Building Fonts:,$<,$@)
+	$(V)$(BUILDER) $^ $@
     
 $(IDS_OUT_DIR)/%.bin: $(IDS_IN_DIR)/%.bin
 	$(call print,Copying:,$<,$@)
 	$(V)$(ASSETS_COPY) $^ $@
-    
-$(LEVEL_HEADERS_OUT_DIR)/%.bin: $(LEVEL_HEADERS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+
+$(LEVEL_HEADERS_OUT_DIR)/%.bin: $(LEVEL_HEADERS_IN_DIR)/%.json 
+	$(call print,Building Level Header:,$<,$@)
+	$(V)$(BUILDER) $^ $@
 
 $(LEVEL_MODELS_OUT_DIR)/%.bin: $(LEVEL_MODELS_IN_DIR)/%.cbin
 	$(call print,Compressing:,$<,$@)
 	$(V)$(COMPRESS) $^ $@
-    
-$(LEVEL_NAMES_OUT_DIR)/%.bin: $(LEVEL_NAMES_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+
+$(LEVEL_NAMES_OUT_DIR)/%.bin: $(LEVEL_NAMES_IN_DIR)/%.json 
+	$(call print,Building Level Name:,$<,$@)
+	$(V)$(BUILDER) $^ $@
 
 $(LEVEL_OBJMAPS_OUT_DIR)/%.bin: $(LEVEL_OBJMAPS_IN_DIR)/%.cbin
 	$(call print,Compressing:,$<,$@)
@@ -442,33 +454,29 @@ $(PART_PARTICLES_OUT_DIR)/%.bin: $(PART_PARTICLES_IN_DIR)/%.bin
 	$(call print,Copying:,$<,$@)
 	$(V)$(ASSETS_COPY) $^ $@
     
-$(SPRITES_OUT_DIR)/%.bin: $(SPRITES_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+$(SPRITES_OUT_DIR)/%.bin: $(SPRITES_IN_DIR)/%.json 
+	$(call print,Building Sprite:,$<,$@)
+	$(V)$(BUILDER) $^ $@
+
+$(TEXT_GAME_OUT_DIR)/%.bin: $(TEXT_GAME_IN_DIR)/%.json 
+	$(call print,Building Game Text:,$<,$@)
+	$(V)$(BUILDER) $^ $@
     
-$(TEXT_GAME_OUT_DIR)/%.bin: $(TEXT_GAME_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.json 
+	$(call print,Building Menu Text:,$<,$@)
+	$(V)$(BUILDER) $^ $@
+
+$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.json
+	$(call print,Building Texture:,$<,$@)
+	$(V)$(BUILDER) $^ $@
     
-$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-
-$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png
+$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.json
 	$(call print,Building Texture:,$<,$@)
-	$(V)$(TEXBUILDER) $^ $@
+	$(V)$(BUILDER) $^ $@
 
-$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png
-	$(call print,Building Texture:,$<,$@)
-	$(V)$(TEXBUILDER) $^ $@
-
-$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-
-$(TT_GHOSTS_OUT_DIR)/%.bin: $(TT_GHOSTS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+$(TT_GHOSTS_OUT_DIR)/%.bin: $(TT_GHOSTS_IN_DIR)/%.json 
+	$(call print,Building T.T. Ghost:,$<,$@)
+	$(V)$(BUILDER) $^ $@
 
 $(UNKNOWN_0_OUT_DIR)/%.bin: $(UNKNOWN_0_IN_DIR)/%.bin
 	$(call print,Copying:,$<,$@)
@@ -511,6 +519,7 @@ $(BUILD_DIR)/$(TARGET).z64: $(BUILD_DIR)/$(TARGET).bin | $(ALL_ASSETS_BUILT)
 	$(V)cp $< $@
 	$(V)$(FIXCHECKSUMS)
 	$(V)$(N64CRC) $@
+	$(V)rm -f $(ASSETS_DIR)/assets-cached.bin
 ifeq ($(NON_MATCHING),0)
 	@(sha1sum -c --quiet sha1/dkr.$(VERSION).sha1 \
 	&& $(PRINT) "$(BLUE)$@$(NO_COL)\

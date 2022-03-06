@@ -20,12 +20,12 @@ if [ -d "$UCODE_DIR" ]; then
     rm -r $UCODE_DIR
 fi
 
-if ! ./tools/dkr_extractor "$1" ./extract-ver ./baseroms . ; then
+if ! ./tools/dkr_assets_tool -t extract "$1" ./extract-ver ./baseroms . ; then
     exit 1
 fi
 
 # Generate the linker file (dkr.ld)
-./generate_ld.sh "$1"
+#./generate_ld.sh "$1"
 
 echo 'Done.'
 

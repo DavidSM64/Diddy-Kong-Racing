@@ -10,6 +10,9 @@ assets/
 ucode/
 !asm/assets/
 
+# asset_enums.h is automatically generated, so should be ignored.
+include/asset_enums.h
+
 # Linker file is automatically generated, so it should be ignored
 dkr.ld
 
