@@ -464,11 +464,11 @@ typedef struct Object_3C {
 } Object_3C;
 
 typedef enum {
-    OBJECT_MODEL_TYPE_3D_MODEL         = 0,
-    OBJECT_MODEL_TYPE_SPRITE_BILLBOARD = 1,
-    OBJECT_MODEL_TYPE_VEHICLE_PART     = 2,
-    OBJECT_MODEL_TYPE_UNKNOWN3         = 3,
-    OBJECT_MODEL_TYPE_UNKNOWN4         = 4,
+    OBJECT_MODEL_TYPE_3D_MODEL,
+    OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
+    OBJECT_MODEL_TYPE_VEHICLE_PART,
+    OBJECT_MODEL_TYPE_UNKNOWN3,
+    OBJECT_MODEL_TYPE_UNKNOWN4,
 } ObjectModelType;
 
 typedef struct ObjectHeader {
@@ -667,7 +667,6 @@ typedef struct ObjectTransform {
   /* 0x0014 */ f32 z_position;
 } ObjectTransform;
 
-/* Size: 0x44 bytes Seems to be the upper 90 of Object? Should this be included in it? */
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
   /* 0x0018 */ s16 unk18;
@@ -713,46 +712,7 @@ typedef struct ObjectSegment {
 
 /* Size: 0x0630 bytes */
 typedef struct Object {
-  /* 0x0000 */ ObjectTransform trans;
-  /* 0x0018 */ s16 unk18;
-  /* 0x001A */ s16 unk1A;
-  /* 0x001C */ f32 x_velocity;
-  /* 0x0020 */ f32 y_velocity;
-  /* 0x0024 */ f32 z_velocity;
-  /* 0x0028 */ f32 unk28;
-
-  union {
-      struct {
-          /* 0x002C */ s16 upper;
-          /* 0x002E */ s16 lower;
-      } half;
-      /* 0x002C */ f32 word;
-  } unk2C;
-
-  /* 0x0030 */ f32 unk30;
-
-  union {
-    /* 0x0034 */ f32 unk34;
-    /* 0x0034 */ s16 levelSegmentIndex;
-  } unk34_a;
-
-  union {
-      struct {
-          /* 0x0038 */ u8 upper;
-          /* 0x0039 */ u8 lower;
-      } half;
-      /* 0x0038 */ s16 word;
-  } unk38;
-
-  /* 0x003A */ s8 unk3A;
-  /* 0x003B */ s8 unk3B;
-
-  union {
-    /* 0x003C */ Object_3C* unk3C;
-    /* 0x003C */ f32 unk3C_f;
-  } unk3C_a;
-
-  /* 0x0040 */ ObjectHeader *header;
+  /* 0x0000 */ ObjectSegment segment;
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;

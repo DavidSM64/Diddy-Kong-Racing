@@ -219,7 +219,7 @@ s32 get_lockup_status(void) {
     s32 controllerIndex = 0;
     s64 sp420[128]; // Overwrite epcStack?
     s64 sp220[64];
-    u8 dataFromControllerPak[512]; //Looks to be sizeof(epcinfo), aligned to 64
+    u8 dataFromControllerPak[512]; //Looks to be sizeof(epcInfo), aligned to 64
 
     if (sLockupStatus != -1) {
         return sLockupStatus;

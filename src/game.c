@@ -678,7 +678,7 @@ void func_8006BEFC(void) {
     if (gCurrentLevelHeader->weather_enable > 0) {
         func_800AB35C();
     }
-    // TODO: Is it possible unk49 could be u8? If it's not, this will always be false.
+    //! @bug this will never be true because unk49 is signed.
     if (gCurrentLevelHeader->unk49 == 0xFF) {
         free_texture(gCurrentLevelHeader->unkA4);
     }

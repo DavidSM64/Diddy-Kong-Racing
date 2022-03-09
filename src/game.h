@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "fade_transition.h"
+#include "math.h"
 
 enum RenderContext {
     DRAW_INTRO = -1,
@@ -102,7 +103,6 @@ extern s32 gVideoLastDepthBuffer;
 
 void func_8006F870(Matrix *, Matrix *); //unknown_070110
 void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
-f32 sqrtf(f32); //IDO?
 void func_80070B04(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);
 
 s16 func_8006ABB4(s32 arg0);

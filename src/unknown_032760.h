@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
+#include "math.h"
 
 typedef struct unk800DC950 {
     u8 unk0;
@@ -82,7 +83,6 @@ typedef struct unk800DC964 {
 extern unk800DC950 **D_800DC950;
 
 f32 func_800707F8(s16); //?
-f32 sqrtf(f32); //IDO?
 
 void func_80031B60(void);
 void func_80032210(unk800DC950 *arg0);
@@ -100,5 +100,6 @@ f32 func_80033C08(unk800DC950 *arg0);
 void func_80031BB8(s32 count);
 void func_80032C7C(Object *object);
 void func_800337E4(void);
+void func_80032424(unk800DC950 *arg0, s32 arg1);
 
 #endif

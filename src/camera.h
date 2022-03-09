@@ -7,6 +7,7 @@
 #include "f3ddkr.h"
 #include "menu.h"
 #include "libultra_internal.h"
+#include "math.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -100,8 +101,6 @@ extern s16 gButtonMask;
     void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
     void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching unknown_070110?
     void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
-
-f32 sqrtf(f32); //IDO?
 
 void func_80066060(s32 arg0, s32 arg1);
 void func_80066098(s8 arg0);

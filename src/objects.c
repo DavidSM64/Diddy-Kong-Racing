@@ -77,6 +77,8 @@ s16 D_800DC7B8[52] = {
     0x00E8, 0x0115, 0x0118, 0x0000,
 };
 
+// A table of which vehicles to use for boss races.
+// https://www.youtube.com/watch?v=WQJAtns_rMk
 s16 D_800DC820[16] = {
     0x0005, 0x0106, 0x0207, 0x0005,
     0x0106, 0x010B, 0x010B, 0x0207,
@@ -597,10 +599,10 @@ void func_8000E1EC(Object *object, s32 arg1) {
     D_8011AD40 = object;
     D_8011AD44 = 4;
     D_8011AD45 = arg1;
-    D_8011AD46 = object->trans.x_position;
-    D_8011AD48 = object->trans.y_position;
-    D_8011AD4A = object->trans.z_position;
-    D_8011AD4C = object->trans.y_rotation;
+    D_8011AD46 = object->segment.trans.x_position;
+    D_8011AD48 = object->segment.trans.y_position;
+    D_8011AD4A = object->segment.trans.z_position;
+    D_8011AD4C = object->segment.trans.y_rotation;
     gParticlePtrList_addObject(object);
     gObjectCount = 0;
 }
@@ -659,14 +661,14 @@ void func_8000E2B4(void) {
     player_64->unk118 = 0;
     player_64->unk0_a.unk0_b.unk3 = (s8) settings->racers[0].character;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
-        player->trans.scale *= 1.4f;
+        player->segment.trans.scale *= 1.4f;
     }
     if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
-        player->trans.scale *= 0.714f;
+        player->segment.trans.scale *= 0.714f;
     }
-    player->unk3C_a.unk3C = 0;
-    player->trans.y_rotation = D_8011AD4C;
-    player->trans.y_position = D_8011AD48;
+    player->segment.unk3C_a.unk3C = 0;
+    player->segment.trans.y_rotation = D_8011AD4C;
+    player->segment.trans.y_position = D_8011AD48;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E2B4.s")
@@ -720,8 +722,8 @@ s32 func_8000E9C0(void) {
 }
 
 void func_8000E9D0(Object *arg0) {
-    arg0->trans.unk6 |= 0x8000;
-    func_800245B4(arg0->unk2C.half.upper | 0xC000);
+    arg0->segment.trans.unk6 |= 0x8000;
+    func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
     if (1);
     D_8011AE64++;
@@ -861,8 +863,8 @@ void func_80011AD0(Object *this) {
             break;
 
         case 3: //L80011BB4
-            tmp_f0 = (f32)this->unk3C_a.unk3C->unkD;
-            if (this->unk3C_a.unk3C->unkD < 0) {
+            tmp_f0 = (f32)this->segment.unk3C_a.unk3C->unkD;
+            if (this->segment.unk3C_a.unk3C->unkD < 0) {
                 tmp_f0 += 4294967296.0f;
             }
             offset = (this->unk64->unkFC * 6);
@@ -920,15 +922,15 @@ void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
     f32 scale;
     u32 tmp2;
     u32 tmp3;
-    if (object->trans.unk6 & 0x5000)
+    if (object->segment.trans.unk6 & 0x5000)
         return;
     func_800B76B8(2, object->unk4A);
     D_8011AE8C = *arg0;
     D_8011AE90 = *arg1;
     D_8011AE94 = *arg2;
-    scale = object->trans.scale;
+    scale = object->segment.trans.scale;
     render_object(object);
-    object->trans.scale = scale;
+    object->segment.trans.scale = scale;
     *arg0 = D_8011AE8C;
     *arg1 = D_8011AE90;
     *arg2 = D_8011AE94;
@@ -946,9 +948,9 @@ void func_80012E28(Object *this) {
     if (this->behaviorId == 1) {
 
         sp_20 = this->unk64;
-        this->trans.y_rotation += sp_20->unk160;
-        this->trans.x_rotation += sp_20->unk162;
-        this->trans.z_rotation += sp_20->unk164;
+        this->segment.trans.y_rotation += sp_20->unk160;
+        this->segment.trans.x_rotation += sp_20->unk162;
+        this->segment.trans.z_rotation += sp_20->unk164;
         sp_1c = 0.0f;
         if (sp_20->unk1D7 < 5) {
 
@@ -962,7 +964,7 @@ void func_80012E28(Object *this) {
             sp_1c = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
         }
         //L80012F0C
-        this->trans.y_position = this->trans.y_position + sp_1c;
+        this->segment.segment.trans.y_position = this->segment.segment.trans.y_position + sp_1c;
         D_8011ADD0 = sp_1c;
     }
     //L80012F20
@@ -974,10 +976,10 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012E28.s")
 void func_80012F30(Object *arg0) {
     if (arg0->behaviorId == 1) {
         Object_64 *object_64 = arg0->unk64;
-        arg0->trans.y_rotation -= object_64->unk160;
-        arg0->trans.x_rotation -= object_64->unk162;
-        arg0->trans.z_rotation -= object_64->unk164;
-        arg0->trans.y_position -= D_8011ADD0;
+        arg0->segment.trans.y_rotation -= object_64->unk160;
+        arg0->segment.trans.x_rotation -= object_64->unk162;
+        arg0->segment.trans.z_rotation -= object_64->unk164;
+        arg0->segment.trans.y_position -= D_8011ADD0;
     }
 }
 
@@ -985,24 +987,24 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 
 void render_object(Object *this) {
     func_80012F94(this);
-    if (this->trans.unk6 & 0x8000) {
+    if (this->segment.trans.unk6 & 0x8000) {
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
     } else {
-        if (this->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
+        if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
-        else if (this->header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD)
+        else if (this->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD)
             render_3d_billboard(this);
-        else if (this->header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4)
+        else if (this->segment.header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4)
             func_80011AD0(this);
     }
     func_80013548(this);
 }
 
 void func_80013548(Object *arg0) {
-    if ((arg0->trans.unk6 & 0x8000) == 0 && arg0->header->behaviorId == 1) {
-        arg0->trans.x_position -= arg0->unk64->unk78;
-        arg0->trans.y_position -= arg0->unk64->unk7C;
-        arg0->trans.z_position -= arg0->unk64->unk80;
+    if ((arg0->segment.trans.unk6 & 0x8000) == 0 && arg0->segment.header->behaviorId == 1) {
+        arg0->segment.trans.x_position -= arg0->unk64->unk78;
+        arg0->segment.trans.y_position -= arg0->unk64->unk7C;
+        arg0->segment.trans.z_position -= arg0->unk64->unk80;
     }
 }
 
@@ -1020,8 +1022,8 @@ void func_800142B8(void) {
 
     for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->trans.unk6 & 0x8000) == 0 && currObj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-            for (j = 0; j < currObj->header->numberOfModelIds; j++) {
+        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+            for (j = 0; j < currObj->segment.header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
                     curr_68->unk20 = curr_68->unk20-- & 0x03;
@@ -1078,7 +1080,7 @@ Object *func_80018C6C(void) {
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->trans.unk6 & 0x8000) && (current_obj->behaviorId == 62))
+        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62))
             return current_obj;
     }
     return NULL;
@@ -1275,7 +1277,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
-        if (object->header->unk71 != 0) {
+        if (object->segment.header->unk71 != 0) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
             calc_dynamic_lighting_for_object_1(object, model, arg2, object, arg3, 1.0f);
         } else {
@@ -1286,7 +1288,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
-        calc_env_mapping_for_object(model, object->trans.z_rotation, object->trans.x_rotation, object->trans.y_rotation);
+        calc_env_mapping_for_object(model, object->segment.trans.z_rotation, object->segment.trans.x_rotation, object->segment.trans.y_rotation);
     }
 }
 
@@ -1332,12 +1334,12 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         current_obj = gObjPtrList[i];
 
         if (current_obj != NULL
-        && (current_obj->trans.unk6 & 0x8000) == 0
+        && (current_obj->segment.trans.unk6 & 0x8000) == 0
         && current_obj->behaviorId == 39
         && current_obj->unk78 == arg0) {
-            *arg1 = current_obj->trans.x_position;
-            *arg2 = current_obj->trans.y_position;
-            *arg3 = current_obj->trans.z_position;
+            *arg1 = current_obj->segment.trans.x_position;
+            *arg2 = current_obj->segment.trans.y_position;
+            *arg3 = current_obj->segment.trans.z_position;
         }
     }
 }
@@ -1461,7 +1463,6 @@ s8 func_8002341C(void) {
 }
 
 #ifdef NON_EQUIVALENT
-extern f32 sqrtf(f32);
 
 //bad regalloc
 //finds furthest object (with some additional conditions)
@@ -1469,16 +1470,14 @@ Object *func_8002342C(f32 x, f32 z) {
     Object *retval = NULL;
     s32 i;
     Object *currObj = NULL;
-    //f32 x; // Why redeclared?
-    //f32 z; // Why redeclared?
     f32 dist;
     f32 max = 0.0f;
 
     for (i = 0; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->trans.unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
-            x = currObj->trans.x_position - x;
-            z = currObj->trans.z_position - z;
+        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
+            x = currObj->segment.trans.x_position - x;
+            z = currObj->segment.trans.z_position - z;
             dist = sqrtf(x * x + z * z);
 
             if (max < dist) {
@@ -1496,7 +1495,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
         return D_8011AD24[1] + 1;
-    } else if (get_current_level_race_type() == 8) {
+    } else if (get_current_level_race_type() == RACE_TYPE_BOSS) {
         return D_8011AD24[1] + 1;
     }
     return 0;
@@ -1513,7 +1512,7 @@ void func_800235D0(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
 
 void run_object_init_func(Object *obj, void *entry, s32 arg2) {
-    obj->behaviorId = obj->header->behaviorId;
+    obj->behaviorId = obj->segment.header->behaviorId;
     switch (obj->behaviorId - 1) { // Why the minus 1?
         case 0:
             obj_init_racer(obj, (LevelObjectEntry_Racer *)entry);

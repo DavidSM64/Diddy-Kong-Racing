@@ -321,7 +321,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
         if (phi_v0 >= 0x4A) {
             phi_v0 = 0x49;
         }
-        temp_v1 = phi_v0 - planeObj->unk18;
+        temp_v1 = phi_v0 - planeObj->segment.unk18;
         phi_v0 = 0;
         if (temp_v1 > 0) {
             phi_v0 = arg0 * 3;
@@ -335,7 +335,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
                 phi_v0 = temp_v1;
             }
         }
-        planeObj->unk18 += phi_v0;
+        planeObj->segment.unk18 += phi_v0;
     }
 }
 
@@ -379,8 +379,8 @@ void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
                 break;
             case 6:
                 obj64->unk204 = 0x78;
-                obj->x_velocity *= 0.7;
-                obj->z_velocity *= 0.7;
+                obj->segment.x_velocity *= 0.7;
+                obj->segment.z_velocity *= 0.7;
                 break;
         }
         obj64->unk187 = 0;
@@ -400,22 +400,22 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     if ((func_8002341C() != 0) && (obj64->unk1D6 == 0xA)) {
         obj->unk4C->unk14 = 0;
     }
-    sp26 = obj->unk18;
+    sp26 = obj->segment.unk18;
     obj64->unk1D6 = 0xA;
     func_80049794(arg0, arg1, obj, obj64);
     obj64->unk1D6 = obj64->unk1D7;
-    obj->unk3B = 0;
+    obj->segment.unk3B = 0;
     if (obj64->unk1D6 == 0xA) {
         if (obj64->someObject != NULL) {
-            obj64->someObject->trans.x_position = obj->trans.x_position;
-            obj64->someObject->trans.y_position = obj->trans.y_position;
-            obj64->someObject->trans.z_position = obj->trans.z_position;
-            obj64->someObject->unk2C.half.lower = obj->unk2C.half.lower;
-            obj64->someObject->trans.y_rotation = obj->trans.y_rotation;
-            obj64->someObject->trans.x_rotation = obj->trans.x_rotation;
-            obj64->someObject->trans.z_rotation = obj->trans.z_rotation;
-            obj->unk3B = 0;
-            obj->unk18 = sp26 + arg0;
+            obj64->someObject->segment.trans.x_position = obj->segment.trans.x_position;
+            obj64->someObject->segment.trans.y_position = obj->segment.trans.y_position;
+            obj64->someObject->segment.trans.z_position = obj->segment.trans.z_position;
+            obj64->someObject->segment.unk2C.half.lower = obj->segment.unk2C.half.lower;
+            obj64->someObject->segment.trans.y_rotation = obj->segment.trans.y_rotation;
+            obj64->someObject->segment.trans.x_rotation = obj->segment.trans.x_rotation;
+            obj64->someObject->segment.trans.z_rotation = obj->segment.trans.z_rotation;
+            obj->segment.unk3B = 0;
+            obj->segment.unk18 = sp26 + arg0;
             func_80061C0C(obj);
         }
     }
@@ -471,21 +471,21 @@ void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
     f32 xDiff, yDiff, zDiff;
     Object *someObj;
 
-    obj->unk3B = 0;
-    obj->unk18 = 0x28;
+    obj->segment.unk3B = 0;
+    obj->segment.unk18 = 0x28;
     someObj = obj64->someObj;
-    xDiff = someObj->trans.x_position - obj->trans.x_position;
-    yDiff = someObj->trans.y_position - obj->trans.y_position;
-    zDiff = someObj->trans.z_position - obj->trans.z_position;
+    xDiff = someObj->segment.trans.x_position - obj->segment.trans.x_position;
+    yDiff = someObj->segment.trans.y_position - obj->segment.trans.y_position;
+    zDiff = someObj->segment.trans.z_position - obj->segment.trans.z_position;
     func_80011570(obj, xDiff, yDiff, zDiff);
-    obj->trans.y_rotation = obj64->someObj->trans.y_rotation;
-    obj->trans.x_rotation = obj64->someObj->trans.x_rotation;
-    obj->trans.z_rotation = obj64->someObj->trans.z_rotation;
-    obj64->unk1A4 = obj->trans.z_rotation;
-    obj64->unk1A0 = obj->trans.y_rotation;
-    obj->x_velocity = xDiff / arg2;
-    obj->y_velocity = yDiff / arg2;
-    obj->z_velocity = zDiff / arg2;
+    obj->segment.trans.y_rotation = obj64->someObj->segment.trans.y_rotation;
+    obj->segment.trans.x_rotation = obj64->someObj->segment.trans.x_rotation;
+    obj->segment.trans.z_rotation = obj64->someObj->segment.trans.z_rotation;
+    obj64->unk1A4 = obj->segment.trans.z_rotation;
+    obj64->unk1A0 = obj->segment.trans.y_rotation;
+    obj->segment.x_velocity = xDiff / arg2;
+    obj->segment.y_velocity = yDiff / arg2;
+    obj->segment.z_velocity = zDiff / arg2;
     obj64->unk1F2 = 0;
     obj64->unk2C = 0.0f;
     obj64->unk30 = 0.0f;
@@ -525,59 +525,59 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
     arg5 *= arg7;
 
     if ((D_8011D55C == -1) && (arg2 >= 3)) {
-        arg0->unk3B = 0;
+        arg0->segment.unk3B = 0;
         arg1->unk1F2 = 0;
-    } else if (arg0->unk3B == 0) {
+    } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
-            if (arg0->unk18 >= 0x29) {
-                arg0->unk18 -= arg7 * 4;
-                if (arg0->unk18 < 0x29) {
-                    arg0->unk3B = arg2;
-                    arg0->unk18 = arg3;
+            if (arg0->segment.unk18 >= 0x29) {
+                arg0->segment.unk18 -= arg7 * 4;
+                if (arg0->segment.unk18 < 0x29) {
+                    arg0->segment.unk3B = arg2;
+                    arg0->segment.unk18 = arg3;
                 }
             } else {
-                arg0->unk18 += arg7 * 4;
-                if (arg0->unk18 >= 0x28) {
-                    arg0->unk3B = arg2;
-                    arg0->unk18 = arg3;
+                arg0->segment.unk18 += arg7 * 4;
+                if (arg0->segment.unk18 >= 0x28) {
+                    arg0->segment.unk3B = arg2;
+                    arg0->segment.unk18 = arg3;
                 }
             }
         } else {
-            arg0->unk3B = arg2;
-            arg0->unk18 = arg3;
+            arg0->segment.unk3B = arg2;
+            arg0->segment.unk18 = arg3;
             arg1->unk1F3 &= ~0x80;
         }
-    } else if (arg0->unk3B == arg2) {
+    } else if (arg0->segment.unk3B == arg2) {
         if (arg6 & 2) {
             if (arg1->unk1F3 & 0x80) {
-                arg0->unk18 -= arg5;
-                if (arg0->unk18 <= 0) {
-                    arg0->unk3B = 0;
+                arg0->segment.unk18 -= arg5;
+                if (arg0->segment.unk18 <= 0) {
+                    arg0->segment.unk3B = 0;
                     arg1->unk1F2 = 0;
-                    arg0->unk18 = 0x28;
+                    arg0->segment.unk18 = 0x28;
                     arg1->unk1F3 = 0;
                 }
             } else {
-                arg0->unk18 += arg5;
-                if (arg0->unk18 >= arg4) {
-                    arg0->unk18 = arg4 - 1;
+                arg0->segment.unk18 += arg5;
+                if (arg0->segment.unk18 >= arg4) {
+                    arg0->segment.unk18 = arg4 - 1;
                     if ((arg6 & 4) == 0) {
                         arg1->unk1F3 |= 0x80;
                     }
                 }
             }
         } else {
-            arg0->unk18 += arg5;
-            if (arg0->unk18 >= arg4) {
-                arg0->unk3B = 0;
+            arg0->segment.unk18 += arg5;
+            if (arg0->segment.unk18 >= arg4) {
+                arg0->segment.unk3B = 0;
                 arg1->unk1F2 = 0;
-                arg0->unk18 = 0x28;
+                arg0->segment.unk18 = 0x28;
                 arg1->unk1F3 = 0;
             }
         }
     } else {
-        arg0->unk18 = arg3;
-        arg0->unk3B = arg2;
+        arg0->segment.unk18 = arg3;
+        arg0->segment.unk3B = arg2;
     }
 }
 
@@ -669,7 +669,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
 void func_80057048(Object *obj, s32 arg1) {
     Object_64 *obj64 = obj->unk64;
     if (D_8011D55C != -1 && obj64->unk108 == 0) {
-        func_80001EA8(arg1, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, NULL);
+        func_80001EA8(arg1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
 
@@ -715,7 +715,7 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
                     }
                 }
                 //sp34 = phi_t0;
-                func_80009558(phi_t0, obj->trans.x_position, obj->trans.y_position, obj->trans.z_position, 4, &obj64->unk24);
+                func_80009558(phi_t0, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &obj64->unk24);
                 obj64->unk28 = phi_t0;
             }
         }
@@ -730,8 +730,8 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     Matrix mf;
 
-    D_8011D510.y_rotation = obj->trans.y_rotation;
-    D_8011D510.x_rotation = obj->trans.x_rotation;
+    D_8011D510.y_rotation = obj->segment.trans.y_rotation;
+    D_8011D510.x_rotation = obj->segment.trans.x_rotation;
     D_8011D510.z_rotation = 0;
     D_8011D510.x_position = 0.0f;
     D_8011D510.y_position = 0.0f;
@@ -792,10 +792,10 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
 void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     s32 temp0, temp1;
     temp0 = (s32)arg0;
-    temp1 = func_8007066C(gCameraObject->x_position - arg1->trans.x_position, gCameraObject->z_position - arg1->trans.z_position);
+    temp1 = func_8007066C(gCameraObject->x_position - arg1->segment.trans.x_position, gCameraObject->z_position - arg1->segment.trans.z_position);
     gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
     gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->unk3C_a.unk3C_f, gCameraObject->z_position);
+    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->segment.unk3C_a.unk3C_f, gCameraObject->z_position);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")

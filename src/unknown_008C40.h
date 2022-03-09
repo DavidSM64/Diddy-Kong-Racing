@@ -2,8 +2,8 @@
 #define _UNKNOWN_008C40_H_
 
 #include "types.h"
+#include "math.h"
 
-f32 sqrtf(f32);
 typedef struct floatXYZVals {
     f32 x1;
     f32 y1;
