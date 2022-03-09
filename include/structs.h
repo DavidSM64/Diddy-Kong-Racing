@@ -667,6 +667,7 @@ typedef struct ObjectTransform {
   /* 0x0014 */ f32 z_position;
 } ObjectTransform;
 
+/* Sites: 0x44 bytes */
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
   /* 0x0018 */ s16 unk18;
