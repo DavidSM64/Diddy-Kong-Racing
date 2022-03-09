@@ -961,7 +961,7 @@ void func_80012E28(Object *this) {
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
             temp = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
-            do { } while (0);
+            if(0){}
             sp_1c = temp;
         }
         this->segment.trans.y_position = this->segment.trans.y_position + sp_1c;
