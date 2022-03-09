@@ -578,29 +578,27 @@ void func_800B2260(unk800B2260 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B22FC.s")
 
-#ifdef NON_EQUIVALENT
-
-// Has regalloc issues.
 void func_800B263C(unk800B2260_C *arg0) {
+    unk800B2260 *new_var;
+    unk800B2260_C *new_var2;
     unk800B2260 *temp_v0;
     s32 i;
 
     temp_v0 = (unk800B2260 *)arg0->unk70;
     if (temp_v0 != NULL) {
+        new_var = temp_v0;
         if (temp_v0->unk6 != 0) {
             if (arg0 == temp_v0->unkC[arg0->unk74]) {
                 temp_v0->unk6--;
                 for (i = arg0->unk74; i < temp_v0->unk6; i++) {
-                    temp_v0->unkC[i] = temp_v0->unkC[i + 1];
-                    temp_v0->unkC[i]->unk74 = i;
+                    new_var->unkC[i] = new_var->unkC[i + 1];
+                    new_var2 = new_var->unkC[i];
+                    new_var2->unk74 = i;
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/particles/func_800B263C.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B2FBC.s")

@@ -937,13 +937,13 @@ void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
     func_800B76B8(2, -1);
 }
 
-#ifdef NON_EQUIVALENT
 void func_80012E28(Object *this) {
     s32 unused1;
     Object_64 *sp_20;
     f32 tmp_f2;
     f32 sp_1c;
     f32 tmp_f0;
+    f32 temp;
 
     if (this->behaviorId == 1) {
 
@@ -958,20 +958,16 @@ void func_80012E28(Object *this) {
             tmp_f2 = sp_1c;
             tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166) * tmp_f2;
 
-            //bad regalloc of 0.0f
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
-            sp_1c = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
+            temp = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
+            do { } while (0);
+            sp_1c = temp;
         }
-        //L80012F0C
-        this->segment.segment.trans.y_position = this->segment.segment.trans.y_position + sp_1c;
+        this->segment.trans.y_position = this->segment.trans.y_position + sp_1c;
         D_8011ADD0 = sp_1c;
     }
-    //L80012F20
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_80012E28.s")
-#endif
 
 void func_80012F30(Object *arg0) {
     if (arg0->behaviorId == 1) {
