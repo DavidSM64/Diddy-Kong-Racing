@@ -11,14 +11,14 @@
 #include "../common/util.h"
 #include "../common/types.h"
 
-#include "build/build_fonts.h"
-#include "build/build_gametext.h"
-#include "build/build_levelname.h"
-#include "build/build_levelheader.h"
-#include "build/build_menutext.h"
-#include "build/build_sprite.h"
-#include "build/build_texture.h"
-#include "build/build_ttghost.h"
+#include "build_files/build_fonts.h"
+#include "build_files/build_gametext.h"
+#include "build_files/build_levelname.h"
+#include "build_files/build_levelheader.h"
+#include "build_files/build_menutext.h"
+#include "build_files/build_sprite.h"
+#include "build_files/build_texture.h"
+#include "build_files/build_ttghost.h"
 
 class Builder {
 public:
