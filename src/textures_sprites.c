@@ -1233,7 +1233,78 @@ s32 func_8007EF64(s16 arg0) {
 
 // There might be a file boundary here.
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007EF80.s")
+void func_8007EF80(TextureHeader *arg0, s32 *arg1, s32 *arg2, s32 arg3) {
+    s32 bit23Set;
+    s32 bit25Set;
+    s32 bit26Set;
+    s32 phi_a0;
+
+    bit23Set = *arg1 & 0x800000;
+    bit26Set = *arg1 & 0x04000000;
+    bit25Set = *arg1 & 0x02000000;
+    if (bit23Set) {
+        if (!bit25Set) {
+            if (get_random_number_from_range(0, 1000) >= 986) {
+                *arg1 &= 0xFBFFFFFF; //All but bit 26
+                *arg1 |= 0x02000000; //Bit 25
+            }
+        } else if (!bit26Set) {
+            *arg2 = *arg2 + (arg0->frameAdvanceDelay * arg3);
+            if (*arg2 >= arg0->numOfTextures) {
+                *arg2 = ((arg0->numOfTextures * 2) - *arg2) - 1;
+                if (*arg2 < 0) {
+                    *arg2 = 0;
+                    *arg1 &= 0xF9FFFFFF; //All but bit 25 and 26
+                    return;
+                }
+                *arg1 |= 0x04000000; //Bit 26
+            }
+        } else {
+            *arg2 = *arg2 - (arg0->frameAdvanceDelay * arg3);
+            if (*arg2 < 0) {
+                *arg2 = 0;
+                *arg1 &= 0xF9FFFFFF; //All but bit 25 and 26
+            }
+        }
+    } else {
+        if (bit25Set) {
+            if (!bit26Set) {
+                *arg2 += arg0->frameAdvanceDelay * arg3;
+            } else {
+                *arg2 -= arg0->frameAdvanceDelay * arg3;
+            }
+            do {
+                phi_a0 = 0;
+                if (*arg2 < 0) {
+                    *arg2 = -*arg2;
+                    *arg1 &= 0xFBFFFFFF; //All but bit 26
+                    phi_a0 = 1;
+                }
+                if (*arg2 >= arg0->numOfTextures) {
+                    *arg2 = ((arg0->numOfTextures * 2) - *arg2) - 1;
+                    *arg1 |= 0x04000000; //Bit 26
+                    phi_a0 = 1;
+                }
+            } while (phi_a0 != 0);
+            return;
+        }
+        if (!bit26Set) {
+            *arg2 = *arg2 + (arg0->frameAdvanceDelay * arg3);
+            if (*arg2 >= arg0->numOfTextures) {
+                do {
+                    *arg2 -= arg0->numOfTextures;
+                } while (*arg2 >= arg0->numOfTextures);
+            }
+        } else {
+            *arg2 = *arg2 - (arg0->frameAdvanceDelay * arg3);
+            if (*arg2 < 0) {
+                do {
+                    *arg2 += arg0->numOfTextures;
+                } while (*arg2 < 0);
+            }
+        }
+    }
+}
 
 void func_8007F1E8(unk8007F1E8 *arg0) {
     s32 i;
