@@ -379,7 +379,7 @@ void ExtractConfig::extract() {
     std::string jsonFilename = outBaseDirectory + "/assets.json";
     write_json(assetsJson, jsonFilename);
 
-    setAssetsFolderPath(outBaseDirectory);
+    set_assets_folder_path(outBaseDirectory);
 
     execute_extraction();
     

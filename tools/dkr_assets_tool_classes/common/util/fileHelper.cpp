@@ -1,5 +1,28 @@
 #include "fileHelper.h"
 
+std::string assetsFolderPath = "";
+std::string version = "";
+
+bool is_asset_folder_path_defined() {
+    return assetsFolderPath != "";
+}
+
+void set_assets_folder_path(std::string path) {
+    assetsFolderPath = path;
+}
+
+std::string get_asset_folder_path() {
+    return assetsFolderPath;
+}
+
+void set_version(std::string ver) {
+    version = ver;
+}
+
+std::string get_version() {
+    return version;
+}
+
 std::vector<uint8_t> read_binary_file(std::string filename) {
     std::ifstream is;
     is.open(filename.c_str(), std::ios::binary);

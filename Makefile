@@ -115,6 +115,11 @@ endif
 endif
 endif
 
+################################
+
+# Removes the enums_cache if it exists in the build folde, incase someone modified the include/enums.h file.
+DUMMY != rm -Rf build/enums_cache
+
 ################ Target Executable and Sources ###############
 
 # BUILD_DIR is location where all build artifacts are placed
@@ -177,7 +182,7 @@ FixPath = $(subst /,,$1)
 N64CRC = $(TOOLS_DIR)/n64crc
 FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
 COMPRESS = $(TOOLS_DIR)/dkr_assets_tool -fc
-BUILDER = $(TOOLS_DIR)/dkr_assets_tool -b ./assets/$(VERSION) 
+BUILDER = $(TOOLS_DIR)/dkr_assets_tool -b $(VERSION) ./assets
 
 LIB_DIRS := lib/
 ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/ lib/asm/non_decompilable

@@ -15,23 +15,24 @@ class GenerateAssets:
     def __init__(self, rootDir, version):
         self.ASSETS_ASM_DIR = rootDir + '/asm/assets'
         self.ASSETS_FILENAME = self.ASSETS_ASM_DIR + '/assets.s'
-        self.ASSETS_DIR = rootDir + '/assets/' + version
+        self.ASSETS_DIR = rootDir + '/assets'
         self.UCODE_DIR = rootDir + '/ucode/' + version
         self.UCODE_TEXT_FILENAME = self.ASSETS_ASM_DIR + '/ucode_text.s'
         self.UCODE_DATA_FILENAME = self.ASSETS_ASM_DIR + '/ucode_data.s'
-        self.BUILD_DIR = rootDir + '/build/' + version
+        self.BUILD_DIR = rootDir + '/build'
+        self.VERSION = version
         
         self.generate_assets_file()
         self.generate_ucode_files()
 
     def generate_assets_file(self):
-        args = ["tools/dkr_assets_tool", "-i", self.ASSETS_DIR, INCLUDE_DIRECTORY, self.BUILD_DIR, self.ASSETS_ASM_DIR]
+        args = ["tools/dkr_assets_tool", "-i", self.VERSION, self.ASSETS_DIR, INCLUDE_DIRECTORY, self.BUILD_DIR, self.ASSETS_ASM_DIR]
         createAssets = subprocess.Popen(args, stdout=subprocess.PIPE)
         createAssets.wait()
         streamdata = createAssets.communicate()[0]
         if createAssets.returncode != 0:
             raise Exception("An error occured while running dkr_assets_tool. Aborting!")
-        with open(self.ASSETS_DIR + '/assets.json') as jsonFile:
+        with open(self.ASSETS_DIR + '/' + self.VERSION + '/assets.json') as jsonFile:
             assetsJSON = json.load(jsonFile)
             self.numAssets = len(assetsJSON['assets']['order'])
 
@@ -61,4 +62,4 @@ class GenerateAssets:
             assetsFile.write(assetsUCodeData)
             
     def generate_ucode_file(self, label, path):
-        return 'glabel ' + label + '\n.incbin "' + self.BUILD_DIR + '/' + path + '"\n'
+        return 'glabel ' + label + '\n.incbin "' + self.BUILD_DIR + '/' + self.VERSION + '/' + path + '"\n'

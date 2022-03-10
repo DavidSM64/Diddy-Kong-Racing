@@ -11,6 +11,12 @@
 #include <filesystem> 
 namespace fs = std::filesystem;
 
+bool is_asset_folder_path_defined();
+void set_assets_folder_path(std::string path);
+std::string get_asset_folder_path();
+void set_version(std::string ver);
+std::string get_version();
+
 std::vector<uint8_t> read_binary_file(std::string filename);
 void write_binary_file(std::vector<uint8_t> &data, std::string filepath);
 std::string read_text_file(std::string filename);

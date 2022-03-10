@@ -1,11 +1,10 @@
 #include "builder.h"
 
-Builder::Builder(std::string assetsDirectory, std::string srcPath, std::string dstPath) {
+Builder::Builder(std::string srcPath, std::string dstPath) {
     if(!path_exists(srcPath)) {
         std::cout << "Error: Invalid path \"" << srcPath << "\"" << std::endl;
         throw 1;
     }
-    setAssetsFolderPath(assetsDirectory);
     
     if(ends_with(srcPath, ".json")) {
         std::string type = get_string_from_json(srcPath, "type");

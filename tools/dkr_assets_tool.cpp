@@ -18,9 +18,9 @@
 void print_usage() {
     std::cout << "---- Usages -------------------------------------------------------------" << std::endl;
     std::cout << "Extracting assets: ./dkr_assets_tool -e <version> <configs path> <baseroms path> <output path>" << std::endl;
-    std::cout << "Building an asset: ./dkr_assets_tool -b <assets path> <source path> <output path>" << std::endl;
-    std::cout << "Creating includes: ./dkr_assets_tool -i <assets path> <include directory> <build directory> <asm output directory>" << std::endl;
-    std::cout << "Compiling assets:  ./dkr_assets_tool -c <assets path> <version>" << std::endl;
+    std::cout << "Building an asset: ./dkr_assets_tool -b <version> <assets path> <source path> <output path>" << std::endl;
+    std::cout << "Creating includes: ./dkr_assets_tool -i <version> <assets path> <include directory> <build directory> <asm output directory>" << std::endl;
+    std::cout << "Compiling assets:  ./dkr_assets_tool -c <version> <assets path>" << std::endl;
     std::cout << "Compress file:     ./dkr_assets_tool -fc <input_filename> <output_filename>" << std::endl;
     std::cout << "Decompress file:   ./dkr_assets_tool -fd <input_filename> <output_filename>" << std::endl;
     std::cout << "-------------------------------------------------------------------------" << std::endl;
@@ -135,27 +135,14 @@ bool parse_options(int argc, char *argv[]) {
                 case PO_TYPE:
                     switch(curOptionState) {
                         case 1: // Extractor
-                            switch(curOptionArgs) {
-                                case 0: // version
-                                case 1: // configs directory
-                                case 2: // baseroms directory
-                                    options.paths.push_back(args[i]);
-                                    break;
-                                case 3: // output directory
-                                    options.paths.push_back(args[i]);
-                                    // End of arguments.
-                                    parsingCmd = false;
-                                    curOption = PO_NONE;
-                                    break;
-                            }
-                            break;
                         case 2: // Builder
                             switch(curOptionArgs) {
-                                case 0: // Assets directory
-                                case 1: // Source path
+                                case 0: // version
+                                case 1: // configs directory / Assets directory
+                                case 2: // baseroms directory / Source path
                                     options.paths.push_back(args[i]);
                                     break;
-                                case 2:  // Output path
+                                case 3: // output
                                     options.paths.push_back(args[i]);
                                     // End of arguments.
                                     parsingCmd = false;
@@ -168,9 +155,10 @@ bool parse_options(int argc, char *argv[]) {
                                 case 0: // Assets directory
                                 case 1: // Enum file output path
                                 case 2: // Build directory
+                                case 3: // Asm output directory
                                     options.paths.push_back(args[i]);
                                     break;
-                                case 3: // Asm output directory
+                                case 4: //  DKR version
                                     options.paths.push_back(args[i]);
                                     // End of arguments.
                                     parsingCmd = false;
@@ -223,24 +211,51 @@ int main(int argc, char *argv[]) {
     switch(options.type) {
         case TT_EXTRACT:
             {
-                Extractor extractor(options.paths[0], options.paths[1], options.paths[2], options.paths[3]);
+                std::string version      = options.paths[0]; // us_1.0
+                std::string configsPath  = options.paths[1]; // <root>/extract-ver
+                std::string baseromsPath = options.paths[2]; // <root>/baseroms
+                std::string outputPath   = options.paths[3]; // <root>
+
+                Extractor extractor(version, configsPath, baseromsPath, outputPath);
             }
             break;
         case TT_BUILD:
             {
-                Builder builder(options.paths[0], options.paths[1], options.paths[2]);
+                std::string version    = options.paths[0]; // us_1.0
+                std::string assetsDir  = options.paths[1]; // <root>/assets
+                std::string sourcePath = options.paths[2]; // Input .json filepath
+                std::string outputPath = options.paths[3]; // Output .bin filepath
+
+                set_assets_folder_path(assetsDir);
+                set_version(version);
+
+                Builder builder(sourcePath, outputPath);
             }
             break;
         case TT_ASSET_INCLUDES:
             {
-                setAssetsFolderPath(options.paths[0]);
-                AssetEnumsHeader assetEnumsHeader(options.paths[1]);
-                AssetAsmIncludes assetAsmIncludes(options.paths[0], options.paths[2], options.paths[3]);
+                std::string version      = options.paths[0]; // us_1.0
+                std::string assetsDir    = options.paths[1]; // <root>/assets
+                std::string includeDir   = options.paths[2]; // <root>/include
+                std::string buildDir     = options.paths[3]; // <root>/build
+                std::string assetsAsmDir = options.paths[4]; // <root>/asm/assets
+
+                set_assets_folder_path(assetsDir);
+                set_version(version);
+
+                AssetEnumsHeader assetEnumsHeader(includeDir);
+                AssetAsmIncludes assetAsmIncludes(assetsDir + "/" + version, buildDir + "/" + version, assetsAsmDir);
             }
             break;
         case TT_ASSET_COMPILE:
             {
-                AssetCompiler compiler(options.paths[0], options.paths[1]);
+                std::string version   = options.paths[0]; // us_1.0
+                std::string assetsDir = options.paths[1]; // <root>/assets
+
+                set_assets_folder_path(assetsDir);
+                set_version(version);
+                
+                AssetCompiler compiler();
             }
             break;
         case TT_ASSET_COMPRESS_FILE:

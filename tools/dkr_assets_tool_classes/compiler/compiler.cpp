@@ -40,8 +40,12 @@ void AssetCompiler::append_manifest_files(std::string &packageDir, std::string &
     std::vector<fs::path> packageFiles = get_filenames_from_directory_only_with_extension(packageDir, ".json");
     std::string curDataPath, newDataPath;
     for(int i = 0; i < packageFiles.size(); i++) {
+        std::string filename = packageFiles[i].filename().string();
+        if(filename == "meta.json") { 
+            continue;
+        }
         newDataPath = packageFiles[i].string();
-        curDataPath = outDirPath + "/" + packageFiles[i].filename().string();
+        curDataPath = outDirPath + "/" + filename;
         combine_json_files(curDataPath, newDataPath, curDataPath);
     }
 }

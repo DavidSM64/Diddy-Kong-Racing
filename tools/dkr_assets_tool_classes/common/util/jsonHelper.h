@@ -12,7 +12,6 @@
 
 void write_json(json::JSON &assetsJSON, std::string filename);
 json::JSON load_assets_json(std::string assetsFolder, std::string jsonName);
-void setAssetsFolderPath(std::string path);
 std::string get_build_id_from_section(std::string sectionName, int index);
 int get_index_of_string_from_json_array(json::JSON &jsonArray, std::string value);
 int get_index_from_build_id(std::string sectionName, std::string buildId);

@@ -1,6 +1,5 @@
 #include "jsonHelper.h"
 
-std::string assetsFolderPath = "";
 bool hasLoadedAssetsJson = false;
 json::JSON assetsJson;
 
@@ -26,24 +25,21 @@ void write_json(json::JSON &jsonData, std::string filename) {
     myfile.close();
 }
 
-void setAssetsFolderPath(std::string path) {
-    assetsFolderPath = path;
-}
-
 void make_sure_assets_json_is_loaded() {
     if(hasLoadedAssetsJson) {
         return;
     }
-    if(assetsFolderPath == "") {
-        std::cout << "assetsFolderPath not defined! Make sure setAssetsFolderPath() is called somewhere!" << std::endl;
+    if(!is_asset_folder_path_defined()) {
+        std::cout << "assetsFolderPath not defined! Make sure set_assets_folder_path() is called somewhere!" << std::endl;
         throw 1;
     }
-    assetsJson = load_assets_json(assetsFolderPath, ASSETS_FILENAME);
+    assetsJson = load_assets_json(get_asset_folder_path() + "/" + get_version(), ASSETS_FILENAME);
     hasLoadedAssetsJson = true;
 }
 
 json::JSON *get_section_json(std::string sectionName) {
     make_sure_assets_json_is_loaded();
+    std::string assetsFolderPath = get_asset_folder_path() + "/" + get_version();
     if(sectionName == lastSectionName) {
         return lastSection;
     } else if(sectionCache.find(sectionName) == sectionCache.end()) {
