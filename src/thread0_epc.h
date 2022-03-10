@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "libultra_internal.h"
+#include "macros.h"
 
 /* Size: 0x1B0 bytes */
 typedef struct epcInfo {
@@ -80,8 +81,8 @@ void func_800B76B8(s32 arg0, s32 arg1);
 s32 get_lockup_status(void);
 void lockup_screen_loop(s32 arg0);
 
-void func_800B6F50(void); // Non Matching
-void thread0_Main(s32 arg0); // Non Matching
+void thread0_create(void); // Non Matching
+void thread0_Main(UNUSED void *unused); // Non Matching
 void func_800B7460(s32 *epc, s32 size, s32 mask); // Non Matching
 void render_epc_lock_up_display(void); // Non Matching
 void func_800B71B0(void); // Non Matching

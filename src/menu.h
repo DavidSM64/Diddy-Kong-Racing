@@ -209,7 +209,7 @@ typedef struct unk800861C8 {
     s8  unk6;
     s8  pad7;
     u32 pad8;
-    u32 unkC;
+    u32 unkC; // Game Data File Size
 } unk800861C8;
 
 /* Unknown size */
@@ -645,7 +645,7 @@ void func_80080E6C(void);
 void func_800813C0(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, Gfx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
-void func_80081800(s32 arg0, s32 arg1, s32 arg2, u8 arg3, u8 arg4, u8 arg5, u8 arg6);
+void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
 void print_missing_controller_text(Gfx **dl, s32 updateRate);
@@ -817,7 +817,7 @@ s32 menu_results_loop(s32 updateRate);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_23_loop(s32 updateRate);
 s32 menu_credits_loop(s32 updateRate);
-void func_8009CA60(s32 arg0);
+void func_8009CA60(s32 imageID);
 void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
@@ -830,5 +830,6 @@ void func_8006F564(s8 arg0);
 void func_80099E8C(s32 updateRate);
 void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
+void func_80081218(void);
 
 #endif

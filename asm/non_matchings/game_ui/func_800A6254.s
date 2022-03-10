@@ -437,7 +437,7 @@ glabel L800A63D8
 .L800A6890:
 /* 0A7490 800A6890 27A50040 */  addiu $a1, $sp, 0x40
 /* 0A7494 800A6894 27A70038 */  addiu $a3, $sp, 0x38
-/* 0A7498 800A6898 0C0165E4 */  jal   func_80059790
+/* 0A7498 800A6898 0C0165E4 */  jal   get_timestamp_from_frames
 /* 0A749C 800A689C AFA80048 */   sw    $t0, 0x48($sp)
 /* 0A74A0 800A68A0 3C098012 */  lui   $t1, %hi(D_80126CDC) # $t1, 0x8012
 /* 0A74A4 800A68A4 25296CDC */  addiu $t1, %lo(D_80126CDC) # addiu $t1, $t1, 0x6cdc
@@ -454,7 +454,7 @@ glabel L800A63D8
 /* 0A74D0 800A68D0 27A70038 */  addiu $a3, $sp, 0x38
 /* 0A74D4 800A68D4 A30F02FC */  sb    $t7, 0x2fc($t8)
 /* 0A74D8 800A68D8 8FA40048 */  lw    $a0, 0x48($sp)
-/* 0A74DC 800A68DC 0C0165E4 */  jal   func_80059790
+/* 0A74DC 800A68DC 0C0165E4 */  jal   get_timestamp_from_frames
 /* 0A74E0 800A68E0 00000000 */   nop   
 /* 0A74E4 800A68E4 3C098012 */  lui   $t1, %hi(D_80126CDC) # $t1, 0x8012
 /* 0A74E8 800A68E8 25296CDC */  addiu $t1, %lo(D_80126CDC) # addiu $t1, $t1, 0x6cdc

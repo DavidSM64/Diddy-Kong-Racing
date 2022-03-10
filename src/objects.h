@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "object_functions.h"
+#include "math.h"
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
@@ -94,9 +95,7 @@ extern s32 D_800DC74C;
 extern s32 D_800DC750;
 extern s32 D_800DC754;
 extern s32 D_800DC758;
-extern s32 D_800DC75C;
 extern s32 D_800DC760;
-extern s32 D_800DC764;
 extern s32 D_800DC768;
 
 extern f32 D_800DC76C[15];
@@ -157,7 +156,7 @@ void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
-void func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object);
+void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object);
 void func_80012F30(Object *arg0);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
@@ -217,6 +216,7 @@ void run_object_loop_func(Object *obj, s32 arg1);
 void func_8002458C(s32 arg0);
 s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
+void func_80012E28(Object *this);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
@@ -226,7 +226,6 @@ void func_8001D258(f32, f32, s32, s32, s32);
 void decrypt_magic_codes(u8 *arg0, s32 length);
 void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
-void func_80012E28(Object *this);
 void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
@@ -234,6 +233,6 @@ Object *spawn_object(void *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 void func_80011570(Object *, f32, f32, f32);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
-
+void func_8001BF20(void);
 
 #endif

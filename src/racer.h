@@ -189,12 +189,13 @@ extern s32 gObjLoopGoldenBalloonChecksum;
 
 extern s16 D_800DCDD4[4];
 
-extern unk8011D510 D_8011D510;
+extern ObjectTransform D_8011D510;
 
 extern s32 D_8011D534;
 
 s32 get_random_number_from_range(s32, s32); //?
-void func_8006FE74(Matrix *, unk8011D510 *); // Non Matching ?
+void func_8006FC30(Matrix, ObjectTransform *); // asm func
+void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching ?
 
 s32 func_80044450(s32 arg0);
 void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64);
@@ -214,12 +215,12 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_64_800575EC *obj64);
 void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2);
 void func_800580B4(Object *obj, Object_64_800580B4 *obj64, s32 arg2, f32 arg3);
-void func_80059790(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3);
+void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
 void func_800598D0(void);
 void func_80059944(void);
 void func_80059984(s32 arg0);
 s32 func_800599A8(void);
-s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4);
+s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s16 *arg3, s16 *arg4);
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime);
 void free_tt_ghost_data(void);
 s32 func_80059B7C(s32 controllerIndex, s32 arg1, s16 arg2, s16 arg3, s16 arg4);

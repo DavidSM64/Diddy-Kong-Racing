@@ -10,6 +10,7 @@
 #include "objects.h"
 #include "controller.h"
 #include "game.h"
+#include "stacks.h"
 
 /************ .rodata ************/
 
@@ -18,10 +19,10 @@ const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 const char D_800E8ED0[] = ">fault< ";
 const char D_800E8EDC[] = "CORE";
 const u8 D_800E8EE4[4] = { 0, 0, 0, 0 };
-const char D_800E8EE8[] = "CORE";
-const u8 D_800E8EF0[4] = { 0, 0, 0, 0 };
-const char D_800E8EF4[] = "CORE";
-const u8 D_800E8EFC[4] = { 0, 0, 0, 0 };
+const u8 sCoreFileName1[] = "CORE";
+const u8 sCoreFileExt1[] = { 0, 0, 0, 0 };
+const u8 sCoreFileName2[] = "CORE";
+const u8 sCoreFileExt2[] = { 0, 0, 0, 0 };
 
 /*********************************/
 
@@ -41,8 +42,6 @@ char *D_800E302C[3] = {
 
 epcInfo gEpcInfo; //Very similar to __OSThreadContext
 s32 D_801299B0[64];
-
-extern s32 D_80129BB0[256];
 
 /******************************/
 
@@ -90,19 +89,20 @@ void func_800B6F04(void) {
     D_80127CAE += 11;
 }
 
-void func_800B6F30(s32 arg0, s32 arg1, s32 arg2) {
+void func_800B6F30(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
-void func_800B6F40(s32 arg0, s32 arg1, s32 arg2) {
+void func_800B6F40(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 #ifdef NON_EQUIVALENT
-void func_800B6F50(void) {
+void thread0_create(void) {
     s32 i;
 
     // Almost matching, just have an issue with argument 4.
     // The -O2 compiler is too smart. :(
-    osCreateThread(&D_801295E0, 0, thread0_Main, 0, &D_801295E0, 255);
+    // It's possible D_801295E0 is a struct containing both the thread and stack pointer
+    osCreateThread(&D_801295E0, 0, thread0_Main, NULL, &D_801295E0, OS_PRIORITY_MAX);
 
     osStartThread(&D_801295E0);
 
@@ -111,11 +111,11 @@ void func_800B6F50(void) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B6F50.s")
+GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0_create.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-void thread0_Main(s32 arg0) { // Has regalloc issues
+void thread0_Main(UNUSED void *unused) { // Has regalloc issues
     s32 sp34;
     s32 s0 = 0;
 
@@ -169,9 +169,7 @@ void func_800B7144(void) {
 
 GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B71B0.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
-#else
+#ifdef NON_EQUIVALENT
 //Rename mask to colorTag?
 void func_800B7460(s32 *epc, s32 size, s32 mask) {
     epcInfo sp840;
@@ -201,10 +199,12 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
                 sp38 += size;
             }
         }
-        write_controller_pak_file(0, -1, &D_800E8EE8, &D_800E8EF0, &sp40, 0x800);
+        write_controller_pak_file(0, -1, sCoreFileName1, sCoreFileExt1, &sp40, 0x800);
         while (1); // Infinite loop; waiting for the player to reset the console?
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
 #endif
 
 void func_800B76B8(s32 arg0, s32 arg1) {
@@ -217,19 +217,20 @@ void func_800B76B8(s32 arg0, s32 arg1) {
 s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
-    char *sp420[256];
-    char *sp220[128];
-    u8 dataFromControllerPak[512];
+    s64 sp420[128]; // Overwrite epcStack?
+    s64 sp220[64];
+    u8 dataFromControllerPak[512]; //Looks to be sizeof(epcInfo), aligned to 64
 
     if (sLockupStatus != -1) {
         return sLockupStatus;
     } else {
         sLockupStatus = 0;
-        if ((get_si_device_status(controllerIndex) == 0) && //Rumble pack check?
-            (get_file_number(controllerIndex, &D_800E8EF4, &D_800E8EFC, &fileNum) == 0) &&
-            (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *)&dataFromControllerPak,
-                sizeof(dataFromControllerPak) * MAXCONTROLLERS) == 0)) {
-            bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(dataFromControllerPak) - 80); //Why less 80 (0x50)?
+        // Looks like it reads EpcInfo data from the controller pak, which is interesting
+        if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
+            (get_file_number(controllerIndex, (u8 *)sCoreFileName2, (u8 *)sCoreFileExt2, &fileNum) == CONTROLLER_PAK_GOOD) &&
+            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 2048) == CONTROLLER_PAK_GOOD))
+        {
+            bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
             bcopy(&sp220, &D_801299B0, sizeof(sp220));
             bcopy(&sp420, &D_80129BB0, sizeof(sp420));
             sLockupStatus = 1;
@@ -238,8 +239,9 @@ s32 get_lockup_status(void) {
         if (sLockupStatus) {
             delete_file(controllerIndex, fileNum);
         }
-        return sLockupStatus;
     }
+
+    return sLockupStatus;
 }
 
 void lockup_screen_loop(s32 updateRate) {
@@ -250,9 +252,7 @@ void lockup_screen_loop(s32 updateRate) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/thread0_epc/render_epc_lock_up_display.s")
-#else
+#ifdef NON_EQUIVALENT
 void render_epc_lock_up_display(void) {
     char *sp50[3];
     s32 s3;
@@ -337,4 +337,6 @@ void render_epc_lock_up_display(void) {
             break;
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/thread0_epc/render_epc_lock_up_display.s")
 #endif

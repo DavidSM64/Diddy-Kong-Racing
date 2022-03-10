@@ -9,7 +9,7 @@
 /************ .bss ************/
 
 u8 piThreadStack[256]; // piThreadStack[OS_PIM_STACKSIZE];
-s32 D_80129BB0[256];
+s64 D_80129BB0[128]; // epcStack?
 s32 D_80129FB0[3];
 s32 D_80129FBC;
 

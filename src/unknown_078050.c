@@ -152,10 +152,8 @@ OSMesgQueue D_80125EA0;
 OSMesg D_80125EB8;
 OSMesgQueue D_80125EC0;
 OSMesgQueue D_80125ED8;
-OSMesg D_80125EF0;
-s32 D_80125EF8[6];
-OSMesg D_80125F10;
-s32 D_80125F18[6];
+OSMesg D_80125EF0[8];
+OSMesg D_80125F10[8];
 u8 D_80125F30;
 u8 D_80125F31;
 u8 D_80125F32;
@@ -175,19 +173,19 @@ OSMesgQueue *osScInterruptQ;
 GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
 
 s32 func_80077A54(void) {
-    OSMesg *sp1C = NULL;
+    s32 *sp1C = NULL;
     if (D_800DE4DC == 0) {
         return 0;
     }
-    osRecvMesg(&D_80125ED8, &sp1C, OS_MESG_BLOCK);
+    osRecvMesg(&D_80125ED8, (OSMesg)&sp1C, OS_MESG_BLOCK);
     D_800DE4DC = 0;
     return sp1C[1];
 }
 
-void func_80077AAC(void *bufPtr, s32 arg1, s32 arg2) {
+void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
     osWritebackDCacheAll();
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
-    osDpSetNextBuffer(bufPtr, arg1);
+    osDpSetNextBuffer(bufPtr, bufSize);
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
 }
 
@@ -228,7 +226,7 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
     gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000);
-    gDPSetFillColor((*dlist)++, 0xFFFCFFFC);
+    gDPSetFillColor((*dlist)++, GPACK_RGBA5551(255, 255, 255, 128) << 16 | GPACK_RGBA5551(255, 255, 255, 128));
     gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
     gDPPipeSync((*dlist)++);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x01000000);
@@ -246,7 +244,7 @@ void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
             }
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dlist)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 0xFF);
+                gDPSetPrimColor((*dlist)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
                 gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
                 gDPFillRectangle((*dlist)++, x1, y1, x2, y2);
@@ -295,8 +293,8 @@ void init_rsp(Gfx **dlist) {
 void func_80078100(OSSched *sc) {
     osScInterruptQ = osScGetInterruptQ(sc);
     osCreateMesgQueue(&D_80125EA0, &D_80125EB8, 1);
-    osCreateMesgQueue(&D_80125EC0, &D_80125EF0, 8);
-    osCreateMesgQueue(&D_80125ED8, &D_80125F10, 8);
+    osCreateMesgQueue(&D_80125EC0, D_80125EF0, 8);
+    osCreateMesgQueue(&D_80125ED8, D_80125F10, 8);
 }
 
 void func_80078170(u32 arg0, u32 arg1, u32 arg2) {
@@ -336,7 +334,7 @@ void func_80078AAC(void *arg0) {
 #ifdef NON_EQUIVALENT
 
 // Regalloc & stack issues.
-void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg3, u8 red, u8 green, u8 blue, u8 alpha) {
+void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
     DrawTexture *phi_t2;
     s32 x0, y0;
@@ -347,8 +345,8 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 arg2, s32 arg
     gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
     tex = arg1->texture;
     while (tex != NULL) {
-        x0 = (arg1->xOffset * 4) + (arg2 * 4);
-        y0 = (arg1->yOffset * 4) + (arg3 * 4);
+        x0 = (arg1->xOffset * 4) + (xPos * 4);
+        y0 = (arg1->yOffset * 4) + (yPos * 4);
         x1 = (tex->width * 4) + x0;
         y1 = (tex->height * 4) + y0;
         if (x1 > 0) {

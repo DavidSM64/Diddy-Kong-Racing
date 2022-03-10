@@ -15,7 +15,7 @@ OSMesg gDmaMesg;
 OSMesgQueue gDmaMesgQueue;
 OSMesg gPIMesgBuf[16];
 OSMesgQueue gPIMesgQueue;
-s32 *gAssetsLookupTable;
+u32 *gAssetsLookupTable;
 
 /*******************************/
 
@@ -28,7 +28,7 @@ void func_80076BA0(void) {
     osCreateMesgQueue(&gDmaMesgQueue, &gDmaMesg, 1);
     osCreatePiManager((OSPri)150, &gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
     assetTableSize = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
-    gAssetsLookupTable = (s32 *)allocate_from_main_pool_safe(assetTableSize, COLOR_TAG_GRAY);
+    gAssetsLookupTable = (u32 *)allocate_from_main_pool_safe(assetTableSize, COLOR_TAG_GRAY);
     func_80071478((u8 *)gAssetsLookupTable);
     dmacopy((u32)&__ASSETS_LUT_START, (u32)gAssetsLookupTable, (s32)assetTableSize);
 }
@@ -36,23 +36,23 @@ void func_80076BA0(void) {
 /**
  * Returns the memory address containing an asset section loaded from ROM.
  */
-s32 *load_asset_section_from_rom(u32 assetIndex) {
-    s32 *index;
-    s32 *out;
+u32 *load_asset_section_from_rom(u32 assetIndex) {
+    u32 *index;
+    u32 *out;
     s32 size;
-    s32 start;
+    u32 start;
     if (gAssetsLookupTable[0] < assetIndex) {
-        return NULL;
+        return 0;
     }
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
     start = *index;
     size = *(index + 1) - start;
-    out = (s32 *)allocate_from_main_pool_safe(size, COLOR_TAG_GRAY);
-    if (out == NULL) {
-        return NULL;
+    out = (u32 *)allocate_from_main_pool_safe(size, COLOR_TAG_GRAY);
+    if (out == 0) {
+        return 0;
     }
-    dmacopy(start + &__ASSETS_LUT_END, out, size);
+    dmacopy((u32)(start + &__ASSETS_LUT_END), (u32)out, size);
     return out;
 }
 
@@ -103,10 +103,10 @@ GLOBAL_ASM("asm/non_matchings/asset_loading/load_compressed_asset_from_rom.s")
  * Loads an asset section to a specific memory address.
  * Returns the size of asset section.
  */
-s32 load_asset_section_from_rom_to_address(u32 assetIndex, s32 *address) {
-    s32 start;
+s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
+    u32 start;
     s32 size;
-    s32 *index;
+    u32 *index;
     if (gAssetsLookupTable[0] < assetIndex) {
         return 0;
     }
@@ -114,7 +114,7 @@ s32 load_asset_section_from_rom_to_address(u32 assetIndex, s32 *address) {
     index = assetIndex + gAssetsLookupTable;
     start = *index;
     size = *(index + 1) - start;
-    dmacopy(start + &__ASSETS_LUT_END, address, size);
+    dmacopy((u32)(start + &__ASSETS_LUT_END), address, size);
     return size;
 }
 
@@ -122,8 +122,8 @@ s32 load_asset_section_from_rom_to_address(u32 assetIndex, s32 *address) {
  * Loads part of an asset section to a specific memory address.
  * Returns the size argument.
  */
-s32 load_asset_to_address(u32 assetIndex, s32 *address, s32 assetOffset, s32 size) {
-    s32 *index;
+s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size) {
+    u32 *index;
     s32 start;
 
     if (size == 0 || gAssetsLookupTable[0] < assetIndex) {
@@ -133,16 +133,16 @@ s32 load_asset_to_address(u32 assetIndex, s32 *address, s32 assetOffset, s32 siz
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
     start = *index + assetOffset;
-    dmacopy(start + &__ASSETS_LUT_END, address, size);
+    dmacopy((u32)(start + &__ASSETS_LUT_END), address, size);
     return size;
 }
 
 /**
  * Returns a rom offset of an asset given its asset section and a local offset.
  */
-u8 *get_rom_offset_of_asset(u32 assetIndex, s32 assetOffset) {
-    s32 *index;
-    s32 start;
+u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
+    u32 *index;
+    u32 start;
 
     if (gAssetsLookupTable[0] < assetIndex) {
         return NULL;
@@ -158,7 +158,7 @@ u8 *get_rom_offset_of_asset(u32 assetIndex, s32 assetOffset) {
  * Returns the size of an asset section.
  */
 s32 get_size_of_asset_section(u32 assetIndex) {
-    s32 *index;
+    u32 *index;
 
     if (gAssetsLookupTable[0] < assetIndex) {
         return 0;
@@ -178,13 +178,13 @@ void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
     OSMesg dmaMesg;
     s32 numBytesToDMA;
 
-    osInvalDCache(ramAddress, numBytes);
+    osInvalDCache((u32 *)ramAddress, numBytes);
     numBytesToDMA = MAX_TRANSFER_SIZE;
     while (numBytes > 0) {
         if (numBytes < numBytesToDMA) {
             numBytesToDMA = numBytes;
         }
-        osPiStartDma(&gAssetsDmaIoMesg, OS_MESG_PRI_NORMAL, OS_READ, romOffset, ramAddress, numBytesToDMA, &gDmaMesgQueue);
+        osPiStartDma(&gAssetsDmaIoMesg, OS_MESG_PRI_NORMAL, OS_READ, romOffset, (u32 *)ramAddress, numBytesToDMA, &gDmaMesgQueue);
         osRecvMesg(&gDmaMesgQueue, &dmaMesg, 1);
         numBytes -= numBytesToDMA;
         romOffset += numBytesToDMA;

@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "fade_transition.h"
+#include "math.h"
 
 enum RenderContext {
     DRAW_INTRO = -1,
@@ -100,9 +101,9 @@ extern s32 gVideoCurrFramebuffer;
 extern s32 gVideoLastFramebuffer;
 extern s32 gVideoLastDepthBuffer;
 
-void func_8006F870(Matrix, Matrix); //unknown_070110
-void func_800705F8(s32, f32, f32, f32); //From unknown_070110
-f32 sqrtf(f32); //IDO?
+void func_8006F870(Matrix *, Matrix *); //unknown_070110
+void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
+void func_80070B04(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);
 
 s16 func_8006ABB4(s32 arg0);
 s32 func_8006B018(s8 arg0);
@@ -123,14 +124,14 @@ u8 *get_level_name(s32 levelId);
 void func_8006BEFC(void);
 void func_8006BFC8(s8 *arg0);
 void func_8006C164(void);
-s32 func_8006C18C(void);
+u32 *func_8006C18C(void);
 s8 func_8006C19C(void);
 void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8006C22C(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3);
 void func_8006C2E4(void);
 s16 func_8006C2F0(void);
 s32 func_8006C300(void);
-void thread3_main(s32 arg0);
+void thread3_main(UNUSED void *unused);
 void init_game(void);
 void main_game_loop(void);
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2);
@@ -192,5 +193,7 @@ void func_8006DCF8(s32 arg0);
 void func_8006EFDC(void);
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId);
 void func_8006CCF0(s32 arg0);
+void func_8006A6B0(void);
+void func_80010994(s32 updateRate);
 
 #endif

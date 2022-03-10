@@ -150,13 +150,13 @@ void func_80032C7C(Object *object) {
     unk800DC950 *entry;
 
     if (object->header->unk3D == 0) {
-        switch (object->header->unk53) { // Model type
-            case 0:                              // 3D Model
+        switch (object->header->modelType) {
+            case OBJECT_MODEL_TYPE_3D_MODEL: // 3D Model
                 sp64 = 2;
                 break;
-            case 1: // 2D Billboard
-            case 2: // Vehicle Part
-            case 3:
+            case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD: // 2D Billboard
+            case OBJECT_MODEL_TYPE_VEHICLE_PART: // Vehicle Part
+            case OBJECT_MODEL_TYPE_UNKNOWN3:
                 sp64 = 4;
                 break;
             default:
@@ -164,9 +164,9 @@ void func_80032C7C(Object *object) {
                 break;
         }
 
-        sp82 = object->x_position;
-        sp80 = object->y_position;
-        sp7E = object->z_position;
+        sp82 = object->trans.x_position;
+        sp80 = object->trans.y_position;
+        sp7E = object->trans.z_position;
         D_800DC968 = 0;
         for (i = 0; i < D_800DC95C; i++) {
             entry = D_800DC950[i];
@@ -183,9 +183,9 @@ void func_80032C7C(Object *object) {
                         D_800DC968 = D_800DC968 + 1;
                     }
                 } else {
-                    D_8011D4C4 = entry->unk10 - object->x_position;
-                    D_8011D4C8 = entry->unk14 - object->y_position;
-                    D_8011D4CC = entry->unk18 - object->z_position;
+                    D_8011D4C4 = entry->unk10 - object->trans.x_position;
+                    D_8011D4C8 = entry->unk14 - object->trans.y_position;
+                    D_8011D4CC = entry->unk18 - object->trans.z_position;
                     if (entry->unk0 == 2) {
                         D_8011D4C8 = 0.0f;
                     }

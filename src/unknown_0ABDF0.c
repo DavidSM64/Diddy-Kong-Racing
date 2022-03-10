@@ -336,11 +336,11 @@ void func_800ADBC8(UNUSED s32 arg0) {
     f32 temp_f2;
 
     sp28 = 1152.0f - (f32) (D_800E2C60 >> 6);
-    sp24 = func_800707C4(D_80127C1C->y_rotation) * sp28;
-    temp_f2 = func_800707F8(D_80127C1C->y_rotation) * sp28;
-    temp_f14 = D_80127C1C->x_position + (temp_f2 - sp24);
-    temp_f16 = D_80127C1C->y_position;
-    temp_f18 = D_80127C1C->z_position + (-temp_f2 - sp24);
+    sp24 = func_800707C4(D_80127C1C->segment.trans.y_rotation) * sp28;
+    temp_f2 = func_800707F8(D_80127C1C->segment.trans.y_rotation) * sp28;
+    temp_f14 = D_80127C1C->segment.trans.x_position + (temp_f2 - sp24);
+    temp_f16 = D_80127C1C->segment.trans.y_position;
+    temp_f18 = D_80127C1C->segment.trans.z_position + (-temp_f2 - sp24);
     if (D_800E2C94 != 0) {
         func_800096D8(D_800E2C94, temp_f14, temp_f16, temp_f18);
     } else {

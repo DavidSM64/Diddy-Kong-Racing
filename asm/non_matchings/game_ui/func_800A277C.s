@@ -477,7 +477,7 @@ glabel func_800A277C
 /* 0A3A14 800A2E14 AFA800BC */  sw    $t0, 0xbc($sp)
 /* 0A3A18 800A2E18 27A500B4 */  addiu $a1, $sp, 0xb4
 /* 0A3A1C 800A2E1C 27A600B0 */  addiu $a2, $sp, 0xb0
-/* 0A3A20 800A2E20 0C0165E4 */  jal   func_80059790
+/* 0A3A20 800A2E20 0C0165E4 */  jal   get_timestamp_from_frames
 /* 0A3A24 800A2E24 27A700AC */   addiu $a3, $sp, 0xac
 /* 0A3A28 800A2E28 8FAC003C */  lw    $t4, 0x3c($sp)
 /* 0A3A2C 800A2E2C 3C01800E */  lui   $at, %hi(D_800E2834) # $at, 0x800e

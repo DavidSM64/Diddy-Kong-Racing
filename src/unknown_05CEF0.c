@@ -37,7 +37,7 @@ void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
     object->unk4C->unk10 = 0x1E;
     object->unk4C->unk12 = 0;
     arg1->unkC = 0.0f;
-    D_8011D5C0 = object->y_position;
+    D_8011D5C0 = object->segment.trans.y_position;
     if (arg1->unk118 != 0) {
         func_80006AC8(object);
     }
@@ -74,7 +74,7 @@ void func_8005D048(Object *object, unk8005D048 *arg1, s32 arg2) {
     Object *sp1C = get_object_struct(0);
     arg1->unk1F7 = 0xFF;
     if (!func_8001139C()) {
-        if ((object->unk30 + arg2) < sp1C->unk30) {
+        if ((object->segment.unk30 + arg2) < sp1C->segment.unk30) {
             arg1->unk1F7 = 0x40;
         }
     }

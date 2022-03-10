@@ -2,6 +2,7 @@
 #define _PRINTF_H_
 
 #include "types.h"
+#include <PR/gu.h>
 
 
 #define RENDER_PRINTF_CMD_ARG_BYTE(val) *D_801285D8 = val; D_801285D8++;
@@ -38,5 +39,7 @@ void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
 
 void set_render_printf_position(u16 xpos, u16 ypos); // Non Matching
+s32 render_printf(const char *format, ...); // Non Matching
+void print_debug_strings(Gfx **arg0); // Non Matching
 
 #endif

@@ -19,8 +19,8 @@
 /************ .data ************/
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
-unknown800DC874 D_800DC874 = { -128, 40, -1 };
-unknown800DC874 D_800DC87C = { -125, 70, -1 };
+unknown800DC874 D_800DC874 = { { -128 }, 40, -1 };
+unknown800DC874 D_800DC87C = { { -125 }, 70, -1 };
 
 f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
@@ -40,7 +40,7 @@ LevelModel *gCurrentLevelModel = NULL;
 LevelHeader *gCurrentLevelHeader2 = NULL;
 
 s32 D_800DC920 = -1;
-s32 D_800DC924 = 0;
+s32 *D_800DC924 = NULL;
 s32 D_800DC928 = 0; // Currently unknown, might be a different type.
 
 s8 D_800DC92C[24] = {
@@ -61,8 +61,8 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 /************ .bss ************/
 
 Gfx *D_8011B0A0;
-s32 D_8011B0A4;
-s32 D_8011B0A8;
+u32 D_8011B0A4;
+u32 D_8011B0A8;
 s32 D_8011B0AC;
 
 Object *D_8011B0B0; // Camera Object?
@@ -151,7 +151,7 @@ f32 D_8011D380;
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
 unk8011D468 D_8011D468;
-s32 D_8011D474;
+s32 *D_8011D474;
 s32 D_8011D478;
 s32 D_8011D47C;
 s32 D_8011D480[2];
@@ -178,9 +178,7 @@ s32 func_800249E0(s32 arg0) {
     return 0;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;
@@ -236,7 +234,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
         D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOR_TAG_YELLOW);
         D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOR_TAG_YELLOW);
         D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOR_TAG_YELLOW);
-    } while (&D_8011D338[++i] != &D_8011D348);
+    } while ((s32)&D_8011D338[++i] != (s32)&D_8011D348);
 
     D_8011B0C8 = 0;
     func_8002D8DC(1, 1, 0);
@@ -252,6 +250,8 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
         func_80025510(arg2 + 1);
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80024D54.s")
@@ -290,7 +290,7 @@ void func_80027FC4(s32 arg0) {
     sp20.unk0 = arg0;
     D_8011B0B8 = spawn_object(&sp20, 2);
     if (D_8011B0B8 != 0) {
-        D_8011B0B8->unk3C_a.unk3C = 0;
+        D_8011B0B8->segment.unk3C_a.unk3C = 0;
         D_8011B0B8->unk4A = -1;
     }
 }
@@ -301,9 +301,7 @@ void func_80028044(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_800289B8(void) {
     u8 sp_2f = gCurrentLevelHeader2->unkC1;
     u8 sp_2e = gCurrentLevelHeader2->unkC2;
@@ -316,37 +314,35 @@ void func_800289B8(void) {
     func_8007B4C8(&D_8011B0A0, 0, 8);
     D_8011B0A0 += 8;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
 #endif
 
 void render_skydome(void) {
-    unk80120AC0 *v0_some_struct;
+    Object *v0_some_struct;
     if (D_8011B0B8 == NULL)
         return;
 
     v0_some_struct = func_80069D20();
     if (gCurrentLevelHeader2->unk49 == 0) {
-        D_8011B0B8->x_position = v0_some_struct->x_position;
-        D_8011B0B8->y_position = v0_some_struct->y_position;
-        D_8011B0B8->z_position = v0_some_struct->z_position;
+        D_8011B0B8->segment.trans.x_position = v0_some_struct->segment.trans.x_position;
+        D_8011B0B8->segment.trans.y_position = v0_some_struct->segment.trans.y_position;
+        D_8011B0B8->segment.trans.z_position = v0_some_struct->segment.trans.z_position;
     }
 
-    func_80068408(&D_8011B0A0, &D_8011B0A4);
+    func_80068408(&D_8011B0A0, (s32 *)&D_8011B0A4);
     if (D_8011B0DC) {
         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8);
     }
 }
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028CD0.s")
-#else
 
-#endif
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028CD0.s")
 
 void func_80028FA0(s32 arg0) {
     D_8011B0FC = arg0;
 }
 
 #ifdef NON_EQUIVALENT
-
 // Regalloc & stack issues.
 void render_level_geometry_and_objects(void) {
     s32 sp16C;
@@ -395,23 +391,23 @@ void render_level_geometry_and_objects(void) {
     for (i = sp160; i < sp16C; i++) {
         obj = get_object(i);
         s0 = 0xFF;
-        objFlags = obj->unk6;
+        objFlags = obj->segment.trans.unk6;
         if (objFlags & 0x80) {
             s0 = 0;
         } else if (!(objFlags & 0x8000)) {
-            s0 = obj->unk39;
+            s0 = obj->segment.unk38.half.lower;
         }
         if (objFlags & sp158) {
             s0 = 0;
         }
-        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->unk2E + 1]) || (1000.0 < obj->unk34_a.unk34))) {
-            if (obj->unk6 & 0x8000) {
+        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->segment.unk2C.half.lower + 1]) || (1000.0 < obj->segment.unk34_a.unk34))) {
+            if (obj->segment.trans.unk6 & 0x8000) {
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
             } else if (obj->unk50 != NULL) {
                 render_floor_decal(obj, obj->unk50);
             }
             func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-            if ((obj->unk58 != NULL) && (obj->header->unk30 & 0x10)) {
+            if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
                 func_8002D670(obj, obj->unk58);
             }
         }
@@ -422,20 +418,20 @@ void render_level_geometry_and_objects(void) {
         sp44 = sp160 - 1;
         do {
             obj = get_object(i);
-            objFlags = obj->unk6;
+            objFlags = obj->segment.trans.unk6;
             if (objFlags & sp158) {
                 s0 = FALSE;
             } else {
                 s0 = TRUE;
             }
-            if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->unk2E + 1]) && (func_8002A900(obj) != 0)) {
-                if (obj->unk6 & 0x8000) {
+            if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->segment.unk2C.half.lower + 1]) && (func_8002A900(obj) != 0)) {
+                if (obj->segment.trans.unk6 & 0x8000) {
                     func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                 } else if (obj->unk50 != NULL) {
                     render_floor_decal(obj, obj->unk50);
                 }
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                if ((obj->unk58 != NULL) && (obj->header->unk30 & 0x10)) {
+                if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
                     func_8002D670(obj, obj->unk58);
                 }
             }
@@ -462,21 +458,21 @@ void render_level_geometry_and_objects(void) {
         do {
             obj = get_object(i);
             s0 = 0xFF;
-            objFlags = obj->unk6;
+            objFlags = obj->segment.trans.unk6;
             if (objFlags & 0x80) {
                 s0 = 1;
             } else if (!(objFlags & 0x8000)) {
-                s0 = obj->unk39;
+                s0 = obj->segment.unk38.half.lower;
             }
             if (objFlags & sp158) {
                 s0 = 0;
             }
-            if ((obj->unk48 == 1) && (s0 >= 0xFF)) {
+            if ((obj->behaviorId == 1) && (s0 >= 0xFF)) {
                 s0 = 0;
             }
-            if (obj != NULL && s0 < 0xFF && sp58[obj->unk2E + 1] && func_8002A900(obj)) {
+            if (obj != NULL && s0 < 0xFF && sp58[obj->segment.unk2C.half.lower + 1] && func_8002A900(obj)) {
                 if (s0 > 0) {
-                    if (obj->unk6 & 0x8000) {
+                    if (obj->segment.trans.unk6 & 0x8000) {
                         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                     } else {
                         if (obj->unk50 != NULL) {
@@ -484,12 +480,12 @@ void render_level_geometry_and_objects(void) {
                         }
                         // This is being called when it shouldn't.
                         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                        if ((obj->unk58 != 0) && (obj->header->unk30 & 0x10)) {
+                        if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
                             func_8002D670(obj, obj->unk58);
                         }
                     }
                 }
-                if (obj->unk48 == 1) {
+                if (obj->behaviorId == 1) {
                     func_80013A0C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                     func_80013DCC(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                 }
@@ -618,11 +614,11 @@ void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentInde
     while (TRUE) {
         curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
         if (curNode->splitType == 0) {
-            camValue = D_8011B0B0->x_position; // Camera X
+            camValue = D_8011B0B0->segment.trans.x_position; // Camera X
         } else if (curNode->splitType == 1) {
-            camValue = D_8011B0B0->y_position; // Camera Y
+            camValue = D_8011B0B0->segment.trans.y_position; // Camera Y
         } else {
-            camValue = D_8011B0B0->z_position; // Camera Z
+            camValue = D_8011B0B0->segment.trans.z_position; // Camera Z
         }
         if (camValue < curNode->splitValue) {
             if (curNode->leftNode != -1) {
@@ -681,9 +677,9 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return FALSE;
     }
-    x = obj->x_position;
-    y = obj->y_position;
-    z = obj->z_position;
+    x = obj->segment.trans.x_position;
+    y = obj->segment.trans.y_position;
+    z = obj->segment.trans.z_position;
     bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
     if ((x < (bb->unk6 + 25)) && ((bb->unk0 - 25) < x) &&
         (z < (bb->unkA + 25)) && ((bb->unk4 - 25) < z) &&
@@ -875,12 +871,12 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
         arg2[2] = 0.0f;
         arg2[1] = 1.0f;
     }
-    if ((obj->unk2E < 0) || (obj->unk2E >= gCurrentLevelModel->numberOfSegments)) {
+    if ((obj->segment.unk2C.half.lower < 0) || (obj->segment.unk2C.half.lower >= gCurrentLevelModel->numberOfSegments)) {
         return FALSE;
     }
-    seg = &gCurrentLevelModel->segments[obj->unk2E];
+    seg = &gCurrentLevelModel->segments[obj->segment.unk2C.half.lower];
     if ((seg->unk2B != 0) && (D_8011D384 != 0) && (arg3 == 1)) {
-        *arg1 = func_800BB2F4(obj->unk2E, obj->x_position, obj->z_position, arg2);
+        *arg1 = func_800BB2F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, arg2);
         return TRUE;
     } else {
         *arg1 = seg->unk38;
@@ -1059,32 +1055,22 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 
 void func_80031018(void) {
     Matrix mf;
-
-    struct {
-        s16 unk00; //sp_38
-        s16 unk02; //sp_3A
-        s16 unk04; //sp_3C
-        u8 pad06[0x02];
-        f32 unk08; //sp40;
-        f32 unk0C; //sp44;
-        f32 unk10; //sp48;
-        f32 unk14; //sp4C;
-    } sp_38;
+    ObjectTransform trans;
 
     f32 x = 0.0f;
     f32 y = 0.0f;
     f32 z = -65536.0f;
 
-    sp_38.unk04 = D_8011B0B0->z_rotation;
-    sp_38.unk02 = D_8011B0B0->x_rotation;
-    sp_38.unk00 = D_8011B0B0->y_rotation;
-    sp_38.unk0C = 0.0f;
-    sp_38.unk10 = 0.0f;
-    sp_38.unk14 = 0.0f;
-    sp_38.unk08 = 1.0f;
+    trans.z_rotation = D_8011B0B0->segment.trans.z_rotation;
+    trans.x_rotation = D_8011B0B0->segment.trans.x_rotation;
+    trans.y_rotation = D_8011B0B0->segment.trans.y_rotation;
+    trans.x_position = 0.0f;
+    trans.y_position = 0.0f;
+    trans.z_position = 0.0f;
+    trans.scale = 1.0f;
 
-    func_8006FC30(&mf, &sp_38);
-    guMtxXFMF(&mf, x, y, z, &x, &y, &z);
+    func_8006FC30(mf, &trans);
+    guMtxXFMF(mf, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
     D_8011D468.x = (s32)x;

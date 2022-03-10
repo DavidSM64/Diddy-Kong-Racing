@@ -64,7 +64,7 @@ void init_main_memory_pool(void) {
 MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     s32 size;
     MemoryPoolSlot *slots;
-    s32 unused_2;
+    UNUSED s32 unused_2;
     s32 *temp = func_8006F510();
     MemoryPoolSlot *newPool;
 
