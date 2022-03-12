@@ -483,7 +483,7 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     f32 tempf0;
     u8 new_var2;
 
-    obj3C = obj->unk3C_a.unk3C;
+    obj3C = obj->segment.unk3C_a.unk3C;
     objList = get_object_struct_array(&numberOfObjects);
     temp0 = func_800707F8((obj3C->unkB << 8) * -1);
     temp1 = func_800707C4((obj3C->unkB << 8) * -1);
@@ -1819,7 +1819,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
     }
     speedf = sp2C;
     settings = get_settings();
-    obj3C = obj->unk3C_a.unk3C;
+    obj3C = obj->segment.unk3C_a.unk3C;
     flag = 0x10000 << obj3C->unk8;
     if (settings->courseFlagsPtr[settings->courseId] & flag) {
         if (obj->unk7C.word > 0) {
@@ -1834,15 +1834,15 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
         if (obj->unk78 == 0) {
             obj->segment.trans.unk6 &= 0xBFFF;
             doubleSpeed = speed * 2;
-            if (obj->unk38.half.lower < (255 - doubleSpeed)) {
-                obj->unk38.half.lower += doubleSpeed;
+            if (obj->segment.unk38.half.lower < (255 - doubleSpeed)) {
+                obj->segment.unk38.half.lower += doubleSpeed;
             } else {
-                obj->unk38.half.lower = 255;
+                obj->segment.unk38.half.lower = 255;
             }
             obj4C = obj->unk4C;
             if ((obj4C->unk13 < 45) && (someBool == FALSE)) {
                 racerObj = obj4C->unk0;
-                if (racerObj && (racerObj->header->behaviorId == 1) && (((Object_64_Racer *)racerObj->unk64)->unk0 == 0)) {
+                if (racerObj && (racerObj->segment.header->behaviorId == 1) && (((Object_64_Racer *)racerObj->unk64)->unk0 == 0)) {
                     settings->balloonsPtr[settings->worldId]++;
                     if (settings->worldId != 0) {
                         settings->balloonsPtr[0]++;
@@ -1856,9 +1856,9 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                 }
             }
             obj64 = (Object_64_GoldenBalloon *)obj->unk64;
-            obj->unk3B = 0;
+            obj->segment.unk3B = 0;
             obj64->unk14 = 0.0f;
-            if (obj->unk38.half.lower < 255) {
+            if (obj->segment.unk38.half.lower < 255) {
                 speedf = 0.0f;
             } else {
                 speedf = 1.0f;
@@ -2328,10 +2328,10 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
     someObj = spawn_object(&sp24, 1);
     if (someObj != NULL) {
         someObj->segment.trans.scale *= 3.5 * arg5;
-        someObj->unk3C_a.unk3C = NULL;
-        someObj->x_velocity = 0.0f;
-        someObj->y_velocity = 0.0f;
-        someObj->z_velocity = 0.0f;
+        someObj->segment.unk3C_a.unk3C = NULL;
+        someObj->segment.x_velocity = 0.0f;
+        someObj->segment.y_velocity = 0.0f;
+        someObj->segment.z_velocity = 0.0f;
     }
     if (arg4 != 0) {
         func_80009558(arg4, arg0, arg1, arg2, 4, 0);
@@ -2510,7 +2510,7 @@ void obj_loop_weather(Object *obj, s32 speed) {
     temp_f0 = obj->segment.trans.x_position - curObj->segment.trans.x_position;
     temp_f2 = obj->segment.trans.z_position - curObj->segment.trans.z_position;
     new_var = obj->unk78f;
-    obj3c = obj->unk3C_a.unk3C;
+    obj3c = obj->segment.unk3C_a.unk3C;
     if (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) <= (new_var * 1.0f)){
       func_800ABC5C(obj3c->unkA * 256, obj3c->unkC * 256, obj3c->unkE * 256, obj3c->unk10 * 257, obj3c->unk11 * 257, (s32) obj3c->unk12);
     }
@@ -2558,7 +2558,7 @@ void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2
 
     obj64 = (Object_64_Butterfly*)obj->unk64;
     if (arg2 == 0) {
-        obj->y_velocity = 0.0f;
+        obj->segment.y_velocity = 0.0f;
         obj64->unkFE = 0;
         obj64->unk100 = 0;
         obj64->unk104 = 0;
@@ -2593,7 +2593,7 @@ void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2
         obj64->unkFC = 1;
     }
     obj->segment.trans.scale = entry->unkB * 0.01f;
-    if (entry->unkA < obj->header->numberOfModelIds) {
+    if (entry->unkA < obj->segment.header->numberOfModelIds) {
         obj64->texture = (TextureHeader*)obj->unk68[entry->unkA];
     } else {
         obj64->texture = (TextureHeader*)obj->unk68[0];
