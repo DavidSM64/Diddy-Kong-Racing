@@ -699,18 +699,16 @@ void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segment
     }
 }
 
-#ifdef NON_EQUIVALENT
-// Unused. Has regalloc issues.
-s32 func_80029DE0(Object *obj, s32 segmentIndex) {
+UNUSED s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     LevelModelSegmentBoundingBox *bb;
-    s32 x, y, z;
+    s32 x, y, z;    
     if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return FALSE;
     }
+    bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
     x = obj->segment.trans.x_position;
     y = obj->segment.trans.y_position;
     z = obj->segment.trans.z_position;
-    bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
     if ((x < (bb->unk6 + 25)) && ((bb->unk0 - 25) < x) &&
         (z < (bb->unkA + 25)) && ((bb->unk4 - 25) < z) &&
         (y < (bb->unk8 + 25)) && ((bb->unk2 - 25) < y)) {
@@ -719,9 +717,6 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex) {
 
     return FALSE;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80029DE0.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 // Has regalloc issues.
