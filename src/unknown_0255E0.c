@@ -738,9 +738,8 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
         if ((x < bb->x2) && (bb->x1 < x) && (z < bb->z2) && (bb->z1 < z)) {
-            heightDiff = bb->y2 + bb->y1;
-            heightDiff >>= 1;
-            heightDiff = (y) - (heightDiff);
+            heightDiff = (bb->y2 + bb->y1) >> 1; // Couldn't get / 2 to match, but >> 1 does.
+            heightDiff = y - heightDiff;
             if (heightDiff < 0) {
                 heightDiff = -heightDiff;
             }
