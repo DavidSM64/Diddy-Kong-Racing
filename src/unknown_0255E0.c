@@ -709,9 +709,9 @@ UNUSED s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     x = obj->segment.trans.x_position;
     y = obj->segment.trans.y_position;
     z = obj->segment.trans.z_position;
-    if ((x < (bb->unk6 + 25)) && ((bb->unk0 - 25) < x) &&
-        (z < (bb->unkA + 25)) && ((bb->unk4 - 25) < z) &&
-        (y < (bb->unk8 + 25)) && ((bb->unk2 - 25) < y)) {
+    if ((x < (bb->x2 + 25)) && ((bb->x1 - 25) < x) &&
+        (z < (bb->z2 + 25)) && ((bb->z1 - 25) < z) &&
+        (y < (bb->y2 + 25)) && ((bb->y1 - 25) < y)) {
         return TRUE;
     }
 
@@ -736,8 +736,8 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
 
     for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
-        if (((s32)xPos < bb->unk6) && (bb->unk0 < (s32)xPos) && ((s32)zPos < bb->unkA) && (bb->unk4 < (s32)zPos)) {
-            heightDiff = (s32)yPos - ((bb->unk8 + bb->unk2) >> 1);
+        if (((s32)xPos < bb->x2) && (bb->x1 < (s32)xPos) && ((s32)zPos < bb->z2) && (bb->z1 < (s32)zPos)) {
+            heightDiff = (s32)yPos - ((bb->y2 + bb->y1) >> 1);
             if (heightDiff < 0) {
                 heightDiff = -heightDiff;
             }
@@ -754,14 +754,14 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/get_level_segment_index_from_position.s")
 #endif
 
-s32 func_8002A05C(s32 arg0, s32 arg1, s32 *arg2) {
+s32 func_8002A05C(s32 x, s32 z, s32 *arg2) {
     s32 i;
     s32 cnt = 0;
-    LevelModelSegmentBoundingBox *a0;
+    LevelModelSegmentBoundingBox *bb;
     for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
-        a0 = gCurrentLevelModel->segmentsBoundingBoxes + i;
-        if (arg0 < a0->unk6 + 4 && a0->unk0 - 4 < arg0
-         && arg1 < a0->unkA + 4 && a0->unk4 - 4 < arg1) {
+        bb = gCurrentLevelModel->segmentsBoundingBoxes + i;
+        if (x < bb->x2 + 4 && bb->x1 - 4 < x
+         && z < bb->z2 + 4 && bb->z1 - 4 < z) {
             *arg2 = i;
             cnt++;
             arg2++;
@@ -787,9 +787,9 @@ s32 func_8002A134(s32 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s
 
     while (i < gCurrentLevelModel->numberOfSegments) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
-        if ((bb->unk6 >= arg1) && (arg4 >= bb->unk0) &&
-            (bb->unkA >= arg3) && (arg6 >= bb->unk4) &&
-            (bb->unk8 >= arg2) && (arg5 >= bb->unk2)) {
+        if ((bb->x2 >= arg1) && (arg4 >= bb->x1) &&
+            (bb->z2 >= arg3) && (arg6 >= bb->z1) &&
+            (bb->y2 >= arg2) && (arg5 >= bb->y1)) {
             phi_v1++;
             *arg0++ = i;
         }
@@ -833,19 +833,19 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
         s2 = FALSE;
         while (i < 8 && !s2) {
             if (i & 1) {
-                sp48 = bb->unk0 * temp0;
+                sp48 = bb->x1 * temp0;
             } else {
-                sp48 = bb->unk6 * temp0;
+                sp48 = bb->x2 * temp0;
             }
             if (i & 2) {
-                sp48 += bb->unk2 * temp1;
+                sp48 += bb->y1 * temp1;
             } else {
-                sp48 += bb->unk8 * temp1;
+                sp48 += bb->y2 * temp1;
             }
             if (i & 4) {
-                sp48 += bb->unk4 * temp2;
+                sp48 += bb->z1 * temp2;
             } else {
-                sp48 += bb->unkA * temp2;
+                sp48 += bb->z2 * temp2;
             }
             sp48 += temp3;
             if (sp48 > 0) {
@@ -858,7 +858,7 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
             return FALSE;
         }
         if (j == 3) {
-            D_8011D380 = func_80066348((bb->unk6 + bb->unk0) >> 1, (bb->unk8 + bb->unk2) >> 1, (bb->unkA + bb->unk4) >> 1);
+            D_8011D380 = func_80066348((bb->x2 + bb->x1) >> 1, (bb->y2 + bb->y1) >> 1, (bb->z2 + bb->z1) >> 1);
             if (D_8011D380 < 1000.0) {
                 D_8011B0BC = 1;
                 return TRUE;
