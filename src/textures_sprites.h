@@ -80,7 +80,7 @@ void func_8007BF1C(s32 arg0);
 s32 func_8007EF64(s16 arg0);
 
 // There might be a file boundary here.
-void func_8007EF80(TextureHeader *arg0, s32 *arg1, s32 *arg2, s32 arg3);
+void func_8007EF80(TextureHeader *arg0, u32 *arg1, s32 *arg2, s32 arg3);
 void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);

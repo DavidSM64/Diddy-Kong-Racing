@@ -400,6 +400,7 @@ typedef struct ObjectModel {
 /* 0x48 */ s16 numberOfAnimations;
 } ObjectModel;
 
+/* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
 /* 0x00 */ Vertex *vertices;
 /* 0x04 */ Triangle *triangles;

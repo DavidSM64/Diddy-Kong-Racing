@@ -1233,7 +1233,7 @@ s32 func_8007EF64(s16 arg0) {
 
 // There might be a file boundary here.
 
-void func_8007EF80(TextureHeader *arg0, s32 *arg1, s32 *arg2, s32 arg3) {
+void func_8007EF80(TextureHeader *arg0, u32 *arg1, s32 *arg2, s32 arg3) {
     s32 bit23Set;
     s32 bit25Set;
     s32 bit26Set;

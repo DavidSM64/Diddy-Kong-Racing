@@ -107,6 +107,7 @@ void func_800307BC(s32 arg0);
 void func_80030838(s32 arg0, s32 arg1);
 void func_8003093C(s32 arg0);
 void func_80031018(void);
+void func_80027E24(s32 arg0);
 
 //Non Matching
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, 

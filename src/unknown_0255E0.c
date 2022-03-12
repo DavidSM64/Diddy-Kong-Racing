@@ -273,7 +273,37 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026E54.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027184.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027568.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800278E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027E24.s")
+
+void func_80027E24(s32 arg0) {
+    s32 segmentNumber, batchNumber;
+    LevelModelSegment *segment;
+    TextureHeader *texture;
+    TriangleBatchInfo *batch;
+    s32 temp;
+
+    segment = gCurrentLevelModel->segments;
+    for (segmentNumber = 0; segmentNumber < gCurrentLevelModel->numberOfSegments; segmentNumber++) {
+        batch = segment[segmentNumber].batches;
+        for (batchNumber = 0; batchNumber < segment[segmentNumber].numberOfBatches; batchNumber++) {
+            if (batch[batchNumber].flags & 0x10000) {
+                if (batch[batchNumber].textureIndex != 0xFF) {
+                    texture = gCurrentLevelModel->textures[batch[batchNumber].textureIndex].texture;
+                    if ((texture->numOfTextures != 0x100) && (texture->frameAdvanceDelay != 0)) {
+                        temp = batch[batchNumber].unk7 << 6;
+                        if (batch[batchNumber].flags & 0x80000000) {
+                            temp |= batch[batchNumber].unk6;
+                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, arg0);
+                            batch[batchNumber].unk6 = temp & 0x3F;
+                        } else {
+                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, arg0);
+                        }
+                        batch[batchNumber].unk7 = (temp >> 6) & 0xFF;
+                    }
+                }
+            }
+        }
+    }
+}
 
 void func_80027FC4(s32 arg0) {
     unk80027FC4 sp20;
@@ -319,15 +349,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
 #endif
 
 void render_skydome(void) {
-    Object *v0_some_struct;
+    ObjectSegment *v0_some_struct;
     if (D_8011B0B8 == NULL)
         return;
 
     v0_some_struct = func_80069D20();
     if (gCurrentLevelHeader2->unk49 == 0) {
-        D_8011B0B8->segment.trans.x_position = v0_some_struct->segment.trans.x_position;
-        D_8011B0B8->segment.trans.y_position = v0_some_struct->segment.trans.y_position;
-        D_8011B0B8->segment.trans.z_position = v0_some_struct->segment.trans.z_position;
+        D_8011B0B8->segment.trans.x_position = v0_some_struct->trans.x_position;
+        D_8011B0B8->segment.trans.y_position = v0_some_struct->trans.y_position;
+        D_8011B0B8->segment.trans.z_position = v0_some_struct->trans.z_position;
     }
 
     func_80068408(&D_8011B0A0, (s32 *)&D_8011B0A4);
