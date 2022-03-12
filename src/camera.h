@@ -114,7 +114,7 @@ s32 get_viewport_count(void);
 s32 func_80066220(void);
 void func_80066CDC(Gfx **dlist, Gfx **arg1);
 void func_80066230(Gfx **dlist, Gfx **arg1);
-f32 func_80066348(f32 arg0, f32 arg1, f32 arg2);
+f32 func_80066348(f32 xPos, f32 yPos, f32 zPos);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
 void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
 void func_80066520(void);

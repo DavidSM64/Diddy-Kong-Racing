@@ -275,20 +275,20 @@ void func_80066230(Gfx **dlist, Gfx **arg1) {
     someStruct->trans.z_position = sp18;
 }
 
-f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
-    s32 phi_v1;
-    f32 temp_f2, temp_f0, temp_f14;
+f32 func_80066348(f32 xPos, f32 yPos, f32 zPos) {
+    s32 index;
+    f32 x, z, y;
 
-    phi_v1 = D_80120CE4;
+    index = D_80120CE4;
 
     if (D_80120D14 != 0) {
-        phi_v1 += 4;
+        index += 4;
     }
 
-    temp_f0 = arg2 - D_80120AC0[phi_v1].trans.z_position;
-    temp_f2 = arg0 - D_80120AC0[phi_v1].trans.x_position;
-    temp_f14 = arg1 - D_80120AC0[phi_v1].trans.y_position;
-    return sqrtf((temp_f0 * temp_f0) + ((temp_f2 * temp_f2) + (temp_f14 * temp_f14)));
+    z = zPos - D_80120AC0[index].trans.z_position;
+    x = xPos - D_80120AC0[index].trans.x_position;
+    y = yPos - D_80120AC0[index].trans.y_position;
+    return sqrtf((z * z) + ((x * x) + (y * y)));
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
