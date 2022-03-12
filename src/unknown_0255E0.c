@@ -718,11 +718,12 @@ UNUSED s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     return FALSE;
 }
 
-#ifdef NON_EQUIVALENT
-// Has regalloc issues.
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     LevelModelSegmentBoundingBox *bb;
     s32 i;
+    s32 z = zPos;
+    s32 x = xPos;
+    s32 y = yPos;
     s32 minVal;
     s32 result;
     s32 heightDiff;
@@ -736,23 +737,22 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
 
     for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
-        if (((s32)xPos < bb->x2) && (bb->x1 < (s32)xPos) && ((s32)zPos < bb->z2) && (bb->z1 < (s32)zPos)) {
-            heightDiff = (s32)yPos - ((bb->y2 + bb->y1) >> 1);
+        if ((x < bb->x2) && (bb->x1 < x) && (z < bb->z2) && (bb->z1 < z)) {
+            heightDiff = bb->y2 + bb->y1;
+            heightDiff >>= 1;
+            heightDiff = (y) - (heightDiff);
             if (heightDiff < 0) {
                 heightDiff = -heightDiff;
             }
             if (heightDiff < minVal) {
-                result = i;
                 minVal = heightDiff;
+                result = i;
             }
         }
     }
 
     return result;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/get_level_segment_index_from_position.s")
-#endif
 
 s32 func_8002A05C(s32 x, s32 z, s32 *arg2) {
     s32 i;
