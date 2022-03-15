@@ -110,10 +110,9 @@ void func_80031018(void);
 void func_80027E24(s32 arg0);
 s32 func_80029DE0(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
+void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex);
 
 //Non Matching
-void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, 
-    u8 *segmentsOrder, u32 *segmentsOrderIndex);
 void render_level_segment(s32 segmentId, s32 nonOpaque);
 void render_level_geometry_and_objects(void);
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb);

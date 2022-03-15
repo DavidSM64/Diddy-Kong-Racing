@@ -635,53 +635,45 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Regalloc issues.
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex) {
     BspTreeNode *curNode;
     s32 camValue;
 
-    while (TRUE) {
-        curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
-        if (curNode->splitType == 0) {
-            camValue = D_8011B0B0->segment.trans.x_position; // Camera X
-        } else if (curNode->splitType == 1) {
-            camValue = D_8011B0B0->segment.trans.y_position; // Camera Y
+    curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
+    if (curNode->splitType == 0) {
+        camValue = D_8011B0B0->segment.trans.x_position; // Camera X
+    } else if (curNode->splitType == 1) {
+        camValue = D_8011B0B0->segment.trans.y_position; // Camera Y
+    } else {
+        camValue = D_8011B0B0->segment.trans.z_position; // Camera Z
+    }
+
+    if (camValue < curNode->splitValue) {
+        if (curNode->leftNode != -1) {
+            traverse_segments_bsp_tree(curNode->leftNode, segmentIndex, curNode->segmentIndex - 1, segmentsOrder, segmentsOrderIndex);
         } else {
-            camValue = D_8011B0B0->segment.trans.z_position; // Camera Z
+            add_segment_to_order(segmentIndex, segmentsOrderIndex, segmentsOrder);
         }
-        if (camValue < curNode->splitValue) {
-            if (curNode->leftNode != -1) {
-                traverse_segments_bsp_tree(curNode->leftNode, segmentIndex, curNode->segmentIndex - 1, segmentsOrder, segmentsOrderIndex);
-            } else {
-                add_segment_to_order(segmentIndex, segmentsOrderIndex, segmentsOrder);
-            }
-            if (curNode->rightNode != -1) {
-                segmentIndex = curNode->segmentIndex;
-                nodeIndex = curNode->rightNode;
-                continue;
-            }
-            add_segment_to_order(segmentIndex2, segmentsOrderIndex, segmentsOrder);
-            return;
-        }
+
         if (curNode->rightNode != -1) {
             traverse_segments_bsp_tree(curNode->rightNode, curNode->segmentIndex, segmentIndex2, segmentsOrder, segmentsOrderIndex);
         } else {
             add_segment_to_order(segmentIndex2, segmentsOrderIndex, segmentsOrder);
         }
-        nodeIndex = curNode->leftNode;
-        if (nodeIndex == -1) {
-            break;
+    } else {
+        if (curNode->rightNode != -1) {
+            traverse_segments_bsp_tree(curNode->rightNode, curNode->segmentIndex, segmentIndex2, segmentsOrder, segmentsOrderIndex);
+        } else {
+            add_segment_to_order(segmentIndex2, segmentsOrderIndex, segmentsOrder);
         }
-        segmentIndex2 = curNode->segmentIndex;
-        segmentIndex2--;
-    }
-    add_segment_to_order(segmentIndex, segmentsOrderIndex, segmentsOrder);
-}
 
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/traverse_segments_bsp_tree.s")
-#endif
+        if (curNode->leftNode != -1) {
+            traverse_segments_bsp_tree(curNode->leftNode, segmentIndex, curNode->segmentIndex - 1, segmentsOrder, segmentsOrderIndex);
+        } else {
+            add_segment_to_order(segmentIndex, segmentsOrderIndex, segmentsOrder);
+        }
+    }
+}
 
 void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segmentsOrder) {
     u32 temp;
