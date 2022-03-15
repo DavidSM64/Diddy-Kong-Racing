@@ -372,52 +372,55 @@ void func_80028FA0(s32 arg0) {
     D_8011B0FC = arg0;
 }
 
-#ifdef NON_EQUIVALENT
-// Regalloc & stack issues.
 void render_level_geometry_and_objects(void) {
     s32 sp16C;
-    s32 sp168;
+    s32 numberOfSegments;
     s32 objFlags;
     s32 sp160;
     s32 i;
     s32 sp158;
-    u8 spD8[128];
+    u8 segmentIds[128];
     u8 sp58[128];
     s32 s0;
     Object *obj;
-    s32 sp44;
 
     func_80012C30();
+
     if (get_settings()->courseId == 0x24) { // 0x24 = Opening sequence area
         D_8011B0FC = 1;
     }
+
     sp160 = func_80014814(&sp16C);
-    if (gCurrentLevelModel->numberOfSegments >= 2) {
-        sp168 = 0;
-        traverse_segments_bsp_tree(0, 0, gCurrentLevelModel->numberOfSegments - 1, &spD8, &sp168);
+
+    if (gCurrentLevelModel->numberOfSegments > 1) {
+        numberOfSegments = 0;
+        traverse_segments_bsp_tree(0, 0, gCurrentLevelModel->numberOfSegments - 1, &segmentIds, &numberOfSegments);
     } else {
-        sp168 = 1;
-        spD8[0] = 0;
+        numberOfSegments = 1;
+        segmentIds[0] = 0;
     }
 
     for (i = 1; i <= gCurrentLevelModel->numberOfSegments; i++) {
         sp58[i] = FALSE;
     }
+
     sp58[0] = TRUE;
 
     if (D_8011B0E0 != 0) {
-        for (i = 0; i < sp168; i++) {
-            render_level_segment(spD8[i], 0); // Render opaque segments
-            sp58[spD8[i] + 1] = TRUE;
+        for (i = 0; i < numberOfSegments; i++) {
+            render_level_segment(segmentIds[i], 0); // Render opaque segments
+            sp58[segmentIds[i] + 1] = TRUE;
         }
     }
+
     if (gCurrentLevelModel->numberOfSegments < 2) {
         sp58[1] = TRUE;
     }
+
     func_8007B3D0(&D_8011B0A0);
     func_80015348(sp160, sp16C - 1);
-
     sp158 = 0x200 << (func_80066220() & 1);
+
     for (i = sp160; i < sp16C; i++) {
         obj = get_object(i);
         s0 = 0xFF;
@@ -433,6 +436,7 @@ void render_level_geometry_and_objects(void) {
         if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->segment.unk2C.half.lower + 1]) || (1000.0 < obj->segment.unk34_a.unk34))) {
             if (obj->segment.trans.unk6 & 0x8000) {
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                continue;
             } else if (obj->unk50 != NULL) {
                 render_floor_decal(obj, obj->unk50);
             }
@@ -443,94 +447,83 @@ void render_level_geometry_and_objects(void) {
         }
     }
 
-    i = sp16C - 1;
-    if (i >= sp160) {
-        sp44 = sp160 - 1;
-        do {
-            obj = get_object(i);
-            objFlags = obj->segment.trans.unk6;
-            if (objFlags & sp158) {
-                s0 = FALSE;
-            } else {
-                s0 = TRUE;
-            }
-            if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->segment.unk2C.half.lower + 1]) && (func_8002A900(obj) != 0)) {
-                if (obj->segment.trans.unk6 & 0x8000) {
-                    func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                } else if (obj->unk50 != NULL) {
-                    render_floor_decal(obj, obj->unk50);
-                }
+    for (i = sp16C - 1; i >= sp160; i--) {
+        obj = get_object(i);
+        objFlags = obj->segment.trans.unk6;
+        if (objFlags & sp158) {
+            s0 = FALSE;
+        } else {
+            s0 = TRUE;
+        }
+        if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->segment.unk2C.half.lower + 1]) && (func_8002A900(obj) != 0)) {
+            if (obj->segment.trans.unk6 & 0x8000) {
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
-                    func_8002D670(obj, obj->unk58);
-                }
+                continue;
+            } else if (obj->unk50 != NULL) {
+                render_floor_decal(obj, obj->unk50);
             }
-            i--;
-        } while (i != sp44);
-    }
-    i = sp168 - 1;
-    if (D_8011B0E0 != 0) {
-        while (i >= 0) {
-            render_level_segment(spD8[i], 1); // Render transparent segments
-            i--;
+            func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+            if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
+                func_8002D670(obj, obj->unk58);
+            }
         }
     }
+
+    if (D_8011B0E0 != 0) {
+        for (i = numberOfSegments - 1; i >= 0; i--) {
+            render_level_segment(segmentIds[i], 1); // Render transparent segments
+        }
+    }
+
     if (D_8011D384 != 0) {
         func_800BA8E4(&D_8011B0A0, &D_8011B0A4, func_80066220());
     }
+
     func_8007B3D0(&D_8011B0A0);
     func_8007B4C8(&D_8011B0A0, 0, 0xA);
     func_80012C3C(&D_8011B0A0);
 
-    i = sp16C - 1;
-    if (i >= sp160) {
-        sp44 = sp160 - 1;
-        do {
-            obj = get_object(i);
-            s0 = 0xFF;
-            objFlags = obj->segment.trans.unk6;
-            if (objFlags & 0x80) {
-                s0 = 1;
-            } else if (!(objFlags & 0x8000)) {
-                s0 = obj->segment.unk38.half.lower;
-            }
-            if (objFlags & sp158) {
-                s0 = 0;
-            }
-            if ((obj->behaviorId == 1) && (s0 >= 0xFF)) {
-                s0 = 0;
-            }
-            if (obj != NULL && s0 < 0xFF && sp58[obj->segment.unk2C.half.lower + 1] && func_8002A900(obj)) {
-                if (s0 > 0) {
-                    if (obj->segment.trans.unk6 & 0x8000) {
-                        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                    } else {
-                        if (obj->unk50 != NULL) {
-                            render_floor_decal(obj, obj->unk50);
-                        }
-                        // This is being called when it shouldn't.
-                        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                        if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
-                            func_8002D670(obj, obj->unk58);
-                        }
-                    }
+    for (i = sp16C - 1; i >= sp160; i--) {
+        obj = get_object(i);
+        s0 = 0xFF;
+        objFlags = obj->segment.trans.unk6;
+        if (objFlags & 0x80) {
+            s0 = 1;
+        } else if (!(objFlags & 0x8000)) {
+            s0 = obj->segment.unk38.half.lower;
+        }
+        if (objFlags & sp158) {
+            s0 = 0;
+        }
+        if ((obj->behaviorId == 1) && (s0 >= 0xFF)) {
+            s0 = 0;
+        }
+        if (obj != NULL && s0 < 0xFF && sp58[obj->segment.unk2C.half.lower + 1] && func_8002A900(obj)) {
+            if (s0 > 0) {
+                if (obj->segment.trans.unk6 & 0x8000) {
+                    func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                    goto skip;
+                } else if (obj->unk50 != NULL) {
+                    render_floor_decal(obj, obj->unk50);
                 }
-                if (obj->behaviorId == 1) {
-                    func_80013A0C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                    func_80013DCC(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
+                    func_8002D670(obj, obj->unk58);
                 }
             }
-            i--;
-        } while (i != sp44);
+skip:
+            if (obj->behaviorId == 1) {
+                func_80013A0C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                func_80013DCC(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+            }
+        }
     }
+
     if (D_800DC924 && func_80027568()) {
-        func_8002581C(&spD8, sp168, func_80066220());
+        func_8002581C(&segmentIds, numberOfSegments, func_80066220());
     }
     D_8011B0FC = 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_geometry_and_objects.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 // nonOpaque: 0 for solid geometry, 1 for transparent geometry.
