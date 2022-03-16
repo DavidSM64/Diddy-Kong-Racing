@@ -7,7 +7,7 @@
 #include "f3ddkr.h"
 #include "menu.h"
 #include "libultra_internal.h"
-#include "math.h"
+#include "libc/math.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240

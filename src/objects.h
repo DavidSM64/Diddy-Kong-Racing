@@ -5,7 +5,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "object_functions.h"
-#include "math.h"
+#include "libc/math.h"
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {

@@ -2,7 +2,7 @@
 #define _UNKNOWN_008C40_H_
 
 #include "types.h"
-#include "math.h"
+#include "libc/math.h"
 
 typedef struct floatXYZVals {
     f32 x1;
