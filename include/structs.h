@@ -480,9 +480,11 @@ typedef struct ObjectHeader {
              u8 pad10[0x20];
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-             u8 pad34[0x9];
+             u8 pad34[9];
   /* 0x3D */ u8 unk3D;
-             u8 pad3E[0x15];
+             u8 pad3E[16];
+             s16 unk4E; //Used in func_8002A900?
+             u8 pad50[3];
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
@@ -642,6 +644,8 @@ typedef struct Object_64 {
     u8 pad1D9[0x19];
     u8 unk1F2;
     u8 unk1F3;
+    u8 pad1F4[3];
+    u8 unk1F7; // Used in func_8002A900
 } Object_64;
 
 typedef struct Object_68 {

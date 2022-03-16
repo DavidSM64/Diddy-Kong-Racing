@@ -92,7 +92,7 @@ void func_80027FC4(s32 arg0);
 void func_80028044(s32 arg0);
 void render_skydome(void);
 void func_80028FA0(s32 arg0);
-void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segmentsOrder);
+void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segmentsOrder);
 s32 func_8002A05C(s32 x, s32 z, s32 *arg2);
 s32 func_8002A134(s32 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s16 arg6);
 LevelModelSegment *func_8002A2C8(s32 arg0);
@@ -110,7 +110,7 @@ void func_80031018(void);
 void func_80027E24(s32 arg0);
 s32 func_80029DE0(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
-void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex);
+void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex);
 void render_level_geometry_and_objects(void);
 
 //Non Matching
@@ -121,5 +121,9 @@ void func_80024D54(Gfx *, Mtx *, VertexList *, TriangleList *, s32);
 void func_8002C7D4(void);
 void render_floor_decal(Object *, Object_50 *);
 void func_8002D670(Object *, Object *);
+s32 func_8002A900(Object *arg0);
+Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
+s32 func_80027568(void);
+//void func_80013DCC(Gfx **arg0, Vertex **arg1, Vertex **arg2, Object *arg3);
 
 #endif

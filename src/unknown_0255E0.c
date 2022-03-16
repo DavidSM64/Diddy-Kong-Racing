@@ -62,7 +62,7 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 
 Gfx *D_8011B0A0;
 u32 D_8011B0A4;
-u32 D_8011B0A8;
+u32 D_8011B0A8; //Vertex**?
 s32 D_8011B0AC;
 
 Object *D_8011B0B0; // Camera Object?
@@ -79,9 +79,9 @@ s32 D_8011B0D4;
 s32 D_8011B0D8;
 s32 D_8011B0DC;
 s8 D_8011B0E0;
-s8 D_8011B0E1;
-s8 D_8011B0E2;
-s8 D_8011B0E3;
+u8 D_8011B0E1;
+u8 D_8011B0E2;
+u8 D_8011B0E3;
 f32 D_8011B0E4;
 f32 D_8011B0E8;
 f32 D_8011B0EC;
@@ -155,17 +155,18 @@ s32 *D_8011D474;
 s32 D_8011D478;
 s32 D_8011D47C;
 s32 D_8011D480[2];
-s32 D_8011D488[2];
+Vertex **D_8011D488;
+s32 D_8011D48C;
 s32 D_8011D490[2];
-s32 D_8011D498;
+Vertex **D_8011D498;
 s16 D_8011D49C;
 s16 D_8011D49E;
-s32 D_8011D4A0;
-s32 D_8011D4A4;
-s32 D_8011D4A8;
-s32 D_8011D4AC;
-s32 D_8011D4B0;
-s16 D_8011D4B4;
+f32 D_8011D4A0;
+f32 D_8011D4A4;
+f32 D_8011D4A8;
+f32 D_8011D4AC;
+f32 D_8011D4B0;
+s8 D_8011D4B4;
 s16 D_8011D4B6;
 s16 D_8011D4B8;
 s16 D_8011D4BA;
@@ -189,7 +190,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     D_8011B104 = 0;
     D_8011B108 = 0;
     D_8011B10C = 0;
-    if (gCurrentLevelHeader2->race_type == 6 || gCurrentLevelHeader2->race_type == 7) {
+    if (gCurrentLevelHeader2->race_type == RACE_TYPE_CUTSCENE_1 || gCurrentLevelHeader2->race_type == RACE_TYPE_CUTSCENE_2) {
         D_8011B0F8 = 1;
     }
     func_8002C0C4(arg0);
@@ -203,7 +204,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
             }
         }
     }
-    if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == 0 || gCurrentLevelHeader2->race_type & 0x40)) {
+    if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == RACE_TYPE_DEFAULT || gCurrentLevelHeader2->race_type & RACE_TYPE_CHALLENGE)) {
         tmp_a2 = 2;
     } else {
         tmp_a2 = arg2;
@@ -394,7 +395,7 @@ void render_level_geometry_and_objects(void) {
 
     if (gCurrentLevelModel->numberOfSegments > 1) {
         numberOfSegments = 0;
-        traverse_segments_bsp_tree(0, 0, gCurrentLevelModel->numberOfSegments - 1, &segmentIds, &numberOfSegments);
+        traverse_segments_bsp_tree(0, 0, gCurrentLevelModel->numberOfSegments - 1, segmentIds, &numberOfSegments);
     } else {
         numberOfSegments = 1;
         segmentIds[0] = 0;
@@ -520,7 +521,7 @@ skip:
     }
 
     if (D_800DC924 && func_80027568()) {
-        func_8002581C(&segmentIds, numberOfSegments, func_80066220());
+        func_8002581C(segmentIds, numberOfSegments, func_80066220());
     }
     D_8011B0FC = 0;
 }
@@ -628,7 +629,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
 #endif
 
-void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, u32 *segmentsOrderIndex) {
+void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex) {
     BspTreeNode *curNode;
     s32 camValue;
 
@@ -668,7 +669,7 @@ void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentInde
     }
 }
 
-void add_segment_to_order(s32 segmentIndex, u32 *segmentsOrderIndex, u8 *segmentsOrder) {
+void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segmentsOrder) {
     u32 temp;
     if (segmentIndex < gCurrentLevelModel->numberOfSegments) {
         if (D_8011B0D4 != -1) {

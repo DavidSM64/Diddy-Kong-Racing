@@ -75,7 +75,7 @@ void func_8007B374(s32 arg0);
 void func_8007B3D0(Gfx **dlist);
 void func_8007B43C(void);
 void func_8007B454(void);
-void func_8007B4C8(s32 arg0, s32 arg1, s32 arg2);
+void func_8007B4C8(Gfx **dlist, s32 arg1, s32 arg2);
 void func_8007BF1C(s32 arg0);
 s32 func_8007EF64(s16 arg0);
 
@@ -88,7 +88,7 @@ void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching
 TextureHeader *func_8007B380(s32 arg0); // Non Matching
-void func_8007B4E8(s32, s32, s32, s32); // Non Matching
+void func_8007B4E8(Gfx **, s32, s32, s32); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut,
