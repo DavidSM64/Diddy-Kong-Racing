@@ -329,7 +329,8 @@ void write_vanilla_warning_file(std::string baseDirectory) {
 void ExtractConfig::execute_extraction() {
     // These braces are important, because I want the ThreadPool to call its destructor by going out of scope.
     {
-        ThreadPool pool(std::thread::hardware_concurrency()); // ThreadPool pool(1);
+        //ThreadPool pool(std::thread::hardware_concurrency()); 
+        ThreadPool pool(1);
         
         for(int i = 0; i < extractions.size(); i++) {
             std::string key = extractions[i].key;
@@ -378,8 +379,6 @@ void ExtractConfig::extract() {
     
     std::string jsonFilename = outBaseDirectory + "/assets.json";
     write_json(assetsJson, jsonFilename);
-
-    set_assets_folder_path(outBaseDirectory);
 
     execute_extraction();
     

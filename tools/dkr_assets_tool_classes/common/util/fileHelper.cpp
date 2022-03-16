@@ -62,6 +62,13 @@ bool path_exists(std::string path) {
     return fs::exists(path);
 }
 
+void path_must_exist(std::string path) {
+    if(!fs::exists(path)) {
+        std::cout << "Error: Path \"" << path << "\" does not exist!" << std::endl;
+        throw 1;
+    }
+}
+
 std::vector<std::string> get_filenames_from_directory(std::string dirPath) {
     std::vector<std::string> out;
     for (const auto &file : fs::recursive_directory_iterator(dirPath)) {

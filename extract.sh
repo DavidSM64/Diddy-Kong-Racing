@@ -20,7 +20,7 @@ if [ -d "$UCODE_DIR" ]; then
     rm -r $UCODE_DIR
 fi
 
-if ! ./tools/dkr_assets_tool -e "$1" ./extract-ver ./baseroms . ; then
+if ! ./tools/dkr_assets_tool -e "$1" ./assets ./extract-ver ./baseroms . ; then
     exit 1
 fi
 

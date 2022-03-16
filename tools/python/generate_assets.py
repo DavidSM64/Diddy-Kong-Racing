@@ -31,7 +31,7 @@ class GenerateAssets:
         createAssets.wait()
         streamdata = createAssets.communicate()[0]
         if createAssets.returncode != 0:
-            raise Exception("An error occured while running dkr_assets_tool. Aborting!")
+            raise SystemExit("An error occured while generating /asm/assets files. Error code " + str(createAssets.returncode) + ". Aborting!")
         with open(self.ASSETS_DIR + '/' + self.VERSION + '/assets.json') as jsonFile:
             assetsJSON = json.load(jsonFile)
             self.numAssets = len(assetsJSON['assets']['order'])

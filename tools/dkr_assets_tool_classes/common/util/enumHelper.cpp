@@ -127,13 +127,14 @@ void make_sure_enums_are_loaded() {
     if(hasLoadedEnums) {
         return;
     }
-
+    std::string assetsFolderPath = get_asset_folder_path();
+    ensure_that_path_exists("build/"); // Make sure build folder exists
     if(path_exists(ENUMS_CACHE_PATH)) {
         load_enums_cache();
     } else {
         // Generate enums map
-        std::string assetsFolderPath = get_asset_folder_path();
-        std::string enumsIncludeText = read_text_file(assetsFolderPath + "/../include/enums.h");
+        path_must_exist("include/enums.h");
+        std::string enumsIncludeText = read_text_file("include/enums.h");
         std::regex enumRegex("enum ([^\\s{]+)\\s*[{]((?:.*\\n)*?)[}]");
         std::smatch sm;
         std::string text = enumsIncludeText;

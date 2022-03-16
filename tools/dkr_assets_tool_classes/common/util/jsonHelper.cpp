@@ -33,7 +33,10 @@ void make_sure_assets_json_is_loaded() {
         std::cout << "assetsFolderPath not defined! Make sure set_assets_folder_path() is called somewhere!" << std::endl;
         throw 1;
     }
-    assetsJson = load_assets_json(get_asset_folder_path() + "/" + get_version(), ASSETS_FILENAME);
+    std::string assetsJsonPath = get_asset_folder_path() + "/" + get_version() + "/" + ASSETS_FILENAME;
+    path_must_exist(assetsJsonPath);
+    std::string assetsJsonText = read_text_file(assetsJsonPath);
+    assetsJson = json::JSON::Load(assetsJsonText);
     hasLoadedAssetsJson = true;
 }
 
@@ -168,6 +171,7 @@ json::JSON *load_json_file(std::string filename) {
         return lastJsonFile;
     } else if(jsonFileCache.find(filename) == jsonFileCache.end()) {
         // file not found in cache, so it needs to be loaded!
+        path_must_exist(filename);
         jsonFileCache[filename] = json::JSON::Load(read_text_file(filename));
     }
     lastJsonFileName = filename;

@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 
 // C++17
 #include <filesystem> 
@@ -22,6 +23,7 @@ void write_binary_file(std::vector<uint8_t> &data, std::string filepath);
 std::string read_text_file(std::string filename);
 void write_text_file(std::string text, std::string filepath);
 bool path_exists(std::string path);
+void path_must_exist(std::string path);
 std::vector<std::string> get_filenames_from_directory(std::string dirPath);
 std::vector<std::string> get_filenames_from_directory_only(std::string dirPath);
 std::vector<fs::path> get_filenames_from_directory_only_with_extension(std::string dirPath, std::string extension);

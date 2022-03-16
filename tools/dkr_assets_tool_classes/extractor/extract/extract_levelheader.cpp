@@ -6,7 +6,7 @@ ExtractLevelHeader::ExtractLevelHeader(std::string key, std::vector<uint8_t> dat
     
     out["type"] = "LevelHeaders";
     out["unknownData"] = json::Object();
-    out["world"] = get_enum_string_from_value("World", (int8_t)data[0]); 
+    out["world"] = get_enum_string_from_value("World", (int8_t)data[0]);
     out["unknownData"]["unk1"] = data[1];
     out["unknownData"]["unk2"] = data[2];
     out["unknownData"]["unk3"] = data[3];
