@@ -109,7 +109,7 @@ s32 gNumberOfViewports;
 s32 D_80120CE4;
 s32 D_80120CE8;
 s32 D_80120CEC;
-s32 D_80120CF0[6];
+ObjectTransform D_80120CF0;
 s32 D_80120D08;
 s32 D_80120D0C;
 f32 gCurCamFOV;
@@ -717,7 +717,47 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
-GLOBAL_ASM("asm/non_matchings/camera/func_80067D3C.s")
+
+void func_80067D3C(Gfx **dlist, UNUSED Gfx **arg1) {
+    s32 temp;
+
+    gSPPerspNormalize((*dlist)++, perspNorm[10]);
+
+    temp = D_80120CE4;
+    if (D_80120D14 != 0) {
+        D_80120CE4 += 4;
+    }
+
+    D_80120CF0.y_rotation = 0x8000 + D_80120AC0[D_80120CE4].trans.y_rotation;
+    D_80120CF0.x_rotation = D_80120AC0[D_80120CE4].trans.x_rotation + D_80120AC0[D_80120CE4].unk38.word;
+    D_80120CF0.z_rotation = D_80120AC0[D_80120CE4].trans.z_rotation;
+
+    D_80120CF0.x_position = -D_80120AC0[D_80120CE4].trans.x_position;
+    D_80120CF0.y_position = -D_80120AC0[D_80120CE4].trans.y_position;
+    if (D_80120D18 != 0) {
+        D_80120CF0.y_position -= D_80120AC0[D_80120CE4].unk30;
+    }
+    D_80120CF0.z_position = -D_80120AC0[D_80120CE4].trans.z_position;
+
+    func_8006FE74(&D_80120F60, &D_80120CF0);
+    func_8006F768(&D_80120F60, &D_80120EE0, &D_80120F20);
+
+    D_80120CF0.y_rotation = -0x8000 - D_80120AC0[D_80120CE4].trans.y_rotation;
+    D_80120CF0.x_rotation = -(D_80120AC0[D_80120CE4].trans.x_rotation + D_80120AC0[D_80120CE4].unk38.word);
+    D_80120CF0.z_rotation = -D_80120AC0[D_80120CE4].trans.z_rotation;
+    D_80120CF0.scale = 1.0f;
+    D_80120CF0.x_position = D_80120AC0[D_80120CE4].trans.x_position;
+    D_80120CF0.y_position = D_80120AC0[D_80120CE4].trans.y_position;
+    if (D_80120D18 != 0) {
+        D_80120CF0.y_position += D_80120AC0[D_80120CE4].unk30;
+    }
+    D_80120CF0.z_position = D_80120AC0[D_80120CE4].trans.z_position;
+
+    func_8006FC30(D_80120FA0, &D_80120CF0);
+    func_8006F870(&D_80120FA0, &D_80121020);
+
+    D_80120CE4 = temp;
+}
 
 /**
  * Sets the Y value of the Y axis in the matrix to the passed value.

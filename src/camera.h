@@ -159,6 +159,7 @@ s8 clamp_joystick_y_axis(s32 player);
 s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
+void func_80067D3C(Gfx **dlist, UNUSED Gfx **arg1);
 
 // Non Matching
 void func_80067A3C(Gfx **dlist);
