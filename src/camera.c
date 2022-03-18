@@ -782,8 +782,8 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     D_800DD148[D_80120CE4 + 5].vp.vscale[1] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[1] = height * 2;
-    gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4 + 5] + 0x80000000);
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
+    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD148[D_80120CE4 + 5]));
+    fast3d_cmd((*dlist)++, 0x1000040, (uintptr_t)OS_PHYSICAL_TO_K0(*arg1));
     *arg1 += 0x40;
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -805,7 +805,7 @@ void func_8006807C(Gfx **dlist, s32 *arg1) {
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
     func_8006F768(D_80120D70[0], &D_80120F20, &D_80121060);
     func_8006F870(&D_80121060, (Matrix *)*arg1);
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
+    fast3d_cmd((*dlist)++, 0x1000040, (uintptr_t)OS_PHYSICAL_TO_K0((*arg1)));
     *arg1 += 0x40;
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -822,9 +822,9 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
         D_800DD148[D_80120CE4].vp.vtrans[1] = posY * 4;
         D_800DD148[D_80120CE4].vp.vscale[0] = tempWidth * 4;
         D_800DD148[D_80120CE4].vp.vscale[1] = height * 4;
-        gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4] + 0x80000000);
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[D_80120CE4]));
     } else {
-        gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)] + 0x80000000);
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)]));
     }
 }
 
@@ -850,7 +850,7 @@ void func_80068408(Gfx **dlist, s32 *arg1) {
     func_8006F870(&D_80121060, (Matrix *)*arg1);
     D_80120D88[D_80120D1C] = *arg1;
 
-    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000));
+    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (uintptr_t)OS_PHYSICAL_TO_K0(*arg1));
 
     *arg1 += 0x40;
 }

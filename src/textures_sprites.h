@@ -7,6 +7,7 @@
 #include "structs.h"
 #include "macros.h"
 #include "memory.h"
+#include "libultra_internal.h"
 
 extern u32 gTexColourTag;
 extern s32 D_800DE7C4;

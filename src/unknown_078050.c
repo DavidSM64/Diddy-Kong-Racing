@@ -361,7 +361,7 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPo
                     v = -(y0 * 8);
                     y0 = 0;
                 }
-                gDkrDmaDisplayList((*dlist)++, tex->cmd + 0x80000000, tex->numberOfCommands);
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
                 gSPTextureRectangle((*dlist)++, x0, y0, x1, y1, 0, u, v, 1024, 1024);
             }
         }

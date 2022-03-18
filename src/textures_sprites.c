@@ -1367,7 +1367,7 @@ void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentCo
     }
     // There are issues with the structure, but this should be equivalent functionality-wise.
     gSPDisplayList((*dlist)++, D_800DF3A8);
-    gDkrDmaDisplayList((*dlist)++, &D_800DF410[index] + 0x80000000, numberOfGfxCommands(D_800DF410[0]));
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DF410[index]), numberOfGfxCommands(D_800DF410[0]));
     gDPSetPrimColorRGBA((*dlist)++, primitiveColor);
     gDPSetEnvColorRGBA((*dlist)++, environmentColor);
 }

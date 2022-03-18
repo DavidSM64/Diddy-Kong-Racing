@@ -650,7 +650,7 @@ void render_dialogue_box(Gfx **dlist, Gfx **mat, VertexList **verts, s32 dialogu
     // Render dialogue box background.
     if (dialogueBox->backgroundColourA != 0) {
         gSPDisplayList((*dlist)++, dDialogueBoxBegin);
-        gDkrDmaDisplayList((*dlist)++, ((u8 *)&dDialogueBoxDrawModes[1]) + 0x80000000, 2);
+        gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[1]), 2);
         gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
         if ((dialogueBox->x2 - dialogueBox->x1) < 10 || (dialogueBox->y2 - dialogueBox->y1) < 10) {
             render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2, dialogueBox->y2 + 2);

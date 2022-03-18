@@ -613,14 +613,14 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                     func_8007BA5C(&D_8011B0A0, texture, flags, temp);
                     vertices += 0x80000000;
                     gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices);
-                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, TRIN_ENABLE_TEXTURE);
+                    gDkrTriangles(D_8011B0A0++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
                     gDPSetPrimColor(D_8011B0A0++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
                 } else {
                     func_8007B4E8(&D_8011B0A0, texture, flags, temp);
                     hasTexture = (texture == NULL) ? TRIN_DISABLE_TEXTURE : TRIN_ENABLE_TEXTURE;
                     vertices += 0x80000000;
                     gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices);
-                    gDkrTriangles(D_8011B0A0++, triangles + 0x80000000, numberTriangles, hasTexture);
+                    gDkrTriangles(D_8011B0A0++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, hasTexture);
                 }
             }
         }

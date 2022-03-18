@@ -420,8 +420,8 @@ void render_fade_barndoor_horizontal(Gfx **dlist, UNUSED s32 arg1, UNUSED s32 ar
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, (s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000, (((s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000) & 6) | 0x58, 0x70);
-    gDkrTriangles((*dlist)++, (s32)sTransitionTris[sTransitionTaskNum[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
+    gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 
@@ -430,8 +430,8 @@ void render_fade_barndoor_vertical(Gfx **dlist, UNUSED s32 arg1, UNUSED s32 arg2
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, (s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000, (((s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000) & 6) | 0x58, 0x70);
-    gDkrTriangles((*dlist)++, (s32)sTransitionTris[sTransitionTaskNum[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
+    gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 
@@ -443,8 +443,8 @@ void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
     u8 *addr, *addr2;
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
-    addr = (sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000);
-    addr2 = (sTransitionTris[sTransitionTaskNum[0]] + 0x80000000);
+    addr = OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]);
+    addr2 = OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]);
     gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
     gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
@@ -465,7 +465,7 @@ void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 // This doesn't work properly.
 void render_fade_waves(Gfx **dlist, s32 arg1, s32 arg2) {
     s32 i;
@@ -474,11 +474,11 @@ void render_fade_waves(Gfx **dlist, s32 arg1, s32 arg2) {
     for(i = 0; i < 6; i++) {
         s32 index = sTransitionTaskNum[0] + i;
         if(i != 1 && i != 4) {
-            gDkrVertices((*dlist)++, (s32)sTransitionVtx[index] + 0x80000000, (((s32)sTransitionVtx[index] + 0x80000000) & 6) | 0x78, 0x94);
-            gDkrTriangles((*dlist)++, (s32)sTransitionTris[index] + 0x80000000, 14, TRIN_DISABLE_TEXTURE);
+            gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x78, 0x94);
+            gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
         } else {
-            gDkrVertices((*dlist)++, (s32)sTransitionVtx[index] + 0x80000000, (((s32)sTransitionVtx[index] + 0x80000000) & 6) | 0x68, 0x82);
-            gDkrTriangles((*dlist)++, (s32)sTransitionTris[index] + 0x80000000, 12, TRIN_DISABLE_TEXTURE);
+            gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x68, 0x82);
+            gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
         }
     }
     func_8007B3D0(dlist);
@@ -491,8 +491,8 @@ void render_fade_barndoor_diagonal(Gfx **dlist, s32 arg1, s32 arg2) {
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, (s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000, (((s32)sTransitionVtx[sTransitionTaskNum[0]] + 0x80000000) & 6) | 0x48, 0x5E);
-    gDkrTriangles((*dlist)++, (s32)sTransitionTris[sTransitionTaskNum[0]] + 0x80000000, 6, TRIN_DISABLE_TEXTURE);
+    gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x48, 0x5E);
+    gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 6, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 
