@@ -847,8 +847,7 @@ void func_80068408(Gfx **dlist, Mtx **mats) {
     func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
     func_8006F870(&D_80121060, (Matrix *)*mats);
     D_80120D88[D_80120D1C] = *mats;
-
-    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (uintptr_t)OS_PHYSICAL_TO_K0((*mats)++));
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), D_80120D08 << 6);
 }
 
 void func_80068508(s32 arg0) {
