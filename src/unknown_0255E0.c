@@ -61,8 +61,8 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 /************ .bss ************/
 
 Gfx *D_8011B0A0;
-u32 D_8011B0A4;
-u32 D_8011B0A8; //Vertex**?
+Mtx *D_8011B0A4;
+u32 D_8011B0A8; //Vertex** or VertexList*?
 s32 D_8011B0AC;
 
 Object *D_8011B0B0; // Camera Object?
@@ -362,7 +362,7 @@ void render_skydome(void) {
         D_8011B0B8->segment.trans.z_position = v0_some_struct->trans.z_position;
     }
 
-    func_80068408(&D_8011B0A0, (s32 *)&D_8011B0A4);
+    func_80068408(&D_8011B0A0, &D_8011B0A4);
     if (D_8011B0DC) {
         func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8);
     }
