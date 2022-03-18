@@ -9,7 +9,7 @@ fi
 echo 'Extracting Assets...'
 
 # Remove assets directory if it exists.
-ASSETS_DIR="./assets/$1"
+ASSETS_DIR="./assets/vanilla/$1"
 if [ -d "$ASSETS_DIR" ]; then
     rm -r $ASSETS_DIR
 fi
@@ -20,12 +20,9 @@ if [ -d "$UCODE_DIR" ]; then
     rm -r $UCODE_DIR
 fi
 
-if ! ./tools/dkr_extractor "$1" ./extract-ver ./baseroms . ; then
+if ! ./tools/dkr_assets_tool -e "$1" ./assets ./extract-ver ./baseroms . ; then
     exit 1
 fi
-
-# Generate the linker file (dkr.ld)
-./generate_ld.sh "$1"
 
 echo 'Done.'
 
