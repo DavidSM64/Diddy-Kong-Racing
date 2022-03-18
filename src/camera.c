@@ -277,7 +277,7 @@ void func_80066230(Gfx **dlist, Mtx **mats) {
 
 f32 func_80066348(f32 xPos, f32 yPos, f32 zPos) {
     s32 index;
-    f32 x, z, y;
+    f32 dx, dz, dy;
 
     index = D_80120CE4;
 
@@ -285,10 +285,10 @@ f32 func_80066348(f32 xPos, f32 yPos, f32 zPos) {
         index += 4;
     }
 
-    z = zPos - D_80120AC0[index].trans.z_position;
-    x = xPos - D_80120AC0[index].trans.x_position;
-    y = yPos - D_80120AC0[index].trans.y_position;
-    return sqrtf((z * z) + ((x * x) + (y * y)));
+    dz = zPos - D_80120AC0[index].trans.z_position;
+    dx = xPos - D_80120AC0[index].trans.x_position;
+    dy = yPos - D_80120AC0[index].trans.y_position;
+    return sqrtf((dz * dz) + ((dx * dx) + (dy * dy)));
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {

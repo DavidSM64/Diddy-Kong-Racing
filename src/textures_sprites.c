@@ -1245,8 +1245,8 @@ void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg
     if (bit23Set) {
         if (!bit25Set) {
             if (get_random_number_from_range(0, 1000) >= 986) {
-                *triangleBatchInfoFlags &= 0xFBFFFFFF; //Unset bit 26
-                *triangleBatchInfoFlags |= 0x02000000; //Set bit 25
+                *triangleBatchInfoFlags &= ~0x4000000;
+                *triangleBatchInfoFlags |= 0x02000000;
             }
         } else if (!bit26Set) {
             *arg2 = *arg2 + (texture->frameAdvanceDelay * arg3);
@@ -1254,16 +1254,16 @@ void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg
                 *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
                 if (*arg2 < 0) {
                     *arg2 = 0;
-                    *triangleBatchInfoFlags &= 0xF9FFFFFF; //Unset bits 25 and 26
+                    *triangleBatchInfoFlags &= ~(0x2000000 | 0x4000000);
                     return;
                 }
-                *triangleBatchInfoFlags |= 0x04000000; //Set bit 26
+                *triangleBatchInfoFlags |= 0x04000000;
             }
         } else {
             *arg2 = *arg2 - (texture->frameAdvanceDelay * arg3);
             if (*arg2 < 0) {
                 *arg2 = 0;
-                *triangleBatchInfoFlags &= 0xF9FFFFFF; //Unset bits 25 and 26
+                *triangleBatchInfoFlags &= ~(0x2000000 | 0x4000000);
             }
         }
     } else {
@@ -1277,12 +1277,12 @@ void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg
                 phi_a0 = 0;
                 if (*arg2 < 0) {
                     *arg2 = -*arg2;
-                    *triangleBatchInfoFlags &= 0xFBFFFFFF; //All but bit 26
+                    *triangleBatchInfoFlags &= ~0x4000000;
                     phi_a0 = 1;
                 }
                 if (*arg2 >= texture->numOfTextures) {
                     *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
-                    *triangleBatchInfoFlags |= 0x04000000; //Bit 26
+                    *triangleBatchInfoFlags |= 0x04000000;
                     phi_a0 = 1;
                 }
             } while (phi_a0 != 0);
