@@ -530,16 +530,13 @@ skip:
 #ifdef NON_EQUIVALENT
 // nonOpaque: 0 for solid geometry, 1 for transparent geometry.
 void render_level_segment(s32 segmentId, s32 nonOpaque) {
-    LevelModelSegment *segment = &gCurrentLevelModel->segments[segmentId]; // spAC
+    LevelModelSegment *segment;
     LevelHeader_70 *lvlHeader70;
     TriangleBatchInfo *batchInfo;
     TextureHeader *texture;
-    s32 temp_v0;
-    s32 temp_v1;
-    s32 flags;
     s32 renderBatch;
-    s32 numberVertices;
-    s32 numberTriangles;
+    s16 numberVertices;
+    s16 numberTriangles;
     s32 vertices;
     s32 triangles;
     s32 color;
@@ -548,15 +545,13 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 sp78;
     s32 i;
     s32 sp70;
-    s32 textureIndex;
-    s32 textureFlags;
+    s16 textureFlags;
+    u8 textureIndex;
     s32 temp;
 
-    if (nonOpaque && (D_8011D384 != 0)) {
-        sp78 = func_800B9228(segment);
-    } else {
-        sp78 = 0;
-    }
+    segment = &gCurrentLevelModel->segments[segmentId];
+    sp78 = (nonOpaque && D_8011D384) ? func_800B9228(segment) : FALSE;
+
     if (nonOpaque) {
         sp70 = segment->numberOfBatches;
         i = segment->unk40;
@@ -567,9 +562,8 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
 
     for (; i < sp70; i++) {
         batchInfo = &segment->batches[i];
-        flags = batchInfo->flags;
         textureFlags = 0;
-        if (!(flags & 0x100)) { // 0x100 = Is this invisible geometry?
+        if (!(batchInfo->flags & 0x100)) { // 0x100 = Is this invisible geometry?
             textureIndex = batchInfo->textureIndex;
             renderBatch = FALSE;
             if (textureIndex == 0xFF) {
@@ -578,48 +572,44 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                 texture = gCurrentLevelModel->textures[textureIndex].texture;
                 textureFlags = texture->flags;
             }
-            flags |= (0x8 | 0x2);
-            if (!(flags & 0x10) && !(flags & 0x800)) { // 0x10 = Depth write
-                flags |= D_8011B0FC;
+            batchInfo->flags |= (0x8 | 0x2);
+            if (!(batchInfo->flags & 0x10) && !(batchInfo->flags & 0x800)) { // 0x10 = Depth write
+                batchInfo->flags |= D_8011B0FC;
             }
             // textureFlags & 0x04 = Is interlaced texture
-            if ((!(textureFlags & 4) && !(flags & 0x2000)) || (flags & 0x800)) {
+            if ((!(textureFlags & 4) && !(batchInfo->flags & 0x2000)) || (batchInfo->flags & 0x800)) {
                 renderBatch = TRUE;
             }
             if (nonOpaque) {
                 renderBatch = (renderBatch + 1) & 1; // Why not just do `renderBatch ^= 1;` or `renderBatch = !renderBatch`?
             }
-            if (sp78 && (flags & 0x2000)) {
+            if (sp78 && (batchInfo->flags & 0x2000)) {
                 renderBatch = FALSE;
             }
             if (renderBatch) {
-                temp_v0 = batchInfo->verticesOffset;
-                temp_v1 = batchInfo->facesOffset;
-                numberVertices = (batchInfo + 1)->verticesOffset - temp_v0;
-                numberTriangles = (batchInfo + 1)->facesOffset - temp_v1;
-                vertices = &segment->vertices[temp_v0];
-                triangles = &segment->triangles[temp_v1];
-                levelHeaderIndex = (flags >> 28) & 7;
+                numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
+                numberTriangles = (batchInfo + 1)->facesOffset - batchInfo->facesOffset;
+                vertices = &segment->vertices[batchInfo->verticesOffset];
+                triangles = &segment->triangles[batchInfo->facesOffset];
+                levelHeaderIndex = (batchInfo->flags >> 28) & 7;
+                temp = batchInfo->unk7 << 14;
                 if (levelHeaderIndex != 0) {                   // This is unused, so this should always be false.
-                    lvlHeader70 = gCurrentLevelHeader2->unk70; //gCurrentLevelHeader2[levelHeaderIndex].unk70;
+                    lvlHeader70 = gCurrentLevelHeader2[levelHeaderIndex << 2].unk70;
                     gDPSetEnvColor(D_8011B0A0++, lvlHeader70->red, lvlHeader70->green, lvlHeader70->blue, lvlHeader70->alpha);
                 } else {
                     gDPSetEnvColor(D_8011B0A0++, 255, 255, 255, 0);
                 }
-                temp = batchInfo->unk7 << 14;
-                if (flags & 0x40000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
+                if (batchInfo->flags & 0x40000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
                     color = gCurrentLevelHeader2->pulseLightData->outColorValue & 0xFF;
                     gDPSetPrimColor(D_8011B0A0++, 0, 0, color, color, color, color);
-                    func_8007BA5C(&D_8011B0A0, texture, flags, temp);
-                    vertices += 0x80000000;
-                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices);
+                    func_8007BA5C(&D_8011B0A0, texture, batchInfo->flags, temp);
+                    gDkrVertices(D_8011B0A0++, OS_PHYSICAL_TO_K0(vertices), (((numberVertices - 1) << 3) | ((s32)OS_PHYSICAL_TO_K0(vertices) & 6)), numberVertices);
                     gDkrTriangles(D_8011B0A0++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
                     gDPSetPrimColor(D_8011B0A0++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
                 } else {
-                    func_8007B4E8(&D_8011B0A0, texture, flags, temp);
+                    func_8007B4E8(&D_8011B0A0, texture, batchInfo->flags, temp);
                     hasTexture = (texture == NULL) ? TRIN_DISABLE_TEXTURE : TRIN_ENABLE_TEXTURE;
-                    vertices += 0x80000000;
-                    gDkrVertices(D_8011B0A0++, vertices, (((numberVertices - 1) << 3) | (vertices & 6)), numberVertices);
+                    gDkrVertices(D_8011B0A0++, OS_PHYSICAL_TO_K0(vertices), ((numberVertices - 1) << 3) | ((s32)OS_PHYSICAL_TO_K0(vertices) & 6), numberVertices);
                     gDkrTriangles(D_8011B0A0++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, hasTexture);
                 }
             }
