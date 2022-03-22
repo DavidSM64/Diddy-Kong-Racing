@@ -1103,6 +1103,8 @@ void func_8007B4C8(Gfx **dlist, s32 arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B4E8.s")
 
 #ifdef NON_EQUIVALENT
+//Reasonaby certain I have the macros correct, but I'm less certain about the arg1 stuff
+//arg1 could be a multidimensional array maybe?
 void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3) {
     s32 index = flags & 0x1F;
 
@@ -1110,119 +1112,19 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3) {
         arg1 += ((arg3 >> 16) * arg1->textureSize);
     }
     if (arg1->width == 64) {
-        gDPLoadMultiBlock(
-            (*dlist)++, //pkt
-            (u32)OS_PHYSICAL_TO_K0((arg1)) + 0x20, //timg
-            0x100, //tmem
-            1, //rtile
-            G_IM_FMT_RGBA, //fmt
-            G_IM_SIZ_16b, //size
-            64, //width
-            16, //height
-            0, //pal
-            0, //cms
-            0, //cmt
-            0, //masks
-            4, //maskt
-            0, //shifts
-            0  //shiftt
-            );
+        gDPLoadMultiBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+sizeof(TextureHeader), 0x100, 1,
+            G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 16, 0, 0, 0, 6, 4, 0, 0);
 
-        // {\
-        // fast3d_cmd((*arg0)++, 0xFD100000, (u32) (arg1 + 0x80000020));\
-        // fast3d_cmd((*arg0)++, 0xF5100100, 0x07010060);\
-        // gDPLoadSync((*arg0)++);\
-        // /ast3d_cmd((*arg0)++, 0xF3000000, 0x073FF080);\
-        // gDPPipeSync((*arg0)++);\
-        // fast3d_cmd((*arg0)++, 0xF5102100, 0x01010060);\
-        // fast3d_cmd((*arg0)++, 0xF2000000, 0x010FC03C);\
-        // }
-
-        gDPLoadTextureBlock(
-            (*dlist)++, //pkt
-            (u32)OS_PHYSICAL_TO_K0((arg1))+0x820, //timg
-            // 0, //tmem
-            // 0, //rtile
-            G_IM_FMT_RGBA, //fmt
-            G_IM_SIZ_16b, //size
-            64, //width
-            16, //height
-            0, //pal
-            0, //cms
-            0, //cmt
-            0, //masks
-            4, //maskt
-            0, //shifts
-            0  //shiftt
-            );
-
-        // {\
-        // fast3d_cmd((*arg0)++, 0xFD100000, (u32) (arg1 + 0x80000820));\
-        // fast3d_cmd((*arg0)++, 0xF5100000, 0x07010060);\
-        // gDPLoadSync((*arg0)++);\
-        // fast3d_cmd((*arg0)++, 0xF3000000, 0x073FF080);\
-        // gDPPipeSync((*arg0)++);\
-        // fast3d_cmd((*arg0)++, 0xF5102000, 0x10060);\
-        // fast3d_cmd((*arg0)++, 0xF2000000, 0xFC03C);\
-        // }
+        gDPLoadTextureBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+(sizeof(TextureHeader)*65),
+            G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 16, 0, 0, 0, 6, 4, 0, 0);
     } else {
-        gDPLoadMultiBlock(
-            (*dlist)++, //pkt
-            (u32)OS_PHYSICAL_TO_K0((arg1)) + 0x20, //timg
-            0x100, //tmem
-            1, //rtile
-            G_IM_FMT_RGBA, //fmt
-            G_IM_SIZ_16b, //size
-            64, //width
-            16, //height
-            0, //pal
-            0, //cms
-            0, //cmt
-            5, //masks
-            5, //maskt
-            0, //shifts
-            0  //shiftt
-            );
+        gDPLoadMultiBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+sizeof(TextureHeader), 0x100, 1,
+            G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, 0, 0, 5, 5, 0, 0);
 
-        // {\
-        // fast3d_cmd((*dlist)++, 0xFD100000, (u32) (arg1 + 0x80000020));\
-        // fast3d_cmd((*dlist)++, 0xF5100100, 0x07014050);\
-        // gDPLoadSync((*dlist)++);\
-        // fast3d_cmd((*dlist)++, 0xF3000000, 0x073FF100);\
-        // gDPPipeSync((*dlist)++);\
-        // fast3d_cmd((*dlist)++, 0xF5101100, 0x01014050);\
-        // fast3d_cmd((*dlist)++, 0xF2000000, 0x0107C07C);\
-        // }
-        // {\
-        // fast3d_cmd((*dlist)++, 0xFD100000, (u32) (arg1 + 0x80000820));\
-        // fast3d_cmd((*dlist)++, 0xF5100000, 0x07014050);\
-        // gDPLoadSync((*dlist)++);\
-        // fast3d_cmd((*dlist)++, 0xF3000000, 0x073FF100);\
-        // gDPPipeSync((*dlist)++);\q
-        // fast3d_cmd((*dlist)++, 0xF5101000, 0x14050);\
-        // fast3d_cmd((*dlist)++, 0xF2000000, 0x7C07C);\
-        // }
-
-
-
-        gDPLoadTextureBlock(
-            (*dlist)++, //pkt
-            (u32)OS_PHYSICAL_TO_K0((arg1))+0x820, //timg
-            // 0, //tmem
-            // 0, //rtile
-            G_IM_FMT_RGBA, //fmt
-            G_IM_SIZ_16b, //size
-            64, //width
-            16, //height
-            0, //pal
-            0, //cms
-            0, //cmt
-            5, //masks
-            5, //maskt
-            0, //shifts
-            0  //shiftt
-            );
+        gDPLoadTextureBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+(sizeof(TextureHeader)*65),
+            G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, 0, 0, 5, 5, 0, 0);
     }
+
     gDPPipeSync((*dlist)++);
 
     D_8012637C = 0;
