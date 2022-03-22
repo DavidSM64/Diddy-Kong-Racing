@@ -1103,17 +1103,16 @@ void func_8007B4C8(Gfx **dlist, s32 arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B4E8.s")
 
 #ifdef NON_EQUIVALENT
-void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, s32 arg2, s32 arg3) {
-    s32 temp_t6;
+void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3) {
+    s32 index = flags & 0x1F;
 
-    if ((arg3 != 0) && (arg3 < (arg1->numOfTextures << 8))) {
+    if ((arg3 != 0) && (arg3 < (arg1->numOfTextures * 256))) {
         arg1 += ((arg3 >> 16) * arg1->textureSize);
     }
     if (arg1->width == 64) {
         gDPLoadMultiBlock(
             (*dlist)++, //pkt
-            //OS_PHYSICAL_TO_K0((arg1+1)), //timg
-            (u32)(arg1+0x80000020), //timg
+            (u32)OS_PHYSICAL_TO_K0((arg1)) + 0x20, //timg
             0x100, //tmem
             1, //rtile
             G_IM_FMT_RGBA, //fmt
@@ -1141,8 +1140,7 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, s32 arg2, s32 arg3) {
 
         gDPLoadTextureBlock(
             (*dlist)++, //pkt
-            //OS_PHYSICAL_TO_K0((arg1+1)), //timg
-            (u32)(arg1+0x80000820), //timg
+            (u32)OS_PHYSICAL_TO_K0((arg1))+0x820, //timg
             // 0, //tmem
             // 0, //rtile
             G_IM_FMT_RGBA, //fmt
@@ -1168,20 +1166,9 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, s32 arg2, s32 arg3) {
         // fast3d_cmd((*arg0)++, 0xF2000000, 0xFC03C);\
         // }
     } else {
-        //0x07014050
-        //tile = 111 = 7
-        //patlette = 0
-        //cmt = 0
-        //maskt = 0101 = 5
-        //shiftt = 0
-        //cms = 0
-        //masks = 0101 = 5
-        //shifts = 0
-
         gDPLoadMultiBlock(
             (*dlist)++, //pkt
-            //OS_PHYSICAL_TO_K0((arg1+1)), //timg
-            (u32)(arg1+0x80000020), //timg
+            (u32)OS_PHYSICAL_TO_K0((arg1)) + 0x20, //timg
             0x100, //tmem
             1, //rtile
             G_IM_FMT_RGBA, //fmt
@@ -1196,6 +1183,7 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, s32 arg2, s32 arg3) {
             0, //shifts
             0  //shiftt
             );
+
         // {\
         // fast3d_cmd((*dlist)++, 0xFD100000, (u32) (arg1 + 0x80000020));\
         // fast3d_cmd((*dlist)++, 0xF5100100, 0x07014050);\
@@ -1210,7 +1198,7 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, s32 arg2, s32 arg3) {
         // fast3d_cmd((*dlist)++, 0xF5100000, 0x07014050);\
         // gDPLoadSync((*dlist)++);\
         // fast3d_cmd((*dlist)++, 0xF3000000, 0x073FF100);\
-        // gDPPipeSync((*dlist)++);\
+        // gDPPipeSync((*dlist)++);\q
         // fast3d_cmd((*dlist)++, 0xF5101000, 0x14050);\
         // fast3d_cmd((*dlist)++, 0xF2000000, 0x7C07C);\
         // }
@@ -1219,8 +1207,7 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, s32 arg2, s32 arg3) {
 
         gDPLoadTextureBlock(
             (*dlist)++, //pkt
-            //OS_PHYSICAL_TO_K0((arg1+1)), //timg
-            (u32)(arg1+0x80000820), //timg
+            (u32)OS_PHYSICAL_TO_K0((arg1))+0x820, //timg
             // 0, //tmem
             // 0, //rtile
             G_IM_FMT_RGBA, //fmt
@@ -1241,15 +1228,14 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, s32 arg2, s32 arg3) {
     D_8012637C = 0;
     gSPSetGeometryMode((*dlist)++, G_FOG);
 
-    temp_t6 = arg2 & 0x1F;
-    if (temp_t6 & G_TEXTURE_ENABLE) {
+    if (index & G_TEXTURE_ENABLE) {
         gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
     } else {
         gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
     }
     D_80126382 = 1;
     D_80126374 = 0;
-    gDkrDmaDisplayList((*dlist)++, (u32) OS_PHYSICAL_TO_K0(D_800DF1A8[temp_t6]), numberOfGfxCommands(D_800DF1A8[0]));
+    gDkrDmaDisplayList((*dlist)++, (u32) OS_PHYSICAL_TO_K0(D_800DF1A8[index]), numberOfGfxCommands(D_800DF1A8[0]));
 }
 #else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BA5C.s")
