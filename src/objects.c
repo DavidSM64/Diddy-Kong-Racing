@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8000B020 */
 
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "memory.h"
 
 #include "types.h"
@@ -44,9 +44,9 @@ s32 D_800DC74C = 0; // Currently unknown, might be a different type.
 s32 D_800DC750 = 0; // Currently unknown, might be a different type.
 s32 D_800DC754 = 0; // Currently unknown, might be a different type.
 s32 D_800DC758 = 0; // Currently unknown, might be a different type.
-s32 D_800DC75C = 0; // Currently unknown, might be a different type.
+Object *D_800DC75C = NULL; // Currently unknown, might be a different type.
 s32 D_800DC760 = 9; // Currently unknown, might be a different type.
-s32 D_800DC764 = 0; // Currently unknown, might be a different type.
+Object *D_800DC764 = NULL; // Currently unknown, might be a different type.
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
 f32 D_800DC76C[15] = { 
@@ -77,6 +77,8 @@ s16 D_800DC7B8[52] = {
     0x00E8, 0x0115, 0x0118, 0x0000,
 };
 
+// A table of which vehicles to use for boss races.
+// https://www.youtube.com/watch?v=WQJAtns_rMk
 s16 D_800DC820[16] = {
     0x0005, 0x0106, 0x0207, 0x0005,
     0x0106, 0x010B, 0x010B, 0x0207,
@@ -132,7 +134,7 @@ f32 D_8011AD28;
 s32 D_8011AD2C;
 f32 D_8011AD30;
 s32 D_8011AD34;
-s32 D_8011AD38;
+s32 D_8011AD38; //D_8011AD38 is ultimately set by func_80074B34, and is almost definitely SIDeviceStatus
 s8 D_8011AD3C;
 s8 D_8011AD3D;
 s8 D_8011AD3E;
@@ -262,21 +264,21 @@ extern s16 D_8011D5AC;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B020.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B020.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B290.s")
-#else
+#ifdef NON_EQUIVALENT
 extern s32 D_800DC754;
 extern Object *D_800DC75C;
 extern Object *D_800DC764;
 
 s32 *get_misc_asset(s32 arg0);
 
-void func_8000B290() {
+// Not positive about the data argument.
+// It just made sense since there seemed to be nothing else to pass to free_from_memory_pool
+void func_8000B290(void *data) {
 
     if (D_800DC754) {
-        free_from_memory_pool();
+        free_from_memory_pool(data);
     }
     get_misc_asset(20);
     /*{
@@ -298,11 +300,13 @@ void func_8000B290() {
 
     gParticlePtrList_flush();
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B290.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B38C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000B750.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000BADC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B38C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000B750.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000BADC.s")
 
 Object *func_8000BF44(s32 arg0) {
     if (arg0 == -1) {
@@ -365,9 +369,7 @@ void func_8000BF8C(void) {
     func_8000C460();
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/decrypt_magic_codes.s")
-#else
+#ifdef NON_EQUIVALENT
 // Decrypts cheats
 void decrypt_magic_codes(u8 *data, s32 length) {
     u8 sp3;
@@ -390,6 +392,8 @@ void decrypt_magic_codes(u8 *data, s32 length) {
         data[i + 3] = ((sp3 & 0x55) << 1) | ((sp3 & 0xAA) >> 1);
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
 #endif
 
 void func_8000C460(void) {
@@ -463,7 +467,7 @@ void func_8000C604(void) {
     free_from_memory_pool(D_8011AEB0[1]);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C718.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000C718.s")
 
 void func_8000C844(s32 arg0) {
     if ((*D_8011AE4C)[arg0] != 0) {
@@ -482,7 +486,7 @@ s32 func_8000C8B4(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000C8F8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
 
 void func_8000CBC0(void) {
     s32 i = 0;
@@ -492,10 +496,8 @@ void func_8000CBC0(void) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CBF0.s")
-#else
-void func_8000CBF0(u32 *arg0, s32 arg1) {
+#ifdef NON_EQUIVALENT
+void func_8000CBF0(Object *arg0, s32 arg1) {
     u32 **temp = &D_8011AE08[arg1];
     u32 *temp2;
     temp2 = *temp;
@@ -505,6 +507,8 @@ void func_8000CBF0(u32 *arg0, s32 arg1) {
     D_8011AE08[arg1] = arg0;
     return;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_8000CBF0.s")
 #endif
 
 s32 func_8000CC20(u32 *arg0) {
@@ -525,23 +529,24 @@ s32 func_8000CC20(u32 *arg0) {
 }
 
 // Has a jump table
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000CC7C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
 
 u32 func_8000E0B0(void) {
+    // D_8011AD38 is likely an SIDeviceStatus value, but not 100% sure yet.
     switch (D_8011AD38) {
-        case 1:
+        case 1: //NO_CONTROLLER_PAK
             return -1;
-        case 7:
+        case 7: //RUMBLE_PAK
             return 0;
-        case 2:
-        case 3:
+        case 2: //CONTROLLER_PAK_INCONSISTENT
+        case 3: //CONTROLLER_PAK_WITH_BAD_ID
             return 3;
-        case 4:
-        case 6:
+        case 4: //CONTROLLER_PAK_FULL
+        case 6: //CONTROLLER_PAK_UNK6
             return 2;
-        case 0:
-        case 5:
-        case 8:
+        case 0: //CONTROLLER_PAK_GOOD
+        case 5: //CONTROLLER_PAK_CHANGED
+        case 8: //CONTROLLER_PAK_UNK8
             return func_80059E20();
         default:
             return 0;
@@ -594,10 +599,10 @@ void func_8000E1EC(Object *object, s32 arg1) {
     D_8011AD40 = object;
     D_8011AD44 = 4;
     D_8011AD45 = arg1;
-    D_8011AD46 = object->x_position;
-    D_8011AD48 = object->y_position;
-    D_8011AD4A = object->z_position;
-    D_8011AD4C = object->y_rotation;
+    D_8011AD46 = object->segment.trans.x_position;
+    D_8011AD48 = object->segment.trans.y_position;
+    D_8011AD4A = object->segment.trans.z_position;
+    D_8011AD4C = object->segment.trans.y_rotation;
     gParticlePtrList_addObject(object);
     gObjectCount = 0;
 }
@@ -643,7 +648,7 @@ void func_8000E2B4(void) {
     sp2C.common.z = D_8011AD4A;
     sp2C.unkC = D_8011AD4C;
     func_800521B8(1);
-    player = func_8000EA54(&sp2C, 0x11);
+    player = spawn_object(&sp2C, 0x11);
     gObjectCount = 1;
     (*gObjectStructArrayPtr)[0] = (s32) player;
     *D_8011AEEC = (s32) player;
@@ -656,17 +661,17 @@ void func_8000E2B4(void) {
     player_64->unk118 = 0;
     player_64->unk0_a.unk0_b.unk3 = (s8) settings->racers[0].character;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
-        player->scale *= 1.4f;
+        player->segment.trans.scale *= 1.4f;
     }
     if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
-        player->scale *= 0.714f;
+        player->segment.trans.scale *= 0.714f;
     }
-    player->unk3C_a.unk3C = 0;
-    player->y_rotation = D_8011AD4C;
-    player->y_position = D_8011AD48;
+    player->segment.unk3C_a.unk3C = 0;
+    player->segment.trans.y_rotation = D_8011AD4C;
+    player->segment.trans.y_position = D_8011AD48;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E2B4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E2B4.s")
 #endif
 
 /**
@@ -687,11 +692,11 @@ u8 func_8000E4D8(void) {
     return D_8011AEF5;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E4E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E558.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E5EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E79C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000E898.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E4E8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E558.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E5EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E79C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000E898.s")
 
 Object *get_object(s32 index) {
     if (index < 0 || index >= objCount) {
@@ -717,21 +722,21 @@ s32 func_8000E9C0(void) {
 }
 
 void func_8000E9D0(Object *arg0) {
-    arg0->unk6 |= 0x8000;
-    func_800245B4(arg0->unk2C | 0xC000);
+    arg0->segment.trans.unk6 |= 0x8000;
+    func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
     if (1);
     D_8011AE64++;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000EA54.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F648.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F758.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F7EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000F99C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FAC4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FBCC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FC6C.s")
+GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F648.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F758.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F7EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000F99C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FAC4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FBCC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FC6C.s")
 
 s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
     arg0->unk4C = arg1;
@@ -745,7 +750,7 @@ s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
     return 0x10C;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8000FD54.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
 
 void gParticlePtrList_addObject(Object *object) {
     func_800245B4(object->unk4A | 0x8000);
@@ -761,9 +766,7 @@ s32 func_80010028(s32 arg0) {
     return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/gParticlePtrList_flush.s")
-#else
+#ifdef NON_EQUIVALENT
 //bad regalloc; swap s2 = s3
 /*removes objects in particleList from gObjPtrList and frees*/
 void gParticlePtrList_flush(void) {
@@ -795,12 +798,14 @@ void gParticlePtrList_flush(void) {
     }
     gParticleCount = 0;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/gParticlePtrList_flush.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800101AC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80010994.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011134.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011264.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
 
 void func_80011390(void) {
     D_8011ADAC = 0;
@@ -818,27 +823,25 @@ s32 func_800113BC() {
     return D_8011ADBC;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800113CC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800113CC.s")
 
 s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
     D_800DC848 = 1;
     // No return value!
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011570.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80011570.s")
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011960.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
                     u32 arg5, u32 arg6, u32 arg7, u32 arg8, f32 arg9) {
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_80011960.s")
 #endif
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80011AD0.s")
-#else
-extern f32 D_800E5550;
+#ifdef NON_EQUIVALENT
+f32 D_800E5550 = 0.01f;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
     u32 offset;
@@ -860,8 +863,8 @@ void func_80011AD0(Object *this) {
             break;
 
         case 3: //L80011BB4
-            tmp_f0 = (f32)this->unk3C->unkD;
-            if (this->unk3C->unkD < 0) {
+            tmp_f0 = (f32)this->segment.unk3C_a.unk3C->unkD;
+            if (this->segment.unk3C_a.unk3C->unkD < 0) {
                 tmp_f0 += 4294967296.0f;
             }
             offset = (this->unk64->unkFC * 6);
@@ -881,10 +884,12 @@ void func_80011AD0(Object *this) {
             break;
     } //L80011C88
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/render_3d_billboard.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/render_3d_model.s")
+GLOBAL_ASM("asm/non_matchings/objects/render_3d_billboard.s")
+GLOBAL_ASM("asm/non_matchings/objects/render_3d_model.s")
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
@@ -913,41 +918,39 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_80012D5C(u32 *arg0, u32 *arg1, u32 *arg2, Object *object) {
+void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
     f32 scale;
     u32 tmp2;
     u32 tmp3;
-    if (object->unk6 & 0x5000)
+    if (object->segment.trans.unk6 & 0x5000)
         return;
     func_800B76B8(2, object->unk4A);
     D_8011AE8C = *arg0;
     D_8011AE90 = *arg1;
     D_8011AE94 = *arg2;
-    scale = object->scale;
+    scale = object->segment.trans.scale;
     render_object(object);
-    object->scale = scale;
+    object->segment.trans.scale = scale;
     *arg0 = D_8011AE8C;
     *arg1 = D_8011AE90;
     *arg2 = D_8011AE94;
     func_800B76B8(2, -1);
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012E28.s")
-#else
 void func_80012E28(Object *this) {
     s32 unused1;
     Object_64 *sp_20;
     f32 tmp_f2;
     f32 sp_1c;
     f32 tmp_f0;
+    f32 temp;
 
     if (this->behaviorId == 1) {
 
         sp_20 = this->unk64;
-        this->y_rotation += sp_20->unk160;
-        this->x_rotation += sp_20->unk162;
-        this->z_rotation += sp_20->unk164;
+        this->segment.trans.y_rotation += sp_20->unk160;
+        this->segment.trans.x_rotation += sp_20->unk162;
+        this->segment.trans.z_rotation += sp_20->unk164;
         sp_1c = 0.0f;
         if (sp_20->unk1D7 < 5) {
 
@@ -955,59 +958,57 @@ void func_80012E28(Object *this) {
             tmp_f2 = sp_1c;
             tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166) * tmp_f2;
 
-            //bad regalloc of 0.0f
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
-            sp_1c = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
+            temp = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
+            if(0){}
+            sp_1c = temp;
         }
-        //L80012F0C
-        this->y_position = this->y_position + sp_1c;
+        this->segment.trans.y_position = this->segment.trans.y_position + sp_1c;
         D_8011ADD0 = sp_1c;
     }
-    //L80012F20
 }
-#endif
 
 void func_80012F30(Object *arg0) {
     if (arg0->behaviorId == 1) {
         Object_64 *object_64 = arg0->unk64;
-        arg0->y_rotation -= object_64->unk160;
-        arg0->x_rotation -= object_64->unk162;
-        arg0->z_rotation -= object_64->unk164;
-        arg0->y_position -= D_8011ADD0;
+        arg0->segment.trans.y_rotation -= object_64->unk160;
+        arg0->segment.trans.x_rotation -= object_64->unk162;
+        arg0->segment.trans.z_rotation -= object_64->unk164;
+        arg0->segment.trans.y_position -= D_8011ADD0;
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80012F94.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 
 void render_object(Object *this) {
     func_80012F94(this);
-    if (this->unk6 & 0x8000) {
+    if (this->segment.trans.unk6 & 0x8000) {
         func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
     } else {
-        if (this->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
+        if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
-        else if (this->header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD)
+        else if (this->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD)
             render_3d_billboard(this);
-        else if (this->header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4)
+        else if (this->segment.header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4)
             func_80011AD0(this);
     }
     func_80013548(this);
 }
 
 void func_80013548(Object *arg0) {
-    if ((arg0->unk6 & 0x8000) == 0 && arg0->header->behaviorId == 1) {
-        arg0->x_position -= arg0->unk64->unk78;
-        arg0->y_position -= arg0->unk64->unk7C;
-        arg0->z_position -= arg0->unk64->unk80;
+    if ((arg0->segment.trans.unk6 & 0x8000) == 0 && arg0->segment.header->behaviorId == 1) {
+        arg0->segment.trans.x_position -= arg0->unk64->unk78;
+        arg0->segment.trans.y_position -= arg0->unk64->unk7C;
+        arg0->segment.trans.z_position -= arg0->unk64->unk80;
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800135B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800138A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013A0C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80013DCC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014090.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80013A0C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80013DCC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
 
 void func_800142B8(void) {
     s32 i = D_8011AE60;
@@ -1017,8 +1018,8 @@ void func_800142B8(void) {
 
     for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-            for (j = 0; j < currObj->header->numberOfModelIds; j++) {
+        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+            for (j = 0; j < currObj->segment.header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
                     curr_68->unk20 = curr_68->unk20-- & 0x03;
@@ -1028,22 +1029,22 @@ void func_800142B8(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800143A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014814.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80014B50.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80015348.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800155B8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800159C8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016500.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016748.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016BC4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016C68.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80016DE8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001709C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017248.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001790C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800143A8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800155B8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016BC4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001709C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017248.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001790C.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017978.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017978.s")
 
 u32 func_800179D0(void) {
     s16 i = 0;
@@ -1056,7 +1057,7 @@ u32 func_800179D0(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017A18.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017A18.s")
 
 void func_80017E74(s32 arg0) {
     D_8011AED8 = arg0;
@@ -1067,24 +1068,24 @@ s16 func_80017E88(void) {
     return D_8011AED8;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80017E98.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800185E4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 
 Object *func_80018C6C(void) {
     s32 i;
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->unk6 & 0x8000) && (current_obj->behaviorId == 62))
+        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62))
             return current_obj;
     }
     return NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80018CE0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001955C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80019808.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001A7D8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001955C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001A7D8.s")
 
 void func_8001A8D4(s32 arg0) {
     D_8011AD4E = 0x12C;
@@ -1092,7 +1093,7 @@ void func_8001A8D4(s32 arg0) {
     D_8011AD52 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001A8F4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001A8F4.s")
 
 s16 func_8001AE44() {
     return D_8011AD4E;
@@ -1102,7 +1103,7 @@ s32 func_8001AE54() {
     return D_8011ADC8;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001AE64.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
 
 s32 func_8001B288(void) {
     if (func_800599A8() != func_8006BD88()) {
@@ -1120,14 +1121,14 @@ s32 func_8001B2E0() {
     return D_8011AD34;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B2F0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B2F0.s")
 
 s32 func_8001B3AC(s32 arg0) {
     return arg0 == D_800DC718;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B3C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B4FC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B3C4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
 s32 func_8001B640() {
     return D_800DC718;
@@ -1137,7 +1138,7 @@ s32 func_8001B650(void) {
     return D_800DC738 == 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B668.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B668.s")
 
 s32 func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
@@ -1152,9 +1153,9 @@ void func_8001B790(void) {
     D_800DC730 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B7A8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B834.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001B974.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B7A8.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B834.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001B974.s")
 
 // Returns a pointer to some struct that is 0x3C bytes long.
 unknown8011AECC *func_8001BA00(s32 arg0) {
@@ -1183,8 +1184,8 @@ s32 *func_8001BA90(s32 *arg0) {
     return D_8011AEEC;
 }
 
-s32 *func_8001BAAC(s32 *arg0) {
-    *arg0 = gObjectCount;
+Object **func_8001BAAC(s32 *numberOfObjects) {
+    *numberOfObjects = gObjectCount;
     return D_8011AEE8;
 }
 
@@ -1198,13 +1199,13 @@ Object *get_object_struct(s32 indx) {
     return (*gObjectStructArrayPtr)[indx];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB18.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BB68.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BB18.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
 
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BC54.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
 
 u32 func_8001BD94(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011AEE0) {
@@ -1213,14 +1214,14 @@ u32 func_8001BD94(s32 arg0) {
     return D_8011AEDC[0][arg0];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BDD4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001BF20.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C418.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C48C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C524.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001C6C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001CC48.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001CD28.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C418.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C48C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C524.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001C6C4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
 
 void func_8001D1AC(void) {
     D_8011AF10[0] = 1;
@@ -1248,10 +1249,10 @@ u32 func_8001D214(s32 arg0) {
 void func_8001D23C(s32 arg0, s32 arg1, s32 arg2) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D258.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D2A0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D4B4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001D5E0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D258.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D2A0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001D5E0.s")
 
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 arg3) {
     s16 environmentMappingEnabled;
@@ -1272,7 +1273,7 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
-        if (object->header->unk71 != 0) {
+        if (object->segment.header->unk71 != 0) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
             calc_dynamic_lighting_for_object_1(object, model, arg2, object, arg3, 1.0f);
         } else {
@@ -1283,13 +1284,13 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
-        calc_env_mapping_for_object(model, object->z_rotation, object->x_rotation, object->y_rotation);
+        calc_env_mapping_for_object(model, object->segment.trans.z_rotation, object->segment.trans.x_rotation, object->segment.trans.y_rotation);
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_dynamic_lighting_for_object_1.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/calc_env_mapping_for_object.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E13C.s")
+GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")
+GLOBAL_ASM("asm/non_matchings/objects/calc_env_mapping_for_object.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E13C.s")
 
 /**
  * Returns a pointer to the asset in the misc. section. If index is out of range, then this
@@ -1329,12 +1330,12 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         current_obj = gObjPtrList[i];
 
         if (current_obj != NULL
-        && (current_obj->unk6 & 0x8000) == 0
+        && (current_obj->segment.trans.unk6 & 0x8000) == 0
         && current_obj->behaviorId == 39
         && current_obj->unk78 == arg0) {
-            *arg1 = current_obj->x_position;
-            *arg2 = current_obj->y_position;
-            *arg3 = current_obj->z_position;
+            *arg1 = current_obj->segment.trans.x_position;
+            *arg2 = current_obj->segment.trans.y_position;
+            *arg3 = current_obj->segment.trans.z_position;
         }
     }
 }
@@ -1363,13 +1364,13 @@ s32 func_8001E4B4(void) {
     return D_8011AE60;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E4C4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E6EC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E89C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001E93C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001EE74.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001EFA4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001F23C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E6EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E89C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001EE74.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001EFA4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001F23C.s")
 
 s8 func_8001F3B8(void) {
     return D_8011ADD4;
@@ -1382,13 +1383,13 @@ void func_8001F3C8(s32 arg0) {
     D_8011ADD4 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001F3EC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001F3EC.s")
 
 void func_8001F450(void) {
     D_8011AD53 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8001F460.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8001F460.s")
 
 s32 func_800210CC(s8 arg0) {
     if (arg0 >= D_8011AD3D) {
@@ -1398,28 +1399,26 @@ s32 func_800210CC(s8 arg0) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021104.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002125C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021400.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80021104.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8002125C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80021400.s")
 
 s8 func_800214C4(void) {
     return D_8011AD22[1 - D_8011AD20[1]];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800214E4.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80021600.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/catmull_rom_interpolation.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002263C.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002277C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800214E4.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
+GLOBAL_ASM("asm/non_matchings/objects/catmull_rom_interpolation.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8002263C.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_8002277C.s")
 
 f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
     f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
     return result;
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800228B0.s")
-#else
+#ifdef NON_EQUIVALENT
 f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
     f32 temp_f12;
     f32 temp_f2;
@@ -1429,6 +1428,8 @@ f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
     *arg3 = arg0[arg1 + 2] - arg0[arg1 + 1];
     return temp_f12 + temp_f2;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_800228B0.s")
 #endif
 
 // Unused?
@@ -1448,19 +1449,16 @@ void func_800228EC(s32 arg0) {
     func_8006F388(10);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80022948.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80022CFC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_80022E18.s")
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800230D0.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80022948.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80022CFC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_80022E18.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 
 s8 func_8002341C(void) {
     return D_8011AEF6;
 }
-#if 1
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_8002342C.s")
-#else
 
-extern f32 sqrtf(f32);
+#ifdef NON_EQUIVALENT
 
 //bad regalloc
 //finds furthest object (with some additional conditions)
@@ -1468,16 +1466,14 @@ Object *func_8002342C(f32 x, f32 z) {
     Object *retval = NULL;
     s32 i;
     Object *currObj = NULL;
-    f32 x;
-    f32 z;
     f32 dist;
     f32 max = 0.0f;
 
     for (i = 0; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
-            x = currObj->x_position - x;
-            z = currObj->z_position - z;
+        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
+            x = currObj->segment.trans.x_position - x;
+            z = currObj->segment.trans.z_position - z;
             dist = sqrtf(x * x + z * z);
 
             if (max < dist) {
@@ -1488,12 +1484,14 @@ Object *func_8002342C(f32 x, f32 z) {
     }
     return retval;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
 #endif
 
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
         return D_8011AD24[1] + 1;
-    } else if (get_current_level_race_type() == 8) {
+    } else if (get_current_level_race_type() == RACE_TYPE_BOSS) {
         return D_8011AD24[1] + 1;
     }
     return 0;
@@ -1507,10 +1505,10 @@ void func_800235D0(s32 arg0) {
     D_8011ADD5 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_00BC20/func_800235DC.s")
+GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
 
 void run_object_init_func(Object *obj, void *entry, s32 arg2) {
-    obj->behaviorId = obj->header->behaviorId;
+    obj->behaviorId = obj->segment.header->behaviorId;
     switch (obj->behaviorId - 1) { // Why the minus 1?
         case 0:
             obj_init_racer(obj, (LevelObjectEntry_Racer *)entry);
@@ -1599,7 +1597,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_stopwatchman(obj, (LevelObjectEntry_StopWatchMan *)entry);
             break;
         case 31:
-            obj_init_coin(obj, (LevelObjectEntry_Banana *)entry);
+            obj_init_banana(obj, (LevelObjectEntry_Banana *)entry);
             break;
         case 32:
             obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *)entry, arg2);
@@ -1666,7 +1664,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_worldkey(obj, (LevelObjectEntry_WorldKey *)entry);
             break;
         case 64:
-            obj_init_coincreator(obj, (LevelObjectEntry_BananaCreator *)entry);
+            obj_init_bananacreator(obj, (LevelObjectEntry_BananaCreator *)entry);
             break;
         case 65:
             obj_init_treasuresucker(obj, (LevelObjectEntry_TreasureSucker *)entry);
@@ -1976,7 +1974,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
             obj_loop_stopwatchman(obj, arg1);
             break;
         case 32:
-            obj_loop_coin(obj, arg1);
+            obj_loop_banana(obj, arg1);
             break;
         case 36:
             obj_loop_buoy_pirateship(obj, arg1);
@@ -2052,7 +2050,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
             obj_loop_worldkey(obj, arg1); //arg1=speed
             break;
         case 65:
-            obj_loop_coincreator(obj, arg1);
+            obj_loop_bananacreator(obj, arg1);
             break;
         case 66:
             obj_loop_treasuresucker(obj, arg1);

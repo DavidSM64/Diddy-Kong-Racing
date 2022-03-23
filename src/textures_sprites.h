@@ -6,6 +6,7 @@
 #include "f3ddkr.h"
 #include "structs.h"
 #include "macros.h"
+#include "memory.h"
 
 extern u32 gTexColourTag;
 extern s32 D_800DE7C4;
@@ -91,5 +92,8 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut,
 	s32 *numFramesOut, s32 *formatOut, s32 *sizeOut); // Non Matching
 void free_sprite(Sprite *sprite); // Non Matching
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
+void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
+MemoryPoolSlot *func_8007C12C(s32 arg0, s32 arg1); // Non Matching
+void func_8007AC70(void); // Non Matching
 
 #endif

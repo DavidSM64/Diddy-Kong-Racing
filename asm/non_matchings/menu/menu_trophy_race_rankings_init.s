@@ -22,8 +22,8 @@ glabel menu_trophy_race_rankings_init
 /* 099674 80098A74 3C04800E */  lui   $a0, %hi(D_800E1040) # $a0, 0x800e
 /* 099678 80098A78 0C027229 */  jal   allocate_menu_images
 /* 09967C 80098A7C 24841040 */   addiu $a0, %lo(D_800E1040) # addiu $a0, $a0, 0x1040
-/* 099680 80098A80 3C03800E */  lui   $v1, %hi(D_800E0FEC) # $v1, 0x800e
-/* 099684 80098A84 24630FEC */  addiu $v1, %lo(D_800E0FEC) # addiu $v1, $v1, 0xfec
+/* 099680 80098A80 3C03800E */  lui   $v1, %hi(gTrophyRaceRound) # $v1, 0x800e
+/* 099684 80098A84 24630FEC */  addiu $v1, %lo(gTrophyRaceRound) # addiu $v1, $v1, 0xfec
 /* 099688 80098A88 8C620000 */  lw    $v0, ($v1)
 /* 09968C 80098A8C 3C01800E */  lui   $at, %hi(D_800E0FF0) # $at, 0x800e
 /* 099690 80098A90 3C05800E */  lui   $a1, %hi(gTrophyRaceWorldId) # $a1, 0x800e

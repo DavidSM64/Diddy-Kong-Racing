@@ -10,7 +10,7 @@ glabel func_8008C698
 /* 08D2B8 8008C6B8 1020003C */  beqz  $at, .L8008C7AC
 /* 08D2BC 8008C6BC 3C068012 */   lui   $a2, %hi(D_801263BC) # $a2, 0x8012
 /* 08D2C0 8008C6C0 8CC663BC */  lw    $a2, %lo(D_801263BC)($a2)
-/* 08D2C4 8008C6C4 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
+/* 08D2C4 8008C6C4 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 08D2C8 8008C6C8 000670C0 */  sll   $t6, $a2, 3
 /* 08D2CC 8008C6CC 29C10100 */  slti  $at, $t6, 0x100
 /* 08D2D0 8008C6D0 14200003 */  bnez  $at, .L8008C6E0
@@ -18,9 +18,9 @@ glabel func_8008C698
 /* 08D2D8 8008C6D8 240F01FF */  li    $t7, 511
 /* 08D2DC 8008C6DC 01EE3023 */  subu  $a2, $t7, $t6
 .L8008C6E0:
-/* 08D2E0 8008C6E0 3C058012 */  lui   $a1, %hi(D_801263A8) # $a1, 0x8012
-/* 08D2E4 8008C6E4 24A563A8 */  addiu $a1, %lo(D_801263A8) # addiu $a1, $a1, 0x63a8
-/* 08D2E8 8008C6E8 248463A0 */  addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
+/* 08D2E0 8008C6E0 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
+/* 08D2E4 8008C6E4 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
+/* 08D2E8 8008C6E8 248463A0 */  addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 08D2EC 8008C6EC 0C019FCB */  jal   func_80067F2C
 /* 08D2F0 8008C6F0 AFA6001C */   sw    $a2, 0x1c($sp)
 /* 08D2F4 8008C6F4 3C048012 */  lui   $a0, %hi(D_801263E0) # $a0, 0x8012
@@ -71,9 +71,9 @@ glabel func_8008C698
 /* 08D394 8008C794 24040001 */  li    $a0, 1
 /* 08D398 8008C798 0C02087B */  jal   draw_menu_elements
 /* 08D39C 8008C79C 3C063F80 */   lui   $a2, 0x3f80
-/* 08D3A0 8008C7A0 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
+/* 08D3A0 8008C7A0 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 08D3A4 8008C7A4 0C0202F2 */  jal   func_80080BC8
-/* 08D3A8 8008C7A8 248463A0 */   addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
+/* 08D3A8 8008C7A8 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 .L8008C7AC:
 /* 08D3AC 8008C7AC 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 08D3B0 8008C7B0 27BD0028 */  addiu $sp, $sp, 0x28

@@ -18,12 +18,12 @@
 
 #define DIALOGUE_NUM_NULL 0xFF
 
-enum TextFonts {
+typedef enum TextFonts {
     FONT_COLOURFUL,
     FONT_SMALL,
     FONT_LARGE,
     FONT_UNK_FF = 255,
-};
+} TextFonts;
 
 enum DialogueFlags {
     DIALOGUE_BOX_UNUSED_01 = 0x0001,
@@ -33,6 +33,30 @@ enum DialogueFlags {
     DIALOGUE_BOX_UNK_02 =    0xBFFF,
     DIALOGUE_BOX_UNUSED_02 = 0xFFFE,
 };
+
+typedef enum HorizontalAlignmentFlags {
+    HORZ_ALIGN_LEFT   = 0,
+    HORZ_ALIGN_RIGHT  = 1,
+    HORZ_ALIGN_CENTER = 4,
+} HorizontalAlignmentFlags;
+
+typedef enum VerticalAlignmentFlags {
+    VERT_ALIGN_TOP    = 0,
+    VERT_ALIGN_BOTTOM = 2,
+    VERT_ALIGN_MIDDLE = 8,
+} VerticalAlignmentFlags;
+
+typedef enum AlignmentFlags {
+    ALIGN_TOP_LEFT      = VERT_ALIGN_TOP | HORZ_ALIGN_LEFT,
+    ALIGN_TOP_CENTER    = VERT_ALIGN_TOP | HORZ_ALIGN_CENTER,
+    ALIGN_TOP_RIGHT     = VERT_ALIGN_TOP | HORZ_ALIGN_RIGHT,
+    ALIGN_MIDDLE_LEFT   = VERT_ALIGN_MIDDLE | HORZ_ALIGN_LEFT,
+    ALIGN_MIDDLE_CENTER = VERT_ALIGN_MIDDLE | HORZ_ALIGN_CENTER,
+    ALIGN_MIDDLE_RIGHT  = VERT_ALIGN_MIDDLE | HORZ_ALIGN_RIGHT,
+    ALIGN_BOTTOM_LEFT   = VERT_ALIGN_BOTTOM | HORZ_ALIGN_LEFT,
+    ALIGN_BOTTOM_CENTER = VERT_ALIGN_BOTTOM | HORZ_ALIGN_CENTER,
+    ALIGN_BOTTOM_RIGHT  = VERT_ALIGN_BOTTOM | HORZ_ALIGN_RIGHT,
+} AlignmentFlags;
 
 /* Size: 0x20 bytes */
 typedef struct unk8012A7EC {
@@ -93,7 +117,7 @@ typedef struct FontData {
 typedef struct DialogueBox {
     u8 unk00; // Unused
     u8 textNum; // A number that is drawn with the text, like a balloon door telling you how many more you need.
-    char *text; // Pointer to the text array
+    unsigned char *text; // Pointer to the text array
     s16 x1; // Left position of the text
     s16 y1; // Top portion of the text
     s16 x2; // Right portion of the text
@@ -158,21 +182,20 @@ typedef struct DialogueBoxBackground {
 void load_fonts(void);
 void func_800C4164(s32 arg0);
 void set_text_font(s32 arg0);
-void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 index);
 void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha);
-void func_800C4404(Gfx** displayList, char *text, s32 alignmentFlags);
-void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, s32 alignmentFlags);
-void func_800C44C0(Gfx** displayList, s32 arg1, char *text, s32 alignmentFlags);
-void func_800C4510(Gfx** displayList, s32 arg1, s32 xpos, s32 ypos, char *text, s32 alignmentFlags);
-void set_current_dialogue_box_coords(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void set_dialogue_font(s32 arg0, s32 font);
-void set_current_dialogue_background_colour(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void set_current_text_colour(s32 arg0, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
-void set_current_text_background_colour(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800C5094(s32 arg0, s32 arg1, s32 arg2);
-void func_800C50D8(s32 arg0);
-void func_800C510C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_800C4404(Gfx** displayList, char *text, AlignmentFlags alignmentFlags);
+void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
+void func_800C44C0(Gfx** displayList, s32 dialogueBoxID, char *text, AlignmentFlags alignmentFlags);
+void func_800C4510(Gfx** displayList, s32 dialogueBoxID, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
+void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, s32 y2);
+void set_dialogue_font(s32 dialogueBoxID, s32 font);
+void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha);
+void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
+void set_current_text_background_colour(s32 dialogueBoxID, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void func_800C5094(s32 dialogueBoxID, s32 arg1, s32 arg2);
+void func_800C50D8(s32 dialogueBoxID);
+void func_800C510C(s32 dialogueBoxID, char *text, s32 arg2, s32 arg3);
 void move_dialogue_box_to_front(s32 arg0, DialogueBox *arg1);
 void assign_dialogue_box_id(s32 arg0);
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4);
@@ -182,16 +205,16 @@ UNUSED void func_800C564C(s32 dialogueBoxID);
 UNUSED void func_800C5678(s32 dialogueBoxID);
 UNUSED void func_800C56A4(s32 dialogueBoxID);
 void func_800C56D0(s32 dialogueBoxID);
-void render_dialogue_boxes(Gfx *dlist, Gfx *mat, VertexList *verts);
+void render_dialogue_boxes(Gfx **dlist, Gfx **mat, VertexList **verts);
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry);
-void render_dialogue_box(Gfx **dlist, Gfx *mat, VertexList *verts, s32 index);
+void render_dialogue_box(Gfx **dlist, Gfx **mat, VertexList **verts, s32 dialogueBoxID);
 void parse_string_with_number(unsigned char *input, char *output, s32 number);
 
 void s32_to_string(char** outString, s32 number); //Non Matching
 TextureHeader *func_800C4318(s32 font, u8 arg1); //Non Matching
-void func_800C4170(s32 arg0); //Non Matching
+void func_800C4170(s32 fontID); //Non Matching
 void func_800C422C(s32 arg0); //Non Matching
-void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, u8 *text, s32 alignmentFlags, f32 arg4); //Non Matching
+void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4); //Non Matching
 s32 func_800C4DA0(u8 *text, s32 x, s32 font); //Non Matching
 void *render_dialogue_text(s32 arg0, s32 posX, s32 posY, char *text, s32 arg4, s32 arg5); //Non Matching
 

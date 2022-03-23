@@ -24,7 +24,7 @@ glabel func_8001F23C
 /* 01FE94 8001F294 A3AA003D */  sb    $t2, 0x3d($sp)
 /* 01FE98 8001F298 84AB000C */  lh    $t3, 0xc($a1)
 /* 01FE9C 8001F29C 24050001 */  li    $a1, 1
-/* 01FEA0 8001F2A0 0C003A95 */  jal   func_8000EA54
+/* 01FEA0 8001F2A0 0C003A95 */  jal   spawn_object
 /* 01FEA4 8001F2A4 A3AB003C */   sb    $t3, 0x3c($sp)
 /* 01FEA8 8001F2A8 AE820064 */  sw    $v0, 0x64($s4)
 /* 01FEAC 8001F2AC 1040000D */  beqz  $v0, .L8001F2E4
@@ -67,7 +67,7 @@ glabel func_8001F23C
 /* 01FF38 8001F338 00008025 */   move  $s0, $zero
 /* 01FF3C 8001F33C 02A02025 */  move  $a0, $s5
 .L8001F340:
-/* 01FF40 8001F340 0C003A95 */  jal   func_8000EA54
+/* 01FF40 8001F340 0C003A95 */  jal   spawn_object
 /* 01FF44 8001F344 24050001 */   li    $a1, 1
 /* 01FF48 8001F348 1040000B */  beqz  $v0, .L8001F378
 /* 01FF4C 8001F34C 00408825 */   move  $s1, $v0

@@ -6,6 +6,7 @@
 #include "macros.h"
 #include "asset_sections.h"
 #include "memory.h"
+#include "textures_sprites.h"
 
 /************ .rodata ************/
 
@@ -117,20 +118,20 @@ s32 D_800E2E50 = 0;
 s32 D_800E2E54 = 0;
 s32 D_800E2E58 = 0;
 s32 D_800E2E5C = 0;
-s32 *D_800E2E60 = NULL;
+Sprite **D_800E2E60 = NULL;
 s32 D_800E2E64 = 0;
 
-s16 D_800E2E68[6] = {
-     0,  8,
-     7, -4,
-    -7, -4,
+XYStruct D_800E2E68[3] = {
+    { 0,  8 },
+    { 7, -4 },
+    { -7, -4 },
 };
 
-s16 D_800E2E74[8] = {
-    -6,  6, 
-     6,  6, 
-     6, -6, 
-    -6, -6,
+XYStruct D_800E2E74[4] = {
+    { -6,  6 },
+    { 6,  6 },
+    { 6, -6 },
+    { -6, -6 },
 };
 
 s32 D_800E2E84[16] = {
@@ -200,18 +201,11 @@ void func_800AE2A0(void) {
 }
 
 void func_800AE2D8(void) {
-    s32 phi_s1;
-    s32 phi_s0;
+    s32 i;
 
     if (D_800E2E60 != NULL) {
-        phi_s1 = 0;
-        phi_s0 = 0;
-        if (D_800E2E64 > 0) {
-            do {
-                free_sprite(*(D_800E2E60 + phi_s1));
-                phi_s0 += 1;
-                phi_s1 += 1;
-            } while (phi_s0 < D_800E2E64);
+        for (i = 0; i < D_800E2E64; i++) {
+            free_sprite(D_800E2E60[i]);
         }
         free_from_memory_pool(D_800E2E60);
         D_800E2E60 = 0;
@@ -305,16 +299,16 @@ void func_800AEE14(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     s16 i;
     Vertex *temp;
     Triangle *tri;
-    s16 *temp2;
+    XYStruct *temp2;
 
     arg0->unk4 = 3;
     arg0->unk8 = *arg1;
     temp = *arg1;
-    temp2 = &D_800E2E68;
+    temp2 = &D_800E2E68[0];
     for (i = 0; i < 3; i++) {
-        temp->x = temp2[0];
-        temp->y = temp2[1];
-        temp2 += 2;
+        temp->x = temp2->x;
+        temp->y = temp2->y;
+        temp2 += 1;
         temp->z = 0;
         temp->r = 255;
         temp->g = 255;
@@ -338,16 +332,16 @@ void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     s16 i;
     Vertex *temp;
     Triangle *tri;
-    s16 *temp2;
+    XYStruct *temp2;
 
     arg0->unk4 = 4;
     arg0->unk8 = *arg1;
     temp = *arg1;
-    temp2 = &D_800E2E74;
+    temp2 = &D_800E2E74[0];
     for (i = 0; i < 4; i++) {
-        temp->x = temp2[0];
-        temp->y = temp2[1];
-        temp2 += 2;
+        temp->x = temp2->x;
+        temp->y = temp2->y;
+        temp2 += 1;
         temp->z = 0;
         temp->r = 255;
         temp->g = 255;
@@ -551,7 +545,7 @@ void func_800AF6E4(Object *obj, s32 arg1) {
     obj6C = &obj->unk6C[arg1];
 
     obj6C->unk4 &= 0x7FFF;
-    obj->unk1A--;
+    obj->segment.unk1A--;
 }
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
@@ -584,29 +578,27 @@ void func_800B2260(unk800B2260 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B22FC.s")
 
-#ifdef NON_EQUIVALENT
-
-// Has regalloc issues.
 void func_800B263C(unk800B2260_C *arg0) {
+    unk800B2260 *new_var;
+    unk800B2260_C *new_var2;
     unk800B2260 *temp_v0;
     s32 i;
 
     temp_v0 = (unk800B2260 *)arg0->unk70;
     if (temp_v0 != NULL) {
+        new_var = temp_v0;
         if (temp_v0->unk6 != 0) {
             if (arg0 == temp_v0->unkC[arg0->unk74]) {
                 temp_v0->unk6--;
                 for (i = arg0->unk74; i < temp_v0->unk6; i++) {
-                    temp_v0->unkC[i] = temp_v0->unkC[i + 1];
-                    temp_v0->unkC[i]->unk74 = i;
+                    new_var->unkC[i] = new_var->unkC[i + 1];
+                    new_var2 = new_var->unkC[i];
+                    new_var2->unk74 = i;
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/particles/func_800B263C.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B2FBC.s")

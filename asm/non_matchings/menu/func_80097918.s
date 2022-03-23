@@ -57,8 +57,8 @@ glabel func_80097918
 /* 0985F4 800979F4 8E2A0000 */  lw    $t2, ($s1)
 /* 0985F8 800979F8 26100F90 */  addiu $s0, %lo(D_800E0F90) # addiu $s0, $s0, 0xf90
 /* 0985FC 800979FC 8E060000 */  lw    $a2, ($s0)
-/* 098600 80097A00 3C138012 */  lui   $s3, %hi(D_801263A0) # $s3, 0x8012
-/* 098604 80097A04 267363A0 */  addiu $s3, %lo(D_801263A0) # addiu $s3, $s3, 0x63a0
+/* 098600 80097A00 3C138012 */  lui   $s3, %hi(sMenuCurrDisplayList) # $s3, 0x8012
+/* 098604 80097A04 267363A0 */  addiu $s3, %lo(sMenuCurrDisplayList) # addiu $s3, $s3, 0x63a0
 /* 098608 80097A08 240B000C */  li    $t3, 12
 /* 09860C 80097A0C 8D470020 */  lw    $a3, 0x20($t2)
 /* 098610 80097A10 AFAB0010 */  sw    $t3, 0x10($sp)

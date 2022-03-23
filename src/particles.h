@@ -109,6 +109,10 @@ typedef struct unk800B2260 {
     unk800B2260_C **unkC;
 } unk800B2260;
 
+typedef struct XYStruct {
+    s16 x, y;
+} XYStruct;
+
 void func_800AE270(void);
 void func_800AE2A0(void);
 void func_800AE2D8(void);
@@ -125,10 +129,12 @@ void func_800AF1E0(unk800AF29C *arg0, s32 arg1, s32 arg2);
 void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
 void func_800AF6E4(Object *obj, s32 arg1);
 void func_800B2260(unk800B2260 *arg0);
+void func_800B263C(unk800B2260_C *arg0);
 
 void func_800AF134(unk800B2260 *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5); // Non Matching
 void func_800AF404(s32 arg0); // Non Matching
-void func_800B263C(unk800B2260_C *arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
+void init_particle_assets(void); // Non Matching
+void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 
 #endif

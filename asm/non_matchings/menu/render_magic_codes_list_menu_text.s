@@ -28,8 +28,8 @@ glabel render_magic_codes_list_menu_text
 /* 08B1D4 8008A5D4 3C17800E */  lui   $s7, %hi(gMenuText) # $s7, 0x800e
 /* 08B1D8 8008A5D8 26F7F4A0 */  addiu $s7, %lo(gMenuText) # addiu $s7, $s7, -0xb60
 /* 08B1DC 8008A5DC 8EEF0000 */  lw    $t7, ($s7)
-/* 08B1E0 8008A5E0 3C158012 */  lui   $s5, %hi(D_801263A0) # $s5, 0x8012
-/* 08B1E4 8008A5E4 26B563A0 */  addiu $s5, %lo(D_801263A0) # addiu $s5, $s5, 0x63a0
+/* 08B1E0 8008A5E0 3C158012 */  lui   $s5, %hi(sMenuCurrDisplayList) # $s5, 0x8012
+/* 08B1E4 8008A5E4 26B563A0 */  addiu $s5, %lo(sMenuCurrDisplayList) # addiu $s5, $s5, 0x63a0
 /* 08B1E8 8008A5E8 2418000C */  li    $t8, 12
 /* 08B1EC 8008A5EC 8DE70050 */  lw    $a3, 0x50($t7)
 /* 08B1F0 8008A5F0 AFB80010 */  sw    $t8, 0x10($sp)

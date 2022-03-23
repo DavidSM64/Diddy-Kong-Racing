@@ -59,7 +59,7 @@ u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput) {
     return decompressedOutput;
 }
 
-#if 0
+#ifdef NON_EQUIVALENT
 
 // Work in progress.
 // You can find the original huft_build function here: 

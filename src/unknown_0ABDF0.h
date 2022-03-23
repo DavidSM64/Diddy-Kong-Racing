@@ -83,5 +83,7 @@ void func_800ADCBC(unk800E2C2C*, s32);
 
 f32 func_800707C4(s16);
 f32 func_800707F8(s16);
+void func_800AB35C(void);
+void func_800AB1F0(void);
 
 #endif

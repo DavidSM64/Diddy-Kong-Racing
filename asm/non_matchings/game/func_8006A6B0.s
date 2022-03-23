@@ -233,8 +233,8 @@ glabel func_8006A6B0
 /* 06B614 8006AA14 AFA70050 */  sw    $a3, 0x50($sp)
 /* 06B618 8006AA18 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 06B61C 8006AA1C 34A500FF */   ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
-/* 06B620 8006AA20 3C038012 */  lui   $v1, %hi(D_8012116C) # $v1, 0x8012
-/* 06B624 8006AA24 2463116C */  addiu $v1, %lo(D_8012116C) # addiu $v1, $v1, 0x116c
+/* 06B620 8006AA20 3C038012 */  lui   $v1, %hi(gLevelNames) # $v1, 0x8012
+/* 06B624 8006AA24 2463116C */  addiu $v1, %lo(gLevelNames) # addiu $v1, $v1, 0x116c
 /* 06B628 8006AA28 8FA40050 */  lw    $a0, 0x50($sp)
 /* 06B62C 8006AA2C 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 06B630 8006AA30 AC620000 */  sw    $v0, ($v1)
@@ -248,8 +248,8 @@ glabel func_8006A6B0
 /* 06B650 8006AA50 00402825 */  move  $a1, $v0
 /* 06B654 8006AA54 0C01DB9A */  jal   load_asset_to_address
 /* 06B658 8006AA58 00003025 */   move  $a2, $zero
-/* 06B65C 8006AA5C 3C038012 */  lui   $v1, %hi(D_8012116C) # $v1, 0x8012
-/* 06B660 8006AA60 2463116C */  addiu $v1, %lo(D_8012116C) # addiu $v1, $v1, 0x116c
+/* 06B65C 8006AA5C 3C038012 */  lui   $v1, %hi(gLevelNames) # $v1, 0x8012
+/* 06B660 8006AA60 2463116C */  addiu $v1, %lo(gLevelNames) # addiu $v1, $v1, 0x116c
 /* 06B664 8006AA64 1A200035 */  blez  $s1, .L8006AB3C
 /* 06B668 8006AA68 00003825 */   move  $a3, $zero
 /* 06B66C 8006AA6C 32250003 */  andi  $a1, $s1, 3

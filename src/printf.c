@@ -100,7 +100,7 @@ void func_800B5E88(void) {
     D_801285D8 = &D_80127CD8;
 }
 
-#if 0
+#ifdef NON_EQUIVALENT
 s32 render_printf(const char *format, ...) {
     s32 written;
     va_list args;
@@ -119,6 +119,7 @@ s32 render_printf(const char *format, ...) {
 #else
 GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 #endif
+
 GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
 
 /**

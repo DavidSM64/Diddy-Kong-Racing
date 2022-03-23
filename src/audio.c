@@ -500,9 +500,10 @@ u8 music_is_playing(void) {
     return (alCSPGetState(gMusicPlayer) == AL_PLAYING);
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/audio/func_800015F8.s")
-#else
+#ifdef NON_EQUIVALENT
+f32 D_800E49E0 = 46875.0f;
+f32 D_800E49E4 = 46875.0f;
+f32 D_800E49E8 = 120000.0f;
 f32 func_800015F8(void) {
     u32 current_cnt = osGetCount();
     u32 delta;
@@ -534,6 +535,8 @@ f32 func_800015F8(void) {
     audioPrevCount = current_cnt;
     return D_80115D34 / tmp;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/audio/func_800015F8.s")
 #endif
 
 void func_80001728(u8 arg0, u8 *arg1, u8 *arg2, u8 *arg3) {
@@ -696,12 +699,12 @@ void func_80001F14(u16 sndIndx, u32 *arg1) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/audio/func_80001FB8.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_80001FB8(u16 arg0) {
-    arg0 * 10 + sSoundEffectsPool[0].unk00;
+    arg0 * 10 + sSoundEffectsPool[0].pad0;
 }
+#else
+GLOBAL_ASM("asm/non_matchings/audio/func_80001FB8.s")
 #endif
 
 u16 ALBankFile_80115D14_GetSoundCount(void) {
@@ -776,9 +779,7 @@ void func_800022BC(u8 arg0, ALSeqPlayer *arg1) {
     }
 }
 
-#if 1
-GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
-#else
+#ifdef NON_EQUIVALENT
 void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq) {
     if (alCSPGetState(seqp) == AL_STOPPED && *arg2) {
         /*load_asset_to_address(ASSET_AUDIO, ptr,
@@ -793,6 +794,8 @@ void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq) {
         }
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
 #endif
 
 void func_80002570(ALSeqPlayer *seqp) {

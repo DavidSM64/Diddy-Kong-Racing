@@ -90,11 +90,11 @@ glabel menu_credits_loop
 /* 09C064 8009B464 00029443 */  sra   $s2, $v0, 0x11
 /* 09C068 8009B468 32597FFF */  andi  $t9, $s2, 0x7fff
 /* 09C06C 8009B46C 3C10800E */  lui   $s0, %hi(D_800E0AF0) # $s0, 0x800e
-/* 09C070 8009B470 3C178012 */  lui   $s7, %hi(D_801263A0) # $s7, 0x8012
+/* 09C070 8009B470 3C178012 */  lui   $s7, %hi(sMenuCurrDisplayList) # $s7, 0x8012
 /* 09C074 8009B474 3C16800E */  lui   $s6, %hi(D_800E0B18) # $s6, 0x800e
 /* 09C078 8009B478 03209025 */  move  $s2, $t9
 /* 09C07C 8009B47C 26D60B18 */  addiu $s6, %lo(D_800E0B18) # addiu $s6, $s6, 0xb18
-/* 09C080 8009B480 26F763A0 */  addiu $s7, %lo(D_801263A0) # addiu $s7, $s7, 0x63a0
+/* 09C080 8009B480 26F763A0 */  addiu $s7, %lo(sMenuCurrDisplayList) # addiu $s7, $s7, 0x63a0
 /* 09C084 8009B484 26100AF0 */  addiu $s0, %lo(D_800E0AF0) # addiu $s0, $s0, 0xaf0
 .L8009B488:
 /* 09C088 8009B488 00158C00 */  sll   $s1, $s5, 0x10
@@ -294,7 +294,7 @@ glabel menu_credits_loop
 /* 09C350 8009B750 014C5821 */  addu  $t3, $t2, $t4
 /* 09C354 8009B754 81640000 */  lb    $a0, ($t3)
 /* 09C358 8009B758 A3A6005B */  sb    $a2, 0x5b($sp)
-/* 09C35C 8009B75C 0C01AF77 */  jal   func_8006BDDC
+/* 09C35C 8009B75C 0C01AF77 */  jal   get_level_name
 /* 09C360 8009B760 24150002 */   li    $s5, 2
 /* 09C364 8009B764 862D0000 */  lh    $t5, ($s1)
 /* 09C368 8009B768 2643000E */  addiu $v1, $s2, 0xe

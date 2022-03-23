@@ -19,11 +19,11 @@ glabel func_80094D28
 /* 095950 80094D50 24010001 */  li    $at, 1
 /* 095954 80094D54 15C10006 */  bne   $t6, $at, .L80094D70
 /* 095958 80094D58 00408025 */   move  $s0, $v0
-/* 09595C 80094D5C 3C048012 */  lui   $a0, %hi(D_801263A0) # $a0, 0x8012
-/* 095960 80094D60 3C058012 */  lui   $a1, %hi(D_801263A8) # $a1, 0x8012
-/* 095964 80094D64 24A563A8 */  addiu $a1, %lo(D_801263A8) # addiu $a1, $a1, 0x63a8
+/* 09595C 80094D5C 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
+/* 095960 80094D60 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
+/* 095964 80094D64 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
 /* 095968 80094D68 0C019FCB */  jal   func_80067F2C
-/* 09596C 80094D6C 248463A0 */   addiu $a0, %lo(D_801263A0) # addiu $a0, $a0, 0x63a0
+/* 09596C 80094D6C 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 .L80094D70:
 /* 095970 80094D70 00002025 */  move  $a0, $zero
 /* 095974 80094D74 0C019A25 */  jal   func_80066894

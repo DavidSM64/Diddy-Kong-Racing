@@ -240,8 +240,8 @@ glabel menu_trophy_race_rankings_loop
 /* 099F48 80099348 24040007 */   li    $a0, 7
 /* 099F4C 8009934C 0C031525 */  jal   assign_dialogue_box_id
 /* 099F50 80099350 24040007 */   li    $a0, 7
-/* 099F54 80099354 3C18800E */  lui   $t8, %hi(D_800E0FEC) # $t8, 0x800e
-/* 099F58 80099358 8F180FEC */  lw    $t8, %lo(D_800E0FEC)($t8)
+/* 099F54 80099354 3C18800E */  lui   $t8, %hi(gTrophyRaceRound) # $t8, 0x800e
+/* 099F58 80099358 8F180FEC */  lw    $t8, %lo(gTrophyRaceRound)($t8)
 /* 099F5C 8009935C 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 099F60 80099360 2B010004 */  slti  $at, $t8, 4
 /* 099F64 80099364 10200005 */  beqz  $at, .L8009937C
@@ -344,7 +344,7 @@ glabel menu_trophy_race_rankings_loop
 /* 09A0C8 800994C8 AFAF003C */  sw    $t7, 0x3c($sp)
 /* 09A0CC 800994CC 91640048 */  lbu   $a0, 0x48($t3)
 /* 09A0D0 800994D0 AFAC0034 */  sw    $t4, 0x34($sp)
-/* 09A0D4 800994D4 0C01AC75 */  jal   func_8006B1D4
+/* 09A0D4 800994D4 0C01AC75 */  jal   get_hub_area_id
 /* 09A0D8 800994D8 AFAB002C */   sw    $t3, 0x2c($sp)
 /* 09A0DC 800994DC 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 09A0E0 800994E0 3C03800E */  lui   $v1, %hi(D_800DF450) # $v1, 0x800e

@@ -22,7 +22,7 @@
 #include "thread30.h"
 #include "unknown_0ABDF0.h"
 #include "audio.h"
-#include "unknown_00BC20.h"
+#include "objects.h"
 #include "camera.h"
 #include "save_data.h"
 #include "unknown_078050.h"
@@ -33,6 +33,14 @@
 #include "printf.h"
 #include "fade_transition.h"
 #include "unknown_077C50.h"
+#include "unknown_008C40.h"
+#include "unknown_0255E0.h"
+#include "game_text.h"
+#include "game_ui.h"
+#include "main.h"
+#include "object_models.h"
+#include "racer.h"
+#include "particles.h"
 
 /************ .rodata ************/
 
@@ -70,9 +78,9 @@ s8 D_800DD330 = 0;
 // Unused
 char *D_800DD334[6] = {
     NULL, NULL, NULL, // These could be a file boundary.
-    D_800E7110,
-    D_800E7118,
-    D_800E7128
+    (char *)D_800E7110,
+    (char *)D_800E7118,
+    (char *)D_800E7128
 };
 
 // Unused
@@ -106,7 +114,7 @@ FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 // CAR / HOV / PLN - So this is vehicle type?
 char *D_800DD410[3] = {
-    D_800E713C, D_800E7140, D_800E7144
+    (char *)D_800E713C, (char *)D_800E7140, (char *)D_800E7144
 };
 FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
@@ -116,10 +124,10 @@ extern s32 gShowControllerPakMenu;
 
 /************ .bss ************/
 
-s32 *gTempAssetTable;
+u32 *gTempAssetTable;
 s32 D_80121164;
 LevelHeader *gCurrentLevelHeader;
-u8 **D_8012116C;
+u8 **gLevelNames;
 s32 gNumberOfLevelHeaders;
 s32 gNumberOfWorlds;
 
@@ -128,19 +136,19 @@ unk8012117C *D_8012117C;
 
 s32 D_80121180[16];
 
-s32 D_801211C0[2];
+u32 *D_801211C0[2];
 s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 s32 D_801211FC;
 Mtx *gHudMatrices[2];
-Gfx *gCurrHudMat;
+Mtx *gCurrHudMat;
 VertexList *gHudVertices[2];
 VertexList *gCurrHudVerts;
 TriangleList *gHudTriangles[2];
 TriangleList *gCurrHudTris;
 s32 D_80121230[8];
-s8 D_80121250[16];
+s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
 s8 D_80121268[8192]; // 0x2000 / 8192 bytes Padding?
 s32 gSPTaskNum;
@@ -168,10 +176,8 @@ s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 OSScClient *gNMISched[3];
-OSMesg *gNMIMesgBuf;
-OSMesgQueue *gNMIMesgQueue;
-s32 D_8012354C;
-s32 D_80123550[4];
+OSMesg gNMIMesgBuf;
+OSMesgQueue gNMIMesgQueue;
 s32 D_80123560[8];
 
 /******************************/
@@ -230,11 +236,11 @@ void func_8006A6B0(void) {
     count--;
     temp = gTempAssetTable[count] - gTempAssetTable[0];
     // Minor issue here.
-    D_8012116C = allocate_from_main_pool_safe(count * sizeof(s32), COLOR_TAG_YELLOW);
+    gLevelNames = allocate_from_main_pool_safe(count * sizeof(s32), COLOR_TAG_YELLOW);
     D_800DD310 = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
     load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
     for (i = 0; i < count; i++) {
-        D_8012116C[i] = &D_800DD310[gTempAssetTable[i]];
+        gLevelNames[i] = &D_800DD310[gTempAssetTable[i]];
     }
     free_from_memory_pool(gTempAssetTable);
 
@@ -320,15 +326,15 @@ s8 func_8006B190(s32 arg0) {
     return 0;
 }
 
-s32 func_8006B1D4(s32 arg0) {
-    s8 *temp;
+s32 get_hub_area_id(s32 worldId) {
+    s8 *hubAreaIds;
 
-    if (arg0 < 0 || arg0 >= gNumberOfWorlds) {
-        arg0 = 0;
+    if (worldId < 0 || worldId >= gNumberOfWorlds) {
+        worldId = 0;
     }
-    temp = get_misc_asset(0x1B);
+    hubAreaIds = (s8 *)get_misc_asset(27); //hub_area_ids
 
-    return temp[arg0];
+    return hubAreaIds[worldId];
 }
 
 void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount) {
@@ -619,39 +625,42 @@ u8 func_8006BDC0(void) {
     return gNumberOfLevelHeaders - 1;
 }
 
-u8 *func_8006BDDC(s32 arg0) {
-    u8 *text;
+/**
+ * Returns the name of the level from the passed ID
+ */
+u8 *get_level_name(s32 levelId) {
+    u8 *levelName;
     u8 numberOfNullPointers = 0;
 
-    if (arg0 < 0 || arg0 >= gNumberOfLevelHeaders) {
+    if (levelId < 0 || levelId >= gNumberOfLevelHeaders) {
         return NULL;
     }
 
-    text = D_8012116C[arg0];
+    levelName = gLevelNames[levelId];
     switch (get_language()) {
         case GERMAN:
             while (numberOfNullPointers < 1) {
-                if (*(text++) == 0) {
+                if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
         case FRENCH:
             while (numberOfNullPointers < 2) {
-                if (*(text++) == 0) {
+                if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
         case JAPANESE:
             while (numberOfNullPointers < 3) {
-                if (*(text++) == 0) {
+                if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
     }
-    return text;
+    return levelName;
 }
 
 void func_8006BEFC(void) {
@@ -669,6 +678,7 @@ void func_8006BEFC(void) {
     if (gCurrentLevelHeader->weather_enable > 0) {
         func_800AB35C();
     }
+    //! @bug this will never be true because unk49 is signed.
     if (gCurrentLevelHeader->unk49 == 0xFF) {
         free_texture(gCurrentLevelHeader->unkA4);
     }
@@ -712,7 +722,7 @@ void func_8006BFC8(s8 *arg0) {
     }
     gTempAssetTable = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
     phi_v1 = 0;
-    while (-1 != (s32)gTempAssetTable[phi_v1]) {
+    while (-1U != gTempAssetTable[phi_v1]) {
         phi_v1++;
     }
     phi_v1--;
@@ -730,7 +740,7 @@ void func_8006C164(void) {
     free_from_memory_pool(D_801211C0[0]);
 }
 
-s32 func_8006C18C(void) {
+u32 *func_8006C18C(void) {
     return D_801211C0[0];
 }
 
@@ -785,7 +795,7 @@ s32 func_8006C300(void) {
  * Main looping function for the main thread.
  */
 
-void thread3_main(s32 arg0) {
+void thread3_main(UNUSED void *unused) {
     init_game();
     D_800DD37C = func_8006A1C4(D_800DD37C, 0);
     sBootDelayTimer = 0;
@@ -802,7 +812,7 @@ void thread3_main(s32 arg0) {
             while (1); // Infinite loop
         }
         main_game_loop();
-        func_80065E30();
+        thread3_verify_stack();
     }
 }
 
@@ -810,7 +820,6 @@ void thread3_main(s32 arg0) {
  * Setup all of the necessary pieces required for the game to function.
  * This includes the memory pool. controllers, video, audio, core assets and more.
  */
-
 void init_game(void) {
     s32 mode;
 
@@ -840,10 +849,10 @@ void init_game(void) {
     func_80076BA0();
     func_80078100(&gMainSched);
     audio_init(&gMainSched);
-    func_80008040();
+    func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
-    func_8007AC70();
-    func_8005F850();
+    func_8007AC70(); // Should be very similar to func_8005F850
+    func_8005F850(); // Matched
     func_8000BF8C();
     func_800B5E88();
     func_800598D0();
@@ -856,7 +865,7 @@ void init_game(void) {
     func_80081218();
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
-    osScAddClient(&gMainSched, &gNMISched, &gNMIMesgQueue, 3);
+    osScAddClient(&gMainSched, gNMISched, &gNMIMesgQueue, 3);
     D_80123560[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
@@ -1075,7 +1084,7 @@ void func_8006CCF0(s32 updateRate) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    func_80024D54(gCurrDisplayList, gCurrHudMat, gCurrHudVerts, gCurrHudTris, updateRate);
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
@@ -1669,21 +1678,21 @@ void calc_and_alloc_heap_for_settings(void) {
     sizes[14] = sizes[13] + dataSize; // total size
 
     gSettingsPtr = allocate_from_main_pool_safe(sizes[14], COLOR_TAG_WHITE);
-    gSettingsPtr->courseFlagsPtr = (u8 *)gSettingsPtr + sizes[0];
-    gSettingsPtr->balloonsPtr = (u8 *)gSettingsPtr + sizes[1];
+    gSettingsPtr->courseFlagsPtr = (s32 *)((u8 *)gSettingsPtr + sizes[0]);
+    gSettingsPtr->balloonsPtr = (s16 *)((u8 *)gSettingsPtr + sizes[1]);
     gSettingsPtr->tajFlags = 0;
-    gSettingsPtr->flapInitialsPtr[0] = (u8 *)gSettingsPtr + sizes[2];
-    gSettingsPtr->flapInitialsPtr[1] = (u8 *)gSettingsPtr + sizes[3];
-    gSettingsPtr->flapInitialsPtr[2] = (u8 *)gSettingsPtr + sizes[4];
-    gSettingsPtr->flapTimesPtr[0] = (u8 *)gSettingsPtr + sizes[5];
-    gSettingsPtr->flapTimesPtr[1] = (u8 *)gSettingsPtr + sizes[6];
-    gSettingsPtr->flapTimesPtr[2] = (u8 *)gSettingsPtr + sizes[7];
-    gSettingsPtr->courseInitialsPtr[0] = (u8 *)gSettingsPtr + sizes[8];
-    gSettingsPtr->courseInitialsPtr[1] = (u8 *)gSettingsPtr + sizes[9];
-    gSettingsPtr->courseInitialsPtr[2] = (u8 *)gSettingsPtr + sizes[10];
-    gSettingsPtr->courseTimesPtr[0] = (u8 *)gSettingsPtr + sizes[11];
-    gSettingsPtr->courseTimesPtr[1] = (u8 *)gSettingsPtr + sizes[12];
-    gSettingsPtr->courseTimesPtr[2] = (u8 *)gSettingsPtr + sizes[13];
+    gSettingsPtr->flapInitialsPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[2]);
+    gSettingsPtr->flapInitialsPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[3]);
+    gSettingsPtr->flapInitialsPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[4]);
+    gSettingsPtr->flapTimesPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[5]);
+    gSettingsPtr->flapTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[6]);
+    gSettingsPtr->flapTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[7]);
+    gSettingsPtr->courseInitialsPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[8]);
+    gSettingsPtr->courseInitialsPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[9]);
+    gSettingsPtr->courseInitialsPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[10]);
+    gSettingsPtr->courseTimesPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[11]);
+    gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
+    gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
     gSettingsPtr->unk4C = &D_80121250;
     D_800DD37C = 263;
 }
@@ -1866,7 +1875,7 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
 
 s32 func_8006EFB8(void) {
     //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
-    if (IO_READ(SP_DMEM_START) != -1) {
+    if (IO_READ(SP_DMEM_START) != -1U) {
         return FALSE;
     }
     return TRUE;
@@ -1981,7 +1990,7 @@ void func_8006F398(void) {
     first_racer_data = (u8 *)(gSettingsPtr->racers);
     second_racer_data = (u8 *)(gSettingsPtr->racers + 1);
 
-    for (i = 0; i < sizeof(Racer); i++) {
+    for (i = 0; i < (s32)sizeof(Racer); i++) {
         temp = first_racer_data[i];
         first_racer_data[i] = second_racer_data[i];
         second_racer_data[i] = temp;

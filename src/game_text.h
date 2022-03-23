@@ -34,5 +34,6 @@ s32 func_800C3400(void);
 void func_800C3440(s32 arg0);
 
 void func_800C31EC(s32); //Non Matching
+s32 func_800C3564(void); //Non Matching
 
 #endif

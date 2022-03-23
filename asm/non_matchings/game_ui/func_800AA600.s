@@ -93,7 +93,7 @@ glabel func_800AA600
 /* 0AB33C 800AA73C A3B8009D */  sb    $t8, 0x9d($sp)
 /* 0AB340 800AA740 A7A000A0 */  sh    $zero, 0xa0($sp)
 /* 0AB344 800AA744 A7A000A2 */  sh    $zero, 0xa2($sp)
-/* 0AB348 800AA748 0C003A95 */  jal   func_8000EA54
+/* 0AB348 800AA748 0C003A95 */  jal   spawn_object
 /* 0AB34C 800AA74C 00002825 */   move  $a1, $zero
 /* 0AB350 800AA750 3C098012 */  lui   $t1, %hi(D_80126CF4) # $t1, 0x8012
 /* 0AB354 800AA754 860B0006 */  lh    $t3, 6($s0)

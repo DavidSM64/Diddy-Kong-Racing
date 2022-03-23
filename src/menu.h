@@ -6,6 +6,7 @@
 #include "PR/gbi.h"
 #include "fade_transition.h"
 #include "font.h"
+#include "save_data.h"
 
 #define TT_MENU_ROOT              0
 #define TT_MENU_CONT_PAK_ERROR_1  1
@@ -191,11 +192,11 @@ typedef struct unk800E153C {
 
 /* Size: 0x10 Bytes */
 typedef struct unk800860A8 {
-    s8 unk0;
+    s8 unk0; //Probably SIDeviceStatus
     u8 pad1[0x5];
-    s8 unk6;
+    s8 controllerIndex;
     u8 pad7[0x5];
-    s32 unkC; //Used for bytes free in controller pak at one point.
+    u32 cPakBytesFree;
 } unk800860A8;
 
 /* Size: 0x10 bytes */
@@ -208,7 +209,7 @@ typedef struct unk800861C8 {
     s8  unk6;
     s8  pad7;
     u32 pad8;
-    u32 unkC;
+    u32 unkC; // Game Data File Size
 } unk800861C8;
 
 /* Unknown size */
@@ -226,6 +227,12 @@ typedef struct unk8006BDB0 {
     u8 pad[0x4C];
     s8 unk4C;
 } unk8006BDB0;
+
+typedef struct TitleScreenDemos {
+    s8 levelId;
+    s8 numberOfPlayers;
+    s8 cutsceneId;
+} TitleScreenDemos;
 
 extern s8  D_800DF450;
 extern f32 D_800DF454;
@@ -277,7 +284,7 @@ extern s32 D_800DF4F0[];
 
 extern unk800DF510 sMenuImageProperties[18];
 
-extern s16 *D_800DF750[1];
+extern s16 *gAssetsMenuElementIds[1];
 extern s16 D_800DF754;
 extern s16 D_800DF758;
 extern unk800DF510 *gMenuImageStack;
@@ -467,7 +474,7 @@ extern s16 D_800E0840[148];
 
 extern s32 D_800E0968;
 extern s32 D_800E096C;
-extern s32 D_800E0970;
+extern s32 *D_800E0970;
 extern s32 D_800E0974;
 extern f32* D_800E0978;
 extern s32 D_800E097C;
@@ -532,7 +539,7 @@ extern s16 D_800E0FD8[6];
 
 extern s32 D_800E0FE4;
 extern s32 gTrophyRaceWorldId;
-extern s32 D_800E0FEC;
+extern s32 gTrophyRaceRound;
 extern s32 D_800E0FF0;
 
 // Unused? Not sure what this is.
@@ -637,11 +644,11 @@ void func_8007FF88(void);
 void func_80080E6C(void);
 void func_800813C0(void);
 void menu_init(u32 menuId);
-s32 menu_loop(Gfx **arg0, s32 **arg1, s32 **arg2, s32 **arg3, s32 arg4);
-void func_80081800(s32 arg0, s32 arg1, s32 arg2, u8 arg3, u8 arg4, u8 arg5, u8 arg6);
+s32 menu_loop(Gfx **currDisplayList, Gfx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
-void print_missing_controller_text(Gfx *dl, s32 updateRate);
+void print_missing_controller_text(Gfx **dl, s32 updateRate);
 void menu_logos_screen_init(void);
 s32 menu_logo_screen_loop(s32 arg0);
 void init_title_screen_variables(void);
@@ -653,7 +660,7 @@ void func_80084734(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
 void menu_save_options_init(void);
-s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 arg4);
+s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 fileSize, s32 arg5);
 void func_800861C8(unk800861C8 *arg0, s32 *arg1);
 s32 func_800874D0(s32 buttonsPressed, s32 arg1);
 s32 func_800875E4(s32 buttonsPressed, s32 arg1);
@@ -682,7 +689,7 @@ void func_8008E428(void);
 void func_8008E45C(void);
 void func_8008E4B0(void);
 void func_8008F534(void);
-void func_80090ED8(s32 arg0);
+void func_80090ED8(s32 updateRate);
 s32 func_80092BE0(s32 arg0);
 void menu_5_init(void);
 void func_80093A0C(void);
@@ -698,7 +705,7 @@ s32 compress_filename_string(unsigned char *filename, s32 length);
 void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
 void func_800981E8(void);
 void func_80098208(void);
-void func_800983C0(s32 arg0);
+void draw_trophy_race_text(UNUSED s32 updateRate);
 void func_80098754(void);
 void func_80099600(void);
 s32 get_trophy_race_world_id(void);
@@ -762,6 +769,16 @@ s32 is_in_adventure_two(void);
 s32 is_in_two_player_adventure(void);
 s32 is_tt_unlocked(void);
 s32 is_drumstick_unlocked(void);
+s32 menu_character_select_loop(s32 updateRate);
+s32 menu_caution_loop(s32 updateRate);
+void func_8008DC7C(UNUSED s32 arg0);
+s32 menu_5_loop(s32 updateRate);
+void func_80095624(s32 status);
+s32 menu_boot_loop(s32 arg0);
+void menu_magic_codes_init(void);
+s32 menu_game_select_loop(s32 arg0);
+s32 menu_ghost_data_loop(s32 updateRate);
+s32 menu_trophy_race_round_loop(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -769,35 +786,50 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_audio_options_loop(s32 arg0);
 s32 menu_options_loop(s32 arg0);
 s32 func_800890AC(s32);
-s32 menu_boot_loop(s32 arg0);
-void menu_magic_codes_init(void);
 void render_magic_codes_list_menu_text(s32 arg0);
 s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
 void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void func_8008C698(s32 arg0);
-s32 menu_game_select_loop(s32 arg0);
 void render_file_select_menu(s32 arg0);
-s32 menu_track_select_loop(s32 arg0);
-void func_8008FF1C(s32 arg0);
-void func_800904E8(s32 arg0);
-void func_80090918(s32 arg0);
-void render_track_select_setup_ui(s32 arg0);
-void func_80092188(s32 arg0);
+s32 menu_track_select_loop(s32 updateRate);
+void func_8008FF1C(s32 updateRate);
+void func_800904E8(s32 updateRate);
+void func_80090918(s32 updateRate);
+void render_track_select_setup_ui(s32 updateRate);
+void func_80092188(s32 updateRate);
 void func_8008E4EC(void);
-s32 menu_5_loop(s32 arg0);
-void func_80095624(s32 arg0);
 s32 trim_filename_string(u8 *input, u8 *output);
 void menu_trophy_race_round_init(void);
 void menu_ghost_data_init(void);
-s32 menu_ghost_data_loop(s32 arg0);
 void update_controller_sticks(void);
 s32 tt_menu_loop(void);
 void menu_track_select_init(void);
 void menu_trophy_race_rankings_init(void);
 void func_8009E3D0(void);
-s32 func_800C3564(void);
 void func_8008C168(s32);
+s32 menu_title_screen_loop(s32 updateRate);
+s32 menu_save_options_loop(s32 updateRate);
+s32 menu_magic_codes_loop(s32 updateRate);
+s32 menu_file_select_loop(s32 updateRate);
+s32 menu_results_loop(s32 updateRate);
+s32 menu_trophy_race_rankings_loop(s32 updateRate);
+s32 menu_23_loop(s32 updateRate);
+s32 menu_credits_loop(s32 updateRate);
+void func_8009CA60(s32 imageID);
+void func_8007FFEC(s32 arg0);
+void func_800871D8(s32 arg0);
+SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
+s32 func_8008832C(void);
+void func_8009C6D4(s32 arg0);
+void func_8008B358(void);
+void func_8008B4C8(void);
+void func_8008B758(s8 *activePlayers);
+void func_8006F564(s8 arg0);
+void func_80099E8C(s32 updateRate);
+void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
+s32 func_800998E0(s32 arg0);
+void func_80081218(void);
 
 #endif

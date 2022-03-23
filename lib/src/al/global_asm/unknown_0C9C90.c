@@ -53,9 +53,7 @@ void alEvtqFlush(ALEventQueue *evtq)
     osSetIntMask(mask);
 }
 
-#if 1
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s")
-#else
+#ifdef NON_EQUIVALENT
 void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta)
 {
     ALEventListItem     *item;
@@ -108,6 +106,8 @@ void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta)
     osSetIntMask(mask);
     
 }
+#else
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/alEvtqPostEvent.s")
 #endif
 
 ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt) {
@@ -164,9 +164,7 @@ void alSynAddPlayer(ALSynth *drvr, ALPlayer *client) {
     osSetIntMask(mask);
 }
 
-#if 1
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/_allocatePVoice.s")
-#else
+#ifdef NON_EQUIVALENT
 s32 _allocatePVoice(ALSynth *drvr, PVoice **pvoice, s16 priority)
 {
     ALLink      *dl;
@@ -199,6 +197,8 @@ s32 _allocatePVoice(ALSynth *drvr, PVoice **pvoice, s16 priority)
     
     return stolen;
 }
+#else
+GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/_allocatePVoice.s")
 #endif
 
 ALParam  *__allocParam(void);

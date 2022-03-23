@@ -109,7 +109,7 @@ glabel obj_loop_treasuresucker
 /* 03DDE0 8003D1E0 AFA7003C */  sw    $a3, 0x3c($sp)
 /* 03DDE4 8003D1E4 AFA60048 */  sw    $a2, 0x48($sp)
 /* 03DDE8 8003D1E8 AFA30044 */  sw    $v1, 0x44($sp)
-/* 03DDEC 8003D1EC 0C003A95 */  jal   func_8000EA54
+/* 03DDEC 8003D1EC 0C003A95 */  jal   spawn_object
 /* 03DDF0 8003D1F0 A7AB002A */   sh    $t3, 0x2a($sp)
 /* 03DDF4 8003D1F4 8FA30044 */  lw    $v1, 0x44($sp)
 /* 03DDF8 8003D1F8 8FA60048 */  lw    $a2, 0x48($sp)

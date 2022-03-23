@@ -7,6 +7,7 @@
 #include "f3ddkr.h"
 #include "menu.h"
 #include "libultra_internal.h"
+#include "math.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -85,9 +86,9 @@ extern s16 D_800DD138[8];
 // RSP Viewports
 extern Vp D_800DD148[20];
 
-extern unk8011D510 D_800DD288;
+extern ObjectTransform D_800DD288;
 
-extern unk8011D510 D_800DD2A0;
+extern ObjectTransform D_800DD2A0;
 
 extern Matrix gOrthoMatrix;
 
@@ -96,12 +97,10 @@ extern u8 D_800DD2F8[8];
 extern s16 gButtonMask;
 
 //TODO: Figure out where these functions live: unknown_070110?
-    void func_8006F870(Matrix, Matrix); //unknown_070110
-    void func_800705F8(s32, f32, f32, f32); //From unknown_070110
-    void func_8006FE74(Matrix *, unk8011D510 *); // Non Matching unknown_070110?
+    void func_8006F870(Matrix *, Matrix *); //unknown_070110
+    void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
+    void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching unknown_070110?
     void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
-
-f32 sqrtf(f32); //IDO?
 
 void func_80066060(s32 arg0, s32 arg1);
 void func_80066098(s8 arg0);
@@ -113,8 +112,8 @@ UNUSED void calculate_camera_perspective(void);
 Matrix *func_80066204(void);
 s32 get_viewport_count(void);
 s32 func_80066220(void);
-void func_80066CDC(Gfx **dlist, s32 arg1);
-void func_80066230(Gfx **dlist, s32 arg1);
+void func_80066CDC(Gfx **dlist, Gfx **arg1);
+void func_80066230(Gfx **dlist, Gfx **arg1);
 f32 func_80066348(f32 arg0, f32 arg1, f32 arg2);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
 void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
@@ -130,7 +129,6 @@ void set_viewport_properties(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2);
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
 void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2);
-void func_80066CDC(Gfx **dlist, s32 arg1);
 void set_ortho_matrix_height(f32 value);
 void func_80067F2C(Gfx **dlist, s32 *arg1);
 void func_8006807C(Gfx **dlist, s32 *arg1);
@@ -138,9 +136,9 @@ void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800682AC(Gfx **dlist);
 void func_80068408(Gfx **dlist, s32 *arg1);
 void func_80068508(s32 arg0);
-unk80120AC0 *func_80069CFC(void);
-unk80120AC0 *func_80069D20(void);
-unk80120AC0 *func_80069D7C(void);
+ObjectSegment *func_80069CFC(void);
+ObjectSegment *func_80069D20(void);
+ObjectSegment *func_80069D7C(void);
 Matrix *func_80069DA4(void);
 Matrix *func_80069DB0(void);
 Matrix *func_80069DBC(void);
@@ -154,14 +152,19 @@ void assign_player_ids(s8 *activePlayers);
 u8 get_player_id(s32 player);
 void swap_player_1_and_2_ids(void);
 u16 get_buttons_held_from_player(s32 player);
-u16 get_buttons_pressed_from_player(s32 player);
+u32 get_buttons_pressed_from_player(s32 player);
 UNUSED u16 get_buttons_released_from_player(s32 player);
-s32 clamp_joystick_x_axis(s32 player);
-s32 clamp_joystick_y_axis(s32 player);
-s32 clamp_joystick(s8 stickMag);
+s8 clamp_joystick_x_axis(s32 player);
+s8 clamp_joystick_y_axis(s32 player);
+s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
+s32 init_controllers(void);
 
 // Non Matching
 void func_80067A3C(Gfx **dlist);
+void func_80066610(void);
+void func_80066CDC(Gfx **dlist, Gfx **arg1);
+void func_80065EA0(void);
+s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
 
 #endif

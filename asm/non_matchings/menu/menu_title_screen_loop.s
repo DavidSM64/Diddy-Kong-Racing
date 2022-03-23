@@ -62,8 +62,8 @@ glabel menu_title_screen_loop
 /* 0846AC 80083AAC AC2DF47C */  sw    $t5, %lo(gMenuDelay)($at)
 .L80083AB0:
 /* 0846B0 80083AB0 25086864 */  addiu $t0, %lo(D_80126864) # addiu $t0, $t0, 0x6864
-/* 0846B4 80083AB4 3C028012 */  lui   $v0, %hi(D_80126874) # $v0, 0x8012
-/* 0846B8 80083AB8 8C426874 */  lw    $v0, %lo(D_80126874)($v0)
+/* 0846B4 80083AB4 3C028012 */  lui   $v0, %hi(sTitleScreenDemoIds) # $v0, 0x8012
+/* 0846B8 80083AB8 8C426874 */  lw    $v0, %lo(sTitleScreenDemoIds)($v0)
 /* 0846BC 80083ABC 8D0E0000 */  lw    $t6, ($t0)
 /* 0846C0 80083AC0 80590000 */  lb    $t9, ($v0)
 /* 0846C4 80083AC4 004E7821 */  addu  $t7, $v0, $t6
@@ -130,10 +130,10 @@ glabel menu_title_screen_loop
 /* 0847A8 80083BA8 00000000 */   nop   
 .L80083BAC:
 /* 0847AC 80083BAC 8D180000 */  lw    $t8, ($t0)
-/* 0847B0 80083BB0 3C028012 */  lui   $v0, %hi(D_80126874) # $v0, 0x8012
+/* 0847B0 80083BB0 3C028012 */  lui   $v0, %hi(sTitleScreenDemoIds) # $v0, 0x8012
 /* 0847B4 80083BB4 27190003 */  addiu $t9, $t8, 3
 /* 0847B8 80083BB8 AD190000 */  sw    $t9, ($t0)
-/* 0847BC 80083BBC 8C426874 */  lw    $v0, %lo(D_80126874)($v0)
+/* 0847BC 80083BBC 8C426874 */  lw    $v0, %lo(sTitleScreenDemoIds)($v0)
 /* 0847C0 80083BC0 2401FFFF */  li    $at, -1
 /* 0847C4 80083BC4 00591821 */  addu  $v1, $v0, $t9
 /* 0847C8 80083BC8 806A0000 */  lb    $t2, ($v1)
@@ -164,8 +164,8 @@ glabel menu_title_screen_loop
 /* 084820 80083C20 00000000 */   nop   
 /* 084824 80083C24 3C088012 */  lui   $t0, %hi(D_80126864) # $t0, 0x8012
 /* 084828 80083C28 25086864 */  addiu $t0, %lo(D_80126864) # addiu $t0, $t0, 0x6864
-/* 08482C 80083C2C 3C028012 */  lui   $v0, %hi(D_80126874) # $v0, 0x8012
-/* 084830 80083C30 8C426874 */  lw    $v0, %lo(D_80126874)($v0)
+/* 08482C 80083C2C 3C028012 */  lui   $v0, %hi(sTitleScreenDemoIds) # $v0, 0x8012
+/* 084830 80083C30 8C426874 */  lw    $v0, %lo(sTitleScreenDemoIds)($v0)
 /* 084834 80083C34 8D0F0000 */  lw    $t7, ($t0)
 /* 084838 80083C38 80490000 */  lb    $t1, ($v0)
 /* 08483C 80083C3C 004FC021 */  addu  $t8, $v0, $t7

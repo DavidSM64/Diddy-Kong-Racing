@@ -26,12 +26,12 @@ typedef struct MenuElement {
   // Element Type
   /* 0x13 */ u8 elementType; // Source type? 0 = ascii text, 2 = number, 7 = texture
   union {
-  /* 0x14 */ char* asciiText; // Pointer to ascii text to be displayed on the screen.
-  /* 0x14 */ u32* texture;    // Pointer to texture to be displayed on the screen.
-  /* 0x14 */ s32* number;     // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ u16* numberU16;  // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ void *element;   // Generic pointer
+  /* 0x14 */ char *asciiText; // Pointer to ascii text to be displayed on the screen.
+  /* 0x14 */ u32 *texture;    // Pointer to texture to be displayed on the screen.
+  /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
   /* 0x14 */ s32 value;       // Some value for elementType == 5
-  /* 0x14 */ void* element;   // Generic pointer
   } unk14_a;
   // Element Background Color/Transparency
   /* 0x18 */ s16 backgroundRed;
@@ -448,7 +448,7 @@ typedef struct LevelModel {
 /* 0x18 */ s16 numberOfTextures;
 /* 0x1A */ s16 numberOfSegments;
            u8 pad1C[4];
-/* 0x20 */ s32 unk20;
+/* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
 /* 0x38 */ u32 minimapColor;
 } LevelModel;
@@ -463,10 +463,13 @@ typedef struct Object_3C {
     u8 unkD;
 } Object_3C;
 
-#define OBJECT_MODEL_TYPE_3D_MODEL         0
-#define OBJECT_MODEL_TYPE_SPRITE_BILLBOARD 1
-#define OBJECT_MODEL_TYPE_VEHICLE_PART     2
-#define OBJECT_MODEL_TYPE_UNKNOWN4         4
+typedef enum {
+    OBJECT_MODEL_TYPE_3D_MODEL,
+    OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
+    OBJECT_MODEL_TYPE_VEHICLE_PART,
+    OBJECT_MODEL_TYPE_UNKNOWN3,
+    OBJECT_MODEL_TYPE_UNKNOWN4,
+} ObjectModelType;
 
 typedef struct ObjectHeader {
              u8 pad0[0x4];
@@ -530,7 +533,8 @@ typedef struct Object_4C {
 } Object_4C;
 
 typedef struct Object_50 {
-    u8 pad0[0x8];
+    f32 unk0;
+    u8 pad4[0x4];
     s16 unk8;
     s16 unkA;
 } Object_50;
@@ -633,7 +637,8 @@ typedef struct Object_64 {
     u8 pad1BC[0x1A];
     s8 unk1D6;
     s8 unk1D7;
-    u8 pad1D8[0x1A];
+    s8 unk1D8;
+    u8 pad1D9[0x19];
     u8 unk1F2;
     u8 unk1F3;
 } Object_64;
@@ -650,8 +655,8 @@ typedef struct Object_6C {
     u8  pad6[0x1A];
 } Object_6C;
 
-/* Size: 0x0630 bytes */
-typedef struct Object {
+/* Size: 0x018 bytes */
+typedef struct ObjectTransform {
   /* 0x0000 */ s16 y_rotation;
   /* 0x0002 */ s16 x_rotation;
   /* 0x0004 */ s16 z_rotation;
@@ -660,32 +665,55 @@ typedef struct Object {
   /* 0x000C */ f32 x_position;
   /* 0x0010 */ f32 y_position;
   /* 0x0014 */ f32 z_position;
+} ObjectTransform;
+
+/* Size: 0x44 bytes */
+typedef struct ObjectSegment {
+  /* 0x0000 */ ObjectTransform trans;
   /* 0x0018 */ s16 unk18;
   /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
-  /* 0x0028 */ u32 unk28;
+  /* 0x0028 */ f32 unk28;
 
-  /* 0x002C */ s16 unk2C;
+  union {
+      struct {
+          /* 0x002C */ s16 upper;
+          /* 0x002E */ s16 lower;
+      } half;
+      /* 0x002C */ f32 word;
+  } unk2C;
 
-  /* 0x002E */ s16 unk2E;
   /* 0x0030 */ f32 unk30;
+
   union {
     /* 0x0034 */ f32 unk34;
-    /* 0x0034 */ s16 unk34_s;
+    /* 0x0034 */ s16 levelSegmentIndex;
   } unk34_a;
-  /* 0x0038 */ u8 unk38;
 
-  /* 0x0039 */ u8 unk39;
+  union {
+      struct {
+          /* 0x0038 */ u8 upper;
+          /* 0x0039 */ u8 lower;
+      } half;
+      /* 0x0038 */ s16 word;
+  } unk38;
+
   /* 0x003A */ s8 unk3A;
   /* 0x003B */ s8 unk3B;
+
   union {
     /* 0x003C */ Object_3C* unk3C;
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
   /* 0x0040 */ ObjectHeader *header;
+} ObjectSegment;
+
+/* Size: 0x0630 bytes */
+typedef struct Object {
+  /* 0x0000 */ ObjectSegment segment;
   /* 0x0044 */ void *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
@@ -921,30 +949,6 @@ typedef struct Object {
 
   u32 unk378[174]; // Not an array. Unknown values.
 } Object;
-
-/* Size: 0x44 bytes, might just be Object? */
-typedef struct unk80120AC0 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    u8  pad6[6];
-    f32 x_position;
-    f32 y_position;
-    f32 z_position;
-    f32 pad18;
-    f32 unk1C;
-    f32 pad20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
-    s16 levelSegmentIndex;
-    s16 pad36;
-    s16 unk38;
-    s8  pad3A;
-    s8  unk3B;
-    u8  pad3C[8];
-} unk80120AC0;
 
 typedef struct unk80027FC4 {
     u8 unk0;
