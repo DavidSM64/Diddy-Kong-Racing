@@ -1149,7 +1149,47 @@ void func_8007BF1C(s32 arg0) {
     D_80126382 = 1;
 }
 
+#ifdef NON_EQUIVALENT
+// Reasonably certain the macros are correct, but definitely need to figure out the gDkrDmaDisplayList Gfx arguments
+void func_8007BF34(Gfx **dlist, s32 arg1) {
+    s32 temp_a1;
+    s32 temp_t8;
+    s32 temp_v0_3;
+
+    if ((arg1 != D_80126374) || (D_80126382 != 0)) {
+        gDPPipeSync((*dlist)++);
+        if (((D_80126374 * 16) < 0) || (D_80126382 != 0)) {
+            gSPSetGeometryMode((*dlist)++, G_FOG);
+        }
+        temp_a1 = arg1 & 0xF7FFFFFF & ~D_80126378;
+        temp_v0_3 = temp_a1 & 2;
+        if (((D_80126374 & 2) != temp_v0_3) || (D_80126382 != 0)) {
+            if (temp_v0_3 != 0) {
+                gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
+            } else {
+                gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
+            }
+        }
+        D_80126382 = 0;
+        D_80126374 = temp_a1;
+        temp_t8 = temp_a1 & ~0x800;
+        if (D_800DE7C4 == 0) {
+            if ((D_80126374 & 0x200) != 0) {
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE848[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(D_800DE848[0]));
+            } else {
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE868[(temp_t8 - 16) * 16]), numberOfGfxCommands(D_800DE868[0]));
+            }
+        } else {
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE8E8[temp_t8 * 16]), numberOfGfxCommands(D_800DE8E8[0]));
+        }
+        D_8012637C = 0;
+        D_80126380 = 1;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
 #ifdef NON_EQUIVALENT
