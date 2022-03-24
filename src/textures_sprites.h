@@ -12,6 +12,30 @@
 extern u32 gTexColourTag;
 extern s32 D_800DE7C4;
 
+extern Gfx D_800DF1A8[32][2];
+extern Gfx *D_8011B0A0;
+extern s32 D_8011B0FC;
+extern u32 D_8011D384;
+extern LevelHeader *gCurrentLevelHeader2;
+extern s32 D_80126374;
+extern s32 D_8012637C;
+extern s16 D_80126382;
+extern Gfx D_800DE628[9];
+extern Gfx D_800DE848[2][2];
+extern Gfx D_800DE868[8][2];
+extern Gfx D_800DE8E8[64][2];
+extern s32 D_80126378;
+extern s16 D_80126380;
+extern Gfx D_800DE7C8[8][2];
+extern Gfx D_800DECE8[16][2];
+extern Gfx D_800DEDE8[16][2];
+extern Gfx D_800DEEE8[4][2];
+extern Gfx D_800DEF28[16][2];
+extern Gfx D_800DF028[8][2];
+extern Gfx D_800DF0A8[16][2];
+extern s16 D_80126384;
+
+
 /* Size: 8 bytes */
 typedef struct unk8007F1E8_18 {
     s32 unk0;
@@ -76,7 +100,7 @@ void func_8007B374(s32 arg0);
 void func_8007B3D0(Gfx **dlist);
 void func_8007B43C(void);
 void func_8007B454(void);
-void func_8007B4C8(Gfx **dlist, s32 arg1, s32 arg2);
+void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags);
 void func_8007BF1C(s32 arg0);
 s32 func_8007EF64(s16 arg0);
 
@@ -89,7 +113,7 @@ void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching
 TextureHeader *func_8007B380(s32 arg0); // Non Matching
-void func_8007B4E8(Gfx **, s32, s32, s32); // Non Matching
+void func_8007B4E8(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut,

@@ -1096,8 +1096,8 @@ void func_8007B454(void) {
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B46C.s")
 
-void func_8007B4C8(Gfx **dlist, s32 arg1, s32 arg2) {
-    func_8007B4E8(dlist, arg1, arg2, 0);
+void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags) {
+    func_8007B4E8(dlist, arg1, flags, 0);
 }
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B4E8.s")
