@@ -14,6 +14,7 @@
 #include "util/fileHelper.h"
 #include "util/jsonHelper.h"
 #include "util/enumHelper.h"
+#include "util/errorHelper.h"
 
 uint32_t get_big_endian_word(std::vector<uint8_t> &data, int offset);
 void write_big_endian_word(std::vector<uint8_t> &data, int offset, uint32_t value);

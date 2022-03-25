@@ -12,7 +12,7 @@ std::string get_texture_format_string(int format) {
         case TEX_FORMAT_CI4:    return "CI4";
         case TEX_FORMAT_CI8:    return "CI8";
     }
-    throw 1;
+    display_error_and_abort("Invalid texture format ", format);
 }
 
 int get_texture_format_from_string(std::string format) {
@@ -25,7 +25,7 @@ int get_texture_format_from_string(std::string format) {
     if(format == "IA4")    return TEX_FORMAT_IA4;
     if(format == "CI4")    return TEX_FORMAT_CI4;
     if(format == "CI8")    return TEX_FORMAT_CI8;
-    throw 1;
+    display_error_and_abort("Invalid texture format ", format);
 }
 
 void deinterlace(std::vector<uint8_t>& texData, int texDataOffset, int width, int height, int bitDepth, int bufferSize) {
@@ -102,12 +102,10 @@ int get_texture_size(int width, int height, int format) {
             return (width * height / 2) + TEX_HEADER_SIZE;
         case TEX_FORMAT_CI4:
         case TEX_FORMAT_CI8:
-            std::cout << "Error: CI texture formats are not currently supported." << std::endl;
-            throw 1;
+            display_error_and_abort("CI texture formats are not currently supported.");
     }
-    
-    std::cout << "Error: Invalid texture format " << format << std::endl;
-    throw 1;
+
+    display_error_and_abort("Invalid texture format ", format);
 }
 
 std::vector<uint8_t> load_texture_from_png(std::string filepath, int textureFormat, int *width, int *height) {
@@ -132,10 +130,9 @@ std::vector<uint8_t> load_texture_from_png(std::string filepath, int textureForm
             return vec;
         }
         case TEX_FORMAT_CI4:
-            std::cout << "Error: CI4 is currently not supported." << std::endl;
-            throw 1;
+        case TEX_FORMAT_CI8:
+            display_error_and_abort("CI4/CI8 texture formats are not currently supported.");
         default:
-            std::cout << "Error: Invalid texture type: " << textureFormat << std::endl;
-            throw 1;
+            display_error_and_abort("Invalid texture format: ", textureFormat);
     }
 }

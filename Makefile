@@ -16,7 +16,10 @@ COMPILE_ASSETS ?= 0
 $(eval $(call validate-option,COMPILE_ASSETS,0 1))
 
 ifeq ($(COMPILE_ASSETS),1)
-  DUMMY != ./tools/dkr_assets_tool -c ./assets $(VERSION)
+  DUMMY != ./tools/dkr_assets_tool -c $(VERSION) ./assets >&2 || echo FAIL
+  ifeq ($(DUMMY),FAIL)
+    $(error Failed to compile assets)
+  endif
 endif
 
 ifeq ($(VERSION),us_1.0)

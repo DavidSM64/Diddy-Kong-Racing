@@ -214,8 +214,8 @@ void BuildTexture::write_texture_data(std::vector<uint8_t> &out, int outOffset, 
         case TEX_FORMAT_CI4:
         case TEX_FORMAT_CI8:
         {
-            std::cout << "Error: CI texture formats are not currently supported." << std::endl;
-            break;
+            display_error_and_abort("CI4/CI8 texture formats are not currently supported.");
         }
     }
 }
+

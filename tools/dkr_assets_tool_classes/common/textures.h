@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "../libs/n64graphics.h"
+#include "util/errorHelper.h"
 
 #define TEX_HEADER_SIZE 0x20
 

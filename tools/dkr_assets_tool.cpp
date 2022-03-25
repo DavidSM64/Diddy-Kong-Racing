@@ -52,11 +52,6 @@ typedef enum _CurrentParseOption {
     PO_TYPE
 } CurrentParseOption;
 
-template <class T>
-void invalid_arg_error(T arg) {
-    std::cout << "Error: Invalid argument \"" << arg << "\"" << std::endl;
-}
-
 std::string get_cmd_from_parse_option(ToolType type) {
     switch(type) {
         case TT_EXTRACT: return "-e";
@@ -84,8 +79,7 @@ bool parse_options(int argc, char *argv[]) {
     for (size_t i = 1; i < args.size(); ++i) {
         if(args[i][0] == '-') {
             if(parsingCmd) {
-                std::cout << "Error: Not enough args for the current command \"" 
-                    << get_cmd_from_parse_option(options.type) << "\"" << std::endl;
+                display_error("Not enough args for the current command \"", get_cmd_from_parse_option(options.type), "\"");
                 return false;
             }
             if(args[i] == "-e") {
@@ -121,14 +115,13 @@ bool parse_options(int argc, char *argv[]) {
             } else if(args[i] == "-h") {
                 return false;
             } else  {
-                std::cout << "Error: Invalid option " << args[i] << std::endl;
+                display_error("Invalid option \"", args[i], "\"");
                 return false;
             }
             curOptionArgs = 0;
         } else {
             if(!parsingCmd) {
-                std::cout << "Error: Too many args for the current command \"" 
-                    << get_cmd_from_parse_option(options.type) << "\"" << std::endl;
+                display_error("Too many args for the current command \"", get_cmd_from_parse_option(options.type), "\"");
                 return false;
             }
             switch(curOption) {
@@ -199,16 +192,14 @@ bool parse_options(int argc, char *argv[]) {
                     }
                     break;
                 default: // This should hopefully never get called
-                    std::cout << "Error: You should not be seeing this message." << std::endl;
-                    return false;
+                    display_error_and_abort("Invalid dkr_assets_tool option. You should not be seeing this message!");
             }
             curOptionArgs++;
         }
     }
     
     if(parsingCmd) {
-        std::cout << "Error: Not enough args for the current command \"" 
-            << get_cmd_from_parse_option(options.type) << "\"" << std::endl;
+        display_error("Not enough args for the current command \"", get_cmd_from_parse_option(options.type), "\"");
         return false;
     }
     
@@ -274,7 +265,7 @@ int main(int argc, char *argv[]) {
                 set_assets_folder_path(assetsDir);
                 set_version(version);
                 
-                AssetCompiler compiler();
+                AssetCompiler compiler;
             }
             break;
         case TT_ASSET_COMPRESS_FILE:
@@ -285,26 +276,19 @@ int main(int argc, char *argv[]) {
                 std::string outputFilename = options.paths[1];
                 std::vector<uint8_t> inputBinary, outputBinary;
                 
-                if(compression.readBinaryFile(inputBinary, inputFilename))
-                {
+                if(compression.readBinaryFile(inputBinary, inputFilename)) {
                     if(inputBinary.size() == 0) {
                         compression.writeBinaryFile(inputBinary, outputFilename);
                     } else {
-                        if (options.type == TT_ASSET_COMPRESS_FILE) 
-                        {
+                        if (options.type == TT_ASSET_COMPRESS_FILE) {
                             outputBinary = compression.compressBuffer(inputBinary);
-                        } 
-                        else if (options.type == TT_ASSET_DECOMPRESS_FILE) 
-                        {
+                        } else if (options.type == TT_ASSET_DECOMPRESS_FILE) {
                             outputBinary = compression.decompressBuffer(inputBinary);
                         }
                         compression.writeBinaryFile(outputBinary, outputFilename);
                     }
-                }
-                else 
-                {
-                    std::cout << "Could not read file: " << inputFilename << std::endl;
-                    return 1;
+                } else {
+                    display_error_and_abort("Could not read file: ", inputFilename);
                 }
             }
             break;

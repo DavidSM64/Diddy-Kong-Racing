@@ -50,9 +50,8 @@ BuildFonts::BuildFonts(std::string srcPath, std::string dstPath) {
             write_ascii_char_nodes(out, srcPath, fontOffset + 0x100, font);
         } else if(encoding == "CUSTOM") {
             write_custom_char_nodes(out, srcPath, fontOffset + 0x100, font);
-        } else{
-            std::cout << "Error: Unsupported font encoding type: \"" << encoding << "\"" << std::endl;
-            throw 1;
+        } else {
+            display_error_and_abort("Unsupported font encoding type: \"", encoding, "\"");
         }
         
     }
@@ -98,8 +97,7 @@ void BuildFonts::write_custom_char_nodes(std::vector<uint8_t> &out, std::string 
     for(std::string &chr : order) {
         if(index >= NUMBER_OF_CHAR_NODES) {
             std::string fontName = get_string_from_json(srcPath, "fonts", font, "name");
-            std::cout << "Error: Too many character nodes in " << fontName << ". The limit is " << NUMBER_OF_CHAR_NODES << std::endl;
-            throw 1;
+            display_error_and_abort("Too many character nodes in ", fontName, ". The limit is ", NUMBER_OF_CHAR_NODES);
         }
         int nodeOffset = offset + (index++ * SIZEOF_CHAR_NODE);
         write_char_node(out, srcPath, nodeOffset, font, chr);

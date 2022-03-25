@@ -2,8 +2,7 @@
 
 Builder::Builder(std::string srcPath, std::string dstPath) {
     if(!path_exists(srcPath)) {
-        std::cout << "Error: Invalid path \"" << srcPath << "\"" << std::endl;
-        throw 1;
+        display_error_and_abort("Invalid path \"", srcPath, "\"");
     }
     
     if(ends_with(srcPath, ".json")) {
@@ -24,7 +23,11 @@ Builder::Builder(std::string srcPath, std::string dstPath) {
             BuildMenuText(srcPath, dstPath);
         } else if (type == "Fonts") {
             BuildFonts(srcPath, dstPath);
-        }  
+        } else if (type == "") {
+            display_error_and_abort("No type found for \"", srcPath, "\".\nMake sure the \"type\" property is defined in the json file!");
+        } else {
+            display_error_and_abort("Unknown type \"", type, "\" in \"", srcPath, "\"");
+        }
     }
 }
 

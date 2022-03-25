@@ -2,8 +2,7 @@
 
 ROM::ROM(std::string filename){
     if(!readROMFile(filename)) {
-        // ROM failed to load.
-        throw 1;
+        display_error_and_abort("Failed to load ROM \"", filename, "\"");
     }
     romFilename = filename;
     

@@ -11,9 +11,10 @@
 
 class AssetCompiler {
 public:
-    AssetCompiler(std::string assetsDirectory, std::string version);
+    AssetCompiler();
     ~AssetCompiler();
 private:
     void copy_stuff_from_folders(std::string &packagesDirPath, std::string &outDirPath, std::string &packageName);
     void append_manifest_files(std::string &packagesDirPath, std::string &outDirPath, std::string &packageName);
+    void verify_json_files(std::string &folderPath);
 };

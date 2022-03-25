@@ -189,13 +189,11 @@ void ExtractTextures::write_images(std::string outImagePath, std::vector<uint8_t
         case TEX_FORMAT_CI4:
         case TEX_FORMAT_CI8:
         {
-            std::cout << "Error: CI texture formats are not currently supported." << std::endl;
-            throw 1;
+            display_error_and_abort("CI texture formats are not currently supported.");
         }
         default: // Invalid texture format
         {
-            std::cout << "Error: Unknown texture format " << format << std::endl;
-            throw 1;
+            display_error_and_abort("Unknown texture format ", format);
         }
     }
 }

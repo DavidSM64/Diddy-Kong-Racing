@@ -136,10 +136,7 @@ std::vector<std::vector<uint8_t>> get_section_files(std::vector<uint8_t>& sectio
         
         int length = nextTableValue - currentTableValue;
         if(length < 0) {
-            std::cout << "Error: Invalid table length: " << length << std::endl;
-            std::cout << std::hex << "currentTableValue: " << currentTableValue << std::dec << std::endl;
-            std::cout << std::hex << "nextTableValue: " << nextTableValue << std::dec << std::endl;
-            throw 1;
+            display_error_and_abort("Invalid table length: ", length, "\ncurrentTableValue: ", currentTableValue, "\nnextTableValue: ", nextTableValue);
         }
         
         std::vector<uint8_t> file(section.begin() + currentTableValue, section.begin() + nextTableValue);
@@ -160,10 +157,8 @@ void ExtractConfig::extract_asset_sections(int &romOffset) {
     int numAssetSectionsFromTable = rom->get_uint(romOffset);
     
     if(numAssetSections != numAssetSectionsFromTable) {
-        std::cout << "Error: Number of asset sections in config does not match ROM." << std::endl;
-        std::cout << "Number of asset sections in Config: " << numAssetSections << std::endl;
-        std::cout << "Number of asset sections in ROM:    " << numAssetSectionsFromTable << std::endl;
-        throw 1;
+        display_error_and_abort("Number of asset sections in config does not match ROM.\nNumber of asset sections in Config: ", 
+            numAssetSections, "\nNumber of asset sections in ROM:    ", numAssetSectionsFromTable);
     }
     
     romOffset += 4;
@@ -329,8 +324,8 @@ void write_vanilla_warning_file(std::string baseDirectory) {
 void ExtractConfig::execute_extraction() {
     // These braces are important, because I want the ThreadPool to call its destructor by going out of scope.
     {
-        //ThreadPool pool(std::thread::hardware_concurrency()); 
-        ThreadPool pool(1);
+        ThreadPool pool(std::thread::hardware_concurrency()); 
+        //ThreadPool pool(1);
         
         for(int i = 0; i < extractions.size(); i++) {
             std::string key = extractions[i].key;
@@ -364,8 +359,7 @@ void ExtractConfig::execute_extraction() {
                     ExtractCompressed(key, data, outFilepath + ".cbin");
                 } else if(type == "Empty") {
                 } else if(type != "NoExtract") {
-                    std::cout << "Unknown extraction type: " << type << std::endl;
-                    throw 1;
+                    display_error_and_abort("Unknown extraction type: ", type);
                 }
             });
         }
