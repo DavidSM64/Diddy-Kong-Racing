@@ -884,8 +884,8 @@ s32 D_80126368;
 TempTexHeader *gTempTextureHeader;
 s32 D_80126370;
 s32 D_80126374;
-s32 D_80126378;
-s32 D_8012637C;
+s32 D_80126378; // Set in Game UI
+TextureHeader *D_8012637C;
 s16 D_80126380;
 s16 D_80126382;
 s16 D_80126384;
@@ -1074,7 +1074,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
 #endif
 
 void func_8007B3D0(Gfx **dlist) {
-    D_8012637C = 0;
+    D_8012637C = NULL;
     D_80126374 = 0;
     D_80126380 = 0;
     D_80126382 = 1;
@@ -1100,7 +1100,156 @@ void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags) {
     func_8007B4E8(dlist, arg1, flags, 0);
 }
 
+#ifdef NON_EQUIVALENT
+void func_8007B4E8(Gfx **dlist, TextureHeader *texhead, u32 flags, s32 arg3) {
+    s32 bitfield;
+    s16 temp_D_80126382;
+    s32 doPipeSync;
+    s32 temp_bitfield;
+    s32 dlIndex;
+
+    temp_D_80126382 = D_80126382;
+    doPipeSync = TRUE;
+
+    if (texhead != NULL) {
+        if ((arg3 != 0) && (arg3 < (texhead->numOfTextures << 8))) {
+            texhead += ((arg3 >> 16) * texhead->textureSize);
+        }
+
+        flags |= texhead->flags;
+        if (texhead != D_8012637C) {
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(texhead->cmd), texhead->numberOfCommands);
+            D_8012637C = texhead;
+            doPipeSync = FALSE;
+        }
+        if (D_80126380 == 0) {
+            D_80126380 = 1;
+            temp_D_80126382 = 1;
+        }
+    } else if (D_80126380 != 0) {
+        D_80126380 = 0;
+        temp_D_80126382 = 1;
+    }
+
+    //This version produces a better score, but I'm not sure it's actually better.
+    //bitfield = flags & (D_80126384 ? 0x827 : 0x0800093F);
+    if (D_80126384 != 0) {
+        bitfield = flags & 0x827;
+    } else {
+        bitfield = flags & 0x0800093F;
+    }
+
+    if (((bitfield & ~D_80126378) * 16) < 0) {
+        bitfield &= ~D_80126378 & ~8;
+    } else {
+        bitfield &= ~D_80126378 & ~0x100;
+    }
+
+    // Ugly version of the two if statements here that matches the same
+    // bitfield = D_80126384 ? flags & 0x827 : flags & 0x0800093F;
+    // bitfield = ((bitfield & ~D_80126378) * 16) < 0 ? bitfield & ~D_80126378 & ~8 : bitfield & ~D_80126378 & ~0x100;
+
+    temp_bitfield = bitfield;
+    if ((bitfield != D_80126374) || (temp_D_80126382 != 0)) {
+        if (doPipeSync) {
+            gDPPipeSync((*dlist)++);
+        }
+
+        if (((D_80126374 & 0x08000000) != (bitfield & 0x08000000)) || ((D_80126382 != 0))) {
+            if ((bitfield & 0x08000000) || (D_80126384 != 0)) {
+                gSPClearGeometryMode((*dlist)++, G_FOG);
+            } else {
+                gSPSetGeometryMode((*dlist)++, G_FOG);
+            }
+        }
+
+        if (((D_80126374 & 2) != (bitfield & 2)) || (D_80126382 != 0)) {
+            if (bitfield & 2) {
+                gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
+            } else {
+                gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
+            }
+        }
+
+        D_80126382 = 0;
+        D_80126374 = bitfield;
+        if (D_80126380 == 0) {
+            if (bitfield & 0x08000000) {
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEEE8[bitfield & 3]), numberOfGfxCommands(D_800DEEE8[0]));
+            }
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEF28[bitfield & 0xF]), numberOfGfxCommands(D_800DEF28[0]));
+            return;
+        }
+
+        if (D_80126384 != 0) {
+            if ((bitfield & 0x800) && (bitfield & 2)) {
+                dlIndex = 0;
+                if (bitfield & 1) {
+                    dlIndex |= 1;
+                }
+                if (bitfield & 4) {
+                    dlIndex |= 2;
+                }
+                if (bitfield & 0x20) {
+                    dlIndex |= 4;
+                }
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF028[dlIndex]), numberOfGfxCommands(D_800DF028[0]));
+                return;
+            }
+            if (bitfield & 0x20) {
+                temp_bitfield = (bitfield ^ 0x20) | 8;
+            }
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF0A8[temp_bitfield]), numberOfGfxCommands(D_800DF0A8[0]));
+            return;
+        }
+
+        if ((bitfield & 0x800) && (bitfield & 2)) {
+            dlIndex = 0;
+            if (bitfield & 1) {
+                dlIndex |= 1;
+            }
+            if (bitfield & 4) {
+                dlIndex |= 2;
+            }
+            if (bitfield & 8) {
+                dlIndex |= 4;
+            }
+            if (bitfield & 0x20) {
+                dlIndex |= 8;
+            }
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEDE8[dlIndex]), numberOfGfxCommands(D_800DEDE8[0]));
+            return;
+        }
+
+        if (bitfield & 0x10) {
+            dlIndex = bitfield & 7;
+            if (bitfield & 8) {
+                dlIndex |= 8;
+            }
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DECE8[dlIndex]), numberOfGfxCommands(D_800DECE8[0]));
+            return;
+        }
+
+        bitfield &= ~0x800;
+        if (bitfield & 0x08000000) {
+            dlIndex = bitfield & 3;
+            if (bitfield & 0x100) {
+                dlIndex |= 4;
+            } else {
+                gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
+                D_80126374 |= 2;
+            }
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE7C8[dlIndex]), numberOfGfxCommands(D_800DE7C8[0]));
+            return;
+        }
+
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE8E8[bitfield]), numberOfGfxCommands(D_800DE8E8[0]));
+        return;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B4E8.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 //Reasonaby certain I have the macros correct, but I'm less certain about the arg1 stuff
@@ -1127,7 +1276,7 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3) {
 
     gDPPipeSync((*dlist)++);
 
-    D_8012637C = 0;
+    D_8012637C = NULL;
     gSPSetGeometryMode((*dlist)++, G_FOG);
 
     if (index & G_TEXTURE_ENABLE) {
@@ -1182,7 +1331,7 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
         } else {
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE8E8[temp_t8 * 16]), numberOfGfxCommands(D_800DE8E8[0]));
         }
-        D_8012637C = 0;
+        D_8012637C = NULL;
         D_80126380 = 1;
     }
 }

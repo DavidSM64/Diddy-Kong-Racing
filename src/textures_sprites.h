@@ -18,7 +18,7 @@ extern s32 D_8011B0FC;
 extern u32 D_8011D384;
 extern LevelHeader *gCurrentLevelHeader2;
 extern s32 D_80126374;
-extern s32 D_8012637C;
+extern TextureHeader *D_8012637C;
 extern s16 D_80126382;
 extern Gfx D_800DE628[9];
 extern Gfx D_800DE848[2][2];
