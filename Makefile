@@ -47,6 +47,7 @@ COLOR ?= 1
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),clean_lib)
 ifneq ($(MAKECMDGOALS),clean_src)
+ifneq ($(MAKECMDGOALS),distclean)
 ifneq ($(MAKECMDGOALS),reset)
 
 ################ Check if a baserom exists  ################
@@ -116,6 +117,7 @@ endif
 
 ################################
 
+endif
 endif
 endif
 endif
@@ -338,7 +340,15 @@ ifneq ($(wildcard ./build/.*),)
 	rm -r build
 else 
 	@echo "/build/ directory has already been deleted." 
-endif 
+endif
+
+distclean:
+	rm -rf build
+	rm -rf assets
+	rm -rf ucode
+	rm -rf dkr.ld
+	rm -rf tools/ido-static-recomp/{,.[!.],..?}* # Deletes all files, including hidden ones.
+	$(MAKE) -C tools distclean
     
 clean_lib:
 ifneq ($(wildcard $(BUILD_DIR)/lib/.*),)
@@ -477,7 +487,7 @@ test: $(BUILD_DIR)/$(TARGET).z64
 load: $(BUILD_DIR)/$(TARGET).z64
 	$(LOADER) $(LOADER_FLAGS) $<
 
-.PHONY: all clean default diff test
+.PHONY: all clean distclean default diff test
 
 # Remove built-in rules, to improve performance
 MAKEFLAGS += --no-builtin-rules

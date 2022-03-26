@@ -21,6 +21,8 @@ all: $(PROGRAMS) $(CXX_PROGRAMS)
 clean:
 	rm -Rf $(PROGRAMS) $(CXX_PROGRAMS) $(BUILD_DIR)
 
+distclean: clean
+
 n64crc: n64crc.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
@@ -42,5 +44,5 @@ $(BUILD_DIR)/%.o: %.cpp
 dkr_assets_tool: $(dkr_assets_tool_OBJ_FILES)
 	$(CXX) $^ -o $@ --std=c++17 -lstdc++fs -lcrypto -lssl -lpthread $(LDFLAGS)
 
-.PHONY: all clean default
+.PHONY: all clean distclean default
 
