@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <unordered_map>
 #include "../../libs/json.hpp"
 
 #include "fileHelper.h"
