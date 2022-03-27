@@ -34,6 +34,9 @@ extern Gfx D_800DEF28[16][2];
 extern Gfx D_800DF028[8][2];
 extern Gfx D_800DF0A8[16][2];
 extern s16 D_80126384;
+extern Gfx D_800DF3A8[6];
+extern Gfx D_800DF3D8[7];
+extern Gfx D_800DF410[3][2];
 
 
 /* Size: 8 bytes */

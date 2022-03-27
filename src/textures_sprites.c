@@ -1592,12 +1592,16 @@ void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta) {
 
 #ifdef NON_EQUIVALENT
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor) {
+    Gfx *tempDlist = D_800DF3A8;
+
     if (index >= 2) {
         index = 2;
+        tempDlist = D_800DF3D8;
     }
+
     // There are issues with the structure, but this should be equivalent functionality-wise.
-    gSPDisplayList((*dlist)++, D_800DF3A8);
-    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DF410[index]), numberOfGfxCommands(D_800DF410[0]));
+    gSPDisplayList((*dlist)++, tempDlist);
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF410[index]), numberOfGfxCommands(D_800DF410[0]));
     gDPSetPrimColorRGBA((*dlist)++, primitiveColor);
     gDPSetEnvColorRGBA((*dlist)++, environmentColor);
 }
