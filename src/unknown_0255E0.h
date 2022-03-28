@@ -94,7 +94,7 @@ void render_skydome(void);
 void func_80028FA0(s32 arg0);
 void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segmentsOrder);
 s32 func_8002A05C(s32 x, s32 z, s32 *arg2);
-s32 func_8002A134(s32 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s16 arg6);
+s32 func_8002A134(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2);
 LevelModelSegment *func_8002A2C8(s32 arg0);
 LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0);
 void func_8002ACC8(s32 arg0);

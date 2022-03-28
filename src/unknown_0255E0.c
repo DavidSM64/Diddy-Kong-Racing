@@ -746,33 +746,33 @@ s32 func_8002A05C(s32 x, s32 z, s32 *arg2) {
     return cnt;
 }
 
-s32 func_8002A134(s32 *arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, s16 arg5, s16 arg6) {
-    s32 phi_v1;
+s32 func_8002A134(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2) {
+    s32 ret;
     s32 i;
     LevelModelSegmentBoundingBox *bb;
 
-    arg1 -= 4;
-    arg2 -= 4;
-    arg3 -= 4;
-    arg4 += 4;
-    arg5 += 4;
-    arg6 += 4;
+    xPos1 -= 4;
+    yPos1 -= 4;
+    zPos1 -= 4;
+    xPos2 += 4;
+    yPos2 += 4;
+    zPos2 += 4;
 
     i = 0;
-    phi_v1 = 0;
+    ret = 0;
 
     while (i < gCurrentLevelModel->numberOfSegments) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
-        if ((bb->x2 >= arg1) && (arg4 >= bb->x1) &&
-            (bb->z2 >= arg3) && (arg6 >= bb->z1) &&
-            (bb->y2 >= arg2) && (arg5 >= bb->y1)) {
-            phi_v1++;
+        if ((bb->x2 >= xPos1) && (xPos2 >= bb->x1) &&
+            (bb->z2 >= zPos1) && (zPos2 >= bb->z1) &&
+            (bb->y2 >= yPos1) && (yPos2 >= bb->y1)) {
+            ret++;
             *arg0++ = i;
         }
         i++;
     }
 
-    return phi_v1;
+    return ret;
 }
 
 LevelModelSegment *func_8002A2C8(s32 arg0) {
