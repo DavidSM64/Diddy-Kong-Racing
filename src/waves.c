@@ -212,12 +212,12 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800B8C04.s")
 
 s32 func_800B9228(LevelModelSegment *arg0) {
     s32 v0 = 0;
-    s32 result = 0;
+    s32 result = FALSE;
     while (v0 < D_8012A0E0 && arg0 != D_800E30D8[v0].unk00) {
         v0++;
     };
     if (D_800E30D4[D_800E30D8[v0].unk0C]) {
-        result = 1;
+        result = TRUE;
         D_8012A1E8[D_800E30DC++] = v0;
     }
     return result;

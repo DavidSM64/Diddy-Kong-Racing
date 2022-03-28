@@ -1,0 +1,1 @@
+python3 tools/python/diff.py -smwo3 --line-numbers "$@"

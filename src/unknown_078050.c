@@ -331,42 +331,39 @@ void func_80078AAC(void *arg0) {
     D_800DE4D0.ptr = arg0;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 
-// Regalloc & stack issues.
+// Regalloc issues.
 void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
-    DrawTexture *phi_t2;
-    s32 x0, y0;
-    s32 x1, y1;
-    s32 u, v;
+    s32 ulx, uly;
+    s32 lrx, lry;
+    s32 s, t;
+    s32 i;
 
     gSPDisplayList((*dlist)++, D_800DE628);
     gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
-    tex = arg1->texture;
-    while (tex != NULL) {
-        x0 = (arg1->xOffset * 4) + (xPos * 4);
-        y0 = (arg1->yOffset * 4) + (yPos * 4);
-        x1 = (tex->width * 4) + x0;
-        y1 = (tex->height * 4) + y0;
-        if (x1 > 0) {
-            u = 0;
-            if (y1 > 0) {
-                v = 0;
-                if (x0 < 0) {
-                    u = -(x0 * 8);
-                    x0 = 0;
+    for (i = 0; (tex = arg1[i].texture); i++) {
+        ulx = (arg1[i].xOffset * 4) + (xPos * 4);
+        uly = (arg1[i].yOffset * 4) + (yPos * 4);
+        lrx = (tex->width * 4) + ulx;
+        lry = (tex->height * 4) + uly;
+        if (lrx > 0) {
+            if (lry > 0) {
+                s = 0;
+                t = 0;
+                if (ulx < 0) {
+                    s = -(ulx * 8);
+                    ulx = 0;
                 }
-                if (y0 < 0) {
-                    v = -(y0 * 8);
-                    y0 = 0;
+                if (uly < 0) {
+                    t = -(uly * 8);
+                    uly = 0;
                 }
-                gDkrDmaDisplayList((*dlist)++, tex->cmd + 0x80000000, tex->numberOfCommands);
-                gSPTextureRectangle((*dlist)++, x0, y0, x1, y1, 0, u, v, 1024, 1024);
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+                gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, 0, s, t, 1024, 1024);
             }
         }
-        arg1++;
-        tex = arg1->texture;
     }
     gDPPipeSync((*dlist)++);
     gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);

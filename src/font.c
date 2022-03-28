@@ -552,7 +552,7 @@ void func_800C56D0(s32 dialogueBoxID) {
  * Contains a timer that counts down two frames before closing a dialogue box
  * when the player exits out of one.
  */
-void render_dialogue_boxes(Gfx **dlist, Gfx **mat, VertexList **verts) {
+void render_dialogue_boxes(Gfx **dlist, Mtx **mat, VertexList **verts) {
     s32 i;
 
     if (sDialogueBoxIsOpen) {
@@ -637,7 +637,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
 /**
  * Render the selected dialogue box. Background first, then text.
  */
-void render_dialogue_box(Gfx **dlist, Gfx **mat, VertexList **verts, s32 dialogueBoxID) {
+void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox;
     s32 i;
@@ -650,7 +650,7 @@ void render_dialogue_box(Gfx **dlist, Gfx **mat, VertexList **verts, s32 dialogu
     // Render dialogue box background.
     if (dialogueBox->backgroundColourA != 0) {
         gSPDisplayList((*dlist)++, dDialogueBoxBegin);
-        gDkrDmaDisplayList((*dlist)++, ((u8 *)&dDialogueBoxDrawModes[1]) + 0x80000000, 2);
+        gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[1]), 2);
         gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
         if ((dialogueBox->x2 - dialogueBox->x1) < 10 || (dialogueBox->y2 - dialogueBox->y1) < 10) {
             render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2, dialogueBox->y2 + 2);

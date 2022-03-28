@@ -43,7 +43,7 @@ s32 D_80126398;
 s32 D_8012639C;
 Gfx *sMenuCurrDisplayList;
 char **D_801263A4;
-Gfx *sMenuCurrHudMat;
+Mtx *sMenuCurrHudMat;
 VertexList *sMenuCurrHudVerts;
 TriangleList *sMenuCurrHudTris;
 unk801263C0 D_801263B4;
@@ -1808,7 +1808,7 @@ void menu_init(u32 menuId) {
 /**
  * Runs every frame. Calls the loop function of the current menu id
  */
-s32 menu_loop(Gfx **currDisplayList, Gfx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     s32 ret;
 
     sMenuCurrDisplayList = *currDisplayList;
@@ -1993,7 +1993,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
 
     s5 = FALSE;
     if (arg0 != 4) {
-        func_80067F2C(&sMenuCurrDisplayList, (s32 *)&sMenuCurrHudMat);
+        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         while (elem->unk14_a.element != NULL) {
             if (&D_80126850 != elem->unk14_a.element) {
                 if (arg0 == 0) {
@@ -4055,7 +4055,7 @@ void func_8008C698(s32 arg0) {
         if (fade >= 0x100) {
             fade = 0x1FF - fade;
         }
-        func_80067F2C(&sMenuCurrDisplayList, (s32 *)&sMenuCurrHudMat);
+        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
         for (i = 0; i <= D_801263E0; i++) {
             filterAlpha = 0;
@@ -4257,7 +4257,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     }
 
     func_8009BD5C();
-    func_80067F2C(&sMenuCurrDisplayList, (s32 *)&sMenuCurrHudMat);
+    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < 3; i++) { // 3 files
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
             color = 0xB0E0C0FF;
@@ -4630,7 +4630,7 @@ void render_track_select_setup_ui(s32 updateRate) {
     }
     func_80066894(0, 1);
     func_8009BD5C();
-    func_80067F2C(&sMenuCurrDisplayList, (s32 *)&sMenuCurrHudMat);
+    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay < 0) {
         if (D_801269F4 == 4) {
             sp84 = 6;
@@ -6944,11 +6944,11 @@ void dialogue_close_stub(void) {
  * Renders a textbox with a displaylist.
  * Return value goes completely unused.
  */
-f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Gfx **mat, VertexList **verts) {
+f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Mtx **mat, VertexList **verts) {
     sMenuCurrDisplayList = *dlist;
     sMenuCurrHudMat = *mat;
     sMenuCurrHudVerts = *verts;
-    func_80067F2C(&sMenuCurrDisplayList, (s32 *)&sMenuCurrHudMat);
+    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (D_800E1E28 != 0 && sCurrentMenuID == 4) {
         func_8009E3D0();
     }
