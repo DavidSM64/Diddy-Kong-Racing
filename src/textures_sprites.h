@@ -92,8 +92,6 @@ typedef struct TempTexHeader {
 /* 0x25 */ u8 pad25[3]; // padding
 } TempTexHeader;
 
-s32 get_random_number_from_range(s32, s32); //?
-
 void func_8007AE0C(s32 arg0);
 void func_8007AE28(s32 arg0);
 s32 func_8007AE44(void);
