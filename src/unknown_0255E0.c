@@ -678,7 +678,7 @@ void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segment
 
 UNUSED s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     LevelModelSegmentBoundingBox *bb;
-    s32 x, y, z;    
+    s32 x, y, z;
     if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return FALSE;
     }
