@@ -8,7 +8,7 @@ BuildTTGhost::BuildTTGhost(std::string srcPath, std::string dstPath) {
     std::vector<uint8_t> out(align16(SIZEOF_TTGHOST_HEADER + numberOfNodes * SIZEOF_TTGHOST_NODE));
     
     // Write header
-    out[0] = get_int_from_json(srcPath, "header", "level");
+    out[0] = get_index_from_build_id("ASSET_LEVEL_HEADERS", get_string_from_json(srcPath, "header", "level")); // get_int_from_json(srcPath, "header", "level");
     out[1] = get_enum_value_from_string("Vehicle", get_string_from_json(srcPath, "header", "vehicle"));
     out[2] = 9; // Always 9?
     write_big_endian_halfword(out, 4, get_int_from_json(srcPath, "header", "time"));

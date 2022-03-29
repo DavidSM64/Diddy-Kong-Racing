@@ -84,7 +84,7 @@ std::string formatGameTextWordEntry(std::string sourceSectionFirst, std::string 
 }
 
 void AssetAsmIncludes::write_ttghost_table_entry(std::stringstream &out, std::string entryWord, std::string ttGhostJsonPath) {
-    int levelId = get_int_from_json(ttGhostJsonPath, "header", "level");
+    int levelId = get_index_from_build_id("ASSET_LEVEL_HEADERS", get_string_from_json(ttGhostJsonPath, "header", "level"));
     std::string vehicle = get_string_from_json(ttGhostJsonPath, "header", "vehicle");
     int vehicleId = get_enum_value_from_string("Vehicle", vehicle);
     write_two_words(out, to_hex((levelId << 24) | (vehicleId << 16)), entryWord);

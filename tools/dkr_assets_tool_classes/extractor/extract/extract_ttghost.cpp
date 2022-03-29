@@ -8,8 +8,8 @@ json::JSON &configJSON)
     out["type"] = "TTGhosts";
     out["header"] = json::Object();
     out["nodes"] = json::Array();
-    
-    out["header"]["level"] = data[0];
+
+    out["header"]["level"] = get_build_id_from_section("ASSET_LEVEL_HEADERS", data[0]); // data[0];
     
     out["header"]["vehicle"] = get_enum_string_from_value("Vehicle", data[1]);
     
