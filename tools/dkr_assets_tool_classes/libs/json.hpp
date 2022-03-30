@@ -181,13 +181,19 @@ class JSON
         ~JSON() {
             switch( Type ) {
             case Class::Array:
-                delete Internal.List;
+                if(Internal.List != nullptr) {
+                    delete Internal.List;
+                }
                 break;
             case Class::Object:
-                delete Internal.Map;
+                if(Internal.Map != nullptr) {
+                    delete Internal.Map;
+                }
                 break;
             case Class::String:
-                delete Internal.String;
+                if(Internal.String != nullptr) {
+                    delete Internal.String;
+                }
                 break;
             default:;
             }

@@ -8,7 +8,7 @@ public:
     ~BuildGameText();
 private:
     /*
-    void build_dialog(std::vector<uint8_t> &out, json::JSON &inputJSON);
-    void build_textbox(std::vector<uint8_t> &out, json::JSON &inputJSON);
+    void build_dialog(std::vector<uint8_t> &out, std::string &srcPath);
     */
+    void build_textbox(std::vector<uint8_t> &out, std::string &srcPath);
 };

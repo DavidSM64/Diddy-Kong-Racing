@@ -123,30 +123,33 @@ void load_enums_cache() {
     }
 }
 
+std::mutex enumsMutex;
+
 void make_sure_enums_are_loaded() {
-    if(hasLoadedEnums) {
-        return;
-    }
-    std::string assetsFolderPath = get_asset_folder_path();
-    ensure_that_path_exists("build/"); // Make sure build folder exists
-    if(path_exists(ENUMS_CACHE_PATH)) {
-        load_enums_cache();
-    } else {
-        // Generate enums map
-        path_must_exist("include/enums.h");
-        std::string enumsIncludeText = read_text_file("include/enums.h");
-        std::regex enumRegex("enum ([^\\s{]+)\\s*[{]((?:.*\\n)*?)[}]");
-        std::smatch sm;
-        std::string text = enumsIncludeText;
-        while (regex_search(text, sm, enumRegex)) {
-            std::string enumName = sm[1];
-            std::string enumValuesText = sm[2];
-            get_enum_values(enumName, enumValuesText);
-            text = sm.suffix();
+    enumsMutex.lock();
+    if(!hasLoadedEnums) {
+        std::string assetsFolderPath = get_asset_folder_path();
+        ensure_that_path_exists("build/"); // Make sure build folder exists
+        if(path_exists(ENUMS_CACHE_PATH)) {
+            load_enums_cache();
+        } else {
+            // Generate enums map
+            path_must_exist("include/enums.h");
+            std::string enumsIncludeText = read_text_file("include/enums.h");
+            std::regex enumRegex("enum ([^\\s{]+)\\s*[{]((?:.*\\n)*?)[}]");
+            std::smatch sm;
+            std::string text = enumsIncludeText;
+            while (regex_search(text, sm, enumRegex)) {
+                std::string enumName = sm[1];
+                std::string enumValuesText = sm[2];
+                get_enum_values(enumName, enumValuesText);
+                text = sm.suffix();
+            }
+            save_enums_cache();
         }
-        save_enums_cache();
+        hasLoadedEnums = true;
     }
-    hasLoadedEnums = true;
+    enumsMutex.unlock();
 }
 
 std::string get_enum_string_from_value(std::string enumName, int value) {

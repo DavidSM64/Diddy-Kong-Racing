@@ -15,6 +15,7 @@ std::unordered_map<std::string, json::JSON> jsonFileCache;
 
 json::JSON load_assets_json(std::string assetsFolder, std::string jsonName) {
     std::string jsonFilepath = assetsFolder + "/" + jsonName;
+    path_must_exist(jsonFilepath);
     return json::JSON::Load(read_text_file(jsonFilepath));
 }
 
@@ -25,25 +26,32 @@ void write_json(json::JSON &jsonData, std::string filename) {
     myfile.close();
 }
 
+std::mutex assetsJsonMutex;
+
 void make_sure_assets_json_is_loaded() {
-    if(hasLoadedAssetsJson) {
-        return;
+    assetsJsonMutex.lock();
+    if(!hasLoadedAssetsJson) {
+        if(!is_asset_folder_path_defined()) {
+            display_error_and_abort("assetsFolderPath not defined! Make sure set_assets_folder_path() is called somewhere!");
+        }
+        std::string assetsJsonPath = get_asset_folder_path() + "/" + get_version() + "/" + ASSETS_FILENAME;
+        path_must_exist(assetsJsonPath);
+        std::string assetsJsonText = read_text_file(assetsJsonPath);
+        assetsJson = json::JSON::Load(assetsJsonText);
+        hasLoadedAssetsJson = true;
     }
-    if(!is_asset_folder_path_defined()) {
-        std::cout << "assetsFolderPath not defined! Make sure set_assets_folder_path() is called somewhere!" << std::endl;
-        throw 1;
-    }
-    std::string assetsJsonPath = get_asset_folder_path() + "/" + get_version() + "/" + ASSETS_FILENAME;
-    path_must_exist(assetsJsonPath);
-    std::string assetsJsonText = read_text_file(assetsJsonPath);
-    assetsJson = json::JSON::Load(assetsJsonText);
-    hasLoadedAssetsJson = true;
+    assetsJsonMutex.unlock();
 }
+
+
+std::mutex sectionJsonMutex;
 
 json::JSON *get_section_json(std::string sectionName) {
     make_sure_assets_json_is_loaded();
+    sectionJsonMutex.lock();
     std::string assetsFolderPath = get_asset_folder_path() + "/" + get_version();
     if(sectionName == lastSectionName) {
+        sectionJsonMutex.unlock();
         return lastSection;
     } else if(sectionCache.find(sectionName) == sectionCache.end()) {
         // section not found in cache, so it needs to be loaded/defined!
@@ -51,13 +59,16 @@ json::JSON *get_section_json(std::string sectionName) {
         if(assetSection.JSONType() == json::JSON::Class::String) {
             std::string sectionJsonLocalPath = assetsJson["assets"]["sections"][sectionName].ToString();
             make_lowercase(sectionJsonLocalPath);
-            sectionCache[sectionName] = json::JSON::Load(read_text_file(assetsFolderPath + "/" + sectionJsonLocalPath));
+            std::string jsonPath = assetsFolderPath + "/" + sectionJsonLocalPath;
+            path_must_exist(jsonPath);
+            sectionCache[sectionName] = json::JSON::Load(read_text_file(jsonPath));
         } else {
             sectionCache[sectionName] = assetSection;
         }
     }
     lastSectionName = sectionName;
     lastSection = &sectionCache[sectionName];
+    sectionJsonMutex.unlock();
     return lastSection;
 }
 

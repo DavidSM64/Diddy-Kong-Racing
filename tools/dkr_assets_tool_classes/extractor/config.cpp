@@ -323,7 +323,7 @@ void write_vanilla_warning_file(std::string baseDirectory) {
 
 void ExtractConfig::execute_extraction() {
     // These braces are important, because I want the ThreadPool to call its destructor by going out of scope.
-    {
+    //{
         ThreadPool pool(std::thread::hardware_concurrency()); 
         //ThreadPool pool(1);
         
@@ -363,7 +363,7 @@ void ExtractConfig::execute_extraction() {
                 }
             });
         }
-    }
+    //}
 }
 
 void ExtractConfig::extract() {

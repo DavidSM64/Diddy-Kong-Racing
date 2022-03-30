@@ -1,6 +1,7 @@
 CC := gcc
 CXX := g++
 CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 -O2 -s
+CXXFLAGS := --std=c++17 -lstdc++fs -lcrypto -lssl -lpthread
 LDFLAGS := -lm
 PROGRAMS := n64crc 
 CXX_PROGRAMS := dkr_assets_tool
@@ -37,12 +38,12 @@ dkr_assets_tool_OBJ_FILES := $(foreach file,$(dkr_assets_tool_C_FILES),$(BUILD_D
 DUMMY != mkdir -p $(sort $(dir $(dkr_assets_tool_OBJ_FILES)))
 
 $(BUILD_DIR)/%.o: %.c
-	$(CXX) -c $^ -o $@ --std=c++17 -lstdc++fs -lcrypto -lssl -lpthread $(LDFLAGS)
+	$(CXX) -c $^ -o $@ $(CXXFLAGS) $(LDFLAGS)
 $(BUILD_DIR)/%.o: %.cpp
-	$(CXX) -c $< -o $@ --std=c++17 -lstdc++fs -lcrypto -lssl -lpthread $(LDFLAGS)
+	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 dkr_assets_tool: $(dkr_assets_tool_OBJ_FILES)
-	$(CXX) $^ -o $@ --std=c++17 -lstdc++fs -lcrypto -lssl -lpthread $(LDFLAGS)
+	$(CXX) $^ -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 .PHONY: all clean distclean default
 

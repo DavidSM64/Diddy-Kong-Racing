@@ -12,20 +12,17 @@ ExtractGameText::ExtractGameText(std::string key, std::vector<uint8_t> data, std
         isDialog = (out["text-type"].ToString() == "Dialog");
     }
     
-    // Uncomment this when the formats have been fully figured out.
-    /*
     if(isDialog) {
-        extract_dialog(data, data);
+        // Uncomment this when the formats have been fully figured out.
+        //extract_dialog(out, data);
+        // Remove this raw part when dialog has been figured out.
+        out["raw"] = json::Array();
+        size_t dataLength = data.size();
+        for(int i = 0; i < dataLength; i++) {
+            out["raw"].append(data[i]);
+        }
     } else { // Textbox
-        extract_textbox(data, data);
-    }
-    */  
-
-    // This is temporary
-    out["raw"] = json::Array();
-    size_t dataLength = data.size();
-    for(int i = 0; i < dataLength; i++) {
-        out["raw"].append(data[i]);
+        extract_textbox(out, data);
     }
 
     write_json(out, outFilepath);
@@ -123,7 +120,7 @@ void ExtractGameText::extract_textbox(json::JSON &out, std::vector<uint8_t> &dat
                 break;
             case 6:
                 cmd["command"] = "SetAlignment";
-                cmd["value"] = (data[offset++] == 0) ? "ALIGN_CENTER" : "ALIGN_LEFT";
+                cmd["value"] = (data[offset++] == 0) ? "Center" : "Left";
                 break;
             case 7:
                 cmd["command"] = "Unknown"; // Doesn't seem to do anything as far as I can tell.

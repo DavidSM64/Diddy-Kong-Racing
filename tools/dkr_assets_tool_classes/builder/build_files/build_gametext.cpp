@@ -13,25 +13,25 @@ BuildGameText::BuildGameText(std::string srcPath, std::string dstPath) {
     
     
     // TODO: Figure this out!
-    /*
+
     std::string textType = get_string_from_json(srcPath, "text-type");
     if(textType == "Dialog") {
-        build_dialog(out, inputJSON);
+        // This is temporary until the game text format is figured out
+        int numRawBytes = get_array_length_from_json(srcPath, "raw");
+
+        for(int i = 0; i < numRawBytes; i++) {
+            out.push_back(get_int_from_json(srcPath, "raw", i));
+        }
+        //build_dialog(out, srcPath);
     } else {
-        build_textbox(out, inputJSON);
+        build_textbox(out, srcPath);
     }
-    */
 
-    // This is temporary until the game text format is figured out
-    int numRawBytes = get_array_length_from_json(srcPath, "raw");
-
-    for(int i = 0; i < numRawBytes; i++) {
-        out.push_back(get_int_from_json(srcPath, "raw", i));
-    }
-    
+        
     while(out.size() % 8 != 0) {
         out.push_back(0); // Make sure the data is 8-byte aligned.
     }
+    
     
     write_binary_file(out, dstPath);
 }
@@ -41,7 +41,7 @@ BuildGameText::~BuildGameText() {
 }
 
 /*
-void BuildGameText::build_dialog(std::vector<uint8_t> &out, json::JSON inputJSON) {
+void BuildGameText::build_dialog(std::vector<uint8_t> &out, std::string &srcPath) {
     int numberOfLines = GET_ARRAY_LENGTH("lines");
     for(int i = 0; i < numberOfLines; i++) {
         if(inputJSON["lines"][i].JSONType() == json::JSON::Class::String) {
@@ -68,6 +68,7 @@ void BuildGameText::build_dialog(std::vector<uint8_t> &out, json::JSON inputJSON
         //}
     }
 }
+*/
 
 void write_basic_command(std::vector<uint8_t> &out, uint8_t cmdId, uint8_t value) {
     out.push_back(cmdId);
@@ -82,10 +83,10 @@ void write_basic_command_4_args(std::vector<uint8_t> &out, uint8_t cmdId, uint8_
     out.push_back(d);
 }
 
-void BuildGameText::build_textbox(std::vector<uint8_t> &out, json::JSON inputJSON) {
-    int numberOfPages = GET_ARRAY_LENGTH("pages");
+void BuildGameText::build_textbox(std::vector<uint8_t> &out, std::string &srcPath) {
+    int numberOfPages = get_array_length_from_json(srcPath, "pages");
     for(int page = 0; page < numberOfPages; page++) {
-        int numberOfCommandsInPage = GET_ARRAY_LENGTH("pages", page);
+        int numberOfCommandsInPage = get_array_length_from_json(srcPath, "pages", page);
         for(int cmd = 0; cmd < numberOfCommandsInPage; cmd++) {
             std::string cmdType = get_string_from_json(srcPath, "pages", page, cmd, "command");
             if(cmdType == "Text") {
@@ -107,7 +108,7 @@ void BuildGameText::build_textbox(std::vector<uint8_t> &out, json::JSON inputJSO
                     get_int_from_json(srcPath, "pages", page, cmd, "value", "alpha")
                 );
             } else if(cmdType == "SetAlignment") {
-                write_basic_command(out, 6, get_string_from_json(srcPath, "pages", page, cmd, "value") == "ALIGN_CENTER" ? 0 : 4);
+                write_basic_command(out, 6, get_string_from_json(srcPath, "pages", page, cmd, "value") == "Center" ? 0 : 4);
             } else if(cmdType == "Unknown") {
                 write_basic_command(out, 7, get_int_from_json(srcPath, "pages", page, cmd, "value"));
             } else if(cmdType == "AddVerticalSpacing") {
@@ -117,7 +118,7 @@ void BuildGameText::build_textbox(std::vector<uint8_t> &out, json::JSON inputJSO
             } else if(cmdType == "SetTimer") {
                 write_basic_command(out, 10, get_int_from_json(srcPath, "pages", page, cmd, "value"));
             } else if(cmdType == "AllowUserInput") {
-                write_basic_command(out, 10, GET_BOOL("pages", page, cmd, "value") ? 1 : 0);
+                write_basic_command(out, 11, get_bool_from_json(srcPath, "pages", page, cmd, "value") ? 1 : 0);
             }
         }
         if(page < numberOfPages - 1) {
@@ -125,4 +126,3 @@ void BuildGameText::build_textbox(std::vector<uint8_t> &out, json::JSON inputJSO
         }
     }
 }
-*/

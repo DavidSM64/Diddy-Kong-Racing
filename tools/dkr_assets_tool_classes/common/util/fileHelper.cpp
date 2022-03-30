@@ -64,8 +64,7 @@ bool path_exists(std::string path) {
 
 void path_must_exist(std::string path) {
     if(!fs::exists(path)) {
-        std::cout << "Error: Path \"" << path << "\" does not exist!" << std::endl;
-        throw 1;
+        display_error_and_abort("Error: Path \"", path, "\" does not exist!");
     }
 }
 

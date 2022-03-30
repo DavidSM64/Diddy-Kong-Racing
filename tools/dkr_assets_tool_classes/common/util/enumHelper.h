@@ -9,6 +9,7 @@
 #include <iterator>
 #include <map>
 #include <regex>
+#include <mutex>
 
 #include "../../libs/calculator.hpp"
 
