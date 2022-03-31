@@ -70,6 +70,18 @@
 | fonts | Object | Yes | Defines the filename for each font. The order of the fonts is set by the `asset_fonts.json` file in the root version directory. |
 | type | String | Yes | Should always be "Fonts" |
 
+```json 
+{
+  "fonts" : {
+    "ASSET_FONTS_BIGFONT" : "game_fonts/BigFont.json",
+    "ASSET_FONTS_FUNFONT" : "game_fonts/FunFont.json",
+    "ASSET_FONTS_SMALLFONT" : "game_fonts/SmallFont.json",
+    "ASSET_FONTS_SUBTITLEFONT" : "game_fonts/SubtitleFont.json"
+  },
+  "type" : "Fonts"
+}
+```
+
 ### Font
 
 | Property Name | Type | Required | Comments |
@@ -482,18 +494,18 @@ Note: Only Textboxes are properly supported.
 | `header` Property Name | Type | Required | Comments |
 | -------- | -------- | -------- | -------- | 
 | level | String | Yes | Level Header ID for this ghost. |
-| time | int | Yes | Divide this number by 60 to get seconds. |
+| time | Integer | Yes | Divide this number by 60 to get seconds. |
 | vehicle | String | Yes | Vehicle used for this ghost. See the "Vehicle" enum for options. |
 
 
 | `node` Property Name | Type | Required | Comments |
 | -------- | -------- | -------- | -------- | 
-| rx | int | Yes | X rotation |
-| ry | int | Yes | Y rotation |
-| rz | int | Yes | Z rotation |
-| x | int | Yes | X position |
-| y | int | Yes | Y position |
-| z | int | Yes | Z position |
+| rx | Integer | Yes | X rotation |
+| ry | Integer | Yes | Y rotation |
+| rz | Integer | Yes | Z rotation |
+| x | Integer | Yes | X position |
+| y | Integer | Yes | Y position |
+| z | Integer | Yes | Z position |
 
 ```json
 {
