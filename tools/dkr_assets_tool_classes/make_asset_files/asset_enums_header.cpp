@@ -23,9 +23,14 @@ AssetEnumsHeader::AssetEnumsHeader(std::string dstFolder) {
             std::vector<std::string> sectionOrder = get_section_order(sectionName);
             write_order_section(out, sectionName, sectionOrder);
         }
-        if(get_string_from_section(sectionName, "type") == "MenuText") {
+        std::string sectionType = get_string_from_section(sectionName, "type");
+        if(sectionType == "MenuText") {
             std::vector<std::string> menuTextBuildIds = get_array_from_section(sectionName, "menu-text-build-ids");
             write_order_section(out, sectionName + "_IDS", menuTextBuildIds);
+        } else if (sectionType == "Fonts") {
+            std::vector<std::string> fonts = get_array_from_section(sectionName, "fonts-order");
+            write_header_comment(out, sectionName);
+            write_order_section(out, sectionName, fonts);
         }
     }
     out << "#endif " << std::endl;

@@ -100,7 +100,7 @@ void ExtractGameText::extract_textbox(json::JSON &out, std::vector<uint8_t> &dat
                 break;
             case 3:
                 cmd["command"] = "SetFont";
-                cmd["value"] = data[offset++];
+                cmd["value"] = get_string_from_section("ASSET_FONTS", "fonts-order", data[offset++]);
                 break;
             case 4:
                 cmd["command"] = "SetBorder";

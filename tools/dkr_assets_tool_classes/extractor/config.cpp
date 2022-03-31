@@ -297,6 +297,18 @@ void ExtractConfig::extract_asset_sections(int &romOffset) {
                 }
                 sectionOut["filename"] = filename + get_extension_from_type(type);
                 extractions.push_back(ExtractInfo(build_id, type, folder, filename, sectionsData[i]));
+
+                if(type == "Fonts") {
+                    //sectionOut["fonts"] = json::Object();
+                    sectionOut["fonts-order"] = json::Array();
+                    for(auto& fontName : section["font-names"].ArrayRange()) {
+                        std::string fontid = "ASSET_FONTS_" + fontName.ToString();
+                        make_uppercase(fontid);
+                        //sectionOut["fonts"][fontid] = fontName.ToString() + ".json";
+                        sectionOut["fonts-order"].append(fontid);
+                    }
+                }
+
             } else if (type == "Table") {
                 sectionOut["for"] = section["for"];
             }
@@ -323,7 +335,7 @@ void write_vanilla_warning_file(std::string baseDirectory) {
 
 void ExtractConfig::execute_extraction() {
     // These braces are important, because I want the ThreadPool to call its destructor by going out of scope.
-    //{
+    {
         ThreadPool pool(std::thread::hardware_concurrency()); 
         //ThreadPool pool(1);
         
@@ -352,7 +364,7 @@ void ExtractConfig::execute_extraction() {
                 } else if(type == "Sprites") {
                     ExtractSprite(key, data, outFilepath + ".json", configJSON);
                 } else if(type == "Fonts") {
-                    ExtractFonts(key, data, outFilepath + ".json", configJSON);
+                    ExtractFonts(key, data, outFilepath + ".json", folder, configJSON);
                 } else if(is_binary_type(type)) {
                     ExtractBinary(key, data, outFilepath + ".bin");
                 } else if(is_compressed_type(type)) {
@@ -363,7 +375,7 @@ void ExtractConfig::execute_extraction() {
                 }
             });
         }
-    //}
+    }
 }
 
 void ExtractConfig::extract() {

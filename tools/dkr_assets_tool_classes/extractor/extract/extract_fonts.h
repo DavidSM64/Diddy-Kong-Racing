@@ -4,6 +4,6 @@
 
 class ExtractFonts : Extract {
 public:
-    ExtractFonts(std::string key, std::vector<uint8_t> data, std::string outFilepath, json::JSON &configJSON);
+    ExtractFonts(std::string key, std::vector<uint8_t> data, std::string outFilepath, std::string folder, json::JSON &configJSON);
     ~ExtractFonts();
 };

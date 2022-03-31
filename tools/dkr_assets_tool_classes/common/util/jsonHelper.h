@@ -128,6 +128,19 @@ inline int get_array_length_from_section(std::string sectionName, FirstKey const
 }
 
 template<typename FirstKey, typename ...RestKeys>
+inline int get_index_of_string_array_value_from_section(std::string sectionName, std::string value, FirstKey const& key, RestKeys const&... rest_keys) {
+    json::JSON *json = get_section_json(sectionName);
+
+    std::vector<std::string> arr = get_array_from_section(sectionName, key, rest_keys...);
+    for(int i = 0; i < arr.size(); i++) {
+        if(arr[i] == value) {
+            return i;
+        }
+    }
+    return -1; // Value not found in array.
+}
+
+template<typename FirstKey, typename ...RestKeys>
 inline bool section_has_key(std::string sectionName, FirstKey const& key, RestKeys const&... rest_keys) {
     json::JSON *json = get_section_json(sectionName);
     if constexpr(sizeof...(RestKeys) == 0)
@@ -135,6 +148,5 @@ inline bool section_has_key(std::string sectionName, FirstKey const& key, RestKe
     else
         return _json_has_key(*json, key, rest_keys...);
 }
-
 
 

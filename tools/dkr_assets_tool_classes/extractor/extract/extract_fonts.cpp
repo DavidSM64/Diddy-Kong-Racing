@@ -1,21 +1,29 @@
 #include "extract_fonts.h"
 
-ExtractFonts::ExtractFonts(std::string key, std::vector<uint8_t> data, std::string outFilepath, json::JSON &configJSON) 
+#define SECTION_TEXTURE_2D_INDEX 4
+#define SECTION_FONTS_INDEX 44
+
+#define GAME_FONTS_FOLDERNAME "game_fonts"
+
+ExtractFonts::ExtractFonts(std::string key, std::vector<uint8_t> data, std::string outFilepath, std::string folder, json::JSON &configJSON) 
 : Extract(key, data, outFilepath) {    
     json::JSON out = json::Object();
     
-    out["type"] = "Fonts";
-    
-    out["fonts"] = json::Array();
-    
+    //out["fonts-folder"] = GAME_FONTS_FOLDERNAME;
+    create_directory(folder + "/" + GAME_FONTS_FOLDERNAME); 
+    out["fonts"] = json::Object();
+
     int numberOfFonts = get_big_endian_word(data, 0);
-    
     for(int i = 0; i < numberOfFonts; i++) {
         int offset = (i * 0x400) + 4; // Offset in file for this font.
+
+        std::string fontName = get_ascii(data, offset);
+        std::string fontId = "ASSET_FONTS_" + fontName;
+        make_uppercase(fontId);
         
         json::JSON font = json::Object();
         
-        font["name"] = get_ascii(data, offset);
+        font["name"] = fontName;
         font["unknown-text"] = get_ascii(data, offset + 0x28);
         font["fixed-width"] = get_big_endian_halfword(data, offset + 0x20);
         font["y-offset"] = get_big_endian_halfword(data, offset + 0x22);
@@ -27,7 +35,8 @@ ExtractFonts::ExtractFonts(std::string key, std::vector<uint8_t> data, std::stri
         int texOffset = offset + 0x40;
         int16_t texIndex = get_big_endian_halfword(data, texOffset);
         while(texIndex != -1) {
-            font["textures"].append(configJSON["assets"]["sections"][4]["child-build-ids"][texIndex]);
+            json::JSON textureId = configJSON["assets"]["sections"][SECTION_TEXTURE_2D_INDEX]["child-build-ids"][texIndex];
+            font["textures"].append(textureId);
             texOffset += 2;
             texIndex = get_big_endian_halfword(data, texOffset);
         }
@@ -63,10 +72,15 @@ ExtractFonts::ExtractFonts(std::string key, std::vector<uint8_t> data, std::stri
         
         font["encoding"] = json::Object();
         font["encoding"]["type"] = "ASCII";
+
+        std::string fontJsonFilename = GAME_FONTS_FOLDERNAME;
+        fontJsonFilename += "/" + fontName + ".json";
+
+        out["fonts"][fontId] = fontJsonFilename;
         
-        out["fonts"].append(font);
+        write_json(font, folder + "/" + fontJsonFilename);
     }
-    
+    out["type"] = "Fonts";
     write_json(out, outFilepath);
     print_extracted();
 }

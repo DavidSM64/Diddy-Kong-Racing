@@ -92,7 +92,12 @@ void BuildGameText::build_textbox(std::vector<uint8_t> &out, std::string &srcPat
             if(cmdType == "Text") {
                 write_ascii(out, get_string_from_json(srcPath, "pages", page, cmd, "value"));
             } else if(cmdType == "SetFont") {
-                write_basic_command(out, 3, get_int_from_json(srcPath, "pages", page, cmd, "value"));
+                std::string fontId = get_string_from_json(srcPath, "pages", page, cmd, "value");
+                int fontIndex = get_index_of_string_array_value_from_section("ASSET_FONTS", fontId, "fonts-order");
+                if(fontIndex == -1) {
+                    display_error_and_abort("Could not find the font \"", fontId, "\" in the \"fonts-order\" array in asset_fonts.json.");
+                }
+                write_basic_command(out, 3, fontIndex);
             } else if(cmdType == "SetBorder") {
                 write_basic_command_4_args(out, 4, 
                     get_int_from_json(srcPath, "pages", page, cmd, "value", "Left"),

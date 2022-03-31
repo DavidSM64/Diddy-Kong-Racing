@@ -4816,6 +4816,15 @@ typedef enum {
     ASSET_PARTICLE_BEHAVIORS_74
 } AssetParticleBehaviorsEnum;
 
+/********** ASSET_FONTS **********/
+
+typedef enum {
+    ASSET_FONTS_FUNFONT,
+    ASSET_FONTS_SMALLFONT,
+    ASSET_FONTS_BIGFONT,
+    ASSET_FONTS_SUBTITLEFONT
+} AssetFontsEnum;
+
 /********** ASSET_TTGHOSTS **********/
 
 typedef enum {

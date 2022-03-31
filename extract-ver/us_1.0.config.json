@@ -965,7 +965,8 @@
 				"build-id": "ASSET_FONTS",
 				"type": "Fonts",
 				"folder": "fonts",
-				"filenames": ["fonts"]
+				"filenames": ["fonts"],
+                "font-names": [ "FunFont", "SmallFont", "BigFont", "SubtitleFont" ]
 			},
 			{
 				"build-id": "ASSET_BINARY_45",
