@@ -1,7 +1,10 @@
 #include "build_menutext.h"
 
 BuildMenuText::BuildMenuText(std::string srcPath, std::string dstPath) {
-    int numberOfEntries = get_array_length_from_json(srcPath, "order");
+    //int numberOfEntries = get_array_length_from_json(srcPath, "order");
+
+    std::vector<std::string> ids = get_array_from_section("ASSET_MENU_TEXT", "menu-text-build-ids");
+    int numberOfEntries = ids.size();
     
     std::vector<uint8_t> table(numberOfEntries * 4);
     std::vector<uint8_t> text;
@@ -10,9 +13,10 @@ BuildMenuText::BuildMenuText(std::string srcPath, std::string dstPath) {
     
     for(int i = 0; i < numberOfEntries; i++) {
         // Get the build id for this index.
-        std::string buildId = get_string_from_json(srcPath, "order", i);
-        // If the build ID string is empty (or null), then just write -1 to the table.
-        if(buildId == "") {
+        std::string buildId = ids[i];
+
+        // If the build ID is not in the sections, then just write -1 to the table.
+        if(!json_has_key(srcPath, "sections", buildId)) {
             write_big_endian_word(table, i * 4, -1);
             continue;
         }

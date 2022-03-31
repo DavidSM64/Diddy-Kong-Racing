@@ -161,10 +161,10 @@
 					"ASSET_MENU_TEXT_JAPANESE"
 				],
 				"language-order": [
-					"ENGLISH",
-					"FRENCH",
-					"GERMAN",
-					"JAPANESE"
+					"LANGUAGE_ENGLISH",
+					"LANGUAGE_FRENCH",
+					"LANGUAGE_GERMAN",
+					"LANGUAGE_JAPANESE"
 				],
 				"menu-text-build-ids": [
 					"ASSET_MENU_TEXT_STEREO",

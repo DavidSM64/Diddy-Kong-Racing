@@ -105,13 +105,13 @@ void ExtractGameText::extract_textbox(json::JSON &out, std::vector<uint8_t> &dat
             case 4:
                 cmd["command"] = "SetBorder";
                 cmd["value"] = json::Object(); // 0 = Farthest left/top, 0xFF = Farthest right/bottom
-                cmd["value"]["Left"] = data[offset++];
-                cmd["value"]["Top"] = data[offset++];
-                cmd["value"]["Right"] = data[offset++];
-                cmd["value"]["Bottom"] = data[offset++];
+                cmd["value"]["left"] = data[offset++];
+                cmd["value"]["top"] = data[offset++];
+                cmd["value"]["right"] = data[offset++];
+                cmd["value"]["bottom"] = data[offset++];
                 break;
             case 5:
-                cmd["command"] = "SetColor";
+                cmd["command"] = "SetColour";
                 cmd["value"] = json::Object();
                 cmd["value"]["red"]   = data[offset++];
                 cmd["value"]["green"] = data[offset++];
@@ -120,7 +120,7 @@ void ExtractGameText::extract_textbox(json::JSON &out, std::vector<uint8_t> &dat
                 break;
             case 6:
                 cmd["command"] = "SetAlignment";
-                cmd["value"] = (data[offset++] == 0) ? "Center" : "Left";
+                cmd["value"] = (data[offset++] == 0) ? "center" : "left";
                 break;
             case 7:
                 cmd["command"] = "Unknown"; // Doesn't seem to do anything as far as I can tell.

@@ -100,12 +100,12 @@ void BuildGameText::build_textbox(std::vector<uint8_t> &out, std::string &srcPat
                 write_basic_command(out, 3, fontIndex);
             } else if(cmdType == "SetBorder") {
                 write_basic_command_4_args(out, 4, 
-                    get_int_from_json(srcPath, "pages", page, cmd, "value", "Left"),
-                    get_int_from_json(srcPath, "pages", page, cmd, "value", "Top"),
-                    get_int_from_json(srcPath, "pages", page, cmd, "value", "Right"),
-                    get_int_from_json(srcPath, "pages", page, cmd, "value", "Bottom")
+                    get_int_from_json(srcPath, "pages", page, cmd, "value", "left"),
+                    get_int_from_json(srcPath, "pages", page, cmd, "value", "top"),
+                    get_int_from_json(srcPath, "pages", page, cmd, "value", "right"),
+                    get_int_from_json(srcPath, "pages", page, cmd, "value", "bottom")
                 );
-            } else if(cmdType == "SetColor") {
+            } else if(cmdType == "SetColour") {
                 write_basic_command_4_args(out, 5, 
                     get_int_from_json(srcPath, "pages", page, cmd, "value", "red"),
                     get_int_from_json(srcPath, "pages", page, cmd, "value", "green"),
@@ -113,7 +113,7 @@ void BuildGameText::build_textbox(std::vector<uint8_t> &out, std::string &srcPat
                     get_int_from_json(srcPath, "pages", page, cmd, "value", "alpha")
                 );
             } else if(cmdType == "SetAlignment") {
-                write_basic_command(out, 6, get_string_from_json(srcPath, "pages", page, cmd, "value") == "Center" ? 0 : 4);
+                write_basic_command(out, 6, get_string_from_json(srcPath, "pages", page, cmd, "value") == "center" ? 0 : 4);
             } else if(cmdType == "Unknown") {
                 write_basic_command(out, 7, get_int_from_json(srcPath, "pages", page, cmd, "value"));
             } else if(cmdType == "AddVerticalSpacing") {
