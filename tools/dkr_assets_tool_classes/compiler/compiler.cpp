@@ -127,11 +127,9 @@ void AssetCompiler::apply_package(std::string &packagesDirPath, std::string &pac
         packageDir = tempDirPath + "/" + packageName;
         // Make sure a subdirectory with the name of the package exists in the temp directory.
         if(file.has_file("meta.json")) {
-            std::cout << "A" << std::endl;
             create_directory(packageDir);
             file.extractall(packageDir);
         } else {
-            std::cout << "B" << std::endl;
             file.extractall(tempDirPath);
         }
     }
@@ -174,6 +172,9 @@ void AssetCompiler::apply_package(std::string &packagesDirPath, std::string &pac
             create_directory(outPath);
         } else {
             std::string localPath = otherFiles[i].substr(packageDir.length() + 1);
+            if(starts_with(localPath, "meta/")) {
+                continue; // Skip files within the meta folder.
+            }
             std::string outPath = outDirPath + "/" + localPath;
             copy_file(otherFiles[i], outPath);
         }
