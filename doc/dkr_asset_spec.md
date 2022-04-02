@@ -63,6 +63,34 @@
 
 ----
 
+## meta.json
+
+Every package should have a meta.json file in the root directory that describes the contents of the package.
+
+| Property Name | Type | Required | Comments |
+| -------- | -------- | -------- | -------- |
+| name | String | Yes | The name of the package. |
+| authors | Array | Yes | The list of authors for the package. |
+| pkg-version | String | Yes | The version text for the package. |
+| revision | Integer | Yes | The revision number for this package. Should match the revision number of dkr\_assets\_tool. |
+| revision-minor | Integer | Yes | The minor revision number for this package. Should match the minor revision number of dkr\_assets\_tool. |
+| description | String | No | Describes what the package does in detail. |
+| description-brief | String | No | A short form of the description. There is no maximum length, but try to keep it under 80 characters. |
+| thumbnail | String | No | A path to a PNG image or a base64 image uri. If you are using a path, put the thumbnail image in a folder called "meta" in the root directory. |
+
+----
+
+## Package Commands
+
+Every single JSON file has an option to tell the asset compiler how to write the JSON file. These commands start with the string "pkg-".
+
+| Property Name | Type | Required | Comments |
+| -------- | -------- | -------- | -------- | 
+| pkg-write | String | No | Either "replace" or "merge". "replace" will overwrite the existing JSON file if it exists. "merge" will combine the contents of the existing JSON file with the new one. Set to "replace" by default. |
+| pkg-rebuild | String | No | Either "onchange" or "always". "onchange" will only copy the final output if the md5 hash is different. "always" will copy the final output even if the md5 hash is the same. Set to "onchange" by default.
+
+----
+
 ## Fonts
 
 | Property Name | Type | Required | Comments |
@@ -93,7 +121,8 @@
 | special-character-width | Integer | Yes | Width for every ASCII character value smaller or equal to 0x20 (including space and excluding the tab character, which uses `tab-width`). |
 | tab-width | Integer | Yes | Width of the tab character `\t` |
 | textures | Array | Yes | An array of Texture IDs to use for this font. DKR has a maximum of 32 textures; future rare games extended this to 64. |
-| unknown-text | String | Yes | Leftover debug text from development? |
+| unknown-text | String | No | Leftover debug text from development? |
+| upper-case-only | Boolean | No | If set to true, then all lowercase nodes ("a", "b", "c", etc.) will only use their uppercase values. This is useful for custom fonts with only a single case in it. Set to `false` by default.  |
 | y-offset | Integer | Yes | Offsets the y position for each character in the font. (Might just be line height?) |
 
 | `character` Property Name | Type | Required | Comments |

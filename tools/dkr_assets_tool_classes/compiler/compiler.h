@@ -8,14 +8,14 @@
 
 #include "../common/util.h"
 #include "../common/types.h"
+#include "../common/revision_number.h"
 
 class AssetCompiler {
 public:
     AssetCompiler();
     ~AssetCompiler();
 private:
-    void apply_package(std::string &packagesDirPath, std::string &packageName, std::string &outDirPath);
-    void copy_stuff_from_folders(std::string &packagesDirPath, std::string &outDirPath);
-    void append_manifest_files(std::string &packagesDirPath, std::string &outDirPath);
-    void verify_json_files(std::string &folderPath);
+    void apply_package(std::string &packagesDirPath, std::string &packageName, std::string &tempDirPath, std::string &outDirPath);
+    void check_meta_json(std::string &packageName, std::string metaJsonFilepath);
+    void merge_output(std::string &tempDir, std::string &outDir);
 };

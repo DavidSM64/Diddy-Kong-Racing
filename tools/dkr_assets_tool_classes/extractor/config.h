@@ -18,6 +18,7 @@ namespace fs = std::filesystem;
 
 #include "../common/util.h"
 #include "../common/types.h"
+#include "../common/revision_number.h"
 #include "../libs/json.hpp"
 #include "../libs/ThreadPool.h"
 

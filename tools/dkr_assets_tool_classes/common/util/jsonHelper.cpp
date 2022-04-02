@@ -171,6 +171,8 @@ void recursively_combine_json(json::JSON &mainJson, json::JSON &addJson) {
 }
 
 void combine_json_files(std::string src1Path, std::string src2Path, std::string outputPath) {
+    path_must_exist(src1Path);
+    path_must_exist(src2Path);
     json::JSON mainJson = json::JSON::Load(read_text_file(src1Path));
     json::JSON addJson = json::JSON::Load(read_text_file(src2Path));
     recursively_combine_json(mainJson, addJson);

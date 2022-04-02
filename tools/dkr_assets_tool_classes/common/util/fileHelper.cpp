@@ -68,6 +68,12 @@ void path_must_exist(std::string path) {
     }
 }
 
+bool path_is_directory(std::string strPath) {
+    fs::path path(strPath);
+    std::error_code ec;
+    return fs::is_directory(path, ec);
+}
+
 std::vector<std::string> get_filenames_from_directory(std::string dirPath) {
     std::vector<std::string> out;
     for (const auto &file : fs::recursive_directory_iterator(dirPath)) {
@@ -117,6 +123,17 @@ std::vector<std::string> get_filenames_from_directory_with_extension(std::string
     return out;
 }
 
+std::vector<std::string> get_filenames_from_directory_without_extension(std::string dirPath, std::string extension) {
+    std::vector<std::string> out;
+    for (const auto &file : fs::recursive_directory_iterator(dirPath)) {
+        std::string path = file.path();
+        if(!ends_with(path, extension)) {
+            out.push_back(path);
+        }
+    }
+    return out;
+}
+
 void create_directory(std::string directory) {
     if(!fs::is_directory(directory)) {
         fs::create_directories(directory);
@@ -148,6 +165,11 @@ void ensure_that_path_exists(std::string path) {
     create_directory(get_directory_from_full_path(path));
 }
 
+
+void copy_file(std::string srcPath, std::string dstPath) {
+    fs::copy(srcPath, dstPath, fs::copy_options::overwrite_existing);
+}
+
 void recursively_copy_directory(std::string srcPath, std::string dstPath) {
     fs::copy(srcPath, dstPath, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 }
@@ -158,8 +180,22 @@ void delete_directory(std::string dirPath) {
     }
 }
 
+void delete_path(std::string path) {
+    if(path_exists(path)) {
+        if(path_is_directory(path)) {
+            fs::remove_all(path);
+        } else {
+            fs::remove(path);
+        }
+    }
+}
+
 std::string replace_extension(std::string path, std::string newExtension) {
     return path.substr(0, path.rfind(".")) + newExtension;
+}
+
+bool starts_with(const std::string &a, const std::string &b) {
+    return a.rfind(b, 0) == 0;
 }
 
 bool ends_with(const std::string &a, const std::string &b) {
@@ -178,4 +214,37 @@ void make_uppercase(std::string& input) {
         character = std::toupper(character);
     }
 }
+
+std::string calculate_md5(std::vector<uint8_t> &bytes) {
+    uint8_t buffer[0x4000];
+    uint8_t digest[MD5_DIGEST_LENGTH];
+
+    std::stringstream ss;
+
+    MD5_CTX md5Context;
+
+    MD5_Init(&md5Context);
+    MD5_Update(&md5Context, &bytes[0], bytes.size()); 
+    int res = MD5_Final(digest, &md5Context);
+
+    if(res == 0) {
+        return "";
+    }
+
+    // set up stringstream format
+    ss << std::hex << std::setfill('0');
+
+
+    for(uint8_t uc: digest) {
+        ss << std::setw(2) << (int)uc;
+    }
+
+    return ss.str();
+}
+
+std::string calculate_file_md5(std::string filepath) {
+    std::vector<uint8_t> bytes = read_binary_file(filepath);
+    return calculate_md5(bytes);
+}
+
 

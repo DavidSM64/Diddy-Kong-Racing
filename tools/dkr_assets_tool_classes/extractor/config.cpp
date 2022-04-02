@@ -1,8 +1,5 @@
 #include "config.h"
 
-#define REVISION_NUMBER 2
-#define REVISION_MINOR_NUMBER 0
-
 const std::string BASE_DIR_NAME = "vanilla";
 const std::string EXT_DIR_NAME = "packages";
 

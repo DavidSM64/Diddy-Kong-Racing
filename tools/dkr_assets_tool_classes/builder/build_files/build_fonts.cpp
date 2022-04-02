@@ -51,12 +51,18 @@ BuildFonts::BuildFonts(std::string srcPath, std::string dstPath) {
         
         std::string encoding = get_string_from_json(fontPath, "encoding", "type");
         make_uppercase(encoding);
+
+        bool uppercaseOnly = false;
+
+        if(json_has_key(fontPath, "uppercase-only")) {
+            uppercaseOnly = get_bool_from_json(fontPath, "uppercase-only");
+        }
         
         // Write character nodes
         if(encoding == "ASCII") {
-            write_ascii_char_nodes(out, fontPath, fontOffset + 0x100);
+            write_ascii_char_nodes(out, fontPath, fontOffset + 0x100, uppercaseOnly);
         } else if(encoding == "CUSTOM") {
-            write_custom_char_nodes(out, fontPath, fontOffset + 0x100);
+            write_custom_char_nodes(out, fontPath, fontOffset + 0x100, uppercaseOnly);
         } else {
             display_error_and_abort("Unsupported font encoding type: \"", encoding, "\"");
         }
@@ -71,17 +77,28 @@ BuildFonts::~BuildFonts() {
 }
 
 void write_char_node(std::vector<uint8_t> &out, std::string fontPath, int nodeOffset, std::string &chr) {
-    out[nodeOffset]     = get_int_from_json(fontPath, "characters", chr, "tex-index");
-    out[nodeOffset + 1] = get_int_from_json(fontPath, "characters", chr, "char-width");
-    out[nodeOffset + 2] = get_int_from_json(fontPath, "characters", chr, "offset", 0);   // X offset
-    out[nodeOffset + 3] = get_int_from_json(fontPath, "characters", chr, "offset", 1);   // Y offset
-    out[nodeOffset + 4] = get_int_from_json(fontPath, "characters", chr, "uv", 0);       // U coordinate
-    out[nodeOffset + 5] = get_int_from_json(fontPath, "characters", chr, "uv", 1);       // V coordinate
-    out[nodeOffset + 6] = get_int_from_json(fontPath, "characters", chr, "tex-size", 0); // Width
-    out[nodeOffset + 7] = get_int_from_json(fontPath, "characters", chr, "tex-size", 1); // Height
+    if(json_has_key(fontPath, "characters", chr)) {
+        out[nodeOffset]     = get_int_from_json(fontPath, "characters", chr, "tex-index");
+        out[nodeOffset + 1] = get_int_from_json(fontPath, "characters", chr, "char-width");
+        out[nodeOffset + 2] = get_int_from_json(fontPath, "characters", chr, "offset", 0);   // X offset
+        out[nodeOffset + 3] = get_int_from_json(fontPath, "characters", chr, "offset", 1);   // Y offset
+        out[nodeOffset + 4] = get_int_from_json(fontPath, "characters", chr, "uv", 0);       // U coordinate
+        out[nodeOffset + 5] = get_int_from_json(fontPath, "characters", chr, "uv", 1);       // V coordinate
+        out[nodeOffset + 6] = get_int_from_json(fontPath, "characters", chr, "tex-size", 0); // Width
+        out[nodeOffset + 7] = get_int_from_json(fontPath, "characters", chr, "tex-size", 1); // Height
+    } else { // Node doesn't exist, so just mark it as empty.
+        out[nodeOffset]     = -1;
+        out[nodeOffset + 1] =  0;
+        out[nodeOffset + 2] =  0;
+        out[nodeOffset + 3] =  0;
+        out[nodeOffset + 4] =  0;
+        out[nodeOffset + 5] =  0;
+        out[nodeOffset + 6] =  0;
+        out[nodeOffset + 7] =  0;
+    }
 }
 
-void BuildFonts::write_ascii_char_nodes(std::vector<uint8_t> &out, std::string fontPath, int offset) {
+void BuildFonts::write_ascii_char_nodes(std::vector<uint8_t> &out, std::string fontPath, int offset, bool uppercaseOnly) {
     for(int node = CHAR_NODE_START_OFFSET; node < CHAR_NODE_END_OFFSET; node++) {
         std::string chr;
         if(node == 127) {
@@ -94,11 +111,14 @@ void BuildFonts::write_ascii_char_nodes(std::vector<uint8_t> &out, std::string f
             chr = (char)node;
         }
         int nodeOffset = offset + (node - CHAR_NODE_START_OFFSET) * SIZEOF_CHAR_NODE;
+        if(uppercaseOnly && node >= (int)'a' && node <= (int)'z') {
+            make_uppercase(chr);
+        }
         write_char_node(out, fontPath, nodeOffset, chr);
     }
 }
 
-void BuildFonts::write_custom_char_nodes(std::vector<uint8_t> &out, std::string fontPath, int offset) {
+void BuildFonts::write_custom_char_nodes(std::vector<uint8_t> &out, std::string fontPath, int offset, bool uppercaseOnly) {
     int index = 0;
     std::vector<std::string> order = get_array_from_json(fontPath, "encoding", "order");
     for(std::string &chr : order) {

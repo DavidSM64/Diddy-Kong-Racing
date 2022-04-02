@@ -2,7 +2,6 @@
 
 #include "../common/util.h"
 #include <iomanip>
-#include <openssl/md5.h>
 
 class ROM {
 public:
@@ -13,14 +12,15 @@ public:
     uint8_t get_byte(int romOffset);
     uint32_t get_uint(int romOffset);
     
-    std::string get_md5();
     int get_size();
+
+
+    std::string get_md5();
     
     bool is_valid();
     
 private:
     void test_endianness();
-    void calculate_md5();
     bool readROMFile(std::string filename);
     bool writeROMFile(std::string filename);
     
