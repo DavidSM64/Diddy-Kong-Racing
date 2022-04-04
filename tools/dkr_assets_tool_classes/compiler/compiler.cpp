@@ -71,7 +71,7 @@ AssetCompiler::AssetCompiler() {
         print_text("Cleaning up...");
         delete_directory(tempDirPath);
     } catch (int e) {
-        //delete_directory(tempDirPath);
+        delete_directory(tempDirPath);
         throw e;
     }
 
@@ -184,36 +184,31 @@ void AssetCompiler::apply_package(std::string &packagesDirPath, std::string &pac
 void AssetCompiler::merge_output(std::string &tempDir, std::string &outDir) {
     std::vector<std::string> tempFiles = get_filenames_from_directory(tempDir);
     std::vector<std::string> curFiles = get_filenames_from_directory(outDir);
-    std::vector<std::string> sameFiles;
+    std::vector<std::string> sameFiles, filesToAdd, filesToRemove;
 
     for(int i = 0; i < tempFiles.size(); i++) {
         std::string tempFilepath = tempFiles[i];
         std::string localPath = tempFilepath.substr(tempDir.length() + 1);
         if(path_exists(outDir + "/" + localPath)) {
             sameFiles.push_back(localPath);
-            tempFiles.erase(tempFiles.begin() + i);
-            i--;
+        } else {
+            filesToAdd.push_back(tempFilepath);
         }
     }
 
     for(int i = 0; i < curFiles.size(); i++) {
         std::string curOutFilepath = curFiles[i];
         std::string localPath = curOutFilepath.substr(outDir.length() + 1);
-        if(path_exists(tempDir + "/" + localPath)) {
-            curFiles.erase(curFiles.begin() + i);
-            i--;
+        if(!path_exists(tempDir + "/" + localPath)) {
+            filesToRemove.push_back(curOutFilepath);
         }
     }
 
-    // tempFiles now only has files that only exist in the temp directory. (Need to get added)
-    // curFiles now only has files that only exist in the current output directory. (Need to get deleted)
-    // sameFiles only has files that exist in both directories. (Need to compare their hashes)
-
-    for(std::string &pathToRemove : curFiles) {
+    for(std::string &pathToRemove : filesToRemove) {
         delete_path(pathToRemove);
     }
     
-    for(std::string &pathToAdd : tempFiles) {
+    for(std::string &pathToAdd : filesToAdd) {
         std::string localPath = pathToAdd.substr(tempDir.length() + 1);
         std::string outAddPath = outDir + "/" + localPath;
         if(path_is_directory(pathToAdd)) {
@@ -222,7 +217,7 @@ void AssetCompiler::merge_output(std::string &tempDir, std::string &outDir) {
             copy_file(pathToAdd, outAddPath);
         }
     }
-    
+
     for(std::string &sameFileLocalPath : sameFiles) {
         std::string tempFilePath = tempDir + "/" + sameFileLocalPath;
         std::string curFilePath = outDir + "/" + sameFileLocalPath;
@@ -245,11 +240,12 @@ void AssetCompiler::merge_output(std::string &tempDir, std::string &outDir) {
             if(doHashCheck) {
                 std::string tempFileHash = calculate_file_md5(tempFilePath);
                 std::string curFileHash = calculate_file_md5(curFilePath);
-                if(tempFileHash == curFileHash) {
-                    continue;
+                if(tempFileHash != curFileHash) {
+                    copy_file(tempFilePath, curFilePath);
                 }
+            } else {
+                copy_file(tempFilePath, curFilePath);
             }
-            copy_file(tempFilePath, curFilePath);
         }
     }
 }
