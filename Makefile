@@ -12,6 +12,16 @@ VERSION := us_1.0
 NON_MATCHING ?= 0
 $(eval $(call validate-option,NON_MATCHING,0 1))
 
+COMPILE_ASSETS ?= 0
+$(eval $(call validate-option,COMPILE_ASSETS,0 1))
+
+ifeq ($(COMPILE_ASSETS),1)
+  DUMMY != ./tools/dkr_assets_tool -c $(VERSION) ./assets >&2 || echo FAIL
+  ifeq ($(DUMMY),FAIL)
+    $(error Failed to compile assets)
+  endif
+endif
+
 ifeq ($(VERSION),us_1.0)
   DEFINES += VERSION_US_1_0=1
 endif
@@ -37,6 +47,7 @@ COLOR ?= 1
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),clean_lib)
 ifneq ($(MAKECMDGOALS),clean_src)
+ifneq ($(MAKECMDGOALS),distclean)
 ifneq ($(MAKECMDGOALS),reset)
 
 ################ Check if a baserom exists  ################
@@ -75,7 +86,11 @@ RECOMP_PROJECT := ./tools/ido-static-recomp/
 
 DUMMY != ls $(RECOMP_PROJECT)ido >/dev/null || echo FAIL
 ifeq ($(DUMMY),FAIL)
-  $(error Missing submodule ido-static-recomp. Please run 'git submodule update --init')
+DUMMY != git submodule update --init
+DUMMY != ls $(RECOMP_PROJECT)ido >/dev/null || echo FAIL
+ifeq ($(DUMMY),FAIL)
+$(error Missing submodule ido-static-recomp. Please run 'git submodule update --init')
+endif
 endif
 
 # List of IDO tools required for the repo.
@@ -110,6 +125,12 @@ endif
 endif
 endif
 endif
+endif
+
+################################
+
+# Removes the enums_cache if it exists in the build folde, incase someone modified the include/enums.h file.
+DUMMY != rm -Rf build/enums_cache
 
 ################ Target Executable and Sources ###############
 
@@ -175,8 +196,8 @@ FixPath = $(subst /,,$1)
 
 N64CRC = $(TOOLS_DIR)/n64crc
 FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
-TEXBUILDER = $(TOOLS_DIR)/dkr_texbuilder
-COMPRESS = $(TOOLS_DIR)/dkr_decompressor -c
+COMPRESS = $(TOOLS_DIR)/dkr_assets_tool -fc
+BUILDER = $(TOOLS_DIR)/dkr_assets_tool -b $(VERSION) ./assets
 
 LIB_DIRS := lib/
 ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/ lib/asm/non_decompilable
@@ -208,8 +229,6 @@ CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -W
 
 ####################### ASSETS #########################
 
-# TODO: Clean this up if possible
-
 # All the asset subfolders to create in the build folder.
 ASSETS_DIRS := audio bin fonts ids levels levels/headers levels/models levels/names levels/objectMaps misc objects objects/animations objects/headers objects/models particles particles/behaviors particles/particles sprites text text/game text/menu textures textures/2d textures/3d tt_ghosts unknown_0 ucode
 
@@ -218,99 +237,66 @@ UCODE_DIR = ucode/$(VERSION)
 
 ASSETS_COPY = cp
 
-AUDIO_IN_DIR = $(ASSETS_DIR)/audio
-AUDIO_OUT_DIR = $(BUILD_DIR)/audio
-ALL_ASSETS_BUILT += $(patsubst $(AUDIO_IN_DIR)/%.bin,$(AUDIO_OUT_DIR)/%.bin,$(wildcard $(AUDIO_IN_DIR)/*.bin))
+# Makes name uppercase, and also replaces '/' with '_' for subfolders.
+# Doing all those subst calls *should* be faster than `$(shell echo '$1' | tr '[:lower:]' '[:upper:]')
+GET_VAR_NAME = $(subst /,_,$(subst a,A,$(subst b,B,$(subst c,C,$(subst d,D,$(subst e,E,$(subst f,F,$(subst g,G,$(subst h,H,$(subst i,I,$(subst j,J,$(subst k,K,$(subst l,L,$(subst m,M,$(subst n,N,$(subst o,O,$(subst p,P,$(subst q,Q,$(subst r,R,$(subst s,S,$(subst t,T,$(subst u,U,$(subst v,V,$(subst w,W,$(subst x,X,$(subst y,Y,$(subst z,Z,$1)))))))))))))))))))))))))))
 
-BIN_IN_DIR = $(ASSETS_DIR)/bin
-BIN_OUT_DIR = $(BUILD_DIR)/bin
-ALL_ASSETS_BUILT += $(patsubst $(BIN_IN_DIR)/%.bin,$(BIN_OUT_DIR)/%.bin,$(wildcard $(BIN_IN_DIR)/*.bin))
+# $1 = Input/Output directories name
+define DEFINE_BINARY_FILES
+ALL_ASSETS_BUILT += $(patsubst $($1_IN_DIR)/%.bin,$($1_OUT_DIR)/%.bin,$(wildcard $($1_IN_DIR)/*.bin))
+endef
+# $1 = Input/Output directories name
+define DEFINE_COMPRESSED_BINARY_FILES
+ALL_ASSETS_BUILT += $(patsubst $($1_IN_DIR)/%.cbin,$($1_OUT_DIR)/%.bin,$(wildcard $($1_IN_DIR)/*.cbin))
+endef
+# $1 = Input/Output directories name
+define DEFINE_JSON_FILES
+ALL_ASSETS_BUILT += $(patsubst $($1_IN_DIR)/%.json,$($1_OUT_DIR)/%.bin,$(wildcard $($1_IN_DIR)/*.json))
+endef
+# $1 = Input/Output directories name
+define DEFINE_JSON_AND_BINARY_FILES
+$(eval $(call DEFINE_JSON_FILES,$1))
+$(eval $(call DEFINE_BINARY_FILES,$1))
+endef
 
-FONTS_IN_DIR = $(ASSETS_DIR)/fonts
-FONTS_OUT_DIR = $(BUILD_DIR)/fonts
-ALL_ASSETS_BUILT += $(patsubst $(FONTS_IN_DIR)/%.bin,$(FONTS_OUT_DIR)/%.bin,$(wildcard $(FONTS_IN_DIR)/*.bin))
+# $1 = folder name, $2 = define function
+define DEFINE_SECTION_FILES
+$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
+$(eval $(VAR_NAME)_IN_DIR = $(ASSETS_DIR)/$1)
+$(eval $(VAR_NAME)_OUT_DIR = $(BUILD_DIR)/$1)
+$(eval $(call $2,$(VAR_NAME)))
+endef
 
-IDS_IN_DIR = $(ASSETS_DIR)/ids
-IDS_OUT_DIR = $(BUILD_DIR)/ids
-ALL_ASSETS_BUILT += $(patsubst $(IDS_IN_DIR)/%.bin,$(IDS_OUT_DIR)/%.bin,$(wildcard $(IDS_IN_DIR)/*.bin))
+###### Define section files into the ALL_ASSETS_BUILT variable ######
 
-LEVELS_IN_DIR = $(ASSETS_DIR)/levels
-LEVELS_OUT_DIR = $(BUILD_DIR)/levels
-LEVEL_HEADERS_IN_DIR = $(LEVELS_IN_DIR)/headers
-LEVEL_HEADERS_OUT_DIR = $(LEVELS_OUT_DIR)/headers
-LEVEL_MODELS_IN_DIR = $(LEVELS_IN_DIR)/models
-LEVEL_MODELS_OUT_DIR = $(LEVELS_OUT_DIR)/models
-LEVEL_NAMES_IN_DIR = $(LEVELS_IN_DIR)/names
-LEVEL_NAMES_OUT_DIR = $(LEVELS_OUT_DIR)/names
-LEVEL_OBJMAPS_IN_DIR = $(LEVELS_IN_DIR)/objectMaps
-LEVEL_OBJMAPS_OUT_DIR = $(LEVELS_OUT_DIR)/objectMaps
-ALL_ASSETS_BUILT += $(patsubst $(LEVEL_HEADERS_IN_DIR)/%.bin,$(LEVEL_HEADERS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_HEADERS_IN_DIR)/*.bin))
-ALL_ASSETS_BUILT += $(patsubst $(LEVEL_MODELS_IN_DIR)/%.cbin,$(LEVEL_MODELS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_MODELS_IN_DIR)/*.cbin))
-ALL_ASSETS_BUILT += $(patsubst $(LEVEL_NAMES_IN_DIR)/%.bin,$(LEVEL_NAMES_OUT_DIR)/%.bin,$(wildcard $(LEVEL_NAMES_IN_DIR)/*.bin))
-ALL_ASSETS_BUILT += $(patsubst $(LEVEL_OBJMAPS_IN_DIR)/%.cbin,$(LEVEL_OBJMAPS_OUT_DIR)/%.bin,$(wildcard $(LEVEL_OBJMAPS_IN_DIR)/*.cbin))
+$(call DEFINE_SECTION_FILES,audio,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,bin,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,fonts,DEFINE_JSON_AND_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,ids,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,levels/headers,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,levels/models,DEFINE_COMPRESSED_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,levels/names,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,levels/objectMaps,DEFINE_COMPRESSED_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,misc,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,objects,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,objects/animations,DEFINE_COMPRESSED_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,objects/headers,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,objects/models,DEFINE_COMPRESSED_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,particles/behaviors,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,particles/particles,DEFINE_BINARY_FILES)
+$(call DEFINE_SECTION_FILES,sprites,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,text/game,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,text/menu,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,textures/2d,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,textures/3d,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,tt_ghosts,DEFINE_JSON_FILES)
+$(call DEFINE_SECTION_FILES,unknown_0,DEFINE_BINARY_FILES)
 
-MISC_IN_DIR = $(ASSETS_DIR)/misc
-MISC_OUT_DIR = $(BUILD_DIR)/misc
-ALL_ASSETS_BUILT += $(patsubst $(MISC_IN_DIR)/%.bin,$(MISC_OUT_DIR)/%.bin,$(wildcard $(MISC_IN_DIR)/*.bin))
-
-OBJECTS_IN_DIR = $(ASSETS_DIR)/objects
-OBJECTS_OUT_DIR = $(BUILD_DIR)/objects
-OBJECT_ANIMS_IN_DIR = $(OBJECTS_IN_DIR)/animations
-OBJECT_ANIMS_OUT_DIR = $(OBJECTS_OUT_DIR)/animations
-OBJECT_HEADERS_IN_DIR = $(OBJECTS_IN_DIR)/headers
-OBJECT_HEADERS_OUT_DIR = $(OBJECTS_OUT_DIR)/headers
-OBJECT_MODELS_IN_DIR = $(OBJECTS_IN_DIR)/models
-OBJECT_MODELS_OUT_DIR = $(OBJECTS_OUT_DIR)/models
-ALL_ASSETS_BUILT += $(patsubst $(OBJECTS_IN_DIR)/%.bin,$(OBJECTS_OUT_DIR)/%.bin,$(wildcard $(OBJECTS_IN_DIR)/*.bin))
-ALL_ASSETS_BUILT += $(patsubst $(OBJECT_ANIMS_IN_DIR)/%.cbin,$(OBJECT_ANIMS_OUT_DIR)/%.bin,$(wildcard $(OBJECT_ANIMS_IN_DIR)/*.cbin))
-ALL_ASSETS_BUILT += $(patsubst $(OBJECT_HEADERS_IN_DIR)/%.bin,$(OBJECT_HEADERS_OUT_DIR)/%.bin,$(wildcard $(OBJECT_HEADERS_IN_DIR)/*.bin))
-ALL_ASSETS_BUILT += $(patsubst $(OBJECT_MODELS_IN_DIR)/%.cbin,$(OBJECT_MODELS_OUT_DIR)/%.bin,$(wildcard $(OBJECT_MODELS_IN_DIR)/*.cbin))
-
-PARTICLES_IN_DIR = $(ASSETS_DIR)/particles
-PARTICLES_OUT_DIR = $(BUILD_DIR)/particles
-PART_BEHAVIORS_IN_DIR = $(PARTICLES_IN_DIR)/behaviors
-PART_BEHAVIORS_OUT_DIR = $(PARTICLES_OUT_DIR)/behaviors
-PART_PARTICLES_IN_DIR = $(PARTICLES_IN_DIR)/particles
-PART_PARTICLES_OUT_DIR = $(PARTICLES_OUT_DIR)/particles
-ALL_ASSETS_BUILT += $(patsubst $(PART_BEHAVIORS_IN_DIR)/%.bin,$(PART_BEHAVIORS_OUT_DIR)/%.bin,$(wildcard $(PART_BEHAVIORS_IN_DIR)/*.bin))
-ALL_ASSETS_BUILT += $(patsubst $(PART_PARTICLES_IN_DIR)/%.bin,$(PART_PARTICLES_OUT_DIR)/%.bin,$(wildcard $(PART_PARTICLES_IN_DIR)/*.bin))
-
-SPRITES_IN_DIR = $(ASSETS_DIR)/sprites
-SPRITES_OUT_DIR = $(BUILD_DIR)/sprites
-ALL_ASSETS_BUILT += $(patsubst $(SPRITES_IN_DIR)/%.bin,$(SPRITES_OUT_DIR)/%.bin,$(wildcard $(SPRITES_IN_DIR)/*.bin))
-
-TEXT_IN_DIR = $(ASSETS_DIR)/text
-TEXT_OUT_DIR = $(BUILD_DIR)/text
-TEXT_GAME_IN_DIR = $(TEXT_IN_DIR)/game
-TEXT_GAME_OUT_DIR = $(TEXT_OUT_DIR)/game
-TEXT_MENU_IN_DIR = $(TEXT_IN_DIR)/menu
-TEXT_MENU_OUT_DIR = $(TEXT_OUT_DIR)/menu
-ALL_ASSETS_BUILT += $(patsubst $(TEXT_GAME_IN_DIR)/%.bin,$(TEXT_GAME_OUT_DIR)/%.bin,$(wildcard $(TEXT_GAME_IN_DIR)/*.bin))
-ALL_ASSETS_BUILT += $(patsubst $(TEXT_MENU_IN_DIR)/%.bin,$(TEXT_MENU_OUT_DIR)/%.bin,$(wildcard $(TEXT_MENU_IN_DIR)/*.bin))
-
-TEXTURES_IN_DIR = $(ASSETS_DIR)/textures
-TEXTURES_OUT_DIR = $(BUILD_DIR)/textures
-TEXTURES_2D_IN_DIR = $(TEXTURES_IN_DIR)/2d
-TEXTURES_2D_OUT_DIR = $(TEXTURES_OUT_DIR)/2d
-TEXTURES_3D_IN_DIR = $(TEXTURES_IN_DIR)/3d
-TEXTURES_3D_OUT_DIR = $(TEXTURES_OUT_DIR)/3d
-ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_2D_IN_DIR)/%.png,$(TEXTURES_2D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_2D_IN_DIR)/*.png))
-ALL_ASSETS_BUILT += $(patsubst $(TEXTURES_3D_IN_DIR)/%.png,$(TEXTURES_3D_OUT_DIR)/%.bin,$(wildcard $(TEXTURES_3D_IN_DIR)/*.png))
-
-TT_GHOSTS_IN_DIR = $(ASSETS_DIR)/tt_ghosts
-TT_GHOSTS_OUT_DIR = $(BUILD_DIR)/tt_ghosts
-ALL_ASSETS_BUILT += $(patsubst $(TT_GHOSTS_IN_DIR)/%.bin,$(TT_GHOSTS_OUT_DIR)/%.bin,$(wildcard $(TT_GHOSTS_IN_DIR)/*.bin))
-
-UNKNOWN_0_IN_DIR = $(ASSETS_DIR)/unknown_0
-UNKNOWN_0_OUT_DIR = $(BUILD_DIR)/unknown_0
-ALL_ASSETS_BUILT += $(patsubst $(UNKNOWN_0_IN_DIR)/%.bin,$(UNKNOWN_0_OUT_DIR)/%.bin,$(wildcard $(UNKNOWN_0_IN_DIR)/*.bin))
-
+# Microcode
 UCODE_IN_DIR = $(UCODE_DIR)
 UCODE_OUT_DIR = $(BUILD_DIR)/ucode
 UCODE = $(wildcard $(UCODE_IN_DIR)/*.bin)
 ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
-
-#ALL_ASSETS_BUILT := $(ANIMATIONS_BUILT) $(AUDIO_BUILT) $(BILLBOARDS_BUILT) $(BINS_BUILT) $(CHEATS_BUILT) $(FONTS_BUILT) $(LEVELS_BUILT) $(OBJECTS_BUILT) $(TEXTURES_BUILT) $(PARTICLES_BUILT) $(TEXT_BUILT) $(TT_GHOSTS_BUILT) $(UCODE_BUILT) $(LUT_BUILT)
 
 ####################### LIBULTRA #########################
 
@@ -358,7 +344,15 @@ ifneq ($(wildcard ./build/.*),)
 	rm -r build
 else 
 	@echo "/build/ directory has already been deleted." 
-endif 
+endif
+
+distclean:
+	rm -rf build
+	rm -rf assets
+	rm -rf ucode
+	rm -rf dkr.ld
+	rm -rf tools/ido-static-recomp/{,.[!.],..?}* # Deletes all files, including hidden ones.
+	$(MAKE) -C tools distclean
     
 clean_lib:
 ifneq ($(wildcard $(BUILD_DIR)/lib/.*),)
@@ -388,98 +382,55 @@ dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 
 # All assets should output a .bin file
 
-$(AUDIO_OUT_DIR)/%.bin: $(AUDIO_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+# $1 = folder name, $2 = Print Message
+define CREATE_BINARY_ASSET_TARGET
+$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
+$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.bin
+	$$(call print,$2:,$$<,$$@)
+	$$(V)$$(ASSETS_COPY) $$^ $$@
+endef
 
-$(BIN_OUT_DIR)/%.bin: $(BIN_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
-$(FONTS_OUT_DIR)/%.bin: $(FONTS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
-$(IDS_OUT_DIR)/%.bin: $(IDS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
-$(LEVEL_HEADERS_OUT_DIR)/%.bin: $(LEVEL_HEADERS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+# $1 = folder name, $2 = Print Message
+define CREATE_COMPRESSED_ASSET_TARGET
+$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
+$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.cbin
+	$$(call print,$2:,$$<,$$@)
+	$$(V)$$(COMPRESS) $$^ $$@
+endef
 
-$(LEVEL_MODELS_OUT_DIR)/%.bin: $(LEVEL_MODELS_IN_DIR)/%.cbin
-	$(call print,Compressing:,$<,$@)
-	$(V)$(COMPRESS) $^ $@
-    
-$(LEVEL_NAMES_OUT_DIR)/%.bin: $(LEVEL_NAMES_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+# $1 = folder name, $2 = Print Message
+define CREATE_JSON_ASSET_TARGET
+$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
+$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.json
+	$$(call print,$2:,$$<,$$@)
+	$$(V)$$(BUILDER) $$^ $$@
+endef
 
-$(LEVEL_OBJMAPS_OUT_DIR)/%.bin: $(LEVEL_OBJMAPS_IN_DIR)/%.cbin
-	$(call print,Compressing:,$<,$@)
-	$(V)$(COMPRESS) $^ $@
-
-$(MISC_OUT_DIR)/%.bin: $(MISC_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
+$(eval $(call CREATE_BINARY_ASSET_TARGET,audio,Copying Audio Binary))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,bin,Copying Bin Binary))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,fonts,Copying Fonts Binary))
+$(eval $(call CREATE_JSON_ASSET_TARGET,fonts,Building Fonts))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,ids,Copying IDs Binary))
+$(eval $(call CREATE_JSON_ASSET_TARGET,levels/headers,Building Level Header))
+$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,levels/models,Compressing Level Model Binary))
+$(eval $(call CREATE_JSON_ASSET_TARGET,levels/names,Building Level Name))
+$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,levels/objectMaps,Compressing Level Object Map Binary))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,misc,Copying Misc Binary))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,objects,Copying Object Binary))
+$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,objects/animations,Compressing Object Animation Binary))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,objects/headers,Copying Object Header Binary))
+$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,objects/models,Compressing Object Model Binary))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,particles/behaviors,Copying Particle Behavior Binary))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,particles/particles,Copying Particle Binary))
+$(eval $(call CREATE_JSON_ASSET_TARGET,sprites,Building Sprite))
+$(eval $(call CREATE_JSON_ASSET_TARGET,text/game,Building Game Text))
+$(eval $(call CREATE_JSON_ASSET_TARGET,text/menu,Building Menu Text))
+$(eval $(call CREATE_JSON_ASSET_TARGET,textures/2d,Building Texture (2D)))
+$(eval $(call CREATE_JSON_ASSET_TARGET,textures/3d,Building Texture (3D)))
+$(eval $(call CREATE_JSON_ASSET_TARGET,tt_ghosts,Building T.T. Ghost))
+$(eval $(call CREATE_BINARY_ASSET_TARGET,unknown_0,Copying Unknown_0 Binary))
     
-$(OBJECTS_OUT_DIR)/%.bin: $(OBJECTS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-
-$(OBJECT_ANIMS_OUT_DIR)/%.bin: $(OBJECT_ANIMS_IN_DIR)/%.cbin
-	$(call print,Compressing:,$<,$@)
-	$(V)$(COMPRESS) $^ $@
-    
-$(OBJECT_HEADERS_OUT_DIR)/%.bin: $(OBJECT_HEADERS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-
-$(OBJECT_MODELS_OUT_DIR)/%.bin: $(OBJECT_MODELS_IN_DIR)/%.cbin
-	$(call print,Compressing:,$<,$@)
-	$(V)$(COMPRESS) $^ $@
-    
-$(PART_BEHAVIORS_OUT_DIR)/%.bin: $(PART_BEHAVIORS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
-$(PART_PARTICLES_OUT_DIR)/%.bin: $(PART_PARTICLES_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
-$(SPRITES_OUT_DIR)/%.bin: $(SPRITES_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
-$(TEXT_GAME_OUT_DIR)/%.bin: $(TEXT_GAME_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
-$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-
-$(TEXTURES_2D_OUT_DIR)/%.bin: $(TEXTURES_2D_IN_DIR)/%.png
-	$(call print,Building Texture:,$<,$@)
-	$(V)$(TEXBUILDER) $^ $@
-
-$(TEXTURES_3D_OUT_DIR)/%.bin: $(TEXTURES_3D_IN_DIR)/%.png
-	$(call print,Building Texture:,$<,$@)
-	$(V)$(TEXBUILDER) $^ $@
-
-$(TEXT_MENU_OUT_DIR)/%.bin: $(TEXT_MENU_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-
-$(TT_GHOSTS_OUT_DIR)/%.bin: $(TT_GHOSTS_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-
-$(UNKNOWN_0_OUT_DIR)/%.bin: $(UNKNOWN_0_IN_DIR)/%.bin
-	$(call print,Copying:,$<,$@)
-	$(V)$(ASSETS_COPY) $^ $@
-    
+# Microcode target
 $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 	$(call print,Copying:,$<,$@)
 	$(V)$(ASSETS_COPY) $^ $@
@@ -540,7 +491,7 @@ test: $(BUILD_DIR)/$(TARGET).z64
 load: $(BUILD_DIR)/$(TARGET).z64
 	$(LOADER) $(LOADER_FLAGS) $<
 
-.PHONY: all clean default diff test
+.PHONY: all clean distclean default diff test
 
 # Remove built-in rules, to improve performance
 MAKEFLAGS += --no-builtin-rules

@@ -1,559 +1,1043 @@
 {
-    "config-name" : "Diddy Kong Racing (USA v1.0)",
-    "checksum-md5" : "4f0e07f0eeac7e5d7ce3a75461888d03",
-    "subfolder" : "us_1.0",
-    "code" : {
-        "sections" : [
-            { 
-                "type": "NoExtract",
-                "folder" : "",
-                "files" : [
-                    { "filename": "rom_header",  "length" : "0x40" }
-                ]
-            },
-            {
-                "type": "Binary", 
-                "folder" : "bin",
-                "files" : [
-                    { "filename": "boot", "length" : "0xFC0" }
-                ]
-            },
-            { 
-                "type": "NoExtract",
-                "folder" : "",
-                "files" : [
-                    { "filename": "game_code", "length" : "0xD7200" }
-                ]
-            },
-            { 
-                "type": "Binary", 
-                "folder" : "../../ucode/us_1.0",
-                "files" : [
-                    { "filename": "ucode_unknown", "length" : "0xEC0" },
-                    { "filename": "ucode_boot", "length" : "0xD0" },
-                    { "filename": "ucode_f3ddkr_dram", "length" : "0x1200" },
-                    { "filename": "ucode_f3ddkr_fifo", "length" : "0x11E0" },
-                    { "filename": "ucode_f3ddkr_xbus", "length" : "0x1200" },
-                    { "filename": "ucode_unknown_2", "length" : "0xAC0" }
-                ]
-            },
-            { 
-                "type": "NoExtract",
-                "folder" : "",
-                "files" : [
-                    {  "filename": "game_data", "length" : "0xD2A0" }
-                ]
-            },
-            { 
-                "type": "Binary",
-                "folder" : "../../ucode/us_1.0",
-                "files" : [
-                    { "filename": "data_unknown", "length" : "0x2D0" },
-                    { "filename": "data_f3ddkr_dram", "length" : "0x800" },
-                    { "filename": "data_f3ddkr_fifo", "length" : "0x800" },
-                    { "filename": "data_f3ddkr_xbus", "length" : "0x800" },
-                    { "filename": "data_unknown_2", "length" : "0xBC0" }
-                ]
-            }
-        ]
-    },
-    "assets" : {
-        "sections": [
-            {
-                "name": "UNKNOWN_0",
-                "type": "Binary",
-                "folder": "unknown_0",
-                "table": 1
-            },
-            { 
-                "name": "UNKNOWN_0_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "TEXTURES_3D",
-                "type": "Textures",
-                "folder": "textures/3d",
-                "table": 3,
-                "flip-textures": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-            },
-            { 
-                "name": "TEXTURES_3D_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "TEXTURES_2D",
-                "type": "Textures",
-                "folder": "textures/2d",
-                "table": 5,
-                "flip-textures" : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            },
-            { 
-                "name": "TEXTURES_2D_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "GAME_TEXT",
-                "type": "GameText",
-                "folder": "text/game",
-                "table": 7
-            },
-            { 
-                "name": "GAME_TEXT_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "MENU_TEXT",
-                "type": "MenuText",
-                "folder": "text/menu",
-                "table": 9,
-                "filenames": [ 
-                    "english_menu_text",
-                    "german_menu_text",
-                    "french_menu_text",
-                    "japanese_menu_text"
-                ]
-            },
-            { 
-                "name": "MENU_TEXT_TABLE",
-                "type": "Table" 
-            },
-            { 
-                "name": "SCREENS",
-                "type": "Binary", 
-                "folder": "screens",
-                "table": 11
-            },
-            { 
-                "name": "SCREENS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "SPRITES",
-                "type": "Sprites",
-                "folder": "sprites",
-                "table": 13
-            },
-            { 
-                "name": "SPRITES_TABLE",
-                "type": "Table" 
-            },
-            { 
-                "name": "EMPTY_14",
-                "type": "Empty" 
-            },
-            {
-                "name": "MISC",
-                "type": "Miscellaneous",
-                "folder": "misc",
-                "table": 16,
-                "filenames": [
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "tracks_menu_ids",
-                    "hub_area_ids",
-                    "main_tracks_ids",
-                    "battle_tracks_ids",
-                    "boss_tracks_ids",
-                    "",
-                    "",
-                    "RacerStats_Unknown0",
-                    "RacerStats_Diddy",
-                    "RacerStats_TT",
-                    "RacerStats_Unknown1",
-                    "RacerStats_Krunch",
-                    "RacerStats_Bumper",
-                    "RacerStats_Tiptup",
-                    "RacerStats_Conker",
-                    "RacerStats_Timber",
-                    "RacerStats_Banjo",
-                    "RacerStats_Drumstick",
-                    "RacerStats_Pipsy",
-                    "RacerStats_Unknown2",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "magic_codes",
-                    "title_screen_demo_ids",
-                    "",
-                    "",
-                    "",
-                    ""
-                ]
-            },
-            { 
-                "name": "MISC_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "HUD_ELEMENT_IDS",
-                "type": "Binary",
-                "folder": "ids",
-                "filenames": [ "hud_element_ids" ]
-            },
-            {
-                "name": "MENU_ELEMENT_IDS",
-                "type": "Binary",
-                "folder": "ids",
-                "filenames": [ "menu_element_ids" ]
-            },
-            { 
-                "name": "UNKNOWN_19",
-                "type": "Binary",
-                "folder": "bin",
-                "filenames": [ "unknown_table" ]
-            },
-            { 
-                "name": "LEVEL_OBJECT_MAPS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "LEVEL_OBJECT_MAPS",
-                "type": "LevelObjectMap",
-                "folder": "levels/objectMaps",
-                "table": 20
-            },
-            { 
-                "name": "LEVEL_HEADERS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "LEVEL_HEADERS",
-                "type": "LevelHeaders",
-                "folder": "levels/headers",
-                "table": 22,
-                "filenames": [
-                    "CentralAreaHub",
-                    "Bluey1",
-                    "DragonForestHub",
-                    "FossilCanyon",
-                    "PirateLagoon",
-                    "AncientLake",
-                    "WalrusCove",
-                    "HotTopVolcano",
-                    "WhaleBay",
-                    "SnowballValley",
-                    "CrescentIsland",
-                    "FireMountain",
-                    "DinoDomainHub",
-                    "EverfrostPeak",
-                    "SherbetIslandHub",
-                    "SpaceportAlpha",
-                    "HorseshoeGulch",
-                    "SpacedustAlley",
-                    "GreenwoodVillage",
-                    "BoulderCanyon",
-                    "WindmillPlains",
-                    "FrontEnd",
-                    "CharacterSelect",
-                    "TitleScreenSequence",
-                    "SnowflakeMountainHub",
-                    "SmokeyCastle",
-                    "DarkwaterBeach",
-                    "IciclePyramid",
-                    "FrostyVillage",
-                    "JungleFalls",
-                    "TreasureCaves",
-                    "HauntedWoods",
-                    "DarkmoonCaverns",
-                    "StarCity",
-                    "TrophyRace",
-                    "FutureFunLandHub",
-                    "OpeningSequence",
-                    "Wizpig1",
-                    "Trickytops1",
-                    "OptionsBackground",
-                    "Bubbler1",
-                    "Smokey1",
-                    "WizpigMouthSequence",
-                    "WizpigAmuletSequence", 
-                    "TTAmuletSequence", 
-                    "RocketSequence", 
-                    "Trickytops2", 
-                    "DinoDomainTrophyAnim",
-                    "SnowflakeMountainTrophyAnim",
-                    "SherbetIslandTrophyAnim",
-                    "DragonForestTrophyAnim",
-                    "FutureFunLandTrophyAnim",
-                    "Bluey2", 
-                    "Bubbler2", 
-                    "Smokey2", 
-                    "Wizpig2", 
-                    "PartySequence",
-                    "TricktopsAnim",
-                    "SmokeyAnim",
-                    "BlueyAnim",
-                    "Wizpig1Anim",
-                    "BubblerAnim",
-                    "Wizpig2Anim",
-                    "LastBit",
-                    "LastBitB"
-                ]
-            },
-            { 
-                "name": "LEVEL_NAMES_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "LEVEL_NAMES",
-                "type": "LevelNames",
-                "folder": "levels/names",
-                "table": 24,
-                "filenames": [
-                    "CentralAreaHub",
-                    "Bluey1",
-                    "DragonForestHub",
-                    "FossilCanyon",
-                    "PirateLagoon",
-                    "AncientLake",
-                    "WalrusCove",
-                    "HotTopVolcano",
-                    "WhaleBay",
-                    "SnowballValley",
-                    "CrescentIsland",
-                    "FireMountain",
-                    "DinoDomainHub",
-                    "EverfrostPeak",
-                    "SherbetIslandHub",
-                    "SpaceportAlpha",
-                    "HorseshoeGulch",
-                    "SpacedustAlley",
-                    "GreenwoodVillage",
-                    "BoulderCanyon",
-                    "WindmillPlains",
-                    "FrontEnd",
-                    "CharacterSelect",
-                    "TitleScreenSequence",
-                    "SnowflakeMountainHub",
-                    "SmokeyCastle",
-                    "DarkwaterBeach",
-                    "IciclePyramid",
-                    "FrostyVillage",
-                    "JungleFalls",
-                    "TreasureCaves",
-                    "HauntedWoods",
-                    "DarkmoonCaverns",
-                    "StarCity",
-                    "TrophyRace",
-                    "FutureFunLandHub",
-                    "OpeningSequence",
-                    "Wizpig1",
-                    "Trickytops1",
-                    "OptionsBackground",
-                    "Bubbler1",
-                    "Smokey1",
-                    "WizpigMouthSequence",
-                    "WizpigAmuletSequence", 
-                    "TTAmuletSequence", 
-                    "RocketSequence", 
-                    "Trickytops2", 
-                    "DinoDomainTrophyAnim",
-                    "SnowflakeMountainTrophyAnim",
-                    "SherbetIslandTrophyAnim",
-                    "DragonForestTrophyAnim",
-                    "FutureFunLandTrophyAnim",
-                    "Bluey2", 
-                    "Bubbler2", 
-                    "Smokey2", 
-                    "Wizpig2", 
-                    "PartySequence",
-                    "TricktopsAnim",
-                    "SmokeyAnim",
-                    "BlueyAnim",
-                    "Wizpig1Anim",
-                    "BubblerAnim",
-                    "Wizpig2Anim",
-                    "LastBit",
-                    "LastBitB"
-                ]
-            },
-            { 
-                "name": "LEVEL_MODELS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "LEVEL_MODELS",
-                "type": "LevelModels",
-                "folder": "levels/models",
-                "table": 26
-            },
-            { 
-                "name": "OBJECT_MODELS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "OBJECT_MODELS",
-                "type": "ObjectModels",
-                "folder": "objects/models",
-                "table": 28
-            },
-            {
-                "name": "ANIMATION_IDS",
-                "type": "Binary",
-                "folder": "objects",
-                "filenames": [ "animation_ids" ]
-            },
-            { 
-                "name": "OBJECT_ANIMATIONS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "OBJECT_ANIMATIONS",
-                "type": "ObjectAnimations",
-                "folder": "objects/animations",
-                "table": 31
-            },
-            { 
-                "name": "OBJECT_HEADERS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "OBJECT_HEADERS",
-                "type": "ObjectHeaders",
-                "folder": "objects/headers",
-                "table": 33
-            },
-            {
-                "name": "LEVEL_OBJECT_TRANSLATION_TABLE",
-                "type": "Binary",
-                "folder": "objects",
-                "filenames": [ "level_object_translation_table" ]
-            },
-            { 
-                "name": "EMPTY_37_TABLE",
-                "type": "Table" 
-            },
-            { 
-                "name": "EMPTY_37",
-                "type": "Empty", 
-                "table": 36 
-            },
-            { 
-                "name": "AUDIO_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "AUDIO",
-                "type": "Audio",
-                "folder": "audio",
-                "table": 38
-            },
-            { 
-                "name": "PARTICLES_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "PARTICLES",
-                "type": "Particles",
-                "folder": "particles/particles",
-                "table": 40
-            },
-            { 
-                "name": "PARTICLE_BEHAVIORS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "PARTICLE_BEHAVIORS",
-                "type": "ParticleBehaviors",
-                "folder": "particles/behaviors",
-                "table": 42
-            },
-            {
-                "name": "BINARY_44",
-                "type": "Binary",
-                "folder": "fonts"
-            },
-            {
-                "name": "BINARY_45",
-                "type": "Binary",
-                "folder": "fonts"
-            },
-            {
-                "name": "BINARY_46",
-                "type": "Binary",
-                "folder": "fonts"
-            },
-            {
-                "name": "BINARY_47",
-                "type": "Binary",
-                "folder": "ids"
-            },
-            { 
-                "name": "TTGHOSTS_TABLE",
-                "type": "Table" 
-            },
-            {
-                "name": "TTGHOSTS",
-                "type": "TTGhosts",
-                "folder": "tt_ghosts",
-                "table": 48,
-                "filenames": [
-                    "FossilCanyon",
-                    "PirateLagoon",
-                    "AncientLake",
-                    "WalrusCove",
-                    "HotTopVolcano",
-                    "WhaleBay",
-                    "SnowballValley",
-                    "CrescentIsland",
-                    "EverfrostPeak", 
-                    "SpaceportAlpha",
-                    "SpacedustAlley",
-                    "GreenwoodVillage",
-                    "BoulderCanyon",
-                    "WindmillPlains",
-                    "FrostyVillage",
-                    "JungleFalls",
-                    "TreasureCaves",
-                    "HauntedWoods",
-                    "DarkmoonCaverns",
-                    "StarCity"
-                ]
-            }
-        ]
-    }
+	"config-name": "Diddy Kong Racing (USA v1.0)",
+	"checksum-md5": "4f0e07f0eeac7e5d7ce3a75461888d03",
+	"subfolder": "us_1.0",
+	"revision": 2,
+	"code": {
+		"sections": [{
+				"type": "NoExtract",
+				"folder": "",
+				"files": [{
+					"filename": "rom_header",
+					"length": "0x40"
+				}]
+			},
+			{
+				"type": "Binary",
+				"folder": "bin",
+				"files": [{
+					"filename": "boot",
+					"length": "0xFC0"
+				}]
+			},
+			{
+				"type": "NoExtract",
+				"folder": "",
+				"files": [{
+					"filename": "game_code",
+					"length": "0xD7200"
+				}]
+			},
+			{
+				"type": "Binary",
+				"folder": "../../../ucode/us_1.0",
+				"files": [{
+						"filename": "ucode_unknown",
+						"length": "0xEC0"
+					},
+					{
+						"filename": "ucode_boot",
+						"length": "0xD0"
+					},
+					{
+						"filename": "ucode_f3ddkr_dram",
+						"length": "0x1200"
+					},
+					{
+						"filename": "ucode_f3ddkr_fifo",
+						"length": "0x11E0"
+					},
+					{
+						"filename": "ucode_f3ddkr_xbus",
+						"length": "0x1200"
+					},
+					{
+						"filename": "ucode_unknown_2",
+						"length": "0xAC0"
+					}
+				]
+			},
+			{
+				"type": "NoExtract",
+				"folder": "",
+				"files": [{
+					"filename": "game_data",
+					"length": "0xD2A0"
+				}]
+			},
+			{
+				"type": "Binary",
+				"folder": "../../../ucode/us_1.0",
+				"files": [{
+						"filename": "data_unknown",
+						"length": "0x2D0"
+					},
+					{
+						"filename": "data_f3ddkr_dram",
+						"length": "0x800"
+					},
+					{
+						"filename": "data_f3ddkr_fifo",
+						"length": "0x800"
+					},
+					{
+						"filename": "data_f3ddkr_xbus",
+						"length": "0x800"
+					},
+					{
+						"filename": "data_unknown_2",
+						"length": "0xBC0"
+					}
+				]
+			}
+		]
+	},
+	"assets": {
+		"sections": [{
+				"build-id": "ASSET_UNKNOWN_0",
+				"type": "Binary",
+				"folder": "unknown_0",
+				"table": 1
+			},
+			{
+				"build-id": "ASSET_UNKNOWN_0_TABLE",
+				"type": "Table",
+				"for": "ASSET_UNKNOWN_0"
+			},
+			{
+				"build-id": "ASSET_TEXTURES_3D",
+				"type": "Textures",
+				"folder": "textures/3d",
+				"table": 3,
+				"flip-textures": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+				"child-build-ids": ["ASSET_TEX3D_0", "ASSET_TEX3D_1", "ASSET_TEX3D_2", "ASSET_TEX3D_3", "ASSET_TEX3D_4", "ASSET_TEX3D_5", "ASSET_TEX3D_6", "ASSET_TEX3D_7", "ASSET_TEX3D_8", "ASSET_TEX3D_9", "ASSET_TEX3D_10", "ASSET_TEX3D_11", "ASSET_TEX3D_12", "ASSET_TEX3D_13", "ASSET_TEX3D_14", "ASSET_TEX3D_15", "ASSET_TEX3D_16", "ASSET_TEX3D_17", "ASSET_TEX3D_18", "ASSET_TEX3D_19", "ASSET_TEX3D_20", "ASSET_TEX3D_21", "ASSET_TEX3D_22", "ASSET_TEX3D_23", "ASSET_TEX3D_24", "ASSET_TEX3D_25", "ASSET_TEX3D_26", "ASSET_TEX3D_27", "ASSET_TEX3D_28", "ASSET_TEX3D_29", "ASSET_TEX3D_30", "ASSET_TEX3D_31", "ASSET_TEX3D_32", "ASSET_TEX3D_33", "ASSET_TEX3D_34", "ASSET_TEX3D_35", "ASSET_TEX3D_36", "ASSET_TEX3D_37", "ASSET_TEX3D_38", "ASSET_TEX3D_39", "ASSET_TEX3D_40", "ASSET_TEX3D_41", "ASSET_TEX3D_42", "ASSET_TEX3D_43", "ASSET_TEX3D_44", "ASSET_TEX3D_45", "ASSET_TEX3D_46", "ASSET_TEX3D_47", "ASSET_TEX3D_48", "ASSET_TEX3D_49", "ASSET_TEX3D_50", "ASSET_TEX3D_51", "ASSET_TEX3D_52", "ASSET_TEX3D_53", "ASSET_TEX3D_54", "ASSET_TEX3D_55", "ASSET_TEX3D_56", "ASSET_TEX3D_57", "ASSET_TEX3D_58", "ASSET_TEX3D_59", "ASSET_TEX3D_60", "ASSET_TEX3D_61", "ASSET_TEX3D_62", "ASSET_TEX3D_63", "ASSET_TEX3D_64", "ASSET_TEX3D_65", "ASSET_TEX3D_66", "ASSET_TEX3D_67", "ASSET_TEX3D_68", "ASSET_TEX3D_69", "ASSET_TEX3D_70", "ASSET_TEX3D_71", "ASSET_TEX3D_72", "ASSET_TEX3D_73", "ASSET_TEX3D_74", "ASSET_TEX3D_75", "ASSET_TEX3D_76", "ASSET_TEX3D_77", "ASSET_TEX3D_78", "ASSET_TEX3D_79", "ASSET_TEX3D_80", "ASSET_TEX3D_81", "ASSET_TEX3D_82", "ASSET_TEX3D_83", "ASSET_TEX3D_84", "ASSET_TEX3D_85", "ASSET_TEX3D_86", "ASSET_TEX3D_87", "ASSET_TEX3D_88", "ASSET_TEX3D_89", "ASSET_TEX3D_90", "ASSET_TEX3D_91", "ASSET_TEX3D_92", "ASSET_TEX3D_93", "ASSET_TEX3D_94", "ASSET_TEX3D_95", "ASSET_TEX3D_96", "ASSET_TEX3D_97", "ASSET_TEX3D_98", "ASSET_TEX3D_99", "ASSET_TEX3D_100", "ASSET_TEX3D_101", "ASSET_TEX3D_102", "ASSET_TEX3D_103", "ASSET_TEX3D_104", "ASSET_TEX3D_105", "ASSET_TEX3D_106", "ASSET_TEX3D_107", "ASSET_TEX3D_108", "ASSET_TEX3D_109", "ASSET_TEX3D_110", "ASSET_TEX3D_111", "ASSET_TEX3D_112", "ASSET_TEX3D_113", "ASSET_TEX3D_114", "ASSET_TEX3D_115", "ASSET_TEX3D_116", "ASSET_TEX3D_117", "ASSET_TEX3D_118", "ASSET_TEX3D_119", "ASSET_TEX3D_120", "ASSET_TEX3D_121", "ASSET_TEX3D_122", "ASSET_TEX3D_123", "ASSET_TEX3D_124", "ASSET_TEX3D_125", "ASSET_TEX3D_126", "ASSET_TEX3D_127", "ASSET_TEX3D_128", "ASSET_TEX3D_129", "ASSET_TEX3D_130", "ASSET_TEX3D_131", "ASSET_TEX3D_132", "ASSET_TEX3D_133", "ASSET_TEX3D_134", "ASSET_TEX3D_135", "ASSET_TEX3D_136", "ASSET_TEX3D_137", "ASSET_TEX3D_138", "ASSET_TEX3D_139", "ASSET_TEX3D_140", "ASSET_TEX3D_141", "ASSET_TEX3D_142", "ASSET_TEX3D_143", "ASSET_TEX3D_144", "ASSET_TEX3D_145", "ASSET_TEX3D_146", "ASSET_TEX3D_147", "ASSET_TEX3D_148", "ASSET_TEX3D_149", "ASSET_TEX3D_150", "ASSET_TEX3D_151", "ASSET_TEX3D_152", "ASSET_TEX3D_153", "ASSET_TEX3D_154", "ASSET_TEX3D_155", "ASSET_TEX3D_156", "ASSET_TEX3D_157", "ASSET_TEX3D_158", "ASSET_TEX3D_159", "ASSET_TEX3D_160", "ASSET_TEX3D_161", "ASSET_TEX3D_162", "ASSET_TEX3D_163", "ASSET_TEX3D_164", "ASSET_TEX3D_165", "ASSET_TEX3D_166", "ASSET_TEX3D_167", "ASSET_TEX3D_168", "ASSET_TEX3D_169", "ASSET_TEX3D_170", "ASSET_TEX3D_171", "ASSET_TEX3D_172", "ASSET_TEX3D_173", "ASSET_TEX3D_174", "ASSET_TEX3D_175", "ASSET_TEX3D_176", "ASSET_TEX3D_177", "ASSET_TEX3D_178", "ASSET_TEX3D_179", "ASSET_TEX3D_180", "ASSET_TEX3D_181", "ASSET_TEX3D_182", "ASSET_TEX3D_183", "ASSET_TEX3D_184", "ASSET_TEX3D_185", "ASSET_TEX3D_186", "ASSET_TEX3D_187", "ASSET_TEX3D_188", "ASSET_TEX3D_189", "ASSET_TEX3D_190", "ASSET_TEX3D_191", "ASSET_TEX3D_192", "ASSET_TEX3D_193", "ASSET_TEX3D_194", "ASSET_TEX3D_195", "ASSET_TEX3D_196", "ASSET_TEX3D_197", "ASSET_TEX3D_198", "ASSET_TEX3D_199", "ASSET_TEX3D_200", "ASSET_TEX3D_201", "ASSET_TEX3D_202", "ASSET_TEX3D_203", "ASSET_TEX3D_204", "ASSET_TEX3D_205", "ASSET_TEX3D_206", "ASSET_TEX3D_207", "ASSET_TEX3D_208", "ASSET_TEX3D_209", "ASSET_TEX3D_210", "ASSET_TEX3D_211", "ASSET_TEX3D_212", "ASSET_TEX3D_213", "ASSET_TEX3D_214", "ASSET_TEX3D_215", "ASSET_TEX3D_216", "ASSET_TEX3D_217", "ASSET_TEX3D_218", "ASSET_TEX3D_219", "ASSET_TEX3D_220", "ASSET_TEX3D_221", "ASSET_TEX3D_222", "ASSET_TEX3D_223", "ASSET_TEX3D_224", "ASSET_TEX3D_225", "ASSET_TEX3D_226", "ASSET_TEX3D_227", "ASSET_TEX3D_228", "ASSET_TEX3D_229", "ASSET_TEX3D_230", "ASSET_TEX3D_231", "ASSET_TEX3D_232", "ASSET_TEX3D_233", "ASSET_TEX3D_234", "ASSET_TEX3D_235", "ASSET_TEX3D_236", "ASSET_TEX3D_237", "ASSET_TEX3D_238", "ASSET_TEX3D_239", "ASSET_TEX3D_240", "ASSET_TEX3D_241", "ASSET_TEX3D_242", "ASSET_TEX3D_243", "ASSET_TEX3D_244", "ASSET_TEX3D_245", "ASSET_TEX3D_246", "ASSET_TEX3D_247", "ASSET_TEX3D_248", "ASSET_TEX3D_249", "ASSET_TEX3D_250", "ASSET_TEX3D_251", "ASSET_TEX3D_252", "ASSET_TEX3D_253", "ASSET_TEX3D_254", "ASSET_TEX3D_255", "ASSET_TEX3D_256", "ASSET_TEX3D_257", "ASSET_TEX3D_258", "ASSET_TEX3D_259", "ASSET_TEX3D_260", "ASSET_TEX3D_261", "ASSET_TEX3D_262", "ASSET_TEX3D_263", "ASSET_TEX3D_264", "ASSET_TEX3D_265", "ASSET_TEX3D_266", "ASSET_TEX3D_267", "ASSET_TEX3D_268", "ASSET_TEX3D_269", "ASSET_TEX3D_270", "ASSET_TEX3D_271", "ASSET_TEX3D_272", "ASSET_TEX3D_273", "ASSET_TEX3D_274", "ASSET_TEX3D_275", "ASSET_TEX3D_276", "ASSET_TEX3D_277", "ASSET_TEX3D_278", "ASSET_TEX3D_279", "ASSET_TEX3D_280", "ASSET_TEX3D_281", "ASSET_TEX3D_282", "ASSET_TEX3D_283", "ASSET_TEX3D_284", "ASSET_TEX3D_285", "ASSET_TEX3D_286", "ASSET_TEX3D_287", "ASSET_TEX3D_288", "ASSET_TEX3D_289", "ASSET_TEX3D_290", "ASSET_TEX3D_291", "ASSET_TEX3D_292", "ASSET_TEX3D_293", "ASSET_TEX3D_294", "ASSET_TEX3D_295", "ASSET_TEX3D_296", "ASSET_TEX3D_297", "ASSET_TEX3D_298", "ASSET_TEX3D_299", "ASSET_TEX3D_300", "ASSET_TEX3D_301", "ASSET_TEX3D_302", "ASSET_TEX3D_303", "ASSET_TEX3D_304", "ASSET_TEX3D_305", "ASSET_TEX3D_306", "ASSET_TEX3D_307", "ASSET_TEX3D_308", "ASSET_TEX3D_309", "ASSET_TEX3D_310", "ASSET_TEX3D_311", "ASSET_TEX3D_312", "ASSET_TEX3D_313", "ASSET_TEX3D_314", "ASSET_TEX3D_315", "ASSET_TEX3D_316", "ASSET_TEX3D_317", "ASSET_TEX3D_318", "ASSET_TEX3D_319", "ASSET_TEX3D_320", "ASSET_TEX3D_321", "ASSET_TEX3D_322", "ASSET_TEX3D_323", "ASSET_TEX3D_324", "ASSET_TEX3D_325", "ASSET_TEX3D_326", "ASSET_TEX3D_327", "ASSET_TEX3D_328", "ASSET_TEX3D_329", "ASSET_TEX3D_330", "ASSET_TEX3D_331", "ASSET_TEX3D_332", "ASSET_TEX3D_333", "ASSET_TEX3D_334", "ASSET_TEX3D_335", "ASSET_TEX3D_336", "ASSET_TEX3D_337", "ASSET_TEX3D_338", "ASSET_TEX3D_339", "ASSET_TEX3D_340", "ASSET_TEX3D_341", "ASSET_TEX3D_342", "ASSET_TEX3D_343", "ASSET_TEX3D_344", "ASSET_TEX3D_345", "ASSET_TEX3D_346", "ASSET_TEX3D_347", "ASSET_TEX3D_348", "ASSET_TEX3D_349", "ASSET_TEX3D_350", "ASSET_TEX3D_351", "ASSET_TEX3D_352", "ASSET_TEX3D_353", "ASSET_TEX3D_354", "ASSET_TEX3D_355", "ASSET_TEX3D_356", "ASSET_TEX3D_357", "ASSET_TEX3D_358", "ASSET_TEX3D_359", "ASSET_TEX3D_360", "ASSET_TEX3D_361", "ASSET_TEX3D_362", "ASSET_TEX3D_363", "ASSET_TEX3D_364", "ASSET_TEX3D_365", "ASSET_TEX3D_366", "ASSET_TEX3D_367", "ASSET_TEX3D_368", "ASSET_TEX3D_369", "ASSET_TEX3D_370", "ASSET_TEX3D_371", "ASSET_TEX3D_372", "ASSET_TEX3D_373", "ASSET_TEX3D_374", "ASSET_TEX3D_375", "ASSET_TEX3D_376", "ASSET_TEX3D_377", "ASSET_TEX3D_378", "ASSET_TEX3D_379", "ASSET_TEX3D_380", "ASSET_TEX3D_381", "ASSET_TEX3D_382", "ASSET_TEX3D_383", "ASSET_TEX3D_384", "ASSET_TEX3D_385", "ASSET_TEX3D_386", "ASSET_TEX3D_387", "ASSET_TEX3D_388", "ASSET_TEX3D_389", "ASSET_TEX3D_390", "ASSET_TEX3D_391", "ASSET_TEX3D_392", "ASSET_TEX3D_393", "ASSET_TEX3D_394", "ASSET_TEX3D_395", "ASSET_TEX3D_396", "ASSET_TEX3D_397", "ASSET_TEX3D_398", "ASSET_TEX3D_399", "ASSET_TEX3D_400", "ASSET_TEX3D_401", "ASSET_TEX3D_402", "ASSET_TEX3D_403", "ASSET_TEX3D_404", "ASSET_TEX3D_405", "ASSET_TEX3D_406", "ASSET_TEX3D_407", "ASSET_TEX3D_408", "ASSET_TEX3D_409", "ASSET_TEX3D_410", "ASSET_TEX3D_411", "ASSET_TEX3D_412", "ASSET_TEX3D_413", "ASSET_TEX3D_414", "ASSET_TEX3D_415", "ASSET_TEX3D_416", "ASSET_TEX3D_417", "ASSET_TEX3D_418", "ASSET_TEX3D_419", "ASSET_TEX3D_420", "ASSET_TEX3D_421", "ASSET_TEX3D_422", "ASSET_TEX3D_423", "ASSET_TEX3D_424", "ASSET_TEX3D_425", "ASSET_TEX3D_426", "ASSET_TEX3D_427", "ASSET_TEX3D_428", "ASSET_TEX3D_429", "ASSET_TEX3D_430", "ASSET_TEX3D_431", "ASSET_TEX3D_432", "ASSET_TEX3D_433", "ASSET_TEX3D_434", "ASSET_TEX3D_435", "ASSET_TEX3D_436", "ASSET_TEX3D_437", "ASSET_TEX3D_438", "ASSET_TEX3D_439", "ASSET_TEX3D_440", "ASSET_TEX3D_441", "ASSET_TEX3D_442", "ASSET_TEX3D_443", "ASSET_TEX3D_444", "ASSET_TEX3D_445", "ASSET_TEX3D_446", "ASSET_TEX3D_447", "ASSET_TEX3D_448", "ASSET_TEX3D_449", "ASSET_TEX3D_450", "ASSET_TEX3D_451", "ASSET_TEX3D_452", "ASSET_TEX3D_453", "ASSET_TEX3D_454", "ASSET_TEX3D_455", "ASSET_TEX3D_456", "ASSET_TEX3D_457", "ASSET_TEX3D_458", "ASSET_TEX3D_459", "ASSET_TEX3D_460", "ASSET_TEX3D_461", "ASSET_TEX3D_462", "ASSET_TEX3D_463", "ASSET_TEX3D_464", "ASSET_TEX3D_465", "ASSET_TEX3D_466", "ASSET_TEX3D_467", "ASSET_TEX3D_468", "ASSET_TEX3D_469", "ASSET_TEX3D_470", "ASSET_TEX3D_471", "ASSET_TEX3D_472", "ASSET_TEX3D_473", "ASSET_TEX3D_474", "ASSET_TEX3D_475", "ASSET_TEX3D_476", "ASSET_TEX3D_477", "ASSET_TEX3D_478", "ASSET_TEX3D_479", "ASSET_TEX3D_480", "ASSET_TEX3D_481", "ASSET_TEX3D_482", "ASSET_TEX3D_483", "ASSET_TEX3D_484", "ASSET_TEX3D_485", "ASSET_TEX3D_486", "ASSET_TEX3D_487", "ASSET_TEX3D_488", "ASSET_TEX3D_489", "ASSET_TEX3D_490", "ASSET_TEX3D_491", "ASSET_TEX3D_492", "ASSET_TEX3D_493", "ASSET_TEX3D_494", "ASSET_TEX3D_495", "ASSET_TEX3D_496", "ASSET_TEX3D_497", "ASSET_TEX3D_498", "ASSET_TEX3D_499", "ASSET_TEX3D_500", "ASSET_TEX3D_501", "ASSET_TEX3D_502", "ASSET_TEX3D_503", "ASSET_TEX3D_504", "ASSET_TEX3D_505", "ASSET_TEX3D_506", "ASSET_TEX3D_507", "ASSET_TEX3D_508", "ASSET_TEX3D_509", "ASSET_TEX3D_510", "ASSET_TEX3D_511", "ASSET_TEX3D_512", "ASSET_TEX3D_513", "ASSET_TEX3D_514", "ASSET_TEX3D_515", "ASSET_TEX3D_516", "ASSET_TEX3D_517", "ASSET_TEX3D_518", "ASSET_TEX3D_519", "ASSET_TEX3D_520", "ASSET_TEX3D_521", "ASSET_TEX3D_522", "ASSET_TEX3D_523", "ASSET_TEX3D_524", "ASSET_TEX3D_525", "ASSET_TEX3D_526", "ASSET_TEX3D_527", "ASSET_TEX3D_528", "ASSET_TEX3D_529", "ASSET_TEX3D_530", "ASSET_TEX3D_531", "ASSET_TEX3D_532", "ASSET_TEX3D_533", "ASSET_TEX3D_534", "ASSET_TEX3D_535", "ASSET_TEX3D_536", "ASSET_TEX3D_537", "ASSET_TEX3D_538", "ASSET_TEX3D_539", "ASSET_TEX3D_540", "ASSET_TEX3D_541", "ASSET_TEX3D_542", "ASSET_TEX3D_543", "ASSET_TEX3D_544", "ASSET_TEX3D_545", "ASSET_TEX3D_546", "ASSET_TEX3D_547", "ASSET_TEX3D_548", "ASSET_TEX3D_549", "ASSET_TEX3D_550", "ASSET_TEX3D_551", "ASSET_TEX3D_552", "ASSET_TEX3D_553", "ASSET_TEX3D_554", "ASSET_TEX3D_555", "ASSET_TEX3D_556", "ASSET_TEX3D_557", "ASSET_TEX3D_558", "ASSET_TEX3D_559", "ASSET_TEX3D_560", "ASSET_TEX3D_561", "ASSET_TEX3D_562", "ASSET_TEX3D_563", "ASSET_TEX3D_564", "ASSET_TEX3D_565", "ASSET_TEX3D_566", "ASSET_TEX3D_567", "ASSET_TEX3D_568", "ASSET_TEX3D_569", "ASSET_TEX3D_570", "ASSET_TEX3D_571", "ASSET_TEX3D_572", "ASSET_TEX3D_573", "ASSET_TEX3D_574", "ASSET_TEX3D_575", "ASSET_TEX3D_576", "ASSET_TEX3D_577", "ASSET_TEX3D_578", "ASSET_TEX3D_579", "ASSET_TEX3D_580", "ASSET_TEX3D_581", "ASSET_TEX3D_582", "ASSET_TEX3D_583", "ASSET_TEX3D_584", "ASSET_TEX3D_585", "ASSET_TEX3D_586", "ASSET_TEX3D_587", "ASSET_TEX3D_588", "ASSET_TEX3D_589", "ASSET_TEX3D_590", "ASSET_TEX3D_591", "ASSET_TEX3D_592", "ASSET_TEX3D_593", "ASSET_TEX3D_594", "ASSET_TEX3D_595", "ASSET_TEX3D_596", "ASSET_TEX3D_597", "ASSET_TEX3D_598", "ASSET_TEX3D_599", "ASSET_TEX3D_600", "ASSET_TEX3D_601", "ASSET_TEX3D_602", "ASSET_TEX3D_603", "ASSET_TEX3D_604", "ASSET_TEX3D_605", "ASSET_TEX3D_606", "ASSET_TEX3D_607", "ASSET_TEX3D_608", "ASSET_TEX3D_609", "ASSET_TEX3D_610", "ASSET_TEX3D_611", "ASSET_TEX3D_612", "ASSET_TEX3D_613", "ASSET_TEX3D_614", "ASSET_TEX3D_615", "ASSET_TEX3D_616", "ASSET_TEX3D_617", "ASSET_TEX3D_618", "ASSET_TEX3D_619", "ASSET_TEX3D_620", "ASSET_TEX3D_621", "ASSET_TEX3D_622", "ASSET_TEX3D_623", "ASSET_TEX3D_624", "ASSET_TEX3D_625", "ASSET_TEX3D_626", "ASSET_TEX3D_627", "ASSET_TEX3D_628", "ASSET_TEX3D_629", "ASSET_TEX3D_630", "ASSET_TEX3D_631", "ASSET_TEX3D_632", "ASSET_TEX3D_633", "ASSET_TEX3D_634", "ASSET_TEX3D_635", "ASSET_TEX3D_636", "ASSET_TEX3D_637", "ASSET_TEX3D_638", "ASSET_TEX3D_639", "ASSET_TEX3D_640", "ASSET_TEX3D_641", "ASSET_TEX3D_642", "ASSET_TEX3D_643", "ASSET_TEX3D_644", "ASSET_TEX3D_645", "ASSET_TEX3D_646", "ASSET_TEX3D_647", "ASSET_TEX3D_648", "ASSET_TEX3D_649", "ASSET_TEX3D_650", "ASSET_TEX3D_651", "ASSET_TEX3D_652", "ASSET_TEX3D_653", "ASSET_TEX3D_654", "ASSET_TEX3D_655", "ASSET_TEX3D_656", "ASSET_TEX3D_657", "ASSET_TEX3D_658", "ASSET_TEX3D_659", "ASSET_TEX3D_660", "ASSET_TEX3D_661", "ASSET_TEX3D_662", "ASSET_TEX3D_663", "ASSET_TEX3D_664", "ASSET_TEX3D_665", "ASSET_TEX3D_666", "ASSET_TEX3D_667", "ASSET_TEX3D_668", "ASSET_TEX3D_669", "ASSET_TEX3D_670", "ASSET_TEX3D_671", "ASSET_TEX3D_672", "ASSET_TEX3D_673", "ASSET_TEX3D_674", "ASSET_TEX3D_675", "ASSET_TEX3D_676", "ASSET_TEX3D_677", "ASSET_TEX3D_678", "ASSET_TEX3D_679", "ASSET_TEX3D_680", "ASSET_TEX3D_681", "ASSET_TEX3D_682", "ASSET_TEX3D_683", "ASSET_TEX3D_684", "ASSET_TEX3D_685", "ASSET_TEX3D_686", "ASSET_TEX3D_687", "ASSET_TEX3D_688", "ASSET_TEX3D_689", "ASSET_TEX3D_690", "ASSET_TEX3D_691", "ASSET_TEX3D_692", "ASSET_TEX3D_693", "ASSET_TEX3D_694", "ASSET_TEX3D_695", "ASSET_TEX3D_696", "ASSET_TEX3D_697", "ASSET_TEX3D_698", "ASSET_TEX3D_699", "ASSET_TEX3D_700", "ASSET_TEX3D_701", "ASSET_TEX3D_702", "ASSET_TEX3D_703", "ASSET_TEX3D_704", "ASSET_TEX3D_705", "ASSET_TEX3D_706", "ASSET_TEX3D_707", "ASSET_TEX3D_708", "ASSET_TEX3D_709", "ASSET_TEX3D_710", "ASSET_TEX3D_711", "ASSET_TEX3D_712", "ASSET_TEX3D_713", "ASSET_TEX3D_714", "ASSET_TEX3D_715", "ASSET_TEX3D_716", "ASSET_TEX3D_717", "ASSET_TEX3D_718", "ASSET_TEX3D_719", "ASSET_TEX3D_720", "ASSET_TEX3D_721", "ASSET_TEX3D_722", "ASSET_TEX3D_723", "ASSET_TEX3D_724", "ASSET_TEX3D_725", "ASSET_TEX3D_726", "ASSET_TEX3D_727", "ASSET_TEX3D_728", "ASSET_TEX3D_729", "ASSET_TEX3D_730", "ASSET_TEX3D_731", "ASSET_TEX3D_732", "ASSET_TEX3D_733", "ASSET_TEX3D_734", "ASSET_TEX3D_735", "ASSET_TEX3D_736", "ASSET_TEX3D_737", "ASSET_TEX3D_738", "ASSET_TEX3D_739", "ASSET_TEX3D_740", "ASSET_TEX3D_741", "ASSET_TEX3D_742", "ASSET_TEX3D_743", "ASSET_TEX3D_744", "ASSET_TEX3D_745", "ASSET_TEX3D_746", "ASSET_TEX3D_747", "ASSET_TEX3D_748", "ASSET_TEX3D_749", "ASSET_TEX3D_750", "ASSET_TEX3D_751", "ASSET_TEX3D_752", "ASSET_TEX3D_753", "ASSET_TEX3D_754", "ASSET_TEX3D_755", "ASSET_TEX3D_756", "ASSET_TEX3D_757", "ASSET_TEX3D_758", "ASSET_TEX3D_759", "ASSET_TEX3D_760", "ASSET_TEX3D_761", "ASSET_TEX3D_762", "ASSET_TEX3D_763", "ASSET_TEX3D_764", "ASSET_TEX3D_765", "ASSET_TEX3D_766", "ASSET_TEX3D_767", "ASSET_TEX3D_768", "ASSET_TEX3D_769", "ASSET_TEX3D_770", "ASSET_TEX3D_771", "ASSET_TEX3D_772", "ASSET_TEX3D_773", "ASSET_TEX3D_774", "ASSET_TEX3D_775", "ASSET_TEX3D_776", "ASSET_TEX3D_777", "ASSET_TEX3D_778", "ASSET_TEX3D_779", "ASSET_TEX3D_780", "ASSET_TEX3D_781", "ASSET_TEX3D_782", "ASSET_TEX3D_783", "ASSET_TEX3D_784", "ASSET_TEX3D_785", "ASSET_TEX3D_786", "ASSET_TEX3D_787", "ASSET_TEX3D_788", "ASSET_TEX3D_789", "ASSET_TEX3D_790", "ASSET_TEX3D_791", "ASSET_TEX3D_792", "ASSET_TEX3D_793", "ASSET_TEX3D_794", "ASSET_TEX3D_795", "ASSET_TEX3D_796", "ASSET_TEX3D_797", "ASSET_TEX3D_798", "ASSET_TEX3D_799", "ASSET_TEX3D_800", "ASSET_TEX3D_801", "ASSET_TEX3D_802", "ASSET_TEX3D_803", "ASSET_TEX3D_804", "ASSET_TEX3D_805", "ASSET_TEX3D_806", "ASSET_TEX3D_807", "ASSET_TEX3D_808", "ASSET_TEX3D_809", "ASSET_TEX3D_810", "ASSET_TEX3D_811", "ASSET_TEX3D_812", "ASSET_TEX3D_813", "ASSET_TEX3D_814", "ASSET_TEX3D_815", "ASSET_TEX3D_816", "ASSET_TEX3D_817", "ASSET_TEX3D_818", "ASSET_TEX3D_819", "ASSET_TEX3D_820", "ASSET_TEX3D_821", "ASSET_TEX3D_822", "ASSET_TEX3D_823", "ASSET_TEX3D_824", "ASSET_TEX3D_825", "ASSET_TEX3D_826", "ASSET_TEX3D_827", "ASSET_TEX3D_828", "ASSET_TEX3D_829", "ASSET_TEX3D_830", "ASSET_TEX3D_831", "ASSET_TEX3D_832", "ASSET_TEX3D_833", "ASSET_TEX3D_834", "ASSET_TEX3D_835", "ASSET_TEX3D_836", "ASSET_TEX3D_837", "ASSET_TEX3D_838", "ASSET_TEX3D_839", "ASSET_TEX3D_840", "ASSET_TEX3D_841", "ASSET_TEX3D_842", "ASSET_TEX3D_843", "ASSET_TEX3D_844", "ASSET_TEX3D_845", "ASSET_TEX3D_846", "ASSET_TEX3D_847", "ASSET_TEX3D_848", "ASSET_TEX3D_849", "ASSET_TEX3D_850", "ASSET_TEX3D_851", "ASSET_TEX3D_852", "ASSET_TEX3D_853", "ASSET_TEX3D_854", "ASSET_TEX3D_855", "ASSET_TEX3D_856", "ASSET_TEX3D_857", "ASSET_TEX3D_858", "ASSET_TEX3D_859", "ASSET_TEX3D_860", "ASSET_TEX3D_861", "ASSET_TEX3D_862", "ASSET_TEX3D_863", "ASSET_TEX3D_864", "ASSET_TEX3D_865", "ASSET_TEX3D_866", "ASSET_TEX3D_867", "ASSET_TEX3D_868", "ASSET_TEX3D_869", "ASSET_TEX3D_870", "ASSET_TEX3D_871", "ASSET_TEX3D_872", "ASSET_TEX3D_873", "ASSET_TEX3D_874", "ASSET_TEX3D_875", "ASSET_TEX3D_876", "ASSET_TEX3D_877", "ASSET_TEX3D_878", "ASSET_TEX3D_879", "ASSET_TEX3D_880", "ASSET_TEX3D_881", "ASSET_TEX3D_882", "ASSET_TEX3D_883", "ASSET_TEX3D_884", "ASSET_TEX3D_885", "ASSET_TEX3D_886", "ASSET_TEX3D_887", "ASSET_TEX3D_888", "ASSET_TEX3D_889", "ASSET_TEX3D_890", "ASSET_TEX3D_891", "ASSET_TEX3D_892", "ASSET_TEX3D_893", "ASSET_TEX3D_894", "ASSET_TEX3D_895", "ASSET_TEX3D_896", "ASSET_TEX3D_897", "ASSET_TEX3D_898", "ASSET_TEX3D_899", "ASSET_TEX3D_900", "ASSET_TEX3D_901", "ASSET_TEX3D_902", "ASSET_TEX3D_903", "ASSET_TEX3D_904", "ASSET_TEX3D_905", "ASSET_TEX3D_906", "ASSET_TEX3D_907", "ASSET_TEX3D_908", "ASSET_TEX3D_909", "ASSET_TEX3D_910", "ASSET_TEX3D_911", "ASSET_TEX3D_912", "ASSET_TEX3D_913", "ASSET_TEX3D_914", "ASSET_TEX3D_915", "ASSET_TEX3D_916", "ASSET_TEX3D_917", "ASSET_TEX3D_918", "ASSET_TEX3D_919", "ASSET_TEX3D_920", "ASSET_TEX3D_921", "ASSET_TEX3D_922", "ASSET_TEX3D_923", "ASSET_TEX3D_924", "ASSET_TEX3D_925", "ASSET_TEX3D_926", "ASSET_TEX3D_927", "ASSET_TEX3D_928", "ASSET_TEX3D_929", "ASSET_TEX3D_930", "ASSET_TEX3D_931", "ASSET_TEX3D_932", "ASSET_TEX3D_933", "ASSET_TEX3D_934", "ASSET_TEX3D_935", "ASSET_TEX3D_936", "ASSET_TEX3D_937", "ASSET_TEX3D_938", "ASSET_TEX3D_939", "ASSET_TEX3D_940", "ASSET_TEX3D_941", "ASSET_TEX3D_942", "ASSET_TEX3D_943", "ASSET_TEX3D_944", "ASSET_TEX3D_945", "ASSET_TEX3D_946", "ASSET_TEX3D_947", "ASSET_TEX3D_948", "ASSET_TEX3D_949", "ASSET_TEX3D_950", "ASSET_TEX3D_951", "ASSET_TEX3D_952", "ASSET_TEX3D_953", "ASSET_TEX3D_954", "ASSET_TEX3D_955", "ASSET_TEX3D_956", "ASSET_TEX3D_957", "ASSET_TEX3D_958", "ASSET_TEX3D_959", "ASSET_TEX3D_960", "ASSET_TEX3D_961", "ASSET_TEX3D_962", "ASSET_TEX3D_963", "ASSET_TEX3D_964", "ASSET_TEX3D_965", "ASSET_TEX3D_966", "ASSET_TEX3D_967", "ASSET_TEX3D_968", "ASSET_TEX3D_969", "ASSET_TEX3D_970", "ASSET_TEX3D_971", "ASSET_TEX3D_972", "ASSET_TEX3D_973", "ASSET_TEX3D_974", "ASSET_TEX3D_975", "ASSET_TEX3D_976", "ASSET_TEX3D_977", "ASSET_TEX3D_978", "ASSET_TEX3D_979", "ASSET_TEX3D_980", "ASSET_TEX3D_981", "ASSET_TEX3D_982", "ASSET_TEX3D_983", "ASSET_TEX3D_984", "ASSET_TEX3D_985", "ASSET_TEX3D_986", "ASSET_TEX3D_987", "ASSET_TEX3D_988", "ASSET_TEX3D_989", "ASSET_TEX3D_990", "ASSET_TEX3D_991", "ASSET_TEX3D_992", "ASSET_TEX3D_993", "ASSET_TEX3D_994", "ASSET_TEX3D_995", "ASSET_TEX3D_996", "ASSET_TEX3D_997", "ASSET_TEX3D_998", "ASSET_TEX3D_999", "ASSET_TEX3D_1000", "ASSET_TEX3D_1001", "ASSET_TEX3D_1002", "ASSET_TEX3D_1003", "ASSET_TEX3D_1004", "ASSET_TEX3D_1005", "ASSET_TEX3D_1006", "ASSET_TEX3D_1007", "ASSET_TEX3D_1008", "ASSET_TEX3D_1009", "ASSET_TEX3D_1010", "ASSET_TEX3D_1011", "ASSET_TEX3D_1012", "ASSET_TEX3D_1013", "ASSET_TEX3D_1014", "ASSET_TEX3D_1015", "ASSET_TEX3D_1016", "ASSET_TEX3D_1017", "ASSET_TEX3D_1018", "ASSET_TEX3D_1019", "ASSET_TEX3D_1020", "ASSET_TEX3D_1021", "ASSET_TEX3D_1022", "ASSET_TEX3D_1023", "ASSET_TEX3D_1024", "ASSET_TEX3D_1025", "ASSET_TEX3D_1026", "ASSET_TEX3D_1027", "ASSET_TEX3D_1028", "ASSET_TEX3D_1029", "ASSET_TEX3D_1030", "ASSET_TEX3D_1031", "ASSET_TEX3D_1032", "ASSET_TEX3D_1033", "ASSET_TEX3D_1034", "ASSET_TEX3D_1035", "ASSET_TEX3D_1036", "ASSET_TEX3D_1037", "ASSET_TEX3D_1038", "ASSET_TEX3D_1039", "ASSET_TEX3D_1040", "ASSET_TEX3D_1041", "ASSET_TEX3D_1042", "ASSET_TEX3D_1043", "ASSET_TEX3D_1044", "ASSET_TEX3D_1045", "ASSET_TEX3D_1046", "ASSET_TEX3D_1047", "ASSET_TEX3D_1048", "ASSET_TEX3D_1049", "ASSET_TEX3D_1050", "ASSET_TEX3D_1051", "ASSET_TEX3D_1052", "ASSET_TEX3D_1053", "ASSET_TEX3D_1054", "ASSET_TEX3D_1055", "ASSET_TEX3D_1056", "ASSET_TEX3D_1057", "ASSET_TEX3D_1058", "ASSET_TEX3D_1059", "ASSET_TEX3D_1060", "ASSET_TEX3D_1061", "ASSET_TEX3D_1062", "ASSET_TEX3D_1063", "ASSET_TEX3D_1064", "ASSET_TEX3D_1065", "ASSET_TEX3D_1066", "ASSET_TEX3D_1067", "ASSET_TEX3D_1068", "ASSET_TEX3D_1069", "ASSET_TEX3D_1070", "ASSET_TEX3D_1071", "ASSET_TEX3D_1072", "ASSET_TEX3D_1073", "ASSET_TEX3D_1074", "ASSET_TEX3D_1075", "ASSET_TEX3D_1076", "ASSET_TEX3D_1077", "ASSET_TEX3D_1078", "ASSET_TEX3D_1079", "ASSET_TEX3D_1080", "ASSET_TEX3D_1081", "ASSET_TEX3D_1082", "ASSET_TEX3D_1083", "ASSET_TEX3D_1084", "ASSET_TEX3D_1085", "ASSET_TEX3D_1086", "ASSET_TEX3D_1087", "ASSET_TEX3D_1088", "ASSET_TEX3D_1089", "ASSET_TEX3D_1090", "ASSET_TEX3D_1091", "ASSET_TEX3D_1092", "ASSET_TEX3D_1093", "ASSET_TEX3D_1094", "ASSET_TEX3D_1095", "ASSET_TEX3D_1096", "ASSET_TEX3D_1097", "ASSET_TEX3D_1098", "ASSET_TEX3D_1099", "ASSET_TEX3D_1100", "ASSET_TEX3D_1101", "ASSET_TEX3D_1102", "ASSET_TEX3D_1103", "ASSET_TEX3D_1104", "ASSET_TEX3D_1105", "ASSET_TEX3D_1106", "ASSET_TEX3D_1107", "ASSET_TEX3D_1108", "ASSET_TEX3D_1109", "ASSET_TEX3D_1110", "ASSET_TEX3D_1111", "ASSET_TEX3D_1112", "ASSET_TEX3D_1113", "ASSET_TEX3D_1114", "ASSET_TEX3D_1115", "ASSET_TEX3D_1116", "ASSET_TEX3D_1117", "ASSET_TEX3D_1118", "ASSET_TEX3D_1119", "ASSET_TEX3D_1120", "ASSET_TEX3D_1121", "ASSET_TEX3D_1122", "ASSET_TEX3D_1123", "ASSET_TEX3D_1124", "ASSET_TEX3D_1125", "ASSET_TEX3D_1126", "ASSET_TEX3D_1127", "ASSET_TEX3D_1128", "ASSET_TEX3D_1129", "ASSET_TEX3D_1130", "ASSET_TEX3D_1131", "ASSET_TEX3D_1132", "ASSET_TEX3D_1133", "ASSET_TEX3D_1134", "ASSET_TEX3D_1135", "ASSET_TEX3D_1136", "ASSET_TEX3D_1137", "ASSET_TEX3D_1138", "ASSET_TEX3D_1139", "ASSET_TEX3D_1140", "ASSET_TEX3D_1141", "ASSET_TEX3D_1142", "ASSET_TEX3D_1143", "ASSET_TEX3D_1144", "ASSET_TEX3D_1145", "ASSET_TEX3D_1146", "ASSET_TEX3D_1147", "ASSET_TEX3D_1148", "ASSET_TEX3D_1149", "ASSET_TEX3D_1150", "ASSET_TEX3D_1151", "ASSET_TEX3D_1152", "ASSET_TEX3D_1153", "ASSET_TEX3D_1154", "ASSET_TEX3D_1155", "ASSET_TEX3D_1156", "ASSET_TEX3D_1157", "ASSET_TEX3D_1158", "ASSET_TEX3D_1159", "ASSET_TEX3D_1160", "ASSET_TEX3D_1161", "ASSET_TEX3D_1162", "ASSET_TEX3D_1163", "ASSET_TEX3D_1164", "ASSET_TEX3D_1165", "ASSET_TEX3D_1166", "ASSET_TEX3D_1167", "ASSET_TEX3D_1168", "ASSET_TEX3D_1169", "ASSET_TEX3D_1170", "ASSET_TEX3D_1171", "ASSET_TEX3D_1172", "ASSET_TEX3D_1173", "ASSET_TEX3D_1174", "ASSET_TEX3D_1175", "ASSET_TEX3D_1176", "ASSET_TEX3D_1177", "ASSET_TEX3D_1178", "ASSET_TEX3D_1179", "ASSET_TEX3D_1180", "ASSET_TEX3D_1181", "ASSET_TEX3D_1182", "ASSET_TEX3D_1183", "ASSET_TEX3D_1184", "ASSET_TEX3D_1185", "ASSET_TEX3D_1186", "ASSET_TEX3D_1187", "ASSET_TEX3D_1188", "ASSET_TEX3D_1189", "ASSET_TEX3D_1190", "ASSET_TEX3D_1191", "ASSET_TEX3D_1192", "ASSET_TEX3D_1193", "ASSET_TEX3D_1194", "ASSET_TEX3D_1195", "ASSET_TEX3D_1196", "ASSET_TEX3D_1197", "ASSET_TEX3D_1198", "ASSET_TEX3D_1199", "ASSET_TEX3D_1200", "ASSET_TEX3D_1201", "ASSET_TEX3D_1202", "ASSET_TEX3D_1203", "ASSET_TEX3D_1204", "ASSET_TEX3D_1205", "ASSET_TEX3D_1206", "ASSET_TEX3D_1207", "ASSET_TEX3D_1208", "ASSET_TEX3D_1209", "ASSET_TEX3D_1210", "ASSET_TEX3D_1211", "ASSET_TEX3D_1212", "ASSET_TEX3D_1213", "ASSET_TEX3D_1214", "ASSET_TEX3D_1215", "ASSET_TEX3D_1216", "ASSET_TEX3D_1217", "ASSET_TEX3D_1218", "ASSET_TEX3D_1219", "ASSET_TEX3D_1220", "ASSET_TEX3D_1221", "ASSET_TEX3D_1222", "ASSET_TEX3D_1223", "ASSET_TEX3D_1224", "ASSET_TEX3D_1225", "ASSET_TEX3D_1226", "ASSET_TEX3D_1227", "ASSET_TEX3D_1228", "ASSET_TEX3D_1229", "ASSET_TEX3D_1230", "ASSET_TEX3D_1231", "ASSET_TEX3D_1232", "ASSET_TEX3D_1233", "ASSET_TEX3D_1234", "ASSET_TEX3D_1235", "ASSET_TEX3D_1236", "ASSET_TEX3D_1237", "ASSET_TEX3D_1238", "ASSET_TEX3D_1239", "ASSET_TEX3D_1240", "ASSET_TEX3D_1241", "ASSET_TEX3D_1242", "ASSET_TEX3D_1243", "ASSET_TEX3D_1244", "ASSET_TEX3D_1245", "ASSET_TEX3D_1246", "ASSET_TEX3D_1247", "ASSET_TEX3D_1248", "ASSET_TEX3D_1249", "ASSET_TEX3D_1250", "ASSET_TEX3D_1251", "ASSET_TEX3D_1252", "ASSET_TEX3D_1253", "ASSET_TEX3D_1254", "ASSET_TEX3D_1255", "ASSET_TEX3D_1256", "ASSET_TEX3D_1257", "ASSET_TEX3D_1258", "ASSET_TEX3D_1259", "ASSET_TEX3D_1260", "ASSET_TEX3D_1261", "ASSET_TEX3D_1262", "ASSET_TEX3D_1263", "ASSET_TEX3D_1264", "ASSET_TEX3D_1265", "ASSET_TEX3D_1266", "ASSET_TEX3D_1267", "ASSET_TEX3D_1268", "ASSET_TEX3D_1269", "ASSET_TEX3D_1270", "ASSET_TEX3D_1271", "ASSET_TEX3D_1272", "ASSET_TEX3D_1273", "ASSET_TEX3D_1274", "ASSET_TEX3D_1275", "ASSET_TEX3D_1276", "ASSET_TEX3D_1277", "ASSET_TEX3D_1278", "ASSET_TEX3D_1279", "ASSET_TEX3D_1280", "ASSET_TEX3D_1281", "ASSET_TEX3D_1282", "ASSET_TEX3D_1283", "ASSET_TEX3D_1284", "ASSET_TEX3D_1285", "ASSET_TEX3D_1286", "ASSET_TEX3D_1287", "ASSET_TEX3D_1288", "ASSET_TEX3D_1289", "ASSET_TEX3D_1290", "ASSET_TEX3D_1291", "ASSET_TEX3D_1292", "ASSET_TEX3D_1293", "ASSET_TEX3D_1294", "ASSET_TEX3D_1295", "ASSET_TEX3D_1296", "ASSET_TEX3D_1297", "ASSET_TEX3D_1298", "ASSET_TEX3D_1299", "ASSET_TEX3D_1300", "ASSET_TEX3D_1301", "ASSET_TEX3D_1302", "ASSET_TEX3D_1303", "ASSET_TEX3D_1304", "ASSET_TEX3D_1305", "ASSET_TEX3D_1306", "ASSET_TEX3D_1307", "ASSET_TEX3D_1308", "ASSET_TEX3D_1309", "ASSET_TEX3D_1310", "ASSET_TEX3D_1311", "ASSET_TEX3D_1312", "ASSET_TEX3D_1313", "ASSET_TEX3D_1314", "ASSET_TEX3D_1315", "ASSET_TEX3D_1316", "ASSET_TEX3D_1317", "ASSET_TEX3D_1318", "ASSET_TEX3D_1319", "ASSET_TEX3D_1320", "ASSET_TEX3D_1321", "ASSET_TEX3D_1322", "ASSET_TEX3D_1323", "ASSET_TEX3D_1324", "ASSET_TEX3D_1325", "ASSET_TEX3D_1326", "ASSET_TEX3D_1327", "ASSET_TEX3D_1328", "ASSET_TEX3D_1329", "ASSET_TEX3D_1330", "ASSET_TEX3D_1331", "ASSET_TEX3D_1332", "ASSET_TEX3D_1333", "ASSET_TEX3D_1334", "ASSET_TEX3D_1335", "ASSET_TEX3D_1336", "ASSET_TEX3D_1337", "ASSET_TEX3D_1338", "ASSET_TEX3D_1339", "ASSET_TEX3D_1340", "ASSET_TEX3D_1341", "ASSET_TEX3D_1342", "ASSET_TEX3D_1343", "ASSET_TEX3D_1344", "ASSET_TEX3D_1345", "ASSET_TEX3D_1346", "ASSET_TEX3D_1347", "ASSET_TEX3D_1348", "ASSET_TEX3D_1349", "ASSET_TEX3D_1350", "ASSET_TEX3D_1351", "ASSET_TEX3D_1352", "ASSET_TEX3D_1353", "ASSET_TEX3D_1354", "ASSET_TEX3D_1355", "ASSET_TEX3D_1356", "ASSET_TEX3D_1357", "ASSET_TEX3D_1358", "ASSET_TEX3D_1359", "ASSET_TEX3D_1360", "ASSET_TEX3D_1361", "ASSET_TEX3D_1362", "ASSET_TEX3D_1363", "ASSET_TEX3D_1364", "ASSET_TEX3D_1365", "ASSET_TEX3D_1366", "ASSET_TEX3D_1367", "ASSET_TEX3D_1368", "ASSET_TEX3D_1369", "ASSET_TEX3D_1370", "ASSET_TEX3D_1371", "ASSET_TEX3D_1372", "ASSET_TEX3D_1373", "ASSET_TEX3D_1374", "ASSET_TEX3D_1375", "ASSET_TEX3D_1376", "ASSET_TEX3D_1377", "ASSET_TEX3D_1378", "ASSET_TEX3D_1379", "ASSET_TEX3D_1380", "ASSET_TEX3D_1381", "ASSET_TEX3D_1382", "ASSET_TEX3D_1383", "ASSET_TEX3D_1384", "ASSET_TEX3D_1385", "ASSET_TEX3D_1386", "ASSET_TEX3D_1387", "ASSET_TEX3D_1388", "ASSET_TEX3D_1389", "ASSET_TEX3D_1390", "ASSET_TEX3D_1391", "ASSET_TEX3D_1392", "ASSET_TEX3D_1393", "ASSET_TEX3D_1394", "ASSET_TEX3D_1395", "ASSET_TEX3D_1396", "ASSET_TEX3D_1397", "ASSET_TEX3D_1398", "ASSET_TEX3D_1399", "ASSET_TEX3D_1400"],
+				"filenames": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+			},
+			{
+				"build-id": "ASSET_TEXTURES_3D_TABLE",
+				"type": "Table",
+				"for": "ASSET_TEXTURES_3D"
+			},
+			{
+				"build-id": "ASSET_TEXTURES_2D",
+				"type": "Textures",
+				"folder": "textures/2d",
+				"table": 5,
+				"flip-textures": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"child-build-ids": ["ASSET_TEX2D_SMALLFONT_0", "ASSET_TEX2D_SMALLFONT_1", "ASSET_TEX2D_SMALLFONT_2", "ASSET_TEX2D_3", "ASSET_TEX2D_4", "ASSET_TEX2D_5", "ASSET_TEX2D_6", "ASSET_TEX2D_7", "ASSET_TEX2D_8", "ASSET_TEX2D_9", "ASSET_TEX2D_10", "ASSET_TEX2D_11", "ASSET_TEX2D_12", "ASSET_TEX2D_13", "ASSET_TEX2D_14", "ASSET_TEX2D_15", "ASSET_TEX2D_16", "ASSET_TEX2D_17", "ASSET_TEX2D_18", "ASSET_TEX2D_19", "ASSET_TEX2D_20", "ASSET_TEX2D_21", "ASSET_TEX2D_22", "ASSET_TEX2D_23", "ASSET_TEX2D_24", "ASSET_TEX2D_25", "ASSET_TEX2D_26", "ASSET_TEX2D_27", "ASSET_TEX2D_28", "ASSET_TEX2D_29", "ASSET_TEX2D_30", "ASSET_TEX2D_31", "ASSET_TEX2D_32", "ASSET_TEX2D_33", "ASSET_TEX2D_34", "ASSET_TEX2D_35", "ASSET_TEX2D_36", "ASSET_TEX2D_37", "ASSET_TEX2D_38", "ASSET_TEX2D_39", "ASSET_TEX2D_40", "ASSET_TEX2D_41", "ASSET_TEX2D_42", "ASSET_TEX2D_43", "ASSET_TEX2D_44", "ASSET_TEX2D_45", "ASSET_TEX2D_46", "ASSET_TEX2D_47", "ASSET_TEX2D_48", "ASSET_TEX2D_49", "ASSET_TEX2D_50", "ASSET_TEX2D_51", "ASSET_TEX2D_52", "ASSET_TEX2D_53", "ASSET_TEX2D_54", "ASSET_TEX2D_55", "ASSET_TEX2D_56", "ASSET_TEX2D_57", "ASSET_TEX2D_58", "ASSET_TEX2D_59", "ASSET_TEX2D_60", "ASSET_TEX2D_61", "ASSET_TEX2D_62", "ASSET_TEX2D_63", "ASSET_TEX2D_64", "ASSET_TEX2D_65", "ASSET_TEX2D_66", "ASSET_TEX2D_67", "ASSET_TEX2D_68", "ASSET_TEX2D_69", "ASSET_TEX2D_70", "ASSET_TEX2D_71", "ASSET_TEX2D_72", "ASSET_TEX2D_73", "ASSET_TEX2D_74", "ASSET_TEX2D_75", "ASSET_TEX2D_76", "ASSET_TEX2D_77", "ASSET_TEX2D_78", "ASSET_TEX2D_79", "ASSET_TEX2D_80", "ASSET_TEX2D_81", "ASSET_TEX2D_82", "ASSET_TEX2D_83", "ASSET_TEX2D_84", "ASSET_TEX2D_85", "ASSET_TEX2D_86", "ASSET_TEX2D_87", "ASSET_TEX2D_88", "ASSET_TEX2D_FUNFONT_0", "ASSET_TEX2D_FUNFONT_1", "ASSET_TEX2D_FUNFONT_2", "ASSET_TEX2D_FUNFONT_3", "ASSET_TEX2D_FUNFONT_4", "ASSET_TEX2D_FUNFONT_5", "ASSET_TEX2D_95", "ASSET_TEX2D_96", "ASSET_TEX2D_97", "ASSET_TEX2D_98", "ASSET_TEX2D_99", "ASSET_TEX2D_100", "ASSET_TEX2D_101", "ASSET_TEX2D_102", "ASSET_TEX2D_103", "ASSET_TEX2D_104", "ASSET_TEX2D_105", "ASSET_TEX2D_106", "ASSET_TEX2D_107", "ASSET_TEX2D_108", "ASSET_TEX2D_109", "ASSET_TEX2D_110", "ASSET_TEX2D_111", "ASSET_TEX2D_112", "ASSET_TEX2D_113", "ASSET_TEX2D_114", "ASSET_TEX2D_115", "ASSET_TEX2D_116", "ASSET_TEX2D_117", "ASSET_TEX2D_118", "ASSET_TEX2D_119", "ASSET_TEX2D_120", "ASSET_TEX2D_121", "ASSET_TEX2D_122", "ASSET_TEX2D_123", "ASSET_TEX2D_124", "ASSET_TEX2D_125", "ASSET_TEX2D_126", "ASSET_TEX2D_127", "ASSET_TEX2D_128", "ASSET_TEX2D_129", "ASSET_TEX2D_130", "ASSET_TEX2D_131", "ASSET_TEX2D_132", "ASSET_TEX2D_133", "ASSET_TEX2D_134", "ASSET_TEX2D_135", "ASSET_TEX2D_136", "ASSET_TEX2D_137", "ASSET_TEX2D_138", "ASSET_TEX2D_139", "ASSET_TEX2D_140", "ASSET_TEX2D_141", "ASSET_TEX2D_142", "ASSET_TEX2D_143", "ASSET_TEX2D_144", "ASSET_TEX2D_145", "ASSET_TEX2D_146", "ASSET_TEX2D_147", "ASSET_TEX2D_148", "ASSET_TEX2D_149", "ASSET_TEX2D_150", "ASSET_TEX2D_151", "ASSET_TEX2D_152", "ASSET_TEX2D_153", "ASSET_TEX2D_154", "ASSET_TEX2D_155", "ASSET_TEX2D_156", "ASSET_TEX2D_157", "ASSET_TEX2D_158", "ASSET_TEX2D_SUBTITLEFONT_0", "ASSET_TEX2D_SUBTITLEFONT_1", "ASSET_TEX2D_SUBTITLEFONT_2", "ASSET_TEX2D_BIGFONT_A", "ASSET_TEX2D_BIGFONT_B", "ASSET_TEX2D_BIGFONT_C", "ASSET_TEX2D_BIGFONT_D", "ASSET_TEX2D_BIGFONT_E", "ASSET_TEX2D_BIGFONT_F", "ASSET_TEX2D_BIGFONT_G", "ASSET_TEX2D_BIGFONT_H", "ASSET_TEX2D_BIGFONT_I", "ASSET_TEX2D_BIGFONT_J", "ASSET_TEX2D_BIGFONT_K", "ASSET_TEX2D_BIGFONT_L", "ASSET_TEX2D_BIGFONT_M", "ASSET_TEX2D_BIGFONT_N", "ASSET_TEX2D_BIGFONT_O", "ASSET_TEX2D_BIGFONT_P", "ASSET_TEX2D_BIGFONT_Q", "ASSET_TEX2D_BIGFONT_R", "ASSET_TEX2D_BIGFONT_S", "ASSET_TEX2D_BIGFONT_T", "ASSET_TEX2D_BIGFONT_U", "ASSET_TEX2D_BIGFONT_V", "ASSET_TEX2D_BIGFONT_W", "ASSET_TEX2D_BIGFONT_X", "ASSET_TEX2D_BIGFONT_Y", "ASSET_TEX2D_BIGFONT_Z", "ASSET_TEX2D_BIGFONT_QUESTIONMARK", "ASSET_TEX2D_BIGFONT_PERIOD", "ASSET_TEX2D_190", "ASSET_TEX2D_191", "ASSET_TEX2D_192", "ASSET_TEX2D_193", "ASSET_TEX2D_194", "ASSET_TEX2D_195", "ASSET_TEX2D_196", "ASSET_TEX2D_197", "ASSET_TEX2D_198", "ASSET_TEX2D_199", "ASSET_TEX2D_200", "ASSET_TEX2D_201", "ASSET_TEX2D_202", "ASSET_TEX2D_203", "ASSET_TEX2D_204", "ASSET_TEX2D_205", "ASSET_TEX2D_206", "ASSET_TEX2D_207", "ASSET_TEX2D_208", "ASSET_TEX2D_209", "ASSET_TEX2D_210", "ASSET_TEX2D_211", "ASSET_TEX2D_212", "ASSET_TEX2D_213", "ASSET_TEX2D_214", "ASSET_TEX2D_215", "ASSET_TEX2D_216", "ASSET_TEX2D_217", "ASSET_TEX2D_218", "ASSET_TEX2D_219", "ASSET_TEX2D_220", "ASSET_TEX2D_221", "ASSET_TEX2D_222", "ASSET_TEX2D_223", "ASSET_TEX2D_224", "ASSET_TEX2D_225", "ASSET_TEX2D_226", "ASSET_TEX2D_227", "ASSET_TEX2D_228", "ASSET_TEX2D_229", "ASSET_TEX2D_230", "ASSET_TEX2D_231", "ASSET_TEX2D_232", "ASSET_TEX2D_233", "ASSET_TEX2D_234", "ASSET_TEX2D_235", "ASSET_TEX2D_236", "ASSET_TEX2D_237", "ASSET_TEX2D_238", "ASSET_TEX2D_239", "ASSET_TEX2D_240", "ASSET_TEX2D_241", "ASSET_TEX2D_242", "ASSET_TEX2D_243", "ASSET_TEX2D_244", "ASSET_TEX2D_245", "ASSET_TEX2D_246", "ASSET_TEX2D_247", "ASSET_TEX2D_248", "ASSET_TEX2D_249", "ASSET_TEX2D_250", "ASSET_TEX2D_251", "ASSET_TEX2D_252", "ASSET_TEX2D_253", "ASSET_TEX2D_254", "ASSET_TEX2D_255", "ASSET_TEX2D_256", "ASSET_TEX2D_257", "ASSET_TEX2D_258", "ASSET_TEX2D_259", "ASSET_TEX2D_260", "ASSET_TEX2D_261", "ASSET_TEX2D_262", "ASSET_TEX2D_263", "ASSET_TEX2D_264", "ASSET_TEX2D_265", "ASSET_TEX2D_266", "ASSET_TEX2D_267", "ASSET_TEX2D_268", "ASSET_TEX2D_269", "ASSET_TEX2D_270", "ASSET_TEX2D_271", "ASSET_TEX2D_272", "ASSET_TEX2D_273", "ASSET_TEX2D_274", "ASSET_TEX2D_275", "ASSET_TEX2D_276", "ASSET_TEX2D_277", "ASSET_TEX2D_278", "ASSET_TEX2D_279", "ASSET_TEX2D_280", "ASSET_TEX2D_281", "ASSET_TEX2D_282", "ASSET_TEX2D_283", "ASSET_TEX2D_284", "ASSET_TEX2D_285", "ASSET_TEX2D_286", "ASSET_TEX2D_287", "ASSET_TEX2D_288", "ASSET_TEX2D_289", "ASSET_TEX2D_290", "ASSET_TEX2D_291", "ASSET_TEX2D_292", "ASSET_TEX2D_293", "ASSET_TEX2D_294", "ASSET_TEX2D_295", "ASSET_TEX2D_296", "ASSET_TEX2D_297", "ASSET_TEX2D_298", "ASSET_TEX2D_299", "ASSET_TEX2D_300", "ASSET_TEX2D_301", "ASSET_TEX2D_302", "ASSET_TEX2D_303", "ASSET_TEX2D_304", "ASSET_TEX2D_305", "ASSET_TEX2D_306", "ASSET_TEX2D_307", "ASSET_TEX2D_308", "ASSET_TEX2D_309", "ASSET_TEX2D_310", "ASSET_TEX2D_311", "ASSET_TEX2D_312", "ASSET_TEX2D_313", "ASSET_TEX2D_314", "ASSET_TEX2D_315", "ASSET_TEX2D_316", "ASSET_TEX2D_317", "ASSET_TEX2D_318", "ASSET_TEX2D_319", "ASSET_TEX2D_320", "ASSET_TEX2D_321", "ASSET_TEX2D_322", "ASSET_TEX2D_323", "ASSET_TEX2D_324", "ASSET_TEX2D_325", "ASSET_TEX2D_326", "ASSET_TEX2D_327", "ASSET_TEX2D_328", "ASSET_TEX2D_329", "ASSET_TEX2D_330", "ASSET_TEX2D_331", "ASSET_TEX2D_332", "ASSET_TEX2D_333", "ASSET_TEX2D_334", "ASSET_TEX2D_335", "ASSET_TEX2D_336", "ASSET_TEX2D_337", "ASSET_TEX2D_338", "ASSET_TEX2D_339", "ASSET_TEX2D_340", "ASSET_TEX2D_341", "ASSET_TEX2D_342", "ASSET_TEX2D_343", "ASSET_TEX2D_344", "ASSET_TEX2D_345", "ASSET_TEX2D_346", "ASSET_TEX2D_347", "ASSET_TEX2D_348", "ASSET_TEX2D_349", "ASSET_TEX2D_350", "ASSET_TEX2D_351", "ASSET_TEX2D_352", "ASSET_TEX2D_353", "ASSET_TEX2D_354", "ASSET_TEX2D_355", "ASSET_TEX2D_356", "ASSET_TEX2D_357", "ASSET_TEX2D_358", "ASSET_TEX2D_359", "ASSET_TEX2D_360", "ASSET_TEX2D_361", "ASSET_TEX2D_362", "ASSET_TEX2D_363", "ASSET_TEX2D_364", "ASSET_TEX2D_365", "ASSET_TEX2D_366", "ASSET_TEX2D_367", "ASSET_TEX2D_368", "ASSET_TEX2D_369", "ASSET_TEX2D_370", "ASSET_TEX2D_371", "ASSET_TEX2D_372", "ASSET_TEX2D_373", "ASSET_TEX2D_374", "ASSET_TEX2D_375", "ASSET_TEX2D_376", "ASSET_TEX2D_377", "ASSET_TEX2D_378", "ASSET_TEX2D_379", "ASSET_TEX2D_380", "ASSET_TEX2D_381", "ASSET_TEX2D_382", "ASSET_TEX2D_383", "ASSET_TEX2D_384", "ASSET_TEX2D_385", "ASSET_TEX2D_386", "ASSET_TEX2D_387", "ASSET_TEX2D_388", "ASSET_TEX2D_389", "ASSET_TEX2D_390", "ASSET_TEX2D_391", "ASSET_TEX2D_392", "ASSET_TEX2D_393", "ASSET_TEX2D_394", "ASSET_TEX2D_395", "ASSET_TEX2D_396", "ASSET_TEX2D_397", "ASSET_TEX2D_398", "ASSET_TEX2D_399", "ASSET_TEX2D_400", "ASSET_TEX2D_401", "ASSET_TEX2D_402", "ASSET_TEX2D_403", "ASSET_TEX2D_404", "ASSET_TEX2D_405", "ASSET_TEX2D_406", "ASSET_TEX2D_407", "ASSET_TEX2D_408", "ASSET_TEX2D_409", "ASSET_TEX2D_410", "ASSET_TEX2D_411", "ASSET_TEX2D_412", "ASSET_TEX2D_413", "ASSET_TEX2D_414", "ASSET_TEX2D_415", "ASSET_TEX2D_416", "ASSET_TEX2D_417", "ASSET_TEX2D_418", "ASSET_TEX2D_419", "ASSET_TEX2D_420", "ASSET_TEX2D_421", "ASSET_TEX2D_422", "ASSET_TEX2D_423", "ASSET_TEX2D_424", "ASSET_TEX2D_425", "ASSET_TEX2D_426", "ASSET_TEX2D_427", "ASSET_TEX2D_428", "ASSET_TEX2D_429", "ASSET_TEX2D_430", "ASSET_TEX2D_431", "ASSET_TEX2D_432", "ASSET_TEX2D_433", "ASSET_TEX2D_434", "ASSET_TEX2D_435", "ASSET_TEX2D_436", "ASSET_TEX2D_437", "ASSET_TEX2D_438", "ASSET_TEX2D_439", "ASSET_TEX2D_440", "ASSET_TEX2D_441", "ASSET_TEX2D_442", "ASSET_TEX2D_443", "ASSET_TEX2D_444", "ASSET_TEX2D_445", "ASSET_TEX2D_446", "ASSET_TEX2D_447", "ASSET_TEX2D_448", "ASSET_TEX2D_449", "ASSET_TEX2D_450", "ASSET_TEX2D_451", "ASSET_TEX2D_452", "ASSET_TEX2D_453", "ASSET_TEX2D_454", "ASSET_TEX2D_455", "ASSET_TEX2D_456", "ASSET_TEX2D_457", "ASSET_TEX2D_458", "ASSET_TEX2D_459", "ASSET_TEX2D_460", "ASSET_TEX2D_461", "ASSET_TEX2D_462", "ASSET_TEX2D_463", "ASSET_TEX2D_464", "ASSET_TEX2D_465", "ASSET_TEX2D_466", "ASSET_TEX2D_467", "ASSET_TEX2D_468", "ASSET_TEX2D_469", "ASSET_TEX2D_470", "ASSET_TEX2D_471", "ASSET_TEX2D_472", "ASSET_TEX2D_473", "ASSET_TEX2D_474", "ASSET_TEX2D_475", "ASSET_TEX2D_476", "ASSET_TEX2D_477", "ASSET_TEX2D_478", "ASSET_TEX2D_479", "ASSET_TEX2D_480", "ASSET_TEX2D_481", "ASSET_TEX2D_482", "ASSET_TEX2D_483", "ASSET_TEX2D_484", "ASSET_TEX2D_485", "ASSET_TEX2D_486", "ASSET_TEX2D_487", "ASSET_TEX2D_488", "ASSET_TEX2D_489", "ASSET_TEX2D_490", "ASSET_TEX2D_491", "ASSET_TEX2D_492", "ASSET_TEX2D_493", "ASSET_TEX2D_494", "ASSET_TEX2D_495", "ASSET_TEX2D_496", "ASSET_TEX2D_497", "ASSET_TEX2D_498", "ASSET_TEX2D_499", "ASSET_TEX2D_500", "ASSET_TEX2D_501", "ASSET_TEX2D_502", "ASSET_TEX2D_503", "ASSET_TEX2D_504", "ASSET_TEX2D_505", "ASSET_TEX2D_506", "ASSET_TEX2D_507", "ASSET_TEX2D_508", "ASSET_TEX2D_509", "ASSET_TEX2D_510", "ASSET_TEX2D_511", "ASSET_TEX2D_512", "ASSET_TEX2D_513", "ASSET_TEX2D_514", "ASSET_TEX2D_515", "ASSET_TEX2D_516", "ASSET_TEX2D_517", "ASSET_TEX2D_518", "ASSET_TEX2D_519", "ASSET_TEX2D_520", "ASSET_TEX2D_521", "ASSET_TEX2D_522", "ASSET_TEX2D_523", "ASSET_TEX2D_524", "ASSET_TEX2D_525", "ASSET_TEX2D_526", "ASSET_TEX2D_527", "ASSET_TEX2D_528", "ASSET_TEX2D_529", "ASSET_TEX2D_530", "ASSET_TEX2D_531", "ASSET_TEX2D_532", "ASSET_TEX2D_533", "ASSET_TEX2D_534", "ASSET_TEX2D_535", "ASSET_TEX2D_536", "ASSET_TEX2D_537", "ASSET_TEX2D_538", "ASSET_TEX2D_539", "ASSET_TEX2D_540", "ASSET_TEX2D_541", "ASSET_TEX2D_542", "ASSET_TEX2D_543", "ASSET_TEX2D_544", "ASSET_TEX2D_545", "ASSET_TEX2D_546", "ASSET_TEX2D_547", "ASSET_TEX2D_548", "ASSET_TEX2D_549", "ASSET_TEX2D_550", "ASSET_TEX2D_551", "ASSET_TEX2D_552", "ASSET_TEX2D_553", "ASSET_TEX2D_554", "ASSET_TEX2D_555", "ASSET_TEX2D_556", "ASSET_TEX2D_557", "ASSET_TEX2D_558", "ASSET_TEX2D_559", "ASSET_TEX2D_560", "ASSET_TEX2D_561", "ASSET_TEX2D_562", "ASSET_TEX2D_563", "ASSET_TEX2D_564", "ASSET_TEX2D_565", "ASSET_TEX2D_566", "ASSET_TEX2D_567", "ASSET_TEX2D_568", "ASSET_TEX2D_569", "ASSET_TEX2D_570", "ASSET_TEX2D_571", "ASSET_TEX2D_572", "ASSET_TEX2D_573", "ASSET_TEX2D_574", "ASSET_TEX2D_575", "ASSET_TEX2D_576", "ASSET_TEX2D_577", "ASSET_TEX2D_578", "ASSET_TEX2D_579", "ASSET_TEX2D_580", "ASSET_TEX2D_581", "ASSET_TEX2D_582", "ASSET_TEX2D_583", "ASSET_TEX2D_584", "ASSET_TEX2D_585", "ASSET_TEX2D_586", "ASSET_TEX2D_587", "ASSET_TEX2D_588", "ASSET_TEX2D_589", "ASSET_TEX2D_590", "ASSET_TEX2D_591", "ASSET_TEX2D_592", "ASSET_TEX2D_593", "ASSET_TEX2D_594", "ASSET_TEX2D_595", "ASSET_TEX2D_596", "ASSET_TEX2D_597", "ASSET_TEX2D_598", "ASSET_TEX2D_599", "ASSET_TEX2D_600", "ASSET_TEX2D_601", "ASSET_TEX2D_602", "ASSET_TEX2D_603", "ASSET_TEX2D_604", "ASSET_TEX2D_605", "ASSET_TEX2D_606", "ASSET_TEX2D_607", "ASSET_TEX2D_608", "ASSET_TEX2D_609", "ASSET_TEX2D_610", "ASSET_TEX2D_611", "ASSET_TEX2D_612", "ASSET_TEX2D_613", "ASSET_TEX2D_614", "ASSET_TEX2D_615", "ASSET_TEX2D_616", "ASSET_TEX2D_617", "ASSET_TEX2D_618", "ASSET_TEX2D_619", "ASSET_TEX2D_620", "ASSET_TEX2D_621", "ASSET_TEX2D_622", "ASSET_TEX2D_623", "ASSET_TEX2D_624", "ASSET_TEX2D_625", "ASSET_TEX2D_626", "ASSET_TEX2D_627", "ASSET_TEX2D_628", "ASSET_TEX2D_629", "ASSET_TEX2D_630", "ASSET_TEX2D_631", "ASSET_TEX2D_632", "ASSET_TEX2D_633", "ASSET_TEX2D_634", "ASSET_TEX2D_635", "ASSET_TEX2D_636", "ASSET_TEX2D_637", "ASSET_TEX2D_638", "ASSET_TEX2D_639", "ASSET_TEX2D_640", "ASSET_TEX2D_641", "ASSET_TEX2D_642", "ASSET_TEX2D_643", "ASSET_TEX2D_644", "ASSET_TEX2D_645", "ASSET_TEX2D_646", "ASSET_TEX2D_647", "ASSET_TEX2D_648", "ASSET_TEX2D_649", "ASSET_TEX2D_650", "ASSET_TEX2D_651", "ASSET_TEX2D_652", "ASSET_TEX2D_653", "ASSET_TEX2D_654", "ASSET_TEX2D_655", "ASSET_TEX2D_656", "ASSET_TEX2D_657", "ASSET_TEX2D_658", "ASSET_TEX2D_659", "ASSET_TEX2D_660", "ASSET_TEX2D_661", "ASSET_TEX2D_662", "ASSET_TEX2D_663", "ASSET_TEX2D_664", "ASSET_TEX2D_665", "ASSET_TEX2D_666", "ASSET_TEX2D_667", "ASSET_TEX2D_668", "ASSET_TEX2D_669", "ASSET_TEX2D_670", "ASSET_TEX2D_671", "ASSET_TEX2D_672", "ASSET_TEX2D_673", "ASSET_TEX2D_674", "ASSET_TEX2D_675", "ASSET_TEX2D_676", "ASSET_TEX2D_677", "ASSET_TEX2D_678", "ASSET_TEX2D_679", "ASSET_TEX2D_680", "ASSET_TEX2D_681", "ASSET_TEX2D_682", "ASSET_TEX2D_683", "ASSET_TEX2D_684", "ASSET_TEX2D_685", "ASSET_TEX2D_686", "ASSET_TEX2D_687", "ASSET_TEX2D_688", "ASSET_TEX2D_689", "ASSET_TEX2D_690", "ASSET_TEX2D_691", "ASSET_TEX2D_692", "ASSET_TEX2D_693", "ASSET_TEX2D_694", "ASSET_TEX2D_695", "ASSET_TEX2D_696", "ASSET_TEX2D_697", "ASSET_TEX2D_698", "ASSET_TEX2D_699", "ASSET_TEX2D_700", "ASSET_TEX2D_701", "ASSET_TEX2D_702", "ASSET_TEX2D_703", "ASSET_TEX2D_704", "ASSET_TEX2D_705", "ASSET_TEX2D_706", "ASSET_TEX2D_707", "ASSET_TEX2D_708", "ASSET_TEX2D_709", "ASSET_TEX2D_710", "ASSET_TEX2D_711", "ASSET_TEX2D_712", "ASSET_TEX2D_713", "ASSET_TEX2D_714", "ASSET_TEX2D_715", "ASSET_TEX2D_716", "ASSET_TEX2D_717", "ASSET_TEX2D_718", "ASSET_TEX2D_719", "ASSET_TEX2D_720", "ASSET_TEX2D_721", "ASSET_TEX2D_722", "ASSET_TEX2D_723", "ASSET_TEX2D_724", "ASSET_TEX2D_725", "ASSET_TEX2D_726", "ASSET_TEX2D_727", "ASSET_TEX2D_728", "ASSET_TEX2D_729", "ASSET_TEX2D_730", "ASSET_TEX2D_731", "ASSET_TEX2D_732", "ASSET_TEX2D_733", "ASSET_TEX2D_734", "ASSET_TEX2D_735", "ASSET_TEX2D_736", "ASSET_TEX2D_737", "ASSET_TEX2D_738", "ASSET_TEX2D_739", "ASSET_TEX2D_740", "ASSET_TEX2D_741", "ASSET_TEX2D_742", "ASSET_TEX2D_743", "ASSET_TEX2D_744", "ASSET_TEX2D_745", "ASSET_TEX2D_746", "ASSET_TEX2D_747", "ASSET_TEX2D_748", "ASSET_TEX2D_749", "ASSET_TEX2D_750", "ASSET_TEX2D_751", "ASSET_TEX2D_752", "ASSET_TEX2D_753", "ASSET_TEX2D_754", "ASSET_TEX2D_755", "ASSET_TEX2D_756", "ASSET_TEX2D_757", "ASSET_TEX2D_758", "ASSET_TEX2D_759", "ASSET_TEX2D_760", "ASSET_TEX2D_761", "ASSET_TEX2D_762", "ASSET_TEX2D_763", "ASSET_TEX2D_764", "ASSET_TEX2D_765", "ASSET_TEX2D_766", "ASSET_TEX2D_767", "ASSET_TEX2D_768", "ASSET_TEX2D_769", "ASSET_TEX2D_770", "ASSET_TEX2D_771", "ASSET_TEX2D_772", "ASSET_TEX2D_773", "ASSET_TEX2D_774", "ASSET_TEX2D_775", "ASSET_TEX2D_776", "ASSET_TEX2D_777", "ASSET_TEX2D_778", "ASSET_TEX2D_779", "ASSET_TEX2D_780", "ASSET_TEX2D_781", "ASSET_TEX2D_782", "ASSET_TEX2D_783", "ASSET_TEX2D_784", "ASSET_TEX2D_785", "ASSET_TEX2D_786", "ASSET_TEX2D_787", "ASSET_TEX2D_788", "ASSET_TEX2D_789", "ASSET_TEX2D_790", "ASSET_TEX2D_791", "ASSET_TEX2D_792", "ASSET_TEX2D_793", "ASSET_TEX2D_794", "ASSET_TEX2D_795", "ASSET_TEX2D_796", "ASSET_TEX2D_797", "ASSET_TEX2D_798", "ASSET_TEX2D_799", "ASSET_TEX2D_800", "ASSET_TEX2D_801", "ASSET_TEX2D_802", "ASSET_TEX2D_803", "ASSET_TEX2D_804", "ASSET_TEX2D_805", "ASSET_TEX2D_806", "ASSET_TEX2D_807", "ASSET_TEX2D_808", "ASSET_TEX2D_809", "ASSET_TEX2D_810", "ASSET_TEX2D_811", "ASSET_TEX2D_812", "ASSET_TEX2D_813", "ASSET_TEX2D_814", "ASSET_TEX2D_815", "ASSET_TEX2D_816", "ASSET_TEX2D_817", "ASSET_TEX2D_818", "ASSET_TEX2D_819", "ASSET_TEX2D_820", "ASSET_TEX2D_821", "ASSET_TEX2D_822", "ASSET_TEX2D_823", "ASSET_TEX2D_824", "ASSET_TEX2D_825", "ASSET_TEX2D_826", "ASSET_TEX2D_827", "ASSET_TEX2D_828", "ASSET_TEX2D_829", "ASSET_TEX2D_830", "ASSET_TEX2D_831", "ASSET_TEX2D_832", "ASSET_TEX2D_833", "ASSET_TEX2D_834", "ASSET_TEX2D_835", "ASSET_TEX2D_836", "ASSET_TEX2D_837", "ASSET_TEX2D_838", "ASSET_TEX2D_839", "ASSET_TEX2D_840", "ASSET_TEX2D_841", "ASSET_TEX2D_842", "ASSET_TEX2D_843", "ASSET_TEX2D_844", "ASSET_TEX2D_845", "ASSET_TEX2D_846", "ASSET_TEX2D_847", "ASSET_TEX2D_848", "ASSET_TEX2D_849", "ASSET_TEX2D_850", "ASSET_TEX2D_851", "ASSET_TEX2D_852", "ASSET_TEX2D_853", "ASSET_TEX2D_854", "ASSET_TEX2D_855", "ASSET_TEX2D_856", "ASSET_TEX2D_857", "ASSET_TEX2D_858", "ASSET_TEX2D_859", "ASSET_TEX2D_860", "ASSET_TEX2D_861", "ASSET_TEX2D_862", "ASSET_TEX2D_863", "ASSET_TEX2D_864", "ASSET_TEX2D_865", "ASSET_TEX2D_866", "ASSET_TEX2D_867", "ASSET_TEX2D_868", "ASSET_TEX2D_869", "ASSET_TEX2D_870", "ASSET_TEX2D_871", "ASSET_TEX2D_872", "ASSET_TEX2D_873", "ASSET_TEX2D_874", "ASSET_TEX2D_875", "ASSET_TEX2D_876", "ASSET_TEX2D_877", "ASSET_TEX2D_878", "ASSET_TEX2D_879", "ASSET_TEX2D_880", "ASSET_TEX2D_881", "ASSET_TEX2D_882", "ASSET_TEX2D_883", "ASSET_TEX2D_884", "ASSET_TEX2D_885", "ASSET_TEX2D_886", "ASSET_TEX2D_887", "ASSET_TEX2D_888", "ASSET_TEX2D_889", "ASSET_TEX2D_890", "ASSET_TEX2D_891", "ASSET_TEX2D_892", "ASSET_TEX2D_893", "ASSET_TEX2D_894", "ASSET_TEX2D_895", "ASSET_TEX2D_896", "ASSET_TEX2D_897", "ASSET_TEX2D_898", "ASSET_TEX2D_899", "ASSET_TEX2D_900", "ASSET_TEX2D_901", "ASSET_TEX2D_902", "ASSET_TEX2D_903", "ASSET_TEX2D_904", "ASSET_TEX2D_905"],
+				"filenames": ["smallfont_0", "smallfont_1", "smallfont_2", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "funfont_0", "funfont_1", "funfont_2", "funfont_3", "funfont_4", "funfont_5", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "subtitlefont_0", "subtitlefont_1", "subtitlefont_2", "bigfont_a", "bigfont_b", "bigfont_c", "bigfont_d", "bigfont_e", "bigfont_f", "bigfont_g", "bigfont_h", "bigfont_i", "bigfont_j", "bigfont_k", "bigfont_l", "bigfont_m", "bigfont_n", "bigfont_o", "bigfont_p", "bigfont_q", "bigfont_r", "bigfont_s", "bigfont_t", "bigfont_u", "bigfont_v", "bigfont_w", "bigfont_x", "bigfont_y", "bigfont_z", "bigfont_questionmark", "bigfont_period", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+			},
+			{
+				"build-id": "ASSET_TEXTURES_2D_TABLE",
+				"type": "Table",
+				"for": "ASSET_TEXTURES_2D"
+			},
+			{
+				"build-id": "ASSET_GAME_TEXT",
+				"type": "GameText",
+				"folder": "text/game",
+				"table": 7
+			},
+			{
+				"build-id": "ASSET_GAME_TEXT_TABLE",
+				"type": "Table",
+				"for": "ASSET_GAME_TEXT"
+			},
+			{
+				"build-id": "ASSET_MENU_TEXT",
+				"type": "MenuText",
+				"folder": "text/menu",
+				"table": 9,
+				"filenames": [
+					"english_menu_text",
+					"french_menu_text",
+					"german_menu_text",
+					"japanese_menu_text"
+				],
+				"child-build-ids": [
+					"ASSET_MENU_TEXT_ENGLISH",
+					"ASSET_MENU_TEXT_FRENCH",
+					"ASSET_MENU_TEXT_GERMAN",
+					"ASSET_MENU_TEXT_JAPANESE"
+				],
+				"language-order": [
+					"LANGUAGE_ENGLISH",
+					"LANGUAGE_FRENCH",
+					"LANGUAGE_GERMAN",
+					"LANGUAGE_JAPANESE"
+				],
+				"menu-text-build-ids": [
+					"ASSET_MENU_TEXT_STEREO",
+					"ASSET_MENU_TEXT_MONO",
+					"ASSET_MENU_TEXT_HEADPHONES",
+					"ASSET_MENU_TEXT_SFXVOLUME",
+					"ASSET_MENU_TEXT_MUSICVOLUME",
+					"ASSET_MENU_TEXT_RETURN",
+					"ASSET_MENU_TEXT_AUDIOOPTIONS",
+					"ASSET_MENU_TEXT_MUSICTEST",
+					"ASSET_MENU_TEXT_ENTERINITIALS",
+					"ASSET_MENU_TEXT_BESTTIME",
+					"ASSET_MENU_TEXT_BESTLAP",
+					"ASSET_MENU_TEXT_SILVERCOIN",
+					"ASSET_MENU_TEXT_GOLDCOIN",
+					"ASSET_MENU_TEXT_CHALLENGE",
+					"ASSET_MENU_TEXT_ENTERCODE",
+					"ASSET_MENU_TEXT_CLEARALLCODES",
+					"ASSET_MENU_TEXT_CODELIST",
+					"ASSET_MENU_TEXT_MAGICCODES",
+					"ASSET_MENU_TEXT_BADCODE",
+					"ASSET_MENU_TEXT_ALLCODESDELETED",
+					"ASSET_MENU_TEXT_MAGICCODESLIST",
+					"ASSET_MENU_TEXT_ON",
+					"ASSET_MENU_TEXT_OFF",
+					"ASSET_MENU_TEXT_TRYAGAIN",
+					"ASSET_MENU_TEXT_SELECTTRACK",
+					"ASSET_MENU_TEXT_RETURNTOLOBBY",
+					"ASSET_MENU_TEXT_SELECTCHARACTER",
+					"ASSET_MENU_TEXT_SAVEGHOST",
+					"ASSET_MENU_TEXT_QUIT",
+					"ASSET_MENU_TEXT_LAPTIMES",
+					"ASSET_MENU_TEXT_OVERALLTIME",
+					"ASSET_MENU_TEXT_RACEORDER",
+					"ASSET_MENU_TEXT_RECORDTIMES",
+					"ASSET_MENU_TEXT_RANKINGS",
+					"ASSET_MENU_TEXT_LANGUAGE",
+					"ASSET_MENU_TEXT_CONTPAK",
+					"ASSET_MENU_TEXT_OPTIONS",
+					"ASSET_MENU_TEXT_CHANGEVEHICLE",
+					"ASSET_MENU_TEXT_HELP",
+					"ASSET_MENU_TEXT_CHALLENGES",
+					"ASSET_MENU_TEXT_VEHICLESELECT",
+					"ASSET_MENU_TEXT_CAR",
+					"ASSET_MENU_TEXT_HOVERCRAFT",
+					"ASSET_MENU_TEXT_PLANE",
+					"ASSET_MENU_TEXT_MAINMENU",
+					"ASSET_MENU_TEXT_CHALLENGESELECT",
+					"ASSET_MENU_TEXT_CARCHALLENGE",
+					"ASSET_MENU_TEXT_HOVERCHALLENGE",
+					"ASSET_MENU_TEXT_PLANECHALLENGE",
+					"ASSET_MENU_TEXT_LOSETOTAJ_0",
+					"ASSET_MENU_TEXT_LOSETOTAJ_1",
+					"ASSET_MENU_TEXT_EXIT",
+					"ASSET_MENU_TEXT_TTINTRO_0",
+					"ASSET_MENU_TEXT_TTINTRO_1",
+					"ASSET_MENU_TEXT_TTINTRO_2",
+					"ASSET_MENU_TEXT_TTINTRO_3",
+					"ASSET_MENU_TEXT_TTINTRO_4",
+					"ASSET_MENU_TEXT_TTINTRO_5",
+					"ASSET_MENU_TEXT_TTINTRO_6",
+					"ASSET_MENU_TEXT_TTINTRO_7",
+					"ASSET_MENU_TEXT_TTINTRO_8",
+					"ASSET_MENU_TEXT_TTINTRO_9",
+					"ASSET_MENU_TEXT_TTINTRO_10",
+					"ASSET_MENU_TEXT_TTINTRO_11",
+					"ASSET_MENU_TEXT_PAKERROR",
+					"ASSET_MENU_TEXT_TIMETRIALON",
+					"ASSET_MENU_TEXT_TIMETRIALOFF",
+					"ASSET_MENU_TEXT_NOCONTPAK",
+					"ASSET_MENU_TEXT_CONTPAKFULL",
+					"ASSET_MENU_TEXT_BADCONTPAK",
+					"ASSET_MENU_TEXT_TROPHYRACE",
+					"ASSET_MENU_TEXT_STATUS",
+					"ASSET_MENU_TEXT_GAMEA",
+					"ASSET_MENU_TEXT_GAMEB",
+					"ASSET_MENU_TEXT_GAMEC",
+					"ASSET_MENU_TEXT_NEW",
+					"ASSET_MENU_TEXT_GAMESELECT",
+					"ASSET_MENU_TEXT_GAMETOCOPY",
+					"ASSET_MENU_TEXT_GAMETOCOPYTO",
+					"ASSET_MENU_TEXT_GAMETOERASE",
+					"ASSET_MENU_TEXT_COPY",
+					"ASSET_MENU_TEXT_ERASE",
+					"ASSET_MENU_TEXT_GHOSTDATA",
+					"ASSET_MENU_TEXT_NOGHOSTSSAVED",
+					"ASSET_MENU_TEXT_ERASEGHOST",
+					"ASSET_MENU_TEXT_CANCEL",
+					"ASSET_MENU_TEXT_CONTPAK1",
+					"ASSET_MENU_TEXT_CONTPAK2",
+					"ASSET_MENU_TEXT_CONTPAK3",
+					"ASSET_MENU_TEXT_CONTPAK4",
+					"ASSET_MENU_TEXT_CONTPAKX",
+					"ASSET_MENU_TEXT_CONTPAKNOTPRESENT",
+					"ASSET_MENU_TEXT_CONTPAKTRYAGAIN",
+					"ASSET_MENU_TEXT_CONTPAKHASCORRUPTDATA_0",
+					"ASSET_MENU_TEXT_CONTPAKHASCORRUPTDATA_1",
+					"ASSET_MENU_TEXT_CONTPAKISDAMAGED_0",
+					"ASSET_MENU_TEXT_CONTPAKISDAMAGED_1",
+					"ASSET_MENU_TEXT_CONTPAKISFULL",
+					"ASSET_MENU_TEXT_CONTINUE",
+					"ASSET_MENU_TEXT_CONTPAKDIFFERENT_0",
+					"ASSET_MENU_TEXT_CONTPAKDIFFERENT_1",
+					"ASSET_MENU_TEXT_CONTPAKRETRY",
+					"ASSET_MENU_TEXT_CANNOTSTOREANYMOREGHOSTS_0",
+					"ASSET_MENU_TEXT_CANNOTSTOREANYMOREGHOSTS_1",
+					"ASSET_MENU_TEXT_ADVTWOLOADERROR_0",
+					"ASSET_MENU_TEXT_ADVTWOLOADERROR_1",
+					"ASSET_MENU_TEXT_ADVTWOLOADERROR_2",
+					"ASSET_MENU_TEXT_ADVTWOLOADERROR_3",
+					"ASSET_MENU_TEXT_ADVTWOLOADERROR_4",
+					"ASSET_MENU_TEXT_ADVTWOLOADERROR_5",
+					"ASSET_MENU_TEXT_PAKNOTES",
+					"ASSET_MENU_TEXT_DELETENOTEX",
+					"ASSET_MENU_TEXT_DELETE",
+					"ASSET_MENU_TEXT_CANCELDELETE",
+					"ASSET_MENU_TEXT_FREEPAGESX",
+					"ASSET_MENU_TEXT_NOTE",
+					"ASSET_MENU_TEXT_FILENAME",
+					"ASSET_MENU_TEXT_PAGES",
+					"ASSET_MENU_TEXT_MORE",
+					"ASSET_MENU_TEXT_GAMEPAK",
+					"ASSET_MENU_TEXT_TIMES",
+					"ASSET_MENU_TEXT_GHOSTS",
+					"ASSET_MENU_TEXT_EMPTYSLOT",
+					"ASSET_MENU_TEXT_VIEWGHOSTS",
+					"ASSET_MENU_TEXT_PLEASEWAIT",
+					"ASSET_MENU_TEXT_GAMEERROR",
+					"ASSET_MENU_TEXT_RESTARTRACE",
+					"ASSET_MENU_TEXT_RESTARTCHALLENGE",
+					"ASSET_MENU_TEXT_ABANDONCHALLENGE",
+					"ASSET_MENU_TEXT_QUITTROPHYRACE",
+					"ASSET_MENU_TEXT_QUITTROPHYRACETITLE",
+					"ASSET_MENU_TEXT_QUITGAME",
+					"ASSET_MENU_TEXT_QUITGAMETITLE",
+					"ASSET_MENU_TEXT_PAUSEOPTIONS",
+					"ASSET_MENU_TEXT_OK",
+					"ASSET_MENU_TEXT_PLAYERSELECT",
+					"ASSET_MENU_TEXT_NUMBEROFRACERS",
+					"ASSET_MENU_TEXT_START",
+					"ASSET_MENU_TEXT_ROUNDONE",
+					"ASSET_MENU_TEXT_ROUNDTWO",
+					"ASSET_MENU_TEXT_ROUNDTHREE",
+					"ASSET_MENU_TEXT_ROUNDFOUR",
+					"ASSET_MENU_TEXT_ADVENTURE",
+					"ASSET_MENU_TEXT_ADVENTURETWO",
+					"ASSET_MENU_TEXT_TRACKS",
+					"ASSET_MENU_TEXT_TROPHYCEREMONY",
+					"ASSET_MENU_TEXT_ADVENTURE2",
+					"ASSET_MENU_TEXT_ADVENTURETWO2",
+					"ASSET_MENU_TEXT_CLEARALLCODESTITLE",
+					"ASSET_MENU_TEXT_CLEARALLCODESCONFIRM",
+					"ASSET_MENU_TEXT_CLEARALLCODESCANCEL",
+					"ASSET_MENU_TEXT_CONTROLLERNOTCONNECTED",
+					"ASSET_MENU_TEXT_CAUTION",
+					"ASSET_MENU_TEXT_RUMBLEPAKDETECTED_0",
+					"ASSET_MENU_TEXT_RUMBLEPAKDETECTED_1",
+					"ASSET_MENU_TEXT_RUMBLEPAKDETECTED_2",
+					"ASSET_MENU_TEXT_INSERTDEVICE_0",
+					"ASSET_MENU_TEXT_INSERTDEVICE_1",
+					"ASSET_MENU_TEXT_INSERTDEVICE_2",
+					"ASSET_MENU_TEXT_INSERTDEVICE_3",
+					"ASSET_MENU_TEXT_INSERTDEVICE_4",
+					"ASSET_MENU_TEXT_INSERTDEVICE_5",
+					"ASSET_MENU_TEXT_INSERTDEVICE_6",
+					"ASSET_MENU_TEXT_TURNOFFN64_0",
+					"ASSET_MENU_TEXT_TURNOFFN64_1",
+					"ASSET_MENU_TEXT_SAVEOPTIONS",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_0",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_1",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_2",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_3",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_4",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_5",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_6",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_7",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_8",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_9",
+					"ASSET_MENU_TEXT_CAUTIONMESSAGE_10",
+					"ASSET_MENU_TEXT_CANNOTSAVEGHOSTDATA_0",
+					"ASSET_MENU_TEXT_CANNOTSAVEGHOSTDATA_1",
+					"ASSET_MENU_TEXT_CANNOTSAVEGHOSTDATA_2",
+					"ASSET_MENU_TEXT_ENTERTROPHYRACE",
+					"ASSET_MENU_TEXT_GAMEPAKBONUSES",
+					"ASSET_MENU_TEXT_SUBTITLESON",
+					"ASSET_MENU_TEXT_SUBTITLESOFF",
+					"ASSET_MENU_TEXT_CORRUPTDATA_0",
+					"ASSET_MENU_TEXT_CORRUPTDATA_1"
+				]
+			},
+			{
+				"build-id": "ASSET_MENU_TEXT_TABLE",
+				"type": "Table",
+				"for": "ASSET_MENU_TEXT"
+			},
+			{
+				"build-id": "ASSET_SCREENS",
+				"type": "Binary",
+				"folder": "screens",
+				"table": 11
+			},
+			{
+				"build-id": "ASSET_SCREENS_TABLE",
+				"type": "Table",
+				"for": "ASSET_SCREENS"
+			},
+			{
+				"build-id": "ASSET_SPRITES",
+				"type": "Sprites",
+				"folder": "sprites",
+				"table": 13
+			},
+			{
+				"build-id": "ASSET_SPRITES_TABLE",
+				"type": "Table",
+				"for": "ASSET_SPRITES"
+			},
+			{
+				"build-id": "ASSET_EMPTY_14",
+				"type": "Empty"
+			},
+			{
+				"build-id": "ASSET_MISC",
+				"type": "Miscellaneous",
+				"folder": "misc",
+				"table": 16,
+				"filenames": [
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"tracks_menu_ids",
+					"hub_area_ids",
+					"main_tracks_ids",
+					"battle_tracks_ids",
+					"boss_tracks_ids",
+					"",
+					"",
+					"RacerStats_Unknown0",
+					"RacerStats_Diddy",
+					"RacerStats_TT",
+					"RacerStats_Unknown1",
+					"RacerStats_Krunch",
+					"RacerStats_Bumper",
+					"RacerStats_Tiptup",
+					"RacerStats_Conker",
+					"RacerStats_Timber",
+					"RacerStats_Banjo",
+					"RacerStats_Drumstick",
+					"RacerStats_Pipsy",
+					"RacerStats_Unknown2",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"magic_codes",
+					"title_screen_demo_ids",
+					"",
+					"",
+					"",
+					""
+				],
+				"child-build-ids": [
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"ASSET_MISC_TRACKS_MENU_IDS",
+					"ASSET_MISC_HUB_AREA_IDS",
+					"ASSET_MISC_MAIN_TRACKS_IDS",
+					"ASSET_MISC_BATTLE_TRACKS_IDS",
+					"ASSET_MISC_BOSS_TRACKS_IDS",
+					"",
+					"",
+					"ASSET_MISC_RACERSTATS_UNKNOWN0",
+					"ASSET_MISC_RACERSTATS_DIDDY",
+					"ASSET_MISC_RACERSTATS_TT",
+					"ASSET_MISC_RACERSTATS_UNKNOWN1",
+					"ASSET_MISC_RACERSTATS_KRUNCH",
+					"ASSET_MISC_RACERSTATS_BUMPER",
+					"ASSET_MISC_RACERSTATS_TIPTUP",
+					"ASSET_MISC_RACERSTATS_CONKER",
+					"ASSET_MISC_RACERSTATS_TIMBER",
+					"ASSET_MISC_RACERSTATS_BANJO",
+					"ASSET_MISC_RACERSTATS_DRUMSTICK",
+					"ASSET_MISC_RACERSTATS_PIPSY",
+					"ASSET_MISC_RACERSTATS_UNKNOWN2",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"",
+					"ASSET_MISC_MAGIC_CODES",
+					"ASSET_MISC_TITLE_SCREEN_DEMO_IDS",
+					"",
+					"",
+					"",
+					""
+				]
+			},
+			{
+				"build-id": "ASSET_MISC_TABLE",
+				"type": "Table",
+				"for": "ASSET_MISC"
+			},
+			{
+				"build-id": "ASSET_HUD_ELEMENT_IDS",
+				"type": "Binary",
+				"folder": "ids",
+				"filenames": ["hud_element_ids"]
+			},
+			{
+				"build-id": "ASSET_MENU_ELEMENT_IDS",
+				"type": "Binary",
+				"folder": "ids",
+				"filenames": ["menu_element_ids"]
+			},
+			{
+				"build-id": "ASSET_UNKNOWN_19",
+				"type": "Binary",
+				"folder": "bin",
+				"filenames": ["unknown_table"]
+			},
+			{
+				"build-id": "ASSET_LEVEL_OBJECT_MAPS_TABLE",
+				"type": "Table",
+				"for": "ASSET_LEVEL_OBJECT_MAPS"
+			},
+			{
+				"build-id": "ASSET_LEVEL_OBJECT_MAPS",
+				"type": "LevelObjectMap",
+				"folder": "levels/objectMaps",
+				"table": 20
+			},
+			{
+				"build-id": "ASSET_LEVEL_HEADERS_TABLE",
+				"type": "Table",
+				"for": "ASSET_LEVEL_HEADERS"
+			},
+			{
+				"build-id": "ASSET_LEVEL_HEADERS",
+				"type": "LevelHeaders",
+				"folder": "levels/headers",
+				"table": 22,
+				"filenames": [
+					"CentralAreaHub",
+					"Bluey1",
+					"DragonForestHub",
+					"FossilCanyon",
+					"PirateLagoon",
+					"AncientLake",
+					"WalrusCove",
+					"HotTopVolcano",
+					"WhaleBay",
+					"SnowballValley",
+					"CrescentIsland",
+					"FireMountain",
+					"DinoDomainHub",
+					"EverfrostPeak",
+					"SherbetIslandHub",
+					"SpaceportAlpha",
+					"HorseshoeGulch",
+					"SpacedustAlley",
+					"GreenwoodVillage",
+					"BoulderCanyon",
+					"WindmillPlains",
+					"FrontEnd",
+					"CharacterSelect",
+					"TitleScreenSequence",
+					"SnowflakeMountainHub",
+					"SmokeyCastle",
+					"DarkwaterBeach",
+					"IciclePyramid",
+					"FrostyVillage",
+					"JungleFalls",
+					"TreasureCaves",
+					"HauntedWoods",
+					"DarkmoonCaverns",
+					"StarCity",
+					"TrophyRace",
+					"FutureFunLandHub",
+					"OpeningSequence",
+					"Wizpig1",
+					"Trickytops1",
+					"OptionsBackground",
+					"Bubbler1",
+					"Smokey1",
+					"WizpigMouthSequence",
+					"WizpigAmuletSequence",
+					"TTAmuletSequence",
+					"RocketSequence",
+					"Trickytops2",
+					"DinoDomainTrophyAnim",
+					"SnowflakeMountainTrophyAnim",
+					"SherbetIslandTrophyAnim",
+					"DragonForestTrophyAnim",
+					"FutureFunLandTrophyAnim",
+					"Bluey2",
+					"Bubbler2",
+					"Smokey2",
+					"Wizpig2",
+					"PartySequence",
+					"TricktopsAnim",
+					"SmokeyAnim",
+					"BlueyAnim",
+					"Wizpig1Anim",
+					"BubblerAnim",
+					"Wizpig2Anim",
+					"LastBit",
+					"LastBitB"
+				],
+				"child-build-ids": [
+					"ASSET_LEVEL_CENTRALAREAHUB",
+					"ASSET_LEVEL_BLUEY1",
+					"ASSET_LEVEL_DRAGONFORESTHUB",
+					"ASSET_LEVEL_FOSSILCANYON",
+					"ASSET_LEVEL_PIRATELAGOON",
+					"ASSET_LEVEL_ANCIENTLAKE",
+					"ASSET_LEVEL_WALRUSCOVE",
+					"ASSET_LEVEL_HOTTOPVOLCANO",
+					"ASSET_LEVEL_WHALEBAY",
+					"ASSET_LEVEL_SNOWBALLVALLEY",
+					"ASSET_LEVEL_CRESCENTISLAND",
+					"ASSET_LEVEL_FIREMOUNTAIN",
+					"ASSET_LEVEL_DINODOMAINHUB",
+					"ASSET_LEVEL_EVERFROSTPEAK",
+					"ASSET_LEVEL_SHERBETISLANDHUB",
+					"ASSET_LEVEL_SPACEPORTALPHA",
+					"ASSET_LEVEL_HORSESHOEGULCH",
+					"ASSET_LEVEL_SPACEDUSTALLEY",
+					"ASSET_LEVEL_GREENWOODVILLAGE",
+					"ASSET_LEVEL_BOULDERCANYON",
+					"ASSET_LEVEL_WINDMILLPLAINS",
+					"ASSET_LEVEL_FRONTEND",
+					"ASSET_LEVEL_CHARACTERSELECT",
+					"ASSET_LEVEL_TITLESCREENSEQUENCE",
+					"ASSET_LEVEL_SNOWFLAKEMOUNTAINHUB",
+					"ASSET_LEVEL_SMOKEYCASTLE",
+					"ASSET_LEVEL_DARKWATERBEACH",
+					"ASSET_LEVEL_ICICLEPYRAMID",
+					"ASSET_LEVEL_FROSTYVILLAGE",
+					"ASSET_LEVEL_JUNGLEFALLS",
+					"ASSET_LEVEL_TREASURECAVES",
+					"ASSET_LEVEL_HAUNTEDWOODS",
+					"ASSET_LEVEL_DARKMOONCAVERNS",
+					"ASSET_LEVEL_STARCITY",
+					"ASSET_LEVEL_TROPHYRACE",
+					"ASSET_LEVEL_FUTUREFUNLANDHUB",
+					"ASSET_LEVEL_OPENINGSEQUENCE",
+					"ASSET_LEVEL_WIZPIG1",
+					"ASSET_LEVEL_TRICKYTOPS1",
+					"ASSET_LEVEL_OPTIONSBACKGROUND",
+					"ASSET_LEVEL_BUBBLER1",
+					"ASSET_LEVEL_SMOKEY1",
+					"ASSET_LEVEL_WIZPIGMOUTHSEQUENCE",
+					"ASSET_LEVEL_WIZPIGAMULETSEQUENCE",
+					"ASSET_LEVEL_TTAMULETSEQUENCE",
+					"ASSET_LEVEL_ROCKETSEQUENCE",
+					"ASSET_LEVEL_TRICKYTOPS2",
+					"ASSET_LEVEL_DINODOMAINTROPHYANIM",
+					"ASSET_LEVEL_SNOWFLAKEMOUNTAINTROPHYANIM",
+					"ASSET_LEVEL_SHERBETISLANDTROPHYANIM",
+					"ASSET_LEVEL_DRAGONFORESTTROPHYANIM",
+					"ASSET_LEVEL_FUTUREFUNLANDTROPHYANIM",
+					"ASSET_LEVEL_BLUEY2",
+					"ASSET_LEVEL_BUBBLER2",
+					"ASSET_LEVEL_SMOKEY2",
+					"ASSET_LEVEL_WIZPIG2",
+					"ASSET_LEVEL_PARTYSEQUENCE",
+					"ASSET_LEVEL_TRICKTOPSANIM",
+					"ASSET_LEVEL_SMOKEYANIM",
+					"ASSET_LEVEL_BLUEYANIM",
+					"ASSET_LEVEL_WIZPIG1ANIM",
+					"ASSET_LEVEL_BUBBLERANIM",
+					"ASSET_LEVEL_WIZPIG2ANIM",
+					"ASSET_LEVEL_LASTBIT",
+					"ASSET_LEVEL_LASTBITB"
+				]
+			},
+			{
+				"build-id": "ASSET_LEVEL_NAMES_TABLE",
+				"type": "Table",
+				"for": "ASSET_LEVEL_NAMES"
+			},
+			{
+				"build-id": "ASSET_LEVEL_NAMES",
+				"type": "LevelNames",
+				"folder": "levels/names",
+				"table": 24,
+				"filenames": [
+					"CentralAreaHubName",
+					"Bluey1Name",
+					"DragonForestHubName",
+					"FossilCanyonName",
+					"PirateLagoonName",
+					"AncientLakeName",
+					"WalrusCoveName",
+					"HotTopVolcanoName",
+					"WhaleBayName",
+					"SnowballValleyName",
+					"CrescentIslandName",
+					"FireMountainName",
+					"DinoDomainHubName",
+					"EverfrostPeakName",
+					"SherbetIslandHubName",
+					"SpaceportAlphaName",
+					"HorseshoeGulchName",
+					"SpacedustAlleyName",
+					"GreenwoodVillageName",
+					"BoulderCanyonName",
+					"WindmillPlainsName",
+					"FrontEndName",
+					"CharacterSelectName",
+					"TitleScreenSequenceName",
+					"SnowflakeMountainHubName",
+					"SmokeyCastleName",
+					"DarkwaterBeachName",
+					"IciclePyramidName",
+					"FrostyVillageName",
+					"JungleFallsName",
+					"TreasureCavesName",
+					"HauntedWoodsName",
+					"DarkmoonCavernsName",
+					"StarCityName",
+					"TrophyRaceName",
+					"FutureFunLandHubName",
+					"OpeningSequenceName",
+					"Wizpig1Name",
+					"Trickytops1Name",
+					"OptionsBackgroundName",
+					"Bubbler1Name",
+					"Smokey1Name",
+					"WizpigMouthSequenceName",
+					"WizpigAmuletSequenceName",
+					"TTAmuletSequenceName",
+					"RocketSequenceName",
+					"Trickytops2Name",
+					"DinoDomainTrophyAnimName",
+					"SnowflakeMountainTrophyAnimName",
+					"SherbetIslandTrophyAnimName",
+					"DragonForestTrophyAnimName",
+					"FutureFunLandTrophyAnimName",
+					"Bluey2Name",
+					"Bubbler2Name",
+					"Smokey2Name",
+					"Wizpig2Name",
+					"PartySequenceName",
+					"TricktopsAnimName",
+					"SmokeyAnimName",
+					"BlueyAnimName",
+					"Wizpig1AnimName",
+					"BubblerAnimName",
+					"Wizpig2AnimName",
+					"LastBitName",
+					"LastBitBName"
+				],
+				"child-build-ids": [
+					"ASSET_LEVELNAME_CENTRALAREAHUB",
+					"ASSET_LEVELNAME_BLUEY1",
+					"ASSET_LEVELNAME_DRAGONFORESTHUB",
+					"ASSET_LEVELNAME_FOSSILCANYON",
+					"ASSET_LEVELNAME_PIRATELAGOON",
+					"ASSET_LEVELNAME_ANCIENTLAKE",
+					"ASSET_LEVELNAME_WALRUSCOVE",
+					"ASSET_LEVELNAME_HOTTOPVOLCANO",
+					"ASSET_LEVELNAME_WHALEBAY",
+					"ASSET_LEVELNAME_SNOWBALLVALLEY",
+					"ASSET_LEVELNAME_CRESCENTISLAND",
+					"ASSET_LEVELNAME_FIREMOUNTAIN",
+					"ASSET_LEVELNAME_DINODOMAINHUB",
+					"ASSET_LEVELNAME_EVERFROSTPEAK",
+					"ASSET_LEVELNAME_SHERBETISLANDHUB",
+					"ASSET_LEVELNAME_SPACEPORTALPHA",
+					"ASSET_LEVELNAME_HORSESHOEGULCH",
+					"ASSET_LEVELNAME_SPACEDUSTALLEY",
+					"ASSET_LEVELNAME_GREENWOODVILLAGE",
+					"ASSET_LEVELNAME_BOULDERCANYON",
+					"ASSET_LEVELNAME_WINDMILLPLAINS",
+					"ASSET_LEVELNAME_FRONTEND",
+					"ASSET_LEVELNAME_CHARACTERSELECT",
+					"ASSET_LEVELNAME_TITLESCREENSEQUENCE",
+					"ASSET_LEVELNAME_SNOWFLAKEMOUNTAINHUB",
+					"ASSET_LEVELNAME_SMOKEYCASTLE",
+					"ASSET_LEVELNAME_DARKWATERBEACH",
+					"ASSET_LEVELNAME_ICICLEPYRAMID",
+					"ASSET_LEVELNAME_FROSTYVILLAGE",
+					"ASSET_LEVELNAME_JUNGLEFALLS",
+					"ASSET_LEVELNAME_TREASURECAVES",
+					"ASSET_LEVELNAME_HAUNTEDWOODS",
+					"ASSET_LEVELNAME_DARKMOONCAVERNS",
+					"ASSET_LEVELNAME_STARCITY",
+					"ASSET_LEVELNAME_TROPHYRACE",
+					"ASSET_LEVELNAME_FUTUREFUNLANDHUB",
+					"ASSET_LEVELNAME_OPENINGSEQUENCE",
+					"ASSET_LEVELNAME_WIZPIG1",
+					"ASSET_LEVELNAME_TRICKYTOPS1",
+					"ASSET_LEVELNAME_OPTIONSBACKGROUND",
+					"ASSET_LEVELNAME_BUBBLER1",
+					"ASSET_LEVELNAME_SMOKEY1",
+					"ASSET_LEVELNAME_WIZPIGMOUTHSEQUENCE",
+					"ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE",
+					"ASSET_LEVELNAME_TTAMULETSEQUENCE",
+					"ASSET_LEVELNAME_ROCKETSEQUENCE",
+					"ASSET_LEVELNAME_TRICKYTOPS2",
+					"ASSET_LEVELNAME_DINODOMAINTROPHYANIM",
+					"ASSET_LEVELNAME_SNOWFLAKEMOUNTAINTROPHYANIM",
+					"ASSET_LEVELNAME_SHERBETISLANDTROPHYANIM",
+					"ASSET_LEVELNAME_DRAGONFORESTTROPHYANIM",
+					"ASSET_LEVELNAME_FUTUREFUNLANDTROPHYANIM",
+					"ASSET_LEVELNAME_BLUEY2",
+					"ASSET_LEVELNAME_BUBBLER2",
+					"ASSET_LEVELNAME_SMOKEY2",
+					"ASSET_LEVELNAME_WIZPIG2",
+					"ASSET_LEVELNAME_PARTYSEQUENCE",
+					"ASSET_LEVELNAME_TRICKTOPSANIM",
+					"ASSET_LEVELNAME_SMOKEYANIM",
+					"ASSET_LEVELNAME_BLUEYANIM",
+					"ASSET_LEVELNAME_WIZPIG1ANIM",
+					"ASSET_LEVELNAME_BUBBLERANIM",
+					"ASSET_LEVELNAME_WIZPIG2ANIM",
+					"ASSET_LEVELNAME_LASTBIT",
+					"ASSET_LEVELNAME_LASTBITB"
+				]
+			},
+			{
+				"build-id": "ASSET_LEVEL_MODELS_TABLE",
+				"type": "Table",
+				"for": "ASSET_LEVEL_MODELS"
+			},
+			{
+				"build-id": "ASSET_LEVEL_MODELS",
+				"type": "LevelModels",
+				"folder": "levels/models",
+				"table": 26
+			},
+			{
+				"build-id": "ASSET_OBJECT_MODELS_TABLE",
+				"type": "Table",
+				"for": "ASSET_OBJECT_MODELS"
+			},
+			{
+				"build-id": "ASSET_OBJECT_MODELS",
+				"type": "ObjectModels",
+				"folder": "objects/models",
+				"table": 28
+			},
+			{
+				"build-id": "ASSET_ANIMATION_IDS",
+				"type": "Binary",
+				"folder": "objects",
+				"filenames": ["animation_ids"]
+			},
+			{
+				"build-id": "ASSET_OBJECT_ANIMATIONS_TABLE",
+				"type": "Table",
+				"for": "ASSET_OBJECT_ANIMATIONS"
+			},
+			{
+				"build-id": "ASSET_OBJECT_ANIMATIONS",
+				"type": "ObjectAnimations",
+				"folder": "objects/animations",
+				"table": 31
+			},
+			{
+				"build-id": "ASSET_OBJECT_HEADERS_TABLE",
+				"type": "Table",
+				"for": "ASSET_OBJECT_HEADERS"
+			},
+			{
+				"build-id": "ASSET_OBJECT_HEADERS",
+				"type": "ObjectHeaders",
+				"folder": "objects/headers",
+				"table": 33
+			},
+			{
+				"build-id": "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE",
+				"type": "Binary",
+				"folder": "objects",
+				"filenames": ["level_object_translation_table"]
+			},
+			{
+				"build-id": "ASSET_EMPTY_37_TABLE",
+				"type": "Table",
+				"for": "ASSET_EMPTY_37"
+			},
+			{
+				"build-id": "ASSET_EMPTY_37",
+				"type": "Empty",
+				"table": 36
+			},
+			{
+				"build-id": "ASSET_AUDIO_TABLE",
+				"type": "Table",
+				"for": "ASSET_AUDIO"
+			},
+			{
+				"build-id": "ASSET_AUDIO",
+				"type": "Audio",
+				"folder": "audio",
+				"table": 38
+			},
+			{
+				"build-id": "ASSET_PARTICLES_TABLE",
+				"type": "Table",
+				"for": "ASSET_PARTICLES"
+			},
+			{
+				"build-id": "ASSET_PARTICLES",
+				"type": "Particles",
+				"folder": "particles/particles",
+				"table": 40
+			},
+			{
+				"build-id": "ASSET_PARTICLE_BEHAVIORS_TABLE",
+				"type": "Table",
+				"for": "ASSET_PARTICLE_BEHAVIORS"
+			},
+			{
+				"build-id": "ASSET_PARTICLE_BEHAVIORS",
+				"type": "ParticleBehaviors",
+				"folder": "particles/behaviors",
+				"table": 42
+			},
+			{
+				"build-id": "ASSET_FONTS",
+				"type": "Fonts",
+				"folder": "fonts",
+				"filenames": ["fonts"],
+                "font-names": [ "FunFont", "SmallFont", "BigFont", "SubtitleFont" ]
+			},
+			{
+				"build-id": "ASSET_BINARY_45",
+				"type": "Binary",
+				"folder": "fonts"
+			},
+			{
+				"build-id": "ASSET_BINARY_46",
+				"type": "Binary",
+				"folder": "fonts"
+			},
+			{
+				"build-id": "ASSET_BINARY_47",
+				"type": "Binary",
+				"folder": "ids"
+			},
+			{
+				"build-id": "ASSET_TTGHOSTS_TABLE",
+				"type": "Table",
+				"for": "ASSET_TTGHOSTS"
+			},
+			{
+				"build-id": "ASSET_TTGHOSTS",
+				"type": "TTGhosts",
+				"folder": "tt_ghosts",
+				"table": 48,
+				"filenames": [
+					"FossilCanyonGhost",
+					"PirateLagoonGhost",
+					"AncientLakeGhost",
+					"WalrusCoveGhost",
+					"HotTopVolcanoGhost",
+					"WhaleBayGhost",
+					"SnowballValleyGhost",
+					"CrescentIslandGhost",
+					"EverfrostPeakGhost",
+					"SpaceportAlphaGhost",
+					"SpacedustAlleyGhost",
+					"GreenwoodVillageGhost",
+					"BoulderCanyonGhost",
+					"WindmillPlainsGhost",
+					"FrostyVillageGhost",
+					"JungleFallsGhost",
+					"TreasureCavesGhost",
+					"HauntedWoodsGhost",
+					"DarkmoonCavernsGhost",
+					"StarCityGhost"
+				],
+				"child-build-ids": [
+					"ASSET_TTGHOSTS_FOSSILCANYON",
+					"ASSET_TTGHOSTS_PIRATELAGOON",
+					"ASSET_TTGHOSTS_ANCIENTLAKE",
+					"ASSET_TTGHOSTS_WALRUSCOVE",
+					"ASSET_TTGHOSTS_HOTTOPVOLCANO",
+					"ASSET_TTGHOSTS_WHALEBAY",
+					"ASSET_TTGHOSTS_SNOWBALLVALLEY",
+					"ASSET_TTGHOSTS_CRESCENTISLAND",
+					"ASSET_TTGHOSTS_EVERFROSTPEAK",
+					"ASSET_TTGHOSTS_SPACEPORTALPHA",
+					"ASSET_TTGHOSTS_SPACEDUSTALLEY",
+					"ASSET_TTGHOSTS_GREENWOODVILLAGE",
+					"ASSET_TTGHOSTS_BOULDERCANYON",
+					"ASSET_TTGHOSTS_WINDMILLPLAINS",
+					"ASSET_TTGHOSTS_FROSTYVILLAGE",
+					"ASSET_TTGHOSTS_JUNGLEFALLS",
+					"ASSET_TTGHOSTS_TREASURECAVES",
+					"ASSET_TTGHOSTS_HAUNTEDWOODS",
+					"ASSET_TTGHOSTS_DARKMOONCAVERNS",
+					"ASSET_TTGHOSTS_STARCITY"
+				]
+			}
+		]
+	}
 }
-
-
-
-
-
