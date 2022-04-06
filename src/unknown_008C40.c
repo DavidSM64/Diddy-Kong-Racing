@@ -43,9 +43,9 @@ void func_80008040(void) {
     s32 i;
 
     func_80002128(&D_80119C40, NULL, NULL);
-    D_80119C48 = allocate_from_main_pool_safe(1440, COLOR_TAG_CYAN);
-    //D_80119C50 = allocate_from_main_pool_safe(160, COLOR_TAG_CYAN);
-    D_80119C44 = allocate_from_main_pool_safe(160, COLOR_TAG_CYAN);
+    D_80119C48 = allocate_from_main_pool_safe(1440, COLOUR_TAG_CYAN);
+    //D_80119C50 = allocate_from_main_pool_safe(160, COLOUR_TAG_CYAN);
+    D_80119C44 = allocate_from_main_pool_safe(160, COLOUR_TAG_CYAN);
     D_800DC6E0 = 0;
     // phi_v1 = &D_80119C58;
     // do {

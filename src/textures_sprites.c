@@ -8,7 +8,7 @@
 
 /************ .data ************/
 
-u32 gTexColourTag = COLOR_TAG_MAGENTA;
+u32 gTexColourTag = COLOUR_TAG_MAGENTA;
 s32 D_800DE7C4 = 1;
 
 // See "include/f3ddkr.h" for the defines

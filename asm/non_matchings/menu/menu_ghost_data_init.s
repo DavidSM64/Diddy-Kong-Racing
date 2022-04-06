@@ -33,7 +33,7 @@ glabel menu_ghost_data_init
 /* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(D_800E174C) # $a0, 0x800e
 /* 09A6D8 80099AD8 0C027229 */  jal   allocate_menu_images
 /* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(D_800E174C) # addiu $a0, $a0, 0x174c
-/* 09A6E0 80099AE0 0C03105C */  jal   func_800C4170
+/* 09A6E0 80099AE0 0C03105C */  jal   load_font
 /* 09A6E4 80099AE4 24040002 */   li    $a0, 2
 /* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(D_80126550) # $v0, 0x8012
 /* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(D_80126550) # addiu $v0, $v0, 0x6550

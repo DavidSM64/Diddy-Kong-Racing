@@ -373,7 +373,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
             ret = CONTROLLER_PAK_BAD_DATA;
         }
         if (ret == CONTROLLER_PAK_GOOD) {
-            alloc = allocate_from_main_pool_safe(fileSize, COLOR_TAG_BLACK);
+            alloc = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_BLACK);
             ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)alloc, fileSize);
 
             if (ret == CONTROLLER_PAK_GOOD) {
@@ -407,7 +407,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     s32 fileSize;
 
     fileSize = get_game_data_file_size(); // 256 bytes
-    gameData = allocate_from_main_pool_safe(fileSize, COLOR_TAG_WHITE);
+    gameData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *)gameData) = GAMD;
     func_800732E8(arg1, gameData + 4);
     ret = func_80073C5C(controllerIndex, 3, &fileExt);
@@ -444,7 +444,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
         }
 
         if (status == CONTROLLER_PAK_GOOD) {
-            cpakData = allocate_from_main_pool_safe(fileSize, COLOR_TAG_BLACK);
+            cpakData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_BLACK);
 
             status = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)cpakData, fileSize);
             if (status == CONTROLLER_PAK_GOOD) {
@@ -475,7 +475,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     u8 *fileExt;
 
     fileSize = get_time_data_file_size(); // 512 bytes
-    timeData = allocate_from_main_pool_safe(fileSize, COLOR_TAG_WHITE);
+    timeData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *)timeData) = TIMD;
     func_800738A4(arg1, timeData + 4);
     ret = func_80073C5C(controllerIndex, 4, &fileExt);
@@ -527,7 +527,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
     }
 
     blocks = 5;
-    alloc = allocate_from_main_pool_safe(blocks * sizeof(u64), COLOR_TAG_WHITE);
+    alloc = allocate_from_main_pool_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
     func_800732E8(settings, (u8 *)alloc);
 
     if (!is_reset_pressed()) {
@@ -556,7 +556,7 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
         return -1;
     }
 
-    alloc = allocate_from_main_pool_safe(0x200, COLOR_TAG_WHITE);
+    alloc = allocate_from_main_pool_safe(0x200, COLOUR_TAG_WHITE);
 
     if (arg1 & 1) {
         s32 blocks = 24;
@@ -593,7 +593,7 @@ s32 write_eeprom_data(Settings *arg0, u8 arg1) {
         return -1;
     }
 
-    alloc = allocate_from_main_pool_safe(0x200, COLOR_TAG_WHITE);
+    alloc = allocate_from_main_pool_safe(0x200, COLOUR_TAG_WHITE);
 
     func_800738A4(arg0, (u8 *)alloc);
 
@@ -926,7 +926,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, u8
     }
     
     files_used = maxNumOfFilesOnCpak * 24;
-    D_800DE440 = allocate_from_main_pool_safe(files_used, COLOR_TAG_BLACK);
+    D_800DE440 = allocate_from_main_pool_safe(files_used, COLOUR_TAG_BLACK);
     bzero(D_800DE440, files_used);
     temp_D_800DE440 = D_800DE440;
     
@@ -1062,7 +1062,7 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
         return (controllerIndex << 30) | CONTROLLER_PAK_BAD_DATA;
     }
 
-    alloc = allocate_from_main_pool_safe(state.file_size, COLOR_TAG_BLACK);
+    alloc = allocate_from_main_pool_safe(state.file_size, COLOUR_TAG_BLACK);
 
     status = read_data_from_controller_pak(controllerIndex, fileNumber, alloc, state.file_size);
     start_reading_controller_data(controllerIndex);
@@ -1314,7 +1314,7 @@ s32 get_file_type(s32 controllerIndex, s32 fileNum) {
     s32 ret;
 
     ret = 6;
-    data = allocate_from_main_pool_safe(0x100, COLOR_TAG_BLACK);
+    data = allocate_from_main_pool_safe(0x100, COLOUR_TAG_BLACK);
     if (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *)data, 0x100) == CONTROLLER_PAK_GOOD) {
         switch (*data) {
             case GAMD:

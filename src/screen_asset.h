@@ -6,7 +6,7 @@
 #include "types.h"
 #include "macros.h"
 #include "f3ddkr.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "asset_loading.h"
 
 #define SCREEN_HEIGHT_PART 6

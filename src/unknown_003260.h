@@ -4,7 +4,7 @@
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "libultra_internal.h"
 #include "sched.h"
 

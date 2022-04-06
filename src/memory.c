@@ -69,7 +69,7 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     MemoryPoolSlot *newPool;
 
     size = poolDataSize + (numSlots * sizeof(MemoryPoolSlot));
-    slots = (MemoryPoolSlot *)allocate_from_main_pool_safe(size, COLOR_TAG_WHITE);
+    slots = (MemoryPoolSlot *)allocate_from_main_pool_safe(size, COLOUR_TAG_WHITE);
     newPool = new_memory_pool(slots, size, numSlots);
     func_8006F53C(temp);
     return newPool;
@@ -563,15 +563,15 @@ GLOBAL_ASM("asm/non_matchings/memory/get_memory_colour_tag_count.s")
  * Unused. 
  */
 void print_memory_colour_tags(void) {
-    stubbed_printf("RED %d\n", get_memory_colour_tag_count(COLOR_TAG_RED));
-    stubbed_printf("GREEN %d\n", get_memory_colour_tag_count(COLOR_TAG_GREEN));
-    stubbed_printf("BLUE %d\n", get_memory_colour_tag_count(COLOR_TAG_BLUE));
-    stubbed_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOR_TAG_YELLOW));
-    stubbed_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOR_TAG_MAGENTA));
-    stubbed_printf("CYAN %d\n", get_memory_colour_tag_count(COLOR_TAG_CYAN));
-    stubbed_printf("WHITE %d\n", get_memory_colour_tag_count(COLOR_TAG_WHITE));
-    stubbed_printf("GREY %d\n", get_memory_colour_tag_count(COLOR_TAG_GRAY));
-    stubbed_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOR_TAG_ORANGE));
+    stubbed_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
+    stubbed_printf("GREEN %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREEN));
+    stubbed_printf("BLUE %d\n", get_memory_colour_tag_count(COLOUR_TAG_BLUE));
+    stubbed_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOUR_TAG_YELLOW));
+    stubbed_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOUR_TAG_MAGENTA));
+    stubbed_printf("CYAN %d\n", get_memory_colour_tag_count(COLOUR_TAG_CYAN));
+    stubbed_printf("WHITE %d\n", get_memory_colour_tag_count(COLOUR_TAG_WHITE));
+    stubbed_printf("GREY %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREY));
+    stubbed_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
 }
 
 /**
@@ -581,15 +581,15 @@ void print_memory_colour_tags(void) {
  */
 void render_memory_colour_tags(void) {
     set_render_printf_background_colour(0, 0, 0, 128);
-    render_printf("RED %d\n", get_memory_colour_tag_count(COLOR_TAG_RED));
-    render_printf("GREEN %d\n", get_memory_colour_tag_count(COLOR_TAG_GREEN));
-    render_printf("BLUE %d\n", get_memory_colour_tag_count(COLOR_TAG_BLUE));
-    render_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOR_TAG_YELLOW));
-    render_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOR_TAG_MAGENTA));
-    render_printf("CYAN %d\n", get_memory_colour_tag_count(COLOR_TAG_CYAN));
-    render_printf("WHITE %d\n", get_memory_colour_tag_count(COLOR_TAG_WHITE));
-    render_printf("GREY %d\n", get_memory_colour_tag_count(COLOR_TAG_GRAY));
-    render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOR_TAG_ORANGE));
+    render_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
+    render_printf("GREEN %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREEN));
+    render_printf("BLUE %d\n", get_memory_colour_tag_count(COLOUR_TAG_BLUE));
+    render_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOUR_TAG_YELLOW));
+    render_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOUR_TAG_MAGENTA));
+    render_printf("CYAN %d\n", get_memory_colour_tag_count(COLOUR_TAG_CYAN));
+    render_printf("WHITE %d\n", get_memory_colour_tag_count(COLOUR_TAG_WHITE));
+    render_printf("GREY %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREY));
+    render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
 }
 
 #ifdef NON_EQUIVALENT

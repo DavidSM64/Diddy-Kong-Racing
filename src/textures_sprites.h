@@ -1,7 +1,7 @@
 #ifndef _TEXTURES_SPRITES_H_
 #define _TEXTURES_SPRITES_H_
 
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "types.h"
 #include "f3ddkr.h"
 #include "structs.h"
