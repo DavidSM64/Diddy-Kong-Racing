@@ -22,8 +22,8 @@ s32 D_8012AAD8;
 /******************************/
 
 void func_800C6170(void) {
-    D_800E3760 = (huft *)allocate_from_main_pool_safe(0x2800, COLOR_TAG_BLACK);
-    gAssetAddress = (s32 *)allocate_from_main_pool_safe(0x10, COLOR_TAG_BLACK);
+    D_800E3760 = (huft *)allocate_from_main_pool_safe(0x2800, COLOUR_TAG_BLACK);
+    gAssetAddress = (s32 *)allocate_from_main_pool_safe(0x10, COLOUR_TAG_BLACK);
 }
 
 /**

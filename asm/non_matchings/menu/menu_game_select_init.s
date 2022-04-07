@@ -30,7 +30,7 @@ glabel menu_game_select_init
 /* 08D178 8008C578 24040043 */   li    $a0, 67
 /* 08D17C 8008C57C 0C01FFFB */  jal   func_8007FFEC
 /* 08D180 8008C580 24040003 */   li    $a0, 3
-/* 08D184 8008C584 0C03105C */  jal   func_800C4170
+/* 08D184 8008C584 0C03105C */  jal   load_font
 /* 08D188 8008C588 24040002 */   li    $a0, 2
 /* 08D18C 8008C58C 0C0002CD */  jal   play_music
 /* 08D190 8008C590 2404001A */   li    $a0, 26

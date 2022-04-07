@@ -8,7 +8,7 @@
 #include "macros.h"
 #include "structs.h"
 #include "level_object_entries.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "asset_loading.h"
 #include "thread0_epc.h"
 #include "save_data.h"
@@ -323,31 +323,31 @@ void func_8000BF8C(void) {
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     D_8011AE68 = (s32 *)new_sub_memory_pool(0x15800, 0x200);
-    gParticlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
-    D_8011AE6C = (s32 *)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
-    D_8011AE74 = (s32 *)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
-    D_8011AECC = (unknown8011AECC *)allocate_from_main_pool_safe(0xE10, COLOR_TAG_BLUE);
-    D_8011AEDC = (u32 *)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
-    gObjectStructArrayPtr = (Object *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AEEC = (s32 *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AEE8 = (Object **)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AF04 = (u32 *)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
-    D_8011ADCC = (s8 *)allocate_from_main_pool_safe(8, COLOR_TAG_BLUE);
-    D_8011AFF4 = (unk800179D0 *)allocate_from_main_pool_safe(0x400, COLOR_TAG_BLUE);
+    gParticlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOUR_TAG_BLUE);
+    D_8011AE6C = (s32 *)allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    D_8011AE74 = (s32 *)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    D_8011AECC = (unknown8011AECC *)allocate_from_main_pool_safe(0xE10, COLOUR_TAG_BLUE);
+    D_8011AEDC = (u32 *)allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    gObjectStructArrayPtr = (Object *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    D_8011AEEC = (s32 *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    D_8011AEE8 = (Object **)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    D_8011AF04 = (u32 *)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    D_8011ADCC = (s8 *)allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
+    D_8011AFF4 = (unk800179D0 *)allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *)load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
     gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    D_8011AD58 = (s32 *)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    D_8011AD58 = (s32 *)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
     gAssetsObjectHeadersTable = load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = (s32 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOR_TAG_WHITE);
-    D_8011AE4C = (u8 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOR_TAG_WHITE);
+    D_8011AE48 = (s32 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
+    D_8011AE4C = (u8 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOUR_TAG_WHITE);
 
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
         (*D_8011AE4C)[i] = 0;
@@ -361,7 +361,7 @@ void func_8000BF8C(void) {
     }
 
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
-    gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;

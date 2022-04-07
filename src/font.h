@@ -9,7 +9,7 @@
 #include "structs.h"
 #include "types.h"
 #include "macros.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "libultra_internal.h"
 #include "f3ddkr.h"
 #include "textures_sprites.h"
@@ -212,8 +212,8 @@ void parse_string_with_number(unsigned char *input, char *output, s32 number);
 
 void s32_to_string(char** outString, s32 number); //Non Matching
 TextureHeader *func_800C4318(s32 font, u8 arg1); //Non Matching
-void func_800C4170(s32 fontID); //Non Matching
-void func_800C422C(s32 arg0); //Non Matching
+void load_font(s32 fontID); //Non Matching
+void unload_font(s32 arg0); //Non Matching
 void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4); //Non Matching
 s32 func_800C4DA0(u8 *text, s32 x, s32 font); //Non Matching
 void *render_dialogue_text(s32 arg0, s32 posX, s32 posY, char *text, s32 arg4, s32 arg5); //Non Matching

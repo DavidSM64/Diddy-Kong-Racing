@@ -10,7 +10,7 @@ glabel menu_track_select_init
 /* 08F3C0 8008E7C0 AFB20028 */  sw    $s2, 0x28($sp)
 /* 08F3C4 8008E7C4 AFB10024 */  sw    $s1, 0x24($sp)
 /* 08F3C8 8008E7C8 AFB00020 */  sw    $s0, 0x20($sp)
-/* 08F3CC 8008E7CC 0C03105C */  jal   func_800C4170
+/* 08F3CC 8008E7CC 0C03105C */  jal   load_font
 /* 08F3D0 8008E7D0 24040002 */   li    $a0, 2
 /* 08F3D4 8008E7D4 0C01BAA4 */  jal   get_settings
 /* 08F3D8 8008E7D8 00000000 */   nop   

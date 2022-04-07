@@ -100,7 +100,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     // if (c->fxType == AL_FX_CUSTOM) {
     //     reg_v0 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
     //     tmp_size = reg_v0[9] - reg_v0[8];
-    //     reg_s0 = allocate_from_main_pool_safe(tmp_size, COLOR_TAG_CYAN);
+    //     reg_s0 = allocate_from_main_pool_safe(tmp_size, COLOUR_TAG_CYAN);
     //     load_asset_to_address(39, reg_s0, reg_v0[8], tmp_size);
     //     c->params = reg_s0;
     //     c[1].maxVVoices = 0;

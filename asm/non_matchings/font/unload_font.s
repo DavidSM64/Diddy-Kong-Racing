@@ -1,4 +1,4 @@
-glabel func_800C422C
+glabel unload_font
 /* 0C4E2C 800C422C 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C4E30 800C4230 3C0E8013 */  lui   $t6, %hi(gNumberOfFonts) # $t6, 0x8013
 /* 0C4E34 800C4234 8DCEA7E0 */  lw    $t6, %lo(gNumberOfFonts)($t6)

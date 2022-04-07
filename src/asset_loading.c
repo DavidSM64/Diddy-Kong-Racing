@@ -2,7 +2,6 @@
 /* RAM_POS: 0x80076BA0 */
 
 #include "asset_loading.h"
-#include "memory.h"
 
 //#include "assets.h"
 #include "macros.h"
@@ -28,7 +27,7 @@ void func_80076BA0(void) {
     osCreateMesgQueue(&gDmaMesgQueue, &gDmaMesg, 1);
     osCreatePiManager((OSPri)150, &gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
     assetTableSize = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
-    gAssetsLookupTable = (u32 *)allocate_from_main_pool_safe(assetTableSize, COLOR_TAG_GRAY);
+    gAssetsLookupTable = (u32 *)allocate_from_main_pool_safe(assetTableSize, COLOUR_TAG_GREY);
     func_80071478((u8 *)gAssetsLookupTable);
     dmacopy((u32)&__ASSETS_LUT_START, (u32)gAssetsLookupTable, (s32)assetTableSize);
 }
@@ -48,7 +47,7 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
     index = assetIndex + gAssetsLookupTable;
     start = *index;
     size = *(index + 1) - start;
-    out = (u32 *)allocate_from_main_pool_safe(size, COLOR_TAG_GRAY);
+    out = (u32 *)allocate_from_main_pool_safe(size, COLOUR_TAG_GREY);
     if (out == 0) {
         return 0;
     }
@@ -56,43 +55,37 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
     return out;
 }
 
-#ifdef NON_EQUIVALENT
-// Unused.
-// This has regalloc & stack issues.
-u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 arg1) {
+#ifdef NON_MATCHING
+// 99.8% matching; has a single stack issue. see: https://decomp.me/scratch/MyWiR
+u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
     s32 size;
-    s32 sp2C;
     s32 start;
+    s32 totalSpace;
+    u8 *gzipHeaderRamPos;
+    u8 *out;
     s32 *index;
-    u8 *temp_a1;
-    u8 *temp_v0_2;
-    u8 *temp_v0_3;
-    u8 *temp_a0;
-
+    u8 *ramPos;
     if (gAssetsLookupTable[0] < assetIndex) {
         return NULL;
     }
-
     assetIndex++;
-    index = assetIndex + gAssetsLookupTable;
-    start = *index;
-    size = *(index + 1) - start;
-
-    temp_v0_2 = (u8 *)allocate_from_main_pool_safe(8, COLOR_TAG_WHITE);
-    temp_a0 = start + &__ASSETS_LUT_END;
-
-    dmacopy(temp_a0, temp_v0_2, 8);
-    sp2C = byteswap32(temp_v0_2) + arg1;
-    free_from_memory_pool(temp_v0_2);
-    temp_v0_3 = (u8 *)allocate_from_main_pool_safe(sp2C + arg1, COLOR_TAG_GRAY);
-
-    if (temp_v0_3 == NULL) {
+    out = assetIndex + gAssetsLookupTable;
+    index = out;
+    start = index[0];
+    size = index[1] - start;
+    gzipHeaderRamPos = (u8 *) allocate_from_main_pool_safe(8, COLOUR_TAG_WHITE);
+    dmacopy((u32) (start + (&__ASSETS_LUT_END)), gzipHeaderRamPos, 8);
+    totalSpace = byteswap32(gzipHeaderRamPos) + extraMemory;
+    free_from_memory_pool(gzipHeaderRamPos);
+    out = (u8 *) allocate_from_main_pool_safe(totalSpace + extraMemory, COLOUR_TAG_GREY);
+    if (out == NULL){
         return NULL;
     }
-    temp_a1 = (temp_v0_3 + sp2C) - size;
-    dmacopy(temp_a0, temp_a1, size);
-    gzip_inflate(temp_a1, temp_v0_3);
-    return temp_v0_3;
+    ramPos = (out + totalSpace) - size;
+    totalSpace = size;
+    dmacopy((u32) (start + (&__ASSETS_LUT_END)), ramPos, size);
+    gzip_inflate(ramPos, out);
+    return out;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/asset_loading/load_compressed_asset_from_rom.s")

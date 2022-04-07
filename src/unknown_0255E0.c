@@ -233,9 +233,9 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     D_8011B0FC = 0;
     i = 0;
     do {
-        D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOR_TAG_YELLOW);
-        D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOR_TAG_YELLOW);
-        D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOR_TAG_YELLOW);
+        D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
+        D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOUR_TAG_YELLOW);
+        D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOUR_TAG_YELLOW);
     } while ((s32)&D_8011D338[++i] != (s32)&D_8011D348);
 
     D_8011B0C8 = 0;

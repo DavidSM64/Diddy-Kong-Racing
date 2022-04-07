@@ -1,4 +1,4 @@
-glabel func_800C4170
+glabel load_font
 /* 0C4D70 800C4170 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 0C4D74 800C4174 3C0E8013 */  lui   $t6, %hi(gNumberOfFonts) # $t6, 0x8013
 /* 0C4D78 800C4178 8DCEA7E0 */  lw    $t6, %lo(gNumberOfFonts)($t6)

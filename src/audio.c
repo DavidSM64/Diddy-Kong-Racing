@@ -6,7 +6,7 @@
 
 #include "types.h"
 #include "macros.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "asset_loading.h"
 #include "audio_internal.h"
 #include "unknown_003260.h"
@@ -107,31 +107,31 @@ void audio_init(OSSched *arg0) {
     alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
 
     addrPtr = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
-    ALBankFile_80115D14 = (ALBankFile *)allocate_from_main_pool_safe(addrPtr[2] - addrPtr[1], COLOR_TAG_CYAN);
+    ALBankFile_80115D14 = (ALBankFile *)allocate_from_main_pool_safe(addrPtr[2] - addrPtr[1], COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D14, addrPtr[1], addrPtr[2] - addrPtr[1]);
     alBnkfNew(ALBankFile_80115D14, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[2]));
 
     sSoundEffectsPoolSize = addrPtr[7] - addrPtr[6];
-    sSoundEffectsPool = (unk80115D18 *)allocate_from_main_pool_safe(sSoundEffectsPoolSize, COLOR_TAG_CYAN);
+    sSoundEffectsPool = (unk80115D18 *)allocate_from_main_pool_safe(sSoundEffectsPoolSize, COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, sSoundEffectsPool, addrPtr[6], sSoundEffectsPoolSize);
     D_80115D20 = sSoundEffectsPoolSize / 10;
 
     sMusicPoolSize = addrPtr[6] - addrPtr[5];
-    sMusicPool = (unk80115D1C *)allocate_from_main_pool_safe(sMusicPoolSize, COLOR_TAG_CYAN);
+    sMusicPool = (unk80115D1C *)allocate_from_main_pool_safe(sMusicPoolSize, COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, sMusicPool, addrPtr[5], sMusicPoolSize);
     D_80115D24 = sMusicPoolSize / 3;
 
-    ALBankFile_80115D10 = (ALBankFile *)allocate_from_main_pool_safe(addrPtr[0], COLOR_TAG_CYAN);
+    ALBankFile_80115D10 = (ALBankFile *)allocate_from_main_pool_safe(addrPtr[0], COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, ALBankFile_80115D10, 0, addrPtr[0]);
     alBnkfNew(ALBankFile_80115D10, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[0]));
     ALSeqFile_80115CF8 = (ALSeqFile *)alHeapDBAlloc(0, 0, &gALHeap, 1, 4);
     load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, addrPtr[4], 4);
 
     seqfSize = (ALSeqFile_80115CF8->seqCount) * 8 + 4;
-    ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, COLOR_TAG_CYAN);
+    ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, ALSeqFile_80115CF8, addrPtr[4], seqfSize);
     alSeqFileNew(ALSeqFile_80115CF8, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[4]));
-    D_80115D0C = (u32 *)allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOR_TAG_CYAN);
+    D_80115D0C = (u32 *)allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOUR_TAG_CYAN);
 
     for (iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++) {
         (u32 *)((u32)ALSeqFile_80115CF8 + 8 + iCnt * 8);
@@ -156,8 +156,8 @@ void audio_init(OSSched *arg0) {
     gMusicPlayer = func_80002224(24, 120);
     set_voice_limit(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
-    D_80115CFC = allocate_from_main_pool_safe(seq_max_len, COLOR_TAG_CYAN);
-    D_80115D00 = allocate_from_main_pool_safe(seq_max_len, COLOR_TAG_CYAN);
+    D_80115CFC = allocate_from_main_pool_safe(seq_max_len, COLOUR_TAG_CYAN);
+    D_80115D00 = allocate_from_main_pool_safe(seq_max_len, COLOUR_TAG_CYAN);
     audConfig.unk04 = 150;
     audConfig.unk00 = 32;
     audConfig.maxChannels = 16;

@@ -6,7 +6,7 @@
 #include "types.h"
 #include "macros.h"
 #include "f3ddkr.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "memory.h"
 #include "PR/libultra.h"
 #include "video.h"

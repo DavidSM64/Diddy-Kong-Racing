@@ -10,7 +10,7 @@
 #include "video.h"
 #include "camera.h"
 #include "menu.h" // For cheats
-#include "unknown_0ABDF0.h"
+#include "weather.h"
 #include "racer.h"
 #include "game.h"
 #include "audio.h"

@@ -42,7 +42,7 @@ UNUSED void *load_screen(s32 screenIndex) {
 
         start = screenTable[screenIndex];
         size = screenTable[screenIndex + 1] - start;
-        someAddr = allocate_from_main_pool_safe(size, COLOR_TAG_BLUE);
+        someAddr = allocate_from_main_pool_safe(size, COLOUR_TAG_BLUE);
 
         load_asset_to_address(ASSET_SCREENS, someAddr, start, size);
         free_from_memory_pool(screenTable);

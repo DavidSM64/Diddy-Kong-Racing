@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800AB1F0 */
 
-#include "unknown_0ABDF0.h"
+#include "weather.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
@@ -19,18 +19,18 @@ unk800E2850 D_800E2850[3] = {
     { 0,  0x08, 2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
 };
 
-s32 D_800E28D4 = 0;
+s32 *D_800E28D4 = 0;
 
-unk800E2850 D_800E28D8 = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // Not sure about typing for the following.
 s32 D_800E2904 = 0;
 s32 D_800E2908 = 0;
-s32 D_800E290C = 0;
-s32 D_800E2910 = 0;
-s32 D_800E2914[2] = { 0, 0 };
-s32 D_800E291C = 0;
-s32 D_800E2920[2] = { 0, 0 };
+s32 *D_800E290C = NULL;
+s32 *D_800E2910 = NULL;
+s32 *D_800E2914[2] = { NULL, NULL };
+s32 *D_800E291C = NULL; // List of Ids
+s32 D_800E2920 = 0;
 
 Gfx D_800E2928[] = {
     gsDPPipeSync(),
@@ -166,7 +166,31 @@ Object *D_80127C40[16];
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AB1F0.s")
+void func_800AB1F0(void) {
+    D_800E28D8.unk0 = 0;
+    D_800E28D8.unk4 = 0;
+    D_800E28D4 = 0;
+    D_80127BB0 = 0;
+    D_80127C00 = 6;
+    D_80127C00 <<= 2;
+    D_80127C04 = D_80127C00 >> 1;
+    D_800E2914[0] = 0;
+    D_800E2914[1] = 0;
+    D_800E290C = 0;
+    D_80127BF8.unk0 = -1;
+    D_80127BF8.unk2 = -0x200;
+    D_800E2A80 = 0;
+    D_800E2A84 = 1;
+    D_800E2A88 = 0;
+    if (D_800E291C == NULL) {
+        D_800E291C = load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
+        D_800E2920 = 0; 
+        while ((s32)D_800E291C[D_800E2920] != -1) {
+            D_800E2920++;
+        }
+    }
+    D_80127C08 = 0;
+}
 
 void func_800AB308(s16 arg0, s16 arg1) {
     if (D_80127BF8.unk2 < D_80127BF8.unk0) {
@@ -178,11 +202,134 @@ void func_800AB308(s16 arg0, s16 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AB35C.s")
+#define FREE_MEM(mem)                   \
+    tempMem = mem;                      \
+    if (tempMem != 0) {                 \
+        free_from_memory_pool(tempMem); \
+        mem = NULL;                     \
+    }
+
+#define FREE_TEX(tex)                   \
+    tempTex = tex;                      \
+    if (tempTex != 0) {                 \
+        free_texture(tempTex);          \
+        tex = NULL;                     \
+    }
+
+void func_800AB35C(void) {
+    TextureHeader *tempTex;
+    s32 *tempMem;
+
+    FREE_MEM(D_800E290C);
+    FREE_MEM(D_800E2914[0]);
+    FREE_MEM(D_800E2914[1]);
+    FREE_MEM(D_800E28D4);
+    FREE_MEM(D_800E28D8.unk0);
+    FREE_TEX(D_800E28D8.unk8);
+    FREE_MEM(D_800E2910);
+
+    D_800E2A88 = 0;
+    D_800E2A80 = 0;
+    D_800E2A84 = 1;
+    if (D_800E2C5C != 0) {
+        func_800AD220();
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AB4A8.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800ABB34.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800ABC5C.s")
+
+void func_800ABB34(void) {
+    s32 temp_v0;
+    s32 phi_s1;
+    s32 i;
+    
+    temp_v0 = 0x10000 / D_800E28D8.unk4;
+    phi_s1 = 0;
+    
+    for(i = 0; i < D_800E28D8.unk4; i++) {
+        D_800E28D8.unk0[i].unk0 = func_8007082C(phi_s1 & 0xFFFF) << 3;
+        D_800E28D8.unk0[i].unk4 = 0xFFFC0000;
+        D_800E28D8.unk0[i].unk8 = func_80070830(phi_s1 & 0xFFFF) << 1;
+        phi_s1 += temp_v0;
+    }
+    
+    D_800E28D8.unk8 = load_texture(*D_800E291C);
+}
+
+
+void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+    if ((arg5 > 0) && ((arg0 != D_80127BB8[5]) || (arg1 != D_80127BB8[8]) || (arg2 != D_80127BB8[11]) 
+        || (arg3 != D_80127BB8[0]) || (arg4 != D_80127BB8[12]))) {
+        D_80127BB8[5] = arg0;
+        D_80127BB8[8] = arg1;
+        D_80127BB8[11] = arg2;
+        D_80127BB8[4] = (s32) ((s32) (arg0 - D_80127BB8[3]) / arg5);
+        D_80127BB8[7] = (s32) ((s32) (arg1 - D_80127BB8[6]) / arg5);
+        D_80127BB8[10] = (s32) ((s32) (arg2 - D_80127BB8[9]) / arg5);
+        if (D_800E2C5C == 0) {
+            D_80127BB8[1] = (s32) ((s32) (arg3 - D_80127BB8[0]) / arg5);
+            D_80127BB8[13] = (s32) ((s32) (arg4 - D_80127BB8[12]) / arg5);
+            D_80127BB8[2] = arg3;
+            D_80127BB8[14] = arg4;
+            D_80127BB8[15] = arg5;
+            return;
+        }
+        D_80127BB8[0] = arg3;
+        D_80127BB8[12] = arg4;
+        D_80127BB8[15] = 0;
+        func_800AD2C4(arg3 + 1, arg4 + 1, (f32) arg5 / 60.0f);
+    }
+}
+
+
+#ifdef NON_EQUIVALENT
+void func_800ABE68(s32* arg0, s32* arg1, s32* arg2, s32* arg3, s32 arg4) {
+    D_80127C0C = *arg0;
+    D_80127C10 = *arg1;
+    D_80127C14 = *arg2;
+    D_80127C18 = *arg3;
+    D_80127C1C = func_80069D20();
+    D_80127C20 = func_80069DBC();
+    if (D_800E2C5C != 0) {
+        func_800AD4B8(arg4);
+    } else {
+        if (D_80127BB8[15] > 0) {
+            if (arg4 < D_80127BB8[15]) {
+                D_80127BB8[0] += D_80127BB8[1] * arg4;
+                D_80127BB8[3] += D_80127BB8[4] * arg4;
+                D_80127BB8[6] += D_80127BB8[7] * arg4;
+                D_80127BB8[9] += D_80127BB8[10] * arg4;
+                D_80127BB8[12] += D_80127BB8[13] * arg4;
+                D_80127BB8[15] -= arg4;
+            } else {
+                D_80127BB8[0] = (s32) D_80127BB8[2];
+                D_80127BB8[3] = (s32) D_80127BB8[5];
+                D_80127BB8[6] = (s32) D_80127BB8[8];
+                D_80127BB8[9] = (s32) D_80127BB8[11];
+                D_80127BB8[12] = (s32) D_80127BB8[14];
+                D_80127BB8[15] = 0;
+            }
+        }
+        D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> 16;
+        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> 16;
+        
+        func_800AC0C8(arg4, &D_80127BF8);
+        if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < (s32) D_80127BF8.unk0)) {
+            D_800E2904 = D_800E2914[D_80127C08];
+            func_800AC21C();
+            func_800AC5A4();
+            D_80127C08 = 1 - D_80127C08;
+        }
+    }
+    *arg0 = D_80127C0C;
+    *arg1 = D_80127C10;
+    *arg2 = D_80127C14;s
+    *arg3 = D_80127C18;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800ABE68.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC5A4.s")
@@ -225,7 +372,24 @@ void func_800ACF98(Object* arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD030.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD144.s")
+
+void func_800AD144(s32 arg0, s32 arg1) {
+    D_800E2C60 = arg0;
+    D_800E2C64 = 0;
+    D_800E2C68 = D_800E2C60;
+    D_800E2C6C = arg1;
+    D_800E2C70 = 0;
+    D_800E2C74 = D_800E2C6C;
+    D_800E2C78 = 0;
+    D_800E2C7C = 0;
+    D_800E2C80 = 0;
+    D_800E2C84 = 0;
+    D_800E2C90 = 0;
+    D_800E2C2C[0].tex = load_texture(D_800E291C[1]);
+    D_800E2C2C[1].tex = load_texture(D_800E291C[1]);
+    D_800E2C8C = func_8007C12C(D_800E291C[3], 0);
+    D_800E2C5C = 1;
+}
 
 void func_800AD220(void) {
     if (D_800E2C2C[0].tex != NULL) {

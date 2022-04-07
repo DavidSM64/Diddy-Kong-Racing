@@ -9,7 +9,7 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "save_data.h"
 #include "unknown_008C40.h"
 #include "objects.h"
@@ -815,7 +815,7 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
 }
 
 void func_800598D0(void) {
-    gGhostData[0] = allocate_from_main_pool_safe(0x21C0, COLOR_TAG_RED);
+    gGhostData[0] = allocate_from_main_pool_safe(0x21C0, COLOUR_TAG_RED);
     gGhostData[1] = (GhostNode *)gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES;
     gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;
@@ -867,13 +867,13 @@ s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s16 *arg3, s16 *arg4) {
  * Returns 0 if successful, or 1 if an error occured.
  */
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
-    GhostHeader *ghost = allocate_from_main_pool_safe(size, COLOR_TAG_RED);
+    GhostHeader *ghost = allocate_from_main_pool_safe(size, COLOUR_TAG_RED);
     if (ghost != NULL) {
         load_asset_to_address(ASSET_TTGHOSTS, ghost, ghostOffset, size);
         if (gGhostData[2] != NULL) {
             free_from_memory_pool(gGhostData[2]);
         }
-        gGhostData[2] = allocate_from_main_pool_safe(size - sizeof(GhostHeader), COLOR_TAG_WHITE);
+        gGhostData[2] = allocate_from_main_pool_safe(size - sizeof(GhostHeader), COLOUR_TAG_WHITE);
         if (gGhostData[2] != NULL) {
             *outTime = ghost->time;
             gTTGhostNodeCount = ghost->nodeCount;
