@@ -19,17 +19,17 @@ u32 *gAssetsLookupTable;
 /*******************************/
 
 // These are both defined in the generated dkr.ld file.
-extern u8 __ASSETS_LUT_START, __ASSETS_LUT_END; // __ASSETS_LUT_START = 0xECB60, _END = 0xECC30
+extern u8 __ASSETS_LUT_START[], __ASSETS_LUT_END[]; // __ASSETS_LUT_START = 0xECB60, _END = 0xECC30
 
 void func_80076BA0(void) {
     u32 assetTableSize;
     osCreateMesgQueue(&gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
     osCreateMesgQueue(&gDmaMesgQueue, &gDmaMesg, 1);
     osCreatePiManager((OSPri)150, &gPIMesgQueue, gPIMesgBuf, ARRAY_COUNT(gPIMesgBuf));
-    assetTableSize = &__ASSETS_LUT_END - &__ASSETS_LUT_START;
+    assetTableSize = __ASSETS_LUT_END - __ASSETS_LUT_START;
     gAssetsLookupTable = (u32 *)allocate_from_main_pool_safe(assetTableSize, COLOUR_TAG_GREY);
     func_80071478((u8 *)gAssetsLookupTable);
-    dmacopy((u32)&__ASSETS_LUT_START, (u32)gAssetsLookupTable, (s32)assetTableSize);
+    dmacopy((u32)__ASSETS_LUT_START, (u32)gAssetsLookupTable, (s32)assetTableSize);
 }
 
 /**
@@ -51,45 +51,42 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
     if (out == 0) {
         return 0;
     }
-    dmacopy((u32)(start + &__ASSETS_LUT_END), (u32)out, size);
+    dmacopy((u32)(start + __ASSETS_LUT_END), (u32)out, size);
     return out;
 }
 
-#ifdef NON_MATCHING
-// 99.8% matching; has a single stack issue. see: https://decomp.me/scratch/MyWiR
+/**
+ * Loads a gzip compressed asset from the ROM file.
+ * Returns a pointer to the decompressed data.
+ */
 u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
     s32 size;
     s32 start;
     s32 totalSpace;
     u8 *gzipHeaderRamPos;
     u8 *out;
-    s32 *index;
-    u8 *ramPos;
     if (gAssetsLookupTable[0] < assetIndex) {
         return NULL;
     }
     assetIndex++;
     out = assetIndex + gAssetsLookupTable;
-    index = out;
-    start = index[0];
-    size = index[1] - start;
+    start = ((s32*)out)[0];
+    size = ((s32*)out)[1] - start;
     gzipHeaderRamPos = (u8 *) allocate_from_main_pool_safe(8, COLOUR_TAG_WHITE);
-    dmacopy((u32) (start + (&__ASSETS_LUT_END)), gzipHeaderRamPos, 8);
+    dmacopy(start + __ASSETS_LUT_END, gzipHeaderRamPos, 8);
     totalSpace = byteswap32(gzipHeaderRamPos) + extraMemory;
     free_from_memory_pool(gzipHeaderRamPos);
     out = (u8 *) allocate_from_main_pool_safe(totalSpace + extraMemory, COLOUR_TAG_GREY);
     if (out == NULL){
         return NULL;
     }
-    ramPos = (out + totalSpace) - size;
-    totalSpace = size;
-    dmacopy((u32) (start + (&__ASSETS_LUT_END)), ramPos, size);
-    gzip_inflate(ramPos, out);
+    gzipHeaderRamPos = (out + totalSpace) - size;
+    if(1){} // Needed to match.
+    dmacopy(start + __ASSETS_LUT_END, gzipHeaderRamPos, size);
+    gzip_inflate(gzipHeaderRamPos, out);
     return out;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/asset_loading/load_compressed_asset_from_rom.s")
-#endif
+
 
 /**
  * Unused.
@@ -107,7 +104,7 @@ s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
     index = assetIndex + gAssetsLookupTable;
     start = *index;
     size = *(index + 1) - start;
-    dmacopy((u32)(start + &__ASSETS_LUT_END), address, size);
+    dmacopy((u32)(start + __ASSETS_LUT_END), address, size);
     return size;
 }
 
@@ -126,7 +123,7 @@ s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
     start = *index + assetOffset;
-    dmacopy((u32)(start + &__ASSETS_LUT_END), address, size);
+    dmacopy((u32)(start + __ASSETS_LUT_END), address, size);
     return size;
 }
 
@@ -144,7 +141,7 @@ u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
     assetIndex++;
     index = assetIndex + gAssetsLookupTable;
     start = *index + assetOffset;
-    return start + &__ASSETS_LUT_END;
+    return start + __ASSETS_LUT_END;
 }
 
 /**
