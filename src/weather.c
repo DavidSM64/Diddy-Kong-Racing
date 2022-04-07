@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800AB1F0 */
 
-#include "unknown_0ABDF0.h"
+#include "weather.h"
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
@@ -183,7 +183,7 @@ void func_800AB1F0(void) {
     D_800E2A84 = 1;
     D_800E2A88 = 0;
     if (D_800E291C == NULL) {
-        D_800E291C = load_asset_section_from_rom(ASSET_UNKNOWN_19);
+        D_800E291C = load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
         D_800E2920 = 0; 
         while ((s32)D_800E291C[D_800E2920] != -1) {
             D_800E2920++;

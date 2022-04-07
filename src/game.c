@@ -20,7 +20,7 @@
 #include "printf.h"
 #include "thread0_epc.h"
 #include "thread30.h"
-#include "unknown_0ABDF0.h"
+#include "weather.h"
 #include "audio.h"
 #include "objects.h"
 #include "camera.h"

@@ -556,10 +556,10 @@
 				"filenames": ["menu_element_ids"]
 			},
 			{
-				"build-id": "ASSET_UNKNOWN_19",
+				"build-id": "ASSET_WEATHER_PARTICLES",
 				"type": "Binary",
-				"folder": "bin",
-				"filenames": ["unknown_table"]
+				"folder": "levels",
+				"filenames": ["weather_particles"]
 			},
 			{
 				"build-id": "ASSET_LEVEL_OBJECT_MAPS_TABLE",

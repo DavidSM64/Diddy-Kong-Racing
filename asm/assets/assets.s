@@ -24,7 +24,7 @@
 .word ASSET_MISC_TABLE - ASSETS_START
 .word ASSET_HUD_ELEMENT_IDS - ASSETS_START
 .word ASSET_MENU_ELEMENT_IDS - ASSETS_START
-.word ASSET_UNKNOWN_19 - ASSETS_START
+.word ASSET_WEATHER_PARTICLES - ASSETS_START
 .word ASSET_LEVEL_OBJECT_MAPS_TABLE - ASSETS_START
 .word ASSET_LEVEL_OBJECT_MAPS - ASSETS_START
 .word ASSET_LEVEL_HEADERS_TABLE - ASSETS_START
@@ -8704,12 +8704,12 @@ glabel ASSET_MENU_ELEMENT_IDS
 .incbin "./build/us_1.0/ids/menu_element_ids.bin"
 glabel ASSET_MENU_ELEMENT_IDS_END
 
-/********** ASSET_UNKNOWN_19 **********/
+/********** ASSET_WEATHER_PARTICLES **********/
 
 .balign 16
-glabel ASSET_UNKNOWN_19
-.incbin "./build/us_1.0/bin/unknown_table.bin"
-glabel ASSET_UNKNOWN_19_END
+glabel ASSET_WEATHER_PARTICLES
+.incbin "./build/us_1.0/levels/weather_particles.bin"
+glabel ASSET_WEATHER_PARTICLES_END
 
 /********** ASSET_LEVEL_OBJECT_MAPS_TABLE **********/
 
