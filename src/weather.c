@@ -29,7 +29,7 @@ s32 D_800E2908 = 0;
 s32 *D_800E290C = NULL;
 s32 *D_800E2910 = NULL;
 s32 *D_800E2914[2] = { NULL, NULL };
-TextureHeader **D_800E291C = NULL;
+s32 *D_800E291C = NULL; // List of Ids
 s32 D_800E2920 = 0;
 
 Gfx D_800E2928[] = {
@@ -283,7 +283,6 @@ void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
 
 
 #ifdef NON_EQUIVALENT
-void func_800AD4B8(s32 arg0);
 void func_800ABE68(s32* arg0, s32* arg1, s32* arg2, s32* arg3, s32 arg4) {
     D_80127C0C = *arg0;
     D_80127C10 = *arg1;
@@ -373,7 +372,24 @@ void func_800ACF98(Object* arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD030.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD144.s")
+
+void func_800AD144(s32 arg0, s32 arg1) {
+    D_800E2C60 = arg0;
+    D_800E2C64 = 0;
+    D_800E2C68 = D_800E2C60;
+    D_800E2C6C = arg1;
+    D_800E2C70 = 0;
+    D_800E2C74 = D_800E2C6C;
+    D_800E2C78 = 0;
+    D_800E2C7C = 0;
+    D_800E2C80 = 0;
+    D_800E2C84 = 0;
+    D_800E2C90 = 0;
+    D_800E2C2C[0].tex = load_texture(D_800E291C[1]);
+    D_800E2C2C[1].tex = load_texture(D_800E291C[1]);
+    D_800E2C8C = func_8007C12C(D_800E291C[3], 0);
+    D_800E2C5C = 1;
+}
 
 void func_800AD220(void) {
     if (D_800E2C2C[0].tex != NULL) {

@@ -83,6 +83,7 @@ void func_800ACF60(Object *arg0);
 void func_800AD220(void);
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2);
 void func_800AD40C(void);
+void func_800AD4B8(s32 arg0);
 void func_800ADBC8(s32);
 void func_800AD658(s32);
 void func_800ADAB8(s32);
