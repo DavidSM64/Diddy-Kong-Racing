@@ -14,9 +14,9 @@
 /************ .data ************/
 
 unk800E2850 D_800E2850[3] = {
-    { 0,  0x40, 0, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
-    { 0, 0x100, 1, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
-    { 0,  0x08, 2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
+    { 0,  0x40, (TextureHeader *)0, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
+    { 0, 0x100, (TextureHeader *)1, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
+    { 0,  0x08, (TextureHeader *)2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
 };
 
 s32 *D_800E28D4 = 0;
@@ -148,19 +148,18 @@ s32 D_80127BB0;
 s32 D_80127BB4;
 s32 D_80127BB8[16];
 unk80127BF8 D_80127BF8;
-s32 D_80127BFC;
 s32 D_80127C00;
 s32 D_80127C04;
 s32 D_80127C08;
 Gfx *D_80127C0C;
 Mtx *D_80127C10;
-s32 D_80127C14;
-Triangle *D_80127C18;
-Object *D_80127C1C;
-s32 D_80127C20;
+VertexList *D_80127C14;
+TriangleList *D_80127C18;
+ObjectSegment *D_80127C1C;
+Matrix *D_80127C20;
 s32 D_80127C24;
 s32 D_80127C28;
-s32 D_80127C2C;
+Matrix *D_80127C2C;
 s32 D_80127C30[4];
 Object *D_80127C40[16];
 
@@ -183,7 +182,7 @@ void func_800AB1F0(void) {
     D_800E2A84 = 1;
     D_800E2A88 = 0;
     if (D_800E291C == NULL) {
-        D_800E291C = load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
+        D_800E291C = (s32 *)load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
         D_800E2920 = 0; 
         while ((s32)D_800E291C[D_800E2920] != -1) {
             D_800E2920++;
@@ -203,7 +202,7 @@ void func_800AB308(s16 arg0, s16 arg1) {
 }
 
 #define FREE_MEM(mem)                   \
-    tempMem = mem;                      \
+    tempMem = (s32 *)mem;               \
     if (tempMem != 0) {                 \
         free_from_memory_pool(tempMem); \
         mem = NULL;                     \
@@ -281,54 +280,50 @@ void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     }
 }
 
-
-#ifdef NON_EQUIVALENT
-void func_800ABE68(s32* arg0, s32* arg1, s32* arg2, s32* arg3, s32 arg4) {
-    D_80127C0C = *arg0;
-    D_80127C10 = *arg1;
-    D_80127C14 = *arg2;
-    D_80127C18 = *arg3;
+void func_800ABE68(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+    UNUSED s32 unused;
+    D_80127C0C = *currDisplayList;
+    D_80127C10 = *currHudMat;
+    D_80127C14 = *currHudVerts;
+    D_80127C18 = *currHudTris;
     D_80127C1C = func_80069D20();
     D_80127C20 = func_80069DBC();
     if (D_800E2C5C != 0) {
-        func_800AD4B8(arg4);
+        func_800AD4B8(updateRate);
     } else {
         if (D_80127BB8[15] > 0) {
-            if (arg4 < D_80127BB8[15]) {
-                D_80127BB8[0] += D_80127BB8[1] * arg4;
-                D_80127BB8[3] += D_80127BB8[4] * arg4;
-                D_80127BB8[6] += D_80127BB8[7] * arg4;
-                D_80127BB8[9] += D_80127BB8[10] * arg4;
-                D_80127BB8[12] += D_80127BB8[13] * arg4;
-                D_80127BB8[15] -= arg4;
+            if (updateRate < D_80127BB8[15]) {
+                D_80127BB8[0] += D_80127BB8[1] * updateRate;
+                D_80127BB8[3] += D_80127BB8[4] * updateRate;
+                D_80127BB8[6] += D_80127BB8[7] * updateRate;
+                D_80127BB8[9] += D_80127BB8[10] * updateRate;
+                D_80127BB8[12] += D_80127BB8[13] * updateRate;
+                D_80127BB8[15] -= updateRate;
             } else {
-                D_80127BB8[0] = (s32) D_80127BB8[2];
-                D_80127BB8[3] = (s32) D_80127BB8[5];
-                D_80127BB8[6] = (s32) D_80127BB8[8];
-                D_80127BB8[9] = (s32) D_80127BB8[11];
-                D_80127BB8[12] = (s32) D_80127BB8[14];
+                D_80127BB8[0] = D_80127BB8[2];
+                D_80127BB8[3] = D_80127BB8[5];
+                D_80127BB8[6] = D_80127BB8[8];
+                D_80127BB8[9] = D_80127BB8[11];
+                D_80127BB8[12] = D_80127BB8[14];
                 D_80127BB8[15] = 0;
             }
         }
-        D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> 16;
-        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> 16;
+        D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (unused = 16);
+        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (unused = 16);
         
-        func_800AC0C8(arg4, &D_80127BF8);
-        if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < (s32) D_80127BF8.unk0)) {
-            D_800E2904 = D_800E2914[D_80127C08];
+        func_800AC0C8(updateRate, &D_80127BF8);
+        if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
+            D_800E2904 = (s32) D_800E2914[D_80127C08];
             func_800AC21C();
             func_800AC5A4();
             D_80127C08 = 1 - D_80127C08;
         }
     }
-    *arg0 = D_80127C0C;
-    *arg1 = D_80127C10;
-    *arg2 = D_80127C14;s
-    *arg3 = D_80127C18;
+    *currDisplayList = D_80127C0C;
+    *currHudMat = D_80127C10;
+    *currHudVerts = D_80127C14;
+    *currHudTris = D_80127C18;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800ABE68.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
@@ -387,7 +382,7 @@ void func_800AD144(s32 arg0, s32 arg1) {
     D_800E2C90 = 0;
     D_800E2C2C[0].tex = load_texture(D_800E291C[1]);
     D_800E2C2C[1].tex = load_texture(D_800E291C[1]);
-    D_800E2C8C = func_8007C12C(D_800E291C[3], 0);
+    D_800E2C8C = (Sprite *)func_8007C12C(D_800E291C[3], 0);
     D_800E2C5C = 1;
 }
 
@@ -500,11 +495,11 @@ void func_800ADBC8(UNUSED s32 arg0) {
     f32 temp_f2;
 
     sp28 = 1152.0f - (f32) (D_800E2C60 >> 6);
-    sp24 = func_800707C4(D_80127C1C->segment.trans.y_rotation) * sp28;
-    temp_f2 = func_800707F8(D_80127C1C->segment.trans.y_rotation) * sp28;
-    temp_f14 = D_80127C1C->segment.trans.x_position + (temp_f2 - sp24);
-    temp_f16 = D_80127C1C->segment.trans.y_position;
-    temp_f18 = D_80127C1C->segment.trans.z_position + (-temp_f2 - sp24);
+    sp24 = func_800707C4(D_80127C1C->trans.y_rotation) * sp28;
+    temp_f2 = func_800707F8(D_80127C1C->trans.y_rotation) * sp28;
+    temp_f14 = D_80127C1C->trans.x_position + (temp_f2 - sp24);
+    temp_f16 = D_80127C1C->trans.y_position;
+    temp_f18 = D_80127C1C->trans.z_position + (-temp_f2 - sp24);
     if (D_800E2C94 != 0) {
         func_800096D8(D_800E2C94, temp_f14, temp_f16, temp_f18);
     } else {

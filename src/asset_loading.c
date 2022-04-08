@@ -59,7 +59,7 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
  * Loads a gzip compressed asset from the ROM file.
  * Returns a pointer to the decompressed data.
  */
-u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
+UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
     s32 size;
     s32 start;
     s32 totalSpace;
@@ -89,11 +89,10 @@ u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
 
 
 /**
- * Unused.
  * Loads an asset section to a specific memory address.
  * Returns the size of asset section.
  */
-s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
+UNUSED s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
     u32 start;
     s32 size;
     u32 *index;
