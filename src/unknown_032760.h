@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
-#include "math.h"
+#include "libc/math.h"
 
 typedef struct unk800DC950 {
     u8 unk0;

@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "gzip.h"
+#include "memory.h"
 
 void func_80076BA0(void);
 u32 *load_asset_section_from_rom(u32 assetIndex);

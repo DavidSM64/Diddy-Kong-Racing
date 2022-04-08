@@ -11,7 +11,7 @@
 #include "macros.h"
 #include "structs.h"
 #include "f3ddkr.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "asset_loading.h"
 #include "menu.h"
 #include "video.h"
@@ -20,7 +20,7 @@
 #include "printf.h"
 #include "thread0_epc.h"
 #include "thread30.h"
-#include "unknown_0ABDF0.h"
+#include "weather.h"
 #include "audio.h"
 #include "objects.h"
 #include "camera.h"
@@ -187,7 +187,7 @@ void func_8006A6B0(void) {
     s32 i, count, checksumCount;
     s32 temp;
     u8 *sp44;
-    sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOR_TAG_YELLOW);
+    sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
     gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
     for (i = 0; i < 16; i++) {
         D_80121180[i] = 0;
@@ -197,7 +197,7 @@ void func_8006A6B0(void) {
         gNumberOfLevelHeaders++;
     }
     gNumberOfLevelHeaders--;
-    D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOR_TAG_YELLOW);
+    D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
     gNumberOfWorlds = -1;
     gCurrentLevelHeader = sp44;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
@@ -216,7 +216,7 @@ void func_8006A6B0(void) {
         D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
     }
     gNumberOfWorlds++;
-    D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOR_TAG_YELLOW);
+    D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
     for (i = 0; i < gNumberOfWorlds; i++) {
         D_80121178[i] = -1;
     }
@@ -236,8 +236,8 @@ void func_8006A6B0(void) {
     count--;
     temp = gTempAssetTable[count] - gTempAssetTable[0];
     // Minor issue here.
-    gLevelNames = allocate_from_main_pool_safe(count * sizeof(s32), COLOR_TAG_YELLOW);
-    D_800DD310 = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
+    gLevelNames = allocate_from_main_pool_safe(count * sizeof(s32), COLOUR_TAG_YELLOW);
+    D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
     load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
     for (i = 0; i < count; i++) {
         gLevelNames[i] = &D_800DD310[gTempAssetTable[i]];
@@ -394,7 +394,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     }
     offset = gTempAssetTable[levelId];
     size = gTempAssetTable[levelId + 1] - offset;
-    gCurrentLevelHeader = (LevelHeader *)allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
+    gCurrentLevelHeader = (LevelHeader *)allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
     load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     D_800DD330 = 0;
     sp44 = levelId;
@@ -464,7 +464,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         free_from_memory_pool(gCurrentLevelHeader);
         offset = gTempAssetTable[levelId];
         size = gTempAssetTable[levelId + 1] - offset;
-        gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOR_TAG_YELLOW);
+        gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
         load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     }
     free_from_memory_pool(gTempAssetTable);
@@ -731,7 +731,7 @@ void func_8006BFC8(s8 *arg0) {
     }
     temp2 = gTempAssetTable[phi_s0];
     temp = gTempAssetTable[phi_s0 + 1] - temp2;
-    D_801211C0[0] = allocate_from_main_pool_safe(temp, COLOR_TAG_YELLOW);
+    D_801211C0[0] = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
     load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0[0], temp2, temp);
     free_from_memory_pool(gTempAssetTable);
 }
@@ -1677,7 +1677,7 @@ void calc_and_alloc_heap_for_settings(void) {
     sizes[13] = sizes[12] + dataSize; // courseTimesPtr[2]
     sizes[14] = sizes[13] + dataSize; // total size
 
-    gSettingsPtr = allocate_from_main_pool_safe(sizes[14], COLOR_TAG_WHITE);
+    gSettingsPtr = allocate_from_main_pool_safe(sizes[14], COLOUR_TAG_WHITE);
     gSettingsPtr->courseFlagsPtr = (s32 *)((u8 *)gSettingsPtr + sizes[0]);
     gSettingsPtr->balloonsPtr = (s16 *)((u8 *)gSettingsPtr + sizes[1]);
     gSettingsPtr->tajFlags = 0;
@@ -1895,12 +1895,12 @@ void func_8006EFDC(void) {
     size4 = (gNumHudTrisPerPlayer[3] * sizeof(Triangle));
     totalSize = size1 + size2 + size3 + size4;
 
-    gDisplayLists[0] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOR_TAG_RED);
+    gDisplayLists[0] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
     gHudMatrices[0] = (u8 *)gDisplayLists[0] + size1;
     gHudVertices[0] = (u8 *)gHudMatrices[0] + size2;
     gHudTriangles[0] = (u8 *)gHudVertices[0] + size3;
 
-    gDisplayLists[1] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOR_TAG_YELLOW);
+    gDisplayLists[1] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
     gHudMatrices[1] = (u8 *)gDisplayLists[1] + size1;
     gHudVertices[1] = (u8 *)gHudMatrices[1] + size2;
     gHudTriangles[1] = (u8 *)gHudVertices[1] + size3;

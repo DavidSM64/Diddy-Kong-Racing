@@ -10,7 +10,7 @@
 #include "video.h"
 #include "camera.h"
 #include "menu.h" // For cheats
-#include "unknown_0ABDF0.h"
+#include "weather.h"
 #include "racer.h"
 #include "game.h"
 #include "audio.h"
@@ -185,7 +185,7 @@ void obj_loop_scenery(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_fireball_octoweapon(Object *obj, LevelObjectEntry_Fireball_Octoweapon *entry) {
+void obj_init_fireball_octoweapon(Object *obj, UNUSED LevelObjectEntry_Fireball_Octoweapon *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
 }
@@ -352,7 +352,7 @@ void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_lasergun.s")
 
-void obj_init_laserbolt(Object *obj, LevelObjectEntry_Laserbolt *entry) {
+void obj_init_laserbolt(Object *obj, UNUSED LevelObjectEntry_Laserbolt *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
 }
@@ -454,7 +454,7 @@ void obj_loop_torch_mist(Object *obj, s32 speed) {
     obj->segment.unk18 += obj->unk78 * speed;
 }
 
-void obj_init_effectbox(Object *obj, LevelObjectEntry_EffectBox *entry) {
+void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
 #ifdef NON_EQUIVALENT
@@ -483,7 +483,7 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     f32 tempf0;
     u8 new_var2;
 
-    obj3C = obj->unk3C_a.unk3C;
+    obj3C = obj->segment.unk3C_a.unk3C;
     objList = get_object_struct_array(&numberOfObjects);
     temp0 = func_800707F8((obj3C->unkB << 8) * -1);
     temp1 = func_800707C4((obj3C->unkB << 8) * -1);
@@ -696,7 +696,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trophycab.s")
 #endif
 
-void obj_init_collectegg(Object *obj, LevelObjectEntry_CollectEgg *entry) {
+void obj_init_collectegg(Object *obj, UNUSED LevelObjectEntry_CollectEgg *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x14;
@@ -705,10 +705,10 @@ void obj_init_collectegg(Object *obj, LevelObjectEntry_CollectEgg *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_collectegg.s")
 
-void obj_init_eggcreator(Object *obj, LevelObjectEntry_EggCreator *entry) {
+void obj_init_eggcreator(UNUSED Object *obj, UNUSED LevelObjectEntry_EggCreator *entry) {
 }
 
-void obj_loop_eggcreator(Object *obj, s32 speed) {
+void obj_loop_eggcreator(Object *obj, UNUSED s32 speed) {
     unk8003564C sp20;
     Object *someObj;
 
@@ -745,7 +745,7 @@ void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_rocketsignpost(Object *obj, s32 speed) {
+void obj_loop_rocketsignpost(Object *obj, UNUSED s32 speed) {
     Object *playerObj;
     Object_4C *obj4C;
 
@@ -789,7 +789,7 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
 }
 
 
-void obj_loop_airzippers_waterzippers(Object *obj, s32 speed) {
+void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 speed) {
     Object *curRacerObj;
     Object_64_Racer *racerObj64;
     f32 xDiff;
@@ -856,7 +856,7 @@ void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
     }
 }
 
-void obj_loop_groundzipper(Object *obj, s32 speed) {
+void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
     Object *curRacerObj;
     Object_64_Racer *racerObj64;
     f32 xDiff;
@@ -941,7 +941,7 @@ void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry) 
     obj->segment.trans.scale = (f32)(obj->segment.header->scale * phi_f0);
 }
 
-void obj_loop_characterflag(Object *obj, s32 speed) {
+void obj_loop_characterflag(Object *obj, UNUSED s32 speed) {
     s32 temp_t4;
     s32 temp_t5;
     Object *someObj;
@@ -975,7 +975,7 @@ void obj_loop_characterflag(Object *obj, s32 speed) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
-void obj_init_stopwatchman(Object *obj, LevelObjectEntry_StopWatchMan *entry) {
+void obj_init_stopwatchman(Object *obj, UNUSED LevelObjectEntry_StopWatchMan *entry) {
     Object_64 *temp;
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 0;
@@ -1021,11 +1021,11 @@ void obj_loop_lavaspurt(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_posarrow(Object *obj, LevelObjectEntry_PosArrow *entry) {
+void obj_init_posarrow(Object *obj, UNUSED LevelObjectEntry_PosArrow *entry) {
     obj->segment.trans.unk6 |= 0x4000;
 }
 
-void obj_loop_posarrow(Object *obj, s32 speed) {
+void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
     Object_64_PosArrow *someObj64;
     Object **someObjList;
     Object *someObj;
@@ -1250,14 +1250,13 @@ void obj_loop_dooropener(Object *obj, s32 speed) {
     func_800235D0(phi_a0);
 }
 
-void obj_init_overridepos(Object *obj, LevelObjectEntry_OverridePos *entry) {
+void obj_init_overridepos(UNUSED Object *obj, UNUSED LevelObjectEntry_OverridePos *entry) {
 }
 
-/* Unused? */
-void func_80037D60(s32 arg0, s32 arg1) {
+UNUSED void func_80037D60(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
-void obj_init_wizpigship(Object *obj, LevelObjectEntry_WizpigShip *entry) {
+void obj_init_wizpigship(UNUSED Object *obj, UNUSED LevelObjectEntry_WizpigShip *entry) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_wizpigship.s")
@@ -1280,7 +1279,7 @@ void obj_loop_vehicleanim(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_hittester(Object *obj, LevelObjectEntry_HitTester *entry) {
+void obj_init_hittester(Object *obj, UNUSED LevelObjectEntry_HitTester *entry) {
     obj->unk4C->unk14 = 0x81;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
@@ -1291,21 +1290,21 @@ void obj_loop_hittester(Object *obj, s32 speed) {
     func_8001F460(obj, speed, obj);
 }
 
-void obj_init_dynamic_lighting_object(Object *obj, LevelObjectEntry_DynamicLightingObject *entry) {
+void obj_init_dynamic_lighting_object(Object *obj, UNUSED LevelObjectEntry_DynamicLightingObject *entry) {
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
     obj->unk4C->unk12 = 0;
 }
 
-void obj_init_unknown96(Object *obj, LevelObjectEntry_Unknown96 *entry) {
+void obj_init_unknown96(Object *obj, UNUSED LevelObjectEntry_Unknown96 *entry) {
     obj->unk4C->unk14 = 0x81;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
     obj->unk4C->unk12 = 0;
 }
 
-void obj_init_snowball(Object *obj, LevelObjectEntry_Snowball *entry) {
+void obj_init_snowball(Object *obj, UNUSED LevelObjectEntry_Snowball *entry) {
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
@@ -1329,8 +1328,7 @@ void obj_loop_snowball(Object *obj, s32 speed) {
     func_8001F460(obj, speed, obj);
 }
 
-// Unused
-void func_80038330(s32 arg0, s32 arg1) {
+UNUSED void func_80038330(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_char_select.s")
@@ -1355,8 +1353,7 @@ void obj_loop_animcamera(Object *obj, s32 speed) {
     }
 }
 
-// Unused
-void func_800387C0(s32 arg0, s32 arg1) {
+UNUSED void func_800387C0(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
 void obj_loop_animcar(Object *obj, s32 speed) {
@@ -1389,7 +1386,7 @@ void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
     obj->segment.trans.y_rotation = entry->unkB << 10; // Not sure about the values here.
 }
 
-void obj_loop_infopoint(Object *obj, s32 speed) {
+void obj_loop_infopoint(Object *obj, UNUSED s32 speed) {
     s16 temp_a0;
     Object_4C *obj4C;
     Object *playerObj;
@@ -1413,7 +1410,7 @@ void obj_loop_infopoint(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_smoke(Object *obj, LevelObjectEntry_Smoke *entry) {
+void obj_init_smoke(UNUSED Object *obj, UNUSED LevelObjectEntry_Smoke *entry) {
 }
 
 void obj_loop_smoke(Object *obj, s32 speed) {
@@ -1431,7 +1428,7 @@ void obj_loop_smoke(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_unknown25(Object *obj, LevelObjectEntry_Unknown25 *entry) {
+void obj_init_unknown25(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown25 *entry) {
 }
 
 void obj_loop_unknown25(Object *obj, s32 speed) {
@@ -1442,7 +1439,7 @@ void obj_loop_unknown25(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_wardensmoke(Object *obj, LevelObjectEntry_WardenSmoke *entry) {
+void obj_init_wardensmoke(UNUSED Object *obj, UNUSED LevelObjectEntry_WardenSmoke *entry) {
 }
 
 void obj_loop_wardensmoke(Object *obj, s32 speed) {
@@ -1476,7 +1473,7 @@ void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) 
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bombexplosion.s")
 
-void obj_init_teleport(Object *obj, LevelObjectEntry_Teleport *entry) {
+void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0xF;
@@ -1486,7 +1483,7 @@ void obj_init_teleport(Object *obj, LevelObjectEntry_Teleport *entry) {
     }
 }
 
-void obj_loop_teleport(Object *obj, s32 speed) {
+void obj_loop_teleport(Object *obj, UNUSED s32 speed) {
     if (obj->unk78 != 0) {
         Object_3C_80038DC4 *temp = obj->segment.unk3C_a.unk3C;
         if (obj->unk4C->unk13 < 0x78) {
@@ -1521,7 +1518,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_exit(Object *obj, s32 speed) {
+void obj_loop_exit(Object *obj, UNUSED s32 speed) {
     Object *racerObj;
     Object_64_Racer *racerObj64;
     s32 numberOfRacers;
@@ -1575,7 +1572,7 @@ void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry) 
     func_80011390();
 }
 
-void obj_loop_cameracontrol(Object *obj, s32 speed) {
+void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
 void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
@@ -1585,10 +1582,10 @@ void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4; // Not sure about the values here.
 }
 
-void obj_loop_setuppoint(Object *obj, s32 speed) {
+void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
-void obj_init_dino_whale(Object *obj, LevelObjectEntry_Dino_Whale *entry) {
+void obj_init_dino_whale(Object *obj, UNUSED LevelObjectEntry_Dino_Whale *entry) {
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 3;
     obj->unk4C->unk10 = 0x14;
@@ -1615,7 +1612,7 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
     }
 }
 
-void obj_init_parkwarden(Object *obj, LevelObjectEntry_Parkwarden *entry) {
+void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry) {
     Object_64 *temp;
     obj->unk4C->unk14 = (u16)1;
     obj->unk4C->unk11 = (u8)0;
@@ -1648,14 +1645,14 @@ void func_8003AC3C(u16 arg0, s32 arg1) {
     }
 }
 
-void obj_loop_gbparkwarden(Object *obj, s32 speed) {
+void obj_loop_gbparkwarden(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
 f32 func_8003ACAC(void) {
     return D_8011D4D0;
 }
 
-void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, s32 arg2) {
+void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, UNUSED s32 arg2) {
     f32 phi_f0 = (s32)(entry->unk8 & 0xFF);
     if (phi_f0 < 5.0f) {
         phi_f0 = 5.0f;
@@ -1666,7 +1663,7 @@ void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, s32 ar
     func_80011390();
 }
 
-void obj_loop_checkpoint(Object *obj, s32 speed) {
+void obj_loop_checkpoint(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
 void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
@@ -1717,7 +1714,7 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_bonus(Object *obj, s32 speed) {
+void obj_loop_bonus(Object *obj, UNUSED s32 speed) {
     Object *racerObj;
     Object_64_Racer *racerObj64;
     s32 numberOfRacers;
@@ -1819,7 +1816,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
     }
     speedf = sp2C;
     settings = get_settings();
-    obj3C = obj->unk3C_a.unk3C;
+    obj3C = obj->segment.unk3C_a.unk3C;
     flag = 0x10000 << obj3C->unk8;
     if (settings->courseFlagsPtr[settings->courseId] & flag) {
         if (obj->unk7C.word > 0) {
@@ -1834,15 +1831,15 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
         if (obj->unk78 == 0) {
             obj->segment.trans.unk6 &= 0xBFFF;
             doubleSpeed = speed * 2;
-            if (obj->unk38.half.lower < (255 - doubleSpeed)) {
-                obj->unk38.half.lower += doubleSpeed;
+            if (obj->segment.unk38.half.lower < (255 - doubleSpeed)) {
+                obj->segment.unk38.half.lower += doubleSpeed;
             } else {
-                obj->unk38.half.lower = 255;
+                obj->segment.unk38.half.lower = 255;
             }
             obj4C = obj->unk4C;
             if ((obj4C->unk13 < 45) && (someBool == FALSE)) {
                 racerObj = obj4C->unk0;
-                if (racerObj && (racerObj->header->behaviorId == 1) && (((Object_64_Racer *)racerObj->unk64)->unk0 == 0)) {
+                if (racerObj && (racerObj->segment.header->behaviorId == 1) && (((Object_64_Racer *)racerObj->unk64)->unk0 == 0)) {
                     settings->balloonsPtr[settings->worldId]++;
                     if (settings->worldId != 0) {
                         settings->balloonsPtr[0]++;
@@ -1856,9 +1853,9 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                 }
             }
             obj64 = (Object_64_GoldenBalloon *)obj->unk64;
-            obj->unk3B = 0;
+            obj->segment.unk3B = 0;
             obj64->unk14 = 0.0f;
-            if (obj->unk38.half.lower < 255) {
+            if (obj->segment.unk38.half.lower < 255) {
                 speedf = 0.0f;
             } else {
                 speedf = 1.0f;
@@ -1957,6 +1954,7 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_ttdoor.s")
+
 void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     f32 phi_f0;
     Object_64_Trigger *obj64;
@@ -2017,17 +2015,17 @@ void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->unk78 = entry->unk8;
 }
 
-void obj_loop_rampswitch(Object *obj, s32 speed) {
+void obj_loop_rampswitch(Object *obj, UNUSED s32 speed) {
     if (obj->unk4C->unk13 < 0x2D) {
         func_8001E344(obj->unk78);
     }
     obj->unk4C->unk13 = (u8)0xFF;
 }
 
-void obj_init_seamonster(Object *obj, LevelObjectEntry_SeaMonster *entry) {
+void obj_init_seamonster(UNUSED Object *obj, UNUSED LevelObjectEntry_SeaMonster *entry) {
 }
 
-void obj_loop_seamonster(Object *obj, s32 speed) {
+void obj_loop_seamonster(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
 void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
@@ -2045,7 +2043,7 @@ void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
     obj->unk7C.word = entry->unk9;
 }
 
-void obj_loop_skycontrol(Object *obj, s32 speed) {
+void obj_loop_skycontrol(Object *obj, UNUSED s32 speed) {
     if (obj->unk4C->unk13 < obj->unk7C.word) {
         func_80028044(obj->unk78);
     }
@@ -2059,7 +2057,7 @@ void obj_init_ainode(Object *obj, LevelObjectEntry_AiNode *entry) {
     func_8001D1AC();
 }
 
-void obj_loop_ainode(Object *obj, s32 speed) {
+void obj_loop_ainode(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
 void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry) {
@@ -2069,12 +2067,12 @@ void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_treasuresucker.s")
 
-void obj_init_flycoin(Object *obj, LevelObjectEntry_FlyCoin *entry) {
+void obj_init_flycoin(UNUSED Object *obj, UNUSED LevelObjectEntry_FlyCoin *entry) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_flycoin.s")
 
-void obj_init_bananacreator(Object *obj, LevelObjectEntry_BananaCreator *entry) {
+void obj_init_bananacreator(Object *obj, UNUSED LevelObjectEntry_BananaCreator *entry) {
     obj->segment.unk18 = 100;
 }
 
@@ -2107,7 +2105,7 @@ void obj_loop_bananacreator(Object *obj, s32 speed) {
 }
 
 
-void obj_init_banana(Object *obj, LevelObjectEntry_Banana *entry) {
+void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -2120,7 +2118,7 @@ void obj_init_banana(Object *obj, LevelObjectEntry_Banana *entry) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_banana.s")
 
-void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entry) {
+void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv2 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -2139,7 +2137,7 @@ void obj_init_silvercoin_adv2(Object *obj, LevelObjectEntry_SilverCoinAdv2 *entr
     }
 }
 
-void obj_init_silvercoin(Object *obj, LevelObjectEntry_SilverCoin *entry) {
+void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
@@ -2266,13 +2264,13 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weaponballoon.s")
 
-void obj_init_wballoonpop(Object *obj, LevelObjectEntry_WBalloonPop *entry) {
+void obj_init_wballoonpop(UNUSED Object *obj, UNUSED LevelObjectEntry_WBalloonPop *entry) {
 }
 
-void obj_loop_wballoonpop(Object *obj, s32 speed) {
+void obj_loop_wballoonpop(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
-void obj_init_weapon(Object *obj, LevelObjectEntry_Weapon *entry) {
+void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x18;
@@ -2328,10 +2326,10 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
     someObj = spawn_object(&sp24, 1);
     if (someObj != NULL) {
         someObj->segment.trans.scale *= 3.5 * arg5;
-        someObj->unk3C_a.unk3C = NULL;
-        someObj->x_velocity = 0.0f;
-        someObj->y_velocity = 0.0f;
-        someObj->z_velocity = 0.0f;
+        someObj->segment.unk3C_a.unk3C = NULL;
+        someObj->segment.x_velocity = 0.0f;
+        someObj->segment.y_velocity = 0.0f;
+        someObj->segment.z_velocity = 0.0f;
     }
     if (arg4 != 0) {
         func_80009558(arg4, arg0, arg1, arg2, 4, 0);
@@ -2422,11 +2420,11 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_texscroll.s")
 
-void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, s32 arg2) {
+void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s32 arg2) {
     obj->unk64 = func_80031CAC(obj, entry);
 }
 
-void obj_init_buoy_pirateship(Object *obj, LevelObjectEntry_Buoy_PirateShip *entry, s32 arg2) {
+void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateShip *entry, UNUSED s32 arg2) {
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 0;
@@ -2441,7 +2439,7 @@ void obj_loop_buoy_pirateship(Object *obj, s32 speed) {
     obj->segment.unk18 += speed * 8;
 }
 
-void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, s32 arg2) {
+void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     f32 phi_f0;
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
     obj->unk4C->unk14 = 1;
@@ -2510,7 +2508,7 @@ void obj_loop_weather(Object *obj, s32 speed) {
     temp_f0 = obj->segment.trans.x_position - curObj->segment.trans.x_position;
     temp_f2 = obj->segment.trans.z_position - curObj->segment.trans.z_position;
     new_var = obj->unk78f;
-    obj3c = obj->unk3C_a.unk3C;
+    obj3c = obj->segment.unk3C_a.unk3C;
     if (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) <= (new_var * 1.0f)){
       func_800ABC5C(obj3c->unkA * 256, obj3c->unkC * 256, obj3c->unkE * 256, obj3c->unk10 * 257, obj3c->unk11 * 257, (s32) obj3c->unk12);
     }
@@ -2521,17 +2519,17 @@ void obj_loop_weather(Object *obj, s32 speed) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weather.s")
 #endif
 
-void obj_init_lensflare(Object *obj, LevelObjectEntry_LensFlare *entry) {
+void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
     func_800AC8A8(obj);
 }
 
-void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, s32 arg2) {
+void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2) {
     func_800ACF60(obj);
     obj->segment.trans.scale = entry->unk8;
     obj->segment.trans.scale /= 40.0f;
 }
 
-void obj_init_wavegenerator(Object *obj, LevelObjectEntry_WaveGenerator *entry, s32 arg2) {
+void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *entry, UNUSED s32 arg2) {
     func_800BF524(obj); //waves.c
 }
 
@@ -2558,7 +2556,7 @@ void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2
 
     obj64 = (Object_64_Butterfly*)obj->unk64;
     if (arg2 == 0) {
-        obj->y_velocity = 0.0f;
+        obj->segment.y_velocity = 0.0f;
         obj64->unkFE = 0;
         obj64->unk100 = 0;
         obj64->unk104 = 0;
@@ -2593,7 +2591,7 @@ void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2
         obj64->unkFC = 1;
     }
     obj->segment.trans.scale = entry->unkB * 0.01f;
-    if (entry->unkA < obj->header->numberOfModelIds) {
+    if (entry->unkA < obj->segment.header->numberOfModelIds) {
         obj64->texture = (TextureHeader*)obj->unk68[entry->unkA];
     } else {
         obj64->texture = (TextureHeader*)obj->unk68[0];
@@ -2691,17 +2689,17 @@ void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
     obj->segment.unk3C_a.unk3C = NULL;
 }
 
-void obj_init_unknown94(Object *obj, LevelObjectEntry_Unknown94 *entry, s32 arg2) {
+void obj_init_unknown94(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown94 *entry, UNUSED s32 arg2) {
 }
 
-void obj_loop_unknown94(Object *obj, s32 speed) {
+void obj_loop_unknown94(UNUSED Object *obj, s32 UNUSED speed) {
 }
 
-void obj_init_rangetrigger(Object *obj, LevelObjectEntry_RangeTrigger *entry) {
+void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrigger *entry) {
 }
 
 void obj_loop_rangetrigger(Object *obj, s32 speed) {
-    s32 temp;
+    UNUSED s32 temp;
     Object_3C_80042178 *obj3C;
     unk80042178 sp20;
 
@@ -2748,7 +2746,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_frog.s")
 
 void obj_loop_pigrocketeer(Object *obj, s32 speed) {
     Object *someObj;
-    Object_64_80042998 *obj64;
+    Object_64 *obj64;
 
     func_8001F460(obj, speed, obj);
     someObj = func_8000BF44(-1);

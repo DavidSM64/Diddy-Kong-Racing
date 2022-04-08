@@ -39,6 +39,16 @@ u32 __osProbeTLB(void *);
 u32 __osDisableInt(void);
 void __osRestoreInt(u32);
 OSThread *__osGetCurrFaultedThread(void);
-u32 osVirtualToPhysical(void *addr);
+
+/* Address translation routines and macros */
+
+extern u32         osVirtualToPhysical(void *);
+extern void *         osPhysicalToVirtual(u32);
+
+#define    OS_K0_TO_PHYSICAL(x)    (u32)(((char *)(x)-0x80000000))
+#define    OS_K1_TO_PHYSICAL(x)    (u32)(((char *)(x)-0xa0000000))
+
+#define    OS_PHYSICAL_TO_K0(x)    (void *)(((u32)(x)+0x80000000))
+#define    OS_PHYSICAL_TO_K1(x)    (void *)(((u32)(x)+0xa0000000))
 
 #endif

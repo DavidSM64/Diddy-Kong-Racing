@@ -4,7 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "fade_transition.h"
-#include "math.h"
+#include "libc/math.h"
 
 enum RenderContext {
     DRAW_INTRO = -1,

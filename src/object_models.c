@@ -4,7 +4,7 @@
 #include "object_models.h"
 #include "macros.h"
 #include "memory.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "unknown_0255E0.h"
 #include "racer.h"
 
@@ -46,8 +46,8 @@ void func_8005F850(void) {
     s32 i;
     s32 checksum;
 
-    D_8011D624 = allocate_from_main_pool_safe(0x230, COLOR_TAG_GREEN);
-    D_8011D628 = allocate_from_main_pool_safe(0x190, COLOR_TAG_GREEN);
+    D_8011D624 = allocate_from_main_pool_safe(0x230, COLOUR_TAG_GREEN);
+    D_8011D628 = allocate_from_main_pool_safe(0x190, COLOUR_TAG_GREEN);
     D_8011D62C = 0;
     D_8011D634 = 0;
     D_8011D620 = load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
@@ -58,7 +58,7 @@ void func_8005F850(void) {
     D_8011D630--;
     D_8011D638 = load_asset_section_from_rom(ASSET_ANIMATION_IDS);
     D_8011D63C = load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
-    D_8011D644 = allocate_from_main_pool_safe(0xC00, COLOR_TAG_GREEN);
+    D_8011D644 = allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
     D_8011D640 = 0;
 
     // Anti-tamper check.

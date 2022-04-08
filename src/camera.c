@@ -109,7 +109,7 @@ s32 gNumberOfViewports;
 s32 D_80120CE4;
 s32 D_80120CE8;
 s32 D_80120CEC;
-s32 D_80120CF0[6];
+ObjectTransform D_80120CF0;
 s32 D_80120D08;
 s32 D_80120D0C;
 f32 gCurCamFOV;
@@ -122,7 +122,7 @@ s32 D_80120D28[6];
 s32 D_80120D40[6];
 u16 perspNorm[12];
 Matrix *D_80120D70[6];
-s32 D_80120D88[6];
+Mtx *D_80120D88[6];
 Matrix D_80120DA0[5];
 Matrix D_80120EE0; // Perspective matrix?
 Matrix D_80120F20;
@@ -237,7 +237,7 @@ s32 func_80066220(void) {
     return D_80120CE4;
 }
 
-void func_80066230(Gfx **dlist, Gfx **arg1) {
+void func_80066230(Gfx **dlist, Mtx **mats) {
     ObjectSegment *someStruct;
     s16 sp2A;
     s16 sp28;
@@ -265,7 +265,7 @@ void func_80066230(Gfx **dlist, Gfx **arg1) {
     someStruct->trans.y_position = 0.0f;
     someStruct->trans.z_position = 0.0f;
     func_8001D5E0(0.0f, 0.0f, -1.0f);
-    func_80066CDC(dlist, arg1);
+    func_80066CDC(dlist, mats);
     someStruct->unk38.word = sp24;
     someStruct->trans.y_rotation = sp2A;
     someStruct->trans.x_rotation = sp28;
@@ -275,20 +275,20 @@ void func_80066230(Gfx **dlist, Gfx **arg1) {
     someStruct->trans.z_position = sp18;
 }
 
-f32 func_80066348(f32 arg0, f32 arg1, f32 arg2) {
-    s32 phi_v1;
-    f32 temp_f2, temp_f0, temp_f14;
+f32 func_80066348(f32 xPos, f32 yPos, f32 zPos) {
+    s32 index;
+    f32 dx, dz, dy;
 
-    phi_v1 = D_80120CE4;
+    index = D_80120CE4;
 
     if (D_80120D14 != 0) {
-        phi_v1 += 4;
+        index += 4;
     }
 
-    temp_f0 = arg2 - D_80120AC0[phi_v1].trans.z_position;
-    temp_f2 = arg0 - D_80120AC0[phi_v1].trans.x_position;
-    temp_f14 = arg1 - D_80120AC0[phi_v1].trans.y_position;
-    return sqrtf((temp_f0 * temp_f0) + ((temp_f2 * temp_f2) + (temp_f14 * temp_f14)));
+    dz = zPos - D_80120AC0[index].trans.z_position;
+    dx = xPos - D_80120AC0[index].trans.x_position;
+    dy = yPos - D_80120AC0[index].trans.y_position;
+    return sqrtf((dz * dz) + ((dx * dx) + (dy * dy)));
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
@@ -581,7 +581,7 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
-void func_80066CDC(Gfx **dlist, Gfx **arg1) {
+void func_80066CDC(Gfx **dlist, Mtx **mats) {
     u32 sp58;
     u32 sp54;
     u32 sp4C;
@@ -610,8 +610,8 @@ void func_80066CDC(Gfx **dlist, Gfx **arg1) {
             gScreenViewports[D_80120CE4].scissorY2
         );
         func_80068158(dlist, 0, 0, 0, 0);
-        if (arg1 != 0) {
-            func_80067D3C(dlist, arg1);
+        if (mats != 0) {
+            func_80067D3C(dlist, mats);
         }
         return;
     }
@@ -707,8 +707,8 @@ void func_80066CDC(Gfx **dlist, Gfx **arg1) {
         sp4C -= 4;
     }
     func_80068158(dlist, sp54, sp58, sp4C, phi_t3);
-    if (arg1 != 0) {
-        func_80067D3C(dlist, arg1);
+    if (mats != 0) {
+        func_80067D3C(dlist, mats);
     }
 }
 
@@ -717,7 +717,47 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
-GLOBAL_ASM("asm/non_matchings/camera/func_80067D3C.s")
+
+void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats) {
+    s32 temp;
+
+    gSPPerspNormalize((*dlist)++, perspNorm[10]);
+
+    temp = D_80120CE4;
+    if (D_80120D14 != 0) {
+        D_80120CE4 += 4;
+    }
+
+    D_80120CF0.y_rotation = 0x8000 + D_80120AC0[D_80120CE4].trans.y_rotation;
+    D_80120CF0.x_rotation = D_80120AC0[D_80120CE4].trans.x_rotation + D_80120AC0[D_80120CE4].unk38.word;
+    D_80120CF0.z_rotation = D_80120AC0[D_80120CE4].trans.z_rotation;
+
+    D_80120CF0.x_position = -D_80120AC0[D_80120CE4].trans.x_position;
+    D_80120CF0.y_position = -D_80120AC0[D_80120CE4].trans.y_position;
+    if (D_80120D18 != 0) {
+        D_80120CF0.y_position -= D_80120AC0[D_80120CE4].unk30;
+    }
+    D_80120CF0.z_position = -D_80120AC0[D_80120CE4].trans.z_position;
+
+    func_8006FE74(&D_80120F60, &D_80120CF0);
+    func_8006F768(&D_80120F60, &D_80120EE0, &D_80120F20);
+
+    D_80120CF0.y_rotation = -0x8000 - D_80120AC0[D_80120CE4].trans.y_rotation;
+    D_80120CF0.x_rotation = -(D_80120AC0[D_80120CE4].trans.x_rotation + D_80120AC0[D_80120CE4].unk38.word);
+    D_80120CF0.z_rotation = -D_80120AC0[D_80120CE4].trans.z_rotation;
+    D_80120CF0.scale = 1.0f;
+    D_80120CF0.x_position = D_80120AC0[D_80120CE4].trans.x_position;
+    D_80120CF0.y_position = D_80120AC0[D_80120CE4].trans.y_position;
+    if (D_80120D18 != 0) {
+        D_80120CF0.y_position += D_80120AC0[D_80120CE4].unk30;
+    }
+    D_80120CF0.z_position = D_80120AC0[D_80120CE4].trans.z_position;
+
+    func_8006FC30(D_80120FA0, &D_80120CF0);
+    func_8006F870(&D_80120FA0, &D_80121020);
+
+    D_80120CE4 = temp;
+}
 
 /**
  * Sets the Y value of the Y axis in the matrix to the passed value.
@@ -728,7 +768,7 @@ void set_ortho_matrix_height(f32 value) {
     gOrthoMatrix[1][1] = value;
 }
 
-void func_80067F2C(Gfx **dlist, s32 *arg1) {
+void func_80067F2C(Gfx **dlist, Mtx **mats) {
     u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
@@ -736,15 +776,14 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
-    func_8006F870(&gOrthoMatrix, (Matrix *)*arg1);
-    D_80120D88[0] = *arg1;
+    func_8006F870(&gOrthoMatrix, (Matrix *)*mats);
+    D_80120D88[0] = *mats;
     D_800DD148[D_80120CE4 + 5].vp.vscale[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vscale[1] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[0] = width * 2;
     D_800DD148[D_80120CE4 + 5].vp.vtrans[1] = height * 2;
-    gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4 + 5] + 0x80000000);
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
-    *arg1 += 0x40;
+    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD148[D_80120CE4 + 5]));
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
 
@@ -759,14 +798,13 @@ void func_80067F2C(Gfx **dlist, s32 *arg1) {
     }
 }
 
-void func_8006807C(Gfx **dlist, s32 *arg1) {
+void func_8006807C(Gfx **dlist, Mtx **mats) {
     func_8006FE74(&D_80121060, &D_800DD288);
     func_8006F768(&D_80121060, &D_80120EE0, &D_80120F20);
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
     func_8006F768(D_80120D70[0], &D_80120F20, &D_80121060);
-    func_8006F870(&D_80121060, (Matrix *)*arg1);
-    fast3d_cmd((*dlist)++, 0x1000040, (u32)(*arg1 + 0x80000000));
-    *arg1 += 0x40;
+    func_8006F870(&D_80121060, (Matrix *)*mats);
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
 }
@@ -782,9 +820,9 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
         D_800DD148[D_80120CE4].vp.vtrans[1] = posY * 4;
         D_800DD148[D_80120CE4].vp.vscale[0] = tempWidth * 4;
         D_800DD148[D_80120CE4].vp.vscale[1] = height * 4;
-        gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4] + 0x80000000);
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[D_80120CE4]));
     } else {
-        gSPViewport((*dlist)++, (u8 *)&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)] + 0x80000000);
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[D_80120CE4 + 10 + (D_800DD134 * 5)]));
     }
 }
 
@@ -804,15 +842,12 @@ void func_800682AC(Gfx **dlist) {
     D_80120CE4 = 0;
 }
 
-void func_80068408(Gfx **dlist, s32 *arg1) {
+void func_80068408(Gfx **dlist, Mtx **mats) {
     func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
-    func_8006F870(&D_80121060, (Matrix *)*arg1);
-    D_80120D88[D_80120D1C] = *arg1;
-
-    fast3d_cmd((*dlist)++, ((((D_80120D08 << 6) & 0xFF) << 0x10) | 0x1000000) | 0x40, (u32)(*arg1 + 0x80000000));
-
-    *arg1 += 0x40;
+    func_8006F870(&D_80121060, (Matrix *)*mats);
+    D_80120D88[D_80120D1C] = *mats;
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), D_80120D08 << 6);
 }
 
 void func_80068508(s32 arg0) {

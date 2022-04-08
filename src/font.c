@@ -88,7 +88,7 @@ void load_fonts(void) {
     u32 *fontAssetData;
     s32 i;
 
-    fontAssetData = load_asset_section_from_rom(ASSET_BINARY_44);
+    fontAssetData = load_asset_section_from_rom(ASSET_FONTS);
 
     gFonts = (FontData *)(fontAssetData); // ???
     gNumberOfFonts = *(fontAssetData);
@@ -98,7 +98,7 @@ void load_fonts(void) {
         gFonts[i].unk28[0] = 0;
     }
 
-    gDialogueBoxBackground = allocate_from_main_pool_safe(DIALOGUEBOXBACKGROUND_TOTAL_SIZE + unk8012A7EC_TOTAL_SIZE, COLOR_TAG_YELLOW);
+    gDialogueBoxBackground = allocate_from_main_pool_safe(DIALOGUEBOXBACKGROUND_TOTAL_SIZE + unk8012A7EC_TOTAL_SIZE, COLOUR_TAG_YELLOW);
     D_8012A7EC = (unk8012A7EC *)((u8 *)gDialogueBoxBackground + DIALOGUEBOXBACKGROUND_TOTAL_SIZE);
 
     for (i = 0; i < DIALOGUEBOXBACKGROUND_COUNT; i++) {
@@ -146,8 +146,8 @@ void load_fonts(void) {
         (*D_8012A7EC)[i].textBGColourA = 0;
         (*D_8012A7EC)[i].unk1C = 0;
     }
-    func_800C4170(0);
-    func_800C4170(1);
+    load_font(0);
+    load_font(1);
     D_8012A7F0 = 0;
 }
 
@@ -157,7 +157,7 @@ void func_800C4164(s32 arg0) {
 
 #ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
-void func_800C4170(s32 fontID) {
+void load_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
         fontData->unk28[0]++;
@@ -175,12 +175,12 @@ void func_800C4170(s32 fontID) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/font/func_800C4170.s")
+GLOBAL_ASM("asm/non_matchings/font/load_font.s")
 #endif
 
 #ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
-void func_800C422C(s32 fontID) {
+void unload_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
         if (fontData->unk28[0] > 0) {
@@ -201,7 +201,7 @@ void func_800C422C(s32 fontID) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/font/func_800C422C.s")
+GLOBAL_ASM("asm/non_matchings/font/unload_font.s")
 #endif
 
 /**
@@ -552,7 +552,7 @@ void func_800C56D0(s32 dialogueBoxID) {
  * Contains a timer that counts down two frames before closing a dialogue box
  * when the player exits out of one.
  */
-void render_dialogue_boxes(Gfx **dlist, Gfx **mat, VertexList **verts) {
+void render_dialogue_boxes(Gfx **dlist, Mtx **mat, VertexList **verts) {
     s32 i;
 
     if (sDialogueBoxIsOpen) {
@@ -637,7 +637,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
 /**
  * Render the selected dialogue box. Background first, then text.
  */
-void render_dialogue_box(Gfx **dlist, Gfx **mat, VertexList **verts, s32 dialogueBoxID) {
+void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox;
     s32 i;
@@ -650,7 +650,7 @@ void render_dialogue_box(Gfx **dlist, Gfx **mat, VertexList **verts, s32 dialogu
     // Render dialogue box background.
     if (dialogueBox->backgroundColourA != 0) {
         gSPDisplayList((*dlist)++, dDialogueBoxBegin);
-        gDkrDmaDisplayList((*dlist)++, ((u8 *)&dDialogueBoxDrawModes[1]) + 0x80000000, 2);
+        gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[1]), 2);
         gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
         if ((dialogueBox->x2 - dialogueBox->x1) < 10 || (dialogueBox->y2 - dialogueBox->y1) < 10) {
             render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2, dialogueBox->y2 + 2);

@@ -228,19 +228,9 @@ class GenerateLD:
         files.sort(key = lambda x: (x[2], x[3])) # Sort tuples by RAM address and prioritize src files first.
         return files
 
-checksum_file = './assets/' + VERSION + '/md5.txt'
-if not os.path.exists('./dkr.ld') and os.path.exists(checksum_file):
-    os.remove(checksum_file)
-
-if os.path.exists(checksum_file):
-    with open(checksum_file, "rt") as a_file:
-        with open('./assets/' + VERSION + '/assets.json',"rb") as f:
-            bytes = f.read() # read file as bytes
-            readable_hash = hashlib.md5(bytes).hexdigest();
-            compare_hash = a_file.read().rstrip()
-            if compare_hash != readable_hash:
-                with open(LD_NAME, 'w') as ldFile:
-                    GenerateLD(ldFile)
-else:
+# A nice side-effect of the ./assets/<version>/ directory being "read-only" is that we can write a file to it, 
+#     and then if it gets deleted we'll know if the assets have been updated.
+if not os.path.exists('./dkr.ld') or not os.path.exists('./assets/' + VERSION + '/ignoreMe.txt'):
     with open(LD_NAME, 'w') as ldFile:
         GenerateLD(ldFile)
+

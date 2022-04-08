@@ -7,7 +7,7 @@
 #include "f3ddkr.h"
 #include "menu.h"
 #include "libultra_internal.h"
-#include "math.h"
+#include "libc/math.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -112,9 +112,8 @@ UNUSED void calculate_camera_perspective(void);
 Matrix *func_80066204(void);
 s32 get_viewport_count(void);
 s32 func_80066220(void);
-void func_80066CDC(Gfx **dlist, Gfx **arg1);
-void func_80066230(Gfx **dlist, Gfx **arg1);
-f32 func_80066348(f32 arg0, f32 arg1, f32 arg2);
+void func_80066230(Gfx **dlist, Mtx **arg1);
+f32 func_80066348(f32 xPos, f32 yPos, f32 zPos);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
 void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
 void func_80066520(void);
@@ -130,11 +129,11 @@ s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1,
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
 void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void set_ortho_matrix_height(f32 value);
-void func_80067F2C(Gfx **dlist, s32 *arg1);
-void func_8006807C(Gfx **dlist, s32 *arg1);
+void func_80067F2C(Gfx **dlist, Mtx **mats);
+void func_8006807C(Gfx **dlist, Mtx **mats);
 void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800682AC(Gfx **dlist);
-void func_80068408(Gfx **dlist, s32 *arg1);
+void func_80068408(Gfx **dlist, Mtx **mats);
 void func_80068508(s32 arg0);
 ObjectSegment *func_80069CFC(void);
 ObjectSegment *func_80069D20(void);
@@ -159,12 +158,13 @@ s8 clamp_joystick_y_axis(s32 player);
 s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
+void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats);
 
 // Non Matching
 void func_80067A3C(Gfx **dlist);
 void func_80066610(void);
-void func_80066CDC(Gfx **dlist, Gfx **arg1);
 void func_80065EA0(void);
 s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
+void func_80066CDC(Gfx **dlist, Mtx **mats);
 
 #endif

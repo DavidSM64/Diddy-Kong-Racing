@@ -8,7 +8,7 @@
 #include "macros.h"
 #include "structs.h"
 #include "level_object_entries.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "asset_loading.h"
 #include "thread0_epc.h"
 #include "save_data.h"
@@ -18,8 +18,8 @@
 
 /************ .data ************/
 
-unknown800DC6F0 D_800DC6F0 = { -128, 0x1E, 0x0F };
-unknown800DC6F0 D_800DC6F8 = { 3, 0x1E, 0x0F };
+unknown800DC6F0 D_800DC6F0 = { { -128 }, 0x1E, 0x0F };
+unknown800DC6F0 D_800DC6F8 = { { 3 }, 0x1E, 0x0F };
 
 s32 D_800DC700 = 0;
 s32 D_800DC704 = 0; // Currently unknown, might be a different type.
@@ -202,9 +202,9 @@ s16 D_8011AE80; // TT Ghost outTime at least
 s16 D_8011AE82;
 s32 D_8011AE84;
 s32 D_8011AE88;
-u32 D_8011AE8C;
-u32 D_8011AE90;
-u32 D_8011AE94;
+Gfx *D_8011AE8C;
+Mtx *D_8011AE90;
+VertexList *D_8011AE94;
 s32 D_8011AE98[2];
 s32 D_8011AEA0;
 s32 D_8011AEA4;
@@ -222,7 +222,7 @@ s16 D_8011AED8;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 s32 D_8011AEE0;
 Object *(*gObjectStructArrayPtr)[8];
-s32 *D_8011AEE8;
+Object **D_8011AEE8;
 s32 *D_8011AEEC;
 s32 gObjectCount;
 u8 gTimeTrialEnabled;
@@ -323,31 +323,31 @@ void func_8000BF8C(void) {
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     D_8011AE68 = (s32 *)new_sub_memory_pool(0x15800, 0x200);
-    gParticlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOR_TAG_BLUE);
-    D_8011AE6C = (s32 *)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
-    D_8011AE74 = (s32 *)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
-    D_8011AECC = (unknown8011AECC *)allocate_from_main_pool_safe(0xE10, COLOR_TAG_BLUE);
-    D_8011AEDC = (u32 *)allocate_from_main_pool_safe(0x50, COLOR_TAG_BLUE);
-    gObjectStructArrayPtr = (Object *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AEEC = (s32 *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AEE8 = (s32 *)allocate_from_main_pool_safe(0x28, COLOR_TAG_BLUE);
-    D_8011AF04 = (u32 *)allocate_from_main_pool_safe(0x200, COLOR_TAG_BLUE);
-    D_8011ADCC = (s8 *)allocate_from_main_pool_safe(8, COLOR_TAG_BLUE);
-    D_8011AFF4 = (unk800179D0 *)allocate_from_main_pool_safe(0x400, COLOR_TAG_BLUE);
+    gParticlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOUR_TAG_BLUE);
+    D_8011AE6C = (s32 *)allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    D_8011AE74 = (s32 *)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    D_8011AECC = (unknown8011AECC *)allocate_from_main_pool_safe(0xE10, COLOUR_TAG_BLUE);
+    D_8011AEDC = (u32 *)allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    gObjectStructArrayPtr = (Object *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    D_8011AEEC = (s32 *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    D_8011AEE8 = (Object **)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    D_8011AF04 = (u32 *)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    D_8011ADCC = (s8 *)allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
+    D_8011AFF4 = (unk800179D0 *)allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *)load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
     gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    D_8011AD58 = (s32 *)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    D_8011AD58 = (s32 *)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
     gAssetsObjectHeadersTable = load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = (s32 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOR_TAG_WHITE);
-    D_8011AE4C = (u8 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOR_TAG_WHITE);
+    D_8011AE48 = (s32 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
+    D_8011AE4C = (u8 *)allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOUR_TAG_WHITE);
 
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
         (*D_8011AE4C)[i] = 0;
@@ -361,7 +361,7 @@ void func_8000BF8C(void) {
     }
 
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
-    gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOR_TAG_BLUE);
+    gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
@@ -652,7 +652,7 @@ void func_8000E2B4(void) {
     gObjectCount = 1;
     (*gObjectStructArrayPtr)[0] = (s32) player;
     *D_8011AEEC = (s32) player;
-    *D_8011AEE8 = (s32) player;
+    *D_8011AEE8 = player;
     player_64 = player->unk64;
     player_64->unk1D6 = (s8) D_8011AD45;
     player_64->unk0_a.unk0_b.unk2 = (u8)0;
@@ -725,7 +725,7 @@ void func_8000E9D0(Object *arg0) {
     arg0->segment.trans.unk6 |= 0x8000;
     func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
-    if (1);
+    if (1){}
     D_8011AE64++;
 }
 
@@ -897,7 +897,6 @@ void func_80012C30(void) {
 
 void func_80012C3C(Gfx **dlist) {
     s32 i;
-    Gfx *tmp;
     for (i = 0; i < D_8011ADA4; i++) {
         gSPDisplayList((*dlist)++, D_8011AD78[i]);
     }
@@ -913,27 +912,25 @@ void func_80012C98(Gfx **dlist) {
 void func_80012CE8(Gfx **dlist) {
     if (D_8011ADA4 < 9) {
         gSPEndDisplayList((*dlist)++);
-        gSPBranchList(D_8011AD78[D_8011ADA4] - 1, (u32)*dlist);
+        gSPBranchList(D_8011AD78[D_8011ADA4] - 1, *dlist);
         D_8011ADA4++;
     }
 }
 
-void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object) {
+void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) {
     f32 scale;
-    u32 tmp2;
-    u32 tmp3;
     if (object->segment.trans.unk6 & 0x5000)
         return;
     func_800B76B8(2, object->unk4A);
-    D_8011AE8C = *arg0;
-    D_8011AE90 = *arg1;
-    D_8011AE94 = *arg2;
+    D_8011AE8C = *dlist;
+    D_8011AE90 = *mats;
+    D_8011AE94 = *verts;
     scale = object->segment.trans.scale;
     render_object(object);
     object->segment.trans.scale = scale;
-    *arg0 = D_8011AE8C;
-    *arg1 = D_8011AE90;
-    *arg2 = D_8011AE94;
+    *dlist = D_8011AE8C;
+    *mats = D_8011AE90;
+    *verts = D_8011AE94;
     func_800B76B8(2, -1);
 }
 
@@ -1202,7 +1199,7 @@ Object *get_object_struct(s32 indx) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BB18.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
 
-void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+UNUSED void func_8001BC40(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2, UNUSED s32 arg3) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
@@ -1246,7 +1243,7 @@ u32 func_8001D214(s32 arg0) {
     return 0;
 }
 
-void func_8001D23C(s32 arg0, s32 arg1, s32 arg2) {
+UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D258.s")
@@ -1314,7 +1311,6 @@ s32 func_8001E2EC(s32 arg0) {
 }
 
 void func_8001E344(s32 arg0) {
-    s32 temp = 8;
     if (arg0 >= 0 && arg0 < 8) {
         D_8011ADCC[0][arg0] = 8;
     }
@@ -1432,8 +1428,7 @@ f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
 GLOBAL_ASM("asm/non_matchings/objects/func_800228B0.s")
 #endif
 
-// Unused?
-void func_800228DC(s32 arg0, s32 arg1, s32 arg2) {
+UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 void func_800228EC(s32 arg0) {
@@ -2145,8 +2140,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
     func_800B76B8(1, -1);
 }
 
-// Unused
-void func_8002458C(s32 arg0) {
+UNUSED void func_8002458C(UNUSED s32 arg0) {
 }
 
 s16 *func_80024594(s32 *arg0, s32 *arg1) {

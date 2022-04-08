@@ -5,7 +5,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "object_functions.h"
-#include "math.h"
+#include "libc/math.h"
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
@@ -156,7 +156,7 @@ void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
-void func_80012D5C(Gfx **arg0, u32 *arg1, u32 *arg2, Object *object);
+void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object);
 void func_80012F30(Object *arg0);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
@@ -219,8 +219,8 @@ void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 
 //Non Matching
-void calc_dynamic_lighting_for_object_1(unk8001D6E4_arg1 *, ObjectModel *, s16, unk8001D6E4_arg1 *, f32, f32);
-void calc_dynamic_lighting_for_object_2(unk8001D6E4_arg1 *, ObjectModel *, s16, f32);
+void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
+void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void gParticlePtrList_flush(void);
 void func_8001D258(f32, f32, s32, s32, s32);
 void decrypt_magic_codes(u8 *arg0, s32 length);

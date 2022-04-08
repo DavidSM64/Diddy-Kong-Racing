@@ -75,7 +75,7 @@ glabel menu_trophy_race_round_init
 /* 098F78 80098378 3C01800E */  lui   $at, %hi(D_800E0980) # $at, 0x800e
 /* 098F7C 8009837C 240B000A */  li    $t3, 10
 /* 098F80 80098380 AC2B0980 */  sw    $t3, %lo(D_800E0980)($at)
-/* 098F84 80098384 0C03105C */  jal   func_800C4170
+/* 098F84 80098384 0C03105C */  jal   load_font
 /* 098F88 80098388 24040002 */   li    $a0, 2
 /* 098F8C 8009838C 0C0002F8 */  jal   set_music_player_voice_limit
 /* 098F90 80098390 24040018 */   li    $a0, 24

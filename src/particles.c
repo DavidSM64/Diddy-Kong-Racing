@@ -4,7 +4,7 @@
 #include "particles.h"
 #include "types.h"
 #include "macros.h"
-#include "asset_sections.h"
+#include "asset_enums.h"
 #include "memory.h"
 #include "textures_sprites.h"
 

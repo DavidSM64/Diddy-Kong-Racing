@@ -236,17 +236,17 @@ void init_framebuffer(s32 index) {
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
     if (gVideoModeIndex >= 2) {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOR_TAG_WHITE);
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     } else {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOR_TAG_WHITE);
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     }

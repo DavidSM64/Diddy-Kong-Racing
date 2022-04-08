@@ -400,6 +400,7 @@ typedef struct ObjectModel {
 /* 0x48 */ s16 numberOfAnimations;
 } ObjectModel;
 
+/* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
 /* 0x00 */ Vertex *vertices;
 /* 0x04 */ Triangle *triangles;
@@ -421,12 +422,12 @@ typedef struct LevelModelSegment {
 } LevelModelSegment;
 
 typedef struct LevelModelSegmentBoundingBox {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
+    /* 0x00 */ s16 x1;
+    /* 0x02 */ s16 y1;
+    /* 0x04 */ s16 z1;
+    /* 0x06 */ s16 x2;
+    /* 0x08 */ s16 y2;
+    /* 0x0A */ s16 z2;
 } LevelModelSegmentBoundingBox;
 
 /* Size: 8 bytes */
@@ -479,9 +480,11 @@ typedef struct ObjectHeader {
              u8 pad10[0x20];
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-             u8 pad34[0x9];
+             u8 pad34[9];
   /* 0x3D */ u8 unk3D;
-             u8 pad3E[0x15];
+             u8 pad3E[16];
+             s16 unk4E; //Used in func_8002A900?
+             u8 pad50[3];
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
@@ -606,7 +609,9 @@ typedef struct Object_64 {
     s8 unk36;
     u8 pad37[0x39];
     u8 unk70;
-    u8 pad71[0x03];
+    u8 unk71;
+    u8 unk72;
+    u8 unk73;
     f32 unk74;
     f32 unk78;
     f32 unk7C;
@@ -641,6 +646,8 @@ typedef struct Object_64 {
     u8 pad1D9[0x19];
     u8 unk1F2;
     u8 unk1F3;
+    u8 pad1F4[3];
+    u8 unk1F7; // Used in func_8002A900
 } Object_64;
 
 typedef struct Object_68 {
