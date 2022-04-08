@@ -62,8 +62,8 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 
 Gfx *D_8011B0A0;
 Mtx *D_8011B0A4;
-u32 D_8011B0A8; //Vertex** or VertexList*?
-s32 D_8011B0AC;
+VertexList *D_8011B0A8;
+TriangleList *D_8011B0AC;
 
 Object *D_8011B0B0; // Camera Object?
 

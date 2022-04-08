@@ -15,7 +15,7 @@ typedef struct unk800E2850_unk0 {
 typedef struct unk800E2850 {
     unk800E2850_unk0 *unk0;
     s32 unk4;
-    s32 *unk8;
+    TextureHeader *unk8;
     s32 unkC;
     s32 unk10;
     s32 unk14;
@@ -73,6 +73,7 @@ typedef struct {
     s16 unk0;
     s16 unk2;
     //s16 unk4;
+    s32 unk4;
 } unk80127BF8;
 
 extern u32 osTvType;
@@ -88,6 +89,7 @@ void func_800ADBC8(s32);
 void func_800AD658(s32);
 void func_800ADAB8(s32);
 void func_800ADCBC(unk800E2C2C*, s32);
+void func_800ABE68(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 
 f32 func_800707C4(s16);
 f32 func_800707F8(s16);
@@ -95,5 +97,9 @@ s32 func_8007082C(s16);
 s32 func_80070830(s16);
 void func_800AB35C(void);
 void func_800AB1F0(void);
+s32 func_800AC0C8(s32, unk80127BF8 *);
+void func_8006F6EC(Matrix *arg0, Matrix *arg1, Matrix *arg2);
+void func_800AC21C(void);
+void func_800AC5A4(void);
 
 #endif

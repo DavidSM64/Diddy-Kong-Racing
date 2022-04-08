@@ -204,7 +204,7 @@ s32 D_8011AE84;
 s32 D_8011AE88;
 Gfx *D_8011AE8C;
 Mtx *D_8011AE90;
-u32 D_8011AE94;
+VertexList *D_8011AE94;
 s32 D_8011AE98[2];
 s32 D_8011AEA0;
 s32 D_8011AEA4;
@@ -917,20 +917,20 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_80012D5C(Gfx **dlist, Mtx **mats, u32 *arg2, Object *object) {
+void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.unk6 & 0x5000)
         return;
     func_800B76B8(2, object->unk4A);
     D_8011AE8C = *dlist;
     D_8011AE90 = *mats;
-    D_8011AE94 = *arg2;
+    D_8011AE94 = *verts;
     scale = object->segment.trans.scale;
     render_object(object);
     object->segment.trans.scale = scale;
     *dlist = D_8011AE8C;
     *mats = D_8011AE90;
-    *arg2 = D_8011AE94;
+    *verts = D_8011AE94;
     func_800B76B8(2, -1);
 }
 
