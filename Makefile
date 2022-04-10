@@ -226,6 +226,8 @@ CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -W
 # All the asset subfolders to create in the build folder.
 ASSETS_DIRS := audio bin fonts ids levels levels/headers levels/models levels/names levels/objectMaps misc objects objects/animations objects/headers objects/models particles particles/behaviors particles/particles sprites text text/game text/menu textures textures/2d textures/3d tt_ghosts unknown_0 ucode
 
+DUMMY != mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS)) >&2 || echo FAIL
+
 ASSETS_DIR = assets/$(VERSION)
 UCODE_DIR = ucode/$(VERSION)
 
@@ -362,10 +364,6 @@ ifneq ($(wildcard $(BUILD_DIR)/src/.*),)
 else 
 	@echo "/build/lib directory has already been deleted." 
 endif 
-
-$(BUILD_DIR):
-	@$(PRINT) "$(GREEN)Making Build Directory: $(BLUE)$@ $(NO_COL)\n"
-	$(V)mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
 
 # Helps fix an issue with parallel jobs.
 $(ALL_ASSETS_BUILT): | $(BUILD_DIR)
