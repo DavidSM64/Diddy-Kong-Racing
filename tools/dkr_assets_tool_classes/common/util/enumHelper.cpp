@@ -131,6 +131,7 @@ void load_enums_cache() {
 
 void generate_enums_cache(std::string enumsHeaderPath) {
     set_enums_cache_path();
+    ensure_that_path_exists("build/" + get_version() + "/");
     // Generate enums map
     path_must_exist(enumsHeaderPath);
     std::string enumsIncludeText = read_text_file(enumsHeaderPath);
