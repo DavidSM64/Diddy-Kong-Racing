@@ -126,12 +126,6 @@ endif
 endif
 endif
 endif
-
-################################
-
-# Removes the enums_cache if it exists in the build folde, incase someone modified the include/enums.h file.
-DUMMY != rm -Rf build/enums_cache
-
 ################ Target Executable and Sources ###############
 
 # BUILD_DIR is location where all build artifacts are placed
@@ -381,6 +375,10 @@ dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 
 ######## Asset Targets ########
 
+$(BUILD_DIR)/enumsCache.bin: include/enums.h
+	$(call print,Building enums.h cache:,$<,$@)
+	$(V)$(TOOLS_DIR)/dkr_assets_tool -bc $(VERSION) $<
+
 # All assets should output a .bin file
 
 # $1 = folder name, $2 = Print Message
@@ -402,9 +400,9 @@ endef
 # $1 = folder name, $2 = Print Message
 define CREATE_JSON_ASSET_TARGET
 $(eval VAR_NAME := $(call GET_VAR_NAME,$1))
-$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.json
+$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.json $(BUILD_DIR)/enumsCache.bin
 	$$(call print,$2:,$$<,$$@)
-	$$(V)$$(BUILDER) $$^ $$@
+	$$(V)$$(BUILDER) $$< $$@
 endef
 
 $(eval $(call CREATE_BINARY_ASSET_TARGET,audio,Copying Audio Binary))

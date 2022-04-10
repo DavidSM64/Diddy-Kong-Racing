@@ -124,7 +124,7 @@ extern s32 gShowControllerPakMenu;
 
 /************ .bss ************/
 
-u32 *gTempAssetTable;
+s32 *gTempAssetTable;
 s32 D_80121164;
 LevelHeader *gCurrentLevelHeader;
 u8 **gLevelNames;
@@ -182,77 +182,82 @@ s32 D_80123560[8];
 
 /******************************/
 
-#ifdef NON_EQUIVALENT
-void func_8006A6B0(void) {
-    s32 i, count, checksumCount;
-    s32 temp;
-    u8 *sp44;
-    sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
-    gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
-    for (i = 0; i < 16; i++) {
-        D_80121180[i] = 0;
+#ifdef NON_MATCHING
+// Only has regalloc issues.
+void func_8006A6B0(void){
+  s32 i;
+  s32 temp;
+  s32 count;
+  s32 checksumCount;
+  u8 *sp44;
+  s32 temp2;
+  
+  sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), 0xFFFF00FF);
+  gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+  i = 0;
+  while (i < 16) {
+    D_80121180[i++] = 0;
+  }
+  gNumberOfLevelHeaders = 0;
+  while (gTempAssetTable[gNumberOfLevelHeaders] != (-1)) {
+    gNumberOfLevelHeaders++;
+  }
+  gNumberOfLevelHeaders--;
+  D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * (sizeof(unk8012117C)), 0xFFFF00FF);
+  gCurrentLevelHeader = sp44;
+  gNumberOfWorlds = -1;
+  for (i = 0; i < gNumberOfLevelHeaders; i++){
+    load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
+    if (gNumberOfWorlds < gCurrentLevelHeader->world) {
+      gNumberOfWorlds = gCurrentLevelHeader->world;
     }
-    gNumberOfLevelHeaders = 0;
-    while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
-        gNumberOfLevelHeaders++;
+    if ((gCurrentLevelHeader->race_type >= 0) && (gCurrentLevelHeader->race_type < 16)) {
+      D_80121180[gCurrentLevelHeader->race_type]++;
     }
-    gNumberOfLevelHeaders--;
-    D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
-    gNumberOfWorlds = -1;
-    gCurrentLevelHeader = sp44;
-    for (i = 0; i < gNumberOfLevelHeaders; i++) {
-        load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
-        if (gNumberOfWorlds < gCurrentLevelHeader->world) {
-            gNumberOfWorlds = gCurrentLevelHeader->world;
-        }
-        if (gCurrentLevelHeader->race_type >= 0 && gCurrentLevelHeader->race_type < 16) {
-            D_80121180[gCurrentLevelHeader->race_type]++;
-        }
-        D_8012117C[i].unk0 = gCurrentLevelHeader->world;
-        D_8012117C[i].unk1 = gCurrentLevelHeader->race_type;
-        D_8012117C[i].unk2 = gCurrentLevelHeader->available_vehicles << 4;
-        D_8012117C[i].unk2 |= gCurrentLevelHeader->vehicle & 0xF;
-        D_8012117C[i].unk3 = 1;
-        D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
-    }
-    gNumberOfWorlds++;
-    D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
-    for (i = 0; i < gNumberOfWorlds; i++) {
-        D_80121178[i] = -1;
-    }
-    for (i = 0; i < gNumberOfLevelHeaders; i++) {
-        if (D_8012117C[i].unk1 == 5) {
-            D_80121178[D_8012117C[i].unk0] = i;
-        }
-    }
-    free_from_memory_pool(gTempAssetTable);
-    free_from_memory_pool(sp44);
+    D_8012117C[i].unk0 = gCurrentLevelHeader->world;
+    D_8012117C[i].unk1 = gCurrentLevelHeader->race_type;
+    D_8012117C[i].unk2 = ((u16)gCurrentLevelHeader->available_vehicles) << 4;
+    D_8012117C[i].unk2 |= gCurrentLevelHeader->vehicle & 0xF;
+    D_8012117C[i].unk3 = 1;
+    D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
+  }
 
-    gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
-    count = 0;
-    while (gTempAssetTable[count] != -1) {
-        count++;
+  gNumberOfWorlds++;
+  D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, 0xFFFF00FF);
+  for (i = 0; i < gNumberOfWorlds; i++){
+    *(D_80121178 + i) = -1;
+  }
+  for (i = 0; i < gNumberOfLevelHeaders; i++){
+    if ((D_8012117C[i].unk1 == 5) != 0 ){
+      D_80121178[D_8012117C[i].unk0] = i;
     }
-    count--;
-    temp = gTempAssetTable[count] - gTempAssetTable[0];
-    // Minor issue here.
-    gLevelNames = allocate_from_main_pool_safe(count * sizeof(s32), COLOUR_TAG_YELLOW);
-    D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
-    for (i = 0; i < count; i++) {
-        gLevelNames[i] = &D_800DD310[gTempAssetTable[i]];
-    }
-    free_from_memory_pool(gTempAssetTable);
-
-    // Anti-piracy/Anti-tamper check.
-    checksumCount = 0;
-    for (i = 0; i < gFunc80068158Length; i++) {
-        checksumCount += ((u8 *)&func_80068158)[i];
-    }
-    if (checksumCount != gFunc80068158Checksum) {
-        // Disables button inputs in some parts of the game if the checksum doesn't match.
-        disable_button_mask();
-    }
+  }
+  free_from_memory_pool(gTempAssetTable);
+  free_from_memory_pool(sp44);
+  
+  gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
+  
+  for (i = 0; gTempAssetTable[i] != (-1); i++){}
+  i--;
+  
+  temp = gTempAssetTable[i];
+  temp -= gTempAssetTable[0];
+  
+  gLevelNames = allocate_from_main_pool_safe(i * (sizeof(s32)), 0xFFFF00FF);
+  D_800DD310 = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
+  load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
+  for (count = 0; count < i; count++) {
+    gLevelNames[count] = &D_800DD310[gTempAssetTable[count]];
+  }
+  free_from_memory_pool(gTempAssetTable);
+  
+  checksumCount = 0;
+  for (i = 0; i < gFunc80068158Length; i++) {
+    checksumCount += ((u8 *) (&func_80068158))[i];
+  }
+  if (checksumCount != gFunc80068158Checksum) {
+    disable_button_mask();
+  }
 }
 #else
 GLOBAL_ASM("asm/non_matchings/game/func_8006A6B0.s")
