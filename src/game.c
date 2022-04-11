@@ -184,7 +184,7 @@ s32 D_80123560[8];
 
 #ifdef NON_MATCHING
 // Only has regalloc issues.
-void func_8006A6B0(void){
+void func_8006A6B0(void) {
   s32 i;
   s32 temp;
   s32 count;
@@ -199,14 +199,14 @@ void func_8006A6B0(void){
     D_80121180[i++] = 0;
   }
   gNumberOfLevelHeaders = 0;
-  while (gTempAssetTable[gNumberOfLevelHeaders] != (-1)) {
+  while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
     gNumberOfLevelHeaders++;
   }
   gNumberOfLevelHeaders--;
-  D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * (sizeof(unk8012117C)), 0xFFFF00FF);
+  D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), 0xFFFF00FF);
   gCurrentLevelHeader = sp44;
   gNumberOfWorlds = -1;
-  for (i = 0; i < gNumberOfLevelHeaders; i++){
+  for (i = 0; i < gNumberOfLevelHeaders; i++) {
     load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
     if (gNumberOfWorlds < gCurrentLevelHeader->world) {
       gNumberOfWorlds = gCurrentLevelHeader->world;
@@ -224,11 +224,11 @@ void func_8006A6B0(void){
 
   gNumberOfWorlds++;
   D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, 0xFFFF00FF);
-  for (i = 0; i < gNumberOfWorlds; i++){
-    *(D_80121178 + i) = -1;
+  for (i = 0; i < gNumberOfWorlds; i++) {
+    D_80121178[i] = -1;
   }
-  for (i = 0; i < gNumberOfLevelHeaders; i++){
-    if ((D_8012117C[i].unk1 == 5) != 0 ){
+  for (i = 0; i < gNumberOfLevelHeaders; i++) {
+    if ((D_8012117C[i].unk1 == 5) != 0) {
       D_80121178[D_8012117C[i].unk0] = i;
     }
   }
@@ -243,7 +243,7 @@ void func_8006A6B0(void){
   temp = gTempAssetTable[i];
   temp -= gTempAssetTable[0];
   
-  gLevelNames = allocate_from_main_pool_safe(i * (sizeof(s32)), 0xFFFF00FF);
+  gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), 0xFFFF00FF);
   D_800DD310 = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
   load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
   for (count = 0; count < i; count++) {

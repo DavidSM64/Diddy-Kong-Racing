@@ -152,7 +152,7 @@ std::mutex enumsMutex;
 void make_sure_enums_are_loaded() {
     enumsMutex.lock();
     if(!hasLoadedEnums) {
-        if(ENUMS_CACHE_PATH == "") {
+        if(ENUMS_CACHE_PATH.empty()) {
             set_enums_cache_path();
         }
         load_enums_cache();

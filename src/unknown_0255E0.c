@@ -921,7 +921,7 @@ void func_8002C0C4(s32 modelId) {
     }
     offset = D_8011D310[modelId];
     size = D_8011D310[modelId + 1] - offset;
-    compressedRamAddr = (u8*)gCurrentLevelModel + (LEVEL_MODEL_MAX_SIZE - size);
+    compressedRamAddr = (u8*)gCurrentLevelModel + LEVEL_MODEL_MAX_SIZE - size;
     compressedRamAddr = compressedRamAddr - (u8*)((s32)compressedRamAddr % 16);
     load_asset_to_address(ASSET_LEVEL_MODELS, compressedRamAddr, offset, size);
     gzip_inflate((u8*) compressedRamAddr, (u8*) gCurrentLevelModel);
@@ -960,7 +960,7 @@ void func_8002C0C4(s32 modelId) {
     }
     set_free_queue_state(0);
     free_from_memory_pool(D_8011D30C);
-    allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, 0xFFFF00FFU);
+    allocate_at_address_in_main_pool(temp_s4, (u8 *) D_8011D30C, 0xFFFF00FFU);
     set_free_queue_state(2);
     func_800A83B4(gCurrentLevelModel);
 
@@ -980,7 +980,7 @@ void func_8002C0C4(s32 modelId) {
             }
         }
     }
-    func_8007B374(-0xFF0001);
+    func_8007B374(0xFF00FFFF);
 }
 
 #else
@@ -1023,7 +1023,7 @@ void func_8002C7D4(void) {
     free_from_memory_pool(D_8011D30C);
     free_from_memory_pool(D_8011D370);
     free_from_memory_pool(D_8011D374);
-    free_sprite((Sprite* ) gCurrentLevelModel->unk20);
+    free_sprite((Sprite *) gCurrentLevelModel->unk20);
     for(i = 0; i < 4; i++) {
         free_from_memory_pool(D_8011D350[i]);
         free_from_memory_pool(D_8011D320[i]);
