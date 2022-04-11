@@ -1024,7 +1024,7 @@ void func_8002C7D4(void) {
     free_from_memory_pool(D_8011D370);
     free_from_memory_pool(D_8011D374);
     free_sprite((Sprite *) gCurrentLevelModel->unk20);
-    for(i = 0; i < 4; i++) {
+    for(i = 0; i < MAXCONTROLLERS; i++) {
         free_from_memory_pool(D_8011D350[i]);
         free_from_memory_pool(D_8011D320[i]);
         free_from_memory_pool(D_8011D338[i]);
@@ -1228,7 +1228,7 @@ void obj_loop_fogchanger(Object* obj) {
         if (sp40 != NULL) {
             tempObj = sp40[i]; // Might be a player object?
             temp_v0 = ((Object_64_FogChanger*)tempObj->unk64)->unk0;
-            if ((temp_v0 >= 0) && (temp_v0 < 4) && (obj != D_8011D388[i].unk34)) {
+            if ((temp_v0 >= 0) && (temp_v0 < MAXCONTROLLERS) && (obj != D_8011D388[i].unk34)) {
                 index = temp_v0;
                 x = tempObj->segment.trans.x_position;
                 z = tempObj->segment.trans.z_position;
@@ -1315,8 +1315,7 @@ void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 #endif
 
-// Unused
-void func_80030FA0(void) {
+UNUSED void func_80030FA0(void) {
     D_8011B0B0 = func_80069D20();
     func_80031018();
     func_8001D5E0((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
