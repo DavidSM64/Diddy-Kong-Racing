@@ -1,5 +1,8 @@
 /**
  * This tool handles everything assets-related including extracting and building.
+ *
+ * TODO: This file needs a refactor at some point. It is a bit of a mess.
+ *
  */
  
 #include <iostream> 
@@ -19,6 +22,7 @@ void print_usage() {
     std::cout << "---- Usages -------------------------------------------------------------" << std::endl;
     std::cout << "Extracting assets: ./dkr_assets_tool -e <version> <configs path> <baseroms path> <output path>" << std::endl;
     std::cout << "Building an asset: ./dkr_assets_tool -b <version> <assets path> <source path> <output path>" << std::endl;
+    std::cout << "Build enums cache: ./dkr_assets_tool -bc <version> <enums.h path>" << std::endl;
     std::cout << "Creating includes: ./dkr_assets_tool -i <version> <assets path> <include directory> <build directory> <asm output directory>" << std::endl;
     std::cout << "Compiling assets:  ./dkr_assets_tool -c <version> <assets path>" << std::endl;
     std::cout << "Compress file:     ./dkr_assets_tool -fc <input_filename> <output_filename>" << std::endl;
@@ -36,6 +40,7 @@ typedef enum _ToolType {
     TT_ASSET_COMPILE,
     TT_ASSET_COMPRESS_FILE,
     TT_ASSET_DECOMPRESS_FILE,
+    TT_BUILD_ENUMS_CACHE,
 } ToolType;
 
 typedef struct _CmdArgOptions {
@@ -56,6 +61,7 @@ std::string get_cmd_from_parse_option(ToolType type) {
     switch(type) {
         case TT_EXTRACT: return "-e";
         case TT_BUILD: return "-b";
+        case TT_BUILD_ENUMS_CACHE: return "-bc";
         case TT_ASSET_INCLUDES: return "-i";
         case TT_ASSET_COMPILE: return "-c";
         case TT_ASSET_COMPRESS_FILE: return "-fc";
@@ -111,6 +117,11 @@ bool parse_options(int argc, char *argv[]) {
                 curOption = PO_TYPE;
                 curOptionState = 6;
                 options.type = TT_ASSET_DECOMPRESS_FILE;
+                parsingCmd = true;
+            } else if(args[i] == "-bc") {
+                curOption = PO_TYPE;
+                curOptionState = 7;
+                options.type = TT_BUILD_ENUMS_CACHE;
                 parsingCmd = true;
             } else if(args[i] == "-h") {
                 return false;
@@ -177,6 +188,7 @@ bool parse_options(int argc, char *argv[]) {
                         case 4: // Compile assets 
                         case 5: // Compress file
                         case 6: // Decompress file
+                        case 7: // Build enums cache.
                             switch(curOptionArgs) {
                                 case 0: // Assets directory / Input filename
                                     options.paths.push_back(args[i]);
@@ -240,6 +252,15 @@ int main(int argc, char *argv[]) {
                 set_version(version);
 
                 Builder builder(sourcePath, outputPath);
+            }
+            break;
+        case TT_BUILD_ENUMS_CACHE:
+            {
+                std::string version         = options.paths[0]; // us_1.0
+                std::string enumsHeaderPath = options.paths[1]; // <root>/include/enums.h
+
+                set_version(version);
+                generate_enums_cache(enumsHeaderPath);
             }
             break;
         case TT_ASSET_INCLUDES:
