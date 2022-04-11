@@ -112,13 +112,6 @@ endif
 
 DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION) >&2 || echo FAIL
 
-##### Generate linker file #####
-
-DUMMY != ./generate_ld.sh $(VERSION) >&2 || echo FAIL
-ifeq ($(DUMMY),FAIL)
-  $(error Failed to generate the linker file)
-endif
-
 ################################
 
 endif
@@ -376,6 +369,12 @@ dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 $(BUILD_DIR)/enumsCache.bin: include/enums.h
 	$(call print,Building enums.h cache:,$<,$@)
 	$(V)$(TOOLS_DIR)/dkr_assets_tool -bc $(VERSION) $<
+
+dkr.ld: $(BUILD_DIR)/enumsCache.bin
+	@$(PRINT) "$(YELLOW)Generating Linker File...$(NO_COL)\n"
+	$(V)./generate_ld.sh $(VERSION)
+
+ALL_ASSETS_BUILT += dkr.ld # This is a hack, but it works I guess.
 
 # All assets should output a .bin file
 

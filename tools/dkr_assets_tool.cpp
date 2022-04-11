@@ -1,8 +1,5 @@
 /**
  * This tool handles everything assets-related including extracting and building.
- *
- * TODO: This file needs a refactor at some point. It is a bit of a mess.
- *
  */
  
 #include <iostream> 
@@ -32,289 +29,176 @@ void print_usage() {
 
 /**************************************************************************/
 
-typedef enum _ToolType {
-    TT_DO_NOTHING,
-    TT_EXTRACT,
-    TT_BUILD,
-    TT_ASSET_INCLUDES,
-    TT_ASSET_COMPILE,
-    TT_ASSET_COMPRESS_FILE,
-    TT_ASSET_DECOMPRESS_FILE,
-    TT_BUILD_ENUMS_CACHE,
-} ToolType;
+struct Command {
+    std::string flag;
+    int args;
+    void (*func)(const std::vector<std::string>&);
+};
 
-typedef struct _CmdArgOptions {
-    ToolType type;
-    std::vector<std::string> paths;
-} CmdArgOptions;
+void extract(const std::vector<std::string>& args);
+void build(const std::vector<std::string>& args);
+void asset_includes(const std::vector<std::string>& args);
+void asset_compile(const std::vector<std::string>& args);
+void asset_compress(const std::vector<std::string>& args);
+void asset_decompress(const std::vector<std::string>& args);
+void build_enums_cache(const std::vector<std::string>& args);
 
-CmdArgOptions options;
+static const std::vector<Command> COMMANDS = {
+    // Extract
+    {
+        .flag = "-e",
+        .args = 5,
+        .func = &extract,
+    },
+    // Build
+    {
+        .flag = "-b",
+        .args = 4,
+        .func = build,
+    },
+    // Build enums cache
+    {
+        .flag = "-bc",
+        .args = 2,
+        .func = build_enums_cache,
+    },
+    // Asset includes
+    {
+        .flag = "-i",
+        .args = 5,
+        .func = asset_includes,
+    },
+    // Asset compile
+    {
+        .flag = "-c",
+        .args = 2,
+        .func = asset_compile,
+    },
+    // Asset compress file
+    {
+        .flag = "-fc",
+        .args = 2,
+        .func = asset_compress,
+    },
+    // Asset decompress file
+    {
+        .flag = "-fd",
+        .args = 2,
+        .func = asset_decompress,
+    },
+};
 
-/**************************************************************************/
+void extract(const std::vector<std::string>& args) {
+    std::string version      = args[0]; // us_1.0
+    std::string assetsDir    = args[1]; // <root>/assets
+    std::string configsPath  = args[2]; // <root>/extract-ver
+    std::string baseromsPath = args[3]; // <root>/baseroms
+    std::string outputPath   = args[4]; // <root>
 
-typedef enum _CurrentParseOption {
-    PO_NONE,
-    PO_TYPE
-} CurrentParseOption;
+    set_assets_folder_path(assetsDir + "/vanilla");
+    set_version(version);
 
-std::string get_cmd_from_parse_option(ToolType type) {
-    switch(type) {
-        case TT_EXTRACT: return "-e";
-        case TT_BUILD: return "-b";
-        case TT_BUILD_ENUMS_CACHE: return "-bc";
-        case TT_ASSET_INCLUDES: return "-i";
-        case TT_ASSET_COMPILE: return "-c";
-        case TT_ASSET_COMPRESS_FILE: return "-fc";
-        case TT_ASSET_DECOMPRESS_FILE: return "-fd";
-    }
-    return "(Invalid option)";
+    Extractor extractor(version, configsPath, baseromsPath, outputPath);
 }
 
-bool parse_options(int argc, char *argv[]) {
-    std::vector<std::string> args(argv, argv+argc);
+void build(const std::vector<std::string>& args) {
+    std::string version    = args[0]; // us_1.0
+    std::string assetsDir  = args[1]; // <root>/assets
+    std::string sourcePath = args[2]; // Input .json filepath
+    std::string outputPath = args[3]; // Output .bin filepath
 
-    if(argc == 1) {
-        return false; // Display usage
-    }
+    set_assets_folder_path(assetsDir);
+    set_version(version);
+
+    Builder builder(sourcePath, outputPath);
+}
+
+void asset_includes(const std::vector<std::string>& args) {
+    std::string version      = args[0]; // us_1.0
+    std::string assetsDir    = args[1]; // <root>/assets
+    std::string includeDir   = args[2]; // <root>/include
+    std::string buildDir     = args[3]; // <root>/build
+    std::string assetsAsmDir = args[4]; // <root>/asm/assets
+
+    set_assets_folder_path(assetsDir);
+    set_version(version);
+
+    AssetEnumsHeader assetEnumsHeader(includeDir);
+    AssetAsmIncludes assetAsmIncludes(assetsDir + "/" + version, buildDir + "/" + version, assetsAsmDir);
+}
+
+void asset_compile(const std::vector<std::string>& args) {
+    std::string version   = args[0]; // us_1.0
+    std::string assetsDir = args[1]; // <root>/assets
+
+    set_assets_folder_path(assetsDir);
+    set_version(version);
     
-    // Parse options from command line.
-    bool parsingCmd = false;
-    int curOptionState = 0;
-    int curOptionArgs = 0;
-    CurrentParseOption curOption = PO_NONE;
-    for (size_t i = 1; i < args.size(); ++i) {
-        if(args[i][0] == '-') {
-            if(parsingCmd) {
-                display_error("Not enough args for the current command \"", get_cmd_from_parse_option(options.type), "\"");
-                return false;
-            }
-            if(args[i] == "-e") {
-                curOption = PO_TYPE;
-                curOptionState = 1;
-                options.type = TT_EXTRACT;
-                parsingCmd = true;
-            } else if(args[i] == "-b") {
-                curOption = PO_TYPE;
-                curOptionState = 2;
-                options.type = TT_BUILD;
-                parsingCmd = true;
-            } else if(args[i] == "-i") {
-                curOption = PO_TYPE;
-                curOptionState = 3;
-                options.type = TT_ASSET_INCLUDES;
-                parsingCmd = true;
-            } else if(args[i] == "-c") {
-                curOption = PO_TYPE;
-                curOptionState = 4;
-                options.type = TT_ASSET_COMPILE;
-                parsingCmd = true;
-            } else if(args[i] == "-fc") {
-                curOption = PO_TYPE;
-                curOptionState = 5;
-                options.type = TT_ASSET_COMPRESS_FILE;
-                parsingCmd = true;
-            } else if(args[i] == "-fd") {
-                curOption = PO_TYPE;
-                curOptionState = 6;
-                options.type = TT_ASSET_DECOMPRESS_FILE;
-                parsingCmd = true;
-            } else if(args[i] == "-bc") {
-                curOption = PO_TYPE;
-                curOptionState = 7;
-                options.type = TT_BUILD_ENUMS_CACHE;
-                parsingCmd = true;
-            } else if(args[i] == "-h") {
-                return false;
-            } else  {
-                display_error("Invalid option \"", args[i], "\"");
-                return false;
-            }
-            curOptionArgs = 0;
+    AssetCompiler compiler;
+}
+
+void asset_compress(const std::vector<std::string>& args) {
+    DKRCompression compression;
+    std::string inputFilename = args[0];
+    std::string outputFilename = args[1];
+    std::vector<uint8_t> inputBinary, outputBinary;
+    
+    if(compression.readBinaryFile(inputBinary, inputFilename)) {
+        if(inputBinary.size() == 0) {
+            compression.writeBinaryFile(inputBinary, outputFilename);
         } else {
-            if(!parsingCmd) {
-                display_error("Too many args for the current command \"", get_cmd_from_parse_option(options.type), "\"");
-                return false;
-            }
-            switch(curOption) {
-                case PO_TYPE:
-                    switch(curOptionState) {
-                        case 1: // Extractor
-                            switch(curOptionArgs) {
-                                case 0: // version
-                                case 1: // assets directory
-                                case 2: // configs directory
-                                case 3: // baseroms directory
-                                    options.paths.push_back(args[i]);
-                                    break;
-                                case 4: // output
-                                    options.paths.push_back(args[i]);
-                                    // End of arguments.
-                                    parsingCmd = false;
-                                    curOption = PO_NONE;
-                                    break;
-                            }
-                            break;
-                        case 2: // Builder
-                            switch(curOptionArgs) {
-                                case 0: // version
-                                case 1: // assets directory
-                                case 2: // source path
-                                    options.paths.push_back(args[i]);
-                                    break;
-                                case 3: // output
-                                    options.paths.push_back(args[i]);
-                                    // End of arguments.
-                                    parsingCmd = false;
-                                    curOption = PO_NONE;
-                                    break;
-                            }
-                            break;
-                        case 3: // Asset header 
-                            switch(curOptionArgs) {
-                                case 0: // Assets directory
-                                case 1: // Enum file output path
-                                case 2: // Build directory
-                                case 3: // Asm output directory
-                                    options.paths.push_back(args[i]);
-                                    break;
-                                case 4: //  DKR version
-                                    options.paths.push_back(args[i]);
-                                    // End of arguments.
-                                    parsingCmd = false;
-                                    curOption = PO_NONE;
-                                    break;
-                            }
-                            break;
-                        case 4: // Compile assets 
-                        case 5: // Compress file
-                        case 6: // Decompress file
-                        case 7: // Build enums cache.
-                            switch(curOptionArgs) {
-                                case 0: // Assets directory / Input filename
-                                    options.paths.push_back(args[i]);
-                                    break;
-                                case 1: // version / Output filename
-                                    options.paths.push_back(args[i]);
-                                    // End of arguments.
-                                    parsingCmd = false;
-                                    curOption = PO_NONE;
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-                default: // This should hopefully never get called
-                    display_error_and_abort("Invalid dkr_assets_tool option. You should not be seeing this message!");
-            }
-            curOptionArgs++;
+            outputBinary = compression.compressBuffer(inputBinary);
+            compression.writeBinaryFile(outputBinary, outputFilename);
         }
+    } else {
+        display_error_and_abort("Could not read file: ", inputFilename);
     }
-    
-    if(parsingCmd) {
-        display_error("Not enough args for the current command \"", get_cmd_from_parse_option(options.type), "\"");
-        return false;
-    }
-    
-    return true;
 }
 
-/**************************************************************************/
+void asset_decompress(const std::vector<std::string>& args) {
+    DKRCompression compression;
+    std::string inputFilename = args[0];
+    std::string outputFilename = args[1];
+    std::vector<uint8_t> inputBinary, outputBinary;
+    
+    if(compression.readBinaryFile(inputBinary, inputFilename)) {
+        if(inputBinary.size() == 0) {
+            compression.writeBinaryFile(inputBinary, outputFilename);
+        } else {
+            outputBinary = compression.decompressBuffer(inputBinary);
+            compression.writeBinaryFile(outputBinary, outputFilename);
+        }
+    } else {
+        display_error_and_abort("Could not read file: ", inputFilename);
+    }
+}
+
+void build_enums_cache(const std::vector<std::string>& args) {
+    std::string version         = args[0]; // us_1.0
+    std::string enumsHeaderPath = args[1]; // <root>/include/enums.h
+
+    set_version(version);
+    generate_enums_cache(enumsHeaderPath);
+}
 
 int main(int argc, char *argv[]) {
-    if(!parse_options(argc, argv)) {
+    if (argc == 1) {
         print_usage();
         return 1;
     }
-    
-    switch(options.type) {
-        case TT_EXTRACT:
-            {
-                std::string version      = options.paths[0]; // us_1.0
-                std::string assetsDir    = options.paths[1]; // <root>/assets
-                std::string configsPath  = options.paths[2]; // <root>/extract-ver
-                std::string baseromsPath = options.paths[3]; // <root>/baseroms
-                std::string outputPath   = options.paths[4]; // <root>
-
-                set_assets_folder_path(assetsDir + "/vanilla");
-                set_version(version);
-
-                Extractor extractor(version, configsPath, baseromsPath, outputPath);
-            }
-            break;
-        case TT_BUILD:
-            {
-                std::string version    = options.paths[0]; // us_1.0
-                std::string assetsDir  = options.paths[1]; // <root>/assets
-                std::string sourcePath = options.paths[2]; // Input .json filepath
-                std::string outputPath = options.paths[3]; // Output .bin filepath
-
-                set_assets_folder_path(assetsDir);
-                set_version(version);
-
-                Builder builder(sourcePath, outputPath);
-            }
-            break;
-        case TT_BUILD_ENUMS_CACHE:
-            {
-                std::string version         = options.paths[0]; // us_1.0
-                std::string enumsHeaderPath = options.paths[1]; // <root>/include/enums.h
-
-                set_version(version);
-                generate_enums_cache(enumsHeaderPath);
-            }
-            break;
-        case TT_ASSET_INCLUDES:
-            {
-                std::string version      = options.paths[0]; // us_1.0
-                std::string assetsDir    = options.paths[1]; // <root>/assets
-                std::string includeDir   = options.paths[2]; // <root>/include
-                std::string buildDir     = options.paths[3]; // <root>/build
-                std::string assetsAsmDir = options.paths[4]; // <root>/asm/assets
-
-                set_assets_folder_path(assetsDir);
-                set_version(version);
-
-                AssetEnumsHeader assetEnumsHeader(includeDir);
-                AssetAsmIncludes assetAsmIncludes(assetsDir + "/" + version, buildDir + "/" + version, assetsAsmDir);
-            }
-            break;
-        case TT_ASSET_COMPILE:
-            {
-                std::string version   = options.paths[0]; // us_1.0
-                std::string assetsDir = options.paths[1]; // <root>/assets
-
-                set_assets_folder_path(assetsDir);
-                set_version(version);
-                
-                AssetCompiler compiler;
-            }
-            break;
-        case TT_ASSET_COMPRESS_FILE:
-        case TT_ASSET_DECOMPRESS_FILE:
-            {
-                DKRCompression compression;
-                std::string inputFilename = options.paths[0];
-                std::string outputFilename = options.paths[1];
-                std::vector<uint8_t> inputBinary, outputBinary;
-                
-                if(compression.readBinaryFile(inputBinary, inputFilename)) {
-                    if(inputBinary.size() == 0) {
-                        compression.writeBinaryFile(inputBinary, outputFilename);
-                    } else {
-                        if (options.type == TT_ASSET_COMPRESS_FILE) {
-                            outputBinary = compression.compressBuffer(inputBinary);
-                        } else if (options.type == TT_ASSET_DECOMPRESS_FILE) {
-                            outputBinary = compression.decompressBuffer(inputBinary);
-                        }
-                        compression.writeBinaryFile(outputBinary, outputFilename);
-                    }
-                } else {
-                    display_error_and_abort("Could not read file: ", inputFilename);
-                }
-            }
-            break;
+    std::string flag = argv[1];
+    auto it = std::find_if(COMMANDS.begin(), COMMANDS.end(), [&flag](const Command& cmd) {
+        return cmd.flag == flag;
+    });
+    if (it == COMMANDS.end()) {
+        print_usage();
+        return 1;
     }
-    
+    if (argc - 2 != it->args) {
+        display_error_and_abort("Expected ", it->args, " args but was given ", argc - 2, ".");
+        return 1;
+    }
+    std::vector<std::string> args(argv + 2, argv + argc);
+    it->func(args);
     return 0;
 }
- 
