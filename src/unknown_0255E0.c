@@ -128,8 +128,8 @@ s32 D_8011D164;
 s32 D_8011D168[84];
 s32 D_8011D2B8[20];
 s32 D_8011D308;
-s32 D_8011D30C;
-s32 D_8011D310;
+LevelModel *D_8011D30C;
+s32 *D_8011D310;
 s32 D_8011D314;
 s32 D_8011D318;
 s32 D_8011D31C;
@@ -144,8 +144,8 @@ unk8011D360 *D_8011D360;
 s32 D_8011D364;
 s32 D_8011D368;
 s32 D_8011D36C;
-s32 D_8011D370;
-s32 D_8011D374;
+s32 *D_8011D370;
+s32 *D_8011D374;
 s32 D_8011D378;
 s32 D_8011D37C;
 f32 D_8011D380;
@@ -886,7 +886,106 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002BAB0.s")
+
+#ifdef NON_EQUIVALENT
+
+// Maximum size for a level model is 522.5 KiB
+#define LEVEL_MODEL_MAX_SIZE 0x82A00
+
+#define LOCAL_OFFSET_TO_RAM_ADDRESS(ptr) \
+    ptr = (s32)((u8*)ptr) + (s32)((u8*)gCurrentLevelModel)
+
+// Loads a level track from the index in the models table.
+// Has regalloc issues.
+void func_8002C0C4(s32 modelId) {
+    s32 i, j, k;
+    s32 numLevelModels;
+    s32 temp_s4;
+    s32 offset, size;
+    u8 *compressedRamAddr;
+    LevelModelSegment *segment;
+    TriangleBatchInfo *batch;
+    Vertex *vertex;
+    
+    func_8007B374(0xFF00FF);
+    D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, 0xFFFF00FFU);
+    gCurrentLevelModel = D_8011D30C;
+    D_8011D370 = allocate_from_main_pool_safe(0x7D0, 0xFFFF00FFU);
+    D_8011D374 = allocate_from_main_pool_safe(0x1F4, 0xFFFF00FFU);
+    D_8011D378 = 0;
+    D_8011D310 = load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    for(numLevelModels = 0; D_8011D310[numLevelModels] != -1; numLevelModels++) {}
+    numLevelModels--;
+    if (modelId >= numLevelModels) {
+        modelId = 0;
+    }
+    offset = D_8011D310[modelId];
+    size = D_8011D310[modelId + 1] - offset;
+    compressedRamAddr = (u8*)gCurrentLevelModel + LEVEL_MODEL_MAX_SIZE - size;
+    compressedRamAddr = compressedRamAddr - (u8*)((s32)compressedRamAddr % 16);
+    load_asset_to_address(ASSET_LEVEL_MODELS, compressedRamAddr, offset, size);
+    gzip_inflate((u8*) compressedRamAddr, (u8*) gCurrentLevelModel);
+    free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.
+
+    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->textures);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBoundingBoxes);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->unkC);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBitfields);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBspTree);
+    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].vertices);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].triangles);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].batches);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].unk14);
+    }
+    for(i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
+        gCurrentLevelModel->textures[i].texture = load_texture(((s32)gCurrentLevelModel->textures[i].texture) | 0x8000);
+    }
+    temp_s4 = (s32)gCurrentLevelModel + gCurrentLevelModel->modelSize;
+    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
+        gCurrentLevelModel->segments[i].unk10 = temp_s4;
+        temp_s4 = align16((gCurrentLevelModel->segments[i].numberOfTriangles * 2) + temp_s4);
+        gCurrentLevelModel->segments[i].unk18 = temp_s4;
+        temp_s4 = &((u8*)temp_s4)[func_8002CC30(&gCurrentLevelModel->segments[i])];
+        func_8002C954(&gCurrentLevelModel->segments[i], &gCurrentLevelModel->segmentsBoundingBoxes[i], i);
+        gCurrentLevelModel->segments[i].unk30 = 0;
+        gCurrentLevelModel->segments[i].unk34 = temp_s4;
+        func_8002C71C(&gCurrentLevelModel->segments[i]);
+        temp_s4 = align16((gCurrentLevelModel->segments[i].unk32 * 2) + temp_s4);
+    }
+    temp_s4 -= (s32)gCurrentLevelModel;
+    if (temp_s4 > LEVEL_MODEL_MAX_SIZE) {
+        rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
+    }
+    set_free_queue_state(0);
+    free_from_memory_pool(D_8011D30C);
+    allocate_at_address_in_main_pool(temp_s4, (u8 *) D_8011D30C, 0xFFFF00FFU);
+    set_free_queue_state(2);
+    func_800A83B4(gCurrentLevelModel);
+
+    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
+        for(j = 0; j < gCurrentLevelModel->segments[i].numberOfBatches; j++) {
+            for(k = gCurrentLevelModel->segments[i].batches[j].verticesOffset; 
+                k < gCurrentLevelModel->segments[i].batches[j+1].verticesOffset; 
+                k++) {
+                // Why do this? Why not just set the vertex colors in the model itself?
+                if(gCurrentLevelModel->segments[i].vertices[k].r == 1 && gCurrentLevelModel->segments[i].vertices[k].g == 1) { 
+                    gCurrentLevelModel->segments[i].vertices[k].a = gCurrentLevelModel->segments[i].vertices[k].b;
+                    gCurrentLevelModel->segments[i].vertices[k].r = 0x80;
+                    gCurrentLevelModel->segments[i].vertices[k].g = 0x80;
+                    gCurrentLevelModel->segments[i].vertices[k].b = 0x80;
+                    gCurrentLevelModel->segments[i].batches[j].flags |= 0x08000000;
+                }
+            }
+        }
+    }
+    func_8007B374(0xFF00FFFF);
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C0C4.s")
+#endif
 
 void func_8002C71C(LevelModelSegment *segment) {
     s32 curVertY;
@@ -911,11 +1010,37 @@ LevelModel *func_8002C7C4(void) {
     return gCurrentLevelModel;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C7D4.s")
+void func_8002C7D4(void) {
+    s32 i;
+
+    func_8000B290();
+    if (D_8011D384 != 0) {
+        func_800B7D20();
+    }
+    for(i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
+        free_texture(gCurrentLevelModel->textures[i].texture);
+    }
+    free_from_memory_pool(D_8011D30C);
+    free_from_memory_pool(D_8011D370);
+    free_from_memory_pool(D_8011D374);
+    free_sprite((Sprite *) gCurrentLevelModel->unk20);
+    for(i = 0; i < MAXCONTROLLERS; i++) {
+        free_from_memory_pool(D_8011D350[i]);
+        free_from_memory_pool(D_8011D320[i]);
+        free_from_memory_pool(D_8011D338[i]);
+    }
+    func_800257D0();
+    if (D_8011B0B8 != NULL) {
+        gParticlePtrList_addObject(D_8011B0B8);
+        gParticlePtrList_flush();
+    }
+    func_8000C604();
+    gCurrentLevelModel = NULL;
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C954.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002CC30.s")
-
-#ifdef NON_EQUIVALENT
 
 typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];
@@ -924,12 +1049,13 @@ typedef struct unk8002D30C_a0 {
 } unk8002D30C_a0;
 
 void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
-    // Weird issue here with the ra register.
-    while (arg0 != NULL) {
+    while(1) {
+        if(!arg0) {
+            return;
+        }
         if (arg0->unk04) {
             arg0->unk04 = (unk8002D30C_a0 *)((s32)arg0->unk04 + arg1);
         }
-
         if (arg0->unk08) {
             arg0->unk08 = (unk8002D30C_a0 *)((s32)arg0->unk08 + arg1);
         }
@@ -938,9 +1064,6 @@ void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
         arg0 = arg0->unk08;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D30C.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_floor_decal.s")
 
@@ -1051,8 +1174,152 @@ void func_8003093C(s32 arg0) {
     gDPSetFogColor(D_8011B0A0++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF);
     gSPFogPosition(D_8011B0A0++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
 }
+
+#ifdef NON_EQUIVALENT
+//unk8011D388 D_8011D388[4];
+
+typedef struct Object_64_FogChanger {
+    s16 unk0;
+} Object_64_FogChanger;
+
+typedef struct Object_3C_FogChanger {
+    u8 pad0[0x2];
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s8 unk8;
+    u8 unk9;
+    u8 unkA;
+    u8 unkB;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+} Object_3C_FogChanger;
+
+void obj_loop_fogchanger(Object* obj) {
+    s32 temp_v0;
+    s32 index;
+    s32 sp74;
+    s32 i;
+    s32 phi_a0, phi_v1;
+    f32 x, z;
+    s32 temp_a3, temp_t0, temp_t1, temp_a1;
+    s32 temp;
+    Object **sp40;
+    Object_3C_FogChanger *sp44;
+    Object *tempObj;
+    unk8011D388 *temp_v0_3;
+    ObjectSegment *phi_s3;
+    
+    sp40 = NULL;
+    sp44 = obj->segment.unk3C_a.unk3C;
+    phi_s3 = NULL;
+    
+    // func_80066510() returns the bool D_80120D14. 1 if camera is controlled by cutscene, 0 if controlled by racer.
+    if (func_80066510()) {
+        phi_s3 = func_80069D7C();
+        sp74 = get_viewport_count() + 1;
+    } else {
+        sp40 = get_object_struct_array(&sp74);
+    }
+    
+    for(i = 0; i < sp74; i++) {
+        index = -1;
+        if (sp40 != NULL) {
+            tempObj = sp40[i]; // Might be a player object?
+            temp_v0 = ((Object_64_FogChanger*)tempObj->unk64)->unk0;
+            if ((temp_v0 >= 0) && (temp_v0 < MAXCONTROLLERS) && (obj != D_8011D388[i].unk34)) {
+                index = temp_v0;
+                x = tempObj->segment.trans.x_position;
+                z = tempObj->segment.trans.z_position;
+            }
+        } else if ((i < 4) && (obj != D_8011D388[i].unk34)) {
+            index = i;
+            x = phi_s3[i].trans.x_position;
+            z = phi_s3[i].trans.z_position;
+        }
+        if (index != -1) {
+            x -= obj->segment.trans.x_position;
+            z -= obj->segment.trans.z_position;
+            if (((x * x) + (z * z)) < obj->unk78f) {
+                phi_a0 = sp44->unkC;
+                phi_v1 = sp44->unkE;
+                temp_a3 = sp44->unk9;
+                temp_t0 = sp44->unkA;
+                temp_t1 = sp44->unkB;
+                temp_a1 = sp44->unk10;
+                if (phi_v1 < phi_a0) {
+                    phi_v1 = sp44->unkC;
+                    phi_a0 = sp44->unkE;
+                }
+                if (phi_v1 >= 0x400) {
+                    phi_v1 = 0x3FF;
+                }
+                if (phi_a0 >= phi_v1 - 5) {
+                    phi_a0 = phi_v1 - 5;
+                }
+                temp_v0_3 = &D_8011D388[index];
+                temp_v0_3->unk28 = temp_a3;
+                temp_v0_3->unk29 = temp_t0;
+                temp_v0_3->unk2A = temp_t1;
+                temp_v0_3->unk2C = phi_a0;
+                temp_v0_3->unk2E = phi_v1;
+                temp_v0_3->unk14 = ((temp_a3 << 16) - temp_v0_3->unk0) / temp_a1;
+                temp_v0_3->unk18 = ((temp_t0 << 16) - temp_v0_3->unk4) / temp_a1;
+                temp_v0_3->unk1C = ((temp_t1 << 16) - temp_v0_3->unk8) / temp_a1;
+                temp_v0_3->unk20 = ((phi_a0 << 16) - temp_v0_3->unkC) / temp_a1;
+                temp_v0_3->unk24 = ((phi_v1 << 16) - temp_v0_3->unk10) / temp_a1;
+                temp_v0_3->unk30 = temp_a1;
+                temp_v0_3->unk34 = obj;
+            }
+        }
+    }
+}
+
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/obj_loop_fogchanger.s")
+#endif
+
+#ifdef NON_EQUIVALENT
+void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
+    s32 max, min;
+    unk8011D388 *entry;
+
+    entry = &D_8011D388[arg0];
+    max = arg5;
+    min = arg4;
+    if (arg5 < arg4) {
+        max = arg4;
+        min = arg5;
+    }
+    if (max > 0x3FF) {
+        max = 0x3FF;
+    }
+    if (min >= max - 5) {
+        min = max - 5;
+    }
+    entry->unk28 = arg1;
+    entry->unk29 = arg2;
+    entry->unk2A = arg3;
+    entry->unk2C = min;
+    entry->unk2E = max;
+    entry->unk14 = ((arg1 << 16) - entry->unk0) / arg6;
+    entry->unk18 = ((arg2 << 16) - entry->unk4) / arg6;
+    entry->unk1C = ((arg3 << 16) - entry->unk8) / arg6;
+    entry->unk20 = ((min << 16) - entry->unkC) / arg6;
+    entry->unk24 = ((max << 16) - entry->unk10) / arg6;
+    entry->unk30 = arg6;
+    entry->unk34 = 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
+#endif
+
+UNUSED void func_80030FA0(void) {
+    D_8011B0B0 = func_80069D20();
+    func_80031018();
+    func_8001D5E0((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
+}
 
 void func_80031018(void) {
     Matrix mf;

@@ -8,6 +8,12 @@ bool hasLoadedEnums = false;
 std::map<std::string, int> enums;
 std::map<std::string, std::vector<std::string>> enumKeys;
 
+std::string ENUMS_CACHE_PATH = "";
+
+void set_enums_cache_path() {
+    ENUMS_CACHE_PATH = "./build/" + get_version() + "/enumsCache.bin";
+}
+
 int evalulate_enum(std::string &enumValue) {
     int attempts = 0;
     std::regex enumNameRegex("([^0-9|^&~+\\-\\/*\\s]+)");
@@ -123,30 +129,33 @@ void load_enums_cache() {
     }
 }
 
+void generate_enums_cache(std::string enumsHeaderPath) {
+    set_enums_cache_path();
+    ensure_that_path_exists("build/" + get_version() + "/");
+    // Generate enums map
+    path_must_exist(enumsHeaderPath);
+    std::string enumsIncludeText = read_text_file(enumsHeaderPath);
+    std::regex enumRegex("enum ([^\\s{]+)\\s*[{]((?:.*\\n)*?)[}]");
+    std::smatch sm;
+    std::string text = enumsIncludeText;
+    while (regex_search(text, sm, enumRegex)) {
+        std::string enumName = sm[1];
+        std::string enumValuesText = sm[2];
+        get_enum_values(enumName, enumValuesText);
+        text = sm.suffix();
+    }
+    save_enums_cache();
+}
+
 std::mutex enumsMutex;
 
 void make_sure_enums_are_loaded() {
     enumsMutex.lock();
     if(!hasLoadedEnums) {
-        std::string assetsFolderPath = get_asset_folder_path();
-        ensure_that_path_exists("build/"); // Make sure build folder exists
-        if(path_exists(ENUMS_CACHE_PATH)) {
-            load_enums_cache();
-        } else {
-            // Generate enums map
-            path_must_exist("include/enums.h");
-            std::string enumsIncludeText = read_text_file("include/enums.h");
-            std::regex enumRegex("enum ([^\\s{]+)\\s*[{]((?:.*\\n)*?)[}]");
-            std::smatch sm;
-            std::string text = enumsIncludeText;
-            while (regex_search(text, sm, enumRegex)) {
-                std::string enumName = sm[1];
-                std::string enumValuesText = sm[2];
-                get_enum_values(enumName, enumValuesText);
-                text = sm.suffix();
-            }
-            save_enums_cache();
+        if(ENUMS_CACHE_PATH.empty()) {
+            set_enums_cache_path();
         }
+        load_enums_cache();
         hasLoadedEnums = true;
     }
     enumsMutex.unlock();

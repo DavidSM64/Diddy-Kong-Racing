@@ -59,7 +59,7 @@ typedef struct unk8011D388 {
     s16 unk2C;
     s16 unk2E;
     s32 unk30;
-    s32 unk34;
+    Object *unk34;
 } unk8011D388;
 
 typedef struct {
@@ -124,6 +124,8 @@ void func_8002D670(Object *, Object *);
 s32 func_8002A900(Object *arg0);
 Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
+void func_8002C954(LevelModelSegment*, LevelModelSegmentBoundingBox*, s32);
+s32 func_8002CC30(LevelModelSegment*);
 //void func_80013DCC(Gfx **arg0, Vertex **arg1, Vertex **arg2, Object *arg3);
 
 #endif

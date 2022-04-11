@@ -112,13 +112,6 @@ endif
 
 DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION) >&2 || echo FAIL
 
-##### Generate linker file #####
-
-DUMMY != ./generate_ld.sh $(VERSION) >&2 || echo FAIL
-ifeq ($(DUMMY),FAIL)
-  $(error Failed to generate the linker file)
-endif
-
 ################################
 
 endif
@@ -126,12 +119,6 @@ endif
 endif
 endif
 endif
-
-################################
-
-# Removes the enums_cache if it exists in the build folde, incase someone modified the include/enums.h file.
-DUMMY != rm -Rf build/enums_cache
-
 ################ Target Executable and Sources ###############
 
 # BUILD_DIR is location where all build artifacts are placed
@@ -231,6 +218,8 @@ CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -W
 
 # All the asset subfolders to create in the build folder.
 ASSETS_DIRS := audio bin fonts ids levels levels/headers levels/models levels/names levels/objectMaps misc objects objects/animations objects/headers objects/models particles particles/behaviors particles/particles sprites text text/game text/menu textures textures/2d textures/3d tt_ghosts unknown_0 ucode
+
+DUMMY != mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS)) >&2 || echo FAIL
 
 ASSETS_DIR = assets/$(VERSION)
 UCODE_DIR = ucode/$(VERSION)
@@ -369,10 +358,6 @@ else
 	@echo "/build/lib directory has already been deleted." 
 endif 
 
-$(BUILD_DIR):
-	@$(PRINT) "$(GREEN)Making Build Directory: $(BLUE)$@ $(NO_COL)\n"
-	$(V)mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS))
-
 # Helps fix an issue with parallel jobs.
 $(ALL_ASSETS_BUILT): | $(BUILD_DIR)
 
@@ -380,6 +365,16 @@ $(ALL_ASSETS_BUILT): | $(BUILD_DIR)
 dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 
 ######## Asset Targets ########
+
+$(BUILD_DIR)/enumsCache.bin: include/enums.h
+	$(call print,Building enums.h cache:,$<,$@)
+	$(V)$(TOOLS_DIR)/dkr_assets_tool -bc $(VERSION) $<
+
+dkr.ld: $(BUILD_DIR)/enumsCache.bin
+	@$(PRINT) "$(YELLOW)Generating Linker File...$(NO_COL)\n"
+	$(V)./generate_ld.sh $(VERSION)
+
+ALL_ASSETS_BUILT += dkr.ld # This is a hack, but it works I guess.
 
 # All assets should output a .bin file
 
@@ -402,9 +397,9 @@ endef
 # $1 = folder name, $2 = Print Message
 define CREATE_JSON_ASSET_TARGET
 $(eval VAR_NAME := $(call GET_VAR_NAME,$1))
-$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.json
+$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.json $(BUILD_DIR)/enumsCache.bin
 	$$(call print,$2:,$$<,$$@)
-	$$(V)$$(BUILDER) $$^ $$@
+	$$(V)$$(BUILDER) $$< $$@
 endef
 
 $(eval $(call CREATE_BINARY_ASSET_TARGET,audio,Copying Audio Binary))

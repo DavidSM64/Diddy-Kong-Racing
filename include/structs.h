@@ -406,13 +406,16 @@ typedef struct LevelModelSegment {
 /* 0x04 */ Triangle *triangles;
            u8 pad8[4];
 /* 0x0C */ TriangleBatchInfo *batches;
-           u8 pad10[0x0C];
+/* 0x10 */ s32 unk10;
+/* 0x14 */ u8 *unk14;
+/* 0x18 */ s16 *unk18;
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
 /* 0x20 */ s16 numberOfBatches;
            u8 pad22[0x09];
-/* 0x2B */ s8 unk2B;
-           u8 pad2C[6];
+/* 0x2B */ s8 unk2B;           
+           u8 pad2C[4];
+/* 0x30 */ s16 unk30;
 /* 0x32 */ s16 unk32;
            s16 *unk34;
 /* 0x38 */ s16 unk38;
@@ -451,7 +454,9 @@ typedef struct LevelModel {
            u8 pad1C[4];
 /* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
-/* 0x38 */ u32 minimapColor;
+/* 0x38 */ u32 minimapColor;           
+           u8 pad3C[0xC];
+/* 0x48 */ s32 modelSize;
 } LevelModel;
 
 typedef struct Object_3C {
