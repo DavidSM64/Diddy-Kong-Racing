@@ -23,7 +23,7 @@ glabel func_80043ECC
 /* 044B1C 80043F1C 81EFD5BB */  lb    $t7, %lo(D_8011D5BB)($t7)
 /* 044B20 80043F20 240C0001 */  li    $t4, 1
 /* 044B24 80043F24 15E0000B */  bnez  $t7, .L80043F54
-/* 044B28 80043F28 3C0D8012 */   lui   $t5, %hi(D_8011D528) # $t5, 0x8012
+/* 044B28 80043F28 3C0D8012 */   lui   $t5, %hi(gCurrentCarInput) # $t5, 0x8012
 /* 044B2C 80043F2C 80580014 */  lb    $t8, 0x14($v0)
 /* 044B30 80043F30 80590016 */  lb    $t9, 0x16($v0)
 /* 044B34 80043F34 80490015 */  lb    $t1, 0x15($v0)
@@ -35,7 +35,7 @@ glabel func_80043ECC
 /* 044B4C 80043F4C 3C018012 */  lui   $at, %hi(D_8011D5BB) # $at, 0x8012
 /* 044B50 80043F50 A02CD5BB */  sb    $t4, %lo(D_8011D5BB)($at)
 .L80043F54:
-/* 044B54 80043F54 8DADD528 */  lw    $t5, %lo(D_8011D528)($t5)
+/* 044B54 80043F54 8DADD528 */  lw    $t5, %lo(gCurrentCarInput)($t5)
 /* 044B58 80043F58 8FB80028 */  lw    $t8, 0x28($sp)
 /* 044B5C 80043F5C 31AE8000 */  andi  $t6, $t5, 0x8000
 /* 044B60 80043F60 15C00016 */  bnez  $t6, .L80043FBC

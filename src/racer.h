@@ -63,7 +63,7 @@ typedef struct Object_64_8004D95C {
 
 typedef struct unk8004F77C {
     u8 unk0[0x20A];
-    u8 unk20A;
+    u8 flags;
 } unk8004F77C;
 
 /* Unknown Size */
@@ -74,9 +74,9 @@ typedef struct unk8005234C {
 
 typedef struct Object_64_80053478 {
     u8 unk0[0x2C];
-    f32 unk2C;
+    f32 unk2C; // Forward Velocity?
     u8 unk30[0x1B1];
-    s8 unk1E1;
+    s8 unk1E1; // Steering Value?
     u8 unk1E2[4];
     s8 unk1E6;
 } Object_64_80053478;
@@ -156,7 +156,7 @@ extern s32 D_800DCB5C;
 extern f32 D_800DCB60[14];
 
 extern s32 D_800DCB98;
-extern f32 D_800DCB9C[19];
+extern f32 gSurfaceSpeedScrubTable[19];
 
 extern f32 D_800DCBE8[19];
 
@@ -206,9 +206,9 @@ s32 func_80052188(void);
 void func_800521B8(s32 arg0);
 void func_8005234C(unk8005234C *arg0);
 void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7);
-void func_80053478(Object_64_80053478 *obj);
+void handle_car_steering(Object_64_80053478 *car);
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1);
-void func_80053664(Object_64 *arg0);
+void handle_car_velocity_control(Object_64 *car);
 void play_char_horn_sound(Object *obj, Object_64 *obj64);
 void func_80057048(Object *obj, s32 arg1);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
@@ -228,7 +228,7 @@ s16 func_80059E20(void);
 void func_8005A3B0(void);
 void func_8005A3C0(void);
 void func_8005A3D0(void);
-void func_8005C25C(void);
+void antipiracy_modify_surface_speed_table(void);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);

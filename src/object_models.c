@@ -67,7 +67,7 @@ void func_8005F850(void) {
         checksum += *(u8 *)(((s32)&func_80024D54) + i);
     }
     if (checksum != gFunc80024D54Checksum) {
-        func_8005C25C();
+        antipiracy_modify_surface_speed_table();
     }
 }
 

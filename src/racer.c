@@ -16,6 +16,7 @@
 #include "audio.h"
 #include "object_functions.h"
 #include "game.h"
+#include "printf.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -35,7 +36,9 @@ f32 D_800DCB60[14] = {
 };
 
 s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
-f32 D_800DCB9C[19] = {
+// Table used for quantifying speed reduction while the car drives over it.
+// An antipiracy trigger can set the first index to 0.5f, which makes that surface type impossible to drive on.
+f32 gSurfaceSpeedScrubTable[19] = {
     0.004f, 0.007f, 0.01f, 0.004f,
     0.01f, 0.01f, 0.01f, 0.01f,
     0.01f, 0.01f, 0.004f, 0.004f,
@@ -136,7 +139,7 @@ s32 D_8011D504;
 ObjectCamera *gCameraObject;
 s32 D_8011D50C;
 ObjectTransform D_8011D510;
-s32 D_8011D528;
+s32 gCurrentCarInput; // Related to input of the car.
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
 s32 D_8011D534;
@@ -149,7 +152,7 @@ s32 D_8011D54C;
 s16 D_8011D550;
 s8 D_8011D552;
 s8 D_8011D553;
-s32 D_8011D554;
+s32 gCurrentCarSteerVel; // Related to rotational velocity of the car.
 s32 D_8011D558;
 s32 D_8011D55C;
 s32 D_8011D560;
@@ -214,6 +217,7 @@ typedef struct Object_64_80044170 {
     s8 unk215;
 } Object_64_80044170;
 
+// Might be the main loop for the AI racers.
 void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
     s32 raceType;
 
@@ -267,9 +271,9 @@ void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
 
     if (arg1->unk214 != 0) {
         D_8011D534 *= -1;
-        D_8011D528 &= ~0x8000;
+        gCurrentCarInput &= ~A_BUTTON;
         D_8011D538 = -50;
-        D_8011D528 |= 0x4000;
+        gCurrentCarInput |= B_BUTTON;
     }
 
     if (D_8011D534 > 75) {
@@ -427,13 +431,13 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8004DE38.s")
 void func_8004F77C(unk8004F77C *arg0) {
     s32 temp;
 
-    arg0->unk20A &= ~0x80;
-    if ((D_8011D528 & 0x4000) != 0) {
-        arg0->unk20A |= 0x80;
+    arg0->flags &= ~0x80;
+    if ((gCurrentCarInput & B_BUTTON) != 0) {
+        arg0->flags |= 0x80;
     }
 
-    temp = arg0->unk20A & 0xF;
-    if ((arg0->unk20A & 0xC0) != 0) {
+    temp = arg0->flags & 0xF;
+    if ((arg0->flags & 0xC0) != 0) {
         temp++;
         if (temp >= 3) {
             temp = 2;
@@ -445,7 +449,7 @@ void func_8004F77C(unk8004F77C *arg0) {
         }
     }
 
-    arg0->unk20A = (arg0->unk20A & 0xFFF0) | temp;
+    arg0->flags = (arg0->flags & 0xFFF0) | temp;
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
@@ -497,20 +501,23 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80050850.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80050A28.s")
 
+// Loops for as long as Taj exists. After swapping vehicle once, will remain true until you enter a door.
 s32 func_80052188(void) {
     if (D_8011D582 == 2) {
         D_8011D582 = 1;
-        return 1;
+        return TRUE;
     }
-    return 0;
+    return FALSE;
 }
 
+// Called when Taj swaps the active vehicle, is set to 1, each time.
 void func_800521B8(s32 arg0) {
     D_8011D582 = arg0;
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_800521C4.s")
 
+// Ran by the AI. Seems to be direction related of some sorts.
 void func_8005234C(unk8005234C *arg0) {
     arg0->unk16C -= arg0->unk16C >> 3;
     if (arg0->unk16C >= -9 && arg0->unk16C < 10) { // Deadzone?
@@ -521,91 +528,115 @@ void func_8005234C(unk8005234C *arg0) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80052388.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 
-void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+// action seems to be 1 when you're reversing, if you hit the horn, it's 4, and if you introduce yourself to a brick wall, it's 3 then 6.
+// unk18 seems to be a counter that's used as a baseline for animations
+// unk3B mostly mirrors what arg2 is, but it gets set to 0
+// I've yet to find a scenario where D_8011D55C is not 0.
+// I've also yet to find a scenario where the action is < 3
+// arg6 is set to 6 when honking, but 7 when reversing and not honking and 0 when crashing.
+// arg7 seems to be based on direction????
+void func_80052988(Object *arg0, Object_64 *arg1, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
-    if ((D_8011D55C == -1) && (arg2 >= 3)) {
+    if ((D_8011D55C == -1) && (action >= 3)) {
         arg0->segment.unk3B = 0;
         arg1->unk1F2 = 0;
+        //render_printf("set0\n");
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
-            if (arg0->segment.unk18 >= 0x29) {
+            if (arg0->segment.unk18 >= 41) {
                 arg0->segment.unk18 -= arg7 * 4;
-                if (arg0->segment.unk18 < 0x29) {
-                    arg0->segment.unk3B = arg2;
+                if (arg0->segment.unk18 < 41) {
+                    arg0->segment.unk3B = action;
                     arg0->segment.unk18 = arg3;
                 }
+                //render_printf("set1\n");
             } else {
                 arg0->segment.unk18 += arg7 * 4;
-                if (arg0->segment.unk18 >= 0x28) {
-                    arg0->segment.unk3B = arg2;
+                if (arg0->segment.unk18 >= 40) {
+                    arg0->segment.unk3B = action;
                     arg0->segment.unk18 = arg3;
                 }
+                //render_printf("set2\n");
             }
-        } else {
-            arg0->segment.unk3B = arg2;
+        } else { // Set active flag, whether it's from just crashing, or beginning to honk.
+            arg0->segment.unk3B = action;
             arg0->segment.unk18 = arg3;
             arg1->unk1F3 &= ~0x80;
         }
-    } else if (arg0->segment.unk3B == arg2) {
+    } else if (arg0->segment.unk3B == action) {
         if (arg6 & 2) {
-            if (arg1->unk1F3 & 0x80) {
+            if (arg1->unk1F3 & 0x80) { // Stop honking or reversing.
                 arg0->segment.unk18 -= arg5;
                 if (arg0->segment.unk18 <= 0) {
                     arg0->segment.unk3B = 0;
                     arg1->unk1F2 = 0;
-                    arg0->segment.unk18 = 0x28;
+                    arg0->segment.unk18 = 40;
                     arg1->unk1F3 = 0;
                 }
-            } else {
+            } else { // Actively reversing or honking or boosting, possibly a velocity modifier, have found it's also set when recovering from getting hit by a rocket or spike trap
                 arg0->segment.unk18 += arg5;
-                if (arg0->segment.unk18 >= arg4) {
-                    arg0->segment.unk18 = arg4 - 1;
+                // Keeps the timer below the duration value, while actively held.
+                if (arg0->segment.unk18 >= duration) {
+                    arg0->segment.unk18 = duration - 1;
                     if ((arg6 & 4) == 0) {
                         arg1->unk1F3 |= 0x80;
                     }
                 }
             }
-        } else {
+        } else { // Crash recoil
             arg0->segment.unk18 += arg5;
-            if (arg0->segment.unk18 >= arg4) {
+            if (arg0->segment.unk18 >= duration) {
                 arg0->segment.unk3B = 0;
                 arg1->unk1F2 = 0;
-                arg0->segment.unk18 = 0x28;
+                arg0->segment.unk18 = 40;
                 arg1->unk1F3 = 0;
             }
         }
-    } else {
+    } else { // Haven't seen this trigger yet.
         arg0->segment.unk18 = arg3;
-        arg0->segment.unk3B = arg2;
+        arg0->segment.unk3B = action;
     }
+    /*render_printf("D_8011D55C %d\n", D_8011D55C);
+    render_printf("action %d\n", action);
+    render_printf("unk18 %d\n", arg0->segment.unk18);
+    render_printf("unk3B %d\n", arg0->segment.unk3B);
+    render_printf("arg6 %d\n", arg6);
+    render_printf("arg7 %d\n", arg7);*/
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80052B64.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80052D7C.s")
 
-void func_80053478(Object_64_80053478 *obj) {
-    s32 phi_v0;
-    f32 phi_f0 = obj->unk2C;
+/**
+ * Handle the steering input of all cars.
+ * It takes the speed of the car, creating a curve for the rotational velocity to scale with.
+ */
+void handle_car_steering(Object_64_80053478 *car) {
+    s32 velScale;
+    f32 vel = car->unk2C;
 
-    if (phi_f0 < 0.0) {
-        phi_f0 = -phi_f0;
+    // Stay positive :)
+    if (vel < 0.0) {
+        vel = -vel;
     }
-    if (phi_f0 > 1.8) {
-        phi_f0 = 1.8f;
+    if (vel > 1.8) {
+        vel = 1.8f;
     }
-    phi_f0 -= 0.2;
-    if (phi_f0 < 0.0) {
-        phi_f0 = 0.0f;
+    vel -= 0.2;
+    if (vel < 0.0) {
+        vel = 0.0f;
     }
-    if (obj->unk1E6 != 0) {
-        phi_v0 = phi_f0 * 68.0f;
+    if (car->unk1E6 != 0) {
+        velScale = vel * 68.0f;
     } else {
-        phi_v0 = phi_f0 * 58.0f;
+        velScale = vel * 58.0f;
     }
-    D_8011D554 -= (obj->unk1E1 * phi_v0);
-    if (obj->unk2C > 0.0f) {
-        D_8011D554 = -D_8011D554;
+    // Set the steering velocity based on the car's steering value, scaled with the temp forward velocity value.
+    gCurrentCarSteerVel -= (car->unk1E1 * velScale);
+    // If the car is reversing, then flip the steering.
+    if (car->unk2C > 0.0f) {
+        gCurrentCarSteerVel = -gCurrentCarSteerVel;
     }
 }
 
@@ -624,23 +655,26 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
 
-void func_80053664(Object_64 *arg0) {
-    if (arg0->throttle > 0.0) {
-        arg0->throttle -= 0.1;
+/**
+ * Adjusts the throttle and brake application for all cars, based off the input.
+ */
+void handle_car_velocity_control(Object_64 *car) {
+    if (car->throttle > 0.0) {
+        car->throttle -= 0.1;
     }
 
-    if (D_8011D528 & 0x8000) {
-        arg0->throttle = 1.0f;
+    if (gCurrentCarInput & A_BUTTON) {
+        car->throttle = 1.0f;
     }
 
-    if (D_8011D528 & 0x4000) {
-        if (arg0->brake < 1.0) {
-            arg0->brake += 0.2;
+    if (gCurrentCarInput & B_BUTTON) {
+        if (car->brake < 1.0) {
+            car->brake += 0.2;
         }
     } else {
         //! @bug Will cause a negative brake value resulting in higher velocity
-        if (arg0->brake > 0.05) {
-            arg0->brake -= 0.1;
+        if (car->brake > 0.05) {
+            car->brake -= 0.1;
         }
     }
 }
@@ -932,8 +966,12 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005A6F0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 
 // This gets called if an anti-piracy checksum fails in func_8005F850.
-void func_8005C25C(void) {
-    D_800DCB9C[0] = 0.05f;
+/**
+ * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
+ * table to an unreasonable value, wrecking drivability while on it.
+ */
+void antipiracy_modify_surface_speed_table(void) {
+    gSurfaceSpeedScrubTable[0] = 0.05f;
 }
 
 void func_8005C270(unk8005C270 *arg0) {

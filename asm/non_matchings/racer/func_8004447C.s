@@ -13,9 +13,9 @@ glabel func_8004447C
 /* 045080 80044480 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
 /* 045084 80044484 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 045088 80044488 AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
-/* 04508C 8004448C 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
+/* 04508C 8004448C 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 045090 80044490 27BDFF88 */  addiu $sp, $sp, -0x78
-/* 045094 80044494 AC20D528 */  sw    $zero, %lo(D_8011D528)($at)
+/* 045094 80044494 AC20D528 */  sw    $zero, %lo(gCurrentCarInput)($at)
 /* 045098 80044498 3C018012 */  lui   $at, %hi(D_8011D534) # $at, 0x8012
 /* 04509C 8004449C AC20D534 */  sw    $zero, %lo(D_8011D534)($at)
 /* 0450A0 800444A0 AFBF001C */  sw    $ra, 0x1c($sp)
@@ -514,11 +514,11 @@ glabel L80044ADC
 /* 0457AC 80044BAC 44804000 */  mtc1  $zero, $f8
 /* 0457B0 80044BB0 46005421 */  cvt.d.s $f16, $f10
 /* 0457B4 80044BB4 4630403C */  c.lt.d $f8, $f16
-/* 0457B8 80044BB8 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
+/* 0457B8 80044BB8 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 0457BC 80044BBC 4500001B */  bc1f  .L80044C2C
 /* 0457C0 80044BC0 34198000 */   li    $t9, 32768
 /* 0457C4 80044BC4 10000019 */  b     .L80044C2C
-/* 0457C8 80044BC8 AC39D528 */   sw    $t9, %lo(D_8011D528)($at)
+/* 0457C8 80044BC8 AC39D528 */   sw    $t9, %lo(gCurrentCarInput)($at)
 .L80044BCC:
 /* 0457CC 80044BCC C604002C */  lwc1  $f4, 0x2c($s0)
 /* 0457D0 80044BD0 3C01C010 */  li    $at, 0xC0100000 # -2.250000
@@ -530,22 +530,22 @@ glabel L80044ADC
 /* 0457E8 80044BE8 45000005 */  bc1f  .L80044C00
 /* 0457EC 80044BEC 240C4000 */   li    $t4, 16384
 /* 0457F0 80044BF0 3418C000 */  li    $t8, 49152
-/* 0457F4 80044BF4 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
+/* 0457F4 80044BF4 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 0457F8 80044BF8 10000003 */  b     .L80044C08
-/* 0457FC 80044BFC AC38D528 */   sw    $t8, %lo(D_8011D528)($at)
+/* 0457FC 80044BFC AC38D528 */   sw    $t8, %lo(gCurrentCarInput)($at)
 .L80044C00:
-/* 045800 80044C00 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
-/* 045804 80044C04 AC2CD528 */  sw    $t4, %lo(D_8011D528)($at)
+/* 045800 80044C00 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
+/* 045804 80044C04 AC2CD528 */  sw    $t4, %lo(gCurrentCarInput)($at)
 .L80044C08:
 /* 045808 80044C08 C608002C */  lwc1  $f8, 0x2c($s0)
 /* 04580C 80044C0C 3C01BFF0 */  li    $at, 0xBFF00000 # -1.875000
 /* 045810 80044C10 44815800 */  mtc1  $at, $f11
 /* 045814 80044C14 46004421 */  cvt.d.s $f16, $f8
 /* 045818 80044C18 4630503C */  c.lt.d $f10, $f16
-/* 04581C 80044C1C 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
+/* 04581C 80044C1C 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 045820 80044C20 45000002 */  bc1f  .L80044C2C
 /* 045824 80044C24 340D8000 */   li    $t5, 32768
-/* 045828 80044C28 AC2DD528 */  sw    $t5, %lo(D_8011D528)($at)
+/* 045828 80044C28 AC2DD528 */  sw    $t5, %lo(gCurrentCarInput)($at)
 .L80044C2C:
 /* 04582C 80044C2C 8E080158 */  lw    $t0, 0x158($s0)
 /* 045830 80044C30 00000000 */  nop   
@@ -604,15 +604,15 @@ glabel L80044ADC
 /* 0458F8 80044CF8 44803000 */  mtc1  $zero, $f6
 /* 0458FC 80044CFC 460042A1 */  cvt.d.s $f10, $f8
 /* 045900 80044D00 462A303C */  c.lt.d $f6, $f10
-/* 045904 80044D04 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
+/* 045904 80044D04 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 045908 80044D08 45000005 */  bc1f  .L80044D20
 /* 04590C 80044D0C 240D4000 */   li    $t5, 16384
 /* 045910 80044D10 340CC000 */  li    $t4, 49152
-/* 045914 80044D14 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
+/* 045914 80044D14 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 045918 80044D18 10000002 */  b     .L80044D24
-/* 04591C 80044D1C AC2CD528 */   sw    $t4, %lo(D_8011D528)($at)
+/* 04591C 80044D1C AC2CD528 */   sw    $t4, %lo(gCurrentCarInput)($at)
 .L80044D20:
-/* 045920 80044D20 AC2DD528 */  sw    $t5, %lo(D_8011D528)($at)
+/* 045920 80044D20 AC2DD528 */  sw    $t5, %lo(gCurrentCarInput)($at)
 .L80044D24:
 /* 045924 80044D24 3C01800E */  lui   $at, %hi(D_800E6350 + 4) # $at, 0x800e
 /* 045928 80044D28 C7B0005C */  lwc1  $f16, 0x5c($sp)

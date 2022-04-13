@@ -16,9 +16,9 @@ glabel func_800452A0
 /* 045EA8 800452A8 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
 /* 045EAC 800452AC 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
 /* 045EB0 800452B0 AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
-/* 045EB4 800452B4 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
+/* 045EB4 800452B4 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 045EB8 800452B8 340E8000 */  li    $t6, 32768
-/* 045EBC 800452BC AC2ED528 */  sw    $t6, %lo(D_8011D528)($at)
+/* 045EBC 800452BC AC2ED528 */  sw    $t6, %lo(gCurrentCarInput)($at)
 /* 045EC0 800452C0 3C018012 */  lui   $at, %hi(D_8011D534) # $at, 0x8012
 /* 045EC4 800452C4 AFB60048 */  sw    $s6, 0x48($sp)
 /* 045EC8 800452C8 AC20D534 */  sw    $zero, %lo(D_8011D534)($at)
