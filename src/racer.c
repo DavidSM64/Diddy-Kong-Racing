@@ -197,24 +197,7 @@ s8 D_8011D5BC;
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80043ECC.s")
 
-typedef struct Object_64_80044170 {
-    char unk0[0x2C];
-    f32 unk2C;
-    char unk30[0x124];
-    s32 unk154;
-    char unk158[0x72];
-    s8 unk1CA;
-    char unk1CB[0x3];
-    u8 unk1CE;
-    char unk1CF[0x13];
-    s8 unk1E2;
-    char unk1E3[0x30];
-    s8 unk213;
-    s8 unk214;
-    s8 unk215;
-} Object_64_80044170;
-
-void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
+void func_80044170(Object *arg0, Object_80044170 *arg1, s32 arg2) {
     s32 raceType;
 
     raceType = get_current_level_race_type();
@@ -452,22 +435,8 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
 
 #ifdef NON_EQUIVALENT
 
-typedef struct Object_64_80050754 {
-            u8 unk0[0x2C];
-            f32 unk2C;
-            f32 unk30;
-            u8 unk34[0x114];
-/* 0x148 */ Object *someObj;
-            u8 unk14C[0x54];
-/* 0x1A0 */ s16 unk1A0;
-/* 0x1A2 */ s16 unk1A2;
-/* 0x1A4 */ s16 unk1A4;
-            u8 unk1A6[0x4C];
-/* 0x1F2 */ s8 unk1F2;
-} Object_64_80050754;
-
 // Mainly has regalloc issues.
-void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
+void func_80050754(Object *obj, Object_80050754 *obj64, f32 arg2) {
     f32 xDiff, yDiff, zDiff;
     Object *someObj;
 
@@ -526,7 +495,7 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
 
     if ((D_8011D55C == -1) && (arg2 >= 3)) {
         arg0->segment.unk3B = 0;
-        arg1->unk1F2 = 0;
+        arg1->original.unk1F2 = 0;
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
             if (arg0->segment.unk18 >= 0x29) {
@@ -545,24 +514,24 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
         } else {
             arg0->segment.unk3B = arg2;
             arg0->segment.unk18 = arg3;
-            arg1->unk1F3 &= ~0x80;
+            arg1->original.unk1F3 &= ~0x80;
         }
     } else if (arg0->segment.unk3B == arg2) {
         if (arg6 & 2) {
-            if (arg1->unk1F3 & 0x80) {
+            if (arg1->original.unk1F3 & 0x80) {
                 arg0->segment.unk18 -= arg5;
                 if (arg0->segment.unk18 <= 0) {
                     arg0->segment.unk3B = 0;
-                    arg1->unk1F2 = 0;
+                    arg1->original.unk1F2 = 0;
                     arg0->segment.unk18 = 0x28;
-                    arg1->unk1F3 = 0;
+                    arg1->original.unk1F3 = 0;
                 }
             } else {
                 arg0->segment.unk18 += arg5;
                 if (arg0->segment.unk18 >= arg4) {
                     arg0->segment.unk18 = arg4 - 1;
                     if ((arg6 & 4) == 0) {
-                        arg1->unk1F3 |= 0x80;
+                        arg1->original.unk1F3 |= 0x80;
                     }
                 }
             }
@@ -570,9 +539,9 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
             arg0->segment.unk18 += arg5;
             if (arg0->segment.unk18 >= arg4) {
                 arg0->segment.unk3B = 0;
-                arg1->unk1F2 = 0;
+                arg1->original.unk1F2 = 0;
                 arg0->segment.unk18 = 0x28;
-                arg1->unk1F3 = 0;
+                arg1->original.unk1F3 = 0;
             }
         }
     } else {
@@ -625,22 +594,22 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
 }
 
 void func_80053664(Object_64 *arg0) {
-    if (arg0->throttle > 0.0) {
-        arg0->throttle -= 0.1;
+    if (arg0->original.throttle > 0.0) {
+        arg0->original.throttle -= 0.1;
     }
 
     if (D_8011D528 & 0x8000) {
-        arg0->throttle = 1.0f;
+        arg0->original.throttle = 1.0f;
     }
 
     if (D_8011D528 & 0x4000) {
-        if (arg0->brake < 1.0) {
-            arg0->brake += 0.2;
+        if (arg0->original.brake < 1.0) {
+            arg0->original.brake += 0.2;
         }
     } else {
         //! @bug Will cause a negative brake value resulting in higher velocity
-        if (arg0->brake > 0.05) {
-            arg0->brake -= 0.1;
+        if (arg0->original.brake > 0.05) {
+            arg0->original.brake -= 0.1;
         }
     }
 }
@@ -659,7 +628,7 @@ void play_char_horn_sound(Object *obj, Object_64 *obj64) {
         func_800570B8(obj, 0x162, 8, 0x82);
     } else {
         // Play character's horn sound
-        func_80057048(obj, obj64->unk0_a.unk0_b.unk3 + 0x156);
+        func_80057048(obj, obj64->original.unk0_a.unk0_b.unk3 + 0x156);
     }
 }
 
@@ -668,7 +637,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
 
 void func_80057048(Object *obj, s32 arg1) {
     Object_64 *obj64 = obj->unk64;
-    if (D_8011D55C != -1 && obj64->unk108 == 0) {
+    if (D_8011D55C != -1 && obj64->original.unk108 == 0) {
         func_80001EA8(arg1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
@@ -680,22 +649,11 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
 }
 
 #ifdef NON_EQUIVALENT
-typedef struct Object_64_800570B8 {
-    u8 pad0[3];
-    s8 unk3;
-    u8 pad4[0x20];
-    s32 unk24;
-    u16 unk28;
-    u16 unk2A;
-    u8 pad2C[0xDC];
-    s32 unk108;
-} Object_64_800570B8;
-
 void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
     s32 phi_t0;
-    Object_64_800570B8 *obj64;
+    Object_800570B8 *obj64;
 
-    obj64 = obj->unk64;
+    obj64 = &obj->unk64->obj800570B8;
     if ((obj64->unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
         if (arg3 == 2) {
             if ((obj64->unk24 != 0) && (arg1 != obj64->unk2A)) {

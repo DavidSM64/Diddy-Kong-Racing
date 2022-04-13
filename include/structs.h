@@ -575,10 +575,9 @@ typedef struct Object_60 {
     void *unk4; // Object* pointer
 } Object_60;
 
-// This REALLY needs to be refactored at some point.
-// This structure differs based on the type of object being loaded.
-// See functions in object_functions.c for how these get loaded.
-typedef struct Object_64 {
+struct Object;
+
+typedef struct Object_Original {
     union {
         f32 unk0;
         struct {
@@ -653,6 +652,435 @@ typedef struct Object_64 {
     u8 unk1F3;
     u8 pad1F4[3];
     u8 unk1F7; // Used in func_8002A900
+} Object_Original;
+
+// from object_functions.c
+
+typedef struct Object_80034860 {
+	s16 unk0;
+	u8  unk4[0x185];
+	s8  unk187;
+} Object_80034860;
+
+typedef struct Object_80034E9C {
+    s32 unk0;
+    s16 unk4;
+} Object_80034E9C;
+
+typedef struct Object_Animator {
+    /* 0x00 */ s16 segmentId;
+    /* 0x02 */ s16 batchId;
+    /* 0x04 */ s16 xSpeedFactor;
+    /* 0x06 */ s16 ySpeedFactor;
+    /* 0x08 */ s16 xSpeed;
+    /* 0x0A */ s16 ySpeed;
+} Object_Animator;
+
+typedef struct Object_8003DFCC {
+    f32 unk0;
+    s16 unk4;
+    s8 unk6[0x2];
+} Object_8003DFCC;
+
+typedef struct Object_Butterfly {
+  /* 0x00  */ Triangle triangles[8];
+  /* 0x80  */ Vertex vertices[12];
+  /* 0xF8  */ TextureHeader *texture;
+  /* 0xFC  */ u8 unkFC;
+  /* 0xFD  */ u8 unkFD;
+  /* 0xFE  */ u8 unkFE;
+  /* 0xFF  */ u8 unkFF;
+  /* 0x100 */ s32 unk100;
+  /* 0x104 */ s16 unk104;
+  /* 0x106 */ s16 unk106;
+  /* 0x108 */ f32 unk108;
+} Object_Butterfly;
+
+// from object_functions.h
+
+typedef struct Object_80034B74 {
+    u8 pad0[0x1FE];
+    u8 unk1FE;
+    u8 unk1FF;
+} Object_80034B74;
+
+typedef struct Object_8003564C {
+    u8 pad0[4];
+    struct Object *unk4;
+} Object_8003564C;
+
+typedef struct Object_80035E34 {
+    u8 pad0[0x1D6];
+    s8 unk1D6;
+} Object_80035E34;
+
+typedef struct Object_80035F6C {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s16 *unk20;
+    u8  *unk24;
+} Object_80035F6C;
+
+typedef struct Object_80035F6C_2 {
+    u8 pad0[3];
+    s8 unk3;
+} Object_80035F6C_2;
+
+typedef struct Object_800376E0 {
+    s16 segmentId;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+} Object_800376E0;
+
+typedef struct Object_Snowball {
+    u8 pad0[0x20];
+    u32 unk20;
+    s16 unk24;
+    u8 pad28[0x12];
+    s8 unk38;
+} Object_Snowball;
+
+typedef struct Object_80038710 {
+    u8 pad0[0x30];
+    s8 unk30;
+    u8 pad31[0x13];
+    s8 unk44;
+} Object_80038710;
+
+typedef struct Object_800387CC {
+    u8 pad0[0x148];
+    struct Object *unk148;
+} Object_800387CC;
+
+typedef struct Object_800388D4 {
+    s16 unk0;
+} Object_800388D4;
+
+typedef struct Object_80038E3C {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_80038E3C;
+
+typedef struct Object_8003C1E0 {
+    f32 unk0;
+    u8 pad4[4];
+    s32 unk8;
+    u8 padC[3];
+    s8 unkF;
+    u8 pad10[2];
+    u8 unk12;
+    u8 unk13;
+} Object_8003C1E0;
+
+typedef struct Object_8003DF08 {
+    s16 unk0;
+} Object_8003DF08;
+
+typedef struct Object_8003FEF4 {
+    u8 unk0;
+    u8 pad1;
+    u16 unk2;
+    u16 unk4;
+    u16 unk6;
+    union {
+        struct {
+            u8 unk8;
+            u8 unk9;
+            u8 unkA;
+            u8 padB;
+        } unk_struct;
+        s32 unk8_word;
+    } unk_union;
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+} Object_8003FEF4;
+
+typedef struct Object_8004001C {
+    u16 pad0;
+    s16 unk2;
+    u8 unk4;
+    u8 unk5;
+} Object_8004001C;
+
+typedef struct Object_800400A4 {
+    s16 unk0;
+    s16 pad2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+} Object_800400A4;
+
+typedef struct Object_80042210 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 unk14;
+    u8 unk15;
+    u8 pad16[3];
+    u8 unk19;
+    u8 pad1A[6];
+    f32 unk20;
+    f32 unk24;
+    u8 pad28[8];
+    f32 unk30;
+} Object_80042210;
+
+typedef struct Object_Wizpig2 {
+    u8 pad0[0x70];
+    u8 unk70;
+    u8 pad71;
+    u8 unk72;
+    u8 pad73;
+    f32 unk74;
+} Object_Wizpig2;
+
+typedef struct Object_Exit {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_Exit;
+
+typedef struct Object_Racer {
+    s16 unk0;
+    u8 pad2;
+    s8 unk3;
+    u8 pad4[0x104];
+    s32 unk108;
+    u8 pad10C[0x40];
+    struct Object *unk14C;
+    u8 pad150[0x33];
+    s8 unk183;
+    s8 pad184;
+    s8 unk185;
+    u8 pad186[0x4D];
+    s8 unk1D3;
+    u8 pad1D4[0x4];
+    s8 unk1D8;
+    u8 pad1D9[0x9];
+    s8 unk1E2;
+    u8 pad1E3[0x12];
+    u8 unk1F5;
+    u8 pad1F6[0xA];
+    s8 unk200;
+    u8 pad201[0x2];
+    s8 unk203;
+    u8 pad204[0x8];
+    u8 unk20C;
+} Object_Racer;
+
+typedef struct Object_Bonus {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_Bonus;
+
+typedef struct Object_ModeChange {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_ModeChange;
+
+typedef struct Object_GoldenBalloon {
+    f32 unk0;
+    u8 pad4[0x8];
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    s8 unk10;
+    f32 unk14;
+} Object_GoldenBalloon;
+
+typedef struct Object_Door {
+    f32 unk0;
+    u8 pad4[0x4];
+    s32 unk8;
+    s16 padA;
+    s8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+} Object_Door;
+
+typedef struct Object_Trigger {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s8 unk14;
+} Object_Trigger;
+
+typedef struct Object_Audio {
+    /* 0x00 */ u16 unk0;
+    /* 0x02 */ u16 unk2;
+    /* 0x04 */ u8 unk4;
+    /* 0x05 */ u8 unk5;
+    /* 0x06 */ u8 unk6;
+    /* 0x07 */ u8 unk7;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+} Object_Audio;
+
+typedef struct Object_MidiFade {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    u8 unk2F[16];
+    u8 unk40;
+} Object_MidiFade;
+
+typedef struct Object_MidiFadePoint {
+    u16 unk0;
+    u16 unk2;
+    f32 unk4;
+    f32 unk8;
+    u8 unkC[16];
+    u8 unk1C;
+} Object_MidiFadePoint;
+
+typedef struct Object_PosArrow {
+    s16 unk0;
+    u8 pad4[0x14E];
+    struct Object *unk150;
+} Object_PosArrow;
+
+typedef struct Object_Banana {
+    u8 pad0[4];
+    struct Object *spawner;
+} Object_Banana;
+
+// from racer.c
+
+typedef struct Object_80044170 {
+    char unk0[0x2C];
+    f32 unk2C;
+    char unk30[0x124];
+    s32 unk154;
+    char unk158[0x72];
+    s8 unk1CA;
+    char unk1CB[0x3];
+    u8 unk1CE;
+    char unk1CF[0x13];
+    s8 unk1E2;
+    char unk1E3[0x30];
+    s8 unk213;
+    s8 unk214;
+    s8 unk215;
+} Object_80044170;
+
+typedef struct Object_80050754 {
+              u8 unk0[0x2C];
+              f32 unk2C;
+              f32 unk30;
+              u8 unk34[0x114];
+  /* 0x148 */ struct Object *someObj;
+              u8 unk14C[0x54];
+  /* 0x1A0 */ s16 unk1A0;
+  /* 0x1A2 */ s16 unk1A2;
+  /* 0x1A4 */ s16 unk1A4;
+              u8 unk1A6[0x4C];
+  /* 0x1F2 */ s8 unk1F2;
+} Object_80050754;
+
+typedef struct Object_800570B8 {
+    u8 pad0[3];
+    s8 unk3;
+    u8 pad4[0x20];
+    s32 unk24;
+    u16 unk28;
+    u16 unk2A;
+    u8 pad2C[0xDC];
+    s32 unk108;
+} Object_800570B8;
+
+typedef struct Object_64 {
+    union {
+        Object_Original original;
+        Object_80034860 obj80034860;
+        Object_80034E9C obj80034E9C;
+        Object_Animator animator;
+        Object_8003DFCC obj8003DFCC;
+        Object_Butterfly butterfly;
+        Object_80034B74 obj80034B74;
+        Object_8003564C obj8003564C;
+        Object_80035E34 obj80035E34;
+        Object_80035F6C obj80035F6C;
+        Object_80035F6C_2 obj80035F6C_2;
+        Object_800376E0 obj800376E0;
+        Object_Snowball snowball;
+        Object_80038710 obj80038710;
+        Object_800387CC obj800387CC;
+        Object_800388D4 obj800388D4;
+        Object_80038E3C obj80038E3C;
+        Object_8003C1E0 obj8003C1E0;
+        Object_8003DF08 obj8003DF08;
+        Object_8003FEF4 obj8003FEF4;
+        Object_8004001C obj8004001C;
+        Object_800400A4 obj800400A4;
+        Object_80042210 obj80042210;
+        Object_Wizpig2 wizpig2;
+        Object_Exit exit;
+        Object_Racer racer;
+        Object_Bonus bonus;
+        Object_ModeChange mode_change;
+        Object_GoldenBalloon golden_balloon;
+        Object_Door door;
+        Object_Trigger trigger;
+        Object_Audio audio;
+        Object_MidiFade midi_fade;
+        Object_MidiFadePoint midi_fade_point;
+        Object_PosArrow pos_arrow;
+        Object_Banana banana;
+        Object_80044170 obj80044170;
+        Object_80050754 obj80050754;
+        Object_800570B8 obj800570B8;
+    };
 } Object_64;
 
 typedef struct Object_68 {
@@ -764,129 +1192,133 @@ typedef struct Object {
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
 
-  /* 0x0098 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
-  /* 0x009A */ u8 unk9A;
-  /* 0x009B */ u8 characterId; // Affects minimap color, horn, voice, etc.
+  /* 0x0098 */ Object_64 obj;
+  
+  //------------------------------ REMOVE BEGIN ------------------------------
+//   /* 0x0098 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
+//   /* 0x009A */ u8 unk9A;
+//   /* 0x009B */ u8 characterId; // Affects minimap color, horn, voice, etc.
 
-  /* 0x009C */ u32 unk9C;
+//   /* 0x009C */ u32 unk9C;
 
-  /* 0x00A0 */ f32 unkA0;
+//   /* 0x00A0 */ f32 unkA0;
 
-  /* 0x00A4 */ u32 unkA4;
-  /* 0x00A8 */ u32 unkA8;
-  /* 0x00AC */ u32 unkAC;
-  /* 0x00B0 */ u32 unkB0;
-  /* 0x00B4 */ u32 unkB4;
-  /* 0x00B8 */ u32 unkB8;
-  /* 0x00BC */ u32 unkBC;
-  /* 0x00C0 */ u32 unkc0;
+//   /* 0x00A4 */ u32 unkA4;
+//   /* 0x00A8 */ u32 unkA8;
+//   /* 0x00AC */ u32 unkAC;
+//   /* 0x00B0 */ u32 unkB0;
+//   /* 0x00B4 */ u32 unkB4;
+//   /* 0x00B8 */ u32 unkB8;
+//   /* 0x00BC */ u32 unkBC;
+//   /* 0x00C0 */ u32 unkc0;
 
-  /* 0x00C4 */ f32 velocity;
-  /* 0x00C8 */ f32 lateral_velocity;
+//   /* 0x00C4 */ f32 velocity;
+//   /* 0x00C8 */ f32 lateral_velocity;
 
-  u32 unkCC[10]; // Not an array. Unknown values.
+//   u32 unkCC[10]; // Not an array. Unknown values.
 
-  /* 0x00F4 */ f32 prev_x_position;
-  /* 0x00F8 */ f32 prev_y_position;
-  /* 0x00FC */ f32 prev_z_position;
+//   /* 0x00F4 */ f32 prev_x_position;
+//   /* 0x00F8 */ f32 prev_y_position;
+//   /* 0x00FC */ f32 prev_z_position;
 
-  /* 0x0100 */ u32 unk100;
-  /* 0x0104 */ u32 unk104;
-  /* 0x0108 */ u32 unk108;
-  /* 0x010C */ u32 unk10C;
+//   /* 0x0100 */ u32 unk100;
+//   /* 0x0104 */ u32 unk104;
+//   /* 0x0108 */ u32 unk108;
+//   /* 0x010C */ u32 unk10C;
 
-  /* 0x0110 */ f32 unk110;
-  /* 0x0114 */ f32 unk114;
-  /* 0x0118 */ f32 unk118;
-  /* 0x011C */ f32 unk11C;
-  /* 0x0120 */ u32 unk120;
-  /* 0x0124 */ f32 stretch_height;
-  /* 0x0128 */ f32 stretch_height_cap;
-  /* 0x012C */ f32 camera_zoom;
-  /* 0x0130 */ u32 unk130;
-  /* 0x0134 */ f32 pitch;
-  /* 0x0138 */ u32 unk138;
-  /* 0x013C */ u32 unk13C;
-  /* 0x0140 */ f32 checkpoint_distance;
-  /* 0x0144 */ u32 unk144;
-  /* 0x0148 */ f32 unk148;
-  /* 0x014C */ f32 throttle;
-  /* 0x0150 */ f32 brake;
-  /* 0x0154 */ u32 unk154;
-  /* 0x0158 */ u32 unk158;
-  /* 0x015C */ u32 unk15C;
-  /* 0x0160 */ f32 unk160;
-  /* 0x0164 */ u32 unk164;
-  /* 0x0168 */ u32 unk168;
-  /* 0x016C */ u32 unk16C;
-  /* 0x0170 */ f32 unk170;
-  /* 0x0174 */ f32 unk174;
-  /* 0x0178 */ f32 unk178;
-  /* 0x017C */ f32 unk17C;
-  /* 0x0180 */ f32 unk180;
-  /* 0x0184 */ f32 unk184;
-  /* 0x0188 */ f32 unk188;
-  /* 0x018C */ f32 unk18C;
-  /* 0x0190 */ f32 unk190;
-  /* 0x0194 */ f32 unk194;
-  /* 0x0198 */ f32 unk198;
-  /* 0x019C */ f32 unk19C;
+//   /* 0x0110 */ f32 unk110;
+//   /* 0x0114 */ f32 unk114;
+//   /* 0x0118 */ f32 unk118;
+//   /* 0x011C */ f32 unk11C;
+//   /* 0x0120 */ u32 unk120;
+//   /* 0x0124 */ f32 stretch_height;
+//   /* 0x0128 */ f32 stretch_height_cap;
+//   /* 0x012C */ f32 camera_zoom;
+//   /* 0x0130 */ u32 unk130;
+//   /* 0x0134 */ f32 pitch;
+//   /* 0x0138 */ u32 unk138;
+//   /* 0x013C */ u32 unk13C;
+//   /* 0x0140 */ f32 checkpoint_distance;
+//   /* 0x0144 */ u32 unk144;
+//   /* 0x0148 */ f32 unk148;
+//   /* 0x014C */ f32 throttle;
+//   /* 0x0150 */ f32 brake;
+//   /* 0x0154 */ u32 unk154;
+//   /* 0x0158 */ u32 unk158;
+//   /* 0x015C */ u32 unk15C;
+//   /* 0x0160 */ f32 unk160;
+//   /* 0x0164 */ u32 unk164;
+//   /* 0x0168 */ u32 unk168;
+//   /* 0x016C */ u32 unk16C;
+//   /* 0x0170 */ f32 unk170;
+//   /* 0x0174 */ f32 unk174;
+//   /* 0x0178 */ f32 unk178;
+//   /* 0x017C */ f32 unk17C;
+//   /* 0x0180 */ f32 unk180;
+//   /* 0x0184 */ f32 unk184;
+//   /* 0x0188 */ f32 unk188;
+//   /* 0x018C */ f32 unk18C;
+//   /* 0x0190 */ f32 unk190;
+//   /* 0x0194 */ f32 unk194;
+//   /* 0x0198 */ f32 unk198;
+//   /* 0x019C */ f32 unk19C;
 
-  u32 unk1A0[8]; // Not an array. Unknown values.
+//   u32 unk1A0[8]; // Not an array. Unknown values.
 
-  /* 0x01C0 */ u32 lap_times[3];
+//   /* 0x01C0 */ u32 lap_times[3];
 
-  /* 0x01CC */ u32 unk1CC;
-  /* 0x01D0 */ u32 unk1D0;
-  /* 0x01D4 */ u32 unk1D4;
-  /* 0x01D8 */ u32 unk1D8;
+//   /* 0x01CC */ u32 unk1CC;
+//   /* 0x01D0 */ u32 unk1D0;
+//   /* 0x01D4 */ u32 unk1D4;
+//   /* 0x01D8 */ u32 unk1D8;
 
-  /* 0x01DC */ void *held_obj_ptr;
+//   /* 0x01DC */ void *held_obj_ptr;
 
-  u32 unk1E0[10]; // Not an array. Unknown values.
+//   u32 unk1E0[10]; // Not an array. Unknown values.
 
-  /* 0x0208 */ u16 unk208;
-  /* 0x020A */ u8 balloon_type;
-  /* 0x020B */ u8 balloon_quantity;
-  /* 0x020C */ u8 balloon_level;
+//   /* 0x0208 */ u16 unk208;
+//   /* 0x020A */ u8 balloon_type;
+//   /* 0x020B */ u8 balloon_quantity;
+//   /* 0x020C */ u8 balloon_level;
 
-  /* 0x020D */ u8 unk20D;
-  /* 0x020E */ u8 unk20E;
-  /* 0x020F */ u8 unk20F;
-  /* 0x0210 */ u32 unk210;
-  /* 0x0214 */ u32 unk214;
-  /* 0x0218 */ u32 unk218;
-  /* 0x021A */ u16 unk21A;
-  /* 0x021B */ u8 unk21B;
+//   /* 0x020D */ u8 unk20D;
+//   /* 0x020E */ u8 unk20E;
+//   /* 0x020F */ u8 unk20F;
+//   /* 0x0210 */ u32 unk210;
+//   /* 0x0214 */ u32 unk214;
+//   /* 0x0218 */ u32 unk218;
+//   /* 0x021A */ u16 unk21A;
+//   /* 0x021B */ u8 unk21B;
 
-  /* 0x021D */ s8 bananas;
-  /* 0x021E */ u8 unk21E;
+//   /* 0x021D */ s8 bananas;
+//   /* 0x021E */ u8 unk21E;
 
-  /* 0x0270 */ u8 unk270;
-  /* 0x0271 */ u8 unk271;
-  /* 0x0272 */ u8 unk272;
+//   /* 0x0270 */ u8 unk270;
+//   /* 0x0271 */ u8 unk271;
+//   /* 0x0272 */ u8 unk272;
 
-  /* 0x0273 */ u8 spinout_timer;
-  /* 0x0274 */ u8 wheel_surfaces[4];
+//   /* 0x0273 */ u8 spinout_timer;
+//   /* 0x0274 */ u8 wheel_surfaces[4];
 
-  /* 0x0278 */ u32 unk278;
-  /* 0x027C */ u16 unk27C;
+//   /* 0x0278 */ u32 unk278;
+//   /* 0x027C */ u16 unk27C;
 
-  /* 0x027E */ u8 drift_direction;
-  /* 0x027F */ u8 unk27F;
+//   /* 0x027E */ u8 drift_direction;
+//   /* 0x027F */ u8 unk27F;
 
-  /* 0x0280 */ u32 unk280;
-  /* 0x0284 */ u8 unk284;
+//   /* 0x0280 */ u32 unk280;
+//   /* 0x0284 */ u8 unk284;
 
-  /* 0x0285 */ s8 squish_timer;
-  /* 0x0286 */ u8 unk286;
-  /* 0x0287 */ u8 boost_sound;
-  /* 0x0288 */ u32 unk288;
+//   /* 0x0285 */ s8 squish_timer;
+//   /* 0x0286 */ u8 unk286;
+//   /* 0x0287 */ u8 boost_sound;
+//   /* 0x0288 */ u32 unk288;
 
-  /* 0x028C */ u16 unk28C;
-  /* 0x028E */ u8 unk28E;
+//   /* 0x028C */ u16 unk28C;
+//   /* 0x028E */ u8 unk28E;
 
-  /* 0x028F */ u8 transparency;
+//   /* 0x028F */ u8 transparency;
+  //------------------------------ REMOVE END ------------------------------
   /* 0x0290 */ u8 indicator_type;
   /* 0x0291 */ s8 indicator_timer;
   /* 0x0292 */ u16 unk292;

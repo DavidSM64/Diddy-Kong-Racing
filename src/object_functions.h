@@ -35,12 +35,6 @@ typedef struct Object_3C_80034B74 {
     u8 unkD;
 } Object_3C_80034B74;
 
-typedef struct Object_64_80034B74 {
-    u8 pad0[0x1FE];
-    u8 unk1FE;
-    u8 unk1FF;
-} Object_64_80034B74;
-
 typedef struct unk8003564C {
     s8 unk0;
     s8 unk1;
@@ -49,11 +43,6 @@ typedef struct unk8003564C {
     s16 unk6;
 } unk8003564C;
 
-typedef struct Object_64_8003564C {
-    u8 pad0[4];
-    Object *unk4;
-} Object_64_8003564C;
-
 typedef struct unk80035E20 {
     u8 pad0[0x40];
     s32 unk40;
@@ -61,29 +50,6 @@ typedef struct unk80035E20 {
     s32 unk78;
     s32 unk7C;
 } unk80035E20;
-
-typedef struct Object_64_80035E34 {
-    u8 pad0[0x1D6];
-    s8 unk1D6;
-} Object_64_80035E34;
-
-typedef struct Object_64_80035F6C {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s16 *unk20;
-    u8  *unk24;
-} Object_64_80035F6C;
-
-typedef struct Object_64_80035F6C_2 {
-    u8 pad0[3];
-    s8 unk3;
-} Object_64_80035F6C_2;
 
 typedef struct unk80037578 {
     u8 pad0[0x78];
@@ -104,15 +70,6 @@ typedef struct LevelObjectEntry800376E0 {
     s8 unkA;
 } LevelObjectEntry800376E0;
 
-typedef struct Object_64_800376E0 {
-    s16 segmentId;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-} Object_64_800376E0;
-
 typedef struct unk80037D08_arg0_64 {
     u8 pad0[0x2A];
     s16 unk2A;
@@ -131,30 +88,6 @@ typedef struct Object_60_800380F8 {
     Object *unkC;
 } Object_60_800380F8;
 
-typedef struct Object_64_Snowball {
-    u8 pad0[0x20];
-    u32 unk20;
-    s16 unk24;
-    u8 pad28[0x12];
-    s8 unk38;
-} Object_64_Snowball;
-
-typedef struct Object_64_80038710 {
-    u8 pad0[0x30];
-    s8 unk30;
-    u8 pad31[0x13];
-    s8 unk44;
-} Object_64_80038710;
-
-typedef struct Object_64_800387CC {
-    u8 pad0[0x148];
-    Object *unk148;
-} Object_64_800387CC;
-
-typedef struct Object_64_800388D4 {
-    s16 unk0;
-} Object_64_800388D4;
-
 typedef struct unk80038B74 {
     u8 pad0[8];
     s8 unk8;
@@ -164,15 +97,6 @@ typedef struct Object_3C_80038DC4 {
     u8 pad0[8];
     s8 unk8;
 } Object_3C_80038DC4;
-
-typedef struct Object_64_80038E3C {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
-} Object_64_80038E3C;
 
 typedef struct unk80039160 {
     u8 pad0[0x78];
@@ -185,17 +109,6 @@ typedef struct unk80039190 {
     s32 unk78;
     s32 unk7C;
 } unk80039190;
-
-typedef struct Object_64_8003C1E0 {
-    f32 unk0;
-    u8 pad4[4];
-    s32 unk8;
-    u8 padC[3];
-    s8 unkF;
-    u8 pad10[2];
-    u8 unk12;
-    u8 unk13;
-} Object_64_8003C1E0;
 
 typedef struct unk8003CF18 {
     u8 pad1A[0x78];
@@ -214,10 +127,6 @@ typedef struct unk8003D3EC {
     u16 unk18;
 } unk8003D3EC;
 
-typedef struct Object_64_8003DF08 {
-    s16 unk0;
-} Object_64_8003DF08;
-
 typedef struct unk8003FC44 {
     s8 unk0;
     s8 unk1;
@@ -226,31 +135,6 @@ typedef struct unk8003FC44 {
     s16 unk6;
     s8 unk7;
 } unk8003FC44;
-
-
-typedef struct Object_64_8003FEF4 {
-    u8 unk0;
-    u8 pad1;
-    u16 unk2;
-    u16 unk4;
-    u16 unk6;
-    union {
-        struct {
-            u8 unk8;
-            u8 unk9;
-            u8 unkA;
-            u8 padB;
-        } unk_struct;
-        s32 unk8_word;
-    } unk_union;
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-} Object_64_8003FEF4;
 
 typedef struct LevelObjectEntry8003FEF4 {
     LevelObjectEntryCommon common;
@@ -272,22 +156,6 @@ typedef struct LevelObjectEntry8004001C {
     u8 unk9;
     u8 unkA;
 } LevelObjectEntry8004001C;
-
-typedef struct Object_64_8004001C {
-    u16 pad0;
-    s16 unk2;
-    u8 unk4;
-    u8 unk5;
-} Object_64_8004001C;
-
-typedef struct Object_64_800400A4 {
-    s16 unk0;
-    s16 pad2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-} Object_64_800400A4;
 
 typedef struct unk80040800 {
     u8 pad0[0x78];
@@ -325,32 +193,6 @@ typedef struct Object_3C_80042178 {
     u16 unkA;
 } Object_3C_80042178;
 
-typedef struct Object_64_80042210 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 unk14;
-    u8 unk15;
-    u8 pad16[3];
-    u8 unk19;
-    u8 pad1A[6];
-    f32 unk20;
-    f32 unk24;
-    u8 pad28[8];
-    f32 unk30;
-} Object_64_80042210;
-
-typedef struct Object_64_80042998 {
-    u8 pad0[0x70];
-    u8 unk70;
-    u8 pad71;
-    u8 unk72;
-    u8 pad73;
-    f32 unk74;
-} Object_64_80042998;
-
 typedef struct unk80042A1C {
     u8 pad0[0x78];
     f32 unk78;
@@ -369,127 +211,7 @@ typedef struct Object_50_Scenery {
 
 //void func_80072348(s16 obj, u8 arg1);
 
-typedef struct Object_64_Exit {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
-} Object_64_Exit;
-
-typedef struct Object_64_Racer {
-    s16 unk0;
-    u8 pad2;
-    s8 unk3;
-    u8 pad4[0x104];
-    s32 unk108;
-    u8 pad10C[0x40];
-    Object *unk14C;
-    u8 pad150[0x33];
-    s8 unk183;
-    s8 pad184;
-    s8 unk185;
-    u8 pad186[0x4D];
-    s8 unk1D3;
-    u8 pad1D4[0x4];
-    s8 unk1D8;
-    u8 pad1D9[0x9];
-    s8 unk1E2;
-    u8 pad1E3[0x12];
-    u8 unk1F5;
-    u8 pad1F6[0xA];
-    s8 unk200;
-    u8 pad201[0x2];
-    s8 unk203;
-    u8 pad204[0x8];
-    u8 unk20C;
-} Object_64_Racer;
-
-typedef struct Object_64_Bonus {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
-} Object_64_Bonus;
-
-typedef struct Object_64_ModeChange {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
-} Object_64_ModeChange;
-
-typedef struct Object_64_GoldenBalloon {
-    f32 unk0;
-    u8 pad4[0x8];
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    s8 unk10;
-    f32 unk14;
-} Object_64_GoldenBalloon;
-
-typedef struct Object_64_Door {
-    f32 unk0;
-    u8 pad4[0x4];
-    s32 unk8;
-    s16 padA;
-    s8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-} Object_64_Door;
-
-typedef struct Object_64_Trigger {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
-} Object_64_Trigger;
-
 typedef Object Object_64_Animation;
-
-typedef struct Object_64_Audio {
-    /* 0x00 */ u16 unk0;
-    /* 0x02 */ u16 unk2;
-    /* 0x04 */ u8 unk4;
-    /* 0x05 */ u8 unk5;
-    /* 0x06 */ u8 unk6;
-    /* 0x07 */ u8 unk7;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ u8 unkC;
-    /* 0x0D */ u8 unkD;
-} Object_64_Audio;
-
-typedef struct Object_64_MidiFade {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    u8 unk2F[16];
-    u8 unk40;
-} Object_64_MidiFade;
 
 typedef struct unk80041A90_MidiFade {
     s16 unk0; // Y rotation
@@ -500,26 +222,6 @@ typedef struct unk80041A90_MidiFade {
     f32 unk10;
     f32 unk14;
 } unk80041A90_MidiFade;
-
-typedef struct Object_64_MidiFadePoint {
-    u16 unk0;
-    u16 unk2;
-    f32 unk4;
-    f32 unk8;
-    u8 unkC[16];
-    u8 unk1C;
-} Object_64_MidiFadePoint;
-
-typedef struct Object_64_PosArrow {
-    s16 unk0;
-    u8 pad4[0x14E];
-    Object *unk150;
-} Object_64_PosArrow;
-
-typedef struct Object_64_Banana {
-    u8 pad0[4];
-    Object *spawner;
-} Object_64_Banana;
 
 // Unsure about the signed/unsigned with these arrays.
 extern u16 D_800DC970[4];
@@ -668,7 +370,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed);
 
 s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
 s32 func_8001CC48(s32, s32, s32);
-void func_8001C6C4(Object_64_GoldenBalloon *obj64, Object *obj, f32, f32, s32);
+void func_8001C6C4(Object_GoldenBalloon *obj64, Object *obj, f32, f32, s32);
 void func_8000CBF0(Object*, s32);
 
 

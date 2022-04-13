@@ -285,7 +285,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
     func_800A4C44(temp, arg2);
     func_800A3884(arg1, arg2);
 
-    if (D_80127188 != 0 && temp->unk1D8 == 0) {
+    if (D_80127188 != 0 && temp->original.unk1D8 == 0) {
         func_800A47A0(temp, arg2);
     }
 
@@ -298,7 +298,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1248.s")
 
 void func_800A1428(s32 arg0, Object *arg1, s32 arg2) {
     Object_64 *temp = arg1->unk64;
-    if (temp->unk1D8 == 0) {
+    if (temp->original.unk1D8 == 0) {
         func_80068508(1);
         func_800A3CE4(arg0, arg2);
         func_800A7520(arg1, arg2);
