@@ -767,7 +767,7 @@ glabel func_80050A28
 /* 05207C 8005147C E7B00040 */   swc1  $f16, 0x40($sp)
 /* 052080 80051480 8FA50028 */  lw    $a1, 0x28($sp)
 /* 052084 80051484 8FA60070 */  lw    $a2, 0x70($sp)
-/* 052088 80051488 3C07800E */  lui   $a3, %hi(gSurfaceSpeedScrubTable) # $a3, 0x800e
+/* 052088 80051488 3C07800E */  lui   $a3, %hi(gSurfaceTractionTable) # $a3, 0x800e
 /* 05208C 8005148C 83A80057 */  lb    $t0, 0x57($sp)
 /* 052090 80051490 8FA90064 */  lw    $t1, 0x64($sp)
 /* 052094 80051494 C7A20048 */  lwc1  $f2, 0x48($sp)
@@ -775,7 +775,7 @@ glabel func_80050A28
 /* 05209C 8005149C C7B00040 */  lwc1  $f16, 0x40($sp)
 /* 0520A0 800514A0 00025A00 */  sll   $t3, $v0, 8
 /* 0520A4 800514A4 05610006 */  bgez  $t3, .L800514C0
-/* 0520A8 800514A8 24E7CB9C */   addiu $a3, %lo(gSurfaceSpeedScrubTable) # addiu $a3, $a3, -0x3464
+/* 0520A8 800514A8 24E7CB9C */   addiu $a3, %lo(gSurfaceTractionTable) # addiu $a3, $a3, -0x3464
 /* 0520AC 800514AC C4E40000 */  lwc1  $f4, ($a3)
 /* 0520B0 800514B0 90A201DC */  lbu   $v0, 0x1dc($a1)
 /* 0520B4 800514B4 46047380 */  add.s $f14, $f14, $f4

@@ -36,16 +36,16 @@ f32 D_800DCB60[14] = {
 };
 
 s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
-// Table used for quantifying speed reduction while the car drives over it.
+// Table used for quantifying speed reduction while the car drives over it, like how grass will slow you down more than the road.
 // An antipiracy trigger can set the first index to 0.5f, which makes that surface type impossible to drive on.
-f32 gSurfaceSpeedScrubTable[19] = {
+f32 gSurfaceTractionTable[19] = {
     0.004f, 0.007f, 0.01f, 0.004f,
     0.01f, 0.01f, 0.01f, 0.01f,
     0.01f, 0.01f, 0.004f, 0.004f,
     0.004f, 0.004f, 0.004f, 0.004f,
     0.004f, 0.004f, 0.004f,
 };
-
+// Can only assume this is surface related too. Not incline thresholds though.
 f32 D_800DCBE8[19] = {
     0.8f, 0.85f, 0.85f, 0.5f,
     0.5f, 0.5f, 0.5f, 0.5f,
@@ -970,8 +970,8 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
  * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
  * table to an unreasonable value, wrecking drivability while on it.
  */
-void antipiracy_modify_surface_speed_table(void) {
-    gSurfaceSpeedScrubTable[0] = 0.05f;
+void antipiracy_modify_surface_traction_table(void) {
+    gSurfaceTractionTable[0] = 0.05f;
 }
 
 void func_8005C270(unk8005C270 *arg0) {

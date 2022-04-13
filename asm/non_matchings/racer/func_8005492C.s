@@ -144,9 +144,9 @@ glabel func_8005492C
 /* 0556E8 80054AE8 10810008 */  beq   $a0, $at, .L80054B0C
 /* 0556EC 80054AEC 46009006 */   mov.s $f0, $f18
 /* 0556F0 80054AF0 00047080 */  sll   $t6, $a0, 2
-/* 0556F4 80054AF4 3C01800E */  lui   $at, %hi(gSurfaceSpeedScrubTable) # $at, 0x800e
+/* 0556F4 80054AF4 3C01800E */  lui   $at, %hi(gSurfaceTractionTable) # $at, 0x800e
 /* 0556F8 80054AF8 002E0821 */  addu  $at, $at, $t6
-/* 0556FC 80054AFC C426CB9C */  lwc1  $f6, %lo(gSurfaceSpeedScrubTable)($at)
+/* 0556FC 80054AFC C426CB9C */  lwc1  $f6, %lo(gSurfaceTractionTable)($at)
 /* 055700 80054B00 18800002 */  blez  $a0, .L80054B0C
 /* 055704 80054B04 46069000 */   add.s $f0, $f18, $f6
 /* 055708 80054B08 00801825 */  move  $v1, $a0

@@ -156,7 +156,7 @@ extern s32 D_800DCB5C;
 extern f32 D_800DCB60[14];
 
 extern s32 D_800DCB98;
-extern f32 gSurfaceSpeedScrubTable[19];
+extern f32 gSurfaceTractionTable[19];
 
 extern f32 D_800DCBE8[19];
 
@@ -228,7 +228,7 @@ s16 func_80059E20(void);
 void func_8005A3B0(void);
 void func_8005A3C0(void);
 void func_8005A3D0(void);
-void antipiracy_modify_surface_speed_table(void);
+void antipiracy_modify_surface_traction_table(void);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
