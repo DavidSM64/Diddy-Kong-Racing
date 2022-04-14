@@ -490,12 +490,12 @@ void func_8005234C(unk8005234C *arg0) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80052388.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 
-void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+void func_80052988(Object *arg0, Object_Racer *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
     if ((D_8011D55C == -1) && (arg2 >= 3)) {
         arg0->segment.unk3B = 0;
-        arg1->original.unk1F2 = 0;
+        arg1->unk1F2 = 0;
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
             if (arg0->segment.unk18 >= 0x29) {
@@ -514,24 +514,24 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
         } else {
             arg0->segment.unk3B = arg2;
             arg0->segment.unk18 = arg3;
-            arg1->original.unk1F3 &= ~0x80;
+            arg1->unk1F3 &= ~0x80;
         }
     } else if (arg0->segment.unk3B == arg2) {
         if (arg6 & 2) {
-            if (arg1->original.unk1F3 & 0x80) {
+            if (arg1->unk1F3 & 0x80) {
                 arg0->segment.unk18 -= arg5;
                 if (arg0->segment.unk18 <= 0) {
                     arg0->segment.unk3B = 0;
-                    arg1->original.unk1F2 = 0;
+                    arg1->unk1F2 = 0;
                     arg0->segment.unk18 = 0x28;
-                    arg1->original.unk1F3 = 0;
+                    arg1->unk1F3 = 0;
                 }
             } else {
                 arg0->segment.unk18 += arg5;
                 if (arg0->segment.unk18 >= arg4) {
                     arg0->segment.unk18 = arg4 - 1;
                     if ((arg6 & 4) == 0) {
-                        arg1->original.unk1F3 |= 0x80;
+                        arg1->unk1F3 |= 0x80;
                     }
                 }
             }
@@ -539,9 +539,9 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
             arg0->segment.unk18 += arg5;
             if (arg0->segment.unk18 >= arg4) {
                 arg0->segment.unk3B = 0;
-                arg1->original.unk1F2 = 0;
+                arg1->unk1F2 = 0;
                 arg0->segment.unk18 = 0x28;
-                arg1->original.unk1F3 = 0;
+                arg1->unk1F3 = 0;
             }
         }
     } else {
@@ -593,23 +593,23 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
 
-void func_80053664(Object_64 *arg0) {
-    if (arg0->original.throttle > 0.0) {
-        arg0->original.throttle -= 0.1;
+void func_80053664(Object_Racer *arg0) {
+    if (arg0->throttle > 0.0) {
+        arg0->throttle -= 0.1;
     }
 
     if (D_8011D528 & 0x8000) {
-        arg0->original.throttle = 1.0f;
+        arg0->throttle = 1.0f;
     }
 
     if (D_8011D528 & 0x4000) {
-        if (arg0->original.brake < 1.0) {
-            arg0->original.brake += 0.2;
+        if (arg0->brake < 1.0) {
+            arg0->brake += 0.2;
         }
     } else {
         //! @bug Will cause a negative brake value resulting in higher velocity
-        if (arg0->original.brake > 0.05) {
-            arg0->original.brake -= 0.1;
+        if (arg0->brake > 0.05) {
+            arg0->brake -= 0.1;
         }
     }
 }
@@ -622,13 +622,13 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80055A84.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80055EC0.s")
 
-void play_char_horn_sound(Object *obj, Object_64 *obj64) {
+void play_char_horn_sound(Object *obj, Object_Racer *obj64) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
         // Play character voice instead of horn.
         func_800570B8(obj, 0x162, 8, 0x82);
     } else {
         // Play character's horn sound
-        func_80057048(obj, obj64->original.unk0_a.unk0_b.unk3 + 0x156);
+        func_80057048(obj, obj64->characterId + 0x156);
     }
 }
 
@@ -636,8 +636,8 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005698C.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
 
 void func_80057048(Object *obj, s32 arg1) {
-    Object_64 *obj64 = obj->unk64;
-    if (D_8011D55C != -1 && obj64->original.unk108 == 0) {
+    Object_Racer *obj64 = &obj->unk64->racer;
+    if (D_8011D55C != -1 && obj64->unk108 == 0) {
         func_80001EA8(arg1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }

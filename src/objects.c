@@ -936,7 +936,7 @@ void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) 
 
 void func_80012E28(Object *this) {
     s32 unused1;
-    Object_64 *sp_20;
+    Object_Racer *sp_20;
     f32 tmp_f2;
     f32 sp_1c;
     f32 tmp_f0;
@@ -944,20 +944,20 @@ void func_80012E28(Object *this) {
 
     if (this->behaviorId == 1) {
 
-        sp_20 = this->unk64;
-        this->segment.trans.y_rotation += sp_20->original.unk160;
-        this->segment.trans.x_rotation += sp_20->original.unk162;
-        this->segment.trans.z_rotation += sp_20->original.unk164;
+        sp_20 = &this->unk64->racer;
+        this->segment.trans.y_rotation += sp_20->unk160;
+        this->segment.trans.x_rotation += sp_20->unk162;
+        this->segment.trans.z_rotation += sp_20->unk164;
         sp_1c = 0.0f;
-        if (sp_20->original.unk1D7 < 5) {
+        if (sp_20->unk1D7 < 5) {
 
-            sp_1c = func_800707F8(sp_20->original.unk164);
+            sp_1c = func_800707F8(sp_20->unk164);
             tmp_f2 = sp_1c;
-            tmp_f0 = func_800707F8(sp_20->original.unk162 - sp_20->original.unk166) * tmp_f2;
+            tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166) * tmp_f2;
 
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
-            temp = (1.0f - tmp_f0) * 24.0f + sp_20->original.unkD0;
+            temp = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
             if(0){}
             sp_1c = temp;
         }
@@ -968,10 +968,10 @@ void func_80012E28(Object *this) {
 
 void func_80012F30(Object *arg0) {
     if (arg0->behaviorId == 1) {
-        Object_64 *object_64 = arg0->unk64;
-        arg0->segment.trans.y_rotation -= object_64->original.unk160;
-        arg0->segment.trans.x_rotation -= object_64->original.unk162;
-        arg0->segment.trans.z_rotation -= object_64->original.unk164;
+        Object_Racer *object_64 = &arg0->unk64->racer;
+        arg0->segment.trans.y_rotation -= object_64->unk160;
+        arg0->segment.trans.x_rotation -= object_64->unk162;
+        arg0->segment.trans.z_rotation -= object_64->unk164;
         arg0->segment.trans.y_position -= D_8011ADD0;
     }
 }
@@ -995,9 +995,9 @@ void render_object(Object *this) {
 
 void func_80013548(Object *arg0) {
     if ((arg0->segment.trans.unk6 & 0x8000) == 0 && arg0->segment.header->behaviorId == 1) {
-        arg0->segment.trans.x_position -= arg0->unk64->original.unk78;
-        arg0->segment.trans.y_position -= arg0->unk64->original.unk7C;
-        arg0->segment.trans.z_position -= arg0->unk64->original.unk80;
+        arg0->segment.trans.x_position -= arg0->unk64->racer.unk78;
+        arg0->segment.trans.y_position -= arg0->unk64->racer.unk7C;
+        arg0->segment.trans.z_position -= arg0->unk64->racer.unk80;
     }
 }
 
@@ -1432,14 +1432,14 @@ UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 void func_800228EC(s32 arg0) {
-    Object_64 *object_64;
+    Object_Racer *object_64;
 
     D_8011AEF7 = 3;
-    object_64 = get_object_struct(0)->unk64;
-    object_64->original.unk190 = 0;
-    object_64->original.unk192 = 0;
-    object_64->original.unk193 = 0;
-    object_64->original.unk1BA = 0;
+    object_64 = &get_object_struct(0)->unk64->racer;
+    object_64->unk190 = 0;
+    object_64->unk192 = 0;
+    object_64->unk193 = 0;
+    object_64->unk1BA = 0;
     func_80017E74(arg0);
     func_8006F388(10);
 }

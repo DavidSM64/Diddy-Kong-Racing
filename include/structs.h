@@ -577,82 +577,14 @@ typedef struct Object_60 {
 
 struct Object;
 
-typedef struct Object_Original {
-    union {
-        f32 unk0;
-        struct {
-            s8 unk0;
-            s8 unk1;
-            s8 unk2;
-            s8 unk3;
-        } unk0_b;
-    } unk0_a;
-    s32 unk4;
-    u8 pad8[4];
-    union {
-        struct {
-            u8 byteC;
-            u8 byteD;
-        } bytes;
-        s16 half;
-    } unkCD;
+typedef struct Object_LaserGun {
+    u8 pad0[0xC];
+    s16 unkC;
     u8 unkE;
     s8 unkF;
     u8 unk10;
     u8 unk11;
-    u8 pad12[6];
-    u8 unk18;
-    u8 pad19[7];
-    u32 unk20;
-    u32 unk24;
-    s16 unk28;
-    s16 unk2A;
-    s32 unk2C;
-    s32 unk30;
-    s16 unk34;
-    s8 unk36;
-    u8 pad37[0x39];
-    u8 unk70;
-    u8 unk71;
-    u8 unk72;
-    u8 unk73;
-    f32 unk74;
-    f32 unk78;
-    f32 unk7C;
-    f32 unk80;
-    u8 pad84[0x30];
-    /* 0xB4 */ f32 throttle;
-    /* 0xB8 */ f32 brake;
-    u8 padBC[0x14];
-    f32 unkD0;
-    u8 padD0[0x24];
-    u32 unkF8;
-    u8 unkFC;
-    u8 padFD[0xB];
-    s32 unk108;
-    u8 pad10C[0xC];
-    s32 unk118;
-    u8 pad11C[0x44];
-    s16 unk160;
-    s16 unk162;
-    s16 unk164;
-    s16 unk166;
-    u8 pad166[0x28];
-    u16 unk190;
-    u8 unk192;
-    u8 unk193;
-    u8 pad194[0x26];
-    u16 unk1BA;
-    u8 pad1BC[0x1A];
-    s8 unk1D6;
-    s8 unk1D7;
-    s8 unk1D8;
-    u8 pad1D9[0x19];
-    u8 unk1F2;
-    u8 unk1F3;
-    u8 pad1F4[3];
-    u8 unk1F7; // Used in func_8002A900
-} Object_Original;
+} Object_LaserGun;
 
 typedef struct Object_Laser {
 	s16 unk0;
@@ -684,6 +616,11 @@ typedef struct Object_WeaponBalloon {
     s16 unk4;
     s8 unk6[0x2];
 } Object_WeaponBalloon;
+
+typedef struct Object_Weapon {
+    u8 pad0[0x18];
+    u8 unk18;
+} Object_Weapon;
 
 typedef struct Object_Butterfly {
   /* 0x00  */ Triangle triangles[8];
@@ -870,7 +807,11 @@ typedef struct Object_Racer {
   /* 0x05C */ f32 prev_x_position;
   /* 0x060 */ f32 prev_y_position;
   /* 0x064 */ f32 prev_z_position;
-  /* 0x068 */ u8 pad68[0x24];
+  /* 0x068 */ u8 pad68[0x10];
+  /* 0x078 */ f32 unk78;
+  /* 0x07C */ f32 unk7C;
+  /* 0x080 */ f32 unk80;
+  /* 0x084 */ u8 pad84[0x8];
   /* 0x08C */ f32 stretch_height;
   /* 0x090 */ f32 stretch_height_cap;
   /* 0x094 */ f32 camera_zoom;
@@ -881,7 +822,9 @@ typedef struct Object_Racer {
   /* 0x0AC */ u8 padAC[0x8];
   /* 0x0B4 */ f32 throttle;
   /* 0x0B8 */ f32 brake;
-  /* 0x0BC */ u8 padBC[0x4C];
+  /* 0x0BC */ u8 padBC[0x14];
+  /* 0x0D0 */ f32 unkD0;
+  /* 0x0D4 */ u8 padD4[0x34];
   /* 0x108 */ s32 unk108;
   /* 0x10C */ u8 pad10C[0xC];
   /* 0x118 */ s32 unk118;
@@ -893,7 +836,12 @@ typedef struct Object_Racer {
   /* 0x14C */ struct Object *unk14C;
   /* 0x150 */ u8 pad150[0x4];
   /* 0x154 */ struct Object *unk154;
-  /* 0x158 */ u8 pad158[0x1A];
+  /* 0x158 */ u8 pad158[0x8];
+  /* 0x160 */ s16 unk160;
+  /* 0x162 */ s16 unk162;
+  /* 0x164 */ s16 unk164;
+  /* 0x166 */ s16 unk166;
+  /* 0x168 */ u8 pad168[0xA];
   /* 0x172 */ u8 balloon_type;
   /* 0x173 */ u8 balloon_quantity;
   /* 0x174 */ u8 balloon_level;
@@ -906,11 +854,16 @@ typedef struct Object_Racer {
   /* 0x188 */ u8 pad188[0x4];
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 unk18E;
-  /* 0x190 */ u8 pad190[0x10];
+  /* 0x190 */ u16 unk190;
+  /* 0x192 */ u8 unk192;
+  /* 0x193 */ u8 unk193;
+  /* 0x194 */ u8 pad194[0xC];
   /* 0x1A0 */ s16 unk1A0;
   /* 0x1A2 */ s16 unk1A2;
   /* 0x1A4 */ s16 unk1A4;
-  /* 0x1A6 */ u8 pad1A6[0x23];
+  /* 0x1A6 */ u8 pad1A6[0x14];
+  /* 0x1BA */ u16 unk1BA;
+  /* 0x1BC */ u8 pad1BC[0xD];
   /* 0x1C9 */ u8 unk1C9;
   /* 0x1CA */ s8 unk1CA;
   /* 0x1CB */ u8 pad1CB[0x3];
@@ -935,7 +888,8 @@ typedef struct Object_Racer {
   /* 0x1EF */ u8 boost_sound;
   /* 0x1F0 */ u8 pad1F0[0x2];
   /* 0x1F2 */ u8 unk1F2;
-  /* 0x1F3 */ u8 pad1F3[0x2];
+  /* 0x1F3 */ u8 unk1F3;
+  /* 0x1F4 */ u8 pad1F4[0x1];
   /* 0x1F5 */ u8 unk1F5;
   /* 0x1F6 */ u8 pad1F6[0x1];
   /* 0x1F7 */ u8 transparency;
@@ -1066,14 +1020,39 @@ typedef struct Object_FogChanger {
     s16 unk0;
 } Object_FogChanger;
 
+typedef struct Object_Taj {
+    f32 unk0;
+    u8 pad4[0x9];
+    u8 unkD;
+    u8 padE[0x1A];
+    s16 unk28;
+    u8 pad2A[0x2];
+    s32 unk2C;
+    u8 pad30[0x4];
+    s16 unk34;
+    s8 unk36;
+} Object_Taj;
+
+typedef struct Object_TT {
+    f32 unk0;
+    u8 pad4[0x9];
+    u8 unkD;
+} Object_TT;
+
+typedef struct Object_Bridge_WhaleRamp {
+    f32 unk0;
+    s32 unk4;
+} Object_Bridge_WhaleRamp;
+
 typedef struct Object_64 {
     union {
-        Object_Original original;
+        Object_LaserGun laser_gun;
         Object_Laser laser;
         Object_TrophyCabinet trophy_cabinet;
         Object_Animator animator;
         Object_Animation animation;
         Object_WeaponBalloon weapon_balloon;
+        Object_Weapon weapon;
         Object_Butterfly butterfly;
         Object_EffectBox effect_box;
         Object_EggCreator egg_creator;
@@ -1104,6 +1083,9 @@ typedef struct Object_64 {
         Object_PosArrow pos_arrow;
         Object_Banana banana;
         Object_FogChanger fog_changer;
+        Object_Taj taj;
+        Object_TT tt;
+        Object_Bridge_WhaleRamp bridge_whale_ramp;
     };
 } Object_64;
 

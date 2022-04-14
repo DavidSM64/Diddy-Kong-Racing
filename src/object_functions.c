@@ -337,15 +337,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fireball_octoweapon.s")
 #endif
 
 void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
-    Object_64 *obj64;
+    Object_LaserGun *obj64;
     obj->unk4C->unk14 = 0x22;
     obj->unk4C->unk11 = 0;
-    obj64 = obj->unk64;
-    obj64->original.unkE = entry->unkA;
-    obj64->original.unkF = entry->unkB;
-    obj64->original.unk10 = entry->unkC;
-    obj64->original.unk11 = entry->unkD;
-    obj64->original.unkCD.half = obj64->original.unkF;
+    obj64 = &obj->unk64->laser_gun;
+    obj64->unkE = entry->unkA;
+    obj64->unkF = entry->unkB;
+    obj64->unk10 = entry->unkC;
+    obj64->unk11 = entry->unkD;
+    obj64->unkC = obj64->unkF;
     obj->segment.trans.y_rotation = entry->unk8 << 4 << 4; // Not sure about the shift amounts here, but it
     obj->segment.trans.x_rotation = entry->unk9 << 4 << 4; // just needs to be 2 left shifts that add up to 8.
 }
@@ -965,14 +965,14 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 speed) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
 void obj_init_stopwatchman(Object *obj, UNUSED LevelObjectEntry_StopWatchMan *entry) {
-    Object_64 *temp;
+    Object_TT *temp;
     obj->unk4C->unk14 = 1;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
     obj->unk4C->unk12 = 0;
-    temp = obj->unk64;
-    temp->original.unkCD.bytes.byteD = 0xFF;
-    temp->original.unk0_a.unk0 = 0.0f;
+    temp = &obj->unk64->tt;
+    temp->unkD = 0xFF;
+    temp->unk0 = 0.0f;
     D_8011D4D8 = 0;
 }
 
@@ -1593,18 +1593,18 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
 }
 
 void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry) {
-    Object_64 *temp;
+    Object_Taj *temp;
     obj->unk4C->unk14 = (u16)1;
     obj->unk4C->unk11 = (u8)0;
     obj->unk4C->unk10 = (u8)0x1E;
     obj->unk4C->unk12 = (u8)0;
-    temp = obj->unk64;
-    temp->original.unkCD.bytes.byteD = 0xFF;
-    temp->original.unk0_a.unk0 = 0.0f;
-    temp->original.unk28 = 0;
-    temp->original.unk2C = 0;
-    temp->original.unk34 = 0;
-    temp->original.unk36 = 0;
+    temp = &obj->unk64->taj;
+    temp->unkD = 0xFF;
+    temp->unk0 = 0.0f;
+    temp->unk28 = 0;
+    temp->unk2C = 0;
+    temp->unk34 = 0;
+    temp->unk36 = 0;
     D_8011D4D4 = 0;
     D_8011D4E2 = 0x10F;
 }
@@ -1971,15 +1971,15 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trigger.s")
 
 void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry) {
-    Object_64 *temp = obj->unk64;
+    Object_Bridge_WhaleRamp *temp = &obj->unk64->bridge_whale_ramp;
     obj->segment.unk3A = entry->unk8;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
-    temp->original.unk0_a.unk0 = obj->segment.trans.y_position;
+    temp->unk0 = obj->segment.trans.y_position;
     obj->unk4C->unk14 = 0x21;
     obj->unk4C->unk11 = 2;
     obj->unk4C->unk10 = 0x14;
     obj->unk4C->unk12 = 0;
-    temp->original.unk4 = 0;
+    temp->unk4 = 0;
     if (obj->segment.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk3A = 0;
     }
@@ -2254,8 +2254,8 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
 }
 
 void obj_loop_weapon(Object *obj, s32 speed) {
-    Object_64 *obj64 = obj->unk64;
-    switch (obj64->original.unk18) {
+    Object_Weapon *obj64 = &obj->unk64->weapon;
+    switch (obj64->unk18) {
         case 0:
         case 1:
             func_8003E694(obj, speed);
@@ -2706,18 +2706,18 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_frog.s")
 
 void obj_loop_pigrocketeer(Object *obj, s32 speed) {
     Object *someObj;
-    Object_64 *obj64;
+    Object_Wizpig2 *obj64;
 
     func_8001F460(obj, speed, obj);
     someObj = func_8000BF44(-1);
 
     if (someObj != NULL) {
-        obj64 = someObj->unk64;
+        obj64 = &someObj->unk64->wizpig2;
         someObj->unk78 = 0;
         if (obj64 != 0) {
-            obj64->original.unk72 += speed;
-            obj64->original.unk70 = 2;
-            obj64->original.unk74 = 1.0f;
+            obj64->unk72 += speed;
+            obj64->unk70 = 2;
+            obj64->unk74 = 1.0f;
             func_8000B750(obj, -1, 2, 1, 1);
         }
     }
