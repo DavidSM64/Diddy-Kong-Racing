@@ -656,16 +656,16 @@ typedef struct Object_Original {
 
 // from object_functions.c
 
-typedef struct Object_80034860 {
+typedef struct Object_Laser {
 	s16 unk0;
 	u8  unk4[0x185];
 	s8  unk187;
-} Object_80034860;
+} Object_Laser;
 
-typedef struct Object_80034E9C {
+typedef struct Object_TrophyCabinet {
     s32 unk0;
     s16 unk4;
-} Object_80034E9C;
+} Object_TrophyCabinet;
 
 typedef struct Object_Animator {
     /* 0x00 */ s16 segmentId;
@@ -676,11 +676,11 @@ typedef struct Object_Animator {
     /* 0x0A */ s16 ySpeed;
 } Object_Animator;
 
-typedef struct Object_8003DFCC {
+typedef struct Object_WeaponBalloon {
     f32 unk0;
     s16 unk4;
     s8 unk6[0x2];
-} Object_8003DFCC;
+} Object_WeaponBalloon;
 
 typedef struct Object_Butterfly {
   /* 0x00  */ Triangle triangles[8];
@@ -698,23 +698,23 @@ typedef struct Object_Butterfly {
 
 // from object_functions.h
 
-typedef struct Object_80034B74 {
+typedef struct Object_EffectBox {
     u8 pad0[0x1FE];
     u8 unk1FE;
     u8 unk1FF;
-} Object_80034B74;
+} Object_EffectBox;
 
-typedef struct Object_8003564C {
+typedef struct Object_EggCreator {
     u8 pad0[4];
     struct Object *unk4;
-} Object_8003564C;
+} Object_EggCreator;
 
-typedef struct Object_80035E34 {
+typedef struct Object_UnkId58 {
     u8 pad0[0x1D6];
     s8 unk1D6;
-} Object_80035E34;
+} Object_UnkId58;
 
-typedef struct Object_80035F6C {
+typedef struct Object_CharacterFlag {
     s32 unk0;
     s32 unk4;
     s32 unk8;
@@ -725,21 +725,12 @@ typedef struct Object_80035F6C {
     s32 unk1C;
     s16 *unk20;
     u8  *unk24;
-} Object_80035F6C;
+} Object_CharacterFlag;
 
 typedef struct Object_80035F6C_2 {
     u8 pad0[3];
     s8 unk3;
 } Object_80035F6C_2;
-
-typedef struct Object_800376E0 {
-    s16 segmentId;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-} Object_800376E0;
 
 typedef struct Object_Snowball {
     u8 pad0[0x20];
@@ -749,32 +740,23 @@ typedef struct Object_Snowball {
     s8 unk38;
 } Object_Snowball;
 
-typedef struct Object_80038710 {
+typedef struct Object_AnimCamera {
     u8 pad0[0x30];
     s8 unk30;
     u8 pad31[0x13];
     s8 unk44;
-} Object_80038710;
+} Object_AnimCamera;
 
-typedef struct Object_800387CC {
+typedef struct Object_AnimCar {
     u8 pad0[0x148];
     struct Object *unk148;
-} Object_800387CC;
+} Object_AnimCar;
 
-typedef struct Object_800388D4 {
+typedef struct Object_InfoPoint {
     s16 unk0;
-} Object_800388D4;
+} Object_InfoPoint;
 
-typedef struct Object_80038E3C {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
-} Object_80038E3C;
-
-typedef struct Object_8003C1E0 {
+typedef struct Object_TTDoor {
     f32 unk0;
     u8 pad4[4];
     s32 unk8;
@@ -783,13 +765,13 @@ typedef struct Object_8003C1E0 {
     u8 pad10[2];
     u8 unk12;
     u8 unk13;
-} Object_8003C1E0;
+} Object_TTDoor;
 
-typedef struct Object_8003DF08 {
+typedef struct Object_WorldKey {
     s16 unk0;
-} Object_8003DF08;
+} Object_WorldKey;
 
-typedef struct Object_8003FEF4 {
+typedef struct Object_AudioLine {
     u8 unk0;
     u8 pad1;
     u16 unk2;
@@ -811,25 +793,25 @@ typedef struct Object_8003FEF4 {
     u8 unk10;
     u8 unk11;
     u8 unk12;
-} Object_8003FEF4;
+} Object_AudioLine;
 
-typedef struct Object_8004001C {
+typedef struct Object_AudioReverb {
     u16 pad0;
     s16 unk2;
     u8 unk4;
     u8 unk5;
-} Object_8004001C;
+} Object_AudioReverb;
 
-typedef struct Object_800400A4 {
+typedef struct Object_TexScroll {
     s16 unk0;
     s16 pad2;
     s16 unk4;
     s16 unk6;
     s16 unk8;
     s16 unkA;
-} Object_800400A4;
+} Object_TexScroll;
 
-typedef struct Object_80042210 {
+typedef struct Object_Frog {
     f32 unk0;
     f32 unk4;
     f32 unk8;
@@ -844,7 +826,7 @@ typedef struct Object_80042210 {
     f32 unk24;
     u8 pad28[8];
     f32 unk30;
-} Object_80042210;
+} Object_Frog;
 
 typedef struct Object_Wizpig2 {
     u8 pad0[0x70];
@@ -868,7 +850,10 @@ typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
   /* 0x002 */ u8 pad2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
-  /* 0x004 */ u8 pad4[0x28];
+  /* 0x004 */ u8 pad4[0x20];
+  /* 0x024 */ s32 unk24;
+  /* 0x028 */ u16 unk28;
+  /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
   /* 0x030 */ f32 lateral_velocity;
   /* 0x034 */ u8 pad34[0x28];
@@ -892,9 +877,11 @@ typedef struct Object_Racer {
   /* 0x128 */ u32 lap_times[3];
   /* 0x134 */ u8 pad134[0x10];
   /* 0x144 */ struct Object *held_obj;
-  /* 0x148 */ u8 pad148[0x4];
+  /* 0x148 */ struct Object *unk148;
   /* 0x14C */ struct Object *unk14C;
-  /* 0x150 */ u8 pad150[0x22];
+  /* 0x150 */ u8 pad150[0x4];
+  /* 0x154 */ s32 unk154;
+  /* 0x158 */ u8 pad158[0x1A];
   /* 0x172 */ u8 balloon_type;
   /* 0x173 */ u8 balloon_quantity;
   /* 0x174 */ u8 balloon_level;
@@ -902,7 +889,15 @@ typedef struct Object_Racer {
   /* 0x183 */ s8 unk183;
   /* 0x184 */ s8 pad184;
   /* 0x185 */ s8 bananas;
-  /* 0x186 */ u8 pad186[0x4D];
+  /* 0x186 */ u8 pad186[0x1A];
+  /* 0x1A0 */ s16 unk1A0;
+  /* 0x1A2 */ s16 unk1A2;
+  /* 0x1A4 */ s16 unk1A4;
+  /* 0x1A6 */ u8 pad1A6[0x24];
+  /* 0x1CA */ s8 unk1CA;
+  /* 0x1CB */ u8 pad1CB[0x3];
+  /* 0x1CE */ u8 unk1CE;
+  /* 0x1CF */ u8 pad1CF[0x4];
   /* 0x1D3 */ s8 unk1D3;
   /* 0x1D4 */ u8 pad1D4[0x4];
   /* 0x1D8 */ s8 unk1D8;
@@ -917,7 +912,9 @@ typedef struct Object_Racer {
   /* 0x1ED */ s8 squish_timer;
   /* 0x1EE */ u8 pad1EE[0x1];
   /* 0x1EF */ u8 boost_sound;
-  /* 0x1F0 */ u8 pad1F1[0x5];
+  /* 0x1F0 */ u8 pad1F0[0x2];
+  /* 0x1F2 */ s8 unk1F2;
+  /* 0x1F3 */ u8 pad1F3[0x2];
   /* 0x1F5 */ u8 unk1F5;
   /* 0x1F6 */ u8 pad1F6[0x1];
   /* 0x1F7 */ u8 transparency;
@@ -931,7 +928,11 @@ typedef struct Object_Racer {
   /* 0x20C */ u8 unk20C;
   /* 0x20D */ u8 pad20D[0x1];
   /* 0x20E */ u16 unk20E;
-  /* 0x210 */ u8 pad210[0xC];
+  /* 0x210 */ u8 pad210[0x3];
+  /* 0x213 */ s8 unk213;
+  /* 0x214 */ s8 unk214;
+  /* 0x215 */ s8 unk215;
+  /* 0x216 */ u8 pad216[0x6];
   /* 0x21C */ u8 unk21C;
 } Object_Racer;
 
@@ -1040,73 +1041,29 @@ typedef struct Object_Banana {
 
 // from racer.c
 
-typedef struct Object_80044170 {
-    char unk0[0x2C];
-    f32 unk2C;
-    char unk30[0x124];
-    s32 unk154;
-    char unk158[0x72];
-    s8 unk1CA;
-    char unk1CB[0x3];
-    u8 unk1CE;
-    char unk1CF[0x13];
-    s8 unk1E2;
-    char unk1E3[0x30];
-    s8 unk213;
-    s8 unk214;
-    s8 unk215;
-} Object_80044170;
-
-typedef struct Object_80050754 {
-              u8 unk0[0x2C];
-              f32 unk2C;
-              f32 unk30;
-              u8 unk34[0x114];
-  /* 0x148 */ struct Object *someObj;
-              u8 unk14C[0x54];
-  /* 0x1A0 */ s16 unk1A0;
-  /* 0x1A2 */ s16 unk1A2;
-  /* 0x1A4 */ s16 unk1A4;
-              u8 unk1A6[0x4C];
-  /* 0x1F2 */ s8 unk1F2;
-} Object_80050754;
-
-typedef struct Object_800570B8 {
-    u8 pad0[3];
-    s8 unk3;
-    u8 pad4[0x20];
-    s32 unk24;
-    u16 unk28;
-    u16 unk2A;
-    u8 pad2C[0xDC];
-    s32 unk108;
-} Object_800570B8;
-
 typedef struct Object_64 {
     union {
         Object_Original original;
-        Object_80034860 obj80034860;
-        Object_80034E9C obj80034E9C;
+        Object_Laser laser;
+        Object_TrophyCabinet trophy_cabinet;
         Object_Animator animator;
-        Object_8003DFCC obj8003DFCC;
+        Object_WeaponBalloon weapon_balloon;
         Object_Butterfly butterfly;
-        Object_80034B74 obj80034B74;
-        Object_8003564C obj8003564C;
-        Object_80035E34 obj80035E34;
-        Object_80035F6C obj80035F6C;
+        Object_EffectBox effect_box;
+        Object_EggCreator egg_creator;
+        Object_UnkId58 unkid58;
+        Object_CharacterFlag character_flag;
         Object_80035F6C_2 obj80035F6C_2;
-        Object_800376E0 obj800376E0;
         Object_Snowball snowball;
-        Object_80038710 obj80038710;
-        Object_800387CC obj800387CC;
-        Object_800388D4 obj800388D4;
-        Object_80038E3C obj80038E3C;
-        Object_8003C1E0 obj8003C1E0;
-        Object_8003DF08 obj8003DF08;
-        Object_8003FEF4 obj8003FEF4;
-        Object_8004001C obj8004001C;
-        Object_800400A4 obj800400A4;
-        Object_80042210 obj80042210;
+        Object_AnimCamera anim_camera;
+        Object_AnimCar anim_car;
+        Object_InfoPoint info_point;
+        Object_TTDoor tt_door;
+        Object_WorldKey world_key;
+        Object_AudioLine audio_line;
+        Object_AudioReverb audio_reverb;
+        Object_TexScroll tex_scroll;
+        Object_Frog frog;
         Object_Wizpig2 wizpig2;
         Object_Exit exit;
         Object_Racer racer;
@@ -1120,9 +1077,6 @@ typedef struct Object_64 {
         Object_MidiFadePoint midi_fade_point;
         Object_PosArrow pos_arrow;
         Object_Banana banana;
-        Object_80044170 obj80044170;
-        Object_80050754 obj80050754;
-        Object_800570B8 obj800570B8;
     };
 } Object_64;
 

@@ -197,7 +197,7 @@ s8 D_8011D5BC;
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80043ECC.s")
 
-void func_80044170(Object *arg0, Object_80044170 *arg1, s32 arg2) {
+void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
     s32 raceType;
 
     raceType = get_current_level_race_type();
@@ -216,14 +216,14 @@ void func_80044170(Object *arg0, Object_80044170 *arg1, s32 arg2) {
             break;
     }
 
-    if (arg1->unk214 == 0 && arg1->unk2C < -0.5) {
+    if (arg1->unk214 == 0 && arg1->velocity < -0.5) {
         arg1->unk215 -= arg2;
         if (arg1->unk215 < 0) {
             arg1->unk215 = 0;
         }
     }
 
-    if (arg1->unk2C > -1.0 && arg1->unk214 == 0 && D_8011D540 == 0 && D_8011D544 == 0.0f && arg1->unk1E2 != 0 && arg1->unk215 == 0) {
+    if (arg1->velocity > -1.0 && arg1->unk214 == 0 && D_8011D540 == 0 && D_8011D544 == 0.0f && arg1->unk1E2 != 0 && arg1->unk215 == 0) {
         arg1->unk213 += arg2;
 
         if (arg1->unk213 > 60) {
@@ -436,28 +436,28 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
 #ifdef NON_EQUIVALENT
 
 // Mainly has regalloc issues.
-void func_80050754(Object *obj, Object_80050754 *obj64, f32 arg2) {
+void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
     f32 xDiff, yDiff, zDiff;
     Object *someObj;
 
     obj->segment.unk3B = 0;
     obj->segment.unk18 = 0x28;
-    someObj = obj64->someObj;
+    someObj = obj64->unk148;
     xDiff = someObj->segment.trans.x_position - obj->segment.trans.x_position;
     yDiff = someObj->segment.trans.y_position - obj->segment.trans.y_position;
     zDiff = someObj->segment.trans.z_position - obj->segment.trans.z_position;
     func_80011570(obj, xDiff, yDiff, zDiff);
-    obj->segment.trans.y_rotation = obj64->someObj->segment.trans.y_rotation;
-    obj->segment.trans.x_rotation = obj64->someObj->segment.trans.x_rotation;
-    obj->segment.trans.z_rotation = obj64->someObj->segment.trans.z_rotation;
+    obj->segment.trans.y_rotation = obj64->unk148->segment.trans.y_rotation;
+    obj->segment.trans.x_rotation = obj64->unk148->segment.trans.x_rotation;
+    obj->segment.trans.z_rotation = obj64->unk148->segment.trans.z_rotation;
     obj64->unk1A4 = obj->segment.trans.z_rotation;
     obj64->unk1A0 = obj->segment.trans.y_rotation;
     obj->segment.x_velocity = xDiff / arg2;
     obj->segment.y_velocity = yDiff / arg2;
     obj->segment.z_velocity = zDiff / arg2;
     obj64->unk1F2 = 0;
-    obj64->unk2C = 0.0f;
-    obj64->unk30 = 0.0f;
+    obj64->velocity = 0.0f;
+    obj64->lateral_velocity = 0.0f;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
@@ -651,9 +651,9 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
 #ifdef NON_EQUIVALENT
 void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
     s32 phi_t0;
-    Object_800570B8 *obj64;
+    Object_Racer *obj64;
 
-    obj64 = &obj->unk64->obj800570B8;
+    obj64 = &obj->unk64->racer;
     if ((obj64->unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
         if (arg3 == 2) {
             if ((obj64->unk24 != 0) && (arg1 != obj64->unk2A)) {
@@ -664,7 +664,7 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
         if (obj64->unk24 == 0) {
             if (arg3 != 3 || get_random_number_from_range(0, 1) != 0) {
                 obj64->unk2A = arg1;
-                arg1 += obj64->unk3;
+                arg1 += obj64->characterId;
                 arg2--;
                 phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
                 if (arg2 > 0) {
