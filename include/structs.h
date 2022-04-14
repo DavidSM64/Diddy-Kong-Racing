@@ -578,32 +578,32 @@ typedef struct Object_60 {
 struct Object;
 
 typedef struct Object_LaserGun {
-    u8 pad0[0xC];
-    s16 unkC;
-    u8 unkE;
-    s8 unkF;
-    u8 unk10;
-    u8 unk11;
+  /* 0x00 */ u8 pad0[0xC];
+  /* 0x0C */ s16 unkC;
+  /* 0x0E */ u8 unkE;
+  /* 0x0F */ s8 unkF;
+  /* 0x10 */ u8 unk10;
+  /* 0x11 */ u8 unk11;
 } Object_LaserGun;
 
 typedef struct Object_Laser {
-	s16 unk0;
-	u8  unk4[0x185];
-	s8  unk187;
+  /* 0x000 */ s16 unk0;
+  /* 0x004 */ u8  unk4[0x185];
+  /* 0x187 */ s8  unk187;
 } Object_Laser;
 
 typedef struct Object_TrophyCabinet {
-    s32 unk0;
-    s16 unk4;
+  /* 0x0 */ s32 unk0;
+  /* 0x4 */ s16 unk4;
 } Object_TrophyCabinet;
 
 typedef struct Object_Animator {
-    /* 0x00 */ s16 segmentId;
-    /* 0x02 */ s16 batchId;
-    /* 0x04 */ s16 xSpeedFactor;
-    /* 0x06 */ s16 ySpeedFactor;
-    /* 0x08 */ s16 xSpeed;
-    /* 0x0A */ s16 ySpeed;
+  /* 0x00 */ s16 segmentId;
+  /* 0x02 */ s16 batchId;
+  /* 0x04 */ s16 xSpeedFactor;
+  /* 0x06 */ s16 ySpeedFactor;
+  /* 0x08 */ s16 xSpeed;
+  /* 0x0A */ s16 ySpeed;
 } Object_Animator;
 
 typedef struct Object_Animation {
@@ -612,24 +612,24 @@ typedef struct Object_Animation {
 } Object_Animation;
 
 typedef struct Object_WeaponBalloon {
-    f32 unk0;
-    s16 unk4;
-    s8 unk6[0x2];
+  /* 0x0 */ f32 unk0;
+  /* 0x4 */ s16 unk4;
+  /* 0x6 */ s8 unk6[0x2];
 } Object_WeaponBalloon;
 
 typedef struct Object_Weapon {
-    u8 pad0[0x18];
-    u8 unk18;
+  /* 0x00 */ u8 pad0[0x18];
+  /* 0x18 */ u8 unk18;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
-  /* 0x00  */ Triangle triangles[8];
-  /* 0x80  */ Vertex vertices[12];
-  /* 0xF8  */ TextureHeader *texture;
-  /* 0xFC  */ u8 unkFC;
-  /* 0xFD  */ u8 unkFD;
-  /* 0xFE  */ u8 unkFE;
-  /* 0xFF  */ u8 unkFF;
+  /* 0x000 */ Triangle triangles[8];
+  /* 0x080 */ Vertex vertices[12];
+  /* 0x0F8 */ TextureHeader *texture;
+  /* 0x0FC */ u8 unkFC;
+  /* 0x0FD */ u8 unkFD;
+  /* 0x0FE */ u8 unkFE;
+  /* 0x0FF */ u8 unkFF;
   /* 0x100 */ s32 unk100;
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
@@ -637,151 +637,151 @@ typedef struct Object_Butterfly {
 } Object_Butterfly;
 
 typedef struct Object_EffectBox {
-    u8 pad0[0x1FE];
-    u8 unk1FE;
-    u8 unk1FF;
+  /* 0x000 */ u8 pad0[0x1FE];
+  /* 0x1FE */ u8 unk1FE;
+  /* 0x1FF */ u8 unk1FF;
 } Object_EffectBox;
 
 typedef struct Object_EggCreator {
-    u8 pad0[4];
-    struct Object *unk4;
+  /* 0x0 */ u8 pad0[4];
+  /* 0x4 */ struct Object *unk4;
 } Object_EggCreator;
 
 typedef struct Object_UnkId58 {
-    u8 pad0[0x1D6];
-    s8 unk1D6;
+  /* 0x000 */ u8 pad0[0x1D6];
+  /* 0x1D6 */ s8 unk1D6;
 } Object_UnkId58;
 
 typedef struct Object_CharacterFlag {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s16 *unk20;
-    u8  *unk24;
+  /* 0x00 */ s32 unk0;
+  /* 0x04 */ s32 unk4;
+  /* 0x08 */ s32 unk8;
+  /* 0x0C */ s32 unkC;
+  /* 0x10 */ s32 unk10;
+  /* 0x14 */ s32 unk14;
+  /* 0x18 */ s32 unk18;
+  /* 0x1C */ s32 unk1C;
+  /* 0x20 */ s16 *unk20;
+  /* 0x24 */ u8  *unk24;
 } Object_CharacterFlag;
 
 typedef struct Object_80035F6C {
-    u8 pad0[3];
-    s8 unk3;
+  /* 0x0 */ u8 pad0[3];
+  /* 0x3 */ s8 unk3;
 } Object_80035F6C;
 
 typedef struct Object_Snowball {
-    u8 pad0[0x20];
-    u32 unk20;
-    s16 unk24;
-    u8 pad28[0x12];
-    s8 unk38;
+  /* 0x00 */ u8 pad0[0x20];
+  /* 0x20 */ u32 unk20;
+  /* 0x24 */ s16 unk24;
+  /* 0x28 */ u8 pad28[0x12];
+  /* 0x38 */ s8 unk38;
 } Object_Snowball;
 
 typedef struct Object_AnimCamera {
-    u8 pad0[0x30];
-    s8 unk30;
-    u8 pad31[0x13];
-    s8 unk44;
+  /* 0x00 */ u8 pad0[0x30];
+  /* 0x30 */ s8 unk30;
+  /* 0x31 */ u8 pad31[0x13];
+  /* 0x44 */ s8 unk44;
 } Object_AnimCamera;
 
 typedef struct Object_AnimCar {
-    u8 pad0[0x148];
-    struct Object *unk148;
+  /* 0x000 */ u8 pad0[0x148];
+  /* 0x148 */ struct Object *unk148;
 } Object_AnimCar;
 
 typedef struct Object_InfoPoint {
-    s16 unk0;
+  /* 0x0 */ s16 unk0;
 } Object_InfoPoint;
 
 typedef struct Object_TTDoor {
-    f32 unk0;
-    u8 pad4[4];
-    s32 unk8;
-    u8 padC[3];
-    s8 unkF;
-    u8 pad10[2];
-    u8 unk12;
-    u8 unk13;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ u8 pad4[4];
+  /* 0x08 */ s32 unk8;
+  /* 0x0C */ u8 padC[3];
+  /* 0x0F */ s8 unkF;
+  /* 0x10 */ u8 pad10[2];
+  /* 0x12 */ u8 unk12;
+  /* 0x13 */ u8 unk13;
 } Object_TTDoor;
 
 typedef struct Object_WorldKey {
-    s16 unk0;
+  /* 0x0 */ s16 unk0;
 } Object_WorldKey;
 
 typedef struct Object_AudioLine {
-    u8 unk0;
-    u8 pad1;
-    u16 unk2;
-    u16 unk4;
-    u16 unk6;
-    union {
-        struct {
-            u8 unk8;
-            u8 unk9;
-            u8 unkA;
-            u8 padB;
-        } unk_struct;
-        s32 unk8_word;
-    } unk_union;
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
+  /* 0x00 */ u8 unk0;
+  /* 0x01 */ u8 pad1;
+  /* 0x02 */ u16 unk2;
+  /* 0x04 */ u16 unk4;
+  /* 0x06 */ u16 unk6;
+  /* 0x08 */ union {
+                 struct {
+                     u8 unk8;
+                     u8 unk9;
+                     u8 unkA;
+                     u8 padB;
+                 } unk_struct;
+                 s32 unk8_word;
+             } unk_union;
+  /* 0x0C */ u8 unkC;
+  /* 0x0D */ u8 unkD;
+  /* 0x0E */ u8 unkE;
+  /* 0x0F */ u8 unkF;
+  /* 0x10 */ u8 unk10;
+  /* 0x11 */ u8 unk11;
+  /* 0x12 */ u8 unk12;
 } Object_AudioLine;
 
 typedef struct Object_AudioReverb {
-    u16 pad0;
-    s16 unk2;
-    u8 unk4;
-    u8 unk5;
+  /* 0x0 */ u16 pad0;
+  /* 0x2 */ s16 unk2;
+  /* 0x4 */ u8 unk4;
+  /* 0x5 */ u8 unk5;
 } Object_AudioReverb;
 
 typedef struct Object_TexScroll {
-    s16 unk0;
-    s16 pad2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
+  /* 0x0 */ s16 unk0;
+  /* 0x2 */ s16 pad2;
+  /* 0x4 */ s16 unk4;
+  /* 0x6 */ s16 unk6;
+  /* 0x8 */ s16 unk8;
+  /* 0xA */ s16 unkA;
 } Object_TexScroll;
 
 typedef struct Object_Frog {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    u8 unk14;
-    u8 unk15;
-    u8 pad16[3];
-    u8 unk19;
-    u8 pad1A[6];
-    f32 unk20;
-    f32 unk24;
-    u8 pad28[8];
-    f32 unk30;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 unkC;
+  /* 0x10 */ f32 unk10;
+  /* 0x14 */ u8 unk14;
+  /* 0x15 */ u8 unk15;
+  /* 0x16 */ u8 pad16[3];
+  /* 0x19 */ u8 unk19;
+  /* 0x1A */ u8 pad1A[6];
+  /* 0x20 */ f32 unk20;
+  /* 0x24 */ f32 unk24;
+  /* 0x28 */ u8 pad28[8];
+  /* 0x30 */ f32 unk30;
 } Object_Frog;
 
 typedef struct Object_Wizpig2 {
-    u8 pad0[0x70];
-    u8 unk70;
-    u8 pad71;
-    u8 unk72;
-    u8 pad73;
-    f32 unk74;
+  /* 0x00 */ u8 pad0[0x70];
+  /* 0x70 */ u8 unk70;
+  /* 0x71 */ u8 pad71;
+  /* 0x72 */ u8 unk72;
+  /* 0x73 */ u8 pad73;
+  /* 0x74 */ f32 unk74;
 } Object_Wizpig2;
 
 typedef struct Object_Exit {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 unkC;
+  /* 0x10 */ s32 unk10;
+  /* 0x14 */ s8 unk14;
 } Object_Exit;
 
 typedef struct Object_Racer {
@@ -893,8 +893,8 @@ typedef struct Object_Racer {
   /* 0x1F5 */ u8 unk1F5;
   /* 0x1F6 */ u8 pad1F6[0x1];
   /* 0x1F7 */ u8 transparency;
-  /* 0x0290 */ u8 indicator_type;
-  /* 0x0291 */ s8 indicator_timer;
+  /* 0x290 */ u8 indicator_type;
+  /* 0x291 */ s8 indicator_timer;
   /* 0x1FA */ u8 pad1FA[0x6];
   /* 0x200 */ s8 unk200;
   /* 0x201 */ u8 pad201[0x2];
@@ -914,134 +914,134 @@ typedef struct Object_Racer {
 } Object_Racer;
 
 typedef struct Object_Bonus {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 unkC;
+  /* 0x10 */ s32 unk10;
+  /* 0x14 */ s8 unk14;
 } Object_Bonus;
 
 typedef struct Object_ModeChange {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 unkC;
+  /* 0x10 */ s32 unk10;
+  /* 0x14 */ s8 unk14;
 } Object_ModeChange;
 
 typedef struct Object_GoldenBalloon {
-    f32 unk0;
-    u8 pad4[0x8];
-    u8 unkC;
-    u8 unkD;
-    u8 unkE;
-    u8 unkF;
-    s8 unk10;
-    f32 unk14;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ u8 pad4[0x8];
+  /* 0x0C */ u8 unkC;
+  /* 0x0D */ u8 unkD;
+  /* 0x0E */ u8 unkE;
+  /* 0x0F */ u8 unkF;
+  /* 0x10 */ s8 unk10;
+  /* 0x14 */ f32 unk14;
 } Object_GoldenBalloon;
 
 typedef struct Object_Door {
-    f32 unk0;
-    u8 pad4[0x4];
-    s32 unk8;
-    s16 padA;
-    s8 unkE;
-    u8 unkF;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ u8 pad4[0x4];
+  /* 0x08 */ s32 unk8;
+  /* 0x0A */ s16 padA;
+  /* 0x0E */ s8 unkE;
+  /* 0x0F */ u8 unkF;
+  /* 0x10 */ u8 unk10;
+  /* 0x11 */ u8 unk11;
+  /* 0x12 */ u8 unk12;
+  /* 0x13 */ u8 unk13;
+  /* 0x14 */ u8 unk14;
 } Object_Door;
 
 typedef struct Object_Trigger {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s32 unk10;
-    s8 unk14;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 unkC;
+  /* 0x10 */ s32 unk10;
+  /* 0x14 */ s8 unk14;
 } Object_Trigger;
 
 typedef struct Object_Audio {
-    /* 0x00 */ u16 unk0;
-    /* 0x02 */ u16 unk2;
-    /* 0x04 */ u8 unk4;
-    /* 0x05 */ u8 unk5;
-    /* 0x06 */ u8 unk6;
-    /* 0x07 */ u8 unk7;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ u8 unkC;
-    /* 0x0D */ u8 unkD;
+  /* 0x00 */ u16 unk0;
+  /* 0x02 */ u16 unk2;
+  /* 0x04 */ u8 unk4;
+  /* 0x05 */ u8 unk5;
+  /* 0x06 */ u8 unk6;
+  /* 0x07 */ u8 unk7;
+  /* 0x08 */ s32 unk8;
+  /* 0x0C */ u8 unkC;
+  /* 0x0D */ u8 unkD;
 } Object_Audio;
 
 typedef struct Object_MidiFade {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    u8 unk2F[16];
-    u8 unk40;
+  /* 0x00 */ u8 unk0;
+  /* 0x01 */ u8 unk1;
+  /* 0x02 */ u8 unk2;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ f32 unkC;
+  /* 0x10 */ f32 unk10;
+  /* 0x14 */ f32 unk14;
+  /* 0x18 */ f32 unk18;
+  /* 0x1C */ f32 unk1C;
+  /* 0x20 */ f32 unk20;
+  /* 0x24 */ f32 unk24;
+  /* 0x28 */ f32 unk28;
+  /* 0x2C */ f32 unk2C;
+  /* 0x2F */ u8 unk2F[16];
+  /* 0x40 */ u8 unk40;
 } Object_MidiFade;
 
 typedef struct Object_MidiFadePoint {
-    u16 unk0;
-    u16 unk2;
-    f32 unk4;
-    f32 unk8;
-    u8 unkC[16];
-    u8 unk1C;
+  /* 0x00 */ u16 unk0;
+  /* 0x02 */ u16 unk2;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ u8 unkC[16];
+  /* 0x1C */ u8 unk1C;
 } Object_MidiFadePoint;
 
 typedef struct Object_PosArrow {
-    s16 unk0;
-    u8 pad4[0x14E];
-    struct Object *unk150;
+  /* 0x000 */ s16 unk0;
+  /* 0x004 */ u8 pad4[0x14E];
+  /* 0x150 */ struct Object *unk150;
 } Object_PosArrow;
 
 typedef struct Object_Banana {
-    u8 pad0[4];
-    struct Object *spawner;
+  /* 0x0 */ u8 pad0[4];
+  /* 0x4 */ struct Object *spawner;
 } Object_Banana;
 
 typedef struct Object_FogChanger {
-    s16 unk0;
+  /* 0x0 */ s16 unk0;
 } Object_FogChanger;
 
 typedef struct Object_Taj {
-    f32 unk0;
-    u8 pad4[0x9];
-    u8 unkD;
-    u8 padE[0x1A];
-    s16 unk28;
-    u8 pad2A[0x2];
-    s32 unk2C;
-    u8 pad30[0x4];
-    s16 unk34;
-    s8 unk36;
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ u8 pad4[0x9];
+  /* 0x0D */ u8 unkD;
+  /* 0x0E */ u8 padE[0x1A];
+  /* 0x28 */ s16 unk28;
+  /* 0x2A */ u8 pad2A[0x2];
+  /* 0x2C */ s32 unk2C;
+  /* 0x30 */ u8 pad30[0x4];
+  /* 0x34 */ s16 unk34;
+  /* 0x36 */ s8 unk36;
 } Object_Taj;
 
 typedef struct Object_TT {
-    f32 unk0;
-    u8 pad4[0x9];
-    u8 unkD;
+  /* 0x0 */ f32 unk0;
+  /* 0x4 */ u8 pad4[0x9];
+  /* 0xD */ u8 unkD;
 } Object_TT;
 
 typedef struct Object_Bridge_WhaleRamp {
-    f32 unk0;
-    s32 unk4;
+  /* 0x0 */ f32 unk0;
+  /* 0x4 */ s32 unk4;
 } Object_Bridge_WhaleRamp;
 
 typedef struct Object_64 {
