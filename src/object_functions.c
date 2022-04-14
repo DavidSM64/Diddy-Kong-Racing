@@ -868,7 +868,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
                 yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < obj->unk78) {
-                    if (racerObj64->unk0 != -1) {
+                    if (racerObj64->playerIndex != -1) {
                         func_80001EA8(263, curRacerObj->segment.trans.x_position, curRacerObj->segment.trans.y_position, curRacerObj->segment.trans.z_position, NULL);
                     }
                     racerObj64->unk1D3 = func_8000C8B4(45);
@@ -877,7 +877,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
                         racerObj64->unk203 |= 4;
                     }
                     if (racerObj64->unk1D8 == 0) {
-                        func_80072348(racerObj64->unk0, 8);
+                        func_80072348(racerObj64->playerIndex, 8);
                     }
                 }
             }
@@ -1529,7 +1529,7 @@ void obj_loop_exit(Object *obj, UNUSED s32 speed) {
             for (i = 0; i < numberOfRacers; i++) {
                 racerObj = racerObjects[i];
                 racerObj64 = &racerObj->unk64->racer;
-                if ((racerObj64->unk0 != -1) && (racerObj64->unk108 == 0)) {
+                if ((racerObj64->playerIndex != -1) && (racerObj64->unk108 == 0)) {
                     xDiff = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                     yDiff = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                     zDiff = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -1725,7 +1725,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 speed) {
                         if ((s32) racerObj64->unk185 < 10) {
                             racerObj64->unk185 = 10;
                             func_80009558(34, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, NULL);
-                            func_80001EA8(racerObj64->unk3 + 123, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
+                            func_80001EA8(racerObj64->characterId + 123, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                         }
                     }
                 }

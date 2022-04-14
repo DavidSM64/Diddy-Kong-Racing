@@ -865,31 +865,74 @@ typedef struct Object_Exit {
 } Object_Exit;
 
 typedef struct Object_Racer {
-    s16 unk0;
-    u8 pad2;
-    s8 unk3;
-    u8 pad4[0x104];
-    s32 unk108;
-    u8 pad10C[0x40];
-    struct Object *unk14C;
-    u8 pad150[0x33];
-    s8 unk183;
-    s8 pad184;
-    s8 unk185;
-    u8 pad186[0x4D];
-    s8 unk1D3;
-    u8 pad1D4[0x4];
-    s8 unk1D8;
-    u8 pad1D9[0x9];
-    s8 unk1E2;
-    u8 pad1E3[0x12];
-    u8 unk1F5;
-    u8 pad1F6[0xA];
-    s8 unk200;
-    u8 pad201[0x2];
-    s8 unk203;
-    u8 pad204[0x8];
-    u8 unk20C;
+  /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
+  /* 0x002 */ u8 pad2;
+  /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
+  /* 0x004 */ u8 pad4[0x28];
+  /* 0x02C */ f32 velocity;
+  /* 0x030 */ f32 lateral_velocity;
+  /* 0x034 */ u8 pad34[0x28];
+  /* 0x05C */ f32 prev_x_position;
+  /* 0x060 */ f32 prev_y_position;
+  /* 0x064 */ f32 prev_z_position;
+  /* 0x068 */ u8 pad68[0x24];
+  /* 0x08C */ f32 stretch_height;
+  /* 0x090 */ f32 stretch_height_cap;
+  /* 0x094 */ f32 camera_zoom;
+  /* 0x098 */ u8 pad98[0x4];
+  /* 0x09C */ f32 pitch;
+  /* 0x0A0 */ u8 padA0[0x8];
+  /* 0x0A8 */ f32 checkpoint_distance;
+  /* 0x0AC */ u8 padAC[0x8];
+  /* 0x0B4 */ f32 throttle;
+  /* 0x0B8 */ f32 brake;
+  /* 0x0BC */ u8 padBC[0x4C];
+  /* 0x108 */ s32 unk108;
+  /* 0x10C */ u8 pad10C[0x1C];
+  /* 0x128 */ u32 lap_times[3];
+  /* 0x134 */ u8 pad134[0x10];
+  /* 0x144 */ struct Object *held_obj;
+  /* 0x148 */ u8 pad148[0x4];
+  /* 0x14C */ struct Object *unk14C;
+  /* 0x150 */ u8 pad150[0x22];
+  /* 0x172 */ u8 balloon_type;
+  /* 0x173 */ u8 balloon_quantity;
+  /* 0x174 */ u8 balloon_level;
+  /* 0x175 */ u8 pad175[0xE];
+  /* 0x183 */ s8 unk183;
+  /* 0x184 */ s8 pad184;
+  /* 0x185 */ s8 bananas;
+  /* 0x186 */ u8 pad186[0x4D];
+  /* 0x1D3 */ s8 unk1D3;
+  /* 0x1D4 */ u8 pad1D4[0x4];
+  /* 0x1D8 */ s8 unk1D8;
+  /* 0x1D9 */ u8 pad1D9[0x2];
+  /* 0x1DB */ u8 spinout_timer;
+  /* 0x1DC */ u8 wheel_surfaces[4];
+  /* 0x1E0 */ u8 pad1E0[0x2];
+  /* 0x1E2 */ s8 unk1E2;
+  /* 0x1E3 */ u8 pad1E3[0x3];
+  /* 0x1E6 */ u8 drift_direction;
+  /* 0x1E7 */ u8 pad1E7[0x6];
+  /* 0x1ED */ s8 squish_timer;
+  /* 0x1EE */ u8 pad1EE[0x1];
+  /* 0x1EF */ u8 boost_sound;
+  /* 0x1F0 */ u8 pad1F1[0x5];
+  /* 0x1F5 */ u8 unk1F5;
+  /* 0x1F6 */ u8 pad1F6[0x1];
+  /* 0x1F7 */ u8 transparency;
+  /* 0x0290 */ u8 indicator_type;
+  /* 0x0291 */ s8 indicator_timer;
+  /* 0x1FA */ u8 pad1FA[0x6];
+  /* 0x200 */ s8 unk200;
+  /* 0x201 */ u8 pad201[0x2];
+  /* 0x203 */ s8 unk203;
+  /* 0x204 */ u8 pad204[0x8];
+  /* 0x20C */ u8 unk20C;
+  /* 0x20D */ u8 pad20D[0x1];
+  /* 0x20E */ u16 unk20E;
+  /* 0x210 */ u8 pad210[0xC];
+  /* 0x21C */ u8 unk21C;
 } Object_Racer;
 
 typedef struct Object_Bonus {
@@ -1193,137 +1236,9 @@ typedef struct Object {
   /* 0x0094 */ u32 unk94;
 
   /* 0x0098 */ Object_64 obj;
-  
-  //------------------------------ REMOVE BEGIN ------------------------------
-//   /* 0x0098 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
-//   /* 0x009A */ u8 unk9A;
-//   /* 0x009B */ u8 characterId; // Affects minimap color, horn, voice, etc.
 
-//   /* 0x009C */ u32 unk9C;
-
-//   /* 0x00A0 */ f32 unkA0;
-
-//   /* 0x00A4 */ u32 unkA4;
-//   /* 0x00A8 */ u32 unkA8;
-//   /* 0x00AC */ u32 unkAC;
-//   /* 0x00B0 */ u32 unkB0;
-//   /* 0x00B4 */ u32 unkB4;
-//   /* 0x00B8 */ u32 unkB8;
-//   /* 0x00BC */ u32 unkBC;
-//   /* 0x00C0 */ u32 unkc0;
-
-//   /* 0x00C4 */ f32 velocity;
-//   /* 0x00C8 */ f32 lateral_velocity;
-
-//   u32 unkCC[10]; // Not an array. Unknown values.
-
-//   /* 0x00F4 */ f32 prev_x_position;
-//   /* 0x00F8 */ f32 prev_y_position;
-//   /* 0x00FC */ f32 prev_z_position;
-
-//   /* 0x0100 */ u32 unk100;
-//   /* 0x0104 */ u32 unk104;
-//   /* 0x0108 */ u32 unk108;
-//   /* 0x010C */ u32 unk10C;
-
-//   /* 0x0110 */ f32 unk110;
-//   /* 0x0114 */ f32 unk114;
-//   /* 0x0118 */ f32 unk118;
-//   /* 0x011C */ f32 unk11C;
-//   /* 0x0120 */ u32 unk120;
-//   /* 0x0124 */ f32 stretch_height;
-//   /* 0x0128 */ f32 stretch_height_cap;
-//   /* 0x012C */ f32 camera_zoom;
-//   /* 0x0130 */ u32 unk130;
-//   /* 0x0134 */ f32 pitch;
-//   /* 0x0138 */ u32 unk138;
-//   /* 0x013C */ u32 unk13C;
-//   /* 0x0140 */ f32 checkpoint_distance;
-//   /* 0x0144 */ u32 unk144;
-//   /* 0x0148 */ f32 unk148;
-//   /* 0x014C */ f32 throttle;
-//   /* 0x0150 */ f32 brake;
-//   /* 0x0154 */ u32 unk154;
-//   /* 0x0158 */ u32 unk158;
-//   /* 0x015C */ u32 unk15C;
-//   /* 0x0160 */ f32 unk160;
-//   /* 0x0164 */ u32 unk164;
-//   /* 0x0168 */ u32 unk168;
-//   /* 0x016C */ u32 unk16C;
-//   /* 0x0170 */ f32 unk170;
-//   /* 0x0174 */ f32 unk174;
-//   /* 0x0178 */ f32 unk178;
-//   /* 0x017C */ f32 unk17C;
-//   /* 0x0180 */ f32 unk180;
-//   /* 0x0184 */ f32 unk184;
-//   /* 0x0188 */ f32 unk188;
-//   /* 0x018C */ f32 unk18C;
-//   /* 0x0190 */ f32 unk190;
-//   /* 0x0194 */ f32 unk194;
-//   /* 0x0198 */ f32 unk198;
-//   /* 0x019C */ f32 unk19C;
-
-//   u32 unk1A0[8]; // Not an array. Unknown values.
-
-//   /* 0x01C0 */ u32 lap_times[3];
-
-//   /* 0x01CC */ u32 unk1CC;
-//   /* 0x01D0 */ u32 unk1D0;
-//   /* 0x01D4 */ u32 unk1D4;
-//   /* 0x01D8 */ u32 unk1D8;
-
-//   /* 0x01DC */ void *held_obj_ptr;
-
-//   u32 unk1E0[10]; // Not an array. Unknown values.
-
-//   /* 0x0208 */ u16 unk208;
-//   /* 0x020A */ u8 balloon_type;
-//   /* 0x020B */ u8 balloon_quantity;
-//   /* 0x020C */ u8 balloon_level;
-
-//   /* 0x020D */ u8 unk20D;
-//   /* 0x020E */ u8 unk20E;
-//   /* 0x020F */ u8 unk20F;
-//   /* 0x0210 */ u32 unk210;
-//   /* 0x0214 */ u32 unk214;
-//   /* 0x0218 */ u32 unk218;
-//   /* 0x021A */ u16 unk21A;
-//   /* 0x021B */ u8 unk21B;
-
-//   /* 0x021D */ s8 bananas;
-//   /* 0x021E */ u8 unk21E;
-
-//   /* 0x0270 */ u8 unk270;
-//   /* 0x0271 */ u8 unk271;
-//   /* 0x0272 */ u8 unk272;
-
-//   /* 0x0273 */ u8 spinout_timer;
-//   /* 0x0274 */ u8 wheel_surfaces[4];
-
-//   /* 0x0278 */ u32 unk278;
-//   /* 0x027C */ u16 unk27C;
-
-//   /* 0x027E */ u8 drift_direction;
-//   /* 0x027F */ u8 unk27F;
-
-//   /* 0x0280 */ u32 unk280;
-//   /* 0x0284 */ u8 unk284;
-
-//   /* 0x0285 */ s8 squish_timer;
-//   /* 0x0286 */ u8 unk286;
-//   /* 0x0287 */ u8 boost_sound;
-//   /* 0x0288 */ u32 unk288;
-
-//   /* 0x028C */ u16 unk28C;
-//   /* 0x028E */ u8 unk28E;
-
-//   /* 0x028F */ u8 transparency;
-  //------------------------------ REMOVE END ------------------------------
-  /* 0x0290 */ u8 indicator_type;
-  /* 0x0291 */ s8 indicator_timer;
-  /* 0x0292 */ u16 unk292;
-
-  u32 unk294[11]; // Not an array. Unknown values.
+  // May be a part of obj (likely Object_Player).
+  /* 0x02B8 */ u8 pad2A8[0x8];
 
   /* 0x02C0 */ f32 unk2C0;
 
