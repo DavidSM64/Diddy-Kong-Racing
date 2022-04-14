@@ -654,8 +654,6 @@ typedef struct Object_Original {
     u8 unk1F7; // Used in func_8002A900
 } Object_Original;
 
-// from object_functions.c
-
 typedef struct Object_Laser {
 	s16 unk0;
 	u8  unk4[0x185];
@@ -676,6 +674,11 @@ typedef struct Object_Animator {
     /* 0x0A */ s16 ySpeed;
 } Object_Animator;
 
+typedef struct Object_Animation {
+  /* 0x00 */ u8 pad0[0x4A];
+  /* 0x4A */ s16 unk4A;
+} Object_Animation;
+
 typedef struct Object_WeaponBalloon {
     f32 unk0;
     s16 unk4;
@@ -695,8 +698,6 @@ typedef struct Object_Butterfly {
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
 } Object_Butterfly;
-
-// from object_functions.h
 
 typedef struct Object_EffectBox {
     u8 pad0[0x1FE];
@@ -856,7 +857,16 @@ typedef struct Object_Racer {
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
   /* 0x030 */ f32 lateral_velocity;
-  /* 0x034 */ u8 pad34[0x28];
+  /* 0x034 */ u8 pad[0x4];
+  /* 0x038 */ f32 ox1;
+  /* 0x03C */ f32 oy1;
+  /* 0x040 */ f32 oz1;
+  /* 0x044 */ f32 ox2;
+  /* 0x048 */ f32 oy2;
+  /* 0x04C */ f32 oz2;
+  /* 0x050 */ f32 ox3;
+  /* 0x054 */ f32 oy3;
+  /* 0x058 */ f32 oz3;
   /* 0x05C */ f32 prev_x_position;
   /* 0x060 */ f32 prev_y_position;
   /* 0x064 */ f32 prev_z_position;
@@ -873,14 +883,16 @@ typedef struct Object_Racer {
   /* 0x0B8 */ f32 brake;
   /* 0x0BC */ u8 padBC[0x4C];
   /* 0x108 */ s32 unk108;
-  /* 0x10C */ u8 pad10C[0x1C];
+  /* 0x10C */ u8 pad10C[0xC];
+  /* 0x118 */ s32 unk118;
+  /* 0x11C */ u8 pad11C[0xC];
   /* 0x128 */ u32 lap_times[3];
   /* 0x134 */ u8 pad134[0x10];
   /* 0x144 */ struct Object *held_obj;
   /* 0x148 */ struct Object *unk148;
   /* 0x14C */ struct Object *unk14C;
   /* 0x150 */ u8 pad150[0x4];
-  /* 0x154 */ s32 unk154;
+  /* 0x154 */ struct Object *unk154;
   /* 0x158 */ u8 pad158[0x1A];
   /* 0x172 */ u8 balloon_type;
   /* 0x173 */ u8 balloon_quantity;
@@ -889,31 +901,40 @@ typedef struct Object_Racer {
   /* 0x183 */ s8 unk183;
   /* 0x184 */ s8 pad184;
   /* 0x185 */ s8 bananas;
-  /* 0x186 */ u8 pad186[0x1A];
+  /* 0x186 */ u8 unk186;
+  /* 0x187 */ s8 unk187;
+  /* 0x188 */ u8 pad188[0x4];
+  /* 0x18C */ s16 unk18C;
+  /* 0x18E */ s16 unk18E;
+  /* 0x190 */ u8 pad190[0x10];
   /* 0x1A0 */ s16 unk1A0;
   /* 0x1A2 */ s16 unk1A2;
   /* 0x1A4 */ s16 unk1A4;
-  /* 0x1A6 */ u8 pad1A6[0x24];
+  /* 0x1A6 */ u8 pad1A6[0x23];
+  /* 0x1C9 */ u8 unk1C9;
   /* 0x1CA */ s8 unk1CA;
   /* 0x1CB */ u8 pad1CB[0x3];
   /* 0x1CE */ u8 unk1CE;
   /* 0x1CF */ u8 pad1CF[0x4];
   /* 0x1D3 */ s8 unk1D3;
-  /* 0x1D4 */ u8 pad1D4[0x4];
+  /* 0x1D4 */ u8 pad1D4[0x2];
+  /* 0x1D6 */ s8 unk1D6;
+  /* 0x1D7 */ s8 unk1D7;
   /* 0x1D8 */ s8 unk1D8;
   /* 0x1D9 */ u8 pad1D9[0x2];
-  /* 0x1DB */ u8 spinout_timer;
+  /* 0x1DB */ s8 spinout_timer;
   /* 0x1DC */ u8 wheel_surfaces[4];
-  /* 0x1E0 */ u8 pad1E0[0x2];
+  /* 0x1E0 */ u8 pad1E0[0x1];
+  /* 0x1E1 */ s8 unk1E1;
   /* 0x1E2 */ s8 unk1E2;
   /* 0x1E3 */ u8 pad1E3[0x3];
-  /* 0x1E6 */ u8 drift_direction;
+  /* 0x1E6 */ s8 drift_direction;
   /* 0x1E7 */ u8 pad1E7[0x6];
   /* 0x1ED */ s8 squish_timer;
   /* 0x1EE */ u8 pad1EE[0x1];
   /* 0x1EF */ u8 boost_sound;
   /* 0x1F0 */ u8 pad1F0[0x2];
-  /* 0x1F2 */ s8 unk1F2;
+  /* 0x1F2 */ u8 unk1F2;
   /* 0x1F3 */ u8 pad1F3[0x2];
   /* 0x1F5 */ u8 unk1F5;
   /* 0x1F6 */ u8 pad1F6[0x1];
@@ -924,11 +945,13 @@ typedef struct Object_Racer {
   /* 0x200 */ s8 unk200;
   /* 0x201 */ u8 pad201[0x2];
   /* 0x203 */ s8 unk203;
-  /* 0x204 */ u8 pad204[0x8];
+  /* 0x204 */ s16 unk204;
+  /* 0x206 */ u8 pad206[0x6];
   /* 0x20C */ u8 unk20C;
   /* 0x20D */ u8 pad20D[0x1];
-  /* 0x20E */ u16 unk20E;
-  /* 0x210 */ u8 pad210[0x3];
+  /* 0x20E */ s16 unk20E;
+  /* 0x210 */ s8 unk210;
+  /* 0x211 */ u8 pad211[0x2];
   /* 0x213 */ s8 unk213;
   /* 0x214 */ s8 unk214;
   /* 0x215 */ s8 unk215;
@@ -1039,7 +1062,9 @@ typedef struct Object_Banana {
     struct Object *spawner;
 } Object_Banana;
 
-// from racer.c
+typedef struct Object_FogChanger {
+    s16 unk0;
+} Object_FogChanger;
 
 typedef struct Object_64 {
     union {
@@ -1047,6 +1072,7 @@ typedef struct Object_64 {
         Object_Laser laser;
         Object_TrophyCabinet trophy_cabinet;
         Object_Animator animator;
+        Object_Animation animation;
         Object_WeaponBalloon weapon_balloon;
         Object_Butterfly butterfly;
         Object_EffectBox effect_box;
@@ -1077,6 +1103,7 @@ typedef struct Object_64 {
         Object_MidiFadePoint midi_fade_point;
         Object_PosArrow pos_arrow;
         Object_Banana banana;
+        Object_FogChanger fog_changer;
     };
 } Object_64;
 

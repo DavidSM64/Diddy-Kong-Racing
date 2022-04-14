@@ -1178,10 +1178,6 @@ void func_8003093C(s32 arg0) {
 #ifdef NON_EQUIVALENT
 //unk8011D388 D_8011D388[4];
 
-typedef struct Object_64_FogChanger {
-    s16 unk0;
-} Object_64_FogChanger;
-
 typedef struct Object_3C_FogChanger {
     u8 pad0[0x2];
     s16 unk2;
@@ -1227,7 +1223,7 @@ void obj_loop_fogchanger(Object* obj) {
         index = -1;
         if (sp40 != NULL) {
             tempObj = sp40[i]; // Might be a player object?
-            temp_v0 = ((Object_64_FogChanger*)tempObj->unk64)->unk0;
+            temp_v0 = tempObj->unk64->fog_changer.unk0;
             if ((temp_v0 >= 0) && (temp_v0 < MAXCONTROLLERS) && (obj != D_8011D388[i].unk34)) {
                 index = temp_v0;
                 x = tempObj->segment.trans.x_position;

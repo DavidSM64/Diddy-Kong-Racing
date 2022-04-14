@@ -1149,7 +1149,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_animator.s")
 #endif
 
 void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2) {
-    Object_64_Animation* obj64;
+    Object_Animation* obj64;
     Object* sp24;
     s8 tempOrderIndex;
     f32 scalef;
@@ -1200,7 +1200,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     if (((func_8001E440() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) && (entry->objectIdToSpawn != -1)) {
         func_8001F23C(obj, entry);
     }
-    obj64 = (Object_64_Animation*)obj->unk64;
+    obj64 = &obj->unk64->animation;
     if (obj->unk64 != 0) { 
         func_8001EFA4(obj, obj64);
         if (entry->order != 0 || obj64->unk4A != entry->objectIdToSpawn) {
