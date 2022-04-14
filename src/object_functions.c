@@ -935,13 +935,13 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 speed) {
     s32 temp_t5;
     Object *someObj;
     Object_CharacterFlag *obj64;
-    Object_80035F6C_2 *someObj64;
+    Object_80035F6C *someObj64;
 
     if (obj->unk7C.word < 0) {
         someObj = get_object_struct(obj->unk78);
         if (someObj != NULL) {
             obj64 = &obj->unk64->character_flag;
-            someObj64 = &someObj->unk64->obj80035F6C_2;
+            someObj64 = &someObj->unk64->obj80035F6C;
             obj->unk7C.word = someObj64->unk3;
             if (obj->unk7C.word < 0 || obj->unk7C.word >= 0xA) {
                 obj->unk7C.word = 0;
