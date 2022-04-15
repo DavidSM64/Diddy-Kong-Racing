@@ -1819,7 +1819,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
             obj4C = obj->unk4C;
             if ((obj4C->unk13 < 45) && (someBool == FALSE)) {
                 racerObj = obj4C->unk0;
-                if (racerObj && (racerObj->segment.header->behaviorId == 1) && (racerObj->unk64->racer->unk0 == 0)) {
+                if (racerObj && (racerObj->segment.header->behaviorId == 1) && (racerObj->unk64->racer.playerIndex == 0)) {
                     settings->balloonsPtr[settings->worldId]++;
                     if (settings->worldId != 0) {
                         settings->balloonsPtr[0]++;
@@ -1832,7 +1832,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                     func_800AFC3C(obj, speed);
                 }
             }
-            obj64 = obj->unk64->golden_balloon;
+            obj64 = &obj->unk64->golden_balloon;
             obj->segment.unk3B = 0;
             obj64->unk14 = 0.0f;
             if (obj->segment.unk38.half.lower < 255) {
@@ -2478,7 +2478,7 @@ void obj_loop_weather(Object *obj, s32 speed) {
         do {
             curObj = objects[1];
             curObj64 = &curObj->unk64->racer;
-        } while (((++objects) < lastObj) && (sp54 != curObj64->unk0));
+        } while (((++objects) < lastObj) && (sp54 != curObj64->playerIndex));
         temp_f0 = obj->segment.trans.x_position - curObj->segment.trans.x_position;
         temp_f2 = obj->segment.trans.z_position - curObj->segment.trans.z_position;
         new_var = obj->unk78f;

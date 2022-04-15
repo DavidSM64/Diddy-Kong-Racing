@@ -781,7 +781,7 @@ typedef struct Object_Exit {
 
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
-  /* 0x002 */ u8 pad2;
+  /* 0x002 */ u8 unk2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ u8 pad4[0x20];
   /* 0x024 */ s32 unk24;
@@ -1039,6 +1039,19 @@ typedef struct Object_Bridge_WhaleRamp {
   /* 0x4 */ s32 unk4;
 } Object_Bridge_WhaleRamp;
 
+typedef struct Object_80011AD0 {
+  /* 0x00 */ u8 pad0[0x20];
+  /* 0x20 */ u32 unk20;
+  /* 0x24 */ u32 unk24;
+  /* 0x28 */ u8 pad28[0x48];
+  /* 0x70 */ u8 unk70;
+  /* 0x71 */ u8 pad71[0x3];
+  /* 0x74 */ f32 unk74;
+  /* 0x78 */ u8 pad78[0x80];
+  /* 0xF8 */ u32 unkF8;
+  /* 0xFC */ u8 unkFC;
+} Object_80011AD0;
+
 typedef struct Object_64 {
     union {
         Object_LaserGun laser_gun;
@@ -1080,6 +1093,7 @@ typedef struct Object_64 {
         Object_Taj taj;
         Object_TT tt;
         Object_Bridge_WhaleRamp bridge_whale_ramp;
+        Object_80011AD0 obj80011AD0;
     };
 } Object_64;
 

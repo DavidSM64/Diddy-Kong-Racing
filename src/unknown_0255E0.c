@@ -181,6 +181,7 @@ s32 func_800249E0(s32 arg0) {
 }
 
 #ifdef NON_EQUIVALENT
+void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;

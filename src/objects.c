@@ -620,7 +620,7 @@ void func_8000E2B4(void) {
     LevelObjectEntry8000E2B4 sp2C;
     Settings *settings;
     Object *player;
-    Object_64 *player_64;
+    Object_Racer *player_64;
     s16 object_id;
 
     if (D_8011AD44 == 0) {
@@ -653,13 +653,13 @@ void func_8000E2B4(void) {
     (*gObjectStructArrayPtr)[0] = (s32) player;
     *D_8011AEEC = (s32) player;
     *D_8011AEE8 = player;
-    player_64 = player->unk64;
+    player_64 = &player->unk64->racer;
     player_64->unk1D6 = (s8) D_8011AD45;
-    player_64->unk0_a.unk0_b.unk2 = (u8)0;
+    player_64->unk2 = (u8)0;
     player_64->unk1D7 = (s8) D_8011AD45;
-    player_64->unk0_a.unk0_b.unk0 = (u16)0;
+    player_64->playerIndex = (u16)0;
     player_64->unk118 = 0;
-    player_64->unk0_a.unk0_b.unk3 = (s8) settings->racers[0].character;
+    player_64->characterId = (s8) settings->racers[0].character;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
         player->segment.trans.scale *= 1.4f;
     }
@@ -850,16 +850,16 @@ void func_80011AD0(Object *this) {
             //L80011B10
             if (this->unk7C.word < 0)
                 break;
-            func_80011960(this, this->unk64->unk20, 4, this->unk64,
-                            2, this->unk64->unk24, 11, 0, 1.0f);
+            func_80011960(this, this->unk64->obj80011AD0.unk20, 4, this->unk64,
+                            2, this->unk64->obj80011AD0.unk24, 11, 0, 1.0f);
             break;
 
         case 61:
             //L80011B58
-            offset = (this->unk64->unkFC * 6);
+            offset = (this->unk64->obj80011AD0.unkFC * 6);
             offset *= 5;
             offset = offset * 2 + 0x80;
-            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->unkF8, 10, 0, 1.0f);
+            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 10, 0, 1.0f);
             break;
 
         case 3: //L80011BB4
@@ -867,16 +867,16 @@ void func_80011AD0(Object *this) {
             if (this->segment.unk3C_a.unk3C->unkD < 0) {
                 tmp_f0 += 4294967296.0f;
             }
-            offset = (this->unk64->unkFC * 6);
+            offset = (this->unk64->obj80011AD0.unkFC * 6);
             offset *= 5;
             offset = offset * 2 + 0x80;
-            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->unkF8, 26, 0, tmp_f0 * D_800E5550);
+            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 26, 0, tmp_f0 * D_800E5550);
             break;
 
         case 89: //L80011C38
             if (this->unk78 == 0)
                 break;
-            if (this->unk64->unk70 > 0 || 0.0f < this->unk64->unk74) {
+            if (this->unk64->obj80011AD0.unk70 > 0 || 0.0f < this->unk64->obj80011AD0.unk74) {
                 func_800135B8(this);
             }
             break;
