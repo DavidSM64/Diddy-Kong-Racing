@@ -665,11 +665,6 @@ typedef struct Object_CharacterFlag {
   /* 0x24 */ u8  *unk24;
 } Object_CharacterFlag;
 
-typedef struct Object_80035F6C {
-  /* 0x0 */ u8 pad0[3];
-  /* 0x3 */ s8 unk3;
-} Object_80035F6C;
-
 typedef struct Object_Snowball {
   /* 0x00 */ u8 pad0[0x20];
   /* 0x20 */ u32 unk20;
@@ -1058,7 +1053,6 @@ typedef struct Object_64 {
         Object_EggCreator egg_creator;
         Object_UnkId58 unkid58;
         Object_CharacterFlag character_flag;
-        Object_80035F6C obj80035F6C;
         Object_Snowball snowball;
         Object_AnimCamera anim_camera;
         Object_AnimCar anim_car;
