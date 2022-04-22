@@ -102,7 +102,7 @@ extern unk800DC6BC* gAlSndPlayer;
 extern s32 sfxVolumeSlider;
 extern s32 D_800DC6C4;
 
-extern void func_80002A98(void*);
+extern void thread4_audio(void*);
 void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al
 void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount); //lib/src/unknown_0C9C90.c
 ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt); //lib/src/unknown_0C9C90.c
