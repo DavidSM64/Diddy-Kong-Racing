@@ -146,8 +146,8 @@ Gfx D_800DE6E8[][2] = {
 
 /************ .bss ************/
 
-s32 D_801242A0[256];
-s32 D_801246A0[1536];
+u8 gDramStack[SP_DRAM_STACK_SIZE8];
+u8 gGfxSPTaskYieldBuffer[0x1800];
 OSMesgQueue D_80125EA0;
 OSMesg D_80125EB8;
 OSMesgQueue D_80125EC0;
