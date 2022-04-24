@@ -191,14 +191,96 @@ s16 D_8011D5AE;
 s32 D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
-s8 D_8011D5BA;
-s8 D_8011D5BB;
-s8 D_8011D5BC;
 
 /******************************/
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80043ECC.s")
+
+typedef struct Object_64_Unknown5 {
+    u8 pad0[0x88];
+    u8 unk89;
+    u8 pad90[0xE9];
+    s8 unk172;
+    s8 unk173;
+    s8 unk174;
+    u8 pad175[0x5E];
+    s8 unk1D3;
+} Object_64_Unknown5;
+
+typedef struct TempStruct5 {
+    s8 pad0[8];
+    s8 unk8[4][4];
+} TempStruct5;
+
+void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 arg2) {
+    TempStruct5 *temp_v0;
+    s8* test;
+    s8 phi_a0;
+    s32 i;
+    static s8 D_8011D5BA;
+    static s8 D_8011D5BB;
+    static s8 D_8011D5BC;
+
+    if (!arg0) {
+        D_8011D5BA = 0;
+        D_8011D5BB = 0;
+        D_8011D5BC = 0;
+        return;
+    }
+    temp_v0 = (TempStruct5 *)func_8006C18C();
+    if (arg1->unk1D3) {
+        if (!D_8011D5BB) {
+            temp_v0->unk8[3][0] += temp_v0->unk8[3][2];
+            temp_v0->unk8[3][1] += temp_v0->unk8[3][3];
+            D_8011D5BB = 1;
+        }
+        if (!(gCurrentCarInput & A_BUTTON)) {
+            D_8011D5BA += arg2;
+        }
+    } else {
+        D_8011D5BB = 0;
+        if (D_8011D5BA > 20) {
+            temp_v0->unk8[0][0] += temp_v0->unk8[0][2];
+            temp_v0->unk8[0][1] += temp_v0->unk8[0][3];
+        }
+        D_8011D5BA = 0;
+    }
+    if (arg1->unk173) {
+        if (D_8011D5BC < arg1->unk174) {
+            temp_v0->unk8[1][0] += temp_v0->unk8[1][2];
+            temp_v0->unk8[1][1] += temp_v0->unk8[1][3];
+        }
+        D_8011D5BC = arg1->unk174;
+    } else {
+        D_8011D5BC = 0;
+    }
+    test = get_misc_asset(12);
+    if ((D_8011D530 & 0x2000) && arg1->unk173) {
+        if (arg1->unk174 < 3) {
+            phi_a0 = test[arg1->unk172 * 3 + arg1->unk174];
+        } else {
+            phi_a0 = arg1->unk172;
+        }
+        if (D_800DCD90[phi_a0] == 1) {
+            temp_v0->unk8[2][0] += temp_v0->unk8[2][2];
+            temp_v0->unk8[2][1] += temp_v0->unk8[2][3];
+        }
+    }
+    for (i = 0; i < 2; i++) {
+        if (temp_v0->unk8[1][i] > 100 || temp_v0->unk8[1][i] < 0) {
+            temp_v0->unk8[1][i] = 100;
+        }
+        if (temp_v0->unk8[0][i]  > 100 || temp_v0->unk8[0][i] < 0) {
+            temp_v0->unk8[0][i]  = 100;
+        }
+        if (temp_v0->unk8[3][i] > 100 || temp_v0->unk8[3][i] < 0) {
+            temp_v0->unk8[3][i] = 100;
+        }
+        if (temp_v0->unk8[2][i] > 100 || temp_v0->unk8[2][i] < 0) {
+            temp_v0->unk8[2][i] = 100;
+        }
+    }
+}
 
 typedef struct Object_64_80044170 {
     char unk0[0x2C];
