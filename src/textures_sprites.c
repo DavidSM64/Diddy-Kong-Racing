@@ -1094,7 +1094,24 @@ void func_8007B454(void) {
     D_80126382 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B46C.s")
+typedef struct Struct_Unk_8007B46C {
+    u8 pad0[0x12];
+    u16 unk12;
+    u8 pad14[2];
+    s16 unk16;
+    u8 pad17[3];
+} Struct_Unk_8007B46C;
+
+Struct_Unk_8007B46C *func_8007B46C(Struct_Unk_8007B46C *arg0, s32 arg1) {
+    if (arg1 > 0) {
+        if (arg1 < arg0->unk12 << 8) {
+            arg0 = ((u8*)arg0) + ((arg1 >> 16) * arg0->unk16);
+        } else {
+            arg0 = ((u8*)arg0) + ((arg0->unk12 >> 8) - 1) * arg0->unk16;
+        }
+    }
+    return arg0;
+}
 
 void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags) {
     func_8007B4E8(dlist, arg1, flags, 0);
