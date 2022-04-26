@@ -917,7 +917,65 @@ void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80059080.s")
+typedef struct Object_64_80059080 {
+    u8 pad0[0x10];
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    u8 pad1C[0x8C];
+    f32 unkA8;
+    u8 padAC[0xE6];
+    s8 unk192;
+    u8 pad196[0x35];
+    u8 unk1C8;
+    u8 pad1C9[3];
+} Object_64_80059080;
+
+void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32* arg2, f32* arg3, f32* arg4) {
+    s32 splinePos;
+    UNUSED u32 pad0, pad1;
+    unknown8011AECC* temp_v0_2;
+    s32 destReached;
+    f32 something0[4];
+    s32 i;
+    f32 something1[4];
+    f32 magnitude;
+    f32 something2[4];
+    s32 splineEnd;
+
+    splineEnd = func_8001BA64();
+
+    if (splineEnd) {
+        magnitude = 1.0 - arg1->unkA8;
+        if (magnitude < 0.0f) {
+            magnitude = 0.0f;
+        }
+        splinePos = arg1->unk192 - 2;
+        if(arg1->unk192){}
+        if (splinePos < 0) {
+            splinePos += splineEnd;
+        }
+        for (i = 0; i < 5; i++) {
+            temp_v0_2 = func_8001BA1C(splinePos, arg1->unk1C8);
+            something0[i] = temp_v0_2->unk10;
+            something1[i] = temp_v0_2->unk14;
+            something2[i] = temp_v0_2->unk18;
+            splinePos++;
+            if (splinePos == splineEnd) {
+                splinePos = 0;
+            }
+        }
+        destReached = 0;
+        if (magnitude >= 1.0) {
+            destReached = 1;
+            magnitude -= 1.0;
+        }
+        *arg2 = catmull_rom_interpolation(something0, destReached, magnitude);
+        *arg3 = catmull_rom_interpolation(something1, destReached, magnitude);
+        *arg4 = catmull_rom_interpolation(something2, destReached, magnitude);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80059208.s")
 
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths) {

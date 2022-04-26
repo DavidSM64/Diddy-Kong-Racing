@@ -19,7 +19,11 @@ typedef struct unknown800DC6F0 {
 
 /* Size: 0x3C bytes */
 typedef struct unknown8011AECC {
-    u8 unk00[0x3A];
+    u8 unk00[0x10];
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    u8 pad1C[0x1E];
     s8 unk3A;
     s8 unk3B;
 } unknown8011AECC;
@@ -217,6 +221,7 @@ void func_8002458C(s32 arg0);
 s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
+f32 catmull_rom_interpolation(f32*, s32, f32);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
