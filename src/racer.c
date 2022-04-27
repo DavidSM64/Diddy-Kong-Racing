@@ -283,7 +283,7 @@ void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 arg2) {
 }
 
 // Might be the main loop for the AI racers.
-void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
+void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
     s32 raceType;
 
     raceType = get_current_level_race_type();
@@ -586,7 +586,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 // I've also yet to find a scenario where the action is < 3
 // arg6 is set to 6 when honking, but 7 when reversing and not honking and 0 when crashing.
 // arg7 seems to be based on direction????
-void func_80052988(Object *arg0, Object_Racer *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
     if ((D_8011D55C == -1) && (action >= 3)) {
@@ -684,7 +684,7 @@ void handle_car_steering(Object_Racer *obj) {
         velScale = vel * 58.0f;
     }
     // Set the steering velocity based on the car's steering value, scaled with the temp forward velocity value.
-    gCurrentCarSteerVel -= (car->unk1E1 * velScale);
+    gCurrentCarSteerVel -= (obj->unk1E1 * velScale);
     // If the car is reversing, then flip the steering.
     if (obj->velocity > 0.0f) {
         gCurrentCarSteerVel = -gCurrentCarSteerVel;
@@ -890,16 +890,15 @@ typedef struct Object_64_80059080 {
 } Object_64_80059080;
 
 void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32* arg2, f32* arg3, f32* arg4) {
-    s32 splinePos;
-    UNUSED u32 pad0, pad1;
     unknown8011AECC* temp_v0_2;
+    s32 splinePos;
     s32 destReached;
-    f32 something0[4];
-    s32 i;
-    f32 something1[4];
-    f32 magnitude;
-    f32 something2[4];
     s32 splineEnd;
+    f32 splineX[5];
+    f32 splineY[5];
+    f32 splineZ[5];
+    f32 magnitude;
+    s32 i;
 
     splineEnd = func_8001BA64();
 
@@ -908,16 +907,16 @@ void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32* arg2, f32* ar
         if (magnitude < 0.0f) {
             magnitude = 0.0f;
         }
+        if (arg1->unk192) {}
         splinePos = arg1->unk192 - 2;
-        if(arg1->unk192){}
         if (splinePos < 0) {
             splinePos += splineEnd;
         }
         for (i = 0; i < 5; i++) {
             temp_v0_2 = func_8001BA1C(splinePos, arg1->unk1C8);
-            something0[i] = temp_v0_2->unk10;
-            something1[i] = temp_v0_2->unk14;
-            something2[i] = temp_v0_2->unk18;
+            splineX[i] = temp_v0_2->unk10;
+            splineY[i] = temp_v0_2->unk14;
+            splineZ[i] = temp_v0_2->unk18;
             splinePos++;
             if (splinePos == splineEnd) {
                 splinePos = 0;
@@ -928,9 +927,9 @@ void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32* arg2, f32* ar
             destReached = 1;
             magnitude -= 1.0;
         }
-        *arg2 = catmull_rom_interpolation(something0, destReached, magnitude);
-        *arg3 = catmull_rom_interpolation(something1, destReached, magnitude);
-        *arg4 = catmull_rom_interpolation(something2, destReached, magnitude);
+        *arg2 = catmull_rom_interpolation(splineX, destReached, magnitude);
+        *arg3 = catmull_rom_interpolation(splineY, destReached, magnitude);
+        *arg4 = catmull_rom_interpolation(splineZ, destReached, magnitude);
     }
 }
 
