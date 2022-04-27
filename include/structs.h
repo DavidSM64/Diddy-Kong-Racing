@@ -413,7 +413,7 @@ typedef struct LevelModelSegment {
 /* 0x1E */ s16 numberOfTriangles;
 /* 0x20 */ s16 numberOfBatches;
            u8 pad22[0x09];
-/* 0x2B */ s8 unk2B;           
+/* 0x2B */ s8 unk2B;
            u8 pad2C[4];
 /* 0x30 */ s16 unk30;
 /* 0x32 */ s16 unk32;
@@ -454,7 +454,7 @@ typedef struct LevelModel {
            u8 pad1C[4];
 /* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
-/* 0x38 */ u32 minimapColor;           
+/* 0x38 */ u32 minimapColor;
            u8 pad3C[0xC];
 /* 0x48 */ s32 modelSize;
 } LevelModel;
@@ -836,7 +836,9 @@ typedef struct Object_Racer {
   /* 0x162 */ s16 unk162;
   /* 0x164 */ s16 unk164;
   /* 0x166 */ s16 unk166;
-  /* 0x168 */ u8 pad168[0xA];
+  /* 0x168 */ u8 pad168[0x4];
+  /* 0x166 */ s16 unk16C;
+  /* 0x168 */ u8 pad16E[0x4];
   /* 0x172 */ u8 balloon_type;
   /* 0x173 */ u8 balloon_quantity;
   /* 0x174 */ u8 balloon_level;
@@ -877,7 +879,8 @@ typedef struct Object_Racer {
   /* 0x1E2 */ s8 unk1E2;
   /* 0x1E3 */ u8 pad1E3[0x3];
   /* 0x1E6 */ s8 drift_direction;
-  /* 0x1E7 */ u8 pad1E7[0x6];
+  /* 0x1E7 */ s8 unk1E7;
+  /* 0x1E8 */ u8 pad1E8[0x5];
   /* 0x1ED */ s8 squish_timer;
   /* 0x1EE */ u8 pad1EE[0x1];
   /* 0x1EF */ u8 boost_sound;

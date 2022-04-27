@@ -576,7 +576,58 @@ void func_8005234C(unk8005234C *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80052388.s")
+extern s16 func_80070750(f32 y, f32 x);
+
+s32 func_80052388(Object* obj1, Object_Racer* arg1, Object* obj2, f32 distance) {
+    s32 rotation;
+    f32 diffX;
+    f32 diffZ;
+    s32 ret = FALSE;
+
+    diffX = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
+    diffZ = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
+    if ((diffX * diffX) + (diffZ * diffZ) < distance) {
+        rotation = (func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        if (rotation > 0x8000) {
+            rotation += 0xFFFF0001;
+        }
+        if (rotation < -0x8000) {
+            rotation += 0xFFFF;
+        }
+        if (rotation > 0x3000) {
+            rotation = 0x3000;
+        }
+        if (rotation < -0x3000) {
+            rotation = -0x3000;
+        }
+        arg1->unk16C = rotation;
+        if ((arg1->unk1E7 & 0x3F) < 0x1F) {
+            arg1->unk16C = 0;
+        }
+        arg1 = (struct Object_Racer *) obj2->unk64;
+        rotation = func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
+        if (rotation > 0x8000) {
+            rotation += 0xFFFF0001;
+        }
+        if (rotation < -0x8000) {
+            rotation += 0xFFFF;
+        }
+        if (rotation > 0x3000) {
+            rotation = 0x3000;
+        }
+        if (rotation < -0x3000) {
+            rotation = -0x3000;
+        }
+        arg1->unk16C = rotation;
+        if (ret) {}
+        ret = TRUE;
+        if ((arg1->unk1E7 & 0x1F) < 0xA) {
+            arg1->unk16C = 0;
+        }
+    }
+    return ret;
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 
 // action seems to be 1 when you're reversing, if you hit the horn, it's 4, and if you introduce yourself to a brick wall, it's 3 then 6.
