@@ -545,7 +545,7 @@ void func_800AF6E4(Object *obj, s32 arg1) {
     obj6C = &obj->unk6C[arg1];
 
     obj6C->unk4 &= 0x7FFF;
-    obj->segment.unk1A--;
+    obj->segment.unk18.half.lower--;
 }
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")

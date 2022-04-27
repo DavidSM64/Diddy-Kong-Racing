@@ -885,10 +885,7 @@ typedef struct Object_Racer {
   /* 0x176 */ s16 unk176;
   /* 0x178 */ s32 unk178;
   /* 0x17C */ s32 unk17C;
-  /* 0x180 */ s8 unk180;
-  /* 0x181 */ s8 unk181;
-  /* 0x182 */ s8 unk182;
-  /* 0x183 */ s8 unk183;
+  /* 0x180 */ s32 unk180;
   /* 0x184 */ s8 pad184;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
@@ -899,7 +896,8 @@ typedef struct Object_Racer {
   /* 0x190 */ u16 unk190;
   /* 0x192 */ u8 unk192;
   /* 0x193 */ u8 unk193;
-  /* 0x194 */ s16 unk194;
+  /* 0x194 */ s8 unk194;
+  /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;
   /* 0x198 */ s32 unk198;
   /* 0x19C */ s32 unk19C;
@@ -908,12 +906,10 @@ typedef struct Object_Racer {
   /* 0x1A4 */ s16 unk1A4;
   /* 0x1A6 */ s16 unk1A6;
   /* 0x1A8 */ s16 unk1A8;
-  /* 0x1AA */ u8 unk1AA;
-  /* 0x1AB */ u8 unk1AB;
+  /* 0x1AA */ u16 unk1AA;
   /* 0x1AC */ u8 unk1AC;
   /* 0x1AD */ u8 unk1AD;
-  /* 0x1AE */ u8 unk1AE;
-  /* 0x1AF */ u8 unk1AF;
+  /* 0x1AE */ s16 unk1AE;
   /* 0x1B0 */ s32 unk1B0;
   /* 0x1B4 */ s32 unk1B4;
   /* 0x1B8 */ s16 unk1B8;
@@ -972,7 +968,7 @@ typedef struct Object_Racer {
   /* 0x1FA */ s8 unk1FA;
   /* 0x1FB */ s8 unk1FB;
   /* 0x1FC */ s8 unk1FC;
-  /* 0x1FD */ s8 unk1FD;
+  /* 0x1FD */ u8 unk1FD;
   /* 0x1FE */ s8 unk1FE;
   /* 0x1FF */ s8 unk1FF;
   /* 0x200 */ s8 unk200;
@@ -994,14 +990,8 @@ typedef struct Object_Racer {
   /* 0x215 */ s8 unk215;
   /* 0x216 */ u8 unk216;
   /* 0x217 */ u8 unk217;
-  /* 0x218 */ u8 unk218;
-  /* 0x219 */ u8 unk219;
-  /* 0x21A */ u8 unk21A;
-  /* 0x21B */ u8 unk21B;
-  /* 0x21C */ u8 unk21C;
-  /* 0x21D */ u8 unk21D;
-  /* 0x21E */ u8 unk21E;
-  /* 0x21F */ u8 unk21F;
+  /* 0x218 */ s32 unk218;
+  /* 0x21C */ s32 unk21C;
   /* 0x220 */ s32 unk220;
 } Object_Racer;
 
@@ -1220,46 +1210,54 @@ typedef struct ObjectTransform {
 
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
-  /* 0x0000 */ ObjectTransform trans;
-  /* 0x0018 */ s16 unk18;
-  /* 0x001A */ s16 unk1A;
-  /* 0x001C */ f32 x_velocity;
-  /* 0x0020 */ f32 y_velocity;
-  /* 0x0024 */ f32 z_velocity;
-  /* 0x0028 */ f32 unk28;
-
+               ObjectTransform trans;
   union {
       struct {
-          /* 0x002C */ s16 upper;
-          /* 0x002E */ s16 lower;
+                       s16 upper;
+                       s16 lower;
       } half;
-      /* 0x002C */ f32 word;
+                   f32 word;
+  } unk18;
+               f32 x_velocity;
+               f32 y_velocity;
+               f32 z_velocity;
+               f32 unk28;
+  union {
+      struct {
+                       s16 upper;
+                       s16 lower;
+      } half;
+                   f32 word;
   } unk2C;
-
-  /* 0x0030 */ f32 unk30;
-
+               f32 unk30;
   union {
-    /* 0x0034 */ f32 unk34;
-    /* 0x0034 */ s16 levelSegmentIndex;
+                 f32 unk34;
+                 s16 levelSegmentIndex;
+    struct h {
+        s16 h0;
+        s16 h1;
+        } h;
   } unk34_a;
-
   union {
       struct {
-          /* 0x0038 */ u8 upper;
-          /* 0x0039 */ u8 lower;
+                       u8 upper;
+                       u8 lower;
       } half;
-      /* 0x0038 */ s16 word;
+                   s16 word;
   } unk38;
-
-  /* 0x003A */ s8 unk3A;
-  /* 0x003B */ s8 unk3B;
-
+               s8 unk3A;
+               s8 unk3B;
   union {
-    /* 0x003C */ Object_3C* unk3C;
-    /* 0x003C */ f32 unk3C_f;
+                 Object_3C* unk3C;
+                 f32 unk3C_f;
+        struct {
+            u8 b0;
+            u8 b1;
+            u8 b2;
+            u8 b3;
+        } byte;
   } unk3C_a;
-
-  /* 0x0040 */ ObjectHeader *header;
+               ObjectHeader *header;
 } ObjectSegment;
 
 /* Size: 0x0630 bytes */
