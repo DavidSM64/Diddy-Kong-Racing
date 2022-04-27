@@ -181,6 +181,7 @@ s32 func_800249E0(s32 arg0) {
 }
 
 #ifdef NON_EQUIVALENT
+void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;
@@ -1178,10 +1179,6 @@ void func_8003093C(s32 arg0) {
 #ifdef NON_EQUIVALENT
 //unk8011D388 D_8011D388[4];
 
-typedef struct Object_64_FogChanger {
-    s16 unk0;
-} Object_64_FogChanger;
-
 typedef struct Object_3C_FogChanger {
     u8 pad0[0x2];
     s16 unk2;
@@ -1227,7 +1224,7 @@ void obj_loop_fogchanger(Object* obj) {
         index = -1;
         if (sp40 != NULL) {
             tempObj = sp40[i]; // Might be a player object?
-            temp_v0 = ((Object_64_FogChanger*)tempObj->unk64)->unk0;
+            temp_v0 = tempObj->unk64->fog_changer.unk0;
             if ((temp_v0 >= 0) && (temp_v0 < MAXCONTROLLERS) && (obj != D_8011D388[i].unk34)) {
                 index = temp_v0;
                 x = tempObj->segment.trans.x_position;

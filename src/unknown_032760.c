@@ -149,8 +149,8 @@ void func_80032C7C(Object *object) {
     s16 phi_a0, phi_a1;
     unk800DC950 *entry;
 
-    if (object->header->unk3D == 0) {
-        switch (object->header->modelType) {
+    if (object->segment.header->unk3D == 0) {
+        switch (object->segment.header->modelType) {
             case OBJECT_MODEL_TYPE_3D_MODEL: // 3D Model
                 sp64 = 2;
                 break;
@@ -164,9 +164,9 @@ void func_80032C7C(Object *object) {
                 break;
         }
 
-        sp82 = object->trans.x_position;
-        sp80 = object->trans.y_position;
-        sp7E = object->trans.z_position;
+        sp82 = object->segment.trans.x_position;
+        sp80 = object->segment.trans.y_position;
+        sp7E = object->segment.trans.z_position;
         D_800DC968 = 0;
         for (i = 0; i < D_800DC95C; i++) {
             entry = D_800DC950[i];
@@ -183,9 +183,9 @@ void func_80032C7C(Object *object) {
                         D_800DC968 = D_800DC968 + 1;
                     }
                 } else {
-                    D_8011D4C4 = entry->unk10 - object->trans.x_position;
-                    D_8011D4C8 = entry->unk14 - object->trans.y_position;
-                    D_8011D4CC = entry->unk18 - object->trans.z_position;
+                    D_8011D4C4 = entry->unk10 - object->segment.trans.x_position;
+                    D_8011D4C8 = entry->unk14 - object->segment.trans.y_position;
+                    D_8011D4CC = entry->unk18 - object->segment.trans.z_position;
                     if (entry->unk0 == 2) {
                         D_8011D4C8 = 0.0f;
                     }
@@ -199,7 +199,7 @@ void func_80032C7C(Object *object) {
                         if (f20 > 0.0f) {
                             f20 *= func_80033A14(entry);
                             if (f20 > 0.0f) {
-                                if (object->header->unk71 != 0) {
+                                if (object->segment.header->unk71 != 0) {
                                     if (D_8011D4C0 > 0.0f) {
                                         temp = 1.0f / sqrtf(D_8011D4C0);
                                         D_8011D4C4 *= temp;
@@ -227,7 +227,7 @@ void func_80032C7C(Object *object) {
             }
         }
 
-        if (object->header->unk71 != 0) {
+        if (object->segment.header->unk71 != 0) {
             if (D_800DC968 == 0) {
                 object->unk54->unk7 = 0;
                 object->unk54->unk11 = 0;
