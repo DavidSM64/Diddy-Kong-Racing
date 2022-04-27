@@ -978,7 +978,8 @@ typedef struct Object_Racer {
   /* 0x204 */ s16 unk204;
   /* 0x206 */ s16 unk206;
   /* 0x208 */ s16 unk208;
-  /* 0x20A */ s16 unk20A;
+  /* 0x20A */ s8 unk20A;
+  /* 0x20B */ s8 unk20B;
   /* 0x20C */ u8 unk20C;
   /* 0x20D */ u8 unk20D;
   /* 0x20E */ s16 unk20E;
