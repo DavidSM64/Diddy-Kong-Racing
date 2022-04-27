@@ -549,7 +549,81 @@ void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80050850.s")
+/**
+ * Applies visual rotational offets to vehicles.
+ * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
+ */
+void apply_vehicle_rotation_offset(Object_Racer* obj, s32 max, s16 roll, s16 pitch, s16 yaw) {
+    s32 diff;
+    s32 tempAngle;
+
+    if (!obj->unk1F1) {
+        tempAngle = roll - (obj->unk160 & 0xFFFF);
+        obj->unk166 = pitch;
+        if (tempAngle > 0x8000) {
+            tempAngle +=  0xFFFF0001;
+        }
+        if (tempAngle < -0x8000) {
+            tempAngle += 0xFFFF;
+        }
+        if (tempAngle > 0) {
+            diff = max * 0x600;
+            if (diff < tempAngle) {
+                tempAngle = diff;
+            }
+            obj->unk160 +=  tempAngle;
+        } else if (tempAngle < 0) {
+            diff = -(max * 0x600);
+            if (tempAngle < diff) {
+                tempAngle = diff;
+            }
+            obj->unk160 += tempAngle;
+        }
+        tempAngle = pitch - (obj->unk162 & 0xFFFF);
+        if (tempAngle > 0x8000) {
+            tempAngle = tempAngle + 0xFFFF0001;
+        }
+        if (tempAngle < -0x8000) {
+            tempAngle = tempAngle + 0xFFFF;
+        }
+        if (tempAngle > 0) {
+            diff = max * 0x600;
+            if (diff < tempAngle) {
+                tempAngle = diff;
+            }
+            obj->unk162 += tempAngle;
+        } else if (tempAngle < 0) {
+            diff = -(max * 0x600);
+            if (tempAngle < diff) {
+                tempAngle = diff;
+            }
+            obj->unk162 += tempAngle;
+        }
+        tempAngle = yaw - (obj->unk164 & 0xFFFF);
+        if (tempAngle > 0x8000) {
+            tempAngle = tempAngle + 0xFFFF0001;
+        }
+        if (tempAngle < -0x8000) {
+            tempAngle = tempAngle + 0xFFFF;
+        }
+        if (tempAngle > 0) {
+            diff = max * 0x600;
+            if (diff < tempAngle) {
+                tempAngle = diff;
+            }
+            obj->unk164 += tempAngle;
+            return;
+        }
+        if (tempAngle < 0) {
+            diff = -(max * 0x600);
+            if (tempAngle < diff) {
+                tempAngle = diff;
+            }
+            obj->unk164 += tempAngle;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80050A28.s")
 
 // Loops for as long as Taj exists. After swapping vehicle once, will remain true until you enter a door.

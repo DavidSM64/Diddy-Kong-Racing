@@ -1004,7 +1004,7 @@ glabel func_80049794
 /* 04B174 8004A574 8FA500F8 */  lw    $a1, 0xf8($sp)
 /* 04B178 8004A578 01E03825 */  move  $a3, $t7
 /* 04B17C 8004A57C AFA00010 */  sw    $zero, 0x10($sp)
-/* 04B180 8004A580 0C014214 */  jal   func_80050850
+/* 04B180 8004A580 0C014214 */  jal   apply_vehicle_rotation_offset
 /* 04B184 8004A584 E7AE00DC */   swc1  $f14, 0xdc($sp)
 /* 04B188 8004A588 920201FE */  lbu   $v0, 0x1fe($s0)
 /* 04B18C 8004A58C C7AE00DC */  lwc1  $f14, 0xdc($sp)

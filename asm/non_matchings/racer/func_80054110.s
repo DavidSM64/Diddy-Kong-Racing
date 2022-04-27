@@ -77,7 +77,7 @@ glabel func_80054110
 /* 054E04 80054204 02002025 */  move  $a0, $s0
 /* 054E08 80054208 00003025 */  move  $a2, $zero
 /* 054E0C 8005420C 00003825 */  move  $a3, $zero
-/* 054E10 80054210 0C014214 */  jal   func_80050850
+/* 054E10 80054210 0C014214 */  jal   apply_vehicle_rotation_offset
 /* 054E14 80054214 AFA00010 */   sw    $zero, 0x10($sp)
 /* 054E18 80054218 0C01AF6C */  jal   get_current_level_header
 /* 054E1C 8005421C 00000000 */   nop   
