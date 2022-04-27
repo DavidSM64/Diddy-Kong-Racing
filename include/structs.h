@@ -474,7 +474,7 @@ typedef enum {
     OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
     OBJECT_MODEL_TYPE_VEHICLE_PART,
     OBJECT_MODEL_TYPE_UNKNOWN3,
-    OBJECT_MODEL_TYPE_UNKNOWN4,
+    OBJECT_MODEL_TYPE_UNKNOWN4
 } ObjectModelType;
 
 typedef struct ObjectHeader {
@@ -884,7 +884,8 @@ typedef struct Object_Racer {
   /* 0x1ED */ s8 squish_timer;
   /* 0x1EE */ u8 pad1EE[0x1];
   /* 0x1EF */ u8 boost_sound;
-  /* 0x1F0 */ u8 pad1F0[0x2];
+  /* 0x1F0 */ u8 pad1F0[0x1];
+  /* 0x1F1 */ u8 unk1F1;
   /* 0x1F2 */ u8 unk1F2;
   /* 0x1F3 */ u8 unk1F3;
   /* 0x1F4 */ u8 pad1F4[0x1];
