@@ -197,24 +197,7 @@ s8 D_8011D5BC;
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80043ECC.s")
 
-typedef struct Object_64_80044170 {
-    char unk0[0x2C];
-    f32 unk2C;
-    char unk30[0x124];
-    s32 unk154;
-    char unk158[0x72];
-    s8 unk1CA;
-    char unk1CB[0x3];
-    u8 unk1CE;
-    char unk1CF[0x13];
-    s8 unk1E2;
-    char unk1E3[0x30];
-    s8 unk213;
-    s8 unk214;
-    s8 unk215;
-} Object_64_80044170;
-
-void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
+void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
     s32 raceType;
 
     raceType = get_current_level_race_type();
@@ -233,14 +216,14 @@ void func_80044170(Object *arg0, Object_64_80044170 *arg1, s32 arg2) {
             break;
     }
 
-    if (arg1->unk214 == 0 && arg1->unk2C < -0.5) {
+    if (arg1->unk214 == 0 && arg1->velocity < -0.5) {
         arg1->unk215 -= arg2;
         if (arg1->unk215 < 0) {
             arg1->unk215 = 0;
         }
     }
 
-    if (arg1->unk2C > -1.0 && arg1->unk214 == 0 && D_8011D540 == 0 && D_8011D544 == 0.0f && arg1->unk1E2 != 0 && arg1->unk215 == 0) {
+    if (arg1->velocity > -1.0 && arg1->unk214 == 0 && D_8011D540 == 0 && D_8011D544 == 0.0f && arg1->unk1E2 != 0 && arg1->unk215 == 0) {
         arg1->unk213 += arg2;
 
         if (arg1->unk213 > 60) {
@@ -304,7 +287,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
 // Something Plane related.
-void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
+void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
     s32 temp_v1;
     s32 phi_v0;
 
@@ -339,13 +322,13 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
     }
 }
 
-void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
+void func_8004C140(Object *obj, Object_Racer *obj64) {
     s8 phi_v1;
     s8 temp;
-    if (obj64->unk0 == -1) {
+    if (obj64->playerIndex == -1) {
         phi_v1 = 0;
     } else {
-        phi_v1 = obj64->unk185;
+        phi_v1 = obj64->bananas;
     }
     temp = obj64->unk187;
     if (temp == 0 || obj64->unk18E > 0) {
@@ -365,16 +348,16 @@ void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
             case 1:
             case 2:
                 if (phi_v1 != 0) {
-                    obj64->unk1DB = 0x28;
+                    obj64->spinout_timer = 0x28;
                 } else {
-                    obj64->unk1DB = 0x3C;
+                    obj64->spinout_timer = 0x3C;
                 }
                 break;
             case 3:
                 if (phi_v1 != 0) {
-                    obj64->unk1DB = 0x28;
+                    obj64->spinout_timer = 0x28;
                 } else {
-                    obj64->unk1DB = 0x3C;
+                    obj64->spinout_timer = 0x3C;
                 }
                 break;
             case 6:
@@ -391,7 +374,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8004C2B0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8004D590.s")
 
-void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
+void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
     s16 sp26;
 
     if (obj64->unk118 != 0) {
@@ -406,14 +389,14 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     obj64->unk1D6 = obj64->unk1D7;
     obj->segment.unk3B = 0;
     if (obj64->unk1D6 == 0xA) {
-        if (obj64->someObject != NULL) {
-            obj64->someObject->segment.trans.x_position = obj->segment.trans.x_position;
-            obj64->someObject->segment.trans.y_position = obj->segment.trans.y_position;
-            obj64->someObject->segment.trans.z_position = obj->segment.trans.z_position;
-            obj64->someObject->segment.unk2C.half.lower = obj->segment.unk2C.half.lower;
-            obj64->someObject->segment.trans.y_rotation = obj->segment.trans.y_rotation;
-            obj64->someObject->segment.trans.x_rotation = obj->segment.trans.x_rotation;
-            obj64->someObject->segment.trans.z_rotation = obj->segment.trans.z_rotation;
+        if (obj64->unk154 != NULL) {
+            obj64->unk154->segment.trans.x_position = obj->segment.trans.x_position;
+            obj64->unk154->segment.trans.y_position = obj->segment.trans.y_position;
+            obj64->unk154->segment.trans.z_position = obj->segment.trans.z_position;
+            obj64->unk154->segment.unk2C.half.lower = obj->segment.unk2C.half.lower;
+            obj64->unk154->segment.trans.y_rotation = obj->segment.trans.y_rotation;
+            obj64->unk154->segment.trans.x_rotation = obj->segment.trans.x_rotation;
+            obj64->unk154->segment.trans.z_rotation = obj->segment.trans.z_rotation;
             obj->segment.unk3B = 0;
             obj->segment.unk18 = sp26 + arg0;
             func_80061C0C(obj);
@@ -452,43 +435,29 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
 
 #ifdef NON_EQUIVALENT
 
-typedef struct Object_64_80050754 {
-            u8 unk0[0x2C];
-            f32 unk2C;
-            f32 unk30;
-            u8 unk34[0x114];
-/* 0x148 */ Object *someObj;
-            u8 unk14C[0x54];
-/* 0x1A0 */ s16 unk1A0;
-/* 0x1A2 */ s16 unk1A2;
-/* 0x1A4 */ s16 unk1A4;
-            u8 unk1A6[0x4C];
-/* 0x1F2 */ s8 unk1F2;
-} Object_64_80050754;
-
 // Mainly has regalloc issues.
-void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
+void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
     f32 xDiff, yDiff, zDiff;
     Object *someObj;
 
     obj->segment.unk3B = 0;
     obj->segment.unk18 = 0x28;
-    someObj = obj64->someObj;
+    someObj = obj64->unk148;
     xDiff = someObj->segment.trans.x_position - obj->segment.trans.x_position;
     yDiff = someObj->segment.trans.y_position - obj->segment.trans.y_position;
     zDiff = someObj->segment.trans.z_position - obj->segment.trans.z_position;
     func_80011570(obj, xDiff, yDiff, zDiff);
-    obj->segment.trans.y_rotation = obj64->someObj->segment.trans.y_rotation;
-    obj->segment.trans.x_rotation = obj64->someObj->segment.trans.x_rotation;
-    obj->segment.trans.z_rotation = obj64->someObj->segment.trans.z_rotation;
+    obj->segment.trans.y_rotation = obj64->unk148->segment.trans.y_rotation;
+    obj->segment.trans.x_rotation = obj64->unk148->segment.trans.x_rotation;
+    obj->segment.trans.z_rotation = obj64->unk148->segment.trans.z_rotation;
     obj64->unk1A4 = obj->segment.trans.z_rotation;
     obj64->unk1A0 = obj->segment.trans.y_rotation;
     obj->segment.x_velocity = xDiff / arg2;
     obj->segment.y_velocity = yDiff / arg2;
     obj->segment.z_velocity = zDiff / arg2;
     obj64->unk1F2 = 0;
-    obj64->unk2C = 0.0f;
-    obj64->unk30 = 0.0f;
+    obj64->velocity = 0.0f;
+    obj64->lateral_velocity = 0.0f;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
@@ -521,7 +490,7 @@ void func_8005234C(unk8005234C *arg0) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80052388.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 
-void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+void func_80052988(Object *arg0, Object_Racer *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
     if ((D_8011D55C == -1) && (arg2 >= 3)) {
@@ -584,9 +553,9 @@ void func_80052988(Object *arg0, Object_64 *arg1, s32 arg2, s32 arg3, s32 arg4, 
 GLOBAL_ASM("asm/non_matchings/racer/func_80052B64.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80052D7C.s")
 
-void func_80053478(Object_64_80053478 *obj) {
+void func_80053478(Object_Racer *obj) {
     s32 phi_v0;
-    f32 phi_f0 = obj->unk2C;
+    f32 phi_f0 = obj->velocity;
 
     if (phi_f0 < 0.0) {
         phi_f0 = -phi_f0;
@@ -598,13 +567,13 @@ void func_80053478(Object_64_80053478 *obj) {
     if (phi_f0 < 0.0) {
         phi_f0 = 0.0f;
     }
-    if (obj->unk1E6 != 0) {
+    if (obj->drift_direction != 0) {
         phi_v0 = phi_f0 * 68.0f;
     } else {
         phi_v0 = phi_f0 * 58.0f;
     }
     D_8011D554 -= (obj->unk1E1 * phi_v0);
-    if (obj->unk2C > 0.0f) {
+    if (obj->velocity > 0.0f) {
         D_8011D554 = -D_8011D554;
     }
 }
@@ -624,7 +593,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
 
-void func_80053664(Object_64 *arg0) {
+void func_80053664(Object_Racer *arg0) {
     if (arg0->throttle > 0.0) {
         arg0->throttle -= 0.1;
     }
@@ -653,13 +622,13 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80055A84.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80055EC0.s")
 
-void play_char_horn_sound(Object *obj, Object_64 *obj64) {
+void play_char_horn_sound(Object *obj, Object_Racer *obj64) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
         // Play character voice instead of horn.
         func_800570B8(obj, 0x162, 8, 0x82);
     } else {
         // Play character's horn sound
-        func_80057048(obj, obj64->unk0_a.unk0_b.unk3 + 0x156);
+        func_80057048(obj, obj64->characterId + 0x156);
     }
 }
 
@@ -667,35 +636,24 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005698C.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
 
 void func_80057048(Object *obj, s32 arg1) {
-    Object_64 *obj64 = obj->unk64;
+    Object_Racer *obj64 = &obj->unk64->racer;
     if (D_8011D55C != -1 && obj64->unk108 == 0) {
         func_80001EA8(arg1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
 
 void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
-    Object_64_unk800570A4 *temp = obj->unk64;
+    Object_Racer *temp = &obj->unk64->racer;
     temp->unk20E = arg1;
     temp->unk210 = arg2;
 }
 
 #ifdef NON_EQUIVALENT
-typedef struct Object_64_800570B8 {
-    u8 pad0[3];
-    s8 unk3;
-    u8 pad4[0x20];
-    s32 unk24;
-    u16 unk28;
-    u16 unk2A;
-    u8 pad2C[0xDC];
-    s32 unk108;
-} Object_64_800570B8;
-
 void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
     s32 phi_t0;
-    Object_64_800570B8 *obj64;
+    Object_Racer *obj64;
 
-    obj64 = obj->unk64;
+    obj64 = &obj->unk64->racer;
     if ((obj64->unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
         if (arg3 == 2) {
             if ((obj64->unk24 != 0) && (arg1 != obj64->unk2A)) {
@@ -706,7 +664,7 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
         if (obj64->unk24 == 0) {
             if (arg3 != 3 || get_random_number_from_range(0, 1) != 0) {
                 obj64->unk2A = arg1;
-                arg1 += obj64->unk3;
+                arg1 += obj64->characterId;
                 arg2--;
                 phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
                 if (arg2 > 0) {
@@ -727,7 +685,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800570B8.s")
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
 
-void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
+void func_800575EC(Object *obj, Object_Racer *obj64) {
     Matrix mf;
 
     D_8011D510.y_rotation = obj->segment.trans.y_rotation;
@@ -765,7 +723,7 @@ void func_800579B0(unk800579B0 *arg0, UNUSED s32 arg1, f32 arg2) {
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80057A40.s")
 
-void func_800580B4(Object *obj, Object_64_800580B4 *obj64, s32 arg2, f32 arg3) {
+void func_800580B4(Object *obj, Object_Racer *obj64, s32 arg2, f32 arg3) {
     f32 xPos, yPos, zPos;
     if ((D_8011D55C != -1) && (obj64->unk1D8 != 1)) {
         if (arg2 != gCameraObject->unk36) {
