@@ -1213,54 +1213,54 @@ typedef struct ObjectTransform {
 
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
-    ObjectTransform trans;
+    /* 0x0000 */ ObjectTransform trans;
     union {
         struct {
-            s16 upper;
-            s16 lower;
+            /* 0x0018 */ s16 upper;
+            /* 0x0020 */ s16 lower;
         } half;
-        f32 word;
+        /* 0x0018 */ f32 word;
     } unk18;
-    f32 x_velocity;
-    f32 y_velocity;
-    f32 z_velocity;
-    f32 unk28;
+        /* 0x001C */ f32 x_velocity;
+        /* 0x0020 */ f32 y_velocity;
+        /* 0x0024 */ f32 z_velocity;
+        /* 0x0028 */ f32 unk28;
     union {
         struct {
-            s16 upper;
-            s16 lower;
+            /* 0x002C */ s16 upper;
+            /* 0x002E */ s16 lower;
         } half;
-        f32 word;
+        /* 0x002C */ f32 word;
     } unk2C;
-    f32 unk30;
+    /* 0x0030 */ f32 unk30;
     union {
-        f32 unk34;
-        s16 levelSegmentIndex;
+        /* 0x0034 */ f32 unk34;
+        /* 0x0034 */ s16 levelSegmentIndex;
         struct h {
-            s16 h0;
-            s16 h1;
+            /* 0x0034 */ s16 h0;
+            /* 0x0036 */ s16 h1;
         } h;
     } unk34_a;
     union {
         struct {
-            u8 upper;
-            u8 lower;
+            /* 0x0038 */ u8 upper;
+            /* 0x0039 */ u8 lower;
         } half;
-        s16 word;
+        /* 0x0038 */ s16 word;
     } unk38;
-    s8 unk3A;
-    s8 unk3B;
+    /* 0x003A */ s8 unk3A;
+    /* 0x003B */ s8 unk3B;
     union {
-        Object_3C* unk3C;
-        f32 unk3C_f;
+        /* 0x003C */ Object_3C* unk3C;
+        /* 0x003C */ f32 unk3C_f;
         struct {
-            u8 b0;
-            u8 b1;
-            u8 b2;
-            u8 b3;
+            /* 0x003C */ u8 b0;
+            /* 0x003D */ u8 b1;
+            /* 0x003E */ u8 b2;
+            /* 0x003F */ u8 b3;
         } byte;
     } unk3C_a;
-    ObjectHeader *header;
+    /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;
 
 /* Size: 0x0630 bytes */
