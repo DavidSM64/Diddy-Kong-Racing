@@ -276,7 +276,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
 			obj->segment.trans.y_position = sp4C[0];
         }
     }
-    obj->segment.unk18.half.upper += speed * 10;
+    obj->segment.unk18 += speed * 10;
     obj64 = obj->unk64;
     obj4C = obj->unk4C;
     obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
@@ -445,7 +445,7 @@ void obj_init_torch_mist(Object *obj, LevelObjectEntry_Torch_Mist *entry) {
 }
 
 void obj_loop_torch_mist(Object *obj, s32 speed) {
-    obj->segment.unk18.half.upper += obj->unk78 * speed;
+    obj->segment.unk18 += obj->unk78 * speed;
 }
 
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
@@ -897,7 +897,7 @@ void obj_loop_unknown58(Object *obj, s32 speed) {
     Object_60 *obj60;
 
     obj->segment.unk3B = 0;
-    obj->segment.unk18.half.upper = 0x28;
+    obj->segment.unk18 = 0x28;
     if (func_8001139C() == 0) {
         obj->unk78 += speed;
     }
@@ -1002,9 +1002,9 @@ void obj_loop_lavaspurt(Object *obj, s32 speed) {
         obj->segment.trans.unk6 |= 0x4000;
     } else {
         obj->segment.trans.unk6 &= ~0x4000;
-        obj->segment.unk18.half.upper += speed * 4;
-        if (obj->segment.unk18.half.upper >= 256) {
-            obj->segment.unk18.half.upper = 0;
+        obj->segment.unk18 += speed * 4;
+        if (obj->segment.unk18 >= 256) {
+            obj->segment.unk18 = 0;
             obj->unk78 = get_random_number_from_range(0, 30) + obj->unk7C.word;
         }
     }
@@ -1029,7 +1029,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
             obj->segment.trans.unk6 &= ~0x4000;
             someObj64->unk150 = obj;
         }
-        obj->segment.unk18.half.upper = obj->unk78 * 127;
+        obj->segment.unk18 = obj->unk78 * 127;
     }
 }
 
@@ -1399,12 +1399,12 @@ void obj_loop_smoke(Object *obj, s32 speed) {
         temp_f2 *= 1.2;
     }
     obj->segment.trans.x_position += obj->segment.x_velocity * temp_f2;
-    obj->segment.unk18.half.upper += speed * 16;
+    obj->segment.unk18 += speed * 16;
     obj->segment.trans.y_position += obj->segment.y_velocity * temp_f2;
     obj->segment.trans.z_position += obj->segment.z_velocity * temp_f2;
-    if (obj->segment.unk18.half.upper >= 256) {
+    if (obj->segment.unk18 >= 256) {
         gParticlePtrList_addObject(obj);
-        obj->segment.unk18.half.upper = 255;
+        obj->segment.unk18 = 255;
     }
 }
 
@@ -1412,10 +1412,10 @@ void obj_init_unknown25(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown25 *e
 }
 
 void obj_loop_unknown25(Object *obj, s32 speed) {
-    obj->segment.unk18.half.upper += speed * 8;
-    if (obj->segment.unk18.half.upper >= 256) {
+    obj->segment.unk18 += speed * 8;
+    if (obj->segment.unk18 >= 256) {
         gParticlePtrList_addObject(obj);
-        obj->segment.unk18.half.upper = 255;
+        obj->segment.unk18 = 255;
     }
 }
 
@@ -1429,17 +1429,17 @@ void obj_loop_wardensmoke(Object *obj, s32 speed) {
     if (osTvType == TV_TYPE_PAL) {
         temp_f2 *= 1.2;
     }
-    obj->segment.unk18.half.upper += speed * 4;
+    obj->segment.unk18 += speed * 4;
     obj->segment.trans.y_position += temp_f2 * 0.25;
-    if (obj->segment.unk18.half.upper >= 256) {
+    if (obj->segment.unk18 >= 256) {
         gParticlePtrList_addObject(obj);
-        obj->segment.unk18.half.upper = 255;
+        obj->segment.unk18 = 255;
     }
 }
 
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) {
     LevelObjectEntry_BombExplosion *entry2;
-    obj->segment.unk18.half.upper = 0;
+    obj->segment.unk18 = 0;
     obj->segment.trans.scale = 0.5f;
     obj->segment.unk3A = get_random_number_from_range(0, obj->segment.header->numberOfModelIds - 1);
     entry2 = entry; // Needed for a match.
@@ -1581,7 +1581,7 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
     } else {
         obj->unk78 = 0;
     }
-    sp2C = obj->segment.unk18.half.upper;
+    sp2C = obj->segment.unk18;
     func_8001F460(obj, speed, obj);
     func_800113CC(obj, 0, sp2C, 0xAC, 0xAD);
     if (obj->unk4C->unk13 < 0xFF) {
@@ -2041,7 +2041,7 @@ void obj_loop_ainode(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
 void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry) {
-    obj->segment.unk18.half.upper = 0x78;
+    obj->segment.unk18 = 0x78;
     obj->unk78 = (entry->unk8 - 1) & 3;
 }
 
@@ -2053,7 +2053,7 @@ void obj_init_flycoin(UNUSED Object *obj, UNUSED LevelObjectEntry_FlyCoin *entry
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_flycoin.s")
 
 void obj_init_bananacreator(Object *obj, UNUSED LevelObjectEntry_BananaCreator *entry) {
-    obj->segment.unk18.half.upper = 100;
+    obj->segment.unk18 = 100;
 }
 
 void obj_loop_bananacreator(Object *obj, s32 speed) {
@@ -2410,7 +2410,7 @@ void obj_loop_buoy_pirateship(Object *obj, s32 speed) {
     if (obj->unk64 != NULL) {
         obj->segment.trans.y_position = func_800BEEB4(obj->unk64);
     }
-    obj->segment.unk18.half.upper += speed * 8;
+    obj->segment.unk18 += speed * 8;
 }
 
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
@@ -2738,6 +2738,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_levelname.s")
 
 void obj_loop_wizghosts(Object *obj, s32 speed) {
     func_8001F460(obj, speed, obj);
-    obj->segment.unk18.half.upper = (obj->segment.unk18.half.upper + (speed * 8)) & 0xFF;
+    obj->segment.unk18 = (obj->segment.unk18 + (speed * 8)) & 0xFF;
 }
 

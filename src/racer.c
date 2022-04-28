@@ -388,7 +388,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
         if (phi_v0 >= 0x4A) {
             phi_v0 = 0x49;
         }
-        temp_v1 = phi_v0 - planeObj->segment.unk18.half.upper;
+        temp_v1 = phi_v0 - planeObj->segment.unk18;
         phi_v0 = 0;
         if (temp_v1 > 0) {
             phi_v0 = arg0 * 3;
@@ -402,7 +402,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
                 phi_v0 = temp_v1;
             }
         }
-        planeObj->segment.unk18.half.upper += phi_v0;
+        planeObj->segment.unk18 += phi_v0;
     }
 }
 
@@ -467,7 +467,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
     if ((func_8002341C() != 0) && (obj64->unk1D6 == 0xA)) {
         obj->unk4C->unk14 = 0;
     }
-    sp26 = obj->segment.unk18.half.upper;
+    sp26 = obj->segment.unk18;
     obj64->unk1D6 = 0xA;
     func_80049794(arg0, arg1, obj, obj64);
     obj64->unk1D6 = obj64->unk1D7;
@@ -482,12 +482,16 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
             obj64->unk154->segment.trans.x_rotation = obj->segment.trans.x_rotation;
             obj64->unk154->segment.trans.z_rotation = obj->segment.trans.z_rotation;
             obj->segment.unk3B = 0;
-            obj->segment.unk18.half.upper = sp26 + arg0;
+            obj->segment.unk18 = sp26 + arg0;
             func_80061C0C(obj);
         }
     }
 }
 
+/**
+ * Initialise the basic properties of each racer object. If it's tied to a human player,
+ * will also initialise a camera object.
+ */
 void obj_init_racer(Object* obj, LevelObjectEntry_CharacterFlag* arg1) {
     Object_Racer* tempObj;
     s32 player;
@@ -578,6 +582,7 @@ void obj_init_racer(Object* obj, LevelObjectEntry_CharacterFlag* arg1) {
     tempObj->unk1C6 = 100;
     D_8011D580 = 0;
 
+    // This needs to be on one line to match.
     for (i = 0; i < 4; i++) { D_8011D58C[i] = 0; }
     if (tempObj);
     if (tempObj);
@@ -625,7 +630,7 @@ void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
     Object *someObj;
 
     obj->segment.unk3B = 0;
-    obj->segment.unk18.half.upper = 0x28;
+    obj->segment.unk18 = 0x28;
     someObj = obj64->unk148;
     xDiff = someObj->segment.trans.x_position - obj->segment.trans.x_position;
     yDiff = someObj->segment.trans.y_position - obj->segment.trans.y_position;
@@ -818,62 +823,62 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 d
         //render_printf("set0\n");
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
-            if (arg0->segment.unk18.half.upper >= 41) {
-                arg0->segment.unk18.half.upper -= arg7 * 4;
-                if (arg0->segment.unk18.half.upper < 41) {
+            if (arg0->segment.unk18 >= 41) {
+                arg0->segment.unk18 -= arg7 * 4;
+                if (arg0->segment.unk18 < 41) {
                     arg0->segment.unk3B = action;
-                    arg0->segment.unk18.half.upper = arg3;
+                    arg0->segment.unk18 = arg3;
                 }
                 //render_printf("set1\n");
             } else {
-                arg0->segment.unk18.half.upper += arg7 * 4;
-                if (arg0->segment.unk18.half.upper >= 40) {
+                arg0->segment.unk18 += arg7 * 4;
+                if (arg0->segment.unk18 >= 40) {
                     arg0->segment.unk3B = action;
-                    arg0->segment.unk18.half.upper = arg3;
+                    arg0->segment.unk18 = arg3;
                 }
                 //render_printf("set2\n");
             }
         } else { // Set active flag, whether it's from just crashing, or beginning to honk.
             arg0->segment.unk3B = action;
-            arg0->segment.unk18.half.upper = arg3;
+            arg0->segment.unk18 = arg3;
             arg1->unk1F3 &= ~0x80;
         }
     } else if (arg0->segment.unk3B == action) {
         if (arg6 & 2) {
             if (arg1->unk1F3 & 0x80) { // Stop honking or reversing.
-                arg0->segment.unk18.half.upper -= arg5;
-                if (arg0->segment.unk18.half.upper <= 0) {
+                arg0->segment.unk18 -= arg5;
+                if (arg0->segment.unk18 <= 0) {
                     arg0->segment.unk3B = 0;
                     arg1->unk1F2 = 0;
-                    arg0->segment.unk18.half.upper = 40;
+                    arg0->segment.unk18 = 40;
                     arg1->unk1F3 = 0;
                 }
             } else { // Actively reversing or honking or boosting, possibly a velocity modifier, have found it's also set when recovering from getting hit by a rocket or spike trap
-                arg0->segment.unk18.half.upper += arg5;
+                arg0->segment.unk18 += arg5;
                 // Keeps the timer below the duration value, while actively held.
-                if (arg0->segment.unk18.half.upper >= duration) {
-                    arg0->segment.unk18.half.upper = duration - 1;
+                if (arg0->segment.unk18 >= duration) {
+                    arg0->segment.unk18 = duration - 1;
                     if ((arg6 & 4) == 0) {
                         arg1->unk1F3 |= 0x80;
                     }
                 }
             }
         } else { // Crash recoil
-            arg0->segment.unk18.half.upper += arg5;
-            if (arg0->segment.unk18.half.upper >= duration) {
+            arg0->segment.unk18 += arg5;
+            if (arg0->segment.unk18 >= duration) {
                 arg0->segment.unk3B = 0;
                 arg1->unk1F2 = 0;
-                arg0->segment.unk18.half.upper = 40;
+                arg0->segment.unk18 = 40;
                 arg1->unk1F3 = 0;
             }
         }
     } else { // Haven't seen this trigger yet.
-        arg0->segment.unk18.half.upper = arg3;
+        arg0->segment.unk18 = arg3;
         arg0->segment.unk3B = action;
     }
     /*render_printf("D_8011D55C %d\n", D_8011D55C);
     render_printf("action %d\n", action);
-    render_printf("unk18 %d\n", arg0->segment.unk18.half.upper);
+    render_printf("unk18 %d\n", arg0->segment.unk18);
     render_printf("unk3B %d\n", arg0->segment.unk3B);
     render_printf("arg6 %d\n", arg6);
     render_printf("arg7 %d\n", arg7);*/
