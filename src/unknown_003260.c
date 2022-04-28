@@ -142,8 +142,8 @@ void audioStopThread(void) {
  */
 void thread4_audio(UNUSED void *arg) {
     s32 audioThreadMarkExit;
-    s16* audioThreadRetraceMesg;
-    s16* audioThreadUpdateMesg;
+    s16 *audioThreadRetraceMesg;
+    s16 *audioThreadUpdateMesg;
 
     audioThreadMarkExit = FALSE;
     audioThreadRetraceMesg = NULL;
