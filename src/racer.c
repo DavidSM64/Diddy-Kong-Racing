@@ -155,7 +155,8 @@ s8 D_8011D553;
 s32 gCurrentCarSteerVel; // Related to rotational velocity of the car.
 s32 D_8011D558;
 s32 D_8011D55C;
-s32 D_8011D560;
+s16 D_8011D560;
+s16 D_8011D562;
 s32 D_8011D564;
 s32 D_8011D568;
 s32 D_8011D56C;
@@ -169,16 +170,13 @@ s8 D_8011D582;
 s8 D_8011D583;
 s8 D_8011D584;
 s8 D_8011D585;
-s8 D_8011D586;
-s8 D_8011D587;
+s16 D_8011D586;
 s8 D_8011D588;
 s8 D_8011D589;
 s8 D_8011D58A;
 s8 D_8011D58B;
-s8 D_8011D58C;
-s8 D_8011D58D;
-s8 D_8011D58E;
-s8 D_8011D58F;
+s8 D_8011D58B;
+s8 D_8011D58C[4];
 GhostHeader *gGhostData[3];
 s8 D_8011D59C;
 s8 D_8011D59D;
@@ -490,7 +488,107 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/obj_init_racer.s")
+void obj_init_racer(Object* obj, LevelObjectEntry_CharacterFlag* arg1) {
+    Object_Racer* tempObj;
+    s32 player;
+    s32 i;
+
+    D_8011D53C = 0;
+    tempObj = (struct Object_Racer *) obj->unk64;
+    obj->segment.trans.y_rotation = arg1->unkC;
+    obj->segment.trans.x_rotation = arg1->unkA;
+    obj->segment.trans.z_rotation = arg1->unk8;
+    player = arg1->unkE;
+    tempObj->unk194 = 0;
+    tempObj->stretch_height = 1.0f;
+    tempObj->stretch_height_cap = 1.0f;
+    if (player >= 0 && player < 4) {
+        if (func_8000E158()) {
+            player = 1 - player;
+        }
+        tempObj->playerIndex = player;
+    } else {
+        tempObj->playerIndex = -1;
+    }
+    tempObj->unk1A0 = obj->segment.trans.y_rotation;
+    tempObj->unk1A4 = obj->segment.trans.z_rotation;
+    tempObj->unkC4 = 0.5f;
+    if (1);
+    tempObj->unk196 = tempObj->unk1A0;
+    tempObj->unkD8 = obj->segment.trans.x_position;
+    tempObj->unkDC = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkE0 = obj->segment.trans.z_position;
+    tempObj->unkE4 = obj->segment.trans.x_position;
+    tempObj->unkE8 = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkEC = obj->segment.trans.z_position;
+    tempObj->unkF0 = obj->segment.trans.x_position;
+    tempObj->unkF4 = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkF8 = obj->segment.trans.z_position;
+    tempObj->unkFC = obj->segment.trans.x_position;
+    tempObj->unk100 = obj->segment.trans.y_position + 30.0f;
+    tempObj->unk104 = obj->segment.trans.z_position;
+    tempObj->prev_x_position = obj->segment.trans.x_position;
+    tempObj->prev_y_position = obj->segment.trans.y_position;
+    tempObj->prev_z_position = obj->segment.trans.z_position;
+    obj->unk4C->x_position = obj->segment.trans.x_position;
+    obj->unk4C->y_position = obj->segment.trans.y_position;
+    obj->unk4C->z_position = obj->segment.trans.z_position;
+    tempObj->unk1E2 = 3;
+    tempObj->unk1AA = 1;
+    tempObj->unk1AE = 1;
+    tempObj->unk1E7 = tempObj->playerIndex * 5;
+    tempObj->checkpoint_distance = 1.0f;
+    tempObj->unk1FD = 0;
+    tempObj->unk178 = 0;
+    tempObj->unk17C = 0;
+    tempObj->unk180 = 0;
+    tempObj->unk218 = 0;
+    tempObj->unk220 = 0;
+    tempObj->unk21C = 0;
+    if (tempObj->playerIndex != -1 && !D_8011D582) {
+        func_800665E8(player);
+        gCameraObject = func_80069CFC();
+        gCameraObject->trans.z_rotation = 0;
+        gCameraObject->trans.x_rotation = 0x400;
+        gCameraObject->trans.y_rotation = tempObj->unk196;
+        gCameraObject->unk36 = 0;
+        gCameraObject->unk3C = 0xFF;
+        gCameraObject->unk3D = 0xFF;
+        gCameraObject->unk3E = 0xFF;
+        gCameraObject->unk3F = 0xFF;
+        gCameraObject->unk18 = 0.0f;
+        func_80057A40(obj, tempObj, 1.0f);
+    }
+    if (!D_8011D582) {
+        D_8011D583 = 0;
+        D_8011D586 = 0;
+        D_8011D584 = 0;
+    }
+    obj->unk4C->unk14 = 5;
+    obj->unk4C->unk11 = 0;
+    obj->unk4C->unk10 = 0xF;
+    obj->unk4C->unk12 = 0x14;
+    tempObj->unk1EE = 0;
+    if (!D_8011D582) {
+        tempObj->transparency = 0xFF;
+    }
+    D_8011D560 = 0;
+    D_8011D544 = 300.0f;
+    tempObj->unk1C9 = 6;
+    tempObj->unk1C6 = 100;
+    D_8011D580 = 0;
+
+    for (i = 0; i < 4; i++) { D_8011D58C[i] = 0; }
+    if (tempObj);
+    if (tempObj);
+    if (tempObj);
+    if (tempObj);
+    func_80043ECC(0, 0, 0);
+    D_8011D583 = i;
+    D_8011D585 = 0;
+    tempObj->unk20A = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8004DE38.s")
 
 void func_8004F77C(unk8004F77C *arg0) {
@@ -969,15 +1067,15 @@ void func_800580B4(Object *obj, Object_Racer *obj64, s32 arg2, f32 arg3) {
     if ((D_8011D55C != -1) && (obj64->unk1D8 != 1)) {
         if (arg2 != gCameraObject->unk36) {
             func_80057A40(obj, obj64, arg3);
-            xPos = gCameraObject->x_position;
-            yPos = gCameraObject->y_position;
-            zPos = gCameraObject->z_position;
+            xPos = gCameraObject->trans.x_position;
+            yPos = gCameraObject->trans.y_position;
+            zPos = gCameraObject->trans.z_position;
             gCameraObject->unk36 = arg2;
             func_80057A40(obj, obj64, arg3);
             if (D_8011D540 == 0 && D_8011D582 == 0) {
-                gCameraObject->unk24 = xPos - gCameraObject->x_position;
-                gCameraObject->unk28 = yPos - (gCameraObject->y_position + gCameraObject->unk30);
-                gCameraObject->unk2C = zPos - gCameraObject->z_position;
+                gCameraObject->x_velocity = xPos - gCameraObject->trans.x_position;
+                gCameraObject->y_velocity = yPos - (gCameraObject->trans.y_position + gCameraObject->unk30);
+                gCameraObject->z_velocity = zPos - gCameraObject->trans.z_position;
             }
         }
     }
@@ -991,10 +1089,10 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
 void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     s32 temp0, temp1;
     temp0 = (s32)arg0;
-    temp1 = func_8007066C(gCameraObject->x_position - arg1->segment.trans.x_position, gCameraObject->z_position - arg1->segment.trans.z_position);
+    temp1 = func_8007066C(gCameraObject->trans.x_position - arg1->segment.trans.x_position, gCameraObject->trans.z_position - arg1->segment.trans.z_position);
     gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
     gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->segment.unk3C_a.unk3C_f, gCameraObject->z_position);
+    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, arg2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")

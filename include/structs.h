@@ -530,7 +530,9 @@ typedef struct Object_44 {
 
 typedef struct Object_4C {
     void *unk0;
-    u8 pad4[0xC];
+    f32 x_position;
+    f32 y_position;
+    f32 z_position;
     u8 unk10;
     u8 unk11;
     u8 unk12;
@@ -1211,54 +1213,54 @@ typedef struct ObjectTransform {
 
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
-               ObjectTransform trans;
-  union {
-      struct {
-                       s16 upper;
-                       s16 lower;
-      } half;
-                   f32 word;
-  } unk18;
-               f32 x_velocity;
-               f32 y_velocity;
-               f32 z_velocity;
-               f32 unk28;
-  union {
-      struct {
-                       s16 upper;
-                       s16 lower;
-      } half;
-                   f32 word;
-  } unk2C;
-               f32 unk30;
-  union {
-                 f32 unk34;
-                 s16 levelSegmentIndex;
-    struct h {
-        s16 h0;
-        s16 h1;
+    ObjectTransform trans;
+    union {
+        struct {
+            s16 upper;
+            s16 lower;
+        } half;
+        f32 word;
+    } unk18;
+    f32 x_velocity;
+    f32 y_velocity;
+    f32 z_velocity;
+    f32 unk28;
+    union {
+        struct {
+            s16 upper;
+            s16 lower;
+        } half;
+        f32 word;
+    } unk2C;
+    f32 unk30;
+    union {
+        f32 unk34;
+        s16 levelSegmentIndex;
+        struct h {
+            s16 h0;
+            s16 h1;
         } h;
-  } unk34_a;
-  union {
-      struct {
-                       u8 upper;
-                       u8 lower;
-      } half;
-                   s16 word;
-  } unk38;
-               s8 unk3A;
-               s8 unk3B;
-  union {
-                 Object_3C* unk3C;
-                 f32 unk3C_f;
+    } unk34_a;
+    union {
+        struct {
+            u8 upper;
+            u8 lower;
+        } half;
+        s16 word;
+    } unk38;
+    s8 unk3A;
+    s8 unk3B;
+    union {
+        Object_3C* unk3C;
+        f32 unk3C_f;
         struct {
             u8 b0;
             u8 b1;
             u8 b2;
             u8 b3;
         } byte;
-  } unk3C_a;
-               ObjectHeader *header;
+    } unk3C_a;
+    ObjectHeader *header;
 } ObjectSegment;
 
 /* Size: 0x0630 bytes */

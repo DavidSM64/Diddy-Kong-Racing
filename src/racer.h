@@ -5,21 +5,23 @@
 #include "structs.h"
 
 typedef struct ObjectCamera {
-/* 0x0000 */ s16 y_rotation;
-/* 0x0002 */ s16 x_rotation;
-/* 0x0004 */ s16 z_rotation;
-/* 0x0006 */ s16 unk6;
-/* 0x0008 */ f32 scale;
-/* 0x000C */ f32 x_position;
-/* 0x0010 */ f32 y_position;
-/* 0x0014 */ f32 z_position;
-/* 0x0018 */ u8 pad18[0xC];
-/* 0x0024 */ f32 unk24;
-/* 0x0028 */ f32 unk28;
-/* 0x002C */ f32 unk2C;
-/* 0x0030 */ f32 unk30;
-/* 0x0034 */ s16 unk34;
-/* 0x0036 */ s16 unk36;
+             ObjectTransform trans;
+             f32 unk18;
+             f32 unk1C;
+             f32 unk20;
+             f32 x_velocity;
+             f32 y_velocity;
+             f32 z_velocity;
+             f32 unk30;
+             s16 unk34;
+             s16 unk36;
+             s16 unk38;
+             u8 unk3A;
+             u8 unk3B;
+             u8 unk3C;
+             u8 unk3D;
+             u8 unk3E;
+             u8 unk3F;
 } ObjectCamera;
 
 typedef struct unk8004F77C {
