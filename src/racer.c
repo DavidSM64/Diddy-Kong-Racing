@@ -212,7 +212,7 @@ typedef struct TempStruct5 {
 
 void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 arg2) {
     TempStruct5 *temp_v0;
-    s8* test;
+    s8 *test;
     s8 phi_a0;
     s32 i;
     static s8 D_8011D5BA;
@@ -656,7 +656,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
  * Applies visual rotational offets to vehicles.
  * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
  */
-void apply_vehicle_rotation_offset(Object_Racer* obj, s32 max, s16 roll, s16 pitch, s16 yaw) {
+void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pitch, s16 yaw) {
     s32 diff;
     s32 tempAngle;
 
@@ -755,7 +755,7 @@ void func_8005234C(unk8005234C *arg0) {
 
 extern s16 func_80070750(f32 y, f32 x);
 
-s32 func_80052388(Object* obj1, Object_Racer* arg1, Object* obj2, f32 distance) {
+s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) {
     s32 rotation;
     f32 diffX;
     f32 diffZ;
@@ -807,20 +807,12 @@ s32 func_80052388(Object* obj1, Object_Racer* arg1, Object* obj2, f32 distance) 
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 
-// action seems to be 1 when you're reversing, if you hit the horn, it's 4, and if you introduce yourself to a brick wall, it's 3 then 6.
-// unk18 seems to be a counter that's used as a baseline for animations
-// unk3B mostly mirrors what arg2 is, but it gets set to 0
-// I've yet to find a scenario where D_8011D55C is not 0.
-// I've also yet to find a scenario where the action is < 3
-// arg6 is set to 6 when honking, but 7 when reversing and not honking and 0 when crashing.
-// arg7 seems to be based on direction????
 void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
     if ((D_8011D55C == -1) && (action >= 3)) {
         arg0->segment.unk3B = 0;
         arg1->unk1F2 = 0;
-        //render_printf("set0\n");
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
             if (arg0->segment.unk18 >= 41) {
@@ -829,23 +821,21 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 d
                     arg0->segment.unk3B = action;
                     arg0->segment.unk18 = arg3;
                 }
-                //render_printf("set1\n");
             } else {
                 arg0->segment.unk18 += arg7 * 4;
                 if (arg0->segment.unk18 >= 40) {
                     arg0->segment.unk3B = action;
                     arg0->segment.unk18 = arg3;
                 }
-                //render_printf("set2\n");
             }
-        } else { // Set active flag, whether it's from just crashing, or beginning to honk.
+        } else {
             arg0->segment.unk3B = action;
             arg0->segment.unk18 = arg3;
             arg1->unk1F3 &= ~0x80;
         }
     } else if (arg0->segment.unk3B == action) {
         if (arg6 & 2) {
-            if (arg1->unk1F3 & 0x80) { // Stop honking or reversing.
+            if (arg1->unk1F3 & 0x80) {
                 arg0->segment.unk18 -= arg5;
                 if (arg0->segment.unk18 <= 0) {
                     arg0->segment.unk3B = 0;
@@ -853,9 +843,8 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 d
                     arg0->segment.unk18 = 40;
                     arg1->unk1F3 = 0;
                 }
-            } else { // Actively reversing or honking or boosting, possibly a velocity modifier, have found it's also set when recovering from getting hit by a rocket or spike trap
+            } else {
                 arg0->segment.unk18 += arg5;
-                // Keeps the timer below the duration value, while actively held.
                 if (arg0->segment.unk18 >= duration) {
                     arg0->segment.unk18 = duration - 1;
                     if ((arg6 & 4) == 0) {
@@ -863,7 +852,7 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 d
                     }
                 }
             }
-        } else { // Crash recoil
+        } else {
             arg0->segment.unk18 += arg5;
             if (arg0->segment.unk18 >= duration) {
                 arg0->segment.unk3B = 0;
@@ -872,16 +861,10 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 d
                 arg1->unk1F3 = 0;
             }
         }
-    } else { // Haven't seen this trigger yet.
+    } else {
         arg0->segment.unk18 = arg3;
         arg0->segment.unk3B = action;
     }
-    /*render_printf("D_8011D55C %d\n", D_8011D55C);
-    render_printf("action %d\n", action);
-    render_printf("unk18 %d\n", arg0->segment.unk18);
-    render_printf("unk3B %d\n", arg0->segment.unk3B);
-    render_printf("arg6 %d\n", arg6);
-    render_printf("arg7 %d\n", arg7);*/
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80052B64.s")
@@ -1117,8 +1100,8 @@ typedef struct Object_64_80059080 {
     u8 pad1C9[3];
 } Object_64_80059080;
 
-void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32* arg2, f32* arg3, f32* arg4) {
-    unknown8011AECC* temp_v0_2;
+void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32 *arg2, f32 *arg3, f32 *arg4) {
+    unknown8011AECC *temp_v0_2;
     s32 splinePos;
     s32 destReached;
     s32 splineEnd;
