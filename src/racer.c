@@ -492,8 +492,8 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
  * Initialise the basic properties of each racer object. If it's tied to a human player,
  * will also initialise a camera object.
  */
-void obj_init_racer(Object* obj, LevelObjectEntry_CharacterFlag* arg1) {
-    Object_Racer* tempObj;
+void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
+    Object_Racer *tempObj;
     s32 player;
     s32 i;
 
