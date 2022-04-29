@@ -194,6 +194,8 @@ void func_8001D1BC(s32 arg0);
 u32 func_8001D1E4(s32 *arg0);
 u32 func_8001D214(s32 arg0);
 void func_8001D23C(s32 arg0, s32 arg1, s32 arg2);
+void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4);
+void func_8001D4B4(s32*, f32, f32, s16, s16, s16);
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 arg3);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
@@ -222,12 +224,12 @@ s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
+s32 func_80031F88(Object*, s32);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void gParticlePtrList_flush(void);
-void func_8001D258(f32, f32, s32, s32, s32);
 void decrypt_magic_codes(u8 *arg0, s32 length);
 void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
