@@ -123,7 +123,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     osCreateMesgQueue(&OSMesgQueue_80116160, &D_80116178, 8);
     osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, 50);
 
-    osCreateThread(&audioThread, 4, &func_80002A98, NULL, &dmaState, p);
+    osCreateThread(&audioThread, 4, &thread4_audio, NULL, &dmaState, p);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
@@ -137,7 +137,38 @@ void audioStopThread(void) {
     osStopThread(&audioThread);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002A98.s")
+/**
+ * Main function for handling ingame audio. Loops continuously as long as the scheduler feeds it updates.
+ */
+void thread4_audio(UNUSED void *arg) {
+    s32 audioThreadMarkExit;
+    s16 *audioThreadRetraceMesg;
+    s16 *audioThreadUpdateMesg;
+
+    audioThreadMarkExit = FALSE;
+    audioThreadRetraceMesg = NULL;
+    audioThreadUpdateMesg = NULL;
+
+    osScAddClient(D_80115F90, &audioStack, &OSMesgQueue_80116160, 1);
+    while (!audioThreadMarkExit) {
+        osRecvMesg(&OSMesgQueue_80116160, &audioThreadRetraceMesg, 1);
+        switch (*audioThreadRetraceMesg) {
+        case 1:
+            func_80002C00(D_80115F98[(((u32) audFrameCt % 3))+2], audioThreadUpdateMesg);
+            osRecvMesg(&D_80116198, &audioThreadUpdateMesg, 1);
+            func_80002DF8(audioThreadUpdateMesg);
+            break;
+        case 4:
+            // Mysterious void.
+            break;
+        case 10:
+            audioThreadMarkExit = TRUE;
+            break;
+        }
+    }
+    alClose(&ALGlobals_801161D0);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
 

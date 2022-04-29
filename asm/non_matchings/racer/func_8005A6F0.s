@@ -367,8 +367,8 @@ glabel func_8005A6F0
 /* 05B7BC 8005ABBC 8FA700AC */   lw    $a3, 0xac($sp)
 /* 05B7C0 8005ABC0 0C01105C */  jal   func_80044170
 /* 05B7C4 8005ABC4 02002825 */   move  $a1, $s0
-/* 05B7C8 8005ABC8 3C0E8012 */  lui   $t6, %hi(D_8011D528) # $t6, 0x8012
-/* 05B7CC 8005ABCC 8DCED528 */  lw    $t6, %lo(D_8011D528)($t6)
+/* 05B7C8 8005ABC8 3C0E8012 */  lui   $t6, %hi(gCurrentCarInput) # $t6, 0x8012
+/* 05B7CC 8005ABCC 8DCED528 */  lw    $t6, %lo(gCurrentCarInput)($t6)
 /* 05B7D0 8005ABD0 3C0C8012 */  lui   $t4, %hi(D_8011D56C) # $t4, 0x8012
 /* 05B7D4 8005ABD4 31D88000 */  andi  $t8, $t6, 0x8000
 /* 05B7D8 8005ABD8 258CD56C */  addiu $t4, %lo(D_8011D56C) # addiu $t4, $t4, -0x2a94
@@ -594,9 +594,9 @@ glabel func_8005A6F0
 /* 05BB10 8005AF10 3C018012 */   lui   $at, %hi(D_8011D534) # $at, 0x8012
 /* 05BB14 8005AF14 AC20D534 */  sw    $zero, %lo(D_8011D534)($at)
 /* 05BB18 8005AF18 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
-/* 05BB1C 8005AF1C 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BB1C 8005AF1C 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BB20 8005AF20 AC20D538 */  sw    $zero, %lo(D_8011D538)($at)
-/* 05BB24 8005AF24 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BB24 8005AF24 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BB28 8005AF28 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BB2C 8005AF2C AC600000 */  sw    $zero, ($v1)
 /* 05BB30 8005AF30 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
@@ -608,9 +608,9 @@ glabel func_8005A6F0
 .L8005AF48:
 /* 05BB48 8005AF48 921901D6 */  lbu   $t9, 0x1d6($s0)
 /* 05BB4C 8005AF4C 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
-/* 05BB50 8005AF50 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BB50 8005AF50 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BB54 8005AF54 2F21000E */  sltiu $at, $t9, 0xe
-/* 05BB58 8005AF58 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BB58 8005AF58 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BB5C 8005AF5C 10200094 */  beqz  $at, .L8005B1B0
 /* 05BB60 8005AF60 2442D52C */   addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
 /* 05BB64 8005AF64 0019C880 */  sll   $t9, $t9, 2
@@ -626,10 +626,10 @@ glabel L8005AF80
 /* 05BB88 8005AF88 8FA600A0 */  lw    $a2, 0xa0($sp)
 /* 05BB8C 8005AF8C 0C013DFD */  jal   func_8004F7F4
 /* 05BB90 8005AF90 02003825 */   move  $a3, $s0
-/* 05BB94 8005AF94 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BB94 8005AF94 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BB98 8005AF98 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BB9C 8005AF9C 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BBA0 8005AFA0 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BBA0 8005AFA0 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BBA4 8005AFA4 10000082 */  b     .L8005B1B0
 /* 05BBA8 8005AFA8 240B0001 */   li    $t3, 1
 glabel L8005AFAC
@@ -638,10 +638,10 @@ glabel L8005AFAC
 /* 05BBB4 8005AFB4 8FA600A0 */  lw    $a2, 0xa0($sp)
 /* 05BBB8 8005AFB8 0C013308 */  jal   func_8004CC20
 /* 05BBBC 8005AFBC 02003825 */   move  $a3, $s0
-/* 05BBC0 8005AFC0 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BBC0 8005AFC0 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BBC4 8005AFC4 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BBC8 8005AFC8 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BBCC 8005AFCC 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BBCC 8005AFCC 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BBD0 8005AFD0 10000077 */  b     .L8005B1B0
 /* 05BBD4 8005AFD4 240B0001 */   li    $t3, 1
 glabel L8005AFD8
@@ -650,10 +650,10 @@ glabel L8005AFD8
 /* 05BBE0 8005AFE0 8FA600A0 */  lw    $a2, 0xa0($sp)
 /* 05BBE4 8005AFE4 0C011949 */  jal   func_80046524
 /* 05BBE8 8005AFE8 02003825 */   move  $a3, $s0
-/* 05BBEC 8005AFEC 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BBEC 8005AFEC 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BBF0 8005AFF0 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BBF4 8005AFF4 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BBF8 8005AFF8 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BBF8 8005AFF8 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BBFC 8005AFFC 1000006C */  b     .L8005B1B0
 /* 05BC00 8005B000 240B0001 */   li    $t3, 1
 glabel L8005B004
@@ -662,10 +662,10 @@ glabel L8005B004
 /* 05BC0C 8005B00C 8FA600A0 */  lw    $a2, 0xa0($sp)
 /* 05BC10 8005B010 0C0125E5 */  jal   func_80049794
 /* 05BC14 8005B014 02003825 */   move  $a3, $s0
-/* 05BC18 8005B018 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BC18 8005B018 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BC1C 8005B01C 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BC20 8005B020 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BC24 8005B024 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BC24 8005B024 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BC28 8005B028 10000061 */  b     .L8005B1B0
 /* 05BC2C 8005B02C 240B0001 */   li    $t3, 1
 glabel L8005B030
@@ -674,10 +674,10 @@ glabel L8005B030
 /* 05BC38 8005B038 8FA600A0 */  lw    $a2, 0xa0($sp)
 /* 05BC3C 8005B03C 0C013657 */  jal   func_8004D95C
 /* 05BC40 8005B040 02003825 */   move  $a3, $s0
-/* 05BC44 8005B044 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BC44 8005B044 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BC48 8005B048 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BC4C 8005B04C 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BC50 8005B050 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BC50 8005B050 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BC54 8005B054 10000056 */  b     .L8005B1B0
 /* 05BC58 8005B058 240B0001 */   li    $t3, 1
 glabel L8005B05C
@@ -689,10 +689,10 @@ glabel L8005B05C
 /* 05BC70 8005B070 AFA20014 */  sw    $v0, 0x14($sp)
 /* 05BC74 8005B074 0C0170D9 */  jal   func_8005C364
 /* 05BC78 8005B078 AFA80018 */   sw    $t0, 0x18($sp)
-/* 05BC7C 8005B07C 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BC7C 8005B07C 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BC80 8005B080 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BC84 8005B084 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BC88 8005B088 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BC88 8005B088 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BC8C 8005B08C 10000048 */  b     .L8005B1B0
 /* 05BC90 8005B090 240B0001 */   li    $t3, 1
 glabel L8005B094
@@ -704,10 +704,10 @@ glabel L8005B094
 /* 05BCA8 8005B0A8 AFA20014 */  sw    $v0, 0x14($sp)
 /* 05BCAC 8005B0AC 0C017434 */  jal   func_8005D0D0
 /* 05BCB0 8005B0B0 AFA80018 */   sw    $t0, 0x18($sp)
-/* 05BCB4 8005B0B4 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BCB4 8005B0B4 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BCB8 8005B0B8 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BCBC 8005B0BC 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BCC0 8005B0C0 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BCC0 8005B0C0 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BCC4 8005B0C4 1000003A */  b     .L8005B1B0
 /* 05BCC8 8005B0C8 240B0001 */   li    $t3, 1
 glabel L8005B0CC
@@ -721,10 +721,10 @@ glabel L8005B0CC
 /* 05BCE8 8005B0E8 AFA30010 */  sw    $v1, 0x10($sp)
 /* 05BCEC 8005B0EC 0C017608 */  jal   func_8005D820
 /* 05BCF0 8005B0F0 AFA80018 */   sw    $t0, 0x18($sp)
-/* 05BCF4 8005B0F4 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BCF4 8005B0F4 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BCF8 8005B0F8 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BCFC 8005B0FC 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BD00 8005B100 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BD00 8005B100 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BD04 8005B104 1000002A */  b     .L8005B1B0
 /* 05BD08 8005B108 240B0001 */   li    $t3, 1
 glabel L8005B10C
@@ -736,10 +736,10 @@ glabel L8005B10C
 /* 05BD20 8005B120 AFA20014 */  sw    $v0, 0x14($sp)
 /* 05BD24 8005B124 0C017930 */  jal   func_8005E4C0
 /* 05BD28 8005B128 AFA80018 */   sw    $t0, 0x18($sp)
-/* 05BD2C 8005B12C 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BD2C 8005B12C 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BD30 8005B130 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BD34 8005B134 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BD38 8005B138 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BD38 8005B138 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BD3C 8005B13C 1000001C */  b     .L8005B1B0
 /* 05BD40 8005B140 240B0001 */   li    $t3, 1
 glabel L8005B144
@@ -751,10 +751,10 @@ glabel L8005B144
 /* 05BD58 8005B158 AFA20014 */  sw    $v0, 0x14($sp)
 /* 05BD5C 8005B15C 0C017AA4 */  jal   func_8005EA90
 /* 05BD60 8005B160 AFA80018 */   sw    $t0, 0x18($sp)
-/* 05BD64 8005B164 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BD64 8005B164 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BD68 8005B168 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BD6C 8005B16C 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BD70 8005B170 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BD70 8005B170 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BD74 8005B174 1000000E */  b     .L8005B1B0
 /* 05BD78 8005B178 240B0001 */   li    $t3, 1
 glabel L8005B17C
@@ -766,10 +766,10 @@ glabel L8005B17C
 /* 05BD90 8005B190 AFA20014 */  sw    $v0, 0x14($sp)
 /* 05BD94 8005B194 0C017CC4 */  jal   func_8005F310
 /* 05BD98 8005B198 AFA80018 */   sw    $t0, 0x18($sp)
-/* 05BD9C 8005B19C 3C038012 */  lui   $v1, %hi(D_8011D528) # $v1, 0x8012
+/* 05BD9C 8005B19C 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
 /* 05BDA0 8005B1A0 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BDA4 8005B1A4 2442D52C */  addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
-/* 05BDA8 8005B1A8 2463D528 */  addiu $v1, %lo(D_8011D528) # addiu $v1, $v1, -0x2ad8
+/* 05BDA8 8005B1A8 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BDAC 8005B1AC 240B0001 */  li    $t3, 1
 .L8005B1B0:
 glabel L8005B1B0
@@ -947,8 +947,8 @@ glabel L8005B1B0
 /* 05C028 8005B428 240B0001 */  li    $t3, 1
 /* 05C02C 8005B42C 130B0008 */  beq   $t8, $t3, .L8005B450
 /* 05C030 8005B430 3C058012 */   lui   $a1, %hi(gActivePlayerButtonPress) # $a1, 0x8012
-/* 05C034 8005B434 3C068012 */  lui   $a2, %hi(D_8011D528) # $a2, 0x8012
-/* 05C038 8005B438 8CC6D528 */  lw    $a2, %lo(D_8011D528)($a2)
+/* 05C034 8005B434 3C068012 */  lui   $a2, %hi(gCurrentCarInput) # $a2, 0x8012
+/* 05C038 8005B438 8CC6D528 */  lw    $a2, %lo(gCurrentCarInput)($a2)
 /* 05C03C 8005B43C 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 05C040 8005B440 8CA5D52C */  lw    $a1, %lo(gActivePlayerButtonPress)($a1)
 /* 05C044 8005B444 8FA700A8 */  lw    $a3, 0xa8($sp)

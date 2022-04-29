@@ -128,8 +128,8 @@ glabel func_80052B64
 /* 053934 80052D34 A0E001DB */  sb    $zero, 0x1db($a3)
 .L80052D38:
 /* 053938 80052D38 84EF01A2 */  lh    $t7, 0x1a2($a3)
-/* 05393C 80052D3C 3C018012 */  lui   $at, %hi(D_8011D554) # $at, 0x8012
-/* 053940 80052D40 AC2FD554 */  sw    $t7, %lo(D_8011D554)($at)
+/* 05393C 80052D3C 3C018012 */  lui   $at, %hi(gCurrentCarSteerVel) # $at, 0x8012
+/* 053940 80052D40 AC2FD554 */  sw    $t7, %lo(gCurrentCarSteerVel)($at)
 /* 053944 80052D44 3C018012 */  lui   $at, %hi(D_8011D56C) # $at, 0x8012
 /* 053948 80052D48 C424D56C */  lwc1  $f4, %lo(D_8011D56C)($at)
 /* 05394C 80052D4C C7A6002C */  lwc1  $f6, 0x2c($sp)

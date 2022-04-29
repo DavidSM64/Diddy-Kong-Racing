@@ -10,7 +10,7 @@
 
 /************ .data ************/
 
-s32 gFunc80024D54Checksum = 116315;
+s32 gTractionTableChecksum = 116315;
 s32 gFunc80024D54Length = 1980;
 
 /*******************************/
@@ -66,8 +66,8 @@ void func_8005F850(void) {
     for (i = 0; i < gFunc80024D54Length; i++) {
         checksum += *(u8 *)(((s32)&func_80024D54) + i);
     }
-    if (checksum != gFunc80024D54Checksum) {
-        func_8005C25C();
+    if (checksum != gTractionTableChecksum) {
+        antipiracy_modify_surface_traction_table();
     }
 }
 

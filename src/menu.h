@@ -25,7 +25,7 @@ enum DialogueMenuCases {
     DIALOG_TT,
     DIALOG_CHALLENGE,
     DIALOG_TROPHY,
-    DIALOG_RACERESULT,
+    DIALOG_RACERESULT
 };
 
 #define CHEAT(index) 1 << index

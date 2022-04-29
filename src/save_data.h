@@ -31,7 +31,7 @@ typedef enum {
     CONTROLLER_PAK_UNK6, //Could be another way to mark as full according to tt_menu_loop
     RUMBLE_PAK,
     CONTROLLER_PAK_UNK8, // func_80074B34 Sets this, possibly set in func_800860A8
-    CONTROLLER_PAK_BAD_DATA,
+    CONTROLLER_PAK_BAD_DATA
 } SIDeviceStatus;
 
 extern s8 *D_800DE440;

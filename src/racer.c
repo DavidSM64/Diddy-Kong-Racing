@@ -16,6 +16,7 @@
 #include "audio.h"
 #include "object_functions.h"
 #include "game.h"
+#include "printf.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -35,14 +36,16 @@ f32 D_800DCB60[14] = {
 };
 
 s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
-f32 D_800DCB9C[19] = {
+// Table used for quantifying speed reduction while the car drives over it, like how grass will slow you down more than the road.
+// An antipiracy trigger can set the first index to 0.5f, which makes that surface type impossible to drive on.
+f32 gSurfaceTractionTable[19] = {
     0.004f, 0.007f, 0.01f, 0.004f,
     0.01f, 0.01f, 0.01f, 0.01f,
     0.01f, 0.01f, 0.004f, 0.004f,
     0.004f, 0.004f, 0.004f, 0.004f,
     0.004f, 0.004f, 0.004f,
 };
-
+// Can only assume this is surface related too. Not incline thresholds though.
 f32 D_800DCBE8[19] = {
     0.8f, 0.85f, 0.85f, 0.5f,
     0.5f, 0.5f, 0.5f, 0.5f,
@@ -136,7 +139,7 @@ s32 D_8011D504;
 ObjectCamera *gCameraObject;
 s32 D_8011D50C;
 ObjectTransform D_8011D510;
-s32 D_8011D528;
+s32 gCurrentCarInput; // Related to input of the car.
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
 s32 D_8011D534;
@@ -149,10 +152,11 @@ s32 D_8011D54C;
 s16 D_8011D550;
 s8 D_8011D552;
 s8 D_8011D553;
-s32 D_8011D554;
+s32 gCurrentCarSteerVel; // Related to rotational velocity of the car.
 s32 D_8011D558;
 s32 D_8011D55C;
-s32 D_8011D560;
+s16 D_8011D560;
+s16 D_8011D562;
 s32 D_8011D564;
 s32 D_8011D568;
 s32 D_8011D56C;
@@ -166,16 +170,13 @@ s8 D_8011D582;
 s8 D_8011D583;
 s8 D_8011D584;
 s8 D_8011D585;
-s8 D_8011D586;
-s8 D_8011D587;
+s16 D_8011D586;
 s8 D_8011D588;
 s8 D_8011D589;
 s8 D_8011D58A;
 s8 D_8011D58B;
-s8 D_8011D58C;
-s8 D_8011D58D;
-s8 D_8011D58E;
-s8 D_8011D58F;
+s8 D_8011D58B;
+s8 D_8011D58C[4];
 GhostHeader *gGhostData[3];
 s8 D_8011D59C;
 s8 D_8011D59D;
@@ -188,15 +189,98 @@ s16 D_8011D5AE;
 s32 D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
-s8 D_8011D5BA;
-s8 D_8011D5BB;
-s8 D_8011D5BC;
 
 /******************************/
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80043ECC.s")
 
+typedef struct Object_64_Unknown5 {
+    u8 pad0[0x88];
+    u8 unk89;
+    u8 pad90[0xE9];
+    s8 unk172;
+    s8 unk173;
+    s8 unk174;
+    u8 pad175[0x5E];
+    s8 unk1D3;
+} Object_64_Unknown5;
+
+typedef struct TempStruct5 {
+    s8 pad0[8];
+    s8 unk8[4][4];
+} TempStruct5;
+
+void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 arg2) {
+    TempStruct5 *temp_v0;
+    s8 *test;
+    s8 phi_a0;
+    s32 i;
+    static s8 D_8011D5BA;
+    static s8 D_8011D5BB;
+    static s8 D_8011D5BC;
+
+    if (!arg0) {
+        D_8011D5BA = 0;
+        D_8011D5BB = 0;
+        D_8011D5BC = 0;
+        return;
+    }
+    temp_v0 = (TempStruct5 *)func_8006C18C();
+    if (arg1->unk1D3) {
+        if (!D_8011D5BB) {
+            temp_v0->unk8[3][0] += temp_v0->unk8[3][2];
+            temp_v0->unk8[3][1] += temp_v0->unk8[3][3];
+            D_8011D5BB = 1;
+        }
+        if (!(gCurrentCarInput & A_BUTTON)) {
+            D_8011D5BA += arg2;
+        }
+    } else {
+        D_8011D5BB = 0;
+        if (D_8011D5BA > 20) {
+            temp_v0->unk8[0][0] += temp_v0->unk8[0][2];
+            temp_v0->unk8[0][1] += temp_v0->unk8[0][3];
+        }
+        D_8011D5BA = 0;
+    }
+    if (arg1->unk173) {
+        if (D_8011D5BC < arg1->unk174) {
+            temp_v0->unk8[1][0] += temp_v0->unk8[1][2];
+            temp_v0->unk8[1][1] += temp_v0->unk8[1][3];
+        }
+        D_8011D5BC = arg1->unk174;
+    } else {
+        D_8011D5BC = 0;
+    }
+    test = get_misc_asset(12);
+    if ((D_8011D530 & 0x2000) && arg1->unk173) {
+        if (arg1->unk174 < 3) {
+            phi_a0 = test[arg1->unk172 * 3 + arg1->unk174];
+        } else {
+            phi_a0 = arg1->unk172;
+        }
+        if (D_800DCD90[phi_a0] == 1) {
+            temp_v0->unk8[2][0] += temp_v0->unk8[2][2];
+            temp_v0->unk8[2][1] += temp_v0->unk8[2][3];
+        }
+    }
+    for (i = 0; i < 2; i++) {
+        if (temp_v0->unk8[1][i] > 100 || temp_v0->unk8[1][i] < 0) {
+            temp_v0->unk8[1][i] = 100;
+        }
+        if (temp_v0->unk8[0][i]  > 100 || temp_v0->unk8[0][i] < 0) {
+            temp_v0->unk8[0][i]  = 100;
+        }
+        if (temp_v0->unk8[3][i] > 100 || temp_v0->unk8[3][i] < 0) {
+            temp_v0->unk8[3][i] = 100;
+        }
+        if (temp_v0->unk8[2][i] > 100 || temp_v0->unk8[2][i] < 0) {
+            temp_v0->unk8[2][i] = 100;
+        }
+    }
+}
+
+// Might be the main loop for the AI racers.
 void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
     s32 raceType;
 
@@ -250,9 +334,9 @@ void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
 
     if (arg1->unk214 != 0) {
         D_8011D534 *= -1;
-        D_8011D528 &= ~0x8000;
+        gCurrentCarInput &= ~A_BUTTON;
         D_8011D538 = -50;
-        D_8011D528 |= 0x4000;
+        gCurrentCarInput |= B_BUTTON;
     }
 
     if (D_8011D534 > 75) {
@@ -404,19 +488,124 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/obj_init_racer.s")
+/**
+ * Initialise the basic properties of each racer object. If it's tied to a human player,
+ * will also initialise a camera object.
+ */
+void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
+    Object_Racer *tempObj;
+    s32 player;
+    s32 i;
+
+    D_8011D53C = 0;
+    tempObj = (struct Object_Racer *) obj->unk64;
+    obj->segment.trans.y_rotation = arg1->unkC;
+    obj->segment.trans.x_rotation = arg1->unkA;
+    obj->segment.trans.z_rotation = arg1->unk8;
+    player = arg1->unkE;
+    tempObj->unk194 = 0;
+    tempObj->stretch_height = 1.0f;
+    tempObj->stretch_height_cap = 1.0f;
+    if (player >= 0 && player < 4) {
+        if (func_8000E158()) {
+            player = 1 - player;
+        }
+        tempObj->playerIndex = player;
+    } else {
+        tempObj->playerIndex = -1;
+    }
+    tempObj->unk1A0 = obj->segment.trans.y_rotation;
+    tempObj->unk1A4 = obj->segment.trans.z_rotation;
+    tempObj->unkC4 = 0.5f;
+    if (1);
+    tempObj->unk196 = tempObj->unk1A0;
+    tempObj->unkD8 = obj->segment.trans.x_position;
+    tempObj->unkDC = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkE0 = obj->segment.trans.z_position;
+    tempObj->unkE4 = obj->segment.trans.x_position;
+    tempObj->unkE8 = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkEC = obj->segment.trans.z_position;
+    tempObj->unkF0 = obj->segment.trans.x_position;
+    tempObj->unkF4 = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkF8 = obj->segment.trans.z_position;
+    tempObj->unkFC = obj->segment.trans.x_position;
+    tempObj->unk100 = obj->segment.trans.y_position + 30.0f;
+    tempObj->unk104 = obj->segment.trans.z_position;
+    tempObj->prev_x_position = obj->segment.trans.x_position;
+    tempObj->prev_y_position = obj->segment.trans.y_position;
+    tempObj->prev_z_position = obj->segment.trans.z_position;
+    obj->unk4C->x_position = obj->segment.trans.x_position;
+    obj->unk4C->y_position = obj->segment.trans.y_position;
+    obj->unk4C->z_position = obj->segment.trans.z_position;
+    tempObj->unk1E2 = 3;
+    tempObj->unk1AA = 1;
+    tempObj->unk1AE = 1;
+    tempObj->unk1E7 = tempObj->playerIndex * 5;
+    tempObj->checkpoint_distance = 1.0f;
+    tempObj->unk1FD = 0;
+    tempObj->unk178 = 0;
+    tempObj->unk17C = 0;
+    tempObj->unk180 = 0;
+    tempObj->unk218 = 0;
+    tempObj->unk220 = 0;
+    tempObj->unk21C = 0;
+    if (tempObj->playerIndex != -1 && !D_8011D582) {
+        func_800665E8(player);
+        gCameraObject = func_80069CFC();
+        gCameraObject->trans.z_rotation = 0;
+        gCameraObject->trans.x_rotation = 0x400;
+        gCameraObject->trans.y_rotation = tempObj->unk196;
+        gCameraObject->unk36 = 0;
+        gCameraObject->unk3C = 0xFF;
+        gCameraObject->unk3D = 0xFF;
+        gCameraObject->unk3E = 0xFF;
+        gCameraObject->unk3F = 0xFF;
+        gCameraObject->unk18 = 0.0f;
+        func_80057A40(obj, tempObj, 1.0f);
+    }
+    if (!D_8011D582) {
+        D_8011D583 = 0;
+        D_8011D586 = 0;
+        D_8011D584 = 0;
+    }
+    obj->unk4C->unk14 = 5;
+    obj->unk4C->unk11 = 0;
+    obj->unk4C->unk10 = 0xF;
+    obj->unk4C->unk12 = 0x14;
+    tempObj->unk1EE = 0;
+    if (!D_8011D582) {
+        tempObj->transparency = 0xFF;
+    }
+    D_8011D560 = 0;
+    D_8011D544 = 300.0f;
+    tempObj->unk1C9 = 6;
+    tempObj->unk1C6 = 100;
+    D_8011D580 = 0;
+
+    // This needs to be on one line to match.
+    for (i = 0; i < 4; i++) { D_8011D58C[i] = 0; }
+    if (tempObj);
+    if (tempObj);
+    if (tempObj);
+    if (tempObj);
+    func_80043ECC(0, 0, 0);
+    D_8011D583 = i;
+    D_8011D585 = 0;
+    tempObj->unk20A = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8004DE38.s")
 
 void func_8004F77C(unk8004F77C *arg0) {
     s32 temp;
 
-    arg0->unk20A &= ~0x80;
-    if ((D_8011D528 & 0x4000) != 0) {
-        arg0->unk20A |= 0x80;
+    arg0->flags &= ~0x80;
+    if ((gCurrentCarInput & B_BUTTON) != 0) {
+        arg0->flags |= 0x80;
     }
 
-    temp = arg0->unk20A & 0xF;
-    if ((arg0->unk20A & 0xC0) != 0) {
+    temp = arg0->flags & 0xF;
+    if ((arg0->flags & 0xC0) != 0) {
         temp++;
         if (temp >= 3) {
             temp = 2;
@@ -428,7 +617,7 @@ void func_8004F77C(unk8004F77C *arg0) {
         }
     }
 
-    arg0->unk20A = (arg0->unk20A & 0xFFF0) | temp;
+    arg0->flags = (arg0->flags & 0xFFF0) | temp;
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
@@ -463,23 +652,100 @@ void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80050850.s")
+/**
+ * Applies visual rotational offets to vehicles.
+ * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
+ */
+void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pitch, s16 yaw) {
+    s32 diff;
+    s32 tempAngle;
+
+    if (!obj->unk1F1) {
+        tempAngle = roll - (obj->unk160 & 0xFFFF);
+        obj->unk166 = pitch;
+        if (tempAngle > 0x8000) {
+            tempAngle +=  0xFFFF0001;
+        }
+        if (tempAngle < -0x8000) {
+            tempAngle += 0xFFFF;
+        }
+        if (tempAngle > 0) {
+            diff = max * 0x600;
+            if (diff < tempAngle) {
+                tempAngle = diff;
+            }
+            obj->unk160 +=  tempAngle;
+        } else if (tempAngle < 0) {
+            diff = -(max * 0x600);
+            if (tempAngle < diff) {
+                tempAngle = diff;
+            }
+            obj->unk160 += tempAngle;
+        }
+        tempAngle = pitch - (obj->unk162 & 0xFFFF);
+        if (tempAngle > 0x8000) {
+            tempAngle = tempAngle + 0xFFFF0001;
+        }
+        if (tempAngle < -0x8000) {
+            tempAngle = tempAngle + 0xFFFF;
+        }
+        if (tempAngle > 0) {
+            diff = max * 0x600;
+            if (diff < tempAngle) {
+                tempAngle = diff;
+            }
+            obj->unk162 += tempAngle;
+        } else if (tempAngle < 0) {
+            diff = -(max * 0x600);
+            if (tempAngle < diff) {
+                tempAngle = diff;
+            }
+            obj->unk162 += tempAngle;
+        }
+        tempAngle = yaw - (obj->unk164 & 0xFFFF);
+        if (tempAngle > 0x8000) {
+            tempAngle = tempAngle + 0xFFFF0001;
+        }
+        if (tempAngle < -0x8000) {
+            tempAngle = tempAngle + 0xFFFF;
+        }
+        if (tempAngle > 0) {
+            diff = max * 0x600;
+            if (diff < tempAngle) {
+                tempAngle = diff;
+            }
+            obj->unk164 += tempAngle;
+            return;
+        }
+        if (tempAngle < 0) {
+            diff = -(max * 0x600);
+            if (tempAngle < diff) {
+                tempAngle = diff;
+            }
+            obj->unk164 += tempAngle;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80050A28.s")
 
+// Loops for as long as Taj exists. After swapping vehicle once, will remain true until you enter a door.
 s32 func_80052188(void) {
     if (D_8011D582 == 2) {
         D_8011D582 = 1;
-        return 1;
+        return TRUE;
     }
-    return 0;
+    return FALSE;
 }
 
+// Called when Taj swaps the active vehicle, is set to 1, each time.
 void func_800521B8(s32 arg0) {
     D_8011D582 = arg0;
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_800521C4.s")
 
+// Ran by the AI. Seems to be direction related of some sorts.
 void func_8005234C(unk8005234C *arg0) {
     arg0->unk16C -= arg0->unk16C >> 3;
     if (arg0->unk16C >= -9 && arg0->unk16C < 10) { // Deadzone?
@@ -487,49 +753,100 @@ void func_8005234C(unk8005234C *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80052388.s")
+extern s16 func_80070750(f32 y, f32 x);
+
+s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) {
+    s32 rotation;
+    f32 diffX;
+    f32 diffZ;
+    s32 ret = FALSE;
+
+    diffX = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
+    diffZ = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
+    if ((diffX * diffX) + (diffZ * diffZ) < distance) {
+        rotation = (func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        if (rotation > 0x8000) {
+            rotation += 0xFFFF0001;
+        }
+        if (rotation < -0x8000) {
+            rotation += 0xFFFF;
+        }
+        if (rotation > 0x3000) {
+            rotation = 0x3000;
+        }
+        if (rotation < -0x3000) {
+            rotation = -0x3000;
+        }
+        arg1->unk16C = rotation;
+        if ((arg1->unk1E7 & 0x3F) < 0x1F) {
+            arg1->unk16C = 0;
+        }
+        arg1 = (struct Object_Racer *) obj2->unk64;
+        rotation = func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
+        if (rotation > 0x8000) {
+            rotation += 0xFFFF0001;
+        }
+        if (rotation < -0x8000) {
+            rotation += 0xFFFF;
+        }
+        if (rotation > 0x3000) {
+            rotation = 0x3000;
+        }
+        if (rotation < -0x3000) {
+            rotation = -0x3000;
+        }
+        arg1->unk16C = rotation;
+        if (ret) {}
+        ret = TRUE;
+        if ((arg1->unk1E7 & 0x1F) < 0xA) {
+            arg1->unk16C = 0;
+        }
+    }
+    return ret;
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 
-void func_80052988(Object *arg0, Object_Racer *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7) {
+void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
-    if ((D_8011D55C == -1) && (arg2 >= 3)) {
+    if ((D_8011D55C == -1) && (action >= 3)) {
         arg0->segment.unk3B = 0;
         arg1->unk1F2 = 0;
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
-            if (arg0->segment.unk18 >= 0x29) {
+            if (arg0->segment.unk18 >= 41) {
                 arg0->segment.unk18 -= arg7 * 4;
-                if (arg0->segment.unk18 < 0x29) {
-                    arg0->segment.unk3B = arg2;
+                if (arg0->segment.unk18 < 41) {
+                    arg0->segment.unk3B = action;
                     arg0->segment.unk18 = arg3;
                 }
             } else {
                 arg0->segment.unk18 += arg7 * 4;
-                if (arg0->segment.unk18 >= 0x28) {
-                    arg0->segment.unk3B = arg2;
+                if (arg0->segment.unk18 >= 40) {
+                    arg0->segment.unk3B = action;
                     arg0->segment.unk18 = arg3;
                 }
             }
         } else {
-            arg0->segment.unk3B = arg2;
+            arg0->segment.unk3B = action;
             arg0->segment.unk18 = arg3;
             arg1->unk1F3 &= ~0x80;
         }
-    } else if (arg0->segment.unk3B == arg2) {
+    } else if (arg0->segment.unk3B == action) {
         if (arg6 & 2) {
             if (arg1->unk1F3 & 0x80) {
                 arg0->segment.unk18 -= arg5;
                 if (arg0->segment.unk18 <= 0) {
                     arg0->segment.unk3B = 0;
                     arg1->unk1F2 = 0;
-                    arg0->segment.unk18 = 0x28;
+                    arg0->segment.unk18 = 40;
                     arg1->unk1F3 = 0;
                 }
             } else {
                 arg0->segment.unk18 += arg5;
-                if (arg0->segment.unk18 >= arg4) {
-                    arg0->segment.unk18 = arg4 - 1;
+                if (arg0->segment.unk18 >= duration) {
+                    arg0->segment.unk18 = duration - 1;
                     if ((arg6 & 4) == 0) {
                         arg1->unk1F3 |= 0x80;
                     }
@@ -537,44 +854,51 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 arg2, s32 arg3, s32 arg
             }
         } else {
             arg0->segment.unk18 += arg5;
-            if (arg0->segment.unk18 >= arg4) {
+            if (arg0->segment.unk18 >= duration) {
                 arg0->segment.unk3B = 0;
                 arg1->unk1F2 = 0;
-                arg0->segment.unk18 = 0x28;
+                arg0->segment.unk18 = 40;
                 arg1->unk1F3 = 0;
             }
         }
     } else {
         arg0->segment.unk18 = arg3;
-        arg0->segment.unk3B = arg2;
+        arg0->segment.unk3B = action;
     }
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80052B64.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80052D7C.s")
 
-void func_80053478(Object_Racer *obj) {
-    s32 phi_v0;
-    f32 phi_f0 = obj->velocity;
+/**
+ * Handle the steering input of all cars.
+ * It takes the speed of the car, creating a curve for the rotational velocity to scale with.
+ */
+void handle_car_steering(Object_Racer *obj) {
+    s32 velScale;
+    f32 vel = obj->velocity;
 
-    if (phi_f0 < 0.0) {
-        phi_f0 = -phi_f0;
+    // Stay positive :)
+    if (vel < 0.0) {
+        vel = -vel;
     }
-    if (phi_f0 > 1.8) {
-        phi_f0 = 1.8f;
+    if (vel > 1.8) {
+        vel = 1.8f;
     }
-    phi_f0 -= 0.2;
-    if (phi_f0 < 0.0) {
-        phi_f0 = 0.0f;
+    vel -= 0.2;
+    if (vel < 0.0) {
+        vel = 0.0f;
     }
     if (obj->drift_direction != 0) {
-        phi_v0 = phi_f0 * 68.0f;
+        velScale = vel * 68.0f;
     } else {
-        phi_v0 = phi_f0 * 58.0f;
+        velScale = vel * 58.0f;
     }
-    D_8011D554 -= (obj->unk1E1 * phi_v0);
+    // Set the steering velocity based on the car's steering value, scaled with the temp forward velocity value.
+    gCurrentCarSteerVel -= (obj->unk1E1 * velScale);
+    // If the car is reversing, then flip the steering.
     if (obj->velocity > 0.0f) {
-        D_8011D554 = -D_8011D554;
+        gCurrentCarSteerVel = -gCurrentCarSteerVel;
     }
 }
 
@@ -593,23 +917,26 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
 
-void func_80053664(Object_Racer *arg0) {
-    if (arg0->throttle > 0.0) {
-        arg0->throttle -= 0.1;
+/**
+ * Adjusts the throttle and brake application for all cars, based off the input.
+ */
+void handle_car_velocity_control(Object_Racer *car) {
+    if (car->throttle > 0.0) {
+        car->throttle -= 0.1;
     }
 
-    if (D_8011D528 & 0x8000) {
-        arg0->throttle = 1.0f;
+    if (gCurrentCarInput & A_BUTTON) {
+        car->throttle = 1.0f;
     }
 
-    if (D_8011D528 & 0x4000) {
-        if (arg0->brake < 1.0) {
-            arg0->brake += 0.2;
+    if (gCurrentCarInput & B_BUTTON) {
+        if (car->brake < 1.0) {
+            car->brake += 0.2;
         }
     } else {
         //! @bug Will cause a negative brake value resulting in higher velocity
-        if (arg0->brake > 0.05) {
-            arg0->brake -= 0.1;
+        if (car->brake > 0.05) {
+            car->brake -= 0.1;
         }
     }
 }
@@ -728,15 +1055,15 @@ void func_800580B4(Object *obj, Object_Racer *obj64, s32 arg2, f32 arg3) {
     if ((D_8011D55C != -1) && (obj64->unk1D8 != 1)) {
         if (arg2 != gCameraObject->unk36) {
             func_80057A40(obj, obj64, arg3);
-            xPos = gCameraObject->x_position;
-            yPos = gCameraObject->y_position;
-            zPos = gCameraObject->z_position;
+            xPos = gCameraObject->trans.x_position;
+            yPos = gCameraObject->trans.y_position;
+            zPos = gCameraObject->trans.z_position;
             gCameraObject->unk36 = arg2;
             func_80057A40(obj, obj64, arg3);
             if (D_8011D540 == 0 && D_8011D582 == 0) {
-                gCameraObject->unk24 = xPos - gCameraObject->x_position;
-                gCameraObject->unk28 = yPos - (gCameraObject->y_position + gCameraObject->unk30);
-                gCameraObject->unk2C = zPos - gCameraObject->z_position;
+                gCameraObject->x_velocity = xPos - gCameraObject->trans.x_position;
+                gCameraObject->y_velocity = yPos - (gCameraObject->trans.y_position + gCameraObject->unk30);
+                gCameraObject->z_velocity = zPos - gCameraObject->trans.z_position;
             }
         }
     }
@@ -750,16 +1077,73 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
 void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     s32 temp0, temp1;
     temp0 = (s32)arg0;
-    temp1 = func_8007066C(gCameraObject->x_position - arg1->segment.trans.x_position, gCameraObject->z_position - arg1->segment.trans.z_position);
+    temp1 = func_8007066C(gCameraObject->trans.x_position - arg1->segment.trans.x_position, gCameraObject->trans.z_position - arg1->segment.trans.z_position);
     gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
     gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->segment.unk3C_a.unk3C_f, gCameraObject->z_position);
+    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, arg2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80059080.s")
+typedef struct Object_64_80059080 {
+    u8 pad0[0x10];
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    u8 pad1C[0x8C];
+    f32 unkA8;
+    u8 padAC[0xE6];
+    s8 unk192;
+    u8 pad196[0x35];
+    u8 unk1C8;
+    u8 pad1C9[3];
+} Object_64_80059080;
+
+void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32 *arg2, f32 *arg3, f32 *arg4) {
+    unknown8011AECC *temp_v0_2;
+    s32 splinePos;
+    s32 destReached;
+    s32 splineEnd;
+    f32 splineX[5];
+    f32 splineY[5];
+    f32 splineZ[5];
+    f32 magnitude;
+    s32 i;
+
+    splineEnd = func_8001BA64();
+
+    if (splineEnd) {
+        magnitude = 1.0 - arg1->unkA8;
+        if (magnitude < 0.0f) {
+            magnitude = 0.0f;
+        }
+        if (arg1->unk192) {}
+        splinePos = arg1->unk192 - 2;
+        if (splinePos < 0) {
+            splinePos += splineEnd;
+        }
+        for (i = 0; i < 5; i++) {
+            temp_v0_2 = func_8001BA1C(splinePos, arg1->unk1C8);
+            splineX[i] = temp_v0_2->unk10;
+            splineY[i] = temp_v0_2->unk14;
+            splineZ[i] = temp_v0_2->unk18;
+            splinePos++;
+            if (splinePos == splineEnd) {
+                splinePos = 0;
+            }
+        }
+        destReached = 0;
+        if (magnitude >= 1.0) {
+            destReached = 1;
+            magnitude -= 1.0;
+        }
+        *arg2 = catmull_rom_interpolation(splineX, destReached, magnitude);
+        *arg3 = catmull_rom_interpolation(splineY, destReached, magnitude);
+        *arg4 = catmull_rom_interpolation(splineZ, destReached, magnitude);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80059208.s")
 
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths) {
@@ -890,8 +1274,12 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005A6F0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 
 // This gets called if an anti-piracy checksum fails in func_8005F850.
-void func_8005C25C(void) {
-    D_800DCB9C[0] = 0.05f;
+/**
+ * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
+ * table to an unreasonable value, wrecking drivability while on it.
+ */
+void antipiracy_modify_surface_traction_table(void) {
+    gSurfaceTractionTable[0] = 0.05f;
 }
 
 void func_8005C270(unk8005C270 *arg0) {

@@ -48,8 +48,8 @@ glabel func_8004CC20
 /* 04D8A0 8004CCA0 A2000203 */   sb    $zero, 0x203($s0)
 /* 04D8A4 8004CCA4 3C018012 */  lui   $at, %hi(D_8011D550) # $at, 0x8012
 /* 04D8A8 8004CCA8 A420D550 */  sh    $zero, %lo(D_8011D550)($at)
-/* 04D8AC 8004CCAC 3C018012 */  lui   $at, %hi(D_8011D554) # $at, 0x8012
-/* 04D8B0 8004CCB0 AC20D554 */  sw    $zero, %lo(D_8011D554)($at)
+/* 04D8AC 8004CCAC 3C018012 */  lui   $at, %hi(gCurrentCarSteerVel) # $at, 0x8012
+/* 04D8B0 8004CCB0 AC20D554 */  sw    $zero, %lo(gCurrentCarSteerVel)($at)
 /* 04D8B4 8004CCB4 3C018012 */  lui   $at, %hi(D_8011D558) # $at, 0x8012
 /* 04D8B8 8004CCB8 AC20D558 */  sw    $zero, %lo(D_8011D558)($at)
 /* 04D8BC 8004CCBC C624000C */  lwc1  $f4, 0xc($s1)
@@ -139,12 +139,12 @@ glabel func_8004CC20
 /* 04D9F4 8004CDF4 0C01BD93 */  jal   guMtxXFMF
 /* 04D9F8 8004CDF8 3C063F80 */   lui   $a2, 0x3f80
 /* 04D9FC 8004CDFC 340E8000 */  li    $t6, 32768
-/* 04DA00 8004CE00 3C018012 */  lui   $at, %hi(D_8011D528) # $at, 0x8012
-/* 04DA04 8004CE04 AC2ED528 */  sw    $t6, %lo(D_8011D528)($at)
+/* 04DA00 8004CE00 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
+/* 04DA04 8004CE04 AC2ED528 */  sw    $t6, %lo(gCurrentCarInput)($at)
 /* 04DA08 8004CE08 02202025 */  move  $a0, $s1
 /* 04DA0C 8004CE0C 0C014D71 */  jal   func_800535C4
 /* 04DA10 8004CE10 02002825 */   move  $a1, $s0
-/* 04DA14 8004CE14 0C014D99 */  jal   func_80053664
+/* 04DA14 8004CE14 0C014D99 */  jal   handle_car_velocity_control
 /* 04DA18 8004CE18 02002025 */   move  $a0, $s0
 /* 04DA1C 8004CE1C 8FA600DC */  lw    $a2, 0xdc($sp)
 /* 04DA20 8004CE20 02202025 */  move  $a0, $s1
@@ -486,7 +486,7 @@ glabel func_8004CC20
 /* 04DF10 8004D310 C624001C */  lwc1  $f4, 0x1c($s1)
 /* 04DF14 8004D314 46009402 */  mul.s $f16, $f18, $f0
 /* 04DF18 8004D318 C62A0020 */  lwc1  $f10, 0x20($s1)
-/* 04DF1C 8004D31C 3C0B8012 */  lui   $t3, %hi(D_8011D554) # $t3, 0x8012
+/* 04DF1C 8004D31C 3C0B8012 */  lui   $t3, %hi(gCurrentCarSteerVel) # $t3, 0x8012
 /* 04DF20 8004D320 02202025 */  move  $a0, $s1
 /* 04DF24 8004D324 46102181 */  sub.s $f6, $f4, $f16
 /* 04DF28 8004D328 C6300024 */  lwc1  $f16, 0x24($s1)
@@ -502,7 +502,7 @@ glabel func_8004CC20
 /* 04DF50 8004D350 46088281 */  sub.s $f10, $f16, $f8
 /* 04DF54 8004D354 E62A0024 */  swc1  $f10, 0x24($s1)
 /* 04DF58 8004D358 AE00010C */  sw    $zero, 0x10c($s0)
-/* 04DF5C 8004D35C 8D6BD554 */  lw    $t3, %lo(D_8011D554)($t3)
+/* 04DF5C 8004D35C 8D6BD554 */  lw    $t3, %lo(gCurrentCarSteerVel)($t3)
 /* 04DF60 8004D360 860201A2 */  lh    $v0, 0x1a2($s0)
 /* 04DF64 8004D364 860F01A0 */  lh    $t7, 0x1a0($s0)
 /* 04DF68 8004D368 01626023 */  subu  $t4, $t3, $v0

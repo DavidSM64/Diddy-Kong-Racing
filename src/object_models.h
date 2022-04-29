@@ -11,7 +11,7 @@ typedef struct unk8011D624 {
     ObjectModel *model;
 } unk8011D624;
 
-extern s32 gFunc80024D54Checksum;
+extern s32 gTractionTableChecksum;
 extern s32 gFunc80024D54Length;
 
 void func_8005F850(void);

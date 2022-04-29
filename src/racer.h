@@ -5,26 +5,28 @@
 #include "structs.h"
 
 typedef struct ObjectCamera {
-/* 0x0000 */ s16 y_rotation;
-/* 0x0002 */ s16 x_rotation;
-/* 0x0004 */ s16 z_rotation;
-/* 0x0006 */ s16 unk6;
-/* 0x0008 */ f32 scale;
-/* 0x000C */ f32 x_position;
-/* 0x0010 */ f32 y_position;
-/* 0x0014 */ f32 z_position;
-/* 0x0018 */ u8 pad18[0xC];
-/* 0x0024 */ f32 unk24;
-/* 0x0028 */ f32 unk28;
-/* 0x002C */ f32 unk2C;
-/* 0x0030 */ f32 unk30;
-/* 0x0034 */ s16 unk34;
-/* 0x0036 */ s16 unk36;
+  /* 0x0014 */ ObjectTransform trans;
+  /* 0x0018 */ f32 unk18;
+  /* 0x001C */ f32 unk1C;
+  /* 0x0020 */ f32 unk20;
+  /* 0x0024 */ f32 x_velocity;
+  /* 0x0028 */ f32 y_velocity;
+  /* 0x002C */ f32 z_velocity;
+  /* 0x0030 */ f32 unk30;
+  /* 0x0034 */ s16 unk34;
+  /* 0x0036 */ s16 unk36;
+  /* 0x0038 */ s16 unk38;
+  /* 0x003A */ u8 unk3A;
+  /* 0x003B */ u8 unk3B;
+  /* 0x003C */ u8 unk3C;
+  /* 0x003D */ u8 unk3D;
+  /* 0x003E */ u8 unk3E;
+  /* 0x003F */ u8 unk3F;
 } ObjectCamera;
 
 typedef struct unk8004F77C {
     u8 unk0[0x20A];
-    u8 unk20A;
+    u8 flags;
 } unk8004F77C;
 
 /* Unknown Size */
@@ -32,6 +34,15 @@ typedef struct unk8005234C {
     u8 unk0[0x16C];
     s16 unk16C;
 } unk8005234C;
+
+typedef struct Object_64_80053478 {
+    u8 unk0[0x2C];
+    f32 unk2C; // Forward Velocity?
+    u8 unk30[0x1B1];
+    s8 unk1E1; // Steering Value?
+    u8 unk1E2[4];
+    s8 unk1E6;
+} Object_64_80053478;
 
 /* Unknown Size */
 typedef struct unk800535C4 {
@@ -80,7 +91,7 @@ extern s32 D_800DCB5C;
 extern f32 D_800DCB60[14];
 
 extern s32 D_800DCB98;
-extern f32 D_800DCB9C[19];
+extern f32 gSurfaceTractionTable[19];
 
 extern f32 D_800DCBE8[19];
 
@@ -130,9 +141,9 @@ s32 func_80052188(void);
 void func_800521B8(s32 arg0);
 void func_8005234C(unk8005234C *arg0);
 void func_80052988(Object *arg0, Object_Racer *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7);
-void func_80053478(Object_Racer *obj);
+void handle_car_steering(Object_Racer *obj);
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1);
-void func_80053664(Object_Racer *arg0);
+void handle_car_velocity_control(Object_Racer *obj);
 void play_char_horn_sound(Object *obj, Object_Racer *obj64);
 void func_80057048(Object *obj, s32 arg1);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
@@ -152,7 +163,7 @@ s16 func_80059E20(void);
 void func_8005A3B0(void);
 void func_8005A3C0(void);
 void func_8005A3D0(void);
-void func_8005C25C(void);
+void antipiracy_modify_surface_traction_table(void);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);

@@ -37,21 +37,21 @@ glabel setupOSTasks
 /* 0780D8 800774D8 ACEA0050 */  sw    $t2, 0x50($a3)
 /* 0780DC 800774DC ACEE0014 */  sw    $t6, 0x14($a3)
 /* 0780E0 800774E0 01E3C023 */  subu  $t8, $t7, $v1
-/* 0780E4 800774E4 3C0C8012 */  lui   $t4, %hi(D_801246A0) # $t4, 0x8012
+/* 0780E4 800774E4 3C0C8012 */  lui   $t4, %hi(gGfxSPTaskYieldBuffer) # $t4, 0x8012
 /* 0780E8 800774E8 3C0D8012 */  lui   $t5, %hi(D_80125EA0) # $t5, 0x8012
 /* 0780EC 800774EC 344200FF */  ori   $v0, (0xFF0000FF & 0xFFFF) # ori $v0, $v0, 0xff
 /* 0780F0 800774F0 ACE90008 */  sw    $t1, 8($a3)
 /* 0780F4 800774F4 3C19800E */  lui   $t9, %hi(rspF3DDKRXbusStart) # $t9, 0x800e
 /* 0780F8 800774F8 3C08800F */  lui   $t0, %hi(rspF3DDKRDataXbusStart) # $t0, 0x800f
-/* 0780FC 800774FC 3C0A8012 */  lui   $t2, %hi(D_801242A0) # $t2, 0x8012
-/* 078100 80077500 258C46A0 */  addiu $t4, %lo(D_801246A0) # addiu $t4, $t4, 0x46a0
+/* 0780FC 800774FC 3C0A8012 */  lui   $t2, %hi(gDramStack) # $t2, 0x8012
+/* 078100 80077500 258C46A0 */  addiu $t4, %lo(gGfxSPTaskYieldBuffer) # addiu $t4, $t4, 0x46a0
 /* 078104 80077504 25AD5EA0 */  addiu $t5, %lo(D_80125EA0) # addiu $t5, $t5, 0x5ea0
 /* 078108 80077508 3C0E8012 */  lui   $t6, %hi(D_801271B0) # $t6, 0x8012
 /* 07810C 8007750C ACF8001C */  sw    $t8, 0x1c($a3)
 /* 078110 80077510 2739A970 */  addiu $t9, %lo(rspF3DDKRXbusStart) # addiu $t9, $t9, -0x5690
 /* 078114 80077514 2508ABA0 */  addiu $t0, %lo(rspF3DDKRDataXbusStart) # addiu $t0, $t0, -0x5460
 /* 078118 80077518 24090800 */  li    $t1, 2048
-/* 07811C 8007751C 254A42A0 */  addiu $t2, %lo(D_801242A0) # addiu $t2, $t2, 0x42a0
+/* 07811C 8007751C 254A42A0 */  addiu $t2, %lo(gDramStack) # addiu $t2, $t2, 0x42a0
 /* 078120 80077520 240B0400 */  li    $t3, 1024
 /* 078124 80077524 ACEC0038 */  sw    $t4, 0x38($a3)
 /* 078128 80077528 ACED003C */  sw    $t5, 0x3c($a3)
@@ -125,14 +125,14 @@ glabel setupOSTasks
 /* 078230 80077630 ACEC0014 */  sw    $t4, 0x14($a3)
 /* 078234 80077634 25EFA970 */  addiu $t7, %lo(rspF3DDKRXbusStart) # addiu $t7, $t7, -0x5690
 /* 078238 80077638 3C18800F */  lui   $t8, %hi(rspF3DDKRDataXbusStart) # $t8, 0x800f
-/* 07823C 8007763C 3C088012 */  lui   $t0, %hi(D_801242A0) # $t0, 0x8012
+/* 07823C 8007763C 3C088012 */  lui   $t0, %hi(gDramStack) # $t0, 0x8012
 /* 078240 80077640 3C0A8012 */  lui   $t2, %hi(D_801271B0) # $t2, 0x8012
 /* 078244 80077644 3C0D8012 */  lui   $t5, %hi(D_80125ED8) # $t5, 0x8012
 /* 078248 80077648 3C0E800E */  lui   $t6, %hi(D_800DE490) # $t6, 0x800e
 /* 07824C 8007764C ACEF0020 */  sw    $t7, 0x20($a3)
 /* 078250 80077650 2718ABA0 */  addiu $t8, %lo(rspF3DDKRDataXbusStart) # addiu $t8, $t8, -0x5460
 /* 078254 80077654 24190800 */  li    $t9, 2048
-/* 078258 80077658 250842A0 */  addiu $t0, %lo(D_801242A0) # addiu $t0, $t0, 0x42a0
+/* 078258 80077658 250842A0 */  addiu $t0, %lo(gDramStack) # addiu $t0, $t0, 0x42a0
 /* 07825C 8007765C 24090400 */  li    $t1, 1024
 /* 078260 80077660 254A71B0 */  addiu $t2, %lo(D_801271B0) # addiu $t2, $t2, 0x71b0
 /* 078264 80077664 240B0A00 */  li    $t3, 2560
@@ -230,16 +230,16 @@ glabel setupOSTasks
 /* 0783C4 800777C4 ACF80028 */  sw    $t8, 0x28($a3)
 /* 0783C8 800777C8 ACEE001C */  sw    $t6, 0x1c($a3)
 /* 0783CC 800777CC 24190800 */  li    $t9, 2048
-/* 0783D0 800777D0 3C088012 */  lui   $t0, %hi(D_801242A0) # $t0, 0x8012
-/* 0783D4 800777D4 3C0A8012 */  lui   $t2, %hi(D_801246A0) # $t2, 0x8012
+/* 0783D0 800777D0 3C088012 */  lui   $t0, %hi(gDramStack) # $t0, 0x8012
+/* 0783D4 800777D4 3C0A8012 */  lui   $t2, %hi(gGfxSPTaskYieldBuffer) # $t2, 0x8012
 /* 0783D8 800777D8 3C0B8012 */  lui   $t3, %hi(D_80125EA0) # $t3, 0x8012
 /* 0783DC 800777DC 3C0C8012 */  lui   $t4, %hi(D_801271B0) # $t4, 0x8012
 /* 0783E0 800777E0 3C0F8012 */  lui   $t7, %hi(D_80125ED8) # $t7, 0x8012
 /* 0783E4 800777E4 3C18800E */  lui   $t8, %hi(D_800DE490) # $t8, 0x800e
 /* 0783E8 800777E8 ACF9002C */  sw    $t9, 0x2c($a3)
-/* 0783EC 800777EC 250842A0 */  addiu $t0, %lo(D_801242A0) # addiu $t0, $t0, 0x42a0
+/* 0783EC 800777EC 250842A0 */  addiu $t0, %lo(gDramStack) # addiu $t0, $t0, 0x42a0
 /* 0783F0 800777F0 24090400 */  li    $t1, 1024
-/* 0783F4 800777F4 254A46A0 */  addiu $t2, %lo(D_801246A0) # addiu $t2, $t2, 0x46a0
+/* 0783F4 800777F4 254A46A0 */  addiu $t2, %lo(gGfxSPTaskYieldBuffer) # addiu $t2, $t2, 0x46a0
 /* 0783F8 800777F8 256B5EA0 */  addiu $t3, %lo(D_80125EA0) # addiu $t3, $t3, 0x5ea0
 /* 0783FC 800777FC 258C71B0 */  addiu $t4, %lo(D_801271B0) # addiu $t4, $t4, 0x71b0
 /* 078400 80077800 240D0A00 */  li    $t5, 2560
@@ -335,17 +335,17 @@ glabel setupOSTasks
 /* 078558 80077958 ACF80028 */  sw    $t8, 0x28($a3)
 /* 07855C 8007795C ACEE001C */  sw    $t6, 0x1c($a3)
 /* 078560 80077960 24190800 */  li    $t9, 2048
-/* 078564 80077964 3C088012 */  lui   $t0, %hi(D_801242A0) # $t0, 0x8012
-/* 078568 80077968 3C0A8012 */  lui   $t2, %hi(D_801246A0) # $t2, 0x8012
+/* 078564 80077964 3C088012 */  lui   $t0, %hi(gDramStack) # $t0, 0x8012
+/* 078568 80077968 3C0A8012 */  lui   $t2, %hi(gGfxSPTaskYieldBuffer) # $t2, 0x8012
 /* 07856C 8007796C 3C0B8012 */  lui   $t3, %hi(D_80125EA0) # $t3, 0x8012
 /* 078570 80077970 3C0C8012 */  lui   $t4, %hi(D_801271B0) # $t4, 0x8012
 /* 078574 80077974 3C0F8012 */  lui   $t7, %hi(D_80125ED8) # $t7, 0x8012
 /* 078578 80077978 3C18800E */  lui   $t8, %hi(D_800DE490) # $t8, 0x800e
 /* 07857C 8007797C ACE20018 */  sw    $v0, 0x18($a3)
 /* 078580 80077980 ACF9002C */  sw    $t9, 0x2c($a3)
-/* 078584 80077984 250842A0 */  addiu $t0, %lo(D_801242A0) # addiu $t0, $t0, 0x42a0
+/* 078584 80077984 250842A0 */  addiu $t0, %lo(gDramStack) # addiu $t0, $t0, 0x42a0
 /* 078588 80077988 24090400 */  li    $t1, 1024
-/* 07858C 8007798C 254A46A0 */  addiu $t2, %lo(D_801246A0) # addiu $t2, $t2, 0x46a0
+/* 07858C 8007798C 254A46A0 */  addiu $t2, %lo(gGfxSPTaskYieldBuffer) # addiu $t2, $t2, 0x46a0
 /* 078590 80077990 256B5EA0 */  addiu $t3, %lo(D_80125EA0) # addiu $t3, $t3, 0x5ea0
 /* 078594 80077994 258C71B0 */  addiu $t4, %lo(D_801271B0) # addiu $t4, $t4, 0x71b0
 /* 078598 80077998 240D0A00 */  li    $t5, 2560

@@ -27,8 +27,8 @@ glabel func_8004F7F4
 /* 050414 8004F814 00E08025 */  move  $s0, $a3
 /* 050418 8004F818 11C00008 */  beqz  $t6, .L8004F83C
 /* 05041C 8004F81C 00C08825 */   move  $s1, $a2
-/* 050420 8004F820 3C048012 */  lui   $a0, %hi(D_8011D528) # $a0, 0x8012
-/* 050424 8004F824 2484D528 */  addiu $a0, %lo(D_8011D528) # addiu $a0, $a0, -0x2ad8
+/* 050420 8004F820 3C048012 */  lui   $a0, %hi(gCurrentCarInput) # $a0, 0x8012
+/* 050424 8004F824 2484D528 */  addiu $a0, %lo(gCurrentCarInput) # addiu $a0, $a0, -0x2ad8
 /* 050428 8004F828 8C8F0000 */  lw    $t7, ($a0)
 /* 05042C 8004F82C 3C01FFFF */  lui   $at, (0xFFFF7FFF >> 16) # lui $at, 0xffff
 /* 050430 8004F830 34217FFF */  ori   $at, (0xFFFF7FFF & 0xFFFF) # ori $at, $at, 0x7fff
@@ -37,10 +37,10 @@ glabel func_8004F7F4
 .L8004F83C:
 /* 05043C 8004F83C 3C198012 */  lui   $t9, %hi(D_8011D55C) # $t9, 0x8012
 /* 050440 8004F840 8F39D55C */  lw    $t9, %lo(D_8011D55C)($t9)
-/* 050444 8004F844 3C048012 */  lui   $a0, %hi(D_8011D528) # $a0, 0x8012
+/* 050444 8004F844 3C048012 */  lui   $a0, %hi(gCurrentCarInput) # $a0, 0x8012
 /* 050448 8004F848 2401FFFF */  li    $at, -1
 /* 05044C 8004F84C 13210005 */  beq   $t9, $at, .L8004F864
-/* 050450 8004F850 2484D528 */   addiu $a0, %lo(D_8011D528) # addiu $a0, $a0, -0x2ad8
+/* 050450 8004F850 2484D528 */   addiu $a0, %lo(gCurrentCarInput) # addiu $a0, $a0, -0x2ad8
 /* 050454 8004F854 820801D8 */  lb    $t0, 0x1d8($s0)
 /* 050458 8004F858 00003025 */  move  $a2, $zero
 /* 05045C 8004F85C 11000008 */  beqz  $t0, .L8004F880
@@ -100,7 +100,7 @@ glabel func_8004F7F4
 /* 050520 8004F920 AE280074 */  sw    $t0, 0x74($s1)
 /* 050524 8004F924 8FA500C0 */  lw    $a1, 0xc0($sp)
 .L8004F928:
-/* 050528 8004F928 0C014214 */  jal   func_80050850
+/* 050528 8004F928 0C014214 */  jal   apply_vehicle_rotation_offset
 /* 05052C 8004F92C AFA30010 */   sw    $v1, 0x10($sp)
 /* 050530 8004F930 8FA600C4 */  lw    $a2, 0xc4($sp)
 /* 050534 8004F934 02202025 */  move  $a0, $s1
@@ -112,8 +112,8 @@ glabel func_8004F7F4
 /* 05054C 8004F94C 02002825 */   move  $a1, $s0
 /* 050550 8004F950 3C018012 */  lui   $at, %hi(D_8011D550) # $at, 0x8012
 /* 050554 8004F954 A420D550 */  sh    $zero, %lo(D_8011D550)($at)
-/* 050558 8004F958 3C018012 */  lui   $at, %hi(D_8011D554) # $at, 0x8012
-/* 05055C 8004F95C AC20D554 */  sw    $zero, %lo(D_8011D554)($at)
+/* 050558 8004F958 3C018012 */  lui   $at, %hi(gCurrentCarSteerVel) # $at, 0x8012
+/* 05055C 8004F95C AC20D554 */  sw    $zero, %lo(gCurrentCarSteerVel)($at)
 /* 050560 8004F960 3C018012 */  lui   $at, %hi(D_8011D558) # $at, 0x8012
 /* 050564 8004F964 AC20D558 */  sw    $zero, %lo(D_8011D558)($at)
 /* 050568 8004F968 C624000C */  lwc1  $f4, 0xc($s1)
@@ -257,7 +257,7 @@ glabel func_8004F7F4
 /* 050758 8004FB58 02202025 */  move  $a0, $s1
 /* 05075C 8004FB5C 0C014D71 */  jal   func_800535C4
 /* 050760 8004FB60 02002825 */   move  $a1, $s0
-/* 050764 8004FB64 0C014D99 */  jal   func_80053664
+/* 050764 8004FB64 0C014D99 */  jal   handle_car_velocity_control
 /* 050768 8004FB68 02002025 */   move  $a0, $s0
 /* 05076C 8004FB6C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 050770 8004FB70 02202025 */  move  $a0, $s1
@@ -456,8 +456,8 @@ glabel func_8004F7F4
 /* 050A38 8004FE38 02002825 */   move  $a1, $s0
 .L8004FE3C:
 /* 050A3C 8004FE3C 860501A2 */  lh    $a1, 0x1a2($s0)
-/* 050A40 8004FE40 3C188012 */  lui   $t8, %hi(D_8011D554) # $t8, 0x8012
-/* 050A44 8004FE44 8F18D554 */  lw    $t8, %lo(D_8011D554)($t8)
+/* 050A40 8004FE40 3C188012 */  lui   $t8, %hi(gCurrentCarSteerVel) # $t8, 0x8012
+/* 050A44 8004FE44 8F18D554 */  lw    $t8, %lo(gCurrentCarSteerVel)($t8)
 /* 050A48 8004FE48 30B9FFFF */  andi  $t9, $a1, 0xffff
 /* 050A4C 8004FE4C 34018001 */  li    $at, 32769
 /* 050A50 8004FE50 03191823 */  subu  $v1, $t8, $t9

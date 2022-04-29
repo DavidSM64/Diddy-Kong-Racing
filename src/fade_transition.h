@@ -21,7 +21,7 @@
 enum TransitionStatus {
     TRANSITION_LEVELSWAP = -1,
     TRANSITION_NONE,
-    TRANSITION_ACTIVE,
+    TRANSITION_ACTIVE
 };
 
 /* Size: 8 bytes */
