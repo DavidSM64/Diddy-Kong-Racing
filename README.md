@@ -117,8 +117,8 @@ As of April 29th, 2022, this is our current score:
 ```
  =================================================================== 
                ADVENTURE ONE (ASM -> C Decompilation)                
- ------------------------- 22.80% Complete ------------------------- 
-                    # Decompiled functions: 1090                     
+ ------------------------- 23.32% Complete ------------------------- 
+                    # Decompiled functions: 1124                     
                      # GLOBAL_ASM remaining: 656                     
                      # NON_MATCHING functions: 8                     
                  # NON_EQUIVALENT WIP functions: 107                 
@@ -126,18 +126,18 @@ As of April 29th, 2022, this is our current score:
               Balloons: 12/47, Keys: 1/4, Trophies: 0/5              
                T.T. Amulets: 1/4, Wizpig Amulets: 1/4                
  ------------------------------------------------------------------- 
- We are participating in the Trophy Race of Dino Domain. (Round One) 
+ We are participating in the Trophy Race of Dino Domain. (Round Two) 
  =================================================================== 
                 ADVENTURE TWO (Cleanup & Documentation)              
- -------------------------  2.98% Complete ------------------------- 
-                     # Documented functions: 146                     
-                   # Undocumented remaining: 1600                    
+ -------------------------  2.99% Complete ------------------------- 
+                     # Documented functions: 147                     
+                   # Undocumented remaining: 1633                    
  --------------------------- Game Status --------------------------- 
               Balloons: 1/47, Keys: 0/4, Trophies: 0/5               
                T.T. Amulets: 0/4, Wizpig Amulets: 0/4                
  ------------------------------------------------------------------- 
       We are collecting the second balloon on Timber's Island.       
- ===================================================================
+ =================================================================== 
 ```
 
 ---
