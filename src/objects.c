@@ -1222,8 +1222,6 @@ void func_8001B790(void) {
     D_800DC730 = 0;
 }
 
-f32 func_8001B834(Object *arg0, s32);
-
 Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2) {
     s32 temp;
     Object *temp_v1;
@@ -1238,8 +1236,6 @@ Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2) {
     *arg2 = func_8001B834(arg0, temp_v1->unk64);
     return temp_v1;
 }
-
-//GLOBAL_ASM("asm/non_matchings/objects/func_8001B7A8.s")
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B834.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B974.s")
