@@ -15,6 +15,7 @@
 #include "menu.h"
 #include "game.h"
 #include "racer.h"
+#include "particles.h"
 
 /************ .data ************/
 
@@ -193,7 +194,7 @@ s32 D_8011AE64;
 s32 *D_8011AE68;
 s32 *D_8011AE6C;
 s32 D_8011AE70;
-s32 *D_8011AE74;
+Object **D_8011AE74;
 s16 D_8011AE78;
 s16 D_8011AE7A;
 s16 D_8011AE7C;
@@ -235,9 +236,12 @@ s32 D_8011AF00;
 u32 (*D_8011AF04)[64]; // Not sure about the number of elements
 s32 D_8011AF08[2];
 s32 D_8011AF10[2];
-s32 D_8011AF18[5];
+f32 D_8011AF18[4];
+s32 D_8011AF28;
 s32 D_8011AF2C;
-s32 D_8011AF30[12];
+s32 D_8011AF30;
+s32 D_8011AF34;
+s32 D_8011AF38[10];
 s32 D_8011AF60[2];
 s32 D_8011AF68[32];
 s32 D_8011AFE8;
@@ -325,7 +329,7 @@ void func_8000BF8C(void) {
     D_8011AE68 = (s32 *)new_sub_memory_pool(0x15800, 0x200);
     gParticlePtrList = (Object **)allocate_from_main_pool_safe(0x320, COLOUR_TAG_BLUE);
     D_8011AE6C = (s32 *)allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    D_8011AE74 = (s32 *)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    D_8011AE74 = (Object **)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011AECC = (unknown8011AECC *)allocate_from_main_pool_safe(0xE10, COLOUR_TAG_BLUE);
     D_8011AEDC = (u32 *)allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     gObjectStructArrayPtr = (Object *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
@@ -496,20 +500,13 @@ void func_8000CBC0(void) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_8000CBF0(Object *arg0, s32 arg1) {
-    u32 **temp = &D_8011AE08[arg1];
-    u32 *temp2;
-    temp2 = *temp;
-    if (temp2 != NULL) {
-        return; // I can't get this second return to appear.
+    if (D_8011AE08[arg1] == NULL) {
+        D_8011AE08[arg1] = arg0;
+    } else {
+        if(D_8011AE08[arg1]){}
     }
-    D_8011AE08[arg1] = arg0;
-    return;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_8000CBF0.s")
-#endif
 
 s32 func_8000CC20(u32 *arg0) {
     s32 i;
@@ -693,7 +690,26 @@ u8 func_8000E4D8(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E4E8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000E558.s")
+
+s32 func_8000E558(Object *arg0){
+    s32 temp_v0;
+    s32 new_var, new_var2;
+    if (arg0->segment.unk3C_a.unk3C == 0) {
+        return TRUE;
+    }
+    temp_v0 = arg0->segment.unk3C_a.unk3C;
+    new_var2 = D_8011AE98[0];
+    if ((temp_v0 >= new_var2) && (((D_8011AEA0 * 8) + new_var2) >= temp_v0)) {
+        return FALSE;
+    }
+    new_var = D_8011AE98[1];
+    // Why even bother with this check?
+    if (temp_v0 >= new_var && temp_v0 <= ((D_8011AEA4 * 8) + new_var)) {
+        return TRUE;
+    }
+    return TRUE;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E5EC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E79C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E898.s")
@@ -731,10 +747,39 @@ void func_8000E9D0(Object *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000F648.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000F758.s")
+
+void func_8000F758(Object *obj) {
+    s32 i;
+    for(i = 0; i < obj->segment.header->unk5A; i++) {
+        obj->unk70[i] = func_80031F88(obj, &obj->segment.header->unk24[i]);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8000F7EC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000F99C.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000FAC4.s")
+
+s32 func_8000FAC4(Object *obj, s32 arg1) {
+    ObjHeaderParticleEntry *particleDataEntry;
+    s32 i;
+
+    obj->unk6C = arg1;
+    particleDataEntry = obj->segment.header->objectParticles;
+    for(i = 0; i < obj->segment.header->unk57; i++) {
+        if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
+            func_800AF1E0(&obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
+        } else {
+            func_800AF29C(&obj->unk6C[i], 
+                (particleDataEntry[i].upper >> 0x18) & 0xFF, 
+                (particleDataEntry[i].upper >> 0x10) & 0xFF, 
+                particleDataEntry[i].upper & 0xFFFF, 
+                (particleDataEntry[i].lower >> 0x10) & 0xFFFF, 
+                particleDataEntry[i].lower & 0xFFFF
+            );
+        }
+    }
+    return ((obj->segment.header->unk57 << 5) + 3) & ~3;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FBCC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FC6C.s")
 
@@ -1039,9 +1084,36 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001709C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80017248.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001790C.s")
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80017978.s")
+unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
+    unk800179D0 *entry;
+    s16 i;
+    
+    for(i = 0; i < 16; i++) {
+        entry = &D_8011AFF4[i];
+        if (entry->unk0 != 0 && entry->unk04 == arg0 && entry->unk08 == arg1) {
+            entry->unk0 = 0;
+            return entry;
+        }
+    }
+    return NULL;
+}
+
+unk800179D0 *func_80017978(s32 arg0, s32 arg1) {
+    unk800179D0 *entry;
+    s16 i;
+    
+    for(i = 0; i < 16; i++) {
+        entry = &D_8011AFF4[i];
+        if (entry->unk0 == 0) {
+            entry->unk04 = arg0;
+            entry->unk08 = arg1;
+            entry->unk0 = 2;
+            return entry;
+        }
+    }
+    return NULL;
+}
 
 u32 func_800179D0(void) {
     s16 i = 0;
@@ -1150,7 +1222,21 @@ void func_8001B790(void) {
     D_800DC730 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B7A8.s")
+Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2) {
+    s32 temp;
+    Object *temp_v1;
+    arg1 = (arg0->obj.obj8001B7A8.unk112 - arg1) - 1;
+    if ((arg1 < 0) || (arg1 >= gObjectCount)) {
+        return NULL;
+    }
+    temp_v1 = D_8011AEE8[arg1];
+    if (temp_v1 == NULL) {
+        return NULL;
+    }
+    *arg2 = func_8001B834(arg0, temp_v1->unk64);
+    return temp_v1;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B834.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B974.s")
 
@@ -1196,7 +1282,17 @@ Object *get_object_struct(s32 indx) {
     return (*gObjectStructArrayPtr)[indx];
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BB18.s")
+s32 func_8001BB18(s32 arg0) {
+    s32 temp_v0 = gObjectCount;
+    if (temp_v0 == 0) {
+        return 0;
+    }
+    if ((arg0 < 0) || (arg0 >= temp_v0)) {
+        return 0;
+    }
+    return D_8011AEEC[arg0];
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
 
 UNUSED void func_8001BC40(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2, UNUSED s32 arg3) {
@@ -1213,8 +1309,29 @@ u32 func_8001BD94(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001C418.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001C48C.s")
+
+s16 func_8001C418(f32 arg0) {
+    s16 i = 0;
+    s16 out = 0;
+    for(; i < 4; i++) {
+        if ((D_8011AF18[i] != -20000.0f) && (D_8011AF18[i] < arg0)) {
+            out = i;
+        }
+    }
+    return out;
+}
+
+s32 func_8001C48C(s32 arg0) {
+    s32 i;
+    for(i = 0; i < 128; i++) {
+        if ((*D_8011AF04)[i] == 0) {
+            (*D_8011AF04)[i] = arg0;
+            return i;
+        }
+    }
+    return -1;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001C524.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001C6C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
@@ -1246,7 +1363,10 @@ u32 func_8001D214(s32 arg0) {
 UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001D258.s")
+void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
+    func_8001D4B4(&D_8011AF30, arg0, arg1, arg2, arg3, arg4);
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D5E0.s")
@@ -1379,7 +1499,22 @@ void func_8001F3C8(s32 arg0) {
     D_8011ADD4 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001F3EC.s")
+s32 func_8001F3EC(s32 arg0){
+    s32 i;
+    s32 count;
+    if (D_8011AE78 == 0) {
+        return -1;
+    }
+    
+    count = 0;
+    for (i = 0; i < D_8011AE78; i++) {
+        if (D_8011AE74[i]->unk7C.word == arg0){
+            count++;
+        }
+    }
+    
+    return count;
+}
 
 void func_8001F450(void) {
     D_8011AD53 = 1;
@@ -1414,19 +1549,18 @@ f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
     return result;
 }
 
-#ifdef NON_EQUIVALENT
 f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
+    f32 new_var2;
     f32 temp_f12;
+    f32 new_var;
     f32 temp_f2;
-    // regalloc issues
-    temp_f2 = (arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2;
+    new_var = arg0[arg1 + 2] - arg0[arg1 + 1];
+    temp_f2 = new_var * arg2;
     temp_f12 = arg0[arg1 + 1];
+    new_var2 = temp_f12 + temp_f2;
     *arg3 = arg0[arg1 + 2] - arg0[arg1 + 1];
-    return temp_f12 + temp_f2;
+    return new_var2;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_800228B0.s")
-#endif
 
 UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }

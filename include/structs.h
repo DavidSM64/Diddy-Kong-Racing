@@ -477,12 +477,28 @@ typedef enum {
     OBJECT_MODEL_TYPE_UNKNOWN4
 } ObjectModelType;
 
+typedef struct ObjHeaderParticleEntry {
+  /* 0x00 */ s32 upper;
+  /* 0x04 */ s32 lower;
+} ObjHeaderParticleEntry;
+
+// Size: 0x18 bytes
+typedef struct ObjectHeader24 {
+    u8 pad0[0x18];
+} ObjectHeader24;
+
 typedef struct ObjectHeader {
              u8 pad0[0x4];
   /* 0x04 */ f32 unk4;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 scale;
-             u8 pad10[0x20];
+  /* 0x10 */ s32 *modelIds;
+  /* 0x14 */ s32 *vehiclePartIds;
+  /* 0x18 */ s8  *vehiclePartIndices;
+  /* 0x1C */ ObjHeaderParticleEntry *objectParticles;
+             s32 pad20;
+  /* 0x24 */ ObjectHeader24 *unk24;
+             u8 pad28[8];
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
              u8 pad34[9];
@@ -495,7 +511,9 @@ typedef struct ObjectHeader {
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
              u8 pad56;
   /* 0x57 */ s8 unk57;
-             u8 pad58[0x8];
+             u8 pad58[0x2];
+  /* 0x5A */ s8 unk5A;
+             u8 pad5B[0x5];
   /* 0x60 */ char internalName[16];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 unk71;
@@ -1142,6 +1160,11 @@ typedef struct Object_80011AD0 {
   /* 0xFC */ u8 unkFC;
 } Object_80011AD0;
 
+typedef struct Object_8001B7A8 {
+              u8 pad0[0x112];
+  /* 0x112 */ s16 unk112;
+} Object_8001B7A8;
+
 typedef struct Object_64 {
     union {
         Object_LaserGun laser_gun;
@@ -1184,6 +1207,7 @@ typedef struct Object_64 {
         Object_TT tt;
         Object_Bridge_WhaleRamp bridge_whale_ramp;
         Object_80011AD0 obj80011AD0;
+        Object_8001B7A8 obj8001B7A8;
     };
 } Object_64;
 
@@ -1271,7 +1295,7 @@ typedef struct Object {
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
-  /* 0x0070 */ u32 unk70;
+  /* 0x0070 */ u32 *unk70;
 
   /* 0x0074 */ u32 unk74;
 
