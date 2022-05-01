@@ -589,10 +589,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
 
     // This needs to be on one line to match.
     for (i = 0; i < 4; i++) { D_8011D58C[i] = 0; }
-    if (tempObj);
-    if (tempObj);
-    if (tempObj);
-    if (tempObj);
+    if (1); if (1); // Also critical to match.
     func_80043ECC(0, 0, 0);
     D_8011D583 = i;
     D_8011D585 = 0;
