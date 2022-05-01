@@ -425,30 +425,30 @@ void func_8004C140(Object *obj, Object_Racer *obj64) {
     if (temp != 4) {
         func_800576E0(obj, obj64, 2);
     }
-    obj64->unk18C = 0x168;
+    obj64->unk18C = 360;
     if (obj64->unk1C9 == 8) {
         obj64->unk1C9 = 0;
     }
     if (obj64->unk1D6 < 5) {
-        func_800570B8(obj, 0x1C2, 8, 0x81);
+        func_800570B8(obj, 450, 8, 129);
         switch (obj64->unk187) {
             case 1:
             case 2:
                 if (phi_v1 != 0) {
-                    obj64->spinout_timer = 0x28;
+                    obj64->spinout_timer = 40;
                 } else {
-                    obj64->spinout_timer = 0x3C;
+                    obj64->spinout_timer = 60;
                 }
                 break;
             case 3:
                 if (phi_v1 != 0) {
-                    obj64->spinout_timer = 0x28;
+                    obj64->spinout_timer = 40;
                 } else {
-                    obj64->spinout_timer = 0x3C;
+                    obj64->spinout_timer = 60;
                 }
                 break;
             case 6:
-                obj64->unk204 = 0x78;
+                obj64->unk204 = 120;
                 obj->segment.x_velocity *= 0.7;
                 obj->segment.z_velocity *= 0.7;
                 break;
@@ -654,18 +654,17 @@ void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
 #endif
-
 /**
  * Applies visual rotational offets to vehicles.
  * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
  */
-void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pitch, s16 yaw) {
+void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 xRotation, s16 yRotation, s16 zRotation) {
     s32 diff;
     s32 tempAngle;
 
     if (!obj->unk1F1) {
-        tempAngle = roll - (obj->unk160 & 0xFFFF);
-        obj->unk166 = pitch;
+        tempAngle = xRotation - (obj->x_rotation_offset & 0xFFFF);
+        obj->unk166 = yRotation;
         if (tempAngle > 0x8000) {
             tempAngle +=  0xFFFF0001;
         }
@@ -677,15 +676,15 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->unk160 +=  tempAngle;
+            obj->x_rotation_offset +=  tempAngle;
         } else if (tempAngle < 0) {
             diff = -(max * 0x600);
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->unk160 += tempAngle;
+            obj->x_rotation_offset += tempAngle;
         }
-        tempAngle = pitch - (obj->unk162 & 0xFFFF);
+        tempAngle = yRotation - (obj->y_rotation_offset & 0xFFFF);
         if (tempAngle > 0x8000) {
             tempAngle = tempAngle + 0xFFFF0001;
         }
@@ -697,15 +696,15 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->unk162 += tempAngle;
+            obj->y_rotation_offset += tempAngle;
         } else if (tempAngle < 0) {
             diff = -(max * 0x600);
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->unk162 += tempAngle;
+            obj->y_rotation_offset += tempAngle;
         }
-        tempAngle = yaw - (obj->unk164 & 0xFFFF);
+        tempAngle = zRotation - (obj->z_rotation_offset & 0xFFFF);
         if (tempAngle > 0x8000) {
             tempAngle = tempAngle + 0xFFFF0001;
         }
@@ -717,7 +716,7 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->unk164 += tempAngle;
+            obj->z_rotation_offset += tempAngle;
             return;
         }
         if (tempAngle < 0) {
@@ -725,7 +724,7 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->unk164 += tempAngle;
+            obj->z_rotation_offset += tempAngle;
         }
     }
 }

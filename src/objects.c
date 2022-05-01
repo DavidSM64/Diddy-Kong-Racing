@@ -990,15 +990,15 @@ void func_80012E28(Object *this) {
     if (this->behaviorId == 1) {
 
         sp_20 = &this->unk64->racer;
-        this->segment.trans.y_rotation += sp_20->unk160;
-        this->segment.trans.x_rotation += sp_20->unk162;
-        this->segment.trans.z_rotation += sp_20->unk164;
+        this->segment.trans.y_rotation += sp_20->x_rotation_offset;
+        this->segment.trans.x_rotation += sp_20->y_rotation_offset;
+        this->segment.trans.z_rotation += sp_20->z_rotation_offset;
         sp_1c = 0.0f;
         if (sp_20->unk1D7 < 5) {
 
-            sp_1c = func_800707F8(sp_20->unk164);
+            sp_1c = func_800707F8(sp_20->z_rotation_offset);
             tmp_f2 = sp_1c;
-            tmp_f0 = func_800707F8(sp_20->unk162 - sp_20->unk166) * tmp_f2;
+            tmp_f0 = func_800707F8(sp_20->y_rotation_offset - sp_20->unk166) * tmp_f2;
 
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
@@ -1014,9 +1014,9 @@ void func_80012E28(Object *this) {
 void func_80012F30(Object *arg0) {
     if (arg0->behaviorId == 1) {
         Object_Racer *object_64 = &arg0->unk64->racer;
-        arg0->segment.trans.y_rotation -= object_64->unk160;
-        arg0->segment.trans.x_rotation -= object_64->unk162;
-        arg0->segment.trans.z_rotation -= object_64->unk164;
+        arg0->segment.trans.y_rotation -= object_64->x_rotation_offset;
+        arg0->segment.trans.x_rotation -= object_64->y_rotation_offset;
+        arg0->segment.trans.z_rotation -= object_64->z_rotation_offset;
         arg0->segment.trans.y_position -= D_8011ADD0;
     }
 }

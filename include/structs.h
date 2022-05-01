@@ -889,13 +889,13 @@ typedef struct Object_Racer {
   /* 0x154 */ struct Object *unk154;
   /* 0x158 */ s32 unk158;
   /* 0x15C */ s32 unk15C;
-  /* 0x160 */ s16 unk160;
-  /* 0x162 */ s16 unk162;
-  /* 0x164 */ s16 unk164;
-  /* 0x166 */ s16 unk166;
+  /* 0x160 */ s16 x_rotation_offset;
+  /* 0x162 */ s16 y_rotation_offset;
+  /* 0x164 */ s16 z_rotation_offset;
+  /* 0x166 */ s16 unk166; // I don't know exactly what these are, but this one in particular seems to cause a Y position offset.
   /* 0x168 */ s16 unk168;
   /* 0x16A */ s16 unk16A;
-  /* 0x166 */ s16 unk16C;
+  /* 0x166 */ s16 unk16C; // As for these, they seem to affect the turning direction of the racer's head.
   /* 0x16E */ s16 unk16E;
   /* 0x170 */ s16 unk170;
   /* 0x172 */ u8 balloon_type;
