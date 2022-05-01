@@ -4,6 +4,15 @@
 #include "types.h"
 #include "structs.h"
 
+typedef enum ActivePlayers {
+    PLAYER_COMPUTER = -1,
+    PLAYER_NONE,
+    PLAYER_ONE,
+    PLAYER_TWO,
+    PLAYER_THREE,
+    PLAYER_FOUR
+} ActivePlayers;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;

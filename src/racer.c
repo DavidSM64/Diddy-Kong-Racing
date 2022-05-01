@@ -497,7 +497,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
  */
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
     Object_Racer *tempObj;
-    s32 player;
+    ActivePlayers player;
     s32 i;
 
     D_8011D53C = 0;
@@ -509,13 +509,15 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
     tempObj->unk194 = 0;
     tempObj->stretch_height = 1.0f;
     tempObj->stretch_height_cap = 1.0f;
-    if (player >= 0 && player < 4) {
+    // Decide which player ID to assign to this object. Human players get a positive value.
+    // Computer players will be -1.
+    if (player >= PLAYER_NONE && player < PLAYER_FOUR) {
         if (func_8000E158()) {
             player = 1 - player;
         }
         tempObj->playerIndex = player;
     } else {
-        tempObj->playerIndex = -1;
+        tempObj->playerIndex = PLAYER_COMPUTER;
     }
     tempObj->unk1A0 = obj->segment.trans.y_rotation;
     tempObj->unk1A4 = obj->segment.trans.z_rotation;
@@ -603,12 +605,12 @@ void func_8004F77C(unk8004F77C *arg0) {
     s32 temp;
 
     arg0->flags &= ~0x80;
-    if ((gCurrentCarInput & B_BUTTON) != 0) {
+    if ((gCurrentCarInput & B_BUTTON)) {
         arg0->flags |= 0x80;
     }
 
     temp = arg0->flags & 0xF;
-    if ((arg0->flags & 0xC0) != 0) {
+    if ((arg0->flags & 0xC0)) {
         temp++;
         if (temp >= 3) {
             temp = 2;
