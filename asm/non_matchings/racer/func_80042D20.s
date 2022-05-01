@@ -1196,9 +1196,9 @@ glabel func_80042D20
 /* 044A30 80043E30 462A903C */  c.lt.d $f18, $f10
 /* 044A34 80043E34 35D98000 */  ori   $t9, $t6, 0x8000
 /* 044A38 80043E38 45000003 */  bc1f  .L80043E48
-/* 044A3C 80043E3C 3C018012 */   lui   $at, %hi(D_8011D534) # $at, 0x8012
+/* 044A3C 80043E3C 3C018012 */   lui   $at, %hi(gCurrentStickX) # $at, 0x8012
 /* 044A40 80043E40 AC590000 */  sw    $t9, ($v0)
-/* 044A44 80043E44 AC20D534 */  sw    $zero, %lo(D_8011D534)($at)
+/* 044A44 80043E44 AC20D534 */  sw    $zero, %lo(gCurrentStickX)($at)
 .L80043E48:
 /* 044A48 80043E48 82180214 */  lb    $t8, 0x214($s0)
 /* 044A4C 80043E4C 87AE006E */  lh    $t6, 0x6e($sp)

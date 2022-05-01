@@ -11,7 +11,7 @@ glabel func_800090C0
 /* 009CE4 800090E4 46128300 */   add.s $f12, $f16, $f18
 /* 009CE8 800090E8 C7AE002C */  lwc1  $f14, 0x2c($sp)
 /* 009CEC 800090EC C7AC0028 */  lwc1  $f12, 0x28($sp)
-/* 009CF0 800090F0 0C01C1D4 */  jal   func_80070750
+/* 009CF0 800090F0 0C01C1D4 */  jal   atan2f
 /* 009CF4 800090F4 E7A0001C */   swc1  $f0, 0x1c($sp)
 /* 009CF8 800090F8 8FA60030 */  lw    $a2, 0x30($sp)
 /* 009CFC 800090FC 340EFFFF */  li    $t6, 65535

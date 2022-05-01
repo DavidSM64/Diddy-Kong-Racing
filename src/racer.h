@@ -126,7 +126,7 @@ extern s16 D_800DCDD4[4];
 
 extern ObjectTransform D_8011D510;
 
-extern s32 D_8011D534;
+extern s32 gCurrentStickX;
 
 s32 get_random_number_from_range(s32, s32); //?
 void func_8006FC30(Matrix, ObjectTransform *); // asm func

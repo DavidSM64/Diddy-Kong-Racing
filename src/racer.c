@@ -17,6 +17,7 @@
 #include "object_functions.h"
 #include "game.h"
 #include "printf.h"
+#include "math_util.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -142,8 +143,8 @@ ObjectTransform D_8011D510;
 s32 gCurrentCarInput; // Related to input of the car.
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
-s32 D_8011D534;
-s32 D_8011D538;
+s32 gCurrentStickX;
+s32 gCurrentStickY;
 s32 D_8011D53C;
 s32 D_8011D540;
 f32 D_8011D544;
@@ -332,27 +333,29 @@ void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
         }
     }
 
+    // Kick it into reverse.
     if (arg1->unk214 != 0) {
-        D_8011D534 *= -1;
+        gCurrentStickX *= -1;
         gCurrentCarInput &= ~A_BUTTON;
-        D_8011D538 = -50;
+        gCurrentStickY = -50;
         gCurrentCarInput |= B_BUTTON;
     }
 
-    if (D_8011D534 > 75) {
-        D_8011D534 = 75;
+    // Cap stick inputs.
+    if (gCurrentStickX > 75) {
+        gCurrentStickX = 75;
     }
 
-    if (D_8011D534 < -75) {
-        D_8011D534 = -75;
+    if (gCurrentStickX < -75) {
+        gCurrentStickX = -75;
     }
 
-    if (D_8011D538 > 75) {
-        D_8011D538 = 75;
+    if (gCurrentStickY > 75) {
+        gCurrentStickY = 75;
     }
 
-    if (D_8011D538 < -75) {
-        D_8011D538 = -75;
+    if (gCurrentStickY < -75) {
+        gCurrentStickY = -75;
     }
 }
 
@@ -753,8 +756,6 @@ void func_8005234C(unk8005234C *arg0) {
     }
 }
 
-extern s16 func_80070750(f32 y, f32 x);
-
 s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) {
     s32 rotation;
     f32 diffX;
@@ -764,7 +765,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
     diffX = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
     diffZ = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
     if ((diffX * diffX) + (diffZ * diffZ) < distance) {
-        rotation = (func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        rotation = (atan2f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (rotation > 0x8000) {
             rotation += 0xFFFF0001;
         }
@@ -782,7 +783,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
             arg1->unk16C = 0;
         }
         arg1 = (struct Object_Racer *) obj2->unk64;
-        rotation = func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
+        rotation = atan2f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
         if (rotation > 0x8000) {
             rotation += 0xFFFF0001;
         }
@@ -1033,7 +1034,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
 void func_800579B0(unk800579B0 *arg0, UNUSED s32 arg1, f32 arg2) {
     s32 temp, temp2;
 
-    temp = D_8011D534 - arg0->unk1E1;
+    temp = gCurrentStickX - arg0->unk1E1;
     temp2 = (s32)((f64)((f32)temp * arg2) * 0.125);
 
     if (temp != 0 && temp2 == 0) {

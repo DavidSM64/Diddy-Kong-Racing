@@ -414,7 +414,7 @@ glabel func_8005A6F0
 /* 05B868 8005AC68 46040182 */  mul.s $f6, $f0, $f4
 /* 05B86C 8005AC6C 3C014300 */  li    $at, 0x43000000 # 128.000000
 /* 05B870 8005AC70 44819000 */  mtc1  $at, $f18
-/* 05B874 8005AC74 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
+/* 05B874 8005AC74 3C018012 */  lui   $at, %hi(gCurrentStickY) # $at, 0x8012
 /* 05B878 8005AC78 46123283 */  div.s $f10, $f6, $f18
 /* 05B87C 8005AC7C 2418003C */  li    $t8, 60
 /* 05B880 8005AC80 460A0201 */  sub.s $f8, $f0, $f10
@@ -428,7 +428,7 @@ glabel func_8005A6F0
 /* 05B8A0 8005ACA0 46002187 */  neg.s $f6, $f4
 /* 05B8A4 8005ACA4 E5860000 */  swc1  $f6, ($t4)
 .L8005ACA8:
-/* 05B8A8 8005ACA8 AC38D538 */  sw    $t8, %lo(D_8011D538)($at)
+/* 05B8A8 8005ACA8 AC38D538 */  sw    $t8, %lo(gCurrentStickY)($at)
 /* 05B8AC 8005ACAC 920201FE */  lbu   $v0, 0x1fe($s0)
 /* 05B8B0 8005ACB0 00000000 */  nop   
 /* 05B8B4 8005ACB4 24010002 */  li    $at, 2
@@ -591,11 +591,11 @@ glabel func_8005A6F0
 /* 05BB08 8005AF08 00000000 */  nop   
 /* 05BB0C 8005AF0C 19E0000E */  blez  $t7, .L8005AF48
 .L8005AF10:
-/* 05BB10 8005AF10 3C018012 */   lui   $at, %hi(D_8011D534) # $at, 0x8012
-/* 05BB14 8005AF14 AC20D534 */  sw    $zero, %lo(D_8011D534)($at)
-/* 05BB18 8005AF18 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
+/* 05BB10 8005AF10 3C018012 */   lui   $at, %hi(gCurrentStickX) # $at, 0x8012
+/* 05BB14 8005AF14 AC20D534 */  sw    $zero, %lo(gCurrentStickX)($at)
+/* 05BB18 8005AF18 3C018012 */  lui   $at, %hi(gCurrentStickY) # $at, 0x8012
 /* 05BB1C 8005AF1C 3C038012 */  lui   $v1, %hi(gCurrentCarInput) # $v1, 0x8012
-/* 05BB20 8005AF20 AC20D538 */  sw    $zero, %lo(D_8011D538)($at)
+/* 05BB20 8005AF20 AC20D538 */  sw    $zero, %lo(gCurrentStickY)($at)
 /* 05BB24 8005AF24 2463D528 */  addiu $v1, %lo(gCurrentCarInput) # addiu $v1, $v1, -0x2ad8
 /* 05BB28 8005AF28 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
 /* 05BB2C 8005AF2C AC600000 */  sw    $zero, ($v1)
@@ -711,8 +711,8 @@ glabel L8005B094
 /* 05BCC4 8005B0C4 1000003A */  b     .L8005B1B0
 /* 05BCC8 8005B0C8 240B0001 */   li    $t3, 1
 glabel L8005B0CC
-/* 05BCCC 8005B0CC 3C0D8012 */  lui   $t5, %hi(D_8011D534) # $t5, 0x8012
-/* 05BCD0 8005B0D0 25ADD534 */  addiu $t5, %lo(D_8011D534) # addiu $t5, $t5, -0x2acc
+/* 05BCCC 8005B0CC 3C0D8012 */  lui   $t5, %hi(gCurrentStickX) # $t5, 0x8012
+/* 05BCD0 8005B0D0 25ADD534 */  addiu $t5, %lo(gCurrentStickX) # addiu $t5, $t5, -0x2acc
 /* 05BCD4 8005B0D4 8FA400A8 */  lw    $a0, 0xa8($sp)
 /* 05BCD8 8005B0D8 8FA500AC */  lw    $a1, 0xac($sp)
 /* 05BCDC 8005B0DC 8FA600A0 */  lw    $a2, 0xa0($sp)

@@ -496,8 +496,8 @@ glabel func_80053750
 /* 054A44 80053E44 24420008 */  addiu $v0, $v0, 8
 /* 054A48 80053E48 1443FF99 */  bne   $v0, $v1, .L80053CB0
 /* 054A4C 80053E4C 01603825 */   move  $a3, $t3
-/* 054A50 80053E50 3C028012 */  lui   $v0, %hi(D_8011D534) # $v0, 0x8012
-/* 054A54 80053E54 2442D534 */  addiu $v0, %lo(D_8011D534) # addiu $v0, $v0, -0x2acc
+/* 054A50 80053E50 3C028012 */  lui   $v0, %hi(gCurrentStickX) # $v0, 0x8012
+/* 054A54 80053E54 2442D534 */  addiu $v0, %lo(gCurrentStickX) # addiu $v0, $v0, -0x2acc
 /* 054A58 80053E58 8C4D0000 */  lw    $t5, ($v0)
 /* 054A5C 80053E5C 24030064 */  li    $v1, 100
 /* 054A60 80053E60 01A30019 */  multu $t5, $v1

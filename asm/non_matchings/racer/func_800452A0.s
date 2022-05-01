@@ -19,14 +19,14 @@ glabel func_800452A0
 /* 045EB4 800452B4 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
 /* 045EB8 800452B8 340E8000 */  li    $t6, 32768
 /* 045EBC 800452BC AC2ED528 */  sw    $t6, %lo(gCurrentCarInput)($at)
-/* 045EC0 800452C0 3C018012 */  lui   $at, %hi(D_8011D534) # $at, 0x8012
+/* 045EC0 800452C0 3C018012 */  lui   $at, %hi(gCurrentStickX) # $at, 0x8012
 /* 045EC4 800452C4 AFB60048 */  sw    $s6, 0x48($sp)
-/* 045EC8 800452C8 AC20D534 */  sw    $zero, %lo(D_8011D534)($at)
+/* 045EC8 800452C8 AC20D534 */  sw    $zero, %lo(gCurrentStickX)($at)
 /* 045ECC 800452CC 0080B025 */  move  $s6, $a0
 /* 045ED0 800452D0 AFBF0054 */  sw    $ra, 0x54($sp)
 /* 045ED4 800452D4 AFB50044 */  sw    $s5, 0x44($sp)
 /* 045ED8 800452D8 AFB00030 */  sw    $s0, 0x30($sp)
-/* 045EDC 800452DC 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
+/* 045EDC 800452DC 3C018012 */  lui   $at, %hi(gCurrentStickY) # $at, 0x8012
 /* 045EE0 800452E0 00C08025 */  move  $s0, $a2
 /* 045EE4 800452E4 00A0A825 */  move  $s5, $a1
 /* 045EE8 800452E8 AFBE0050 */  sw    $fp, 0x50($sp)
@@ -41,7 +41,7 @@ glabel func_800452A0
 /* 045F0C 8004530C E7B60024 */  swc1  $f22, 0x24($sp)
 /* 045F10 80045310 E7B50018 */  swc1  $f21, 0x18($sp)
 /* 045F14 80045314 E7B4001C */  swc1  $f20, 0x1c($sp)
-/* 045F18 80045318 AC20D538 */  sw    $zero, %lo(D_8011D538)($at)
+/* 045F18 80045318 AC20D538 */  sw    $zero, %lo(gCurrentStickY)($at)
 /* 045F1C 8004531C 0C006E9D */  jal   get_object_struct_array
 /* 045F20 80045320 27A4009C */   addiu $a0, $sp, 0x9c
 /* 045F24 80045324 8FAF009C */  lw    $t7, 0x9c($sp)
@@ -504,7 +504,7 @@ glabel L800456DC
 /* 046568 80045968 45000031 */  bc1f  .L80045A30
 /* 04656C 8004596C 46000086 */   mov.s $f2, $f0
 /* 046570 80045970 4600A306 */  mov.s $f12, $f20
-/* 046574 80045974 0C01C1D4 */  jal   func_80070750
+/* 046574 80045974 0C01C1D4 */  jal   atan2f
 /* 046578 80045978 E7A200A8 */   swc1  $f2, 0xa8($sp)
 /* 04657C 8004597C 24018000 */  li    $at, -32768
 /* 046580 80045980 0041C821 */  addu  $t9, $v0, $at
@@ -529,13 +529,13 @@ glabel L800456DC
 /* 0465C4 800459C4 C7A8005C */  lwc1  $f8, 0x5c($sp)
 /* 0465C8 800459C8 00035823 */  negu  $t3, $v1
 /* 0465CC 800459CC 000B6143 */  sra   $t4, $t3, 5
-/* 0465D0 800459D0 3C018012 */  lui   $at, %hi(D_8011D534) # $at, 0x8012
-/* 0465D4 800459D4 AC2CD534 */  sw    $t4, %lo(D_8011D534)($at)
+/* 0465D0 800459D0 3C018012 */  lui   $at, %hi(gCurrentStickX) # $at, 0x8012
+/* 0465D4 800459D4 AC2CD534 */  sw    $t4, %lo(gCurrentStickX)($at)
 /* 0465D8 800459D8 E7A200A8 */  swc1  $f2, 0xa8($sp)
 /* 0465DC 800459DC 0C0326B4 */  jal   sqrtf
 /* 0465E0 800459E0 4608C300 */   add.s $f12, $f24, $f8
 /* 0465E4 800459E4 4600B306 */  mov.s $f12, $f22
-/* 0465E8 800459E8 0C01C1D4 */  jal   func_80070750
+/* 0465E8 800459E8 0C01C1D4 */  jal   atan2f
 /* 0465EC 800459EC 46000386 */   mov.s $f14, $f0
 /* 0465F0 800459F0 3044FFFF */  andi  $a0, $v0, 0xffff
 /* 0465F4 800459F4 C7A200A8 */  lwc1  $f2, 0xa8($sp)
@@ -553,24 +553,24 @@ glabel L800456DC
 .L80045A20:
 /* 046620 80045A20 00036823 */  negu  $t5, $v1
 /* 046624 80045A24 000D71C3 */  sra   $t6, $t5, 7
-/* 046628 80045A28 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
-/* 04662C 80045A2C AC2ED538 */  sw    $t6, %lo(D_8011D538)($at)
+/* 046628 80045A28 3C018012 */  lui   $at, %hi(gCurrentStickY) # $at, 0x8012
+/* 04662C 80045A2C AC2ED538 */  sw    $t6, %lo(gCurrentStickY)($at)
 .L80045A30:
 /* 046630 80045A30 82A201CC */  lb    $v0, 0x1cc($s5)
-/* 046634 80045A34 3C018012 */  lui   $at, %hi(D_8011D534) # $at, 0x8012
+/* 046634 80045A34 3C018012 */  lui   $at, %hi(gCurrentStickX) # $at, 0x8012
 /* 046638 80045A38 0441000A */  bgez  $v0, .L80045A64
-/* 04663C 80045A3C 3C038012 */   lui   $v1, %hi(D_8011D534) # $v1, 0x8012
-/* 046640 80045A40 AC20D534 */  sw    $zero, %lo(D_8011D534)($at)
-/* 046644 80045A44 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
+/* 04663C 80045A3C 3C038012 */   lui   $v1, %hi(gCurrentStickX) # $v1, 0x8012
+/* 046640 80045A40 AC20D534 */  sw    $zero, %lo(gCurrentStickX)($at)
+/* 046644 80045A44 3C018012 */  lui   $at, %hi(gCurrentStickY) # $at, 0x8012
 /* 046648 80045A48 240FFFDD */  li    $t7, -35
-/* 04664C 80045A4C AC2FD538 */  sw    $t7, %lo(D_8011D538)($at)
+/* 04664C 80045A4C AC2FD538 */  sw    $t7, %lo(gCurrentStickY)($at)
 /* 046650 80045A50 82B801CC */  lb    $t8, 0x1cc($s5)
 /* 046654 80045A54 00000000 */  nop   
 /* 046658 80045A58 27190001 */  addiu $t9, $t8, 1
 /* 04665C 80045A5C 10000013 */  b     .L80045AAC
 /* 046660 80045A60 A2B901CC */   sb    $t9, 0x1cc($s5)
 .L80045A64:
-/* 046664 80045A64 8C63D534 */  lw    $v1, %lo(D_8011D534)($v1)
+/* 046664 80045A64 8C63D534 */  lw    $v1, %lo(gCurrentStickX)($v1)
 /* 046668 80045A68 24490001 */  addiu $t1, $v0, 1
 /* 04666C 80045A6C 2861003D */  slti  $at, $v1, 0x3d
 /* 046670 80045A70 10200003 */  beqz  $at, .L80045A80

@@ -33,7 +33,7 @@
 .include "asm/unknown_070110/func_800705F8.s"
 .include "asm/unknown_070110/func_80070638.s"
 .include "asm/unknown_070110/func_8007066C.s"
-.include "asm/unknown_070110/func_80070750.s"
+.include "asm/unknown_070110/atan2f.s"
 .include "asm/unknown_070110/func_800707C4.s"
 .include "asm/unknown_070110/func_800707F8.s"
 .include "asm/unknown_070110/func_8007082C.s"

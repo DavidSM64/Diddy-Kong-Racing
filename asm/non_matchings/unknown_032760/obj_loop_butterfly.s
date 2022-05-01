@@ -188,7 +188,7 @@ glabel L80040E54
 /* 041AC8 80040EC8 E7AC0094 */  swc1  $f12, 0x94($sp)
 /* 041ACC 80040ECC E7AE008C */  swc1  $f14, 0x8c($sp)
 /* 041AD0 80040ED0 AFA90038 */  sw    $t1, 0x38($sp)
-/* 041AD4 80040ED4 0C01C1D4 */  jal   func_80070750
+/* 041AD4 80040ED4 0C01C1D4 */  jal   atan2f
 /* 041AD8 80040ED8 AFA8003C */   sw    $t0, 0x3c($sp)
 /* 041ADC 80040EDC 86040000 */  lh    $a0, ($s0)
 /* 041AE0 80040EE0 8FA8003C */  lw    $t0, 0x3c($sp)
@@ -517,7 +517,7 @@ glabel L800411E4
 /* 041FAC 800413AC E7AC0094 */  swc1  $f12, 0x94($sp)
 /* 041FB0 800413B0 E7AE008C */  swc1  $f14, 0x8c($sp)
 /* 041FB4 800413B4 A7AA0072 */  sh    $t2, 0x72($sp)
-/* 041FB8 800413B8 0C01C1D4 */  jal   func_80070750
+/* 041FB8 800413B8 0C01C1D4 */  jal   atan2f
 /* 041FBC 800413BC AFA8003C */   sw    $t0, 0x3c($sp)
 /* 041FC0 800413C0 86040000 */  lh    $a0, ($s0)
 /* 041FC4 800413C4 8FA8003C */  lw    $t0, 0x3c($sp)
