@@ -34,30 +34,6 @@ enum DialogueFlags {
     DIALOGUE_BOX_UNUSED_02 = 0xFFFE,
 };
 
-typedef enum HorizontalAlignmentFlags {
-    HORZ_ALIGN_LEFT   = 0,
-    HORZ_ALIGN_RIGHT  = 1,
-    HORZ_ALIGN_CENTER = 4,
-} HorizontalAlignmentFlags;
-
-typedef enum VerticalAlignmentFlags {
-    VERT_ALIGN_TOP    = 0,
-    VERT_ALIGN_BOTTOM = 2,
-    VERT_ALIGN_MIDDLE = 8,
-} VerticalAlignmentFlags;
-
-typedef enum AlignmentFlags {
-    ALIGN_TOP_LEFT      = VERT_ALIGN_TOP | HORZ_ALIGN_LEFT,
-    ALIGN_TOP_CENTER    = VERT_ALIGN_TOP | HORZ_ALIGN_CENTER,
-    ALIGN_TOP_RIGHT     = VERT_ALIGN_TOP | HORZ_ALIGN_RIGHT,
-    ALIGN_MIDDLE_LEFT   = VERT_ALIGN_MIDDLE | HORZ_ALIGN_LEFT,
-    ALIGN_MIDDLE_CENTER = VERT_ALIGN_MIDDLE | HORZ_ALIGN_CENTER,
-    ALIGN_MIDDLE_RIGHT  = VERT_ALIGN_MIDDLE | HORZ_ALIGN_RIGHT,
-    ALIGN_BOTTOM_LEFT   = VERT_ALIGN_BOTTOM | HORZ_ALIGN_LEFT,
-    ALIGN_BOTTOM_CENTER = VERT_ALIGN_BOTTOM | HORZ_ALIGN_CENTER,
-    ALIGN_BOTTOM_RIGHT  = VERT_ALIGN_BOTTOM | HORZ_ALIGN_RIGHT,
-} AlignmentFlags;
-
 /* Size: 0x20 bytes */
 typedef struct unk8012A7EC {
     u8 unk0;

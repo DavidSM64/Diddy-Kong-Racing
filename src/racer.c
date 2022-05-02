@@ -288,11 +288,11 @@ void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
     raceType = get_current_level_race_type();
 
     switch (raceType) {
-        case RACE_TYPE_CHALLENGE_BATTLE:
-        case RACE_TYPE_CHALLENGE_BANANAS:
+        case RACETYPE_CHALLENGE_BATTLE:
+        case RACETYPE_CHALLENGE_BANANAS:
             func_8004447C(arg0, arg1, arg2);
             break;
-        case RACE_TYPE_CHALLENGE_EGGS:
+        case RACETYPE_CHALLENGE_EGGS:
             func_800452A0(arg0, arg1, arg2);
             break;
         default:
@@ -316,9 +316,9 @@ void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
             arg1->unk214 = 60;
             arg1->unk215 = 120;
 
-            if ((raceType & RACE_TYPE_CHALLENGE) == 0) {
+            if ((raceType & RACETYPE_CHALLENGE) == 0) {
                 arg1->unk1CA = (arg1->unk1CA + 1) & 3;
-            } else if (raceType == RACE_TYPE_CHALLENGE_BATTLE || raceType == RACE_TYPE_CHALLENGE_BANANAS) {
+            } else if (raceType == RACETYPE_CHALLENGE_BATTLE || raceType == RACETYPE_CHALLENGE_BANANAS) {
                 if (arg1->unk1CE != 0xFF) {
                     arg1->unk154 = func_8001D214(arg1->unk1CE);
                 }
@@ -509,7 +509,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
     tempObj->unk194 = 0;
     tempObj->stretch_height = 1.0f;
     tempObj->stretch_height_cap = 1.0f;
-    // Decide which player ID to assign to this object. Human players get a positive value.
+    // Decide which player ID to assign to this object. Human players get a value from 0-3.
     // Computer players will be -1.
     if (player >= PLAYER_NONE && player < PLAYER_FOUR) {
         if (func_8000E158()) {

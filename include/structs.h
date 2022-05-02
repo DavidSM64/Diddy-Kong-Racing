@@ -4,6 +4,7 @@
 /* Note: Structs are not complete, take them with a grain of salt. */
 
 #include "types.h"
+#include "enums.h"
 
 /* Size: 0x20 bytes */
 typedef struct MenuElement {

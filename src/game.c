@@ -643,21 +643,21 @@ u8 *get_level_name(s32 levelId) {
 
     levelName = gLevelNames[levelId];
     switch (get_language()) {
-        case GERMAN:
+        case LANGUAGE_GERMAN:
             while (numberOfNullPointers < 1) {
                 if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
-        case FRENCH:
+        case LANGUAGE_FRENCH:
             while (numberOfNullPointers < 2) {
                 if (*(levelName++) == 0) {
                     numberOfNullPointers++;
                 }
             }
             break;
-        case JAPANESE:
+        case LANGUAGE_JAPANESE:
             while (numberOfNullPointers < 3) {
                 if (*(levelName++) == 0) {
                     numberOfNullPointers++;

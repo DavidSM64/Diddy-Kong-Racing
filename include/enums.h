@@ -6,7 +6,9 @@
 typedef enum Vehicle {
     VEHICLE_CAR,
     VEHICLE_HOVERCRAFT,
-    VEHICLE_PLANE
+    VEHICLE_PLANE,
+
+    NUMBER_OF_VEHICLE_TYPES
 } Vehicle;
 
 typedef enum Language {
@@ -33,6 +35,7 @@ typedef enum RaceType {
     RACETYPE_CUTSCENE_1        =  6, // Not sure what the difference between these two are.
     RACETYPE_CUTSCENE_2        =  7,
     RACETYPE_BOSS              =  8,
+    RACETYPE_CHALLENGE        = 64, // For masking
     RACETYPE_CHALLENGE_BATTLE  = 64,
     RACETYPE_CHALLENGE_BANANAS = 65,
     RACETYPE_CHALLENGE_EGGS    = 66

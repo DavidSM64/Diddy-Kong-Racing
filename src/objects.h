@@ -19,11 +19,15 @@ typedef struct unknown800DC6F0 {
 
 /* Size: 0x3C bytes */
 typedef struct unknown8011AECC {
-    u8 unk00[0x10];
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
     f32 unk10;
     f32 unk14;
     f32 unk18;
-    u8 pad1C[0x1E];
+    f32 unk1C;
+    u8 pad20[0x1A];
     s8 unk3A;
     s8 unk3B;
 } unknown8011AECC;

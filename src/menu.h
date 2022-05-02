@@ -94,13 +94,6 @@ typedef enum MENU_ID {
     MENU_CAUTION
 } MENU_ID;
 
-enum Language {
-    ENGLISH,
-    GERMAN,
-    FRENCH,
-    JAPANESE
-};
-
 /* Size: 0x20 bytes */
 // So this is looking to be a struct for menu images.
 typedef struct unk800DF510 {

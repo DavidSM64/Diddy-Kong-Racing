@@ -1620,7 +1620,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
         return D_8011AD24[1] + 1;
-    } else if (get_current_level_race_type() == RACE_TYPE_BOSS) {
+    } else if (get_current_level_race_type() == RACETYPE_BOSS) {
         return D_8011AD24[1] + 1;
     }
     return 0;
