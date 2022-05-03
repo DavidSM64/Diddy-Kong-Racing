@@ -642,35 +642,29 @@ void func_8004F77C(unk8004F77C *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
 
-#ifdef NON_EQUIVALENT
-
-// Mainly has regalloc issues.
-void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
-    f32 xDiff, yDiff, zDiff;
-    Object *someObj;
+void func_80050754(Object *obj, Object_Racer *racer, f32 arg2) {
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
 
     obj->segment.unk3B = 0;
-    obj->segment.unk18 = 0x28;
-    someObj = obj64->unk148;
-    xDiff = someObj->segment.trans.x_position - obj->segment.trans.x_position;
-    yDiff = someObj->segment.trans.y_position - obj->segment.trans.y_position;
-    zDiff = someObj->segment.trans.z_position - obj->segment.trans.z_position;
-    func_80011570(obj, xDiff, yDiff, zDiff);
-    obj->segment.trans.y_rotation = obj64->unk148->segment.trans.y_rotation;
-    obj->segment.trans.x_rotation = obj64->unk148->segment.trans.x_rotation;
-    obj->segment.trans.z_rotation = obj64->unk148->segment.trans.z_rotation;
-    obj64->unk1A4 = obj->segment.trans.z_rotation;
-    obj64->unk1A0 = obj->segment.trans.y_rotation;
-    obj->segment.x_velocity = xDiff / arg2;
-    obj->segment.y_velocity = yDiff / arg2;
-    obj->segment.z_velocity = zDiff / arg2;
-    obj64->unk1F2 = 0;
-    obj64->velocity = 0.0f;
-    obj64->lateral_velocity = 0.0f;
+    obj->segment.unk18 = 40;
+    diffX = racer->unk148->segment.trans.x_position - obj->segment.trans.x_position;
+    diffY = racer->unk148->segment.trans.y_position - obj->segment.trans.y_position;
+    diffZ = racer->unk148->segment.trans.z_position - obj->segment.trans.z_position;
+    func_80011570(obj, diffX, diffY, diffZ);
+    obj->segment.trans.y_rotation = racer->unk148->segment.trans.y_rotation;
+    obj->segment.trans.x_rotation = racer->unk148->segment.trans.x_rotation;
+    obj->segment.trans.z_rotation = racer->unk148->segment.trans.z_rotation;
+    racer->unk1A4 = obj->segment.trans.z_rotation;
+    racer->unk1A0 = obj->segment.trans.y_rotation;
+    obj->segment.x_velocity = diffX / arg2;
+    obj->segment.y_velocity = diffY / arg2;
+    obj->segment.z_velocity = diffZ / arg2;
+    racer->velocity = 0.0f;
+    racer->unk1F2 = 0;
+    racer->lateral_velocity = 0.0f;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
-#endif
 /**
  * Applies visual rotational offets to vehicles.
  * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
