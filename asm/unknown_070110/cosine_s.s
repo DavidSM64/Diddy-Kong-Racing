@@ -1,4 +1,4 @@
-glabel func_800707C4
+glabel cosine_s
 /* 0713C4 800707C4 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0713C8 800707C8 FFBF0000 */  sd    $ra, ($sp)
 /* 0713CC 800707CC 0C01C20C */  jal   func_80070830

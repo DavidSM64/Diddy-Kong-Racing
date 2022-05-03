@@ -495,8 +495,8 @@ void func_800ADBC8(UNUSED s32 arg0) {
     f32 temp_f2;
 
     sp28 = 1152.0f - (f32) (D_800E2C60 >> 6);
-    sp24 = func_800707C4(D_80127C1C->trans.y_rotation) * sp28;
-    temp_f2 = func_800707F8(D_80127C1C->trans.y_rotation) * sp28;
+    sp24 = cosine_s(D_80127C1C->trans.y_rotation) * sp28;
+    temp_f2 = sine_s(D_80127C1C->trans.y_rotation) * sp28;
     temp_f14 = D_80127C1C->trans.x_position + (temp_f2 - sp24);
     temp_f16 = D_80127C1C->trans.y_position;
     temp_f18 = D_80127C1C->trans.z_position + (-temp_f2 - sp24);

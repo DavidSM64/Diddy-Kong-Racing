@@ -996,9 +996,9 @@ void func_80012E28(Object *this) {
         sp_1c = 0.0f;
         if (sp_20->unk1D7 < 5) {
 
-            sp_1c = func_800707F8(sp_20->z_rotation_offset);
+            sp_1c = sine_s(sp_20->z_rotation_offset);
             tmp_f2 = sp_1c;
-            tmp_f0 = func_800707F8(sp_20->y_rotation_offset - sp_20->unk166) * tmp_f2;
+            tmp_f0 = sine_s(sp_20->y_rotation_offset - sp_20->unk166) * tmp_f2;
 
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 

@@ -1,4 +1,4 @@
-glabel func_800707F8
+glabel sine_s
 /* 0713F8 800707F8 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0713FC 800707FC FFBF0000 */  sd    $ra, ($sp)
 /* 071400 80070800 0C01C20B */  jal   func_8007082C

@@ -2199,7 +2199,7 @@ glabel func_80049794
 /* 04C2C8 8004B6C8 860401A4 */  lh    $a0, 0x1a4($s0)
 /* 04C2CC 8004B6CC 46244482 */  mul.d $f18, $f8, $f4
 /* 04C2D0 8004B6D0 46209320 */  cvt.s.d $f12, $f18
-/* 04C2D4 8004B6D4 0C01C1FE */  jal   func_800707F8
+/* 04C2D4 8004B6D4 0C01C1FE */  jal   sine_s
 /* 04C2D8 8004B6D8 E7AC00EC */   swc1  $f12, 0xec($sp)
 /* 04C2DC 8004B6DC 821901E0 */  lb    $t9, 0x1e0($s0)
 /* 04C2E0 8004B6E0 C7AC00EC */  lwc1  $f12, 0xec($sp)
@@ -2237,7 +2237,7 @@ glabel func_80049794
 /* 04C358 8004B758 46044481 */  sub.s $f18, $f8, $f4
 /* 04C35C 8004B75C E6320024 */  swc1  $f18, 0x24($s1)
 /* 04C360 8004B760 860401A4 */  lh    $a0, 0x1a4($s0)
-/* 04C364 8004B764 0C01C1F1 */  jal   func_800707C4
+/* 04C364 8004B764 0C01C1F1 */  jal   cosine_s
 /* 04C368 8004B768 E7AC00EC */   swc1  $f12, 0xec($sp)
 /* 04C36C 8004B76C 820F01E0 */  lb    $t7, 0x1e0($s0)
 /* 04C370 8004B770 C7AC00EC */  lwc1  $f12, 0xec($sp)

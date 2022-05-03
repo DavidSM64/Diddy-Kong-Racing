@@ -455,8 +455,8 @@ void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *e
 
 // Has regalloc & stack issues.
 
-f32 func_800707C4(s16);
-f32 func_800707F8(s16);
+f32 cosine_s(s16);
+f32 sine_s(s16);
 Object **get_object_struct_array(s32 *count);
 
 void obj_loop_effectbox(Object *obj, s32 speed) {
@@ -479,8 +479,8 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
 
     obj3C = obj->segment.unk3C_a.unk3C;
     objList = get_object_struct_array(&numberOfObjects);
-    temp0 = func_800707F8((obj3C->unkB << 8) * -1);
-    temp1 = func_800707C4((obj3C->unkB << 8) * -1);
+    temp0 = sine_s((obj3C->unkB << 8) * -1);
+    temp1 = cosine_s((obj3C->unkB << 8) * -1);
     temp2 = obj3C->unk8 * 3;
     temp3 = obj3C->unk9 * 3;
     temp4 = obj3C->unkA * 3;
@@ -1486,9 +1486,9 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->unk11 << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->segment.trans.y_rotation);
+    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->segment.trans.y_rotation);
+    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk10;
     obj64->unk14 = entry->unk18;
@@ -1657,9 +1657,9 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->segment.trans.y_rotation);
+    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->segment.trans.y_rotation);
+    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
@@ -1682,9 +1682,9 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->segment.trans.y_rotation);
+    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->segment.trans.y_rotation);
+    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
@@ -1955,9 +1955,9 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
-    obj64->unk0 = func_800707C4(obj->segment.trans.y_rotation);
+    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = func_800707F8(obj->segment.trans.y_rotation);
+    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->scale;
     obj64->unk14 = entry->unkD;

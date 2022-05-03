@@ -1088,8 +1088,8 @@ void func_80058B84(f32 arg0, Object* obj, Object_Racer* arg2) {
     gCameraObject->trans.x_rotation = 0x400;
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->unk1C = 150.0f;
-    xOffset = func_800707C4(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
-    zOffset = func_800707F8(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
+    xOffset = cosine_s(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
+    zOffset = sine_s(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
     gCameraObject->trans.x_position = obj->segment.trans.x_position + xOffset;
     temp_f12 = (gCameraObject->trans.y_position - (obj->segment.trans.y_position + 45.0f)) * 0.25;
     if (temp_f12 < -2.0) {

@@ -91,8 +91,8 @@ void func_800ADAB8(s32);
 void func_800ADCBC(unk800E2C2C*, s32);
 void func_800ABE68(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 
-f32 func_800707C4(s16);
-f32 func_800707F8(s16);
+f32 cosine_s(s16);
+f32 sine_s(s16);
 s32 func_8007082C(s16);
 s32 func_80070830(s16);
 void func_800AB35C(void);
