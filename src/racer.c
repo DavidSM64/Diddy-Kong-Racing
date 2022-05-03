@@ -989,9 +989,9 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
     temp->unk210 = arg2;
 }
 
-void func_800570B8(Object* obj, s32 arg1, s32 arg2, s32 arg3) {
+void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
     s32 temp_v1;
-    Object_64* temp_s2;
+    Object_64 *temp_s2;
 
     temp_s2 = obj->unk64;
     if ((temp_s2->racer.unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
