@@ -172,11 +172,7 @@ s8 D_8011D583;
 s8 D_8011D584;
 s8 D_8011D585;
 s16 D_8011D586;
-s8 D_8011D588;
-s8 D_8011D589;
-s8 D_8011D58A;
-s8 D_8011D58B;
-s8 D_8011D58B;
+s8 D_8011D588[4];
 s8 D_8011D58C[4];
 GhostHeader *gGhostData[3];
 s8 D_8011D59C;
@@ -364,7 +360,29 @@ s32 func_80044450(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004447C.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80045128.s")
+
+struct TempStruct2 {
+    Object *unk0[4];
+    u8 pad10[0x1BF];
+    s32 unk1CF;
+};
+
+void func_80045128(struct TempStruct2 *header) {
+    struct Object_Racer *obj;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        obj = (struct Object_Racer *) header->unk0[i]->unk64;
+        D_8011D588[i] = obj->unk193;
+        if (obj->unk1CF != 0) {
+            D_8011D588[i] |= 0x40;
+        }
+        if (obj->held_obj != 0) {
+            D_8011D588[i] |= 0x80;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80046524.s")

@@ -13,7 +13,7 @@ enum RenderContext {
     DRAW_UNK_02,
     DRAW_UNK_03,
     DRAW_UNK_04,
-    DRAW_CRASH_SCREEN,
+    DRAW_CRASH_SCREEN
 };
 
 /* Size: 6 bytes */

@@ -22,7 +22,7 @@ typedef enum TextFonts {
     FONT_COLOURFUL,
     FONT_SMALL,
     FONT_LARGE,
-    FONT_UNK_FF = 255,
+    FONT_UNK_FF = 255
 } TextFonts;
 
 enum DialogueFlags {
@@ -31,7 +31,7 @@ enum DialogueFlags {
     DIALOGUE_BOX_CLOSED =    0x7FFF,
     DIALOGUE_BOX_OPEN =      0x8000,
     DIALOGUE_BOX_UNK_02 =    0xBFFF,
-    DIALOGUE_BOX_UNUSED_02 = 0xFFFE,
+    DIALOGUE_BOX_UNUSED_02 = 0xFFFE
 };
 
 /* Size: 0x20 bytes */
