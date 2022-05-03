@@ -18,6 +18,7 @@
 #include "game.h"
 #include "printf.h"
 #include "math_util.h"
+#include "unknown_0255E0.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -665,6 +666,7 @@ void func_80050754(Object *obj, Object_Racer *racer, f32 arg2) {
     racer->unk1F2 = 0;
     racer->lateral_velocity = 0.0f;
 }
+
 /**
  * Applies visual rotational offets to vehicles.
  * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
@@ -1084,18 +1086,20 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800581E8.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80058B84.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
 
-#ifdef NON_EQUIVALENT
-void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
-    s32 temp0, temp1;
-    temp0 = (s32)arg0;
-    temp1 = func_8007066C(gCameraObject->trans.x_position - arg1->segment.trans.x_position, gCameraObject->trans.z_position - arg1->segment.trans.z_position);
-    gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
-    gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, arg2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
+void func_80058F44(f32 arg0, struct Object *arg1, struct Object *arg2)
+{
+    s32 temp_f4;
+    f32 diffX;
+    f32 diffZ;
+    temp_f4 = (s32) arg0;
+    diffX = gCameraObject->trans.x_position - arg1->segment.trans.x_position;
+    diffZ = gCameraObject->trans.z_position - arg1->segment.trans.z_position;
+    gCameraObject->trans.y_rotation += ((((-func_8007066C((s32) diffX, (s32) diffZ)) -
+                                    gCameraObject->trans.y_rotation) + 0x8000) * temp_f4) >> 4;
+    gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * temp_f4)) >> 4);
+    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position,
+                            arg2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")
-#endif
 
 typedef struct Object_64_80059080 {
     u8 pad0[0x10];
