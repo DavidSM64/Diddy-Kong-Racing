@@ -988,40 +988,32 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
     temp->unk210 = arg2;
 }
 
-#ifdef NON_EQUIVALENT
-void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
-    s32 phi_t0;
-    Object_Racer *obj64;
+void func_800570B8(Object* obj, s32 arg1, s32 arg2, s32 arg3) {
+    s32 temp_v1;
+    Object_64* temp_s2;
 
-    obj64 = &obj->unk64->racer;
-    if ((obj64->unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
+    temp_s2 = obj->unk64;
+    if ((temp_s2->racer.unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
         if (arg3 == 2) {
-            if ((obj64->unk24 != 0) && (arg1 != obj64->unk2A)) {
-                func_800096F8(obj64->unk24);
-                obj64->unk24 = 0;
+            if ((temp_s2->racer.unk24 != 0) && (arg1 != temp_s2->racer.unk2A)) {
+                func_800096F8(temp_s2->racer.unk24);
+                temp_s2->racer.unk24 = 0;
             }
         }
-        if (obj64->unk24 == 0) {
-            if (arg3 != 3 || get_random_number_from_range(0, 1) != 0) {
-                obj64->unk2A = arg1;
-                arg1 += obj64->characterId;
-                arg2--;
-                phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
-                if (arg2 > 0) {
-                    while (phi_t0 == obj64->unk28) {
-                        phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
-                    }
+        if ((temp_s2->racer.unk24 == 0) && ((arg3 != 3) || (get_random_number_from_range(0, 1) != 0))) {
+            temp_s2->racer.unk2A = arg1;
+            arg1 += temp_s2->racer.characterId;
+            temp_v1 = (get_random_number_from_range(0, arg2 - 1) * 12) + arg1;
+            if (arg2 - 1 > 0) {
+                while (temp_v1 == temp_s2->racer.unk28) {
+                    temp_v1 = (get_random_number_from_range(0, arg2 - 1) * 12) + arg1;
                 }
-                //sp34 = phi_t0;
-                func_80009558(phi_t0, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &obj64->unk24);
-                obj64->unk28 = phi_t0;
             }
+            func_80009558(temp_v1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &temp_s2->racer.unk24);
+            temp_s2->racer.unk28 = temp_v1;
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_800570B8.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
 
