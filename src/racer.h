@@ -6,7 +6,6 @@
 
 typedef enum ActivePlayers {
     PLAYER_COMPUTER = -1,
-    PLAYER_NONE,
     PLAYER_ONE,
     PLAYER_TWO,
     PLAYER_THREE,

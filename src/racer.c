@@ -531,7 +531,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
     tempObj->stretch_height_cap = 1.0f;
     // Decide which player ID to assign to this object. Human players get a value from 0-3.
     // Computer players will be -1.
-    if (player >= PLAYER_NONE && player < PLAYER_FOUR) {
+    if (player >= PLAYER_ONE && player <= PLAYER_FOUR) {
         if (func_8000E158()) {
             player = 1 - player;
         }
