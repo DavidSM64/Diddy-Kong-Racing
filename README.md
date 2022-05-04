@@ -117,9 +117,9 @@ As of April 29th, 2022, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------------------- 23.52% Complete --------------------------
-                     # Decompiled functions: 1129
-                      # GLOBAL_ASM remaining: 650
+ -------------------------- 23.68% Complete --------------------------
+                     # Decompiled functions: 1131
+                      # GLOBAL_ASM remaining: 648
                       # NON_MATCHING functions: 8
                   # NON_EQUIVALENT WIP functions: 104
  ---------------------------- Game Status ----------------------------

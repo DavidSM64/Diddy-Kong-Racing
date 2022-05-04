@@ -759,7 +759,47 @@ void func_800521B8(s32 arg0) {
     D_8011D582 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_800521C4.s")
+void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2) {
+    Object *tempObj;
+    s8 foundObj;
+    s32 sp24;
+    s32 temp_f10;
+
+    foundObj = 0;
+    if (func_80023568()) {
+        tempObj = get_object_struct(1);
+        foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+    }
+    if (!foundObj) {
+        tempObj = func_8001B7A8(racer, 1, &sp24);
+        if (tempObj && !D_8011D540) {
+            foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+        }
+    }
+    if (!foundObj) {
+        tempObj = func_8001B7A8(racer, -1, &sp24);
+        if (tempObj && !D_8011D540) {
+            foundObj = func_80052388(obj, racer, tempObj, 30000.0f);
+        }
+    }
+    if (!foundObj) {
+        if ((racer->unk1E7 & 0x1F) < 2) {
+            temp_f10 = racer->velocity * 1280.0f;
+
+            if (temp_f10 < 0) {
+                temp_f10 = -temp_f10;
+            }
+
+            if (temp_f10 > 0x2800) {
+                temp_f10 = 0x2800;
+            }
+
+            temp_f10 = 0x2800 - temp_f10;
+
+            racer->unk16C = get_random_number_from_range(-temp_f10, temp_f10);
+        }
+    }
+}
 
 // Ran by the AI. Seems to be direction related of some sorts.
 void func_8005234C(unk8005234C *arg0) {
@@ -1016,7 +1056,111 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
+f32 func_80057220(Object* arg0, Object_Racer* arg1) {
+    f32 speedMultiplier;
+    s32 temp_v1;
+    f32 bananas;
+    f32 cap;
+    s32 phi_a1;
+    s32 sp28;
+
+    speedMultiplier = 1.0f;
+    if (D_8011D540 != 0) {
+        speedMultiplier = 0.0f;
+    }
+    sp28 = func_800113AC();
+    if (D_8011D540);
+    if ((D_8011D540 > 0) && (D_8011D540 < 30) && (!arg1->unk1F4)) {
+        temp_v1 = D_8011D540 - 14;
+        if ((gActivePlayerButtonPress & 0x8000) != 0) {
+            if ((temp_v1 < 0) && (sp28 >= 0)) {
+                temp_v1 = 0;
+            }
+            if (temp_v1 < 0) {
+                temp_v1 = -temp_v1;
+            }
+
+            if ((gCurrentCarInput & 0x2000)) {
+                if (temp_v1 < 2) {
+                    temp_v1 = 0;
+                }
+            }
+
+			phi_a1 = 24 - temp_v1;
+            arg1->unk1D3 = func_8000C8B4(phi_a1 >> 1);
+            if (phi_a1 == 24) {
+                func_80057048(arg0, 34);
+                arg1->unk1D3 = func_8000C8B4(20);
+            }
+            if ((s32) arg1->unk1D3 < func_8000C8B4(20)) {
+                arg1->unk203 = 0;
+            } else if ((s32) arg1->unk1D3 < func_8000C8B4(35)) {
+                arg1->unk203 = 1;
+            } else {
+                arg1->unk203 = 2;
+            }
+            arg1->boost_sound |= 1;
+            D_8011D560 = 7;
+            D_8011D585 = arg1->unk1D3;
+        }
+        if ((arg1->playerIndex == -1) && (!arg1->unk1CC || (arg1->unk1CC == 1 && D_8011D585))) {
+            if (D_8011D585) {
+                arg1->unk1D3 = D_8011D585;
+            } else {
+                arg1->unk1D3 = func_8000C8B4(5);
+            }
+            if (arg1->unk1D3 < func_8000C8B4(20)) {
+                arg1->unk203 = 0;
+            } else if (arg1->unk1D3 < func_8000C8B4(35)) {
+                arg1->unk203 = 1;
+            } else {
+                arg1->unk203 = 2;
+            }
+        }
+    }
+    if (arg1->unk1D3 && !D_8011D540 && sp28 && !arg1->unk1D8) {
+         func_80072348(arg1->playerIndex, 6);
+    }
+    if ((D_8011D540 < 80) && ((gActivePlayerButtonPress & 0x8000))) {
+        arg1->unk1F4 = 1U;
+    }
+    if (D_8011D540 == 0) {
+        if ((arg1->boost_sound & 1) != 0) {
+            arg1->boost_sound = (u8) (arg1->boost_sound & 0xFFFE);
+            func_800570B8(arg0, 0x162, 8, 0x82);
+            func_80057048(arg0, 0x21);
+        }
+    }
+    if ((arg1->boost_sound & 2) != 0) {
+        arg1->boost_sound = (u8) (arg1->boost_sound & 0xFFFD);
+    }
+    bananas = arg1->bananas;
+    // Cheats only apply to human players.
+    if (arg1->playerIndex == PLAYER_COMPUTER) {
+        bananas = arg1->unk124;
+    }  else {
+        if (bananas > 10.0) {
+            // Cap the banana speed boost to 10 if the unlimited bananas cheat is not enabled.
+            if (!(get_filtered_cheats() & CHEAT_NO_LIMIT_TO_BANANAS)) {
+                bananas = 10.0f;
+            }
+        }
+        // Make the speed bonus negative if the speed reduction cheat is on.
+        if (((get_filtered_cheats() & CHEAT_BANANAS_REDUCE_SPEED)) && (bananas > 0.0f)) {
+            bananas = -bananas;
+        }
+    }
+    // This also means the AI can have twice as many
+    cap = 20.0f;
+    if (bananas > cap) {
+        bananas = cap;
+    }
+    if (bananas < -cap) {
+        bananas = -cap;
+    }
+    speedMultiplier += (bananas * 0.025f);
+    return speedMultiplier;
+}
 
 void func_800575EC(Object *obj, Object_Racer *obj64) {
     Matrix mf;

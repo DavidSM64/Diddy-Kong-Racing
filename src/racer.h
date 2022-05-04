@@ -172,6 +172,7 @@ void func_8005A3B0(void);
 void func_8005A3C0(void);
 void func_8005A3D0(void);
 void antipiracy_modify_surface_traction_table(void);
+s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
