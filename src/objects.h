@@ -19,11 +19,15 @@ typedef struct unknown800DC6F0 {
 
 /* Size: 0x3C bytes */
 typedef struct unknown8011AECC {
-    u8 unk00[0x10];
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
     f32 unk10;
     f32 unk14;
     f32 unk18;
-    u8 pad1C[0x1E];
+    f32 unk1C;
+    u8 pad20[0x1A];
     s8 unk3A;
     s8 unk3B;
 } unknown8011AECC;
@@ -120,7 +124,7 @@ extern s32 D_800DC85C;
 extern u8 D_800DC860;
 extern u16 D_800DC864;
 
-f32 func_800707F8(s16); //?
+f32 sine_s(s16); //?
 
 Object *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);

@@ -246,8 +246,8 @@ extern Triangle D_800DCAA8[8];
 extern VertexPosition D_800DCB28[6];
 extern u32 osTvType;
 
-f32 func_800707C4(s16); // No idea where it's located
-f32 func_800707F8(s16); // No idea where it's located
+f32 cosine_s(s16); // No idea where it's located
+f32 sine_s(s16); // No idea where it's located
 s32 get_random_number_from_range(s32, s32); // Non Matching src/unknown_070110.c
 s32 func_8007066C(s32, s32); // Non Matching src/unknown_070110.c
 

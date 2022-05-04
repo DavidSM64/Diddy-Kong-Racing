@@ -17,6 +17,9 @@
 #include "object_functions.h"
 #include "game.h"
 #include "printf.h"
+#include "math_util.h"
+#include "unknown_0255E0.h"
+#include "weather.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -142,8 +145,8 @@ ObjectTransform D_8011D510;
 s32 gCurrentCarInput; // Related to input of the car.
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
-s32 D_8011D534;
-s32 D_8011D538;
+s32 gCurrentStickX;
+s32 gCurrentStickY;
 s32 D_8011D53C;
 s32 D_8011D540;
 f32 D_8011D544;
@@ -171,11 +174,7 @@ s8 D_8011D583;
 s8 D_8011D584;
 s8 D_8011D585;
 s16 D_8011D586;
-s8 D_8011D588;
-s8 D_8011D589;
-s8 D_8011D58A;
-s8 D_8011D58B;
-s8 D_8011D58B;
+s8 D_8011D588[4];
 s8 D_8011D58C[4];
 GhostHeader *gGhostData[3];
 s8 D_8011D59C;
@@ -287,11 +286,11 @@ void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
     raceType = get_current_level_race_type();
 
     switch (raceType) {
-        case RACE_TYPE_CHALLENGE_BATTLE:
-        case RACE_TYPE_CHALLENGE_BANANAS:
+        case RACETYPE_CHALLENGE_BATTLE:
+        case RACETYPE_CHALLENGE_BANANAS:
             func_8004447C(arg0, arg1, arg2);
             break;
-        case RACE_TYPE_CHALLENGE_EGGS:
+        case RACETYPE_CHALLENGE_EGGS:
             func_800452A0(arg0, arg1, arg2);
             break;
         default:
@@ -315,9 +314,9 @@ void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
             arg1->unk214 = 60;
             arg1->unk215 = 120;
 
-            if ((raceType & RACE_TYPE_CHALLENGE) == 0) {
+            if ((raceType & RACETYPE_CHALLENGE) == 0) {
                 arg1->unk1CA = (arg1->unk1CA + 1) & 3;
-            } else if (raceType == RACE_TYPE_CHALLENGE_BATTLE || raceType == RACE_TYPE_CHALLENGE_BANANAS) {
+            } else if (raceType == RACETYPE_CHALLENGE_BATTLE || raceType == RACETYPE_CHALLENGE_BANANAS) {
                 if (arg1->unk1CE != 0xFF) {
                     arg1->unk154 = func_8001D214(arg1->unk1CE);
                 }
@@ -332,27 +331,29 @@ void func_80044170(Object *arg0, Object_Racer *arg1, s32 arg2) {
         }
     }
 
+    // Kick it into reverse.
     if (arg1->unk214 != 0) {
-        D_8011D534 *= -1;
+        gCurrentStickX *= -1;
         gCurrentCarInput &= ~A_BUTTON;
-        D_8011D538 = -50;
+        gCurrentStickY = -50;
         gCurrentCarInput |= B_BUTTON;
     }
 
-    if (D_8011D534 > 75) {
-        D_8011D534 = 75;
+    // Cap stick inputs.
+    if (gCurrentStickX > 75) {
+        gCurrentStickX = 75;
     }
 
-    if (D_8011D534 < -75) {
-        D_8011D534 = -75;
+    if (gCurrentStickX < -75) {
+        gCurrentStickX = -75;
     }
 
-    if (D_8011D538 > 75) {
-        D_8011D538 = 75;
+    if (gCurrentStickY > 75) {
+        gCurrentStickY = 75;
     }
 
-    if (D_8011D538 < -75) {
-        D_8011D538 = -75;
+    if (gCurrentStickY < -75) {
+        gCurrentStickY = -75;
     }
 }
 
@@ -361,7 +362,29 @@ s32 func_80044450(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004447C.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80045128.s")
+
+struct TempStruct2 {
+    Object *unk0[4];
+    u8 pad10[0x1BF];
+    s32 unk1CF;
+};
+
+void func_80045128(struct TempStruct2 *header) {
+    struct Object_Racer *obj;
+    s32 i;
+
+    for (i = 0; i < 4; i++) {
+        obj = (struct Object_Racer *) header->unk0[i]->unk64;
+        D_8011D588[i] = obj->unk193;
+        if (obj->unk1CF != 0) {
+            D_8011D588[i] |= 0x40;
+        }
+        if (obj->held_obj != 0) {
+            D_8011D588[i] |= 0x80;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80046524.s")
@@ -422,30 +445,30 @@ void func_8004C140(Object *obj, Object_Racer *obj64) {
     if (temp != 4) {
         func_800576E0(obj, obj64, 2);
     }
-    obj64->unk18C = 0x168;
+    obj64->unk18C = 360;
     if (obj64->unk1C9 == 8) {
         obj64->unk1C9 = 0;
     }
     if (obj64->unk1D6 < 5) {
-        func_800570B8(obj, 0x1C2, 8, 0x81);
+        func_800570B8(obj, 450, 8, 129);
         switch (obj64->unk187) {
             case 1:
             case 2:
                 if (phi_v1 != 0) {
-                    obj64->spinout_timer = 0x28;
+                    obj64->spinout_timer = 40;
                 } else {
-                    obj64->spinout_timer = 0x3C;
+                    obj64->spinout_timer = 60;
                 }
                 break;
             case 3:
                 if (phi_v1 != 0) {
-                    obj64->spinout_timer = 0x28;
+                    obj64->spinout_timer = 40;
                 } else {
-                    obj64->spinout_timer = 0x3C;
+                    obj64->spinout_timer = 60;
                 }
                 break;
             case 6:
-                obj64->unk204 = 0x78;
+                obj64->unk204 = 120;
                 obj->segment.x_velocity *= 0.7;
                 obj->segment.z_velocity *= 0.7;
                 break;
@@ -494,7 +517,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
  */
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
     Object_Racer *tempObj;
-    s32 player;
+    ActivePlayers player;
     s32 i;
 
     D_8011D53C = 0;
@@ -506,13 +529,15 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
     tempObj->unk194 = 0;
     tempObj->stretch_height = 1.0f;
     tempObj->stretch_height_cap = 1.0f;
-    if (player >= 0 && player < 4) {
+    // Decide which player ID to assign to this object. Human players get a value from 0-3.
+    // Computer players will be -1.
+    if (player >= PLAYER_ONE && player <= PLAYER_FOUR) {
         if (func_8000E158()) {
             player = 1 - player;
         }
         tempObj->playerIndex = player;
     } else {
-        tempObj->playerIndex = -1;
+        tempObj->playerIndex = PLAYER_COMPUTER;
     }
     tempObj->unk1A0 = obj->segment.trans.y_rotation;
     tempObj->unk1A4 = obj->segment.trans.z_rotation;
@@ -584,10 +609,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
 
     // This needs to be on one line to match.
     for (i = 0; i < 4; i++) { D_8011D58C[i] = 0; }
-    if (tempObj);
-    if (tempObj);
-    if (tempObj);
-    if (tempObj);
+    if (1); if (1); // Also critical to match.
     func_80043ECC(0, 0, 0);
     D_8011D583 = i;
     D_8011D585 = 0;
@@ -600,12 +622,12 @@ void func_8004F77C(unk8004F77C *arg0) {
     s32 temp;
 
     arg0->flags &= ~0x80;
-    if ((gCurrentCarInput & B_BUTTON) != 0) {
+    if ((gCurrentCarInput & B_BUTTON)) {
         arg0->flags |= 0x80;
     }
 
     temp = arg0->flags & 0xF;
-    if ((arg0->flags & 0xC0) != 0) {
+    if ((arg0->flags & 0xC0)) {
         temp++;
         if (temp >= 3) {
             temp = 2;
@@ -622,47 +644,41 @@ void func_8004F77C(unk8004F77C *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
 
-#ifdef NON_EQUIVALENT
-
-// Mainly has regalloc issues.
-void func_80050754(Object *obj, Object_Racer *obj64, f32 arg2) {
-    f32 xDiff, yDiff, zDiff;
-    Object *someObj;
+void func_80050754(Object *obj, Object_Racer *racer, f32 arg2) {
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
 
     obj->segment.unk3B = 0;
-    obj->segment.unk18 = 0x28;
-    someObj = obj64->unk148;
-    xDiff = someObj->segment.trans.x_position - obj->segment.trans.x_position;
-    yDiff = someObj->segment.trans.y_position - obj->segment.trans.y_position;
-    zDiff = someObj->segment.trans.z_position - obj->segment.trans.z_position;
-    func_80011570(obj, xDiff, yDiff, zDiff);
-    obj->segment.trans.y_rotation = obj64->unk148->segment.trans.y_rotation;
-    obj->segment.trans.x_rotation = obj64->unk148->segment.trans.x_rotation;
-    obj->segment.trans.z_rotation = obj64->unk148->segment.trans.z_rotation;
-    obj64->unk1A4 = obj->segment.trans.z_rotation;
-    obj64->unk1A0 = obj->segment.trans.y_rotation;
-    obj->segment.x_velocity = xDiff / arg2;
-    obj->segment.y_velocity = yDiff / arg2;
-    obj->segment.z_velocity = zDiff / arg2;
-    obj64->unk1F2 = 0;
-    obj64->velocity = 0.0f;
-    obj64->lateral_velocity = 0.0f;
+    obj->segment.unk18 = 40;
+    diffX = racer->unk148->segment.trans.x_position - obj->segment.trans.x_position;
+    diffY = racer->unk148->segment.trans.y_position - obj->segment.trans.y_position;
+    diffZ = racer->unk148->segment.trans.z_position - obj->segment.trans.z_position;
+    func_80011570(obj, diffX, diffY, diffZ);
+    obj->segment.trans.y_rotation = racer->unk148->segment.trans.y_rotation;
+    obj->segment.trans.x_rotation = racer->unk148->segment.trans.x_rotation;
+    obj->segment.trans.z_rotation = racer->unk148->segment.trans.z_rotation;
+    racer->unk1A4 = obj->segment.trans.z_rotation;
+    racer->unk1A0 = obj->segment.trans.y_rotation;
+    obj->segment.x_velocity = diffX / arg2;
+    obj->segment.y_velocity = diffY / arg2;
+    obj->segment.z_velocity = diffZ / arg2;
+    racer->velocity = 0.0f;
+    racer->unk1F2 = 0;
+    racer->lateral_velocity = 0.0f;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_80050754.s")
-#endif
 
 /**
  * Applies visual rotational offets to vehicles.
  * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
  */
-void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pitch, s16 yaw) {
+void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation) {
     s32 diff;
     s32 tempAngle;
 
     if (!obj->unk1F1) {
-        tempAngle = roll - (obj->unk160 & 0xFFFF);
-        obj->unk166 = pitch;
+        tempAngle = yRotation - (obj->y_rotation_offset & 0xFFFF);
+        obj->unk166 = xRotation;
         if (tempAngle > 0x8000) {
             tempAngle +=  0xFFFF0001;
         }
@@ -674,15 +690,15 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->unk160 +=  tempAngle;
+            obj->y_rotation_offset +=  tempAngle;
         } else if (tempAngle < 0) {
             diff = -(max * 0x600);
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->unk160 += tempAngle;
+            obj->y_rotation_offset += tempAngle;
         }
-        tempAngle = pitch - (obj->unk162 & 0xFFFF);
+        tempAngle = xRotation - (obj->x_rotation_offset & 0xFFFF);
         if (tempAngle > 0x8000) {
             tempAngle = tempAngle + 0xFFFF0001;
         }
@@ -694,15 +710,15 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->unk162 += tempAngle;
+            obj->x_rotation_offset += tempAngle;
         } else if (tempAngle < 0) {
             diff = -(max * 0x600);
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->unk162 += tempAngle;
+            obj->x_rotation_offset += tempAngle;
         }
-        tempAngle = yaw - (obj->unk164 & 0xFFFF);
+        tempAngle = zRotation - (obj->z_rotation_offset & 0xFFFF);
         if (tempAngle > 0x8000) {
             tempAngle = tempAngle + 0xFFFF0001;
         }
@@ -714,7 +730,7 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->unk164 += tempAngle;
+            obj->z_rotation_offset += tempAngle;
             return;
         }
         if (tempAngle < 0) {
@@ -722,7 +738,7 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 roll, s16 pit
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->unk164 += tempAngle;
+            obj->z_rotation_offset += tempAngle;
         }
     }
 }
@@ -743,7 +759,47 @@ void func_800521B8(s32 arg0) {
     D_8011D582 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_800521C4.s")
+void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2) {
+    Object *tempObj;
+    s8 foundObj;
+    s32 sp24;
+    s32 temp_f10;
+
+    foundObj = 0;
+    if (func_80023568()) {
+        tempObj = get_object_struct(1);
+        foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+    }
+    if (!foundObj) {
+        tempObj = func_8001B7A8(racer, 1, &sp24);
+        if (tempObj && !D_8011D540) {
+            foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+        }
+    }
+    if (!foundObj) {
+        tempObj = func_8001B7A8(racer, -1, &sp24);
+        if (tempObj && !D_8011D540) {
+            foundObj = func_80052388(obj, racer, tempObj, 30000.0f);
+        }
+    }
+    if (!foundObj) {
+        if ((racer->unk1E7 & 0x1F) < 2) {
+            temp_f10 = racer->velocity * 1280.0f;
+
+            if (temp_f10 < 0) {
+                temp_f10 = -temp_f10;
+            }
+
+            if (temp_f10 > 0x2800) {
+                temp_f10 = 0x2800;
+            }
+
+            temp_f10 = 0x2800 - temp_f10;
+
+            racer->unk16C = get_random_number_from_range(-temp_f10, temp_f10);
+        }
+    }
+}
 
 // Ran by the AI. Seems to be direction related of some sorts.
 void func_8005234C(unk8005234C *arg0) {
@@ -752,8 +808,6 @@ void func_8005234C(unk8005234C *arg0) {
         arg0->unk16C = 0;
     }
 }
-
-extern s16 func_80070750(f32 y, f32 x);
 
 s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) {
     s32 rotation;
@@ -764,7 +818,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
     diffX = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
     diffZ = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
     if ((diffX * diffX) + (diffZ * diffZ) < distance) {
-        rotation = (func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        rotation = (arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (rotation > 0x8000) {
             rotation += 0xFFFF0001;
         }
@@ -782,7 +836,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
             arg1->unk16C = 0;
         }
         arg1 = (struct Object_Racer *) obj2->unk64;
-        rotation = func_80070750(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
+        rotation = arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
         if (rotation > 0x8000) {
             rotation += 0xFFFF0001;
         }
@@ -975,42 +1029,138 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
     temp->unk210 = arg2;
 }
 
-#ifdef NON_EQUIVALENT
 void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
-    s32 phi_t0;
-    Object_Racer *obj64;
+    s32 temp_v1;
+    Object_64 *temp_s2;
 
-    obj64 = &obj->unk64->racer;
-    if ((obj64->unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
+    temp_s2 = obj->unk64;
+    if ((temp_s2->racer.unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
         if (arg3 == 2) {
-            if ((obj64->unk24 != 0) && (arg1 != obj64->unk2A)) {
-                func_800096F8(obj64->unk24);
-                obj64->unk24 = 0;
+            if ((temp_s2->racer.unk24 != 0) && (arg1 != temp_s2->racer.unk2A)) {
+                func_800096F8(temp_s2->racer.unk24);
+                temp_s2->racer.unk24 = 0;
             }
         }
-        if (obj64->unk24 == 0) {
-            if (arg3 != 3 || get_random_number_from_range(0, 1) != 0) {
-                obj64->unk2A = arg1;
-                arg1 += obj64->characterId;
-                arg2--;
-                phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
-                if (arg2 > 0) {
-                    while (phi_t0 == obj64->unk28) {
-                        phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
-                    }
+        if ((temp_s2->racer.unk24 == 0) && ((arg3 != 3) || (get_random_number_from_range(0, 1) != 0))) {
+            temp_s2->racer.unk2A = arg1;
+            arg1 += temp_s2->racer.characterId;
+            temp_v1 = (get_random_number_from_range(0, arg2 - 1) * 12) + arg1;
+            if (arg2 - 1 > 0) {
+                while (temp_v1 == temp_s2->racer.unk28) {
+                    temp_v1 = (get_random_number_from_range(0, arg2 - 1) * 12) + arg1;
                 }
-                //sp34 = phi_t0;
-                func_80009558(phi_t0, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &obj64->unk24);
-                obj64->unk28 = phi_t0;
             }
+            func_80009558(temp_v1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &temp_s2->racer.unk24);
+            temp_s2->racer.unk28 = temp_v1;
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_800570B8.s")
-#endif
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80057220.s")
+f32 func_80057220(Object* arg0, Object_Racer* arg1) {
+    f32 speedMultiplier;
+    s32 temp_v1;
+    f32 bananas;
+    f32 cap;
+    s32 phi_a1;
+    s32 sp28;
+
+    speedMultiplier = 1.0f;
+    if (D_8011D540 != 0) {
+        speedMultiplier = 0.0f;
+    }
+    sp28 = func_800113AC();
+    if (D_8011D540);
+    if ((D_8011D540 > 0) && (D_8011D540 < 30) && (!arg1->unk1F4)) {
+        temp_v1 = D_8011D540 - 14;
+        if (gActivePlayerButtonPress & A_BUTTON) {
+            if ((temp_v1 < 0) && (sp28 >= 0)) {
+                temp_v1 = 0;
+            }
+            if (temp_v1 < 0) {
+                temp_v1 = -temp_v1;
+            }
+
+            if ((gCurrentCarInput & Z_TRIG)) {
+                if (temp_v1 < 2) {
+                    temp_v1 = 0;
+                }
+            }
+
+			phi_a1 = 24 - temp_v1;
+            arg1->unk1D3 = func_8000C8B4(phi_a1 >> 1);
+            if (phi_a1 == 24) {
+                func_80057048(arg0, 34);
+                arg1->unk1D3 = func_8000C8B4(20);
+            }
+            if ((s32) arg1->unk1D3 < func_8000C8B4(20)) {
+                arg1->unk203 = 0;
+            } else if ((s32) arg1->unk1D3 < func_8000C8B4(35)) {
+                arg1->unk203 = 1;
+            } else {
+                arg1->unk203 = 2;
+            }
+            arg1->boost_sound |= 1;
+            D_8011D560 = 7;
+            D_8011D585 = arg1->unk1D3;
+        }
+        if ((arg1->playerIndex == -1) && (!arg1->unk1CC || (arg1->unk1CC == 1 && D_8011D585))) {
+            if (D_8011D585) {
+                arg1->unk1D3 = D_8011D585;
+            } else {
+                arg1->unk1D3 = func_8000C8B4(5);
+            }
+            if (arg1->unk1D3 < func_8000C8B4(20)) {
+                arg1->unk203 = 0;
+            } else if (arg1->unk1D3 < func_8000C8B4(35)) {
+                arg1->unk203 = 1;
+            } else {
+                arg1->unk203 = 2;
+            }
+        }
+    }
+    if (arg1->unk1D3 && !D_8011D540 && sp28 && !arg1->unk1D8) {
+         func_80072348(arg1->playerIndex, 6);
+    }
+    if ((D_8011D540 < 80) && gActivePlayerButtonPress & A_BUTTON) {
+        arg1->unk1F4 = 1U;
+    }
+    if (D_8011D540 == 0) {
+        if ((arg1->boost_sound & 1) != 0) {
+            arg1->boost_sound = (u8) (arg1->boost_sound & 0xFFFE);
+            func_800570B8(arg0, 354, 8, 130);
+            func_80057048(arg0, 33);
+        }
+    }
+    if ((arg1->boost_sound & 2) != 0) {
+        arg1->boost_sound = (u8) (arg1->boost_sound & 0xFFFD);
+    }
+    bananas = arg1->bananas;
+    // Cheats only apply to human players.
+    if (arg1->playerIndex == PLAYER_COMPUTER) {
+        bananas = arg1->unk124;
+    }  else {
+        if (bananas > 10.0) {
+            // Cap the banana speed boost to 10 if the unlimited bananas cheat is not enabled.
+            if (!(get_filtered_cheats() & CHEAT_NO_LIMIT_TO_BANANAS)) {
+                bananas = 10.0f;
+            }
+        }
+        // Make the speed bonus negative if the speed reduction cheat is on.
+        if (((get_filtered_cheats() & CHEAT_BANANAS_REDUCE_SPEED)) && (bananas > 0.0f)) {
+            bananas = -bananas;
+        }
+    }
+    // This also means the AI can have twice as many
+    cap = 20.0f;
+    if (bananas > cap) {
+        bananas = cap;
+    }
+    if (bananas < -cap) {
+        bananas = -cap;
+    }
+    speedMultiplier += (bananas * 0.025f);
+    return speedMultiplier;
+}
 
 void func_800575EC(Object *obj, Object_Racer *obj64) {
     Matrix mf;
@@ -1033,7 +1183,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
 void func_800579B0(unk800579B0 *arg0, UNUSED s32 arg1, f32 arg2) {
     s32 temp, temp2;
 
-    temp = D_8011D534 - arg0->unk1E1;
+    temp = gCurrentStickX - arg0->unk1E1;
     temp2 = (s32)((f64)((f32)temp * arg2) * 0.125);
 
     if (temp != 0 && temp2 == 0) {
@@ -1070,21 +1220,52 @@ void func_800580B4(Object *obj, Object_Racer *obj64, s32 arg2, f32 arg3) {
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_800581E8.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80058B84.s")
+
+void func_80058B84(f32 arg0, Object* obj, Object_Racer* arg2) {
+    s32 levelSeg;
+    f32 temp_f12;
+    f32 zOffset;
+    f32 xOffset;
+
+    gCameraObject->trans.y_rotation += 0x200;
+    if (1);
+    gCameraObject->trans.x_rotation = 0x400;
+    gCameraObject->trans.z_rotation = 0;
+    gCameraObject->unk1C = 150.0f;
+    xOffset = cosine_s(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
+    zOffset = sine_s(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
+    gCameraObject->trans.x_position = obj->segment.trans.x_position + xOffset;
+    temp_f12 = (gCameraObject->trans.y_position - (obj->segment.trans.y_position + 45.0f)) * 0.25;
+    if (temp_f12 < -2.0) {
+        gCameraObject->trans.y_position = (gCameraObject->trans.y_position - (temp_f12 + 2.0));
+    }
+    if (temp_f12 > 0.0f) {
+        gCameraObject->trans.y_position = obj->segment.trans.y_position + 45.0f;
+    }
+    gCameraObject->trans.z_position = obj->segment.trans.z_position + zOffset;
+    levelSeg = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
+    if (levelSeg != -1) {
+        gCameraObject->unk34 = levelSeg;
+    }
+    arg2->unk196 = gCameraObject->trans.y_rotation;
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
 
-#ifdef NON_EQUIVALENT
-void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
-    s32 temp0, temp1;
-    temp0 = (s32)arg0;
-    temp1 = func_8007066C(gCameraObject->trans.x_position - arg1->segment.trans.x_position, gCameraObject->trans.z_position - arg1->segment.trans.z_position);
-    gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
-    gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, arg2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
+void func_80058F44(f32 arg0, struct Object *arg1, struct Object *arg2)
+{
+    s32 temp_f4;
+    f32 diffX;
+    f32 diffZ;
+    temp_f4 = (s32) arg0;
+    diffX = gCameraObject->trans.x_position - arg1->segment.trans.x_position;
+    diffZ = gCameraObject->trans.z_position - arg1->segment.trans.z_position;
+    gCameraObject->trans.y_rotation += ((((-func_8007066C((s32) diffX, (s32) diffZ)) -
+                                    gCameraObject->trans.y_rotation) + 0x8000) * temp_f4) >> 4;
+    gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * temp_f4)) >> 4);
+    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position,
+                            arg2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_80058F44.s")
-#endif
 
 typedef struct Object_64_80059080 {
     u8 pad0[0x10];

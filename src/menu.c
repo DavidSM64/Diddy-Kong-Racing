@@ -1506,13 +1506,13 @@ void load_menu_text(s32 language) {
     }
 
     switch (language) {
-        case JAPANESE:
+        case LANGUAGE_JAPANESE:
             langIndex = 4;
             break;
-        case GERMAN:
+        case LANGUAGE_GERMAN:
             langIndex = 3;
             break;
-        case FRENCH:
+        case LANGUAGE_FRENCH:
             langIndex = 2;
             break;
         default: // English
@@ -1706,7 +1706,7 @@ void func_80081218(void) {
     gCheatsAssetData = get_misc_asset(0x41);
     gNumberOfCheats = (s32)(*gCheatsAssetData);
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
-    load_menu_text(ENGLISH);
+    load_menu_text(LANGUAGE_ENGLISH);
     for (i = 0; i < 128; i++) {
         D_80126550[i] = NULL;
     }
@@ -2445,10 +2445,10 @@ s32 menu_options_loop(s32 arg0) {
     } else if (D_800DF460 == 0 && analogX != 0) {
         // Change language
         s32 currentLang = get_language();
-        if ((currentLang >> 31) == 0 && currentLang == ENGLISH) {
-            set_language(FRENCH);
+        if ((currentLang >> 31) == 0 && currentLang == LANGUAGE_ENGLISH) {
+            set_language(LANGUAGE_FRENCH);
         } else {
-            set_language(ENGLISH);
+            set_language(LANGUAGE_ENGLISH);
         }
         func_80001D04(0xEB, 0);
     } else if (D_800DF460 == 1 && analogX != 0) {
@@ -6983,16 +6983,16 @@ u64 get_eeprom_settings(void) {
  * 0 = English, 1 = German, 2 = French, 3 = Japanese
  */
 s32 get_language(void) {
-    s32 language = ENGLISH;
+    s32 language = LANGUAGE_ENGLISH;
     switch (sEepromSettings & 0xC) {
         case 4:
-            language = GERMAN;
+            language = LANGUAGE_GERMAN;
             break;
         case 8:
-            language = FRENCH;
+            language = LANGUAGE_FRENCH;
             break;
         case 12:
-            language = JAPANESE;
+            language = LANGUAGE_JAPANESE;
             break;
     }
     return language;
@@ -7007,13 +7007,13 @@ void set_language(s32 language) {
     u64 langFlag = 0; // English
 
     switch (language) {
-        case GERMAN:
+        case LANGUAGE_GERMAN:
             langFlag = 4;
             break;
-        case FRENCH:
+        case LANGUAGE_FRENCH:
             langFlag = 8;
             break;
-        case JAPANESE:
+        case LANGUAGE_JAPANESE:
             langFlag = 12;
             break;
     }

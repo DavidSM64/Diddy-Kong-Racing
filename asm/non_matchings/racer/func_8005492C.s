@@ -51,7 +51,7 @@ glabel func_8005492C
 /* 05558C 8005498C C7A20030 */  lwc1  $f2, 0x30($sp)
 /* 055590 80054990 28411C01 */  slti  $at, $v0, 0x1c01
 /* 055594 80054994 10200003 */  beqz  $at, .L800549A4
-/* 055598 80054998 3C048012 */   lui   $a0, %hi(D_8011D534) # $a0, 0x8012
+/* 055598 80054998 3C048012 */   lui   $a0, %hi(gCurrentStickX) # $a0, 0x8012
 /* 05559C 8005499C 2841E400 */  slti  $at, $v0, -0x1c00
 /* 0555A0 800549A0 10200002 */  beqz  $at, .L800549AC
 .L800549A4:
@@ -60,7 +60,7 @@ glabel func_8005492C
 .L800549AC:
 /* 0555AC 800549AC 3C028012 */  lui   $v0, %hi(gCurrentCarInput) # $v0, 0x8012
 /* 0555B0 800549B0 8C42D528 */  lw    $v0, %lo(gCurrentCarInput)($v0)
-/* 0555B4 800549B4 8C84D534 */  lw    $a0, %lo(D_8011D534)($a0)
+/* 0555B4 800549B4 8C84D534 */  lw    $a0, %lo(gCurrentStickX)($a0)
 /* 0555B8 800549B8 304F4000 */  andi  $t7, $v0, 0x4000
 /* 0555BC 800549BC 24030006 */  li    $v1, 6
 /* 0555C0 800549C0 11E00002 */  beqz  $t7, .L800549CC
@@ -350,9 +350,9 @@ glabel func_8005492C
 /* 0559E8 80054DE8 46208201 */  sub.d $f8, $f16, $f0
 /* 0559EC 80054DEC C4256810 */  lwc1  $f5, %lo(D_800E6810)($at)
 /* 0559F0 80054DF0 C4246814 */  lwc1  $f4, %lo(D_800E6810 + 4)($at)
-/* 0559F4 80054DF4 3C088012 */  lui   $t0, %hi(D_8011D538) # $t0, 0x8012
+/* 0559F4 80054DF4 3C088012 */  lui   $t0, %hi(gCurrentStickY) # $t0, 0x8012
 /* 0559F8 80054DF8 46244182 */  mul.d $f6, $f8, $f4
-/* 0559FC 80054DFC 8D08D538 */  lw    $t0, %lo(D_8011D538)($t0)
+/* 0559FC 80054DFC 8D08D538 */  lw    $t0, %lo(gCurrentStickY)($t0)
 /* 055A00 80054E00 3C028012 */  lui   $v0, %hi(gCurrentCarInput) # $v0, 0x8012
 /* 055A04 80054E04 2901FFE7 */  slti  $at, $t0, -0x19
 /* 055A08 80054E08 1020000D */  beqz  $at, .L80054E40

@@ -98,13 +98,13 @@ glabel func_800ADCBC
 /* 0AEA3C 800ADE3C 01B97021 */  addu  $t6, $t5, $t9
 /* 0AEA40 800ADE40 01CF4024 */  and   $t0, $t6, $t7
 /* 0AEA44 800ADE44 02288821 */  addu  $s1, $s1, $t0
-/* 0AEA48 800ADE48 0C01C1F1 */  jal   func_800707C4
+/* 0AEA48 800ADE48 0C01C1F1 */  jal   cosine_s
 /* 0AEA4C 800ADE4C AFA8009C */   sw    $t0, 0x9c($sp)
 /* 0AEA50 800ADE50 3C188012 */  lui   $t8, %hi(D_80127C1C) # $t8, 0x8012
 /* 0AEA54 800ADE54 8F187C1C */  lw    $t8, %lo(D_80127C1C)($t8)
 /* 0AEA58 800ADE58 00000000 */  nop   
 /* 0AEA5C 800ADE5C 87040004 */  lh    $a0, 4($t8)
-/* 0AEA60 800ADE60 0C01C1FE */  jal   func_800707F8
+/* 0AEA60 800ADE60 0C01C1FE */  jal   sine_s
 /* 0AEA64 800ADE64 E7A0007C */   swc1  $f0, 0x7c($sp)
 /* 0AEA68 800ADE68 3C01800E */  lui   $at, %hi(D_800E2A8C) # $at, 0x800e
 /* 0AEA6C 800ADE6C C42C2A8C */  lwc1  $f12, %lo(D_800E2A8C)($at)

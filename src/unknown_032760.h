@@ -82,7 +82,7 @@ typedef struct unk800DC964 {
 
 extern unk800DC950 **D_800DC950;
 
-f32 func_800707F8(s16); //?
+f32 sine_s(s16); //?
 
 void func_80031B60(void);
 void func_80032210(unk800DC950 *arg0);

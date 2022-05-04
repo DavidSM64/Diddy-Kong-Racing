@@ -352,7 +352,7 @@ glabel func_800A01A0
 /* 0A12CC 800A06CC 3C098012 */   lui   $t1, %hi(D_80126CD4) # $t1, 0x8012
 /* 0A12D0 800A06D0 24426D2C */  addiu $v0, %lo(D_80126D2C) # addiu $v0, $v0, 0x6d2c
 /* 0A12D4 800A06D4 84440000 */  lh    $a0, ($v0)
-/* 0A12D8 800A06D8 0C01C1F1 */  jal   func_800707C4
+/* 0A12D8 800A06D8 0C01C1F1 */  jal   cosine_s
 /* 0A12DC 800A06DC 00000000 */   nop   
 /* 0A12E0 800A06E0 3C048012 */  lui   $a0, %hi(D_80126D30) # $a0, 0x8012
 /* 0A12E4 800A06E4 24846D30 */  addiu $a0, %lo(D_80126D30) # addiu $a0, $a0, 0x6d30

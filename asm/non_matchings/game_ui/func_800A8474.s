@@ -1716,7 +1716,7 @@ glabel func_800A8474
 /* 0AA970 800A9D70 01A1001A */  div   $zero, $t5, $at
 /* 0AA974 800A9D74 00007012 */  mflo  $t6
 /* 0AA978 800A9D78 000EC400 */  sll   $t8, $t6, 0x10
-/* 0AA97C 800A9D7C 0C01C1FE */  jal   func_800707F8
+/* 0AA97C 800A9D7C 0C01C1FE */  jal   sine_s
 /* 0AA980 800A9D80 00182403 */   sra   $a0, $t8, 0x10
 /* 0AA984 800A9D84 8FB90158 */  lw    $t9, 0x158($sp)
 /* 0AA988 800A9D88 E7A00118 */  swc1  $f0, 0x118($sp)
@@ -1727,7 +1727,7 @@ glabel func_800A8474
 /* 0AA99C 800A9D9C 0181001A */  div   $zero, $t4, $at
 /* 0AA9A0 800A9DA0 00005812 */  mflo  $t3
 /* 0AA9A4 800A9DA4 000B5400 */  sll   $t2, $t3, 0x10
-/* 0AA9A8 800A9DA8 0C01C1F1 */  jal   func_800707C4
+/* 0AA9A8 800A9DA8 0C01C1F1 */  jal   cosine_s
 /* 0AA9AC 800A9DAC 000A2403 */   sra   $a0, $t2, 0x10
 /* 0AA9B0 800A9DB0 0C003936 */  jal   func_8000E4D8
 /* 0AA9B4 800A9DB4 E7A00114 */   swc1  $f0, 0x114($sp)

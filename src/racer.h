@@ -4,6 +4,14 @@
 #include "types.h"
 #include "structs.h"
 
+typedef enum ActivePlayers {
+    PLAYER_COMPUTER = -1,
+    PLAYER_ONE,
+    PLAYER_TWO,
+    PLAYER_THREE,
+    PLAYER_FOUR
+} ActivePlayers;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -126,7 +134,7 @@ extern s16 D_800DCDD4[4];
 
 extern ObjectTransform D_8011D510;
 
-extern s32 D_8011D534;
+extern s32 gCurrentStickX;
 
 s32 get_random_number_from_range(s32, s32); //?
 void func_8006FC30(Matrix, ObjectTransform *); // asm func
@@ -164,6 +172,7 @@ void func_8005A3B0(void);
 void func_8005A3C0(void);
 void func_8005A3D0(void);
 void antipiracy_modify_surface_traction_table(void);
+s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);

@@ -78,7 +78,7 @@ glabel func_80013DCC
 /* 014AD4 80013ED4 000E2403 */  sra   $a0, $t6, 0x10
 /* 014AD8 80013ED8 AFA30048 */  sw    $v1, 0x48($sp)
 /* 014ADC 80013EDC AFAB0054 */  sw    $t3, 0x54($sp)
-/* 014AE0 80013EE0 0C01C1FE */  jal   func_800707F8
+/* 014AE0 80013EE0 0C01C1FE */  jal   sine_s
 /* 014AE4 80013EE4 AFA90028 */   sw    $t1, 0x28($sp)
 /* 014AE8 80013EE8 3C01800E */  lui   $at, %hi(D_800E5580) # $at, 0x800e
 /* 014AEC 80013EEC C42A5580 */  lwc1  $f10, %lo(D_800E5580)($at)

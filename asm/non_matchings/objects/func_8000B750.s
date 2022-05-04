@@ -85,7 +85,7 @@ glabel func_8000B750
 /* 00C468 8000B868 00192403 */  sra   $a0, $t9, 0x10
 /* 00C46C 8000B86C AFAB004C */  sw    $t3, 0x4c($sp)
 /* 00C470 8000B870 AFAA0038 */  sw    $t2, 0x38($sp)
-/* 00C474 8000B874 0C01C1FE */  jal   func_800707F8
+/* 00C474 8000B874 0C01C1FE */  jal   sine_s
 /* 00C478 8000B878 AFA20044 */   sw    $v0, 0x44($sp)
 /* 00C47C 8000B87C 8FA20044 */  lw    $v0, 0x44($sp)
 /* 00C480 8000B880 8FAB004C */  lw    $t3, 0x4c($sp)

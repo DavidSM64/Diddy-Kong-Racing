@@ -908,8 +908,8 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, u8
         start_reading_controller_data(controllerIndex);
         return (controllerIndex << 30) | CONTROLLER_PAK_BAD_DATA;
     }
-    
-    if (get_language() == JAPANESE) {
+
+    if (get_language() == LANGUAGE_JAPANESE) {
         gameCode = JPN_GAME_CODE;
     } else if (osTvType == TV_TYPE_PAL) {
         gameCode = PAL_GAME_CODE;
@@ -1099,7 +1099,7 @@ SIDeviceStatus get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s
     string_to_font_codes(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
     string_to_font_codes(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
 
-    if (get_language() == JAPANESE) {
+    if (get_language() == LANGUAGE_JAPANESE) {
         gameCode = JPN_GAME_CODE;
     } else if (osTvType == TV_TYPE_PAL) {
         gameCode = PAL_GAME_CODE;
@@ -1176,7 +1176,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8
     string_to_font_codes(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
     string_to_font_codes(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
 
-    if (get_language() == JAPANESE) {
+    if (get_language() == LANGUAGE_JAPANESE) {
         game_code = JPN_GAME_CODE;
     } else if (osTvType == TV_TYPE_PAL) {
         game_code = PAL_GAME_CODE;

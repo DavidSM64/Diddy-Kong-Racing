@@ -115,29 +115,29 @@ s32 is_drumstick_unlocked(void) {
 
 As of April 29th, 2022, this is our current score:
 ```
- =================================================================== 
-               ADVENTURE ONE (ASM -> C Decompilation)                
- ------------------------- 23.32% Complete ------------------------- 
-                    # Decompiled functions: 1124                     
-                     # GLOBAL_ASM remaining: 656                     
-                     # NON_MATCHING functions: 8                     
-                 # NON_EQUIVALENT WIP functions: 107                 
- --------------------------- Game Status --------------------------- 
-              Balloons: 12/47, Keys: 1/4, Trophies: 0/5              
-               T.T. Amulets: 1/4, Wizpig Amulets: 1/4                
- ------------------------------------------------------------------- 
- We are participating in the Trophy Race of Dino Domain. (Round Two) 
- =================================================================== 
-                ADVENTURE TWO (Cleanup & Documentation)              
- -------------------------  2.99% Complete ------------------------- 
-                     # Documented functions: 147                     
-                   # Undocumented remaining: 1633                    
- --------------------------- Game Status --------------------------- 
-              Balloons: 1/47, Keys: 0/4, Trophies: 0/5               
-               T.T. Amulets: 0/4, Wizpig Amulets: 0/4                
- ------------------------------------------------------------------- 
-      We are collecting the second balloon on Timber's Island.       
- =================================================================== 
+ =====================================================================
+                ADVENTURE ONE (ASM -> C Decompilation)
+ -------------------------- 23.68% Complete --------------------------
+                     # Decompiled functions: 1131
+                      # GLOBAL_ASM remaining: 648
+                      # NON_MATCHING functions: 8
+                  # NON_EQUIVALENT WIP functions: 104
+ ---------------------------- Game Status ----------------------------
+               Balloons: 12/47, Keys: 1/4, Trophies: 0/5
+                T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+ ---------------------------------------------------------------------
+ We are participating in the Trophy Race of Dino Domain. (Round Three)
+ =====================================================================
+                 ADVENTURE TWO (Cleanup & Documentation)
+ --------------------------  2.99% Complete --------------------------
+                      # Documented functions: 147
+                    # Undocumented remaining: 1632
+ ---------------------------- Game Status ----------------------------
+               Balloons: 1/47, Keys: 0/4, Trophies: 0/5
+                T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ ---------------------------------------------------------------------
+       We are collecting the second balloon on Timber's Island.
+ =====================================================================
 ```
 
 ---

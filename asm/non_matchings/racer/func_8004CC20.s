@@ -53,16 +53,16 @@ glabel func_8004CC20
 /* 04D8B4 8004CCB4 3C018012 */  lui   $at, %hi(D_8011D558) # $at, 0x8012
 /* 04D8B8 8004CCB8 AC20D558 */  sw    $zero, %lo(D_8011D558)($at)
 /* 04D8BC 8004CCBC C624000C */  lwc1  $f4, 0xc($s1)
-/* 04D8C0 8004CCC0 3C188012 */  lui   $t8, %hi(D_8011D534) # $t8, 0x8012
+/* 04D8C0 8004CCC0 3C188012 */  lui   $t8, %hi(gCurrentStickX) # $t8, 0x8012
 /* 04D8C4 8004CCC4 E7A400B8 */  swc1  $f4, 0xb8($sp)
 /* 04D8C8 8004CCC8 C6260010 */  lwc1  $f6, 0x10($s1)
-/* 04D8CC 8004CCCC 8F18D534 */  lw    $t8, %lo(D_8011D534)($t8)
+/* 04D8CC 8004CCCC 8F18D534 */  lw    $t8, %lo(gCurrentStickX)($t8)
 /* 04D8D0 8004CCD0 E7A600B4 */  swc1  $f6, 0xb4($sp)
 /* 04D8D4 8004CCD4 C6280014 */  lwc1  $f8, 0x14($s1)
 /* 04D8D8 8004CCD8 8FA800D8 */  lw    $t0, 0xd8($sp)
 /* 04D8DC 8004CCDC E7A800B0 */  swc1  $f8, 0xb0($sp)
 /* 04D8E0 8004CCE0 820401E1 */  lb    $a0, 0x1e1($s0)
-/* 04D8E4 8004CCE4 3C0C8012 */  lui   $t4, %hi(D_8011D538) # $t4, 0x8012
+/* 04D8E4 8004CCE4 3C0C8012 */  lui   $t4, %hi(gCurrentStickY) # $t4, 0x8012
 /* 04D8E8 8004CCE8 03041823 */  subu  $v1, $t8, $a0
 /* 04D8EC 8004CCEC 00680019 */  multu $v1, $t0
 /* 04D8F0 8004CCF0 02002825 */  move  $a1, $s0
@@ -83,7 +83,7 @@ glabel func_8004CC20
 /* 04D924 8004CD24 00865821 */  addu  $t3, $a0, $a2
 .L8004CD28:
 /* 04D928 8004CD28 A20B01E1 */  sb    $t3, 0x1e1($s0)
-/* 04D92C 8004CD2C 8D8CD538 */  lw    $t4, %lo(D_8011D538)($t4)
+/* 04D92C 8004CD2C 8D8CD538 */  lw    $t4, %lo(gCurrentStickY)($t4)
 /* 04D930 8004CD30 820701E8 */  lb    $a3, 0x1e8($s0)
 /* 04D934 8004CD34 02202025 */  move  $a0, $s1
 /* 04D938 8004CD38 01871823 */  subu  $v1, $t4, $a3

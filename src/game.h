@@ -13,7 +13,7 @@ enum RenderContext {
     DRAW_UNK_02,
     DRAW_UNK_03,
     DRAW_UNK_04,
-    DRAW_CRASH_SCREEN,
+    DRAW_CRASH_SCREEN
 };
 
 /* Size: 6 bytes */
@@ -31,26 +31,6 @@ enum NumberOfPlayers {
     TWO_PLAYERS   = 1,
     THREE_PLAYERS = 2,
     FOUR_PLAYERS  = 3
-};
-
-enum Vehicle {
-    VEHICLE_CAR,
-    VEHICLE_HOVERCRAFT,
-    VEHICLE_PLANE,
-
-    NUMBER_OF_VEHICLE_TYPES,
-};
-
-enum RaceType {
-    RACE_TYPE_DEFAULT = 0,
-    RACE_TYPE_HUB_AREA = 5,
-    RACE_TYPE_CUTSCENE_1 = 6,
-    RACE_TYPE_CUTSCENE_2 = 7,
-    RACE_TYPE_BOSS = 8,
-    RACE_TYPE_CHALLENGE = 0x40, // For masking
-    RACE_TYPE_CHALLENGE_BATTLE = 0x40,
-    RACE_TYPE_CHALLENGE_BANANAS = 0x41,
-    RACE_TYPE_CHALLENGE_EGGS = 0x42
 };
 
 extern s8 *D_800DD310;

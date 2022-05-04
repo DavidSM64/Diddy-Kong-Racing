@@ -130,8 +130,8 @@ glabel func_8004F7F4
 /* 050594 8004F994 10400068 */  beqz  $v0, .L8004FB38
 /* 050598 8004F998 00000000 */   nop   
 /* 05059C 8004F99C 04410013 */  bgez  $v0, .L8004F9EC
-/* 0505A0 8004F9A0 3C068012 */   lui   $a2, %hi(D_8011D534) # $a2, 0x8012
-/* 0505A4 8004F9A4 24C6D534 */  addiu $a2, %lo(D_8011D534) # addiu $a2, $a2, -0x2acc
+/* 0505A0 8004F9A0 3C068012 */   lui   $a2, %hi(gCurrentStickX) # $a2, 0x8012
+/* 0505A4 8004F9A4 24C6D534 */  addiu $a2, %lo(gCurrentStickX) # addiu $a2, $a2, -0x2acc
 /* 0505A8 8004F9A8 8CC90000 */  lw    $t1, ($a2)
 /* 0505AC 8004F9AC 8FAB00C0 */  lw    $t3, 0xc0($sp)
 /* 0505B0 8004F9B0 2921001A */  slti  $at, $t1, 0x1a
@@ -150,9 +150,9 @@ glabel func_8004F7F4
 /* 0505E4 8004F9E4 10000019 */  b     .L8004FA4C
 /* 0505E8 8004F9E8 44825000 */   mtc1  $v0, $f10
 .L8004F9EC:
-/* 0505EC 8004F9EC 3C068012 */  lui   $a2, %hi(D_8011D534) # $a2, 0x8012
+/* 0505EC 8004F9EC 3C068012 */  lui   $a2, %hi(gCurrentStickX) # $a2, 0x8012
 /* 0505F0 8004F9F0 18400012 */  blez  $v0, .L8004FA3C
-/* 0505F4 8004F9F4 24C6D534 */   addiu $a2, %lo(D_8011D534) # addiu $a2, $a2, -0x2acc
+/* 0505F4 8004F9F4 24C6D534 */   addiu $a2, %lo(gCurrentStickX) # addiu $a2, $a2, -0x2acc
 /* 0505F8 8004F9F8 8CCD0000 */  lw    $t5, ($a2)
 /* 0505FC 8004F9FC 8FAF00C0 */  lw    $t7, 0xc0($sp)
 /* 050600 8004FA00 29A1FFE7 */  slti  $at, $t5, -0x19
@@ -200,9 +200,9 @@ glabel func_8004F7F4
 /* 050698 8004FA98 0C015C12 */  jal   func_80057048
 /* 05069C 8004FA9C 2405001C */   li    $a1, 28
 /* 0506A0 8004FAA0 821901E6 */  lb    $t9, 0x1e6($s0)
-/* 0506A4 8004FAA4 3C068012 */  lui   $a2, %hi(D_8011D534) # $a2, 0x8012
+/* 0506A4 8004FAA4 3C068012 */  lui   $a2, %hi(gCurrentStickX) # $a2, 0x8012
 /* 0506A8 8004FAA8 00194023 */  negu  $t0, $t9
-/* 0506AC 8004FAAC 24C6D534 */  addiu $a2, %lo(D_8011D534) # addiu $a2, $a2, -0x2acc
+/* 0506AC 8004FAAC 24C6D534 */  addiu $a2, %lo(gCurrentStickX) # addiu $a2, $a2, -0x2acc
 /* 0506B0 8004FAB0 A20801DB */  sb    $t0, 0x1db($s0)
 /* 0506B4 8004FAB4 A20001E6 */  sb    $zero, 0x1e6($s0)
 .L8004FAB8:

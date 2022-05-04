@@ -9,7 +9,7 @@ glabel func_8005A424
 /* 05B040 8005A440 C4EE0008 */  lwc1  $f14, 8($a3)
 /* 05B044 8005A444 C4EC0000 */  lwc1  $f12, ($a3)
 /* 05B048 8005A448 AFA40020 */  sw    $a0, 0x20($sp)
-/* 05B04C 8005A44C 0C01C1D4 */  jal   func_80070750
+/* 05B04C 8005A44C 0C01C1D4 */  jal   arctan2_f
 /* 05B050 8005A450 AFA7001C */   sw    $a3, 0x1c($sp)
 /* 05B054 8005A454 8FA60020 */  lw    $a2, 0x20($sp)
 /* 05B058 8005A458 3058FFFF */  andi  $t8, $v0, 0xffff
@@ -31,9 +31,9 @@ glabel func_8005A424
 /* 05B094 8005A494 3401FFFF */  li    $at, 65535
 /* 05B098 8005A498 00611821 */  addu  $v1, $v1, $at
 .L8005A49C:
-/* 05B09C 8005A49C 3C058012 */  lui   $a1, %hi(D_8011D534) # $a1, 0x8012
+/* 05B09C 8005A49C 3C058012 */  lui   $a1, %hi(gCurrentStickX) # $a1, 0x8012
 /* 05B0A0 8005A4A0 00031823 */  negu  $v1, $v1
-/* 05B0A4 8005A4A4 24A5D534 */  addiu $a1, %lo(D_8011D534) # addiu $a1, $a1, -0x2acc
+/* 05B0A4 8005A4A4 24A5D534 */  addiu $a1, %lo(gCurrentStickX) # addiu $a1, $a1, -0x2acc
 /* 05B0A8 8005A4A8 00035943 */  sra   $t3, $v1, 5
 /* 05B0AC 8005A4AC ACAB0000 */  sw    $t3, ($a1)
 /* 05B0B0 8005A4B0 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
@@ -42,8 +42,8 @@ glabel func_8005A424
 /* 05B0BC 8005A4BC AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
 /* 05B0C0 8005A4C0 2484D528 */  addiu $a0, %lo(gCurrentCarInput) # addiu $a0, $a0, -0x2ad8
 /* 05B0C4 8005A4C4 AC800000 */  sw    $zero, ($a0)
-/* 05B0C8 8005A4C8 3C018012 */  lui   $at, %hi(D_8011D538) # $at, 0x8012
-/* 05B0CC 8005A4CC AC20D538 */  sw    $zero, %lo(D_8011D538)($at)
+/* 05B0C8 8005A4C8 3C018012 */  lui   $at, %hi(gCurrentStickY) # $at, 0x8012
+/* 05B0CC 8005A4CC AC20D538 */  sw    $zero, %lo(gCurrentStickY)($at)
 /* 05B0D0 8005A4D0 C4C4002C */  lwc1  $f4, 0x2c($a2)
 /* 05B0D4 8005A4D4 3C01C010 */  li    $at, 0xC0100000 # -2.250000
 /* 05B0D8 8005A4D8 44813800 */  mtc1  $at, $f7

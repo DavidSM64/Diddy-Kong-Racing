@@ -4,6 +4,7 @@
 /* Note: Structs are not complete, take them with a grain of salt. */
 
 #include "types.h"
+#include "enums.h"
 
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
@@ -876,7 +877,7 @@ typedef struct Object_Racer {
   /* 0x118 */ s32 unk118;
   /* 0x11C */ s32 unk11C;
   /* 0x120 */ s32 unk120;
-  /* 0x124 */ s32 unk124;
+  /* 0x124 */ f32 unk124;
   /* 0x128 */ u32 lap_times[3];
   /* 0x134 */ s32 unk134;
   /* 0x138 */ s32 unk138;
@@ -889,13 +890,13 @@ typedef struct Object_Racer {
   /* 0x154 */ struct Object *unk154;
   /* 0x158 */ s32 unk158;
   /* 0x15C */ s32 unk15C;
-  /* 0x160 */ s16 unk160;
-  /* 0x162 */ s16 unk162;
-  /* 0x164 */ s16 unk164;
-  /* 0x166 */ s16 unk166;
+  /* 0x160 */ s16 y_rotation_offset;
+  /* 0x162 */ s16 x_rotation_offset;
+  /* 0x164 */ s16 z_rotation_offset;
+  /* 0x166 */ s16 unk166; // I don't know exactly what these are, but this one in particular seems to cause a Y position offset.
   /* 0x168 */ s16 unk168;
   /* 0x16A */ s16 unk16A;
-  /* 0x166 */ s16 unk16C;
+  /* 0x166 */ s16 unk16C; // As for these, they seem to affect the turning direction of the racer's head.
   /* 0x16E */ s16 unk16E;
   /* 0x170 */ s16 unk170;
   /* 0x172 */ u8 balloon_type;
@@ -915,7 +916,7 @@ typedef struct Object_Racer {
   /* 0x18E */ s16 unk18E;
   /* 0x190 */ u16 unk190;
   /* 0x192 */ u8 unk192;
-  /* 0x193 */ u8 unk193;
+  /* 0x193 */ s8 unk193;
   /* 0x194 */ s8 unk194;
   /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;
@@ -942,10 +943,10 @@ typedef struct Object_Racer {
   /* 0x1C9 */ u8 unk1C9;
   /* 0x1CA */ s8 unk1CA;
   /* 0x1CB */ u8 unk1CB;
-  /* 0x1CC */ u8 unk1CC;
+  /* 0x1CC */ s8 unk1CC;
   /* 0x1CD */ u8 unk1CD;
   /* 0x1CE */ u8 unk1CE;
-  /* 0x1CF */ u8 unk1CF;
+  /* 0x1CF */ s8 unk1CF;
   /* 0x1D0 */ u8 unk1D0;
   /* 0x1D1 */ u8 unk1D1;
   /* 0x1D2 */ u8 unk1D2;
