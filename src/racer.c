@@ -672,13 +672,13 @@ void func_80050754(Object *obj, Object_Racer *racer, f32 arg2) {
  * Applies visual rotational offets to vehicles.
  * Examples include planes when on the ground, or when crashing, or hovercraft when braking.
  */
-void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 xRotation, s16 yRotation, s16 zRotation) {
+void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation) {
     s32 diff;
     s32 tempAngle;
 
     if (!obj->unk1F1) {
-        tempAngle = xRotation - (obj->x_rotation_offset & 0xFFFF);
-        obj->unk166 = yRotation;
+        tempAngle = yRotation - (obj->y_rotation_offset & 0xFFFF);
+        obj->unk166 = xRotation;
         if (tempAngle > 0x8000) {
             tempAngle +=  0xFFFF0001;
         }
@@ -690,15 +690,15 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 xRotation, s1
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->x_rotation_offset +=  tempAngle;
+            obj->y_rotation_offset +=  tempAngle;
         } else if (tempAngle < 0) {
             diff = -(max * 0x600);
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->x_rotation_offset += tempAngle;
+            obj->y_rotation_offset += tempAngle;
         }
-        tempAngle = yRotation - (obj->y_rotation_offset & 0xFFFF);
+        tempAngle = xRotation - (obj->x_rotation_offset & 0xFFFF);
         if (tempAngle > 0x8000) {
             tempAngle = tempAngle + 0xFFFF0001;
         }
@@ -710,13 +710,13 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 xRotation, s1
             if (diff < tempAngle) {
                 tempAngle = diff;
             }
-            obj->y_rotation_offset += tempAngle;
+            obj->x_rotation_offset += tempAngle;
         } else if (tempAngle < 0) {
             diff = -(max * 0x600);
             if (tempAngle < diff) {
                 tempAngle = diff;
             }
-            obj->y_rotation_offset += tempAngle;
+            obj->x_rotation_offset += tempAngle;
         }
         tempAngle = zRotation - (obj->z_rotation_offset & 0xFFFF);
         if (tempAngle > 0x8000) {
@@ -1072,7 +1072,7 @@ f32 func_80057220(Object* arg0, Object_Racer* arg1) {
     if (D_8011D540);
     if ((D_8011D540 > 0) && (D_8011D540 < 30) && (!arg1->unk1F4)) {
         temp_v1 = D_8011D540 - 14;
-        if ((gActivePlayerButtonPress & 0x8000) != 0) {
+        if (gActivePlayerButtonPress & A_BUTTON) {
             if ((temp_v1 < 0) && (sp28 >= 0)) {
                 temp_v1 = 0;
             }
@@ -1080,7 +1080,7 @@ f32 func_80057220(Object* arg0, Object_Racer* arg1) {
                 temp_v1 = -temp_v1;
             }
 
-            if ((gCurrentCarInput & 0x2000)) {
+            if ((gCurrentCarInput & Z_TRIG)) {
                 if (temp_v1 < 2) {
                     temp_v1 = 0;
                 }
@@ -1121,14 +1121,14 @@ f32 func_80057220(Object* arg0, Object_Racer* arg1) {
     if (arg1->unk1D3 && !D_8011D540 && sp28 && !arg1->unk1D8) {
          func_80072348(arg1->playerIndex, 6);
     }
-    if ((D_8011D540 < 80) && ((gActivePlayerButtonPress & 0x8000))) {
+    if ((D_8011D540 < 80) && gActivePlayerButtonPress & A_BUTTON) {
         arg1->unk1F4 = 1U;
     }
     if (D_8011D540 == 0) {
         if ((arg1->boost_sound & 1) != 0) {
             arg1->boost_sound = (u8) (arg1->boost_sound & 0xFFFE);
-            func_800570B8(arg0, 0x162, 8, 0x82);
-            func_80057048(arg0, 0x21);
+            func_800570B8(arg0, 354, 8, 130);
+            func_80057048(arg0, 33);
         }
     }
     if ((arg1->boost_sound & 2) != 0) {

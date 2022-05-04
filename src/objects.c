@@ -50,7 +50,7 @@ s32 D_800DC760 = 9; // Currently unknown, might be a different type.
 Object *D_800DC764 = NULL; // Currently unknown, might be a different type.
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
-f32 D_800DC76C[15] = { 
+f32 D_800DC76C[15] = {
     1.0f, 0.70711f, 0.70711f, 1.0f,
     0.0f, 0.70711f, -0.70711f, 0.0f,
     -1.0f, -0.70711f, -0.70711f, -1.0f,
@@ -768,11 +768,11 @@ s32 func_8000FAC4(Object *obj, s32 arg1) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
             func_800AF1E0(&obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
         } else {
-            func_800AF29C(&obj->unk6C[i], 
-                (particleDataEntry[i].upper >> 0x18) & 0xFF, 
-                (particleDataEntry[i].upper >> 0x10) & 0xFF, 
-                particleDataEntry[i].upper & 0xFFFF, 
-                (particleDataEntry[i].lower >> 0x10) & 0xFFFF, 
+            func_800AF29C(&obj->unk6C[i],
+                (particleDataEntry[i].upper >> 0x18) & 0xFF,
+                (particleDataEntry[i].upper >> 0x10) & 0xFF,
+                particleDataEntry[i].upper & 0xFFFF,
+                (particleDataEntry[i].lower >> 0x10) & 0xFFFF,
                 particleDataEntry[i].lower & 0xFFFF
             );
         }
@@ -990,15 +990,15 @@ void func_80012E28(Object *this) {
     if (this->behaviorId == 1) {
 
         sp_20 = &this->unk64->racer;
-        this->segment.trans.y_rotation += sp_20->x_rotation_offset;
-        this->segment.trans.x_rotation += sp_20->y_rotation_offset;
+        this->segment.trans.y_rotation += sp_20->y_rotation_offset;
+        this->segment.trans.x_rotation += sp_20->x_rotation_offset;
         this->segment.trans.z_rotation += sp_20->z_rotation_offset;
         sp_1c = 0.0f;
         if (sp_20->unk1D7 < 5) {
 
             sp_1c = sine_s(sp_20->z_rotation_offset);
             tmp_f2 = sp_1c;
-            tmp_f0 = sine_s(sp_20->y_rotation_offset - sp_20->unk166) * tmp_f2;
+            tmp_f0 = sine_s(sp_20->x_rotation_offset - sp_20->unk166) * tmp_f2;
 
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
@@ -1014,8 +1014,8 @@ void func_80012E28(Object *this) {
 void func_80012F30(Object *arg0) {
     if (arg0->behaviorId == 1) {
         Object_Racer *object_64 = &arg0->unk64->racer;
-        arg0->segment.trans.y_rotation -= object_64->x_rotation_offset;
-        arg0->segment.trans.x_rotation -= object_64->y_rotation_offset;
+        arg0->segment.trans.y_rotation -= object_64->y_rotation_offset;
+        arg0->segment.trans.x_rotation -= object_64->x_rotation_offset;
         arg0->segment.trans.z_rotation -= object_64->z_rotation_offset;
         arg0->segment.trans.y_position -= D_8011ADD0;
     }
@@ -1088,7 +1088,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80017248.s")
 unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
     unk800179D0 *entry;
     s16 i;
-    
+
     for(i = 0; i < 16; i++) {
         entry = &D_8011AFF4[i];
         if (entry->unk0 != 0 && entry->unk04 == arg0 && entry->unk08 == arg1) {
@@ -1102,7 +1102,7 @@ unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
 unk800179D0 *func_80017978(s32 arg0, s32 arg1) {
     unk800179D0 *entry;
     s16 i;
-    
+
     for(i = 0; i < 16; i++) {
         entry = &D_8011AFF4[i];
         if (entry->unk0 == 0) {
@@ -1505,14 +1505,14 @@ s32 func_8001F3EC(s32 arg0){
     if (D_8011AE78 == 0) {
         return -1;
     }
-    
+
     count = 0;
     for (i = 0; i < D_8011AE78; i++) {
         if (D_8011AE74[i]->unk7C.word == arg0){
             count++;
         }
     }
-    
+
     return count;
 }
 
