@@ -211,7 +211,7 @@ typedef struct Object80033F60_4C_64 {
 s32 func_80011560(void);
 void func_80011570(Object*, f32, f32, f32);
 void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
-s16 atan2f(f32, f32);
+s16 arctan2_f(f32, f32);
 s32 func_8002AD08(f32, f32**, s32);
 void func_80001D04(u16, s32 *);               
 void func_8000488C(s32);                                                     
@@ -268,7 +268,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         }
         obj->segment.z_velocity += (phi_f2 - obj->segment.z_velocity) * 0.125 * sp7C;
         if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5) {
-            obj->segment.trans.y_rotation = atan2f(obj->segment.x_velocity, obj->segment.z_velocity);
+            obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
             obj->segment.trans.x_rotation -= speed << 9;
         }
         func_80011570(obj, obj->segment.x_velocity * sp7C, obj->segment.y_velocity * sp7C, obj->segment.z_velocity * sp7C);

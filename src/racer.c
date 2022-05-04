@@ -818,7 +818,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
     diffX = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
     diffZ = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
     if ((diffX * diffX) + (diffZ * diffZ) < distance) {
-        rotation = (atan2f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        rotation = (arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (rotation > 0x8000) {
             rotation += 0xFFFF0001;
         }
@@ -836,7 +836,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
             arg1->unk16C = 0;
         }
         arg1 = (struct Object_Racer *) obj2->unk64;
-        rotation = atan2f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
+        rotation = arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
         if (rotation > 0x8000) {
             rotation += 0xFFFF0001;
         }

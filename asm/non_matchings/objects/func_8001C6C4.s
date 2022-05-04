@@ -245,7 +245,7 @@ glabel func_8001C6C4
 /* 01D638 8001CA38 4500003C */  bc1f  .L8001CB2C
 /* 01D63C 8001CA3C 8FAB00EC */   lw    $t3, 0xec($sp)
 /* 01D640 8001CA40 4600B306 */  mov.s $f12, $f22
-/* 01D644 8001CA44 0C01C1D4 */  jal   atan2f
+/* 01D644 8001CA44 0C01C1D4 */  jal   arctan2_f
 /* 01D648 8001CA48 4600D386 */   mov.s $f14, $f26
 /* 01D64C 8001CA4C 8FA800EC */  lw    $t0, 0xec($sp)
 /* 01D650 8001CA50 24018000 */  li    $at, -32768
@@ -281,7 +281,7 @@ glabel func_8001C6C4
 /* 01D6C0 8001CAC0 00005812 */  mflo  $t3
 /* 01D6C4 8001CAC4 000B6103 */  sra   $t4, $t3, 4
 /* 01D6C8 8001CAC8 006C6821 */  addu  $t5, $v1, $t4
-/* 01D6CC 8001CACC 0C01C1D4 */  jal   atan2f
+/* 01D6CC 8001CACC 0C01C1D4 */  jal   arctan2_f
 /* 01D6D0 8001CAD0 A5CD0000 */   sh    $t5, ($t6)
 /* 01D6D4 8001CAD4 8FAF00EC */  lw    $t7, 0xec($sp)
 /* 01D6D8 8001CAD8 00000000 */  nop   

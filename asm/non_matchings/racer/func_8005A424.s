@@ -9,7 +9,7 @@ glabel func_8005A424
 /* 05B040 8005A440 C4EE0008 */  lwc1  $f14, 8($a3)
 /* 05B044 8005A444 C4EC0000 */  lwc1  $f12, ($a3)
 /* 05B048 8005A448 AFA40020 */  sw    $a0, 0x20($sp)
-/* 05B04C 8005A44C 0C01C1D4 */  jal   atan2f
+/* 05B04C 8005A44C 0C01C1D4 */  jal   arctan2_f
 /* 05B050 8005A450 AFA7001C */   sw    $a3, 0x1c($sp)
 /* 05B054 8005A454 8FA60020 */  lw    $a2, 0x20($sp)
 /* 05B058 8005A458 3058FFFF */  andi  $t8, $v0, 0xffff
