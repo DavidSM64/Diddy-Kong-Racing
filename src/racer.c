@@ -1250,7 +1250,34 @@ void func_80058B84(f32 arg0, Object* obj, Object_Racer* arg2) {
     arg2->unk196 = gCameraObject->trans.y_rotation;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80058D5C.s")
+void func_80058D5C(f32 arg0, Object *arg1, Object_Racer *arg2) {
+    s32 sp34;
+    Object *tempObj;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    f32 distance;
+
+    sp34 = arg2->unk1D0;
+    tempObj = func_8001BDD4(arg1, &sp34);
+    if (!tempObj) {
+        gCameraObject->unk36 = 5;
+        return;
+    }
+    arg2->unk1D0 = sp34;
+    gCameraObject->trans.x_position = tempObj->segment.trans.x_position;
+    gCameraObject->trans.y_position = tempObj->segment.trans.y_position;
+    gCameraObject->trans.z_position = tempObj->segment.trans.z_position;
+    xDiff = gCameraObject->trans.x_position - arg1->segment.trans.x_position;
+    yDiff = gCameraObject->trans.y_position - arg1->segment.trans.y_position;
+    zDiff = gCameraObject->trans.z_position - arg1->segment.trans.z_position;
+    distance = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+    gCameraObject->trans.y_rotation = (s16) (0x8000 - func_8007066C((s32) xDiff, (s32) zDiff));
+    gCameraObject->trans.x_rotation = func_8007066C((s32) yDiff, (s32) distance);
+    gCameraObject->trans.z_rotation = 0;
+    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, arg2->oy1, gCameraObject->trans.z_position);
+    if (1);
+}
 
 void func_80058F44(f32 arg0, struct Object *arg1, struct Object *arg2)
 {
