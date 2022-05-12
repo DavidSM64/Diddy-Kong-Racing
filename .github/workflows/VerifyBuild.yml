@@ -1,0 +1,32 @@
+name: Verify Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    
+    - name: Install packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential pkg-config git python3 libssl-dev wget libcapstone-dev
+        
+    - name: Get ROM
+      run: wget -q -O baseroms/dkr.z64 ${{secrets.ROMURL}}
+      
+    - name: Build ROM
+      run: make
+      
+    - name: Verify Build
+      run: if [[ $(sha1sum -c --quiet sha1/dkr.us_1.0.sha1) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
