@@ -20,10 +20,32 @@ jobs:
     - name: Install packages
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential pkg-config git python3 libssl-dev wget libcapstone-dev
+        sudo apt-get install -y build-essential pkg-config git python3 libssl-dev wget libcapstone-dev binutils-mips-linux-gnu
         
     - name: Get ROM
       run: wget -q -O baseroms/dkr.z64 ${{secrets.ROMURL}}
+
+    - name: Verify ROM
+      run: if [[ $(echo "0cb115d8716dbbc2922fda38e533b9fe63bb9670 baseroms/dkr.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+    - name: Build Recomp
+      run: |
+        cd tools/ido-static-recomp/
+        python3 build.py ido/5.3 -O2
+        cp build5.3/out/usr/bin/cc build5.3/out/cc
+        cp build5.3/out/usr/lib/* build5.3/out/
+        cd ../../
+
+    - name: Build Tools
+      run: |
+        cd tools
+        make
+        cd ..
+
+    - name: Extract Assets
+      run: |
+        ./extract.sh
+        python3 tools/python/check_if_need_to_extract.py us_1.0
       
     - name: Build ROM
       run: make
