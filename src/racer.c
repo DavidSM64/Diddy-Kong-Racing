@@ -411,7 +411,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
         if (phi_v0 >= 0x4A) {
             phi_v0 = 0x49;
         }
-        temp_v1 = phi_v0 - planeObj->segment.unk18;
+        temp_v1 = phi_v0 - planeObj->segment.unk18.half.upper;
         phi_v0 = 0;
         if (temp_v1 > 0) {
             phi_v0 = arg0 * 3;
@@ -425,7 +425,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
                 phi_v0 = temp_v1;
             }
         }
-        planeObj->segment.unk18 += phi_v0;
+        planeObj->segment.unk18.half.upper += phi_v0;
     }
 }
 
@@ -490,7 +490,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
     if ((func_8002341C() != 0) && (obj64->unk1D6 == 0xA)) {
         obj->unk4C->unk14 = 0;
     }
-    sp26 = obj->segment.unk18;
+    sp26 = obj->segment.unk18.half.upper;
     obj64->unk1D6 = 0xA;
     func_80049794(arg0, arg1, obj, obj64);
     obj64->unk1D6 = obj64->unk1D7;
@@ -505,7 +505,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
             obj64->unk154->segment.trans.x_rotation = obj->segment.trans.x_rotation;
             obj64->unk154->segment.trans.z_rotation = obj->segment.trans.z_rotation;
             obj->segment.unk3B = 0;
-            obj->segment.unk18 = sp26 + arg0;
+            obj->segment.unk18.half.upper = sp26 + arg0;
             func_80061C0C(obj);
         }
     }
@@ -650,7 +650,7 @@ void func_80050754(Object *obj, Object_Racer *racer, f32 arg2) {
     f32 diffZ;
 
     obj->segment.unk3B = 0;
-    obj->segment.unk18 = 40;
+    obj->segment.unk18.half.upper = 40;
     diffX = racer->unk148->segment.trans.x_position - obj->segment.trans.x_position;
     diffY = racer->unk148->segment.trans.y_position - obj->segment.trans.y_position;
     diffZ = racer->unk148->segment.trans.z_position - obj->segment.trans.z_position;
@@ -869,54 +869,54 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 d
         arg1->unk1F2 = 0;
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
-            if (arg0->segment.unk18 >= 41) {
-                arg0->segment.unk18 -= arg7 * 4;
-                if (arg0->segment.unk18 < 41) {
+            if (arg0->segment.unk18.half.upper >= 41) {
+                arg0->segment.unk18.half.upper -= arg7 * 4;
+                if (arg0->segment.unk18.half.upper < 41) {
                     arg0->segment.unk3B = action;
-                    arg0->segment.unk18 = arg3;
+                    arg0->segment.unk18.half.upper = arg3;
                 }
             } else {
-                arg0->segment.unk18 += arg7 * 4;
-                if (arg0->segment.unk18 >= 40) {
+                arg0->segment.unk18.half.upper += arg7 * 4;
+                if (arg0->segment.unk18.half.upper >= 40) {
                     arg0->segment.unk3B = action;
-                    arg0->segment.unk18 = arg3;
+                    arg0->segment.unk18.half.upper = arg3;
                 }
             }
         } else {
             arg0->segment.unk3B = action;
-            arg0->segment.unk18 = arg3;
+            arg0->segment.unk18.half.upper = arg3;
             arg1->unk1F3 &= ~0x80;
         }
     } else if (arg0->segment.unk3B == action) {
         if (arg6 & 2) {
             if (arg1->unk1F3 & 0x80) {
-                arg0->segment.unk18 -= arg5;
-                if (arg0->segment.unk18 <= 0) {
+                arg0->segment.unk18.half.upper -= arg5;
+                if (arg0->segment.unk18.half.upper <= 0) {
                     arg0->segment.unk3B = 0;
                     arg1->unk1F2 = 0;
-                    arg0->segment.unk18 = 40;
+                    arg0->segment.unk18.half.upper = 40;
                     arg1->unk1F3 = 0;
                 }
             } else {
-                arg0->segment.unk18 += arg5;
-                if (arg0->segment.unk18 >= duration) {
-                    arg0->segment.unk18 = duration - 1;
+                arg0->segment.unk18.half.upper += arg5;
+                if (arg0->segment.unk18.half.upper >= duration) {
+                    arg0->segment.unk18.half.upper = duration - 1;
                     if ((arg6 & 4) == 0) {
                         arg1->unk1F3 |= 0x80;
                     }
                 }
             }
         } else {
-            arg0->segment.unk18 += arg5;
-            if (arg0->segment.unk18 >= duration) {
+            arg0->segment.unk18.half.upper += arg5;
+            if (arg0->segment.unk18.half.upper >= duration) {
                 arg0->segment.unk3B = 0;
                 arg1->unk1F2 = 0;
-                arg0->segment.unk18 = 40;
+                arg0->segment.unk18.half.upper = 40;
                 arg1->unk1F3 = 0;
             }
         }
     } else {
-        arg0->segment.unk18 = arg3;
+        arg0->segment.unk18.half.upper = arg3;
         arg0->segment.unk3B = action;
     }
 }
@@ -1180,11 +1180,11 @@ void func_800575EC(Object *obj, Object_Racer *obj64) {
 
 GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
 
-void func_800579B0(unk800579B0 *arg0, UNUSED s32 arg1, f32 arg2) {
+void func_800579B0(Object_Racer *racer, UNUSED s32 arg1, f32 arg2) {
     s32 temp, temp2;
 
-    temp = gCurrentStickX - arg0->unk1E1;
-    temp2 = (s32)((f64)((f32)temp * arg2) * 0.125);
+    temp = gCurrentStickX - racer->unk1E1;
+    temp2 = (temp * arg2) * 0.125;
 
     if (temp != 0 && temp2 == 0) {
         if (temp > 0) {
@@ -1195,7 +1195,7 @@ void func_800579B0(unk800579B0 *arg0, UNUSED s32 arg1, f32 arg2) {
         }
     }
 
-    arg0->unk1E1 = arg0->unk1E1 + temp2;
+    racer->unk1E1 += temp2;
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80057A40.s")

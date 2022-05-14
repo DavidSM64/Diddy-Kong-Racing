@@ -156,7 +156,7 @@ void play_char_horn_sound(Object *obj, Object_Racer *obj64);
 void func_80057048(Object *obj, s32 arg1);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_Racer *obj64);
-void func_800579B0(unk800579B0 *arg0, s32 arg1, f32 arg2);
+void func_800579B0(Object_Racer *racer, s32 arg1, f32 arg2);
 void func_800580B4(Object *obj, Object_Racer *obj64, s32 arg2, f32 arg3);
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
 void func_800598D0(void);
@@ -177,6 +177,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 arg2);
 void func_8005C270(unk8005C270 *arg0);
 f32 func_80057220(Object* arg0, Object_Racer* arg1);
 void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
+void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);

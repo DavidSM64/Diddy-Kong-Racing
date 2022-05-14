@@ -894,7 +894,7 @@ typedef struct Object_Racer {
   /* 0x172 */ u8 balloon_type;
   /* 0x173 */ u8 balloon_quantity;
   /* 0x174 */ u8 balloon_level;
-  /* 0x175 */ u8 unk175;
+  /* 0x175 */ s8 unk175;
   /* 0x176 */ s16 unk176;
   /* 0x178 */ s32 unk178;
   /* 0x17C */ s32 unk17C;
@@ -1231,8 +1231,13 @@ typedef struct ObjectTransform {
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
-  /* 0x0018 */ s16 unk18;
-  /* 0x001A */ s16 unk1A;
+  union {
+      struct {
+      /* 0x0018 */ s16 upper;
+      /* 0x001A */ s16 lower;
+      } half;
+      /* 0x0018 */ s32 word;
+  } unk18;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
