@@ -544,18 +544,18 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *arg1) {
     tempObj->unkC4 = 0.5f;
     if (1);
     tempObj->unk196 = tempObj->unk1A0;
-    tempObj->unkD8 = obj->segment.trans.x_position;
-    tempObj->unkDC = obj->segment.trans.y_position + 30.0f;
-    tempObj->unkE0 = obj->segment.trans.z_position;
-    tempObj->unkE4 = obj->segment.trans.x_position;
-    tempObj->unkE8 = obj->segment.trans.y_position + 30.0f;
-    tempObj->unkEC = obj->segment.trans.z_position;
-    tempObj->unkF0 = obj->segment.trans.x_position;
-    tempObj->unkF4 = obj->segment.trans.y_position + 30.0f;
-    tempObj->unkF8 = obj->segment.trans.z_position;
-    tempObj->unkFC = obj->segment.trans.x_position;
-    tempObj->unk100 = obj->segment.trans.y_position + 30.0f;
-    tempObj->unk104 = obj->segment.trans.z_position;
+    tempObj->unkD8[0] = obj->segment.trans.x_position;
+    tempObj->unkD8[1] = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkD8[2] = obj->segment.trans.z_position;
+    tempObj->unkE4[0] = obj->segment.trans.x_position;
+    tempObj->unkE4[1] = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkE4[2] = obj->segment.trans.z_position;
+    tempObj->unkF0[0] = obj->segment.trans.x_position;
+    tempObj->unkF0[1] = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkF0[2] = obj->segment.trans.z_position;
+    tempObj->unkFC[0] = obj->segment.trans.x_position;
+    tempObj->unkFC[1] = obj->segment.trans.y_position + 30.0f;
+    tempObj->unkFC[2] = obj->segment.trans.z_position;
     tempObj->prev_x_position = obj->segment.trans.x_position;
     tempObj->prev_y_position = obj->segment.trans.y_position;
     tempObj->prev_z_position = obj->segment.trans.z_position;
@@ -820,7 +820,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
     if ((diffX * diffX) + (diffZ * diffZ) < distance) {
         rotation = (arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (rotation > 0x8000) {
-            rotation += 0xFFFF0001;
+            rotation -= 0xFFFF;
         }
         if (rotation < -0x8000) {
             rotation += 0xFFFF;
@@ -838,7 +838,7 @@ s32 func_80052388(Object *obj1, Object_Racer *arg1, Object *obj2, f32 distance) 
         arg1 = (struct Object_Racer *) obj2->unk64;
         rotation = arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
         if (rotation > 0x8000) {
-            rotation += 0xFFFF0001;
+            rotation -= 0xFFFF;
         }
         if (rotation < -0x8000) {
             rotation += 0xFFFF;
@@ -1276,7 +1276,6 @@ void func_80058D5C(f32 arg0, Object *arg1, Object_Racer *arg2) {
     gCameraObject->trans.x_rotation = func_8007066C((s32) yDiff, (s32) distance);
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, arg2->oy1, gCameraObject->trans.z_position);
-    if (1);
 }
 
 void func_80058F44(f32 arg0, struct Object *arg1, struct Object *arg2)
