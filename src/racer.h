@@ -147,7 +147,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64);
 void func_8004F77C(unk8004F77C *arg0);
 s32 func_80052188(void);
 void func_800521B8(s32 arg0);
-void func_8005234C(unk8005234C *arg0);
+void func_8005234C(Object_Racer *arg0);
 void func_80052988(Object *arg0, Object_Racer *arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7);
 void handle_car_steering(Object_Racer *obj);
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1);

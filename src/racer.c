@@ -802,7 +802,7 @@ void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2) {
 }
 
 // Ran by the AI. Seems to be direction related of some sorts.
-void func_8005234C(unk8005234C *arg0) {
+void func_8005234C(Object_Racer *arg0) {
     arg0->unk16C -= arg0->unk16C >> 3;
     if (arg0->unk16C >= -9 && arg0->unk16C < 10) { // Deadzone?
         arg0->unk16C = 0;
