@@ -1094,7 +1094,105 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3) {
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8005492C.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80055A84.s")
+
+void func_80055A84(Object *obj, Object_Racer *racer, s32 arg2) {
+    f32 angleZ;
+    f32 distance;
+    s32 sp74;
+    s32 flags;
+    s32 temp_v1_2;
+    f32 tempX;
+    f32 tempY;
+    f32 tempZ;
+    s32 xRot;
+    f32 angleX;
+    f32 *temp_v0;
+    f32 tempPos[3];
+    s32 i;
+    f32 sp40;
+    s8 sp3F;
+    s8 shouldSquish;
+
+    if (D_8011D4F0[0] < obj->segment.trans.y_position) {
+        obj->segment.trans.y_position = D_8011D4F0[0];
+    }
+    temp_v0 =(f32 *) get_misc_asset(56);
+    sp3F = -1;
+    sp40 = temp_v0[racer->unk1D7];
+    tempPos[0] = obj->segment.trans.x_position;
+    tempPos[1] = obj->segment.trans.y_position;
+    tempPos[2] = obj->segment.trans.z_position;
+    D_8011D548 = 0.0f;
+    D_8011D54C = 0.0f;
+    sp74 = 0;
+    flags = 0;
+    if (racer->playerIndex != PLAYER_COMPUTER || racer->unk1D7 < 5) {
+        flags = func_80017248(obj, 1, &sp74, racer->unkD8, tempPos, &sp40, &sp3F);
+    }
+    if (flags & 0x80) {
+        D_8011D548 = tempPos[0] - obj->segment.trans.x_position;
+        D_8011D54C = tempPos[2] - obj->segment.trans.z_position;
+        flags &= ~0x80;
+    }
+    shouldSquish = 0;
+    if (flags && tempPos[1] < obj->segment.trans.y_position - 4.0) {
+        shouldSquish = 1;
+    }
+    func_80031130(1, &racer->unkD8[0], tempPos, racer->unk1D6);
+    sp74 = 0;
+    racer->unk1E3 = func_80031600(racer->unkD8 , tempPos, &sp40, &sp3F, 1, &sp74);
+    racer->unk1E4 = flags;
+    racer->unk1E3 |= flags;
+    racer->unk1E2 = 0;
+    if (racer->unk1E3) {
+        racer->unk1E3 = 15;
+        racer->unk1E2 = 4;
+    }
+    if (shouldSquish && sp74) {
+        if (racer->squish_timer == 0) {
+            racer->unk187 = 4;
+        } else {
+            racer->squish_timer = 60;
+        }
+    }
+    for (i = 0; i < 3; i++) {
+        racer->unkD8[i] = tempPos[i];
+    }
+    racer->wheel_surfaces[0] = sp3F;
+    i = 1;
+    racer->wheel_surfaces[1] = sp3F;
+    racer->wheel_surfaces[2] = sp3F;
+    racer->wheel_surfaces[3] = sp3F;
+    obj->segment.trans.x_position = racer->unkD8[0];
+    obj->segment.trans.y_position = racer->unkD8[1];
+    obj->segment.trans.z_position = racer->unkD8[2];
+    if (racer->unk1E2) {
+        func_8002ACD4(&tempX, &tempY, &tempZ);
+        angleX = cosine_s(-obj->segment.trans.y_rotation);
+        angleZ = sine_s(-obj->segment.trans.y_rotation);
+        distance = (tempX * angleZ) + (tempZ * angleX);
+        tempZ = (tempX * angleX) - (tempZ * angleZ);
+        temp_v1_2 = -((arctan2_f(distance, tempY) << 16) >> 16); // Uhh...
+        if (temp_v1_2 < 0x2000 && temp_v1_2 > -0x2000) {
+            racer->unk1A4 = temp_v1_2 ;
+        }
+        xRot = -((arctan2_f(tempZ, tempY) << 16) >> 16); // UHH...
+        if ((xRot < 0x2000) && (xRot > -0x2000)) {
+            obj->segment.trans.x_rotation = xRot;
+        }
+        if (racer->unk1D6 == 4) {
+            if (1)
+            xRot -= (u16) obj->segment.trans.x_rotation;
+            WRAP(xRot, -0x8000, 0x8000);
+            obj->segment.trans.x_rotation += xRot >> 2;
+        }
+    }
+    if (racer->unk1D6 != 4 && racer->unk1D6 != 2 && racer->unk1D6 != 10 && racer->unk1D6 != 7) {
+        CLAMP(racer->unk1A4, -0x3400, 0x3400);
+        CLAMP(obj->segment.trans.x_rotation, -0x3400, 0x3400);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80055EC0.s")
 
 void play_char_horn_sound(Object *obj, Object_Racer *racer) {
