@@ -219,7 +219,9 @@ typedef struct LevelHeader {
 
   /* 0x20 */ s32 *unk20;
 
-  /* 0x24 */ u8 pad24[0x10];
+  /* 0x24 */ u8 pad24[6];
+  /* 0x2A */ u8 unk2A;
+  /* 0x2B */ u8 pad2B[9];
 
   /* 0x34 */ s16 geometry;
   /* 0x36 */ s16 collectables; // Objects such as bananas, balloons, etc.
@@ -874,7 +876,7 @@ typedef struct Object_Racer {
   /* 0x134 */ s32 unk134;
   /* 0x138 */ s32 unk138;
   /* 0x13C */ s32 unk13C;
-  /* 0x140 */ s32 unk140;
+  /* 0x140 */ struct Object *unk140;
   /* 0x144 */ struct Object *held_obj;
   /* 0x148 */ struct Object *unk148;
   /* 0x14C */ struct Object *unk14C;
@@ -906,7 +908,7 @@ typedef struct Object_Racer {
   /* 0x188 */ s32 unk188;
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 unk18E;
-  /* 0x190 */ u16 unk190;
+  /* 0x190 */ s16 unk190;
   /* 0x192 */ s8 unk192;
   /* 0x193 */ s8 unk193;
   /* 0x194 */ s8 unk194;
