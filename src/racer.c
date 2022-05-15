@@ -193,6 +193,7 @@ s16 D_8011D5B8;
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 
+// Also fairly certain this is NOT Object_Racer.
 typedef struct Object_64_Unknown5 {
     u8 pad0[0x88];
     u8 unk89;
