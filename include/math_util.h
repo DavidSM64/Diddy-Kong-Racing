@@ -4,13 +4,20 @@
 #include "types.h"
 #include "structs.h"
 
-#define WRAP(x, low, high) {           \
-    if (x > high) x -= (high * 2) - 1; \
-    if (x < low) x += (high * 2) - 1;  \
-}
+/**
+ * Keeps the value within the range.
+ */
 #define CLAMP(x, low, high) {          \
     if (x > high) x = high;            \
     if (x < low) x = low;              \
+}
+/**
+ * Allows an arbitrary range the number can wrap around.
+ * Often used for angles, to keep them within s16 bounds while stored in an s32.
+ */
+#define WRAP(x, low, high) {           \
+    if (x > high) x -= (high * 2) - 1; \
+    if (x < low) x += (high * 2) - 1;  \
 }
 
 s16 arctan2_f(f32 y, f32 x);
