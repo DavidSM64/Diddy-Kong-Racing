@@ -23,6 +23,12 @@
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
+/**
+ * This file features extensive use of CLAMP and WRAP.
+ * CLAMP will keep the value within the two ranges.
+ * WRAP will "overflow" the value. Used to keep angles within s16 bounds.
+ */
+
 /************ .data ************/
 
 s32 gObjLoopGoldenBalloonLength = 0x310;
@@ -193,24 +199,7 @@ s16 D_8011D5B8;
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 
-// Also fairly certain this is NOT Object_Racer.
-typedef struct Object_64_Unknown5 {
-    u8 pad0[0x88];
-    u8 unk89;
-    u8 pad90[0xE9];
-    s8 unk172;
-    s8 unk173;
-    s8 unk174;
-    u8 pad175[0x5E];
-    s8 unk1D3;
-} Object_64_Unknown5;
-
-typedef struct TempStruct5 {
-    s8 pad0[8];
-    s8 unk8[4][4];
-} TempStruct5;
-
-void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 arg2) {
+void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate) {
     TempStruct5 *temp_v0;
     s8 *test;
     s8 phi_a0;
@@ -233,7 +222,7 @@ void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 arg2) {
             D_8011D5BB = 1;
         }
         if (!(gCurrentCarInput & A_BUTTON)) {
-            D_8011D5BA += arg2;
+            D_8011D5BA += updateRate;
         }
     } else {
         D_8011D5BB = 0;
@@ -295,8 +284,7 @@ void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate) {
             func_800452A0(obj, racer, updateRate);
             break;
         default:
-            // last argument was required for match, might not really exist
-            func_80045C48(obj, racer, updateRate, raceType);
+            func_80045C48(obj, racer, updateRate);
             break;
     }
 
@@ -307,7 +295,7 @@ void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate) {
         }
     }
 
-    if (racer->velocity > -1.0 && racer->unk214 == 0 && D_8011D540 == 0 && D_8011D544 == 0.0f && racer->unk1E2 != 0 && racer->unk215 == 0) {
+    if (racer->velocity > -1.0 && racer->unk214 == 0 && !D_8011D540 && D_8011D544 == 0.0f && racer->unk1E2 && racer->unk215 == 0) {
         racer->unk213 += updateRate;
 
         if (racer->unk213 > 60) {
@@ -315,7 +303,7 @@ void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate) {
             racer->unk214 = 60;
             racer->unk215 = 120;
 
-            if ((raceType & RACETYPE_CHALLENGE) == 0) {
+            if (!(raceType & RACETYPE_CHALLENGE)) {
                 racer->unk1CA = (racer->unk1CA + 1) & 3;
             } else if (raceType == RACETYPE_CHALLENGE_BATTLE || raceType == RACETYPE_CHALLENGE_BANANAS) {
                 if (racer->unk1CE != 0xFF) {
@@ -341,21 +329,8 @@ void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 
     // Cap stick inputs.
-    if (gCurrentStickX > 75) {
-        gCurrentStickX = 75;
-    }
-
-    if (gCurrentStickX < -75) {
-        gCurrentStickX = -75;
-    }
-
-    if (gCurrentStickY > 75) {
-        gCurrentStickY = 75;
-    }
-
-    if (gCurrentStickY < -75) {
-        gCurrentStickY = -75;
-    }
+    CLAMP(gCurrentStickX, -75, 75);
+    CLAMP(gCurrentStickY, -75, 75);
 }
 
 s32 func_80044450(s32 cap) {
@@ -410,8 +385,8 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
         if (phi_v0 < 0) {
             phi_v0 = 0;
         }
-        if (phi_v0 >= 0x4A) {
-            phi_v0 = 0x49;
+        if (phi_v0 > 73) {
+            phi_v0 = 73;
         }
         temp_v1 = phi_v0 - planeObj->segment.unk18;
         phi_v0 = 0;
@@ -612,7 +587,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     // This needs to be on one line to match.
     for (i = 0; i < 4; i++) { D_8011D58C[i] = 0; }
     if (1); if (1); // Also critical to match.
-    func_80043ECC(0, 0, 0);
+    func_80043ECC(0, NULL, 0);
     D_8011D583 = i;
     D_8011D585 = 0;
     tempObj->unk20A = 0;
@@ -679,14 +654,9 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s1
     s32 tempAngle;
 
     if (!obj->unk1F1) {
-        tempAngle = yRotation - (obj->y_rotation_offset & 0xFFFF);
+        tempAngle = yRotation - (u16) obj->y_rotation_offset;
         obj->unk166 = xRotation;
-        if (tempAngle > 0x8000) {
-            tempAngle +=  0xFFFF0001;
-        }
-        if (tempAngle < -0x8000) {
-            tempAngle += 0xFFFF;
-        }
+        WRAP(tempAngle, -0x8000, 0x8000);
         if (tempAngle > 0) {
             diff = max * 0x600;
             if (diff < tempAngle) {
@@ -700,13 +670,8 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s1
             }
             obj->y_rotation_offset += tempAngle;
         }
-        tempAngle = xRotation - (obj->x_rotation_offset & 0xFFFF);
-        if (tempAngle > 0x8000) {
-            tempAngle = tempAngle + 0xFFFF0001;
-        }
-        if (tempAngle < -0x8000) {
-            tempAngle = tempAngle + 0xFFFF;
-        }
+        tempAngle = xRotation - (u16) obj->x_rotation_offset;
+        WRAP(tempAngle, -0x8000, 0x8000);
         if (tempAngle > 0) {
             diff = max * 0x600;
             if (diff < tempAngle) {
@@ -720,13 +685,8 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s1
             }
             obj->x_rotation_offset += tempAngle;
         }
-        tempAngle = zRotation - (obj->z_rotation_offset & 0xFFFF);
-        if (tempAngle > 0x8000) {
-            tempAngle = tempAngle + 0xFFFF0001;
-        }
-        if (tempAngle < -0x8000) {
-            tempAngle = tempAngle + 0xFFFF;
-        }
+        tempAngle = zRotation - (u16) obj->z_rotation_offset;
+        WRAP(tempAngle, -0x8000, 0x8000);
         if (tempAngle > 0) {
             diff = max * 0x600;
             if (diff < tempAngle) {
@@ -764,7 +724,7 @@ void func_800521B8(s32 arg0) {
 void func_800521C4(Object *obj, Object_Racer *racer, UNUSED s32 arg2) {
     Object *tempObj;
     s8 foundObj;
-    s32 sp24; // probably distance if I had to guess.
+    f32 distance;
     s32 tempVel;
 
     foundObj = 0;
@@ -773,13 +733,13 @@ void func_800521C4(Object *obj, Object_Racer *racer, UNUSED s32 arg2) {
         foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
     }
     if (!foundObj) {
-        tempObj = func_8001B7A8(racer, 1, &sp24);
+        tempObj = func_8001B7A8(racer, 1, &distance);
         if (tempObj && !D_8011D540) {
             foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
         }
     }
     if (!foundObj) {
-        tempObj = func_8001B7A8(racer, -1, &sp24);
+        tempObj = func_8001B7A8(racer, -1, &distance);
         if (tempObj && !D_8011D540) {
             foundObj = func_80052388(obj, racer, tempObj, 30000.0f);
         }
@@ -821,36 +781,16 @@ s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance)
     diffZ = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
     if ((diffX * diffX) + (diffZ * diffZ) < distance) {
         rotation = (arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        if (rotation > 0x8000) {
-            rotation -= 0xFFFF;
-        }
-        if (rotation < -0x8000) {
-            rotation += 0xFFFF;
-        }
-        if (rotation > 0x3000) {
-            rotation = 0x3000;
-        }
-        if (rotation < -0x3000) {
-            rotation = -0x3000;
-        }
+        WRAP(rotation, -0x8000, 0x8000);
+        CLAMP(rotation, -0x3000, 0x3000);
         racer->unk16C = rotation;
         if ((racer->unk1E7 & 0x3F) < 0x1F) {
             racer->unk16C = 0;
         }
         racer = (struct Object_Racer *) obj2->unk64;
         rotation = arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
-        if (rotation > 0x8000) {
-            rotation -= 0xFFFF;
-        }
-        if (rotation < -0x8000) {
-            rotation += 0xFFFF;
-        }
-        if (rotation > 0x3000) {
-            rotation = 0x3000;
-        }
-        if (rotation < -0x3000) {
-            rotation = -0x3000;
-        }
+        WRAP(rotation, -0x8000, 0x8000);
+        CLAMP(rotation, -0x3000, 0x3000);
         racer->unk16C = rotation;
         if (ret) {}
         ret = TRUE;
@@ -1069,19 +1009,9 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3) {
     obj->segment.unk18 = tempAngle;
     func_8005234C(racer);
     angle = gCurrentCarSteerVel - (u16) racer->unk1A2;
-    if (angle > 0x8000) {
-        angle -= 0xFFFF;
-    }
-    if (angle < -0x8000) {
-        angle += 0xFFFF;
-    }
+    WRAP(angle, -0x8000, 0x8000);
     angle >>= 2;
-    if (angle > 0x2EE) {
-        angle = 0x2EE;
-    }
-    if (angle < -0x2EE) {
-        angle = -0x2EE;
-    }
+    CLAMP(angle, -0x2EE, 0x2EE);
     racer->unk1A2 += (angle * updateRate);
     obj->segment.trans.y_rotation = racer->unk1A0 + racer->unk1A2;
     racer->unk1A6 += ((D_8011D558 - racer->unk1A6) * updateRate) >> 4;

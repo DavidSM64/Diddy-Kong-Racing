@@ -44,6 +44,23 @@ typedef struct unk8005234C {
     s16 unk16C;
 } unk8005234C;
 
+// Also fairly certain this is NOT Object_Racer.
+typedef struct Object_64_Unknown5 {
+    u8 pad0[0x88];
+    u8 unk89;
+    u8 pad90[0xE9];
+    s8 unk172;
+    s8 unk173;
+    s8 unk174;
+    u8 pad175[0x5E];
+    s8 unk1D3;
+} Object_64_Unknown5;
+
+typedef struct TempStruct5 {
+    s8 pad0[8];
+    s8 unk8[4][4];
+} TempStruct5;
+
 typedef struct Object_64_80053478 {
     u8 unk0[0x2C];
     f32 unk2C; // Forward Velocity?
@@ -180,6 +197,7 @@ void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80050754(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);

@@ -4,6 +4,15 @@
 #include "types.h"
 #include "structs.h"
 
+#define WRAP(x, low, high) {           \
+    if (x > high) x -= (high * 2) - 1; \
+    if (x < low) x += (high * 2) - 1;  \
+}
+#define CLAMP(x, low, high) {          \
+    if (x > high) x = high;            \
+    if (x < low) x = low;              \
+}
+
 s16 arctan2_f(f32 y, f32 x);
 f32 sine_s(s16 angle);
 f32 cosine_s(s16 angle);
