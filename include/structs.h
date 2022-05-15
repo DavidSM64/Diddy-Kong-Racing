@@ -807,9 +807,9 @@ typedef struct Object_Racer {
   /* 0x004 */ s32 unk4;
   /* 0x008 */ s32 unk8;
   /* 0x00C */ s32 unkC;
-  /* 0x010 */ s32 unk10;
-  /* 0x014 */ s32 unk14;
-  /* 0x018 */ s32 unk18;
+  /* 0x010 */ f32 unk10;
+  /* 0x014 */ f32 unk14;
+  /* 0x018 */ f32 unk18;
   /* 0x01C */ s32 unk1C;
   /* 0x020 */ s32 unk20;
   /* 0x024 */ s32 unk24;
@@ -907,7 +907,7 @@ typedef struct Object_Racer {
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 unk18E;
   /* 0x190 */ u16 unk190;
-  /* 0x192 */ u8 unk192;
+  /* 0x192 */ s8 unk192;
   /* 0x193 */ s8 unk193;
   /* 0x194 */ s8 unk194;
   /* 0x195 */ s8 unk195;

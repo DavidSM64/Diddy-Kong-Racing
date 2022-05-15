@@ -1293,21 +1293,7 @@ void func_80058F44(f32 arg0, struct Object *arg1, struct Object *arg2)
                             arg2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
 }
 
-typedef struct Object_64_80059080 {
-    u8 pad0[0x10];
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    u8 pad1C[0x8C];
-    f32 unkA8;
-    u8 padAC[0xE6];
-    s8 unk192;
-    u8 pad196[0x35];
-    u8 unk1C8;
-    u8 pad1C9[3];
-} Object_64_80059080;
-
-void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32 *arg2, f32 *arg3, f32 *arg4) {
+void func_80059080(UNUSED Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *velZ) {
     unknown8011AECC *temp_v0_2;
     s32 splinePos;
     s32 destReached;
@@ -1321,17 +1307,17 @@ void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32 *arg2, f32 *ar
     splineEnd = func_8001BA64();
 
     if (splineEnd) {
-        magnitude = 1.0 - arg1->unkA8;
+        magnitude = 1.0 - racer->checkpoint_distance;
         if (magnitude < 0.0f) {
             magnitude = 0.0f;
         }
-        if (arg1->unk192) {}
-        splinePos = arg1->unk192 - 2;
+        if (racer->unk192) {}
+        splinePos = racer->unk192 - 2;
         if (splinePos < 0) {
             splinePos += splineEnd;
         }
         for (i = 0; i < 5; i++) {
-            temp_v0_2 = func_8001BA1C(splinePos, arg1->unk1C8);
+            temp_v0_2 = func_8001BA1C(splinePos, racer->unk1C8);
             splineX[i] = temp_v0_2->unk10;
             splineY[i] = temp_v0_2->unk14;
             splineZ[i] = temp_v0_2->unk18;
@@ -1345,9 +1331,9 @@ void func_80059080(s32 arg0, struct Object_64_80059080 *arg1, f32 *arg2, f32 *ar
             destReached = 1;
             magnitude -= 1.0;
         }
-        *arg2 = catmull_rom_interpolation(splineX, destReached, magnitude);
-        *arg3 = catmull_rom_interpolation(splineY, destReached, magnitude);
-        *arg4 = catmull_rom_interpolation(splineZ, destReached, magnitude);
+        *velX = catmull_rom_interpolation(splineX, destReached, magnitude);
+        *velY = catmull_rom_interpolation(splineY, destReached, magnitude);
+        *velZ = catmull_rom_interpolation(splineZ, destReached, magnitude);
     }
 }
 

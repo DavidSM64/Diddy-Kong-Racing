@@ -178,6 +178,7 @@ void func_8005C270(unk8005C270 *arg0);
 f32 func_80057220(Object* arg0, Object_Racer* arg1);
 void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
 void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation);
+void func_80059080(Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *velZ);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
