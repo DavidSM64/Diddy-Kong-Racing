@@ -1095,7 +1095,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3) {
 GLOBAL_ASM("asm/non_matchings/racer/func_8005492C.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 
-void func_80055A84(Object *obj, Object_Racer *racer, s32 arg2) {
+void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     f32 angleZ;
     f32 distance;
     s32 sp74;

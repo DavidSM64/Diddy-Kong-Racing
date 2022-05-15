@@ -198,6 +198,7 @@ void func_80050754(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate);
+void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
