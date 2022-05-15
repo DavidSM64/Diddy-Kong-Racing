@@ -411,7 +411,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
         if (phi_v0 >= 0x4A) {
             phi_v0 = 0x49;
         }
-        temp_v1 = phi_v0 - planeObj->segment.unk18.half.upper;
+        temp_v1 = phi_v0 - planeObj->segment.unk18;
         phi_v0 = 0;
         if (temp_v1 > 0) {
             phi_v0 = arg0 * 3;
@@ -425,7 +425,7 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
                 phi_v0 = temp_v1;
             }
         }
-        planeObj->segment.unk18.half.upper += phi_v0;
+        planeObj->segment.unk18 += phi_v0;
     }
 }
 
@@ -490,7 +490,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
     if ((func_8002341C() != 0) && (obj64->unk1D6 == 0xA)) {
         obj->unk4C->unk14 = 0;
     }
-    sp26 = obj->segment.unk18.half.upper;
+    sp26 = obj->segment.unk18;
     obj64->unk1D6 = 0xA;
     func_80049794(arg0, arg1, obj, obj64);
     obj64->unk1D6 = obj64->unk1D7;
@@ -505,7 +505,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *obj64) {
             obj64->unk154->segment.trans.x_rotation = obj->segment.trans.x_rotation;
             obj64->unk154->segment.trans.z_rotation = obj->segment.trans.z_rotation;
             obj->segment.unk3B = 0;
-            obj->segment.unk18.half.upper = sp26 + arg0;
+            obj->segment.unk18 = sp26 + arg0;
             func_80061C0C(obj);
         }
     }
@@ -650,7 +650,7 @@ void func_80050754(Object *obj, Object_Racer *racer, f32 arg2) {
     f32 diffZ;
 
     obj->segment.unk3B = 0;
-    obj->segment.unk18.half.upper = 40;
+    obj->segment.unk18 = 40;
     diffX = racer->unk148->segment.trans.x_position - obj->segment.trans.x_position;
     diffY = racer->unk148->segment.trans.y_position - obj->segment.trans.y_position;
     diffZ = racer->unk148->segment.trans.z_position - obj->segment.trans.z_position;
@@ -869,54 +869,54 @@ void func_80052988(Object *arg0, Object_Racer *arg1, s32 action, s32 arg3, s32 d
         arg1->unk1F2 = 0;
     } else if (arg0->segment.unk3B == 0) {
         if (arg6 & 1) {
-            if (arg0->segment.unk18.half.upper >= 41) {
-                arg0->segment.unk18.half.upper -= arg7 * 4;
-                if (arg0->segment.unk18.half.upper < 41) {
+            if (arg0->segment.unk18 >= 41) {
+                arg0->segment.unk18 -= arg7 * 4;
+                if (arg0->segment.unk18 < 41) {
                     arg0->segment.unk3B = action;
-                    arg0->segment.unk18.half.upper = arg3;
+                    arg0->segment.unk18 = arg3;
                 }
             } else {
-                arg0->segment.unk18.half.upper += arg7 * 4;
-                if (arg0->segment.unk18.half.upper >= 40) {
+                arg0->segment.unk18 += arg7 * 4;
+                if (arg0->segment.unk18 >= 40) {
                     arg0->segment.unk3B = action;
-                    arg0->segment.unk18.half.upper = arg3;
+                    arg0->segment.unk18 = arg3;
                 }
             }
         } else {
             arg0->segment.unk3B = action;
-            arg0->segment.unk18.half.upper = arg3;
+            arg0->segment.unk18 = arg3;
             arg1->unk1F3 &= ~0x80;
         }
     } else if (arg0->segment.unk3B == action) {
         if (arg6 & 2) {
             if (arg1->unk1F3 & 0x80) {
-                arg0->segment.unk18.half.upper -= arg5;
-                if (arg0->segment.unk18.half.upper <= 0) {
+                arg0->segment.unk18 -= arg5;
+                if (arg0->segment.unk18 <= 0) {
                     arg0->segment.unk3B = 0;
                     arg1->unk1F2 = 0;
-                    arg0->segment.unk18.half.upper = 40;
+                    arg0->segment.unk18 = 40;
                     arg1->unk1F3 = 0;
                 }
             } else {
-                arg0->segment.unk18.half.upper += arg5;
-                if (arg0->segment.unk18.half.upper >= duration) {
-                    arg0->segment.unk18.half.upper = duration - 1;
+                arg0->segment.unk18 += arg5;
+                if (arg0->segment.unk18 >= duration) {
+                    arg0->segment.unk18 = duration - 1;
                     if ((arg6 & 4) == 0) {
                         arg1->unk1F3 |= 0x80;
                     }
                 }
             }
         } else {
-            arg0->segment.unk18.half.upper += arg5;
-            if (arg0->segment.unk18.half.upper >= duration) {
+            arg0->segment.unk18 += arg5;
+            if (arg0->segment.unk18 >= duration) {
                 arg0->segment.unk3B = 0;
                 arg1->unk1F2 = 0;
-                arg0->segment.unk18.half.upper = 40;
+                arg0->segment.unk18 = 40;
                 arg1->unk1F3 = 0;
             }
         }
     } else {
-        arg0->segment.unk18.half.upper = arg3;
+        arg0->segment.unk18 = arg3;
         arg0->segment.unk3B = action;
     }
 }
@@ -997,7 +997,169 @@ void handle_car_velocity_control(Object_Racer *car) {
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80053750.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80053E9C.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80054110.s")
+
+void func_80054110(Object *obj, Object_Racer *racer, s32 arg2, f32 arg3) {
+    f32 tempVel;
+    f32 xVel;
+    f32 zVel;
+    f32 spA0;
+    f32 sp9C;
+    f32 tempX;
+    f32 tempY;
+    f32 tempZ;
+    Matrix sp50;
+    LevelHeader *header;
+    s32 angle;
+    s32 tempAngle;
+
+    tempX = obj->segment.trans.x_position;
+    tempY = obj->segment.trans.y_position;
+    tempZ = obj->segment.trans.z_position;
+    gCurrentCarSteerVel = 0;
+    D_8011D558 = 0;
+    func_800579B0(racer, 0, arg3);
+    handle_car_velocity_control(racer);
+    func_800575EC(obj, racer);
+    func_80055EC0(obj, racer, arg2);
+    func_80053E9C(obj, racer, arg2);
+    if (racer->spinout_timer) {
+        func_80052B64(obj, racer, arg2, arg3); // Sbinalla
+    } else if (racer->unk1E2 > 0) {
+        func_8005492C(obj, racer, arg2, arg3);
+    } else {
+        func_80052D7C(obj, racer, arg2, arg3);
+    }
+    apply_vehicle_rotation_offset(racer, arg2, 0, 0, 0);
+    header = get_current_level_header();
+    if ((racer->unkC0 != 0.0 && header->unk2) || D_8011D581 == 10) {
+        if (racer->unk1F0) {
+            racer->checkpoint_distance -= 0.3;
+        } else {
+            racer->checkpoint_distance -= 0.1;
+        }
+        func_80059080(obj, racer, &xVel, &spA0, &zVel);
+        if (racer->unk1F0) {
+            racer->checkpoint_distance += 0.3;
+        } else {
+            racer->checkpoint_distance += 0.1;
+        }
+        xVel -= obj->segment.trans.x_position;
+        zVel -= obj->segment.trans.z_position;
+        spA0 = sqrtf((xVel * xVel) + (zVel * zVel));
+        xVel /= spA0;
+        zVel /= spA0;
+        obj->segment.x_velocity = xVel * 4.0f;
+        obj->segment.z_velocity = zVel * 4.0f;
+        obj->segment.y_velocity = 9.5f;
+        racer->unk1F0 = 1;
+    } else if (racer->unk1E2 > 2) {
+        racer->unk1F0 = 0;
+    }
+    obj->segment.unk3B = 0;
+    tempAngle = ((-racer->unk1A2 >> 8) / D_8011D570);
+    tempAngle = 40 - tempAngle;
+    if (tempAngle < 0) {
+        tempAngle = 0;
+    }
+    if (tempAngle > 73) {
+        tempAngle = 73;
+    }
+    obj->segment.unk18 = tempAngle;
+    func_8005234C(racer);
+    angle = gCurrentCarSteerVel - (u16) racer->unk1A2;
+    if (angle > 0x8000) {
+        angle -= 0xFFFF;
+    }
+    if (angle < -0x8000) {
+        angle += 0xFFFF;
+    }
+    angle >>= 2;
+    if (angle > 0x2EE) {
+        angle = 0x2EE;
+    }
+    if (angle < -0x2EE) {
+        angle = -0x2EE;
+    }
+    racer->unk1A2 += (angle * arg2);
+    obj->segment.trans.y_rotation = racer->unk1A0 + racer->unk1A2;
+    racer->unk1A6 += ((D_8011D558 - racer->unk1A6) * arg2) >> 4;
+    obj->segment.trans.z_rotation = racer->unk1A4 + racer->unk1A6;
+    if (!racer->unk1F0) {
+        D_8011D510.y_rotation = racer->unk1A0 + racer->unk10C;
+        D_8011D510.x_rotation = 0;
+        D_8011D510.z_rotation = 0;
+        D_8011D510.x_position = 0.0f;
+        D_8011D510.y_position = 0.0f;
+        D_8011D510.z_position = 0.0f;
+        D_8011D510.scale = 1.0f;
+        func_8006FE74(&sp50, &D_8011D510);
+        guMtxXFMF(sp50, racer->lateral_velocity, 0.0f, racer->velocity, &obj->segment.x_velocity, &tempVel, &obj->segment.z_velocity);
+    }
+    if (racer->unk175) {
+        obj->segment.x_velocity = D_8011D578;
+        obj->segment.z_velocity = D_8011D57C;
+    }
+    if (!racer->unk148) {
+        xVel = obj->segment.x_velocity;
+        zVel = obj->segment.z_velocity;
+        if (racer->unk1D2) {
+            xVel += racer->unk11C;
+            zVel += racer->unk120;
+        }
+        xVel += racer->unk84;
+        zVel += racer->unk88;
+        func_80011570(obj, xVel * arg3, obj->segment.y_velocity * arg3, zVel * arg3);
+    } else {
+        func_80050754(obj, racer, arg3);
+    }
+    if (D_8011D55C == -1 && !func_80023568()) {
+            func_80055A84(obj, racer, arg2);
+    } else {
+        func_80054FD0(obj, racer, arg2);
+    }
+    if (!racer->unk201) {
+        obj->unk74 = 0;
+    } else if (racer->unk1D6 < 5) {
+        func_800AF714(obj, arg2);
+    }
+    func_80053750(obj, racer, arg3);
+    tempVel = 1.0f / arg3;
+    xVel = (((obj->segment.trans.x_position - tempX) - D_8011D548) * tempVel) - racer->unk84;
+    obj->segment.y_velocity = (obj->segment.trans.y_position - tempY) * tempVel;
+    zVel = (((obj->segment.trans.z_position - tempZ) - D_8011D54C) * tempVel) - racer->unk88;
+    D_8011D510.y_rotation = -(racer->unk1A0 + racer->unk10C);
+    D_8011D510.x_rotation = -obj->segment.trans.x_rotation;
+    D_8011D510.z_rotation = -obj->segment.trans.z_rotation;
+    D_8011D510.x_position = 0.0f;
+    D_8011D510.y_position = 0.0f;
+    D_8011D510.z_position = 0.0f;
+    D_8011D510.scale = 1.0f;
+    func_8006FE74(&sp50, &D_8011D510);
+    guMtxXFMF(sp50, xVel, 0.0f, zVel, &sp9C, &tempVel, &spA0);
+    if (racer->unk1D2) {
+        racer->unk1D2 -= arg2;
+        if (racer->unk1D2 < 0) {
+            racer->unk1D2 = 0;
+        }
+    } else {
+        tempVel = racer->velocity - spA0;
+        if (tempVel > 0.5) {
+            racer->velocity -= tempVel - 0.5;
+        }
+        if (tempVel < -0.5) {
+            racer->velocity -= tempVel + 0.5;
+        }
+        tempVel = racer->lateral_velocity - sp9C;
+        if (tempVel && tempVel) {}
+        if (tempVel > 0.5) {
+            racer->lateral_velocity -= tempVel - 0.5;
+        }
+        if (tempVel < -0.5) {
+            racer->lateral_velocity -= tempVel + 0.5;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8005492C.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80055A84.s")

@@ -1231,13 +1231,8 @@ typedef struct ObjectTransform {
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
-  union {
-      struct {
-      /* 0x0018 */ s16 upper;
-      /* 0x001A */ s16 lower;
-      } half;
-      /* 0x0018 */ s32 word;
-  } unk18;
+  /* 0x0018 */ s16 unk18;
+  /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
