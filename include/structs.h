@@ -209,7 +209,7 @@ typedef struct PulsatingLightData {
 typedef struct LevelHeader {
   /* 0x00 */ s8 world;
   /* 0x01 */ u8 unk1;
-  /* 0x02 */ u8 unk2;
+  /* 0x02 */ s8 unk2;
   /* 0x03 */ u8 unk3;
   /* 0x04 */ u8 unk4[4];
 

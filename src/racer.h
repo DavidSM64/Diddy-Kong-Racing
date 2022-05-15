@@ -184,5 +184,13 @@ void func_80059080(Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *
 void set_ghost_position_and_rotation(Object *obj);
 void func_800576E0(Object *obj, Object_Racer *obj64, s32 arg2);
 void func_80057A40(Object *obj, Object_Racer *obj64, f32 arg2);
+void func_80055EC0(Object*, Object_Racer*, s32);
+void func_80054FD0(Object*, Object_Racer*, s32);
+void func_8005492C(Object*, Object_Racer*, s32, f32);
+void func_80053E9C(Object*, Object_Racer*, s32);
+void func_80053750(Object*, Object_Racer*, f32);
+void func_80052D7C(Object*, Object_Racer*, s32, f32);
+void func_80052B64(Object*, Object_Racer*, s32, f32);
+void func_80050754(Object*, Object_Racer*, f32);
 
 #endif
