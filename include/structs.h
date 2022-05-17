@@ -514,7 +514,8 @@ typedef struct ObjectHeader {
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
              u8 pad56;
   /* 0x57 */ s8 unk57;
-             u8 pad58[0x2];
+             s8 unk58;
+             u8 pad59;
   /* 0x5A */ s8 unk5A;
              u8 pad5B[0x5];
   /* 0x60 */ char internalName[16];
@@ -893,19 +894,22 @@ typedef struct Object_Racer {
   /* 0x166 */ s16 unk16C; // As for these, they seem to affect the turning direction of the racer's head.
   /* 0x16E */ s16 unk16E;
   /* 0x170 */ s16 unk170;
-  /* 0x172 */ u8 balloon_type;
-  /* 0x173 */ u8 balloon_quantity;
-  /* 0x174 */ u8 balloon_level;
+  /* 0x172 */ s8 balloon_type;
+  /* 0x173 */ s8 balloon_quantity;
+  /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 unk175;
   /* 0x176 */ s16 unk176;
   /* 0x178 */ s32 unk178;
   /* 0x17C */ s32 unk17C;
   /* 0x180 */ s32 unk180;
-  /* 0x184 */ s8 pad184;
+  /* 0x184 */ s8 unk184;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
   /* 0x187 */ s8 unk187;
-  /* 0x188 */ s32 unk188;
+  /* 0x188 */ s8 unk188;
+  /* 0x189 */ s8 unk189;
+  /* 0x18A */ s8 unk18A;
+  /* 0x18B */ s8 unk18B;
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 unk18E;
   /* 0x190 */ s16 unk190;
@@ -999,7 +1003,7 @@ typedef struct Object_Racer {
   /* 0x20D */ u8 unk20D;
   /* 0x20E */ s16 unk20E;
   /* 0x210 */ s8 unk210;
-  /* 0x211 */ u8 unk211;
+  /* 0x211 */ s8 unk211;
   /* 0x212 */ u8 unk212;
   /* 0x213 */ s8 unk213;
   /* 0x214 */ s8 unk214;

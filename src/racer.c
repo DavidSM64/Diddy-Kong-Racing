@@ -1390,7 +1390,105 @@ void func_800579B0(Object_Racer *racer, UNUSED s32 arg1, f32 updateRate) {
     racer->unk1E1 += temp2;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80057A40.s")
+void func_80057A40(Object *obj, Object_Racer *racer, f32 arg2) {
+	f32 temp_f14;
+    s32 temp_f18;
+	s32 temp_v0_13;
+
+    if (gActivePlayerButtonPress & 8 && func_800A0190()) {
+        gCameraObject->unk3B++;
+        if (gCameraObject->unk3B >= 4) {
+            gCameraObject->unk3B = 0;
+        }
+        if (racer->playerIndex != PLAYER_COMPUTER) {
+            func_80066060(racer->playerIndex, gCameraObject->unk3B);
+        }
+        switch (gCameraObject->unk3B) {
+        case 0:
+            func_80001D04(104, 0);
+            break;
+        case 1:
+            func_80001D04(105, 0);
+            break;
+        default:
+            func_80001D04(106, 0);
+            break;
+        }
+    }
+    if (racer->unk1D8 == 1 && gCameraObject->unk36 != 5) {
+            gCameraObject->unk36 = 7;
+    }
+    if (racer->unk108) {
+        gCameraObject->unk36 = 3;
+    }
+
+    switch (gCameraObject->unk36) {
+	default:
+		break;
+    case 0:
+        func_800581E8(arg2, obj, racer);
+        break;
+    case 1:
+        func_8004C2B0(arg2, obj, racer);
+        break;
+    case 3:
+        func_80058F44(arg2, obj, (Object* ) racer);
+        break;
+    case 4:
+        func_80048E64(arg2, obj, racer);
+        break;
+    case 5:
+        func_80058B84(arg2, obj, racer);
+        break;
+    case 6:
+        func_8004D590(arg2, obj, racer);
+        break;
+    case 7:
+        func_80058D5C(arg2, obj, racer);
+        break;
+    }
+    temp_f14 = D_8011D586 / 10240.0f;
+    gCameraObject->x_velocity = (((obj->segment.trans.x_position + (91.75 * racer->ox1) + (90.0 * racer->ox3))
+                                - gCameraObject->trans.x_position) * temp_f14);
+    gCameraObject->z_velocity = (((obj->segment.trans.z_position + (91.75 * racer->oz1) + (90.0 * racer->oz3))
+                                - gCameraObject->trans.z_position) * temp_f14);
+    gCameraObject->y_velocity = (((func_8003ACAC() + 48.5) - gCameraObject->trans.y_position) * temp_f14);
+    gCameraObject->unk38 =  -gCameraObject->trans.x_rotation * temp_f14;
+    gCameraObject->trans.x_position += gCameraObject->x_velocity;
+    gCameraObject->trans.y_position += gCameraObject->y_velocity + gCameraObject->unk30;
+    gCameraObject->trans.z_position += gCameraObject->z_velocity;
+    if (!D_8011D540 && !D_8011D586) {
+        gCameraObject->x_velocity = gCameraObject->x_velocity * 0.95;
+        gCameraObject->y_velocity = gCameraObject->y_velocity * 0.95;
+        gCameraObject->z_velocity = gCameraObject->z_velocity * 0.95;
+    }
+    temp_v0_13 = D_8011D586;
+    if (temp_v0_13 > 0x1400) {
+        temp_v0_13 = 0x2800 - D_8011D586;
+    }
+    if (temp_v0_13 > 0x600) {
+        temp_v0_13 = 0x600;
+    }
+    temp_v0_13 = ((temp_v0_13 >> 4) + 4);
+    temp_f18 = arg2;
+    if (D_8011D583) {
+        D_8011D586 += (temp_f18 * temp_v0_13);
+        if (D_8011D586 > 0x2800) {
+            D_8011D586 = 0x2800;
+        }
+    } else {
+        D_8011D586 -= (temp_f18 * temp_v0_13);
+        if (D_8011D586 < 0) {
+            D_8011D586 = 0;
+        }
+    }
+    gCameraObject->trans.y_rotation -= D_8011D586;
+    gCameraObject->unk3A -= temp_f18;
+    while (gCameraObject->unk3A < 0) {
+        gCameraObject->unk3A += 5;
+         gCameraObject->unk30 = -gCameraObject->unk30 * 0.75;
+    }
+}
 
 void func_800580B4(Object *obj, Object_Racer *racer, s32 arg2, f32 arg3) {
     f32 xPos, yPos, zPos;

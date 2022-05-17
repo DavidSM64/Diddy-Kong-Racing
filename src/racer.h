@@ -25,7 +25,7 @@ typedef struct ObjectCamera {
   /* 0x0034 */ s16 unk34;
   /* 0x0036 */ s16 unk36;
   /* 0x0038 */ s16 unk38;
-  /* 0x003A */ u8 unk3A;
+  /* 0x003A */ s8 unk3A;
   /* 0x003B */ u8 unk3B;
   /* 0x003C */ u8 unk3C;
   /* 0x003D */ u8 unk3D;
@@ -199,11 +199,11 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_80057A40(Object *obj, Object_Racer *racer, f32 arg2);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
 void func_800576E0(Object *obj, Object_Racer *racer, s32 arg2);
-void func_80057A40(Object *obj, Object_Racer *racer, f32 arg2);
 void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_8005492C(Object *obj, Object_Racer *racer, s32, f32);
@@ -212,5 +212,9 @@ void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
 void func_80052B64(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8*);
+void func_80048E64(f32, Object*, Object_Racer*);
+void func_8004C2B0(f32, Object*, Object_Racer*);
+void func_8004D590(f32, Object*, Object_Racer*);
+void func_800581E8(f32, Object*, Object_Racer*);
 
 #endif
