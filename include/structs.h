@@ -808,7 +808,7 @@ typedef struct Object_Racer {
   /* 0x002 */ u8 unk2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
-  /* 0x008 */ s32 unk8;
+  /* 0x008 */ f32 unk8;
   /* 0x00C */ s32 unkC;
   /* 0x010 */ f32 unk10;
   /* 0x014 */ f32 unk14;
@@ -919,7 +919,8 @@ typedef struct Object_Racer {
   /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;
   /* 0x198 */ s32 unk198;
-  /* 0x19C */ s32 unk19C;
+  /* 0x19C */ s16 unk19C;
+  /* 0x19E */ s16 unk19E;
   /* 0x1A0 */ s16 unk1A0;
   /* 0x1A2 */ s16 unk1A2;
   /* 0x1A4 */ s16 unk1A4;
@@ -945,7 +946,7 @@ typedef struct Object_Racer {
   /* 0x1CD */ u8 unk1CD;
   /* 0x1CE */ u8 unk1CE;
   /* 0x1CF */ s8 unk1CF;
-  /* 0x1D0 */ s8 unk1D0;
+  /* 0x1D0 */ s8 spectateCamID;
   /* 0x1D1 */ u8 unk1D1;
   /* 0x1D2 */ s8 unk1D2;
   /* 0x1D3 */ s8 unk1D3;
@@ -953,7 +954,7 @@ typedef struct Object_Racer {
   /* 0x1D5 */ u8 unk1D5;
   /* 0x1D6 */ s8 unk1D6;
   /* 0x1D7 */ s8 unk1D7;
-  /* 0x1D8 */ s8 unk1D8;
+  /* 0x1D8 */ s8 raceStatus;
   /* 0x1D9 */ u8 unk1D9;
   /* 0x1DA */ u8 unk1DA;
   /* 0x1DB */ s8 spinout_timer;

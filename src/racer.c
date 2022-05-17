@@ -366,7 +366,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80046524.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80048C7C.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80048E64.s")
+GLOBAL_ASM("asm/non_matchings/racer/update_camera_hovercraft.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
@@ -454,9 +454,9 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8004C2B0.s")
+GLOBAL_ASM("asm/non_matchings/racer/update_camera_plane.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_8004D590.s")
+GLOBAL_ASM("asm/non_matchings/racer/update_camera_loop.s")
 
 void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *racer) {
     s16 sp26;
@@ -557,7 +557,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
         gCameraObject->trans.y_rotation = tempObj->unk196;
-        gCameraObject->unk36 = 0;
+        gCameraObject->mode = CAMERA_CAR;
         gCameraObject->unk3C = 0xFF;
         gCameraObject->unk3D = 0xFF;
         gCameraObject->unk3E = 0xFF;
@@ -1310,7 +1310,7 @@ f32 func_80057220(Object *obj, Object_Racer *racer) {
             }
         }
     }
-    if (racer->unk1D3 && !D_8011D540 && sp28 && !racer->unk1D8) {
+    if (racer->unk1D3 && !D_8011D540 && sp28 && racer->raceStatus == STATUS_RACING) {
          func_80072348(racer->playerIndex, 6);
     }
     if ((D_8011D540 < 80) && gActivePlayerButtonPress & A_BUTTON) {
@@ -1390,24 +1390,24 @@ void func_800579B0(Object_Racer *racer, UNUSED s32 arg1, f32 updateRate) {
     racer->unk1E1 += temp2;
 }
 
-void func_80057A40(Object *obj, Object_Racer *racer, f32 arg2) {
+void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
 	f32 temp_f14;
-    s32 temp_f18;
-	s32 temp_v0_13;
+    s32 delta;
+	s32 angle;
 
-    if (gActivePlayerButtonPress & 8 && func_800A0190()) {
-        gCameraObject->unk3B++;
-        if (gCameraObject->unk3B >= 4) {
-            gCameraObject->unk3B = 0;
+    if (gActivePlayerButtonPress & U_CBUTTONS && func_800A0190()) {
+        gCameraObject->zoom++;
+        if (gCameraObject->zoom > ZOOM_VERY_CLOSE) {
+            gCameraObject->zoom = ZOOM_MEDIUM;
         }
         if (racer->playerIndex != PLAYER_COMPUTER) {
-            func_80066060(racer->playerIndex, gCameraObject->unk3B);
+            func_80066060(racer->playerIndex, gCameraObject->zoom);
         }
-        switch (gCameraObject->unk3B) {
-        case 0:
+        switch (gCameraObject->zoom) {
+        case ZOOM_MEDIUM:
             func_80001D04(104, 0);
             break;
-        case 1:
+        case ZOOM_FAR:
             func_80001D04(105, 0);
             break;
         default:
@@ -1415,43 +1415,48 @@ void func_80057A40(Object *obj, Object_Racer *racer, f32 arg2) {
             break;
         }
     }
-    if (racer->unk1D8 == 1 && gCameraObject->unk36 != 5) {
-            gCameraObject->unk36 = 7;
+    if (racer->raceStatus == STATUS_FINISHED && gCameraObject->mode != CAMERA_FINISH_CHALLENGE) {
+            gCameraObject->mode = CAMERA_FINISH_RACE;
     }
     if (racer->unk108) {
-        gCameraObject->unk36 = 3;
+        gCameraObject->mode = CAMERA_FIXED;
     }
-
-    switch (gCameraObject->unk36) {
+    // Set the camera behaviour based on current mode.
+    switch (gCameraObject->mode) {
 	default:
 		break;
-    case 0:
-        func_800581E8(arg2, obj, racer);
+    case CAMERA_CAR:
+        // Driving a car.
+        update_camera_car(updateRate, obj, racer);
         break;
-    case 1:
-        func_8004C2B0(arg2, obj, racer);
+    case CAMERA_PLANE:
+        // Flying a plane.
+        update_camera_plane(updateRate, obj, racer);
         break;
-    case 3:
-        func_80058F44(arg2, obj, (Object* ) racer);
+    case CAMERA_FIXED:
+        // Fixes the camera in place, continuing to look at the player. Used when entering doors.
+        update_camera_fixed(updateRate, obj, racer);
         break;
-    case 4:
-        func_80048E64(arg2, obj, racer);
+    case CAMERA_HOVERCRAFT:
+        // Driving a hovercraft.
+        update_camera_hovercraft(updateRate, obj, racer);
         break;
-    case 5:
-        func_80058B84(arg2, obj, racer);
+    case CAMERA_FINISH_CHALLENGE:
+        // When you finish a challenge, the camera will rotate around the player, or around a set path, if the player's been KO'd.
+        update_camera_finish_challenge(updateRate, obj, racer);
         break;
-    case 6:
-        func_8004D590(arg2, obj, racer);
+    case CAMERA_LOOP:
+        // Used for loop-the-loops. Follows the face direction of the player exactly, the standard camera modes do not.
+        update_camera_loop(updateRate, obj, racer);
         break;
-    case 7:
-        func_80058D5C(arg2, obj, racer);
+    case CAMERA_FINISH_RACE:
+        // When you finish a race, the camera will go into a more cinematic mode, following the player.
+        update_camera_finish_race(updateRate, obj, racer);
         break;
     }
     temp_f14 = D_8011D586 / 10240.0f;
-    gCameraObject->x_velocity = (((obj->segment.trans.x_position + (91.75 * racer->ox1) + (90.0 * racer->ox3))
-                                - gCameraObject->trans.x_position) * temp_f14);
-    gCameraObject->z_velocity = (((obj->segment.trans.z_position + (91.75 * racer->oz1) + (90.0 * racer->oz3))
-                                - gCameraObject->trans.z_position) * temp_f14);
+    gCameraObject->x_velocity = (((obj->segment.trans.x_position + (91.75 * racer->ox1) + (90.0 * racer->ox3)) - gCameraObject->trans.x_position) * temp_f14);
+    gCameraObject->z_velocity = (((obj->segment.trans.z_position + (91.75 * racer->oz1) + (90.0 * racer->oz3)) - gCameraObject->trans.z_position) * temp_f14);
     gCameraObject->y_velocity = (((func_8003ACAC() + 48.5) - gCameraObject->trans.y_position) * temp_f14);
     gCameraObject->unk38 =  -gCameraObject->trans.x_rotation * temp_f14;
     gCameraObject->trans.x_position += gCameraObject->x_velocity;
@@ -1462,43 +1467,43 @@ void func_80057A40(Object *obj, Object_Racer *racer, f32 arg2) {
         gCameraObject->y_velocity = gCameraObject->y_velocity * 0.95;
         gCameraObject->z_velocity = gCameraObject->z_velocity * 0.95;
     }
-    temp_v0_13 = D_8011D586;
-    if (temp_v0_13 > 0x1400) {
-        temp_v0_13 = 0x2800 - D_8011D586;
+    angle = D_8011D586;
+    if (angle > 0x1400) {
+        angle = 0x2800 - D_8011D586;
     }
-    if (temp_v0_13 > 0x600) {
-        temp_v0_13 = 0x600;
+    if (angle > 0x600) {
+        angle = 0x600;
     }
-    temp_v0_13 = ((temp_v0_13 >> 4) + 4);
-    temp_f18 = arg2;
+    angle = ((angle >> 4) + 4);
+    delta = updateRate;
     if (D_8011D583) {
-        D_8011D586 += (temp_f18 * temp_v0_13);
+        D_8011D586 += (delta * angle);
         if (D_8011D586 > 0x2800) {
             D_8011D586 = 0x2800;
         }
     } else {
-        D_8011D586 -= (temp_f18 * temp_v0_13);
+        D_8011D586 -= (delta * angle);
         if (D_8011D586 < 0) {
             D_8011D586 = 0;
         }
     }
     gCameraObject->trans.y_rotation -= D_8011D586;
-    gCameraObject->unk3A -= temp_f18;
+    gCameraObject->unk3A -= delta;
     while (gCameraObject->unk3A < 0) {
         gCameraObject->unk3A += 5;
          gCameraObject->unk30 = -gCameraObject->unk30 * 0.75;
     }
 }
 
-void func_800580B4(Object *obj, Object_Racer *racer, s32 arg2, f32 arg3) {
+void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     f32 xPos, yPos, zPos;
-    if ((D_8011D55C != -1) && (racer->unk1D8 != 1)) {
-        if (arg2 != gCameraObject->unk36) {
+    if ((D_8011D55C != -1) && (racer->raceStatus != STATUS_FINISHED)) {
+        if (mode != gCameraObject->mode) {
             func_80057A40(obj, racer, arg3);
             xPos = gCameraObject->trans.x_position;
             yPos = gCameraObject->trans.y_position;
             zPos = gCameraObject->trans.z_position;
-            gCameraObject->unk36 = arg2;
+            gCameraObject->mode = mode;
             func_80057A40(obj, racer, arg3);
             if (D_8011D540 == 0 && D_8011D582 == 0) {
                 gCameraObject->x_velocity = xPos - gCameraObject->trans.x_position;
@@ -1509,9 +1514,14 @@ void func_800580B4(Object *obj, Object_Racer *racer, s32 arg2, f32 arg3) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_800581E8.s")
+GLOBAL_ASM("asm/non_matchings/racer/update_camera_car.s")
 
-void func_80058B84(UNUSED f32 arg0, Object *obj, Object_Racer *racer) {
+/**
+ * Handles the camera movement when the player has finished a challenge.
+ * If the player still exists, it will follow and rotate around the player.
+ * Otherwise, it will follow a set path while rotating.
+ */
+void update_camera_finish_challenge(UNUSED f32 updateRate, Object *obj, Object_Racer *racer) {
     s32 levelSeg;
     f32 temp_f12;
     f32 zOffset;
@@ -1540,21 +1550,25 @@ void func_80058B84(UNUSED f32 arg0, Object *obj, Object_Racer *racer) {
     racer->unk196 = gCameraObject->trans.y_rotation;
 }
 
-void func_80058D5C(UNUSED f32 arg0, Object *obj, Object_Racer *racer) {
-    s32 sp34;
+/**
+ * Handles the camera movement when the player has finished the race.
+ * Uses a more cinematic approach to following the player, using pre-existing points in the track to look from.
+ */
+void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer *racer) {
+    s32 cameraID;
     Object *tempObj;
     f32 xDiff;
     f32 yDiff;
     f32 zDiff;
     f32 distance;
 
-    sp34 = racer->unk1D0;
-    tempObj = func_8001BDD4(obj, &sp34);
+    cameraID = racer->spectateCamID;
+    tempObj = func_8001BDD4(obj, &cameraID);
     if (!tempObj) {
-        gCameraObject->unk36 = 5;
+        gCameraObject->mode = CAMERA_FINISH_CHALLENGE;
         return;
     }
-    racer->unk1D0 = sp34;
+    racer->spectateCamID = cameraID;
     gCameraObject->trans.x_position = tempObj->segment.trans.x_position;
     gCameraObject->trans.y_position = tempObj->segment.trans.y_position;
     gCameraObject->trans.z_position = tempObj->segment.trans.z_position;
@@ -1568,18 +1582,22 @@ void func_80058D5C(UNUSED f32 arg0, Object *obj, Object_Racer *racer) {
     gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
 }
 
-void func_80058F44(f32 arg0, struct Object *obj1, struct Object *obj2) {
-    s32 temp_f4;
-    f32 diffX;
-    f32 diffZ;
-    temp_f4 = (s32) arg0;
-    diffX = gCameraObject->trans.x_position - obj1->segment.trans.x_position;
-    diffZ = gCameraObject->trans.z_position - obj1->segment.trans.z_position;
-    gCameraObject->trans.y_rotation += ((((-func_8007066C((s32) diffX, (s32) diffZ)) -
-                                    gCameraObject->trans.y_rotation) + 0x8000) * temp_f4) >> 4;
-    gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * temp_f4)) >> 4);
+/**
+ * Stops the camera in place when set, while still pointing in the direction of the player.
+ * Used when entering doors.
+ */
+void update_camera_fixed(f32 updateRate, struct Object *obj, struct Object_Racer *racer) {
+    s32 delta;
+    f32 xDiff;
+    f32 zDiff;
+    delta = (s32) updateRate;
+    xDiff = gCameraObject->trans.x_position - obj->segment.trans.x_position;
+    zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
+    gCameraObject->trans.y_rotation += ((((-func_8007066C((s32) xDiff, (s32) zDiff)) -
+                                    gCameraObject->trans.y_rotation) + 0x8000) * delta) >> 4;
+    gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * delta)) >> 4);
     gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position,
-                            obj2->segment.unk3C_a.unk3C_f, gCameraObject->trans.z_position);
+                            racer->oy1, gCameraObject->trans.z_position);
 }
 
 void func_80059080(UNUSED Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *velZ) {

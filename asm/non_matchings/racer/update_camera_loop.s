@@ -1,4 +1,4 @@
-glabel func_8004D590
+glabel update_camera_loop
 /* 04E190 8004D590 3C0142F0 */  li    $at, 0x42F00000 # 120.000000
 /* 04E194 8004D594 3C028012 */  lui   $v0, %hi(D_8011D540) # $v0, 0x8012
 /* 04E198 8004D598 44810000 */  mtc1  $at, $f0

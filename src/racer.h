@@ -13,6 +13,18 @@ typedef enum ActivePlayers {
     PLAYER_FOUR
 } ActivePlayers;
 
+typedef enum RaceStatus {
+    STATUS_RACING,
+    STATUS_FINISHED
+} RaceStatus;
+
+typedef enum CameraZoom {
+    ZOOM_MEDIUM,
+    ZOOM_FAR,
+    ZOOM_CLOSE,
+    ZOOM_VERY_CLOSE
+} CameraZoom;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -23,10 +35,10 @@ typedef struct ObjectCamera {
   /* 0x002C */ f32 z_velocity;
   /* 0x0030 */ f32 unk30;
   /* 0x0034 */ s16 unk34;
-  /* 0x0036 */ s16 unk36;
+  /* 0x0036 */ s16 mode;
   /* 0x0038 */ s16 unk38;
   /* 0x003A */ s8 unk3A;
-  /* 0x003B */ u8 unk3B;
+  /* 0x003B */ u8 zoom;
   /* 0x003C */ u8 unk3C;
   /* 0x003D */ u8 unk3D;
   /* 0x003E */ u8 unk3E;
@@ -100,6 +112,7 @@ typedef struct unk800579B0 {
     s8 unk1E1;
 } unk800579B0;
 
+extern ObjectCamera *gCameraObject;
 extern s32 gObjLoopGoldenBalloonLength;
 extern s16 D_800DCB54;
 extern s32 D_800DCB58;
@@ -167,7 +180,7 @@ void func_80057048(Object *obj, s32 arg1);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_Racer *racer);
 void func_800579B0(Object_Racer *racer, s32 arg1, f32 updateRate);
-void func_800580B4(Object *obj, Object_Racer *racer, s32 arg2, f32 arg3);
+void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3);
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
 void func_800598D0(void);
 void func_80059944(void);
@@ -190,16 +203,20 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
 void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation);
 void func_80059080(Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *velZ);
 void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3);
-void func_80058B84(f32 arg0, Object *obj, Object_Racer *racer);
-void func_80058D5C(f32 arg0, Object *obj, Object_Racer *racer);
-void func_80058F44(f32 arg0, struct Object *obj1, struct Object *obj2);
+void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer);
+void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer);
+void update_camera_loop(f32 updateRate, Object *obj, Object_Racer *racer);
+void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer);
+void update_camera_finish_challenge(f32 arg0, Object *obj, Object_Racer *racer);
+void update_camera_finish_race(f32 arg0, Object *obj, Object_Racer *racer);
+void update_camera_fixed(f32 arg0, struct Object *obj, Object_Racer *racer);
 void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80050754(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80057A40(Object *obj, Object_Racer *racer, f32 arg2);
+void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
@@ -212,9 +229,5 @@ void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
 void func_80052B64(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8*);
-void func_80048E64(f32, Object*, Object_Racer*);
-void func_8004C2B0(f32, Object*, Object_Racer*);
-void func_8004D590(f32, Object*, Object_Racer*);
-void func_800581E8(f32, Object*, Object_Racer*);
 
 #endif
