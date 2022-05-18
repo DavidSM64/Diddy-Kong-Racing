@@ -456,7 +456,75 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
 
 GLOBAL_ASM("asm/non_matchings/racer/update_camera_plane.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
-GLOBAL_ASM("asm/non_matchings/racer/update_camera_loop.s")
+
+/**
+ * Handles the camera movement when the player is on a loop-the-loop.
+ * This happens in Walrus Cove and Darkmoon Caverns.
+ * The camera's rotation follows the players exactly, in order to stay levelled.
+ */
+void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
+    s32 delta;
+    UNUSED f32 pad;
+    s32 segmentIndex;
+    s32 angle;
+    f32 zoom;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    Matrix mtx;
+    s32 angleDiff;
+
+	delta = (s32) updateRate;
+    zoom = 120.0f;
+    if (D_8011D540 >= 0x3D) {
+        zoom += ((f32) (D_8011D540 - 0x3C) * 4.0f);
+    }
+    racer->unk196 = 0x8000 - racer->unk1A0;
+    if (get_viewport_count() == 1) {
+        zoom = 160.0f;
+    }
+    // A little bit of indecisiveness.
+    if (gCameraObject->zoom == ZOOM_FAR) {
+        zoom += 35.0f;
+    }
+    if (gCameraObject->zoom == ZOOM_FAR) {
+        zoom -= 35.0f;
+    }
+    gCameraObject->unk1C += (zoom - gCameraObject->unk1C) * 0.125;
+    D_8011D510.y_rotation = -gCameraObject->trans.y_rotation + 0x8000;
+    D_8011D510.x_rotation = -gCameraObject->trans.x_rotation;
+    D_8011D510.z_rotation = 0;
+    D_8011D510.x_position = 0.0f;
+    D_8011D510.y_position = 0.0f;
+    D_8011D510.z_position = 0.0f;
+    D_8011D510.scale = 1.0f;
+    func_8006FC30(mtx, &D_8011D510);
+    guMtxXFMF(mtx, 0.0f, 0.0f, gCameraObject->unk1C, &velX, &velY, &velZ);
+    gCameraObject->trans.x_position = obj->segment.trans.x_position + velX;
+    gCameraObject->trans.y_position = obj->segment.trans.y_position + velY;
+    gCameraObject->trans.z_position = obj->segment.trans.z_position + velZ;
+    guMtxXFMF(mtx, 0.0f, cosine_s(0x800) * gCameraObject->unk1C, 0.0f, &velX, &velY, &velZ);
+    gCameraObject->trans.x_position += velX;
+    gCameraObject->trans.y_position += velY;
+    gCameraObject->trans.z_position += velZ;
+    angleDiff = (u16) (-obj->segment.trans.z_rotation);
+    angle = angleDiff - ((u16) gCameraObject->trans.z_rotation);
+    WRAP(angle, -0x8000, 0x8000);
+    gCameraObject->trans.z_rotation += ((angle * delta) >> 4);
+    angleDiff = -obj->segment.trans.x_rotation;
+    angle = angleDiff - (u16) gCameraObject->trans.x_rotation;
+    WRAP(angle, -0x8000, 0x8000);
+    gCameraObject->trans.x_rotation += ((angle * delta) >> 4);
+    gCameraObject->trans.y_rotation = racer->unk196;
+    segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
+    if (segmentIndex != -1) {
+        gCameraObject->unk34 = segmentIndex;
+    }
+    racer->unk196 = gCameraObject->trans.y_rotation;
+    gCameraObject->trans.x_position += gCameraObject->x_velocity;
+    gCameraObject->trans.y_position += gCameraObject->y_velocity;
+    gCameraObject->trans.z_position += gCameraObject->z_velocity;
+}
 
 void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *racer) {
     s16 sp26;
