@@ -192,7 +192,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     D_8011B104 = 0;
     D_8011B108 = 0;
     D_8011B10C = 0;
-    if (gCurrentLevelHeader2->race_type == RACE_TYPE_CUTSCENE_1 || gCurrentLevelHeader2->race_type == RACE_TYPE_CUTSCENE_2) {
+    if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 || gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_2) {
         D_8011B0F8 = 1;
     }
     func_8002C0C4(arg0);
@@ -206,7 +206,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
             }
         }
     }
-    if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == RACE_TYPE_DEFAULT || gCurrentLevelHeader2->race_type & RACE_TYPE_CHALLENGE)) {
+    if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader2->race_type & RACETYPE_CHALLENGE)) {
         tmp_a2 = 2;
     } else {
         tmp_a2 = arg2;

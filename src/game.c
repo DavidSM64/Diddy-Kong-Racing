@@ -403,12 +403,12 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
     D_800DD330 = 0;
     sp44 = levelId;
-    if (gCurrentLevelHeader->race_type == RACE_TYPE_DEFAULT) {
+    if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
         func_8006C2E4();
     }
     if (func_8006C2F0() == 0) {
         if (D_800DD32C == 0) {
-            if (gCurrentLevelHeader->race_type == RACE_TYPE_BOSS) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
                 phi_v1_2 = settings->courseFlagsPtr[levelId];
                 phi_v0_2 = FALSE;
                 if (gCurrentLevelHeader->world == 0 || gCurrentLevelHeader->world == 5) {
@@ -436,7 +436,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
                     entranceId = cutsceneId;
                 }
             }
-            if (gCurrentLevelHeader->race_type == RACE_TYPE_HUB_AREA) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
                 s32 curWorld = gCurrentLevelHeader->world;
                 if (curWorld > 0 && curWorld < 5) {
                     if (settings->keys & (1 << curWorld)) {
@@ -452,7 +452,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
                     }
                 }
             }
-            if (gCurrentLevelHeader->race_type == RACE_TYPE_HUB_AREA && gCurrentLevelHeader->world == 0 && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == 0 && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
                 // Trigger wizpig face cutscene
                 s32 savedEntranceId = entranceId;
                 s32 savedCutsceneId = cutsceneId;
@@ -483,19 +483,19 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         }
     }
     if (cutsceneId == 0x64) {
-        if (get_trophy_race_world_id() != 0 && gCurrentLevelHeader->race_type == RACE_TYPE_DEFAULT) {
+        if (get_trophy_race_world_id() != 0 && gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
             cutsceneId = 0;
-        } else if (is_in_tracks_mode() == 1 && gCurrentLevelHeader->race_type == RACE_TYPE_DEFAULT) {
+        } else if (is_in_tracks_mode() == 1 && gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
             cutsceneId = 0;
         }
     }
-    if (gCurrentLevelHeader->race_type == RACE_TYPE_DEFAULT || gCurrentLevelHeader->race_type == RACE_TYPE_BOSS) {
+    if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
         D_800DD31C = 1;
     } else {
         D_800DD31C = 0;
     }
-    if (noPlayers && gCurrentLevelHeader->race_type != RACE_TYPE_CUTSCENE_2) {
-        gCurrentLevelHeader->race_type = RACE_TYPE_CUTSCENE_1;
+    if (noPlayers && gCurrentLevelHeader->race_type != RACETYPE_CUTSCENE_2) {
+        gCurrentLevelHeader->race_type = RACETYPE_CUTSCENE_1;
     }
     set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
     func_80000CBC();
@@ -517,7 +517,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         vehicleId = D_800DD314;
     }
     func_8006DB20(vehicleId);
-    if (gCurrentLevelHeader->race_type == RACE_TYPE_HUB_AREA) {
+    if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
         if (settings->worldId > 0) {
             s32 temp_s0_5 = 8 << (settings->worldId + 31);
             if (settings->worldId == 5) {
@@ -546,16 +546,16 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
             }
         }
     }
-    if (numberOfPlayers != ONE_PLAYER && gCurrentLevelHeader->race_type == RACE_TYPE_DEFAULT) {
+    if (numberOfPlayers != ONE_PLAYER && gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
         cutsceneId = 0x64;
     }
-    if ((gCurrentLevelHeader->race_type == RACE_TYPE_DEFAULT || (gCurrentLevelHeader->race_type & RACE_TYPE_CHALLENGE)) && is_in_two_player_adventure()) {
+    if ((gCurrentLevelHeader->race_type == RACETYPE_DEFAULT || (gCurrentLevelHeader->race_type & RACETYPE_CHALLENGE)) && is_in_two_player_adventure()) {
         D_800DD318 = 1;
         cutsceneId = 0x64;
     } else {
         D_800DD318 = 0;
     }
-    if (gCurrentLevelHeader->race_type == RACE_TYPE_DEFAULT && !noPlayers && is_time_trial_enabled()) {
+    if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && !noPlayers && is_time_trial_enabled()) {
         cutsceneId = 0x64;
     }
     func_8001E450(cutsceneId);
