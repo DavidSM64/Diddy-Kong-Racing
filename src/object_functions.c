@@ -876,7 +876,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
                     if (racerObj64->unk20C) {
                         racerObj64->unk203 |= 4;
                     }
-                    if (racerObj64->unk1D8 == 0) {
+                    if (racerObj64->raceStatus == STATUS_RACING) {
                         func_80072348(racerObj64->playerIndex, 8);
                     }
                 }

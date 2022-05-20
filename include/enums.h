@@ -11,6 +11,17 @@ typedef enum Vehicle {
     NUMBER_OF_VEHICLE_TYPES
 } Vehicle;
 
+typedef enum CameraMode {
+    CAMERA_CAR,
+    CAMERA_PLANE,
+    CAMERA_UNUSED,
+    CAMERA_FIXED,
+    CAMERA_HOVERCRAFT,
+    CAMERA_FINISH_CHALLENGE,
+    CAMERA_LOOP,
+    CAMERA_FINISH_RACE
+} CameraMode;
+
 typedef enum Language {
     LANGUAGE_ENGLISH,
     LANGUAGE_GERMAN,

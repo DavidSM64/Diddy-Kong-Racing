@@ -209,7 +209,7 @@ typedef struct PulsatingLightData {
 typedef struct LevelHeader {
   /* 0x00 */ s8 world;
   /* 0x01 */ u8 unk1;
-  /* 0x02 */ u8 unk2;
+  /* 0x02 */ s8 unk2;
   /* 0x03 */ u8 unk3;
   /* 0x04 */ u8 unk4[4];
 
@@ -219,7 +219,9 @@ typedef struct LevelHeader {
 
   /* 0x20 */ s32 *unk20;
 
-  /* 0x24 */ u8 pad24[0x10];
+  /* 0x24 */ u8 pad24[6];
+  /* 0x2A */ u8 unk2A;
+  /* 0x2B */ u8 pad2B[9];
 
   /* 0x34 */ s16 geometry;
   /* 0x36 */ s16 collectables; // Objects such as bananas, balloons, etc.
@@ -512,7 +514,8 @@ typedef struct ObjectHeader {
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
              u8 pad56;
   /* 0x57 */ s8 unk57;
-             u8 pad58[0x2];
+             s8 unk58;
+             u8 pad59;
   /* 0x5A */ s8 unk5A;
              u8 pad5B[0x5];
   /* 0x60 */ char internalName[16];
@@ -805,11 +808,11 @@ typedef struct Object_Racer {
   /* 0x002 */ u8 unk2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
-  /* 0x008 */ s32 unk8;
+  /* 0x008 */ f32 unk8;
   /* 0x00C */ s32 unkC;
-  /* 0x010 */ s32 unk10;
-  /* 0x014 */ s32 unk14;
-  /* 0x018 */ s32 unk18;
+  /* 0x010 */ f32 unk10;
+  /* 0x014 */ f32 unk14;
+  /* 0x018 */ f32 unk18;
   /* 0x01C */ s32 unk1C;
   /* 0x020 */ s32 unk20;
   /* 0x024 */ s32 unk24;
@@ -833,7 +836,7 @@ typedef struct Object_Racer {
   /* 0x068 */ s32 unk68;
   /* 0x06C */ s32 unk6C;
   /* 0x070 */ s32 unk70;
-  /* 0x074 */ s32 unk74;
+  /* 0x074 */ f32 unk74;
   /* 0x078 */ f32 unk78;
   /* 0x07C */ f32 unk7C;
   /* 0x080 */ f32 unk80;
@@ -858,31 +861,23 @@ typedef struct Object_Racer {
   /* 0x0CC */ f32 unkCC;
   /* 0x0D0 */ f32 unkD0;
   /* 0x0D4 */ s32 unkD4;
-  /* 0x0D8 */ f32 unkD8;
-  /* 0x0DC */ f32 unkDC;
-  /* 0x0E0 */ f32 unkE0;
-  /* 0x0E4 */ f32 unkE4;
-  /* 0x0E8 */ f32 unkE8;
-  /* 0x0EC */ f32 unkEC;
-  /* 0x0F0 */ f32 unkF0;
-  /* 0x0F4 */ f32 unkF4;
-  /* 0x0F8 */ f32 unkF8;
-  /* 0x0FC */ f32 unkFC;
-  /* 0x100 */ f32 unk100;
-  /* 0x104 */ f32 unk104;
+  /* 0x0D8 */ f32 unkD8[3];
+  /* 0x0E4 */ f32 unkE4[3];
+  /* 0x0F0 */ f32 unkF0[3];
+  /* 0x0FC */ f32 unkFC[3];
   /* 0x108 */ s32 unk108;
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;
   /* 0x114 */ s32 unk114;
   /* 0x118 */ s32 unk118;
-  /* 0x11C */ s32 unk11C;
-  /* 0x120 */ s32 unk120;
+  /* 0x11C */ f32 unk11C;
+  /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;
   /* 0x128 */ u32 lap_times[3];
   /* 0x134 */ s32 unk134;
   /* 0x138 */ s32 unk138;
   /* 0x13C */ s32 unk13C;
-  /* 0x140 */ s32 unk140;
+  /* 0x140 */ struct Object *unk140;
   /* 0x144 */ struct Object *held_obj;
   /* 0x148 */ struct Object *unk148;
   /* 0x14C */ struct Object *unk14C;
@@ -899,29 +894,33 @@ typedef struct Object_Racer {
   /* 0x166 */ s16 unk16C; // As for these, they seem to affect the turning direction of the racer's head.
   /* 0x16E */ s16 unk16E;
   /* 0x170 */ s16 unk170;
-  /* 0x172 */ u8 balloon_type;
-  /* 0x173 */ u8 balloon_quantity;
-  /* 0x174 */ u8 balloon_level;
-  /* 0x175 */ u8 unk175;
+  /* 0x172 */ s8 balloon_type;
+  /* 0x173 */ s8 balloon_quantity;
+  /* 0x174 */ s8 balloon_level;
+  /* 0x175 */ s8 unk175;
   /* 0x176 */ s16 unk176;
   /* 0x178 */ s32 unk178;
   /* 0x17C */ s32 unk17C;
   /* 0x180 */ s32 unk180;
-  /* 0x184 */ s8 pad184;
+  /* 0x184 */ s8 unk184;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
   /* 0x187 */ s8 unk187;
-  /* 0x188 */ s32 unk188;
+  /* 0x188 */ s8 unk188;
+  /* 0x189 */ s8 unk189;
+  /* 0x18A */ s8 unk18A;
+  /* 0x18B */ s8 unk18B;
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 unk18E;
-  /* 0x190 */ u16 unk190;
-  /* 0x192 */ u8 unk192;
+  /* 0x190 */ s16 unk190;
+  /* 0x192 */ s8 unk192;
   /* 0x193 */ s8 unk193;
   /* 0x194 */ s8 unk194;
   /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;
   /* 0x198 */ s32 unk198;
-  /* 0x19C */ s32 unk19C;
+  /* 0x19C */ s16 unk19C;
+  /* 0x19E */ s16 unk19E;
   /* 0x1A0 */ s16 unk1A0;
   /* 0x1A2 */ s16 unk1A2;
   /* 0x1A4 */ s16 unk1A4;
@@ -947,20 +946,20 @@ typedef struct Object_Racer {
   /* 0x1CD */ u8 unk1CD;
   /* 0x1CE */ u8 unk1CE;
   /* 0x1CF */ s8 unk1CF;
-  /* 0x1D0 */ u8 unk1D0;
+  /* 0x1D0 */ s8 spectateCamID;
   /* 0x1D1 */ u8 unk1D1;
-  /* 0x1D2 */ u8 unk1D2;
+  /* 0x1D2 */ s8 unk1D2;
   /* 0x1D3 */ s8 unk1D3;
   /* 0x1D4 */ u8 unk1D4;
   /* 0x1D5 */ u8 unk1D5;
   /* 0x1D6 */ s8 unk1D6;
   /* 0x1D7 */ s8 unk1D7;
-  /* 0x1D8 */ s8 unk1D8;
+  /* 0x1D8 */ s8 raceStatus;
   /* 0x1D9 */ u8 unk1D9;
   /* 0x1DA */ u8 unk1DA;
   /* 0x1DB */ s8 spinout_timer;
   /* 0x1DC */ u8 wheel_surfaces[4];
-  /* 0x1E0 */ u8 unk1E0;
+  /* 0x1E0 */ s8 unk1E0;
   /* 0x1E1 */ s8 unk1E1;
   /* 0x1E2 */ s8 unk1E2;
   /* 0x1E3 */ s8 unk1E3;
@@ -1005,7 +1004,7 @@ typedef struct Object_Racer {
   /* 0x20D */ u8 unk20D;
   /* 0x20E */ s16 unk20E;
   /* 0x210 */ s8 unk210;
-  /* 0x211 */ u8 unk211;
+  /* 0x211 */ s8 unk211;
   /* 0x212 */ u8 unk212;
   /* 0x213 */ s8 unk213;
   /* 0x214 */ s8 unk214;

@@ -12,7 +12,7 @@ glabel D_800E6578
 .double 0.2
 
 .text
-glabel func_8004C2B0
+glabel update_camera_plane
 /* 04CEB0 8004C2B0 3C014348 */  li    $at, 0x43480000 # 200.000000
 /* 04CEB4 8004C2B4 44810000 */  mtc1  $at, $f0
 /* 04CEB8 8004C2B8 3C0142F0 */  li    $at, 0x42F00000 # 120.000000
