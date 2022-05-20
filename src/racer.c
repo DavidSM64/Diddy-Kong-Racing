@@ -1585,7 +1585,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
         tempZ = (tempX * angleX) - (tempZ * angleZ);
         temp_v1_2 = -(s16)(u16)arctan2_f(distance, tempY);
         if (temp_v1_2 < 0x2000 && temp_v1_2 > -0x2000) {
-            racer->unk1A4 = temp_v1_2 ;
+            racer->unk1A4 = temp_v1_2;
         }
         xRot = -(s16)(u16)arctan2_f(tempZ, tempY);
         if ((xRot < 0x2000) && (xRot > -0x2000)) {
