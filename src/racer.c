@@ -592,7 +592,212 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
     }
 }
 
+
+#ifdef NON_EQUIVALENT
+void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
+    s32 segmentIndex;
+    f32 baseSpeed;
+    f32 tempVel;
+    f32 yOffset;
+    f32 yVel;
+    s32 angle;
+    f32 temp_f16;
+    f32 baseFloat1 = 120.0f;
+    s32 angleVel;
+    f32 xOffset;
+    f32 zOffset;
+    f32 baseFloat2 = 45.0f;
+    f32 phi_f14;
+    f32 brakeVar = 0.0f;
+    s32 numViewports;
+    f32 baseFloat3;
+    s32 delta;
+
+    delta = (s32) updateRate;
+    temp_f16 = D_8011D4F0[0];
+    temp_f16 = 200.0f - (obj->segment.trans.y_position + (-temp_f16));
+    if (temp_f16 < 0.0f) {
+        temp_f16 = 0.0f;
+    }
+    if (temp_f16 > 200.0f) {
+        temp_f16 = 200.0f;
+    }
+    numViewports = get_viewport_count();
+    if (numViewports == 1) {
+        baseFloat2 = 180.0f;
+        baseFloat1 = 50.0f;
+    } else if (numViewports > 1) {
+        baseFloat2 = 110.0f;
+        baseFloat1 = 42.0f;
+    }
+    if (((!(gCurrentCarInput & 0x10)) || racer->unk1E2 < 3) && !racer->unk1F5) {
+        angle = (-racer->unk1A0 - (racer->unk196 & 0xFFFF)) + 0x8000;
+        if (angle > 0x8000) {
+            angle -= 0xFFFF;
+        }
+        angle = angle;
+        if (angle < -0x8000) {
+            angle += 0xFFFF;
+        }
+        if (racer->camera_zoom < 0.4) {
+            racer->camera_zoom += 0.005;
+        } else {
+            racer->camera_zoom = 0.4f;
+        }
+        angleVel = angle * racer->camera_zoom;
+        if (angleVel > 0x200) {
+            angleVel = 0x200;
+        }
+        if (angleVel < -0x200) {
+            angleVel = -0x200;
+        }
+        angleVel *= delta;
+        if (angle < 0 && angleVel < angle) {
+            angleVel = angle;
+        }
+        if (angle > 0 && angle < angleVel) {
+            angleVel = angle;
+        }
+        racer->unk196 += angleVel;
+    } else {
+        racer->camera_zoom = 0.0f;
+    }
+    if (D_8011D586) {
+        racer->unk196 = 0x8000 - racer->unk1A0;
+    }
+    if (racer->unk1E0 == 2 || racer->unk1E0 == -2) {
+        angle = 0;
+    } else {
+        angle = obj->segment.trans.x_rotation;
+        if (angle > 0x3000) {
+            angle = 0x3000;
+        }
+        if (angle < -0x3000) {
+            angle = -0x3000;
+        }
+    }
+    angle = -(angle - ((s32) (temp_f16 * 10.0f)));
+    angle = angle - ((u16) gCameraObject->trans.x_rotation);
+    if (angle > 0x8000) {
+        angle -= 0xFFFF;
+    }
+    if (angle < -0x8000) {
+        angle += 0xFFFF;
+    }
+    gCameraObject->trans.x_rotation += ((angle * delta) >> 4);
+    brakeVar = racer->brake;
+    baseSpeed = racer->unk8;
+    switch (gCameraObject->zoom) {
+    case 1:
+        baseFloat2 += 35.0f;
+        break;
+    case 2:
+        baseFloat1 -= 10.0f;
+        baseFloat2 -= 35.0f;
+        break;
+    case 3:
+        baseFloat2 -= 53.0f;
+        baseFloat1 -= 5.0f;
+        baseSpeed *= 0.25;
+        brakeVar = 0.0f;
+        break;
+    }
+    if (numViewports < 2) {
+        phi_f14 = baseSpeed * 60.0f;
+        phi_f14 = baseFloat2 + phi_f14;
+    } else {
+        phi_f14 = baseSpeed * 30.0f;
+        phi_f14 = baseFloat2 + phi_f14;
+    }
+    if (racer->velocity < 0.0 && !racer->unk1E2) {
+        tempVel = -(racer->velocity * brakeVar);
+        tempVel = tempVel * 6.0f;
+        if (65.0 < tempVel) {
+            tempVel = 65.0f;
+        }
+        if (yOffset);
+        phi_f14 -= tempVel;
+    }
+    if (!D_8011D540) {
+        if (func_8000C8B4(36) < racer->unk1D3) {
+            phi_f14 = -30.0f;
+        } else if (racer->unk1D3 > 0) {
+            phi_f14 = 180.0f;
+        }
+    }
+    if (D_8011D540 > 80) {
+        gCameraObject->unk1C = phi_f14;
+        gCameraObject->unk20 = baseFloat1;
+    }
+    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125;
+    gCameraObject->unk20 += (baseFloat1 - gCameraObject->unk20) * 0.125;
+    phi_f14 = cosine_s(gCameraObject->trans.x_rotation - 0x400);
+    xOffset = sine_s(gCameraObject->trans.x_rotation - 0x400);
+    baseFloat3 = phi_f14;
+    baseFloat2 = (gCameraObject->unk1C * baseFloat3) - (gCameraObject->unk20 * xOffset);
+    baseFloat1 = ((gCameraObject->unk1C) * (gCameraObject->unk1C));
+    baseFloat1 += (gCameraObject->unk20 * baseFloat3);
+    xOffset = cosine_s(0x8000 - racer->unk196) * baseFloat2;
+    zOffset = sine_s(0x8000 - racer->unk196) * baseFloat2;
+    yVel = cosine_s(racer->unk196 + 0x4000) * 3.0f;
+    yVel = yVel * racer->lateral_velocity;
+    gCameraObject->trans.x_position = (obj->segment.trans.x_position + xOffset) + yVel;
+    temp_f16 = obj->segment.trans.y_position;
+    yOffset = gCameraObject->trans.y_position - (temp_f16 + baseFloat1);
+    if (racer->unk1E0 == 1 || racer->unk1E0 == -1) {
+        racer->unk74 = 8.0;
+    }
+    if (racer->unk1E0 == 2 || racer->unk1E0 == -2) {
+        racer->unk74 = 8.0;
+    }
+    if (racer->unk74 > 2.0) {
+        racer->unk74 -= 0.2;
+    } else {
+        racer->unk74 = 2.0;
+    }
+    yVel = racer->unk74;
+    yVel = (yOffset * updateRate) / yVel;
+    if (yVel > 0.0f && yOffset < yVel) {
+        yVel = yOffset;
+    }
+    if (yVel < 0.0f && yVel < yOffset) {
+        yVel = yOffset;
+    }
+    gCameraObject->trans.y_position -= yVel;
+    gCameraObject->trans.z_position = zOffset + obj->segment.trans.z_position + (-sine_s(racer->unk196 + 0x4000) * 3.0f * racer->lateral_velocity);
+    gCameraObject->trans.y_rotation = racer->unk196;
+    if (racer->unk1E0 || D_8011D586) {
+        angle = -(u16) gCameraObject->trans.z_rotation;
+        if (angle > 0x8000) {
+            angle -= 0xFFFF;
+        }
+        if (angle < -0x8000) {
+            angle += 0xFFFF;
+        }
+        gCameraObject->trans.z_rotation += angle >> 2;
+    } else {
+        angle = (u16) gCameraObject->trans.z_rotation;
+        angle = angle + (-(racer->unk1A4 >> 4));
+        if (angle > 0x8000) {
+            angle -= 0xFFFF;
+        }
+        if (angle < -0x8000) {
+            angle += 0xFFFF;
+        }
+        gCameraObject->trans.z_rotation += angle >> 3;
+    }
+    tempVel = gCameraObject->trans.x_position;
+    segmentIndex = get_level_segment_index_from_position(tempVel, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
+    if (segmentIndex != -1) {
+        gCameraObject->unk34 = segmentIndex;
+    }
+    racer->unk196 = gCameraObject->trans.y_rotation;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/update_camera_plane.s")
+#endif
+
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
 
 /**
@@ -1720,7 +1925,208 @@ void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
+    s64 pad;
+    s32 segmentIndex;
+    f32 sp54 = 120.0f;
+    f32 baseDistance = 120.0f;
+    f32 yVel = 50.0f;
+    f32 temp_f16;
+    f32 sineOffset;
+    f32 baseSpeed;
+    f32 lateralOffset;
+    s32 angle;
+    f32 cosOffset;
+    s32 angleVel;
+    f32 xOffset;
+    f32 yOffset;
+    f32 zOffset;
+    f32 brakeVar;
+    f32 tempVel;
+    s32 baseAngle = 0x400;
+    s32 newAngle;
+    s32 numViewports;
+    s32 tempAngle;
+    s32 delta = (s32) updateRate;
+
+    numViewports = get_viewport_count();
+    if (numViewports == 1) {
+        baseDistance = 192.0f;
+        baseAngle = 0x200;
+    } else if (numViewports > 2) {
+        baseDistance = 100.0f;
+        yVel = 40.0f;
+    }
+    numViewports = func_80023568();
+    if (numViewports == 1 || numViewports == 4) {
+        baseDistance = 144.0f;
+        yVel = 110.0f;
+        if (gCameraObject->zoom == ZOOM_VERY_CLOSE) {
+            baseDistance += 30.0f;
+        }
+        baseAngle = 0xD00;
+    }
+    angle = racer->unk19E >> 3;
+    racer->unk196 = (-racer->unk1A0 - racer->unk19E) + 0x8000;
+    if (angle > 0x400) {
+        angle = 0x400;
+    }
+    if (angle < -0x400) {
+        angle = -0x400;
+    }
+    angle = angle * delta;
+    angleVel = angle;
+    if (angleVel > 0 && angleVel < racer->unk19E) {
+        racer->unk19E -= angleVel;
+    }
+    if (angleVel < 0) {
+        if (racer->unk19E < angleVel) {
+            racer->unk19E -= angleVel;
+        }
+    }
+    brakeVar = racer->brake;
+    baseSpeed = racer->unk8;
+    switch (gCameraObject->zoom) {
+    case 1:
+        baseDistance += 35.0f;
+        break;
+    case 2:
+        baseDistance -= 35.0f;
+        yVel -= 10.0f;
+        break;
+    case 3:
+        baseDistance -= 53.0f;
+        yVel -= 5.0f;
+        brakeVar = 0.0f;
+        baseSpeed *= 0.25;
+        break;
+    }
+    if (racer->unk1E2 > 2 || racer->unk1E5 != 0) {
+        angle = (obj->segment.trans.x_rotation);
+        if (angle > 0) {
+            angle -= 0x71C;
+            if (angle < 0) {
+                angle = 0;
+            }
+            angle >>= 1;
+        } else {
+            angle += 0x71C;
+            if (angle > 0) {
+                angle = 0;
+            }
+        }
+        angle = baseAngle - angle;
+        tempAngle = angle - (u16) gCameraObject->trans.x_rotation;
+        if (tempAngle > 0x8000) {
+            tempAngle -= 0xFFFF;
+        }
+        if (tempAngle < -0x8000) {
+            tempAngle += 0xFFFF;
+        }
+        gCameraObject->trans.x_rotation += (tempAngle * delta) >> 4;
+    }
+    if (racer->velocity < 0.0) {
+        tempVel = 6.0f;
+        if (racer->drift_direction) {
+            tempVel = 3.0f;
+        }
+        tempVel = -(racer->velocity * brakeVar) * tempVel;
+        if (65.0 < tempVel) {
+            tempVel = 65.0f;
+        }
+        baseDistance -= tempVel;
+    }
+    if (!racer->drift_direction) {
+        baseDistance += baseSpeed * 60.0f;
+    } else {
+        baseDistance += baseSpeed * 30.0f;
+    }
+    if (D_8011D540 == 0) {
+        if (func_8000C8B4(0x24) < racer->unk1D3) {
+            baseDistance = -30.0f;
+        } else if (racer->unk1D3 > 0) {
+            baseDistance = 180.0f;
+        }
+    }
+    if (D_8011D540 > 80) {
+        gCameraObject->unk1C = baseDistance;
+        gCameraObject->unk20 = yVel;
+    }
+    gCameraObject->unk1C += (baseDistance - gCameraObject->unk1C) * 0.125;
+    gCameraObject->unk20 += (yVel - gCameraObject->unk20) * 0.125;
+    cosOffset = cosine_s(gCameraObject->trans.x_rotation - baseAngle);
+    sineOffset = sine_s(gCameraObject->trans.x_rotation - baseAngle);
+    lateralOffset = gCameraObject->unk1C;
+    lateralOffset = (lateralOffset * sineOffset) - (gCameraObject->unk20 * cosOffset);
+    yVel = (gCameraObject->unk1C * cosOffset) + (gCameraObject->unk20 * sineOffset);
+    sineOffset = cosine_s(-racer->unk196 + 0x8000) * lateralOffset;
+    cosOffset = sine_s(-racer->unk196 + 0x8000) * lateralOffset;
+    baseDistance = 0.0f;
+    if (gCurrentCarInput & 0x8000) {
+        baseDistance = racer->lateral_velocity * 1.3;
+        if (baseDistance > 0.0f) {
+            baseDistance -= 1.5;
+            if (baseDistance < 0.0f) {
+                baseDistance = 0.0f;
+            }
+        } else {
+            baseDistance += 1.5;
+            if (baseDistance > 0.0f) {
+                baseDistance = 0.0f;
+            }
+        }
+    }
+    if (racer->drift_direction) {
+        baseDistance = -(f32) racer->drift_direction * 12.0f;
+    }
+    racer->unkC8 += (baseDistance - racer->unkC8) * 0.125;
+    if (racer->spinout_timer) {
+        racer->camera_zoom -= racer->camera_zoom * 0.25;
+    } else {
+        racer->camera_zoom += (10.0 - racer->camera_zoom) * 0.25;
+    }
+    xOffset = obj->segment.trans.x_position - (racer->ox1 * racer->camera_zoom);
+    yOffset = obj->segment.trans.y_position - (racer->oy1 * racer->camera_zoom);
+    zOffset = obj->segment.trans.z_position - (racer->oz1 * racer->camera_zoom);
+    tempVel = cosine_s(racer->unk196 + 0x4000) * racer->unkC8;
+    baseDistance = xOffset + tempVel;
+    gCameraObject->trans.x_position = sineOffset + baseDistance;
+    yOffset += yVel;
+    temp_f16 = (gCameraObject->trans.y_position - yOffset) * 0.25;
+    if (temp_f16 < -2.0) {
+        gCameraObject->trans.y_position -= temp_f16 + 2.0;
+    }
+    gCameraObject->trans.y_position -= temp_f16 * 0.25;
+    if (temp_f16 > 0.0f || D_8011D540) {
+        gCameraObject->trans.y_position = yOffset;
+    }
+    gCameraObject->trans.z_position = zOffset + (-sine_s(racer->unk196 + 0x4000) * racer->unkC8) + cosOffset;
+    gCameraObject->trans.y_rotation = racer->unk196;
+    newAngle = gCameraObject->trans.z_rotation;
+    if ((racer->drift_direction && racer->brake > 0.0) || D_8011D586) {
+        newAngle = 0;
+    }
+    angle = obj->segment.trans.z_rotation;
+    angleVel = (newAngle + angle) >> 4;
+    gCameraObject->trans.z_rotation -= angleVel;
+    if (gCameraObject->trans.z_rotation > 0x2000) {
+        gCameraObject->trans.z_rotation = 0x2000;
+    }
+    if (gCameraObject->trans.z_rotation < -0x2000) {
+        gCameraObject->trans.z_rotation = -0x2000;
+    }
+    gCameraObject->trans.y_position -= racer->unkC8 * cosine_s(gCameraObject->trans.z_rotation);
+    lateralOffset = (yOffset = gCameraObject->trans.x_position);
+    segmentIndex = get_level_segment_index_from_position(lateralOffset, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
+    if (segmentIndex != -1) {
+        gCameraObject->unk34 = segmentIndex;
+    }
+    racer->unk196 = gCameraObject->trans.y_rotation;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/update_camera_car.s")
+#endif
 
 /**
  * Handles the camera movement when the player has finished a challenge.
