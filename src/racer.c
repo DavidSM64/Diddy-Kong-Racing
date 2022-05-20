@@ -1583,11 +1583,11 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
         angleZ = sine_s(-obj->segment.trans.y_rotation);
         distance = (tempX * angleZ) + (tempZ * angleX);
         tempZ = (tempX * angleX) - (tempZ * angleZ);
-        temp_v1_2 = -((arctan2_f(distance, tempY) << 16) >> 16); // Uhh...
+        temp_v1_2 = -(s16)(u16)arctan2_f(distance, tempY);
         if (temp_v1_2 < 0x2000 && temp_v1_2 > -0x2000) {
             racer->unk1A4 = temp_v1_2 ;
         }
-        xRot = -((arctan2_f(tempZ, tempY) << 16) >> 16); // UHH...
+        xRot = -(s16)(u16)arctan2_f(tempZ, tempY);
         if ((xRot < 0x2000) && (xRot > -0x2000)) {
             obj->segment.trans.x_rotation = xRot;
         }
