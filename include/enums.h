@@ -1,6 +1,9 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
+#include "sound_ids.h"
+#include "sequence_ids.h"
+
 /* All the enums defined here can be used in asset files */
 
 typedef enum Vehicle {
