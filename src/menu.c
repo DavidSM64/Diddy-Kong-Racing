@@ -80,9 +80,9 @@ s32 D_80126438[4];
 //bit 24     = Unknown, but it's set as a default high bit.
 //bit 25     = Seems to be a flag for whether subtitles are enabled or not.
 //bits 26-55 = Unknown, but it could be a set of flags for unlocked tracks
-//bits 56-63 = Checksum bits. These are calculated from the previous bits, 
+//bits 56-63 = Checksum bits. These are calculated from the previous bits,
 //             and validated using calculate_eeprom_settings_checksum.
-//             If the checksum fails, the settings are reset to just 
+//             If the checksum fails, the settings are reset to just
 //             bits 24/25 being high.
 u64 sEepromSettings;
 
@@ -366,7 +366,7 @@ unk800DF510 sMenuImageProperties[18] = {
     { 0, 0, 0, 0x5D,   1.0f, 0.0f,   0.0f,    0.0f, 0, 0, 0, 0, 0, { 0 } },
 };
 
-s16 *gAssetsMenuElementIds[1] = { NULL }; // This is probably not correct. 
+s16 *gAssetsMenuElementIds[1] = { NULL }; // This is probably not correct.
 s16 D_800DF754 = 0;
 s16 D_800DF758 = 0;
 unk800DF510 *gMenuImageStack = NULL;
@@ -1921,7 +1921,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     get_timestamp_from_frames(frameCount, &minutes, &seconds, &hundredths);
     func_80068508(1);
     func_8007BF1C(0);
-    
+
     gMenuImageStack[imageIndex].unk18 = minutes / 10;
     gMenuImageStack[imageIndex].unkC = xPos;
     func_8009CA60(imageIndex);
@@ -1944,21 +1944,21 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     gMenuImageStack[imageIndex].unk18 = seconds % 10;
     gMenuImageStack[imageIndex].unkC = xPos;
     func_8009CA60(imageIndex);
-    
+
     xPos += xOffset2;
     gMenuImageStack[imageIndex2].unkC = xPos;
     func_8009CA60(imageIndex2);
 
-    xPos += xOffset3;    
+    xPos += xOffset3;
     gMenuImageStack[imageIndex].unk18 = hundredths / 10;
     gMenuImageStack[imageIndex].unkC = xPos;
     func_8009CA60(imageIndex);
 
-    xPos += xOffset1;    
+    xPos += xOffset1;
     gMenuImageStack[imageIndex].unk18 = hundredths % 10;
     gMenuImageStack[imageIndex].unkC = xPos;
     func_8009CA60(imageIndex);
-    
+
     func_80068508(0);
     func_8007BF1C(1);
     sMenuGuiColourR = (u8)255;
@@ -2305,7 +2305,7 @@ void menu_title_screen_init(void) {
     gTitleScreenCurrentOption = 0;
     gNumberOfActivePlayers = 4;
     initialise_player_ids();
-    play_music(1);
+    play_music(SEQUENCE_NONE2);
     sMenuMusicVolume = musicGetRelativeVolume();
     if (D_800DF458) {
         D_8012686C = 0;
@@ -2360,7 +2360,7 @@ void menu_options_init(void) {
     load_font(2);
     set_text_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(0x18);
-    play_music(0x18);
+    play_music(SEQUENCE_LOBBY);
     func_80000B18();
 }
 
@@ -2648,7 +2648,7 @@ s32 menu_audio_options_loop(s32 arg0) {
                     } else {
                         func_80000B28();
                         set_music_player_voice_limit(0x18);
-                        play_music(0x18);
+                        play_music(SEQUENCE_LOBBY);
                         func_80000B18();
                     }
                 }
@@ -2701,7 +2701,7 @@ void func_800851FC(void) {
     }
     if (D_801263D8 >= 0) {
         set_music_player_voice_limit(0x18);
-        play_music(0x18);
+        play_music(SEQUENCE_LOBBY);
         set_music_fade_timer(0x100);
         func_80000B18();
     }
@@ -2748,7 +2748,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80085B9C.s")
 
 s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
     s32 ret = 0;
-    
+
     if (*arg1 != 0) {
         ret = get_free_space(controllerIndex, &arg2[*arg3].cPakBytesFree, &sControllerPakNotesFree[controllerIndex]);
         if (ret == CONTROLLER_PAK_GOOD) {
@@ -2762,9 +2762,9 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, 
             if ((*arg1 < 0) && status == RUMBLE_PAK) {
                 *arg1 = 0;
                 ret = 0;
-            } else if 
-                (status != CONTROLLER_PAK_WITH_BAD_ID && 
-                 status != CONTROLLER_PAK_INCONSISTENT && 
+            } else if
+                (status != CONTROLLER_PAK_WITH_BAD_ID &&
+                 status != CONTROLLER_PAK_INCONSISTENT &&
                  status != CONTROLLER_PAK_BAD_DATA)
             {
                 ret = 0;
@@ -2937,13 +2937,13 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
             }
         }
     }
-    if (   (pakStatusSuccess == 0) 
-        || (pakStatusError3  != 0) 
-        || (pakStatusErrorNoFreeSpace != 0) 
+    if (   (pakStatusSuccess == 0)
+        || (pakStatusError3  != 0)
+        || (pakStatusErrorNoFreeSpace != 0)
         || (pakStatusError9 != 0)) {
         return NO_CONTROLLER_PAK; // Return unsuccessfully?
     }
-    
+
     controllerIndexVal = *controllerIndex;
     if (controllerIndexVal < 0) {
         i = controllerIndexVal;
@@ -2976,7 +2976,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
             }
         } while (sControllerPakIssueNotFound[i] == 0);
     }
-    
+
     *controllerIndex = controllerIndexVal;
     ret = get_controller_pak_file_list(controllerIndexVal, 16, &sCurrentControllerPakAllFileNames, &sCurrentControllerPakAllFileExtensions, &sCurrentControllerPakAllFileSizes, &sCurrentControllerPakAllFileTypes);
 
@@ -2990,7 +2990,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
                 for (; sCurrentControllerPakAllFileNames[i][k] != 0; j++, k++) {
                     D_80126AA0[i][j] = sCurrentControllerPakAllFileNames[i][k];
                 }
-                
+
                 if ((sCurrentControllerPakAllFileExtensions[i] != 0) && (*sCurrentControllerPakAllFileExtensions[i] != 0)) {
                     D_80126AA0[i][j] = '.';
                     j++;
@@ -3050,7 +3050,7 @@ s32 menu_boot_loop(s32 arg0) {
     if (osTvType == TV_TYPE_PAL) {
         y = 132;
     }
-    
+
     temp = y;
 
     switch (D_80126C20) {
@@ -3165,10 +3165,10 @@ void func_80088938(s32 arg0) {
         set_text_colour(255, 255, 255, 0, 255);
         draw_text(&sMenuCurrDisplayList, 160, 30, gMenuText[35], ALIGN_MIDDLE_CENTER);
         assign_dialogue_box_id(6);
-        
+
         //HERE!
         set_current_dialogue_box_coords(6, 58, yPos, 262, yPos + 30);
-        
+
 
         if (D_800DF460 == -1) {
             set_current_dialogue_background_colour(6, 255, 255, 255, (alpha >> 1) + 128);
@@ -3240,7 +3240,7 @@ void func_80088938(s32 arg0) {
             set_dialogue_font(6, 0);
             set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
             set_current_dialogue_background_colour(6, 0, 0, 0, 160);
-            
+
             for (yPos = 4, i = 0; i < 3; i++) {
                 if (i == 0) {
                     set_current_text_colour(6, 255, 0, 255, 64, 255);
@@ -3741,7 +3741,7 @@ void menu_character_select_init(void) {
     D_801263B8.unk0 = -1;
     D_801263B8.unk2 = 0;
     D_801263B8.unk1 = 0;
-    play_music(0x1A);
+    play_music(SEQUENCE_CHARACTER_SELECT);
     for (i = 0; i < 10; i++) {
         temp = D_800DFDB4[i];
         if (i != D_801263C0.unk0) {
@@ -4013,7 +4013,7 @@ void menu_game_select_init(void) {
     func_8009C6D4(0x43);
     func_8007FFEC(3);
     load_font(2);
-    play_music(0x1A);
+    play_music(SEQUENCE_CHARACTER_SELECT);
 
     for (i = 0; i < 10; i++) {
         if (i != D_801263B4.unk0) {
@@ -4201,7 +4201,7 @@ void menu_file_select_init(void) {
     D_80126CC0 = 0;
     func_800C01D8(&sMenuTransitionFadeOut);
     load_font(2);
-    play_music(0x1A);
+    play_music(SEQUENCE_CHARACTER_SELECT);
     for (i = 0; i < 10; i++) {
         if (i != D_801263B4.unk0) {
             func_80001114(D_800DFDB4[i][0]);
@@ -4958,7 +4958,7 @@ void menu_5_init(void) {
             func_80000FDC(temp, 0, 0.5f);
         }
         set_music_player_voice_limit(0x18);
-        play_music(0x18);
+        play_music(SEQUENCE_LOBBY);
         func_80000B18();
         D_801263E0 = 0;
         func_8009C674(D_800E0FB4);
@@ -5235,7 +5235,7 @@ void func_80094C14(s32 arg0) {
             case 1:
                 if (normalise_time(0x12C) < D_801263D8) {
                     set_music_player_voice_limit(0x18);
-                    play_music(0x18);
+                    play_music(SEQUENCE_LOBBY);
                     set_music_fade_timer(0x100);
                 }
                 break;
@@ -5337,7 +5337,7 @@ void menu_11_init(void) {
     load_font(2);
     func_800C01D8(&sMenuTransitionFadeOut);
     set_music_player_voice_limit(0x18);
-    play_music(0x18);
+    play_music(SEQUENCE_LOBBY);
     set_music_fade_timer(0x80);
 }
 
@@ -5505,7 +5505,7 @@ void menu_trophy_race_round_init(void) {
     D_800E0980 = 10;
     load_font(2);
     set_music_player_voice_limit(0x18);
-    play_music(0x18);
+    play_music(SEQUENCE_LOBBY);
     set_music_fade_timer(0x100);
 }
 #else
@@ -5897,19 +5897,19 @@ void menu_credits_init(void) {
     set_music_player_voice_limit(0x18);
     D_800E18F8 = (u16)0x1000;
     if (gViewingCreditsFromCheat) {
-        play_music(8);
+        play_music(SEQUENCE_DARKMOON_CAVERNS);
         gCreditsArray[84] = gCreditsLastMessageArray[2]; // "THE END"
         gCreditsArray[85] = gCreditsLastMessageArray[3]; // "NO CHEAT"
         gCreditsArray[86] = gCreditsLastMessageArray[4]; // "THIS TIME."
         gViewingCreditsFromCheat = 0;
     } else {
         if (settings->bosses & 0x20) {
-            play_music(0x25);
+            play_music(SEQUENCE_CRESCENT_ISLAND);
             gCreditsArray[84] = gCreditsLastMessageArray[1]; // "TO BE CONTINUED ..."
             D_800E18F8 = (u16)0x61F4;
             D_80126BCC = 9;
         } else {
-            play_music(8);
+            play_music(SEQUENCE_DARKMOON_CAVERNS);
             gCreditsArray[84] = gCreditsLastMessageArray[0]; // "THE END?"
         }
 

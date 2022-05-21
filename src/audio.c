@@ -233,10 +233,10 @@ void func_80000B28(void) {
     D_800DC648 = 0;
 }
 
-void play_music(u8 arg0) {
+void play_music(u8 seqID) {
     if (D_800DC648 == 0 && musicVolumeSliderPercentage != 0) {
-        D_80115D04 = arg0;
-        musicRelativeVolume = 0x7F;
+        D_80115D04 = seqID;
+        musicRelativeVolume = 127;
         if (D_800DC640 != 0) {
             func_800022BC(D_80115D04, gMusicPlayer);
         }

@@ -68,7 +68,7 @@ void func_80000890(u8 arg0);
 void func_80000968(s32 arg0);
 void func_80000B18(void);
 void func_80000B28(void);
-void play_music(u8 arg0);
+void play_music(u8 seqID);
 void set_music_player_voice_limit(u8 voiceLimit);
 void func_80000C1C(void);
 void func_80000C2C(void);

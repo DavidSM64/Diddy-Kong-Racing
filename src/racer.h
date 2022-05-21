@@ -224,7 +224,7 @@ s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance)
 void func_80055A84(Object *obj, Object_Racer *racer, s32 arg2);
 void func_8005C270(Object_Racer *racer);
 f32 handle_racer_top_speed(Object *obj, Object_Racer *racer);
-void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
+void func_800570B8(Object *obj, s32 soundID, s32 arg2, s32 arg3);
 void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation);
 void func_80059080(Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *velZ);
 void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3);
