@@ -7,7 +7,6 @@
 #include "libc/math.h"
 
 #define WORLD_KEY_GRAB_CHECK_RADIUS 50
-#define SOUND_WORLD_KEY_GRAB 54
 
 #define TIME_JIFFIES_PER_SECOND 60
 #define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND

@@ -643,9 +643,13 @@ void sfxSetPan(ALPan pan) {
     return;
 }
 
-void play_sound(u8 arg0) {
+/**
+ * Plays a sequence just once, allowing it to coexist with the music if necessary.
+ * Examples include getting silver coins, challenge keys, or getting the locked message.
+ */
+void play_sequence(u8 seqID) {
     D_800DC644 = 1;
-    func_800022BC(D_80115D05 = arg0, gSndFxPlayer);
+    func_800022BC(D_80115D05 = seqID, gSndFxPlayer);
 }
 
 u32 func_80001C08(void) {
@@ -685,16 +689,16 @@ void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4) {
     }
 }
 
-void func_80001F14(u16 sndIndx, u32 *arg1) {
-    if (sndIndx <= 0 || ALBankFile_80115D14_GetSoundCount() < sndIndx) {
+void func_80001F14(u16 soundID, u32 *arg1) {
+    if (soundID <= 0 || ALBankFile_80115D14_GetSoundCount() < soundID) {
         if (arg1) {
             *arg1 = 0;
         }
     } else {
         if (arg1) {
-            func_80004638(ALBankFile_80115D14->bankArray[0], (s16)sndIndx, arg1);
+            func_80004638(ALBankFile_80115D14->bankArray[0], (s16)soundID, arg1);
         } else {
-            func_80004638(ALBankFile_80115D14->bankArray[0], (s16)sndIndx, &D_80115F88);
+            func_80004638(ALBankFile_80115D14->bankArray[0], (s16)soundID, &D_80115F88);
         }
     }
 }
@@ -740,11 +744,11 @@ void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-u8 ALBankFile_80115D14_GetSoundDecayTime(u16 sndIndx) {
-    if (sndIndx <= 0 || ALBankFile_80115D14->bankArray[0]->instArray[0]->soundCount < sndIndx) {
+u8 ALBankFile_80115D14_GetSoundDecayTime(u16 soundID) {
+    if (soundID <= 0 || ALBankFile_80115D14->bankArray[0]->instArray[0]->soundCount < soundID) {
         return 0;
     }
-    return ((u32)(1 + ALBankFile_80115D14->bankArray[0]->instArray[0]->soundArray[sndIndx - 1]->envelope->decayTime) == 0);
+    return ((u32)(1 + ALBankFile_80115D14->bankArray[0]->instArray[0]->soundArray[soundID - 1]->envelope->decayTime) == 0);
 }
 
 ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events) {

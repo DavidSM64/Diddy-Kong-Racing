@@ -553,5 +553,4 @@ enum SoundID {
     NUM_SOUND_IDS
 };
 
-
 #endif

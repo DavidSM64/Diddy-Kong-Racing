@@ -543,7 +543,6 @@ void func_800C31EC(s32);
 s32 func_800C3400(void);
 LevelHeader *get_current_level_header(void);
 Settings *get_settings(void);
-void play_sound(u8 arg0);
 void set_music_fade_timer(s32 time);
 void set_sndfx_player_voice_limit(u8 voiceLimit);
 
@@ -632,7 +631,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
                 obj64->unk0 = 140;
                 set_sndfx_player_voice_limit(16);
                 set_music_fade_timer(-8);
-                play_sound(17);
+                play_sequence(SEQUENCE_LOCKED);
             }
         }
         if ((obj64->unk0 != 0) && (func_80001C08() == 0)) {
@@ -1587,7 +1586,7 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
     if (obj->unk4C->unk13 < 0xFF) {
         if (obj->unk78 == 0) {
             obj->unk78 = 0x3C;
-            func_80009558(0x23B, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            func_80009558(571, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
         }
     }
 }
@@ -2170,7 +2169,7 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 speed) {
                 Object_WorldKey *obj64 = &playerObj->unk64->world_key;
                 if (obj64->unk0 != -1) {
                     // Player has grabbed the key!
-                    play_sound(SOUND_WORLD_KEY_GRAB);
+                    play_sequence(SEQUENCE_KEY_COLLECT);
                     settings = get_settings();
                     settings->keys |= 1 << worldKeyObj->unk78; // Set key flag
                     gParticlePtrList_addObject(worldKeyObj);   // Makes the key unload.

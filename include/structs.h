@@ -5,7 +5,6 @@
 
 #include "types.h"
 #include "enums.h"
-#include "sound_ids.h"
 
 /* Size: 0x20 bytes */
 typedef struct MenuElement {

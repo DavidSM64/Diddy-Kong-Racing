@@ -64,7 +64,7 @@ glabel obj_loop_silvercoin
 /* 03EA04 8003DE04 2484002B */  addiu $a0, $a0, 0x2b
 /* 03EA08 8003DE08 309900FF */  andi  $t9, $a0, 0xff
 /* 03EA0C 8003DE0C 03202025 */  move  $a0, $t9
-/* 03EA10 8003DE10 0C0006F0 */  jal   play_sound
+/* 03EA10 8003DE10 0C0006F0 */  jal   play_sequence
 /* 03EA14 8003DE14 AFA20018 */   sw    $v0, 0x18($sp)
 /* 03EA18 8003DE18 8FA20018 */  lw    $v0, 0x18($sp)
 /* 03EA1C 8003DE1C 8FA60020 */  lw    $a2, 0x20($sp)
