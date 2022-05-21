@@ -1635,29 +1635,35 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
     temp->unk210 = arg2;
 }
 
-void func_800570B8(Object *obj, s32 soundID, s32 arg2, s32 arg3) {
-    s32 temp_v1;
-    Object_64 *temp_s2;
+/**
+ * Play a random character voice clip from the given offset.
+ * It uses SOUND_VOICE_CHARACTER_POSITIVE and SOUND_VOICE_CHARACTER_NEGATIVE for
+ * acceptable offsets. Range will always be 8, because that's how many ID's for each
+ * there are.
+ */
+void func_800570B8(Object *obj, s32 soundID, s32 range, s32 arg3) {
+    s32 soundIndex;
+    Object_64 *tempRacer;
 
-    temp_s2 = obj->unk64;
-    if ((temp_s2->racer.unk108 == 0) && ((!(arg3 & 0x80)) || (D_8011D55C != -1))) {
+    tempRacer = obj->unk64;
+    if (tempRacer->racer.unk108 == 0 && ((!(arg3 & 0x80)) || D_8011D55C != -1)) {
         if (arg3 == 2) {
-            if ((temp_s2->racer.unk24 != 0) && (soundID != temp_s2->racer.unk2A)) {
-                func_800096F8(temp_s2->racer.unk24);
-                temp_s2->racer.unk24 = 0;
+            if ((tempRacer->racer.unk24 != 0) && (soundID != tempRacer->racer.unk2A)) {
+                func_800096F8(tempRacer->racer.unk24);
+                tempRacer->racer.unk24 = 0;
             }
         }
-        if ((temp_s2->racer.unk24 == 0) && ((arg3 != 3) || (get_random_number_from_range(0, 1) != 0))) {
-            temp_s2->racer.unk2A = soundID;
-            soundID += temp_s2->racer.characterId;
-            temp_v1 = (get_random_number_from_range(0, arg2 - 1) * 12) + soundID;
-            if (arg2 - 1 > 0) {
-                while (temp_v1 == temp_s2->racer.unk28) {
-                    temp_v1 = (get_random_number_from_range(0, arg2 - 1) * 12) + soundID;
+        if (tempRacer->racer.unk24 == 0 && (arg3 != 3 || get_random_number_from_range(0, 1))) {
+            tempRacer->racer.unk2A = soundID;
+            soundID += tempRacer->racer.characterId;
+            soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
+            if (range - 1 > 0) {
+                while (soundIndex == tempRacer->racer.unk28) {
+                    soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
                 }
             }
-            func_80009558(temp_v1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &temp_s2->racer.unk24);
-            temp_s2->racer.unk28 = temp_v1;
+            func_80009558(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &tempRacer->racer.unk24);
+            tempRacer->racer.unk28 = soundIndex;
         }
     }
 }

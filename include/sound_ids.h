@@ -6,6 +6,9 @@
 #define SOUND_VOICE_CHARACTER_POSITIVE SOUND_VOICE_KRUNCH_POSITIVE1
 #define SOUND_VOICE_CHARACTER_NEGATIVE SOUND_VOICE_KRUNCH_NEGATIVE1
 
+/// Cannot stress enough that these names are very temporary, preliminary, expendable and other words that imply that they are not final.
+// Also might be worth thinking of a better way of laying this out, because scrolling through hundreds of sound ID's isn't particularly pleasant.
+
 // Anything I've labelled as UNK, without a comment, is something I didn't get an audible sound from.
 enum SoundID {
     SOUND_UNK0,
