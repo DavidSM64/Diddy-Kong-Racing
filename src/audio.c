@@ -673,12 +673,12 @@ u16 func_80001CB8(u16 arg0) {
 //Play Sound effect?
 GLOBAL_ASM("asm/non_matchings/audio/func_80001D04.s")
 
-void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4) {
+void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4) {
     if (arg4 == NULL) {
         arg4 = &D_80115F84;
     }
 
-    func_80001D04(arg0, arg4);
+    func_80001D04(soundID, arg4);
 
     if (*arg4 != NULL) {
         func_80009B7C(*arg4, x, y, z);

@@ -197,7 +197,7 @@ glabel func_8004F7F4
 /* 05068C 8004FA8C 00000000 */  nop   
 /* 050690 8004FA90 45000009 */  bc1f  .L8004FAB8
 /* 050694 8004FA94 00000000 */   nop   
-/* 050698 8004FA98 0C015C12 */  jal   func_80057048
+/* 050698 8004FA98 0C015C12 */  jal   racer_play_sound
 /* 05069C 8004FA9C 2405001C */   li    $a1, 28
 /* 0506A0 8004FAA0 821901E6 */  lb    $t9, 0x1e6($s0)
 /* 0506A4 8004FAA4 3C068012 */  lui   $a2, %hi(gCurrentStickX) # $a2, 0x8012
@@ -522,7 +522,7 @@ glabel func_8004F7F4
 /* 050B2C 8004FF2C 8E25000C */  lw    $a1, 0xc($s1)
 /* 050B30 8004FF30 8E260010 */  lw    $a2, 0x10($s1)
 /* 050B34 8004FF34 8E270014 */  lw    $a3, 0x14($s1)
-/* 050B38 8004FF38 0C0007AA */  jal   func_80001EA8
+/* 050B38 8004FF38 0C0007AA */  jal   play_sound_spatial
 /* 050B3C 8004FF3C AFAF0010 */   sw    $t7, 0x10($sp)
 /* 050B40 8004FF40 3C048012 */  lui   $a0, %hi(D_8011D550) # $a0, 0x8012
 /* 050B44 8004FF44 3C068012 */  lui   $a2, %hi(D_8011D553) # $a2, 0x8012

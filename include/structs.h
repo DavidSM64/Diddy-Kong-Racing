@@ -5,6 +5,7 @@
 
 #include "types.h"
 #include "enums.h"
+#include "sound_ids.h"
 
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
@@ -942,7 +943,7 @@ typedef struct Object_Racer {
   /* 0x1C9 */ u8 unk1C9;
   /* 0x1CA */ s8 unk1CA;
   /* 0x1CB */ u8 unk1CB;
-  /* 0x1CC */ s8 unk1CC;
+  /* 0x1CC */ s8 aiSkill;
   /* 0x1CD */ u8 unk1CD;
   /* 0x1CE */ u8 unk1CE;
   /* 0x1CF */ s8 unk1CF;

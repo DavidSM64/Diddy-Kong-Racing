@@ -130,7 +130,7 @@ Object *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);
 void func_8000C460(void);
 void func_8000C604(void);
-s32 set_timer_region_adjusted(s32 timer);
+s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
 s32 func_8000CC20(u32 *arg0);
 u32 func_8000E0B0(void);

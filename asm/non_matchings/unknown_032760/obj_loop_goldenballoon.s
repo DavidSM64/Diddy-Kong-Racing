@@ -142,7 +142,7 @@ glabel obj_loop_goldenballoon
 /* 03C2BC 8003B6BC 8E270014 */  lw    $a3, 0x14($s1)
 /* 03C2C0 8003B6C0 8E260010 */  lw    $a2, 0x10($s1)
 /* 03C2C4 8003B6C4 8E25000C */  lw    $a1, 0xc($s1)
-/* 03C2C8 8003B6C8 0C0007AA */  jal   func_80001EA8
+/* 03C2C8 8003B6C8 0C0007AA */  jal   play_sound_spatial
 /* 03C2CC 8003B6CC AFA00010 */   sw    $zero, 0x10($sp)
 /* 03C2D0 8003B6D0 862B0006 */  lh    $t3, 6($s1)
 /* 03C2D4 8003B6D4 24090010 */  li    $t1, 16

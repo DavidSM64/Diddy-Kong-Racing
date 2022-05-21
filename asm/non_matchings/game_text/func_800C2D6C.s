@@ -39,7 +39,7 @@ glabel func_800C2D6C
 /* 0C39FC 800C2DFC 00000000 */  nop   
 /* 0C3A00 800C2E00 03370019 */  multu $t9, $s7
 /* 0C3A04 800C2E04 00002012 */  mflo  $a0
-/* 0C3A08 800C2E08 0C00322D */  jal   set_timer_region_adjusted
+/* 0C3A08 800C2E08 0C00322D */  jal   normalise_time
 /* 0C3A0C 800C2E0C 00000000 */   nop   
 /* 0C3A10 800C2E10 8E280000 */  lw    $t0, ($s1)
 /* 0C3A14 800C2E14 A6820000 */  sh    $v0, ($s4)

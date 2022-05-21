@@ -115,13 +115,13 @@ glabel func_800A7B68
 /* 0A8914 800A7D14 00000000 */  nop   
 .L800A7D18:
 /* 0A8918 800A7D18 34048CA0 */  li    $a0, 36000
-/* 0A891C 800A7D1C 0C00322D */  jal   set_timer_region_adjusted
+/* 0A891C 800A7D1C 0C00322D */  jal   normalise_time
 /* 0A8920 800A7D20 AFA90044 */   sw    $t1, 0x44($sp)
 /* 0A8924 800A7D24 8FA90044 */  lw    $t1, 0x44($sp)
 /* 0A8928 800A7D28 0050082A */  slt   $at, $v0, $s0
 /* 0A892C 800A7D2C 10200005 */  beqz  $at, .L800A7D44
 /* 0A8930 800A7D30 34048CA0 */   li    $a0, 36000
-/* 0A8934 800A7D34 0C00322D */  jal   set_timer_region_adjusted
+/* 0A8934 800A7D34 0C00322D */  jal   normalise_time
 /* 0A8938 800A7D38 AFA90044 */   sw    $t1, 0x44($sp)
 /* 0A893C 800A7D3C 8FA90044 */  lw    $t1, 0x44($sp)
 /* 0A8940 800A7D40 00408025 */  move  $s0, $v0
@@ -136,7 +136,7 @@ glabel func_800A7B68
 /* 0A8960 800A7D60 8FA90044 */  lw    $t1, 0x44($sp)
 /* 0A8964 800A7D64 17000006 */  bnez  $t8, .L800A7D80
 /* 0A8968 800A7D68 34048CA0 */   li    $a0, 36000
-/* 0A896C 800A7D6C 0C00322D */  jal   set_timer_region_adjusted
+/* 0A896C 800A7D6C 0C00322D */  jal   normalise_time
 /* 0A8970 800A7D70 AFA90044 */   sw    $t1, 0x44($sp)
 /* 0A8974 800A7D74 8FA90044 */  lw    $t1, 0x44($sp)
 /* 0A8978 800A7D78 14500028 */  bne   $v0, $s0, .L800A7E1C

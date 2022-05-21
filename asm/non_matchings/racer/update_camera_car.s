@@ -260,7 +260,7 @@ glabel update_camera_car
 /* 05916C 8005856C 24040024 */   li    $a0, 36
 /* 059170 80058570 AFA70070 */  sw    $a3, 0x70($sp)
 /* 059174 80058574 E7B00054 */  swc1  $f16, 0x54($sp)
-/* 059178 80058578 0C00322D */  jal   set_timer_region_adjusted
+/* 059178 80058578 0C00322D */  jal   normalise_time
 /* 05917C 8005857C E7B20050 */   swc1  $f18, 0x50($sp)
 /* 059180 80058580 8FA70070 */  lw    $a3, 0x70($sp)
 /* 059184 80058584 3C088012 */  lui   $t0, %hi(gCameraObject) # $t0, 0x8012

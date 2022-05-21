@@ -191,7 +191,7 @@ void func_8006A6B0(void) {
   s32 checksumCount;
   u8 *sp44;
   s32 temp2;
-  
+
   sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), 0xFFFF00FF);
   gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
   i = 0;
@@ -234,15 +234,15 @@ void func_8006A6B0(void) {
   }
   free_from_memory_pool(gTempAssetTable);
   free_from_memory_pool(sp44);
-  
+
   gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
-  
+
   for (i = 0; gTempAssetTable[i] != (-1); i++){}
   i--;
-  
+
   temp = gTempAssetTable[i];
   temp -= gTempAssetTable[0];
-  
+
   gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), 0xFFFF00FF);
   D_800DD310 = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
   load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
@@ -250,7 +250,7 @@ void func_8006A6B0(void) {
     gLevelNames[count] = &D_800DD310[gTempAssetTable[count]];
   }
   free_from_memory_pool(gTempAssetTable);
-  
+
   checksumCount = 0;
   for (i = 0; i < gFunc80068158Length; i++) {
     checksumCount += ((u8 *) (&func_80068158))[i];

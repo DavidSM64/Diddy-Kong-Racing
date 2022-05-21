@@ -487,7 +487,7 @@ void func_8000C844(s32 arg0) {
  * Since PAL runs at 50Hz, it therefore will reduce the timer to 5/6 to match, keeping
  * it consistent with non PAL timers, running 60Hz.
  */
-s32 set_timer_region_adjusted(s32 timer) {
+s32 normalise_time(s32 timer) {
     if (osTvType != TV_TYPE_PAL || timer < 0) {
         return timer;
     } else {

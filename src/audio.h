@@ -116,7 +116,7 @@ void play_sound(u8 arg0);
 u32 func_80001C08(void);
 void func_80001C5C(u16 arg0);
 u16 func_80001CB8(u16 arg0);
-void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4);
+void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4);
 void func_80001F14(u16 sndIndx, u32 *arg1);
 u16 ALBankFile_80115D14_GetSoundCount(void);
 u8 ALSeqFile_80115CF8_GetSeqCount(void);
@@ -129,7 +129,7 @@ void func_80002570(ALSeqPlayer *seqp);
 void func_80002608(u8 arg0);
 u8 func_80002630(void);
 
-void func_80001D04(u16, s32*); //Non matching.
+void func_80001D04(u16 soundID, s32*); //Non matching.
 void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Matching
 f32 func_800015F8(void); //Non Matching
 void func_80001FB8(u16 arg0); //Non Matching

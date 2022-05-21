@@ -31,6 +31,7 @@ typedef enum BoostSound {
     BOOST_UNK2
 } BoostSound;
 
+// boost types suffixed with _FAST are the ones you get from releasing the throttle.
 typedef enum BoostType {
     BOOST_SMALL,
     BOOST_MEDIUM,
@@ -40,6 +41,14 @@ typedef enum BoostType {
     BOOST_MEDIUM_FAST,
     BOOST_LARGE_FAST,
 } BoostType;
+
+typedef enum AISkill {
+    AI_MASTER,
+    AI_EXPERT,
+    AI_HARD,
+    AI_MEDIUM,
+    AI_EASY
+} AISkill;
 
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
@@ -192,7 +201,7 @@ void handle_car_steering(Object_Racer *racer);
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1);
 void handle_car_velocity_control(Object_Racer *racer);
 void play_char_horn_sound(Object *obj, Object_Racer *racer);
-void func_80057048(Object *obj, s32 arg1);
+void racer_play_sound(Object *obj, s32 soundID);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_Racer *racer);
 void func_800579B0(Object_Racer *racer, s32 arg1, f32 updateRate);

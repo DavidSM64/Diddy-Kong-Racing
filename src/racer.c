@@ -178,7 +178,7 @@ s8 D_8011D581;
 s8 D_8011D582;
 s8 D_8011D583;
 s8 D_8011D584;
-s8 D_8011D585;
+s8 gStartBoostTime;
 s16 D_8011D586;
 s8 D_8011D588[4];
 s8 D_8011D58C[4];
@@ -452,7 +452,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
     phi_f14 += baseSpeed * 30.0f;
     if (gRaceStartTimer == 0) {
-        if (set_timer_region_adjusted(36) < racer->boostTimer) {
+        if (normalise_time(36) < racer->boostTimer) {
             phi_f14 = -30.0f;
         } else if (racer->boostTimer > 0) {
             phi_f14 = 180.0f;
@@ -719,7 +719,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         phi_f14 -= tempVel;
     }
     if (!gRaceStartTimer) {
-        if (set_timer_region_adjusted(36) < racer->boostTimer) {
+        if (normalise_time(36) < racer->boostTimer) {
             phi_f14 = -30.0f;
         } else if (racer->boostTimer > 0) {
             phi_f14 = 180.0f;
@@ -1000,7 +1000,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     if (1); if (1); // Also critical to match.
     func_80043ECC(0, NULL, 0);
     D_8011D583 = i;
-    D_8011D585 = 0;
+    gStartBoostTime = 0;
     tempObj->unk20A = 0;
 }
 
@@ -1612,17 +1612,20 @@ void play_char_horn_sound(Object *obj, Object_Racer *racer) {
         func_800570B8(obj, 0x162, 8, 0x82);
     } else {
         // Play character's horn sound
-        func_80057048(obj, racer->characterId + 0x156);
+        racer_play_sound(obj, racer->characterId + SOUND_HORN1);
     }
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8005698C.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
 
-void func_80057048(Object *obj, s32 arg1) {
+/**
+ * Play a spatial sound, emitting from the position of the racer object.
+ */
+void racer_play_sound(Object *obj, s32 soundID) {
     Object_Racer *racer = &obj->unk64->racer;
     if (D_8011D55C != -1 && racer->unk108 == 0) {
-        func_80001EA8(arg1, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+        play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
 
@@ -1659,6 +1662,8 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
     }
 }
 
+//s32 soundID = 545;
+
 /**
  * This function dictates the base top speed of a racer.
  * During the race start sequence it hardsets it to 0 so you don't go anywhere.
@@ -1692,45 +1697,53 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
             if (timer < 0) {
                 timer = -timer;
             }
-
             if ((gCurrentCarInput & Z_TRIG)) {
                 if (timer < 2) {
                     timer = 0;
                 }
             }
-
 			timer2 = 24 - timer;
-            racer->boostTimer = set_timer_region_adjusted(timer2 >> 1);
+            racer->boostTimer = normalise_time(timer2 >> 1);
             if (timer2 == 24) {
-                func_80057048(obj, 34);
-                racer->boostTimer = set_timer_region_adjusted(20);
+                racer_play_sound(obj, SOUND_SELECT);
+                racer->boostTimer = normalise_time(20);
             }
-            if (racer->boostTimer < set_timer_region_adjusted(20)) {
+            if (racer->boostTimer < normalise_time(20)) {
                 racer->boostType = BOOST_SMALL;
-            } else if (racer->boostTimer < set_timer_region_adjusted(35)) {
+            } else if (racer->boostTimer < normalise_time(35)) {
                 racer->boostType = BOOST_MEDIUM;
             } else {
                 racer->boostType = BOOST_LARGE;
             }
             racer->boost_sound |= BOOST_RACE_START;
             D_8011D560 = 7;
-            D_8011D585 = racer->boostTimer;
+            gStartBoostTime = racer->boostTimer;
         }
-        if ((racer->playerIndex == PLAYER_COMPUTER) && (!racer->unk1CC || (racer->unk1CC == 1 && D_8011D585))) {
-            if (D_8011D585) {
-                racer->boostTimer = D_8011D585;
+        // For the AI, expert AI will match the players start, and master AI will get a good start always.
+        if ((racer->playerIndex == PLAYER_COMPUTER) && (racer->aiSkill == AI_MASTER || (racer->aiSkill == AI_EXPERT && gStartBoostTime))) {
+            if (gStartBoostTime) {
+                racer->boostTimer = gStartBoostTime;
             } else {
-                racer->boostTimer = set_timer_region_adjusted(5);
+                racer->boostTimer = normalise_time(5);
             }
-            if (racer->boostTimer < set_timer_region_adjusted(20)) {
+            if (racer->boostTimer < normalise_time(20)) {
                 racer->boostType = BOOST_SMALL;
-            } else if (racer->boostTimer < set_timer_region_adjusted(35)) {
+            } else if (racer->boostTimer < normalise_time(35)) {
                 racer->boostType = BOOST_MEDIUM;
             } else {
                 racer->boostType = BOOST_LARGE;
             }
         }
     }
+    /*render_printf("%d", soundID);
+    if (gActivePlayerButtonPress & L_TRIG)
+    {
+        racer_play_sound(obj, soundID);
+    }
+    if (gActivePlayerButtonPress & L_JPAD)
+        soundID --;
+    if (gActivePlayerButtonPress & R_JPAD)
+        soundID ++;*/
     if (racer->boostTimer && !gRaceStartTimer && timer3 && racer->raceStatus == STATUS_RACING) {
          func_80072348(racer->playerIndex, 6);
     }
@@ -1741,7 +1754,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         if (racer->boost_sound & BOOST_RACE_START) {
             racer->boost_sound &= ~BOOST_RACE_START;
             func_800570B8(obj, 354, 8, 130);
-            func_80057048(obj, 33);
+            racer_play_sound(obj, SOUND_NITRO_BOOST);
         }
     }
 
@@ -2054,7 +2067,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         baseDistance += baseSpeed * 30.0f;
     }
     if (gRaceStartTimer == 0) {
-        if (set_timer_region_adjusted(0x24) < racer->boostTimer) {
+        if (normalise_time(0x24) < racer->boostTimer) {
             baseDistance = -30.0f;
         } else if (racer->boostTimer > 0) {
             baseDistance = 180.0f;

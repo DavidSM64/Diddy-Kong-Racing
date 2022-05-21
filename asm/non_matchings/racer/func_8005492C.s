@@ -183,7 +183,7 @@ glabel func_8005492C
 /* 055778 80054B78 AFA5004C */  sw    $a1, 0x4c($sp)
 /* 05577C 80054B7C AFA70048 */  sw    $a3, 0x48($sp)
 /* 055780 80054B80 E7A00028 */  swc1  $f0, 0x28($sp)
-/* 055784 80054B84 0C00322D */  jal   set_timer_region_adjusted
+/* 055784 80054B84 0C00322D */  jal   normalise_time
 /* 055788 80054B88 E7A20030 */   swc1  $f2, 0x30($sp)
 /* 05578C 80054B8C 8FA5004C */  lw    $a1, 0x4c($sp)
 /* 055790 80054B90 8FA70048 */  lw    $a3, 0x48($sp)

@@ -354,7 +354,7 @@ glabel update_camera_plane
 /* 04D374 8004C774 24040024 */   li    $a0, 36
 /* 04D378 8004C778 AFA70058 */  sw    $a3, 0x58($sp)
 /* 04D37C 8004C77C E7AE0034 */  swc1  $f14, 0x34($sp)
-/* 04D380 8004C780 0C00322D */  jal   set_timer_region_adjusted
+/* 04D380 8004C780 0C00322D */  jal   normalise_time
 /* 04D384 8004C784 E7B20030 */   swc1  $f18, 0x30($sp)
 /* 04D388 8004C788 8FA70058 */  lw    $a3, 0x58($sp)
 /* 04D38C 8004C78C 3C088012 */  lui   $t0, %hi(gCameraObject) # $t0, 0x8012

@@ -5227,20 +5227,20 @@ void func_80094C14(s32 arg0) {
         D_801263D8 += arg0;
         switch (D_800DF460) {
             case 0:
-                if (set_timer_region_adjusted(0xF0) < D_801263D8) {
+                if (normalise_time(0xF0) < D_801263D8) {
                     set_music_fade_timer(-0x100);
                     D_800DF460 = 1;
                 }
                 break;
             case 1:
-                if (set_timer_region_adjusted(0x12C) < D_801263D8) {
+                if (normalise_time(0x12C) < D_801263D8) {
                     set_music_player_voice_limit(0x18);
                     play_music(0x18);
                     set_music_fade_timer(0x100);
                 }
                 break;
         }
-        if (set_timer_region_adjusted(0x12C) < D_801263D8) {
+        if (normalise_time(0x12C) < D_801263D8) {
             D_801263D8 = -1;
         }
     }

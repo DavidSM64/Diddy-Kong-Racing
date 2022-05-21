@@ -372,7 +372,7 @@ glabel obj_loop_banana
 /* 03E704 8003DB04 01602025 */  move  $a0, $t3
 /* 03E708 8003DB08 AFA90030 */  sw    $t1, 0x30($sp)
 /* 03E70C 8003DB0C AFA80068 */  sw    $t0, 0x68($sp)
-/* 03E710 8003DB10 0C0007AA */  jal   func_80001EA8
+/* 03E710 8003DB10 0C0007AA */  jal   play_sound_spatial
 /* 03E714 8003DB14 AFA00010 */   sw    $zero, 0x10($sp)
 /* 03E718 8003DB18 8FA80068 */  lw    $t0, 0x68($sp)
 /* 03E71C 8003DB1C 8FA90030 */  lw    $t1, 0x30($sp)
