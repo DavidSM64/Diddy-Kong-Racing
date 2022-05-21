@@ -509,16 +509,16 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
 // Something Plane related.
-void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64) {
+void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *racer) {
     s32 temp_v1;
     s32 phi_v0;
 
-    if (planeObj64->unk1D7 != 10) {
+    if (racer->unk1D7 != 10) {
         //!@bug Typo. Should've been `== 0`, not `= 0`.
-        if ((planeObj64->unk1F2 = 0)) {
+        if ((racer->unk1F2 = 0)) {
             return; // This never gets called because of the typo.
         }
-        phi_v0 = planeObj64->unk1E1;
+        phi_v0 = racer->steerAngle;
         phi_v0 = 40 - (phi_v0 >> 1);
         if (phi_v0 < 0) {
             phi_v0 = 0;
@@ -1302,7 +1302,7 @@ void handle_car_steering(Object_Racer *racer) {
         velScale = vel * 58.0f;
     }
     // Set the steering velocity based on the car's steering value, scaled with the temp forward velocity value.
-    gCurrentCarSteerVel -= (racer->unk1E1 * velScale);
+    gCurrentCarSteerVel -= (racer->steerAngle * velScale);
     // If the car is reversing, then flip the steering.
     if (racer->velocity > 0.0f) {
         gCurrentCarSteerVel = -gCurrentCarSteerVel;
@@ -1351,7 +1351,7 @@ void handle_car_velocity_control(Object_Racer *racer) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80053750.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80053E9C.s")
 
-void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3) {
+void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     f32 tempVel;
     f32 xVel;
     f32 zVel;
@@ -1370,17 +1370,17 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3) {
     tempZ = obj->segment.trans.z_position;
     gCurrentCarSteerVel = 0;
     D_8011D558 = 0;
-    func_800579B0(racer, 0, arg3);
+    handle_base_steering(racer, 0, updateRateF);
     handle_car_velocity_control(racer);
     func_800575EC(obj, racer);
     func_80055EC0(obj, racer, updateRate);
     func_80053E9C(obj, racer, updateRate);
     if (racer->spinout_timer) {
-        func_80052B64(obj, racer, updateRate, arg3); // Sbinalla
+        func_80052B64(obj, racer, updateRate, updateRateF); // Sbinalla
     } else if (racer->unk1E2 > 0) {
-        func_8005492C(obj, racer, updateRate, arg3);
+        func_8005492C(obj, racer, updateRate, updateRateF);
     } else {
-        func_80052D7C(obj, racer, updateRate, arg3);
+        func_80052D7C(obj, racer, updateRate, updateRateF);
     }
     apply_vehicle_rotation_offset(racer, updateRate, 0, 0, 0);
     header = get_current_level_header();
@@ -1451,9 +1451,9 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3) {
         }
         xVel += racer->unk84;
         zVel += racer->unk88;
-        func_80011570(obj, xVel * arg3, obj->segment.y_velocity * arg3, zVel * arg3);
+        func_80011570(obj, xVel * updateRateF, obj->segment.y_velocity * updateRateF, zVel * updateRateF);
     } else {
-        func_80050754(obj, racer, arg3);
+        func_80050754(obj, racer, updateRateF);
     }
     if (D_8011D55C == -1 && !func_80023568()) {
             func_80055A84(obj, racer, updateRate);
@@ -1465,8 +1465,8 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3) {
     } else if (racer->unk1D6 < 5) {
         func_800AF714(obj, updateRate);
     }
-    func_80053750(obj, racer, arg3);
-    tempVel = 1.0f / arg3;
+    func_80053750(obj, racer, updateRateF);
+    tempVel = 1.0f / updateRateF;
     xVel = (((obj->segment.trans.x_position - tempX) - D_8011D548) * tempVel) - racer->unk84;
     obj->segment.y_velocity = (obj->segment.trans.y_position - tempY) * tempVel;
     zVel = (((obj->segment.trans.z_position - tempZ) - D_8011D54C) * tempVel) - racer->unk88;
@@ -1668,8 +1668,6 @@ void func_800570B8(Object *obj, s32 soundID, s32 range, s32 arg3) {
     }
 }
 
-//s32 soundID = 545;
-
 /**
  * This function dictates the base top speed of a racer.
  * During the race start sequence it hardsets it to 0 so you don't go anywhere.
@@ -1741,15 +1739,6 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
             }
         }
     }
-    /*render_printf("%d", soundID);
-    if (gActivePlayerButtonPress & L_TRIG)
-    {
-        racer_play_sound(obj, soundID);
-    }
-    if (gActivePlayerButtonPress & L_JPAD)
-        soundID --;
-    if (gActivePlayerButtonPress & R_JPAD)
-        soundID ++;*/
     if (racer->boostTimer && !gRaceStartTimer && timer3 && racer->raceStatus == STATUS_RACING) {
          func_80072348(racer->playerIndex, 6);
     }
@@ -1813,22 +1802,27 @@ void func_800575EC(Object *obj, Object_Racer *racer) {
 
 GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
 
-void func_800579B0(Object_Racer *racer, UNUSED s32 arg1, f32 updateRate) {
-    s32 temp, temp2;
+/**
+ * Generate the steer velocity by taking the current steer velocity and getting the difference between the stick tilt.
+ * Get the velocity from a fraction of the difference.
+ */
+void handle_base_steering(Object_Racer *racer, UNUSED s32 arg1, f32 updateRate) {
+    s32 steering, turnVel;
 
-    temp = gCurrentStickX - racer->unk1E1;
-    temp2 = (temp * updateRate) * 0.125;
+    steering = gCurrentStickX - racer->steerAngle;
+    turnVel = (steering * updateRate) * 0.125;
 
-    if (temp != 0 && temp2 == 0) {
-        if (temp > 0) {
-            temp2 = 1;
+    if (steering != 0 && turnVel == 0) {
+        if (steering > 0) {
+            turnVel = 1;
         }
-        if (temp < 0) {
-            temp2 = -1;
+        if (steering < 0) {
+            turnVel = -1;
         }
     }
 
-    racer->unk1E1 += temp2;
+    racer->steerAngle += turnVel;
+
 }
 
 void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
@@ -1932,7 +1926,7 @@ void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
     gCameraObject->unk3A -= delta;
     while (gCameraObject->unk3A < 0) {
         gCameraObject->unk3A += 5;
-         gCameraObject->unk30 = -gCameraObject->unk30 * 0.75;
+        gCameraObject->unk30 = -gCameraObject->unk30 * 0.75;
     }
 }
 

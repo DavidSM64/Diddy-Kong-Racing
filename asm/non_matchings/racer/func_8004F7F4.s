@@ -249,7 +249,7 @@ glabel func_8004F7F4
 .L8004FB3C:
 /* 05073C 8004FB3C 8FA600C4 */  lw    $a2, 0xc4($sp)
 /* 050740 8004FB40 02002025 */  move  $a0, $s0
-/* 050744 8004FB44 0C015E6C */  jal   func_800579B0
+/* 050744 8004FB44 0C015E6C */  jal   handle_base_steering
 /* 050748 8004FB48 00002825 */   move  $a1, $zero
 /* 05074C 8004FB4C 02202025 */  move  $a0, $s1
 /* 050750 8004FB50 0C015D7B */  jal   func_800575EC

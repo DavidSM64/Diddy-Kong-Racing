@@ -960,7 +960,7 @@ typedef struct Object_Racer {
   /* 0x1DB */ s8 spinout_timer;
   /* 0x1DC */ u8 wheel_surfaces[4];
   /* 0x1E0 */ s8 unk1E0;
-  /* 0x1E1 */ s8 unk1E1;
+  /* 0x1E1 */ s8 steerAngle;
   /* 0x1E2 */ s8 unk1E2;
   /* 0x1E3 */ s8 unk1E3;
   /* 0x1E4 */ s8 unk1E4;
