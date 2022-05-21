@@ -41,9 +41,9 @@ glabel func_8004DE38
 /* 04EA68 8004DE68 A020D581 */   sb    $zero, %lo(D_8011D581)($at)
 /* 04EA6C 8004DE6C 3C014049 */  li    $at, 0x40490000 # 3.140625
 /* 04EA70 8004DE70 44811800 */  mtc1  $at, $f3
-/* 04EA74 8004DE74 3C018012 */  lui   $at, %hi(D_8011D540) # $at, 0x8012
+/* 04EA74 8004DE74 3C018012 */  lui   $at, %hi(gRaceStartTimer) # $at, 0x8012
 /* 04EA78 8004DE78 8FA300B4 */  lw    $v1, 0xb4($sp)
-/* 04EA7C 8004DE7C AC22D540 */  sw    $v0, %lo(D_8011D540)($at)
+/* 04EA7C 8004DE7C AC22D540 */  sw    $v0, %lo(gRaceStartTimer)($at)
 /* 04EA80 8004DE80 C626001C */  lwc1  $f6, 0x1c($s1)
 /* 04EA84 8004DE84 44801000 */  mtc1  $zero, $f2
 /* 04EA88 8004DE88 44832000 */  mtc1  $v1, $f4
@@ -221,8 +221,8 @@ glabel func_8004DE38
 /* 04ECF4 8004E0F4 1000059D */  b     .L8004F76C
 /* 04ECF8 8004E0F8 8FBF002C */   lw    $ra, 0x2c($sp)
 .L8004E0FC:
-/* 04ECFC 8004E0FC 3C0B8012 */  lui   $t3, %hi(D_8011D540) # $t3, 0x8012
-/* 04ED00 8004E100 8D6BD540 */  lw    $t3, %lo(D_8011D540)($t3)
+/* 04ECFC 8004E0FC 3C0B8012 */  lui   $t3, %hi(gRaceStartTimer) # $t3, 0x8012
+/* 04ED00 8004E100 8D6BD540 */  lw    $t3, %lo(gRaceStartTimer)($t3)
 /* 04ED04 8004E104 00000000 */  nop   
 /* 04ED08 8004E108 15600017 */  bnez  $t3, .L8004E168
 /* 04ED0C 8004E10C 00002025 */   move  $a0, $zero
@@ -262,8 +262,8 @@ glabel func_8004DE38
 .L8004E18C:
 /* 04ED8C 8004E18C 0C01B683 */  jal   get_render_context
 /* 04ED90 8004E190 00000000 */   nop   
-/* 04ED94 8004E194 3C0D8012 */  lui   $t5, %hi(D_8011D540) # $t5, 0x8012
-/* 04ED98 8004E198 8DADD540 */  lw    $t5, %lo(D_8011D540)($t5)
+/* 04ED94 8004E194 3C0D8012 */  lui   $t5, %hi(gRaceStartTimer) # $t5, 0x8012
+/* 04ED98 8004E198 8DADD540 */  lw    $t5, %lo(gRaceStartTimer)($t5)
 /* 04ED9C 8004E19C AFA200A4 */  sw    $v0, 0xa4($sp)
 /* 04EDA0 8004E1A0 15A00010 */  bnez  $t5, .L8004E1E4
 /* 04EDA4 8004E1A4 3C028012 */   lui   $v0, %hi(D_8011D544) # $v0, 0x8012
@@ -642,8 +642,8 @@ glabel func_8004DE38
 /* 04F31C 8004E71C 0C019944 */  jal   func_80066510
 /* 04F320 8004E720 00000000 */   nop   
 /* 04F324 8004E724 14400014 */  bnez  $v0, .L8004E778
-/* 04F328 8004E728 3C0D8012 */   lui   $t5, %hi(D_8011D540) # $t5, 0x8012
-/* 04F32C 8004E72C 8DADD540 */  lw    $t5, %lo(D_8011D540)($t5)
+/* 04F328 8004E728 3C0D8012 */   lui   $t5, %hi(gRaceStartTimer) # $t5, 0x8012
+/* 04F32C 8004E72C 8DADD540 */  lw    $t5, %lo(gRaceStartTimer)($t5)
 /* 04F330 8004E730 24010064 */  li    $at, 100
 /* 04F334 8004E734 11A10010 */  beq   $t5, $at, .L8004E778
 /* 04F338 8004E738 00000000 */   nop   
@@ -751,8 +751,8 @@ glabel func_8004DE38
 /* 04F4B0 8004E8B0 0C015B8B */  jal   func_80056E2C
 /* 04F4B4 8004E8B4 02002825 */   move  $a1, $s0
 .L8004E8B8:
-/* 04F4B8 8004E8B8 3C038012 */  lui   $v1, %hi(D_8011D540) # $v1, 0x8012
-/* 04F4BC 8004E8BC 8C63D540 */  lw    $v1, %lo(D_8011D540)($v1)
+/* 04F4B8 8004E8B8 3C038012 */  lui   $v1, %hi(gRaceStartTimer) # $v1, 0x8012
+/* 04F4BC 8004E8BC 8C63D540 */  lw    $v1, %lo(gRaceStartTimer)($v1)
 /* 04F4C0 8004E8C0 00000000 */  nop   
 /* 04F4C4 8004E8C4 10600010 */  beqz  $v1, .L8004E908
 /* 04F4C8 8004E8C8 00000000 */   nop   
@@ -782,7 +782,7 @@ glabel func_8004DE38
 /* 04F520 8004E920 012B082A */  slt   $at, $t1, $t3
 /* 04F524 8004E924 10200015 */  beqz  $at, .L8004E97C
 /* 04F528 8004E928 00000000 */   nop   
-/* 04F52C 8004E92C 0C00322D */  jal   func_8000C8B4
+/* 04F52C 8004E92C 0C00322D */  jal   set_timer_region_adjusted
 /* 04F530 8004E930 34048CA0 */   li    $a0, 36000
 /* 04F534 8004E934 820D0194 */  lb    $t5, 0x194($s0)
 /* 04F538 8004E938 8FA500B4 */  lw    $a1, 0xb4($sp)
@@ -796,7 +796,7 @@ glabel func_8004DE38
 /* 04F558 8004E958 10000008 */  b     .L8004E97C
 /* 04F55C 8004E95C AC6F0128 */   sw    $t7, 0x128($v1)
 .L8004E960:
-/* 04F560 8004E960 0C00322D */  jal   func_8000C8B4
+/* 04F560 8004E960 0C00322D */  jal   set_timer_region_adjusted
 /* 04F564 8004E964 34048CA0 */   li    $a0, 36000
 /* 04F568 8004E968 82080194 */  lb    $t0, 0x194($s0)
 /* 04F56C 8004E96C 00000000 */  nop   
@@ -987,8 +987,8 @@ glabel L8004EBF4
 glabel L8004EC10
 /* 04F810 8004EC10 3C0B8012 */  lui   $t3, %hi(gCurrentCarInput) # $t3, 0x8012
 /* 04F814 8004EC14 3C0D8012 */  lui   $t5, %hi(gActivePlayerButtonPress) # $t5, 0x8012
-/* 04F818 8004EC18 3C0C8012 */  lui   $t4, %hi(D_8011D540) # $t4, 0x8012
-/* 04F81C 8004EC1C 258CD540 */  addiu $t4, %lo(D_8011D540) # addiu $t4, $t4, -0x2ac0
+/* 04F818 8004EC18 3C0C8012 */  lui   $t4, %hi(gRaceStartTimer) # $t4, 0x8012
+/* 04F81C 8004EC1C 258CD540 */  addiu $t4, %lo(gRaceStartTimer) # addiu $t4, $t4, -0x2ac0
 /* 04F820 8004EC20 25ADD52C */  addiu $t5, %lo(gActivePlayerButtonPress) # addiu $t5, $t5, -0x2ad4
 /* 04F824 8004EC24 256BD528 */  addiu $t3, %lo(gCurrentCarInput) # addiu $t3, $t3, -0x2ad8
 /* 04F828 8004EC28 8FA400B4 */  lw    $a0, 0xb4($sp)
@@ -1004,8 +1004,8 @@ glabel L8004EC10
 glabel L8004EC50
 /* 04F850 8004EC50 3C0E8012 */  lui   $t6, %hi(gCurrentCarInput) # $t6, 0x8012
 /* 04F854 8004EC54 3C0F8012 */  lui   $t7, %hi(gActivePlayerButtonPress) # $t7, 0x8012
-/* 04F858 8004EC58 3C088012 */  lui   $t0, %hi(D_8011D540) # $t0, 0x8012
-/* 04F85C 8004EC5C 2508D540 */  addiu $t0, %lo(D_8011D540) # addiu $t0, $t0, -0x2ac0
+/* 04F858 8004EC58 3C088012 */  lui   $t0, %hi(gRaceStartTimer) # $t0, 0x8012
+/* 04F85C 8004EC5C 2508D540 */  addiu $t0, %lo(gRaceStartTimer) # addiu $t0, $t0, -0x2ac0
 /* 04F860 8004EC60 25EFD52C */  addiu $t7, %lo(gActivePlayerButtonPress) # addiu $t7, $t7, -0x2ad4
 /* 04F864 8004EC64 25CED528 */  addiu $t6, %lo(gCurrentCarInput) # addiu $t6, $t6, -0x2ad8
 /* 04F868 8004EC68 8FA400B4 */  lw    $a0, 0xb4($sp)
@@ -1021,8 +1021,8 @@ glabel L8004EC50
 glabel L8004EC90
 /* 04F890 8004EC90 3C188012 */  lui   $t8, %hi(gCurrentCarInput) # $t8, 0x8012
 /* 04F894 8004EC94 3C198012 */  lui   $t9, %hi(gCurrentStickX) # $t9, 0x8012
-/* 04F898 8004EC98 3C0A8012 */  lui   $t2, %hi(D_8011D540) # $t2, 0x8012
-/* 04F89C 8004EC9C 254AD540 */  addiu $t2, %lo(D_8011D540) # addiu $t2, $t2, -0x2ac0
+/* 04F898 8004EC98 3C0A8012 */  lui   $t2, %hi(gRaceStartTimer) # $t2, 0x8012
+/* 04F89C 8004EC9C 254AD540 */  addiu $t2, %lo(gRaceStartTimer) # addiu $t2, $t2, -0x2ac0
 /* 04F8A0 8004ECA0 2739D534 */  addiu $t9, %lo(gCurrentStickX) # addiu $t9, $t9, -0x2acc
 /* 04F8A4 8004ECA4 2718D528 */  addiu $t8, %lo(gCurrentCarInput) # addiu $t8, $t8, -0x2ad8
 /* 04F8A8 8004ECA8 8FA400B4 */  lw    $a0, 0xb4($sp)
@@ -1038,8 +1038,8 @@ glabel L8004EC90
 glabel L8004ECD0
 /* 04F8D0 8004ECD0 3C098012 */  lui   $t1, %hi(gCurrentCarInput) # $t1, 0x8012
 /* 04F8D4 8004ECD4 3C0B8012 */  lui   $t3, %hi(gActivePlayerButtonPress) # $t3, 0x8012
-/* 04F8D8 8004ECD8 3C0D8012 */  lui   $t5, %hi(D_8011D540) # $t5, 0x8012
-/* 04F8DC 8004ECDC 25ADD540 */  addiu $t5, %lo(D_8011D540) # addiu $t5, $t5, -0x2ac0
+/* 04F8D8 8004ECD8 3C0D8012 */  lui   $t5, %hi(gRaceStartTimer) # $t5, 0x8012
+/* 04F8DC 8004ECDC 25ADD540 */  addiu $t5, %lo(gRaceStartTimer) # addiu $t5, $t5, -0x2ac0
 /* 04F8E0 8004ECE0 256BD52C */  addiu $t3, %lo(gActivePlayerButtonPress) # addiu $t3, $t3, -0x2ad4
 /* 04F8E4 8004ECE4 2529D528 */  addiu $t1, %lo(gCurrentCarInput) # addiu $t1, $t1, -0x2ad8
 /* 04F8E8 8004ECE8 8FA400B4 */  lw    $a0, 0xb4($sp)
@@ -1055,8 +1055,8 @@ glabel L8004ECD0
 glabel L8004ED10
 /* 04F910 8004ED10 3C0C8012 */  lui   $t4, %hi(gCurrentCarInput) # $t4, 0x8012
 /* 04F914 8004ED14 3C0E8012 */  lui   $t6, %hi(gActivePlayerButtonPress) # $t6, 0x8012
-/* 04F918 8004ED18 3C0F8012 */  lui   $t7, %hi(D_8011D540) # $t7, 0x8012
-/* 04F91C 8004ED1C 25EFD540 */  addiu $t7, %lo(D_8011D540) # addiu $t7, $t7, -0x2ac0
+/* 04F918 8004ED18 3C0F8012 */  lui   $t7, %hi(gRaceStartTimer) # $t7, 0x8012
+/* 04F91C 8004ED1C 25EFD540 */  addiu $t7, %lo(gRaceStartTimer) # addiu $t7, $t7, -0x2ac0
 /* 04F920 8004ED20 25CED52C */  addiu $t6, %lo(gActivePlayerButtonPress) # addiu $t6, $t6, -0x2ad4
 /* 04F924 8004ED24 258CD528 */  addiu $t4, %lo(gCurrentCarInput) # addiu $t4, $t4, -0x2ad8
 /* 04F928 8004ED28 8FA400B4 */  lw    $a0, 0xb4($sp)
@@ -1072,8 +1072,8 @@ glabel L8004ED10
 glabel L8004ED50
 /* 04F950 8004ED50 3C088012 */  lui   $t0, %hi(gCurrentCarInput) # $t0, 0x8012
 /* 04F954 8004ED54 3C188012 */  lui   $t8, %hi(gActivePlayerButtonPress) # $t8, 0x8012
-/* 04F958 8004ED58 3C198012 */  lui   $t9, %hi(D_8011D540) # $t9, 0x8012
-/* 04F95C 8004ED5C 2739D540 */  addiu $t9, %lo(D_8011D540) # addiu $t9, $t9, -0x2ac0
+/* 04F958 8004ED58 3C198012 */  lui   $t9, %hi(gRaceStartTimer) # $t9, 0x8012
+/* 04F95C 8004ED5C 2739D540 */  addiu $t9, %lo(gRaceStartTimer) # addiu $t9, $t9, -0x2ac0
 /* 04F960 8004ED60 2718D52C */  addiu $t8, %lo(gActivePlayerButtonPress) # addiu $t8, $t8, -0x2ad4
 /* 04F964 8004ED64 2508D528 */  addiu $t0, %lo(gCurrentCarInput) # addiu $t0, $t0, -0x2ad8
 /* 04F968 8004ED68 8FA400B4 */  lw    $a0, 0xb4($sp)
@@ -1621,10 +1621,10 @@ glabel L8004ED88
 /* 050124 8004F524 1040000B */  beqz  $v0, .L8004F554
 /* 050128 8004F528 00000000 */   nop   
 /* 05012C 8004F52C 860A0000 */  lh    $t2, ($s0)
-/* 050130 8004F530 3C098012 */  lui   $t1, %hi(D_8011D540) # $t1, 0x8012
+/* 050130 8004F530 3C098012 */  lui   $t1, %hi(gRaceStartTimer) # $t1, 0x8012
 /* 050134 8004F534 15400007 */  bnez  $t2, .L8004F554
 /* 050138 8004F538 00000000 */   nop   
-/* 05013C 8004F53C 8D29D540 */  lw    $t1, %lo(D_8011D540)($t1)
+/* 05013C 8004F53C 8D29D540 */  lw    $t1, %lo(gRaceStartTimer)($t1)
 /* 050140 8004F540 8FA500B4 */  lw    $a1, 0xb4($sp)
 /* 050144 8004F544 15200003 */  bnez  $t1, .L8004F554
 /* 050148 8004F548 00000000 */   nop   
@@ -1644,10 +1644,10 @@ glabel L8004ED88
 /* 050178 8004F578 3C018012 */  lui   $at, %hi(D_8011D584) # $at, 0x8012
 /* 05017C 8004F57C A020D584 */  sb    $zero, %lo(D_8011D584)($at)
 /* 050180 8004F580 8E020150 */  lw    $v0, 0x150($s0)
-/* 050184 8004F584 3C0D8012 */  lui   $t5, %hi(D_8011D540) # $t5, 0x8012
+/* 050184 8004F584 3C0D8012 */  lui   $t5, %hi(gRaceStartTimer) # $t5, 0x8012
 /* 050188 8004F588 1040003D */  beqz  $v0, .L8004F680
 /* 05018C 8004F58C 00000000 */   nop   
-/* 050190 8004F590 8DADD540 */  lw    $t5, %lo(D_8011D540)($t5)
+/* 050190 8004F590 8DADD540 */  lw    $t5, %lo(gRaceStartTimer)($t5)
 /* 050194 8004F594 00002025 */  move  $a0, $zero
 /* 050198 8004F598 15A0003A */  bnez  $t5, .L8004F684
 /* 05019C 8004F59C 240D00FF */   li    $t5, 255

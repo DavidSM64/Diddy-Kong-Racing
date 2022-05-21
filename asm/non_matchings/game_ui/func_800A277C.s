@@ -344,14 +344,14 @@ glabel func_800A277C
 /* 0A3824 800A2C24 44093000 */  mfc1  $t1, $f6
 /* 0A3828 800A2C28 00000000 */  nop   
 .L800A2C2C:
-/* 0A382C 800A2C2C 0C00322D */  jal   func_8000C8B4
+/* 0A382C 800A2C2C 0C00322D */  jal   set_timer_region_adjusted
 /* 0A3830 800A2C30 AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A3834 800A2C34 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A3838 800A2C38 00000000 */  nop   
 /* 0A383C 800A2C3C 0049082A */  slt   $at, $v0, $t1
 /* 0A3840 800A2C40 10200005 */  beqz  $at, .L800A2C58
 /* 0A3844 800A2C44 24100444 */   li    $s0, 1092
-/* 0A3848 800A2C48 0C00322D */  jal   func_8000C8B4
+/* 0A3848 800A2C48 0C00322D */  jal   set_timer_region_adjusted
 /* 0A384C 800A2C4C 34048CA0 */   li    $a0, 36000
 /* 0A3850 800A2C50 00404825 */  move  $t1, $v0
 /* 0A3854 800A2C54 24100444 */  li    $s0, 1092

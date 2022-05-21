@@ -167,7 +167,7 @@ f32 D_8011ADA8;
 s32 D_8011ADAC;
 s32 D_8011ADB0;
 s32 D_8011ADB4;
-s32 D_8011ADB8;
+s32 gRaceStartCountdown;
 s32 D_8011ADBC;
 s32 D_8011ADC0;
 u8 D_8011ADC4;
@@ -482,11 +482,16 @@ void func_8000C844(s32 arg0) {
     }
 }
 
-s32 func_8000C8B4(s32 arg0) {
-    if (osTvType != 0 || arg0 < 0) {
-        return arg0;
+/**
+ * Converts the passed value into an accurate countdown value based on the systems region.
+ * Since PAL runs at 50Hz, it therefore will reduce the timer to 5/6 to match, keeping
+ * it consistent with non PAL timers, running 60Hz.
+ */
+s32 set_timer_region_adjusted(s32 timer) {
+    if (osTvType != TV_TYPE_PAL || timer < 0) {
+        return timer;
     } else {
-        return (arg0 * 5) / 6;
+        return (timer * 5) / 6;
     }
 }
 
@@ -860,8 +865,13 @@ s32 func_8001139C() {
     return D_8011ADB0;
 }
 
-s32 func_800113AC() {
-    return D_8011ADB8;
+/**
+ * Return the timer countdown before the race starts.
+ * There exists another variable in racer.c with exactly the same purpose.
+ * This does not get used anywhere else.
+ */
+s32 get_race_start_timer() {
+    return gRaceStartCountdown;
 }
 
 s32 func_800113BC() {

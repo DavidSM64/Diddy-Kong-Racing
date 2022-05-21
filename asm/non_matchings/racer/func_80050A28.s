@@ -454,7 +454,7 @@ glabel func_80050A28
 /* 051C0C 8005100C 00000000 */   nop   
 /* 051C10 80051010 A20001E6 */  sb    $zero, 0x1e6($s0)
 .L80051014:
-/* 051C14 80051014 0C015C88 */  jal   func_80057220
+/* 051C14 80051014 0C015C88 */  jal   handle_racer_top_speed
 /* 051C18 80051018 AFA70078 */   sw    $a3, 0x78($sp)
 /* 051C1C 8005101C 3C0F8012 */  lui   $t7, %hi(gCurrentCarInput) # $t7, 0x8012
 /* 051C20 80051020 8DEFD528 */  lw    $t7, %lo(gCurrentCarInput)($t7)
@@ -1062,7 +1062,7 @@ glabel func_80050A28
 /* 0524DC 800518DC 1521001B */  bne   $t1, $at, .L8005194C
 /* 0524E0 800518E0 2404002D */   li    $a0, 45
 /* 0524E4 800518E4 AFA90064 */  sw    $t1, 0x64($sp)
-/* 0524E8 800518E8 0C00322D */  jal   func_8000C8B4
+/* 0524E8 800518E8 0C00322D */  jal   set_timer_region_adjusted
 /* 0524EC 800518EC E7AE0044 */   swc1  $f14, 0x44($sp)
 /* 0524F0 800518F0 240F0002 */  li    $t7, 2
 /* 0524F4 800518F4 A20201D3 */  sb    $v0, 0x1d3($s0)
@@ -1353,8 +1353,8 @@ glabel func_80050A28
 /* 052920 80051D20 44802000 */  mtc1  $zero, $f4
 /* 052924 80051D24 46067382 */  mul.s $f14, $f14, $f6
 /* 052928 80051D28 19600016 */  blez  $t3, .L80051D84
-/* 05292C 80051D2C 3C188012 */   lui   $t8, %hi(D_8011D540) # $t8, 0x8012
-/* 052930 80051D30 8F18D540 */  lw    $t8, %lo(D_8011D540)($t8)
+/* 05292C 80051D2C 3C188012 */   lui   $t8, %hi(gRaceStartTimer) # $t8, 0x8012
+/* 052930 80051D30 8F18D540 */  lw    $t8, %lo(gRaceStartTimer)($t8)
 /* 052934 80051D34 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 052938 80051D38 17000010 */  bnez  $t8, .L80051D7C
 /* 05293C 80051D3C 00000000 */   nop   
@@ -1538,11 +1538,11 @@ glabel func_80050A28
 /* 052BD4 80051FD4 4500003F */  bc1f  .L800520D4
 /* 052BD8 80051FD8 00000000 */   nop   
 /* 052BDC 80051FDC 820C01D7 */  lb    $t4, 0x1d7($s0)
-/* 052BE0 80051FE0 3C0F8012 */  lui   $t7, %hi(D_8011D540) # $t7, 0x8012
+/* 052BE0 80051FE0 3C0F8012 */  lui   $t7, %hi(gRaceStartTimer) # $t7, 0x8012
 /* 052BE4 80051FE4 29810005 */  slti  $at, $t4, 5
 /* 052BE8 80051FE8 1020003A */  beqz  $at, .L800520D4
 /* 052BEC 80051FEC 00000000 */   nop   
-/* 052BF0 80051FF0 8DEFD540 */  lw    $t7, %lo(D_8011D540)($t7)
+/* 052BF0 80051FF0 8DEFD540 */  lw    $t7, %lo(gRaceStartTimer)($t7)
 /* 052BF4 80051FF4 00000000 */  nop   
 /* 052BF8 80051FF8 15E00036 */  bnez  $t7, .L800520D4
 /* 052BFC 80051FFC 00000000 */   nop   

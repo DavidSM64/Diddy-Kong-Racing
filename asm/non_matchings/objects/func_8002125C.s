@@ -35,7 +35,7 @@ glabel func_8002125C
 .L800212D8:
 /* 021ED8 800212D8 84A40024 */  lh    $a0, 0x24($a1)
 /* 021EDC 800212DC AFA60020 */  sw    $a2, 0x20($sp)
-/* 021EE0 800212E0 0C00322D */  jal   func_8000C8B4
+/* 021EE0 800212E0 0C00322D */  jal   set_timer_region_adjusted
 /* 021EE4 800212E4 AFA5001C */   sw    $a1, 0x1c($sp)
 /* 021EE8 800212E8 8FA5001C */  lw    $a1, 0x1c($sp)
 /* 021EEC 800212EC 8FA60020 */  lw    $a2, 0x20($sp)

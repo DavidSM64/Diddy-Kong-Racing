@@ -798,7 +798,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 speed) {
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
             racerObj64 = &curRacerObj->unk64->racer;
-            if ((racerObj64->unk1F5 == 0) && (racerObj64->unk1D3 < 15)) {
+            if ((racerObj64->unk1F5 == 0) && (racerObj64->boostTimer < 15)) {
                 xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -863,7 +863,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
             racerObj64 = &curRacerObj->unk64->racer;
-            if ((racerObj64->unk1D3 < 15) && (racerObj64->unk1E2 != 0)) {
+            if ((racerObj64->boostTimer < 15) && (racerObj64->unk1E2 != 0)) {
                 xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -871,10 +871,10 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
                     if (racerObj64->playerIndex != -1) {
                         func_80001EA8(263, curRacerObj->segment.trans.x_position, curRacerObj->segment.trans.y_position, curRacerObj->segment.trans.z_position, NULL);
                     }
-                    racerObj64->unk1D3 = func_8000C8B4(45);
-                    racerObj64->unk203 = 2;
-                    if (racerObj64->unk20C) {
-                        racerObj64->unk203 |= 4;
+                    racerObj64->boostTimer = set_timer_region_adjusted(45);
+                    racerObj64->boostType = BOOST_LARGE;
+                    if (racerObj64->throttleReleased) {
+                        racerObj64->boostType |= BOOST_SMALL_FAST;
                     }
                     if (racerObj64->raceStatus == STATUS_RACING) {
                         func_80072348(racerObj64->playerIndex, 8);
@@ -2249,7 +2249,7 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x18;
     obj->unk4C->unk12 = 0;
-    obj->unk78 = func_8000C8B4(0x1E0);
+    obj->unk78 = set_timer_region_adjusted(0x1E0);
     obj->unk7C.word = 0;
 }
 

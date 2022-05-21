@@ -190,7 +190,7 @@ void func_800C3440(s32 arg0) {
             if (D_8012A786 != 0) {
                 D_8012A785 -= arg0;
                 while (D_8012A785 < 0) {
-                    D_8012A785 += func_8000C8B4(0x3C);
+                    D_8012A785 += set_timer_region_adjusted(0x3C);
                     D_8012A786--;
                 }
                 if (D_8012A786 <= 0) {

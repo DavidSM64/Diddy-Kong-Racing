@@ -949,7 +949,7 @@ typedef struct Object_Racer {
   /* 0x1D0 */ s8 spectateCamID;
   /* 0x1D1 */ u8 unk1D1;
   /* 0x1D2 */ s8 unk1D2;
-  /* 0x1D3 */ s8 unk1D3;
+  /* 0x1D3 */ s8 boostTimer;
   /* 0x1D4 */ u8 unk1D4;
   /* 0x1D5 */ u8 unk1D5;
   /* 0x1D6 */ s8 unk1D6;
@@ -979,7 +979,7 @@ typedef struct Object_Racer {
   /* 0x1F1 */ u8 unk1F1;
   /* 0x1F2 */ u8 unk1F2;
   /* 0x1F3 */ u8 unk1F3;
-  /* 0x1F4 */ u8 unk1F4;
+  /* 0x1F4 */ u8 startInput;
   /* 0x1F5 */ u8 unk1F5;
   /* 0x1F6 */ u8 unk1F6;
   /* 0x1F7 */ u8 transparency;
@@ -994,13 +994,13 @@ typedef struct Object_Racer {
   /* 0x200 */ s8 unk200;
   /* 0x201 */ s8 unk201;
   /* 0x202 */ s8 unk202;
-  /* 0x203 */ s8 unk203;
+  /* 0x203 */ s8 boostType;
   /* 0x204 */ s16 unk204;
   /* 0x206 */ s16 unk206;
   /* 0x208 */ s16 unk208;
   /* 0x20A */ s8 unk20A;
   /* 0x20B */ s8 unk20B;
-  /* 0x20C */ u8 unk20C;
+  /* 0x20C */ u8 throttleReleased;
   /* 0x20D */ u8 unk20D;
   /* 0x20E */ s16 unk20E;
   /* 0x210 */ s8 unk210;

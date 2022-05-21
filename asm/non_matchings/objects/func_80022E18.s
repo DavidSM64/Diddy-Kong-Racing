@@ -166,8 +166,8 @@ glabel func_80022E18
 /* 023C80 80023080 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
 /* 023C84 80023084 AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
 /* 023C88 80023088 8FAF001C */  lw    $t7, 0x1c($sp)
-/* 023C8C 8002308C 3C018012 */  lui   $at, %hi(D_8011ADB8) # $at, 0x8012
-/* 023C90 80023090 AC20ADB8 */  sw    $zero, %lo(D_8011ADB8)($at)
+/* 023C8C 8002308C 3C018012 */  lui   $at, %hi(gRaceStartCountdown) # $at, 0x8012
+/* 023C90 80023090 AC20ADB8 */  sw    $zero, %lo(gRaceStartCountdown)($at)
 /* 023C94 80023094 240D0014 */  li    $t5, 20
 /* 023C98 80023098 ADED0078 */  sw    $t5, 0x78($t7)
 .L8002309C:

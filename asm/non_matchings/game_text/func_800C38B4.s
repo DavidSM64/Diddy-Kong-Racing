@@ -189,7 +189,7 @@ glabel L800C3B50
 /* 0C4758 800C3B58 15800007 */  bnez  $t4, .L800C3B78
 /* 0C475C 800C3B5C 00000000 */   nop   
 /* 0C4760 800C3B60 920E0001 */  lbu   $t6, 1($s0)
-/* 0C4764 800C3B64 0C00322D */  jal   func_8000C8B4
+/* 0C4764 800C3B64 0C00322D */  jal   set_timer_region_adjusted
 /* 0C4768 800C3B68 A28E0000 */   sb    $t6, ($s4)
 /* 0C476C 800C3B6C 8E6F0000 */  lw    $t7, ($s3)
 /* 0C4770 800C3B70 A2E20000 */  sb    $v0, ($s7)

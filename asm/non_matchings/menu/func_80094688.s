@@ -126,7 +126,7 @@ glabel func_80094688
 /* 095458 80094858 31F80040 */  andi  $t8, $t7, 0x40
 /* 09545C 8009485C 13000005 */  beqz  $t8, .L80094874
 /* 095460 80094860 00000000 */   nop   
-/* 095464 80094864 0C00322D */  jal   func_8000C8B4
+/* 095464 80094864 0C00322D */  jal   set_timer_region_adjusted
 /* 095468 80094868 240400F0 */   li    $a0, 240
 /* 09546C 8009486C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
 /* 095470 80094870 AC2263C4 */  sw    $v0, %lo(gIgnorePlayerInput)($at)

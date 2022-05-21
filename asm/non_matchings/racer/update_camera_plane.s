@@ -247,7 +247,7 @@ glabel update_camera_plane
 /* 04D1F4 8004C5F4 008B1823 */  subu  $v1, $a0, $t3
 /* 04D1F8 8004C5F8 0061082A */  slt   $at, $v1, $at
 /* 04D1FC 8004C5FC 14200004 */  bnez  $at, .L8004C610
-/* 04D200 8004C600 3C198012 */   lui   $t9, %hi(D_8011D540) # $t9, 0x8012
+/* 04D200 8004C600 3C198012 */   lui   $t9, %hi(gRaceStartTimer) # $t9, 0x8012
 /* 04D204 8004C604 3C01FFFF */  lui   $at, (0xFFFF0001 >> 16) # lui $at, 0xffff
 /* 04D208 8004C608 34210001 */  ori   $at, (0xFFFF0001 & 0xFFFF) # ori $at, $at, 1
 /* 04D20C 8004C60C 00611821 */  addu  $v1, $v1, $at
@@ -348,13 +348,13 @@ glabel update_camera_plane
 .L8004C764:
 /* 04D364 8004C764 46107381 */  sub.s $f14, $f14, $f16
 .L8004C768:
-/* 04D368 8004C768 8F39D540 */  lw    $t9, %lo(D_8011D540)($t9)
+/* 04D368 8004C768 8F39D540 */  lw    $t9, %lo(gRaceStartTimer)($t9)
 /* 04D36C 8004C76C 00000000 */  nop   
 /* 04D370 8004C770 17200015 */  bnez  $t9, .L8004C7C8
 /* 04D374 8004C774 24040024 */   li    $a0, 36
 /* 04D378 8004C778 AFA70058 */  sw    $a3, 0x58($sp)
 /* 04D37C 8004C77C E7AE0034 */  swc1  $f14, 0x34($sp)
-/* 04D380 8004C780 0C00322D */  jal   func_8000C8B4
+/* 04D380 8004C780 0C00322D */  jal   set_timer_region_adjusted
 /* 04D384 8004C784 E7B20030 */   swc1  $f18, 0x30($sp)
 /* 04D388 8004C788 8FA70058 */  lw    $a3, 0x58($sp)
 /* 04D38C 8004C78C 3C088012 */  lui   $t0, %hi(gCameraObject) # $t0, 0x8012
@@ -374,8 +374,8 @@ glabel update_camera_plane
 /* 04D3C0 8004C7C0 44817000 */  mtc1  $at, $f14
 /* 04D3C4 8004C7C4 00000000 */  nop   
 .L8004C7C8:
-/* 04D3C8 8004C7C8 3C0A8012 */  lui   $t2, %hi(D_8011D540) # $t2, 0x8012
-/* 04D3CC 8004C7CC 8D4AD540 */  lw    $t2, %lo(D_8011D540)($t2)
+/* 04D3C8 8004C7C8 3C0A8012 */  lui   $t2, %hi(gRaceStartTimer) # $t2, 0x8012
+/* 04D3CC 8004C7CC 8D4AD540 */  lw    $t2, %lo(gRaceStartTimer)($t2)
 /* 04D3D0 8004C7D0 8D050000 */  lw    $a1, ($t0)
 /* 04D3D4 8004C7D4 29410051 */  slti  $at, $t2, 0x51
 /* 04D3D8 8004C7D8 14200007 */  bnez  $at, .L8004C7F8

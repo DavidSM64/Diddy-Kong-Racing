@@ -224,7 +224,7 @@ glabel func_8003E694
 /* 03F5D4 8003E9D4 00402825 */  move  $a1, $v0
 /* 03F5D8 8003E9D8 144E000C */  bne   $v0, $t6, .L8003EA0C
 /* 03F5DC 8003E9DC 240401C2 */   li    $a0, 450
-/* 03F5E0 8003E9E0 0C00322D */  jal   func_8000C8B4
+/* 03F5E0 8003E9E0 0C00322D */  jal   set_timer_region_adjusted
 /* 03F5E4 8003E9E4 AFA200E4 */   sw    $v0, 0xe4($sp)
 /* 03F5E8 8003E9E8 8E030078 */  lw    $v1, 0x78($s0)
 /* 03F5EC 8003E9EC 8FA500E4 */  lw    $a1, 0xe4($sp)

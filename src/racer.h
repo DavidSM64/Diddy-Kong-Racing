@@ -25,6 +25,22 @@ typedef enum CameraZoom {
     ZOOM_VERY_CLOSE
 } CameraZoom;
 
+typedef enum BoostSound {
+    BOOST_NONE,
+    BOOST_RACE_START,
+    BOOST_UNK2
+} BoostSound;
+
+typedef enum BoostType {
+    BOOST_SMALL,
+    BOOST_MEDIUM,
+    BOOST_LARGE,
+    BOOST_UNK3,
+    BOOST_SMALL_FAST,
+    BOOST_MEDIUM_FAST,
+    BOOST_LARGE_FAST,
+} BoostType;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -198,7 +214,7 @@ void antipiracy_modify_surface_traction_table(void);
 s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 arg2);
 void func_8005C270(Object_Racer *racer);
-f32 func_80057220(Object *obj, Object_Racer *racer);
+f32 handle_racer_top_speed(Object *obj, Object_Racer *racer);
 void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
 void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation);
 void func_80059080(Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *velZ);

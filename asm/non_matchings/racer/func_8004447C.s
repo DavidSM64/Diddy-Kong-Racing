@@ -113,8 +113,8 @@ glabel func_8004447C
 /* 045204 80044604 3C018012 */  lui   $at, %hi(gCurrentStickX) # $at, 0x8012
 /* 045208 80044608 AC2ED534 */  sw    $t6, %lo(gCurrentStickX)($at)
 .L8004460C:
-/* 04520C 8004460C 3C0F8012 */  lui   $t7, %hi(D_8011D540) # $t7, 0x8012
-/* 045210 80044610 8DEFD540 */  lw    $t7, %lo(D_8011D540)($t7)
+/* 04520C 8004460C 3C0F8012 */  lui   $t7, %hi(gRaceStartTimer) # $t7, 0x8012
+/* 045210 80044610 8DEFD540 */  lw    $t7, %lo(gRaceStartTimer)($t7)
 /* 045214 80044614 00000000 */  nop   
 /* 045218 80044618 11E00002 */  beqz  $t7, .L80044624
 /* 04521C 8004461C 00000000 */   nop   

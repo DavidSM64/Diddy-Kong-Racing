@@ -43,7 +43,7 @@ typedef struct unk800179D0 {
 
 /* Unknown Size */
 typedef struct unk800179D0_2 {
-    s32 unk04; 
+    s32 unk04;
 } unk800179D0_2;
 
 typedef struct unk8001D6E4_arg1_40 {
@@ -130,7 +130,7 @@ Object *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);
 void func_8000C460(void);
 void func_8000C604(void);
-s32 func_8000C8B4(s32 arg0);
+s32 set_timer_region_adjusted(s32 timer);
 void func_8000CBC0(void);
 s32 func_8000CC20(u32 *arg0);
 u32 func_8000E0B0(void);
@@ -157,7 +157,7 @@ s32 func_80010018(void);
 s32 func_80010028(s32 arg0);
 void func_80011390(void);
 s32 func_8001139C();
-s32 func_800113AC();
+s32 get_race_start_timer();
 s32 func_800113BC();
 s32 func_80011560(void);
 void func_80012C30(void);
