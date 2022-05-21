@@ -922,9 +922,9 @@ typedef struct Object_Racer {
   /* 0x19C */ s16 unk19C;
   /* 0x19E */ s16 unk19E;
   /* 0x1A0 */ s16 unk1A0;
-  /* 0x1A2 */ s16 unk1A2;
-  /* 0x1A4 */ s16 unk1A4;
-  /* 0x1A6 */ s16 unk1A6;
+  /* 0x1A2 */ s16 y_rotation_vel;
+  /* 0x1A4 */ s16 x_rotation_vel;
+  /* 0x1A6 */ s16 z_rotation_vel;
   /* 0x1A8 */ s16 unk1A8;
   /* 0x1AA */ u16 unk1AA;
   /* 0x1AC */ u8 unk1AC;

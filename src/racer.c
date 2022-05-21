@@ -777,7 +777,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         gCameraObject->trans.z_rotation += angle >> 2;
     } else {
         angle = (u16) gCameraObject->trans.z_rotation;
-        angle = angle + (-(racer->unk1A4 >> 4));
+        angle = angle + (-(racer->x_rotation_vel >> 4));
         if (angle > 0x8000) {
             angle -= 0xFFFF;
         }
@@ -928,7 +928,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
         tempObj->playerIndex = PLAYER_COMPUTER;
     }
     tempObj->unk1A0 = obj->segment.trans.y_rotation;
-    tempObj->unk1A4 = obj->segment.trans.z_rotation;
+    tempObj->x_rotation_vel = obj->segment.trans.z_rotation;
     tempObj->unkC4 = 0.5f;
     if (1);
     tempObj->unk196 = tempObj->unk1A0;
@@ -1046,7 +1046,7 @@ void func_80050754(Object *obj, Object_Racer *racer, f32 divisor) {
     obj->segment.trans.y_rotation = racer->unk148->segment.trans.y_rotation;
     obj->segment.trans.x_rotation = racer->unk148->segment.trans.x_rotation;
     obj->segment.trans.z_rotation = racer->unk148->segment.trans.z_rotation;
-    racer->unk1A4 = obj->segment.trans.z_rotation;
+    racer->x_rotation_vel = obj->segment.trans.z_rotation;
     racer->unk1A0 = obj->segment.trans.y_rotation;
     obj->segment.x_velocity = diffX / divisor;
     obj->segment.y_velocity = diffY / divisor;
@@ -1409,7 +1409,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk1F0 = 0;
     }
     obj->segment.unk3B = 0;
-    tempAngle = ((-racer->unk1A2 >> 8) / D_8011D570);
+    tempAngle = ((-racer->y_rotation_vel >> 8) / D_8011D570);
     tempAngle = 40 - tempAngle;
     if (tempAngle < 0) {
         tempAngle = 0;
@@ -1419,14 +1419,14 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     obj->segment.unk18 = tempAngle;
     func_8005234C(racer);
-    angle = gCurrentCarSteerVel - (u16) racer->unk1A2;
+    angle = gCurrentCarSteerVel - (u16) racer->y_rotation_vel;
     WRAP(angle, -0x8000, 0x8000);
     angle >>= 2;
     CLAMP(angle, -0x2EE, 0x2EE);
-    racer->unk1A2 += (angle * updateRate);
-    obj->segment.trans.y_rotation = racer->unk1A0 + racer->unk1A2;
-    racer->unk1A6 += ((D_8011D558 - racer->unk1A6) * updateRate) >> 4;
-    obj->segment.trans.z_rotation = racer->unk1A4 + racer->unk1A6;
+    racer->y_rotation_vel += (angle * updateRate);
+    obj->segment.trans.y_rotation = racer->unk1A0 + racer->y_rotation_vel;
+    racer->z_rotation_vel += ((D_8011D558 - racer->z_rotation_vel) * updateRate) >> 4;
+    obj->segment.trans.z_rotation = racer->x_rotation_vel + racer->z_rotation_vel;
     if (!racer->unk1F0) {
         D_8011D510.y_rotation = racer->unk1A0 + racer->unk10C;
         D_8011D510.x_rotation = 0;
@@ -1585,7 +1585,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
         tempZ = (tempX * angleX) - (tempZ * angleZ);
         temp_v1_2 = -(s16)(u16)arctan2_f(distance, tempY);
         if (temp_v1_2 < 0x2000 && temp_v1_2 > -0x2000) {
-            racer->unk1A4 = temp_v1_2;
+            racer->x_rotation_vel = temp_v1_2;
         }
         xRot = -(s16)(u16)arctan2_f(tempZ, tempY);
         if ((xRot < 0x2000) && (xRot > -0x2000)) {
@@ -1599,7 +1599,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
         }
     }
     if (racer->unk1D6 != 4 && racer->unk1D6 != 2 && racer->unk1D6 != 10 && racer->unk1D6 != 7) {
-        CLAMP(racer->unk1A4, -0x3400, 0x3400);
+        CLAMP(racer->x_rotation_vel, -0x3400, 0x3400);
         CLAMP(obj->segment.trans.x_rotation, -0x3400, 0x3400);
     }
 }
