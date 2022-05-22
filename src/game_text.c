@@ -190,7 +190,7 @@ void func_800C3440(s32 arg0) {
             if (D_8012A786 != 0) {
                 D_8012A785 -= arg0;
                 while (D_8012A785 < 0) {
-                    D_8012A785 += normalise_time(0x3C);
+                    D_8012A785 += normalise_time(60);
                     D_8012A786--;
                 }
                 if (D_8012A786 <= 0) {
