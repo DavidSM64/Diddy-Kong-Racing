@@ -196,7 +196,7 @@ glabel L8009DC60
 /* 09E9F4 8009DDF4 10000023 */  b     .L8009DE84
 /* 09E9F8 8009DDF8 246D0001 */   addiu $t5, $v1, 1
 .L8009DDFC:
-/* 09E9FC 8009DDFC 0C000741 */  jal   func_80001D04
+/* 09E9FC 8009DDFC 0C000741 */  jal   play_sound_global
 /* 09EA00 8009DE00 00002825 */   move  $a1, $zero
 /* 09EA04 8009DE04 3C048012 */  lui   $a0, %hi(D_80126398) # $a0, 0x8012
 /* 09EA08 8009DE08 24846398 */  addiu $a0, %lo(D_80126398) # addiu $a0, $a0, 0x6398
@@ -211,7 +211,7 @@ glabel L8009DC60
 /* 09EA2C 8009DE2C A02A64E2 */   sb    $t2, %lo(sCurrentMenuID)($at)
 /* 09EA30 8009DE30 240400EF */  li    $a0, 239
 .L8009DE34:
-/* 09EA34 8009DE34 0C000741 */  jal   func_80001D04
+/* 09EA34 8009DE34 0C000741 */  jal   play_sound_global
 /* 09EA38 8009DE38 00002825 */   move  $a1, $zero
 /* 09EA3C 8009DE3C 2404022E */  li    $a0, 558
 /* 09EA40 8009DE40 0C00DAF3 */  jal   func_80036BCC
@@ -239,7 +239,7 @@ glabel L8009DC60
 /* 09EA8C 8009DE8C 31CF4000 */  andi  $t7, $t6, 0x4000
 /* 09EA90 8009DE90 11E00005 */  beqz  $t7, .L8009DEA8
 /* 09EA94 8009DE94 24040241 */   li    $a0, 577
-/* 09EA98 8009DE98 0C000741 */  jal   func_80001D04
+/* 09EA98 8009DE98 0C000741 */  jal   play_sound_global
 /* 09EA9C 8009DE9C 00002825 */   move  $a1, $zero
 /* 09EAA0 8009DEA0 24180003 */  li    $t8, 3
 /* 09EAA4 8009DEA4 AFB80044 */  sw    $t8, 0x44($sp)
@@ -420,7 +420,7 @@ glabel L8009E098
 /* 09ED24 8009E124 31AF9000 */  andi  $t7, $t5, 0x9000
 /* 09ED28 8009E128 11E0000E */  beqz  $t7, .L8009E164
 /* 09ED2C 8009E12C 8FA90040 */   lw    $t1, 0x40($sp)
-/* 09ED30 8009E130 0C000741 */  jal   func_80001D04
+/* 09ED30 8009E130 0C000741 */  jal   play_sound_global
 /* 09ED34 8009E134 00002825 */   move  $a1, $zero
 /* 09ED38 8009E138 3C048012 */  lui   $a0, %hi(D_80126398) # $a0, 0x8012
 /* 09ED3C 8009E13C 24846398 */  addiu $a0, %lo(D_80126398) # addiu $a0, $a0, 0x6398
@@ -438,7 +438,7 @@ glabel L8009E098
 /* 09ED68 8009E168 312A4000 */  andi  $t2, $t1, 0x4000
 /* 09ED6C 8009E16C 11400005 */  beqz  $t2, .L8009E184
 /* 09ED70 8009E170 24040241 */   li    $a0, 577
-/* 09ED74 8009E174 0C000741 */  jal   func_80001D04
+/* 09ED74 8009E174 0C000741 */  jal   play_sound_global
 /* 09ED78 8009E178 00002825 */   move  $a1, $zero
 /* 09ED7C 8009E17C 3C018012 */  lui   $at, %hi(sCurrentMenuID) # $at, 0x8012
 /* 09ED80 8009E180 A02064E2 */  sb    $zero, %lo(sCurrentMenuID)($at)

@@ -176,7 +176,7 @@ glabel func_800A7B68
 /* 0A89F0 800A7DF0 240400FE */  li    $a0, 254
 /* 0A89F4 800A7DF4 17000003 */  bnez  $t8, .L800A7E04
 /* 0A89F8 800A7DF8 00000000 */   nop   
-/* 0A89FC 800A7DFC 0C000741 */  jal   func_80001D04
+/* 0A89FC 800A7DFC 0C000741 */  jal   play_sound_global
 /* 0A8A00 800A7E00 00002825 */   move  $a1, $zero
 .L800A7E04:
 /* 0A8A04 800A7E04 A2000000 */  sb    $zero, ($s0)

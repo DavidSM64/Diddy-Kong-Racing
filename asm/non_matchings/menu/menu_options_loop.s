@@ -91,7 +91,7 @@ glabel menu_options_loop
 /* 0850A8 800844A8 0C030076 */  jal   func_800C01D8
 /* 0850AC 800844AC 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0850B0 800844B0 24040241 */  li    $a0, 577
-/* 0850B4 800844B4 0C000741 */  jal   func_80001D04
+/* 0850B4 800844B4 0C000741 */  jal   play_sound_global
 /* 0850B8 800844B8 00002825 */   move  $a1, $zero
 /* 0850BC 800844BC 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 0850C0 800844C0 3C06800E */  lui   $a2, %hi(D_800DF460) # $a2, 0x800e
@@ -108,7 +108,7 @@ glabel menu_options_loop
 /* 0850E8 800844E8 240A001F */   li    $t2, 31
 /* 0850EC 800844EC AD2A0000 */  sw    $t2, ($t1)
 /* 0850F0 800844F0 240400EF */  li    $a0, 239
-/* 0850F4 800844F4 0C000741 */  jal   func_80001D04
+/* 0850F4 800844F4 0C000741 */  jal   play_sound_global
 /* 0850F8 800844F8 00002825 */   move  $a1, $zero
 /* 0850FC 800844FC 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 085100 80084500 3C06800E */  lui   $a2, %hi(D_800DF460) # $a2, 0x800e
@@ -136,7 +136,7 @@ glabel menu_options_loop
 /* 085150 80084550 00002025 */   move  $a0, $zero
 /* 085154 80084554 240400EB */  li    $a0, 235
 .L80084558:
-/* 085158 80084558 0C000741 */  jal   func_80001D04
+/* 085158 80084558 0C000741 */  jal   play_sound_global
 /* 08515C 8008455C 00002825 */   move  $a1, $zero
 /* 085160 80084560 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 085164 80084564 3C06800E */  lui   $a2, %hi(D_800DF460) # $a2, 0x800e
@@ -154,7 +154,7 @@ glabel menu_options_loop
 /* 085190 80084590 1320000F */  beqz  $t9, .L800845D0
 /* 085194 80084594 240400EB */   li    $a0, 235
 /* 085198 80084598 240400EB */  li    $a0, 235
-/* 08519C 8008459C 0C000741 */  jal   func_80001D04
+/* 08519C 8008459C 0C000741 */  jal   play_sound_global
 /* 0851A0 800845A0 00002825 */   move  $a1, $zero
 /* 0851A4 800845A4 24040000 */  li    $a0, 0
 /* 0851A8 800845A8 0C027AAF */  jal   unset_eeprom_settings_value
@@ -168,7 +168,7 @@ glabel menu_options_loop
 /* 0851C8 800845C8 1000000E */  b     .L80084604
 /* 0851CC 800845CC AC2AFA14 */   sw    $t2, %lo(gOptionMenuStrings+4)($at)
 .L800845D0:
-/* 0851D0 800845D0 0C000741 */  jal   func_80001D04
+/* 0851D0 800845D0 0C000741 */  jal   play_sound_global
 /* 0851D4 800845D4 00002825 */   move  $a1, $zero
 /* 0851D8 800845D8 24040000 */  li    $a0, 0
 /* 0851DC 800845DC 0C027A9E */  jal   set_eeprom_settings_value
@@ -208,7 +208,7 @@ glabel menu_options_loop
 .L80084658:
 /* 085258 80084658 10620007 */  beq   $v1, $v0, .L80084678
 /* 08525C 8008465C 240400EB */   li    $a0, 235
-/* 085260 80084660 0C000741 */  jal   func_80001D04
+/* 085260 80084660 0C000741 */  jal   play_sound_global
 /* 085264 80084664 00002825 */   move  $a1, $zero
 /* 085268 80084668 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 08526C 8008466C 3C06800E */  lui   $a2, %hi(D_800DF460) # $a2, 0x800e

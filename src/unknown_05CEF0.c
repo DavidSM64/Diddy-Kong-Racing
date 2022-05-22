@@ -65,7 +65,7 @@ void func_8005CB04(s32 arg0) {
         phi_v1 = 0;
     }
     arg0 += phi_v1;
-    func_80001D04(D_8011D5C8[arg0], 0);
+    play_sound_global(D_8011D5C8[arg0], 0);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")

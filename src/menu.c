@@ -1978,7 +1978,7 @@ void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
     D_800DF79C = arg4;
     D_800DF7A0 = arg5;
     if (D_80126858 > 0) {
-        func_80001D04(0x16, NULL);
+        play_sound_global(SOUND_WHOOSH1, NULL);
     }
 }
 
@@ -2437,11 +2437,11 @@ s32 menu_options_loop(s32 arg0) {
         set_music_fade_timer(-128);
         gMenuDelay = -1;
         func_800C01D8(&sMenuTransitionFadeIn);
-        func_80001D04(0x241, 0);
+        play_sound_global(SOUND_MENU_BACK3, 0);
     } else if ((buttonsPressed & (A_BUTTON | START_BUTTON)) && D_800DF460 >= 2) {
         // Go to a sub-menu
         gMenuDelay = 31;
-        func_80001D04(0xEF, 0);
+        play_sound_global(SOUND_SELECT2, 0);
     } else if (D_800DF460 == 0 && analogX != 0) {
         // Change language
         s32 currentLang = get_language();
@@ -2450,16 +2450,16 @@ s32 menu_options_loop(s32 arg0) {
         } else {
             set_language(LANGUAGE_ENGLISH);
         }
-        func_80001D04(0xEB, 0);
+        play_sound_global(SOUND_MENU_PICK2, 0);
     } else if (D_800DF460 == 1 && analogX != 0) {
         // Enable/Disable subtitles.
         if (sEepromSettings & 0x2000000) {
-            func_80001D04(0xEB, NULL);
+            play_sound_global(SOUND_MENU_PICK2, NULL);
             unset_eeprom_settings_value(0);
             func_800C2AF4(0);
             gOptionMenuStrings[1] = gMenuText[183];
         } else {
-            func_80001D04(0xEB, 0);
+            play_sound_global(SOUND_MENU_PICK2, 0);
             set_eeprom_settings_value(0);
             func_800C2AF4(1);
             gOptionMenuStrings[1] = gMenuText[182];
@@ -2472,7 +2472,7 @@ s32 menu_options_loop(s32 arg0) {
             if (D_800DF460 >= 6) {
                 D_800DF460 = 5;
             }
-            func_80001D04(0xEB, 0);
+            play_sound_global(SOUND_MENU_PICK2, 0);
         }
         if (analogY > 0) {
             // Scroll up the list.
@@ -2480,7 +2480,7 @@ s32 menu_options_loop(s32 arg0) {
             if (D_800DF460 < 0) {
                 D_800DF460 = 0;
             }
-            func_80001D04(0xEB, 0);
+            play_sound_global(SOUND_MENU_PICK2, 0);
         }
     }
 
@@ -2670,17 +2670,17 @@ s32 menu_audio_options_loop(s32 arg0) {
         }
 
         if (gOptionsMenuItemIndex == 1 && D_801269FC == NULL) {
-            func_80001D04(0x19B, &D_801269FC);
+            play_sound_global(SOUND_VOICE_DIDDY_POSITIVE5, &D_801269FC);
         } else if (D_801269FC != NULL) {
             func_8000488C(&D_801269FC);
         }
 
         if (sp30 == 3) {
-            func_80001D04(0x241, NULL);
+            play_sound_global(SOUND_MENU_BACK3, NULL);
         } else if (sp30 == 2) {
-            func_80001D04(0xEF, NULL);
+            play_sound_global(SOUND_SELECT2, NULL);
         } else if (sp30 == 1) {
-            func_80001D04(0xEB, NULL);
+            play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     }
     if (gMenuDelay < -0x1E) {
@@ -2822,17 +2822,17 @@ s32 func_800874D0(s32 buttonsPressed, s32 arg1) {
         if (D_80126A10 != D_80126A14) {
             func_800871D8(8);
         } else {
-            func_80001D04(0x241, NULL);
+            play_sound_global(SOUND_MENU_BACK3, NULL);
             ret = -1;
         }
     } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-        func_80001D04(0xEF, NULL);
+        play_sound_global(SOUND_SELECT2, NULL);
         D_801263E0 = 4;
     } else if ((arg1 < 0) && (D_80126BD4 > 0)) {
-        func_80001D04(0xEB, NULL);
+        play_sound_global(SOUND_MENU_PICK2, NULL);
         D_80126BD4--;
     } else if ((arg1 > 0) && (D_80126BD4 < (D_80126A08 - 1))) {
-        func_80001D04(0xEB, NULL);
+        play_sound_global(SOUND_MENU_PICK2, NULL);
         D_80126BD4++;
     }
     return ret;
@@ -2840,16 +2840,16 @@ s32 func_800874D0(s32 buttonsPressed, s32 arg1) {
 
 s32 func_800875E4(s32 buttonsPressed, s32 arg1) {
     if (buttonsPressed & B_BUTTON) {
-        func_80001D04(0x241, NULL);
+        play_sound_global(SOUND_MENU_BACK3, NULL);
         D_801263E0 = 3;
     } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-        func_80001D04(0xEF, NULL);
+        play_sound_global(SOUND_SELECT2, NULL);
         D_801263E0 = 6;
     } else if ((arg1 < 0) && (D_80126BE4 > 0)) {
-        func_80001D04(0xEB, NULL);
+        play_sound_global(SOUND_MENU_PICK2, NULL);
         D_80126BE4--;
     } else if ((arg1 > 0) && (D_80126BE4 < D_80126A00 - 1)) {
-        func_80001D04(0xEB, NULL);
+        play_sound_global(SOUND_MENU_PICK2, NULL);
         D_80126BE4++;
     }
 
@@ -2858,10 +2858,10 @@ s32 func_800875E4(s32 buttonsPressed, s32 arg1) {
 
 s32 func_800876CC(s32 buttonsPressed, UNUSED s32 arg1) {
     if (buttonsPressed & B_BUTTON) {
-        func_80001D04(0x241, NULL);
+        play_sound_global(SOUND_MENU_BACK3, NULL);
         D_801263E0 = 5;
     } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-        func_80001D04(0xEF, NULL);
+        play_sound_global(SOUND_SELECT2, NULL);
         D_801263E0 = 7;
         D_801263D8 = 0;
     }
@@ -3558,7 +3558,7 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
     }
 
     if (((xAxis < 0) || (xAxis > 0)) && (numUnlockedCodes != gOptionsMenuItemIndex)) {
-        func_80001D04(0xEF, NULL);
+        play_sound_global(SOUND_SELECT2, NULL);
         phi_s1 = 1 << D_80126C80[gOptionsMenuItemIndex];
         gActiveMagicCodes ^= phi_s1;       // Toggle active cheats?
         func_8008A8F8(phi_s1, 0x10, 0x20); // func_8008A8F8() = Clear flags?
@@ -3596,7 +3596,7 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
     }
 
     if (gOptionsMenuItemIndex != phi_a2) {
-        func_80001D04(0xEB, NULL);
+        play_sound_global(SOUND_MENU_PICK2, NULL);
     }
 
     if ((buttonsPressed & 0x9000) && (numUnlockedCodes == gOptionsMenuItemIndex)) {
@@ -3608,7 +3608,7 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
     if (sp48 != 0) {
         gMenuDelay = sp48;
         func_800C01D8(&sMenuTransitionFadeIn);
-        func_80001D04(0x241, NULL);
+        play_sound_global(SOUND_MENU_BACK3, NULL);
     }
     if (gMenuDelay < -0x1E) {
         func_8008AD1C();
@@ -3937,10 +3937,10 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
     }
     if (!someBool) {
         gPlayersCharacterArray[arg0] = arg1[j];
-        func_80001D04(arg3, NULL);
+        play_sound_global(arg3, NULL);
         return;
     }
-    func_80001D04(arg4, NULL);
+    play_sound_global(arg4, NULL);
 }
 
 void func_8008C128(void) {
@@ -3973,7 +3973,7 @@ s32 menu_caution_loop(s32 updateRate) {
     if (gMenuDelay) {
         gMenuDelay += updateRate;
     } else if (gIgnorePlayerInput <= 0 && (get_buttons_pressed_from_player(0) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
-        func_80001D04(0xEF, NULL);
+        play_sound_global(SOUND_SELECT2, NULL);
         gMenuDelay = 1;
         func_800C01D8(&sMenuTransitionFadeIn);
     }
@@ -4151,7 +4151,7 @@ s32 menu_game_select_loop(s32 arg0) {
                 }
                 func_800C01D8(&sMenuTransitionFadeIn);
                 gMenuDelay = 1;
-                func_80001D04(0xEF, 0);
+                play_sound_global(SOUND_SELECT2, 0);
             } else if (playerInputs & B_BUTTON) {
                 func_800C01D8(&sMenuTransitionFadeIn);
                 gMenuDelay = -1;
@@ -4159,13 +4159,13 @@ s32 menu_game_select_loop(s32 arg0) {
                 if (playerYDir < 0) {
                     if (D_800DF460 < D_801263E0) {
                         D_800DF460++;
-                        func_80001D04(0xEB, 0);
+                        play_sound_global(SOUND_MENU_PICK2, 0);
                     }
                 }
                 if (playerYDir > 0) {
                     if (D_800DF460 > 0) {
                         D_800DF460--;
-                        func_80001D04(0xEB, 0);
+                        play_sound_global(SOUND_MENU_PICK2, 0);
                     }
                 }
             }
@@ -4397,16 +4397,16 @@ void func_8008DC7C(UNUSED s32 arg0) {
 
     if (D_80126494 == 0) {
         if (buttonsPressed & B_BUTTON) {
-            func_80001D04(577, NULL);
+            play_sound_global(SOUND_MENU_BACK3, NULL);
             D_80126488 = 0;
             return;
         } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             if (gSavefileInfo[D_8012648C].isStarted != 0) {
-                func_80001D04(239, NULL);
+                play_sound_global(SOUND_SELECT2, NULL);
                 D_80126494 = 1;
                 return;
             }
-            func_80001D04(577, NULL);
+            play_sound_global(SOUND_MENU_BACK3, NULL);
             return;
         }
 
@@ -4427,11 +4427,11 @@ void func_8008DC7C(UNUSED s32 arg0) {
         }
 
         if (D_8012648C != temp) {
-            func_80001D04(235, NULL);
+            play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     } else {
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-            func_80001D04(239, NULL);
+            play_sound_global(SOUND_SELECT2, NULL);
             func_8006ECAC(D_8012648C);
             gSavefileInfo[D_8012648C].isAdventure2 = 0;
             gSavefileInfo[D_8012648C].isStarted = 0;
@@ -4444,7 +4444,7 @@ void func_8008DC7C(UNUSED s32 arg0) {
             D_801263E0 = 0;
             D_80126488 = 0;
         } else if (buttonsPressed & B_BUTTON) {
-            func_80001D04(577, NULL);
+            play_sound_global(SOUND_MENU_BACK3, NULL);
             D_80126494 = 0;
         }
     }
@@ -4598,7 +4598,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80090918.s")
 
 void func_80090ED8(UNUSED s32 updateRate) {
     if (D_801263E0 == 1 && D_800E0414 == 0 && D_80126840 == 0) {
-        func_80001D04(0x132, &D_80126840);
+        play_sound_global(SOUND_VOICE_TT_SNORE, &D_80126840);
     }
 }
 
@@ -5038,9 +5038,9 @@ s32 menu_5_loop(s32 updateRate) {
                 }
                 gMenuDelay = 1;
                 func_800C01D8(&sMenuTransitionFadeIn);
-                func_80001D04(0xEF, NULL);
+                play_sound_global(SOUND_SELECT2, NULL);
             } else if (D_801267D8[0] & 0x4000) {
-                func_80001D04(0x241, NULL);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
                 if (sp20 || sp28) {
                     if (sp28) {
                         func_800C31EC(0x2710);
@@ -5053,12 +5053,12 @@ s32 menu_5_loop(s32 updateRate) {
             }
         } else {
             if (D_801267D8[0] & 0x4000) {
-                func_80001D04(0x241, NULL);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
                 func_800C01D8(&sMenuTransitionFadeIn);
                 gMenuDelay = -1;
             } else if (D_801267D8[0] & 0x9000) {
                 D_801263E0 = 1;
-                func_80001D04(0x131, NULL);
+                play_sound_global(SOUND_CAR_REV2, NULL);
             } else if (sp1C >= 2) {
                 if (D_80126830 > 0) {
                     do {
@@ -5074,7 +5074,7 @@ s32 menu_5_loop(s32 updateRate) {
                     vehicle = vehicle2;
                 }
                 if (vehicle != vehicle2) {
-                    func_80001D04(0xEB, NULL);
+                    play_sound_global(SOUND_MENU_PICK2, NULL);
                     gPlayerSelectVehicle[0] = vehicle;
                 }
             }
@@ -5227,20 +5227,20 @@ void func_80094C14(s32 arg0) {
         D_801263D8 += arg0;
         switch (D_800DF460) {
             case 0:
-                if (normalise_time(0xF0) < D_801263D8) {
-                    set_music_fade_timer(-0x100);
+                if (normalise_time(240) < D_801263D8) {
+                    set_music_fade_timer(-256);
                     D_800DF460 = 1;
                 }
                 break;
             case 1:
-                if (normalise_time(0x12C) < D_801263D8) {
-                    set_music_player_voice_limit(0x18);
+                if (normalise_time(300) < D_801263D8) {
+                    set_music_player_voice_limit(24);
                     play_music(SEQUENCE_MAIN_MENU);
-                    set_music_fade_timer(0x100);
+                    set_music_fade_timer(256);
                 }
                 break;
         }
-        if (normalise_time(0x12C) < D_801263D8) {
+        if (normalise_time(300) < D_801263D8) {
             D_801263D8 = -1;
         }
     }
@@ -5557,7 +5557,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
             temp = trackMenuIds[(((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound)];
             temp_a2 = D_800E0758[temp];
             if (temp_a2 != -1) {
-                func_80001D04(temp_a2, NULL);
+                play_sound_global(temp_a2, NULL);
             }
             D_800E0980 = 0;
         }
@@ -5744,11 +5744,11 @@ s32 menu_ghost_data_loop(s32 updateRate) {
         case 0:
             if ((pressedButtons & (START_BUTTON | A_BUTTON)) && (D_801264D4 > 0)) {
                 D_801263E0 = 2;
-                func_80001D04(0xEF, 0);
+                play_sound_global(SOUND_SELECT2, 0);
             } else if ((pressedButtons & B_BUTTON) || ((pressedButtons & (START_BUTTON | A_BUTTON)) && (D_801264D4 == 0))) {
                 gMenuDelay = 1;
                 func_800C01D8(&sMenuTransitionFadeIn);
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
             } else {
                 temp = D_80126498;
                 if (yStick < 0 && D_80126498 < (D_801264D4 - 1)) {
@@ -5764,14 +5764,14 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                     }
                 }
                 if (temp != D_80126498) {
-                    func_80001D04(0xEB, 0);
+                    play_sound_global(SOUND_MENU_PICK2, 0);
                 }
             }
             break;
         case 1:
             if (pressedButtons & B_BUTTON) {
                 D_801263E0 = 0;
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
             } else {
                 if (pressedButtons & (START_BUTTON | A_BUTTON)) {
                     if (func_800998E0(D_80126498) == 0) {
@@ -5784,26 +5784,26 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                         if (D_80126498 < D_801263D8) {
                             D_801263D8 = D_80126498;
                         }
-                        func_80001D04(0xEF, 0);
+                        play_sound_global(SOUND_SELECT2, 0);
                     } else {
                         gMenuDelay = 1;
                         func_800C01D8(&sMenuTransitionFadeIn);
-                        func_80001D04(0x241, 0);
+                        play_sound_global(SOUND_MENU_BACK3, 0);
                     }
                     D_801263E0 = 0;
                 } else if (yStick < 0) {
                     D_801263E0 = 2;
-                    func_80001D04(0xEB, 0);
+                    play_sound_global(SOUND_MENU_PICK2, 0);
                 }
             }
             break;
         case 2:
             if (pressedButtons & (START_BUTTON | A_BUTTON | B_BUTTON)) {
                 D_801263E0 = 0;
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
             } else if (yStick > 0) {
                 D_801263E0 = 1;
-                func_80001D04(0xEB, 0);
+                play_sound_global(SOUND_MENU_PICK2, 0);
             }
             break;
     }
@@ -6431,10 +6431,10 @@ void render_dialogue_option(char *text, s32 yOffset, s32 optionID) {
 void handle_menu_joystick_input(void) {
     if (gControllersYAxisDirection[0] < 0) {
         sDialogueOption = sDialogueOption + 1;
-        func_80001D04(0xB2, NULL);
+        play_sound_global(SOUND_MENU_PICK, NULL);
     } else if (gControllersYAxisDirection[0] > 0) {
         sDialogueOption = sDialogueOption - 1;
-        func_80001D04(0xB2, NULL);
+        play_sound_global(SOUND_MENU_PICK, NULL);
     }
 
     if (sDialogueOption < 0) {
@@ -6502,17 +6502,17 @@ s32 taj_menu_loop(void) {
             gDialogueOptionYOffset = 30;
             if (settings->tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) {
                 gDialogueOptionTangible = settings->tajFlags & TAJ_FLAGS_CAR_CHAL_COMPLETED;
-                render_dialogue_option(gMenuText[46], 0x14, 0); // CAR CHALLENGE
+                render_dialogue_option(gMenuText[46], 20, 0); // CAR CHALLENGE
             }
             if (settings->tajFlags & TAJ_FLAGS_HOVER_CHAL_UNLOCKED) {
                 gDialogueOptionTangible = settings->tajFlags & TAJ_FLAGS_HOVER_CHAL_COMPLETED;
-                render_dialogue_option(gMenuText[47], 0x14, 1); // HOVER CHALLENGE
+                render_dialogue_option(gMenuText[47], 20, 1); // HOVER CHALLENGE
             }
             if (settings->tajFlags & TAJ_FLAGS_PLANE_CHAL_UNLOCKED) {
                 gDialogueOptionTangible = settings->tajFlags & TAJ_FLAGS_PLANE_CHAL_COMPLETED;
-                render_dialogue_option(gMenuText[48], 0x14, 2); // PLANE CHALLENGE
+                render_dialogue_option(gMenuText[48], 20, 2); // PLANE CHALLENGE
             }
-            render_dialogue_option(gMenuText[44], 0x14, 3); // MAIN MENU
+            render_dialogue_option(gMenuText[44], 20, 3); // MAIN MENU
             break;
     }
 
@@ -6526,17 +6526,17 @@ s32 taj_menu_loop(void) {
             D_800DF4DC = 0;
             render_dialogue_text(1, POS_CENTRED, 6, gMenuText[36], 1, 4); // OPTIONS
             gDialogueOptionYOffset = 30;
-            render_dialogue_option(gMenuText[37], 0x14, 0); // CHANGE VEHICLE
+            render_dialogue_option(gMenuText[37], 20, 0); // CHANGE VEHICLE
             if (settings->tajFlags & TAJ_FLAGS_UNLOCKED_A_CHALLENGE) {
-                render_dialogue_option(gMenuText[39], 0x14, 1); // CHALLENGES
+                render_dialogue_option(gMenuText[39], 20, 1); // CHALLENGES
             }
-            render_dialogue_option(gMenuText[5], 0x14, 2); // RETURN
+            render_dialogue_option(gMenuText[5], 20, 2); // RETURN
             handle_menu_joystick_input();
             if (buttonsPressed & B_BUTTON) {
                 sp2C = 3;
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
             } else if (buttonsPressed & A_BUTTON) {
-                func_80001D04(0xEF, 0);
+                play_sound_global(SOUND_SELECT2, 0);
                 switch (D_80126516) {
                     case 1:
                         sCurrentMenuID = 3;
@@ -6557,7 +6557,7 @@ s32 taj_menu_loop(void) {
         case 2:
             handle_menu_joystick_input();
             if (buttonsPressed & B_BUTTON) {
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
                 func_8003AC3C(0x238, 1);
                 sCurrentMenuID = 1;
                 sDialogueOption = 0;
@@ -6575,13 +6575,13 @@ s32 taj_menu_loop(void) {
         case 3:
             handle_menu_joystick_input();
             if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & A_BUTTON) && (D_80126516 == 3))) {
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
                 func_8003AC3C(0x23A, 1);
                 sCurrentMenuID = 1;
                 sDialogueOption = 3;
             } else if (buttonsPressed & A_BUTTON) {
                 sp2C = D_80126516 | 0x40;
-                func_80001D04(0xEF, 0);
+                play_sound_global(SOUND_SELECT2, 0);
                 sCurrentMenuID = 0x63;
             }
             break;
@@ -6654,7 +6654,7 @@ s32 dialogue_race_defeat(void) {
     render_dialogue_option(gMenuText[51], 20, 1); // EXIT
     handle_menu_joystick_input();
     if (playerInput & A_BUTTON) {
-        func_80001D04(0xEF, NULL);
+        play_sound_global(SOUND_SELECT2, NULL);
         switch (D_80126516) {
             case 0:
                 state = 1;
@@ -6734,13 +6734,13 @@ s32 tt_menu_loop(void) {
             if ((buttonsPressed & A_BUTTON) && (sCurrentMenuID != TT_MENU_EXIT)) {
                 switch (D_80126516) {
                     case 1:
-                        func_80001D04(0xEF, 0);
+                        play_sound_global(SOUND_SELECT2, 0);
                         D_80126398 = 0;
                         D_8012639C = TT_MENU_ROOT;
                         sCurrentMenuID = TT_MENU_SAVE_GHOST;
                         break;
                     case 3:
-                        func_80001D04(0xEF, 0);
+                        play_sound_global(SOUND_SELECT2, 0);
                         func_80036BCC(0x22E, 1);
                         func_8009C674(D_800E1E2C);
                         allocate_menu_images(D_800E1E40);
@@ -6750,7 +6750,7 @@ s32 tt_menu_loop(void) {
                 }
                 currentOption = D_80126516 + 1;
             } else if (buttonsPressed & B_BUTTON) {
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
                 currentOption = 3;
             }
             if (sCurrentMenuID == TT_MENU_GAME_STATUS) {
@@ -6812,12 +6812,12 @@ s32 tt_menu_loop(void) {
             render_dialogue_text(1, POS_CENTRED, 50, gMenuText[160], 1, 4); // the Controller Pak
             render_dialogue_text(1, POS_CENTRED, 66, gMenuText[162], 1, 4); // insert it now!
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-                func_80001D04(0xEF, 0);
+                play_sound_global(SOUND_SELECT2, 0);
                 D_80126398 = 0;
                 D_8012639C = TT_MENU_INSERT_RUMBLE_PAK;
                 sCurrentMenuID = TT_MENU_SAVE_GHOST;
             } else if (buttonsPressed & B_BUTTON) {
-                func_80001D04(0x241, 0);
+                play_sound_global(SOUND_MENU_BACK3, 0);
                 sCurrentMenuID = TT_MENU_ROOT;
             }
             break;

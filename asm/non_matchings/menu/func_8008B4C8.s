@@ -82,7 +82,7 @@ glabel func_8008B4C8
 /* 08C1F4 8008B5F4 02002825 */  move  $a1, $s0
 /* 08C1F8 8008B5F8 2484019E */  addiu $a0, $a0, 0x19e
 /* 08C1FC 8008B5FC 3089FFFF */  andi  $t1, $a0, 0xffff
-/* 08C200 8008B600 0C000741 */  jal   func_80001D04
+/* 08C200 8008B600 0C000741 */  jal   play_sound_global
 /* 08C204 8008B604 01202025 */   move  $a0, $t1
 /* 08C208 8008B608 3C02800E */  lui   $v0, %hi(gNumberOfActivePlayers) # $v0, 0x800e
 /* 08C20C 8008B60C 8C42F4BC */  lw    $v0, %lo(gNumberOfActivePlayers)($v0)
@@ -156,7 +156,7 @@ glabel func_8008B4C8
 /* 08C308 8008B708 00000000 */  nop   
 /* 08C30C 8008B70C 24840093 */  addiu $a0, $a0, 0x93
 /* 08C310 8008B710 3098FFFF */  andi  $t8, $a0, 0xffff
-/* 08C314 8008B714 0C000741 */  jal   func_80001D04
+/* 08C314 8008B714 0C000741 */  jal   play_sound_global
 /* 08C318 8008B718 03002025 */   move  $a0, $t8
 .L8008B71C:
 /* 08C31C 8008B71C 26100001 */  addiu $s0, $s0, 1

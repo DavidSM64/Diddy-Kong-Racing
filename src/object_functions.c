@@ -213,7 +213,7 @@ void func_80011570(Object*, f32, f32, f32);
 void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
 s16 arctan2_f(f32, f32);
 s32 func_8002AD08(f32, f32**, s32);
-void func_80001D04(u16, s32 *);
+void play_sound_global(u16, s32 *);
 void func_8000488C(s32);
 void func_800AFC3C(Object *, s32);
 void gParticlePtrList_addObject(Object *);
@@ -292,7 +292,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
                 obj4C_obj64->unk204 = 60;
                 obj->unk7C.word = -60;
                 obj->unk78 = obj4C_obj;
-                func_80001D04(586, &obj64->unk1C);
+                play_sound_global(586, &obj64->unk1C);
             }
         }
     }
@@ -527,10 +527,10 @@ void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
 
 #ifdef NON_EQUIVALENT
 
-void func_80001D04(u16, s32 *);
-void func_80001D04(u16, s32 *);
+void play_sound_global(u16, s32 *);
+void play_sound_global(u16, s32 *);
 u32 func_80001C08(void);
-void func_80001D04(u16, s32 *);
+void play_sound_global(u16, s32 *);
 Object *spawn_object(void *, s32);
 void func_8005A3B0(void);
 void func_8006F254(void);
@@ -621,7 +621,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
             // A hit has been detected at this point.
             if (isTrophyRaceAvaliable) {
                 obj->unk78 = 1;
-                func_80001D04(303, 0);
+                play_sound_global(303, 0);
                 func_800A3870();
             }
             else
@@ -983,7 +983,7 @@ void func_80036BCC(u16 arg0, s32 arg1) {
         D_8011D4D8 = 0;
     }
     if (D_8011D4D8 == 0) {
-        func_80001D04(arg0, &D_8011D4D8);
+        play_sound_global(arg0, &D_8011D4D8);
     }
 }
 
@@ -1468,7 +1468,7 @@ void obj_loop_teleport(Object *obj, UNUSED s32 speed) {
         if (obj->unk4C->unk13 < 0x78) {
             func_8006F338(temp->unk8);
             obj->unk78 = 0;
-            func_80001D04(0x30, 0);
+            play_sound_global(0x30, 0);
             func_80000FDC(0x12A, 0, 1.0f);
         }
     }
@@ -1620,7 +1620,7 @@ void func_8003AC3C(u16 arg0, s32 arg1) {
         D_8011D4D4 = 0;
     }
     if (D_8011D4D4 == 0) {
-        func_80001D04(arg0, &D_8011D4D4);
+        play_sound_global(arg0, &D_8011D4D4);
     }
 }
 

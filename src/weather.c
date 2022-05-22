@@ -472,7 +472,7 @@ void func_800ADAB8(s32 arg0) {
             if (D_800E2C6C >= 32769 && func_800C018C() == 0) {
                 func_800C01D8(&D_800E2C98);
             }
-            func_80001D04(39, 0);
+            play_sound_global(39, 0);
             D_800E2C80 = 0;
         }
     } else if (D_800E2C60 >= 48000) {
@@ -480,7 +480,7 @@ void func_800ADAB8(s32 arg0) {
             D_800E2C7C -= arg0;
             return;
         }
-        func_80001D04(575, 0);
+        play_sound_global(575, 0);
         D_800E2C80 = 600 - ((s32) (D_800E2C60 + -48000) >> 5);
         D_800E2C7C = get_random_number_from_range(900, 1140) - ((s32) (D_800E2C60 + -48000) >> 5);
     }

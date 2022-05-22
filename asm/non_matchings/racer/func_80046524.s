@@ -1116,7 +1116,7 @@ glabel func_80046524
 /* 0480A0 800474A0 2605021C */  addiu $a1, $s0, 0x21c
 /* 0480A4 800474A4 A3A700AD */  sb    $a3, 0xad($sp)
 /* 0480A8 800474A8 A3A900AF */  sb    $t1, 0xaf($sp)
-/* 0480AC 800474AC 0C000741 */  jal   func_80001D04
+/* 0480AC 800474AC 0C000741 */  jal   play_sound_global
 /* 0480B0 800474B0 E7B20104 */   swc1  $f18, 0x104($sp)
 /* 0480B4 800474B4 820601E0 */  lb    $a2, 0x1e0($s0)
 /* 0480B8 800474B8 8E05021C */  lw    $a1, 0x21c($s0)

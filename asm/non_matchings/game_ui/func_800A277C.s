@@ -652,7 +652,7 @@ glabel func_800A277C
 .L800A30BC:
 /* 0A3CBC 800A30BC 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
 /* 0A3CC0 800A30C0 A6240000 */  sh    $a0, ($s1)
-/* 0A3CC4 800A30C4 0C000741 */  jal   func_80001D04
+/* 0A3CC4 800A30C4 0C000741 */  jal   play_sound_global
 /* 0A3CC8 800A30C8 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
 /* 0A3CCC 800A30CC 240E0001 */  li    $t6, 1
 /* 0A3CD0 800A30D0 8FA900A0 */  lw    $t1, 0xa0($sp)
@@ -727,7 +727,7 @@ glabel func_800A277C
 /* 0A3DD4 800A31D4 11200004 */  beqz  $t1, .L800A31E8
 /* 0A3DD8 800A31D8 24040144 */   li    $a0, 324
 /* 0A3DDC 800A31DC 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
-/* 0A3DE0 800A31E0 0C000741 */  jal   func_80001D04
+/* 0A3DE0 800A31E0 0C000741 */  jal   play_sound_global
 /* 0A3DE4 800A31E4 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
 .L800A31E8:
 /* 0A3DE8 800A31E8 0C006CA2 */  jal   func_8001B288
@@ -798,7 +798,7 @@ glabel func_800A277C
 .L800A32E8:
 /* 0A3EE8 800A32E8 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
 /* 0A3EEC 800A32EC A6240000 */  sh    $a0, ($s1)
-/* 0A3EF0 800A32F0 0C000741 */  jal   func_80001D04
+/* 0A3EF0 800A32F0 0C000741 */  jal   play_sound_global
 /* 0A3EF4 800A32F4 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
 /* 0A3EF8 800A32F8 24040078 */  li    $a0, 120
 /* 0A3EFC 800A32FC 0C01BE53 */  jal   get_random_number_from_range

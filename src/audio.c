@@ -318,7 +318,7 @@ void handle_music_fade(u8 updateRate) {
             D_80115D48[reg_s2].unk2 -= updateRate;
             if (D_80115D48[reg_s2].unk2 <= 0) {
                 j = reg_s2;
-                func_80001D04(D_80115D48[reg_s2].unk0, D_80115D48[reg_s2].unk4);
+                play_sound_global(D_80115D48[reg_s2].unk0, D_80115D48[reg_s2].unk4);
 
                 D_800DC658 -= 1;
                 while (j < D_800DC658) {
@@ -675,14 +675,14 @@ u16 func_80001CB8(u16 arg0) {
 }
 
 //Play Sound effect?
-GLOBAL_ASM("asm/non_matchings/audio/func_80001D04.s")
+GLOBAL_ASM("asm/non_matchings/audio/play_sound_global.s")
 
 void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4) {
     if (arg4 == NULL) {
         arg4 = &D_80115F84;
     }
 
-    func_80001D04(soundID, arg4);
+    play_sound_global(soundID, arg4);
 
     if (*arg4 != NULL) {
         func_80009B7C(*arg4, x, y, z);
