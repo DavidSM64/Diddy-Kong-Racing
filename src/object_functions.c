@@ -292,7 +292,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
                 obj4C_obj64->unk204 = 60;
                 obj->unk7C.word = -60;
                 obj->unk78 = obj4C_obj;
-                play_sound_global(586, &obj64->unk1C);
+                play_sound_global(SOUND_BUBBLE_RISE, &obj64->unk1C);
             }
         }
     }
@@ -621,7 +621,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
             // A hit has been detected at this point.
             if (isTrophyRaceAvaliable) {
                 obj->unk78 = 1;
-                play_sound_global(303, 0);
+                play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, 0);
                 func_800A3870();
             }
             else
@@ -1468,7 +1468,7 @@ void obj_loop_teleport(Object *obj, UNUSED s32 speed) {
         if (obj->unk4C->unk13 < 0x78) {
             func_8006F338(temp->unk8);
             obj->unk78 = 0;
-            play_sound_global(0x30, 0);
+            play_sound_global(SOUND_WHOOSH2, 0);
             func_80000FDC(0x12A, 0, 1.0f);
         }
     }

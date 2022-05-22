@@ -396,9 +396,9 @@ void func_800A6DB4(s16 *arg0) {
 
     if (arg0 != NULL) {
         if (settings->racers[*arg0].best_times & 0x80) {
-            play_sound_global(0x145, &D_80126D40);
+            play_sound_global(SOUND_VOICE_TT_RACE_RECORD, &D_80126D40);
         } else {
-            play_sound_global(0x102, &D_80126D40);
+            play_sound_global(SOUND_VOICE_TT_FINISH, &D_80126D40);
         }
     }
 }
