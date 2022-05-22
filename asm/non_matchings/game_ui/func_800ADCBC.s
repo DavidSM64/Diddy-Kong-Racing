@@ -35,7 +35,7 @@ glabel func_800ADCBC
 /* 0AE940 800ADD40 01E09025 */  move  $s2, $t7
 /* 0AE944 800ADD44 AFA3004C */  sw    $v1, 0x4c($sp)
 /* 0AE948 800ADD48 00002012 */  mflo  $a0
-/* 0AE94C 800ADD4C 0C00322D */  jal   func_8000C8B4
+/* 0AE94C 800ADD4C 0C00322D */  jal   normalise_time
 /* 0AE950 800ADD50 00000000 */   nop   
 /* 0AE954 800ADD54 860F0000 */  lh    $t7, ($s0)
 /* 0AE958 800ADD58 8FA3004C */  lw    $v1, 0x4c($sp)
@@ -47,7 +47,7 @@ glabel func_800ADCBC
 /* 0AE970 800ADD70 00000000 */  nop   
 /* 0AE974 800ADD74 01AE0019 */  multu $t5, $t6
 /* 0AE978 800ADD78 00002012 */  mflo  $a0
-/* 0AE97C 800ADD7C 0C00322D */  jal   func_8000C8B4
+/* 0AE97C 800ADD7C 0C00322D */  jal   normalise_time
 /* 0AE980 800ADD80 00000000 */   nop   
 /* 0AE984 800ADD84 860E0004 */  lh    $t6, 4($s0)
 /* 0AE988 800ADD88 860F0002 */  lh    $t7, 2($s0)

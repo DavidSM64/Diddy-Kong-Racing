@@ -13,9 +13,9 @@ glabel func_80010994
 /* 0115C0 800109C0 2404FFFF */   li    $a0, -1
 /* 0115C4 800109C4 3C028012 */  lui   $v0, %hi(D_8011ADB0) # $v0, 0x8012
 /* 0115C8 800109C8 8C42ADB0 */  lw    $v0, %lo(D_8011ADB0)($v0)
-/* 0115CC 800109CC 3C018012 */  lui   $at, %hi(D_8011ADB8) # $at, 0x8012
+/* 0115CC 800109CC 3C018012 */  lui   $at, %hi(gRaceStartCountdown) # $at, 0x8012
 /* 0115D0 800109D0 1840000D */  blez  $v0, .L80010A08
-/* 0115D4 800109D4 AC22ADB8 */   sw    $v0, %lo(D_8011ADB8)($at)
+/* 0115D4 800109D4 AC22ADB8 */   sw    $v0, %lo(gRaceStartCountdown)($at)
 /* 0115D8 800109D8 0C028064 */  jal   func_800A0190
 /* 0115DC 800109DC 00000000 */   nop   
 /* 0115E0 800109E0 10400009 */  beqz  $v0, .L80010A08

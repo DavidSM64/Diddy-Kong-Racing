@@ -127,7 +127,7 @@ glabel obj_loop_trophycab
 /* 035C6C 8003506C 240C0001 */   li    $t4, 1
 /* 035C70 80035070 AE0C0078 */  sw    $t4, 0x78($s0)
 /* 035C74 80035074 2404012F */  li    $a0, 303
-/* 035C78 80035078 0C000741 */  jal   func_80001D04
+/* 035C78 80035078 0C000741 */  jal   play_sound_global
 /* 035C7C 8003507C 00002825 */   move  $a1, $zero
 /* 035C80 80035080 0C028E1C */  jal   func_800A3870
 /* 035C84 80035084 00000000 */   nop   
@@ -145,7 +145,7 @@ glabel obj_loop_trophycab
 /* 035CB0 800350B0 ADAE0000 */   sw    $t6, ($t5)
 /* 035CB4 800350B4 0C000326 */  jal   set_music_fade_timer
 /* 035CB8 800350B8 2404FFF8 */   li    $a0, -8
-/* 035CBC 800350BC 0C0006F0 */  jal   play_sound
+/* 035CBC 800350BC 0C0006F0 */  jal   play_sequence
 /* 035CC0 800350C0 24040011 */   li    $a0, 17
 .L800350C4:
 /* 035CC4 800350C4 8FA30050 */  lw    $v1, 0x50($sp)

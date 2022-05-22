@@ -63,7 +63,7 @@ glabel func_8008D5F8
 /* 08E2E4 8008D6E4 13190008 */  beq   $t8, $t9, .L8008D708
 /* 08E2E8 8008D6E8 00002825 */   move  $a1, $zero
 /* 08E2EC 8008D6EC AFA60020 */  sw    $a2, 0x20($sp)
-/* 08E2F0 8008D6F0 0C000741 */  jal   func_80001D04
+/* 08E2F0 8008D6F0 0C000741 */  jal   play_sound_global
 /* 08E2F4 8008D6F4 AFA7001C */   sw    $a3, 0x1c($sp)
 /* 08E2F8 8008D6F8 8FA60020 */  lw    $a2, 0x20($sp)
 /* 08E2FC 8008D6FC 8FA7001C */  lw    $a3, 0x1c($sp)
@@ -72,12 +72,12 @@ glabel func_8008D5F8
 .L8008D708:
 /* 08E308 8008D708 240400EF */  li    $a0, 239
 .L8008D70C:
-/* 08E30C 8008D70C 0C000741 */  jal   func_80001D04
+/* 08E30C 8008D70C 0C000741 */  jal   play_sound_global
 /* 08E310 8008D710 00002825 */   move  $a1, $zero
 /* 08E314 8008D714 10000065 */  b     .L8008D8AC
 /* 08E318 8008D718 24020001 */   li    $v0, 1
 .L8008D71C:
-/* 08E31C 8008D71C 0C000741 */  jal   func_80001D04
+/* 08E31C 8008D71C 0C000741 */  jal   play_sound_global
 /* 08E320 8008D720 00002825 */   move  $a1, $zero
 /* 08E324 8008D724 3C0B800E */  lui   $t3, %hi(gSaveFileIndex) # $t3, 0x800e
 /* 08E328 8008D728 256BF4CC */  addiu $t3, %lo(gSaveFileIndex) # addiu $t3, $t3, -0xb34
@@ -93,7 +93,7 @@ glabel func_8008D5F8
 /* 08E350 8008D750 00001025 */   move  $v0, $zero
 /* 08E354 8008D754 240400EF */  li    $a0, 239
 .L8008D758:
-/* 08E358 8008D758 0C000741 */  jal   func_80001D04
+/* 08E358 8008D758 0C000741 */  jal   play_sound_global
 /* 08E35C 8008D75C 00002825 */   move  $a1, $zero
 /* 08E360 8008D760 3C0B800E */  lui   $t3, %hi(gSaveFileIndex) # $t3, 0x800e
 /* 08E364 8008D764 256BF4CC */  addiu $t3, %lo(gSaveFileIndex) # addiu $t3, $t3, -0xb34
@@ -187,7 +187,7 @@ glabel func_8008D5F8
 /* 08E494 8008D894 01836825 */  or    $t5, $t4, $v1
 /* 08E498 8008D898 108D0003 */  beq   $a0, $t5, .L8008D8A8
 /* 08E49C 8008D89C 00002825 */   move  $a1, $zero
-/* 08E4A0 8008D8A0 0C000741 */  jal   func_80001D04
+/* 08E4A0 8008D8A0 0C000741 */  jal   play_sound_global
 /* 08E4A4 8008D8A4 240400EB */   li    $a0, 235
 .L8008D8A8:
 /* 08E4A8 8008D8A8 00001025 */  move  $v0, $zero

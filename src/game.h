@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "fade_transition.h"
 #include "libc/math.h"
+#include "racer.h"
 
 enum RenderContext {
     DRAW_INTRO = -1,
@@ -104,7 +105,7 @@ u8 *get_level_name(s32 levelId);
 void func_8006BEFC(void);
 void func_8006BFC8(s8 *arg0);
 void func_8006C164(void);
-u32 *func_8006C18C(void);
+TempStruct5 *func_8006C18C(void);
 s8 func_8006C19C(void);
 void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8006C22C(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3);

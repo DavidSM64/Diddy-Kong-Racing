@@ -627,7 +627,7 @@ glabel func_80019808
 /* 01ACFC 8001A0FC 00002825 */   move  $a1, $zero
 /* 01AD00 8001A100 AFBF0064 */  sw    $ra, 0x64($sp)
 /* 01AD04 8001A104 AFA80080 */  sw    $t0, 0x80($sp)
-/* 01AD08 8001A108 0C000741 */  jal   func_80001D04
+/* 01AD08 8001A108 0C000741 */  jal   play_sound_global
 /* 01AD0C 8001A10C AFAA0044 */   sw    $t2, 0x44($sp)
 /* 01AD10 8001A110 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
 /* 01AD14 8001A114 8FA80080 */  lw    $t0, 0x80($sp)

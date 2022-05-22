@@ -68,7 +68,7 @@ void func_80000890(u8 arg0);
 void func_80000968(s32 arg0);
 void func_80000B18(void);
 void func_80000B28(void);
-void play_music(u8 arg0);
+void play_music(u8 seqID);
 void set_music_player_voice_limit(u8 voiceLimit);
 void func_80000C1C(void);
 void func_80000C2C(void);
@@ -112,24 +112,24 @@ u8 musicGetRelativeVolume(void);
 s32 musicGetVolSliderPercentage(void);
 void sfxSetRelativeVolume(u8 arg0);
 void sfxSetPan(ALPan pan);
-void play_sound(u8 arg0);
+void play_sequence(u8 seqID);
 u32 func_80001C08(void);
 void func_80001C5C(u16 arg0);
 u16 func_80001CB8(u16 arg0);
-void func_80001EA8(u16 arg0, f32 x, f32 y, f32 z, s32 **arg4);
-void func_80001F14(u16 sndIndx, u32 *arg1);
+void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4);
+void func_80001F14(u16 soundID, u32 *arg1);
 u16 ALBankFile_80115D14_GetSoundCount(void);
 u8 ALSeqFile_80115CF8_GetSeqCount(void);
 void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2);
 void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2);
-u8 ALBankFile_80115D14_GetSoundDecayTime(u16 sndIndx);
+u8 ALBankFile_80115D14_GetSoundDecayTime(u16 soundID);
 ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events);
 void func_800022BC(u8 arg0, ALSeqPlayer *arg1);
 void func_80002570(ALSeqPlayer *seqp);
 void func_80002608(u8 arg0);
 u8 func_80002630(void);
 
-void func_80001D04(u16, s32*); //Non matching.
+void play_sound_global(u16 soundID, s32*); //Non matching.
 void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Matching
 f32 func_800015F8(void); //Non Matching
 void func_80001FB8(u16 arg0); //Non Matching

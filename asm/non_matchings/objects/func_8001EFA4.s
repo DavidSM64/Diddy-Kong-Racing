@@ -86,7 +86,7 @@ glabel func_8001EFA4
 /* 01FCD4 8001F0D4 46209120 */  cvt.s.d $f4, $f18
 /* 01FCD8 8001F0D8 E6040008 */  swc1  $f4, 8($s0)
 /* 01FCDC 8001F0DC 8624000E */  lh    $a0, 0xe($s1)
-/* 01FCE0 8001F0E0 0C00322D */  jal   func_8000C8B4
+/* 01FCE0 8001F0E0 0C00322D */  jal   normalise_time
 /* 01FCE4 8001F0E4 AFA5002C */   sw    $a1, 0x2c($sp)
 /* 01FCE8 8001F0E8 8FA5002C */  lw    $a1, 0x2c($sp)
 /* 01FCEC 8001F0EC A602002A */  sh    $v0, 0x2a($s0)
@@ -130,7 +130,7 @@ glabel func_8001EFA4
 /* 01FD84 8001F184 A20F0034 */  sb    $t7, 0x34($s0)
 /* 01FD88 8001F188 AE40006C */  sw    $zero, 0x6c($s2)
 /* 01FD8C 8001F18C 86240024 */  lh    $a0, 0x24($s1)
-/* 01FD90 8001F190 0C00322D */  jal   func_8000C8B4
+/* 01FD90 8001F190 0C00322D */  jal   normalise_time
 /* 01FD94 8001F194 00000000 */   nop   
 /* 01FD98 8001F198 A6020036 */  sh    $v0, 0x36($s0)
 /* 01FD9C 8001F19C 82380026 */  lb    $t8, 0x26($s1)

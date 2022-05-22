@@ -344,14 +344,14 @@ glabel func_800A277C
 /* 0A3824 800A2C24 44093000 */  mfc1  $t1, $f6
 /* 0A3828 800A2C28 00000000 */  nop   
 .L800A2C2C:
-/* 0A382C 800A2C2C 0C00322D */  jal   func_8000C8B4
+/* 0A382C 800A2C2C 0C00322D */  jal   normalise_time
 /* 0A3830 800A2C30 AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A3834 800A2C34 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A3838 800A2C38 00000000 */  nop   
 /* 0A383C 800A2C3C 0049082A */  slt   $at, $v0, $t1
 /* 0A3840 800A2C40 10200005 */  beqz  $at, .L800A2C58
 /* 0A3844 800A2C44 24100444 */   li    $s0, 1092
-/* 0A3848 800A2C48 0C00322D */  jal   func_8000C8B4
+/* 0A3848 800A2C48 0C00322D */  jal   normalise_time
 /* 0A384C 800A2C4C 34048CA0 */   li    $a0, 36000
 /* 0A3850 800A2C50 00404825 */  move  $t1, $v0
 /* 0A3854 800A2C54 24100444 */  li    $s0, 1092
@@ -652,7 +652,7 @@ glabel func_800A277C
 .L800A30BC:
 /* 0A3CBC 800A30BC 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
 /* 0A3CC0 800A30C0 A6240000 */  sh    $a0, ($s1)
-/* 0A3CC4 800A30C4 0C000741 */  jal   func_80001D04
+/* 0A3CC4 800A30C4 0C000741 */  jal   play_sound_global
 /* 0A3CC8 800A30C8 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
 /* 0A3CCC 800A30CC 240E0001 */  li    $t6, 1
 /* 0A3CD0 800A30D0 8FA900A0 */  lw    $t1, 0xa0($sp)
@@ -727,7 +727,7 @@ glabel func_800A277C
 /* 0A3DD4 800A31D4 11200004 */  beqz  $t1, .L800A31E8
 /* 0A3DD8 800A31D8 24040144 */   li    $a0, 324
 /* 0A3DDC 800A31DC 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
-/* 0A3DE0 800A31E0 0C000741 */  jal   func_80001D04
+/* 0A3DE0 800A31E0 0C000741 */  jal   play_sound_global
 /* 0A3DE4 800A31E4 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
 .L800A31E8:
 /* 0A3DE8 800A31E8 0C006CA2 */  jal   func_8001B288
@@ -798,7 +798,7 @@ glabel func_800A277C
 .L800A32E8:
 /* 0A3EE8 800A32E8 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
 /* 0A3EEC 800A32EC A6240000 */  sh    $a0, ($s1)
-/* 0A3EF0 800A32F0 0C000741 */  jal   func_80001D04
+/* 0A3EF0 800A32F0 0C000741 */  jal   play_sound_global
 /* 0A3EF4 800A32F4 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
 /* 0A3EF8 800A32F8 24040078 */  li    $a0, 120
 /* 0A3EFC 800A32FC 0C01BE53 */  jal   get_random_number_from_range

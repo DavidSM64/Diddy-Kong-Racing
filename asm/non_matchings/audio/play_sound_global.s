@@ -1,4 +1,4 @@
-glabel func_80001D04
+glabel play_sound_global
 /* 002904 80001D04 3C0F8011 */  lui   $t7, %hi(D_80115D20) # $t7, 0x8011
 /* 002908 80001D08 8DEF5D20 */  lw    $t7, %lo(D_80115D20)($t7)
 /* 00290C 80001D0C 27BDFFD8 */  addiu $sp, $sp, -0x28

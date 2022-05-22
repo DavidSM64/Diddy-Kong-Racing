@@ -73,7 +73,7 @@ glabel func_80056E2C
 /* 057B38 80056F38 AFA7002C */  sw    $a3, 0x2c($sp)
 /* 057B3C 80056F3C E7A2001C */  swc1  $f2, 0x1c($sp)
 /* 057B40 80056F40 E7AE0024 */  swc1  $f14, 0x24($sp)
-/* 057B44 80056F44 0C000741 */  jal   func_80001D04
+/* 057B44 80056F44 0C000741 */  jal   play_sound_global
 /* 057B48 80056F48 E7B00020 */   swc1  $f16, 0x20($sp)
 /* 057B4C 80056F4C 8FA7002C */  lw    $a3, 0x2c($sp)
 /* 057B50 80056F50 C7A2001C */  lwc1  $f2, 0x1c($sp)

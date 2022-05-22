@@ -134,8 +134,8 @@ glabel func_80042D20
 /* 043A90 80042E90 A7AC0034 */  sh    $t4, 0x34($sp)
 /* 043A94 80042E94 0C008D5A */  jal   func_80023568
 /* 043A98 80042E98 A7AD0078 */   sh    $t5, 0x78($sp)
-/* 043A9C 80042E9C 3C188012 */  lui   $t8, %hi(D_8011D540) # $t8, 0x8012
-/* 043AA0 80042EA0 8F18D540 */  lw    $t8, %lo(D_8011D540)($t8)
+/* 043A9C 80042E9C 3C188012 */  lui   $t8, %hi(gRaceStartTimer) # $t8, 0x8012
+/* 043AA0 80042EA0 8F18D540 */  lw    $t8, %lo(gRaceStartTimer)($t8)
 /* 043AA4 80042EA4 87A80076 */  lh    $t0, 0x76($sp)
 /* 043AA8 80042EA8 8FAA0060 */  lw    $t2, 0x60($sp)
 /* 043AAC 80042EAC 87AC0034 */  lh    $t4, 0x34($sp)
@@ -361,8 +361,8 @@ glabel func_80042D20
 /* 043DF4 800431F4 87AC0034 */  lh    $t4, 0x34($sp)
 /* 043DF8 800431F8 87AD0078 */  lh    $t5, 0x78($sp)
 /* 043DFC 800431FC 1440000F */  bnez  $v0, .L8004323C
-/* 043E00 80043200 3C0F8012 */   lui   $t7, %hi(D_8011D540) # $t7, 0x8012
-/* 043E04 80043204 8DEFD540 */  lw    $t7, %lo(D_8011D540)($t7)
+/* 043E00 80043200 3C0F8012 */   lui   $t7, %hi(gRaceStartTimer) # $t7, 0x8012
+/* 043E04 80043204 8DEFD540 */  lw    $t7, %lo(gRaceStartTimer)($t7)
 /* 043E08 80043208 24010064 */  li    $at, 100
 /* 043E0C 8004320C 15E10022 */  bne   $t7, $at, .L80043298
 /* 043E10 80043210 00002025 */   move  $a0, $zero
@@ -900,8 +900,8 @@ glabel func_80042D20
 /* 0445D8 800439D8 3338FFFB */  andi  $t8, $t9, 0xfffb
 /* 0445DC 800439DC A2180209 */  sb    $t8, 0x209($s0)
 .L800439E0:
-/* 0445E0 800439E0 3C0F8012 */  lui   $t7, %hi(D_8011D540) # $t7, 0x8012
-/* 0445E4 800439E4 8DEFD540 */  lw    $t7, %lo(D_8011D540)($t7)
+/* 0445E0 800439E0 3C0F8012 */  lui   $t7, %hi(gRaceStartTimer) # $t7, 0x8012
+/* 0445E4 800439E4 8DEFD540 */  lw    $t7, %lo(gRaceStartTimer)($t7)
 /* 0445E8 800439E8 8FB90054 */  lw    $t9, 0x54($sp)
 /* 0445EC 800439EC 15E00050 */  bnez  $t7, .L80043B30
 /* 0445F0 800439F0 3C01800E */   lui   $at, %hi(D_800E62B0 + 4) # $at, 0x800e
@@ -1094,10 +1094,10 @@ glabel func_80042D20
 /* 0448B4 80043CB4 E6120124 */  swc1  $f18, 0x124($s0)
 /* 0448B8 80043CB8 87AE0070 */  lh    $t6, 0x70($sp)
 .L80043CBC:
-/* 0448BC 80043CBC 3C0F8012 */  lui   $t7, %hi(D_8011D540) # $t7, 0x8012
+/* 0448BC 80043CBC 3C0F8012 */  lui   $t7, %hi(gRaceStartTimer) # $t7, 0x8012
 /* 0448C0 80043CC0 11C00061 */  beqz  $t6, .L80043E48
 /* 0448C4 80043CC4 00000000 */   nop   
-/* 0448C8 80043CC8 8DEFD540 */  lw    $t7, %lo(D_8011D540)($t7)
+/* 0448C8 80043CC8 8DEFD540 */  lw    $t7, %lo(gRaceStartTimer)($t7)
 /* 0448CC 80043CCC 3C038012 */  lui   $v1, %hi(D_8011D5B8) # $v1, 0x8012
 /* 0448D0 80043CD0 11E00006 */  beqz  $t7, .L80043CEC
 /* 0448D4 80043CD4 2463D5B8 */   addiu $v1, %lo(D_8011D5B8) # addiu $v1, $v1, -0x2a48

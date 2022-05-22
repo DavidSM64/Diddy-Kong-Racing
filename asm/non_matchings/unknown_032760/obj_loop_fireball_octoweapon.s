@@ -295,7 +295,7 @@ glabel obj_loop_fireball_octoweapon
 /* 034FA0 800343A0 AE030078 */  sw    $v1, 0x78($s0)
 /* 034FA4 800343A4 8FA50074 */  lw    $a1, 0x74($sp)
 /* 034FA8 800343A8 2404024A */  li    $a0, 586
-/* 034FAC 800343AC 0C000741 */  jal   func_80001D04
+/* 034FAC 800343AC 0C000741 */  jal   play_sound_global
 /* 034FB0 800343B0 24A5001C */   addiu $a1, $a1, 0x1c
 .L800343B4:
 /* 034FB4 800343B4 86090048 */  lh    $t1, 0x48($s0)

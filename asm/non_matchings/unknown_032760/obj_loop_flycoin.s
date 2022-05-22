@@ -72,7 +72,7 @@ glabel obj_loop_flycoin
 /* 03DFB4 8003D3B4 24040022 */  li    $a0, 34
 /* 03DFB8 8003D3B8 11C10004 */  beq   $t6, $at, .L8003D3CC
 /* 03DFBC 8003D3BC 8FB8002C */   lw    $t8, 0x2c($sp)
-/* 03DFC0 8003D3C0 0C000741 */  jal   func_80001D04
+/* 03DFC0 8003D3C0 0C000741 */  jal   play_sound_global
 /* 03DFC4 8003D3C4 00002825 */   move  $a1, $zero
 .L8003D3C8:
 /* 03DFC8 8003D3C8 8FB8002C */  lw    $t8, 0x2c($sp)

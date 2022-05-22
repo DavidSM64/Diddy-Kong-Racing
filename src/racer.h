@@ -5,6 +5,8 @@
 #include "structs.h"
 #include "level_object_entries.h"
 
+#define SEGMENT_NONE -1 // If the level in question does not use segmentation.
+
 typedef enum ActivePlayers {
     PLAYER_COMPUTER = -1,
     PLAYER_ONE,
@@ -25,6 +27,31 @@ typedef enum CameraZoom {
     ZOOM_VERY_CLOSE
 } CameraZoom;
 
+typedef enum BoostSound {
+    BOOST_NONE,
+    BOOST_RACE_START,
+    BOOST_UNK2
+} BoostSound;
+
+// boost types suffixed with _FAST are the ones you get from releasing the throttle.
+typedef enum BoostType {
+    BOOST_SMALL,
+    BOOST_MEDIUM,
+    BOOST_LARGE,
+    BOOST_UNK3,
+    BOOST_SMALL_FAST,
+    BOOST_MEDIUM_FAST,
+    BOOST_LARGE_FAST,
+} BoostType;
+
+typedef enum AISkill {
+    AI_MASTER,
+    AI_EXPERT,
+    AI_HARD,
+    AI_MEDIUM,
+    AI_EASY
+} AISkill;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -34,7 +61,7 @@ typedef struct ObjectCamera {
   /* 0x0028 */ f32 y_velocity;
   /* 0x002C */ f32 z_velocity;
   /* 0x0030 */ f32 unk30;
-  /* 0x0034 */ s16 unk34;
+  /* 0x0034 */ s16 segmentIndex;
   /* 0x0036 */ s16 mode;
   /* 0x0038 */ s16 unk38;
   /* 0x003A */ s8 unk3A;
@@ -56,31 +83,10 @@ typedef struct unk8005234C {
     s16 unk16C;
 } unk8005234C;
 
-// Also fairly certain this is NOT Object_Racer.
-typedef struct Object_64_Unknown5 {
-    u8 pad0[0x88];
-    u8 unk89;
-    u8 pad90[0xE9];
-    s8 unk172;
-    s8 unk173;
-    s8 unk174;
-    u8 pad175[0x5E];
-    s8 unk1D3;
-} Object_64_Unknown5;
-
 typedef struct TempStruct5 {
     s8 pad0[8];
     s8 unk8[4][4];
 } TempStruct5;
-
-typedef struct Object_64_80053478 {
-    u8 unk0[0x2C];
-    f32 unk2C; // Forward Velocity?
-    u8 unk30[0x1B1];
-    s8 unk1E1; // Steering Value?
-    u8 unk1E2[4];
-    s8 unk1E6;
-} Object_64_80053478;
 
 /* Unknown Size */
 typedef struct unk800535C4 {
@@ -176,10 +182,10 @@ void handle_car_steering(Object_Racer *racer);
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1);
 void handle_car_velocity_control(Object_Racer *racer);
 void play_char_horn_sound(Object *obj, Object_Racer *racer);
-void func_80057048(Object *obj, s32 arg1);
+void racer_play_sound(Object *obj, s32 soundID);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_Racer *racer);
-void func_800579B0(Object_Racer *racer, s32 arg1, f32 updateRate);
+void handle_base_steering(Object_Racer *racer, s32 arg1, f32 updateRate);
 void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3);
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
 void func_800598D0(void);
@@ -198,11 +204,11 @@ void antipiracy_modify_surface_traction_table(void);
 s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 arg2);
 void func_8005C270(Object_Racer *racer);
-f32 func_80057220(Object *obj, Object_Racer *racer);
-void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3);
+f32 handle_racer_top_speed(Object *obj, Object_Racer *racer);
+void func_800570B8(Object *obj, s32 soundID, s32 range, s32 arg3);
 void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s16 xRotation, s16 zRotation);
 void func_80059080(Object *obj, Object_Racer *racer, f32 *velX, f32 *velY, f32 *velZ);
-void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 arg3);
+void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
 void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer);
 void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer);
 void update_camera_loop(f32 updateRate, Object *obj, Object_Racer *racer);
@@ -214,7 +220,7 @@ void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80050754(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate);
+void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate);
 

@@ -225,7 +225,7 @@ glabel menu_file_select_loop
 /* 08EDB8 8008E1B8 1300000C */  beqz  $t8, .L8008E1EC
 /* 08EDBC 8008E1BC 256B0FB0 */   addiu $t3, %lo(D_800E0FB0) # addiu $t3, $t3, 0xfb0
 /* 08EDC0 8008E1C0 240400EF */  li    $a0, 239
-/* 08EDC4 8008E1C4 0C000741 */  jal   func_80001D04
+/* 08EDC4 8008E1C4 0C000741 */  jal   play_sound_global
 /* 08EDC8 8008E1C8 00002825 */   move  $a1, $zero
 /* 08EDCC 8008E1CC 3C04800E */  lui   $a0, %hi(gSaveFileIndex) # $a0, 0x800e
 /* 08EDD0 8008E1D0 8C84F4CC */  lw    $a0, %lo(gSaveFileIndex)($a0)

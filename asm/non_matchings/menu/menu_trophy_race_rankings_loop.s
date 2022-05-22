@@ -116,7 +116,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099D80 80099180 11000006 */  beqz  $t0, .L8009919C
 /* 099D84 80099184 2404005E */   li    $a0, 94
 /* 099D88 80099188 00002825 */  move  $a1, $zero
-/* 099D8C 8009918C 0C000741 */  jal   func_80001D04
+/* 099D8C 8009918C 0C000741 */  jal   play_sound_global
 /* 099D90 80099190 AFAB002C */   sw    $t3, 0x2c($sp)
 /* 099D94 80099194 8FAB002C */  lw    $t3, 0x2c($sp)
 /* 099D98 80099198 00000000 */  nop   
@@ -186,7 +186,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099E7C 8009927C 11E20008 */  beq   $t7, $v0, .L800992A0
 /* 099E80 80099280 31189000 */   andi  $t8, $t0, 0x9000
 /* 099E84 80099284 AFA80044 */  sw    $t0, 0x44($sp)
-/* 099E88 80099288 0C000741 */  jal   func_80001D04
+/* 099E88 80099288 0C000741 */  jal   play_sound_global
 /* 099E8C 8009928C AFAB002C */   sw    $t3, 0x2c($sp)
 /* 099E90 80099290 8FA80044 */  lw    $t0, 0x44($sp)
 /* 099E94 80099294 8FAB002C */  lw    $t3, 0x2c($sp)
