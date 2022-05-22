@@ -146,14 +146,14 @@ f32 D_8011D4F0[2];
 s32 D_8011D4F8[3];
 s32 D_8011D504;
 ObjectCamera *gCameraObject;
-s32 D_8011D50C;
+UNUSED s32 D_8011D50C;
 ObjectTransform D_8011D510;
 s32 gCurrentCarInput; // Related to input of the car.
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
 s32 gCurrentStickX;
 s32 gCurrentStickY;
-s32 D_8011D53C;
+s32 D_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
 s32 gRaceStartTimer;
 f32 D_8011D544;
 f32 D_8011D548;
@@ -164,8 +164,8 @@ s8 D_8011D553;
 s32 gCurrentCarSteerVel; // Related to rotational velocity of the car.
 s32 D_8011D558;
 s32 D_8011D55C;
-s16 D_8011D560;
-s16 D_8011D562;
+s16 D_8011D560; // Set, but never read.
+UNUSED s16 D_8011D562;
 s32 D_8011D564;
 s32 D_8011D568;
 s32 D_8011D56C;
@@ -481,7 +481,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         yVel *= 0.5;
     } else {
         if (D_8011D53C == 1) {
-            yVel *= 0.5;
+            yVel *= 0.5; // Unreachable. D_8011D53C is never not 0.
         } else {
             yVel *= 0.25;
         }
@@ -1667,6 +1667,8 @@ void func_800570B8(Object *obj, s32 soundID, s32 range, s32 arg3) {
         }
     }
 }
+
+extern s32 gTajSoundMask;
 
 /**
  * This function dictates the base top speed of a racer.

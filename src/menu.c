@@ -3972,7 +3972,7 @@ void menu_caution_init(void) {
 s32 menu_caution_loop(s32 updateRate) {
     if (gMenuDelay) {
         gMenuDelay += updateRate;
-    } else if (gIgnorePlayerInput <= 0 && (get_buttons_pressed_from_player(0) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
+    } else if (gIgnorePlayerInput <= 0 && (get_buttons_pressed_from_player(PLAYER_ONE) & (A_BUTTON | B_BUTTON | START_BUTTON))) {
         play_sound_global(SOUND_SELECT2, NULL);
         gMenuDelay = 1;
         func_800C01D8(&sMenuTransitionFadeIn);
@@ -4138,7 +4138,7 @@ s32 menu_game_select_loop(s32 arg0) {
     } else {
         func_8008C698(arg0);
         if ((gMenuDelay == 0) && (D_801263D8 == 0)) {
-            playerInputs = get_buttons_pressed_from_player(0);
+            playerInputs = get_buttons_pressed_from_player(PLAYER_ONE);
             playerYDir = gControllersYAxisDirection[0];
             playerInputs = playerInputs;
             if (gNumberOfActivePlayers == 2) {
@@ -4387,7 +4387,7 @@ void func_8008DC7C(UNUSED s32 arg0) {
     s32 controllerXAxisDirection;
     s32 temp;
 
-    buttonsPressed = get_buttons_pressed_from_player(0);
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     controllerXAxisDirection = gControllersXAxisDirection[0];
 
     if (gNumberOfActivePlayers == 2) {
@@ -6483,7 +6483,7 @@ s32 taj_menu_loop(void) {
         set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     }
     sp2C = 0;
-    buttonsPressed = get_buttons_pressed_from_player(0);
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     sDialogueOptionMax = 0;
 
     switch (sCurrentMenuID) {
@@ -6541,7 +6541,7 @@ s32 taj_menu_loop(void) {
                     case 1:
                         sCurrentMenuID = 3;
                         sDialogueOption = 0;
-                        func_8003AC3C(0x239, 1);
+                        play_taj_voice_clip(SOUND_VOICE_TAJ_CHALLENGE_MENU, TRUE);
                         break;
                     case 2:
                         sp2C = 3;
@@ -6549,7 +6549,7 @@ s32 taj_menu_loop(void) {
                     case 0:
                         sCurrentMenuID = 2;
                         sDialogueOption = 0;
-                        func_8003AC3C(0x234, 1);
+                        play_taj_voice_clip(SOUND_VOICE_TAJ_SELECT_VEHICLE, TRUE);
                         break;
                 }
             }
@@ -6558,7 +6558,7 @@ s32 taj_menu_loop(void) {
             handle_menu_joystick_input();
             if (buttonsPressed & B_BUTTON) {
                 play_sound_global(SOUND_MENU_BACK3, 0);
-                func_8003AC3C(0x238, 1);
+                play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK, TRUE);
                 sCurrentMenuID = 1;
                 sDialogueOption = 0;
             } else if (buttonsPressed & A_BUTTON) {
@@ -6568,7 +6568,7 @@ s32 taj_menu_loop(void) {
                 } else {
                     sCurrentMenuID = 1;
                     sDialogueOption = 0;
-                    func_8003AC3C(0x238, 1);
+                    play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK, TRUE);
                 }
             }
             break;
@@ -6576,7 +6576,7 @@ s32 taj_menu_loop(void) {
             handle_menu_joystick_input();
             if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & A_BUTTON) && (D_80126516 == 3))) {
                 play_sound_global(SOUND_MENU_BACK3, 0);
-                func_8003AC3C(0x23A, 1);
+                play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK2, TRUE);
                 sCurrentMenuID = 1;
                 sDialogueOption = 3;
             } else if (buttonsPressed & A_BUTTON) {
@@ -6641,10 +6641,10 @@ s32 dialogue_race_defeat(void) {
     s32 state;
     s32 playerInput;
 
-    set_current_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0x87);
+    set_current_dialogue_box_coords(1, 24, 16, 184, 135);
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     state = 0;
-    playerInput = get_buttons_pressed_from_player(0);
+    playerInput = get_buttons_pressed_from_player(PLAYER_ONE);
     sDialogueOptionMax = 0;
     D_800DF4DC = 0;
     render_dialogue_text(1, POS_CENTRED, 6, gMenuText[49], 1, 4);    // BETTER LUCK
@@ -6698,7 +6698,7 @@ s32 tt_menu_loop(void) {
     }
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
-    buttonsPressed = get_buttons_pressed_from_player(0);
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     sDialogueOptionMax = 0;
     gDialogueOptionYOffset = 32;
     switch (sCurrentMenuID) {
@@ -6721,12 +6721,12 @@ s32 tt_menu_loop(void) {
             if (D_80126516 == 0) {
                 if (gControllersXAxisDirection[0] > 0) {
                     if (!is_time_trial_enabled()) {
-                        func_80036BCC(0x231, 1);
+                        play_tt_voice_clip(SOUND_VOICE_TT_TIME_TRIAL_ON, TRUE);
                     }
                     set_time_trial_enabled(TRUE);
                 } else if (gControllersXAxisDirection[0] < 0) {
                     if (is_time_trial_enabled() == 1) {
-                        func_80036BCC(0x230, 1);
+                        play_tt_voice_clip(SOUND_VOICE_TT_TIME_TRIAL_OFF, TRUE);
                     }
                     set_time_trial_enabled(FALSE);
                 }
@@ -6741,7 +6741,7 @@ s32 tt_menu_loop(void) {
                         break;
                     case 3:
                         play_sound_global(SOUND_SELECT2, 0);
-                        func_80036BCC(0x22E, 1);
+                        play_tt_voice_clip(SOUND_VOICE_TT_GAME_STATUS, TRUE);
                         func_8009C674(D_800E1E2C);
                         allocate_menu_images(D_800E1E40);
                         D_800E1E28 = 1;
@@ -6790,7 +6790,7 @@ s32 tt_menu_loop(void) {
                 sCurrentMenuID = TT_MENU_ROOT;
                 D_800E1E28 = 0;
                 func_8009C4A8(D_800E1E2C);
-                func_80036BCC(0x22F, 1);
+                play_tt_voice_clip(SOUND_VOICE_TT_OKAY, TRUE);
             }
             break;
         case TT_MENU_INTRODUCTION:
@@ -6902,7 +6902,7 @@ s32 trophy_race_cabinet_menu_loop(void) {
     set_current_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0x78);
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
-    buttonsPressed = get_buttons_pressed_from_player(0);
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     render_dialogue_text(1, POS_CENTRED, 6, gMenuText[70], 1, 4); // TROPHY RACE
     if (gControllersYAxisDirection[0] < 0) {
         sDialogueOption++;
@@ -7054,12 +7054,12 @@ s32 is_in_two_player_adventure(void) {
  * Returns 1 if T.T. is avaliable to use, or 0 if not.
  */
 s32 is_tt_unlocked(void) {
-    return gActiveMagicCodes & 1;
+    return gActiveMagicCodes & CHEAT_CONTROL_TT;
 }
 
 /**
  * Returns 1 if Drumstick is avaliable to use, or 0 if not.
  */
 s32 is_drumstick_unlocked(void) {
-    return gActiveMagicCodes & 2;
+    return gActiveMagicCodes & CHEAT_CONTROL_DRUMSTICK;
 }

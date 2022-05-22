@@ -41,7 +41,7 @@ typedef enum BoostType {
     BOOST_UNK3,
     BOOST_SMALL_FAST,
     BOOST_MEDIUM_FAST,
-    BOOST_LARGE_FAST,
+    BOOST_LARGE_FAST
 } BoostType;
 
 typedef enum AISkill {

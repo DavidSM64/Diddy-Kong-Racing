@@ -117,8 +117,8 @@ VertexPosition D_800DCB28[6] = {
 /************ .bss ************/
 
 f32 D_8011D4D0;
-s32 D_8011D4D4;
-s32 D_8011D4D8;
+s32 gTajSoundMask;
+s32 gTTSoundMask;
 s32 D_8011D4DC;
 s16 D_8011D4E0;
 s16 D_8011D4E2;
@@ -743,7 +743,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 speed) {
         if (obj4C->unk13 < 0xC8) {
             if (playerObj == obj4C->unk0) {
                 // Detect if the player honks or slams into the signpost.
-                if ((get_buttons_pressed_from_player(0) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
+                if ((get_buttons_pressed_from_player(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
                     func_8006F29C();
                 }
             }
@@ -972,18 +972,22 @@ void obj_init_stopwatchman(Object *obj, UNUSED LevelObjectEntry_StopWatchMan *en
     temp = &obj->unk64->tt;
     temp->unkD = 0xFF;
     temp->unk0 = 0.0f;
-    D_8011D4D8 = 0;
+    gTTSoundMask = 0;
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_stopwatchman.s")
 
-void func_80036BCC(u16 arg0, s32 arg1) {
-    if ((D_8011D4D8 != 0) && (arg1 & 1)) {
-        func_8000488C(D_8011D4D8); //This is likely wrong and will need to be fixed
-        D_8011D4D8 = 0;
+/**
+ * If TT is currently talking, clear the audio associated with gTTSoundMask,
+ * then play the new sound ID in its place.
+ */
+void play_tt_voice_clip(u16 soundID, s32 interrupt) {
+    if (gTTSoundMask && interrupt & 1) {
+        func_8000488C(gTTSoundMask); //This is likely wrong and will need to be fixed
+        gTTSoundMask = 0;
     }
-    if (D_8011D4D8 == 0) {
-        play_sound_global(arg0, &D_8011D4D8);
+    if (gTTSoundMask == 0) {
+        play_sound_global(soundID, &gTTSoundMask);
     }
 }
 
@@ -1193,7 +1197,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     func_80011390();
     obj->unk7C.word = entry->actorIndex;
     obj->unk78 = arg2;
-    if (arg2 != 0 && (get_buttons_pressed_from_player(0) & R_CBUTTONS)) {
+    if (arg2 != 0 && (get_buttons_pressed_from_player(PLAYER_ONE) & R_CBUTTONS)) {
         obj->unk78 = 2;
     }
     if (((func_8001E440() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) && (entry->objectIdToSpawn != -1)) {
@@ -1366,7 +1370,7 @@ void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
 }
 
 void obj_loop_infopoint(Object *obj, UNUSED s32 speed) {
-    s16 temp_a0;
+    s16 player;
     Object_4C *obj4C;
     Object *playerObj;
 
@@ -1381,8 +1385,8 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 speed) {
         playerObj = obj4C->unk0;
         if (playerObj->segment.header->behaviorId == 1) {
             Object_InfoPoint *playerObj64 = &playerObj->unk64->info_point;
-            temp_a0 = playerObj64->unk0;
-            if ((temp_a0 != -1) && (get_buttons_pressed_from_player(temp_a0) & Z_TRIG)) {
+            player = playerObj64->unk0;
+            if ((player != PLAYER_COMPUTER) && (get_buttons_pressed_from_player(player) & Z_TRIG)) {
                 func_800C31EC(obj->unk78 & 0xFF);
             }
         }
@@ -1604,7 +1608,7 @@ void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry)
     temp->unk2C = 0;
     temp->unk34 = 0;
     temp->unk36 = 0;
-    D_8011D4D4 = 0;
+    gTajSoundMask = 0;
     D_8011D4E2 = 0x10F;
 }
 
@@ -1614,13 +1618,17 @@ void func_80039320(s16 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_parkwarden.s")
 
-void func_8003AC3C(u16 arg0, s32 arg1) {
-    if ((D_8011D4D4 != 0) && (arg1 & 1)) {
-        func_8000488C(D_8011D4D4);
-        D_8011D4D4 = 0;
+/**
+ * If Taj is currently talking, clear the audio associated with gTajSoundMask,
+ * then play the new sound ID in its place.
+ */
+void play_taj_voice_clip(u16 soundID, s32 interrupt) {
+    if (gTajSoundMask && interrupt & 1) {
+        func_8000488C(gTajSoundMask);
+        gTajSoundMask = 0;
     }
-    if (D_8011D4D4 == 0) {
-        play_sound_global(arg0, &D_8011D4D4);
+    if (!gTajSoundMask) {
+        play_sound_global(soundID, &gTajSoundMask);
     }
 }
 

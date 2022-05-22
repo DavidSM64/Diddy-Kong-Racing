@@ -89,7 +89,7 @@ u8 D_80115F78;
 u8 D_80115F79;
 s32 D_80115F7C;
 s32 D_80115F80;
-u32 D_80115F84;
+u32 gGlobalSoundMask;
 u32 D_80115F88;
 
 /******************************/
@@ -674,18 +674,22 @@ u16 func_80001CB8(u16 arg0) {
     return sSoundEffectsPool[arg0].unk6;
 }
 
-//Play Sound effect?
 GLOBAL_ASM("asm/non_matchings/audio/play_sound_global.s")
 
-void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4) {
-    if (arg4 == NULL) {
-        arg4 = &D_80115F84;
+/**
+ * Creates a spatial audio reference, then plays a sound.
+ * This then makes the audio pan around in 3D space.
+ * If it is not given a mask, then it will use the global mask.
+ */
+void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
+    if (soundMask == NULL) {
+        soundMask = &gGlobalSoundMask;
     }
 
-    play_sound_global(soundID, arg4);
+    play_sound_global(soundID, soundMask);
 
-    if (*arg4 != NULL) {
-        func_80009B7C(*arg4, x, y, z);
+    if (*soundMask != NULL) {
+        func_80009B7C(*soundMask, x, y, z);
     }
 }
 

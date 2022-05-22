@@ -874,7 +874,8 @@ s32 get_race_start_timer() {
     return gRaceStartCountdown;
 }
 
-s32 func_800113BC() {
+// Unused function, purpose currently unknown.
+UNUSED s32 func_800113BC() {
     return D_8011ADBC;
 }
 
