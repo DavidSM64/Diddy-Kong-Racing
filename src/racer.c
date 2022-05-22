@@ -199,7 +199,7 @@ s16 D_8011D5B8;
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 
-void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate) {
+void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
     TempStruct5 *temp_v0;
     s8 *test;
     s8 phi_a0;
@@ -214,8 +214,8 @@ void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate) {
         D_8011D5BC = 0;
         return;
     }
-    temp_v0 = (TempStruct5 *)func_8006C18C();
-    if (arg1->unk1D3) {
+    temp_v0 = func_8006C18C();
+    if (racer->boostTimer) {
         if (!D_8011D5BB) {
             temp_v0->unk8[3][0] += temp_v0->unk8[3][2];
             temp_v0->unk8[3][1] += temp_v0->unk8[3][3];
@@ -232,21 +232,21 @@ void func_80043ECC(s32 arg0, Object_64_Unknown5 *arg1, s32 updateRate) {
         }
         D_8011D5BA = 0;
     }
-    if (arg1->unk173) {
-        if (D_8011D5BC < arg1->unk174) {
+    if (racer->balloon_quantity) {
+        if (D_8011D5BC < racer->balloon_level) {
             temp_v0->unk8[1][0] += temp_v0->unk8[1][2];
             temp_v0->unk8[1][1] += temp_v0->unk8[1][3];
         }
-        D_8011D5BC = arg1->unk174;
+        D_8011D5BC = racer->balloon_level;
     } else {
         D_8011D5BC = 0;
     }
     test = get_misc_asset(12);
-    if ((D_8011D530 & 0x2000) && arg1->unk173) {
-        if (arg1->unk174 < 3) {
-            phi_a0 = test[arg1->unk172 * 3 + arg1->unk174];
+    if ((D_8011D530 & 0x2000) && racer->balloon_quantity) {
+        if (racer->balloon_level < 3) {
+            phi_a0 = test[racer->balloon_type * 3 + racer->balloon_level];
         } else {
-            phi_a0 = arg1->unk172;
+            phi_a0 = racer->balloon_type;
         }
         if (D_800DCD90[phi_a0] == 1) {
             temp_v0->unk8[2][0] += temp_v0->unk8[2][2];
@@ -500,8 +500,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     gCameraObject->trans.z_position = obj->segment.trans.z_position + zVel;
     gCameraObject->trans.y_rotation = racer->unk196;
     segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
-    if (segmentIndex != -1) {
-        gCameraObject->unk34 = segmentIndex;
+    if (segmentIndex != SEGMENT_NONE) {
+        gCameraObject->segmentIndex = segmentIndex;
     }
 }
 
@@ -789,7 +789,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     tempVel = gCameraObject->trans.x_position;
     segmentIndex = get_level_segment_index_from_position(tempVel, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
     if (segmentIndex != -1) {
-        gCameraObject->unk34 = segmentIndex;
+        gCameraObject->segmentIndex = segmentIndex;
     }
     racer->unk196 = gCameraObject->trans.y_rotation;
 }
@@ -819,8 +819,8 @@ void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
 
 	delta = (s32) updateRate;
     zoom = 120.0f;
-    if (gRaceStartTimer >= 0x3D) {
-        zoom += ((f32) (gRaceStartTimer - 0x3C) * 4.0f);
+    if (gRaceStartTimer > 60) {
+        zoom += ((f32) (gRaceStartTimer - 60) * 4.0f);
     }
     racer->unk196 = 0x8000 - racer->unk1A0;
     if (get_viewport_count() == 1) {
@@ -860,8 +860,8 @@ void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
     gCameraObject->trans.x_rotation += ((angle * delta) >> 4);
     gCameraObject->trans.y_rotation = racer->unk196;
     segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
-    if (segmentIndex != -1) {
-        gCameraObject->unk34 = segmentIndex;
+    if (segmentIndex != SEGMENT_NONE) {
+        gCameraObject->segmentIndex = segmentIndex;
     }
     racer->unk196 = gCameraObject->trans.y_rotation;
     gCameraObject->trans.x_position += gCameraObject->x_velocity;
@@ -1949,7 +1949,7 @@ void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     s64 pad;
     s32 segmentIndex;
@@ -2067,7 +2067,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         baseDistance += baseSpeed * 30.0f;
     }
     if (gRaceStartTimer == 0) {
-        if (normalise_time(0x24) < racer->boostTimer) {
+        if (normalise_time(36) < racer->boostTimer) {
             baseDistance = -30.0f;
         } else if (racer->boostTimer > 0) {
             baseDistance = 180.0f;
@@ -2144,7 +2144,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     lateralOffset = (yOffset = gCameraObject->trans.x_position);
     segmentIndex = get_level_segment_index_from_position(lateralOffset, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
     if (segmentIndex != -1) {
-        gCameraObject->unk34 = segmentIndex;
+        gCameraObject->segmentIndex = segmentIndex;
     }
     racer->unk196 = gCameraObject->trans.y_rotation;
 }
@@ -2158,7 +2158,7 @@ GLOBAL_ASM("asm/non_matchings/racer/update_camera_car.s")
  * Otherwise, it will follow a set path while rotating.
  */
 void update_camera_finish_challenge(UNUSED f32 updateRate, Object *obj, Object_Racer *racer) {
-    s32 levelSeg;
+    s32 segmentIndex;
     f32 temp_f12;
     f32 zOffset;
     f32 xOffset;
@@ -2179,9 +2179,9 @@ void update_camera_finish_challenge(UNUSED f32 updateRate, Object *obj, Object_R
         gCameraObject->trans.y_position = obj->segment.trans.y_position + 45.0f;
     }
     gCameraObject->trans.z_position = obj->segment.trans.z_position + zOffset;
-    levelSeg = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
-    if (levelSeg != -1) {
-        gCameraObject->unk34 = levelSeg;
+    segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
+    if (segmentIndex != SEGMENT_NONE) {
+        gCameraObject->segmentIndex = segmentIndex;
     }
     racer->unk196 = gCameraObject->trans.y_rotation;
 }
@@ -2215,7 +2215,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     gCameraObject->trans.y_rotation = (s16) (0x8000 - func_8007066C((s32) xDiff, (s32) zDiff));
     gCameraObject->trans.x_rotation = func_8007066C((s32) yDiff, (s32) distance);
     gCameraObject->trans.z_rotation = 0;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
+    gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
 }
 
 /**
@@ -2232,7 +2232,7 @@ void update_camera_fixed(f32 updateRate, struct Object *obj, struct Object_Racer
     gCameraObject->trans.y_rotation += ((((-func_8007066C((s32) xDiff, (s32) zDiff)) -
                                     gCameraObject->trans.y_rotation) + 0x8000) * delta) >> 4;
     gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * delta)) >> 4);
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->trans.x_position,
+    gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position,
                             racer->oy1, gCameraObject->trans.z_position);
 }
 
