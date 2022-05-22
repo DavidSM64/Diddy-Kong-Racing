@@ -631,7 +631,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
                 obj64->unk0 = 140;
                 set_sndfx_player_voice_limit(16);
                 set_music_fade_timer(-8);
-                play_sequence(SEQUENCE_LOCKED);
+                play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
             }
         }
         if ((obj64->unk0 != 0) && (func_80001C08() == 0)) {

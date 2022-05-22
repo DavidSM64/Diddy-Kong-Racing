@@ -1612,7 +1612,7 @@ void play_char_horn_sound(Object *obj, Object_Racer *racer) {
         func_800570B8(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
     } else {
         // Play character's horn sound
-        racer_play_sound(obj, racer->characterId + SOUND_HORN1);
+        racer_play_sound(obj, racer->characterId + SOUND_HORN_CHARACTER);
     }
 }
 

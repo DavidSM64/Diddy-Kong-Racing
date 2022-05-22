@@ -2360,7 +2360,7 @@ void menu_options_init(void) {
     load_font(2);
     set_text_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(0x18);
-    play_music(SEQUENCE_LOBBY);
+    play_music(SEQUENCE_MAIN_MENU);
     func_80000B18();
 }
 
@@ -2648,7 +2648,7 @@ s32 menu_audio_options_loop(s32 arg0) {
                     } else {
                         func_80000B28();
                         set_music_player_voice_limit(0x18);
-                        play_music(SEQUENCE_LOBBY);
+                        play_music(SEQUENCE_MAIN_MENU);
                         func_80000B18();
                     }
                 }
@@ -2701,7 +2701,7 @@ void func_800851FC(void) {
     }
     if (D_801263D8 >= 0) {
         set_music_player_voice_limit(0x18);
-        play_music(SEQUENCE_LOBBY);
+        play_music(SEQUENCE_MAIN_MENU);
         set_music_fade_timer(0x100);
         func_80000B18();
     }
@@ -3741,7 +3741,7 @@ void menu_character_select_init(void) {
     D_801263B8.unk0 = -1;
     D_801263B8.unk2 = 0;
     D_801263B8.unk1 = 0;
-    play_music(SEQUENCE_CHARACTER_SELECT);
+    play_music(SEQUENCE_CHOOSE_YOUR_RACER);
     for (i = 0; i < 10; i++) {
         temp = D_800DFDB4[i];
         if (i != D_801263C0.unk0) {
@@ -4013,7 +4013,7 @@ void menu_game_select_init(void) {
     func_8009C6D4(0x43);
     func_8007FFEC(3);
     load_font(2);
-    play_music(SEQUENCE_CHARACTER_SELECT);
+    play_music(SEQUENCE_CHOOSE_YOUR_RACER);
 
     for (i = 0; i < 10; i++) {
         if (i != D_801263B4.unk0) {
@@ -4201,7 +4201,7 @@ void menu_file_select_init(void) {
     D_80126CC0 = 0;
     func_800C01D8(&sMenuTransitionFadeOut);
     load_font(2);
-    play_music(SEQUENCE_CHARACTER_SELECT);
+    play_music(SEQUENCE_CHOOSE_YOUR_RACER);
     for (i = 0; i < 10; i++) {
         if (i != D_801263B4.unk0) {
             func_80001114(D_800DFDB4[i][0]);
@@ -4958,7 +4958,7 @@ void menu_5_init(void) {
             func_80000FDC(temp, 0, 0.5f);
         }
         set_music_player_voice_limit(0x18);
-        play_music(SEQUENCE_LOBBY);
+        play_music(SEQUENCE_MAIN_MENU);
         func_80000B18();
         D_801263E0 = 0;
         func_8009C674(D_800E0FB4);
@@ -5235,7 +5235,7 @@ void func_80094C14(s32 arg0) {
             case 1:
                 if (normalise_time(0x12C) < D_801263D8) {
                     set_music_player_voice_limit(0x18);
-                    play_music(SEQUENCE_LOBBY);
+                    play_music(SEQUENCE_MAIN_MENU);
                     set_music_fade_timer(0x100);
                 }
                 break;
@@ -5337,7 +5337,7 @@ void menu_11_init(void) {
     load_font(2);
     func_800C01D8(&sMenuTransitionFadeOut);
     set_music_player_voice_limit(0x18);
-    play_music(SEQUENCE_LOBBY);
+    play_music(SEQUENCE_MAIN_MENU);
     set_music_fade_timer(0x80);
 }
 
@@ -5505,7 +5505,7 @@ void menu_trophy_race_round_init(void) {
     D_800E0980 = 10;
     load_font(2);
     set_music_player_voice_limit(0x18);
-    play_music(SEQUENCE_LOBBY);
+    play_music(SEQUENCE_MAIN_MENU);
     set_music_fade_timer(0x100);
 }
 #else
