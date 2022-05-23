@@ -574,10 +574,10 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         settings->worldId = gCurrentLevelHeader->world;
     }
     settings->courseId = levelId;
-    if (gCurrentLevelHeader->weather_enable > 0) {
+    if (gCurrentLevelHeader->weatherEnable > 0) {
         func_800AB4A8(
-            gCurrentLevelHeader->unk92,
-            gCurrentLevelHeader->weather_enable,
+            gCurrentLevelHeader->weatherType,
+            gCurrentLevelHeader->weatherEnable,
             gCurrentLevelHeader->unk96 << 8,
             gCurrentLevelHeader->unk98 << 8,
             gCurrentLevelHeader->unk9A << 8,
@@ -680,7 +680,7 @@ void func_8006BEFC(void) {
     func_8002C7D4();
     func_80008174();
     func_80000968(0);
-    if (gCurrentLevelHeader->weather_enable > 0) {
+    if (gCurrentLevelHeader->weatherEnable > 0) {
         func_800AB35C();
     }
     //! @bug this will never be true because unk49 is signed.

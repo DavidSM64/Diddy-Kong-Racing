@@ -1842,13 +1842,13 @@ void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
         }
         switch (gCameraObject->zoom) {
         case ZOOM_MEDIUM:
-            play_sound_global(SOUND_MENU_BACK, 0);
+            play_sound_global(SOUND_MENU_BACK, NULL);
             break;
         case ZOOM_FAR:
-            play_sound_global(SOUND_MENU_BACK2, 0);
+            play_sound_global(SOUND_MENU_BACK2, NULL);
             break;
         default:
-            play_sound_global(SOUND_UNK106, 0);
+            play_sound_global(SOUND_UNK106, NULL);
             break;
         }
     }

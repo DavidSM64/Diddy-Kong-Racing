@@ -255,10 +255,10 @@ typedef struct LevelHeader {
   /* 0x74 */ s8 *unk74[7];
 
   // Weather related?
-  /* 0x90 */ s16 weather_enable;
-  /* 0x92 */ s16 unk92;
-  /* 0x94 */ u8 unk94;
-  /* 0x95 */ u8 unk95;
+  /* 0x90 */ s16 weatherEnable;
+  /* 0x92 */ s16 weatherType;
+  /* 0x94 */ u8 weatherIntensity;
+  /* 0x95 */ u8 weatherOpacity;
   /* 0x96 */ s16 unk96;
   /* 0x98 */ s16 unk98;
   /* 0x9A */ s16 unk9A;
@@ -691,7 +691,7 @@ typedef struct Object_CharacterFlag {
 
 typedef struct Object_Snowball {
   /* 0x00 */ u8 pad0[0x20];
-  /* 0x20 */ u32 unk20;
+  /* 0x20 */ u32 soundMask;
   /* 0x24 */ s16 unk24;
   /* 0x28 */ u8 pad28[0x12];
   /* 0x38 */ s8 unk38;

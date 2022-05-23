@@ -621,7 +621,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
             // A hit has been detected at this point.
             if (isTrophyRaceAvaliable) {
                 obj->unk78 = 1;
-                play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, 0);
+                play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, NULL);
                 func_800A3870();
             }
             else
@@ -1302,10 +1302,10 @@ void obj_loop_snowball(Object *obj, s32 speed) {
         }
     }
     if (obj64->unk24 != 0) {
-        if (obj64->unk20 == 0) {
-            func_80009558(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &obj64->unk20);
+        if (obj64->soundMask == 0) {
+            func_80009558(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &obj64->soundMask);
         } else {
-            func_800096D8(obj64->unk20, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            func_800096D8(obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     }
     func_8001F460(obj, speed, obj);
@@ -1472,7 +1472,7 @@ void obj_loop_teleport(Object *obj, UNUSED s32 speed) {
         if (obj->unk4C->unk13 < 0x78) {
             func_8006F338(temp->unk8);
             obj->unk78 = 0;
-            play_sound_global(SOUND_WHOOSH2, 0);
+            play_sound_global(SOUND_WHOOSH2, NULL);
             func_80000FDC(0x12A, 0, 1.0f);
         }
     }
@@ -1590,7 +1590,7 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
     if (obj->unk4C->unk13 < 0xFF) {
         if (obj->unk78 == 0) {
             obj->unk78 = 0x3C;
-            func_80009558(571, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            func_80009558(SOUND_VOICE_BRONTO_ROAR, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
         }
     }
 }

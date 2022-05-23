@@ -65,8 +65,8 @@ glabel func_800ADCBC
 /* 0AE9B8 800ADDB8 00117A03 */  sra   $t7, $s1, 8
 /* 0AE9BC 800ADDBC 01E08825 */  move  $s1, $t7
 /* 0AE9C0 800ADDC0 03120019 */  multu $t8, $s2
-/* 0AE9C4 800ADDC4 3C0F800E */  lui   $t7, %hi(D_800E2C60) # $t7, 0x800e
-/* 0AE9C8 800ADDC8 8DEF2C60 */  lw    $t7, %lo(D_800E2C60)($t7)
+/* 0AE9C4 800ADDC4 3C0F800E */  lui   $t7, %hi(gLightningFrequency) # $t7, 0x800e
+/* 0AE9C8 800ADDC8 8DEF2C60 */  lw    $t7, %lo(gLightningFrequency)($t7)
 /* 0AE9CC 800ADDCC 00009012 */  mflo  $s2
 /* 0AE9D0 800ADDD0 0012CA03 */  sra   $t9, $s2, 8
 /* 0AE9D4 800ADDD4 03209025 */  move  $s2, $t9

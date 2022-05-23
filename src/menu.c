@@ -2437,11 +2437,11 @@ s32 menu_options_loop(s32 arg0) {
         set_music_fade_timer(-128);
         gMenuDelay = -1;
         func_800C01D8(&sMenuTransitionFadeIn);
-        play_sound_global(SOUND_MENU_BACK3, 0);
+        play_sound_global(SOUND_MENU_BACK3, NULL);
     } else if ((buttonsPressed & (A_BUTTON | START_BUTTON)) && D_800DF460 >= 2) {
         // Go to a sub-menu
         gMenuDelay = 31;
-        play_sound_global(SOUND_SELECT2, 0);
+        play_sound_global(SOUND_SELECT2, NULL);
     } else if (D_800DF460 == 0 && analogX != 0) {
         // Change language
         s32 currentLang = get_language();
@@ -2450,7 +2450,7 @@ s32 menu_options_loop(s32 arg0) {
         } else {
             set_language(LANGUAGE_ENGLISH);
         }
-        play_sound_global(SOUND_MENU_PICK2, 0);
+        play_sound_global(SOUND_MENU_PICK2, NULL);
     } else if (D_800DF460 == 1 && analogX != 0) {
         // Enable/Disable subtitles.
         if (sEepromSettings & 0x2000000) {
@@ -2459,7 +2459,7 @@ s32 menu_options_loop(s32 arg0) {
             func_800C2AF4(0);
             gOptionMenuStrings[1] = gMenuText[183];
         } else {
-            play_sound_global(SOUND_MENU_PICK2, 0);
+            play_sound_global(SOUND_MENU_PICK2, NULL);
             set_eeprom_settings_value(0);
             func_800C2AF4(1);
             gOptionMenuStrings[1] = gMenuText[182];
@@ -2472,7 +2472,7 @@ s32 menu_options_loop(s32 arg0) {
             if (D_800DF460 >= 6) {
                 D_800DF460 = 5;
             }
-            play_sound_global(SOUND_MENU_PICK2, 0);
+            play_sound_global(SOUND_MENU_PICK2, NULL);
         }
         if (analogY > 0) {
             // Scroll up the list.
@@ -2480,7 +2480,7 @@ s32 menu_options_loop(s32 arg0) {
             if (D_800DF460 < 0) {
                 D_800DF460 = 0;
             }
-            play_sound_global(SOUND_MENU_PICK2, 0);
+            play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     }
 
@@ -4151,7 +4151,7 @@ s32 menu_game_select_loop(s32 arg0) {
                 }
                 func_800C01D8(&sMenuTransitionFadeIn);
                 gMenuDelay = 1;
-                play_sound_global(SOUND_SELECT2, 0);
+                play_sound_global(SOUND_SELECT2, NULL);
             } else if (playerInputs & B_BUTTON) {
                 func_800C01D8(&sMenuTransitionFadeIn);
                 gMenuDelay = -1;
@@ -4159,13 +4159,13 @@ s32 menu_game_select_loop(s32 arg0) {
                 if (playerYDir < 0) {
                     if (D_800DF460 < D_801263E0) {
                         D_800DF460++;
-                        play_sound_global(SOUND_MENU_PICK2, 0);
+                        play_sound_global(SOUND_MENU_PICK2, NULL);
                     }
                 }
                 if (playerYDir > 0) {
                     if (D_800DF460 > 0) {
                         D_800DF460--;
-                        play_sound_global(SOUND_MENU_PICK2, 0);
+                        play_sound_global(SOUND_MENU_PICK2, NULL);
                     }
                 }
             }
@@ -5744,11 +5744,11 @@ s32 menu_ghost_data_loop(s32 updateRate) {
         case 0:
             if ((pressedButtons & (START_BUTTON | A_BUTTON)) && (D_801264D4 > 0)) {
                 D_801263E0 = 2;
-                play_sound_global(SOUND_SELECT2, 0);
+                play_sound_global(SOUND_SELECT2, NULL);
             } else if ((pressedButtons & B_BUTTON) || ((pressedButtons & (START_BUTTON | A_BUTTON)) && (D_801264D4 == 0))) {
                 gMenuDelay = 1;
                 func_800C01D8(&sMenuTransitionFadeIn);
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
             } else {
                 temp = D_80126498;
                 if (yStick < 0 && D_80126498 < (D_801264D4 - 1)) {
@@ -5764,14 +5764,14 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                     }
                 }
                 if (temp != D_80126498) {
-                    play_sound_global(SOUND_MENU_PICK2, 0);
+                    play_sound_global(SOUND_MENU_PICK2, NULL);
                 }
             }
             break;
         case 1:
             if (pressedButtons & B_BUTTON) {
                 D_801263E0 = 0;
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
             } else {
                 if (pressedButtons & (START_BUTTON | A_BUTTON)) {
                     if (func_800998E0(D_80126498) == 0) {
@@ -5784,26 +5784,26 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                         if (D_80126498 < D_801263D8) {
                             D_801263D8 = D_80126498;
                         }
-                        play_sound_global(SOUND_SELECT2, 0);
+                        play_sound_global(SOUND_SELECT2, NULL);
                     } else {
                         gMenuDelay = 1;
                         func_800C01D8(&sMenuTransitionFadeIn);
-                        play_sound_global(SOUND_MENU_BACK3, 0);
+                        play_sound_global(SOUND_MENU_BACK3, NULL);
                     }
                     D_801263E0 = 0;
                 } else if (yStick < 0) {
                     D_801263E0 = 2;
-                    play_sound_global(SOUND_MENU_PICK2, 0);
+                    play_sound_global(SOUND_MENU_PICK2, NULL);
                 }
             }
             break;
         case 2:
             if (pressedButtons & (START_BUTTON | A_BUTTON | B_BUTTON)) {
                 D_801263E0 = 0;
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
             } else if (yStick > 0) {
                 D_801263E0 = 1;
-                play_sound_global(SOUND_MENU_PICK2, 0);
+                play_sound_global(SOUND_MENU_PICK2, NULL);
             }
             break;
     }
@@ -6534,9 +6534,9 @@ s32 taj_menu_loop(void) {
             handle_menu_joystick_input();
             if (buttonsPressed & B_BUTTON) {
                 sp2C = 3;
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
             } else if (buttonsPressed & A_BUTTON) {
-                play_sound_global(SOUND_SELECT2, 0);
+                play_sound_global(SOUND_SELECT2, NULL);
                 switch (D_80126516) {
                     case 1:
                         sCurrentMenuID = 3;
@@ -6557,7 +6557,7 @@ s32 taj_menu_loop(void) {
         case 2:
             handle_menu_joystick_input();
             if (buttonsPressed & B_BUTTON) {
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
                 play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK, TRUE);
                 sCurrentMenuID = 1;
                 sDialogueOption = 0;
@@ -6575,13 +6575,13 @@ s32 taj_menu_loop(void) {
         case 3:
             handle_menu_joystick_input();
             if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & A_BUTTON) && (D_80126516 == 3))) {
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
                 play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK2, TRUE);
                 sCurrentMenuID = 1;
                 sDialogueOption = 3;
             } else if (buttonsPressed & A_BUTTON) {
                 sp2C = D_80126516 | 0x40;
-                play_sound_global(SOUND_SELECT2, 0);
+                play_sound_global(SOUND_SELECT2, NULL);
                 sCurrentMenuID = 0x63;
             }
             break;
@@ -6734,13 +6734,13 @@ s32 tt_menu_loop(void) {
             if ((buttonsPressed & A_BUTTON) && (sCurrentMenuID != TT_MENU_EXIT)) {
                 switch (D_80126516) {
                     case 1:
-                        play_sound_global(SOUND_SELECT2, 0);
+                        play_sound_global(SOUND_SELECT2, NULL);
                         D_80126398 = 0;
                         D_8012639C = TT_MENU_ROOT;
                         sCurrentMenuID = TT_MENU_SAVE_GHOST;
                         break;
                     case 3:
-                        play_sound_global(SOUND_SELECT2, 0);
+                        play_sound_global(SOUND_SELECT2, NULL);
                         play_tt_voice_clip(SOUND_VOICE_TT_GAME_STATUS, TRUE);
                         func_8009C674(D_800E1E2C);
                         allocate_menu_images(D_800E1E40);
@@ -6750,7 +6750,7 @@ s32 tt_menu_loop(void) {
                 }
                 currentOption = D_80126516 + 1;
             } else if (buttonsPressed & B_BUTTON) {
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
                 currentOption = 3;
             }
             if (sCurrentMenuID == TT_MENU_GAME_STATUS) {
@@ -6812,12 +6812,12 @@ s32 tt_menu_loop(void) {
             render_dialogue_text(1, POS_CENTRED, 50, gMenuText[160], 1, 4); // the Controller Pak
             render_dialogue_text(1, POS_CENTRED, 66, gMenuText[162], 1, 4); // insert it now!
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-                play_sound_global(SOUND_SELECT2, 0);
+                play_sound_global(SOUND_SELECT2, NULL);
                 D_80126398 = 0;
                 D_8012639C = TT_MENU_INSERT_RUMBLE_PAK;
                 sCurrentMenuID = TT_MENU_SAVE_GHOST;
             } else if (buttonsPressed & B_BUTTON) {
-                play_sound_global(SOUND_MENU_BACK3, 0);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
                 sCurrentMenuID = TT_MENU_ROOT;
             }
             break;

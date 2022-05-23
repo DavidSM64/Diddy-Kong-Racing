@@ -11,8 +11,8 @@ glabel func_800AD658
 /* 0AE27C 800AD67C 24120001 */   li    $s2, 1
 /* 0AE280 800AD680 3C0F800E */  lui   $t7, %hi(D_800E2C6C) # $t7, 0x800e
 /* 0AE284 800AD684 8DEF2C6C */  lw    $t7, %lo(D_800E2C6C)($t7)
-/* 0AE288 800AD688 3C19800E */  lui   $t9, %hi(D_800E2C60) # $t9, 0x800e
-/* 0AE28C 800AD68C 8F392C60 */  lw    $t9, %lo(D_800E2C60)($t9)
+/* 0AE288 800AD688 3C19800E */  lui   $t9, %hi(gLightningFrequency) # $t9, 0x800e
+/* 0AE28C 800AD68C 8F392C60 */  lw    $t9, %lo(gLightningFrequency)($t9)
 /* 0AE290 800AD690 000FC083 */  sra   $t8, $t7, 2
 /* 0AE294 800AD694 03190019 */  multu $t8, $t9
 /* 0AE298 800AD698 00002025 */  move  $a0, $zero
