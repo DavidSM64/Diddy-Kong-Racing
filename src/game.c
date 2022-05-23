@@ -578,11 +578,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         func_800AB4A8(
             gCurrentLevelHeader->weatherType,
             gCurrentLevelHeader->weatherEnable,
-            gCurrentLevelHeader->unk96 << 8,
-            gCurrentLevelHeader->unk98 << 8,
-            gCurrentLevelHeader->unk9A << 8,
-            gCurrentLevelHeader->unk94 * 0x101,
-            gCurrentLevelHeader->unk95 * 0x101);
+            gCurrentLevelHeader->weatherVelX << 8,
+            gCurrentLevelHeader->weatherVelY << 8,
+            gCurrentLevelHeader->weatherVelZ << 8,
+            gCurrentLevelHeader->weatherIntensity * 0x101,
+            gCurrentLevelHeader->weatherOpacity * 0x101);
         func_800AB308(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
