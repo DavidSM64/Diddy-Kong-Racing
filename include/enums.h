@@ -49,7 +49,7 @@ typedef enum RaceType {
     RACETYPE_CUTSCENE_1        =  6, // Not sure what the difference between these two are.
     RACETYPE_CUTSCENE_2        =  7,
     RACETYPE_BOSS              =  8,
-    RACETYPE_CHALLENGE        = 64, // For masking
+    RACETYPE_CHALLENGE         = 64, // For masking
     RACETYPE_CHALLENGE_BATTLE  = 64,
     RACETYPE_CHALLENGE_BANANAS = 65,
     RACETYPE_CHALLENGE_EGGS    = 66
@@ -68,9 +68,9 @@ typedef enum VerticalAlignmentFlags {
 } VerticalAlignmentFlags;
 
 typedef enum AlignmentFlags {
-    ALIGN_TOP_LEFT      = VERT_ALIGN_TOP | HORZ_ALIGN_LEFT,
-    ALIGN_TOP_CENTER    = VERT_ALIGN_TOP | HORZ_ALIGN_CENTER,
-    ALIGN_TOP_RIGHT     = VERT_ALIGN_TOP | HORZ_ALIGN_RIGHT,
+    ALIGN_TOP_LEFT      = VERT_ALIGN_TOP    | HORZ_ALIGN_LEFT,
+    ALIGN_TOP_CENTER    = VERT_ALIGN_TOP    | HORZ_ALIGN_CENTER,
+    ALIGN_TOP_RIGHT     = VERT_ALIGN_TOP    | HORZ_ALIGN_RIGHT,
     ALIGN_MIDDLE_LEFT   = VERT_ALIGN_MIDDLE | HORZ_ALIGN_LEFT,
     ALIGN_MIDDLE_CENTER = VERT_ALIGN_MIDDLE | HORZ_ALIGN_CENTER,
     ALIGN_MIDDLE_RIGHT  = VERT_ALIGN_MIDDLE | HORZ_ALIGN_RIGHT,

@@ -517,7 +517,7 @@ glabel L80039978
 /* 03A648 80039A48 AE070078 */  sw    $a3, 0x78($s0)
 /* 03A64C 80039A4C E62A0004 */  swc1  $f10, 4($s1)
 /* 03A650 80039A50 9484D4E2 */  lhu   $a0, %lo(D_8011D4E2)($a0)
-/* 03A654 80039A54 0C00EB0F */  jal   func_8003AC3C
+/* 03A654 80039A54 0C00EB0F */  jal   play_taj_voice_clip
 /* 03A658 80039A58 24050001 */   li    $a1, 1
 /* 03A65C 80039A5C 2418010F */  li    $t8, 271
 /* 03A660 80039A60 3C018012 */  lui   $at, %hi(D_8011D4E2) # $at, 0x8012
@@ -645,7 +645,7 @@ glabel L80039BB8
 /* 03A81C 80039C1C E62A0004 */  swc1  $f10, 4($s1)
 /* 03A820 80039C20 A20F003B */  sb    $t7, 0x3b($s0)
 /* 03A824 80039C24 A620001C */  sh    $zero, 0x1c($s1)
-/* 03A828 80039C28 0C00EB0F */  jal   func_8003AC3C
+/* 03A828 80039C28 0C00EB0F */  jal   play_taj_voice_clip
 /* 03A82C 80039C2C 24050001 */   li    $a1, 1
 /* 03A830 80039C30 86380020 */  lh    $t8, 0x20($s1)
 /* 03A834 80039C34 92250011 */  lbu   $a1, 0x11($s1)
@@ -699,7 +699,7 @@ glabel L80039BB8
 /* 03A8F0 80039CF0 00000000 */  nop   
 /* 03A8F4 80039CF4 24840235 */  addiu $a0, $a0, 0x235
 /* 03A8F8 80039CF8 3089FFFF */  andi  $t1, $a0, 0xffff
-/* 03A8FC 80039CFC 0C00EB0F */  jal   func_8003AC3C
+/* 03A8FC 80039CFC 0C00EB0F */  jal   play_taj_voice_clip
 /* 03A900 80039D00 01202025 */   move  $a0, $t1
 /* 03A904 80039D04 8FA6007C */  lw    $a2, 0x7c($sp)
 /* 03A908 80039D08 10000005 */  b     .L80039D20
@@ -734,7 +734,7 @@ glabel L80039BB8
 /* 03A974 80039D74 00000000 */  nop   
 /* 03A978 80039D78 24840235 */  addiu $a0, %lo(gGameSelectTextElemsNoAdv2+157) # addiu $a0, $a0, 0x235
 /* 03A97C 80039D7C 3099FFFF */  andi  $t9, $a0, 0xffff
-/* 03A980 80039D80 0C00EB0F */  jal   func_8003AC3C
+/* 03A980 80039D80 0C00EB0F */  jal   play_taj_voice_clip
 /* 03A984 80039D84 03202025 */   move  $a0, $t9
 /* 03A988 80039D88 1000035E */  b     .L8003AB04
 /* 03A98C 80039D8C C7B00098 */   lwc1  $f16, 0x98($sp)
@@ -745,7 +745,7 @@ glabel L80039BB8
 /* 03A99C 80039D9C 0C030076 */  jal   func_800C01D8
 /* 03A9A0 80039DA0 2484C978 */   addiu $a0, $a0, -0x3688
 /* 03A9A4 80039DA4 24040110 */  li    $a0, 272
-/* 03A9A8 80039DA8 0C00EB0F */  jal   func_8003AC3C
+/* 03A9A8 80039DA8 0C00EB0F */  jal   play_taj_voice_clip
 /* 03A9AC 80039DAC 24050001 */   li    $a1, 1
 /* 03A9B0 80039DB0 44803000 */  mtc1  $zero, $f6
 /* 03A9B4 80039DB4 00000000 */  nop   

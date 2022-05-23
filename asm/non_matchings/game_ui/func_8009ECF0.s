@@ -15,7 +15,7 @@ glabel func_8009ECF0
 /* 09F924 8009ED24 0C01BAA4 */  jal   get_settings
 /* 09F928 8009ED28 A0226D37 */   sb    $v0, %lo(D_80126D37)($at)
 /* 09F92C 8009ED2C 3C018012 */  lui   $at, %hi(D_80127184) # $at, 0x8012
-/* 09F930 8009ED30 0C003877 */  jal   func_8000E1DC
+/* 09F930 8009ED30 0C003877 */  jal   check_if_silver_coin_race
 /* 09F934 8009ED34 AC227184 */   sw    $v0, %lo(D_80127184)($at)
 /* 09F938 8009ED38 3C018012 */  lui   $at, %hi(D_80127188) # $at, 0x8012
 /* 09F93C 8009ED3C A0227188 */  sb    $v0, %lo(D_80127188)($at)

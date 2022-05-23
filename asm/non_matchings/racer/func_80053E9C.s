@@ -90,7 +90,7 @@ glabel func_80053E9C
 /* 054BAC 80053FAC 10200054 */  beqz  $at, .L80054100
 /* 054BB0 80053FB0 24060008 */   li    $a2, 8
 /* 054BB4 80053FB4 24070081 */  li    $a3, 129
-/* 054BB8 80053FB8 0C015C2E */  jal   func_800570B8
+/* 054BB8 80053FB8 0C015C2E */  jal   play_random_character_voice
 /* 054BBC 80053FBC AFA40028 */   sw    $a0, 0x28($sp)
 /* 054BC0 80053FC0 820E0187 */  lb    $t6, 0x187($s0)
 /* 054BC4 80053FC4 8FA40028 */  lw    $a0, 0x28($sp)

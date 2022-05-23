@@ -95,13 +95,13 @@ ExtractLevelHeader::ExtractLevelHeader(std::string key, std::vector<uint8_t> dat
         out["unknown-data"]["unk74"].append(ptr);
     }
     out["unknown-data"]["weather"] = json::Object();
-    out["unknown-data"]["weather"]["unk90"] = (int)get_big_endian_halfword(data, 0x90);
-    out["unknown-data"]["weather"]["unk92"] = (int)get_big_endian_halfword(data, 0x92);
-    out["unknown-data"]["weather"]["unk94"] = data[0x94];
-    out["unknown-data"]["weather"]["unk95"] = data[0x95];
-    out["unknown-data"]["weather"]["unk96"] = (int)get_big_endian_halfword(data, 0x96);
-    out["unknown-data"]["weather"]["unk98"] = (int)get_big_endian_halfword(data, 0x98);
-    out["unknown-data"]["weather"]["unk9A"] = (int)get_big_endian_halfword(data, 0x9A);
+    out["unknown-data"]["weather"]["particle-density"] = (int)get_big_endian_halfword(data, 0x90);
+    out["unknown-data"]["weather"]["type"] = (int)get_big_endian_halfword(data, 0x92);
+    out["unknown-data"]["weather"]["intensity"] = data[0x94];
+    out["unknown-data"]["weather"]["opacity"] = data[0x95];
+    out["unknown-data"]["weather"]["x-velocity"] = (int)get_big_endian_halfword(data, 0x96);
+    out["unknown-data"]["weather"]["y-velocity"] = (int)get_big_endian_halfword(data, 0x98);
+    out["unknown-data"]["weather"]["z-velocity"] = (int)get_big_endian_halfword(data, 0x9A);
     out["fov"] = data[0x9C];
     out["background-colour"] = json::Object();
     out["background-colour"]["red"] = data[0x9D];

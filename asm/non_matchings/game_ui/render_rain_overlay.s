@@ -1,4 +1,4 @@
-glabel func_800ADCBC
+glabel render_rain_overlay
 /* 0AE8BC 800ADCBC 27BDFF60 */  addiu $sp, $sp, -0xa0
 /* 0AE8C0 800ADCC0 AFBF0044 */  sw    $ra, 0x44($sp)
 /* 0AE8C4 800ADCC4 AFB30040 */  sw    $s3, 0x40($sp)
@@ -65,8 +65,8 @@ glabel func_800ADCBC
 /* 0AE9B8 800ADDB8 00117A03 */  sra   $t7, $s1, 8
 /* 0AE9BC 800ADDBC 01E08825 */  move  $s1, $t7
 /* 0AE9C0 800ADDC0 03120019 */  multu $t8, $s2
-/* 0AE9C4 800ADDC4 3C0F800E */  lui   $t7, %hi(D_800E2C60) # $t7, 0x800e
-/* 0AE9C8 800ADDC8 8DEF2C60 */  lw    $t7, %lo(D_800E2C60)($t7)
+/* 0AE9C4 800ADDC4 3C0F800E */  lui   $t7, %hi(gLightningFrequency) # $t7, 0x800e
+/* 0AE9C8 800ADDC8 8DEF2C60 */  lw    $t7, %lo(gLightningFrequency)($t7)
 /* 0AE9CC 800ADDCC 00009012 */  mflo  $s2
 /* 0AE9D0 800ADDD0 0012CA03 */  sra   $t9, $s2, 8
 /* 0AE9D4 800ADDD4 03209025 */  move  $s2, $t9
@@ -209,7 +209,7 @@ glabel func_800ADCBC
 /* 0AEBF8 800ADFF8 440F5000 */  mfc1  $t7, $f10
 /* 0AEBFC 800ADFFC 4600C102 */  mul.s $f4, $f24, $f0
 /* 0AEC00 800AE000 A44F0016 */  sh    $t7, 0x16($v0)
-/* 0AEC04 800AE004 3C0F8012 */  lui   $t7, %hi(D_80127C0C) # $t7, 0x8012
+/* 0AEC04 800AE004 3C0F8012 */  lui   $t7, %hi(gWeatherDisplayListHead) # $t7, 0x8012
 /* 0AEC08 800AE008 4602D182 */  mul.s $f6, $f26, $f2
 /* 0AEC0C 800AE00C 46062201 */  sub.s $f8, $f4, $f6
 /* 0AEC10 800AE010 4458F800 */  cfc1  $t8, $31
@@ -239,7 +239,7 @@ glabel func_800ADCBC
 /* 0AEC70 800AE070 440E5000 */  mfc1  $t6, $f10
 /* 0AEC74 800AE074 44D9F800 */  ctc1  $t9, $31
 /* 0AEC78 800AE078 A44E0020 */  sh    $t6, 0x20($v0)
-/* 0AEC7C 800AE07C 8DEF7C0C */  lw    $t7, %lo(D_80127C0C)($t7)
+/* 0AEC7C 800AE07C 8DEF7C0C */  lw    $t7, %lo(gWeatherDisplayListHead)($t7)
 /* 0AEC80 800AE080 8D820000 */  lw    $v0, ($t4)
 /* 0AEC84 800AE084 AFAF0068 */  sw    $t7, 0x68($sp)
 /* 0AEC88 800AE088 AC580000 */  sw    $t8, ($v0)
@@ -317,7 +317,7 @@ glabel func_800ADCBC
 /* 0AEDA8 800AE1A8 35AF0050 */  ori   $t7, $t5, 0x50
 /* 0AEDAC 800AE1AC ACAF0000 */  sw    $t7, ($a1)
 /* 0AEDB0 800AE1B0 8D380000 */  lw    $t8, ($t1)
-/* 0AEDB4 800AE1B4 3C018012 */  lui   $at, %hi(D_80127C0C) # $at, 0x8012
+/* 0AEDB4 800AE1B4 3C018012 */  lui   $at, %hi(gWeatherDisplayListHead) # $at, 0x8012
 /* 0AEDB8 800AE1B8 030A0019 */  multu $t8, $t2
 /* 0AEDBC 800AE1BC 00007012 */  mflo  $t6
 /* 0AEDC0 800AE1C0 016EC821 */  addu  $t9, $t3, $t6
@@ -344,7 +344,7 @@ glabel func_800ADCBC
 /* 0AEE14 800AE214 272D0004 */  addiu $t5, $t9, 4
 /* 0AEE18 800AE218 31AF000F */  andi  $t7, $t5, 0xf
 /* 0AEE1C 800AE21C AD2F0000 */  sw    $t7, ($t1)
-/* 0AEE20 800AE220 AC387C0C */  sw    $t8, %lo(D_80127C0C)($at)
+/* 0AEE20 800AE220 AC387C0C */  sw    $t8, %lo(gWeatherDisplayListHead)($at)
 /* 0AEE24 800AE224 AD820000 */  sw    $v0, ($t4)
 .L800AE228:
 /* 0AEE28 800AE228 8FBF0044 */  lw    $ra, 0x44($sp)

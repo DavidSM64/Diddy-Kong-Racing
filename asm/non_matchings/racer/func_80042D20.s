@@ -178,7 +178,7 @@ glabel func_80042D20
 /* 043B40 80042F40 AFAA0060 */  sw    $t2, 0x60($sp)
 /* 043B44 80042F44 AFAB0024 */  sw    $t3, 0x24($sp)
 /* 043B48 80042F48 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 043B4C 80042F4C 0C015C2E */  jal   func_800570B8
+/* 043B4C 80042F4C 0C015C2E */  jal   play_random_character_voice
 /* 043B50 80042F50 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 043B54 80042F54 87A80076 */  lh    $t0, 0x76($sp)
 /* 043B58 80042F58 8FAA0060 */  lw    $t2, 0x60($sp)
@@ -213,7 +213,7 @@ glabel func_80042D20
 /* 043BC4 80042FC4 A7A80076 */  sh    $t0, 0x76($sp)
 /* 043BC8 80042FC8 24050162 */  li    $a1, 354
 /* 043BCC 80042FCC 24060008 */  li    $a2, 8
-/* 043BD0 80042FD0 0C015C2E */  jal   func_800570B8
+/* 043BD0 80042FD0 0C015C2E */  jal   play_random_character_voice
 /* 043BD4 80042FD4 24070002 */   li    $a3, 2
 /* 043BD8 80042FD8 87A80076 */  lh    $t0, 0x76($sp)
 /* 043BDC 80042FDC 8FAA0060 */  lw    $t2, 0x60($sp)
@@ -249,7 +249,7 @@ glabel func_80042D20
 /* 043C4C 8004304C A7AD0078 */  sh    $t5, 0x78($sp)
 /* 043C50 80043050 A7AC0034 */  sh    $t4, 0x34($sp)
 /* 043C54 80043054 A7A80076 */  sh    $t0, 0x76($sp)
-/* 043C58 80043058 0C015C2E */  jal   func_800570B8
+/* 043C58 80043058 0C015C2E */  jal   play_random_character_voice
 /* 043C5C 8004305C 24070002 */   li    $a3, 2
 /* 043C60 80043060 87AF0070 */  lh    $t7, 0x70($sp)
 /* 043C64 80043064 87A80076 */  lh    $t0, 0x76($sp)
@@ -262,7 +262,7 @@ glabel func_80042D20
 /* 043C80 80043080 24070003 */  li    $a3, 3
 /* 043C84 80043084 A7A80076 */  sh    $t0, 0x76($sp)
 /* 043C88 80043088 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 043C8C 8004308C 0C015C2E */  jal   func_800570B8
+/* 043C8C 8004308C 0C015C2E */  jal   play_random_character_voice
 /* 043C90 80043090 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 043C94 80043094 87A80076 */  lh    $t0, 0x76($sp)
 /* 043C98 80043098 87AC0034 */  lh    $t4, 0x34($sp)

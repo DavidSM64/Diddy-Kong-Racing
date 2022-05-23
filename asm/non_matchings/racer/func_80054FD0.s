@@ -343,7 +343,7 @@ glabel func_80054FD0
 /* 0560DC 800554DC 240501C2 */  li    $a1, 450
 /* 0560E0 800554E0 24060008 */  li    $a2, 8
 /* 0560E4 800554E4 24070082 */  li    $a3, 130
-/* 0560E8 800554E8 0C015C2E */  jal   func_800570B8
+/* 0560E8 800554E8 0C015C2E */  jal   play_random_character_voice
 /* 0560EC 800554EC AFA9018C */   sw    $t1, 0x18c($sp)
 /* 0560F0 800554F0 02202025 */  move  $a0, $s1
 /* 0560F4 800554F4 0C015C12 */  jal   racer_play_sound

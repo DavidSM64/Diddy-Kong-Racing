@@ -330,7 +330,7 @@ glabel func_80024D54
 /* 025E24 80025224 24E7B0AC */  addiu $a3, %lo(D_8011B0AC) # addiu $a3, $a3, -0x4f54
 /* 025E28 80025228 24C6B0A8 */  addiu $a2, %lo(D_8011B0A8) # addiu $a2, $a2, -0x4f58
 /* 025E2C 8002522C 02402825 */  move  $a1, $s2
-/* 025E30 80025230 0C02AF9A */  jal   func_800ABE68
+/* 025E30 80025230 0C02AF9A */  jal   process_weather
 /* 025E34 80025234 AFAF0010 */   sw    $t7, 0x10($sp)
 .L80025238:
 /* 025E38 80025238 0C01A748 */  jal   func_80069D20
