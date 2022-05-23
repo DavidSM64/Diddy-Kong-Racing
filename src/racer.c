@@ -1524,7 +1524,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     s8 sp3F;
     s8 shouldSquish;
 
-    if (D_8011D4F0[0] < obj->segment.trans.y_position) {
+    if (obj->segment.trans.y_position > D_8011D4F0[0]) {
         obj->segment.trans.y_position = D_8011D4F0[0];
     }
     temp_v0 =(f32 *) get_misc_asset(56);
@@ -1668,8 +1668,6 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 arg3) 
     }
 }
 
-extern s32 gTajSoundMask;
-
 /**
  * This function dictates the base top speed of a racer.
  * During the race start sequence it hardsets it to 0 so you don't go anywhere.
@@ -1690,7 +1688,6 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         speedMultiplier = 0.0f;
     }
     timer3 = get_race_start_timer();
-    //render_printf("%d", racer->unk2A);
     if (gRaceStartTimer);
     // If the A button is held for the first time, 30 frames prior to starting,
     // decide how much boost to add based on when it was pressed.

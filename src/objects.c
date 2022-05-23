@@ -180,7 +180,7 @@ s8 D_8011ADD5;
 s32 D_8011ADD8[10];
 s8 D_8011AE00;
 s8 D_8011AE01;
-s8 D_8011AE02;
+s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 u32 *D_8011AE08[16];
 s32 (*D_8011AE48)[8]; // Unknown number of entries.
@@ -589,11 +589,19 @@ void func_8000E1B8(void) {
     D_800DC740 = 0;
 }
 
-s8 func_8000E1CC(void) {
-    return D_8011AE02;
+/**
+ * Return true if there exist players piloting planes or hovercraft.
+ * Used to determine whether to use certain zippers.
+ */
+s8 find_non_car_racers(void) {
+    return gIsNonCarRacers;
 }
 
-s8 func_8000E1DC() {
+/**
+ * Return true if the silver coin race mode is active.
+ * Used to determine whether to spawn silver coins.
+ */
+s8 check_if_silver_coin_race() {
     return gIsSilverCoinRace;
 }
 

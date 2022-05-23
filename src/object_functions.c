@@ -787,7 +787,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 speed) {
     Object** racerObjs;
     s32 i;
 
-    if (func_8000E1CC() == 0) {
+    if (find_non_car_racers() == FALSE) {
         obj->segment.trans.unk6 |= 0x4000;
     } else {
         obj->segment.trans.unk6 &= 0xBFFF;
@@ -2112,7 +2112,7 @@ void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv
     obj->unk78 = 3;
     obj->unk7C.word = 16;
     if (!is_in_tracks_mode()) {
-        if (func_8000E1DC() && is_in_adventure_two()) {
+        if (check_if_silver_coin_race() && is_in_adventure_two()) {
             obj->unk78 = 0;
         } else {
             obj->unk78 = 3;
@@ -2131,7 +2131,7 @@ void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry)
     obj->unk78 = 3;
     obj->unk7C.word = 0;
     if (!is_in_tracks_mode()) {
-        if (func_8000E1DC() && !is_in_adventure_two()) {
+        if (check_if_silver_coin_race() && !is_in_adventure_two()) {
             obj->unk78 = 0;
         } else {
             obj->unk78 = 3;
