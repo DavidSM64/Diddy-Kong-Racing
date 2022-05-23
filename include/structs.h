@@ -815,8 +815,8 @@ typedef struct Object_Racer {
   /* 0x018 */ f32 unk18;
   /* 0x01C */ s32 unk1C;
   /* 0x020 */ s32 unk20;
-  /* 0x024 */ s32 unk24;
-  /* 0x028 */ u16 unk28;
+  /* 0x024 */ s32 soundMask;
+  /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
   /* 0x030 */ f32 lateral_velocity;

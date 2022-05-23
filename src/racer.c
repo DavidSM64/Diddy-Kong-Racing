@@ -565,7 +565,7 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
         racer->unk1C9 = 0;
     }
     if (racer->unk1D6 < 5) {
-        func_800570B8(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
+        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
         switch (racer->unk187) {
             case 1:
             case 2:
@@ -1609,7 +1609,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80055EC0.s")
 void play_char_horn_sound(Object *obj, Object_Racer *racer) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
         // Play character voice instead of horn.
-        func_800570B8(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
+        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
     } else {
         // Play character's horn sound
         racer_play_sound(obj, racer->characterId + SOUND_HORN_CHARACTER);
@@ -1641,29 +1641,29 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
  * acceptable offsets. Range will always be 8, because that's how many ID's for each
  * there are.
  */
-void func_800570B8(Object *obj, s32 soundID, s32 range, s32 arg3) {
+void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 arg3) {
     s32 soundIndex;
     Object_64 *tempRacer;
 
     tempRacer = obj->unk64;
     if (tempRacer->racer.unk108 == 0 && ((!(arg3 & 0x80)) || D_8011D55C != -1)) {
         if (arg3 == 2) {
-            if ((tempRacer->racer.unk24 != 0) && (soundID != tempRacer->racer.unk2A)) {
-                func_800096F8(tempRacer->racer.unk24);
-                tempRacer->racer.unk24 = 0;
+            if ((tempRacer->racer.soundMask != 0) && (soundID != tempRacer->racer.unk2A)) {
+                func_800096F8(tempRacer->racer.soundMask);
+                tempRacer->racer.soundMask = 0;
             }
         }
-        if (tempRacer->racer.unk24 == 0 && (arg3 != 3 || get_random_number_from_range(0, 1))) {
+        if (tempRacer->racer.soundMask == 0 && (arg3 != 3 || get_random_number_from_range(0, 1))) {
             tempRacer->racer.unk2A = soundID;
             soundID += tempRacer->racer.characterId;
             soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
             if (range - 1 > 0) {
-                while (soundIndex == tempRacer->racer.unk28) {
+                while (soundIndex == tempRacer->racer.lastSoundID) {
                     soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
                 }
             }
-            func_80009558(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &tempRacer->racer.unk24);
-            tempRacer->racer.unk28 = soundIndex;
+            func_80009558(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &tempRacer->racer.soundMask);
+            tempRacer->racer.lastSoundID = soundIndex;
         }
     }
 }
@@ -1690,6 +1690,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         speedMultiplier = 0.0f;
     }
     timer3 = get_race_start_timer();
+    //render_printf("%d", racer->unk2A);
     if (gRaceStartTimer);
     // If the A button is held for the first time, 30 frames prior to starting,
     // decide how much boost to add based on when it was pressed.
@@ -1750,7 +1751,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     if (!gRaceStartTimer) {
         if (racer->boost_sound & BOOST_RACE_START) {
             racer->boost_sound &= ~BOOST_RACE_START;
-            func_800570B8(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
+            play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
             racer_play_sound(obj, SOUND_NITRO_BOOST);
         }
     }

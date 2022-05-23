@@ -891,7 +891,7 @@ glabel func_80049794
 /* 04AFD0 8004A3D0 02202025 */  move  $a0, $s1
 /* 04AFD4 8004A3D4 24050162 */  li    $a1, 354
 /* 04AFD8 8004A3D8 24060008 */  li    $a2, 8
-/* 04AFDC 8004A3DC 0C015C2E */  jal   func_800570B8
+/* 04AFDC 8004A3DC 0C015C2E */  jal   play_random_character_voice
 /* 04AFE0 8004A3E0 24070082 */   li    $a3, 130
 /* 04AFE4 8004A3E4 86040000 */  lh    $a0, ($s0)
 /* 04AFE8 8004A3E8 0C01C8D2 */  jal   func_80072348
@@ -1152,7 +1152,7 @@ glabel func_80049794
 /* 04B398 8004A798 02202025 */  move  $a0, $s1
 /* 04B39C 8004A79C 24050162 */  li    $a1, 354
 /* 04B3A0 8004A7A0 24060008 */  li    $a2, 8
-/* 04B3A4 8004A7A4 0C015C2E */  jal   func_800570B8
+/* 04B3A4 8004A7A4 0C015C2E */  jal   play_random_character_voice
 /* 04B3A8 8004A7A8 24070082 */   li    $a3, 130
 /* 04B3AC 8004A7AC C7AE00DC */  lwc1  $f14, 0xdc($sp)
 /* 04B3B0 8004A7B0 00000000 */  nop   

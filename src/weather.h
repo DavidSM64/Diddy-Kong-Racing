@@ -89,10 +89,10 @@ void func_800ACF60(Object *arg0);
 void func_800AD220(void);
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2);
 void func_800AD40C(void);
-void handle_weather_rain(s32 arg0);
-void handle_rain_sound(s32);
-void func_800AD658(s32);
-void handle_rain_lightning(s32);
+void handle_weather_rain(s32 updateRate);
+void handle_rain_sound(s32 updateRate);
+void func_800AD658(s32 updateRate);
+void handle_rain_lightning(s32 updateRate);
 void func_800ADCBC(unk800E2C2C*, s32);
 void func_800ABE68(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 
