@@ -116,7 +116,7 @@ unk800E2B4C D_800E2B4C[8] = {
     { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
 };
 
-unk800E2C2C D_800E2C2C[2] = {
+unk800E2C2C gRainGfx[2] = {
     { 0, 0, 0x400, 0x400, 0x000A, 0xFFC4, NULL, 0x80, 0xFF, 0xFF, 0x80, 0x80, 0xFF, 0x80, 0x00 },
     { 0, 0, 0x600, 0x600, 0x0020, 0xFF40, NULL, 0xFF, 0xFF, 0xFF, 0x00, 0x80, 0xFF, 0xFF, 0x00 }
 };
@@ -132,8 +132,8 @@ s32 D_800E2C78 = 0;
 s32 gLightningTimer = 0;
 s32 gThunderTimer = 0;
 s32 D_800E2C84 = 0;
-s32 D_800E2C88 = 0;
-Sprite *D_800E2C8C = 0;
+s32 gRainOverlayUnusedValue = 0; // Set, but never read.
+Sprite *gRainSplashGfx = 0;
 s32 D_800E2C90 = 0;
 s32 gWeatherSoundMask = 0;
 
@@ -151,7 +151,7 @@ unk80127BF8 D_80127BF8;
 s32 D_80127C00;
 s32 D_80127C04;
 s32 D_80127C08;
-Gfx *D_80127C0C;
+Gfx *gWeatherDisplayListHead;
 Mtx *D_80127C10;
 VertexList *D_80127C14;
 TriangleList *D_80127C18;
@@ -215,7 +215,11 @@ void func_800AB308(s16 arg0, s16 arg1) {
         tex = NULL;                     \
     }
 
-void func_800AB35C(void) {
+/**
+ * Free the weather assets from memory.
+ * If it's raining, then free those too.
+ */
+void free_weather_memory(void) {
     TextureHeader *tempTex;
     s32 *tempMem;
 
@@ -231,7 +235,7 @@ void func_800AB35C(void) {
     D_800E2A80 = 0;
     D_800E2A84 = 1;
     if (gWeatherType != WEATHER_SNOW) {
-        func_800AD220();
+        free_rain_memory();
     }
 }
 
@@ -280,9 +284,13 @@ void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     }
 }
 
-void func_800ABE68(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+/**
+ * The root function for handling all weather.
+ * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
+ */
+void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     UNUSED s32 unused;
-    D_80127C0C = *currDisplayList;
+    gWeatherDisplayListHead = *currDisplayList;
     D_80127C10 = *currHudMat;
     D_80127C14 = *currHudVerts;
     D_80127C18 = *currHudTris;
@@ -311,15 +319,15 @@ void func_800ABE68(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHud
         D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (unused = 16);
         D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (unused = 16);
 
-        func_800AC0C8(updateRate, &D_80127BF8);
+        func_800AC0C8(updateRate, &D_80127BF8); // This is the snow physics that makes it move
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
             D_800E2904 = (s32) D_800E2914[D_80127C08];
-            func_800AC21C();
+            func_800AC21C(); // Both of these funcs are needed to render.
             func_800AC5A4();
             D_80127C08 = 1 - D_80127C08;
         }
     }
-    *currDisplayList = D_80127C0C;
+    *currDisplayList = gWeatherDisplayListHead;
     *currHudMat = D_80127C10;
     *currHudVerts = D_80127C14;
     *currHudTris = D_80127C18;
@@ -380,26 +388,30 @@ void func_800AD144(s32 arg0, s32 arg1) {
     gThunderTimer = 0;
     D_800E2C84 = 0;
     D_800E2C90 = 0;
-    D_800E2C2C[0].tex = load_texture(D_800E291C[1]);
-    D_800E2C2C[1].tex = load_texture(D_800E291C[1]);
-    D_800E2C8C = (Sprite *)func_8007C12C(D_800E291C[3], 0);
+    gRainGfx[0].tex = load_texture(D_800E291C[1]);
+    gRainGfx[1].tex = load_texture(D_800E291C[1]);
+    gRainSplashGfx = (Sprite *)func_8007C12C(D_800E291C[3], 0);
     gWeatherType = WEATHER_RAIN;
 }
 
-void func_800AD220(void) {
-    if (D_800E2C2C[0].tex != NULL) {
-        free_texture(D_800E2C2C[0].tex);
-        D_800E2C88 = 0;
+/**
+ * Free the rain overlay and splash asset data from memory.
+ * Clear the soundmask too, stopping any ongoing audio.
+ */
+void free_rain_memory(void) {
+    if (gRainGfx[0].tex != NULL) {
+        free_texture(gRainGfx[0].tex);
+        gRainOverlayUnusedValue = 0;
     }
 
-    if (D_800E2C2C[1].tex != NULL) {
-        free_texture(D_800E2C2C[1].tex);
-        D_800E2C88 = 0;
+    if (gRainGfx[1].tex != NULL) {
+        free_texture(gRainGfx[1].tex);
+        gRainOverlayUnusedValue = 0;
     }
 
-    if (D_800E2C8C != NULL) {
-        free_sprite(D_800E2C8C);
-        D_800E2C8C = 0;
+    if (gRainSplashGfx != NULL) {
+        free_sprite(gRainSplashGfx);
+        gRainSplashGfx = 0;
     }
 
     if (gWeatherSoundMask) {
@@ -420,7 +432,7 @@ void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2) {
 
 void func_800AD40C(void) {
     s32 a, b;
-    if (gWeatherType != WEATHER_SNOW && !get_viewport_count()) {
+    if (gWeatherType != WEATHER_SNOW && get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
         a = ((gLightningFrequency * -38) >> 16) + 1018;
         b = ((gLightningFrequency * -20) >> 16) + 1023;
         func_80030664(0, a, b, 0x1CU, 0xFU, 0x24U);
@@ -432,10 +444,14 @@ void func_800AD4AC(s32 arg0) {
     D_800E2C6C = arg0;
 }
 
+/**
+ * When active, (Single player only) Call all the functions related to the behaviour and rendering of
+ * rain, and if necessary, thunder.
+ */
 void handle_weather_rain(s32 updateRate) {
     s32 i;
 
-    if ((get_viewport_count() == 0) && (gWeatherType != WEATHER_SNOW)) {
+    if ((get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) && (gWeatherType != WEATHER_SNOW)) {
         if (D_800E2C78 > 0) {
             if (updateRate < D_800E2C78) {
                 D_800E2C78 -= updateRate;
@@ -448,22 +464,22 @@ void handle_weather_rain(s32 updateRate) {
             }
         }
         handle_rain_sound(updateRate);
-        func_800AD658(updateRate);
+        render_rain_splashes(updateRate);
         handle_rain_lightning(updateRate);
         if (gLightningFrequency >= 256) {
-            func_80067F2C(&D_80127C0C, &D_80127C10);
+            func_80067F2C(&gWeatherDisplayListHead, &D_80127C10);
             for(i = 0; i < 2; i++) {
-                func_800ADCBC(&D_800E2C2C[i], updateRate);
+                render_rain_overlay(&gRainGfx[i], updateRate);
             }
-            gDPSetPrimColor(D_80127C0C++, 0, 0, 255, 255, 255, 255);
-            gDPSetEnvColor(D_80127C0C++, 255, 255, 255, 0);
-            func_8007B3D0(&D_80127C0C);
-            func_800682AC(&D_80127C0C);
+            gDPSetPrimColor(gWeatherDisplayListHead++, 0, 0, 255, 255, 255, 255);
+            gDPSetEnvColor(gWeatherDisplayListHead++, 255, 255, 255, 0);
+            func_8007B3D0(&gWeatherDisplayListHead); // Pipesync and some stuff idk yet
+            func_800682AC(&gWeatherDisplayListHead); // Looks to create a viewport scissor.
         }
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD658.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/render_rain_splashes.s")
 
 /**
  * On a randomly set timer, based on the weather intensity, count down and make the sound of thunder.
@@ -515,4 +531,4 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800ADCBC.s")
+GLOBAL_ASM("asm/non_matchings/game_ui/render_rain_overlay.s")

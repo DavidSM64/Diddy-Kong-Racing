@@ -681,7 +681,7 @@ void func_8006BEFC(void) {
     func_80008174();
     func_80000968(0);
     if (gCurrentLevelHeader->weatherEnable > 0) {
-        func_800AB35C();
+        free_weather_memory();
     }
     //! @bug this will never be true because unk49 is signed.
     if (gCurrentLevelHeader->unk49 == 0xFF) {
@@ -1032,6 +1032,7 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_80072298(1);
 }
 
+// Guessing this is the "unload everything ready for level swap" function.
 void func_8006CC14(void) {
     set_free_queue_state(0);
     if (D_800DD38C == 0) {

@@ -259,9 +259,9 @@ typedef struct LevelHeader {
   /* 0x92 */ s16 weatherType;
   /* 0x94 */ u8 weatherIntensity;
   /* 0x95 */ u8 weatherOpacity;
-  /* 0x96 */ s16 unk96;
-  /* 0x98 */ s16 unk98;
-  /* 0x9A */ s16 unk9A;
+  /* 0x96 */ s16 weatherVelX;
+  /* 0x98 */ s16 weatherVelY;
+  /* 0x9A */ s16 weatherVelZ;
 
   /* 0x9C */ s8 cameraFOV; // Must be a value within [0, 90]
   /* 0x9D */ u8 bgColorRed;
