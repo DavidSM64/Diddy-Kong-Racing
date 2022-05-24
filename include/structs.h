@@ -255,13 +255,13 @@ typedef struct LevelHeader {
   /* 0x74 */ s8 *unk74[7];
 
   // Weather related?
-  /* 0x90 */ s16 weather_enable;
-  /* 0x92 */ s16 unk92;
-  /* 0x94 */ u8 unk94;
-  /* 0x95 */ u8 unk95;
-  /* 0x96 */ s16 unk96;
-  /* 0x98 */ s16 unk98;
-  /* 0x9A */ s16 unk9A;
+  /* 0x90 */ s16 weatherEnable;
+  /* 0x92 */ s16 weatherType;
+  /* 0x94 */ u8 weatherIntensity;
+  /* 0x95 */ u8 weatherOpacity;
+  /* 0x96 */ s16 weatherVelX;
+  /* 0x98 */ s16 weatherVelY;
+  /* 0x9A */ s16 weatherVelZ;
 
   /* 0x9C */ s8 cameraFOV; // Must be a value within [0, 90]
   /* 0x9D */ u8 bgColorRed;
@@ -691,7 +691,7 @@ typedef struct Object_CharacterFlag {
 
 typedef struct Object_Snowball {
   /* 0x00 */ u8 pad0[0x20];
-  /* 0x20 */ u32 unk20;
+  /* 0x20 */ u32 soundMask;
   /* 0x24 */ s16 unk24;
   /* 0x28 */ u8 pad28[0x12];
   /* 0x38 */ s8 unk38;
@@ -815,8 +815,8 @@ typedef struct Object_Racer {
   /* 0x018 */ f32 unk18;
   /* 0x01C */ s32 unk1C;
   /* 0x020 */ s32 unk20;
-  /* 0x024 */ s32 unk24;
-  /* 0x028 */ u16 unk28;
+  /* 0x024 */ s32 soundMask;
+  /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
   /* 0x030 */ f32 lateral_velocity;

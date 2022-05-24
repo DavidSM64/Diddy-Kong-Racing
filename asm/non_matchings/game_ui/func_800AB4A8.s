@@ -11,7 +11,7 @@ glabel func_800AB4A8
 /* 0AC0CC 800AB4CC 00A0A025 */  move  $s4, $a1
 /* 0AC0D0 800AB4D0 AFB60030 */  sw    $s6, 0x30($sp)
 /* 0AC0D4 800AB4D4 AFB5002C */  sw    $s5, 0x2c($sp)
-/* 0AC0D8 800AB4D8 0C02ACD7 */  jal   func_800AB35C
+/* 0AC0D8 800AB4D8 0C02ACD7 */  jal   free_weather_memory
 /* 0AC0DC 800AB4DC AFB30024 */   sw    $s3, 0x24($sp)
 /* 0AC0E0 800AB4E0 3C028012 */  lui   $v0, %hi(D_80127BB8) # $v0, 0x8012
 /* 0AC0E4 800AB4E4 24427BB8 */  addiu $v0, %lo(D_80127BB8) # addiu $v0, $v0, 0x7bb8

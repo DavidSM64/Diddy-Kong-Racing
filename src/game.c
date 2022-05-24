@@ -574,15 +574,15 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
         settings->worldId = gCurrentLevelHeader->world;
     }
     settings->courseId = levelId;
-    if (gCurrentLevelHeader->weather_enable > 0) {
+    if (gCurrentLevelHeader->weatherEnable > 0) {
         func_800AB4A8(
-            gCurrentLevelHeader->unk92,
-            gCurrentLevelHeader->weather_enable,
-            gCurrentLevelHeader->unk96 << 8,
-            gCurrentLevelHeader->unk98 << 8,
-            gCurrentLevelHeader->unk9A << 8,
-            gCurrentLevelHeader->unk94 * 0x101,
-            gCurrentLevelHeader->unk95 * 0x101);
+            gCurrentLevelHeader->weatherType,
+            gCurrentLevelHeader->weatherEnable,
+            gCurrentLevelHeader->weatherVelX << 8,
+            gCurrentLevelHeader->weatherVelY << 8,
+            gCurrentLevelHeader->weatherVelZ << 8,
+            gCurrentLevelHeader->weatherIntensity * 0x101,
+            gCurrentLevelHeader->weatherOpacity * 0x101);
         func_800AB308(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
@@ -680,8 +680,8 @@ void func_8006BEFC(void) {
     func_8002C7D4();
     func_80008174();
     func_80000968(0);
-    if (gCurrentLevelHeader->weather_enable > 0) {
-        func_800AB35C();
+    if (gCurrentLevelHeader->weatherEnable > 0) {
+        free_weather_memory();
     }
     //! @bug this will never be true because unk49 is signed.
     if (gCurrentLevelHeader->unk49 == 0xFF) {
@@ -1032,6 +1032,7 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     func_80072298(1);
 }
 
+// Guessing this is the "unload everything ready for level swap" function.
 void func_8006CC14(void) {
     set_free_queue_state(0);
     if (D_800DD38C == 0) {

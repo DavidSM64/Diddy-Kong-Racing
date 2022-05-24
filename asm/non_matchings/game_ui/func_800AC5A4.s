@@ -26,8 +26,8 @@ glabel func_800AC5A4
 /* 0AD204 800AC604 AEB80000 */   sw    $t8, ($s5)
 /* 0AD208 800AC608 0C01A76C */  jal   func_80069DB0
 /* 0AD20C 800AC60C AFA00034 */   sw    $zero, 0x34($sp)
-/* 0AD210 800AC610 3C108012 */  lui   $s0, %hi(D_80127C0C) # $s0, 0x8012
-/* 0AD214 800AC614 26107C0C */  addiu $s0, %lo(D_80127C0C) # addiu $s0, $s0, 0x7c0c
+/* 0AD210 800AC610 3C108012 */  lui   $s0, %hi(gWeatherDisplayListHead) # $s0, 0x8012
+/* 0AD214 800AC614 26107C0C */  addiu $s0, %lo(gWeatherDisplayListHead) # addiu $s0, $s0, 0x7c0c
 /* 0AD218 800AC618 8E030000 */  lw    $v1, ($s0)
 /* 0AD21C 800AC61C 3C0B8000 */  lui   $t3, 0x8000
 /* 0AD220 800AC620 246E0008 */  addiu $t6, $v1, 8

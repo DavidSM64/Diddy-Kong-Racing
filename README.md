@@ -113,15 +113,15 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of April 29th, 2022, this is our current score:
+As of May 23rd, 2022, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
  ------------------- 24.58% Complete -------------------
-              # Decompiled functions: 1137
+              # Decompiled functions: 1136
                # GLOBAL_ASM remaining: 642
-               # NON_MATCHING functions: 8
-           # NON_EQUIVALENT WIP functions: 106
+               # NON_MATCHING functions: 9
+           # NON_EQUIVALENT WIP functions: 105
  --------------------- Game Status ---------------------
         Balloons: 12/47, Keys: 1/4, Trophies: 1/5
          T.T. Amulets: 1/4, Wizpig Amulets: 1/4
@@ -129,9 +129,9 @@ As of April 29th, 2022, this is our current score:
     We are racing Taj in the Car Challenge. (Lap 1/3)
  =======================================================
           ADVENTURE TWO (Cleanup & Documentation)
- -------------------  3.43% Complete -------------------
-               # Documented functions: 152
-             # Undocumented remaining: 1627
+ -------------------  3.89% Complete -------------------
+               # Documented functions: 169
+             # Undocumented remaining: 1609
  --------------------- Game Status ---------------------
         Balloons: 2/47, Keys: 0/4, Trophies: 0/5
          T.T. Amulets: 0/4, Wizpig Amulets: 0/4

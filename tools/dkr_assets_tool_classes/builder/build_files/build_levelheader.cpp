@@ -17,7 +17,7 @@ int get_bitfield_from_enum_values(std::string &srcPath, std::string propertyName
 
 BuildLevelHeader::BuildLevelHeader(std::string srcPath, std::string dstPath) {
     std::vector<uint8_t> out(SIZEOF_LEVEL_HEADER);
-    
+
     // World ID
     out[0] = get_enum_value_from_string("World", get_string_from_json(srcPath, "world"));
 
@@ -77,13 +77,13 @@ BuildLevelHeader::BuildLevelHeader(std::string srcPath, std::string dstPath) {
     }
 
     // Weather values currently unknown.
-    write_big_endian_halfword(out, 0x90, get_int_from_json(srcPath, "unknown-data", "weather", "unk90"));
-    write_big_endian_halfword(out, 0x92, get_int_from_json(srcPath, "unknown-data", "weather", "unk92"));
-    out[0x94] = get_int_from_json(srcPath, "unknown-data", "weather", "unk94");
-    out[0x95] = get_int_from_json(srcPath, "unknown-data", "weather", "unk95");
-    write_big_endian_halfword(out, 0x96, get_int_from_json(srcPath, "unknown-data", "weather", "unk96"));
-    write_big_endian_halfword(out, 0x98, get_int_from_json(srcPath, "unknown-data", "weather", "unk98"));
-    write_big_endian_halfword(out, 0x9A, get_int_from_json(srcPath, "unknown-data", "weather", "unk9A"));
+    write_big_endian_halfword(out, 0x90, get_int_from_json(srcPath, "unknown-data", "weather", "particle-density"));
+    write_big_endian_halfword(out, 0x92, get_int_from_json(srcPath, "unknown-data", "weather", "type"));
+    out[0x94] = get_int_from_json(srcPath, "unknown-data", "weather", "intensity");
+    out[0x95] = get_int_from_json(srcPath, "unknown-data", "weather", "opacity");
+    write_big_endian_halfword(out, 0x96, get_int_from_json(srcPath, "unknown-data", "weather", "x-velocity"));
+    write_big_endian_halfword(out, 0x98, get_int_from_json(srcPath, "unknown-data", "weather", "y-velocity"));
+    write_big_endian_halfword(out, 0x9A, get_int_from_json(srcPath, "unknown-data", "weather", "z-velocity"));
 
     // Field of view
     out[0x9C] = get_int_from_json(srcPath, "fov");
@@ -107,10 +107,10 @@ BuildLevelHeader::BuildLevelHeader(std::string srcPath, std::string dstPath) {
 
     GET_UNKNOWN_VALUES(out, 0xB0, 0xC4, "unkB0");
     write_big_endian_word(out, 0xC4, get_int_from_json(srcPath, "unknown-data", "unkC4"));
-    
+
     write_binary_file(out, dstPath);
 }
 
 BuildLevelHeader::~BuildLevelHeader() {
-    
+
 }

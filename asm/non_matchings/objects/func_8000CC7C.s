@@ -545,13 +545,13 @@ glabel func_8000CC7C
 /* 00DFF8 8000D3F8 2419FFFF */  li    $t9, -1
 /* 00DFFC 8000D3FC 15C00004 */  bnez  $t6, .L8000D410
 /* 00E000 8000D400 3C038012 */   lui   $v1, %hi(gObjectCount) # $v1, 0x8012
-/* 00E004 8000D404 3C018012 */  lui   $at, %hi(D_8011AE02) # $at, 0x8012
+/* 00E004 8000D404 3C018012 */  lui   $at, %hi(gIsNonCarRacers) # $at, 0x8012
 /* 00E008 8000D408 10000004 */  b     .L8000D41C
-/* 00E00C 8000D40C A020AE02 */   sb    $zero, %lo(D_8011AE02)($at)
+/* 00E00C 8000D40C A020AE02 */   sb    $zero, %lo(gIsNonCarRacers)($at)
 .L8000D410:
 /* 00E010 8000D410 240F0001 */  li    $t7, 1
-/* 00E014 8000D414 3C018012 */  lui   $at, %hi(D_8011AE02) # $at, 0x8012
-/* 00E018 8000D418 A02FAE02 */  sb    $t7, %lo(D_8011AE02)($at)
+/* 00E014 8000D414 3C018012 */  lui   $at, %hi(gIsNonCarRacers) # $at, 0x8012
+/* 00E018 8000D418 A02FAE02 */  sb    $t7, %lo(gIsNonCarRacers)($at)
 .L8000D41C:
 /* 00E01C 8000D41C 8FB80078 */  lw    $t8, 0x78($sp)
 /* 00E020 8000D420 8C63AEF0 */  lw    $v1, %lo(gObjectCount)($v1)
@@ -840,8 +840,8 @@ glabel func_8000CC7C
 /* 00E424 8000D824 24010008 */   li    $at, 8
 /* 00E428 8000D828 14410002 */  bne   $v0, $at, .L8000D834
 .L8000D82C:
-/* 00E42C 8000D82C 3C018012 */   lui   $at, %hi(D_8011AE02) # $at, 0x8012
-/* 00E430 8000D830 A02FAE02 */  sb    $t7, %lo(D_8011AE02)($at)
+/* 00E42C 8000D82C 3C018012 */   lui   $at, %hi(gIsNonCarRacers) # $at, 0x8012
+/* 00E430 8000D830 A02FAE02 */  sb    $t7, %lo(gIsNonCarRacers)($at)
 .L8000D834:
 /* 00E434 8000D834 A27E01CB */  sb    $fp, 0x1cb($s3)
 /* 00E438 8000D838 826201CB */  lb    $v0, 0x1cb($s3)

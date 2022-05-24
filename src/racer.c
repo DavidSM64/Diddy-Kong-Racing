@@ -146,14 +146,14 @@ f32 D_8011D4F0[2];
 s32 D_8011D4F8[3];
 s32 D_8011D504;
 ObjectCamera *gCameraObject;
-s32 D_8011D50C;
+UNUSED s32 D_8011D50C;
 ObjectTransform D_8011D510;
 s32 gCurrentCarInput; // Related to input of the car.
 s32 gActivePlayerButtonPress;
 s32 D_8011D530;
 s32 gCurrentStickX;
 s32 gCurrentStickY;
-s32 D_8011D53C;
+s32 D_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
 s32 gRaceStartTimer;
 f32 D_8011D544;
 f32 D_8011D548;
@@ -164,8 +164,8 @@ s8 D_8011D553;
 s32 gCurrentCarSteerVel; // Related to rotational velocity of the car.
 s32 D_8011D558;
 s32 D_8011D55C;
-s16 D_8011D560;
-s16 D_8011D562;
+s16 D_8011D560; // Set, but never read.
+UNUSED s16 D_8011D562;
 s32 D_8011D564;
 s32 D_8011D568;
 s32 D_8011D56C;
@@ -481,7 +481,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         yVel *= 0.5;
     } else {
         if (D_8011D53C == 1) {
-            yVel *= 0.5;
+            yVel *= 0.5; // Unreachable. D_8011D53C is never not 0.
         } else {
             yVel *= 0.25;
         }
@@ -565,7 +565,7 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
         racer->unk1C9 = 0;
     }
     if (racer->unk1D6 < 5) {
-        func_800570B8(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
+        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
         switch (racer->unk187) {
             case 1:
             case 2:
@@ -1524,7 +1524,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     s8 sp3F;
     s8 shouldSquish;
 
-    if (D_8011D4F0[0] < obj->segment.trans.y_position) {
+    if (obj->segment.trans.y_position > D_8011D4F0[0]) {
         obj->segment.trans.y_position = D_8011D4F0[0];
     }
     temp_v0 =(f32 *) get_misc_asset(56);
@@ -1609,7 +1609,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80055EC0.s")
 void play_char_horn_sound(Object *obj, Object_Racer *racer) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
         // Play character voice instead of horn.
-        func_800570B8(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
+        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
     } else {
         // Play character's horn sound
         racer_play_sound(obj, racer->characterId + SOUND_HORN_CHARACTER);
@@ -1641,29 +1641,29 @@ void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
  * acceptable offsets. Range will always be 8, because that's how many ID's for each
  * there are.
  */
-void func_800570B8(Object *obj, s32 soundID, s32 range, s32 arg3) {
+void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 arg3) {
     s32 soundIndex;
     Object_64 *tempRacer;
 
     tempRacer = obj->unk64;
     if (tempRacer->racer.unk108 == 0 && ((!(arg3 & 0x80)) || D_8011D55C != -1)) {
         if (arg3 == 2) {
-            if ((tempRacer->racer.unk24 != 0) && (soundID != tempRacer->racer.unk2A)) {
-                func_800096F8(tempRacer->racer.unk24);
-                tempRacer->racer.unk24 = 0;
+            if ((tempRacer->racer.soundMask != 0) && (soundID != tempRacer->racer.unk2A)) {
+                func_800096F8(tempRacer->racer.soundMask);
+                tempRacer->racer.soundMask = 0;
             }
         }
-        if (tempRacer->racer.unk24 == 0 && (arg3 != 3 || get_random_number_from_range(0, 1))) {
+        if (tempRacer->racer.soundMask == 0 && (arg3 != 3 || get_random_number_from_range(0, 1))) {
             tempRacer->racer.unk2A = soundID;
             soundID += tempRacer->racer.characterId;
             soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
             if (range - 1 > 0) {
-                while (soundIndex == tempRacer->racer.unk28) {
+                while (soundIndex == tempRacer->racer.lastSoundID) {
                     soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
                 }
             }
-            func_80009558(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &tempRacer->racer.unk24);
-            tempRacer->racer.unk28 = soundIndex;
+            func_80009558(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &tempRacer->racer.soundMask);
+            tempRacer->racer.lastSoundID = soundIndex;
         }
     }
 }
@@ -1748,7 +1748,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     if (!gRaceStartTimer) {
         if (racer->boost_sound & BOOST_RACE_START) {
             racer->boost_sound &= ~BOOST_RACE_START;
-            func_800570B8(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
+            play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
             racer_play_sound(obj, SOUND_NITRO_BOOST);
         }
     }
@@ -1840,13 +1840,13 @@ void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
         }
         switch (gCameraObject->zoom) {
         case ZOOM_MEDIUM:
-            play_sound_global(SOUND_MENU_BACK, 0);
+            play_sound_global(SOUND_MENU_BACK, NULL);
             break;
         case ZOOM_FAR:
-            play_sound_global(SOUND_MENU_BACK2, 0);
+            play_sound_global(SOUND_MENU_BACK2, NULL);
             break;
         default:
-            play_sound_global(SOUND_UNK106, 0);
+            play_sound_global(SOUND_UNK106, NULL);
             break;
         }
     }

@@ -221,10 +221,10 @@ void func_800C0180(void) {
 
 //@bug: This doesn't seem to guarantee a return.
 u32 func_800C018C(void) {
-    u32 phi_v0 = (sTransitionFadeTimer != 0);
-    if (phi_v0 == 0) {
-        phi_v0 = (sTransitionFlags != 0);
-        if (phi_v0 != 0) {
+    u32 isActive = (sTransitionFadeTimer != 0);
+    if (isActive == 0) {
+        isActive = (sTransitionFlags != 0);
+        if (isActive != 0) {
             return (D_800E31BC != 0);
         }
     }
