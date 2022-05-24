@@ -5,8 +5,8 @@
 
 #define OS_PIM_STACKSIZE 4096
 
-extern u8 piThreadStack[256]; // piThreadStack[OS_PIM_STACKSIZE];
-extern s64 D_80129BB0[128]; //epcStack?
+extern u8 piThreadStack[0x100]; // piThreadStack[OS_PIM_STACKSIZE];
+extern u8 D_80129BB0[0x400]; //epcStack?
 extern s32 D_80129FB0[3];
 extern s32 D_80129FBC;
 
