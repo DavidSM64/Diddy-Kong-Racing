@@ -94,5 +94,6 @@ s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId,
 s32 func_800753D8(s32 controllerIndex, s32 arg1);
 //Pretty bad signature, but at can confidently state arg0 is controllerIndex.
 s32 func_800756D4(s32 controllerIndex, s8 *arg1, void *arg2, u8 *arg3, void *arg4);
+void func_80072348(s16 arg0, u8 arg1);
 
 #endif

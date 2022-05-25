@@ -168,7 +168,7 @@ s16 D_8011D560; // Set, but never read.
 UNUSED s16 D_8011D562;
 s32 D_8011D564;
 s32 D_8011D568;
-s32 D_8011D56C;
+f32 D_8011D56C;
 f32 D_8011D570;
 f32 D_8011D574;
 f32 D_8011D578;
@@ -406,7 +406,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
     brakeVar = racer->brake;
     tempZoom = gCameraObject->zoom;
-    baseSpeed = racer->unk8;
+    baseSpeed = racer->forwardVel;
     switch (gCameraObject->zoom) {
     case 1:
         phi_f14 += 35.0f;
@@ -686,7 +686,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     }
     gCameraObject->trans.x_rotation += ((angle * delta) >> 4);
     brakeVar = racer->brake;
-    baseSpeed = racer->unk8;
+    baseSpeed = racer->forwardVel;
     switch (gCameraObject->zoom) {
     case 1:
         baseFloat2 += 35.0f;
@@ -1274,7 +1274,51 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80052B64.s")
+void func_80052B64(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+    s32 angleVel;
+
+    racer->velocity *= 0.97;
+    racer->lateral_velocity = 0.0f;
+    if (racer->raceStatus == STATUS_RACING) {
+        func_80072348(racer->playerIndex, 0);
+    }
+    angleVel = racer->y_rotation_vel;
+    if (D_8011D55C >= 0) {
+        if (D_800DCB98 < 3) {
+            obj->unk74 |= 0x4FC00;
+            goto skip;
+        }
+        if (racer->wheel_surfaces[2] < 0xFF) {
+            obj->unk74 |= 1 << (racer->wheel_surfaces[2] * 2);
+        }
+        if (racer->wheel_surfaces[3] < 0xFF) {
+            obj->unk74 |= 2 << (racer->wheel_surfaces[3] * 2);
+        }
+    }
+    skip:
+    if (racer->spinout_timer > 0) {
+        racer->y_rotation_vel += updateRate * 0x500;
+        if (racer->y_rotation_vel > 0 && angleVel < 0) {
+            racer->spinout_timer--;
+            if (gCurrentStickX > 50 && racer->spinout_timer == 1) {
+                racer->spinout_timer = 0;
+            }
+        }
+    } else if (racer->spinout_timer < 0) {
+        racer->y_rotation_vel -= updateRate * 0x500;
+        if (racer->y_rotation_vel < 0 && angleVel > 0) {
+            racer->spinout_timer++;
+            if (gCurrentStickX < -50 && racer->spinout_timer == -1) {
+                racer->spinout_timer = 0;
+            }
+        }
+    }
+    gCurrentCarSteerVel = racer->y_rotation_vel;
+    obj->segment.y_velocity -= D_8011D56C * updateRateF;
+    gCurrentStickX = 0;
+    racer->steerAngle = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80052D7C.s")
 
 /**
@@ -1384,7 +1428,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     apply_vehicle_rotation_offset(racer, updateRate, 0, 0, 0);
     header = get_current_level_header();
-    if ((racer->unkC0 != 0.0 && header->unk2) || D_8011D581 == 10) {
+    if ((racer->buoyancy != 0.0 && header->unk2) || D_8011D581 == 10) {
         if (racer->unk1F0) {
             racer->checkpoint_distance -= 0.3;
         } else {
@@ -2010,7 +2054,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         }
     }
     brakeVar = racer->brake;
-    baseSpeed = racer->unk8;
+    baseSpeed = racer->forwardVel;
     switch (gCameraObject->zoom) {
     case 1:
         baseDistance += 35.0f;

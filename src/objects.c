@@ -1057,11 +1057,11 @@ void render_object(Object *this) {
     func_80013548(this);
 }
 
-void func_80013548(Object *arg0) {
-    if ((arg0->segment.trans.unk6 & 0x8000) == 0 && arg0->segment.header->behaviorId == 1) {
-        arg0->segment.trans.x_position -= arg0->unk64->racer.unk78;
-        arg0->segment.trans.y_position -= arg0->unk64->racer.unk7C;
-        arg0->segment.trans.z_position -= arg0->unk64->racer.unk80;
+void func_80013548(Object *obj) {
+    if ((obj->segment.trans.unk6 & 0x8000) == 0 && obj->segment.header->behaviorId == 1) {
+        obj->segment.trans.x_position -= obj->unk64->racer.carBobX;
+        obj->segment.trans.y_position -= obj->unk64->racer.carBobY;
+        obj->segment.trans.z_position -= obj->unk64->racer.carBobZ;
     }
 }
 

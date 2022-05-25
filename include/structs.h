@@ -808,7 +808,7 @@ typedef struct Object_Racer {
   /* 0x002 */ u8 unk2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
-  /* 0x008 */ f32 unk8;
+  /* 0x008 */ f32 forwardVel;
   /* 0x00C */ s32 unkC;
   /* 0x010 */ f32 unk10;
   /* 0x014 */ f32 unk14;
@@ -820,7 +820,7 @@ typedef struct Object_Racer {
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
   /* 0x030 */ f32 lateral_velocity;
-  /* 0x034 */ s32 unk34;
+  /* 0x034 */ s32 unk34; // I think this is the engine pitch for the hovercraft and plane, but I cannot yet confirm.
   /* 0x038 */ f32 ox1;
   /* 0x03C */ f32 oy1;
   /* 0x040 */ f32 oz1;
@@ -837,25 +837,25 @@ typedef struct Object_Racer {
   /* 0x06C */ s32 unk6C;
   /* 0x070 */ s32 unk70;
   /* 0x074 */ f32 unk74;
-  /* 0x078 */ f32 unk78;
-  /* 0x07C */ f32 unk7C;
-  /* 0x080 */ f32 unk80;
+  /* 0x078 */ f32 carBobX;
+  /* 0x07C */ f32 carBobY;
+  /* 0x080 */ f32 carBobZ;
   /* 0x084 */ f32 unk84;
   /* 0x088 */ f32 unk88;
   /* 0x08C */ f32 stretch_height;
   /* 0x090 */ f32 stretch_height_cap;
   /* 0x094 */ f32 camera_zoom;
-  /* 0x098 */ f32 unk98;
+  /* 0x098 */ f32 unk98; // Can only guess this is yaw.
   /* 0x09C */ f32 pitch;
-  /* 0x0A0 */ f32 unkA0;
-  /* 0x0A4 */ s32 unkA4;
+  /* 0x0A0 */ f32 unkA0; // might be roll
+  /* 0x0A4 */ f32 unkA4;
   /* 0x0A8 */ f32 checkpoint_distance;
   /* 0x0AC */ f32 unkAC;
   /* 0x0B0 */ f32 unkB0;
   /* 0x0B4 */ f32 throttle;
   /* 0x0B8 */ f32 brake;
   /* 0x0BC */ f32 unkBC;
-  /* 0x0C0 */ f32 unkC0;
+  /* 0x0C0 */ f32 buoyancy;
   /* 0x0C4 */ f32 unkC4;
   /* 0x0C8 */ f32 unkC8;
   /* 0x0CC */ f32 unkCC;
