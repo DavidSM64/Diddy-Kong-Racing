@@ -52,3 +52,15 @@ jobs:
 
     - name: Verify Build
       run: if [[ $(sha1sum -c --quiet sha1/dkr.us_1.0.sha1) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
+
+    - name: Clean Build
+      run: make clean
+
+    - name: Verify NON_MATCHING
+      run: make NON_MATCHING=1
+
+    - name: Clean Again
+      run: make clean
+
+    - name: Verify NON_EQUIVALENT
+      run: make NON_EQUIVALENT=1
