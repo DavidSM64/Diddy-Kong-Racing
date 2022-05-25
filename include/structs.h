@@ -905,7 +905,7 @@ typedef struct Object_Racer {
   /* 0x184 */ s8 unk184;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
-  /* 0x187 */ s8 unk187;
+  /* 0x187 */ s8 attackType;
   /* 0x188 */ s8 unk188;
   /* 0x189 */ s8 unk189;
   /* 0x18A */ s8 unk18A;

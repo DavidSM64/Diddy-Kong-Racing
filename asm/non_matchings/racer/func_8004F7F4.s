@@ -265,7 +265,7 @@ glabel func_8004F7F4
 /* 050778 8004FB78 02002825 */   move  $a1, $s0
 /* 05077C 8004FB7C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 050780 8004FB80 02202025 */  move  $a0, $s1
-/* 050784 8004FB84 0C014FA7 */  jal   func_80053E9C
+/* 050784 8004FB84 0C014FA7 */  jal   racer_attack_handler
 /* 050788 8004FB88 02002825 */   move  $a1, $s0
 /* 05078C 8004FB8C 820F01DB */  lb    $t7, 0x1db($s0)
 /* 050790 8004FB90 00000000 */  nop   
@@ -274,7 +274,7 @@ glabel func_8004F7F4
 /* 05079C 8004FB9C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 0507A0 8004FBA0 8FA700C4 */  lw    $a3, 0xc4($sp)
 /* 0507A4 8004FBA4 02202025 */  move  $a0, $s1
-/* 0507A8 8004FBA8 0C014AD9 */  jal   func_80052B64
+/* 0507A8 8004FBA8 0C014AD9 */  jal   racer_spinout_car
 /* 0507AC 8004FBAC 02002825 */   move  $a1, $s0
 /* 0507B0 8004FBB0 10000010 */  b     .L8004FBF4
 /* 0507B4 8004FBB4 8E02001C */   lw    $v0, 0x1c($s0)

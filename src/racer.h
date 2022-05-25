@@ -52,6 +52,16 @@ typedef enum AISkill {
     AI_EASY
 } AISkill;
 
+typedef enum AttackType {
+    ATTACK_NONE,
+    ATTACK_EXPLOSION,
+    ATTACK_SPIN,
+    ATTACK_UNK3,
+    ATTACK_SQUISHED,
+    ATTACK_FLUNG,
+    ATTACK_BUBBLE
+} AttackType;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -223,6 +233,7 @@ void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate);
+void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
@@ -230,10 +241,9 @@ void func_800576E0(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_8005492C(Object *obj, Object_Racer *racer, s32, f32);
-void func_80053E9C(Object *obj, Object_Racer *racer, s32);
+void racer_attack_handler(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
-void func_80052B64(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8*);
 
 #endif

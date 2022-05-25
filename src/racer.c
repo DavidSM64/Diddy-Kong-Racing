@@ -544,20 +544,21 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *racer) {
     }
 }
 
+// Another attack handler by the looks of things.
 void func_8004C140(Object *obj, Object_Racer *racer) {
     s8 bananas;
-    s8 temp;
+    s8 attackType;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         bananas = 0;
     } else {
         bananas = racer->bananas;
     }
-    temp = racer->unk187;
-    if (temp == 0 || racer->unk18E > 0) {
-        racer->unk187 = 0;
+    attackType = racer->attackType;
+    if (attackType == 0 || racer->unk18E > 0) {
+        racer->attackType = ATTACK_NONE;
         return;
     }
-    if (temp != 4) {
+    if (attackType != ATTACK_SQUISHED) {
         func_800576E0(obj, racer, 2);
     }
     racer->unk18C = 360;
@@ -566,29 +567,29 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
     }
     if (racer->unk1D6 < 5) {
         play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
-        switch (racer->unk187) {
-            case 1:
-            case 2:
+        switch (racer->attackType) {
+            case ATTACK_EXPLOSION:
+            case ATTACK_SPIN:
                 if (bananas != 0) {
                     racer->spinout_timer = 40;
                 } else {
                     racer->spinout_timer = 60;
                 }
                 break;
-            case 3:
+            case ATTACK_UNK3:
                 if (bananas != 0) {
                     racer->spinout_timer = 40;
                 } else {
                     racer->spinout_timer = 60;
                 }
                 break;
-            case 6:
+            case ATTACK_BUBBLE:
                 racer->unk204 = 120;
                 obj->segment.x_velocity *= 0.7;
                 obj->segment.z_velocity *= 0.7;
                 break;
         }
-        racer->unk187 = 0;
+        racer->attackType = ATTACK_NONE;
     }
 }
 
@@ -1274,10 +1275,14 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     }
 }
 
-void func_80052B64(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+/**
+ * If the spinout timer is above zero, remove steering control and have them rotate until
+ * the timer runs out.
+ */
+void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
     s32 angleVel;
 
-    racer->velocity *= 0.97;
+    racer->velocity *= 0.97; //@Delta: Reduces 3% of speed per frame, not accounting for game speed.
     racer->lateral_velocity = 0.0f;
     if (racer->raceStatus == STATUS_RACING) {
         func_80072348(racer->playerIndex, 0);
@@ -1299,7 +1304,7 @@ void func_80052B64(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     if (racer->spinout_timer > 0) {
         racer->y_rotation_vel += updateRate * 0x500;
         if (racer->y_rotation_vel > 0 && angleVel < 0) {
-            racer->spinout_timer--;
+            racer->spinout_timer--; //@Delta
             if (gCurrentStickX > 50 && racer->spinout_timer == 1) {
                 racer->spinout_timer = 0;
             }
@@ -1307,7 +1312,7 @@ void func_80052B64(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     } else if (racer->spinout_timer < 0) {
         racer->y_rotation_vel -= updateRate * 0x500;
         if (racer->y_rotation_vel < 0 && angleVel > 0) {
-            racer->spinout_timer++;
+            racer->spinout_timer++; //@Delta
             if (gCurrentStickX < -50 && racer->spinout_timer == -1) {
                 racer->spinout_timer = 0;
             }
@@ -1393,7 +1398,83 @@ void handle_car_velocity_control(Object_Racer *racer) {
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80053750.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80053E9C.s")
+
+/**
+ * Initialise some states when a racer is attacked or runs into something.
+ * While the majority of the respondent behaviour takes place elsewhere, the squish behaviour
+ * happens here.
+ */
+void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
+    s8 bananas;
+
+    if (racer->playerIndex == PLAYER_COMPUTER) {
+        bananas = 0;
+    } else {
+        bananas = racer->bananas;
+    }
+    if (racer->squish_timer > 0) {
+        racer->squish_timer -= updateRate;
+        racer->throttle = 0.0f;
+        racer->stretch_height_cap = 0.1f;
+        if (racer->squish_timer <= 0 && racer->playerIndex >= 0) {
+            racer_play_sound(obj, SOUND_PLOP2);
+        }
+    } else {
+        racer->squish_timer = 0;
+    }
+    if (racer->attackType == 0 || racer->unk18E > 0) {
+        racer->attackType = 0;
+    } else {
+        if ((racer->squish_timer == 0) || racer->attackType != 4) {
+            if ((racer->attackType != 2) && (racer->attackType != 4)) {
+                func_800576E0(obj, racer, 2);
+            }
+            racer->unk18C = 360;
+            if (racer->unk1C9 == 8) {
+                racer->unk1C9 = 0;
+            }
+            if (racer->unk1D6 < 5) {
+                play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
+                switch (racer->attackType) {
+                // Getting hit by a rocket, or running into a landmine.
+                case ATTACK_EXPLOSION:
+                    racer->unk1F1 = 1;
+                    if (bananas == 0) {
+                        racer->velocity = 0.0f;
+                        obj->segment.y_velocity += 10.5;
+                    } else {
+                        racer->velocity /= 4;
+                        obj->segment.y_velocity += 8.5;
+                    }
+                    break;
+                // Running into an oil slick.
+                case ATTACK_SPIN:
+                    racer->spinout_timer = 2;
+                    racer->y_rotation_vel = 0x1002;
+                    racer_play_sound(obj, SOUND_TYRE_SCREECH);
+                    break;
+                // Crushed by something big, like a snowball.
+                case ATTACK_SQUISHED:
+                    racer->squish_timer = 0x3C;
+                    break;
+                // Running into a bubble trap.
+                case ATTACK_BUBBLE:
+                    racer->unk204 = 0x78;
+                    racer->velocity *= 0.5;
+                    break;
+                // Not sure where this one's from.
+                case ATTACK_FLUNG:
+                    racer->unk1F1 = 1;
+                    racer->velocity = 0.0f;
+                    obj->segment.y_velocity += 20.5;
+                    racer_play_sound(obj, SOUND_WHEE);
+                    break;
+                }
+                racer->attackType = 0;
+            }
+        }
+    }
+}
 
 void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     f32 tempVel;
@@ -1418,9 +1499,9 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     handle_car_velocity_control(racer);
     func_800575EC(obj, racer);
     func_80055EC0(obj, racer, updateRate);
-    func_80053E9C(obj, racer, updateRate);
+    racer_attack_handler(obj, racer, updateRate);
     if (racer->spinout_timer) {
-        func_80052B64(obj, racer, updateRate, updateRateF); // Sbinalla
+        racer_spinout_car(obj, racer, updateRate, updateRateF); // Sbinalla
     } else if (racer->unk1E2 > 0) {
         func_8005492C(obj, racer, updateRate, updateRateF);
     } else {
@@ -1605,7 +1686,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     if (shouldSquish && sp74) {
         if (racer->squish_timer == 0) {
-            racer->unk187 = 4;
+            racer->attackType = ATTACK_SQUISHED;
         } else {
             racer->squish_timer = 60;
         }
