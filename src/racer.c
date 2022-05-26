@@ -2466,6 +2466,7 @@ void update_camera_fixed(f32 updateRate, struct Object *obj, struct Object_Racer
                             racer->oy1, gCameraObject->trans.z_position);
 }
 
+// Think this is used to calculate the path for the AI.
 void func_80059080(UNUSED Object *obj, Object_Racer *racer, f32 *xVel, f32 *yVel, f32 *zVel) {
     unknown8011AECC *temp_v0_2;
     s32 splinePos;
