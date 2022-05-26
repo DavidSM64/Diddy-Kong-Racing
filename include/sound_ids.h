@@ -331,7 +331,7 @@ enum SoundID {
     SOUND_TWANG,
     SOUND_UNK317, // Unsure
     SOUND_VOICE_TT_POWERUP,
-    SOUND_SPLOINK,
+    SOUND_SPLAT,
     SOUND_PLOP2,
     SOUND_VOICE_TT_INTRO, // "Hi there, I'm T.T!"
     SOUND_VOICE_TT_SEE_YOU, // "See you there"

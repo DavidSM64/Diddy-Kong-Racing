@@ -365,7 +365,57 @@ void func_80045128(struct TempStruct2 *header) {
 GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80046524.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80048C7C.s")
+
+void func_80048C7C(Object* obj, Object_Racer* racer) {
+    s8 bananas;
+
+    if (racer->playerIndex == PLAYER_COMPUTER) {
+        bananas = 0;
+    } else {
+        bananas = racer->bananas;
+    }
+    if ((racer->attackType == ATTACK_NONE) || (racer->unk18E > 0)) {
+        racer->attackType = ATTACK_NONE;
+        return;
+    }
+    if (racer->attackType != ATTACK_SQUISHED) {
+        func_800576E0(obj, racer, 2);
+    }
+    play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
+    switch (racer->attackType) {
+    case ATTACK_EXPLOSION:
+    case ATTACK_SPIN:
+        racer->unk1F1 = 1;
+        if (bananas == 0) {
+            obj->segment.x_velocity = 0.0f;
+            obj->segment.z_velocity = 0.0f;
+            obj->segment.y_velocity = 8.0f;
+        } else {
+            obj->segment.x_velocity = obj->segment.x_velocity * 0.5;
+            obj->segment.z_velocity = obj->segment.z_velocity * 0.5;
+            obj->segment.y_velocity = 6.0f;
+        }
+        break;
+    case ATTACK_SQUISHED:
+        racer->squish_timer = 60;
+        break;
+    case ATTACK_BUBBLE:
+        racer->unk204 = 0x78;
+        obj->segment.x_velocity *= 0.7;
+        if (obj->segment.y_velocity > 2.0f) {
+            obj->segment.y_velocity = 2.0f;
+        }
+        obj->segment.z_velocity *= 0.7;
+        break;
+    case ATTACK_FLUNG:
+        racer->unk1F1 = 1;
+        racer->velocity = 0.0f;
+        obj->segment.y_velocity += 20.5;
+        racer_play_sound(obj, 0x139);
+        break;
+    }
+    racer->attackType = ATTACK_NONE;
+}
 
 /**
  * Handles the camera movement when the player is driving a hovercraft.
@@ -505,7 +555,57 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
 }
 
+// Function itself matches but causes a diff in another func.
+#ifdef NON_MATCHING
+f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
+    Matrix mtx;
+    f32 velocity;
+    s32 angle;
+    s32 v1;
+    f32 delta;
+
+    delta = updateRate;
+    if (arg3 == 14) {
+        velocity = racer->velocity;
+        if (velocity < 0.0f) {
+            velocity = -velocity;
+        }
+        velocity = 1.0 - (velocity * 0.166);
+        if (velocity < 0.0f) {
+            velocity = 0.0f;
+        }
+    } else {
+        obj1->segment.trans.x_position += pos[0] * delta * arg6;
+        obj1->segment.trans.z_position += pos[2] * delta * arg6;
+        velocity = 1.0f;
+    }
+    D_8011D510.y_rotation = -obj1->segment.trans.y_rotation;
+    D_8011D510.x_rotation = 0;
+    D_8011D510.z_rotation = 0;
+    D_8011D510.x_position = 0.0f;
+    D_8011D510.y_position = 0.0f;
+    D_8011D510.z_position = 0.0f;
+    D_8011D510.scale = 1.0f;
+    func_8006FE74(&mtx, &D_8011D510);
+    guMtxXFMF(mtx, pos[0], pos[1], pos[2], &pos[0], &pos[1], &pos[2]);
+    angle = -((s16) (u16)arctan2_f(pos[0], pos[1])) * velocity;
+    angle = (u16) (angle - (arg5 << 6)) - (u16) racer->x_rotation_vel;
+    angle = angle > 0x8000 ? angle - 0xffff : angle;
+    angle = angle < -0x8000 ? angle + 0xffff : angle;
+    racer->x_rotation_vel += (angle * updateRate) >> 4;
+    v1 = ((s16) (u16)arctan2_f(pos[2], pos[1]) * velocity);
+    v1 += -gCurrentStickY * 32;
+    v1 += 0x3C0;
+    angle = (u16)v1 - ((u16) obj1->segment.trans.x_rotation);
+    angle = angle > 0x8000 ? angle - 0xffff : angle;
+    angle = angle < -0x8000 ? angle + 0xffff : angle;
+    obj1->segment.trans.x_rotation += (angle * updateRate) >> 4;
+    return velocity;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
 // Something Plane related.
@@ -870,7 +970,7 @@ void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
     gCameraObject->trans.z_position += gCameraObject->z_velocity;
 }
 
-void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *racer) {
+void func_8004D95C(s32 updateRate, s32 updateRateF, Object *obj, Object_Racer *racer) {
     s16 sp26;
 
     if (racer->unk118 != 0) {
@@ -881,7 +981,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *racer) {
     }
     sp26 = obj->segment.unk18;
     racer->unk1D6 = 10;
-    func_80049794(arg0, arg1, obj, racer);
+    func_80049794(updateRate, updateRateF, obj, racer);
     racer->unk1D6 = racer->unk1D7;
     obj->segment.unk3B = 0;
     if (racer->unk1D6 == 10) {
@@ -894,7 +994,7 @@ void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *racer) {
             racer->unk154->segment.trans.x_rotation = obj->segment.trans.x_rotation;
             racer->unk154->segment.trans.z_rotation = obj->segment.trans.z_rotation;
             obj->segment.unk3B = 0;
-            obj->segment.unk18 = sp26 + arg0;
+            obj->segment.unk18 = sp26 + updateRate;
             func_80061C0C(obj);
         }
     }

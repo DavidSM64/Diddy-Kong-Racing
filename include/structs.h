@@ -237,7 +237,7 @@ typedef struct LevelHeader {
   /* 0x44 */ u8 unk44[0x5];
 
   /* 0x49 */ s8 unk49;
-  /* 0x4A */ u8 unk4A;
+  /* 0x4A */ s8 unk4A;
   /* 0x4B */ s8 laps;
   /* 0x4C */ s8 race_type;
   /* 0x4D */ s8 vehicle;
@@ -873,7 +873,7 @@ typedef struct Object_Racer {
   /* 0x11C */ f32 unk11C;
   /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;
-  /* 0x128 */ u32 lap_times[3];
+  /* 0x128 */ s32 lap_times[3];
   /* 0x134 */ s32 unk134;
   /* 0x138 */ s32 unk138;
   /* 0x13C */ s32 unk13C;
@@ -883,8 +883,8 @@ typedef struct Object_Racer {
   /* 0x14C */ struct Object *unk14C;
   /* 0x150 */ struct Object *unk150;
   /* 0x154 */ struct Object *unk154;
-  /* 0x158 */ s32 unk158;
-  /* 0x15C */ s32 unk15C;
+  /* 0x158 */ struct Object *unk158;
+  /* 0x15C */ struct Object *unk15C;
   /* 0x160 */ s16 y_rotation_offset;
   /* 0x162 */ s16 x_rotation_offset;
   /* 0x164 */ s16 z_rotation_offset;
@@ -908,8 +908,7 @@ typedef struct Object_Racer {
   /* 0x187 */ s8 attackType;
   /* 0x188 */ s8 unk188;
   /* 0x189 */ s8 unk189;
-  /* 0x18A */ s8 unk18A;
-  /* 0x18B */ s8 unk18B;
+  /* 0x18A */ s16 unk18A;
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 unk18E;
   /* 0x190 */ s16 unk190;
@@ -930,10 +929,11 @@ typedef struct Object_Racer {
   /* 0x1AC */ u8 unk1AC;
   /* 0x1AD */ u8 unk1AD;
   /* 0x1AE */ s16 unk1AE;
-  /* 0x1B0 */ s32 unk1B0;
+  /* 0x1B0 */ s16 unk1B0;
+  /* 0x1B2 */ s16 unk1B2;
   /* 0x1B4 */ s32 unk1B4;
   /* 0x1B8 */ s16 unk1B8;
-  /* 0x1BA */ u16 unk1BA;
+  /* 0x1BA */ s16 unk1BA;
   /* 0x1BC */ s32 unk1BC;
   /* 0x1C0 */ s32 unk1C0;
   /* 0x1C4 */ s16 unk1C4;
@@ -947,7 +947,7 @@ typedef struct Object_Racer {
   /* 0x1CE */ u8 unk1CE;
   /* 0x1CF */ s8 unk1CF;
   /* 0x1D0 */ s8 spectateCamID;
-  /* 0x1D1 */ u8 unk1D1;
+  /* 0x1D1 */ s8 unk1D1;
   /* 0x1D2 */ s8 unk1D2;
   /* 0x1D3 */ s8 boostTimer;
   /* 0x1D4 */ u8 unk1D4;
@@ -955,7 +955,7 @@ typedef struct Object_Racer {
   /* 0x1D6 */ s8 unk1D6;
   /* 0x1D7 */ s8 unk1D7;
   /* 0x1D8 */ s8 raceStatus;
-  /* 0x1D9 */ u8 unk1D9;
+  /* 0x1D9 */ s8 unk1D9;
   /* 0x1DA */ u8 unk1DA;
   /* 0x1DB */ s8 spinout_timer;
   /* 0x1DC */ u8 wheel_surfaces[4];
@@ -981,7 +981,7 @@ typedef struct Object_Racer {
   /* 0x1F3 */ u8 unk1F3;
   /* 0x1F4 */ u8 startInput;
   /* 0x1F5 */ u8 unk1F5;
-  /* 0x1F6 */ u8 unk1F6;
+  /* 0x1F6 */ s8 unk1F6;
   /* 0x1F7 */ u8 transparency;
   /* 0x290 */ u8 indicator_type;
   /* 0x291 */ s8 indicator_timer;
@@ -989,8 +989,8 @@ typedef struct Object_Racer {
   /* 0x1FB */ s8 unk1FB;
   /* 0x1FC */ s8 unk1FC;
   /* 0x1FD */ u8 unk1FD;
-  /* 0x1FE */ s8 unk1FE;
-  /* 0x1FF */ s8 unk1FF;
+  /* 0x1FE */ u8 unk1FE;
+  /* 0x1FF */ u8 unk1FF;
   /* 0x200 */ s8 unk200;
   /* 0x201 */ s8 unk201;
   /* 0x202 */ s8 unk202;
@@ -1002,8 +1002,8 @@ typedef struct Object_Racer {
   /* 0x20B */ s8 unk20B;
   /* 0x20C */ u8 throttleReleased;
   /* 0x20D */ u8 unk20D;
-  /* 0x20E */ s16 unk20E;
-  /* 0x210 */ s8 unk210;
+  /* 0x20E */ u16 unk20E;
+  /* 0x210 */ u8 unk210;
   /* 0x211 */ s8 unk211;
   /* 0x212 */ u8 unk212;
   /* 0x213 */ s8 unk213;
