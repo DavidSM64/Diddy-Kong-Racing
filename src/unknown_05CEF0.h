@@ -27,5 +27,6 @@ void func_8005CA78(s32 arg0);
 void func_8005CA84(f32 x, f32 y, f32 z, s32 arg3);
 void func_8005CB04(s32 arg0);
 void func_8005D048(Object *object, unk8005D048 *arg1, s32 arg2);
+void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, s32 *input, u32 *buttonsPressed, s32 *startTimer); /* extern */
 
 #endif

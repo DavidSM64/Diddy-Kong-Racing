@@ -144,7 +144,7 @@ const char D_800E62A0[] = "Back\n";
 
 f32 D_8011D4F0[2];
 s32 D_8011D4F8[3];
-s32 D_8011D504;
+s8 D_8011D504;
 ObjectCamera *gCameraObject;
 UNUSED s32 D_8011D50C;
 ObjectTransform D_8011D510;
@@ -166,14 +166,14 @@ s32 D_8011D558;
 s32 D_8011D55C;
 s16 D_8011D560; // Set, but never read.
 UNUSED s16 D_8011D562;
-s32 D_8011D564;
-s32 D_8011D568;
+f32 *D_8011D564;
+s32 *D_8011D568;
 f32 D_8011D56C;
 f32 D_8011D570;
 f32 D_8011D574;
 f32 D_8011D578;
 f32 D_8011D57C;
-s8 D_8011D580;
+u8 D_8011D580;
 s8 D_8011D581;
 s8 D_8011D582;
 s8 D_8011D583;
@@ -190,8 +190,9 @@ s16 D_8011D5A0[2];
 s16 gTTGhostNodeCount; // Gets assigned, but never used?
 s16 D_8011D5A8[2];
 s16 D_8011D5AC;
-s16 D_8011D5AE;
-s32 D_8011D5B0;
+s8 D_8011D5AE;
+s8 D_8011D5AF;
+struct TempStruct8 *D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
 
@@ -383,6 +384,7 @@ void func_80048C7C(Object* obj, Object_Racer* racer) {
     }
     play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
     switch (racer->attackType) {
+    // Getting hit by a rocket, running into a landmine or an oil slick.
     case ATTACK_EXPLOSION:
     case ATTACK_SPIN:
         racer->unk1F1 = 1;
@@ -396,9 +398,11 @@ void func_80048C7C(Object* obj, Object_Racer* racer) {
             obj->segment.y_velocity = 6.0f;
         }
         break;
+    // Crushed by something big, like a snowball.
     case ATTACK_SQUISHED:
         racer->squish_timer = 60;
         break;
+    // Running into a bubble trap.
     case ATTACK_BUBBLE:
         racer->unk204 = 0x78;
         obj->segment.x_velocity *= 0.7;
@@ -407,6 +411,7 @@ void func_80048C7C(Object* obj, Object_Racer* racer) {
         }
         obj->segment.z_velocity *= 0.7;
         break;
+    // This goes unused.
     case ATTACK_FLUNG:
         racer->unk1F1 = 1;
         racer->velocity = 0.0f;
@@ -970,7 +975,7 @@ void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
     gCameraObject->trans.z_position += gCameraObject->z_velocity;
 }
 
-void func_8004D95C(s32 updateRate, s32 updateRateF, Object *obj, Object_Racer *racer) {
+void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s16 sp26;
 
     if (racer->unk118 != 0) {
@@ -1562,7 +1567,7 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
                     racer->unk204 = 0x78;
                     racer->velocity *= 0.5;
                     break;
-                // Not sure where this one's from.
+                // This goes unused.
                 case ATTACK_FLUNG:
                     racer->unk1F1 = 1;
                     racer->velocity = 0.0f;

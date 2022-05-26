@@ -1329,11 +1329,11 @@ u32 func_8001BD94(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
 
-s16 func_8001C418(f32 arg0) {
+s16 func_8001C418(f32 yPos) {
     s16 i = 0;
     s16 out = 0;
     for(; i < 4; i++) {
-        if ((D_8011AF18[i] != -20000.0f) && (D_8011AF18[i] < arg0)) {
+        if ((D_8011AF18[i] != -20000.0f) && (D_8011AF18[i] < yPos)) {
             out = i;
         }
     }

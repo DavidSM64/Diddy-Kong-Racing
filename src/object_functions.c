@@ -212,9 +212,7 @@ s32 func_80011560(void);
 void func_80011570(Object*, f32, f32, f32);
 void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
 s16 arctan2_f(f32, f32);
-s32 func_8002AD08(f32, f32**, s32);
 void play_sound_global(u16, s32 *);
-void func_8000488C(s32);
 void func_800AFC3C(Object *, s32);
 void gParticlePtrList_addObject(Object *);
 
@@ -272,7 +270,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             obj->segment.trans.x_rotation -= speed << 9;
         }
         func_80011570(obj, obj->segment.x_velocity * sp7C, obj->segment.y_velocity * sp7C, obj->segment.z_velocity * sp7C);
-        if (obj->unk4A == 298 && func_8002AD08(obj->segment.trans.y_position, &sp4C, 0)) {
+        if (obj->unk4A == 298 && func_8002AD08(obj->segment.trans.y_position, &sp4C, 0, 0)) {
 			obj->segment.trans.y_position = sp4C[0];
         }
     }
