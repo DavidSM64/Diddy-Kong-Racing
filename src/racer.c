@@ -142,7 +142,7 @@ const char D_800E62A0[] = "Back\n";
 
 /************ .bss ************/
 
-f32 D_8011D4F0[2];
+f32 D_8011D4F0;
 s32 D_8011D4F8[3];
 s8 D_8011D504;
 ObjectCamera *gCameraObject;
@@ -720,7 +720,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     s32 delta;
 
     delta = (s32) updateRate;
-    temp_f16 = D_8011D4F0[0];
+    temp_f16 = D_8011D4F0;
     temp_f16 = 200.0f - (obj->segment.trans.y_position + (-temp_f16));
     if (temp_f16 < 0.0f) {
         temp_f16 = 0.0f;
@@ -1139,24 +1139,24 @@ void func_8004F77C(unk8004F77C *arg0) {
 GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
 
 void func_80050754(Object *obj, Object_Racer *racer, f32 divisor) {
-    f32 diffX;
-    f32 diffY;
-    f32 diffZ;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
 
     obj->segment.unk3B = 0;
     obj->segment.unk18 = 40;
-    diffX = racer->unk148->segment.trans.x_position - obj->segment.trans.x_position;
-    diffY = racer->unk148->segment.trans.y_position - obj->segment.trans.y_position;
-    diffZ = racer->unk148->segment.trans.z_position - obj->segment.trans.z_position;
-    func_80011570(obj, diffX, diffY, diffZ);
+    xDiff = racer->unk148->segment.trans.x_position - obj->segment.trans.x_position;
+    yDiff = racer->unk148->segment.trans.y_position - obj->segment.trans.y_position;
+    zDiff = racer->unk148->segment.trans.z_position - obj->segment.trans.z_position;
+    func_80011570(obj, xDiff, yDiff, zDiff);
     obj->segment.trans.y_rotation = racer->unk148->segment.trans.y_rotation;
     obj->segment.trans.x_rotation = racer->unk148->segment.trans.x_rotation;
     obj->segment.trans.z_rotation = racer->unk148->segment.trans.z_rotation;
     racer->x_rotation_vel = obj->segment.trans.z_rotation;
     racer->unk1A0 = obj->segment.trans.y_rotation;
-    obj->segment.x_velocity = diffX / divisor;
-    obj->segment.y_velocity = diffY / divisor;
-    obj->segment.z_velocity = diffZ / divisor;
+    obj->segment.x_velocity = xDiff / divisor;
+    obj->segment.y_velocity = yDiff / divisor;
+    obj->segment.z_velocity = zDiff / divisor;
     racer->velocity = 0.0f;
     racer->unk1F2 = 0;
     racer->lateral_velocity = 0.0f;
@@ -1290,14 +1290,14 @@ void func_8005234C(Object_Racer *racer) {
 
 s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance) {
     s32 rotation;
-    f32 diffX;
-    f32 diffZ;
+    f32 xDiff;
+    f32 zDiff;
     s32 ret = FALSE;
 
-    diffX = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
-    diffZ = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
-    if ((diffX * diffX) + (diffZ * diffZ) < distance) {
-        rotation = (arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+    xDiff = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
+    zDiff = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
+    if ((xDiff * xDiff) + (zDiff * zDiff) < distance) {
+        rotation = (arctan2_f(xDiff, zDiff) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(rotation, -0x8000, 0x8000);
         CLAMP(rotation, -0x3000, 0x3000);
         racer->unk16C = rotation;
@@ -1305,7 +1305,7 @@ s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance)
             racer->unk16C = 0;
         }
         racer = (struct Object_Racer *) obj2->unk64;
-        rotation = arctan2_f(diffX, diffZ) - (obj1->segment.trans.y_rotation & 0xFFFF);
+        rotation = arctan2_f(xDiff, zDiff) - (obj1->segment.trans.y_rotation & 0xFFFF);
         WRAP(rotation, -0x8000, 0x8000);
         CLAMP(rotation, -0x3000, 0x3000);
         racer->unk16C = rotation;
@@ -1587,17 +1587,17 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     f32 zVel;
     f32 yVel;
     f32 hVel;
-    f32 tempX;
-    f32 tempY;
-    f32 tempZ;
+    f32 xTemp;
+    f32 yTemp;
+    f32 zTemp;
     Matrix mtx;
     LevelHeader *header;
     s32 angle;
     s32 tempAngle;
 
-    tempX = obj->segment.trans.x_position;
-    tempY = obj->segment.trans.y_position;
-    tempZ = obj->segment.trans.z_position;
+    xTemp = obj->segment.trans.x_position;
+    yTemp = obj->segment.trans.y_position;
+    zTemp = obj->segment.trans.z_position;
     gCurrentCarSteerVel = 0;
     D_8011D558 = 0;
     handle_base_steering(racer, 0, updateRateF);
@@ -1697,9 +1697,9 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     func_80053750(obj, racer, updateRateF);
     tempVel = 1.0f / updateRateF;
-    xVel = (((obj->segment.trans.x_position - tempX) - D_8011D548) * tempVel) - racer->unk84;
-    obj->segment.y_velocity = (obj->segment.trans.y_position - tempY) * tempVel;
-    zVel = (((obj->segment.trans.z_position - tempZ) - D_8011D54C) * tempVel) - racer->unk88;
+    xVel = (((obj->segment.trans.x_position - xTemp) - D_8011D548) * tempVel) - racer->unk84;
+    obj->segment.y_velocity = (obj->segment.trans.y_position - yTemp) * tempVel;
+    zVel = (((obj->segment.trans.z_position - zTemp) - D_8011D54C) * tempVel) - racer->unk88;
     D_8011D510.y_rotation = -(racer->unk1A0 + racer->unk10C);
     D_8011D510.x_rotation = -obj->segment.trans.x_rotation;
     D_8011D510.z_rotation = -obj->segment.trans.z_rotation;
@@ -1742,9 +1742,9 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 sp74;
     s32 flags;
     s32 temp_v1_2;
-    f32 tempX;
-    f32 tempY;
-    f32 tempZ;
+    f32 xTemp;
+    f32 yTemp;
+    f32 zTemp;
     s32 xRot;
     f32 angleX;
     f32 *temp_v0;
@@ -1754,8 +1754,8 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     s8 sp3F;
     s8 shouldSquish;
 
-    if (obj->segment.trans.y_position > D_8011D4F0[0]) {
-        obj->segment.trans.y_position = D_8011D4F0[0];
+    if (obj->segment.trans.y_position > D_8011D4F0) {
+        obj->segment.trans.y_position = D_8011D4F0;
     }
     temp_v0 =(f32 *) get_misc_asset(56);
     sp3F = -1;
@@ -1808,16 +1808,16 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     obj->segment.trans.y_position = racer->unkD8[1];
     obj->segment.trans.z_position = racer->unkD8[2];
     if (racer->unk1E2) {
-        func_8002ACD4(&tempX, &tempY, &tempZ);
+        func_8002ACD4(&xTemp, &yTemp, &zTemp);
         angleX = cosine_s(-obj->segment.trans.y_rotation);
         angleZ = sine_s(-obj->segment.trans.y_rotation);
-        distance = (tempX * angleZ) + (tempZ * angleX);
-        tempZ = (tempX * angleX) - (tempZ * angleZ);
-        temp_v1_2 = -(s16)(u16)arctan2_f(distance, tempY);
+        distance = (xTemp * angleZ) + (zTemp * angleX);
+        zTemp = (xTemp * angleX) - (zTemp * angleZ);
+        temp_v1_2 = -(s16)(u16)arctan2_f(distance, yTemp);
         if (temp_v1_2 < 0x2000 && temp_v1_2 > -0x2000) {
             racer->x_rotation_vel = temp_v1_2;
         }
-        xRot = -(s16)(u16)arctan2_f(tempZ, tempY);
+        xRot = -(s16)(u16)arctan2_f(zTemp, yTemp);
         if ((xRot < 0x2000) && (xRot > -0x2000)) {
             obj->segment.trans.x_rotation = xRot;
         }
