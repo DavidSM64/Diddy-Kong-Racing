@@ -109,7 +109,7 @@ For example:
  * Returns 1 if Drumstick is avaliable to use, or 0 if not.
  */
 s32 is_drumstick_unlocked(void) {
-    return gActiveMagicCodes & CHEAT_CONTROL_DRUMSTICK;
+    return gActiveMagicCodes & 2;
 }
 ```
 
