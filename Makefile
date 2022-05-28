@@ -30,6 +30,8 @@ ifeq ($(NON_MATCHING),1)
 endif
 ifeq ($(NON_EQUIVALENT),1)
   DEFINES += NON_EQUIVALENT=1
+  DEFINES += NON_MATCHING=1
+  NON_MATCHING = 1
 endif
 
 # Whether to hide commands or not
