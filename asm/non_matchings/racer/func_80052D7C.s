@@ -160,9 +160,9 @@ glabel func_80052D7C
 /* 053B5C 80052F5C E5440020 */  swc1  $f4, 0x20($t2)
 .L80052F60:
 /* 053B60 80052F60 80AB01E1 */  lb    $t3, 0x1e1($a1)
-/* 053B64 80052F64 3C028012 */  lui   $v0, %hi(gCurrentCarInput) # $v0, 0x8012
+/* 053B64 80052F64 3C028012 */  lui   $v0, %hi(gCurrentRacerInput) # $v0, 0x8012
 /* 053B68 80052F68 A0AB01E8 */  sb    $t3, 0x1e8($a1)
-/* 053B6C 80052F6C 8C42D528 */  lw    $v0, %lo(gCurrentCarInput)($v0)
+/* 053B6C 80052F6C 8C42D528 */  lw    $v0, %lo(gCurrentRacerInput)($v0)
 /* 053B70 80052F70 3C013FE0 */  li    $at, 0x3FE00000 # 1.750000
 /* 053B74 80052F74 304C8000 */  andi  $t4, $v0, 0x8000
 /* 053B78 80052F78 1180000C */  beqz  $t4, .L80052FAC
@@ -172,10 +172,10 @@ glabel func_80052D7C
 /* 053B88 80052F88 44808000 */  mtc1  $zero, $f16
 /* 053B8C 80052F8C 460042A1 */  cvt.d.s $f10, $f8
 /* 053B90 80052F90 46305481 */  sub.d $f18, $f10, $f16
-/* 053B94 80052F94 3C028012 */  lui   $v0, %hi(gCurrentCarInput) # $v0, 0x8012
+/* 053B94 80052F94 3C028012 */  lui   $v0, %hi(gCurrentRacerInput) # $v0, 0x8012
 /* 053B98 80052F98 462091A0 */  cvt.s.d $f6, $f18
 /* 053B9C 80052F9C E4A6002C */  swc1  $f6, 0x2c($a1)
-/* 053BA0 80052FA0 8C42D528 */  lw    $v0, %lo(gCurrentCarInput)($v0)
+/* 053BA0 80052FA0 8C42D528 */  lw    $v0, %lo(gCurrentRacerInput)($v0)
 /* 053BA4 80052FA4 00000000 */  nop   
 /* 053BA8 80052FA8 304E4000 */  andi  $t6, $v0, 0x4000
 .L80052FAC:

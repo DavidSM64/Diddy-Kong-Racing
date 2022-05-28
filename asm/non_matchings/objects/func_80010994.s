@@ -249,7 +249,7 @@ glabel func_80010994
 /* 011920 80010D20 02802825 */  move  $a1, $s4
 /* 011924 80010D24 01B27021 */  addu  $t6, $t5, $s2
 /* 011928 80010D28 8DC40000 */  lw    $a0, ($t6)
-/* 01192C 80010D2C 0C01378E */  jal   func_8004DE38
+/* 01192C 80010D2C 0C01378E */  jal   update_player_racer
 /* 011930 80010D30 00000000 */   nop   
 /* 011934 80010D34 3C0F8012 */  lui   $t7, %hi(gObjectCount) # $t7, 0x8012
 /* 011938 80010D38 8DEFAEF0 */  lw    $t7, %lo(gObjectCount)($t7)

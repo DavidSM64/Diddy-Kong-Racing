@@ -309,18 +309,18 @@ void func_80027E24(s32 arg0) {
 }
 
 void func_80027FC4(s32 arg0) {
-    unk80027FC4 sp20;
+    LevelObjectEntryCommon sp20;
 
     func_8005A3D0();
     if (arg0 == -1) {
         D_8011B0B8 = NULL;
         return;
     }
-    sp20.unk2 = 0;
-    sp20.unk4 = 0;
-    sp20.unk6 = 0;
-    sp20.unk1 = 8;
-    sp20.unk0 = arg0;
+    sp20.x = 0;
+    sp20.y = 0;
+    sp20.z = 0;
+    sp20.size = 8;
+    sp20.objectID = arg0;
     D_8011B0B8 = spawn_object(&sp20, 2);
     if (D_8011B0B8 != 0) {
         D_8011B0B8->segment.unk3C_a.unk3C = 0;
@@ -907,7 +907,7 @@ void func_8002C0C4(s32 modelId) {
     LevelModelSegment *segment;
     TriangleBatchInfo *batch;
     Vertex *vertex;
-    
+
     func_8007B374(0xFF00FF);
     D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, 0xFFFF00FFU);
     gCurrentLevelModel = D_8011D30C;
@@ -967,11 +967,11 @@ void func_8002C0C4(s32 modelId) {
 
     for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
         for(j = 0; j < gCurrentLevelModel->segments[i].numberOfBatches; j++) {
-            for(k = gCurrentLevelModel->segments[i].batches[j].verticesOffset; 
-                k < gCurrentLevelModel->segments[i].batches[j+1].verticesOffset; 
+            for(k = gCurrentLevelModel->segments[i].batches[j].verticesOffset;
+                k < gCurrentLevelModel->segments[i].batches[j+1].verticesOffset;
                 k++) {
                 // Why do this? Why not just set the vertex colors in the model itself?
-                if(gCurrentLevelModel->segments[i].vertices[k].r == 1 && gCurrentLevelModel->segments[i].vertices[k].g == 1) { 
+                if(gCurrentLevelModel->segments[i].vertices[k].r == 1 && gCurrentLevelModel->segments[i].vertices[k].g == 1) {
                     gCurrentLevelModel->segments[i].vertices[k].a = gCurrentLevelModel->segments[i].vertices[k].b;
                     gCurrentLevelModel->segments[i].vertices[k].r = 0x80;
                     gCurrentLevelModel->segments[i].vertices[k].g = 0x80;
@@ -1207,11 +1207,11 @@ void obj_loop_fogchanger(Object* obj) {
     Object *tempObj;
     unk8011D388 *temp_v0_3;
     ObjectSegment *phi_s3;
-    
+
     sp40 = NULL;
     sp44 = obj->segment.unk3C_a.unk3C;
     phi_s3 = NULL;
-    
+
     // func_80066510() returns the bool D_80120D14. 1 if camera is controlled by cutscene, 0 if controlled by racer.
     if (func_80066510()) {
         phi_s3 = func_80069D7C();
@@ -1219,7 +1219,7 @@ void obj_loop_fogchanger(Object* obj) {
     } else {
         sp40 = get_object_struct_array(&sp74);
     }
-    
+
     for(i = 0; i < sp74; i++) {
         index = -1;
         if (sp40 != NULL) {

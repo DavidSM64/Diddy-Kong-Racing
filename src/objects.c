@@ -652,7 +652,7 @@ void func_8000E2B4(void) {
     sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
     sp2C.unkA = 0;
     sp2C.unk8 = 0;
-    sp2C.common.object_id = (s8) object_id;
+    sp2C.common.objectID = (s8) object_id;
     sp2C.common.x = D_8011AD46;
     sp2C.common.y = D_8011AD48;
     sp2C.common.z = D_8011AD4A;
@@ -1057,11 +1057,11 @@ void render_object(Object *this) {
     func_80013548(this);
 }
 
-void func_80013548(Object *arg0) {
-    if ((arg0->segment.trans.unk6 & 0x8000) == 0 && arg0->segment.header->behaviorId == 1) {
-        arg0->segment.trans.x_position -= arg0->unk64->racer.unk78;
-        arg0->segment.trans.y_position -= arg0->unk64->racer.unk7C;
-        arg0->segment.trans.z_position -= arg0->unk64->racer.unk80;
+void func_80013548(Object *obj) {
+    if ((obj->segment.trans.unk6 & 0x8000) == 0 && obj->segment.header->behaviorId == 1) {
+        obj->segment.trans.x_position -= obj->unk64->racer.carBobX;
+        obj->segment.trans.y_position -= obj->unk64->racer.carBobY;
+        obj->segment.trans.z_position -= obj->unk64->racer.carBobZ;
     }
 }
 
@@ -1329,11 +1329,11 @@ u32 func_8001BD94(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
 
-s16 func_8001C418(f32 arg0) {
+s16 func_8001C418(f32 yPos) {
     s16 i = 0;
     s16 out = 0;
     for(; i < 4; i++) {
-        if ((D_8011AF18[i] != -20000.0f) && (D_8011AF18[i] < arg0)) {
+        if ((D_8011AF18[i] != -20000.0f) && (D_8011AF18[i] < yPos)) {
             out = i;
         }
     }

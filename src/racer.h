@@ -7,6 +7,14 @@
 
 #define SEGMENT_NONE -1 // If the level in question does not use segmentation.
 
+struct TempStruct8 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s8 unk10;
+};
+
 typedef enum ActivePlayers {
     PLAYER_COMPUTER = -1,
     PLAYER_ONE,
@@ -51,6 +59,23 @@ typedef enum AISkill {
     AI_MEDIUM,
     AI_EASY
 } AISkill;
+
+typedef enum AttackType {
+    ATTACK_NONE,
+    ATTACK_EXPLOSION,
+    ATTACK_SPIN,
+    ATTACK_UNK3,
+    ATTACK_SQUISHED,
+    ATTACK_FLUNG,
+    ATTACK_BUBBLE
+} AttackType;
+
+typedef enum ShieldType {
+    SHIELD_NONE,
+    SHIELD_LEVEL1,
+    SHIELD_LEVEL2,
+    SHIELD_LEVEL3
+} ShieldType;
 
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
@@ -127,7 +152,7 @@ extern s32 D_800DCB5C;
 // Not sure if D_800DCB58 & D_800DCB5C are actually a part of this array.
 extern f32 D_800DCB60[14];
 
-extern s32 D_800DCB98;
+extern s32 gNumViewports;
 extern f32 gSurfaceTractionTable[19];
 
 extern f32 D_800DCBE8[19];
@@ -172,7 +197,7 @@ void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching ?
 s32 func_80044450(s32 cap);
 void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64);
 void func_8004C140(Object *obj, Object_Racer *racer);
-void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_Racer *racer);
+void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
 void func_8004F77C(unk8004F77C *arg0);
 s32 func_80052188(void);
 void func_800521B8(s32 arg0);
@@ -222,7 +247,10 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate);
+void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate);
+void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
+void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate);
+void func_80048C7C(Object* obj, Object_Racer* racer);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
@@ -230,10 +258,20 @@ void func_800576E0(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_8005492C(Object *obj, Object_Racer *racer, s32, f32);
-void func_80053E9C(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
-void func_80052B64(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8*);
+void func_80059BF0(Object* obj, s32 updateRate);
+void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);  /* extern */
+void func_8005A424(Object_Racer *racer, s32 updateRate);       /* extern */
+void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
+void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
+void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
+void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
+void func_8004CC20(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
+void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
 
 #endif

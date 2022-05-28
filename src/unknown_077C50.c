@@ -12,12 +12,16 @@
 #include "game.h"
 #include "game_ui.h"
 
-// Draws the borders/negative space for multiplayer.
+/**
+ * Renders the black borders that separate each viewport during multiplayer.
+ * 2 player has a single horizontal line, while 3 and 4 player splits the screen into quadrants.
+ * 3 player will completely fill in where player 4 would normally be.
+ */
 void render_borders_for_multiplayer(Gfx **dlist) {
     u32 widthAndHeight, width, height;
     u32 y, x, xOffset, yOffset;
     LevelHeader *levelHeader;
-    
+
     widthAndHeight = get_video_width_and_height_as_s32();
     width = GET_VIDEO_WIDTH(widthAndHeight);
     height = GET_VIDEO_HEIGHT(widthAndHeight);

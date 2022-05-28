@@ -1,4 +1,4 @@
-glabel func_800096D8
+glabel update_spatial_audio_position
 /* 00A2D8 800096D8 44856000 */  mtc1  $a1, $f12
 /* 00A2DC 800096DC 44867000 */  mtc1  $a2, $f14
 /* 00A2E0 800096E0 AFA7000C */  sw    $a3, 0xc($sp)

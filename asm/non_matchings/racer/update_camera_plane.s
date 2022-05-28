@@ -23,8 +23,8 @@ glabel update_camera_plane
 /* 04CECC 8004C2CC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 04CED0 8004C2D0 E7AC0050 */  swc1  $f12, 0x50($sp)
 /* 04CED4 8004C2D4 AFA50054 */  sw    $a1, 0x54($sp)
-/* 04CED8 8004C2D8 3C018012 */  lui   $at, %hi(D_8011D4F0) # $at, 0x8012
-/* 04CEDC 8004C2DC C424D4F0 */  lwc1  $f4, %lo(D_8011D4F0)($at)
+/* 04CED8 8004C2D8 3C018012 */  lui   $at, %hi(gCurrentCourseHeight) # $at, 0x8012
+/* 04CEDC 8004C2DC C424D4F0 */  lwc1  $f4, %lo(gCurrentCourseHeight)($at)
 /* 04CEE0 8004C2E0 C4A60010 */  lwc1  $f6, 0x10($a1)
 /* 04CEE4 8004C2E4 44801000 */  mtc1  $zero, $f2
 /* 04CEE8 8004C2E8 46062401 */  sub.s $f16, $f4, $f6
@@ -53,7 +53,7 @@ glabel update_camera_plane
 /* 04CF3C 8004C33C C7B20030 */  lwc1  $f18, 0x30($sp)
 /* 04CF40 8004C340 24010001 */  li    $at, 1
 /* 04CF44 8004C344 14410007 */  bne   $v0, $at, .L8004C364
-/* 04CF48 8004C348 3C0F8012 */   lui   $t7, %hi(gCurrentCarInput) # $t7, 0x8012
+/* 04CF48 8004C348 3C0F8012 */   lui   $t7, %hi(gCurrentRacerInput) # $t7, 0x8012
 /* 04CF4C 8004C34C 3C014334 */  li    $at, 0x43340000 # 180.000000
 /* 04CF50 8004C350 44817000 */  mtc1  $at, $f14
 /* 04CF54 8004C354 3C014248 */  li    $at, 0x42480000 # 50.000000
@@ -69,7 +69,7 @@ glabel update_camera_plane
 /* 04CF78 8004C378 44819000 */  mtc1  $at, $f18
 /* 04CF7C 8004C37C 00000000 */  nop   
 .L8004C380:
-/* 04CF80 8004C380 8DEFD528 */  lw    $t7, %lo(gCurrentCarInput)($t7)
+/* 04CF80 8004C380 8DEFD528 */  lw    $t7, %lo(gCurrentRacerInput)($t7)
 /* 04CF84 8004C384 00000000 */  nop   
 /* 04CF88 8004C388 31F80010 */  andi  $t8, $t7, 0x10
 /* 04CF8C 8004C38C 13000006 */  beqz  $t8, .L8004C3A8

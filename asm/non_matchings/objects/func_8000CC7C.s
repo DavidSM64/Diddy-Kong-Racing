@@ -1166,7 +1166,7 @@ glabel L8000D98C
 /* 00E8C8 8000DCC8 00000000 */  nop   
 /* 00E8CC 8000DCCC 02202025 */  move  $a0, $s1
 .L8000DCD0:
-/* 00E8D0 8000DCD0 0C01378E */  jal   func_8004DE38
+/* 00E8D0 8000DCD0 0C01378E */  jal   update_player_racer
 /* 00E8D4 8000DCD4 24050002 */   li    $a1, 2
 /* 00E8D8 8000DCD8 26100001 */  addiu $s0, $s0, 1
 /* 00E8DC 8000DCDC 2A01000A */  slti  $at, $s0, 0xa

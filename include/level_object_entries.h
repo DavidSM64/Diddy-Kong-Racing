@@ -3,7 +3,7 @@
 
     /* Size: 8 bytes. Shared across every entry. */
 typedef struct LevelObjectEntryCommon {
-    u8 object_id; // 9-bit object ID to load (uses size's MSB).
+    u8 objectID; // 9-bit object ID to load (uses size's MSB).
     u8 size; // 7-bit total entry length (MSB is used in object_id).
     s16 x, y, z; // Position in level
 } LevelObjectEntryCommon;

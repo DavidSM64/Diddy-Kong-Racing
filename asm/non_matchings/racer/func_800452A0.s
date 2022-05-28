@@ -12,13 +12,13 @@ glabel D_800E63A0
 .text
 glabel func_800452A0
 /* 045EA0 800452A0 27BDFF48 */  addiu $sp, $sp, -0xb8
-/* 045EA4 800452A4 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
-/* 045EA8 800452A8 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
-/* 045EAC 800452AC 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
-/* 045EB0 800452B0 AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
-/* 045EB4 800452B4 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
+/* 045EA4 800452A4 3C018012 */  lui   $at, %hi(gCurrentButtonsPressed) # $at, 0x8012
+/* 045EA8 800452A8 AC20D52C */  sw    $zero, %lo(gCurrentButtonsPressed)($at)
+/* 045EAC 800452AC 3C018012 */  lui   $at, %hi(gCurrentButtonsReleased) # $at, 0x8012
+/* 045EB0 800452B0 AC20D530 */  sw    $zero, %lo(gCurrentButtonsReleased)($at)
+/* 045EB4 800452B4 3C018012 */  lui   $at, %hi(gCurrentRacerInput) # $at, 0x8012
 /* 045EB8 800452B8 340E8000 */  li    $t6, 32768
-/* 045EBC 800452BC AC2ED528 */  sw    $t6, %lo(gCurrentCarInput)($at)
+/* 045EBC 800452BC AC2ED528 */  sw    $t6, %lo(gCurrentRacerInput)($at)
 /* 045EC0 800452C0 3C018012 */  lui   $at, %hi(gCurrentStickX) # $at, 0x8012
 /* 045EC4 800452C4 AFB60048 */  sw    $s6, 0x48($sp)
 /* 045EC8 800452C8 AC20D534 */  sw    $zero, %lo(gCurrentStickX)($at)
@@ -618,9 +618,9 @@ glabel L80045AF8
 /* 046700 80045B00 44808000 */  mtc1  $zero, $f16
 /* 046704 80045B04 460012A1 */  cvt.d.s $f10, $f2
 /* 046708 80045B08 4630503C */  c.lt.d $f10, $f16
-/* 04670C 80045B0C 3C028012 */  lui   $v0, %hi(gActivePlayerButtonPress) # $v0, 0x8012
+/* 04670C 80045B0C 3C028012 */  lui   $v0, %hi(gCurrentButtonsPressed) # $v0, 0x8012
 /* 046710 80045B10 4500003B */  bc1f  .L80045C00
-/* 046714 80045B14 2442D52C */   addiu $v0, %lo(gActivePlayerButtonPress) # addiu $v0, $v0, -0x2ad4
+/* 046714 80045B14 2442D52C */   addiu $v0, %lo(gCurrentButtonsPressed) # addiu $v0, $v0, -0x2ad4
 /* 046718 80045B18 A2A001CD */  sb    $zero, 0x1cd($s5)
 /* 04671C 80045B1C 8C4F0000 */  lw    $t7, ($v0)
 /* 046720 80045B20 00000000 */  nop   
@@ -649,14 +649,14 @@ glabel L80045B70
 /* 046770 80045B70 82A90173 */  lb    $t1, 0x173($s5)
 /* 046774 80045B74 3C01800E */  lui   $at, %hi(D_800E63A0 + 4) # $at, 0x800e
 /* 046778 80045B78 15200002 */  bnez  $t1, .L80045B84
-/* 04677C 80045B7C 3C028012 */   lui   $v0, %hi(D_8011D530) # $v0, 0x8012
+/* 04677C 80045B7C 3C028012 */   lui   $v0, %hi(gCurrentButtonsReleased) # $v0, 0x8012
 /* 046780 80045B80 A2A001CD */  sb    $zero, 0x1cd($s5)
 .L80045B84:
 /* 046784 80045B84 C42963A0 */  lwc1  $f9, %lo(D_800E63A0)($at)
 /* 046788 80045B88 C42863A4 */  lwc1  $f8, %lo(D_800E63A0 + 4)($at)
 /* 04678C 80045B8C 460011A1 */  cvt.d.s $f6, $f2
 /* 046790 80045B90 4628303C */  c.lt.d $f6, $f8
-/* 046794 80045B94 2442D530 */  addiu $v0, %lo(D_8011D530) # addiu $v0, $v0, -0x2ad0
+/* 046794 80045B94 2442D530 */  addiu $v0, %lo(gCurrentButtonsReleased) # addiu $v0, $v0, -0x2ad0
 /* 046798 80045B98 4500001A */  bc1f  .L80045C04
 /* 04679C 80045B9C 8FBF0054 */   lw    $ra, 0x54($sp)
 /* 0467A0 80045BA0 8C480000 */  lw    $t0, ($v0)

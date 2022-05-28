@@ -1,11 +1,11 @@
 glabel func_80045C48
-/* 046848 80045C48 3C018012 */  lui   $at, %hi(gCurrentCarInput) # $at, 0x8012
+/* 046848 80045C48 3C018012 */  lui   $at, %hi(gCurrentRacerInput) # $at, 0x8012
 /* 04684C 80045C4C 27BDFF18 */  addiu $sp, $sp, -0xe8
-/* 046850 80045C50 AC20D528 */  sw    $zero, %lo(gCurrentCarInput)($at)
-/* 046854 80045C54 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
-/* 046858 80045C58 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
-/* 04685C 80045C5C 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
-/* 046860 80045C60 AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
+/* 046850 80045C50 AC20D528 */  sw    $zero, %lo(gCurrentRacerInput)($at)
+/* 046854 80045C54 3C018012 */  lui   $at, %hi(gCurrentButtonsPressed) # $at, 0x8012
+/* 046858 80045C58 AC20D52C */  sw    $zero, %lo(gCurrentButtonsPressed)($at)
+/* 04685C 80045C5C 3C018012 */  lui   $at, %hi(gCurrentButtonsReleased) # $at, 0x8012
+/* 046860 80045C60 AC20D530 */  sw    $zero, %lo(gCurrentButtonsReleased)($at)
 /* 046864 80045C64 3C018012 */  lui   $at, %hi(gCurrentStickX) # $at, 0x8012
 /* 046868 80045C68 AC20D534 */  sw    $zero, %lo(gCurrentStickX)($at)
 /* 04686C 80045C6C AFBF002C */  sw    $ra, 0x2c($sp)

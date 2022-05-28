@@ -11,8 +11,8 @@ glabel func_80054FD0
 /* 055BD8 80054FD8 AFB10028 */  sw    $s1, 0x28($sp)
 /* 055BDC 80054FDC AFB00024 */  sw    $s0, 0x24($sp)
 /* 055BE0 80054FE0 AFA601A8 */  sw    $a2, 0x1a8($sp)
-/* 055BE4 80054FE4 3C018012 */  lui   $at, %hi(D_8011D4F0) # $at, 0x8012
-/* 055BE8 80054FE8 C420D4F0 */  lwc1  $f0, %lo(D_8011D4F0)($at)
+/* 055BE4 80054FE4 3C018012 */  lui   $at, %hi(gCurrentCourseHeight) # $at, 0x8012
+/* 055BE8 80054FE8 C420D4F0 */  lwc1  $f0, %lo(gCurrentCourseHeight)($at)
 /* 055BEC 80054FEC C4840010 */  lwc1  $f4, 0x10($a0)
 /* 055BF0 80054FF0 00A08025 */  move  $s0, $a1
 /* 055BF4 80054FF4 4604003C */  c.lt.s $f0, $f4
@@ -322,10 +322,10 @@ glabel func_80054FD0
 /* 05608C 8005548C 4500003D */  bc1f  .L80055584
 /* 056090 80055490 00000000 */   nop   
 /* 056094 80055494 921801F3 */  lbu   $t8, 0x1f3($s0)
-/* 056098 80055498 3C0D8012 */  lui   $t5, %hi(D_8011D55C) # $t5, 0x8012
+/* 056098 80055498 3C0D8012 */  lui   $t5, %hi(gCurrentPlayerIndex) # $t5, 0x8012
 /* 05609C 8005549C 37190008 */  ori   $t9, $t8, 8
 /* 0560A0 800554A0 A21901F3 */  sb    $t9, 0x1f3($s0)
-/* 0560A4 800554A4 8DADD55C */  lw    $t5, %lo(D_8011D55C)($t5)
+/* 0560A4 800554A4 8DADD55C */  lw    $t5, %lo(gCurrentPlayerIndex)($t5)
 /* 0560A8 800554A8 2401FFFF */  li    $at, -1
 /* 0560AC 800554AC 11A10006 */  beq   $t5, $at, .L800554C8
 /* 0560B0 800554B0 3C0E8012 */   lui   $t6, %hi(gCameraObject) # $t6, 0x8012

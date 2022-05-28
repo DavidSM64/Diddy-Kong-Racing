@@ -134,9 +134,11 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     return ret;
 }
 
+// Another function related to playing sound.
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800096D8.s")
+// I think this function is used to update the world position of any sound associated with the given soundmask.
+GLOBAL_ASM("asm/non_matchings/unknown_005740/update_spatial_audio_position.s")
 void func_800096F8(s32 arg0) {
     s32 i;
     s32 *v0 = D_80119C44;

@@ -32,7 +32,8 @@ s32 D_800DE4D8 = 0;
 s32 D_800DE4DC = 0;
 
 Gfx dRspInit[] = {
-    gsSPClearGeometryMode(0x001F3204),
+    gsSPClearGeometryMode(G_SHADE | G_SHADING_SMOOTH | G_CULL_FRONT | G_CULL_BACK |
+                          G_FOG | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_LOD),
     gsSPTexture(0, 0, 0, 0, 0),
     gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE),
     gsSPClipRatio(FRUSTRATIO_2),

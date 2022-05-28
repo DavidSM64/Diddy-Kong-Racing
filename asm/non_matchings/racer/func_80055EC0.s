@@ -19,8 +19,8 @@ glabel func_80055EC0
 /* 056AD8 80055ED8 00A08025 */  move  $s0, $a1
 /* 056ADC 80055EDC 10400073 */  beqz  $v0, .L800560AC
 /* 056AE0 80055EE0 00803825 */   move  $a3, $a0
-/* 056AE4 80055EE4 3C058012 */  lui   $a1, %hi(gActivePlayerButtonPress) # $a1, 0x8012
-/* 056AE8 80055EE8 24A5D52C */  addiu $a1, %lo(gActivePlayerButtonPress) # addiu $a1, $a1, -0x2ad4
+/* 056AE4 80055EE4 3C058012 */  lui   $a1, %hi(gCurrentButtonsPressed) # $a1, 0x8012
+/* 056AE8 80055EE8 24A5D52C */  addiu $a1, %lo(gCurrentButtonsPressed) # addiu $a1, $a1, -0x2ad4
 /* 056AEC 80055EEC 8CAE0000 */  lw    $t6, ($a1)
 /* 056AF0 80055EF0 00401825 */  move  $v1, $v0
 /* 056AF4 80055EF4 31CF2000 */  andi  $t7, $t6, 0x2000 # Z_TRIG
@@ -136,10 +136,10 @@ glabel func_80055EC0
 /* 056CA4 800560A4 1000021E */  b     .L80056920
 /* 056CA8 800560A8 A20B0211 */   sb    $t3, 0x211($s0)
 .L800560AC:
-/* 056CAC 800560AC 3C058012 */  lui   $a1, %hi(gActivePlayerButtonPress) # $a1, 0x8012
-/* 056CB0 800560B0 24A5D52C */  addiu $a1, %lo(gActivePlayerButtonPress) # addiu $a1, $a1, -0x2ad4
+/* 056CAC 800560AC 3C058012 */  lui   $a1, %hi(gCurrentButtonsPressed) # $a1, 0x8012
+/* 056CB0 800560B0 24A5D52C */  addiu $a1, %lo(gCurrentButtonsPressed) # addiu $a1, $a1, -0x2ad4
 /* 056CB4 800560B4 8CAD0000 */  lw    $t5, ($a1)
-/* 056CB8 800560B8 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
+/* 056CB8 800560B8 3C018012 */  lui   $at, %hi(gCurrentButtonsReleased) # $at, 0x8012
 /* 056CBC 800560BC 31AE2000 */  andi  $t6, $t5, 0x2000
 /* 056CC0 800560C0 11C00002 */  beqz  $t6, .L800560CC
 /* 056CC4 800560C4 2404000C */   li    $a0, 12
@@ -149,7 +149,7 @@ glabel func_80055EC0
 /* 056CD0 800560D0 00000000 */  nop   
 /* 056CD4 800560D4 11E00006 */  beqz  $t7, .L800560F0
 /* 056CD8 800560D8 00000000 */   nop   
-/* 056CDC 800560DC AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
+/* 056CDC 800560DC AC20D530 */  sw    $zero, %lo(gCurrentButtonsReleased)($at)
 /* 056CE0 800560E0 8CB80000 */  lw    $t8, ($a1)
 /* 056CE4 800560E4 2401DFFF */  li    $at, -8193
 /* 056CE8 800560E8 0301C824 */  and   $t9, $t8, $at
@@ -192,10 +192,10 @@ glabel func_80055EC0
 /* 056D6C 8005616C 032B6821 */  addu  $t5, $t9, $t3
 /* 056D70 80056170 01A27021 */  addu  $t6, $t5, $v0
 /* 056D74 80056174 81C80000 */  lb    $t0, ($t6)
-/* 056D78 80056178 3C058012 */  lui   $a1, %hi(gActivePlayerButtonPress) # $a1, 0x8012
+/* 056D78 80056178 3C058012 */  lui   $a1, %hi(gCurrentButtonsPressed) # $a1, 0x8012
 /* 056D7C 8005617C 2401FFFF */  li    $at, -1
 /* 056D80 80056180 15010003 */  bne   $t0, $at, .L80056190
-/* 056D84 80056184 24A5D52C */   addiu $a1, %lo(gActivePlayerButtonPress) # addiu $a1, $a1, -0x2ad4
+/* 056D84 80056184 24A5D52C */   addiu $a1, %lo(gCurrentButtonsPressed) # addiu $a1, $a1, -0x2ad4
 /* 056D88 80056188 100001E5 */  b     .L80056920
 /* 056D8C 8005618C A2000173 */   sb    $zero, 0x173($s0)
 .L80056190:
@@ -213,7 +213,7 @@ glabel func_80055EC0
 /* 056DBC 800561BC 00000000 */  nop   
 .L800561C0:
 /* 056DC0 800561C0 820C0195 */  lb    $t4, 0x195($s0)
-/* 056DC4 800561C4 3C0B8012 */  lui   $t3, %hi(gCurrentCarInput) # $t3, 0x8012
+/* 056DC4 800561C4 3C0B8012 */  lui   $t3, %hi(gCurrentRacerInput) # $t3, 0x8012
 /* 056DC8 800561C8 11800006 */  beqz  $t4, .L800561E4
 /* 056DCC 800561CC 00000000 */   nop   
 /* 056DD0 800561D0 82190175 */  lb    $t9, 0x175($s0)
@@ -222,12 +222,12 @@ glabel func_80055EC0
 /* 056DDC 800561DC 8FBF0024 */   lw    $ra, 0x24($sp)
 /* 056DE0 800561E0 A2000195 */  sb    $zero, 0x195($s0)
 .L800561E4:
-/* 056DE4 800561E4 8D6BD528 */  lw    $t3, %lo(gCurrentCarInput)($t3)
-/* 056DE8 800561E8 3C038012 */  lui   $v1, %hi(D_8011D530) # $v1, 0x8012
+/* 056DE4 800561E4 8D6BD528 */  lw    $t3, %lo(gCurrentRacerInput)($t3)
+/* 056DE8 800561E8 3C038012 */  lui   $v1, %hi(gCurrentButtonsReleased) # $v1, 0x8012
 /* 056DEC 800561EC 316D2000 */  andi  $t5, $t3, 0x2000
 /* 056DF0 800561F0 15A00006 */  bnez  $t5, .L8005620C
 /* 056DF4 800561F4 00000000 */   nop   
-/* 056DF8 800561F8 8C63D530 */  lw    $v1, %lo(D_8011D530)($v1)
+/* 056DF8 800561F8 8C63D530 */  lw    $v1, %lo(gCurrentButtonsReleased)($v1)
 /* 056DFC 800561FC 00000000 */  nop   
 /* 056E00 80056200 306E2000 */  andi  $t6, $v1, 0x2000
 /* 056E04 80056204 11C00045 */  beqz  $t6, .L8005631C
@@ -242,8 +242,8 @@ glabel func_80055EC0
 /* 056E24 80056224 11010017 */  beq   $t0, $at, .L80056284
 /* 056E28 80056228 24010007 */   li    $at, 7
 /* 056E2C 8005622C 11010015 */  beq   $t0, $at, .L80056284
-/* 056E30 80056230 3C038012 */   lui   $v1, %hi(D_8011D530) # $v1, 0x8012
-/* 056E34 80056234 8C63D530 */  lw    $v1, %lo(D_8011D530)($v1)
+/* 056E30 80056230 3C038012 */   lui   $v1, %hi(gCurrentButtonsReleased) # $v1, 0x8012
+/* 056E34 80056234 8C63D530 */  lw    $v1, %lo(gCurrentButtonsReleased)($v1)
 /* 056E38 80056238 00000000 */  nop   
 /* 056E3C 8005623C 306F2000 */  andi  $t7, $v1, 0x2000
 /* 056E40 80056240 10000036 */  b     .L8005631C
@@ -258,8 +258,8 @@ glabel func_80055EC0
 /* 056E60 80056260 8FA8007C */  lw    $t0, 0x7c($sp)
 /* 056E64 80056264 A2000175 */  sb    $zero, 0x175($s0)
 /* 056E68 80056268 AE020140 */  sw    $v0, 0x140($s0)
-/* 056E6C 8005626C 3C038012 */  lui   $v1, %hi(D_8011D530) # $v1, 0x8012
-/* 056E70 80056270 8C63D530 */  lw    $v1, %lo(D_8011D530)($v1)
+/* 056E6C 8005626C 3C038012 */  lui   $v1, %hi(gCurrentButtonsReleased) # $v1, 0x8012
+/* 056E70 80056270 8C63D530 */  lw    $v1, %lo(gCurrentButtonsReleased)($v1)
 /* 056E74 80056274 AFA2006C */  sw    $v0, 0x6c($sp)
 /* 056E78 80056278 30782000 */  andi  $t8, $v1, 0x2000
 /* 056E7C 8005627C 10000027 */  b     .L8005631C
@@ -288,7 +288,7 @@ glabel func_80055EC0
 .L800562D0:
 /* 056ED0 800562D0 24010006 */  li    $at, 6
 /* 056ED4 800562D4 4600303C */  c.lt.s $f6, $f0
-/* 056ED8 800562D8 3C038012 */  lui   $v1, %hi(D_8011D530) # $v1, 0x8012
+/* 056ED8 800562D8 3C038012 */  lui   $v1, %hi(gCurrentButtonsReleased) # $v1, 0x8012
 /* 056EDC 800562DC 45000009 */  bc1f  .L80056304
 /* 056EE0 800562E0 00000000 */   nop   
 /* 056EE4 800562E4 15010005 */  bne   $t0, $at, .L800562FC
@@ -304,7 +304,7 @@ glabel func_80055EC0
 /* 056F04 80056304 AE000140 */  sw    $zero, 0x140($s0)
 /* 056F08 80056308 00005025 */  move  $t2, $zero
 .L8005630C:
-/* 056F0C 8005630C 8C63D530 */  lw    $v1, %lo(D_8011D530)($v1)
+/* 056F0C 8005630C 8C63D530 */  lw    $v1, %lo(gCurrentButtonsReleased)($v1)
 /* 056F10 80056310 AFAA006C */  sw    $t2, 0x6c($sp)
 /* 056F14 80056314 306C2000 */  andi  $t4, $v1, 0x2000
 /* 056F18 80056318 01801825 */  move  $v1, $t4

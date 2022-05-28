@@ -99,7 +99,7 @@ glabel func_8003F0F8
 /* 03FE68 8003F268 8E45000C */  lw    $a1, 0xc($s2)
 /* 03FE6C 8003F26C 8E460010 */  lw    $a2, 0x10($s2)
 /* 03FE70 8003F270 8E470014 */  lw    $a3, 0x14($s2)
-/* 03FE74 8003F274 0C0025B6 */  jal   func_800096D8
+/* 03FE74 8003F274 0C0025B6 */  jal   update_spatial_audio_position
 /* 03FE78 8003F278 00000000 */   nop   
 /* 03FE7C 8003F27C 1000000F */  b     .L8003F2BC
 /* 03FE80 8003F280 8FBF0044 */   lw    $ra, 0x44($sp)
