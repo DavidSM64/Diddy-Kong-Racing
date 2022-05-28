@@ -309,16 +309,16 @@ void func_80027E24(s32 arg0) {
 }
 
 void func_80027FC4(s32 arg0) {
-    NewObject sp20;
+    LevelObjectEntryCommon sp20;
 
     func_8005A3D0();
     if (arg0 == -1) {
         D_8011B0B8 = NULL;
         return;
     }
-    sp20.yRotation = 0;
-    sp20.xRotation = 0;
-    sp20.zRotation = 0;
+    sp20.x = 0;
+    sp20.y = 0;
+    sp20.z = 0;
     sp20.size = 8;
     sp20.objectID = arg0;
     D_8011B0B8 = spawn_object(&sp20, 2);

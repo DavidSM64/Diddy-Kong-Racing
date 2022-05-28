@@ -1138,7 +1138,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
     s32 angleVel;
     s32 temp_v1_4;
     s32 i;
-    struct NewObject newObject;
+    struct LevelObjectEntryCommon newObject;
 
     gNumViewports = get_viewport_count() + 1;
     D_8011D581 = 0;
@@ -1488,9 +1488,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
                 if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
                     temp_v0_16 = func_8001BA1C(tempRacer->unk192, tempRacer->unk1C8);
                     if (!tempRacer->unk15C) {
-                        newObject.yRotation = 0;
-                        newObject.xRotation = 0;
-                        newObject.zRotation = 0;
+                        newObject.x = 0;
+                        newObject.y = 0;
+                        newObject.z = 0;
                         newObject.objectID = 0x86;
                         newObject.size = 8;
                         tempRacer->unk15C = spawn_object(&newObject, 1);

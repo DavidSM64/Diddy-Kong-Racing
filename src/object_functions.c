@@ -556,7 +556,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
     s32 sp34;
     s32 isTrophyRaceAvaliable;
     s32 raceType;
-    NewObject sp44;
+    LevelObjectEntryCommon sp44;
     Settings *settings;
     LevelHeader *curLevelHeader;
     Object_TrophyCabinet *obj64;
@@ -577,9 +577,9 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
             obj->unk7C.word = 1;
             if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) {
                 sp44.objectID = 128;
-                sp44.yRotation = obj->segment.unk3C_a.unk3C->unk2;
-                sp44.xRotation = obj->segment.unk3C_a.unk3C->unk4;
-                sp44.zRotation = obj->segment.unk3C_a.unk3C->unk6;
+                sp44.x = obj->segment.unk3C_a.unk3C->unk2;
+                sp44.y = obj->segment.unk3C_a.unk3C->unk4;
+                sp44.z = obj->segment.unk3C_a.unk3C->unk6;
                 sp44.size = 8;
                 trophyObj = spawn_object(&sp44, 1);
                 if (trophyObj) {
@@ -2075,7 +2075,7 @@ void obj_loop_bananacreator(Object *obj, s32 speed) {
     newEntry.y = ((s32) ((s16) obj->segment.trans.y_position)) - 3;
     newEntry.z = (s32) obj->segment.trans.z_position;
     newEntry.size = 8;
-    newEntry.object_id = 83;
+    newEntry.objectID = 83;
     newBananaObj = spawn_object(&newEntry, 1);
     obj->unk7C.word = 1;
     if (newBananaObj) {

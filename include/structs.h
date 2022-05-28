@@ -1394,14 +1394,6 @@ typedef struct Object {
   u32 unk378[174]; // Not an array. Unknown values.
 } Object;
 
-typedef struct NewObject {
-    u8 objectID;
-    u8 size;
-    s16 yRotation;
-    s16 xRotation;
-    s16 zRotation;
-} NewObject;
-
 // Unused
 typedef struct GhostHeaderChecksum {
 	u8  levelID;
