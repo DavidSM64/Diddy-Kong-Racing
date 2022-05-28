@@ -11,8 +11,8 @@ glabel func_80054FD0
 /* 055BD8 80054FD8 AFB10028 */  sw    $s1, 0x28($sp)
 /* 055BDC 80054FDC AFB00024 */  sw    $s0, 0x24($sp)
 /* 055BE0 80054FE0 AFA601A8 */  sw    $a2, 0x1a8($sp)
-/* 055BE4 80054FE4 3C018012 */  lui   $at, %hi(D_8011D4F0) # $at, 0x8012
-/* 055BE8 80054FE8 C420D4F0 */  lwc1  $f0, %lo(D_8011D4F0)($at)
+/* 055BE4 80054FE4 3C018012 */  lui   $at, %hi(gCurrentCourseHeight) # $at, 0x8012
+/* 055BE8 80054FE8 C420D4F0 */  lwc1  $f0, %lo(gCurrentCourseHeight)($at)
 /* 055BEC 80054FEC C4840010 */  lwc1  $f4, 0x10($a0)
 /* 055BF0 80054FF0 00A08025 */  move  $s0, $a1
 /* 055BF4 80054FF4 4604003C */  c.lt.s $f0, $f4

@@ -23,8 +23,8 @@ glabel update_camera_plane
 /* 04CECC 8004C2CC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 04CED0 8004C2D0 E7AC0050 */  swc1  $f12, 0x50($sp)
 /* 04CED4 8004C2D4 AFA50054 */  sw    $a1, 0x54($sp)
-/* 04CED8 8004C2D8 3C018012 */  lui   $at, %hi(D_8011D4F0) # $at, 0x8012
-/* 04CEDC 8004C2DC C424D4F0 */  lwc1  $f4, %lo(D_8011D4F0)($at)
+/* 04CED8 8004C2D8 3C018012 */  lui   $at, %hi(gCurrentCourseHeight) # $at, 0x8012
+/* 04CEDC 8004C2DC C424D4F0 */  lwc1  $f4, %lo(gCurrentCourseHeight)($at)
 /* 04CEE0 8004C2E0 C4A60010 */  lwc1  $f6, 0x10($a1)
 /* 04CEE4 8004C2E4 44801000 */  mtc1  $zero, $f2
 /* 04CEE8 8004C2E8 46062401 */  sub.s $f16, $f4, $f6

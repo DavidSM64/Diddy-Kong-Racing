@@ -673,9 +673,9 @@ glabel func_80049794
 /* 04AC9C 8004A09C 3C013FD0 */  li    $at, 0x3FD00000 # 1.625000
 /* 04ACA0 8004A0A0 44819800 */  mtc1  $at, $f19
 /* 04ACA4 8004A0A4 44809000 */  mtc1  $zero, $f18
-/* 04ACA8 8004A0A8 3C018012 */  lui   $at, %hi(D_8011D4F0) # $at, 0x8012
+/* 04ACA8 8004A0A8 3C018012 */  lui   $at, %hi(gCurrentCourseHeight) # $at, 0x8012
 /* 04ACAC 8004A0AC 46320102 */  mul.d $f4, $f0, $f18
-/* 04ACB0 8004A0B0 C428D4F0 */  lwc1  $f8, %lo(D_8011D4F0)($at)
+/* 04ACB0 8004A0B0 C428D4F0 */  lwc1  $f8, %lo(gCurrentCourseHeight)($at)
 /* 04ACB4 8004A0B4 3C014049 */  li    $at, 0x40490000 # 3.140625
 /* 04ACB8 8004A0B8 A3A000A3 */  sb    $zero, 0xa3($sp)
 /* 04ACBC 8004A0BC 820201E0 */  lb    $v0, 0x1e0($s0)

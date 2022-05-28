@@ -70,6 +70,13 @@ typedef enum AttackType {
     ATTACK_BUBBLE
 } AttackType;
 
+typedef enum ShieldType {
+    SHIELD_NONE,
+    SHIELD_LEVEL1,
+    SHIELD_LEVEL2,
+    SHIELD_LEVEL3
+} ShieldType;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -240,7 +247,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate);
+void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate);
 void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate);
 void func_80048C7C(Object* obj, Object_Racer* racer);

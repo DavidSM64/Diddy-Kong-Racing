@@ -148,7 +148,7 @@ const char D_800E62A0[] = "Back\n";
 
 /************ .bss ************/
 
-f32 D_8011D4F0;
+f32 gCurrentCourseHeight;
 s32 D_8011D4F8[3];
 s8 D_8011D504;
 ObjectCamera *gCameraObject;
@@ -161,7 +161,7 @@ s32 gCurrentStickX;
 s32 gCurrentStickY;
 s32 D_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
 s32 gRaceStartTimer;
-f32 D_8011D544;
+f32 D_8011D544; // Starts are 300, then counts down when the race starts. Usage currently unknown.
 f32 D_8011D548;
 f32 D_8011D54C;
 s16 D_8011D550;
@@ -381,7 +381,7 @@ void func_80048C7C(Object* obj, Object_Racer* racer) {
     } else {
         bananas = racer->bananas;
     }
-    if ((racer->attackType == ATTACK_NONE) || (racer->unk18E > 0)) {
+    if ((racer->attackType == ATTACK_NONE) || (racer->shieldTimer > 0)) {
         racer->attackType = ATTACK_NONE;
         return;
     }
@@ -665,7 +665,7 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
         bananas = racer->bananas;
     }
     attackType = racer->attackType;
-    if (attackType == 0 || racer->unk18E > 0) {
+    if (attackType == 0 || racer->shieldTimer > 0) {
         racer->attackType = ATTACK_NONE;
         return;
     }
@@ -726,7 +726,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     s32 delta;
 
     delta = (s32) updateRate;
-    temp_f16 = D_8011D4F0;
+    temp_f16 = gCurrentCourseHeight;
     temp_f16 = 200.0f - (obj->segment.trans.y_position + (-temp_f16));
     if (temp_f16 < 0.0f) {
         temp_f16 = 0.0f;
@@ -1016,77 +1016,77 @@ void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
  * will also initialise a camera object.
  */
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
-    Object_Racer *tempObj;
+    Object_Racer *tempRacer;
     ActivePlayers player;
     s32 i;
 
     D_8011D53C = 0;
-    tempObj = (struct Object_Racer *) obj->unk64;
+    tempRacer = (struct Object_Racer *) obj->unk64;
     obj->segment.trans.y_rotation = racer->unkC;
     obj->segment.trans.x_rotation = racer->unkA;
     obj->segment.trans.z_rotation = racer->unk8;
     player = racer->unkE;
-    tempObj->unk194 = 0;
-    tempObj->stretch_height = 1.0f;
-    tempObj->stretch_height_cap = 1.0f;
+    tempRacer->unk194 = 0;
+    tempRacer->stretch_height = 1.0f;
+    tempRacer->stretch_height_cap = 1.0f;
     // Decide which player ID to assign to this object. Human players get a value from 0-3.
     // Computer players will be -1.
     if (player >= PLAYER_ONE && player <= PLAYER_FOUR) {
         if (func_8000E158()) {
             player = 1 - player;
         }
-        tempObj->playerIndex = player;
+        tempRacer->playerIndex = player;
     } else {
-        tempObj->playerIndex = PLAYER_COMPUTER;
+        tempRacer->playerIndex = PLAYER_COMPUTER;
     }
-    tempObj->unk1A0 = obj->segment.trans.y_rotation;
-    tempObj->x_rotation_vel = obj->segment.trans.z_rotation;
-    tempObj->unkC4 = 0.5f;
+    tempRacer->unk1A0 = obj->segment.trans.y_rotation;
+    tempRacer->x_rotation_vel = obj->segment.trans.z_rotation;
+    tempRacer->unkC4 = 0.5f;
     if (1);
-    tempObj->unk196 = tempObj->unk1A0;
-    tempObj->unkD8[0] = obj->segment.trans.x_position;
-    tempObj->unkD8[1] = obj->segment.trans.y_position + 30.0f;
-    tempObj->unkD8[2] = obj->segment.trans.z_position;
-    tempObj->unkE4[0] = obj->segment.trans.x_position;
-    tempObj->unkE4[1] = obj->segment.trans.y_position + 30.0f;
-    tempObj->unkE4[2] = obj->segment.trans.z_position;
-    tempObj->unkF0[0] = obj->segment.trans.x_position;
-    tempObj->unkF0[1] = obj->segment.trans.y_position + 30.0f;
-    tempObj->unkF0[2] = obj->segment.trans.z_position;
-    tempObj->unkFC[0] = obj->segment.trans.x_position;
-    tempObj->unkFC[1] = obj->segment.trans.y_position + 30.0f;
-    tempObj->unkFC[2] = obj->segment.trans.z_position;
-    tempObj->prev_x_position = obj->segment.trans.x_position;
-    tempObj->prev_y_position = obj->segment.trans.y_position;
-    tempObj->prev_z_position = obj->segment.trans.z_position;
+    tempRacer->unk196 = tempRacer->unk1A0;
+    tempRacer->unkD8[0] = obj->segment.trans.x_position;
+    tempRacer->unkD8[1] = obj->segment.trans.y_position + 30.0f;
+    tempRacer->unkD8[2] = obj->segment.trans.z_position;
+    tempRacer->unkE4[0] = obj->segment.trans.x_position;
+    tempRacer->unkE4[1] = obj->segment.trans.y_position + 30.0f;
+    tempRacer->unkE4[2] = obj->segment.trans.z_position;
+    tempRacer->unkF0[0] = obj->segment.trans.x_position;
+    tempRacer->unkF0[1] = obj->segment.trans.y_position + 30.0f;
+    tempRacer->unkF0[2] = obj->segment.trans.z_position;
+    tempRacer->unkFC[0] = obj->segment.trans.x_position;
+    tempRacer->unkFC[1] = obj->segment.trans.y_position + 30.0f;
+    tempRacer->unkFC[2] = obj->segment.trans.z_position;
+    tempRacer->prev_x_position = obj->segment.trans.x_position;
+    tempRacer->prev_y_position = obj->segment.trans.y_position;
+    tempRacer->prev_z_position = obj->segment.trans.z_position;
     obj->unk4C->x_position = obj->segment.trans.x_position;
     obj->unk4C->y_position = obj->segment.trans.y_position;
     obj->unk4C->z_position = obj->segment.trans.z_position;
-    tempObj->unk1E2 = 3;
-    tempObj->unk1AA = 1;
-    tempObj->unk1AE = 1;
-    tempObj->unk1E7 = tempObj->playerIndex * 5;
-    tempObj->checkpoint_distance = 1.0f;
-    tempObj->unk1FD = 0;
-    tempObj->unk178 = 0;
-    tempObj->unk17C = 0;
-    tempObj->unk180 = 0;
-    tempObj->unk218 = 0;
-    tempObj->unk220 = 0;
-    tempObj->unk21C = 0;
-    if (tempObj->playerIndex != -1 && !D_8011D582) {
+    tempRacer->unk1E2 = 3;
+    tempRacer->unk1AA = 1;
+    tempRacer->unk1AE = 1;
+    tempRacer->unk1E7 = tempRacer->playerIndex * 5;
+    tempRacer->checkpoint_distance = 1.0f;
+    tempRacer->unk1FD = 0;
+    tempRacer->unk178 = 0;
+    tempRacer->shieldSoundMask = 0;
+    tempRacer->unk180 = 0;
+    tempRacer->unk218 = 0;
+    tempRacer->unk220 = 0;
+    tempRacer->unk21C = 0;
+    if (tempRacer->playerIndex != -1 && !D_8011D582) {
         func_800665E8(player);
         gCameraObject = func_80069CFC();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
-        gCameraObject->trans.y_rotation = tempObj->unk196;
+        gCameraObject->trans.y_rotation = tempRacer->unk196;
         gCameraObject->mode = CAMERA_CAR;
         gCameraObject->unk3C = 0xFF;
         gCameraObject->unk3D = 0xFF;
         gCameraObject->unk3E = 0xFF;
         gCameraObject->unk3F = 0xFF;
         gCameraObject->unk18 = 0.0f;
-        func_80057A40(obj, tempObj, 1.0f);
+        update_player_camera(obj, tempRacer, 1.0f);
     }
     if (!D_8011D582) {
         D_8011D583 = 0;
@@ -1097,14 +1097,14 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0xF;
     obj->unk4C->unk12 = 0x14;
-    tempObj->unk1EE = 0;
+    tempRacer->unk1EE = 0;
     if (!D_8011D582) {
-        tempObj->transparency = 0xFF;
+        tempRacer->transparency = 0xFF;
     }
     D_8011D560 = 0;
     D_8011D544 = 300.0f;
-    tempObj->unk1C9 = 6;
-    tempObj->unk1C6 = 100;
+    tempRacer->unk1C9 = 6;
+    tempRacer->unk1C6 = 100;
     D_8011D580 = 0;
 
     // This needs to be on one line to match.
@@ -1113,10 +1113,14 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     func_80043ECC(0, NULL, 0);
     D_8011D583 = i;
     gStartBoostTime = 0;
-    tempObj->unk20A = 0;
+    tempRacer->unk20A = 0;
 }
 
-void func_8004DE38(Object* obj, s32 updateRate) {
+/**
+ * Main function for handling everything related to the player controlled racer object.
+ * Branches off into a different function if the player becomes computer controlled. (Finishing a race)
+ */
+void update_player_racer(Object* obj, s32 updateRate) {
     s32 tempVar;
     s32 temp_v0_17;
     s32 context;
@@ -1183,7 +1187,7 @@ void func_8004DE38(Object* obj, s32 updateRate) {
         tempRacer->unk1F1 = 0;
     }
     // PAL moves 20% faster.
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         delta *= 1.2;
     }
     tempRacer->unk1F6 -= updateRate;
@@ -1197,7 +1201,7 @@ void func_8004DE38(Object* obj, s32 updateRate) {
         tempRacer->unk201 = 0;
     }
     header = get_current_level_header();
-    D_8011D4F0 = header->course_height;
+    gCurrentCourseHeight = header->course_height;
     tempRacer->throttleReleased = 0;
     if (tempRacer->playerIndex == PLAYER_COMPUTER) {
         func_8005A6F0(obj, tempRacer, updateRate, delta);
@@ -1274,8 +1278,8 @@ void func_8004DE38(Object* obj, s32 updateRate) {
             tempRacer->unk1CA = 1;
             tempRacer->playerIndex = PLAYER_COMPUTER;
             tempRacer->unk1C9 = 0;
-            if (tempRacer->unk18E >= 6) {
-                tempRacer->unk18E = 5;
+            if (tempRacer->shieldTimer >= 6) {
+                tempRacer->shieldTimer = 5;
             }
         }
         tempVar = tempRacer->playerIndex;
@@ -1362,8 +1366,8 @@ void func_8004DE38(Object* obj, s32 updateRate) {
         if (D_8011D5AE) {
             for (i = 0; i < D_8011D5AE; i++) {
                 if (D_8011D5B0[i]->unk10 == 0xF) {
-                    if (D_8011D5B0[i]->unk0 < D_8011D4F0) {
-                        D_8011D4F0 = D_8011D5B0[i]->unk0;
+                    if (D_8011D5B0[i]->unk0 < gCurrentCourseHeight) {
+                        gCurrentCourseHeight = D_8011D5B0[i]->unk0;
                     }
                 }
             }
@@ -1537,7 +1541,7 @@ void func_8004DE38(Object* obj, s32 updateRate) {
             func_800576E0(obj, tempRacer, tempRacer->unk188);
         }
         tempRacer->playerIndex = gCurrentPlayerIndex;
-        func_80057A40(obj, tempRacer, delta);
+        update_player_camera(obj, tempRacer, delta);
         D_8011D583 = 0;
         if (tempRacer->unk148) {
             tempRacer->unk148 = NULL;
@@ -1569,10 +1573,10 @@ void func_8004DE38(Object* obj, s32 updateRate) {
         } else {
             tempRacer->unk16A += tempVar;
         }
-        if ((gCurrentButtonsPressed & 0x10) && tempRacer->unk1EB) {
+        if ((gCurrentButtonsPressed & R_TRIG) && tempRacer->unk1EB) {
             tempRacer->unk1EC = 1;
             tempRacer->unk1EB = 0;
-        } else if (gCurrentButtonsPressed & 0x10) {
+        } else if (gCurrentButtonsPressed & R_TRIG) {
             tempRacer->unk1EB = 22;
         }
         if (tempRacer->unk1EB > 0) {
@@ -1580,20 +1584,20 @@ void func_8004DE38(Object* obj, s32 updateRate) {
         } else {
             tempRacer->unk1EB = 0;
         }
-        if (tempRacer->unk18E > 0) {
-            if (tempRacer->unk18E > 60) {
-                if (tempRacer->unk17C) {
-                    update_spatial_audio_position(tempRacer->unk17C, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+        if (tempRacer->shieldTimer > 0) {
+            if (tempRacer->shieldTimer > 60) {
+                if (tempRacer->shieldSoundMask) {
+                    update_spatial_audio_position(tempRacer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
                 } else if (tempRacer->unk118) {
-                    func_80009558(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &tempRacer->unk17C);
+                    func_80009558(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &tempRacer->shieldSoundMask);
                 }
-            } else if (tempRacer->unk17C) {
-                func_800096F8(tempRacer->unk17C);
-                tempRacer->unk17C = 0;
+            } else if (tempRacer->shieldSoundMask) {
+                func_800096F8(tempRacer->shieldSoundMask);
+                tempRacer->shieldSoundMask = 0;
             }
-            tempRacer->unk18E -= updateRate;
-            if (tempRacer->unk18E <= 0) {
-                tempRacer->unk189 = 0;
+            tempRacer->shieldTimer -= updateRate;
+            if (tempRacer->shieldTimer <= 0) {
+                tempRacer->shieldType = SHIELD_NONE;
             }
         }
         if (tempRacer->unk180) {
@@ -2063,7 +2067,7 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
     } else {
         racer->squish_timer = 0;
     }
-    if (racer->attackType == 0 || racer->unk18E > 0) {
+    if (racer->attackType == 0 || racer->shieldTimer > 0) {
         racer->attackType = 0;
     } else {
         if ((racer->squish_timer == 0) || racer->attackType != 4) {
@@ -2290,8 +2294,8 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     s8 sp3F;
     s8 shouldSquish;
 
-    if (obj->segment.trans.y_position > D_8011D4F0) {
-        obj->segment.trans.y_position = D_8011D4F0;
+    if (obj->segment.trans.y_position > gCurrentCourseHeight) {
+        obj->segment.trans.y_position = gCurrentCourseHeight;
     }
     temp_v0 =(f32 *) get_misc_asset(56);
     sp3F = -1;
@@ -2591,7 +2595,12 @@ void handle_base_steering(Object_Racer *racer, UNUSED s32 arg1, f32 updateRate) 
 
 }
 
-void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
+/**
+ * Primary function for updating the camera during player control.
+ * Decides which behaviour to use, then branches off to that function.
+ * Afterwards, writes position data to the current camera object.
+ */
+void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
 	f32 temp_f14;
     s32 delta;
 	s32 angle;
@@ -2700,12 +2709,12 @@ void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     f32 xPos, yPos, zPos;
     if ((gCurrentPlayerIndex != -1) && (racer->raceStatus != STATUS_FINISHED)) {
         if (mode != gCameraObject->mode) {
-            func_80057A40(obj, racer, arg3);
+            update_player_camera(obj, racer, arg3);
             xPos = gCameraObject->trans.x_position;
             yPos = gCameraObject->trans.y_position;
             zPos = gCameraObject->trans.z_position;
             gCameraObject->mode = mode;
-            func_80057A40(obj, racer, arg3);
+            update_player_camera(obj, racer, arg3);
             if (gRaceStartTimer == 0 && D_8011D582 == 0) {
                 gCameraObject->x_velocity = xPos - gCameraObject->trans.x_position;
                 gCameraObject->y_velocity = yPos - (gCameraObject->trans.y_position + gCameraObject->unk30);

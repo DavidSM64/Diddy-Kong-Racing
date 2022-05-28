@@ -900,17 +900,17 @@ typedef struct Object_Racer {
   /* 0x175 */ s8 unk175;
   /* 0x176 */ s16 unk176;
   /* 0x178 */ s32 unk178;
-  /* 0x17C */ s32 unk17C;
-  /* 0x180 */ s32 unk180;
+  /* 0x17C */ s32 shieldSoundMask;
+  /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
   /* 0x184 */ s8 unk184;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
   /* 0x187 */ s8 attackType;
   /* 0x188 */ s8 unk188;
-  /* 0x189 */ s8 unk189;
+  /* 0x189 */ s8 shieldType;
   /* 0x18A */ s16 unk18A;
   /* 0x18C */ s16 unk18C;
-  /* 0x18E */ s16 unk18E;
+  /* 0x18E */ s16 shieldTimer;
   /* 0x190 */ s16 unk190;
   /* 0x192 */ s8 unk192;
   /* 0x193 */ s8 unk193;
