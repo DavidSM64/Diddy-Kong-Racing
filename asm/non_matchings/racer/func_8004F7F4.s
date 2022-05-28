@@ -27,20 +27,20 @@ glabel func_8004F7F4
 /* 050414 8004F814 00E08025 */  move  $s0, $a3
 /* 050418 8004F818 11C00008 */  beqz  $t6, .L8004F83C
 /* 05041C 8004F81C 00C08825 */   move  $s1, $a2
-/* 050420 8004F820 3C048012 */  lui   $a0, %hi(gCurrentCarInput) # $a0, 0x8012
-/* 050424 8004F824 2484D528 */  addiu $a0, %lo(gCurrentCarInput) # addiu $a0, $a0, -0x2ad8
+/* 050420 8004F820 3C048012 */  lui   $a0, %hi(gCurrentRacerInput) # $a0, 0x8012
+/* 050424 8004F824 2484D528 */  addiu $a0, %lo(gCurrentRacerInput) # addiu $a0, $a0, -0x2ad8
 /* 050428 8004F828 8C8F0000 */  lw    $t7, ($a0)
 /* 05042C 8004F82C 3C01FFFF */  lui   $at, (0xFFFF7FFF >> 16) # lui $at, 0xffff
 /* 050430 8004F830 34217FFF */  ori   $at, (0xFFFF7FFF & 0xFFFF) # ori $at, $at, 0x7fff
 /* 050434 8004F834 01E1C024 */  and   $t8, $t7, $at
 /* 050438 8004F838 AC980000 */  sw    $t8, ($a0)
 .L8004F83C:
-/* 05043C 8004F83C 3C198012 */  lui   $t9, %hi(D_8011D55C) # $t9, 0x8012
-/* 050440 8004F840 8F39D55C */  lw    $t9, %lo(D_8011D55C)($t9)
-/* 050444 8004F844 3C048012 */  lui   $a0, %hi(gCurrentCarInput) # $a0, 0x8012
+/* 05043C 8004F83C 3C198012 */  lui   $t9, %hi(gCurrentPlayerIndex) # $t9, 0x8012
+/* 050440 8004F840 8F39D55C */  lw    $t9, %lo(gCurrentPlayerIndex)($t9)
+/* 050444 8004F844 3C048012 */  lui   $a0, %hi(gCurrentRacerInput) # $a0, 0x8012
 /* 050448 8004F848 2401FFFF */  li    $at, -1
 /* 05044C 8004F84C 13210005 */  beq   $t9, $at, .L8004F864
-/* 050450 8004F850 2484D528 */   addiu $a0, %lo(gCurrentCarInput) # addiu $a0, $a0, -0x2ad8
+/* 050450 8004F850 2484D528 */   addiu $a0, %lo(gCurrentRacerInput) # addiu $a0, $a0, -0x2ad8
 /* 050454 8004F854 820801D8 */  lb    $t0, 0x1d8($s0)
 /* 050458 8004F858 00003025 */  move  $a2, $zero
 /* 05045C 8004F85C 11000008 */  beqz  $t0, .L8004F880
@@ -55,9 +55,9 @@ glabel func_8004F7F4
 /* 05047C 8004F87C 8FBF002C */   lw    $ra, 0x2c($sp)
 .L8004F880:
 /* 050480 8004F880 820901D4 */  lb    $t1, 0x1d4($s0)
-/* 050484 8004F884 3C038012 */  lui   $v1, %hi(gActivePlayerButtonPress) # $v1, 0x8012
+/* 050484 8004F884 3C038012 */  lui   $v1, %hi(gCurrentButtonsPressed) # $v1, 0x8012
 /* 050488 8004F888 1120000D */  beqz  $t1, .L8004F8C0
-/* 05048C 8004F88C 2463D52C */   addiu $v1, %lo(gActivePlayerButtonPress) # addiu $v1, $v1, -0x2ad4
+/* 05048C 8004F88C 2463D52C */   addiu $v1, %lo(gCurrentButtonsPressed) # addiu $v1, $v1, -0x2ad4
 /* 050490 8004F890 8C6A0000 */  lw    $t2, ($v1)
 /* 050494 8004F894 2401DFEF */  li    $at, -8209
 /* 050498 8004F898 01415824 */  and   $t3, $t2, $at
@@ -512,8 +512,8 @@ glabel func_8004F7F4
 /* 050B04 8004FF04 9484D550 */  lhu   $a0, %lo(D_8011D550)($a0)
 /* 050B08 8004FF08 00000000 */  nop   
 /* 050B0C 8004FF0C 10800024 */  beqz  $a0, .L8004FFA0
-/* 050B10 8004FF10 3C0E8012 */   lui   $t6, %hi(D_8011D55C) # $t6, 0x8012
-/* 050B14 8004FF14 8DCED55C */  lw    $t6, %lo(D_8011D55C)($t6)
+/* 050B10 8004FF10 3C0E8012 */   lui   $t6, %hi(gCurrentPlayerIndex) # $t6, 0x8012
+/* 050B14 8004FF14 8DCED55C */  lw    $t6, %lo(gCurrentPlayerIndex)($t6)
 /* 050B18 8004FF18 2401FFFF */  li    $at, -1
 /* 050B1C 8004FF1C 11C1000F */  beq   $t6, $at, .L8004FF5C
 /* 050B20 8004FF20 2401010C */   li    $at, 268
@@ -709,22 +709,22 @@ glabel func_8004F7F4
 /* 050DE8 800501E8 0C00455C */  jal   func_80011570
 /* 050DEC 800501EC 00000000 */   nop   
 /* 050DF0 800501F0 10400006 */  beqz  $v0, .L8005020C
-/* 050DF4 800501F4 3C098012 */   lui   $t1, %hi(D_8011D55C) # $t1, 0x8012
-/* 050DF8 800501F8 8D29D55C */  lw    $t1, %lo(D_8011D55C)($t1)
+/* 050DF4 800501F4 3C098012 */   lui   $t1, %hi(gCurrentPlayerIndex) # $t1, 0x8012
+/* 050DF8 800501F8 8D29D55C */  lw    $t1, %lo(gCurrentPlayerIndex)($t1)
 /* 050DFC 800501FC 2401FFFF */  li    $at, -1
 /* 050E00 80050200 11210002 */  beq   $t1, $at, .L8005020C
 /* 050E04 80050204 240A0001 */   li    $t2, 1
 /* 050E08 80050208 A3AA0053 */  sb    $t2, 0x53($sp)
 .L8005020C:
-/* 050E0C 8005020C 3C028012 */  lui   $v0, %hi(D_8011D55C) # $v0, 0x8012
-/* 050E10 80050210 8C42D55C */  lw    $v0, %lo(D_8011D55C)($v0)
+/* 050E0C 8005020C 3C028012 */  lui   $v0, %hi(gCurrentPlayerIndex) # $v0, 0x8012
+/* 050E10 80050210 8C42D55C */  lw    $v0, %lo(gCurrentPlayerIndex)($v0)
 /* 050E14 80050214 10000007 */  b     .L80050234
 /* 050E18 80050218 2401FFFF */   li    $at, -1
 .L8005021C:
 /* 050E1C 8005021C 0C0141D5 */  jal   func_80050754
 /* 050E20 80050220 02002825 */   move  $a1, $s0
-/* 050E24 80050224 3C028012 */  lui   $v0, %hi(D_8011D55C) # $v0, 0x8012
-/* 050E28 80050228 8C42D55C */  lw    $v0, %lo(D_8011D55C)($v0)
+/* 050E24 80050224 3C028012 */  lui   $v0, %hi(gCurrentPlayerIndex) # $v0, 0x8012
+/* 050E28 80050228 8C42D55C */  lw    $v0, %lo(gCurrentPlayerIndex)($v0)
 /* 050E2C 8005022C 00000000 */  nop   
 /* 050E30 80050230 2401FFFF */  li    $at, -1
 .L80050234:
@@ -897,10 +897,10 @@ glabel func_8004F7F4
 /* 0510B4 800504B4 E6100030 */  swc1  $f16, 0x30($s0)
 .L800504B8:
 /* 0510B8 800504B8 820F01D3 */  lb    $t7, 0x1d3($s0)
-/* 0510BC 800504BC 3C18800E */  lui   $t8, %hi(D_800DCB98) # $t8, 0x800e
+/* 0510BC 800504BC 3C18800E */  lui   $t8, %hi(gNumViewports) # $t8, 0x800e
 /* 0510C0 800504C0 15E00043 */  bnez  $t7, .L800505D0
 /* 0510C4 800504C4 00000000 */   nop   
-/* 0510C8 800504C8 8F18CB98 */  lw    $t8, %lo(D_800DCB98)($t8)
+/* 0510C8 800504C8 8F18CB98 */  lw    $t8, %lo(gNumViewports)($t8)
 /* 0510CC 800504CC 00000000 */  nop   
 /* 0510D0 800504D0 2B010002 */  slti  $at, $t8, 2
 /* 0510D4 800504D4 1020003E */  beqz  $at, .L800505D0
@@ -970,12 +970,12 @@ glabel func_8004F7F4
 /* 0511C8 800505C8 014D6025 */  or    $t4, $t2, $t5
 /* 0511CC 800505CC AE2C0074 */  sw    $t4, 0x74($s1)
 .L800505D0:
-/* 0511D0 800505D0 3C0E8012 */  lui   $t6, %hi(D_8011D55C) # $t6, 0x8012
-/* 0511D4 800505D4 8DCED55C */  lw    $t6, %lo(D_8011D55C)($t6)
+/* 0511D0 800505D0 3C0E8012 */  lui   $t6, %hi(gCurrentPlayerIndex) # $t6, 0x8012
+/* 0511D4 800505D4 8DCED55C */  lw    $t6, %lo(gCurrentPlayerIndex)($t6)
 /* 0511D8 800505D8 2401FFFF */  li    $at, -1
 /* 0511DC 800505DC 11C10030 */  beq   $t6, $at, .L800506A0
-/* 0511E0 800505E0 3C0F800E */   lui   $t7, %hi(D_800DCB98) # $t7, 0x800e
-/* 0511E4 800505E4 8DEFCB98 */  lw    $t7, %lo(D_800DCB98)($t7)
+/* 0511E0 800505E0 3C0F800E */   lui   $t7, %hi(gNumViewports) # $t7, 0x800e
+/* 0511E4 800505E4 8DEFCB98 */  lw    $t7, %lo(gNumViewports)($t7)
 /* 0511E8 800505E8 00000000 */  nop   
 /* 0511EC 800505EC 29E10002 */  slti  $at, $t7, 2
 /* 0511F0 800505F0 1020002B */  beqz  $at, .L800506A0
@@ -1037,8 +1037,8 @@ glabel func_8004F7F4
 /* 0512C4 800506C4 02002825 */  move  $a1, $s0
 /* 0512C8 800506C8 0C01602D */  jal   func_800580B4
 /* 0512CC 800506CC 00003025 */   move  $a2, $zero
-/* 0512D0 800506D0 3C0A800E */  lui   $t2, %hi(D_800DCB98) # $t2, 0x800e
-/* 0512D4 800506D4 8D4ACB98 */  lw    $t2, %lo(D_800DCB98)($t2)
+/* 0512D0 800506D0 3C0A800E */  lui   $t2, %hi(gNumViewports) # $t2, 0x800e
+/* 0512D4 800506D4 8D4ACB98 */  lw    $t2, %lo(gNumViewports)($t2)
 /* 0512D8 800506D8 24010001 */  li    $at, 1
 /* 0512DC 800506DC 15410013 */  bne   $t2, $at, .L8005072C
 /* 0512E0 800506E0 83AC0053 */   lb    $t4, 0x53($sp)

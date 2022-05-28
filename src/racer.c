@@ -20,6 +20,12 @@
 #include "math_util.h"
 #include "unknown_0255E0.h"
 #include "weather.h"
+#include "unknown_05CEF0.h"
+#include "unknown_05DCD0.h"
+#include "unknown_05F0C0.h"
+#include "unknown_05F690.h"
+#include "unknown_05FF10.h"
+#include "unknown_005740.h"
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -44,7 +50,7 @@ f32 D_800DCB60[14] = {
     10.0f, 10.0f,
 };
 
-s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
+s32 gNumViewports = 0; // Currently unknown, might be a different type.
 // Table used for quantifying speed reduction while the car drives over it, like how grass will slow you down more than the road.
 // An antipiracy trigger can set the first index to 0.5f, which makes that surface type impossible to drive on.
 f32 gSurfaceTractionTable[19] = {
@@ -148,9 +154,9 @@ s8 D_8011D504;
 ObjectCamera *gCameraObject;
 UNUSED s32 D_8011D50C;
 ObjectTransform D_8011D510;
-s32 gCurrentCarInput; // Related to input of the car.
-s32 gActivePlayerButtonPress;
-s32 D_8011D530;
+s32 gCurrentRacerInput;
+s32 gCurrentButtonsPressed;
+s32 gCurrentButtonsReleased;
 s32 gCurrentStickX;
 s32 gCurrentStickY;
 s32 D_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
@@ -161,9 +167,9 @@ f32 D_8011D54C;
 s16 D_8011D550;
 s8 D_8011D552;
 s8 D_8011D553;
-s32 gCurrentCarSteerVel; // Related to rotational velocity of the car.
+s32 gCurrentCarSteerVel;
 s32 D_8011D558;
-s32 D_8011D55C;
+s32 gCurrentPlayerIndex;
 s16 D_8011D560; // Set, but never read.
 UNUSED s16 D_8011D562;
 f32 *D_8011D564;
@@ -192,7 +198,7 @@ s16 D_8011D5A8[2];
 s16 D_8011D5AC;
 s8 D_8011D5AE;
 s8 D_8011D5AF;
-struct TempStruct8 *D_8011D5B0;
+struct TempStruct8 **D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
 
@@ -222,7 +228,7 @@ void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
             temp_v0->unk8[3][1] += temp_v0->unk8[3][3];
             D_8011D5BB = 1;
         }
-        if (!(gCurrentCarInput & A_BUTTON)) {
+        if (!(gCurrentRacerInput & A_BUTTON)) {
             D_8011D5BA += updateRate;
         }
     } else {
@@ -243,7 +249,7 @@ void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
         D_8011D5BC = 0;
     }
     test = get_misc_asset(12);
-    if ((D_8011D530 & 0x2000) && racer->balloon_quantity) {
+    if ((gCurrentButtonsReleased & 0x2000) && racer->balloon_quantity) {
         if (racer->balloon_level < 3) {
             phi_a0 = test[racer->balloon_type * 3 + racer->balloon_level];
         } else {
@@ -324,9 +330,9 @@ void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate) {
     // Kick it into reverse.
     if (racer->unk214 != 0) {
         gCurrentStickX *= -1;
-        gCurrentCarInput &= ~A_BUTTON;
+        gCurrentRacerInput &= ~A_BUTTON;
         gCurrentStickY = -50;
-        gCurrentCarInput |= B_BUTTON;
+        gCurrentRacerInput |= B_BUTTON;
     }
 
     // Cap stick inputs.
@@ -736,7 +742,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         baseFloat2 = 110.0f;
         baseFloat1 = 42.0f;
     }
-    if (((!(gCurrentCarInput & 0x10)) || racer->unk1E2 < 3) && !racer->unk1F5) {
+    if (((!(gCurrentRacerInput & 0x10)) || racer->unk1E2 < 3) && !racer->unk1F5) {
         angle = (-racer->unk1A0 - (racer->unk196 & 0xFFFF)) + 0x8000;
         if (angle > 0x8000) {
             angle -= 0xFFFF;
@@ -1110,13 +1116,543 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempObj->unk20A = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8004DE38.s")
+void func_8004DE38(Object* obj, s32 updateRate) {
+    s32 tempVar;
+    s32 temp_v0_17;
+    s32 context;
+    Object* tempObj;
+    f32 delta;
+    f32 waterHeight;
+    Object_Racer* tempRacer;
+    f32 tempX;
+    f32 tempY;
+    f32 tempZ;
+    f32 lastCheckpointDist;
+    f32 temp_f12;
+    LevelHeader* header;
+    unknown8011AECC* temp_v0_16;
+    s32 angleVel;
+    s32 temp_v1_4;
+    s32 i;
+    struct NewObject newObject;
+
+    gNumViewports = get_viewport_count() + 1;
+    D_8011D581 = 0;
+    gRaceStartTimer = func_8001139C();
+    delta = updateRate;
+    tempRacer = (Object_Racer *)obj->unk64;
+    // Cap all of the velocities on the different axes.
+    // Unfortunately, Rareware didn't appear to use a clamp macro here, which would've saved a lot of real estate.
+    if (obj->segment.x_velocity > 50.0) {
+        obj->segment.x_velocity = 50.0f;
+    }
+    if (obj->segment.y_velocity > 50.0) {
+        obj->segment.y_velocity = 50.0f;
+    }
+    if (obj->segment.z_velocity > 50.0) {
+        obj->segment.z_velocity = 50.0f;
+    }
+    if (obj->segment.x_velocity < -50.0) {
+        obj->segment.x_velocity = -50.0f;
+    }
+    if (obj->segment.y_velocity < -50.0) {
+        obj->segment.y_velocity = -50.0f;
+    }
+    if (obj->segment.z_velocity < -50.0) {
+        obj->segment.z_velocity = -50.0f;
+    }
+    if (tempRacer->velocity > 50.0) {
+        tempRacer->velocity = 50.0f;
+    }
+    if (tempRacer->lateral_velocity > 50.0) {
+        tempRacer->lateral_velocity = 50.0f;
+    }
+    if (tempRacer->velocity < -50.0) {
+        tempRacer->velocity = -50.0f;
+    }
+    if (tempRacer->lateral_velocity < -50.0) {
+        tempRacer->lateral_velocity = -50.0f;
+    }
+    if (tempRacer->checkpoint_distance < -1.0) {
+        tempRacer->checkpoint_distance = -1.0f;
+    }
+    if (tempRacer->checkpoint_distance > 2.0) {
+        tempRacer->checkpoint_distance = 2.0f;
+    }
+    if (tempRacer->unk1FE == 1) {
+        tempRacer->unk1F1 = 0;
+    }
+    // PAL moves 20% faster.
+    if (osTvType == 0) {
+        delta *= 1.2;
+    }
+    tempRacer->unk1F6 -= updateRate;
+    if (tempRacer->unk1F6 < 0) {
+        tempRacer->unk1F6 = 0;
+    }
+    obj->unk74 = 0;
+    if (tempRacer->unk201 > 0) {
+        tempRacer->unk201 -= updateRate;
+    } else {
+        tempRacer->unk201 = 0;
+    }
+    header = get_current_level_header();
+    D_8011D4F0 = header->course_height;
+    tempRacer->throttleReleased = 0;
+    if (tempRacer->playerIndex == PLAYER_COMPUTER) {
+        func_8005A6F0(obj, tempRacer, updateRate, delta);
+    } else {
+        // Print player 1's coordinates to the screen if the debug cheat is enabled.
+        if ((gRaceStartTimer == 0) && (tempRacer->playerIndex == PLAYER_ONE)) {
+            if (get_filtered_cheats() & CHEAT_PRINT_COORDS) {
+                render_printf(&D_800E6280, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            }
+        }
+        set_render_printf_background_colour(0, 0, 0, 128);
+        if (func_8002341C()) {
+            D_8011D586 = 0;
+        }
+        context = get_render_context();
+        if (gRaceStartTimer == 0) {
+            if (D_8011D544 > 0.0) {
+                D_8011D544 -= delta;
+            } else {
+                D_8011D544 = 0.0f;
+            }
+        } else {
+            tempRacer->unk1C6 = get_random_number_from_range(-60, 60) + 120;
+        }
+        if (tempRacer->unk18C > 0) {
+            tempRacer->unk18C -= updateRate;
+        } else {
+            tempRacer->unk18C = 0;
+        }
+        D_8011D564 = (f32*) get_misc_asset(9);
+        D_8011D56C = D_8011D564[tempRacer->characterId] * 0.45;
+        if (tempRacer->unk204 > 0) {
+            D_8011D56C = -0.02f;
+        }
+        D_8011D564 = (f32*) get_misc_asset(10);
+        D_8011D570 = D_8011D564[tempRacer->characterId];
+        D_8011D564 = (f32*) get_misc_asset(11);
+        D_8011D574 = D_8011D564[tempRacer->characterId];
+        if (tempRacer->unk1FE == 3) {
+            D_8011D56C *= (f32) tempRacer->unk1FF / 256;
+        }
+        if (tempRacer->unk1FE == 1) {
+            D_8011D56C -= (D_8011D56C * tempRacer->unk1FF) / 128;
+            if (tempRacer->unk204 > 0) {
+                D_8011D56C = -D_8011D56C;
+            }
+        }
+        if (tempRacer->unk1FE == 2) {
+            tempRacer->unk84 += ((cosine_s((tempRacer->unk1FF << 8)) * 4.0f) - tempRacer->unk84) * 0.0625 * delta;
+            tempRacer->unk88 += ((sine_s((tempRacer->unk1FF << 8)) * 4.0f) - tempRacer->unk88) * 0.0625 * delta;
+        } else {
+            tempRacer->unk84 -= tempRacer->unk84 * 0.0625 * delta;
+            tempRacer->unk88 -= tempRacer->unk88 * 0.0625 * delta;
+        }
+        D_8011D564 = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
+        D_8011D568 = get_misc_asset(obj->segment.header->pad5B[2]);
+        if (obj->segment.y_velocity < 4.0 && (tempRacer->unk1E2 >= 3 || tempRacer->buoyancy != 0.0)) {
+            tempRacer->unk1F1 = 0;
+        }
+        tempX = obj->segment.trans.x_position;
+        tempY = obj->segment.trans.y_position;
+        tempZ = obj->segment.trans.z_position;
+        if (tempRacer->unk1B2 > 0) {
+            tempRacer->unk1B2 -= updateRate;
+            if (tempRacer->unk1B2 < 0) {
+                tempRacer->unk1B2 = 0;
+            }
+        }
+        func_800665E8(tempRacer->playerIndex);
+        gCameraObject = (ObjectCamera *) func_80069CFC();
+        tempRacer->unk1E7++;
+        gCurrentPlayerIndex = tempRacer->playerIndex;
+        if ((tempRacer->raceStatus == STATUS_FINISHED) || (context == 1)) {
+            tempRacer->unk1CA = 1;
+            tempRacer->playerIndex = PLAYER_COMPUTER;
+            tempRacer->unk1C9 = 0;
+            if (tempRacer->unk18E >= 6) {
+                tempRacer->unk18E = 5;
+            }
+        }
+        tempVar = tempRacer->playerIndex;
+        if (tempRacer->playerIndex != PLAYER_COMPUTER) {
+            if (tempRacer->unk108 == 0) {
+                if (func_8000E158()) {
+                    tempVar = 1 - tempVar;
+                }
+                //Cap the joystick tilt and write the button inputs to the current buffer.
+                gCurrentStickX = clamp_joystick_x_axis(tempVar);
+                // Flip the steering for adventure 2.
+                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
+                    gCurrentStickX = -gCurrentStickX;
+                }
+                gCurrentStickY = clamp_joystick_y_axis(tempVar);
+                gCurrentRacerInput = get_buttons_held_from_player(tempVar);
+                gCurrentButtonsPressed = get_buttons_pressed_from_player(tempVar);
+                gCurrentButtonsReleased = get_buttons_released_from_player(tempVar);
+            } else {
+                func_8005A424(tempRacer, updateRate);
+            }
+        } else {
+            func_80044170(obj, tempRacer, updateRate);
+        }
+        //Set the value that decides whether to get an empowered boost.
+        if ((gCurrentRacerInput & 0x8000) == 0) {
+            tempRacer->throttleReleased = 1;
+        }
+        if (func_80066510() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
+            gCurrentStickX = 0;
+            gCurrentStickY = 0;
+            gCurrentRacerInput = 0;
+            gCurrentButtonsPressed = 0;
+            gCurrentButtonsReleased = 0;
+            tempRacer->steerAngle = 0;
+        }
+        if (tempRacer->unk204 > 0) {
+            tempRacer->unk204 -= updateRate;
+            tempRacer->velocity *= 0.9f;
+            obj->segment.x_velocity *= 0.87f;
+            if (obj->segment.y_velocity > 2.0f) {
+                obj->segment.y_velocity = 2.0f;
+            }
+            obj->segment.z_velocity *= 0.87f;
+        }
+        if (tempRacer->unk206 > 0) {
+            tempRacer->unk18A = tempRacer->unk206;
+            tempRacer->unk206 -= updateRate;
+        }
+        if (tempRacer->unk18A > 0) {
+            tempVar = tempRacer->unk18A & 0xF;
+            tempRacer->unk18A -= updateRate;
+            if (tempVar < (tempRacer->unk18A & 0xF)) {
+                tempRacer->unk1D1 = get_random_number_from_range(-80, 80);
+            }
+            gCurrentStickX += tempRacer->unk1D1;
+        } else {
+            tempRacer->unk18A = 0;
+        }
+        if (tempRacer->unk175) {
+            func_80056E2C(obj, tempRacer, updateRate);
+        }
+        // Zero out input before the race has begun.
+        if (gRaceStartTimer && (header->race_type == RACETYPE_DEFAULT ||
+            header->race_type == RACETYPE_HORSESHOE_GULCH || header->race_type == RACETYPE_BOSS)) {
+            gCurrentStickX = 0;
+            gCurrentStickY = 0;
+            gCurrentRacerInput = 0;
+        }
+        // Handle the race timer if it's currently active.
+        if (gRaceStartTimer == 0 && header->laps > (tempRacer->unk194)) {
+            // Keep it under 10 minutes.
+            if (tempRacer->lap_times[tempRacer->unk194] < normalise_time(36000) - updateRate) {
+                tempRacer->lap_times[tempRacer->unk194] += updateRate;
+            } else {
+                tempRacer->lap_times[tempRacer->unk194] = normalise_time(36000);
+            }
+        }
+        // Assign a camera to human players.
+        if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
+            gCameraObject = (ObjectCamera *) func_80069CFC();
+        }
+        D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &D_8011D5B0);
+        if (D_8011D5AE) {
+            for (i = 0; i < D_8011D5AE; i++) {
+                if (D_8011D5B0[i]->unk10 == 0xF) {
+                    if (D_8011D5B0[i]->unk0 < D_8011D4F0) {
+                        D_8011D4F0 = D_8011D5B0[i]->unk0;
+                    }
+                }
+            }
+        }
+        if (tempRacer->unk1D6 != 1) {
+            waterHeight = -10000.0f;
+            // So I assume this func exists to find the water height.
+            D_8011D504 = func_8002AD08(obj->segment.trans.y_position, &waterHeight, D_8011D4F8);
+            if (D_8011D504) {
+                if (obj->segment.trans.y_position - 5.0f < waterHeight) {
+                    tempRacer->unk1E5 = 5;
+                    tempRacer->buoyancy = waterHeight - (obj->segment.trans.y_position - 5.0f);
+                } else {
+                    tempRacer->buoyancy = 0.0f;
+                }
+            } else {
+                if (tempRacer->unk1E5 > 0) {
+                    tempRacer->unk1E5--;
+                } else {
+                    tempRacer->buoyancy = 0.0f;
+                }
+            }
+            if (tempRacer->unk1E5 > 0 && obj->segment.trans.y_position < waterHeight + 5.0f) {
+                obj->unk4C->unk14 |= 0x10;
+            } else {
+                obj->unk4C->unk14 &= 0xFFEF;
+            }
+        }
+        func_8002ACC8(0);
+        switch (tempRacer->unk1D6) {
+        case 0:
+            func_8004F7F4(updateRate, delta, obj, tempRacer);
+            break;
+        case 4:
+            func_8004CC20(updateRate, delta, obj, tempRacer);
+            break;
+        case 1:
+            func_80046524(updateRate, delta, obj, tempRacer);
+            break;
+        case 2:
+            func_80049794(updateRate, delta, obj, tempRacer);
+            break;
+        case 3:
+        case 10:
+            func_8004D95C(updateRate, delta, obj, tempRacer);
+            break;
+        case 5:
+            func_8005C364(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 6:
+            func_8005D0D0(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 7:
+        case 8:
+            func_8005D820(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer);
+            break;
+        case 11:
+            func_8005E4C0(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 12:
+            func_8005EA90(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 13:
+            func_8005F310(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        }
+        if (tempRacer->unk175 == 0) {
+            if (tempRacer->unk178) {
+                func_8000488C(tempRacer->unk178);
+                tempRacer->unk178 = 0;
+            }
+        }
+        temp_v0_17 = header->playerIndex;
+        if (temp_v0_17) {
+            temp_f12 = -(f32) temp_v0_17;
+            if (tempRacer->velocity > temp_v0_17) {
+                tempRacer->velocity = temp_v0_17;
+            }
+            if (tempRacer->velocity < temp_f12) {
+                tempRacer->velocity = temp_f12;
+            }
+        }
+        if (context != 1 || func_8000E148()) {
+            func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+        }
+        lastCheckpointDist = tempRacer->checkpoint_distance;
+        tempVar = func_800185E4(tempRacer->unk192, obj, tempX, tempY, tempZ, &tempRacer->checkpoint_distance, &tempRacer->unk1C8);
+        if (tempVar == -100) {
+            func_8005C270(tempRacer);
+        }
+        temp_v0_16 = func_8001BA1C(tempRacer->unk192, tempRacer->unk1C8);
+        if (tempRacer->playerIndex == PLAYER_COMPUTER && temp_v0_16->unk36[tempRacer->unk1CA] == 5 && tempRacer->unk1E5) {
+            tempRacer->unk1C8 = 1;
+        }
+        if (temp_v0_16->unk36[tempRacer->unk1CA] == 6) {
+            tempRacer->unk193 = header->laps + 1;
+        }
+        if (tempVar == 0) {
+            if (tempRacer->playerIndex == PLAYER_COMPUTER && temp_v0_16->unk36[tempRacer->unk1CA] == 2) {
+                tempRacer->unk1C8 = 1;
+            }
+            temp_v0_17 = func_8001BA64();
+            tempRacer->unk192++;
+            if (tempRacer->unk192 >= temp_v0_17) {
+                tempRacer->unk192 = 0;
+                if (tempRacer->unk190 > 0) {
+                    if (tempRacer->unk193 < 120) {
+                        tempRacer->unk193++;
+                    }
+                }
+                if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->unk193 + 1 == header->laps
+                    && !D_8011D580 && get_current_level_race_type() == RACETYPE_DEFAULT) {
+                    func_800014BC(1.12f);
+                    D_8011D580 = 1;
+                }
+            }
+            if (func_8002341C()) {
+                if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
+                    temp_v0_16 = func_8001BA1C(tempRacer->unk192, tempRacer->unk1C8);
+                    if (!tempRacer->unk15C) {
+                        newObject.yRotation = 0;
+                        newObject.xRotation = 0;
+                        newObject.zRotation = 0;
+                        newObject.objectID = 0x86;
+                        newObject.size = 8;
+                        tempRacer->unk15C = spawn_object(&newObject, 1);
+                        if (tempRacer->unk15C) {
+                            tempRacer->unk15C->segment.unk3C_a.unk3C = 0;
+                            tempRacer->unk15C->segment.unk38.half.lower = 128;
+                        }
+                    }
+                    if (tempRacer->unk15C) {
+                        tempRacer->unk15C->segment.trans.x_position = temp_v0_16->unk28->segment.trans.x_position;
+                        tempRacer->unk15C->segment.trans.y_position = temp_v0_16->unk28->segment.trans.y_position;
+                        if (tempRacer->unk1D6 == 0) {
+                            tempRacer->unk15C->segment.trans.y_position -= 30.0;
+                        }
+                        tempRacer->unk15C->segment.trans.z_position = temp_v0_16->unk28->segment.trans.z_position;
+                        tempRacer->unk15C->segment.trans.y_rotation = temp_v0_16->unk28->segment.trans.y_rotation;
+                        tempRacer->unk15C->segment.trans.x_rotation = temp_v0_16->unk28->segment.trans.x_rotation;
+                        tempRacer->unk15C->segment.unk2C.half.lower = temp_v0_16->unk28->segment.unk2C.half.lower;
+                    }
+                }
+            }
+            if (tempRacer->unk190 < (header->laps + 3) * temp_v0_17) {
+                tempRacer->unk190++;
+            }
+            tempRacer->unk1A8 = 10000;
+        } else {
+            if (tempRacer->playerIndex == PLAYER_COMPUTER && lastCheckpointDist < tempRacer->checkpoint_distance) {
+                tempRacer->checkpoint_distance = lastCheckpointDist;
+            }
+            tempRacer->unk1A8 = tempVar;
+        }
+        if (func_8002341C()) {
+            if (tempRacer->unk15C) {
+                tempRacer->unk15C->segment.unk18 += 8 * updateRate;
+            }
+            if ((tempRacer->unk1BA > 400) || (tempRacer->unk1BA < -400)) {
+                func_80022E18(2);
+            }
+        }
+        func_80018CE0(obj, tempX, tempY, tempZ, updateRate);
+        func_80059208(obj, tempRacer, updateRate);
+        if (tempRacer->raceStatus == 1) {
+            if (tempRacer->unk1D9 < 60) {
+                tempRacer->unk1D9 += updateRate;
+            }
+        }
+        if (tempRacer->unk188 > 0) {
+            func_800576E0(obj, tempRacer, tempRacer->unk188);
+        }
+        tempRacer->playerIndex = gCurrentPlayerIndex;
+        func_80057A40(obj, tempRacer, delta);
+        D_8011D583 = 0;
+        if (tempRacer->unk148) {
+            tempRacer->unk148 = NULL;
+            tempRacer->velocity = 0.0f;
+            tempRacer->lateral_velocity = 0.0f;
+        }
+        if (tempRacer->stretch_height <= tempRacer->stretch_height_cap) {
+            temp_f12 = 0.02f;
+        } else {
+            temp_f12 = -0.02f;
+        }
+        tempRacer->stretch_height += (((tempRacer->stretch_height_cap - tempRacer->stretch_height) * 0.125) + temp_f12) * delta;
+        if ((temp_f12 < 0.0f && tempRacer->stretch_height <= tempRacer->stretch_height_cap) ||
+            (temp_f12 > 0.0f && tempRacer->stretch_height >= tempRacer->stretch_height_cap)) {
+            tempRacer->stretch_height = tempRacer->stretch_height_cap;
+            tempRacer->stretch_height_cap = 1.0f;
+        }
+
+        tempVar = ((tempRacer->unk16C - tempRacer->unk16A) * updateRate) >> 3;
+        if (tempVar > 0x800) {
+            tempVar = 0x800;
+        }
+        if (tempVar < -0x800) {
+            tempVar = -0x800;
+        }
+        angleVel = D_800DCB54;
+        if (angleVel) {
+            tempRacer->unk16A += angleVel;
+        } else {
+            tempRacer->unk16A += tempVar;
+        }
+        if ((gCurrentButtonsPressed & 0x10) && tempRacer->unk1EB) {
+            tempRacer->unk1EC = 1;
+            tempRacer->unk1EB = 0;
+        } else if (gCurrentButtonsPressed & 0x10) {
+            tempRacer->unk1EB = 22;
+        }
+        if (tempRacer->unk1EB > 0) {
+            tempRacer->unk1EB -= updateRate;
+        } else {
+            tempRacer->unk1EB = 0;
+        }
+        if (tempRacer->unk18E > 0) {
+            if (tempRacer->unk18E > 60) {
+                if (tempRacer->unk17C) {
+                    update_spatial_audio_position(tempRacer->unk17C, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+                } else if (tempRacer->unk118) {
+                    func_80009558(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &tempRacer->unk17C);
+                }
+            } else if (tempRacer->unk17C) {
+                func_800096F8(tempRacer->unk17C);
+                tempRacer->unk17C = 0;
+            }
+            tempRacer->unk18E -= updateRate;
+            if (tempRacer->unk18E <= 0) {
+                tempRacer->unk189 = 0;
+            }
+        }
+        if (tempRacer->unk180) {
+            update_spatial_audio_position(tempRacer->unk180, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+        }
+        if (func_8000E4D8() && tempRacer->playerIndex == PLAYER_ONE && gRaceStartTimer == 0) {
+            func_80059BF0(obj, updateRate);
+        }
+        if (tempRacer->soundMask) {
+            update_spatial_audio_position(tempRacer->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+        }
+        D_8011D584 = 0;
+        if (tempRacer->unk150 && gRaceStartTimer == 0) {
+            s8 *yAsset;
+            tempRacer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
+            yAsset = (s8 *)get_misc_asset(0);
+            tempRacer->unk150->segment.trans.y_position = obj->segment.trans.y_position + yAsset[tempRacer->characterId];
+            tempRacer->unk150->segment.trans.z_position = obj->segment.trans.z_position;
+            tempRacer->unk150->segment.trans.scale = obj->segment.unk30 / 265.0f;
+            if (obj->segment.unk30 < 1500.0 || get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
+                tempObj = tempRacer->unk150;
+                tempObj->segment.trans.unk6 |= 0x4000;
+            }
+            if (tempRacer->unk150->segment.trans.scale < 1.0) {
+                tempRacer->unk150->segment.trans.scale = 1.0f;
+            }
+            tempRacer->unk150 = NULL;
+        }
+        tempRacer->unk1FE = -1;
+        func_8004F77C((unk8004F77C* ) tempRacer);
+        if (tempRacer->unk20E) {
+            if (tempRacer->unk210 > updateRate) {
+                tempRacer->unk210 -= updateRate;
+            } else {
+                tempRacer->unk210 = 0;
+                if (tempRacer->playerIndex == PLAYER_COMPUTER) {
+                    func_80009558(tempRacer->unk20E, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                } else {
+                    play_sound_spatial(tempRacer->unk20E, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+                }
+                tempRacer->unk20E = 0;
+            }
+        }
+        if (header->race_type & RACETYPE_CHALLENGE && header->race_type != RACETYPE_CHALLENGE_EGGS) {
+            tempRacer->unk212 = func_8001C418(obj->segment.trans.y_position);
+        } else {
+            tempRacer->unk212 = 0;
+        }
+        if (tempRacer->unk194 < tempRacer->unk193) {
+            tempRacer->unk194 = tempRacer->unk193;
+        }
+    }
+}
 
 void func_8004F77C(unk8004F77C *arg0) {
     s32 temp;
 
     arg0->flags &= ~0x80;
-    if ((gCurrentCarInput & B_BUTTON)) {
+    if ((gCurrentRacerInput & B_BUTTON)) {
         arg0->flags |= 0x80;
     }
 
@@ -1323,7 +1859,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
 void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
-    if ((D_8011D55C == -1) && (action >= 3)) {
+    if ((gCurrentPlayerIndex == -1) && (action >= 3)) {
         obj->segment.unk3B = 0;
         racer->unk1F2 = 0;
     } else if (obj->segment.unk3B == 0) {
@@ -1393,8 +1929,8 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
         func_80072348(racer->playerIndex, 0);
     }
     angleVel = racer->y_rotation_vel;
-    if (D_8011D55C >= 0) {
-        if (D_800DCB98 < 3) {
+    if (gCurrentPlayerIndex >= 0) {
+        if (gNumViewports < 3) {
             obj->unk74 |= 0x4FC00;
             goto skip;
         }
@@ -1486,11 +2022,11 @@ void handle_car_velocity_control(Object_Racer *racer) {
         racer->throttle -= 0.1;
     }
 
-    if (gCurrentCarInput & A_BUTTON) {
+    if (gCurrentRacerInput & A_BUTTON) {
         racer->throttle = 1.0f;
     }
 
-    if (gCurrentCarInput & B_BUTTON) {
+    if (gCurrentRacerInput & B_BUTTON) {
         if (racer->brake < 1.0) {
             racer->brake += 0.2;
         }
@@ -1685,7 +2221,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     } else {
         func_80050754(obj, racer, updateRateF);
     }
-    if (D_8011D55C == -1 && !func_80023568()) {
+    if (gCurrentPlayerIndex == -1 && !func_80023568()) {
             func_80055A84(obj, racer, updateRate);
     } else {
         func_80054FD0(obj, racer, updateRate);
@@ -1854,7 +2390,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
  */
 void racer_play_sound(Object *obj, s32 soundID) {
     Object_Racer *racer = &obj->unk64->racer;
-    if (D_8011D55C != -1 && racer->unk108 == 0) {
+    if (gCurrentPlayerIndex != -1 && racer->unk108 == 0) {
         play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
@@ -1876,7 +2412,7 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 arg3) 
     Object_64 *tempRacer;
 
     tempRacer = obj->unk64;
-    if (tempRacer->racer.unk108 == 0 && ((!(arg3 & 0x80)) || D_8011D55C != -1)) {
+    if (tempRacer->racer.unk108 == 0 && ((!(arg3 & 0x80)) || gCurrentPlayerIndex != -1)) {
         if (arg3 == 2) {
             if ((tempRacer->racer.soundMask != 0) && (soundID != tempRacer->racer.unk2A)) {
                 func_800096F8(tempRacer->racer.soundMask);
@@ -1923,7 +2459,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     // decide how much boost to add based on when it was pressed.
     if (gRaceStartTimer > 0 && gRaceStartTimer < 30 && !racer->startInput) {
         timer = gRaceStartTimer - 14;
-        if (gActivePlayerButtonPress & A_BUTTON) {
+        if (gCurrentButtonsPressed & A_BUTTON) {
             if (timer < 0 && timer3 >= 0) {
                 timer = 0;
             }
@@ -1931,7 +2467,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
             if (timer < 0) {
                 timer = -timer;
             }
-            if ((gCurrentCarInput & Z_TRIG)) {
+            if ((gCurrentRacerInput & Z_TRIG)) {
                 if (timer < 2) {
                     timer = 0;
                 }
@@ -1972,7 +2508,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     if (racer->boostTimer && !gRaceStartTimer && timer3 && racer->raceStatus == STATUS_RACING) {
          func_80072348(racer->playerIndex, 6);
     }
-    if ((gRaceStartTimer < 80) && gActivePlayerButtonPress & A_BUTTON) {
+    if ((gRaceStartTimer < 80) && gCurrentButtonsPressed & A_BUTTON) {
         racer->startInput = 1;
     }
     if (!gRaceStartTimer) {
@@ -2060,7 +2596,7 @@ void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
     s32 delta;
 	s32 angle;
 
-    if (gActivePlayerButtonPress & U_CBUTTONS && func_800A0190()) {
+    if (gCurrentButtonsPressed & U_CBUTTONS && func_800A0190()) {
         gCameraObject->zoom++;
         if (gCameraObject->zoom > ZOOM_VERY_CLOSE) {
             gCameraObject->zoom = ZOOM_MEDIUM;
@@ -2162,7 +2698,7 @@ void func_80057A40(Object *obj, Object_Racer *racer, f32 updateRate) {
 
 void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     f32 xPos, yPos, zPos;
-    if ((D_8011D55C != -1) && (racer->raceStatus != STATUS_FINISHED)) {
+    if ((gCurrentPlayerIndex != -1) && (racer->raceStatus != STATUS_FINISHED)) {
         if (mode != gCameraObject->mode) {
             func_80057A40(obj, racer, arg3);
             xPos = gCameraObject->trans.x_position;
@@ -2317,7 +2853,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     sineOffset = cosine_s(-racer->unk196 + 0x8000) * lateralOffset;
     cosOffset = sine_s(-racer->unk196 + 0x8000) * lateralOffset;
     baseDistance = 0.0f;
-    if (gCurrentCarInput & 0x8000) {
+    if (gCurrentRacerInput & 0x8000) {
         baseDistance = racer->lateral_velocity * 1.3;
         if (baseDistance > 0.0f) {
             baseDistance -= 1.5;

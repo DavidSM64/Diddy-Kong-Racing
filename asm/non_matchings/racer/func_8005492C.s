@@ -58,8 +58,8 @@ glabel func_8005492C
 /* 0555A4 800549A4 240E0001 */   li    $t6, 1
 /* 0555A8 800549A8 AFAE0038 */  sw    $t6, 0x38($sp)
 .L800549AC:
-/* 0555AC 800549AC 3C028012 */  lui   $v0, %hi(gCurrentCarInput) # $v0, 0x8012
-/* 0555B0 800549B0 8C42D528 */  lw    $v0, %lo(gCurrentCarInput)($v0)
+/* 0555AC 800549AC 3C028012 */  lui   $v0, %hi(gCurrentRacerInput) # $v0, 0x8012
+/* 0555B0 800549B0 8C42D528 */  lw    $v0, %lo(gCurrentRacerInput)($v0)
 /* 0555B4 800549B4 8C84D534 */  lw    $a0, %lo(gCurrentStickX)($a0)
 /* 0555B8 800549B8 304F4000 */  andi  $t7, $v0, 0x4000
 /* 0555BC 800549BC 24030006 */  li    $v1, 6
@@ -353,11 +353,11 @@ glabel func_8005492C
 /* 0559F4 80054DF4 3C088012 */  lui   $t0, %hi(gCurrentStickY) # $t0, 0x8012
 /* 0559F8 80054DF8 46244182 */  mul.d $f6, $f8, $f4
 /* 0559FC 80054DFC 8D08D538 */  lw    $t0, %lo(gCurrentStickY)($t0)
-/* 055A00 80054E00 3C028012 */  lui   $v0, %hi(gCurrentCarInput) # $v0, 0x8012
+/* 055A00 80054E00 3C028012 */  lui   $v0, %hi(gCurrentRacerInput) # $v0, 0x8012
 /* 055A04 80054E04 2901FFE7 */  slti  $at, $t0, -0x19
 /* 055A08 80054E08 1020000D */  beqz  $at, .L80054E40
 /* 055A0C 80054E0C 462033A0 */   cvt.s.d $f14, $f6
-/* 055A10 80054E10 8C42D528 */  lw    $v0, %lo(gCurrentCarInput)($v0)
+/* 055A10 80054E10 8C42D528 */  lw    $v0, %lo(gCurrentRacerInput)($v0)
 /* 055A14 80054E14 00000000 */  nop   
 /* 055A18 80054E18 30498000 */  andi  $t1, $v0, 0x8000
 /* 055A1C 80054E1C 15200008 */  bnez  $t1, .L80054E40

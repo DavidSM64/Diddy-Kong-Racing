@@ -15,14 +15,6 @@ struct TempStruct8 {
     s8 unk10;
 };
 
-struct TempStruct9 {
-    s8 unk0;
-    s8 unk1;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-};
-
 typedef enum ActivePlayers {
     PLAYER_COMPUTER = -1,
     PLAYER_ONE,
@@ -153,7 +145,7 @@ extern s32 D_800DCB5C;
 // Not sure if D_800DCB58 & D_800DCB5C are actually a part of this array.
 extern f32 D_800DCB60[14];
 
-extern s32 D_800DCB98;
+extern s32 gNumViewports;
 extern f32 gSurfaceTractionTable[19];
 
 extern f32 D_800DCBE8[19];
@@ -270,5 +262,9 @@ void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_80049794(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_8004CC20(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
+void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
+void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
 
 #endif

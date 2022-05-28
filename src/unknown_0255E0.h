@@ -128,6 +128,6 @@ void func_8002C954(LevelModelSegment*, LevelModelSegmentBoundingBox*, s32);
 s32 func_8002CC30(LevelModelSegment*);
 s8 func_8002B0F4(s16, f32 xPos, f32 zPos, s32*);           /* extern */
 void func_80013DCC(Gfx **arg0, Vertex **arg1, Vertex **arg2, Object *arg3);
-s8 func_8002AD08(f32 yPos, s8, f32* waterHeight, s32*);                /* extern */
+s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);                /* extern */
 
 #endif

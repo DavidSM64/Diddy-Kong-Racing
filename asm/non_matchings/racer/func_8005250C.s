@@ -27,12 +27,12 @@ glabel func_8005250C
 /* 05315C 8005255C 81430000 */  lb    $v1, ($t2)
 /* 053160 80052560 00000000 */  nop   
 .L80052564:
-/* 053164 80052564 3C0B8012 */  lui   $t3, %hi(gActivePlayerButtonPress) # $t3, 0x8012
-/* 053168 80052568 8D6BD52C */  lw    $t3, %lo(gActivePlayerButtonPress)($t3)
+/* 053164 80052564 3C0B8012 */  lui   $t3, %hi(gCurrentButtonsPressed) # $t3, 0x8012
+/* 053168 80052568 8D6BD52C */  lw    $t3, %lo(gCurrentButtonsPressed)($t3)
 /* 05316C 8005256C 24010004 */  li    $at, 4
 /* 053170 80052570 316C2000 */  andi  $t4, $t3, 0x2000
 /* 053174 80052574 11800006 */  beqz  $t4, .L80052590
-/* 053178 80052578 3C09800E */   lui   $t1, %hi(D_800DCB98) # $t1, 0x800e
+/* 053178 80052578 3C09800E */   lui   $t1, %hi(gNumViewports) # $t1, 0x800e
 /* 05317C 8005257C 10610004 */  beq   $v1, $at, .L80052590
 /* 053180 80052580 24010008 */   li    $at, 8
 /* 053184 80052584 10610002 */  beq   $v1, $at, .L80052590
@@ -53,12 +53,12 @@ glabel func_8005250C
 /* 0531B8 800525B8 33080008 */  andi  $t0, $t8, 8
 /* 0531BC 800525BC 11000016 */  beqz  $t0, .L80052618
 /* 0531C0 800525C0 24180004 */   li    $t8, 4
-/* 0531C4 800525C4 8D29CB98 */  lw    $t1, %lo(D_800DCB98)($t1)
-/* 0531C8 800525C8 3C0A8012 */  lui   $t2, %hi(D_8011D55C) # $t2, 0x8012
+/* 0531C4 800525C4 8D29CB98 */  lw    $t1, %lo(gNumViewports)($t1)
+/* 0531C8 800525C8 3C0A8012 */  lui   $t2, %hi(gCurrentPlayerIndex) # $t2, 0x8012
 /* 0531CC 800525CC 29210003 */  slti  $at, $t1, 3
 /* 0531D0 800525D0 10200010 */  beqz  $at, .L80052614
 /* 0531D4 800525D4 00000000 */   nop   
-/* 0531D8 800525D8 8D4AD55C */  lw    $t2, %lo(D_8011D55C)($t2)
+/* 0531D8 800525D8 8D4AD55C */  lw    $t2, %lo(gCurrentPlayerIndex)($t2)
 /* 0531DC 800525DC 8FAE0028 */  lw    $t6, 0x28($sp)
 /* 0531E0 800525E0 05400008 */  bltz  $t2, .L80052604
 /* 0531E4 800525E4 00000000 */   nop   
@@ -130,7 +130,7 @@ glabel L80052678
 /* 0532D4 800526D4 44CFF800 */  ctc1  $t7, $31
 /* 0532D8 800526D8 03231823 */  subu  $v1, $t9, $v1
 /* 0532DC 800526DC 04610002 */  bgez  $v1, .L800526E8
-/* 0532E0 800526E0 3C0F8012 */   lui   $t7, %hi(gCurrentCarInput) # $t7, 0x8012
+/* 0532E0 800526E0 3C0F8012 */   lui   $t7, %hi(gCurrentRacerInput) # $t7, 0x8012
 /* 0532E4 800526E4 00001825 */  move  $v1, $zero
 .L800526E8:
 /* 0532E8 800526E8 2861004A */  slti  $at, $v1, 0x4a
@@ -179,7 +179,7 @@ glabel L80052678
 /* 053384 80052784 00000000 */  nop   
 /* 053388 80052788 4500007C */  bc1f  .L8005297C
 /* 05338C 8005278C 8FBF0024 */   lw    $ra, 0x24($sp)
-/* 053390 80052790 8DEFD528 */  lw    $t7, %lo(gCurrentCarInput)($t7)
+/* 053390 80052790 8DEFD528 */  lw    $t7, %lo(gCurrentRacerInput)($t7)
 /* 053394 80052794 240E0006 */  li    $t6, 6
 /* 053398 80052798 31F94000 */  andi  $t9, $t7, 0x4000
 /* 05339C 8005279C 13200077 */  beqz  $t9, .L8005297C
@@ -233,8 +233,8 @@ glabel L8005280C
 /* 053450 80052850 10000049 */  b     .L80052978
 /* 053454 80052854 A0A801F3 */   sb    $t0, 0x1f3($a1)
 glabel L80052858
-/* 053458 80052858 3C098012 */  lui   $t1, %hi(gCurrentCarInput) # $t1, 0x8012
-/* 05345C 8005285C 8D29D528 */  lw    $t1, %lo(gCurrentCarInput)($t1)
+/* 053458 80052858 3C098012 */  lui   $t1, %hi(gCurrentRacerInput) # $t1, 0x8012
+/* 05345C 8005285C 8D29D528 */  lw    $t1, %lo(gCurrentRacerInput)($t1)
 /* 053460 80052860 8FA40028 */  lw    $a0, 0x28($sp)
 /* 053464 80052864 312A2000 */  andi  $t2, $t1, 0x2000
 /* 053468 80052868 11400002 */  beqz  $t2, .L80052874
@@ -262,8 +262,8 @@ glabel L800528A4
 /* 0534B8 800528B8 8FA40028 */  lw    $a0, 0x28($sp)
 /* 0534BC 800528BC 45000008 */  bc1f  .L800528E0
 /* 0534C0 800528C0 24020003 */   li    $v0, 3
-/* 0534C4 800528C4 3C0F8012 */  lui   $t7, %hi(gCurrentCarInput) # $t7, 0x8012
-/* 0534C8 800528C8 8DEFD528 */  lw    $t7, %lo(gCurrentCarInput)($t7)
+/* 0534C4 800528C4 3C0F8012 */  lui   $t7, %hi(gCurrentRacerInput) # $t7, 0x8012
+/* 0534C8 800528C8 8DEFD528 */  lw    $t7, %lo(gCurrentRacerInput)($t7)
 /* 0534CC 800528CC 00000000 */  nop   
 /* 0534D0 800528D0 31F94000 */  andi  $t9, $t7, 0x4000
 /* 0534D4 800528D4 13200003 */  beqz  $t9, .L800528E4

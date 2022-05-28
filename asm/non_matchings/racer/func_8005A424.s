@@ -27,7 +27,7 @@ glabel func_8005A424
 .L8005A488:
 /* 05B088 8005A488 28618000 */  slti  $at, $v1, -0x8000
 /* 05B08C 8005A48C 10200003 */  beqz  $at, .L8005A49C
-/* 05B090 8005A490 3C048012 */   lui   $a0, %hi(gCurrentCarInput) # $a0, 0x8012
+/* 05B090 8005A490 3C048012 */   lui   $a0, %hi(gCurrentRacerInput) # $a0, 0x8012
 /* 05B094 8005A494 3401FFFF */  li    $at, 65535
 /* 05B098 8005A498 00611821 */  addu  $v1, $v1, $at
 .L8005A49C:
@@ -36,11 +36,11 @@ glabel func_8005A424
 /* 05B0A4 8005A4A4 24A5D534 */  addiu $a1, %lo(gCurrentStickX) # addiu $a1, $a1, -0x2acc
 /* 05B0A8 8005A4A8 00035943 */  sra   $t3, $v1, 5
 /* 05B0AC 8005A4AC ACAB0000 */  sw    $t3, ($a1)
-/* 05B0B0 8005A4B0 3C018012 */  lui   $at, %hi(gActivePlayerButtonPress) # $at, 0x8012
-/* 05B0B4 8005A4B4 AC20D52C */  sw    $zero, %lo(gActivePlayerButtonPress)($at)
-/* 05B0B8 8005A4B8 3C018012 */  lui   $at, %hi(D_8011D530) # $at, 0x8012
-/* 05B0BC 8005A4BC AC20D530 */  sw    $zero, %lo(D_8011D530)($at)
-/* 05B0C0 8005A4C0 2484D528 */  addiu $a0, %lo(gCurrentCarInput) # addiu $a0, $a0, -0x2ad8
+/* 05B0B0 8005A4B0 3C018012 */  lui   $at, %hi(gCurrentButtonsPressed) # $at, 0x8012
+/* 05B0B4 8005A4B4 AC20D52C */  sw    $zero, %lo(gCurrentButtonsPressed)($at)
+/* 05B0B8 8005A4B8 3C018012 */  lui   $at, %hi(gCurrentButtonsReleased) # $at, 0x8012
+/* 05B0BC 8005A4BC AC20D530 */  sw    $zero, %lo(gCurrentButtonsReleased)($at)
+/* 05B0C0 8005A4C0 2484D528 */  addiu $a0, %lo(gCurrentRacerInput) # addiu $a0, $a0, -0x2ad8
 /* 05B0C4 8005A4C4 AC800000 */  sw    $zero, ($a0)
 /* 05B0C8 8005A4C8 3C018012 */  lui   $at, %hi(gCurrentStickY) # $at, 0x8012
 /* 05B0CC 8005A4CC AC20D538 */  sw    $zero, %lo(gCurrentStickY)($at)

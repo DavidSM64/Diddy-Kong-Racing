@@ -367,9 +367,9 @@ glabel update_camera_car
 /* 05930C 8005870C 0C01C1FE */  jal   sine_s
 /* 059310 80058710 000B2403 */   sra   $a0, $t3, 0x10
 /* 059314 80058714 C7AC0040 */  lwc1  $f12, 0x40($sp)
-/* 059318 80058718 3C0D8012 */  lui   $t5, %hi(gCurrentCarInput) # $t5, 0x8012
+/* 059318 80058718 3C0D8012 */  lui   $t5, %hi(gCurrentRacerInput) # $t5, 0x8012
 /* 05931C 8005871C 460C0202 */  mul.s $f8, $f0, $f12
-/* 059320 80058720 8DADD528 */  lw    $t5, %lo(gCurrentCarInput)($t5)
+/* 059320 80058720 8DADD528 */  lw    $t5, %lo(gCurrentRacerInput)($t5)
 /* 059324 80058724 44807000 */  mtc1  $zero, $f14
 /* 059328 80058728 8FA70070 */  lw    $a3, 0x70($sp)
 /* 05932C 8005872C 31AF8000 */  andi  $t7, $t5, 0x8000

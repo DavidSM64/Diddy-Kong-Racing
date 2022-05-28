@@ -237,7 +237,7 @@ typedef struct LevelHeader {
   /* 0x44 */ u8 unk44[0x5];
 
   /* 0x49 */ s8 unk49;
-  /* 0x4A */ s8 unk4A;
+  /* 0x4A */ s8 playerIndex;
   /* 0x4B */ s8 laps;
   /* 0x4C */ s8 race_type;
   /* 0x4D */ s8 vehicle;
@@ -1394,13 +1394,13 @@ typedef struct Object {
   u32 unk378[174]; // Not an array. Unknown values.
 } Object;
 
-typedef struct unk80027FC4 {
-    u8 unk0;
-    u8 unk1;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-} unk80027FC4;
+typedef struct NewObject {
+    u8 objectID;
+    u8 size;
+    s16 yRotation;
+    s16 xRotation;
+    s16 zRotation;
+} NewObject;
 
 // Unused
 typedef struct GhostHeaderChecksum {
