@@ -212,9 +212,7 @@ s32 func_80011560(void);
 void func_80011570(Object*, f32, f32, f32);
 void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
 s16 arctan2_f(f32, f32);
-s32 func_8002AD08(f32, f32**, s32);
 void play_sound_global(u16, s32 *);
-void func_8000488C(s32);
 void func_800AFC3C(Object *, s32);
 void gParticlePtrList_addObject(Object *);
 
@@ -558,7 +556,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
     s32 sp34;
     s32 isTrophyRaceAvaliable;
     s32 raceType;
-    unk80027FC4 sp44;
+    NewObject sp44;
     Settings *settings;
     LevelHeader *curLevelHeader;
     Object_TrophyCabinet *obj64;
@@ -578,11 +576,11 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
         if ((raceType != 7) && (raceType != 6)) { // Make sure the current level is not a cutscene.
             obj->unk7C.word = 1;
             if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) {
-                sp44.unk0 = 128;
-                sp44.unk2 = obj->segment.unk3C_a.unk3C->unk2;
-                sp44.unk4 = obj->segment.unk3C_a.unk3C->unk4;
-                sp44.unk6 = obj->segment.unk3C_a.unk3C->unk6;
-                sp44.unk1 = 8;
+                sp44.objectID = 128;
+                sp44.yRotation = obj->segment.unk3C_a.unk3C->unk2;
+                sp44.xRotation = obj->segment.unk3C_a.unk3C->unk4;
+                sp44.zRotation = obj->segment.unk3C_a.unk3C->unk6;
+                sp44.size = 8;
                 trophyObj = spawn_object(&sp44, 1);
                 if (trophyObj) {
                     trophyObj->segment.unk3C_a.unk3C = (void *) 0;
@@ -1305,7 +1303,7 @@ void obj_loop_snowball(Object *obj, s32 speed) {
         if (obj64->soundMask == 0) {
             func_80009558(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &obj64->soundMask);
         } else {
-            func_800096D8(obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            update_spatial_audio_position(obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     }
     func_8001F460(obj, speed, obj);
