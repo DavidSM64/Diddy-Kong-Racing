@@ -652,7 +652,7 @@ void func_8000E2B4(void) {
     sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
     sp2C.unkA = 0;
     sp2C.unk8 = 0;
-    sp2C.common.object_id = (s8) object_id;
+    sp2C.common.objectID = (s8) object_id;
     sp2C.common.x = D_8011AD46;
     sp2C.common.y = D_8011AD48;
     sp2C.common.z = D_8011AD4A;
