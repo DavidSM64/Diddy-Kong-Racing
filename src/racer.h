@@ -263,7 +263,7 @@ void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8*);
 void func_80059BF0(Object* obj, s32 updateRate);
 void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);  /* extern */
-void func_8005A424(Object_Racer *racer, s32 updateRate);       /* extern */
+void racer_enter_door(Object_Racer *racer, s32 updateRate);       /* extern */
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */

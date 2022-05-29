@@ -1299,7 +1299,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
                 gCurrentButtonsPressed = get_buttons_pressed_from_player(tempVar);
                 gCurrentButtonsReleased = get_buttons_released_from_player(tempVar);
             } else {
-                func_8005A424(tempRacer, updateRate);
+                racer_enter_door(tempRacer, updateRate);
             }
         } else {
             func_80044170(obj, tempRacer, updateRate);
@@ -3181,7 +3181,66 @@ void func_8005A3D0(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8005A424.s")
+/**
+ * When you enter a door, take control away from the player.
+ * Get the angle to the door object, and drive towards it.
+ * After a timer hits 0, execute the transition.
+ */
+void racer_enter_door(Object_Racer* racer, s32 updateRate) {
+    struct Object_Exit *temp_a3;
+    f32 delta;
+    s32 angle;
+
+    temp_a3 = (struct Object_Exit *) racer->unk108->unk64;
+    racer->playerIndex = PLAYER_COMPUTER;
+    angle = (u16) arctan2_f(temp_a3->unk0, temp_a3->unk8)  - (racer->unk1A0 & 0xFFFF);
+    if (angle > 0x8000) {
+        angle -= 0xFFFF;
+    }
+    if (angle < -0x8000) {
+        angle += 0xFFFF;
+    }
+    angle = -angle >> 5;
+    gCurrentStickX = angle;
+    gCurrentButtonsPressed = 0;
+    gCurrentButtonsReleased = 0;
+    gCurrentRacerInput = 0;
+    gCurrentStickY = 0;
+    if (racer->velocity > -4.0) {
+        gCurrentRacerInput |= 0x8000;
+    } else if (racer->velocity < -5.0) {
+        gCurrentRacerInput |= 0x4000;
+    }
+    delta = (f32) updateRate;
+    gCameraObject->trans.x_position += (temp_a3->unk0 * delta) * 1.5;
+    gCameraObject->trans.z_position += (temp_a3->unk8 * delta) * 1.5;
+    if (gCurrentStickX > 75) { gCurrentStickX = 75; gCurrentRacerInput |= 0xC000; } // Only matches if it's on the same line
+    if (gCurrentStickX < -75) {
+        gCurrentStickX = -75;
+        gCurrentRacerInput |= 0xC000;
+    }
+    if (racer->transitionTimer < -1) {
+        racer->transitionTimer += updateRate;
+        if (racer->transitionTimer >= 0) {
+            racer->transitionTimer = -1;
+        }
+    }
+    if ((racer->transitionTimer < -1 && gCurrentStickX < 10 && gCurrentStickX > -10) || racer->transitionTimer == -1) {
+        if (func_80066510() == 0) {
+            func_800C01D8((FadeTransition* ) D_800DCDD4);
+        }
+        racer->transitionTimer = 60 - updateRate;
+    }
+    func_8006F388(1);
+    if (racer->transitionTimer > 0) {
+        racer->transitionTimer -= updateRate;
+        if (racer->transitionTimer <= 0) {
+            func_8006D968((s8* ) racer->unk108->segment.unk3C_a.unk3C);
+            racer->transitionTimer = 0;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8005A6F0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 
