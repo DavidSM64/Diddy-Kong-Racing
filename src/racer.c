@@ -173,7 +173,7 @@ s32 gCurrentPlayerIndex;
 s16 D_8011D560; // Set, but never read.
 UNUSED s16 D_8011D562;
 f32 *D_8011D564;
-s32 *D_8011D568;
+f32 *D_8011D568;
 f32 D_8011D56C;
 f32 D_8011D570;
 f32 D_8011D574;
@@ -556,8 +556,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->trans.y_position = obj->segment.trans.y_position + phi_f18;
     }
 
-    // Unused function call that wasn't fully optimised out.
-    sine_s(racer->unk196 + 0x4000);
+    sine_s(racer->unk196 + 0x4000); // Unused function call that wasn't fully optimised out.
     gCameraObject->trans.z_position = obj->segment.trans.z_position + zVel;
     gCameraObject->trans.y_rotation = racer->unk196;
     segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
@@ -1128,9 +1127,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
     f32 delta;
     f32 waterHeight;
     Object_Racer* tempRacer;
-    f32 tempX;
-    f32 tempY;
-    f32 tempZ;
+    f32 xTemp;
+    f32 yTemp;
+    f32 zTemp;
     f32 lastCheckpointDist;
     f32 temp_f12;
     LevelHeader* header;
@@ -1204,7 +1203,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
     gCurrentCourseHeight = header->course_height;
     tempRacer->throttleReleased = 0;
     if (tempRacer->playerIndex == PLAYER_COMPUTER) {
-        func_8005A6F0(obj, tempRacer, updateRate, delta);
+        func_8005A6F0(obj, tempRacer, updateRate, delta); // AI.
     } else {
         // Print player 1's coordinates to the screen if the debug cheat is enabled.
         if ((gRaceStartTimer == 0) && (tempRacer->playerIndex == PLAYER_ONE)) {
@@ -1261,9 +1260,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if (obj->segment.y_velocity < 4.0 && (tempRacer->unk1E2 >= 3 || tempRacer->buoyancy != 0.0)) {
             tempRacer->unk1F1 = 0;
         }
-        tempX = obj->segment.trans.x_position;
-        tempY = obj->segment.trans.y_position;
-        tempZ = obj->segment.trans.z_position;
+        xTemp = obj->segment.trans.x_position;
+        yTemp = obj->segment.trans.y_position;
+        zTemp = obj->segment.trans.z_position;
         if (tempRacer->unk1B2 > 0) {
             tempRacer->unk1B2 -= updateRate;
             if (tempRacer->unk1B2 < 0) {
@@ -1454,7 +1453,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;
-        tempVar = func_800185E4(tempRacer->unk192, obj, tempX, tempY, tempZ, &tempRacer->checkpoint_distance, &tempRacer->unk1C8);
+        tempVar = func_800185E4(tempRacer->unk192, obj, xTemp, yTemp, zTemp, &tempRacer->checkpoint_distance, &tempRacer->unk1C8);
         if (tempVar == -100) {
             func_8005C270(tempRacer);
         }
@@ -1530,7 +1529,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
                 func_80022E18(2);
             }
         }
-        func_80018CE0(obj, tempX, tempY, tempZ, updateRate);
+        func_80018CE0(obj, xTemp, yTemp, zTemp, updateRate);
         func_80059208(obj, tempRacer, updateRate);
         if (tempRacer->raceStatus == 1) {
             if (tempRacer->unk1D9 < 60) {

@@ -393,7 +393,8 @@ typedef struct ObjectModel {
 /* 0x24 */ s16 numberOfVertices;
 /* 0x26 */ s16 numberOfTriangles;
 /* 0x28 */ s16 numberOfBatches;
-           u8 pad2A[6];
+           u8 pad2A[4];
+/* 0x2E */ u8 unk2E;
 /* 0x30 */ s16 unk30;
            u8 pad32[6];
 /* 0x38 */ TriangleBatchInfo *batches;
@@ -407,7 +408,7 @@ typedef struct ObjectModel {
 typedef struct LevelModelSegment {
 /* 0x00 */ Vertex *vertices;
 /* 0x04 */ Triangle *triangles;
-           u8 pad8[4];
+/* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
 /* 0x10 */ s32 unk10;
 /* 0x14 */ u8 *unk14;
@@ -833,9 +834,9 @@ typedef struct Object_Racer {
   /* 0x05C */ f32 prev_x_position;
   /* 0x060 */ f32 prev_y_position;
   /* 0x064 */ f32 prev_z_position;
-  /* 0x068 */ s32 unk68;
-  /* 0x06C */ s32 unk6C;
-  /* 0x070 */ s32 unk70;
+  /* 0x068 */ f32 unk68;
+  /* 0x06C */ f32 unk6C;
+  /* 0x070 */ f32 unk70;
   /* 0x074 */ f32 unk74;
   /* 0x078 */ f32 carBobX;
   /* 0x07C */ f32 carBobY;
@@ -934,8 +935,10 @@ typedef struct Object_Racer {
   /* 0x1B4 */ s32 unk1B4;
   /* 0x1B8 */ s16 unk1B8;
   /* 0x1BA */ s16 unk1BA;
-  /* 0x1BC */ s32 unk1BC;
-  /* 0x1C0 */ s32 unk1C0;
+  /* 0x1BC */ s16 unk1BC;
+  /* 0x1BE */ s16 unk1BE;
+  /* 0x1C0 */ s16 unk1C0;
+  /* 0x1C2 */ s16 unk1C2;
   /* 0x1C4 */ s16 unk1C4;
   /* 0x1C6 */ s16 unk1C6;
   /* 0x1C8 */ u8 unk1C8;

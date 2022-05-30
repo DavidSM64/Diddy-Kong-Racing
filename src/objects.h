@@ -30,7 +30,9 @@ typedef struct unknown8011AECC {
     f32 unk20;
     f32 unk24;
     Object* unk28;
-    u8 pad2C[0xA];
+    u8 pad2C[0x2];
+    s8 unk2E[4];
+    s8 unk32[4];
     s8 unk36[4];
     s8 unk3A;
     s8 unk3B;
