@@ -1304,7 +1304,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             func_80044170(obj, tempRacer, updateRate);
         }
         //Set the value that decides whether to get an empowered boost.
-        if ((gCurrentRacerInput & 0x8000) == 0) {
+        if ((gCurrentRacerInput & A_BUTTON) == 0) {
             tempRacer->throttleReleased = 1;
         }
         if (func_80066510() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
@@ -2861,7 +2861,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     sineOffset = cosine_s(-racer->unk196 + 0x8000) * lateralOffset;
     cosOffset = sine_s(-racer->unk196 + 0x8000) * lateralOffset;
     baseDistance = 0.0f;
-    if (gCurrentRacerInput & 0x8000) {
+    if (gCurrentRacerInput & A_BUTTON) {
         baseDistance = racer->lateral_velocity * 1.3;
         if (baseDistance > 0.0f) {
             baseDistance -= 1.5;
@@ -3206,17 +3206,17 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     gCurrentRacerInput = 0;
     gCurrentStickY = 0;
     if (racer->velocity > -4.0) {
-        gCurrentRacerInput |= 0x8000;
+        gCurrentRacerInput |= A_BUTTON;
     } else if (racer->velocity < -5.0) {
-        gCurrentRacerInput |= 0x4000;
+        gCurrentRacerInput |= B_BUTTON;
     }
     delta = (f32) updateRate;
     gCameraObject->trans.x_position += (temp_a3->unk0 * delta) * 1.5;
     gCameraObject->trans.z_position += (temp_a3->unk8 * delta) * 1.5;
-    if (gCurrentStickX > 75) { gCurrentStickX = 75; gCurrentRacerInput |= 0xC000; } // Only matches if it's on the same line
+    if (gCurrentStickX > 75) { gCurrentStickX = 75; gCurrentRacerInput |= A_BUTTON | B_BUTTON; } // Only matches if it's on the same line
     if (gCurrentStickX < -75) {
         gCurrentStickX = -75;
-        gCurrentRacerInput |= 0xC000;
+        gCurrentRacerInput |= A_BUTTON | B_BUTTON;
     }
     if (racer->transitionTimer < -1) {
         racer->transitionTimer += updateRate;

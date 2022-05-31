@@ -273,5 +273,6 @@ void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
+Object* func_8005698C(Object_Racer* racer, Object* obj, f32* arg2);
 
 #endif
