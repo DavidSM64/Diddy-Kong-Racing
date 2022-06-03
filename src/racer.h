@@ -195,7 +195,7 @@ void func_8006FC30(Matrix, ObjectTransform *); // asm func
 void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching ?
 
 s32 func_80044450(s32 cap);
-void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64);
+void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer);
 void func_8004C140(Object *obj, Object_Racer *racer);
 void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
 void func_8004F77C(unk8004F77C *arg0);
@@ -210,7 +210,7 @@ void play_char_horn_sound(Object *obj, Object_Racer *racer);
 void racer_play_sound(Object *obj, s32 soundID);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_Racer *racer);
-void handle_base_steering(Object_Racer *racer, s32 arg1, f32 updateRate);
+void handle_base_steering(Object_Racer *racer, s32 updateRate, f32 updateRateF);
 void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3);
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
 void func_800598D0(void);
@@ -252,6 +252,7 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
 void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate);
 void func_80048C7C(Object* obj, Object_Racer* racer);
 void racer_enter_door(Object_Racer *racer, s32 updateRate);
+void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);

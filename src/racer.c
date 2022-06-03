@@ -619,7 +619,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
 // Something Plane related.
-void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *racer) {
+void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer) {
     s32 temp_v1;
     s32 phi_v0;
 
@@ -636,21 +636,21 @@ void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *racer) {
         if (phi_v0 > 73) {
             phi_v0 = 73;
         }
-        temp_v1 = phi_v0 - planeObj->segment.unk18;
+        temp_v1 = phi_v0 - obj->segment.unk18;
         phi_v0 = 0;
         if (temp_v1 > 0) {
-            phi_v0 = arg0 * 3;
+            phi_v0 = updateRate * 3;
             if (temp_v1 < phi_v0) {
                 phi_v0 = temp_v1;
             }
         }
         if (temp_v1 < 0) {
-            phi_v0 = arg0 * -3;
+            phi_v0 = updateRate * -3;
             if (phi_v0 < temp_v1) {
                 phi_v0 = temp_v1;
             }
         }
-        planeObj->segment.unk18 += phi_v0;
+        obj->segment.unk18 += phi_v0;
     }
 }
 
@@ -1857,7 +1857,112 @@ s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance)
     return ret;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8005250C.s")
+void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
+    s8 *balloonAsset;
+    s16 angleDelta;
+    s32 phi_t1;
+    s32 angleVel;
+    s32 newAngle;
+    s32 new_var;
+
+    angleVel = 0;
+    if (racer->balloon_quantity > 0) {
+        balloonAsset = (s8 *) get_misc_asset(0xC);
+        angleVel = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
+    }
+    if (gCurrentButtonsPressed & 0x2000 && angleVel != 4 && angleVel != 8) {
+        racer->unk1F2 = 5;
+    }
+    if (racer->boostTimer) {
+        racer->unk1F3 |= 4;
+    }
+    if (racer->unk1F3 & 8) {
+        if (gNumViewports < 3) {
+            if (gCurrentPlayerIndex >= PLAYER_ONE) {
+                obj->unk74 |= 0x100000;
+            } else {
+                obj->unk74 |= 0x80000;
+            }
+        }
+        racer->unk1F2 = 4;
+    }
+    if (gRaceStartTimer) {
+        racer->unk1F3 = 0;
+        racer->unk1F2 = 0;
+    }
+    if (racer->raceStatus == STATUS_FINISHED) {
+        racer->unk1F2 = 0;
+        racer->unk1F3 = 0;
+    }
+    switch (racer->unk1F2) {
+    case 0:        
+        angleVel = (s32) (((-racer->y_rotation_vel) >> 8) / D_8011D570);
+        angleVel = 40 - angleVel;
+        if (angleVel < 0) {
+            angleVel = 0;
+        }
+        if (angleVel > 73) {
+            angleVel = 73;
+        }
+        newAngle = angleVel - obj->segment.unk18;
+        angleVel = 0;
+        if (newAngle > 0) {
+            angleVel = updateRate * 3;
+            if (newAngle < angleVel) {
+                angleVel = newAngle;
+            }
+        }
+        if (newAngle < 0) {
+            angleVel = updateRate * -3;
+            if (angleVel < newAngle) {
+                angleVel = newAngle;
+            }
+        }
+        obj->segment.unk18 += angleVel;
+        obj->segment.unk3B = 0;
+        if (angleVel);
+        if (racer->unk1F3 & 4) {
+            racer->unk1F2 = 3;
+            racer->unk1F3 &= 0xFFFB;
+        }
+        if (racer->velocity > 0.0 && gCurrentRacerInput & 0x4000) {
+            racer->unk1F2 = 6;
+        }
+        break;
+    case 3:
+        new_var = 2;
+        if (racer->unk1F3 & 4) {
+            new_var = 6;
+        }
+        func_80052988(obj, racer, 2, 0, 32, 4, new_var, updateRate);
+        racer->unk1F3 &= 0xFFFB;
+        break;
+    case 4:
+        func_80052988(obj, racer, 3, 0, 32, 2, 0, updateRate);
+        racer->unk1F3 &= 0xFFF7;
+        break;
+    case 5:
+        new_var = 2;
+        if (gCurrentRacerInput & 0x2000) {
+            new_var = 6;
+        }
+        func_80052988(obj, racer, 4, 0, 48, 4, new_var, updateRate);
+        break;
+    case 6:
+        new_var = 3;
+        if (racer->velocity > 0.0 && gCurrentRacerInput & 0x4000) {
+            new_var = 7;
+        }
+        func_80052988(obj, racer, 1, 0, 80, 3, new_var, updateRate);
+        break;
+    case 7:
+        func_80052988(obj, racer, 5, 0, 96, 4, 0, updateRate);
+        if (racer->unk1F2 == 0) {
+            func_80052988(obj, racer, 5, 0, 96, 4, 0, updateRate);
+        }
+        break;
+    }
+}
 
 void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
@@ -2575,11 +2680,11 @@ GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
  * Generate the steer velocity by taking the current steer velocity and getting the difference between the stick tilt.
  * Get the velocity from a fraction of the difference.
  */
-void handle_base_steering(Object_Racer *racer, UNUSED s32 arg1, f32 updateRate) {
+void handle_base_steering(Object_Racer *racer, UNUSED s32 updateRate, f32 updateRateF) {
     s32 steering, turnVel;
 
     steering = gCurrentStickX - racer->steerAngle;
-    turnVel = (steering * updateRate) * 0.125;
+    turnVel = (steering * updateRateF) * 0.125;
 
     if (steering != 0 && turnVel == 0) {
         if (steering > 0) {
