@@ -778,7 +778,8 @@ void load_menu_text(s32 language); // Non Matching
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_audio_options_loop(s32 arg0);
 s32 menu_options_loop(s32 arg0);
-s32 func_800890AC(s32);
+void render_controller_pak_ui(UNUSED s32 updateRate);
+s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
 s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);

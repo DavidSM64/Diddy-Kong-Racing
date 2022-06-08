@@ -1,4 +1,4 @@
-glabel func_80088938
+glabel render_controller_pak_ui
 /* 089538 80088938 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 08953C 8008893C AFBF0044 */  sw    $ra, 0x44($sp)
 /* 089540 80088940 AFA40048 */  sw    $a0, 0x48($sp)

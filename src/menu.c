@@ -3039,7 +3039,7 @@ void menu_boot_init(void) {
     D_80126C18 = 0; // D_80126C18 is a timer for the boot screen, counts up to 0x8C frames.
 }
 
-s32 menu_boot_loop(s32 arg0) {
+s32 menu_boot_loop(s32 updateRate) {
     s32 out;
     s32 temp;
     s32 y;
@@ -3056,7 +3056,7 @@ s32 menu_boot_loop(s32 arg0) {
     switch (D_80126C20) {
         case 0:
             if (D_80126C18 < 32) {
-                D_80126C18 += arg0;
+                D_80126C18 += updateRate;
                 if (D_80126C18 >= 33) {
                     D_80126C18 = 32;
                 }
@@ -3067,7 +3067,7 @@ s32 menu_boot_loop(s32 arg0) {
             break;
         case 1:
             if (D_80126C18 < 140) {
-                D_80126C18 += arg0;
+                D_80126C18 += updateRate;
                 if (D_80126C18 >= 141) {
                     D_80126C18 = 140;
                 }
@@ -3084,7 +3084,7 @@ s32 menu_boot_loop(s32 arg0) {
                 func_800C01D8(&sMenuTransitionFadeInFast);
             }
             temp = 300;
-            out = func_800890AC(arg0);
+            out = menu_controller_pak_loop(updateRate);
             break;
     }
 
@@ -3141,15 +3141,15 @@ void func_800887E8(void) {
 }
 
 #ifdef NON_EQUIVALENT
-void func_80088938(s32 arg0) {
+//Visual Aid : https://i.imgur.com/7T2Scdr.png
+void render_controller_pak_ui(UNUSED s32 updateRate) {
     s32 alpha;
     s32 i;
-    s8* phi_s2;
-    s8* phi_s0;
-    s8* phi_s4;
-    s32 phi_s3 = 1;
-    s32 yPos = 48;
-    //s32 yPos;
+    char* freePagesText;
+    char* noteText;
+    char* fileNameText;
+    s32 phi_s3;
+    s32 yPos;
 
     set_text_background_colour(0, 0, 0, 0);
     alpha = D_801263BC << 3;
@@ -3167,7 +3167,7 @@ void func_80088938(s32 arg0) {
         assign_dialogue_box_id(6);
 
         //HERE!
-        set_current_dialogue_box_coords(6, 58, yPos, 262, yPos + 30);
+        set_current_dialogue_box_coords(6, 58, 48, 262, yPos + 30);
 
 
         if (D_800DF460 == -1) {
@@ -3179,7 +3179,7 @@ void func_80088938(s32 arg0) {
         set_dialogue_font(6, 0);
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + D_80126A68], phi_s3, 4);
+        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + D_80126A68], 1, 4);
         render_dialogue_text(6, POS_CENTRED, 16, gMenuText[114], sCurrentControllerPakFreeSpace, 4);
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
@@ -3194,31 +3194,31 @@ void func_80088938(s32 arg0) {
             if (i < 0) {
                 set_current_dialogue_background_colour(6, 224, 48, 48, 224);
                 set_current_text_colour(6, 224, 224, 48, 255, 255);
-                phi_s2 = gMenuText[115];
-                phi_s0 = gMenuText[116];
-                phi_s4 = gMenuText[117];
+                freePagesText = gMenuText[115]; //ASSET_MENU_TEXT_FREEPAGESX - FREE PAGES: ~
+                noteText = gMenuText[116]; //ASSET_MENU_TEXT_NOTE - NOTE
+                fileNameText = gMenuText[117]; //ASSET_MENU_TEXT_FILENAME - FILENAME
                 phi_s3 = 1;
             } else {
-                phi_s2 = &D_800E820C;
-                phi_s4 = &D_800E820C;
+                freePagesText = (char *)&D_800E820C; //~
+                fileNameText = (char *)&D_800E820C; //~
                 if (D_800DF460 == (i + D_801263D8)) {
                     set_current_dialogue_background_colour(6, 255, 255, 255, (alpha >> 1) + 128);
                 } else {
                     set_current_dialogue_background_colour(6, 224, 224, 48, 224);
                 }
                 set_current_text_colour(6, 16, 16, 160, 255, 255);
-                phi_s0 = D_80126AA0[D_801263D8 + i];
-                phi_s3 = (s32) (&sCurrentControllerPakAllFileSizes)[D_801263D8 + i];
+                noteText = D_80126AA0[D_801263D8 + i];
+                phi_s3 = sCurrentControllerPakAllFileSizes[D_801263D8 + i];
             }
-            render_dialogue_text(6, 26, 2, phi_s2, D_801263D8 + i + 1, 4);
-            render_dialogue_text(6, 56, 2, phi_s0, 1, 0);
-            render_dialogue_text(6, 240, 2, phi_s4, phi_s3, 4);
+            render_dialogue_text(6, 26, 2, freePagesText, D_801263D8 + i + 1, 4);
+            render_dialogue_text(6, 56, 2, noteText, 1, 0);
+            render_dialogue_text(6, 240, 2, fileNameText, phi_s3, 4);
             render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
             yPos += 16;
         }
         if (D_801263D8 < (16 - D_80126BB4)) {
             if ((D_801263BC & 8) != 0) {
-                render_textured_rectangle(&sMenuCurrDisplayList, (DrawTexture* ) &D_800E043C, 160, yPos + 8, (u8) 255, (u8) 255, (u8) 255, (u8) 255);
+                render_textured_rectangle(&sMenuCurrDisplayList, D_800E043C, 160, yPos + 8, 255, 255, 255, 255);
                 func_8007B3D0(&sMenuCurrDisplayList);
             }
         } else {
@@ -3266,9 +3266,10 @@ void func_80088938(s32 arg0) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/menu/func_80088938.s")
+GLOBAL_ASM("asm/non_matchings/menu/render_controller_pak_ui.s")
 #endif
-GLOBAL_ASM("asm/non_matchings/menu/func_800890AC.s")
+
+GLOBAL_ASM("asm/non_matchings/menu/menu_controller_pak_loop.s")
 
 void func_800895A4(void) {
     func_8009C508(0x3F);
@@ -6606,7 +6607,7 @@ s32 taj_menu_loop(void) {
         case -8:
         case -7:
         case -6:
-            func_800C31EC(0xC - sCurrentMenuID);
+            func_800C31EC(12 - sCurrentMenuID);
             sCurrentMenuID = 6;
             sDialogueOption = 0;
             break;

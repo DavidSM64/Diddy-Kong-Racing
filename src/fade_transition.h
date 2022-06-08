@@ -26,12 +26,12 @@ enum TransitionStatus {
 
 /* Size: 8 bytes */
 typedef struct FadeTransition {
-    u8 type; // top 2 bits also act as flags
-    u8 red;
-    u8 green;
-    u8 blue;
-    u16 duration;
-    u16 unk6;
+  /* 0x00 */ u8 type; // top 2 bits also act as flags
+  /* 0x01 */ u8 red;
+  /* 0x02 */ u8 green;
+  /* 0x03 */ u8 blue;
+  /* 0x04 */ u16 duration;
+  /* 0x06 */ u16 unk6;
 } FadeTransition;
 
 extern u32 osTvType;

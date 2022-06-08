@@ -1,4 +1,4 @@
-glabel func_800890AC
+glabel menu_controller_pak_loop
 /* 089CAC 800890AC 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
 /* 089CB0 800890B0 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
 /* 089CB4 800890B4 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
@@ -15,7 +15,7 @@ glabel func_800890AC
 /* 089CE0 800890E0 AFA0002C */  sw    $zero, 0x2c($sp)
 /* 089CE4 800890E4 10200008 */  beqz  $at, .L80089108
 /* 089CE8 800890E8 AC780000 */   sw    $t8, ($v1)
-/* 089CEC 800890EC 0C02224E */  jal   func_80088938
+/* 089CEC 800890EC 0C02224E */  jal   render_controller_pak_ui
 /* 089CF0 800890F0 AFA40048 */   sw    $a0, 0x48($sp)
 /* 089CF4 800890F4 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 089CF8 800890F8 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
