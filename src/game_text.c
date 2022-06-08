@@ -108,12 +108,12 @@ void func_800C2F1C(s32 arg0) {
             }
             D_8012A7AC -= arg0;
             if (D_8012A7AC <= 0) {
-                func_800C2D6C(D_8012A7B6);
+                func_800C2D6C();
             }
         }
     }
     if (D_8012A7B6 != 0) {
-        func_800C2B00(D_8012A7B6);
+        func_800C2B00();
     }
 }
 
