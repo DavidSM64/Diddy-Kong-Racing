@@ -773,6 +773,7 @@ s32 menu_game_select_loop(s32 arg0);
 s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
+s32 func_8008832C(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -815,7 +816,6 @@ void func_8009CA60(s32 imageID);
 void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
-s32 func_8008832C(void);
 void func_8009C6D4(s32 arg0);
 void func_8008B358(void);
 void func_8008B4C8(void);

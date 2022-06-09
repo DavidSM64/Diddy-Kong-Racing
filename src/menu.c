@@ -222,7 +222,7 @@ u8 sControllerPakBadData[MAXCONTROLLERS]; //Flag to see if there's bad data for 
 u8 *D_80126A40[8]; //Menu Text
 u8 sControllerPakDataPresent[MAXCONTROLLERS]; //Flag to see if there's data present for the given controller pak? Not sure
 s32 D_80126A64;
-s32 D_80126A68;
+s32 D_80126A68; //sCurrentControllerIndex?
 s32 D_80126A6C;
 s32 D_80126A70;
 s32 D_80126A74;
@@ -295,7 +295,7 @@ s8 D_800DF450 = 0;
 f32 D_800DF454 = 1.0f;
 s32 D_800DF458 = 1;
 s32 gTitleScreenCurrentOption = 0; // 0 = "Start", 1 = "Options"
-s32 D_800DF460 = 0;
+s32 D_800DF460 = 0; // Currently selected menu index? Reused in different menus.
 s32 D_800DF464 = 4; // Currently unknown, might be a different type.
 s32 D_800DF468 = 0;
 s32 D_800DF46C = 0;
@@ -3024,7 +3024,47 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80087F14.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008832C.s")
+s32 func_8008832C(void) {
+    s32 errorFound;
+    s32 i;
+
+    errorFound = 0;
+    D_80126BC8 = 0;
+
+    for (i = 0; i <= 0 && errorFound == 0; i++) {
+        if (sControllerPakFatalErrorFound[i] != 0) {
+            gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_PAKERROR];           // PAK ERROR
+            gControllerPakMenuElement[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_PAKERROR];           // PAK ERROR
+            gControllerPakMenuElement[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + i];       // CONTROLLER PAK 1 / 2 / 3 / 4
+            gControllerPakMenuElement[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTPAKISDAMAGED_0]; // IRREPARABLY DAMAGED.
+            gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TURNOFFN64_0];       // Switch off the N64
+            gControllerPakMenuElement[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TURNOFFN64_1];       // and remove the controller pak.
+            D_80126BC8 = 1;
+            errorFound = 1;
+        } else if ((sControllerPakNoFreeSpace[i] != 0) && (sControllerPakDataPresent[i] == 0)) {
+            gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];            // CAUTION
+            gControllerPakMenuElement[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];            // CAUTION
+            gControllerPakMenuElement[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + i];       // CONTROLLER PAK 1 / 2 / 3 / 4
+            gControllerPakMenuElement[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTPAKFULL];        // CONTROLLER PAK FULL
+            gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTINUE];           // CONTINUE
+            gControllerPakMenuElement[5].unk14_a.asciiText = NULL;
+            sControllerPakDataPresent[i] = 1;
+            D_80126BC8 = 2;
+            errorFound = 1;
+        } else if (sControllerPakBadData[i] != 0) {
+            gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];            // CAUTION
+            gControllerPakMenuElement[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];            // CAUTION
+            gControllerPakMenuElement[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + i];       // CONTROLLER PAK 1 / 2 / 3 / 4
+            gControllerPakMenuElement[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0];      // CORRUPT DATA.
+            gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_1];      // TRY AGAIN!
+            gControllerPakMenuElement[5].unk14_a.asciiText = NULL;
+            D_80126BC8 = 3;
+            errorFound = 1;
+        }
+    }
+
+    return D_80126BC8;
+}
 
 void menu_boot_init(void) {
     s32 i;
@@ -3279,7 +3319,163 @@ void render_controller_pak_ui(s32 updateRate) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+s32 menu_controller_pak_loop(s32 updateRate) {
+    s32 i;
+    s32 pressedButtons;
+    s32 xStick;
+    s32 yStick;
+    s32 playMoveSound = FALSE;
+    s32 playCancelSound = FALSE;
+    s32 playSelectedSound = FALSE;
+    s32 temp_v1_2;
+
+    D_801263BC = (D_801263BC + updateRate) & 0x3F;
+    if (gMenuDelay < 20) {
+        render_controller_pak_ui(updateRate);
+    }
+    gMenuDelay += updateRate;
+    if (gMenuDelay == 0) {
+        pressedButtons = 0;
+        xStick = 0;
+        yStick = 0;
+        for (i = 0; i < MAXCONTROLLERS; i++) {
+            pressedButtons |= get_buttons_pressed_from_player(i);
+            xStick += gControllersXAxisDirection[i];
+            yStick += gControllersYAxisDirection[i];
+        }
+        if (D_80126BC8 != 0) {
+            if ((D_80126BC8 != 1) && (pressedButtons & (A_BUTTON | START_BUTTON))) {
+                play_sound_global(SOUND_SELECT2, NULL);
+                if (func_80087F14(&D_80126A68, 0) == CONTROLLER_PAK_GOOD) {
+                    D_80126BC8 = 0;
+                } else if (func_8008832C() == 0) {
+                    gShowControllerPakMenu = 0;
+                }
+                if ((D_80126BC8 == 0) && (gShowControllerPakMenu == 0)) {
+                    playCancelSound = TRUE;
+                    gMenuDelay = 1;
+                    func_800C01D8(&sMenuTransitionFadeIn);
+                }
+            }
+        } else {
+            if (D_801263E0 != 0) {
+                if (D_80126C10 != 0) {
+                    D_80126C10--;
+                    if (D_80126C10 == 0) {
+                        if (delete_file(D_80126A68, D_800DF460) != CONTROLLER_PAK_GOOD) {
+                            //Failed to delete the file
+                            playCancelSound = TRUE;
+                            gMenuDelay = 1;
+                            func_800C01D8(&sMenuTransitionFadeIn);
+                        } else {
+                            //File deleted successfully
+                            playSelectedSound = TRUE;
+                            if (func_80087F14(&D_80126A68, xStick) != CONTROLLER_PAK_GOOD) {
+                                playCancelSound = TRUE;
+                                gMenuDelay = 1;
+                                func_800C01D8(&sMenuTransitionFadeIn);
+                            }
+                        }
+                        D_801263E0 = 0;
+                    }
+                } else if (pressedButtons & B_BUTTON) {
+                    playCancelSound = TRUE;
+                    D_801263E0 = 0;
+                } else if (pressedButtons & (A_BUTTON | START_BUTTON)) {
+                    if (D_801263E0 == 1) {
+                        D_80126C10 = 3;
+                    } else {
+                        playCancelSound = TRUE;
+                        D_801263E0 = 0;
+                    }
+                } else if (yStick > 0 && D_801263E0 >= 2) {
+                    D_801263E0 = 1;
+                    playMoveSound = TRUE;
+                } else if (yStick < 0 && D_801263E0 < 2) {
+                    D_801263E0 = 2;
+                    playMoveSound = TRUE;
+                }
+            } else if (pressedButtons & B_BUTTON || (D_800DF460 == 16 && pressedButtons & (A_BUTTON | START_BUTTON))) {
+                playCancelSound = 1;
+                gMenuDelay = 1;
+                func_800C01D8(&sMenuTransitionFadeIn);
+            } else {
+                //D_800DF460 = selected menu index?
+                switch (D_800DF460) {
+                case -1:
+                    if (yStick < 0) {
+                        D_800DF460 = 0;
+                        playMoveSound = TRUE;
+                    }
+                    break;
+                case 16:
+                    if (yStick > 0) {
+                        D_800DF460 = 15;
+                        playMoveSound = TRUE;
+                    }
+                    break;
+                default:
+                    if (pressedButtons & (A_BUTTON | START_BUTTON)) {
+                        //Check if the selected menu item is a file or blank
+                        if ((sCurrentControllerPakAllFileTypes[D_800DF460] >= 3) && (sCurrentControllerPakAllFileTypes[D_800DF460] <= 6)) {
+                            D_80126C10 = 0;
+                            D_801263E0 = 2;
+                            playSelectedSound = TRUE;
+                        } else {
+                            //If it's not, just play the "back" sound
+                            playCancelSound = TRUE;
+                        }
+                    } else {
+                        if (yStick > 0) {
+                            D_800DF460--;
+                            if (D_800DF460 < 0) {
+                                D_800DF460 = 0;
+                            } else {
+                                playMoveSound = TRUE;
+                            }
+                        } else if (yStick < 0) {
+                            D_800DF460++;
+                            playMoveSound = TRUE;
+                        }
+                    }
+                    if (D_800DF460 >= (D_801263D8 + D_80126BB4)) {
+                        D_801263D8 = (D_800DF460 - D_80126BB4) + 1;
+                    }
+                    if (D_800DF460 < D_801263D8) {
+                        D_801263D8 = D_800DF460;
+                    }
+                    temp_v1_2 = 16 - D_80126BB4;
+                    if (temp_v1_2 < D_801263D8) {
+                        D_801263D8 = temp_v1_2;
+                    }
+                    if (D_801263D8 < 0) {
+                        D_801263D8 = 0;
+                    }
+                    break;
+                }
+            }
+        }
+        if (playCancelSound) {
+            //Menu Cancel Sound
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+        } else if (playSelectedSound) {
+            //Menu Item Selected Sound
+            play_sound_global(SOUND_SELECT2, NULL);
+        } else if (playMoveSound) {
+            //Menu Moving Sound
+            play_sound_global(SOUND_MENU_PICK2, NULL);
+        }
+    } else if (gMenuDelay >= 36) {
+        func_800895A4();
+        menu_init(MENU_LOGOS);
+        load_level_for_menu(21, -1, 0);
+    }
+    return 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/menu_controller_pak_loop.s")
+#endif
 
 void func_800895A4(void) {
     func_8009C508(0x3F);
