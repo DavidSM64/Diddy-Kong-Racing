@@ -648,7 +648,7 @@ void init_title_screen_variables(void);
 void menu_title_screen_init(void);
 void func_80084118(void);
 void menu_options_init(void);
-void func_800841B8(s32 arg0);
+void render_options_menu_ui(s32 updateRate);
 void unload_big_font_1(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
@@ -772,13 +772,13 @@ void menu_magic_codes_init(void);
 s32 menu_game_select_loop(s32 arg0);
 s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
+void render_controller_pak_ui(UNUSED s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_audio_options_loop(s32 arg0);
-s32 menu_options_loop(s32 arg0);
-void render_controller_pak_ui(UNUSED s32 updateRate);
+s32 menu_options_loop(s32 updateRate);
 s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
 s32 menu_magic_codes_list_loop(s32 arg0);

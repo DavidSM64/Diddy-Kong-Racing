@@ -26,7 +26,7 @@ glabel menu_options_loop
 /* 084FB4 800843B4 28410023 */   slti  $at, $v0, 0x23
 /* 084FB8 800843B8 10200005 */  beqz  $at, .L800843D0
 /* 084FBC 800843BC 00000000 */   nop   
-/* 084FC0 800843C0 0C02106E */  jal   func_800841B8
+/* 084FC0 800843C0 0C02106E */  jal   render_options_menu_ui
 /* 084FC4 800843C4 00000000 */   nop   
 /* 084FC8 800843C8 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 084FCC 800843CC 2529F47C */  addiu $t1, %lo(gMenuDelay) # addiu $t1, $t1, -0xb84
