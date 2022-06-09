@@ -350,7 +350,7 @@ extern u8 D_800DFC70[8];
 
 extern s16 D_800DFC78[26];
 
-extern MenuElement D_800DFCB4[7];
+extern MenuElement gControllerPakMenuElement[7];
 
 extern s32 gShowControllerPakMenu;
 
@@ -649,7 +649,7 @@ void menu_title_screen_init(void);
 void func_80084118(void);
 void menu_options_init(void);
 void func_800841B8(s32 arg0);
-void func_80084734(void);
+void unload_big_font_1(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
 void menu_save_options_init(void);
@@ -663,7 +663,7 @@ void menu_boot_init(void);
 void func_800887C4(void);
 void func_800887E8(void);
 void func_800895A4(void);
-void func_8008A4C8(void);
+void unload_big_font_2(void);
 void menu_magic_codes_list_init(void);
 void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2);
 void func_8008AD1C(void);
@@ -674,7 +674,7 @@ void draw_character_select_text(s32 arg0);
 void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4);
 void func_8008C128(void);
 void menu_caution_init(void);
-void unload_large_font(void);
+void unload_big_font_3(void);
 void func_8008CACC(void);
 void menu_file_select_init(void);
 void render_menu_image(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
@@ -696,10 +696,10 @@ void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
 s32 compress_filename_string(unsigned char *filename, s32 length);
 void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
-void func_800981E8(void);
+void unload_big_font_4(void);
 void func_80098208(void);
 void draw_trophy_race_text(UNUSED s32 updateRate);
-void func_80098754(void);
+void unload_big_font_5(void);
 void func_80099600(void);
 s32 get_trophy_race_world_id(void);
 void func_8009ABAC(void);

@@ -511,7 +511,7 @@ s16 D_800DFCAC[4] = {
     0x000B, 0x000C, 0x0002, 0xFFFF
 };
 
-MenuElement D_800DFCB4[7] = {
+MenuElement gControllerPakMenuElement[7] = {
     { 161, 32,  161, 33,  161, 32,  0,   0,   0,   255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
     { 160, 30,  160, 30,  160, 30,  255, 255, 255, 0,   255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
     { 160, 112, 160, 112, 160, 112, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
@@ -2322,7 +2322,7 @@ void menu_title_screen_init(void) {
     set_music_player_voice_limit(0x1B);
     func_800660C0();
     set_text_font(ASSET_FONTS_FUNFONT);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     func_80000890(0);
     set_time_trial_enabled(FALSE);
     D_80126864 = 0;
@@ -2349,7 +2349,7 @@ void func_80084118(void) {
     func_8009C4A8(sGameTitleTileTextures);
     set_music_player_voice_limit(0x10);
     func_800660D0();
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
     func_80000890(1);
 }
 
@@ -2357,7 +2357,7 @@ void menu_options_init(void) {
     D_801263BC = 0;
     gMenuDelay = 0;
     func_800C01D8(&sMenuTransitionFadeOut);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     set_text_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(0x18);
     play_music(SEQUENCE_MAIN_MENU);
@@ -2487,23 +2487,23 @@ s32 menu_options_loop(s32 arg0) {
     if (gMenuDelay >= 31) {
         // Change screen to a sub-menu
         if (D_800DF460 == 2) {
-            func_80084734();
+            unload_big_font_1();
             menu_init(MENU_AUDIO_OPTIONS);
             return 0;
         }
         if (D_800DF460 == 3) {
-            func_80084734();
+            unload_big_font_1();
             menu_init(MENU_SAVE_OPTIONS);
             return 0;
         }
-        func_80084734();
+        unload_big_font_1();
         menu_init(MENU_MAGIC_CODES);
         return 0;
     }
     if (gMenuDelay < -30) {
         // Change screen back to the title screen.
         func_80000B28();
-        func_80084734();
+        unload_big_font_1();
         menu_init(MENU_TITLE);
         return 0;
     }
@@ -2514,8 +2514,12 @@ s32 menu_options_loop(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_options_loop.s")
 #endif
 
-void func_80084734(void) {
-    unload_font(2);
+
+/**
+ * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
+ */
+void unload_big_font_1(void) {
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 void menu_audio_options_init(void) {
@@ -2541,7 +2545,7 @@ void menu_audio_options_init(void) {
         gAudioMenuStrings[3].unk2 = 0xC0;
         D_801263E0 = 4;
     }
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80084854.s")
@@ -2706,7 +2710,7 @@ void func_800851FC(void) {
         func_80000B18();
     }
     func_8009C4A8(gOptionMenuTextures);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 void menu_save_options_init(void) {
@@ -2731,7 +2735,7 @@ void menu_save_options_init(void) {
     func_8009C674(D_800DFC78);
     allocate_menu_images(D_800DFCAC);
     func_8007FFEC(0xA);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     D_800DFC10[0].texture = D_80126550[71];
     D_800DFC20[0].texture = D_80126550[72];
     D_800DFC30[0].texture = D_80126550[75];
@@ -2873,7 +2877,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80087734.s")
 GLOBAL_ASM("asm/non_matchings/menu/menu_save_options_loop.s")
 
 void func_80087EB8(void) {
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
     func_8007FF88();
     func_8009C4A8(D_800DFC78);
     assign_dialogue_box_id(7);
@@ -3123,33 +3127,32 @@ void func_800887E8(void) {
     if (func_80087F14(&D_80126A68, 0) == CONTROLLER_PAK_GOOD) {
         gMenuDelay = 0;
     } else if (func_8008832C() == 0) {
-        gMenuDelay = 0x14;
+        gMenuDelay = 20;
     }
     if (D_80126BC8 == 0 && !gShowControllerPakMenu) {
-        gMenuDelay = 0x14;
+        gMenuDelay = 20;
     }
     D_800DF460 = 0;
     D_801263D8 = 0;
-    func_8009C6D4(0x3F);
+    func_8009C6D4(63);
     func_8008E4B0();
     if (osTvType == TV_TYPE_PAL) {
         D_80126BB4 = 8;
     } else {
         D_80126BB4 = 7;
     }
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
 }
 
-#ifdef NON_EQUIVALENT
 //Visual Aid : https://i.imgur.com/7T2Scdr.png
-void render_controller_pak_ui(UNUSED s32 updateRate) {
+void render_controller_pak_ui(s32 updateRate) {
     s32 alpha;
     s32 i;
-    char* freePagesText;
-    char* noteText;
-    char* fileNameText;
-    s32 phi_s3;
-    s32 yPos;
+    char *noteText;
+    char *fileNameText;
+    char *pagesText;
+    s32 numberOfPages;
+    s32 yPos = 0;
 
     set_text_background_colour(0, 0, 0, 0);
     alpha = D_801263BC << 3;
@@ -3157,18 +3160,18 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         alpha = 511 - alpha;
     }
     if (D_80126BC8 != 0) {
-        draw_menu_elements(1, D_800DFCB4, 1.0f);
+        draw_menu_elements(1, gControllerPakMenuElement, 1.0f);
     } else if (gShowControllerPakMenu != 0) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_colour(0, 0, 0, 255, 128);
-        draw_text(&sMenuCurrDisplayList, 161, 33, gMenuText[35], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, 161, 33, gMenuText[ASSET_MENU_TEXT_CONTPAK], ALIGN_MIDDLE_CENTER); //CONTROLLER PAK - Drop Shadow
         set_text_colour(255, 255, 255, 0, 255);
-        draw_text(&sMenuCurrDisplayList, 160, 30, gMenuText[35], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, 160, 30, gMenuText[ASSET_MENU_TEXT_CONTPAK], ALIGN_MIDDLE_CENTER); //CONTROLLER PAK - Main Text
+
+        yPos += 48;
+
         assign_dialogue_box_id(6);
-
-        //HERE!
-        set_current_dialogue_box_coords(6, 58, 48, 262, yPos + 30);
-
+        set_current_dialogue_box_coords(6, 58, yPos, 262, yPos + 30);
 
         if (D_800DF460 == -1) {
             set_current_dialogue_background_colour(6, 255, 255, 255, (alpha >> 1) + 128);
@@ -3176,43 +3179,45 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
             set_current_dialogue_background_colour(6, 96, 192, 92, 224);
         }
 
-        set_dialogue_font(6, 0);
+        set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + D_80126A68], 1, 4);
-        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[114], sCurrentControllerPakFreeSpace, 4);
+        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + D_80126A68], 1, 4); //ASSET_MENU_TEXT_CONTPAK1 - CONTROLLER PAK 1 / 2 / 3 / 4
+        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreeSpace, 4); //FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
-        //HERE!
         yPos += 34; //To 82
 
-        set_dialogue_font(6, 1);
+        set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
         set_current_text_background_colour(6, 0, 0, 0, 0);
         for (i = -1; i < D_80126BB4; i++) {
             assign_dialogue_box_id(6);
             set_current_dialogue_box_coords(6, 28, yPos, 292, yPos + 14);
             if (i < 0) {
+                //Red background for table header
                 set_current_dialogue_background_colour(6, 224, 48, 48, 224);
                 set_current_text_colour(6, 224, 224, 48, 255, 255);
-                freePagesText = gMenuText[115]; //ASSET_MENU_TEXT_FREEPAGESX - FREE PAGES: ~
-                noteText = gMenuText[116]; //ASSET_MENU_TEXT_NOTE - NOTE
-                fileNameText = gMenuText[117]; //ASSET_MENU_TEXT_FILENAME - FILENAME
-                phi_s3 = 1;
+                noteText = gMenuText[ASSET_MENU_TEXT_NOTE]; //NOTE
+                fileNameText = gMenuText[ASSET_MENU_TEXT_FILENAME]; //FILENAME
+                pagesText = gMenuText[ASSET_MENU_TEXT_PAGES]; //PAGES
+                numberOfPages = 1;
             } else {
-                freePagesText = (char *)&D_800E820C; //~
-                fileNameText = (char *)&D_800E820C; //~
                 if (D_800DF460 == (i + D_801263D8)) {
+                    //White background for currently selected row
                     set_current_dialogue_background_colour(6, 255, 255, 255, (alpha >> 1) + 128);
                 } else {
+                    //Yellow background for all other rows
                     set_current_dialogue_background_colour(6, 224, 224, 48, 224);
                 }
                 set_current_text_colour(6, 16, 16, 160, 255, 255);
-                noteText = D_80126AA0[D_801263D8 + i];
-                phi_s3 = sCurrentControllerPakAllFileSizes[D_801263D8 + i];
+                noteText = (char *)&D_800E820C; //~
+                pagesText = (char *)&D_800E820C; //~
+                fileNameText = D_80126AA0[D_801263D8 + i];
+                numberOfPages = sCurrentControllerPakAllFileSizes[D_801263D8 + i];
             }
-            render_dialogue_text(6, 26, 2, freePagesText, D_801263D8 + i + 1, 4);
-            render_dialogue_text(6, 56, 2, noteText, 1, 0);
-            render_dialogue_text(6, 240, 2, fileNameText, phi_s3, 4);
+            render_dialogue_text(6, 26, 2, noteText, D_801263D8 + i + 1, 4);
+            render_dialogue_text(6, 56, 2, fileNameText, 1, 0);
+            render_dialogue_text(6, 240, 2, pagesText, numberOfPages, 4);
             render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
             yPos += 16;
         }
@@ -3228,7 +3233,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
             } else {
                 set_text_colour(255, 255, 255, 0, 255);
             }
-            draw_text(&sMenuCurrDisplayList, POS_CENTRED, yPos, gMenuText[51], ALIGN_TOP_CENTER);
+            draw_text(&sMenuCurrDisplayList, POS_CENTRED, yPos, gMenuText[ASSET_MENU_TEXT_EXIT], ALIGN_TOP_CENTER); //EXIT
         }
         if ((D_801263E0 != 0) && (D_80126C10 == 0)) {
             if (osTvType == TV_TYPE_PAL) {
@@ -3237,11 +3242,12 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
                 yPos = 120;
             }
             assign_dialogue_box_id(6);
-            set_dialogue_font(6, 0);
+            set_dialogue_font(6, ASSET_FONTS_FUNFONT);
             set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
             set_current_dialogue_background_colour(6, 0, 0, 0, 160);
 
-            for (yPos = 4, i = 0; i < 3; i++) {
+            yPos = 4;
+            for (i = 0; i <= 2; i++) {
                 if (i == 0) {
                     set_current_text_colour(6, 255, 0, 255, 64, 255);
                 } else if (i == D_801263E0) {
@@ -3249,7 +3255,13 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
                 } else {
                     set_current_text_colour(6, 255, 255, 255, 0, 255);
                 }
-                render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[111 + i], D_800DF460 + 1, 4);
+
+                //Render these three lines in this order
+                //ASSET_MENU_TEXT_DELETENOTEX  - DELETE NOTE ~ ?
+                //ASSET_MENU_TEXT_DELETE       - DELETE
+                //ASSET_MENU_TEXT_CANCELDELETE - CANCEL
+                render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[ASSET_MENU_TEXT_DELETENOTEX + i], D_800DF460 + 1, 4);
+
                 if (i != 0) {
                     yPos += 16;
                 } else {
@@ -3265,16 +3277,12 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/render_controller_pak_ui.s")
-#endif
-
 GLOBAL_ASM("asm/non_matchings/menu/menu_controller_pak_loop.s")
 
 void func_800895A4(void) {
     func_8009C508(0x3F);
     free_from_memory_pool(D_80126AA0[0]);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 void menu_magic_codes_init(void) {
@@ -3293,7 +3301,7 @@ void menu_magic_codes_init(void) {
     set_current_dialogue_box_coords(7, 50, 50, 270, 132);
     set_current_dialogue_background_colour(7, 0, 0, 0, 128);
     assign_dialogue_box_id(7);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
 }
 
 #ifdef NON_EQUIVALENT
@@ -3423,8 +3431,12 @@ GLOBAL_ASM("asm/non_matchings/menu/render_magic_codes_ui.s")
 
 GLOBAL_ASM("asm/non_matchings/menu/menu_magic_codes_loop.s")
 
-void func_8008A4C8(void) {
-    unload_font(2);
+
+/**
+ * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
+ */
+void unload_big_font_2(void) {
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 void menu_magic_codes_list_init(void) {
@@ -3432,7 +3444,7 @@ void menu_magic_codes_list_init(void) {
     gMenuDelay = 0;
     D_801263E0 = 0;
     gOptionsMenuItemIndex = (u16)0;
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     func_8009C6D4(0x3F);
     func_8008E4B0();
     func_800C01D8(&sMenuTransitionFadeOut);
@@ -3625,7 +3637,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_magic_codes_list_loop.s")
 
 void func_8008AD1C(void) {
     func_8009C508(0x3F);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 #ifdef NON_EQUIVALENT
@@ -3755,7 +3767,7 @@ void menu_character_select_init(void) {
     func_8009C674(D_800DFDC8);
     allocate_menu_images(D_800DFDCC);
     func_800C01D8(&sMenuTransitionFadeOut);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
 }
 
 /**
@@ -3947,7 +3959,7 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
 void func_8008C128(void) {
     func_8009C4A8((s16 *)&D_800DFDC8);
     set_free_queue_state(0);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
     set_free_queue_state(2);
     D_800DFFD0 = 0;
 }
@@ -3961,7 +3973,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008C168.s")
 void menu_caution_init(void) {
     gIgnorePlayerInput = 60;
     gMenuDelay = 0;
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     func_800C01D8(&sMenuTransitionFadeOut);
     gPlayerHasSeenCautionMenu = 1;
 }
@@ -3982,7 +3994,7 @@ s32 menu_caution_loop(s32 updateRate) {
         draw_menu_elements(1, gCautionMenuTextElements, 1.0f);
     }
     if (gMenuDelay > 30) {
-        unload_large_font();
+        unload_big_font_3();
         menu_init(MENU_GAME_SELECT);
     }
     if (gIgnorePlayerInput > 0) {
@@ -3994,7 +4006,7 @@ s32 menu_caution_loop(s32 updateRate) {
 /**
  * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
  */
-void unload_large_font(void) {
+void unload_big_font_3(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -4013,7 +4025,7 @@ void menu_game_select_init(void) {
     D_801263D8 = 1;
     func_8009C6D4(0x43);
     func_8007FFEC(3);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     play_music(SEQUENCE_CHOOSE_YOUR_RACER);
 
     for (i = 0; i < 10; i++) {
@@ -4177,7 +4189,7 @@ s32 menu_game_select_loop(s32 arg0) {
 }
 
 void func_8008CACC(void) {
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
     func_8007FF88();
     func_8009C508(0x43);
 }
@@ -4201,7 +4213,7 @@ void menu_file_select_init(void) {
     D_80126488 = 0;
     D_80126CC0 = 0;
     func_800C01D8(&sMenuTransitionFadeOut);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     play_music(SEQUENCE_CHOOSE_YOUR_RACER);
     for (i = 0; i < 10; i++) {
         if (i != D_801263B4.unk0) {
@@ -4456,7 +4468,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_file_select_loop.s")
 void func_8008E428(void) {
     func_8009C4A8(D_800E0398);
     func_8007FF88();
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 void func_8008E45C(void) {
@@ -4583,7 +4595,7 @@ void func_8008F534(void) {
             func_8009C508(D_800E0710[i + 1]);
         }
     }
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
     func_8007FF88();
     func_80000B28();
     func_80000C2C();
@@ -4977,7 +4989,7 @@ void menu_5_init(void) {
         D_801263BC = 0;
         gMenuDelay = 0;
         D_800E0980 = 0x1E;
-        load_font(2);
+        load_font(ASSET_FONTS_BIGFONT);
         load_level_for_menu(s0, -1, 1);
     }
     assign_dialogue_box_id(7);
@@ -5100,7 +5112,7 @@ s32 menu_5_loop(s32 updateRate) {
 
 void func_80093A0C(void) {
     func_8009C4A8((s16 *)&D_800E0FB4);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
     func_80000B28();
 }
 
@@ -5301,7 +5313,7 @@ void func_80096790(void) {
     }
     D_80126BBC = 0;
 
-    func_800981E8();
+    unload_big_font_4();
     func_80000968(0);
 }
 
@@ -5335,7 +5347,7 @@ void menu_11_init(void) {
     func_8009C674(D_800E0A24);
     allocate_menu_images(D_800E0A40);
     func_80094604();
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     func_800C01D8(&sMenuTransitionFadeOut);
     set_music_player_voice_limit(0x18);
     play_music(SEQUENCE_MAIN_MENU);
@@ -5347,7 +5359,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_results_loop.s")
 
 void func_800976CC(void) {
     func_8009C4A8(D_800E0A24);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 /**
@@ -5452,14 +5464,18 @@ void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, 
     gCheatInputString = NULL;
     D_80126C3C = 0;
     D_80126C34 = 0;
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80097918.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80097D10.s")
 
-void func_800981E8(void) {
-    unload_font(2);
+
+/**
+ * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
+ */
+void unload_big_font_4(void) {
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 // Gets triggered when entering trophy race in adventure mode.
@@ -5504,7 +5520,7 @@ void menu_trophy_race_round_init(void) {
 
     gMenuDelay = 0;
     D_800E0980 = 10;
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(0x18);
     play_music(SEQUENCE_MAIN_MENU);
     set_music_fade_timer(0x100);
@@ -5578,7 +5594,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
         }
     }
     if (gMenuDelay >= 31) {
-        func_80098754();
+        unload_big_font_5();
         gTrackIdToLoad = trackMenuIds[(((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound)];
         D_800DF478 = 1;
         return gNumberOfActivePlayers;
@@ -5587,8 +5603,11 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
     return 0;
 }
 
-void func_80098754(void) {
-    unload_font(2);
+/**
+ * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
+ */
+void unload_big_font_5(void) {
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80098774.s")
@@ -5632,7 +5651,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_rankings_loop.s")
 
 void func_80099600(void) {
     func_8009C4A8(D_800E1024);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 s32 get_trophy_race_world_id(void) {
@@ -5655,7 +5674,7 @@ void menu_ghost_data_init(void) {
     }
     func_8009C674(&D_800E1708);
     allocate_menu_images(&D_800E174C);
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     D_800E153C[0].texture = D_80126550[14];
     D_800E153C[5].texture = D_80126550[15];
     D_800E1594[0].texture = D_80126550[16];
@@ -5819,7 +5838,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
 
 void func_8009ABAC(void) {
     func_8009C4A8(D_800E1708);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
 }
 
 void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
@@ -5894,7 +5913,7 @@ void menu_credits_init(void) {
     func_8009C674(D_800E17D8);
     allocate_menu_images(D_800E17F0);
     func_80094604();
-    load_font(2);
+    load_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(0x18);
     D_800E18F8 = (u16)0x1000;
     if (gViewingCreditsFromCheat) {
@@ -5958,7 +5977,7 @@ void func_8009BCF0(void) {
     func_80066894(0, 0);
     set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
     func_8009C4A8(D_800E17D8);
-    unload_font(2);
+    unload_font(ASSET_FONTS_BIGFONT);
     func_8006F564(0);
 }
 

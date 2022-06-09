@@ -146,8 +146,8 @@ void load_fonts(void) {
         (*D_8012A7EC)[i].textBGColourA = 0;
         (*D_8012A7EC)[i].unk1C = 0;
     }
-    load_font(0);
-    load_font(1);
+    load_font(ASSET_FONTS_FUNFONT);
+    load_font(ASSET_FONTS_SMALLFONT);
     D_8012A7F0 = 0;
 }
 
