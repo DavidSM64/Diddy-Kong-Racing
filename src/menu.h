@@ -94,6 +94,13 @@ typedef enum MENU_ID {
     MENU_CAUTION
 } MENU_ID;
 
+typedef enum PakError {
+    PAK_ERROR_NONE,
+    PAK_ERROR_FATAL,
+    PAK_ERROR_FULL,
+    PAK_ERROR_CORRUPT
+} PakError;
+
 /* Size: 0x20 bytes */
 // So this is looking to be a struct for menu images.
 typedef struct unk800DF510 {
@@ -773,7 +780,7 @@ s32 menu_game_select_loop(s32 arg0);
 s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
-s32 func_8008832C(void);
+PakError check_for_controller_pak_errors(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching

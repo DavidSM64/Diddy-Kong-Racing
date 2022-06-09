@@ -244,7 +244,7 @@ s32 D_80126BB8;
 s32 D_80126BBC;
 s32 D_80126BC0;
 s32 D_80126BC4;
-s32 D_80126BC8;
+PakError sControllerPakError; // 0 = no error, 1 = fatal error, 2 = no free space, 3 = bad data
 s32 D_80126BCC;
 s32 D_80126BD0;
 s32 D_80126BD4;
@@ -3024,13 +3024,22 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80087F14.s")
 #endif
 
-s32 func_8008832C(void) {
+/**
+ * Sets and returns an error code if any controller paks have an error.
+ * Current implementation only checks the first controller pak.
+ * 0 = No Error
+ * 1 = Fatal Error
+ * 2 = No Free Space
+ * 3 = Corrupt Data
+ */
+PakError check_for_controller_pak_errors(void) {
     s32 errorFound;
     s32 i;
 
     errorFound = 0;
-    D_80126BC8 = 0;
+    sControllerPakError = PAK_ERROR_NONE;
 
+    // This has been hard limited to just the first controller pak, but can easily be modified to check the rest with i <= MAXCONTROLLERS
     for (i = 0; i <= 0 && errorFound == 0; i++) {
         if (sControllerPakFatalErrorFound[i] != 0) {
             gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_PAKERROR];           // PAK ERROR
@@ -3039,7 +3048,7 @@ s32 func_8008832C(void) {
             gControllerPakMenuElement[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTPAKISDAMAGED_0]; // IRREPARABLY DAMAGED.
             gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TURNOFFN64_0];       // Switch off the N64
             gControllerPakMenuElement[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TURNOFFN64_1];       // and remove the controller pak.
-            D_80126BC8 = 1;
+            sControllerPakError = PAK_ERROR_FATAL;
             errorFound = 1;
         } else if ((sControllerPakNoFreeSpace[i] != 0) && (sControllerPakDataPresent[i] == 0)) {
             gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];            // CAUTION
@@ -3049,7 +3058,7 @@ s32 func_8008832C(void) {
             gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CONTINUE];           // CONTINUE
             gControllerPakMenuElement[5].unk14_a.asciiText = NULL;
             sControllerPakDataPresent[i] = 1;
-            D_80126BC8 = 2;
+            sControllerPakError = PAK_ERROR_FULL;
             errorFound = 1;
         } else if (sControllerPakBadData[i] != 0) {
             gControllerPakMenuElement[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];            // CAUTION
@@ -3058,12 +3067,12 @@ s32 func_8008832C(void) {
             gControllerPakMenuElement[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0];      // CORRUPT DATA.
             gControllerPakMenuElement[4].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_1];      // TRY AGAIN!
             gControllerPakMenuElement[5].unk14_a.asciiText = NULL;
-            D_80126BC8 = 3;
+            sControllerPakError = PAK_ERROR_CORRUPT;
             errorFound = 1;
         }
     }
 
-    return D_80126BC8;
+    return sControllerPakError;
 }
 
 void menu_boot_init(void) {
@@ -3166,10 +3175,10 @@ void func_800887E8(void) {
     load_menu_text(get_language());
     if (func_80087F14(&D_80126A68, 0) == CONTROLLER_PAK_GOOD) {
         gMenuDelay = 0;
-    } else if (func_8008832C() == 0) {
+    } else if (check_for_controller_pak_errors() == 0) {
         gMenuDelay = 20;
     }
-    if (D_80126BC8 == 0 && !gShowControllerPakMenu) {
+    if (sControllerPakError == PAK_ERROR_NONE && !gShowControllerPakMenu) {
         gMenuDelay = 20;
     }
     D_800DF460 = 0;
@@ -3199,7 +3208,7 @@ void render_controller_pak_ui(s32 updateRate) {
     if (alpha >= 256) {
         alpha = 511 - alpha;
     }
-    if (D_80126BC8 != 0) {
+    if (sControllerPakError != PAK_ERROR_NONE) {
         draw_menu_elements(1, gControllerPakMenuElement, 1.0f);
     } else if (gShowControllerPakMenu != 0) {
         set_text_font(ASSET_FONTS_BIGFONT);
@@ -3344,15 +3353,15 @@ s32 menu_controller_pak_loop(s32 updateRate) {
             xStick += gControllersXAxisDirection[i];
             yStick += gControllersYAxisDirection[i];
         }
-        if (D_80126BC8 != 0) {
-            if ((D_80126BC8 != 1) && (pressedButtons & (A_BUTTON | START_BUTTON))) {
+        if (sControllerPakError != PAK_ERROR_NONE) {
+            if ((sControllerPakError != PAK_ERROR_FATAL) && (pressedButtons & (A_BUTTON | START_BUTTON))) {
                 play_sound_global(SOUND_SELECT2, NULL);
                 if (func_80087F14(&D_80126A68, 0) == CONTROLLER_PAK_GOOD) {
-                    D_80126BC8 = 0;
-                } else if (func_8008832C() == 0) {
+                    sControllerPakError = PAK_ERROR_NONE;
+                } else if (check_for_controller_pak_errors() == 0) {
                     gShowControllerPakMenu = 0;
                 }
-                if ((D_80126BC8 == 0) && (gShowControllerPakMenu == 0)) {
+                if ((sControllerPakError == PAK_ERROR_NONE) && (gShowControllerPakMenu == 0)) {
                     playCancelSound = TRUE;
                     gMenuDelay = 1;
                     func_800C01D8(&sMenuTransitionFadeIn);

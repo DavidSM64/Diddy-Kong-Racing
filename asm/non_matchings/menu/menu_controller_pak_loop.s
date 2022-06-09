@@ -57,8 +57,8 @@ glabel menu_controller_pak_loop
 /* 089D80 80089180 00F93821 */  addu  $a3, $a3, $t9
 /* 089D84 80089184 1481FFEA */  bne   $a0, $at, .L80089130
 /* 089D88 80089188 010C4021 */   addu  $t0, $t0, $t4
-/* 089D8C 8008918C 3C028012 */  lui   $v0, %hi(D_80126BC8) # $v0, 0x8012
-/* 089D90 80089190 8C426BC8 */  lw    $v0, %lo(D_80126BC8)($v0)
+/* 089D8C 8008918C 3C028012 */  lui   $v0, %hi(sControllerPakError) # $v0, 0x8012
+/* 089D90 80089190 8C426BC8 */  lw    $v0, %lo(sControllerPakError)($v0)
 /* 089D94 80089194 3C0A8012 */  lui   $t2, %hi(D_801263E0) # $t2, 0x8012
 /* 089D98 80089198 10400026 */  beqz  $v0, .L80089234
 /* 089D9C 8008919C 254A63E0 */   addiu $t2, %lo(D_801263E0) # addiu $t2, $t2, 0x63e0
@@ -74,18 +74,18 @@ glabel menu_controller_pak_loop
 /* 089DC4 800891C4 0C021FC5 */  jal   func_80087F14
 /* 089DC8 800891C8 00002825 */   move  $a1, $zero
 /* 089DCC 800891CC 14400003 */  bnez  $v0, .L800891DC
-/* 089DD0 800891D0 3C018012 */   lui   $at, %hi(D_80126BC8) # $at, 0x8012
+/* 089DD0 800891D0 3C018012 */   lui   $at, %hi(sControllerPakError) # $at, 0x8012
 /* 089DD4 800891D4 10000006 */  b     .L800891F0
-/* 089DD8 800891D8 AC206BC8 */   sw    $zero, %lo(D_80126BC8)($at)
+/* 089DD8 800891D8 AC206BC8 */   sw    $zero, %lo(sControllerPakError)($at)
 .L800891DC:
-/* 089DDC 800891DC 0C0220CB */  jal   func_8008832C
+/* 089DDC 800891DC 0C0220CB */  jal   check_for_controller_pak_errors
 /* 089DE0 800891E0 00000000 */   nop   
 /* 089DE4 800891E4 14400002 */  bnez  $v0, .L800891F0
 /* 089DE8 800891E8 3C01800E */   lui   $at, %hi(gShowControllerPakMenu) # $at, 0x800e
 /* 089DEC 800891EC AC20FD94 */  sw    $zero, %lo(gShowControllerPakMenu)($at)
 .L800891F0:
-/* 089DF0 800891F0 3C0E8012 */  lui   $t6, %hi(D_80126BC8) # $t6, 0x8012
-/* 089DF4 800891F4 8DCE6BC8 */  lw    $t6, %lo(D_80126BC8)($t6)
+/* 089DF0 800891F0 3C0E8012 */  lui   $t6, %hi(sControllerPakError) # $t6, 0x8012
+/* 089DF4 800891F4 8DCE6BC8 */  lw    $t6, %lo(sControllerPakError)($t6)
 /* 089DF8 800891F8 3C0F800E */  lui   $t7, %hi(gShowControllerPakMenu) # $t7, 0x800e
 /* 089DFC 800891FC 15C000C4 */  bnez  $t6, .L80089510
 /* 089E00 80089200 00000000 */   nop   
