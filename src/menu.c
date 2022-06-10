@@ -239,7 +239,7 @@ u8 *sCurrentControllerPakAllFileExtensions[16]; //Every file extension on the co
 u8  sCurrentControllerPakAllFileTypes[16]; //File type of all files on controller pak
 u32 sCurrentControllerPakAllFileSizes[16]; //File size of all files on controller pak
 u32 sCurrentControllerPakFreeSpace; //Space available in current controller pak
-s32 D_80126BB4; //8 if PAL, 7 if not
+s32 sControllerPakMenuNumberOfRows; //8 if PAL, 7 if not
 s32 D_80126BB8;
 s32 D_80126BBC;
 s32 D_80126BC0;
@@ -511,6 +511,7 @@ s16 D_800DFCAC[4] = {
     0x000B, 0x000C, 0x0002, 0xFFFF
 };
 
+//Should this only have 6? The final record seems to be unused and blank.
 MenuElement gControllerPakMenuElement[7] = {
     { 161, 32,  161, 33,  161, 32,  0,   0,   0,   255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
     { 160, 30,  160, 30,  160, 30,  255, 255, 255, 0,   255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
@@ -3186,9 +3187,9 @@ void func_800887E8(void) {
     func_8009C6D4(63);
     func_8008E4B0();
     if (osTvType == TV_TYPE_PAL) {
-        D_80126BB4 = 8;
+        sControllerPakMenuNumberOfRows = 8;
     } else {
-        D_80126BB4 = 7;
+        sControllerPakMenuNumberOfRows = 7;
     }
     load_font(ASSET_FONTS_BIGFONT);
 }
@@ -3239,7 +3240,7 @@ void render_controller_pak_ui(s32 updateRate) {
 
         set_dialogue_font(6, ASSET_FONTS_SMALLFONT);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        for (i = -1; i < D_80126BB4; i++) {
+        for (i = -1; i < sControllerPakMenuNumberOfRows; i++) {
             assign_dialogue_box_id(6);
             set_current_dialogue_box_coords(6, 28, yPos, 292, yPos + 14);
             if (i < 0) {
@@ -3270,7 +3271,7 @@ void render_controller_pak_ui(s32 updateRate) {
             render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
             yPos += 16;
         }
-        if (D_801263D8 < (16 - D_80126BB4)) {
+        if (D_801263D8 < (16 - sControllerPakMenuNumberOfRows)) {
             if ((D_801263BC & 8) != 0) {
                 render_textured_rectangle(&sMenuCurrDisplayList, D_800E043C, 160, yPos + 8, 255, 255, 255, 255);
                 func_8007B3D0(&sMenuCurrDisplayList);
@@ -3328,7 +3329,6 @@ void render_controller_pak_ui(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 s32 menu_controller_pak_loop(s32 updateRate) {
     s32 i;
     s32 pressedButtons;
@@ -3337,13 +3337,13 @@ s32 menu_controller_pak_loop(s32 updateRate) {
     s32 playMoveSound = FALSE;
     s32 playCancelSound = FALSE;
     s32 playSelectedSound = FALSE;
+    s32 pad;
     s32 temp_v1_2;
 
     D_801263BC = (D_801263BC + updateRate) & 0x3F;
     if (gMenuDelay < 20) {
         render_controller_pak_ui(updateRate);
     }
-    gMenuDelay += updateRate;
     if (gMenuDelay == 0) {
         pressedButtons = 0;
         xStick = 0;
@@ -3414,6 +3414,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                 switch (D_800DF460) {
                 case -1:
                     if (yStick < 0) {
+                        if(!xStick);
                         D_800DF460 = 0;
                         playMoveSound = TRUE;
                     }
@@ -3448,13 +3449,13 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                             playMoveSound = TRUE;
                         }
                     }
-                    if (D_800DF460 >= (D_801263D8 + D_80126BB4)) {
-                        D_801263D8 = (D_800DF460 - D_80126BB4) + 1;
+                    if (D_800DF460 >= (D_801263D8 + sControllerPakMenuNumberOfRows)) {
+                        D_801263D8 = (D_800DF460 - sControllerPakMenuNumberOfRows) + 1;
                     }
                     if (D_800DF460 < D_801263D8) {
                         D_801263D8 = D_800DF460;
                     }
-                    temp_v1_2 = 16 - D_80126BB4;
+                    temp_v1_2 = 16 - sControllerPakMenuNumberOfRows;
                     if (temp_v1_2 < D_801263D8) {
                         D_801263D8 = temp_v1_2;
                     }
@@ -3475,16 +3476,17 @@ s32 menu_controller_pak_loop(s32 updateRate) {
             //Menu Moving Sound
             play_sound_global(SOUND_MENU_PICK2, NULL);
         }
-    } else if (gMenuDelay >= 36) {
-        func_800895A4();
-        menu_init(MENU_LOGOS);
-        load_level_for_menu(21, -1, 0);
+    } else {
+        gMenuDelay += updateRate;
+        if (gMenuDelay >= 36) {
+
+            func_800895A4();
+            menu_init(MENU_LOGOS);
+            load_level_for_menu(21, -1, 0);
+        }
     }
     return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_controller_pak_loop.s")
-#endif
 
 void func_800895A4(void) {
     func_8009C508(0x3F);
