@@ -12,23 +12,23 @@ glabel func_800C2B00
 /* 0C3728 800C2B28 AFB00020 */  sw    $s0, 0x20($sp)
 /* 0C372C 800C2B2C 0C031525 */  jal   assign_dialogue_box_id
 /* 0C3730 800C2B30 24040006 */   li    $a0, 6
-/* 0C3734 800C2B34 3C118013 */  lui   $s1, %hi(D_8012A7B4) # $s1, 0x8013
-/* 0C3738 800C2B38 2631A7B4 */  addiu $s1, %lo(D_8012A7B4) # addiu $s1, $s1, -0x584c
-/* 0C373C 800C2B3C 3C108013 */  lui   $s0, %hi(D_8012A7B0) # $s0, 0x8013
-/* 0C3740 800C2B40 3C158013 */  lui   $s5, %hi(D_8012A7AE) # $s5, 0x8013
-/* 0C3744 800C2B44 3C168013 */  lui   $s6, %hi(D_8012A7B2) # $s6, 0x8013
+/* 0C3734 800C2B34 3C118013 */  lui   $s1, %hi(sDialogueYPos2) # $s1, 0x8013
+/* 0C3738 800C2B38 2631A7B4 */  addiu $s1, %lo(sDialogueYPos2) # addiu $s1, $s1, -0x584c
+/* 0C373C 800C2B3C 3C108013 */  lui   $s0, %hi(sDialogueYPos1) # $s0, 0x8013
+/* 0C3740 800C2B40 3C158013 */  lui   $s5, %hi(sDialogueXPos1) # $s5, 0x8013
+/* 0C3744 800C2B44 3C168013 */  lui   $s6, %hi(sDialogueXPos2) # $s6, 0x8013
 /* 0C3748 800C2B48 862E0000 */  lh    $t6, ($s1)
-/* 0C374C 800C2B4C 26D6A7B2 */  addiu $s6, %lo(D_8012A7B2) # addiu $s6, $s6, -0x584e
-/* 0C3750 800C2B50 26B5A7AE */  addiu $s5, %lo(D_8012A7AE) # addiu $s5, $s5, -0x5852
-/* 0C3754 800C2B54 2610A7B0 */  addiu $s0, %lo(D_8012A7B0) # addiu $s0, $s0, -0x5850
+/* 0C374C 800C2B4C 26D6A7B2 */  addiu $s6, %lo(sDialogueXPos2) # addiu $s6, $s6, -0x584e
+/* 0C3750 800C2B50 26B5A7AE */  addiu $s5, %lo(sDialogueXPos1) # addiu $s5, $s5, -0x5852
+/* 0C3754 800C2B54 2610A7B0 */  addiu $s0, %lo(sDialogueYPos1) # addiu $s0, $s0, -0x5850
 /* 0C3758 800C2B58 86060000 */  lh    $a2, ($s0)
 /* 0C375C 800C2B5C 86A50000 */  lh    $a1, ($s5)
 /* 0C3760 800C2B60 86C70000 */  lh    $a3, ($s6)
 /* 0C3764 800C2B64 24040006 */  li    $a0, 6
 /* 0C3768 800C2B68 0C0313B7 */  jal   set_current_dialogue_box_coords
 /* 0C376C 800C2B6C AFAE0010 */   sw    $t6, 0x10($sp)
-/* 0C3770 800C2B70 3C178013 */  lui   $s7, %hi(D_8012A7A8) # $s7, 0x8013
-/* 0C3774 800C2B74 26F7A7A8 */  addiu $s7, %lo(D_8012A7A8) # addiu $s7, $s7, -0x5858
+/* 0C3770 800C2B70 3C178013 */  lui   $s7, %hi(sDialogueAlpha) # $s7, 0x8013
+/* 0C3774 800C2B74 26F7A7A8 */  addiu $s7, %lo(sDialogueAlpha) # addiu $s7, $s7, -0x5858
 /* 0C3778 800C2B78 86EF0000 */  lh    $t7, ($s7)
 /* 0C377C 800C2B7C 24040006 */  li    $a0, 6
 /* 0C3780 800C2B80 000FC080 */  sll   $t8, $t7, 2
