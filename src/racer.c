@@ -276,7 +276,6 @@ void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
     }
 }
 
-// Might be the main loop for the AI racers.
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 raceType;
 
@@ -1863,14 +1862,14 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
     s32 phi_t1;
     s32 angleVel;
     s32 newAngle;
-    s32 new_var;
+    s32 actionStatus;
 
     angleVel = 0;
     if (racer->balloon_quantity > 0) {
         balloonAsset = (s8 *) get_misc_asset(0xC);
         angleVel = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
     }
-    if (gCurrentButtonsPressed & 0x2000 && angleVel != 4 && angleVel != 8) {
+    if (gCurrentButtonsPressed & Z_TRIG && angleVel != 4 && angleVel != 8) {
         racer->unk1F2 = 5;
     }
     if (racer->boostTimer) {
@@ -1895,7 +1894,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
         racer->unk1F3 = 0;
     }
     switch (racer->unk1F2) {
-    case 0:        
+    case 0: // Sliding, creating tyre marks
         angleVel = (s32) (((-racer->y_rotation_vel) >> 8) / D_8011D570);
         angleVel = 40 - angleVel;
         if (angleVel < 0) {
@@ -1925,35 +1924,35 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
             racer->unk1F2 = 3;
             racer->unk1F3 &= 0xFFFB;
         }
-        if (racer->velocity > 0.0 && gCurrentRacerInput & 0x4000) {
+        if (racer->velocity > 0.0 && gCurrentRacerInput & B_BUTTON) {
             racer->unk1F2 = 6;
         }
         break;
-    case 3:
-        new_var = 2;
+    case 3: // Boost
+        actionStatus = 2;
         if (racer->unk1F3 & 4) {
-            new_var = 6;
+            actionStatus = 6;
         }
-        func_80052988(obj, racer, 2, 0, 32, 4, new_var, updateRate);
+        func_80052988(obj, racer, 2, 0, 32, 4, actionStatus, updateRate);
         racer->unk1F3 &= 0xFFFB;
         break;
-    case 4:
+    case 4: // Crash
         func_80052988(obj, racer, 3, 0, 32, 2, 0, updateRate);
         racer->unk1F3 &= 0xFFF7;
         break;
-    case 5:
-        new_var = 2;
-        if (gCurrentRacerInput & 0x2000) {
-            new_var = 6;
+    case 5: // Horn
+        actionStatus = 2;
+        if (gCurrentRacerInput & Z_TRIG) {
+            actionStatus = 6;
         }
-        func_80052988(obj, racer, 4, 0, 48, 4, new_var, updateRate);
+        func_80052988(obj, racer, 4, 0, 48, 4, actionStatus, updateRate);
         break;
     case 6:
-        new_var = 3;
-        if (racer->velocity > 0.0 && gCurrentRacerInput & 0x4000) {
-            new_var = 7;
+        actionStatus = 3;
+        if (racer->velocity > 0.0 && gCurrentRacerInput & B_BUTTON) {
+            actionStatus = 7; // Reverse
         }
-        func_80052988(obj, racer, 1, 0, 80, 3, new_var, updateRate);
+        func_80052988(obj, racer, 1, 0, 80, 3, actionStatus, updateRate);
         break;
     case 7:
         func_80052988(obj, racer, 5, 0, 96, 4, 0, updateRate);

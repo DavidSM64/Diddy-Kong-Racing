@@ -976,7 +976,7 @@ typedef struct Object_Racer {
   /* 0x1EB */ s8 unk1EB;
   /* 0x1EC */ s8 unk1EC;
   /* 0x1ED */ s8 squish_timer;
-  /* 0x1EE */ s8 unk1EE;
+  /* 0x1EE */ u8 unk1EE;
   /* 0x1EF */ u8 boost_sound;
   /* 0x1F0 */ u8 unk1F0;
   /* 0x1F1 */ u8 unk1F1;
@@ -990,7 +990,7 @@ typedef struct Object_Racer {
   /* 0x291 */ s8 indicator_timer;
   /* 0x1FA */ s8 unk1FA;
   /* 0x1FB */ s8 unk1FB;
-  /* 0x1FC */ s8 unk1FC;
+  /* 0x1FC */ u8 unk1FC;
   /* 0x1FD */ u8 unk1FD;
   /* 0x1FE */ u8 unk1FE;
   /* 0x1FF */ u8 unk1FF;
