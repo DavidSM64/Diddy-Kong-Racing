@@ -575,43 +575,44 @@ void render_dialogue_boxes(Gfx **dlist, Mtx **mat, VertexList **verts) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void s32_to_string(char **outString, s32 number) {
     u8 digit;
     s32 i;
     s32 hasDigit; // boolean
     s32 div;
+    s32 pow;
+    char *ret = *outString;
 
     // Check for a negative number
     if (number < 0) {
-        **outString = '-';
+        *ret = '-';
+        ret++;
         number = -number;
-        (*outString)++;
     }
 
     // Loop through digit places.
-    for (i = 0; i < 9; i++) {
-        hasDigit = FALSE;
+    hasDigit = FALSE;
+    i = 0;
+    while(i < 9) {
+        pow = gDescPowsOf10[i++];
         digit = '0';
-        if (number >= gDescPowsOf10[i]) {
-            div = number / gDescPowsOf10[i];
+        if (number >= pow) {
             hasDigit = TRUE;
-            digit = '0' + div;
-            number -= div * gDescPowsOf10[i];
+            div = number / pow;
+            number -= div * pow;
+            digit += div;
         }
         if (hasDigit) {
-            **outString = digit;
-            (*outString)++;
+            *ret = digit;
+            ret++;
         }
     }
 
     // One's digit place
-    **outString = '0' + number;
-    (*outString)++;
+    *ret = '0' + number;
+    ret++;
+    *outString = ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/font/s32_to_string.s")
-#endif
 
 /**
  * Draws a solid color rectangle at the coordinates specified.

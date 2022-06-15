@@ -186,7 +186,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry);
 void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogueBoxID);
 void parse_string_with_number(unsigned char *input, char *output, s32 number);
 
-void s32_to_string(char** outString, s32 number); //Non Matching
+void s32_to_string(char **outString, s32 number); //Non Matching
 TextureHeader *func_800C4318(s32 font, u8 arg1); //Non Matching
 void load_font(s32 fontID); //Non Matching
 void unload_font(s32 arg0); //Non Matching

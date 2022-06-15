@@ -334,20 +334,20 @@ extern s32 D_800DFAE0;
 
 
 // Unsure about typing with these arrays.
-extern s32 D_800DFAE4[6];
-extern s32 D_800DFAFC[6];
-extern s32 D_800DFB14[6];
-extern s32 D_800DFB2C[5];
-extern s32 D_800DFB40[7];
-extern s32 D_800DFB5C[6];
-extern s32 D_800DFB74[6];
-extern s32 D_800DFB8C[6];
-extern s32 D_800DFBA4[6];
-extern s32 D_800DFBBC[8];
+extern char *D_800DFAE4[6];
+extern char *D_800DFAFC[6];
+extern char *D_800DFB14[6];
+extern char *D_800DFB2C[5];
+extern char *D_800DFB40[7];
+extern char *D_800DFB5C[6];
+extern char *D_800DFB74[6];
+extern char *D_800DFB8C[6];
+extern char *D_800DFBA4[6];
+extern char *D_800DFBBC[8];
 extern s32 D_800DFBDC;
 
 // Unused?
-extern s32* D_800DFBE0[10];
+extern char *D_800DFBE0[10];
 
 extern s32 D_800DFC08;
 extern s32 D_800DFC0C;
@@ -637,6 +637,18 @@ extern s8 D_800E1E28;
 extern s16 D_800E1E2C[10];
 
 extern s16 D_800E1E40[10];
+
+extern char *D_800E09F8[3];
+extern char *gAudioOutputStrings[3];
+extern char *gFilenames[3];
+extern char *gMusicTestString;
+extern char *sBadControllerPakMenuText[5];
+extern char *sControllerPakFullMenuText[5];
+extern char *sCorruptDataMenuText[3];
+extern u64 sEepromSettings;
+extern char *sInsertControllerPakMenuText[3];
+extern char *sNoControllerPakMenuText[5];
+extern char *sInsertRumblePakMenuText[4];
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
