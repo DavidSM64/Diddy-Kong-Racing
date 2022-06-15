@@ -3297,12 +3297,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     temp_a3 = (struct Object_Exit *) racer->unk108->unk64;
     racer->playerIndex = PLAYER_COMPUTER;
     angle = (u16) arctan2_f(temp_a3->unk0, temp_a3->unk8)  - (racer->unk1A0 & 0xFFFF);
-    if (angle > 0x8000) {
-        angle -= 0xFFFF;
-    }
-    if (angle < -0x8000) {
-        angle += 0xFFFF;
-    }
+    WRAP(angle, -0x8000, 0x8000);
     angle = -angle >> 5;
     gCurrentStickX = angle;
     gCurrentButtonsPressed = 0;
