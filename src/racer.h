@@ -83,6 +83,30 @@ typedef enum MiscAsset {
     MISC_RACER_HANDLING
 } MiscAsset;
 
+typedef enum SurfaceType {
+    SURFACE_DEFAULT,
+    SURFACE_GRASS,
+    SURFACE_SAND,
+    SURFACE_UNK3,
+    SURFACE_STONE,
+    SURFACE_UNK5,
+    SURFACE_UNK6,
+    SURFACE_UNK7,
+    SURFACE_UNK8,
+    SURFACE_UNK9,
+    SURFACE_FROZEN_WATER,
+    SURFACE_UNK11,
+    SURFACE_TAJ_PAD,
+    SURFACE_SNOW,
+    SURFACE_UNK14,
+    SURFACE_UNK15,
+    SURFACE_UNK16,
+    SURFACE_INVIS_WALL,
+    SURFACE_UNK18,
+
+    SURFACE_NONE = 0xFF
+} SurfaceType;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -268,7 +292,7 @@ void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_8005492C(Object *obj, Object_Racer *racer, s32, f32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
-s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8*);
+s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8* surface);
 void func_80059BF0(Object* obj, s32 updateRate);
 void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);  /* extern */
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */

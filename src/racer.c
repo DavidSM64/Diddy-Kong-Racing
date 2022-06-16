@@ -2044,10 +2044,10 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
             obj->unk74 |= 0x4FC00;
             goto skip;
         }
-        if (racer->wheel_surfaces[2] < 0xFF) {
+        if (racer->wheel_surfaces[2] < SURFACE_NONE) {
             obj->unk74 |= 1 << (racer->wheel_surfaces[2] * 2);
         }
-        if (racer->wheel_surfaces[3] < 0xFF) {
+        if (racer->wheel_surfaces[3] < SURFACE_NONE) {
             obj->unk74 |= 2 << (racer->wheel_surfaces[3] * 2);
         }
     }
@@ -2397,14 +2397,14 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     f32 tempPos[3];
     s32 i;
     f32 sp40;
-    s8 sp3F;
+    s8 surface;
     s8 shouldSquish;
 
     if (obj->segment.trans.y_position > gCurrentCourseHeight) {
         obj->segment.trans.y_position = gCurrentCourseHeight;
     }
     temp_v0 =(f32 *) get_misc_asset(56);
-    sp3F = -1;
+    surface = -1;
     sp40 = temp_v0[racer->unk1D7];
     tempPos[0] = obj->segment.trans.x_position;
     tempPos[1] = obj->segment.trans.y_position;
@@ -2414,7 +2414,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     sp74 = 0;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->unk1D7 < 5) {
-        flags = func_80017248(obj, 1, &sp74, racer->unkD8, tempPos, &sp40, &sp3F);
+        flags = func_80017248(obj, 1, &sp74, racer->unkD8, tempPos, &sp40, &surface);
     }
     if (flags & 0x80) {
         D_8011D548 = tempPos[0] - obj->segment.trans.x_position;
@@ -2427,7 +2427,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     func_80031130(1, &racer->unkD8[0], tempPos, racer->unk1D6);
     sp74 = 0;
-    racer->unk1E3 = func_80031600(racer->unkD8 , tempPos, &sp40, &sp3F, 1, &sp74);
+    racer->unk1E3 = func_80031600(racer->unkD8 , tempPos, &sp40, &surface, 1, &sp74);
     racer->unk1E4 = flags;
     racer->unk1E3 |= flags;
     racer->unk1E2 = 0;
@@ -2445,11 +2445,11 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     for (i = 0; i < 3; i++) {
         racer->unkD8[i] = tempPos[i];
     }
-    racer->wheel_surfaces[0] = sp3F;
+    racer->wheel_surfaces[0] = surface;
     i = 1;
-    racer->wheel_surfaces[1] = sp3F;
-    racer->wheel_surfaces[2] = sp3F;
-    racer->wheel_surfaces[3] = sp3F;
+    racer->wheel_surfaces[1] = surface;
+    racer->wheel_surfaces[2] = surface;
+    racer->wheel_surfaces[3] = surface;
     obj->segment.trans.x_position = racer->unkD8[0];
     obj->segment.trans.y_position = racer->unkD8[1];
     obj->segment.trans.z_position = racer->unkD8[2];
@@ -3351,7 +3351,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
  * table to an unreasonable value, wrecking drivability while on it.
  */
 void antipiracy_modify_surface_traction_table(void) {
-    gSurfaceTractionTable[0] = 0.05f;
+    gSurfaceTractionTable[SURFACE_DEFAULT] = 0.05f;
 }
 
 void func_8005C270(Object_Racer *racer) {
