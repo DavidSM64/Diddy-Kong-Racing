@@ -101,8 +101,8 @@ glabel func_8005492C
 /* 055640 80054A40 00000000 */  nop   
 .L80054A44:
 /* 055644 80054A44 00480019 */  multu $v0, $t0
-/* 055648 80054A48 3C018012 */  lui   $at, %hi(D_8011D570) # $at, 0x8012
-/* 05564C 80054A4C C426D570 */  lwc1  $f6, %lo(D_8011D570)($at)
+/* 055648 80054A48 3C018012 */  lui   $at, %hi(gCurrentRacerHandlingStat) # $at, 0x8012
+/* 05564C 80054A4C C426D570 */  lwc1  $f6, %lo(gCurrentRacerHandlingStat)($at)
 /* 055650 80054A50 84AB01A0 */  lh    $t3, 0x1a0($a1)
 /* 055654 80054A54 00A02025 */  move  $a0, $a1
 /* 055658 80054A58 00001012 */  mflo  $v0
@@ -262,13 +262,13 @@ glabel func_8005492C
 /* 0558A0 80054CA0 46001087 */  neg.s $f2, $f2
 .L80054CA4:
 /* 0558A4 80054CA4 4602003C */  c.lt.s $f0, $f2
-/* 0558A8 80054CA8 3C0B8012 */  lui   $t3, %hi(D_8011D564) # $t3, 0x8012
+/* 0558A8 80054CA8 3C0B8012 */  lui   $t3, %hi(gCurrentRacerMiscPtr) # $t3, 0x8012
 /* 0558AC 80054CAC 45000002 */  bc1f  .L80054CB8
 /* 0558B0 80054CB0 3C0E8012 */   lui   $t6, %hi(gRaceStartTimer) # $t6, 0x8012
 /* 0558B4 80054CB4 46000086 */  mov.s $f2, $f0
 .L80054CB8:
 /* 0558B8 80054CB8 444CF800 */  cfc1  $t4, $31
-/* 0558BC 80054CBC 8D6BD564 */  lw    $t3, %lo(D_8011D564)($t3)
+/* 0558BC 80054CBC 8D6BD564 */  lw    $t3, %lo(gCurrentRacerMiscPtr)($t3)
 /* 0558C0 80054CC0 35810003 */  ori   $at, $t4, 3
 /* 0558C4 80054CC4 38210002 */  xori  $at, $at, 2
 /* 0558C8 80054CC8 44C1F800 */  ctc1  $at, $31
@@ -404,7 +404,7 @@ glabel func_8005492C
 /* 055ABC 80054EBC 00000000 */  nop   
 .L80054EC0:
 /* 055AC0 80054EC0 4612603C */  c.lt.s $f12, $f18
-/* 055AC4 80054EC4 3C018012 */  lui   $at, %hi(D_8011D56C) # $at, 0x8012
+/* 055AC4 80054EC4 3C018012 */  lui   $at, %hi(gCurrentRacerWeightStat) # $at, 0x8012
 /* 055AC8 80054EC8 4500000B */  bc1f  .L80054EF8
 /* 055ACC 80054ECC 00000000 */   nop   
 /* 055AD0 80054ED0 460E6180 */  add.s $f6, $f12, $f14
@@ -433,7 +433,7 @@ glabel func_8005492C
 /* 055B24 80054F24 44803000 */  mtc1  $zero, $f6
 /* 055B28 80054F28 46005221 */  cvt.d.s $f8, $f10
 /* 055B2C 80054F2C 46283032 */  c.eq.d $f6, $f8
-/* 055B30 80054F30 C420D56C */  lwc1  $f0, %lo(D_8011D56C)($at)
+/* 055B30 80054F30 C420D56C */  lwc1  $f0, %lo(gCurrentRacerWeightStat)($at)
 /* 055B34 80054F34 45010006 */  bc1t  .L80054F50
 /* 055B38 80054F38 3C013FE0 */   li    $at, 0x3FE00000 # 1.750000
 /* 055B3C 80054F3C 44815800 */  mtc1  $at, $f11

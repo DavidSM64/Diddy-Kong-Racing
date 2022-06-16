@@ -172,10 +172,10 @@ s32 D_8011D558;
 s32 gCurrentPlayerIndex;
 s16 D_8011D560; // Set, but never read.
 UNUSED s16 D_8011D562;
-f32 *D_8011D564;
+f32 *gCurrentRacerMiscPtr;
 f32 *D_8011D568;
-f32 D_8011D56C;
-f32 D_8011D570;
+f32 gCurrentRacerWeightStat;
+f32 gCurrentRacerHandlingStat;
 f32 D_8011D574;
 f32 D_8011D578;
 f32 D_8011D57C;
@@ -1229,22 +1229,22 @@ void update_player_racer(Object* obj, s32 updateRate) {
         } else {
             tempRacer->unk18C = 0;
         }
-        D_8011D564 = (f32*) get_misc_asset(9);
-        D_8011D56C = D_8011D564[tempRacer->characterId] * 0.45;
+        gCurrentRacerMiscPtr = (f32*) get_misc_asset(MISC_RACER_WEIGHT);
+        gCurrentRacerWeightStat = gCurrentRacerMiscPtr[tempRacer->characterId] * 0.45;
         if (tempRacer->unk204 > 0) {
-            D_8011D56C = -0.02f;
+            gCurrentRacerWeightStat = -0.02f;
         }
-        D_8011D564 = (f32*) get_misc_asset(10);
-        D_8011D570 = D_8011D564[tempRacer->characterId];
-        D_8011D564 = (f32*) get_misc_asset(11);
-        D_8011D574 = D_8011D564[tempRacer->characterId];
+        gCurrentRacerMiscPtr = (f32*) get_misc_asset(MISC_RACER_HANDLING);
+        gCurrentRacerHandlingStat = gCurrentRacerMiscPtr[tempRacer->characterId];
+        gCurrentRacerMiscPtr = (f32*) get_misc_asset(11);
+        D_8011D574 = gCurrentRacerMiscPtr[tempRacer->characterId];
         if (tempRacer->unk1FE == 3) {
-            D_8011D56C *= (f32) tempRacer->unk1FF / 256;
+            gCurrentRacerWeightStat *= (f32) tempRacer->unk1FF / 256;
         }
         if (tempRacer->unk1FE == 1) {
-            D_8011D56C -= (D_8011D56C * tempRacer->unk1FF) / 128;
+            gCurrentRacerWeightStat -= (gCurrentRacerWeightStat * tempRacer->unk1FF) / 128;
             if (tempRacer->unk204 > 0) {
-                D_8011D56C = -D_8011D56C;
+                gCurrentRacerWeightStat = -gCurrentRacerWeightStat;
             }
         }
         if (tempRacer->unk1FE == 2) {
@@ -1254,8 +1254,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->unk84 -= tempRacer->unk84 * 0.0625 * delta;
             tempRacer->unk88 -= tempRacer->unk88 * 0.0625 * delta;
         }
-        D_8011D564 = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
+        gCurrentRacerMiscPtr = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
         D_8011D568 = get_misc_asset(obj->segment.header->pad5B[2]);
+        
         if (obj->segment.y_velocity < 4.0 && (tempRacer->unk1E2 >= 3 || tempRacer->buoyancy != 0.0)) {
             tempRacer->unk1F1 = 0;
         }
@@ -1612,6 +1613,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             s8 *yAsset;
             tempRacer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
             yAsset = (s8 *)get_misc_asset(0);
+            
             tempRacer->unk150->segment.trans.y_position = obj->segment.trans.y_position + yAsset[tempRacer->characterId];
             tempRacer->unk150->segment.trans.z_position = obj->segment.trans.z_position;
             tempRacer->unk150->segment.trans.scale = obj->segment.unk30 / 265.0f;
@@ -1867,6 +1869,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
     angleVel = 0;
     if (racer->balloon_quantity > 0) {
         balloonAsset = (s8 *) get_misc_asset(0xC);
+        
         angleVel = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
     }
     if (gCurrentButtonsPressed & Z_TRIG && angleVel != 4 && angleVel != 8) {
@@ -1895,7 +1898,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
     }
     switch (racer->unk1F2) {
     case 0: // Sliding, creating tyre marks
-        angleVel = (s32) (((-racer->y_rotation_vel) >> 8) / D_8011D570);
+        angleVel = (s32) (((-racer->y_rotation_vel) >> 8) / gCurrentRacerHandlingStat);
         angleVel = 40 - angleVel;
         if (angleVel < 0) {
             angleVel = 0;
@@ -2067,7 +2070,7 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
         }
     }
     gCurrentCarSteerVel = racer->y_rotation_vel;
-    obj->segment.y_velocity -= D_8011D56C * updateRateF;
+    obj->segment.y_velocity -= gCurrentRacerWeightStat * updateRateF;
     gCurrentStickX = 0;
     racer->steerAngle = 0;
 }
@@ -2282,7 +2285,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk1F0 = 0;
     }
     obj->segment.unk3B = 0;
-    tempAngle = ((-racer->y_rotation_vel >> 8) / D_8011D570);
+    tempAngle = ((-racer->y_rotation_vel >> 8) / gCurrentRacerHandlingStat);
     tempAngle = 40 - tempAngle;
     if (tempAngle < 0) {
         tempAngle = 0;

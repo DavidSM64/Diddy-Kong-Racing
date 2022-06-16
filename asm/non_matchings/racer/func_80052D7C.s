@@ -312,14 +312,14 @@ glabel func_80052D7C
 /* 053D94 80053194 46008021 */  cvt.d.s $f0, $f16
 /* 053D98 80053198 46320182 */  mul.d $f6, $f0, $f18
 /* 053D9C 8005319C C7A4004C */  lwc1  $f4, 0x4c($sp)
-/* 053DA0 800531A0 3C018012 */  lui   $at, %hi(D_8011D56C) # $at, 0x8012
+/* 053DA0 800531A0 3C018012 */  lui   $at, %hi(gCurrentRacerWeightStat) # $at, 0x8012
 /* 053DA4 800531A4 460022A1 */  cvt.d.s $f10, $f4
 /* 053DA8 800531A8 462A3202 */  mul.d $f8, $f6, $f10
 /* 053DAC 800531AC 46280401 */  sub.d $f16, $f0, $f8
 /* 053DB0 800531B0 462084A0 */  cvt.s.d $f18, $f16
 /* 053DB4 800531B4 E5520020 */  swc1  $f18, 0x20($t2)
 /* 053DB8 800531B8 90AB01F1 */  lbu   $t3, 0x1f1($a1)
-/* 053DBC 800531BC C422D56C */  lwc1  $f2, %lo(D_8011D56C)($at)
+/* 053DBC 800531BC C422D56C */  lwc1  $f2, %lo(gCurrentRacerWeightStat)($at)
 /* 053DC0 800531C0 15600005 */  bnez  $t3, .L800531D8
 /* 053DC4 800531C4 3C01800E */   lui   $at, %hi(D_800E6720) # $at, 0x800e
 /* 053DC8 800531C8 90AC01F0 */  lbu   $t4, 0x1f0($a1)

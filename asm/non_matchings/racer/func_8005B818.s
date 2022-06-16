@@ -43,9 +43,9 @@ glabel func_8005B818
 /* 05C46C 8005B86C AFA60130 */  sw    $a2, 0x130($sp)
 /* 05C470 8005B870 0C0078A7 */  jal   get_misc_asset
 /* 05C474 8005B874 24040021 */   li    $a0, 33
-/* 05C478 8005B878 3C018012 */  lui   $at, %hi(D_8011D564) # $at, 0x8012
+/* 05C478 8005B878 3C018012 */  lui   $at, %hi(gCurrentRacerMiscPtr) # $at, 0x8012
 /* 05C47C 8005B87C 0C01AF6C */  jal   get_current_level_header
-/* 05C480 8005B880 AC22D564 */   sw    $v0, %lo(D_8011D564)($at)
+/* 05C480 8005B880 AC22D564 */   sw    $v0, %lo(gCurrentRacerMiscPtr)($at)
 /* 05C484 8005B884 0C006E99 */  jal   func_8001BA64
 /* 05C488 8005B888 AFA20080 */   sw    $v0, 0x80($sp)
 /* 05C48C 8005B88C 10400260 */  beqz  $v0, .L8005C210

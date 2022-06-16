@@ -77,6 +77,12 @@ typedef enum ShieldType {
     SHIELD_LEVEL3
 } ShieldType;
 
+typedef enum MiscAsset {
+    MISC_PAD = 8,
+    MISC_RACER_WEIGHT,
+    MISC_RACER_HANDLING
+} MiscAsset;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
