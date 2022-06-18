@@ -180,7 +180,7 @@ f32 D_8011D574;
 f32 D_8011D578;
 f32 D_8011D57C;
 u8 D_8011D580;
-s8 D_8011D581;
+s8 gCurrentSurfaceType;
 s8 D_8011D582;
 s8 D_8011D583;
 s8 D_8011D584;
@@ -1139,7 +1139,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
     struct LevelObjectEntryCommon newObject;
 
     gNumViewports = get_viewport_count() + 1;
-    D_8011D581 = 0;
+    gCurrentSurfaceType = SURFACE_DEFAULT;
     gRaceStartTimer = func_8001139C();
     delta = updateRate;
     tempRacer = (Object_Racer *)obj->unk64;
@@ -2260,7 +2260,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     apply_vehicle_rotation_offset(racer, updateRate, 0, 0, 0);
     header = get_current_level_header();
-    if ((racer->buoyancy != 0.0 && header->unk2) || D_8011D581 == 10) {
+    if ((racer->buoyancy != 0.0 && header->unk2) || gCurrentSurfaceType == SURFACE_FROZEN_WATER) {
         if (racer->unk1F0) {
             racer->checkpoint_distance -= 0.3;
         } else {
@@ -2379,7 +2379,154 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_8005492C.s")
+void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+    s32 xStick;
+    s32 stickMultiplier;
+    s32 surfaceType;
+    s32 sp38;
+    f32 temp_f0_2;
+    f32 velSquare;
+    f32 pad;
+    f32 traction;
+    f32 forwardVel;
+    f32 weight;
+    f32 vel;
+    f32 multiplier;
+    s32 rawStick;
+    s32 velocityS;
+    s32 temp;
+    u16 temp2;
+
+    velSquare = racer->velocity * racer->velocity;
+    racer->unk84 = 0.0f;
+    racer->unk88 = 0.0f;
+    if (racer->velocity < 0.0f) {
+        velSquare = -velSquare;
+    }
+    sp38 = 0;
+    multiplier = handle_racer_top_speed(obj, racer);
+    if (racer->y_rotation_vel > 0x1C00 || racer->y_rotation_vel < -0x1C00) {
+        sp38 = 1;
+    }
+    rawStick = gCurrentStickX;
+    stickMultiplier = 6;
+    if (gCurrentRacerInput & B_BUTTON) {
+        stickMultiplier = 12;
+    }
+    if (gCurrentRacerInput & B_BUTTON && racer->drift_direction != 0) {
+        stickMultiplier = 18;
+    }
+    xStick = 0;
+    if (racer->velocity < -0.3) {
+        xStick = rawStick * stickMultiplier;
+    }
+    if (racer->velocity > 0.3) {
+        xStick = -rawStick * stickMultiplier;
+    }
+    xStick *= updateRate;
+    temp = (s32) ((xStick >> 1) * gCurrentRacerHandlingStat); 
+    temp2 = temp;
+    racer->unk1A0 -= temp2;
+    handle_car_steering(racer);
+    racer->lateral_velocity *= 0.9;
+    surfaceType = SURFACE_DEFAULT;
+    traction = 0.0f;
+    if (racer->wheel_surfaces[0] != SURFACE_NONE) {
+        traction += gSurfaceTractionTable[racer->wheel_surfaces[0]];
+        if (racer->wheel_surfaces[0] > SURFACE_DEFAULT) {
+            surfaceType = racer->wheel_surfaces[0];
+        }
+    }
+    if (racer->buoyancy != 0.0) {
+        traction = 0.02f;
+    }
+    gCurrentSurfaceType = surfaceType;
+    racer->drift_direction = 0;
+    racer->unk10C = 0;
+    if (surfaceType == 4) {
+        multiplier = 0.25f;
+        racer->lateral_velocity = 0.0f;
+    }
+    if (racer->boostTimer == 0 && surfaceType == 3) {
+        racer->boostTimer = normalise_time(45);
+        racer->boostType = 3;
+    }
+    racer->velocity -= velSquare * traction;
+    if (sp38) {
+        if (racer->unk1EE < 16) {
+            racer->unk1EE++;
+        }
+    } else {
+        racer->unk1EE = 0;
+    }
+    if (get_viewport_count() < 2 && sp38 && racer->velocity < -2.0) {
+        if (racer->wheel_surfaces[2] < 0xFF) {
+            obj->unk74 |= 1 << (racer->wheel_surfaces[2] * 2);
+        }
+        if (racer->wheel_surfaces[3] < 0xFF) {
+            obj->unk74 |= 2 << (racer->wheel_surfaces[3] * 2);
+        }
+    }
+    vel = racer->velocity;
+    if (vel < 0.0f) {
+        vel = -vel;
+    }
+    if (vel > 12.0f) {
+        vel = 12.0f;
+    }
+    velocityS = (s32) vel;
+    temp_f0_2 = vel - (f32) velocityS;
+    vel = (gCurrentRacerMiscPtr[velocityS+1] * temp_f0_2) + (gCurrentRacerMiscPtr[velocityS] * (1.0 - temp_f0_2));
+    vel *= 1.7;
+    vel *= multiplier;
+    if (racer->boostTimer > 0) {
+        if (gRaceStartTimer == 0) {
+            racer->throttle = 1.0f;
+            if (vel != 0.0) {
+                vel = 2.0f;
+            }
+            racer->boostTimer -= updateRate;
+        }
+    } else {
+        racer->boostTimer = 0;
+    }
+    // If basically at a standstill, then allow reversing.
+    if (racer->velocity > -2.0 && racer->velocity < 3.0) {
+        f32 reverseVel = (3.0 - racer->velocity) * 0.15;
+        if (gCurrentStickY < -25 && !(gCurrentRacerInput & A_BUTTON) && gCurrentRacerInput & B_BUTTON) {
+            racer->brake = 0.0f;
+            racer->velocity += reverseVel;
+        }
+    }
+	forwardVel = (vel * racer->brake) * 0.32;
+    racer->velocity -= vel * racer->throttle;
+    if (racer->velocity > -0.04 && racer->velocity < 0.04) {
+        racer->velocity = 0.0f;
+    }
+    if (racer->velocity < 0.0f) {
+        racer->velocity += forwardVel;
+        if (racer->velocity > 0.0f) {
+            racer->velocity = 0.0f;
+        }
+    } else {
+        racer->velocity -= forwardVel;
+        if (racer->velocity < 0.0f) {
+            racer->velocity = 0.0f;
+        }
+    }
+
+    // Heavier characters will fall faster.
+    weight = gCurrentRacerWeightStat;
+    if (racer->buoyancy != 0.0) {
+        weight *= 0.5;
+    }
+    if (racer->brake < 0.9 && gRaceStartTimer == 0) {
+        racer->velocity += weight * (racer->pitch / 4) * updateRateF;
+    }
+    obj->segment.y_velocity -= weight * updateRateF;
+}
+
+
 GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {

@@ -348,8 +348,8 @@ glabel func_8004F7F4
 /* 0508B0 8004FCB0 00000000 */  nop   
 /* 0508B4 8004FCB4 15000005 */  bnez  $t0, .L8004FCCC
 .L8004FCB8:
-/* 0508B8 8004FCB8 3C098012 */   lui   $t1, %hi(D_8011D581) # $t1, 0x8012
-/* 0508BC 8004FCBC 8129D581 */  lb    $t1, %lo(D_8011D581)($t1)
+/* 0508B8 8004FCB8 3C098012 */   lui   $t1, %hi(gCurrentSurfaceType) # $t1, 0x8012
+/* 0508BC 8004FCBC 8129D581 */  lb    $t1, %lo(gCurrentSurfaceType)($t1)
 /* 0508C0 8004FCC0 2401000A */  li    $at, 10
 /* 0508C4 8004FCC4 1521004F */  bne   $t1, $at, .L8004FE04
 /* 0508C8 8004FCC8 00000000 */   nop   
