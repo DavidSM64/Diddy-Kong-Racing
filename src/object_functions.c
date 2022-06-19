@@ -2650,7 +2650,7 @@ void obj_loop_bubbler(Object *obj, s32 speed) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (s32)get_misc_asset(0x14) + (entry->unk8[0] << 7);
+    obj->unk64 = (s32)get_misc_asset(MISC_UNK14) + (entry->unk8[0] << 7);
     obj->segment.unk3C_a.unk3C = NULL;
 }
 

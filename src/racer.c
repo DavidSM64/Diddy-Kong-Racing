@@ -250,7 +250,7 @@ void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
     } else {
         D_8011D5BC = 0;
     }
-    test = get_misc_asset(12);
+    test = get_misc_asset(MISC_UNK0C);
     if ((gCurrentButtonsReleased & 0x2000) && racer->balloon_quantity) {
         if (racer->balloon_level < 3) {
             phi_a0 = test[racer->balloon_type * 3 + racer->balloon_level];
@@ -1238,7 +1238,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         }
         gCurrentRacerMiscPtr = (f32*) get_misc_asset(MISC_RACER_HANDLING);
         gCurrentRacerHandlingStat = gCurrentRacerMiscPtr[tempRacer->characterId];
-        gCurrentRacerMiscPtr = (f32*) get_misc_asset(11);
+        gCurrentRacerMiscPtr = (f32*) get_misc_asset(MISC_UNK0B);
         D_8011D574 = gCurrentRacerMiscPtr[tempRacer->characterId];
         if (tempRacer->unk1FE == 3) {
             gCurrentRacerWeightStat *= (f32) tempRacer->unk1FF / 256;
@@ -1614,7 +1614,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if (tempRacer->unk150 && gRaceStartTimer == 0) {
             s8 *yAsset;
             tempRacer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
-            yAsset = (s8 *)get_misc_asset(0);
+            yAsset = (s8 *)get_misc_asset(MISC_UNK00);
             
             tempRacer->unk150->segment.trans.y_position = obj->segment.trans.y_position + yAsset[tempRacer->characterId];
             tempRacer->unk150->segment.trans.z_position = obj->segment.trans.z_position;
@@ -1870,7 +1870,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
 
     angleVel = 0;
     if (racer->balloon_quantity > 0) {
-        balloonAsset = (s8 *) get_misc_asset(0xC);
+        balloonAsset = (s8 *) get_misc_asset(MISC_UNK0C);
         
         angleVel = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
     }
@@ -2690,7 +2690,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (obj->segment.trans.y_position > gCurrentCourseHeight) {
         obj->segment.trans.y_position = gCurrentCourseHeight;
     }
-    temp_v0 =(f32 *) get_misc_asset(56);
+    temp_v0 =(f32 *) get_misc_asset(MISC_UNK38);
     surface = -1;
     sp40 = temp_v0[racer->unk1D7];
     tempPos[0] = obj->segment.trans.x_position;

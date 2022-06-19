@@ -284,7 +284,7 @@ void func_8000B290(void *data) {
     if (D_800DC754) {
         free_from_memory_pool(data);
     }
-    get_misc_asset(20);
+    get_misc_asset(MISC_UNK14);
     /*{
         if(D_800DC754->unk7a)
             free_sprite();
