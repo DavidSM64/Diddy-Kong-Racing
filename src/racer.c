@@ -202,6 +202,8 @@ struct TempStruct8 **D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
 
+extern void func_8000488C(u8 *soundMask);
+
 /******************************/
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
@@ -2075,7 +2077,145 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
     racer->steerAngle = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80052D7C.s")
+void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+    s32 steerAngle;
+    s32 yStick;
+    s32 angle;
+    s8 sp33;
+    f32 vel;
+    s32 temp;
+
+    sp33 = 0;
+    if (racer->unk1FE == 1 && racer->playerIndex == PLAYER_COMPUTER) {
+        gCurrentStickY = 60;
+    }
+    if (racer->unk1F0 != 0) {
+        if (racer->playerIndex != PLAYER_COMPUTER) {
+            steerAngle = racer->steerAngle;
+        } else {
+            steerAngle = gCurrentStickX;
+        }
+        racer->unk1A0 -= (u16) ((steerAngle * 6 * updateRate) >> 1);
+        angle = -(u16) racer->x_rotation_vel;
+        if (angle > 0x8000) {
+            angle -= 0xFFFF;
+        }
+        if (angle < -0x8000) {
+            angle += 0xFFFF;
+        }
+        racer->x_rotation_vel += (angle >> 3);
+    }
+    if (racer->unk18) {
+        func_8000488C(racer->unk18);
+    }
+    if (racer->unk10) {
+        func_8000488C(racer->unk10);
+    }
+    if (racer->unk14) {
+        func_8000488C(racer->unk14);
+    }
+    if (racer->unk1FE == 1 || racer->unk1FE == 3) {
+        racer->unk1E8 = racer->steerAngle;
+    }
+    if (racer->buoyancy != 0.0) {
+        if (obj->segment.y_velocity > 2.0) {
+            obj->segment.y_velocity = 2.0f;
+        }
+        if (obj->segment.y_velocity < -2.0) {
+            obj->segment.y_velocity = -2.0f;
+        }
+        racer->unk1E8 = racer->steerAngle;
+        if (gCurrentRacerInput & A_BUTTON) {
+            racer->velocity -= 0.5;
+        }
+        if (gCurrentRacerInput & B_BUTTON && gCurrentStickY < -25) {
+            racer->velocity += 0.5;
+        }
+        sp33 = 1;
+        racer->lateral_velocity *= 0.87;
+        racer->velocity *= 0.87;
+        obj->segment.y_velocity *= 0.9;
+        func_800494E0(obj, racer, D_8011D4F8, D_8011D504, updateRate, gCurrentStickX, 6.0f);
+    }
+    if (racer->playerIndex == -1) {
+        racer->unk1E8 = racer->steerAngle;
+    }
+    if (racer->boostTimer > 0) {
+        racer->boostTimer -= updateRate;
+    } else {
+        racer->boostTimer = 0;
+    }
+    angle = racer->unk1E8 * 6;
+    if (racer->velocity > 0.3) {
+        angle = -racer->steerAngle;
+        angle *= 6;
+    }
+    racer->unk1A0 -= angle & 0xFFFF;
+    gCurrentCarSteerVel = racer->unk110;
+    if (racer->boostTimer) {
+        if (racer->velocity > -20.0) {
+            racer->velocity -= 1.6;
+        }
+    }
+    yStick = gCurrentStickY;
+  if ((yStick < 50) && (yStick > (-50))) {
+        yStick = 0;
+    }
+    obj->segment.y_velocity -= (obj->segment.y_velocity * 0.025) * updateRateF;
+    vel = gCurrentRacerWeightStat;
+    if (racer->unk1F1 || racer->unk1F0) {
+        vel = 0.45f;
+        racer->y_rotation_offset += 0x500 * updateRate;
+        racer->x_rotation_offset += 0x600 * updateRate;
+    }
+    if (racer->unk1FE == 1 || racer->unk1FE == 3) {
+        racer->lateral_velocity *= 0.97;
+        racer->velocity *= 0.97;
+        if (yStick > 50) {
+            racer->velocity -= 0.2;
+        }
+        if (yStick < -50) {
+            racer->velocity += 0.2;
+        }
+        sp33 = 1;
+    }
+    if (sp33) {
+        obj->unk74 = 0;
+        racer->drift_direction = 0;
+        racer->unk10C -= (racer->unk10C * updateRate) >> 4;
+        gCurrentCarSteerVel = 0;
+        handle_car_steering(racer);
+    } else {
+        if (yStick > 50) {
+            vel *= 1.33;
+        }
+        if (yStick < -50) {
+            vel *= 0.53;
+        }
+    }
+    if (racer->boostTimer) {
+        vel *= 0.5;
+    }
+    yStick = -yStick;
+    yStick *= 64;
+    yStick = (u16) yStick;
+    angle = yStick - ((u16) obj->segment.trans.x_rotation);
+    angle = angle > 0x8000 ? angle - 0xFFFF : angle;
+    angle = angle < -0x8000 ? angle + 0xFFFF : angle;
+    obj->segment.trans.x_rotation += (angle >> 3);
+    obj->segment.y_velocity -= vel * updateRateF;
+    if (racer->buoyancy == 0.0) {
+        steerAngle = -obj->segment.y_velocity * 20.0;
+        if (steerAngle < 50) {
+            steerAngle = 50;
+        }
+        if (steerAngle > 127) {
+            steerAngle = 127;
+        }
+        racer->unk1E0 = steerAngle;
+    }
+    obj->unk74 = 0;
+}
 
 /**
  * Handle the steering input of all cars.

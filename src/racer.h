@@ -283,13 +283,14 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate);
 void func_80048C7C(Object* obj, Object_Racer* racer);
 void racer_enter_door(Object_Racer *racer, s32 updateRate);
 void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
+void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
+f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
 void func_800576E0(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
-void func_8005492C(Object *obj, Object_Racer *racer, s32, f32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8* surface);
