@@ -79,4 +79,34 @@ typedef enum AlignmentFlags {
     ALIGN_BOTTOM_RIGHT  = VERT_ALIGN_BOTTOM | HORZ_ALIGN_RIGHT
 } AlignmentFlags;
 
+typedef enum MiscAsset {
+    MISC_PAD = 8,
+    MISC_RACER_WEIGHT,
+    MISC_RACER_HANDLING
+} MiscAsset;
+
+typedef enum SurfaceType {
+    SURFACE_DEFAULT,
+    SURFACE_GRASS,
+    SURFACE_SAND,
+    SURFACE_UNK3,
+    SURFACE_STONE,
+    SURFACE_UNK5,
+    SURFACE_UNK6,
+    SURFACE_UNK7,
+    SURFACE_UNK8,
+    SURFACE_UNK9,
+    SURFACE_FROZEN_WATER,
+    SURFACE_UNK11,
+    SURFACE_TAJ_PAD,
+    SURFACE_SNOW,
+    SURFACE_UNK14,
+    SURFACE_UNK15,
+    SURFACE_UNK16,
+    SURFACE_INVIS_WALL,
+    SURFACE_UNK18,
+
+    SURFACE_NONE = 255
+} SurfaceType;
+
 #endif

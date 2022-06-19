@@ -77,36 +77,6 @@ typedef enum ShieldType {
     SHIELD_LEVEL3
 } ShieldType;
 
-typedef enum MiscAsset {
-    MISC_PAD = 8,
-    MISC_RACER_WEIGHT,
-    MISC_RACER_HANDLING
-} MiscAsset;
-
-typedef enum SurfaceType {
-    SURFACE_DEFAULT,
-    SURFACE_GRASS,
-    SURFACE_SAND,
-    SURFACE_UNK3,
-    SURFACE_STONE,
-    SURFACE_UNK5,
-    SURFACE_UNK6,
-    SURFACE_UNK7,
-    SURFACE_UNK8,
-    SURFACE_UNK9,
-    SURFACE_FROZEN_WATER,
-    SURFACE_UNK11,
-    SURFACE_TAJ_PAD,
-    SURFACE_SNOW,
-    SURFACE_UNK14,
-    SURFACE_UNK15,
-    SURFACE_UNK16,
-    SURFACE_INVIS_WALL,
-    SURFACE_UNK18,
-
-    SURFACE_NONE = 0xFF
-} SurfaceType;
-
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
