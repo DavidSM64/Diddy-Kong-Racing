@@ -178,31 +178,22 @@ void load_font(s32 fontID) {
 GLOBAL_ASM("asm/non_matchings/font/load_font.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Mostly has regalloc issues.
 void unload_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
         if (fontData->unk28[0] > 0) {
             fontData->unk28[0]--;
-            if ((fontData->unk28[0] & 0xFF) == 0) {
-                // Minor issue with this loop.
+            if ((fontData->unk28[0]) == 0) {
                 s32 i = 0;
-                while (fontData->unk40[i] != -1) {
+                while (i < 32 && fontData->unk40[i] != -1) {
                     free_texture(fontData->texturePointers[i]);
                     fontData->texturePointers[i] = NULL;
                     i++;
-                    if (i >= 32) {
-                        break;
-                    }
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/font/unload_font.s")
-#endif
 
 /**
  * Set the font of the current dialogue box's text.
