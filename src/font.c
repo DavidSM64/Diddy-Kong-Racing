@@ -155,28 +155,19 @@ void func_800C4164(s32 arg0) {
     D_8012A7F0 = arg0;
 }
 
-#ifdef NON_EQUIVALENT
-// Mostly has regalloc issues.
 void load_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
         fontData->unk28[0]++;
         if (fontData->unk28[0] == 1) {
-            // Minor issue with this loop.
             s32 i = 0;
-            while (fontData->unk40[i] != -1) {
+            while (i < 32 && fontData->unk40[i] != -1) {
                 fontData->texturePointers[i] = load_texture(fontData->unk40[i]);
                 i++;
-                if (i >= 64) {
-                    break;
-                }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/font/load_font.s")
-#endif
 
 void unload_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
