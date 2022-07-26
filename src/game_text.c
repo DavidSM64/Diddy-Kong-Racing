@@ -38,7 +38,7 @@ s16 sDialogueAlpha;
 s16 D_8012A7AA;
 s16 D_8012A7AC;
 s16 sDialogueXPos1; // The Upper Left X Coord of the Dialogue Box.
-s16 sDialogueYPos1; // The Upper Left Corner of the Dialogue Box. Changes for PAL / NTSC
+s16 sDialogueYPos1; // The Upper Left Y Coord of the Dialogue Box. Changes for PAL / NTSC
 s16 sDialogueXPos2; // The Lower Right X Coord of the Dialogue Box.
 s16 sDialogueYPos2; // The Lower Right Y Coord of the Dialogue Box. Changes for PAL / NTSC
 s16 D_8012A7B6;     // A Boolean value
