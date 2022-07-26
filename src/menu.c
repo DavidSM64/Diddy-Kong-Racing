@@ -510,7 +510,6 @@ s16 D_800DFCAC[4] = {
     0x000B, 0x000C, 0x0002, 0xFFFF
 };
 
-//Should this only have 6? The final record seems to be unused and blank.
 MenuElement gControllerPakMenuElement[7] = {
     { 161, 32,  161, 33,  161, 32,  0,   0,   0,   255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
     { 160, 30,  160, 30,  160, 30,  255, 255, 255, 0,   255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
@@ -1495,7 +1494,7 @@ const char D_800E8250[] = "loadFrontEndItem() - Item no %d out of range 0-%d\n";
 
 /*********************************/
 
-#if 0
+#ifdef NON_EQUIVALENT
 
 // Should be functionally equivalent
 void load_menu_text(s32 language) {
@@ -1531,100 +1530,100 @@ void load_menu_text(s32 language) {
                 gMenuText[i] = &((u8 *)gMenuText)[(s32)gMenuText[i]];
             }
         }
-        gAudioOutputStrings[0] = gMenuText[ASSET_MENU_TEXT_STEREO];                                  // STEREO
-        gAudioOutputStrings[1] = gMenuText[ASSET_MENU_TEXT_MONO];                                    // MONO
-        gAudioOutputStrings[2] = gMenuText[ASSET_MENU_TEXT_HEADPHONES];                              // HEADPHONES
-        gAudioMenuStrings[1].unkC = gMenuText[ASSET_MENU_TEXT_SFXVOLUME];                            // SFX VOLUME
-        gAudioMenuStrings[2].unkC = gMenuText[ASSET_MENU_TEXT_MUSICVOLUME];                          // MUSIC VOLUME
-        gAudioMenuStrings[3].unkC = gMenuText[ASSET_MENU_TEXT_RETURN];                               // RETURN
-        gAudioMenuStrings[4].unkC = gMenuText[ASSET_MENU_TEXT_AUDIOOPTIONS];                         // AUDIO OPTIONS
-        gAudioMenuStrings[5].unkC = gMenuText[ASSET_MENU_TEXT_AUDIOOPTIONS];                         // AUDIO OPTIONS
-        gMusicTestString = gMenuText[ASSET_MENU_TEXT_MUSICTEST];                                     // MUSIC TEST 00
-        gMagicCodeMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_ENTERCODE];                             // ENTER CODE
-        gMagicCodeMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_CLEARALLCODES];                         // CLEAR ALL CODES
-        gMagicCodeMenuStrings[2] = gMenuText[ASSET_MENU_TEXT_CODELIST];                              // CODE LIST
-        gMagicCodeMenuStrings[3] = gMenuText[ASSET_MENU_TEXT_RETURN];                                // RETURN
-        D_800E0BEC[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_LAPTIMES];                       // LAP TIMES
-        D_800E0BEC[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_OVERALLTIME];                    // OVERALL TIME
-        D_800E0CEC[8].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];                      // RACE ORDER
-        D_800E0CEC[9].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];                      // RACE ORDER
-        D_800E0E4C[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES];                    // RECORD TIMES
-        D_800E0E4C[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES];                    // RECORD TIMES
-        D_800E0E4C[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_BESTTIME];                       // BEST TIME
-        D_800E0E4C[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_BESTLAP];                        // BEST LAP
-        gOptionMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_LANGUAGE];                                 // ENGLISH
+        gAudioOutputStrings[0] = gMenuText[ASSET_MENU_TEXT_STEREO];                                  // "STEREO"
+        gAudioOutputStrings[1] = gMenuText[ASSET_MENU_TEXT_MONO];                                    // "MONO"
+        gAudioOutputStrings[2] = gMenuText[ASSET_MENU_TEXT_HEADPHONES];                              // "HEADPHONES"
+        gAudioMenuStrings[1].unkC = gMenuText[ASSET_MENU_TEXT_SFXVOLUME];                            // "SFX VOLUME"
+        gAudioMenuStrings[2].unkC = gMenuText[ASSET_MENU_TEXT_MUSICVOLUME];                          // "MUSIC VOLUME"
+        gAudioMenuStrings[3].unkC = gMenuText[ASSET_MENU_TEXT_RETURN];                               // "RETURN"
+        gAudioMenuStrings[4].unkC = gMenuText[ASSET_MENU_TEXT_AUDIOOPTIONS];                         // "AUDIO OPTIONS"
+        gAudioMenuStrings[5].unkC = gMenuText[ASSET_MENU_TEXT_AUDIOOPTIONS];                         // "AUDIO OPTIONS"
+        gMusicTestString = gMenuText[ASSET_MENU_TEXT_MUSICTEST];                                     // "MUSIC TEST 00"
+        gMagicCodeMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_ENTERCODE];                             // "ENTER CODE"
+        gMagicCodeMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_CLEARALLCODES];                         // "CLEAR ALL CODES"
+        gMagicCodeMenuStrings[2] = gMenuText[ASSET_MENU_TEXT_CODELIST];                              // "CODE LIST"
+        gMagicCodeMenuStrings[3] = gMenuText[ASSET_MENU_TEXT_RETURN];                                // "RETURN"
+        D_800E0BEC[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_LAPTIMES];                       // "LAP TIMES"
+        D_800E0BEC[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_OVERALLTIME];                    // "OVERALL TIME"
+        D_800E0CEC[8].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];                      // "RACE ORDER"
+        D_800E0CEC[9].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RACEORDER];                      // "RACE ORDER"
+        D_800E0E4C[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES];                    // "RECORD TIMES"
+        D_800E0E4C[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_RECORDTIMES];                    // "RECORD TIMES"
+        D_800E0E4C[2].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_BESTTIME];                       // "BEST TIME"
+        D_800E0E4C[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_BESTLAP];                        // "BEST LAP"
+        gOptionMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_LANGUAGE];                                 // "ENGLISH"
         if (sEepromSettings & 0x2000000) {
-            gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESON];                          // SUBTITLES ON
+            gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESON];                          // "SUBTITLES ON"
         } else {
-            gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESOFF];                         // SUBTITLES OFF
+            gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESOFF];                         // "SUBTITLES OFF"
         }
-        gOptionMenuStrings[2] = gMenuText[ASSET_MENU_TEXT_AUDIOOPTIONS];                             // AUDIO OPTIONS
-        gOptionMenuStrings[3] = gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS];                              // SAVE OPTIONS
-        gOptionMenuStrings[4] = gMenuText[ASSET_MENU_TEXT_MAGICCODES];                               // MAGIC CODES
-        gOptionMenuStrings[5] = gMenuText[ASSET_MENU_TEXT_RETURN];                                   // RETURN
-        gFilenames[0] = gMenuText[ASSET_MENU_TEXT_GAMEA];                                            // GAME A
-        gFilenames[1] = gMenuText[ASSET_MENU_TEXT_GAMEB];                                            // GAME B
-        gFilenames[2] = gMenuText[ASSET_MENU_TEXT_GAMEC];                                            // GAME C
-        D_800DFAE4[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // CONTROLLER PAK ~
-        D_800DFAE4[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKNOTPRESENT];                                // IS NOT PRESENT.
-        D_800DFAE4[3] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // CANCEL
-        D_800DFAFC[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // CONTROLLER PAK ~
-        D_800DFAFC[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKHASCORRUPTDATA_0];                          // CONTAINS CORRUPT DATA.
-        D_800DFAFC[3] = gMenuText[ASSET_MENU_TEXT_CONTPAKHASCORRUPTDATA_1];                          // ATTEMPT TO REPAIR
-        D_800DFAFC[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // CANCEL
-        D_800DFB14[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // CONTROLLER PAK ~
-        D_800DFB14[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKISDAMAGED_0];                               // IRREPARABLY DAMAGED.
-        D_800DFB14[3] = gMenuText[ASSET_MENU_TEXT_CONTPAKISDAMAGED_1];                               // REFORMAT PAK
-        D_800DFB14[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // CANCEL
-        D_800DFB2C[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // CONTROLLER PAK ~
-        D_800DFB2C[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKISFULL];                                    // FULL.
-        D_800DFB2C[3] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // CONTINUE
-        D_800DFB40[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // CONTROLLER PAK ~
-        D_800DFB40[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKDIFFERENT_0];                               // DIFFERENT CONTROLLER
-        D_800DFB40[2] = gMenuText[ASSET_MENU_TEXT_CONTPAKDIFFERENT_1];                               // PAK IS INSERTED.
-        D_800DFB40[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // CANCEL
-        D_800DFB5C[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // CONTROLLER PAK ~
-        D_800DFB5C[1] = gMenuText[ASSET_MENU_TEXT_CANNOTSTOREANYMOREGHOSTS_0];                       // CANNOT STORE ANY
-        D_800DFB5C[2] = gMenuText[ASSET_MENU_TEXT_CANNOTSTOREANYMOREGHOSTS_1];                       // MORE GHOSTS.
-        D_800DFB5C[4] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // CONTINUE
-        D_800DFB74[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // CONTROLLER PAK ~
-        D_800DFB74[1] = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0];                                    // CORRUPT DATA.
-        D_800DFB74[3] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];                                         // TRY AGAIN
-        D_800DFB74[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // CANCEL
-        D_800DFB8C[0] = gMenuText[ASSET_MENU_TEXT_RUMBLEPAKDETECTED_0];                              // Rumble Pak Detected
-        D_800DFB8C[1] = gMenuText[ASSET_MENU_TEXT_RUMBLEPAKDETECTED_1];                              // Insert any Controller Paks
-        D_800DFB8C[2] = gMenuText[ASSET_MENU_TEXT_RUMBLEPAKDETECTED_2];                              // you wish to use now!
-        D_800DFB8C[4] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // CONTINUE
-        D_800DFBA4[0] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_0];                                   // If you wish to use any
-        D_800DFBA4[1] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_1];                                   // Rumble Paks then please
-        D_800DFBA4[2] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_2];                                   // insert them now.
-        D_800DFBA4[4] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // CONTINUE
-        D_800DFBBC[0] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_0];                                // SORRY, BUT YOU
-        D_800DFBBC[1] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_1];                                // CAN'T LOAD GAMES
-        D_800DFBBC[2] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_2];                                // FOR THE SECOND
-        D_800DFBBC[3] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_3];                                // ADVENTURE UNTIL
-        D_800DFBBC[4] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_4];                                // YOU HAVE COMPLETED
-        D_800DFBBC[5] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_5];                                // THE FIRST.
-        D_800DFBBC[7] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // CONTINUE
-        gTitleMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_START];                                     // START
-        gTitleMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_OPTIONS];                                   // OPTIONS
-        gGameSelectTextElemsNoAdv2[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // GAME SELECT
-        gGameSelectTextElemsNoAdv2[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // GAME SELECT
-        gGameSelectTextElemsNoAdv2[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];      // ADVENTURE
-        gGameSelectTextElemsNoAdv2[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];         // TRACKS
-        gGameSelectTextElemsWithAdv2[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // GAME SELECT
-        gGameSelectTextElemsWithAdv2[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // GAME SELECT
-        gGameSelectTextElemsWithAdv2[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];    // ADVENTURE
-        gGameSelectTextElemsWithAdv2[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURETWO]; // ADVENTURE TWO
-        gGameSelectTextElemsWithAdv2[7].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];       // TRACKS
-        sBadControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_BADCONTPAK];                        // BAD CONTROLLER PAK
-        sControllerPakFullMenuText[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKFULL];                      // CONTROLLER PAK FULL
-        sNoControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_NOCONTPAK];                          // NO CONTROLLER PAK
+        gOptionMenuStrings[2] = gMenuText[ASSET_MENU_TEXT_AUDIOOPTIONS];                             // "AUDIO OPTIONS"
+        gOptionMenuStrings[3] = gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS];                              // "SAVE OPTIONS"
+        gOptionMenuStrings[4] = gMenuText[ASSET_MENU_TEXT_MAGICCODES];                               // "MAGIC CODES"
+        gOptionMenuStrings[5] = gMenuText[ASSET_MENU_TEXT_RETURN];                                   // "RETURN"
+        gFilenames[0] = gMenuText[ASSET_MENU_TEXT_GAMEA];                                            // "GAME A"
+        gFilenames[1] = gMenuText[ASSET_MENU_TEXT_GAMEB];                                            // "GAME B"
+        gFilenames[2] = gMenuText[ASSET_MENU_TEXT_GAMEC];                                            // "GAME C"
+        D_800DFAE4[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // "CONTROLLER PAK ~"
+        D_800DFAE4[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKNOTPRESENT];                                // "IS NOT PRESENT."
+        D_800DFAE4[3] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // "CANCEL"
+        D_800DFAFC[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // "CONTROLLER PAK ~"
+        D_800DFAFC[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKHASCORRUPTDATA_0];                          // "CONTAINS CORRUPT DATA."
+        D_800DFAFC[3] = gMenuText[ASSET_MENU_TEXT_CONTPAKHASCORRUPTDATA_1];                          // "ATTEMPT TO REPAIR"
+        D_800DFAFC[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // "CANCEL"
+        D_800DFB14[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // "CONTROLLER PAK ~"
+        D_800DFB14[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKISDAMAGED_0];                               // "IRREPARABLY DAMAGED."
+        D_800DFB14[3] = gMenuText[ASSET_MENU_TEXT_CONTPAKISDAMAGED_1];                               // "REFORMAT PAK"
+        D_800DFB14[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // "CANCEL"
+        D_800DFB2C[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // "CONTROLLER PAK ~"
+        D_800DFB2C[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKISFULL];                                    // "FULL."
+        D_800DFB2C[3] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // "CONTINUE"
+        D_800DFB40[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // "CONTROLLER PAK ~"
+        D_800DFB40[1] = gMenuText[ASSET_MENU_TEXT_CONTPAKDIFFERENT_0];                               // "DIFFERENT CONTROLLER"
+        D_800DFB40[2] = gMenuText[ASSET_MENU_TEXT_CONTPAKDIFFERENT_1];                               // "PAK IS INSERTED."
+        D_800DFB40[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // "CANCEL"
+        D_800DFB5C[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // "CONTROLLER PAK ~"
+        D_800DFB5C[1] = gMenuText[ASSET_MENU_TEXT_CANNOTSTOREANYMOREGHOSTS_0];                       // "CANNOT STORE ANY"
+        D_800DFB5C[2] = gMenuText[ASSET_MENU_TEXT_CANNOTSTOREANYMOREGHOSTS_1];                       // "MORE GHOSTS."
+        D_800DFB5C[4] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // "CONTINUE"
+        D_800DFB74[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKX];                                         // "CONTROLLER PAK ~"
+        D_800DFB74[1] = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0];                                    // "CORRUPT DATA."
+        D_800DFB74[3] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];                                         // "TRY AGAIN"
+        D_800DFB74[4] = gMenuText[ASSET_MENU_TEXT_CANCEL];                                           // "CANCEL"
+        D_800DFB8C[0] = gMenuText[ASSET_MENU_TEXT_RUMBLEPAKDETECTED_0];                              // "Rumble Pak Detected"
+        D_800DFB8C[1] = gMenuText[ASSET_MENU_TEXT_RUMBLEPAKDETECTED_1];                              // "Insert any Controller Paks"
+        D_800DFB8C[2] = gMenuText[ASSET_MENU_TEXT_RUMBLEPAKDETECTED_2];                              // "you wish to use now!"
+        D_800DFB8C[4] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // "CONTINUE"
+        D_800DFBA4[0] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_0];                                   // "If you wish to use any"
+        D_800DFBA4[1] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_1];                                   // "Rumble Paks then please"
+        D_800DFBA4[2] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_2];                                   // "insert them now."
+        D_800DFBA4[4] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // "CONTINUE"
+        D_800DFBBC[0] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_0];                                // "SORRY, BUT YOU"
+        D_800DFBBC[1] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_1];                                // "CAN'T LOAD GAMES"
+        D_800DFBBC[2] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_2];                                // "FOR THE SECOND"
+        D_800DFBBC[3] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_3];                                // "ADVENTURE UNTIL"
+        D_800DFBBC[4] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_4];                                // "YOU HAVE COMPLETED"
+        D_800DFBBC[5] = gMenuText[ASSET_MENU_TEXT_ADVTWOLOADERROR_5];                                // "THE FIRST."
+        D_800DFBBC[7] = gMenuText[ASSET_MENU_TEXT_CONTINUE];                                         // "CONTINUE"
+        gTitleMenuStrings[0] = gMenuText[ASSET_MENU_TEXT_START];                                     // "START"
+        gTitleMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_OPTIONS];                                   // "OPTIONS"
+        gGameSelectTextElemsNoAdv2[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // "GAME SELECT"
+        gGameSelectTextElemsNoAdv2[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];     // "GAME SELECT"
+        gGameSelectTextElemsNoAdv2[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];      // "ADVENTURE"
+        gGameSelectTextElemsNoAdv2[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];         // "TRACKS"
+        gGameSelectTextElemsWithAdv2[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // "GAME SELECT"
+        gGameSelectTextElemsWithAdv2[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_GAMESELECT];   // "GAME SELECT"
+        gGameSelectTextElemsWithAdv2[3].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURE];    // "ADVENTURE"
+        gGameSelectTextElemsWithAdv2[5].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_ADVENTURETWO]; // "ADVENTURE TWO"
+        gGameSelectTextElemsWithAdv2[7].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_TRACKS];       // "TRACKS"
+        sBadControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_BADCONTPAK];                        // "BAD CONTROLLER PAK"
+        sControllerPakFullMenuText[0] = gMenuText[ASSET_MENU_TEXT_CONTPAKFULL];                      // "CONTROLLER PAK FULL"
+        sNoControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_NOCONTPAK];                          // 'NO CONTROLLER PAK"
         sCorruptDataMenuText[4] = NULL;
         sCorruptDataMenuText[5] = NULL;
-        sCorruptDataMenuText[0] = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0];                          // CORRUPT DATA.
+        sCorruptDataMenuText[0] = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_0];                          // "CORRUPT DATA."
         //Three messages
-        //If you wish to change / Controller Pak or Rumble Pak, / please do so now.
+        //"If you wish to change" / "Controller Pak or Rumble Pak," / "please do so now."
         for (i = 0; i < 2; i++) {
             sBadControllerPakMenuText[i + 1] = gMenuText[177 + i];
             sControllerPakFullMenuText[i + 1] = gMenuText[177 + i];
@@ -1635,15 +1634,15 @@ void load_menu_text(s32 language) {
         while (sCorruptDataMenuText[j] != NULL) {
             j++;
         }
-        sCorruptDataMenuText[j] = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_1];                          // TRY AGAIN!
-        sInsertControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3];                 // If you wish to use
-        sInsertControllerPakMenuText[1] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_4];                 // the Controller Pak
-        sInsertControllerPakMenuText[2] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6];                 // insert it now!
-        sInsertRumblePakMenuText[0] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3];                     // If you wish to use
-        sInsertRumblePakMenuText[1] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_5];                     // the Rumble Pak
-        sInsertRumblePakMenuText[2] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6];                     // insert it now!
-        gCautionMenuTextElements[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];          // CAUTION
-        gCautionMenuTextElements[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];          // CAUTION
+        sCorruptDataMenuText[j] = gMenuText[ASSET_MENU_TEXT_CORRUPTDATA_1];                          // "TRY AGAIN!"
+        sInsertControllerPakMenuText[0] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3];                 // "If you wish to use"
+        sInsertControllerPakMenuText[1] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_4];                 // "the Controller Pak"
+        sInsertControllerPakMenuText[2] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6];                 // "insert it now!"
+        sInsertRumblePakMenuText[0] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3];                     // "If you wish to use"
+        sInsertRumblePakMenuText[1] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_5];                     // "the Rumble Pak"
+        sInsertRumblePakMenuText[2] = gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6];                     // "insert it now!"
+        gCautionMenuTextElements[0].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];          // "CAUTION"
+        gCautionMenuTextElements[1].unk14_a.asciiText = gMenuText[ASSET_MENU_TEXT_CAUTION];          // "CAUTION"
         for (i = 2; i < 13; i++) {
             // Caution message lines starting from gMenuText[166]
             gCautionMenuTextElements[i].unk14_a.asciiText = gMenuText[166 + (i - 2)];
