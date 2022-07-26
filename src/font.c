@@ -170,7 +170,7 @@ void unload_font(s32 fontID) {
         FontData *fontData = &gFonts[fontID];
         if (fontData->unk28[0] > 0) {
             fontData->unk28[0]--;
-            if ((fontData->unk28[0]) == 0) {
+            if (fontData->unk28[0] == 0) {
                 s32 i = 0;
                 while (i < 32 && fontData->unk40[i] != -1) {
                     free_texture(fontData->texturePointers[i]);
