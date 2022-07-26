@@ -3357,7 +3357,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                 play_sound_global(SOUND_SELECT2, NULL);
                 if (func_80087F14(&D_80126A68, 0) == CONTROLLER_PAK_GOOD) {
                     sControllerPakError = PAK_ERROR_NONE;
-                } else if (check_for_controller_pak_errors() == 0) {
+                } else if (check_for_controller_pak_errors() == PAK_ERROR_NONE) {
                     gShowControllerPakMenu = 0;
                 }
                 if ((sControllerPakError == PAK_ERROR_NONE) && (gShowControllerPakMenu == 0)) {
