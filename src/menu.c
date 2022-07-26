@@ -3175,7 +3175,7 @@ void func_800887E8(void) {
     load_menu_text(get_language());
     if (func_80087F14(&D_80126A68, 0) == CONTROLLER_PAK_GOOD) {
         gMenuDelay = 0;
-    } else if (check_for_controller_pak_errors() == 0) {
+    } else if (check_for_controller_pak_errors() == PAK_ERROR_NONE) {
         gMenuDelay = 20;
     }
     if (sControllerPakError == PAK_ERROR_NONE && !gShowControllerPakMenu) {
