@@ -3404,7 +3404,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                     D_801263E0 = 2;
                     playMoveSound = TRUE;
                 }
-            } else if (pressedButtons & B_BUTTON || (D_800DF460 == 16 && pressedButtons & (A_BUTTON | START_BUTTON))) {
+            } else if ((pressedButtons & B_BUTTON) || (D_800DF460 == 16 && (pressedButtons & (A_BUTTON | START_BUTTON)))) {
                 playCancelSound = 1;
                 gMenuDelay = 1;
                 func_800C01D8(&sMenuTransitionFadeIn);
