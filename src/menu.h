@@ -94,6 +94,13 @@ typedef enum MENU_ID {
     MENU_CAUTION
 } MENU_ID;
 
+typedef enum PakError {
+    PAK_ERROR_NONE,
+    PAK_ERROR_FATAL,
+    PAK_ERROR_FULL,
+    PAK_ERROR_CORRUPT
+} PakError;
+
 /* Size: 0x20 bytes */
 // So this is looking to be a struct for menu images.
 typedef struct unk800DF510 {
@@ -327,20 +334,20 @@ extern s32 D_800DFAE0;
 
 
 // Unsure about typing with these arrays.
-extern s32 D_800DFAE4[6];
-extern s32 D_800DFAFC[6];
-extern s32 D_800DFB14[6];
-extern s32 D_800DFB2C[5];
-extern s32 D_800DFB40[7];
-extern s32 D_800DFB5C[6];
-extern s32 D_800DFB74[6];
-extern s32 D_800DFB8C[6];
-extern s32 D_800DFBA4[6];
-extern s32 D_800DFBBC[8];
+extern char *D_800DFAE4[6];
+extern char *D_800DFAFC[6];
+extern char *D_800DFB14[6];
+extern char *D_800DFB2C[5];
+extern char *D_800DFB40[7];
+extern char *D_800DFB5C[6];
+extern char *D_800DFB74[6];
+extern char *D_800DFB8C[6];
+extern char *D_800DFBA4[6];
+extern char *D_800DFBBC[8];
 extern s32 D_800DFBDC;
 
 // Unused?
-extern s32* D_800DFBE0[10];
+extern char *D_800DFBE0[10];
 
 extern s32 D_800DFC08;
 extern s32 D_800DFC0C;
@@ -350,7 +357,7 @@ extern u8 D_800DFC70[8];
 
 extern s16 D_800DFC78[26];
 
-extern MenuElement D_800DFCB4[7];
+extern MenuElement gControllerPakMenuElement[7];
 
 extern s32 gShowControllerPakMenu;
 
@@ -631,6 +638,18 @@ extern s16 D_800E1E2C[10];
 
 extern s16 D_800E1E40[10];
 
+extern char *D_800E09F8[3];
+extern char *gAudioOutputStrings[3];
+extern char *gFilenames[3];
+extern char *gMusicTestString;
+extern char *sBadControllerPakMenuText[5];
+extern char *sControllerPakFullMenuText[5];
+extern char *sCorruptDataMenuText[3];
+extern u64 sEepromSettings;
+extern char *sInsertControllerPakMenuText[3];
+extern char *sNoControllerPakMenuText[5];
+extern char *sInsertRumblePakMenuText[4];
+
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
 void func_8007FF88(void);
@@ -648,8 +667,8 @@ void init_title_screen_variables(void);
 void menu_title_screen_init(void);
 void func_80084118(void);
 void menu_options_init(void);
-void func_800841B8(s32 arg0);
-void func_80084734(void);
+void render_options_menu_ui(s32 updateRate);
+void unload_big_font_1(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
 void menu_save_options_init(void);
@@ -663,7 +682,7 @@ void menu_boot_init(void);
 void func_800887C4(void);
 void func_800887E8(void);
 void func_800895A4(void);
-void func_8008A4C8(void);
+void unload_big_font_2(void);
 void menu_magic_codes_list_init(void);
 void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2);
 void func_8008AD1C(void);
@@ -674,7 +693,7 @@ void draw_character_select_text(s32 arg0);
 void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4);
 void func_8008C128(void);
 void menu_caution_init(void);
-void unload_large_font(void);
+void unload_big_font_3(void);
 void func_8008CACC(void);
 void menu_file_select_init(void);
 void render_menu_image(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
@@ -696,10 +715,10 @@ void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
 s32 compress_filename_string(unsigned char *filename, s32 length);
 void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
-void func_800981E8(void);
+void unload_big_font_4(void);
 void func_80098208(void);
 void draw_trophy_race_text(UNUSED s32 updateRate);
-void func_80098754(void);
+void unload_big_font_5(void);
 void func_80099600(void);
 s32 get_trophy_race_world_id(void);
 void func_8009ABAC(void);
@@ -772,13 +791,15 @@ void menu_magic_codes_init(void);
 s32 menu_game_select_loop(s32 arg0);
 s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
+void render_controller_pak_ui(UNUSED s32 updateRate);
+PakError check_for_controller_pak_errors(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_audio_options_loop(s32 arg0);
-s32 menu_options_loop(s32 arg0);
-s32 func_800890AC(s32);
+s32 menu_options_loop(s32 updateRate);
+s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
 s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
@@ -814,7 +835,6 @@ void func_8009CA60(s32 imageID);
 void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
-s32 func_8008832C(void);
 void func_8009C6D4(s32 arg0);
 void func_8008B358(void);
 void func_8008B4C8(void);

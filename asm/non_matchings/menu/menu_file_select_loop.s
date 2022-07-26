@@ -147,7 +147,7 @@ glabel menu_file_select_loop
 /* 08EC8C 8008E08C 25CE64A0 */  addiu $t6, %lo(gSavefileInfo) # addiu $t6, $t6, 0x64a0
 /* 08EC90 8008E090 000D6880 */  sll   $t5, $t5, 2
 /* 08EC94 8008E094 01AE1021 */  addu  $v0, $t5, $t6
-/* 08EC98 8008E098 0C02607A */  jal   func_800981E8
+/* 08EC98 8008E098 0C02607A */  jal   unload_big_font_4
 /* 08EC9C 8008E09C AFA20030 */   sw    $v0, 0x30($sp)
 /* 08ECA0 8008E0A0 8FA20030 */  lw    $v0, 0x30($sp)
 /* 08ECA4 8008E0A4 3C018012 */  lui   $at, %hi(D_80126CC0) # $at, 0x8012
@@ -166,7 +166,7 @@ glabel menu_file_select_loop
 /* 08ECD4 8008E0D4 00000000 */   nop   
 /* 08ECD8 8008E0D8 1040006C */  beqz  $v0, .L8008E28C
 /* 08ECDC 8008E0DC 00000000 */   nop   
-/* 08ECE0 8008E0E0 0C02607A */  jal   func_800981E8
+/* 08ECE0 8008E0E0 0C02607A */  jal   unload_big_font_4
 /* 08ECE4 8008E0E4 00000000 */   nop   
 /* 08ECE8 8008E0E8 3C0C800E */  lui   $t4, %hi(gSaveFileIndex) # $t4, 0x800e
 /* 08ECEC 8008E0EC 8D8CF4CC */  lw    $t4, %lo(gSaveFileIndex)($t4)

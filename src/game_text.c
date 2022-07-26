@@ -34,14 +34,14 @@ s16 D_8012A792;
 unk8012A798 D_8012A798;
 s32 D_8012A7A0;
 s32 D_8012A7A4;
-s16 D_8012A7A8;
+s16 sDialogueAlpha;
 s16 D_8012A7AA;
 s16 D_8012A7AC;
-s16 D_8012A7AE;
-s16 D_8012A7B0;
-s16 D_8012A7B2;
-s16 D_8012A7B4;
-s16 D_8012A7B6;
+s16 sDialogueXPos1; // The Upper Left X Coord of the Dialogue Box.
+s16 sDialogueYPos1; // The Upper Left Y Coord of the Dialogue Box. Changes for PAL / NTSC
+s16 sDialogueXPos2; // The Lower Right X Coord of the Dialogue Box.
+s16 sDialogueYPos2; // The Lower Right Y Coord of the Dialogue Box. Changes for PAL / NTSC
+s16 D_8012A7B6;     // A Boolean value
 s16 D_8012A7B8;
 s16 D_8012A7BA;
 s16 D_8012A7BE;
@@ -59,17 +59,17 @@ void func_800C29F0(void) {
     D_8012A7C8.unk4 = D_8012A7C8.unk0 + 0x3C0;
     D_8012A7D4 = 0;
     D_8012A7B6 = 0;
-    D_8012A7A8 = 0;
-    D_8012A7AA = 0x20;
+    sDialogueAlpha = 0;
+    D_8012A7AA = 32;
     D_8012A7BA = 0;
-    D_8012A7AE = 0x20;
-    D_8012A7B2 = 0x120;
+    sDialogueXPos1 = 32;
+    sDialogueXPos2 = 288;
     if (osTvType == TV_TYPE_PAL) {
-        D_8012A7B0 = 0xE0;
-        D_8012A7B4 = 0xF8;
+        sDialogueYPos1 = 224;
+        sDialogueYPos2 = 248;
     } else {
-        D_8012A7B0 = 0xCA;
-        D_8012A7B4 = 0xDE;
+        sDialogueYPos1 = 202;
+        sDialogueYPos2 = 222;
     }
     func_800C56D0(6);
 }
@@ -94,26 +94,26 @@ void func_800C2F1C(s32 arg0) {
     }
     if (D_8012A7B6 != 0) {
         if (D_8012A7AC <= 0) {
-            D_8012A7A8 -= arg0 * D_8012A7AA;
-            if ((s32)D_8012A7A8 < 0) {
-                D_8012A7A8 = 0;
+            sDialogueAlpha -= arg0 * D_8012A7AA;
+            if ((s32)sDialogueAlpha < 0) {
+                sDialogueAlpha = 0;
                 D_8012A7B6 = 0;
                 close_dialogue_box(6);
                 assign_dialogue_box_id(6);
             }
         } else {
-            D_8012A7A8 += arg0 * D_8012A7AA;
-            if (D_8012A7A8 >= 0x101) {
-                D_8012A7A8 = 0x100;
+            sDialogueAlpha += arg0 * D_8012A7AA;
+            if (sDialogueAlpha > 256) {
+                sDialogueAlpha = 256;
             }
             D_8012A7AC -= arg0;
             if (D_8012A7AC <= 0) {
-                func_800C2D6C(D_8012A7B6);
+                func_800C2D6C();
             }
         }
     }
     if (D_8012A7B6 != 0) {
-        func_800C2B00(D_8012A7B6);
+        func_800C2B00();
     }
 }
 
