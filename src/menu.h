@@ -347,7 +347,7 @@ extern char *D_800DFBBC[8];
 extern s32 D_800DFBDC;
 
 // Unused?
-extern char *D_800DFBE0[10];
+extern char **D_800DFBE0[10];
 
 extern s32 D_800DFC08;
 extern s32 D_800DFC0C;
@@ -713,7 +713,7 @@ void func_80096790(void);
 void menu_11_init(void);
 void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
-s32 compress_filename_string(unsigned char *filename, s32 length);
+s32 compress_filename_string(char *filename, s32 length);
 void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
 void unload_big_font_4(void);
 void func_80098208(void);

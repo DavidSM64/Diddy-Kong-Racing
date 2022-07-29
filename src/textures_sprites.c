@@ -1448,19 +1448,27 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/load_sprite_info.s")
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
 #ifdef NON_EQUIVALENT
+// andi 0xff instead of a simple mov for j = i. s32 doesn't work.
 void free_sprite(Sprite *sprite) {
-    s32 i, j, index;
+    s32 i;
+    u8 j;
+    s32 frame;
+    s32 spriteId;
+    SpriteCacheEntry *cache;
+
     if (sprite != NULL) {
         sprite->numberOfInstances--;
         if (sprite->numberOfInstances <= 0) {
             for (i = 0; i < D_80126358; i++) {
-                if (sprite == gSpriteCache[i].sprite) {
-                    for (j = 0; j < sprite->numberOfFrames; j++) {
-                        free_texture(sprite->frames[j]);
+                j = i; // What?
+                if (sprite == gSpriteCache[j].sprite) {
+                    for (frame = 0; frame < sprite->numberOfFrames; frame++) {
+                        free_texture(sprite->frames[frame]);
                     }
+                    spriteId = -1;
                     free_from_memory_pool(sprite);
-                    gSpriteCache[i].id = -1;
-                    gSpriteCache[i].sprite = (Sprite *)-1;
+                    gSpriteCache[j].id = spriteId;
+                    gSpriteCache[j].sprite = (Sprite *)spriteId; // ?
                     break;
                 }
             }

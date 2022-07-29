@@ -478,7 +478,7 @@ char *D_800DFBBC[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 s32 D_800DFBDC = 0;
 
 // Unused?
-char *D_800DFBE0[10] = {
+char **D_800DFBE0[10] = {
     D_800DFAE4, D_800DFAFC, D_800DFB14, D_800DFB2C, D_800DFB40, D_800DFB5C, D_800DFB8C, D_800DFBA4, D_800DFB74, D_800DFBBC
 };
 
@@ -5586,7 +5586,7 @@ void decompress_filename_string(u32 compressedFilename, char *output, s32 length
  * Takes in a string, and compresses it into an integer.
  * Each character takes up 5 bits, so up to 6 chars can fit in the integer.
  */
-s32 compress_filename_string(unsigned char *filename, s32 length) {
+s32 compress_filename_string(char *filename, s32 length) {
     s32 i;
     u32 output;
     u8 processingChars;

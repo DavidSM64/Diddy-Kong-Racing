@@ -349,11 +349,11 @@ s32 get_time_data_file_size(void) {
 }
 
 //Probably get_file_extension
-//func_80073C5C(s32 controllerIndex, s32 fileType, u8 **fileExt);
+//func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt);
 GLOBAL_ASM("asm/non_matchings/save_data/func_80073C5C.s")
 
 //Read DKRACING-ADV data into settings?
-s32 read_game_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Settings *settings) {
+s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Settings *settings) {
     s32 *alloc;
     s32 ret;
     s32 fileNumber;
@@ -366,7 +366,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
         return (controllerIndex << 30) | ret;
     }
     //D_800E7670 = "DKRACING-ADV"
-    ret = get_file_number(controllerIndex, (u8 *)D_800E7670, fileExt, &fileNumber);
+    ret = get_file_number(controllerIndex, (char *)D_800E7670, fileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -401,7 +401,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
 
 s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     UNUSED s32 pad;
-    u8 *fileExt;
+    char *fileExt;
     u8 *gameData; //Probably a struct where the first s32 is GAMD
     s32 ret;
     s32 fileSize;
@@ -413,7 +413,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     ret = func_80073C5C(controllerIndex, 3, &fileExt);
     if (ret == 0) {
         // D_800E7680 = DKRACING-ADV
-        ret = write_controller_pak_file(controllerIndex, -1, (u8 *) D_800E7680, (u8 *) &fileExt, gameData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *) D_800E7680, (char *)&fileExt, gameData, fileSize);
     }
     free_from_memory_pool(gameData);
     if (ret != 0) {
@@ -423,7 +423,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
 }
 
 //Read time data from controller pak into settings
-s32 read_time_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Settings *settings) {
+s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Settings *settings) {
     s32 *cpakData;
     s32 status;
     s32 fileNumber;
@@ -436,7 +436,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, u8 *fileExt, Setting
     }
 
     //D_800E7690 = DKRACING-TIMES
-    status = get_file_number(controllerIndex, (u8 *)D_800E7690, fileExt, &fileNumber);
+    status = get_file_number(controllerIndex, (char *)D_800E7690, fileExt, &fileNumber);
     if (status == CONTROLLER_PAK_GOOD) {
         status = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -472,7 +472,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     s32 ret;
     s32 fileSize;
     UNUSED s32 temp_v0;
-    u8 *fileExt;
+    char *fileExt;
 
     fileSize = get_time_data_file_size(); // 512 bytes
     timeData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
@@ -481,7 +481,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     ret = func_80073C5C(controllerIndex, 4, &fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
         //D_800E76A0 = DKRACING-TIMES
-        ret = write_controller_pak_file(controllerIndex, -1, (u8 *) &D_800E76A0, (u8 *) &fileExt, timeData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *)D_800E76A0, (char *)&fileExt, timeData, fileSize);
     }
     free_from_memory_pool(timeData);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -889,7 +889,7 @@ SIDeviceStatus reformat_controller_pak(s32 controllerIndex) {
     return ret;
 }
 
-s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, u8 **fileNames, u8 **fileExtensions, u32 *fileSizes, u8 *fileTypes) {
+s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, char **fileNames, char **fileExtensions, u32 *fileSizes, u8 *fileTypes) {
     OSPfsState state;
     s32 ret;
     s32 maxNumOfFilesOnCpak;
@@ -932,9 +932,9 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, u8
     
     //TODO: There's probably an unidentified struct here
     for (i = 0; i < maxNumOfFilesOnCpak; i++) {
-        fileNames[i] = (u8 *) temp_D_800DE440;
+        fileNames[i] = (char *) temp_D_800DE440;
         temp_D_800DE440 += 0x12;
-        fileExtensions[i] = (u8 *) temp_D_800DE440;
+        fileExtensions[i] = (char *) temp_D_800DE440;
         fileSizes[i] = 0;
         fileTypes[i] = -1;
         temp_D_800DE440 += 6;
@@ -960,8 +960,8 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, u8
             return CONTROLLER_PAK_BAD_DATA;
         }
         
-        font_codes_to_string((u8 *)&state.game_name, (u8 *)fileNames[i], PFS_FILE_NAME_LEN);
-        font_codes_to_string((u8 *)&state.ext_name, (u8 *)fileExtensions[i], PFS_FILE_EXT_LEN);
+        font_codes_to_string((char *)&state.game_name, (char *)fileNames[i], PFS_FILE_NAME_LEN);
+        font_codes_to_string((char *)&state.ext_name, (char *)fileExtensions[i], PFS_FILE_EXT_LEN);
         fileSizes[i] = state.file_size;
         fileTypes[i] = 6; // Unknown file type? Possibly from another game?
         
@@ -1044,9 +1044,9 @@ s32 delete_file(s32 controllerIndex, s32 fileNum) {
 // Copies a file from one controller pak to the other
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex) {
     UNUSED s32 pad;
-    u8 fileName[PFS_FILE_NAME_LEN];
+    char fileName[PFS_FILE_NAME_LEN];
     UNUSED s32 pad2;
-    u8 fileExt[PFS_FILE_EXT_LEN];
+    char fileExt[PFS_FILE_EXT_LEN];
     OSPfsState state;
     s32 status;
     u8 *alloc;
@@ -1071,8 +1071,8 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
         return (controllerIndex << 30) | status;
     }
 
-    font_codes_to_string((u8 *)&state.game_name, fileName, PFS_FILE_NAME_LEN);
-    font_codes_to_string((u8 *)&state.ext_name, fileExt, PFS_FILE_EXT_LEN);
+    font_codes_to_string(state.game_name, fileName, PFS_FILE_NAME_LEN);
+    font_codes_to_string(state.ext_name, fileExt, PFS_FILE_EXT_LEN);
 
     status = write_controller_pak_file(secondControllerIndex, -1, fileName, fileExt, alloc, state.file_size);
     if (status != CONTROLLER_PAK_GOOD) {
@@ -1088,11 +1088,11 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
 //     s32 fileType;
 //     u8 game_name[PFS_FILE_NAME_LEN];
 // } fileStruct;
-SIDeviceStatus get_file_number(s32 controllerIndex, u8 *fileName, u8 *fileExt, s32 *fileNumber) {
+SIDeviceStatus get_file_number(s32 controllerIndex, char *fileName, char *fileExt, s32 *fileNumber) {
     u32 gameCode;
-    u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
+    char fileNameAsFontCodes[PFS_FILE_NAME_LEN];
     UNUSED s32 pad;
-    u8 fileExtAsFontCodes[PFS_FILE_EXT_LEN];
+    char fileExtAsFontCodes[PFS_FILE_EXT_LEN];
     UNUSED s32 pad2;
     s32 ret;
 
@@ -1151,7 +1151,7 @@ SIDeviceStatus read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u
 }
 
 //If fileNumber -1, it creates a new file?
-SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8 *fileName, u8 *fileExt, u8 *dataToWrite, s32 fileSize) {
+SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, char *fileName, char *fileExt, u8 *dataToWrite, s32 fileSize) {
     s32 temp;
     u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
     UNUSED s32 temp2;
@@ -1173,8 +1173,8 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, u8
         bytesToSave = (fileSize - temp) + 0x100;
     }
 
-    string_to_font_codes(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
-    string_to_font_codes(fileExt, fileExtAsFontCodes, PFS_FILE_EXT_LEN);
+    string_to_font_codes(fileName, (char *)fileNameAsFontCodes, PFS_FILE_NAME_LEN);
+    string_to_font_codes(fileExt, (char *)fileExtAsFontCodes, PFS_FILE_EXT_LEN);
 
     if (get_language() == LANGUAGE_JAPANESE) {
         game_code = JPN_GAME_CODE;
@@ -1238,9 +1238,9 @@ SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
 }
 
 //Converts N64 Font codes used in controller pak file names, into C ASCII a coded string
-u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength) {
+char *font_codes_to_string(char *inString, char *outString, s32 stringLength) {
     s32 index = *inString;
-    u8 *ret = outString;
+    char *ret = outString;
 
     while (index != 0 && stringLength != 0) {
         // Less than sizeof(gN64FontCodes) - 3.
@@ -1271,10 +1271,10 @@ u8 *font_codes_to_string(u8 *inString, u8 *outString, s32 stringLength) {
 }
 
 //Converts a C ASCII string into N64 Font codes for controller pak file names
-u8 *string_to_font_codes(u8 *inString, u8 *outString, s32 stringLength) {
+char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
     s32 i;
-    u8 currentChar;
-    u8 *ret = outString;
+    char currentChar;
+    char *ret = outString;
 
     while (*inString != 0 && stringLength != 0) {
         *outString = 0;

@@ -18,11 +18,11 @@ const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 const char D_800E8ED0[] = ">fault< ";
 const char D_800E8EDC[] = "CORE";
-const u8 D_800E8EE4[4] = { 0, 0, 0, 0 };
-const u8 sCoreFileName1[] = "CORE";
-const u8 sCoreFileExt1[] = { 0, 0, 0, 0 };
-const u8 sCoreFileName2[] = "CORE";
-const u8 sCoreFileExt2[] = { 0, 0, 0, 0 };
+const char D_800E8EE4[4] = { 0, 0, 0, 0 };
+const char sCoreFileName1[] = "CORE";
+const char sCoreFileExt1[] = { 0, 0, 0, 0 };
+const char sCoreFileName2[] = "CORE";
+const char sCoreFileExt2[] = { 0, 0, 0, 0 };
 
 /*********************************/
 
@@ -227,7 +227,7 @@ s32 get_lockup_status(void) {
         sLockupStatus = 0;
         // Looks like it reads EpcInfo data from the controller pak, which is interesting
         if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
-            (get_file_number(controllerIndex, (u8 *)sCoreFileName2, (u8 *)sCoreFileExt2, &fileNum) == CONTROLLER_PAK_GOOD) &&
+            (get_file_number(controllerIndex, (char *)sCoreFileName2, (char *)sCoreFileExt2, &fileNum) == CONTROLLER_PAK_GOOD) &&
             (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 2048) == CONTROLLER_PAK_GOOD))
         {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));

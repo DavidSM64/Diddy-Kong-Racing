@@ -262,12 +262,177 @@ UNUSED void func_800C4510(Gfx **displayList, s32 dialogueBoxID, s32 xpos, s32 yp
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/font/func_800C45A4.s")
+#ifdef NON_MATCHING
+//A few minor regalloc differences are all that's left.
+void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4) {
+    s32 temp_f4;
+    s32 temp_t9;
+    s32 ypos;
+    s32 xpos;
+    TextureHeader *texture;
+    s32 textureLrx;
+    s32 textureLry;
+    s32 textureS;
+    s32 textureT;
+    s32 textureUlx;
+    s32 textureUly;
+    s32 textureWidth;
+    s32 textureHeight;
+    s32 xAlignmentDiff;
+    s32 yAlignmentDiff;
+    s32 newTempY;
+    s32 var_t0;
+    s32 newData;
+    s32 textureIndex;
+    s32 lastTextureIndex;
+    FontData *fontData;
+    s32 charIndex;
+    char curChar;
 
-#ifdef NON_EQUIVALENT
-s32 func_800C4DA0(unsigned char *text, s32 x, s32 font) {
+    lastTextureIndex = -1;
+    xAlignmentDiff = -1;
+
+    if (text != NULL) {
+        xpos = arg1->xpos;
+        ypos = arg1->ypos;
+        fontData = &gFonts[arg1->font];
+        gSPDisplayList((*dlist)++, dDialogueBoxBegin);
+        if (arg1 != gDialogueBoxBackground) {
+            temp_f4 = (((arg1->y2 - arg1->y1) + 1) / (f32)2) * arg4;
+            temp_t9 = (arg1->y1 + arg1->y2) >> 1;
+            gDPSetScissor((*dlist)++, 
+                G_SC_NON_INTERLACE, 
+                arg1->x1, 
+                temp_t9 - temp_f4, 
+                arg1->x2, 
+                temp_t9 + temp_f4
+            );
+        }
+        if (alignmentFlags & 5) {
+            xAlignmentDiff = func_800C4DA0(text, xpos, arg1->font);
+            if (alignmentFlags & 1) {
+                xpos = (xpos - xAlignmentDiff) + 1;
+            } else {
+                xpos -= xAlignmentDiff >> 1;
+            }
+        }
+        if (alignmentFlags & 2) {
+            ypos = (ypos - fontData->unk22) + 1;
+        }
+        if (alignmentFlags & 8) {
+            ypos -= fontData->unk22 >> 1;
+        }
+        if (arg1->textBGColourA != 0) {
+            gDPSetEnvColor((*dlist)++, arg1->textBGColourR, arg1->textBGColourG, arg1->textBGColourB, arg1->textBGColourA);
+            if (xAlignmentDiff == -1) {
+                xAlignmentDiff = func_800C4DA0(text, xpos, arg1->font);
+            }
+            newTempY = (fontData->unk22 + ypos - 1);
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[1]), 2);
+            gDPFillRectangle((*dlist)++,
+                (xpos + arg1->x1),
+                (ypos + arg1->y1),
+                (xpos + arg1->x1 + (0, xAlignmentDiff) - 1), //0 comma operator is likely a fakematch
+                (newTempY + arg1->y1)
+            );
+            gDPPipeSync((*dlist)++);
+        }
+        gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, arg1->opacity);
+        gDPSetEnvColor((*dlist)++, arg1->textColourR, arg1->textColourG, arg1->textColourB, arg1->textColourA);
+        gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[0]), 2);
+        gDPPipeSync((*dlist)++);
+        xpos += arg1->unk20;
+        ypos += arg1->unk22;
+        for (charIndex = 0; text[charIndex] != '\0' && arg1->y2 >= ypos; xpos += var_t0, charIndex++) {
+            curChar = text[charIndex];
+            newData = 0;
+            var_t0 = 0;
+            //Check the ASCII Range
+            if ((curChar < 0x21) || (curChar >= 0x80)) {
+                switch (curChar ) {
+                    case ' ': //Space
+                        xpos += fontData->unk24;
+                        break;
+                    case '\n': //Line Feed
+                        xpos = arg1->unk20;
+                        ypos += fontData->unk22;
+                        break;
+                    case '\t': //Tab
+                        xpos += fontData->unk26 - ((xpos - arg1->unk20) % fontData->unk26);
+                        break;
+                    case '\v': //VT - Vertical Tab
+                        ypos += fontData->unk22;
+                        break;
+                    case '\r': //Carriage Return
+                        xpos = arg1->unk20;
+                        break;
+                    default:
+                        xpos += fontData->unk24;
+                        break;
+                }
+            } else {
+                curChar -= 0x20; //Convert lowercase to upper case
+                textureIndex = fontData->unk100[curChar].unk0;
+                if (textureIndex != 0xFF) {
+                    newData = 1;
+                    if (lastTextureIndex != textureIndex) {
+                        lastTextureIndex = textureIndex;
+                        texture = fontData->texturePointers[textureIndex];
+                        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(texture->cmd), texture->numberOfCommands);
+                    }
+                    textureWidth = fontData->unk100[curChar].unk2;
+                    textureHeight = fontData->unk100[curChar].unk3;
+                    textureS = fontData->unk100[curChar].unk4;
+                    textureT = fontData->unk100[curChar].unk5;
+                    xAlignmentDiff = fontData->unk100[curChar].unk6;
+                    yAlignmentDiff = fontData->unk100[curChar].unk7;
+                    var_t0 = (fontData->unk20 == 0) ? fontData->unk100[curChar].unk1 : fontData->unk20;
+                }
+            }
+            if (newData) {
+                textureUlx = ((arg1->x1 + xpos) + textureWidth) * 4;
+                textureUly = (arg1->y1 + ypos + textureHeight) * 4;
+                textureLrx = (xAlignmentDiff * 4) + textureUlx;
+                textureLry = (yAlignmentDiff * 4) + textureUly;
+                textureS *= 32; //upper left coordinate for the texture derived from X
+                textureT *= 32; //upper left coordinate for the texture derived from Y
+                if ((textureUlx < 0) && (textureLrx > 0)) {
+                    textureS += -textureUlx * 8;
+                    textureUlx = 0;
+                }
+                if ((textureUly < 0) && (textureLry > 0)) {
+                    textureT += -textureUly * 8;
+                    textureUly = 0;
+                }
+                gSPTextureRectangle((*dlist)++, textureUlx, textureUly, textureLrx, textureLry, 0, textureS, textureT, 1024, 1024);
+            }
+            if (D_8012A7F0 && (var_t0 != 0)) {
+                var_t0--;
+            }
+        }
+
+        arg1->xpos = xpos - arg1->unk20;
+        arg1->ypos = ypos - arg1->unk22;
+
+        gDPPipeSync((*dlist)++);
+
+        if (arg1 != gDialogueBoxBackground) {
+            func_80067A3C(dlist);
+        }
+
+        func_8007B3D0(dlist);
+        gDPPipeSync((*dlist)++);
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/font/func_800C45A4.s")
+#endif
+
+s32 func_800C4DA0(char *text, s32 x, s32 font) {
     s32 diffX, thisDiffX;
     FontData *fontData;
+    s32 index;
+    char ch;
 
     if (text == NULL) {
         return 0;
@@ -277,37 +442,32 @@ s32 func_800C4DA0(unsigned char *text, s32 x, s32 font) {
         font = gDialogueBoxBackground[0].font;
     }
     fontData = &gFonts[font];
-    while (*text != '\0') {
-        unsigned char ch = *text;
+    for (index = 0; text[index] != '\0'; index++) {
         thisDiffX = diffX;
+        ch = text[index];
         if ((ch < 0x21) || (ch >= 0x80)) {
             if (ch == '\t') { // Tab character
-                diffX = (diffX + fontData->unk26) - (diffX % fontData->unk26);
+                diffX += fontData->unk26 - (diffX % fontData->unk26);
             } else {
                 diffX += fontData->unk24;
             }
         } else {
-            unsigned char upperCaseCh = ch - 0x20;
-            FontCharData *fontCharData = &fontData->unk100[upperCaseCh];
+            ch -= 0x20; //Convert lower case to upper case ASCII
             
-            if (fontCharData->unk0 != 0xFF) {
+            if (fontData->unk100[ch].unk0 != 0xFF) {
                 if (fontData->unk20 == 0) {
-                    diffX += fontCharData->unk1;
+                    diffX += fontData->unk100[ch].unk1;
                 } else {
                     diffX += fontData->unk20;
                 }
             }
         }
-        if (D_8012A7F0 != 0 && thisDiffX != diffX) {
+        if (D_8012A7F0 != 0 && diffX != thisDiffX) {
             diffX--;
         }
-        text++;
     }
     return diffX - x;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/font/func_800C4DA0.s")
-#endif
 
 void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, s32 y2) {
     if (dialogueBoxID > 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
@@ -530,8 +690,7 @@ void assign_dialogue_box_id(s32 dialogueBoxID) {
     }
 }
 
-// Unused
-void func_800C54E8(s32 dialogueBoxID, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
+UNUSED void func_800C54E8(s32 dialogueBoxID, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
     FontData *fontData;
     DialogueBoxBackground *dialogueBox;
 
@@ -620,7 +779,6 @@ void render_dialogue_boxes(Gfx **dlist, Mtx **mat, VertexList **verts) {
 
     for (i = 1; i < DIALOGUEBOXBACKGROUND_COUNT; i++) {
         if (gDialogueBoxBackground[i].flags & DIALOGUE_BOX_OPEN) {
-                //render_printf("%X\n", (*gDialogueBoxBackground)[i].flags);
             if (gDialogueBoxBackground[i].flags & DIALOGUE_BOX_UNK_01) {
                 render_dialogue_box(dlist, mat, verts, i);
             } else {
@@ -762,14 +920,14 @@ void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogu
  * Takes in a string and a number, and replaces each instance of the
  * character '~' with the number.
  */
-void parse_string_with_number(unsigned char *input, char *output, s32 number) {
+void parse_string_with_number(char *input, char *output, s32 number) {
     while (*input != '\0') {
         if ('~' == *input) { // ~ is equivalent to a %d.
             // output the number as part of the string
             s32_to_string(&output, number);
             input++;
         } else {
-            *output = *input;
+            *output = (signed char)*input; //It's either this cast, or change the function signature
             input++;
             output++;
         }
