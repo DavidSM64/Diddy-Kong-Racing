@@ -1,6 +1,9 @@
+compiler_type = "ido"
+
 [preserve_macros]
 "g[DS]P.*" = "void"
 "gDma.*" = "void"
+"gDkr.*" = "void"
 "_SHIFTL" = "unsigned int"
 
 [decompme.compilers]

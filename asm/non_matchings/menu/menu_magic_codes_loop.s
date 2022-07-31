@@ -527,7 +527,7 @@ glabel menu_magic_codes_loop
 /* 08B030 8008A430 14200022 */  bnez  $at, .L8008A4BC
 /* 08B034 8008A434 8FBF0014 */   lw    $ra, 0x14($sp)
 .L8008A438:
-/* 08B038 8008A438 0C022932 */  jal   func_8008A4C8
+/* 08B038 8008A438 0C022932 */  jal   unload_big_font_2
 /* 08B03C 8008A43C 00000000 */   nop   
 /* 08B040 8008A440 3C19800E */  lui   $t9, %hi(gMenuDelay) # $t9, 0x800e
 /* 08B044 8008A444 8F39F47C */  lw    $t9, %lo(gMenuDelay)($t9)
