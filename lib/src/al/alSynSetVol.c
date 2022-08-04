@@ -1,8 +1,8 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800C9AE0 */
+/* RAM_POS: 0x800C9650 */
 
 /*====================================================================
- * synsetpriority.c
+ * synsetvol.c
  *
  * Copyright 1995, Silicon Graphics, Inc.
  * All Rights Reserved.
@@ -25,11 +25,30 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-void alSynSetPriority(UNUSED ALSynth *s, ALVoice *voice, s16 priority)
+void alSynSetVol(ALSynth *synth, ALVoice *v, s16 volume, ALMicroTime t)
 {
-    voice->priority = priority;
+    ALParam  *update;
+    ALFilter *f;
+
+    if (v->pvoice) {
+        /*
+         * get new update struct from the free list
+         */
+        update = __allocParam();
+        ALFailIf(update == 0, ERR_ALSYN_NO_UPDATE);
+
+        /*
+         * set offset and volume data
+         */
+        update->delta           = synth->paramSamples + v->pvoice->offset;
+        update->type            = AL_FILTER_SET_VOLUME;
+        update->data.i          = volume;
+        update->moredata.i      = __timeToSamples(synth, t);
+        update->next            = 0;
+
+        f = v->pvoice->channelKnob;
+        (*f->setParam)(f, AL_FILTER_ADD_UPDATE, update);        
+    }
 }
 
-// TODO: Why do we still need a bunch of NOPS? This would be indicative of a file end,
-// but it's not generating them for some reason still.
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA6E0/alSynSetPriority.s")
+

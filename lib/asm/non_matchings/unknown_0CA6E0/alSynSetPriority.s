@@ -1,9 +1,4 @@
-glabel alSynSetPriority
-/* 0CA6E0 800C9AE0 AFA40000 */  sw    $a0, ($sp)
-/* 0CA6E4 800C9AE4 AFA60008 */  sw    $a2, 8($sp)
-/* 0CA6E8 800C9AE8 03E00008 */  jr    $ra
-/* 0CA6EC 800C9AEC A4A60016 */   sh    $a2, 0x16($a1)
-
+glabel NOPSNEEDED
 /* 0CA6F0 800C9AF0 00000000 */  nop   
 /* 0CA6F4 800C9AF4 00000000 */  nop   
 /* 0CA6F8 800C9AF8 00000000 */  nop   
