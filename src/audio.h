@@ -56,6 +56,7 @@ void func_80063BA0(ALCSPlayer *seqp, u8 arg1, u8 arg2); //lib/src/unknown_0647A0
 u8 func_80063C00(ALCSPlayer *seqp, u8 arg1); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan); //lib/src/al/alSeqpGetChlFXMix.c
 void func_8006492C(u8 arg0); //lib/src/mips1/al/reverb.c
+u8 func_8006493C(); //lib/src/mips1/al/reverb.c
 void alHeapInit(ALHeap *hp, u8 *base, s32 len); //lib/src/al/alHeapInit.c
 void alBnkfNew(ALBankFile *ctl, u8 *tbl); //lib/src/al/global_asm.c
 void alCSPSetVol(ALCSPlayer *seqp, s16 vol); //lib/src/al/alCSPSetVol.c

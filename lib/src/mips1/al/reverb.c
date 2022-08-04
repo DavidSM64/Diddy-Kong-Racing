@@ -255,4 +255,11 @@ Acmd *_filterBuffer(ALLowPass *lp, s32 buff, s32 count, Acmd *p)
 }
 
 GLOBAL_ASM("lib/asm/non_matchings/reverb/_doModFunc.s")
-GLOBAL_ASM("lib/asm/non_matchings/reverb/func_8006492C.s")
+
+void func_8006492C(u8 arg0) {
+    D_800DCEB0 = arg0;
+}
+
+u8 func_8006493C() {
+    return D_800DCEB0;
+}
