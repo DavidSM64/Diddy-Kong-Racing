@@ -26,7 +26,6 @@
 #include "audio_internal.h"
 #include "libultra_internal.h"
 
-#ifdef NON_EQUIVALENT
 s32 _allocatePVoice(ALSynth *drvr, PVoice **pvoice, s16 priority)
 {
     ALLink      *dl;
@@ -59,9 +58,6 @@ s32 _allocatePVoice(ALSynth *drvr, PVoice **pvoice, s16 priority)
     
     return stolen;
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0C9C90/_allocatePVoice.s")
-#endif
 
 s32 alSynAllocVoice(ALSynth *drvr, ALVoice *voice, ALVoiceConfig *vc)
 {
