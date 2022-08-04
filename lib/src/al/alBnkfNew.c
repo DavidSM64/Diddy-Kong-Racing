@@ -69,7 +69,7 @@ void alBnkfNew(ALBankFile *file, u8 *table)
     }
 }
 
-void _bnkfPatchBank(ALBank *bank, s32 offset, s32 table) 
+static void _bnkfPatchBank(ALBank *bank, s32 offset, s32 table) 
 {
     s32 i;
     
@@ -91,7 +91,7 @@ void _bnkfPatchBank(ALBank *bank, s32 offset, s32 table)
     }
 }
 
-void _bnkfPatchInst(ALInstrument *inst, s32 offset, s32 table)
+static void _bnkfPatchInst(ALInstrument *inst, s32 offset, s32 table)
 {
     s32 i;
 
@@ -108,7 +108,7 @@ void _bnkfPatchInst(ALInstrument *inst, s32 offset, s32 table)
     }
 }
 
-void _bnkfPatchSound(ALSound *s, s32 offset, s32 table)
+static void _bnkfPatchSound(ALSound *s, s32 offset, s32 table)
 {
     if (s->flags)
         return;
@@ -122,7 +122,7 @@ void _bnkfPatchSound(ALSound *s, s32 offset, s32 table)
     _bnkfPatchWaveTable(s->wavetable, offset, table);
 }
 
-void _bnkfPatchWaveTable(ALWaveTable *w, s32 offset, s32 table)
+static void _bnkfPatchWaveTable(ALWaveTable *w, s32 offset, s32 table)
 {
     if (w->flags)
         return;
