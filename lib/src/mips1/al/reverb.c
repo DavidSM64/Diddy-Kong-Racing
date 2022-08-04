@@ -221,7 +221,6 @@ s32 alFxParamHdl(void *filter, s32 paramID, void *param)
     return 0;
 }
 
-#if 1
 Acmd *_loadOutputBuffer(ALFx *r, ALDelay *d, s32 buff, s32 incount, Acmd *p)
 {
     Acmd        *ptr = p;
@@ -295,9 +294,6 @@ Acmd *_loadOutputBuffer(ALFx *r, ALDelay *d, s32 buff, s32 incount, Acmd *p)
 
     return ptr;
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/reverb/_loadOutputBuffer.s")
-#endif
 
 /* 
  * This routine is for loading data from the delay line buff. If the
@@ -403,7 +399,40 @@ Acmd *_filterBuffer(ALLowPass *lp, s32 buff, s32 count, Acmd *p)
     return ptr;
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/reverb/_doModFunc.s")
+/*
+ * Generate a triangle wave from -1 to 1, and find the current position
+ * in the wave. (Rate of the wave is controlled by d->rsinc, which is chorus
+ * rate) Multiply the current triangle wave value by d->rsgain, (chorus depth)
+ * which is expressed in number of samples back from output pointer the chorus
+ * should go at it's full chorus. In otherwords, this function returns a number
+ * of samples the output pointer should modulate backwards.
+ */
+f32 _doModFunc(ALDelay *d, s32 count)
+{
+  f32 val;
+
+  /*
+   * generate bipolar sawtooth
+   * from -RANGE to +RANGE
+   */
+  d->rsval += d->rsinc * count;
+  d->rsval = (d->rsval > RANGE) ? d->rsval-(RANGE*2) : d->rsval;
+
+  /*
+   * convert to monopolar triangle
+   * from 0 to RANGE
+   */
+  val = d->rsval;
+  val = (val < 0) ? -val : val;
+
+  /*
+   * convert to bipolar triangle 
+   * from -1 to 1
+   */
+  val -= RANGE/2;
+
+  return(d->rsgain * val);
+}
 
 void func_8006492C(u8 arg0) {
     D_800DCEB0 = arg0;
