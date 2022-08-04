@@ -20,9 +20,10 @@ void __CSPHandleNextSeqEvent(ALCSPlayer *seqp);
 void __CSPHandleMetaMsg(ALCSPlayer *seqp, ALEvent *event);
 void  __CSPRepostEvent(ALEventQueue *evtq, ALEventListItem *item);
 void __setUsptFromTempo(ALCSPlayer *seqp, f32 tempo);
-u32 __alCSeqGetTrackEvent(ALCSeq *seq, ALEvent *event); 
+void alCSeqNextEvent(ALCSeq *seq, ALEvent *event); 
 void __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *event);
 ALMicroTime __CSPVoiceHandler(void *node);
+void		__CSPHandleNextSeqEvent(ALCSPlayer *seqp);
 
 /*
  * Sequence Player public functions
@@ -340,7 +341,7 @@ void __CSPHandleNextSeqEvent(ALCSPlayer *seqp)
     if (seqp->target == NULL)
 	return;
 
-    __alCSeqGetTrackEvent(seqp->target, &evt);
+    alCSeqNextEvent(seqp->target, &evt);
 
     switch (evt.type)
     {
