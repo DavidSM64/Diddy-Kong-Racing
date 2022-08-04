@@ -52,7 +52,7 @@ void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib
 void alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0C84E0.c
 void alCSPSetChlVol(ALCSPlayer *, u8 chan, u8 vol); //lib/src/unknown_0C84E0.c
 u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan); //lib/src/al
-void func_80063BA0(ALCSPlayer *seqp, u8 arg1, u8 arg2); //lib/src/unknown_0647A0.c
+void func_80063BA0(ALSeqPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0647A0.c
 u8 func_80063C00(ALCSPlayer *seqp, u8 arg1); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan); //lib/src/al/alSeqpGetChlFXMix.c
 void func_8006492C(u8 arg0); //lib/src/mips1/al/reverb.c
