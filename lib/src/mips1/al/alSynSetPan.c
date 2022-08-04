@@ -7,6 +7,8 @@
 #include "macros.h"
 #include "audio_internal.h"
 
+ALParam *__allocParam();
+
 void alSynSetPan(ALSynth *synth, ALVoice *v, u8 pan) {
     ALParam  *update;
     ALFilter *f;
