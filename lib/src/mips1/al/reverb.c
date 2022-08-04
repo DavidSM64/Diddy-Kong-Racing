@@ -36,6 +36,7 @@ Acmd *_loadBuffer(ALFx *r, s16 *curr_ptr, s32 buff, s32 count, Acmd *p);
 Acmd *_saveBuffer(ALFx *r, s16 *curr_ptr, s32 buff, s32 count, Acmd *p);
 Acmd *_filterBuffer(ALLowPass *lp, s32 buff, s32 count, Acmd *p);
 f32  _doModFunc(ALDelay *d, s32 count);
+void init_lpfilter(ALLowPass *lp);
 
 u8 D_800DCEB0 = 1;
 static s32 L_INC[] = { L0_INC, L1_INC, L2_INC };
@@ -147,7 +148,79 @@ s32 alFxParam(void *filter, s32 paramID, void *param) {
     return 0;
 }
 
-GLOBAL_ASM("lib/asm/non_matchings/reverb/alFxParamHdl.s")
+/*
+ * This routine gets called by alSynSetFXParam. No checking takes place to 
+ * verify the validity of the paramID or the param value. input and output 
+ * values must be 8 byte aligned, so round down any param passed. 
+ */
+s32 alFxParamHdl(void *filter, s32 paramID, void *param)
+{
+    ALFx   *f = (ALFx *) filter;    
+    s32    p = (paramID - 2) % 8; 
+    s32    s = (paramID - 2) / 8;
+    s32    val = *(s32*)param;
+
+#define INPUT_PARAM         0
+#define OUTPUT_PARAM        1
+#define FBCOEF_PARAM        2
+#define FFCOEF_PARAM        3
+#define GAIN_PARAM          4
+#define CHORUSRATE_PARAM    5
+#define CHORUSDEPTH_PARAM   6
+#define LPFILT_PARAM        7
+
+    switch(p)
+    {
+        case INPUT_PARAM:
+            f->delay[s].input = (u32)val & 0xFFFFFFF8;
+            break;
+        case OUTPUT_PARAM:
+            f->delay[s].output = (u32)val & 0xFFFFFFF8;
+            break;
+        case FFCOEF_PARAM:
+            f->delay[s].ffcoef = (s16)val;
+            break;
+        case FBCOEF_PARAM:
+            f->delay[s].fbcoef = (s16)val;
+            break;
+        case GAIN_PARAM:
+            f->delay[s].gain = (s16)val;
+            break;
+        case CHORUSRATE_PARAM:
+            /* f->delay[s].rsinc = ((f32)val)/0xffffff; */
+            f->delay[s].rsinc = ((((f32)val)/1000) * RANGE)/alGlobals->drvr.outputRate; 
+            break;
+
+/*
+ * the following constant is derived from:
+ *
+ *      ratio = 2^(cents/1200)
+ *
+ * and therefore for hundredths of a cent
+ *                     x
+ *      ln(ratio) = ---------------
+ *              (120,000)/ln(2)
+ * where
+ *      120,000/ln(2) = 173123.40...
+ */
+#define CONVERT 173123.404906676
+#define LENGTH  (f->delay[s].output - f->delay[s].input)
+
+        case CHORUSDEPTH_PARAM:
+            /*f->delay[s].rsgain = (((f32)val) / CONVERT) * LENGTH; */
+            f->delay[s].rsgain = (((f32)val) / CONVERT) * LENGTH;
+            break;
+        case LPFILT_PARAM:
+            if(f->delay[s].lp)
+            {
+                f->delay[s].lp->fc = (s16)val;
+                init_lpfilter(f->delay[s].lp);
+            }
+            break;
+    }
+    return 0;
+}
+
 GLOBAL_ASM("lib/asm/non_matchings/reverb/_loadOutputBuffer.s")
 
 /* 
