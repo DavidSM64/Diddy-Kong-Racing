@@ -7,7 +7,7 @@ glabel D_800E95A8
 .ascii "\0\0" # padding
 
 .text
-glabel func_800CAC5C
+glabel _pullSubFrame
 /* 0CB85C 800CAC5C 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 0CB860 800CAC60 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0CB864 800CAC64 AFA40050 */  sw    $a0, 0x50($sp)
@@ -136,7 +136,7 @@ glabel func_800CAC5C
 /* 0CBA44 800CAE44 AFAC0014 */  sw    $t4, 0x14($sp)
 /* 0CBA48 800CAE48 AFB90010 */  sw    $t9, 0x10($sp)
 /* 0CBA4C 800CAE4C 46802321 */  cvt.d.w $f12, $f4
-/* 0CBA50 800CAE50 0C032CB5 */  jal   func_800CB2D4
+/* 0CBA50 800CAE50 0C032CB5 */  jal   _getRate
 /* 0CBA54 800CAE54 468033A1 */   cvt.d.w $f14, $f6
 /* 0CBA58 800CAE58 8FAA0048 */  lw    $t2, 0x48($sp)
 /* 0CBA5C 800CAE5C 00000000 */  nop   
@@ -166,7 +166,7 @@ glabel func_800CAC5C
 /* 0CBAB8 800CAEB8 AFA90014 */  sw    $t1, 0x14($sp)
 /* 0CBABC 800CAEBC AFAD0010 */  sw    $t5, 0x10($sp)
 /* 0CBAC0 800CAEC0 46804321 */  cvt.d.w $f12, $f8
-/* 0CBAC4 800CAEC4 0C032CB5 */  jal   func_800CB2D4
+/* 0CBAC4 800CAEC4 0C032CB5 */  jal   _getRate
 /* 0CBAC8 800CAEC8 468053A1 */   cvt.d.w $f14, $f10
 /* 0CBACC 800CAECC 8FA80048 */  lw    $t0, 0x48($sp)
 /* 0CBAD0 800CAED0 00000000 */  nop   

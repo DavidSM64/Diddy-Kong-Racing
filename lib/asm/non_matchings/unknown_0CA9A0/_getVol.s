@@ -1,4 +1,4 @@
-glabel func_800CB498
+glabel _getVol
 /* 0CC098 800CB498 00063400 */  sll   $a2, $a2, 0x10
 /* 0CC09C 800CB49C 00063403 */  sra   $a2, $a2, 0x10
 /* 0CC0A0 800CB4A0 27BDFFF8 */  addiu $sp, $sp, -8

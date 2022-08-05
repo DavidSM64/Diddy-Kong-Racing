@@ -268,7 +268,7 @@ glabel L800CA460
 /* 0CB070 800CA470 27A50056 */  addiu $a1, $sp, 0x56
 /* 0CB074 800CA474 27A60046 */  addiu $a2, $sp, 0x46
 /* 0CB078 800CA478 AFB80010 */  sw    $t8, 0x10($sp)
-/* 0CB07C 800CA47C 0C032B17 */  jal   func_800CAC5C
+/* 0CB07C 800CA47C 0C032B17 */  jal   _pullSubFrame
 /* 0CB080 800CA480 AFA80014 */   sw    $t0, 0x14($sp)
 /* 0CB084 800CA484 AFA2005C */  sw    $v0, 0x5c($sp)
 /* 0CB088 800CA488 8FAA0058 */  lw    $t2, 0x58($sp)
@@ -334,7 +334,7 @@ glabel L800CA460
 /* 0CB170 800CA570 448B3000 */  mtc1  $t3, $f6
 /* 0CB174 800CA574 85260026 */  lh    $a2, 0x26($t1)
 /* 0CB178 800CA578 95270024 */  lhu   $a3, 0x24($t1)
-/* 0CB17C 800CA57C 0C032D26 */  jal   func_800CB498
+/* 0CB17C 800CA57C 0C032D26 */  jal   _getVol
 /* 0CB180 800CA580 46803320 */   cvt.s.w $f12, $f6
 /* 0CB184 800CA584 444EF800 */  cfc1  $t6, $31
 /* 0CB188 800CA588 8FB90058 */  lw    $t9, 0x58($sp)
@@ -354,7 +354,7 @@ glabel L800CA460
 /* 0CB1C0 800CA5C0 448F5000 */  mtc1  $t7, $f10
 /* 0CB1C4 800CA5C4 8546002C */  lh    $a2, 0x2c($t2)
 /* 0CB1C8 800CA5C8 9547002A */  lhu   $a3, 0x2a($t2)
-/* 0CB1CC 800CA5CC 0C032D26 */  jal   func_800CB498
+/* 0CB1CC 800CA5CC 0C032D26 */  jal   _getVol
 /* 0CB1D0 800CA5D0 46805320 */   cvt.s.w $f12, $f10
 /* 0CB1D4 800CA5D4 444DF800 */  cfc1  $t5, $31
 /* 0CB1D8 800CA5D8 8FB80058 */  lw    $t8, 0x58($sp)
@@ -523,7 +523,7 @@ glabel L800CA828
 /* 0CB438 800CA838 27A50056 */  addiu $a1, $sp, 0x56
 /* 0CB43C 800CA83C 27A60046 */  addiu $a2, $sp, 0x46
 /* 0CB440 800CA840 AFAF0010 */  sw    $t7, 0x10($sp)
-/* 0CB444 800CA844 0C032B17 */  jal   func_800CAC5C
+/* 0CB444 800CA844 0C032B17 */  jal   _pullSubFrame
 /* 0CB448 800CA848 AFAD0014 */   sw    $t5, 0x14($sp)
 /* 0CB44C 800CA84C AFA2005C */  sw    $v0, 0x5c($sp)
 /* 0CB450 800CA850 8FAC0058 */  lw    $t4, 0x58($sp)
@@ -565,7 +565,7 @@ glabel L800CA8C4
 /* 0CB4D4 800CA8D4 27A50056 */  addiu $a1, $sp, 0x56
 /* 0CB4D8 800CA8D8 27A60046 */  addiu $a2, $sp, 0x46
 /* 0CB4DC 800CA8DC AFAF0010 */  sw    $t7, 0x10($sp)
-/* 0CB4E0 800CA8E0 0C032B17 */  jal   func_800CAC5C
+/* 0CB4E0 800CA8E0 0C032B17 */  jal   _pullSubFrame
 /* 0CB4E4 800CA8E4 AFAD0014 */   sw    $t5, 0x14($sp)
 /* 0CB4E8 800CA8E8 AFA2005C */  sw    $v0, 0x5c($sp)
 /* 0CB4EC 800CA8EC 8FAC0058 */  lw    $t4, 0x58($sp)
@@ -640,7 +640,7 @@ glabel L800CA8C4
 /* 0CB5F4 800CA9F4 27A50056 */  addiu $a1, $sp, 0x56
 /* 0CB5F8 800CA9F8 27A60046 */  addiu $a2, $sp, 0x46
 /* 0CB5FC 800CA9FC AFA80010 */  sw    $t0, 0x10($sp)
-/* 0CB600 800CAA00 0C032B17 */  jal   func_800CAC5C
+/* 0CB600 800CAA00 0C032B17 */  jal   _pullSubFrame
 /* 0CB604 800CAA04 AFAE0014 */   sw    $t6, 0x14($sp)
 /* 0CB608 800CAA08 AFA2005C */  sw    $v0, 0x5c($sp)
 /* 0CB60C 800CAA0C 8FB90058 */  lw    $t9, 0x58($sp)
