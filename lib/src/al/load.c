@@ -438,6 +438,7 @@ alLoadParam(void *filter, s32 paramID, void *param)
     }
 }
 
+static
 Acmd *_decodeChunk(Acmd *ptr, ALLoadFilter *f, s32 tsam, s32 nbytes, s16 outp, s16 inp, u32 flags)
 
 {

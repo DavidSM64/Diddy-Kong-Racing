@@ -508,6 +508,7 @@ s16 _getRate(f64 vol, f64 tgt, s32 count, u16* ratel)
     return (s16)a;
 }
 
+static
 f32 _getVol(f32 ivol, s32 samples, s16 ratem, u16 ratel) {
     f32 r;
     r = ((ratem<<16) + (f32) ratel)/65536.0;
