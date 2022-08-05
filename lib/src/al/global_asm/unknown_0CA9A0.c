@@ -1,5 +1,5 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800CA0B0 */
+/* RAM_POS: 0x800CA0D0 */
 
 #include "types.h"
 #include "macros.h"
@@ -30,7 +30,6 @@ s16 eqpower[ EQPOWER_LENGTH ] = {
     405,      0
 };
 
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alFilterNew.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alEnvMixerPull.s")
 GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA9A0/alEnvmixerParam.s")
 //Called by alEnvMixerPull
