@@ -24,6 +24,7 @@
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
+#include "thread0_epc.h"
 
 // TODO: these come from headers
 #ident "$Revision: 1.17 $"
@@ -109,7 +110,15 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset,
 #ifdef _DEBUG
         assert(samples >= 0);
         assert(samples <= AL_MAX_RSP_SAMPLES);
+#else
+        // Something must have gone wrong when compiling this file, and the asserts got left in.
+        // The function happens to currently live in the thread0 file for some reason.
+        if (samples >= 0) {} 
+        else { thread0_Assert("samples >= 0", "env.c", 104); }
+        if (samples <= AL_MAX_RSP_SAMPLES) {} 
+        else { thread0_Assert("samples <= AL_MAX_RSP_SAMPLES", "env.c", 105); }
 #endif
+
         
         switch (e->ctrlList->type) {
           case (AL_FILTER_START_VOICE_ALT):
@@ -381,6 +390,11 @@ Acmd* _pullSubFrame(void *filter, s16 *inp, s16 *outp, s32 outCount,
      */
 #ifdef _DEBUG
     assert(source);
+#else
+    // Something must have gone wrong when compiling this file, and the asserts got left in.
+    // The function happens to currently live in the thread0 file for some reason.
+    if (source) {}
+    else { thread0_Assert("source", "env.c", 373); }
 #endif
     
     ptr = (*source->handler)(source, inp, outCount, sampleOffset, p);

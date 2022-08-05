@@ -44,7 +44,7 @@ glabel _pullSubFrame
 /* 0CB8D8 800CACD8 3C05800F */  lui   $a1, %hi(D_800E95A8) # $a1, 0x800f
 /* 0CB8DC 800CACDC 24A595A8 */  addiu $a1, %lo(D_800E95A8) # addiu $a1, $a1, -0x6a58
 /* 0CB8E0 800CACE0 248495A0 */  addiu $a0, %lo(D_800E95A0) # addiu $a0, $a0, -0x6a60
-/* 0CB8E4 800CACE4 0C02DBD0 */  jal   func_800B6F40
+/* 0CB8E4 800CACE4 0C02DBD0 */  jal   thread0_Assert
 /* 0CB8E8 800CACE8 24060175 */   li    $a2, 373
 .L800CACEC:
 /* 0CB8EC 800CACEC 8FAB0064 */  lw    $t3, 0x64($sp)

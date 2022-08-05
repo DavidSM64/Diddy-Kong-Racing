@@ -77,7 +77,7 @@ glabel alEnvmixerPull
 /* 0CADA4 800CA1A4 3C05800F */  lui   $a1, %hi(D_800E9570) # $a1, 0x800f
 /* 0CADA8 800CA1A8 24A59570 */  addiu $a1, %lo(D_800E9570) # addiu $a1, $a1, -0x6a90
 /* 0CADAC 800CA1AC 24849560 */  addiu $a0, %lo(D_800E9560) # addiu $a0, $a0, -0x6aa0
-/* 0CADB0 800CA1B0 0C02DBD0 */  jal   func_800B6F40
+/* 0CADB0 800CA1B0 0C02DBD0 */  jal   thread0_Assert
 /* 0CADB4 800CA1B4 24060068 */   li    $a2, 104
 .L800CA1B8:
 /* 0CADB8 800CA1B8 8FA90048 */  lw    $t1, 0x48($sp)
@@ -92,7 +92,7 @@ glabel alEnvmixerPull
 /* 0CADD8 800CA1D8 3C05800F */  lui   $a1, %hi(D_800E9598) # $a1, 0x800f
 /* 0CADDC 800CA1DC 24A59598 */  addiu $a1, %lo(D_800E9598) # addiu $a1, $a1, -0x6a68
 /* 0CADE0 800CA1E0 24849578 */  addiu $a0, %lo(D_800E9578) # addiu $a0, $a0, -0x6a88
-/* 0CADE4 800CA1E4 0C02DBD0 */  jal   func_800B6F40
+/* 0CADE4 800CA1E4 0C02DBD0 */  jal   thread0_Assert
 /* 0CADE8 800CA1E8 24060069 */   li    $a2, 105
 .L800CA1EC:
 /* 0CADEC 800CA1EC 8FAA0058 */  lw    $t2, 0x58($sp)
