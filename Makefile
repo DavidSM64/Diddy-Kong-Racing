@@ -308,9 +308,6 @@ $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
 $(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips1
 $(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips1
 
-# asm-processor currently does not support -O3, so this is my workaround.
-$(BUILD_DIR)/lib/src/al/global_asm/%.o: OPT_FLAGS := -O2 -Xfullwarn
-
 ######################## Targets #############################
 
 default: all

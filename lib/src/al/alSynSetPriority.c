@@ -29,7 +29,3 @@ void alSynSetPriority(UNUSED ALSynth *s, ALVoice *voice, s16 priority)
 {
     voice->priority = priority;
 }
-
-// TODO: Why do we still need a bunch of NOPS? This would be indicative of a file end,
-// but it's not generating them for some reason still.
-GLOBAL_ASM("lib/asm/non_matchings/unknown_0CA6E0/alSynSetPriority.s")
