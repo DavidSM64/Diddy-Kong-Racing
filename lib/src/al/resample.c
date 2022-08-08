@@ -24,6 +24,8 @@
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
+#include "PR/os.h"
+#include "PR/abi.h"
 
 // TODO: this comes from a header
 #ident "$Revision: 1.49 $"

@@ -45,11 +45,15 @@ void alSynSetFXMix(ALSynth *synth, ALVoice *v, u8 fxmix)
         update->delta  = synth->paramSamples + v->pvoice->offset;
         update->type   = AL_FILTER_SET_FXAMT;
 
+//Ignore GCC warnings for this line, as there's no other way to match this.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtype-limits"
         //Differs from ultralib
         if (fxmix < 0)
             update->data.i = -fxmix;
         else
             update->data.i = fxmix;
+#pragma GCC diagnostic pop
 
         update->next   = 0;
 

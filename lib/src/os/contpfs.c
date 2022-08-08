@@ -208,10 +208,9 @@ s32 __osCheckId(OSPfs *pfs)
     ret = __osContRamRead(pfs->queue, pfs->channel, 1, (u8*)temp);
     if (ret != 0)
     {
-        if (ret != 2)
+        if (ret != PFS_ERR_NEW_PACK)
             return ret;
-        else
-            ERRCK(__osContRamRead(pfs->queue, pfs->channel, 1, (u8*)temp));
+        ERRCK(__osContRamRead(pfs->queue, pfs->channel, 1, (u8*)temp));
     }
 
     for (k = 0; k < ARRLEN(temp); k++)

@@ -70,7 +70,7 @@ s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args) {
             x.length = 'L';
             fmt_ptr++;
         }
-        _Putfld(&x, &args, *fmt_ptr, ac);
+        _Putfld(&x, (va_list *)&args, *fmt_ptr, ac);
         x.width -= x.n0 + x.num_leading_zeros + x.part2_len + x.num_mid_zeros
                       + x.part3_len + x.num_trailing_zeros;
         if (!(x.flags & FLAGS_MINUS))
