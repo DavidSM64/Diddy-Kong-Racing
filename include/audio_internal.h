@@ -296,7 +296,20 @@ typedef struct PVoice_s {
     ALResampler         resampler;
     ALEnvMixer		envmixer;
     s32                 offset;
-    s32                 unkDC;
+    u8                  unkDC;
 } PVoice;
+
+/*
+ * prototypes for private driver functions
+ */
+ALParam         *__allocParam(void);
+void            __freeParam(ALParam *param);
+void            __freePVoices(ALSynth *drvr, PVoice *pvoice);
+void            _collectPVoices(ALSynth *drvr);
+
+s32             __timeToSamples(ALSynth *ALSynth, s32 micros);
+ALMicroTime     _samplesToTime(ALSynth *synth, s32 samples);
+
+void            _init_lpfilter(ALLowPass *lp);
 
 #endif

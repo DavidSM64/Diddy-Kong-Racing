@@ -5,18 +5,13 @@
 #include "audio_internal.h"
 #include "macros.h"
 
-#ifdef NON_EQUIVALENT
-
 s32 __nextSampleTime(ALSynth *drvr, ALPlayer **client);
 s32 _timeToSamplesNoRound(ALSynth *ALSynth, s32 micros);
 
-// Regalloc issue. s7 and s8 need to swap places; there is also an extra 8 bytes on the stack.
 void alSynNew(ALSynth *drvr, ALSynConfig *c)
 {
     s32         i;
-    ALVoice     *vv;
     PVoice      *pv;
-    ALVoice     *vvoices;
     PVoice      *pvoices;
     ALHeap      *hp = c->heap;
     ALSave      *save;
@@ -50,7 +45,7 @@ void alSynNew(ALSynth *drvr, ALSynConfig *c)
     
     for(i = 0; i < 2; i++) {
         if (c->fxType[i] != 0) {
-            alSynAllocFX(drvr, (s16)i, c, c);
+            alSynAllocFX(drvr, (s16)i, c, hp);
         } else {
             alMainBusParam(drvr->mainBus, 2, drvr->auxBus + i);
         }
@@ -95,9 +90,6 @@ void alSynNew(ALSynth *drvr, ALSynConfig *c)
     
     drvr->heap = hp;
 }
-#else
-GLOBAL_ASM("lib/asm/non_matchings/synthesizer/alSynNew.s")
-#endif
 
 void __collectPVoices(ALSynth *drvr);
 s32 __timeToSamplesNoRound(ALSynth *synth, s32 micros);
@@ -173,10 +165,8 @@ void __freeParam(ALParam *param)
 void __collectPVoices(ALSynth *drvr) 
 {
     ALLink *dl;
-    PVoice *pv;
 
     while ((dl = drvr->pLameList.next) != 0) {
-        pv = (PVoice *)dl;
         alUnlink(dl);
         alLink(dl, &drvr->pFreeList);        
     }

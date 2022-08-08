@@ -74,7 +74,7 @@ void func_800B6E50(void);
 void func_800B6EE0(void);
 void func_800B6F04(void);
 void func_800B6F30(s32 arg0, s32 arg1, s32 arg2);
-void func_800B6F40(s32 arg0, s32 arg1, s32 arg2);
+void thread0_Assert(UNUSED char *message, UNUSED char *fileName, UNUSED s32 lineNumber);
 void func_800B70D0(void);
 void func_800B7144(void);
 void func_800B76B8(s32 arg0, s32 arg1);

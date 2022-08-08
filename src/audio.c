@@ -405,7 +405,7 @@ void musicSetChlVol(u8 chan, u8 vol) {
 }
 
 /* Unused?*/
-s32 musicGetChlVol(u8 arg0) {
+u8 musicGetChlVol(u8 arg0) {
     if (arg0 >= 0x10) {
         return 0;
     } else {
@@ -756,7 +756,7 @@ u8 ALBankFile_80115D14_GetSoundDecayTime(u16 soundID) {
 }
 
 ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
-    ALCSPlayer_Custom *cseqp;
+    ALCSPlayer *cseqp;
     ALSeqpConfig config;
 
     config.maxVoices = _max_voices;
@@ -768,7 +768,7 @@ ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
     config.updateOsc = NULL;
     config.stopOsc = NULL;
 
-    cseqp = (ALCSPlayer_Custom *)alHeapDBAlloc(NULL, 0, &gALHeap, 1, sizeof(ALCSPlayer_Custom));
+    cseqp = (ALCSPlayer *)alHeapDBAlloc(NULL, 0, &gALHeap, 1, sizeof(ALCSPlayer));
     alCSPNew(cseqp, &config);
     alCSPSetBank(cseqp, ALBankFile_80115D10->bankArray[0]);
     cseqp->unk36 = 0x7F;

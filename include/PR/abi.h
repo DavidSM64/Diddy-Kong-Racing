@@ -242,7 +242,9 @@ typedef union {
 /*
  * ADPCM State
  */
-typedef short ADPCM_STATE[16];
+#define ADPCMVSIZE	8
+#define ADPCMFSIZE      16
+typedef short ADPCM_STATE[ADPCMFSIZE];
 
 /*
  * Pole filter state
