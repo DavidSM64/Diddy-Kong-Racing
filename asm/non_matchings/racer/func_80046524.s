@@ -810,7 +810,7 @@ glabel func_80046524
 /* 047C28 80047028 8E0E0148 */  lw    $t6, 0x148($s0)
 /* 047C2C 8004702C 44805000 */  mtc1  $zero, $f10
 /* 047C30 80047030 15C0000E */  bnez  $t6, .L8004706C
-/* 047C34 80047034 3C0A8012 */   lui   $t2, %hi(gCurrentRacerMiscPtr) # $t2, 0x8012
+/* 047C34 80047034 3C0A8012 */   lui   $t2, %hi(gCurrentRacerMiscAssetPtr) # $t2, 0x8012
 /* 047C38 80047038 A220003B */  sb    $zero, 0x3b($s1)
 /* 047C3C 8004703C 820201E1 */  lb    $v0, 0x1e1($s0)
 /* 047C40 80047040 24180028 */  li    $t8, 40
@@ -842,7 +842,7 @@ glabel func_80046524
 /* 047C98 80047098 46000486 */  mov.s $f18, $f0
 .L8004709C:
 /* 047C9C 8004709C 4459F800 */  cfc1  $t9, $31
-/* 047CA0 800470A0 8D4AD564 */  lw    $t2, %lo(gCurrentRacerMiscPtr)($t2)
+/* 047CA0 800470A0 8D4AD564 */  lw    $t2, %lo(gCurrentRacerMiscAssetPtr)($t2)
 /* 047CA4 800470A4 37210003 */  ori   $at, $t9, 3
 /* 047CA8 800470A8 38210002 */  xori  $at, $at, 2
 /* 047CAC 800470AC 44C1F800 */  ctc1  $at, $31

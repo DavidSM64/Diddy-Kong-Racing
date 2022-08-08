@@ -77,8 +77,8 @@ glabel func_8005A6F0
 .L8005A798:
 /* 05B398 8005A798 0C0078A7 */  jal   get_misc_asset
 /* 05B39C 8005A79C 24040009 */   li    $a0, 9
-/* 05B3A0 8005A7A0 3C038012 */  lui   $v1, %hi(gCurrentRacerMiscPtr) # $v1, 0x8012
-/* 05B3A4 8005A7A4 2463D564 */  addiu $v1, %lo(gCurrentRacerMiscPtr) # addiu $v1, $v1, -0x2a9c
+/* 05B3A0 8005A7A0 3C038012 */  lui   $v1, %hi(gCurrentRacerMiscAssetPtr) # $v1, 0x8012
+/* 05B3A4 8005A7A4 2463D564 */  addiu $v1, %lo(gCurrentRacerMiscAssetPtr) # addiu $v1, $v1, -0x2a9c
 /* 05B3A8 8005A7A8 AC620000 */  sw    $v0, ($v1)
 /* 05B3AC 8005A7AC 82190003 */  lb    $t9, 3($s0)
 /* 05B3B0 8005A7B0 3C01800E */  lui   $at, %hi(D_800E6940 + 4) # $at, 0x800e
@@ -103,8 +103,8 @@ glabel func_8005A6F0
 .L8005A7FC:
 /* 05B3FC 8005A7FC 0C0078A7 */  jal   get_misc_asset
 /* 05B400 8005A800 2404000A */   li    $a0, 10
-/* 05B404 8005A804 3C038012 */  lui   $v1, %hi(gCurrentRacerMiscPtr) # $v1, 0x8012
-/* 05B408 8005A808 2463D564 */  addiu $v1, %lo(gCurrentRacerMiscPtr) # addiu $v1, $v1, -0x2a9c
+/* 05B404 8005A804 3C038012 */  lui   $v1, %hi(gCurrentRacerMiscAssetPtr) # $v1, 0x8012
+/* 05B408 8005A808 2463D564 */  addiu $v1, %lo(gCurrentRacerMiscAssetPtr) # addiu $v1, $v1, -0x2a9c
 /* 05B40C 8005A80C AC620000 */  sw    $v0, ($v1)
 /* 05B410 8005A810 82180003 */  lb    $t8, 3($s0)
 /* 05B414 8005A814 3C018012 */  lui   $at, %hi(gCurrentRacerHandlingStat) # $at, 0x8012
@@ -114,8 +114,8 @@ glabel func_8005A6F0
 /* 05B424 8005A824 2404000B */  li    $a0, 11
 /* 05B428 8005A828 0C0078A7 */  jal   get_misc_asset
 /* 05B42C 8005A82C E426D570 */   swc1  $f6, %lo(gCurrentRacerHandlingStat)($at)
-/* 05B430 8005A830 3C058012 */  lui   $a1, %hi(gCurrentRacerMiscPtr) # $a1, 0x8012
-/* 05B434 8005A834 24A5D564 */  addiu $a1, %lo(gCurrentRacerMiscPtr) # addiu $a1, $a1, -0x2a9c
+/* 05B430 8005A830 3C058012 */  lui   $a1, %hi(gCurrentRacerMiscAssetPtr) # $a1, 0x8012
+/* 05B434 8005A834 24A5D564 */  addiu $a1, %lo(gCurrentRacerMiscAssetPtr) # addiu $a1, $a1, -0x2a9c
 /* 05B438 8005A838 ACA20000 */  sw    $v0, ($a1)
 /* 05B43C 8005A83C 82180003 */  lb    $t8, 3($s0)
 /* 05B440 8005A840 8FA400A0 */  lw    $a0, 0xa0($sp)
@@ -510,8 +510,8 @@ glabel func_8005A6F0
 /* 05B9D8 8005ADD8 0C0078A7 */  jal   get_misc_asset
 /* 05B9DC 8005ADDC E428D570 */   swc1  $f8, %lo(gCurrentRacerHandlingStat)($at)
 /* 05B9E0 8005ADE0 8FB900A0 */  lw    $t9, 0xa0($sp)
-/* 05B9E4 8005ADE4 3C018012 */  lui   $at, %hi(gCurrentRacerMiscPtr) # $at, 0x8012
-/* 05B9E8 8005ADE8 AC22D564 */  sw    $v0, %lo(gCurrentRacerMiscPtr)($at)
+/* 05B9E4 8005ADE4 3C018012 */  lui   $at, %hi(gCurrentRacerMiscAssetPtr) # $at, 0x8012
+/* 05B9E8 8005ADE8 AC22D564 */  sw    $v0, %lo(gCurrentRacerMiscAssetPtr)($at)
 /* 05B9EC 8005ADEC 8F2D0040 */  lw    $t5, 0x40($t9)
 /* 05B9F0 8005ADF0 00000000 */  nop   
 /* 05B9F4 8005ADF4 91A4005D */  lbu   $a0, 0x5d($t5)

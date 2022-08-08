@@ -1702,7 +1702,7 @@ void func_80081218(void) {
     D_80126530[3] = (u8 *)D_80126530[2] + sp20;
     D_80126530[3]->courseFlagsPtr = (u8 *)D_80126530[3] + sizeof(Settings);
     D_80126530[3]->balloonsPtr = (u8 *)D_80126530[3]->courseFlagsPtr + sp28;
-    gCheatsAssetData = get_misc_asset(MISC_UNK41);
+    gCheatsAssetData = get_misc_asset(MISC_ASSET_UNK41);
     gNumberOfCheats = (s32)(*gCheatsAssetData);
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
     load_menu_text(LANGUAGE_ENGLISH);
@@ -2325,7 +2325,7 @@ void menu_title_screen_init(void) {
     func_80000890(0);
     set_time_trial_enabled(FALSE);
     D_80126864 = 0;
-    sTitleScreenDemoIds = (TitleScreenDemos *)get_misc_asset(MISC_UNK42);
+    sTitleScreenDemoIds = (TitleScreenDemos *)get_misc_asset(MISC_ASSET_UNK42);
     numberOfPlayers = sTitleScreenDemoIds->numberOfPlayers;
     D_80126868 = 0;
     if (numberOfPlayers == -2) {
@@ -5126,7 +5126,7 @@ s32 func_80092BE0(s32 arg0) {
     s32 index;
     s32 temp;
 
-    trackIdArray = (s8 *)get_misc_asset(MISC_UNK1C);
+    trackIdArray = (s8 *)get_misc_asset(MISC_ASSET_UNK1C);
 
     index = 0;
     temp = -1;
@@ -5704,7 +5704,7 @@ void menu_trophy_race_round_init(void) {
     s8 *levelIds;
 
     settings = get_settings();
-    levelIds = (s8 *)get_misc_asset(MISC_UNK1A); // Returns level ids array.
+    levelIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1A); // Returns level ids array.
 
     if (gTrophyRaceRound == 0) {
         for (i = 0; i < 8; i++) {
@@ -5745,7 +5745,7 @@ void draw_trophy_race_text(UNUSED s32 updateRate) {
     u8 *levelName;
     s8 *levelIds;
 
-    levelIds = (s8 *)get_misc_asset(MISC_UNK1A);
+    levelIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1A);
     if (osTvType == TV_TYPE_PAL) {
         yPos = 18;
     } else {
@@ -5772,7 +5772,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
     s16 temp_a2;
     s32 temp;
 
-    trackMenuIds = (s8 *)get_misc_asset(MISC_UNK1A); //tracks_menu_ids
+    trackMenuIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1A); //tracks_menu_ids
     if (D_800E0980 != 0) {
         D_800E0980 -= updateRate;
         if (D_800E0980 <= 0) {
@@ -6059,7 +6059,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
         arg0++;
     }
 
-    if ((phi_v1 == 0) && (get_misc_asset(MISC_UNK19) == (s32 *)arg0)) {
+    if ((phi_v1 == 0) && (get_misc_asset(MISC_ASSET_UNK19) == (s32 *)arg0)) {
         D_8012684C = 1;
     } else {
         D_8012684C = 0;

@@ -12,39 +12,39 @@
 
 // Anything I've labelled as UNK, without a comment, is something I didn't get an audible sound from.
 enum SoundID {
-    SOUND_UNK0,
+    SOUND_UNK00,
     SOUND_CAR_SLIDE,
     SOUND_CAR_SLIDE2, // Not sure what this is for. I thought it was for the brakes originally, but there's clearly a brake
     SOUND_INTRO_PLANE,
     SOUND_INTRO_KIDS,
-    SOUND_UNK5, // Sounds like something sifting, idk.
-    SOUND_UNK6, // Same thing, but faster
-    SOUND_UNK7,
-    SOUND_UNK8,
+    SOUND_UNK_05, // Sounds like something sifting, idk.
+    SOUND_UNK_06, // Same thing, but faster
+    SOUND_UNK_07,
+    SOUND_UNK_08,
     SOUND_STOMP,
-    SOUND_UNK10,
-    SOUND_UNK11,
+    SOUND_UNK_0A,
+    SOUND_UNK_0B,
     SOUND_CRASH,
     SOUND_CRASH2, // Not the same as the last, sounds like a cymbal or something.
     SOUND_BALLOON_POP,
     SOUND_PLOP, // Dropping a landmine
-    SOUND_UNK16,
+    SOUND_UNK_10,
     SOUND_EXPLOSION,
     SOUND_NYOOM, // Firing a rocket.
-    SOUND_UNK19,
-    SOUND_UNK20,
-    SOUND_UNK21,
+    SOUND_UNK_13,
+    SOUND_UNK_14,
+    SOUND_UNK_15,
     SOUND_WHOOSH1, // The hud flying in on a race start.
     SOUND_EXPLOSION2, // Not sure what this one's for.
     SOUND_VOICE_TT_GET_READY,
     SOUND_VOICE_TT_GO,
-    SOUND_UNK26,
-    SOUND_UNK27,
+    SOUND_UNK_1A,
+    SOUND_UNK_1B,
     SOUND_CAR_BRAKE,
-    SOUND_UNK29,
-    SOUND_UNK30,
-    SOUND_UNK31,
-    SOUND_UNK32,
+    SOUND_UNK_1D,
+    SOUND_UNK_1E,
+    SOUND_UNK_1F,
+    SOUND_UNK_20,
     SOUND_NITRO_BOOST,
     SOUND_SELECT,
     SOUND_VOICE_TAJ_CUTSCENE_0, // "Woah there!"
@@ -54,7 +54,7 @@ enum SoundID {
     SOUND_LIGHTNING,
     SOUND_VOICE_TAJ_WOAH,
     SOUND_VOICE_TAJ_HINT, // "I've got something special for you."
-    SOUND_UNK42, // Sounds like a wave or something, not sure.
+    SOUND_UNK_2A, // Sounds like a wave or something, not sure.
     SOUND_RIBBIT, // :frog:
     SOUND_SPLOOSH,
     SOUND_VOICE_TAJ_WINNER, // "You won first prize!"
@@ -63,11 +63,11 @@ enum SoundID {
     SOUND_WHOOSH2, // This is a transition before a Taj Tech Tip.
     SOUND_WHOOSH3, // Don't remember what this is but I know it's used somewhere.
     SOUND_VOICE_TAJ_BALLOON, // "This is for you."
-    SOUND_UNK51, // Some softer gong thing maybe?
+    SOUND_UNK_33, // Some softer gong thing maybe?
     SOUND_TWINKLE, // Sounds like a lower, slower version of SOUND_SELECT
     SOUND_VOICE_WIZPIG_LAUGH,
     SOUND_NYOOM_HIGH, // High pitched nyoom.
-    SOUND_UNK55, // I cannot describe tbis. uhh, a car coming past? really I can't say
+    SOUND_UNK_37, // I cannot describe tbis. uhh, a car coming past? really I can't say
     SOUND_VOICE_TT_RADIO, // "Okay <unclear> control" remind me to find the subtitles for this lol. It's the rocket.
     SOUND_DOOR_CLOSE,
     SOUND_VOICE_TT_THREE,
@@ -77,7 +77,7 @@ enum SoundID {
     SOUND_VOICE_TT_ONE,
     SOUND_VOICE_TT_BLASTOFF,
     SOUND_ROCKET_LAUNCH,
-    SOUND_UNK65, // Sounds like an explosion sort. Likely related to the rocket.
+    SOUND_UNK_41, // Sounds like an explosion sort. Likely related to the rocket.
     SOUND_VOICE_DIDDY_LAUGH,
     SOUND_VOICE_BANJO_GUHHUH,
     SOUND_VOICE_DIDDY_LAUGH2,
@@ -97,28 +97,28 @@ enum SoundID {
     SOUND_VOICE_WIZPIG_LAUGH3,
     SOUND_VOICE_WIZPIG_ENDING, // "Sorry to break the party worms, but I had to say goodbyte!"
     SOUND_VOICE_WIZPIG_UNK0, // "Well lookie here, it's the little worm!"
-    SOUND_UNK85, // Sounds like some future something
+    SOUND_UNK_55, // Sounds like some future something
     SOUND_VOICE_WIZPIG_SEEYA, // "See ya later, worms!"
     SOUND_VOICE_WIZPIG_LAUGH4,
     SOUND_VOICE_BLUEY_REMATCH1, // "Fantastic!"
     SOUND_VOICE_BLUEY_REMATCH2, // "If you can beat me again..."
     SOUND_VOICE_BLUEY_REMATCH3, // "I'll give you a special prize"
-    SOUND_UNK91, // Might be the hovercraft engine.
-    SOUND_UNK92, // Might be the car engine.
+    SOUND_UNK_58, // Might be the hovercraft engine.
+    SOUND_UNK_59, // Might be the car engine.
     SOUND_TING_LOW,
     SOUND_TING_HIGH,
     SOUND_BOOST_LEVEL3,
-    SOUND_UNK96, // Also not sure
-    SOUND_UNK97, // Sounds like an earthquake, goes on for absolutely ever, but not a continuous sound.
+    SOUND_UNK_60, // Also not sure
+    SOUND_UNK_61, // Sounds like an earthquake, goes on for absolutely ever, but not a continuous sound.
     SOUND_ELECTRIC_BUZZ, // Bzzzz!
-    SOUND_UNK99, // sounds kind of like lightning but not 100% sure
-    SOUND_UNK100,
-    SOUND_UNK101,
+    SOUND_UNK_63, // sounds kind of like lightning but not 100% sure
+    SOUND_UNK_64,
+    SOUND_UNK_65,
     SOUND_VOICE_TT_WRONG_WAY,
     SOUND_VOICE_TT_NONONO,
     SOUND_MENU_BACK,
     SOUND_MENU_BACK2, // Appears to be exactly the same as the previous to my tonedeaf ears.
-    SOUND_UNK106, // Same thing as the previous but with an inverse wave.
+    SOUND_UNK_6A, // Same thing as the previous but with an inverse wave.
     SOUND_VOICE_WIZPIG_ENCOUNTER, // "You can't beat me!"
     SOUND_VOICE_WIZPIG_DEFEAT, // "Gragh, no! No!"
     SOUND_VOICE_WIZPIG_GROAN,
@@ -128,23 +128,23 @@ enum SoundID {
     SOUND_ZAP3,
     SOUND_VOICE_WIZPIG_SCREAM2,
     SOUND_VOICE_KRUNCH_LAUGH,
-    SOUND_UNK116, // More lightning?
+    SOUND_UNK_74, // More lightning?
     SOUND_VOICE_WIZPIG_SCREAM3,
     SOUND_VOICE_DRUMSTUCK_BWAK, // Chicken noises intensify.
     SOUND_VOICE_BLUEY_GOODBYE, // "Goodbye, Kid!"
     SOUND_VOICE_BANJO_YAHOO,
     SOUND_VOICE_BLUEY_SILVERCOINS2, // "Collect all the silver coins from the snow world"
     SOUND_CAR_REV, // Selecting the car in the menu, and the initial revs at the start.
-    SOUND_UNK123,
-    SOUND_UNK124,
-    SOUND_UNK125,
-    SOUND_UNK126,
-    SOUND_UNK127,
-    SOUND_UNK128,
-    SOUND_UNK129,
-    SOUND_UNK130,
-    SOUND_UNK131,
-    SOUND_UNK132,
+    SOUND_UNK_7B,
+    SOUND_UNK_7C,
+    SOUND_UNK_7D,
+    SOUND_UNK_7E,
+    SOUND_UNK_7F,
+    SOUND_UNK_80,
+    SOUND_UNK_81,
+    SOUND_UNK_82,
+    SOUND_UNK_83,
+    SOUND_UNK_84,
     SOUND_VOICE_BLUEY_TROPHY_CHALLENGE, // "Now try the trophy challenge"
     SOUND_VOICE_BLUEY_AMULET, // "You've won a piece of the amulet"
     SOUND_VOICE_KRUNCH_SELECT, // "My name's Krunch"
@@ -187,9 +187,9 @@ enum SoundID {
     SOUND_STOMP2,
     SOUND_STOMP3,
     SOUND_BOUNCE,
-    SOUND_UNK175, // sounds just like UNK5
+    SOUND_UNK_AF, // sounds just like UNK5
     SOUND_FOOTSTEP,
-    SOUND_UNK177, // Very low pitch something
+    SOUND_UNK_B1, // Very low pitch something
     SOUND_MENU_PICK,
     SOUND_VOICE_WIZPIG_LAUGH_SHORT2,
     SOUND_VOICE_WIZPIG_LAUGH_SHORT3,
@@ -221,7 +221,7 @@ enum SoundID {
     SOUND_VOICE_SMOKEY_GOODTRY, // "Excellent"
     SOUND_VOICE_SMOKEY_SILVERCOINS3, // "You must find 8 from each level and win"
     SOUND_VOICE_SMOKEY_SILVERCOINS4, // "Then come back and see me"
-    SOUND_UNK209,
+    SOUND_UNK_D1,
     SOUND_VOICE_SMOKEY_BADLUCK, // "Bad luck"
     SOUND_VOICE_SMOKEY_RETRY, // "Try again whenever you're ready"
     SOUND_VOICE_SMOKEY_TROPHY1, // "You have earned a piece of the amulet"
@@ -249,8 +249,8 @@ enum SoundID {
     SOUND_VOICE_BLUEY_ENCOUNTER2, // "Now I challenge you to a race"
     SOUND_MENU_PICK2,
     SOUND_MENU_PICK3,
-    SOUND_UNK237,
-    SOUND_UNK238,
+    SOUND_UNK_ED,
+    SOUND_UNK_EE,
     SOUND_SELECT2,
     SOUND_VOICE_TRICKY_WOAH3,
     SOUND_VOICE_TRICKY_WOAH4,
@@ -264,21 +264,21 @@ enum SoundID {
     SOUND_VOICE_SMOKEY_LAUGH,
     SOUND_VOICE_BLUEY_HAHA3,
     SOUND_VOICE_BLUEY_HAHA4,
-    SOUND_UNK252,
+    SOUND_UNK_FC,
     SOUND_CROWD,
     SOUND_MENU_PICK4,
-    SOUND_UNK255,
+    SOUND_UNK_FF,
     SOUND_VOICE_TT_LAP2,
     SOUND_VOICE_TT_FINAL_LAP,
     SOUND_VOICE_TT_FINISH,
-    SOUND_UNK259, // Sounds like car engines driving past
-    SOUND_UNK260, // Continuous sound, not sure what it is
+    SOUND_UNK_103, // Sounds like car engines driving past
+    SOUND_UNK_104, // Continuous sound, not sure what it is
     SOUND_VOICE_TT_DIDDY_KONG_RACING, // title drop
     SOUND_VOICE_TT_PRESS_START,
     SOUND_ZIP_PAD_BOOST,
-    SOUND_UNK264,
-    SOUND_UNK265,
-    SOUND_UNK266,
+    SOUND_UNK_108,
+    SOUND_UNK_109,
+    SOUND_UNK_10A,
     SOUND_STOMP4,
     SOUND_STOMP5,
     SOUND_INTRO_KIDS2,
@@ -329,7 +329,7 @@ enum SoundID {
     SOUND_MAGNET_HUM,
     SOUND_TYRE_SCREECH,
     SOUND_TWANG,
-    SOUND_UNK317, // Unsure
+    SOUND_UNK_13D, // Unsure
     SOUND_VOICE_TT_POWERUP,
     SOUND_SPLAT,
     SOUND_PLOP2,
@@ -338,11 +338,11 @@ enum SoundID {
     SOUND_VOICE_TT_OK,
     SOUND_VOICE_TT_LAP_RECORD,
     SOUND_VOICE_TT_RACE_RECORD,
-    SOUND_UNK326,
+    SOUND_UNK_146,
     SOUND_VOICE_TT_GO_FOR_IT,
     SOUND_VOICE_TT_KEEP_GOING,
     SOUND_VOICE_TT_YOU_CAN_DO_THIS,
-    SOUND_UNK330,
+    SOUND_UNK_14A,
     SOUND_VOICE_TT_OH_NO,
     SOUND_VOICE_TT_TOO_BAD,
     SOUND_VOICE_TT_UNLUCKY,
@@ -559,9 +559,9 @@ enum SoundID {
     //Betting these are unused, because they sit in the spot where character ID's should be.
     SOUND_VOICE_BLUEY_REMATCH4, // "If you can beat me again..."
     SOUND_VOICE_BLUEY_TROPHY2, // "Goodbye kid"
-    SOUND_UNK546, // I'm guessing rolling snowballs
-    SOUND_UNK547, // The sound of hitting something
-    SOUND_UNK548, // Same
+    SOUND_UNK_222, // I'm guessing rolling snowballs
+    SOUND_UNK_223, // The sound of hitting something
+    SOUND_UNK_224, // Same
     SOUND_VOICE_TRICKY_OW,
     SOUND_VOICE_TRICKY_OW2,
     SOUND_VOICE_SMOKEY_HM,
@@ -606,53 +606,53 @@ enum SoundID {
     SOUND_VOICE_TT_BEAT_ALL_TIMES, // "You've beaten all my times"
     SOUND_VOICE_TT_UNLOCKED, // "Now you can pick me"
     SOUND_VOICE_TAJ_CHALLENGE_RACE, // "I challenge you to a race"
-    SOUND_UNK593,
-    SOUND_UNK594,
-    SOUND_UNK595,
-    SOUND_UNK596,
-    SOUND_UNK597,
-    SOUND_UNK598,
-    SOUND_UNK599,
-    SOUND_UNK600,
-    SOUND_UNK601,
-    SOUND_UNK602,
-    SOUND_UNK603,
-    SOUND_UNK604,
-    SOUND_UNK605,
-    SOUND_UNK606,
-    SOUND_UNK607,
-    SOUND_UNK608,
-    SOUND_UNK609,
-    SOUND_UNK610,
-    SOUND_UNK611,
-    SOUND_UNK612,
-    SOUND_UNK613,
-    SOUND_UNK614,
-    SOUND_UNK615,
-    SOUND_UNK616,
-    SOUND_UNK617,
-    SOUND_UNK618,
-    SOUND_UNK619,
-    SOUND_UNK620,
-    SOUND_UNK621,
-    SOUND_UNK622,
-    SOUND_UNK623,
-    SOUND_UNK624,
-    SOUND_UNK625,
-    SOUND_UNK626,
-    SOUND_UNK627,
-    SOUND_UNK628,
-    SOUND_UNK629,
-    SOUND_UNK630,
-    SOUND_UNK631,
-    SOUND_UNK632,
-    SOUND_UNK633,
-    SOUND_UNK634,
-    SOUND_UNK635,
-    SOUND_UNK636,
-    SOUND_UNK637,
-    SOUND_UNK638,
-    // Trying to play 639 onwards will incur a crash.
+    SOUND_UNK_251,
+    SOUND_UNK_252,
+    SOUND_UNK_253,
+    SOUND_UNK_254,
+    SOUND_UNK_255,
+    SOUND_UNK_256,
+    SOUND_UNK_257,
+    SOUND_UNK_258,
+    SOUND_UNK_259,
+    SOUND_UNK_25A,
+    SOUND_UNK_25B,
+    SOUND_UNK_25C,
+    SOUND_UNK_25D,
+    SOUND_UNK_25E,
+    SOUND_UNK_25F,
+    SOUND_UNK_260,
+    SOUND_UNK_261,
+    SOUND_UNK_262,
+    SOUND_UNK_263,
+    SOUND_UNK_264,
+    SOUND_UNK_265,
+    SOUND_UNK_266,
+    SOUND_UNK_267,
+    SOUND_UNK_268,
+    SOUND_UNK_269,
+    SOUND_UNK_26A,
+    SOUND_UNK_26B,
+    SOUND_UNK_26C,
+    SOUND_UNK_26D,
+    SOUND_UNK_26E,
+    SOUND_UNK_26F,
+    SOUND_UNK_270,
+    SOUND_UNK_271,
+    SOUND_UNK_272,
+    SOUND_UNK_273,
+    SOUND_UNK_274,
+    SOUND_UNK_275,
+    SOUND_UNK_276,
+    SOUND_UNK_277,
+    SOUND_UNK_278,
+    SOUND_UNK_279,
+    SOUND_UNK_27A,
+    SOUND_UNK_27B,
+    SOUND_UNK_27C,
+    SOUND_UNK_27E,
+    SOUND_UNK_27F,
+    // Trying to play 27F onwards will incur a crash.
     NUM_SOUND_IDS
 };
 

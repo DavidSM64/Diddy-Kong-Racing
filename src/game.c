@@ -337,7 +337,7 @@ s32 get_hub_area_id(s32 worldId) {
     if (worldId < 0 || worldId >= gNumberOfWorlds) {
         worldId = 0;
     }
-    hubAreaIds = (s8 *)get_misc_asset(MISC_UNK1B); //hub_area_ids
+    hubAreaIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1B); //hub_area_ids
 
     return hubAreaIds[worldId];
 }
@@ -427,7 +427,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
                             D_800DD330 = (u8)2;
                         }
                     }
-                    someAsset = get_misc_asset(MISC_UNK43);
+                    someAsset = get_misc_asset(MISC_ASSET_UNK43);
                     phi_s0 = 0;
                     while (levelId != someAsset[phi_s0 + 1]) {
                         phi_s0++;
@@ -445,7 +445,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
                             // Trigger World Key unlocking Challenge Door cutscene.
                             func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
                             settings->cutsceneFlags |= temp_v0_5;
-                            levelId = get_misc_asset(MISC_UNK44)[curWorld - 1];
+                            levelId = get_misc_asset(MISC_ASSET_UNK44)[curWorld - 1];
                             entranceId = 0;
                             cutsceneId = 5;
                         }
@@ -460,7 +460,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
                 entranceId = 0;
                 func_8006C1AC(levelId, savedEntranceId, vehicleId, savedCutsceneId);
                 settings->cutsceneFlags |= 0x2000;
-                levelId = get_misc_asset(MISC_UNK44)[1];
+                levelId = get_misc_asset(MISC_ASSET_UNK44)[1];
             }
         }
     }
@@ -1740,7 +1740,7 @@ void func_8006E770(Settings *settings, s32 arg1) {
     u16 *temp_v0;
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
-    temp_v0 = (u16 *)get_misc_asset(MISC_UNK17);
+    temp_v0 = (u16 *)get_misc_asset(MISC_ASSET_UNK17);
     for (i = 0; i < 3; i++) { // 3 = number of save files?
         for (j = 0; j < numLevels; j++) {
             index = (j * 12) + (i * 4);

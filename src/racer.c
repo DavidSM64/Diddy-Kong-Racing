@@ -172,7 +172,7 @@ s32 D_8011D558;
 s32 gCurrentPlayerIndex;
 s16 D_8011D560; // Set, but never read.
 UNUSED s16 D_8011D562;
-f32 *gCurrentRacerMiscPtr;
+f32 *gCurrentRacerMiscAssetPtr;
 f32 *D_8011D568;
 f32 gCurrentRacerWeightStat;
 f32 gCurrentRacerHandlingStat;
@@ -250,7 +250,7 @@ void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
     } else {
         D_8011D5BC = 0;
     }
-    test = get_misc_asset(MISC_UNK0C);
+    test = get_misc_asset(MISC_ASSET_UNK0C);
     if ((gCurrentButtonsReleased & 0x2000) && racer->balloon_quantity) {
         if (racer->balloon_level < 3) {
             phi_a0 = test[racer->balloon_type * 3 + racer->balloon_level];
@@ -1231,15 +1231,15 @@ void update_player_racer(Object* obj, s32 updateRate) {
         } else {
             tempRacer->unk18C = 0;
         }
-        gCurrentRacerMiscPtr = (f32*) get_misc_asset(MISC_RACER_WEIGHT);
-        gCurrentRacerWeightStat = gCurrentRacerMiscPtr[tempRacer->characterId] * 0.45;
+        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(MISC_RACER_WEIGHT);
+        gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId] * 0.45;
         if (tempRacer->unk204 > 0) {
             gCurrentRacerWeightStat = -0.02f;
         }
-        gCurrentRacerMiscPtr = (f32*) get_misc_asset(MISC_RACER_HANDLING);
-        gCurrentRacerHandlingStat = gCurrentRacerMiscPtr[tempRacer->characterId];
-        gCurrentRacerMiscPtr = (f32*) get_misc_asset(MISC_UNK0B);
-        D_8011D574 = gCurrentRacerMiscPtr[tempRacer->characterId];
+        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(MISC_RACER_HANDLING);
+        gCurrentRacerHandlingStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
+        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(MISC_ASSET_UNK0B);
+        D_8011D574 = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
         if (tempRacer->unk1FE == 3) {
             gCurrentRacerWeightStat *= (f32) tempRacer->unk1FF / 256;
         }
@@ -1256,7 +1256,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->unk84 -= tempRacer->unk84 * 0.0625 * delta;
             tempRacer->unk88 -= tempRacer->unk88 * 0.0625 * delta;
         }
-        gCurrentRacerMiscPtr = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
+        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
         D_8011D568 = get_misc_asset(obj->segment.header->pad5B[2]);
         
         if (obj->segment.y_velocity < 4.0 && (tempRacer->unk1E2 >= 3 || tempRacer->buoyancy != 0.0)) {
@@ -1614,7 +1614,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if (tempRacer->unk150 && gRaceStartTimer == 0) {
             s8 *yAsset;
             tempRacer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
-            yAsset = (s8 *)get_misc_asset(MISC_UNK00);
+            yAsset = (s8 *)get_misc_asset(MISC_ASSET_UNK00);
             
             tempRacer->unk150->segment.trans.y_position = obj->segment.trans.y_position + yAsset[tempRacer->characterId];
             tempRacer->unk150->segment.trans.z_position = obj->segment.trans.z_position;
@@ -1870,7 +1870,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
 
     angleVel = 0;
     if (racer->balloon_quantity > 0) {
-        balloonAsset = (s8 *) get_misc_asset(MISC_UNK0C);
+        balloonAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK0C);
         
         angleVel = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
     }
@@ -2158,7 +2158,7 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         }
     }
     yStick = gCurrentStickY;
-  if ((yStick < 50) && (yStick > (-50))) {
+    if ((yStick < 50) && (yStick > (-50))) {
         yStick = 0;
     }
     obj->segment.y_velocity -= (obj->segment.y_velocity * 0.025) * updateRateF;
@@ -2587,7 +2587,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         multiplier = 0.25f;
         racer->lateral_velocity = 0.0f;
     }
-    if (racer->boostTimer == 0 && surfaceType == 3) {
+    if (racer->boostTimer == 0 && surfaceType == SURFACE_UNK03) {
         racer->boostTimer = normalise_time(45);
         racer->boostType = 3;
     }
@@ -2616,7 +2616,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     }
     velocityS = (s32) vel;
     temp_f0_2 = vel - (f32) velocityS;
-    vel = (gCurrentRacerMiscPtr[velocityS+1] * temp_f0_2) + (gCurrentRacerMiscPtr[velocityS] * (1.0 - temp_f0_2));
+    vel = (gCurrentRacerMiscAssetPtr[velocityS+1] * temp_f0_2) + (gCurrentRacerMiscAssetPtr[velocityS] * (1.0 - temp_f0_2));
     vel *= 1.7;
     vel *= multiplier;
     if (racer->boostTimer > 0) {
@@ -2690,7 +2690,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (obj->segment.trans.y_position > gCurrentCourseHeight) {
         obj->segment.trans.y_position = gCurrentCourseHeight;
     }
-    temp_v0 =(f32 *) get_misc_asset(MISC_UNK38);
+    temp_v0 =(f32 *) get_misc_asset(MISC_ASSET_UNK38);
     surface = -1;
     sp40 = temp_v0[racer->unk1D7];
     tempPos[0] = obj->segment.trans.x_position;
@@ -3014,7 +3014,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
             play_sound_global(SOUND_MENU_BACK2, NULL);
             break;
         default:
-            play_sound_global(SOUND_UNK106, NULL);
+            play_sound_global(SOUND_UNK_6A, NULL);
             break;
         }
     }

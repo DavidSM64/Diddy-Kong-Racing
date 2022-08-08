@@ -1730,7 +1730,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 speed) {
                         if ((s32) racer->bananas < 10) {
                             racer->bananas = 10;
                             func_80009558(SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, NULL);
-                            play_sound_spatial(racer->characterId + SOUND_UNK123, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
+                            play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                         }
                     }
                 }
@@ -2650,7 +2650,7 @@ void obj_loop_bubbler(Object *obj, s32 speed) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (s32)get_misc_asset(MISC_UNK14) + (entry->unk8[0] << 7);
+    obj->unk64 = (s32)get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7);
     obj->segment.unk3C_a.unk3C = NULL;
 }
 
