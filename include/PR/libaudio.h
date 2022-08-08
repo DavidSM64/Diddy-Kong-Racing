@@ -802,7 +802,7 @@ typedef struct {
     /* 0x38 */ ALEvent             nextEvent;
     /* 0x48 */ ALEventQueue        evtq;
     /* 0x5C */ ALMicroTime         frameTime;
-    /* 0x60 */ ALChanState_Custom   *chanState;     /* 16 channels for MIDI             */
+    /* 0x60 */ ALChanState_Custom  *chanState;     /* 16 channels for MIDI             */
     /* 0x64 */ ALVoiceState        *vAllocHead;    /* list head for allocated voices   */
     /* 0x68 */ ALVoiceState        *vAllocTail;    /* list tail for allocated voices   */
     /* 0x6C */ ALVoiceState        *vFreeList;     /* list of free voice state structs */
