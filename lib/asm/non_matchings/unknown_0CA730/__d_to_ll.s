@@ -1,5 +1,5 @@
 /* Hacky workaround. This is required because after alSynSetPriority, the linker seems to have added a bunch of nops. */
-glabel NOPSNEEDED
+glabel __NOPS_NEEDED
 /* 0CA6F0 800C9AF0 00000000 */  nop   
 /* 0CA6F4 800C9AF4 00000000 */  nop   
 /* 0CA6F8 800C9AF8 00000000 */  nop   
