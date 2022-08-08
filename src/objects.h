@@ -30,7 +30,9 @@ typedef struct unknown8011AECC {
     f32 unk20;
     f32 unk24;
     Object* unk28;
-    u8 pad2C[0xA];
+    u8 pad2C[0x2];
+    s8 unk2E[4];
+    s8 unk32[4];
     s8 unk36[4];
     s8 unk3A;
     s8 unk3B;
@@ -254,5 +256,6 @@ void func_8001BF20(void);
 void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
+Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 
 #endif

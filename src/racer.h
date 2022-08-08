@@ -195,7 +195,7 @@ void func_8006FC30(Matrix, ObjectTransform *); // asm func
 void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching ?
 
 s32 func_80044450(s32 cap);
-void func_8004C0A0(s32 arg0, Object *planeObj, Object_Racer *planeObj64);
+void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer);
 void func_8004C140(Object *obj, Object_Racer *racer);
 void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
 void func_8004F77C(unk8004F77C *arg0);
@@ -210,7 +210,7 @@ void play_char_horn_sound(Object *obj, Object_Racer *racer);
 void racer_play_sound(Object *obj, s32 soundID);
 void func_800570A4(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_Racer *racer);
-void handle_base_steering(Object_Racer *racer, s32 arg1, f32 updateRate);
+void handle_base_steering(Object_Racer *racer, s32 updateRate, f32 updateRateF);
 void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3);
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
 void func_800598D0(void);
@@ -251,19 +251,21 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate);
 void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate);
 void func_80048C7C(Object* obj, Object_Racer* racer);
+void racer_enter_door(Object_Racer *racer, s32 updateRate);
+void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
+void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
+f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
 void func_800576E0(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
-void func_8005492C(Object *obj, Object_Racer *racer, s32, f32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
-s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8*);
+s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8* surface);
 void func_80059BF0(Object* obj, s32 updateRate);
 void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);  /* extern */
-void func_8005A424(Object_Racer *racer, s32 updateRate);       /* extern */
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
@@ -273,5 +275,6 @@ void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
+Object* func_8005698C(Object_Racer* racer, Object* obj, f32* arg2);
 
 #endif

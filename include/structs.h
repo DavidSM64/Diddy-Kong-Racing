@@ -393,7 +393,8 @@ typedef struct ObjectModel {
 /* 0x24 */ s16 numberOfVertices;
 /* 0x26 */ s16 numberOfTriangles;
 /* 0x28 */ s16 numberOfBatches;
-           u8 pad2A[6];
+           u8 pad2A[4];
+/* 0x2E */ u8 unk2E;
 /* 0x30 */ s16 unk30;
            u8 pad32[6];
 /* 0x38 */ TriangleBatchInfo *batches;
@@ -407,7 +408,7 @@ typedef struct ObjectModel {
 typedef struct LevelModelSegment {
 /* 0x00 */ Vertex *vertices;
 /* 0x04 */ Triangle *triangles;
-           u8 pad8[4];
+/* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
 /* 0x10 */ s32 unk10;
 /* 0x14 */ u8 *unk14;
@@ -810,9 +811,9 @@ typedef struct Object_Racer {
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
   /* 0x00C */ s32 unkC;
-  /* 0x010 */ f32 unk10;
-  /* 0x014 */ f32 unk14;
-  /* 0x018 */ f32 unk18;
+  /* 0x010 */ s32 unk10;
+  /* 0x014 */ s32 unk14;
+  /* 0x018 */ s32 unk18;
   /* 0x01C */ s32 unk1C;
   /* 0x020 */ s32 unk20;
   /* 0x024 */ s32 soundMask;
@@ -833,9 +834,9 @@ typedef struct Object_Racer {
   /* 0x05C */ f32 prev_x_position;
   /* 0x060 */ f32 prev_y_position;
   /* 0x064 */ f32 prev_z_position;
-  /* 0x068 */ s32 unk68;
-  /* 0x06C */ s32 unk6C;
-  /* 0x070 */ s32 unk70;
+  /* 0x068 */ f32 unk68;
+  /* 0x06C */ f32 unk6C;
+  /* 0x070 */ f32 unk70;
   /* 0x074 */ f32 unk74;
   /* 0x078 */ f32 carBobX;
   /* 0x07C */ f32 carBobY;
@@ -865,7 +866,7 @@ typedef struct Object_Racer {
   /* 0x0E4 */ f32 unkE4[3];
   /* 0x0F0 */ f32 unkF0[3];
   /* 0x0FC */ f32 unkFC[3];
-  /* 0x108 */ s32 unk108;
+  /* 0x108 */ struct Object *unk108;
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;
   /* 0x114 */ s32 unk114;
@@ -899,7 +900,7 @@ typedef struct Object_Racer {
   /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 unk175;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ s32 unk178;
+  /* 0x178 */ s32 *unk178;
   /* 0x17C */ s32 shieldSoundMask;
   /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
   /* 0x184 */ s8 unk184;
@@ -934,8 +935,10 @@ typedef struct Object_Racer {
   /* 0x1B4 */ s32 unk1B4;
   /* 0x1B8 */ s16 unk1B8;
   /* 0x1BA */ s16 unk1BA;
-  /* 0x1BC */ s32 unk1BC;
-  /* 0x1C0 */ s32 unk1C0;
+  /* 0x1BC */ s16 unk1BC;
+  /* 0x1BE */ s16 unk1BE;
+  /* 0x1C0 */ s16 unk1C0;
+  /* 0x1C2 */ s16 unk1C2;
   /* 0x1C4 */ s16 unk1C4;
   /* 0x1C6 */ s16 unk1C6;
   /* 0x1C8 */ u8 unk1C8;
@@ -973,7 +976,7 @@ typedef struct Object_Racer {
   /* 0x1EB */ s8 unk1EB;
   /* 0x1EC */ s8 unk1EC;
   /* 0x1ED */ s8 squish_timer;
-  /* 0x1EE */ s8 unk1EE;
+  /* 0x1EE */ u8 unk1EE;
   /* 0x1EF */ u8 boost_sound;
   /* 0x1F0 */ u8 unk1F0;
   /* 0x1F1 */ u8 unk1F1;
@@ -987,11 +990,11 @@ typedef struct Object_Racer {
   /* 0x291 */ s8 indicator_timer;
   /* 0x1FA */ s8 unk1FA;
   /* 0x1FB */ s8 unk1FB;
-  /* 0x1FC */ s8 unk1FC;
+  /* 0x1FC */ u8 unk1FC;
   /* 0x1FD */ u8 unk1FD;
   /* 0x1FE */ u8 unk1FE;
   /* 0x1FF */ u8 unk1FF;
-  /* 0x200 */ s8 unk200;
+  /* 0x200 */ s8 transitionTimer;
   /* 0x201 */ s8 unk201;
   /* 0x202 */ s8 unk202;
   /* 0x203 */ s8 boostType;

@@ -777,7 +777,7 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
 
 void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 speed) {
     Object *curRacerObj;
-    Object_Racer *racerObj64;
+    Object_Racer *racer;
     f32 xDiff;
     f32 yDiff;
     f32 zDiff;
@@ -794,14 +794,14 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 speed) {
         racerObjs = get_object_struct_array(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
-            racerObj64 = &curRacerObj->unk64->racer;
-            if ((racerObj64->unk1F5 == 0) && (racerObj64->boostTimer < 15)) {
+            racer = &curRacerObj->unk64->racer;
+            if ((racer->unk1F5 == 0) && (racer->boostTimer < 15)) {
                 xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < 100) {
-                    racerObj64->unk1F5 = 1;
-                    racerObj64->unk14C = obj;
+                    racer->unk1F5 = 1;
+                    racer->unk14C = obj;
                 }
             }
         }
@@ -1501,7 +1501,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
 
 void obj_loop_exit(Object *obj, UNUSED s32 speed) {
     Object *racerObj;
-    Object_Racer *racerObj64;
+    Object_Racer *racer;
     s32 numberOfRacers;
     Settings *settings;
     f32 xDiff;
@@ -1529,16 +1529,16 @@ void obj_loop_exit(Object *obj, UNUSED s32 speed) {
             racerObjects = get_object_struct_array(&numberOfRacers);
             for (i = 0; i < numberOfRacers; i++) {
                 racerObj = racerObjects[i];
-                racerObj64 = &racerObj->unk64->racer;
-                if ((racerObj64->playerIndex != -1) && (racerObj64->unk108 == 0)) {
+                racer = &racerObj->unk64->racer;
+                if ((racer->playerIndex != -1) && (racer->unk108 == 0)) {
                     xDiff = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                     yDiff = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                     zDiff = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                     if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
                         temp = (obj64->unk0 * racerObj->segment.trans.x_position) + (obj64->unk8 * racerObj->segment.trans.z_position) + obj64->unkC;
                         if (temp < 0.0f) {
-                            racerObj64->unk108 = obj;
-                            racerObj64->unk200 = -120;
+                            racer->unk108 = obj;
+                            racer->transitionTimer = -120;
                         }
                     }
                 }
@@ -1730,7 +1730,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 speed) {
                         if ((s32) racer->bananas < 10) {
                             racer->bananas = 10;
                             func_80009558(SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, NULL);
-                            play_sound_spatial(racer->characterId + SOUND_UNK123, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
+                            play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                         }
                     }
                 }
@@ -2650,7 +2650,7 @@ void obj_loop_bubbler(Object *obj, s32 speed) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (s32)get_misc_asset(0x14) + (entry->unk8[0] << 7);
+    obj->unk64 = (s32)get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7);
     obj->segment.unk3C_a.unk3C = NULL;
 }
 
