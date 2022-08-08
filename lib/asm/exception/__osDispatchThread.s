@@ -83,8 +83,8 @@ glabel __osDispatchThread
 /* 0D4164 800D3564 001AD402 */  srl   $k0, $k0, 0x10
 /* 0D4168 800D3568 037AD824 */  and   $k1, $k1, $k0
 /* 0D416C 800D356C 001BD840 */  sll   $k1, $k1, 1
-/* 0D4170 800D3570 3C1A800F */  lui   $k0, %hi(D_800E94D0) # $k0, 0x800f
-/* 0D4174 800D3574 275A94D0 */  addiu $k0, %lo(D_800E94D0) # addiu $k0, $k0, -0x6b30
+/* 0D4170 800D3570 3C1A800F */  lui   $k0, %hi(__osRcpImTable) # $k0, 0x800f
+/* 0D4174 800D3574 275A94D0 */  addiu $k0, %lo(__osRcpImTable) # addiu $k0, $k0, -0x6b30
 /* 0D4178 800D3578 037AD821 */  addu  $k1, $k1, $k0
 /* 0D417C 800D357C 977B0000 */  lhu   $k1, ($k1)
 /* 0D4180 800D3580 3C1AA430 */  lui   $k0, %hi(MI_INTR_MASK_REG) # $k0, 0xa430

@@ -32,9 +32,9 @@ glabel osSetIntMask
 /* 0CA680 800C9A80 00814024 */  and   $t0, $a0, $at
 /* 0CA684 800C9A84 010B4024 */  and   $t0, $t0, $t3
 /* 0CA688 800C9A88 000843C2 */  srl   $t0, $t0, 0xf
-/* 0CA68C 800C9A8C 3C0A800F */  lui   $t2, %hi(D_800E94D0) # $t2, 0x800f
+/* 0CA68C 800C9A8C 3C0A800F */  lui   $t2, %hi(__osRcpImTable) # $t2, 0x800f
 /* 0CA690 800C9A90 01485021 */  addu  $t2, $t2, $t0
-/* 0CA694 800C9A94 954A94D0 */  lhu   $t2, %lo(D_800E94D0)($t2)
+/* 0CA694 800C9A94 954A94D0 */  lhu   $t2, %lo(__osRcpImTable)($t2)
 /* 0CA698 800C9A98 3C01A430 */  lui   $at, %hi(MI_INTR_MASK_REG) # $at, 0xa430
 /* 0CA69C 800C9A9C AC2A000C */  sw    $t2, %lo(MI_INTR_MASK_REG)($at)
 /* 0CA6A0 800C9AA0 3088FF01 */  andi  $t0, $a0, 0xff01
@@ -50,3 +50,16 @@ glabel osSetIntMask
 /* 0CA6C8 800C9AC8 03E00008 */  jr    $ra
 /* 0CA6CC 800C9ACC 00000000 */   nop   
 
+.rdata
+glabel __osRcpImTable
+/* LUT to convert between MI_INTR and MI_INTR_MASK */
+/* MI_INTR is status for each interrupt whereas    */
+/* MI_INTR_MASK has seperate bits for set/clr      */
+.half     0x0555, 0x0556, 0x0559, 0x055A, 0x0565, 0x0566, 0x0569, 0x056A
+.half     0x0595, 0x0596, 0x0599, 0x059A, 0x05A5, 0x05A6, 0x05A9, 0x05AA
+.half     0x0655, 0x0656, 0x0659, 0x065A, 0x0665, 0x0666, 0x0669, 0x066A
+.half     0x0695, 0x0696, 0x0699, 0x069A, 0x06A5, 0x06A6, 0x06A9, 0x06AA
+.half     0x0955, 0x0956, 0x0959, 0x095A, 0x0965, 0x0966, 0x0969, 0x096A
+.half     0x0995, 0x0996, 0x0999, 0x099A, 0x09A5, 0x09A6, 0x09A9, 0x09AA
+.half     0x0A55, 0x0A56, 0x0A59, 0x0A5A, 0x0A65, 0x0A66, 0x0A69, 0x0A6A
+.half     0x0A95, 0x0A96, 0x0A99, 0x0A9A, 0x0AA5, 0x0AA6, 0x0AA9, 0x0AAA

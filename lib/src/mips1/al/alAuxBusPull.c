@@ -45,29 +45,10 @@ s32 alAuxBusParam(void *filter, s32 paramID, void *param) {
     
 }
 
-/* Size: 0x4C bytes */
-typedef struct unk80065A80_arg0_34 {
-    u8 pad0[0x4C];
-} unk80065A80_arg0_34;
-
-/* Unknown size */
-typedef struct unk80065A80_arg0 {
-    u8 pad0[0x34];
-    unk80065A80_arg0_34 *unk34;
-} unk80065A80_arg0;
-
-/* Unknown size */
-typedef struct unk80065A80_arg1 {
-    u8 pad0[0x8C];
-    s32 unk8C;
-    u8 pad90[0x4C];
-    u8 unkDC;
-} unk80065A80_arg1;
-
-void func_80065A80(unk80065A80_arg0 *arg0, unk80065A80_arg1 *arg1, s16 arg2) {
+void func_80065A80(ALSynth *arg0, PVoice *arg1, s16 arg2) {
     if (arg2 != arg1->unkDC) {
-        alAuxBusParam(&arg0->unk34[arg1->unkDC], 0x11, &arg1->unk8C);
-        alAuxBusParam(&arg0->unk34[arg2], 2, &arg1->unk8C);
+        alAuxBusParam(&arg0->auxBus[arg1->unkDC], 17, &arg1->envmixer);
+        alAuxBusParam(&arg0->auxBus[arg2], 2, &arg1->envmixer);
         arg1->unkDC = arg2;
     }
 }

@@ -299,16 +299,14 @@ $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/al/unknown_0C9C90.o: OPT_FLAGS := -O2 -Xfullwarn -Wo,-loopunroll,0
+$(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -g
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 32
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
 $(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips1
-
-# asm-processor currently does not support -O3, so this is my workaround.
-$(BUILD_DIR)/lib/src/al/global_asm/%.o: OPT_FLAGS := -O2 -Xfullwarn
+$(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips1
 
 ######################## Targets #############################
 

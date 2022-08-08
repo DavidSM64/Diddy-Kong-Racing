@@ -49,13 +49,14 @@ void  alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *config); //lib/src/al/csplayer.c
 void  alCSPSetBank(ALCSPlayer *seqp, ALBank *b); //lib/src/unknown_0C8660.c
 void set_voice_limit(ALSeqPlayer *seqp, u8 voiceLimit); //lib/src/mips1/alseqplayer.c
 void    *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al/alHeapDBAlloc.c
-s32 alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0C84E0.c
+void alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0C84E0.c
 void alCSPSetChlVol(ALCSPlayer *, u8 chan, u8 vol); //lib/src/unknown_0C84E0.c
 u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan); //lib/src/al
-void func_80063BA0(ALCSPlayer *seqp, u8 arg1, u8 arg2); //lib/src/unknown_0647A0.c
+void func_80063BA0(ALSeqPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0647A0.c
 u8 func_80063C00(ALCSPlayer *seqp, u8 arg1); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan); //lib/src/al/alSeqpGetChlFXMix.c
 void func_8006492C(u8 arg0); //lib/src/mips1/al/reverb.c
+u8 func_8006493C(); //lib/src/mips1/al/reverb.c
 void alHeapInit(ALHeap *hp, u8 *base, s32 len); //lib/src/al/alHeapInit.c
 void alBnkfNew(ALBankFile *ctl, u8 *tbl); //lib/src/al/global_asm.c
 void alCSPSetVol(ALCSPlayer *seqp, s16 vol); //lib/src/al/alCSPSetVol.c
@@ -86,7 +87,7 @@ s32 musicGetChnlActive(s32 arg0);
 void func_80001170(u8 arg0);
 void musicSetChlPan(u8 chan, ALPan pan);
 void musicSetChlVol(u8 chan, u8 vol);
-s32 musicGetChlVol(u8 arg0);
+u8 musicGetChlVol(u8 arg0);
 void func_80001268(u8 arg0, u8 arg1);
 u8 func_800012A8(u8 arg0);
 void func_800012E8(void);
