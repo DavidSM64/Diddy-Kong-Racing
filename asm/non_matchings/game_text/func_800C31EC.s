@@ -37,14 +37,14 @@ glabel func_800C31EC
 /* 0C3E68 800C3268 2401FFFE */  li    $at, -2
 .L800C326C:
 /* 0C3E6C 800C326C 02013024 */  and   $a2, $s0, $at
-/* 0C3E70 800C3270 3C058013 */  lui   $a1, %hi(D_8012A780) # $a1, 0x8013
-/* 0C3E74 800C3274 8CA5A780 */  lw    $a1, %lo(D_8012A780)($a1)
+/* 0C3E70 800C3270 3C058013 */  lui   $a1, %hi(gGameTextTable) # $a1, 0x8013
+/* 0C3E74 800C3274 8CA5A780 */  lw    $a1, %lo(gGameTextTable)($a1)
 /* 0C3E78 800C3278 0006C080 */  sll   $t8, $a2, 2
 /* 0C3E7C 800C327C 03003025 */  move  $a2, $t8
 /* 0C3E80 800C3280 0C01DB9A */  jal   load_asset_to_address
 /* 0C3E84 800C3284 24070010 */   li    $a3, 16
-/* 0C3E88 800C3288 3C048013 */  lui   $a0, %hi(D_8012A780) # $a0, 0x8013
-/* 0C3E8C 800C328C 8C84A780 */  lw    $a0, %lo(D_8012A780)($a0)
+/* 0C3E88 800C3288 3C048013 */  lui   $a0, %hi(gGameTextTable) # $a0, 0x8013
+/* 0C3E8C 800C328C 8C84A780 */  lw    $a0, %lo(gGameTextTable)($a0)
 /* 0C3E90 800C3290 32190001 */  andi  $t9, $s0, 1
 /* 0C3E94 800C3294 00195080 */  sll   $t2, $t9, 2
 /* 0C3E98 800C3298 008A1821 */  addu  $v1, $a0, $t2

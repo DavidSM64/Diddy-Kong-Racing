@@ -192,7 +192,7 @@ void func_8006A6B0(void) {
   u8 *sp44;
   s32 temp2;
 
-  sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), 0xFFFF00FF);
+  sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
   gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
   i = 0;
   while (i < 16) {
@@ -203,7 +203,7 @@ void func_8006A6B0(void) {
     gNumberOfLevelHeaders++;
   }
   gNumberOfLevelHeaders--;
-  D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), 0xFFFF00FF);
+  D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
   gCurrentLevelHeader = sp44;
   gNumberOfWorlds = -1;
   for (i = 0; i < gNumberOfLevelHeaders; i++) {
@@ -223,7 +223,7 @@ void func_8006A6B0(void) {
   }
 
   gNumberOfWorlds++;
-  D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, 0xFFFF00FF);
+  D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
   for (i = 0; i < gNumberOfWorlds; i++) {
     D_80121178[i] = -1;
   }
@@ -243,8 +243,8 @@ void func_8006A6B0(void) {
   temp = gTempAssetTable[i];
   temp -= gTempAssetTable[0];
 
-  gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), 0xFFFF00FF);
-  D_800DD310 = allocate_from_main_pool_safe(temp, 0xFFFF00FF);
+  gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), COLOUR_TAG_YELLOW);
+  D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
   load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
   for (count = 0; count < i; count++) {
     gLevelNames[count] = &D_800DD310[gTempAssetTable[count]];
