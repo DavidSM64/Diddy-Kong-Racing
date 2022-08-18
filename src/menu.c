@@ -219,7 +219,7 @@ u8 sControllerPakIssueNotFound[MAXCONTROLLERS]; //Flag to see if there's no know
 u8 sControllerPakFatalErrorFound[MAXCONTROLLERS]; //Flag to see if there's a fatal error for the given controller pak
 u8 sControllerPakNoFreeSpace[MAXCONTROLLERS]; //Flag to see if there's no free space for the given controller pak
 u8 sControllerPakBadData[MAXCONTROLLERS]; //Flag to see if there's bad data for the given controller pak
-u8 *D_80126A40[8]; //Menu Text
+char *D_80126A40[8]; //Menu Text
 u8 sControllerPakDataPresent[MAXCONTROLLERS]; //Flag to see if there's data present for the given controller pak? Not sure
 s32 D_80126A64;
 s32 D_80126A68; //sCurrentControllerIndex?
@@ -5323,7 +5323,59 @@ void func_80093A0C(void) {
 }
 
 //Draw pause game screen?
-GLOBAL_ASM("asm/non_matchings/menu/func_80093A40.s")
+void func_80093A40(void) {
+    s32 raceType;
+    s32 i;
+    Settings *settings;
+
+    func_80072298(0U);
+    settings = get_settings();
+    D_800E098C = -1;
+
+    for (i = 0; ((get_active_player_count() > i) && (D_800E098C < 0)); i++) {
+        if (get_buttons_held_from_player(i) & START_BUTTON) {
+            D_800E098C = i;
+        }
+    }
+    if (D_800E098C < 0) {
+        D_800E098C = 0;
+    }
+    D_80126A40[0] = gMenuText[ASSET_MENU_TEXT_CONTINUE];
+    D_800E0984 = 1;
+    if (gTrophyRaceWorldId == 0) {
+        raceType = func_8006B14C(settings->courseId);
+        if ((settings->worldId == WORLD_CENTRAL_AREA) && (func_8002341C() != 0)) {
+            D_80126A40[1] = gMenuText[ASSET_MENU_TEXT_ABANDONCHALLENGE];
+            D_800E0984 = 2;
+        } else if ((settings->worldId > WORLD_CENTRAL_AREA) && (raceType != RACETYPE_BOSS)) {
+            if (raceType & RACETYPE_CHALLENGE) {
+                D_80126A40[1] = gMenuText[ASSET_MENU_TEXT_RESTARTCHALLENGE];
+                D_80126A40[2] = (!gIsInTracksMode) ? gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY] : gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
+                D_800E0984 = 3;
+            } else if (raceType == RACETYPE_DEFAULT) {
+                D_80126A40[1] = gMenuText[ASSET_MENU_TEXT_RESTARTRACE];
+                D_80126A40[2] = (!gIsInTracksMode) ? gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY] : gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
+                D_800E0984 = 3;
+            }
+        } else if ((!gIsInTracksMode) && (raceType == RACETYPE_BOSS)) {
+            D_80126A40[1] = gMenuText[ASSET_MENU_TEXT_RESTARTRACE];
+            D_80126A40[2] = gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY];
+            D_800E0984 = 3;
+        }
+        if ((gIsInTracksMode == TRUE) && (gNumberOfActivePlayers == 1)) {
+            D_80126A40[D_800E0984++] = gMenuText[ASSET_MENU_TEXT_SELECTCHARACTER];
+        }
+        D_80126A40[D_800E0984++] = gMenuText[ASSET_MENU_TEXT_QUITGAME];
+    } else {
+        D_80126A40[D_800E0984++] = gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACE];
+    }
+    D_80126A68 = 0;
+    D_801263BC = 0;
+    gMenuDelay = 0;
+    gIgnorePlayerInput = 1;
+    D_800E0988 = 0;
+    reset_controller_sticks();
+}
 
 #ifdef NON_EQUIVALENT
 // In the right ballpark, but not right.
