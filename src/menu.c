@@ -5322,6 +5322,7 @@ void func_80093A0C(void) {
     func_80000B28();
 }
 
+//Draw pause game screen?
 GLOBAL_ASM("asm/non_matchings/menu/func_80093A40.s")
 
 #ifdef NON_EQUIVALENT

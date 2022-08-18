@@ -1052,10 +1052,8 @@ void func_8006CC14(void) {
     set_free_queue_state(2);
 }
 
-#ifdef NON_EQUIVALENT
-// Almost matching except for a couple minor issues.
 void func_8006CCF0(s32 updateRate) {
-    s32 i, buttonHeldInputs, sp40, sp3C, buttonPressedInputs, phi_v1_2;
+    s32 buttonPressedInputs, buttonHeldInputs, i, sp40, sp3C;
 
     sp40 = 0;
     buttonHeldInputs = 0;
@@ -1090,7 +1088,7 @@ void func_8006CCF0(s32 updateRate) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(gCurrDisplayList, gCurrHudMat, gCurrHudVerts, gCurrHudTris, updateRate);
+    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
@@ -1110,34 +1108,33 @@ void func_8006CCF0(s32 updateRate) {
                 D_800DD390 = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
-            // Issue with the below cases.
             case 4:
+                buttonHeldInputs |= L_TRIG,
                 sp40 = 1;
-                buttonHeldInputs |= L_TRIG;
                 break;
             case 7:
+                buttonHeldInputs |= L_TRIG,
                 sp40 = 2;
-                buttonHeldInputs |= L_TRIG;
                 break;
             case 8:
+                buttonHeldInputs |= L_TRIG,
                 sp40 = 3;
-                buttonHeldInputs |= L_TRIG;
                 break;
             case 9:
+                buttonHeldInputs |= L_TRIG,
                 sp40 = 4;
-                buttonHeldInputs |= L_TRIG;
                 break;
             case 10:
+                buttonHeldInputs |= L_TRIG,
                 sp40 = 5;
-                buttonHeldInputs |= L_TRIG;
                 break;
             case 11:
+                buttonHeldInputs |= L_TRIG,
                 sp40 = 6;
-                buttonHeldInputs |= L_TRIG;
                 break;
             case 12:
+                buttonHeldInputs |= L_TRIG,
                 sp40 = 7;
-                buttonHeldInputs |= L_TRIG;
                 break;
         }
     }
@@ -1164,7 +1161,7 @@ void func_8006CCF0(s32 updateRate) {
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
                     func_8006F398();
                 }
-                buttonHeldInputs |= (L_TRIG | R_TRIG);
+                buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
             case 2:
                 func_80001050();
@@ -1212,27 +1209,27 @@ void func_8006CCF0(s32 updateRate) {
             D_800DD39C = 0;
         }
     }
-    phi_v1_2 = FALSE;
+    sp3C = FALSE;
     if (D_800DD390 != 0) {
         D_800DD390 -= updateRate;
         if (D_800DD390 <= 0) {
             D_800DD390 = 0;
             func_8006C1AC(0, 0, 0, 0);
             func_8006C1AC(0x2B, 0, -1, 0xA);
-            phi_v1_2 = TRUE;
+            sp3C = TRUE;
         }
     }
     if (D_800DD394 > 0) {
         D_800DD394 -= updateRate;
         if (D_800DD394 <= 0) {
             buttonHeldInputs = L_TRIG;
+            sp3C = TRUE;
             switch (D_80123524) {
                 case 1:
                     buttonHeldInputs = (L_TRIG | Z_TRIG);
                     break;
                 case 2:
                     sp40 = 3;
-                    sp3C = 1;
                     func_80098208();
                     D_801234FC = 2;
                     break;
@@ -1251,7 +1248,7 @@ void func_8006CCF0(s32 updateRate) {
             D_800DD394 = 0;
         }
     }
-    if (phi_v1_2) {
+    if (sp3C) {
         if (func_8006C2F0() != 0) {
             func_8006C22C(&D_801234F4, &D_80123504, &i, &D_80123508);
             func_8006F42C();
@@ -1275,10 +1272,10 @@ void func_8006CCF0(s32 updateRate) {
         }
     } else {
         sp3C = func_8006C300();
-        if (func_8006C2F0() != 0) {
+        if (func_8006C2F0()) {
             if (D_800DD394 == 0) {
-                // Minor issue here.
-                if ((func_800214C4() != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
+                i = func_800214C4();
+                if ((i != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
                     if (sp3C != 0) {
                         func_80000B28();
                     }
@@ -1332,10 +1329,10 @@ void func_8006CCF0(s32 updateRate) {
                 case 6:
                     // Go to character select menu from "Select Character" option in tracks menu.
                     i = 0;
-                    if (is_drumstick_unlocked() != 0) {
+                    if (is_drumstick_unlocked()) {
                         i ^= 1;
                     }
-                    if (is_tt_unlocked() != 0) {
+                    if (is_tt_unlocked()) {
                         i ^= 3;
                     }
                     func_8008AEB4(1, 0);
@@ -1382,9 +1379,6 @@ void func_8006CCF0(s32 updateRate) {
         D_801234F8 = 0;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006CCF0.s")
-#endif
 
 void func_8006D8A4(void) {
     D_800DD390 = 0x2C;
@@ -1856,10 +1850,10 @@ void func_8006EC18(s32 arg0) {
     D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
 }
 
-void func_8006EC48(s32 arg0) {
+void func_8006EC48(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
         D_800DD37C &= -0xC01;
-        D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
+        D_800DD37C |= (0x40 | ((saveFileIndex & 3) << 0xA));
     }
 }
 
