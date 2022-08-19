@@ -921,28 +921,25 @@ void func_80069F28(f32 arg0) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 /**
  * Unused function that prints out the passed matrix values to the debug output.
  * This function prints in fixed point.
  */
-void func_80069F64(s16 *mtx) {
+UNUSED void debug_print_fixed_matrix_values(s16 *mtx) {
     s32 i, j;
     s32 val;
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j++) {
             val = mtx[i * 4 + j];
             rmonPrintf("%x.", val);
-            val = mtx[((i + 4) * 4 + j)]; // Issue here.
-            rmonPrintf("%x  ", (u16)val);
+            val = mtx[((i + 4) * 4 + j)];
+            rmonPrintf("%x  ", (u16)val & 0xFFFF);
         }
         rmonPrintf("\n");
+        if (!val){}
     }
     rmonPrintf("\n");
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80069F64.s")
-#endif
 
 /**
  * Unused function that prints out the passed matrix values to the debug output.
