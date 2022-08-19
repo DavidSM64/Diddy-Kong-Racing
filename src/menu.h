@@ -794,6 +794,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
 PakError check_for_controller_pak_errors(void);
 void func_80093A40(void);
+s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching

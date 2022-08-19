@@ -5379,7 +5379,7 @@ void func_80093A40(void) {
 
 #ifdef NON_EQUIVALENT
 // In the right ballpark, but not right.
-void func_80093D40(s32 arg0) {
+void func_80093D40(UNUSED s32 updateRate) {
     s32 yOffset;
     s32 i;
     s32 xOffset;
@@ -5463,7 +5463,120 @@ void func_80093D40(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80093D40.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80094170.s")
+s32 func_80094170(UNUSED Gfx **dl, s32 updateRate) {
+    s8 temp;
+    s32 playerId;
+    s32 buttonsPressed;
+
+    if (D_800E0984 == 0) {
+        func_80000968(0);
+        return 0;
+    }
+
+    func_80000968(1);
+    D_801263BC = (D_801263BC + updateRate) & 0x3F;
+    update_controller_sticks();
+
+    buttonsPressed = 0;
+    if (!gIgnorePlayerInput) {
+        buttonsPressed = get_buttons_pressed_from_player(D_800E098C);
+    }
+
+    if (gMenuDelay == 0) {
+        if (D_800E0988 != 0) {
+            if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                play_sound_global(SOUND_SELECT2, NULL);
+                if (D_800E0988 == 1) {
+                    gMenuDelay = 1;
+                } else {
+                    D_800E0988 = 0;
+                }
+            } else if (buttonsPressed & B_BUTTON) {
+                play_sound_global(SOUND_SELECT2, NULL);
+                D_800E0988 = 0;
+            } else {
+                temp = D_800E0988;
+                playerId = D_800E098C;
+                if (gControllersYAxisDirection[playerId] != 0) {
+                    D_800E0988 = 3 - D_800E0988;
+                }
+                if (temp != D_800E0988) {
+                    play_sound_global(SOUND_MENU_PICK2, NULL);
+                }
+            }
+        } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            play_sound_global(SOUND_SELECT2, NULL);
+            if ((D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_QUITGAME]) ||
+                    ((gTrophyRaceWorldId != 0) && (D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACE]))) {
+                D_800E0988 = 2;
+            } else {
+                gMenuDelay = 1;
+            }
+        } else {
+            temp = D_80126A68;
+            playerId = D_800E098C;
+            buttonsPressed = gControllersYAxisDirection[playerId];
+            if (buttonsPressed < 0) {
+                D_80126A68++;
+            }
+            if (buttonsPressed > 0) {
+                D_80126A68--;
+            }
+            if (D_80126A68 < 0) {
+                D_80126A68 = D_800E0984 - 1;
+            }
+            if (D_80126A68 >= D_800E0984) {
+                D_80126A68 = 0;
+            }
+            if (temp != D_80126A68) {
+                play_sound_global(SOUND_MENU_PICK2, NULL);
+            }
+        }
+    } else {
+        gMenuDelay++;
+        if (gMenuDelay >= 4) {
+            n_alSynRemovePlayer();
+            if (D_800E0988 == 1) {
+                if (gTrophyRaceWorldId != 0) {
+                    gTrophyRaceWorldId = 0;
+                    if (gIsInTracksMode == 0) {
+                        return 3;
+                    }
+                    return 5;
+                }
+                return 4;
+            }
+            if (D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_CONTINUE]) {
+                func_80000968(0);
+                return 1;
+            }
+            if ((D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_RESTARTRACE]) || (D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_RESTARTCHALLENGE])) {
+                if ((gIsInTracksMode == 0) && (D_800E0758[func_8006EB14()] != -1)) {
+                    func_80000FDC(D_800E0758[func_8006EB14()], 0, 1.0f);
+                }
+                return 2;
+            }
+            if (D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY]) {
+                return 3;
+            }
+            if (D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
+                return 5;
+            }
+            if (D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_SELECTCHARACTER]) {
+                return 12;
+            }
+            if (D_80126A40[D_80126A68] == gMenuText[ASSET_MENU_TEXT_ABANDONCHALLENGE]) {
+                func_80000968(0);
+                return 7;
+            }
+            return 1;
+        }
+    }
+
+    func_80093D40(updateRate);
+    gIgnorePlayerInput = 0;
+    return 0;
+}
 
 void n_alSynRemovePlayer(void) {
     func_80072298(1);
