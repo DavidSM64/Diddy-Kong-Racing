@@ -119,8 +119,8 @@ typedef struct unk8012A7EC {
 
 typedef struct {
     u8 r;
-    u8 b;
     u8 g;
+    u8 b;
     u8 a;
 } ColourRGBA;
 

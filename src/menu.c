@@ -3193,7 +3193,7 @@ void func_800887E8(void) {
 }
 
 //Visual Aid : https://i.imgur.com/7T2Scdr.png
-void render_controller_pak_ui(s32 updateRate) {
+void render_controller_pak_ui(UNUSED s32 updateRate) {
     s32 alpha;
     s32 i;
     char *noteText;
@@ -5322,13 +5322,13 @@ void func_80093A0C(void) {
     func_80000B28();
 }
 
-//Draw pause game screen?
+//Pause Menu
 void func_80093A40(void) {
     s32 raceType;
     s32 i;
     Settings *settings;
 
-    func_80072298(0U);
+    func_80072298(0);
     settings = get_settings();
     D_800E098C = -1;
 
@@ -5379,38 +5379,34 @@ void func_80093A40(void) {
 
 #ifdef NON_EQUIVALENT
 // In the right ballpark, but not right.
+// Draw pause game screen?
 void func_80093D40(UNUSED s32 updateRate) {
     s32 yOffset;
     s32 i;
-    s32 xOffset;
     s32 x;
     ColourRGBA *colours;
-    s32 xPos;
     s32 baseYPos;
+    s32 xPos;
     s32 alpha;
 
-    i = 0;
-    xPos = 160;
-    if (D_800E0984 > 0) {
-        do {
-            //func_800C4DA0(text, x, font) x = diffX - x
-            x = func_800C4DA0(&D_80126A40[i], 0, 0) + 8;
-            if (xPos < x) {
-                xPos = x;
-            }
-            i++;
-        } while (i < D_800E0984);
+    for (i = 0, xPos = 160; i < D_800E0984; i++) {
+        x = func_800C4DA0(D_80126A40[i], 0, 0) + 8;
+        if (xPos < x) {
+            xPos = x;
+        }
     }
-    if (osTvType == TV_TYPE_PAL) {
-        baseYPos = 132;
-    } else {
-        baseYPos = 120;
-    }
+
+    baseYPos = (osTvType == TV_TYPE_PAL) ? 132 : 120;
+
+    yOffset = ((D_800E0984 * 16) + 28);
+
     func_800C56D0(7);
     assign_dialogue_box_id(7);
-    yOffset = (s32) ((D_800E0984 * 16) + 28) >> 1;
-    xOffset = xPos >> 1;
-    set_current_dialogue_box_coords(7, 160 - xOffset, baseYPos - yOffset, xOffset + 160, yOffset + baseYPos);
+
+    yOffset >>= 1;
+    xPos >>= 1;
+
+    set_current_dialogue_box_coords(7, 160 - xPos, baseYPos - yOffset, xPos + 160, yOffset + baseYPos);
     colours = &D_800E0990[get_player_id(D_800E098C)];
     set_current_dialogue_background_colour(7, colours->r, colours->g, colours->b, colours->a);
     set_dialogue_font(7, 0);
@@ -5423,38 +5419,33 @@ void func_80093D40(UNUSED s32 updateRate) {
     }
     if (D_800E0988 != 0) {
         if (gTrophyRaceWorldId != 0) {
-            i = yOffset - 26;
-            render_dialogue_text(7, POS_CENTRED, i + 8, gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACETITLE], 1, 12); // QUIT TROPHY RACE?
+            yOffset -= 26;
+            render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACETITLE], 1, 12);
         } else {
-            i = yOffset - 26;
-            render_dialogue_text(7, POS_CENTRED, i + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, 12); // QUIT GAME?
+            yOffset -= 26;
+            render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, 12);
         }
         if (D_800E0988 == 1) {
             set_current_text_colour(7, 255, 255, 255, alpha, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
         }
-        render_dialogue_text(7, POS_CENTRED, i + 28, gMenuText[ASSET_MENU_TEXT_OK], 1, 12); // OK
+        render_dialogue_text(7, POS_CENTRED, yOffset + 28, gMenuText[ASSET_MENU_TEXT_OK], 1, 12); // OK
         if (D_800E0988 == 2) {
             set_current_text_colour(7, 255, 255, 255, alpha, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
         }
-        render_dialogue_text(7, POS_CENTRED, i + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, 12); // CANCEL
+        render_dialogue_text(7, POS_CENTRED, yOffset + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, 12);
     } else {
-        render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PAUSEOPTIONS], D_800E098C + 1, 12); // PAUSE OPTIONS
-        baseYPos = 32;
-        if (D_800E0984 > 0) {
-            do {
-                if (i == D_80126A68) {
-                    set_current_text_colour(7, 255, 255, 255, alpha, 255);
-                } else {
-                    set_current_text_colour(7, 255, 255, 255, 0, 255);
-                }
-                render_dialogue_text(7, POS_CENTRED, baseYPos, &D_80126A40[i], 1, 12);
-                i++;
-                baseYPos += 16;
-            } while (i < D_800E0984);
+        render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PAUSEOPTIONS], D_800E098C + 1, 12);
+        for (i = 0, yOffset = 32; i < D_800E0984; i++, yOffset += 16) {
+            if (i == D_80126A68) {
+                set_current_text_colour(7, 255, 255, 255, alpha, 255);
+            } else {
+                set_current_text_colour(7, 255, 255, 255, 0, 255);
+            }
+            render_dialogue_text(7, POS_CENTRED, yOffset, D_80126A40[i], 1, 12);
         }
     }
     open_dialogue_box(7);
@@ -5463,6 +5454,7 @@ void func_80093D40(UNUSED s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80093D40.s")
 #endif
 
+//Pause menu
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate) {
     s8 temp;
     s32 playerId;
