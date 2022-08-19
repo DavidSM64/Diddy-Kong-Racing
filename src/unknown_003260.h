@@ -94,7 +94,7 @@ extern s32 D_800DC6A4;
 extern s32 D_800DC6A8;
 extern s32 D_800DC6AC;
 
-extern s32 D_800DC6B0;
+extern ALEventQueue *D_800DC6B0;
 extern s32 D_800DC6B4;
 extern unk800DC6BC_40* D_800DC6B8;
 extern unk800DC6BC* gAlSndPlayer;
@@ -124,11 +124,11 @@ void func_800049D8(void);
 void func_800049F8(void * sndState,s16 type, u32 arg2);
 u16 func_80004A3C(u8 arg0);
 ALDMAproc __amDmaNew(AMDMAState **state);
+void func_80004A60(u8 arg0, u16 arg1);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
 void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
-void func_80004A60(u8, u16); //Could be s32, s32
 
 #endif
