@@ -787,14 +787,11 @@ void func_80067F2C(Gfx **dlist, Mtx **mats) {
     D_80120D1C = 0;
     D_80120D08 = 0;
 
-    i = 0;
-    while (i < 4) { // for loop doesn't match here.
-        j = 0;
-        while (j < 4) {
+    for (i = 0; i < 4; i++) {
+        //Required to be one line, but the "\" fixes that.
+        for (j = 0; j < 4; j++){\
             D_80120F20[i][j] = gOrthoMatrix[i][j];
-            j++;
         }
-        i++;
     }
 }
 
