@@ -1732,11 +1732,8 @@ void menu_init(u32 menuId) {
     sUnused_801263C8 = 0;
     sUnused_80126828 = 0;
 
-    // Does not match with a for loop
-    i = 0;
-    while (i < 4) {
-        D_80126808[i++] = 0;
-    }
+    //Needs to be one line
+    for (i = 0; i < 4; i++) { D_80126808[i] = 0; }
 
     func_80001844();
     switch (gCurrentMenuId) {
@@ -4698,13 +4695,9 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008E4EC.s")
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F00C.s")
 
-#ifdef NON_MATCHING
-// Close to done with this function. Just a regalloc issue remains.
-
 s32 menu_track_select_loop(s32 updateRate) {
     s32 cutsceneId;
     Settings *settings;
-    s32 i = 0;
 
     settings = get_settings();
     D_801263BC = (D_801263BC + updateRate) & 0x3F;
@@ -4764,9 +4757,8 @@ s32 menu_track_select_loop(s32 updateRate) {
     if (D_801267D0 >= 2) {
         func_8008F534();
         if (gMultiplayerSelectedNumberOfRacersCopy != gMultiplayerSelectedNumberOfRacers) {
-            // regalloc issue with the for loop.
-            for (i = 0; i < 8; i++) {
-                settings->racers[i].starting_position = i;
+            for (cutsceneId = 0; cutsceneId < 8; cutsceneId++) {
+                settings->racers[cutsceneId].starting_position = cutsceneId;
             }
         }
         if (D_801269C8 != 4) {
@@ -4782,9 +4774,6 @@ s32 menu_track_select_loop(s32 updateRate) {
     gIgnorePlayerInput = 0;
     return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_loop.s")
-#endif
 
 void func_8008F534(void) {
     s32 i;

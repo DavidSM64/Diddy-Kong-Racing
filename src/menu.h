@@ -795,6 +795,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate);
 PakError check_for_controller_pak_errors(void);
 void func_80093A40(void);
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
+s32 menu_track_select_loop(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -809,7 +810,6 @@ void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void func_8008C698(s32 arg0);
 void render_file_select_menu(s32 arg0);
-s32 menu_track_select_loop(s32 updateRate);
 void func_8008FF1C(s32 updateRate);
 void func_800904E8(s32 updateRate);
 void func_80090918(s32 updateRate);
