@@ -190,26 +190,15 @@ typedef struct unk800E153C {
     u32 unk4; // Flags?
 } unk800E153C;
 
-/* Size: 0x10 Bytes */
-typedef struct unk800860A8 {
-    s8 unk0; //Probably SIDeviceStatus
-    u8 pad1[0x5];
-    s8 controllerIndex;
-    u8 pad7[0x5];
-    u32 cPakBytesFree;
-} unk800860A8;
-
 /* Size: 0x10 bytes */
 typedef struct unk800861C8 {
     u8 unk0;
     u8 unk1;
     u8 unk2;
-    u8 pad3;
-    u16 pad4;
-    s8  unk6;
-    s8  pad7;
-    u32 pad8;
-    u32 unkC; // Game Data File Size
+    u8 pad3[0x3];
+    u8  controllerIndex;
+    u8  pad7[0x5];
+    u32 fileSize; // Game Data File Size
 } unk800861C8;
 
 /* Unknown size */
@@ -672,7 +661,7 @@ void unload_big_font_1(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
 void menu_save_options_init(void);
-s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 fileSize, s32 arg5);
+s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, s32 arg5);
 void func_800861C8(unk800861C8 *arg0, s32 *arg1);
 s32 func_800874D0(s32 buttonsPressed, s32 arg1);
 s32 func_800875E4(s32 buttonsPressed, s32 arg1);
@@ -796,6 +785,7 @@ PakError check_for_controller_pak_errors(void);
 void func_80093A40(void);
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
+s32 func_800867D4(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching

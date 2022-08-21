@@ -207,9 +207,9 @@ s32 D_801269F4;
 s32 D_801269F8;
 s32 *D_801269FC;
 s32 D_80126A00;
-unk800860A8 *D_80126A04; //Shares it's allocation with D_80126A0C
+unk800861C8 *D_80126A04; //Shares it's allocation with D_80126A0C
 s32 D_80126A08;
-s32 D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
+unk800861C8 *D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
 s32 D_80126A10;
 s32 D_80126A14;
 s32 D_80126A18;
@@ -2720,8 +2720,8 @@ void menu_save_options_init(void) {
     D_801263E0 = 1;
     D_801263D8 = 0;
     D_80126A64 = (s32)allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
-    D_80126A0C = (s32)allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
-    D_80126A04 = (unk800860A8 *)(D_80126A0C + 0x500);
+    D_80126A0C = (unk800861C8 *)allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
+    D_80126A04 = &D_80126A0C[80]; //0x500 bytes forward
     D_80126A08 = 0;
     D_80126BD4 = 0;
     D_80126BDC = 0.0f;
@@ -2746,13 +2746,13 @@ void menu_save_options_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/func_800853D0.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80085B9C.s")
 
-s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
+s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
     s32 ret = 0;
 
     if (*arg1 != 0) {
-        ret = get_free_space(controllerIndex, &arg2[*arg3].cPakBytesFree, &sControllerPakNotesFree[controllerIndex]);
+        ret = get_free_space(controllerIndex, &arg2[*arg3].fileSize, &sControllerPakNotesFree[controllerIndex]);
         if (ret == CONTROLLER_PAK_GOOD) {
-            if (((s32)arg2[*arg3].cPakBytesFree >= fileSize) && (sControllerPakNotesFree[controllerIndex] > 0)) {
+            if (((s32)arg2[*arg3].fileSize >= fileSize) && (sControllerPakNotesFree[controllerIndex] > 0)) {
                 arg2[*arg3].unk0 = 8; //CONTROLLER_PAK_UNK8 maybe?
                 arg2[*arg3].controllerIndex = controllerIndex;
                 (*arg3)++;
@@ -2782,15 +2782,47 @@ void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
             arg0[*arg1].unk0 = 1;
             arg0[*arg1].unk1 = 0;
             arg0[*arg1].unk2 = 0;
-            arg0[*arg1].unk6 = i;
-            arg0[*arg1].unkC = get_game_data_file_size();
+            arg0[*arg1].controllerIndex = i;
+            arg0[*arg1].fileSize = get_game_data_file_size();
             (*arg1)++;
         }
     }
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_800862C4.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_800867D4.s")
+
+s32 func_800867D4(void) {
+    s32 ret = 0;
+
+    D_80126A00 = 0;
+
+    switch (D_80126A0C[D_80126BD4].unk0) {
+        case 1: //Some other type of game data?
+            func_8006EB78(D_80126A0C[D_80126BD4].controllerIndex);
+            func_800861C8(D_80126A04, &D_80126A00);
+            ret = func_800860A8(0, &D_80126A18, D_80126A04, &D_80126A00, get_game_data_file_size(), -1);
+            break;
+        case 2: //Some other type of time data?
+            ret = func_800860A8(0, &D_80126A18, (unk800861C8 *) D_80126A04, &D_80126A00, get_time_data_file_size(), -1);
+            break;
+        case 3: //GAMD / Game Data
+            func_800861C8(D_80126A04, &D_80126A00);
+            ret = func_800860A8(1, &D_80126A1C, (unk800861C8 *) D_80126A04, &D_80126A00, get_game_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
+            break;
+        case 4: //TIMD / Time Data
+            D_80126A04[D_80126A00++].unk0 = 2;
+            ret = func_800860A8(1, &D_80126A1C, (unk800861C8 *) D_80126A04, &D_80126A00, get_time_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
+            break;
+        case 5: //GHSS / Ghost Data
+            D_80126A04[D_80126A00++].unk0 = 9;
+            ret = func_800860A8(1, &D_80126A1C, (unk800861C8 *) D_80126A04, &D_80126A00, func_80074B1C(), D_80126A0C[D_80126BD4].controllerIndex);
+            break;
+    }
+
+    D_80126A04[D_80126A00++].unk0 = 7;
+
+    return ret;
+}
 
 void func_80086A48(s32 arg0) {
     f32 temp, temp2;
@@ -3409,7 +3441,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                 switch (D_800DF460) {
                 case -1:
                     if (yStick < 0) {
-                        if(!xStick);
+                        if(!xStick){}
                         D_800DF460 = 0;
                         playMoveSound = TRUE;
                     }
