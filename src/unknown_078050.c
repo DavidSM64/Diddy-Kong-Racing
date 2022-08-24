@@ -362,7 +362,7 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPo
                     uly = 0;
                 }
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
-                gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, 0, s, t, 1024, 1024);
+                gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
             }
         }
     }

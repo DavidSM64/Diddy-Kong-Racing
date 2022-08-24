@@ -406,6 +406,12 @@ void func_800A6DB4(s16 *arg0) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6E30.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A718C.s")
 
+UNUSED void func_800A7440(u16 soundId) {
+    if ((D_80126D40 == 0) && (!is_game_paused())) {
+        play_sound_global(soundId, &D_80126D40);
+    }
+}
+
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2) {
     if (D_80126D74 == 0) {
         D_80126D7C = arg0;

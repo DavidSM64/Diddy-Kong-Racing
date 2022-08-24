@@ -142,9 +142,9 @@ s8 D_80126541;
 s32 D_80126544;
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
 TextureHeader *D_80126550[67];                        // lookup table? TEXTURES
-s32 D_8012665C;
-s32 D_80126660;
-s32 D_80126664;
+TextureHeader *D_8012665C;
+TextureHeader *D_80126660;
+TextureHeader *D_80126664;
 s32 D_80126668[58];
 u8 D_80126750[128];
 s32 D_801267D0;
@@ -221,7 +221,7 @@ u8 sControllerPakNoFreeSpace[MAXCONTROLLERS]; //Flag to see if there's no free s
 u8 sControllerPakBadData[MAXCONTROLLERS]; //Flag to see if there's bad data for the given controller pak
 char *D_80126A40[8]; //Menu Text
 u8 sControllerPakDataPresent[MAXCONTROLLERS]; //Flag to see if there's data present for the given controller pak? Not sure
-s32 D_80126A64;
+u8 *D_80126A64;
 s32 D_80126A68; //sCurrentControllerIndex?
 s32 D_80126A6C;
 s32 D_80126A70;
@@ -2719,7 +2719,7 @@ void menu_save_options_init(void) {
     gMenuDelay = 0;
     D_801263E0 = 1;
     D_801263D8 = 0;
-    D_80126A64 = (s32)allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
+    D_80126A64 = (u8 *)allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
     D_80126A0C = (unk800861C8 *)allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
     D_80126A04 = &D_80126A0C[80]; //0x500 bytes forward
     D_80126A08 = 0;
@@ -2744,7 +2744,119 @@ void menu_save_options_init(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_800853D0.s")
+
+#ifdef NON_EQUIVALENT
+void func_80085B9C(UNUSED s32 updateRate) {
+    s32 yPos; //yPos
+    s32 var_s2; //for loop iterator?
+    s32 var_s3; //bool
+    s32 temp_f4;
+    s32 videoWidth;
+    s32 temp_v0;
+    s32 drawTexturedRectangle; //bool
+    s32 drawPleaseWait; //bool
+    s32 drawOk; //bool
+    s32 drawDialogueBox; //bool
+    DrawTexture *tempTex;
+
+    videoWidth = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
+    var_s3 = FALSE;
+    drawTexturedRectangle = FALSE; //render textured rectangle
+    drawPleaseWait = FALSE; //Draw Please Wait
+    drawOk = FALSE; //Draw "OK?"
+    drawDialogueBox = FALSE; //Render Dialogue Box
+    switch (D_801263E0 & 7) {
+        case 0: 
+            break;
+        case 1:
+        case 2:
+            drawPleaseWait = TRUE;
+            break;
+        case 3:
+        case 4:
+            var_s3 = TRUE;
+            break;
+        case 5:
+            var_s3 = TRUE;
+            drawTexturedRectangle = TRUE;
+            break;
+        case 6:
+            var_s3 = TRUE;
+            drawTexturedRectangle = TRUE;
+            drawOk = TRUE;
+            break;
+        case 7:
+            var_s3 = TRUE;
+            drawTexturedRectangle = TRUE;
+            drawPleaseWait = TRUE;
+            break;
+    }
+    if (D_801263E0 & 8) {
+        drawDialogueBox = TRUE;
+    }
+    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    set_text_background_colour(0, 0, 0, 0);
+    set_text_font(2);
+    set_text_colour(0, 0, 0, 255, 128);
+    draw_text(&sMenuCurrDisplayList, 161, 35, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
+    set_text_colour(255, 255, 255, 0, 255);
+    draw_text(&sMenuCurrDisplayList, 160, 32, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
+    if (drawTexturedRectangle) {
+        yPos = (osTvType == TV_TYPE_PAL) ? 132 : 120;
+        yPos += ((s32) (D_801263BC & 0x1F) >> 1);
+        var_s2 = 0;
+        tempTex = &D_800E043C[var_s2];
+        do {
+            render_textured_rectangle(&sMenuCurrDisplayList, tempTex, 160, yPos, 255, 255, 255, 255);
+            tempTex++;
+            var_s2++;
+            yPos += 16;
+        } while(var_s2 != 2);
+    }
+    if (var_s3) {
+        temp_f4 = D_80126BDC;
+        temp_v0 = 80 - (s32) ((D_80126BDC - temp_f4) * 164);
+        while ((temp_v0 < videoWidth) && (temp_f4 < D_80126A08)) {
+            func_800853D0(&D_80126A0C[temp_f4], temp_v0, 64);
+            temp_f4++;
+            temp_v0 += 164;
+        }
+        while ((temp_v0 > 0)  && (temp_f4 > 0)) {
+            temp_f4--;
+            temp_v0 -= 164;
+            func_800853D0(&D_80126A0C[temp_f4], temp_v0, 64);
+        }
+    }
+    if (drawTexturedRectangle) {
+        temp_f4 = D_80126BEC;
+        temp_v0 = 80 - (s32) ((D_80126BEC - temp_f4) * 164);
+        while ((temp_v0 < videoWidth) && (temp_f4 < D_80126A00)) {
+            func_800853D0(&D_80126A04[temp_f4], temp_v0, 144);
+            temp_f4++;
+            temp_v0 += 164;
+        }
+        while ((temp_v0 > 0) && (temp_f4 > 0)) {
+            temp_f4--;
+            temp_v0 -= 164;
+            func_800853D0(&D_80126A04[temp_f4], temp_v0, 144);
+        }
+    }
+    set_text_font(2);
+    set_text_colour(255, 255, 255, 0, 255);
+    if (drawOk) {
+        draw_text(&sMenuCurrDisplayList, 160, 128, D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
+    }
+    if (drawPleaseWait) {
+        draw_text(&sMenuCurrDisplayList, 160, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], ALIGN_MIDDLE_CENTER);
+    }
+    if (drawDialogueBox) {
+        render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+    }
+    func_80080E6C();
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80085B9C.s")
+#endif
 
 s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
     s32 ret = 0;
@@ -2803,19 +2915,19 @@ s32 func_800867D4(void) {
             ret = func_800860A8(0, &D_80126A18, D_80126A04, &D_80126A00, get_game_data_file_size(), -1);
             break;
         case 2: //Some other type of time data?
-            ret = func_800860A8(0, &D_80126A18, (unk800861C8 *) D_80126A04, &D_80126A00, get_time_data_file_size(), -1);
+            ret = func_800860A8(0, &D_80126A18, D_80126A04, &D_80126A00, get_time_data_file_size(), -1);
             break;
         case 3: //GAMD / Game Data
             func_800861C8(D_80126A04, &D_80126A00);
-            ret = func_800860A8(1, &D_80126A1C, (unk800861C8 *) D_80126A04, &D_80126A00, get_game_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
+            ret = func_800860A8(1, &D_80126A1C, D_80126A04, &D_80126A00, get_game_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
             break;
         case 4: //TIMD / Time Data
             D_80126A04[D_80126A00++].unk0 = 2;
-            ret = func_800860A8(1, &D_80126A1C, (unk800861C8 *) D_80126A04, &D_80126A00, get_time_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
+            ret = func_800860A8(1, &D_80126A1C, D_80126A04, &D_80126A00, get_time_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
             break;
         case 5: //GHSS / Ghost Data
             D_80126A04[D_80126A00++].unk0 = 9;
-            ret = func_800860A8(1, &D_80126A1C, (unk800861C8 *) D_80126A04, &D_80126A00, func_80074B1C(), D_80126A0C[D_80126BD4].controllerIndex);
+            ret = func_800860A8(1, &D_80126A1C, D_80126A04, &D_80126A00, func_80074B1C(), D_80126A0C[D_80126BD4].controllerIndex);
             break;
     }
 

@@ -4,6 +4,8 @@ compiler_type = "ido"
 "g[DS]P.*" = "void"
 "gDma.*" = "void"
 "gDkr.*" = "void"
+"fast3d_cmd" = "void"
+"OS_PHYSICAL_TO_K0" = "void *"
 "_SHIFTL" = "unsigned int"
 
 [decompme.compilers]

@@ -196,8 +196,8 @@ typedef struct unk800861C8 {
     u8 unk1;
     u8 unk2;
     u8 pad3[0x3];
-    u8  controllerIndex;
-    u8  pad7[0x5];
+    u8 controllerIndex;
+    u8 pad7[0x5];
     u32 fileSize; // Game Data File Size
 } unk800861C8;
 
@@ -584,7 +584,7 @@ extern s32 gViewingCreditsFromCheat;
 
 extern MenuElement D_800E1B50[9];
 
-//extern u32 dMenuHudSettings[24];
+extern Gfx dMenuHudSettings[6];
 
 extern s8 D_800E1CD0[32];
 
@@ -638,6 +638,29 @@ extern u64 sEepromSettings;
 extern char *sInsertControllerPakMenuText[3];
 extern char *sNoControllerPakMenuText[5];
 extern char *sInsertRumblePakMenuText[4];
+extern s32 *D_80126C2C;
+extern Settings *D_80126530[4];
+
+extern DrawTexture D_800DFC10[2];
+extern DrawTexture D_800DFC20[2];
+extern DrawTexture D_800DFC30[2];
+extern DrawTexture D_800DFC40[2];
+extern DrawTexture D_800DFC50[2];
+extern DrawTexture D_800DFC60[2];
+extern TextureHeader *D_8012665C;
+extern TextureHeader *D_80126660;
+extern TextureHeader *D_80126664;
+extern Gfx *sMenuCurrDisplayList;
+extern Mtx *sMenuCurrHudMat;
+extern const char D_800E8208[];
+extern s32 D_801263BC;
+extern s32 D_801263E0;
+extern s32 D_80126A00;
+extern unk800861C8 *D_80126A04;
+extern s32 D_80126A08;
+extern unk800861C8 *D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
+extern f32 D_80126BDC;
+extern f32 D_80126BEC;
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -836,5 +859,7 @@ void func_80099E8C(s32 updateRate);
 void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
+void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
+void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 
 #endif
