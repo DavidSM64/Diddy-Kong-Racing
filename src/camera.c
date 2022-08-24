@@ -856,7 +856,38 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80068BF4.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
+
+#ifdef NON_MATCHING
+void func_80069A40(Gfx **dlist) {
+    D_80120D20[0]--;
+    D_80120D1C--;
+    if (D_80120D1C > 0) {
+        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0(D_80120D88[D_80120D1C]), G_MTX_DKR_INDEX_1);
+        return;
+    }
+    gDkrInsertMatrix((*dlist)++, G_MWO_MATRIX_XX_XY_I, 0);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/camera/func_80069A40.s")
+#endif
+
+UNUSED void func_80069B70(f32 arg0, UNUSED f32 arg1, f32 arg2) {
+    D_80120AC0[D_80120CE4].trans.x_position -= arg0 * sine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].trans.z_position -= arg0 * cosine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].trans.x_position -= arg2 * cosine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].trans.z_position += arg2 * sine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].unk34_a.levelSegmentIndex =
+        get_level_segment_index_from_position(
+            D_80120AC0[D_80120CE4].trans.x_position,
+            D_80120AC0[D_80120CE4].trans.y_position,
+            D_80120AC0[D_80120CE4].trans.z_position);
+}
+
+UNUSED void func_80069CB4(s32 arg0, s32 arg1, s32 arg2) {
+    D_80120AC0[D_80120CE4].trans.y_rotation += arg0;
+    D_80120AC0[D_80120CE4].trans.x_rotation += arg1;
+    D_80120AC0[D_80120CE4].trans.z_rotation += arg2;
+}
 
 ObjectSegment *func_80069CFC(void) {
     return &D_80120AC0[D_80120CE4];
