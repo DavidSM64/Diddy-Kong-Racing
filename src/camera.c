@@ -871,6 +871,17 @@ void func_80069A40(Gfx **dlist) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80069A40.s")
 #endif
 
+UNUSED void func_80069ACC(f32 arg0, f32 arg1, f32 arg2) {
+    D_80120AC0[D_80120CE4].trans.x_position += arg0;
+    D_80120AC0[D_80120CE4].trans.y_position += arg1;
+    D_80120AC0[D_80120CE4].trans.z_position += arg2;
+    D_80120AC0[D_80120CE4].unk34_a.levelSegmentIndex =
+        get_level_segment_index_from_position(
+            D_80120AC0[D_80120CE4].trans.x_position,
+            D_80120AC0[D_80120CE4].trans.y_position,
+            D_80120AC0[D_80120CE4].trans.z_position);
+}
+
 UNUSED void func_80069B70(f32 arg0, UNUSED f32 arg1, f32 arg2) {
     D_80120AC0[D_80120CE4].trans.x_position -= arg0 * sine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
     D_80120AC0[D_80120CE4].trans.z_position -= arg0 * cosine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
