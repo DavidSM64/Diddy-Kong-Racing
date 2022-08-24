@@ -122,6 +122,11 @@ GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 
 GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
 
+UNUSED void func_800B61E0(void) {
+    D_801285D8 = &D_80127CD8;
+    func_800B6EE0();
+}
+
 /**
  * Set the colour of the current debug text.
  */
