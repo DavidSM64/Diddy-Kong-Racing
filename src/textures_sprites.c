@@ -1357,7 +1357,23 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
+
+#ifdef NON_MATCHING
+Sprite *func_8007C52C(s32 arg0) {
+    Sprite *temp_v1;
+
+    if ((arg0 < 0) || (arg0 >= D_80126358)) {
+        return NULL;
+    }
+    temp_v1 = gSpriteCache[arg0].sprite;
+    if (temp_v1 == (Sprite *)-1) {
+        return NULL;
+    }
+    return temp_v1;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C52C.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
@@ -1394,9 +1410,19 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
 
-#ifdef NON_EQUIVALENT
-// Unused
-s32 func_8007C860(s32 spriteIndex) {
+#ifdef NON_MATCHING
+UNUSED s32 func_8007C860(s32 spriteIndex) {
+    if ((spriteIndex < 0) || (spriteIndex >= gNumberOfLoadedTextures)) {
+        return -1;
+    }
+    return gTextureCache[spriteIndex].id;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
+#endif
+
+#ifdef NON_MATCHING
+UNUSED s32 func_8007C8A0(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
         return -1;
     }
@@ -1404,7 +1430,7 @@ s32 func_8007C860(s32 spriteIndex) {
     return gSpriteCache[spriteIndex].id;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C8A0.s")
 #endif
 
 #ifdef NON_EQUIVALENT
