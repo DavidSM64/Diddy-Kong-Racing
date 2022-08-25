@@ -385,6 +385,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4154.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A45F0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A497C.s")
+UNUSED void func_800A4C34(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {}
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5A64.s")

@@ -856,6 +856,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80068BF4.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_800699E4.s")
 
 #ifdef NON_MATCHING
 void func_80069A40(Gfx **dlist) {
