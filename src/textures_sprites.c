@@ -1357,6 +1357,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C52C.s")
 
 #ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
