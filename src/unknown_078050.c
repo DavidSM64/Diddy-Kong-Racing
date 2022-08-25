@@ -172,6 +172,10 @@ OSMesgQueue *osScInterruptQ;
 /*******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
+GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800775B0.s")
+GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077734.s")
+GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800778C8.s")
+
 
 s32 func_80077A54(void) {
     s32 *sp1C = NULL;
