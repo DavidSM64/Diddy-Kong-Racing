@@ -1667,6 +1667,7 @@ void func_8007FF88(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8007FFEC.s")
+GLOBAL_ASM("asm/non_matchings/menu/func_80080518.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
 
@@ -4836,6 +4837,11 @@ void func_8008E4B0(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8008E4EC.s")
+
+s32 func_8008E790(void) {
+    return D_800E097C;
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F00C.s")
 
