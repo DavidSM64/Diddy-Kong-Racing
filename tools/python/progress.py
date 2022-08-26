@@ -30,8 +30,10 @@ def get_func_sizes():
             components = line.split()
             size = int(components[4], 16)
             name = components[5]
-            total += size
-            sizes[name] = size
+            #Labels are coming through here as functions, and this finds and ignores them
+            if name[0:4] != "L800":
+                total += size
+                sizes[name] = size
 
     return sizes, total
 
@@ -63,6 +65,7 @@ def get_funcs_sizes(sizes, matchings, nonmatchings):
             # print(func)
         else:
             nmsize += sizes[func]
+            #print("% s,%i" % (func, sizes[func]))
 
     return msize, nmsize
 
