@@ -10,6 +10,7 @@ from colour import Color
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.join(script_dir, "..", "..")
 asm_dir = os.path.join(root_dir, "asm", "non_matchings")
+asm_lib_dir = os.path.join(root_dir, "lib", "asm", "non_matchings")
 build_dir = os.path.join(root_dir, "build", "us_1.0")
 elf_path = os.path.join(build_dir, "dkr.elf")
 
@@ -41,8 +42,11 @@ def get_nonmatching_funcs():
         for f in files:
             if f.endswith(".s"):
                 funcs.add(f[:-2])
-            else:
-                print(f[:-2])
+
+    for root, dirs, files in os.walk(asm_lib_dir):
+        for f in files:
+            if f.endswith(".s"):
+                funcs.add(f[:-2])
 
     return funcs
 
@@ -96,7 +100,7 @@ def main(args):
         color = Color("#50ca22", hue=lerp(0, 105/255, matching_ratio / 100))
         print(json.dumps({
             "schemaVersion": 1,
-            "label": f"progress ({args.version})",
+            "label": f"progress",
             "message": f"{matching_ratio:.2f}%",
             "color": color.hex,
         }))
