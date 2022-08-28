@@ -19,7 +19,7 @@ s32 D_800E3680 = 1;
 
 /************ .bss ************/
 
-u8 *D_8012A780;
+u8 *gGameTextTable; //128 bytes?
 s8 D_8012A784;
 s8 D_8012A785;
 s8 D_8012A786;
@@ -31,7 +31,7 @@ s16 D_8012A78C;
 s16 D_8012A78E;
 s16 D_8012A790;
 s16 D_8012A792;
-unk8012A798 D_8012A798;
+u8 *D_8012A798[2]; //960 x2 bytes
 s32 D_8012A7A0;
 s32 D_8012A7A4;
 s16 sDialogueAlpha;
@@ -119,9 +119,9 @@ void func_800C2F1C(s32 arg0) {
 
 void func_800C3048(void) {
     D_8012A78C = -1;
-    D_8012A780 = (u8 *)allocate_from_main_pool_safe(0x800, COLOUR_TAG_GREEN);
-    D_8012A798.unk0 = D_8012A780 + 0x80;
-    D_8012A798.unk4 = D_8012A798.unk0 + 0x3C0;
+    gGameTextTable = (u8 *)allocate_from_main_pool_safe(2048, COLOUR_TAG_GREEN);
+    D_8012A798[0] = &gGameTextTable[128];
+    D_8012A798[1] = &D_8012A798[0][960];
     D_8012A7A4 = 0;
     func_800C29F0();
     D_8012A790 = (get_size_of_asset_section(ASSET_GAME_TEXT_TABLE) >> 2) - 2;
@@ -131,7 +131,7 @@ void func_800C3048(void) {
 void func_800C30CC(void) {
     s32 i;
     if (D_800E3670) {
-        free_from_memory_pool(D_8012A780);
+        free_from_memory_pool(gGameTextTable);
         D_800E3670 = 0;
         D_8012A789 = 0;
         for (i = 0; i < 10; i++) {

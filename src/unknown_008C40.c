@@ -137,8 +137,18 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
 // Another function related to playing sound.
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
+#if 0
 // I think this function is used to update the world position of any sound associated with the given soundmask.
+//This matches, but it breaks update_player_racer
+void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3) {
+    arg0->x = arg1;
+    arg0->y = arg2;
+    arg0->z = arg3;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/update_spatial_audio_position.s")
+#endif
+
 void func_800096F8(s32 arg0) {
     s32 i;
     s32 *v0 = D_80119C44;
@@ -157,5 +167,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800099EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009AB4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A184.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A2E8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A414.s")

@@ -385,6 +385,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4154.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A45F0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A497C.s")
+UNUSED void func_800A4C34(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {}
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5A64.s")
@@ -405,6 +406,12 @@ void func_800A6DB4(s16 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6E30.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A718C.s")
+
+UNUSED void func_800A7440(u16 soundId) {
+    if ((D_80126D40 == 0) && (!is_game_paused())) {
+        play_sound_global(soundId, &D_80126D40);
+    }
+}
 
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2) {
     if (D_80126D74 == 0) {

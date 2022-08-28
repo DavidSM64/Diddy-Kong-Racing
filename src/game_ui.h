@@ -43,6 +43,12 @@ typedef struct unk800E2770 {
     s32 unkC;
 } unk800E2770;
 
+extern unk80126CDC *D_80126CDC;
+extern Gfx *D_80126CFC;
+extern u32 D_80126D00;
+extern u32 D_80126D04;
+extern u8 D_80126D37;
+
 u8 func_800A0190(void);
 void func_800A0B74(void);
 void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2);

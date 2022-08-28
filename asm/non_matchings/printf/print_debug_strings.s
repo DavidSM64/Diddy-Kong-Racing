@@ -159,17 +159,3 @@ glabel print_debug_strings
 /* 0B6DD4 800B61D4 8FB40030 */  lw    $s4, 0x30($sp)
 /* 0B6DD8 800B61D8 03E00008 */  jr    $ra
 /* 0B6DDC 800B61DC 27BD0038 */   addiu $sp, $sp, 0x38
-
-/* 0B6DE0 800B61E0 27BDFFE8 */  addiu $sp, $sp, -0x18
-/* 0B6DE4 800B61E4 3C0E8012 */  lui   $t6, %hi(D_80127CD8) # $t6, 0x8012
-/* 0B6DE8 800B61E8 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0B6DEC 800B61EC 25CE7CD8 */  addiu $t6, %lo(D_80127CD8) # addiu $t6, $t6, 0x7cd8
-/* 0B6DF0 800B61F0 3C018013 */  lui   $at, %hi(D_801285D8) # $at, 0x8013
-/* 0B6DF4 800B61F4 0C02DBB8 */  jal   func_800B6EE0
-/* 0B6DF8 800B61F8 AC2E85D8 */   sw    $t6, %lo(D_801285D8)($at)
-/* 0B6DFC 800B61FC 8FBF0014 */  lw    $ra, 0x14($sp)
-/* 0B6E00 800B6200 27BD0018 */  addiu $sp, $sp, 0x18
-/* 0B6E04 800B6204 03E00008 */  jr    $ra
-/* 0B6E08 800B6208 00000000 */   nop   
-
-

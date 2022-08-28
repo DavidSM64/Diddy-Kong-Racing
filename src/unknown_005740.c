@@ -8,7 +8,7 @@
 
 /************ .data ************/
 
-s8 D_800DC6D0 = 1;  // Currently unknown, might be a u8.
+u8 D_800DC6D0 = 1;
 s32 D_800DC6D4 = 0; // Currently unknown, might be a different type.
 s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 
@@ -44,4 +44,17 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006AC8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006FC8.s")
+
+UNUSED void func_80007F78(void) {
+    D_800DC6D0 = 1;
+}
+
+UNUSED void func_80007F88(void) {
+    D_800DC6D0 = 0;
+}
+
+UNUSED u8 func_80007F94(void) {
+    return D_800DC6D0;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80007FA4.s")

@@ -787,14 +787,11 @@ void func_80067F2C(Gfx **dlist, Mtx **mats) {
     D_80120D1C = 0;
     D_80120D08 = 0;
 
-    i = 0;
-    while (i < 4) { // for loop doesn't match here.
-        j = 0;
-        while (j < 4) {
+    for (i = 0; i < 4; i++) {
+        //Required to be one line, but the "\" fixes that.
+        for (j = 0; j < 4; j++){ \
             D_80120F20[i][j] = gOrthoMatrix[i][j];
-            j++;
         }
-        i++;
     }
 }
 
@@ -859,7 +856,50 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80068BF4.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
+GLOBAL_ASM("asm/non_matchings/camera/func_800699E4.s")
+
+#ifdef NON_MATCHING
+void func_80069A40(Gfx **dlist) {
+    D_80120D20[0]--;
+    D_80120D1C--;
+    if (D_80120D1C > 0) {
+        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0(D_80120D88[D_80120D1C]), G_MTX_DKR_INDEX_1);
+        return;
+    }
+    gDkrInsertMatrix((*dlist)++, G_MWO_MATRIX_XX_XY_I, 0);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/camera/func_80069A40.s")
+#endif
+
+UNUSED void func_80069ACC(f32 arg0, f32 arg1, f32 arg2) {
+    D_80120AC0[D_80120CE4].trans.x_position += arg0;
+    D_80120AC0[D_80120CE4].trans.y_position += arg1;
+    D_80120AC0[D_80120CE4].trans.z_position += arg2;
+    D_80120AC0[D_80120CE4].unk34_a.levelSegmentIndex =
+        get_level_segment_index_from_position(
+            D_80120AC0[D_80120CE4].trans.x_position,
+            D_80120AC0[D_80120CE4].trans.y_position,
+            D_80120AC0[D_80120CE4].trans.z_position);
+}
+
+UNUSED void func_80069B70(f32 arg0, UNUSED f32 arg1, f32 arg2) {
+    D_80120AC0[D_80120CE4].trans.x_position -= arg0 * sine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].trans.z_position -= arg0 * cosine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].trans.x_position -= arg2 * cosine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].trans.z_position += arg2 * sine_s(D_80120AC0[D_80120CE4].trans.y_rotation);
+    D_80120AC0[D_80120CE4].unk34_a.levelSegmentIndex =
+        get_level_segment_index_from_position(
+            D_80120AC0[D_80120CE4].trans.x_position,
+            D_80120AC0[D_80120CE4].trans.y_position,
+            D_80120AC0[D_80120CE4].trans.z_position);
+}
+
+UNUSED void func_80069CB4(s32 arg0, s32 arg1, s32 arg2) {
+    D_80120AC0[D_80120CE4].trans.y_rotation += arg0;
+    D_80120AC0[D_80120CE4].trans.x_rotation += arg1;
+    D_80120AC0[D_80120CE4].trans.z_rotation += arg2;
+}
 
 ObjectSegment *func_80069CFC(void) {
     return &D_80120AC0[D_80120CE4];
@@ -924,28 +964,25 @@ void func_80069F28(f32 arg0) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 /**
  * Unused function that prints out the passed matrix values to the debug output.
  * This function prints in fixed point.
  */
-void func_80069F64(s16 *mtx) {
+UNUSED void debug_print_fixed_matrix_values(s16 *mtx) {
     s32 i, j;
     s32 val;
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j++) {
             val = mtx[i * 4 + j];
             rmonPrintf("%x.", val);
-            val = mtx[((i + 4) * 4 + j)]; // Issue here.
-            rmonPrintf("%x  ", (u16)val);
+            val = mtx[((i + 4) * 4 + j)];
+            rmonPrintf("%x  ", (u16)val & 0xFFFF);
         }
         rmonPrintf("\n");
+        if (!val){}
     }
     rmonPrintf("\n");
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80069F64.s")
-#endif
 
 /**
  * Unused function that prints out the passed matrix values to the debug output.

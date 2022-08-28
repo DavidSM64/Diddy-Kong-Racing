@@ -71,6 +71,13 @@
 
 #define G_TRIN  5
 #define G_DMADL 7
+#define G_MTX_DKR_INDEX_0 0x00
+#define G_MTX_DKR_INDEX_1 0x40
+#define G_MTX_DKR_INDEX_2 0x80
+#define G_MW_BILLBOARD 0x02 //0x01 = billboarding enabled, 0x00 = disabled
+#define G_MW_MVMATRIX 0x0A  //Specifies the index of the modelview matrix. 
+#define gDkrInsertMatrix(pkt, where, num)				\
+	gMoveWd(pkt, G_MW_MVMATRIX, where, num)
 
 #define gDkrVertices(pkt, address, no, v0)                         \
 {                                                                  \

@@ -6,6 +6,12 @@
 #include "types.h"
 #include "enums.h"
 
+typedef struct Vec3f {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3f;
+
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
   // Element Position

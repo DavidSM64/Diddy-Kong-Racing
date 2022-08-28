@@ -708,12 +708,27 @@ void func_80001F14(u16 soundID, u32 *arg1) {
 }
 
 #ifdef NON_EQUIVALENT
-void func_80001FB8(u16 arg0) {
-    arg0 * 10 + sSoundEffectsPool[0].pad0;
+void func_80001FB8(u16 soundId, void *sndState, u8 arg2) {
+    if (sndState != NULL) {
+        func_800049F8(sndState, 8, (s32) (sSoundEffectsPool[soundId].unk2 * (arg2 / 127.0f)) << 8);
+    }
 }
 #else
 GLOBAL_ASM("asm/non_matchings/audio/func_80001FB8.s")
 #endif
+
+UNUSED void func_8000208C(void *sndState, u8 arg1) {
+    if (sndState != NULL) {
+        func_800049F8(sndState, 8, arg1 << 8);
+    }
+}
+
+UNUSED void func_800020BC(void *sndState, u32 arg1) {
+    u32 *temp = &arg1;
+    if (sndState != NULL) {
+        func_800049F8(sndState, 16, *temp);
+    }
+}
 
 u16 ALBankFile_80115D14_GetSoundCount(void) {
     return ALBankFile_80115D14->bankArray[0]->instArray[0]->soundCount;

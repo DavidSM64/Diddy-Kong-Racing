@@ -151,7 +151,7 @@ void func_8006EBC4(void);
 void func_8006EBE0(void);
 void func_8006EBFC(void);
 void func_8006EC18(s32 arg0);
-void func_8006EC48(s32 arg0);
+void func_8006EC48(s32 saveFileIndex);
 void func_8006ECAC(s32 arg0);
 void func_8006ECC4(void);
 void func_8006ECE0(void);
@@ -167,13 +167,13 @@ void func_8006F42C(void);
 void pre_intro_loop(void);
 s32 is_controller_missing(void);
 s32 check_imem_validity(void);
+void func_8006CCF0(s32 updateRate);
 
 //Non Matching
 void func_8006ECFC(s32 numberOfPlayers);
 void func_8006DCF8(s32 arg0);
 void func_8006EFDC(void);
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId);
-void func_8006CCF0(s32 arg0);
 void func_8006A6B0(void);
 void func_80010994(s32 updateRate);
 
