@@ -424,11 +424,11 @@ void func_8000488C(u8 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
 
-void func_80004998(void) {
+UNUSED void func_80004998(void) {
     func_800048D8(1);
 }
 
-void func_800049B8(void) {
+UNUSED void func_800049B8(void) {
     func_800048D8(17);
 }
 

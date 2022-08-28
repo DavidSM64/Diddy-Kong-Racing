@@ -315,8 +315,7 @@ GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-// Unused?
-void func_80071314(void) {
+UNUSED void func_80071314(void) {
     s32 *sp40;
     MemoryPool *pool;
     MemoryPoolSlot *slot;

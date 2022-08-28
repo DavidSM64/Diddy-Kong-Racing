@@ -4838,7 +4838,7 @@ void func_8008E4B0(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8008E4EC.s")
 
-s32 func_8008E790(void) {
+UNUSED s32 func_8008E790(void) {
     return D_800E097C;
 }
 
