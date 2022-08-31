@@ -16,6 +16,7 @@
 #include "game.h"
 #include "racer.h"
 #include "particles.h"
+#include "printf.h"
 
 /************ .data ************/
 
