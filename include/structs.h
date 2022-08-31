@@ -1174,6 +1174,16 @@ typedef struct Object_8001B7A8 {
   /* 0x112 */ s16 unk112;
 } Object_8001B7A8;
 
+typedef struct Object_64_80021400 {
+  /* 0x00 */ u8 pad[0x29];
+  /* 0x2A */ s16 unk2A;
+} Object_64_80021400;
+
+typedef struct Object_80021400 {
+  /* 0x000 */ u8 pad[0x63];
+  /* 0x064 */ struct Object_64_80021400 *obj64;
+} Object_80021400;
+
 typedef struct Object_64 {
     union {
         Object_LaserGun laser_gun;
@@ -1217,6 +1227,7 @@ typedef struct Object_64 {
         Object_Bridge_WhaleRamp bridge_whale_ramp;
         Object_80011AD0 obj80011AD0;
         Object_8001B7A8 obj8001B7A8;
+        Object_80021400 obj80021400;
     };
 } Object_64;
 

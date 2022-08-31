@@ -237,6 +237,7 @@ void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
 s32 func_80031F88(Object*, s32);
 s16 func_8001C418(f32 yPos);
+void func_80021400(s32 arg0);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

@@ -1548,7 +1548,22 @@ s32 func_800210CC(s8 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80021104.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8002125C.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80021400.s")
+
+void func_80021400(s32 arg0) {
+    s32 i;
+    arg0 &= 0xFF; //?
+
+
+    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->unk7C.word & 0xFF)); i++) {}
+
+    if (i < D_8011AE78) {
+        if (D_8011AE74[i]->unk64 != NULL) {
+            if (D_8011AE74[i]->unk64->obj80021400.obj64->unk2A < 0) {
+                D_8011AE74[i]->unk64->obj80021400.obj64->unk2A = 1;
+            }
+        }
+    }
+}
 
 s8 func_800214C4(void) {
     return D_8011AD22[1 - D_8011AD20[1]];

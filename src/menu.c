@@ -5924,25 +5924,23 @@ s32 compress_filename_string(char *filename, s32 length) {
 
 // Not matching, but functionally equivalent.
 // Trims the trailing end of the string, so that spaces won't show up at the end.
-s32 trim_filename_string(u8 *input, u8 *output) {
+void trim_filename_string(char *input, char *output) {
     s32 numSpaces, numSpacesProcessed;
     while (*input != '\0') {
         numSpaces = 0;
         numSpacesProcessed = 0;
         if (*input == ' ') {
-            u8 *temp = input;
-            temp++;
+            input++;
             numSpaces++;
-            while (*temp == ' ') {
-                temp++;
+            while (*input == ' ') {
+                input++;
                 numSpaces++;
             }
-            if (*temp == '\0') {
-                break;
-            }
-            while (numSpacesProcessed < numSpaces) {
-                *(output++) = *(input++);
-                numSpacesProcessed++;
+            if (*input != '\0') {
+                while (numSpacesProcessed < numSpaces) {
+                    *(output++) = *(input++);
+                    numSpacesProcessed++;
+                }
             }
         } else {
             *(output++) = *(input++);
