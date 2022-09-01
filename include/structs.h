@@ -217,7 +217,7 @@ typedef struct LevelHeader {
   /* 0x01 */ u8 unk1;
   /* 0x02 */ s8 unk2;
   /* 0x03 */ u8 unk3;
-  /* 0x04 */ s8 unk4_s8[4];
+  /* 0x04 */ s8 unk4[4];
   /* 0x08 */ f32 course_height;
 
   /* 0x0C */ u8 padC[0x14];
