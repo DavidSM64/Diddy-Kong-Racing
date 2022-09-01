@@ -81,6 +81,10 @@ glabel func_800708D0
 /* 0715FC 800709FC 03E00008 */  jr    $ra
 /* 071600 80070A00 00000000 */   nop   
 
+# Unused and a bit of a weird case.
+# It blends into func_800708D0 if t0 != 0,
+# and func_800708D0 can jump into this from instruction 2
+glabel func_80070A04
 /* 071604 80070A04 94CC0002 */  lhu   $t4, 2($a2)
 .L80070A08:
 /* 071608 80070A08 94CD000E */  lhu   $t5, 0xe($a2)

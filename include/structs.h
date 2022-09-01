@@ -1175,12 +1175,12 @@ typedef struct Object_8001B7A8 {
 } Object_8001B7A8;
 
 typedef struct Object_64_80021400 {
-  /* 0x00 */ u8 pad[0x29];
+  /* 0x00 */ u8 pad[0x2A];
   /* 0x2A */ s16 unk2A;
 } Object_64_80021400;
 
 typedef struct Object_80021400 {
-  /* 0x000 */ u8 pad[0x63];
+  /* 0x000 */ u8 pad[0x64];
   /* 0x064 */ struct Object_64_80021400 *obj64;
 } Object_80021400;
 
