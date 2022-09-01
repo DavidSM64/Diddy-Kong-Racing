@@ -165,13 +165,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800098A4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800099EC.s")
 
-extern LevelHeader D_8011A6D8[];
-
 s32 func_80009AB4(u8 arg0) {
     s32 ret;
-    s32 i; //for loop iterator
-    LevelHeader *levelHeader;
-    LevelHeader_04 *var_a2; //Probably a Vec3f
+    s32 i;
+    UNK_8011A6D8 *levelHeader;
+    UNK_8011A6D8_04 *var_a2; //Probably a Vec3f
     
     ret = 1;
     levelHeader = &D_8011A6D8[arg0];
