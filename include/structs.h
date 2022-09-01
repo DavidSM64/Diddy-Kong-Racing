@@ -211,13 +211,20 @@ typedef struct PulsatingLightData {
     PulsatingLightDataFrame frames[1]; // Length varies based on numberFrames.
 } PulsatingLightData;
 
-/* Size: 0xC4 bytes */
+/* Side: 0x0C / 12 bytes - Possibly just a Vec3f? */
+typedef struct LevelHeader_04 {
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+} LevelHeader_04;
+
+/* Size: 0xC0 bytes */
 typedef struct LevelHeader {
-  /* 0x00 */ s8 world;
+  /* 0x00 */ u8 world;
   /* 0x01 */ u8 unk1;
   /* 0x02 */ s8 unk2;
   /* 0x03 */ u8 unk3;
-  /* 0x04 */ u8 unk4[4];
+  /* 0x04 */ LevelHeader_04 *unk4;
 
   /* 0x08 */ f32 course_height;
 
@@ -282,18 +289,16 @@ typedef struct LevelHeader {
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
   /* 0xB3 */ u8 voiceLimit;
-  /* 0xB3 */ u8 unkB4;
-  /* 0xB3 */ u8 unkB5;
-  /* 0xB3 */ u8 unkB6;
-  /* 0xB3 */ u8 unkB7;
-  /* 0xB4 */ u8 padB8[0x2];
+  /* 0xB4 */ u8 unkB4;
+  /* 0xB5 */ u8 unkB5;
+  /* 0xB6 */ u8 unkB6;
+  /* 0xB7 */ u8 unkB7;
+  /* 0xB8 */ s8 unkB8;
+  /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;
+  /* 0xBC */ u8 unkBC;
+  /* 0xBD */ u8 unkBD;
   /* 0xBE */ u8 unkBE;
-  /* 0xBE */ u8 unkBF;
-  /* 0xBE */ u8 unkC0;
-  /* 0xC1 */ u8 unkC1;
-  /* 0xC2 */ u8 unkC2;
-  /* 0xC3 */ u8 unkC3;
 } LevelHeader;
 
 /* Size: 0x50 bytes */

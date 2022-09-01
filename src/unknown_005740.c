@@ -24,8 +24,8 @@ s32 D_80119C44;
 s32 **D_80119C48;
 s32 D_80119C4C;
 s32 D_80119C50[2];
-s32 D_80119C58;
-s32 D_80119C5C;
+s32 D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
+s32 D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
 s32 D_80119C60[670];
 s32 D_8011A6D8;
 s32 D_8011A6DC;
