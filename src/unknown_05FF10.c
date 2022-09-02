@@ -16,10 +16,20 @@
 
 //sSoundEffectsPool index values?
 s16 D_800DCE80[14] = {
-    0x022C, 0x00A5, 0x00A6, 0x0057,
-    0x0051, 0x006D, 0x0052, 0x00F8,
-    0x00F9, 0x0227, 0x0228, 0x002E,
-    0x002F, 0x0030,
+    SOUND_VOICE_BOSS_LAUGH2,
+    SOUND_VOICE_TRICKY_HM,
+    SOUND_VOICE_TRICKY_HMMM,
+    SOUND_VOICE_WIZPIG_LAUGH4,
+    SOUND_VOICE_WIZPIG_LAUGH2,
+    SOUND_VOICE_WIZPIG_GROAN,
+    SOUND_VOICE_WIZPIG_LAUGH3,
+    SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_LAUGH,
+    SOUND_VOICE_SMOKEY_HM,
+    SOUND_VOICE_SMOKEY_HM2,
+    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,
+    SOUND_WHOOSH2
 };
 
 /*******************************/
@@ -84,7 +94,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.unk18 = sp3C;
     if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk3B != 1)) {
         func_8005CB04(1);
-        play_sound_global(17, NULL);
+        play_sound_global(SOUND_EXPLOSION, NULL);
         func_80069F28(12.0f);
         obj->segment.x_velocity *= 0.4;
         obj->segment.z_velocity *= 0.4;
