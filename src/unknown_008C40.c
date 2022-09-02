@@ -135,6 +135,7 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
 }
 
 // Another function related to playing sound.
+// Play Sound at position?
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
 #if 0
@@ -168,8 +169,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800099EC.s")
 s32 func_80009AB4(u8 arg0) {
     s32 ret;
     s32 i;
-    UNK_8011A6D8 *levelHeader;
-    UNK_8011A6D8_04 *var_a2; //Probably a Vec3f
+    unk8011A6D8 *levelHeader;
+    unk8011A6D8_04 *var_a2; //Probably a Vec3f
     
     ret = 1;
     levelHeader = &D_8011A6D8[arg0];
@@ -181,7 +182,7 @@ s32 func_80009AB4(u8 arg0) {
 
     for (i = 0; i < levelHeader->unkB8; i++, var_a2++) {
         if ((var_a2->unk0 == -100000.0) || 
-            (var_a2->unk0 + 1 == -100000.0)|| 
+            (var_a2->unk0 + 1 == -100000.0) || 
             (var_a2->unk0 + 2 == -100000.0)) {
             ret = 0;
         }

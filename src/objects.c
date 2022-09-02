@@ -1559,8 +1559,8 @@ void func_80021400(s32 arg0) {
 
     if (i < D_8011AE78) {
         if (D_8011AE74[i]->unk64 != NULL) {
-            if (D_8011AE74[i]->unk64->obj80021400.obj64->unk2A < 0) {
-                D_8011AE74[i]->unk64->obj80021400.obj64->unk2A = 1;
+            if (D_8011AE74[i]->unk64->obj80021400_64.obj64->unk2A < 0) {
+                D_8011AE74[i]->unk64->obj80021400_64.obj64->unk2A = 1;
             }
         }
     }

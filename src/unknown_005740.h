@@ -17,5 +17,6 @@ extern s32 D_80119C50[2];
 void func_800050D0(Object* obj, u32 buttonsPressed, s32 carInput, s32 updateRate);        /* extern */
 
 f32 func_80007FA4(f32 arg0);
+void func_80006AC8(Object *);
 
 #endif

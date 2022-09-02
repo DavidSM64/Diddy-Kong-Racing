@@ -387,7 +387,7 @@ typedef struct TriangleBatchInfo {
 /* Size: 8 bytes */
 typedef struct ObjectModel_44 {
 /* 0x00 */ s32 *anim;
-/* 0x04 */ s32 unk4;
+/* 0x04 */ s32 unk4; // Number of frames in animation?
 } ObjectModel_44;
 
 typedef struct ObjectModel {
@@ -818,7 +818,7 @@ typedef struct Object_Racer {
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
-  /* 0x00C */ s32 unkC;
+  /* 0x00C */ f32 unkC;
   /* 0x010 */ s32 unk10;
   /* 0x014 */ s32 unk14;
   /* 0x018 */ s32 unk18;
@@ -1181,10 +1181,10 @@ typedef struct Object_64_80021400 {
   /* 0x2A */ s16 unk2A;
 } Object_64_80021400;
 
-typedef struct Object_80021400 {
+typedef struct Object_80021400_64 {
   /* 0x000 */ u8 pad[0x64];
   /* 0x064 */ struct Object_64_80021400 *obj64;
-} Object_80021400;
+} Object_80021400_64;
 
 typedef struct Object_64 {
     union {
@@ -1229,13 +1229,19 @@ typedef struct Object_64 {
         Object_Bridge_WhaleRamp bridge_whale_ramp;
         Object_80011AD0 obj80011AD0;
         Object_8001B7A8 obj8001B7A8;
-        Object_80021400 obj80021400;
+        Object_80021400_64 obj80021400_64;
     };
 } Object_64;
 
 typedef struct Object_68 {
-    u8 pad00[0x20];
-    s8 unk20;
+  /* 0x00 */ union {
+      ObjectModel *objModel;
+      TextureHeader *texHeader;
+  };
+  /* 0x04 */ u8 pad04[12];
+  /* 0x10 */ s16 unk10;
+  /* 0x14 */ u8 pad14[14];
+  /* 0x20 */ s8 unk20;
  } Object_68;
 
 /* Size: 0x20 bytes */

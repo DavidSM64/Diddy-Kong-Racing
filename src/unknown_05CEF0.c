@@ -46,7 +46,7 @@ void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005C364.s")
 
-void func_8005CA78(s32 arg0) {
+void func_8005CA78(u16 *arg0) {
     D_8011D5C8 = arg0;
 }
 
@@ -70,12 +70,12 @@ void func_8005CB04(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
 
-void func_8005D048(Object *object, unk8005D048 *arg1, s32 arg2) {
+void func_8005D048(Object *object, Object_Racer *arg1, s32 arg2) {
     Object *sp1C = get_object_struct(0);
-    arg1->unk1F7 = 0xFF;
+    arg1->transparency = 0xFF;
     if (!func_8001139C()) {
         if ((object->segment.unk30 + arg2) < sp1C->segment.unk30) {
-            arg1->unk1F7 = 0x40;
+            arg1->transparency = 0x40;
         }
     }
 }

@@ -15,22 +15,22 @@ typedef struct floatXYZVals {
 } floatXYZVals;
 
 /* Size: 0x0C / 12 bytes - Possibly just a Vec3f? */
-typedef struct UNK_8011A6D8_04 {
+typedef struct unk8011A6D8_04 {
   /* 0x00 */ f32 unk0;
   /* 0x04 */ f32 unk4;
   /* 0x08 */ f32 unk8;
-} UNK_8011A6D8_04;
+} unk8011A6D8_04;
 
 /* Size: 0xC0 / 192 bytes - Thought it was a LevelHeader, but that didn't match other usages */
-typedef struct UNK_8011A6D8 {
+typedef struct unk8011A6D8 {
   /* 0x00 */ u8 pad0[0x04];
-  /* 0x04 */ UNK_8011A6D8_04 *unk4;
+  /* 0x04 */ unk8011A6D8_04 *unk4;
   /* 0x05 */ u8 pad05[0xB0];
   /* 0xB8 */ s8 unkB8;
   /* 0xB9 */ u8 padB9[0x07];
-} UNK_8011A6D8;
+} unk8011A6D8;
 
-extern UNK_8011A6D8 D_8011A6D8[];
+extern unk8011A6D8 D_8011A6D8[];
 
 extern s32 *D_80119C44;
 void func_80008168(void);
