@@ -96,6 +96,10 @@ extern u8 D_800DD2F8[8];
 
 extern s16 gButtonMask;
 
+extern f32 D_80120D58[5];
+extern f32 D_80120D40[6];
+extern f32 D_80120D28[6];
+
 //TODO: Figure out where these functions live: unknown_070110?
     void func_8006F870(Matrix *, Matrix *); //unknown_070110
     void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110

@@ -118,9 +118,10 @@ u8 D_80120D15;
 s32 D_80120D18;
 s32 D_80120D1C;
 s32 D_80120D20[2];
-s32 D_80120D28[6];
-s32 D_80120D40[6];
-u16 perspNorm[12];
+f32 D_80120D28[6];
+f32 D_80120D40[6];
+f32 D_80120D58[5];
+u16 perspNorm;
 Matrix *D_80120D70[6];
 Mtx *D_80120D88[6];
 Matrix D_80120DA0[5];
@@ -211,7 +212,7 @@ UNUSED f32 get_current_camera_fov(void) {
 void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
-        guPerspectiveF(D_80120EE0, &perspNorm[10], camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+        guPerspectiveF(D_80120EE0, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
         func_8006F870(&D_80120EE0, &D_80120FE0);
     }
 }
@@ -220,7 +221,7 @@ void update_camera_fov(f32 camFieldOfView) {
  * Unused function that recalculates the perspective matrix.
  */
 UNUSED void calculate_camera_perspective(void) {
-    guPerspectiveF(D_80120EE0, &perspNorm[10], CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     func_8006F870(&D_80120EE0, &D_80120FE0);
 }
 
@@ -721,7 +722,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
 void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats) {
     s32 temp;
 
-    gSPPerspNormalize((*dlist)++, perspNorm[10]);
+    gSPPerspNormalize((*dlist)++, perspNorm);
 
     temp = D_80120CE4;
     if (D_80120D14 != 0) {
@@ -856,7 +857,12 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80068BF4.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
-GLOBAL_ASM("asm/non_matchings/camera/func_800699E4.s")
+
+UNUSED void func_800699E4(f32 *arg0, f32 *arg1, f32 *arg2) {
+    *arg0 = D_80120D28[D_80120D20[0]];
+    *arg1 = D_80120D40[D_80120D20[0]];
+    *arg2 = D_80120D58[D_80120D20[0]];
+}
 
 #ifdef NON_MATCHING
 void func_80069A40(Gfx **dlist) {
