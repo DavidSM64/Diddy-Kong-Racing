@@ -860,7 +860,38 @@ GLOBAL_ASM("asm/non_matchings/objects/gParticlePtrList_flush.s")
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+
+#ifdef NON_EQUIVALENT
+void func_80011134(Object *arg0, s32 arg1) {
+    s32 sp5C;
+    ObjectModel *temp_s3;
+    TriangleBatchInfo *temp_s4;
+    TriangleBatchInfo *var_s0;
+    TextureHeader *var_t5;
+    s16 temp_s5;
+    s32 var_s1;
+    u8 temp_v0;
+
+    temp_s3 = arg0->unk68[arg0->segment.unk3A]->objModel;
+    temp_s5 = temp_s3->unk50;
+    temp_s4 = temp_s3->batches;
+    for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
+        var_s0 = &temp_s4[var_s1];
+        if (var_s0->flags & 0x10000) { //Texture is animated
+            temp_v0 = var_s0->textureIndex;
+            if (temp_v0 != 0xFF) {
+                var_t5 = temp_s3->textures[temp_v0].texture;
+                sp5C = var_s0->unk7 << 6;
+                func_8007EF80(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
+                var_s0->unk7 = sp5C >> 6;
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
 
 void func_80011390(void) {
