@@ -138,7 +138,7 @@ void func_8000C460(void);
 void func_8000C604(void);
 s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
-s32 func_8000CC20(u32 *arg0);
+s32 func_8000CC20(Object *arg0);
 u32 func_8000E0B0(void);
 void func_8000E128(void);
 s8 func_8000E138();
@@ -238,6 +238,7 @@ f32 catmull_rom_interpolation(f32*, s32, f32);
 s32 func_80031F88(Object*, s32);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
+s32 func_8001B668(s32 arg0);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

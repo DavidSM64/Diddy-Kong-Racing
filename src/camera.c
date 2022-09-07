@@ -117,7 +117,8 @@ s8 D_80120D14;
 u8 D_80120D15;
 s32 D_80120D18;
 s32 D_80120D1C;
-s32 D_80120D20[2];
+s32 D_80120D20;
+s32 D_80120D24;
 f32 D_80120D28[6];
 f32 D_80120D40[6];
 f32 D_80120D58[5];
@@ -160,7 +161,7 @@ void func_80065EA0(void) {
     D_80120D14 = 0;
     D_80120CE4 = 0;
     D_80120D1C = 0;
-    D_80120D20[0] = 0;
+    D_80120D20 = 0;
     gNumberOfViewports = 0;
     D_80120D0C = 0;
     D_80120D18 = 0;
@@ -225,8 +226,7 @@ UNUSED void calculate_camera_perspective(void) {
     func_8006F870(&D_80120EE0, &D_80120FE0);
 }
 
-/* Unused? */
-Matrix *func_80066204(void) {
+UNUSED Matrix *func_80066204(void) {
     return &D_801210A0;
 }
 
@@ -859,20 +859,27 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
 
 UNUSED void func_800699E4(f32 *arg0, f32 *arg1, f32 *arg2) {
-    *arg0 = D_80120D28[D_80120D20[0]];
-    *arg1 = D_80120D40[D_80120D20[0]];
-    *arg2 = D_80120D58[D_80120D20[0]];
+    *arg0 = D_80120D28[D_80120D20];
+    *arg1 = D_80120D40[D_80120D20];
+    *arg2 = D_80120D58[D_80120D20];
 }
 
 #ifdef NON_MATCHING
+// This could be marked as matching if you uncomment the fake match line,
+// but I'm holding out hope for a proper match still.
 void func_80069A40(Gfx **dlist) {
-    D_80120D20[0]--;
+    D_80120D20--;
     D_80120D1C--;
+
+    // Fakematch - Uncomment this to match
+    //{ Gfx **newDlist = dlist; if (((newDlist && dlist) && newDlist) != 0){} }
+
     if (D_80120D1C > 0) {
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0(D_80120D88[D_80120D1C]), G_MTX_DKR_INDEX_1);
-        return;
     }
-    gDkrInsertMatrix((*dlist)++, G_MWO_MATRIX_XX_XY_I, 0);
+    else {
+        gDkrInsertMatrix((*dlist)++, G_MWO_MATRIX_XX_XY_I, 0);
+    }
 }
 #else
 GLOBAL_ASM("asm/non_matchings/camera/func_80069A40.s")

@@ -719,6 +719,8 @@ void func_8006BFC8(s8 *arg0) {
 
     phi_s0 = arg0[phi_s0];
 
+    // Check if CHEAT_ULTIMATE_AI is active
+    // This check works because a << 6 will but a 1 in the sign bit making it negative
     if ((get_filtered_cheats() << 6) < 0) {
         phi_s0 = 9;
     }

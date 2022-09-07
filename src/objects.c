@@ -183,7 +183,7 @@ s8 D_8011AE00;
 s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
-u32 *D_8011AE08[16];
+Object *D_8011AE08[16];
 s32 (*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8];  // Unknown number of entries.
 s32 D_8011AE50;
@@ -498,34 +498,37 @@ s32 normalise_time(s32 timer) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
 
+// Reset all values of D_8011AE08 to NULL
 void func_8000CBC0(void) {
     s32 i; //Required to be one line to match
-    for (i = 0; i < 16; i++) { D_8011AE08[i] = NULL; }
+    for (i = 0; i < ARRAY_COUNT(D_8011AE08); i++) { D_8011AE08[i] = NULL; }
 }
 
-void func_8000CBF0(Object *arg0, s32 arg1) {
-    if (D_8011AE08[arg1] == NULL) {
-        D_8011AE08[arg1] = arg0;
+// Set the object value for the given index if it's not already set
+void func_8000CBF0(Object *obj, s32 index) {
+    if (D_8011AE08[index] == NULL) {
+        D_8011AE08[index] = obj;
     } else {
-        if(D_8011AE08[arg1]){}
+        if(D_8011AE08[index]){}
     }
 }
 
-s32 func_8000CC20(u32 *arg0) {
+// Set the next available value in D_8011AE08, and return it's index value. -1 if it's not set.
+s32 func_8000CC20(Object *obj) {
     s32 i;
-    s32 phi_v1;
+    s32 NextFreeIndex;
 
-    phi_v1 = -1;
-    for (i = 0; i < 0x10; i++) {
-        if (D_8011AE08[i] == 0) {
-            phi_v1 = i;
-            i = 0x10;
+    NextFreeIndex = -1;
+    for (i = 0; i < ARRAY_COUNT(D_8011AE08); i++) {
+        if (D_8011AE08[i] == NULL) {
+            NextFreeIndex = i;
+            i = ARRAY_COUNT(D_8011AE08); // Why not just break?
         }
     }
-    if (phi_v1 != -1) {
-        D_8011AE08[phi_v1] = arg0;
+    if (NextFreeIndex != -1) {
+        D_8011AE08[NextFreeIndex] = obj;
     }
-    return phi_v1;
+    return NextFreeIndex;
 }
 
 // Has a jump table
@@ -1255,7 +1258,24 @@ s32 func_8001B650(void) {
     return D_800DC738 == 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B668.s")
+s32 func_8001B668(s32 arg0) {
+    s16 sp2E;
+    s16 sp2C;
+    s32 temp_v0;
+    s32 sp24;
+
+    sp24 = func_800599A8();
+    if ((func_8006BD88() != sp24) || (D_800DC728 != D_8011AE82)) {
+        temp_v0 = func_800599B8(arg0, func_8006BD88(), D_8011AE82, &sp2E, &sp2C);
+        if (temp_v0 == 0) {
+            D_800DC728 = D_8011AE82;
+            D_800DC72C = sp2E;
+            D_800DC724 = sp2C;
+        }
+        return temp_v0;
+    }
+    return func_800599B8(arg0, func_8006BD88(), D_8011AE82, NULL, NULL);
+}
 
 s32 func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
