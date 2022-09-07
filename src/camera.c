@@ -864,15 +864,12 @@ UNUSED void func_800699E4(f32 *arg0, f32 *arg1, f32 *arg2) {
     *arg2 = D_80120D58[D_80120D20];
 }
 
-#ifdef NON_MATCHING
-// This could be marked as matching if you uncomment the fake match line,
-// but I'm holding out hope for a proper match still.
 void func_80069A40(Gfx **dlist) {
     D_80120D20--;
     D_80120D1C--;
 
-    // Fakematch - Uncomment this to match
-    //{ Gfx **newDlist = dlist; if (((newDlist && dlist) && newDlist) != 0){} }
+    // Fakematch?
+    { s32 temp = D_80120D20; if ((temp && temp) != 0){} }
 
     if (D_80120D1C > 0) {
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0(D_80120D88[D_80120D1C]), G_MTX_DKR_INDEX_1);
@@ -881,9 +878,6 @@ void func_80069A40(Gfx **dlist) {
         gDkrInsertMatrix((*dlist)++, G_MWO_MATRIX_XX_XY_I, 0);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80069A40.s")
-#endif
 
 UNUSED void func_80069ACC(f32 arg0, f32 arg1, f32 arg2) {
     D_80120AC0[D_80120CE4].trans.x_position += arg0;
