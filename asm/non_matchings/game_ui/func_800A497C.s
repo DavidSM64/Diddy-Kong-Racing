@@ -184,8 +184,3 @@ glabel func_800A497C
 /* 0A582C 800A4C2C 03E00008 */  jr    $ra
 /* 0A5830 800A4C30 27BD0030 */   addiu $sp, $sp, 0x30
 
-/* 0A5834 800A4C34 AFA40000 */  sw    $a0, ($sp)
-/* 0A5838 800A4C38 AFA50004 */  sw    $a1, 4($sp)
-/* 0A583C 800A4C3C 03E00008 */  jr    $ra
-/* 0A5840 800A4C40 AFA60008 */   sw    $a2, 8($sp)
-

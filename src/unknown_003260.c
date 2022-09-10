@@ -53,7 +53,7 @@ s32 D_800DC6A4 = 0;       // Currently unknown, might be a different type.
 s32 D_800DC6A8 = 0;       // Currently unknown, might be a different type.
 s32 D_800DC6AC = 0;       // Currently unknown, might be a different type.
 
-s32 D_800DC6B0 = 0; // Currently unknown, might be a different type.
+ALEventQueue *D_800DC6B0 = NULL;
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
 unk800DC6BC_40 *D_800DC6B8 = NULL;
 unk800DC6BC *gAlSndPlayer = &D_80119BD0;
@@ -424,6 +424,14 @@ void func_8000488C(u8 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
 
+UNUSED void func_80004998(void) {
+    func_800048D8(1);
+}
+
+UNUSED void func_800049B8(void) {
+    func_800048D8(17);
+}
+
 void func_800049D8(void) {
     func_800048D8(3);
 }
@@ -442,4 +450,29 @@ u16 func_80004A3C(u8 arg0) {
     return D_80119C28[arg0];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004A60.s")
+//TODO: The structs used here are almost definitely wrong, but they do match,
+//      so it can at least show the pattern we're looking for.
+//arg0 = sound channel?
+//arg1 = volume?
+void func_80004A60(u8 arg0, u16 arg1) {
+    OSIntMask mask;
+    ALEventQueue *queue;
+    UNUSED s32 pad;
+    ALEvent evt;
+
+    mask = osSetIntMask(1);
+    queue = D_800DC6B0;
+    D_80119C28[arg0] = arg1;
+
+    while (queue != NULL) {
+        //This is almost definitely the wrong struct list, but it matches so I'm not going to complain
+        if ((((ALInstrument *)queue->allocList.next->prev)->priority & 0x3F) == arg0) {
+            evt.type = 0x800;
+            evt.msg.spseq.seq = (void *)queue;
+            alEvtqPostEvent(&gAlSndPlayer->evtq, &evt, 0);
+        }
+        queue = (ALEventQueue *) queue->freeList.next;
+    }
+
+    osSetIntMask(mask);
+}

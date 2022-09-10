@@ -190,26 +190,15 @@ typedef struct unk800E153C {
     u32 unk4; // Flags?
 } unk800E153C;
 
-/* Size: 0x10 Bytes */
-typedef struct unk800860A8 {
-    s8 unk0; //Probably SIDeviceStatus
-    u8 pad1[0x5];
-    s8 controllerIndex;
-    u8 pad7[0x5];
-    u32 cPakBytesFree;
-} unk800860A8;
-
 /* Size: 0x10 bytes */
 typedef struct unk800861C8 {
     u8 unk0;
     u8 unk1;
     u8 unk2;
-    u8 pad3;
-    u16 pad4;
-    s8  unk6;
-    s8  pad7;
-    u32 pad8;
-    u32 unkC; // Game Data File Size
+    u8 pad3[0x3];
+    u8 controllerIndex;
+    u8 pad7[0x5];
+    u32 fileSize; // Game Data File Size
 } unk800861C8;
 
 /* Unknown size */
@@ -595,7 +584,7 @@ extern s32 gViewingCreditsFromCheat;
 
 extern MenuElement D_800E1B50[9];
 
-//extern u32 dMenuHudSettings[24];
+extern Gfx dMenuHudSettings[6];
 
 extern s8 D_800E1CD0[32];
 
@@ -649,6 +638,29 @@ extern u64 sEepromSettings;
 extern char *sInsertControllerPakMenuText[3];
 extern char *sNoControllerPakMenuText[5];
 extern char *sInsertRumblePakMenuText[4];
+extern s32 *D_80126C2C;
+extern Settings *D_80126530[4];
+
+extern DrawTexture D_800DFC10[2];
+extern DrawTexture D_800DFC20[2];
+extern DrawTexture D_800DFC30[2];
+extern DrawTexture D_800DFC40[2];
+extern DrawTexture D_800DFC50[2];
+extern DrawTexture D_800DFC60[2];
+extern TextureHeader *D_8012665C;
+extern TextureHeader *D_80126660;
+extern TextureHeader *D_80126664;
+extern Gfx *sMenuCurrDisplayList;
+extern Mtx *sMenuCurrHudMat;
+extern const char D_800E8208[];
+extern s32 D_801263BC;
+extern s32 D_801263E0;
+extern s32 D_80126A00;
+extern unk800861C8 *D_80126A04;
+extern s32 D_80126A08;
+extern unk800861C8 *D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
+extern f32 D_80126BDC;
+extern f32 D_80126BEC;
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -672,7 +684,7 @@ void unload_big_font_1(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
 void menu_save_options_init(void);
-s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800860A8 *arg2, s32 *arg3, s32 fileSize, s32 arg5);
+s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, s32 arg5);
 void func_800861C8(unk800861C8 *arg0, s32 *arg1);
 s32 func_800874D0(s32 buttonsPressed, s32 arg1);
 s32 func_800875E4(s32 buttonsPressed, s32 arg1);
@@ -793,6 +805,10 @@ s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
 PakError check_for_controller_pak_errors(void);
+void func_80093A40(void);
+s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
+s32 menu_track_select_loop(s32 updateRate);
+s32 func_800867D4(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -807,7 +823,6 @@ void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void func_8008C698(s32 arg0);
 void render_file_select_menu(s32 arg0);
-s32 menu_track_select_loop(s32 updateRate);
 void func_8008FF1C(s32 updateRate);
 void func_800904E8(s32 updateRate);
 void func_80090918(s32 updateRate);
@@ -844,5 +859,7 @@ void func_80099E8C(s32 updateRate);
 void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
+void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
+void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 
 #endif

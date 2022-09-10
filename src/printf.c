@@ -74,8 +74,15 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3240.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B34B0.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
+GLOBAL_ASM("asm/non_matchings/printf/func_800B3678.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3740.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3E64.s")
+GLOBAL_ASM("asm/non_matchings/printf/func_800B4488.s")
+GLOBAL_ASM("asm/non_matchings/printf/func_800B44D4.s")
+GLOBAL_ASM("asm/non_matchings/printf/func_800B452C.s")
+GLOBAL_ASM("asm/non_matchings/printf/func_800B4578.s")
+GLOBAL_ASM("asm/non_matchings/printf/func_800B45C4.s")
+GLOBAL_ASM("asm/non_matchings/printf/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4668.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B46BC.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4940.s")
@@ -121,6 +128,11 @@ GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
+
+UNUSED void func_800B61E0(void) {
+    D_801285D8 = &D_80127CD8;
+    func_800B6EE0();
+}
 
 /**
  * Set the colour of the current debug text.

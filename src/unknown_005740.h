@@ -4,7 +4,7 @@
 #include "types.h"
 #include "structs.h"
 
-extern s8 D_800DC6D0;
+extern u8 D_800DC6D0;
 extern s32 D_800DC6D4;
 extern s32 D_800DC6D8;
 extern s32 D_800DC6DC;

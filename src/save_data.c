@@ -705,6 +705,7 @@ void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 node
 }
 
 //Seems to only be called when used as an argument for func_800860A8. Effectively just returns 0x6700
+//get_ghost_data_file_size()?
 s32 func_80074B1C(void) {
     //func_80074EB8 Makes extensive use out of 0x1100, and even does a * 6 to it.
     //func_80075000 Uses 0x1100 once as well.

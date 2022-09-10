@@ -498,11 +498,8 @@ s32 normalise_time(s32 timer) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
 
 void func_8000CBC0(void) {
-    s32 i = 0;
-    while (i < 16) { // For some odd reason, using a for loop here makes this not match.
-        D_8011AE08[i] = NULL;
-        i++;
-    }
+    s32 i; //Required to be one line to match
+    for (i = 0; i < 16; i++) { D_8011AE08[i] = NULL; }
 }
 
 void func_8000CBF0(Object *arg0, s32 arg1) {

@@ -310,8 +310,12 @@ void free_slot_containing_address(u8 *address) {
     }
 }
 
-// Unused?
-void func_80071314(void) {
+#else
+GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
+#endif
+
+#ifdef NON_EQUIVALENT
+UNUSED void func_80071314(void) {
     s32 *sp40;
     MemoryPool *pool;
     MemoryPoolSlot *slot;
@@ -337,9 +341,8 @@ void func_80071314(void) {
     }
     func_8006F53C(sp40);
 }
-
 #else
-GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
+GLOBAL_ASM("asm/non_matchings/memory/func_80071314.s")
 #endif
 
 void func_80071440(void *dataAddress) {
