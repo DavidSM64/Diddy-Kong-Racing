@@ -755,27 +755,29 @@ s8 func_8006C19C(void) {
     return D_800DD318;
 }
 
-void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    D_801211C8[D_800DD328++] = arg0;
-    D_801211C8[D_800DD328++] = arg1;
-    D_801211C8[D_800DD328++] = arg2;
-    D_801211C8[D_800DD328++] = arg3;
+// Push a stack onto D_801211C8
+void func_8006C1AC(s32 levelId, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
+    D_801211C8[D_800DD328++] = levelId;
+    D_801211C8[D_800DD328++] = entranceId;
+    D_801211C8[D_800DD328++] = vehicleId;
+    D_801211C8[D_800DD328++] = cutsceneId;
 }
 
-void func_8006C22C(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
+// Pop a stack from D_801211C8
+void func_8006C22C(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId) {
     s16 temp_v1;
 
     D_800DD328--;
-    *arg3 = D_801211C8[D_800DD328];
+    *cutsceneId = D_801211C8[D_800DD328];
     D_800DD328--;
     temp_v1 = D_801211C8[D_800DD328];
     D_800DD328--;
-    *arg1 = D_801211C8[D_800DD328];
+    *entranceId = D_801211C8[D_800DD328];
     D_800DD328--;
-    *arg0 = D_801211C8[D_800DD328];
+    *levelId = D_801211C8[D_800DD328];
 
     if (temp_v1 != -1) {
-        *arg2 = temp_v1;
+        *vehicleId = temp_v1;
     }
 
     D_800DD32C = 1;
@@ -1777,8 +1779,7 @@ void func_8006E994(Settings *settings) {
     settings->wizpigAmulet = 0;
 }
 
-// Unused?
-void func_8006EA58(void) {
+UNUSED void func_8006EA58(void) {
     func_8006E770(gSettingsPtr, 3);
     func_8006E994(gSettingsPtr);
 }

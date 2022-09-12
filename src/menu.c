@@ -5374,7 +5374,7 @@ s32 menu_5_loop(s32 updateRate) {
     sp20 = FALSE;
     if (!is_time_trial_enabled()) {
         if (sp1C == 1) {
-            if (settings->worldId == 5 || (settings->bosses & (1 << settings->worldId))) {
+            if (settings->worldId == WORLD_FUTURE_FUN_LAND || (settings->bosses & (1 << settings->worldId))) {
                 sp20 = TRUE;
             }
         }
@@ -5999,7 +5999,7 @@ void menu_trophy_race_round_init(void) {
     s8 *levelIds;
 
     settings = get_settings();
-    levelIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1A); // Returns level ids array.
+    levelIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS); // Returns level ids array.
 
     if (gTrophyRaceRound == 0) {
         for (i = 0; i < 8; i++) {
@@ -6040,7 +6040,7 @@ void draw_trophy_race_text(UNUSED s32 updateRate) {
     u8 *levelName;
     s8 *levelIds;
 
-    levelIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1A);
+    levelIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
     if (osTvType == TV_TYPE_PAL) {
         yPos = 18;
     } else {
@@ -6067,7 +6067,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
     s16 temp_a2;
     s32 temp;
 
-    trackMenuIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1A); //tracks_menu_ids
+    trackMenuIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS); //tracks_menu_ids
     if (D_800E0980 != 0) {
         D_800E0980 -= updateRate;
         if (D_800E0980 <= 0) {
