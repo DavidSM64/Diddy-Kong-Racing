@@ -189,6 +189,22 @@ extern s16 D_800DCDD4[4];
 extern ObjectTransform D_8011D510;
 
 extern s32 gCurrentStickX;
+extern s32 gRaceStartTimer;
+extern s32 gCurrentStickY;
+extern f32 gCurrentRacerWeightStat;
+extern u32 gCurrentRacerInput;
+extern f32 gCurrentRacerHandlingStat;
+extern f32 *gCurrentRacerMiscAssetPtr;
+extern s32 gCurrentPlayerIndex;
+extern u32 gCurrentButtonsPressed;
+extern u32 gCurrentButtonsReleased;
+extern s8 D_8011D5AE;
+extern s8 D_8011D584;
+extern f32 D_8011D574;
+extern f32 *D_8011D568;
+extern f32 D_8011D544;
+
+extern struct TempStruct8 **D_8011D5B0;
 
 s32 get_random_number_from_range(s32, s32); //?
 void func_8006FC30(Matrix, ObjectTransform *); // asm func
@@ -276,5 +292,6 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
 Object* func_8005698C(Object_Racer* racer, Object* obj, f32* arg2);
+void func_8005B818(Object *arg0, Object_Racer *arg1, s32 arg2, f32 arg3);
 
 #endif

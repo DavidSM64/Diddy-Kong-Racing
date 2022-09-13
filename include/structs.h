@@ -528,7 +528,9 @@ typedef struct ObjectHeader {
              s8 unk58;
              u8 pad59;
   /* 0x5A */ s8 unk5A;
-             u8 pad5B[0x5];
+             u8 pad5B[0x2];
+  /* 0x5D */ u8 unk5D; //Misc Asset index?
+  /* 0x5E */ u8 pad5E[0x2];
   /* 0x60 */ char internalName[16];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 unk71;
@@ -844,9 +846,9 @@ typedef struct Object_Racer {
   /* 0x05C */ f32 prev_x_position;
   /* 0x060 */ f32 prev_y_position;
   /* 0x064 */ f32 prev_z_position;
-  /* 0x068 */ f32 unk68;
-  /* 0x06C */ f32 unk6C;
-  /* 0x070 */ f32 unk70;
+  /* 0x068 */ f32 unk68; // xPos
+  /* 0x06C */ f32 unk6C; // yPos
+  /* 0x070 */ f32 unk70; // zPos
   /* 0x074 */ f32 unk74;
   /* 0x078 */ f32 carBobX;
   /* 0x07C */ f32 carBobY;
@@ -910,7 +912,7 @@ typedef struct Object_Racer {
   /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 unk175;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ s32 *unk178;
+  /* 0x178 */ u8 *unk178;
   /* 0x17C */ s32 shieldSoundMask;
   /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
   /* 0x184 */ s8 unk184;

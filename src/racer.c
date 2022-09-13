@@ -155,8 +155,8 @@ ObjectCamera *gCameraObject;
 UNUSED s32 D_8011D50C;
 ObjectTransform D_8011D510;
 u32 gCurrentRacerInput;
-s32 gCurrentButtonsPressed;
-s32 gCurrentButtonsReleased;
+u32 gCurrentButtonsPressed;
+u32 gCurrentButtonsReleased;
 s32 gCurrentStickX;
 s32 gCurrentStickY;
 s32 D_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
@@ -3629,7 +3629,338 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+// WIP
+void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
+    s32 renderContext; //sp94
+    s32 countOfObjects; //sp90
+    f32 xPos; //sp8C
+    f32 yPos; //sp88
+    f32 zPos; //sp84
+    f32 sp80;
+    LevelHeader *levelHeader; //sp70
+    Object **objects;
+    Object *playerOneObj;
+    Object *playerTwoObj;
+    f32 temp_f0;
+    f32 temp_f2;
+    f32 var_f10;
+    f32 var_f2;
+    f64 temp_f12;
+    s32 temp_v0_10;
+    s32 temp_v0_8;
+    s32 var_t2;
+    s32 var_t2_3;
+    unknown8011AECC *temp_v0_9;
+
+    gCurrentPlayerIndex = -1;
+    renderContext = get_render_context();
+    levelHeader = get_current_level_header();
+    if (racer->unk1F6 > 0) {
+        racer->unk1F6 -= updateRate;
+    } else {
+        racer->unk1F6 = 0;
+    }
+    if (gRaceStartTimer != 0) {
+        racer->unk1C6 = get_random_number_from_range(-60, 60) + 120;
+    }
+    if (racer->unk18C > 0) {
+        racer->unk18C -= updateRate;
+    } else {
+        racer->unk18C = 0;
+    }
+    gCurrentRacerMiscAssetPtr = get_misc_asset(MISC_RACER_WEIGHT);
+    gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[racer->characterId] * 0.45;
+    if (racer->unk204 > 0) {
+        gCurrentRacerWeightStat = -0.02f;
+    }
+    gCurrentRacerMiscAssetPtr = get_misc_asset(MISC_RACER_HANDLING);
+    gCurrentRacerHandlingStat = gCurrentRacerMiscAssetPtr[racer->characterId];
+    gCurrentRacerMiscAssetPtr = get_misc_asset(MISC_ASSET_UNK0B);
+    D_8011D574 = gCurrentRacerMiscAssetPtr[racer->characterId];
+    xPos = obj->segment.trans.x_position;
+    yPos = obj->segment.trans.y_position;
+    zPos = obj->segment.trans.z_position;
+    if (racer->unk1B2 > 0) {
+        racer->unk1B2 -= updateRate;
+        if (racer->unk1B2 < 0) {
+            racer->unk1B2 = 0;
+        }
+    }
+    racer->unk1E7++;
+    
+    if ((func_8002341C() == 0) && (func_80023568() == 0)) {
+        if (racer->unk1D6 != 4) {
+            if (!(D_8011D544 > 120.0f) && (gRaceStartTimer == 0)) {
+                if (levelHeader->race_type & RACETYPE_CHALLENGE_BATTLE) {
+                    goto block_19;
+                }
+            } else {
+                goto block_20;
+            }
+        } else {
+block_19:
+            racer->unk201 = 30;
+        }
+    } else {
+block_20:
+        racer->unk201 = 30;
+    }
+
+    var_f2 = 1000000;
+    if (racer->unk201 == 0) {
+        objects = get_object_struct_array(&countOfObjects);
+        playerTwoObj = NULL;
+        playerOneObj = NULL;
+        for (var_t2 = 0; var_t2 < countOfObjects; var_t2++) {
+            if (objects[var_t2]->unk64->racer.playerIndex == PLAYER_ONE) {
+                playerOneObj = objects[var_t2];
+            }
+            if (objects[var_t2]->unk64->racer.playerIndex == PLAYER_TWO) {
+                 playerTwoObj = objects[var_t2];
+            }
+        }
+        if (playerOneObj != NULL) {
+            temp_f2 = playerOneObj->segment.trans.x_position - obj->segment.trans.x_position;
+            temp_f0 = playerOneObj->segment.trans.z_position - obj->segment.trans.z_position;
+            var_f2 = (temp_f2 * temp_f2) + (temp_f0 * temp_f0);
+        }
+        if ((playerTwoObj != NULL) && (var_f2 >= 160000.0)) {
+            temp_f2 = playerTwoObj->segment.trans.x_position - obj->segment.trans.x_position;
+            temp_f0 = playerTwoObj->segment.trans.z_position - obj->segment.trans.z_position;
+            var_f2 = (temp_f2 * temp_f2) + (temp_f0 * temp_f0);
+        }
+    }
+    if (racer->unk204 > 0) {
+        racer->unk204 -= updateRate;
+        racer->velocity *= 0.8f;
+    }
+    if (racer->unk206 > 0) {
+        racer->unk18A = racer->unk206;
+        racer->unk206 -= updateRate;
+    }
+    if ((racer->unk201 == 0) && (var_f2 < 160000.0)) {
+        racer->unk201 = 30;
+    }
+    if (racer->unk201 != 0) {
+        func_80044170(obj, racer, updateRate);
+        if (!(gCurrentRacerInput & A_BUTTON)) {
+            racer->throttleReleased = 1;
+        }
+        if (racer->unk1FE == 3) {
+            // var_f10 = racer->unk1FF;
+            // if (racer->unk1FF < 0) {
+            //     var_f10 += 4294967296.0f;
+            // }
+            //This is producing a multiply instead of a divide for some reason
+            gCurrentRacerWeightStat *= (racer->unk1FF / 256.0f);
+        }
+        if (racer->unk1FE == 1) {
+            gCurrentRacerWeightStat -= ((gCurrentRacerWeightStat * racer->unk1FF) / 128);
+            if (racer->unk204 > 0) {
+                gCurrentRacerWeightStat = -gCurrentRacerWeightStat;
+            }
+            gCurrentStickY = 60;
+        }
+        if (racer->unk1FE == 2) {
+            racer->unk84 = (racer->unk84 + (((cosine_s(racer->unk1FF << 8) * 4) - racer->unk84) * 0.0625 * updateRateF));
+            racer->unk88 = (racer->unk88 + (((sine_s  (racer->unk1FF << 8) * 4) - racer->unk88) * 0.0625 * updateRateF));
+        } else {
+            racer->unk84 = (racer->unk84 - (racer->unk84 * 0.0625 * updateRateF));
+            racer->unk88 = (racer->unk88 - (racer->unk88 * 0.0625 * updateRateF));
+        }
+        gCurrentRacerHandlingStat = 1;
+        gCurrentRacerMiscAssetPtr = get_misc_asset(MISC_ASSET_UNK21);
+        D_8011D568 = get_misc_asset(obj->segment.header->unk5D);
+        if ((obj->segment.y_velocity < 4.0) && ((racer->unk1E2 >= 3) || (racer->buoyancy != 0.0))) {
+            racer->unk1F1 = 0;
+        }
+        if (racer->unk175 != 0) {
+            func_80056E2C(obj, racer, updateRate);
+        }
+        if (racer->unk1D6 != 1) {
+            racer->unk1E5 = 0;
+            racer->buoyancy = 0;
+            D_8011D5AE = 0;
+        } else {
+            D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &D_8011D5B0);
+        }
+        func_8002ACC8(0);
+        if ((racer->unk148 != NULL) || (gRaceStartTimer != 0) || (racer->unk204 > 0)) {
+            gCurrentStickX = 0;
+            gCurrentStickY = 0;
+            gCurrentRacerInput = 0;
+            gCurrentButtonsReleased = 0;
+            gCurrentButtonsPressed = 0;
+        }
+        switch (racer->unk1D6) {
+        case 0:
+            func_8004F7F4(updateRate, updateRateF, obj, racer);
+            break;
+        case 4:
+            func_8004CC20(updateRate, updateRateF, obj, racer);
+            break;
+        case 1:
+            func_80046524(updateRate, updateRateF, obj, racer);
+            break;
+        case 2:
+            func_80049794(updateRate, updateRateF, obj, racer);
+            break;
+        case 3:
+        case 10:
+            func_8004D95C(updateRate, updateRateF, obj, racer);
+            break;
+        case 5:
+            func_8005C364(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 6:
+            func_8005D0D0(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 7:
+        case 8:
+            func_8005D820(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer);
+            break;
+        case 11:
+            func_8005E4C0(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 12:
+            func_8005EA90(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        case 13:
+            func_8005F310(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            break;
+        }
+        if (renderContext != DRAW_MENU) {
+            func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+        }
+        sp80 = racer->checkpoint_distance;
+        countOfObjects = racer->unk192;
+        temp_v0_8 = func_800185E4(racer->unk192, obj, xPos, yPos, zPos, &racer->checkpoint_distance, &racer->unk1C8);
+        if (temp_v0_8 == -100) {
+            func_8005C270(racer);
+        }
+        temp_v0_9 = func_8001BA1C(racer->unk192, racer->unk1C8);
+        if (temp_v0_9->unk36[racer->unk1CA] == 5) {
+            racer->unk201 = 30;
+            if (racer->unk1E5 != 0) {
+                racer->unk1C8 = 1;
+            }
+        }
+        if (temp_v0_9->unk36[racer->unk1CA] == 6) {
+            racer->unk193 = levelHeader->laps + 1;
+        }
+        if (temp_v0_9->unk36[racer->unk1CA] == 4) {
+            if (racer->velocity < -4.0) {
+                racer->velocity *= 0.9;
+            }
+        }
+        if (temp_v0_8 == 0) {
+            if (temp_v0_9->unk36[racer->unk1CA] == 2) {
+                racer->unk1C8 = 1;
+            }
+            temp_v0_10 = func_8001BA64();
+            racer->unk192++;
+            if (racer->unk192 >= temp_v0_10) {
+                racer->unk192 = 0;
+                if (racer->unk190 > 0) {
+                    if (racer->unk193 < 120) {
+                        racer->unk193++;
+                    }
+                }
+            }
+            if (racer->unk190 < ((levelHeader->laps + 3) * temp_v0_10)) {
+                racer->unk190++;
+            }
+            racer->unk1A8 = 10000;
+        } else {
+            if ((racer->playerIndex == -1) && (sp80 < racer->checkpoint_distance)) {
+                racer->checkpoint_distance = sp80;
+            }
+            racer->unk1A8 = temp_v0_8;
+        }
+        racer->unk68 = obj->segment.trans.x_position;
+        racer->unk6C = obj->segment.trans.y_position;
+        racer->unk70 = obj->segment.trans.z_position;
+    } else {
+        func_8005B818(obj, racer, updateRate, updateRateF);
+        if (renderContext != DRAW_MENU) {
+            func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+        }
+    }
+    if (racer->unk175 == 0) {
+        if (racer->unk178 != NULL) {
+            func_8000488C(racer->unk178);
+            racer->unk178 = NULL;
+        }
+    }
+    func_80018CE0(obj, xPos, yPos, zPos, updateRate);
+    if (racer->unk188 > 0) {
+        func_800576E0(obj, racer, racer->unk188);
+    }
+    if (racer->unk148 != NULL) {
+        racer->unk148 = NULL;
+        racer->velocity = 0.0f;
+        racer->lateral_velocity = 0.0f;
+    }
+    if (racer->stretch_height <= racer->stretch_height_cap) {
+        var_f2 = 0.02f;
+    } else {
+        var_f2 = -0.02f;
+    }
+    racer->stretch_height = (racer->stretch_height + ((((racer->stretch_height_cap - racer->stretch_height) * 0.125) + var_f2) * updateRateF));
+    if (((var_f2 < 0.0f) && (racer->stretch_height <= racer->stretch_height_cap)) || ((var_f2 > 0.0f) && (racer->stretch_height_cap <= racer->stretch_height))) {
+        racer->stretch_height = racer->stretch_height_cap;
+        racer->stretch_height_cap = 1.0f;
+    }
+    var_t2_3 = ((racer->unk16C - racer->unk16A) * updateRate) >> 3;
+    CLAMP(var_t2_3, -0x800, 0x800)
+    if (D_800DCB54 != 0) {
+        racer->unk16A += D_800DCB54;
+    } else {
+        racer->unk16A += var_t2_3;
+    }
+    if (racer->shieldTimer > 0) {
+        if (racer->shieldTimer >= 61) {
+            if (racer->shieldSoundMask != 0) {
+                update_spatial_audio_position(racer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            } else if (racer->unk118 != 0) {
+                func_80009558(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &racer->shieldSoundMask);
+            }
+        } else {
+            if (racer->shieldSoundMask != 0) {
+                func_800096F8(racer->shieldSoundMask);
+                racer->shieldSoundMask = 0;
+            }
+        }
+        racer->shieldTimer -= updateRate;
+        if (racer->shieldTimer <= 0) {
+            racer->shieldType = 0;
+        }
+    }
+    if (racer->soundMask != 0) {
+        update_spatial_audio_position(racer->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+    }
+    D_8011D584 = 0;
+    if ((racer->unk150 != NULL) && (gRaceStartTimer == 0)) {
+        racer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
+        racer->unk150->segment.trans.y_position = get_misc_asset(MISC_ASSET_UNK00)[racer->characterId] + obj->segment.trans.y_position;
+        racer->unk150->segment.trans.z_position = obj->segment.trans.z_position;
+        racer->unk150->segment.trans.scale = obj->segment.unk30 / 265.0f;
+        if (obj->segment.unk30 < 1500.0) {
+            racer->unk150->segment.trans.unk6 |= 0x4000;
+        }
+        if (racer->unk150->segment.trans.scale < 1.0) {
+            racer->unk150->segment.trans.scale = 1.0f;
+        }
+        racer->unk150 = NULL;
+    }
+    racer->unk1FE = 0xFF;
+    func_8004F77C((unk8004F77C *) racer);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/func_8005A6F0.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 
 // This gets called if an anti-piracy checksum fails in func_8005F850.
