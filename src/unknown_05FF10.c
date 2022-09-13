@@ -43,7 +43,7 @@ s8 D_8011D611;
 
 #ifdef NON_EQUIVALENT
 // Seems to be mostly regalloc and stack differences
-void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, s32 *input, u32 *buttonsPressed, s32 *startTimer) {
+void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 sp3E;
     s16 sp3C;
     s16 sp3A;

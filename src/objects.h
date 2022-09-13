@@ -261,5 +261,6 @@ void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);  
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
+void func_800113CC(Object *, s32, s32, s32, s32);
 
 #endif

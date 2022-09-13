@@ -154,7 +154,7 @@ s8 D_8011D504;
 ObjectCamera *gCameraObject;
 UNUSED s32 D_8011D50C;
 ObjectTransform D_8011D510;
-s32 gCurrentRacerInput;
+u32 gCurrentRacerInput;
 s32 gCurrentButtonsPressed;
 s32 gCurrentButtonsReleased;
 s32 gCurrentStickX;

@@ -6,6 +6,6 @@
 
 extern s16 D_800DCE60[14];
 
-void func_8005EA90(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, s32 *input, u32 *buttonsPressed, s32 *startTimer); /* extern */
+void func_8005EA90(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer); /* extern */
 
 #endif
