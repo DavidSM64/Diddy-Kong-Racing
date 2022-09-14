@@ -97,11 +97,6 @@ typedef struct ObjectCamera {
   /* 0x003F */ u8 unk3F;
 } ObjectCamera;
 
-typedef struct unk8004F77C {
-    u8 unk0[0x20A];
-    u8 flags;
-} unk8004F77C;
-
 /* Unknown Size */
 typedef struct unk8005234C {
     u8 unk0[0x16C];
@@ -214,7 +209,7 @@ s32 func_80044450(s32 cap);
 void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer);
 void func_8004C140(Object *obj, Object_Racer *racer);
 void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
-void func_8004F77C(unk8004F77C *arg0);
+void func_8004F77C(Object_Racer *arg0);
 s32 func_80052188(void);
 void func_800521B8(s32 arg0);
 void func_8005234C(Object_Racer *racer);
