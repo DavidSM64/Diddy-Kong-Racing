@@ -1077,7 +1077,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 void render_object(Object *this) {
     func_80012F94(this);
     if (this->segment.trans.unk6 & 0x8000) {
-        func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
+        func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 0x8000);
     } else {
         if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
@@ -1624,7 +1624,24 @@ s8 func_800214C4(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_800214E4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
 GLOBAL_ASM("asm/non_matchings/objects/catmull_rom_interpolation.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8002263C.s")
+
+f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3) {
+    f32 ret;
+    f32 temp3;
+    f32 temp2;
+    f32 temp;
+
+    temp = ((((-0.5) * arg0[arg1]) + (1.5 * arg0[arg1 + 1])) + ((-1.5) * arg0[arg1 + 2])) + (arg0[arg1 + 3] * 0.5);
+    temp2 = ((arg0[arg1] + ((-2.5) * arg0[arg1 + 1])) + (2.0 * arg0[arg1 + 2])) + (arg0[arg1 + 3] * (-0.5));
+    temp3 = arg0[arg1];
+    temp3 = ((arg0[arg1 + 2] * 0.5) + (-0.5 * temp3));
+
+    ret = (f64)arg0[arg1 + 1];
+    *arg3 = (((temp * 3 * arg2) + (2 * temp2)) * arg2) + temp3;
+    ret = (((((temp * arg2) + temp2)  * arg2) + temp3) * arg2) + ret;
+    return ret;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8002277C.s")
 
 f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {

@@ -266,6 +266,8 @@ void racer_enter_door(Object_Racer *racer, s32 updateRate);
 void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
 void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
+void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
+void func_80042D20(Object *, Object_Racer *, s32);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
@@ -276,7 +278,6 @@ void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8* surface);
 void func_80059BF0(Object* obj, s32 updateRate);
-void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);  /* extern */
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */

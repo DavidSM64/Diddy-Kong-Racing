@@ -280,8 +280,8 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
     for (i = 0; settings->courseId != miscAsset67[i]; i += 2) {
         if ((miscAsset67CourseByte && miscAsset67CourseByte) && miscAsset67CourseByte) {}
     }
-    racerUnk1AC = racer->unk1AC;
     miscAsset67CourseByte = miscAsset67[i + 1];
+    racerUnk1AC = racer->unk1AC;
     if (arg1_ret == 1) {
         if (racerUnk1AC == 1) {
             play_music(SEQUENCE_BATTLE_VICTORY);
@@ -317,7 +317,8 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             } else {
                 func_8006F140(3);
             }
-            *arg1 = arg1_ret + 1;
+            arg1_ret++;
+            *arg1 = arg1_ret;
             return;
         }
         if (settings->courseFlagsPtr[settings->courseId] & 2) {
@@ -330,7 +331,8 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     func_8006F398();
                 }
             }
-            *arg1 = arg1_ret + 1;
+            arg1_ret++;
+            *arg1 = arg1_ret;
             return;
         }
         if (racerUnk1AC == 1) {
