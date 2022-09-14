@@ -6,11 +6,22 @@
 #include "types.h"
 #include "enums.h"
 
+// Stolen from PD
+// This hacky structure allows coords to be accessed using
+// coord->x, coord->y and coord->z, but also as
+// coord->f[0], coord->f[1] and coord->f[2].
+// In some places code only matches when using the float array.
 typedef struct Vec3f {
-    f32 x;
-    f32 y;
-    f32 z;
+	union {
+		struct {
+			f32 x;
+			f32 y;
+			f32 z;
+		};
+		f32 f[3];
+	};
 } Vec3f;
+
 
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
@@ -874,10 +885,10 @@ typedef struct Object_Racer {
   /* 0x0CC */ f32 unkCC;
   /* 0x0D0 */ f32 unkD0;
   /* 0x0D4 */ s32 unkD4;
-  /* 0x0D8 */ f32 unkD8[3];
-  /* 0x0E4 */ f32 unkE4[3];
-  /* 0x0F0 */ f32 unkF0[3];
-  /* 0x0FC */ f32 unkFC[3];
+  /* 0x0D8 */ Vec3f unkD8;
+  /* 0x0E4 */ Vec3f unkE4;
+  /* 0x0F0 */ Vec3f unkF0;
+  /* 0x0FC */ Vec3f unkFC;
   /* 0x108 */ struct Object *unk108;
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;

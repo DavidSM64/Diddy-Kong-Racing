@@ -276,7 +276,7 @@ void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
-s32 func_80017248(void*, s32, s32*, void*, f32*, s32*, s8* surface);
+s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, s32*, s8* surface);
 void func_80059BF0(Object* obj, s32 updateRate);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
@@ -288,6 +288,6 @@ void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
 Object* func_8005698C(Object_Racer* racer, Object* obj, f32* arg2);
-void func_8005B818(Object *arg0, Object_Racer *arg1, s32 arg2, f32 arg3);
+void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
 
 #endif

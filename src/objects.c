@@ -1631,8 +1631,8 @@ f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3) {
     f32 temp2;
     f32 temp;
 
-    temp = ((((-0.5) * arg0[arg1]) + (1.5 * arg0[arg1 + 1])) + ((-1.5) * arg0[arg1 + 2])) + (arg0[arg1 + 3] * 0.5);
-    temp2 = ((arg0[arg1] + ((-2.5) * arg0[arg1 + 1])) + (2.0 * arg0[arg1 + 2])) + (arg0[arg1 + 3] * (-0.5));
+    temp = (((-0.5 * arg0[arg1]) + (1.5 * arg0[arg1 + 1])) + (-1.5 * arg0[arg1 + 2])) + (arg0[arg1 + 3] * 0.5);
+    temp2 = ((arg0[arg1] + (-2.5 * arg0[arg1 + 1])) + (2.0 * arg0[arg1 + 2])) + (arg0[arg1 + 3] * -0.5);
     temp3 = arg0[arg1];
     temp3 = ((arg0[arg1 + 2] * 0.5) + (-0.5 * temp3));
 
