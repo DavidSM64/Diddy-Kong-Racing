@@ -1015,7 +1015,7 @@ void func_8002C71C(LevelModelSegment *segment) {
     segment->unk32 = numVerts;
 }
 
-LevelModel *func_8002C7C4(void) {
+LevelModel *get_current_level_model(void) {
     return gCurrentLevelModel;
 }
 

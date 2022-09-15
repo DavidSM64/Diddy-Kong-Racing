@@ -480,7 +480,12 @@ typedef struct LevelModel {
 /* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
 /* 0x38 */ u32 minimapColor;
-           u8 pad3C[0xC];
+/* 0x3C */ s16 unk3C;
+/* 0x3E */ s16 unk3E;
+/* 0x40 */ s16 unk40;
+/* 0x42 */ s16 unk42;
+/* 0x44 */ s16 unk44;
+/* 0x46 */ s16 unk46;
 /* 0x48 */ s32 modelSize;
 } LevelModel;
 
@@ -827,6 +832,7 @@ typedef struct Object_Exit {
   /* 0x14 */ s8 unk14;
 } Object_Exit;
 
+/* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
   /* 0x002 */ u8 unk2;

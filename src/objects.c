@@ -17,6 +17,7 @@
 #include "racer.h"
 #include "particles.h"
 #include "printf.h"
+#include "unknown_0255E0.h"
 
 /************ .data ************/
 
@@ -926,7 +927,88 @@ s32 func_80011560(void) { //! @bug The developers probably intended this to be a
     // No return value!
 }
 
+#ifdef NON_EQUIVALENT
+// WIP
+s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
+    f32 newXPos;
+    f32 newYPos;
+    f32 newZPos;
+    LevelModel *levelModel;
+    LevelModelSegmentBoundingBox *box;
+    f32 objYPos;
+    f32 objZPos;
+    f32 objXPos;
+    s32 temp_v0_3;
+    s32 var_a0;
+    s32 var_v1;
+
+    levelModel = get_current_level_model();
+    objYPos = obj->segment.trans.y_position;
+    objXPos = obj->segment.trans.x_position;
+    objZPos = obj->segment.trans.z_position;
+    newYPos = objYPos + yPos;
+    newXPos = objXPos + xPos;
+    newZPos = objZPos + zPos;
+    var_v1 = 0;
+    if (levelModel == NULL) {
+        D_800DC848 = 0;
+        return 0;
+    }
+    if (newXPos > (f32) (levelModel->unk3E + 1000.0)) {
+        var_v1 = 1;
+    }
+    if (objXPos < (f32) (levelModel->unk3C - 1000.0)) {
+        var_v1 = 1;
+    }
+    if (objYPos > (f32) (levelModel->unk42 + 3000.0)) {
+        var_v1 = 1;
+    }
+    if (objYPos < (f32) (levelModel->unk40 - 500.00)) {
+        var_v1 = 1;
+    }
+    if (objZPos > (f32) (levelModel->unk46 + 1000.0)) {
+        var_v1 = 1;
+    }
+    if (objZPos < (f32) (levelModel->unk44 - 1000.0)) {
+        var_v1 = 1;
+    }
+    if (D_800DC848 != 0) {
+        var_v1 = 0;
+    }
+    D_800DC848 = 0;
+    if (var_v1 != 0) {
+        obj->segment.unk2C.half.lower = -1;
+        return 1;
+    }
+    obj->segment.trans.x_position = newXPos;
+    obj->segment.trans.y_position = newYPos;
+    obj->segment.trans.z_position = newZPos;
+    box = func_8002A2DC(obj->segment.unk2C.half.lower);
+    if (box == NULL) {
+        obj->segment.unk2C.half.lower = get_level_segment_index_from_position((s32) newXPos, (s32) newYPos, (s32) newZPos);
+    } else {
+        var_a0 = 0;
+        if ((box->x2 < (s32) newXPos) || ((s32) newXPos < box->x1)) {
+            var_a0 = 1;
+        }
+        if ((box->y2 < (s32) newYPos) || ((s32) newYPos < box->y1)) {
+            var_a0 = 1;
+        }
+        if ((box->z2 < (s32) newZPos) || ((s32) newZPos < box->z1)) {
+            var_a0 = 1;
+        }
+        if (var_a0 != 0) {
+            temp_v0_3 = get_level_segment_index_from_position((s32) newXPos, (s32) newYPos, (s32) newZPos);
+            if (temp_v0_3 != -1) {
+                obj->segment.unk2C.half.lower = temp_v0_3;
+            }
+        }
+    }
+    return 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80011570.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
@@ -1623,8 +1705,24 @@ s8 func_800214C4(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800214E4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
-GLOBAL_ASM("asm/non_matchings/objects/catmull_rom_interpolation.s")
 
+f32 catmull_rom_interpolation(f32 *arg0, s32 arg1, f32 arg2) {
+    f32 ret;
+    f32 temp3;
+    f32 temp2;
+    f32 temp;
+
+    temp = (((-0.5 * arg0[arg1]) + (1.5 * arg0[arg1 + 1])) + (-1.5 * arg0[arg1 + 2])) + (arg0[arg1 + 3] * 0.5);
+    temp2 = ((arg0[arg1] + (-2.5 * arg0[arg1 + 1])) + (2.0 * arg0[arg1 + 2])) + (arg0[arg1 + 3] * -0.5);
+    temp3 = arg0[arg1];
+    temp3 = ((arg0[arg1 + 2] * 0.5) + (-0.5 * temp3));
+
+    ret = (f64)arg0[arg1 + 1];
+    ret = (((((temp * arg2) + temp2)  * arg2) + temp3) * arg2) + ret;
+    return ret;
+}
+
+// Exact same code as above, but it returns something in arg3
 f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3) {
     f32 ret;
     f32 temp3;

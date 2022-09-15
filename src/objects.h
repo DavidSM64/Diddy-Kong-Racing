@@ -235,11 +235,11 @@ s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
+f32 func_8002263C(f32 *, s32, f32, f32 *);
 s32 func_80031F88(Object*, s32);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
-f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -253,7 +253,7 @@ s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *spawn_object(void *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
-void func_80011570(Object *, f32, f32, f32);
+s32 func_80011570(Object *, f32, f32, f32);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
 void func_8001BF20(void);
 void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);

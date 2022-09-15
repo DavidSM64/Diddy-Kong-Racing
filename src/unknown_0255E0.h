@@ -102,7 +102,7 @@ void func_8002ACC8(s32 arg0);
 s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2);
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3);
 void func_8002C71C(LevelModelSegment *segment);
-LevelModel *func_8002C7C4(void);
+LevelModel *get_current_level_model(void);
 void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, s8 *arg3, s8 *arg4, s8 *arg5);
 void func_800307BC(s32 arg0);
 void func_80030838(s32 arg0, s32 arg1);

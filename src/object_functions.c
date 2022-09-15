@@ -209,7 +209,6 @@ typedef struct Object80033F60_4C_64 {
 } Object80033F60_4C_64;
 
 s32 func_80011560(void);
-void func_80011570(Object*, f32, f32, f32);
 void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
 s16 arctan2_f(f32, f32);
 void play_sound_global(u16, s32 *);
@@ -1040,7 +1039,7 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
     s16 segmentBatchCount;
 
     obj64 = &obj->unk64->animator;
-    levelModel = func_8002C7C4();
+    levelModel = get_current_level_model();
     obj64->batchId = entry->unk8;
     obj64->xSpeedFactor = entry->unk9;
     obj64->ySpeedFactor = entry->unkA;
@@ -1100,7 +1099,7 @@ void obj_loop_animator(Object* obj, s32 speed) {
     segmentId = obj64->segmentId;
 
     if (obj64->segmentId != -1) {
-        levelModel = func_8002C7C4();
+        levelModel = get_current_level_model();
         levelModelSegment = &levelModel->segments[segmentId];
         batchId = obj64->batchId;
         triangleBatchInfo = &levelModelSegment->batches[batchId];
@@ -2380,7 +2379,7 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
     s16 numberOfTexturesInLevel;
 
     obj64 = &obj->unk64->tex_scroll;
-    levelModel = func_8002C7C4();
+    levelModel = get_current_level_model();
     obj64->unk0 = entry->unk8;
     if (obj64->unk0 < 0) {
         obj64->unk0 = 0;

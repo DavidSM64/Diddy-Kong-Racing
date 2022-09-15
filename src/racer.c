@@ -3968,6 +3968,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     s32 var_v0;
     s8 temp_v0_3;
     unknown8011AECC *temp_v0_2;
+    s32 i;
 
     gCurrentRacerMiscAssetPtr = get_misc_asset(MISC_ASSET_UNK21);
     levelHeader = get_current_level_header();
@@ -3976,7 +3977,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk1C9 = 0;
         racer->unk1F5 = 0;
         racer->attackType = 0;
-        racer->lateral_velocity = 0.0f;
+        racer->lateral_velocity = 0;
         sp94 = 20.0f;
         if (racer->unk124 < -20.0f) {
             racer->unk124 = -20.0f;
@@ -4028,26 +4029,22 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (var_a0 >= sp11C) {
             var_a0 -= sp11C;
         }
-        do {
-            temp_v0_2 = func_8001BA1C(var_a0, (s32) racer->unk1C8);
-            *var_v1 = temp_v0_2->unk10;
-            var_a0 += 1;
-            *var_a2 = temp_v0_2->unk14;
-            var_v1 += 4;
-            *var_a3 = temp_v0_2->unk18;
-            var_a2 += 4;
-            var_a3 += 4;
-            var_t0 += 4;
-            *var_t1 = (f32) temp_v0_2->unk2E[racer->unk1CA];
-            var_t0[var_a0] = (f32) temp_v0_2->unk32[racer->unk1CA];
-            var_v1[var_a0] = (f32) (var_v1[var_a0] + (temp_v0_2->unk1C * temp_v0_2->unk8 * (f32) temp_v0_2->unk2E[racer->unk1CA]));
-            var_a2[var_a0] = (f32) (var_a2[var_a0] + (temp_v0_2->unk1C * (f32) temp_v0_2->unk32[racer->unk1CA]));
-            var_a3[var_a0] = (f32) (var_a3[var_a0] + (temp_v0_2->unk1C * -temp_v0_2->unk0 * (f32) temp_v0_2->unk2E[racer->unk1CA]));
+        for (i = 0; i < 1; i++) {
+            temp_v0_2 = func_8001BA1C(var_a0, racer->unk1C8);
+            var_v1[i] = temp_v0_2->unk10;
+            var_a2[i] = temp_v0_2->unk14;
+            var_a3[i] = temp_v0_2->unk18;
+            var_t1[i] = temp_v0_2->unk2E[racer->unk1CA];
+            var_t0[i] = temp_v0_2->unk32[racer->unk1CA];
+            var_v1[i] += ((temp_v0_2->unk1C * temp_v0_2->unk8 * temp_v0_2->unk2E[racer->unk1CA]));
+            var_a2[i] += ((temp_v0_2->unk1C * temp_v0_2->unk32[racer->unk1CA]));
+            var_a3[i] += ((temp_v0_2->unk1C * -temp_v0_2->unk0 * temp_v0_2->unk2E[racer->unk1CA]));
+            var_a0++;
             if (var_a0 == sp11C) {
                 var_a0 = 0;
             }
-            var_t1 += 4;
-        } while (var_t0 != &spB8);
+        }
+        
         if (racer->velocity < 0.0f) {
             racer->velocity = -racer->velocity;
         }
@@ -4130,8 +4127,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk1C4 = racer->unk1C0;
         racer->unk1BE = racer->unk1A0;
         racer->unk1C0 = obj->segment.trans.x_rotation;
-        func_80011570(obj, var_f26, temp_f24_3, var_f28);
-        if (obj->segment.trans.x_rotation != 0) { //completely unknown v0 value here. No idea what the if statement is comparing to.
+        if (func_80011570(obj, var_f26, temp_f24_3, var_f28)) {
             obj->segment.trans.x_position += var_f26;
             obj->segment.trans.y_position += temp_f24_3;
             obj->segment.trans.z_position += var_f28;
