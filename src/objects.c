@@ -927,88 +927,93 @@ s32 func_80011560(void) { //! @bug The developers probably intended this to be a
     // No return value!
 }
 
-#ifdef NON_EQUIVALENT
-// WIP
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
+    UNUSED f32 unused;
+    f32 test1, test2, test3, test4, test5, test6;
     f32 newXPos;
     f32 newYPos;
     f32 newZPos;
     LevelModel *levelModel;
     LevelModelSegmentBoundingBox *box;
-    f32 objYPos;
-    f32 objZPos;
-    f32 objXPos;
-    s32 temp_v0_3;
     s32 var_a0;
     s32 var_v1;
+    s32 intXPos, intYPos, intZPos;
 
     levelModel = get_current_level_model();
-    objYPos = obj->segment.trans.y_position;
-    objXPos = obj->segment.trans.x_position;
-    objZPos = obj->segment.trans.z_position;
-    newYPos = objYPos + yPos;
-    newXPos = objXPos + xPos;
-    newZPos = objZPos + zPos;
-    var_v1 = 0;
+    newXPos = obj->segment.trans.x_position + xPos;
+    newYPos = obj->segment.trans.y_position + yPos;
+    newZPos = obj->segment.trans.z_position + zPos;
     if (levelModel == NULL) {
         D_800DC848 = 0;
         return 0;
     }
-    if (newXPos > (f32) (levelModel->unk3E + 1000.0)) {
+    var_v1 = 0;
+    test1 = (levelModel->unk3E + 1000.0);
+    if (newXPos > test1) {
         var_v1 = 1;
     }
-    if (objXPos < (f32) (levelModel->unk3C - 1000.0)) {
+    test2 = (levelModel->unk3C - 1000.0);
+    if (obj->segment.trans.x_position < test2) {
         var_v1 = 1;
     }
-    if (objYPos > (f32) (levelModel->unk42 + 3000.0)) {
+    if (1) { } if (1) { } if (1) { }
+    test3 = (levelModel->unk42 + 3000.0);
+    if (obj->segment.trans.y_position > test3) {
         var_v1 = 1;
     }
-    if (objYPos < (f32) (levelModel->unk40 - 500.00)) {
+    test4 = (levelModel->unk40 - 500.00);
+    if (obj->segment.trans.y_position < test4) {
         var_v1 = 1;
     }
-    if (objZPos > (f32) (levelModel->unk46 + 1000.0)) {
+    test5 = (levelModel->unk46 + 1000.0);
+    if (obj->segment.trans.z_position > test5) {
         var_v1 = 1;
     }
-    if (objZPos < (f32) (levelModel->unk44 - 1000.0)) {
+    test6 = (levelModel->unk44 - 1000.0);
+    if (obj->segment.trans.z_position < test6) {
         var_v1 = 1;
     }
     if (D_800DC848 != 0) {
         var_v1 = 0;
     }
+    
     D_800DC848 = 0;
     if (var_v1 != 0) {
         obj->segment.unk2C.half.lower = -1;
         return 1;
     }
+
     obj->segment.trans.x_position = newXPos;
     obj->segment.trans.y_position = newYPos;
     obj->segment.trans.z_position = newZPos;
     box = func_8002A2DC(obj->segment.unk2C.half.lower);
+
+    //For some reason the XYZ positions are converted into integers for the next section
+    intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
+    
     if (box == NULL) {
-        obj->segment.unk2C.half.lower = get_level_segment_index_from_position((s32) newXPos, (s32) newYPos, (s32) newZPos);
+        obj->segment.unk2C.half.lower = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+        return 0;
     } else {
         var_a0 = 0;
-        if ((box->x2 < (s32) newXPos) || ((s32) newXPos < box->x1)) {
+        if ((box->x2 < intXPos) || (intXPos < box->x1)) {
             var_a0 = 1;
         }
-        if ((box->y2 < (s32) newYPos) || ((s32) newYPos < box->y1)) {
+        if ((box->y2 < intYPos) || (intYPos < box->y1)) {
             var_a0 = 1;
         }
-        if ((box->z2 < (s32) newZPos) || ((s32) newZPos < box->z1)) {
+        if ((box->z2 < intZPos) || (intZPos < box->z1)) {
             var_a0 = 1;
         }
         if (var_a0 != 0) {
-            temp_v0_3 = get_level_segment_index_from_position((s32) newXPos, (s32) newYPos, (s32) newZPos);
-            if (temp_v0_3 != -1) {
-                obj->segment.unk2C.half.lower = temp_v0_3;
+            var_v1 = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+            if (var_v1 != -1) {
+                obj->segment.unk2C.half.lower = var_v1;
             }
         }
     }
     return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_80011570.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
@@ -1113,7 +1118,7 @@ void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) 
 }
 
 void func_80012E28(Object *this) {
-    s32 unused1;
+    UNUSED s32 unused1;
     Object_Racer *sp_20;
     f32 tmp_f2;
     f32 sp_1c;
