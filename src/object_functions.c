@@ -23,6 +23,8 @@
 #include "game_ui.h"
 #include "waves.h"
 #include "unknown_003260.h"
+#include "objects.h"
+#include "math_util.h"
 
 /************ .data ************/
 
@@ -208,15 +210,8 @@ typedef struct Object80033F60_4C_64 {
 	s16 unk204;
 } Object80033F60_4C_64;
 
-s32 func_80011560(void);
-void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
-s16 arctan2_f(f32, f32);
-void play_sound_global(u16, s32 *);
-void func_800AFC3C(Object *, s32);
-void gParticlePtrList_addObject(Object *);
-
 void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
-	Object *obj78;
+	ObjectTransform *trans78;
 	Object_4C *obj4C;
 	f32 sp7C;
 	Object80033F60_4C_64 *obj4C_obj64;
@@ -226,7 +221,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
     s32 *temp;
 	f32 sp4C[7];
 
-    obj78 = (Object*)obj->unk78;
+    trans78 = obj->trans78;
 
     sp7C = speed;
     if (osTvType == TV_TYPE_PAL) {
@@ -238,9 +233,9 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         obj->segment.trans.y_position = 0.0f;
         obj->segment.trans.z_position = 0.0f;
         func_80011560();
-        func_80011570(obj, obj78->segment.trans.x_position, obj78->segment.trans.y_position, obj78->segment.trans.z_position);
+        func_80011570(obj, trans78->x_position, trans78->y_position, trans78->z_position);
     } else {
-        phi_f2 = (obj78->segment.trans.x_position - obj->segment.trans.x_position) * 0.1;
+        phi_f2 = (trans78->x_position - obj->segment.trans.x_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -248,7 +243,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             phi_f2 = -10.0f;
         }
         obj->segment.x_velocity += (phi_f2 - obj->segment.x_velocity) * 0.125 * sp7C;
-        phi_f2 = (obj78->segment.trans.y_position - obj->segment.trans.y_position) * 0.1;
+        phi_f2 = (trans78->y_position - obj->segment.trans.y_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -256,7 +251,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             phi_f2 = -10.0f;
         }
         obj->segment.y_velocity += (phi_f2 - obj->segment.y_velocity) * 0.125 * sp7C;
-        phi_f2 = (obj78->segment.trans.z_position - obj->segment.trans.z_position) * 0.1;
+        phi_f2 = (trans78->z_position - obj->segment.trans.z_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -275,7 +270,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
     }
     obj->segment.unk18 += speed * 10;
     obj64 = obj->unk64;
-    obj4C = obj->unk4C;
+     obj4C = obj->unk4C;
     obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
     if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->segment.header->behaviorId == 1)) {
         obj4C_obj64 = obj4C_obj->unk64;
@@ -353,10 +348,6 @@ void obj_init_laserbolt(Object *obj, UNUSED LevelObjectEntry_Laserbolt *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
 }
-
-void func_80031130(s32, f32*, f32*, s32);
-void func_80031600(f32*, f32*, f32*, s8*, s32, s8*);
-void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s32 arg6);
 
 typedef struct Object_7C_80034860 {
 	u8 pad0[0xC];
