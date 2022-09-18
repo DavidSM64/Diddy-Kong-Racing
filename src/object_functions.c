@@ -439,20 +439,15 @@ void obj_loop_torch_mist(Object *obj, s32 speed) {
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
-#ifdef NON_EQUIVALENT
-
-// Has regalloc & stack issues.
-
-f32 cosine_s(s16);
-f32 sine_s(s16);
-Object **get_object_struct_array(s32 *count);
+#ifdef NON_MATCHING
+// Has regalloc issues
 
 void obj_loop_effectbox(Object *obj, s32 speed) {
     Object **objList;
-    Object_3C_80034B74 *obj3C;
     Object_EffectBox *curObj64;
-    s32 i;
     s32 numberOfObjects;
+    Object_3C_80034B74 *obj3C;
+    s32 i;
     f32 xDiff;
     f32 yDiff;
     f32 zDiff;
@@ -462,8 +457,6 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     f32 temp3;
     f32 temp4;
     f32 temp5;
-    f32 tempf0;
-    u8 new_var2;
 
     obj3C = obj->segment.unk3C_a.unk3C;
     objList = get_object_struct_array(&numberOfObjects);
@@ -477,26 +470,18 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
         xDiff = objList[i]->segment.trans.x_position - obj->segment.trans.x_position;
         yDiff = objList[i]->segment.trans.y_position - obj->segment.trans.y_position;
         zDiff = objList[i]->segment.trans.z_position - obj->segment.trans.z_position;
-        if (((-temp3) < yDiff) && (yDiff < temp3))
-        {
+        if ((-temp3 < yDiff) && (yDiff < temp3)) {
             temp5 = (xDiff * temp0) + (zDiff * temp1);
-            if (((-temp2) < temp5) && (temp5 < temp2))
-            {
-                temp5 = ((-xDiff) * temp1) + (zDiff * temp0);
-                if (((-temp4) < (((-xDiff) * temp1) + (zDiff * temp0))) && (temp5 < temp4))
-                {
-                    temp5 = temp3 / 2;
+            if ((-temp2 < temp5) && (temp5 < temp2)) {
+                temp5 = (-xDiff * temp1) + (zDiff * temp0);
+                if ((-temp4 < temp5) && (temp5 < temp4)) {
                     curObj64 = &objList[i]->unk64->effect_box;
                     curObj64->unk1FE = obj3C->unkC;
                     curObj64->unk1FF = obj3C->unkD;
-                    if ((temp5 < yDiff) && (curObj64->unk1FE == 1))
-                    {
-                        new_var2 = curObj64->unk1FF;
-                        tempf0 = (new_var2 & 0xFF) * ((f32) (1.0 - ((yDiff - temp5) / temp5)));
-                        curObj64->unk1FF = new_var2 * ((f32) (1.0 - ((yDiff - temp5) / temp5)));
-                        if (tempf0 < 0.0f)
-                        {
-                        }
+                    temp5 = temp3 / 2;
+                    if ((temp5 < yDiff) && (curObj64->unk1FE == 1)) {
+                        temp5 = (1.0 - ((yDiff - temp5) / temp5));
+                        curObj64->unk1FF *= temp5;
                     }
                 }
             }
