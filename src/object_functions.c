@@ -1748,15 +1748,10 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     }
 }
 
-
-#ifdef NON_EQUIVALENT
-
-// Has regalloc issues.
-
 void obj_loop_goldenballoon(Object *obj, s32 speed) {
-    s32 padding[1];
     Object_3C *obj3C;
     Object_4C *obj4C;
+    Object_Racer *racer;
     Object_GoldenBalloon *obj64;
     Settings *settings;
     s32 flag;
@@ -1764,15 +1759,16 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
     Object *racerObj;
     f32 sp2C;
     f32 speedf;
-    s32 someBool;
+    s32 isPirated;
 
     sp2C = speed;
     if (osTvType == TV_TYPE_PAL) {
         sp2C *= 1.2;
     }
-    someBool = FALSE;
-    if ((*(s32*)0xA0000284) != 0x240B17D7) {
-        someBool = TRUE;
+    isPirated = FALSE;
+    // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
+    if (IO_READ(0x284) != 0x240B17D7) {
+        isPirated = TRUE;
     }
     speedf = sp2C;
     settings = get_settings();
@@ -1797,29 +1793,30 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                 obj->segment.unk38.half.lower = 255;
             }
             obj4C = obj->unk4C;
-            if ((obj4C->unk13 < 45) && (someBool == FALSE)) {
+            if ((obj4C->unk13 < 45) && (isPirated == FALSE)) {
                 racerObj = obj4C->unk0;
-                if (racerObj && (racerObj->segment.header->behaviorId == 1) && (racerObj->unk64->racer.playerIndex == 0)) {
-                    settings->balloonsPtr[settings->worldId]++;
-                    if (settings->worldId != 0) {
-                        settings->balloonsPtr[0]++;
+                if ((racerObj && (racerObj->segment.header->behaviorId == 1))) {
+                    racer = &racerObj->unk64->racer;
+                    if (racer->playerIndex == PLAYER_ONE) {
+                        settings->balloonsPtr[settings->worldId]++;
+                        if(isPirated == 1) { }
+                        if (settings->worldId != 0) {
+                            settings->balloonsPtr[0]++;
+                        }
+                        settings->courseFlagsPtr[settings->courseId] |= flag;
+                        if (&obj->segment){ }
+                        play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+                        obj->unk7C.word = 16;
+                        obj->unk74 = 2;
+                        obj->segment.trans.unk6 |= 0x4000;
+                        func_800AFC3C(obj, speed);
                     }
-                    settings->courseFlagsPtr[settings->courseId] |= flag;
-                    play_sound_spatial(573, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
-                    obj->unk7C.word = 16;
-                    obj->unk74 = 2;
-                    obj->segment.trans.unk6 |= 0x4000;
-                    func_800AFC3C(obj, speed);
                 }
             }
             obj64 = &obj->unk64->golden_balloon;
             obj->segment.unk3B = 0;
             obj64->unk14 = 0.0f;
-            if (obj->segment.unk38.half.lower < 255) {
-                speedf = 0.0f;
-            } else {
-                speedf = 1.0f;
-            }
+            speedf = (obj->segment.unk38.half.lower < 255) ? 0 : 1;
             if (obj64->unkD == 255) {
                 obj64->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
                 if (obj64->unkD != 255) {
@@ -1834,11 +1831,6 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
         }
     }
 }
-
-
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_goldenballoon.s")
-#endif
 
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     Object_Door *obj64;

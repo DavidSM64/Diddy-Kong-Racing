@@ -129,7 +129,7 @@ s16 D_800DCDB0[16] = {
 };
 
 // Checksum count for obj_loop_goldenballoon
-s32 gObjLoopGoldenBalloonChecksum = 42391;
+s32 gObjLoopGoldenBalloonChecksum = 0xA597;
 
 s16 D_800DCDD4[4] = {
     0, 0, 0x32, -1
