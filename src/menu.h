@@ -829,7 +829,7 @@ void func_80090918(s32 updateRate);
 void render_track_select_setup_ui(s32 updateRate);
 void func_80092188(s32 updateRate);
 void func_8008E4EC(void);
-s32 trim_filename_string(u8 *input, u8 *output);
+void trim_filename_string(char *input, char *output);
 void menu_trophy_race_round_init(void);
 void menu_ghost_data_init(void);
 void update_controller_sticks(void);

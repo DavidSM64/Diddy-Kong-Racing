@@ -7,6 +7,6 @@
 extern s16 D_800DCE80[14];
 
 //Nonmatching
-void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, s32 *input, u32 *buttonsPressed, s32 *startTimer); /* extern */
+void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer); /* extern */
 
 #endif

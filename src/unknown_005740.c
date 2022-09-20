@@ -24,10 +24,10 @@ s32 D_80119C44;
 s32 **D_80119C48;
 s32 D_80119C4C;
 s32 D_80119C50[2];
-s32 D_80119C58;
-s32 D_80119C5C;
+s32 D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
+s32 D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
 s32 D_80119C60[670];
-s32 D_8011A6D8;
+s32 D_8011A6D8; //unk8011A6D8[]
 s32 D_8011A6DC;
 s32 D_8011A6E0[334];
 s32 D_8011AC18;
@@ -57,4 +57,22 @@ UNUSED u8 func_80007F94(void) {
     return D_800DC6D0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80007FA4.s")
+f32 func_80007FA4(f32 arg0) {
+    f32 temp_f0;
+    f32 temp_f12;
+    f32 var_f14;
+    f32 var_f2;
+    s32 var_v0;
+
+    var_f2 = 0.0f;
+    temp_f0 = -1.0f;
+    arg0 = (arg0 - 1.0f) / (1.0f + arg0);
+    var_f14 = arg0;
+    temp_f12 = arg0 * arg0;
+    for (var_v0 = 1; (var_f2 - temp_f0) > 0.001; var_v0 += 2) {
+        temp_f0 = var_f2;
+        var_f2 += var_f14 / var_v0;
+        var_f14 *= temp_f12;
+    }
+    return var_f2 * 2;
+}

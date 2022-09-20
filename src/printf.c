@@ -9,6 +9,7 @@
 #include "stdarg.h"
 #include "textures_sprites.h"
 #include "stdio.h"
+#include "objects.h"
 
 /************ .data ************/
 
@@ -74,7 +75,24 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3240.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B34B0.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B3678.s")
+
+UNUSED void func_800B3678(Gfx **arg0, Mtx **arg1, VertexList **arg2) {
+    UNUSED s32 pad;
+    UNUSED s32 pad2;
+    Object **temp_s0;
+    s32 sp38;
+    s32 sp34;
+
+    temp_s0 = func_8000E988(&sp38, &sp34);
+    for (; sp38 < sp34; sp38++) {
+        if (temp_s0[sp38]->segment.trans.unk6 & 0x8000) {
+            if ((s32) temp_s0[sp38]->segment.header & 0x8000) {
+                func_800B3740(temp_s0[sp38], arg0, arg1, arg2, 0);
+            }
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3740.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3E64.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4488.s")
