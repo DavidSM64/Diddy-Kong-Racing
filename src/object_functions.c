@@ -270,7 +270,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
     }
     obj->segment.unk18 += speed * 10;
     obj64 = obj->unk64;
-     obj4C = obj->unk4C;
+    obj4C = obj->unk4C;
     obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
     if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->segment.header->behaviorId == 1)) {
         obj4C_obj64 = obj4C_obj->unk64;

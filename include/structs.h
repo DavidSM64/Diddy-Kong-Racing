@@ -12,16 +12,15 @@
 // coord->f[0], coord->f[1] and coord->f[2].
 // In some places code only matches when using the float array.
 typedef struct Vec3f {
-	union {
-		struct {
-			f32 x;
-			f32 y;
-			f32 z;
-		};
-		f32 f[3];
-	};
+  union {
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+    };
+    f32 f[3];
+  };
 } Vec3f;
-
 
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
@@ -1445,7 +1444,7 @@ typedef struct Object {
 
 // Unused
 typedef struct GhostHeaderChecksum {
-	u8  levelID;
+  u8  levelID;
     u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
 } GhostHeaderChecksum;
 
