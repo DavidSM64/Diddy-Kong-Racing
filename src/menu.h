@@ -809,7 +809,7 @@ void func_80093A40(void);
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
-s32 func_80097D10(s32 arg0);
+s32 menu_enter_filename_loop(s32 arg0);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -862,6 +862,6 @@ s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
-void func_80097918(UNUSED s32 unused);
+void render_enter_filename_ui(UNUSED s32 unused);
 
 #endif

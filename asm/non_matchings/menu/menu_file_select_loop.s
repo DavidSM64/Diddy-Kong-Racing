@@ -162,7 +162,7 @@ glabel menu_file_select_loop
 /* 08ECC8 8008E0C8 A0400007 */   sb    $zero, 7($v0)
 .L8008E0CC:
 /* 08ECCC 8008E0CC 8FA40048 */  lw    $a0, 0x48($sp)
-/* 08ECD0 8008E0D0 0C025F44 */  jal   func_80097D10
+/* 08ECD0 8008E0D0 0C025F44 */  jal   menu_enter_filename_loop
 /* 08ECD4 8008E0D4 00000000 */   nop   
 /* 08ECD8 8008E0D8 1040006C */  beqz  $v0, .L8008E28C
 /* 08ECDC 8008E0DC 00000000 */   nop   

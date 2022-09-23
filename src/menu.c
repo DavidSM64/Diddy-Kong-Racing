@@ -5973,7 +5973,7 @@ void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5
 // Draw menu for "Enter your initials" when starting a new game.
 // The text entry is a horizontal list of characters you scroll through.
 // Visual Aid: https://imgur.com/llVwdTy
-void func_80097918(UNUSED s32 unused) {
+void render_enter_filename_ui(UNUSED s32 unused) {
     s32 sp6C;
     s32 i;
     s32 pad;
@@ -6046,10 +6046,10 @@ void func_80097918(UNUSED s32 unused) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/menu/func_80097918.s")
+GLOBAL_ASM("asm/non_matchings/menu/render_enter_filename_ui.s")
 #endif
 
-s32 func_80097D10(s32 arg0) {
+s32 menu_enter_filename_loop(s32 arg0) {
     s32 var_v0_2;
     f32 temp_f20;
     u32 buttonsPressed;
@@ -6181,7 +6181,7 @@ s32 func_80097D10(s32 arg0) {
         D_80126C74[D_800E0FA0] = 0;
         play_sound_global(SOUND_MENU_BACK3, NULL);
     }
-    func_80097918(arg0);
+    render_enter_filename_ui(arg0);
     return gCheatInputString;
 }
 
