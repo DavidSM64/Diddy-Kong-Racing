@@ -271,7 +271,7 @@ u16 gCheatInputCurrentRow;
 u16 gCheatInputCurrentColumn;
 u16 gCheatInputStringLength;
 s16 gOptionsMenuItemIndex;
-char *gCheatInputString;
+s32 gCheatInputString;
 s16 D_80126C4C;
 f32 D_80126C50;
 s8 D_80126C54;
@@ -281,7 +281,7 @@ s8 D_80126C57;
 u8 D_80126C58[20];
 s32 *D_80126C6C;
 s32 D_80126C70;
-s32 D_80126C74;
+char *D_80126C74;
 s32 D_80126C78;
 s32 D_80126C7C;
 s16 D_80126C80[32];
@@ -1010,11 +1010,11 @@ MenuElement D_800E0E4C[9] = {
 // The length of the array must be a power of two.
 u8 gFileNameValidChars[32] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.?    ";
 
-s32 D_800E0F8C = 0;
+char D_800E0F8C = '\0';
 s32 D_800E0F90 = 192;
 s32 D_800E0F94 = 160;
 s32 D_800E0F98 = 120;
-s32 D_800E0F9C = 2;
+s32 D_800E0F9C = ASSET_FONTS_BIGFONT;
 s32 D_800E0FA0 = 0;
 s32 D_800E0FA4 = 0;
 char D_800E0FA8[4] = "DKR"; // Default file name?
@@ -5952,7 +5952,7 @@ void trim_filename_string(char *input, char *output) {
 GLOBAL_ASM("asm/non_matchings/menu/trim_filename_string.s")
 #endif
 
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6) {
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6) {
     D_800E0F90 = arg0;
     D_800E0F94 = arg1;
     D_800E0F98 = arg2;
@@ -5962,15 +5962,228 @@ void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, 
     D_80126C78 = arg6;
     D_800E0FA0 = 0;
     D_80126C50 = (f32)*D_80126C6C;
-    gCheatInputString = NULL;
+    gCheatInputString = 0;
     D_80126C3C = 0;
     D_80126C34 = 0;
     load_font(ASSET_FONTS_BIGFONT);
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80097918.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_80097D10.s")
+#ifdef NON_EQUIVALENT
+// Minor differences, and is very close.
+// Draw menu for "Enter your initials" when starting a new game.
+// The text entry is a horizontal list of characters you scroll through.
+// Visual Aid: https://imgur.com/llVwdTy
+void func_80097918(UNUSED s32 unused) {
+    s32 sp6C;
+    s32 i;
+    s32 pad;
+    s32 temp_f4;
+    s32 yPos;
+    s32 charIndex;
+    char *fileName;
+    s32 xPos;
+    s32 xPosOffset;
+    s32 charIndexOffset;
 
+    temp_f4 = D_80126C50;
+    sp6C = 160 - (s32) ((D_80126C50 - temp_f4) * 40);
+    set_text_background_colour(0, 0, 0, 0);
+    set_text_font(ASSET_FONTS_FUNFONT);
+    set_text_colour(0, 0, 0, 255, 128);
+    draw_text(&sMenuCurrDisplayList, 162, D_800E0F90 - 22, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
+    set_text_colour(255, 128, 255, 96, 255);
+    draw_text(&sMenuCurrDisplayList, 160, D_800E0F90 - 24, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
+    yPos = D_800E0F90;
+    for (i = 0; i < 2; i++) {
+        xPos = sp6C;
+        charIndex = temp_f4;
+        if (i != 0) {
+            xPos -= 40;
+            charIndex--;
+            xPosOffset = -40;
+            charIndexOffset = -1;
+        } else {
+            xPosOffset = 40;
+            charIndexOffset = 1;
+        }
+        while ((xPos >= -15) && (xPos < 336)) {
+            if (charIndex < 0) {
+                charIndex = 30;
+            }
+            if (charIndex > 30) {
+                charIndex = 0;
+            }
+            if (charIndex == *D_80126C6C) {
+                set_text_colour(255, 255, 255, 0, 255);
+            } else {
+                set_text_colour(0, 0, 0, 128, 255);
+            }
+            if (charIndex < 28) {
+                set_text_font(ASSET_FONTS_BIGFONT);
+                D_800E0F8C = gFileNameValidChars[charIndex];
+                draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E0F8C, ALIGN_MIDDLE_CENTER);
+            } else {
+                set_text_font(ASSET_FONTS_FUNFONT);
+                if (charIndex == 28) {
+                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8244 /* "SP" */, ALIGN_MIDDLE_CENTER);
+                } else if (charIndex == 29) {
+                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8248 /* "DEL" */, ALIGN_MIDDLE_CENTER);
+                } else {
+                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E824C /* "OK" */, ALIGN_MIDDLE_CENTER);
+                }
+            }
+            xPos += xPosOffset;
+            charIndex += charIndexOffset;
+        }
+    }
+    trim_filename_string(D_80126C74, fileName);
+    if (fileName != NULL) {
+        set_text_font(D_800E0F9C);
+        set_text_colour(0, 0, 0, 255, 128);
+        draw_text(&sMenuCurrDisplayList, D_800E0F94 + 1, D_800E0F98 + 3, fileName, ALIGN_MIDDLE_CENTER);
+        set_text_colour(255, 255, 255, 0, 255);
+        draw_text(&sMenuCurrDisplayList, D_800E0F94, D_800E0F98, fileName, ALIGN_MIDDLE_CENTER);
+    }
+}
+#else
+GLOBAL_ASM("asm/non_matchings/menu/func_80097918.s")
+#endif
+
+s32 func_80097D10(s32 arg0) {
+    s32 var_v0_2;
+    f32 temp_f20;
+    u32 buttonsPressed;
+    f32 var_f12;
+    f32 var_f14;
+    f32 var_f18;
+    s32 *temp_a1;
+    s32 var_v1;
+    s32 joytickXAxis;
+
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    joytickXAxis = clamp_joystick_x_axis(PLAYER_ONE);
+    if ((joytickXAxis > -35) && (joytickXAxis < 35)) {
+        joytickXAxis = 0;
+    }
+    if (joytickXAxis < 0) {
+        if (D_80126C3C >= 0) {
+            D_80126C34 = 0;
+            D_80126C3C = -1;
+        }
+        D_80126C34 += arg0;
+        if (arg0 != D_80126C34) {
+            if (D_80126C34 < 28) {
+                joytickXAxis = 0;
+            } else {
+                D_80126C34 -= 6;
+            }
+        }
+    } else if (joytickXAxis > 0) {
+        if (D_80126C3C <= 0) {
+            D_80126C34 = 0;
+            D_80126C3C = 1;
+        }
+        D_80126C34 += arg0;
+        if (arg0 != D_80126C34) {
+            if (D_80126C34 < 28) {
+                joytickXAxis = 0;
+            } else {
+                D_80126C34 -= 6;
+            }
+        }
+    } else {
+        D_80126C34 = 0;
+        D_80126C3C = 0;
+    }
+    temp_a1 = D_80126C6C;
+    temp_f20 = (f32) *temp_a1;
+    for (var_v1 = 0; var_v1 < arg0; var_v1++) {
+        if (D_80126C50 <= temp_f20) {
+            var_f12 = temp_f20 - D_80126C50;
+            var_f14 = temp_f20 - (D_80126C50 + 31.0f);
+        } else {
+            var_f12 = (temp_f20 + 31.0f) - D_80126C50;
+            var_f14 = temp_f20 - D_80126C50;
+        }
+        if ((var_f12 * var_f12) < (var_f14 * var_f14)) {
+            var_f18 = var_f12;
+        } else {
+            var_f18 = var_f14;
+        }
+        D_80126C50 += var_f18 * 0.1f;
+        if (D_80126C50 >= 31.0f) {
+            do {
+                D_80126C50 -= 31.0f;
+            } while (D_80126C50 >= 31.0f);
+        }
+        if (D_80126C50 < 0.0f) {
+            do {
+                D_80126C50 += 31.0f;
+            } while (D_80126C50 < 0.0f);
+        }
+    }
+    if (D_800E0FA0 < D_80126C78) {
+        if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            if (*temp_a1 < 29) {
+                D_80126C74[D_800E0FA0] = gFileNameValidChars[*temp_a1];
+                D_800E0FA0++;
+                D_80126C74[D_800E0FA0] = 0;
+                play_sound_global(SOUND_SELECT2, NULL);
+                if (D_800E0FA0 >= D_80126C78) {
+                    *D_80126C6C = 30;
+                }
+            } else if (*temp_a1 == 29) {
+                if (D_800E0FA0 > 0) {
+                    D_800E0FA0--;
+                    D_80126C74[D_800E0FA0] = 0;
+                }
+                play_sound_global(SOUND_MENU_BACK3, NULL);
+            } else {
+                if ((D_800E0FA0 != 0) || (D_80126C74[0] == 0)) {
+                    for (var_v1 = D_800E0FA0; var_v1 < D_80126C78; var_v1++) {
+                        D_80126C74[var_v1] = 32;
+                    }
+                }
+                D_80126C74[D_80126C78] = '\0';
+                play_sound_global(SOUND_SELECT2, NULL);
+                gCheatInputString = 1;
+            }
+        } else if (buttonsPressed & B_BUTTON) {
+            if (D_800E0FA0 > 0) {
+                D_800E0FA0--;
+            }
+            D_80126C74[D_800E0FA0] = 0;
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+        } else {
+            var_v0_2 = *temp_a1;
+            if (joytickXAxis < 0) {
+                var_v0_2--;
+            }
+            if (joytickXAxis > 0) {
+                var_v0_2++;
+            }
+            if (var_v0_2 < 0) {
+                var_v0_2 = 30;
+            }
+            if (var_v0_2 >= 31) {
+                var_v0_2 = 0;
+            }
+            if (var_v0_2 != *temp_a1) {
+                play_sound_global(SOUND_MENU_PICK2, NULL);
+                *D_80126C6C = var_v0_2;
+            }
+        }
+    } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+        play_sound_global(SOUND_SELECT2, NULL);
+        gCheatInputString = 1;
+    } else if (buttonsPressed & B_BUTTON) {
+        D_800E0FA0--;
+        D_80126C74[D_800E0FA0] = 0;
+        play_sound_global(SOUND_MENU_BACK3, NULL);
+    }
+    func_80097918(arg0);
+    return gCheatInputString;
+}
 
 /**
  * Explicitly says to unload the ASSET_FONTS_BIGFONT type.

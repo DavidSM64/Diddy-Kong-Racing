@@ -511,7 +511,7 @@ extern MenuElement D_800E0E4C[9];
 // Valid characters for name input. Must be u8, not char.
 extern u8 gFileNameValidChars[32];
 
-extern s32 D_800E0F8C;
+extern char D_800E0F8C;
 extern s32 D_800E0F90;
 extern s32 D_800E0F94;
 extern s32 D_800E0F98;
@@ -726,7 +726,7 @@ void menu_11_init(void);
 void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
 s32 compress_filename_string(char *filename, s32 length);
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6);
 void unload_big_font_4(void);
 void func_80098208(void);
 void draw_trophy_race_text(UNUSED s32 updateRate);
@@ -809,6 +809,7 @@ void func_80093A40(void);
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
+s32 func_80097D10(s32 arg0);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -861,5 +862,6 @@ s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
+void func_80097918(UNUSED s32 unused);
 
 #endif
