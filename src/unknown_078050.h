@@ -7,10 +7,29 @@
 #include "sched.h"
 #include "libultra_internal.h"
 
+#include "game_ui.h"
+#include "video.h"
+
 typedef union {
     void (*function)(Gfx*, s32);
     void *ptr;
 } unk800DE4D0;
+
+typedef struct DKR_OSTask {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    OSTask_t task; // Size: 0x40 bytes
+    OSMesgQueue *unk50;
+    s32 unk54;
+    s32 unk58;
+    s32 unk5C;
+    s32 unk60;
+    s32 unk64;
+    s32 unk68;
+    s32 unk6C;
+} DKR_OSTask;
 
 extern s16 D_800DE490[16];
 
@@ -27,6 +46,14 @@ extern s32 D_800DE4CC;
 extern s32 D_800DE4D4;
 extern s32 D_800DE4D8;
 extern s32 D_800DE4DC;
+
+// Defined in dkr.ld
+extern s8 rspF3DDKRDramStart[];
+extern s8 rspF3DDKRBootStart[];
+extern s8 rspF3DDKRXbusStart[];
+extern s8 rspF3DDKRDataXbusStart[];
+extern s8 rspF3DDKRFifoStart[];
+extern s8 rspF3DDKRDataFifoStart[];
 
 s32 func_80077A54(void);
 void func_80077AAC(void *bufPtr, s32 arg1, UNUSED s32 arg2);

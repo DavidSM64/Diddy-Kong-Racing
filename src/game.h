@@ -2,6 +2,7 @@
 #define _UNKNOWN_06B2B0_H_
 
 #include "types.h"
+#include "video.h"
 #include "structs.h"
 #include "fade_transition.h"
 #include "libc/math.h"
@@ -78,7 +79,7 @@ extern FadeTransition D_800DD3FC;
 extern char *D_800DD410[3];
 extern FadeTransition D_800DD41C;
 extern FadeTransition D_800DD424;
-extern s32 gVideoCurrFramebuffer;
+extern u16 *gVideoCurrFramebuffer;
 extern s32 gVideoLastFramebuffer;
 extern s32 gVideoLastDepthBuffer;
 
