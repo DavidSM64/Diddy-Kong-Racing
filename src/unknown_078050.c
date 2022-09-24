@@ -175,7 +175,7 @@ OSMesgQueue *osScInterruptQ;
 
 /*******************************/
 
-s32 setupOSTasks(Gfx* arg0, Gfx* arg1, s32 arg2) {
+s32 setup_ostask_xbus(Gfx* arg0, Gfx* arg1, s32 arg2) {
     DKR_OSTask *dkrtask;
 
     D_800DE4DC = 1;
@@ -214,7 +214,7 @@ s32 setupOSTasks(Gfx* arg0, Gfx* arg1, s32 arg2) {
     return 0;
 }
 
-void func_800775B0(Gfx* arg0, Gfx* arg1, s32 arg2) {
+void setup_ostask_xbus_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
     DKR_OSTask *dkrtask;
     s32 *sp20;
 
@@ -260,7 +260,7 @@ void func_800775B0(Gfx* arg0, Gfx* arg1, s32 arg2) {
     }
 }
 
-void func_80077734(Gfx* arg0, Gfx* arg1, s32 arg2) {
+void setup_ostask_fifo(Gfx* arg0, Gfx* arg1, s32 arg2) {
     DKR_OSTask *dkrtask;
     s32 *sp20;
 
@@ -284,7 +284,6 @@ void func_80077734(Gfx* arg0, Gfx* arg1, s32 arg2) {
     dkrtask->task.dram_stack_size = 0x400;
     dkrtask->task.output_buff = gGfxSPTaskYieldBuffer;
     dkrtask->task.output_buff_size = gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE;
-    
     dkrtask->task.yield_data_ptr = D_801271B0;
     dkrtask->task.yield_data_size = 0xA00;
     dkrtask->unk0 = 0;
@@ -309,7 +308,7 @@ void func_80077734(Gfx* arg0, Gfx* arg1, s32 arg2) {
     }
 }
 
-void func_800778C8(Gfx* arg0, Gfx* arg1, s32 arg2) {
+void setup_ostask_fifo_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
     DKR_OSTask *dkrtask;
     s32 *sp20;
 
