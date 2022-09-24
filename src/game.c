@@ -906,7 +906,7 @@ void main_game_loop(void) {
         set_rsp_segment(&gCurrDisplayList, 4, (s32)gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
-        setupOSTasks(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+        setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
