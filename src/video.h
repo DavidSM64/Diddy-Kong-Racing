@@ -58,6 +58,7 @@ enum LogicUpdateRates {
 
 extern s32 gVideoRefreshRate;
 
+extern u16 *gVideoCurrFramebuffer;
 extern u16 *gVideoDepthBuffer;
 extern s32 D_800DE774;
 extern s8  D_800DE778;

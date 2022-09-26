@@ -147,8 +147,10 @@ Gfx D_800DE6E8[][2] = {
 
 /************ .bss ************/
 
+#define YIELD_BUFFER_SIZE 0x1800
+
 u8 gDramStack[SP_DRAM_STACK_SIZE8];
-u8 gGfxSPTaskYieldBuffer[0x1800];
+u8 gGfxSPTaskYieldBuffer[YIELD_BUFFER_SIZE];
 OSMesgQueue D_80125EA0;
 OSMesg D_80125EB8;
 OSMesgQueue D_80125EC0;
@@ -165,17 +167,191 @@ u8 D_80125F36;
 u8 D_80125F37;
 s32 D_80125F38;
 s32 D_80125F3C;
-s32 D_80125F40[56];
-s32 D_80126020[56];
+
+DKR_OSTask D_80125F40[2];
+DKR_OSTask D_80126020[2];
+
 OSMesgQueue *osScInterruptQ;
 
 /*******************************/
 
-GLOBAL_ASM("asm/non_matchings/unknown_078050/setupOSTasks.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800775B0.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80077734.s")
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800778C8.s")
+s32 setup_ostask_xbus(Gfx* arg0, Gfx* arg1, s32 arg2) {
+    DKR_OSTask *dkrtask;
 
+    D_800DE4DC = 1;
+    dkrtask = &D_80125F40[D_800DE4D4];
+    D_800DE4D4++;
+    if (D_800DE4D4 == 2) {
+        D_800DE4D4 = 0;
+    }
+    dkrtask->unk8 = 0x23;
+    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->unk58 = 0xFF0000FF;
+    dkrtask->unk5C = 0xFF0000FF;
+    dkrtask->task.data_ptr = arg0;
+    dkrtask->task.data_size = ((s32)arg1 - (s32)arg0) >> 3;
+    dkrtask->task.type = 1;
+    dkrtask->task.flags = 2;
+    dkrtask->task.ucode_boot = rspF3DDKRBootStart;
+    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
+    dkrtask->task.ucode = rspF3DDKRXbusStart;
+    dkrtask->task.ucode_data = rspF3DDKRDataXbusStart;
+    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.dram_stack = gDramStack;
+    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.output_buff = gGfxSPTaskYieldBuffer;
+    dkrtask->task.output_buff_size = &D_80125EA0;
+    dkrtask->task.yield_data_ptr = D_801271B0;
+    dkrtask->task.yield_data_size = 0xA00;
+    dkrtask->task.output_buff = NULL;
+    dkrtask->task.output_buff_size = NULL;
+    dkrtask->unk0 = 0;
+    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->unk60 = 0xFF;
+    dkrtask->unk64 = 0xFF;
+    osWritebackDCacheAll();
+    osSendMesg(osScInterruptQ, dkrtask, 1);
+    return 0;
+}
+
+void setup_ostask_xbus_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
+    DKR_OSTask *dkrtask;
+    s32 *sp20;
+
+    sp20 = NULL;
+    dkrtask = &D_80126020[D_800DE4D8];
+    D_800DE4D8++;
+    if (D_800DE4D8 == 2) {
+        D_800DE4D8 = 0;
+    }
+    dkrtask->task.data_ptr = arg0;
+    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0) << 3));
+    dkrtask->task.type = 1;
+    dkrtask->task.flags = 2;
+    dkrtask->task.ucode_boot = rspF3DDKRBootStart;
+    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
+    dkrtask->task.ucode = rspF3DDKRXbusStart;
+    dkrtask->task.ucode_data = rspF3DDKRDataXbusStart;
+    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.dram_stack = gDramStack;
+    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.yield_data_ptr = D_801271B0;
+    dkrtask->task.yield_data_size = 0xA00;
+    dkrtask->task.output_buff = NULL;
+    dkrtask->task.output_buff_size = 0;
+    dkrtask->unk0 = 0;
+    dkrtask->unk8 = 3;
+    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->unk54 = D_800DE490;
+    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->unk58 = 0xFF0000FF;
+    dkrtask->unk5C = 0xFF0000FF;
+    dkrtask->unk60 = 0xFF;
+    dkrtask->unk64 = 0xFF;
+    dkrtask->unk68 = 0;
+    
+    if (arg2 != 0) {
+        dkrtask->unk50 = &D_80125EA0;
+    }
+    osWritebackDCacheAll();
+    osSendMesg(osScInterruptQ, dkrtask, 1);
+    if (arg2 != 0) {
+        osRecvMesg(&D_80125EA0, &sp20, 1);
+    }
+}
+
+void setup_ostask_fifo(Gfx* arg0, Gfx* arg1, s32 arg2) {
+    DKR_OSTask *dkrtask;
+    s32 *sp20;
+
+    sp20 = NULL;
+    dkrtask = &D_80126020[D_800DE4D8];
+    D_800DE4D8++;
+    if (D_800DE4D8 == 2) {
+        D_800DE4D8 = 0;
+    }
+    
+    dkrtask->task.data_ptr = arg0;
+    dkrtask->task.ucode_boot = rspF3DDKRBootStart;
+    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0)) << 3);
+    dkrtask->task.type = 1;
+    dkrtask->task.flags = 2;
+    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
+    dkrtask->task.ucode = rspF3DDKRFifoStart;
+    dkrtask->task.ucode_data = rspF3DDKRDataFifoStart;
+    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.dram_stack = gDramStack;
+    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.output_buff = gGfxSPTaskYieldBuffer;
+    dkrtask->task.output_buff_size = gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE;
+    dkrtask->task.yield_data_ptr = D_801271B0;
+    dkrtask->task.yield_data_size = 0xA00;
+    dkrtask->unk0 = 0;
+    dkrtask->unk8 = 7;
+    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->unk54 = D_800DE490;
+    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->unk58 = 0xFF0000FF;
+    dkrtask->unk5C = 0xFF0000FF;
+    dkrtask->unk60 = 0xFF;
+    dkrtask->unk64 = 0xFF;
+    dkrtask->unk68 = 0;
+    
+    if (arg2 != 0) {
+        dkrtask->unk50 =  &D_80125EA0;
+    }
+    osWritebackDCacheAll();
+    osSendMesg(osScInterruptQ, dkrtask, 1);
+    
+    if (arg2 != 0) {
+        osRecvMesg(&D_80125EA0, &sp20, 1);
+    }
+}
+
+void setup_ostask_fifo_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
+    DKR_OSTask *dkrtask;
+    s32 *sp20;
+
+    sp20 = NULL;
+    dkrtask = &D_80125F40[D_800DE4D4];
+    D_800DE4D4++;
+    if (D_800DE4D4 == 3) {
+        D_800DE4D4 = 0;
+    }
+    
+    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0)) << 3);
+    dkrtask->task.data_ptr = arg0;
+    dkrtask->task.type = 1;
+    dkrtask->task.flags = 2;
+    dkrtask->task.ucode_boot = rspF3DDKRBootStart;
+    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
+    dkrtask->task.ucode = rspF3DDKRFifoStart;
+    dkrtask->task.ucode_data = rspF3DDKRDataFifoStart;
+    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.dram_stack = gDramStack;
+    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.output_buff = gGfxSPTaskYieldBuffer;
+    dkrtask->task.output_buff_size = &D_80125EA0;
+    dkrtask->task.yield_data_ptr = &D_801271B0;
+    dkrtask->task.yield_data_size = 0xA00;
+    dkrtask->unk0 = 0;
+    dkrtask->unk8 = 7;
+    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->unk54 = D_800DE490;
+    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->unk58 = 0xFF0000FF;
+    dkrtask->unk5C = 0xFF0000FF;
+    if (arg2 != 0) {
+        dkrtask->unk60 = 0xFF;
+        dkrtask->unk64 = 0xFF;
+    }
+    dkrtask->unk68 = 0;
+    osWritebackDCacheAll();
+    osSendMesg(osScInterruptQ, dkrtask, 1);
+    if (arg2 != 0) {
+        osRecvMesg(&D_80125ED8, &sp20, 1);
+    }
+}
 
 s32 func_80077A54(void) {
     s32 *sp1C = NULL;

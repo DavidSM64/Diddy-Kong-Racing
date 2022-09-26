@@ -1198,13 +1198,13 @@ typedef struct Object_Bridge_WhaleRamp {
 typedef struct Object_80011AD0 {
   /* 0x00 */ u8 pad0[0x20];
   /* 0x20 */ u32 unk20;
-  /* 0x24 */ u32 unk24;
+  /* 0x24 */ u32 unk24; //TextureHeader *?
   /* 0x28 */ u8 pad28[0x48];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 pad71[0x3];
   /* 0x74 */ f32 unk74;
   /* 0x78 */ u8 pad78[0x80];
-  /* 0xF8 */ u32 unkF8;
+  /* 0xF8 */ u32 unkF8; //TextureHeader *?
   /* 0xFC */ u8 unkFC;
 } Object_80011AD0;
 
