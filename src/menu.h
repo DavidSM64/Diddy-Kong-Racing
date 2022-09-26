@@ -661,6 +661,7 @@ extern s32 D_80126A08;
 extern unk800861C8 *D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
 extern f32 D_80126BDC;
 extern f32 D_80126BEC;
+extern SavefileInfo gSavefileInfo[4];
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -795,7 +796,7 @@ s32 is_tt_unlocked(void);
 s32 is_drumstick_unlocked(void);
 s32 menu_character_select_loop(s32 updateRate);
 s32 menu_caution_loop(s32 updateRate);
-void func_8008DC7C(UNUSED s32 arg0);
+void func_8008DC7C(UNUSED s32 updateRate);
 s32 menu_5_loop(s32 updateRate);
 void func_80095624(s32 status);
 s32 menu_boot_loop(s32 arg0);
@@ -810,6 +811,7 @@ s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
 s32 menu_enter_filename_loop(s32 arg0);
+s32 menu_file_select_loop(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -842,7 +844,6 @@ void func_8008C168(s32);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_save_options_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
-s32 menu_file_select_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_23_loop(s32 updateRate);
@@ -863,5 +864,7 @@ void func_80081218(void);
 void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
+s32 func_8008D5F8(s32 updateRate);
+void func_8008D8BC(s32 updateRate);
 
 #endif

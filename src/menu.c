@@ -4744,7 +4744,7 @@ GLOBAL_ASM("asm/non_matchings/menu/render_file_select_menu.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008D5F8.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008D8BC.s")
 
-void func_8008DC7C(UNUSED s32 arg0) {
+void func_8008DC7C(UNUSED s32 updateRate) {
     s32 buttonsPressed;
     s32 controllerXAxisDirection;
     s32 temp;
@@ -4812,7 +4812,146 @@ void func_8008DC7C(UNUSED s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/menu_file_select_loop.s")
+s32 menu_file_select_loop(s32 updateRate) {
+    s32 var_t0;
+    s32 temp_v0_4;
+    s32 new_var;
+    Settings *settings;
+
+    settings = get_settings();
+    func_8008C168(updateRate);
+    if (D_801263D8) {
+        D_801263D8++;
+        
+        if (D_801263D8 >= 3) {
+            for (var_t0 = 0; var_t0 < 3; var_t0++) {
+                gSavefileInfo[var_t0].isAdventure2 = 0;
+                if (D_80126530[var_t0]->newGame) {
+                    gSavefileInfo[var_t0].isStarted = 0;
+                    gSavefileInfo[var_t0].balloonCount = 0;
+                    gSavefileInfo[var_t0].name[0] = 'D';
+                    gSavefileInfo[var_t0].name[1] = 'K';
+                    gSavefileInfo[var_t0].name[2] = 'R';
+                    gSavefileInfo[var_t0].name[3] = '\0';
+                } else {
+                    if (D_80126530[var_t0]->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
+                        gSavefileInfo[var_t0].isAdventure2 = TRUE;
+                    }
+                    gSavefileInfo[var_t0].isStarted = TRUE;
+                    gSavefileInfo[var_t0].balloonCount = (u16) *D_80126530[var_t0]->balloonsPtr;
+                    decompress_filename_string(D_80126530[var_t0]->filename, gSavefileInfo[var_t0].name, 3);
+                }
+            }
+            D_801263D8 = 0;
+        }
+    }
+    D_801263BC = (D_801263BC + updateRate) & 0x3f;
+    if (gMenuDelay != 0) {
+        if (gMenuDelay > 0) {
+            gMenuDelay += updateRate;
+        } else {
+            gMenuDelay -= updateRate;
+        }
+    }
+    if ((gMenuDelay >= -20) && (gMenuDelay <= 20)) {
+        render_file_select_menu(updateRate);
+    }
+    if ((gMenuDelay == 0) && (D_801263D8 == 0)) {
+        if (D_80126484 != 0) {
+            func_8008D8BC(updateRate);
+        } else if (D_80126488 != 0) {
+            func_8008DC7C(updateRate);
+        } else if (D_80126CC0 != 0) {
+            if ((get_buttons_pressed_from_player(PLAYER_ONE) & B_BUTTON) && (D_800E0FA0 == 0)) {
+                unload_big_font_4();
+                D_80126CC0 = 0;
+                gSavefileInfo[var_t0].name[0] = 'D';
+                gSavefileInfo[var_t0].name[1] = 'K';
+                gSavefileInfo[var_t0].name[2] = 'R';
+                gSavefileInfo[var_t0].name[3] = '\0';
+            } else if (menu_enter_filename_loop(updateRate) != 0) {
+                new_var = 3;
+                unload_big_font_4();
+                D_80126CC0 = 0;
+                gSavefileInfo[gSaveFileIndex].isAdventure2 = 0;
+                if (gIsInAdventureTwo != 0) {
+                    gSavefileInfo[gSaveFileIndex].isAdventure2 = 1;
+                }
+                gSavefileInfo[gSaveFileIndex].isStarted = 1;
+                gSavefileInfo[gSaveFileIndex].balloonCount = 0;
+                settings->filename = compress_filename_string(gSavefileInfo[gSaveFileIndex].name, new_var);
+                func_8006EB78(gSaveFileIndex);
+                set_music_fade_timer(-128);
+                func_800C01D8(&sMenuTransitionFadeIn);
+                gMenuDelay = 1;
+            }
+        } else {
+            temp_v0_4 = func_8008D5F8(updateRate);
+            if (temp_v0_4 != 0) {
+                if (temp_v0_4 > 0) {
+                    if (gSavefileInfo[gSaveFileIndex].isStarted != 0) {
+                        play_sound_global(0xEFU, NULL);
+                        func_8006EB78(gSaveFileIndex);
+                        set_music_fade_timer(-0x80);
+                    } else {
+                        D_80126CC0 = 1;
+                        D_800E0FB0 = 0;
+                        var_t0 = 0;
+                        if (osTvType == TV_TYPE_PAL) {
+                            var_t0 = 12;
+                        }
+                        func_80097874(var_t0 + 187, D_800E03CC[gSaveFileIndex].unk0 + D_800E03FC[0],
+                            D_800E03CC[gSaveFileIndex].unk2 + D_800E03FC[1] + var_t0, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
+                        temp_v0_4 = 0;
+                    }
+                }
+                if (temp_v0_4 != 0) {
+                    func_800C01D8(&sMenuTransitionFadeIn);
+                    gMenuDelay = temp_v0_4;
+                }
+            }
+        }
+    }
+    if (gMenuDelay > 35) {
+        if (gActiveMagicCodes & CHEAT_FREE_BALLOON) {
+            gActiveMagicCodes &= ~CHEAT_FREE_BALLOON;
+            gUnlockedMagicCodes &= ~CHEAT_FREE_BALLOON;
+            (*settings->balloonsPtr)++;
+        }
+        gIsInTwoPlayerAdventure = (gNumberOfActivePlayers == 2);
+        if (gIsInTwoPlayerAdventure) {
+            func_8000E1B8();
+        }
+        gNumberOfActivePlayers = 1;
+        D_800E0FAC = 1;
+        func_8008E428();
+        func_80000B28();
+        func_8006E5BC();
+        gTrophyRaceWorldId = 0;
+        if (settings->newGame) {
+            if (gIsInAdventureTwo) {
+                settings->cutsceneFlags |= CUTSCENE_ADVENTURE_TWO;
+            }
+            func_8009ABD8((s8 *)get_misc_asset(MISC_ASSET_UNK19), 0, gNumberOfActivePlayers, 0, 0, 0);
+            menu_init(MENU_UNKNOWN_23);
+            return 0;
+        }
+        if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
+            gIsInAdventureTwo = TRUE;
+        } else {
+            gIsInAdventureTwo = FALSE;
+        }
+        return gNumberOfActivePlayers;
+    }
+    if (gMenuDelay < -35) {
+        func_8008E428();
+        menu_init(MENU_GAME_SELECT);
+        return 0;
+    }
+    else {
+        return 0;
+    }
+}
 
 void func_8008E428(void) {
     func_8009C4A8(D_800E0398);
@@ -7416,9 +7555,9 @@ s32 tt_menu_loop(void) {
     settings = get_settings();
 
     if (is_in_two_player_adventure()) {
-        settings->cutsceneFlags |= 2;
+        settings->cutsceneFlags |= CUTSCENE_TT_HELP;
     }
-    if (!(settings->cutsceneFlags & 2)) {
+    if (!(settings->cutsceneFlags & CUTSCENE_TT_HELP)) {
         sCurrentMenuID = TT_MENU_INTRODUCTION;
     }
     if ((sCurrentMenuID != TT_MENU_GAME_STATUS) && (sCurrentMenuID != TT_MENU_INTRODUCTION)) {
@@ -7537,7 +7676,7 @@ s32 tt_menu_loop(void) {
                 i++;
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
-                settings->cutsceneFlags |= 2;
+                settings->cutsceneFlags |= CUTSCENE_TT_HELP;
                 sCurrentMenuID = TT_MENU_ROOT;
             }
             break;
