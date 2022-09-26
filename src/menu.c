@@ -4741,7 +4741,94 @@ void render_file_select_menu(UNUSED s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/menu/render_file_select_menu.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008D5F8.s")
+s32 func_8008D5F8(UNUSED s32 updateRate) {
+    u32 buttonsPressed;
+    s32 xAxisDirection;
+    s32 yAxisDirection;
+    s32 temp_a0;
+    u32 buttonsPressedPlayer2;
+
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    xAxisDirection = gControllersXAxisDirection[PLAYER_ONE];
+    yAxisDirection = gControllersYAxisDirection[PLAYER_ONE];
+    if (gNumberOfActivePlayers == 2) {
+        buttonsPressedPlayer2 = get_buttons_pressed_from_player(PLAYER_TWO);
+        buttonsPressed |= buttonsPressedPlayer2;
+        xAxisDirection += gControllersXAxisDirection[PLAYER_TWO];
+        yAxisDirection += gControllersYAxisDirection[PLAYER_TWO];
+    }
+    if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+        switch (D_801263E0) {
+            case 0:
+                if (gSavefileInfo[gSaveFileIndex].isStarted) {
+                    if (gIsInAdventureTwo != gSavefileInfo[gSaveFileIndex].isAdventure2) {
+                        play_sound_global(SOUND_HORN_DRUMSTICK, NULL);
+                        break;
+                    }
+                }
+                play_sound_global(SOUND_SELECT2, NULL);
+                return 1;
+            case 1:
+                play_sound_global(SOUND_SELECT2, NULL);
+                D_8012648C = gSaveFileIndex;
+                D_80126484 = 1;
+                D_80126494 = 0;
+                return 0;
+            case 2:
+                play_sound_global(SOUND_SELECT2, NULL);
+                D_8012648C = gSaveFileIndex;
+                D_80126488 = 1;
+                D_80126494 = 0;
+                return 0;
+        }
+    } else if (buttonsPressed & CONT_B) {
+        return -1;
+    }
+
+    temp_a0 = (D_801263E0 << 8) | gSaveFileIndex;
+    if (D_801263E0 == 0) {
+        // Left
+        if ((xAxisDirection < 0) && (gSaveFileIndex > 0)) {
+            gSaveFileIndex--;
+        }
+        // Right
+        if ((xAxisDirection > 0) && (gSaveFileIndex < 2)) {
+            gSaveFileIndex++;
+        }
+        // Down
+        if (yAxisDirection < 0) {
+            if (gSaveFileIndex >= 2) {
+                D_801263E0 = 2;
+            } else {
+                D_801263E0 = 1;
+            }
+        }
+    } else {
+        // Left
+        if ((xAxisDirection < 0) && (D_801263E0 == 2)) {
+            D_801263E0 = 1;
+        }
+        // Right
+        if ((xAxisDirection > 0) && (D_801263E0 == 1)) {
+            D_801263E0 = 2;
+        }
+        // Up
+        if (yAxisDirection > 0) {
+            if ((D_801263E0 == 1) && (gSaveFileIndex >= 2)) {
+                gSaveFileIndex = 0;
+            }
+            if ((D_801263E0 == 2) && (gSaveFileIndex <= 0)) {
+                gSaveFileIndex = 2;
+            }
+            D_801263E0 = 0;
+        }
+    }
+    if (temp_a0 != ((D_801263E0 << 8) | gSaveFileIndex)) {
+        play_sound_global(SOUND_MENU_PICK2, NULL);
+    }
+    return 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_8008D8BC.s")
 
 void func_8008DC7C(UNUSED s32 updateRate) {
@@ -4813,9 +4900,9 @@ void func_8008DC7C(UNUSED s32 updateRate) {
 }
 
 s32 menu_file_select_loop(s32 updateRate) {
-    s32 var_t0;
-    s32 temp_v0_4;
-    s32 new_var;
+    s32 i;
+    s32 currentMenuDelay;
+    u32 buttonsPressed;
     Settings *settings;
 
     settings = get_settings();
@@ -4824,22 +4911,22 @@ s32 menu_file_select_loop(s32 updateRate) {
         D_801263D8++;
         
         if (D_801263D8 >= 3) {
-            for (var_t0 = 0; var_t0 < 3; var_t0++) {
-                gSavefileInfo[var_t0].isAdventure2 = 0;
-                if (D_80126530[var_t0]->newGame) {
-                    gSavefileInfo[var_t0].isStarted = 0;
-                    gSavefileInfo[var_t0].balloonCount = 0;
-                    gSavefileInfo[var_t0].name[0] = 'D';
-                    gSavefileInfo[var_t0].name[1] = 'K';
-                    gSavefileInfo[var_t0].name[2] = 'R';
-                    gSavefileInfo[var_t0].name[3] = '\0';
+            for (i = 0; i < 3; i++) {
+                gSavefileInfo[i].isAdventure2 = 0;
+                if (D_80126530[i]->newGame) {
+                    gSavefileInfo[i].isStarted = 0;
+                    gSavefileInfo[i].balloonCount = 0;
+                    gSavefileInfo[i].name[0] = 'D';
+                    gSavefileInfo[i].name[1] = 'K';
+                    gSavefileInfo[i].name[2] = 'R';
+                    gSavefileInfo[i].name[3] = '\0';
                 } else {
-                    if (D_80126530[var_t0]->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
-                        gSavefileInfo[var_t0].isAdventure2 = TRUE;
+                    if (D_80126530[i]->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
+                        gSavefileInfo[i].isAdventure2 = TRUE;
                     }
-                    gSavefileInfo[var_t0].isStarted = TRUE;
-                    gSavefileInfo[var_t0].balloonCount = (u16) *D_80126530[var_t0]->balloonsPtr;
-                    decompress_filename_string(D_80126530[var_t0]->filename, gSavefileInfo[var_t0].name, 3);
+                    gSavefileInfo[i].isStarted = TRUE;
+                    gSavefileInfo[i].balloonCount = (u16) *D_80126530[i]->balloonsPtr;
+                    decompress_filename_string(D_80126530[i]->filename, gSavefileInfo[i].name, 3);
                 }
             }
             D_801263D8 = 0;
@@ -4862,15 +4949,15 @@ s32 menu_file_select_loop(s32 updateRate) {
         } else if (D_80126488 != 0) {
             func_8008DC7C(updateRate);
         } else if (D_80126CC0 != 0) {
-            if ((get_buttons_pressed_from_player(PLAYER_ONE) & B_BUTTON) && (D_800E0FA0 == 0)) {
+            buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+            if ((buttonsPressed & B_BUTTON) && (D_800E0FA0 == 0)) {
                 unload_big_font_4();
                 D_80126CC0 = 0;
-                gSavefileInfo[var_t0].name[0] = 'D';
-                gSavefileInfo[var_t0].name[1] = 'K';
-                gSavefileInfo[var_t0].name[2] = 'R';
-                gSavefileInfo[var_t0].name[3] = '\0';
+                gSavefileInfo[i].name[0] = 'D';
+                gSavefileInfo[i].name[1] = 'K';
+                gSavefileInfo[i].name[2] = 'R';
+                gSavefileInfo[i].name[3] = '\0';
             } else if (menu_enter_filename_loop(updateRate) != 0) {
-                new_var = 3;
                 unload_big_font_4();
                 D_80126CC0 = 0;
                 gSavefileInfo[gSaveFileIndex].isAdventure2 = 0;
@@ -4879,16 +4966,16 @@ s32 menu_file_select_loop(s32 updateRate) {
                 }
                 gSavefileInfo[gSaveFileIndex].isStarted = 1;
                 gSavefileInfo[gSaveFileIndex].balloonCount = 0;
-                settings->filename = compress_filename_string(gSavefileInfo[gSaveFileIndex].name, new_var);
+                settings->filename = compress_filename_string(gSavefileInfo[gSaveFileIndex].name, 3);
                 func_8006EB78(gSaveFileIndex);
                 set_music_fade_timer(-128);
                 func_800C01D8(&sMenuTransitionFadeIn);
                 gMenuDelay = 1;
             }
         } else {
-            temp_v0_4 = func_8008D5F8(updateRate);
-            if (temp_v0_4 != 0) {
-                if (temp_v0_4 > 0) {
+            currentMenuDelay = func_8008D5F8(updateRate);
+            if (currentMenuDelay != 0) {
+                if (currentMenuDelay > 0) {
                     if (gSavefileInfo[gSaveFileIndex].isStarted != 0) {
                         play_sound_global(0xEFU, NULL);
                         func_8006EB78(gSaveFileIndex);
@@ -4896,18 +4983,18 @@ s32 menu_file_select_loop(s32 updateRate) {
                     } else {
                         D_80126CC0 = 1;
                         D_800E0FB0 = 0;
-                        var_t0 = 0;
+                        i = 0;
                         if (osTvType == TV_TYPE_PAL) {
-                            var_t0 = 12;
+                            i = 12;
                         }
-                        func_80097874(var_t0 + 187, D_800E03CC[gSaveFileIndex].unk0 + D_800E03FC[0],
-                            D_800E03CC[gSaveFileIndex].unk2 + D_800E03FC[1] + var_t0, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
-                        temp_v0_4 = 0;
+                        func_80097874(i + 187, D_800E03CC[gSaveFileIndex].unk0 + D_800E03FC[0],
+                            D_800E03CC[gSaveFileIndex].unk2 + D_800E03FC[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
+                        currentMenuDelay = 0;
                     }
                 }
-                if (temp_v0_4 != 0) {
+                if (currentMenuDelay != 0) {
                     func_800C01D8(&sMenuTransitionFadeIn);
-                    gMenuDelay = temp_v0_4;
+                    gMenuDelay = currentMenuDelay;
                 }
             }
         }
