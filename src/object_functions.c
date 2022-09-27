@@ -236,30 +236,30 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         func_80011570(obj, trans78->x_position, trans78->y_position, trans78->z_position);
     } else {
         phi_f2 = (trans78->x_position - obj->segment.trans.x_position) * 0.1;
-        if (phi_f2 > 10.0) {
+        if (phi_f2 > 10.0f){
             phi_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
+        if (phi_f2 < -10.0f){
             phi_f2 = -10.0f;
         }
         obj->segment.x_velocity += (phi_f2 - obj->segment.x_velocity) * 0.125 * sp7C;
         phi_f2 = (trans78->y_position - obj->segment.trans.y_position) * 0.1;
-        if (phi_f2 > 10.0) {
+        if (phi_f2 > 10.0f){
             phi_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
+        if (phi_f2 < -10.0f){
             phi_f2 = -10.0f;
         }
         obj->segment.y_velocity += (phi_f2 - obj->segment.y_velocity) * 0.125 * sp7C;
         phi_f2 = (trans78->z_position - obj->segment.trans.z_position) * 0.1;
-        if (phi_f2 > 10.0) {
+        if (phi_f2 > 10.0f){
             phi_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
+        if (phi_f2 < -10.0f){
             phi_f2 = -10.0f;
         }
         obj->segment.z_velocity += (phi_f2 - obj->segment.z_velocity) * 0.125 * sp7C;
-        if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5) {
+        if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5f){
             obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
             obj->segment.trans.x_rotation -= speed << 9;
         }
@@ -298,7 +298,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
                 func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
             }
             obj->segment.trans.scale *= 0.9;
-            if (obj->segment.trans.scale < 0.5) {
+            if (obj->segment.trans.scale < 0.5f){
                 gParticlePtrList_addObject(obj);
             }
         }

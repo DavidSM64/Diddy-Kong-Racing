@@ -279,7 +279,7 @@ ALMicroTime __CSPVoiceHandler(void *node)
 #endif
 
 	    seqp->target = seqp->nextEvent.msg.spseq.seq;
-	    //__setUsptFromTempo (seqp, 500000.0);
+	    //__setUsptFromTempo (seqp, 500000.0f);
 	    if (seqp->bank)
 		__initFromBank((ALSeqPlayer *)seqp, seqp->bank);
 	    break;

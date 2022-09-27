@@ -386,6 +386,9 @@ void render_level_geometry_and_objects(void) {
     u8 sp58[128];
     s32 s0;
     Object *obj;
+#ifdef ENABLE_DEBUG_PROFILER
+    u32 first = osGetTime();
+#endif
 
     func_80012C30();
 
@@ -526,6 +529,9 @@ skip:
         func_8002581C(segmentIds, numberOfSegments, func_80066220());
     }
     D_8011B0FC = 0;
+#ifdef ENABLE_DEBUG_PROFILER
+    profiler_update(gPuppyTimers.graphTime, first);
+#endif
 }
 
 #ifdef NON_EQUIVALENT
@@ -836,7 +842,7 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
         }
         if (j == 3) {
             D_8011D380 = func_80066348((bb->x2 + bb->x1) >> 1, (bb->y2 + bb->y1) >> 1, (bb->z2 + bb->z1) >> 1);
-            if (D_8011D380 < 1000.0) {
+            if (D_8011D380 < 1000.0f){
                 D_8011B0BC = 1;
                 return TRUE;
             }

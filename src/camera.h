@@ -9,8 +9,6 @@
 #include "libultra_internal.h"
 #include "libc/math.h"
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
 #define SCREEN_WIDTH_HALF (SCREEN_WIDTH / 2)
 #define SCREEN_HEIGHT_HALF (SCREEN_HEIGHT / 2)
 

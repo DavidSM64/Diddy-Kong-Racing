@@ -894,7 +894,7 @@ u8 suCodeTimer = 0;
 
 #ifdef ENABLE_DEBUG_PROFILER
 u8 perfIteration = 0;
-f32 gFPS = 0;
+s32 gFPS = 0;
 u8 gProfilerOn = 0;
 u8 gWidescreen = 0;
 s32 sTriCount = 0;
@@ -902,7 +902,7 @@ s32 prevTime = 0;
 u32 sTimerTemp = 0;
 struct PuppyPrintTimers gPuppyTimers;
 
-#define FRAMETIME_COUNT 30
+#define FRAMETIME_COUNT 10
 
 OSTime frameTimes[FRAMETIME_COUNT];
 u8 curFrameTimeIndex = 0;
@@ -917,7 +917,7 @@ void calculate_and_update_fps(void) {
     if (curFrameTimeIndex >= FRAMETIME_COUNT) {
         curFrameTimeIndex = 0;
     }
-    gFPS = ((f32)FRAMETIME_COUNT * 1000000.0f) / (s32)OS_CYCLES_TO_USEC(newTime - oldTime);
+    gFPS = (FRAMETIME_COUNT * 1000000) / (s32)OS_CYCLES_TO_USEC(newTime - oldTime);
 }
 
 void rdp_profiler_update(u32 *time, u32 time2) {
@@ -944,7 +944,7 @@ void profiler_add(u32 *time, u32 offset) {
 }
 
 void render_profiler(void) {
-    render_printf("FPS: %0.02f\n", gFPS);
+    render_printf("FPS: %02d\n", gFPS);
     render_printf("CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
     render_printf("RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
     render_printf("RDP: %dus (%d%%)\n", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
@@ -1060,7 +1060,7 @@ void main_game_loop(void) {
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 #ifdef ENABLE_DEBUG_PROFILER
-    u32 first = osGetCount();
+    u32 first = osGetTime();
     gPuppyTimers.racerTime[PERF_AGGREGATE] -= gPuppyTimers.racerTime[perfIteration];
     gPuppyTimers.racerTime[perfIteration] = 0;
     if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
@@ -1154,11 +1154,6 @@ void main_game_loop(void) {
 
 #ifdef FIFO_UCODE
     if (suCodeTimer) {
-        if (suCodeSwitch) {
-            render_printf("Microcode Changed to Xbus (Original)");
-        } else {
-            render_printf("Microcode Changed to FIFO (Modified)");
-        }
         suCodeTimer--;
     }
 #endif

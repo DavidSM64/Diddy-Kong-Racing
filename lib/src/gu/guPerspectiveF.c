@@ -28,10 +28,10 @@ void guPerspectiveF(Matrix mf, u16 *perspNorm, float fovy, float aspect, float n
     }
 
     if (perspNorm != (u16 *) NULL) {
-        if (near+far<=2.0) {
+        if (near+far<=2.0f){
             *perspNorm = (u16) 0xFFFF;
         } else {
-            *perspNorm = (u16) ((2.0*65536.0)/(near+far));
+            *perspNorm = (u16) ((2.0*65536.0f)/(near+far));
         if (*perspNorm<=0)
             *perspNorm = (u16) 0x0001;
         }

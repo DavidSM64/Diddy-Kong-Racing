@@ -3,6 +3,7 @@
 
 #include "unknown_003260.h"
 #include "memory.h"
+#include "game.h"
 
 /************ .bss ************/
 
@@ -34,7 +35,7 @@ extern OSMesgQueue audDMAMessageQ;
 extern OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
 extern unk800DC6BC D_80119BD0;
 extern u16 *D_80119C28;
-extern f32 gVideoRefreshRate;
+//extern f32 gVideoRefreshRate;
 
 /******************************/
 
@@ -144,6 +145,9 @@ void thread4_audio(UNUSED void *arg) {
     s32 audioThreadMarkExit;
     s16 *audioThreadRetraceMesg;
     s16 *audioThreadUpdateMesg;
+#ifdef ENABLE_DEBUG_PROFILER
+    OSTime first;
+#endif
 
     audioThreadMarkExit = FALSE;
     audioThreadRetraceMesg = NULL;
@@ -152,11 +156,23 @@ void thread4_audio(UNUSED void *arg) {
     osScAddClient(D_80115F90, &audioStack, &OSMesgQueue_80116160, 1);
     while (!audioThreadMarkExit) {
         osRecvMesg(&OSMesgQueue_80116160, &audioThreadRetraceMesg, 1);
+#ifdef ENABLE_DEBUG_PROFILER
+        first = osGetTime();
+#endif
         switch (*audioThreadRetraceMesg) {
         case 1:
             func_80002C00(D_80115F98[(((u32) audFrameCt % 3))+2], audioThreadUpdateMesg);
+#ifdef ENABLE_DEBUG_PROFILER
+            profiler_update(gPuppyTimers.thread4Time, first);
+#endif
             osRecvMesg(&D_80116198, &audioThreadUpdateMesg, 1);
+#ifdef ENABLE_DEBUG_PROFILER
+            first = osGetTime();
+#endif
             func_80002DF8(audioThreadUpdateMesg);
+#ifdef ENABLE_DEBUG_PROFILER
+            profiler_add(gPuppyTimers.thread4Time, first);
+#endif
             break;
         case 4:
             // Mysterious void.

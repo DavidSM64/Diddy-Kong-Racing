@@ -247,12 +247,12 @@ static u32 __alCSeqGetTrackEvent(ALCSeq *seq, u32 track, ALEvent *event)
 f32 alCSeqTicksToSec(ALCSeq *seq, s32 ticks, u32 tempo)
 {
     return ((f32) (((f32)(ticks) * (f32)(tempo)) /
-                     ((f32)(seq->base->division) * 1000000.0)));
+                     ((f32)(seq->base->division) * 1000000.0f)));
 }
 
 u32 alCSeqSecToTicks(ALCSeq *seq, f32 sec, u32 tempo)
 {
-    return (u32)(((sec * 1000000.0) * seq->base->division) / tempo);
+    return (u32)(((sec * 1000000.0f)* seq->base->division) / tempo);
 }
 
 

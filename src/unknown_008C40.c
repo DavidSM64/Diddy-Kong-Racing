@@ -100,7 +100,7 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     dy = y2 - y1;
     dz = z2 - z1;
 
-    if (dx == 0.0 && dy == 0.0 && dz == 0.0) {
+    if (dx == 0.0 && dy == 0.0 && dz == 0.0f){
         temp = 0.0f;
     } else {
         temp = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) /
@@ -181,9 +181,9 @@ s32 func_80009AB4(u8 arg0) {
     }
 
     for (i = 0; i < levelHeader->unkB8; i++, var_a2++) {
-        if ((var_a2->unk0 == -100000.0) || 
-            (var_a2->unk0 + 1 == -100000.0) || 
-            (var_a2->unk0 + 2 == -100000.0)) {
+        if ((var_a2->unk0 == -100000.0f)|| 
+            (var_a2->unk0 + 1 == -100000.0f)|| 
+            (var_a2->unk0 + 2 == -100000.0f)) {
             ret = 0;
         }
     }

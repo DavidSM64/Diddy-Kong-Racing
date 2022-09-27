@@ -24,9 +24,7 @@
 
 
 
-
-
-
+// Don't touch any of this below.
 
 #ifdef DISABLE_AA
 #define AA_DEF 0

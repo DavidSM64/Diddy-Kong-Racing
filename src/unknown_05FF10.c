@@ -59,7 +59,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     sp3E = obj->segment.unk3B;
     sp3C = obj->segment.unk18;
     sp3A = racer->unk16A;
-    if ((racer->velocity < 0.3) && (racer->velocity > -0.3)) {
+    if ((racer->velocity < 0.3f)&& (racer->velocity > -0.3f)) {
         *buttonsPressed = 0;
     }
     if (racer->raceStatus == STATUS_FINISHED && func_80023568()) {
@@ -107,14 +107,14 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         xVelSquared = obj->segment.x_velocity * obj->segment.x_velocity;
         zVelSquared = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((xVelSquared * xVelSquared) + (zVelSquared * zVelSquared));
-        if (racer->velocity > -0.5) {
+        if (racer->velocity > -0.5f){
             racer->velocity = 0;
             obj->segment.x_velocity = 0;
             obj->segment.y_velocity = 0;
             obj->segment.z_velocity = 0;
         }
     }
-    racer->unkC += (updateRateF * 2.0);
+    racer->unkC += (updateRateF * 2.0f);
     obj68 = obj->unk68[0];
     temp_f2_3 = ((obj68->objModel->animations[obj->segment.unk3B].unk4 * 16) - 17);
     while (temp_f2_3 <= racer->unkC) {

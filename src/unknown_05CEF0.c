@@ -126,10 +126,10 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     temp_v0_2 = *obj->unk68;
     temp_f20 = ((temp_v0_2->objModel->animations[obj->segment.unk3B].unk4 * 16) - 17);
     if (obj->segment.unk3B != 3) {
-        if (racer->velocity < -2.0) {
+        if (racer->velocity < -2.0f){
             obj->segment.unk3B = 1;
             racer->unkC -= racer->velocity * updateRateF * 0.5;
-        } else if ((racer->velocity < -0.1) || (racer->velocity > 0.1)) {
+        } else if ((racer->velocity < -0.1f)|| (racer->velocity > 0.1f)) {
             obj->segment.unk3B = 2;
             racer->unkC -= racer->velocity * updateRateF * 2;
         } else {
@@ -175,7 +175,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     temp_v0_4 = get_object_struct(0);
     temp_f20 = temp_v0_4->segment.trans.x_position - obj->segment.trans.x_position;
     temp_f14 = temp_v0_4->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14)) < 700.0) {
+    if (sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14)) < 700.0f){
         var_v1 = (arctan2_f(temp_f20, temp_f14) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (var_v1 >= 0x8001) {
             var_v1 += 0xFFFF0001;
@@ -200,7 +200,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (D_8011D5C0 < temp_v0_4->segment.trans.y_position) {
         D_8011D5C0 = temp_v0_4->segment.trans.y_position;
     }
-    if ((temp_v0_4->segment.trans.y_position + 400.0) < D_8011D5C0) {
+    if ((temp_v0_4->segment.trans.y_position + 400.0f)< D_8011D5C0) {
         if (!func_800C018C() && is_in_two_player_adventure()) {
             func_8006F398();
         }

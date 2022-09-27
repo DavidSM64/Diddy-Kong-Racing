@@ -948,16 +948,16 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
         return 0;
     }
     var_v1 = 0;
-    test1 = (levelModel->unk3E + 1000.0);
+    test1 = (levelModel->unk3E + 1000.0f);
     if (newXPos > test1) {
         var_v1 = 1;
     }
-    test2 = (levelModel->unk3C - 1000.0);
+    test2 = (levelModel->unk3C - 1000.0f);
     if (obj->segment.trans.x_position < test2) {
         var_v1 = 1;
     }
     if (1) { } if (1) { } if (1) { }
-    test3 = (levelModel->unk42 + 3000.0);
+    test3 = (levelModel->unk42 + 3000.0f);
     if (obj->segment.trans.y_position > test3) {
         var_v1 = 1;
     }
@@ -965,11 +965,11 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     if (obj->segment.trans.y_position < test4) {
         var_v1 = 1;
     }
-    test5 = (levelModel->unk46 + 1000.0);
+    test5 = (levelModel->unk46 + 1000.0f);
     if (obj->segment.trans.z_position > test5) {
         var_v1 = 1;
     }
-    test6 = (levelModel->unk44 - 1000.0);
+    test6 = (levelModel->unk44 - 1000.0f);
     if (obj->segment.trans.z_position < test6) {
         var_v1 = 1;
     }
@@ -1717,7 +1717,7 @@ f32 catmull_rom_interpolation(f32 *arg0, s32 arg1, f32 arg2) {
     
     temp =  (-0.5 * arg0[arg1])    + ( 1.5 * arg0[arg1 + 1]) + (-1.5 * arg0[arg1 + 2]) + ( 0.5 * arg0[arg1 + 3]);
     temp2 = ( 1.0 * arg0[arg1])    + (-2.5 * arg0[arg1 + 1]) + ( 2.0 * arg0[arg1 + 2]) + (-0.5 * arg0[arg1 + 3]);
-    temp3 = (arg0[arg1 + 2] * 0.5) + ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
+    temp3 = (arg0[arg1 + 2] * 0.5f)+ ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
     
     ret = (1.0 * arg0[arg1 + 1]);
     ret = (((((temp * arg2) + temp2) * arg2) + temp3) * arg2) + ret;
@@ -1732,7 +1732,7 @@ f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3) {
     
     temp =  (-0.5 * arg0[arg1])    + ( 1.5 * arg0[arg1 + 1]) + (-1.5 * arg0[arg1 + 2]) + ( 0.5 * arg0[arg1 + 3]);
     temp2 = ( 1.0 * arg0[arg1])    + (-2.5 * arg0[arg1 + 1]) + ( 2.0 * arg0[arg1 + 2]) + (-0.5 * arg0[arg1 + 3]);
-    temp3 = (arg0[arg1 + 2] * 0.5) + ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
+    temp3 = (arg0[arg1 + 2] * 0.5f)+ ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
     
     ret = (1.0 * arg0[arg1 + 1]);
     *arg3 = (((temp * 3 * arg2) + (2 * temp2)) * arg2) + temp3;
