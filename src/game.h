@@ -36,12 +36,22 @@ enum NumberOfPlayers {
 };
 
 #ifdef ENABLE_DEBUG_PROFILER
+
+enum rspFlags {
+    RSP_NONE,
+    RSP_AUDIO_START,
+    RSP_GFX_START,
+    RSP_AUDIO_FINISHED,
+    RSP_GFX_FINISHED,
+    RSP_GFX_PAUSED,
+    RSP_GFX_RESUME,
+};
+
 #define NUM_PERF_ITERATIONS 32
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
 #define PERF_TOTAL NUM_PERF_ITERATIONS + 1
 typedef u32 PPTimer[NUM_PERF_ITERATIONS + 2];
-struct PuppyPrintTimers
-{
+struct PuppyPrintTimers {
     u32 cpuTime; // Sum of multiple CPU timings, and what will be displayed.
     u32 rspTime; // Sum of multiple RSP timings, and publicly shamed on the street.
     u32 rdpTime; // Sum of multiple RDP timings, and hung by its entrails for all to see.
