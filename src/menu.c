@@ -271,7 +271,7 @@ u16 gCheatInputCurrentRow;
 u16 gCheatInputCurrentColumn;
 u16 gCheatInputStringLength;
 s16 gOptionsMenuItemIndex;
-s32 gCheatInputString;
+s32 D_80126C48;
 s16 D_80126C4C;
 f32 D_80126C50;
 s8 D_80126C54;
@@ -6318,7 +6318,7 @@ void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5
     D_80126C78 = arg6;
     D_800E0FA0 = 0;
     D_80126C50 = (f32)*D_80126C6C;
-    gCheatInputString = 0;
+    D_80126C48 = FALSE;
     D_80126C3C = 0;
     D_80126C34 = 0;
     load_font(ASSET_FONTS_BIGFONT);
@@ -6405,7 +6405,7 @@ void render_enter_filename_ui(UNUSED s32 unused) {
 GLOBAL_ASM("asm/non_matchings/menu/render_enter_filename_ui.s")
 #endif
 
-s32 menu_enter_filename_loop(s32 arg0) {
+s32 menu_enter_filename_loop(s32 updateRate) {
     s32 var_v0_2;
     f32 temp_f20;
     u32 buttonsPressed;
@@ -6426,8 +6426,8 @@ s32 menu_enter_filename_loop(s32 arg0) {
             D_80126C34 = 0;
             D_80126C3C = -1;
         }
-        D_80126C34 += arg0;
-        if (arg0 != D_80126C34) {
+        D_80126C34 += updateRate;
+        if (updateRate != D_80126C34) {
             if (D_80126C34 < 28) {
                 joytickXAxis = 0;
             } else {
@@ -6439,8 +6439,8 @@ s32 menu_enter_filename_loop(s32 arg0) {
             D_80126C34 = 0;
             D_80126C3C = 1;
         }
-        D_80126C34 += arg0;
-        if (arg0 != D_80126C34) {
+        D_80126C34 += updateRate;
+        if (updateRate != D_80126C34) {
             if (D_80126C34 < 28) {
                 joytickXAxis = 0;
             } else {
@@ -6453,7 +6453,7 @@ s32 menu_enter_filename_loop(s32 arg0) {
     }
     temp_a1 = D_80126C6C;
     temp_f20 = (f32) *temp_a1;
-    for (var_v1 = 0; var_v1 < arg0; var_v1++) {
+    for (var_v1 = 0; var_v1 < updateRate; var_v1++) {
         if (D_80126C50 <= temp_f20) {
             var_f12 = temp_f20 - D_80126C50;
             var_f14 = temp_f20 - (D_80126C50 + 31.0f);
@@ -6502,7 +6502,7 @@ s32 menu_enter_filename_loop(s32 arg0) {
                 }
                 D_80126C74[D_80126C78] = '\0';
                 play_sound_global(SOUND_SELECT2, NULL);
-                gCheatInputString = 1;
+                D_80126C48 = TRUE;
             }
         } else if (buttonsPressed & B_BUTTON) {
             if (D_800E0FA0 > 0) {
@@ -6531,14 +6531,14 @@ s32 menu_enter_filename_loop(s32 arg0) {
         }
     } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
         play_sound_global(SOUND_SELECT2, NULL);
-        gCheatInputString = 1;
+        D_80126C48 = TRUE;
     } else if (buttonsPressed & B_BUTTON) {
         D_800E0FA0--;
         D_80126C74[D_800E0FA0] = 0;
         play_sound_global(SOUND_MENU_BACK3, NULL);
     }
-    render_enter_filename_ui(arg0);
-    return gCheatInputString;
+    render_enter_filename_ui(updateRate);
+    return D_80126C48;
 }
 
 /**

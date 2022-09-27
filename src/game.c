@@ -1827,9 +1827,9 @@ void func_8006EB5C(void) {
     D_800DD37C |= 0x03;
 }
 
-void func_8006EB78(s32 arg0) {
+void func_8006EB78(s32 saveFileIndex) {
     D_800DD37C &= -0x301;
-    D_800DD37C |= (0x04 | ((arg0 & 3) << 8));
+    D_800DD37C |= (0x04 | ((saveFileIndex & 3) << 8));
 }
 
 void func_8006EBA8(void) {

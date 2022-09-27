@@ -669,6 +669,9 @@ extern f32 D_80126BDC;
 extern f32 D_80126BEC;
 extern SavefileInfo gSavefileInfo[4];
 
+extern s8 gControllersXAxisDirection[4];
+extern s8 gControllersYAxisDirection[4];
+
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
 void func_8007FF88(void);
@@ -816,7 +819,7 @@ void func_80093A40(void);
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
-s32 menu_enter_filename_loop(s32 arg0);
+s32 menu_enter_filename_loop(s32 updateRate);
 s32 menu_file_select_loop(s32 updateRate);
 s32 func_8008D5F8(s32 updateRate);
 void func_8008C168(s32 updateRate);
