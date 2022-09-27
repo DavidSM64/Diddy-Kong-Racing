@@ -74,9 +74,9 @@ s32 D_80126438[4];
 
 //Eeeprom save data bits stored at address 0xF
 //bit 0      = Adventure Two is Unlocked
-//bit 1      = Used to set the CHEAT_MIRRORED_TRACKS magic code flag
+//bit 1      = Used to set the CHEAT_CONTROL_DRUMSTICK magic code flag. Drumstick is unlocked flag?
 //bits 2-3   = Current language value
-//bits 4-23  = Used to set the CHEAT_CONTROL_DRUMSTICK magic code flag
+//bits 4-23  = Used to set the CHEAT_CONTROL_TT magic code flag. Could be tracks where TT has been beat?
 //bit 24     = Unknown, but it's set as a default high bit.
 //bit 25     = Seems to be a flag for whether subtitles are enabled or not.
 //bits 26-55 = Unknown, but it could be a set of flags for unlocked tracks
@@ -90,7 +90,7 @@ f32 sBootScreenTimer;
 s8 gControllersXAxisDelay[4];
 s8 gControllersYAxisDelay[4];
 s8 gControllersXAxisDirection[4]; // X axis (-1 = left, 1 = right) for controller
-MenuElement **D_80126460;
+MenuElement *D_80126460;
 s8 gControllersYAxisDirection[4]; // Y axis (-1 = down, 1 = up) for controller
 s8 gControllersXAxis[4];
 s8 gControllersYAxis[4];
@@ -2271,10 +2271,10 @@ s32 menu_logo_screen_loop(s32 updateRate) {
  */
 void init_title_screen_variables(void) {
     if (sEepromSettings & 2) {
-        set_magic_code_flags(2);
+        set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
     }
     if ((sEepromSettings & 0xFFFFF0) == 0xFFFFF0) {
-        set_magic_code_flags(1);
+        set_magic_code_flags(CHEAT_CONTROL_TT);
     }
     if (sEepromSettings & 1) {
         gIsInAdventureTwo = 1;
@@ -4447,12 +4447,10 @@ void menu_game_select_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_game_select_init.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-void func_8008C698(s32 arg0) {
-    s32 fade;
+void func_8008C698(s32 updateRate) {
     s32 i;
     s32 filterAlpha;
-    u8 temp;
+    s32 fade;
 
     if (gMenuDelay >= -21 && gMenuDelay < 22) {
         fade = D_801263BC * 8;
@@ -4467,9 +4465,8 @@ void func_8008C698(s32 arg0) {
             if (i == D_800DF460) {
                 filterAlpha = fade;
             }
-            // This doesn't match.
-            temp = i; // How do I make this a `mov`?
-            (&((unk80126460 *)D_80126460)[temp] + 1)->elem[1].filterAlpha = filterAlpha;
+            //Fakematch? What's the (i ^ 0)?
+            D_80126460[((i ^ 0) * 2) + 3].filterAlpha = filterAlpha;
         }
 
         if (osTvType == TV_TYPE_PAL) {
@@ -4480,22 +4477,19 @@ void func_8008C698(s32 arg0) {
             D_800DF7A0 = 0;
         }
 
-        draw_menu_elements(1, (MenuElement *)D_80126460, 1.0f);
+        draw_menu_elements(1, D_80126460, 1.0f);
         func_80080BC8(&sMenuCurrDisplayList);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_8008C698.s")
-#endif
 
-s32 menu_game_select_loop(s32 arg0) {
+s32 menu_game_select_loop(s32 updateRate) {
     s32 playerInputs;
     s32 playerYDir;
     s32 charSelectScene;
 
-    func_8008C168(arg0);
+    func_8008C168(updateRate);
 
-    D_801263BC = (D_801263BC + arg0) & 0x3F;
+    D_801263BC = (D_801263BC + updateRate) & 0x3F;
 
     if (D_801263D8 != 0) {
         D_801263D8++;
@@ -4506,9 +4500,9 @@ s32 menu_game_select_loop(s32 arg0) {
     }
     if (gMenuDelay != 0) {
         if (gMenuDelay < 0) {
-            gMenuDelay -= arg0;
+            gMenuDelay -= updateRate;
         } else {
-            gMenuDelay += arg0;
+            gMenuDelay += updateRate;
         }
     }
     if (gMenuDelay >= 0x1F) {
@@ -4541,7 +4535,7 @@ s32 menu_game_select_loop(s32 arg0) {
         menu_init(MENU_CHARACTER_SELECT);
         return 0;
     } else {
-        func_8008C698(arg0);
+        func_8008C698(updateRate);
         if ((gMenuDelay == 0) && (D_801263D8 == 0)) {
             playerInputs = get_buttons_pressed_from_player(PLAYER_ONE);
             playerYDir = gControllersYAxisDirection[0];

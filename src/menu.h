@@ -807,7 +807,7 @@ s32 menu_5_loop(s32 updateRate);
 void func_80095624(s32 status);
 s32 menu_boot_loop(s32 arg0);
 void menu_magic_codes_init(void);
-s32 menu_game_select_loop(s32 arg0);
+s32 menu_game_select_loop(s32 updateRate);
 s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
@@ -820,6 +820,7 @@ s32 menu_enter_filename_loop(s32 arg0);
 s32 menu_file_select_loop(s32 updateRate);
 s32 func_8008D5F8(s32 updateRate);
 void func_8008C168(s32 updateRate);
+void func_8008C698(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -832,7 +833,6 @@ s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
 void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
-void func_8008C698(s32 arg0);
 void render_file_select_menu(s32 arg0);
 void func_8008FF1C(s32 updateRate);
 void func_800904E8(s32 updateRate);
