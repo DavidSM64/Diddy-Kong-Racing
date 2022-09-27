@@ -897,6 +897,9 @@ u8 perfIteration = 0;
 f32 gFPS = 0;
 u8 gProfilerOn = 0;
 u8 gWidescreen = 0;
+s32 sTriCount = 0;
+s32 prevTime = 0;
+u32 sTimerTemp = 0;
 struct PuppyPrintTimers gPuppyTimers;
 
 #define FRAMETIME_COUNT 30
@@ -940,8 +943,7 @@ void profiler_add(u32 *time, u32 offset) {
     time[perfIteration] += offset;
 }
 
-void render_profiler(void)
-{
+void render_profiler(void) {
     render_printf("FPS: %0.02f\n", gFPS);
     render_printf("CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
     render_printf("RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
@@ -951,16 +953,12 @@ void render_profiler(void)
     if (gPuppyTimers.racerTime[PERF_TOTAL])
         render_printf("Racer: %dus\n", gPuppyTimers.racerTime[PERF_TOTAL]);
     render_printf("Audio: %dus\n", gPuppyTimers.thread4Time[PERF_TOTAL]);
-    if (gPlatform & IQUE)
-        render_printf("iQue Player\n");
-    else
-    if (gPlatform & CONSOLE)
-        render_printf("N64 Console\n");
-    else
-    if (gPlatform & VC)
-        render_printf("Wii VC\n");
-    else
-        render_printf("N64 Emulator\n");
+    render_printf("Tri: %d\n", sTriCount);
+    if (!suCodeSwitch) {
+        render_printf("GFX: FIFO");
+    } else {
+        render_printf("GFX: XBUS");
+    }
 }
 
 /// Add whichever times you wish to create aggregates of.
@@ -1043,10 +1041,6 @@ s32 count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
     return triCount;
 }
 
-s32 sTriCount = 0;
-s32 prevTime = 0;
-u32 sTimerTemp = 0;
-
 void count_triangles(u8 *dlist, u8 *dlistEnd) {
     sTimerTemp++;
     if ((sTimerTemp % 2) == 0) {
@@ -1054,7 +1048,6 @@ void count_triangles(u8 *dlist, u8 *dlistEnd) {
         sTriCount = count_triangles_in_dlist(dlist, dlistEnd);
         sTimerTemp = (s32) OS_CYCLES_TO_USEC(osGetCount() - first);
     }
-    render_printf("Tri: %d\n", sTriCount);
 }
 #endif
 
