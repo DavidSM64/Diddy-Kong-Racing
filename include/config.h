@@ -36,4 +36,10 @@
 #define RD_DEF IM_RD
 #endif
 
+#ifdef EXPANSION_PAK
+    #define RAM_END 0x80800000
+#else
+    #define RAM_END 0x80400000
+#endif
+
 #endif // CONFIG_H

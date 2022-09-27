@@ -1063,6 +1063,11 @@ void main_game_loop(void) {
     u32 first = osGetCount();
     gPuppyTimers.racerTime[PERF_AGGREGATE] -= gPuppyTimers.racerTime[perfIteration];
     gPuppyTimers.racerTime[perfIteration] = 0;
+    if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
+        gProfilerOn ^= 1;
+    }
+
+
 #else
     osSetTime(0);
 #endif
@@ -1141,7 +1146,10 @@ void main_game_loop(void) {
     // menus & gameplay.
 
 #ifdef ENABLE_DEBUG_PROFILER
-
+    if (gProfilerOn) {
+        render_profiler();
+        count_triangles((u8*)gDisplayLists[gSPTaskNum], (u8*)gCurrDisplayList);
+    }
 #endif
 
 #ifdef FIFO_UCODE
