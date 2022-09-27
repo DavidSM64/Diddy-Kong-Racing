@@ -214,7 +214,7 @@ s32 setup_ostask_xbus(Gfx* arg0, Gfx* arg1, s32 arg2) {
     return 0;
 }
 
-void setup_ostask_xbus_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
+UNUSED void setup_ostask_xbus_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
     DKR_OSTask *dkrtask;
     s32 *sp20;
 
@@ -308,7 +308,7 @@ void setup_ostask_fifo(Gfx* arg0, Gfx* arg1, s32 arg2) {
     }
 }
 
-void setup_ostask_fifo_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
+UNUSED void setup_ostask_fifo_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
     DKR_OSTask *dkrtask;
     s32 *sp20;
 

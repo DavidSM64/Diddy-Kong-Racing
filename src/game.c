@@ -1048,6 +1048,10 @@ void count_triangles(u8 *dlist, u8 *dlistEnd) {
 }
 #endif
 
+u32 sPrevTime = 0;
+u32 sDeltaTime = 0;
+s32 sTotalTime = 0;
+
 /**
  * The main gameplay loop.
  * Contains all game logic, audio and graphics processing.
@@ -1055,6 +1059,7 @@ void count_triangles(u8 *dlist, u8 *dlistEnd) {
 void main_game_loop(void) {
     s32 debugLoopCounter;
     s32 framebufferSize;
+    s32 framDebt = 0;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 #ifdef ENABLE_DEBUG_PROFILER
     u32 first = osGetTime();
@@ -1121,6 +1126,25 @@ void main_game_loop(void) {
         }
     }
 
+    sDeltaTime = osGetTime() - sPrevTime;
+    sPrevTime = osGetTime();
+    sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
+    sTotalTime -= 33333;
+    if (sTotalTime > 50000) {
+        sLogicUpdateRate+=3;
+        sTotalTime = 0;
+    } else
+    if (sTotalTime > 33333) {
+        sLogicUpdateRate+=2;
+        sTotalTime -= 33333;
+    } else
+    if (sTotalTime > 16666) {
+        sLogicUpdateRate++;
+        sTotalTime -= 16666;
+    }
+    if (sTotalTime <= 0) {
+        sTotalTime = 0;
+    }
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
             pre_intro_loop();
