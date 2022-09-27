@@ -8,6 +8,7 @@
 #include "f3ddkr.h"
 #include "libultra_internal.h"
 #include "viint.h"
+#include "src/game.h"
 
 /*
  * private typedefs and defines
@@ -209,6 +210,9 @@ void func_80079760(OSSched *sc) {
     OSScTask *dp = 0;
 
     if (sc->audioListHead) {
+#ifdef ENABLE_DEBUG_PROFILER
+        puppyprint_update_rsp(RSP_AUDIO_START);
+#endif
         sc->doAudio = 1;
     }
     if (sc->doAudio && sc->curRSPTask) {
@@ -332,6 +336,9 @@ void __scHandleRSP(OSSched *sc) {
     //Rare seems to have edited this function, most specifically here.
     //Still need to do better for a match, but this does work
     if (t->list.t.type == M_AUDTASK) {
+#ifdef ENABLE_DEBUG_PROFILER
+        puppyprint_update_rsp(RSP_AUDIO_FINISHED);
+#endif
         gRSPAudTaskCount = osGetCount();
         D_800DE74C = (f32) (((f32) (gRSPAudTaskCount - D_80126120) * 60.0f) / OS_CPU_COUNTER_F);
         D_800DE744 = (f32) (D_800DE744 + D_800DE74C);
@@ -351,12 +358,18 @@ void __scHandleRSP(OSSched *sc) {
             t->state |= OS_SC_YIELDED;
             if ((t->flags & OS_SC_TYPE_MASK) == OS_SC_XBUS) {
                 /* push the task back on the list */
+#ifdef ENABLE_DEBUG_PROFILER
+                puppyprint_update_rsp(RSP_GFX_PAUSED);
+#endif
                 t->next = sc->gfxListHead;
                 sc->gfxListHead = t;
                 if (sc->gfxListTail == 0)
                     sc->gfxListTail = t;
             }
         } else {
+#ifdef ENABLE_DEBUG_PROFILER
+            puppyprint_update_rsp(RSP_GFX_RESUME);
+#endif
             t->state &= ~OS_SC_NEEDS_RSP;
     /* BEGIN TODO: This just feels wrong, but it matches */
             do{} while(0);
@@ -366,6 +379,9 @@ void __scHandleRSP(OSSched *sc) {
     } else {
         t->state &= ~OS_SC_NEEDS_RSP;
         __scTaskComplete(sc, t);
+#ifdef ENABLE_DEBUG_PROFILER
+        puppyprint_update_rsp(RSP_GFX_FINISHED);
+#endif
     }
 
     state = ((sc->curRSPTask == 0) << 1) | (sc->curRDPTask == 0);
@@ -442,6 +458,9 @@ void __scAppendList(OSSched *sc, OSScTask *t) {
     long type = t->list.t.type;
 
     if (type == M_AUDTASK) {
+#ifdef ENABLE_DEBUG_PROFILER
+        puppyprint_update_rsp(RSP_AUDIO_START);
+#endif
         if(sc->audioListTail)
             sc->audioListTail->next = t;
         else
@@ -449,6 +468,9 @@ void __scAppendList(OSSched *sc, OSScTask *t) {
 
         sc->audioListTail = t;
     } else {
+#ifdef ENABLE_DEBUG_PROFILER
+        puppyprint_update_rsp(RSP_GFX_START);
+#endif
         if(sc->gfxListTail)
             sc->gfxListTail->next = t;
         else
@@ -464,6 +486,9 @@ void __scAppendList(OSSched *sc, OSScTask *t) {
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
     if (sp) {
         if (sp->list.t.type == M_AUDTASK) {
+#ifdef ENABLE_DEBUG_PROFILER
+            puppyprint_update_rsp(RSP_AUDIO_START);
+#endif
             osWritebackDCacheAll();  /* flush the cache */
             D_80126120 = osGetCount();
         }
@@ -488,6 +513,9 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
 void __scYield(OSSched *sc) {
     if (sc->curRSPTask->list.t.type == M_GFXTASK) {
         sc->curRSPTask->state |= OS_SC_YIELD;
+#ifdef ENABLE_DEBUG_PROFILER
+        puppyprint_update_rsp(RSP_GFX_PAUSED);
+#endif
         gYieldTime = osGetTime();
         osSpTaskYield();
     } 
@@ -551,7 +579,9 @@ static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                                   assert(sc->curRDPTask == gfx);
 
                           }
-
+#ifdef ENABLE_DEBUG_PROFILER
+                          puppyprint_update_rsp(RSP_GFX_RESUME);
+#endif
                           sc->gfxListHead = sc->gfxListHead->next;
                           if (sc->gfxListHead == NULL)
                               sc->gfxListTail = NULL;
@@ -561,6 +591,9 @@ static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                       if (avail == (OS_SC_SP | OS_SC_DP)) {
                           *sp = *dp = gfx;
                           avail &= ~(OS_SC_SP | OS_SC_DP);
+#ifdef ENABLE_DEBUG_PROFILER
+                          puppyprint_update_rsp(RSP_GFX_FINISHED);
+#endif
                           sc->gfxListHead = sc->gfxListHead->next;
                           if (sc->gfxListHead == NULL)
                               sc->gfxListTail = NULL;
