@@ -4829,7 +4829,100 @@ s32 func_8008D5F8(UNUSED s32 updateRate) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008D8BC.s")
+void func_8008D8BC(UNUSED s32 updateRate) {
+    s32 prevValue;
+    u32 buttonsPressed;
+    s32 xAxisDirection;
+    s32 i;
+    Settings *settings;
+    u32 buttonsPressedPlayerTwo;
+
+    settings = get_settings();
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    xAxisDirection = gControllersXAxisDirection[PLAYER_ONE];
+    if (gNumberOfActivePlayers == 2) {
+        buttonsPressedPlayerTwo = get_buttons_pressed_from_player(PLAYER_TWO);
+        buttonsPressed |= buttonsPressedPlayerTwo;
+        xAxisDirection += gControllersXAxisDirection[PLAYER_TWO];
+    }
+    if (D_80126494 == 0) {
+        if (buttonsPressed & (B_BUTTON)) {
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+            D_80126484 = 0;
+            return;
+        }
+        if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            if (gSavefileInfo[D_8012648C].isStarted) {
+                play_sound_global(SOUND_SELECT2, NULL);
+                func_8006EB78(D_8012648C);
+                D_80126490 = D_8012648C;
+                D_80126494 = 1;
+                return;
+            }
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+            return;
+        }
+        prevValue = D_8012648C;
+        if ((xAxisDirection < 0) && (D_8012648C > 0)) {
+            D_8012648C--;
+        }
+        if ((xAxisDirection > 0) && (D_8012648C < 2)) {
+            D_8012648C++;
+        }
+        if (prevValue != D_8012648C) {
+            play_sound_global(SOUND_MENU_PICK2, NULL);
+        }
+    } else if (D_80126494 == 1) {
+        if (buttonsPressed & B_BUTTON) {
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+            D_8012648C = D_80126490;
+            D_80126494 = 0;
+            return;
+        }
+        if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            if (!gSavefileInfo[D_80126490].isStarted) {
+                play_sound_global(SOUND_SELECT2, NULL);
+                D_80126494 = 2;
+                return;
+            }
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+            return;
+        }
+        prevValue = D_80126490;
+        if ((xAxisDirection < 0) && (D_80126490 > 0)) {
+            D_80126490--;
+        }
+        if ((xAxisDirection > 0) && (D_80126490 < 2)) {
+            D_80126490++;
+        }
+        if (prevValue != D_80126490) {
+            play_sound_global(SOUND_MENU_PICK2, NULL);
+        }
+    } else {
+        if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            play_sound_global(SOUND_SELECT2, NULL);
+            func_8006EC18(D_80126490);
+            gSavefileInfo[D_80126490].isAdventure2 = FALSE;
+            gSavefileInfo[D_80126490].isStarted = TRUE;
+            gSavefileInfo[D_80126490].balloonCount = *settings->balloonsPtr;
+            if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
+                gSavefileInfo[D_80126490].isAdventure2 = 1;
+            }
+            for (i = 0; gSavefileInfo[D_8012648C].name[i] != '\0'; i++) {
+                gSavefileInfo[D_80126490].name[i] = gSavefileInfo[D_8012648C].name[i];
+            }
+            gSavefileInfo[D_80126490].name[i] = '\0';
+            gSaveFileIndex = D_80126490;
+            D_801263E0 = 0;
+            D_80126484 = 0;
+            return;
+        }
+        if (buttonsPressed & B_BUTTON) {
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+            D_80126494 = 1;
+        }
+    }
+}
 
 void func_8008DC7C(UNUSED s32 updateRate) {
     s32 buttonsPressed;
