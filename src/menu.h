@@ -289,7 +289,7 @@ extern s32 sMenuGuiOpacity;
 extern s32 D_800DF768;
 
 extern s32 D_800DF794;
-extern s32 D_800DF798;
+extern MenuElement *D_800DF798;
 extern s32 D_800DF79C;
 
 extern s32 D_800DF7A0;
@@ -680,7 +680,7 @@ void func_800813C0(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
-void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
+void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
 void print_missing_controller_text(Gfx **dl, s32 updateRate);
 void menu_logos_screen_init(void);

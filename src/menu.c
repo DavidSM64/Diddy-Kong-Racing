@@ -382,7 +382,7 @@ UNUSED FadeTransition sMenuTransitionFadeInWhite = FADE_TRANSITION(0, FADE_COLOR
 UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(0x80, FADE_COLOR_WHITE, 18, 0);
 
 s32 D_800DF794 = 4;
-s32 D_800DF798 = 0;
+MenuElement *D_800DF798 = NULL;
 s32 D_800DF79C = 0;
 
 s32 D_800DF7A0 = 0;
@@ -1965,7 +1965,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80081C04.s")
 
-void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
+void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
     D_800DF798 = arg0;
     D_800DF794 = 0;
     D_80126858 = arg1 * 60.0f;
@@ -1979,7 +1979,86 @@ void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+// Single reg swap needed to match
+s32 func_80081F4C(s32 updateRate) {
+    f32 var_f20;
+    s32 ret;
+    s32 i;
+    s32 buttonsPressedAllPlayers;
+
+    ret = 1;
+    var_f20 = -1.0f;
+    buttonsPressedAllPlayers = 0;
+    if (D_800DF794 != 4) {
+        if (gIgnorePlayerInput == 0) {
+            for (i = 0; i < gNumberOfActivePlayers; i++) {
+                buttonsPressedAllPlayers |= get_buttons_pressed_from_player(i);
+            }
+        }
+        D_80126854 += updateRate;
+        do {
+            switch (D_800DF794) {
+                case 0:
+                    if (buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) {
+                        D_80126854 = 0;
+                        D_800DF794 = 1;
+                        buttonsPressedAllPlayers = 0;
+                    } else {
+                        if (D_80126854 >= D_80126858) {
+                            D_80126854 = D_80126854 - D_80126858;
+                            D_800DF794 = 1;
+                            D_800DF794 = 1;
+                        } else {
+                            var_f20 = (f32) D_80126854 / (f32) D_80126858;
+                        }
+                    }
+                    break;
+                case 1:
+                    if (D_8012685C < 0) {
+                        D_80126854 = 0;
+                    }
+                    if (buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) {
+                        D_80126854 = 0;
+                        D_800DF794 = 2;
+                        buttonsPressedAllPlayers = 0;
+                        // Needs to increase regalloc by one,
+                        // This is also a weird check for what it's worth
+                        if ((D_80126860 > 0) != 0) {
+                            play_sound_global(SOUND_WHOOSH1, NULL);
+                        }
+                    } else {
+                        if (D_80126854 >= D_8012685C) {
+                            D_80126854 -= D_8012685C;
+                            D_800DF794 = 2;
+                            if (D_80126854 < D_80126860) {
+                                play_sound_global(SOUND_WHOOSH1, NULL);
+                            }
+                        } else {
+                            var_f20 = (f32) D_80126854 / (f32) D_8012685C;
+                        }
+                    }
+                    break;
+                case 2:
+                    if ((buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) || (D_80126854 >= D_80126860)) {
+                        D_800DF794 = 4;
+                    } else {
+                        var_f20 = (f32) D_80126854 / (f32) D_80126860;
+                    }
+                    break;
+            }
+        } while ((var_f20 < 0.0f) && (D_800DF794 != 4));
+
+        if (D_800DF794 != 4) {
+            draw_menu_elements(D_800DF794, D_800DF798, var_f20);
+            ret = 0;
+        }
+    }
+    return ret;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80081F4C.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 
