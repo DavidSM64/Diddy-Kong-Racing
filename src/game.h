@@ -35,6 +35,46 @@ enum NumberOfPlayers {
     FOUR_PLAYERS  = 3
 };
 
+#ifdef ENABLE_DEBUG_PROFILER
+#define NUM_PERF_ITERATIONS 32
+#define PERF_AGGREGATE NUM_PERF_ITERATIONS
+#define PERF_TOTAL NUM_PERF_ITERATIONS + 1
+typedef u32 PPTimer[NUM_PERF_ITERATIONS + 2];
+struct PuppyPrintTimers
+{
+    u32 cpuTime; // Sum of multiple CPU timings, and what will be displayed.
+    u32 rspTime; // Sum of multiple RSP timings, and publicly shamed on the street.
+    u32 rdpTime; // Sum of multiple RDP timings, and hung by its entrails for all to see.
+    u32 rspPauseTime; // Buffer that keeps track of the halt time of the Gfx task.
+    u32 rspGfxBufTime; // Buffer that keeps track of the current Gfx task;
+    u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task;
+    u32 threadsTime; // The combined processing time from thread 2, 3 and 6.
+    PPTimer collisionTime; // Collision execution time.
+    PPTimer behaviourTime; // Behaviour script execution time.
+    PPTimer racerTime; // Behaviour script execution time.
+    PPTimer thread2Time; // Fault thread execution time.
+    PPTimer thread3Time; // Task thread execution time.
+    PPTimer thread4Time; // Audio thread execution time.
+    PPTimer thread5Time; // Game thread execution time.
+    PPTimer thread6Time; // Rumble thread execution time.
+    PPTimer graphTime; // Graph Node processing time.
+    PPTimer dmaTime; // thread 5 DMA time.
+    PPTimer dmaAudioTime; // thread 4 DMA time.
+    PPTimer cameraTime; // Camera behaviour.
+    PPTimer profilerTime; // Profiler rendering time.
+    PPTimer controllerTime; // Controller polling time.
+    PPTimer rspAudioTime; // RSP Audio processing time.
+    PPTimer rspGfxTime; // RSP Graphics processing time.
+    PPTimer rdpBufTime; // RDP buffer processing time.
+    PPTimer rdpBusTime; // RDP pipe busy time.
+    PPTimer rdpTmmTime; // RDP texture memory time.
+};
+extern struct PuppyPrintTimers gPuppyTimers;
+extern void profiler_update(u32 *time, u32 time2);
+extern void puppyprint_update_rsp(u8 flags);
+extern void profiler_add(u32 *time, u32 offset);
+#endif
+
 extern s8 *D_800DD310;
 extern s8  D_800DD314;
 extern u8  D_800DD318;

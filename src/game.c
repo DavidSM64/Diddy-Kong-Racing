@@ -892,6 +892,172 @@ s8 suCodeSwitch = 0;
 u8 suCodeTimer = 0;
 #endif
 
+#ifdef ENABLE_DEBUG_PROFILER
+u8 perfIteration = 0;
+f32 gFPS = 0;
+u8 gProfilerOn = 0;
+u8 gWidescreen = 0;
+struct PuppyPrintTimers gPuppyTimers;
+
+#define FRAMETIME_COUNT 30
+
+OSTime frameTimes[FRAMETIME_COUNT];
+u8 curFrameTimeIndex = 0;
+
+// Call once per frame
+void calculate_and_update_fps(void) {
+    OSTime newTime = osGetTime();
+    OSTime oldTime = frameTimes[curFrameTimeIndex];
+    frameTimes[curFrameTimeIndex] = newTime;
+
+    curFrameTimeIndex++;
+    if (curFrameTimeIndex >= FRAMETIME_COUNT) {
+        curFrameTimeIndex = 0;
+    }
+    gFPS = ((f32)FRAMETIME_COUNT * 1000000.0f) / (s32)OS_CYCLES_TO_USEC(newTime - oldTime);
+}
+
+void rdp_profiler_update(u32 *time, u32 time2) {
+    time[PERF_AGGREGATE] -= time[perfIteration];
+    time[perfIteration] = time2;
+    time[PERF_AGGREGATE] += time[perfIteration];
+}
+
+void profiler_update(u32 *time, u32 time2)
+{
+    time[PERF_AGGREGATE] -= time[perfIteration];
+    time[perfIteration] = (osGetTime() - time2);
+    time[PERF_AGGREGATE] += time[perfIteration];
+}
+
+void profiler_offset(u32 *time, u32 offset) {
+    time[PERF_AGGREGATE] -= offset;
+    time[perfIteration] -= offset;
+}
+
+void profiler_add(u32 *time, u32 offset) {
+    time[PERF_AGGREGATE] += offset;
+    time[perfIteration] += offset;
+}
+
+void render_profiler(void)
+{
+    render_printf("FPS: %0.02f\n", gFPS);
+    render_printf("CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
+    render_printf("RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
+    render_printf("RDP: %dus (%d%%)\n", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
+    render_printf("Logic: %dus\n", gPuppyTimers.behaviourTime[PERF_TOTAL]);
+    render_printf("Scene: %dus\n", gPuppyTimers.graphTime[PERF_TOTAL]);
+    if (gPuppyTimers.racerTime[PERF_TOTAL])
+        render_printf("Racer: %dus\n", gPuppyTimers.racerTime[PERF_TOTAL]);
+    render_printf("Audio: %dus\n", gPuppyTimers.thread4Time[PERF_TOTAL]);
+    if (gPlatform & IQUE)
+        render_printf("iQue Player\n");
+    else
+    if (gPlatform & CONSOLE)
+        render_printf("N64 Console\n");
+    else
+    if (gPlatform & VC)
+        render_printf("Wii VC\n");
+    else
+        render_printf("N64 Emulator\n");
+}
+
+/// Add whichever times you wish to create aggregates of.
+void puppyprint_calculate_average_times(void)
+{
+    rdp_profiler_update(gPuppyTimers.rdpBufTime, IO_READ(DPC_BUFBUSY_REG));
+    rdp_profiler_update(gPuppyTimers.rdpTmmTime, IO_READ(DPC_TMEM_REG));
+    rdp_profiler_update(gPuppyTimers.rdpBusTime, IO_READ(DPC_PIPEBUSY_REG));
+    IO_WRITE(DPC_STATUS_REG, DPC_CLR_CLOCK_CTR | DPC_CLR_CMD_CTR | DPC_CLR_PIPE_CTR | DPC_CLR_TMEM_CTR);
+    gPuppyTimers.collisionTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.collisionTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.behaviourTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.behaviourTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.racerTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.racerTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.thread2Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread2Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.thread3Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread3Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.thread4Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread4Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.thread5Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread5Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.thread6Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread6Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.graphTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.graphTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.dmaTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.dmaTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.dmaAudioTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.dmaAudioTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.cameraTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.cameraTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.profilerTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.profilerTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.controllerTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.controllerTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.rspAudioTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.rspAudioTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.rspGfxTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.rspGfxTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+    gPuppyTimers.rdpBufTime[PERF_TOTAL] = (gPuppyTimers.rdpBufTime[PERF_AGGREGATE] * 10) / (625*NUM_PERF_ITERATIONS);
+    gPuppyTimers.rdpBusTime[PERF_TOTAL] = (gPuppyTimers.rdpBusTime[PERF_AGGREGATE] * 10) / (625*NUM_PERF_ITERATIONS);
+
+    gPuppyTimers.dmaTime[PERF_TOTAL] += gPuppyTimers.dmaAudioTime[PERF_TOTAL];
+    gPuppyTimers.cpuTime = gPuppyTimers.thread2Time[PERF_TOTAL] + gPuppyTimers.thread3Time[PERF_TOTAL] + gPuppyTimers.thread4Time[PERF_TOTAL] + gPuppyTimers.thread5Time[PERF_TOTAL] +
+    gPuppyTimers.thread6Time[PERF_TOTAL]; //Thread timers are all added together to get the total CPU time.
+    gPuppyTimers.threadsTime = gPuppyTimers.thread2Time[PERF_TOTAL] + gPuppyTimers.thread3Time[PERF_TOTAL] + gPuppyTimers.thread6Time[PERF_TOTAL];
+    gPuppyTimers.rspTime = gPuppyTimers.rspAudioTime[PERF_TOTAL] + gPuppyTimers.rspGfxTime[PERF_TOTAL];
+    gPuppyTimers.rdpTime = MAX(gPuppyTimers.rdpBufTime[PERF_TOTAL], gPuppyTimers.rdpTmmTime[PERF_TOTAL]);
+    gPuppyTimers.rdpTime = MAX(gPuppyTimers.rdpBusTime[PERF_TOTAL], gPuppyTimers.rdpTime);
+}
+
+void puppyprint_update_rsp(u8 flags)
+{
+    switch (flags)
+    {
+    case RSP_GFX_START:
+        gPuppyTimers.rspGfxBufTime = (u32)osGetTime();
+        gPuppyTimers.rspPauseTime = 0;
+        break;
+    case RSP_AUDIO_START:
+        gPuppyTimers.rspAudioBufTime = (u32)osGetTime();
+        break;
+    case RSP_GFX_PAUSED:
+        gPuppyTimers.rspPauseTime = (u32)osGetTime();
+        break;
+    case RSP_GFX_RESUME:
+        gPuppyTimers.rspPauseTime = (u32)osGetTime() - gPuppyTimers.rspPauseTime;
+        break;
+    case RSP_GFX_FINISHED:
+        gPuppyTimers.rspGfxTime[PERF_AGGREGATE] -= gPuppyTimers.rspGfxTime[perfIteration];
+        gPuppyTimers.rspGfxTime[perfIteration] = (u32)(osGetTime() - gPuppyTimers.rspGfxBufTime) + gPuppyTimers.rspPauseTime;
+        gPuppyTimers.rspGfxTime[PERF_AGGREGATE] += gPuppyTimers.rspGfxTime[perfIteration];
+        break;
+    case RSP_AUDIO_FINISHED:
+        gPuppyTimers.rspAudioTime[PERF_AGGREGATE] -= gPuppyTimers.rspAudioTime[perfIteration];
+        gPuppyTimers.rspAudioTime[perfIteration] = (u32)osGetTime() - gPuppyTimers.rspAudioBufTime;
+        gPuppyTimers.rspAudioTime[PERF_AGGREGATE] += gPuppyTimers.rspAudioTime[perfIteration];
+        break;
+    }
+}
+
+s32 count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
+    s32 triCount = 0;
+    while(dlist < dlistEnd) {
+        switch(dlist[0]) {
+            case G_TRIN: // TRIN
+                triCount += (dlist[1] >> 4) + 1;
+                break;
+            case G_ENDDL: // ENDDL
+                return triCount;
+        }
+        dlist += 8;
+    }
+    return triCount;
+}
+
+s32 sTriCount = 0;
+s32 prevTime = 0;
+u32 sTimerTemp = 0;
+
+void count_triangles(u8 *dlist, u8 *dlistEnd) {
+    sTimerTemp++;
+    if ((sTimerTemp % 2) == 0) {
+        s32 first = osGetCount();
+        sTriCount = count_triangles_in_dlist(dlist, dlistEnd);
+        sTimerTemp = (s32) OS_CYCLES_TO_USEC(osGetCount() - first);
+    }
+    render_printf("Tri: %d\n", sTriCount);
+}
+#endif
+
 /**
  * The main gameplay loop.
  * Contains all game logic, audio and graphics processing.
@@ -900,8 +1066,13 @@ void main_game_loop(void) {
     s32 debugLoopCounter;
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
-
+#ifdef ENABLE_DEBUG_PROFILER
+    u32 first = osGetCount();
+    gPuppyTimers.racerTime[PERF_AGGREGATE] -= gPuppyTimers.racerTime[perfIteration];
+    gPuppyTimers.racerTime[perfIteration] = 0;
+#else
     osSetTime(0);
+#endif
 
     if (D_800DD380 == 8) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -1003,6 +1174,12 @@ void main_game_loop(void) {
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
     }
+#ifdef ENABLE_DEBUG_PROFILER
+    profiler_update(gPuppyTimers.thread3Time, first);
+    profiler_update(gPuppyTimers.behaviourTime, first);
+    profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.graphTime[perfIteration]);
+    profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.racerTime[perfIteration]);
+#endif
 
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
