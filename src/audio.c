@@ -294,7 +294,7 @@ void handle_music_fade(u8 updateRate) {
         sMusicDelayTimer += updateRate;
         sMusicFadeVolume = ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
 
-        if ((f64)sMusicFadeVolume > 1.0f) {
+        if ((f32)sMusicFadeVolume > 1.0f) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
             sMusicFadeVolume = 1.0f;
@@ -304,7 +304,7 @@ void handle_music_fade(u8 updateRate) {
 
         sMusicDelayTimer -= updateRate;
         sMusicFadeVolume = 1.0f - ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
-        if ((f64)sMusicFadeVolume < 0) {
+        if ((f32)sMusicFadeVolume < 0) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
             sMusicFadeVolume = 0.0f;

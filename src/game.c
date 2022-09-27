@@ -1083,9 +1083,8 @@ void main_game_loop(void) {
 #ifndef FIFO_UCODE
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
 #else
-        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
+        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD && gProfilerOn) {
             suCodeSwitch ^= 1;
-            suCodeTimer = 30;
         }
         if (suCodeSwitch == FALSE) {
             setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
@@ -1149,12 +1148,6 @@ void main_game_loop(void) {
     if (gProfilerOn) {
         render_profiler();
         count_triangles((u8*)gDisplayLists[gSPTaskNum], (u8*)gCurrDisplayList);
-    }
-#endif
-
-#ifdef FIFO_UCODE
-    if (suCodeTimer) {
-        suCodeTimer--;
     }
 #endif
 

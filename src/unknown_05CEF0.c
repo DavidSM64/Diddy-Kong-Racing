@@ -134,10 +134,10 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racer->unkC -= racer->velocity * updateRateF * 2;
         } else {
             obj->segment.unk3B = 0;
-            racer->unkC += (f64) updateRateF;
+            racer->unkC += (f32) updateRateF;
         }
     } else {
-        racer->unkC += (2.0 * (f64) updateRateF);
+        racer->unkC += (2.0 * (f32) updateRateF);
     }
     while (racer->unkC < 0.0f) {
         racer->unkC += temp_f20;
