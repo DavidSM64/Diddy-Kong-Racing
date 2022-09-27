@@ -926,8 +926,7 @@ void rdp_profiler_update(u32 *time, u32 time2) {
     time[PERF_AGGREGATE] += time[perfIteration];
 }
 
-void profiler_update(u32 *time, u32 time2)
-{
+void profiler_update(u32 *time, u32 time2) {
     time[PERF_AGGREGATE] -= time[perfIteration];
     time[perfIteration] = (osGetTime() - time2);
     time[PERF_AGGREGATE] += time[perfIteration];
@@ -962,8 +961,7 @@ void render_profiler(void) {
 }
 
 /// Add whichever times you wish to create aggregates of.
-void puppyprint_calculate_average_times(void)
-{
+void puppyprint_calculate_average_times(void) {
     rdp_profiler_update(gPuppyTimers.rdpBufTime, IO_READ(DPC_BUFBUSY_REG));
     rdp_profiler_update(gPuppyTimers.rdpTmmTime, IO_READ(DPC_TMEM_REG));
     rdp_profiler_update(gPuppyTimers.rdpBusTime, IO_READ(DPC_PIPEBUSY_REG));
@@ -996,8 +994,7 @@ void puppyprint_calculate_average_times(void)
     gPuppyTimers.rdpTime = MAX(gPuppyTimers.rdpBusTime[PERF_TOTAL], gPuppyTimers.rdpTime);
 }
 
-void puppyprint_update_rsp(u8 flags)
-{
+void puppyprint_update_rsp(u8 flags) {
     switch (flags)
     {
     case RSP_GFX_START:
@@ -1066,8 +1063,6 @@ void main_game_loop(void) {
     if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
         gProfilerOn ^= 1;
     }
-
-
 #else
     osSetTime(0);
 #endif
@@ -1205,11 +1200,15 @@ void main_game_loop(void) {
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
     tempLogicUpdateRate = func_8007A98C(D_800DD380);
+#if NUM_FRAMEBUFFERS == 2
     sLogicUpdateRate = tempLogicUpdateRate;
     tempLogicUpdateRateMax = LOGIC_10FPS;
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
         sLogicUpdateRate = tempLogicUpdateRateMax;
     }
+#else
+    sLogicUpdateRate = LOGIC_30FPS;
+#endif
 }
 
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {

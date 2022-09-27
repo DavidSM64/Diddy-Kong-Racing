@@ -15,7 +15,7 @@
 #define EXPANSION_PAK
 #define DISABLE_ANTI_TAMPER
 #define UNLOCK_ALL
-#define NUM_FRAMEBUFFERS 2
+#define NUM_FRAMEBUFFERS 3
 #define FIFO_UCODE
 
 

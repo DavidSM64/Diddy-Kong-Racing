@@ -198,11 +198,12 @@ void func_8007A974(void) {
     D_80126309 = 2;
 }
 
-#ifdef NON_EQUIVALENT
+//#ifdef NON_EQUIVALENT
 // regalloc & stack issues
 s32 func_8007A98C(s32 arg0) {
     s32 tempUpdateRate;
 
+#if NUM_FRAMEBUFFERS == 2
     tempUpdateRate = LOGIC_60FPS;
     if (D_801262D0 != 0) {
         D_801262D0--;
@@ -237,13 +238,17 @@ s32 func_8007A98C(s32 arg0) {
         tempUpdateRate += 1;
         tempUpdateRate &= 0xFF;
     }
+#else
+    osViBlack(FALSE);
+    swap_framebuffers();
+#endif
     osViSwapBuffer(gVideoLastFramebuffer);
     osRecvMesg(&D_801261A0, NULL, OS_MESG_BLOCK);
     return tempUpdateRate;
 }
-#else
+/*#else
 GLOBAL_ASM("asm/non_matchings/video/func_8007A98C.s")
-#endif
+#endif*/
 
 void func_8007AB24(s8 arg0) {
     D_801262E4 = arg0;
