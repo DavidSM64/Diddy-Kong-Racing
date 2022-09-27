@@ -151,9 +151,9 @@ void func_800C314C(void) {
 
 void func_800C3158(s32 arg0, f32 arg1) {
     if (osTvType == TV_TYPE_PAL) {
-        D_800E3678 = arg1 * 50.0;
+        D_800E3678 = arg1 * 50.0f;
     } else {
-        D_800E3678 = arg1 * 60.0;
+        D_800E3678 = arg1 * 60.0f;
     }
     D_800E367C = arg0;
 }

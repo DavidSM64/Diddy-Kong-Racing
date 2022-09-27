@@ -1715,11 +1715,11 @@ f32 catmull_rom_interpolation(f32 *arg0, s32 arg1, f32 arg2) {
     f32 ret;
     f32 temp3, temp2, temp;
     
-    temp =  (-0.5 * arg0[arg1])    + ( 1.5 * arg0[arg1 + 1]) + (-1.5 * arg0[arg1 + 2]) + ( 0.5 * arg0[arg1 + 3]);
-    temp2 = ( 1.0 * arg0[arg1])    + (-2.5 * arg0[arg1 + 1]) + ( 2.0 * arg0[arg1 + 2]) + (-0.5 * arg0[arg1 + 3]);
-    temp3 = (arg0[arg1 + 2] * 0.5f)+ ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
+    temp =  (-0.5f * arg0[arg1])    + ( 1.5f * arg0[arg1 + 1]) + (-1.5f * arg0[arg1 + 2]) + ( 0.5f * arg0[arg1 + 3]);
+    temp2 = ( 1.0f * arg0[arg1])    + (-2.5f * arg0[arg1 + 1]) + ( 2.0f * arg0[arg1 + 2]) + (-0.5f * arg0[arg1 + 3]);
+    temp3 = (arg0[arg1 + 2] * 0.5f)+ ( 0.0f * arg0[arg1 + 1]) + (-0.5f * arg0[arg1])     + ( 0.0f * arg0[arg1 + 3]);
     
-    ret = (1.0 * arg0[arg1 + 1]);
+    ret = (1.0f * arg0[arg1 + 1]);
     ret = (((((temp * arg2) + temp2) * arg2) + temp3) * arg2) + ret;
     
     return ret;
@@ -1730,11 +1730,11 @@ f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3) {
     f32 ret;
     f32 temp3, temp2, temp;
     
-    temp =  (-0.5 * arg0[arg1])    + ( 1.5 * arg0[arg1 + 1]) + (-1.5 * arg0[arg1 + 2]) + ( 0.5 * arg0[arg1 + 3]);
-    temp2 = ( 1.0 * arg0[arg1])    + (-2.5 * arg0[arg1 + 1]) + ( 2.0 * arg0[arg1 + 2]) + (-0.5 * arg0[arg1 + 3]);
-    temp3 = (arg0[arg1 + 2] * 0.5f)+ ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
+    temp =  (-0.5f * arg0[arg1])    + ( 1.5f * arg0[arg1 + 1]) + (-1.5f * arg0[arg1 + 2]) + ( 0.5f * arg0[arg1 + 3]);
+    temp2 = ( 1.0f * arg0[arg1])    + (-2.5f * arg0[arg1 + 1]) + ( 2.0f * arg0[arg1 + 2]) + (-0.5f * arg0[arg1 + 3]);
+    temp3 = (arg0[arg1 + 2] * 0.5f)+ ( 0.0f * arg0[arg1 + 1]) + (-0.5f * arg0[arg1])     + ( 0.0f * arg0[arg1 + 3]);
     
-    ret = (1.0 * arg0[arg1 + 1]);
+    ret = (1.0f * arg0[arg1 + 1]);
     *arg3 = (((temp * 3 * arg2) + (2 * temp2)) * arg2) + temp3;
     ret = (((((temp * arg2) + temp2) * arg2) + temp3) * arg2) + ret;
     

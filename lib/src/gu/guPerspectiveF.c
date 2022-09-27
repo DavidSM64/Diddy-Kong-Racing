@@ -12,7 +12,7 @@ void guPerspectiveF(Matrix mf, u16 *perspNorm, float fovy, float aspect, float n
 
     guMtxIdentF(mf);
 
-    fovy *= 3.1415926 / 180.0;
+    fovy *= 3.1415926 / 180.0f;
     cot = cosf (fovy/2) / sinf (fovy/2);
 
     mf[0][0] = cot / aspect;
@@ -28,10 +28,10 @@ void guPerspectiveF(Matrix mf, u16 *perspNorm, float fovy, float aspect, float n
     }
 
     if (perspNorm != (u16 *) NULL) {
-        if (near+far<=2.0f){
+        if (near+far<=2.0f) {
             *perspNorm = (u16) 0xFFFF;
         } else {
-            *perspNorm = (u16) ((2.0*65536.0f)/(near+far));
+            *perspNorm = (u16) ((2.0f*65536.0f)/(near+far));
         if (*perspNorm<=0)
             *perspNorm = (u16) 0x0001;
         }

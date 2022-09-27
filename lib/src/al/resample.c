@@ -122,7 +122,7 @@ s32 alResampleParam(void *filter, s32 paramID, void *param)
             break;
 	  
         case (AL_FILTER_RESET):
-            r->delta  = 0.0;
+            r->delta  = 0.0f;
             r->first  = 1;
             r->motion = AL_STOPPED;
             r->upitch = 0;

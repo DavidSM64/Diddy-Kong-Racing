@@ -439,7 +439,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & sp158) {
             s0 = 0;
         }
-        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->segment.unk2C.half.lower + 1]) || (1000.0 < obj->segment.unk34_a.unk34))) {
+        if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->segment.unk2C.half.lower + 1]) || (1000.0f < obj->segment.unk34_a.unk34))) {
             if (obj->segment.trans.unk6 & 0x8000) {
                 func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
                 continue;
@@ -842,7 +842,7 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
         }
         if (j == 3) {
             D_8011D380 = func_80066348((bb->x2 + bb->x1) >> 1, (bb->y2 + bb->y1) >> 1, (bb->z2 + bb->z1) >> 1);
-            if (D_8011D380 < 1000.0f){
+            if (D_8011D380 < 1000.0f) {
                 D_8011B0BC = 1;
                 return TRUE;
             }

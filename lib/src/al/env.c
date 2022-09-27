@@ -449,11 +449,11 @@ _frexpf(f64 value, s32 *eptr)
     if (value == 0.0f)/* nothing to do for zero */
         return (value);
     absvalue = (value > 0.0f)? value : -value;
-    for ( ; absvalue >= 1.0; absvalue *= 0.5f)
+    for ( ; absvalue >= 1.0f; absvalue *= 0.5f)
         ++*eptr;
-    for ( ; absvalue < 0.5; absvalue += absvalue)
+    for ( ; absvalue < 0.5f; absvalue += absvalue)
         --*eptr;
-    return (value > 0.0 ? absvalue : -absvalue);
+    return (value > 0.0f ? absvalue : -absvalue);
 }
 
 f64
@@ -499,8 +499,8 @@ s16 _getRate(f64 vol, f64 tgt, s32 count, u16* ratel)
 
     a = (tgt - vol) / (f32)count;
     a *= 8;
-    if (a < 0.0f){
-        a -= 1.0;
+    if (a < 0.0f) {
+        a -= 1.0f;
     }
     s = (s16) a;
     *ratel = (s16)((0xffff * (a - (f32) s)));
@@ -511,7 +511,7 @@ s16 _getRate(f64 vol, f64 tgt, s32 count, u16* ratel)
 static
 f32 _getVol(f32 ivol, s32 samples, s16 ratem, u16 ratel) {
     f32 r;
-    r = ((ratem<<16) + (f32) ratel)/65536.0;
-    ivol += (r * samples) / 8.0;
+    r = ((ratem<<16) + (f32) ratel)/65536.0f;
+    ivol += (r * samples) / 8.0f;
     return ivol;
 }

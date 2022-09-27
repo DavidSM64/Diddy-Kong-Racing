@@ -180,7 +180,7 @@ void __freePVoices(ALSynth *drvr, PVoice *pvoice)
 
 s32 __timeToSamplesNoRound(ALSynth *synth, s32 micros)
 {
-    f32 tmp = ((f32)micros) * synth->outputRate / 1000000.0 + 0.5;
+    f32 tmp = ((f32)micros) * synth->outputRate / 1000000.0f + 0.5f;
 
     return (s32)tmp;
 }

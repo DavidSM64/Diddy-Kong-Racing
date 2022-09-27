@@ -100,7 +100,7 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     dy = y2 - y1;
     dz = z2 - z1;
 
-    if (dx == 0.0 && dy == 0.0 && dz == 0.0f){
+    if (dx == 0.0f && dy == 0.0f && dz == 0.0f) {
         temp = 0.0f;
     } else {
         temp = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) /

@@ -2244,10 +2244,10 @@ s32 menu_logo_screen_loop(s32 updateRate) {
         set_text_font(ASSET_FONTS_SMALLFONT);
         set_text_background_colour(0, 0, 0, 0);
         if ((sBootScreenTimer < 8.0f)&& (sBootScreenTimer >= 7.5f)) {
-            opacity = (8.0 - sBootScreenTimer) * 510.0;
+            opacity = (8.0f - sBootScreenTimer) * 510.0f;
         } else {
             if ((sBootScreenTimer < 7.5f)&& (sBootScreenTimer >= 7.0f)) {
-                opacity = (sBootScreenTimer - 7.0f)* 510.0;
+                opacity = (sBootScreenTimer - 7.0f)* 510.0f;
             } else {
                 opacity = 0;
             }
@@ -2260,8 +2260,8 @@ s32 menu_logo_screen_loop(s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, POS_CENTRED, yOffset + 213, gRareCopyrightString, ALIGN_MIDDLE_CENTER);
         }
         yOffsetShadow = yOffset + 212;
-        if (sBootScreenTimer > 8.0f){
-            opacity = (8.5 - sBootScreenTimer) * 510.0;
+        if (sBootScreenTimer > 8.0f) {
+            opacity = (8.5f - sBootScreenTimer) * 510.0f;
         } else {
             opacity = 0xFF;
         }
@@ -7526,7 +7526,7 @@ s32 get_language(void) {
 
 /**
  * Sets the language used by the game. Even though German is not selectable in the US version, it is
- * still fully intact. Japanese is not properly implemented in the US 1.0 version of the game. If you
+ * still fully intact. Japanese is not properly implemented in the US 1.0f version of the game. If you
  * tried to switch to it, all you would see is the word "Japanese" used everywhere as a placeholder.
  */
 void set_language(s32 language) {

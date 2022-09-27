@@ -96,11 +96,11 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         func_80069F28(12.0f);
-        obj->segment.x_velocity *= 0.4;
-        obj->segment.z_velocity *= 0.4;
+        obj->segment.x_velocity *= 0.4f;
+        obj->segment.z_velocity *= 0.4f;
         obj->segment.unk3B = 1;
         racer->unkC = 0;
-        obj->segment.y_velocity += 4.0;
+        obj->segment.y_velocity += 4.0f;
     }
     racer->attackType = ATTACK_NONE;
     if (racer->unk148 != NULL) {

@@ -37,7 +37,7 @@
  * the following arrays contain default parameters for
  * a few hopefully useful effects.
  */
-#define ms *(((s32)((f32)44.1))&~0x7)
+#define ms *(((s32)((f32)44.1f))&~0x7)
 
 
 static s32 SMALLROOM_PARAMS[26] = {
@@ -147,7 +147,7 @@ void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
         d->ffcoef = param[j++];
         d->gain   = param[j++];
         if (param[j]) {
-    #define RANGE 2.0
+    #define RANGE 2.0f
             //d->rsinc     = ((f32) param[j++])/0xffffff;
             d->rsinc = ((((f32)param[j++])/1000) * RANGE)/c->outputRate;
             /*
@@ -165,11 +165,11 @@ void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
     #define CONVERT 173123.404906676
     #define LENGTH	(d->output - d->input)
             d->rsgain 	 = (((f32) param[j++])/CONVERT) * LENGTH;
-            d->rsval	 = 1.0;
-            d->rsdelta	 = 0.0;
+            d->rsval	 = 1.0f;
+            d->rsdelta	 = 0.0f;
             d->rs 	 = allocate_from_main_pool_safe(sizeof(ALResampler), COLOUR_TAG_CYAN);
             d->rs->state = allocate_from_main_pool_safe(sizeof(RESAMPLE_STATE), COLOUR_TAG_CYAN);
-            d->rs->delta = 0.0;
+            d->rs->delta = 0.0f;
             d->rs->first = 1;
         } else {
             d->rs = 0;
@@ -243,10 +243,10 @@ void alResampleNew(ALResampler *r, ALHeap *hp) {
      * Init resampler state
      */
     r->state = alHeapAlloc(hp, 1, sizeof(RESAMPLE_STATE));
-    r->delta  = 0.0;
+    r->delta  = 0.0f;
     r->first  = 1;
     r->motion = AL_STOPPED;
-    r->ratio = 1.0;
+    r->ratio = 1.0f;
     r->upitch = 0;
     r->ctrlList = 0;
     r->ctrlTail = 0;

@@ -11,7 +11,7 @@
 #ident "$Revision: 1.49 $"
 #ident "$Revision: 1.17 $"
 
-#define RANGE 2.0
+#define RANGE 2.0f
 extern ALGlobals *alGlobals;
 
 #ifdef AUD_PROFILE
@@ -242,7 +242,7 @@ Acmd *_loadOutputBuffer(ALFx *r, ALDelay *d, s32 buff, s32 incount, Acmd *p)
         delta /= length;  /* convert delta from number of samples to a pitch ratio */
         delta = (s32)(delta * UNITY_PITCH); /* quantize to value microcode will use */
         delta = delta / UNITY_PITCH;
-        fratio = 1.0 - delta;  /* pitch ratio needs to be centered around 1, not zero */
+        fratio = 1.0f - delta;  /* pitch ratio needs to be centered around 1, not zero */
       
         /* d->rs->delta is the difference between the fractional and integer value
          * of the samples needed. fratio * incount + rs->delta gives the number of samples 

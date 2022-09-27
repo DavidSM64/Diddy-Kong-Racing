@@ -139,7 +139,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(640),        //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -147,7 +147,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(640),        //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -209,7 +209,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(640),        //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -217,7 +217,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(640),        //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -278,7 +278,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -286,7 +286,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -347,7 +347,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -355,7 +355,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -417,7 +417,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(35, 509),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -425,7 +425,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(2560),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -487,7 +487,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(35, 509),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -495,7 +495,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(2560),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -557,7 +557,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(2560),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(35, 509),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -565,7 +565,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(5120),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -626,7 +626,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(640),         //origin
-          SCALE(1, 0.25),      //yScale
+          SCALE(1, 0.25f),      //yScale
           HSTART(93, 567),     //vStart
           BURST(107, 2, 9, 0), //vBurst
           VINTR(2),            //vIntr
@@ -634,7 +634,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(640),          //origin
-          SCALE(1, 0.75),       //yScale
+          SCALE(1, 0.75f),       //yScale
           HSTART(95, 569),      //vStart
           BURST(105, 2, 13, 0), //vBurst
           VINTR(2),             //vIntr
@@ -696,7 +696,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(640),         //origin
-          SCALE(1, 0.25),      //yScale
+          SCALE(1, 0.25f),      //yScale
           HSTART(93, 567),     //vStart
           BURST(107, 2, 9, 0), //vBurst
           VINTR(2),            //vIntr
@@ -704,7 +704,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(640),          //origin
-          SCALE(1, 0.75),       //yScale
+          SCALE(1, 0.75f),       //yScale
           HSTART(95, 569),      //vStart
           BURST(105, 2, 13, 0), //vBurst
           VINTR(2),             //vIntr
@@ -765,7 +765,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),        //origin
-          SCALE(1, 0.25),      //yScale
+          SCALE(1, 0.25f),      //yScale
           HSTART(93, 567),     //vStart
           BURST(107, 2, 9, 0), //vBurst
           VINTR(2),            //vIntr
@@ -773,7 +773,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(1280),         //origin
-          SCALE(1, 0.75),       //yScale
+          SCALE(1, 0.75f),       //yScale
           HSTART(95, 569),      //vStart
           BURST(105, 2, 13, 0), //vBurst
           VINTR(2),             //vIntr
@@ -834,7 +834,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),        //origin
-          SCALE(1, 0.25),      //yScale
+          SCALE(1, 0.25f),      //yScale
           HSTART(93, 567),     //vStart
           BURST(107, 2, 9, 0), //vBurst
           VINTR(2),            //vIntr
@@ -842,7 +842,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(1280),         //origin
-          SCALE(1, 0.75),       //yScale
+          SCALE(1, 0.75f),       //yScale
           HSTART(95, 569),      //vStart
           BURST(105, 2, 13, 0), //vBurst
           VINTR(2),             //vIntr
@@ -904,7 +904,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),        //origin
-          SCALE(0.5, 0.5),     //yScale
+          SCALE(0.5f, 0.5f),     //yScale
           HSTART(93, 567),     //vStart
           BURST(107, 2, 9, 0), //vBurst
           VINTR(2),            //vIntr
@@ -912,7 +912,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(2560),         //origin
-          SCALE(0.5, 0.5),      //yScale
+          SCALE(0.5f, 0.5f),      //yScale
           HSTART(95, 569),      //vStart
           BURST(105, 2, 13, 0), //vBurst
           VINTR(2),             //vIntr
@@ -974,7 +974,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),        //origin
-          SCALE(0.5, 0.5),     //yScale
+          SCALE(0.5f, 0.5f),     //yScale
           HSTART(93, 567),     //vStart
           BURST(107, 2, 9, 0), //vBurst
           VINTR(2),            //vIntr
@@ -982,7 +982,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(2560),         //origin
-          SCALE(0.5, 0.5),      //yScale
+          SCALE(0.5f, 0.5f),      //yScale
           HSTART(95, 569),      //vStart
           BURST(105, 2, 13, 0), //vBurst
           VINTR(2),             //vIntr
@@ -1044,7 +1044,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(2560),        //origin
-          SCALE(0.5, 0.5),     //yScale
+          SCALE(0.5f, 0.5f),     //yScale
           HSTART(93, 567),     //vStart
           BURST(107, 2, 9, 0), //vBurst
           VINTR(2),            //vIntr
@@ -1052,7 +1052,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(5120),         //origin
-          SCALE(0.5, 0.5),      //yScale
+          SCALE(0.5f, 0.5f),      //yScale
           HSTART(95, 569),      //vStart
           BURST(105, 2, 13, 0), //vBurst
           VINTR(2),             //vIntr
@@ -1113,7 +1113,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(640),        //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(2, 2, 11, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1121,7 +1121,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(640),        //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1183,7 +1183,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(640),        //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(2, 2, 11, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1191,7 +1191,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(640),        //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1252,7 +1252,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(2, 2, 11, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1260,7 +1260,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1321,7 +1321,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.25),     //yScale
+          SCALE(1, 0.25f),     //yScale
           HSTART(35, 509),    //vStart
           BURST(2, 2, 11, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1329,7 +1329,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(1280),       //origin
-          SCALE(1, 0.75),     //yScale
+          SCALE(1, 0.75f),     //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1391,7 +1391,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(35, 509),    //vStart
           BURST(2, 2, 11, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1399,7 +1399,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(2560),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1461,7 +1461,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(1280),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(35, 509),    //vStart
           BURST(2, 2, 11, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1469,7 +1469,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(2560),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1531,7 +1531,7 @@ OSViMode osViModeTable[42] = {
       {
           //[0]
           ORIGIN(2560),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(35, 509),    //vStart
           BURST(2, 2, 11, 0), //vBurst
           VINTR(2),           //vIntr
@@ -1539,7 +1539,7 @@ OSViMode osViModeTable[42] = {
       {
           //[1]
           ORIGIN(5120),       //origin
-          SCALE(0.5, 0.5),    //yScale
+          SCALE(0.5f, 0.5f),    //yScale
           HSTART(37, 511),    //vStart
           BURST(4, 2, 14, 0), //vBurst
           VINTR(2),           //vIntr

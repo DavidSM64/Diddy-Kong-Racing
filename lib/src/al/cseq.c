@@ -58,7 +58,7 @@ void alCSeqNew(ALCSeq *seq, u8 *ptr)
             seq->curLoc[i] = 0;
     }
 
-    seq->qnpt = 1.0/(f32)seq->base->division;
+    seq->qnpt = 1.0f/(f32)seq->base->division;
 }
 
 void alCSeqNextEvent(ALCSeq *seq,ALEvent *evt)

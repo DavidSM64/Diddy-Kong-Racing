@@ -110,11 +110,11 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk3B != 3)) {
         racer->unk1CD = obj->segment.unk3B;
         obj->segment.unk3B = 3;
-        obj->segment.y_velocity += 7.5;
+        obj->segment.y_velocity += 7.5f;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         func_80069F28(12.0f);
-        racer->velocity *= 0.3;
+        racer->velocity *= 0.3f;
         racer->unkC = 0.0f;
     }
     racer->attackType = ATTACK_NONE;
@@ -126,9 +126,9 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     temp_v0_2 = *obj->unk68;
     temp_f20 = ((temp_v0_2->objModel->animations[obj->segment.unk3B].unk4 * 16) - 17);
     if (obj->segment.unk3B != 3) {
-        if (racer->velocity < -2.0f){
+        if (racer->velocity < -2.0f) {
             obj->segment.unk3B = 1;
-            racer->unkC -= racer->velocity * updateRateF * 0.5;
+            racer->unkC -= racer->velocity * updateRateF * 0.5f;
         } else if ((racer->velocity < -0.1f)|| (racer->velocity > 0.1f)) {
             obj->segment.unk3B = 2;
             racer->unkC -= racer->velocity * updateRateF * 2;
@@ -137,7 +137,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racer->unkC += (f32) updateRateF;
         }
     } else {
-        racer->unkC += (2.0 * (f32) updateRateF);
+        racer->unkC += (2.0f * (f32) updateRateF);
     }
     while (racer->unkC < 0.0f) {
         racer->unkC += temp_f20;
@@ -175,7 +175,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     temp_v0_4 = get_object_struct(0);
     temp_f20 = temp_v0_4->segment.trans.x_position - obj->segment.trans.x_position;
     temp_f14 = temp_v0_4->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14)) < 700.0f){
+    if (sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14)) < 700.0f) {
         var_v1 = (arctan2_f(temp_f20, temp_f14) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (var_v1 >= 0x8001) {
             var_v1 += 0xFFFF0001;

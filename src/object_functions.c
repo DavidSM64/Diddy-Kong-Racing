@@ -225,7 +225,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
 
     sp7C = speed;
     if (osTvType == TV_TYPE_PAL) {
-        sp7C *= 1.2;
+        sp7C *= 1.2f;
     }
 
     if ((obj->behaviorId == 116) && (obj->unk7C.word < 0)) {
@@ -235,30 +235,30 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         func_80011560();
         func_80011570(obj, trans78->x_position, trans78->y_position, trans78->z_position);
     } else {
-        phi_f2 = (trans78->x_position - obj->segment.trans.x_position) * 0.1;
-        if (phi_f2 > 10.0f){
+        phi_f2 = (trans78->x_position - obj->segment.trans.x_position) * 0.1f;
+        if (phi_f2 > 10.0f) {
             phi_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0f){
+        if (phi_f2 < -10.0f) {
             phi_f2 = -10.0f;
         }
-        obj->segment.x_velocity += (phi_f2 - obj->segment.x_velocity) * 0.125 * sp7C;
-        phi_f2 = (trans78->y_position - obj->segment.trans.y_position) * 0.1;
-        if (phi_f2 > 10.0f){
+        obj->segment.x_velocity += (phi_f2 - obj->segment.x_velocity) * 0.125f * sp7C;
+        phi_f2 = (trans78->y_position - obj->segment.trans.y_position) * 0.1f;
+        if (phi_f2 > 10.0f) {
             phi_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0f){
+        if (phi_f2 < -10.0f) {
             phi_f2 = -10.0f;
         }
-        obj->segment.y_velocity += (phi_f2 - obj->segment.y_velocity) * 0.125 * sp7C;
-        phi_f2 = (trans78->z_position - obj->segment.trans.z_position) * 0.1;
-        if (phi_f2 > 10.0f){
+        obj->segment.y_velocity += (phi_f2 - obj->segment.y_velocity) * 0.125f * sp7C;
+        phi_f2 = (trans78->z_position - obj->segment.trans.z_position) * 0.1f;
+        if (phi_f2 > 10.0f) {
             phi_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0f){
+        if (phi_f2 < -10.0f) {
             phi_f2 = -10.0f;
         }
-        obj->segment.z_velocity += (phi_f2 - obj->segment.z_velocity) * 0.125 * sp7C;
+        obj->segment.z_velocity += (phi_f2 - obj->segment.z_velocity) * 0.125f * sp7C;
         if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5f){
             obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
             obj->segment.trans.x_rotation -= speed << 9;
@@ -297,7 +297,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
                 gParticlePtrList_addObject(obj);
                 func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
             }
-            obj->segment.trans.scale *= 0.9;
+            obj->segment.trans.scale *= 0.9f;
             if (obj->segment.trans.scale < 0.5f){
                 gParticlePtrList_addObject(obj);
             }
@@ -374,7 +374,7 @@ void obj_loop_laserbolt(Object *obj, s32 speed) {
     sp4F = FALSE;
     sp5C = speed;
     if (osTvType == TV_TYPE_PAL) {
-        sp5C *= 1.2;
+        sp5C *= 1.2f;
     }
     sp40 = obj->segment.trans.x_position + (obj->segment.x_velocity * sp5C);
     sp44 = obj->segment.trans.y_position + (obj->segment.y_velocity * sp5C);
@@ -391,7 +391,7 @@ void obj_loop_laserbolt(Object *obj, s32 speed) {
     }
     func_80011570(obj, obj->segment.x_velocity * sp5C, obj->segment.y_velocity * sp5C, obj->segment.z_velocity * sp5C);
     if (sp38) {
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f, obj->segment.trans.z_position, 44, 0, 0.2, 0);
+        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f, obj->segment.trans.z_position, 44, 0, 0.2f, 0);
         sp4F = TRUE;
     }
 
@@ -414,7 +414,7 @@ void obj_loop_laserbolt(Object *obj, s32 speed) {
                 obj7C->unkC = 180;
             }
             sp4F = TRUE;
-            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f, obj->segment.trans.z_position, 44, 17, 0.5, 0);
+            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f, obj->segment.trans.z_position, 44, 17, 0.5f, 0);
         }
     }
     if (sp4F) {
@@ -480,7 +480,7 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
                     curObj64->unk1FF = obj3C->unkD;
                     temp5 = temp3 / 2;
                     if ((temp5 < yDiff) && (curObj64->unk1FE == 1)) {
-                        temp5 = (1.0 - ((yDiff - temp5) / temp5));
+                        temp5 = (1.0f - ((yDiff - temp5) / temp5));
                         curObj64->unk1FF *= temp5;
                     }
                 }
@@ -1372,7 +1372,7 @@ void obj_init_smoke(UNUSED Object *obj, UNUSED LevelObjectEntry_Smoke *entry) {
 void obj_loop_smoke(Object *obj, s32 speed) {
     f32 temp_f2 = speed;
     if (osTvType == TV_TYPE_PAL) {
-        temp_f2 *= 1.2;
+        temp_f2 *= 1.2f;
     }
     obj->segment.trans.x_position += obj->segment.x_velocity * temp_f2;
     obj->segment.unk18 += speed * 16;
@@ -1403,10 +1403,10 @@ void obj_loop_wardensmoke(Object *obj, s32 speed) {
 
     temp_f2 = (f32)speed;
     if (osTvType == TV_TYPE_PAL) {
-        temp_f2 *= 1.2;
+        temp_f2 *= 1.2f;
     }
     obj->segment.unk18 += speed * 4;
-    obj->segment.trans.y_position += temp_f2 * 0.25;
+    obj->segment.trans.y_position += temp_f2 * 0.25f;
     if (obj->segment.unk18 >= 256) {
         gParticlePtrList_addObject(obj);
         obj->segment.unk18 = 255;
@@ -1690,7 +1690,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 speed) {
     obj64 = &obj->unk64->bonus;
     if (obj->unk4C->unk13 < obj64->unk10) {
         dist = obj64->unk10;
-        halfDist = dist * 0.5;
+        halfDist = dist * 0.5f;
         racerObjects = get_object_struct_array(&numberOfRacers);
         for (i = 0; i < numberOfRacers; i++) {
             racerObj = racerObjects[i];
@@ -1763,7 +1763,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
 
     sp2C = speed;
     if (osTvType == TV_TYPE_PAL) {
-        sp2C *= 1.2;
+        sp2C *= 1.2f;
     }
     isPirated = FALSE;
     // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
@@ -2271,7 +2271,7 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
     sp24.unk6 = arg2;
     someObj = spawn_object(&sp24, 1);
     if (someObj != NULL) {
-        someObj->segment.trans.scale *= 3.5 * arg5;
+        someObj->segment.trans.scale *= 3.5f * arg5;
         someObj->segment.unk3C_a.unk3C = NULL;
         someObj->segment.x_velocity = 0.0f;
         someObj->segment.y_velocity = 0.0f;
