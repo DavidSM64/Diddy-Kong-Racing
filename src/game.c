@@ -1198,6 +1198,13 @@ void main_game_loop(void) {
     if (!gIsPaused) {
         func_80066520();
     }
+#ifdef ENABLE_DEBUG_PROFILER
+    calculate_and_update_fps();
+    puppyprint_calculate_average_times();
+    perfIteration++;
+    if (perfIteration == NUM_PERF_ITERATIONS - 1)
+        perfIteration = 0;
+#endif
     if (D_800DD3F0 == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
         if (osTvType == TV_TYPE_PAL) {
