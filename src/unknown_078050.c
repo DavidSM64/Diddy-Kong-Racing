@@ -43,7 +43,7 @@ Gfx dRspInit[] = {
 // Default RDP settings
 Gfx dRdpInit[] = {
     gsDPSetCycleType(G_CYC_1CYCLE),
-    gsDPPipelineMode(G_PM_1PRIMITIVE),
+    gsDPPipelineMode(G_PM_NPRIMITIVE),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
     gsDPSetTextureDetail(G_TD_CLAMP),
@@ -264,30 +264,30 @@ void setup_ostask_fifo(Gfx* arg0, Gfx* arg1, s32 arg2) {
     DKR_OSTask *dkrtask;
     s32 *sp20;
 
-    sp20 = NULL;
-    dkrtask = &D_80126020[D_800DE4D8];
-    D_800DE4D8++;
-    if (D_800DE4D8 == 2) {
-        D_800DE4D8 = 0;
+    D_800DE4DC = 1;
+    dkrtask = &D_80125F40[D_800DE4D4];
+    D_800DE4D4++;
+    if (D_800DE4D4 == 2) {
+        D_800DE4D4 = 0;
     }
     
     dkrtask->task.data_ptr = arg0;
     dkrtask->task.ucode_boot = rspF3DDKRBootStart;
-    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0)) << 3);
+    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0)));
     dkrtask->task.type = 1;
-    dkrtask->task.flags = 2;
+    dkrtask->task.flags = 0;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.ucode = rspF3DDKRFifoStart;
     dkrtask->task.ucode_data = rspF3DDKRDataFifoStart;
     dkrtask->task.ucode_data_size = 0x800;
     dkrtask->task.dram_stack = gDramStack;
     dkrtask->task.dram_stack_size = 0x400;
-    dkrtask->task.output_buff = gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE;
+    dkrtask->task.output_buff = 0x80400000;
+    dkrtask->task.output_buff_size = 0x80500000;
     dkrtask->task.yield_data_ptr = D_801271B0;
     dkrtask->task.yield_data_size = 0xA00;
     dkrtask->unk0 = 0;
-    dkrtask->unk8 = 7;
+    dkrtask->unk8 = 3;
     dkrtask->unk50 = &D_80125ED8;
     dkrtask->unk54 = D_800DE490;
     dkrtask->unkC = (s32) gVideoCurrFramebuffer;

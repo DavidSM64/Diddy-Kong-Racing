@@ -41,7 +41,7 @@ Gfx dDebugFontSettings[] = {
     gsDPSetTextureFilter(G_TF_BILERP),
     gsDPSetTextureConvert(G_TC_FILT),
     gsDPSetAlphaCompare(G_AC_NONE),
-    gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
     gsDPSetEnvColor(255, 255, 255, 255),
     gsDPSetPrimColor(0, 0, 0, 0, 0, 0),
     gsSPEndDisplayList(),

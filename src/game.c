@@ -887,6 +887,11 @@ void init_game(void) {
     osSetTime(0);
 }
 
+#ifdef FIFO_UCODE
+s8 suCodeSwitch = 0;
+u8 suCodeTimer = 0;
+#endif
+
 /**
  * The main gameplay loop.
  * Contains all game logic, audio and graphics processing.
@@ -906,7 +911,19 @@ void main_game_loop(void) {
         set_rsp_segment(&gCurrDisplayList, 4, (s32)gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
+#ifndef FIFO_UCODE
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+#else
+        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
+            suCodeSwitch ^= 1;
+            suCodeTimer = 30;
+        }
+        if (suCodeSwitch == FALSE) {
+            setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+        } else {
+            setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+        }
+#endif
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
@@ -958,6 +975,21 @@ void main_game_loop(void) {
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
+
+#ifdef ENABLE_DEBUG_PROFILER
+
+#endif
+
+#ifdef FIFO_UCODE
+    if (suCodeTimer) {
+        if (suCodeSwitch) {
+            render_printf("Microcode Changed to Xbus (Original)");
+        } else {
+            render_printf("Microcode Changed to FIFO (Modified)");
+        }
+        suCodeTimer--;
+    }
+#endif
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
