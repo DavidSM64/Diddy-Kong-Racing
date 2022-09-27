@@ -1129,7 +1129,7 @@ void main_game_loop(void) {
     sDeltaTime = osGetTime() - sPrevTime;
     sPrevTime = osGetTime();
     sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
-    sTotalTime -= 33333;
+    sTotalTime -= 16666;
     if (sTotalTime > 50000) {
         sLogicUpdateRate+=3;
         sTotalTime = 0;
@@ -1231,7 +1231,7 @@ void main_game_loop(void) {
         sLogicUpdateRate = tempLogicUpdateRateMax;
     }
 #else
-    sLogicUpdateRate = LOGIC_30FPS;
+    sLogicUpdateRate = LOGIC_60FPS;
 #endif
 }
 
