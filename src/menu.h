@@ -127,7 +127,13 @@ typedef struct unk80126460 {
 typedef struct unk801263C0 {
     s8 unk0;
     s8 unk1;
-    s16 unk2;
+    union {
+        struct {
+            s8 unk2a;
+            s8 unk3;
+        };
+        s16 unk2;
+    };
 } unk801263C0;
 
 /* Size: 0x30 bytes */
@@ -813,6 +819,7 @@ s32 func_800867D4(void);
 s32 menu_enter_filename_loop(s32 arg0);
 s32 menu_file_select_loop(s32 updateRate);
 s32 func_8008D5F8(s32 updateRate);
+void func_8008C168(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -841,7 +848,6 @@ s32 tt_menu_loop(void);
 void menu_track_select_init(void);
 void menu_trophy_race_rankings_init(void);
 void func_8009E3D0(void);
-void func_8008C168(s32);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_save_options_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
