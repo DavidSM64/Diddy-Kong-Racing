@@ -1979,8 +1979,6 @@ void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s3
     }
 }
 
-#ifdef NON_EQUIVALENT
-// Single reg swap needed to match
 s32 func_80081F4C(s32 updateRate) {
     f32 var_f20;
     s32 ret;
@@ -2006,8 +2004,7 @@ s32 func_80081F4C(s32 updateRate) {
                         buttonsPressedAllPlayers = 0;
                     } else {
                         if (D_80126854 >= D_80126858) {
-                            D_80126854 = D_80126854 - D_80126858;
-                            D_800DF794 = 1;
+                            D_80126854 -= D_80126858;
                             D_800DF794 = 1;
                         } else {
                             var_f20 = (f32) D_80126854 / (f32) D_80126858;
@@ -2022,9 +2019,7 @@ s32 func_80081F4C(s32 updateRate) {
                         D_80126854 = 0;
                         D_800DF794 = 2;
                         buttonsPressedAllPlayers = 0;
-                        // Needs to increase regalloc by one,
-                        // This is also a weird check for what it's worth
-                        if ((D_80126860 > 0) != 0) {
+                        if (D_80126860 > D_80126854) {
                             play_sound_global(SOUND_WHOOSH1, NULL);
                         }
                     } else {
@@ -2056,9 +2051,6 @@ s32 func_80081F4C(s32 updateRate) {
     }
     return ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80081F4C.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 
