@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "PR/gbi.h"
+#include "audio.h"
 #include "fade_transition.h"
 #include "font.h"
 #include "save_data.h"
@@ -824,6 +825,7 @@ s32 menu_file_select_loop(s32 updateRate);
 s32 func_8008D5F8(s32 updateRate);
 void func_8008C168(s32 updateRate);
 void func_8008C698(s32 updateRate);
+void func_80083098(f32);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching

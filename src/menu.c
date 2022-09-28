@@ -177,10 +177,10 @@ s32 D_80126858;
 s32 D_8012685C;
 s32 D_80126860;
 s32 D_80126864;
-s16 D_80126868;
+s16 gTitleDemoTimer;
 s32 D_8012686C;
 f32 D_80126870;
-TitleScreenDemos *sTitleScreenDemoIds; //Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
+s8 *sTitleScreenDemoIds; //Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 s32 D_80126878[24];
 f32 D_801268D8;
 s32 D_801268DC;
@@ -2395,13 +2395,13 @@ void menu_title_screen_init(void) {
     set_time_trial_enabled(FALSE);
     D_80126864 = 0;
     sTitleScreenDemoIds = (TitleScreenDemos *)get_misc_asset(MISC_ASSET_UNK42);
-    numberOfPlayers = sTitleScreenDemoIds->numberOfPlayers;
-    D_80126868 = 0;
+    numberOfPlayers = sTitleScreenDemoIds[1];
+    gTitleDemoTimer = 0;
     if (numberOfPlayers == -2) {
         numberOfPlayers = 0;
-        D_80126868 = 0x258;
+        gTitleDemoTimer = 600;
     }
-    load_level_for_menu(sTitleScreenDemoIds->levelId, numberOfPlayers, sTitleScreenDemoIds->cutsceneId);
+    load_level_for_menu(sTitleScreenDemoIds[0], numberOfPlayers, sTitleScreenDemoIds[2]);
     D_801268D8 = 0;
     D_801268E0 = 0;
     D_801268DC = 0;
@@ -2410,8 +2410,204 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008377C.s")
-GLOBAL_ASM("asm/non_matchings/menu/menu_title_screen_loop.s")
+void func_8008377C(s32 arg0, f32 arg1) {
+    u32 foo[2];
+    s32 var_a3;
+    f32 temp_f0;
+    s32 i;
+    s32 var_s2;
+
+    if (D_8012686C != 0) {
+        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        temp_f0 = (f32) D_8012686C * 0.03125f;
+        sMenuGuiOpacity = (D_8012686C * 8) - 1;
+        func_80068508(0);
+        if (temp_f0 != 1.0f) {
+            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160.0f, 52.0f, temp_f0, temp_f0, -2U, 1);
+        } else {
+            render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160, 52, 255, 255, 255, 255);
+        }
+        if (is_controller_missing() == 0) {
+            i = 0; 
+            if (osTvType == TV_TYPE_PAL) {
+                var_s2 = 0xDA;
+            } else {
+                var_s2 = 0xC0;
+            }
+            set_text_font(0);
+            set_text_background_colour(0, 0, 0, 0);
+            while(gTitleMenuStrings[i] != NULL) {
+                if (i == gTitleScreenCurrentOption) {
+                    var_a3 = (D_801263BC & 0x1F) * 0x10;
+                    if (var_a3 >= 0x100) {
+                        var_a3 = 0x1FF - var_a3;
+                    }
+                } else {
+                    var_a3 = 0;
+                }
+                set_text_colour(255, 255, 255, var_a3, sMenuGuiOpacity);
+                draw_text(&sMenuCurrDisplayList, POS_CENTRED, var_s2, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
+                var_s2 += 0x10;
+                i++;
+            }
+        }
+    } else {
+        if (sTitleScreenDemoIds[D_80126864] == sTitleScreenDemoIds[0]) {
+            func_80083098(arg1);
+        }
+    }
+}
+
+s32 menu_title_screen_loop(s32 updateRate) {
+    s32 temp_v0_5;
+    s32 sp28;
+    TitleScreenDemos *demo;
+    s32 contrIndex;
+    f32 sp1C;
+    ObjectSegment* sp18;
+    s8 var_a1;
+
+    sp18 = func_80069D20();
+    D_801263BC = (D_801263BC + updateRate) & 0x3F;
+    func_8008E4EC();
+    if (osTvType == 0) {
+        sp1C = (f32) updateRate / 50.0f;
+    } else {
+        sp1C = (f32) updateRate / 60.0f;
+    }
+    if (gMenuDelay < 20) {
+        func_8008377C(updateRate, sp1C);
+    }
+    if (gMenuDelay != 0) {
+        gMenuDelay += updateRate;
+    }
+    if (sTitleScreenDemoIds[D_80126864] == sTitleScreenDemoIds[0]) {
+        D_801263D8 += updateRate;
+    }
+    sp28 = 0;
+    if (gTitleDemoTimer > 0) {
+        gTitleDemoTimer -= updateRate;
+        if ((gTitleDemoTimer < 60) && ((gTitleDemoTimer + updateRate) >= 60)) {
+            set_music_fade_timer(-0x300);
+            sp28 = 0;
+            func_800C01D8((FadeTransition* ) D_800E1E08);
+        }
+        if (gTitleDemoTimer <= 0) {
+            sp28 = 1;
+        }
+    } else {
+        gTitleDemoTimer = 0;
+    }
+    if ((gMenuDelay == 0) && (func_800214C4() || sp28)) {
+        if(gTitleDemoTimer){}
+        D_80126864 += 3;
+        demo = &sTitleScreenDemoIds[D_80126864];
+        if (demo->levelId == -1) {
+            D_80126864 = 0;
+            demo = &sTitleScreenDemoIds[D_80126864];
+        }
+        if (D_8012686C == 0) {
+            D_8012686C = 1;
+        }
+        var_a1 = demo->numberOfPlayers;
+        gTitleDemoTimer = 0;
+        if (var_a1 == -2) {
+            var_a1 = 0;
+            gTitleDemoTimer = 1500;
+        }
+        load_level_for_menu(demo->levelId, var_a1, demo->cutsceneId);
+        if (sTitleScreenDemoIds[D_80126864] == sTitleScreenDemoIds[0]) {
+            D_801268D8 = 0.0f;
+            D_801268E0 = 0;
+            D_801268DC = 0;
+            D_800DF9F4 = 0;
+            D_801263D8 = 0;
+        }
+    }
+    if (D_8012686C != 0) {
+        if (D_8012686C < 32) {
+            if (D_8012686C == 1) {
+                play_sound_global(SOUND_WHOOSH1, 0);
+            }
+            D_8012686C += updateRate;
+            if (D_8012686C >= 32) {
+                D_8012686C = 32;
+                sp18->unk30 = 8.0f;
+                play_sound_global(SOUND_EXPLOSION, 0);
+            }
+        } else {
+            if (D_80126870 < 6.0f) {
+                D_80126870 +=  sp1C;
+                if ((D_80126870 > 0.67f) && (D_801263E0 == 0)) {
+                    play_sound_global(SOUND_VOICE_TT_DIDDY_KONG_RACING, 0);
+                    D_801263E0 = 1;
+                } else if ((D_80126870 > 2.83f) && (D_801263E0 == 1)) {
+                    play_sound_global(SOUND_VOICE_TT_PRESS_START, 0);
+                    D_801263E0 = 2;
+                }
+            }
+        }
+    }
+    if (D_80126870 > 0.0f) {
+        if (D_80126870 < 0.5f) {
+            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (1.0f - D_80126870)));
+        } else if (D_80126870 < 4.5f) {
+            set_relative_volume_for_music(((s32) sMenuMusicVolume >> 1));
+        } else if (D_80126870 < 5.0f) {
+            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (D_80126870 - 4.0f)));
+        } else {
+            set_relative_volume_for_music(*((s8*)&sMenuMusicVolume + 3));
+        }
+    }
+    if (D_8012686C == 0) {
+        if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
+            D_8012686C = 1;
+        }
+    } else if ((gMenuDelay == 0) && !is_controller_missing()) {
+        s32 temp0 = gTitleScreenCurrentOption;
+        // D_80126838 = +1 when going up, and -1 when going down.
+        if ((D_80126838 < 0) && (gTitleScreenCurrentOption < 1)) {
+            gTitleScreenCurrentOption++;
+        }
+        if ((D_80126838 > 0) && (gTitleScreenCurrentOption > 0)) {
+            gTitleScreenCurrentOption--;
+        }
+        if (temp0 != gTitleScreenCurrentOption) {
+            play_sound_global(SOUND_MENU_PICK2, 0 * contrIndex); // TODO: The `* contrIndex` here is a fake match.
+        }
+        if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
+            for(contrIndex = 3; contrIndex > 0 && !(D_801267D8[contrIndex] & (A_BUTTON | START_BUTTON)); contrIndex--){}
+            set_active_player_index(contrIndex);
+            gMenuDelay = 1;
+            func_800C01D8(&sMenuTransitionFadeIn);
+            func_800C0170();
+            play_sound_global(SOUND_SELECT2, 0);
+        }
+    }
+    if (gMenuDelay > 30) {
+        func_80084118();
+        func_800C0180();
+        if (gTitleScreenCurrentOption == 0) {
+            sp28 = 0;
+            if (is_drumstick_unlocked()) {
+                sp28 = 1;
+            }
+            if (is_tt_unlocked()) {
+                sp28 ^= 3;
+            }
+            load_level_for_menu(0x16, -1, sp28);
+            func_8008AEB4(0, NULL);
+            menu_init(3U);
+            return 0;
+        }
+        D_800DF460 = 0;
+        load_level_for_menu(0x27, -1, 0);
+        menu_init(MENU_OPTIONS);
+        return 0;
+    }
+    gIgnorePlayerInput = 0;
+    return 0;
+}
 
 void func_80084118(void) {
     func_8009C4A8(sGameTitleTileTextures);
