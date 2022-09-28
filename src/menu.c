@@ -2354,11 +2354,11 @@ void func_8008377C(s32 arg0, f32 arg1) {
         if (temp_f0 != 1.0f) {
             render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160.0f, 52.0f, temp_f0, temp_f0, -2U, 1);
         } else {
-            render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, 0xA0, 0x34, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
+            render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160, 52, 255, 255, 255, 255);
         }
         if (is_controller_missing() == 0) {
             i = 0; 
-            if (osTvType == 0) {
+            if (osTvType == OS_TV_TYPE_PAL) {
                 var_s2 = 0xDA;
             } else {
                 var_s2 = 0xC0;
@@ -2375,7 +2375,7 @@ void func_8008377C(s32 arg0, f32 arg1) {
                     var_a3 = 0;
                 }
                 set_text_colour(255, 255, 255, var_a3, sMenuGuiOpacity);
-                draw_text(&sMenuCurrDisplayList, -0x8000, var_s2, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, POS_CENTRED, var_s2, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
                 var_s2 += 0x10;
                 i++;
             }
@@ -2456,22 +2456,22 @@ s32 menu_title_screen_loop(s32 updateRate) {
     if (D_8012686C != 0) {
         if (D_8012686C < 32) {
             if (D_8012686C == 1) {
-                play_sound_global(0x16, 0);
+                play_sound_global(SOUND_WHOOSH1, 0);
             }
             D_8012686C += updateRate;
             if (D_8012686C >= 32) {
                 D_8012686C = 32;
                 sp18->unk30 = 8.0f;
-                play_sound_global(0x11, 0);
+                play_sound_global(SOUND_EXPLOSION, 0);
             }
         } else {
             if (D_80126870 < 6.0f) {
                 D_80126870 +=  sp1C;
                 if ((D_80126870 > 0.67f) && (D_801263E0 == 0)) {
-                    play_sound_global(0x105, 0);
+                    play_sound_global(SOUND_VOICE_TT_DIDDY_KONG_RACING, 0);
                     D_801263E0 = 1;
                 } else if ((D_80126870 > 2.83f) && (D_801263E0 == 1)) {
-                    play_sound_global(0x106, 0);
+                    play_sound_global(SOUND_VOICE_TT_PRESS_START, 0);
                     D_801263E0 = 2;
                 }
             }
@@ -2502,7 +2502,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gTitleScreenCurrentOption--;
         }
         if (temp0 != gTitleScreenCurrentOption) {
-            play_sound_global(0xEB, 0 * contrIndex); // TODO: The `* contrIndex` here is a fake match.
+            play_sound_global(SOUND_MENU_PICK2, 0 * contrIndex); // TODO: The `* contrIndex` here is a fake match.
         }
         if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
             for(contrIndex = 3; contrIndex > 0 && !(D_801267D8[contrIndex] & (A_BUTTON | START_BUTTON)); contrIndex--){}
@@ -2510,10 +2510,10 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gMenuDelay = 1;
             func_800C01D8(&sMenuTransitionFadeIn);
             func_800C0170();
-            play_sound_global(0xEF, 0);
+            play_sound_global(SOUND_SELECT2, 0);
         }
     }
-    if (gMenuDelay >= 0x1F) {
+    if (gMenuDelay > 30) {
         func_80084118();
         func_800C0180();
         if (gTitleScreenCurrentOption == 0) {
@@ -2531,7 +2531,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
         D_800DF460 = 0;
         load_level_for_menu(0x27, -1, 0);
-        menu_init(0xCU);
+        menu_init(MENU_OPTIONS);
         return 0;
     }
     gIgnorePlayerInput = 0;
