@@ -217,7 +217,11 @@ void func_80079760(OSSched *sc) {
 #ifdef ENABLE_DEBUG_PROFILER
         puppyprint_update_rsp(RSP_AUDIO_START);
 #endif
+#ifdef DISABLE_AUDIO
+        sc->doAudio = 0;
+#else
         sc->doAudio = 1;
+#endif
     }
     if (sc->doAudio && sc->curRSPTask) {
         __scYield(sc);

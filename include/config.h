@@ -17,6 +17,7 @@
 #define UNLOCK_ALL
 #define NUM_FRAMEBUFFERS 3
 #define FIFO_UCODE
+// #define DISABLE_AUDIO
 
 
 
