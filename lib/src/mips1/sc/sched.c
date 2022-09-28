@@ -162,10 +162,13 @@ static void __scMain(void *arg) {
     s32 state = 0;
     OSScTask *sp = 0;
     OSScTask *dp = 0;
+    OSTime first;
 
     while (1) {
 
         osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
+
+        first = osGetTime();
 
         switch ((int) msg) {
             case (VIDEO_MSG):
@@ -201,6 +204,7 @@ static void __scMain(void *arg) {
                     __scExec(sc, sp, dp);
                 break;
         }
+        profiler_update(gPuppyTimers.thread5Time, first);
     }
 }
 
@@ -407,7 +411,7 @@ void __scHandleRDP(OSSched *sc) {
 
 
 OSScTask *__scTaskReady(OSScTask *t) {
-    return t;
+    //return t;
     if (t) {    
         /*
          * If there is a pending swap bail out til later (next
