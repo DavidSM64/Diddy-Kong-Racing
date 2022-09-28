@@ -2339,8 +2339,6 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
-//GLOBAL_ASM("asm/non_matchings/menu/func_8008377C.s")
-
 void func_8008377C(s32 arg0, f32 arg1) {
     u32 foo[2];
     s32 var_a3;
@@ -2388,7 +2386,6 @@ void func_8008377C(s32 arg0, f32 arg1) {
         }
     }
 }
-
 
 s32 menu_title_screen_loop(s32 updateRate) {
     s32 temp_v0_5;
