@@ -2441,9 +2441,9 @@ void render_options_menu_ui(UNUSED s32 updateRate) {
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_background_colour(0, 0, 0, 0);
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, 161, 35, gMenuText[ASSET_MENU_TEXT_OPTIONS], ALIGN_MIDDLE_CENTER); // OPTIONS
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_OPTIONS], ALIGN_MIDDLE_CENTER); // OPTIONS
     set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, 160, 32, gMenuText[ASSET_MENU_TEXT_OPTIONS], ALIGN_MIDDLE_CENTER); // OPTIONS
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_OPTIONS], ALIGN_MIDDLE_CENTER); // OPTIONS
 
     optionMenuTextIndex = 0;
     yPos = 76;
@@ -2755,7 +2755,7 @@ s32 menu_audio_options_loop(s32 arg0) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     }
-    if (gMenuDelay < -0x1E) {
+    if (gMenuDelay < -30) {
         func_800851FC();
         menu_init(0xC);
         return 0;
@@ -2870,16 +2870,16 @@ void func_80085B9C(UNUSED s32 updateRate) {
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(2);
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, 161, 35, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, 160, 32, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
     if (drawTexturedRectangle) {
         yPos = (osTvType == TV_TYPE_PAL) ? 132 : 120;
         yPos += ((s32) (D_801263BC & 0x1F) >> 1);
         var_s2 = 0;
         tempTex = &D_800E043C[var_s2];
         do {
-            render_textured_rectangle(&sMenuCurrDisplayList, tempTex, 160, yPos, 255, 255, 255, 255);
+            render_textured_rectangle(&sMenuCurrDisplayList, tempTex, SCREEN_WIDTH_HALF, yPos, 255, 255, 255, 255);
             tempTex++;
             var_s2++;
             yPos += 16;
@@ -2916,10 +2916,10 @@ void func_80085B9C(UNUSED s32 updateRate) {
     set_text_font(2);
     set_text_colour(255, 255, 255, 0, 255);
     if (drawOk) {
-        draw_text(&sMenuCurrDisplayList, 160, 128, D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
     }
     if (drawPleaseWait) {
-        draw_text(&sMenuCurrDisplayList, 160, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], ALIGN_MIDDLE_CENTER);
     }
     if (drawDialogueBox) {
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
@@ -3354,7 +3354,7 @@ s32 menu_boot_loop(s32 updateRate) {
     }
 
     if (temp < 300) {
-        render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160, temp, 255, 255, 255, 255);
+        render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, temp, 255, 255, 255, 255);
         func_8007B3D0(&sMenuCurrDisplayList);
     }
 
@@ -3425,9 +3425,9 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
     } else if (gShowControllerPakMenu != 0) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_colour(0, 0, 0, 255, 128);
-        draw_text(&sMenuCurrDisplayList, 161, 33, gMenuText[ASSET_MENU_TEXT_CONTPAK], ALIGN_MIDDLE_CENTER); //CONTROLLER PAK - Drop Shadow
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 33, gMenuText[ASSET_MENU_TEXT_CONTPAK], ALIGN_MIDDLE_CENTER); //CONTROLLER PAK - Drop Shadow
         set_text_colour(255, 255, 255, 0, 255);
-        draw_text(&sMenuCurrDisplayList, 160, 30, gMenuText[ASSET_MENU_TEXT_CONTPAK], ALIGN_MIDDLE_CENTER); //CONTROLLER PAK - Main Text
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 30, gMenuText[ASSET_MENU_TEXT_CONTPAK], ALIGN_MIDDLE_CENTER); //CONTROLLER PAK - Main Text
 
         yPos += 48;
 
@@ -3484,7 +3484,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         }
         if (D_801263D8 < (16 - sControllerPakMenuNumberOfRows)) {
             if ((D_801263BC & 8) != 0) {
-                render_textured_rectangle(&sMenuCurrDisplayList, D_800E043C, 160, yPos + 8, 255, 255, 255, 255);
+                render_textured_rectangle(&sMenuCurrDisplayList, D_800E043C, SCREEN_WIDTH_HALF, yPos + 8, 255, 255, 255, 255);
                 func_8007B3D0(&sMenuCurrDisplayList);
             }
         } else {
@@ -3535,7 +3535,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         if (D_80126C10 != 0) {
             set_text_colour(255, 255, 255, 0, 255);
             set_text_font(ASSET_FONTS_BIGFONT);
-            draw_text(&sMenuCurrDisplayList, 160, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], ALIGN_MIDDLE_CENTER);
         }
     }
 }
@@ -3738,9 +3738,9 @@ void render_magic_codes_ui(s32 arg0) {
     render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 7);
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, 161, 35, gMenuText[ASSET_MENU_TEXT_MAGICCODES], ALIGN_MIDDLE_CENTER); //"MAGIC CODES"
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_MAGICCODES], ALIGN_MIDDLE_CENTER); //"MAGIC CODES"
     set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, 160, 32, gMenuText[ASSET_MENU_TEXT_MAGICCODES], ALIGN_MIDDLE_CENTER); //"MAGIC CODES"
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_MAGICCODES], ALIGN_MIDDLE_CENTER); //"MAGIC CODES"
     set_text_font(ASSET_FONTS_FUNFONT);
     set_text_colour(255, 255, 255, 0, 255);
 
@@ -3888,9 +3888,9 @@ void render_magic_codes_list_menu_text(s32 arg0) {
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, 161, 35, gMenuText[ASSET_MENU_TEXT_MAGICCODESLIST], ALIGN_MIDDLE_CENTER); // MAGIC CODES LIST
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_MAGICCODESLIST], ALIGN_MIDDLE_CENTER); // MAGIC CODES LIST
     set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, 160, 32, gMenuText[ASSET_MENU_TEXT_MAGICCODESLIST], ALIGN_MIDDLE_CENTER); // MAGIC CODES LIST
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_MAGICCODESLIST], ALIGN_MIDDLE_CENTER); // MAGIC CODES LIST
     numOfUnlockedCheats = 0;
     phi_v0 = 1;
     for (i = 0; i < 32; i++) {
@@ -3931,7 +3931,7 @@ void render_magic_codes_list_menu_text(s32 arg0) {
         return;
     }
     if (D_801263BC & 8) {
-        render_textured_rectangle(&sMenuCurrDisplayList, &D_800E043C, 160, yPos + 8, 255, 255, 255, 255);
+        render_textured_rectangle(&sMenuCurrDisplayList, &D_800E043C, SCREEN_WIDTH_HALF, yPos + 8, 255, 255, 255, 255);
     }
 }
 #else
@@ -4043,7 +4043,7 @@ s32 menu_magic_codes_list_loop(s32 arg0) {
         func_800C01D8(&sMenuTransitionFadeIn);
         play_sound_global(SOUND_MENU_BACK3, NULL);
     }
-    if (gMenuDelay < -0x1E) {
+    if (gMenuDelay < -30) {
         func_8008AD1C();
         menu_init(0xA);
         return 0;
@@ -4200,16 +4200,16 @@ void draw_character_select_text(UNUSED s32 arg0) {
         set_text_background_colour(0, 0, 0, 0);
         set_text_colour(0, 0, 0, 255, 128);
         // Draw "Player Select" text drop shadow
-        draw_text(&sMenuCurrDisplayList, 161, 35, gMenuText[ASSET_MENU_TEXT_PLAYERSELECT], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_PLAYERSELECT], ALIGN_MIDDLE_CENTER);
         set_text_colour(255, 255, 255, 0, 255);
         // Draw "Player Select" text
-        draw_text(&sMenuCurrDisplayList, 160, 32, gMenuText[ASSET_MENU_TEXT_PLAYERSELECT], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_PLAYERSELECT], ALIGN_MIDDLE_CENTER);
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers && gNumberOfActivePlayers > 0) {
             yPos = 208;
             if (osTvType == TV_TYPE_PAL) {
                 yPos = 234;
             }
-            draw_text(&sMenuCurrDisplayList, 160, yPos, D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
         func_8007B3D0(&sMenuCurrDisplayList);
         update_camera_fov(40.0f);
@@ -4576,7 +4576,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             gMenuDelay += updateRate;
         }
     }
-    if (gMenuDelay >= 0x1F) {
+    if (gMenuDelay > 30) {
         func_8008CACC();
         if (D_800DF460 == D_801263E0) {
             func_80000B28();
@@ -4592,7 +4592,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             menu_init(MENU_FILE_SELECT);
         }
         return 0;
-    } else if (gMenuDelay < -0x1E) {
+    } else if (gMenuDelay < -30) {
         func_8008CACC();
         charSelectScene = 0;
         if (is_drumstick_unlocked()) {
@@ -4805,29 +4805,29 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     }
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, 161, 19, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 19, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, 160, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
     y += 0xBB;
     if (D_80126484 != FALSE) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, 160, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
         } else if (D_80126494 == 1) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, 160, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, 160, y, &D_800E8234, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8234, ALIGN_MIDDLE_CENTER);
         }
         return;
     }
     if (D_80126488 != FALSE) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, 160, y, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, 160, y, &D_800E8238, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8238, ALIGN_MIDDLE_CENTER);
         }
         return;
     }
@@ -5675,7 +5675,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                 if (D_801269C8 >= 4) {
                     sp80 += 0x18;
                 }
-                draw_text(&sMenuCurrDisplayList, 160, 172, D_800E823C, ALIGN_MIDDLE_CENTER); // D_800E823C = "OK?"
+                draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 172, D_800E823C, ALIGN_MIDDLE_CENTER); // D_800E823C = "OK?"
             }
         }
         sMenuGuiOpacity = 0xFF;
@@ -5760,7 +5760,7 @@ void menu_5_init(void) {
         func_800C01D8(&sMenuTransitionFadeOut);
         D_801263BC = 0;
         gMenuDelay = 0;
-        D_800E0980 = 0x1E;
+        D_800E0980 = 30;
         load_font(ASSET_FONTS_BIGFONT);
         load_level_for_menu(s0, -1, 1);
     }
@@ -5955,7 +5955,7 @@ void func_80093D40(UNUSED s32 updateRate) {
     s32 xPos;
     s32 alpha;
 
-    for (i = 0, xPos = 160; i < D_800E0984; i++) {
+    for (i = 0, xPos = SCREEN_WIDTH_HALF; i < D_800E0984; i++) {
         x = func_800C4DA0(D_80126A40[i], 0, 0) + 8;
         if (xPos < x) {
             xPos = x;
@@ -5972,7 +5972,7 @@ void func_80093D40(UNUSED s32 updateRate) {
     yOffset >>= 1;
     xPos >>= 1;
 
-    set_current_dialogue_box_coords(7, 160 - xPos, baseYPos - yOffset, xPos + 160, yOffset + baseYPos);
+    set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - xPos, baseYPos - yOffset, xPos + SCREEN_WIDTH_HALF, yOffset + baseYPos);
     colours = &D_800E0990[get_player_id(D_800E098C)];
     set_current_dialogue_background_colour(7, colours->r, colours->g, colours->b, colours->a);
     set_dialogue_font(7, 0);
@@ -6413,13 +6413,13 @@ void render_enter_filename_ui(UNUSED s32 unused) {
     s32 charIndexOffset;
 
     temp_f4 = D_80126C50;
-    sp6C = 160 - (s32) ((D_80126C50 - temp_f4) * 40);
+    sp6C = SCREEN_WIDTH_HALF - (s32) ((D_80126C50 - temp_f4) * 40);
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(ASSET_FONTS_FUNFONT);
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, 162, D_800E0F90 - 22, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 2, D_800E0F90 - 22, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
     set_text_colour(255, 128, 255, 96, 255);
-    draw_text(&sMenuCurrDisplayList, 160, D_800E0F90 - 24, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, D_800E0F90 - 24, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
     yPos = D_800E0F90;
     for (i = 0; i < 2; i++) {
         xPos = sp6C;
@@ -6693,13 +6693,13 @@ void draw_trophy_race_text(UNUSED s32 updateRate) {
     set_text_font(ASSET_FONTS_BIGFONT);
     //Text Shadows first
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, 161, 35, (char *)worldName, ALIGN_MIDDLE_CENTER);
-    draw_text(&sMenuCurrDisplayList, 161, 67, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], ALIGN_MIDDLE_CENTER); // TROPHY RACE
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, (char *)worldName, ALIGN_MIDDLE_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 67, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], ALIGN_MIDDLE_CENTER); // TROPHY RACE
     set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, 160, 32, (char *)worldName, ALIGN_MIDDLE_CENTER);
-    draw_text(&sMenuCurrDisplayList, 160, 64, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], ALIGN_MIDDLE_CENTER); // TROPHY RACE
-    draw_text(&sMenuCurrDisplayList, 160, yPos + 176, gMenuText[138 + gTrophyRaceRound], ALIGN_MIDDLE_CENTER); // ROUND ONE / ROUND TWO / ROUND THREE / ROUND FOUR
-    draw_text(&sMenuCurrDisplayList, 160, yPos + 208, (char *)levelName, ALIGN_MIDDLE_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, (char *)worldName, ALIGN_MIDDLE_CENTER);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 64, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], ALIGN_MIDDLE_CENTER); // TROPHY RACE
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos + 176, gMenuText[138 + gTrophyRaceRound], ALIGN_MIDDLE_CENTER); // ROUND ONE / ROUND TWO / ROUND THREE / ROUND FOUR
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos + 208, (char *)levelName, ALIGN_MIDDLE_CENTER);
 }
 
 s32 menu_trophy_race_round_loop(s32 updateRate) {
@@ -6860,7 +6860,7 @@ void menu_ghost_data_init(void) {
         func_800C01D8(&sMenuTransitionFadeOut);
         return;
     }
-    gMenuDelay = 0x1E;
+    gMenuDelay = 30;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/menu/menu_ghost_data_init.s")
@@ -6970,7 +6970,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
     }
 
     gIgnorePlayerInput = FALSE;
-    if (gMenuDelay >= 0x1F) {
+    if (gMenuDelay > 30) {
         func_8009ABAC();
         menu_init(MENU_SAVE_OPTIONS);
     }
