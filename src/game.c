@@ -953,11 +953,15 @@ void render_profiler(void) {
         render_printf("Racer: %dus\n", gPuppyTimers.racerTime[PERF_TOTAL]);
     render_printf("Audio: %dus\n", gPuppyTimers.thread4Time[PERF_TOTAL]);
     render_printf("Tri: %d\n", sTriCount);
+#ifdef FIFO_UCODE
     if (!suCodeSwitch) {
         render_printf("GFX: FIFO");
     } else {
         render_printf("GFX: XBUS");
     }
+#else
+    render_printf("GFX: XBUS");
+#endif
 }
 
 /// Add whichever times you wish to create aggregates of.
@@ -1126,6 +1130,7 @@ void main_game_loop(void) {
         }
     }
 
+#if NUM_FRAMEBUFFERS != 2
     sDeltaTime = osGetTime() - sPrevTime;
     sPrevTime = osGetTime();
     sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
@@ -1148,6 +1153,7 @@ void main_game_loop(void) {
     if (sTotalTime <= 0) {
         sTotalTime = 0;
     }
+#endif
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
             pre_intro_loop();

@@ -244,6 +244,9 @@ s32 func_8007A98C(s32 arg0) {
     swap_framebuffers();
 #endif
     osViSwapBuffer(gVideoLastFramebuffer);
+#if NUM_FRAMEBUFFERS == 2
+    osRecvMesg(&D_801261A0, NULL, OS_MESG_BLOCK);
+#endif
     return tempUpdateRate;
 }
 /*#else
