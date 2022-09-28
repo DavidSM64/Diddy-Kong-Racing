@@ -177,7 +177,7 @@ s32 D_80126858;
 s32 D_8012685C;
 s32 D_80126860;
 s32 D_80126864;
-s16 D_80126868;
+s16 gTitleDemoTimer;
 s32 D_8012686C;
 f32 D_80126870;
 s8 *sTitleScreenDemoIds; //Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
@@ -2325,10 +2325,10 @@ void menu_title_screen_init(void) {
     D_80126864 = 0;
     sTitleScreenDemoIds = (TitleScreenDemos *)get_misc_asset(MISC_ASSET_UNK42);
     numberOfPlayers = sTitleScreenDemoIds[1];
-    D_80126868 = 0;
+    gTitleDemoTimer = 0;
     if (numberOfPlayers == -2) {
         numberOfPlayers = 0;
-        D_80126868 = 0x258;
+        gTitleDemoTimer = 600;
     }
     load_level_for_menu(sTitleScreenDemoIds[0], numberOfPlayers, sTitleScreenDemoIds[2]);
     D_801268D8 = 0;
@@ -2404,7 +2404,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     } else {
         sp1C = (f32) updateRate / 60.0f;
     }
-    if (gMenuDelay < 0x14) {
+    if (gMenuDelay < 20) {
         func_8008377C(updateRate, sp1C);
     }
     if (gMenuDelay != 0) {
@@ -2414,21 +2414,21 @@ s32 menu_title_screen_loop(s32 updateRate) {
         D_801263D8 += updateRate;
     }
     sp28 = 0;
-    if (D_80126868 > 0) {
-        D_80126868 -= updateRate;
-        if ((D_80126868 < 0x3C) && ((D_80126868 + updateRate) >= 0x3C)) {
+    if (gTitleDemoTimer > 0) {
+        gTitleDemoTimer -= updateRate;
+        if ((gTitleDemoTimer < 60) && ((gTitleDemoTimer + updateRate) >= 60)) {
             set_music_fade_timer(-0x300);
             sp28 = 0;
             func_800C01D8((FadeTransition* ) D_800E1E08);
         }
-        if (D_80126868 <= 0) {
+        if (gTitleDemoTimer <= 0) {
             sp28 = 1;
         }
     } else {
-        D_80126868 = 0;
+        gTitleDemoTimer = 0;
     }
     if ((gMenuDelay == 0) && (func_800214C4() || sp28)) {
-        if(D_80126868){}
+        if(gTitleDemoTimer){}
         D_80126864 += 3;
         demo = &sTitleScreenDemoIds[D_80126864];
         if (demo->levelId == -1) {
@@ -2439,10 +2439,10 @@ s32 menu_title_screen_loop(s32 updateRate) {
             D_8012686C = 1;
         }
         var_a1 = demo->numberOfPlayers;
-        D_80126868 = 0;
+        gTitleDemoTimer = 0;
         if (var_a1 == -2) {
             var_a1 = 0;
-            D_80126868 = 0x5DC;
+            gTitleDemoTimer = 1500;
         }
         load_level_for_menu(demo->levelId, var_a1, demo->cutsceneId);
         if (sTitleScreenDemoIds[D_80126864] == sTitleScreenDemoIds[0]) {
@@ -2454,13 +2454,13 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
     }
     if (D_8012686C != 0) {
-        if (D_8012686C < 0x20) {
+        if (D_8012686C < 32) {
             if (D_8012686C == 1) {
                 play_sound_global(0x16, 0);
             }
             D_8012686C += updateRate;
-            if (D_8012686C >= 0x20) {
-                D_8012686C = 0x20;
+            if (D_8012686C >= 32) {
+                D_8012686C = 32;
                 sp18->unk30 = 8.0f;
                 play_sound_global(0x11, 0);
             }
@@ -2489,7 +2489,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
     }
     if (D_8012686C == 0) {
-        if (D_801267D8[4] & 0x9000) {
+        if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
             D_8012686C = 1;
         }
     } else if ((gMenuDelay == 0) && !is_controller_missing()) {
@@ -2504,8 +2504,8 @@ s32 menu_title_screen_loop(s32 updateRate) {
         if (temp0 != gTitleScreenCurrentOption) {
             play_sound_global(0xEB, 0 * contrIndex); // TODO: The `* contrIndex` here is a fake match.
         }
-        if (D_801267D8[4] & 0x9000) {
-            for(contrIndex = 3; contrIndex > 0 && !(D_801267D8[contrIndex] & 0x9000); contrIndex--){}
+        if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
+            for(contrIndex = 3; contrIndex > 0 && !(D_801267D8[contrIndex] & (A_BUTTON | START_BUTTON)); contrIndex--){}
             set_active_player_index(contrIndex);
             gMenuDelay = 1;
             func_800C01D8(&sMenuTransitionFadeIn);
