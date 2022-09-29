@@ -197,9 +197,9 @@ u8 D_801269C4[4];
 s32 D_801269C8;
 s32 D_801269CC;
 char *gAudioOutputStrings[3];
-s32 D_801269DC;
+f32 D_801269DC;
 char *gMusicTestString;
-s32 D_801269E4;
+f32 D_801269E4;
 s32 D_801269E8;
 s32 D_801269EC;
 s32 D_801269F0;
@@ -2874,7 +2874,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
     if (drawTexturedRectangle) {
-        yPos = (osTvType == TV_TYPE_PAL) ? 132 : 120;
+        yPos = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
         yPos += ((s32) (D_801263BC & 0x1F) >> 1);
         var_s2 = 0;
         tempTex = &D_800E043C[var_s2];
@@ -3311,9 +3311,9 @@ s32 menu_boot_loop(s32 updateRate) {
 
     out = 0;
 
-    y = 120;
+    y = SCREEN_HEIGHT_HALF;
     if (osTvType == TV_TYPE_PAL) {
-        y = 132;
+        y = SCREEN_HEIGHT_HALF_PAL;
     }
 
     temp = y;
@@ -3500,7 +3500,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
             if (osTvType == TV_TYPE_PAL) {
                 yPos = 134;
             } else {
-                yPos = 120;
+                yPos = SCREEN_HEIGHT_HALF;
             }
             assign_dialogue_box_id(6);
             set_dialogue_font(6, ASSET_FONTS_FUNFONT);
@@ -3810,9 +3810,9 @@ void render_magic_codes_ui(s32 arg0) {
         draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144, gMenuText[ASSET_MENU_TEXT_ALLCODESDELETED], ALIGN_MIDDLE_CENTER); //"All cheats have been deleted"
     }
     if (D_801263E0 != 0) {
-        yPos = 120;
+        yPos = SCREEN_HEIGHT_HALF;
         if (osTvType == TV_TYPE_PAL) {
-            yPos = 134;
+            yPos = SCREEN_HEIGHT_HALF + 14;
         }
         assign_dialogue_box_id(6);
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
@@ -4351,17 +4351,15 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
     s32 i;
 
     j = 0;
-    someBool = 1;
+    someBool = TRUE;
     while (someBool && j < arg2 && arg1[j] != -1) {
-        someBool = 0;
+        someBool = FALSE;
         // Run this block if the DOUBLEVISION cheat isn't active.
         if (!(get_filtered_cheats() & CHEAT_SELECT_SAME_PLAYER)) {
-            i = 0;
-            while (i < 4 && !someBool) {
+            for (i = 0; i < MAXCONTROLLERS && !someBool; i++) {
                 if (i != arg0 && gPlayersCharacterArray[i] == arg1[j]) {
-                    someBool = 1;
+                    someBool = TRUE;
                 }
-                i++;
             }
             if (someBool) {
                 j++;
@@ -4370,14 +4368,16 @@ void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
     }
     if (!someBool) {
         gPlayersCharacterArray[arg0] = arg1[j];
+        // arg3 seems to always be passed SOUND_MENU_PICK3?
         play_sound_global(arg3, NULL);
-        return;
+    } else {
+        // arg4 seems to always be passed SOUND_HORN_DRUMSTICK?
+        play_sound_global(arg4, NULL);
     }
-    play_sound_global(arg4, NULL);
 }
 
 void func_8008C128(void) {
-    func_8009C4A8((s16 *)&D_800DFDC8);
+    func_8009C4A8(D_800DFDC8);
     set_free_queue_state(0);
     unload_font(ASSET_FONTS_BIGFONT);
     set_free_queue_state(2);
@@ -5126,7 +5126,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                         gSavefileInfo[i].isAdventure2 = TRUE;
                     }
                     gSavefileInfo[i].isStarted = TRUE;
-                    gSavefileInfo[i].balloonCount = (u16) *D_80126530[i]->balloonsPtr;
+                    gSavefileInfo[i].balloonCount = *D_80126530[i]->balloonsPtr;
                     decompress_filename_string(D_80126530[i]->filename, gSavefileInfo[i].name, 3);
                 }
             }
@@ -5178,7 +5178,7 @@ s32 menu_file_select_loop(s32 updateRate) {
             if (currentMenuDelay != 0) {
                 if (currentMenuDelay > 0) {
                     if (gSavefileInfo[gSaveFileIndex].isStarted != 0) {
-                        play_sound_global(0xEFU, NULL);
+                        play_sound_global(SOUND_SELECT2, NULL);
                         func_8006EB78(gSaveFileIndex);
                         set_music_fade_timer(-0x80);
                     } else {
@@ -5962,7 +5962,7 @@ void func_80093D40(UNUSED s32 updateRate) {
         }
     }
 
-    baseYPos = (osTvType == TV_TYPE_PAL) ? 132 : 120;
+    baseYPos = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
 
     yOffset = ((D_800E0984 * 16) + 28);
 
@@ -8060,7 +8060,7 @@ s32 trophy_race_cabinet_menu_loop(void) {
     s32 currentOption;
     s32 buttonsPressed;
 
-    set_current_dialogue_box_coords(1, 24, 16, 184, 120);
+    set_current_dialogue_box_coords(1, 24, 16, 184, SCREEN_HEIGHT_HALF);
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
