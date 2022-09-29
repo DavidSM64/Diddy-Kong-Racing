@@ -2410,40 +2410,47 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
+<<<<<<< HEAD
 void func_8008377C(UNUSED s32 arg0, f32 arg1) {
     UNUSED u32 foo[2];
-    s32 var_a3;
-    f32 temp_f0;
+    s32 alpha;
+    f32 scale;
+=======
+void func_8008377C(s32 arg0, f32 arg1) {
+    u32 foo[2];
+    s32 alpha;
+    f32 scale;
+>>>>>>> uppstream/master
     s32 i;
-    s32 var_s2;
+    s32 posY;
 
     if (D_8012686C != 0) {
         func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        temp_f0 = (f32) D_8012686C * 0.03125f;
+        scale = (f32) D_8012686C * 0.03125f;
         sMenuGuiOpacity = (D_8012686C * 8) - 1;
         func_80068508(0);
-        if (temp_f0 != 1.0f) {
-            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52.0f, temp_f0, temp_f0, -2, 1);
+        if (scale != 1.0f) {
+            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, 1);
         } else {
             render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52, 255, 255, 255, 255);
         }
-        if (is_controller_missing() == 0) {
+        if (!is_controller_missing()) {
             i = 0; 
-            var_s2 = (osTvType == TV_TYPE_PAL) ? 218 : 192;
-            set_text_font(0);
+            posY = (osTvType == TV_TYPE_PAL) ? 218 : 192;
+            set_text_font(ASSET_FONTS_FUNFONT);
             set_text_background_colour(0, 0, 0, 0);
             while(gTitleMenuStrings[i] != NULL) {
                 if (i == gTitleScreenCurrentOption) {
-                    var_a3 = (D_801263BC & 0x1F) * 16;
-                    if (var_a3 >= 0x100) {
-                        var_a3 = 0x1FF - var_a3;
+                    alpha = (D_801263BC & 0x1F) * 16;
+                    if (alpha >= 255) {
+                        alpha = 511 - alpha;
                     }
                 } else {
-                    var_a3 = 0;
+                    alpha = 0;
                 }
-                set_text_colour(255, 255, 255, var_a3, sMenuGuiOpacity);
-                draw_text(&sMenuCurrDisplayList, POS_CENTRED, var_s2, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
-                var_s2 += 16;
+                set_text_colour(255, 255, 255, alpha, sMenuGuiOpacity);
+                draw_text(&sMenuCurrDisplayList, POS_CENTRED, posY, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
+                posY += 16;
                 i++;
             }
         }

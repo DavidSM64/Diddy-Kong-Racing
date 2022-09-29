@@ -89,7 +89,7 @@ char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 s8 sAntiPiracyTriggered = 0;
 s32 D_800DD378 = 1;
 s32 D_800DD37C = 0;
-s32 D_800DD380 = 0; // Currently unknown, might be a different type.
+s32 D_800DD380 = 0;
 s32 sControllerStatus = 0;
 s32 D_800DD388 = 0; // Currently unknown, might be a different type.
 s8 D_800DD38C = 0;
@@ -874,7 +874,7 @@ void init_game(void) {
     func_80081218();
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
-    osScAddClient(&gMainSched, gNMISched, &gNMIMesgQueue, 3);
+    osScAddClient(&gMainSched, gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
     D_80123560[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
