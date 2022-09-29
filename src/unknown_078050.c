@@ -275,10 +275,10 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     s32 *mesgBuf;
 
     D_800DE4DC = 1;
-    dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
-    gfxBufCounter2++;
-    if (gfxBufCounter2 == 2) {
-        gfxBufCounter2 = 0;
+    dkrtask = &gGfxTaskBuf[gfxBufCounter2];
+    gfxBufCounter++;
+    if (gfxBufCounter == 2) {
+        gfxBufCounter = 0;
     }
     
     dkrtask->task.data_ptr = dlBegin;
@@ -297,7 +297,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.yield_data_ptr = D_801271B0;
     dkrtask->task.yield_data_size = 0xA00;
     dkrtask->unk0 = 0;
-    dkrtask->unk8 = 7;
+    dkrtask->unk8 = 3;
     dkrtask->mesgQueue = &D_80125ED8;
     dkrtask->unk54 = D_800DE490;
     dkrtask->frameBuffer = (s32) gVideoCurrFramebuffer;

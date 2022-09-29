@@ -239,7 +239,7 @@ s32 func_8007A98C(s32 arg0) {
         tempUpdateRate &= 0xFF;
     }
 #else
-    osRecvMesg(&D_801261A0, NULL, OS_MESG_BLOCK);
+    osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
     osViBlack(FALSE);
     swap_framebuffers();
 #endif
