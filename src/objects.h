@@ -138,7 +138,7 @@ void func_8000C460(void);
 void func_8000C604(void);
 s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
-s32 func_8000CC20(u32 *arg0);
+s32 func_8000CC20(Object *arg0);
 u32 func_8000E0B0(void);
 void func_8000E128(void);
 s8 func_8000E138();
@@ -235,8 +235,12 @@ s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
+f32 func_8002263C(f32 *, s32, f32, f32 *);
 s32 func_80031F88(Object*, s32);
 s16 func_8001C418(f32 yPos);
+void func_80021400(s32 arg0);
+s32 func_8001B668(s32 arg0);
+s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -250,12 +254,14 @@ s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *spawn_object(void *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
-void func_80011570(Object *, f32, f32, f32);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
 void func_8001BF20(void);
+void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
+void func_80011134(Object *, s32);
+void func_800113CC(Object *, s32, s32, s32, s32);
 
 #endif

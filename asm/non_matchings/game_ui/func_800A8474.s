@@ -1435,7 +1435,7 @@ glabel func_800A8474
 /* 0AA55C 800A995C 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
 /* 0AA560 800A9960 0C019FCB */  jal   func_80067F2C
 /* 0AA564 800A9964 02802025 */   move  $a0, $s4
-/* 0AA568 800A9968 0C00B1F1 */  jal   func_8002C7C4
+/* 0AA568 800A9968 0C00B1F1 */  jal   get_current_level_model
 /* 0AA56C 800A996C 00000000 */   nop   
 /* 0AA570 800A9970 10400296 */  beqz  $v0, .L800AA3CC
 /* 0AA574 800A9974 AFA20158 */   sw    $v0, 0x158($sp)

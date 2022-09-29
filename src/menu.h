@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "PR/gbi.h"
+#include "audio.h"
 #include "fade_transition.h"
 #include "font.h"
 #include "save_data.h"
@@ -809,6 +810,7 @@ void func_80093A40(void);
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
+void func_80083098(f32);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -829,7 +831,7 @@ void func_80090918(s32 updateRate);
 void render_track_select_setup_ui(s32 updateRate);
 void func_80092188(s32 updateRate);
 void func_8008E4EC(void);
-s32 trim_filename_string(u8 *input, u8 *output);
+void trim_filename_string(char *input, char *output);
 void menu_trophy_race_round_init(void);
 void menu_ghost_data_init(void);
 void update_controller_sticks(void);

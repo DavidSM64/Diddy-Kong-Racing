@@ -30,7 +30,7 @@ for folder in ASM_FOLDERS:
 BUILD_DIRECTORY = './build/us_1.0'
 SRC_DIRECTORY = './src'
 LIB_SRC_DIRECTORY = './lib/src'
-FUNCTION_REGEX = r'^(?<!static\s)(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?([^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
+FUNCTION_REGEX = r'^(?<!static\s)(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(?:\s*UNUSED\s+)?([^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#if(?:.|\n)*?(GLOBAL_ASM[(][^)]*[)])(.|\n)*?#endif'
 NON_MATCHING_REGEX = re.compile(r'^#ifdef[ ]+NON_MATCHING', re.MULTILINE)

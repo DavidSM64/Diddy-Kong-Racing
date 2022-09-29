@@ -16,6 +16,8 @@
 #include "game.h"
 #include "racer.h"
 #include "particles.h"
+#include "printf.h"
+#include "unknown_0255E0.h"
 
 /************ .data ************/
 
@@ -182,7 +184,7 @@ s8 D_8011AE00;
 s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
-u32 *D_8011AE08[16];
+Object *D_8011AE08[16];
 s32 (*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8];  // Unknown number of entries.
 s32 D_8011AE50;
@@ -497,34 +499,37 @@ s32 normalise_time(s32 timer) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
 
+// Reset all values of D_8011AE08 to NULL
 void func_8000CBC0(void) {
     s32 i; //Required to be one line to match
-    for (i = 0; i < 16; i++) { D_8011AE08[i] = NULL; }
+    for (i = 0; i < ARRAY_COUNT(D_8011AE08); i++) { D_8011AE08[i] = NULL; }
 }
 
-void func_8000CBF0(Object *arg0, s32 arg1) {
-    if (D_8011AE08[arg1] == NULL) {
-        D_8011AE08[arg1] = arg0;
+// Set the object value for the given index if it's not already set
+void func_8000CBF0(Object *obj, s32 index) {
+    if (D_8011AE08[index] == NULL) {
+        D_8011AE08[index] = obj;
     } else {
-        if(D_8011AE08[arg1]){}
+        if(D_8011AE08[index]){}
     }
 }
 
-s32 func_8000CC20(u32 *arg0) {
+// Set the next available value in D_8011AE08, and return it's index value. -1 if it's not set.
+s32 func_8000CC20(Object *obj) {
     s32 i;
-    s32 phi_v1;
+    s32 NextFreeIndex;
 
-    phi_v1 = -1;
-    for (i = 0; i < 0x10; i++) {
-        if (D_8011AE08[i] == 0) {
-            phi_v1 = i;
-            i = 0x10;
+    NextFreeIndex = -1;
+    for (i = 0; i < ARRAY_COUNT(D_8011AE08); i++) {
+        if (D_8011AE08[i] == NULL) {
+            NextFreeIndex = i;
+            i = ARRAY_COUNT(D_8011AE08); // Why not just break?
         }
     }
-    if (phi_v1 != -1) {
-        D_8011AE08[phi_v1] = arg0;
+    if (NextFreeIndex != -1) {
+        D_8011AE08[NextFreeIndex] = obj;
     }
-    return phi_v1;
+    return NextFreeIndex;
 }
 
 // Has a jump table
@@ -859,7 +864,38 @@ GLOBAL_ASM("asm/non_matchings/objects/gParticlePtrList_flush.s")
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+
+#ifdef NON_EQUIVALENT
+void func_80011134(Object *arg0, s32 arg1) {
+    s32 sp5C;
+    ObjectModel *temp_s3;
+    TriangleBatchInfo *temp_s4;
+    TriangleBatchInfo *var_s0;
+    TextureHeader *var_t5;
+    s16 temp_s5;
+    s32 var_s1;
+    u8 temp_v0;
+
+    temp_s3 = arg0->unk68[arg0->segment.unk3A]->objModel;
+    temp_s5 = temp_s3->unk50;
+    temp_s4 = temp_s3->batches;
+    for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
+        var_s0 = &temp_s4[var_s1];
+        if (var_s0->flags & 0x10000) { //Texture is animated
+            temp_v0 = var_s0->textureIndex;
+            if (temp_v0 != 0xFF) {
+                var_t5 = temp_s3->textures[temp_v0].texture;
+                sp5C = var_s0->unk7 << 6;
+                func_8007EF80(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
+                var_s0->unk7 = sp5C >> 6;
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
 
 void func_80011390(void) {
@@ -891,7 +927,93 @@ s32 func_80011560(void) { //! @bug The developers probably intended this to be a
     // No return value!
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80011570.s")
+s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
+    UNUSED f32 unused;
+    f32 test1, test2, test3, test4, test5, test6;
+    f32 newXPos;
+    f32 newYPos;
+    f32 newZPos;
+    LevelModel *levelModel;
+    LevelModelSegmentBoundingBox *box;
+    s32 var_a0;
+    s32 var_v1;
+    s32 intXPos, intYPos, intZPos;
+
+    levelModel = get_current_level_model();
+    newXPos = obj->segment.trans.x_position + xPos;
+    newYPos = obj->segment.trans.y_position + yPos;
+    newZPos = obj->segment.trans.z_position + zPos;
+    if (levelModel == NULL) {
+        D_800DC848 = 0;
+        return 0;
+    }
+    var_v1 = 0;
+    test1 = (levelModel->unk3E + 1000.0);
+    if (newXPos > test1) {
+        var_v1 = 1;
+    }
+    test2 = (levelModel->unk3C - 1000.0);
+    if (obj->segment.trans.x_position < test2) {
+        var_v1 = 1;
+    }
+    if (1) { } if (1) { } if (1) { }
+    test3 = (levelModel->unk42 + 3000.0);
+    if (obj->segment.trans.y_position > test3) {
+        var_v1 = 1;
+    }
+    test4 = (levelModel->unk40 - 500.00);
+    if (obj->segment.trans.y_position < test4) {
+        var_v1 = 1;
+    }
+    test5 = (levelModel->unk46 + 1000.0);
+    if (obj->segment.trans.z_position > test5) {
+        var_v1 = 1;
+    }
+    test6 = (levelModel->unk44 - 1000.0);
+    if (obj->segment.trans.z_position < test6) {
+        var_v1 = 1;
+    }
+    if (D_800DC848 != 0) {
+        var_v1 = 0;
+    }
+    
+    D_800DC848 = 0;
+    if (var_v1 != 0) {
+        obj->segment.unk2C.half.lower = -1;
+        return 1;
+    }
+
+    obj->segment.trans.x_position = newXPos;
+    obj->segment.trans.y_position = newYPos;
+    obj->segment.trans.z_position = newZPos;
+    box = func_8002A2DC(obj->segment.unk2C.half.lower);
+
+    //For some reason the XYZ positions are converted into integers for the next section
+    intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
+    
+    if (box == NULL) {
+        obj->segment.unk2C.half.lower = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+        return 0;
+    } else {
+        var_a0 = 0;
+        if ((box->x2 < intXPos) || (intXPos < box->x1)) {
+            var_a0 = 1;
+        }
+        if ((box->y2 < intYPos) || (intYPos < box->y1)) {
+            var_a0 = 1;
+        }
+        if ((box->z2 < intZPos) || (intZPos < box->z1)) {
+            var_a0 = 1;
+        }
+        if (var_a0 != 0) {
+            var_v1 = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+            if (var_v1 != -1) {
+                obj->segment.unk2C.half.lower = var_v1;
+            }
+        }
+    }
+    return 0;
+}
 
 #ifdef NON_EQUIVALENT
 void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
@@ -996,7 +1118,7 @@ void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) 
 }
 
 void func_80012E28(Object *this) {
-    s32 unused1;
+    UNUSED s32 unused1;
     Object_Racer *sp_20;
     f32 tmp_f2;
     f32 sp_1c;
@@ -1042,7 +1164,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 void render_object(Object *this) {
     func_80012F94(this);
     if (this->segment.trans.unk6 & 0x8000) {
-        func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 32768);
+        func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 0x8000);
     } else {
         if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
@@ -1223,7 +1345,24 @@ s32 func_8001B650(void) {
     return D_800DC738 == 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B668.s")
+s32 func_8001B668(s32 arg0) {
+    s16 sp2E;
+    s16 sp2C;
+    s32 temp_v0;
+    s32 sp24;
+
+    sp24 = func_800599A8();
+    if ((func_8006BD88() != sp24) || (D_800DC728 != D_8011AE82)) {
+        temp_v0 = func_800599B8(arg0, func_8006BD88(), D_8011AE82, &sp2E, &sp2C);
+        if (temp_v0 == 0) {
+            D_800DC728 = D_8011AE82;
+            D_800DC72C = sp2E;
+            D_800DC724 = sp2C;
+        }
+        return temp_v0;
+    }
+    return func_800599B8(arg0, func_8006BD88(), D_8011AE82, NULL, NULL);
+}
 
 s32 func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
@@ -1548,7 +1687,22 @@ s32 func_800210CC(s8 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80021104.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8002125C.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80021400.s")
+
+void func_80021400(s32 arg0) {
+    s32 i;
+    arg0 &= 0xFF; //?
+
+
+    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->unk7C.word & 0xFF)); i++) {}
+
+    if (i < D_8011AE78) {
+        if (D_8011AE74[i]->unk64 != NULL) {
+            if (D_8011AE74[i]->unk64->obj80021400_64.obj64->unk2A < 0) {
+                D_8011AE74[i]->unk64->obj80021400_64.obj64->unk2A = 1;
+            }
+        }
+    }
+}
 
 s8 func_800214C4(void) {
     return D_8011AD22[1 - D_8011AD20[1]];
@@ -1556,8 +1710,37 @@ s8 func_800214C4(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800214E4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
-GLOBAL_ASM("asm/non_matchings/objects/catmull_rom_interpolation.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8002263C.s")
+
+f32 catmull_rom_interpolation(f32 *arg0, s32 arg1, f32 arg2) {
+    f32 ret;
+    f32 temp3, temp2, temp;
+    
+    temp =  (-0.5 * arg0[arg1])    + ( 1.5 * arg0[arg1 + 1]) + (-1.5 * arg0[arg1 + 2]) + ( 0.5 * arg0[arg1 + 3]);
+    temp2 = ( 1.0 * arg0[arg1])    + (-2.5 * arg0[arg1 + 1]) + ( 2.0 * arg0[arg1 + 2]) + (-0.5 * arg0[arg1 + 3]);
+    temp3 = (arg0[arg1 + 2] * 0.5) + ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
+    
+    ret = (1.0 * arg0[arg1 + 1]);
+    ret = (((((temp * arg2) + temp2) * arg2) + temp3) * arg2) + ret;
+    
+    return ret;
+}
+
+// Exact same code as above, but it returns something in arg3
+f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3) {
+    f32 ret;
+    f32 temp3, temp2, temp;
+    
+    temp =  (-0.5 * arg0[arg1])    + ( 1.5 * arg0[arg1 + 1]) + (-1.5 * arg0[arg1 + 2]) + ( 0.5 * arg0[arg1 + 3]);
+    temp2 = ( 1.0 * arg0[arg1])    + (-2.5 * arg0[arg1 + 1]) + ( 2.0 * arg0[arg1 + 2]) + (-0.5 * arg0[arg1 + 3]);
+    temp3 = (arg0[arg1 + 2] * 0.5) + ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
+    
+    ret = (1.0 * arg0[arg1 + 1]);
+    *arg3 = (((temp * 3 * arg2) + (2 * temp2)) * arg2) + temp3;
+    ret = (((((temp * arg2) + temp2) * arg2) + temp3) * arg2) + ret;
+    
+    return ret;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8002277C.s")
 
 f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {

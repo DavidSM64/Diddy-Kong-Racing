@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "f3ddkr.h"
+#include "racer.h"
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC874 {
@@ -101,7 +102,7 @@ void func_8002ACC8(s32 arg0);
 s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2);
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3);
 void func_8002C71C(LevelModelSegment *segment);
-LevelModel *func_8002C7C4(void);
+LevelModel *get_current_level_model(void);
 void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, s8 *arg3, s8 *arg4, s8 *arg5);
 void func_800307BC(s32 arg0);
 void func_80030838(s32 arg0, s32 arg1);
@@ -126,7 +127,7 @@ Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportInde
 s32 func_80027568(void);
 void func_8002C954(LevelModelSegment*, LevelModelSegmentBoundingBox*, s32);
 s32 func_8002CC30(LevelModelSegment*);
-s8 func_8002B0F4(s16, f32 xPos, f32 zPos, s32*);           /* extern */
+s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);           /* extern */
 void func_80013DCC(Gfx **arg0, Vertex **arg1, Vertex **arg2, Object *arg3);
 s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);                /* extern */
 

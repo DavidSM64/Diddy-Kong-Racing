@@ -30,7 +30,7 @@ glabel obj_loop_animator
 /* 038454 80037854 00064903 */   sra   $t1, $a2, 4
 /* 038458 80037858 AFA3003C */  sw    $v1, 0x3c($sp)
 /* 03845C 8003785C AFA80020 */  sw    $t0, 0x20($sp)
-/* 038460 80037860 0C00B1F1 */  jal   func_8002C7C4
+/* 038460 80037860 0C00B1F1 */  jal   get_current_level_model
 /* 038464 80037864 AFA9001C */   sw    $t1, 0x1c($sp)
 /* 038468 80037868 8FA3003C */  lw    $v1, 0x3c($sp)
 /* 03846C 8003786C 8C4F0004 */  lw    $t7, 4($v0)

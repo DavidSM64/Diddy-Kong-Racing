@@ -23,6 +23,8 @@
 #include "game_ui.h"
 #include "waves.h"
 #include "unknown_003260.h"
+#include "objects.h"
+#include "math_util.h"
 
 /************ .data ************/
 
@@ -208,16 +210,8 @@ typedef struct Object80033F60_4C_64 {
 	s16 unk204;
 } Object80033F60_4C_64;
 
-s32 func_80011560(void);
-void func_80011570(Object*, f32, f32, f32);
-void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
-s16 arctan2_f(f32, f32);
-void play_sound_global(u16, s32 *);
-void func_800AFC3C(Object *, s32);
-void gParticlePtrList_addObject(Object *);
-
 void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
-	Object *obj78;
+	ObjectTransform *trans78;
 	Object_4C *obj4C;
 	f32 sp7C;
 	Object80033F60_4C_64 *obj4C_obj64;
@@ -227,7 +221,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
     s32 *temp;
 	f32 sp4C[7];
 
-    obj78 = (Object*)obj->unk78;
+    trans78 = obj->trans78;
 
     sp7C = speed;
     if (osTvType == TV_TYPE_PAL) {
@@ -239,9 +233,9 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         obj->segment.trans.y_position = 0.0f;
         obj->segment.trans.z_position = 0.0f;
         func_80011560();
-        func_80011570(obj, obj78->segment.trans.x_position, obj78->segment.trans.y_position, obj78->segment.trans.z_position);
+        func_80011570(obj, trans78->x_position, trans78->y_position, trans78->z_position);
     } else {
-        phi_f2 = (obj78->segment.trans.x_position - obj->segment.trans.x_position) * 0.1;
+        phi_f2 = (trans78->x_position - obj->segment.trans.x_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -249,7 +243,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             phi_f2 = -10.0f;
         }
         obj->segment.x_velocity += (phi_f2 - obj->segment.x_velocity) * 0.125 * sp7C;
-        phi_f2 = (obj78->segment.trans.y_position - obj->segment.trans.y_position) * 0.1;
+        phi_f2 = (trans78->y_position - obj->segment.trans.y_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -257,7 +251,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             phi_f2 = -10.0f;
         }
         obj->segment.y_velocity += (phi_f2 - obj->segment.y_velocity) * 0.125 * sp7C;
-        phi_f2 = (obj78->segment.trans.z_position - obj->segment.trans.z_position) * 0.1;
+        phi_f2 = (trans78->z_position - obj->segment.trans.z_position) * 0.1;
         if (phi_f2 > 10.0) {
             phi_f2 = 10.0f;
         }
@@ -355,10 +349,6 @@ void obj_init_laserbolt(Object *obj, UNUSED LevelObjectEntry_Laserbolt *entry) {
     obj->unk4C->unk11 = 0;
 }
 
-void func_80031130(s32, f32*, f32*, s32);
-void func_80031600(f32*, f32*, f32*, s8*, s32, s8*);
-void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s32 arg6);
-
 typedef struct Object_7C_80034860 {
 	u8 pad0[0xC];
 	s16 unkC;
@@ -449,20 +439,15 @@ void obj_loop_torch_mist(Object *obj, s32 speed) {
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
-#ifdef NON_EQUIVALENT
-
-// Has regalloc & stack issues.
-
-f32 cosine_s(s16);
-f32 sine_s(s16);
-Object **get_object_struct_array(s32 *count);
+#ifdef NON_MATCHING
+// Has regalloc issues
 
 void obj_loop_effectbox(Object *obj, s32 speed) {
     Object **objList;
-    Object_3C_80034B74 *obj3C;
     Object_EffectBox *curObj64;
-    s32 i;
     s32 numberOfObjects;
+    Object_3C_80034B74 *obj3C;
+    s32 i;
     f32 xDiff;
     f32 yDiff;
     f32 zDiff;
@@ -472,8 +457,6 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     f32 temp3;
     f32 temp4;
     f32 temp5;
-    f32 tempf0;
-    u8 new_var2;
 
     obj3C = obj->segment.unk3C_a.unk3C;
     objList = get_object_struct_array(&numberOfObjects);
@@ -487,26 +470,18 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
         xDiff = objList[i]->segment.trans.x_position - obj->segment.trans.x_position;
         yDiff = objList[i]->segment.trans.y_position - obj->segment.trans.y_position;
         zDiff = objList[i]->segment.trans.z_position - obj->segment.trans.z_position;
-        if (((-temp3) < yDiff) && (yDiff < temp3))
-        {
+        if ((-temp3 < yDiff) && (yDiff < temp3)) {
             temp5 = (xDiff * temp0) + (zDiff * temp1);
-            if (((-temp2) < temp5) && (temp5 < temp2))
-            {
-                temp5 = ((-xDiff) * temp1) + (zDiff * temp0);
-                if (((-temp4) < (((-xDiff) * temp1) + (zDiff * temp0))) && (temp5 < temp4))
-                {
-                    temp5 = temp3 / 2;
+            if ((-temp2 < temp5) && (temp5 < temp2)) {
+                temp5 = (-xDiff * temp1) + (zDiff * temp0);
+                if ((-temp4 < temp5) && (temp5 < temp4)) {
                     curObj64 = &objList[i]->unk64->effect_box;
                     curObj64->unk1FE = obj3C->unkC;
                     curObj64->unk1FF = obj3C->unkD;
-                    if ((temp5 < yDiff) && (curObj64->unk1FE == 1))
-                    {
-                        new_var2 = curObj64->unk1FF;
-                        tempf0 = (new_var2 & 0xFF) * ((f32) (1.0 - ((yDiff - temp5) / temp5)));
-                        curObj64->unk1FF = new_var2 * ((f32) (1.0 - ((yDiff - temp5) / temp5)));
-                        if (tempf0 < 0.0f)
-                        {
-                        }
+                    temp5 = temp3 / 2;
+                    if ((temp5 < yDiff) && (curObj64->unk1FE == 1)) {
+                        temp5 = (1.0 - ((yDiff - temp5) / temp5));
+                        curObj64->unk1FF *= temp5;
                     }
                 }
             }
@@ -1040,7 +1015,7 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
     s16 segmentBatchCount;
 
     obj64 = &obj->unk64->animator;
-    levelModel = func_8002C7C4();
+    levelModel = get_current_level_model();
     obj64->batchId = entry->unk8;
     obj64->xSpeedFactor = entry->unk9;
     obj64->ySpeedFactor = entry->unkA;
@@ -1100,7 +1075,7 @@ void obj_loop_animator(Object* obj, s32 speed) {
     segmentId = obj64->segmentId;
 
     if (obj64->segmentId != -1) {
-        levelModel = func_8002C7C4();
+        levelModel = get_current_level_model();
         levelModelSegment = &levelModel->segments[segmentId];
         batchId = obj64->batchId;
         triangleBatchInfo = &levelModelSegment->batches[batchId];
@@ -1773,15 +1748,10 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     }
 }
 
-
-#ifdef NON_EQUIVALENT
-
-// Has regalloc issues.
-
 void obj_loop_goldenballoon(Object *obj, s32 speed) {
-    s32 padding[1];
     Object_3C *obj3C;
     Object_4C *obj4C;
+    Object_Racer *racer;
     Object_GoldenBalloon *obj64;
     Settings *settings;
     s32 flag;
@@ -1789,15 +1759,16 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
     Object *racerObj;
     f32 sp2C;
     f32 speedf;
-    s32 someBool;
+    s32 isPirated;
 
     sp2C = speed;
     if (osTvType == TV_TYPE_PAL) {
         sp2C *= 1.2;
     }
-    someBool = FALSE;
-    if ((*(s32*)0xA0000284) != 0x240B17D7) {
-        someBool = TRUE;
+    isPirated = FALSE;
+    // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
+    if (IO_READ(0x284) != 0x240B17D7) {
+        isPirated = TRUE;
     }
     speedf = sp2C;
     settings = get_settings();
@@ -1822,29 +1793,30 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                 obj->segment.unk38.half.lower = 255;
             }
             obj4C = obj->unk4C;
-            if ((obj4C->unk13 < 45) && (someBool == FALSE)) {
+            if ((obj4C->unk13 < 45) && (isPirated == FALSE)) {
                 racerObj = obj4C->unk0;
-                if (racerObj && (racerObj->segment.header->behaviorId == 1) && (racerObj->unk64->racer.playerIndex == 0)) {
-                    settings->balloonsPtr[settings->worldId]++;
-                    if (settings->worldId != 0) {
-                        settings->balloonsPtr[0]++;
+                if ((racerObj && (racerObj->segment.header->behaviorId == 1))) {
+                    racer = &racerObj->unk64->racer;
+                    if (racer->playerIndex == PLAYER_ONE) {
+                        settings->balloonsPtr[settings->worldId]++;
+                        if(isPirated == 1) { }
+                        if (settings->worldId != 0) {
+                            settings->balloonsPtr[0]++;
+                        }
+                        settings->courseFlagsPtr[settings->courseId] |= flag;
+                        if (&obj->segment){ }
+                        play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+                        obj->unk7C.word = 16;
+                        obj->unk74 = 2;
+                        obj->segment.trans.unk6 |= 0x4000;
+                        func_800AFC3C(obj, speed);
                     }
-                    settings->courseFlagsPtr[settings->courseId] |= flag;
-                    play_sound_spatial(573, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
-                    obj->unk7C.word = 16;
-                    obj->unk74 = 2;
-                    obj->segment.trans.unk6 |= 0x4000;
-                    func_800AFC3C(obj, speed);
                 }
             }
             obj64 = &obj->unk64->golden_balloon;
             obj->segment.unk3B = 0;
             obj64->unk14 = 0.0f;
-            if (obj->segment.unk38.half.lower < 255) {
-                speedf = 0.0f;
-            } else {
-                speedf = 1.0f;
-            }
+            speedf = (obj->segment.unk38.half.lower < 255) ? 0 : 1;
             if (obj64->unkD == 255) {
                 obj64->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
                 if (obj64->unkD != 255) {
@@ -1859,11 +1831,6 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
         }
     }
 }
-
-
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_goldenballoon.s")
-#endif
 
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     Object_Door *obj64;
@@ -2380,7 +2347,7 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
     s16 numberOfTexturesInLevel;
 
     obj64 = &obj->unk64->tex_scroll;
-    levelModel = func_8002C7C4();
+    levelModel = get_current_level_model();
     obj64->unk0 = entry->unk8;
     if (obj64->unk0 < 0) {
         obj64->unk0 = 0;

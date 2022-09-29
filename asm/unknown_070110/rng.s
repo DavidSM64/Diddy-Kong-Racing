@@ -1,3 +1,28 @@
+/*
+https://decomp.me/scratch/s8fPG
+//-O2 -mips2
+extern s32 D_800DD434;
+extern s32 D_800DD438;
+
+void set_rng_seed(s32 arg0) {
+    D_800DD434 = arg0;
+}
+
+void save_rng_seed(s32 arg0) {
+    arg0 = D_800DD434;
+    D_800DD438 = arg0;
+}
+
+void load_rng_seed(s32 arg0) {
+    arg0 = D_800DD438;
+    D_800DD434 = arg0;
+}
+
+s32 get_rng_seed(void) {
+    return D_800DD434;
+}
+*/
+
 glabel set_rng_seed
 /* 07050C 8006F90C 3C01800E */  lui   $at, %hi(D_800DD434)
 /* 070510 8006F910 03E00008 */  jr    $ra

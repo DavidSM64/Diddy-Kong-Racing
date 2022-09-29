@@ -4,7 +4,7 @@ glabel func_800AA3EC
 /* 0AAFF4 800AA3F4 E7AC0030 */  swc1  $f12, 0x30($sp)
 /* 0AAFF8 800AA3F8 E7AE0034 */  swc1  $f14, 0x34($sp)
 /* 0AAFFC 800AA3FC AFA60038 */  sw    $a2, 0x38($sp)
-/* 0AB000 800AA400 0C00B1F1 */  jal   func_8002C7C4
+/* 0AB000 800AA400 0C00B1F1 */  jal   get_current_level_model
 /* 0AB004 800AA404 AFA7003C */   sw    $a3, 0x3c($sp)
 /* 0AB008 800AA408 3C014270 */  li    $at, 0x42700000 # 60.000000
 /* 0AB00C 800AA40C 44812000 */  mtc1  $at, $f4

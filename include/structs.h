@@ -6,10 +6,20 @@
 #include "types.h"
 #include "enums.h"
 
+// Stolen from PD
+// This hacky structure allows coords to be accessed using
+// coord->x, coord->y and coord->z, but also as
+// coord->f[0], coord->f[1] and coord->f[2].
+// In some places code only matches when using the float array.
 typedef struct Vec3f {
-    f32 x;
-    f32 y;
-    f32 z;
+  union {
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+    };
+    f32 f[3];
+  };
 } Vec3f;
 
 /* Size: 0x20 bytes */
@@ -213,12 +223,11 @@ typedef struct PulsatingLightData {
 
 /* Size: 0xC4 bytes */
 typedef struct LevelHeader {
-  /* 0x00 */ s8 world;
+  /* 0x00 */ u8 world;
   /* 0x01 */ u8 unk1;
   /* 0x02 */ s8 unk2;
   /* 0x03 */ u8 unk3;
-  /* 0x04 */ u8 unk4[4];
-
+  /* 0x04 */ s8 unk4[4];
   /* 0x08 */ f32 course_height;
 
   /* 0x0C */ u8 padC[0x14];
@@ -282,15 +291,18 @@ typedef struct LevelHeader {
   /* 0xB0 */ s16 unkB0;
   /* 0xB2 */ u8 unkB2;
   /* 0xB3 */ u8 voiceLimit;
-  /* 0xB3 */ u8 unkB4;
-  /* 0xB3 */ u8 unkB5;
-  /* 0xB3 */ u8 unkB6;
-  /* 0xB3 */ u8 unkB7;
-  /* 0xB4 */ u8 padB8[0x2];
+  /* 0xB4 */ u8 unkB4;
+  /* 0xB5 */ u8 unkB5;
+  /* 0xB6 */ u8 unkB6;
+  /* 0xB7 */ u8 unkB7;
+  /* 0xB8 */ s8 unkB8;
+  /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;
+  /* 0xBC */ u8 unkBC;
+  /* 0xBD */ u8 unkBD;
   /* 0xBE */ u8 unkBE;
-  /* 0xBE */ u8 unkBF;
-  /* 0xBE */ u8 unkC0;
+  /* 0xBF */ u8 unkBF;
+  /* 0xC0 */ u8 unkC0;
   /* 0xC1 */ u8 unkC1;
   /* 0xC2 */ u8 unkC2;
   /* 0xC3 */ u8 unkC3;
@@ -385,7 +397,7 @@ typedef struct TriangleBatchInfo {
 /* Size: 8 bytes */
 typedef struct ObjectModel_44 {
 /* 0x00 */ s32 *anim;
-/* 0x04 */ s32 unk4;
+/* 0x04 */ s32 unk4; // Number of frames in animation?
 } ObjectModel_44;
 
 typedef struct ObjectModel {
@@ -408,6 +420,8 @@ typedef struct ObjectModel {
 /* 0x40 */ s32 *unk40;
 /* 0x44 */ ObjectModel_44 *animations;
 /* 0x48 */ s16 numberOfAnimations;
+/* 0x4A */ u8 pad4A[6];
+/* 0x50 */ s16 unk50;
 } ObjectModel;
 
 /* Size: 0x44 bytes */
@@ -465,7 +479,12 @@ typedef struct LevelModel {
 /* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
 /* 0x38 */ u32 minimapColor;
-           u8 pad3C[0xC];
+/* 0x3C */ s16 unk3C;
+/* 0x3E */ s16 unk3E;
+/* 0x40 */ s16 unk40;
+/* 0x42 */ s16 unk42;
+/* 0x44 */ s16 unk44;
+/* 0x46 */ s16 unk46;
 /* 0x48 */ s32 modelSize;
 } LevelModel;
 
@@ -524,7 +543,9 @@ typedef struct ObjectHeader {
              s8 unk58;
              u8 pad59;
   /* 0x5A */ s8 unk5A;
-             u8 pad5B[0x5];
+             u8 pad5B[0x2];
+  /* 0x5D */ u8 unk5D; //Misc Asset index?
+  /* 0x5E */ u8 pad5E[0x2];
   /* 0x60 */ char internalName[16];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 unk71;
@@ -810,13 +831,14 @@ typedef struct Object_Exit {
   /* 0x14 */ s8 unk14;
 } Object_Exit;
 
+/* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
   /* 0x002 */ u8 unk2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
-  /* 0x00C */ s32 unkC;
+  /* 0x00C */ f32 unkC;
   /* 0x010 */ s32 unk10;
   /* 0x014 */ s32 unk14;
   /* 0x018 */ s32 unk18;
@@ -840,9 +862,9 @@ typedef struct Object_Racer {
   /* 0x05C */ f32 prev_x_position;
   /* 0x060 */ f32 prev_y_position;
   /* 0x064 */ f32 prev_z_position;
-  /* 0x068 */ f32 unk68;
-  /* 0x06C */ f32 unk6C;
-  /* 0x070 */ f32 unk70;
+  /* 0x068 */ f32 unk68; // xPos
+  /* 0x06C */ f32 unk6C; // yPos
+  /* 0x070 */ f32 unk70; // zPos
   /* 0x074 */ f32 unk74;
   /* 0x078 */ f32 carBobX;
   /* 0x07C */ f32 carBobY;
@@ -868,10 +890,10 @@ typedef struct Object_Racer {
   /* 0x0CC */ f32 unkCC;
   /* 0x0D0 */ f32 unkD0;
   /* 0x0D4 */ s32 unkD4;
-  /* 0x0D8 */ f32 unkD8[3];
-  /* 0x0E4 */ f32 unkE4[3];
-  /* 0x0F0 */ f32 unkF0[3];
-  /* 0x0FC */ f32 unkFC[3];
+  /* 0x0D8 */ Vec3f unkD8;
+  /* 0x0E4 */ Vec3f unkE4;
+  /* 0x0F0 */ Vec3f unkF0;
+  /* 0x0FC */ Vec3f unkFC;
   /* 0x108 */ struct Object *unk108;
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;
@@ -906,7 +928,7 @@ typedef struct Object_Racer {
   /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 unk175;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ s32 *unk178;
+  /* 0x178 */ u8 *unk178;
   /* 0x17C */ s32 shieldSoundMask;
   /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
   /* 0x184 */ s8 unk184;
@@ -933,8 +955,7 @@ typedef struct Object_Racer {
   /* 0x1A6 */ s16 z_rotation_vel;
   /* 0x1A8 */ s16 unk1A8;
   /* 0x1AA */ u16 unk1AA;
-  /* 0x1AC */ u8 unk1AC;
-  /* 0x1AD */ u8 unk1AD;
+  /* 0x1AC */ s16 unk1AC;
   /* 0x1AE */ s16 unk1AE;
   /* 0x1B0 */ s16 unk1B0;
   /* 0x1B2 */ s16 unk1B2;
@@ -1007,7 +1028,7 @@ typedef struct Object_Racer {
   /* 0x204 */ s16 unk204;
   /* 0x206 */ s16 unk206;
   /* 0x208 */ s16 unk208;
-  /* 0x20A */ s8 unk20A;
+  /* 0x20A */ u8 unk20A;
   /* 0x20B */ s8 unk20B;
   /* 0x20C */ u8 throttleReleased;
   /* 0x20D */ u8 unk20D;
@@ -1174,6 +1195,16 @@ typedef struct Object_8001B7A8 {
   /* 0x112 */ s16 unk112;
 } Object_8001B7A8;
 
+typedef struct Object_64_80021400 {
+  /* 0x00 */ u8 pad[0x2A];
+  /* 0x2A */ s16 unk2A;
+} Object_64_80021400;
+
+typedef struct Object_80021400_64 {
+  /* 0x000 */ u8 pad[0x64];
+  /* 0x064 */ struct Object_64_80021400 *obj64;
+} Object_80021400_64;
+
 typedef struct Object_64 {
     union {
         Object_LaserGun laser_gun;
@@ -1217,12 +1248,19 @@ typedef struct Object_64 {
         Object_Bridge_WhaleRamp bridge_whale_ramp;
         Object_80011AD0 obj80011AD0;
         Object_8001B7A8 obj8001B7A8;
+        Object_80021400_64 obj80021400_64;
     };
 } Object_64;
 
 typedef struct Object_68 {
-    u8 pad00[0x20];
-    s8 unk20;
+  /* 0x00 */ union {
+      ObjectModel *objModel;
+      TextureHeader *texHeader;
+  };
+  /* 0x04 */ u8 pad04[12];
+  /* 0x10 */ s16 unk10;
+  /* 0x14 */ u8 pad14[14];
+  /* 0x20 */ s8 unk20;
  } Object_68;
 
 /* Size: 0x20 bytes */
@@ -1309,6 +1347,7 @@ typedef struct Object {
   /* 0x0074 */ u32 unk74;
 
   union {
+  /* 0x0078 */ ObjectTransform *trans78;
   /* 0x0078 */ s32 unk78;
   /* 0x0078 */ f32 unk78f;
   };
@@ -1405,7 +1444,7 @@ typedef struct Object {
 
 // Unused
 typedef struct GhostHeaderChecksum {
-	u8  levelID;
+  u8  levelID;
     u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
 } GhostHeaderChecksum;
 

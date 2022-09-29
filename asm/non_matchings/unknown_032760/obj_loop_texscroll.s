@@ -4,7 +4,7 @@ glabel obj_loop_texscroll
 /* 040D50 80040150 AFB00018 */  sw    $s0, 0x18($sp)
 /* 040D54 80040154 AFA5003C */  sw    $a1, 0x3c($sp)
 /* 040D58 80040158 8C8D0064 */  lw    $t5, 0x64($a0)
-/* 040D5C 8004015C 0C00B1F1 */  jal   func_8002C7C4
+/* 040D5C 8004015C 0C00B1F1 */  jal   get_current_level_model
 /* 040D60 80040160 AFAD0024 */   sw    $t5, 0x24($sp)
 /* 040D64 80040164 8FAD0024 */  lw    $t5, 0x24($sp)
 /* 040D68 80040168 8FAA003C */  lw    $t2, 0x3c($sp)

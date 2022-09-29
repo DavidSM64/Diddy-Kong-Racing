@@ -719,6 +719,8 @@ void func_8006BFC8(s8 *arg0) {
 
     phi_s0 = arg0[phi_s0];
 
+    // Check if CHEAT_ULTIMATE_AI is active
+    // This check works because a << 6 will but a 1 in the sign bit making it negative
     if ((get_filtered_cheats() << 6) < 0) {
         phi_s0 = 9;
     }
@@ -753,27 +755,29 @@ s8 func_8006C19C(void) {
     return D_800DD318;
 }
 
-void func_8006C1AC(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    D_801211C8[D_800DD328++] = arg0;
-    D_801211C8[D_800DD328++] = arg1;
-    D_801211C8[D_800DD328++] = arg2;
-    D_801211C8[D_800DD328++] = arg3;
+// Push a stack onto D_801211C8
+void func_8006C1AC(s32 levelId, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
+    D_801211C8[D_800DD328++] = levelId;
+    D_801211C8[D_800DD328++] = entranceId;
+    D_801211C8[D_800DD328++] = vehicleId;
+    D_801211C8[D_800DD328++] = cutsceneId;
 }
 
-void func_8006C22C(s32 *arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
+// Pop a stack from D_801211C8
+void func_8006C22C(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId) {
     s16 temp_v1;
 
     D_800DD328--;
-    *arg3 = D_801211C8[D_800DD328];
+    *cutsceneId = D_801211C8[D_800DD328];
     D_800DD328--;
     temp_v1 = D_801211C8[D_800DD328];
     D_800DD328--;
-    *arg1 = D_801211C8[D_800DD328];
+    *entranceId = D_801211C8[D_800DD328];
     D_800DD328--;
-    *arg0 = D_801211C8[D_800DD328];
+    *levelId = D_801211C8[D_800DD328];
 
     if (temp_v1 != -1) {
-        *arg2 = temp_v1;
+        *vehicleId = temp_v1;
     }
 
     D_800DD32C = 1;
@@ -897,12 +901,12 @@ void main_game_loop(void) {
     if (D_800DD380 == 8) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         set_rsp_segment(&gCurrDisplayList, 0, 0);
-        set_rsp_segment(&gCurrDisplayList, 1, gVideoCurrFramebuffer);
+        set_rsp_segment(&gCurrDisplayList, 1, (s32)gVideoCurrFramebuffer);
         set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
-        set_rsp_segment(&gCurrDisplayList, 4, gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&gCurrDisplayList, 4, (s32)gVideoCurrFramebuffer - 0x500);
     }
     if (D_800DD3F0 == 0) {
-        setupOSTasks(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+        setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
@@ -989,7 +993,7 @@ void main_game_loop(void) {
         if (osTvType == TV_TYPE_PAL) {
             framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
-        func_80070B04(gVideoLastFramebuffer, gVideoCurrFramebuffer, gVideoCurrFramebuffer + framebufferSize);
+        func_80070B04(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
@@ -1775,8 +1779,7 @@ void func_8006E994(Settings *settings) {
     settings->wizpigAmulet = 0;
 }
 
-// Unused?
-void func_8006EA58(void) {
+UNUSED void func_8006EA58(void) {
     func_8006E770(gSettingsPtr, 3);
     func_8006E994(gSettingsPtr);
 }
