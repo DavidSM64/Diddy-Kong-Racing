@@ -2410,17 +2410,10 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
-<<<<<<< HEAD
 void func_8008377C(UNUSED s32 arg0, f32 arg1) {
     UNUSED u32 foo[2];
     s32 alpha;
     f32 scale;
-=======
-void func_8008377C(s32 arg0, f32 arg1) {
-    u32 foo[2];
-    s32 alpha;
-    f32 scale;
->>>>>>> uppstream/master
     s32 i;
     s32 posY;
 
@@ -2442,7 +2435,7 @@ void func_8008377C(s32 arg0, f32 arg1) {
             while(gTitleMenuStrings[i] != NULL) {
                 if (i == gTitleScreenCurrentOption) {
                     alpha = (D_801263BC & 0x1F) * 16;
-                    if (alpha >= 255) {
+                    if (alpha > 255) {
                         alpha = 511 - alpha;
                     }
                 } else {
