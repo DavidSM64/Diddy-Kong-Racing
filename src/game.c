@@ -1192,17 +1192,17 @@ void main_game_loop(void) {
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
     }
+
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
+
+    func_80066610();
 #ifdef ENABLE_DEBUG_PROFILER
     profiler_update(gPuppyTimers.thread3Time, first);
     profiler_update(gPuppyTimers.behaviourTime, first);
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.graphTime[perfIteration]);
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.racerTime[perfIteration]);
 #endif
-
-    gDPFullSync(gCurrDisplayList++);
-    gSPEndDisplayList(gCurrDisplayList++);
-
-    func_80066610();
     if (D_800DD3F0 != 1) {
         if (D_800DD38C == 0) {
             D_800DD380 = func_80077A54();
