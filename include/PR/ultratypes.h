@@ -2,7 +2,7 @@
 #define _TYPES_H_
 
 #ifndef NULL
-#define NULL    (void *)0
+#define NULL 0
 #endif
 
 #define TRUE 1
@@ -10,12 +10,12 @@
 
 typedef signed char            s8;
 typedef unsigned char          u8;
-typedef signed short int       s16;
-typedef unsigned short int     u16;
-typedef signed int             s32;
-typedef unsigned int           u32;
-typedef signed long long int   s64;
-typedef unsigned long long int u64;
+typedef signed short           s16;
+typedef unsigned short         u16;
+typedef long                   s32;
+typedef unsigned long          u32;
+typedef signed long long       s64;
+typedef unsigned long long     u64;
 
 typedef volatile u8   vu8;
 typedef volatile u16 vu16;

@@ -11,6 +11,11 @@
 #define OS_SC_AUDIO_MSG         5
 #define OS_SC_MAX_MESGS         8
 
+#define OS_SC_ID_NONE   0
+#define OS_SC_ID_AUDIO  1
+#define OS_SC_ID_VIDEO  2
+#define OS_SC_ID_PRENMI 3
+
 /*
  * OSScTask state
  */
@@ -65,7 +70,7 @@ typedef struct OSScTask_s {
 } OSScTask;
 
 typedef struct SCClient_s {
-    u8                  unk0;   /* Added by Rare?               */
+    u8                  id;   /* Client ID, added by Rareware to single out individual scheduler clients*/
     struct SCClient_s   *next;  /* next client in the list      */
     OSMesgQueue         *msgQ;  /* where to send the frame msg  */
 } OSScClient;
@@ -102,7 +107,7 @@ extern OSViMode osViModeTable[];
 void __scYield(OSSched *sc);
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields);
-void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 arg3);
+void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 id);
 void osScRemoveClient(OSSched *sc, OSScClient *c);
 OSMesgQueue *osScGetCmdQ(OSSched *sc);
 OSMesgQueue *osScGetInterruptQ(OSSched *sc);
