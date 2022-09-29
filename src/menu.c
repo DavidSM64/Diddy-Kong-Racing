@@ -4665,8 +4665,6 @@ void unload_big_font_3(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
-#ifdef NON_EQUIVALENT
-
 void menu_game_select_init(void) {
     s32 i;
 
@@ -4700,15 +4698,11 @@ void menu_game_select_init(void) {
         D_801263E0 = 1;
     }
 
-    // This loop doesn't match.
     for (i = 0; i <= D_801263E0; i++) {
-        u8 temp = i; // How do I make this a `mov`?
-        (&((unk80126460 *)D_80126460)[temp] + 1)->elem[0].unk14_a.texture = D_80126550[67];
+        //Fakematch? What's the (i ^ 0)?
+        D_80126460[((i ^ 0) * 2) + 2].unk14_a.texture = D_80126550[67];
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_game_select_init.s")
-#endif
 
 void func_8008C698(UNUSED s32 updateRate) {
     s32 i;
