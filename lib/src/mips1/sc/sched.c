@@ -415,7 +415,6 @@ void __scHandleRDP(OSSched *sc) {
 
 
 OSScTask *__scTaskReady(OSScTask *t) {
-    //return t;
     if (t) {    
         /*
          * If there is a pending swap bail out til later (next
