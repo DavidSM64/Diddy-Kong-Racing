@@ -233,7 +233,7 @@ s32 D_80126A90;
 s32 D_80126A94;
 s32 D_80126A98;
 s32 D_80126A9C;
-u8 *D_80126AA0[16]; //Text to render
+char *D_80126AA0[16]; //Text to render
 u8 *sCurrentControllerPakAllFileNames[16]; //Every file name on the controller pak
 u8 *sCurrentControllerPakAllFileExtensions[16]; //Every file extension on the controller pak
 u8  sCurrentControllerPakAllFileTypes[16]; //File type of all files on controller pak
@@ -2394,7 +2394,7 @@ void menu_title_screen_init(void) {
     func_80000890(0);
     set_time_trial_enabled(FALSE);
     D_80126864 = 0;
-    sTitleScreenDemoIds = (TitleScreenDemos *)get_misc_asset(MISC_ASSET_UNK42);
+    sTitleScreenDemoIds = (s8 *)get_misc_asset(MISC_ASSET_UNK42);
     numberOfPlayers = sTitleScreenDemoIds[1];
     gTitleDemoTimer = 0;
     if (numberOfPlayers == -2) {
@@ -2410,8 +2410,8 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
-void func_8008377C(s32 arg0, f32 arg1) {
-    u32 foo[2];
+void func_8008377C(UNUSED s32 arg0, f32 arg1) {
+    UNUSED u32 foo[2];
     s32 var_a3;
     f32 temp_f0;
     s32 i;
@@ -2423,22 +2423,18 @@ void func_8008377C(s32 arg0, f32 arg1) {
         sMenuGuiOpacity = (D_8012686C * 8) - 1;
         func_80068508(0);
         if (temp_f0 != 1.0f) {
-            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160.0f, 52.0f, temp_f0, temp_f0, -2U, 1);
+            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52.0f, temp_f0, temp_f0, -2, 1);
         } else {
-            render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160, 52, 255, 255, 255, 255);
+            render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52, 255, 255, 255, 255);
         }
         if (is_controller_missing() == 0) {
             i = 0; 
-            if (osTvType == TV_TYPE_PAL) {
-                var_s2 = 0xDA;
-            } else {
-                var_s2 = 0xC0;
-            }
+            var_s2 = (osTvType == TV_TYPE_PAL) ? 218 : 192;
             set_text_font(0);
             set_text_background_colour(0, 0, 0, 0);
             while(gTitleMenuStrings[i] != NULL) {
                 if (i == gTitleScreenCurrentOption) {
-                    var_a3 = (D_801263BC & 0x1F) * 0x10;
+                    var_a3 = (D_801263BC & 0x1F) * 16;
                     if (var_a3 >= 0x100) {
                         var_a3 = 0x1FF - var_a3;
                     }
@@ -2447,7 +2443,7 @@ void func_8008377C(s32 arg0, f32 arg1) {
                 }
                 set_text_colour(255, 255, 255, var_a3, sMenuGuiOpacity);
                 draw_text(&sMenuCurrDisplayList, POS_CENTRED, var_s2, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
-                var_s2 += 0x10;
+                var_s2 += 16;
                 i++;
             }
         }
@@ -2459,9 +2455,9 @@ void func_8008377C(s32 arg0, f32 arg1) {
 }
 
 s32 menu_title_screen_loop(s32 updateRate) {
-    s32 temp_v0_5;
+    UNUSED s32 temp_v0_5;
     s32 sp28;
-    TitleScreenDemos *demo;
+    s8 *demo;
     s32 contrIndex;
     f32 sp1C;
     ObjectSegment* sp18;
@@ -2502,20 +2498,20 @@ s32 menu_title_screen_loop(s32 updateRate) {
         if(gTitleDemoTimer){}
         D_80126864 += 3;
         demo = &sTitleScreenDemoIds[D_80126864];
-        if (demo->levelId == -1) {
+        if (demo[0] == -1) {
             D_80126864 = 0;
             demo = &sTitleScreenDemoIds[D_80126864];
         }
         if (D_8012686C == 0) {
             D_8012686C = 1;
         }
-        var_a1 = demo->numberOfPlayers;
+        var_a1 = demo[1];
         gTitleDemoTimer = 0;
         if (var_a1 == -2) {
             var_a1 = 0;
             gTitleDemoTimer = 1500;
         }
-        load_level_for_menu(demo->levelId, var_a1, demo->cutsceneId);
+        load_level_for_menu(demo[0], var_a1, demo[2]);
         if (sTitleScreenDemoIds[D_80126864] == sTitleScreenDemoIds[0]) {
             D_801268D8 = 0.0f;
             D_801268E0 = 0;
@@ -3569,7 +3565,7 @@ void func_800887E8(void) {
 
     // Fills in the table.
     for (i = 1; i < 16; i++) {
-        D_80126AA0[i] = (u8 *)(((u32)D_80126AA0[0]) + (i * 0x20));
+        D_80126AA0[i] = (char *)(((u32)D_80126AA0[0]) + (i * 0x20));
     }
 
     for (i = 0; i < 1; i++) {
@@ -4714,7 +4710,7 @@ void menu_game_select_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_game_select_init.s")
 #endif
 
-void func_8008C698(s32 updateRate) {
+void func_8008C698(UNUSED s32 updateRate) {
     s32 i;
     s32 filterAlpha;
     s32 fade;
