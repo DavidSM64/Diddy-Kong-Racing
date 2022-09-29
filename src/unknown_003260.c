@@ -9,12 +9,12 @@
 // All of these are defined in unknown_003260_bss.c
 // This was needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 
-extern s32 D_80115F90;
+extern s32 gAudioSched;
 extern ALHeap *D_80115F94;
 extern s32 D_80115F98[2];
 extern s32 D_80115FA0[3];
 extern OSThread audioThread;
-extern OSMesgQueue OSMesgQueue_80116160;
+extern OSMesgQueue gAudioMesgQueue;
 extern OSMesg D_80116178[8];
 extern OSMesgQueue D_80116198;
 extern OSMesg D_801161B0[8];
@@ -89,7 +89,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     u32 tmp_size;
     s32 tmp;
     s32 i;
-    D_80115F90 = arg2;
+    gAudioSched = arg2;
     D_80115F94 = c->heap;
     c->dmaproc = &__amDmaNew;
     c->outputRate = osAiSetFrequency(22050);
@@ -120,7 +120,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     alHeapDBAlloc(0, 0, c->heap, 1, 120);
 
     osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
-    osCreateMesgQueue(&OSMesgQueue_80116160, &D_80116178, 8);
+    osCreateMesgQueue(&gAudioMesgQueue, &D_80116178, 8);
     osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, 50);
 
     osCreateThread(&audioThread, 4, &thread4_audio, NULL, &dmaState, p);
@@ -149,9 +149,9 @@ void thread4_audio(UNUSED void *arg) {
     audioThreadRetraceMesg = NULL;
     audioThreadUpdateMesg = NULL;
 
-    osScAddClient(D_80115F90, &audioStack, &OSMesgQueue_80116160, 1);
+    osScAddClient(gAudioSched, &audioStack, &gAudioMesgQueue, OS_SC_ID_AUDIO);
     while (!audioThreadMarkExit) {
-        osRecvMesg(&OSMesgQueue_80116160, &audioThreadRetraceMesg, 1);
+        osRecvMesg(&gAudioMesgQueue, &audioThreadRetraceMesg, 1);
         switch (*audioThreadRetraceMesg) {
         case 1:
             func_80002C00(D_80115F98[(((u32) audFrameCt % 3))+2], audioThreadUpdateMesg);

@@ -27,8 +27,8 @@ u32 D_800DE4C8 = 0;
 s32 D_800DE4CC = 0;
 
 unk800DE4D0 D_800DE4D0 = { NULL };
-s32 D_800DE4D4 = 0;
-s32 D_800DE4D8 = 0;
+s32 gfxBufCounter = 0;
+s32 gfxBufCounter2 = 0;
 s32 D_800DE4DC = 0;
 
 Gfx dRspInit[] = {
@@ -168,28 +168,32 @@ u8 D_80125F37;
 s32 D_80125F38;
 s32 D_80125F3C;
 
-DKR_OSTask D_80125F40[2];
-DKR_OSTask D_80126020[2];
+DKR_OSTask gGfxTaskBuf[2];
+DKR_OSTask gGfxTaskBuf2[2];
 
 OSMesgQueue *osScInterruptQ;
 
 /*******************************/
 
-s32 setup_ostask_xbus(Gfx* arg0, Gfx* arg1, s32 arg2) {
+/**
+ * Prepare the gfx task for the F3DDKR XBus microcode.
+ * Sends a message to the scheduler to start processing an RSP task once set up.
+ */
+s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     DKR_OSTask *dkrtask;
 
     D_800DE4DC = 1;
-    dkrtask = &D_80125F40[D_800DE4D4];
-    D_800DE4D4++;
-    if (D_800DE4D4 == 2) {
-        D_800DE4D4 = 0;
+    dkrtask = &gGfxTaskBuf[gfxBufCounter];
+    gfxBufCounter++;
+    if (gfxBufCounter == 2) {
+        gfxBufCounter = 0;
     }
     dkrtask->unk8 = 0x23;
-    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->mesgQueue = &D_80125ED8;
     dkrtask->unk58 = 0xFF0000FF;
     dkrtask->unk5C = 0xFF0000FF;
-    dkrtask->task.data_ptr = arg0;
-    dkrtask->task.data_size = ((s32)arg1 - (s32)arg0) >> 3;
+    dkrtask->task.data_ptr = dlBegin;
+    dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
     dkrtask->task.type = 1;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot = rspF3DDKRBootStart;
@@ -206,7 +210,7 @@ s32 setup_ostask_xbus(Gfx* arg0, Gfx* arg1, s32 arg2) {
     dkrtask->task.output_buff = NULL;
     dkrtask->task.output_buff_size = NULL;
     dkrtask->unk0 = 0;
-    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->frameBuffer = (s32) gVideoCurrFramebuffer;
     dkrtask->unk60 = 0xFF;
     dkrtask->unk64 = 0xFF;
     osWritebackDCacheAll();
@@ -214,18 +218,18 @@ s32 setup_ostask_xbus(Gfx* arg0, Gfx* arg1, s32 arg2) {
     return 0;
 }
 
-void setup_ostask_xbus_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
+UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
-    s32 *sp20;
+    s32 *mesgBuf;
 
-    sp20 = NULL;
-    dkrtask = &D_80126020[D_800DE4D8];
-    D_800DE4D8++;
-    if (D_800DE4D8 == 2) {
-        D_800DE4D8 = 0;
+    mesgBuf = NULL;
+    dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
+    gfxBufCounter2++;
+    if (gfxBufCounter2 == 2) {
+        gfxBufCounter2 = 0;
     }
-    dkrtask->task.data_ptr = arg0;
-    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0) << 3));
+    dkrtask->task.data_ptr = dlBegin;
+    dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.type = 1;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot = rspF3DDKRBootStart;
@@ -241,39 +245,45 @@ void setup_ostask_xbus_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
     dkrtask->task.output_buff_size = 0;
     dkrtask->unk0 = 0;
     dkrtask->unk8 = 3;
-    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->mesgQueue = &D_80125ED8;
     dkrtask->unk54 = D_800DE490;
-    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->frameBuffer = (s32) gVideoCurrFramebuffer;
     dkrtask->unk58 = 0xFF0000FF;
     dkrtask->unk5C = 0xFF0000FF;
     dkrtask->unk60 = 0xFF;
     dkrtask->unk64 = 0xFF;
     dkrtask->unk68 = 0;
     
-    if (arg2 != 0) {
-        dkrtask->unk50 = &D_80125EA0;
+    if (recvMesg) {
+        dkrtask->mesgQueue = &D_80125EA0;
     }
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
-    if (arg2 != 0) {
-        osRecvMesg(&D_80125EA0, &sp20, 1);
+    if (recvMesg) {
+        osRecvMesg(&D_80125EA0, &mesgBuf, 1);
     }
 }
 
-void setup_ostask_fifo(Gfx* arg0, Gfx* arg1, s32 arg2) {
+/**
+ * 
+ * Prepare the gfx task for the F3DDKR FIFO microcode.
+ * Sends a message to the scheduler to start processing an RSP task once set up.
+ * Goes unused, and is broken.
+ */
+UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
-    s32 *sp20;
+    s32 *mesgBuf;
 
-    sp20 = NULL;
-    dkrtask = &D_80126020[D_800DE4D8];
-    D_800DE4D8++;
-    if (D_800DE4D8 == 2) {
-        D_800DE4D8 = 0;
+    mesgBuf = NULL;
+    dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
+    gfxBufCounter2++;
+    if (gfxBufCounter2 == 2) {
+        gfxBufCounter2 = 0;
     }
     
-    dkrtask->task.data_ptr = arg0;
+    dkrtask->task.data_ptr = dlBegin;
     dkrtask->task.ucode_boot = rspF3DDKRBootStart;
-    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0)) << 3);
+    dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.type = 1;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
@@ -288,39 +298,40 @@ void setup_ostask_fifo(Gfx* arg0, Gfx* arg1, s32 arg2) {
     dkrtask->task.yield_data_size = 0xA00;
     dkrtask->unk0 = 0;
     dkrtask->unk8 = 7;
-    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->mesgQueue = &D_80125ED8;
     dkrtask->unk54 = D_800DE490;
-    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->frameBuffer = (s32) gVideoCurrFramebuffer;
     dkrtask->unk58 = 0xFF0000FF;
     dkrtask->unk5C = 0xFF0000FF;
     dkrtask->unk60 = 0xFF;
     dkrtask->unk64 = 0xFF;
     dkrtask->unk68 = 0;
     
-    if (arg2 != 0) {
-        dkrtask->unk50 =  &D_80125EA0;
+    if (recvMesg) {
+        dkrtask->mesgQueue =  &D_80125EA0;
     }
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
     
-    if (arg2 != 0) {
-        osRecvMesg(&D_80125EA0, &sp20, 1);
+    if (recvMesg) {
+        osRecvMesg(&D_80125EA0, &mesgBuf, 1);
     }
 }
 
-void setup_ostask_fifo_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
+UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
-    s32 *sp20;
+    s32 *mesgBuf;
 
-    sp20 = NULL;
-    dkrtask = &D_80125F40[D_800DE4D4];
-    D_800DE4D4++;
-    if (D_800DE4D4 == 3) {
-        D_800DE4D4 = 0;
+    mesgBuf = NULL;
+    dkrtask = &gGfxTaskBuf[gfxBufCounter];
+    gfxBufCounter++;
+    // gfxBufCounter being 2 would mean an out of bounds access of gGfxTaskBuf
+    if (gfxBufCounter == 3) {
+        gfxBufCounter = 0;
     }
     
-    dkrtask->task.data_size = (s32) (((s32) (arg1 - arg0)) << 3);
-    dkrtask->task.data_ptr = arg0;
+    dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
+    dkrtask->task.data_ptr = dlBegin;
     dkrtask->task.type = 1;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot = rspF3DDKRBootStart;
@@ -336,34 +347,34 @@ void setup_ostask_fifo_2(Gfx* arg0, Gfx* arg1, s32 arg2) {
     dkrtask->task.yield_data_size = 0xA00;
     dkrtask->unk0 = 0;
     dkrtask->unk8 = 7;
-    dkrtask->unk50 = &D_80125ED8;
+    dkrtask->mesgQueue = &D_80125ED8;
     dkrtask->unk54 = D_800DE490;
-    dkrtask->unkC = (s32) gVideoCurrFramebuffer;
+    dkrtask->frameBuffer = (s32) gVideoCurrFramebuffer;
     dkrtask->unk58 = 0xFF0000FF;
     dkrtask->unk5C = 0xFF0000FF;
-    if (arg2 != 0) {
+    if (recvMesg) {
         dkrtask->unk60 = 0xFF;
         dkrtask->unk64 = 0xFF;
     }
     dkrtask->unk68 = 0;
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
-    if (arg2 != 0) {
-        osRecvMesg(&D_80125ED8, &sp20, 1);
+    if (recvMesg) {
+        osRecvMesg(&D_80125ED8, &mesgBuf, 1);
     }
 }
 
 s32 func_80077A54(void) {
-    s32 *sp1C = NULL;
+    OSMesg *mesg = NULL;
     if (D_800DE4DC == 0) {
         return 0;
     }
-    osRecvMesg(&D_80125ED8, (OSMesg)&sp1C, OS_MESG_BLOCK);
+    osRecvMesg(&D_80125ED8, &mesg, OS_MESG_BLOCK);
     D_800DE4DC = 0;
-    return sp1C[1];
+    return mesg[1];
 }
 
-void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
+UNUSED void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
     osWritebackDCacheAll();
     while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
     osDpSetNextBuffer(bufPtr, bufSize);

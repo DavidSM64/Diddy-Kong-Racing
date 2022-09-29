@@ -31,8 +31,8 @@ s32 gVideoRefreshRate;
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
 s32 D_8012617C;
-OSMesg D_80126180[8];
-OSMesgQueue D_801261A0[8];
+OSMesg gVideoMesgBuf[8];
+OSMesgQueue gVideoMesgQueue[8];
 OSViMode gTvViMode;
 s32 gVideoFbWidths[2];
 s32 gVideoFbHeights[2];
@@ -49,7 +49,7 @@ s32 D_801262E8[8];
 u8 D_80126308;
 u8 D_80126309;
 s32 D_8012630C;
-OSScClient D_80126310;
+OSScClient gVideoSched;
 
 /******************************/
 
@@ -87,8 +87,8 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     init_framebuffer(1);
     gVideoCurrFbIndex = 1;
     swap_framebuffers();
-    osCreateMesgQueue((OSMesgQueue *)&D_801261A0, D_80126180, ARRAY_COUNT(D_80126180));
-    osScAddClient(sc, &D_80126310, (OSMesgQueue *)&D_801261A0, 2);
+    osCreateMesgQueue((OSMesgQueue *)&gVideoMesgQueue, gVideoMesgBuf, ARRAY_COUNT(gVideoMesgBuf));
+    osScAddClient(sc, &gVideoSched, (OSMesgQueue *)&gVideoMesgQueue, OS_SC_ID_VIDEO);
     init_vi_settings();
     D_801262D0 = 12;
     osViBlack(TRUE);
@@ -272,7 +272,7 @@ s32 func_8007A98C(s32 arg0) {
     if (arg0 != 8) {
         swap_framebuffers();
     }
-    while (osRecvMesg(&D_801261A0, NULL, OS_MESG_NOBLOCK) != -1) {
+    while (osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
         tempUpdateRate += 1;
         tempUpdateRate &= 0xFF;
     }
@@ -292,12 +292,12 @@ s32 func_8007A98C(s32 arg0) {
         }
     }
     while (tempUpdateRate < D_80126309) {
-        osRecvMesg(&D_801261A0, NULL, OS_MESG_BLOCK);
+        osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
         tempUpdateRate += 1;
         tempUpdateRate &= 0xFF;
     }
     osViSwapBuffer(gVideoLastFramebuffer);
-    osRecvMesg(&D_801261A0, NULL, OS_MESG_BLOCK);
+    osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
     return tempUpdateRate;
 }
 #else

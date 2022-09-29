@@ -22,8 +22,8 @@ glabel func_8007A98C
 /* 07B5D8 8007A9D8 0C01EAE7 */  jal   swap_framebuffers
 /* 07B5DC 8007A9DC 00000000 */   nop   
 .L8007A9E0:
-/* 07B5E0 8007A9E0 3C128012 */  lui   $s2, %hi(D_801261A0) # $s2, 0x8012
-/* 07B5E4 8007A9E4 265261A0 */  addiu $s2, %lo(D_801261A0) # addiu $s2, $s2, 0x61a0
+/* 07B5E0 8007A9E0 3C128012 */  lui   $s2, %hi(gVideoMesgQueue) # $s2, 0x8012
+/* 07B5E4 8007A9E4 265261A0 */  addiu $s2, %lo(gVideoMesgQueue) # addiu $s2, $s2, 0x61a0
 /* 07B5E8 8007A9E8 02402025 */  move  $a0, $s2
 /* 07B5EC 8007A9EC 00002825 */  move  $a1, $zero
 /* 07B5F0 8007A9F0 0C0322EC */  jal   osRecvMesg

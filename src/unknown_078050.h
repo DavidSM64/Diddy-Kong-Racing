@@ -19,9 +19,9 @@ typedef struct DKR_OSTask {
     s32 unk0;
     s32 unk4;
     s32 unk8;
-    s32 unkC;
+    s32 frameBuffer;
     OSTask_t task; // Size: 0x40 bytes
-    OSMesgQueue *unk50;
+    OSMesgQueue *mesgQueue;
     s32 unk54;
     s32 unk58;
     s32 unk5C;
@@ -43,8 +43,8 @@ extern u32 D_800DE4C4;
 extern u32 D_800DE4C8;
 extern s32 D_800DE4CC;
 
-extern s32 D_800DE4D4;
-extern s32 D_800DE4D8;
+extern s32 gfxBufCounter;
+extern s32 gfxBufCounter2;
 extern s32 D_800DE4DC;
 
 // Defined in dkr.ld

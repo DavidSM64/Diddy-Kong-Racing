@@ -110,8 +110,8 @@ glabel func_80002C00
 /* 0039A8 80002DA8 AE000050 */  sw    $zero, 0x50($s0)
 /* 0039AC 80002DAC AE000054 */  sw    $zero, 0x54($s0)
 /* 0039B0 80002DB0 AE0C0074 */  sw    $t4, 0x74($s0)
-/* 0039B4 80002DB4 3C048011 */  lui   $a0, %hi(D_80115F90) # $a0, 0x8011
-/* 0039B8 80002DB8 8C845F90 */  lw    $a0, %lo(D_80115F90)($a0)
+/* 0039B4 80002DB4 3C048011 */  lui   $a0, %hi(gAudioSched) # $a0, 0x8011
+/* 0039B8 80002DB8 8C845F90 */  lw    $a0, %lo(gAudioSched)($a0)
 /* 0039BC 80002DBC 0C01E55D */  jal   osScGetCmdQ
 /* 0039C0 80002DC0 00000000 */   nop   
 /* 0039C4 80002DC4 00402025 */  move  $a0, $v0
