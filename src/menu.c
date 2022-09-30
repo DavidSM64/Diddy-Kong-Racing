@@ -671,14 +671,19 @@ u16 D_800E03BC[8] = {
     0x00D0,
 };
 
+// File select elements
 unk800E03CC D_800E03CC[3] = {
-    { 0x0018, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 },
-    { 0x0074, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 },
-    { 0x00D0, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 },
+    { 24, 81, 88, 64, 4, 4, 0x4080, 0xFFC0 },
+    { 116, 81, 88, 64, 4, 4, 0x4080, 0xFFC0 },
+    { 208, 81, 88, 64, 4, 4, 0x4080, 0xFFC0 },
 };
 
 s16 D_800E03FC[10] = {
-    0x002C, 0x0036, 0x0015, 0x0019, 0x002C, 0x001B, 0x003F, 0x0019, 0x002D, 0x0019
+    SCREEN_FIT_X(44), SCREEN_HEIGHT - 186, 
+    SCREEN_FIT_X(21), SCREEN_HEIGHT - 195, 
+    SCREEN_FIT_X(44), SCREEN_HEIGHT - 193, 
+    SCREEN_FIT_X(63), SCREEN_HEIGHT - 195, 
+    SCREEN_FIT_X(45), SCREEN_HEIGHT - 195
 };
 
 // Either 0 (2 racers), 1 (4 racers), or 2 (6 racers)
