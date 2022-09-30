@@ -92,8 +92,15 @@ typedef enum MENU_ID {
     MENU_CREDITS,
     MENU_BOOT,
     MENU_UNUSED_27,
-    MENU_CAUTION
+    MENU_CAUTION,
+#ifdef PUPPYPRINT_DEBUG
+    MENU_BENCHMARK
+#endif
 } MENU_ID;
+
+// Benchmark menu functions.
+void menu_benchmark_init(void);
+s32 menu_benchmark_loop(s32 updateRate);
 
 typedef enum PakError {
     PAK_ERROR_NONE,
@@ -288,7 +295,7 @@ extern s32 D_800DF798;
 extern s32 D_800DF79C;
 
 extern s32 D_800DF7A0;
-extern char *gTitleMenuStrings[3];
+extern char *gTitleMenuStrings[];
 
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 extern char gVersionDisplayText[20];

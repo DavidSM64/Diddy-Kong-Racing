@@ -385,8 +385,14 @@ s32 D_800DF794 = 4;
 s32 D_800DF798 = 0;
 s32 D_800DF79C = 0;
 
+#ifdef PUPPYPRINT_DEBUG
+char sBenchmarkString[] = "Benchmark";
+#else
+#define sBenchmarkString 0
+#endif
+
 s32 D_800DF7A0 = 0;
-char *gTitleMenuStrings[3] = { 0, 0, 0 };
+char *gTitleMenuStrings[] = { 0, 0, sBenchmarkString, 0 };
 
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 char gVersionDisplayText[20] = "VERSION XXXXXXXX";
@@ -1798,6 +1804,11 @@ void menu_init(u32 menuId) {
         case MENU_CAUTION:
             menu_caution_init();
             break;
+#ifdef PUPPYPRINT_DEBUG
+        case MENU_BENCHMARK:
+            menu_benchmark_init();
+            break;
+#endif
     }
     sUnused_80126470 = 0xD000;
 }
@@ -1875,6 +1886,11 @@ s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts
         case MENU_CAUTION:
             ret = menu_caution_loop(updateRate);
             break;
+#ifdef PUPPYPRINT_DEBUG
+        case MENU_BENCHMARK:
+            ret = menu_benchmark_loop(updateRate);
+            break;
+#endif
     }
     *currDisplayList = sMenuCurrDisplayList;
     *currHudMat = sMenuCurrHudMat;
@@ -2387,6 +2403,12 @@ void func_8008377C(s32 arg0, f32 arg1) {
     }
 }
 
+#ifdef PUPPYPRINT_DEBUG
+    #define TITLE_SCREEN_MAX_OPTS 3
+#else
+    #define TITLE_SCREEN_MAX_OPTS 2
+#endif
+
 s32 menu_title_screen_loop(s32 updateRate) {
     s32 temp_v0_5;
     s32 sp28;
@@ -2495,7 +2517,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     } else if ((gMenuDelay == 0) && !is_controller_missing()) {
         s32 temp0 = gTitleScreenCurrentOption;
         // D_80126838 = +1 when going up, and -1 when going down.
-        if ((D_80126838 < 0) && (gTitleScreenCurrentOption < 1)) {
+        if ((D_80126838 < 0) && (gTitleScreenCurrentOption < TITLE_SCREEN_MAX_OPTS - 1)) {
             gTitleScreenCurrentOption++;
         }
         if ((D_80126838 > 0) && (gTitleScreenCurrentOption > 0)) {
@@ -2526,9 +2548,15 @@ s32 menu_title_screen_loop(s32 updateRate) {
             }
             load_level_for_menu(0x16, -1, sp28);
             func_8008AEB4(0, NULL);
-            menu_init(3U);
+            menu_init(MENU_CHARACTER_SELECT);
             return 0;
         }
+#ifdef PUPPYPRINT_DEBUG
+        else if (gTitleScreenCurrentOption == 2) {
+            menu_init(MENU_BENCHMARK);
+            return 0;
+        }
+#endif
         D_800DF460 = 0;
         load_level_for_menu(0x27, -1, 0);
         menu_init(MENU_OPTIONS);
@@ -7780,3 +7808,408 @@ s32 is_tt_unlocked(void) {
 s32 is_drumstick_unlocked(void) {
     return gActiveMagicCodes & CHEAT_CONTROL_DRUMSTICK;
 }
+
+#ifdef PUPPYPRINT_DEBUG
+/*************************************************************************************************/
+
+// In menu.c after menu_title_screen_loop()
+
+s32 benchLvlIds[] = {
+    ASSET_LEVEL_CENTRALAREAHUB,
+    ASSET_LEVEL_ANCIENTLAKE, ASSET_LEVEL_FOSSILCANYON, ASSET_LEVEL_JUNGLEFALLS, ASSET_LEVEL_HOTTOPVOLCANO,
+    ASSET_LEVEL_EVERFROSTPEAK, ASSET_LEVEL_WALRUSCOVE, ASSET_LEVEL_SNOWBALLVALLEY, ASSET_LEVEL_FROSTYVILLAGE,
+    ASSET_LEVEL_WHALEBAY, ASSET_LEVEL_CRESCENTISLAND, ASSET_LEVEL_PIRATELAGOON, ASSET_LEVEL_TREASURECAVES,
+    ASSET_LEVEL_WINDMILLPLAINS, ASSET_LEVEL_GREENWOODVILLAGE, ASSET_LEVEL_BOULDERCANYON, ASSET_LEVEL_HAUNTEDWOODS,
+    ASSET_LEVEL_SPACEDUSTALLEY, ASSET_LEVEL_SPACEPORTALPHA, ASSET_LEVEL_DARKMOONCAVERNS, ASSET_LEVEL_STARCITY,
+// Battle stages currently don't work. The A.I. racers are always in planes and don't do anything.
+    //ASSET_LEVEL_FIREMOUNTAIN, ASSET_LEVEL_ICICLEPYRAMID, ASSET_LEVEL_DARKWATERBEACH, ASSET_LEVEL_SMOKEYCASTLE
+// Boss stages current don't work. The intro cutscene plays, but then softlocks.
+    //ASSET_LEVEL_TRICKYTOPS1, ASSET_LEVEL_BLUEY1, ASSET_LEVEL_BUBBLER1, ASSET_LEVEL_SMOKEY1, 
+    //ASSET_LEVEL_WIZPIG1, ASSET_LEVEL_WIZPIG2,
+};
+
+typedef enum BenchmarkState {
+    BENCHMARK_NOT_STARTED, // Show list of levels to benchmark.
+    BENCHMARK_RUNNING,
+    BENCHMARK_RUNNING_FADE_OUT,
+    BENCHMARK_FINISHED // Show results.
+} BenchmarkState;
+
+s32 benchNumLvls = sizeof(benchLvlIds) / sizeof(s32);
+s32 benchSel;
+s32 benchSelStart;
+s32 benchNumPlayers;
+s32 benchTimer;
+BenchmarkState benchState = BENCHMARK_NOT_STARTED;
+OSTime benchLastTime = 0;
+
+u8 benchFpsRecords[256];
+u8 benchFramesRecorded = 0;
+
+#define BENCH_DIAL_X 32
+#define BENCH_DIAL_Y 48
+#define BENCH_DIAL_WIDTH SCREEN_WIDTH - 64
+#define BENCH_DIAL_HEIGHT SCREEN_HEIGHT - 66
+
+#define NUM_ENTRYS_IN_BENCH_DIAL (BENCH_DIAL_HEIGHT - 4) / 16
+
+void menu_benchmark_init(void) {
+    load_level_for_menu(0x27, -1, 0);
+    
+    play_music(SEQUENCE_MAIN_MENU);
+
+    load_font(ASSET_FONTS_BIGFONT);
+    load_font(ASSET_FONTS_FUNFONT);
+
+    set_time_trial_enabled(FALSE);
+    gIsInTracksMode = FALSE;
+
+    if(benchState == BENCHMARK_NOT_STARTED) {
+        benchFramesRecorded = 0;
+        benchSel = 0;
+        benchNumPlayers = 1;
+    }
+
+    benchSelStart = 0;
+    gIgnorePlayerInput = 1;
+    gMenuDelay = 20;
+}
+
+s32 benchmark_check_inputs(s32 updateRate) {
+    s32 buttonsPressed;
+    s32 analogX;
+    s32 analogY;
+
+    if (gMenuDelay != 0) {
+        if (gMenuDelay < 0) {
+            gMenuDelay += updateRate;
+        } else {
+            gMenuDelay -= updateRate;
+        }
+        if (gMenuDelay <= 1 && gMenuDelay >= -1) {
+            gMenuDelay = 0;
+            gIgnorePlayerInput = 0;
+        }
+        return 0;
+    }
+
+
+    buttonsPressed = 0;
+    analogX = 0;
+    analogY = 0;
+    if (gIgnorePlayerInput == 0 && gMenuDelay == 0) {
+        // Get input from all 4 controllers.
+        s32 i;
+        for (i = 0; i < 4; i++) {
+            analogY += gControllersYAxisDirection[i];             // Y axis (-1 = down, 1 = up) for controller
+            analogX += gControllersXAxisDirection[i];             // X axis (-1 = left, 1 = right) for controller
+            buttonsPressed |= get_buttons_pressed_from_player(i); // Button presses for controller
+        }
+    }
+
+    if(benchState == BENCHMARK_NOT_STARTED) {
+        if (analogY > 0) {
+            if(benchSel > 0) {
+                benchSel--;
+            } else {
+                benchSel = benchNumLvls - 1;
+            }
+        } else if (analogY < 0) {
+            if(benchSel < benchNumLvls - 1) {
+                benchSel++;
+            } else {
+                benchSel = 0;
+            }
+        }
+        if(buttonsPressed & L_TRIG) {
+            if(benchNumPlayers > 1) {
+                benchNumPlayers--;
+            } else {
+                benchNumPlayers = 4;
+            }
+        } else if(buttonsPressed & R_TRIG) {
+            if(benchNumPlayers < 4) {
+                benchNumPlayers++;
+            } else {
+                benchNumPlayers = 1;
+            }
+        }
+    }
+
+    if(buttonsPressed & (A_BUTTON | START_BUTTON)) {
+        return 1; // Run benchmark.
+    } else if(buttonsPressed & (B_BUTTON)) {
+        return -1; // Go back to the title screen.
+    }
+
+    return 0;
+}
+
+void run_benchmark() {
+    s32 cutsceneId;
+
+    benchFramesRecorded = 0;
+    benchTimer = 30 * 60;
+    benchLastTime = 0;
+    osSetTime(0);
+    cutsceneId = (benchLvlIds[benchSel] == ASSET_LEVEL_CENTRALAREAHUB) ? 1 : 100;
+    set_rng_seed(12345); // This is needed to make each run consistent.
+    load_level_for_menu(benchLvlIds[benchSel], benchNumPlayers - 1, cutsceneId);
+    benchState = BENCHMARK_RUNNING;
+}
+
+void stop_benchmark() {
+    benchState = BENCHMARK_FINISHED;
+    menu_init(MENU_BENCHMARK);
+}
+
+// Got lazy with this one.
+char *numPlayersDisplays[] = {
+    "Number players: 1", "Number players: 2", "Number players: 3", "Number players: 4"
+};
+
+#define MAX_FPS 30
+
+// Got lazy with this too.
+char *fpsMarkers[] = {
+    //"60", "55", "50", "45", "40", "35", // I don't know if there is enough height for these.
+    "30", "25", "20", "15", "10", "5", "0"
+};
+
+int numberOfMarkers = sizeof(fpsMarkers) / sizeof(char*);
+
+void render_benchmark_select_screen() {
+    s32 i;
+
+    if (benchSel - benchSelStart >= NUM_ENTRYS_IN_BENCH_DIAL - 1) {
+        benchSelStart = benchSel - NUM_ENTRYS_IN_BENCH_DIAL + 1;
+    } else if (benchSelStart > benchSel) {
+        benchSelStart = benchSel;
+    }
+
+    set_text_font(ASSET_FONTS_BIGFONT);
+    set_text_background_colour(0, 0, 0, 0);
+    set_text_colour(0, 0, 0, 255, 128);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 32, "BENCHMARK", ALIGN_MIDDLE_CENTER); // Shadow
+    set_text_colour(255, 255, 255, 0, 255);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 29, "BENCHMARK", ALIGN_MIDDLE_CENTER);
+
+    set_text_font(ASSET_FONTS_FUNFONT);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, SCREEN_HEIGHT - 8, numPlayersDisplays[benchNumPlayers-1], ALIGN_MIDDLE_CENTER);
+
+    assign_dialogue_box_id(6);
+    set_current_dialogue_box_coords(6, BENCH_DIAL_X, BENCH_DIAL_Y, BENCH_DIAL_X + BENCH_DIAL_WIDTH, BENCH_DIAL_Y + BENCH_DIAL_HEIGHT);
+    set_current_dialogue_background_colour(6, 0, 0, 0, 160);
+    set_dialogue_font(6, ASSET_FONTS_FUNFONT);
+
+    for(i = 0; i < benchNumLvls; i++) {
+        if (i == benchSel) {
+            set_current_text_colour(6, 255, 255, 255, 0, 255);
+        } else {
+            set_current_text_colour(6, 0, 0, 0, 160, 255);
+        }
+        render_dialogue_text(6, POS_CENTRED, 4 + (i * 16) - (benchSelStart * 16), get_level_name(benchLvlIds[i]), 1, 4);
+    }
+
+    render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
+}
+
+#define BENCH_RESULT_DIAL_X 16
+#define BENCH_RESULT_DIAL_Y 80
+#define BENCH_RESULT_DIAL_WIDTH SCREEN_WIDTH - 32
+#define BENCH_RESULT_DIAL_HEIGHT SCREEN_HEIGHT - 96
+#define BENCH_RESULT_DIAL_USABLE_WIDTH (BENCH_RESULT_DIAL_WIDTH - 40)
+#define BAR_MUL 4.0f * ((f32)SCREEN_HEIGHT / 240.0f)
+
+u32 get_fill_color(s32 r, s32 g, s32 b) {
+    u16 rgba;
+
+    if(r > 255) r = 255;
+    if(g > 255) g = 255;
+    if(b > 255) b = 255;
+
+    r /= 8;
+    g /= 8;
+    b /= 8;
+
+    rgba = (r << 11) | (g << 6) | (b << 1) | 1;
+
+    return (rgba << 16) | rgba;
+}
+
+void bench_draw_line(s32 x, s32 y, s32 w, s32 h, s32 r, s32 g, s32 b) {
+    u32 color = get_fill_color(r, g, b);
+    gDPSetFillColor(sMenuCurrDisplayList++, color);
+    gDPFillRectangle(sMenuCurrDisplayList++, x, y, x + w - 1, y + h - 1);
+}
+
+void get_avg_and_min_fps(s32 *outAvg, s32 *outMin) {
+    s32 i, count, min, rec;
+
+    if(benchFramesRecorded < 1) {
+        *outAvg = 0;
+        *outMin = 0;
+        return;
+    }
+
+    min = MAX_FPS;
+    count = 0;
+    for(i = 0; i < benchFramesRecorded; i++) {
+        rec = benchFpsRecords[i];
+        count += rec;
+        if(rec < min) min = rec;
+    }
+
+    *outAvg = count / benchFramesRecorded;
+    *outMin = min;
+}
+
+void render_benchmark_results_screen() {
+    s32 i;
+    s32 markerStride;
+    s32 entryStride, entryStrideRemainder;
+    s32 xOffset;
+    s32 barHeight;
+    s32 r, g, b;
+    s32 halfMarkCount;
+    s32 avgFps, minFps;
+    char outBuf[64];
+
+    set_text_font(ASSET_FONTS_BIGFONT);
+    set_text_background_colour(0, 0, 0, 0);
+    set_text_colour(0, 0, 0, 255, 128);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF+1, 28, "RESULTS", ALIGN_MIDDLE_CENTER); // Shadow
+    set_text_colour(255, 255, 255, 0, 255);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 25, "RESULTS", ALIGN_MIDDLE_CENTER);
+
+    set_text_font(ASSET_FONTS_FUNFONT);
+
+    draw_text(&sMenuCurrDisplayList, 20, 54, get_level_name(benchLvlIds[benchSel]), ALIGN_MIDDLE_LEFT);
+    set_text_colour(60, 255, 120, 80, 255);
+    draw_text(&sMenuCurrDisplayList, 20, 71, numPlayersDisplays[benchNumPlayers-1], ALIGN_MIDDLE_LEFT);
+    set_text_colour(200, 200, 60, 80, 255);
+    // sprintf seems to only work with a single variable at a time.
+    get_avg_and_min_fps(&avgFps, &minFps);
+    sprintf(outBuf, "Avg FPS: %d", &avgFps);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
+    sprintf(outBuf, "Min FPS: %d", &minFps);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
+
+
+    assign_dialogue_box_id(6);
+    set_current_dialogue_box_coords(6, BENCH_RESULT_DIAL_X, BENCH_RESULT_DIAL_Y, BENCH_RESULT_DIAL_X + BENCH_RESULT_DIAL_WIDTH, 
+        BENCH_RESULT_DIAL_Y + BENCH_RESULT_DIAL_HEIGHT);
+    set_current_dialogue_background_colour(6, 0, 0, 0, SCREEN_WIDTH_HALF);
+    set_dialogue_font(6, ASSET_FONTS_FUNFONT);
+    set_current_text_colour(6, 255, 255, 255, 0, 255);
+    
+    markerStride = (BENCH_RESULT_DIAL_HEIGHT) / (numberOfMarkers);
+
+    // Draw vert lines for record entries
+    if(benchFramesRecorded > 0) {
+        for(i = 0; i < numberOfMarkers; i++) {
+            render_dialogue_text(6, BENCH_RESULT_DIAL_WIDTH - 16, i * markerStride + 6, fpsMarkers[i], 1, 4);
+        }
+        render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
+        gDPSetCycleType(sMenuCurrDisplayList++, G_CYC_FILL);
+        gDPSetRenderMode(sMenuCurrDisplayList++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+
+        entryStride = BENCH_RESULT_DIAL_USABLE_WIDTH / benchFramesRecorded;
+        entryStrideRemainder = BENCH_RESULT_DIAL_USABLE_WIDTH % benchFramesRecorded;
+
+        xOffset = BENCH_RESULT_DIAL_X + 8 + (entryStrideRemainder / 2);
+        for(i = 0; i < benchFramesRecorded; i++) {
+            g = (i & 1) == 0 ? 100 : 130;
+            b = (i & 1) == 0 ? 220 : 200;
+            barHeight = ((f32)benchFpsRecords[i] /(f32) MAX_FPS) * (f32)(markerStride * 6);
+            bench_draw_line(xOffset + (i * entryStride), BENCH_RESULT_DIAL_Y + 11 + ((markerStride * 6) - barHeight) , entryStride, barHeight, 100, g, b);
+            gDPPipeSync(sMenuCurrDisplayList++);
+        }
+        
+        // Draw horz lines for fps markers.
+        halfMarkCount = numberOfMarkers / 2;
+        xOffset = BENCH_RESULT_DIAL_X + 8;
+        for(i = 0; i < numberOfMarkers; i++) {
+            if(i >= halfMarkCount) {
+                r = 255;
+                g = 255 - (s32)(255.0f * (((f32)i - halfMarkCount) / halfMarkCount));
+            } else {
+                r = (s32)(255.0f * ((f32)i / halfMarkCount));
+                g = 255;
+            }
+            bench_draw_line(xOffset, BENCH_RESULT_DIAL_Y + (i * markerStride + 11), BENCH_RESULT_DIAL_USABLE_WIDTH, 1, r, g, 0);
+        }
+    } else {
+        render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF+1, BENCH_RESULT_DIAL_Y + (BENCH_RESULT_DIAL_HEIGHT / 2)-8, "NO DATA COULD BE RECORDED", ALIGN_MIDDLE_CENTER); 
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF+1, BENCH_RESULT_DIAL_Y + (BENCH_RESULT_DIAL_HEIGHT / 2)+8, "Note: does not work in emulators", ALIGN_MIDDLE_CENTER); 
+    }
+    
+
+}
+
+s32 benchFrames = 0;
+
+void record_fps() {
+    OSTime frameDiff;
+    
+    benchFrames++;
+
+    frameDiff = osGetTime() - benchLastTime;
+
+    // If the time elapsed is greater than a second, then record the number of frames.
+    if (frameDiff >= 46882325 && benchFramesRecorded < 256) {
+        benchFpsRecords[benchFramesRecorded++] = benchFrames;
+        benchFrames = 0;
+        benchLastTime += 46882325;
+    }
+}
+
+s32 menu_benchmark_loop(s32 updateRate) {
+    s32 inputResult;
+
+    // 0 = do nothing, 1 = go forward, -1 = go back
+    inputResult = benchmark_check_inputs(updateRate);
+
+    switch(benchState) {
+        case BENCHMARK_NOT_STARTED:
+            switch(inputResult) {
+                case 1: 
+                    run_benchmark(); 
+                    break;
+            }
+            render_benchmark_select_screen();
+            break;
+        case BENCHMARK_RUNNING:
+        case BENCHMARK_RUNNING_FADE_OUT:
+            switch(inputResult) {
+                case -1:
+                    menu_init(MENU_BENCHMARK);
+                    benchState = BENCHMARK_NOT_STARTED;
+                    break;
+            }
+            record_fps();
+            benchTimer -= updateRate;
+            if(benchState == BENCHMARK_RUNNING && benchTimer <= 60) {
+                func_800C01D8((FadeTransition* ) D_800E1E08);
+                benchState = BENCHMARK_RUNNING_FADE_OUT;
+            }
+            if (benchState == BENCHMARK_RUNNING_FADE_OUT && benchTimer <= 0){
+                stop_benchmark();
+            }
+            break;
+        case BENCHMARK_FINISHED:
+            switch(inputResult) {
+                case 1: 
+                    benchState = BENCHMARK_NOT_STARTED;
+                    break;
+            }
+            render_benchmark_results_screen();
+            break;
+    }
+
+    return 0;
+}
+
+/*************************************************************************************************/
+#endif
