@@ -151,7 +151,7 @@ LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 # Pad to 12MB if matching, otherwise build to a necessary minimum of 1.04KB
 ifeq ($(NON_MATCHING),0)
-  OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
+  OBJCOPY = $(CROSS)objcopy --pad-to=0x101000 --gap-fill=0xFF
 else
   OBJCOPY = $(CROSS)objcopy --pad-to=0x101000 --gap-fill=0xFF
 endif

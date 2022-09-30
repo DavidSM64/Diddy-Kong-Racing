@@ -134,6 +134,7 @@ void change_vi(OSViMode *mode, int width, int height) {
     s32 addX = 16;
     gGlobalVI = osViModeNtscLan1;
 
+    //addX = 24;
     mode->comRegs.width = width;
     mode->comRegs.xScale = ((width + addX)*512)/320;
     // Y Scale
@@ -158,7 +159,7 @@ void init_vi_settings(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
 
-    change_vi(&gGlobalVI, 304, 224);
+    change_vi(&gGlobalVI, gVideoModeResolutions[gVideoModeIndex & 7].width, gVideoModeResolutions[gVideoModeIndex & 7].height);
     osViSetMode(&gGlobalVI);
     osViSetSpecialFeatures(OS_VI_DIVOT_ON);
     osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
