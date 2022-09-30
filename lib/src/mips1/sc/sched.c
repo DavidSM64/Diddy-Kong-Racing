@@ -168,7 +168,9 @@ static void __scMain(void *arg) {
 
         osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
 
+#ifdef PUPPYPRINT_DEBUG
         first = osGetTime();
+#endif
 
         switch ((int) msg) {
             case (VIDEO_MSG):
@@ -204,7 +206,9 @@ static void __scMain(void *arg) {
                     __scExec(sc, sp, dp);
                 break;
         }
+#ifdef PUPPYPRINT_DEBUG
         profiler_update(gPuppyTimers.thread5Time, first);
+#endif
     }
 }
 
@@ -214,7 +218,7 @@ void func_80079760(OSSched *sc) {
     OSScTask *dp = 0;
 
     if (sc->audioListHead) {
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
         puppyprint_update_rsp(RSP_AUDIO_START);
 #endif
 #ifdef DISABLE_AUDIO
@@ -344,7 +348,7 @@ void __scHandleRSP(OSSched *sc) {
     //Rare seems to have edited this function, most specifically here.
     //Still need to do better for a match, but this does work
     if (t->list.t.type == M_AUDTASK) {
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
         puppyprint_update_rsp(RSP_AUDIO_FINISHED);
 #endif
         gRSPAudTaskCount = osGetCount();
@@ -366,7 +370,7 @@ void __scHandleRSP(OSSched *sc) {
             t->state |= OS_SC_YIELDED;
             if ((t->flags & OS_SC_TYPE_MASK) == OS_SC_XBUS) {
                 /* push the task back on the list */
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
                 puppyprint_update_rsp(RSP_GFX_PAUSED);
 #endif
                 t->next = sc->gfxListHead;
@@ -375,7 +379,7 @@ void __scHandleRSP(OSSched *sc) {
                     sc->gfxListTail = t;
             }
         } else {
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
             puppyprint_update_rsp(RSP_GFX_RESUME);
 #endif
             t->state &= ~OS_SC_NEEDS_RSP;
@@ -387,7 +391,7 @@ void __scHandleRSP(OSSched *sc) {
     } else {
         t->state &= ~OS_SC_NEEDS_RSP;
         __scTaskComplete(sc, t);
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
         puppyprint_update_rsp(RSP_GFX_FINISHED);
 #endif
     }
@@ -466,7 +470,7 @@ void __scAppendList(OSSched *sc, OSScTask *t) {
     long type = t->list.t.type;
 
     if (type == M_AUDTASK) {
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
         puppyprint_update_rsp(RSP_AUDIO_START);
 #endif
         if(sc->audioListTail)
@@ -476,7 +480,7 @@ void __scAppendList(OSSched *sc, OSScTask *t) {
 
         sc->audioListTail = t;
     } else {
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
         puppyprint_update_rsp(RSP_GFX_START);
 #endif
         if(sc->gfxListTail)
@@ -494,7 +498,7 @@ void __scAppendList(OSSched *sc, OSScTask *t) {
 void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
     if (sp) {
         if (sp->list.t.type == M_AUDTASK) {
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
             puppyprint_update_rsp(RSP_AUDIO_START);
 #endif
             osWritebackDCacheAll();  /* flush the cache */
@@ -521,7 +525,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
 void __scYield(OSSched *sc) {
     if (sc->curRSPTask->list.t.type == M_GFXTASK) {
         sc->curRSPTask->state |= OS_SC_YIELD;
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
         puppyprint_update_rsp(RSP_GFX_PAUSED);
 #endif
         gYieldTime = osGetTime();
@@ -587,7 +591,7 @@ static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                                   assert(sc->curRDPTask == gfx);
 
                           }
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
                           puppyprint_update_rsp(RSP_GFX_RESUME);
 #endif
                           sc->gfxListHead = sc->gfxListHead->next;
@@ -599,7 +603,7 @@ static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP)
                       if (avail == (OS_SC_SP | OS_SC_DP)) {
                           *sp = *dp = gfx;
                           avail &= ~(OS_SC_SP | OS_SC_DP);
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
                           puppyprint_update_rsp(RSP_GFX_FINISHED);
 #endif
                           sc->gfxListHead = sc->gfxListHead->next;

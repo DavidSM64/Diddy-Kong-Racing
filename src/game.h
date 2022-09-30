@@ -35,7 +35,7 @@ enum NumberOfPlayers {
     FOUR_PLAYERS  = 3
 };
 
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
 
 enum rspFlags {
     RSP_NONE,

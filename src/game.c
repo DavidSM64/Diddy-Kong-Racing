@@ -892,7 +892,7 @@ s8 suCodeSwitch = 0;
 u8 suCodeTimer = 0;
 #endif
 
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
 u8 perfIteration = 0;
 s32 gFPS = 0;
 u8 gProfilerOn = 0;
@@ -1066,7 +1066,7 @@ void main_game_loop(void) {
     s32 debugLoopCounter;
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
     u32 first = osGetTime();
     gPuppyTimers.racerTime[PERF_AGGREGATE] -= gPuppyTimers.racerTime[perfIteration];
     gPuppyTimers.racerTime[perfIteration] = 0;
@@ -1074,7 +1074,9 @@ void main_game_loop(void) {
         gProfilerOn ^= 1;
     }
 #else
+#if NUM_FRAMEBUFFERS == 2
     osSetTime(0);
+#endif
 #endif
 
     if (D_800DD380 == 8) {
@@ -1088,14 +1090,18 @@ void main_game_loop(void) {
 #ifndef FIFO_UCODE
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
 #else
+    #ifdef PUPPYPRINT_DEBUG
         if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD && gProfilerOn) {
             suCodeSwitch ^= 1;
         }
         if (suCodeSwitch == FALSE) {
+    #endif
             setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+    #ifdef PUPPYPRINT_DEBUG
         } else {
             setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         }
+    #endif
 #endif
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
@@ -1173,7 +1179,7 @@ void main_game_loop(void) {
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
 
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
     if (gProfilerOn) {
         render_profiler();
         count_triangles((u8*)gDisplayLists[gSPTaskNum], (u8*)gCurrDisplayList);
@@ -1197,7 +1203,7 @@ void main_game_loop(void) {
     gSPEndDisplayList(gCurrDisplayList++);
 
     func_80066610();
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
     profiler_update(gPuppyTimers.thread3Time, first);
     profiler_update(gPuppyTimers.behaviourTime, first);
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.graphTime[perfIteration]);
@@ -1215,7 +1221,7 @@ void main_game_loop(void) {
     if (!gIsPaused) {
         func_80066520();
     }
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
     calculate_and_update_fps();
     puppyprint_calculate_average_times();
     perfIteration++;
@@ -2242,6 +2248,16 @@ void func_8006F42C(void) {
     D_800DD3F0 = 2;
 }
 
+#if SKIP_INTRO == SKIP_TITLE
+ #define BOOT_LVL MENU_TITLE
+#elif SKIP_INTRO == SKIP_CHARACTER
+ #define BOOT_LVL MENU_CHARACTER_SELECT
+#elif SKIP_INTRO == SKIP_MENU
+ #define BOOT_LVL MENU_GAME_SELECT
+#else
+ #define BOOT_LVL MENU_BOOT
+#endif // SKIP_INTRO
+
 /**
  * Give the player 8 frames to enter the CPak menu with start, then load the intro sequence.
  */
@@ -2255,9 +2271,13 @@ void pre_intro_loop(void) {
     if (buttonInputs & START_BUTTON) {
         gShowControllerPakMenu = TRUE;
     }
+#ifndef SKIP_INTRO
     sBootDelayTimer++;
+#else
+    sBootDelayTimer = 8;
+#endif
     if (sBootDelayTimer >= 8) {
-        load_menu_with_level_background(MENU_BOOT, 0x27, 2);
+        load_menu_with_level_background(BOOT_LVL, 0x27, 2);
     }
 }
 

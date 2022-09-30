@@ -386,7 +386,7 @@ void render_level_geometry_and_objects(void) {
     u8 sp58[128];
     s32 s0;
     Object *obj;
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
     u32 first = osGetTime();
 #endif
 
@@ -529,7 +529,7 @@ skip:
         func_8002581C(segmentIds, numberOfSegments, func_80066220());
     }
     D_8011B0FC = 0;
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
     profiler_update(gPuppyTimers.graphTime, first);
 #endif
 }

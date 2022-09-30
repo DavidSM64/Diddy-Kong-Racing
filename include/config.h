@@ -8,7 +8,7 @@
 
 /// Optional toggles.
 #define DISABLE_AA
-#define ENABLE_DEBUG_PROFILER
+#define PUPPYPRINT_DEBUG
 #define SKIP_INTRO SKIP_TITLE
 #define DEFAULT_CHARACTER 7
 #define NUM_RACERS 8

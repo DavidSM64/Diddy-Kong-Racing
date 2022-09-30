@@ -145,7 +145,7 @@ void thread4_audio(UNUSED void *arg) {
     s32 audioThreadMarkExit;
     s16 *audioThreadRetraceMesg;
     s16 *audioThreadUpdateMesg;
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
     OSTime first;
 #endif
 
@@ -156,21 +156,21 @@ void thread4_audio(UNUSED void *arg) {
     osScAddClient(gAudioSched, &audioStack, &gAudioMesgQueue, OS_SC_ID_AUDIO);
     while (!audioThreadMarkExit) {
         osRecvMesg(&gAudioMesgQueue, &audioThreadRetraceMesg, 1);
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
         first = osGetTime();
 #endif
         switch (*audioThreadRetraceMesg) {
         case 1:
             func_80002C00(D_80115F98[(((u32) audFrameCt % 3))+2], audioThreadUpdateMesg);
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
             profiler_update(gPuppyTimers.thread4Time, first);
 #endif
             osRecvMesg(&D_80116198, &audioThreadUpdateMesg, 1);
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
             first = osGetTime();
 #endif
             func_80002DF8(audioThreadUpdateMesg);
-#ifdef ENABLE_DEBUG_PROFILER
+#ifdef PUPPYPRINT_DEBUG
             profiler_add(gPuppyTimers.thread4Time, first);
 #endif
             break;
