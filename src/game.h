@@ -47,7 +47,7 @@ extern s16 D_800DD32C;
 extern s8 D_800DD330;
 
 // Unused?
-extern char *D_800DD334[6];
+extern char *sDebugRomBuildInfo[6];
 
 // Unused?
 extern char gBuildString[40];
@@ -101,7 +101,7 @@ void func_8006BD10(f32 arg0);
 s32 func_8006BD88(void);
 u8 get_current_level_race_type(void);
 LevelHeader *get_current_level_header(void);
-u8 func_8006BDC0(void);
+u8 get_total_level_header_count(void);
 u8 *get_level_name(s32 levelId);
 void func_8006BEFC(void);
 void func_8006BFC8(s8 *arg0);

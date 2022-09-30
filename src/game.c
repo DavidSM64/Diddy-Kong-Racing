@@ -44,18 +44,18 @@
 
 /************ .rodata ************/
 
-const char D_800E70B0[] = "LOADLEVEL Error: Level out of range\n";
-const char D_800E70D8[] = "BossLev problem\n";
-const char D_800E70EC[] = "AITABLE Error: Table out of range\n";
-const char D_800E7110[] = "1.1605";
-const char D_800E7118[] = "02/10/97 16:03";
-const char D_800E7128[] = "pmountain";
+UNUSED const char sLevelErrorString[] = "LOADLEVEL Error: Level out of range\n";
+UNUSED const char sBossErrorString[] = "BossLev problem\n";
+UNUSED const char sAITableErrorString[] = "AITABLE Error: Table out of range\n";
+UNUSED const char sDebugVersionInfoString[] = "1.1605";
+UNUSED const char sDebugBuildDateString[] = "02/10/97 16:03";
+UNUSED const char sDebugUsernameString[] = "pmountain";
 
-const char D_800E7134[] = "BBB\n";
-const char D_800E713C[] = "CAR";
-const char D_800E7140[] = "HOV";
-const char D_800E7144[] = "PLN";
-const char D_800E7148[] = "Swapping\n";
+const char D_800E7134[] = "BBB\n"; // Functionally unused.
+UNUSED const char sDebugCarString[] = "CAR";
+UNUSED const char sDebugHovercraftString[] = "HOV";
+UNUSED const char sDebugPlaneString[] = "PLN";
+UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 
 /*********************************/
 
@@ -75,12 +75,11 @@ s16 D_800DD32C = 0;
 
 s8 D_800DD330 = 0;
 
-// Unused
-char *D_800DD334[6] = {
+UNUSED char *sDebugRomBuildInfo[6] = {
     NULL, NULL, NULL, // These could be a file boundary.
-    (char *)D_800E7110,
-    (char *)D_800E7118,
-    (char *)D_800E7128
+    (char *)sDebugVersionInfoString,
+    (char *)sDebugBuildDateString,
+    (char *)sDebugUsernameString
 };
 
 // Unused
@@ -113,8 +112,8 @@ s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 // CAR / HOV / PLN - So this is vehicle type?
-char *D_800DD410[3] = {
-    (char *)D_800E713C, (char *)D_800E7140, (char *)D_800E7144
+UNUSED char *D_800DD410[3] = {
+    (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
 };
 FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
@@ -617,16 +616,25 @@ s32 func_8006BD88(void) {
     return D_80121164;
 }
 
+/**
+ * Return the race type ID of the current level.
+ */
 u8 get_current_level_race_type(void) {
     return gCurrentLevelHeader->race_type;
 }
 
+/**
+ * Return the header data of the current level.
+ */
 LevelHeader *get_current_level_header(void) {
     return gCurrentLevelHeader;
 }
 
-/* Unused? */
-u8 func_8006BDC0(void) {
+/**
+ * Returns the amount of level headers there are in the game.
+ * Goes unused.
+ */
+UNUSED u8 get_total_level_header_count(void) {
     return gNumberOfLevelHeaders - 1;
 }
 
@@ -833,7 +841,7 @@ void init_game(void) {
     s32 mode;
 
     init_main_memory_pool();
-    func_800C6170();
+    func_800C6170(); // Initialise gzip decompression related things
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
@@ -849,14 +857,14 @@ void init_game(void) {
         mode = 28;
     }
 
-    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8)mode, 1);
+    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8) mode, 1);
     D_800DD3A0 = FALSE;
     if (!func_8006EFB8()) {
         D_800DD3A0 = TRUE;
     }
-    init_video(1, &gMainSched);
+    init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     func_80076BA0();
-    func_80078100(&gMainSched);
+    setup_gfx_mesg_queues(&gMainSched);
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
@@ -978,7 +986,7 @@ void main_game_loop(void) {
     func_80066610();
     if (D_800DD3F0 != 1) {
         if (D_800DD38C == 0) {
-            D_800DD380 = func_80077A54();
+            D_800DD380 = wait_for_gfx_task();
         }
     } else {
         D_800DD3F0 = 0;
@@ -1041,7 +1049,7 @@ void func_8006CC14(void) {
     set_free_queue_state(0);
     if (D_800DD38C == 0) {
         if (D_800DD3F0 != 1) {
-            func_80077A54();
+            wait_for_gfx_task();
         }
         D_800DD38C = 1;
     }

@@ -145,11 +145,11 @@ void init_vi_settings(void) {
     }
 
     switch (gVideoModeIndex & 7) {
-        case 0:
+        case VIDEO_MODE_LOWRES_LAN:
             stubbed_printf("320 by 240 Point sampled, Non interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
-        case 1:
+        case VIDEO_MODE_LOWRES_LPN:
             //@bug: The video mode being set here is Point sampled
             //but the printf implies it was intended to be Anti-aliased.
             //By my understanding, this is the case we will always hit in code,
@@ -171,7 +171,7 @@ void init_vi_settings(void) {
             }
             osViSetMode(&gTvViMode);
             break;
-        case 2:
+        case VIDEO_MODE_MEDRES_LPN:
             stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
             tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
@@ -187,7 +187,7 @@ void init_vi_settings(void) {
             gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
             osViSetMode(&gTvViMode);
             break;
-        case 3:
+        case VIDEO_MODE_MEDRES_LAN:
             stubbed_printf("640 by 240 Anti-aliased, Non interlaced.\n");
             tvViMode = &osViModeNtscLan1;
             if (osTvType == TV_TYPE_PAL) {
@@ -202,19 +202,19 @@ void init_vi_settings(void) {
             gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
             osViSetMode(&gTvViMode);
             break;
-        case 4:
+        case VIDEO_MODE_HIGHRES_HPN:
             stubbed_printf("640 by 480 Point sampled, Interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPN1]);
             break;
-        case 5:
+        case VIDEO_MODE_HIGHRES_HAN:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAN1]);
             break;
-        case 6:
+        case VIDEO_MODE_HIGHRES_HPF:
             stubbed_printf("640 by 480 Point sampled, Interlaced, De-flickered.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPF1]);
             break;
-        case 7:
+        case VIDEO_MODE_HIGHRES_HAF:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced, De-flickered.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
             break;
@@ -235,7 +235,7 @@ void init_framebuffer(s32 index) {
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
-    if (gVideoModeIndex >= 2) {
+    if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
         gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
