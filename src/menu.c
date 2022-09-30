@@ -8177,6 +8177,9 @@ s32 menu_benchmark_loop(s32 updateRate) {
                 case 1: 
                     run_benchmark(); 
                     break;
+                case -1:
+                    menu_init(MENU_TITLE);
+                    break;
             }
             render_benchmark_select_screen();
             break;
