@@ -557,7 +557,7 @@ extern s16 D_800E1754[10];
 
 extern s16 D_800E1768[12];
 
-//extern u32 D_800E1780[22];
+//extern u32 dCreditsFade[22];
 
 extern s16 D_800E17D8[12];
 
@@ -739,7 +739,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 void menu_23_init(void);
 void func_8009AF18(void);
 void menu_credits_init(void);
-void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void render_credits_fade(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_8009BCF0(void);
 void func_8009BD5C(void);
 void func_8009BE54();

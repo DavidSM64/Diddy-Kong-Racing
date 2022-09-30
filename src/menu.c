@@ -1225,7 +1225,7 @@ s16 D_800E1768[12] = {
     0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, -1, 0
 };
 
-Gfx D_800E1780[11] = {
+Gfx dCreditsFade[11] = {
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_1CYCLE),
     gsDPSetTextureLOD(G_TL_TILE),
@@ -4675,8 +4675,8 @@ s32 menu_game_select_loop(s32 arg0) {
         } else {
             gIsInAdventureTwo = D_800DF460;
             gIsInTracksMode = FALSE;
-            gPlayerSelectVehicle[0] = 0;
-            func_8006DB14(0);
+            gPlayerSelectVehicle[PLAYER_ONE] = VEHICLE_CAR;
+            set_level_default_vehicle(VEHICLE_CAR);
             menu_init(MENU_FILE_SELECT);
         }
         return 0;
@@ -5261,12 +5261,12 @@ void render_track_select_setup_ui(s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, 56, 72 + sp80, gMenuText[ASSET_MENU_TEXT_BESTTIME], ALIGN_MIDDLE_LEFT);  // "BEST TIME"
             draw_text(&sMenuCurrDisplayList, 56, 92 + sp80, gMenuText[ASSET_MENU_TEXT_BESTLAP], ALIGN_MIDDLE_LEFT); // "BEST LAP"
             set_text_colour(255, 128, 255, 96, sMenuGuiOpacity);
-            decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], &sp78, 3);
+            decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], &sp78, 3);
             draw_text(&sMenuCurrDisplayList, 250, 72 + sp80, &sp78, ALIGN_MIDDLE_CENTER);
-            decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], &sp78, 3);
+            decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], &sp78, 3);
             draw_text(&sMenuCurrDisplayList, 250, 92 + sp80, &sp78, ALIGN_MIDDLE_CENTER);
-            show_timestamp(settings->courseTimesPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], 22, 53, 128, 255, 255, 0);
-            show_timestamp(settings->flapTimesPtr[gPlayerSelectVehicle[0]][gTrackIdForPreview], 22, 33, 255, 192, 255, 0);
+            show_timestamp(settings->courseTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 53, 128, 255, 255, 0);
+            show_timestamp(settings->flapTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 33, 255, 192, 255, 0);
             if (D_801263E0 != -1) {
                 if (gNumberOfActivePlayers == 1) {
                     // Glow effect
@@ -5332,13 +5332,13 @@ void render_track_select_setup_ui(s32 updateRate) {
                 }
                 sp80 += 0x8B;
                 s7 = sp80;
-                if (gPlayerSelectVehicle[0] == 2) {
+                if (gPlayerSelectVehicle[PLAYER_ONE] == 2) {
                     s7 = sp80 + 2;
                 }
                 if (gNumberOfActivePlayers == 1) {
                     if (D_801263E0 == 0) {
                         // Draw vehicle image for one player
-                        render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[0] * 3], 0x95, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                        render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[PLAYER_ONE] * 3], 0x95, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                     } else {
                         // Draw T.T. image for one player
                         render_textured_rectangle(&sMenuCurrDisplayList, D_800E0648[D_800E0414 * 3], 0x95, sp80, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
@@ -5347,12 +5347,12 @@ void render_track_select_setup_ui(s32 updateRate) {
                 if ((gNumberOfActivePlayers == 2) && (!sp74)) {
                     s7 = sp80;
                     // Draw vehicle image for first player
-                    render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[0] * 3], 0x4F, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
-                    if (gPlayerSelectVehicle[1] == 2) {
+                    render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[PLAYER_ONE] * 3], 0x4F, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                    if (gPlayerSelectVehicle[PLAYER_TWO] == 2) {
                         s7 = sp80 + 2;
                     }
                     // Draw vehicle image for second player
-                    render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[1] * 3], 0xB0, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                    render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[PLAYER_TWO] * 3], 0xB0, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                 }
 
                 func_8007B3D0(&sMenuCurrDisplayList);
@@ -5498,7 +5498,7 @@ void menu_5_init(void) {
     D_801263BC = 0;
     gMenuDelay = 0;
     s0 = settings->unk4C->unk2;
-    gPlayerSelectVehicle[0] = func_8006B0AC(s0);
+    gPlayerSelectVehicle[PLAYER_ONE] = func_8006B0AC(s0);
     result = func_8006B14C(s0);
     if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[s0] & 2)))) {
         temp = D_800E0758[s0];
@@ -5578,9 +5578,9 @@ s32 menu_5_loop(s32 updateRate) {
     D_801263BC = (D_801263BC + updateRate) & 0x3F;
     func_80092E94(updateRate, sp1C, sp20);
     if (sp1C < 2) {
-        gPlayerSelectVehicle[0] = func_8006B0AC(sp24);
+        gPlayerSelectVehicle[PLAYER_ONE] = func_8006B0AC(sp24);
     }
-    vehicle = gPlayerSelectVehicle[0];
+    vehicle = gPlayerSelectVehicle[PLAYER_ONE];
     sp30 = func_8006B0F8(sp24);
     vehicle2 = vehicle;
     func_8008E4EC();
@@ -5629,7 +5629,7 @@ s32 menu_5_loop(s32 updateRate) {
                 }
                 if (vehicle != vehicle2) {
                     play_sound_global(SOUND_MENU_PICK2, NULL);
-                    gPlayerSelectVehicle[0] = vehicle;
+                    gPlayerSelectVehicle[PLAYER_ONE] = vehicle;
                 }
             }
         }
@@ -6212,7 +6212,7 @@ void menu_trophy_race_round_init(void) {
         gPlayerSelectVehicle[i] = func_8006B0AC(levelId);
     }
 
-    func_8006DB14(func_8006B0AC(levelId));
+    set_level_default_vehicle(func_8006B0AC(levelId));
     load_level_for_menu(levelId, -1, 1);
 
     gMenuDelay = 0;
@@ -6648,18 +6648,21 @@ void menu_credits_init(void) {
     func_8006F564(1);
 }
 
-void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    if (arg4 >= 0x100) {
-        arg4 = 0xFF;
+/**
+ * Render a fading rectangle over the screen during the credits to serve as a transition between levels.
+ */
+void render_credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
+    if (a > 255) {
+        a = 255;
     }
-    if (arg4 < 0) {
-        arg4 = 0;
+    if (a < 0) {
+        a = 0;
     }
 
-    gSPDisplayList(sMenuCurrDisplayList++, D_800E1780);
-    gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 0, 0, 0, arg4);
+    gSPDisplayList(sMenuCurrDisplayList++, dCreditsFade);
+    gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 0, 0, 0, a);
     gDPSetCombineMode(sMenuCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPFillRectangle(sMenuCurrDisplayList++, arg0, arg1, arg0 + arg2, arg1 + arg3);
+    gDPFillRectangle(sMenuCurrDisplayList++, x1, y1, x1 + x2, y1 + y2);
     gDPPipeSync(sMenuCurrDisplayList++);
     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
 

@@ -200,7 +200,7 @@ glabel func_800904E8
 /* 0913CC 800907CC 3C018012 */  lui   $at, %hi(D_801269F8) # $at, 0x8012
 /* 0913D0 800907D0 0C01AC2B */  jal   func_8006B0AC
 /* 0913D4 800907D4 AC2B69F8 */   sw    $t3, %lo(D_801269F8)($at)
-/* 0913D8 800907D8 0C01B6C5 */  jal   func_8006DB14
+/* 0913D8 800907D8 0C01B6C5 */  jal   set_level_default_vehicle
 /* 0913DC 800907DC 00402025 */   move  $a0, $v0
 /* 0913E0 800907E0 3C038012 */  lui   $v1, %hi(D_801269DC) # $v1, 0x8012
 /* 0913E4 800907E4 3C088012 */  lui   $t0, %hi(D_801269E4) # $t0, 0x8012

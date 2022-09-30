@@ -46,12 +46,6 @@ extern s16 D_800DD32C;
 
 extern s8 D_800DD330;
 
-// Unused?
-extern char *sDebugRomBuildInfo[6];
-
-// Unused?
-extern char gBuildString[40];
-
 extern s8  sAntiPiracyTriggered;
 extern s32 D_800DD378;
 extern s32 D_800DD37C;
@@ -126,9 +120,9 @@ void func_8006D968(s8 *arg0);
 s32 get_render_context(void);
 UNUSED void func_8006DA1C(s32 arg0);
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
-void func_8006DB14(s32 arg0);
+void set_level_default_vehicle(s32 arg0);
 void func_8006DB20(s32 vehicleId);
-s32 func_8006DB2C(void);
+s32 get_level_default_vehicle(void);
 void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId);
 void func_8006DBE4(void);
 void func_8006DC58(s32 arg0);

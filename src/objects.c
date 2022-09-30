@@ -650,7 +650,7 @@ void func_8000E2B4(void) {
     } else {
         object_id = D_800DC7B8[D_8011AD45 + 37];
     }
-    func_8006DB14(D_8011AD45);
+    set_level_default_vehicle(D_8011AD45);
     sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
     sp2C.unkA = 0;
     sp2C.unk8 = 0;

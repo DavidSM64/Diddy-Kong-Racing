@@ -5,8 +5,8 @@ glabel jpt_800E71D8
 .text
 glabel func_8006DCF8
 /* 06E8F8 8006DCF8 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
-/* 06E8FC 8006DCFC 3C0E8012 */  lui   $t6, %hi(D_80123514) # $t6, 0x8012
-/* 06E900 8006DD00 81CE3514 */  lb    $t6, %lo(D_80123514)($t6)
+/* 06E8FC 8006DCFC 3C0E8012 */  lui   $t6, %hi(gIsLoading) # $t6, 0x8012
+/* 06E900 8006DD00 81CE3514 */  lb    $t6, %lo(gIsLoading)($t6)
 /* 06E904 8006DD04 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 06E908 8006DD08 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 /* 06E90C 8006DD0C 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012
@@ -78,10 +78,10 @@ glabel func_8006DCF8
 /* 06EA08 8006DE08 0C01AC2B */  jal   func_8006B0AC
 /* 06EA0C 8006DE0C AD040000 */   sw    $a0, ($t0)
 /* 06EA10 8006DE10 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06EA14 8006DE14 3C0A8012 */  lui   $t2, %hi(D_80123518) # $t2, 0x8012
+/* 06EA14 8006DE14 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06EA18 8006DE18 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
 /* 06EA1C 8006DE1C 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
-/* 06EA20 8006DE20 254A3518 */  addiu $t2, %lo(D_80123518) # addiu $t2, $t2, 0x3518
+/* 06EA20 8006DE20 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06EA24 8006DE24 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
 /* 06EA28 8006DE28 24180064 */  li    $t8, 100
 /* 06EA2C 8006DE2C AD420000 */  sw    $v0, ($t2)
@@ -153,8 +153,8 @@ glabel L8006DF00
 /* 06EB28 8006DF28 3C018012 */  lui   $at, %hi(sRenderContext) # $at, 0x8012
 /* 06EB2C 8006DF2C AC2034EC */  sw    $zero, %lo(sRenderContext)($at)
 /* 06EB30 8006DF30 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
-/* 06EB34 8006DF34 3C0A8012 */  lui   $t2, %hi(D_80123518) # $t2, 0x8012
-/* 06EB38 8006DF38 254A3518 */  addiu $t2, %lo(D_80123518) # addiu $t2, $t2, 0x3518
+/* 06EB34 8006DF34 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
+/* 06EB38 8006DF38 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06EB3C 8006DF3C 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
 /* 06EB40 8006DF40 8C650000 */  lw    $a1, ($v1)
 /* 06EB44 8006DF44 8D470000 */  lw    $a3, ($t2)
@@ -187,7 +187,7 @@ glabel L8006DF70
 /* 06EBAC 8006DFAC 80A2000F */  lb    $v0, 0xf($a1)
 /* 06EBB0 8006DFB0 80A30001 */  lb    $v1, 1($a1)
 /* 06EBB4 8006DFB4 04400002 */  bltz  $v0, .L8006DFC0
-/* 06EBB8 8006DFB8 3C0A8012 */   lui   $t2, %hi(D_80123518) # $t2, 0x8012
+/* 06EBB8 8006DFB8 3C0A8012 */   lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06EBBC 8006DFBC AD220000 */  sw    $v0, ($t1)
 .L8006DFC0:
 /* 06EBC0 8006DFC0 00A36021 */  addu  $t4, $a1, $v1
@@ -197,7 +197,7 @@ glabel L8006DF70
 /* 06EBD0 8006DFD0 24633500 */   addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
 /* 06EBD4 8006DFD4 AD620000 */  sw    $v0, ($t3)
 .L8006DFD8:
-/* 06EBD8 8006DFD8 254A3518 */  addiu $t2, %lo(D_80123518) # addiu $t2, $t2, 0x3518
+/* 06EBD8 8006DFD8 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06EBDC 8006DFDC 8D470000 */  lw    $a3, ($t2)
 /* 06EBE0 8006DFE0 8D040000 */  lw    $a0, ($t0)
 /* 06EBE4 8006DFE4 8C650000 */  lw    $a1, ($v1)
@@ -216,8 +216,8 @@ glabel L8006E00C
 /* 06EC14 8006E014 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
 /* 06EC18 8006E018 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
 /* 06EC1C 8006E01C 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06EC20 8006E020 3C0A8012 */  lui   $t2, %hi(D_80123518) # $t2, 0x8012
-/* 06EC24 8006E024 254A3518 */  addiu $t2, %lo(D_80123518) # addiu $t2, $t2, 0x3518
+/* 06EC20 8006E020 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
+/* 06EC24 8006E024 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06EC28 8006E028 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
 /* 06EC2C 8006E02C 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
 /* 06EC30 8006E030 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
@@ -255,8 +255,8 @@ glabel L8006E054
 /* 06ECAC 8006E0AC 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
 /* 06ECB0 8006E0B0 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
 /* 06ECB4 8006E0B4 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
-/* 06ECB8 8006E0B8 3C0A8012 */  lui   $t2, %hi(D_80123518) # $t2, 0x8012
-/* 06ECBC 8006E0BC 254A3518 */  addiu $t2, %lo(D_80123518) # addiu $t2, $t2, 0x3518
+/* 06ECB8 8006E0B8 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
+/* 06ECBC 8006E0BC 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06ECC0 8006E0C0 8C650000 */  lw    $a1, ($v1)
 /* 06ECC4 8006E0C4 8D040000 */  lw    $a0, ($t0)
 /* 06ECC8 8006E0C8 8D260000 */  lw    $a2, ($t1)
@@ -342,9 +342,9 @@ glabel L8006E0E0
 /* 06EDF8 8006E1F8 00403825 */   move  $a3, $v0
 /* 06EDFC 8006E1FC 3C188012 */  lui   $t8, %hi(D_8012351C) # $t8, 0x8012
 /* 06EE00 8006E200 8F18351C */  lw    $t8, %lo(D_8012351C)($t8)
-/* 06EE04 8006E204 3C0A8012 */  lui   $t2, %hi(D_80123518) # $t2, 0x8012
+/* 06EE04 8006E204 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06EE08 8006E208 3C018012 */  lui   $at, %hi(D_801234FC) # $at, 0x8012
-/* 06EE0C 8006E20C 254A3518 */  addiu $t2, %lo(D_80123518) # addiu $t2, $t2, 0x3518
+/* 06EE0C 8006E20C 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06EE10 8006E210 AC2034FC */  sw    $zero, %lo(D_801234FC)($at)
 /* 06EE14 8006E214 10000030 */  b     .L8006E2D8
 /* 06EE18 8006E218 AD580000 */   sw    $t8, ($t2)
@@ -371,9 +371,9 @@ glabel L8006E0E0
 /* 06EE68 8006E268 AE180000 */  sw    $t8, ($s0)
 /* 06EE6C 8006E26C AC400004 */  sw    $zero, 4($v0)
 /* 06EE70 8006E270 AC590000 */  sw    $t9, ($v0)
-/* 06EE74 8006E274 3C0A8012 */  lui   $t2, %hi(D_80123518) # $t2, 0x8012
+/* 06EE74 8006E274 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06EE78 8006E278 3C018012 */  lui   $at, %hi(sRenderContext) # $at, 0x8012
-/* 06EE7C 8006E27C 254A3518 */  addiu $t2, %lo(D_80123518) # addiu $t2, $t2, 0x3518
+/* 06EE7C 8006E27C 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06EE80 8006E280 AC2034EC */  sw    $zero, %lo(sRenderContext)($at)
 /* 06EE84 8006E284 8D460000 */  lw    $a2, ($t2)
 /* 06EE88 8006E288 8FA4002C */  lw    $a0, 0x2c($sp)
