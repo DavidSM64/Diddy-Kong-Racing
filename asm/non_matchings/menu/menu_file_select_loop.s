@@ -247,8 +247,8 @@ glabel menu_file_select_loop
 /* 08EE0C 8008E20C 3C0A800E */   lui   $t2, %hi(D_800E03FC) # $t2, 0x800e
 /* 08EE10 8008E210 2408000C */  li    $t0, 12
 .L8008E214:
-/* 08EE14 8008E214 3C0E800E */  lui   $t6, %hi(D_800E03CC) # $t6, 0x800e
-/* 08EE18 8008E218 25CE03CC */  addiu $t6, %lo(D_800E03CC) # addiu $t6, $t6, 0x3cc
+/* 08EE14 8008E214 3C0E800E */  lui   $t6, %hi(gFileSelectButtons) # $t6, 0x800e
+/* 08EE18 8008E218 25CE03CC */  addiu $t6, %lo(gFileSelectButtons) # addiu $t6, $t6, 0x3cc
 /* 08EE1C 8008E21C 00096900 */  sll   $t5, $t1, 4
 /* 08EE20 8008E220 254A03FC */  addiu $t2, %lo(D_800E03FC) # addiu $t2, $t2, 0x3fc
 /* 08EE24 8008E224 01AE1821 */  addu  $v1, $t5, $t6

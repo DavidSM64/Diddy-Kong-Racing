@@ -160,7 +160,7 @@ typedef struct unk800DFA3C {
     u32* unkC;
 } unk800DFA3C;
 
-typedef struct unk800E03CC {
+typedef struct FileSelectElement {
     s16 unk0;
     s16 unk2;
     s16 unk4;
@@ -169,7 +169,7 @@ typedef struct unk800E03CC {
     s16 unkA;
     s16 unkC;
     s16 unkE;
-} unk800E03CC;
+} FileSelectElement;
 
 /* Size: 0xE bytes. */
 typedef struct unk801263CC {
@@ -386,7 +386,7 @@ extern s16 D_800E0398[6];
 
 extern s16 D_800E03A4[6];
 
-extern unk800E03CC D_800E03CC[3];
+extern FileSelectElement gFileSelectButtons[3];
 
 extern s16 D_800E03FC[10];
 
