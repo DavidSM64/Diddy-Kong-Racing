@@ -160,16 +160,16 @@ typedef struct unk800DFA3C {
     u32* unkC;
 } unk800DFA3C;
 
-typedef struct FileSelectElement {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} FileSelectElement;
+typedef struct ButtonElement {
+    s16 x;
+    s16 y;
+    s16 width;
+    s16 height;
+    s16 borderWidth; // The glowing border that goes around this button
+    s16 borderHeight;
+    s16 colourMin; // The border oscillates between two colours in RGBA5551 format.
+    s16 colourMax;
+} ButtonElement;
 
 /* Size: 0xE bytes. */
 typedef struct unk801263CC {
@@ -386,7 +386,7 @@ extern s16 D_800E0398[6];
 
 extern s16 D_800E03A4[6];
 
-extern FileSelectElement gFileSelectButtons[3];
+extern ButtonElement gFileSelectButtons[3];
 
 extern s16 D_800E03FC[10];
 

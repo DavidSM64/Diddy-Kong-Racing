@@ -665,12 +665,10 @@ u16 D_800E03BC[8] = {
     0x00D0,
 };
 
-
-
-FileSelectElement gFileSelectButtons[3] = {
-    { 12, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 },
-    { 0x0074, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 },
-    { 0x00D0, 0x0051, 0x0058, 0x0040, 0x0004, 0x0004, 0x4080, 0xFFC0 },
+ButtonElement gFileSelectButtons[3] = {
+    { 24, 81, 88, 64, 4, 4, 0x4080, 0xFFC0 }, // File A
+    { 116, 81, 88, 64, 4, 4, 0x4080, 0xFFC0 }, // File B
+    { 208, 81, 88, 64, 4, 4, 0x4080, 0xFFC0 }, // File C
 };
 
 s16 D_800E03FC[10] = {
@@ -4824,8 +4822,8 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         } else {
             color = 0x6A9073FF;
         }
-        func_80080580(0, gFileSelectButtons[i].unk0 - 0xA0, 0x78 - gFileSelectButtons[i].unk2, gFileSelectButtons[i].unk4,
-            gFileSelectButtons[i].unk6, gFileSelectButtons[i].unk8, gFileSelectButtons[i].unkA, color, D_80126550[67]);
+        func_80080580(0, gFileSelectButtons[i].x - 0xA0, 0x78 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
+            gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, D_80126550[67]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
     if (D_801263D8 == 0) {
@@ -4839,22 +4837,22 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 if (gSavefileInfo[i].isAdventure2 != 0) {
                     s2 = 0xC;
                 }
-                render_menu_image(s2, D_800E03FC[2] + gFileSelectButtons[i].unk0, D_800E03FC[3] + gFileSelectButtons[i].unk2, 0, 0, 0, 128);
+                render_menu_image(s2, D_800E03FC[2] + gFileSelectButtons[i].x, D_800E03FC[3] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 func_80068508(1);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / s5;
-                render_menu_image(0, (D_800E03FC[6] + gFileSelectButtons[i].unk0) - 6, D_800E03FC[7] + gFileSelectButtons[i].unk2, 0, 0, 0, 128);
+                render_menu_image(0, (D_800E03FC[6] + gFileSelectButtons[i].x) - 6, D_800E03FC[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % s5;
-                render_menu_image(0, D_800E03FC[6] + gFileSelectButtons[i].unk0 + 6, D_800E03FC[7] + gFileSelectButtons[i].unk2, 0, 0, 0, 128);
+                render_menu_image(0, D_800E03FC[6] + gFileSelectButtons[i].x + 6, D_800E03FC[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 func_80068508(0);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
-                render_menu_image(s5, D_800E03FC[8] + gFileSelectButtons[i].unk0, D_800E03FC[9] + gFileSelectButtons[i].unk2, 0, 0, 0, 128);
+                render_menu_image(s5, D_800E03FC[8] + gFileSelectButtons[i].x, D_800E03FC[9] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 sMenuGuiColourG = 255;
                 sMenuGuiColourB = 255;
                 func_8007BF1C(1);
             } else {
                 set_text_colour(255, 255, 255, 64, 255);
-                draw_text(&sMenuCurrDisplayList, D_800E03FC[4] + gFileSelectButtons[i].unk0, D_800E03FC[5] + gFileSelectButtons[i].unk2 + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, D_800E03FC[4] + gFileSelectButtons[i].x, D_800E03FC[5] + gFileSelectButtons[i].y + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
             }
         }
     }
@@ -4880,8 +4878,8 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         }
         if (s2) {
             s32 temp_t0 = phi_v0_2 | ~0xFF;
-            func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].unk0, gFileSelectButtons[i].unk2 + y, gFileSelectButtons[i].unk4, gFileSelectButtons[i].unk6,
-                gFileSelectButtons[i].unk8, gFileSelectButtons[i].unkA, temp_t0, temp_t0, temp_t0, temp_t0);
+            func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].x, gFileSelectButtons[i].y + y, gFileSelectButtons[i].width, gFileSelectButtons[i].height,
+                gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, temp_t0, temp_t0, temp_t0, temp_t0);
         }
         if (D_80126CC0 == 0 || i != gSaveFileIndex) {
             trim_filename_string(gSavefileInfo[i].name, tempName);
@@ -4889,7 +4887,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 trim_filename_string(gFilenames[i], tempName);
             }
             if (tempName != NULL) {
-                draw_text(&sMenuCurrDisplayList, D_800E03FC[0] + gFileSelectButtons[i].unk0, D_800E03FC[1] + gFileSelectButtons[i].unk2 + y, tempName, ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, D_800E03FC[0] + gFileSelectButtons[i].x, D_800E03FC[1] + gFileSelectButtons[i].y + y, tempName, ALIGN_MIDDLE_CENTER);
             }
         }
     }
