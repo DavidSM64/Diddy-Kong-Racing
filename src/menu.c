@@ -7781,7 +7781,11 @@ void set_language(s32 language) {
  * Returns TRUE if the player has adventure two unlocked.
  */
 s32 is_adventure_two_unlocked(void) {
+#ifndef UNLOCK_ALL
     return sEepromSettings & 1;
+#else
+    return TRUE;
+#endif
 }
 
 /**
@@ -7806,14 +7810,22 @@ s32 is_in_two_player_adventure(void) {
  * Returns 1 if T.T. is avaliable to use, or 0 if not.
  */
 s32 is_tt_unlocked(void) {
+#ifndef UNLOCK_ALL
     return gActiveMagicCodes & CHEAT_CONTROL_TT;
+#else
+    return TRUE;
+#endif
 }
 
 /**
  * Returns 1 if Drumstick is avaliable to use, or 0 if not.
  */
 s32 is_drumstick_unlocked(void) {
+#ifndef UNLOCK_ALL
     return gActiveMagicCodes & CHEAT_CONTROL_DRUMSTICK;
+#else
+    return TRUE;
+#endif
 }
 
 #ifdef PUPPYPRINT_DEBUG
