@@ -385,11 +385,7 @@ s32 D_800DF794 = 4;
 s32 D_800DF798 = 0;
 s32 D_800DF79C = 0;
 
-#ifdef PUPPYPRINT_DEBUG
 char sBenchmarkString[] = "Benchmark";
-#else
-#define sBenchmarkString 0
-#endif
 
 s32 D_800DF7A0 = 0;
 char *gTitleMenuStrings[] = { 0, 0, sBenchmarkString, 0 };
@@ -1804,11 +1800,9 @@ void menu_init(u32 menuId) {
         case MENU_CAUTION:
             menu_caution_init();
             break;
-#ifdef PUPPYPRINT_DEBUG
         case MENU_BENCHMARK:
             menu_benchmark_init();
             break;
-#endif
     }
     sUnused_80126470 = 0xD000;
 }
@@ -1886,11 +1880,9 @@ s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts
         case MENU_CAUTION:
             ret = menu_caution_loop(updateRate);
             break;
-#ifdef PUPPYPRINT_DEBUG
         case MENU_BENCHMARK:
             ret = menu_benchmark_loop(updateRate);
             break;
-#endif
     }
     *currDisplayList = sMenuCurrDisplayList;
     *currHudMat = sMenuCurrHudMat;
@@ -2403,12 +2395,6 @@ void func_8008377C(s32 arg0, f32 arg1) {
     }
 }
 
-#ifdef PUPPYPRINT_DEBUG
-    #define TITLE_SCREEN_MAX_OPTS 3
-#else
-    #define TITLE_SCREEN_MAX_OPTS 2
-#endif
-
 s32 menu_title_screen_loop(s32 updateRate) {
     s32 temp_v0_5;
     s32 sp28;
@@ -2517,7 +2503,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     } else if ((gMenuDelay == 0) && !is_controller_missing()) {
         s32 temp0 = gTitleScreenCurrentOption;
         // D_80126838 = +1 when going up, and -1 when going down.
-        if ((D_80126838 < 0) && (gTitleScreenCurrentOption < TITLE_SCREEN_MAX_OPTS - 1)) {
+        if ((D_80126838 < 0) && (gTitleScreenCurrentOption < 2)) {
             gTitleScreenCurrentOption++;
         }
         if ((D_80126838 > 0) && (gTitleScreenCurrentOption > 0)) {
@@ -2551,12 +2537,10 @@ s32 menu_title_screen_loop(s32 updateRate) {
             menu_init(MENU_CHARACTER_SELECT);
             return 0;
         }
-#ifdef PUPPYPRINT_DEBUG
         else if (gTitleScreenCurrentOption == 2) {
             menu_init(MENU_BENCHMARK);
             return 0;
         }
-#endif
         D_800DF460 = 0;
         load_level_for_menu(0x27, -1, 0);
         menu_init(MENU_OPTIONS);
@@ -7809,7 +7793,6 @@ s32 is_drumstick_unlocked(void) {
     return gActiveMagicCodes & CHEAT_CONTROL_DRUMSTICK;
 }
 
-#ifdef PUPPYPRINT_DEBUG
 /*************************************************************************************************/
 
 // In menu.c after menu_title_screen_loop()
@@ -8215,4 +8198,3 @@ s32 menu_benchmark_loop(s32 updateRate) {
 }
 
 /*************************************************************************************************/
-#endif

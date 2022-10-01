@@ -93,9 +93,7 @@ typedef enum MENU_ID {
     MENU_BOOT,
     MENU_UNUSED_27,
     MENU_CAUTION,
-#ifdef PUPPYPRINT_DEBUG
     MENU_BENCHMARK
-#endif
 } MENU_ID;
 
 // Benchmark menu functions.

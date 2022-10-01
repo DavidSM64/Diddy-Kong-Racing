@@ -896,7 +896,7 @@ void main_game_loop(void) {
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 
-    osSetTime(0);
+    //osSetTime(0);
 
     if (D_800DD380 == 8) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
