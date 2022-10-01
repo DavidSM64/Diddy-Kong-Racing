@@ -74,48 +74,48 @@ glabel func_8008F00C
 /* 08FD18 8008F118 00000000 */   nop   
 /* 08FD1C 8008F11C 3C028012 */  lui   $v0, %hi(D_80126550) # $v0, 0x8012
 /* 08FD20 8008F120 24426550 */  addiu $v0, %lo(D_80126550) # addiu $v0, $v0, 0x6550
-/* 08FD24 8008F124 3C03800E */  lui   $v1, %hi(D_800E04A4) # $v1, 0x800e
-/* 08FD28 8008F128 3C04800E */  lui   $a0, %hi(D_800E04BC) # $a0, 0x800e
+/* 08FD24 8008F124 3C03800E */  lui   $v1, %hi(gRaceSelectionTTOnTop) # $v1, 0x800e
+/* 08FD28 8008F128 3C04800E */  lui   $a0, %hi(gRaceSelectionTTOffTop) # $a0, 0x800e
 /* 08FD2C 8008F12C 8C590090 */  lw    $t9, 0x90($v0)
 /* 08FD30 8008F130 8C480094 */  lw    $t0, 0x94($v0)
 /* 08FD34 8008F134 8C490098 */  lw    $t1, 0x98($v0)
 /* 08FD38 8008F138 8C4A009C */  lw    $t2, 0x9c($v0)
-/* 08FD3C 8008F13C 248404BC */  addiu $a0, %lo(D_800E04BC) # addiu $a0, $a0, 0x4bc
-/* 08FD40 8008F140 246304A4 */  addiu $v1, %lo(D_800E04A4) # addiu $v1, $v1, 0x4a4
+/* 08FD3C 8008F13C 248404BC */  addiu $a0, %lo(gRaceSelectionTTOffTop) # addiu $a0, $a0, 0x4bc
+/* 08FD40 8008F140 246304A4 */  addiu $v1, %lo(gRaceSelectionTTOnTop) # addiu $v1, $v1, 0x4a4
 /* 08FD44 8008F144 8C4B007C */  lw    $t3, 0x7c($v0)
-/* 08FD48 8008F148 3C01800E */  lui   $at, %hi(D_800E04D4) # $at, 0x800e
+/* 08FD48 8008F148 3C01800E */  lui   $at, %hi(gRaceSelectionCarOptHighlight) # $at, 0x800e
 /* 08FD4C 8008F14C AC790000 */  sw    $t9, ($v1)
 /* 08FD50 8008F150 AC680008 */  sw    $t0, 8($v1)
 /* 08FD54 8008F154 AC890000 */  sw    $t1, ($a0)
 /* 08FD58 8008F158 AC8A0008 */  sw    $t2, 8($a0)
-/* 08FD5C 8008F15C AC2B04D4 */  sw    $t3, %lo(D_800E04D4)($at)
+/* 08FD5C 8008F15C AC2B04D4 */  sw    $t3, %lo(gRaceSelectionCarOptHighlight)($at)
 /* 08FD60 8008F160 8C4C0078 */  lw    $t4, 0x78($v0)
-/* 08FD64 8008F164 3C01800E */  lui   $at, %hi(D_800E04E4) # $at, 0x800e
-/* 08FD68 8008F168 AC2C04E4 */  sw    $t4, %lo(D_800E04E4)($at)
+/* 08FD64 8008F164 3C01800E */  lui   $at, %hi(gRaceSelectionCarOpt) # $at, 0x800e
+/* 08FD68 8008F168 AC2C04E4 */  sw    $t4, %lo(gRaceSelectionCarOpt)($at)
 /* 08FD6C 8008F16C 8C4D0084 */  lw    $t5, 0x84($v0)
-/* 08FD70 8008F170 3C01800E */  lui   $at, %hi(D_800E04F4) # $at, 0x800e
-/* 08FD74 8008F174 AC2D04F4 */  sw    $t5, %lo(D_800E04F4)($at)
+/* 08FD70 8008F170 3C01800E */  lui   $at, %hi(gRaceSelectionHoverOptHighlight) # $at, 0x800e
+/* 08FD74 8008F174 AC2D04F4 */  sw    $t5, %lo(gRaceSelectionHoverOptHighlight)($at)
 /* 08FD78 8008F178 8C4E0080 */  lw    $t6, 0x80($v0)
-/* 08FD7C 8008F17C 3C01800E */  lui   $at, %hi(D_800E0504) # $at, 0x800e
-/* 08FD80 8008F180 AC2E0504 */  sw    $t6, %lo(D_800E0504)($at)
+/* 08FD7C 8008F17C 3C01800E */  lui   $at, %hi(gRaceSelectionHoverOpt) # $at, 0x800e
+/* 08FD80 8008F180 AC2E0504 */  sw    $t6, %lo(gRaceSelectionHoverOpt)($at)
 /* 08FD84 8008F184 8C4F008C */  lw    $t7, 0x8c($v0)
-/* 08FD88 8008F188 3C01800E */  lui   $at, %hi(D_800E0514) # $at, 0x800e
-/* 08FD8C 8008F18C AC2F0514 */  sw    $t7, %lo(D_800E0514)($at)
+/* 08FD88 8008F188 3C01800E */  lui   $at, %hi(gRaceSelectioPlaneOptHighlight) # $at, 0x800e
+/* 08FD8C 8008F18C AC2F0514 */  sw    $t7, %lo(gRaceSelectioPlaneOptHighlight)($at)
 /* 08FD90 8008F190 8C580088 */  lw    $t8, 0x88($v0)
-/* 08FD94 8008F194 3C01800E */  lui   $at, %hi(D_800E0524) # $at, 0x800e
-/* 08FD98 8008F198 AC380524 */  sw    $t8, %lo(D_800E0524)($at)
+/* 08FD94 8008F194 3C01800E */  lui   $at, %hi(gRaceSelectioPlaneOpt) # $at, 0x800e
+/* 08FD98 8008F198 AC380524 */  sw    $t8, %lo(gRaceSelectioPlaneOpt)($at)
 /* 08FD9C 8008F19C 8C5900A0 */  lw    $t9, 0xa0($v0)
-/* 08FDA0 8008F1A0 3C01800E */  lui   $at, %hi(D_800E0534) # $at, 0x800e
-/* 08FDA4 8008F1A4 AC390534 */  sw    $t9, %lo(D_800E0534)($at)
+/* 08FDA0 8008F1A0 3C01800E */  lui   $at, %hi(gRaceSelectionTTOnOptHighlight) # $at, 0x800e
+/* 08FDA4 8008F1A4 AC390534 */  sw    $t9, %lo(gRaceSelectionTTOnOptHighlight)($at)
 /* 08FDA8 8008F1A8 8C4800A8 */  lw    $t0, 0xa8($v0)
-/* 08FDAC 8008F1AC 3C01800E */  lui   $at, %hi(D_800E0544) # $at, 0x800e
-/* 08FDB0 8008F1B0 AC280544 */  sw    $t0, %lo(D_800E0544)($at)
+/* 08FDAC 8008F1AC 3C01800E */  lui   $at, %hi(gRaceSelectionTTOffOptHighlight) # $at, 0x800e
+/* 08FDB0 8008F1B0 AC280544 */  sw    $t0, %lo(gRaceSelectionTTOffOptHighlight)($at)
 /* 08FDB4 8008F1B4 8C4900A4 */  lw    $t1, 0xa4($v0)
-/* 08FDB8 8008F1B8 3C01800E */  lui   $at, %hi(D_800E0554) # $at, 0x800e
-/* 08FDBC 8008F1BC AC290554 */  sw    $t1, %lo(D_800E0554)($at)
+/* 08FDB8 8008F1B8 3C01800E */  lui   $at, %hi(gRaceSelectionTTOnOpt) # $at, 0x800e
+/* 08FDBC 8008F1BC AC290554 */  sw    $t1, %lo(gRaceSelectionTTOnOpt)($at)
 /* 08FDC0 8008F1C0 8C4A00AC */  lw    $t2, 0xac($v0)
-/* 08FDC4 8008F1C4 3C01800E */  lui   $at, %hi(D_800E0564) # $at, 0x800e
-/* 08FDC8 8008F1C8 AC2A0564 */  sw    $t2, %lo(D_800E0564)($at)
+/* 08FDC4 8008F1C4 3C01800E */  lui   $at, %hi(gRaceSelectionTTOffOpt) # $at, 0x800e
+/* 08FDC8 8008F1C8 AC2A0564 */  sw    $t2, %lo(gRaceSelectionTTOffOpt)($at)
 /* 08FDCC 8008F1CC 8C4B00B0 */  lw    $t3, 0xb0($v0)
 /* 08FDD0 8008F1D0 3C01800E */  lui   $at, %hi(D_800E0574) # $at, 0x800e
 /* 08FDD4 8008F1D4 AC2B0574 */  sw    $t3, %lo(D_800E0574)($at)

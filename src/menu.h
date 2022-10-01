@@ -409,21 +409,21 @@ extern DrawTexture D_800E042C[2];
 extern DrawTexture D_800E043C[2];
 extern DrawTexture D_800E044C[2];
 
-extern DrawTexture D_800E045C[3];
-extern DrawTexture D_800E0474[3];
-extern DrawTexture D_800E048C[3];
-extern DrawTexture D_800E04A4[3];
-extern DrawTexture D_800E04BC[3];
-extern DrawTexture D_800E04D4[2];
-extern DrawTexture D_800E04E4[2];
-extern DrawTexture D_800E04F4[2];
-extern DrawTexture D_800E0504[2];
-extern DrawTexture D_800E0514[2];
-extern DrawTexture D_800E0524[2];
-extern DrawTexture D_800E0534[2];
-extern DrawTexture D_800E0544[2];
-extern DrawTexture D_800E0554[2];
-extern DrawTexture D_800E0564[2];
+extern DrawTexture gRaceSelectionCarTexTop[3];
+extern DrawTexture gRaceSelectionHoverTexTop[3];
+extern DrawTexture gRaceSelectionPlaneTexTop[3];
+extern DrawTexture gRaceSelectionTTOnTop[3];
+extern DrawTexture gRaceSelectionTTOffTop[3];
+extern DrawTexture gRaceSelectionCarOptHighlight[2];
+extern DrawTexture gRaceSelectionCarOpt[2];
+extern DrawTexture gRaceSelectionHoverOptHighlight[2];
+extern DrawTexture gRaceSelectionHoverOpt[2];
+extern DrawTexture gRaceSelectioPlaneOptHighlight[2];
+extern DrawTexture gRaceSelectioPlaneOpt[2];
+extern DrawTexture gRaceSelectionTTOnOptHighlight[2];
+extern DrawTexture gRaceSelectionTTOffOptHighlight[2];
+extern DrawTexture gRaceSelectionTTOnOpt[2];
+extern DrawTexture gRaceSelectionTTOffOpt[2];
 extern DrawTexture D_800E0574[2];
 extern DrawTexture D_800E0584[2];
 extern DrawTexture D_800E0594[2];
@@ -437,7 +437,7 @@ extern s32 D_800E05F4[8];
 
 extern DrawTexture D_800E0614[2];
 
-extern DrawTexture *D_800E0624[9];
+extern DrawTexture *gRaceSelectionImages[9];
 
 extern DrawTexture *D_800E0648[6];
 

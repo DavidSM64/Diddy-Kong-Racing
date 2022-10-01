@@ -316,8 +316,8 @@ glabel func_80092E94
 /* 093F64 80093364 3C198012 */  lui   $t9, %hi(gPlayerSelectVehicle) # $t9, 0x8012
 /* 093F68 80093368 833969C0 */  lb    $t9, %lo(gPlayerSelectVehicle)($t9)
 /* 093F6C 8009336C 01104023 */  subu  $t0, $t0, $s0
-/* 093F70 80093370 3C18800E */  lui   $t8, %hi(D_800E0624) # $t8, 0x800e
-/* 093F74 80093374 27180624 */  addiu $t8, %lo(D_800E0624) # addiu $t8, $t8, 0x624
+/* 093F70 80093370 3C18800E */  lui   $t8, %hi(gRaceSelectionImages) # $t8, 0x800e
+/* 093F74 80093374 27180624 */  addiu $t8, %lo(gRaceSelectionImages) # addiu $t8, $t8, 0x624
 /* 093F78 80093378 00086880 */  sll   $t5, $t0, 2
 /* 093F7C 8009337C 16190010 */  bne   $s0, $t9, .L800933C0
 /* 093F80 80093380 01B81821 */   addu  $v1, $t5, $t8
@@ -366,9 +366,9 @@ glabel func_80092E94
 /* 094020 80093420 00026880 */  sll   $t5, $v0, 2
 /* 094024 80093424 01A26823 */  subu  $t5, $t5, $v0
 /* 094028 80093428 000DC080 */  sll   $t8, $t5, 2
-/* 09402C 8009342C 3C05800E */  lui   $a1, %hi(D_800E0624) # $a1, 0x800e
+/* 09402C 8009342C 3C05800E */  lui   $a1, %hi(gRaceSelectionImages) # $a1, 0x800e
 /* 094030 80093430 00B82821 */  addu  $a1, $a1, $t8
-/* 094034 80093434 8CA50624 */  lw    $a1, %lo(D_800E0624)($a1)
+/* 094034 80093434 8CA50624 */  lw    $a1, %lo(gRaceSelectionImages)($a1)
 /* 094038 80093438 241900FF */  li    $t9, 255
 /* 09403C 8009343C 240900FF */  li    $t1, 255
 /* 094040 80093440 240E00FF */  li    $t6, 255

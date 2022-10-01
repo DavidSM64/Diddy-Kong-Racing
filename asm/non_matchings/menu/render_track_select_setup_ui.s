@@ -659,10 +659,10 @@ glabel render_track_select_setup_ui
 /* 0924D4 800918D4 0000A025 */   move  $s4, $zero
 /* 0924D8 800918D8 00154880 */  sll   $t1, $s5, 2
 /* 0924DC 800918DC 01354823 */  subu  $t1, $t1, $s5
-/* 0924E0 800918E0 3C0A800E */  lui   $t2, %hi(D_800E0624) # $t2, 0x800e
+/* 0924E0 800918E0 3C0A800E */  lui   $t2, %hi(gRaceSelectionImages) # $t2, 0x800e
 /* 0924E4 800918E4 3C0C800E */  lui   $t4, %hi(D_800E06B0) # $t4, 0x800e
 /* 0924E8 800918E8 258C06B0 */  addiu $t4, %lo(D_800E06B0) # addiu $t4, $t4, 0x6b0
-/* 0924EC 800918EC 254A0624 */  addiu $t2, %lo(D_800E0624) # addiu $t2, $t2, 0x624
+/* 0924EC 800918EC 254A0624 */  addiu $t2, %lo(gRaceSelectionImages) # addiu $t2, $t2, 0x624
 /* 0924F0 800918F0 00094080 */  sll   $t0, $t1, 2
 /* 0924F4 800918F4 3C118012 */  lui   $s1, %hi(gPlayerSelectVehicle) # $s1, 0x8012
 /* 0924F8 800918F8 00135840 */  sll   $t3, $s3, 1
@@ -767,8 +767,8 @@ glabel render_track_select_setup_ui
 /* 092660 80091A60 17000019 */  bnez  $t8, .L80091AC8
 /* 092664 80091A64 00000000 */   nop   
 /* 092668 80091A68 00760019 */  multu $v1, $s6
-/* 09266C 80091A6C 3C11800E */  lui   $s1, %hi(D_800E0624) # $s1, 0x800e
-/* 092670 80091A70 26310624 */  addiu $s1, %lo(D_800E0624) # addiu $s1, $s1, 0x624
+/* 09266C 80091A6C 3C11800E */  lui   $s1, %hi(gRaceSelectionImages) # $s1, 0x800e
+/* 092670 80091A70 26310624 */  addiu $s1, %lo(gRaceSelectionImages) # addiu $s1, $s1, 0x624
 /* 092674 80091A74 8FCB0000 */  lw    $t3, ($fp)
 /* 092678 80091A78 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 09267C 80091A7C 240900FF */  li    $t1, 255
@@ -816,10 +816,10 @@ glabel render_track_select_setup_ui
 /* 092720 80091B20 8C42F4BC */  lw    $v0, %lo(gNumberOfActivePlayers)($v0)
 /* 092724 80091B24 00000000 */  nop   
 .L80091B28:
-/* 092728 80091B28 3C11800E */  lui   $s1, %hi(D_800E0624) # $s1, 0x800e
+/* 092728 80091B28 3C11800E */  lui   $s1, %hi(gRaceSelectionImages) # $s1, 0x800e
 /* 09272C 80091B2C 24010002 */  li    $at, 2
 /* 092730 80091B30 14410031 */  bne   $v0, $at, .L80091BF8
-/* 092734 80091B34 26310624 */   addiu $s1, %lo(D_800E0624) # addiu $s1, $s1, 0x624
+/* 092734 80091B34 26310624 */   addiu $s1, %lo(gRaceSelectionImages) # addiu $s1, $s1, 0x624
 /* 092738 80091B38 8FAA0074 */  lw    $t2, 0x74($sp)
 /* 09273C 80091B3C 3C088012 */  lui   $t0, %hi(gPlayerSelectVehicle) # $t0, 0x8012
 /* 092740 80091B40 1540002D */  bnez  $t2, .L80091BF8

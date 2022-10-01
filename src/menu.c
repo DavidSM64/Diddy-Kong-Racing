@@ -685,21 +685,21 @@ DrawTexture D_800E042C[2] = { { NULL, -8, -12 }, { NULL, 0, 0 }};
 DrawTexture D_800E043C[2] = { { NULL, -12, -8 }, { NULL, 0, 0 }};
 DrawTexture D_800E044C[2] = { { NULL, -8, -12 }, { NULL, 0, 0 }};
 
-DrawTexture D_800E045C[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture D_800E0474[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture D_800E048C[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture D_800E04A4[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture D_800E04BC[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture D_800E04D4[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E04E4[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E04F4[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0504[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0514[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0524[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0534[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0544[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0554[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0564[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionCarTexTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionHoverTexTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlaneTexTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOnTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOffTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionCarOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionCarOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionHoverOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionHoverOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectioPlaneOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectioPlaneOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOnOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOffOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOnOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOffOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture D_800E0574[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture D_800E0584[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture D_800E0594[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
@@ -713,12 +713,12 @@ s32 D_800E05F4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
 
 DrawTexture D_800E0614[2] = { { NULL, -16, -16 }, { NULL, 0, 0 } };
 
-DrawTexture *D_800E0624[9] = {
-    D_800E045C, D_800E04D4, D_800E04E4, D_800E0474, D_800E04F4, D_800E0504, D_800E048C, D_800E0514, D_800E0524
+DrawTexture *gRaceSelectionImages[9] = {
+    gRaceSelectionCarTexTop, gRaceSelectionCarOptHighlight, gRaceSelectionCarOpt, gRaceSelectionHoverTexTop, gRaceSelectionHoverOptHighlight, gRaceSelectionHoverOpt, gRaceSelectionPlaneTexTop, gRaceSelectioPlaneOptHighlight, gRaceSelectioPlaneOpt
 };
 
 DrawTexture *D_800E0648[6] = {
-    D_800E04BC, D_800E0544, D_800E0564, D_800E04A4, D_800E0534, D_800E0554
+    gRaceSelectionTTOffTop, gRaceSelectionTTOffOptHighlight, gRaceSelectionTTOffOpt, gRaceSelectionTTOnTop, gRaceSelectionTTOnOptHighlight, gRaceSelectionTTOnOpt
 };
 
 DrawTexture *D_800E0660[6] = {
@@ -752,7 +752,7 @@ s16 D_800E06D4[8] = {
 };
 
 ButtonTextElement gTwoPlayerRacerCountMenu = {
-    80, 140, 160, 64, 4, 4, 80, 20, 58, 40, 80, 40, 102, 40
+    SCREEN_WIDTH_HALF - 80, 140, 160, 64, 4, 4, 80, 20, 58, 40, 80, 40, 102, 40
 };
 
 ButtonElement D_800E0700 = {
@@ -5017,12 +5017,12 @@ void func_8008E428(void) {
 }
 
 void func_8008E45C(void) {
-    D_800E045C[0].texture = D_80126550[24];
-    D_800E045C[1].texture = D_80126550[25];
-    D_800E0474[0].texture = D_80126550[26];
-    D_800E0474[1].texture = D_80126550[27];
-    D_800E048C[0].texture = D_80126550[28];
-    D_800E048C[1].texture = D_80126550[29];
+    gRaceSelectionCarTexTop[0].texture = D_80126550[24];
+    gRaceSelectionCarTexTop[1].texture = D_80126550[25];
+    gRaceSelectionHoverTexTop[0].texture = D_80126550[26];
+    gRaceSelectionHoverTexTop[1].texture = D_80126550[27];
+    gRaceSelectionPlaneTexTop[0].texture = D_80126550[28];
+    gRaceSelectionPlaneTexTop[1].texture = D_80126550[29];
 }
 
 void func_8008E4B0(void) {
@@ -5315,13 +5315,13 @@ void render_track_select_setup_ui(s32 updateRate) {
                                     for (j = 0; j < gNumberOfActivePlayers; j++) {
                                         if (i == gPlayerSelectVehicle[j]) {
                                             // Highlighted
-                                            render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[(i * 3) + 1], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                                            render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[(i * 3) + 1], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                                         } else if (settings->courseFlagsPtr[gTrackIdForPreview] & 2) {
                                             // Not highlighted
-                                            render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[(i * 3) + 2], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                                            render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[(i * 3) + 2], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                                         } else {
                                             // Not available (Ghosted out)
-                                            render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[(i * 3) + 2], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity / 2);
+                                            render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[(i * 3) + 2], D_800E06B0[s3 + j], yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity / 2);
                                         }
                                     }
                                 }
@@ -5338,7 +5338,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                 if (gNumberOfActivePlayers == 1) {
                     if (D_801263E0 == 0) {
                         // Draw vehicle image for one player
-                        render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[PLAYER_ONE] * 3], 0x95, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                        render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[PLAYER_ONE] * 3], 0x95, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                     } else {
                         // Draw T.T. image for one player
                         render_textured_rectangle(&sMenuCurrDisplayList, D_800E0648[D_800E0414 * 3], 0x95, sp80, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
@@ -5347,12 +5347,12 @@ void render_track_select_setup_ui(s32 updateRate) {
                 if ((gNumberOfActivePlayers == 2) && (!sp74)) {
                     s7 = sp80;
                     // Draw vehicle image for first player
-                    render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[PLAYER_ONE] * 3], 0x4F, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                    render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[PLAYER_ONE] * 3], 0x4F, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                     if (gPlayerSelectVehicle[PLAYER_TWO] == 2) {
                         s7 = sp80 + 2;
                     }
                     // Draw vehicle image for second player
-                    render_textured_rectangle(&sMenuCurrDisplayList, D_800E0624[gPlayerSelectVehicle[PLAYER_TWO] * 3], 0xB0, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                    render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[PLAYER_TWO] * 3], 0xB0, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                 }
 
                 func_8007B3D0(&sMenuCurrDisplayList);
@@ -5518,12 +5518,12 @@ void menu_5_init(void) {
         func_8009C674(D_800E0FB4);
         allocate_menu_images(D_800E0FD8);
         func_8008E45C();
-        D_800E04D4[0].texture = D_80126550[31];
-        D_800E04E4[0].texture = D_80126550[30];
-        D_800E04F4[0].texture = D_80126550[33];
-        D_800E0504[0].texture = D_80126550[32];
-        D_800E0514[0].texture = D_80126550[35];
-        D_800E0524[0].texture = D_80126550[34];
+        gRaceSelectionCarOptHighlight[0].texture = D_80126550[31];
+        gRaceSelectionCarOpt[0].texture = D_80126550[30];
+        gRaceSelectionHoverOptHighlight[0].texture = D_80126550[33];
+        gRaceSelectionHoverOpt[0].texture = D_80126550[32];
+        gRaceSelectioPlaneOptHighlight[0].texture = D_80126550[35];
+        gRaceSelectioPlaneOpt[0].texture = D_80126550[34];
         D_800E05B4[0].texture = D_80126550[48];
         D_800E0614[0].texture = D_80126550[94];
         func_800C01D8(&sMenuTransitionFadeOut);
