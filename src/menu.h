@@ -171,6 +171,16 @@ typedef struct ButtonElement {
     s16 colourMax;
 } ButtonElement;
 
+typedef struct ButtonTextElement {
+    s16 x;
+    s16 y;
+    s16 width;
+    s16 height;
+    s16 borderWidth;
+    s16 borderHeight;
+    s16 textPos[8];
+} ButtonTextElement;
+
 /* Size: 0xE bytes. */
 typedef struct unk801263CC {
     u8 pad0[0xC];
@@ -443,9 +453,9 @@ extern s16 D_800E06C4[8];
 
 extern s16 D_800E06D4[8];
 
-extern s16 D_800E06E4[14];
+extern ButtonTextElement gTwoPlayerRacerCountMenu;
 
-extern s16 D_800E0700[8];
+extern ButtonElement D_800E0700;
 
 extern s16 D_800E0710[16];
 

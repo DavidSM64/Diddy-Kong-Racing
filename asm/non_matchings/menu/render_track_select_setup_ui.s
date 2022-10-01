@@ -923,8 +923,8 @@ glabel render_track_select_setup_ui
 /* 0928B4 80091CB4 8DA40220 */  lw    $a0, 0x220($t5)
 /* 0928B8 80091CB8 0C031368 */  jal   func_800C4DA0
 /* 0928BC 80091CBC 00003025 */   move  $a2, $zero
-/* 0928C0 80091CC0 3C12800E */  lui   $s2, %hi(D_800E06E4) # $s2, 0x800e
-/* 0928C4 80091CC4 265206E4 */  addiu $s2, %lo(D_800E06E4) # addiu $s2, $s2, 0x6e4
+/* 0928C0 80091CC0 3C12800E */  lui   $s2, %hi(gTwoPlayerRacerCountMenu) # $s2, 0x800e
+/* 0928C4 80091CC4 265206E4 */  addiu $s2, %lo(gTwoPlayerRacerCountMenu) # addiu $s2, $s2, 0x6e4
 /* 0928C8 80091CC8 86430004 */  lh    $v1, 4($s2)
 /* 0928CC 80091CCC 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 0928D0 80091CD0 2478FFF4 */  addiu $t8, $v1, -0xc

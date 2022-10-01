@@ -751,12 +751,12 @@ s16 D_800E06D4[8] = {
     0x0000, 0x004A, 0xFFAB, 0x0000,
 };
 
-s16 D_800E06E4[14] = {
-    0x50, 0x8C, 0xA0, 0x40, 0x04, 0x04, 0x50, 0x14, 0x3A, 0x28, 0x50, 0x28, 0x66, 0x28
+ButtonTextElement gTwoPlayerRacerCountMenu = {
+    80, 140, 160, 64, 4, 4, 80, 20, 58, 40, 80, 40, 102, 40
 };
 
-s16 D_800E0700[8] = {
-    0x50, 0x98, 0xA0, 0x28, 0x04, 0x04, 0x50, 0x0E
+ButtonElement D_800E0700 = {
+    80, 152, 160, 40, 4, 4, 80, 14
 };
 
 s16 D_800E0710[16] = {
@@ -5375,18 +5375,18 @@ void render_track_select_setup_ui(s32 updateRate) {
 
                 if (sp74) {
                     s32 temp_v0_12 = func_800C4DA0(gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], 0, 0); // "NUMBER OF RACERS"
-                    if ((D_800E06E4[2] - 0xC) < temp_v0_12) {
+                    if ((gTwoPlayerRacerCountMenu.width - 0xC) < temp_v0_12) {
                         s4 = temp_v0_12 + 0xC;
                     } else {
-                        s4 = D_800E06E4[2];
+                        s4 = gTwoPlayerRacerCountMenu.width;
                     }
-                    func_80080580(&sMenuCurrDisplayList, -(s4 >> 1), 0x78 - D_800E06E4[1], s4, D_800E06E4[3], D_800E06E4[4], D_800E06E4[5], 0xB0E0C0FF, D_8012665C);
+                    func_80080580(&sMenuCurrDisplayList, -(s4 >> 1), 0x78 - gTwoPlayerRacerCountMenu.y, s4, gTwoPlayerRacerCountMenu.height, gTwoPlayerRacerCountMenu.textPos[0], gTwoPlayerRacerCountMenu.textPos[1], 0xB0E0C0FF, D_8012665C);
                     func_80080E6C();
                     set_text_font(ASSET_FONTS_FUNFONT);
                     set_text_colour(0, 0, 0, 0xFF, 0x80);
-                    draw_text(&sMenuCurrDisplayList, D_800E06E4[6] + D_800E06E4[0] + 1, D_800E06E4[7] + D_800E06E4[1] + 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, gTwoPlayerRacerCountMenu.textPos[2] + gTwoPlayerRacerCountMenu.x + 1, gTwoPlayerRacerCountMenu.textPos[3] + gTwoPlayerRacerCountMenu.y + 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
                     set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
-                    draw_text(&sMenuCurrDisplayList, D_800E06E4[6] + D_800E06E4[0] - 1, D_800E06E4[7] + D_800E06E4[1] - 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, gTwoPlayerRacerCountMenu.textPos[2] + gTwoPlayerRacerCountMenu.x - 1, gTwoPlayerRacerCountMenu.textPos[3] + gTwoPlayerRacerCountMenu.y - 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
                     func_80068508(1);
                     func_8007BF1C(0);
                     for (i = 0; i < 3; i++) {
@@ -5401,9 +5401,9 @@ void render_track_select_setup_ui(s32 updateRate) {
                             }
                         }
                         // X position
-                        gMenuImageStack[0].unkC = (D_800E06E4[index + 8] + D_800E06E4[0]) - 0xA0;
+                        gMenuImageStack[0].unkC = (gTwoPlayerRacerCountMenu.textPos[4 + index] + gTwoPlayerRacerCountMenu.x) - 0xA0;
                         // Y position
-                        gMenuImageStack[0].unk10 = (-D_800E06E4[index + 9] - D_800E06E4[1]) + 0x78;
+                        gMenuImageStack[0].unk10 = (-gTwoPlayerRacerCountMenu.textPos[5 + index] - gTwoPlayerRacerCountMenu.y) + 0x78;
                         // Number value to draw.
                         gMenuImageStack[0].unk18 = index + 2;
                         func_8009CA60(0);
