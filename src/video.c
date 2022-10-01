@@ -134,19 +134,21 @@ void change_vi(OSViMode *mode, int width, int height) {
     s32 addX = 16;
     gGlobalVI = osViModeNtscLan1;
 
-    //addX = 24;
-    mode->comRegs.width = width;
-    mode->comRegs.xScale = ((width + addX)*512)/320;
-    // Y Scale
-    mode->fldRegs[0].yScale = (((height + 16 - (addPAL * 2))*1024)/240);
-    mode->fldRegs[1].yScale = (((height + 16 - (addPAL * 2))*1024)/240);
-    // X Centre
-    mode->fldRegs[0].origin = width*2;
-    mode->fldRegs[1].origin = width*4;
+    if (height < 240) {
+        //addX = 24;
+        mode->comRegs.width = width;
+        mode->comRegs.xScale = ((width + addX)*512)/320;
+        // Y Scale
+        mode->fldRegs[0].yScale = (((height + 16 - (addPAL * 2))*1024)/240);
+        mode->fldRegs[1].yScale = (((height + 16 - (addPAL * 2))*1024)/240);
+        // X Centre
+        mode->fldRegs[0].origin = width*2;
+        mode->fldRegs[1].origin = width*4;
 
-    mode->comRegs.hStart = (428-304) << 16 | (428+304);
-    mode->fldRegs[0].vStart = (277-height) << 16 | (271+height);
-    mode->fldRegs[1].vStart = (277-height) << 16 | (271+height);
+        mode->comRegs.hStart = (428-304) << 16 | (428+304);
+        mode->fldRegs[0].vStart = (277-height) << 16 | (271+height);
+        mode->fldRegs[1].vStart = (277-height) << 16 | (271+height);
+    }
 }
 
 /**
