@@ -74,14 +74,14 @@ glabel func_8008F00C
 /* 08FD18 8008F118 00000000 */   nop   
 /* 08FD1C 8008F11C 3C028012 */  lui   $v0, %hi(D_80126550) # $v0, 0x8012
 /* 08FD20 8008F120 24426550 */  addiu $v0, %lo(D_80126550) # addiu $v0, $v0, 0x6550
-/* 08FD24 8008F124 3C03800E */  lui   $v1, %hi(gRaceSelectionTTOnTop) # $v1, 0x800e
-/* 08FD28 8008F128 3C04800E */  lui   $a0, %hi(gRaceSelectionTTOffTop) # $a0, 0x800e
+/* 08FD24 8008F124 3C03800E */  lui   $v1, %hi(gRaceSelectionTTOn) # $v1, 0x800e
+/* 08FD28 8008F128 3C04800E */  lui   $a0, %hi(gRaceSelectionTTOff) # $a0, 0x800e
 /* 08FD2C 8008F12C 8C590090 */  lw    $t9, 0x90($v0)
 /* 08FD30 8008F130 8C480094 */  lw    $t0, 0x94($v0)
 /* 08FD34 8008F134 8C490098 */  lw    $t1, 0x98($v0)
 /* 08FD38 8008F138 8C4A009C */  lw    $t2, 0x9c($v0)
-/* 08FD3C 8008F13C 248404BC */  addiu $a0, %lo(gRaceSelectionTTOffTop) # addiu $a0, $a0, 0x4bc
-/* 08FD40 8008F140 246304A4 */  addiu $v1, %lo(gRaceSelectionTTOnTop) # addiu $v1, $v1, 0x4a4
+/* 08FD3C 8008F13C 248404BC */  addiu $a0, %lo(gRaceSelectionTTOff) # addiu $a0, $a0, 0x4bc
+/* 08FD40 8008F140 246304A4 */  addiu $v1, %lo(gRaceSelectionTTOn) # addiu $v1, $v1, 0x4a4
 /* 08FD44 8008F144 8C4B007C */  lw    $t3, 0x7c($v0)
 /* 08FD48 8008F148 3C01800E */  lui   $at, %hi(gRaceSelectionCarOptHighlight) # $at, 0x800e
 /* 08FD4C 8008F14C AC790000 */  sw    $t9, ($v1)

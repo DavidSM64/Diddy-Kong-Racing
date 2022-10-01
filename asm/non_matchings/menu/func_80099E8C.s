@@ -314,16 +314,16 @@ glabel func_80099E8C
 /* 09AF28 8009A328 240FFFFF */   li    $t7, -1
 /* 09AF2C 8009A32C 24010002 */  li    $at, 2
 /* 09AF30 8009A330 10410007 */  beq   $v0, $at, .L8009A350
-/* 09AF34 8009A334 3C05800E */   lui   $a1, %hi(gRaceSelectionPlaneTexTop) # $a1, 0x800e
-/* 09AF38 8009A338 3C05800E */  lui   $a1, %hi(gRaceSelectionCarTexTop) # $a1, 0x800e
+/* 09AF34 8009A334 3C05800E */   lui   $a1, %hi(gRaceSelectionPlaneTex) # $a1, 0x800e
+/* 09AF38 8009A338 3C05800E */  lui   $a1, %hi(gRaceSelectionCarTex) # $a1, 0x800e
 /* 09AF3C 8009A33C 10000005 */  b     .L8009A354
-/* 09AF40 8009A340 24A5045C */   addiu $a1, %lo(gRaceSelectionCarTexTop) # addiu $a1, $a1, 0x45c
+/* 09AF40 8009A340 24A5045C */   addiu $a1, %lo(gRaceSelectionCarTex) # addiu $a1, $a1, 0x45c
 .L8009A344:
-/* 09AF44 8009A344 3C05800E */  lui   $a1, %hi(gRaceSelectionHoverTexTop) # $a1, 0x800e
+/* 09AF44 8009A344 3C05800E */  lui   $a1, %hi(gRaceSelectionHoverTex) # $a1, 0x800e
 /* 09AF48 8009A348 10000002 */  b     .L8009A354
-/* 09AF4C 8009A34C 24A50474 */   addiu $a1, %lo(gRaceSelectionHoverTexTop) # addiu $a1, $a1, 0x474
+/* 09AF4C 8009A34C 24A50474 */   addiu $a1, %lo(gRaceSelectionHoverTex) # addiu $a1, $a1, 0x474
 .L8009A350:
-/* 09AF50 8009A350 24A5048C */  addiu $a1, %lo(gRaceSelectionPlaneTexTop) # addiu $a1, $a1, 0x48c
+/* 09AF50 8009A350 24A5048C */  addiu $a1, %lo(gRaceSelectionPlaneTex) # addiu $a1, $a1, 0x48c
 .L8009A354:
 /* 09AF54 8009A354 862B0008 */  lh    $t3, 8($s1)
 /* 09AF58 8009A358 862D000A */  lh    $t5, 0xa($s1)

@@ -685,11 +685,11 @@ DrawTexture D_800E042C[2] = { { NULL, -8, -12 }, { NULL, 0, 0 }};
 DrawTexture D_800E043C[2] = { { NULL, -12, -8 }, { NULL, 0, 0 }};
 DrawTexture D_800E044C[2] = { { NULL, -8, -12 }, { NULL, 0, 0 }};
 
-DrawTexture gRaceSelectionCarTexTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture gRaceSelectionHoverTexTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture gRaceSelectionPlaneTexTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture gRaceSelectionTTOnTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
-DrawTexture gRaceSelectionTTOffTop[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionCarTex[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionHoverTex[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlaneTex[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOn[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTOff[3] = { { NULL, 0, 0 }, { NULL, 0, 32 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionCarOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionCarOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionHoverOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
@@ -714,11 +714,11 @@ s32 D_800E05F4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
 DrawTexture D_800E0614[2] = { { NULL, -16, -16 }, { NULL, 0, 0 } };
 
 DrawTexture *gRaceSelectionImages[9] = {
-    gRaceSelectionCarTexTop, gRaceSelectionCarOptHighlight, gRaceSelectionCarOpt, gRaceSelectionHoverTexTop, gRaceSelectionHoverOptHighlight, gRaceSelectionHoverOpt, gRaceSelectionPlaneTexTop, gRaceSelectioPlaneOptHighlight, gRaceSelectioPlaneOpt
+    gRaceSelectionCarTex, gRaceSelectionCarOptHighlight, gRaceSelectionCarOpt, gRaceSelectionHoverTex, gRaceSelectionHoverOptHighlight, gRaceSelectionHoverOpt, gRaceSelectionPlaneTex, gRaceSelectioPlaneOptHighlight, gRaceSelectioPlaneOpt
 };
 
 DrawTexture *D_800E0648[6] = {
-    gRaceSelectionTTOffTop, gRaceSelectionTTOffOptHighlight, gRaceSelectionTTOffOpt, gRaceSelectionTTOnTop, gRaceSelectionTTOnOptHighlight, gRaceSelectionTTOnOpt
+    gRaceSelectionTTOff, gRaceSelectionTTOffOptHighlight, gRaceSelectionTTOffOpt, gRaceSelectionTTOn, gRaceSelectionTTOnOptHighlight, gRaceSelectionTTOnOpt
 };
 
 DrawTexture *D_800E0660[6] = {
@@ -5017,12 +5017,12 @@ void func_8008E428(void) {
 }
 
 void func_8008E45C(void) {
-    gRaceSelectionCarTexTop[0].texture = D_80126550[24];
-    gRaceSelectionCarTexTop[1].texture = D_80126550[25];
-    gRaceSelectionHoverTexTop[0].texture = D_80126550[26];
-    gRaceSelectionHoverTexTop[1].texture = D_80126550[27];
-    gRaceSelectionPlaneTexTop[0].texture = D_80126550[28];
-    gRaceSelectionPlaneTexTop[1].texture = D_80126550[29];
+    gRaceSelectionCarTex[0].texture = D_80126550[24];
+    gRaceSelectionCarTex[1].texture = D_80126550[25];
+    gRaceSelectionHoverTex[0].texture = D_80126550[26];
+    gRaceSelectionHoverTex[1].texture = D_80126550[27];
+    gRaceSelectionPlaneTex[0].texture = D_80126550[28];
+    gRaceSelectionPlaneTex[1].texture = D_80126550[29];
 }
 
 void func_8008E4B0(void) {

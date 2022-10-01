@@ -409,11 +409,11 @@ extern DrawTexture D_800E042C[2];
 extern DrawTexture D_800E043C[2];
 extern DrawTexture D_800E044C[2];
 
-extern DrawTexture gRaceSelectionCarTexTop[3];
-extern DrawTexture gRaceSelectionHoverTexTop[3];
-extern DrawTexture gRaceSelectionPlaneTexTop[3];
-extern DrawTexture gRaceSelectionTTOnTop[3];
-extern DrawTexture gRaceSelectionTTOffTop[3];
+extern DrawTexture gRaceSelectionCarTex[3];
+extern DrawTexture gRaceSelectionHoverTex[3];
+extern DrawTexture gRaceSelectionPlaneTex[3];
+extern DrawTexture gRaceSelectionTTOn[3];
+extern DrawTexture gRaceSelectionTTOff[3];
 extern DrawTexture gRaceSelectionCarOptHighlight[2];
 extern DrawTexture gRaceSelectionCarOpt[2];
 extern DrawTexture gRaceSelectionHoverOptHighlight[2];
