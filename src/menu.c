@@ -2341,42 +2341,42 @@ void menu_title_screen_init(void) {
 
 void func_8008377C(s32 arg0, f32 arg1) {
     u32 foo[2];
-    s32 var_a3;
-    f32 temp_f0;
+    s32 alpha;
+    f32 scale;
     s32 i;
-    s32 var_s2;
+    s32 posY;
 
     if (D_8012686C != 0) {
         func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        temp_f0 = (f32) D_8012686C * 0.03125f;
+        scale = (f32) D_8012686C * 0.03125f;
         sMenuGuiOpacity = (D_8012686C * 8) - 1;
         func_80068508(0);
-        if (temp_f0 != 1.0f) {
-            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, 160.0f, 52.0f, temp_f0, temp_f0, -2U, 1);
+        if (scale != 1.0f) {
+            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, 1);
         } else {
-            render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, 0xA0, 0x34, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
+            render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52, 255, 255, 255, 255);
         }
-        if (is_controller_missing() == 0) {
+        if (!is_controller_missing()) {
             i = 0; 
-            if (osTvType == 0) {
-                var_s2 = 0xDA;
+            if (osTvType == TV_TYPE_PAL) {
+                posY = SCREEN_HEIGHT - 22;
             } else {
-                var_s2 = 0xC0;
+                posY = SCREEN_HEIGHT - 48;
             }
-            set_text_font(0);
+            set_text_font(ASSET_FONTS_FUNFONT);
             set_text_background_colour(0, 0, 0, 0);
             while(gTitleMenuStrings[i] != NULL) {
                 if (i == gTitleScreenCurrentOption) {
-                    var_a3 = (D_801263BC & 0x1F) * 0x10;
-                    if (var_a3 >= 0x100) {
-                        var_a3 = 0x1FF - var_a3;
+                    alpha = (D_801263BC & 0x1F) * 16;
+                    if (alpha > 255) {
+                        alpha = 511 - alpha;
                     }
                 } else {
-                    var_a3 = 0;
+                    alpha = 0;
                 }
-                set_text_colour(255, 255, 255, var_a3, sMenuGuiOpacity);
-                draw_text(&sMenuCurrDisplayList, -0x8000, var_s2, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
-                var_s2 += 0x10;
+                set_text_colour(255, 255, 255, alpha, sMenuGuiOpacity);
+                draw_text(&sMenuCurrDisplayList, POS_CENTRED, posY, gTitleMenuStrings[i], ALIGN_MIDDLE_CENTER);
+                posY += 16;
                 i++;
             }
         }
@@ -2456,22 +2456,22 @@ s32 menu_title_screen_loop(s32 updateRate) {
     if (D_8012686C != 0) {
         if (D_8012686C < 32) {
             if (D_8012686C == 1) {
-                play_sound_global(0x16, 0);
+                play_sound_global(SOUND_WHOOSH1, 0);
             }
             D_8012686C += updateRate;
             if (D_8012686C >= 32) {
                 D_8012686C = 32;
                 sp18->unk30 = 8.0f;
-                play_sound_global(0x11, 0);
+                play_sound_global(SOUND_EXPLOSION, 0);
             }
         } else {
             if (D_80126870 < 6.0f) {
                 D_80126870 +=  sp1C;
                 if ((D_80126870 > 0.67f) && (D_801263E0 == 0)) {
-                    play_sound_global(0x105, 0);
+                    play_sound_global(SOUND_VOICE_TT_DIDDY_KONG_RACING, 0);
                     D_801263E0 = 1;
                 } else if ((D_80126870 > 2.83f) && (D_801263E0 == 1)) {
-                    play_sound_global(0x106, 0);
+                    play_sound_global(SOUND_VOICE_TT_PRESS_START, 0);
                     D_801263E0 = 2;
                 }
             }
@@ -2502,7 +2502,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gTitleScreenCurrentOption--;
         }
         if (temp0 != gTitleScreenCurrentOption) {
-            play_sound_global(0xEB, 0 * contrIndex); // TODO: The `* contrIndex` here is a fake match.
+            play_sound_global(SOUND_MENU_PICK2, 0 * contrIndex); // TODO: The `* contrIndex` here is a fake match.
         }
         if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
             for(contrIndex = 3; contrIndex > 0 && !(D_801267D8[contrIndex] & (A_BUTTON | START_BUTTON)); contrIndex--){}
@@ -2510,10 +2510,10 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gMenuDelay = 1;
             func_800C01D8(&sMenuTransitionFadeIn);
             func_800C0170();
-            play_sound_global(0xEF, 0);
+            play_sound_global(SOUND_SELECT2, 0);
         }
     }
-    if (gMenuDelay >= 0x1F) {
+    if (gMenuDelay > 30) {
         func_80084118();
         func_800C0180();
         if (gTitleScreenCurrentOption == 0) {
@@ -2531,7 +2531,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
         D_800DF460 = 0;
         load_level_for_menu(0x27, -1, 0);
-        menu_init(0xCU);
+        menu_init(MENU_OPTIONS);
         return 0;
     }
     gIgnorePlayerInput = 0;
