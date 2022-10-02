@@ -262,8 +262,7 @@ UNUSED void func_800C4510(Gfx **displayList, s32 dialogueBoxID, s32 xpos, s32 yp
     }
 }
 
-void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4)
-{
+void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4) {
   s32 temp_f4;
   s32 temp_t9;
   s32 ypos;
@@ -290,48 +289,39 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
   char curChar;
   xAlignmentDiff = -1;
   lastTextureIndex = -1;
-  if (text != ((void *) 0))
-  {
+  if (text != NULL) {
     textureLry = 0;
     xpos = arg1->xpos;
     ypos = arg1->ypos;
     fontData = &gFonts[arg1->font];
     gSPDisplayList((*dlist)++, dDialogueBoxBegin);
-    if (arg1 != gDialogueBoxBackground)
-    {
+    if (arg1 != gDialogueBoxBackground) {
       temp_f4 = (((arg1->y2 - arg1->y1) + 1) / ((f32) 2)) * arg4;
       temp_t9 = (arg1->y1 + arg1->y2) >> 1;
       gDPSetScissor((*dlist)++, 0, arg1->x1, temp_t9 - temp_f4, arg1->x2, temp_t9 + temp_f4);
     }
-    if (alignmentFlags & 5)
-    {
+    if (alignmentFlags & (HORZ_ALIGN_RIGHT | HORZ_ALIGN_CENTER)) {
       xAlignmentDiff = func_800C4DA0(text, xpos, arg1->font);
-      if (alignmentFlags & 1)
+      if (alignmentFlags & HORZ_ALIGN_RIGHT)
       {
         xpos = (xpos - xAlignmentDiff) + 1;
-      }
-      else
-      {
+      } else {
         xpos -= xAlignmentDiff >> 1;
       }
     }
-    if (alignmentFlags & 2)
-    {
+    if (alignmentFlags & VERT_ALIGN_BOTTOM) {
       ypos = (ypos - fontData->unk22) + 1;
     }
-    if (alignmentFlags & 8)
-    {
+    if (alignmentFlags & VERT_ALIGN_MIDDLE) {
       ypos -= fontData->unk22 >> 1;
     }
-    if (arg1->textBGColourA != 0)
-    {
+    if (arg1->textBGColourA != 0) {
       gDPSetEnvColor((*dlist)++, arg1->textBGColourR, arg1->textBGColourG, arg1->textBGColourB, arg1->textBGColourA);
-      if (xAlignmentDiff == -1)
-      {
+      if (xAlignmentDiff == -1) {
         xAlignmentDiff = func_800C4DA0(text, xpos, arg1->font);
       }
       newTempX = xpos + xAlignmentDiff - 1;
-      newTempY = (ypos + fontData->unk22 - 1); // Need to make newTempY t1 instead of a1.
+      newTempY = (ypos + fontData->unk22 - 1);
       gDkrDmaDisplayList((*dlist)++, (u32) (((char *) dDialogueBoxDrawModes[1]) - 0x80000000), 2);
       gDPFillRectangle((*dlist)++, xpos + arg1->x1, ypos + arg1->y1, newTempX + arg1->x1, newTempY + arg1->y1);
       gDPPipeSync((*dlist)++);
@@ -342,52 +332,38 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
     gDPPipeSync((*dlist)++);
     xpos += arg1->unk20;
     ypos += arg1->unk22;
-    for (charIndex = 0; (text[charIndex] != '\0') && (arg1->y2 >= ypos); xpos += var_t0, charIndex++)
-    {
+    for (charIndex = 0; (text[charIndex] != '\0') && (arg1->y2 >= ypos); xpos += var_t0, charIndex++) {
       curChar = text[charIndex];
       newData = 0;
       var_t0 = 0;
-      if ((curChar < 0x21) || (curChar >= 0x80))
-      {
-        switch (curChar)
-        {
+      if ((curChar < 0x21) || (curChar >= 0x80)) {
+        switch (curChar) {
           case ' ':
             xpos += fontData->unk24;
             break;
-
           case '\n':
             xpos = arg1->unk20;
             ypos += fontData->unk22;
             break;
-
           case '\t':
             xpos += fontData->unk26 - ((xpos - arg1->unk20) % fontData->unk26);
             break;
-
           case '\v':
             ypos += fontData->unk22;
             break;
-
           case '\r':
             xpos = arg1->unk20;
             break;
-
           default:
             xpos += fontData->unk24;
             break;
-
         }
-
-      }
-      else
-      {
+      } else {
         curChar -= 0x20;
         textureIndex = fontData->unk100[curChar].unk0;
-        if (textureIndex != 0xFF)
-        {
+        if (textureIndex != 0xFF) {
           newData = 1;
-          if (lastTextureIndex != textureIndex)
-          {
+          if (lastTextureIndex != textureIndex) {
             lastTextureIndex = textureIndex;
             texture = fontData->texturePointers[textureIndex];
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(texture->cmd), texture->numberOfCommands);
@@ -402,21 +378,18 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
           newData = 1;
         }
       }
-      if (newData)
-      {
+      if (newData) {
         textureUlx = ((arg1->x1 + xpos) + textureWidth) * 4;
         textureUly = ((arg1->y1 + ypos) + textureHeight) * 4;
         textureLrx = (xAlignmentDiff * 4) + textureUlx;
         newTempY = (yAlignmentDiff * 4) + textureUly;
         textureS *= 32;
         textureT *= 32;
-        if ((textureUlx < 0) && (textureLrx > 0))
-        {
+        if ((textureUlx < 0) && (textureLrx > 0)) {
           textureS += (-textureUlx) * 8;
           textureUlx = 0;
         }
-        if ((textureUly <= (0 - 1)) && (newTempY > 0))
-        {
+        if ((textureUly <= (0 - 1)) && (newTempY > 0)) {
           textureT += (-textureUly) * 8;
           textureUly = 0;
         }
@@ -431,8 +404,7 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
     arg1->xpos = xpos - arg1->unk20;
     arg1->ypos = ypos - arg1->unk22;
     gDPPipeSync((*dlist)++);
-    if (arg1 != gDialogueBoxBackground)
-    {
+    if (arg1 != gDialogueBoxBackground) {
       func_80067A3C(dlist);
     }
     func_8007B3D0(dlist);
