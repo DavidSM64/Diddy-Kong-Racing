@@ -70,7 +70,7 @@ glabel func_8008F00C
 /* 08FD08 8008F108 3C04800E */  lui   $a0, %hi(D_800E0830) # $a0, 0x800e
 /* 08FD0C 8008F10C 0C027229 */  jal   allocate_menu_images
 /* 08FD10 8008F110 24840830 */   addiu $a0, %lo(D_800E0830) # addiu $a0, $a0, 0x830
-/* 08FD14 8008F114 0C023917 */  jal   func_8008E45C
+/* 08FD14 8008F114 0C023917 */  jal   assign_vehicle_icon_textures
 /* 08FD18 8008F118 00000000 */   nop   
 /* 08FD1C 8008F11C 3C028012 */  lui   $v0, %hi(D_80126550) # $v0, 0x8012
 /* 08FD20 8008F120 24426550 */  addiu $v0, %lo(D_80126550) # addiu $v0, $v0, 0x6550

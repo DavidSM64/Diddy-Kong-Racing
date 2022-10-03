@@ -230,9 +230,9 @@ glabel menu_ghost_data_init
 /* 09A9E8 80099DE8 8FAF0048 */  lw    $t7, 0x48($sp)
 /* 09A9EC 80099DEC AC980040 */  sw    $t8, 0x40($a0)
 /* 09A9F0 80099DF0 00F6C021 */  addu  $t8, $a3, $s6
-/* 09A9F4 80099DF4 0C023917 */  jal   func_8008E45C
+/* 09A9F4 80099DF4 0C023917 */  jal   assign_vehicle_icon_textures
 /* 09A9F8 80099DF8 AF0F0018 */   sw    $t7, 0x18($t8)
-/* 09A9FC 80099DFC 0C025181 */  jal   func_80094604
+/* 09A9FC 80099DFC 0C025181 */  jal   assign_racer_portrait_textures
 /* 09AA00 80099E00 00000000 */   nop   
 /* 09AA04 80099E04 0C02392C */  jal   func_8008E4B0
 /* 09AA08 80099E08 00000000 */   nop   

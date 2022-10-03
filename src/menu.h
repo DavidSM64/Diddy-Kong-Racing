@@ -410,10 +410,10 @@ extern s32 gMultiplayerSelectedNumberOfRacers;
 extern s32 D_800E0414;
 extern s32 D_800E0418;
 
-extern DrawTexture D_800E041C[2];
-extern DrawTexture D_800E042C[2];
-extern DrawTexture D_800E043C[2];
-extern DrawTexture D_800E044C[2];
+extern DrawTexture gMenuSelectionArrowUp[2];
+extern DrawTexture gMenuSelectionArrowLeft[2];
+extern DrawTexture gMenuSelectionArrowDown[2];
+extern DrawTexture gMenuSelectionArrowRight[2];
 
 extern DrawTexture gRaceSelectionCarTex[3];
 extern DrawTexture gRaceSelectionHoverTex[3];
@@ -449,7 +449,7 @@ extern DrawTexture *D_800E0648[6];
 
 extern DrawTexture *D_800E0660[6];
 
-extern DrawTexture *D_800E0678[4];
+extern DrawTexture *gMenuSelectionArrows[4];
 
 extern u16 D_800E0688[20];
 
@@ -731,7 +731,7 @@ void func_8008CACC(void);
 void menu_file_select_init(void);
 void render_menu_image(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_8008E428(void);
-void func_8008E45C(void);
+void assign_vehicle_icon_textures(void);
 void func_8008E4B0(void);
 void func_8008F534(void);
 void func_80090ED8(s32 updateRate);
@@ -740,7 +740,7 @@ void menu_5_init(void);
 void func_80093A0C(void);
 void n_alSynRemovePlayer(void);
 void n_alSeqpDelete(void);
-void func_80094604(void);
+void assign_racer_portrait_textures(void);
 void func_80094C14(s32 arg0);
 void func_80096790(void);
 void menu_11_init(void);
@@ -887,5 +887,68 @@ void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5,
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
+
+
+
+typedef enum MenuTextures {
+    TEXTURE_NONE,
+
+    TEXTURE_ICON_VEHICLE_CAR_TOP = 24,
+    TEXTURE_ICON_VEHICLE_CAR_BOTTOM,
+    TEXTURE_ICON_VEHICLE_HOVERCRAFT_TOP,
+    TEXTURE_ICON_VEHICLE_HOVERCRAFT_BOTTOM,
+    TEXTURE_ICON_VEHICLE_PLANE_TOP,
+    TEXTURE_ICON_VEHICLE_PLANE_BOTTOM,
+    TEXTURE_ICON_VEHICLE_SELECT_CAR,
+    TEXTURE_ICON_VEHICLE_SELECT_CAR_HIGHLIGHT,
+    TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT,
+    TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT_HIGHLIGHT,
+    TEXTURE_ICON_VEHICLE_SELECT_PLANE,
+    TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT,
+
+    TEXTURE_UNK_48 = 48,
+
+    TEXTURE_ICON_PORTRAIT_KRUNCH = 50,
+    TEXTURE_ICON_PORTRAIT_DIDDY,
+    TEXTURE_ICON_PORTRAIT_DRUMSTICK,
+    TEXTURE_ICON_PORTRAIT_BUMPER,
+    TEXTURE_ICON_PORTRAIT_BANJO,
+    TEXTURE_ICON_PORTRAIT_CONKER,
+    TEXTURE_ICON_PORTRAIT_TIPTUP,
+    TEXTURE_ICON_PORTRAIT_TT,
+    TEXTURE_ICON_PORTRAIT_PIPSY,
+    TEXTURE_ICON_PORTRAIT_TIMBER,
+    TEXTURE_ICON_ARROW_LEFT,
+    TEXTURE_ICON_ARROW_UP,
+    TEXTURE_ICON_ARROW_RIGHT,
+    TEXTURE_ICON_ARROW_DOWN,
+
+    TEXTURE_ICON_BALLOON_GOLD = 64,
+    TEXTURE_ICON_BALLOON_DIAMOND,
+    TEXTURE_ICON_MARKER_CROSS,
+    TEXTURE_SURFACE_BUTTON_WOOD,
+
+    TEXTURE_ICON_SAVE_BIN = 70,
+    TEXTURE_ICON_SAVE_N64,
+    TEXTURE_ICON_SAVE_TT,
+    TEXTURE_ICON_SAVE_CPAK,
+    TEXTURE_ICON_SAVE_FILECABINET,
+    TEXTURE_ICON_SAVE_GHOSTS,
+
+    TEXTURE_TITLE_SEGMENT_01 = 80,
+    TEXTURE_TITLE_SEGMENT_02,
+    TEXTURE_TITLE_SEGMENT_03,
+    TEXTURE_TITLE_SEGMENT_04,
+    TEXTURE_TITLE_SEGMENT_05,
+    TEXTURE_TITLE_SEGMENT_06,
+    TEXTURE_TITLE_SEGMENT_07,
+    TEXTURE_TITLE_SEGMENT_08,
+    TEXTURE_TITLE_SEGMENT_09,
+    TEXTURE_TITLE_SEGMENT_10,
+    TEXTURE_TITLE_SEGMENT_11,
+
+    TEXTURE_UNK_94 = 94,
+
+} MenuTextures;
 
 #endif
