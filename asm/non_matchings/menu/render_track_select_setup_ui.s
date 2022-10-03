@@ -467,14 +467,14 @@ glabel render_track_select_setup_ui
 /* 09220C 8009160C 8FA70080 */  lw    $a3, 0x80($sp)
 /* 092210 80091610 8FCA0000 */  lw    $t2, ($fp)
 /* 092214 80091614 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
-/* 092218 80091618 3C05800E */  lui   $a1, %hi(D_800E05B4) # $a1, 0x800e
+/* 092218 80091618 3C05800E */  lui   $a1, %hi(gRaceSelectionVehicleTitleTexture) # $a1, 0x800e
 /* 09221C 8009161C 241900FF */  li    $t9, 255
 /* 092220 80091620 240900FF */  li    $t1, 255
 /* 092224 80091624 240800FF */  li    $t0, 255
 /* 092228 80091628 AFA80018 */  sw    $t0, 0x18($sp)
 /* 09222C 8009162C AFA90014 */  sw    $t1, 0x14($sp)
 /* 092230 80091630 AFB90010 */  sw    $t9, 0x10($sp)
-/* 092234 80091634 24A505B4 */  addiu $a1, %lo(D_800E05B4) # addiu $a1, $a1, 0x5b4
+/* 092234 80091634 24A505B4 */  addiu $a1, %lo(gRaceSelectionVehicleTitleTexture) # addiu $a1, $a1, 0x5b4
 /* 092238 80091638 248463A0 */  addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 09223C 8009163C 24060088 */  li    $a2, 136
 /* 092240 80091640 24E70072 */  addiu $a3, $a3, 0x72
@@ -485,14 +485,14 @@ glabel render_track_select_setup_ui
 .L80091654:
 /* 092254 80091654 8FA70080 */  lw    $a3, 0x80($sp)
 /* 092258 80091658 8FD80000 */  lw    $t8, ($fp)
-/* 09225C 8009165C 3C05800E */  lui   $a1, %hi(D_800E05C4) # $a1, 0x800e
+/* 09225C 8009165C 3C05800E */  lui   $a1, %hi(gRaceSelectionTTTitleTexture) # $a1, 0x800e
 /* 092260 80091660 240B00FF */  li    $t3, 255
 /* 092264 80091664 240C00FF */  li    $t4, 255
 /* 092268 80091668 240D00FF */  li    $t5, 255
 /* 09226C 8009166C AFAD0018 */  sw    $t5, 0x18($sp)
 /* 092270 80091670 AFAC0014 */  sw    $t4, 0x14($sp)
 /* 092274 80091674 AFAB0010 */  sw    $t3, 0x10($sp)
-/* 092278 80091678 24A505C4 */  addiu $a1, %lo(D_800E05C4) # addiu $a1, $a1, 0x5c4
+/* 092278 80091678 24A505C4 */  addiu $a1, %lo(gRaceSelectionTTTitleTexture) # addiu $a1, $a1, 0x5c4
 /* 09227C 8009167C 24060088 */  li    $a2, 136
 /* 092280 80091680 0000A825 */  move  $s5, $zero
 /* 092284 80091684 24E70072 */  addiu $a3, $a3, 0x72
@@ -1164,14 +1164,14 @@ glabel render_track_select_setup_ui
 /* 092C44 80092044 3C048012 */   lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 092C48 80092048 8FA70080 */  lw    $a3, 0x80($sp)
 /* 092C4C 8009204C 8FCF0000 */  lw    $t7, ($fp)
-/* 092C50 80092050 3C05800E */  lui   $a1, %hi(D_800E0614) # $a1, 0x800e
+/* 092C50 80092050 3C05800E */  lui   $a1, %hi(gRaceSelectionTTTexture) # $a1, 0x800e
 /* 092C54 80092054 241800FF */  li    $t8, 255
 /* 092C58 80092058 240D00FF */  li    $t5, 255
 /* 092C5C 8009205C 240C00FF */  li    $t4, 255
 /* 092C60 80092060 AFAC0018 */  sw    $t4, 0x18($sp)
 /* 092C64 80092064 AFAD0014 */  sw    $t5, 0x14($sp)
 /* 092C68 80092068 AFB80010 */  sw    $t8, 0x10($sp)
-/* 092C6C 8009206C 24A50614 */  addiu $a1, %lo(D_800E0614) # addiu $a1, $a1, 0x614
+/* 092C6C 8009206C 24A50614 */  addiu $a1, %lo(gRaceSelectionTTTexture) # addiu $a1, $a1, 0x614
 /* 092C70 80092070 248463A0 */  addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 092C74 80092074 240600CC */  li    $a2, 204
 /* 092C78 80092078 24E7007A */  addiu $a3, $a3, 0x7a

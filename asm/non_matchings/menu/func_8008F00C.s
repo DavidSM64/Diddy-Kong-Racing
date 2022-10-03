@@ -99,11 +99,11 @@ glabel func_8008F00C
 /* 08FD7C 8008F17C 3C01800E */  lui   $at, %hi(gRaceSelectionHoverOpt) # $at, 0x800e
 /* 08FD80 8008F180 AC2E0504 */  sw    $t6, %lo(gRaceSelectionHoverOpt)($at)
 /* 08FD84 8008F184 8C4F008C */  lw    $t7, 0x8c($v0)
-/* 08FD88 8008F188 3C01800E */  lui   $at, %hi(gRaceSelectioPlaneOptHighlight) # $at, 0x800e
-/* 08FD8C 8008F18C AC2F0514 */  sw    $t7, %lo(gRaceSelectioPlaneOptHighlight)($at)
+/* 08FD88 8008F188 3C01800E */  lui   $at, %hi(gRaceSelectionPlaneOptHighlight) # $at, 0x800e
+/* 08FD8C 8008F18C AC2F0514 */  sw    $t7, %lo(gRaceSelectionPlaneOptHighlight)($at)
 /* 08FD90 8008F190 8C580088 */  lw    $t8, 0x88($v0)
-/* 08FD94 8008F194 3C01800E */  lui   $at, %hi(gRaceSelectioPlaneOpt) # $at, 0x800e
-/* 08FD98 8008F198 AC380524 */  sw    $t8, %lo(gRaceSelectioPlaneOpt)($at)
+/* 08FD94 8008F194 3C01800E */  lui   $at, %hi(gRaceSelectionPlaneOpt) # $at, 0x800e
+/* 08FD98 8008F198 AC380524 */  sw    $t8, %lo(gRaceSelectionPlaneOpt)($at)
 /* 08FD9C 8008F19C 8C5900A0 */  lw    $t9, 0xa0($v0)
 /* 08FDA0 8008F1A0 3C01800E */  lui   $at, %hi(gRaceSelectionTTOnOptHighlight) # $at, 0x800e
 /* 08FDA4 8008F1A4 AC390534 */  sw    $t9, %lo(gRaceSelectionTTOnOptHighlight)($at)
@@ -117,26 +117,26 @@ glabel func_8008F00C
 /* 08FDC4 8008F1C4 3C01800E */  lui   $at, %hi(gRaceSelectionTTOffOpt) # $at, 0x800e
 /* 08FDC8 8008F1C8 AC2A0564 */  sw    $t2, %lo(gRaceSelectionTTOffOpt)($at)
 /* 08FDCC 8008F1CC 8C4B00B0 */  lw    $t3, 0xb0($v0)
-/* 08FDD0 8008F1D0 3C01800E */  lui   $at, %hi(D_800E0574) # $at, 0x800e
-/* 08FDD4 8008F1D4 AC2B0574 */  sw    $t3, %lo(D_800E0574)($at)
+/* 08FDD0 8008F1D0 3C01800E */  lui   $at, %hi(gRaceSelectionPlayer1Texture) # $at, 0x800e
+/* 08FDD4 8008F1D4 AC2B0574 */  sw    $t3, %lo(gRaceSelectionPlayer1Texture)($at)
 /* 08FDD8 8008F1D8 8C4C00B4 */  lw    $t4, 0xb4($v0)
-/* 08FDDC 8008F1DC 3C01800E */  lui   $at, %hi(D_800E0584) # $at, 0x800e
-/* 08FDE0 8008F1E0 AC2C0584 */  sw    $t4, %lo(D_800E0584)($at)
+/* 08FDDC 8008F1DC 3C01800E */  lui   $at, %hi(gRaceSelectionPlayer2Texture) # $at, 0x800e
+/* 08FDE0 8008F1E0 AC2C0584 */  sw    $t4, %lo(gRaceSelectionPlayer2Texture)($at)
 /* 08FDE4 8008F1E4 8C4D00B8 */  lw    $t5, 0xb8($v0)
-/* 08FDE8 8008F1E8 3C01800E */  lui   $at, %hi(D_800E0594) # $at, 0x800e
-/* 08FDEC 8008F1EC AC2D0594 */  sw    $t5, %lo(D_800E0594)($at)
+/* 08FDE8 8008F1E8 3C01800E */  lui   $at, %hi(gRaceSelectionPlayer3Texture) # $at, 0x800e
+/* 08FDEC 8008F1EC AC2D0594 */  sw    $t5, %lo(gRaceSelectionPlayer3Texture)($at)
 /* 08FDF0 8008F1F0 8C4E00BC */  lw    $t6, 0xbc($v0)
-/* 08FDF4 8008F1F4 3C01800E */  lui   $at, %hi(D_800E05A4) # $at, 0x800e
-/* 08FDF8 8008F1F8 AC2E05A4 */  sw    $t6, %lo(D_800E05A4)($at)
+/* 08FDF4 8008F1F4 3C01800E */  lui   $at, %hi(gRaceSelectionPlayer4Texture) # $at, 0x800e
+/* 08FDF8 8008F1F8 AC2E05A4 */  sw    $t6, %lo(gRaceSelectionPlayer4Texture)($at)
 /* 08FDFC 8008F1FC 8C4F00C0 */  lw    $t7, 0xc0($v0)
-/* 08FE00 8008F200 3C01800E */  lui   $at, %hi(D_800E05B4) # $at, 0x800e
-/* 08FE04 8008F204 AC2F05B4 */  sw    $t7, %lo(D_800E05B4)($at)
+/* 08FE00 8008F200 3C01800E */  lui   $at, %hi(gRaceSelectionVehicleTitleTexture) # $at, 0x800e
+/* 08FE04 8008F204 AC2F05B4 */  sw    $t7, %lo(gRaceSelectionVehicleTitleTexture)($at)
 /* 08FE08 8008F208 8C5800C4 */  lw    $t8, 0xc4($v0)
-/* 08FE0C 8008F20C 3C01800E */  lui   $at, %hi(D_800E05C4) # $at, 0x800e
-/* 08FE10 8008F210 AC3805C4 */  sw    $t8, %lo(D_800E05C4)($at)
+/* 08FE0C 8008F20C 3C01800E */  lui   $at, %hi(gRaceSelectionTTTitleTexture) # $at, 0x800e
+/* 08FE10 8008F210 AC3805C4 */  sw    $t8, %lo(gRaceSelectionTTTitleTexture)($at)
 /* 08FE14 8008F214 8C590178 */  lw    $t9, 0x178($v0)
-/* 08FE18 8008F218 3C01800E */  lui   $at, %hi(D_800E0614) # $at, 0x800e
-/* 08FE1C 8008F21C AC390614 */  sw    $t9, %lo(D_800E0614)($at)
+/* 08FE18 8008F218 3C01800E */  lui   $at, %hi(gRaceSelectionTTTexture) # $at, 0x800e
+/* 08FE1C 8008F21C AC390614 */  sw    $t9, %lo(gRaceSelectionTTTexture)($at)
 .L8008F220:
 /* 08FE20 8008F220 8FBF0014 */  lw    $ra, 0x14($sp)
 .L8008F224:
