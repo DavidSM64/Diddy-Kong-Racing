@@ -557,20 +557,59 @@ s16 D_800DFDCC[2] = { -1, 0 };
 // Not sure what this is
 // Used for D_801263CC when Neither T.T. Nor Drumstick are unlocked
 // unk801263CC
-s32 D_800DFDD0[28] = {
-    0xFFFF04FF, 0xFFFFFFFF, 0x010203FF, 0x0000FFFF,
-    0x05FF00FF, 0xFFFF0203, 0xFFFF0009, 0xFFFF06FF,
-    0x0100FFFF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0201,
-    0x00FFFFFF, 0xFFFF0005, 0x00FFFFFF, 0xFFFFFFFF,
-    0x050607FF, 0x000301FF, 0xFFFF04FF, 0xFFFF0607,
-    0xFFFF0002, 0x02FFFFFF, 0x0504FFFF, 0x07FFFFFF,
-    0x000703FF, 0xFFFF0605, 0x04FFFFFF, 0xFFFF0004,
+
+typedef struct IHATETHIS {
+    u8 upDir;
+    u8 pad01;
+    u8 downDir;
+    u8 pad03;
+    u8 leftDir;
+    u8 pad05;
+    u8 pad06;
+    u8 pad07;
+    u8 rightDir;
+    u8 pad09;
+    u8 pad0A;
+    u8 pad1B;
+    u8 pad0C;
+    u16 voiceID;
+} IHATETHIS;
+
+enum CharacterList {
+    KRUNCH,
+    DIDDY,
+    BUMPER,
+    BANJO,
+    CONKER,
+    TIPTUP,
+    PIPSY,
+    TIMBER,
+
+    NONE = 0xFF
 };
 
-// Not sure what this is
-// Used for D_801263CC when only Drumstick is unlocked
-// unk801263CC
-s32 D_800DFE40[32] = {
+// XX000000 00000000 00000000 0000 - Up Input
+// 0000XX00 00000000 00000000 0000 - Down Input
+// 00000000 XX000000 00000000 0000 - Left Input
+// 00000000 00000000 XX000000 0000 - Right Input
+// 00000000 00000000 00000000 XXXX - Voice clip
+
+#define CHARACTER_SELECT_ENTRY(upDir, downDir, leftDir, rightDir, unk01, unk02, unk03, unk04, voiceID) \
+    upDir, 0xFF, downDir, 0xFF, leftDir, unk01, unk02, 0xFF, rightDir, unk03, unk04, 0xFF, ((voiceID << 8) & 0xFF), (voiceID & 0xFF)
+
+// An array of pseudo bytecode for the character select screen with 8 available.
+u8 gCharacterSelectBytesDefault[] = {
+    CHARACTER_SELECT_ENTRY(NONE, CONKER, NONE, DIDDY, 0xFF, 0xFF, 0x02, 0x03, 0x0000),
+    CHARACTER_SELECT_ENTRY(NONE, TIPTUP, KRUNCH, BUMPER, 0xFF, 0xFF, 0x03, 0xFF, 0x0009),
+    CHARACTER_SELECT_ENTRY(NONE, PIPSY, DIDDY, BANJO, 0x00, 0xFF, 0xFF, 0xFF, 0x0001),
+    CHARACTER_SELECT_ENTRY(NONE, TIMBER, BUMPER, NONE, 0x01, 0x00, 0xFF, 0xFF, 0x0005),
+    CHARACTER_SELECT_ENTRY(KRUNCH, NONE, NONE, TIPTUP, 0xFF, 0xFF, 0x06, 0x07, 0x0003),
+    CHARACTER_SELECT_ENTRY(DIDDY, NONE, CONKER, PIPSY, 0xFF, 0xFF, 0x07, 0xFF, 0x0002),
+    CHARACTER_SELECT_ENTRY(BUMPER, NONE, TIPTUP, TIMBER, 0x04, 0xFF, 0xFF, 0xFF, 0x0007),
+    CHARACTER_SELECT_ENTRY(BANJO, NONE, PIPSY, NONE, 0x05, 0x04, 0xFF, 0xFF, 0x0004),
+};
+
+s32 gCharacterSelectBytesDrumStick[32] = {
     0xFFFF04FF, 0xFFFFFFFF, 0x01080203, 0x0000FFFF,
     0x040500FF, 0xFFFF0802, 0x03FF0009, 0xFFFF0607,
     0x080100FF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0208,
@@ -581,10 +620,21 @@ s32 D_800DFE40[32] = {
     0xFFFF0506, 0x0100FFFF, 0x0203FFFF, 0x00060000,
 };
 
-// Not sure what this is
-// Used for D_801263CC when only T.T. is unlocked
-// unk801263CC
-s32 D_800DFEC0[32] = {
+/*s32 gCharacterSelectBytesDrumStick[32] = {
+    0xFFFF04FF, 0xFFFFFFFF, 0x01080203, 0x0000
+    FFFF, 0x040500FF, 0xFFFF0802, 0x03FF0009, 
+    0xFFFF0607, 0x080100FF, 0x03FFFFFF, 0x0001
+    FFFF, 0x07FF0208, 0x0100FFFF, 0xFFFF0005, 
+    0x0001FFFF, 0xFFFFFFFF, 0x050607FF, 0x0003
+    0108, 0xFFFF04FF, 0xFFFF0607, 0xFFFF0002, 
+    0x0802FFFF, 0x0504FFFF, 0x07FFFFFF, 0x0007
+    0203, 0xFFFF0605, 0x04FFFFFF, 0xFFFF0004,
+    0xFFFF0506, 0x0100FFFF, 0x0203FFFF, 0x0006
+    0000,
+};*/
+
+// Under the unlikely chance you have T.T unlocked, but not Drumstick.
+s32 gCharacterSelectBytesTT[32] = {
     0xFFFF04FF, 0xFFFFFFFF, 0x010203FF, 0x0000FFFF,
     0x050800FF, 0xFFFF0203, 0xFFFF0009, 0xFFFF0806,
     0x0100FFFF, 0x03FFFFFF, 0x0001FFFF, 0x06070201,
@@ -595,10 +645,8 @@ s32 D_800DFEC0[32] = {
     0x0102FFFF, 0x0504FFFF, 0x0607FFFF, 0x00080000,
 };
 
-// Not sure what this is
-// Used for D_801263CC when both T.T. and Drumstick are unlocked
-// unk801263CC
-s32 D_800DFF40[36] = {
+// With everyone unlocked.
+s32 gCharacterSelectBytesComplete[36] = {
     0xFFFF04FF, 0xFFFFFFFF, 0x01080203, 0x0000FFFF,
     0x05FF00FF, 0xFFFF0802, 0x03FF0009, 0xFFFF06FF,
     0x080100FF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0208,
@@ -4347,14 +4395,14 @@ void menu_character_select_init(void) {
     initialise_player_ids();
     if (is_drumstick_unlocked()) {
         if (is_tt_unlocked()) {
-            D_801263CC = &D_800DFF40;
+            D_801263CC = &gCharacterSelectBytesComplete;
         } else {
-            D_801263CC = &D_800DFE40;
+            D_801263CC = &gCharacterSelectBytesDrumStick;
         }
     } else if (is_tt_unlocked()) {
-        D_801263CC = &D_800DFEC0;
+        D_801263CC = &gCharacterSelectBytesTT;
     } else {
-        D_801263CC = &D_800DFDD0;
+        D_801263CC = &gCharacterSelectBytesDefault;
     }
     for (i = 0; i < 4; i++) {
         D_801263DC[i] = 0;

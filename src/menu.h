@@ -377,18 +377,6 @@ extern u8 D_800DFDB4[10][2];
 extern s16 D_800DFDC8[2];
 extern s16 D_800DFDCC[2];
 
-// Not sure what this is
-extern s32 D_800DFDD0[28];
-
-// Not sure what this is
-extern s32 D_800DFE40[32];
-
-// Not sure what this is
-extern s32 D_800DFEC0[32];
-
-// Not sure what this is
-extern s32 D_800DFF40[36];
-
 extern s32 D_800DFFD0;
 extern s32 D_800DFFD4;
 
