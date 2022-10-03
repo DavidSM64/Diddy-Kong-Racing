@@ -19,6 +19,7 @@ VideoModeResolution gVideoModeResolutions[] = {
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
+    { SCREEN_WIDTH, SCREEN_HEIGHT }, // 640x480
 };
 
 s32 D_800DE7BC = 0; // Currently unknown, might be a different type.
