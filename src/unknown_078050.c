@@ -471,7 +471,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
 
 /**
  * Gets the framebuffer width, then points to the start of segment 0x01 in memory.
- * afterwards, alls the draw command that initialises all the rendermodes, ready for use.
+ * afterwards, calls the draw command that initialises all the rendermodes, ready for use.
  */
 void init_rdp_and_framebuffer(Gfx **dlist) {
     s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
