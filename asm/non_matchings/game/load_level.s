@@ -433,7 +433,7 @@ glabel load_level
 /* 06C484 8006B884 00000000 */  nop   
 /* 06C488 8006B888 19A00006 */  blez  $t5, .L8006B8A4
 /* 06C48C 8006B88C 00000000 */   nop   
-/* 06C490 8006B890 0C01B6CB */  jal   func_8006DB2C
+/* 06C490 8006B890 0C01B6CB */  jal   get_level_default_vehicle
 /* 06C494 8006B894 00000000 */   nop   
 /* 06C498 8006B898 3C01800E */  lui   $at, %hi(D_800DD314) # $at, 0x800e
 /* 06C49C 8006B89C 8FA30040 */  lw    $v1, 0x40($sp)

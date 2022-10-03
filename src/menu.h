@@ -166,16 +166,26 @@ typedef struct unk800DFA3C {
     u32* unkC;
 } unk800DFA3C;
 
-typedef struct unk800E03CC {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} unk800E03CC;
+typedef struct ButtonElement {
+    s16 x;
+    s16 y;
+    s16 width;
+    s16 height;
+    s16 borderWidth; // The glowing border that goes around this button
+    s16 borderHeight;
+    s16 colourMin; // The border oscillates between two colours in RGBA5551 format.
+    s16 colourMax;
+} ButtonElement;
+
+typedef struct ButtonTextElement {
+    s16 x;
+    s16 y;
+    s16 width;
+    s16 height;
+    s16 borderWidth;
+    s16 borderHeight;
+    s16 textPos[8];
+} ButtonTextElement;
 
 /* Size: 0xE bytes. */
 typedef struct unk801263CC {
@@ -392,7 +402,7 @@ extern s16 D_800E0398[6];
 
 extern s16 D_800E03A4[6];
 
-extern unk800E03CC D_800E03CC[3];
+extern ButtonElement gFileSelectButtons[3];
 
 extern s16 D_800E03FC[10];
 
@@ -400,26 +410,26 @@ extern s32 gMultiplayerSelectedNumberOfRacers;
 extern s32 D_800E0414;
 extern s32 D_800E0418;
 
-extern DrawTexture D_800E041C[2];
-extern DrawTexture D_800E042C[2];
-extern DrawTexture D_800E043C[2];
-extern DrawTexture D_800E044C[2];
+extern DrawTexture gMenuSelectionArrowUp[2];
+extern DrawTexture gMenuSelectionArrowLeft[2];
+extern DrawTexture gMenuSelectionArrowDown[2];
+extern DrawTexture gMenuSelectionArrowRight[2];
 
-extern DrawTexture D_800E045C[3];
-extern DrawTexture D_800E0474[3];
-extern DrawTexture D_800E048C[3];
-extern DrawTexture D_800E04A4[3];
-extern DrawTexture D_800E04BC[3];
-extern DrawTexture D_800E04D4[2];
-extern DrawTexture D_800E04E4[2];
-extern DrawTexture D_800E04F4[2];
-extern DrawTexture D_800E0504[2];
-extern DrawTexture D_800E0514[2];
-extern DrawTexture D_800E0524[2];
-extern DrawTexture D_800E0534[2];
-extern DrawTexture D_800E0544[2];
-extern DrawTexture D_800E0554[2];
-extern DrawTexture D_800E0564[2];
+extern DrawTexture gRaceSelectionCarTex[3];
+extern DrawTexture gRaceSelectionHoverTex[3];
+extern DrawTexture gRaceSelectionPlaneTex[3];
+extern DrawTexture gRaceSelectionTTOn[3];
+extern DrawTexture gRaceSelectionTTOff[3];
+extern DrawTexture gRaceSelectionCarOptHighlight[2];
+extern DrawTexture gRaceSelectionCarOpt[2];
+extern DrawTexture gRaceSelectionHoverOptHighlight[2];
+extern DrawTexture gRaceSelectionHoverOpt[2];
+extern DrawTexture gRaceSelectioPlaneOptHighlight[2];
+extern DrawTexture gRaceSelectioPlaneOpt[2];
+extern DrawTexture gRaceSelectionTTOnOptHighlight[2];
+extern DrawTexture gRaceSelectionTTOffOptHighlight[2];
+extern DrawTexture gRaceSelectionTTOnOpt[2];
+extern DrawTexture gRaceSelectionTTOffOpt[2];
 extern DrawTexture D_800E0574[2];
 extern DrawTexture D_800E0584[2];
 extern DrawTexture D_800E0594[2];
@@ -433,13 +443,13 @@ extern s32 D_800E05F4[8];
 
 extern DrawTexture D_800E0614[2];
 
-extern DrawTexture *D_800E0624[9];
+extern DrawTexture *gRaceSelectionImages[9];
 
 extern DrawTexture *D_800E0648[6];
 
 extern DrawTexture *D_800E0660[6];
 
-extern DrawTexture *D_800E0678[4];
+extern DrawTexture *gMenuSelectionArrows[4];
 
 extern u16 D_800E0688[20];
 
@@ -449,9 +459,9 @@ extern s16 D_800E06C4[8];
 
 extern s16 D_800E06D4[8];
 
-extern s16 D_800E06E4[14];
+extern ButtonTextElement gTwoPlayerRacerCountMenu;
 
-extern s16 D_800E0700[8];
+extern ButtonElement D_800E0700;
 
 extern s16 D_800E0710[16];
 
@@ -563,7 +573,7 @@ extern s16 D_800E1754[10];
 
 extern s16 D_800E1768[12];
 
-//extern u32 D_800E1780[22];
+//extern u32 dCreditsFade[22];
 
 extern s16 D_800E17D8[12];
 
@@ -721,7 +731,7 @@ void func_8008CACC(void);
 void menu_file_select_init(void);
 void render_menu_image(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_8008E428(void);
-void func_8008E45C(void);
+void assign_vehicle_icon_textures(void);
 void func_8008E4B0(void);
 void func_8008F534(void);
 void func_80090ED8(s32 updateRate);
@@ -730,7 +740,7 @@ void menu_5_init(void);
 void func_80093A0C(void);
 void n_alSynRemovePlayer(void);
 void n_alSeqpDelete(void);
-void func_80094604(void);
+void assign_racer_portrait_textures(void);
 void func_80094C14(s32 arg0);
 void func_80096790(void);
 void menu_11_init(void);
@@ -749,7 +759,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 void menu_23_init(void);
 void func_8009AF18(void);
 void menu_credits_init(void);
-void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void render_credits_fade(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_8009BCF0(void);
 void func_8009BD5C(void);
 void func_8009BE54();
@@ -877,5 +887,139 @@ void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5,
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
+
+typedef enum MenuTextures {
+/* 0x00 */ TEXTURE_UNK_00,
+/* 0x01 */ TEXTURE_UNK_01,
+/* 0x02 */ TEXTURE_UNK_02,
+/* 0x03 */ TEXTURE_UNK_03,
+/* 0x04 */ TEXTURE_UNK_04,
+/* 0x05 */ TEXTURE_UNK_05,
+/* 0x06 */ TEXTURE_UNK_06,
+/* 0x07 */ TEXTURE_UNK_07,
+/* 0x08 */ TEXTURE_UNK_08,
+/* 0x09 */ TEXTURE_UNK_09,
+/* 0x0A */ TEXTURE_UNK_0A,
+/* 0x0B */ TEXTURE_UNK_0B,
+/* 0x0C */ TEXTURE_UNK_0C,
+/* 0x0D */ TEXTURE_UNK_0D,
+/* 0x0E */ TEXTURE_UNK_0E,
+/* 0x0F */ TEXTURE_UNK_0F,
+/* 0x10 */ TEXTURE_UNK_10,
+/* 0x11 */ TEXTURE_UNK_11,
+/* 0x12 */ TEXTURE_UNK_12,
+/* 0x13 */ TEXTURE_UNK_13,
+/* 0x14 */ TEXTURE_UNK_14,
+/* 0x15 */ TEXTURE_UNK_15,
+/* 0x16 */ TEXTURE_UNK_16,
+/* 0x17 */ TEXTURE_UNK_17,
+/* 0x18 */ TEXTURE_ICON_VEHICLE_CAR_TOP,
+/* 0x19 */ TEXTURE_ICON_VEHICLE_CAR_BOTTOM,
+/* 0x1A */ TEXTURE_ICON_VEHICLE_HOVERCRAFT_TOP,
+/* 0x1B */ TEXTURE_ICON_VEHICLE_HOVERCRAFT_BOTTOM,
+/* 0x1C */ TEXTURE_ICON_VEHICLE_PLANE_TOP,
+/* 0x1D */ TEXTURE_ICON_VEHICLE_PLANE_BOTTOM,
+/* 0x1E */ TEXTURE_ICON_VEHICLE_SELECT_CAR,
+/* 0x1F */ TEXTURE_ICON_VEHICLE_SELECT_CAR_HIGHLIGHT,
+/* 0x20 */ TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT,
+/* 0x21 */ TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT_HIGHLIGHT,
+/* 0x22 */ TEXTURE_ICON_VEHICLE_SELECT_PLANE,
+/* 0x23 */ TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT,
+/* 0x24 */ TEXTURE_UNK_24,
+/* 0x25 */ TEXTURE_UNK_25,
+/* 0x26 */ TEXTURE_UNK_26,
+/* 0x27 */ TEXTURE_UNK_27,
+/* 0x28 */ TEXTURE_UNK_28,
+/* 0x29 */ TEXTURE_UNK_29,
+/* 0x2A */ TEXTURE_UNK_2A,
+/* 0x2B */ TEXTURE_UNK_2B,
+/* 0x2C */ TEXTURE_UNK_2C,
+/* 0x2D */ TEXTURE_UNK_2D,
+/* 0x2E */ TEXTURE_UNK_2E,
+/* 0x2F */ TEXTURE_UNK_2F,
+/* 0x30 */ TEXTURE_UNK_30,
+/* 0x31 */ TEXTURE_UNK_31,
+/* 0x32 */ TEXTURE_ICON_PORTRAIT_KRUNCH,
+/* 0x33 */ TEXTURE_ICON_PORTRAIT_DIDDY,
+/* 0x34 */ TEXTURE_ICON_PORTRAIT_DRUMSTICK,
+/* 0x35 */ TEXTURE_ICON_PORTRAIT_BUMPER,
+/* 0x36 */ TEXTURE_ICON_PORTRAIT_BANJO,
+/* 0x37 */ TEXTURE_ICON_PORTRAIT_CONKER,
+/* 0x38 */ TEXTURE_ICON_PORTRAIT_TIPTUP,
+/* 0x39 */ TEXTURE_ICON_PORTRAIT_TT,
+/* 0x3A */ TEXTURE_ICON_PORTRAIT_PIPSY,
+/* 0x3B */ TEXTURE_ICON_PORTRAIT_TIMBER,
+/* 0x3C */ TEXTURE_ICON_ARROW_LEFT,
+/* 0x3D */ TEXTURE_ICON_ARROW_UP,
+/* 0x3E */ TEXTURE_ICON_ARROW_RIGHT,
+/* 0x3F */ TEXTURE_ICON_ARROW_DOWN,
+/* 0x40 */ TEXTURE_ICON_BALLOON_GOLD,
+/* 0x41 */ TEXTURE_ICON_BALLOON_DIAMOND,
+/* 0x42 */ TEXTURE_ICON_MARKER_CROSS,
+/* 0x43 */ TEXTURE_SURFACE_BUTTON_WOOD,
+/* 0x44 */ TEXTURE_UNK_44,
+/* 0x45 */ TEXTURE_UNK_45,
+/* 0x46 */ TEXTURE_ICON_SAVE_BIN,
+/* 0x47 */ TEXTURE_ICON_SAVE_N64,
+/* 0x48 */ TEXTURE_ICON_SAVE_TT,
+/* 0x49 */ TEXTURE_ICON_SAVE_CPAK,
+/* 0x4A */ TEXTURE_ICON_SAVE_FILECABINET,
+/* 0x4B */ TEXTURE_ICON_SAVE_GHOSTS,
+/* 0x4C */ TEXTURE_UNK_4C,
+/* 0x4D */ TEXTURE_UNK_4D,
+/* 0x4E */ TEXTURE_UNK_4E,
+/* 0x4F */ TEXTURE_UNK_4F,
+/* 0x50 */ TEXTURE_TITLE_SEGMENT_01,
+/* 0x51 */ TEXTURE_TITLE_SEGMENT_02,
+/* 0x52 */ TEXTURE_TITLE_SEGMENT_03,
+/* 0x53 */ TEXTURE_TITLE_SEGMENT_04,
+/* 0x54 */ TEXTURE_TITLE_SEGMENT_05,
+/* 0x55 */ TEXTURE_TITLE_SEGMENT_06,
+/* 0x56 */ TEXTURE_TITLE_SEGMENT_07,
+/* 0x57 */ TEXTURE_TITLE_SEGMENT_08,
+/* 0x58 */ TEXTURE_TITLE_SEGMENT_09,
+/* 0x59 */ TEXTURE_TITLE_SEGMENT_10,
+/* 0x5A */ TEXTURE_TITLE_SEGMENT_11,
+/* 0x5B */ TEXTURE_UNK_5B,
+/* 0x5C */ TEXTURE_UNK_5C,
+/* 0x5D */ TEXTURE_UNK_5D,
+/* 0x5E */ TEXTURE_UNK_5E,
+/* 0x5F */ TEXTURE_UNK_5F,
+/* 0x60 */ TEXTURE_UNK_60,
+/* 0x61 */ TEXTURE_UNK_61,
+/* 0x62 */ TEXTURE_UNK_62,
+/* 0x63 */ TEXTURE_UNK_63,
+/* 0x64 */ TEXTURE_UNK_64,
+/* 0x65 */ TEXTURE_UNK_65,
+/* 0x66 */ TEXTURE_UNK_66,
+/* 0x67 */ TEXTURE_UNK_67,
+/* 0x68 */ TEXTURE_UNK_68,
+/* 0x69 */ TEXTURE_UNK_69,
+/* 0x6A */ TEXTURE_UNK_6A,
+/* 0x6B */ TEXTURE_UNK_6B,
+/* 0x6C */ TEXTURE_UNK_6C,
+/* 0x6D */ TEXTURE_UNK_6D,
+/* 0x6E */ TEXTURE_UNK_6E,
+/* 0x6F */ TEXTURE_UNK_6F,
+/* 0x70 */ TEXTURE_UNK_70,
+/* 0x71 */ TEXTURE_UNK_71,
+/* 0x72 */ TEXTURE_UNK_72,
+/* 0x73 */ TEXTURE_UNK_73,
+/* 0x74 */ TEXTURE_UNK_74,
+/* 0x75 */ TEXTURE_UNK_75,
+/* 0x76 */ TEXTURE_UNK_76,
+/* 0x77 */ TEXTURE_UNK_77,
+/* 0x78 */ TEXTURE_UNK_78,
+/* 0x79 */ TEXTURE_UNK_79,
+/* 0x7A */ TEXTURE_UNK_7A,
+/* 0x7B */ TEXTURE_UNK_7B,
+/* 0x7C */ TEXTURE_UNK_7C,
+/* 0x7D */ TEXTURE_UNK_7D,
+/* 0x7E */ TEXTURE_UNK_7E,
+/* 0x7F */ TEXTURE_UNK_7F,
+
+    NUM_MENU_TEXTURES
+
+} MenuTextures;
 
 #endif

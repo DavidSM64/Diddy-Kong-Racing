@@ -280,8 +280,8 @@ glabel func_8008FA54
 /* 090A54 8008FE54 032A8021 */  addu  $s0, $t9, $t2
 /* 090A58 8008FE58 860B0000 */  lh    $t3, ($s0)
 /* 090A5C 8008FE5C 860C0002 */  lh    $t4, 2($s0)
-/* 090A60 8008FE60 3C08800E */  lui   $t0, %hi(D_800E0678) # $t0, 0x800e
-/* 090A64 8008FE64 25080678 */  addiu $t0, %lo(D_800E0678) # addiu $t0, $t0, 0x678
+/* 090A60 8008FE60 3C08800E */  lui   $t0, %hi(gMenuSelectionArrows) # $t0, 0x800e
+/* 090A64 8008FE64 25080678 */  addiu $t0, %lo(gMenuSelectionArrows) # addiu $t0, $t0, 0x678
 /* 090A68 8008FE68 0011C080 */  sll   $t8, $s1, 2
 /* 090A6C 8008FE6C 03089021 */  addu  $s2, $t8, $t0
 /* 090A70 8008FE70 8E450000 */  lw    $a1, ($s2)

@@ -56,6 +56,21 @@ enum LogicUpdateRates {
     LOGIC_5FPS = 12
 };
 
+enum VideoModes {
+    VIDEO_MODE_LOWRES_LAN,
+    VIDEO_MODE_LOWRES_LPN,
+    VIDEO_MODE_MEDRES_LPN,
+    VIDEO_MODE_MEDRES_LAN,
+    VIDEO_MODE_HIGHRES_HPN,
+    VIDEO_MODE_HIGHRES_HAN,
+    VIDEO_MODE_HIGHRES_HPF,
+    VIDEO_MODE_HIGHRES_HAF,
+
+    VIDEO_MODE_LOWRES_MASK = 0,
+    VIDEO_MODE_MIDRES_MASK = 2,
+    VIDEO_MODE_HIGHRES_MASK = 4
+};
+
 extern s32 gVideoRefreshRate;
 
 extern u16 *gVideoCurrFramebuffer;

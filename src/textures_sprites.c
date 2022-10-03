@@ -1073,6 +1073,7 @@ TextureHeader *func_8007B380(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
 #endif
 
+// Set after every draw call with ortho tris. Looks to reset some software side render flags.
 void func_8007B3D0(Gfx **dlist) {
     D_8012637C = NULL;
     D_80126374 = 0;

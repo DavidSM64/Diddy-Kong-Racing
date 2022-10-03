@@ -45,7 +45,7 @@ extern s32 D_800DE4CC;
 
 extern s32 gfxBufCounter;
 extern s32 gfxBufCounter2;
-extern s32 D_800DE4DC;
+extern s32 gGfxTaskIsRunning;
 
 // Defined in dkr.ld
 extern s8 rspF3DDKRDramStart[];
@@ -55,13 +55,13 @@ extern s8 rspF3DDKRDataXbusStart[];
 extern s8 rspF3DDKRFifoStart[];
 extern s8 rspF3DDKRDataFifoStart[];
 
-s32 func_80077A54(void);
+s32 wait_for_gfx_task(void);
 void func_80077AAC(void *bufPtr, s32 arg1, UNUSED s32 arg2);
 void set_background_prim_colour(u8 arg0, u8 arg1, u8 arg2);
 void set_background_fill_colour(s32 red, s32 green, s32 blue);
 void init_rdp_and_framebuffer(Gfx **dlist);
 void init_rsp(Gfx **dlist);
-void func_80078100(OSSched *sc);
+void setup_gfx_mesg_queues(OSSched *sc);
 void func_80078170(u32 arg0, u32 arg1, u32 arg2);
 void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_800787F0(void);

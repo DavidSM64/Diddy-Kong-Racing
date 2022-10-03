@@ -160,8 +160,8 @@ glabel func_80084854
 /* 0856B0 80084AB0 24070007 */   li    $a3, 7
 /* 0856B4 80084AB4 3C06800E */  lui   $a2, %hi(gSfxVolumeSliderValue) # $a2, 0x800e
 /* 0856B8 80084AB8 8CC6FAC0 */  lw    $a2, %lo(gSfxVolumeSliderValue)($a2)
-/* 0856BC 80084ABC 3C10800E */  lui   $s0, %hi(D_800E042C) # $s0, 0x800e
-/* 0856C0 80084AC0 2610042C */  addiu $s0, %lo(D_800E042C) # addiu $s0, $s0, 0x42c
+/* 0856BC 80084ABC 3C10800E */  lui   $s0, %hi(gMenuSelectionArrowLeft) # $s0, 0x800e
+/* 0856C0 80084AC0 2610042C */  addiu $s0, %lo(gMenuSelectionArrowLeft) # addiu $s0, $s0, 0x42c
 /* 0856C4 80084AC4 240D00FF */  li    $t5, 255
 /* 0856C8 80084AC8 240E00FF */  li    $t6, 255
 /* 0856CC 80084ACC 240F00FF */  li    $t7, 255

@@ -47,7 +47,7 @@ glabel func_8000E2B4
 /* 00EF44 8000E344 8463C802 */  lh    $v1, %lo(D_800DC7B8+0x4A)/*-0x37fe*/($v1)
 /* 00EF48 8000E348 00000000 */  nop   
 .L8000E34C:
-/* 00EF4C 8000E34C 0C01B6C5 */  jal   func_8006DB14
+/* 00EF4C 8000E34C 0C01B6C5 */  jal   set_level_default_vehicle
 /* 00EF50 8000E350 A7A30022 */   sh    $v1, 0x22($sp)
 /* 00EF54 8000E354 87A30022 */  lh    $v1, 0x22($sp)
 /* 00EF58 8000E358 93AD002D */  lbu   $t5, 0x2d($sp)

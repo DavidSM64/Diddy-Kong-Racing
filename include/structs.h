@@ -25,11 +25,11 @@ typedef struct Vec3f {
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
   // Element Position
-  /* 0x00 */ s16 left;
+  /* 0x00 */ s16 left; // Where the element spawns on entry.
   /* 0x02 */ s16 top;
-  /* 0x04 */ s16 center;
+  /* 0x04 */ s16 center; // Value of where the element moves to after entry
   /* 0x06 */ s16 middle;
-  /* 0x08 */ s16 right;
+  /* 0x08 */ s16 right; // Value of where the element moves to after exit
   /* 0x0A */ s16 bottom;
   // Element Color/Transparency
   /* 0x0C */ u8 filterRed;
