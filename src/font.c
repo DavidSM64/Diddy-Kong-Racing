@@ -38,58 +38,19 @@ s32 gDescPowsOf10[9] = {
 // The dialogue box will draw in pieces, using properties from each line. It starts with a box
 // and goes inwards or outwards depending on the direction, set by the define.
 
-#define INWARDS 0
+#define INWARDS  0
 #define OUTWARDS 1
 
 s8 sDialogueBoxDimensions[48] = {
-    /*X Offset*/ 4,
-    INWARDS,
-    /*Y Start*/ 0,
-    INWARDS,
-    /*Y end*/ 1,
-    /*X Offset*/ 2,
-    INWARDS,
-    /*Y Start*/ 1,
-    INWARDS,
-    /*Y end*/ 2,
-    /*X Offset*/ 1,
-    INWARDS,
-    /*Y Start*/ 2,
-    INWARDS,
-    /*Y end*/ 4,
-    /*X Offset*/ 0,
-    INWARDS,
-    /*Y Start*/ 4,
-    OUTWARDS,
-    /*Y end*/ -4,
-    /*X Offset*/ 1,
-    OUTWARDS,
-    /*Y Start*/ -4,
-    OUTWARDS,
-    /*Y end*/ -2,
-    /*X Offset*/ 2,
-    OUTWARDS,
-    /*Y Start*/ -2,
-    OUTWARDS,
-    /*Y end*/ -1,
-    /*X Offset*/ 4,
-    OUTWARDS,
-    /*Y Start*/ -1,
-    OUTWARDS,
-    0,
-    /*X Offset*/ -1,
-    0,
-    0,
-    0,
-    0, // End of Data
-    /*X Offset*/ 0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    /*X Offset*/ 4,  INWARDS,  /*Y Start*/  0,  INWARDS,  /*Y end*/  1,
+    /*X Offset*/ 2,  INWARDS,  /*Y Start*/  1,  INWARDS,  /*Y end*/  2,
+    /*X Offset*/ 1,  INWARDS,  /*Y Start*/  2,  INWARDS,  /*Y end*/  4,
+    /*X Offset*/ 0,  INWARDS,  /*Y Start*/  4,  OUTWARDS, /*Y end*/ -4,
+    /*X Offset*/ 1,  OUTWARDS, /*Y Start*/ -4,  OUTWARDS, /*Y end*/ -2,
+    /*X Offset*/ 2,  OUTWARDS, /*Y Start*/ -2,  OUTWARDS, /*Y end*/ -1,
+    /*X Offset*/ 4,  OUTWARDS, /*Y Start*/ -1,  OUTWARDS,  0,
+    /*X Offset*/ -1, 0, 0, 0, 0, // End of Data
+    /*X Offset*/ 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 #undef INWARDS
