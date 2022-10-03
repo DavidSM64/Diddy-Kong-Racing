@@ -5655,16 +5655,16 @@ void render_track_select_setup_ui(s32 updateRate) {
             if (s4 < temp) {
                 s4 = temp;
             }
-            if (s4 < D_800E0700[2]) {
-                s4 = D_800E0700[2];
+            if (s4 < D_800E0700.width) {
+                s4 = D_800E0700.width;
             } else {
                 s4 += 0xC;
             }
-            func_80080580(&sMenuCurrDisplayList, -(s4 >> 1), 0x78 - D_800E0700[1], s4, D_800E0700[3],
-                D_800E0700[4], D_800E0700[5], sMenuGuiOpacity + 0xB0E0C000, D_8012665C);
+            func_80080580(&sMenuCurrDisplayList, -(s4 >> 1), 0x78 - D_800E0700.y, s4, D_800E0700.height,
+                D_800E0700.borderWidth, D_800E0700.borderHeight, sMenuGuiOpacity + 0xB0E0C000, D_8012665C);
             func_80080E6C();
             set_text_font(ASSET_FONTS_FUNFONT);
-            s7 = D_800E0700[7] + D_800E0700[1] + sp80;
+            s7 = D_800E0700.colourMax + D_800E0700.y + sp80;
             s7++;
             for (i = 0; i < 2; i++) {
                 for (j = 0; j < 4; j += 2) {
