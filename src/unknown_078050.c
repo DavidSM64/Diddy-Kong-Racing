@@ -274,7 +274,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     s32 *mesgBuf;
 
-    D_800DE4DC = 1;
+    gGfxTaskIsRunning = 1;
     dkrtask = &gGfxTaskBuf[gfxBufCounter2];
     gfxBufCounter++;
     if (gfxBufCounter == 2) {

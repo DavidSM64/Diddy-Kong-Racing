@@ -19,7 +19,6 @@ VideoModeResolution gVideoModeResolutions[] = {
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
-    { SCREEN_WIDTH, SCREEN_HEIGHT }, // 640x480
 };
 
 s32 D_800DE7BC = 0; // Currently unknown, might be a different type.
@@ -175,7 +174,9 @@ void init_vi_settings(void) {
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
         case VIDEO_MODE_LOWRES_LPN:
-            //@bug: The video mode being set here is Point sampled
+			change_vi(&gGlobalVI, gVideoModeResolutions[gVideoModeIndex & 7].width, gVideoModeResolutions[gVideoModeIndex & 7].height);
+			osViSetMode(&gGlobalVI);
+            /*//@bug: The video mode being set here is Point sampled
             //but the printf implies it was intended to be Anti-aliased.
             //By my understanding, this is the case we will always hit in code,
             //So maybe it was swapped out late in development?
@@ -194,7 +195,7 @@ void init_vi_settings(void) {
                 gTvViMode.fldRegs[0].vStart += PAL_HEIGHT_DIFFERENCE;
                 gTvViMode.fldRegs[1].vStart += PAL_HEIGHT_DIFFERENCE;
             }
-            osViSetMode(&gTvViMode);
+            osViSetMode(&gTvViMode);*/
             break;
         case VIDEO_MODE_MEDRES_LPN:
             stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
@@ -243,10 +244,6 @@ void init_vi_settings(void) {
             stubbed_printf("640 by 480 Anti-aliased, Interlaced, De-flickered.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
             break;
-		case VIDEO_MODE_CUSTON:
-			change_vi(&gGlobalVI, gVideoModeResolutions[gVideoModeIndex & 7].width, gVideoModeResolutions[gVideoModeIndex & 7].height);
-			osViSetMode(&gGlobalVI);
-			break;
     }
     osViSetSpecialFeatures(OS_VI_DIVOT_ON);
     osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
