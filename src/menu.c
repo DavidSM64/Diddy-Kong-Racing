@@ -5374,8 +5374,8 @@ s32 menu_file_select_loop(s32 updateRate) {
                         if (osTvType == TV_TYPE_PAL) {
                             i = 12;
                         }
-                        func_80097874(i + 187, D_800E03CC[gSaveFileIndex].unk0 + D_800E03FC[0],
-                            D_800E03CC[gSaveFileIndex].unk2 + D_800E03FC[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
+                        func_80097874(i + 187, gFileSelectButtons[gSaveFileIndex].x + D_800E03FC[0],
+                            gFileSelectButtons[gSaveFileIndex].y + D_800E03FC[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
                         currentMenuDelay = 0;
                     }
                 }
