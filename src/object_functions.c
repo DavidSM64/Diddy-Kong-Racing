@@ -1434,7 +1434,7 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0xF;
     obj->unk4C->unk12 = 0;
-    if (get_settings()->cutsceneFlags & 1) {
+    if (get_settings()->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) {
         obj->unk78 = 1;
     }
 }

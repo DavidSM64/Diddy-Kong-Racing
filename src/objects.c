@@ -1024,46 +1024,41 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80011960.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-f32 D_800E5550 = 0.01f;
+//f32 D_800E5550 = 0.01f;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
-    u32 offset;
+    s32 offset;
     switch (this->behaviorId) {
         case 47:
             //L80011B10
-            if (this->unk7C.word < 0)
-                break;
-            func_80011960(this, this->unk64->obj80011AD0.unk20, 4, this->unk64,
-                            2, this->unk64->obj80011AD0.unk24, 11, 0, 1.0f);
+            if (this->unk7C.word >= 0) {
+                func_80011960(this, this->unk64->obj80011AD0.unk20, 4, this->unk64,
+                                2, this->unk64->obj80011AD0.unk24, 11, 0, 1.0f);
+            }
             break;
 
         case 61:
             //L80011B58
             offset = (this->unk64->obj80011AD0.unkFC * 6);
             offset *= 5;
-            offset = offset * 2 + 0x80;
+            offset *= 2;
+            offset += 128;
             func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 10, 0, 1.0f);
             break;
 
         case 3: //L80011BB4
-            tmp_f0 = (f32)this->segment.unk3C_a.unk3C->unkD;
-            if (this->segment.unk3C_a.unk3C->unkD < 0) {
-                tmp_f0 += 4294967296.0f;
-            }
+            tmp_f0 = this->segment.unk3C_a.unk3C->unkD;
             offset = (this->unk64->obj80011AD0.unkFC * 6);
             offset *= 5;
-            offset = offset * 2 + 0x80;
-            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 26, 0, tmp_f0 * D_800E5550);
+            offset *= 2;
+            offset += 128;
+            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 26, 0, tmp_f0 * 0.01f);
             break;
 
         case 89: //L80011C38
-            if (this->unk78 == 0)
-                break;
-            if (this->unk64->obj80011AD0.unk70 > 0 || 0.0f < this->unk64->obj80011AD0.unk74) {
+            if ((this->unk78 != 0) && (this->unk64->obj80011AD0.unk70 > 0 || this->unk64->obj80011AD0.unk74 > 0.0f)) {
                 func_800135B8(this);
             }
-            break;
-        default:
             break;
     } //L80011C88
 }
