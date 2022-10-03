@@ -3,11 +3,9 @@
 
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
-*.c text
-*.h text
-
-# Declare files that will always have CRLF line endings on checkout.
-*.sln text eol=lf
+*.c text eol=lf
+*.inc.c text eol=lf
+*.h text eol=lf
 
 # Denote all files that are truly binary and should not be modified.
 *.png binary
