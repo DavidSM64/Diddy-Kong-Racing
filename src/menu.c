@@ -5952,8 +5952,8 @@ void menu_5_init(void) {
         gRaceSelectionHoverOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT];
         gRaceSelectioPlaneOptHighlight[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT];
         gRaceSelectioPlaneOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE];
-        D_800E05B4[0].texture = D_80126550[TEXTURE_UNK_48];
-        D_800E0614[0].texture = D_80126550[TEXTURE_UNK_94];
+        D_800E05B4[0].texture = D_80126550[TEXTURE_UNK_30];
+        D_800E0614[0].texture = D_80126550[TEXTURE_UNK_5E];
         func_800C01D8(&sMenuTransitionFadeOut);
         D_801263BC = 0;
         gMenuDelay = 0;
