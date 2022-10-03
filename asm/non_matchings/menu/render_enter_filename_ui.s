@@ -1,4 +1,4 @@
-glabel func_80097918
+glabel render_enter_filename_ui
 /* 098518 80097918 444EF800 */  cfc1  $t6, $31
 /* 09851C 8009791C 3C018012 */  lui   $at, %hi(D_80126C50) # $at, 0x8012
 /* 098520 80097920 C4206C50 */  lwc1  $f0, %lo(D_80126C50)($at)

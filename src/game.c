@@ -452,14 +452,14 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
                     }
                 }
             }
-            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == 0 && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == 0 && !(settings->cutsceneFlags & CUTSCENE_WIZPIG_FACE) && settings->wizpigAmulet >= 4) {
                 // Trigger wizpig face cutscene
                 s32 savedEntranceId = entranceId;
                 s32 savedCutsceneId = cutsceneId;
                 cutsceneId = 0;
                 entranceId = 0;
                 func_8006C1AC(levelId, savedEntranceId, vehicleId, savedCutsceneId);
-                settings->cutsceneFlags |= 0x2000;
+                settings->cutsceneFlags |= CUTSCENE_WIZPIG_FACE;
                 levelId = get_misc_asset(MISC_ASSET_UNK44)[1];
             }
         }
@@ -1827,9 +1827,9 @@ void func_8006EB5C(void) {
     D_800DD37C |= 0x03;
 }
 
-void func_8006EB78(s32 arg0) {
+void func_8006EB78(s32 saveFileIndex) {
     D_800DD37C &= -0x301;
-    D_800DD37C |= (0x04 | ((arg0 & 3) << 8));
+    D_800DD37C |= (0x04 | ((saveFileIndex & 3) << 8));
 }
 
 void func_8006EBA8(void) {
@@ -1958,8 +1958,8 @@ void func_8006F254(void) {
 
 void func_8006F29C(void) {
     if (D_800DD394 == 0) {
-        if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & 1) && gSettingsPtr->bosses & 1) {
-            gSettingsPtr->cutsceneFlags |= 1;
+        if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
+            gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
             func_800C01D8(&D_800DD41C);
             D_800DD394 = 0x28;
             D_80123525 = 0x2D;

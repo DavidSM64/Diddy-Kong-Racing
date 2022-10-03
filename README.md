@@ -113,31 +113,31 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of October 2nd, 2022, this is our current score:
+As of October 3rd, 2022, this is our current score:
 ```
  ======================================================== 
           ADVENTURE ONE (ASM -> C Decompilation)          
- ------------------- 31.77% Complete -------------------- 
-               # Decompiled functions: 1275               
-               # GLOBAL_ASM remaining: 558                
+ ------------------- 32.49% Complete -------------------- 
+               # Decompiled functions: 1283               
+               # GLOBAL_ASM remaining: 550                
                # NON_MATCHING functions: 14               
-           # NON_EQUIVALENT WIP functions: 100            
+            # NON_EQUIVALENT WIP functions: 99            
  --------------------- Game Status ---------------------- 
-        Balloons: 16/47, Keys: 2/4, Trophies: 1/5         
+        Balloons: 17/47, Keys: 2/4, Trophies: 1/5         
           T.T. Amulets: 1/4, Wizpig Amulets: 1/4          
  -------------------------------------------------------- 
-        We are racing in Frosty Village. (Lap 3/3)        
+           We are racing the walrus boss Bluey.           
  ======================================================== 
           ADVENTURE TWO (Cleanup & Documentation)         
- -------------------  5.39% Complete -------------------- 
-               # Documented functions: 195                
-              # Undocumented remaining: 1638              
+ -------------------  5.48% Complete -------------------- 
+               # Documented functions: 197                
+              # Undocumented remaining: 1636              
  --------------------- Game Status ---------------------- 
          Balloons: 3/47, Keys: 0/4, Trophies: 0/5         
           T.T. Amulets: 0/4, Wizpig Amulets: 0/4          
  -------------------------------------------------------- 
  We are collecting the fourth balloon on Timber's Island. 
- ======================================================== 
+ ========================================================
 ```
 
 ---
