@@ -5694,7 +5694,7 @@ void render_track_select_setup_ui(s32 updateRate) {
             decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], &sp78, 3);
             draw_text(&sMenuCurrDisplayList, 250, 92 + sp80, &sp78, ALIGN_MIDDLE_CENTER);
             show_timestamp(settings->courseTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 53, 128, 255, 255, FONT_COLOURFUL);
-            show_timestamp(settings->flapTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 33, 255, 192, 255, 0);
+            show_timestamp(settings->flapTimesPtr[gPlayerSelectVehicle[PLAYER_ONE]][gTrackIdForPreview], 22, 33, 255, 192, 255, FONT_COLOURFUL);
             if (D_801263E0 != -1) {
                 if (gNumberOfActivePlayers == 1) {
                     // Glow effect
