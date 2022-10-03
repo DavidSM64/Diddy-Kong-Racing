@@ -29,7 +29,7 @@ s32 D_800DE4CC = 0;
 unk800DE4D0 D_800DE4D0 = { NULL };
 s32 gfxBufCounter = 0;
 s32 gfxBufCounter2 = 0;
-s32 D_800DE4DC = 0;
+s32 gGfxTaskIsRunning = FALSE;
 
 Gfx dRspInit[] = {
     gsSPClearGeometryMode(G_SHADE | G_SHADING_SMOOTH | G_CULL_FRONT | G_CULL_BACK |
@@ -182,7 +182,7 @@ OSMesgQueue *osScInterruptQ;
 s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     DKR_OSTask *dkrtask;
 
-    D_800DE4DC = 1;
+    gGfxTaskIsRunning = TRUE;
     dkrtask = &gGfxTaskBuf[gfxBufCounter];
     gfxBufCounter++;
     if (gfxBufCounter == 2) {
@@ -364,13 +364,18 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     }
 }
 
-s32 func_80077A54(void) {
+/**
+ * Called from the main game loop, will halt until a message comes through saying the graphics task
+ * has finished.
+ * Alternatively, if no task is active, then it will just skip.
+ */
+s32 wait_for_gfx_task(void) {
     OSMesg *mesg = NULL;
-    if (D_800DE4DC == 0) {
+    if (gGfxTaskIsRunning == FALSE) {
         return 0;
     }
     osRecvMesg(&D_80125ED8, &mesg, OS_MESG_BLOCK);
-    D_800DE4DC = 0;
+    gGfxTaskIsRunning = FALSE;
     return mesg[1];
 }
 
@@ -465,8 +470,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
 #endif
 
 /**
- * Gets the framebuffer height, then points to the start of segment 0x01 in memory.
- * afterwards, alls the draw command that initialises all the rendermodes, ready for use.
+ * Gets the framebuffer width, then points to the start of segment 0x01 in memory.
+ * afterwards, calls the draw command that initialises all the rendermodes, ready for use.
  */
 void init_rdp_and_framebuffer(Gfx **dlist) {
     s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
@@ -482,7 +487,10 @@ void init_rsp(Gfx **dlist) {
     gSPDisplayList((*dlist)++, dRspInit);
 }
 
-void func_80078100(OSSched *sc) {
+/**
+ * Initialise the mesg queues for the gfx tasks, that interface with the scheduler.
+ */
+void setup_gfx_mesg_queues(OSSched *sc) {
     osScInterruptQ = osScGetInterruptQ(sc);
     osCreateMesgQueue(&D_80125EA0, &D_80125EB8, 1);
     osCreateMesgQueue(&D_80125EC0, D_80125EF0, 8);

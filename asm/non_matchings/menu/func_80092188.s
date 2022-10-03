@@ -702,7 +702,7 @@ glabel L8009287C
 .L80092B68:
 /* 093768 80092B68 3C048012 */  lui   $a0, %hi(gPlayerSelectVehicle) # $a0, 0x8012
 /* 09376C 80092B6C 808469C0 */  lb    $a0, %lo(gPlayerSelectVehicle)($a0)
-/* 093770 80092B70 0C01B6C5 */  jal   func_8006DB14
+/* 093770 80092B70 0C01B6C5 */  jal   set_level_default_vehicle
 /* 093774 80092B74 00000000 */   nop   
 /* 093778 80092B78 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
 /* 09377C 80092B7C 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)

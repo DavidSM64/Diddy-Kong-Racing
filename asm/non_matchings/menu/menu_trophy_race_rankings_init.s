@@ -77,7 +77,7 @@ glabel menu_trophy_race_rankings_init
 .L80098B44:
 /* 099744 80098B44 3C018012 */  lui   $at, %hi(D_80126A68) # $at, 0x8012
 /* 099748 80098B48 AC206A68 */  sw    $zero, %lo(D_80126A68)($at)
-/* 09974C 80098B4C 0C025181 */  jal   func_80094604
+/* 09974C 80098B4C 0C025181 */  jal   assign_racer_portrait_textures
 /* 099750 80098B50 AFA90040 */   sw    $t1, 0x40($sp)
 /* 099754 80098B54 3C0B800E */  lui   $t3, %hi(gNumberOfActivePlayers) # $t3, 0x800e
 /* 099758 80098B58 256BF4BC */  addiu $t3, %lo(gNumberOfActivePlayers) # addiu $t3, $t3, -0xb44

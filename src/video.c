@@ -161,8 +161,92 @@ void init_vi_settings(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
 
-    change_vi(&gGlobalVI, gVideoModeResolutions[gVideoModeIndex & 7].width, gVideoModeResolutions[gVideoModeIndex & 7].height);
-    osViSetMode(&gGlobalVI);
+    viModeTableIndex = OS_VI_NTSC_LPN1;
+    if (osTvType == TV_TYPE_PAL) {
+        viModeTableIndex = OS_VI_PAL_LPN1;
+    } else if (osTvType == TV_TYPE_MPAL) {
+        viModeTableIndex = OS_VI_MPAL_LPN1;
+    }
+
+    switch (gVideoModeIndex & 7) {
+        case VIDEO_MODE_LOWRES_LAN:
+            stubbed_printf("320 by 240 Point sampled, Non interlaced.\n");
+            osViSetMode(&osViModeTable[viModeTableIndex]);
+            break;
+        case VIDEO_MODE_LOWRES_LPN:
+            //@bug: The video mode being set here is Point sampled
+            //but the printf implies it was intended to be Anti-aliased.
+            //By my understanding, this is the case we will always hit in code,
+            //So maybe it was swapped out late in development?
+            stubbed_printf("320 by 240 Anti-aliased, Non interlaced.\n");
+            tvViMode = &osViModeNtscLpn1;
+            if (osTvType == TV_TYPE_PAL) {
+                tvViMode = &osViModePalLpn1;
+            } else if (osTvType == TV_TYPE_MPAL) {
+                tvViMode = &osViModeMpalLpn1;
+            }
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            if (osTvType == TV_TYPE_PAL) {
+                //A simple osViExtendVStart to add an additional 24 scanlines?
+                gTvViMode.fldRegs[0].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
+                gTvViMode.fldRegs[1].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
+                gTvViMode.fldRegs[0].vStart += PAL_HEIGHT_DIFFERENCE;
+                gTvViMode.fldRegs[1].vStart += PAL_HEIGHT_DIFFERENCE;
+            }
+            osViSetMode(&gTvViMode);
+            break;
+        case VIDEO_MODE_MEDRES_LPN:
+            stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
+            tvViMode = &osViModeNtscLpn1;
+            if (osTvType == TV_TYPE_PAL) {
+                tvViMode = &osViModePalLpn1;
+            } else if (osTvType == TV_TYPE_MPAL) {
+                tvViMode = &osViModeMpalLpn1;
+            }
+
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
+            gTvViMode.comRegs.xScale = SCALE(1, 0);
+            gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
+            gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
+            osViSetMode(&gTvViMode);
+            break;
+        case VIDEO_MODE_MEDRES_LAN:
+            stubbed_printf("640 by 240 Anti-aliased, Non interlaced.\n");
+            tvViMode = &osViModeNtscLan1;
+            if (osTvType == TV_TYPE_PAL) {
+                tvViMode = &osViModePalLan1;
+            } else if (osTvType == TV_TYPE_MPAL) {
+                tvViMode = &osViModeMpalLan1;
+            }
+            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
+            gTvViMode.comRegs.xScale = SCALE(1, 0);
+            gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
+            gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
+            osViSetMode(&gTvViMode);
+            break;
+        case VIDEO_MODE_HIGHRES_HPN:
+            stubbed_printf("640 by 480 Point sampled, Interlaced.\n");
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPN1]);
+            break;
+        case VIDEO_MODE_HIGHRES_HAN:
+            stubbed_printf("640 by 480 Anti-aliased, Interlaced.\n");
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAN1]);
+            break;
+        case VIDEO_MODE_HIGHRES_HPF:
+            stubbed_printf("640 by 480 Point sampled, Interlaced, De-flickered.\n");
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPF1]);
+            break;
+        case VIDEO_MODE_HIGHRES_HAF:
+            stubbed_printf("640 by 480 Anti-aliased, Interlaced, De-flickered.\n");
+            osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
+            break;
+		case VIDEO_MODE_CUSTON:
+			change_vi(&gGlobalVI, gVideoModeResolutions[gVideoModeIndex & 7].width, gVideoModeResolutions[gVideoModeIndex & 7].height);
+			osViSetMode(&gGlobalVI);
+			break;
+    }
     osViSetSpecialFeatures(OS_VI_DIVOT_ON);
     osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
     osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
@@ -179,7 +263,7 @@ void init_framebuffer(s32 index) {
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
-    if (gVideoModeIndex >= 2) {
+    if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
         gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {

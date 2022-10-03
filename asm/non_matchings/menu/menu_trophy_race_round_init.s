@@ -64,7 +64,7 @@ glabel menu_trophy_race_round_init
 .L80098350:
 /* 098F50 80098350 0C01AC2B */  jal   func_8006B0AC
 /* 098F54 80098354 02002025 */   move  $a0, $s0
-/* 098F58 80098358 0C01B6C5 */  jal   func_8006DB14
+/* 098F58 80098358 0C01B6C5 */  jal   set_level_default_vehicle
 /* 098F5C 8009835C 00402025 */   move  $a0, $v0
 /* 098F60 80098360 02002025 */  move  $a0, $s0
 /* 098F64 80098364 2405FFFF */  li    $a1, -1

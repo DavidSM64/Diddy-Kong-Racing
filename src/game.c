@@ -44,18 +44,18 @@
 
 /************ .rodata ************/
 
-const char D_800E70B0[] = "LOADLEVEL Error: Level out of range\n";
-const char D_800E70D8[] = "BossLev problem\n";
-const char D_800E70EC[] = "AITABLE Error: Table out of range\n";
-const char D_800E7110[] = "1.1605";
-const char D_800E7118[] = "02/10/97 16:03";
-const char D_800E7128[] = "pmountain";
+UNUSED const char sLevelErrorString[] = "LOADLEVEL Error: Level out of range\n";
+UNUSED const char sBossErrorString[] = "BossLev problem\n";
+UNUSED const char sAITableErrorString[] = "AITABLE Error: Table out of range\n";
+UNUSED const char sDebugVersionInfoString[] = "1.1605";
+UNUSED const char sDebugBuildDateString[] = "02/10/97 16:03";
+UNUSED const char sDebugUsernameString[] = "pmountain";
 
-const char D_800E7134[] = "BBB\n";
-const char D_800E713C[] = "CAR";
-const char D_800E7140[] = "HOV";
-const char D_800E7144[] = "PLN";
-const char D_800E7148[] = "Swapping\n";
+const char D_800E7134[] = "BBB\n"; // Functionally unused.
+UNUSED const char sDebugCarString[] = "CAR";
+UNUSED const char sDebugHovercraftString[] = "HOV";
+UNUSED const char sDebugPlaneString[] = "PLN";
+UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 
 /*********************************/
 
@@ -75,16 +75,14 @@ s16 D_800DD32C = 0;
 
 s8 D_800DD330 = 0;
 
-// Unused
-char *D_800DD334[6] = {
+UNUSED char *sDebugRomBuildInfo[6] = {
     NULL, NULL, NULL, // These could be a file boundary.
-    (char *)D_800E7110,
-    (char *)D_800E7118,
-    (char *)D_800E7128
+    (char *)sDebugVersionInfoString,
+    (char *)sDebugBuildDateString,
+    (char *)sDebugUsernameString
 };
 
-// Unused
-char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
+UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
 s32 D_800DD378 = 1;
@@ -113,8 +111,8 @@ s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 // CAR / HOV / PLN - So this is vehicle type?
-char *D_800DD410[3] = {
-    (char *)D_800E713C, (char *)D_800E7140, (char *)D_800E7144
+UNUSED char *D_800DD410[3] = {
+    (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
 };
 FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
@@ -162,11 +160,11 @@ s32 D_80123504;
 s32 D_80123508;
 s32 D_8012350C;
 Settings *gSettingsPtr;
-s8 D_80123514;
+s8 gIsLoading;
 s8 gIsPaused;
 s8 D_80123516;
-s32 D_80123518;
-s32 D_8012351C;
+s32 gLevelDefaultVehicleID;
+s32 D_8012351C; // Looks to be the current level's vehicle ID.
 s32 sBootDelayTimer;
 s8 D_80123524;
 s8 D_80123525;
@@ -511,7 +509,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     }
     settings->courseId = levelId;
     if (temp == 0 && settings->worldId > 0) {
-        D_800DD314 = func_8006DB2C();
+        D_800DD314 = get_level_default_vehicle();
     }
     if (settings->worldId == 0 && temp > 0 && D_800DD314 != -1) {
         vehicleId = D_800DD314;
@@ -617,16 +615,25 @@ s32 func_8006BD88(void) {
     return D_80121164;
 }
 
+/**
+ * Return the race type ID of the current level.
+ */
 u8 get_current_level_race_type(void) {
     return gCurrentLevelHeader->race_type;
 }
 
+/**
+ * Return the header data of the current level.
+ */
 LevelHeader *get_current_level_header(void) {
     return gCurrentLevelHeader;
 }
 
-/* Unused? */
-u8 func_8006BDC0(void) {
+/**
+ * Returns the amount of level headers there are in the game.
+ * Goes unused.
+ */
+UNUSED u8 get_total_level_header_count(void) {
     return gNumberOfLevelHeaders - 1;
 }
 
@@ -833,13 +840,13 @@ void init_game(void) {
     s32 mode;
 
     init_main_memory_pool();
-    func_800C6170();
+    func_800C6170(); // Initialise gzip decompression related things
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
     }
-    D_80123514 = FALSE;
-    D_80123518 = 0;
+    gIsLoading = FALSE;
+    gLevelDefaultVehicleID = VEHICLE_CAR;
 
     if (osTvType == TV_TYPE_PAL) {
         mode = 14;
@@ -849,14 +856,14 @@ void init_game(void) {
         mode = 28;
     }
 
-    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8)mode, 1);
+    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8) mode, 1);
     D_800DD3A0 = FALSE;
     if (!func_8006EFB8()) {
         D_800DD3A0 = TRUE;
     }
-    init_video(1, &gMainSched);
+    init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     func_80076BA0();
-    func_80078100(&gMainSched);
+    setup_gfx_mesg_queues(&gMainSched);
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
@@ -1211,7 +1218,7 @@ void main_game_loop(void) {
 #endif
     if (D_800DD3F0 != 1) {
         if (D_800DD38C == 0) {
-            D_800DD380 = func_80077A54();
+            D_800DD380 = wait_for_gfx_task();
         }
     } else {
         D_800DD3F0 = 0;
@@ -1285,7 +1292,7 @@ void func_8006CC14(void) {
     set_free_queue_state(0);
     if (D_800DD38C == 0) {
         if (D_800DD3F0 != 1) {
-            func_80077A54();
+            wait_for_gfx_task();
         }
         D_800DD38C = 1;
     }
@@ -1555,7 +1562,7 @@ void func_8006CCF0(s32 updateRate) {
         func_8006CC14();
         func_8006EC48(get_save_file_index());
         if (sp40 != 0) {
-            D_80123514 = FALSE;
+            gIsLoading = FALSE;
             switch (sp40) {
                 case 1:
                     // Go to track select menu from "Select Track" option in tracks menu.
@@ -1587,9 +1594,9 @@ void func_8006CCF0(s32 updateRate) {
                     load_menu_with_level_background(MENU_CHARACTER_SELECT, 0x16, i);
                     break;
                 case 7:
-                    D_80123514 = TRUE;
+                    gIsLoading = TRUE;
                     load_menu_with_level_background(MENU_UNKNOWN_23, -1, 0);
-                    D_80123514 = FALSE;
+                    gIsLoading = FALSE;
                     break;
                 case 8:
                     load_menu_with_level_background(MENU_CREDITS, -1, 0);
@@ -1599,7 +1606,7 @@ void func_8006CCF0(s32 updateRate) {
             if (D_80121250[2] == -1) {
                 load_menu_with_level_background(MENU_UNUSED_8, -1, 0);
             } else {
-                D_80123514 = TRUE;
+                gIsLoading = TRUE;
                 load_menu_with_level_background(MENU_UNKNOWN_5, -1, -1);
             }
         } else if (!(buttonHeldInputs & R_TRIG)) {
@@ -1607,12 +1614,12 @@ void func_8006CCF0(s32 updateRate) {
                 D_801234F4 = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
-                D_80123518 = func_8006B0AC(D_801234F4);
+                gLevelDefaultVehicleID = func_8006B0AC(D_801234F4);
                 if (D_80123508 < 0) {
                     D_80123508 = 0x64;
                 }
             }
-            load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+            load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
         } else {
             func_8006EC48(get_save_file_index());
             load_menu_with_level_background(MENU_TITLE, -1, 0);
@@ -1622,7 +1629,7 @@ void func_8006CCF0(s32 updateRate) {
     if (D_801234F8 != 0) {
         D_80123516 = 0;
         func_8006CC14();
-        load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+        load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
         func_8006EC48(get_save_file_index());
         D_801234F8 = 0;
     }
@@ -1692,10 +1699,10 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_80004A60(2, 32767);
     func_80065EA0();
 
-    if (!D_80123514) {
-        D_80123514 = FALSE;
+    if (!gIsLoading) {
+        gIsLoading = FALSE;
         if (levelId < 0) {
-            D_80123514 = TRUE;
+            gIsLoading = TRUE;
         } else {
             load_level_3(levelId, -1, 0, 2, cutsceneId);
         }
@@ -1707,16 +1714,22 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     D_80123504 = 0;
 }
 
-void func_8006DB14(s32 arg0) {
-    D_80123518 = arg0;
+/**
+ * Set the default vehicle option from the current loaded level.
+ */
+void set_level_default_vehicle(s32 vehicleID) {
+    gLevelDefaultVehicleID = vehicleID;
 }
 
 void func_8006DB20(s32 vehicleId) {
     D_8012351C = vehicleId;
 }
 
-s32 func_8006DB2C(void) {
-    return D_80123518;
+/**
+ * Get the default vehicle option, set by a loaded level.
+ */
+s32 get_level_default_vehicle(void) {
+    return gLevelDefaultVehicleID;
 }
 
 /**
@@ -1736,8 +1749,8 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
 }
 
 void func_8006DBE4(void) {
-    if (!D_80123514) {
-        D_80123514 = TRUE;
+    if (!gIsLoading) {
+        gIsLoading = TRUE;
         set_free_queue_state(0);
         func_8006BEFC();
         func_800C01D8(&D_800DD3F4);
@@ -1746,7 +1759,7 @@ void func_8006DBE4(void) {
         func_800C30CC();
         set_free_queue_state(2);
     }
-    D_80123514 = FALSE;
+    gIsLoading = FALSE;
 }
 
 void func_8006DC58(s32 updateRate) {
@@ -1769,7 +1782,7 @@ void func_8006DCF8(s32 updateRate) {
 
     gIsPaused = FALSE;
     D_80123516 = 0;
-    if (!D_80123514 && D_801234F0) {
+    if (!gIsLoading && D_801234F0) {
         func_8006DC58(updateRate);
     }
     menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
@@ -1784,13 +1797,13 @@ void func_8006DCF8(s32 updateRate) {
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
         D_801234F4 = menuLoopResult & 0x7F;
-        D_80123518 = func_8006B0AC(D_801234F4);
+        gLevelDefaultVehicleID = func_8006B0AC(D_801234F4);
         D_80123504 = 0;
         D_80123508 = 0x64;
         sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
         D_80123516 = 0;
-        load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+        load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
         func_8006EC48(get_save_file_index());
         return;
     }
@@ -1807,7 +1820,7 @@ void func_8006DCF8(s32 updateRate) {
                 D_80123504 = 0;
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 func_8006EC48(get_save_file_index());
                 break;
             case 1:
@@ -1824,20 +1837,20 @@ void func_8006DCF8(s32 updateRate) {
                 if (temp2 >= 0) {
                     D_80123508 = temp2;
                 }
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 func_8006EC48(get_save_file_index());
                 break;
             case 2:
                 sRenderContext = DRAW_GAME;
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 break;
             case 3:
                 sRenderContext = DRAW_GAME;
                 D_801234F4 = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
-                D_80123518 = func_8006B0AC(D_801234F4);
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                gLevelDefaultVehicleID = func_8006B0AC(D_801234F4);
+                load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 break;
             default:
                 load_menu_with_level_background(MENU_TITLE, -1, 0);
@@ -1862,7 +1875,7 @@ void func_8006DCF8(s32 updateRate) {
         D_80123500 = gSettingsPtr->gObjectCount - 1;
         load_level_2(D_801234F4, D_80123500, D_80123504, temp);
         D_801234FC = 0;
-        D_80123518 = D_8012351C;
+        gLevelDefaultVehicleID = D_8012351C;
         return;
     }
     if (menuLoopResult > 0) {
@@ -1871,7 +1884,7 @@ void func_8006DCF8(s32 updateRate) {
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
         sRenderContext = DRAW_GAME;
-        func_8006CAE4(menuLoopResult, -1, D_80123518);
+        func_8006CAE4(menuLoopResult, -1, gLevelDefaultVehicleID);
         if (gSettingsPtr->newGame && !is_in_tracks_mode()) {
             func_80000B28();
             gSettingsPtr->newGame = FALSE;
@@ -1884,7 +1897,7 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
 #endif
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
-    if (!D_80123514) {
+    if (!gIsLoading) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
             gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -1894,10 +1907,10 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     }
     if (levelId != -1) {
         load_level_3(levelId, numberOfPlayers, 0, 2, cutsceneId);
-        D_80123514 = FALSE;
+        gIsLoading = FALSE;
         return;
     }
-    D_80123514 = TRUE;
+    gIsLoading = TRUE;
 }
 
 void calc_and_alloc_heap_for_settings(void) {
