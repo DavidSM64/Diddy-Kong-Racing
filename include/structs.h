@@ -142,6 +142,24 @@ typedef struct Settings4C {
 #define TAJ_FLAGS_HOVER_CHAL_COMPLETED 0x10
 #define TAJ_FLAGS_PLANE_CHAL_COMPLETED 0x20
 
+#define CUTSCENE_LIGHTHOUSE_ROCKET         0x1
+#define CUTSCENE_TT_HELP                   0x2
+#define CUTSCENE_ADVENTURE_TWO             0x4
+#define CUTSCENE_DINO_DOMAIN_BOSS          0x8
+#define CUTSCENE_SHERBET_ISLAND_BOSS       0x10
+#define CUTSCENE_SNOWFLAKE_MOUNTAIN_BOSS   0x20
+#define CUTSCENE_DRAGON_FOREST_BOSS        0x40
+#define CUTSCENE_FUTURE_FUN_LAND_BOSS      0x80
+#define CUTSCENE_DINO_DOMAIN_BOSS_2        0x100
+#define CUTSCENE_SHERBET_ISLAND_BOSS_2     0x200
+#define CUTSCENE_SNOWFLAKE_MOUNTAIN_BOSS_2 0x400
+#define CUTSCENE_DRAGON_FOREST_BOSS_2      0x800
+#define CUTSCENE_WIZPIG_FACE               0x2000
+#define CUTSCENE_DINO_DOMAIN_KEY           0x4000
+#define CUTSCENE_SHERBET_ISLAND_KEY        0x8000
+#define CUTSCENE_SNOWFLAKE_MOUNTAIN_KEY    0x10000
+#define CUTSCENE_DRAGON_FOREST_KEY         0x20000
+
 /* Size: 0x118 bytes */
 typedef struct Settings {
   /* 0x0000 */ s16 *balloonsPtr;
@@ -1180,13 +1198,13 @@ typedef struct Object_Bridge_WhaleRamp {
 typedef struct Object_80011AD0 {
   /* 0x00 */ u8 pad0[0x20];
   /* 0x20 */ u32 unk20;
-  /* 0x24 */ u32 unk24;
+  /* 0x24 */ u32 unk24; //TextureHeader *?
   /* 0x28 */ u8 pad28[0x48];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 pad71[0x3];
   /* 0x74 */ f32 unk74;
   /* 0x78 */ u8 pad78[0x80];
-  /* 0xF8 */ u32 unkF8;
+  /* 0xF8 */ u32 unkF8; //TextureHeader *?
   /* 0xFC */ u8 unkFC;
 } Object_80011AD0;
 

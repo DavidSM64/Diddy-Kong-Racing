@@ -5,6 +5,6 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-u8 func_80063C00(ALCSPlayer *seqp, u8 arg1) {
-    return ((ALChanState_Custom*)seqp->chanState)[arg1].unk10;
+u8 func_80063C00(ALCSPlayer *seqp, u8 chan) {
+    return ((ALChanState_Custom*)seqp->chanState)[chan].unk10;
 }

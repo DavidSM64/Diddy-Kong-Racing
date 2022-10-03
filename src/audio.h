@@ -55,7 +55,7 @@ void alCSPSetChlPan(ALCSPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0C8
 void alCSPSetChlVol(ALCSPlayer *, u8 chan, u8 vol); //lib/src/unknown_0C84E0.c
 u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan); //lib/src/al
 void func_80063BA0(ALSeqPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0647A0.c
-u8 func_80063C00(ALCSPlayer *seqp, u8 arg1); //lib/src/mips1/al/unknown_064800.c
+u8 func_80063C00(ALCSPlayer *seqp, u8 chan); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan); //lib/src/al/alSeqpGetChlFXMix.c
 void func_8006492C(u8 arg0); //lib/src/mips1/al/reverb.c
 u8 func_8006493C(); //lib/src/mips1/al/reverb.c
@@ -63,7 +63,6 @@ void alHeapInit(ALHeap *hp, u8 *base, s32 len); //lib/src/al/alHeapInit.c
 void alBnkfNew(ALBankFile *ctl, u8 *tbl); //lib/src/al/global_asm.c
 void alCSPSetVol(ALCSPlayer *seqp, s16 vol); //lib/src/al/alCSPSetVol.c
 void alCSPStop(ALCSPlayer *seqp); //lib/src/al/unknown_0C91A0.c
-void func_80063B44(u32 arg0, u8 arg1); //lib/src/al/unknown_0646F0.c
 s32  alCSPGetState(ALCSPlayer *seqp); //lib/src/unknown_0C8650.c
 
 void audio_init(OSSched *arg0);
@@ -84,13 +83,13 @@ void func_80000FDC(u16 arg0, s32 arg1, f32 arg2);
 void func_80001050(void);
 u16 musicGetChanMask(void);
 void func_80001074(u16 arg0);
-void func_80001114(u8 arg0);
+void func_80001114(u8 chan);
 s32 musicGetChnlActive(s32 arg0);
 void func_80001170(u8 arg0);
 void musicSetChlPan(u8 chan, ALPan pan);
 void musicSetChlVol(u8 chan, u8 vol);
 u8 musicGetChlVol(u8 arg0);
-void func_80001268(u8 arg0, u8 arg1);
+void func_80001268(u8 chan, ALPan pan);
 u8 func_800012A8(u8 arg0);
 void func_800012E8(void);
 u8 func_80001358(u8 arg0, u8 arg1, s32 arg2);

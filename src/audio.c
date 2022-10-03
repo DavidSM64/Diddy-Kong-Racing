@@ -11,6 +11,7 @@
 #include "audio_internal.h"
 #include "unknown_003260.h"
 #include "sched.h"
+#include "lib/src/mips1/al/unknown_0646F0.h"
 
 /************ .data ************/
 
@@ -376,9 +377,9 @@ void func_80001074(u16 arg0) {
     return;
 }
 
-void func_80001114(u8 arg0) {
-    if (arg0 < 0x10) {
-        func_80063AF0(gMusicPlayer, arg0);
+void func_80001114(u8 chan) {
+    if (chan < 16) {
+        func_80063AF0(gMusicPlayer, chan);
     }
 }
 
@@ -386,14 +387,14 @@ s32 musicGetChnlActive(s32 arg0) {
     return (gMusicPlayer->chanMask & (1 << arg0)) == 0;
 }
 
-void func_80001170(u8 arg0) {
-    if (arg0 < 0x10) {
-        func_80063B44(gMusicPlayer, arg0);
+void func_80001170(u8 chan) {
+    if (chan < 16) {
+        func_80063B44(gMusicPlayer, chan);
     }
 }
 
 void musicSetChlPan(u8 chan, ALPan pan) {
-    if (chan < 0x10) {
+    if (chan < 16) {
         alCSPSetChlPan(gMusicPlayer, chan, pan);
     }
 }
@@ -405,25 +406,25 @@ void musicSetChlVol(u8 chan, u8 vol) {
 }
 
 /* Unused?*/
-u8 musicGetChlVol(u8 arg0) {
-    if (arg0 >= 0x10) {
+u8 musicGetChlVol(u8 chan) {
+    if (chan >= 16) {
         return 0;
     } else {
-        return alCSPGetChlVol(gMusicPlayer, arg0);
+        return alCSPGetChlVol(gMusicPlayer, chan);
     }
 }
 
-void func_80001268(u8 arg0, u8 arg1) {
-    if (arg0 < 0x10) {
-        func_80063BA0(gMusicPlayer, arg0, arg1);
+void func_80001268(u8 chan, ALPan pan) {
+    if (chan < 16) {
+        func_80063BA0(gMusicPlayer, chan, pan);
     }
 }
 
-u8 func_800012A8(u8 arg0) {
-    if (arg0 >= 0x10) {
+u8 func_800012A8(u8 chan) {
+    if (chan >= 16) {
         return 0;
     }
-    return func_80063C00(gMusicPlayer, arg0);
+    return func_80063C00(gMusicPlayer, chan);
 }
 
 void func_800012E8(void) {

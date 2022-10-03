@@ -196,7 +196,7 @@ s32 func_8006EB14(void);
 void func_8006EB24(void);
 void func_8006EB40(void);
 void func_8006EB5C(void);
-void func_8006EB78(s32 arg0);
+void func_8006EB78(s32 saveFileIndex);
 void func_8006EBA8(void);
 void func_8006EBC4(void);
 void func_8006EBE0(void);

@@ -138,7 +138,13 @@ typedef struct unk80126460 {
 typedef struct unk801263C0 {
     s8 unk0;
     s8 unk1;
-    s16 unk2;
+    union {
+        struct {
+            s8 unk2a;
+            s8 unk3;
+        };
+        s16 unk2;
+    };
 } unk801263C0;
 
 /* Size: 0x30 bytes */
@@ -294,7 +300,7 @@ extern s32 sMenuGuiOpacity;
 extern s32 D_800DF768;
 
 extern s32 D_800DF794;
-extern s32 D_800DF798;
+extern MenuElement *D_800DF798;
 extern s32 D_800DF79C;
 
 extern s32 D_800DF7A0;
@@ -522,7 +528,7 @@ extern MenuElement D_800E0E4C[9];
 // Valid characters for name input. Must be u8, not char.
 extern u8 gFileNameValidChars[32];
 
-extern s32 D_800E0F8C;
+extern char D_800E0F8C;
 extern s32 D_800E0F90;
 extern s32 D_800E0F94;
 extern s32 D_800E0F98;
@@ -672,6 +678,10 @@ extern s32 D_80126A08;
 extern unk800861C8 *D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
 extern f32 D_80126BDC;
 extern f32 D_80126BEC;
+extern SavefileInfo gSavefileInfo[4];
+
+extern s8 gControllersXAxisDirection[4];
+extern s8 gControllersYAxisDirection[4];
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -681,7 +691,7 @@ void func_800813C0(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
-void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
+void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
 void print_missing_controller_text(Gfx **dl, s32 updateRate);
 void menu_logos_screen_init(void);
@@ -737,7 +747,7 @@ void menu_11_init(void);
 void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
 s32 compress_filename_string(char *filename, s32 length);
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6);
 void unload_big_font_4(void);
 void func_80098208(void);
 void draw_trophy_race_text(UNUSED s32 updateRate);
@@ -806,12 +816,12 @@ s32 is_tt_unlocked(void);
 s32 is_drumstick_unlocked(void);
 s32 menu_character_select_loop(s32 updateRate);
 s32 menu_caution_loop(s32 updateRate);
-void func_8008DC7C(UNUSED s32 arg0);
+void func_8008DC7C(UNUSED s32 updateRate);
 s32 menu_5_loop(s32 updateRate);
 void func_80095624(s32 status);
 s32 menu_boot_loop(s32 arg0);
 void menu_magic_codes_init(void);
-s32 menu_game_select_loop(s32 arg0);
+s32 menu_game_select_loop(s32 updateRate);
 s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
@@ -820,6 +830,11 @@ void func_80093A40(void);
 s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
+s32 menu_enter_filename_loop(s32 updateRate);
+s32 menu_file_select_loop(s32 updateRate);
+s32 func_8008D5F8(s32 updateRate);
+void func_8008C168(s32 updateRate);
+void func_8008C698(s32 updateRate);
 void func_80083098(f32);
 
 // Non Matching functions below here
@@ -833,7 +848,6 @@ s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
 void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
-void func_8008C698(s32 arg0);
 void render_file_select_menu(s32 arg0);
 void func_8008FF1C(s32 updateRate);
 void func_800904E8(s32 updateRate);
@@ -849,11 +863,9 @@ s32 tt_menu_loop(void);
 void menu_track_select_init(void);
 void menu_trophy_race_rankings_init(void);
 void func_8009E3D0(void);
-void func_8008C168(s32);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_save_options_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
-s32 menu_file_select_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_23_loop(s32 updateRate);
@@ -873,5 +885,7 @@ s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
+void render_enter_filename_ui(UNUSED s32 unused);
+void func_8008D8BC(s32 updateRate);
 
 #endif
