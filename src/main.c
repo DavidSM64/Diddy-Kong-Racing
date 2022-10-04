@@ -62,7 +62,8 @@ void main(void) {
 }
 
 void thread1_main(UNUSED void *unused) {
-    thread0_create();
+    //thread0_create();
+    crash_screen_init();
     osCreateThread(&gThread3, 3, &thread3_main, 0, &gThread3StackPointer, 10);
     gThread3Stack[1024] = 0;
     gThread3Stack[0] = 0;

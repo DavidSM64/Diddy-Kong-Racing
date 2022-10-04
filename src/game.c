@@ -832,6 +832,11 @@ void thread3_main(UNUSED void *unused) {
     }
 }
 
+#ifdef FIFO_UCODE
+s8 suCodeSwitch = 0;
+u8 suCodeTimer = 0;
+#endif
+
 /**
  * Setup all of the necessary pieces required for the game to function.
  * This includes the memory pool. controllers, video, audio, core assets and more.
@@ -886,6 +891,9 @@ void init_game(void) {
     D_80123504 = 0;
     D_80123508 = 0;
     gSPTaskNum = 0;
+    if (IO_READ(DPC_BUFBUSY_REG) == 0) {
+        suCodeSwitch = 1;
+    }
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
@@ -893,11 +901,6 @@ void init_game(void) {
 
     osSetTime(0);
 }
-
-#ifdef FIFO_UCODE
-s8 suCodeSwitch = 0;
-u8 suCodeTimer = 0;
-#endif
 
 #ifdef PUPPYPRINT_DEBUG
 u8 perfIteration = 0;
