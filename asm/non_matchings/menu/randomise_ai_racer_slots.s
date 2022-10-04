@@ -53,8 +53,8 @@ glabel randomise_ai_racer_slots
 /* 08C7F0 8008BBF0 10200042 */  beqz  $at, .L8008BCFC
 /* 08C7F4 8008BBF4 02009025 */   move  $s2, $s0
 /* 08C7F8 8008BBF8 271863F0 */  addiu $t8, %lo(gCharacterIdSlots) # addiu $t8, $t8, 0x63f0
-/* 08C7FC 8008BBFC 3C148012 */  lui   $s4, %hi(D_801263CC) # $s4, 0x8012
-/* 08C800 8008BC00 269463CC */  addiu $s4, %lo(D_801263CC) # addiu $s4, $s4, 0x63cc
+/* 08C7FC 8008BBFC 3C148012 */  lui   $s4, %hi(gCurrCharacterSelectData) # $s4, 0x8012
+/* 08C800 8008BC00 269463CC */  addiu $s4, %lo(gCurrCharacterSelectData) # addiu $s4, $s4, 0x63cc
 /* 08C804 8008BC04 02189821 */  addu  $s3, $s0, $t8
 /* 08C808 8008BC08 2415000E */  li    $s5, 14
 .L8008BC0C:

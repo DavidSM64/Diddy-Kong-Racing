@@ -198,10 +198,13 @@ typedef struct ButtonTextElement {
 } ButtonTextElement;
 
 /* Size: 0xE bytes. */
-typedef struct unk801263CC {
-    u8 pad0[0xC];
-    s16 unkC;
-} unk801263CC;
+typedef struct CharacterSelectData {
+    u8 upInput[2];
+    u8 downInput[2];
+    u8 rightInput[4];
+    u8 LeftInput[4];
+    s16 voiceID;
+} CharacterSelectData;
 
 /* Size: 0x0C Bytes */
 typedef struct SavefileInfo {
@@ -387,18 +390,6 @@ extern u8 D_800DFDB4[10][2];
 extern s16 D_800DFDC8[2];
 extern s16 D_800DFDCC[2];
 
-// Not sure what this is
-extern s32 D_800DFDD0[28];
-
-// Not sure what this is
-extern s32 D_800DFE40[32];
-
-// Not sure what this is
-extern s32 D_800DFEC0[32];
-
-// Not sure what this is
-extern s32 D_800DFF40[36];
-
 extern s32 D_800DFFD0;
 extern s32 D_800DFFD4;
 
@@ -434,24 +425,24 @@ extern DrawTexture gRaceSelectionCarOptHighlight[2];
 extern DrawTexture gRaceSelectionCarOpt[2];
 extern DrawTexture gRaceSelectionHoverOptHighlight[2];
 extern DrawTexture gRaceSelectionHoverOpt[2];
-extern DrawTexture gRaceSelectioPlaneOptHighlight[2];
-extern DrawTexture gRaceSelectioPlaneOpt[2];
+extern DrawTexture gRaceSelectionPlaneOptHighlight[2];
+extern DrawTexture gRaceSelectionPlaneOpt[2];
 extern DrawTexture gRaceSelectionTTOnOptHighlight[2];
 extern DrawTexture gRaceSelectionTTOffOptHighlight[2];
 extern DrawTexture gRaceSelectionTTOnOpt[2];
 extern DrawTexture gRaceSelectionTTOffOpt[2];
-extern DrawTexture D_800E0574[2];
-extern DrawTexture D_800E0584[2];
-extern DrawTexture D_800E0594[2];
-extern DrawTexture D_800E05A4[2];
-extern DrawTexture D_800E05B4[2];
-extern DrawTexture D_800E05C4[2];
+extern DrawTexture gRaceSelectionPlayer1Texture[2];
+extern DrawTexture gRaceSelectionPlayer2Texture[2];
+extern DrawTexture gRaceSelectionPlayer3Texture[2];
+extern DrawTexture gRaceSelectionPlayer4Texture[2];
+extern DrawTexture gRaceSelectionVehicleTitleTexture[2];
+extern DrawTexture gRaceSelectionTTTitleTexture[2];
 
 // These are probably structs
 extern s32 D_800E05D4[8];
 extern s32 D_800E05F4[8];
 
-extern DrawTexture D_800E0614[2];
+extern DrawTexture gRaceSelectionTTTexture[2];
 
 extern DrawTexture *gRaceSelectionImages[9];
 
@@ -913,16 +904,16 @@ typedef enum MenuTextures {
 /* 0x0B */ TEXTURE_UNK_0B,
 /* 0x0C */ TEXTURE_UNK_0C,
 /* 0x0D */ TEXTURE_UNK_0D,
-/* 0x0E */ TEXTURE_UNK_0E,
-/* 0x0F */ TEXTURE_UNK_0F,
-/* 0x10 */ TEXTURE_UNK_10,
-/* 0x11 */ TEXTURE_UNK_11,
-/* 0x12 */ TEXTURE_UNK_12,
-/* 0x13 */ TEXTURE_UNK_13,
-/* 0x14 */ TEXTURE_UNK_14,
-/* 0x15 */ TEXTURE_UNK_15,
-/* 0x16 */ TEXTURE_UNK_16,
-/* 0x17 */ TEXTURE_UNK_17,
+/* 0x0E */ TEXTURE_BACKGROUND_DINO_DOMAIN_TOP,
+/* 0x0F */ TEXTURE_BACKGROUND_DINO_DOMAIN_BOTTOM,
+/* 0x10 */ TEXTURE_BACKGROUND_SHERBERT_ISLAND_TOP,
+/* 0x11 */ TEXTURE_BACKGROUND_SHERBERT_ISLAND_BOTTOM,
+/* 0x12 */ TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_TOP,
+/* 0x13 */ TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_BOTTOM,
+/* 0x14 */ TEXTURE_BACKGROUND_DRAGON_FOREST_TOP,
+/* 0x15 */ TEXTURE_BACKGROUND_DRAGON_FOREST_BOTTOM,
+/* 0x16 */ TEXTURE_BACKGROUND_FUTURE_FUN_LAND_TOP,
+/* 0x17 */ TEXTURE_BACKGROUND_FUTURE_FUN_LAND_BOTTOM,
 /* 0x18 */ TEXTURE_ICON_VEHICLE_CAR_TOP,
 /* 0x19 */ TEXTURE_ICON_VEHICLE_CAR_BOTTOM,
 /* 0x1A */ TEXTURE_ICON_VEHICLE_HOVERCRAFT_TOP,
@@ -935,20 +926,20 @@ typedef enum MenuTextures {
 /* 0x21 */ TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT_HIGHLIGHT,
 /* 0x22 */ TEXTURE_ICON_VEHICLE_SELECT_PLANE,
 /* 0x23 */ TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT,
-/* 0x24 */ TEXTURE_UNK_24,
-/* 0x25 */ TEXTURE_UNK_25,
-/* 0x26 */ TEXTURE_UNK_26,
-/* 0x27 */ TEXTURE_UNK_27,
-/* 0x28 */ TEXTURE_UNK_28,
-/* 0x29 */ TEXTURE_UNK_29,
-/* 0x2A */ TEXTURE_UNK_2A,
-/* 0x2B */ TEXTURE_UNK_2B,
-/* 0x2C */ TEXTURE_UNK_2C,
-/* 0x2D */ TEXTURE_UNK_2D,
-/* 0x2E */ TEXTURE_UNK_2E,
-/* 0x2F */ TEXTURE_UNK_2F,
-/* 0x30 */ TEXTURE_UNK_30,
-/* 0x31 */ TEXTURE_UNK_31,
+/* 0x24 */ TEXTURE_ICON_TIMETRIAL_ON_TOP,
+/* 0x25 */ TEXTURE_ICON_TIMETRIAL_ON_BOTTOM,
+/* 0x26 */ TEXTURE_ICON_TIMETRIAL_OFF_TOP,
+/* 0x27 */ TEXTURE_ICON_TIMETRIAL_OFF_BOTTOM,
+/* 0x28 */ TEXTURE_ICON_TIMETRIAL_OPT_ON,
+/* 0x29 */ TEXTURE_ICON_TIMETRIAL_OPT_OFF,
+/* 0x2A */ TEXTURE_ICON_TIMETRIAL_OPT_ON_HIGHLIGHT,
+/* 0x2B */ TEXTURE_ICON_TIMETRIAL_OPT_OFF_HIGHLIGHT,
+/* 0x2C */ TEXTURE_ICON_PLAYER_1,
+/* 0x2D */ TEXTURE_ICON_PLAYER_2,
+/* 0x2E */ TEXTURE_ICON_PLAYER_3,
+/* 0x2F */ TEXTURE_ICON_PLAYER_4,
+/* 0x30 */ TEXTURE_ICON_VEHICLE_TITLE,
+/* 0x31 */ TEXTURE_ICON_TT_TITLE,
 /* 0x32 */ TEXTURE_ICON_PORTRAIT_KRUNCH,
 /* 0x33 */ TEXTURE_ICON_PORTRAIT_DIDDY,
 /* 0x34 */ TEXTURE_ICON_PORTRAIT_DRUMSTICK,
@@ -993,7 +984,7 @@ typedef enum MenuTextures {
 /* 0x5B */ TEXTURE_UNK_5B,
 /* 0x5C */ TEXTURE_UNK_5C,
 /* 0x5D */ TEXTURE_UNK_5D,
-/* 0x5E */ TEXTURE_UNK_5E,
+/* 0x5E */ TEXTURE_ICON_TT_HEAD,
 /* 0x5F */ TEXTURE_UNK_5F,
 /* 0x60 */ TEXTURE_UNK_60,
 /* 0x61 */ TEXTURE_UNK_61,

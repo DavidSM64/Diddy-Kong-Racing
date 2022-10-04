@@ -107,14 +107,14 @@ glabel func_80092E94
 /* 093C34 80093034 3C0A800E */   lui   $t2, %hi(sMenuGuiOpacity) # $t2, 0x800e
 /* 093C38 80093038 8D4AF764 */  lw    $t2, %lo(sMenuGuiOpacity)($t2)
 /* 093C3C 8009303C 8FA70060 */  lw    $a3, 0x60($sp)
-/* 093C40 80093040 3C05800E */  lui   $a1, %hi(D_800E0614) # $a1, 0x800e
+/* 093C40 80093040 3C05800E */  lui   $a1, %hi(gRaceSelectionTTTexture) # $a1, 0x800e
 /* 093C44 80093044 241900FF */  li    $t9, 255
 /* 093C48 80093048 240800FF */  li    $t0, 255
 /* 093C4C 8009304C 240900FF */  li    $t1, 255
 /* 093C50 80093050 AFA90018 */  sw    $t1, 0x18($sp)
 /* 093C54 80093054 AFA80014 */  sw    $t0, 0x14($sp)
 /* 093C58 80093058 AFB90010 */  sw    $t9, 0x10($sp)
-/* 093C5C 8009305C 24A50614 */  addiu $a1, %lo(D_800E0614) # addiu $a1, $a1, 0x614
+/* 093C5C 8009305C 24A50614 */  addiu $a1, %lo(gRaceSelectionTTTexture) # addiu $a1, $a1, 0x614
 /* 093C60 80093060 02402025 */  move  $a0, $s2
 /* 093C64 80093064 240600CC */  li    $a2, 204
 /* 093C68 80093068 AFAA001C */  sw    $t2, 0x1c($sp)
@@ -275,7 +275,7 @@ glabel func_80092E94
 /* 093EC8 800932C8 0C0316D6 */  jal   render_dialogue_box
 /* 093ECC 800932CC 24070007 */   li    $a3, 7
 /* 093ED0 800932D0 8FA70060 */  lw    $a3, 0x60($sp)
-/* 093ED4 800932D4 3C05800E */  lui   $a1, %hi(D_800E05B4) # $a1, 0x800e
+/* 093ED4 800932D4 3C05800E */  lui   $a1, %hi(gRaceSelectionVehicleTitleTexture) # $a1, 0x800e
 /* 093ED8 800932D8 240C00FF */  li    $t4, 255
 /* 093EDC 800932DC 240800FF */  li    $t0, 255
 /* 093EE0 800932E0 240D00FF */  li    $t5, 255
@@ -284,7 +284,7 @@ glabel func_80092E94
 /* 093EEC 800932EC AFAD0018 */  sw    $t5, 0x18($sp)
 /* 093EF0 800932F0 AFA80014 */  sw    $t0, 0x14($sp)
 /* 093EF4 800932F4 AFAC0010 */  sw    $t4, 0x10($sp)
-/* 093EF8 800932F8 24A505B4 */  addiu $a1, %lo(D_800E05B4) # addiu $a1, $a1, 0x5b4
+/* 093EF8 800932F8 24A505B4 */  addiu $a1, %lo(gRaceSelectionVehicleTitleTexture) # addiu $a1, $a1, 0x5b4
 /* 093EFC 800932FC 02402025 */  move  $a0, $s2
 /* 093F00 80093300 24060088 */  li    $a2, 136
 /* 093F04 80093304 0C01E2AE */  jal   render_textured_rectangle

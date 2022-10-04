@@ -53,7 +53,7 @@ unk801263C0 D_801263C0;
 
 s32 gIgnorePlayerInput;
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
-unk801263CC (*D_801263CC)[8]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
+CharacterSelectData (*gCurrCharacterSelectData)[8]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
 s32 D_801263D0;
 s8 gActivePlayersArray[4];
@@ -561,61 +561,92 @@ s16 D_800DFDC8[2] = { -1, 0 };
 s16 D_800DFDCC[2] = { -1, 0 };
 
 // Not sure what this is
-// Used for D_801263CC when Neither T.T. Nor Drumstick are unlocked
-// unk801263CC
-s32 D_800DFDD0[28] = {
-    0xFFFF04FF, 0xFFFFFFFF, 0x010203FF, 0x0000FFFF,
-    0x05FF00FF, 0xFFFF0203, 0xFFFF0009, 0xFFFF06FF,
-    0x0100FFFF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0201,
-    0x00FFFFFF, 0xFFFF0005, 0x00FFFFFF, 0xFFFFFFFF,
-    0x050607FF, 0x000301FF, 0xFFFF04FF, 0xFFFF0607,
-    0xFFFF0002, 0x02FFFFFF, 0x0504FFFF, 0x07FFFFFF,
-    0x000703FF, 0xFFFF0605, 0x04FFFFFF, 0xFFFF0004,
+// Used for gCurrCharacterSelectData when Neither T.T. Nor Drumstick are unlocked
+// CharacterSelectData
+
+#define NONE 0xFF
+#define KRUNCH 0
+#define DIDDY 1
+#define BUMPER 2
+#define BANJO 3
+#define CONKER 4
+#define TIPTUP 5
+#define PIPSY 6
+#define TIMBER 7
+#define DRUMSTICK 8
+#define TICTOC 8 // Will later be redefined as 9.
+
+/**
+ * Diddy Kong Racing's character select menu refers to these arrays below to know how
+ * to handle some certain things. This includes which direction selects which index, which voice ID
+ * they use, and which audio voices the BGM uses. It has a different table for each possible combination
+ * of which characters are available to select. This system is far from conventional.
+ * Unfortunately, because each entry is explicitly 14 bytes, it means a struct would not match, because
+ * a struct would align itself to 16 bytes, creating an extra 2 bytes of padding inbetween.
+ * 
+ * The layout shows which character is in each cardinal direction. Presumably so it knows
+ * where to place extra cursors when a new player joins.
+ * Frankly, this is a comically overcomplicated method.
+*/
+
+// Default character select screen with the initial 8 characters.
+/*Name          Up              Down            Left                            Right Inputs                    Voice ID*/
+u8 gCharacterSelectBytesDefault[] = {
+/*Krunch*/      NONE, NONE,     CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, BUMPER, BANJO, NONE,     0x00, 0x00,
+/*Diddy*/       NONE, NONE,     TIPTUP, NONE,   KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
+/*Bumper*/      NONE, NONE,     PIPSY, NONE,    DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01,
+/*Banjo*/       NONE, NONE,     TIMBER, NONE,   BUMPER, DIDDY, KRUNCH, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x05, 
+/*Conker*/      KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, PIPSY, TIMBER, NONE,    0x00, 0x03,
+/*Tiptup*/      DIDDY, NONE,    NONE, NONE,     CONKER, NONE, NONE, NONE,       PIPSY, TIMBER, NONE, NONE,      0x00, 0x02, 
+/*Pipsy*/       BUMPER, NONE,   NONE, NONE,     TIPTUP, CONKER, NONE, NONE,     TIMBER, NONE, NONE, NONE,       0x00, 0x07,
+/*Timber*/      BANJO, NONE,    NONE, NONE,     PIPSY, TIPTUP, CONKER, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x04,
 };
 
-// Not sure what this is
-// Used for D_801263CC when only Drumstick is unlocked
-// unk801263CC
-s32 D_800DFE40[32] = {
-    0xFFFF04FF, 0xFFFFFFFF, 0x01080203, 0x0000FFFF,
-    0x040500FF, 0xFFFF0802, 0x03FF0009, 0xFFFF0607,
-    0x080100FF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0208,
-    0x0100FFFF, 0xFFFF0005, 0x0001FFFF, 0xFFFFFFFF,
-    0x050607FF, 0x00030108, 0xFFFF04FF, 0xFFFF0607,
-    0xFFFF0002, 0x0802FFFF, 0x0504FFFF, 0x07FFFFFF,
-    0x00070203, 0xFFFF0605, 0x04FFFFFF, 0xFFFF0004,
-    0xFFFF0506, 0x0100FFFF, 0x0203FFFF, 0x00060000,
+// Drumstick is unlocked, but T.T is not.
+/*Name          Up                  Down                Left                                Right                               Voice ID*/
+u8 gCharacterSelectBytesDrumStick[] = {
+/*Krunch*/      NONE, NONE,         CONKER, NONE,       NONE, NONE, NONE, NONE,             DIDDY, DRUMSTICK, BUMPER, BANJO,    0x00, 0x00,
+/*Diddy*/       NONE, NONE,         CONKER, TIPTUP,     KRUNCH, NONE, NONE, NONE,           DRUMSTICK, BUMPER, BANJO, NONE,     0x00, 0x09, 
+/*Bumper*/      NONE, NONE,         PIPSY, TIMBER,      DRUMSTICK, DIDDY, KRUNCH, NONE,     BANJO, NONE, NONE, NONE,            0x00, 0x01,
+/*Banjo*/       NONE, NONE,         TIMBER, NONE,       BUMPER, DRUMSTICK, DIDDY, KRUNCH,   NONE, NONE, NONE, NONE,             0x00, 0x05, 
+/*Conker*/      KRUNCH, DIDDY,      NONE, NONE,         NONE, NONE, NONE, NONE,             TIPTUP, PIPSY, TIMBER, NONE,        0x00, 0x03,
+/*Tiptup*/      DIDDY, DRUMSTICK,   NONE, NONE,         CONKER, NONE, NONE, NONE,           PIPSY, TIMBER, NONE, NONE,          0x00, 0x02, 
+/*Pipsy*/       DRUMSTICK, BUMPER,  NONE, NONE,         TIPTUP, CONKER, NONE, NONE,         TIMBER, NONE, NONE, NONE,           0x00, 0x07,
+/*Timber*/      BUMPER, BANJO,      NONE, NONE,         PIPSY, TIPTUP, CONKER, NONE,        NONE, NONE, NONE, NONE,             0x00, 0x04,
+/*Drumstick*/   NONE, NONE,         TIPTUP, PIPSY,      DIDDY, KRUNCH, NONE, NONE,          BUMPER, BANJO, NONE, NONE,          0x00, 0x06,
 };
 
-// Not sure what this is
-// Used for D_801263CC when only T.T. is unlocked
-// unk801263CC
-s32 D_800DFEC0[32] = {
-    0xFFFF04FF, 0xFFFFFFFF, 0x010203FF, 0x0000FFFF,
-    0x050800FF, 0xFFFF0203, 0xFFFF0009, 0xFFFF0806,
-    0x0100FFFF, 0x03FFFFFF, 0x0001FFFF, 0x06070201,
-    0x00FFFFFF, 0xFFFF0005, 0x00FFFFFF, 0xFFFFFFFF,
-    0x05080607, 0x00030001, 0xFFFF04FF, 0xFFFF0806,
-    0x07FF0002, 0x0203FFFF, 0x080504FF, 0x07FFFFFF,
-    0x000703FF, 0xFFFF0608, 0x0504FFFF, 0xFFFF0004,
-    0x0102FFFF, 0x0504FFFF, 0x0607FFFF, 0x00080000,
+// Under the unlikely chance you have T.T unlocked, but not Drumstick.
+/*Name      Up              Down            Left                            Right                           Voice ID*/
+u8 gCharacterSelectBytesTT[] = {
+/*Krunch*/  NONE, NONE,     CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, BUMPER, BANJO, NONE,     0x00, 0x00, 
+/*Diddy*/   NONE, NONE,     TIPTUP, TICTOC, KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
+/*Bumper*/  NONE, NONE,     TICTOC, PIPSY,  DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01, 
+/*Banjo*/   NONE, NONE,     PIPSY, TIMBER,  BUMPER, DIDDY, KRUNCH, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x05, 
+/*Conker*/  KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC, PIPSY, TIMBER,  0x00, 0x03, 
+/*Tiptup*/  KRUNCH, DIDDY,  NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC, PIPSY, TIMBER, NONE,    0x00, 0x02, 
+/*Pipsy*/   BUMPER, BANJO,  NONE, NONE,     TICTOC, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,       0x00, 0x07, 
+/*Timber*/  BANJO, NONE,    NONE, NONE,     PIPSY, TICTOC, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,         0x00, 0x04, 
+/*T.T*/     DIDDY, BUMPER,  NONE, NONE,     TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,      0x00, 0x08,
 };
 
-// Not sure what this is
-// Used for D_801263CC when both T.T. and Drumstick are unlocked
-// unk801263CC
-s32 D_800DFF40[36] = {
-    0xFFFF04FF, 0xFFFFFFFF, 0x01080203, 0x0000FFFF,
-    0x05FF00FF, 0xFFFF0802, 0x03FF0009, 0xFFFF06FF,
-    0x080100FF, 0x03FFFFFF, 0x0001FFFF, 0x07FF0208,
-    0x0100FFFF, 0xFFFF0005, 0x00FFFFFF, 0xFFFFFFFF,
-    0x05090607, 0x000301FF, 0xFFFF04FF, 0xFFFF0906,
-    0x07FF0002, 0x02FFFFFF, 0x090504FF, 0x07FFFFFF,
-    0x000703FF, 0xFFFF0609, 0x0504FFFF, 0xFFFF0004,
-    0xFFFF09FF, 0x0100FFFF, 0x0203FFFF, 0x000608FF,
-    0x05FF0504, 0xFFFF0607, 0xFFFF0008, 0x00000000,
+#define TICTOC 9
+// With everyone unlocked.
+/*Name          Up                  Down            Left                            Right                               Voice ID*/
+u8 gCharacterSelectBytesComplete[] = {
+/*Krunch*/      NONE, NONE,         CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, DRUMSTICK, BUMPER, BANJO,    0x00, 0x00, 
+/*Diddy*/       NONE, NONE,         TIPTUP, NONE,   KRUNCH, NONE, NONE, NONE,       DRUMSTICK, BUMPER, BANJO, NONE,     0x00, 0x09, 
+/*Bumper*/      NONE, NONE,         PIPSY, NONE,    DRUMSTICK, DIDDY, KRUNCH,       NONE, BANJO, NONE, NONE, NONE,      0x00, 0x01, 
+/*Banjo*/       NONE, NONE,         TIMBER, NONE,   BUMPER, DRUMSTICK, DIDDY,       KRUNCH, NONE, NONE, NONE, NONE,     0x00, 0x05, 
+/*Conker*/      KRUNCH, NONE,       NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC, PIPSY, TIMBER,      0x00, 0x03, 
+/*Tiptup*/      DIDDY, NONE,        NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC, PIPSY, TIMBER, NONE,        0x00, 0x02, 
+/*Pipsy*/       BUMPER, NONE,       NONE, NONE,     TICTOC, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,           0x00, 0x07, 
+/*Timber*/      BANJO, NONE,        NONE, NONE,     PIPSY, TICTOC, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,             0x00, 0x04, 
+/*Drumstick*/   NONE, NONE,         TICTOC, NONE,   DIDDY, KRUNCH, NONE, NONE,      BUMPER, BANJO, NONE, NONE,          0x00, 0x06, 
+/*T.T*/         DRUMSTICK, NONE,    TIPTUP, NONE,   TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,          0x00, 0x08, 
 };
 
+s32 D_800DFFCC = 0; // Likely unused.
 s32 D_800DFFD0 = 0;
 s32 D_800DFFD4 = -1;
 
@@ -711,27 +742,28 @@ DrawTexture gRaceSelectionCarOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } 
 DrawTexture gRaceSelectionCarOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionHoverOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionHoverOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture gRaceSelectioPlaneOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture gRaceSelectioPlaneOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlaneOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlaneOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionTTOnOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionTTOffOptHighlight[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionTTOnOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionTTOffOpt[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0574[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0584[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0594[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E05A4[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E05B4[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E05C4[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlayer1Texture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlayer2Texture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlayer3Texture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionPlayer4Texture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionVehicleTitleTexture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTTitleTexture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 
 // These are probably structs
 s32 D_800E05D4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
 s32 D_800E05F4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
 
-DrawTexture D_800E0614[2] = { { NULL, -16, -16 }, { NULL, 0, 0 } };
+DrawTexture gRaceSelectionTTTexture[2] = { { NULL, -16, -16 }, { NULL, 0, 0 } };
 
 DrawTexture *gRaceSelectionImages[9] = {
-    gRaceSelectionCarTex, gRaceSelectionCarOptHighlight, gRaceSelectionCarOpt, gRaceSelectionHoverTex, gRaceSelectionHoverOptHighlight, gRaceSelectionHoverOpt, gRaceSelectionPlaneTex, gRaceSelectioPlaneOptHighlight, gRaceSelectioPlaneOpt
+    gRaceSelectionCarTex, gRaceSelectionCarOptHighlight, gRaceSelectionCarOpt, gRaceSelectionHoverTex, gRaceSelectionHoverOptHighlight, gRaceSelectionHoverOpt, gRaceSelectionPlaneTex, gRaceSelectionPlaneOptHighlight, gRaceSelectionPlaneOpt
+
 };
 
 DrawTexture *D_800E0648[6] = {
@@ -739,7 +771,7 @@ DrawTexture *D_800E0648[6] = {
 };
 
 DrawTexture *D_800E0660[6] = {
-    D_800E0574, D_800E0584, D_800E0594, D_800E05A4, D_800E05B4, D_800E05C4
+    gRaceSelectionPlayer1Texture, gRaceSelectionPlayer2Texture, gRaceSelectionPlayer3Texture, gRaceSelectionPlayer4Texture, gRaceSelectionVehicleTitleTexture, gRaceSelectionTTTitleTexture
 };
 
 DrawTexture *gMenuSelectionArrows[4] = {
@@ -4380,14 +4412,14 @@ void menu_character_select_init(void) {
     initialise_player_ids();
     if (is_drumstick_unlocked()) {
         if (is_tt_unlocked()) {
-            D_801263CC = &D_800DFF40;
+            gCurrCharacterSelectData = &gCharacterSelectBytesComplete;
         } else {
-            D_801263CC = &D_800DFE40;
+            gCurrCharacterSelectData = &gCharacterSelectBytesDrumStick;
         }
     } else if (is_tt_unlocked()) {
-        D_801263CC = &D_800DFEC0;
+        gCurrCharacterSelectData = &gCharacterSelectBytesTT;
     } else {
-        D_801263CC = &D_800DFDD0;
+        gCurrCharacterSelectData = &gCharacterSelectBytesDefault;
     }
     for (i = 0; i < 4; i++) {
         D_801263DC[i] = 0;
@@ -4399,7 +4431,7 @@ void menu_character_select_init(void) {
     for (i = 0; (i < 4) && (!breakTheLoop); i++) {
         if (gActivePlayersArray[i] != 0) {
             breakTheLoop = TRUE;
-            D_801263C0.unk0 = (*D_801263CC)[gPlayersCharacterArray[i]].unkC;
+            D_801263C0.unk0 = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
             D_801263C0.unk2 = 0x7F;
             D_801263C0.unk1 = 1;
         }
@@ -4487,7 +4519,7 @@ void randomise_ai_racer_slots(s32 arg0) {
     i = arg0;
     while (i < 8) {
         s1 = FALSE; // Check for duplicate racer id.
-        gCharacterIdSlots[i] = (*D_801263CC)[get_random_number_from_range(0, numCharacters)].unkC;
+        gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
         for (j = 0; j < i; j++) {
             if (gCharacterIdSlots[i] == gCharacterIdSlots[j]) {
                 s1 = TRUE; // Duplicate found!
@@ -4545,7 +4577,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             phi_a0 = 0;
             for (j = 0; j < 4; j++) {
                 if (gActivePlayersArray[j]) {
-                    gCharacterIdSlots[phi_a0] = (*D_801263CC)[gPlayersCharacterArray[j]].unkC;
+                    gCharacterIdSlots[phi_a0] = (*gCurrCharacterSelectData)[gPlayersCharacterArray[j]].voiceID;
                     phi_a0++;
                 }
             }
@@ -5734,9 +5766,9 @@ void render_track_select_setup_ui(s32 updateRate) {
                     set_current_dialogue_box_coords(7, 134, sp80 + 112, 186, sp80 + 137);
                     render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 7);
                     if (D_801263E0 <= 0) {
-                        render_textured_rectangle(&sMenuCurrDisplayList, &D_800E05B4, 136, sp80 + 114, 255, 0xFF, 255, sMenuGuiOpacity);
+                        render_textured_rectangle(&sMenuCurrDisplayList, &gRaceSelectionVehicleTitleTexture, 136, sp80 + 114, 255, 0xFF, 255, sMenuGuiOpacity);
                     } else {
-                        render_textured_rectangle(&sMenuCurrDisplayList, &D_800E05C4, 136, sp80 + 114, 255, 255, 255, sMenuGuiOpacity);
+                        render_textured_rectangle(&sMenuCurrDisplayList, &gRaceSelectionTTTitleTexture, 136, sp80 + 114, 255, 255, 255, sMenuGuiOpacity);
                         for (i = 0; i < 2; i++) {
                             s32 yTemp = 0x97 + sp80 + (i * 0x18);
                             if (i == D_800E0414) {
@@ -5895,7 +5927,7 @@ void render_track_select_setup_ui(s32 updateRate) {
         }
         if ((gNumberOfActivePlayers == 1) && (D_801263E0 >= 0) && (func_80092BE0(gTrackIdForPreview) >= 0)) {
             // Render small T.T. icon.
-            render_textured_rectangle(&sMenuCurrDisplayList, &D_800E0614, 0xCC, 0x7A, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+            render_textured_rectangle(&sMenuCurrDisplayList, &gRaceSelectionTTTexture, 0xCC, 0x7A, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
             func_8007B3D0(&sMenuCurrDisplayList);
         }
         if (D_801269C8 != 5) {
@@ -5983,10 +6015,11 @@ void menu_5_init(void) {
         gRaceSelectionCarOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_CAR];
         gRaceSelectionHoverOptHighlight[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT_HIGHLIGHT];
         gRaceSelectionHoverOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT];
-        gRaceSelectioPlaneOptHighlight[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT];
-        gRaceSelectioPlaneOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE];
-        D_800E05B4[0].texture = D_80126550[TEXTURE_UNK_30];
-        D_800E0614[0].texture = D_80126550[TEXTURE_UNK_5E];
+        gRaceSelectionPlaneOptHighlight[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT];
+        gRaceSelectionPlaneOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE];
+        gRaceSelectionVehicleTitleTexture[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_TITLE];
+        gRaceSelectionTTTexture[0].texture = D_80126550[TEXTURE_ICON_TT_HEAD];
+
         func_800C01D8(&sMenuTransitionFadeOut);
         D_801263BC = 0;
         gMenuDelay = 0;
