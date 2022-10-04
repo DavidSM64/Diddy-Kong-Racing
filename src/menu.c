@@ -757,6 +757,7 @@ DrawTexture gRaceSelectionTTTexture[2] = { { NULL, -16, -16 }, { NULL, 0, 0 } };
 
 DrawTexture *gRaceSelectionImages[9] = {
     gRaceSelectionCarTex, gRaceSelectionCarOptHighlight, gRaceSelectionCarOpt, gRaceSelectionHoverTex, gRaceSelectionHoverOptHighlight, gRaceSelectionHoverOpt, gRaceSelectionPlaneTex, gRaceSelectionPlaneOptHighlight, gRaceSelectionPlaneOpt
+
 };
 
 DrawTexture *D_800E0648[6] = {
@@ -5985,6 +5986,7 @@ void menu_5_init(void) {
         gRaceSelectionPlaneOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE];
         gRaceSelectionVehicleTitleTexture[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_TITLE];
         gRaceSelectionTTTexture[0].texture = D_80126550[TEXTURE_ICON_TT_HEAD];
+
         func_800C01D8(&sMenuTransitionFadeOut);
         D_801263BC = 0;
         gMenuDelay = 0;
