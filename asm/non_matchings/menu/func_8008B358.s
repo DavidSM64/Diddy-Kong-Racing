@@ -14,9 +14,9 @@ glabel func_8008B358
 /* 08BF88 8008B388 3C138012 */  lui   $s3, %hi(D_801263C0) # $s3, 0x8012
 /* 08BF8C 8008B38C 3C14800E */  lui   $s4, %hi(gNumberOfActivePlayers) # $s4, 0x800e
 /* 08BF90 8008B390 3C158012 */  lui   $s5, %hi(D_801267D8) # $s5, 0x8012
-/* 08BF94 8008B394 3C178012 */  lui   $s7, %hi(D_801263CC) # $s7, 0x8012
+/* 08BF94 8008B394 3C178012 */  lui   $s7, %hi(gCurrCharacterSelectData) # $s7, 0x8012
 /* 08BF98 8008B398 AFBF003C */  sw    $ra, 0x3c($sp)
-/* 08BF9C 8008B39C 26F763CC */  addiu $s7, %lo(D_801263CC) # addiu $s7, $s7, 0x63cc
+/* 08BF9C 8008B39C 26F763CC */  addiu $s7, %lo(gCurrCharacterSelectData) # addiu $s7, $s7, 0x63cc
 /* 08BFA0 8008B3A0 26B567D8 */  addiu $s5, %lo(D_801267D8) # addiu $s5, $s5, 0x67d8
 /* 08BFA4 8008B3A4 2694F4BC */  addiu $s4, %lo(gNumberOfActivePlayers) # addiu $s4, $s4, -0xb44
 /* 08BFA8 8008B3A8 267363C0 */  addiu $s3, %lo(D_801263C0) # addiu $s3, $s3, 0x63c0
