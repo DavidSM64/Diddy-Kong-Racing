@@ -575,24 +575,28 @@ typedef struct IHATETHIS {
     u16 voiceID;
 } IHATETHIS;
 
-enum CharacterList {
-    KRUNCH,
-    DIDDY,
-    BUMPER,
-    BANJO,
-    CONKER,
-    TIPTUP,
-    PIPSY,
-    TIMBER,
-
-    NONE = 0xFF
-};
+#define NONE 0xFF
+#define KRUNCH 0
+#define DIDDY 1
+#define BUMPER 2
+#define BANJO 3
+#define CONKER 4
+#define TIPTUP 5
+#define PIPSY 6
+#define TIMBER 7
 
 // XX000000 00000000 00000000 0000 - Up Input
 // 0000XX00 00000000 00000000 0000 - Down Input
 // 00000000 XX000000 00000000 0000 - Left Input
 // 00000000 00000000 XX000000 0000 - Right Input
 // 00000000 00000000 00000000 XXXX - Voice clip
+
+/**
+ * Diddy Kong Racing's character select menu refers to these arrays below to know how
+ * to handle some certain things. This includes which direction selects which index, which voice ID
+ * they use, and which audio voices the BGM uses. It has a different table for each possible combination
+ * of which characters are available to select. This system is far from conventional.
+*/
 
 #define CHARACTER_SELECT_ENTRY(upDir, downDir, leftDir, rightDir, unk01, unk02, unk03, unk04, voiceID) \
     upDir, 0xFF, downDir, 0xFF, leftDir, unk01, unk02, 0xFF, rightDir, unk03, unk04, 0xFF, ((voiceID << 8) & 0xFF), (voiceID & 0xFF)
