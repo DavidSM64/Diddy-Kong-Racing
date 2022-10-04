@@ -10,11 +10,11 @@ glabel func_8008B758
 /* 08C378 8008B778 3C108012 */  lui   $s0, %hi(D_801263C0) # $s0, 0x8012
 /* 08C37C 8008B77C 3C168012 */  lui   $s6, %hi(gPlayersCharacterArray) # $s6, 0x8012
 /* 08C380 8008B780 3C17800E */  lui   $s7, %hi(gNumberOfReadyPlayers) # $s7, 0x800e
-/* 08C384 8008B784 3C1E8012 */  lui   $fp, %hi(D_801263CC) # $fp, 0x8012
+/* 08C384 8008B784 3C1E8012 */  lui   $fp, %hi(gCurrCharacterSelectData) # $fp, 0x8012
 /* 08C388 8008B788 AFBF0044 */  sw    $ra, 0x44($sp)
 /* 08C38C 8008B78C AFB20028 */  sw    $s2, 0x28($sp)
 /* 08C390 8008B790 AFB10024 */  sw    $s1, 0x24($sp)
-/* 08C394 8008B794 27DE63CC */  addiu $fp, %lo(D_801263CC) # addiu $fp, $fp, 0x63cc
+/* 08C394 8008B794 27DE63CC */  addiu $fp, %lo(gCurrCharacterSelectData) # addiu $fp, $fp, 0x63cc
 /* 08C398 8008B798 26F7F480 */  addiu $s7, %lo(gNumberOfReadyPlayers) # addiu $s7, $s7, -0xb80
 /* 08C39C 8008B79C 26D663E8 */  addiu $s6, %lo(gPlayersCharacterArray) # addiu $s6, $s6, 0x63e8
 /* 08C3A0 8008B7A0 261063C0 */  addiu $s0, %lo(D_801263C0) # addiu $s0, $s0, 0x63c0

@@ -188,10 +188,13 @@ typedef struct ButtonTextElement {
 } ButtonTextElement;
 
 /* Size: 0xE bytes. */
-typedef struct unk801263CC {
-    u8 pad0[0xC];
-    s16 unkC;
-} unk801263CC;
+typedef struct CharacterSelectData {
+    u8 upInput[2];
+    u8 downInput[2];
+    u8 rightInput[4];
+    u8 LeftInput[4];
+    s16 voiceID;
+} CharacterSelectData;
 
 /* Size: 0x0C Bytes */
 typedef struct SavefileInfo {

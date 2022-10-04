@@ -53,7 +53,7 @@ unk801263C0 D_801263C0;
 
 s32 gIgnorePlayerInput;
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
-unk801263CC (*D_801263CC)[8]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
+CharacterSelectData (*gCurrCharacterSelectData)[8]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
 s32 D_801263D0;
 s8 gActivePlayersArray[4];
@@ -555,8 +555,8 @@ s16 D_800DFDC8[2] = { -1, 0 };
 s16 D_800DFDCC[2] = { -1, 0 };
 
 // Not sure what this is
-// Used for D_801263CC when Neither T.T. Nor Drumstick are unlocked
-// unk801263CC
+// Used for gCurrCharacterSelectData when Neither T.T. Nor Drumstick are unlocked
+// CharacterSelectData
 
 #define NONE 0xFF
 #define KRUNCH 0
@@ -4378,14 +4378,14 @@ void menu_character_select_init(void) {
     initialise_player_ids();
     if (is_drumstick_unlocked()) {
         if (is_tt_unlocked()) {
-            D_801263CC = &gCharacterSelectBytesComplete;
+            gCurrCharacterSelectData = &gCharacterSelectBytesComplete;
         } else {
-            D_801263CC = &gCharacterSelectBytesDrumStick;
+            gCurrCharacterSelectData = &gCharacterSelectBytesDrumStick;
         }
     } else if (is_tt_unlocked()) {
-        D_801263CC = &gCharacterSelectBytesTT;
+        gCurrCharacterSelectData = &gCharacterSelectBytesTT;
     } else {
-        D_801263CC = &gCharacterSelectBytesDefault;
+        gCurrCharacterSelectData = &gCharacterSelectBytesDefault;
     }
     for (i = 0; i < 4; i++) {
         D_801263DC[i] = 0;
@@ -4397,7 +4397,7 @@ void menu_character_select_init(void) {
     for (i = 0; (i < 4) && (!breakTheLoop); i++) {
         if (gActivePlayersArray[i] != 0) {
             breakTheLoop = TRUE;
-            D_801263C0.unk0 = (*D_801263CC)[gPlayersCharacterArray[i]].unkC;
+            D_801263C0.unk0 = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
             D_801263C0.unk2 = 0x7F;
             D_801263C0.unk1 = 1;
         }
@@ -4485,7 +4485,7 @@ void randomise_ai_racer_slots(s32 arg0) {
     i = arg0;
     while (i < 8) {
         s1 = FALSE; // Check for duplicate racer id.
-        gCharacterIdSlots[i] = (*D_801263CC)[get_random_number_from_range(0, numCharacters)].unkC;
+        gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
         for (j = 0; j < i; j++) {
             if (gCharacterIdSlots[i] == gCharacterIdSlots[j]) {
                 s1 = TRUE; // Duplicate found!
@@ -4543,7 +4543,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             phi_a0 = 0;
             for (j = 0; j < 4; j++) {
                 if (gActivePlayersArray[j]) {
-                    gCharacterIdSlots[phi_a0] = (*D_801263CC)[gPlayersCharacterArray[j]].unkC;
+                    gCharacterIdSlots[phi_a0] = (*gCurrCharacterSelectData)[gPlayersCharacterArray[j]].voiceID;
                     phi_a0++;
                 }
             }
