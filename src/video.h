@@ -75,8 +75,6 @@ extern s32 gVideoRefreshRate;
 
 extern u16 *gVideoCurrFramebuffer;
 extern u16 *gVideoDepthBuffer;
-extern s32 D_800DE774;
-extern s8  D_800DE778;
 
 extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 
@@ -87,8 +85,6 @@ typedef struct VideoModeResolution {
 } VideoModeResolution;
 
 extern VideoModeResolution gVideoModeResolutions[8];
-
-extern s32 D_800DE7BC;
 
 void init_video(s32 videoModeIndex, OSSched *sc);
 void set_video_mode_index(s32 videoModeIndex);

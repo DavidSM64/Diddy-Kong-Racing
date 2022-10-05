@@ -7,8 +7,8 @@
 /************ .data ************/
 
 u16 *gVideoDepthBuffer = NULL;
-s32 D_800DE774 = 0; // Currently unknown, might be a different type.
-s8 D_800DE778 = 2;
+UNUSED s32 D_800DE774 = 0; // Currently unknown, might be a different type.
+UNUSED s8 D_800DE778 = 2;
 
 VideoModeResolution gVideoModeResolutions[] = {
     {          SCREEN_WIDTH,          SCREEN_HEIGHT }, // 320x240
@@ -21,7 +21,7 @@ VideoModeResolution gVideoModeResolutions[] = {
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
 };
 
-s32 D_800DE7BC = 0; // Currently unknown, might be a different type.
+UNUSED s32 D_800DE7BC = 0;
 
 /*******************************/
 
@@ -30,7 +30,7 @@ s32 D_800DE7BC = 0; // Currently unknown, might be a different type.
 s32 gVideoRefreshRate;
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
-s32 D_8012617C;
+UNUSED s32 D_8012617C;
 OSMesg gVideoMesgBuf[8];
 OSMesgQueue gVideoMesgQueue[8];
 OSViMode gTvViMode;
@@ -44,11 +44,11 @@ u16 *gVideoCurrFramebuffer;
 u16 *gVideoLastFramebuffer;
 u16 *gVideoCurrDepthBuffer;
 u16 *gVideoLastDepthBuffer;
-u8 D_801262E4;
-s32 D_801262E8[8];
-u8 gVideoDeltaCounter;
-u8 gVideoDeltaTime;
-s32 D_8012630C;
+UNUSED u8 D_801262E4;
+UNUSED OSMesg D_801262E8[8];
+UNUSED u8 gVideoDeltaCounter;
+UNUSED u8 gVideoDeltaTime;
+UNUSED s32 D_8012630C;
 OSScClient gVideoSched;
 
 /******************************/
