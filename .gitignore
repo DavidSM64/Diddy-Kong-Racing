@@ -23,3 +23,7 @@ ctx.c.m2c
 
 # Ignore .deb packages
 *.deb
+
+# Ignore batch and executable files.
+*.exe
+*.bat
