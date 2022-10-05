@@ -595,7 +595,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
     set_background_prim_colour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
-    func_8007A974();
+    reset_video_delta_time();
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
 #else

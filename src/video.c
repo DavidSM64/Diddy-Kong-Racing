@@ -79,7 +79,7 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
         }
     }
 
-    func_8007A974();
+    reset_video_delta_time();
     set_video_mode_index(videoModeIndex);
     gVideoFramebuffers[0] = NULL;
     gVideoFramebuffers[1] = NULL;
@@ -252,7 +252,11 @@ void init_framebuffer(s32 index) {
     }
 }
 
-void func_8007A974(void) {
+/**
+ * Sets the video counters to their default values.
+ * Another renmant from an unused system.
+ */
+void reset_video_delta_time(void) {
     gVideoDeltaCounter = 0;
     gVideoDeltaTime = 2;
 }

@@ -97,7 +97,7 @@ UNUSED void set_video_width_and_height_from_index(s32 fbIndex);
 s32 get_video_width_and_height_as_s32(void);
 void init_vi_settings(void);
 void init_framebuffer(s32 index);
-void func_8007A974(void);
+void reset_video_delta_time(void);
 void func_8007AB24(s8 arg0);
 s32 get_video_refresh_speed(void);
 void swap_framebuffers(void);
