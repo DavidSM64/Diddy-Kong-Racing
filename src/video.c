@@ -292,54 +292,14 @@ void func_8007A974(void) {
 //#ifdef NON_EQUIVALENT
 // regalloc & stack issues
 s32 func_8007A98C(s32 arg0) {
-    s32 tempUpdateRate;
+    s32 tempUpdateRate = LOGIC_60FPS;
 
-#if NUM_FRAMEBUFFERS == 2
-    tempUpdateRate = LOGIC_60FPS;
-    if (D_801262D0 != 0) {
-        D_801262D0--;
-        if (D_801262D0 == 0) {
-            osViBlack(FALSE);
-        }
-    }
-    if (arg0 != 8) {
-        swap_framebuffers();
-    }
-    while (osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
-        tempUpdateRate += 1;
-        tempUpdateRate &= 0xFF;
-    }
-
-    if (tempUpdateRate < D_80126309) {
-        if (D_80126308 < 0x14) {
-            D_80126308++;
-        }
-        if (D_80126308 == 0x14) {
-            D_80126309 = tempUpdateRate;
-            D_80126308 = 0;
-        }
-    } else {
-        D_80126308 = 0;
-        if ((D_80126309 >= tempUpdateRate) || (D_801262E4 > tempUpdateRate)) {
-            D_80126309 = tempUpdateRate;
-        }
-    }
-    while (tempUpdateRate < D_80126309) {
-        osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
-        tempUpdateRate += 1;
-        tempUpdateRate &= 0xFF;
-    }
-#else
     osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
     osViBlack(FALSE);
     if (arg0 != 8) {
         swap_framebuffers();
     }
-#endif
     osViSwapBuffer(gVideoLastFramebuffer);
-#if NUM_FRAMEBUFFERS == 2
-    osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
-#endif
     return tempUpdateRate;
 }
 /*#else

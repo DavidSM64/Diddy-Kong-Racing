@@ -7667,14 +7667,18 @@ s32 get_active_player_count(void) {
  * Returns the number of racers for a multiplayer match.
  */
 s32 get_multiplayer_racer_count(void) {
+    s32 count = (gMultiplayerSelectedNumberOfRacers + 1) << 1;
     if (!gIsInTracksMode) {
-        return 6; // Two player adventure is fixed at 6 racers
+        return NUM_RACERS_2P; // Two player adventure is fixed at 6 racers
     }
     if (gTrophyRaceWorldId) {
-        return 6; // Trophy race is fixed at 6 racers
+        return NUM_RACERS_2P; // Trophy race is fixed at 6 racers
     }
     // gMultiplayerSelectedNumberOfRacers is either 0 (2 racers), 1 (4 racers), or 2 (6 racers)
-    return (gMultiplayerSelectedNumberOfRacers + 1) << 1; // Doesn't match with multiply.
+    if (count == 6) {
+        return NUM_RACERS_2P;
+    }
+    return count;
 }
 
 Settings **func_8009C490(void) {
