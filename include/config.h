@@ -7,17 +7,17 @@
 #define SKIP_MENU 3
 
 /// Optional toggles.
-#define DISABLE_AA
-#define PUPPYPRINT_DEBUG
-// #define SKIP_INTRO SKIP_TITLE
-#define DEFAULT_CHARACTER 7
+#define DISABLE_AA // Globally disable anti-aliasing, reducing RDP load.
+#define PUPPYPRINT_DEBUG // Enable debug features
+#define SKIP_INTRO SKIP_TITLE // Skip the boot screen, making getting ingame faster.
+#define DEFAULT_CHARACTER 7 // If you skip character select, pick a default character.
 #define NUM_RACERS 8
-// #define EXPANSION_PAK
-#define FORCE_4MB_MEMORY
-#define DISABLE_ANTI_TAMPER
-#define UNLOCK_ALL
-#define FIFO_UCODE
-// #define DISABLE_AUDIO
+// #define EXPANSION_PAK // Enable expansion pak features.
+#define FORCE_4MB_MEMORY // Pretend the expansion pak is not installed.
+#define DISABLE_ANTI_TAMPER // Disable all the anti tamperment measures in the ROM
+#define UNLOCK_ALL // Unlock all characters, tracks and adventure 2.
+#define FIFO_UCODE // Allow usage of the faster FIFO microcode. Emulators will still use xbus.
+// #define DISABLE_AUDIO // Disable all ingame audio, and prevent the RSP from working on audio tasks.
 
 #define SCREEN_WIDTH 304
 #define SCREEN_HEIGHT 224
