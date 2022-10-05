@@ -55,6 +55,50 @@ void get_platform(void)
     }*/
 }
 
+#define STEP 0x100000
+#define SIZE_4MB 0x400000
+#define SIZE_8MB 0x800000
+
+u32 osGetMemSize(void) {
+    vu32* ptr;
+    u32 size = SIZE_4MB;
+    u32 data0;
+    u32 data1;
+
+    while (size < SIZE_8MB) {
+        ptr = (vu32*)(K1BASE + size);
+
+        data0 = *ptr;
+        data1 = ptr[STEP / 4 - 1];
+
+        *ptr ^= ~0;
+        ptr[STEP / 4 - 1] ^= ~0;
+
+        if ((*ptr != (data0 ^ ~0)) || (ptr[STEP / 4 - 1] != (data1 ^ ~0))) {
+            return size;
+        }
+
+        *ptr = data0;
+        ptr[STEP / 4 - 1] = data1;
+
+        size += STEP;
+    }
+
+    return size;
+}
+
+void find_expansion_pak(void) {
+#ifdef FORCE_4MB_MEMORY
+    gExpansionPak = FALSE;
+    return;
+#endif
+    if (osGetMemSize() == 0x800000) {
+        gExpansionPak = TRUE;
+    } else {
+        gExpansionPak = FALSE;
+    }
+}
+
 void main(void) {
     osInitialize();
     osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1StackPointer, OS_PRIORITY_IDLE);
@@ -64,6 +108,7 @@ void main(void) {
 void thread1_main(UNUSED void *unused) {
     //thread0_create();
     crash_screen_init();
+    find_expansion_pak();
     osCreateThread(&gThread3, 3, &thread3_main, 0, &gThread3StackPointer, 10);
     gThread3Stack[1024] = 0;
     gThread3Stack[0] = 0;

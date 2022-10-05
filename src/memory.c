@@ -5,6 +5,7 @@
 #include "printf.h"
 #include "thread0_epc.h"
 #include "controller.h"
+#include "video.h"
 
 /************ .rodata ************/
 
@@ -49,6 +50,10 @@ extern MemoryPoolSlot gMainMemoryPool;
  * Starts at 0x8012D3F0. Ends at 0x80400000. Contains 1600 allocation slots.
  */
 void init_main_memory_pool(void) {
+    u32 ramEnd = 0x80400000;
+    if (gExpansionPak) {
+        ramEnd = 0x80800000;
+    }
     gNumberOfMemoryPools = -1;
     if (1) {
         // Create the main memory pool.

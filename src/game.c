@@ -1083,10 +1083,6 @@ void main_game_loop(void) {
     if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
         gProfilerOn ^= 1;
     }
-#else
-#if NUM_FRAMEBUFFERS == 2
-    osSetTime(0);
-#endif
 #endif
 
     if (D_800DD380 == 8) {
@@ -1104,7 +1100,7 @@ void main_game_loop(void) {
         if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD && gProfilerOn) {
             suCodeSwitch ^= 1;
         }
-        if (suCodeSwitch == FALSE) {
+        if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG) != 0) {
     #endif
             setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
     #ifdef PUPPYPRINT_DEBUG
@@ -1147,7 +1143,6 @@ void main_game_loop(void) {
         }
     }
 
-#if NUM_FRAMEBUFFERS != 2
     sDeltaTime = osGetTime() - sPrevTime;
     sPrevTime = osGetTime();
     sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
@@ -1170,7 +1165,6 @@ void main_game_loop(void) {
     if (sTotalTime <= 0) {
         sTotalTime = 0;
     }
-#endif
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
             pre_intro_loop();
@@ -1250,15 +1244,12 @@ void main_game_loop(void) {
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
     tempLogicUpdateRate = func_8007A98C(D_800DD380);
-#if NUM_FRAMEBUFFERS == 2
     sLogicUpdateRate = tempLogicUpdateRate;
     tempLogicUpdateRateMax = LOGIC_10FPS;
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
         sLogicUpdateRate = tempLogicUpdateRateMax;
     }
-#else
     sLogicUpdateRate = LOGIC_60FPS;
-#endif
 }
 
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {

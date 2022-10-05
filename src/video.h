@@ -66,13 +66,15 @@ enum VideoModes {
     VIDEO_MODE_HIGHRES_MASK = 4
 };
 
+extern u8 gNumFrameBuffers;
+extern u8 gExpansionPak;
 extern s32 gVideoRefreshRate;
 
 extern u16 *gVideoCurrFramebuffer;
 extern u16 *gVideoDepthBuffer;
 extern s32 D_800DE774;
 extern s8  D_800DE778;
-extern u16 *gVideoFramebuffers[NUM_FRAMEBUFFERS];
+extern u16 *gVideoFramebuffers[];
 extern s32 gVideoCurrFbIndex;
 
 extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;

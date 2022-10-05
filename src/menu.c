@@ -3561,6 +3561,7 @@ void menu_boot_init(void) {
     func_800C01D8(&sMenuTransitionFadeOut);
     set_background_prim_colour(0, 0, 0);
     func_8009C674(sGameTitleTileTextures);
+    load_font(FONT_SMALL);
 
     // Sets up the 11 texture pointers for the "Diddy Kong Racing" logo.
     for (i = 0; i < 11; i++) {
@@ -3624,6 +3625,13 @@ s32 menu_boot_loop(s32 updateRate) {
     if (temp < 300) {
         render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, temp, 255, 255, 255, 255);
         func_8007B3D0(&sMenuCurrDisplayList);
+        
+        set_text_font(FONT_SMALL);
+        if (gExpansionPak) {
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, SCREEN_HEIGHT - 40, "Expansion Pak Detected", ALIGN_MIDDLE_CENTER);
+        } else {
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, SCREEN_HEIGHT - 40, "Expansion Pak Missing", ALIGN_MIDDLE_CENTER);
+        }
     }
 
     return out;

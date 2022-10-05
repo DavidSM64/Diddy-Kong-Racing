@@ -9,13 +9,13 @@
 /// Optional toggles.
 #define DISABLE_AA
 #define PUPPYPRINT_DEBUG
-#define SKIP_INTRO SKIP_TITLE
+// #define SKIP_INTRO SKIP_TITLE
 #define DEFAULT_CHARACTER 7
 #define NUM_RACERS 8
 // #define EXPANSION_PAK
+#define FORCE_4MB_MEMORY
 #define DISABLE_ANTI_TAMPER
 #define UNLOCK_ALL
-#define NUM_FRAMEBUFFERS 2
 #define FIFO_UCODE
 // #define DISABLE_AUDIO
 

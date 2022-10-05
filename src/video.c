@@ -34,9 +34,9 @@ s32 D_8012617C;
 OSMesg gVideoMesgBuf[8];
 OSMesgQueue gVideoMesgQueue[8];
 OSViMode gTvViMode;
-s32 gVideoFbWidths[NUM_FRAMEBUFFERS];
-s32 gVideoFbHeights[NUM_FRAMEBUFFERS];
-u16 *gVideoFramebuffers[NUM_FRAMEBUFFERS];
+s32 gVideoFbWidths[3];
+s32 gVideoFbHeights[3];
+u16 *gVideoFramebuffers[3];
 s32 gVideoCurrFbIndex;
 s32 gVideoModeIndex;
 s32 D_801262D0;
@@ -50,6 +50,8 @@ u8 D_80126308;
 u8 D_80126309;
 s32 D_8012630C;
 OSScClient gVideoSched;
+u8 gNumFrameBuffers = 2;
+u8 gExpansionPak = FALSE;
 
 /******************************/
 
@@ -79,9 +81,13 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
         }
     }
 
+    if (gExpansionPak) {
+        gNumFrameBuffers++;
+    }
+
     func_8007A974();
     set_video_mode_index(videoModeIndex);
-    for (i = 0; i < NUM_FRAMEBUFFERS; i++) {
+    for (i = 0; i < gNumFrameBuffers; i++) {
         gVideoFramebuffers[i] = 0;
         init_framebuffer(i);
     }
@@ -326,7 +332,9 @@ s32 func_8007A98C(s32 arg0) {
 #else
     osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
     osViBlack(FALSE);
-    swap_framebuffers();
+    if (arg0 != 8) {
+        swap_framebuffers();
+    }
 #endif
     osViSwapBuffer(gVideoLastFramebuffer);
 #if NUM_FRAMEBUFFERS == 2
@@ -359,7 +367,7 @@ void swap_framebuffers(void) {
     gVideoLastFramebuffer = gVideoFramebuffers[gVideoCurrFbIndex];
     gVideoLastDepthBuffer = gVideoDepthBuffer;
     gVideoCurrFbIndex++;
-    if (gVideoCurrFbIndex == NUM_FRAMEBUFFERS) {
+    if (gVideoCurrFbIndex == gNumFrameBuffers) {
         gVideoCurrFbIndex = 0;
     }
     gVideoCurrFramebuffer = gVideoFramebuffers[gVideoCurrFbIndex];
