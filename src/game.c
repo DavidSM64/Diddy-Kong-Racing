@@ -891,9 +891,9 @@ void init_game(void) {
     D_80123504 = 0;
     D_80123508 = 0;
     gSPTaskNum = 0;
-    if (IO_READ(DPC_BUFBUSY_REG) == 0) {
+    /*if (IO_READ(DPC_BUFBUSY_REG) == 0) {
         suCodeSwitch = 1;
-    }
+    }*/
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
