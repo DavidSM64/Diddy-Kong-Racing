@@ -81,8 +81,8 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
 
     func_8007A974();
     set_video_mode_index(videoModeIndex);
-    gVideoFramebuffers[0] = 0;
-    gVideoFramebuffers[1] = 0;
+    gVideoFramebuffers[0] = NULL;
+    gVideoFramebuffers[1] = NULL;
     init_framebuffer(0);
     init_framebuffer(1);
     gVideoCurrFbIndex = 1;
@@ -277,7 +277,7 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
     if (mesg != 8) {
         swap_framebuffers();
     }
-    while (osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
+    while (osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
         tempUpdateRate++;
     }
 
@@ -296,12 +296,12 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
         }
     }
     while (tempUpdateRate < gVideoDeltaTime) {
-        osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
+        osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
         tempUpdateRate++;
     }
 
     osViSwapBuffer(gVideoLastFramebuffer);
-    osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
+    osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
     return tempUpdateRate;
 }
 
