@@ -1147,6 +1147,7 @@ void main_game_loop(void) {
     sPrevTime = osGetTime();
     sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
     sTotalTime -= 16666;
+    sLogicUpdateRate = LOGIC_60FPS;
     while (sTotalTime > 16666) {
         sTotalTime -= 16666;
         sLogicUpdateRate++;
@@ -1238,7 +1239,6 @@ void main_game_loop(void) {
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
         sLogicUpdateRate = tempLogicUpdateRateMax;
     }
-    sLogicUpdateRate = LOGIC_60FPS;
 }
 
 void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
