@@ -1116,6 +1116,19 @@ void main_game_loop(void) {
         D_800DD3F0 -= 1;
     }
 
+    sDeltaTime = osGetTime() - sPrevTime;
+    sPrevTime = osGetTime();
+    sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
+    sTotalTime -= 16666;
+    sLogicUpdateRate = LOGIC_60FPS;
+    while (sTotalTime > 16666) {
+        sTotalTime -= 16666;
+        sLogicUpdateRate++;
+        if (sLogicUpdateRate == 4) {
+            sTotalTime = 0;
+        }
+    }
+
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gCurrHudMat = gHudMatrices[gSPTaskNum];
     gCurrHudVerts = gHudVertices[gSPTaskNum];
@@ -1140,19 +1153,6 @@ void main_game_loop(void) {
         }
         if (debugLoopCounter >= 20000001) { // This shouldn't ever be true?
             render_printf(D_800E7134 /* "BBB\n" */);
-        }
-    }
-
-    sDeltaTime = osGetTime() - sPrevTime;
-    sPrevTime = osGetTime();
-    sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
-    sTotalTime -= 16666;
-    sLogicUpdateRate = LOGIC_60FPS;
-    while (sTotalTime > 16666) {
-        sTotalTime -= 16666;
-        sLogicUpdateRate++;
-        if (sLogicUpdateRate == 4) {
-            sTotalTime = 0;
         }
     }
     switch (sRenderContext) {
