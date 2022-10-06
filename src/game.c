@@ -1147,23 +1147,12 @@ void main_game_loop(void) {
     sPrevTime = osGetTime();
     sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
     sTotalTime -= 16666;
-    // Drops below 20
-    if (sTotalTime > 50000) {
-        sLogicUpdateRate+=3;
-        sTotalTime = 0;
-    } else
-    // Drops below 30 but stays above 20
-    if (sTotalTime > 33333) {
-        sLogicUpdateRate+=2;
-        sTotalTime -= 33333;
-    } else
-    // Drops below 60 but stays above 30
-    if (sTotalTime > 16666) {
-        sLogicUpdateRate++;
+    while (sTotalTime > 16666) {
         sTotalTime -= 16666;
-    }
-    if (sTotalTime <= 0) {
-        sTotalTime = 0;
+        sLogicUpdateRate++;
+        if (sLogicUpdateRate == 4) {
+            sTotalTime = 0;
+        }
     }
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
