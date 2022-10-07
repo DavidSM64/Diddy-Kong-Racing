@@ -146,8 +146,7 @@ OSMesgQueue *osScGetInterruptQ(OSSched *sc) {
     return &sc->interruptQ;
 }
 
-// Unused.
-void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
+UNUSED void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
     *arg0 = D_800DE740;
     *arg1 = D_800DE748;
     *arg2 = D_800DE74C;
@@ -379,7 +378,7 @@ void __scHandleRDP(OSSched *sc) {
     t = sc->curRDPTask;
     sc->curRDPTask = 0;
 
-    t->state &= -2;
+    t->state &= ~OS_SC_NEEDS_RDP;
 
     __scTaskComplete(sc, t);
 
