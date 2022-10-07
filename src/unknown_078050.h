@@ -16,18 +16,18 @@ typedef union {
 } unk800DE4D0;
 
 typedef struct DKR_OSTask {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 frameBuffer;
+    struct DKR_OSTask *next;
+    u32 state;
+    u32 flags;
+    void *frameBuffer;
     OSTask_t task; // Size: 0x40 bytes
     OSMesgQueue *mesgQueue;
-    s32 unk54;
+    OSMesg mesg;
     s32 unk58;
     s32 unk5C;
     s32 unk60;
     s32 unk64;
-    s32 unk68;
+    u32 unk68;
     s32 unk6C;
 } DKR_OSTask;
 
@@ -55,7 +55,7 @@ extern s8 rspF3DDKRDataXbusStart[];
 extern s8 rspF3DDKRFifoStart[];
 extern s8 rspF3DDKRDataFifoStart[];
 
-s32 wait_for_gfx_task(void);
+OSMesg wait_for_gfx_task(void);
 void func_80077AAC(void *bufPtr, s32 arg1, UNUSED s32 arg2);
 void set_background_prim_colour(u8 arg0, u8 arg1, u8 arg2);
 void set_background_fill_colour(s32 red, s32 green, s32 blue);
@@ -63,8 +63,6 @@ void init_rdp_and_framebuffer(Gfx **dlist);
 void init_rsp(Gfx **dlist);
 void setup_gfx_mesg_queues(OSSched *sc);
 void func_80078170(u32 arg0, u32 arg1, u32 arg2);
-void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_800787F0(void);
 
 //Non Matching
 void render_background(Gfx **dlist, s32 *arg1, s32 arg2);

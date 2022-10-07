@@ -278,7 +278,7 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
             osViBlack(FALSE);
         }
     }
-    if (mesg != 8) {
+    if (mesg != MESG_SKIP_BUFFER_SWAP) {
         swap_framebuffers();
     }
     while (osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
