@@ -369,14 +369,14 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
  * has finished.
  * Alternatively, if no task is active, then it will just skip.
  */
-OSMesg wait_for_gfx_task(void) {
+s32 wait_for_gfx_task(void) {
     OSMesg *mesg = NULL;
     if (gGfxTaskIsRunning == FALSE) { 
         return 0;
     }
-    osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesg, OS_MESG_BLOCK);
+    osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesg, OS_MESG_BLOCK); 
     gGfxTaskIsRunning = FALSE;
-    return mesg[1];
+    return (s32) mesg[1];
 }
 
 UNUSED void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
@@ -406,7 +406,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
 
 #ifdef NON_EQUIVALENT
 // Stack issues
-void render_background(Gfx **dlist, s32 *arg1, s32 arg2) {
+void render_background(Gfx **dlist, Mtx *arg1, s32 arg2) {
     s32 x1;
     s32 y1;
     s32 x2;

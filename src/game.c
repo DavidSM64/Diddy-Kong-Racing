@@ -697,7 +697,8 @@ void func_8006BEFC(void) {
 }
 
 void func_8006BFC8(s8 *arg0) {
-    s32 temp, temp2;
+    s32 temp;
+    UNUSED s32 temp2;
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
@@ -734,9 +735,9 @@ void func_8006BFC8(s8 *arg0) {
     if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
-    gTempAssetTable = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
     phi_v1 = 0;
-    while (-1U != gTempAssetTable[phi_v1]) {
+    while (-1 != (s32) gTempAssetTable[phi_v1]) {
         phi_v1++;
     }
     phi_v1--;
@@ -746,7 +747,7 @@ void func_8006BFC8(s8 *arg0) {
     temp2 = gTempAssetTable[phi_s0];
     temp = gTempAssetTable[phi_s0 + 1] - temp2;
     D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0, temp2, temp);
+    load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
     free_from_memory_pool(gTempAssetTable);
 }
 
@@ -881,7 +882,7 @@ void init_game(void) {
     func_80081218();
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
-    osScAddClient(&gMainSched, gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
+    osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
     D_80123560[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
@@ -932,7 +933,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, &gCurrHudMat, 1);
+    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, 1); 
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
@@ -1105,7 +1106,7 @@ void func_8006CCF0(s32 updateRate) {
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
     if (D_80123516 != 0) {
-        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
+        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate); 
         switch (i - 1) {
             case 1:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
@@ -1115,7 +1116,7 @@ void func_8006CCF0(s32 updateRate) {
                 func_8006D8F0(-1);
                 break;
             case 3:
-                func_8006C2E4();
+                func_8006C2E4(); 
                 D_800DD390 = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
@@ -1710,7 +1711,7 @@ void calc_and_alloc_heap_for_settings(void) {
     gSettingsPtr->courseTimesPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[11]);
     gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
     gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
-    gSettingsPtr->unk4C = &D_80121250;
+    gSettingsPtr->unk4C = (Settings4C *) &D_80121250;
     D_800DD37C = 263;
 }
 
