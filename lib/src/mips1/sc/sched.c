@@ -304,7 +304,7 @@ void __scHandleRetrace(OSSched *sc) {
 
     gRetraceCounter64++;
     gRetraceCounter32++;
-    sc->frameCount+=1; // If you want to make the game 60FPS, change this to 2.
+    sc->frameCount+=2; // If you want to make the game 60FPS, change this to 2.
 
     if ((sc->unkTask) && (sc->frameCount >= 2)) {
         unkTask = sc->unkTask;

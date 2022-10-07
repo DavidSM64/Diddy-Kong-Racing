@@ -8,6 +8,8 @@
 #include "libc/math.h"
 #include "racer.h"
 
+extern Gfx *gDisplayLists[2];
+
 enum RenderContext {
     DRAW_INTRO = -1,
     DRAW_GAME,
