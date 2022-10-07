@@ -23,15 +23,15 @@ typedef struct DKR_OSTask {
     OSTask_t task; // Size: 0x40 bytes
     OSMesgQueue *mesgQueue;
     OSMesg mesg;
-    s32 unk58;
-    s32 unk5C;
-    s32 unk60;
-    s32 unk64;
+    s32 unused58;
+    s32 unused5C;
+    s32 unused60;
+    s32 unused64;
     u32 unk68;
-    s32 unk6C;
+    s32 unused6C;
 } DKR_OSTask;
 
-extern s16 D_800DE490[16];
+extern s16 gGfxTaskMesgNums[16];
 
 extern u8 sBackgroundPrimColourR;
 extern u8 sBackgroundPrimColourG;

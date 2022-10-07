@@ -11,7 +11,7 @@
 
 /************ .data ************/
 
-s16 D_800DE490[16] = {
+s16 gGfxTaskMesgNums[16] = {
     2, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0
 };
@@ -190,8 +190,8 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     }
     dkrtask->flags = OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->unk58 = COLOUR_TAG_RED;
-    dkrtask->unk5C = COLOUR_TAG_RED;
+    dkrtask->unused58 = COLOUR_TAG_RED;
+    dkrtask->unused5C = COLOUR_TAG_RED;
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
     dkrtask->task.type = 1;
@@ -211,8 +211,8 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.output_buff_size = NULL;
     dkrtask->next = NULL;
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
-    dkrtask->unk60 = 0xFF;
-    dkrtask->unk64 = 0xFF;
+    dkrtask->unused60 = 0xFF;
+    dkrtask->unused64 = 0xFF;
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
     return 0;
@@ -246,12 +246,12 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->next = NULL;
     dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = D_800DE490;
+    dkrtask->mesg = gGfxTaskMesgNums;
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
-    dkrtask->unk58 = COLOUR_TAG_RED;
-    dkrtask->unk5C = COLOUR_TAG_RED;
-    dkrtask->unk60 = 0xFF;
-    dkrtask->unk64 = 0xFF;
+    dkrtask->unused58 = COLOUR_TAG_RED;
+    dkrtask->unused5C = COLOUR_TAG_RED;
+    dkrtask->unused60 = 0xFF;
+    dkrtask->unused64 = 0xFF;
     dkrtask->unk68 = 0;
     
     if (recvMesg) {
@@ -299,12 +299,12 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->next = NULL;
     dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP | OS_SC_DRAM_DLIST;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = D_800DE490;
+    dkrtask->mesg = gGfxTaskMesgNums;
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
-    dkrtask->unk58 = COLOUR_TAG_RED;
-    dkrtask->unk5C = COLOUR_TAG_RED;
-    dkrtask->unk60 = 0xFF;
-    dkrtask->unk64 = 0xFF;
+    dkrtask->unused58 = COLOUR_TAG_RED;
+    dkrtask->unused5C = COLOUR_TAG_RED;
+    dkrtask->unused60 = 0xFF;
+    dkrtask->unused64 = 0xFF;
     dkrtask->unk68 = 0;
     
     if (recvMesg) {
@@ -348,13 +348,13 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->next = NULL;
     dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP | OS_SC_DRAM_DLIST;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = D_800DE490;
+    dkrtask->mesg = gGfxTaskMesgNums;
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
-    dkrtask->unk58 = COLOUR_TAG_RED;
-    dkrtask->unk5C = COLOUR_TAG_RED;
+    dkrtask->unused58 = COLOUR_TAG_RED;
+    dkrtask->unused5C = COLOUR_TAG_RED;
     if (recvMesg) {
-        dkrtask->unk60 = 0xFF;
-        dkrtask->unk64 = 0xFF;
+        dkrtask->unused60 = 0xFF;
+        dkrtask->unused64 = 0xFF;
     }
     dkrtask->unk68 = 0;
     osWritebackDCacheAll();

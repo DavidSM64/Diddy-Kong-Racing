@@ -21,6 +21,9 @@ VideoModeResolution gVideoModeResolutions[] = {
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
 };
 
+// This value exists in order to make sure there are no out of bounds accesses of gVideoModeResolutions
+#define NUM_RESOLUTION_MODES ((sizeof(gVideoModeResolutions) / sizeof(VideoModeResolution)) - 1)
+
 UNUSED s32 D_800DE7BC = 0;
 
 /*******************************/
@@ -115,8 +118,8 @@ UNUSED s32 get_video_mode_index(void) {
  * Since only one kind of video mode is ever used, this function is never called.
  */
 UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
-    gVideoFbWidths[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].width;
-    gVideoFbHeights[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].height;
+    gVideoFbWidths[fbIndex] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
+    gVideoFbHeights[fbIndex] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
 }
 
 /**
@@ -144,7 +147,7 @@ void init_vi_settings(void) {
         viModeTableIndex = OS_VI_MPAL_LPN1;
     }
 
-    switch (gVideoModeIndex & 7) {
+    switch (gVideoModeIndex & NUM_RESOLUTION_MODES) {
         case VIDEO_MODE_LOWRES_LAN:
             stubbed_printf("320 by 240 Point sampled, Non interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex]);
@@ -233,8 +236,8 @@ void init_framebuffer(s32 index) {
         func_80071538((u8 *)gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
-    gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
-    gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
+    gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
+    gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
     if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
         gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);

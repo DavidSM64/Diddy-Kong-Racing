@@ -2226,242 +2226,242 @@ s32 func_80023E30(s32 arg0) {
 void run_object_loop_func(Object *obj, s32 arg1) {
     func_800B76B8(1, obj->unk4A);
     switch (obj->behaviorId) {
-        case 2:
+        case BHV_SCENERY:
             obj_loop_scenery(obj, arg1);
             break;
-        case 3:
+        case BHV_FISH:
             obj_loop_fish(obj, arg1);
             break;
-        case 4:
+        case BHV_ANIMATOR:
             obj_loop_animator(obj, arg1);
             break;
-        case 6:
+        case BHV_SMOKE:
             obj_loop_smoke(obj, arg1);
             break;
-        case 25:
+        case BHV_UNK_19:
             obj_loop_unknown25(obj, arg1);
             break;
-        case 22:
+        case BHV_BOMB_EXPLOSION:
             obj_loop_bombexplosion(obj, arg1);
             break;
-        case 7:
+        case BHV_EXIT:
             obj_loop_exit(obj, arg1);
             break;
-        case 10:
+        case BHV_CAMERA_CONTROL:
             obj_loop_cameracontrol(obj, arg1);
             break;
-        case 11:
+        case BHV_SETUP_POINT:
             obj_loop_setuppoint(obj, arg1);
             break;
-        case 12:
+        case BHV_DINO_WHALE:
             obj_loop_dino_whale(obj, arg1);
             break;
-        case 13:
+        case BHV_CHECKPOINT:
             obj_loop_checkpoint(obj, arg1);
             break;
-        case 30:
+        case BHV_MODECHANGE:
             obj_loop_modechange(obj, arg1);
             break;
-        case 41:
+        case BHV_BONUS:
             obj_loop_bonus(obj, arg1);
             break;
-        case 14:
+        case BHV_DOOR:
             obj_loop_door(obj, arg1);
             break;
-        case 15:
+        case BHV_FOG_CHANGER:
             obj_loop_fogchanger(obj);
             break;
-        case 16:
+        case BHV_AINODE:
             obj_loop_ainode(obj, arg1);
             break;
-        case 17:
+        case BHV_WEAPON_BALLOON:
             obj_loop_weaponballoon(obj, arg1);
             break;
-        case 23:
+        case BHV_BALLOON_POP:
             obj_loop_wballoonpop(obj, arg1);
             break;
-        case 5:
-        case 18:
+        case BHV_WEAPON:
+        case BHV_WEAPON_2:
             obj_loop_weapon(obj, arg1);
             break;
-        case 26:
+        case BHV_SKY_CONTROL:
             obj_loop_skycontrol(obj, arg1);
             break;
-        case 28:
+        case BHV_TORCH_MIST:
             obj_loop_torch_mist(obj, arg1);
             break;
-        case 29:
+        case BHV_TEXTURE_SCROLL:
             obj_loop_texscroll(obj, arg1);
             break;
-        case 31:
+        case BHV_STOPWATCH_MAN:
             obj_loop_stopwatchman(obj, arg1);
             break;
-        case 32:
+        case BHV_BANANA:
             obj_loop_banana(obj, arg1);
             break;
-        case 36:
+        case BHV_BUOY_PIRATE_SHIP:
             obj_loop_buoy_pirateship(obj, arg1);
             break;
-        case 67:
+        case BHV_LOG:
             obj_loop_log(obj, arg1);
             break;
-        case 37:
+        case BHV_WEATHER:
             obj_loop_weather(obj, arg1);
             break;
-        case 38:
+        case BHV_BRIDGE_WHALE_RAMP:
             obj_loop_bridge_whaleramp(obj, arg1);
             break;
-        case 39:
+        case BHV_RAMP_SWITCH:
             obj_loop_rampswitch(obj, arg1);
             break;
-        case 40:
+        case BHV_SEA_MONSTER:
             obj_loop_seamonster(obj, arg1);
             break;
-        case 45:
+        case BHV_COLLECT_EGG:
             obj_loop_collectegg(obj, arg1);
             break;
-        case 46:
+        case BHV_EGG_CREATOR:
             obj_loop_eggcreator(obj, arg1);
             break;
-        case 47:
+        case BHV_CHARACTER_FLAG:
             obj_loop_characterflag(obj, arg1);
             break;
-        case 50:
-        case 81:
-        case 85:
-        case 86:
+        case BHV_ANIMATED_OBJECT:
+        case BHV_ANIMATED_OBJECT_2:
+        case BHV_ANIMATED_OBJECT_3:
+        case BHV_ANIMATED_OBJECT_4:
             obj_loop_animobject(obj, arg1);
             break;
-        case 119:
+        case BHV_WIZPIG_GHOSTS:
             obj_loop_wizghosts(obj, arg1);
             break;
-        case 51:
+        case BHV_CAMERA_ANIMATION:
             obj_loop_animcamera(obj, arg1);
             break;
-        case 52:
+        case BHV_INFO_POINT:
             obj_loop_infopoint(obj, arg1);
             break;
-        case 53:
+        case BHV_CAR_ANIMATION:
             obj_loop_animcar(obj, arg1);
             break;
-        case 54:
+        case BHV_CHARACTER_SELECT:
             obj_loop_char_select(obj, arg1);
             break;
-        case 55:
+        case BHV_TRIGGER:
             obj_loop_trigger(obj, arg1);
             break;
-        case 56:
+        case BHV_VEHICLE_ANIMATION:
             obj_loop_vehicleanim(obj, arg1);
             break;
-        case 57:
-        case 93:
+        case BHV_ZIPPER_WATER:
+        case BHV_ZIPPER_AIR:
             obj_loop_airzippers_waterzippers(obj, arg1);
             break;
-        case 58:
+        case BHV_UNK_3A:
             obj_loop_unknown58(obj, arg1);
             break;
-        case 60:
+        case BHV_WAVE_POWER:
             obj_loop_wavepower(obj);
             break;
-        case 61:
+        case BHV_BUTTERFLY:
             obj_loop_butterfly(obj, arg1);
             break;
-        case 62:
+        case BHV_PARK_WARDEN:
             obj_loop_parkwarden(obj, arg1);
             break;
-        case 64:
+        case BHV_WORLD_KEY:
             obj_loop_worldkey(obj, arg1); //arg1=speed
             break;
-        case 65:
+        case BHV_BANANA_SPAWNER:
             obj_loop_bananacreator(obj, arg1);
             break;
-        case 66:
+        case BHV_TREASURE_SUCKER:
             obj_loop_treasuresucker(obj, arg1);
             break;
-        case 68:
+        case BHV_LAVA_SPURT:
             obj_loop_lavaspurt(obj, arg1);
             break;
-        case 69:
+        case BHV_POS_ARROW:
             obj_loop_posarrow(obj, arg1);
             break;
-        case 70:
-        case 72:
-        case 103:
-        case 104:
+        case BHV_HIT_TESTER:
+        case BHV_HIT_TESTER_2:
+        case BHV_HIT_TESTER_3:
+        case BHV_HIT_TESTER_4:
             obj_loop_hittester(obj, arg1);
             break;
-        case 96:
-        case 97:
-        case 101:
-        case 102:
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_3:
+        case BHV_SNOWBALL_4:
             obj_loop_snowball(obj, arg1);
             break;
-        case 73:
+        case BHV_EFFECT_BOX:
             obj_loop_effectbox(obj, arg1);
             break;
-        case 74:
+        case BHV_TROPHY_CABINET:
             obj_loop_trophycab(obj, arg1);
             break;
-        case 75:
+        case BHV_BUBBLER:
             obj_loop_bubbler(obj, arg1);
             break;
-        case 76:
+        case BHV_FLY_COIN:
             obj_loop_flycoin(obj, arg1);
             break;
-        case 77:
+        case BHV_GOLDEN_BALLOON:
             obj_loop_goldenballoon(obj, arg1);
             break;
-        case 78:
+        case BHV_LASER_BOLT:
             obj_loop_laserbolt(obj, arg1);
             break;
-        case 79:
+        case BHV_LASER_GUN:
             obj_loop_lasergun(obj, arg1);
             break;
-        case 80:
+        case BHV_PARK_WARDEN_2:
             obj_loop_gbparkwarden(obj, arg1);
             break;
-        case 82:
+        case BHV_ZIPPER_GROUND:
             obj_loop_groundzipper(obj, arg1);
             break;
-        case 84:
+        case BHV_WIZPIG_SHIP:
             obj_loop_wizpigship(obj, arg1);
             break;
-        case 88:
-        case 110:
+        case BHV_SILVER_COIN:
+        case BHV_SILVER_COIN_2:
             obj_loop_silvercoin(obj, arg1);
             break;
-        case 90:
+        case BHV_WARDEN_SMOKE:
             obj_loop_wardensmoke(obj, arg1);
             break;
-        case 94:
+        case BHV_UNK_5E:
             obj_loop_unknown94(obj, arg1);
             break;
-        case 98:
+        case BHV_TELEPORT:
             obj_loop_teleport(obj, arg1);
             break;
-        case 105:
+        case BHV_RANGE_TRIGGER:
             obj_loop_rangetrigger(obj, arg1);
             break;
-        case 100:
+        case BHV_ROCKET_SIGNPOST:
             obj_loop_rocketsignpost(obj, arg1);
             break;
-        case 108:
-        case 116:
+        case BHV_FIREBALL_OCTOWEAPON:
+        case BHV_FIREBALL_OCTOWEAPON_2:
             obj_loop_fireball_octoweapon(obj, arg1);
             break;
-        case 109:
+        case BHV_FROG:
             obj_loop_frog(obj, arg1);
             break;
-        case 111:
+        case BHV_TT_DOOR:
             obj_loop_ttdoor(obj, arg1);
             break;
-        case 113:
+        case BHV_DOOR_OPENER:
             obj_loop_dooropener(obj, arg1);
             break;
-        case 115:
+        case BHV_PIG_ROCKETEER:
             obj_loop_pigrocketeer(obj, arg1);
             break;
-        case 117:
+        case BHV_LEVEL_NAME:
             obj_loop_levelname(obj, arg1);
             break;
     }
