@@ -826,9 +826,9 @@ s32 func_80010028(s32 arg0) {
     return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
 
-#ifdef NON_EQUIVALENT
-//bad regalloc; swap s2 = s3
-/*removes objects in particleList from gObjPtrList and frees*/
+/*
+ * Clears all existing particles from the object list
+ */
 void gParticlePtrList_flush(void) {
     s32 j, i, search_indx, tmp;
     Object *searchObj;
@@ -846,10 +846,11 @@ void gParticlePtrList_flush(void) {
         //if object found
         if (search_indx != -1) {
             tmp = D_8011AE7C;
-            if (search_indx < D_8011AE7C)
+            if (search_indx < D_8011AE7C) {
                 D_8011AE7C = tmp - 1;
-
+            }
             objCount--;
+            if (0);
             for (j = search_indx; j < objCount; j++) {
                 gObjPtrList[j] = gObjPtrList[j + 1];
             }
@@ -858,9 +859,6 @@ void gParticlePtrList_flush(void) {
     }
     gParticleCount = 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/gParticlePtrList_flush.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
