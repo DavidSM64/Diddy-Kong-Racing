@@ -619,34 +619,25 @@ void func_8000E1EC(Object *object, s32 arg1) {
     gObjectCount = 0;
 }
 
-#ifdef NON_EQUIVALENT
-typedef struct LevelObjectEntry8000E2B4 {
-    LevelObjectEntryCommon common;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} LevelObjectEntry8000E2B4;
-
 void func_8000E2B4(void) {
+    Object *player;
     LevelObjectEntry8000E2B4 sp2C;
     Settings *settings;
-    Object *player;
     Object_Racer *player_64;
     s16 object_id;
 
-    if (D_8011AD44 == 0) {
+    if (!D_8011AD44) {
         return;
     }
-    D_8011AD44 = (s8) (D_8011AD44 - 1);
-    if (D_8011AD44 != 0) {
+    D_8011AD44--;
+    if (D_8011AD44) {
         return;
     }
     settings = get_settings();
     sp2C.unkE = 0;
     sp2C.common.size = 0x10;
     if (D_8011AD45 < 5) {
-        object_id = ((s16*)D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
+        object_id = ((s16*) D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
     } else {
         object_id = D_800DC7B8[D_8011AD45 + 37];
     }
@@ -654,7 +645,7 @@ void func_8000E2B4(void) {
     sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
     sp2C.unkA = 0;
     sp2C.unk8 = 0;
-    sp2C.common.objectID = (s8) object_id;
+    sp2C.common.objectID = object_id;
     sp2C.common.x = D_8011AD46;
     sp2C.common.y = D_8011AD48;
     sp2C.common.z = D_8011AD4A;
@@ -662,16 +653,16 @@ void func_8000E2B4(void) {
     func_800521B8(1);
     player = spawn_object(&sp2C, 0x11);
     gObjectCount = 1;
-    (*gObjectStructArrayPtr)[0] = (s32) player;
-    *D_8011AEEC = (s32) player;
+    (*gObjectStructArrayPtr)[0] = player;
+    *D_8011AEEC = player;
     *D_8011AEE8 = player;
     player_64 = &player->unk64->racer;
-    player_64->unk1D6 = (s8) D_8011AD45;
-    player_64->unk2 = (u8)0;
-    player_64->unk1D7 = (s8) D_8011AD45;
-    player_64->playerIndex = (u16)0;
-    player_64->unk118 = 0;
+    player_64->unk1D6 = D_8011AD45;
+    player_64->unk1D7 = D_8011AD45;
+    player_64->unk2 = 0;
     player_64->characterId = (s8) settings->racers[0].character;
+    player_64->playerIndex = 0;
+    player_64->unk118 = 0;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
         player->segment.trans.scale *= 1.4f;
     }
@@ -682,9 +673,6 @@ void func_8000E2B4(void) {
     player->segment.trans.y_rotation = D_8011AD4C;
     player->segment.trans.y_position = D_8011AD48;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_8000E2B4.s")
-#endif
 
 /**
  * Enables or Disables time trial mode.

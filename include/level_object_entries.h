@@ -535,4 +535,12 @@ typedef struct LevelObjectEntry_Midichset {
     /* 0x0B */ u8 unkB;
 } LevelObjectEntry_Midichset;
 
+typedef struct LevelObjectEntry8000E2B4 {
+    LevelObjectEntryCommon common;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} LevelObjectEntry8000E2B4;
+
 #endif
