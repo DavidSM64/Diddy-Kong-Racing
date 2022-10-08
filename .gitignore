@@ -1,5 +1,6 @@
 # Baseroms is where the user will place their ROM files.
 baseroms/*
+nonmatchings/*
 
 # Ignore pycache
 __pycache__
