@@ -43,10 +43,8 @@ s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
 s8 D_800DC744 = 0;
 s8 D_800DC748 = 0;
-s32 D_800DC74C = 0; // Currently unknown, might be a different type.
-s32 D_800DC750 = 0; // Currently unknown, might be a different type.
-s32 D_800DC754 = 0; // Currently unknown, might be a different type.
-s32 D_800DC758 = 0; // Currently unknown, might be a different type.
+s32 D_800DC74C[2] = {0, 0}; // Have a feeling these are both the same array.
+s32 D_800DC754[2] = {0, 0};
 Object *D_800DC75C = NULL; // Currently unknown, might be a different type.
 s32 D_800DC760 = 9; // Currently unknown, might be a different type.
 Object *D_800DC764 = NULL; // Currently unknown, might be a different type.
@@ -272,30 +270,40 @@ extern s16 D_8011D5AC;
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000B020.s")
 
-#ifdef NON_EQUIVALENT
-extern s32 D_800DC754;
-extern Object *D_800DC75C;
-extern Object *D_800DC764;
+struct TempStruct9 {
+    u8 pad[0x78];
+    Sprite* unk78;
+    TextureHeader* unk7C;
+};
 
-s32 *get_misc_asset(s32 arg0);
+void func_8000B290(void) {
+    Sprite* temp_a0_2;
+    TextureHeader* temp_a0_3;
+    s32 temp_a0;
+    struct TempStruct9* var_s0;
+    u32 i;
 
-// Not positive about the data argument.
-// It just made sense since there seemed to be nothing else to pass to free_from_memory_pool
-void func_8000B290(void *data) {
-
-    if (D_800DC754) {
-        free_from_memory_pool(data);
+    temp_a0 = D_800DC754[0];
+    if (temp_a0 != 0) {
+        free_from_memory_pool((void* ) temp_a0);
+        D_800DC754[0] = 0;
+        D_800DC754[1] = 0;
+        D_800DC74C[0] = 0;
+        D_800DC74C[1] = 0;
     }
-    get_misc_asset(MISC_ASSET_UNK14);
-    /*{
-        if(D_800DC754->unk7a)
-            free_sprite();
-        D_800DC754->unk7a = 0;
-
-        if(D_800DC754->unk7C)
-            free_texture();
-        D_800DC754->unk7C = 0;
-    }*/
+    var_s0 = (struct TempStruct9 *) get_misc_asset(0x14);
+    for (i = 0; i < 10; i++) {
+        temp_a0_2 = var_s0[i].unk78;
+        if (temp_a0_2 != 0) {
+            free_sprite(temp_a0_2);
+            var_s0[i].unk78 = 0;
+        }
+        temp_a0_3 = var_s0[i].unk7C;
+        if (temp_a0_3 != 0) {
+            free_texture(temp_a0_3);
+            var_s0[i].unk7C = 0;
+        }
+    }
     if (D_800DC75C)
         gParticlePtrList_addObject(D_800DC75C);
     D_800DC75C = NULL;
@@ -303,12 +311,8 @@ void func_8000B290(void *data) {
     if (D_800DC764)
         gParticlePtrList_addObject(D_800DC764);
     D_800DC764 = NULL;
-
     gParticlePtrList_flush();
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_8000B290.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000B38C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000B750.s")

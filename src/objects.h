@@ -236,10 +236,8 @@ extern s8 D_800DC73C;
 extern s8 D_800DC740;
 extern s8 D_800DC744;
 extern s8 D_800DC748;
-extern s32 D_800DC74C;
-extern s32 D_800DC750;
-extern s32 D_800DC754;
-extern s32 D_800DC758;
+extern s32 D_800DC74C[2];
+extern s32 D_800DC754[2];
 extern s32 D_800DC760;
 extern s32 D_800DC768;
 
