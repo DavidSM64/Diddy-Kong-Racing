@@ -1525,6 +1525,9 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
     s16 environmentMappingEnabled;
     s32 dynamicLightingEnabled;
     s16 i;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first =  osGetTime();
+#endif
 
     dynamicLightingEnabled = 0;
     environmentMappingEnabled = 0;
@@ -1553,6 +1556,9 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
         // Calculates environment mapping for the object
         calc_env_mapping_for_object(model, object->segment.trans.z_rotation, object->segment.trans.x_rotation, object->segment.trans.y_rotation);
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.lightTime, osGetTime() - first);
+#endif
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")

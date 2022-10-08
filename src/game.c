@@ -961,6 +961,8 @@ void render_profiler(void) {
     render_printf("Scene: %dus\n", gPuppyTimers.graphTime[PERF_TOTAL]);
     if (gPuppyTimers.racerTime[PERF_TOTAL])
         render_printf("Racer: %dus\n", gPuppyTimers.racerTime[PERF_TOTAL]);
+    if (gPuppyTimers.lightTime[PERF_TOTAL])
+        render_printf("Light: %dus\n", gPuppyTimers.lightTime[PERF_TOTAL]);
     render_printf("Audio: %dus\n", gPuppyTimers.thread4Time[PERF_TOTAL]);
     render_printf("Tri: %d\n", sTriCount);
 #ifdef FIFO_UCODE
@@ -984,6 +986,7 @@ void puppyprint_calculate_average_times(void) {
         gPuppyTimers.collisionTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.collisionTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.behaviourTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.behaviourTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.racerTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.racerTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+        gPuppyTimers.lightTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.lightTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.thread2Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread2Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.thread3Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread3Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.thread4Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread4Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
@@ -1080,6 +1083,8 @@ void main_game_loop(void) {
     u32 first = osGetTime();
     gPuppyTimers.racerTime[PERF_AGGREGATE] -= gPuppyTimers.racerTime[perfIteration];
     gPuppyTimers.racerTime[perfIteration] = 0;
+    gPuppyTimers.lightTime[PERF_AGGREGATE] -= gPuppyTimers.lightTime[perfIteration];
+    gPuppyTimers.lightTime[perfIteration] = 0;
     if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
         gProfilerOn ^= 1;
     }
@@ -1201,6 +1206,7 @@ void main_game_loop(void) {
     profiler_update(gPuppyTimers.thread3Time, first);
     profiler_update(gPuppyTimers.behaviourTime, first);
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.graphTime[perfIteration]);
+    profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.lightTime[perfIteration]);
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.racerTime[perfIteration]);
 #endif
     if (D_800DD3F0 != 1) {
