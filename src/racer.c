@@ -1139,6 +1139,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
     s32 temp_v1_4;
     s32 i;
     struct LevelObjectEntryCommon newObject;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first =  osGetTime();
+#endif
 
     gNumViewports = get_viewport_count() + 1;
     gCurrentSurfaceType = SURFACE_DEFAULT;
@@ -1652,6 +1655,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->unk194 = tempRacer->unk193;
         }
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.racerTime, osGetTime() - first);
+#endif
 }
 
 void func_8004F77C(Object_Racer *racer) {
