@@ -1817,261 +1817,261 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
 
 void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     obj->behaviorId = obj->segment.header->behaviorId;
-    switch (obj->behaviorId - 1) { // Why the minus 1?
-        case 0:
+    switch (obj->behaviorId) {
+        case BHV_RACER:
             obj_init_racer(obj, (LevelObjectEntry_Racer *)entry);
             break;
-        case 1:
+        case BHV_SCENERY:
             obj_init_scenery(obj, (LevelObjectEntry_Scenery*)entry);
             break;
-        case 2:
+        case BHV_FISH:
             obj_init_fish(obj, (LevelObjectEntry_Fish *)entry);
             break;
-        case 3:
+        case BHV_ANIMATOR:
             obj_init_animator(obj, (LevelObjectEntry_Animator *)entry, arg2);
             break;
-        case 5:
+        case BHV_SMOKE:
             obj_init_smoke(obj, (LevelObjectEntry_Smoke *)entry);
             break;
-        case 24:
+        case BHV_UNK_19:
             obj_init_unknown25(obj, (LevelObjectEntry_Unknown25 *)entry);
             break;
-        case 21:
+        case BHV_BOMB_EXPLOSION:
             obj_init_bombexplosion(obj, (LevelObjectEntry_BombExplosion *)entry);
             break;
-        case 6:
+        case BHV_EXIT:
             obj_init_exit(obj, (LevelObjectEntry_Exit *)entry);
             break;
-        case 7:
+        case BHV_AUDIO:
             obj_init_audio(obj, (LevelObjectEntry_Audio *)entry);
             break;
-        case 8:
-        case 18:
+        case BHV_AUDIO_LINE:
+        case BHV_AUDIO_LINE_2:
             obj_init_audioline(obj, (LevelObjectEntry_AudioLine *)entry);
             break;
-        case 26:
+        case BHV_AUDIO_REVERB:
             obj_init_audioreverb(obj, (LevelObjectEntry_AudioReverb *)entry);
             break;
-        case 9:
+        case BHV_CAMERA_CONTROL:
             obj_init_cameracontrol(obj, (LevelObjectEntry_CameraControl *)entry);
             break;
-        case 10:
+        case BHV_SETUP_POINT:
             obj_init_setuppoint(obj, (LevelObjectEntry_SetupPoint *)entry);
             break;
-        case 11:
+        case BHV_DINO_WHALE:
             obj_init_dino_whale(obj, (LevelObjectEntry_Dino_Whale *)entry);
             break;
-        case 12:
+        case BHV_CHECKPOINT:
             obj_init_checkpoint(obj, (LevelObjectEntry_Checkpoint *)entry, arg2);
             break;
-        case 29:
+        case BHV_MODECHANGE:
             obj_init_modechange(obj, (LevelObjectEntry_ModeChange *)entry);
             break;
-        case 40:
+        case BHV_BONUS:
             obj_init_bonus(obj, (LevelObjectEntry_Bonus *)entry);
             break;
-        case 13:
+        case BHV_DOOR:
             obj_init_door(obj, (LevelObjectEntry_Door *)entry);
             break;
-        case 110:
+        case BHV_TT_DOOR:
             obj_init_ttdoor(obj, (LevelObjectEntry_TTDoor *)entry);
             break;
-        case 14:
+        case BHV_FOG_CHANGER:
             obj_init_fogchanger(obj, (LevelObjectEntry_FogChanger *)entry);
             break;
-        case 15:
+        case BHV_AINODE:
             obj_init_ainode(obj, (LevelObjectEntry_AiNode *)entry);
             break;
-        case 16:
+        case BHV_WEAPON_BALLOON:
             obj_init_weaponballoon(obj, (LevelObjectEntry_WeaponBalloon *)entry);
             break;
-        case 22:
+        case BHV_BALLOON_POP:
             obj_init_wballoonpop(obj, (LevelObjectEntry_WBalloonPop *)entry);
             break;
-        case 4:
-        case 17:
+        case BHV_WEAPON:
+        case BHV_WEAPON_2:
             obj_init_weapon(obj, (LevelObjectEntry_Weapon *)entry);
             break;
-        case 25:
+        case BHV_SKY_CONTROL:
             obj_init_skycontrol(obj, (LevelObjectEntry_SkyControl *)entry);
             break;
-        case 27:
+        case BHV_TORCH_MIST:
             obj_init_torch_mist(obj, (LevelObjectEntry_Torch_Mist *)entry);
             break;
-        case 28:
+        case BHV_TEXTURE_SCROLL:
             obj_init_texscroll(obj, (LevelObjectEntry_TexScroll *)entry, arg2);
             break;
-        case 30:
+        case BHV_STOPWATCH_MAN:
             obj_init_stopwatchman(obj, (LevelObjectEntry_StopWatchMan *)entry);
             break;
-        case 31:
+        case BHV_BANANA:
             obj_init_banana(obj, (LevelObjectEntry_Banana *)entry);
             break;
-        case 32:
+        case BHV_LIGHT_RGBA:
             obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *)entry, arg2);
             break;
-        case 35:
+        case BHV_BUOY_PIRATE_SHIP:
             obj_init_buoy_pirateship(obj, (LevelObjectEntry_Buoy_PirateShip *)entry, arg2);
             break;
-        case 66:
+        case BHV_LOG:
             obj_init_log(obj, (LevelObjectEntry_Log *)entry, arg2);
             break;
-        case 36:
+        case BHV_WEATHER:
             obj_init_weather(obj, (LevelObjectEntry_Weather *)entry);
             break;
-        case 37:
+        case BHV_BRIDGE_WHALE_RAMP:
             obj_init_bridge_whaleramp(obj, (LevelObjectEntry_Bridge_WhaleRamp *)entry);
             break;
-        case 38:
+        case BHV_RAMP_SWITCH:
             obj_init_rampswitch(obj, (LevelObjectEntry_RampSwitch *)entry);
             break;
-        case 39:
+        case BHV_SEA_MONSTER:
             obj_init_seamonster(obj, (LevelObjectEntry_SeaMonster *)entry);
             break;
-        case 42:
+        case BHV_LENS_FLARE:
             obj_init_lensflare(obj, (LevelObjectEntry_LensFlare *)entry);
             break;
-        case 43:
+        case BHV_LENS_FLARE_SWITCH:
             obj_init_lensflareswitch(obj, (LevelObjectEntry_LensFlareSwitch *)entry);
             break;
-        case 44:
+        case BHV_COLLECT_EGG:
             obj_init_collectegg(obj, (LevelObjectEntry_CollectEgg *)entry);
             break;
-        case 45:
+        case BHV_EGG_CREATOR:
             obj_init_eggcreator(obj, (LevelObjectEntry_EggCreator *)entry);
             break;
-        case 46:
+        case BHV_CHARACTER_FLAG:
             obj_init_characterflag(obj, (LevelObjectEntry_CharacterFlag *)entry);
             break;
-        case 48:
+        case BHV_ANIMATION:
             obj_init_animation(obj, (LevelObjectEntry_Animation *)entry);
             break;
-        case 51:
+        case BHV_INFO_POINT:
             obj_init_infopoint(obj, (LevelObjectEntry_InfoPoint *)entry);
             break;
-        case 54:
+        case BHV_TRIGGER:
             obj_init_trigger(obj, (LevelObjectEntry_Trigger *)entry);
             break;
-        case 56:
-        case 92:
+        case BHV_ZIPPER_WATER:
+        case BHV_ZIPPER_AIR:
             obj_init_airzippers_waterzippers(obj, (LevelObjectEntry_AirZippers_WaterZippers *)entry);
             break;
-        case 57:
+        case BHV_UNK_3A:
             obj_init_unknown58(obj, (LevelObjectEntry_Unknown58 *)entry);
             break;
-        case 58:
+        case BHV_WAVE_GENERATOR:
             obj_init_wavegenerator(obj, (LevelObjectEntry_WaveGenerator *)entry, arg2);
             break;
-        case 60:
+        case BHV_BUTTERFLY:
             obj_init_butterfly(obj, (LevelObjectEntry_Butterfly *)entry);
             break;
-        case 61:
+        case BHV_PARK_WARDEN:
             obj_init_parkwarden(obj, (LevelObjectEntry_Parkwarden *)entry);
             break;
-        case 63:
+        case BHV_WORLD_KEY:
             obj_init_worldkey(obj, (LevelObjectEntry_WorldKey *)entry);
             break;
-        case 64:
+        case BHV_BANANA_SPAWNER:
             obj_init_bananacreator(obj, (LevelObjectEntry_BananaCreator *)entry);
             break;
-        case 65:
+        case BHV_TREASURE_SUCKER:
             obj_init_treasuresucker(obj, (LevelObjectEntry_TreasureSucker *)entry);
             break;
-        case 67:
+        case BHV_LAVA_SPURT:
             obj_init_lavaspurt(obj, (LevelObjectEntry_LavaSpurt *)entry);
             break;
-        case 68:
+        case BHV_POS_ARROW:
             obj_init_posarrow(obj, (LevelObjectEntry_PosArrow *)entry);
             break;
-        case 69:
-        case 102:
+        case BHV_HIT_TESTER:
+        case BHV_HIT_TESTER_3:
             obj_init_hittester(obj, (LevelObjectEntry_HitTester *)entry);
             break;
-        case 71:
-        case 94:
-        case 103:
+        case BHV_HIT_TESTER_2:
+        case BHV_DYNAMIC_LIGHT_OBJECT_2:
+        case BHV_HIT_TESTER_4:
             obj_init_dynamic_lighting_object(obj, (LevelObjectEntry_DynamicLightingObject *)entry);
             break;
-        case 95:
-        case 100:
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_3:
             obj_init_unknown96(obj, (LevelObjectEntry_Unknown96 *)entry);
             break;
-        case 96:
-        case 101:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_4:
             obj_init_snowball(obj, (LevelObjectEntry_Snowball *)entry);
             break;
-        case 70:
+        case BHV_MIDI_FADE:
             obj_init_midifade(obj, (LevelObjectEntry_MidiFade *)entry);
             break;
-        case 111:
+        case BHV_MIDI_FADE_POINT:
             obj_init_midifadepoint(obj, (LevelObjectEntry_MidiFadePoint *)entry);
             break;
-        case 117:
+        case BHV_MIDI_CHANNEL_SET:
             obj_init_midichset(obj, (LevelObjectEntry_Midichset *)entry);
             break;
-        case 72:
+        case BHV_EFFECT_BOX:
             obj_init_effectbox(obj, (LevelObjectEntry_EffectBox *)entry);
             break;
-        case 73:
+        case BHV_TROPHY_CABINET:
             obj_init_trophycab(obj, (LevelObjectEntry_TrophyCab *)entry);
             break;
-        case 74:
+        case BHV_BUBBLER:
             obj_init_bubbler(obj, (LevelObjectEntry_Bubbler *)entry);
             break;
-        case 75:
+        case BHV_FLY_COIN:
             obj_init_flycoin(obj, (LevelObjectEntry_FlyCoin *)entry);
             break;
-        case 76:
+        case BHV_GOLDEN_BALLOON:
             obj_init_goldenballoon(obj, (LevelObjectEntry_GoldenBalloon *)entry);
             break;
-        case 77:
+        case BHV_LASER_BOLT:
             obj_init_laserbolt(obj, (LevelObjectEntry_Laserbolt *)entry);
             break;
-        case 78:
+        case BHV_LASER_GUN:
             obj_init_lasergun(obj, (LevelObjectEntry_Lasergun *)entry);
             break;
-        case 81:
+        case BHV_ZIPPER_GROUND:
             obj_init_groundzipper(obj, (LevelObjectEntry_GroundZipper *)entry);
             break;
-        case 82:
+        case BHV_OVERRIDE_POS:
             obj_init_overridepos(obj, (LevelObjectEntry_OverridePos *)entry);
             break;
-        case 83:
+        case BHV_WIZPIG_SHIP:
             obj_init_wizpigship(obj, (LevelObjectEntry_WizpigShip *)entry);
             break;
-        case 88:
+        case BHV_BOOST:
             obj_init_boost(obj, (LevelObjectEntry_Boost *)entry);
             break;
-        case 87:
+        case BHV_SILVER_COIN:
             obj_init_silvercoin(obj, (LevelObjectEntry_SilverCoin *)entry);
             break;
-        case 89:
+        case BHV_WARDEN_SMOKE:
             obj_init_wardensmoke(obj, (LevelObjectEntry_WardenSmoke *)entry);
             break;
-        case 93:
+        case BHV_UNK_5E:
             obj_init_unknown94(obj, (LevelObjectEntry_Unknown94 *)entry, arg2);
             break;
-        case 97:
+        case BHV_TELEPORT:
             obj_init_teleport(obj, (LevelObjectEntry_Teleport *)entry);
             break;
-        case 98:
-        case 99:
+        case BHV_ROCKET_SIGNPOST:
+        case BHV_ROCKET_SIGNPOST_2:
             obj_init_lighthouse_rocketsignpost(obj, (LevelObjectEntry_Lighthouse_RocketSignpost *)entry);
             break;
-        case 104:
+        case BHV_RANGE_TRIGGER:
             obj_init_rangetrigger(obj, (LevelObjectEntry_RangeTrigger *)entry);
             break;
-        case 107:
-        case 115:
+        case BHV_FIREBALL_OCTOWEAPON:
+        case BHV_FIREBALL_OCTOWEAPON_2:
             obj_init_fireball_octoweapon(obj, (LevelObjectEntry_Fireball_Octoweapon *)entry);
             break;
-        case 108:
+        case BHV_FROG:
             obj_init_frog(obj, (LevelObjectEntry_Frog *)entry);
             break;
-        case 109:
+        case BHV_SILVER_COIN_2:
             obj_init_silvercoin_adv2(obj, (LevelObjectEntry_SilverCoinAdv2 *)entry);
             break;
-        case 116:
+        case BHV_LEVEL_NAME:
             obj_init_levelname(obj, (LevelObjectEntry_LevelName *)entry);
             break;
     }
@@ -2427,7 +2427,7 @@ void run_object_loop_func(Object *obj, s32 arg1) {
         case BHV_RANGE_TRIGGER:
             obj_loop_rangetrigger(obj, arg1);
             break;
-        case BHV_ROCKET_SIGNPOST:
+        case BHV_ROCKET_SIGNPOST_2:
             obj_loop_rocketsignpost(obj, arg1);
             break;
         case BHV_FIREBALL_OCTOWEAPON:
