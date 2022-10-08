@@ -830,7 +830,7 @@ s32 func_80010028(s32 arg0) {
  * Clears all existing particles from the object list
  */
 void gParticlePtrList_flush(void) {
-    s32 j, i, search_indx, tmp;
+    s32 j, i, search_indx;
     Object *searchObj;
 
     D_8011AE88 = 0;
@@ -845,9 +845,8 @@ void gParticlePtrList_flush(void) {
 
         //if object found
         if (search_indx != -1) {
-            tmp = D_8011AE7C;
             if (search_indx < D_8011AE7C) {
-                D_8011AE7C = tmp - 1;
+                D_8011AE7C--;
             }
             objCount--;
             if (0);
