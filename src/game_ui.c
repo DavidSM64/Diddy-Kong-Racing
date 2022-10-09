@@ -434,12 +434,18 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7FBC.s")
 
 void func_800A83B4(LevelModel *model) {
     s32 sp2C;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first =  osGetTime();
+#endif
     gMinimapRed = (model->minimapColor >> 16) & 0xFF;
     gMinimapGreen = (model->minimapColor >> 8) & 0xFF;
     gMinimapBlue = model->minimapColor & 0xFF;
     load_sprite_info(model->unk20, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
     func_8007CA68(model->unk20, 0, &D_80126D14, &D_80126D18, &sp2C);
     model->unk20 = (s32)func_8007C12C(model->unk20, 1);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.hudTime, osGetTime() - first);
+#endif
 }
 
 s8 func_800A8458(void) {

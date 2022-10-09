@@ -65,6 +65,8 @@ struct PuppyPrintTimers {
     PPTimer behaviourTime; // Behaviour script execution time.
     PPTimer racerTime; // Behaviour script execution time.
     PPTimer lightTime; // Behaviour script execution time.
+    PPTimer hudTime; // Behaviour script execution time.
+    PPTimer objectsTime; // Behaviour script execution time.
     PPTimer thread2Time; // Fault thread execution time.
     PPTimer thread3Time; // Task thread execution time.
     PPTimer thread4Time; // Audio thread execution time.

@@ -41,6 +41,8 @@
 #include "object_models.h"
 #include "racer.h"
 #include "particles.h"
+#include "string.h"
+#include "stdarg.h"
 
 /************ .rodata ************/
 
@@ -910,6 +912,7 @@ u8 gWidescreen = 0;
 s32 sTriCount = 0;
 s32 prevTime = 0;
 u32 sTimerTemp = 0;
+u8 sProfilerPage = 0;
 struct PuppyPrintTimers gPuppyTimers;
 
 #define FRAMETIME_COUNT 10
@@ -937,8 +940,12 @@ void rdp_profiler_update(u32 *time, u32 time2) {
 }
 
 void profiler_update(u32 *time, u32 time2) {
+    s32 tmm = (osGetTime() - time2);
+    if (tmm > OS_USEC_TO_CYCLES(99999)) {
+        tmm =  OS_USEC_TO_CYCLES(99999);
+    }
     time[PERF_AGGREGATE] -= time[perfIteration];
-    time[perfIteration] = (osGetTime() - time2);
+    time[perfIteration] = tmm;
     time[PERF_AGGREGATE] += time[perfIteration];
 }
 
@@ -952,8 +959,29 @@ void profiler_add(u32 *time, u32 offset) {
     time[perfIteration] += offset;
 }
 
+
+static char *proutSprintf(char *dst, const char *src, size_t count)
+{
+    return (char *)memcpy((u8 *)dst, (u8 *)src, count) + count;
+}
+
+int puppyprintf(char *dst, const char *fmt, ...)
+{
+    s32 ans;
+    va_list ap;
+    va_start(ap, fmt);
+    ans = _Printf(proutSprintf, dst, fmt, ap);
+    if (ans >= 0)
+    {
+        dst[ans] = 0;
+    }
+    return ans; 
+}
+
 void render_profiler(void) {
-    render_printf("FPS: %02d\n", gFPS);
+    char textBytes[32];
+    s32 printY;
+    /*render_printf("FPS: %02d\n", gFPS);
     render_printf("CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
     render_printf("RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
     render_printf("RDP: %dus (%d%%)\n", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
@@ -973,7 +1001,73 @@ void render_profiler(void) {
     }
 #else
     render_printf("GFX: XBUS");
-#endif
+#endif*/
+    set_text_font(FONT_SMALL);
+    set_text_colour(255, 255, 255, 255, 255);
+    set_text_background_colour(0,0, 0, 192);
+    puppyprintf(textBytes,  "FPS: %d\n", gFPS);
+    draw_text(&gCurrDisplayList, 4, 10, textBytes, ALIGN_TOP_LEFT);
+    puppyprintf(textBytes,  "CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
+    draw_text(&gCurrDisplayList, 4, 20, textBytes, ALIGN_TOP_LEFT);
+    printY = 30;
+    if (IO_READ(DPC_PIPEBUSY_REG)) {
+        puppyprintf(textBytes,  "RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
+        draw_text(&gCurrDisplayList, 4, 30, textBytes, ALIGN_TOP_LEFT);
+        puppyprintf(textBytes,  "RDP: %dus (%d%%)\n", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
+        draw_text(&gCurrDisplayList, 4, 40, textBytes, ALIGN_TOP_LEFT);
+        printY = 50;
+    }
+    puppyprintf(textBytes,  "TRI: %d\n", sTriCount);
+    draw_text(&gCurrDisplayList, 4, printY, textBytes, ALIGN_TOP_LEFT);
+#ifdef FIFO_UCODE
+    if (!suCodeSwitch) {
+        draw_text(&gCurrDisplayList, 4, printY + 10, "GFX: FIFO", ALIGN_TOP_LEFT);
+    } else {
+ #endif
+        draw_text(&gCurrDisplayList, 4, printY + 10, "GFX: XBUS", ALIGN_TOP_LEFT);
+ #ifdef FIFO_UCODE
+    }
+ #endif
+
+    if (sProfilerPage == 0) {
+        printY = 40;
+        puppyprintf(textBytes,  "Logic: %dus\n", gPuppyTimers.behaviourTime[PERF_TOTAL]);
+        draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, 10, textBytes, ALIGN_TOP_RIGHT);
+        puppyprintf(textBytes,  "Scene: %dus\n", gPuppyTimers.graphTime[PERF_TOTAL]);
+        draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, 20, textBytes, ALIGN_TOP_RIGHT);
+        puppyprintf(textBytes,  "Audio: %dus\n", gPuppyTimers.thread4Time[PERF_TOTAL]);
+        draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, 30, textBytes, ALIGN_TOP_RIGHT);
+        if (gPuppyTimers.objectsTime[PERF_TOTAL]) {
+            puppyprintf(textBytes,  "Object: %dus\n", gPuppyTimers.objectsTime[PERF_TOTAL]);
+            draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
+            printY+=10;
+        }
+        if (gPuppyTimers.racerTime[PERF_TOTAL]) {
+            puppyprintf(textBytes,  "Racer: %dus\n", gPuppyTimers.racerTime[PERF_TOTAL]);
+            draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
+            printY+=10;
+        }
+        if (gPuppyTimers.lightTime[PERF_TOTAL]) {
+            puppyprintf(textBytes,  "Light: %dus\n", gPuppyTimers.lightTime[PERF_TOTAL]);
+            draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
+            printY+=10;
+        }
+        if (gPuppyTimers.collisionTime[PERF_TOTAL]) {
+            puppyprintf(textBytes,  "Collision: %dus\n", gPuppyTimers.collisionTime[PERF_TOTAL]);
+            draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
+            printY+=10;
+        }
+        if (gPuppyTimers.controllerTime[PERF_TOTAL]) {
+            puppyprintf(textBytes,  "Pad: %dus\n", gPuppyTimers.controllerTime[PERF_TOTAL]);
+            draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
+            printY+=10;
+        }
+        if (gPuppyTimers.hudTime[PERF_TOTAL]) {
+            puppyprintf(textBytes,  "HUD: %dus\n", gPuppyTimers.hudTime[PERF_TOTAL]);
+            draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
+            printY+=10;
+        }
+    }
 }
 
 /// Add whichever times you wish to create aggregates of.
@@ -986,7 +1080,9 @@ void puppyprint_calculate_average_times(void) {
         gPuppyTimers.collisionTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.collisionTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.behaviourTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.behaviourTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.racerTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.racerTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+        gPuppyTimers.hudTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.hudTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.lightTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.lightTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+        gPuppyTimers.objectsTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.objectsTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.thread2Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread2Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.thread3Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread3Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.thread4Time[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.thread4Time[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
@@ -1085,6 +1181,10 @@ void main_game_loop(void) {
     gPuppyTimers.racerTime[perfIteration] = 0;
     gPuppyTimers.lightTime[PERF_AGGREGATE] -= gPuppyTimers.lightTime[perfIteration];
     gPuppyTimers.lightTime[perfIteration] = 0;
+    gPuppyTimers.hudTime[PERF_AGGREGATE] -= gPuppyTimers.hudTime[perfIteration];
+    gPuppyTimers.hudTime[perfIteration] = 0;
+    gPuppyTimers.objectsTime[PERF_AGGREGATE] -= gPuppyTimers.objectsTime[perfIteration];
+    gPuppyTimers.objectsTime[perfIteration] = 0;
     if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
         gProfilerOn ^= 1;
     }
@@ -1208,6 +1308,11 @@ void main_game_loop(void) {
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.graphTime[perfIteration]);
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.lightTime[perfIteration]);
     profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.racerTime[perfIteration]);
+    profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.hudTime[perfIteration]);
+    profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.cameraTime[perfIteration]);
+    profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.controllerTime[perfIteration]);
+    profiler_offset(gPuppyTimers.objectsTime, gPuppyTimers.racerTime[perfIteration]);
+    profiler_offset(gPuppyTimers.behaviourTime, gPuppyTimers.objectsTime[perfIteration]);
 #endif
     if (D_800DD3F0 != 1) {
         if (D_800DD38C == 0) {
@@ -1298,6 +1403,9 @@ void func_8006CC14(void) {
 
 void func_8006CCF0(s32 updateRate) {
     s32 buttonPressedInputs, buttonHeldInputs, i, sp40, sp3C;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
 
     sp40 = 0;
     buttonHeldInputs = 0;
@@ -1311,7 +1419,13 @@ void func_8006CCF0(s32 updateRate) {
         buttonPressedInputs |= START_BUTTON;
     }
     if (!gIsPaused) {
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetTime();
+#endif
         func_80010994(updateRate);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.objectsTime, osGetTime() - first);
+#endif
         if (func_80066510() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
                 && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
@@ -1752,8 +1866,17 @@ void func_8006DBE4(void) {
 }
 
 void func_8006DC58(s32 updateRate) {
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
     if (get_thread30_level_id_to_load() == 0) {
+#ifdef PUPPYPRINT_DEBUG
+    first =  osGetTime();
+#endif
         func_80010994(updateRate);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.objectsTime, osGetTime() - first);
+#endif
         gParticlePtrList_flush();
         func_8001BF20();
         func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);

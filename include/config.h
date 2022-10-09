@@ -17,6 +17,7 @@
 #define UNLOCK_ALL // Unlock all characters, tracks and adventure 2.
 #define FIFO_UCODE // Allow usage of the faster FIFO microcode. Emulators will still use xbus.
 // #define DISABLE_AUDIO // Disable all ingame audio, and prevent the RSP from working on audio tasks.
+#define NUM_CONTROLLERS 3
 
 #define NUM_RACERS_1P 8 // Default is 8
 #define NUM_RACERS_2P 6 // Default is 6
