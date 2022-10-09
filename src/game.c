@@ -1164,6 +1164,7 @@ void main_game_loop(void) {
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetTime();
+    u32 first2;
     gPuppyTimers.racerTime[PERF_AGGREGATE] -= gPuppyTimers.racerTime[perfIteration];
     gPuppyTimers.racerTime[perfIteration] = 0;
     gPuppyTimers.lightTime[PERF_AGGREGATE] -= gPuppyTimers.lightTime[perfIteration];
@@ -1233,7 +1234,14 @@ void main_game_loop(void) {
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, &gCurrHudMat, 1);
+
+#ifdef PUPPYPRINT_DEBUG
+    first2 = osGetTime();
+#endif
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
+#ifdef PUPPYPRINT_DEBUG
+    rdp_profiler_update(gPuppyTimers.controllerTime, osGetTime() - first2);
+#endif
     if (get_lockup_status()) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
