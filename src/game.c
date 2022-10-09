@@ -1502,7 +1502,13 @@ void func_8006CCF0(s32 updateRate) {
         }
     }
     if (gIsPaused) {
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetTime();
+#endif
         i = func_80094170(&gCurrDisplayList, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.hudTime, osGetTime() - first);
+#endif
         switch (i - 1) {
             case 0:
                 gIsPaused = FALSE;
@@ -1551,7 +1557,13 @@ void func_8006CCF0(s32 updateRate) {
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetTime();
+#endif
     func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.hudTime, osGetTime() - first);
+#endif
     func_80077268(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
