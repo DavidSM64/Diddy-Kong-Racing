@@ -983,27 +983,6 @@ void render_profiler(void) {
     char textBytes[32];
     s32 printY;
     s32 totalGfx;
-    /*render_printf("FPS: %02d\n", gFPS);
-    render_printf("CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
-    render_printf("RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
-    render_printf("RDP: %dus (%d%%)\n", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
-    render_printf("Logic: %dus\n", gPuppyTimers.behaviourTime[PERF_TOTAL]);
-    render_printf("Scene: %dus\n", gPuppyTimers.graphTime[PERF_TOTAL]);
-    if (gPuppyTimers.racerTime[PERF_TOTAL])
-        render_printf("Racer: %dus\n", gPuppyTimers.racerTime[PERF_TOTAL]);
-    if (gPuppyTimers.lightTime[PERF_TOTAL])
-        render_printf("Light: %dus\n", gPuppyTimers.lightTime[PERF_TOTAL]);
-    render_printf("Audio: %dus\n", gPuppyTimers.thread4Time[PERF_TOTAL]);
-    render_printf("Tri: %d\n", sTriCount);
-#ifdef FIFO_UCODE
-    if (!suCodeSwitch) {
-        render_printf("GFX: FIFO");
-    } else {
-        render_printf("GFX: XBUS");
-    }
-#else
-    render_printf("GFX: XBUS");
-#endif*/
     #define TEXT_OFFSET 10
     set_text_font(ASSET_FONTS_SMALLFONT);
     set_text_colour(255, 255, 255, 255, 255);
@@ -1031,7 +1010,7 @@ void render_profiler(void) {
  #endif
     puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
     draw_text(&gCurrDisplayList, SCREEN_WIDTH_HALF / 2, SCREEN_HEIGHT - 4, textBytes, ALIGN_BOTTOM_CENTER);
-    puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer * get_active_player_count());
+    puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);
     draw_text(&gCurrDisplayList, SCREEN_WIDTH_HALF + (SCREEN_WIDTH_HALF / 2), SCREEN_HEIGHT - 4, textBytes, ALIGN_BOTTOM_CENTER);
 
     if (sProfilerPage == 0) {
