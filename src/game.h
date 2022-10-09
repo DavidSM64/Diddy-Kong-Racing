@@ -75,7 +75,6 @@ struct PuppyPrintTimers {
     PPTimer graphTime; // Graph Node processing time.
     PPTimer dmaTime; // thread 5 DMA time.
     PPTimer dmaAudioTime; // thread 4 DMA time.
-    PPTimer cameraTime; // Camera behaviour.
     PPTimer profilerTime; // Profiler rendering time.
     PPTimer controllerTime; // Controller polling time.
     PPTimer rspAudioTime; // RSP Audio processing time.
