@@ -1009,46 +1009,46 @@ void render_profiler(void) {
     }
  #endif
     puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
-    draw_text(&gCurrDisplayList, SCREEN_WIDTH_HALF / 2, SCREEN_HEIGHT - 4, textBytes, ALIGN_BOTTOM_CENTER);
+    draw_text(&gCurrDisplayList, (gScreenWidth/2) / 2, gScreenHeight - 4, textBytes, ALIGN_BOTTOM_CENTER);
     puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);
-    draw_text(&gCurrDisplayList, SCREEN_WIDTH_HALF + (SCREEN_WIDTH_HALF / 2), SCREEN_HEIGHT - 4, textBytes, ALIGN_BOTTOM_CENTER);
+    draw_text(&gCurrDisplayList, (gScreenWidth/2) + ((gScreenWidth/2) / 2), gScreenHeight - 4, textBytes, ALIGN_BOTTOM_CENTER);
 
     if (sProfilerPage == 0) {
         printY = 40;
         puppyprintf(textBytes,  "Logic: %dus", gPuppyTimers.behaviourTime[PERF_TOTAL]);
-        draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, 10, textBytes, ALIGN_TOP_RIGHT);
+        draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, 10, textBytes, ALIGN_TOP_RIGHT);
         puppyprintf(textBytes,  "Scene: %dus", gPuppyTimers.graphTime[PERF_TOTAL]);
-        draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, 20, textBytes, ALIGN_TOP_RIGHT);
+        draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, 20, textBytes, ALIGN_TOP_RIGHT);
         puppyprintf(textBytes,  "Audio: %dus", gPuppyTimers.thread4Time[PERF_TOTAL]);
-        draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, 30, textBytes, ALIGN_TOP_RIGHT);
+        draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, 30, textBytes, ALIGN_TOP_RIGHT);
         if (gPuppyTimers.objectsTime[PERF_TOTAL]) {
             puppyprintf(textBytes,  "Object: %dus", gPuppyTimers.objectsTime[PERF_TOTAL]);
-            draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
+            draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.racerTime[PERF_TOTAL]) {
             puppyprintf(textBytes,  "Racer: %dus", gPuppyTimers.racerTime[PERF_TOTAL]);
-            draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
+            draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.lightTime[PERF_TOTAL]) {
             puppyprintf(textBytes,  "Light: %dus", gPuppyTimers.lightTime[PERF_TOTAL]);
-            draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
+            draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.collisionTime[PERF_TOTAL]) {
             puppyprintf(textBytes,  "Collision: %dus", gPuppyTimers.collisionTime[PERF_TOTAL]);
-            draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
+            draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.controllerTime[PERF_TOTAL]) {
             puppyprintf(textBytes,  "Pad: %dus", gPuppyTimers.controllerTime[PERF_TOTAL]);
-            draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
+            draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.hudTime[PERF_TOTAL]) {
             puppyprintf(textBytes,  "HUD: %dus", gPuppyTimers.hudTime[PERF_TOTAL]);
-            draw_text(&gCurrDisplayList, SCREEN_WIDTH - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
+            draw_text(&gCurrDisplayList, gScreenWidth - TEXT_OFFSET, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
     }
@@ -1177,6 +1177,19 @@ void main_game_loop(void) {
         gProfilerOn ^= 1;
     }
 #endif
+
+if (get_buttons_pressed_from_player(0) & R_JPAD) {
+        if (gScreenWidth == 304) {
+            gScreenWidth = 360;
+            change_vi(&gGlobalVI, 360, 224);
+        } else if (gScreenWidth == 360) {
+            gScreenWidth = 408;
+            change_vi(&gGlobalVI, 408, 224);
+        } else {
+            gScreenWidth = 304;
+            change_vi(&gGlobalVI, 304, 224);
+        }
+    }
 
     if (D_800DD380 == 8) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];

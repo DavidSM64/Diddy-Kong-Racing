@@ -52,6 +52,8 @@ s32 D_8012630C;
 OSScClient gVideoSched;
 u8 gNumFrameBuffers = 2;
 u8 gExpansionPak = FALSE;
+u16 gScreenWidth;
+u16 gScreenHeight;
 
 /******************************/
 
@@ -180,8 +182,10 @@ void init_vi_settings(void) {
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
         case VIDEO_MODE_LOWRES_LPN:
-			change_vi(&gGlobalVI, gVideoModeResolutions[gVideoModeIndex & 7].width, gVideoModeResolutions[gVideoModeIndex & 7].height);
+			change_vi(&gGlobalVI, 304, 224);
 			osViSetMode(&gGlobalVI);
+            gScreenWidth = 304;
+            gScreenHeight = 224;
             /*//@bug: The video mode being set here is Point sampled
             //but the printf implies it was intended to be Anti-aliased.
             //By my understanding, this is the case we will always hit in code,
@@ -268,10 +272,10 @@ void init_framebuffer(s32 index) {
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
     if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((408 * 224 * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((408 * 224 * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     } else {
