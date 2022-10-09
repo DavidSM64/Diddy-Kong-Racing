@@ -162,7 +162,7 @@ void func_8006F42C(void);
 void pre_intro_loop(void);
 s32 is_controller_missing(void);
 s32 check_imem_validity(void);
-void func_8006CCF0(s32 updateRate);
+void ingame_logic_loop(s32 updateRate);
 
 //Non Matching
 void func_8006ECFC(s32 numberOfPlayers);

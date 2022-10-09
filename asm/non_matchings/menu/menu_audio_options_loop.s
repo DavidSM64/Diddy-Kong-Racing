@@ -1,6 +1,6 @@
 glabel menu_audio_options_loop
-/* 085874 80084C74 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 085878 80084C78 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 085874 80084C74 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 085878 80084C78 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 08587C 80084C7C 8C6E0000 */  lw    $t6, ($v1)
 /* 085880 80084C80 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 085884 80084C84 2529F47C */  addiu $t1, %lo(gMenuDelay) # addiu $t1, $t1, -0xb84

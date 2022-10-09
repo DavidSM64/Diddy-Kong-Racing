@@ -236,8 +236,8 @@ glabel menu_ghost_data_init
 /* 09AA00 80099E00 00000000 */   nop   
 /* 09AA04 80099E04 0C02392C */  jal   func_8008E4B0
 /* 09AA08 80099E08 00000000 */   nop   
-/* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
-/* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
+/* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
+/* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
 /* 09AA14 80099E14 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
 /* 09AA18 80099E18 AC2063E0 */  sw    $zero, %lo(D_801263E0)($at)
 /* 09AA1C 80099E1C 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012

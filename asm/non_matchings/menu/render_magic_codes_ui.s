@@ -89,10 +89,10 @@ glabel render_magic_codes_ui
 /* 08A3F8 800897F8 160D0014 */  bne   $s0, $t5, .L8008984C
 /* 08A3FC 800897FC 2A61005B */   slti  $at, $s3, 0x5b
 /* 08A400 80089800 86CE0000 */  lh    $t6, ($s6)
-/* 08A404 80089804 3C128012 */  lui   $s2, %hi(D_801263BC) # $s2, 0x8012
+/* 08A404 80089804 3C128012 */  lui   $s2, %hi(gOptionBlinkTimer) # $s2, 0x8012
 /* 08A408 80089808 17CE000F */  bne   $fp, $t6, .L80089848
 /* 08A40C 8008980C 24040080 */   li    $a0, 128
-/* 08A410 80089810 8E5263BC */  lw    $s2, %lo(D_801263BC)($s2)
+/* 08A410 80089810 8E5263BC */  lw    $s2, %lo(gOptionBlinkTimer)($s2)
 /* 08A414 80089814 240500FF */  li    $a1, 255
 /* 08A418 80089818 001278C0 */  sll   $t7, $s2, 3
 /* 08A41C 8008981C 29E10100 */  slti  $at, $t7, 0x100
@@ -177,8 +177,8 @@ glabel render_magic_codes_ui
 /* 08A53C 8008993C 2BC10004 */  slti  $at, $fp, 4
 /* 08A540 80089940 1420FFA4 */  bnez  $at, .L800897D4
 /* 08A544 80089944 26940016 */   addiu $s4, $s4, 0x16
-/* 08A548 80089948 3C128012 */  lui   $s2, %hi(D_801263BC) # $s2, 0x8012
-/* 08A54C 8008994C 8E5263BC */  lw    $s2, %lo(D_801263BC)($s2)
+/* 08A548 80089948 3C128012 */  lui   $s2, %hi(gOptionBlinkTimer) # $s2, 0x8012
+/* 08A54C 8008994C 8E5263BC */  lw    $s2, %lo(gOptionBlinkTimer)($s2)
 /* 08A550 80089950 00000000 */  nop   
 /* 08A554 80089954 001248C0 */  sll   $t1, $s2, 3
 /* 08A558 80089958 29210100 */  slti  $at, $t1, 0x100

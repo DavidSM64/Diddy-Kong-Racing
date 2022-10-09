@@ -918,7 +918,7 @@ void main_game_loop(void) {
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
-    if (D_800DD3F0 != 0) {
+    if (D_800DD3F0) {
         D_800DD3F0 -= 1;
     }
 
@@ -957,7 +957,7 @@ void main_game_loop(void) {
             func_8006DCF8(sLogicUpdateRate);
             break;
         case DRAW_GAME: // In game (Controlling a character)
-            func_8006CCF0(sLogicUpdateRate);
+            ingame_logic_loop(sLogicUpdateRate);
             break;
         case DRAW_CRASH_SCREEN: // EPC (lockup display)
             lockup_screen_loop(sLogicUpdateRate);
@@ -1064,20 +1064,27 @@ void func_8006CC14(void) {
     set_free_queue_state(2);
 }
 
-void func_8006CCF0(s32 updateRate) {
+/**
+ * The main behaviour function involving all of the ingame stuff.
+ * Involves the updating of all objects and setting up the render scene.
+*/
+void ingame_logic_loop(s32 updateRate) {
     s32 buttonPressedInputs, buttonHeldInputs, i, sp40, sp3C;
 
     sp40 = 0;
     buttonHeldInputs = 0;
     buttonPressedInputs = 0;
 
+    // Get input data for all 4 players.
     for (i = 0; i < get_active_player_count(); i++) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
+    // Spam the start button, making the game unplayable because it's constantly paused.
     if (sAntiPiracyTriggered) {
         buttonPressedInputs |= START_BUTTON;
     }
+    // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
         if (func_80066510() == 0 || func_8001139C()) {
@@ -1105,46 +1112,46 @@ void func_8006CCF0(s32 updateRate) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
-    if (D_80123516 != 0) {
+    if (D_80123516) {
         i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate); 
-        switch (i - 1) {
-            case 1:
+        switch (i) {
+            case 2:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
-            case 0:
+            case 1:
                 D_80123516 = 0;
                 func_8006D8F0(-1);
                 break;
-            case 3:
+            case 4:
                 func_8006C2E4(); 
                 D_800DD390 = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
-            case 4:
+            case 5:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 1;
                 break;
-            case 7:
+            case 8:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 2;
                 break;
-            case 8:
+            case 9:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 3;
                 break;
-            case 9:
+            case 10:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 4;
                 break;
-            case 10:
+            case 11:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 5;
                 break;
-            case 11:
+            case 12:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 6;
                 break;
-            case 12:
+            case 13:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 7;
                 break;
@@ -1162,7 +1169,7 @@ void func_8006CCF0(s32 updateRate) {
         }
     }
     if (gIsPaused) {
-        i = func_80094170(&gCurrDisplayList, updateRate);
+        i = render_pause_menu(&gCurrDisplayList, updateRate);
         switch (i - 1) {
             case 0:
                 gIsPaused = FALSE;

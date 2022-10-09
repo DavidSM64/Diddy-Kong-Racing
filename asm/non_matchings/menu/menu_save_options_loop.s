@@ -4,8 +4,8 @@ glabel jpt_800E84B0
 
 .text
 glabel menu_save_options_loop
-/* 088760 80087B60 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 088764 80087B64 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 088760 80087B60 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 088764 80087B64 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 088768 80087B68 8C6E0000 */  lw    $t6, ($v1)
 /* 08876C 80087B6C 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 088770 80087B70 01C47821 */  addu  $t7, $t6, $a0

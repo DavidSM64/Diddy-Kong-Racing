@@ -238,8 +238,8 @@ glabel render_file_select_menu
 /* 08DCF0 8008D0F0 160BFF7B */  bne   $s0, $t3, .L8008CEE0
 /* 08DCF4 8008D0F4 2631000C */   addiu $s1, $s1, 0xc
 .L8008D0F8:
-/* 08DCF8 8008D0F8 3C028012 */  lui   $v0, %hi(D_801263BC) # $v0, 0x8012
-/* 08DCFC 8008D0FC 8C4263BC */  lw    $v0, %lo(D_801263BC)($v0)
+/* 08DCF8 8008D0F8 3C028012 */  lui   $v0, %hi(gOptionBlinkTimer) # $v0, 0x8012
+/* 08DCFC 8008D0FC 8C4263BC */  lw    $v0, %lo(gOptionBlinkTimer)($v0)
 /* 08DD00 8008D100 3C14800E */  lui   $s4, %hi(D_800E03FC) # $s4, 0x800e
 /* 08DD04 8008D104 000260C0 */  sll   $t4, $v0, 3
 /* 08DD08 8008D108 29810100 */  slti  $at, $t4, 0x100

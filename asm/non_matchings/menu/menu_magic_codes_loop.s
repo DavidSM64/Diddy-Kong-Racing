@@ -19,9 +19,9 @@ glabel menu_magic_codes_loop
 .L80089D1C:
 /* 08A91C 80089D1C 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 08A920 80089D20 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
-/* 08A924 80089D24 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
+/* 08A924 80089D24 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
 /* 08A928 80089D28 1040000F */  beqz  $v0, .L80089D68
-/* 08A92C 80089D2C 246363BC */   addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 08A92C 80089D2C 246363BC */   addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 08A930 80089D30 18400008 */  blez  $v0, .L80089D54
 /* 08A934 80089D34 0044C823 */   subu  $t9, $v0, $a0
 /* 08A938 80089D38 0044C021 */  addu  $t8, $v0, $a0

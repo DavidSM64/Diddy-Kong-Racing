@@ -98,8 +98,8 @@ glabel func_80099E8C
 /* 09ABF0 80099FF0 100001ED */  b     .L8009A7A8
 /* 09ABF4 80099FF4 8FBF005C */   lw    $ra, 0x5c($sp)
 .L80099FF8:
-/* 09ABF8 80099FF8 3C028012 */  lui   $v0, %hi(D_801263BC) # $v0, 0x8012
-/* 09ABFC 80099FFC 8C4263BC */  lw    $v0, %lo(D_801263BC)($v0)
+/* 09ABF8 80099FF8 3C028012 */  lui   $v0, %hi(gOptionBlinkTimer) # $v0, 0x8012
+/* 09ABFC 80099FFC 8C4263BC */  lw    $v0, %lo(gOptionBlinkTimer)($v0)
 /* 09AC00 8009A000 AFA900E8 */  sw    $t1, 0xe8($sp)
 /* 09AC04 8009A004 000250C0 */  sll   $t2, $v0, 3
 /* 09AC08 8009A008 29410100 */  slti  $at, $t2, 0x100
@@ -540,8 +540,8 @@ glabel func_80099E8C
 /* 09B290 8009A690 0C0316D6 */  jal   render_dialogue_box
 /* 09B294 8009A694 24070007 */   li    $a3, 7
 .L8009A698:
-/* 09B298 8009A698 3C098012 */  lui   $t1, %hi(D_801263BC) # $t1, 0x8012
-/* 09B29C 8009A69C 8D2963BC */  lw    $t1, %lo(D_801263BC)($t1)
+/* 09B298 8009A698 3C098012 */  lui   $t1, %hi(gOptionBlinkTimer) # $t1, 0x8012
+/* 09B29C 8009A69C 8D2963BC */  lw    $t1, %lo(gOptionBlinkTimer)($t1)
 /* 09B2A0 8009A6A0 3C028012 */  lui   $v0, %hi(D_801263D8) # $v0, 0x8012
 /* 09B2A4 8009A6A4 312A0010 */  andi  $t2, $t1, 0x10
 /* 09B2A8 8009A6A8 1140003E */  beqz  $t2, .L8009A7A4

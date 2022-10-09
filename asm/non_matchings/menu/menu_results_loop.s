@@ -1,6 +1,6 @@
 glabel menu_results_loop
-/* 097EA8 800972A8 3C028012 */  lui   $v0, %hi(D_801263BC) # $v0, 0x8012
-/* 097EAC 800972AC 244263BC */  addiu $v0, %lo(D_801263BC) # addiu $v0, $v0, 0x63bc
+/* 097EA8 800972A8 3C028012 */  lui   $v0, %hi(gOptionBlinkTimer) # $v0, 0x8012
+/* 097EAC 800972AC 244263BC */  addiu $v0, %lo(gOptionBlinkTimer) # addiu $v0, $v0, 0x63bc
 /* 097EB0 800972B0 8C4E0000 */  lw    $t6, ($v0)
 /* 097EB4 800972B4 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 097EB8 800972B8 01C4C021 */  addu  $t8, $t6, $a0
@@ -89,9 +89,9 @@ glabel menu_results_loop
 /* 097FF4 800973F4 14600088 */  bnez  $v1, .L80097618
 /* 097FF8 800973F8 8FB80028 */   lw    $t8, 0x28($sp)
 /* 097FFC 800973FC 8CCF0000 */  lw    $t7, ($a2)
-/* 098000 80097400 3C04800E */  lui   $a0, %hi(D_800E0988) # $a0, 0x800e
+/* 098000 80097400 3C04800E */  lui   $a0, %hi(gMenuSubOption) # $a0, 0x800e
 /* 098004 80097404 15E00009 */  bnez  $t7, .L8009742C
-/* 098008 80097408 24840988 */   addiu $a0, %lo(D_800E0988) # addiu $a0, $a0, 0x988
+/* 098008 80097408 24840988 */   addiu $a0, %lo(gMenuSubOption) # addiu $a0, $a0, 0x988
 /* 09800C 8009740C 3C188012 */  lui   $t8, %hi(D_801267E8) # $t8, 0x8012
 /* 098010 80097410 8F1867E8 */  lw    $t8, %lo(D_801267E8)($t8)
 /* 098014 80097414 00000000 */  nop   
@@ -156,12 +156,12 @@ glabel menu_results_loop
 /* 0980E8 800974E8 AFAF001C */   sw    $t7, 0x1c($sp)
 .L800974EC:
 /* 0980EC 800974EC 8F1867E8 */  lw    $t8, %lo(D_801267E8)($t8)
-/* 0980F0 800974F0 3C068012 */  lui   $a2, %hi(D_80126A68) # $a2, 0x8012
+/* 0980F0 800974F0 3C068012 */  lui   $a2, %hi(gMenuOption) # $a2, 0x8012
 /* 0980F4 800974F4 33199000 */  andi  $t9, $t8, 0x9000
 /* 0980F8 800974F8 13200019 */  beqz  $t9, .L80097560
-/* 0980FC 800974FC 24C66A68 */   addiu $a2, %lo(D_80126A68) # addiu $a2, $a2, 0x6a68
-/* 098100 80097500 3C068012 */  lui   $a2, %hi(D_80126A68) # $a2, 0x8012
-/* 098104 80097504 24C66A68 */  addiu $a2, %lo(D_80126A68) # addiu $a2, $a2, 0x6a68
+/* 0980FC 800974FC 24C66A68 */   addiu $a2, %lo(gMenuOption) # addiu $a2, $a2, 0x6a68
+/* 098100 80097500 3C068012 */  lui   $a2, %hi(gMenuOption) # $a2, 0x8012
+/* 098104 80097504 24C66A68 */  addiu $a2, %lo(gMenuOption) # addiu $a2, $a2, 0x6a68
 /* 098108 80097508 8CCA0000 */  lw    $t2, ($a2)
 /* 09810C 8009750C 3C0D800E */  lui   $t5, %hi(gMenuText) # $t5, 0x800e
 /* 098110 80097510 8DADF4A0 */  lw    $t5, %lo(gMenuText)($t5)
@@ -250,8 +250,8 @@ glabel menu_results_loop
 /* 098238 80097638 24040007 */   li    $a0, 7
 /* 09823C 8009763C 0C031525 */  jal   assign_dialogue_box_id
 /* 098240 80097640 24040007 */   li    $a0, 7
-/* 098244 80097644 3C068012 */  lui   $a2, %hi(D_80126A68) # $a2, 0x8012
-/* 098248 80097648 24C66A68 */  addiu $a2, %lo(D_80126A68) # addiu $a2, $a2, 0x6a68
+/* 098244 80097644 3C068012 */  lui   $a2, %hi(gMenuOption) # $a2, 0x8012
+/* 098248 80097648 24C66A68 */  addiu $a2, %lo(gMenuOption) # addiu $a2, $a2, 0x6a68
 /* 09824C 8009764C 8CCB0000 */  lw    $t3, ($a2)
 /* 098250 80097650 3C03800E */  lui   $v1, %hi(gMenuText) # $v1, 0x800e
 /* 098254 80097654 8C63F4A0 */  lw    $v1, %lo(gMenuText)($v1)
