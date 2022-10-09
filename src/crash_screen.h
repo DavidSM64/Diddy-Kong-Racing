@@ -9,12 +9,22 @@
 #include "game.h"
 #include "stacks.h"
 #include "stdarg.h"
+#include "string.h"
 
 #ifndef CRASH_SCREEN_H
 #define CRASH_SCREEN_H
 
 u16 sCrashX;
 u16 sCrashY;
+u8 gAssert = 0;
+char gAssertString[64];
+
+void puppyprint_assert(char *str) {
+    s32 len = strlen(str);
+    gAssert = 1;
+    memcpy(&gAssertString, str, len);
+    *(volatile int *) 0 = 0;
+}
 
 const char *const gCauseDesc[18] = {
     "Interrupt",
@@ -248,34 +258,39 @@ void draw_crash_screen(OSThread *thread) {
     crash_screen_print(sCrashX + 10, sCrashY + 5, "THREAD:%d  (%s)", thread->id, gCauseDesc[cause]);
     crash_screen_print(sCrashX + 10, sCrashY + 15, "PC:%08XH   SR:%08XH   VA:%08XH", tc->pc, tc->sr, tc->badvaddr);
     osWritebackDCacheAll();
-    crash_screen_print(sCrashX + 10, sCrashY + 30, "AT:%08XH   V0:%08XH   V1:%08XH", (u32) tc->at, (u32) tc->v0, (u32) tc->v1);
-    crash_screen_print(sCrashX + 10, sCrashY + 40, "A0:%08XH   A1:%08XH   A2:%08XH", (u32) tc->a0, (u32) tc->a1, (u32) tc->a2);
-    crash_screen_print(sCrashX + 10, sCrashY + 50, "A3:%08XH   T0:%08XH   T1:%08XH", (u32) tc->a3, (u32) tc->t0, (u32) tc->t1);
-    crash_screen_print(sCrashX + 10, sCrashY + 60, "T2:%08XH   T3:%08XH   T4:%08XH", (u32) tc->t2, (u32) tc->t3, (u32) tc->t4);
-    crash_screen_print(sCrashX + 10, sCrashY + 70, "T5:%08XH   T6:%08XH   T7:%08XH", (u32) tc->t5, (u32) tc->t6, (u32) tc->t7);
-    crash_screen_print(sCrashX + 10, sCrashY + 80, "S0:%08XH   S1:%08XH   S2:%08XH", (u32) tc->s0, (u32) tc->s1, (u32) tc->s2);
-    crash_screen_print(sCrashX + 10, sCrashY + 90, "S3:%08XH   S4:%08XH   S5:%08XH", (u32) tc->s3, (u32) tc->s4, (u32) tc->s5);
-    crash_screen_print(sCrashX + 10, sCrashY + 100, "S6:%08XH   S7:%08XH   T8:%08XH", (u32) tc->s6, (u32) tc->s7, (u32) tc->t8);
-    crash_screen_print(sCrashX + 10, sCrashY + 110, "T9:%08XH   GP:%08XH   SP:%08XH", (u32) tc->t9, (u32) tc->gp, (u32) tc->sp);
-    crash_screen_print(sCrashX + 10, sCrashY + 120, "S8:%08XH   RA:%08XH", (u32) tc->s8, (u32) tc->ra);
-    crash_screen_print_fpcsr(tc->fpcsr);
-    osWritebackDCacheAll();
-    crash_screen_print_float_reg(sCrashX + 10, sCrashY + 145, 0, &tc->fp0.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 100, sCrashY + 145, 2, &tc->fp2.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 190, sCrashY + 145, 4, &tc->fp4.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 10, sCrashY + 155, 6, &tc->fp6.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 100, sCrashY + 155, 8, &tc->fp8.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 190, sCrashY + 155, 10, &tc->fp10.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 10, sCrashY + 165, 12, &tc->fp12.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 100, sCrashY + 165, 14, &tc->fp14.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 190, sCrashY + 165, 16, &tc->fp16.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 10, sCrashY + 175, 18, &tc->fp18.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 100, sCrashY + 175, 20, &tc->fp20.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 190, sCrashY + 175, 22, &tc->fp22.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 10, sCrashY + 185, 24, &tc->fp24.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 100, sCrashY + 185, 26, &tc->fp26.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 190, sCrashY + 185, 28, &tc->fp28.f.f_even);
-    crash_screen_print_float_reg(sCrashX + 10, sCrashY + 195, 30, &tc->fp30.f.f_even);
+    if (!gAssert) {
+        crash_screen_print(sCrashX + 10, sCrashY + 30, "AT:%08XH   V0:%08XH   V1:%08XH", (u32) tc->at, (u32) tc->v0, (u32) tc->v1);
+        crash_screen_print(sCrashX + 10, sCrashY + 40, "A0:%08XH   A1:%08XH   A2:%08XH", (u32) tc->a0, (u32) tc->a1, (u32) tc->a2);
+        crash_screen_print(sCrashX + 10, sCrashY + 50, "A3:%08XH   T0:%08XH   T1:%08XH", (u32) tc->a3, (u32) tc->t0, (u32) tc->t1);
+        crash_screen_print(sCrashX + 10, sCrashY + 60, "T2:%08XH   T3:%08XH   T4:%08XH", (u32) tc->t2, (u32) tc->t3, (u32) tc->t4);
+        crash_screen_print(sCrashX + 10, sCrashY + 70, "T5:%08XH   T6:%08XH   T7:%08XH", (u32) tc->t5, (u32) tc->t6, (u32) tc->t7);
+        crash_screen_print(sCrashX + 10, sCrashY + 80, "S0:%08XH   S1:%08XH   S2:%08XH", (u32) tc->s0, (u32) tc->s1, (u32) tc->s2);
+        crash_screen_print(sCrashX + 10, sCrashY + 90, "S3:%08XH   S4:%08XH   S5:%08XH", (u32) tc->s3, (u32) tc->s4, (u32) tc->s5);
+        crash_screen_print(sCrashX + 10, sCrashY + 100, "S6:%08XH   S7:%08XH   T8:%08XH", (u32) tc->s6, (u32) tc->s7, (u32) tc->t8);
+        crash_screen_print(sCrashX + 10, sCrashY + 110, "T9:%08XH   GP:%08XH   SP:%08XH", (u32) tc->t9, (u32) tc->gp, (u32) tc->sp);
+        crash_screen_print(sCrashX + 10, sCrashY + 120, "S8:%08XH   RA:%08XH", (u32) tc->s8, (u32) tc->ra);
+        crash_screen_print_fpcsr(tc->fpcsr);
+        osWritebackDCacheAll();
+        crash_screen_print_float_reg(sCrashX + 10, sCrashY + 145, 0, &tc->fp0.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 100, sCrashY + 145, 2, &tc->fp2.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 190, sCrashY + 145, 4, &tc->fp4.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 10, sCrashY + 155, 6, &tc->fp6.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 100, sCrashY + 155, 8, &tc->fp8.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 190, sCrashY + 155, 10, &tc->fp10.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 10, sCrashY + 165, 12, &tc->fp12.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 100, sCrashY + 165, 14, &tc->fp14.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 190, sCrashY + 165, 16, &tc->fp16.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 10, sCrashY + 175, 18, &tc->fp18.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 100, sCrashY + 175, 20, &tc->fp20.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 190, sCrashY + 175, 22, &tc->fp22.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 10, sCrashY + 185, 24, &tc->fp24.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 100, sCrashY + 185, 26, &tc->fp26.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 190, sCrashY + 185, 28, &tc->fp28.f.f_even);
+        crash_screen_print_float_reg(sCrashX + 10, sCrashY + 195, 30, &tc->fp30.f.f_even);
+    } else {
+        crash_screen_print(sCrashX + 10, sCrashY + 30, "Assert tripped");
+        crash_screen_print(sCrashX + 10, sCrashY + 45, gAssertString);
+    }
     osWritebackDCacheAll();
     osViBlack(FALSE);
     osViSwapBuffer(gCrashScreen.framebuffer);
