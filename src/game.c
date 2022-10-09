@@ -910,6 +910,7 @@ s32 gFPS = 0;
 u8 gProfilerOn = 0;
 u8 gWidescreen = 0;
 s32 sTriCount = 0;
+s32 sVtxCount = 0;
 s32 prevTime = 0;
 u32 sTimerTemp = 0;
 u8 sProfilerPage = 0;
@@ -981,6 +982,7 @@ int puppyprintf(char *dst, const char *fmt, ...)
 void render_profiler(void) {
     char textBytes[32];
     s32 printY;
+    s32 totalGfx;
     /*render_printf("FPS: %02d\n", gFPS);
     render_printf("CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
     render_printf("RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
@@ -1005,65 +1007,67 @@ void render_profiler(void) {
     set_text_font(FONT_SMALL);
     set_text_colour(255, 255, 255, 255, 255);
     set_text_background_colour(0,0, 0, 192);
-    puppyprintf(textBytes,  "FPS: %d\n", gFPS);
+    puppyprintf(textBytes,  "FPS: %d", gFPS);
     draw_text(&gCurrDisplayList, 4, 10, textBytes, ALIGN_TOP_LEFT);
-    puppyprintf(textBytes,  "CPU: %dus (%d%%)\n", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
+    puppyprintf(textBytes,  "CPU: %dus (%d%%)", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
     draw_text(&gCurrDisplayList, 4, 20, textBytes, ALIGN_TOP_LEFT);
     printY = 30;
     if (IO_READ(DPC_PIPEBUSY_REG)) {
-        puppyprintf(textBytes,  "RSP: %dus (%d%%)\n", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
+        puppyprintf(textBytes,  "RSP: %dus (%d%%)", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
         draw_text(&gCurrDisplayList, 4, 30, textBytes, ALIGN_TOP_LEFT);
-        puppyprintf(textBytes,  "RDP: %dus (%d%%)\n", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
+        puppyprintf(textBytes,  "RDP: %dus (%d%%)", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
         draw_text(&gCurrDisplayList, 4, 40, textBytes, ALIGN_TOP_LEFT);
         printY = 50;
     }
-    puppyprintf(textBytes,  "TRI: %d\n", sTriCount);
-    draw_text(&gCurrDisplayList, 4, printY, textBytes, ALIGN_TOP_LEFT);
 #ifdef FIFO_UCODE
     if (!suCodeSwitch) {
-        draw_text(&gCurrDisplayList, 4, printY + 10, "GFX: FIFO", ALIGN_TOP_LEFT);
+        draw_text(&gCurrDisplayList, 4, printY, "GFX: FIFO", ALIGN_TOP_LEFT);
     } else {
  #endif
-        draw_text(&gCurrDisplayList, 4, printY + 10, "GFX: XBUS", ALIGN_TOP_LEFT);
+        draw_text(&gCurrDisplayList, 4, printY, "GFX: XBUS", ALIGN_TOP_LEFT);
  #ifdef FIFO_UCODE
     }
  #endif
+    puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
+    draw_text(&gCurrDisplayList, SCREEN_WIDTH_HALF, SCREEN_HEIGHT - 14, textBytes, ALIGN_BOTTOM_CENTER);
+    puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gDisplayLists[gSPTaskNum] - ((u32)gCurrDisplayList | 0x20000000)) / 4, 11000);
+    draw_text(&gCurrDisplayList, SCREEN_WIDTH_HALF, SCREEN_HEIGHT - 4, textBytes, ALIGN_BOTTOM_CENTER);
 
     if (sProfilerPage == 0) {
         printY = 40;
-        puppyprintf(textBytes,  "Logic: %dus\n", gPuppyTimers.behaviourTime[PERF_TOTAL]);
+        puppyprintf(textBytes,  "Logic: %dus", gPuppyTimers.behaviourTime[PERF_TOTAL]);
         draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, 10, textBytes, ALIGN_TOP_RIGHT);
-        puppyprintf(textBytes,  "Scene: %dus\n", gPuppyTimers.graphTime[PERF_TOTAL]);
+        puppyprintf(textBytes,  "Scene: %dus", gPuppyTimers.graphTime[PERF_TOTAL]);
         draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, 20, textBytes, ALIGN_TOP_RIGHT);
-        puppyprintf(textBytes,  "Audio: %dus\n", gPuppyTimers.thread4Time[PERF_TOTAL]);
+        puppyprintf(textBytes,  "Audio: %dus", gPuppyTimers.thread4Time[PERF_TOTAL]);
         draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, 30, textBytes, ALIGN_TOP_RIGHT);
         if (gPuppyTimers.objectsTime[PERF_TOTAL]) {
-            puppyprintf(textBytes,  "Object: %dus\n", gPuppyTimers.objectsTime[PERF_TOTAL]);
+            puppyprintf(textBytes,  "Object: %dus", gPuppyTimers.objectsTime[PERF_TOTAL]);
             draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.racerTime[PERF_TOTAL]) {
-            puppyprintf(textBytes,  "Racer: %dus\n", gPuppyTimers.racerTime[PERF_TOTAL]);
+            puppyprintf(textBytes,  "Racer: %dus", gPuppyTimers.racerTime[PERF_TOTAL]);
             draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.lightTime[PERF_TOTAL]) {
-            puppyprintf(textBytes,  "Light: %dus\n", gPuppyTimers.lightTime[PERF_TOTAL]);
+            puppyprintf(textBytes,  "Light: %dus", gPuppyTimers.lightTime[PERF_TOTAL]);
             draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.collisionTime[PERF_TOTAL]) {
-            puppyprintf(textBytes,  "Collision: %dus\n", gPuppyTimers.collisionTime[PERF_TOTAL]);
+            puppyprintf(textBytes,  "Collision: %dus", gPuppyTimers.collisionTime[PERF_TOTAL]);
             draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.controllerTime[PERF_TOTAL]) {
-            puppyprintf(textBytes,  "Pad: %dus\n", gPuppyTimers.controllerTime[PERF_TOTAL]);
+            puppyprintf(textBytes,  "Pad: %dus", gPuppyTimers.controllerTime[PERF_TOTAL]);
             draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
         if (gPuppyTimers.hudTime[PERF_TOTAL]) {
-            puppyprintf(textBytes,  "HUD: %dus\n", gPuppyTimers.hudTime[PERF_TOTAL]);
+            puppyprintf(textBytes,  "HUD: %dus", gPuppyTimers.hudTime[PERF_TOTAL]);
             draw_text(&gCurrDisplayList, SCREEN_WIDTH - 4, printY, textBytes, ALIGN_TOP_RIGHT);
             printY+=10;
         }
@@ -1145,6 +1149,9 @@ s32 count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
             case G_TRIN: // TRIN
                 triCount += (dlist[1] >> 4) + 1;
                 break;
+            case G_VTX:
+                sVtxCount += (dlist[1] >> 4) + 1;
+                break;
             case G_ENDDL: // ENDDL
                 return triCount;
         }
@@ -1157,6 +1164,7 @@ void count_triangles(u8 *dlist, u8 *dlistEnd) {
     sTimerTemp++;
     if ((sTimerTemp % 16) == 0) {
         s32 first = osGetCount();
+        sVtxCount = 0;
         sTriCount = count_triangles_in_dlist(dlist, dlistEnd);
         sTimerTemp = (s32) OS_CYCLES_TO_USEC(osGetCount() - first);
     }
