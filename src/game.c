@@ -1178,7 +1178,7 @@ void main_game_loop(void) {
     }
 #endif
 
-if (get_buttons_pressed_from_player(0) & R_JPAD) {
+    /*if (get_buttons_pressed_from_player(0) & R_JPAD) {
         if (gScreenWidth == 304) {
             gScreenWidth = 360;
             change_vi(&gGlobalVI, 360, 224);
@@ -1189,7 +1189,7 @@ if (get_buttons_pressed_from_player(0) & R_JPAD) {
             gScreenWidth = 304;
             change_vi(&gGlobalVI, 304, 224);
         }
-    }
+    }*/
 
     if (D_800DD380 == 8) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];

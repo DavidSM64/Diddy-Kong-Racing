@@ -293,6 +293,7 @@ void draw_crash_screen(OSThread *thread) {
     }
     osWritebackDCacheAll();
     osViBlack(FALSE);
+    change_vi(&gGlobalVI, 304, 224);
     osViSwapBuffer(gCrashScreen.framebuffer);
 }
 

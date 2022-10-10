@@ -52,7 +52,7 @@ s32 D_8012630C;
 OSScClient gVideoSched;
 u8 gNumFrameBuffers = 2;
 u8 gExpansionPak = FALSE;
-u16 gScreenWidth;
+u16 gScreenWidth = 304;
 u16 gScreenHeight;
 
 /******************************/
@@ -132,7 +132,7 @@ UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
  * The high 16 bits are the height of the frame, and the low 16 bits are the width.
  */
 s32 get_video_width_and_height_as_s32(void) {
-    return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
+    return (gScreenHeight << 16) | gScreenWidth;
 }
 
 OSViMode gGlobalVI;
