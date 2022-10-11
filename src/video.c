@@ -52,7 +52,7 @@ s32 D_8012630C;
 OSScClient gVideoSched;
 u8 gNumFrameBuffers = 2;
 u8 gExpansionPak = FALSE;
-u16 gScreenWidth = 304;
+u16 gScreenWidth = SCREEN_WIDTH;
 u16 gScreenHeight;
 
 /******************************/
@@ -182,10 +182,10 @@ void init_vi_settings(void) {
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
         case VIDEO_MODE_LOWRES_LPN:
-			change_vi(&gGlobalVI, 304, 224);
+			change_vi(&gGlobalVI, SCREEN_WIDTH, SCREEN_HEIGHT);
 			osViSetMode(&gGlobalVI);
-            gScreenWidth = 304;
-            gScreenHeight = 224;
+            gScreenWidth = SCREEN_WIDTH;
+            gScreenHeight = SCREEN_HEIGHT;
             /*//@bug: The video mode being set here is Point sampled
             //but the printf implies it was intended to be Anti-aliased.
             //By my understanding, this is the case we will always hit in code,
