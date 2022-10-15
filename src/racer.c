@@ -3117,7 +3117,7 @@ void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     }
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     s64 pad;
     s32 segmentIndex;
