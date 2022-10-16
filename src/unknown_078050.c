@@ -302,11 +302,11 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = 0x400;
     dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) (gGfxSPTaskYieldBuffer + (sizeof(u64) * 0x2000));
+    dkrtask->task.output_buff_size = (u64 *) (gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE);
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
-    dkrtask->next = NULL;
-    dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP | OS_SC_DRAM_DLIST;
+    dkrtask->next = 0;
+    dkrtask->flags = 3; // OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP | OS_SC_DRAM_DLIST;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
     dkrtask->mesg = gGfxTaskMesgNums;
     dkrtask->frameBuffer = gVideoCurrFramebuffer;
