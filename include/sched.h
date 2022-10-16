@@ -16,6 +16,9 @@
 #define OS_SC_ID_VIDEO  2
 #define OS_SC_ID_PRENMI 3
 
+#define OSMESG_SWAP_BUFFER 0
+#define MESG_SKIP_BUFFER_SWAP 8
+
 /*
  * OSScTask state
  */

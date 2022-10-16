@@ -91,8 +91,6 @@ typedef struct VideoModeResolution {
 
 extern VideoModeResolution gVideoModeResolutions[8];
 
-extern s32 D_800DE7BC;
-
 void init_video(s32 videoModeIndex, OSSched *sc);
 void set_video_mode_index(s32 videoModeIndex);
 UNUSED s32 get_video_mode_index(void);
@@ -100,13 +98,13 @@ UNUSED void set_video_width_and_height_from_index(s32 fbIndex);
 s32 get_video_width_and_height_as_s32(void);
 void init_vi_settings(void);
 void init_framebuffer(s32 index);
-void func_8007A974(void);
+void reset_video_delta_time(void);
 void func_8007AB24(s8 arg0);
 s32 get_video_refresh_speed(void);
 void swap_framebuffers(void);
 void memory_copy(u8 *src, u8 *dest, s32 len);
 
 //Non Matching
-s32 func_8007A98C(s32 arg0);
+s32 swap_framebuffer_when_ready(s32 arg0);
 
 #endif

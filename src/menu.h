@@ -486,8 +486,8 @@ extern s32 D_800E0974;
 extern f32* D_800E0978;
 extern s32 D_800E097C;
 extern s32 D_800E0980;
-extern s32 D_800E0984;
-extern s32 D_800E0988;
+extern s32 gMenuOptionCap;
+extern s32 gMenuSubOption;
 extern s32 D_800E098C;
 
 extern s16 D_800E0A24[14];
@@ -671,7 +671,7 @@ extern TextureHeader *D_80126664;
 extern Gfx *sMenuCurrDisplayList;
 extern Mtx *sMenuCurrHudMat;
 extern const char D_800E8208[];
-extern s32 D_801263BC;
+extern s32 gOptionBlinkTimer;
 extern s32 D_801263E0;
 extern s32 D_80126A00;
 extern unk800861C8 *D_80126A04;
@@ -828,7 +828,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
 PakError check_for_controller_pak_errors(void);
 void func_80093A40(void);
-s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
+s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
 s32 menu_enter_filename_loop(s32 updateRate);
@@ -888,6 +888,7 @@ void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5,
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
+s32 func_80095728(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,

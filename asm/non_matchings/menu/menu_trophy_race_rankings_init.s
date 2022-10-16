@@ -10,8 +10,8 @@ glabel menu_trophy_race_rankings_init
 /* 099644 80098A44 AC2063E0 */  sw    $zero, %lo(D_801263E0)($at)
 /* 099648 80098A48 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 09964C 80098A4C AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
-/* 099650 80098A50 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
-/* 099654 80098A54 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
+/* 099650 80098A50 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
+/* 099654 80098A54 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
 /* 099658 80098A58 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
 /* 09965C 80098A5C AC2063D8 */  sw    $zero, %lo(D_801263D8)($at)
 /* 099660 80098A60 0C026F97 */  jal   reset_controller_sticks
@@ -75,8 +75,8 @@ glabel menu_trophy_race_rankings_init
 /* 09973C 80098B3C AC6E0000 */  sw    $t6, ($v1)
 /* 099740 80098B40 AC2F6C14 */  sw    $t7, %lo(D_80126C14)($at)
 .L80098B44:
-/* 099744 80098B44 3C018012 */  lui   $at, %hi(D_80126A68) # $at, 0x8012
-/* 099748 80098B48 AC206A68 */  sw    $zero, %lo(D_80126A68)($at)
+/* 099744 80098B44 3C018012 */  lui   $at, %hi(gMenuOption) # $at, 0x8012
+/* 099748 80098B48 AC206A68 */  sw    $zero, %lo(gMenuOption)($at)
 /* 09974C 80098B4C 0C025181 */  jal   assign_racer_portrait_textures
 /* 099750 80098B50 AFA90040 */   sw    $t1, 0x40($sp)
 /* 099754 80098B54 3C0B800E */  lui   $t3, %hi(gNumberOfActivePlayers) # $t3, 0x800e

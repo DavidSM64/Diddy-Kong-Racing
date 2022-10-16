@@ -728,7 +728,7 @@ glabel load_level
 /* 06C8CC 8006BCCC 9066009F */  lbu   $a2, 0x9f($v1)
 /* 06C8D0 8006BCD0 0C01DECD */  jal   set_background_prim_colour
 /* 06C8D4 8006BCD4 00000000 */   nop   
-/* 06C8D8 8006BCD8 0C01EA5D */  jal   func_8007A974
+/* 06C8D8 8006BCD8 0C01EA5D */  jal   reset_video_delta_time
 /* 06C8DC 8006BCDC 00000000 */   nop   
 /* 06C8E0 8006BCE0 8E380000 */  lw    $t8, ($s1)
 /* 06C8E4 8006BCE4 8FAF0064 */  lw    $t7, 0x64($sp)

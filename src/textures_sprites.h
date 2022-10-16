@@ -20,7 +20,7 @@ extern LevelHeader *gCurrentLevelHeader2;
 extern s32 D_80126374;
 extern TextureHeader *D_8012637C;
 extern s16 D_80126382;
-extern Gfx D_800DE628[9];
+extern Gfx dTextureRectangleModes[];
 extern Gfx D_800DE848[2][2];
 extern Gfx D_800DE868[8][2];
 extern Gfx D_800DE8E8[64][2];
@@ -104,6 +104,7 @@ void func_8007B454(void);
 void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags);
 void func_8007BF1C(s32 arg0);
 s32 func_8007EF64(s16 arg0);
+void func_8007B4E8(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3);
 
 // There might be a file boundary here.
 void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 arg3);
@@ -114,7 +115,6 @@ void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching
 TextureHeader *func_8007B380(s32 arg0); // Non Matching
-void func_8007B4E8(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut,

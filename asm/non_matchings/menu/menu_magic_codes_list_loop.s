@@ -25,8 +25,8 @@ glabel menu_magic_codes_list_loop
 /* 08B580 8008A980 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
 /* 08B584 8008A984 00000000 */  nop   
 .L8008A988:
-/* 08B588 8008A988 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 08B58C 8008A98C 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 08B588 8008A988 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 08B58C 8008A98C 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 08B590 8008A990 8C780000 */  lw    $t8, ($v1)
 /* 08B594 8008A994 2841FFED */  slti  $at, $v0, -0x13
 /* 08B598 8008A998 0304C821 */  addu  $t9, $t8, $a0

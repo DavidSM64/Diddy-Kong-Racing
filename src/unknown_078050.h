@@ -16,22 +16,22 @@ typedef union {
 } unk800DE4D0;
 
 typedef struct DKR_OSTask {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 frameBuffer;
+    struct DKR_OSTask *next;
+    u32 state;
+    u32 flags;
+    void *frameBuffer;
     OSTask_t task; // Size: 0x40 bytes
     OSMesgQueue *mesgQueue;
-    s32 unk54;
-    s32 unk58;
-    s32 unk5C;
-    s32 unk60;
-    s32 unk64;
-    s32 unk68;
-    s32 unk6C;
+    OSMesg mesg;
+    s32 unused58;
+    s32 unused5C;
+    s32 unused60;
+    s32 unused64;
+    u32 unk68;
+    s32 unused6C;
 } DKR_OSTask;
 
-extern s16 D_800DE490[16];
+extern s16 gGfxTaskMesgNums[16];
 
 extern u8 sBackgroundPrimColourR;
 extern u8 sBackgroundPrimColourG;
@@ -63,13 +63,13 @@ void init_rdp_and_framebuffer(Gfx **dlist);
 void init_rsp(Gfx **dlist);
 void setup_gfx_mesg_queues(OSSched *sc);
 void func_80078170(u32 arg0, u32 arg1, u32 arg2);
-void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_800787F0(void);
+s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
+void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
+void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha);
+void func_800787FC(Gfx** arg0);
 
 //Non Matching
-void render_background(Gfx **dlist, s32 *arg1, s32 arg2);
-void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha);
+void render_background(Gfx **dlist, Mtx *mtx, s32 arg2);
 void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 x, f32 y, f32 x_scale, f32 y_scale, u32 color, s32 flip);
-s32 setup_ostask_xbus(Gfx *, Gfx *, s32 arg2); // Not 100% sure about these types, but it matches what main_game_loop is sending.
 
 #endif
