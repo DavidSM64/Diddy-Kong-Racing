@@ -277,10 +277,10 @@ struct TempStruct9 {
 };
 
 void func_8000B290(void) {
-    Sprite* temp_a0_2;
-    TextureHeader* temp_a0_3;
+    Sprite *temp_a0_2;
+    TextureHeader *temp_a0_3;
     s32 temp_a0;
-    struct TempStruct9* var_s0;
+    struct TempStruct9 *var_s0;
     u32 i;
 
     temp_a0 = D_800DC754[0];

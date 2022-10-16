@@ -525,7 +525,7 @@ void func_800787F0(void) {
     D_800DE4CC = 0;
 }
 
-void func_800787FC(Gfx** arg0) {
+void func_800787FC(Gfx **arg0) {
     s32 height;
     s32 width;
     s32 var_t4; // Flips between 0 and 1

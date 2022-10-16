@@ -205,10 +205,10 @@ typedef struct unk800A414_arg3 {
     f32 unk14;
 } unk800A414_arg3;
 
-void func_8000A414(Gfx** arg0, Vertex** arg1, Triangle** arg2, unk800A414_arg3* arg3, u8 arg4, u8 arg5, u8 arg6) {
-    Gfx* sp34;
-    Vertex* sp30;
-    Triangle* sp2C;
+void func_8000A414(Gfx **arg0, Vertex **arg1, Triangle **arg2, unk800A414_arg3 *arg3, u8 arg4, u8 arg5, u8 arg6) {
+    Gfx *sp34;
+    Vertex *sp30;
+    Triangle *sp2C;
     s16 sp2A;
     s16 sp28;
     s16 sp26;
