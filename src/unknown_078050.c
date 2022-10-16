@@ -531,45 +531,47 @@ void func_80078AAC(void *arg0) {
     D_800DE4D0.ptr = arg0;
 }
 
-#ifdef NON_MATCHING
-
-// Regalloc issues.
-void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
+/**
+ * Renders one or more textures directly on screen resulting from the passed image properties.
+ * Texture rectangle coordinates use 10.2 precision and texture coords use 10.5 precision.
+ * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
+*/
+void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
-    s32 ulx, uly;
-    s32 lrx, lry;
-    s32 s, t;
     s32 i;
+    s32 uly;
+    s32 ulx;
+    s32 lry;
+    s32 lrx;
+    s32 t;
+    s32 s;
 
     gSPDisplayList((*dlist)++, D_800DE628);
-    gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha);
-    for (i = 0; (tex = arg1[i].texture); i++) {
-        ulx = (arg1[i].xOffset * 4) + (xPos * 4);
-        uly = (arg1[i].yOffset * 4) + (yPos * 4);
-        lrx = (tex->width * 4) + ulx;
-        lry = (tex->height * 4) + uly;
-        if (lrx > 0) {
-            if (lry > 0) {
-                s = 0;
-                t = 0;
-                if (ulx < 0) {
-                    s = -(ulx * 8);
-                    ulx = 0;
-                }
-                if (uly < 0) {
-                    t = -(uly * 8);
-                    uly = 0;
-                }
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
-                gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+    gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha); 
+    xPos <<= 2;
+    yPos <<= 2;
+    for (i = 0; (tex = img[i].texture); i++) {
+        ulx = (img[i].xOffset << 2) + xPos;
+        uly = (img[i].yOffset << 2) + yPos;
+        lrx = (tex->width << 2) + ulx;
+        lry = (tex->height << 2) + uly;
+        if (lrx > 0 && lry > 0) {
+            s = 0;
+            t = 0;
+            if (ulx < 0) {
+                s = -(ulx << 3);
+                ulx = 0;
             }
+            if (uly < 0) {
+                t = -(uly << 3);
+                uly = 0;
+            }
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
         }
     }
     gDPPipeSync((*dlist)++);
     gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_078050/render_textured_rectangle.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/render_texture_rectangle_scaled.s")
