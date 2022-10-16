@@ -541,8 +541,8 @@ glabel L8009BAD8
 /* 09C6D8 8009BAD8 0C031CF8 */  jal   get_thread30_level_id_to_load
 /* 09C6DC 8009BADC 00000000 */   nop   
 /* 09C6E0 8009BAE0 14400048 */  bnez  $v0, .L8009BC04
-/* 09C6E4 8009BAE4 3C038012 */   lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 09C6E8 8009BAE8 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 09C6E4 8009BAE4 3C038012 */   lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 09C6E8 8009BAE8 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 09C6EC 8009BAEC 24180002 */  li    $t8, 2
 /* 09C6F0 8009BAF0 24190028 */  li    $t9, 40
 /* 09C6F4 8009BAF4 AE180000 */  sw    $t8, ($s0)
@@ -551,8 +551,8 @@ glabel L8009BAD8
 /* 09C700 8009BB00 10000040 */  b     .L8009BC04
 /* 09C704 8009BB04 AC206BD8 */   sw    $zero, %lo(D_80126BD8)($at)
 glabel L8009BB08
-/* 09C708 8009BB08 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 09C70C 8009BB0C 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 09C708 8009BB08 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 09C70C 8009BB0C 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 09C710 8009BB10 8C690000 */  lw    $t1, ($v1)
 /* 09C714 8009BB14 8FAA0088 */  lw    $t2, 0x88($sp)
 /* 09C718 8009BB18 8CCB0000 */  lw    $t3, ($a2)
@@ -568,8 +568,8 @@ glabel L8009BB08
 /* 09C740 8009BB40 10000030 */  b     .L8009BC04
 /* 09C744 8009BB44 AE180000 */   sw    $t8, ($s0)
 glabel L8009BB48
-/* 09C748 8009BB48 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 09C74C 8009BB4C 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 09C748 8009BB48 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 09C74C 8009BB4C 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 09C750 8009BB50 8C790000 */  lw    $t9, ($v1)
 /* 09C754 8009BB54 8FA90088 */  lw    $t1, 0x88($sp)
 /* 09C758 8009BB58 8CC20000 */  lw    $v0, ($a2)
@@ -592,8 +592,8 @@ glabel L8009BB48
 /* 09C794 8009BB94 1000001B */  b     .L8009BC04
 /* 09C798 8009BB98 AE110000 */   sw    $s1, ($s0)
 glabel L8009BB9C
-/* 09C79C 8009BB9C 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 09C7A0 8009BBA0 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 09C79C 8009BB9C 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 09C7A0 8009BBA0 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 09C7A4 8009BBA4 8C6F0000 */  lw    $t7, ($v1)
 /* 09C7A8 8009BBA8 8FB80088 */  lw    $t8, 0x88($sp)
 /* 09C7AC 8009BBAC 8CC90000 */  lw    $t1, ($a2)

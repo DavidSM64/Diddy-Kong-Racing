@@ -49,7 +49,7 @@ extern u32 D_80126D00;
 extern u32 D_80126D04;
 extern u8 D_80126D37;
 
-extern s32 D_801271B0[640];
+extern u8 gGfxTaskYieldData[0xA00];
 
 u8 func_800A0190(void);
 void func_800A0B74(void);
@@ -84,5 +84,6 @@ void func_800A718C(Object_64 *);
 void func_800AA600(Gfx **arg0, u32 *arg1, u32 *arg2, unk80126CDC *arg3);
 void func_8009ECF0(s32 viewPortCount);
 void func_800A003C(void);
+void func_800A8474(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
 
 #endif

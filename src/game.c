@@ -595,7 +595,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
     set_background_prim_colour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
-    func_8007A974();
+    reset_video_delta_time();
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
 #else
@@ -697,7 +697,8 @@ void func_8006BEFC(void) {
 }
 
 void func_8006BFC8(s8 *arg0) {
-    s32 temp, temp2;
+    s32 temp;
+    UNUSED s32 temp2;
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
@@ -734,9 +735,9 @@ void func_8006BFC8(s8 *arg0) {
     if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
-    gTempAssetTable = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
     phi_v1 = 0;
-    while (-1U != gTempAssetTable[phi_v1]) {
+    while (-1 != (s32) gTempAssetTable[phi_v1]) {
         phi_v1++;
     }
     phi_v1--;
@@ -746,7 +747,7 @@ void func_8006BFC8(s8 *arg0) {
     temp2 = gTempAssetTable[phi_s0];
     temp = gTempAssetTable[phi_s0 + 1] - temp2;
     D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0, temp2, temp);
+    load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
     free_from_memory_pool(gTempAssetTable);
 }
 
@@ -881,7 +882,7 @@ void init_game(void) {
     func_80081218();
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
-    osScAddClient(&gMainSched, gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
+    osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
     D_80123560[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
@@ -917,7 +918,7 @@ void main_game_loop(void) {
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
-    if (D_800DD3F0 != 0) {
+    if (D_800DD3F0) {
         D_800DD3F0 -= 1;
     }
 
@@ -932,7 +933,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, &gCurrHudMat, 1);
+    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, 1); 
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
@@ -956,7 +957,7 @@ void main_game_loop(void) {
             func_8006DCF8(sLogicUpdateRate);
             break;
         case DRAW_GAME: // In game (Controlling a character)
-            func_8006CCF0(sLogicUpdateRate);
+            ingame_logic_loop(sLogicUpdateRate);
             break;
         case DRAW_CRASH_SCREEN: // EPC (lockup display)
             lockup_screen_loop(sLogicUpdateRate);
@@ -1006,7 +1007,7 @@ void main_game_loop(void) {
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
-    tempLogicUpdateRate = func_8007A98C(D_800DD380);
+    tempLogicUpdateRate = swap_framebuffer_when_ready(D_800DD380);
     sLogicUpdateRate = tempLogicUpdateRate;
     tempLogicUpdateRateMax = LOGIC_10FPS;
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
@@ -1063,20 +1064,27 @@ void func_8006CC14(void) {
     set_free_queue_state(2);
 }
 
-void func_8006CCF0(s32 updateRate) {
+/**
+ * The main behaviour function involving all of the ingame stuff.
+ * Involves the updating of all objects and setting up the render scene.
+*/
+void ingame_logic_loop(s32 updateRate) {
     s32 buttonPressedInputs, buttonHeldInputs, i, sp40, sp3C;
 
     sp40 = 0;
     buttonHeldInputs = 0;
     buttonPressedInputs = 0;
 
+    // Get input data for all 4 players.
     for (i = 0; i < get_active_player_count(); i++) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
+    // Spam the start button, making the game unplayable because it's constantly paused.
     if (sAntiPiracyTriggered) {
         buttonPressedInputs |= START_BUTTON;
     }
+    // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
         if (func_80066510() == 0 || func_8001139C()) {
@@ -1104,46 +1112,46 @@ void func_8006CCF0(s32 updateRate) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
-    if (D_80123516 != 0) {
-        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
-        switch (i - 1) {
-            case 1:
+    if (D_80123516) {
+        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate); 
+        switch (i) {
+            case 2:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
-            case 0:
+            case 1:
                 D_80123516 = 0;
                 func_8006D8F0(-1);
                 break;
-            case 3:
-                func_8006C2E4();
+            case 4:
+                func_8006C2E4(); 
                 D_800DD390 = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
-            case 4:
+            case 5:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 1;
                 break;
-            case 7:
+            case 8:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 2;
                 break;
-            case 8:
+            case 9:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 3;
                 break;
-            case 9:
+            case 10:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 4;
                 break;
-            case 10:
+            case 11:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 5;
                 break;
-            case 11:
+            case 12:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 6;
                 break;
-            case 12:
+            case 13:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 7;
                 break;
@@ -1161,7 +1169,7 @@ void func_8006CCF0(s32 updateRate) {
         }
     }
     if (gIsPaused) {
-        i = func_80094170(&gCurrDisplayList, updateRate);
+        i = render_pause_menu(&gCurrDisplayList, updateRate);
         switch (i - 1) {
             case 0:
                 gIsPaused = FALSE;
@@ -1710,7 +1718,7 @@ void calc_and_alloc_heap_for_settings(void) {
     gSettingsPtr->courseTimesPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[11]);
     gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
     gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
-    gSettingsPtr->unk4C = &D_80121250;
+    gSettingsPtr->unk4C = (Settings4C *) &D_80121250;
     D_800DD37C = 263;
 }
 

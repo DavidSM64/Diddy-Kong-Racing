@@ -8,8 +8,8 @@ glabel jpt_800E8488
 
 .text
 glabel func_80087734
-/* 088334 80087734 3C068012 */  lui   $a2, %hi(D_801263BC) # $a2, 0x8012
-/* 088338 80087738 8CC663BC */  lw    $a2, %lo(D_801263BC)($a2)
+/* 088334 80087734 3C068012 */  lui   $a2, %hi(gOptionBlinkTimer) # $a2, 0x8012
+/* 088338 80087738 8CC663BC */  lw    $a2, %lo(gOptionBlinkTimer)($a2)
 /* 08833C 8008773C 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 088340 80087740 000670C0 */  sll   $t6, $a2, 3
 /* 088344 80087744 29C10100 */  slti  $at, $t6, 0x100

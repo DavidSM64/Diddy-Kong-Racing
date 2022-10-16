@@ -1,5 +1,6 @@
 # Baseroms is where the user will place their ROM files.
 baseroms/*
+nonmatchings/*
 
 # Ignore pycache
 __pycache__
@@ -23,3 +24,7 @@ ctx.c.m2c
 
 # Ignore .deb packages
 *.deb
+
+# Ignore batch and executable files.
+*.exe
+*.bat

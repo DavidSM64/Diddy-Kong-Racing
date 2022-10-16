@@ -105,7 +105,7 @@ glabel L80085C30
 /* 086904 80085D04 8FAE004C */  lw    $t6, 0x4c($sp)
 /* 086908 80085D08 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 08690C 80085D0C 11C0001F */  beqz  $t6, .L80085D8C
-/* 086910 80085D10 3C188012 */   lui   $t8, %hi(D_801263BC) # $t8, 0x8012
+/* 086910 80085D10 3C188012 */   lui   $t8, %hi(gOptionBlinkTimer) # $t8, 0x8012
 /* 086914 80085D14 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 086918 80085D18 00009025 */  move  $s2, $zero
 /* 08691C 80085D1C 15E00003 */  bnez  $t7, .L80085D2C
@@ -115,7 +115,7 @@ glabel L80085C30
 .L80085D2C:
 /* 08692C 80085D2C 24100078 */  li    $s0, 120
 .L80085D30:
-/* 086930 80085D30 8F1863BC */  lw    $t8, %lo(D_801263BC)($t8)
+/* 086930 80085D30 8F1863BC */  lw    $t8, %lo(gOptionBlinkTimer)($t8)
 /* 086934 80085D34 2631043C */  addiu $s1, %lo(gMenuSelectionArrowDown) # addiu $s1, $s1, 0x43c
 /* 086938 80085D38 3319001F */  andi  $t9, $t8, 0x1f
 /* 08693C 80085D3C 00195043 */  sra   $t2, $t9, 1

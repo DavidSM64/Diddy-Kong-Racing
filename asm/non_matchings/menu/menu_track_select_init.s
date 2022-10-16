@@ -85,8 +85,8 @@ glabel menu_track_select_init
 /* 08F4E8 8008E8E8 AC3563D0 */  sw    $s5, %lo(D_801263D0)($at)
 /* 08F4EC 8008E8EC 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
 /* 08F4F0 8008E8F0 AC2F63D8 */  sw    $t7, %lo(D_801263D8)($at)
-/* 08F4F4 8008E8F4 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
-/* 08F4F8 8008E8F8 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
+/* 08F4F4 8008E8F4 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
+/* 08F4F8 8008E8F8 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
 /* 08F4FC 8008E8FC 3C018012 */  lui   $at, %hi(D_801267D0) # $at, 0x8012
 /* 08F500 8008E900 0C023C03 */  jal   func_8008F00C
 /* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(D_801267D0)($at)

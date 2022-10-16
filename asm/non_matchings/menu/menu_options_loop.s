@@ -1,6 +1,6 @@
 glabel menu_options_loop
-/* 084F5C 8008435C 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 084F60 80084360 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 084F5C 8008435C 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 084F60 80084360 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 084F64 80084364 8C6E0000 */  lw    $t6, ($v1)
 /* 084F68 80084368 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 084F6C 8008436C 2529F47C */  addiu $t1, %lo(gMenuDelay) # addiu $t1, $t1, -0xb84

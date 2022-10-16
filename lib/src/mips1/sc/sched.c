@@ -20,9 +20,8 @@
 
 /************ .data ************/
 
-// Unsure about if this is an array or struct.
 s32 D_800DE730[] = { 0, 0 };
-s32 D_800DE738[] = { 0, 8 };
+s32 gBootBlackoutMesg[] = { OSMESG_SWAP_BUFFER, MESG_SKIP_BUFFER_SWAP };
 
 f32 D_800DE740 = 0;
 f32 D_800DE744 = 0;
@@ -147,8 +146,7 @@ OSMesgQueue *osScGetInterruptQ(OSSched *sc) {
     return &sc->interruptQ;
 }
 
-// Unused.
-void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
+UNUSED void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
     *arg0 = D_800DE740;
     *arg1 = D_800DE748;
     *arg2 = D_800DE74C;
@@ -255,7 +253,7 @@ void __scHandleRetrace(OSSched *sc) {
 
     if ((gCurRDPTaskCounter > 10) && (sc->curRDPTask)) {
         if (sc->curRDPTask->unk68 == 0) {
-            osSendMesg(sc->curRDPTask->msgQ, &D_800DE738, OS_MESG_BLOCK);
+            osSendMesg(sc->curRDPTask->msgQ, &gBootBlackoutMesg, OS_MESG_BLOCK);
         }
 
         set_curRDPTask_NULL = TRUE;
@@ -380,7 +378,7 @@ void __scHandleRDP(OSSched *sc) {
     t = sc->curRDPTask;
     sc->curRDPTask = 0;
 
-    t->state &= -2;
+    t->state &= ~OS_SC_NEEDS_RDP;
 
     __scTaskComplete(sc, t);
 

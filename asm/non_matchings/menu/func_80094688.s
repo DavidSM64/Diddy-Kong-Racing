@@ -98,24 +98,24 @@ glabel func_80094688
 .L800947EC:
 /* 0953EC 800947EC 3C018012 */  lui   $at, %hi(D_80126CC0) # $at, 0x8012
 /* 0953F0 800947F0 AC206CC0 */  sw    $zero, %lo(D_80126CC0)($at)
-/* 0953F4 800947F4 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
-/* 0953F8 800947F8 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
+/* 0953F4 800947F4 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
+/* 0953F8 800947F8 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
 /* 0953FC 800947FC 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
 /* 095400 80094800 AC2063D8 */  sw    $zero, %lo(D_801263D8)($at)
 /* 095404 80094804 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 095408 80094808 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 09540C 8009480C 3C01800E */  lui   $at, %hi(D_800DF460) # $at, 0x800e
 /* 095410 80094810 AC20F460 */  sw    $zero, %lo(D_800DF460)($at)
-/* 095414 80094814 3C018012 */  lui   $at, %hi(D_80126A68) # $at, 0x8012
-/* 095418 80094818 AC206A68 */  sw    $zero, %lo(D_80126A68)($at)
+/* 095414 80094814 3C018012 */  lui   $at, %hi(gMenuOption) # $at, 0x8012
+/* 095418 80094818 AC206A68 */  sw    $zero, %lo(gMenuOption)($at)
 /* 09541C 8009481C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
 /* 095420 80094820 240C0001 */  li    $t4, 1
 /* 095424 80094824 AC2C63C4 */  sw    $t4, %lo(gIgnorePlayerInput)($at)
 /* 095428 80094828 3C018012 */  lui   $at, %hi(D_80126C54) # $at, 0x8012
 /* 09542C 8009482C 240EFFFF */  li    $t6, -1
 /* 095430 80094830 AC2E6C54 */  sw    $t6, %lo(D_80126C54)($at)
-/* 095434 80094834 3C01800E */  lui   $at, %hi(D_800E0988) # $at, 0x800e
-/* 095438 80094838 AC200988 */  sw    $zero, %lo(D_800E0988)($at)
+/* 095434 80094834 3C01800E */  lui   $at, %hi(gMenuSubOption) # $at, 0x800e
+/* 095438 80094838 AC200988 */  sw    $zero, %lo(gMenuSubOption)($at)
 /* 09543C 8009483C 3C018012 */  lui   $at, %hi(D_80126C1C) # $at, 0x8012
 /* 095440 80094840 AC206C1C */  sw    $zero, %lo(D_80126C1C)($at)
 /* 095444 80094844 8FAD0028 */  lw    $t5, 0x28($sp)

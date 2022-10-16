@@ -159,8 +159,8 @@ glabel render_track_select_setup_ui
 /* 091D68 80091168 2406002B */  li    $a2, 43
 /* 091D6C 8009116C 0C031110 */  jal   draw_text
 /* 091D70 80091170 02003825 */   move  $a3, $s0
-/* 091D74 80091174 3C068012 */  lui   $a2, %hi(D_801263BC) # $a2, 0x8012
-/* 091D78 80091178 8CC663BC */  lw    $a2, %lo(D_801263BC)($a2)
+/* 091D74 80091174 3C068012 */  lui   $a2, %hi(gOptionBlinkTimer) # $a2, 0x8012
+/* 091D78 80091178 8CC663BC */  lw    $a2, %lo(gOptionBlinkTimer)($a2)
 /* 091D7C 8009117C 24040007 */  li    $a0, 7
 /* 091D80 80091180 000668C0 */  sll   $t5, $a2, 3
 /* 091D84 80091184 29A10100 */  slti  $at, $t5, 0x100
