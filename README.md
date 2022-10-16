@@ -115,29 +115,29 @@ s32 is_drumstick_unlocked(void) {
 
 As of October 3rd, 2022, this is our current score:
 ```
- ======================================================== 
-          ADVENTURE ONE (ASM -> C Decompilation)          
- ------------------- 32.49% Complete -------------------- 
-               # Decompiled functions: 1283               
-               # GLOBAL_ASM remaining: 550                
-               # NON_MATCHING functions: 14               
-            # NON_EQUIVALENT WIP functions: 99            
- --------------------- Game Status ---------------------- 
-        Balloons: 17/47, Keys: 2/4, Trophies: 1/5         
-          T.T. Amulets: 1/4, Wizpig Amulets: 1/4          
- -------------------------------------------------------- 
-           We are racing the walrus boss Bluey.           
- ======================================================== 
-          ADVENTURE TWO (Cleanup & Documentation)         
- -------------------  5.48% Complete -------------------- 
-               # Documented functions: 197                
-              # Undocumented remaining: 1636              
- --------------------- Game Status ---------------------- 
-         Balloons: 3/47, Keys: 0/4, Trophies: 0/5         
-          T.T. Amulets: 0/4, Wizpig Amulets: 0/4          
- -------------------------------------------------------- 
- We are collecting the fourth balloon on Timber's Island. 
- ========================================================
+ ==========================================
+   ADVENTURE ONE (ASM -> C Decompilation)
+ ------------ 33.19% Complete -------------
+        # Decompiled functions: 1292
+        # GLOBAL_ASM remaining: 541
+        # NON_MATCHING functions: 12
+     # NON_EQUIVALENT WIP functions: 94
+ -------------- Game Status ---------------
+ Balloons: 17/47, Keys: 2/4, Trophies: 1/5
+   T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+ ------------------------------------------
+    We are racing the walrus boss Bluey.
+ ==========================================
+   ADVENTURE TWO (Cleanup & Documentation)
+ ------------  6.13% Complete -------------
+        # Documented functions: 210
+       # Undocumented remaining: 1623
+ -------------- Game Status ---------------
+  Balloons: 4/47, Keys: 0/4, Trophies: 0/5
+   T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ ------------------------------------------
+  We are racing in Ancient Lake. (Lap 1/3)
+ ==========================================
 ```
 
 ---
