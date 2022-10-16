@@ -195,4 +195,94 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A184.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A2E8.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A414.s")
+
+typedef struct unk800A414_arg3 {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+} unk800A414_arg3;
+
+void func_8000A414(Gfx** arg0, Vertex** arg1, Triangle** arg2, unk800A414_arg3* arg3, u8 arg4, u8 arg5, u8 arg6) {
+    Gfx* sp34;
+    Vertex* sp30;
+    Triangle* sp2C;
+    s16 sp2A;
+    s16 sp28;
+    s16 sp26;
+    s16 sp24;
+    s16 sp22;
+    s16 sp20;
+
+
+    sp2A =  arg3->unk0;
+    sp28 =  arg3->unk4;
+    sp26 =  arg3->unk8;
+    sp24 =  arg3->unkC;
+    sp22 =  arg3->unk10;
+    sp20 =  arg3->unk14;
+    sp34 = *arg0;
+    
+    sp30 = *arg1;
+    sp2C = *arg2;
+    func_8007B4C8(&sp34, NULL, 0U);
+    gDkrVertices(sp34++, OS_PHYSICAL_TO_K0(sp30), (((s32)OS_PHYSICAL_TO_K0(sp30)) & 6) | 0x18, 0x28);
+    gDkrTriangles(sp34++, OS_PHYSICAL_TO_K0(sp2C), 2, 0);
+    sp30[0].x = sp2A;
+    sp30[0].y = (s16) (sp28 + 5);
+    sp30[0].z = sp26;
+    sp30[0].r = arg4;
+    sp30[0].g = arg5;
+    sp30[0].b = arg6;
+    sp30[0].a = 255;
+    sp30[1].x = sp2A;
+    sp30[1].y = (s16) (sp28 - 5);
+    sp30[1].z = sp26;
+    sp30[1].r = arg4;
+    sp30[1].g = arg5;
+    sp30[1].b = arg6;
+    sp30[1].a = 255;
+    sp30[2].x = sp24;
+    sp30[2].y = (s16) (sp22 + 5);
+    sp30[2].z = sp20;
+    sp30[2].r = 255;
+    sp30[2].g = 255;
+    sp30[2].b = 255;
+    sp30[2].a = 255;
+    sp30[3].x = sp24;
+    sp30[3].y = (s16) (sp22 - 5);
+    sp30[3].z = sp20;
+    sp30[3].r = 255;
+    sp30[3].g = 255;
+    sp30[3].b = 255;
+    sp30[3].a = 255;
+    sp30 += 4;
+    
+    sp2C[0].drawBackface = 0x40; // 0x40 = Draw backface.
+    sp2C[0].vi0 = 2;
+    sp2C[0].vi1 = 1;
+    sp2C[0].vi2 = 0;
+    sp2C[0].uv0.u = 0x3E0;
+    sp2C[0].uv0.v = 0x3E0;
+    sp2C[0].uv1.u = 0x3E0;
+    sp2C[0].uv1.v = 0;
+    sp2C[0].uv2.u = 1;
+    sp2C[0].uv2.v = 0;
+    sp2C[1].drawBackface = 0x40;
+    sp2C[1].vi0 = 3;
+    sp2C[1].vi1 = 2;
+    sp2C[1].vi2 = 1;
+    sp2C[1].uv0.u = 1;
+    sp2C[1].uv0.v = 0x3E0;
+    sp2C[1].uv1.u = 0x3E0;
+    sp2C[1].uv1.v = 0x3E0;
+    sp2C[1].uv2.u = 1;
+    sp2C[1].uv2.v = 0;
+    sp2C += 2;
+    
+    *arg0 = sp34;
+    *arg1 = sp30;
+    *arg2 = sp2C;
+}

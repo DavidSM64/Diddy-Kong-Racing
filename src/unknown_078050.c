@@ -83,7 +83,7 @@ Gfx D_800DE5E0[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DE628[] = {
+Gfx dTextureRectangleModes[] = {
     gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
@@ -525,7 +525,36 @@ void func_800787F0(void) {
     D_800DE4CC = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_800787FC.s")
+void func_800787FC(Gfx** arg0) {
+    s32 height;
+    s32 width;
+    s32 var_t4; // Flips between 0 and 1
+    s32 y;
+    s32 x;
+
+    var_t4 = get_video_width_and_height_as_s32();
+    height = GET_VIDEO_HEIGHT(var_t4) & 0xFFFF;
+    width = GET_VIDEO_WIDTH(var_t4);
+    
+    gSPDisplayList((*arg0)++, D_800DE5E0);
+    gDPSetPrimColor((*arg0)++, 0, 0, D_80125F30, D_80125F31, D_80125F32, D_80125F33);
+
+    for (y = 0, var_t4 = 0; y < height; y += D_80125F3C, var_t4 ^= 1) {
+        for (x = var_t4 * D_80125F38; x < width; x += D_80125F38 * 2) {
+            gDPFillRectangle((*arg0)++, x, y, x + D_80125F38, y + D_80125F3C);            
+        }
+    }
+    
+    gDPSetPrimColor((*arg0)++, 0, 0, D_80125F34, D_80125F35, D_80125F36, D_80125F37);
+    
+    for (y = 0, var_t4 = 1; y < height; y += D_80125F3C, var_t4 ^= 1) {
+        for (x = var_t4 * D_80125F38; x < width; x += D_80125F38 * 2) {
+            gDPFillRectangle((*arg0)++, x, y, x + D_80125F38, y + D_80125F3C);            
+        }
+    }
+    
+    gDPPipeSync((*arg0)++);
+}
 
 void func_80078AAC(void *arg0) {
     D_800DE4D0.ptr = arg0;
@@ -536,7 +565,7 @@ void func_80078AAC(void *arg0) {
  * Texture rectangle coordinates use 10.2 precision and texture coords use 10.5 precision.
  * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
 */
-void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
+void render_textured_rectangle(Gfx **dlist, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
     s32 i;
     s32 uly;
@@ -546,13 +575,13 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos
     s32 t;
     s32 s;
 
-    gSPDisplayList((*dlist)++, D_800DE628);
+    gSPDisplayList((*dlist)++, dTextureRectangleModes);
     gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha); 
     xPos <<= 2;
     yPos <<= 2;
-    for (i = 0; (tex = img[i].texture); i++) {
-        ulx = (img[i].xOffset << 2) + xPos;
-        uly = (img[i].yOffset << 2) + yPos;
+    for (i = 0; (tex = element[i].texture); i++) {
+        ulx = (element[i].xOffset << 2) + xPos;
+        uly = (element[i].yOffset << 2) + yPos;
         lrx = (tex->width << 2) + ulx;
         lry = (tex->height << 2) + uly;
         if (lrx > 0 && lry > 0) {

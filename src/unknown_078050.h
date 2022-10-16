@@ -63,11 +63,12 @@ void init_rdp_and_framebuffer(Gfx **dlist);
 void init_rsp(Gfx **dlist);
 void setup_gfx_mesg_queues(OSSched *sc);
 void func_80078170(u32 arg0, u32 arg1, u32 arg2);
+s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
+void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
+void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha);
 
 //Non Matching
 void render_background(Gfx **dlist, Mtx *mtx, s32 arg2);
-void render_textured_rectangle(Gfx **dlist, DrawTexture *arg1, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha);
 void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 x, f32 y, f32 x_scale, f32 y_scale, u32 color, s32 flip);
-s32 setup_ostask_xbus(Gfx *, Gfx *, s32 arg2); // Not 100% sure about these types, but it matches what main_game_loop is sending.
 
 #endif
