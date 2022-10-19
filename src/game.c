@@ -908,7 +908,7 @@ void init_game(void) {
 #ifdef PUPPYPRINT_DEBUG
 u8 perfIteration = 0;
 s32 gFPS = 0;
-u8 gProfilerOn = 1;
+u8 gProfilerOn = 0;
 u8 gWidescreen = 0;
 s32 sTriCount = 0;
 s32 sVtxCount = 0;

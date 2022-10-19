@@ -1235,7 +1235,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->unk18C = 0;
         }
         gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(MISC_RACER_WEIGHT);
-        gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId] * 0.45;
+        gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId] * 0.45f;
         if (tempRacer->unk204 > 0) {
             gCurrentRacerWeightStat = -0.02f;
         }
@@ -1244,10 +1244,10 @@ void update_player_racer(Object* obj, s32 updateRate) {
         gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(MISC_ASSET_UNK0B);
         D_8011D574 = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
         if (tempRacer->unk1FE == 3) {
-            gCurrentRacerWeightStat *= (f32) tempRacer->unk1FF / 256;
+            gCurrentRacerWeightStat *= (f32) tempRacer->unk1FF / 256.0f;
         }
         if (tempRacer->unk1FE == 1) {
-            gCurrentRacerWeightStat -= (gCurrentRacerWeightStat * tempRacer->unk1FF) / 128;
+            gCurrentRacerWeightStat -= (gCurrentRacerWeightStat * tempRacer->unk1FF) / 128.0f;
             if (tempRacer->unk204 > 0) {
                 gCurrentRacerWeightStat = -gCurrentRacerWeightStat;
             }
@@ -3072,9 +3072,9 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
     gCameraObject->trans.y_position += gCameraObject->y_velocity + gCameraObject->unk30;
     gCameraObject->trans.z_position += gCameraObject->z_velocity;
     if (!gRaceStartTimer && !D_8011D586) {
-        gCameraObject->x_velocity = gCameraObject->x_velocity * 0.95;
-        gCameraObject->y_velocity = gCameraObject->y_velocity * 0.95;
-        gCameraObject->z_velocity = gCameraObject->z_velocity * 0.95;
+        gCameraObject->x_velocity = gCameraObject->x_velocity * 0.95f;
+        gCameraObject->y_velocity = gCameraObject->y_velocity * 0.95f;
+        gCameraObject->z_velocity = gCameraObject->z_velocity * 0.95f;
     }
     angle = D_8011D586;
     if (angle > 0x1400) {
@@ -3608,7 +3608,10 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     delta = (f32) updateRate;
     gCameraObject->trans.x_position += (temp_a3->unk0 * delta) * 1.5f;
     gCameraObject->trans.z_position += (temp_a3->unk8 * delta) * 1.5f;
-    if (gCurrentStickX > 75) { gCurrentStickX = 75; gCurrentRacerInput |= A_BUTTON | B_BUTTON; } // Only matches if it's on the same line
+    if (gCurrentStickX > 75) {
+        gCurrentStickX = 75; 
+        gCurrentRacerInput |= A_BUTTON | B_BUTTON; 
+    }
     if (gCurrentStickX < -75) {
         gCurrentStickX = -75;
         gCurrentRacerInput |= A_BUTTON | B_BUTTON;
@@ -3671,7 +3674,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk18C = 0;
     }
     gCurrentRacerMiscAssetPtr = (f32 *)get_misc_asset(MISC_RACER_WEIGHT);
-    gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[racer->characterId] * 0.45;
+    gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[racer->characterId] * 0.45f;
     if (racer->unk204 > 0) {
         gCurrentRacerWeightStat = -0.02f;
     }
@@ -3744,10 +3747,10 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->throttleReleased = 1;
         }
         if (racer->unk1FE == 3) {
-            gCurrentRacerWeightStat *= ((f32)racer->unk1FF / 256);
+            gCurrentRacerWeightStat *= ((f32)racer->unk1FF / 256.0f);
         }
         if (racer->unk1FE == 1) {
-            gCurrentRacerWeightStat -= ((gCurrentRacerWeightStat * racer->unk1FF) / 128);
+            gCurrentRacerWeightStat -= ((gCurrentRacerWeightStat * racer->unk1FF) / 128.0f);
             if (racer->unk204 > 0) {
                 gCurrentRacerWeightStat = -gCurrentRacerWeightStat;
             }
