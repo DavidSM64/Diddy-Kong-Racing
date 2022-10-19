@@ -1007,26 +1007,32 @@ void render_profiler(void) {
     #define TEXT_OFFSET 10
     set_text_font(ASSET_FONTS_SMALLFONT);
     set_text_colour(255, 255, 255, 255, 255);
+    if (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
+        printY = 50;
+    } else {
+        printY = 30;
+    }
     if (sProfilerPage != 1) {
         set_text_background_colour(0, 0, 0, 255);
     } else {
+        gDPPipeSync(gCurrDisplayList++);
+        gDPSetCycleType(gCurrDisplayList++, G_CYC_1CYCLE);
         gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
         gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
         gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
-        gDPFillRectangle(gCurrDisplayList++, TEXT_OFFSET - 2, 8, 112, 52);
+        gDPFillRectangle(gCurrDisplayList++, TEXT_OFFSET - 2, 8, 112, printY + 2);
+        gDPPipeSync(gCurrDisplayList++);
         set_text_background_colour(0, 0, 0, 0);
     }
     puppyprintf(textBytes,  "FPS: %2.2f", gFPS);
     draw_text(&gCurrDisplayList, TEXT_OFFSET, 10, textBytes, ALIGN_TOP_LEFT);
     puppyprintf(textBytes,  "CPU: %dus (%d%%)", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
     draw_text(&gCurrDisplayList, TEXT_OFFSET, 20, textBytes, ALIGN_TOP_LEFT);
-    printY = 30;
     if (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
         puppyprintf(textBytes,  "RSP: %dus (%d%%)", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
         draw_text(&gCurrDisplayList, TEXT_OFFSET, 30, textBytes, ALIGN_TOP_LEFT);
         puppyprintf(textBytes,  "RDP: %dus (%d%%)", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
         draw_text(&gCurrDisplayList, TEXT_OFFSET, 40, textBytes, ALIGN_TOP_LEFT);
-        printY = 50;
     }
     if (sProfilerPage == 0) {
 #ifdef FIFO_UCODE
