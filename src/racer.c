@@ -4180,6 +4180,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
 GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 #endif
 
+#ifndef NO_ANTIPIRACY
 // This gets called if an anti-piracy checksum fails in func_8005F850.
 /**
  * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
@@ -4188,6 +4189,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 void antipiracy_modify_surface_traction_table(void) {
     gSurfaceTractionTable[SURFACE_DEFAULT] = 0.05f;
 }
+#endif
 
 void func_8005C270(Object_Racer *racer) {
     s32 temp = func_8001BA64();

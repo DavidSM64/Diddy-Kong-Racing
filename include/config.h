@@ -13,7 +13,7 @@
 #define DEFAULT_CHARACTER 7 // If you skip character select, pick a default character.
 #define EXPANSION_PAK // Enable expansion pak requirement
 // #define FORCE_4MB_MEMORY // Pretend the expansion pak is not installed.
-#define DISABLE_ANTI_TAMPER // Disable all the anti tamperment measures in the ROM
+#define NO_ANTIPIRACY // Disable all the anti tamperment measures in the ROM
 #define UNLOCK_ALL // Unlock all characters, tracks and adventure 2.
 #define FIFO_UCODE // Allow usage of the faster FIFO microcode. Emulators will still use xbus.
 // #define DISABLE_AUDIO // Disable all ingame audio, and prevent the RSP from working on audio tasks.

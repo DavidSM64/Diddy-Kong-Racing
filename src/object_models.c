@@ -61,6 +61,7 @@ void func_8005F850(void) {
     D_8011D644 = allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
     D_8011D640 = 0;
 
+#ifndef NO_ANTIPIRACY
     // Anti-tamper check.
     checksum = 0;
     for (i = 0; i < gFunc80024D54Length; i++) {
@@ -69,6 +70,7 @@ void func_8005F850(void) {
     if (checksum != gTractionTableChecksum) {
         antipiracy_modify_surface_traction_table();
     }
+#endif
 }
 
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")

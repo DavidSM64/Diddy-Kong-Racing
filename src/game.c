@@ -849,10 +849,12 @@ void init_game(void) {
 
     init_main_memory_pool();
     func_800C6170(); // Initialise gzip decompression related things
+#ifndef NO_ANTIPIRACY
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
     }
+#endif
     gIsLoading = FALSE;
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
@@ -1428,10 +1430,12 @@ void ingame_logic_loop(s32 updateRate) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
+#ifndef NO_ANTIPIRACY
     // Spam the start button, making the game unplayable because it's constantly paused.
     if (sAntiPiracyTriggered) {
         buttonPressedInputs |= START_BUTTON;
     }
+#endif
     // Update all objects
     if (!gIsPaused) {
 #ifdef PUPPYPRINT_DEBUG
@@ -2444,6 +2448,7 @@ s32 is_controller_missing(void) {
     }
 }
 
+#ifndef NO_ANTIPIRACY
 /**
  * Ran on boot, will make sure the CIC chip (CIC6103) is to spec. Will return true if it's all good, otherwise it returns false.
  * The intention of this function, is an attempt to check that the cartridge is a legitimate copy.
@@ -2457,3 +2462,4 @@ s32 check_imem_validity(void) {
     }
     return TRUE;
 }
+#endif
