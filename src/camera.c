@@ -193,9 +193,8 @@ void func_80066060(s32 arg0, s32 arg1) {
  * Otherwise, set it to 0, regardless of TV type.
 */
 void set_viewport_tv_type(s8 setting) {
-    s8 tempSetting = (setting << 24) >> 24;
     if (osTvType == TV_TYPE_PAL) {
-        gAdjustViewportHeight = tempSetting;
+        gAdjustViewportHeight = setting;
     }
 }
 
