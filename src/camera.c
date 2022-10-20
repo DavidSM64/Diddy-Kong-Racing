@@ -936,7 +936,7 @@ void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f
     f32 tempY;
     f32 tempZ;
     s32 index;
-    f32 temp_f0;
+    f32 scaleFactor;
 
     func_8006FC30(D_80121060, arg2);
     if (arg4 != 0.0f) {
@@ -969,10 +969,10 @@ void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f
     D_80120CF0.scale = 1.0f;
     func_8006FE74(&D_80121060, &D_80120CF0);
     guMtxXFMF(D_80121060, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
-    temp_f0 = 1.0f / arg2->scale;
-    tempX *= temp_f0;
-    tempY *= temp_f0;
-    tempZ *= temp_f0;
+    scaleFactor = 1.0f / arg2->scale;
+    tempX *= scaleFactor;
+    tempY *= scaleFactor;
+    tempZ *= scaleFactor;
     D_80120D20++;
     index = D_80120D20;
     D_80120D28[index] = tempX;
