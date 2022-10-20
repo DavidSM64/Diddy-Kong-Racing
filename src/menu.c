@@ -1710,7 +1710,12 @@ void func_8007FF88(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8007FFEC.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_80080518.s")
+
+void func_80080518(f32 arg0, f32 arg1) {
+    D_800E1DC0 = (s32) (arg0 * 32.0f);
+    D_800E1DC4 = (s32) (arg1 * 32.0f);
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
 
