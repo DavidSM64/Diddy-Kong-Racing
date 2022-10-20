@@ -50,7 +50,6 @@ void render_borders_for_multiplayer(Gfx **dlist) {
             gDPFillRectangle((*dlist)++, x, 0, x + xOffset, height);
             break;
     }
-    return;
 }
 
 /**

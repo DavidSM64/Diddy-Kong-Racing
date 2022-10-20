@@ -713,8 +713,12 @@ ButtonElement gFileSelectButtons[3] = {
     { 208, 81, 88, 64, 4, 4, GPACK_RGBA5551(64, 16, 0, 0), GPACK_RGBA5551(255, 255, 0, 0) }, // File C
 };
 
-s16 D_800E03FC[10] = {
-    0x002C, 0x0036, 0x0015, 0x0019, 0x002C, 0x001B, 0x003F, 0x0019, 0x002D, 0x0019
+s16 gFileSelectElementPos[10] = {
+    44, 54, // game name
+    21, 25, // Balloon icon
+    44, 27, // New Text
+    63, 25, // Balloon count
+    45, 25  // Balloon count x
 };
 
 // Either 0 (2 racers), 1 (4 racers), or 2 (6 racers)
@@ -4978,22 +4982,22 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 if (gSavefileInfo[i].isAdventure2 != 0) {
                     s2 = 0xC;
                 }
-                render_menu_image(s2, D_800E03FC[2] + gFileSelectButtons[i].x, D_800E03FC[3] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                render_menu_image(s2, gFileSelectElementPos[2] + gFileSelectButtons[i].x, gFileSelectElementPos[3] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 func_80068508(1);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / s5;
-                render_menu_image(0, (D_800E03FC[6] + gFileSelectButtons[i].x) - 6, D_800E03FC[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                render_menu_image(0, (gFileSelectElementPos[6] + gFileSelectButtons[i].x) - 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % s5;
-                render_menu_image(0, D_800E03FC[6] + gFileSelectButtons[i].x + 6, D_800E03FC[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                render_menu_image(0, gFileSelectElementPos[6] + gFileSelectButtons[i].x + 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 func_80068508(0);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
-                render_menu_image(s5, D_800E03FC[8] + gFileSelectButtons[i].x, D_800E03FC[9] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                render_menu_image(s5, gFileSelectElementPos[8] + gFileSelectButtons[i].x, gFileSelectElementPos[9] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 sMenuGuiColourG = 255;
                 sMenuGuiColourB = 255;
                 func_8007BF1C(1);
             } else {
                 set_text_colour(255, 255, 255, 64, 255);
-                draw_text(&sMenuCurrDisplayList, D_800E03FC[4] + gFileSelectButtons[i].x, D_800E03FC[5] + gFileSelectButtons[i].y + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[4] + gFileSelectButtons[i].x, gFileSelectElementPos[5] + gFileSelectButtons[i].y + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
             }
         }
     }
@@ -5028,7 +5032,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 trim_filename_string(gFilenames[i], tempName);
             }
             if (tempName != NULL) {
-                draw_text(&sMenuCurrDisplayList, D_800E03FC[0] + gFileSelectButtons[i].x, D_800E03FC[1] + gFileSelectButtons[i].y + y, tempName, ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[0] + gFileSelectButtons[i].x, gFileSelectElementPos[1] + gFileSelectButtons[i].y + y, tempName, ALIGN_MIDDLE_CENTER);
             }
         }
     }
@@ -5417,8 +5421,8 @@ s32 menu_file_select_loop(s32 updateRate) {
                         if (osTvType == TV_TYPE_PAL) {
                             i = 12;
                         }
-                        func_80097874(i + 187, gFileSelectButtons[gSaveFileIndex].x + D_800E03FC[0],
-                            gFileSelectButtons[gSaveFileIndex].y + D_800E03FC[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
+                        func_80097874(i + 187, gFileSelectButtons[gSaveFileIndex].x + gFileSelectElementPos[0],
+                            gFileSelectButtons[gSaveFileIndex].y + gFileSelectElementPos[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
                         currentMenuDelay = 0;
                     }
                 }

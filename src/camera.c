@@ -8,6 +8,7 @@
 #include "unknown_0255E0.h"
 #include "video.h"
 #include "lib/src/libc/rmonPrintf.h"
+#include "math_util.h"
 
 extern u32 osTvType;
 
@@ -114,7 +115,7 @@ s32 D_80120D08;
 s32 D_80120D0C;
 f32 gCurCamFOV;
 s8 D_80120D14;
-u8 D_80120D15;
+s8 D_80120D15;
 s32 D_80120D18;
 s32 D_80120D1C;
 s32 D_80120D20;
@@ -124,7 +125,7 @@ f32 D_80120D40[6];
 f32 D_80120D58[5];
 u16 perspNorm;
 Matrix *D_80120D70[6];
-Mtx *D_80120D88[6];
+Matrix *D_80120D88[6];
 Matrix D_80120DA0[5];
 Matrix D_80120EE0; // Perspective matrix?
 Matrix D_80120F20;
@@ -853,9 +854,133 @@ void func_80068508(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/camera/func_80068514.s")
-GLOBAL_ASM("asm/non_matchings/camera/func_80068BF4.s")
+
+typedef struct unk80068BF4 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s32 *unk8;
+    s32 *unkC[2];
+} unk80068BF4;
+
+#define gDkrEnableBillboard(pkt) \
+	gMoveWd(pkt, G_MW_BILLBOARD, 0, 1)
+#define gDkrDisableBillboard(pkt) \
+	gMoveWd(pkt, G_MW_BILLBOARD, 0, 0)
+
+void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3, unk80068BF4 *arg4, s32 arg5) {
+    s32 temp;
+    f32 temp_f0;
+    s32 var_s3;
+    Vertex *temp_v1;
+    Matrix sp90;
+    Matrix sp50;
+
+    if (arg4 != NULL) {
+        temp_v1 = *arg2;
+        temp_v1->x = arg3->trans.x_position;
+        temp_v1->y = arg3->trans.y_position;
+        temp_v1->z = arg3->trans.z_position;
+        temp_v1->r = 0xFF;
+        temp_v1->g = 0xFF;
+        temp_v1->b = 0xFF;
+        temp_v1->a = 0xFF;
+        gDkrVertices((*arg0)++, OS_PHYSICAL_TO_K0(*arg2), (((s32)OS_PHYSICAL_TO_K0(*arg2)) & 6), 0xD);
+        (*arg2)++; // Can't be done in the macro?
+        var_s3 = arg3->unk18;
+        D_80120D1C += 1;
+        D_80120CF0.y_rotation = -arg3->trans.y_rotation;
+        D_80120CF0.x_rotation = -arg3->trans.x_rotation;
+        D_80120CF0.z_rotation = D_80120AC0[D_80120CE4].trans.z_rotation + arg3->trans.z_rotation;
+        D_80120CF0.x_position = 0.0f;
+        D_80120CF0.y_position = 0.0f;
+        D_80120CF0.z_position = 0.0f;
+        if (D_80120D15 != 0) {
+            temp_f0 = arg3->trans.scale;
+            func_80070638(&sp50, temp_f0, temp_f0, 1.0f);
+            func_80070130(&sp90, 0, 1.0f, gVideoAspectRatio);
+            func_8006F768(&sp90, &sp50, D_80121060);
+        } else {
+            temp_f0 = arg3->trans.scale;
+            func_80070638(D_80121060, temp_f0, temp_f0, 1.0f);
+        }
+        func_8006FE74(&sp90, &D_80120CF0);
+        func_8006F768(D_80121060, &sp90, D_80120D70[D_80120D1C]);
+        func_8006F870(D_80120D70[D_80120D1C], *arg1);
+        D_80120D88[D_80120D1C] = *arg1;
+        gSPMatrix((*arg0)++, OS_PHYSICAL_TO_K0((*arg1)++), G_MTX_DKR_INDEX_2);
+        gDkrEnableBillboard((*arg0)++);
+        if (D_80120D0C == 0) {
+            var_s3 =  ((s32) ((var_s3 & 0xFF) * arg4->unk0) >> 8);
+        }
+        func_8007BF34(arg0, arg4->unk6 | arg5);
+        if (var_s3 >= arg4->unk0) {
+            var_s3 = arg4->unk0 - 1;
+        }
+        gSPDisplayList((*arg0)++, arg4->unkC[var_s3]);
+        if (--D_80120D1C == 0) {
+            var_s3 = 0;
+        } else {
+            var_s3 = 1;
+        }
+        gDkrInsertMatrix((*arg0)++, 0, var_s3 << 6);
+        gDkrDisableBillboard((*arg0)++);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
-GLOBAL_ASM("asm/non_matchings/camera/func_80069484.s")
+
+void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4) {
+    f32 tempX;
+    f32 tempY;
+    f32 tempZ;
+    s32 index;
+    f32 temp_f0;
+
+    func_8006FC30(D_80121060, arg2);
+    if (arg4 != 0.0f) {
+        func_8006FE30(&D_80121060, arg4);
+    }
+    if (arg3 != 1.0f) {
+        func_8006FE04(&D_80121060, arg3);
+    }
+    func_8006F768(&D_80121060, D_80120D70[D_80120D1C], D_80120D70[D_80120D1C + 1]);
+    func_8006F768(D_80120D70[D_80120D1C + 1], &D_80120F20, &D_801210A0);
+    func_8006F870(&D_801210A0, *arg1);
+    D_80120D1C++;
+    D_80120D88[0, D_80120D1C] = *arg1; // Should be [D_80120D1C], but only matches with [0, D_80120D1C]
+    if (1) { } if (1) { } if (1) { }; // Necessary to match
+    gSPMatrix((*arg0)++, OS_PHYSICAL_TO_K0((*arg1)++), G_MTX_DKR_INDEX_1);
+    guMtxXFMF(*D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
+    index = D_80120CE4;
+    if (D_80120D14) {
+        index += 4;
+    }
+    tempX = D_80120AC0[index].trans.x_position - tempX;
+    tempY = D_80120AC0[index].trans.y_position - tempY;
+    tempZ = D_80120AC0[index].trans.z_position - tempZ;
+    D_80120CF0.y_rotation = -arg2->y_rotation;
+    D_80120CF0.x_rotation = -arg2->x_rotation;
+    D_80120CF0.z_rotation = -arg2->z_rotation;
+    D_80120CF0.x_position = 0.0f;
+    D_80120CF0.y_position = 0.0f;
+    D_80120CF0.z_position = 0.0f;
+    D_80120CF0.scale = 1.0f;
+    func_8006FE74(&D_80121060, &D_80120CF0);
+    guMtxXFMF(D_80121060, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
+    temp_f0 = 1.0f / arg2->scale;
+    tempX *= temp_f0;
+    tempY *= temp_f0;
+    tempZ *= temp_f0;
+    D_80120D20++;
+    index = D_80120D20;
+    D_80120D28[index] = tempX;
+    D_80120D40[index] = tempY;
+    if (0); // Necessary to match
+    D_80120D58[index] = tempZ;
+}
+
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
 
 UNUSED void func_800699E4(f32 *arg0, f32 *arg1, f32 *arg2) {
