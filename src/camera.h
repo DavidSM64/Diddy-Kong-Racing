@@ -53,7 +53,7 @@ enum ViewPortFlags {
     VIEWPORT_HEIGHT_CUSTOM = 0x0040
 };
 
-extern s8 D_800DD060;
+extern s8 gAntiPiracyViewport;
 
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
@@ -110,7 +110,7 @@ extern f32 D_80120D28[6];
     void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
 
 void func_80066060(s32 arg0, s32 arg1);
-void func_80066098(s8 arg0);
+void set_viewport_tv_type(s8 arg0);
 void func_800660C0(void);
 void func_800660D0(void);
 UNUSED f32 get_current_camera_fov(void);
@@ -122,11 +122,11 @@ s32 func_80066220(void);
 void func_80066230(Gfx **dlist, Mtx **arg1);
 f32 func_80066348(f32 xPos, f32 yPos, f32 zPos);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
-void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
-void func_80066520(void);
-s8 func_80066510(void);
-s32 func_8006652C(s32 arg0);
-void func_800665E8(s32 arg0);
+void write_to_object_render_stack(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
+void disable_cutscene_camera(void);
+s8 check_if_showing_cutscene_camera(void);
+s32 set_active_viewports_and_object_stack_cap(s32 arg0);
+void set_object_stack_pos(s32 arg0);
 void func_80066818(s32 viewPortIndex, s32 arg1);
 void func_80066894(s32 viewPortIndex, s32 arg1);
 s32 func_80066910(s32 viewPortIndex);

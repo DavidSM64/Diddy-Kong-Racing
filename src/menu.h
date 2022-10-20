@@ -395,7 +395,7 @@ extern s16 D_800E03A4[6];
 
 extern ButtonElement gFileSelectButtons[3];
 
-extern s16 D_800E03FC[10];
+extern s16 gFileSelectElementPos[10];
 
 extern s32 gMultiplayerSelectedNumberOfRacers;
 extern s32 D_800E0414;

@@ -123,7 +123,7 @@ glabel func_800A4154
 /* 0A4F28 800A4328 24040001 */  li    $a0, 1
 /* 0A4F2C 800A432C 0C01EFC7 */  jal   func_8007BF1C
 /* 0A4F30 800A4330 AFA30024 */   sw    $v1, 0x24($sp)
-/* 0A4F34 800A4334 0C019826 */  jal   func_80066098
+/* 0A4F34 800A4334 0C019826 */  jal   set_viewport_tv_type
 /* 0A4F38 800A4338 24040001 */   li    $a0, 1
 /* 0A4F3C 800A433C 8E070000 */  lw    $a3, ($s0)
 /* 0A4F40 800A4340 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
@@ -134,7 +134,7 @@ glabel func_800A4154
 /* 0A4F54 800A4354 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A4F58 800A4358 0C02A980 */  jal   func_800AA600
 /* 0A4F5C 800A435C 24E70360 */   addiu $a3, $a3, 0x360
-/* 0A4F60 800A4360 0C019826 */  jal   func_80066098
+/* 0A4F60 800A4360 0C019826 */  jal   set_viewport_tv_type
 /* 0A4F64 800A4364 00002025 */   move  $a0, $zero
 /* 0A4F68 800A4368 0C01EFC7 */  jal   func_8007BF1C
 /* 0A4F6C 800A436C 00002025 */   move  $a0, $zero
@@ -177,7 +177,7 @@ glabel func_800A4154
 .L800A4400:
 /* 0A5000 800A4400 A44C0398 */  sh    $t4, 0x398($v0)
 .L800A4404:
-/* 0A5004 800A4404 0C019826 */  jal   func_80066098
+/* 0A5004 800A4404 0C019826 */  jal   set_viewport_tv_type
 /* 0A5008 800A4408 24040001 */   li    $a0, 1
 /* 0A500C 800A440C 8E070000 */  lw    $a3, ($s0)
 /* 0A5010 800A4410 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
@@ -188,7 +188,7 @@ glabel func_800A4154
 /* 0A5024 800A4424 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A5028 800A4428 0C02A980 */  jal   func_800AA600
 /* 0A502C 800A442C 24E70380 */   addiu $a3, $a3, 0x380
-/* 0A5030 800A4430 0C019826 */  jal   func_80066098
+/* 0A5030 800A4430 0C019826 */  jal   set_viewport_tv_type
 /* 0A5034 800A4434 00002025 */   move  $a0, $zero
 /* 0A5038 800A4438 8E020000 */  lw    $v0, ($s0)
 /* 0A503C 800A443C 10000022 */  b     .L800A44C8
@@ -201,7 +201,7 @@ glabel func_800A4154
 /* 0A5054 800A4454 A5AB00F8 */   sh    $t3, 0xf8($t5)
 /* 0A5058 800A4458 0C01EFC7 */  jal   func_8007BF1C
 /* 0A505C 800A445C 24040001 */   li    $a0, 1
-/* 0A5060 800A4460 0C019826 */  jal   func_80066098
+/* 0A5060 800A4460 0C019826 */  jal   set_viewport_tv_type
 /* 0A5064 800A4464 24040001 */   li    $a0, 1
 /* 0A5068 800A4468 8E070000 */  lw    $a3, ($s0)
 /* 0A506C 800A446C 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
@@ -214,7 +214,7 @@ glabel func_800A4154
 /* 0A5088 800A4488 24E700E0 */   addiu $a3, $a3, 0xe0
 /* 0A508C 800A448C 0C01EFC7 */  jal   func_8007BF1C
 /* 0A5090 800A4490 00002025 */   move  $a0, $zero
-/* 0A5094 800A4494 0C019826 */  jal   func_80066098
+/* 0A5094 800A4494 0C019826 */  jal   set_viewport_tv_type
 /* 0A5098 800A4498 00002025 */   move  $a0, $zero
 /* 0A509C 800A449C 0C01A142 */  jal   func_80068508
 /* 0A50A0 800A44A0 24040001 */   li    $a0, 1

@@ -6,6 +6,6 @@
 
 // Non Matching
 void render_borders_for_multiplayer(Gfx **dlist);
-void func_80077268(Gfx **dlist);
+void render_second_multiplayer_borders(Gfx **dlist);
 
 #endif

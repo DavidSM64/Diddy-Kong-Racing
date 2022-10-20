@@ -1412,7 +1412,7 @@ glabel func_800A8474
 /* 0AA508 800A9908 144002B1 */  bnez  $v0, .L800AA3D0
 /* 0AA50C 800A990C 8FBF003C */   lw    $ra, 0x3c($sp)
 .L800A9910:
-/* 0AA510 800A9910 0C019944 */  jal   func_80066510
+/* 0AA510 800A9910 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 0AA514 800A9914 A3A40113 */   sb    $a0, 0x113($sp)
 /* 0AA518 800A9918 93A40113 */  lbu   $a0, 0x113($sp)
 /* 0AA51C 800A991C 144002AC */  bnez  $v0, .L800AA3D0

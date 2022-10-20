@@ -22,15 +22,15 @@ glabel func_80067A3C
 /* 068688 80067A88 106B0008 */  beq   $v1, $t3, .L80067AAC
 /* 06868C 80067A8C 00E02025 */   move  $a0, $a3
 /* 068690 80067A90 106A0012 */  beq   $v1, $t2, .L80067ADC
-/* 068694 80067A94 3C0F8012 */   lui   $t7, %hi(D_80120CE4) # $t7, 0x8012
+/* 068694 80067A94 3C0F8012 */   lui   $t7, %hi(gObjectRenderStackPos) # $t7, 0x8012
 /* 068698 80067A98 240C0003 */  li    $t4, 3
 /* 06869C 80067A9C 106C001A */  beq   $v1, $t4, .L80067B08
-/* 0686A0 80067AA0 3C028012 */   lui   $v0, %hi(D_80120CE4) # $v0, 0x8012
+/* 0686A0 80067AA0 3C028012 */   lui   $v0, %hi(gObjectRenderStackPos) # $v0, 0x8012
 /* 0686A4 80067AA4 1000003F */  b     .L80067BA4
 /* 0686A8 80067AA8 44882000 */   mtc1  $t0, $f4
 .L80067AAC:
-/* 0686AC 80067AAC 3C0F8012 */  lui   $t7, %hi(D_80120CE4) # $t7, 0x8012
-/* 0686B0 80067AB0 8DEF0CE4 */  lw    $t7, %lo(D_80120CE4)($t7)
+/* 0686AC 80067AAC 3C0F8012 */  lui   $t7, %hi(gObjectRenderStackPos) # $t7, 0x8012
+/* 0686B0 80067AB0 8DEF0CE4 */  lw    $t7, %lo(gObjectRenderStackPos)($t7)
 /* 0686B4 80067AB4 000411C3 */  sra   $v0, $a0, 7
 /* 0686B8 80067AB8 15E00005 */  bnez  $t7, .L80067AD0
 /* 0686BC 80067ABC 00047043 */   sra   $t6, $a0, 1
@@ -43,7 +43,7 @@ glabel func_80067A3C
 /* 0686D4 80067AD4 10000032 */  b     .L80067BA0
 /* 0686D8 80067AD8 00823823 */   subu  $a3, $a0, $v0
 .L80067ADC:
-/* 0686DC 80067ADC 8DEF0CE4 */  lw    $t7, %lo(D_80120CE4)($t7)
+/* 0686DC 80067ADC 8DEF0CE4 */  lw    $t7, %lo(gObjectRenderStackPos)($t7)
 /* 0686E0 80067AE0 00051A03 */  sra   $v1, $a1, 8
 /* 0686E4 80067AE4 15E00005 */  bnez  $t7, .L80067AFC
 /* 0686E8 80067AE8 00057043 */   sra   $t6, $a1, 1
@@ -56,7 +56,7 @@ glabel func_80067A3C
 /* 068700 80067B00 10000027 */  b     .L80067BA0
 /* 068704 80067B04 00A33023 */   subu  $a2, $a1, $v1
 .L80067B08:
-/* 068708 80067B08 8C420CE4 */  lw    $v0, %lo(D_80120CE4)($v0)
+/* 068708 80067B08 8C420CE4 */  lw    $v0, %lo(gObjectRenderStackPos)($v0)
 /* 06870C 80067B0C 00057843 */  sra   $t7, $a1, 1
 /* 068710 80067B10 10400009 */  beqz  $v0, .L80067B38
 /* 068714 80067B14 0005C203 */   sra   $t8, $a1, 8

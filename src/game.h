@@ -49,10 +49,10 @@ extern s8 D_800DD330;
 extern s8  sAntiPiracyTriggered;
 extern s32 D_800DD378;
 extern s32 D_800DD37C;
-extern s32 D_800DD380;
+extern s32 gScreenStatus;
 extern s32 sControllerStatus;
 extern s32 D_800DD388;
-extern s8  D_800DD38C;
+extern s8  gWaitForGfxTask;
 extern s8  D_800DD390;
 extern s16 D_800DD394;
 extern s8  D_800DD398;
@@ -63,7 +63,7 @@ extern s32 D_800DD3A8;
 extern s32 D_800DD3AC;
 
 
-extern s8  D_800DD3F0;
+extern s8  gDrawFrameTimer;
 extern FadeTransition D_800DD3F4;
 extern FadeTransition D_800DD408;
 // Unused?

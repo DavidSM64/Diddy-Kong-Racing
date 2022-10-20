@@ -129,7 +129,7 @@ glabel func_80005D08
 .L80005EA8:
 /* 006AA8 80005EA8 E7A20024 */  swc1  $f2, 0x24($sp)
 /* 006AAC 80005EAC E7AE001C */  swc1  $f14, 0x1c($sp)
-/* 006AB0 80005EB0 0C019944 */  jal   func_80066510
+/* 006AB0 80005EB0 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 006AB4 80005EB4 E7B00030 */   swc1  $f16, 0x30($sp)
 /* 006AB8 80005EB8 C7A20024 */  lwc1  $f2, 0x24($sp)
 /* 006ABC 80005EBC C7AE001C */  lwc1  $f14, 0x1c($sp)

@@ -1075,7 +1075,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk220 = 0;
     tempRacer->unk21C = 0;
     if (tempRacer->playerIndex != -1 && !D_8011D582) {
-        func_800665E8(player);
+        set_object_stack_pos(player);
         gCameraObject = func_80069CFC();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
@@ -1271,7 +1271,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
                 tempRacer->unk1B2 = 0;
             }
         }
-        func_800665E8(tempRacer->playerIndex);
+        set_object_stack_pos(tempRacer->playerIndex);
         gCameraObject = (ObjectCamera *) func_80069CFC();
         tempRacer->unk1E7++;
         gCurrentPlayerIndex = tempRacer->playerIndex;
@@ -1309,7 +1309,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if ((gCurrentRacerInput & A_BUTTON) == 0) {
             tempRacer->throttleReleased = 1;
         }
-        if (func_80066510() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
+        if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
             gCurrentStickX = 0;
             gCurrentStickY = 0;
             gCurrentRacerInput = 0;
@@ -3614,7 +3614,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         }
     }
     if ((racer->transitionTimer < -1 && gCurrentStickX < 10 && gCurrentStickX > -10) || racer->transitionTimer == -1) {
-        if (func_80066510() == 0) {
+        if (check_if_showing_cutscene_camera() == 0) {
             func_800C01D8((FadeTransition* ) D_800DCDD4);
         }
         racer->transitionTimer = 60 - updateRate;
