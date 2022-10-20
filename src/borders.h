@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_077C50_H_
-#define _UNKNOWN_077C50_H_
+#ifndef _borders_H_
+#define _borders_H_
 
 #include "types.h"
 #include "f3ddkr.h"

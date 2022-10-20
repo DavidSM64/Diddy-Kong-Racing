@@ -32,7 +32,7 @@
 #include "PR/os_internal.h"
 #include "printf.h"
 #include "fade_transition.h"
-#include "unknown_077C50.h"
+#include "borders.h"
 #include "unknown_008C40.h"
 #include "unknown_0255E0.h"
 #include "game_text.h"
