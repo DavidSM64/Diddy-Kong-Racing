@@ -28,7 +28,7 @@ const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
 
 /************ .data ************/
 
-s8 D_800DD060 = 0;
+s8 gAntiPiracyViewport = FALSE;
 
 // x1, y1, x2, y2
 // posX, posY, width, height
@@ -50,7 +50,7 @@ ScreenViewport gScreenViewports[4] = {
 s32 D_800DD134 = 0;
 
 // Not sure about the typing here
-s16 D_800DD138[8] = {
+UNUSED s16 D_800DD138[8] = {
     0, 0, 0, -1, -1, 0, 0, 0
 };
 
@@ -108,14 +108,14 @@ s16 gButtonMask = 0xFFFF;
 ObjectSegment gObjectRenderStack[8];
 s32 gNumberOfViewports;
 s32 gObjectRenderStackPos;
-s32 D_80120CE8;
+s32 gOjbectRenderStackCap;
 s32 D_80120CEC;
 ObjectTransform D_80120CF0;
 s32 D_80120D08;
 s32 D_80120D0C;
 f32 gCurCamFOV;
 s8 gCutsceneCameraActive;
-s8 D_80120D15;
+s8 gAdjustViewportHeight;
 s32 D_80120D18;
 s32 D_80120D1C;
 s32 D_80120D20;
@@ -166,12 +166,12 @@ void func_80065EA0(void) {
     gNumberOfViewports = 0;
     D_80120D0C = 0;
     D_80120D18 = 0;
-    D_80120D15 = 0;
-    D_800DD060 = 0;
+    gAdjustViewportHeight = 0;
+    gAntiPiracyViewport = 0;
     while (IO_READ(PI_STATUS_REG) & PI_STATUS_ERROR) {
     }
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
-        D_800DD060 = 1;
+        gAntiPiracyViewport = TRUE;
     }
     guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     func_8006F870(D_80120EE0, D_80120FE0);
@@ -188,15 +188,21 @@ void func_80066060(s32 arg0, s32 arg1) {
     }
 }
 
-void func_80066098(s8 arg0) {
-    s8 temp = (arg0 << 24) >> 24;
-    if (!osTvType) {
-        D_80120D15 = temp;
+/**
+ * Set gAdjustViewportHeight to PAL mode if necessary, if setting is 1.
+ * Otherwise, set it to 0, regardless of TV type.
+*/
+void set_viewport_tv_type(s8 setting) {
+    s8 tempSetting = (setting << 24) >> 24;
+    if (osTvType == TV_TYPE_PAL) {
+        gAdjustViewportHeight = tempSetting;
     }
 }
+
 void func_800660C0(void) {
     D_80120D18 = 1;
 }
+
 void func_800660D0(void) {
     D_80120D18 = 0;
 }
@@ -249,8 +255,8 @@ void func_80066230(Gfx **dlist, Mtx **mats) {
     f32 sp1C;
     f32 sp18;
 
-    func_8006652C(0);
-    func_800665E8(0);
+    set_active_viewports_and_object_stack_cap(0);
+    set_object_stack_pos(0);
     someStruct = func_80069D20();
     sp2A = someStruct->trans.y_rotation;
     sp28 = someStruct->trans.x_rotation;
@@ -341,35 +347,44 @@ void disable_cutscene_camera(void) {
     gCutsceneCameraActive = FALSE;
 }
 
-s32 func_8006652C(s32 arg0) {
-    if ((arg0 >= 0) && (arg0 < 4)) {
-        gNumberOfViewports = arg0;
+/**
+ * Sets the cap for the object render stack.
+ * If the number passed is within 1-4, then the stack cap is set to
+ * how many active viewports there are.
+*/
+s32 set_active_viewports_and_object_stack_cap(s32 num) {
+    if (num >= 0 && num < 4) {
+        gNumberOfViewports = num;
     } else {
         gNumberOfViewports = 0;
     }
     switch (gNumberOfViewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
-            D_80120CE8 = 1;
+            gOjbectRenderStackCap = 1;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
-            D_80120CE8 = 2;
+            gOjbectRenderStackCap = 2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
-            D_80120CE8 = 3;
+            gOjbectRenderStackCap = 3;
             break;
         case VIEWPORTS_COUNT_4_PLAYERS:
-            D_80120CE8 = 4;
+            gOjbectRenderStackCap = 4;
             break;
     }
-    if (gObjectRenderStackPos >= D_80120CE8) {
+    if (gObjectRenderStackPos >= gOjbectRenderStackCap) {
         gObjectRenderStackPos = 0;
     }
-    return D_80120CE8;
+    return gOjbectRenderStackCap;
 }
 
-void func_800665E8(s32 arg0) {
-    if (arg0 >= 0 && arg0 < 4) {
-        gObjectRenderStackPos = arg0;
+/**
+ * Sets the object stack pos to the passed number.
+ * If it's not within 1-4, then it's set to 0.
+*/
+void set_object_stack_pos(s32 num) {
+    if (num >= 0 && num < 4) {
+        gObjectRenderStackPos = num;
     } else {
         gObjectRenderStackPos = 0;
     }
@@ -821,7 +836,8 @@ void func_8006807C(Gfx **dlist, Mtx **mats) {
 
 void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
     s32 tempWidth = (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) ? -width : width;
-    if (D_800DD060 != 0) {
+    // Antipiracy measure. Flips the screen upside down.
+    if (gAntiPiracyViewport) {
         height = -height;
         tempWidth = -width;
     }
@@ -907,7 +923,7 @@ void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3
         D_80120CF0.x_position = 0.0f;
         D_80120CF0.y_position = 0.0f;
         D_80120CF0.z_position = 0.0f;
-        if (D_80120D15) {
+        if (gAdjustViewportHeight) {
             scale = arg3->trans.scale;
             func_80070638(sp50, scale, scale, 1.0f);
             func_80070130(sp90, 0, 1.0f, gVideoAspectRatio);

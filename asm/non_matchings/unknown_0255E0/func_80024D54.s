@@ -33,7 +33,7 @@ glabel func_80024D54
 /* 0259D0 80024DD0 3C048012 */  lui   $a0, %hi(D_8011D37C) # $a0, 0x8012
 /* 0259D4 80024DD4 3C018012 */  lui   $at, %hi(D_8011B0BC) # $at, 0x8012
 /* 0259D8 80024DD8 8C84D37C */  lw    $a0, %lo(D_8011D37C)($a0)
-/* 0259DC 80024DDC 0C01994B */  jal   func_8006652C
+/* 0259DC 80024DDC 0C01994B */  jal   set_active_viewports_and_object_stack_cap
 /* 0259E0 80024DE0 AC20B0BC */   sw    $zero, %lo(D_8011B0BC)($at)
 /* 0259E4 80024DE4 0C01BAA8 */  jal   is_game_paused
 /* 0259E8 80024DE8 00409825 */   move  $s3, $v0
@@ -262,7 +262,7 @@ glabel func_80024D54
 /* 025D20 80025120 AC400004 */  sw    $zero, 4($v0)
 /* 025D24 80025124 AC4D0000 */  sw    $t5, ($v0)
 /* 025D28 80025128 8E040000 */  lw    $a0, ($s0)
-/* 025D2C 8002512C 0C01997A */  jal   func_800665E8
+/* 025D2C 8002512C 0C01997A */  jal   set_object_stack_pos
 /* 025D30 80025130 00000000 */   nop   
 /* 025D34 80025134 02202025 */  move  $a0, $s1
 /* 025D38 80025138 0C019B37 */  jal   func_80066CDC
@@ -405,7 +405,7 @@ glabel func_80024D54
 /* 025F44 80025344 AE2F0000 */  sw    $t7, ($s1)
 /* 025F48 80025348 24040003 */  li    $a0, 3
 /* 025F4C 8002534C AC400004 */  sw    $zero, 4($v0)
-/* 025F50 80025350 0C01997A */  jal   func_800665E8
+/* 025F50 80025350 0C01997A */  jal   set_object_stack_pos
 /* 025F54 80025354 AC4D0000 */   sw    $t5, ($v0)
 /* 025F58 80025358 0C019948 */  jal   disable_cutscene_camera
 /* 025F5C 8002535C 00000000 */   nop   
@@ -472,7 +472,7 @@ glabel func_80024D54
 /* 026048 80025448 10000006 */  b     .L80025464
 /* 02604C 8002544C 00000000 */   nop   
 .L80025450:
-/* 026050 80025450 0C01997A */  jal   func_800665E8
+/* 026050 80025450 0C01997A */  jal   set_object_stack_pos
 /* 026054 80025454 24040003 */   li    $a0, 3
 /* 026058 80025458 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 02605C 8002545C 0C009E3A */  jal   func_800278E8

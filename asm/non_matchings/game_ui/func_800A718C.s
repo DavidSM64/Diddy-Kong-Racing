@@ -149,7 +149,7 @@ glabel func_800A718C
 /* 0A7FA0 800A73A0 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
 /* 0A7FA4 800A73A4 0C02A980 */  jal   func_800AA600
 /* 0A7FA8 800A73A8 24E702A0 */   addiu $a3, $a3, 0x2a0
-/* 0A7FAC 800A73AC 0C019826 */  jal   func_80066098
+/* 0A7FAC 800A73AC 0C019826 */  jal   set_viewport_tv_type
 /* 0A7FB0 800A73B0 24040001 */   li    $a0, 1
 /* 0A7FB4 800A73B4 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
 /* 0A7FB8 800A73B8 8F180300 */  lw    $t8, %lo(osTvType)($t8)
@@ -171,7 +171,7 @@ glabel func_800A718C
 /* 0A7FF4 800A73F4 24E70260 */   addiu $a3, $a3, 0x260
 /* 0A7FF8 800A73F8 0C01EFC7 */  jal   func_8007BF1C
 /* 0A7FFC 800A73FC 00002025 */   move  $a0, $zero
-/* 0A8000 800A7400 0C019826 */  jal   func_80066098
+/* 0A8000 800A7400 0C019826 */  jal   set_viewport_tv_type
 /* 0A8004 800A7404 00002025 */   move  $a0, $zero
 /* 0A8008 800A7408 3C078012 */  lui   $a3, %hi(D_80126CDC) # $a3, 0x8012
 /* 0A800C 800A740C 8CE76CDC */  lw    $a3, %lo(D_80126CDC)($a3)

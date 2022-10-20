@@ -7372,8 +7372,8 @@ void func_8009BD5C(void) {
     f32 sp1C;
     f32 sp18;
 
-    func_8006652C(0);
-    func_800665E8(0);
+    set_active_viewports_and_object_stack_cap(0);
+    set_object_stack_pos(0);
 
     temp_v0 = (unk80069D20 *)func_80069D20();
 

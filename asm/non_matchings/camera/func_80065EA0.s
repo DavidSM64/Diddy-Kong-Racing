@@ -63,11 +63,11 @@ glabel func_80065EA0
 /* 066B7C 80065F7C AC200D0C */  sw    $zero, %lo(D_80120D0C)($at)
 /* 066B80 80065F80 3C018012 */  lui   $at, %hi(D_80120D18) # $at, 0x8012
 /* 066B84 80065F84 AC200D18 */  sw    $zero, %lo(D_80120D18)($at)
-/* 066B88 80065F88 3C04800E */  lui   $a0, %hi(D_800DD060) # $a0, 0x800e
-/* 066B8C 80065F8C 3C018012 */  lui   $at, %hi(D_80120D15) # $at, 0x8012
-/* 066B90 80065F90 2484D060 */  addiu $a0, %lo(D_800DD060) # addiu $a0, $a0, -0x2fa0
+/* 066B88 80065F88 3C04800E */  lui   $a0, %hi(gAntiPiracyViewport) # $a0, 0x800e
+/* 066B8C 80065F8C 3C018012 */  lui   $at, %hi(gAdjustViewportHeight) # $at, 0x8012
+/* 066B90 80065F90 2484D060 */  addiu $a0, %lo(gAntiPiracyViewport) # addiu $a0, $a0, -0x2fa0
 /* 066B94 80065F94 3C03A460 */  lui   $v1, (0xA4600010 >> 16) # lui $v1, 0xa460
-/* 066B98 80065F98 A0200D15 */  sb    $zero, %lo(D_80120D15)($at)
+/* 066B98 80065F98 A0200D15 */  sb    $zero, %lo(gAdjustViewportHeight)($at)
 /* 066B9C 80065F9C 34630010 */  ori   $v1, (0xA4600010 & 0xFFFF) # ori $v1, $v1, 0x10
 /* 066BA0 80065FA0 A0800000 */  sb    $zero, ($a0)
 /* 066BA4 80065FA4 8C620000 */  lw    $v0, ($v1)

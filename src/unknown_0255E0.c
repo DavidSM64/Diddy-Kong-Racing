@@ -215,7 +215,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     if (D_8011D384) {
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
     }
-    func_8006652C(arg2);
+    set_active_viewports_and_object_stack_cap(arg2);
     func_80027FC4(arg1);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
@@ -230,7 +230,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     } else {
         func_800C01D8(&D_800DC874);
     }
-    func_8006652C(D_8011D37C);
+    set_active_viewports_and_object_stack_cap(D_8011D37C);
     D_8011B0FC = 0;
     i = 0;
     do {

@@ -19,7 +19,7 @@ glabel func_800A7520
 /* 0A8138 800A7538 00000000 */  nop   
 /* 0A813C 800A753C 15C00145 */  bnez  $t6, .L800A7A54
 /* 0A8140 800A7540 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 0A8144 800A7544 0C019826 */  jal   func_80066098
+/* 0A8144 800A7544 0C019826 */  jal   set_viewport_tv_type
 /* 0A8148 800A7548 AFA9001C */   sw    $t1, 0x1c($sp)
 /* 0A814C 800A754C 8FA9001C */  lw    $t1, 0x1c($sp)
 /* 0A8150 800A7550 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
@@ -359,7 +359,7 @@ glabel func_800A7520
 /* 0A863C 800A7A3C 240FFFFF */  li    $t7, -1
 /* 0A8640 800A7A40 00002025 */  move  $a0, $zero
 /* 0A8644 800A7A44 AC4F0004 */  sw    $t7, 4($v0)
-/* 0A8648 800A7A48 0C019826 */  jal   func_80066098
+/* 0A8648 800A7A48 0C019826 */  jal   set_viewport_tv_type
 /* 0A864C 800A7A4C AC4E0000 */   sw    $t6, ($v0)
 /* 0A8650 800A7A50 8FBF0014 */  lw    $ra, 0x14($sp)
 .L800A7A54:
