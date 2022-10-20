@@ -320,7 +320,7 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
             }
             newTempX = xpos + xAlignmentDiff - 1;
             newTempY = (ypos + fontData->unk22 - 1);
-            gDkrDmaDisplayList((*dlist)++, (u32)(((char *) dDialogueBoxDrawModes[1]) - 0x80000000), 2);
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[1]), 2);
             gDPFillRectangle((*dlist)++, xpos + arg1->x1, ypos + arg1->y1, newTempX + arg1->x1,
                              newTempY + arg1->y1);
             gDPPipeSync((*dlist)++);
@@ -328,7 +328,7 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
         gDPSetPrimColor((*dlist)++, textureLry, 0, 255, 255, 255, arg1->opacity);
         gDPSetEnvColor((*dlist)++, arg1->textColourR, arg1->textColourG, arg1->textColourB,
                        arg1->textColourA);
-        gDkrDmaDisplayList((*dlist)++, (u32)(((char *) dDialogueBoxDrawModes[0]) - 0x80000000), 2);
+        gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[0]), 2);
         gDPPipeSync((*dlist)++);
         xpos += arg1->unk20;
         ypos += arg1->unk22;
@@ -339,20 +339,20 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
             var_t0 = 0;
             if ((curChar < 0x21) || (curChar >= 0x80)) {
                 switch (curChar) {
-                    case ' ':
+                    case ' ': // Space
                         xpos += fontData->unk24;
                         break;
-                    case '\n':
+                    case '\n': // Line Feed
                         xpos = arg1->unk20;
                         ypos += fontData->unk22;
                         break;
-                    case '\t':
+                    case '\t': // Tab
                         xpos += fontData->unk26 - ((xpos - arg1->unk20) % fontData->unk26);
                         break;
-                    case '\v':
+                    case '\v': // VT - Vertical Tab
                         ypos += fontData->unk22;
                         break;
-                    case '\r':
+                    case '\r': // Carriage Return
                         xpos = arg1->unk20;
                         break;
                     default:
@@ -360,7 +360,7 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
                         break;
                 }
             } else {
-                curChar -= 0x20;
+                curChar -= 0x20; // Convert lower case to upper case ASCII
                 textureIndex = fontData->unk100[curChar].unk0;
                 if (textureIndex != 0xFF) {
                     newData = 1;
