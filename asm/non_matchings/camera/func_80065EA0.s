@@ -29,12 +29,12 @@ glabel func_80065EA0
 /* 066AF8 80065EF8 00895021 */  addu  $t2, $a0, $t1
 /* 066AFC 80065EFC 008FC021 */  addu  $t8, $a0, $t7
 /* 066B00 80065F00 008B6021 */  addu  $t4, $a0, $t3
-/* 066B04 80065F04 3C118012 */  lui   $s1, %hi(D_80120CE4) # $s1, 0x8012
+/* 066B04 80065F04 3C118012 */  lui   $s1, %hi(gObjectRenderStackPos) # $s1, 0x8012
 /* 066B08 80065F08 AFBF0034 */  sw    $ra, 0x34($sp)
 /* 066B0C 80065F0C AC4C0004 */  sw    $t4, 4($v0)
 /* 066B10 80065F10 AC580008 */  sw    $t8, 8($v0)
 /* 066B14 80065F14 AC4A000C */  sw    $t2, 0xc($v0)
-/* 066B18 80065F18 26310CE4 */  addiu $s1, %lo(D_80120CE4) # addiu $s1, $s1, 0xce4
+/* 066B18 80065F18 26310CE4 */  addiu $s1, %lo(gObjectRenderStackPos) # addiu $s1, $s1, 0xce4
 /* 066B1C 80065F1C 00008025 */  move  $s0, $zero
 /* 066B20 80065F20 24120008 */  li    $s2, 8
 /* 066B24 80065F24 240B00B4 */  li    $t3, 180
@@ -50,8 +50,8 @@ glabel func_80065EA0
 /* 066B48 80065F48 26100001 */  addiu $s0, $s0, 1
 /* 066B4C 80065F4C 1612FFF6 */  bne   $s0, $s2, .L80065F28
 /* 066B50 80065F50 240B00B4 */   li    $t3, 180
-/* 066B54 80065F54 3C018012 */  lui   $at, %hi(D_80120D14) # $at, 0x8012
-/* 066B58 80065F58 A0200D14 */  sb    $zero, %lo(D_80120D14)($at)
+/* 066B54 80065F54 3C018012 */  lui   $at, %hi(gCutsceneCameraActive) # $at, 0x8012
+/* 066B58 80065F58 A0200D14 */  sb    $zero, %lo(gCutsceneCameraActive)($at)
 /* 066B5C 80065F5C AE200000 */  sw    $zero, ($s1)
 /* 066B60 80065F60 3C018012 */  lui   $at, %hi(D_80120D1C) # $at, 0x8012
 /* 066B64 80065F64 AC200D1C */  sw    $zero, %lo(D_80120D1C)($at)

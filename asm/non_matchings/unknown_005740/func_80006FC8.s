@@ -88,7 +88,7 @@ glabel func_80006FC8
 /* 007CBC 800070BC 0000A825 */  move  $s5, $zero
 /* 007CC0 800070C0 15200006 */  bnez  $t1, .L800070DC
 /* 007CC4 800070C4 8FAA00AC */   lw    $t2, 0xac($sp)
-/* 007CC8 800070C8 0C019944 */  jal   func_80066510
+/* 007CC8 800070C8 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 007CCC 800070CC 00000000 */   nop   
 /* 007CD0 800070D0 10400047 */  beqz  $v0, .L800071F0
 /* 007CD4 800070D4 3C013F80 */   lui   $at, 0x3f80

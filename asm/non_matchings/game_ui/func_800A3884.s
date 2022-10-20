@@ -11,7 +11,7 @@ glabel func_800A3884
 /* 0A4494 800A3894 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0A4498 800A3898 15C1010E */  bne   $t6, $at, .L800A3CD4
 /* 0A449C 800A389C AFA5002C */   sw    $a1, 0x2c($sp)
-/* 0A44A0 800A38A0 0C019944 */  jal   func_80066510
+/* 0A44A0 800A38A0 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 0A44A4 800A38A4 AFA40028 */   sw    $a0, 0x28($sp)
 /* 0A44A8 800A38A8 8FA40028 */  lw    $a0, 0x28($sp)
 /* 0A44AC 800A38AC 1440010A */  bnez  $v0, .L800A3CD8

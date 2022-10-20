@@ -334,7 +334,7 @@ glabel func_800A01A0
 /* 0A1284 800A0684 24040002 */   li    $a0, 2
 /* 0A1288 800A0688 0C01EFC7 */  jal   func_8007BF1C
 /* 0A128C 800A068C 00002025 */   move  $a0, $zero
-/* 0A1290 800A0690 0C019944 */  jal   func_80066510
+/* 0A1290 800A0690 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 0A1294 800A0694 00000000 */   nop   
 /* 0A1298 800A0698 14400066 */  bnez  $v0, .L800A0834
 /* 0A129C 800A069C 3C0F8012 */   lui   $t7, %hi(D_80126D34) # $t7, 0x8012

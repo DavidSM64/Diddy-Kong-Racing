@@ -994,7 +994,7 @@ void main_game_loop(void) {
     gWaitForGfxTask = FALSE;
     clear_free_queue();
     if (!gIsPaused) {
-        func_80066520();
+        disable_cutscene_camera();
     }
     if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
@@ -1087,7 +1087,7 @@ void ingame_logic_loop(s32 updateRate) {
     // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
-        if (func_80066510() == 0 || func_8001139C()) {
+        if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
                 && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;

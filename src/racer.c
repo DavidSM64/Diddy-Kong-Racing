@@ -1309,7 +1309,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if ((gCurrentRacerInput & A_BUTTON) == 0) {
             tempRacer->throttleReleased = 1;
         }
-        if (func_80066510() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
+        if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
             gCurrentStickX = 0;
             gCurrentStickY = 0;
             gCurrentRacerInput = 0;
@@ -3614,7 +3614,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         }
     }
     if ((racer->transitionTimer < -1 && gCurrentStickX < 10 && gCurrentStickX > -10) || racer->transitionTimer == -1) {
-        if (func_80066510() == 0) {
+        if (check_if_showing_cutscene_camera() == 0) {
             func_800C01D8((FadeTransition* ) D_800DCDD4);
         }
         racer->transitionTimer = 60 - updateRate;

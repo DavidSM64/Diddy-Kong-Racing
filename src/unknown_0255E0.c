@@ -1220,8 +1220,8 @@ void obj_loop_fogchanger(Object* obj) {
     sp44 = obj->segment.unk3C_a.unk3C;
     phi_s3 = NULL;
 
-    // func_80066510() returns the bool D_80120D14. 1 if camera is controlled by cutscene, 0 if controlled by racer.
-    if (func_80066510()) {
+    // check_if_showing_cutscene_camera() returns the bool gCutsceneCameraActive. 1 if camera is controlled by cutscene, 0 if controlled by racer.
+    if (check_if_showing_cutscene_camera()) {
         phi_s3 = func_80069D7C();
         sp74 = get_viewport_count() + 1;
     } else {
