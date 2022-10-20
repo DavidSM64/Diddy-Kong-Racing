@@ -119,7 +119,7 @@ s8 gAdjustViewportHeight;
 s32 D_80120D18;
 s32 D_80120D1C;
 s32 D_80120D20;
-s32 D_80120D24;
+UNUSED s32 D_80120D24;
 f32 D_80120D28[6];
 f32 D_80120D40[6];
 f32 D_80120D58[5];
@@ -137,12 +137,12 @@ Matrix D_80121060;
 Matrix D_801210A0;
 OSMesgQueue sSIMesgQueue;
 OSMesg sSIMesgBuf;
-OSMesg D_801210FC;
+OSMesg gSIMesg;
 OSContStatus status;
-s32 D_80121108[2]; //Padding?
+UNUSED s32 D_80121108[2]; //Padding?
 ControllerData sControllerData[8];
-u16 sControllerButtonsPressed[4];
-u16 D_80121148[4];
+u16 gControllerButtonsPressed[4];
+u16 gControllerButtonsReleased[4];
 u8 sPlayerID[16];
 
 /******************************/
@@ -1171,7 +1171,7 @@ s32 init_controllers(void) {
     UNUSED s32 *temp2; // Unused
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
-    osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, D_801210FC);
+    osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);
     osContInit(&sSIMesgQueue, &bitpattern, &status);
     osContStartReadData(&sSIMesgQueue);
     initialise_player_ids();
@@ -1249,14 +1249,14 @@ u16 get_buttons_held_from_player(s32 player) {
  * NOTE: This was a u16, but we only got a match in menu_ghost_data_loop when it was a u32 for some reason
  */
 u32 get_buttons_pressed_from_player(s32 player) {
-    return sControllerButtonsPressed[sPlayerID[player]];
+    return gControllerButtonsPressed[sPlayerID[player]];
 }
 
 /**
  * Unused function that returns the buttons that are no longer pressed in that frame.
  */
 UNUSED u16 get_buttons_released_from_player(s32 player) {
-    return D_80121148[sPlayerID[player]];
+    return gControllerButtonsReleased[sPlayerID[player]];
 }
 
 /**
