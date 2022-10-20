@@ -1,5 +1,5 @@
-#ifndef _borders_H_
-#define _borders_H_
+#ifndef _BORDERS_H_
+#define _BORDERS_H_
 
 #include "types.h"
 #include "f3ddkr.h"
