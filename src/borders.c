@@ -25,9 +25,9 @@ void render_borders_for_multiplayer(Gfx **dlist) {
     widthAndHeight = get_video_width_and_height_as_s32();
     width = GET_VIDEO_WIDTH(widthAndHeight);
     height = GET_VIDEO_HEIGHT(widthAndHeight);
-    xOffset = width >> 8;
+    xOffset = width / 256;
     width += 0; //Fake match?
-    yOffset = height >> 7;
+    yOffset = height / 128;
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetFillColor((*dlist)++, GPACK_RGBA5551(0, 0, 0, 1) << 16 | GPACK_RGBA5551(0, 0, 0, 1)); // Black fill color
     switch (get_viewport_count()) {
@@ -53,6 +53,10 @@ void render_borders_for_multiplayer(Gfx **dlist) {
     return;
 }
 
+/**
+ * Appears to be largely the same as the function above, rendering after the UI.
+ * This instead, renders slightly larger (around 1px) borders that are invisible.
+ */
 void func_80077268(Gfx **dlist) {
     u32 screenSize;
     u32 screenWidth;
