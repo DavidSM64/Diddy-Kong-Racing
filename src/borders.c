@@ -56,8 +56,9 @@ void render_borders_for_multiplayer(Gfx **dlist) {
 /**
  * Appears to be largely the same as the function above, rendering after the UI.
  * This instead, renders slightly larger (around 1px) borders that are invisible.
+ * The purpose of this function is unknown, because it has zero cosmetic effect.
  */
-void func_80077268(Gfx **dlist) {
+void render_second_multiplayer_borders(Gfx **dlist) {
     u32 screenSize;
     u32 screenWidth;
     u32 screenHeight;
