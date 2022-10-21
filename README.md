@@ -115,6 +115,7 @@ s32 is_drumstick_unlocked(void) {
 
 As of October 3rd, 2022, this is our current score:
 ```
+<!-- README_SCORE_BEGIN -->
  ==========================================
    ADVENTURE ONE (ASM -> C Decompilation)
  ------------ 33.19% Complete -------------
@@ -138,6 +139,7 @@ As of October 3rd, 2022, this is our current score:
  ------------------------------------------
   We are racing in Ancient Lake. (Lap 1/3)
  ==========================================
+<!-- README_SCORE_END -->
 ```
 
 ---
