@@ -309,7 +309,7 @@ s32 D_800DF488 = 0;
 s32 D_800DF48C = 0; // Currently unknown, might be a different type.
 s32 D_800DF490 = 0; // Currently unknown, might be a different type.
 s32 gIsInAdventureTwo = 0;
-s32 gPlayerHasSeenCautionMenu = 0;
+s32 gPlayerHasSeenCautionMenu = CAUTIONSTATUS;
 s32 *gMenuTextLangTable = NULL;
 
 char **gMenuText = NULL;
