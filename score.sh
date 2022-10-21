@@ -5,12 +5,15 @@ if [[ $1 == '--update-readme' ]]; then
 import sys
 import os
 import re
-BEGIN='<!-- README_SCORE_BEGIN -->'
-END='<!-- README_SCORE_END -->'
+from datetime import datetime
+
+BEGIN = '<!-- README_SCORE_BEGIN -->'
+END = '<!-- README_SCORE_END -->'
+DATE_STR = datetime.now().strftime('As of %B %-d, %Y, this is our current score:')
 print(
   re.sub(
     fr'(?s).{BEGIN}.*{END}',
-    f'\n{BEGIN}\n{os.environ["NEW_SCORE"]}\n{END}',
+    f'\n{BEGIN}\n{DATE_STR}\n```\n{os.environ["NEW_SCORE"]}\n```\n{END}',
     open('README.md', 'r').read()
   )
 )
