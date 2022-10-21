@@ -170,21 +170,7 @@ void thread4_audio(UNUSED void *arg) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
-
-// May require other functions matching to also match.
-#ifdef NON_MATCHING
-void func_80002DF8(s32 arg0) {
-    static s32 D_800DC6A0 = 1;
-    if ((osAiGetLength() / 4) == 0) {
-        if (D_800DC6A0 == 0) {
-            D_800DC6A0 = 0;
-        }
-    }
-}
-#else
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
-#endif
-
 
 /******************************************************************************
  *
