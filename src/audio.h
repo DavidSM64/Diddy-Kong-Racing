@@ -130,6 +130,8 @@ void func_800022BC(u8 arg0, ALSeqPlayer *arg1);
 void func_80002570(ALSeqPlayer *seqp);
 void func_80002608(u8 arg0);
 u8 func_80002630(void);
+void alSeqFileNew(ALSeqFile *file, u8 *base);
+void func_80063A90(ALSeqPlayer *seqp, u8 chan);
 
 void play_sound_global(u16 soundID, s32* soundMask); //Non matching.
 void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Matching

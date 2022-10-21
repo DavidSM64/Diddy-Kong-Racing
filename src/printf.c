@@ -10,6 +10,7 @@
 #include "textures_sprites.h"
 #include "stdio.h"
 #include "objects.h"
+#include "particles.h"
 
 /************ .data ************/
 
@@ -97,7 +98,12 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3740.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3E64.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4488.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B44D4.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B452C.s")
+
+UNUSED unk800E2CF0 *func_800B452C(s32 *arg0) {
+    for (*arg0 = *arg0 - 1; *arg0 < 0; *arg0 += gParticlesAssetTableCount);
+    return gParticlesAssetTable[*arg0];
+}
+
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4578.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B461C.s")
