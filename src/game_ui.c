@@ -118,7 +118,7 @@ unk800E2770 D_800E2770[2] = {
     { 0, 0xFF, 0, 0, 0, 0, 0 },
 };
 
-s8 D_800E2790 = 1;
+u8 D_800E2790 = 1;
 
 s8 D_800E2794[16] = {
     1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
@@ -136,7 +136,7 @@ s8 D_800E27AC[12] = {
     40, 40, -1, -2,
 };
 
-s32 D_800E27B8 = 0;
+u8 D_800E27B8 = 0;
 
 u8 D_800E27BC[120] = {
     0xFF, 0xA0, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x80,
@@ -294,7 +294,98 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
     func_80068508(0);
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A0EB4.s")
+void func_800A0EB4(Object_64* arg0, s32 arg1) {
+    s32 temp_v0;
+    s32 temp_v1;
+    unk80126CDC* temp_s0;
+
+    if (D_800E2790 != 0) {
+        temp_v0 = arg0->racer.indicator_timer;
+        if (temp_v0 > 0) {
+            temp_v1 = arg0->racer.indicator_type;
+            arg0->racer.indicator_timer = temp_v0 - arg1;
+            if (temp_v1 != 0) {
+                temp_s0 = (unk80126CDC *) &D_80126CDC->unk420;
+                switch (temp_v1) {
+                case 1:
+                    temp_s0->unk6 = 0x21;
+                    temp_s0->unk0 = 0;
+                    break;
+                case 2:
+                    temp_s0->unk6 = 0x20;
+                    temp_s0->unk0 = 0;
+                    break;
+                case 3:
+                    temp_s0->unk6 = 0x1F;
+                    temp_s0->unk0 = 0;
+                    break;
+                case 4:
+                    temp_s0->unk6 = 0x21;
+                    temp_s0->unk0 = -0x8000;
+                    break;
+                case 5:
+                    temp_s0->unk6 = 0x20;
+                    temp_s0->unk0 = -0x8000;
+                    break;
+                case 6:
+                    temp_s0->unk6 = 0x1F;
+                    temp_s0->unk0 = -0x8000;
+                    break;
+                case 7:
+                    temp_s0->unk6 = 0x1E;
+                    temp_s0->unk0 = -0x8000;
+                    temp_s0->unk2 = -0x8000;
+                    break;
+                case 8:
+                    temp_s0->unk6 = 0x1E;
+                    temp_s0->unk0 = 0;
+                    break;
+                default:
+                    temp_s0->unk6 = 0x1D;
+                    temp_s0->unk0 = 0;
+                    break;
+                }
+                if ((get_filtered_cheats() & 4) && ((s32) arg0->racer.indicator_type < 0x1E)) {
+                    temp_s0->unk0 = (s16) (0x8000 - temp_s0->unk0);
+                }
+                if ((D_80126D0C == 0) && (arg0->racer.raceStatus == STATUS_RACING) && (arg0->racer.indicator_type != 0) && (D_800E27B8 == 0)) {
+                    gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 160);
+                    func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
+                    temp_s0->unkC = -temp_s0->unkC;
+                    func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
+                    temp_s0->unkC = -temp_s0->unkC;
+                    temp_s0->unk2 = 0;
+                    gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 255);
+                }
+            }
+        } else {
+            arg0->racer.indicator_timer = 0;
+        }
+        if (D_800E27B8) {
+            if (D_800E27B8 & 0x20) {
+                gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 160);
+                temp_s0 = (unk80126CDC *) &D_80126CDC->unk420;
+                temp_s0->unk0 = 0;
+                temp_s0->unk2 = 0;
+                temp_s0->unk6 = 0x1D;
+                if ((get_filtered_cheats() & 4) && ((s32) arg0->racer.indicator_type < 0x1E)) {
+                    temp_s0->unk0 = (s16) (0x8000 - temp_s0->unk0);
+                }
+                func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
+                temp_s0->unkC = (f32) -temp_s0->unkC;
+                func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
+                temp_s0->unkC = (f32) -temp_s0->unkC;
+                gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 255);
+            }
+            if (arg1 < D_800E27B8) {
+                D_800E27B8 -= arg1;
+                return;
+            }
+            D_800E27B8 = 0;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1248.s")
 
 void func_800A1428(s32 arg0, Object *arg1, s32 arg2) {

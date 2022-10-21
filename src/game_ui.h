@@ -6,9 +6,16 @@
 #include "libultra_internal.h"
 
 typedef struct {
-    u8 unk0[0x6];
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
     s16 unk6;
-    u8 unk8[0x4BC];
+    s16 unk8;
+    s16 unkA;
+    f32 unkC;
+    u8 unk10[0x410];
+    struct unk80126CDC *unk420;
+    u8 unk424[0xA0];
     u16 unk4C4;
     u8 unk4C6[0x1B4];
     s8 unk67A;
