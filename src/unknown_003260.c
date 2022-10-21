@@ -128,6 +128,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
+GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread8MB.s") 
 #endif
 
 void audioStartThread(void) {

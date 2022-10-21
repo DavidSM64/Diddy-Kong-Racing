@@ -11,6 +11,7 @@
 #include "audio_internal.h"
 #include "unknown_003260.h"
 #include "sched.h"
+#include "video.h"
 #include "lib/src/mips1/al/unknown_0646F0.h"
 
 /************ .data ************/
@@ -153,7 +154,11 @@ void audio_init(OSSched *sc) {
     synth_config.fxType[1] = 2;
     synth_config.outputRate = 0;
     synth_config.heap = &gALHeap;
-    audioNewThread(&synth_config, 12, sc);
+    if (gExpansionPak) {
+        audioNewThread8MB(&synth_config, 12, sc);
+    } else {
+        audioNewThread(&synth_config, 12, sc);
+    }
     gMusicPlayer = func_80002224(24, 120);
     set_voice_limit(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);

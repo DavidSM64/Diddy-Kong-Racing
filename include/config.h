@@ -11,7 +11,7 @@
 #define PUPPYPRINT_DEBUG // Enable debug features
 #define SKIP_INTRO SKIP_TITLE // Skip the boot screen, making getting ingame faster.
 #define DEFAULT_CHARACTER 7 // If you skip character select, pick a default character.
-#define EXPANSION_PAK // Enable expansion pak requirement
+// #define EXPANSION_PAK // Enable expansion pak requirement
 // #define FORCE_4MB_MEMORY // Pretend the expansion pak is not installed.
 #define NO_ANTIPIRACY // Disable all the anti tamperment measures in the ROM
 #define UNLOCK_ALL // Unlock all characters, tracks and adventure 2.
