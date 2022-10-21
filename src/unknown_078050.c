@@ -148,7 +148,7 @@ Gfx D_800DE6E8[][2] = {
 
 /************ .bss ************/
 
-#define YIELD_BUFFER_SIZE 0x1800
+#define YIELD_BUFFER_SIZE 1
 
 u8 gDramStack[SP_DRAM_STACK_SIZE8];
 u8 gGfxSPTaskYieldBuffer[YIELD_BUFFER_SIZE];
@@ -266,7 +266,7 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
 }
 
 void allocate_task_buffer(void) {
-    gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * 0x2000, COLOUR_TAG_WHITE);
+    gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * 0x2800, COLOUR_TAG_WHITE);
 }
 
 /**
@@ -301,8 +301,8 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_data_size = 0x800;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = 0x400;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) (gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE);
+    dkrtask->task.output_buff = gGfxSPTaskOutputBuffer;
+    dkrtask->task.output_buff_size = (u64 *)((u8 *) gGfxSPTaskOutputBuffer + (sizeof(u64) * 0x2800));
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->next = 0;
