@@ -221,6 +221,15 @@ typedef struct unk800861C8 {
     u32 fileSize; // Game Data File Size
 } unk800861C8;
 
+/* Size: 0x10 bytes */
+typedef struct unk800E0970 {
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+    s8 unk3;
+    s8 pad4[12];
+} unk800E0970;
+
 /* Unknown size */
 typedef struct unk80069D20 {
     s16 unk0;
@@ -242,6 +251,23 @@ typedef struct TitleScreenDemos {
     s8 numberOfPlayers;
     s8 cutsceneId;
 } TitleScreenDemos;
+
+/* Size 0x10 bytes */
+typedef struct unk80126930 {
+  /* 0x00 */ char *levelName;
+  /* 0x04 */ char *unk4;
+  /* 0x08 */ s16 xPos;
+  /* 0x0A */ s16 yPos;
+  /* 0x0C */ u8 pad;
+  /* 0x0D */ u8 colour;
+    union {
+        struct {
+            /* 0x0E */ u8 copyViewPort;
+            /* 0x0F */ u8 imageId;
+        };
+        /* 0x0E */ u16 unkE;
+    };
+} unk80126930;
 
 extern s8  D_800DF450;
 extern f32 D_800DF454;
@@ -427,17 +453,13 @@ extern DrawTexture gRaceSelectionPlayer3Texture[2];
 extern DrawTexture gRaceSelectionPlayer4Texture[2];
 extern DrawTexture gRaceSelectionVehicleTitleTexture[2];
 extern DrawTexture gRaceSelectionTTTitleTexture[2];
-
-// These are probably structs
-extern s32 D_800E05D4[8];
-extern s32 D_800E05F4[8];
-
+extern DrawTexture D_800E05D4[4];
+extern DrawTexture D_800E05F4[4];
 extern DrawTexture gRaceSelectionTTTexture[2];
 
 extern DrawTexture *gRaceSelectionImages[9];
 
 extern DrawTexture *D_800E0648[6];
-
 extern DrawTexture *D_800E0660[6];
 
 extern DrawTexture *gMenuSelectionArrows[4];
@@ -469,9 +491,9 @@ extern s16 D_800E0830[8];
 
 extern s16 D_800E0840[148];
 
-extern s32 D_800E0968;
+extern Vertex *D_800E0968;
 extern s32 D_800E096C;
-extern s32 *D_800E0970;
+extern unk800E0970 *D_800E0970;
 extern s32 D_800E0974;
 extern f32* D_800E0978;
 extern s32 D_800E097C;
@@ -655,9 +677,6 @@ extern DrawTexture D_800DFC30[2];
 extern DrawTexture D_800DFC40[2];
 extern DrawTexture D_800DFC50[2];
 extern DrawTexture D_800DFC60[2];
-extern TextureHeader *D_8012665C;
-extern TextureHeader *D_80126660;
-extern TextureHeader *D_80126664;
 extern Gfx *sMenuCurrDisplayList;
 extern Mtx *sMenuCurrHudMat;
 extern const char D_800E8208[];
@@ -673,6 +692,26 @@ extern SavefileInfo gSavefileInfo[4];
 
 extern s8 gControllersXAxisDirection[4];
 extern s8 gControllersYAxisDirection[4];
+extern TextureHeader *D_80126550[128];
+extern s32 D_801267D0;
+extern u8 D_801269C4[4];
+extern f32 D_801269DC;
+extern f32 D_801269E4;
+extern f32 D_801269E8;
+extern f32 D_801269EC;
+extern s8 gPlayerSelectVehicle[4];
+extern s16 D_80126918;
+extern s32 D_801263D8;
+extern s32 D_80126480;
+//extern s32 D_801268E8[12];
+extern s16 D_80126918;
+extern s32 D_80126924;
+extern s32 D_80126928;
+extern s32 D_8012692C;
+extern unk80126930 D_80126930[9];
+extern s32 D_801269F0;
+extern s32 D_801269F4;
+extern s32 D_801269F8;
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -827,6 +866,7 @@ s32 func_8008D5F8(s32 updateRate);
 void func_8008C168(s32 updateRate);
 void func_8008C698(s32 updateRate);
 void func_80083098(f32);
+void func_8008F00C(s32);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -874,10 +914,13 @@ void func_80099E8C(s32 updateRate);
 void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
-void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
+void func_80080580(Gfx **arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
+void func_8008FA54(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
+//Possible names
+//void func_8008FA54(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 s32 func_80095728(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
 
 typedef enum MenuTextures {
