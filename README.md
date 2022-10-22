@@ -113,6 +113,7 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
+<!-- README_SCORE_BEGIN -->
 As of October 3rd, 2022, this is our current score:
 ```
  ==========================================
@@ -139,6 +140,7 @@ As of October 3rd, 2022, this is our current score:
   We are racing in Ancient Lake. (Lap 1/3)
  ==========================================
 ```
+<!-- README_SCORE_END -->
 
 ---
 

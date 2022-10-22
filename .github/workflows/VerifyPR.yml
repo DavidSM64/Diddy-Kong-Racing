@@ -28,13 +28,11 @@ jobs:
     - name: Verify ROM
       run: if [[ $(echo "0cb115d8716dbbc2922fda38e533b9fe63bb9670 baseroms/dkr.z64" | sha1sum -c --quiet -) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
 
-    - name: Build Recomp
+    - name: Download Recomp
       run: |
-        cd tools/ido-static-recomp/
-        python3 build.py ido/5.3 -O2
-        cp build5.3/out/usr/bin/cc build5.3/out/cc
-        cp build5.3/out/usr/lib/* build5.3/out/
-        cd ../../
+        wget -q -O ido-static-recomp.tar.gz https://github.com/decompals/ido-static-recomp/releases/download/v0.1/ido-5.3-recomp-ubuntu-latest.tar.gz
+        mkdir -p tools/ido-static-recomp/build5.3/out
+        tar -xvzf ido-static-recomp.tar.gz -C tools/ido-static-recomp/build5.3/out
 
     - name: Build Tools
       run: |
@@ -64,3 +62,13 @@ jobs:
 
     - name: Verify NON_EQUIVALENT
       run: make NON_EQUIVALENT=1
+
+    - name: Update decomp score in README
+      run: ./score.sh --update-readme
+
+    - name: Update PR
+      uses: test-room-7/action-update-file@v1
+      with:
+        file-path: README.md
+        commit-msg: Update score in README
+        github-token: ${{ secrets.GITHUB_TOKEN }}
