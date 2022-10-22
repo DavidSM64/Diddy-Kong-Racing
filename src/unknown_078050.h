@@ -11,7 +11,7 @@
 #include "video.h"
 
 typedef union {
-    void (*function)(Gfx*, s32);
+    void (*function)(Gfx*, Mtx *);
     void *ptr;
 } unk800DE4D0;
 
@@ -71,5 +71,6 @@ void render_background(Gfx **dlist, Mtx *mtx, s32 drawBG);
 
 //Non Matching
 void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 x, f32 y, f32 x_scale, f32 y_scale, u32 color, s32 flip);
+void func_80078190(Gfx **dlist);
 
 #endif

@@ -437,7 +437,7 @@ void render_background(Gfx **dlist, Mtx *mtx, s32 drawBG) {
             } else if (D_800DE4C4 != 0) {
                 func_80078190(dlist);
             } else if (D_800DE4D0.ptr != NULL) {
-                D_800DE4D0.function((Gfx *) dlist, mtx); 
+                D_800DE4D0.function((Gfx *) dlist, mtx);
             } else {
                 gDPSetFillColor((*dlist)++, sBackgroundFillColour);
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
