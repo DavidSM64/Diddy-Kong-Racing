@@ -1,6 +1,6 @@
 if [[ $1 == '--update-readme' ]]; then
   export NEW_SCORE=$(python3 ./tools/python/score.py)
-  echo $NEW_SCORE
+  echo "$NEW_SCORE"
   python3 - <<'EOF' > README.md.tmp
 import sys
 import os
@@ -18,7 +18,7 @@ print(
   )
 )
 EOF
-mv README.md.tmp README.md
+sed '$ { /^$/ d}' README.md.tmp > README.md # removes extra newlines at end of file
 else
   python3 ./tools/python/score.py "$@"
 fi
