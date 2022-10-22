@@ -933,7 +933,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, 1); 
+    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, TRUE); 
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();

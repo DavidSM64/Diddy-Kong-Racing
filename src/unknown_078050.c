@@ -404,16 +404,19 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
     sBackgroundFillColour |= (sBackgroundFillColour << 16);
 }
 
-#ifdef NON_EQUIVALENT
-// Stack issues
-void render_background(Gfx **dlist, Mtx *arg1, s32 arg2) {
+/**
+ * Clears the ZBuffer first, then decides how to draw the background which goes directly
+ * over the colour buffer. DrawBG if set to 0 (which never happens) will completely skip
+ * over clearing the colour buffer.
+*/
+void render_background(Gfx **dlist, Mtx *mtx, s32 drawBG) {
+    s32 widthAndHeight;
+    s32 w;
+    s32 h;
     s32 x1;
     s32 y1;
     s32 x2;
     s32 y2;
-    s32 widthAndHeight;
-    s32 w, h;
-    s32 rgba16Color;
 
     widthAndHeight = get_video_width_and_height_as_s32();
     w = GET_VIDEO_WIDTH(widthAndHeight);
@@ -423,18 +426,18 @@ void render_background(Gfx **dlist, Mtx *arg1, s32 arg2) {
     gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000);
-    gDPSetFillColor((*dlist)++, GPACK_RGBA5551(255, 255, 255, 128) << 16 | GPACK_RGBA5551(255, 255, 255, 128));
+    gDPSetFillColor((*dlist)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));
     gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
     gDPPipeSync((*dlist)++);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x01000000);
-    if (arg2) {
+    if (drawBG) {
         if (func_80066910(0)) {
             if (D_800DE4CC) {
                 func_800787FC(dlist);
             } else if (D_800DE4C4 != 0) {
                 func_80078190(dlist);
             } else if (D_800DE4D0.ptr != NULL) {
-                D_800DE4D0.function(dlist, arg1);
+                D_800DE4D0.function((Gfx *) dlist, mtx); 
             } else {
                 gDPSetFillColor((*dlist)++, sBackgroundFillColour);
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
@@ -452,12 +455,9 @@ void render_background(Gfx **dlist, Mtx *arg1, s32 arg2) {
             } else if (D_800DE4C4 != 0) {
                 func_80078190(dlist);
             } else if (D_800DE4D0.ptr != NULL) {
-                D_800DE4D0.function(dlist, arg1);
+                D_800DE4D0.function((Gfx *) dlist, mtx);
             } else {
-                //Also has an issue here.
-                rgba16Color = GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1);
-                rgba16Color |= rgba16Color << 16;
-                gDPSetFillColor((*dlist)++, rgba16Color);
+                gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
         }
@@ -465,9 +465,6 @@ void render_background(Gfx **dlist, Mtx *arg1, s32 arg2) {
     gDPPipeSync((*dlist)++);
     func_80067A3C(dlist);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_078050/render_background.s")
-#endif
 
 /**
  * Gets the framebuffer width, then points to the start of segment 0x01 in memory.
