@@ -71,4 +71,5 @@ jobs:
       with:
         file-path: README.md
         commit-msg: Update score in README
+        branch: ${{ env.GITHUB_REF_NAME }}
         github-token: ${{ secrets.GITHUB_TOKEN }}
