@@ -90,7 +90,7 @@ s32 D_800DD37C = 0;
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
 UNUSED s32 D_800DD388 = 0;
-s8 gWaitForGfxTask = FALSE;
+s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
 s16 D_800DD394 = 0;
 s8 D_800DD398 = 0;
@@ -985,13 +985,13 @@ void main_game_loop(void) {
 
     func_80066610();
     if (gDrawFrameTimer != 1) {
-        if (gWaitForGfxTask == FALSE) {
+        if (gSkipGfxTask == FALSE) {
             gScreenStatus = wait_for_gfx_task();
         }
     } else {
         gDrawFrameTimer = 0;
     }
-    gWaitForGfxTask = FALSE;
+    gSkipGfxTask = FALSE;
     clear_free_queue();
     if (!gIsPaused) {
         disable_cutscene_camera();
@@ -1047,11 +1047,11 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
 // Guessing this is the "unload everything ready for level swap" function.
 void func_8006CC14(void) {
     set_free_queue_state(0);
-    if (gWaitForGfxTask == FALSE) {
+    if (gSkipGfxTask == FALSE) {
         if (gDrawFrameTimer != 1) {
             wait_for_gfx_task();
         }
-        gWaitForGfxTask = TRUE;
+        gSkipGfxTask = TRUE;
     }
     func_8006BEFC();
     func_800C01D8(&D_800DD3F4);

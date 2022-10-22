@@ -299,18 +299,18 @@ f32 func_80066348(f32 xPos, f32 yPos, f32 zPos) {
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation = (s16)(arg3 * 0xB6);
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_position = (f32)xPos;
-    gObjectRenderStack[gObjectRenderStackPos].trans.y_position = (f32)yPos;
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_position = (f32)zPos;
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_rotation = (s16)(arg4 * 0xB6);
-    gObjectRenderStack[gObjectRenderStackPos].unk38.word = (s16)0;
+    gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation = (s16) (arg3 * 0xB6);
+    gObjectRenderStack[gObjectRenderStackPos].trans.x_position = (f32) xPos;
+    gObjectRenderStack[gObjectRenderStackPos].trans.y_position = (f32) yPos;
+    gObjectRenderStack[gObjectRenderStackPos].trans.z_position = (f32) zPos;
+    gObjectRenderStack[gObjectRenderStackPos].trans.x_rotation = (s16) (arg4 * 0xB6);
+    gObjectRenderStack[gObjectRenderStackPos].unk38.word = (s16) 0;
     gObjectRenderStack[gObjectRenderStackPos].z_velocity = 0.0f;
     gObjectRenderStack[gObjectRenderStackPos].unk28 = 0.0f;
     gObjectRenderStack[gObjectRenderStackPos].unk2C.word = 0.0f;
     gObjectRenderStack[gObjectRenderStackPos].unk30 = 0.0f;
     gObjectRenderStack[gObjectRenderStackPos].x_velocity = 160.0f;
-    gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation = (s16)(arg5 * 0xB6);
+    gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation = (s16) (arg5 * 0xB6);
     gObjectRenderStack[gObjectRenderStackPos].unk3B = D_800DD2F8[gObjectRenderStackPos];
 }
 

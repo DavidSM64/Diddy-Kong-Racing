@@ -85,7 +85,7 @@ void render_second_multiplayer_borders(Gfx **dlist) {
             tempY = (screenHeight / 2) - (height / 2);
             tempX = (screenWidth / 2) - (width / 2);
             gDPFillRectangle((*dlist)++, 0, tempY, screenWidth, tempY + height);
-            tempX += 0;
+            tempX += 0; // Fakematch
             gDPFillRectangle((*dlist)++, tempX, 0, tempX + width, screenHeight);
             break;
     }

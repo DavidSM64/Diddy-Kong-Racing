@@ -294,10 +294,10 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
     func_80068508(0);
 }
 
-void func_800A0EB4(Object_64* arg0, s32 arg1) {
+void func_800A0EB4(Object_64 *arg0, s32 arg1) {
     s32 temp_v0;
     s32 temp_v1;
-    unk80126CDC* temp_s0;
+    unk80126CDC *temp_s0;
 
     if (D_800E2790 != 0) {
         temp_v0 = arg0->racer.indicator_timer;
