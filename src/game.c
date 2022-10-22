@@ -897,9 +897,6 @@ void init_game(void) {
     D_80123504 = 0;
     D_80123508 = 0;
     gSPTaskNum = 0;
-    /*if (IO_READ(DPC_BUFBUSY_REG) == 0) {
-        suCodeSwitch = 1;
-    }*/
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
@@ -1026,13 +1023,19 @@ void render_profiler(void) {
     }
     puppyprintf(textBytes,  "FPS: %2.2f", gFPS);
     draw_text(&gCurrDisplayList, TEXT_OFFSET, 10, textBytes, ALIGN_TOP_LEFT);
-    puppyprintf(textBytes,  "CPU: %dus (%d%%)", gPuppyTimers.cpuTime, gPuppyTimers.cpuTime / 333);
+    puppyprintf(textBytes,  "CPU: %dus", gPuppyTimers.cpuTime);
     draw_text(&gCurrDisplayList, TEXT_OFFSET, 20, textBytes, ALIGN_TOP_LEFT);
+    puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.cpuTime / 333);
+    draw_text(&gCurrDisplayList, 112 - 4, 20, textBytes, ALIGN_TOP_RIGHT);
     if (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
-        puppyprintf(textBytes,  "RSP: %dus (%d%%)", gPuppyTimers.rspTime, gPuppyTimers.rspTime / 333);
+        puppyprintf(textBytes,  "RSP: %dus", gPuppyTimers.rspTime);
         draw_text(&gCurrDisplayList, TEXT_OFFSET, 30, textBytes, ALIGN_TOP_LEFT);
-        puppyprintf(textBytes,  "RDP: %dus (%d%%)", gPuppyTimers.rdpTime, gPuppyTimers.rdpTime / 333);
+        puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rspTime / 333);
+        draw_text(&gCurrDisplayList, 112 - 4, 30, textBytes, ALIGN_TOP_RIGHT);
+        puppyprintf(textBytes,  "RDP: %dus", gPuppyTimers.rdpTime);
         draw_text(&gCurrDisplayList, TEXT_OFFSET, 40, textBytes, ALIGN_TOP_LEFT);
+        puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rdpTime / 333);
+        draw_text(&gCurrDisplayList, 112 - 4, 40, textBytes, ALIGN_TOP_RIGHT);
     }
     if (sProfilerPage == 0) {
 #ifdef FIFO_UCODE
