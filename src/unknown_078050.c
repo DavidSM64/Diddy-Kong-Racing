@@ -266,7 +266,7 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
 }
 
 void allocate_task_buffer(void) {
-    gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * 0x2800, COLOUR_TAG_WHITE);
+    gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * FIFO_BUFFER_SIZE, COLOUR_TAG_WHITE);
 }
 
 /**
@@ -275,16 +275,13 @@ void allocate_task_buffer(void) {
  * Sends a message to the scheduler to start processing an RSP task once set up.
  * Goes unused, and is broken.
  */
-UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
+void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     s32 *mesgBuf;
 
-    gGfxTaskIsRunning = 1;
-    dkrtask = &gGfxTaskBuf[gfxBufCounter2];
-    gfxBufCounter++;
-    if (gfxBufCounter == 2) {
-        gfxBufCounter = 0;
-    }
+    gGfxTaskIsRunning = TRUE;
+    dkrtask = &gGfxTaskBuf[gfxBufCounter];
+    gfxBufCounter ^= 1;
 
     if (gGfxSPTaskOutputBuffer == NULL) {
         allocate_task_buffer();
@@ -302,7 +299,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = 0x400;
     dkrtask->task.output_buff = gGfxSPTaskOutputBuffer;
-    dkrtask->task.output_buff_size = (u64 *)((u8 *) gGfxSPTaskOutputBuffer + (sizeof(u64) * 0x2800));
+    dkrtask->task.output_buff_size = (u64 *)((u8 *) gGfxSPTaskOutputBuffer + (sizeof(u64) * FIFO_BUFFER_SIZE));
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->next = 0;

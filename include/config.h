@@ -18,6 +18,7 @@
 #define FIFO_UCODE // Allow usage of the faster FIFO microcode. Emulators will still use xbus.
 // #define DISABLE_AUDIO // Disable all ingame audio, and prevent the RSP from working on audio tasks.
 #define SKIP_WARNING_SCREEN // Remove the pak warning screen.
+#define FIFO_BUFFER_SIZE 0x2FC0
 
 #define NUM_RACERS_1P 8 // Default is 8
 #define NUM_RACERS_2P 6 // Default is 6
