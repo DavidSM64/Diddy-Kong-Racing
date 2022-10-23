@@ -881,20 +881,6 @@ void func_80068508(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/camera/func_80068514.s")
 
-typedef struct unk80068BF4 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s32 *unk8;
-    s32 *unkC[2];
-} unk80068BF4;
-
-#define gDkrEnableBillboard(pkt) \
-	gMoveWd(pkt, G_MW_BILLBOARD, 0, 1)
-#define gDkrDisableBillboard(pkt) \
-	gMoveWd(pkt, G_MW_BILLBOARD, 0, 0)
-
 void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3, unk80068BF4 *arg4, s32 arg5) {
     UNUSED s32 pad;
     f32 scale;

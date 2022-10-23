@@ -81,6 +81,15 @@ typedef struct ControllerData {
     s8 unk6;
 } ControllerData;
 
+typedef struct unk80068BF4 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s32 *unk8;
+    s32 *unkC[2];
+} unk80068BF4;
+
 extern ScreenViewport gScreenViewports[4];
 
 // Not sure about the typing here
