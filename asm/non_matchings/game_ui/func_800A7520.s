@@ -204,12 +204,12 @@ glabel func_800A7520
 /* 0A83F8 800A77F8 8FA9001C */  lw    $t1, 0x1c($sp)
 /* 0A83FC 800A77FC 00000000 */  nop   
 .L800A7800:
-/* 0A8400 800A7800 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
+/* 0A8400 800A7800 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A8404 800A7804 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
 /* 0A8408 800A7808 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
 /* 0A840C 800A780C 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
 /* 0A8410 800A7810 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
-/* 0A8414 800A7814 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A8414 800A7814 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A8418 800A7818 24470040 */  addiu $a3, $v0, 0x40
 /* 0A841C 800A781C 0C02A980 */  jal   func_800AA600
 /* 0A8420 800A7820 AFA9001C */   sw    $t1, 0x1c($sp)
@@ -221,7 +221,7 @@ glabel func_800A7520
 /* 0A8438 800A7838 25086CDC */  addiu $t0, %lo(D_80126CDC) # addiu $t0, $t0, 0x6cdc
 /* 0A843C 800A783C 28610004 */  slti  $at, $v1, 4
 /* 0A8440 800A7840 14200006 */  bnez  $at, .L800A785C
-/* 0A8444 800A7844 3C048012 */   lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
+/* 0A8444 800A7844 3C048012 */   lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A8448 800A7848 8D0C0000 */  lw    $t4, ($t0)
 /* 0A844C 800A784C 240BFF80 */  li    $t3, -128
 /* 0A8450 800A7850 A18B063A */  sb    $t3, 0x63a($t4)
@@ -230,7 +230,7 @@ glabel func_800A7520
 .L800A785C:
 /* 0A845C 800A785C 28610003 */  slti  $at, $v1, 3
 /* 0A8460 800A7860 10200009 */  beqz  $at, .L800A7888
-/* 0A8464 800A7864 24846CFC */   addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A8464 800A7864 24846CFC */   addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A8468 800A7868 8D020000 */  lw    $v0, ($t0)
 /* 0A846C 800A786C 8FAE0024 */  lw    $t6, 0x24($sp)
 /* 0A8470 800A7870 804D063A */  lb    $t5, 0x63a($v0)
@@ -277,8 +277,8 @@ glabel func_800A7520
 /* 0A8508 800A7908 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
 /* 0A850C 800A790C 0C02A980 */  jal   func_800AA600
 /* 0A8510 800A7910 24E70620 */   addiu $a3, $a3, 0x620
-/* 0A8514 800A7914 3C058012 */  lui   $a1, %hi(D_80126CFC) # $a1, 0x8012
-/* 0A8518 800A7918 24A56CFC */  addiu $a1, %lo(D_80126CFC) # addiu $a1, $a1, 0x6cfc
+/* 0A8514 800A7914 3C058012 */  lui   $a1, %hi(gHUDCurrDisplayList) # $a1, 0x8012
+/* 0A8518 800A7918 24A56CFC */  addiu $a1, %lo(gHUDCurrDisplayList) # addiu $a1, $a1, 0x6cfc
 /* 0A851C 800A791C 8CA20000 */  lw    $v0, ($a1)
 /* 0A8520 800A7920 3C0BFA00 */  lui   $t3, 0xfa00
 /* 0A8524 800A7924 244A0008 */  addiu $t2, $v0, 8
@@ -324,9 +324,9 @@ glabel func_800A7520
 /* 0A85BC 800A79BC 00000000 */  nop   
 /* 0A85C0 800A79C0 A5440058 */  sh    $a0, 0x58($t2)
 /* 0A85C4 800A79C4 8D020000 */  lw    $v0, ($t0)
-/* 0A85C8 800A79C8 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
+/* 0A85C8 800A79C8 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A85CC 800A79CC 804B005B */  lb    $t3, 0x5b($v0)
-/* 0A85D0 800A79D0 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A85D0 800A79D0 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A85D4 800A79D4 05610005 */  bgez  $t3, .L800A79EC
 /* 0A85D8 800A79D8 00000000 */   nop   
 /* 0A85DC 800A79DC A040005B */  sb    $zero, 0x5b($v0)
@@ -350,8 +350,8 @@ glabel func_800A7520
 /* 0A861C 800A7A1C 0C02A980 */  jal   func_800AA600
 /* 0A8620 800A7A20 24470040 */   addiu $a3, $v0, 0x40
 .L800A7A24:
-/* 0A8624 800A7A24 3C058012 */  lui   $a1, %hi(D_80126CFC) # $a1, 0x8012
-/* 0A8628 800A7A28 24A56CFC */  addiu $a1, %lo(D_80126CFC) # addiu $a1, $a1, 0x6cfc
+/* 0A8624 800A7A24 3C058012 */  lui   $a1, %hi(gHUDCurrDisplayList) # $a1, 0x8012
+/* 0A8628 800A7A28 24A56CFC */  addiu $a1, %lo(gHUDCurrDisplayList) # addiu $a1, $a1, 0x6cfc
 /* 0A862C 800A7A2C 8CA20000 */  lw    $v0, ($a1)
 /* 0A8630 800A7A30 3C0EFA00 */  lui   $t6, 0xfa00
 /* 0A8634 800A7A34 244D0008 */  addiu $t5, $v0, 8

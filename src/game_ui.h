@@ -5,6 +5,29 @@
 #include "structs.h"
 #include "libultra_internal.h"
 
+enum CourseIndicatorArrows {
+    INDICATOR_NONE,
+    INDICATOR_LEFT,
+    INDICATOR_LEFT_SHARP,
+    INDICATOR_LEFT_UTURN,
+    INDICATOR_RIGHT,
+    INDICATOR_RIGHT_SHARP,
+    INDICATOR_RIGHT_UTURN,
+    INDICATOR_UP,
+    INDICATOR_DOWN,
+    INDICATOR_EXCLAMATION,
+};
+
+typedef struct {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 textureID;
+    s16 unk8;
+    s16 unkA;
+    f32 unkC;
+} IndicatorArrow;
+
 typedef struct {
     s16 unk0;
     s16 unk2;
@@ -14,7 +37,7 @@ typedef struct {
     s16 unkA;
     f32 unkC;
     u8 unk10[0x410];
-    struct unk80126CDC *unk420;
+    struct IndicatorArrow *courseIndicator;
     u8 unk424[0xA0];
     u16 unk4C4;
     u8 unk4C6[0x1B4];
@@ -51,7 +74,7 @@ typedef struct unk800E2770 {
 } unk800E2770;
 
 extern unk80126CDC *D_80126CDC;
-extern Gfx *D_80126CFC;
+extern Gfx *gHUDCurrDisplayList;
 extern u32 D_80126D00;
 extern u32 D_80126D04;
 extern u8 D_80126D37;
@@ -79,7 +102,7 @@ void func_800AB1D4(u8 arg0);
 void func_800A14F0(Object *, s32);
 void func_800A3CE4(s32, s32);
 void func_800A7520(Object *, s32);
-void func_800A0EB4(Object_64 *arg0, s32 arg1);
+void render_course_indicator_arrows(Object_64 *arg0, s32 arg1);
 void func_800A5A64(Object_64 *arg0, s32 arg1);
 void func_800A4F50(Object_64 *arg0, s32 arg1);
 void func_800A4154(Object_64 *arg0, s32 arg1);

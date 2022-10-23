@@ -184,7 +184,7 @@ s32 D_80126CEC;
 s32 D_80126CF0;
 s32 D_80126CF4;
 s32 D_80126CF8;
-Gfx *D_80126CFC;
+Gfx *gHUDCurrDisplayList;
 u32 D_80126D00;
 u32 D_80126D04;
 s32 D_80126D08;
@@ -273,7 +273,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
     Object_Racer *temp = &arg1->unk64->racer;
 
     func_80068508(1);
-    func_800A0EB4(temp, arg2);
+    render_course_indicator_arrows(temp, arg2);
     func_800A5A64(temp, arg2);
     func_800A3CE4(arg0, arg2);
 
@@ -294,91 +294,95 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
     func_80068508(0);
 }
 
-void func_800A0EB4(Object_64 *arg0, s32 arg1) {
-    s32 temp_v0;
-    s32 temp_v1;
-    unk80126CDC *temp_s0;
+/**
+ * Render the onscreen course arrows that show the player where to go.
+*/
+void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
+    s32 timer;
+    s32 type;
+    IndicatorArrow *indicator;
 
-    if (D_800E2790 != 0) {
-        temp_v0 = arg0->racer.indicator_timer;
-        if (temp_v0 > 0) {
-            temp_v1 = arg0->racer.indicator_type;
-            arg0->racer.indicator_timer = temp_v0 - arg1;
-            if (temp_v1 != 0) {
-                temp_s0 = (unk80126CDC *) &D_80126CDC->unk420;
-                switch (temp_v1) {
-                case 1:
-                    temp_s0->unk6 = 0x21;
-                    temp_s0->unk0 = 0;
+    if (D_800E2790) {
+        timer = racer->racer.indicator_timer;
+        if (timer > 0) {
+            type = racer->racer.indicator_type;
+            racer->racer.indicator_timer = timer - updateRate;
+            if (type) {
+                indicator = &D_80126CDC->courseIndicator;
+                switch (type) {
+                case INDICATOR_LEFT:
+                    indicator->textureID = ASSET_TEX2D_33;
+                    indicator->unk0 = 0;
                     break;
-                case 2:
-                    temp_s0->unk6 = 0x20;
-                    temp_s0->unk0 = 0;
+                case INDICATOR_LEFT_SHARP:
+                    indicator->textureID = ASSET_TEX2D_32;
+                    indicator->unk0 = 0;
                     break;
-                case 3:
-                    temp_s0->unk6 = 0x1F;
-                    temp_s0->unk0 = 0;
+                case INDICATOR_LEFT_UTURN:
+                    indicator->textureID = ASSET_TEX2D_31;
+                    indicator->unk0 = 0;
                     break;
-                case 4:
-                    temp_s0->unk6 = 0x21;
-                    temp_s0->unk0 = -0x8000;
+                case INDICATOR_RIGHT:
+                    indicator->textureID = ASSET_TEX2D_33;
+                    indicator->unk0 = -0x8000;
                     break;
-                case 5:
-                    temp_s0->unk6 = 0x20;
-                    temp_s0->unk0 = -0x8000;
+                case INDICATOR_RIGHT_SHARP:
+                    indicator->textureID = ASSET_TEX2D_32;
+                    indicator->unk0 = -0x8000;
                     break;
-                case 6:
-                    temp_s0->unk6 = 0x1F;
-                    temp_s0->unk0 = -0x8000;
+                case INDICATOR_RIGHT_UTURN:
+                    indicator->textureID = ASSET_TEX2D_31;
+                    indicator->unk0 = -0x8000;
                     break;
-                case 7:
-                    temp_s0->unk6 = 0x1E;
-                    temp_s0->unk0 = -0x8000;
-                    temp_s0->unk2 = -0x8000;
+                case INDICATOR_UP:
+                    indicator->textureID = ASSET_TEX2D_30;
+                    indicator->unk0 = -0x8000;
+                    indicator->unk2 = -0x8000;
                     break;
-                case 8:
-                    temp_s0->unk6 = 0x1E;
-                    temp_s0->unk0 = 0;
+                case INDICATOR_DOWN:
+                    indicator->textureID = ASSET_TEX2D_30;
+                    indicator->unk0 = 0;
                     break;
-                default:
-                    temp_s0->unk6 = 0x1D;
-                    temp_s0->unk0 = 0;
+                default: // INDICATOR_EXCLAMATION
+                    indicator->textureID = ASSET_TEX2D_29;
+                    indicator->unk0 = 0;
                     break;
                 }
-                if ((get_filtered_cheats() & 4) && ((s32) arg0->racer.indicator_type < 0x1E)) {
-                    temp_s0->unk0 = (s16) (0x8000 - temp_s0->unk0);
+                // Flip the arrow direction on adventure 2.
+                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->racer.indicator_type < ASSET_TEX2D_30)) {
+                    indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
-                if ((D_80126D0C == 0) && (arg0->racer.raceStatus == STATUS_RACING) && (arg0->racer.indicator_type != 0) && (D_800E27B8 == 0)) {
-                    gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 160);
-                    func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
-                    temp_s0->unkC = -temp_s0->unkC;
-                    func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
-                    temp_s0->unkC = -temp_s0->unkC;
-                    temp_s0->unk2 = 0;
-                    gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 255);
+                if ((D_80126D0C == 0) && (racer->racer.raceStatus == STATUS_RACING) && (racer->racer.indicator_type) && (D_800E27B8 == 0)) {
+                    gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+                    func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                    indicator->unkC = -indicator->unkC;
+                    func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                    indicator->unkC = -indicator->unkC;
+                    indicator->unk2 = 0;
+                    gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 }
             }
         } else {
-            arg0->racer.indicator_timer = 0;
+            racer->racer.indicator_timer = 0;
         }
         if (D_800E27B8) {
             if (D_800E27B8 & 0x20) {
-                gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 160);
-                temp_s0 = (unk80126CDC *) &D_80126CDC->unk420;
-                temp_s0->unk0 = 0;
-                temp_s0->unk2 = 0;
-                temp_s0->unk6 = 0x1D;
-                if ((get_filtered_cheats() & 4) && ((s32) arg0->racer.indicator_type < 0x1E)) {
-                    temp_s0->unk0 = (s16) (0x8000 - temp_s0->unk0);
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+                indicator = (IndicatorArrow *) &D_80126CDC->courseIndicator;
+                indicator->unk0 = 0;
+                indicator->unk2 = 0;
+                indicator->textureID = ASSET_TEX2D_29;
+                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->racer.indicator_type < ASSET_TEX2D_30)) {
+                    indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
-                func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
-                temp_s0->unkC = (f32) -temp_s0->unkC;
-                func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_s0);
-                temp_s0->unkC = (f32) -temp_s0->unkC;
-                gDPSetPrimColor(D_80126CFC++, 0, 0, 255, 255, 255, 255);
+                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                indicator->unkC = (f32) -indicator->unkC;
+                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                indicator->unkC = (f32) -indicator->unkC;
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
-            if (arg1 < D_800E27B8) {
-                D_800E27B8 -= arg1;
+            if (updateRate < D_800E27B8) {
+                D_800E27B8 -= updateRate;
                 return;
             }
             D_800E27B8 = 0;
@@ -457,7 +461,7 @@ void func_800A26C8(Object *obj, s32 arg1) {
         if (is_in_two_player_adventure()) {
             temp_a3 = &D_80126CDC[1];
             temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
-            func_800AA600(&D_80126CFC, &D_80126D00, &D_80126D04, temp_a3);
+            func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, temp_a3);
         }
         func_80068508(0);
     }

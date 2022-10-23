@@ -191,9 +191,9 @@ glabel func_800A8474
 /* 0A92F0 800A86F0 8FAC0160 */  lw    $t4, 0x160($sp)
 /* 0A92F4 800A86F4 AFA20150 */  sw    $v0, 0x150($sp)
 /* 0A92F8 800A86F8 8D8D0000 */  lw    $t5, ($t4)
-/* 0A92FC 800A86FC 3C148012 */  lui   $s4, %hi(D_80126CFC) # $s4, 0x8012
+/* 0A92FC 800A86FC 3C148012 */  lui   $s4, %hi(gHUDCurrDisplayList) # $s4, 0x8012
 /* 0A9300 800A8700 8FAE0164 */  lw    $t6, 0x164($sp)
-/* 0A9304 800A8704 26946CFC */  addiu $s4, %lo(D_80126CFC) # addiu $s4, $s4, 0x6cfc
+/* 0A9304 800A8704 26946CFC */  addiu $s4, %lo(gHUDCurrDisplayList) # addiu $s4, $s4, 0x6cfc
 /* 0A9308 800A8708 AE8D0000 */  sw    $t5, ($s4)
 /* 0A930C 800A870C 8DCF0000 */  lw    $t7, ($t6)
 /* 0A9310 800A8710 8FB80168 */  lw    $t8, 0x168($sp)

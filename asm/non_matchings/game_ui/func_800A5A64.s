@@ -199,8 +199,8 @@ glabel func_800A5A64
 /* 0A694C 800A5D4C 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A6950 800A5D50 1440006B */  bnez  $v0, .L800A5F00
 /* 0A6954 800A5D54 25086CDC */   addiu $t0, %lo(D_80126CDC) # addiu $t0, $t0, 0x6cdc
-/* 0A6958 800A5D58 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
-/* 0A695C 800A5D5C 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A6958 800A5D58 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
+/* 0A695C 800A5D5C 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A6960 800A5D60 8C830000 */  lw    $v1, ($a0)
 /* 0A6964 800A5D64 3C0BFA00 */  lui   $t3, 0xfa00
 /* 0A6968 800A5D68 246A0008 */  addiu $t2, $v1, 8
@@ -218,16 +218,16 @@ glabel func_800A5A64
 /* 0A6998 800A5D98 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A699C 800A5D9C 25086CDC */  addiu $t0, %lo(D_80126CDC) # addiu $t0, $t0, 0x6cdc
 /* 0A69A0 800A5DA0 8D070000 */  lw    $a3, ($t0)
-/* 0A69A4 800A5DA4 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
+/* 0A69A4 800A5DA4 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A69A8 800A5DA8 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
 /* 0A69AC 800A5DAC 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
-/* 0A69B0 800A5DB0 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A69B0 800A5DB0 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A69B4 800A5DB4 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
 /* 0A69B8 800A5DB8 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
 /* 0A69BC 800A5DBC 0C02A980 */  jal   func_800AA600
 /* 0A69C0 800A5DC0 24E70480 */   addiu $a3, $a3, 0x480
-/* 0A69C4 800A5DC4 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
-/* 0A69C8 800A5DC8 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A69C4 800A5DC4 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
+/* 0A69C8 800A5DC8 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A69CC 800A5DCC 8C830000 */  lw    $v1, ($a0)
 /* 0A69D0 800A5DD0 3C0EFA00 */  lui   $t6, 0xfa00
 /* 0A69D4 800A5DD4 246D0008 */  addiu $t5, $v1, 8

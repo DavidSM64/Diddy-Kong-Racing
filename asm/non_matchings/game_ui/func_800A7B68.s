@@ -100,14 +100,14 @@ glabel func_800A7B68
 /* 0A88DC 800A7CDC 00004825 */  move  $t1, $zero
 .L800A7CE0:
 /* 0A88E0 800A7CE0 14E0000D */  bnez  $a3, .L800A7D18
-/* 0A88E4 800A7CE4 3C048012 */   lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
+/* 0A88E4 800A7CE4 3C048012 */   lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A88E8 800A7CE8 3C078012 */  lui   $a3, %hi(D_80126CDC) # $a3, 0x8012
 /* 0A88EC 800A7CEC 8CE76CDC */  lw    $a3, %lo(D_80126CDC)($a3)
 /* 0A88F0 800A7CF0 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
 /* 0A88F4 800A7CF4 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
 /* 0A88F8 800A7CF8 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
 /* 0A88FC 800A7CFC 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
-/* 0A8900 800A7D00 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A8900 800A7D00 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A8904 800A7D04 AFA90044 */  sw    $t1, 0x44($sp)
 /* 0A8908 800A7D08 0C02A980 */  jal   func_800AA600
 /* 0A890C 800A7D0C 24E70140 */   addiu $a3, $a3, 0x140
@@ -283,11 +283,11 @@ glabel func_800A7B68
 /* 0A8B80 800A7F80 0C029FEF */  jal   func_800A7FBC
 /* 0A8B84 800A7F84 AFAB0010 */   sw    $t3, 0x10($sp)
 .L800A7F88:
-/* 0A8B88 800A7F88 3C038012 */  lui   $v1, %hi(D_80126CFC) # $v1, 0x8012
-/* 0A8B8C 800A7F8C 8C636CFC */  lw    $v1, %lo(D_80126CFC)($v1)
-/* 0A8B90 800A7F90 3C018012 */  lui   $at, %hi(D_80126CFC) # $at, 0x8012
+/* 0A8B88 800A7F88 3C038012 */  lui   $v1, %hi(gHUDCurrDisplayList) # $v1, 0x8012
+/* 0A8B8C 800A7F8C 8C636CFC */  lw    $v1, %lo(gHUDCurrDisplayList)($v1)
+/* 0A8B90 800A7F90 3C018012 */  lui   $at, %hi(gHUDCurrDisplayList) # $at, 0x8012
 /* 0A8B94 800A7F94 24790008 */  addiu $t9, $v1, 8
-/* 0A8B98 800A7F98 AC396CFC */  sw    $t9, %lo(D_80126CFC)($at)
+/* 0A8B98 800A7F98 AC396CFC */  sw    $t9, %lo(gHUDCurrDisplayList)($at)
 /* 0A8B9C 800A7F9C 3C0DFA00 */  lui   $t5, 0xfa00
 /* 0A8BA0 800A7FA0 240EFFFF */  li    $t6, -1
 /* 0A8BA4 800A7FA4 AC6E0004 */  sw    $t6, 4($v1)

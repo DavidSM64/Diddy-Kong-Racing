@@ -107,9 +107,9 @@ glabel func_800A1248
 .L800A13C4:
 /* 0A1FC4 800A13C4 8FA8004C */  lw    $t0, 0x4c($sp)
 .L800A13C8:
-/* 0A1FC8 800A13C8 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
+/* 0A1FC8 800A13C8 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A1FCC 800A13CC 8D070064 */  lw    $a3, 0x64($t0)
-/* 0A1FD0 800A13D0 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A1FD0 800A13D0 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A1FD4 800A13D4 0C01ECF4 */  jal   func_8007B3D0
 /* 0A1FD8 800A13D8 AFA70044 */   sw    $a3, 0x44($sp)
 /* 0A1FDC 800A13DC 8FA40044 */  lw    $a0, 0x44($sp)
