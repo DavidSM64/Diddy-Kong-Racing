@@ -102,7 +102,7 @@ glabel L800A6F3C
 /* 0A7B8C 800A6F8C 240A0002 */  li    $t2, 2
 /* 0A7B90 800A6F90 468042A0 */  cvt.s.w $f10, $f8
 /* 0A7B94 800A6F94 240CFF88 */  li    $t4, -120
-/* 0A7B98 800A6F98 3C0E8012 */  lui   $t6, %hi(D_80126D40) # $t6, 0x8012
+/* 0A7B98 800A6F98 3C0E8012 */  lui   $t6, %hi(gHUDVoiceSoundMask) # $t6, 0x8012
 /* 0A7B9C 800A6F9C E44A01CC */  swc1  $f10, 0x1cc($v0)
 /* 0A7BA0 800A6FA0 8D0B0000 */  lw    $t3, ($t0)
 /* 0A7BA4 800A6FA4 3C0F8012 */  lui   $t7, %hi(D_80126D71) # $t7, 0x8012
@@ -110,7 +110,7 @@ glabel L800A6F3C
 /* 0A7BAC 800A6FAC 8D0D0000 */  lw    $t5, ($t0)
 /* 0A7BB0 800A6FB0 00000000 */  nop   
 /* 0A7BB4 800A6FB4 A1AC01DB */  sb    $t4, 0x1db($t5)
-/* 0A7BB8 800A6FB8 8DCE6D40 */  lw    $t6, %lo(D_80126D40)($t6)
+/* 0A7BB8 800A6FB8 8DCE6D40 */  lw    $t6, %lo(gHUDVoiceSoundMask)($t6)
 /* 0A7BBC 800A6FBC 00000000 */  nop   
 /* 0A7BC0 800A6FC0 15C00009 */  bnez  $t6, .L800A6FE8
 /* 0A7BC4 800A6FC4 00000000 */   nop   
@@ -118,7 +118,7 @@ glabel L800A6F3C
 /* 0A7BCC 800A6FCC 00000000 */  nop   
 /* 0A7BD0 800A6FD0 15E00005 */  bnez  $t7, .L800A6FE8
 /* 0A7BD4 800A6FD4 00000000 */   nop   
-/* 0A7BD8 800A6FD8 0C029B6D */  jal   func_800A6DB4
+/* 0A7BD8 800A6FD8 0C029B6D */  jal   play_time_trial_end_message
 /* 0A7BDC 800A6FDC 00C02025 */   move  $a0, $a2
 /* 0A7BE0 800A6FE0 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A7BE4 800A6FE4 25086CDC */  addiu $t0, %lo(D_80126CDC) # addiu $t0, $t0, 0x6cdc

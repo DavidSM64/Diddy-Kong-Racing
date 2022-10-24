@@ -29,8 +29,8 @@ glabel func_800A497C
 /* 0A55E4 800A49E4 24040016 */  li    $a0, 22
 /* 0A55E8 800A49E8 0C000741 */  jal   play_sound_global
 /* 0A55EC 800A49EC 00002825 */   move  $a1, $zero
-/* 0A55F0 800A49F0 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
-/* 0A55F4 800A49F4 24A56D40 */  addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
+/* 0A55F0 800A49F0 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
+/* 0A55F4 800A49F4 24A56D40 */  addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 /* 0A55F8 800A49F8 0C000741 */  jal   play_sound_global
 /* 0A55FC 800A49FC 24040102 */   li    $a0, 258
 /* 0A5600 800A4A00 3C02800E */  lui   $v0, %hi(D_800E2770) # $v0, 0x800e

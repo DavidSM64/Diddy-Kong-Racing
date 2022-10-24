@@ -272,12 +272,12 @@ glabel func_8001AE64
 /* 01BE58 8001B258 10000008 */  b     .L8001B27C
 /* 01BE5C 8001B25C 8FBF001C */   lw    $ra, 0x1c($sp)
 .L8001B260:
-/* 01BE60 8001B260 0C029B6D */  jal   func_800A6DB4
+/* 01BE60 8001B260 0C029B6D */  jal   play_time_trial_end_message
 /* 01BE64 8001B264 00000000 */   nop   
 /* 01BE68 8001B268 10000004 */  b     .L8001B27C
 /* 01BE6C 8001B26C 8FBF001C */   lw    $ra, 0x1c($sp)
 .L8001B270:
-/* 01BE70 8001B270 0C029B6D */  jal   func_800A6DB4
+/* 01BE70 8001B270 0C029B6D */  jal   play_time_trial_end_message
 /* 01BE74 8001B274 00000000 */   nop   
 .L8001B278:
 /* 01BE78 8001B278 8FBF001C */  lw    $ra, 0x1c($sp)

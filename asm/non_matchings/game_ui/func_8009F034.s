@@ -88,10 +88,10 @@ glabel func_8009F034
 /* 09FD10 8009F110 A4206D2C */  sh    $zero, %lo(D_80126D2C)($at)
 /* 09FD14 8009F114 3C018012 */  lui   $at, %hi(D_80126CD4) # $at, 0x8012
 /* 09FD18 8009F118 A0206CD4 */  sb    $zero, %lo(D_80126CD4)($at)
-/* 09FD1C 8009F11C 3C018012 */  lui   $at, %hi(D_80126D36) # $at, 0x8012
-/* 09FD20 8009F120 A0206D36 */  sb    $zero, %lo(D_80126D36)($at)
-/* 09FD24 8009F124 3C018012 */  lui   $at, %hi(D_80126D38) # $at, 0x8012
-/* 09FD28 8009F128 A0206D38 */  sb    $zero, %lo(D_80126D38)($at)
+/* 09FD1C 8009F11C 3C018012 */  lui   $at, %hi(gHideRaceTimer) # $at, 0x8012
+/* 09FD20 8009F120 A0206D36 */  sb    $zero, %lo(gHideRaceTimer)($at)
+/* 09FD24 8009F124 3C018012 */  lui   $at, %hi(gWrongWayNagPrefix) # $at, 0x8012
+/* 09FD28 8009F128 A0206D38 */  sb    $zero, %lo(gWrongWayNagPrefix)($at)
 /* 09FD2C 8009F12C 3C018012 */  lui   $at, %hi(D_80126D35) # $at, 0x8012
 /* 09FD30 8009F130 A0206D35 */  sb    $zero, %lo(D_80126D35)($at)
 /* 09FD34 8009F134 3C018012 */  lui   $at, %hi(D_80126CD0) # $at, 0x8012

@@ -200,11 +200,11 @@ s32 D_80126D2C;
 s32 D_80126D30;
 u8 D_80126D34;
 u8 D_80126D35;
-u8 D_80126D36;
+u8 gHideRaceTimer;
 u8 D_80126D37;
-u8 D_80126D38;
+u8 gWrongWayNagPrefix;
 s32 D_80126D3C;
-s32 D_80126D40;
+s32 gHUDVoiceSoundMask;
 s32 D_80126D44;
 s32 D_80126D48;
 s32 D_80126D4C;
@@ -221,7 +221,7 @@ u8 D_80126D66;
 u8 D_80126D67;
 u8 D_80126D68;
 u8 D_80126D69;
-s32 D_80126D6C;
+s32 gWrongWayNagTimer;
 u8 D_80126D70;
 u8 D_80126D71;
 s32 D_80126D74;
@@ -269,28 +269,28 @@ void func_800A0B74(void) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A0BD4.s")
 
-void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
-    Object_Racer *temp = &arg1->unk64->racer;
+void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate) {
+    Object_Racer *racer = &arg1->unk64->racer;
 
     func_80068508(1);
-    render_course_indicator_arrows(temp, arg2);
-    render_wrong_way_text(temp, arg2);
-    func_800A3CE4(arg0, arg2);
+    render_course_indicator_arrows(racer, updateRate);
+    render_wrong_way_text(racer, updateRate);
+    func_800A3CE4(arg0, updateRate);
 
     if (D_80126D60->unk4C == 0) {
-        func_800A4F50(temp, arg2);
+        func_800A4F50(racer, updateRate);
     }
 
-    func_800A4154(temp, arg2);
-    render_race_time(temp, arg2);
-    func_800A4C44(temp, arg2);
-    func_800A3884(arg1, arg2);
+    func_800A4154(racer, updateRate);
+    render_race_time(racer, updateRate);
+    func_800A4C44(racer, updateRate);
+    func_800A3884(arg1, updateRate);
 
-    if (D_80127188 != 0 && temp->raceStatus == STATUS_RACING) {
-        func_800A47A0(temp, arg2);
+    if (D_80127188 && racer->raceStatus == STATUS_RACING) {
+        func_800A47A0(racer, updateRate);
     }
 
-    func_800A7520(arg1, arg2);
+    func_800A7520(arg1, updateRate);
     func_80068508(0);
 }
 
@@ -392,19 +392,19 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1248.s")
 
-void func_800A1428(s32 arg0, Object *arg1, s32 arg2) {
-    Object_Racer *temp = &arg1->unk64->racer;
-    if (temp->raceStatus == STATUS_RACING) {
+void func_800A1428(s32 arg0, Object *arg1, s32 updateRate) {
+    Object_Racer *racer = &arg1->unk64->racer;
+    if (racer->raceStatus == STATUS_RACING) {
         func_80068508(1);
-        func_800A3CE4(arg0, arg2);
-        func_800A7520(arg1, arg2);
-        if ((0x7F - (arg2 * 2)) >= D_80126CDC->unk67A) {
-            D_80126CDC->unk67A += (arg2 * 2);
+        func_800A3CE4(arg0, updateRate);
+        func_800A7520(arg1, updateRate);
+        if ((0x7F - (updateRate * 2)) >= D_80126CDC->unk67A) {
+            D_80126CDC->unk67A += (updateRate * 2);
         } else {
-            D_80126CDC->unk67A = (D_80126CDC->unk67A + (arg2 * 2)) - 0xFF;
+            D_80126CDC->unk67A = (D_80126CDC->unk67A + (updateRate * 2)) - 0xFF;
         }
         if (D_80126D37 != 2) {
-            func_800A14F0(arg1, arg2);
+            func_800A14F0(arg1, updateRate);
         }
         func_80068508(0);
     }
@@ -416,36 +416,36 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1C04.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
 
-void func_800A258C(s32 arg0, Object *arg1, s32 arg2) {
+void func_800A258C(s32 arg0, Object *arg1, s32 updateRate) {
     LevelHeader *level;
     Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
-    render_wrong_way_text(temp, arg2);
-    func_800A3CE4(arg0, arg2);
-    render_race_time(temp, arg2);
-    func_800A7520(arg1, arg2);
+    render_wrong_way_text(temp, updateRate);
+    func_800A3CE4(arg0, updateRate);
+    render_race_time(temp, updateRate);
+    func_800A7520(arg1, updateRate);
 
     level = get_current_level_header();
     if (level->laps > 1) {
-        func_800A4F50(temp, arg2);
+        func_800A4F50(temp, updateRate);
     }
 
-    func_800A3884(arg1, arg2);
-    func_800A4C44(temp, arg2);
+    func_800A3884(arg1, updateRate);
+    func_800A4C44(temp, updateRate);
     func_80068508(0);
 }
 
-void func_800A263C(s32 arg0, Object *arg1, s32 arg2) {
+void func_800A263C(s32 arg0, Object *arg1, s32 updateRate) {
     Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
-    render_wrong_way_text(temp, arg2);
-    func_800A4F50(temp, arg2);
-    func_800A4C44(temp, arg2);
-    render_race_time(temp, arg2);
-    func_800A3CE4(arg0, arg2);
-    func_800A3884(arg1, arg2);
+    render_wrong_way_text(temp, updateRate);
+    func_800A4F50(temp, updateRate);
+    func_800A4C44(temp, updateRate);
+    render_race_time(temp, updateRate);
+    func_800A3CE4(arg0, updateRate);
+    func_800A3884(arg1, updateRate);
     func_80068508(0);
 }
 
@@ -488,64 +488,60 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
  * Players going the wrong way will be nagged by T.T to turn around.
  * This function plays the audio, and makes the text fly in.
 */
-void render_wrong_way_text(Object_64* obj, s32 updateRate) {
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f2;
-    f32 temp_f2_2;
-    s8 temp_v1;
-    s8 temp_v1_2;
-    u8 var_t9;
+void render_wrong_way_text(Object_64* obj, s32 updateRate) { 
+    f32 textMoveSpeed;
+    f32 textPosTarget;
 
     if (D_80126D0C == 1) {
         func_8007BF1C(1);
     }
     if (obj->racer.unk1FC > 120 && (D_80126D0C || D_80126CDC->unk46C == D_80126CDC->unk47A[2]) && !is_game_paused()) {
-        if ((D_80126D38 || D_80126D6C == 0) && D_80126D40 == 0) {
-            if (D_80126D38 || (get_random_number_from_range(1, 10) >= 8)) {
-                D_80126D38 = 0;
-                play_sound_global(SOUND_VOICE_TT_WRONG_WAY, &D_80126D40);
-                D_80126D6C = get_random_number_from_range(1, 480) + 120;
+        if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == 0) {
+            // 20% chance that T.T decides not to precede his nagging with "No no no!"
+            if (gWrongWayNagPrefix || (get_random_number_from_range(1, 10) >= 8)) {
+                gWrongWayNagPrefix = FALSE;
+                play_sound_global(SOUND_VOICE_TT_WRONG_WAY, &gHUDVoiceSoundMask);
+                gWrongWayNagTimer = get_random_number_from_range(1, 480) + 120;
             } else {
-                D_80126D38 = 1;
-                play_sound_global(SOUND_VOICE_TT_NONONO, &D_80126D40);
+                gWrongWayNagPrefix = TRUE;
+                play_sound_global(SOUND_VOICE_TT_NONONO, &gHUDVoiceSoundMask);
             }
         }
-        D_80126D6C -= updateRate;
-        if (D_80126D6C < 0) {
-            D_80126D6C = 0;
+        gWrongWayNagTimer -= updateRate;
+        if (gWrongWayNagTimer < 0) {
+            gWrongWayNagTimer = 0;
         }
     }
     if (D_80126CDC->unk47A[0]) {
         if (D_80126CDC->unk47A[0] == 1) {
             if (D_80126CDC->unk47A[1] == 1) {
-                temp_f0 = updateRate * 13;
-                D_80126CDC->unk46C = D_80126CDC->unk46C + temp_f0;
-                temp_f2 = D_80126CDC->unk47A[2];
-                if (temp_f2 < D_80126CDC->unk46C) {
-                    D_80126CDC->unk46C = temp_f2;
+                textMoveSpeed = updateRate * 13;
+                D_80126CDC->unk46C += textMoveSpeed;
+                textPosTarget = D_80126CDC->unk47A[2];
+                if (D_80126CDC->unk46C > textPosTarget) {
+                    D_80126CDC->unk46C = textPosTarget;
                 }
-                D_80126CDC->unk48C = (f32) (D_80126CDC->unk48C - temp_f0);
-                temp_f2_2 = D_80126CDC->unk49C;
-                if (D_80126CDC->unk48C < temp_f2_2) {
-                    D_80126CDC->unk48C = temp_f2_2;
+                D_80126CDC->unk48C -= textMoveSpeed;
+                textPosTarget = D_80126CDC->unk49C;
+                if (D_80126CDC->unk48C < textPosTarget) {
+                    D_80126CDC->unk48C = textPosTarget;
                 }
                 if (obj->racer.unk1FC <= 90) {
                     D_80126CDC->unk47A[1] = -1;
                     play_sound_global(SOUND_WHOOSH1, NULL);
                 }
             } else if (D_80126CDC->unk47A[1] == -1) {
-                temp_f0_2 = (f32) (updateRate * 13);
-                D_80126CDC->unk46C -= temp_f0_2;
-                D_80126CDC->unk48C += temp_f0_2;
+                textMoveSpeed = updateRate * 13;
+                D_80126CDC->unk46C -= textMoveSpeed;
+                D_80126CDC->unk48C += textMoveSpeed;
                 if (D_80126CDC->unk46C < -200.0f) {
                     D_80126CDC->unk47A[0] = 0;
                 }
             }
             if (!is_game_paused()) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk454[0xC]);
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk454[0x2C]);
+                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk460);
+                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk480);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         }
@@ -569,7 +565,7 @@ void render_wrong_way_text(Object_64* obj, s32 updateRate) {
         }
         D_80126CDC->unk48C = D_80126CDC->unk49C + 200;
         D_80126CDC->unk46C =  D_80126CDC->unk49C - 200;
-        play_sound_global(0x16U, NULL);
+        play_sound_global(SOUND_WHOOSH1, NULL);
     }
     func_8007BF1C(0);
 }
@@ -577,14 +573,18 @@ void render_wrong_way_text(Object_64* obj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5F18.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6254.s")
 
-void func_800A6DB4(s16 *arg0) {
+/**
+ * Play the normal race finish message, unless you beat your time record,
+ * then T.T will say "Race Record" instead.
+*/
+void play_time_trial_end_message(s16 *playerID) {
     Settings *settings = get_settings();
 
-    if (arg0 != NULL) {
-        if (settings->racers[*arg0].best_times & 0x80) {
-            play_sound_global(SOUND_VOICE_TT_RACE_RECORD, &D_80126D40);
+    if (playerID != NULL) {
+        if (settings->racers[*playerID].best_times & 0x80) {
+            play_sound_global(SOUND_VOICE_TT_RACE_RECORD, &gHUDVoiceSoundMask);
         } else {
-            play_sound_global(SOUND_VOICE_TT_FINISH, &D_80126D40);
+            play_sound_global(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
         }
     }
 }
@@ -592,9 +592,13 @@ void func_800A6DB4(s16 *arg0) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6E30.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A718C.s")
 
-UNUSED void func_800A7440(u16 soundId) {
-    if ((D_80126D40 == 0) && (!is_game_paused())) {
-        play_sound_global(soundId, &D_80126D40);
+/**
+ * Unused function that plays whichever T.T voice line is passed through.
+ * Only if the game is currently running and no voice line is already playing.
+*/
+UNUSED void play_hud_voice_line(u16 soundId) {
+    if ((gHUDVoiceSoundMask == NULL) && !(is_game_paused())) {
+        play_sound_global(soundId, &gHUDVoiceSoundMask);
     }
 }
 
@@ -661,14 +665,14 @@ void render_race_time(Object_64* obj, s32 updateRate) {
                 }
                 D_80126CDC->unk15A = timerHideCounter - 127;
                 if ((timerHideCounter % 30) > 20) {
-                    D_80126D36 = TRUE;
+                    gHideRaceTimer = TRUE;
                     return;
                 } else {
-                    if (D_80126D36) {
+                    if (gHideRaceTimer) {
                         if (D_80126D0C == 0) {
                             play_sound_global(SOUND_HUD_LAP_TICK, NULL);
                         }
-                        D_80126D36 = 0;
+                        gHideRaceTimer = FALSE;
                     }
                 }
             } else {

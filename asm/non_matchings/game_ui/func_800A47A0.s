@@ -89,10 +89,10 @@ glabel func_800A47A0
 /* 0A54F0 800A48F0 15C0000F */  bnez  $t6, .L800A4930
 /* 0A54F4 800A48F4 8FA80040 */   lw    $t0, 0x40($sp)
 /* 0A54F8 800A48F8 822F05DB */  lb    $t7, 0x5db($s1)
-/* 0A54FC 800A48FC 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
+/* 0A54FC 800A48FC 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
 /* 0A5500 800A4900 29E1001E */  slti  $at, $t7, 0x1e
 /* 0A5504 800A4904 14200009 */  bnez  $at, .L800A492C
-/* 0A5508 800A4908 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
+/* 0A5508 800A4908 24A56D40 */   addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 /* 0A550C 800A490C 24180001 */  li    $t8, 1
 /* 0A5510 800A4910 A23805DA */  sb    $t8, 0x5da($s1)
 /* 0A5514 800A4914 8CB90000 */  lw    $t9, ($a1)

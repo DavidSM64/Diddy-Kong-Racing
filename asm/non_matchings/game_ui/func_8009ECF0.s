@@ -152,8 +152,8 @@ glabel func_8009ECF0
 /* 09FB30 8009EF30 AC78000C */   sw    $t8, 0xc($v1)
 /* 09FB34 8009EF34 3C018012 */  lui   $at, %hi(D_80126D64) # $at, 0x8012
 /* 09FB38 8009EF38 A0206D64 */  sb    $zero, %lo(D_80126D64)($at)
-/* 09FB3C 8009EF3C 3C018012 */  lui   $at, %hi(D_80126D6C) # $at, 0x8012
-/* 09FB40 8009EF40 AC206D6C */  sw    $zero, %lo(D_80126D6C)($at)
+/* 09FB3C 8009EF3C 3C018012 */  lui   $at, %hi(gWrongWayNagTimer) # $at, 0x8012
+/* 09FB40 8009EF40 AC206D6C */  sw    $zero, %lo(gWrongWayNagTimer)($at)
 /* 09FB44 8009EF44 3C018012 */  lui   $at, %hi(D_80126D48) # $at, 0x8012
 /* 09FB48 8009EF48 A4206D48 */  sh    $zero, %lo(D_80126D48)($at)
 /* 09FB4C 8009EF4C 24020004 */  li    $v0, 4

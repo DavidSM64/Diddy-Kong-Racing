@@ -14,8 +14,8 @@ glabel func_800A0BD4
 /* 0A1804 800A0C04 00447023 */  subu  $t6, $v0, $a0
 /* 0A1808 800A0C08 1DC0000A */  bgtz  $t6, .L800A0C34
 /* 0A180C 800A0C0C AC6E0000 */   sw    $t6, ($v1)
-/* 0A1810 800A0C10 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
-/* 0A1814 800A0C14 24A56D40 */  addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
+/* 0A1810 800A0C10 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
+/* 0A1814 800A0C14 24A56D40 */  addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 /* 0A1818 800A0C18 8CB80000 */  lw    $t8, ($a1)
 /* 0A181C 800A0C1C AC600000 */  sw    $zero, ($v1)
 /* 0A1820 800A0C20 17000004 */  bnez  $t8, .L800A0C34
