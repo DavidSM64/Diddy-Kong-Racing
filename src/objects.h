@@ -135,7 +135,7 @@ enum ObjectBehaviours {
     BHV_UNK_7C,
     BHV_UNK_7D,
     BHV_UNK_7E,
-    BHV_UNK_7F,
+    BHV_UNK_7F
 };
 
 /* Size: 0x8 bytes */

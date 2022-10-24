@@ -72,7 +72,7 @@ enum VideoModes {
 };
 
 extern s32 gVideoRefreshRate;
-
+extern f32 gVideoAspectRatio;
 extern u16 *gVideoCurrFramebuffer;
 extern u16 *gVideoDepthBuffer;
 

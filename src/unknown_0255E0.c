@@ -215,7 +215,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     if (D_8011D384) {
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
     }
-    func_8006652C(arg2);
+    set_active_viewports_and_object_stack_cap(arg2);
     func_80027FC4(arg1);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
@@ -230,7 +230,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     } else {
         func_800C01D8(&D_800DC874);
     }
-    func_8006652C(D_8011D37C);
+    set_active_viewports_and_object_stack_cap(D_8011D37C);
     D_8011B0FC = 0;
     i = 0;
     do {
@@ -1220,8 +1220,8 @@ void obj_loop_fogchanger(Object* obj) {
     sp44 = obj->segment.unk3C_a.unk3C;
     phi_s3 = NULL;
 
-    // func_80066510() returns the bool D_80120D14. 1 if camera is controlled by cutscene, 0 if controlled by racer.
-    if (func_80066510()) {
+    // check_if_showing_cutscene_camera() returns the bool gCutsceneCameraActive. 1 if camera is controlled by cutscene, 0 if controlled by racer.
+    if (check_if_showing_cutscene_camera()) {
         phi_s3 = func_80069D7C();
         sp74 = get_viewport_count() + 1;
     } else {
