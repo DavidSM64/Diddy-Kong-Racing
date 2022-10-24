@@ -202,7 +202,7 @@ u8 D_80126D34;
 u8 D_80126D35;
 u8 D_80126D36;
 u8 D_80126D37;
-s32 D_80126D38;
+u8 D_80126D38;
 s32 D_80126D3C;
 s32 D_80126D40;
 s32 D_80126D44;
@@ -274,7 +274,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
 
     func_80068508(1);
     render_course_indicator_arrows(temp, arg2);
-    func_800A5A64(temp, arg2);
+    render_wrong_way_text(temp, arg2);
     func_800A3CE4(arg0, arg2);
 
     if (D_80126D60->unk4C == 0) {
@@ -421,7 +421,7 @@ void func_800A258C(s32 arg0, Object *arg1, s32 arg2) {
     Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
-    func_800A5A64(temp, arg2);
+    render_wrong_way_text(temp, arg2);
     func_800A3CE4(arg0, arg2);
     render_race_time(temp, arg2);
     func_800A7520(arg1, arg2);
@@ -440,7 +440,7 @@ void func_800A263C(s32 arg0, Object *arg1, s32 arg2) {
     Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
-    func_800A5A64(temp, arg2);
+    render_wrong_way_text(temp, arg2);
     func_800A4F50(temp, arg2);
     func_800A4C44(temp, arg2);
     render_race_time(temp, arg2);
@@ -483,7 +483,97 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A497C.s")
 UNUSED void func_800A4C34(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {}
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5A64.s")
+
+/**
+ * Players going the wrong way will be nagged by TT to turn around.
+ * This function plays the audio, and makes the text fly in.
+*/
+void render_wrong_way_text(Object_64* obj, s32 updateRate) {
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 temp_f2;
+    f32 temp_f2_2;
+    s8 temp_v1;
+    s8 temp_v1_2;
+    u8 var_t9;
+
+    if (D_80126D0C == 1) {
+        func_8007BF1C(1);
+    }
+    if (obj->racer.unk1FC > 120 && (D_80126D0C || D_80126CDC->unk46C == D_80126CDC->unk47A[2]) && !is_game_paused()) {
+        if ((D_80126D38 || D_80126D6C == 0) && D_80126D40 == 0) {
+            if (D_80126D38 || (get_random_number_from_range(1, 10) >= 8)) {
+                D_80126D38 = 0;
+                play_sound_global(SOUND_VOICE_TT_WRONG_WAY, &D_80126D40);
+                D_80126D6C = get_random_number_from_range(1, 480) + 120;
+            } else {
+                D_80126D38 = 1;
+                play_sound_global(SOUND_VOICE_TT_NONONO, &D_80126D40);
+            }
+        }
+        D_80126D6C -= updateRate;
+        if (D_80126D6C < 0) {
+            D_80126D6C = 0;
+        }
+    }
+    if (D_80126CDC->unk47A[0]) {
+        if (D_80126CDC->unk47A[0] == 1) {
+            if (D_80126CDC->unk47A[1] == 1) {
+                temp_f0 = updateRate * 13;
+                D_80126CDC->unk46C = D_80126CDC->unk46C + temp_f0;
+                temp_f2 = D_80126CDC->unk47A[2];
+                if (temp_f2 < D_80126CDC->unk46C) {
+                    D_80126CDC->unk46C = temp_f2;
+                }
+                D_80126CDC->unk48C = (f32) (D_80126CDC->unk48C - temp_f0);
+                temp_f2_2 = D_80126CDC->unk49C;
+                if (D_80126CDC->unk48C < temp_f2_2) {
+                    D_80126CDC->unk48C = temp_f2_2;
+                }
+                if (obj->racer.unk1FC <= 90) {
+                    D_80126CDC->unk47A[1] = -1;
+                    play_sound_global(SOUND_WHOOSH1, NULL);
+                }
+            } else if (D_80126CDC->unk47A[1] == -1) {
+                temp_f0_2 = (f32) (updateRate * 13);
+                D_80126CDC->unk46C -= temp_f0_2;
+                D_80126CDC->unk48C += temp_f0_2;
+                if (D_80126CDC->unk46C < -200.0f) {
+                    D_80126CDC->unk47A[0] = 0;
+                }
+            }
+            if (!is_game_paused()) {
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk454[0xC]);
+                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk454[0x2C]);
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            }
+        }
+    } else if (obj->racer.unk1FC > 120) {
+        D_80126CDC->unk47A[0] = 1;
+        D_80126CDC->unk47A[1] = 1;
+        D_80126CDC->unk47A[2] = -31;
+        D_80126CDC->unk49C = 52;
+        D_80126CDC->unk47A[3] = 0;
+        if (D_80126D0C == 1) {
+            D_80126CDC->unk47A[2] = -21;
+            D_80126CDC->unk49C = 42;
+        } else  if (D_80126D0C >= 2) {
+            if (obj->racer.playerIndex == PLAYER_ONE || obj->racer.playerIndex == PLAYER_THREE) {
+                D_80126CDC->unk47A[2] = -100;
+                D_80126CDC->unk49C = -55;
+            } else {
+                D_80126CDC->unk47A[2] = 59;
+                D_80126CDC->unk49C = 104;
+            }
+        }
+        D_80126CDC->unk48C = D_80126CDC->unk49C + 200;
+        D_80126CDC->unk46C =  D_80126CDC->unk49C - 200;
+        play_sound_global(0x16U, NULL);
+    }
+    func_8007BF1C(0);
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5F18.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6254.s")
 

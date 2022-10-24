@@ -874,7 +874,7 @@ glabel func_800A277C
 /* 0A3FF8 800A33F8 00000000 */   nop   
 /* 0A3FFC 800A33FC 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A4000 800A3400 8FA500C8 */  lw    $a1, 0xc8($sp)
-/* 0A4004 800A3404 0C029699 */  jal   func_800A5A64
+/* 0A4004 800A3404 0C029699 */  jal   render_wrong_way_text
 /* 0A4008 800A3408 00000000 */   nop   
 /* 0A400C 800A340C 8FA400C0 */  lw    $a0, 0xc0($sp)
 /* 0A4010 800A3410 8FA500C8 */  lw    $a1, 0xc8($sp)
