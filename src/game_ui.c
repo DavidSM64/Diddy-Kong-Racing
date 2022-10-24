@@ -485,7 +485,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
 
 /**
- * Players going the wrong way will be nagged by TT to turn around.
+ * Players going the wrong way will be nagged by T.T to turn around.
  * This function plays the audio, and makes the text fly in.
 */
 void render_wrong_way_text(Object_64* obj, s32 updateRate) {
