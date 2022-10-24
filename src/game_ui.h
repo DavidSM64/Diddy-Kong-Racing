@@ -28,17 +28,50 @@ typedef struct {
     f32 unkC;
 } IndicatorArrow;
 
-typedef struct {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
+typedef struct unk80126CDC {
+    u8 unk0[0x6];
     s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    f32 unkC;
-    u8 unk10[0x410];
+    u8 unk8[0x58];    
+    struct unk80126CDC *unk60; // Not sure if this is correct.
+    s8 unk64[4];
+    u8 unk68[0xD8];
+    u8 unk140;
+    u8 unk141;
+    u8 unk142[0x18];
+    s8 unk15A;
+    s8 unk15B;
+    u8 pad[0x10];
+    f32 unk16C;
+    f32 unk170;
+    u8 unk174[0x8C];    
+    struct unk80126CDC *unk200; // Not sure if this is correct.
+    u8 unk204[0x14];
+    s16 unk218; 
+    s16 unk21A;
+    u8 unk21C[0xD0];
+    f32 unk2EC;
+    f32 unk2F0;
+    u8 unk2F4[0x1C];
+    f32 unk310;
+    u8 unk314[0x1C];
+    f32 unk330;
+    s32 unk334;
+    s16 unk338;
+    s16 unk33A;
+    s32 unk33C;
+    s16 unk340;
+    s16 unk342;
+    u8 unk344[0xC];
+    f32 unk350;
+    u8 unk354[0xCC];
     struct IndicatorArrow *courseIndicator;
-    u8 unk424[0xA0];
+    u8 unk424[0x1C];
+    s16 unk440;
+    s16 unk442;
+    s16 unk444;
+    u8 unk446[0xA];
+    f32 unk450;
+    u8 unk454[0x70];
     u16 unk4C4;
     u8 unk4C6[0x1B4];
     s8 unk67A;
@@ -47,7 +80,8 @@ typedef struct {
 } unk80126CDC;
 
 typedef struct {
-    u8 unk0[0x4C];
+    u8 unk0[0x4B];
+    s8 unk4B;
     s8 unk4C;
 } unk80126D60;
 
