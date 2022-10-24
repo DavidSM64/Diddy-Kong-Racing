@@ -113,31 +113,31 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of October 3rd, 2022, this is our current score:
+As of October 24th, 2022, this is our current score:
 ```
- ==========================================
-   ADVENTURE ONE (ASM -> C Decompilation)
- ------------ 33.19% Complete -------------
-        # Decompiled functions: 1292
-        # GLOBAL_ASM remaining: 541
-        # NON_MATCHING functions: 12
-     # NON_EQUIVALENT WIP functions: 94
- -------------- Game Status ---------------
- Balloons: 17/47, Keys: 2/4, Trophies: 1/5
-   T.T. Amulets: 1/4, Wizpig Amulets: 1/4
- ------------------------------------------
-    We are racing the walrus boss Bluey.
- ==========================================
-   ADVENTURE TWO (Cleanup & Documentation)
- ------------  6.13% Complete -------------
-        # Documented functions: 210
-       # Undocumented remaining: 1623
- -------------- Game Status ---------------
-  Balloons: 4/47, Keys: 0/4, Trophies: 0/5
-   T.T. Amulets: 0/4, Wizpig Amulets: 0/4
- ------------------------------------------
-  We are racing in Ancient Lake. (Lap 1/3)
- ==========================================
+ =======================================================
+         ADVENTURE ONE (ASM -> C Decompilation)
+ ------------------- 33.76% Complete -------------------
+              # Decompiled functions: 1299
+               # GLOBAL_ASM remaining: 534
+              # NON_MATCHING functions: 12
+           # NON_EQUIVALENT WIP functions: 92
+ --------------------- Game Status ---------------------
+        Balloons: 17/47, Keys: 2/4, Trophies: 1/5
+         T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+ -------------------------------------------------------
+ We are battling in Icicle Pyramid. (3 opponents remain)
+ =======================================================
+          ADVENTURE TWO (Cleanup & Documentation)
+ -------------------  6.47% Complete -------------------
+               # Documented functions: 219
+             # Undocumented remaining: 1614
+ --------------------- Game Status ---------------------
+        Balloons: 4/47, Keys: 0/4, Trophies: 0/5
+         T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ -------------------------------------------------------
+        We are racing in Ancient Lake. (Lap 1/3)
+ =======================================================
 ```
 
 ---
