@@ -300,7 +300,9 @@ typedef struct LevelHeader {
   /* 0x9D */ u8 bgColorRed;
   /* 0x9E */ u8 bgColorGreen;
   /* 0x9F */ u8 bgColorBlue;
-  /* 0xA0 */ s32 unkA0;
+  /* 0xA0 */ s16 unkA0;
+  /* 0xA2 */ s8 unkA2;
+  /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
   /* 0xA8 */ u16 unkA8;
   /* 0xAA */ u16 unkAA;
@@ -493,7 +495,8 @@ typedef struct LevelModel {
 /* 0x14 */ BspTreeNode *segmentsBspTree;
 /* 0x18 */ s16 numberOfTextures;
 /* 0x1A */ s16 numberOfSegments;
-           u8 pad1C[4];
+/* 0x1C */ s16 unk1C;
+/* 0x1E */ s16 unk1E;
 /* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
 /* 0x38 */ u32 minimapColor;

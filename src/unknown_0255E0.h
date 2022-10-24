@@ -127,8 +127,19 @@ Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportInde
 s32 func_80027568(void);
 void func_8002C954(LevelModelSegment*, LevelModelSegmentBoundingBox*, s32);
 s32 func_8002CC30(LevelModelSegment*);
-s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);           /* extern */
+s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
 void func_80013DCC(Gfx **arg0, Vertex **arg1, Vertex **arg2, Object *arg3);
-s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);                /* extern */
+s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);
+void func_800278E8(s32);
+void func_80028050();
+void func_800289B8();
+void func_80028CD0(s32);
+void func_8002A31C();
+void func_8002D8DC(s32, s32, s32);
+void func_8007F24C(s8*, s32);
+void func_800A01A0(Gfx**, Mtx**, s16**, s32, s32);
+void func_800ACA20(Gfx**, Mtx**, s16**, ObjectSegment*);
+void func_800AD030(ObjectSegment*);
+void func_800B9C18(s32);
 
 #endif
