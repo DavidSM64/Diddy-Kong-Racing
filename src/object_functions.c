@@ -1304,7 +1304,7 @@ void obj_loop_animcamera(Object *obj, s32 speed) {
             phi_v1 = 1;
         }
         if (phi_v1) {
-            func_80066488(obj64->unk30, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0x8000 - obj->segment.trans.y_rotation, -obj->segment.trans.x_rotation, obj->segment.trans.z_rotation);
+            write_to_object_render_stack(obj64->unk30, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0x8000 - obj->segment.trans.y_rotation, -obj->segment.trans.x_rotation, obj->segment.trans.z_rotation);
         }
     }
 }

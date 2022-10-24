@@ -960,7 +960,7 @@ typedef struct Object_Racer {
   /* 0x18E */ s16 shieldTimer;
   /* 0x190 */ s16 unk190;
   /* 0x192 */ s8 unk192;
-  /* 0x193 */ s8 unk193;
+  /* 0x193 */ s8 lapCount;
   /* 0x194 */ s8 unk194;
   /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;

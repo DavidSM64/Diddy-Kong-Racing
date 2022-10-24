@@ -147,8 +147,8 @@ glabel func_800A497C
 .L800A4BA0:
 /* 0A57A0 800A4BA0 00000000 */  nop   
 /* 0A57A4 800A4BA4 11A0001F */  beqz  $t5, .L800A4C24
-/* 0A57A8 800A4BA8 3C048012 */   lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
-/* 0A57AC 800A4BAC 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A57A8 800A4BA8 3C048012 */   lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
+/* 0A57AC 800A4BAC 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A57B0 800A4BB0 8C830000 */  lw    $v1, ($a0)
 /* 0A57B4 800A4BB4 3C0FFA00 */  lui   $t7, 0xfa00
 /* 0A57B8 800A4BB8 246E0008 */  addiu $t6, $v1, 8
@@ -161,16 +161,16 @@ glabel func_800A497C
 /* 0A57D4 800A4BD4 AC780004 */  sw    $t8, 4($v1)
 /* 0A57D8 800A4BD8 0C02A980 */  jal   func_800AA600
 /* 0A57DC 800A4BDC AC6F0000 */   sw    $t7, ($v1)
-/* 0A57E0 800A4BE0 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
+/* 0A57E0 800A4BE0 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A57E4 800A4BE4 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
 /* 0A57E8 800A4BE8 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
-/* 0A57EC 800A4BEC 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A57EC 800A4BEC 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A57F0 800A4BF0 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
 /* 0A57F4 800A4BF4 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
 /* 0A57F8 800A4BF8 0C02A980 */  jal   func_800AA600
 /* 0A57FC 800A4BFC 02003825 */   move  $a3, $s0
-/* 0A5800 800A4C00 3C048012 */  lui   $a0, %hi(D_80126CFC) # $a0, 0x8012
-/* 0A5804 800A4C04 24846CFC */  addiu $a0, %lo(D_80126CFC) # addiu $a0, $a0, 0x6cfc
+/* 0A5800 800A4C00 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
+/* 0A5804 800A4C04 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A5808 800A4C08 8C830000 */  lw    $v1, ($a0)
 /* 0A580C 800A4C0C 3C08FA00 */  lui   $t0, 0xfa00
 /* 0A5810 800A4C10 24790008 */  addiu $t9, $v1, 8

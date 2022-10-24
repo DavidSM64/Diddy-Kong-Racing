@@ -69,8 +69,7 @@ enum VideoModes {
 extern u8 gNumFrameBuffers;
 extern u8 gExpansionPak;
 extern s32 gVideoRefreshRate;
-extern OSViMode gGlobalVI;
-
+extern f32 gVideoAspectRatio;
 extern u16 *gVideoCurrFramebuffer;
 extern u16 *gVideoDepthBuffer;
 extern s32 D_800DE774;

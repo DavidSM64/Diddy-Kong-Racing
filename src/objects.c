@@ -1761,7 +1761,7 @@ void func_800228EC(s32 arg0) {
     object_64 = &get_object_struct(0)->unk64->racer;
     object_64->unk190 = 0;
     object_64->unk192 = 0;
-    object_64->unk193 = 0;
+    object_64->lapCount = 0;
     object_64->unk1BA = 0;
     func_80017E74(arg0);
     func_8006F388(10);

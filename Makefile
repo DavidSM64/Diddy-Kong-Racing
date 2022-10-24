@@ -332,6 +332,7 @@ endif
 clean: 
 ifneq ($(wildcard ./build/.*),) 
 	rm -r build
+	rm -r dkr.ld
 else 
 	@echo "/build/ directory has already been deleted." 
 endif

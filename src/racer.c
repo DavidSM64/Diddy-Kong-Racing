@@ -360,7 +360,7 @@ void func_80045128(struct TempStruct2 *header) {
 
     for (i = 0; i < 4; i++) {
         obj = (Object_Racer *) header->unk0[i]->unk64;
-        D_8011D588[i] = obj->unk193;
+        D_8011D588[i] = obj->lapCount;
         if (obj->unk1CF != 0) {
             D_8011D588[i] |= 0x40;
         }
@@ -1075,7 +1075,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk220 = 0;
     tempRacer->unk21C = 0;
     if (tempRacer->playerIndex != -1 && !D_8011D582) {
-        func_800665E8(player);
+        set_object_stack_pos(player);
         gCameraObject = func_80069CFC();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
@@ -1274,7 +1274,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
                 tempRacer->unk1B2 = 0;
             }
         }
-        func_800665E8(tempRacer->playerIndex);
+        set_object_stack_pos(tempRacer->playerIndex);
         gCameraObject = (ObjectCamera *) func_80069CFC();
         tempRacer->unk1E7++;
         gCurrentPlayerIndex = tempRacer->playerIndex;
@@ -1312,7 +1312,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if ((gCurrentRacerInput & A_BUTTON) == 0) {
             tempRacer->throttleReleased = 1;
         }
-        if (func_80066510() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
+        if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
             gCurrentStickX = 0;
             gCurrentStickY = 0;
             gCurrentRacerInput = 0;
@@ -1467,7 +1467,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->unk1C8 = 1;
         }
         if (temp_v0_16->unk36[tempRacer->unk1CA] == 6) {
-            tempRacer->unk193 = header->laps + 1;
+            tempRacer->lapCount = header->laps + 1;
         }
         if (tempVar == 0) {
             if (tempRacer->playerIndex == PLAYER_COMPUTER && temp_v0_16->unk36[tempRacer->unk1CA] == 2) {
@@ -1478,11 +1478,11 @@ void update_player_racer(Object* obj, s32 updateRate) {
             if (tempRacer->unk192 >= temp_v0_17) {
                 tempRacer->unk192 = 0;
                 if (tempRacer->unk190 > 0) {
-                    if (tempRacer->unk193 < 120) {
-                        tempRacer->unk193++;
+                    if (tempRacer->lapCount < 120) {
+                        tempRacer->lapCount++;
                     }
                 }
-                if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->unk193 + 1 == header->laps
+                if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->lapCount + 1 == header->laps
                     && !D_8011D580 && get_current_level_race_type() == RACETYPE_DEFAULT) {
                     func_800014BC(1.12f);
                     D_8011D580 = 1;
@@ -1651,8 +1651,8 @@ void update_player_racer(Object* obj, s32 updateRate) {
         } else {
             tempRacer->unk212 = 0;
         }
-        if (tempRacer->unk194 < tempRacer->unk193) {
-            tempRacer->unk194 = tempRacer->unk193;
+        if (tempRacer->unk194 < tempRacer->lapCount) {
+            tempRacer->unk194 = tempRacer->lapCount;
         }
     }
 #ifdef PUPPYPRINT_DEBUG
@@ -3623,7 +3623,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         }
     }
     if ((racer->transitionTimer < -1 && gCurrentStickX < 10 && gCurrentStickX > -10) || racer->transitionTimer == -1) {
-        if (func_80066510() == 0) {
+        if (check_if_showing_cutscene_camera() == 0) {
             func_800C01D8((FadeTransition* ) D_800DCDD4);
         }
         racer->transitionTimer = 60 - updateRate;
@@ -3820,7 +3820,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             }
         }
         if (temp_v0_9->unk36[racer->unk1CA] == 6) {
-            racer->unk193 = levelHeader->laps + 1;
+            racer->lapCount = levelHeader->laps + 1;
         }
         if (temp_v0_9->unk36[racer->unk1CA] == 4) {
             if (racer->velocity < -4.0f) {
@@ -3836,8 +3836,8 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             if (racer->unk192 >= temp_v0_10) {
                 racer->unk192 = 0;
                 if (racer->unk190 > 0) {
-                    if (racer->unk193 < 120) {
-                        racer->unk193++;
+                    if (racer->lapCount < 120) {
+                        racer->lapCount++;
                     }
                 }
             }
@@ -4102,9 +4102,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             if (racer->unk192 >= sp11C) {
                 racer->unk192 = 0;
                 if (racer->unk190 > 0) {
-                    temp_v0_3 = racer->unk193;
+                    temp_v0_3 = racer->lapCount;
                     if (temp_v0_3 < 0x78) {
-                        racer->unk193 = temp_v0_3 + 1;
+                        racer->lapCount = temp_v0_3 + 1;
                     }
                 }
             }
@@ -4197,8 +4197,8 @@ void func_8005C270(Object_Racer *racer) {
     racer->unk192--;
     if (racer->unk192 < 0) {
         racer->unk192 += temp;
-        if (racer->unk193 > 0) {
-            racer->unk193--;
+        if (racer->lapCount > 0) {
+            racer->lapCount--;
         }
     }
 

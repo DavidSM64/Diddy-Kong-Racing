@@ -107,7 +107,7 @@ glabel func_800249F0
 /* 025770 80024B70 00000000 */   nop   
 .L80024B74:
 /* 025774 80024B74 8FA40030 */  lw    $a0, 0x30($sp)
-/* 025778 80024B78 0C01994B */  jal   func_8006652C
+/* 025778 80024B78 0C01994B */  jal   set_active_viewports_and_object_stack_cap
 /* 02577C 80024B7C 00000000 */   nop   
 /* 025780 80024B80 0C009FF1 */  jal   func_80027FC4
 /* 025784 80024B84 02402025 */   move  $a0, $s2
@@ -149,7 +149,7 @@ glabel func_800249F0
 /* 025810 80024C10 2484C874 */   addiu $a0, %lo(D_800DC874) # addiu $a0, $a0, -0x378c
 /* 025814 80024C14 8E640000 */  lw    $a0, ($s3)
 .L80024C18:
-/* 025818 80024C18 0C01994B */  jal   func_8006652C
+/* 025818 80024C18 0C01994B */  jal   set_active_viewports_and_object_stack_cap
 /* 02581C 80024C1C 00000000 */   nop   
 /* 025820 80024C20 8E690000 */  lw    $t1, ($s3)
 /* 025824 80024C24 3C018012 */  lui   $at, %hi(D_8011B0FC) # $at, 0x8012

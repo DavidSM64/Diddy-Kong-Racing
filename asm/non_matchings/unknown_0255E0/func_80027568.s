@@ -29,7 +29,7 @@ glabel func_80027568
 /* 0281B8 800275B8 100000BC */  b     .L800278AC
 /* 0281BC 800275BC 00001025 */   move  $v0, $zero
 .L800275C0:
-/* 0281C0 800275C0 0C019944 */  jal   func_80066510
+/* 0281C0 800275C0 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 0281C4 800275C4 AFA60080 */   sw    $a2, 0x80($sp)
 /* 0281C8 800275C8 8FA60080 */  lw    $a2, 0x80($sp)
 /* 0281CC 800275CC 1440000A */  bnez  $v0, .L800275F8

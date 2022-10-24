@@ -55,7 +55,7 @@ s32 gIgnorePlayerInput;
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
 CharacterSelectData (*gCurrCharacterSelectData)[8]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
-s32 D_801263D0;
+s32 D_801263D0; //Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[4];
 s32 D_801263D8;
 s8 D_801263DC[4];
@@ -141,12 +141,8 @@ s8 D_80126540;
 s8 D_80126541;
 s32 D_80126544;
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
-TextureHeader *D_80126550[67];                        // lookup table? TEXTURES
-TextureHeader *D_8012665C;
-TextureHeader *D_80126660;
-TextureHeader *D_80126664;
-s32 D_80126668[58];
-u8 D_80126750[128];
+TextureHeader *D_80126550[128];              // lookup table? TEXTURES
+u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
 s32 D_801267D0;
 s32 D_801267D4;
 s32 D_801267D8[3];
@@ -186,12 +182,14 @@ f32 D_801268D8;
 s32 D_801268DC;
 s32 D_801268E0;
 s32 D_801268E4;
-s32 D_801268E8[12];
-s32 D_80126918[3];
+s16 D_801268E8[24]; // Probably a struct?
+s16 D_80126918;
+UNUSED s32 D_8012691C;
+UNUSED s32 D_80126920;
 s32 D_80126924;
 s32 D_80126928;
 s32 D_8012692C;
-s32 D_80126930[36];
+unk80126930 D_80126930[9];
 s8 gPlayerSelectVehicle[4]; // Unknown number of entries.
 u8 D_801269C4[4];
 s32 D_801269C8;
@@ -200,8 +198,8 @@ char *gAudioOutputStrings[3];
 f32 D_801269DC;
 char *gMusicTestString;
 f32 D_801269E4;
-s32 D_801269E8;
-s32 D_801269EC;
+f32 D_801269E8;
+f32 D_801269EC;
 s32 D_801269F0;
 s32 D_801269F4;
 s32 D_801269F8;
@@ -719,12 +717,12 @@ ButtonElement gFileSelectButtons[3] = {
     { SCREEN_FIT_X(208), SCREEN_FIT_Y(81), SCREEN_FIT_X(88), SCREEN_FIT_Y(64), 4, 4, GPACK_RGBA5551(64, 16, 0, 0), GPACK_RGBA5551(255, 255, 0, 0) }, // File C
 };
 
-s16 D_800E03FC[10] = {
-    (44), (54), // game name
-    (21), (25), // Balloon icon
-    (44), (27), // New Text
-    (63), (25), // Balloon count
-    (45), (25) // Balloon count x
+s16 gFileSelectElementPos[10] = {
+    44, 54, // game name
+    21, 25, // Balloon icon
+    44, 27, // New Text
+    63, 25, // Balloon count
+    45, 25  // Balloon count x
 };
 
 // Either 0 (2 racers), 1 (4 racers), or 2 (6 racers)
@@ -758,11 +756,8 @@ DrawTexture gRaceSelectionPlayer3Texture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } }
 DrawTexture gRaceSelectionPlayer4Texture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionVehicleTitleTexture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionTTTitleTexture[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-
-// These are probably structs
-s32 D_800E05D4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
-s32 D_800E05F4[8] = { 0, 0xFFD0, 0, 0xFFF0, 0, 0x10, 0, 0 };
-
+DrawTexture D_800E05D4[4] = { { NULL, 0, -48 }, { NULL, 0, -16 }, { NULL, 0, 16 }, { NULL, 0, 0 } };
+DrawTexture D_800E05F4[4] = { { NULL, 0, -48 }, { NULL, 0, -16 }, { NULL, 0, 16 }, { NULL, 0, 0 } };
 DrawTexture gRaceSelectionTTTexture[2] = { { NULL, -16, -16 }, { NULL, 0, 0 } };
 
 DrawTexture *gRaceSelectionImages[9] = {
@@ -912,9 +907,9 @@ s16 D_800E0840[148] = {
     0xFF20, 0xFF00, 0x0000, 0x0000
 };
 
-s32 D_800E0968 = 0;
+Vertex *D_800E0968 = NULL;
 s32 D_800E096C = 0;
-s32 *D_800E0970 = NULL;
+unk800E0970 *D_800E0970 = NULL;
 s32 D_800E0974 = 0;
 const f32 D_800E7D04[1] = { 0.5f }; // .rodata
 f32 *D_800E0978 = D_800E7D04;       // .data
@@ -1725,7 +1720,12 @@ void func_8007FF88(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8007FFEC.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_80080518.s")
+
+void func_80080518(f32 arg0, f32 arg1) {
+    D_800E1DC0 = (s32) (arg0 * 32.0f);
+    D_800E1DC4 = (s32) (arg1 * 32.0f);
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
 
@@ -2137,7 +2137,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
     if (arg0 != 4) {
         func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         while (elem->unk14_a.element != NULL) {
-            if (&D_80126850 != elem->unk14_a.element) {
+            if (elem->unk14_a.element != &D_80126850) {
                 if (arg0 == 0) {
                     tempX = elem->center - elem->left;
                     tempX *= arg2;
@@ -2154,7 +2154,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                     xPos = tempX + elem->center;
                     tempY = elem->bottom - elem->middle;
                     tempY *= arg2;
-                    yPos = tempY + elem->middle;
+                    yPos = (tempY & 0xFFFFFFFFFFFFFFFFu) + elem->middle;
                 }
                 switch (elem->elementType) {
                     case 0:
@@ -2195,7 +2195,6 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             elem->textAlignFlags);
                         break;
                     case 3:
-                        s5 = TRUE;
                         render_textured_rectangle(
                             &sMenuCurrDisplayList,
                             elem->unk14_a.texture,
@@ -2205,9 +2204,9 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             elem->filterGreen,
                             elem->filterBlue,
                             elem->opacity);
+                        s5 = TRUE;
                         break;
                     case 4:
-                        s5 = TRUE;
                         render_texture_rectangle_scaled(
                             &sMenuCurrDisplayList,
                             elem->unk14_a.element,
@@ -2217,6 +2216,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             elem->backgroundGreen / 256.0f,
                             (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
                             elem->textAlignFlags);
+                        s5 = TRUE;
                         break;
                     case 5:
                         if (s5) {
@@ -5029,22 +5029,22 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 if (gSavefileInfo[i].isAdventure2 != 0) {
                     s2 = 0xC;
                 }
-                render_menu_image(s2, D_800E03FC[2] + SCREEN_FIT_X(gFileSelectButtons[i].x), D_800E03FC[3] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
+                render_menu_image(s2, gFileSelectElementPos[2] + SCREEN_FIT_X(gFileSelectButtons[i].x), gFileSelectElementPos[3] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
                 func_80068508(1);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / s5;
-                render_menu_image(0, (D_800E03FC[6] + SCREEN_FIT_X(gFileSelectButtons[i].x)) - 6, D_800E03FC[7] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
+                render_menu_image(0, (gFileSelectElementPos[6] + SCREEN_FIT_X(gFileSelectButtons[i].x)) - 6, gFileSelectElementPos[7] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % s5;
-                render_menu_image(0, D_800E03FC[6] + SCREEN_FIT_X(gFileSelectButtons[i].x) + 6, D_800E03FC[7] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
+                render_menu_image(0, gFileSelectElementPos[6] + SCREEN_FIT_X(gFileSelectButtons[i].x) + 6, gFileSelectElementPos[7] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
                 func_80068508(0);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
-                render_menu_image(s5, D_800E03FC[8] + SCREEN_FIT_X(gFileSelectButtons[i].x), D_800E03FC[9] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
+                render_menu_image(s5, gFileSelectElementPos[8] + SCREEN_FIT_X(gFileSelectButtons[i].x), gFileSelectElementPos[9] + SCREEN_FIT_Y(gFileSelectButtons[i].y), 0, 0, 0, 128);
                 sMenuGuiColourG = 255;
                 sMenuGuiColourB = 255;
                 func_8007BF1C(1);
             } else {
                 set_text_colour(255, 255, 255, 64, 255);
-                draw_text(&sMenuCurrDisplayList, D_800E03FC[4] + SCREEN_FIT_X(gFileSelectButtons[i].x), D_800E03FC[5] + SCREEN_FIT_Y(gFileSelectButtons[i].y) + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[4] + SCREEN_FIT_X(gFileSelectButtons[i].x), gFileSelectElementPos[5] + SCREEN_FIT_Y(gFileSelectButtons[i].y) + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
             }
         }
     }
@@ -5079,7 +5079,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 trim_filename_string(gFilenames[i], tempName);
             }
             if (tempName != NULL) {
-                draw_text(&sMenuCurrDisplayList, D_800E03FC[0] + gFileSelectButtons[i].x, D_800E03FC[1] + gFileSelectButtons[i].y + y, tempName, ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[0] + gFileSelectButtons[i].x, gFileSelectElementPos[1] + gFileSelectButtons[i].y + y, tempName, ALIGN_MIDDLE_CENTER);
             }
         }
     }
@@ -5468,8 +5468,8 @@ s32 menu_file_select_loop(s32 updateRate) {
                         if (osTvType == TV_TYPE_PAL) {
                             i = 12;
                         }
-                        func_80097874(i + 187, gFileSelectButtons[gSaveFileIndex].x + D_800E03FC[0],
-                            gFileSelectButtons[gSaveFileIndex].y + D_800E03FC[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
+                        func_80097874(i + 187, gFileSelectButtons[gSaveFileIndex].x + gFileSelectElementPos[0],
+                            gFileSelectButtons[gSaveFileIndex].y + gFileSelectElementPos[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
                         currentMenuDelay = 0;
                     }
                 }
@@ -5550,7 +5550,62 @@ UNUSED s32 func_8008E790(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_8008F00C.s")
+
+void func_8008F00C(s32 arg0) {
+    s32 temp_v0_2;
+    s32 i;
+    s32 temp;
+
+    if ((D_801267D0 != -1) && (D_801267D0 != 0) && (D_801267D0 == 1)) {
+        func_8009C4A8(D_800E07E8);
+    }
+    
+    D_801267D0 = arg0;
+    temp = D_801267D0;
+    
+    if ((temp >= 0) && (temp < 2)) {
+        switch (D_801267D0) {
+            case 0:
+                D_801269E8 = D_801269DC;
+                D_801269EC = D_801269E4;
+                break;
+            case 1:
+                temp_v0_2 = func_8006B0AC(gTrackIdForPreview);
+                for (i = 0; i < gNumberOfActivePlayers; i++) {
+                    D_801269C4[i] = 0;
+                    gPlayerSelectVehicle[i] = temp_v0_2;
+                }
+                gNumberOfReadyPlayers = 0;
+                D_800E0980 = 1;
+                func_8009C674(D_800E07E8);
+                allocate_menu_images(D_800E0830);
+                assign_vehicle_icon_textures();
+                gRaceSelectionTTOn[0].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_ON_TOP];
+                gRaceSelectionTTOn[1].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_ON_BOTTOM];
+                gRaceSelectionTTOff[0].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_OFF_TOP];
+                gRaceSelectionTTOff[1].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_OFF_BOTTOM];
+                gRaceSelectionCarOptHighlight[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_CAR_HIGHLIGHT];
+                gRaceSelectionCarOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_CAR];
+                gRaceSelectionHoverOptHighlight[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT_HIGHLIGHT];
+                gRaceSelectionHoverOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT];
+                gRaceSelectionPlaneOptHighlight[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT];
+                gRaceSelectionPlaneOpt[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_SELECT_PLANE];
+                gRaceSelectionTTOnOptHighlight[0].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_OPT_ON];
+                gRaceSelectionTTOffOptHighlight[0].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_OPT_ON_HIGHLIGHT];
+                gRaceSelectionTTOnOpt[0].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_OPT_OFF];
+                gRaceSelectionTTOffOpt[0].texture = D_80126550[TEXTURE_ICON_TIMETRIAL_OPT_OFF_HIGHLIGHT];
+                gRaceSelectionPlayer1Texture[0].texture = D_80126550[TEXTURE_ICON_PLAYER_1];
+                gRaceSelectionPlayer2Texture[0].texture = D_80126550[TEXTURE_ICON_PLAYER_2];
+                gRaceSelectionPlayer3Texture[0].texture = D_80126550[TEXTURE_ICON_PLAYER_3];
+                gRaceSelectionPlayer4Texture[0].texture = D_80126550[TEXTURE_ICON_PLAYER_4];
+                gRaceSelectionVehicleTitleTexture[0].texture = D_80126550[TEXTURE_ICON_VEHICLE_TITLE];
+                gRaceSelectionTTTitleTexture[0].texture = D_80126550[TEXTURE_ICON_TT_TITLE];
+                gRaceSelectionTTTexture[0].texture = D_80126550[TEXTURE_ICON_TT_HEAD];
+                break;
+        }
+    }
+    gMenuDelay = 0;
+}
 
 s32 menu_track_select_loop(s32 updateRate) {
     s32 cutsceneId;
@@ -5744,7 +5799,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                 s4 += 0xC;
             }
             func_80080580(&sMenuCurrDisplayList, -(s4 >> 1), SCREEN_HEIGHT_HALF - D_800E0700.y, s4, D_800E0700.height,
-                D_800E0700.borderWidth, D_800E0700.borderHeight, sMenuGuiOpacity + 0xB0E0C000, D_8012665C);
+                D_800E0700.borderWidth, D_800E0700.borderHeight, sMenuGuiOpacity + 0xB0E0C000, D_80126550[43]);
             func_80080E6C();
             set_text_font(ASSET_FONTS_FUNFONT);
             s7 = D_800E0700.colourMax + D_800E0700.y + sp80;
@@ -5893,7 +5948,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                     } else {
                         s4 = gTwoPlayerRacerCountMenu.width;
                     }
-                    func_80080580(&sMenuCurrDisplayList, -(s4 >> 1), 120 - gTwoPlayerRacerCountMenu.y, s4, gTwoPlayerRacerCountMenu.height, gTwoPlayerRacerCountMenu.textPos[0], gTwoPlayerRacerCountMenu.textPos[1], 0xB0E0C0FF, D_8012665C);
+                    func_80080580(&sMenuCurrDisplayList, -(s4 >> 1), 0x78 - gTwoPlayerRacerCountMenu.y, s4, gTwoPlayerRacerCountMenu.height, gTwoPlayerRacerCountMenu.textPos[0], gTwoPlayerRacerCountMenu.textPos[1], 0xB0E0C0FF, D_80126550[43]);
                     func_80080E6C();
                     set_text_font(ASSET_FONTS_FUNFONT);
                     set_text_colour(0, 0, 0, 0xFF, 0x80);
@@ -7166,7 +7221,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
 
-    if ((gMenuDelay >= -19) && (gMenuDelay < 20)) {
+    if ((gMenuDelay > -20) && (gMenuDelay < 20)) {
         func_80099E8C(updateRate);
     }
 
@@ -7182,7 +7237,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
     xStick = 0;
     yStick = 0;
     if (!gIgnorePlayerInput && gMenuDelay == 0) {
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < MAXCONTROLLERS; i++) {
             pressedButtons |= get_buttons_pressed_from_player(i);
             xStick += gControllersXAxisDirection[i];
             yStick += gControllersYAxisDirection[i];
@@ -7422,8 +7477,8 @@ void func_8009BD5C(void) {
     f32 sp1C;
     f32 sp18;
 
-    func_8006652C(0);
-    func_800665E8(0);
+    set_active_viewports_and_object_stack_cap(0);
+    set_object_stack_pos(0);
 
     temp_v0 = (unk80069D20 *)func_80069D20();
 

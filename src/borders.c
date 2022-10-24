@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80077050 */
 
-#include "unknown_077C50.h"
+#include "borders.h"
 
 #include "camera.h"
 #include "types.h"
@@ -25,9 +25,9 @@ void render_borders_for_multiplayer(Gfx **dlist) {
     widthAndHeight = get_video_width_and_height_as_s32();
     width = GET_VIDEO_WIDTH(widthAndHeight);
     height = GET_VIDEO_HEIGHT(widthAndHeight);
-    xOffset = width >> 8;
+    xOffset = width / 256;
     width += 0; //Fake match?
-    yOffset = height >> 7;
+    yOffset = height / 128;
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetFillColor((*dlist)++, GPACK_RGBA5551(0, 0, 0, 1) << 16 | GPACK_RGBA5551(0, 0, 0, 1)); // Black fill color
     switch (get_viewport_count()) {
@@ -50,42 +50,43 @@ void render_borders_for_multiplayer(Gfx **dlist) {
             gDPFillRectangle((*dlist)++, x, 0, x + xOffset, height);
             break;
     }
-    return;
 }
 
-#ifdef NON_EQUIVALENT
-void func_80077268(Gfx **dlist) {
-    u32 temp_a2_2;
-    u32 temp_v0_3;
-    u32 temp_v0_4;
+/**
+ * Appears to be largely the same as the function above, rendering after the UI.
+ * This instead, renders slightly larger (around 1px) borders that are invisible.
+ * The purpose of this function is unknown, because it has zero cosmetic effect.
+ */
+void render_second_multiplayer_borders(Gfx **dlist) {
+    u32 screenSize;
+    u32 screenWidth;
+    u32 screenHeight;
     u32 height;
     u32 width;
-    u32 temp_t2;
-    u32 widthAndHeight;
-    u32 ra;
+    u32 tempX;
+    u32 tempY;
 
-    widthAndHeight = get_video_width_and_height_as_s32();
-    height = GET_VIDEO_HEIGHT(widthAndHeight);
-    width = GET_VIDEO_WIDTH(widthAndHeight);
+    screenSize = get_video_width_and_height_as_s32();
+    screenHeight = GET_VIDEO_HEIGHT(screenSize);
+    screenWidth = GET_VIDEO_WIDTH(screenSize);
+    height = (screenHeight / 128) << 1 << 1;
+    width = (screenWidth / 256) << 1 << 1;
     gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
     gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPSetRenderMode((*dlist)++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetPrimColor((*dlist)++, 0, 0, 0, 0, 0, 0);
-    // Issues with this block.
-    switch(get_viewport_count()){
+    switch(get_viewport_count()) {
         case VIEWPORTS_COUNT_2_PLAYERS:
-            temp_v0_4 = (height >> 1) - (temp_t2 >> 1);
-            gDPFillRectangle((*dlist)++, 0, temp_v0_4, width, temp_v0_4 + temp_t2);
+            tempY = (screenHeight / 2) - (height / 2);
+            gDPFillRectangle((*dlist)++, 0, tempY, screenWidth, tempY + height);
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
         case VIEWPORTS_COUNT_4_PLAYERS:
-            temp_v0_3 = (height >> 1) - (temp_t2 >> 1);
-            temp_a2_2 = (width >> 1) - (ra >> 1);
-            gDPFillRectangle((*dlist)++, 0, temp_v0_3, width, temp_v0_3 + temp_t2);
-            gDPFillRectangle((*dlist)++, temp_a2_2, 0, temp_a2_2 + ra, height);
+            tempY = (screenHeight / 2) - (height / 2);
+            tempX = (screenWidth / 2) - (width / 2);
+            gDPFillRectangle((*dlist)++, 0, tempY, screenWidth, tempY + height);
+            tempX += 0; // Fakematch
+            gDPFillRectangle((*dlist)++, tempX, 0, tempX + width, screenHeight);
             break;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_077C50/func_80077268.s")
-#endif

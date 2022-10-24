@@ -7,7 +7,7 @@
 /************ .data ************/
 
 u16 *gVideoDepthBuffer = NULL;
-UNUSED s32 D_800DE774 = 0; // Currently unknown, might be a different type.
+UNUSED s32 D_800DE774 = 0;
 UNUSED s8 D_800DE778 = 2;
 
 VideoModeResolution gVideoModeResolutions[] = {

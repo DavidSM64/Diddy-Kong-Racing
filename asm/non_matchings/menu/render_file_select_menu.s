@@ -66,8 +66,8 @@ glabel render_file_select_menu
 /* 08DA60 8008CE60 AFAB0018 */  sw    $t3, 0x18($sp)
 /* 08DA64 8008CE64 0C020160 */  jal   func_80080580
 /* 08DA68 8008CE68 AFAC0020 */   sw    $t4, 0x20($sp)
-/* 08DA6C 8008CE6C 3C0D800E */  lui   $t5, %hi(D_800E03FC) # $t5, 0x800e
-/* 08DA70 8008CE70 25AD03FC */  addiu $t5, %lo(D_800E03FC) # addiu $t5, $t5, 0x3fc
+/* 08DA6C 8008CE6C 3C0D800E */  lui   $t5, %hi(gFileSelectElementPos) # $t5, 0x800e
+/* 08DA70 8008CE70 25AD03FC */  addiu $t5, %lo(gFileSelectElementPos) # addiu $t5, $t5, 0x3fc
 /* 08DA74 8008CE74 26100010 */  addiu $s0, $s0, 0x10
 /* 08DA78 8008CE78 020D082B */  sltu  $at, $s0, $t5
 /* 08DA7C 8008CE7C 1420FFE1 */  bnez  $at, .L8008CE04
@@ -88,10 +88,10 @@ glabel render_file_select_menu
 /* 08DAB8 8008CEB8 00003825 */   move  $a3, $zero
 /* 08DABC 8008CEBC 3C118012 */  lui   $s1, %hi(gSavefileInfo) # $s1, 0x8012
 /* 08DAC0 8008CEC0 3C10800E */  lui   $s0, %hi(gFileSelectButtons) # $s0, 0x800e
-/* 08DAC4 8008CEC4 3C14800E */  lui   $s4, %hi(D_800E03FC) # $s4, 0x800e
+/* 08DAC4 8008CEC4 3C14800E */  lui   $s4, %hi(gFileSelectElementPos) # $s4, 0x800e
 /* 08DAC8 8008CEC8 3C13800E */  lui   $s3, %hi(gMenuImageStack) # $s3, 0x800e
 /* 08DACC 8008CECC 2673F75C */  addiu $s3, %lo(gMenuImageStack) # addiu $s3, $s3, -0x8a4
-/* 08DAD0 8008CED0 269403FC */  addiu $s4, %lo(D_800E03FC) # addiu $s4, $s4, 0x3fc
+/* 08DAD0 8008CED0 269403FC */  addiu $s4, %lo(gFileSelectElementPos) # addiu $s4, $s4, 0x3fc
 /* 08DAD4 8008CED4 261003CC */  addiu $s0, %lo(gFileSelectButtons) # addiu $s0, $s0, 0x3cc
 /* 08DAD8 8008CED8 263164A0 */  addiu $s1, %lo(gSavefileInfo) # addiu $s1, $s1, 0x64a0
 /* 08DADC 8008CEDC 2415000A */  li    $s5, 10
@@ -232,18 +232,18 @@ glabel render_file_select_menu
 /* 08DCDC 8008D0DC 0C031110 */  jal   draw_text
 /* 08DCE0 8008D0E0 01CF2821 */   addu  $a1, $t6, $t7
 .L8008D0E4:
-/* 08DCE4 8008D0E4 3C0B800E */  lui   $t3, %hi(D_800E03FC) # $t3, 0x800e
-/* 08DCE8 8008D0E8 256B03FC */  addiu $t3, %lo(D_800E03FC) # addiu $t3, $t3, 0x3fc
+/* 08DCE4 8008D0E4 3C0B800E */  lui   $t3, %hi(gFileSelectElementPos) # $t3, 0x800e
+/* 08DCE8 8008D0E8 256B03FC */  addiu $t3, %lo(gFileSelectElementPos) # addiu $t3, $t3, 0x3fc
 /* 08DCEC 8008D0EC 26100010 */  addiu $s0, $s0, 0x10
 /* 08DCF0 8008D0F0 160BFF7B */  bne   $s0, $t3, .L8008CEE0
 /* 08DCF4 8008D0F4 2631000C */   addiu $s1, $s1, 0xc
 .L8008D0F8:
 /* 08DCF8 8008D0F8 3C028012 */  lui   $v0, %hi(gOptionBlinkTimer) # $v0, 0x8012
 /* 08DCFC 8008D0FC 8C4263BC */  lw    $v0, %lo(gOptionBlinkTimer)($v0)
-/* 08DD00 8008D100 3C14800E */  lui   $s4, %hi(D_800E03FC) # $s4, 0x800e
+/* 08DD00 8008D100 3C14800E */  lui   $s4, %hi(gFileSelectElementPos) # $s4, 0x800e
 /* 08DD04 8008D104 000260C0 */  sll   $t4, $v0, 3
 /* 08DD08 8008D108 29810100 */  slti  $at, $t4, 0x100
-/* 08DD0C 8008D10C 269403FC */  addiu $s4, %lo(D_800E03FC) # addiu $s4, $s4, 0x3fc
+/* 08DD0C 8008D10C 269403FC */  addiu $s4, %lo(gFileSelectElementPos) # addiu $s4, $s4, 0x3fc
 /* 08DD10 8008D110 14200003 */  bnez  $at, .L8008D120
 /* 08DD14 8008D114 01801025 */   move  $v0, $t4
 /* 08DD18 8008D118 240D01FF */  li    $t5, 511
