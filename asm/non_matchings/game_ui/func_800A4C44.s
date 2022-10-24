@@ -41,8 +41,8 @@ glabel func_800A4C44
 /* 0A58D8 800A4CD8 A5230018 */  sh    $v1, 0x18($t1)
 /* 0A58DC 800A4CDC 24630001 */  addiu $v1, $v1, 1
 .L800A4CE0:
-/* 0A58E0 800A4CE0 3C0A8012 */  lui   $t2, %hi(D_80126D0C) # $t2, 0x8012
-/* 0A58E4 800A4CE4 8D4A6D0C */  lw    $t2, %lo(D_80126D0C)($t2)
+/* 0A58E0 800A4CE0 3C0A8012 */  lui   $t2, %hi(gHUDNumPlayers) # $t2, 0x8012
+/* 0A58E4 800A4CE4 8D4A6D0C */  lw    $t2, %lo(gHUDNumPlayers)($t2)
 /* 0A58E8 800A4CE8 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A58EC 800A4CEC 29410002 */  slti  $at, $t2, 2
 /* 0A58F0 800A4CF0 10200017 */  beqz  $at, .L800A4D50

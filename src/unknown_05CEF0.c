@@ -81,9 +81,9 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     sp56 = obj->segment.unk3B;
     sp54 = obj->segment.unk18;
     sp52 = racer->unk16A;
-    if (racer->raceStatus == STATUS_FINISHED) {
+    if (racer->raceFinished == TRUE) {
         func_80021400(130);
-        racer->raceStatus++;
+        racer->raceFinished++;
     }
     var_v1 = *startTimer;
     if ((racer->playerIndex == PLAYER_COMPUTER)  && (*startTimer != 100)) {
@@ -209,7 +209,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if ((obj == temp_v0_4->unk4C->unk0) && (temp_v0_4->unk4C->unk14 & 8) && (obj->segment.unk3B == 1)) {
         temp_s0->attackType = ATTACK_SQUISHED;
     }
-    if ((temp_s0->raceStatus != STATUS_RACING) && (D_8011D5C4 == 0)) {
+    if ((temp_s0->raceFinished != FALSE) && (D_8011D5C4 == 0)) {
         D_8011D5C4 = 1;
         func_8005CB68(temp_s0, &D_8011D5C4);
     }

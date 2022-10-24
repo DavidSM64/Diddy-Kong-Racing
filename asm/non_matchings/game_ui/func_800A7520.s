@@ -116,7 +116,7 @@ glabel func_800A7520
 /* 0A82A4 800A76A4 014B6021 */  addu  $t4, $t2, $t3
 /* 0A82A8 800A76A8 A04C005C */  sb    $t4, 0x5c($v0)
 /* 0A82AC 800A76AC 8D020000 */  lw    $v0, ($t0)
-/* 0A82B0 800A76B0 3C0E8012 */  lui   $t6, %hi(D_80126D0C) # $t6, 0x8012
+/* 0A82B0 800A76B0 3C0E8012 */  lui   $t6, %hi(gHUDNumPlayers) # $t6, 0x8012
 /* 0A82B4 800A76B4 8043005C */  lb    $v1, 0x5c($v0)
 /* 0A82B8 800A76B8 00000000 */  nop   
 /* 0A82BC 800A76BC 28610079 */  slti  $at, $v1, 0x79
@@ -127,7 +127,7 @@ glabel func_800A7520
 /* 0A82D0 800A76D0 1000002E */  b     .L800A778C
 /* 0A82D4 800A76D4 00000000 */   nop   
 .L800A76D8:
-/* 0A82D8 800A76D8 8DCE6D0C */  lw    $t6, %lo(D_80126D0C)($t6)
+/* 0A82D8 800A76D8 8DCE6D0C */  lw    $t6, %lo(gHUDNumPlayers)($t6)
 /* 0A82DC 800A76DC 00000000 */  nop   
 /* 0A82E0 800A76E0 15C0002A */  bnez  $t6, .L800A778C
 /* 0A82E4 800A76E4 00000000 */   nop   
@@ -173,8 +173,8 @@ glabel func_800A7520
 /* 0A8384 800A7784 8D020000 */  lw    $v0, ($t0)
 /* 0A8388 800A7788 00000000 */  nop   
 .L800A778C:
-/* 0A838C 800A778C 3C0A8012 */  lui   $t2, %hi(D_80126D0C) # $t2, 0x8012
-/* 0A8390 800A7790 8D4A6D0C */  lw    $t2, %lo(D_80126D0C)($t2)
+/* 0A838C 800A778C 3C0A8012 */  lui   $t2, %hi(gHUDNumPlayers) # $t2, 0x8012
+/* 0A8390 800A7790 8D4A6D0C */  lw    $t2, %lo(gHUDNumPlayers)($t2)
 /* 0A8394 800A7794 44808000 */  mtc1  $zero, $f16
 /* 0A8398 800A7798 1940000A */  blez  $t2, .L800A77C4
 /* 0A839C 800A779C 3C013FE8 */   li    $at, 0x3FE80000 # 1.812500
@@ -308,7 +308,7 @@ glabel func_800A7520
 /* 0A857C 800A797C 44808000 */  mtc1  $zero, $f16
 /* 0A8580 800A7980 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
 /* 0A8584 800A7984 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
-/* 0A8588 800A7988 3C0C8012 */  lui   $t4, %hi(D_80126D0C) # $t4, 0x8012
+/* 0A8588 800A7988 3C0C8012 */  lui   $t4, %hi(gHUDNumPlayers) # $t4, 0x8012
 /* 0A858C 800A798C 46309180 */  add.d $f6, $f18, $f16
 /* 0A8590 800A7990 3C014000 */  li    $at, 0x40000000 # 2.000000
 /* 0A8594 800A7994 46203220 */  cvt.s.d $f8, $f6
@@ -334,7 +334,7 @@ glabel func_800A7520
 /* 0A85E4 800A79E4 8C426CDC */  lw    $v0, %lo(D_80126CDC)($v0)
 /* 0A85E8 800A79E8 00000000 */  nop   
 .L800A79EC:
-/* 0A85EC 800A79EC 8D8C6D0C */  lw    $t4, %lo(D_80126D0C)($t4)
+/* 0A85EC 800A79EC 8D8C6D0C */  lw    $t4, %lo(gHUDNumPlayers)($t4)
 /* 0A85F0 800A79F0 00000000 */  nop   
 /* 0A85F4 800A79F4 11800009 */  beqz  $t4, .L800A7A1C
 /* 0A85F8 800A79F8 00000000 */   nop   

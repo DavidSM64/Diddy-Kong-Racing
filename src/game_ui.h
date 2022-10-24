@@ -15,7 +15,7 @@ enum CourseIndicatorArrows {
     INDICATOR_RIGHT_UTURN,
     INDICATOR_UP,
     INDICATOR_DOWN,
-    INDICATOR_EXCLAMATION,
+    INDICATOR_EXCLAMATION
 };
 
 typedef struct {
@@ -153,6 +153,7 @@ void func_800AB1D4(u8 arg0);
 void render_race_time(Object_64 *obj, s32 updateRate);
 void render_wrong_way_text(Object_64 *obj, s32 updateRate);
 void render_course_indicator_arrows(Object_64 *obj, s32 updateRate);
+void func_800A26C8(Object *obj, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -169,5 +170,12 @@ void func_8009ECF0(s32 viewPortCount);
 void func_800A003C(void);
 void func_800A8474(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
+void func_800A1248(s32, Object*, s32);
+void func_800A1C04(s32, Object*, s32);
+void func_800A277C(s32, Object*, s32);
+void func_800A497C(Object_64*, s32);
+void func_800A6254(Object_64*, s32);
+void func_800A6E30(Object_64*, s32);
+void func_800A7A60(Object*, Gfx**);
 
 #endif

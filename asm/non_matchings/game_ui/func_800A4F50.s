@@ -4,10 +4,10 @@ glabel func_800A4F50
 /* 0A5B58 800A4F58 AFA40018 */  sw    $a0, 0x18($sp)
 /* 0A5B5C 800A4F5C AFA5001C */  sw    $a1, 0x1c($sp)
 /* 0A5B60 800A4F60 808F01D8 */  lb    $t7, 0x1d8($a0)
-/* 0A5B64 800A4F64 3C028012 */  lui   $v0, %hi(D_80126D0C) # $v0, 0x8012
+/* 0A5B64 800A4F64 3C028012 */  lui   $v0, %hi(gHUDNumPlayers) # $v0, 0x8012
 /* 0A5B68 800A4F68 15E00089 */  bnez  $t7, .L800A5190
 /* 0A5B6C 800A4F6C 00000000 */   nop   
-/* 0A5B70 800A4F70 8C426D0C */  lw    $v0, %lo(D_80126D0C)($v0)
+/* 0A5B70 800A4F70 8C426D0C */  lw    $v0, %lo(gHUDNumPlayers)($v0)
 /* 0A5B74 800A4F74 00000000 */  nop   
 /* 0A5B78 800A4F78 1840000B */  blez  $v0, .L800A4FA8
 /* 0A5B7C 800A4F7C 00000000 */   nop   
@@ -150,8 +150,8 @@ glabel func_800A4F50
 /* 0A5D88 800A5188 0C02A980 */  jal   func_800AA600
 /* 0A5D8C 800A518C 24E700C0 */   addiu $a3, $a3, 0xc0
 .L800A5190:
-/* 0A5D90 800A5190 3C0D8012 */  lui   $t5, %hi(D_80126D0C) # $t5, 0x8012
-/* 0A5D94 800A5194 8DAD6D0C */  lw    $t5, %lo(D_80126D0C)($t5)
+/* 0A5D90 800A5190 3C0D8012 */  lui   $t5, %hi(gHUDNumPlayers) # $t5, 0x8012
+/* 0A5D94 800A5194 8DAD6D0C */  lw    $t5, %lo(gHUDNumPlayers)($t5)
 /* 0A5D98 800A5198 24010001 */  li    $at, 1
 /* 0A5D9C 800A519C 15A10003 */  bne   $t5, $at, .L800A51AC
 /* 0A5DA0 800A51A0 00000000 */   nop   
@@ -199,8 +199,8 @@ glabel func_800A4F50
 /* 0A5E44 800A5244 8D0F0000 */  lw    $t7, ($t0)
 /* 0A5E48 800A5248 0C000741 */  jal   play_sound_global
 /* 0A5E4C 800A524C A1E003DD */   sb    $zero, 0x3dd($t7)
-/* 0A5E50 800A5250 3C028012 */  lui   $v0, %hi(D_80126D0C) # $v0, 0x8012
-/* 0A5E54 800A5254 8C426D0C */  lw    $v0, %lo(D_80126D0C)($v0)
+/* 0A5E50 800A5250 3C028012 */  lui   $v0, %hi(gHUDNumPlayers) # $v0, 0x8012
+/* 0A5E54 800A5254 8C426D0C */  lw    $v0, %lo(gHUDNumPlayers)($v0)
 /* 0A5E58 800A5258 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A5E5C 800A525C 8FA90018 */  lw    $t1, 0x18($sp)
 /* 0A5E60 800A5260 10400006 */  beqz  $v0, .L800A527C
@@ -295,8 +295,8 @@ glabel func_800A4F50
 /* 0A5FB0 800A53B0 00002825 */  move  $a1, $zero
 /* 0A5FB4 800A53B4 0C000741 */  jal   play_sound_global
 /* 0A5FB8 800A53B8 A32003DD */   sb    $zero, 0x3dd($t9)
-/* 0A5FBC 800A53BC 3C028012 */  lui   $v0, %hi(D_80126D0C) # $v0, 0x8012
-/* 0A5FC0 800A53C0 8C426D0C */  lw    $v0, %lo(D_80126D0C)($v0)
+/* 0A5FBC 800A53BC 3C028012 */  lui   $v0, %hi(gHUDNumPlayers) # $v0, 0x8012
+/* 0A5FC0 800A53C0 8C426D0C */  lw    $v0, %lo(gHUDNumPlayers)($v0)
 /* 0A5FC4 800A53C4 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A5FC8 800A53C8 8FA90018 */  lw    $t1, 0x18($sp)
 /* 0A5FCC 800A53CC 10400006 */  beqz  $v0, .L800A53E8

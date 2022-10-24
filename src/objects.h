@@ -370,6 +370,7 @@ s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
+s32 func_8001BB18(s32 arg0);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
