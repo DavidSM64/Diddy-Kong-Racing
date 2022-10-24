@@ -21,7 +21,7 @@ glabel func_800A47A0
 /* 0A53EC 800A47EC C62405D0 */  lwc1  $f4, 0x5d0($s1)
 /* 0A53F0 800A47F0 3C128080 */  lui   $s2, (0x80808080 >> 16) # lui $s2, 0x8080
 /* 0A53F4 800A47F4 460021A4 */  cvt.w.s $f6, $f4
-/* 0A53F8 800A47F8 3C138012 */  lui   $s3, %hi(D_80126CFC) # $s3, 0x8012
+/* 0A53F8 800A47F8 3C138012 */  lui   $s3, %hi(gHUDCurrDisplayList) # $s3, 0x8012
 /* 0A53FC 800A47FC 440F3000 */  mfc1  $t7, $f6
 /* 0A5400 800A4800 44CEF800 */  ctc1  $t6, $31
 /* 0A5404 800A4804 448F4000 */  mtc1  $t7, $f8
@@ -41,7 +41,7 @@ glabel func_800A47A0
 /* 0A543C 800A483C 26946D00 */  addiu $s4, %lo(D_80126D00) # addiu $s4, $s4, 0x6d00
 /* 0A5440 800A4840 44089000 */  mfc1  $t0, $f18
 /* 0A5444 800A4844 44D9F800 */  ctc1  $t9, $31
-/* 0A5448 800A4848 26736CFC */  addiu $s3, %lo(D_80126CFC) # addiu $s3, $s3, 0x6cfc
+/* 0A5448 800A4848 26736CFC */  addiu $s3, %lo(gHUDCurrDisplayList) # addiu $s3, $s3, 0x6cfc
 /* 0A544C 800A484C 36528080 */  ori   $s2, (0x80808080 & 0xFFFF) # ori $s2, $s2, 0x8080
 /* 0A5450 800A4850 00008025 */  move  $s0, $zero
 /* 0A5454 800A4854 24170008 */  li    $s7, 8

@@ -9,7 +9,7 @@ glabel obj_loop_fogchanger
 /* 031690 80030A90 00808025 */  move  $s0, $a0
 /* 031694 80030A94 00009825 */  move  $s3, $zero
 /* 031698 80030A98 AFA00040 */  sw    $zero, 0x40($sp)
-/* 03169C 80030A9C 0C019944 */  jal   func_80066510
+/* 03169C 80030A9C 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 0316A0 80030AA0 AFAB0044 */   sw    $t3, 0x44($sp)
 /* 0316A4 80030AA4 8FAB0044 */  lw    $t3, 0x44($sp)
 /* 0316A8 80030AA8 8FBF0040 */  lw    $ra, 0x40($sp)
