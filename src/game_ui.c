@@ -120,7 +120,7 @@ unk800E2770 D_800E2770[2] = {
 
 u8 D_800E2790 = 1;
 
-s8 D_800E2794[16] = {
+u8 D_800E2794[16] = {
     1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 };
 
@@ -282,7 +282,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
     }
 
     func_800A4154(temp, arg2);
-    func_800A7B68(temp, arg2);
+    render_race_time(temp, arg2);
     func_800A4C44(temp, arg2);
     func_800A3884(arg1, arg2);
 
@@ -423,7 +423,7 @@ void func_800A258C(s32 arg0, Object *arg1, s32 arg2) {
     func_80068508(1);
     func_800A5A64(temp, arg2);
     func_800A3CE4(arg0, arg2);
-    func_800A7B68(temp, arg2);
+    render_race_time(temp, arg2);
     func_800A7520(arg1, arg2);
 
     level = get_current_level_header();
@@ -443,7 +443,7 @@ void func_800A263C(s32 arg0, Object *arg1, s32 arg2) {
     func_800A5A64(temp, arg2);
     func_800A4F50(temp, arg2);
     func_800A4C44(temp, arg2);
-    func_800A7B68(temp, arg2);
+    render_race_time(temp, arg2);
     func_800A3CE4(arg0, arg2);
     func_800A3884(arg1, arg2);
     func_80068508(0);
@@ -524,7 +524,81 @@ void func_800A74EC(u16 arg0, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7520.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7A60.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7B68.s")
+
+/**
+ * Render the lap time on the top right.
+ * When the player begins a new lap, start flashing the previous lap time below instead.
+*/
+void render_race_time(Object_64* obj, s32 updateRate) {
+    s32 i;
+    s32 stopwatchTimer;
+    s32 minutes;
+    s32 seconds;
+    s32 hundredths;
+    s32 countingDown;
+    s32 timerHideCounter;
+
+    if (!(D_80126D0C && D_800E2794[(D_80126D0C * 4) + obj->racer.playerIndex] != 1) || (D_80126D0C > 0 && obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180)) {
+        if (obj->racer.raceStatus == STATUS_RACING) {
+            timerHideCounter = D_80126CDC->unk15A + 127;
+            if (obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180 && obj->racer.lapCount < D_80126D60->numLaps) {
+                stopwatchTimer = obj->racer.lap_times[obj->racer.lapCount - 1];
+                countingDown = TRUE;
+                if (timerHideCounter == 0) {
+                    timerHideCounter = 180;
+                }
+            } else {
+                stopwatchTimer = 0;
+                for (i = 0; obj->racer.unk194 >= i && i < D_80126D60->numLaps; i++) {
+                    stopwatchTimer += obj->racer.lap_times[i];
+                }
+                countingDown = stopwatchTimer == 0 || obj->racer.raceStatus != STATUS_RACING || is_game_paused();
+                D_80126CDC->unk15A = -127;
+                timerHideCounter = 0;
+            }
+            if (D_80126D0C == 0) {
+                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk140);
+            }
+            if (normalise_time(36000) < stopwatchTimer) {
+                stopwatchTimer = normalise_time(36000);
+            }
+            get_timestamp_from_frames(stopwatchTimer, &minutes, &seconds, &hundredths);
+            if (countingDown || (normalise_time(36000) == stopwatchTimer)) {
+                if((timerHideCounter > updateRate)) {
+                    timerHideCounter -= updateRate;
+                } else {
+                    timerHideCounter = 0;
+                }
+                D_80126CDC->unk15A = timerHideCounter - 127;
+                if ((timerHideCounter % 30) > 20) {
+                    D_80126D36 = TRUE;
+                    return;
+                } else {
+                    if (D_80126D36) {
+                        if (D_80126D0C == 0) {
+                            play_sound_global(SOUND_HUD_LAP_TICK, NULL);
+                        }
+                        D_80126D36 = 0;
+                    }
+                }
+            } else {
+                hundredths = D_80126CDC->unk15B + ((hundredths / 10) * 10);
+                D_80126CDC->unk15B = D_80126CDC->unk15B + 1;
+                if (D_80126CDC->unk15B >= 10) {
+                    D_80126CDC->unk15B = 0;
+                }
+            }
+            
+            if (D_80126D37 == 1) {
+                func_800A7FBC(D_80126CDC->unk16C, D_80126CDC->unk170, minutes, seconds, hundredths, 0);
+            } else {
+                func_800A7FBC(D_80126CDC->unk16C, D_80126CDC->unk170, minutes, seconds, hundredths, 1);
+            }
+            gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7FBC.s")
 
 void func_800A83B4(LevelModel *model) {

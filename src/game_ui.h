@@ -81,7 +81,7 @@ typedef struct unk80126CDC {
 
 typedef struct {
     u8 unk0[0x4B];
-    s8 unk4B;
+    s8 numLaps;
     s8 unk4C;
 } unk80126D60;
 
@@ -140,7 +140,7 @@ void render_course_indicator_arrows(Object_64 *arg0, s32 arg1);
 void func_800A5A64(Object_64 *arg0, s32 arg1);
 void func_800A4F50(Object_64 *arg0, s32 arg1);
 void func_800A4154(Object_64 *arg0, s32 arg1);
-void func_800A7B68(Object_64 *arg0, s32 arg1);
+void render_race_time(Object_64 *arg0, s32 arg1);
 void func_800A4C44(Object_64 *arg0, s32 arg1);
 void func_800A3884(Object *arg0, s32 arg1);
 void func_800A47A0(Object_64 *arg0, s32 arg1);
@@ -149,5 +149,6 @@ void func_800AA600(Gfx **arg0, u32 *arg1, u32 *arg2, unk80126CDC *arg3);
 void func_8009ECF0(s32 viewPortCount);
 void func_800A003C(void);
 void func_800A8474(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
+void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
 
 #endif
