@@ -125,6 +125,7 @@ void func_800049F8(void * sndState,s16 type, u32 arg2);
 u16 func_80004A3C(u8 arg0);
 ALDMAproc __amDmaNew(AMDMAState **state);
 void func_80004A60(u8 arg0, u16 arg1);
+void func_80002DF8(s32 arg0);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);

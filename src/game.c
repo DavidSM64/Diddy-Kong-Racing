@@ -32,7 +32,7 @@
 #include "PR/os_internal.h"
 #include "printf.h"
 #include "fade_transition.h"
-#include "unknown_077C50.h"
+#include "borders.h"
 #include "unknown_008C40.h"
 #include "unknown_0255E0.h"
 #include "game_text.h"
@@ -85,25 +85,25 @@ UNUSED char *sDebugRomBuildInfo[6] = {
 UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
-s32 D_800DD378 = 1;
+UNUSED s32 D_800DD378 = 1;
 s32 D_800DD37C = 0;
-s32 D_800DD380 = 0;
+s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
-s32 D_800DD388 = 0; // Currently unknown, might be a different type.
-s8 D_800DD38C = 0;
+UNUSED s32 D_800DD388 = 0;
+s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
 s16 D_800DD394 = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
 s8 D_800DD3A0 = FALSE;
-s32 D_800DD3A4 = 0; // Currently unknown, might be a different type.
-s32 D_800DD3A8 = 0; // Currently unknown, might be a different type.
-s32 D_800DD3AC = 0; // Currently unknown, might be a different type.
+UNUSED s32 D_800DD3A4 = 0;
+UNUSED s32 D_800DD3A8 = 0;
+UNUSED s32 D_800DD3AC = 0;
 s32 gNumF3dCmdsPerPlayer[4] = { 4500, 7000, 11000, 11000 };
 s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
-s8 D_800DD3F0 = 0;
+s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
 // Unused?
 FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
@@ -138,17 +138,17 @@ TempStruct5 *D_801211C0;
 s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
-s32 D_801211FC;
+UNUSED s32 D_801211FC;
 Mtx *gHudMatrices[2];
 Mtx *gCurrHudMat;
 VertexList *gHudVertices[2];
 VertexList *gCurrHudVerts;
 TriangleList *gHudTriangles[2];
 TriangleList *gCurrHudTris;
-s32 D_80121230[8];
+UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-s8 D_80121268[8192]; // 0x2000 / 8192 bytes Padding?
+UNUSED u8 D_80121268[0x2000]; // 0x2000 / 8192 bytes Padding?
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
@@ -168,15 +168,15 @@ s32 D_8012351C; // Looks to be the current level's vehicle ID.
 s32 sBootDelayTimer;
 s8 D_80123524;
 s8 D_80123525;
-s8 D_80123526;
+UNUSED s8 D_80123526; // Set to 0 then never used.
 s32 gCurrNumF3dCmdsPerPlayer;
 s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 OSScClient *gNMISched[3];
-OSMesg gNMIMesgBuf;
+OSMesg gNMIOSMesg;
 OSMesgQueue gNMIMesgQueue;
-s32 D_80123560[8];
+s32 gNMIMesgBuf[8];
 
 /******************************/
 
@@ -881,9 +881,9 @@ void init_game(void) {
     init_controller_paks();
     func_80081218();
     create_and_start_thread30();
-    osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
+    osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
-    D_80123560[0] = 0;
+    gNMIMesgBuf[0] = 0;
     D_80123504 = 0;
     D_80123508 = 0;
     gSPTaskNum = 0;
@@ -906,20 +906,20 @@ void main_game_loop(void) {
 
     osSetTime(0);
 
-    if (D_800DD380 == 8) {
+    if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         set_rsp_segment(&gCurrDisplayList, 0, 0);
         set_rsp_segment(&gCurrDisplayList, 1, (s32)gVideoCurrFramebuffer);
         set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
         set_rsp_segment(&gCurrDisplayList, 4, (s32)gVideoCurrFramebuffer - 0x500);
     }
-    if (D_800DD3F0 == 0) {
+    if (gDrawFrameTimer == 0) {
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
-    if (D_800DD3F0) {
-        D_800DD3F0 -= 1;
+    if (gDrawFrameTimer) {
+        gDrawFrameTimer--;
     }
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -933,7 +933,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, 1); 
+    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, TRUE); 
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
@@ -984,19 +984,19 @@ void main_game_loop(void) {
     gSPEndDisplayList(gCurrDisplayList++);
 
     func_80066610();
-    if (D_800DD3F0 != 1) {
-        if (D_800DD38C == 0) {
-            D_800DD380 = wait_for_gfx_task();
+    if (gDrawFrameTimer != 1) {
+        if (gSkipGfxTask == FALSE) {
+            gScreenStatus = wait_for_gfx_task();
         }
     } else {
-        D_800DD3F0 = 0;
+        gDrawFrameTimer = 0;
     }
-    D_800DD38C = 0;
+    gSkipGfxTask = FALSE;
     clear_free_queue();
     if (!gIsPaused) {
-        func_80066520();
+        disable_cutscene_camera();
     }
-    if (D_800DD3F0 == 2) {
+    if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
         if (osTvType == TV_TYPE_PAL) {
             framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
@@ -1007,7 +1007,7 @@ void main_game_loop(void) {
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
-    tempLogicUpdateRate = swap_framebuffer_when_ready(D_800DD380);
+    tempLogicUpdateRate = swap_framebuffer_when_ready(gScreenStatus);
     sLogicUpdateRate = tempLogicUpdateRate;
     tempLogicUpdateRateMax = LOGIC_10FPS;
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
@@ -1047,11 +1047,11 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
 // Guessing this is the "unload everything ready for level swap" function.
 void func_8006CC14(void) {
     set_free_queue_state(0);
-    if (D_800DD38C == 0) {
-        if (D_800DD3F0 != 1) {
+    if (gSkipGfxTask == FALSE) {
+        if (gDrawFrameTimer != 1) {
             wait_for_gfx_task();
         }
-        D_800DD38C = 1;
+        gSkipGfxTask = TRUE;
     }
     func_8006BEFC();
     func_800C01D8(&D_800DD3F4);
@@ -1087,7 +1087,7 @@ void ingame_logic_loop(s32 updateRate) {
     // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
-        if (func_80066510() == 0 || func_8001139C()) {
+        if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
                 && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;
@@ -1219,7 +1219,7 @@ void ingame_logic_loop(s32 updateRate) {
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
     func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
-    func_80077268(&gCurrDisplayList);
+    render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
             D_801234F4 = 0x23;
@@ -1535,7 +1535,7 @@ void func_8006DC58(s32 updateRate) {
         func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
-        func_80077268(&gCurrDisplayList);
+        render_second_multiplayer_borders(&gCurrDisplayList);
     }
 }
 
@@ -1824,10 +1824,10 @@ s8 func_8006EAB0(void) {
  * Sets and returns (nonzero) the message set when pressing the reset button.
  */
 s32 is_reset_pressed(void) {
-    if (D_80123560[0] == 0) {
-        D_80123560[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
+    if (gNMIMesgBuf[0] == 0) {
+        gNMIMesgBuf[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
     }
-    return D_80123560[0];
+    return gNMIMesgBuf[0];
 }
 
 s32 func_8006EB14(void) {
@@ -2022,7 +2022,7 @@ void func_8006F398(void) {
 }
 
 void func_8006F42C(void) {
-    D_800DD3F0 = 2;
+    gDrawFrameTimer = 2;
 }
 
 /**
