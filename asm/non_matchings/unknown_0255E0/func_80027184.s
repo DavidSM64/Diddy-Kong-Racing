@@ -19,9 +19,9 @@ glabel func_80027184
 /* 027DC4 800271C4 84620000 */  lh    $v0, ($v1)
 /* 027DC8 800271C8 24010018 */  li    $at, 24
 /* 027DCC 800271CC 1441003A */  bne   $v0, $at, .L800272B8
-/* 027DD0 800271D0 3C078012 */   lui   $a3, %hi(D_8011B0A8) # $a3, 0x8012
-/* 027DD4 800271D4 3C0D8012 */  lui   $t5, %hi(D_8011B0A0) # $t5, 0x8012
-/* 027DD8 800271D8 25ADB0A0 */  addiu $t5, %lo(D_8011B0A0) # addiu $t5, $t5, -0x4f60
+/* 027DD0 800271D0 3C078012 */   lui   $a3, %hi(gSceneCurrVertexList) # $a3, 0x8012
+/* 027DD4 800271D4 3C0D8012 */  lui   $t5, %hi(gSceneCurrDisplayList) # $t5, 0x8012
+/* 027DD8 800271D8 25ADB0A0 */  addiu $t5, %lo(gSceneCurrDisplayList) # addiu $t5, $t5, -0x4f60
 /* 027DDC 800271DC 8DAA0000 */  lw    $t2, ($t5)
 /* 027DE0 800271E0 3C108012 */  lui   $s0, %hi(D_8011D488) # $s0, 0x8012
 /* 027DE4 800271E4 2610D488 */  addiu $s0, %lo(D_8011D488) # addiu $s0, $s0, -0x2b78
@@ -66,12 +66,12 @@ glabel func_80027184
 /* 027E80 80027280 3C198012 */  lui   $t9, %hi(D_8011D498) # $t9, 0x8012
 /* 027E84 80027284 AD4E0000 */  sw    $t6, ($t2)
 /* 027E88 80027288 8F39D498 */  lw    $t9, %lo(D_8011D498)($t9)
-/* 027E8C 8002728C 24E7B0A8 */  addiu $a3, %lo(D_8011B0A8) # addiu $a3, $a3, -0x4f58
+/* 027E8C 8002728C 24E7B0A8 */  addiu $a3, %lo(gSceneCurrVertexList) # addiu $a3, $a3, -0x4f58
 /* 027E90 80027290 03317821 */  addu  $t7, $t9, $s1
 /* 027E94 80027294 AD4F0004 */  sw    $t7, 4($t2)
-/* 027E98 80027298 3C088012 */  lui   $t0, %hi(D_8011B0AC) # $t0, 0x8012
+/* 027E98 80027298 3C088012 */  lui   $t0, %hi(gSceneCurrTriList) # $t0, 0x8012
 /* 027E9C 8002729C 8CF80000 */  lw    $t8, ($a3)
-/* 027EA0 800272A0 2508B0AC */  addiu $t0, %lo(D_8011B0AC) # addiu $t0, $t0, -0x4f54
+/* 027EA0 800272A0 2508B0AC */  addiu $t0, %lo(gSceneCurrTriList) # addiu $t0, $t0, -0x4f54
 /* 027EA4 800272A4 8D0E0000 */  lw    $t6, ($t0)
 /* 027EA8 800272A8 A4600000 */  sh    $zero, ($v1)
 /* 027EAC 800272AC 3C018012 */  lui   $at, %hi(D_8011D498) # $at, 0x8012
@@ -85,8 +85,8 @@ glabel func_80027184
 /* 027EC8 800272C8 3C018012 */  lui   $at, %hi(D_8011D4AC) # $at, 0x8012
 /* 027ECC 800272CC 46006102 */  mul.s $f4, $f12, $f0
 /* 027ED0 800272D0 C422D4AC */  lwc1  $f2, %lo(D_8011D4AC)($at)
-/* 027ED4 800272D4 3C078012 */  lui   $a3, %hi(D_8011B0A8) # $a3, 0x8012
-/* 027ED8 800272D8 24E7B0A8 */  addiu $a3, %lo(D_8011B0A8) # addiu $a3, $a3, -0x4f58
+/* 027ED4 800272D4 3C078012 */  lui   $a3, %hi(gSceneCurrVertexList) # $a3, 0x8012
+/* 027ED8 800272D8 24E7B0A8 */  addiu $a3, %lo(gSceneCurrVertexList) # addiu $a3, $a3, -0x4f58
 /* 027EDC 800272DC 46022180 */  add.s $f6, $f4, $f2
 /* 027EE0 800272E0 8CE20000 */  lw    $v0, ($a3)
 /* 027EE4 800272E4 4459F800 */  cfc1  $t9, $31
@@ -118,9 +118,9 @@ glabel func_80027184
 /* 027F4C 8002734C 46004282 */  mul.s $f10, $f8, $f0
 /* 027F50 80027350 9231B0E3 */  lbu   $s1, %lo(D_8011B0E3)($s1)
 /* 027F54 80027354 A4490000 */  sh    $t1, ($v0)
-/* 027F58 80027358 3C088012 */  lui   $t0, %hi(D_8011B0AC) # $t0, 0x8012
+/* 027F58 80027358 3C088012 */  lui   $t0, %hi(gSceneCurrTriList) # $t0, 0x8012
 /* 027F5C 8002735C 46025100 */  add.s $f4, $f10, $f2
-/* 027F60 80027360 2508B0AC */  addiu $t0, %lo(D_8011B0AC) # addiu $t0, $t0, -0x4f54
+/* 027F60 80027360 2508B0AC */  addiu $t0, %lo(gSceneCurrTriList) # addiu $t0, $t0, -0x4f54
 /* 027F64 80027364 4458F800 */  cfc1  $t8, $31
 /* 027F68 80027368 24420028 */  addiu $v0, $v0, 0x28
 /* 027F6C 8002736C 37010003 */  ori   $at, $t8, 3

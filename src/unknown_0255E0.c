@@ -60,10 +60,10 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 
 /************ .bss ************/
 
-Gfx *D_8011B0A0;
-Mtx *D_8011B0A4;
-VertexList *D_8011B0A8;
-TriangleList *D_8011B0AC;
+Gfx *gSceneCurrDisplayList;
+Mtx *gSceneCurrMatrix;
+VertexList *gSceneCurrVertexList;
+TriangleList *gSceneCurrTriList;
 
 Object *D_8011B0B0; // Camera Object?
 
@@ -260,7 +260,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 // Regalloc
 #ifdef NON_MATCHING
 extern s32 D_A0000200;
-void func_80024D54(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) {
+/**
+ * The root function for rendering the entire scene
+*/
+void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
     s32 delta;
@@ -269,10 +272,10 @@ void func_80024D54(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate)
     s32 posY;
     UNUSED s32 pad;
 
-    D_8011B0A0 = *dList;
-    D_8011B0A4 = *mtx;
-    D_8011B0A8 = *vtx;
-    D_8011B0AC = *tris;
+    gSceneCurrDisplayList = *dList;
+    gSceneCurrMatrix = *mtx;
+    gSceneCurrVertexList = *vtx;
+    gSceneCurrTriList = *tris;
     D_8011B0DC = 1;
     D_8011B0C4 = 0;
     D_8011B0C0 = 0;
@@ -315,12 +318,12 @@ void func_80024D54(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate)
     if (D_A0000200 != 0xAC290000) {
         flip = TRUE;
     }
-    func_8007B3D0(&D_8011B0A0);
-    gDkrDisableBillboard(D_8011B0A0++);
-    gSPClearGeometryMode(D_8011B0A0++, CVG_X_ALPHA);
-    gDPSetBlendColor(D_8011B0A0++, 0, 0, 0, 0x64);
-    gDPSetPrimColor(D_8011B0A0++, 0, 0, 255, 255, 255, 255);
-    gDPSetEnvColor(D_8011B0A0++, 255, 255, 255, 0);
+    func_8007B3D0(&gSceneCurrDisplayList);
+    gDkrDisableBillboard(gSceneCurrDisplayList++);
+    gSPClearGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
+    gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
+    gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
     func_800AD40C();
     func_80030838(numViewports, delta);
     func_800AF404(delta);
@@ -334,35 +337,35 @@ void func_80024D54(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate)
             }
         }
         if (flip) {
-            gSPSetGeometryMode(D_8011B0A0++, CVG_X_ALPHA);
+            gSPSetGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
         }
         func_8003093C(D_8011B0B4);
-        gDPPipeSync(D_8011B0A0++);
+        gDPPipeSync(gSceneCurrDisplayList++);
         set_object_stack_pos(D_8011B0B4);
-        func_80066CDC(&D_8011B0A0, &D_8011B0A4);
+        func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
         if (numViewports < 2) {
-            func_80068408(&D_8011B0A0, &D_8011B0A4);
+            func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             if (gCurrentLevelHeader2->unk49 == -1) {
                 func_80028050();
             } else {
                 render_skydome();
             }
         } else {
-            func_8006807C(&D_8011B0A0, &D_8011B0A4);
+            func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_800289B8();
-            func_80067D3C(&D_8011B0A0, &D_8011B0A4);
-            func_80068408(&D_8011B0A0, &D_8011B0A4);
+            func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+            func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         }
-        gDPPipeSync(D_8011B0A0++);
+        gDPPipeSync(gSceneCurrDisplayList++);
         func_80028CD0(updateRate);
         func_800AB308(-1, -512);
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
-            process_weather(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, &D_8011B0AC, delta);
+            process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, delta);
         }
         func_800AD030(func_80069D20());
-        func_800ACA20(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, func_80069D20());
-        func_800A01A0(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, func_8001BB18(D_8011B0B4), updateRate);
+        func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_80069D20());
+        func_800A01A0(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_8001BB18(D_8011B0B4), updateRate);
     }
     if ((numViewports == 3) && 
         (get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS) &&
@@ -370,25 +373,25 @@ void func_80024D54(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate)
         (get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS)) {
         if (func_800A8458() == 0) {
             if (flip) {
-                gSPSetGeometryMode(D_8011B0A0++, CVG_X_ALPHA);
+                gSPSetGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
             }
             func_8003093C(3);
-            gDPPipeSync(D_8011B0A0++);
+            gDPPipeSync(gSceneCurrDisplayList++);
             set_object_stack_pos(3);
             disable_cutscene_camera();
             func_800278E8(updateRate);
-            func_80066CDC(&D_8011B0A0, &D_8011B0A4);
+            func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_8002A31C();
-            func_8006807C(&D_8011B0A0, &D_8011B0A4);
+            func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_800289B8();
-            func_80067D3C(&D_8011B0A0, &D_8011B0A4);
-            func_80068408(&D_8011B0A0, &D_8011B0A4);
+            func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+            func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             
-            gDPPipeSync(D_8011B0A0++);
+            gDPPipeSync(gSceneCurrDisplayList++);
             func_80028CD0(updateRate);
             func_800AB308(-1, -512);
             func_800AD030(func_80069D20());
-            func_800ACA20(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, func_80069D20());
+            func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_80069D20());
             set_text_font(0);
             if (osTvType == 0) {
                 posX = 166;
@@ -397,23 +400,23 @@ void func_80024D54(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate)
                 posX = 170;
                 posY = 125;
             }
-            draw_text(&D_8011B0A0, posX, posY, (char *) &D_800E5DF0, ALIGN_TOP_LEFT);
+            draw_text(&gSceneCurrDisplayList, posX, posY, (char *) &D_800E5DF0, ALIGN_TOP_LEFT);
         } else {
             set_object_stack_pos(3);
             func_800278E8(updateRate);
         }
     }
-    func_800682AC(&D_8011B0A0);
-    gDPPipeSync(D_8011B0A0++);
-    gDkrDisableBillboard(D_8011B0A0++);
+    func_800682AC(&gSceneCurrDisplayList);
+    gDPPipeSync(gSceneCurrDisplayList++);
+    gDkrDisableBillboard(gSceneCurrDisplayList++);
     D_8011B0C8 = 1 - D_8011B0C8;
-    *dList = D_8011B0A0;
-    *mtx = D_8011B0A4;
-    *vtx = D_8011B0A8;
-    *tris = D_8011B0AC;
+    *dList = gSceneCurrDisplayList;
+    *mtx = gSceneCurrMatrix;
+    *vtx = gSceneCurrVertexList;
+    *tris = gSceneCurrTriList;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80024D54.s")
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
@@ -500,10 +503,10 @@ void func_800289B8(void) {
     u8 sp_2c = gCurrentLevelHeader2->unkBE;
     u8 sp_2b = gCurrentLevelHeader2->unkBF;
     u8 sp_2a = gCurrentLevelHeader2->unkC0;
-    u32 sp_24 = D_8011B0A8;
-    func_8007B3D0(&D_8011B0A0);
-    func_8007B4C8(&D_8011B0A0, 0, 8);
-    D_8011B0A0 += 8;
+    u32 sp_24 = gSceneCurrVertexList;
+    func_8007B3D0(&gSceneCurrDisplayList);
+    func_8007B4C8(&gSceneCurrDisplayList, 0, 8);
+    gSceneCurrDisplayList += 8;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
@@ -521,9 +524,9 @@ void render_skydome(void) {
         D_8011B0B8->segment.trans.z_position = v0_some_struct->trans.z_position;
     }
 
-    func_80068408(&D_8011B0A0, &D_8011B0A4);
+    func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
     if (D_8011B0DC) {
-        func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, D_8011B0B8);
+        func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, D_8011B0B8);
     }
 }
 
@@ -578,7 +581,7 @@ void render_level_geometry_and_objects(void) {
         sp58[1] = TRUE;
     }
 
-    func_8007B3D0(&D_8011B0A0);
+    func_8007B3D0(&gSceneCurrDisplayList);
     func_80015348(sp160, sp16C - 1);
     sp158 = 0x200 << (func_80066220() & 1);
 
@@ -596,12 +599,12 @@ void render_level_geometry_and_objects(void) {
         }
         if ((obj != NULL) && (s0 == 0xFF) && (func_8002A900(obj)) && ((sp58[obj->segment.unk2C.half.lower + 1]) || (1000.0 < obj->segment.unk34_a.unk34))) {
             if (obj->segment.trans.unk6 & 0x8000) {
-                func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->unk50 != NULL) {
                 render_floor_decal(obj, obj->unk50);
             }
-            func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+            func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
                 func_8002D670(obj, obj->unk58);
             }
@@ -618,12 +621,12 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && s0 && (objFlags & 0x100) && (sp58[obj->segment.unk2C.half.lower + 1]) && (func_8002A900(obj) != 0)) {
             if (obj->segment.trans.unk6 & 0x8000) {
-                func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->unk50 != NULL) {
                 render_floor_decal(obj, obj->unk50);
             }
-            func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+            func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
                 func_8002D670(obj, obj->unk58);
             }
@@ -637,12 +640,12 @@ void render_level_geometry_and_objects(void) {
     }
 
     if (D_8011D384 != 0) {
-        func_800BA8E4(&D_8011B0A0, &D_8011B0A4, func_80066220());
+        func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, func_80066220());
     }
 
-    func_8007B3D0(&D_8011B0A0);
-    func_8007B4C8(&D_8011B0A0, 0, 0xA);
-    func_80012C3C(&D_8011B0A0);
+    func_8007B3D0(&gSceneCurrDisplayList);
+    func_8007B4C8(&gSceneCurrDisplayList, 0, 0xA);
+    func_80012C3C(&gSceneCurrDisplayList);
 
     for (i = sp16C - 1; i >= sp160; i--) {
         obj = get_object(i);
@@ -662,20 +665,20 @@ void render_level_geometry_and_objects(void) {
         if (obj != NULL && s0 < 0xFF && sp58[obj->segment.unk2C.half.lower + 1] && func_8002A900(obj)) {
             if (s0 > 0) {
                 if (obj->segment.trans.unk6 & 0x8000) {
-                    func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                    func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                     goto skip;
                 } else if (obj->unk50 != NULL) {
                     render_floor_decal(obj, obj->unk50);
                 }
-                func_80012D5C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
                     func_8002D670(obj, obj->unk58);
                 }
             }
 skip:
             if (obj->behaviorId == 1) {
-                func_80013A0C(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
-                func_80013DCC(&D_8011B0A0, &D_8011B0A4, &D_8011B0A8, obj);
+                func_80013A0C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                func_80013DCC(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             }
         }
     }
@@ -754,22 +757,22 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                 temp = batchInfo->unk7 << 14;
                 if (levelHeaderIndex != 0) {                   // This is unused, so this should always be false.
                     lvlHeader70 = gCurrentLevelHeader2[levelHeaderIndex << 2].unk70;
-                    gDPSetEnvColor(D_8011B0A0++, lvlHeader70->red, lvlHeader70->green, lvlHeader70->blue, lvlHeader70->alpha);
+                    gDPSetEnvColor(gSceneCurrDisplayList++, lvlHeader70->red, lvlHeader70->green, lvlHeader70->blue, lvlHeader70->alpha);
                 } else {
-                    gDPSetEnvColor(D_8011B0A0++, 255, 255, 255, 0);
+                    gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
                 }
                 if (batchInfo->flags & 0x40000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
                     color = gCurrentLevelHeader2->pulseLightData->outColorValue & 0xFF;
-                    gDPSetPrimColor(D_8011B0A0++, 0, 0, color, color, color, color);
-                    func_8007BA5C(&D_8011B0A0, texture, batchInfo->flags, temp);
-                    gDkrVertices(D_8011B0A0++, OS_PHYSICAL_TO_K0(vertices), (((numberVertices - 1) << 3) | ((s32)OS_PHYSICAL_TO_K0(vertices) & 6)), numberVertices);
-                    gDkrTriangles(D_8011B0A0++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
-                    gDPSetPrimColor(D_8011B0A0++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
+                    gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
+                    func_8007BA5C(&gSceneCurrDisplayList, texture, batchInfo->flags, temp);
+                    gDkrVertices(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), (((numberVertices - 1) << 3) | ((s32)OS_PHYSICAL_TO_K0(vertices) & 6)), numberVertices);
+                    gDkrTriangles(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
+                    gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
                 } else {
-                    func_8007B4E8(&D_8011B0A0, texture, batchInfo->flags, temp);
+                    func_8007B4E8(&gSceneCurrDisplayList, texture, batchInfo->flags, temp);
                     hasTexture = (texture == NULL) ? TRIN_DISABLE_TEXTURE : TRIN_ENABLE_TEXTURE;
-                    gDkrVertices(D_8011B0A0++, OS_PHYSICAL_TO_K0(vertices), ((numberVertices - 1) << 3) | ((s32)OS_PHYSICAL_TO_K0(vertices) & 6), numberVertices);
-                    gDkrTriangles(D_8011B0A0++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, hasTexture);
+                    gDkrVertices(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), ((numberVertices - 1) << 3) | ((s32)OS_PHYSICAL_TO_K0(vertices) & 6), numberVertices);
+                    gDkrTriangles(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, hasTexture);
                 }
             }
         }
@@ -1338,8 +1341,8 @@ void func_80030838(s32 arg0, s32 arg1) {
 }
 
 void func_8003093C(s32 arg0) {
-    gDPSetFogColor(D_8011B0A0++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF);
-    gSPFogPosition(D_8011B0A0++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
+    gDPSetFogColor(gSceneCurrDisplayList++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF);
+    gSPFogPosition(gSceneCurrDisplayList++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
 }
 
 #ifdef NON_EQUIVALENT

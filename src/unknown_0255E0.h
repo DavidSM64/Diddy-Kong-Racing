@@ -118,7 +118,7 @@ void render_level_geometry_and_objects(void);
 void render_level_segment(s32 segmentId, s32 nonOpaque);
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb);
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
-void func_80024D54(Gfx **, Mtx **, VertexList **, TriangleList **, s32);
+void render_scene(Gfx **, Mtx **, VertexList **, TriangleList **, s32);
 void func_8002C7D4(void);
 void render_floor_decal(Object *, Object_50 *);
 void func_8002D670(Object *, Object *);

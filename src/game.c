@@ -140,11 +140,11 @@ Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 UNUSED s32 D_801211FC;
 Mtx *gHudMatrices[2];
-Mtx *gCurrHudMat;
+Mtx *gGameCurrMatrix;
 VertexList *gHudVertices[2];
-VertexList *gCurrHudVerts;
+VertexList *gGamecurrVertexList;
 TriangleList *gHudTriangles[2];
-TriangleList *gCurrHudTris;
+TriangleList *gGamecurrTriList;
 UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
@@ -923,9 +923,9 @@ void main_game_loop(void) {
     }
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
-    gCurrHudMat = gHudMatrices[gSPTaskNum];
-    gCurrHudVerts = gHudVertices[gSPTaskNum];
-    gCurrHudTris = gHudTriangles[gSPTaskNum];
+    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
+    gGamecurrVertexList = gHudVertices[gSPTaskNum];
+    gGamecurrTriList = gHudTriangles[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
     set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
@@ -933,7 +933,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, TRUE); 
+    render_background(&gCurrDisplayList, (Mtx *) &gGameCurrMatrix, TRUE); 
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
@@ -969,12 +969,12 @@ void main_game_loop(void) {
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
-    render_dialogue_boxes(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+    render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGamecurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);
     // handle_transitions will perform the logic of transitions and return the transition ID.
     if (handle_transitions(sLogicUpdateRate)) {
-        render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+        render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGamecurrVertexList);
     }
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
@@ -1107,13 +1107,13 @@ void ingame_logic_loop(s32 updateRate) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGamecurrVertexList, &gGamecurrTriList, updateRate);
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
     if (D_80123516) {
-        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate); 
+        i = func_80095728(&gCurrDisplayList, &gGameCurrMatrix, &gGamecurrVertexList, updateRate); 
         switch (i) {
             case 2:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
@@ -1218,7 +1218,7 @@ void ingame_logic_loop(s32 updateRate) {
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
-    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
+    func_800A8474(&gCurrDisplayList, &gGameCurrMatrix, &gGamecurrVertexList, updateRate);
     render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
@@ -1531,7 +1531,7 @@ void func_8006DC58(s32 updateRate) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
         func_8001BF20();
-        func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+        render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGamecurrVertexList, &gGamecurrTriList, updateRate);
         func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
@@ -1549,7 +1549,7 @@ void func_8006DCF8(s32 updateRate) {
     if (!gIsLoading && D_801234F0) {
         func_8006DC58(updateRate);
     }
-    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    menuLoopResult = menu_loop(&gCurrDisplayList, &gGameCurrMatrix, &gGamecurrVertexList, &gGamecurrTriList, updateRate);
     D_801234F0 = TRUE;
     if (menuLoopResult == -2) {
         D_801234F0 = FALSE;

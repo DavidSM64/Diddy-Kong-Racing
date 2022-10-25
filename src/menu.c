@@ -422,16 +422,16 @@ DrawTexture sGameTitleTileOffsets[12] = {
 
 // Title screen cinematic text
 unk800DF83C D_800DF83C[10] = {
-    { "TIMBER", 14.0f, 14.5f, 16.5f, 17.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "BUMPER", 19.0f, 19.5f, 21.5f, 22.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "CONKER", 24.0f, 24.5f, 26.5f, 27.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "TIPTUP", 29.0f, 29.5f, 31.5f, 32.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "DRUMSTICK", 35.0f, 35.5f, 37.5f, 38.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "PIPSY", 40.0f, 40.5f, 42.5f, 43.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "BANJO", 45.0f, 45.5f, 47.5f, 48.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "KRUNCH", 50.0f, 50.5f, 52.5f, 53.0f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "WIZPIG", 57.5f, 58.0f, 60.0f, 60.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f },
-    { "DIDDY", 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, 208.0f, 160.0f, 208.0f, 400.0f, 208.0f }
+    { "TIMBER", 14.0f, 14.5f, 16.5f, 17.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "BUMPER", 19.0f, 19.5f, 21.5f, 22.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "CONKER", 24.0f, 24.5f, 26.5f, 27.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "TIPTUP", 29.0f, 29.5f, 31.5f, 32.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "DRUMSTICK", 35.0f, 35.5f, 37.5f, 38.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "PIPSY", 40.0f, 40.5f, 42.5f, 43.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "BANJO", 45.0f, 45.5f, 47.5f, 48.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "KRUNCH", 50.0f, 50.5f, 52.5f, 53.0f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "WIZPIG", 57.5f, 58.0f, 60.0f, 60.5f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f },
+    { "DIDDY", 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f }
 };
 
 s32 D_800DF9F4 = 0;
@@ -636,6 +636,7 @@ u8 gCharacterSelectBytesComplete[] = {
 /*Timber*/      BANJO, NONE,        NONE, NONE,     PIPSY, TICTOC, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,             0x00, 0x04, 
 /*Drumstick*/   NONE, NONE,         TICTOC, NONE,   DIDDY, KRUNCH, NONE, NONE,      BUMPER, BANJO, NONE, NONE,          0x00, 0x06, 
 /*T.T*/         DRUMSTICK, NONE,    TIPTUP, NONE,   TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,          0x00, 0x08, 
+// !@bug T.T's down input selects Tiptup. It should be set to NONE.
 };
 
 s32 D_800DFFCC = 0; // Likely unused.
@@ -643,41 +644,41 @@ s32 D_800DFFD0 = 0;
 s32 D_800DFFD4 = -1;
 
 MenuElement gCautionMenuTextElements[14] = {
-    { 161,  35, 161,  35, 161,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160,  32, 160,  32, 160,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160,  72, 160,  68, 160,  72, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160,  86, 160,  82, 160,  86, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 100, 160,  96, 160, 100, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 114, 160, 110, 160, 114, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 128, 160, 124, 160, 128, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 142, 160, 138, 160, 142, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 156, 160, 152, 160, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 156, 160, 166, 160, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 186, 160, 180, 160, 186, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 200, 160, 194, 160, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 200, 160, 208, 160, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF,  72, SCREEN_WIDTH_HALF,  68, SCREEN_WIDTH_HALF,  72, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF,  86, SCREEN_WIDTH_HALF,  82, SCREEN_WIDTH_HALF,  86, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 100, SCREEN_WIDTH_HALF,  96, SCREEN_WIDTH_HALF, 100, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 114, SCREEN_WIDTH_HALF, 110, SCREEN_WIDTH_HALF, 114, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 128, SCREEN_WIDTH_HALF, 124, SCREEN_WIDTH_HALF, 128, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 142, SCREEN_WIDTH_HALF, 138, SCREEN_WIDTH_HALF, 142, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 166, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 186, SCREEN_WIDTH_HALF, 180, SCREEN_WIDTH_HALF, 186, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 194, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 208, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
     {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,                   0,  0, 0, { NULL }, 0, 0, 0, 0 },
 };
 
 MenuElement gGameSelectTextElemsNoAdv2[7] = {
-    { 161,  35, 161,  35, 161,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { 160,  32, 160,  32, 160,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
     { -96,  39, -96,  39, -96,  39, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 192, 44, 4, 4 },
-    { 160, 104, 160, 104, 160, 104, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
     { -96,  -9, -96,  -9, -96,  -9, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 192, 44, 4, 4 },
-    { 160, 152, 160, 152, 160, 152, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    { SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
     {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   0,  0, 0, 0 },
 };
 
 MenuElement gGameSelectTextElemsWithAdv2[9] = {
-    {  161,  35,  161,  35,  161,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    {  160,  32,  160,  32,  160,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    {  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    {  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
     { -112,  55, -112,  55, -112,  55, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  160,  88,  160,  88,  160,  88, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    {  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
     { -112,   7, -112,   7, -112,   7, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  160, 136,  160, 136,  160, 136, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    {  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
     { -112, -41, -112, -41, -112, -41, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  160, 184,  160, 184,  160, 184, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
+    {  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
     {    0,   0,    0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   0,  0, 0, 0 },
 };
 
@@ -1099,8 +1100,8 @@ s16 D_800E1044 = -1;
 
 MenuElement D_800E1048[9][3] = {
     {
-        { 481,   35, 161, 35, -159,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-        { 480,   32, 160, 32, -160,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+        { SCREEN_WIDTH + 160 + 1,   35, SCREEN_WIDTH_HALF + 1, 35, -159,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
+        { SCREEN_WIDTH + 160,   32, SCREEN_WIDTH_HALF, 32, -160,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
         {  64, -192,  64, 48,   64, 288, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 }
     },
     {
@@ -1392,7 +1393,7 @@ s32 gCheatsInCreditsArray[21] = {
 };
 #define NUMBER_CHEATS_IN_CREDITS sizeof(gCheatsInCreditsArray) / sizeof(s32)
 
-s32 gViewingCreditsFromCheat = 0; // Set to 1 if viewing credits from "WHODIDTHIS" cheat
+s32 gViewingCreditsFromCheat = FALSE; // Set to 1 if viewing credits from "WHODIDTHIS" cheat
 
 MenuElement D_800E1B50[9] = {
     { 480, 104, 160, 104, -160, 104, 255,   0, 255, 48, 255, ASSET_FONTS_FUNFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
@@ -7355,7 +7356,7 @@ void menu_credits_init(void) {
         gCreditsArray[84] = gCreditsLastMessageArray[2]; // "THE END"
         gCreditsArray[85] = gCreditsLastMessageArray[3]; // "NO CHEAT"
         gCreditsArray[86] = gCreditsLastMessageArray[4]; // "THIS TIME."
-        gViewingCreditsFromCheat = 0;
+        gViewingCreditsFromCheat = FALSE;
     } else {
         if (settings->bosses & 0x20) {
             play_music(SEQUENCE_CRESCENT_ISLAND);
