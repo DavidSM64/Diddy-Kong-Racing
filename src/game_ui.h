@@ -128,8 +128,8 @@ typedef struct unk800E2770 {
 
 extern unk80126CDC *D_80126CDC;
 extern Gfx *gHUDCurrDisplayList;
-extern u32 D_80126D00;
-extern u32 D_80126D04;
+extern Matrix *D_80126D00;
+extern TriangleList *D_80126D04;
 extern u8 D_80126D37;
 
 extern u8 gGfxTaskYieldData[0xA00];
@@ -137,8 +137,8 @@ extern u8 gGfxTaskYieldData[0xA00];
 u8 func_800A0190(void);
 void func_800A0B74(void);
 void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate);
-void func_800A1428(s32 arg0, Object *arg1, s32 updateRate);
-void func_800A258C(s32 arg0, Object *arg1, s32 updateRate);
+void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate);
+void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate);
 void func_800A263C(s32 arg0, Object *arg1, s32 updateRate);
 void func_800A3870(void);
 void play_time_trial_end_message(s16 *playerID);
@@ -153,7 +153,8 @@ void func_800AB1D4(u8 arg0);
 void render_race_time(Object_64 *obj, s32 updateRate);
 void render_wrong_way_text(Object_64 *obj, s32 updateRate);
 void render_course_indicator_arrows(Object_64 *obj, s32 updateRate);
-void func_800A26C8(Object *obj, s32 updateRate);
+void render_hud_hubworld(Object *obj, s32 updateRate);
+void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);

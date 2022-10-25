@@ -189,8 +189,8 @@ s32 D_80126CF0;
 s32 D_80126CF4;
 s32 D_80126CF8;
 Gfx *gHUDCurrDisplayList;
-u32 D_80126D00;
-u32 D_80126D04;
+Matrix *D_80126D00;
+TriangleList *D_80126D04;
 s32 D_80126D08;
 s32 gHUDNumPlayers; //Number of Players?
 s32 D_80126D10;
@@ -257,7 +257,11 @@ u8 func_800A0190(void) {
     return D_80126D34;
 }
 
-void func_800A01A0(Gfx** dList, u32* arg1, u32* arg2, Object* arg3, s32 updateRate) {
+/**
+ * The root function for all of the heads up display during an active event.
+ * Branches off to its own function for each race type, but overridden completely in time trial.
+*/
+void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s32 updateRate) {
     s32 sp2C;
     Object_64* racer;
 
@@ -272,10 +276,10 @@ void func_800A01A0(Gfx** dList, u32* arg1, u32* arg2, Object* arg3, s32 updateRa
         }
     }
     if (arg3 != NULL && !(D_80126D60->unkBC & 2)) {
-        if (get_render_context() != 1) {
+        if (get_render_context() != DRAW_MENU) {
             gHUDCurrDisplayList = *dList;
-            D_80126D00 = *arg1;
-            D_80126D04 = *arg2;
+            D_80126D00 = *mtx;
+            D_80126D04 = *tris;
             D_80127180 = 0;
             if (D_80126CD1 != 0) {
                 D_80126CD0 += updateRate;
@@ -394,7 +398,7 @@ void func_800A01A0(Gfx** dList, u32* arg1, u32* arg2, Object* arg3, s32 updateRa
                                 }
                                 break;
                             case RACETYPE_BOSS:
-                                func_800A258C(sp2C, arg3, updateRate);
+                                render_hud_race_boss(sp2C, arg3, updateRate);
                                 break;
                             case RACETYPE_CHALLENGE_BANANAS:
                                 func_800A1248(sp2C, arg3, updateRate);
@@ -403,10 +407,10 @@ void func_800A01A0(Gfx** dList, u32* arg1, u32* arg2, Object* arg3, s32 updateRa
                                 func_800A1C04(sp2C, arg3, updateRate);
                                 break;
                             case RACETYPE_CHALLENGE_EGGS:
-                                func_800A1428(sp2C, arg3, updateRate);
+                                render_hud_challenge_eggs(sp2C, arg3, updateRate);
                                 break;
                             default:
-                                func_800A26C8(arg3, updateRate);
+                                render_hud_hubworld(arg3, updateRate);
                                 break;
                         }
                     }
@@ -437,8 +441,8 @@ block_95:
                     render_textured_rectangle(&gHUDCurrDisplayList, &D_80126D80, 0, 0, 255, 255, 255, 255);
                 }
                 *dList = gHUDCurrDisplayList;
-                *arg1 = D_80126D00;
-                *arg2 = D_80126D04;
+                *mtx = D_80126D00;
+                *tris = D_80126D04;
                 func_8007AE28(-1);
             }
         }
@@ -581,7 +585,10 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1248.s")
 
-void func_800A1428(s32 arg0, Object *arg1, s32 updateRate) {
+/**
+ * The Egg Collector challenge mode displays the icons of each player and their score.
+*/
+void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
     Object_Racer *racer = &arg1->unk64->racer;
     if (racer->raceFinished == FALSE) {
         func_80068508(1);
@@ -605,7 +612,10 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1C04.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
 
-void func_800A258C(s32 arg0, Object *arg1, s32 updateRate) {
+/**
+ * When racing the boss, render the essentials, but skip the bananas.
+*/
+void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate) {
     LevelHeader *level;
     Object_64 *temp = arg1->unk64;
 
@@ -638,7 +648,11 @@ void func_800A263C(s32 arg0, Object *arg1, s32 updateRate) {
     func_80068508(0);
 }
 
-void func_800A26C8(Object *obj, s32 updateRate) {
+/**
+ * The hub world displays the player's balloon count.
+ * In two player adventure, the icon of the character of the player sitting out is displayed.
+*/
+void render_hud_hubworld(Object *obj, s32 updateRate) {
     Object_64 *obj64;
     unk80126CDC *temp_a3;
 

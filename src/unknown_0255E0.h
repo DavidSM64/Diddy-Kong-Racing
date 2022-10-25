@@ -137,7 +137,6 @@ void func_80028CD0(s32);
 void func_8002A31C();
 void func_8002D8DC(s32, s32, s32);
 void func_8007F24C(s8*, s32);
-void func_800A01A0(Gfx**, Mtx**, s16**, s32, s32);
 void func_800ACA20(Gfx**, Mtx**, s16**, ObjectSegment*);
 void func_800AD030(ObjectSegment*);
 void func_800B9C18(s32);
