@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, os, subprocess, sys, re, time
+import os, subprocess, sys, re, time
 from datetime import date
 from pathlib import Path
 
@@ -41,10 +41,8 @@ def cleanup(out):
     for remove in defs:
         out = out.replace(remove.group(0), '')
     out = out.replace('\t', ' ') # Replace tabs with spaces.
-    while '\n\n' in out:
-        out = out.replace('\n\n', '\n')
-    while '  ' in out:
-        out = out.replace('  ', ' ')
+    out = re.sub(r"\n\n+", "\n", out)
+    out = re.sub(r"  +", " ", out)
     return out
 
 # Removes trailing commas from enums, which create warnings on decomp.me
@@ -109,7 +107,7 @@ def collect_function_prototypes(filename, filetext, data):
     collect_func_from_regex(filename, filetext, regex_func_def, data) # Then get definitions.
 
 # Only used for single line typedef (not structs or enums)
-typedefRegex_1 = r"typedef[\t ]+(([A-Za-z_0-9 ]+)[ \t])+[ *\t]*([A-Za-z_0-9]+)(?:[[][^]]*[]])*[ \t]*;"
+typedefRegex_1 = r"typedef[\t ]+(([A-Za-z_0-9 ]+)[ \t])+[ *\t]*([A-Za-z_0-9]+)(?:[\[][^\]]*[\]])*[ \t]*;"
 # Used for typedefs for function pointers.
 typedefRegex_2 = r"typedef[\t ]+(([A-Za-z_0-9 ]+)[ \t])+[ *\t]*(?:[(][* ]*([^)]+)[)][ \t]*[(][* ]*([^)]*)[)][^;]*)[ \t]*;"
 
@@ -151,7 +149,7 @@ def collect_typedefs(filename, filetext, data):
         }
 
 # This regex extracts the type from a member.
-structMemTypeRegex = r"^[ \t]*(?:/[*][^*]*?[*]/)?[ \t]*?((?:[A-Za-z0-9_]+[ *\t]+)+)[ \t*]*(?:(?:(?:[A-Za-z0-9_*]+)(?:[ \t*]*[[][^]]*[]])?[ \t]*)|(?:[^\n;]*));"
+structMemTypeRegex = r"^[ \t]*(?:/[*][^*]*?[*]/)?[ \t]*?((?:[A-Za-z0-9_]+[ *\t]+)+)[ \t*]*(?:(?:(?:[A-Za-z0-9_*]+)(?:[ \t*]*[\[][^]]*[\]])?[ \t]*)|(?:[^\n;]*));"
 # Get all the types that are in the struct
 def get_struct_types(structText):
     defs = regex_get_matches(structText, structMemTypeRegex)
@@ -445,10 +443,12 @@ def find_files():
     
 
 def main():
+    print("Generating context file...")
     data = collect(find_files())
 
     with open(os.path.join(root_dir, "ctx.c"), "w", encoding="UTF-8") as f:
         f.write(write_output(data))
+    print("Done! Generated as ctx.c")
 
 
 if __name__ == "__main__":
