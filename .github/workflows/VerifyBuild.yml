@@ -16,12 +16,12 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
-    
+
     - name: Install packages
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential pkg-config git python3 libssl-dev wget libcapstone-dev binutils-mips-linux-gnu
-        
+
     - name: Get ROM
       run: wget -q -O baseroms/dkr.z64 ${{secrets.ROMURL}}
 
@@ -37,17 +37,17 @@ jobs:
     - name: Build Tools
       run: |
         cd tools
-        make
+        make -j4
         cd ..
 
     - name: Extract Assets
       run: |
         ./extract.sh
         python3 tools/python/check_if_need_to_extract.py us_1.0
-      
+
     - name: Build ROM
-      run: make
-      
+      run: make -j4
+
     - name: Verify Build
       run: if [[ $(sha1sum -c --quiet sha1/dkr.us_1.0.sha1) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
 
@@ -55,10 +55,10 @@ jobs:
       run: make clean
 
     - name: Verify NON_MATCHING
-      run: make NON_MATCHING=1
+      run: make -j4 NON_MATCHING=1
 
     - name: Clean Again
       run: make clean
 
     - name: Verify NON_EQUIVALENT
-      run: make NON_EQUIVALENT=1
+      run: make -j4 NON_EQUIVALENT=1

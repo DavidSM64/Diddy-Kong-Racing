@@ -3,6 +3,8 @@
 
 #include "types.h"
 #include "structs.h"
+#include "particles.h"
+#include "macros.h"
 #include <PR/gu.h>
 
 
@@ -35,6 +37,10 @@
 
 
 void func_800B4A08(s32 arg0);
+UNUSED unk800E2CF0 *func_800B4488(s32 idx);
+UNUSED unk800E2CF0 *func_800B44D4(s32 *idx);
+UNUSED unk800E2CF0 *func_800B452C(s32 *arg0);
+UNUSED ParticleBehavior *func_800B4578(s32 idx);
 void func_800B5E88(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
