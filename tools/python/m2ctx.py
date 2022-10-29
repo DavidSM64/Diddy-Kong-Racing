@@ -452,7 +452,7 @@ def write_output(data):
     
 # Uses the `find` program to return the filenames in the specified folders.
 def find_files():
-    find_command = ["find"] + search_folders
+    find_command = ["find"] + search_folders + ["-type", "f", "-name", "*.[ch]"]
     try:
         return subprocess.check_output(find_command, cwd=root_dir, encoding="utf-8")
     except subprocess.CalledProcessError:
