@@ -114,13 +114,13 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of October 24th, 2022, this is our current score:
+As of October 28, 2022, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 34.02% Complete -------------------
-              # Decompiled functions: 1301
-               # GLOBAL_ASM remaining: 532
+ ------------------- 34.09% Complete -------------------
+              # Decompiled functions: 1306
+               # GLOBAL_ASM remaining: 527
               # NON_MATCHING functions: 12
            # NON_EQUIVALENT WIP functions: 92
  --------------------- Game Status ---------------------
