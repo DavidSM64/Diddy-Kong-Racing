@@ -28,10 +28,10 @@ glabel func_8006DCF8
 /* 06E944 8006DD44 3C108012 */  lui   $s0, %hi(gCurrDisplayList) # $s0, 0x8012
 /* 06E948 8006DD48 261011F8 */  addiu $s0, %lo(gCurrDisplayList) # addiu $s0, $s0, 0x11f8
 /* 06E94C 8006DD4C 3C058012 */  lui   $a1, %hi(gGameCurrMatrix) # $a1, 0x8012
-/* 06E950 8006DD50 3C068012 */  lui   $a2, %hi(gGamecurrVertexList) # $a2, 0x8012
-/* 06E954 8006DD54 3C078012 */  lui   $a3, %hi(gGamecurrTriList) # $a3, 0x8012
-/* 06E958 8006DD58 24E71228 */  addiu $a3, %lo(gGamecurrTriList) # addiu $a3, $a3, 0x1228
-/* 06E95C 8006DD5C 24C61218 */  addiu $a2, %lo(gGamecurrVertexList) # addiu $a2, $a2, 0x1218
+/* 06E950 8006DD50 3C068012 */  lui   $a2, %hi(gGameCurrVertexList) # $a2, 0x8012
+/* 06E954 8006DD54 3C078012 */  lui   $a3, %hi(gGameCurrTriList) # $a3, 0x8012
+/* 06E958 8006DD58 24E71228 */  addiu $a3, %lo(gGameCurrTriList) # addiu $a3, $a3, 0x1228
+/* 06E95C 8006DD5C 24C61218 */  addiu $a2, %lo(gGameCurrVertexList) # addiu $a2, $a2, 0x1218
 /* 06E960 8006DD60 24A51208 */  addiu $a1, %lo(gGameCurrMatrix) # addiu $a1, $a1, 0x1208
 /* 06E964 8006DD64 02002025 */  move  $a0, $s0
 /* 06E968 8006DD68 0C020569 */  jal   menu_loop

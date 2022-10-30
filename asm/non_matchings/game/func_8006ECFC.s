@@ -156,12 +156,12 @@ glabel func_8006ECFC
 /* 06FB50 8006EF50 8D8C1220 */  lw    $t4, %lo(gHudTriangles)($t4)
 /* 06FB54 8006EF54 3C0E8012 */  lui   $t6, %hi(gHudVertices) # $t6, 0x8012
 /* 06FB58 8006EF58 AC2D1208 */  sw    $t5, %lo(gGameCurrMatrix)($at)
-/* 06FB5C 8006EF5C 3C018012 */  lui   $at, %hi(gGamecurrTriList) # $at, 0x8012
+/* 06FB5C 8006EF5C 3C018012 */  lui   $at, %hi(gGameCurrTriList) # $at, 0x8012
 /* 06FB60 8006EF60 01CF7021 */  addu  $t6, $t6, $t7
 /* 06FB64 8006EF64 8DCE1210 */  lw    $t6, %lo(gHudVertices)($t6)
-/* 06FB68 8006EF68 AC2C1228 */  sw    $t4, %lo(gGamecurrTriList)($at)
-/* 06FB6C 8006EF6C 3C018012 */  lui   $at, %hi(gGamecurrVertexList) # $at, 0x8012
-/* 06FB70 8006EF70 AC2E1218 */  sw    $t6, %lo(gGamecurrVertexList)($at)
+/* 06FB68 8006EF68 AC2C1228 */  sw    $t4, %lo(gGameCurrTriList)($at)
+/* 06FB6C 8006EF6C 3C018012 */  lui   $at, %hi(gGameCurrVertexList) # $at, 0x8012
+/* 06FB70 8006EF70 AC2E1218 */  sw    $t6, %lo(gGameCurrVertexList)($at)
 /* 06FB74 8006EF74 8C820000 */  lw    $v0, ($a0)
 /* 06FB78 8006EF78 3C18E900 */  lui   $t8, 0xe900
 /* 06FB7C 8006EF7C 244F0008 */  addiu $t7, $v0, 8
