@@ -45,11 +45,11 @@ glabel func_800A45F0
 /* 0A5298 800A4698 26526CD5 */  addiu $s2, %lo(D_80126CD5) # addiu $s2, $s2, 0x6cd5
 /* 0A529C 800A469C 241E0001 */  li    $fp, 1
 /* 0A52A0 800A46A0 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
-/* 0A52A4 800A46A4 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
-/* 0A52A8 800A46A8 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
+/* 0A52A4 800A46A4 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
+/* 0A52A8 800A46A8 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
 /* 0A52AC 800A46AC A25E0000 */  sb    $fp, ($s2)
-/* 0A52B0 800A46B0 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
-/* 0A52B4 800A46B4 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
+/* 0A52B0 800A46B0 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0A52B4 800A46B4 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A52B8 800A46B8 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A52BC 800A46BC 0C02A980 */  jal   func_800AA600
 /* 0A52C0 800A46C0 24E70640 */   addiu $a3, $a3, 0x640
@@ -74,11 +74,11 @@ glabel func_800A45F0
 /* 0A5304 800A4704 3C048012 */   lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A5308 800A4708 AEB30000 */  sw    $s3, ($s5)
 .L800A470C:
-/* 0A530C 800A470C 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
-/* 0A5310 800A4710 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
+/* 0A530C 800A470C 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
+/* 0A5310 800A4710 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
 /* 0A5314 800A4714 A25E0000 */  sb    $fp, ($s2)
-/* 0A5318 800A4718 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
-/* 0A531C 800A471C 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
+/* 0A5318 800A4718 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0A531C 800A471C 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A5320 800A4720 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A5324 800A4724 0C02A980 */  jal   func_800AA600
 /* 0A5328 800A4728 26270400 */   addiu $a3, $s1, 0x400

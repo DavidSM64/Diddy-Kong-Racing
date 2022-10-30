@@ -45,10 +45,10 @@ glabel func_800A3CE4
 /* 0A4988 800A3D88 3C0AFA00 */  lui   $t2, 0xfa00
 /* 0A498C 800A3D8C 25086CDC */  addiu $t0, %lo(D_80126CDC) # addiu $t0, $t0, 0x6cdc
 /* 0A4990 800A3D90 AC4A0000 */  sw    $t2, ($v0)
-/* 0A4994 800A3D94 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
-/* 0A4998 800A3D98 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
-/* 0A499C 800A3D9C 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
-/* 0A49A0 800A3DA0 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
+/* 0A4994 800A3D94 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
+/* 0A4998 800A3D98 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
+/* 0A499C 800A3D9C 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0A49A0 800A3DA0 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A49A4 800A3DA4 00006012 */  mflo  $t4
 /* 0A49A8 800A3DA8 318D00FF */  andi  $t5, $t4, 0xff
 /* 0A49AC 800A3DAC 01A17025 */  or    $t6, $t5, $at
@@ -177,10 +177,10 @@ glabel func_800A3CE4
 /* 0A4B90 800A3F90 AC4A0004 */  sw    $t2, 4($v0)
 /* 0A4B94 800A3F94 AC590000 */  sw    $t9, ($v0)
 /* 0A4B98 800A3F98 8D070000 */  lw    $a3, ($t0)
-/* 0A4B9C 800A3F9C 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
-/* 0A4BA0 800A3FA0 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
-/* 0A4BA4 800A3FA4 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
-/* 0A4BA8 800A3FA8 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
+/* 0A4B9C 800A3F9C 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
+/* 0A4BA0 800A3FA0 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
+/* 0A4BA4 800A3FA4 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0A4BA8 800A3FA8 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A4BAC 800A3FAC 0C02A980 */  jal   func_800AA600
 /* 0A4BB0 800A3FB0 24E70180 */   addiu $a3, $a3, 0x180
 /* 0A4BB4 800A3FB4 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012

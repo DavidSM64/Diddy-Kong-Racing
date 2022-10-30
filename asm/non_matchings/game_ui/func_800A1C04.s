@@ -23,7 +23,7 @@ glabel func_800A1C04
 /* 0A2854 800A1C54 00000000 */   nop   
 /* 0A2858 800A1C58 8FA40044 */  lw    $a0, 0x44($sp)
 /* 0A285C 800A1C5C 8FA50048 */  lw    $a1, 0x48($sp)
-/* 0A2860 800A1C60 0C029D48 */  jal   func_800A7520
+/* 0A2860 800A1C60 0C029D48 */  jal   render_weapon_hud
 /* 0A2864 800A1C64 00000000 */   nop   
 /* 0A2868 800A1C68 0C006E9D */  jal   get_object_struct_array
 /* 0A286C 800A1C6C 27A40034 */   addiu $a0, $sp, 0x34

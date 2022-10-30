@@ -31,7 +31,21 @@ typedef struct {
 typedef struct unk80126CDC {
     u8 unk0[0x6];
     s16 unk6;
-    u8 unk8[0x58];    
+    u8 unk8[0x38];
+    struct unk80126CDC *unk40;
+    s16 unk44;
+    s16 unk46;
+    f32 unk48;
+    s32 unk4C;
+    s32 unk50;
+    s32 unk54;
+    s16 unk58;
+    s8 unk5A;
+    s8 unk5B;
+    s8 unk5C;
+    s8 unk5D;
+    s8 unk5E;
+    s8 unk5F;
     struct unk80126CDC *unk60; // Not sure if this is correct.
     s8 unk64[4];
     u8 unk68[0xD8];
@@ -92,7 +106,13 @@ typedef struct unk80126CDC {
     s8 unk49D;
     s8 unk49E[0x25];
     u16 unk4C4;
-    u8 unk4C6[0x1B4];
+    u8 unk4C6[0x15A];
+    struct unk80126CDC *unk620;
+    u8 unk624[0x14];
+    s16 unk638;
+    s8 unk63A;
+    s8 unk63B;
+    u8 unk63C[0x3E];
     s8 unk67A;
     s8 unk67B[0xA4];
     s8 unk720;
@@ -128,8 +148,8 @@ typedef struct unk800E2770 {
 
 extern unk80126CDC *D_80126CDC;
 extern Gfx *gHUDCurrDisplayList;
-extern Matrix *D_80126D00;
-extern TriangleList *D_80126D04;
+extern Matrix *gHUDCurrMatrix;
+extern TriangleList *gHUDCurrTriList;
 extern u8 D_80126D37;
 
 extern u8 gGfxTaskYieldData[0xA00];
@@ -159,7 +179,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
 // Non Matching
 void func_800A14F0(Object *, s32);
 void func_800A3CE4(s32, s32);
-void func_800A7520(Object *, s32);
+void render_weapon_hud(Object *, s32);
 void func_800A4F50(Object_64 *arg0, s32 arg1);
 void func_800A4154(Object_64 *arg0, s32 arg1);
 void func_800A4C44(Object_64 *arg0, s32 arg1);

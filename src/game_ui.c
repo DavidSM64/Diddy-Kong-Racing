@@ -189,10 +189,10 @@ s32 D_80126CF0;
 s32 D_80126CF4;
 s32 D_80126CF8;
 Gfx *gHUDCurrDisplayList;
-Matrix *D_80126D00;
-TriangleList *D_80126D04;
+Matrix *gHUDCurrMatrix;
+TriangleList *gHUDCurrTriList;
 s32 D_80126D08;
-s32 gHUDNumPlayers; //Number of Players?
+s32 gHUDNumPlayers;
 s32 D_80126D10;
 s32 D_80126D14;
 s32 D_80126D18;
@@ -278,8 +278,8 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
     if (arg3 != NULL && !(D_80126D60->unkBC & 2)) {
         if (get_render_context() != DRAW_MENU) {
             gHUDCurrDisplayList = *dList;
-            D_80126D00 = *mtx;
-            D_80126D04 = *tris;
+            gHUDCurrMatrix = *mtx;
+            gHUDCurrTriList = *tris;
             D_80127180 = 0;
             if (D_80126CD1 != 0) {
                 D_80126CD0 += updateRate;
@@ -377,7 +377,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
                 }
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 func_800A7A60(arg3, &gHUDCurrDisplayList);
-                func_80067F2C(&gHUDCurrDisplayList, (Mtx** ) &D_80126D00);
+                func_80067F2C(&gHUDCurrDisplayList, (Mtx** ) &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
                 sp2C = func_8001139C(&gHUDCurrDisplayList) >> 1;
                 if (func_8000E4D8()) {
@@ -441,8 +441,8 @@ block_95:
                     render_textured_rectangle(&gHUDCurrDisplayList, &D_80126D80, 0, 0, 255, 255, 255, 255);
                 }
                 *dList = gHUDCurrDisplayList;
-                *mtx = D_80126D00;
-                *tris = D_80126D04;
+                *mtx = gHUDCurrMatrix;
+                *tris = gHUDCurrTriList;
                 func_8007AE28(-1);
             }
         }
@@ -483,7 +483,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate) {
         func_800A47A0(racer, updateRate);
     }
 
-    func_800A7520(arg1, updateRate);
+    render_weapon_hud(arg1, updateRate);
     func_80068508(0);
 }
 
@@ -547,9 +547,9 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
                 }
                 if ((gHUDNumPlayers == 0) && (racer->racer.raceFinished == FALSE) && (racer->racer.indicator_type) && (D_800E27B8 == 0)) {
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                    func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                     indicator->unkC = -indicator->unkC;
-                    func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                     indicator->unkC = -indicator->unkC;
                     indicator->unk2 = 0;
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -568,9 +568,9 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
                 if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->racer.indicator_type < ASSET_TEX2D_30)) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                 indicator->unkC = (f32) -indicator->unkC;
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                 indicator->unkC = (f32) -indicator->unkC;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
@@ -593,7 +593,7 @@ void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
     if (racer->raceFinished == FALSE) {
         func_80068508(1);
         func_800A3CE4(arg0, updateRate);
-        func_800A7520(arg1, updateRate);
+        render_weapon_hud(arg1, updateRate);
         if ((0x7F - (updateRate * 2)) >= D_80126CDC->unk67A) {
             D_80126CDC->unk67A += (updateRate * 2);
         } else {
@@ -623,7 +623,7 @@ void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate) {
     render_wrong_way_text(temp, updateRate);
     func_800A3CE4(arg0, updateRate);
     render_race_time(temp, updateRate);
-    func_800A7520(arg1, updateRate);
+    render_weapon_hud(arg1, updateRate);
 
     level = get_current_level_header();
     if (level->laps > 1) {
@@ -664,7 +664,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
         if (is_in_two_player_adventure()) {
             temp_a3 = &D_80126CDC[1];
             temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
-            func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, temp_a3);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, temp_a3);
         }
         func_80068508(0);
     }
@@ -743,8 +743,8 @@ void render_wrong_way_text(Object_64* obj, s32 updateRate) {
             }
             if (!is_game_paused()) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk460);
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk480);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk460);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk480);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         }
@@ -819,7 +819,87 @@ void func_800A74EC(u16 arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7520.s")
+/**
+ * Renders the icon in the bottom left of the current weapon.
+ * The icon will spin and grow as it appears, then spins and shrinks as it disappears.
+*/
+void render_weapon_hud(Object* obj, s32 updateRate) {
+    Object_64* racerObj;
+    s32 temp_a0;
+
+    racerObj = obj->unk64;
+    if (racerObj->racer.raceFinished == FALSE) {
+        set_viewport_tv_type(TV_TYPE_NTSC);
+        temp_a0 = (racerObj->racer.balloon_type * 3) + (racerObj->racer.balloon_level);
+        if (D_80126CDC->unk5D != racerObj->racer.balloon_level) {
+            if (racerObj->racer.balloon_level == 0) {
+                D_80126CDC->unk5C = 120;
+            } else if (D_80126D37 == 1) {
+                D_80126CDC->unk5C = 0;
+            } else {
+                D_80126CDC->unk5C = 120;
+            }
+            D_80126CDC->unk5D = racerObj->racer.balloon_level;
+        }
+        if (racerObj->racer.balloon_quantity > 0) {
+            if (D_80126CDC->unk5B < 16 && racerObj->racer.unk170 == 0) {
+                D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25;
+            } else {
+                D_80126CDC->unk44 = 0;
+                D_80126CDC->unk48 = 1.0f;
+            }
+            D_80126CDC->unk58 = temp_a0;
+            D_80126CDC->unk5B += updateRate;
+            if (D_80126CDC->unk5B > 16) {
+                D_80126CDC->unk5B = 16;
+                D_80126CDC->unk5C += updateRate;
+                if (D_80126CDC->unk5C > 120) {
+                    D_80126CDC->unk5C = 120;
+                } else if (gHUDNumPlayers == 0) {
+                    D_80126CDC->unk48 += 0.18 * cosine_s(((f32) D_80126CDC->unk5C * 682.6583 * 4.0));
+                }
+            }
+            if (gHUDNumPlayers > 0) {
+                D_80126CDC->unk48 *= 0.75;
+            }
+            if (D_80126CDC->unk48 != 1.0) {
+                func_8007BF1C(1);
+            }
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, &D_80126CDC->unk40);
+            func_8007BF1C(0);
+            if (racerObj->racer.balloon_quantity > 3) {
+                D_80126CDC->unk63A = -128;
+            }
+            if (racerObj->racer.balloon_quantity < 3) {
+                D_80126CDC->unk63A -= updateRate;
+            }
+            if (racerObj->racer.balloon_quantity >= 3 || (((D_80126CDC->unk63A + 128) % 32) < 20) && racerObj->racer.balloon_quantity != 1) {
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+                D_80126CDC->unk638 = racerObj->racer.balloon_quantity - 1;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, &D_80126CDC->unk620);
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            }
+        } else {
+            if (D_80126CDC->unk5B > 0) {
+                D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25;
+                D_80126CDC->unk5B -= updateRate;
+                D_80126CDC->unk58 = temp_a0;
+                if (D_80126CDC->unk5B < 0) {
+                    D_80126CDC->unk5B = 0;
+                }
+                if (gHUDNumPlayers) {
+                    D_80126CDC->unk48 /= 2;
+                }
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, &D_80126CDC->unk40);
+            }
+        }
+        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        set_viewport_tv_type(TV_TYPE_PAL);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7A60.s")
 
 /**
@@ -854,7 +934,7 @@ void render_race_time(Object_64* obj, s32 updateRate) {
                 timerHideCounter = 0;
             }
             if (gHUDNumPlayers == 0) {
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk140);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk140);
             }
             if (normalise_time(36000) < stopwatchTimer) {
                 stopwatchTimer = normalise_time(36000);
