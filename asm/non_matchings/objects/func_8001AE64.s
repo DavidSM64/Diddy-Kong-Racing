@@ -228,9 +228,9 @@ glabel func_8001AE64
 /* 01BDB8 8001B1B8 0C016661 */  jal   func_80059984
 /* 01BDBC 8001B1BC 00402025 */   move  $a0, $v0
 /* 01BDC0 8001B1C0 240F0001 */  li    $t7, 1
-/* 01BDC4 8001B1C4 3C01800E */  lui   $at, %hi(D_800DC730) # $at, 0x800e
+/* 01BDC4 8001B1C4 3C01800E */  lui   $at, %hi(gHasGhostToSave) # $at, 0x800e
 /* 01BDC8 8001B1C8 240B0005 */  li    $t3, 5
-/* 01BDCC 8001B1CC A02FC730 */  sb    $t7, %lo(D_800DC730)($at)
+/* 01BDCC 8001B1CC A02FC730 */  sb    $t7, %lo(gHasGhostToSave)($at)
 .L8001B1D0:
 /* 01BDD0 8001B1D0 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
 /* 01BDD4 8001B1D4 8F390300 */  lw    $t9, %lo(osTvType)($t9)
