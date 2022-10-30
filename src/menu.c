@@ -328,7 +328,7 @@ s32 D_800DF4D0              = 0; // Unused?
 s32 gTrackIdToLoad          = 0;
 s8 D_800DF4D8               = 1;
 s8 D_800DF4DC               = 0;
-s8 D_800DF4E0               = 0;
+s8 gNeedToCloseDialogueBox  = FALSE;
 
 s8 D_800DF4E4[4] = {
     0, 0, 0, 0
@@ -7801,14 +7801,14 @@ void func_8009CF68(s32 arg0) {
             sCurrentMenuID = 0;
             sDialogueOption = 0;
         }
-        D_800DF4E0 = 1;
+        gNeedToCloseDialogueBox = TRUE;
         D_800DF4E4[arg0] = 1;
     }
 }
 
 void func_8009CFB0(void) {
-    if (D_800DF4E0 != 0) {
-        D_800DF4E0 = 0;
+    if (gNeedToCloseDialogueBox) {
+        gNeedToCloseDialogueBox = FALSE;
         close_dialogue_box(1);
         reset_controller_sticks();
     }
@@ -7821,7 +7821,7 @@ s32 func_8009CFEC(u32 dialogueOption) {
     if ((func_800C3400() != 0) && (dialogueOption != DIALOG_CHALLENGE)) {
         return 0;
     }
-    if (D_800DF4E0 != 0) {
+    if (gNeedToCloseDialogueBox) {
         return 0;
     }
     if (dialogueOption != DIALOG_CHALLENGE) {
@@ -8083,7 +8083,7 @@ s32 taj_menu_loop(void) {
             if (sCurrentMenuID == 7) {
                 sp2C = 3;
             }
-            D_800DF4E0 = 0;
+            gNeedToCloseDialogueBox = FALSE;
             close_dialogue_box(1);
             D_800DF4DC = 0;
             sCurrentMenuID = 0;
