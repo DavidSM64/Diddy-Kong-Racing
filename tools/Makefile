@@ -1,7 +1,7 @@
 CC := gcc
 CXX := g++
 CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 -O2 -s
-CXXFLAGS := --std=c++17
+CXXFLAGS := -I . -Wall -Wextra -std=c++17
 LDFLAGS := -lm
 PROGRAMS := n64crc dkr_assets_tool
 
