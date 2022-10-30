@@ -328,7 +328,7 @@ s32 D_800DF4D0              = 0; // Unused?
 s32 gTrackIdToLoad          = 0;
 s8 D_800DF4D8               = 1;
 s8 D_800DF4DC               = 0;
-s8 gNeedToCloseDialogueBox  = 0;
+s8 gNeedToCloseDialogueBox  = FALSE;
 
 s8 D_800DF4E4[4] = {
     0, 0, 0, 0
