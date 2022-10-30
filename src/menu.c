@@ -566,7 +566,8 @@ s16 D_800DFDCC[2] = { -1, 0 };
 #define PIPSY 6
 #define TIMBER 7
 #define DRUMSTICK 8
-#define TICTOC 8 // Will later be redefined as 9.
+#define TICTOC_8 8 // T.T's unlocked but Drumstick is not
+#define TICTOC_9 9 // Everyone unlocked.
 
 /**
  * Diddy Kong Racing's character select menu refers to these arrays below to know how
@@ -612,17 +613,16 @@ u8 gCharacterSelectBytesDrumStick[] = {
 /*Name      Up              Down            Left                            Right                           Voice ID*/
 u8 gCharacterSelectBytesTT[] = {
 /*Krunch*/  NONE, NONE,     CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, BUMPER, BANJO, NONE,     0x00, 0x00, 
-/*Diddy*/   NONE, NONE,     TIPTUP, TICTOC, KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
-/*Bumper*/  NONE, NONE,     TICTOC, PIPSY,  DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01, 
+/*Diddy*/   NONE, NONE,     TIPTUP, TICTOC_8, KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
+/*Bumper*/  NONE, NONE,     TICTOC_8, PIPSY,  DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01, 
 /*Banjo*/   NONE, NONE,     PIPSY, TIMBER,  BUMPER, DIDDY, KRUNCH, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x05, 
-/*Conker*/  KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC, PIPSY, TIMBER,  0x00, 0x03, 
-/*Tiptup*/  KRUNCH, DIDDY,  NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC, PIPSY, TIMBER, NONE,    0x00, 0x02, 
-/*Pipsy*/   BUMPER, BANJO,  NONE, NONE,     TICTOC, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,       0x00, 0x07, 
-/*Timber*/  BANJO, NONE,    NONE, NONE,     PIPSY, TICTOC, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,         0x00, 0x04, 
+/*Conker*/  KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC_8, PIPSY, TIMBER,  0x00, 0x03, 
+/*Tiptup*/  KRUNCH, DIDDY,  NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC_8, PIPSY, TIMBER, NONE,    0x00, 0x02, 
+/*Pipsy*/   BUMPER, BANJO,  NONE, NONE,     TICTOC_8, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,       0x00, 0x07, 
+/*Timber*/  BANJO, NONE,    NONE, NONE,     PIPSY, TICTOC_8, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,         0x00, 0x04, 
 /*T.T*/     DIDDY, BUMPER,  NONE, NONE,     TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,      0x00, 0x08,
 };
 
-#define TICTOC 9
 // With everyone unlocked.
 /*Name          Up                  Down            Left                            Right                               Voice ID*/
 u8 gCharacterSelectBytesComplete[] = {
@@ -630,11 +630,11 @@ u8 gCharacterSelectBytesComplete[] = {
 /*Diddy*/       NONE, NONE,         TIPTUP, NONE,   KRUNCH, NONE, NONE, NONE,       DRUMSTICK, BUMPER, BANJO, NONE,     0x00, 0x09, 
 /*Bumper*/      NONE, NONE,         PIPSY, NONE,    DRUMSTICK, DIDDY, KRUNCH,       NONE, BANJO, NONE, NONE, NONE,      0x00, 0x01, 
 /*Banjo*/       NONE, NONE,         TIMBER, NONE,   BUMPER, DRUMSTICK, DIDDY,       KRUNCH, NONE, NONE, NONE, NONE,     0x00, 0x05, 
-/*Conker*/      KRUNCH, NONE,       NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC, PIPSY, TIMBER,      0x00, 0x03, 
-/*Tiptup*/      DIDDY, NONE,        NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC, PIPSY, TIMBER, NONE,        0x00, 0x02, 
-/*Pipsy*/       BUMPER, NONE,       NONE, NONE,     TICTOC, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,           0x00, 0x07, 
-/*Timber*/      BANJO, NONE,        NONE, NONE,     PIPSY, TICTOC, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,             0x00, 0x04, 
-/*Drumstick*/   NONE, NONE,         TICTOC, NONE,   DIDDY, KRUNCH, NONE, NONE,      BUMPER, BANJO, NONE, NONE,          0x00, 0x06, 
+/*Conker*/      KRUNCH, NONE,       NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC_9, PIPSY, TIMBER,      0x00, 0x03, 
+/*Tiptup*/      DIDDY, NONE,        NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC_9, PIPSY, TIMBER, NONE,        0x00, 0x02, 
+/*Pipsy*/       BUMPER, NONE,       NONE, NONE,     TICTOC_9, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,           0x00, 0x07, 
+/*Timber*/      BANJO, NONE,        NONE, NONE,     PIPSY, TICTOC_9, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,             0x00, 0x04, 
+/*Drumstick*/   NONE, NONE,         TICTOC_9, NONE,   DIDDY, KRUNCH, NONE, NONE,      BUMPER, BANJO, NONE, NONE,          0x00, 0x06, 
 /*T.T*/         DRUMSTICK, NONE,    TIPTUP, NONE,   TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,          0x00, 0x08, 
 // !@bug T.T's down input selects Tiptup. It should be set to NONE.
 };
