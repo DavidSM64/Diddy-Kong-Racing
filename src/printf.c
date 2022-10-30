@@ -96,15 +96,34 @@ UNUSED void func_800B3678(Gfx **arg0, Mtx **arg1, VertexList **arg2) {
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3740.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3E64.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B4488.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B44D4.s")
+
+UNUSED unk800E2CF0 *func_800B4488(s32 idx) {
+    if (idx < gParticlesAssetTableCount) {
+        return gParticlesAssetTable[idx];
+    }
+    return gParticlesAssetTable[gParticlesAssetTableCount - 1];
+}
+
+UNUSED unk800E2CF0 *func_800B44D4(s32 *idx) {
+    *idx = *idx + 1;
+    while (*idx >= gParticlesAssetTableCount) {
+        *idx = *idx - gParticlesAssetTableCount;
+    }
+    return gParticlesAssetTable[*idx];
+}
 
 UNUSED unk800E2CF0 *func_800B452C(s32 *arg0) {
     for (*arg0 = *arg0 - 1; *arg0 < 0; *arg0 += gParticlesAssetTableCount);
     return gParticlesAssetTable[*arg0];
 }
 
-GLOBAL_ASM("asm/non_matchings/printf/func_800B4578.s")
+UNUSED ParticleBehavior *func_800B4578(s32 idx) {
+    if (idx < gParticleBehavioursAssetTableCount) {
+        return gParticleBehavioursAssetTable[idx];
+    }
+    return gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount - 1];
+}
+
 GLOBAL_ASM("asm/non_matchings/printf/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4668.s")

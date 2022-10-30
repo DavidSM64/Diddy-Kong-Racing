@@ -141,7 +141,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
 #if 0
 // I think this function is used to update the world position of any sound associated with the given soundmask.
 //This matches, but it breaks update_player_racer
-void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3) {
+void update_spatial_audio_position(s32 arg0, f32 arg1, f32 arg2, f32 arg3) {
     arg0->x = arg1;
     arg0->y = arg2;
     arg0->z = arg3;

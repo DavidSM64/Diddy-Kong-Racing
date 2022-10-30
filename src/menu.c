@@ -7446,7 +7446,7 @@ void func_8009BD5C(void) {
     temp_v0->unk10 = -32.0f;
     temp_v0->unk14 = -32.0f;
 
-    func_8001D5E0(0, 0, -1);
+    set_and_normalize_D_8011AFE8(0, 0, -1);
     func_80066CDC(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
     temp_v0->unk0 = sp2A;

@@ -379,7 +379,7 @@ void gParticlePtrList_flush(void);
 void decrypt_magic_codes(u8 *arg0, s32 length);
 void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
-void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
+void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *spawn_object(void *entry, s32);
