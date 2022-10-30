@@ -25,9 +25,9 @@ glabel func_800A47A0
 /* 0A53FC 800A47FC 440F3000 */  mfc1  $t7, $f6
 /* 0A5400 800A4800 44CEF800 */  ctc1  $t6, $31
 /* 0A5404 800A4804 448F4000 */  mtc1  $t7, $f8
-/* 0A5408 800A4808 3C148012 */  lui   $s4, %hi(D_80126D00) # $s4, 0x8012
+/* 0A5408 800A4808 3C148012 */  lui   $s4, %hi(gHUDCurrMatrix) # $s4, 0x8012
 /* 0A540C 800A480C 468042A0 */  cvt.s.w $f10, $f8
-/* 0A5410 800A4810 3C158012 */  lui   $s5, %hi(D_80126D04) # $s5, 0x8012
+/* 0A5410 800A4810 3C158012 */  lui   $s5, %hi(gHUDCurrTriList) # $s5, 0x8012
 /* 0A5414 800A4814 0080B025 */  move  $s6, $a0
 /* 0A5418 800A4818 4459F800 */  cfc1  $t9, $31
 /* 0A541C 800A481C E62A05D0 */  swc1  $f10, 0x5d0($s1)
@@ -36,9 +36,9 @@ glabel func_800A47A0
 /* 0A5428 800A4828 38210002 */  xori  $at, $at, 2
 /* 0A542C 800A482C 44C1F800 */  ctc1  $at, $31
 /* 0A5430 800A4830 C71005D0 */  lwc1  $f16, 0x5d0($t8)
-/* 0A5434 800A4834 26B56D04 */  addiu $s5, %lo(D_80126D04) # addiu $s5, $s5, 0x6d04
+/* 0A5434 800A4834 26B56D04 */  addiu $s5, %lo(gHUDCurrTriList) # addiu $s5, $s5, 0x6d04
 /* 0A5438 800A4838 460084A4 */  cvt.w.s $f18, $f16
-/* 0A543C 800A483C 26946D00 */  addiu $s4, %lo(D_80126D00) # addiu $s4, $s4, 0x6d00
+/* 0A543C 800A483C 26946D00 */  addiu $s4, %lo(gHUDCurrMatrix) # addiu $s4, $s4, 0x6d00
 /* 0A5440 800A4840 44089000 */  mfc1  $t0, $f18
 /* 0A5444 800A4844 44D9F800 */  ctc1  $t9, $31
 /* 0A5448 800A4848 26736CFC */  addiu $s3, %lo(gHUDCurrDisplayList) # addiu $s3, $s3, 0x6cfc
@@ -89,10 +89,10 @@ glabel func_800A47A0
 /* 0A54F0 800A48F0 15C0000F */  bnez  $t6, .L800A4930
 /* 0A54F4 800A48F4 8FA80040 */   lw    $t0, 0x40($sp)
 /* 0A54F8 800A48F8 822F05DB */  lb    $t7, 0x5db($s1)
-/* 0A54FC 800A48FC 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
+/* 0A54FC 800A48FC 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
 /* 0A5500 800A4900 29E1001E */  slti  $at, $t7, 0x1e
 /* 0A5504 800A4904 14200009 */  bnez  $at, .L800A492C
-/* 0A5508 800A4908 24A56D40 */   addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
+/* 0A5508 800A4908 24A56D40 */   addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 /* 0A550C 800A490C 24180001 */  li    $t8, 1
 /* 0A5510 800A4910 A23805DA */  sb    $t8, 0x5da($s1)
 /* 0A5514 800A4914 8CB90000 */  lw    $t9, ($a1)

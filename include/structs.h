@@ -300,7 +300,9 @@ typedef struct LevelHeader {
   /* 0x9D */ u8 bgColorRed;
   /* 0x9E */ u8 bgColorGreen;
   /* 0x9F */ u8 bgColorBlue;
-  /* 0xA0 */ s32 unkA0;
+  /* 0xA0 */ s16 unkA0;
+  /* 0xA2 */ s8 unkA2;
+  /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
   /* 0xA8 */ u16 unkA8;
   /* 0xAA */ u16 unkAA;
@@ -493,7 +495,8 @@ typedef struct LevelModel {
 /* 0x14 */ BspTreeNode *segmentsBspTree;
 /* 0x18 */ s16 numberOfTextures;
 /* 0x1A */ s16 numberOfSegments;
-           u8 pad1C[4];
+/* 0x1C */ s16 unk1C;
+/* 0x1E */ s16 unk1E;
 /* 0x20 */ s32 unk20; //spriteIndex?
            u8 pad24[0x14];
 /* 0x38 */ u32 minimapColor;
@@ -1002,7 +1005,7 @@ typedef struct Object_Racer {
   /* 0x1D5 */ u8 unk1D5;
   /* 0x1D6 */ s8 unk1D6;
   /* 0x1D7 */ s8 unk1D7;
-  /* 0x1D8 */ s8 raceStatus;
+  /* 0x1D8 */ s8 raceFinished;
   /* 0x1D9 */ s8 unk1D9;
   /* 0x1DA */ u8 unk1DA;
   /* 0x1DB */ s8 spinout_timer;

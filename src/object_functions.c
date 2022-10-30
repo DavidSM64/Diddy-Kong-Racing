@@ -848,7 +848,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
                     if (racer->throttleReleased) {
                         racer->boostType |= BOOST_SMALL_FAST;
                     }
-                    if (racer->raceStatus == STATUS_RACING) {
+                    if (racer->raceFinished == FALSE) {
                         func_80072348(racer->playerIndex, 8);
                     }
                 }

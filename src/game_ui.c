@@ -11,6 +11,7 @@
 #include "audio.h"
 #include "textures_sprites.h"
 #include "racer.h"
+#include "math_util.h"
 
 extern u32 osTvType;
 
@@ -120,8 +121,11 @@ unk800E2770 D_800E2770[2] = {
 
 u8 D_800E2790 = 1;
 
-u8 D_800E2794[16] = {
-    1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+u8 D_800E2794[4][4] = {
+    {1, 1, 1, 1}, 
+    {2, 2, 2, 2}, 
+    {2, 2, 2, 2}, 
+    {2, 2, 2, 2}
 };
 
 s8 D_800E27A4[4] = {
@@ -169,26 +173,24 @@ s32 D_800E283C[5] = {
 
 /************ .bss ************/
 
-u8 D_80126CD0;
-u8 D_80126CD1;
-u8 D_80126CD2;
-u8 D_80126CD3;
-u8 D_80126CD4;
-u8 D_80126CD5;
+s8 D_80126CD0;
+s8 D_80126CD1;
+s8 D_80126CD2;
+s8 D_80126CD3;
+s8 D_80126CD4;
+s8 D_80126CD5;
 s32 D_80126CD8;
 unk80126CDC *D_80126CDC;
-s32 D_80126CE0;
-s32 D_80126CE4;
-s32 D_80126CE8;
+unk80126CDC *D_80126CE0[3];
 s32 D_80126CEC;
 s32 D_80126CF0;
 s32 D_80126CF4;
 s32 D_80126CF8;
 Gfx *gHUDCurrDisplayList;
-u32 D_80126D00;
-u32 D_80126D04;
+Matrix *gHUDCurrMatrix;
+TriangleList *gHUDCurrTriList;
 s32 D_80126D08;
-s32 D_80126D0C; //Number of Players?
+s32 gHUDNumPlayers;
 s32 D_80126D10;
 s32 D_80126D14;
 s32 D_80126D18;
@@ -196,15 +198,15 @@ s32 D_80126D1C;
 s32 D_80126D20;
 s32 D_80126D24;
 s32 D_80126D28;
-s32 D_80126D2C;
-s32 D_80126D30;
+u16 D_80126D2C;
+f32 D_80126D30;
 u8 D_80126D34;
 u8 D_80126D35;
-u8 D_80126D36;
+u8 gHideRaceTimer;
 u8 D_80126D37;
-u8 D_80126D38;
+u8 gWrongWayNagPrefix;
 s32 D_80126D3C;
-s32 D_80126D40;
+s32 gHUDVoiceSoundMask;
 s32 D_80126D44;
 s32 D_80126D48;
 s32 D_80126D4C;
@@ -214,21 +216,20 @@ u8 gMinimapGreen;
 u8 gMinimapBlue;
 s32 D_80126D58;
 s32 D_80126D5C;
-unk80126D60 *D_80126D60;
+LevelHeader *D_80126D60;
 u8 D_80126D64;
 u8 D_80126D65;
 u8 D_80126D66;
 u8 D_80126D67;
 u8 D_80126D68;
 u8 D_80126D69;
-s32 D_80126D6C;
+s32 gWrongWayNagTimer;
 u8 D_80126D70;
 u8 D_80126D71;
 s32 D_80126D74;
 s32 D_80126D78;
 u16 D_80126D7C;
-s32 D_80126D80;
-s32 D_80126D84;
+DrawTexture D_80126D80;
 s32 D_80126D88[254];
 s32 D_80127180;
 s32 D_80127184;
@@ -254,7 +255,197 @@ u8 func_800A0190(void) {
     return D_80126D34;
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A01A0.s")
+/**
+ * The root function for all of the heads up display during an active event.
+ * Branches off to its own function for each race type, but overridden completely in time trial.
+*/
+void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s32 updateRate) {
+    s32 sp2C;
+    Object_64* racer;
+
+    D_80126D08 = func_80066220();
+    if (D_8012718A) {
+        arg3 = func_8001BB18(1 - D_80126D08);
+    }
+    D_80126D60 = get_current_level_header();
+    if (arg3 == NULL) {
+        if (func_8001E440() == 10) {
+            arg3 = func_8001BB18(0);
+        }
+    }
+    if (arg3 != NULL && !(D_80126D60->unkBC & 2)) {
+        if (get_render_context() != DRAW_MENU) {
+            gHUDCurrDisplayList = *dList;
+            gHUDCurrMatrix = *mtx;
+            gHUDCurrTriList = *tris;
+            D_80127180 = 0;
+            if (D_80126CD1 != 0) {
+                D_80126CD0 += updateRate;
+                if (D_8012718B < D_80126CD0) {
+                    D_80126CD0 = D_8012718B;
+                }
+            } else {
+                D_80126CD0 -= updateRate;
+                if (D_80126CD0 < 0) {
+                    D_80126CD0 = 0;
+                }
+            }
+            if (D_80126CD2 == 0) {
+                racer = arg3->unk64;
+                if (D_8012718A) {
+                    D_80126D10 = 1 - racer->racer.playerIndex;
+                } else {
+                    D_80126D10 = racer->racer.playerIndex;
+                }
+                D_80126CDC = D_80126CE0[D_80126D08];
+                if (func_8001E440() != 10) {
+                    if (gHUDNumPlayers == 0) {
+                        if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && ((D_80126D60->race_type == RACETYPE_DEFAULT) || D_80126D60->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
+                            D_800E2790 = 1 - D_800E2790;
+                            play_sound_global((SOUND_TING_HIGHER + D_800E2790), NULL);
+                            if (D_800E2790) {
+                                D_800E27B8 = 0x78;
+                            } else {
+                                D_800E27B8 = 0;
+                            }
+                        }
+                    } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && !(D_80126D60->race_type & RACETYPE_CHALLENGE) && D_80126D34) {
+                        if (D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] < PLAYER_FOUR) {
+                             D_800E2794[gHUDNumPlayers][racer->racer.playerIndex]++;
+                        } else {
+                             D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] = PLAYER_ONE;
+                        }
+                        play_sound_global((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] == 0)), NULL);
+                    }
+                    if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->racer.raceFinished == FALSE && D_80126D34 && D_80126CD0 == 0) {
+                        D_800E27A4[gHUDNumPlayers] = 1 - D_800E27A4[gHUDNumPlayers];
+                        if (D_800E27A4[gHUDNumPlayers] == 0) {
+                            play_sound_global(SOUND_TING_LOW, NULL);
+                        } else {
+                            play_sound_global(SOUND_TING_HIGH, NULL);
+                        }
+                    }
+                }
+                if (D_80126CD4 == 0) {
+                    if (D_80126D60->race_type & RACETYPE_CHALLENGE || D_80126D60->race_type == RACETYPE_DEFAULT || D_80126D60->race_type == RACETYPE_HORSESHOE_GULCH || D_80126D60->race_type == RACETYPE_BOSS) {
+                        D_800E2770[0].unk2 = 0x7F;
+                        D_800E2770[1].unk2 = 0x7F;
+                        func_80001844();
+                        func_800012E8();
+                        play_music(SEQUENCE_RACE_START_FANFARE);
+                        set_sound_channel_count(12);
+                    } else {
+                        func_8006BD10(1.0f);
+                    }
+                    D_80126CD4 += 1;
+                }
+                gDPPipeSync(gHUDCurrDisplayList++);
+                init_rsp(&gHUDCurrDisplayList);
+                init_rdp_and_framebuffer(&gHUDCurrDisplayList);
+                func_8007AE28(-1);
+                func_8007AE0C(2);
+                func_8007BF1C(0);
+                if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == 0 && racer->racer.playerIndex == PLAYER_ONE) {
+                    if (D_80126D35 != 0) {
+                        D_80126D28 = cosine_s(D_80126D2C) * D_80126D30 * 8.0f;
+                        D_80126D2C += updateRate << 0xB;
+                        if (D_80126D2C >= 0x8000) {
+                            D_80126D2C -= 0x8000;
+                            D_80126D30 = D_80126D30 / 2;
+                            if (D_80126D30 <= 0.125) {
+                                D_80126D34 = 1;
+                                D_80126D24 = 0;
+                            }
+                        }
+                    } else {
+                        if (D_80126CD4 == 1) {
+                            play_sound_global(SOUND_WHOOSH1, NULL);
+                            D_80126CD4 += 1;
+                        }
+                        D_80126D24 -= updateRate * 13;
+                        if (D_80126D24 < 0) {
+                            D_80126D24 = 0;
+                        }
+                        if (D_80126D24 == 0) {
+                            D_80126D35 = 1;
+                            play_sound_global(SOUND_EXPLOSION2, NULL);
+                            D_80126D28 = 0;
+                        }
+                    }
+                }
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                func_800A7A60(arg3, &gHUDCurrDisplayList);
+                func_80067F2C(&gHUDCurrDisplayList, (Mtx** ) &gHUDCurrMatrix);
+                gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
+                sp2C = func_8001139C(&gHUDCurrDisplayList) >> 1;
+                if (func_8000E4D8()) {
+                    func_800A277C(sp2C, arg3, updateRate);
+                } else {
+                    if (func_8001E440(sp2C) == 10) {
+                        func_80068508(1);
+                        func_800A718C(racer);
+                        func_80068508(0);
+                    } else {
+                        switch (get_current_level_race_type()) {
+                            case RACETYPE_DEFAULT:
+                            case RACETYPE_HORSESHOE_GULCH:
+                                if (func_8002341C() != 0) {
+                                    func_800A263C(sp2C, arg3, updateRate);
+                                } else {
+                                    func_800A0DC0(sp2C, arg3, updateRate);
+                                }
+                                break;
+                            case RACETYPE_BOSS:
+                                render_hud_race_boss(sp2C, arg3, updateRate);
+                                break;
+                            case RACETYPE_CHALLENGE_BANANAS:
+                                func_800A1248(sp2C, arg3, updateRate);
+                                break;
+                            case RACETYPE_CHALLENGE_BATTLE:
+                                func_800A1C04(sp2C, arg3, updateRate);
+                                break;
+                            case RACETYPE_CHALLENGE_EGGS:
+                                render_hud_challenge_eggs(sp2C, arg3, updateRate);
+                                break;
+                            default:
+                                render_hud_hubworld(arg3, updateRate);
+                                break;
+                        }
+                    }
+                }
+                if (racer->racer.raceFinished == 1) {
+                    func_80068508(1);
+                    if (func_8000E4D8()) {
+                        func_800A6E30(racer, updateRate);
+                    } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->racer.unk1AC == 1) {
+                        if (is_in_two_player_adventure()) {
+                            if (get_current_level_race_type() == RACETYPE_BOSS) {
+                                goto block_93;
+                            }
+                            goto block_95;
+                        }
+block_93:
+                        func_800A497C(racer, updateRate);
+                    } else {
+block_95:
+                        func_800A6254(racer, updateRate);
+                    }
+                    func_80068508(0);
+                }
+                D_80126CD1 = 0;
+                func_8007BF1C(1);
+                if (D_80127180) {
+                    (&D_80126D80)[D_80127180].texture = NULL;
+                    render_textured_rectangle(&gHUDCurrDisplayList, &D_80126D80, 0, 0, 255, 255, 255, 255);
+                }
+                *dList = gHUDCurrDisplayList;
+                *mtx = gHUDCurrMatrix;
+                *tris = gHUDCurrTriList;
+                func_8007AE28(-1);
+            }
+        }
+    }
+}
 
 void func_800A0B74(void) {
     s32 i;
@@ -269,28 +460,28 @@ void func_800A0B74(void) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A0BD4.s")
 
-void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2) {
-    Object_Racer *temp = &arg1->unk64->racer;
+void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate) {
+    Object_Racer *racer = &arg1->unk64->racer;
 
     func_80068508(1);
-    render_course_indicator_arrows(temp, arg2);
-    render_wrong_way_text(temp, arg2);
-    func_800A3CE4(arg0, arg2);
+    render_course_indicator_arrows(racer, updateRate);
+    render_wrong_way_text(racer, updateRate);
+    func_800A3CE4(arg0, updateRate);
 
-    if (D_80126D60->unk4C == 0) {
-        func_800A4F50(temp, arg2);
+    if (D_80126D60->race_type == RACETYPE_DEFAULT) {
+        func_800A4F50(racer, updateRate);
     }
 
-    func_800A4154(temp, arg2);
-    render_race_time(temp, arg2);
-    func_800A4C44(temp, arg2);
-    func_800A3884(arg1, arg2);
+    func_800A4154(racer, updateRate);
+    render_race_time(racer, updateRate);
+    func_800A4C44(racer, updateRate);
+    func_800A3884(arg1, updateRate);
 
-    if (D_80127188 != 0 && temp->raceStatus == STATUS_RACING) {
-        func_800A47A0(temp, arg2);
+    if (D_80127188 && racer->raceFinished == FALSE) {
+        func_800A47A0(racer, updateRate);
     }
 
-    func_800A7520(arg1, arg2);
+    render_weapon_hud(arg1, updateRate);
     func_80068508(0);
 }
 
@@ -349,14 +540,14 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
                     break;
                 }
                 // Flip the arrow direction on adventure 2.
-                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->racer.indicator_type < ASSET_TEX2D_30)) {
+                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS && racer->racer.indicator_type < ASSET_TEX2D_30) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
-                if ((D_80126D0C == 0) && (racer->racer.raceStatus == STATUS_RACING) && (racer->racer.indicator_type) && (D_800E27B8 == 0)) {
+                if (gHUDNumPlayers == 0 && racer->racer.raceFinished == FALSE && racer->racer.indicator_type && D_800E27B8 == 0) {
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                    func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                     indicator->unkC = -indicator->unkC;
-                    func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                     indicator->unkC = -indicator->unkC;
                     indicator->unk2 = 0;
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -375,9 +566,9 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
                 if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->racer.indicator_type < ASSET_TEX2D_30)) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                 indicator->unkC = (f32) -indicator->unkC;
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, indicator);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                 indicator->unkC = (f32) -indicator->unkC;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
@@ -392,19 +583,22 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1248.s")
 
-void func_800A1428(s32 arg0, Object *arg1, s32 arg2) {
-    Object_Racer *temp = &arg1->unk64->racer;
-    if (temp->raceStatus == STATUS_RACING) {
+/**
+ * The Egg Collector challenge mode displays the icons of each player and their score.
+*/
+void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
+    Object_Racer *racer = &arg1->unk64->racer;
+    if (racer->raceFinished == FALSE) {
         func_80068508(1);
-        func_800A3CE4(arg0, arg2);
-        func_800A7520(arg1, arg2);
-        if ((0x7F - (arg2 * 2)) >= D_80126CDC->unk67A) {
-            D_80126CDC->unk67A += (arg2 * 2);
+        func_800A3CE4(arg0, updateRate);
+        render_weapon_hud(arg1, updateRate);
+        if ((127 - (updateRate * 2)) >= D_80126CDC->unk67A) {
+            D_80126CDC->unk67A += updateRate * 2;
         } else {
-            D_80126CDC->unk67A = (D_80126CDC->unk67A + (arg2 * 2)) - 0xFF;
+            D_80126CDC->unk67A = (D_80126CDC->unk67A + (updateRate * 2)) - 255;
         }
         if (D_80126D37 != 2) {
-            func_800A14F0(arg1, arg2);
+            func_800A14F0(arg1, updateRate);
         }
         func_80068508(0);
     }
@@ -416,40 +610,47 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1C04.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
 
-void func_800A258C(s32 arg0, Object *arg1, s32 arg2) {
+/**
+ * When racing the boss, render the essentials, but skip the bananas.
+*/
+void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate) {
     LevelHeader *level;
     Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
-    render_wrong_way_text(temp, arg2);
-    func_800A3CE4(arg0, arg2);
-    render_race_time(temp, arg2);
-    func_800A7520(arg1, arg2);
+    render_wrong_way_text(temp, updateRate);
+    func_800A3CE4(arg0, updateRate);
+    render_race_time(temp, updateRate);
+    render_weapon_hud(arg1, updateRate);
 
     level = get_current_level_header();
     if (level->laps > 1) {
-        func_800A4F50(temp, arg2);
+        func_800A4F50(temp, updateRate);
     }
 
-    func_800A3884(arg1, arg2);
-    func_800A4C44(temp, arg2);
+    func_800A3884(arg1, updateRate);
+    func_800A4C44(temp, updateRate);
     func_80068508(0);
 }
 
-void func_800A263C(s32 arg0, Object *arg1, s32 arg2) {
+void func_800A263C(s32 arg0, Object *arg1, s32 updateRate) {
     Object_64 *temp = arg1->unk64;
 
     func_80068508(1);
-    render_wrong_way_text(temp, arg2);
-    func_800A4F50(temp, arg2);
-    func_800A4C44(temp, arg2);
-    render_race_time(temp, arg2);
-    func_800A3CE4(arg0, arg2);
-    func_800A3884(arg1, arg2);
+    render_wrong_way_text(temp, updateRate);
+    func_800A4F50(temp, updateRate);
+    func_800A4C44(temp, updateRate);
+    render_race_time(temp, updateRate);
+    func_800A3CE4(arg0, updateRate);
+    func_800A3884(arg1, updateRate);
     func_80068508(0);
 }
 
-void func_800A26C8(Object *obj, s32 arg1) {
+/**
+ * The hub world displays the player's balloon count.
+ * In two player adventure, the icon of the character of the player sitting out is displayed.
+*/
+void render_hud_hubworld(Object *obj, s32 updateRate) {
     Object_64 *obj64;
     unk80126CDC *temp_a3;
 
@@ -457,11 +658,11 @@ void func_800A26C8(Object *obj, s32 arg1) {
         obj64 = obj->unk64;
         func_80068508(1);
         func_800A718C(obj64);
-        func_800A3884(obj, arg1);
+        func_800A3884(obj, updateRate);
         if (is_in_two_player_adventure()) {
             temp_a3 = &D_80126CDC[1];
             temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
-            func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, temp_a3);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, temp_a3);
         }
         func_80068508(0);
     }
@@ -488,64 +689,60 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
  * Players going the wrong way will be nagged by T.T to turn around.
  * This function plays the audio, and makes the text fly in.
 */
-void render_wrong_way_text(Object_64* obj, s32 updateRate) {
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f2;
-    f32 temp_f2_2;
-    s8 temp_v1;
-    s8 temp_v1_2;
-    u8 var_t9;
+void render_wrong_way_text(Object_64* obj, s32 updateRate) { 
+    f32 textMoveSpeed;
+    f32 textPosTarget;
 
-    if (D_80126D0C == 1) {
+    if (gHUDNumPlayers == 1) {
         func_8007BF1C(1);
     }
-    if (obj->racer.unk1FC > 120 && (D_80126D0C || D_80126CDC->unk46C == D_80126CDC->unk47A[2]) && !is_game_paused()) {
-        if ((D_80126D38 || D_80126D6C == 0) && D_80126D40 == 0) {
-            if (D_80126D38 || (get_random_number_from_range(1, 10) >= 8)) {
-                D_80126D38 = 0;
-                play_sound_global(SOUND_VOICE_TT_WRONG_WAY, &D_80126D40);
-                D_80126D6C = get_random_number_from_range(1, 480) + 120;
+    if (obj->racer.unk1FC > 120 && (gHUDNumPlayers || D_80126CDC->unk46C == D_80126CDC->unk47A[2]) && !is_game_paused()) {
+        if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == NULL) {
+            // 20% chance that T.T decides not to precede his nagging with "No no no!"
+            if (gWrongWayNagPrefix || (get_random_number_from_range(1, 10) >= 8)) {
+                gWrongWayNagPrefix = FALSE;
+                play_sound_global(SOUND_VOICE_TT_WRONG_WAY, &gHUDVoiceSoundMask);
+                gWrongWayNagTimer = get_random_number_from_range(1, 480) + 120;
             } else {
-                D_80126D38 = 1;
-                play_sound_global(SOUND_VOICE_TT_NONONO, &D_80126D40);
+                gWrongWayNagPrefix = TRUE;
+                play_sound_global(SOUND_VOICE_TT_NONONO, &gHUDVoiceSoundMask);
             }
         }
-        D_80126D6C -= updateRate;
-        if (D_80126D6C < 0) {
-            D_80126D6C = 0;
+        gWrongWayNagTimer -= updateRate;
+        if (gWrongWayNagTimer < 0) {
+            gWrongWayNagTimer = 0;
         }
     }
     if (D_80126CDC->unk47A[0]) {
         if (D_80126CDC->unk47A[0] == 1) {
             if (D_80126CDC->unk47A[1] == 1) {
-                temp_f0 = updateRate * 13;
-                D_80126CDC->unk46C = D_80126CDC->unk46C + temp_f0;
-                temp_f2 = D_80126CDC->unk47A[2];
-                if (temp_f2 < D_80126CDC->unk46C) {
-                    D_80126CDC->unk46C = temp_f2;
+                textMoveSpeed = updateRate * 13;
+                D_80126CDC->unk46C += textMoveSpeed;
+                textPosTarget = D_80126CDC->unk47A[2];
+                if (D_80126CDC->unk46C > textPosTarget) {
+                    D_80126CDC->unk46C = textPosTarget;
                 }
-                D_80126CDC->unk48C = (f32) (D_80126CDC->unk48C - temp_f0);
-                temp_f2_2 = D_80126CDC->unk49C;
-                if (D_80126CDC->unk48C < temp_f2_2) {
-                    D_80126CDC->unk48C = temp_f2_2;
+                D_80126CDC->unk48C -= textMoveSpeed;
+                textPosTarget = D_80126CDC->unk49C;
+                if (D_80126CDC->unk48C < textPosTarget) {
+                    D_80126CDC->unk48C = textPosTarget;
                 }
                 if (obj->racer.unk1FC <= 90) {
                     D_80126CDC->unk47A[1] = -1;
                     play_sound_global(SOUND_WHOOSH1, NULL);
                 }
             } else if (D_80126CDC->unk47A[1] == -1) {
-                temp_f0_2 = (f32) (updateRate * 13);
-                D_80126CDC->unk46C -= temp_f0_2;
-                D_80126CDC->unk48C += temp_f0_2;
+                textMoveSpeed = updateRate * 13;
+                D_80126CDC->unk46C -= textMoveSpeed;
+                D_80126CDC->unk48C += textMoveSpeed;
                 if (D_80126CDC->unk46C < -200.0f) {
                     D_80126CDC->unk47A[0] = 0;
                 }
             }
             if (!is_game_paused()) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk454[0xC]);
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk454[0x2C]);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk460);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk480);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         }
@@ -555,10 +752,10 @@ void render_wrong_way_text(Object_64* obj, s32 updateRate) {
         D_80126CDC->unk47A[2] = -31;
         D_80126CDC->unk49C = 52;
         D_80126CDC->unk47A[3] = 0;
-        if (D_80126D0C == 1) {
+        if (gHUDNumPlayers == 1) {
             D_80126CDC->unk47A[2] = -21;
             D_80126CDC->unk49C = 42;
-        } else  if (D_80126D0C >= 2) {
+        } else  if (gHUDNumPlayers > 1) {
             if (obj->racer.playerIndex == PLAYER_ONE || obj->racer.playerIndex == PLAYER_THREE) {
                 D_80126CDC->unk47A[2] = -100;
                 D_80126CDC->unk49C = -55;
@@ -569,7 +766,7 @@ void render_wrong_way_text(Object_64* obj, s32 updateRate) {
         }
         D_80126CDC->unk48C = D_80126CDC->unk49C + 200;
         D_80126CDC->unk46C =  D_80126CDC->unk49C - 200;
-        play_sound_global(0x16U, NULL);
+        play_sound_global(SOUND_WHOOSH1, NULL);
     }
     func_8007BF1C(0);
 }
@@ -577,14 +774,18 @@ void render_wrong_way_text(Object_64* obj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A5F18.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6254.s")
 
-void func_800A6DB4(s16 *arg0) {
+/**
+ * Play the normal race finish message, unless you beat your time record,
+ * then T.T will say "Race Record" instead.
+*/
+void play_time_trial_end_message(s16 *playerID) {
     Settings *settings = get_settings();
 
-    if (arg0 != NULL) {
-        if (settings->racers[*arg0].best_times & 0x80) {
-            play_sound_global(SOUND_VOICE_TT_RACE_RECORD, &D_80126D40);
+    if (playerID != NULL) {
+        if (settings->racers[*playerID].best_times & 0x80) {
+            play_sound_global(SOUND_VOICE_TT_RACE_RECORD, &gHUDVoiceSoundMask);
         } else {
-            play_sound_global(SOUND_VOICE_TT_FINISH, &D_80126D40);
+            play_sound_global(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
         }
     }
 }
@@ -592,9 +793,13 @@ void func_800A6DB4(s16 *arg0) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6E30.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A718C.s")
 
-UNUSED void func_800A7440(u16 soundId) {
-    if ((D_80126D40 == 0) && (!is_game_paused())) {
-        play_sound_global(soundId, &D_80126D40);
+/**
+ * Unused function that plays whichever T.T voice line is passed through.
+ * Only if the game is currently running and no voice line is already playing.
+*/
+UNUSED void play_hud_voice_line(u16 soundId) {
+    if (gHUDVoiceSoundMask == NULL && !(is_game_paused())) {
+        play_sound_global(soundId, &gHUDVoiceSoundMask);
     }
 }
 
@@ -612,7 +817,87 @@ void func_800A74EC(u16 arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7520.s")
+/**
+ * Renders the icon in the bottom left of the current weapon.
+ * The icon will spin and grow as it appears, then spins and shrinks as it disappears.
+*/
+void render_weapon_hud(Object *obj, s32 updateRate) {
+    Object_64 *racerObj;
+    s32 temp_a0;
+
+    racerObj = obj->unk64;
+    if (racerObj->racer.raceFinished == FALSE) {
+        set_viewport_tv_type(TV_TYPE_NTSC);
+        temp_a0 = (racerObj->racer.balloon_type * 3) + (racerObj->racer.balloon_level);
+        if (D_80126CDC->unk5D != racerObj->racer.balloon_level) {
+            if (racerObj->racer.balloon_level == 0) {
+                D_80126CDC->unk5C = 120;
+            } else if (D_80126D37 == 1) {
+                D_80126CDC->unk5C = 0;
+            } else {
+                D_80126CDC->unk5C = 120;
+            }
+            D_80126CDC->unk5D = racerObj->racer.balloon_level;
+        }
+        if (racerObj->racer.balloon_quantity > 0) {
+            if (D_80126CDC->unk5B < 16 && racerObj->racer.unk170 == 0) {
+                D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25;
+            } else {
+                D_80126CDC->unk44 = 0;
+                D_80126CDC->unk48 = 1.0f;
+            }
+            D_80126CDC->unk58 = temp_a0;
+            D_80126CDC->unk5B += updateRate;
+            if (D_80126CDC->unk5B > 16) {
+                D_80126CDC->unk5B = 16;
+                D_80126CDC->unk5C += updateRate;
+                if (D_80126CDC->unk5C > 120) {
+                    D_80126CDC->unk5C = 120;
+                } else if (gHUDNumPlayers == 0) {
+                    D_80126CDC->unk48 += 0.18 * cosine_s(((f32) D_80126CDC->unk5C * 682.6583 * 4.0));
+                }
+            }
+            if (gHUDNumPlayers > 0) {
+                D_80126CDC->unk48 *= 0.75;
+            }
+            if (D_80126CDC->unk48 != 1.0) {
+                func_8007BF1C(1);
+            }
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, &D_80126CDC->unk40);
+            func_8007BF1C(0);
+            if (racerObj->racer.balloon_quantity > 3) {
+                D_80126CDC->unk63A = -128;
+            }
+            if (racerObj->racer.balloon_quantity < 3) {
+                D_80126CDC->unk63A -= updateRate;
+            }
+            if (racerObj->racer.balloon_quantity >= 3 || (((D_80126CDC->unk63A + 128) % 32) < 20) && racerObj->racer.balloon_quantity != 1) {
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+                D_80126CDC->unk638 = racerObj->racer.balloon_quantity - 1;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, &D_80126CDC->unk620);
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            }
+        } else {
+            if (D_80126CDC->unk5B > 0) {
+                D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25;
+                D_80126CDC->unk5B -= updateRate;
+                D_80126CDC->unk58 = temp_a0;
+                if (D_80126CDC->unk5B < 0) {
+                    D_80126CDC->unk5B = 0;
+                }
+                if (gHUDNumPlayers) {
+                    D_80126CDC->unk48 /= 2;
+                }
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, &D_80126CDC->unk40);
+            }
+        }
+        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        set_viewport_tv_type(TV_TYPE_PAL);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7A60.s")
 
 /**
@@ -628,10 +913,10 @@ void render_race_time(Object_64* obj, s32 updateRate) {
     s32 countingDown;
     s32 timerHideCounter;
 
-    if (!(D_80126D0C && D_800E2794[(D_80126D0C * 4) + obj->racer.playerIndex] != 1) || (D_80126D0C > 0 && obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180)) {
-        if (obj->racer.raceStatus == STATUS_RACING) {
+    if (!(gHUDNumPlayers && D_800E2794[gHUDNumPlayers][obj->racer.playerIndex] != 1) || (gHUDNumPlayers > 0 && obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180)) {
+        if (obj->racer.raceFinished == FALSE) {
             timerHideCounter = D_80126CDC->unk15A + 127;
-            if (obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180 && obj->racer.lapCount < D_80126D60->numLaps) {
+            if (obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180 && obj->racer.lapCount < D_80126D60->laps) {
                 stopwatchTimer = obj->racer.lap_times[obj->racer.lapCount - 1];
                 countingDown = TRUE;
                 if (timerHideCounter == 0) {
@@ -639,15 +924,15 @@ void render_race_time(Object_64* obj, s32 updateRate) {
                 }
             } else {
                 stopwatchTimer = 0;
-                for (i = 0; obj->racer.unk194 >= i && i < D_80126D60->numLaps; i++) {
+                for (i = 0; obj->racer.unk194 >= i && i < D_80126D60->laps; i++) {
                     stopwatchTimer += obj->racer.lap_times[i];
                 }
-                countingDown = stopwatchTimer == 0 || obj->racer.raceStatus != STATUS_RACING || is_game_paused();
+                countingDown = stopwatchTimer == 0 || obj->racer.raceFinished || is_game_paused();
                 D_80126CDC->unk15A = -127;
                 timerHideCounter = 0;
             }
-            if (D_80126D0C == 0) {
-                func_800AA600(&gHUDCurrDisplayList, &D_80126D00, &D_80126D04, (unk80126CDC* ) &D_80126CDC->unk140);
+            if (gHUDNumPlayers == 0) {
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk140);
             }
             if (normalise_time(36000) < stopwatchTimer) {
                 stopwatchTimer = normalise_time(36000);
@@ -661,14 +946,14 @@ void render_race_time(Object_64* obj, s32 updateRate) {
                 }
                 D_80126CDC->unk15A = timerHideCounter - 127;
                 if ((timerHideCounter % 30) > 20) {
-                    D_80126D36 = TRUE;
+                    gHideRaceTimer = TRUE;
                     return;
                 } else {
-                    if (D_80126D36) {
-                        if (D_80126D0C == 0) {
+                    if (gHideRaceTimer) {
+                        if (gHUDNumPlayers == 0) {
                             play_sound_global(SOUND_HUD_LAP_TICK, NULL);
                         }
-                        D_80126D36 = 0;
+                        gHideRaceTimer = FALSE;
                     }
                 }
             } else {
@@ -702,7 +987,7 @@ void func_800A83B4(LevelModel *model) {
 }
 
 s8 func_800A8458(void) {
-    return D_800E27A4[D_80126D0C];
+    return D_800E27A4[gHUDNumPlayers];
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A8474.s")

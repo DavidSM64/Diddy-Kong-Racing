@@ -82,8 +82,8 @@ glabel render_floor_decal
 /* 02E0B8 8002D4B8 00000000 */   nop   
 .L8002D4BC:
 /* 02E0BC 8002D4BC 00A30019 */  multu $a1, $v1
-/* 02E0C0 8002D4C0 3C118012 */  lui   $s1, %hi(D_8011B0A0) # $s1, 0x8012
-/* 02E0C4 8002D4C4 2631B0A0 */  addiu $s1, %lo(D_8011B0A0) # addiu $s1, $s1, -0x4f60
+/* 02E0C0 8002D4C0 3C118012 */  lui   $s1, %hi(gSceneCurrDisplayList) # $s1, 0x8012
+/* 02E0C4 8002D4C4 2631B0A0 */  addiu $s1, %lo(gSceneCurrDisplayList) # addiu $s1, $s1, -0x4f60
 /* 02E0C8 8002D4C8 8E240000 */  lw    $a0, ($s1)
 /* 02E0CC 8002D4CC 2401FF00 */  li    $at, -256
 /* 02E0D0 8002D4D0 248F0008 */  addiu $t7, $a0, 8
@@ -99,10 +99,10 @@ glabel render_floor_decal
 .L8002D4F8:
 /* 02E0F8 8002D4F8 84EE000A */  lh    $t6, 0xa($a3)
 .L8002D4FC:
-/* 02E0FC 8002D4FC 3C118012 */  lui   $s1, %hi(D_8011B0A0) # $s1, 0x8012
+/* 02E0FC 8002D4FC 3C118012 */  lui   $s1, %hi(gSceneCurrDisplayList) # $s1, 0x8012
 /* 02E100 8002D500 026E082A */  slt   $at, $s3, $t6
 /* 02E104 8002D504 10200045 */  beqz  $at, .L8002D61C
-/* 02E108 8002D508 2631B0A0 */   addiu $s1, %lo(D_8011B0A0) # addiu $s1, $s1, -0x4f60
+/* 02E108 8002D508 2631B0A0 */   addiu $s1, %lo(gSceneCurrDisplayList) # addiu $s1, $s1, -0x4f60
 /* 02E10C 8002D50C 001380C0 */  sll   $s0, $s3, 3
 /* 02E110 8002D510 AFA70044 */  sw    $a3, 0x44($sp)
 /* 02E114 8002D514 3C150400 */  lui   $s5, 0x400

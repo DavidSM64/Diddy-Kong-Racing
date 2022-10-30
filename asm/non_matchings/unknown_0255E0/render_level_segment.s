@@ -53,8 +53,8 @@ glabel render_level_segment
 /* 02A314 80029714 102000EC */  beqz  $at, .L80029AC8
 /* 02A318 80029718 00025080 */   sll   $t2, $v0, 2
 /* 02A31C 8002971C 01425023 */  subu  $t2, $t2, $v0
-/* 02A320 80029720 3C128012 */  lui   $s2, %hi(D_8011B0A0) # $s2, 0x8012
-/* 02A324 80029724 2652B0A0 */  addiu $s2, %lo(D_8011B0A0) # addiu $s2, $s2, -0x4f60
+/* 02A320 80029720 3C128012 */  lui   $s2, %hi(gSceneCurrDisplayList) # $s2, 0x8012
+/* 02A324 80029724 2652B0A0 */  addiu $s2, %lo(gSceneCurrDisplayList) # addiu $s2, $s2, -0x4f60
 /* 02A328 80029728 000A5080 */  sll   $t2, $t2, 2
 .L8002972C:
 /* 02A32C 8002972C 8FB900AC */  lw    $t9, 0xac($sp)

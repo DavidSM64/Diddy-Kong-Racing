@@ -23,11 +23,6 @@ typedef enum ActivePlayers {
     PLAYER_FOUR
 } ActivePlayers;
 
-typedef enum RaceStatus {
-    STATUS_RACING,
-    STATUS_FINISHED
-} RaceStatus;
-
 typedef enum CameraZoom {
     ZOOM_MEDIUM,
     ZOOM_FAR,

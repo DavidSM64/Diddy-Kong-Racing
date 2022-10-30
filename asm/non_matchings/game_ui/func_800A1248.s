@@ -118,7 +118,7 @@ glabel func_800A1248
 /* 0A1FE8 800A13E8 00000000 */   nop   
 /* 0A1FEC 800A13EC 8FA4004C */  lw    $a0, 0x4c($sp)
 /* 0A1FF0 800A13F0 8FA50050 */  lw    $a1, 0x50($sp)
-/* 0A1FF4 800A13F4 0C029D48 */  jal   func_800A7520
+/* 0A1FF4 800A13F4 0C029D48 */  jal   render_weapon_hud
 /* 0A1FF8 800A13F8 00000000 */   nop   
 /* 0A1FFC 800A13FC 0C01A142 */  jal   func_80068508
 /* 0A2000 800A1400 00002025 */   move  $a0, $zero

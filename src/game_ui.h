@@ -15,7 +15,7 @@ enum CourseIndicatorArrows {
     INDICATOR_RIGHT_UTURN,
     INDICATOR_UP,
     INDICATOR_DOWN,
-    INDICATOR_EXCLAMATION,
+    INDICATOR_EXCLAMATION
 };
 
 typedef struct {
@@ -31,7 +31,21 @@ typedef struct {
 typedef struct unk80126CDC {
     u8 unk0[0x6];
     s16 unk6;
-    u8 unk8[0x58];    
+    u8 unk8[0x38];
+    struct unk80126CDC *unk40;
+    s16 unk44;
+    s16 unk46;
+    f32 unk48;
+    s32 unk4C;
+    s32 unk50;
+    s32 unk54;
+    s16 unk58;
+    s8 unk5A;
+    s8 unk5B;
+    s8 unk5C;
+    s8 unk5D;
+    s8 unk5E;
+    s8 unk5F;
     struct unk80126CDC *unk60; // Not sure if this is correct.
     s8 unk64[4];
     u8 unk68[0xD8];
@@ -72,18 +86,33 @@ typedef struct unk80126CDC {
     u8 unk446[0xA];
     f32 unk450;
     s8 unk454[4];
-    u8 unk458[0x14];
+    u8 unk458;
+    u8 unk459;
+    u8 unk45A[0x6];
+    u8 unk460;
+    s8 unk461;
+    u8 unk462[0xA];
     f32 unk46C;
     u8 unk470[0xA];
     s8 unk47A[4];
-    u8 unk47E[0xC];
+    u8 unk47E;
+    u8 unk47F;
+    u8 unk480;
+    s8 unk481;
+    u8 unk482[0x8];
     f32 unk48C;
     u8 unk490[0xC];
     s8 unk49C;
     s8 unk49D;
     s8 unk49E[0x25];
     u16 unk4C4;
-    u8 unk4C6[0x1B4];
+    u8 unk4C6[0x15A];
+    struct unk80126CDC *unk620;
+    u8 unk624[0x14];
+    s16 unk638;
+    s8 unk63A;
+    s8 unk63B;
+    u8 unk63C[0x3E];
     s8 unk67A;
     s8 unk67B[0xA4];
     s8 unk720;
@@ -119,20 +148,20 @@ typedef struct unk800E2770 {
 
 extern unk80126CDC *D_80126CDC;
 extern Gfx *gHUDCurrDisplayList;
-extern u32 D_80126D00;
-extern u32 D_80126D04;
+extern Matrix *gHUDCurrMatrix;
+extern TriangleList *gHUDCurrTriList;
 extern u8 D_80126D37;
 
 extern u8 gGfxTaskYieldData[0xA00];
 
 u8 func_800A0190(void);
 void func_800A0B74(void);
-void func_800A0DC0(s32 arg0, Object *arg1, s32 arg2);
-void func_800A1428(s32 arg0, Object *arg1, s32 arg2);
-void func_800A258C(s32 arg0, Object *arg1, s32 arg2);
-void func_800A263C(s32 arg0, Object *arg1, s32 arg2);
+void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate);
+void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate);
+void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate);
+void func_800A263C(s32 arg0, Object *arg1, s32 updateRate);
 void func_800A3870(void);
-void func_800A6DB4(s16 *arg0);
+void play_time_trial_end_message(s16 *playerID);
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2);
 void func_800A74EC(u16 arg0, s32 arg1);
 void func_800A83B4(LevelModel *model);
@@ -141,16 +170,18 @@ void func_800AB194(s32 arg0);
 void func_800AB1AC(s32 arg0);
 void func_800AB1C8(void);
 void func_800AB1D4(u8 arg0);
+void render_race_time(Object_64 *obj, s32 updateRate);
+void render_wrong_way_text(Object_64 *obj, s32 updateRate);
+void render_course_indicator_arrows(Object_64 *obj, s32 updateRate);
+void render_hud_hubworld(Object *obj, s32 updateRate);
+void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s32 updateRate);
+void render_weapon_hud(Object *obj, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
 void func_800A3CE4(s32, s32);
-void func_800A7520(Object *, s32);
-void render_course_indicator_arrows(Object_64 *arg0, s32 arg1);
-void render_wrong_way_text(Object_64 *arg0, s32 arg1);
 void func_800A4F50(Object_64 *arg0, s32 arg1);
 void func_800A4154(Object_64 *arg0, s32 arg1);
-void render_race_time(Object_64 *arg0, s32 arg1);
 void func_800A4C44(Object_64 *arg0, s32 arg1);
 void func_800A3884(Object *arg0, s32 arg1);
 void func_800A47A0(Object_64 *arg0, s32 arg1);
@@ -160,5 +191,12 @@ void func_8009ECF0(s32 viewPortCount);
 void func_800A003C(void);
 void func_800A8474(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
+void func_800A1248(s32, Object*, s32);
+void func_800A1C04(s32, Object*, s32);
+void func_800A277C(s32, Object*, s32);
+void func_800A497C(Object_64*, s32);
+void func_800A6254(Object_64*, s32);
+void func_800A6E30(Object_64*, s32);
+void func_800A7A60(Object*, Gfx**);
 
 #endif

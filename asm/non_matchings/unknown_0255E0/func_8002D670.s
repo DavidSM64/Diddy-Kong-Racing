@@ -76,8 +76,8 @@ glabel func_8002D670
 /* 02E394 8002D794 0258082A */  slt   $at, $s2, $t8
 /* 02E398 8002D798 10200044 */  beqz  $at, .L8002D8AC
 /* 02E39C 8002D79C 3C1E0400 */   lui   $fp, 0x400
-/* 02E3A0 8002D7A0 3C108012 */  lui   $s0, %hi(D_8011B0A0) # $s0, 0x8012
-/* 02E3A4 8002D7A4 2610B0A0 */  addiu $s0, %lo(D_8011B0A0) # addiu $s0, $s0, -0x4f60
+/* 02E3A0 8002D7A0 3C108012 */  lui   $s0, %hi(gSceneCurrDisplayList) # $s0, 0x8012
+/* 02E3A4 8002D7A4 2610B0A0 */  addiu $s0, %lo(gSceneCurrDisplayList) # addiu $s0, $s0, -0x4f60
 /* 02E3A8 8002D7A8 2417000A */  li    $s7, 10
 /* 02E3AC 8002D7AC 3C148000 */  lui   $s4, 0x8000
 .L8002D7B0:
