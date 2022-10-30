@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export NEW_SCORE=$(python3 ./tools/python/score.py)
+export NEW_SCORE="$(python3 ./tools/python/score.py)"
 python3 - <<'EOF' > README.md.tmp
 import sys
 import os

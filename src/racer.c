@@ -3390,7 +3390,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
  * Stops the camera in place when set, while still pointing in the direction of the player.
  * Used when entering doors.
  */
-void update_camera_fixed(f32 updateRate, struct Object *obj, struct Object_Racer *racer) {
+void update_camera_fixed(f32 updateRate, Object *obj, Object_Racer *racer) {
     s32 delta;
     f32 xDiff;
     f32 zDiff;

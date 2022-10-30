@@ -309,7 +309,7 @@ extern s32 D_800DF4D0;
 extern s32 gTrackIdToLoad;
 extern s8 D_800DF4D8;
 extern s8 gNextTajChallengeMenu;
-extern s8 D_800DF4E0;
+extern s8 gNeedToCloseDialogueBox;
 extern s8 D_800DF4E4[4];
 extern s32 D_800DF4E8;
 extern s8 gDialogueOptionTangible;

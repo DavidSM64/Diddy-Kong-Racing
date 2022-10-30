@@ -1323,7 +1323,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 UNUSED void func_80030FA0(void) {
     D_8011B0B0 = func_80069D20();
     func_80031018();
-    func_8001D5E0((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
+    set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
 }
 
 void func_80031018(void) {
