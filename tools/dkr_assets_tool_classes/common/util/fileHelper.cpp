@@ -1,4 +1,5 @@
 #include "fileHelper.h"
+#include "md5.h"
 
 std::string assetsFolderPath = "";
 std::string version = "";
@@ -216,24 +217,11 @@ void make_uppercase(std::string& input) {
 }
 
 std::string calculate_md5(std::vector<uint8_t> &bytes) {
-    uint8_t buffer[0x4000];
-    uint8_t digest[MD5_DIGEST_LENGTH];
-
+    md5::Digest digest = md5::compute(bytes);
     std::stringstream ss;
-
-    MD5_CTX md5Context;
-
-    MD5_Init(&md5Context);
-    MD5_Update(&md5Context, &bytes[0], bytes.size()); 
-    int res = MD5_Final(digest, &md5Context);
-
-    if(res == 0) {
-        return "";
-    }
 
     // set up stringstream format
     ss << std::hex << std::setfill('0');
-
 
     for(uint8_t uc: digest) {
         ss << std::setw(2) << (int)uc;
