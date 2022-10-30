@@ -251,7 +251,7 @@ void update_camera_loop(f32 updateRate, Object *obj, Object_Racer *racer);
 void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer);
 void update_camera_finish_challenge(f32 arg0, Object *obj, Object_Racer *racer);
 void update_camera_finish_race(f32 arg0, Object *obj, Object_Racer *racer);
-void update_camera_fixed(f32 arg0, struct Object *obj, Object_Racer *racer);
+void update_camera_fixed(f32 arg0, Object *obj, Object_Racer *racer);
 void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2);
 void func_80050754(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
