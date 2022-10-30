@@ -42,7 +42,7 @@ $(BUILD_DIR)/%.o: %.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 dkr_assets_tool: $(dkr_assets_tool_OBJ_FILES)
-	$(CXX) $^ -o $@ $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) $^ -o $@ $(CXXFLAGS) $(LDFLAGS) -lpthread
 
 .PHONY: all clean distclean default
 
