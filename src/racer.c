@@ -1533,7 +1533,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         }
         func_80018CE0(obj, xTemp, yTemp, zTemp, updateRate);
         func_80059208(obj, tempRacer, updateRate);
-        if (tempRacer->raceFinished == 1) {
+        if (tempRacer->raceFinished == TRUE) {
             if (tempRacer->unk1D9 < 60) {
                 tempRacer->unk1D9 += updateRate;
             }
@@ -3100,7 +3100,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
 
 void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     f32 xPos, yPos, zPos;
-    if ((gCurrentPlayerIndex != -1) && (racer->raceFinished != TRUE)) {
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->raceFinished != TRUE) {
         if (mode != gCameraObject->mode) {
             update_player_camera(obj, racer, arg3);
             xPos = gCameraObject->trans.x_position;

@@ -365,7 +365,7 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
         }
         func_800AD030(func_80069D20());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_80069D20());
-        func_800A01A0(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_8001BB18(D_8011B0B4), updateRate);
+        render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_8001BB18(D_8011B0B4), updateRate);
     }
     if ((numViewports == 3) && 
         (get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS) &&

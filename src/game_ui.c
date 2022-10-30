@@ -542,10 +542,10 @@ void render_course_indicator_arrows(Object_64 *racer, s32 updateRate) {
                     break;
                 }
                 // Flip the arrow direction on adventure 2.
-                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->racer.indicator_type < ASSET_TEX2D_30)) {
+                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS && racer->racer.indicator_type < ASSET_TEX2D_30) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
-                if ((gHUDNumPlayers == 0) && (racer->racer.raceFinished == FALSE) && (racer->racer.indicator_type) && (D_800E27B8 == 0)) {
+                if (gHUDNumPlayers == 0 && racer->racer.raceFinished == FALSE && racer->racer.indicator_type && D_800E27B8 == 0) {
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, indicator);
                     indicator->unkC = -indicator->unkC;
@@ -594,10 +594,10 @@ void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
         func_80068508(1);
         func_800A3CE4(arg0, updateRate);
         render_weapon_hud(arg1, updateRate);
-        if ((0x7F - (updateRate * 2)) >= D_80126CDC->unk67A) {
-            D_80126CDC->unk67A += (updateRate * 2);
+        if ((127 - (updateRate * 2)) >= D_80126CDC->unk67A) {
+            D_80126CDC->unk67A += updateRate * 2;
         } else {
-            D_80126CDC->unk67A = (D_80126CDC->unk67A + (updateRate * 2)) - 0xFF;
+            D_80126CDC->unk67A = (D_80126CDC->unk67A + (updateRate * 2)) - 255;
         }
         if (D_80126D37 != 2) {
             func_800A14F0(arg1, updateRate);
@@ -699,7 +699,7 @@ void render_wrong_way_text(Object_64* obj, s32 updateRate) {
         func_8007BF1C(1);
     }
     if (obj->racer.unk1FC > 120 && (gHUDNumPlayers || D_80126CDC->unk46C == D_80126CDC->unk47A[2]) && !is_game_paused()) {
-        if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == 0) {
+        if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == NULL) {
             // 20% chance that T.T decides not to precede his nagging with "No no no!"
             if (gWrongWayNagPrefix || (get_random_number_from_range(1, 10) >= 8)) {
                 gWrongWayNagPrefix = FALSE;
@@ -800,7 +800,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A718C.s")
  * Only if the game is currently running and no voice line is already playing.
 */
 UNUSED void play_hud_voice_line(u16 soundId) {
-    if ((gHUDVoiceSoundMask == NULL) && !(is_game_paused())) {
+    if (gHUDVoiceSoundMask == NULL && !(is_game_paused())) {
         play_sound_global(soundId, &gHUDVoiceSoundMask);
     }
 }
@@ -823,8 +823,8 @@ void func_800A74EC(u16 arg0, s32 arg1) {
  * Renders the icon in the bottom left of the current weapon.
  * The icon will spin and grow as it appears, then spins and shrinks as it disappears.
 */
-void render_weapon_hud(Object* obj, s32 updateRate) {
-    Object_64* racerObj;
+void render_weapon_hud(Object *obj, s32 updateRate) {
+    Object_64 *racerObj;
     s32 temp_a0;
 
     racerObj = obj->unk64;
@@ -929,7 +929,7 @@ void render_race_time(Object_64* obj, s32 updateRate) {
                 for (i = 0; obj->racer.unk194 >= i && i < D_80126D60->laps; i++) {
                     stopwatchTimer += obj->racer.lap_times[i];
                 }
-                countingDown = stopwatchTimer == 0 || obj->racer.raceFinished != FALSE || is_game_paused();
+                countingDown = stopwatchTimer == 0 || obj->racer.raceFinished || is_game_paused();
                 D_80126CDC->unk15A = -127;
                 timerHideCounter = 0;
             }
