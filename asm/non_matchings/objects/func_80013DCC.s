@@ -25,20 +25,20 @@ glabel func_80013DCC
 /* 014A0C 80013E0C 1300009C */  beqz  $t8, .L80014080
 /* 014A10 80013E10 8FBF0024 */   lw    $ra, 0x24($sp)
 /* 014A14 80013E14 8E190000 */  lw    $t9, ($s0)
-/* 014A18 80013E18 3C118012 */  lui   $s1, %hi(D_8011AE8C) # $s1, 0x8012
+/* 014A18 80013E18 3C118012 */  lui   $s1, %hi(gObjectCurrDisplayList) # $s1, 0x8012
 /* 014A1C 80013E1C 13200097 */  beqz  $t9, .L8001407C
-/* 014A20 80013E20 2631AE8C */   addiu $s1, %lo(D_8011AE8C) # addiu $s1, $s1, -0x5174
+/* 014A20 80013E20 2631AE8C */   addiu $s1, %lo(gObjectCurrDisplayList) # addiu $s1, $s1, -0x5174
 /* 014A24 80013E24 8C8D0000 */  lw    $t5, ($a0)
-/* 014A28 80013E28 3C018012 */  lui   $at, %hi(D_8011AE90) # $at, 0x8012
+/* 014A28 80013E28 3C018012 */  lui   $at, %hi(gObjectCurrMatrix) # $at, 0x8012
 /* 014A2C 80013E2C AE2D0000 */  sw    $t5, ($s1)
 /* 014A30 80013E30 8CAF0000 */  lw    $t7, ($a1)
 /* 014A34 80013E34 24040016 */  li    $a0, 22
-/* 014A38 80013E38 AC2FAE90 */  sw    $t7, %lo(D_8011AE90)($at)
+/* 014A38 80013E38 AC2FAE90 */  sw    $t7, %lo(gObjectCurrMatrix)($at)
 /* 014A3C 80013E3C 8CD90000 */  lw    $t9, ($a2)
-/* 014A40 80013E40 3C018012 */  lui   $at, %hi(D_8011AE94) # $at, 0x8012
+/* 014A40 80013E40 3C018012 */  lui   $at, %hi(gObjectCurrVertexList) # $at, 0x8012
 /* 014A44 80013E44 AFAB0054 */  sw    $t3, 0x54($sp)
 /* 014A48 80013E48 0C0078A7 */  jal   get_misc_asset
-/* 014A4C 80013E4C AC39AE94 */   sw    $t9, %lo(D_8011AE94)($at)
+/* 014A4C 80013E4C AC39AE94 */   sw    $t9, %lo(gObjectCurrVertexList)($at)
 /* 014A50 80013E50 8FAB0054 */  lw    $t3, 0x54($sp)
 /* 014A54 80013E54 00000000 */  nop   
 /* 014A58 80013E58 816401D6 */  lb    $a0, 0x1d6($t3)
@@ -135,10 +135,10 @@ glabel func_80013DCC
 /* 014BB8 80013FB8 0C01FD65 */  jal   func_8007F594
 /* 014BBC 80013FBC 01413025 */   or    $a2, $t2, $at
 /* 014BC0 80013FC0 C7B00038 */  lwc1  $f16, 0x38($sp)
-/* 014BC4 80013FC4 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
+/* 014BC4 80013FC4 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
 /* 014BC8 80013FC8 8E060000 */  lw    $a2, ($s0)
 /* 014BCC 80013FCC 8FA70064 */  lw    $a3, 0x64($sp)
-/* 014BD0 80013FD0 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 014BD0 80013FD0 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 014BD4 80013FD4 02202025 */  move  $a0, $s1
 /* 014BD8 80013FD8 0C01A3EA */  jal   func_80068FA8
 /* 014BDC 80013FDC E7B00010 */   swc1  $f16, 0x10($sp)
@@ -171,14 +171,14 @@ glabel func_80013DCC
 /* 014C48 80014048 AC6C0000 */   sw    $t4, ($v1)
 /* 014C4C 8001404C 8E2E0000 */  lw    $t6, ($s1)
 /* 014C50 80014050 8FAF0058 */  lw    $t7, 0x58($sp)
-/* 014C54 80014054 3C188012 */  lui   $t8, %hi(D_8011AE90) # $t8, 0x8012
+/* 014C54 80014054 3C188012 */  lui   $t8, %hi(gObjectCurrMatrix) # $t8, 0x8012
 /* 014C58 80014058 ADEE0000 */  sw    $t6, ($t7)
 /* 014C5C 8001405C 8FB9005C */  lw    $t9, 0x5c($sp)
-/* 014C60 80014060 8F18AE90 */  lw    $t8, %lo(D_8011AE90)($t8)
-/* 014C64 80014064 3C0C8012 */  lui   $t4, %hi(D_8011AE94) # $t4, 0x8012
+/* 014C60 80014060 8F18AE90 */  lw    $t8, %lo(gObjectCurrMatrix)($t8)
+/* 014C64 80014064 3C0C8012 */  lui   $t4, %hi(gObjectCurrVertexList) # $t4, 0x8012
 /* 014C68 80014068 AF380000 */  sw    $t8, ($t9)
 /* 014C6C 8001406C 8FAD0060 */  lw    $t5, 0x60($sp)
-/* 014C70 80014070 8D8CAE94 */  lw    $t4, %lo(D_8011AE94)($t4)
+/* 014C70 80014070 8D8CAE94 */  lw    $t4, %lo(gObjectCurrVertexList)($t4)
 /* 014C74 80014074 00000000 */  nop   
 /* 014C78 80014078 ADAC0000 */  sw    $t4, ($t5)
 .L8001407C:

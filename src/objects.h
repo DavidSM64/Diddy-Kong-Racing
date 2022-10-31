@@ -138,6 +138,19 @@ enum ObjectBehaviours {
     BHV_UNK_7F
 };
 
+typedef struct TempStruct8011B010 {
+    u8 unk0;
+} TempStruct8011B010;
+
+struct RacerShieldGfx {
+    s16 x_position;
+    s16 y_position;
+    s16 z_position;
+    s16 y_offset;
+    f32 scale;
+    f32 turnSpeed;
+};
+
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
     union {
@@ -393,5 +406,7 @@ s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpoint
 Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
+s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
+void func_80068FA8(Gfx**, Mtx**, Object*, Object*, f32); /* extern */
 
 #endif

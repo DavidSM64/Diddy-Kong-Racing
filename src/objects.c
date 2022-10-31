@@ -18,6 +18,7 @@
 #include "particles.h"
 #include "printf.h"
 #include "unknown_0255E0.h"
+#include "math_util.h"
 
 /************ .data ************/
 
@@ -203,9 +204,9 @@ s16 D_8011AE80; // TT Ghost outTime at least
 s16 D_8011AE82;
 s32 D_8011AE84;
 s32 D_8011AE88;
-Gfx *D_8011AE8C;
-Mtx *D_8011AE90;
-VertexList *D_8011AE94;
+Gfx *gObjectCurrDisplayList;
+Mtx *gObjectCurrMatrix;
+VertexList *gObjectCurrVertexList;
 s32 D_8011AE98[2];
 s32 D_8011AEA0;
 s32 D_8011AEA4;
@@ -253,7 +254,7 @@ s32 D_8011AFFC;
 s32 D_8011B000;
 s32 D_8011B004;
 s32 D_8011B008;
-s32 D_8011B010[4]; //Possibly Misc Asset 20 pointers
+TempStruct8011B010 D_8011B010[16];
 Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
@@ -1088,15 +1089,15 @@ void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) 
     if (object->segment.trans.unk6 & 0x5000)
         return;
     func_800B76B8(2, object->unk4A);
-    D_8011AE8C = *dlist;
-    D_8011AE90 = *mats;
-    D_8011AE94 = *verts;
+    gObjectCurrDisplayList = *dlist;
+    gObjectCurrMatrix = *mats;
+    gObjectCurrVertexList = *verts;
     scale = object->segment.trans.scale;
     render_object(object);
     object->segment.trans.scale = scale;
-    *dlist = D_8011AE8C;
-    *mats = D_8011AE90;
-    *verts = D_8011AE94;
+    *dlist = gObjectCurrDisplayList;
+    *mats = gObjectCurrMatrix;
+    *verts = gObjectCurrVertexList;
     func_800B76B8(2, -1);
 }
 
@@ -1147,7 +1148,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 void render_object(Object *this) {
     func_80012F94(this);
     if (this->segment.trans.unk6 & 0x8000) {
-        func_800B3740(this, &D_8011AE8C, &D_8011AE90, &D_8011AE94, 0x8000);
+        func_800B3740(this, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
     } else {
         if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
@@ -1169,7 +1170,79 @@ void func_80013548(Object *obj) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80013A0C.s")
+
+/**
+ * Get the racer object data, and fetch set visual shield properties based on that racer.
+ * Afterwards, render the graphics with opacity scaling with the fadetimer.
+ */
+void render_racer_shield(Gfx** dList, Mtx** mtx, VertexList** vtxList, Object *obj) {
+    struct Object_Racer* racer;
+    Object_68 *gfxData;
+    ObjectModel *mdl;
+    struct RacerShieldGfx* shield;
+    s32 shieldType;
+    s32 var_a1;
+    s32 var_a2;
+    f32 scale;
+    f32 shear;
+
+    racer = (Object_Racer *) obj->unk64;
+    if (racer->shieldTimer > 0 && D_800DC75C != NULL) {
+        gObjectCurrDisplayList = *dList;
+        gObjectCurrMatrix = *mtx;
+        gObjectCurrVertexList = *vtxList;
+        var_a2 = racer->unk2;
+        if (var_a2 > 10) {
+            var_a2 = 0;
+        }
+        var_a1 = racer->unk1D6;
+        if (var_a1 > 2) {
+            var_a1 = 0;
+        }
+        shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_UNK15));
+        var_a1 =  (var_a1 * 10) + var_a2;
+        shield = shield + var_a1;
+        D_800DC75C->segment.trans.x_position = shield->x_position;
+        D_800DC75C->segment.trans.y_position = shield->y_position;
+        D_800DC75C->segment.trans.z_position = shield->z_position;
+        D_800DC75C->segment.trans.y_position += shield->y_offset * cosine_s(D_8011B010[var_a2].unk0 * 0x200);
+        shear = (sine_s(D_8011B010[var_a2].unk0 * 1024) * 0.05f) + 0.95f;
+        D_800DC75C->segment.trans.scale = shield->scale * shear;
+        shear = shear * shield->turnSpeed;
+        D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2].unk0 * 0x800;
+        D_800DC75C->segment.trans.x_rotation = 0x800;
+        D_800DC75C->segment.trans.z_rotation = 0;
+        shieldType = racer->shieldType;
+        if (shieldType) {
+            shieldType--;
+        }
+        if (shieldType > 2) {
+            shieldType = 2;
+        }
+        scale = ((f32) shieldType * 0.1) + 1.0f;
+        D_800DC75C->segment.trans.scale *= scale;
+        shear *= scale;
+        gfxData = D_800DC75C->unk68[shieldType];
+        mdl = gfxData->objModel;
+        D_800DC75C->unk44 = gfxData->unk4[gfxData->unk1F];
+        gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+        if (racer->shieldTimer < 64) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, racer->shieldTimer * 4);
+        } else {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        }
+        func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC75C, obj, shear);
+        func_800143A8(mdl, D_800DC75C, 0, 4, 0);
+        gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
+        if (racer->shieldTimer < 64) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        }
+        *dList = gObjectCurrDisplayList;
+        *mtx = gObjectCurrMatrix;
+        *vtxList = gObjectCurrVertexList;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80013DCC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
 
