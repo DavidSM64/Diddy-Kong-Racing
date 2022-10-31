@@ -327,7 +327,7 @@ s32 gSaveFileIndex          = 0;
 s32 D_800DF4D0              = 0; // Unused?
 s32 gTrackIdToLoad          = 0;
 s8 D_800DF4D8               = 1;
-s8 D_800DF4DC               = 0;
+s8 gNextTajChallengeMenu    = FALSE;
 s8 gNeedToCloseDialogueBox  = FALSE;
 
 s8 D_800DF4E4[4] = {
@@ -7908,8 +7908,8 @@ void func_8009D324(void) {
     D_800DF4D8 = 0;
 }
 
-void func_8009D330(s32 arg0) {
-    D_800DF4DC = arg0;
+void set_next_taj_challenge_menu(s32 arg0) {
+    gNextTajChallengeMenu = arg0;
 }
 
 /**
@@ -7930,8 +7930,8 @@ s32 taj_menu_loop(void) {
     Settings *settings; // sp24
 
     settings = get_settings();
-    if ((D_800DF4DC != 0) && (sCurrentMenuID == 0)) {
-        sCurrentMenuID = -D_800DF4DC;
+    if ((gNextTajChallengeMenu != 0) && (sCurrentMenuID == 0)) {
+        sCurrentMenuID = -gNextTajChallengeMenu;
     }
     if (sCurrentMenuID == 0) {
         sCurrentMenuID = 1;
@@ -7981,7 +7981,7 @@ s32 taj_menu_loop(void) {
             D_800DF4D8 = 1;
             break;
         case 1:
-            D_800DF4DC = 0;
+            gNextTajChallengeMenu = 0;
             render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_OPTIONS], 1, 4); // OPTIONS
             gDialogueOptionYOffset = 30;
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_CHANGEVEHICLE], 20, 0); // CHANGE VEHICLE
@@ -8051,13 +8051,13 @@ s32 taj_menu_loop(void) {
             break;
         case -4:
             func_800C31EC(0x11);
-            D_800DF4DC = 0;
+            gNextTajChallengeMenu = 0;
             sCurrentMenuID = 1;
             sDialogueOption = 3;
             break;
         case -5:
             func_800C31EC(0x15);
-            D_800DF4DC = 0;
+            gNextTajChallengeMenu = 0;
             sCurrentMenuID = 7;
             sDialogueOption = 0;
             break;
@@ -8069,12 +8069,12 @@ s32 taj_menu_loop(void) {
             sDialogueOption = 0;
             break;
         case 4:
-            sp2C = (D_800DF4DC - 1) | 0x40;
+            sp2C = (gNextTajChallengeMenu - 1) | 0x40;
             sCurrentMenuID = 5;
             close_dialogue_box(1);
             break;
         case 5:
-            D_800DF4DC = 0;
+            gNextTajChallengeMenu = 0;
             close_dialogue_box(1);
             break;
         case 6:
@@ -8085,7 +8085,7 @@ s32 taj_menu_loop(void) {
             }
             gNeedToCloseDialogueBox = FALSE;
             close_dialogue_box(1);
-            D_800DF4DC = 0;
+            gNextTajChallengeMenu = 0;
             sCurrentMenuID = 0;
             break;
     }
@@ -8104,7 +8104,7 @@ s32 dialogue_race_defeat(void) {
     state = 0;
     playerInput = get_buttons_pressed_from_player(PLAYER_ONE);
     sDialogueOptionMax = 0;
-    D_800DF4DC = 0;
+    gNextTajChallengeMenu = 0;
     render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_LOSETOTAJ_0], 1, 4);    // BETTER LUCK
     render_dialogue_text(1, POS_CENTRED, 20, gMenuText[ASSET_MENU_TEXT_LOSETOTAJ_1], 1, 4); // NEXT TIME!
     gDialogueOptionYOffset = 50;
