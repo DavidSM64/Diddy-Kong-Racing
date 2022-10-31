@@ -1283,7 +1283,7 @@ typedef struct Object_68 {
   /* 0x04 */ s32 *unk4[3];
   /* 0x10 */ s16 unk10;
   /* 0x14 */ u8 pad14[13];
-  /* 0x21 */ s8 unk1F;
+  /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
   /* 0x21 */ s8 unk21;
  } Object_68;

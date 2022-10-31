@@ -254,7 +254,7 @@ s32 D_8011AFFC;
 s32 D_8011B000;
 s32 D_8011B004;
 s32 D_8011B008;
-TempStruct8011B010 D_8011B010[16];
+u8 D_8011B010[16];
 Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
@@ -1175,7 +1175,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
  * Get the racer object data, and fetch set visual shield properties based on that racer.
  * Afterwards, render the graphics with opacity scaling with the fadetimer.
  */
-void render_racer_shield(Gfx** dList, Mtx** mtx, VertexList** vtxList, Object *obj) {
+void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj) {
     struct Object_Racer* racer;
     Object_68 *gfxData;
     ObjectModel *mdl;
@@ -1205,11 +1205,11 @@ void render_racer_shield(Gfx** dList, Mtx** mtx, VertexList** vtxList, Object *o
         D_800DC75C->segment.trans.x_position = shield->x_position;
         D_800DC75C->segment.trans.y_position = shield->y_position;
         D_800DC75C->segment.trans.z_position = shield->z_position;
-        D_800DC75C->segment.trans.y_position += shield->y_offset * cosine_s(D_8011B010[var_a2].unk0 * 0x200);
-        shear = (sine_s(D_8011B010[var_a2].unk0 * 1024) * 0.05f) + 0.95f;
+        D_800DC75C->segment.trans.y_position += shield->y_offset * cosine_s(D_8011B010[var_a2] * 0x200);
+        shear = (sine_s(D_8011B010[var_a2] * 1024) * 0.05f) + 0.95f;
         D_800DC75C->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
-        D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2].unk0 * 0x800;
+        D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
         D_800DC75C->segment.trans.x_rotation = 0x800;
         D_800DC75C->segment.trans.z_rotation = 0;
         shieldType = racer->shieldType;
