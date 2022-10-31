@@ -177,7 +177,20 @@ s8 D_80126CD0;
 s8 D_80126CD1;
 s8 D_80126CD2;
 s8 D_80126CD3;
+
+/**
+ * gRaceStartShowHudStep counts up from 0->5 on race start, and is used to
+ * coordinate when certain hud actions & audio clips play/happen:
+ *   - set to 0 on loading of new race
+ *   - 0->1 when camera shutter open animation occurs
+ *   - 1->2 when hud slides into screen with "whoosh" sound
+ *   - 2->3 on the "Get Ready!" voice play
+ *   - 3->4 on the "Go" voice and text
+ *   - 4->5 on the "Go" sliding off screen
+ *   - stays 5 until the next race starts
+*/
 s8 gRaceStartShowHudStep;
+
 s8 D_80126CD5;
 s32 D_80126CD8;
 unk80126CDC *D_80126CDC;
