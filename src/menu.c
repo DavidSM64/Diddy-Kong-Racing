@@ -8172,7 +8172,7 @@ s32 tt_menu_loop(void) {
             }
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_RETURN], 0x14, 2); // RETURN
             handle_menu_joystick_input();
-            if (!gDialogueItemSelection) {
+            if (gDialogueItemSelection == 0) {
                 if (gControllersXAxisDirection[0] > 0) {
                     if (!is_time_trial_enabled()) {
                         play_tt_voice_clip(SOUND_VOICE_TT_TIME_TRIAL_ON, TRUE);
