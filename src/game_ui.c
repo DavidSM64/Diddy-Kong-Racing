@@ -177,7 +177,20 @@ s8 D_80126CD0;
 s8 D_80126CD1;
 s8 D_80126CD2;
 s8 D_80126CD3;
-s8 D_80126CD4;
+
+/**
+ * gRaceStartShowHudStep counts up from 0->5 on race start, and is used to
+ * coordinate when certain hud actions & audio clips play/happen:
+ *   - set to 0 on loading of new race
+ *   - 0->1 when camera shutter open animation occurs
+ *   - 1->2 when hud slides into screen with "whoosh" sound
+ *   - 2->3 on the "Get Ready!" voice play
+ *   - 3->4 on the "Go" voice and text
+ *   - 4->5 on the "Go" sliding off screen
+ *   - stays 5 until the next race starts
+*/
+s8 gRaceStartShowHudStep;
+
 s8 D_80126CD5;
 s32 D_80126CD8;
 unk80126CDC *D_80126CDC;
@@ -263,7 +276,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
     s32 sp2C;
     Object_64* racer;
 
-    D_80126D08 = func_80066220();
+    D_80126D08 = get_object_render_stack_pos();
     if (D_8012718A) {
         arg3 = func_8001BB18(1 - D_80126D08);
     }
@@ -326,7 +339,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
                         }
                     }
                 }
-                if (D_80126CD4 == 0) {
+                if (gRaceStartShowHudStep == 0) {
                     if (D_80126D60->race_type & RACETYPE_CHALLENGE || D_80126D60->race_type == RACETYPE_DEFAULT || D_80126D60->race_type == RACETYPE_HORSESHOE_GULCH || D_80126D60->race_type == RACETYPE_BOSS) {
                         D_800E2770[0].unk2 = 0x7F;
                         D_800E2770[1].unk2 = 0x7F;
@@ -337,7 +350,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
                     } else {
                         func_8006BD10(1.0f);
                     }
-                    D_80126CD4 += 1;
+                    gRaceStartShowHudStep += 1;
                 }
                 gDPPipeSync(gHUDCurrDisplayList++);
                 init_rsp(&gHUDCurrDisplayList);
@@ -358,9 +371,9 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
                             }
                         }
                     } else {
-                        if (D_80126CD4 == 1) {
+                        if (gRaceStartShowHudStep == 1) {
                             play_sound_global(SOUND_WHOOSH1, NULL);
-                            D_80126CD4 += 1;
+                            gRaceStartShowHudStep += 1;
                         }
                         D_80126D24 -= updateRate * 13;
                         if (D_80126D24 < 0) {
@@ -1007,7 +1020,7 @@ void func_800AB1AC(s32 arg0) {
 
 /* Unused? */
 void func_800AB1C8(void) {
-    D_80126CD4 = 0;
+    gRaceStartShowHudStep = 0;
 }
 
 void func_800AB1D4(u8 arg0) {

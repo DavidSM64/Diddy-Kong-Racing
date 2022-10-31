@@ -583,7 +583,7 @@ void render_level_geometry_and_objects(void) {
 
     func_8007B3D0(&gSceneCurrDisplayList);
     func_80015348(sp160, sp16C - 1);
-    sp158 = 0x200 << (func_80066220() & 1);
+    sp158 = 0x200 << (get_object_render_stack_pos() & 1);
 
     for (i = sp160; i < sp16C; i++) {
         obj = get_object(i);
@@ -640,7 +640,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     if (D_8011D384 != 0) {
-        func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, func_80066220());
+        func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_object_render_stack_pos());
     }
 
     func_8007B3D0(&gSceneCurrDisplayList);
@@ -684,7 +684,7 @@ skip:
     }
 
     if (D_800DC924 && func_80027568()) {
-        func_8002581C(segmentIds, numberOfSegments, func_80066220());
+        func_8002581C(segmentIds, numberOfSegments, get_object_render_stack_pos());
     }
     D_8011B0FC = 0;
 }

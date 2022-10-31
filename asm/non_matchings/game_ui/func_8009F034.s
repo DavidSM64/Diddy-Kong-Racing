@@ -86,8 +86,8 @@ glabel func_8009F034
 .L8009F10C:
 /* 09FD0C 8009F10C 3C018012 */  lui   $at, %hi(D_80126D2C) # $at, 0x8012
 /* 09FD10 8009F110 A4206D2C */  sh    $zero, %lo(D_80126D2C)($at)
-/* 09FD14 8009F114 3C018012 */  lui   $at, %hi(D_80126CD4) # $at, 0x8012
-/* 09FD18 8009F118 A0206CD4 */  sb    $zero, %lo(D_80126CD4)($at)
+/* 09FD14 8009F114 3C018012 */  lui   $at, %hi(gRaceStartShowHudStep) # $at, 0x8012
+/* 09FD18 8009F118 A0206CD4 */  sb    $zero, %lo(gRaceStartShowHudStep)($at)
 /* 09FD1C 8009F11C 3C018012 */  lui   $at, %hi(gHideRaceTimer) # $at, 0x8012
 /* 09FD20 8009F120 A0206D36 */  sb    $zero, %lo(gHideRaceTimer)($at)
 /* 09FD24 8009F124 3C018012 */  lui   $at, %hi(gWrongWayNagPrefix) # $at, 0x8012
