@@ -8143,7 +8143,7 @@ s32 tt_menu_loop(void) {
     }
     if ((sCurrentMenuID != TT_MENU_GAME_STATUS) && (sCurrentMenuID != TT_MENU_INTRODUCTION)) {
         currentOption = 0x78;
-        if (has_ghost_to_save() != 0) {
+        if (has_ghost_to_save()) {
             currentOption = 0x88;
         }
         set_current_dialogue_box_coords(1, 0x18, 0x10, 0xC0, currentOption);
