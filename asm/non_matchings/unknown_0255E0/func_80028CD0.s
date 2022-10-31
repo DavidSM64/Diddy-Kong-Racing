@@ -4,7 +4,7 @@ glabel func_80028CD0
 /* 0298D8 80028CD8 0C01A748 */  jal   func_80069D20
 /* 0298DC 80028CDC AFA40048 */   sw    $a0, 0x48($sp)
 /* 0298E0 80028CE0 3C018012 */  lui   $at, %hi(D_8011B0B0) # $at, 0x8012
-/* 0298E4 80028CE4 0C019888 */  jal   func_80066220
+/* 0298E4 80028CE4 0C019888 */  jal   get_object_render_stack_pos
 /* 0298E8 80028CE8 AC22B0B0 */   sw    $v0, %lo(D_8011B0B0)($at)
 /* 0298EC 80028CEC 0C00C406 */  jal   func_80031018
 /* 0298F0 80028CF0 AFA2003C */   sw    $v0, 0x3c($sp)
@@ -100,7 +100,7 @@ glabel func_80028CD0
 /* 029A4C 80028E4C 14EAFFF7 */  bne   $a3, $t2, .L80028E2C
 /* 029A50 80028E50 00000000 */   nop   
 .L80028E54:
-/* 029A54 80028E54 0C019888 */  jal   func_80066220
+/* 029A54 80028E54 0C019888 */  jal   get_object_render_stack_pos
 /* 029A58 80028E58 AFA30028 */   sw    $v1, 0x28($sp)
 /* 029A5C 80028E5C 8FA30028 */  lw    $v1, 0x28($sp)
 /* 029A60 80028E60 444BF800 */  cfc1  $t3, $31
@@ -139,7 +139,7 @@ glabel func_80028CD0
 /* 029AE4 80028EE4 10000025 */  b     .L80028F7C
 /* 029AE8 80028EE8 00000000 */   nop   
 .L80028EEC:
-/* 029AEC 80028EEC 0C019888 */  jal   func_80066220
+/* 029AEC 80028EEC 0C019888 */  jal   get_object_render_stack_pos
 /* 029AF0 80028EF0 00000000 */   nop   
 /* 029AF4 80028EF4 444FF800 */  cfc1  $t7, $31
 /* 029AF8 80028EF8 3C038012 */  lui   $v1, %hi(D_8011B0B0) # $v1, 0x8012
