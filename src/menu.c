@@ -8166,7 +8166,7 @@ s32 tt_menu_loop(void) {
                 } else {
                     render_dialogue_option(gMenuText[ASSET_MENU_TEXT_TIMETRIALOFF], 0x14, 0); // TIME TRIAL OFF
                 }
-                if (has_ghost_to_save() != 0) {
+                if (has_ghost_to_save()) {
                     render_dialogue_option(gMenuText[ASSET_MENU_TEXT_SAVEGHOST], 0x14, 1); // SAVE GHOST
                 }
             }
