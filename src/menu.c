@@ -39,10 +39,10 @@
 
 DrawTexture *D_80126390;
 DrawTexture *D_80126394;
-s32 D_80126398;
-s32 D_8012639C;
+s32 gSaveGhostDelayCounter;
+s32 gPreviousMenuID;
 Gfx *sMenuCurrDisplayList;
-char **D_801263A4;
+char **gTTSaveGhostPakErrorText;
 Mtx *sMenuCurrHudMat;
 VertexList *sMenuCurrHudVerts;
 TriangleList *sMenuCurrHudTris;
@@ -111,7 +111,7 @@ SavefileInfo gSavefileInfo[4];
 
 s32 D_801264D0;
 s32 D_801264D4;
-s8 sDialogueOption;
+s8 gDialogueSubmenu;
 s32 D_801264DC;
 s8 D_801264E0;
 s8 D_801264E1;
@@ -129,7 +129,7 @@ s16 D_8012650C;
 s8 gDialogueOptionYOffset;
 s32 D_80126510;
 s16 D_80126514;
-s8 D_80126516;
+s8 gDialogueItemSelection;
 s32 D_80126518;
 s32 D_8012651C;
 s32 D_80126520;
@@ -7799,7 +7799,7 @@ void func_8009CF68(s32 arg0) {
     if (D_800DF4E4[arg0] == 0) {
         if (arg0 != 3) {
             sCurrentMenuID = 0;
-            sDialogueOption = 0;
+            gDialogueSubmenu = 0;
         }
         gNeedToCloseDialogueBox = TRUE;
         D_800DF4E4[arg0] = 1;
@@ -7873,9 +7873,9 @@ void set_option_text_colour(s32 condition) {
  * Render a line of text at a given Y position, and pass through the text ID and option ID.
  */
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID) {
-    set_option_text_colour(sDialogueOption == sDialogueOptionMax);
-    if (sDialogueOption == sDialogueOptionMax) {
-        D_80126516 = optionID;
+    set_option_text_colour(gDialogueSubmenu == sDialogueOptionMax);
+    if (gDialogueSubmenu == sDialogueOptionMax) {
+        gDialogueItemSelection = optionID;
     }
     render_dialogue_text(1, POS_CENTRED, gDialogueOptionYOffset, text, 1, 4);
     gDialogueOptionYOffset = (s8)(gDialogueOptionYOffset + yOffset);
@@ -7888,19 +7888,19 @@ void render_dialogue_option(char *text, s32 yOffset, s32 optionID) {
  */
 void handle_menu_joystick_input(void) {
     if (gControllersYAxisDirection[0] < 0) {
-        sDialogueOption = sDialogueOption + 1;
+        gDialogueSubmenu = gDialogueSubmenu + 1;
         play_sound_global(SOUND_MENU_PICK, NULL);
     } else if (gControllersYAxisDirection[0] > 0) {
-        sDialogueOption = sDialogueOption - 1;
+        gDialogueSubmenu = gDialogueSubmenu - 1;
         play_sound_global(SOUND_MENU_PICK, NULL);
     }
 
-    if (sDialogueOption < 0) {
-        sDialogueOption = sDialogueOptionMax - 1;
+    if (gDialogueSubmenu < 0) {
+        gDialogueSubmenu = sDialogueOptionMax - 1;
     }
 
-    if (sDialogueOption >= sDialogueOptionMax) {
-        sDialogueOption = 0;
+    if (gDialogueSubmenu >= sDialogueOptionMax) {
+        gDialogueSubmenu = 0;
     }
 }
 
@@ -7995,10 +7995,10 @@ s32 taj_menu_loop(void) {
                 play_sound_global(SOUND_MENU_BACK3, NULL);
             } else if (buttonsPressed & A_BUTTON) {
                 play_sound_global(SOUND_SELECT2, NULL);
-                switch (D_80126516) {
+                switch (gDialogueItemSelection) {
                     case 1:
                         sCurrentMenuID = 3;
-                        sDialogueOption = 0;
+                        gDialogueSubmenu = 0;
                         play_taj_voice_clip(SOUND_VOICE_TAJ_CHALLENGE_MENU, TRUE);
                         break;
                     case 2:
@@ -8006,7 +8006,7 @@ s32 taj_menu_loop(void) {
                         break;
                     case 0:
                         sCurrentMenuID = 2;
-                        sDialogueOption = 0;
+                        gDialogueSubmenu = 0;
                         play_taj_voice_clip(SOUND_VOICE_TAJ_SELECT_VEHICLE, TRUE);
                         break;
                 }
@@ -8018,27 +8018,27 @@ s32 taj_menu_loop(void) {
                 play_sound_global(SOUND_MENU_BACK3, NULL);
                 play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK, TRUE);
                 sCurrentMenuID = 1;
-                sDialogueOption = 0;
+                gDialogueSubmenu = 0;
             } else if (buttonsPressed & A_BUTTON) {
-                if (D_80126516 != 3) {
-                    sp2C = D_80126516 | 0x80;
+                if (gDialogueItemSelection != 3) {
+                    sp2C = gDialogueItemSelection | 0x80;
                     sCurrentMenuID = 0x62;
                 } else {
                     sCurrentMenuID = 1;
-                    sDialogueOption = 0;
+                    gDialogueSubmenu = 0;
                     play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK, TRUE);
                 }
             }
             break;
         case 3:
             handle_menu_joystick_input();
-            if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & A_BUTTON) && (D_80126516 == 3))) {
+            if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & A_BUTTON) && (gDialogueItemSelection == 3))) {
                 play_sound_global(SOUND_MENU_BACK3, NULL);
                 play_taj_voice_clip(SOUND_VOICE_TAJ_MENUBACK2, TRUE);
                 sCurrentMenuID = 1;
-                sDialogueOption = 3;
+                gDialogueSubmenu = 3;
             } else if (buttonsPressed & A_BUTTON) {
-                sp2C = D_80126516 | 0x40;
+                sp2C = gDialogueItemSelection | 0x40;
                 play_sound_global(SOUND_SELECT2, NULL);
                 sCurrentMenuID = 0x63;
             }
@@ -8053,20 +8053,20 @@ s32 taj_menu_loop(void) {
             func_800C31EC(0x11);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 1;
-            sDialogueOption = 3;
+            gDialogueSubmenu = 3;
             break;
         case -5:
             func_800C31EC(0x15);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 7;
-            sDialogueOption = 0;
+            gDialogueSubmenu = 0;
             break;
         case -8:
         case -7:
         case -6:
             func_800C31EC(12 - sCurrentMenuID);
             sCurrentMenuID = 6;
-            sDialogueOption = 0;
+            gDialogueSubmenu = 0;
             break;
         case 4:
             sp2C = (gNextTajChallengeMenu - 1) | 0x40;
@@ -8113,7 +8113,7 @@ s32 dialogue_race_defeat(void) {
     handle_menu_joystick_input();
     if (playerInput & A_BUTTON) {
         play_sound_global(SOUND_SELECT2, NULL);
-        switch (D_80126516) {
+        switch (gDialogueItemSelection) {
             case 0:
                 state = 1;
                 break;
@@ -8125,17 +8125,13 @@ s32 dialogue_race_defeat(void) {
     return state;
 }
 
-#ifdef NON_MATCHING
-
-// Has a couple minor issues, but should be functionally equivalent.
 s32 tt_menu_loop(void) {
     s32 currentOption;
     s32 buttonsPressed;
     s32 i;
     s32 yPos1;
-    s32 yPos2;
+    u8 result;
     Settings *settings;
-    s32 result;
 
     settings = get_settings();
 
@@ -8147,7 +8143,7 @@ s32 tt_menu_loop(void) {
     }
     if ((sCurrentMenuID != TT_MENU_GAME_STATUS) && (sCurrentMenuID != TT_MENU_INTRODUCTION)) {
         currentOption = 0x78;
-        if (func_8001B780() != 0) {
+        if (has_ghost_to_save()) {
             currentOption = 0x88;
         }
         set_current_dialogue_box_coords(1, 0x18, 0x10, 0xC0, currentOption);
@@ -8156,7 +8152,7 @@ s32 tt_menu_loop(void) {
     }
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
-    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
+    buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE) << 0;
     sDialogueOptionMax = 0;
     gDialogueOptionYOffset = 32;
     switch (sCurrentMenuID) {
@@ -8170,13 +8166,13 @@ s32 tt_menu_loop(void) {
                 } else {
                     render_dialogue_option(gMenuText[ASSET_MENU_TEXT_TIMETRIALOFF], 0x14, 0); // TIME TRIAL OFF
                 }
-                if (func_8001B780() != 0) {
+                if (has_ghost_to_save()) {
                     render_dialogue_option(gMenuText[ASSET_MENU_TEXT_SAVEGHOST], 0x14, 1); // SAVE GHOST
                 }
             }
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_RETURN], 0x14, 2); // RETURN
             handle_menu_joystick_input();
-            if (D_80126516 == 0) {
+            if (gDialogueItemSelection == 0) {
                 if (gControllersXAxisDirection[0] > 0) {
                     if (!is_time_trial_enabled()) {
                         play_tt_voice_clip(SOUND_VOICE_TT_TIME_TRIAL_ON, TRUE);
@@ -8190,11 +8186,12 @@ s32 tt_menu_loop(void) {
                 }
             }
             if ((buttonsPressed & A_BUTTON) && (sCurrentMenuID != TT_MENU_EXIT)) {
-                switch (D_80126516) {
+                if(gPreviousMenuID && !gPreviousMenuID && !gPreviousMenuID){} // Fake match
+                switch (gDialogueItemSelection) {
                     case 1:
                         play_sound_global(SOUND_SELECT2, NULL);
-                        D_80126398 = 0;
-                        D_8012639C = TT_MENU_ROOT;
+                        gSaveGhostDelayCounter = 0;
+                        gPreviousMenuID = TT_MENU_ROOT;
                         sCurrentMenuID = TT_MENU_SAVE_GHOST;
                         break;
                     case 3:
@@ -8206,7 +8203,7 @@ s32 tt_menu_loop(void) {
                         sCurrentMenuID = TT_MENU_GAME_STATUS;
                         break;
                 }
-                currentOption = D_80126516 + 1;
+                currentOption = gDialogueItemSelection + 1;
             } else if (buttonsPressed & B_BUTTON) {
                 play_sound_global(SOUND_MENU_BACK3, NULL);
                 currentOption = 3;
@@ -8215,8 +8212,6 @@ s32 tt_menu_loop(void) {
                 currentOption = 0;
             }
             if (currentOption == 3) {
-                //FAKEMATCH?
-                //if ((gControllersXAxisDirection && gControllersXAxisDirection) && gControllersXAxisDirection){}
                 sCurrentMenuID = TT_MENU_EXIT;
             }
             if (sCurrentMenuID == TT_MENU_EXIT) {
@@ -8225,16 +8220,16 @@ s32 tt_menu_loop(void) {
             break;
         case TT_MENU_CONT_PAK_ERROR_1:
             i = 0;
-            while (D_801263A4[i] != NULL) {
+            while (gTTSaveGhostPakErrorText[i] != NULL) {
                 i++;
             }
             yPos1 = 58;
             if (i > 0) {
                 i--;
-                yPos1 -= (i * 8);
+                yPos1 -= (i << 2 << 1); // Might be fake?
                 i = 0;
-                while (D_801263A4[i] != NULL) {
-                    render_dialogue_text(1, POS_CENTRED, yPos1, D_801263A4[i], 1, 4);
+                while (gTTSaveGhostPakErrorText[i] != NULL) {
+                    render_dialogue_text(1, POS_CENTRED, yPos1, gTTSaveGhostPakErrorText[i], 1, 4);
                     yPos1 += 16;
                     i++;
                 }
@@ -8252,17 +8247,16 @@ s32 tt_menu_loop(void) {
             }
             break;
         case TT_MENU_INTRODUCTION:
-            // RIGHT HERE is where I to swap the timing of assignment of these two vars
-            yPos2 = 6;
+            {
             i = 52;
             while (gMenuText[i] != NULL) {
-                render_dialogue_text(1, POS_CENTRED, yPos2, gMenuText[i], 1, 4);
-                yPos2 += 16;
+                render_dialogue_text(1, POS_CENTRED, 6 + ((i-52) * 16), gMenuText[i], 1, 4);
                 i++;
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
                 settings->cutsceneFlags |= CUTSCENE_TT_HELP;
                 sCurrentMenuID = TT_MENU_ROOT;
+            }
             }
             break;
         case TT_MENU_INSERT_CONT_PAK:
@@ -8271,8 +8265,8 @@ s32 tt_menu_loop(void) {
             render_dialogue_text(1, POS_CENTRED, 66, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6], 1, 4); // insert it now!
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
                 play_sound_global(SOUND_SELECT2, NULL);
-                D_80126398 = 0;
-                D_8012639C = TT_MENU_INSERT_RUMBLE_PAK;
+                gSaveGhostDelayCounter = 0;
+                gPreviousMenuID = TT_MENU_INSERT_RUMBLE_PAK;
                 sCurrentMenuID = TT_MENU_SAVE_GHOST;
             } else if (buttonsPressed & B_BUTTON) {
                 play_sound_global(SOUND_MENU_BACK3, NULL);
@@ -8289,15 +8283,15 @@ s32 tt_menu_loop(void) {
             break;
         case TT_MENU_SAVE_GHOST:
             render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], 1, 4); // PLEASE WAIT
-            D_80126398++;
-            if (D_80126398 >= 5) {
-                result = func_8001B738(0) & 0xFF;
+            gSaveGhostDelayCounter++;
+            if (gSaveGhostDelayCounter >= 5) {
+                result = func_8001B738(0);
                 if (result == CONTROLLER_PAK_CHANGED) {
-                    result = func_8001B738(0) & 0xFF;
+                    result = func_8001B738(0);
                 }
                 switch (result) {
                     case CONTROLLER_PAK_GOOD:
-                        sCurrentMenuID = D_8012639C;
+                        sCurrentMenuID = gPreviousMenuID;
                         break;
                     case RUMBLE_PAK:
                         sCurrentMenuID = TT_MENU_INSERT_CONT_PAK;
@@ -8305,21 +8299,21 @@ s32 tt_menu_loop(void) {
                     case NO_CONTROLLER_PAK:
                         // NO CONTROLLER PAK
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
-                        D_801263A4 = sNoControllerPakMenuText;
+                        gTTSaveGhostPakErrorText = sNoControllerPakMenuText;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case CONTROLLER_PAK_FULL:
                     case CONTROLLER_PAK_UNK6:
                         // CONTROLLER PAK FULL
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
-                        D_801263A4 = sControllerPakFullMenuText;
+                        gTTSaveGhostPakErrorText = sControllerPakFullMenuText;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case CONTROLLER_PAK_BAD_DATA:
                         // CORRUPT DATA.
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
                         // TRY AGAIN!
-                        D_801263A4 = sCorruptDataMenuText;
+                        gTTSaveGhostPakErrorText = sCorruptDataMenuText;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case CONTROLLER_PAK_INCONSISTENT:
@@ -8329,7 +8323,7 @@ s32 tt_menu_loop(void) {
                     default:
                         // BAD CONTROLLER PAK
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
-                        D_801263A4 = sBadControllerPakMenuText;
+                        gTTSaveGhostPakErrorText = sBadControllerPakMenuText;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                 }
@@ -8344,9 +8338,6 @@ s32 tt_menu_loop(void) {
 
     return currentOption;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/tt_menu_loop.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8009E3D0.s")
 
@@ -8363,22 +8354,22 @@ s32 trophy_race_cabinet_menu_loop(void) {
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], 1, 4); // TROPHY RACE
     if (gControllersYAxisDirection[0] < 0) {
-        sDialogueOption++;
+        gDialogueSubmenu++;
     } else if (gControllersYAxisDirection[0] > 0) {
-        sDialogueOption--;
+        gDialogueSubmenu--;
     }
-    if (sDialogueOption < 0) {
-        sDialogueOption = 0;
+    if (gDialogueSubmenu < 0) {
+        gDialogueSubmenu = 0;
     }
-    if (sDialogueOption > 1) {
-        sDialogueOption = 1;
+    if (gDialogueSubmenu > 1) {
+        gDialogueSubmenu = 1;
     }
-    set_option_text_colour(sDialogueOption == 0);
+    set_option_text_colour(gDialogueSubmenu == 0);
     render_dialogue_text(1, POS_CENTRED, 30, gMenuText[ASSET_MENU_TEXT_ENTERTROPHYRACE], 1, 4); // ENTER TROPHY RACE
-    set_option_text_colour(sDialogueOption == 1);
+    set_option_text_colour(gDialogueSubmenu == 1);
     render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_EXIT], 1, 4); // EXIT
     if (buttonsPressed & A_BUTTON) {
-        currentOption = sDialogueOption + 1;
+        currentOption = gDialogueSubmenu + 1;
     }
     if (buttonsPressed & B_BUTTON) {
         currentOption = 2;

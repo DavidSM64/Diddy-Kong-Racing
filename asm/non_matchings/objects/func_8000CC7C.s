@@ -1043,9 +1043,9 @@ glabel L8000D98C
 /* 00E6EC 8000DAEC 00002025 */   move  $a0, $zero
 /* 00E6F0 8000DAF0 3C10800E */  lui   $s0, %hi(D_800DC728) # $s0, 0x800e
 /* 00E6F4 8000DAF4 AE220000 */  sw    $v0, ($s1)
-/* 00E6F8 8000DAF8 3C01800E */  lui   $at, %hi(D_800DC730) # $at, 0x800e
+/* 00E6F8 8000DAF8 3C01800E */  lui   $at, %hi(gHasGhostToSave) # $at, 0x800e
 /* 00E6FC 8000DAFC 2610C728 */  addiu $s0, %lo(D_800DC728) # addiu $s0, $s0, -0x38d8
-/* 00E700 8000DB00 A020C730 */  sb    $zero, %lo(D_800DC730)($at)
+/* 00E700 8000DB00 A020C730 */  sb    $zero, %lo(gHasGhostToSave)($at)
 /* 00E704 8000DB04 860E0000 */  lh    $t6, ($s0)
 /* 00E708 8000DB08 00000000 */  nop   
 /* 00E70C 8000DB0C 29C10005 */  slti  $at, $t6, 5
