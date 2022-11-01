@@ -261,7 +261,6 @@ extern s16 D_800DC820[16];
 extern s8 D_800DC840[8];
 
 extern s8 D_800DC848;
-extern s32 D_800DC84C[3];
 extern s32 D_800DC858;
 extern s32 D_800DC85C;
 

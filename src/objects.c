@@ -90,7 +90,7 @@ s16 D_800DC820[16] = {
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
 s8 D_800DC848 = 0;
-s32 D_800DC84C[3] = { // Currently unknown, might be a different type.
+u32 D_800DC84C[3] = {
     0xFF401000,
     0x1040FF00,
     0x10FF4000,
@@ -259,8 +259,8 @@ Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
 s32 D_8011B068[4];
-s8 D_8011B078[3];
-s8 D_8011B07B;
+u8 D_8011B078[3];
+u8 D_8011B07B[1];
 s32 D_8011B07C;
 s32 D_8011B080[7];
 
@@ -1199,14 +1199,14 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *o
         if (var_a1 > 2) {
             var_a1 = 0;
         }
-        shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_UNK15));
+        shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
         var_a1 =  (var_a1 * 10) + var_a2;
         shield = shield + var_a1;
         D_800DC75C->segment.trans.x_position = shield->x_position;
         D_800DC75C->segment.trans.y_position = shield->y_position;
         D_800DC75C->segment.trans.z_position = shield->z_position;
         D_800DC75C->segment.trans.y_position += shield->y_offset * cosine_s(D_8011B010[var_a2] * 0x200);
-        shear = (sine_s(D_8011B010[var_a2] * 1024) * 0.05f) + 0.95f;
+        shear = (sine_s(D_8011B010[var_a2] * 0x400) * 0.05f) + 0.95f;
         D_800DC75C->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
         D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
