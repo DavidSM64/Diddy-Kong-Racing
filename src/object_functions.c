@@ -2442,7 +2442,7 @@ void obj_loop_weather(Object *obj, s32 speed) {
     f32 temp_f2;
     s32 i;
     s32 temp[3];
-    sp54 = func_80066220();
+    sp54 = get_object_render_stack_pos();
     objects = get_object_struct_array(&numberOfObjects);
     if (numberOfObjects != 0) {
         lastObj = &objects[numberOfObjects - 1];

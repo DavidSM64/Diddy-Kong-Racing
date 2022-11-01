@@ -9,13 +9,12 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 ## Dependencies
 
 * `libcapstone-dev`
-* `libssl-dev`
 * `gcc`, Version 8.0 or higher
 * `make`, Version 4.2 or higher
 * `python3`
 * `wget`
 
-`sudo apt install build-essential pkg-config git python3 libssl-dev wget libcapstone-dev`
+`sudo apt install build-essential pkg-config git python3 wget libcapstone-dev`
 
 ### binutils
 

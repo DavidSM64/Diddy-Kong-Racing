@@ -116,14 +116,14 @@ glabel func_80022E18
 /* 023BCC 80022FCC 0305C824 */  and   $t9, $t8, $a1
 /* 023BD0 80022FD0 13200005 */  beqz  $t9, .L80022FE8
 /* 023BD4 80022FD4 00403025 */   move  $a2, $v0
-/* 023BD8 80022FD8 0C0274CC */  jal   func_8009D330
+/* 023BD8 80022FD8 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023BDC 80022FDC 24040005 */   li    $a0, 5
 /* 023BE0 80022FE0 10000013 */  b     .L80023030
 /* 023BE4 80022FE4 8FAB001C */   lw    $t3, 0x1c($sp)
 .L80022FE8:
 /* 023BE8 80022FE8 24E40006 */  addiu $a0, $a3, 6
 /* 023BEC 80022FEC AFA5002C */  sw    $a1, 0x2c($sp)
-/* 023BF0 80022FF0 0C0274CC */  jal   func_8009D330
+/* 023BF0 80022FF0 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023BF4 80022FF4 AFA60020 */   sw    $a2, 0x20($sp)
 /* 023BF8 80022FF8 8FA60020 */  lw    $a2, 0x20($sp)
 /* 023BFC 80022FFC 8FA5002C */  lw    $a1, 0x2c($sp)
@@ -137,7 +137,7 @@ glabel func_80022E18
 /* 023C1C 8002301C 10000004 */  b     .L80023030
 /* 023C20 80023020 8FAB001C */   lw    $t3, 0x1c($sp)
 .L80023024:
-/* 023C24 80023024 0C0274CC */  jal   func_8009D330
+/* 023C24 80023024 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023C28 80023028 24040004 */   li    $a0, 4
 /* 023C2C 8002302C 8FAB001C */  lw    $t3, 0x1c($sp)
 .L80023030:
@@ -152,7 +152,7 @@ glabel func_80022E18
 /* 023C4C 8002304C 00000000 */   nop   
 /* 023C50 80023050 0C000611 */  jal   func_80001844
 /* 023C54 80023054 00000000 */   nop   
-/* 023C58 80023058 0C0274CC */  jal   func_8009D330
+/* 023C58 80023058 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023C5C 8002305C 00002025 */   move  $a0, $zero
 /* 023C60 80023060 0C00205A */  jal   func_80008168
 /* 023C64 80023064 00000000 */   nop   

@@ -240,7 +240,7 @@ s32 get_viewport_count(void) {
     return gNumberOfViewports;
 }
 
-s32 func_80066220(void) {
+s32 get_object_render_stack_pos(void) {
     return gObjectRenderStackPos;
 }
 

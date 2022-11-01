@@ -37,7 +37,7 @@ s32 D_800DC720 = 0; // Currently unknown, might be a different type.
 s16 D_800DC724 = 0x2A30;
 s16 D_800DC728 = -1;
 s16 D_800DC72C = 0;
-u8 D_800DC730 = 0;
+u8 gHasGhostToSave = 0;
 s32 D_800DC734 = 0; // Currently unknown, might be a different type.
 u8 D_800DC738 = 0;
 s8 D_800DC73C = 0;
@@ -1484,13 +1484,13 @@ s32 func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
 }
 
-u8 func_8001B780() {
-    return D_800DC730;
+u8 has_ghost_to_save() {
+    return gHasGhostToSave;
 }
 
 void func_8001B790(void) {
     D_8011D5AC = -1;
-    D_800DC730 = 0;
+    gHasGhostToSave = 0;
 }
 
 Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2) {
