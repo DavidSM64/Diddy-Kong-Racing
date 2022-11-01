@@ -92,7 +92,7 @@ s32 sControllerStatus = 0;
 UNUSED s32 D_800DD388 = 0;
 s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
-s16 gNumUpdatesUntilLevelLoad = 0;
+s16 gLevelLoadTimer = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
 s8 D_800DD3A0 = FALSE;
@@ -1089,7 +1089,7 @@ void ingame_logic_loop(s32 updateRate) {
         func_80010994(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
-                && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == 0) && (gNumUpdatesUntilLevelLoad == 0) && (D_800DD398 == 0)) {
+                && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == 0) && (gLevelLoadTimer == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
@@ -1238,9 +1238,9 @@ void ingame_logic_loop(s32 updateRate) {
             sp3C = TRUE;
         }
     }
-    if (gNumUpdatesUntilLevelLoad > 0) {
-        gNumUpdatesUntilLevelLoad -= updateRate;
-        if (gNumUpdatesUntilLevelLoad <= 0) {
+    if (gLevelLoadTimer > 0) {
+        gLevelLoadTimer -= updateRate;
+        if (gLevelLoadTimer <= 0) {
             buttonHeldInputs = L_TRIG;
             sp3C = TRUE;
             switch (D_80123524) {
@@ -1264,7 +1264,7 @@ void ingame_logic_loop(s32 updateRate) {
                     break;
             }
             D_80123524 = 0;
-            gNumUpdatesUntilLevelLoad = 0;
+            gLevelLoadTimer = 0;
         }
     }
     if (sp3C) {
@@ -1292,7 +1292,7 @@ void ingame_logic_loop(s32 updateRate) {
     } else {
         sp3C = func_8006C300();
         if (func_8006C2F0()) {
-            if (gNumUpdatesUntilLevelLoad == 0) {
+            if (gLevelLoadTimer == 0) {
                 i = func_800214C4();
                 if ((i != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
                     if (sp3C != 0) {
@@ -1321,7 +1321,7 @@ void ingame_logic_loop(s32 updateRate) {
     }
     if (((buttonHeldInputs & L_TRIG) && (sRenderContext == DRAW_GAME)) || (D_801234FC != 0)) {
         gIsPaused = FALSE;
-        gNumUpdatesUntilLevelLoad = 0;
+        gLevelLoadTimer = 0;
         gPostRaceViewPort = 0;
         func_8006CC14();
         func_8006EC48(get_save_file_index());
@@ -1939,50 +1939,50 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006EFDC.s")
 #endif
 
 void func_8006F140(s32 arg0) {
-    if (gNumUpdatesUntilLevelLoad == 0) {
-        gNumUpdatesUntilLevelLoad = 0x28;
+    if (gLevelLoadTimer == 0) {
+        gLevelLoadTimer = 0x28;
         D_80123524 = 0;
         D_80123526 = 0;
         if (arg0 == 1) {
             func_800C01D8(&D_800DD41C);
         }
         if (arg0 == 3) {
-            gNumUpdatesUntilLevelLoad = 0x11A;
+            gLevelLoadTimer = 0x11A;
             func_800C01D8(&D_800DD424);
         }
         if (arg0 == 4) {
-            gNumUpdatesUntilLevelLoad = 0x168;
+            gLevelLoadTimer = 0x168;
             func_800C01D8(&D_800DD424);
         }
         if (arg0 == 0) {
-            gNumUpdatesUntilLevelLoad = 2;
+            gLevelLoadTimer = 2;
         }
     }
 }
 
 // Unused?
 void func_8006F20C(void) {
-    if (gNumUpdatesUntilLevelLoad == 0) {
+    if (gLevelLoadTimer == 0) {
         func_800C01D8(&D_800DD41C);
-        gNumUpdatesUntilLevelLoad = 0x28;
+        gLevelLoadTimer = 0x28;
         D_80123524 = 1;
     }
 }
 
 void func_8006F254(void) {
-    if (gNumUpdatesUntilLevelLoad == 0) {
+    if (gLevelLoadTimer == 0) {
         func_800C01D8(&D_800DD41C);
-        gNumUpdatesUntilLevelLoad = 0x28;
+        gLevelLoadTimer = 0x28;
         D_80123524 = 2;
     }
 }
 
 void func_8006F29C(void) {
-    if (gNumUpdatesUntilLevelLoad == 0) {
+    if (gLevelLoadTimer == 0) {
         if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
             gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
             func_800C01D8(&D_800DD41C);
-            gNumUpdatesUntilLevelLoad = 0x28;
+            gLevelLoadTimer = 0x28;
             D_80123525 = 0x2D;
             D_80123524 = 3;
         }
@@ -1990,10 +1990,10 @@ void func_8006F29C(void) {
 }
 
 void func_8006F338(s32 arg0) {
-    if (gNumUpdatesUntilLevelLoad == 0) {
+    if (gLevelLoadTimer == 0) {
         D_80123525 = arg0;
         func_800C01D8(&D_800DD41C);
-        gNumUpdatesUntilLevelLoad = 0x28;
+        gLevelLoadTimer = 0x28;
         D_80123524 = 4;
     }
 }
