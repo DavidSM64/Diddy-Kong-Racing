@@ -261,7 +261,6 @@ extern s16 D_800DC820[16];
 extern s8 D_800DC840[8];
 
 extern s8 D_800DC848;
-extern s32 D_800DC84C[3];
 extern s32 D_800DC858;
 extern s32 D_800DC85C;
 
@@ -332,7 +331,7 @@ f32 func_8001B834(Object *arg0, s32);
 unknown8011AECC *func_8001BA00(s32 arg0);
 unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1);
 s32 func_8001BA64();
-Object **get_object_struct_array(s32 *cnt);
+Object **get_racer_objects(s32 *cnt);
 s32 *func_8001BA90(s32 *arg0);
 Object **func_8001BAAC(s32 *numberOfObjects);
 Object *get_object_struct(s32 indx);
@@ -381,6 +380,7 @@ s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 s32 func_8001BB18(s32 arg0);
 void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 
 //Non Matching

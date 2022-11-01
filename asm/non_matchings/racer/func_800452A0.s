@@ -42,7 +42,7 @@ glabel func_800452A0
 /* 045F10 80045310 E7B50018 */  swc1  $f21, 0x18($sp)
 /* 045F14 80045314 E7B4001C */  swc1  $f20, 0x1c($sp)
 /* 045F18 80045318 AC20D538 */  sw    $zero, %lo(gCurrentStickY)($at)
-/* 045F1C 8004531C 0C006E9D */  jal   get_object_struct_array
+/* 045F1C 8004531C 0C006E9D */  jal   get_racer_objects
 /* 045F20 80045320 27A4009C */   addiu $a0, $sp, 0x9c
 /* 045F24 80045324 8FAF009C */  lw    $t7, 0x9c($sp)
 /* 045F28 80045328 24010004 */  li    $at, 4

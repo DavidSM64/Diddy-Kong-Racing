@@ -29,7 +29,8 @@ typedef struct {
 } IndicatorArrow;
 
 typedef struct unk80126CDC {
-    u8 unk0[0x6];
+    struct unk80126CDC *unk0;
+    u8 unk4[0x2];
     s16 unk6;
     u8 unk8[0x38];
     struct unk80126CDC *unk40;
@@ -57,7 +58,11 @@ typedef struct unk80126CDC {
     u8 pad[0x10];
     f32 unk16C;
     f32 unk170;
-    u8 unk174[0x8C];    
+    u8 unk174[0x18];
+    f32 unk18C;
+    u8 pad190[0xA];
+    s8 unk19A[1];
+    u8 pad19C[0x65];
     struct unk80126CDC *unk200; // Not sure if this is correct.
     u8 unk204[0x14];
     s16 unk218; 
@@ -115,7 +120,6 @@ typedef struct unk80126CDC {
     u8 unk63C[0x3E];
     s8 unk67A;
     s8 unk67B[0xA4];
-    s8 unk720;
 } unk80126CDC;
 
 typedef struct {
@@ -137,13 +141,16 @@ typedef struct unk800E1E64 {
 
 /* Size: 0x10 bytes */
 typedef struct unk800E2770 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+    s8 unk3;
     s32 unk4;
     s32 unk8;
-    s32 unkC;
+    s8 unkC;
+    s8 unkD;
+    s8 unkE;
+    s8 unkF;
 } unk800E2770;
 
 extern unk80126CDC *D_80126CDC;
@@ -176,10 +183,10 @@ void render_course_indicator_arrows(Object_64 *obj, s32 updateRate);
 void render_hud_hubworld(Object *obj, s32 updateRate);
 void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s32 updateRate);
 void render_weapon_hud(Object *obj, s32 updateRate);
+void render_race_start(s32 arg0, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
-void func_800A3CE4(s32, s32);
 void func_800A4F50(Object_64 *arg0, s32 arg1);
 void func_800A4154(Object_64 *arg0, s32 arg1);
 void func_800A4C44(Object_64 *arg0, s32 arg1);
@@ -198,5 +205,6 @@ void func_800A497C(Object_64*, s32);
 void func_800A6254(Object_64*, s32);
 void func_800A6E30(Object_64*, s32);
 void func_800A7A60(Object*, Gfx**);
+void func_800095E8(s32, f32, f32, f32, s32, s32, f32, s32*);
 
 #endif

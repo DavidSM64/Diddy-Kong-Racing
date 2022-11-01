@@ -90,7 +90,7 @@ s16 D_800DC820[16] = {
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
 s8 D_800DC848 = 0;
-s32 D_800DC84C[3] = { // Currently unknown, might be a different type.
+u32 D_800DC84C[3] = {
     0xFF401000,
     0x1040FF00,
     0x10FF4000,
@@ -259,9 +259,8 @@ Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
 s32 D_8011B068[4];
-s8 D_8011B078[3];
-s8 D_8011B07B;
-s32 D_8011B07C;
+u8 D_8011B078[3];
+u8 D_8011B07B[1];
 s32 D_8011B080[7];
 
 extern s16 D_8011D5AC;
@@ -1199,25 +1198,25 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *o
         if (var_a1 > 2) {
             var_a1 = 0;
         }
-        shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_UNK15));
+        shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
         var_a1 =  (var_a1 * 10) + var_a2;
         shield = shield + var_a1;
         D_800DC75C->segment.trans.x_position = shield->x_position;
         D_800DC75C->segment.trans.y_position = shield->y_position;
         D_800DC75C->segment.trans.z_position = shield->z_position;
         D_800DC75C->segment.trans.y_position += shield->y_offset * cosine_s(D_8011B010[var_a2] * 0x200);
-        shear = (sine_s(D_8011B010[var_a2] * 1024) * 0.05f) + 0.95f;
+        shear = (sine_s(D_8011B010[var_a2] * 0x400) * 0.05f) + 0.95f;
         D_800DC75C->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
         D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
         D_800DC75C->segment.trans.x_rotation = 0x800;
         D_800DC75C->segment.trans.z_rotation = 0;
         shieldType = racer->shieldType;
-        if (shieldType) {
+        if (shieldType != SHIELD_NONE) {
             shieldType--;
         }
-        if (shieldType > 2) {
-            shieldType = 2;
+        if (shieldType > SHIELD_LEVEL3 - 1) {
+            shieldType = SHIELD_LEVEL3 - 1;
         }
         scale = ((f32) shieldType * 0.1) + 1.0f;
         D_800DC75C->segment.trans.scale *= scale;
@@ -1243,7 +1242,68 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *o
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80013DCC.s")
+/**
+ * Get the racer object data, and fetch set visual magnet properties based on that racer.
+ * Afterwards, render the graphics with opacity set by the properties.
+ */
+void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj) {
+    Object_Racer *racer;
+    Object_68 *gfxData;
+    ObjectModel *mdl;
+    f32* magnet;
+    s32 var_a0;
+    s32 var_t0;
+    s32 opacity;
+    f32 shear;
+    s32 pad;
+
+    racer = (Object_Racer *) obj->unk64;
+    var_t0 = racer->unk2 * 4;
+    if (D_8011B07B[var_t0]) {
+        if (D_800DC764 != NULL) {
+            gObjectCurrDisplayList = *dList;
+            gObjectCurrMatrix = *mtx;
+            gObjectCurrVertexList = *vtxList;
+            magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
+            var_a0 = racer->unk1D6;
+            if (var_a0 < 0 || var_a0 > 2) {
+                var_a0 = 0;
+            }
+            magnet = &magnet[var_a0 * 5];
+            var_t0 = racer->unk2;
+            if (var_t0 > 10) {
+                var_t0 = 0;
+            }
+            D_800DC764->segment.trans.x_position = magnet[0];
+            D_800DC764->segment.trans.y_position = magnet[1];
+            D_800DC764->segment.trans.z_position = magnet[2];
+            magnet += 3;
+            shear = (sine_s((D_8011B078[(var_t0 * 4) + 1] * 0x400)) * 0.02f) + 0.98f;
+            D_800DC764->segment.trans.scale = magnet[0] * shear;
+            magnet += 1;
+            shear = magnet[0] * shear;
+            D_800DC764->segment.trans.y_rotation = D_8011B078[(var_t0 * 4) + 2] * 0x1000;
+            D_800DC764->segment.trans.x_rotation = 0;
+            D_800DC764->segment.trans.z_rotation = 0;
+            gfxData = *D_800DC764->unk68;
+            mdl = gfxData->objModel;
+            D_800DC764->unk44 = gfxData->unk4[gfxData->unk1F];
+            opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
+            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, D_800DC84C[racer->unk184]);
+            func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC764, obj, shear);
+            D_800DC720 = TRUE;
+            func_800143A8(mdl, D_800DC764, 0, 4, 0);
+            D_800DC720 = FALSE;
+            gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            func_8007B3D0(&gObjectCurrDisplayList);
+            *dList = gObjectCurrDisplayList;
+            *mtx = gObjectCurrMatrix;
+            *vtxList = gObjectCurrVertexList;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
 
 void func_800142B8(void) {
@@ -1468,7 +1528,7 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Object **get_object_struct_array(s32 *cnt) {
+Object **get_racer_objects(s32 *cnt) {
     *cnt = gObjectCount;
     return *gObjectStructArrayPtr;
 }

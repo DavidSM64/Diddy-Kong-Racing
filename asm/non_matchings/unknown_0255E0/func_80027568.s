@@ -20,7 +20,7 @@ glabel func_80027568
 /* 028194 80027594 E7B6001C */  swc1  $f22, 0x1c($sp)
 /* 028198 80027598 E7B50010 */  swc1  $f21, 0x10($sp)
 /* 02819C 8002759C E7B40014 */  swc1  $f20, 0x14($sp)
-/* 0281A0 800275A0 0C006E9D */  jal   get_object_struct_array
+/* 0281A0 800275A0 0C006E9D */  jal   get_racer_objects
 /* 0281A4 800275A4 27A400C4 */   addiu $a0, $sp, 0xc4
 /* 0281A8 800275A8 8FAE00C4 */  lw    $t6, 0xc4($sp)
 /* 0281AC 800275AC 00403025 */  move  $a2, $v0

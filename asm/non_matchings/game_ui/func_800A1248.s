@@ -17,13 +17,13 @@ glabel func_800A1248
 /* 0A1E70 800A1270 8CA70064 */  lw    $a3, 0x64($a1)
 /* 0A1E74 800A1274 00808025 */  move  $s0, $a0
 /* 0A1E78 800A1278 27A4003C */  addiu $a0, $sp, 0x3c
-/* 0A1E7C 800A127C 0C006E9D */  jal   get_object_struct_array
+/* 0A1E7C 800A127C 0C006E9D */  jal   get_racer_objects
 /* 0A1E80 800A1280 AFA70044 */   sw    $a3, 0x44($sp)
 /* 0A1E84 800A1284 00409025 */  move  $s2, $v0
 /* 0A1E88 800A1288 0C01A142 */  jal   func_80068508
 /* 0A1E8C 800A128C 24040001 */   li    $a0, 1
 /* 0A1E90 800A1290 8FA50050 */  lw    $a1, 0x50($sp)
-/* 0A1E94 800A1294 0C028F39 */  jal   func_800A3CE4
+/* 0A1E94 800A1294 0C028F39 */  jal   render_race_start
 /* 0A1E98 800A1298 02002025 */   move  $a0, $s0
 /* 0A1E9C 800A129C 3C028012 */  lui   $v0, %hi(D_80126D37) # $v0, 0x8012
 /* 0A1EA0 800A12A0 90426D37 */  lbu   $v0, %lo(D_80126D37)($v0)
