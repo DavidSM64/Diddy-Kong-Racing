@@ -792,7 +792,7 @@ glabel func_800A8474
 .L800A8FD4:
 /* 0A9BD4 800A8FD4 E7A0004C */  swc1  $f0, 0x4c($sp)
 /* 0A9BD8 800A8FD8 E7A20048 */  swc1  $f2, 0x48($sp)
-/* 0A9BDC 800A8FDC 0C029055 */  jal   func_800A4154
+/* 0A9BDC 800A8FDC 0C029055 */  jal   render_racer_bananas
 /* 0A9BE0 800A8FE0 E7AE0044 */   swc1  $f14, 0x44($sp)
 /* 0A9BE4 800A8FE4 8E420000 */  lw    $v0, ($s2)
 /* 0A9BE8 800A8FE8 C7A0004C */  lwc1  $f0, 0x4c($sp)

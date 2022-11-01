@@ -487,7 +487,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate) {
         func_800A4F50(racer, updateRate);
     }
 
-    func_800A4154(racer, updateRate);
+    render_racer_bananas(racer, updateRate);
     render_race_time(racer, updateRate);
     func_800A4C44(racer, updateRate);
     func_800A3884(arg1, updateRate);
@@ -765,7 +765,82 @@ void render_race_start(s32 arg0, s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4154.s")
+/**
+ * Renders the banana counter on screen.
+ * When a banana is collected, render sparkles and animate the banana. for a brief moment.
+*/
+void render_racer_bananas(Object_64* obj, s32 updateRate) {
+    s32 bananas;
+    s16 temp_v1;
+    s32 temp_lo;
+    u8 var_v1;
+    if(obj->racer.playerIndex == PLAYER_COMPUTER || ((gHUDNumPlayers < 1 || D_800E2794[gHUDNumPlayers][obj->racer.playerIndex] == 2 || D_80126D60->race_type == 0x41 || D_80126D60->race_type == 0x40) && obj->racer.raceFinished == FALSE) && (gHUDNumPlayers < 1 || (obj->racer.lapCount < 1) || obj->racer.lap_times[obj->racer.lapCount] >= 180 || D_80126D60->race_type & 0x40)) {
+        func_800AA600(&gHUDCurrDisplayList, (Matrix *) &gHUDCurrMatrix, (TriangleList *) &gHUDCurrTriList, (unk80126CDC *) &D_80126CDC->unk240);
+        bananas = obj->racer.bananas;
+        var_v1 = D_80126CDC->unkF8;
+        if ((D_80126CDC->unkFA == 0) && (D_80126CDC->unkFB != obj->racer.bananas)) {
+            D_80126CDC->unkFA = 2;
+            D_80126CDC->unkFB = obj->racer.bananas;
+        } else if (D_80126CDC->unkFA) {
+            D_80126CDC->unk388 = 2.0f;
+            var_v1 += updateRate * 13;
+            if (var_v1 < (D_80126CDC->unkF8 & 0xFF)) {
+                D_80126CDC->unkFA--;
+                if (D_80126CDC->unkFA == 0) {
+                    D_80126CDC->unk39B = 1;
+                    D_80126CDC->unk39A = 6;
+                    var_v1 = 0;
+                    D_80126CDC->unk398 = 1;
+                }
+            }
+        }
+        if (var_v1 == 0) {
+            func_8007BF1C(1);
+            set_viewport_tv_type(TV_TYPE_NTSC);
+            func_800AA600(&gHUDCurrDisplayList, (Matrix *) &gHUDCurrMatrix, (TriangleList *) &gHUDCurrTriList, (unk80126CDC *) &D_80126CDC->unk360);
+            set_viewport_tv_type(TV_TYPE_PAL);
+            func_8007BF1C(0);
+            D_80126CDC->unkF8 = var_v1;
+            if (D_80126CDC->unk39B) {
+                D_80126CDC->unk39A -= updateRate;
+                if (D_80126CDC->unk39A < 0) {
+                    D_80126CDC->unk39A = 6;
+                    if (D_80126CDC->unk398 == 6) {
+                        D_80126CDC->unk398 = 0;
+                        D_80126CDC->unk39B--;
+                    } else {
+                        D_80126CDC->unk398++;
+                    }
+                }
+                set_viewport_tv_type(TV_TYPE_NTSC);
+                func_800AA600(&gHUDCurrDisplayList, (Matrix *) &gHUDCurrMatrix, (TriangleList *) &gHUDCurrTriList, (unk80126CDC *) &D_80126CDC->unk380);
+                set_viewport_tv_type(TV_TYPE_PAL);
+            }
+        } else {
+            D_80126CDC->unkF8 = var_v1 + 128;
+            func_80068508(0);
+            func_8007BF1C(1);
+            set_viewport_tv_type(TV_TYPE_NTSC);
+            func_800AA600(&gHUDCurrDisplayList, (Matrix *) &gHUDCurrMatrix, (TriangleList *) &gHUDCurrTriList, (unk80126CDC *) &D_80126CDC->unkE0);
+            func_8007BF1C(0);
+            set_viewport_tv_type(TV_TYPE_PAL);
+            func_80068508(1);
+            D_80126CDC->unkF8 -= 128;
+        }
+        temp_lo = bananas / 10;
+        if (temp_lo) {
+            D_80126CDC->unk118 = temp_lo;
+            D_80126CDC->unk138 = bananas % 10;
+            func_800AA600(&gHUDCurrDisplayList, (Matrix *) &gHUDCurrMatrix, (TriangleList *) &gHUDCurrTriList, (unk80126CDC *) &D_80126CDC->unk120);
+        } else {
+            D_80126CDC->unk118 = bananas % 10;
+        }
+        func_800AA600(&gHUDCurrDisplayList, (Matrix *) &gHUDCurrMatrix, (TriangleList *) &gHUDCurrTriList, (unk80126CDC *) &D_80126CDC->unk100);
+        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A45F0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A497C.s")

@@ -870,7 +870,7 @@ glabel func_800A277C
 /* 0A3FE8 800A33E8 00000000 */   nop   
 /* 0A3FEC 800A33EC 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A3FF0 800A33F0 8FA500C8 */  lw    $a1, 0xc8($sp)
-/* 0A3FF4 800A33F4 0C029055 */  jal   func_800A4154
+/* 0A3FF4 800A33F4 0C029055 */  jal   render_racer_bananas
 /* 0A3FF8 800A33F8 00000000 */   nop   
 /* 0A3FFC 800A33FC 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A4000 800A3400 8FA500C8 */  lw    $a1, 0xc8($sp)
