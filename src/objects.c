@@ -261,7 +261,6 @@ s32 D_8011B058[4];
 s32 D_8011B068[4];
 u8 D_8011B078[3];
 u8 D_8011B07B[1];
-s32 D_8011B07C;
 s32 D_8011B080[7];
 
 extern s16 D_8011D5AC;
@@ -1213,11 +1212,11 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *o
         D_800DC75C->segment.trans.x_rotation = 0x800;
         D_800DC75C->segment.trans.z_rotation = 0;
         shieldType = racer->shieldType;
-        if (shieldType) {
+        if (shieldType != SHIELD_NONE) {
             shieldType--;
         }
-        if (shieldType > 2) {
-            shieldType = 2;
+        if (shieldType > SHIELD_LEVEL3 - 1) {
+            shieldType = SHIELD_LEVEL3 - 1;
         }
         scale = ((f32) shieldType * 0.1) + 1.0f;
         D_800DC75C->segment.trans.scale *= scale;
@@ -1243,7 +1242,68 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *o
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80013DCC.s")
+/**
+ * Get the racer object data, and fetch set visual magnet properties based on that racer.
+ * Afterwards, render the graphics with opacity set by the properties.
+ */
+void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj) {
+    Object_Racer *racer;
+    Object_68 *gfxData;
+    ObjectModel *mdl;
+    f32* magnet;
+    s32 var_a0;
+    s32 var_t0;
+    s32 opacity;
+    f32 shear;
+    s32 pad;
+
+    racer = (Object_Racer *) obj->unk64;
+    var_t0 = racer->unk2 * 4;
+    if (D_8011B07B[var_t0]) {
+        if (D_800DC764 != NULL) {
+            gObjectCurrDisplayList = *dList;
+            gObjectCurrMatrix = *mtx;
+            gObjectCurrVertexList = *vtxList;
+            magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
+            var_a0 = racer->unk1D6;
+            if (var_a0 < 0 || var_a0 > 2) {
+                var_a0 = 0;
+            }
+            magnet = &magnet[var_a0 * 5];
+            var_t0 = racer->unk2;
+            if (var_t0 > 10) {
+                var_t0 = 0;
+            }
+            D_800DC764->segment.trans.x_position = magnet[0];
+            D_800DC764->segment.trans.y_position = magnet[1];
+            D_800DC764->segment.trans.z_position = magnet[2];
+            magnet += 3;
+            shear = (sine_s((D_8011B078[(var_t0 * 4) + 1] * 0x400)) * 0.02f) + 0.98f;
+            D_800DC764->segment.trans.scale = magnet[0] * shear;
+            magnet += 1;
+            shear = magnet[0] * shear;
+            D_800DC764->segment.trans.y_rotation = D_8011B078[(var_t0 * 4) + 2] * 0x1000;
+            D_800DC764->segment.trans.x_rotation = 0;
+            D_800DC764->segment.trans.z_rotation = 0;
+            gfxData = *D_800DC764->unk68;
+            mdl = gfxData->objModel;
+            D_800DC764->unk44 = gfxData->unk4[gfxData->unk1F];
+            opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
+            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, D_800DC84C[racer->unk184]);
+            func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC764, obj, shear);
+            D_800DC720 = TRUE;
+            func_800143A8(mdl, D_800DC764, 0, 4, 0);
+            D_800DC720 = FALSE;
+            gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            func_8007B3D0(&gObjectCurrDisplayList);
+            *dList = gObjectCurrDisplayList;
+            *mtx = gObjectCurrMatrix;
+            *vtxList = gObjectCurrVertexList;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
 
 void func_800142B8(void) {

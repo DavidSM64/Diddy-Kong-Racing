@@ -128,7 +128,7 @@ s32 func_80027568(void);
 void func_8002C954(LevelModelSegment*, LevelModelSegmentBoundingBox*, s32);
 s32 func_8002CC30(LevelModelSegment*);
 s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
-void func_80013DCC(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object* obj);
+void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object* obj);
 s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);
 void func_800278E8(s32);
 void func_80028050(void);

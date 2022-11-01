@@ -678,7 +678,7 @@ void render_level_geometry_and_objects(void) {
 skip:
             if (obj->behaviorId == BHV_RACER) {
                 render_racer_shield(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-                func_80013DCC(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                render_racer_magnet(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             }
         }
     }
