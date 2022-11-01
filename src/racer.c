@@ -3884,7 +3884,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk16A += var_t2;
     }
     if (racer->shieldTimer > 0) {
-        if (racer->shieldTimer >= 61) {
+        if (racer->shieldTimer > 60) {
             if (racer->shieldSoundMask != 0) {
                 update_spatial_audio_position(racer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else if (racer->unk118 != 0) {

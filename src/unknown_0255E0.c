@@ -659,7 +659,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & sp158) {
             s0 = 0;
         }
-        if ((obj->behaviorId == 1) && (s0 >= 0xFF)) {
+        if ((obj->behaviorId == BHV_RACER) && (s0 >= 0xFF)) {
             s0 = 0;
         }
         if (obj != NULL && s0 < 0xFF && sp58[obj->segment.unk2C.half.lower + 1] && func_8002A900(obj)) {
@@ -676,8 +676,8 @@ void render_level_geometry_and_objects(void) {
                 }
             }
 skip:
-            if (obj->behaviorId == 1) {
-                func_80013A0C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+            if (obj->behaviorId == BHV_RACER) {
+                render_racer_shield(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 func_80013DCC(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             }
         }

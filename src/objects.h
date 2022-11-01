@@ -138,6 +138,15 @@ enum ObjectBehaviours {
     BHV_UNK_7F
 };
 
+struct RacerShieldGfx {
+    s16 x_position;
+    s16 y_position;
+    s16 z_position;
+    s16 y_offset;
+    f32 scale;
+    f32 turnSpeed;
+};
+
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
     union {
@@ -371,6 +380,8 @@ void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 s32 func_8001BB18(s32 arg0);
+void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -379,7 +390,6 @@ void gParticlePtrList_flush(void);
 void decrypt_magic_codes(u8 *arg0, s32 length);
 void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
-void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *spawn_object(void *entry, s32);
@@ -393,5 +403,7 @@ s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpoint
 Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
+s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
+void func_80068FA8(Gfx**, Mtx**, Object*, Object*, f32); /* extern */
 
 #endif

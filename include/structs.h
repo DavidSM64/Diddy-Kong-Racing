@@ -426,7 +426,9 @@ typedef struct ObjectModel {
 /* 0x08 */ Triangle *triangles;
 /* 0x0C */ s32 *unkC;
 /* 0x10 */ s32 *unk10;
-           u8 pad0[0x0E];
+           u8 pad0[0x0B];
+/* 0x1F */ s8 unk1F;
+           u8 pad20[2];
 /* 0x22 */ s16 numberOfTextures;
 /* 0x24 */ s16 numberOfVertices;
 /* 0x26 */ s16 numberOfTriangles;
@@ -855,7 +857,7 @@ typedef struct Object_Exit {
 /* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
-  /* 0x002 */ u8 unk2;
+  /* 0x002 */ s8 unk2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
@@ -1278,12 +1280,14 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ u8 pad04[12];
+  /* 0x04 */ s32 *unk4[3];
   /* 0x10 */ s16 unk10;
-  /* 0x14 */ u8 pad14[14];
+  /* 0x14 */ u8 pad14[13];
+  /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
+  /* 0x21 */ s8 unk21;
  } Object_68;
-
+ 
 /* Size: 0x20 bytes */
 typedef struct Object_6C {
     u8  pad0[0x4];

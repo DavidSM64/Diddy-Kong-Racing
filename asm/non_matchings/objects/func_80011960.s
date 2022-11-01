@@ -6,17 +6,17 @@ glabel func_80011960
 /* 012570 80011970 AFA60030 */  sw    $a2, 0x30($sp)
 /* 012574 80011974 AFA70034 */  sw    $a3, 0x34($sp)
 /* 012578 80011978 8FA60028 */  lw    $a2, 0x28($sp)
-/* 01257C 8001197C 3C048012 */  lui   $a0, %hi(D_8011AE8C) # $a0, 0x8012
+/* 01257C 8001197C 3C048012 */  lui   $a0, %hi(gObjectCurrDisplayList) # $a0, 0x8012
 /* 012580 80011980 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 012584 80011984 8FA70048 */  lw    $a3, 0x48($sp)
-/* 012588 80011988 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
-/* 01258C 8001198C 2484AE8C */  addiu $a0, %lo(D_8011AE8C) # addiu $a0, $a0, -0x5174
+/* 012588 80011988 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
+/* 01258C 8001198C 2484AE8C */  addiu $a0, %lo(gObjectCurrDisplayList) # addiu $a0, $a0, -0x5174
 /* 012590 80011990 AFA00024 */  sw    $zero, 0x24($sp)
-/* 012594 80011994 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 012594 80011994 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 012598 80011998 0C01A521 */  jal   func_80069484
 /* 01259C 8001199C E7A40010 */   swc1  $f4, 0x10($sp)
-/* 0125A0 800119A0 3C048012 */  lui   $a0, %hi(D_8011AE8C) # $a0, 0x8012
-/* 0125A4 800119A4 2484AE8C */  addiu $a0, %lo(D_8011AE8C) # addiu $a0, $a0, -0x5174
+/* 0125A0 800119A0 3C048012 */  lui   $a0, %hi(gObjectCurrDisplayList) # $a0, 0x8012
+/* 0125A4 800119A4 2484AE8C */  addiu $a0, %lo(gObjectCurrDisplayList) # addiu $a0, $a0, -0x5174
 /* 0125A8 800119A8 8C820000 */  lw    $v0, ($a0)
 /* 0125AC 800119AC 3C0FFA00 */  lui   $t7, 0xfa00
 /* 0125B0 800119B0 244E0008 */  addiu $t6, $v0, 8
@@ -45,10 +45,10 @@ glabel func_80011960
 /* 012608 80011A08 8FA90030 */  lw    $t1, 0x30($sp)
 /* 01260C 80011A0C 8FAF002C */  lw    $t7, 0x2c($sp)
 /* 012610 80011A10 3C088000 */  lui   $t0, 0x8000
-/* 012614 80011A14 3C048012 */  lui   $a0, %hi(D_8011AE8C) # $a0, 0x8012
+/* 012614 80011A14 3C048012 */  lui   $a0, %hi(gObjectCurrDisplayList) # $a0, 0x8012
 /* 012618 80011A18 2538FFFF */  addiu $t8, $t1, -1
 /* 01261C 80011A1C 01E82821 */  addu  $a1, $t7, $t0
-/* 012620 80011A20 2484AE8C */  addiu $a0, %lo(D_8011AE8C) # addiu $a0, $a0, -0x5174
+/* 012620 80011A20 2484AE8C */  addiu $a0, %lo(gObjectCurrDisplayList) # addiu $a0, $a0, -0x5174
 /* 012624 80011A24 30AA0006 */  andi  $t2, $a1, 6
 /* 012628 80011A28 0018C8C0 */  sll   $t9, $t8, 3
 /* 01262C 80011A2C 8C820000 */  lw    $v0, ($a0)
