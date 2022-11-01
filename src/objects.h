@@ -380,6 +380,7 @@ s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 s32 func_8001BB18(s32 arg0);
 void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 
 //Non Matching
