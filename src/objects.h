@@ -331,7 +331,7 @@ f32 func_8001B834(Object *arg0, s32);
 unknown8011AECC *func_8001BA00(s32 arg0);
 unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1);
 s32 func_8001BA64();
-Object **get_object_struct_array(s32 *cnt);
+Object **get_racer_objects(s32 *cnt);
 s32 *func_8001BA90(s32 *arg0);
 Object **func_8001BAAC(s32 *numberOfObjects);
 Object *get_object_struct(s32 indx);

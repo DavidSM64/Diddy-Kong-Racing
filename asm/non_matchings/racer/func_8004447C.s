@@ -25,7 +25,7 @@ glabel func_8004447C
 /* 0450B0 800444B0 00A08025 */  move  $s0, $a1
 /* 0450B4 800444B4 AFA60080 */  sw    $a2, 0x80($sp)
 /* 0450B8 800444B8 AC20D538 */  sw    $zero, %lo(gCurrentStickY)($at)
-/* 0450BC 800444BC 0C006E9D */  jal   get_object_struct_array
+/* 0450BC 800444BC 0C006E9D */  jal   get_racer_objects
 /* 0450C0 800444C0 27A40058 */   addiu $a0, $sp, 0x58
 /* 0450C4 800444C4 8FAE0058 */  lw    $t6, 0x58($sp)
 /* 0450C8 800444C8 24010004 */  li    $at, 4

@@ -12,6 +12,8 @@
 #include "textures_sprites.h"
 #include "racer.h"
 #include "math_util.h"
+#include "objects.h"
+#include "game_text.h"
 
 extern u32 osTvType;
 
@@ -479,7 +481,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate) {
     func_80068508(1);
     render_course_indicator_arrows(racer, updateRate);
     render_wrong_way_text(racer, updateRate);
-    func_800A3CE4(arg0, updateRate);
+    render_race_start(arg0, updateRate);
 
     if (D_80126D60->race_type == RACETYPE_DEFAULT) {
         func_800A4F50(racer, updateRate);
@@ -603,7 +605,7 @@ void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
     Object_Racer *racer = &arg1->unk64->racer;
     if (racer->raceFinished == FALSE) {
         func_80068508(1);
-        func_800A3CE4(arg0, updateRate);
+        render_race_start(arg0, updateRate);
         render_weapon_hud(arg1, updateRate);
         if ((127 - (updateRate * 2)) >= D_80126CDC->unk67A) {
             D_80126CDC->unk67A += updateRate * 2;
@@ -632,7 +634,7 @@ void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate) {
 
     func_80068508(1);
     render_wrong_way_text(temp, updateRate);
-    func_800A3CE4(arg0, updateRate);
+    render_race_start(arg0, updateRate);
     render_race_time(temp, updateRate);
     render_weapon_hud(arg1, updateRate);
 
@@ -654,7 +656,7 @@ void func_800A263C(s32 arg0, Object *arg1, s32 updateRate) {
     func_800A4F50(temp, updateRate);
     func_800A4C44(temp, updateRate);
     render_race_time(temp, updateRate);
-    func_800A3CE4(arg0, updateRate);
+    render_race_start(arg0, updateRate);
     func_800A3884(arg1, updateRate);
     func_80068508(0);
 }
@@ -689,7 +691,80 @@ void func_800A3870(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A3884.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A3CE4.s")
+
+/**
+ * Call the functions that render the "Get Ready" and "GO!" as well as their countdowns to control fade.
+ * This function will also call to begin the background music for 1 and 2 player. 3 and 4 are treated with silence.
+*/
+void render_race_start(s32 arg0, s32 updateRate) {
+
+    if (!is_game_paused()) {
+        if (arg0 == 0 && D_800E2770[0].unkC == -1) {
+            D_800E2770[0].unk3 = -1;
+            D_800E2770[1].unk3 = -1;
+        }
+        if (gHUDNumPlayers == 1) {
+            func_8007BF1C(1);
+        }
+        if (arg0 > 0) {
+            if (D_80126D34) {
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, (arg0 * 255) / 40);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk174[0x2C]);
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                if (gRaceStartShowHudStep == 2) {
+                    play_sound_global(SOUND_VOICE_TT_GET_READY, &gHUDVoiceSoundMask);
+                    gRaceStartShowHudStep++;
+                }
+            }
+            if (D_80126D3C == 0 && func_80023568() == 0) {
+                f32 sp4C;
+                UNUSED s32 pad;
+                Object** racerGroup;
+                Object* randomRacer;
+                Object_Racer* racer;
+                s32 numRacerObjects;
+                racerGroup = get_racer_objects(&numRacerObjects);
+                randomRacer = racerGroup[get_random_number_from_range(1, numRacerObjects) - 1];
+                racer = (Object_Racer*)randomRacer->unk64;
+                if (racer->unk1D6 == 0) {
+                    if (get_random_number_from_range(0, 100) >= 96) {
+                        sp4C = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
+                        func_800095E8(76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position, randomRacer->segment.trans.z_position, 4, ((get_random_number_from_range(0, 7) * 63) / 7) + 24, sp4C * 100.0f, &D_80126D3C);
+                    }
+                }
+            }
+        } else if (D_80126CDC->unk18C > -200.0f) {
+            gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) &D_80126CDC->unk174[0xC]);
+            gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            D_80126CDC->unk19A[D_80126D08] += updateRate;
+            if (D_80126CDC->unk19A[D_80126D08] >= 60) {
+                if (gRaceStartShowHudStep == 4) {
+                    // Mute background music in 3/4 player.
+                    if (get_viewport_count() > 1) {
+                        play_music(SEQUENCE_NONE);
+                    } else {
+                        func_8006BD10(1.0f);
+                    }
+                    play_sound_global(SOUND_WHOOSH1, NULL);
+                    gRaceStartShowHudStep++;
+                }
+                D_80126CDC->unk18C -= (updateRate * 8);
+            }
+            if (gRaceStartShowHudStep == 3) {
+                play_sound_global(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
+                if ((func_8001B640() != 0) && (func_8001B650() == 0)) {
+                    func_800A7484(0x24B, 1.7f, 0);
+                    func_800C3158(0x52, 1.7f);
+                }
+                D_80126D70 = 1;
+                gRaceStartShowHudStep++;
+            }
+        }
+        func_8007BF1C(0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4154.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A45F0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")

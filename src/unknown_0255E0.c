@@ -1386,7 +1386,7 @@ void obj_loop_fogchanger(Object* obj) {
         phi_s3 = func_80069D7C();
         sp74 = get_viewport_count() + 1;
     } else {
-        sp40 = get_object_struct_array(&sp74);
+        sp40 = get_racer_objects(&sp74);
     }
 
     for(i = 0; i < sp74; i++) {

@@ -1528,7 +1528,7 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Object **get_object_struct_array(s32 *cnt) {
+Object **get_racer_objects(s32 *cnt) {
     *cnt = gObjectCount;
     return *gObjectStructArrayPtr;
 }

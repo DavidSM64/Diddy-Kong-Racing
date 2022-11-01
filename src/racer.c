@@ -3699,7 +3699,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     
     var_fv1 = 1000000;
     if (racer->unk201 == 0) {
-        objects = get_object_struct_array(&countOfObjects);
+        objects = get_racer_objects(&countOfObjects);
         playerOneObj = playerTwoObj = NULL;
         for (var_t2 = 0; var_t2 < countOfObjects; var_t2++) {
             tempRacer = &objects[var_t2]->unk64->racer;
