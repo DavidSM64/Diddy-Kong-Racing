@@ -183,10 +183,10 @@ void render_course_indicator_arrows(Object_64 *obj, s32 updateRate);
 void render_hud_hubworld(Object *obj, s32 updateRate);
 void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s32 updateRate);
 void render_weapon_hud(Object *obj, s32 updateRate);
+void render_race_start(s32 arg0, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
-void render_race_start(s32, s32);
 void func_800A4F50(Object_64 *arg0, s32 arg1);
 void func_800A4154(Object_64 *arg0, s32 arg1);
 void func_800A4C44(Object_64 *arg0, s32 arg1);
