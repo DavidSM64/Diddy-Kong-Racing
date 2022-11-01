@@ -8,10 +8,9 @@
 #include <iterator>
 #include <iostream>
 #include <iomanip>
-#include <openssl/md5.h>
 
 // C++17
-#include <filesystem> 
+#include <filesystem>
 namespace fs = std::filesystem;
 
 #include "errorHelper.h"
