@@ -253,7 +253,7 @@ typedef struct TitleScreenDemos {
 } TitleScreenDemos;
 
 /* Size 0x10 bytes */
-typedef struct unk80126930 {
+typedef struct TrackRenderDetails {
   /* 0x00 */ char *levelName;
   /* 0x04 */ char *unk4;
   /* 0x08 */ s16 xPos;
@@ -267,7 +267,7 @@ typedef struct unk80126930 {
         };
         /* 0x0E */ u16 unkE;
     };
-} unk80126930;
+} TrackRenderDetails;
 
 extern s8  D_800DF450;
 extern f32 D_800DF454;
@@ -695,20 +695,20 @@ extern s8 gControllersYAxisDirection[4];
 extern TextureHeader *D_80126550[128];
 extern s32 D_801267D0;
 extern u8 D_801269C4[4];
-extern f32 D_801269DC;
-extern f32 D_801269E4;
+extern f32 gTrackSelectX;
+extern f32 gTrackSelectY;
 extern f32 D_801269E8;
 extern f32 D_801269EC;
 extern s8 gPlayerSelectVehicle[4];
-extern s16 D_80126918;
+extern s16 gFFLUnlocked;
 extern s32 D_801263D8;
 extern s32 D_80126480;
 //extern s32 D_801268E8[12];
-extern s16 D_80126918;
+extern s16 gFFLUnlocked;
 extern s32 D_80126924;
 extern s32 D_80126928;
 extern s32 D_8012692C;
-extern unk80126930 D_80126930[9];
+extern TrackRenderDetails gTrackSelectRenderDetails[9];
 extern s32 D_801269F0;
 extern s32 D_801269F4;
 extern s32 D_801269F8;

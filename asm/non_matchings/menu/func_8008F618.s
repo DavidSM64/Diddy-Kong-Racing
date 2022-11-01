@@ -30,16 +30,16 @@ glabel func_8008F618
 /* 090288 8008F688 AECE0000 */  sw    $t6, ($s6)
 /* 09028C 8008F68C 3C0FE700 */  lui   $t7, 0xe700
 /* 090290 8008F690 4458F800 */  cfc1  $t8, $31
-/* 090294 8008F694 3C018012 */  lui   $at, %hi(D_801269DC) # $at, 0x8012
+/* 090294 8008F694 3C018012 */  lui   $at, %hi(gTrackSelectX) # $at, 0x8012
 /* 090298 8008F698 AC4F0000 */  sw    $t7, ($v0)
 /* 09029C 8008F69C AC400004 */  sw    $zero, 4($v0)
-/* 0902A0 8008F6A0 C42469DC */  lwc1  $f4, %lo(D_801269DC)($at)
+/* 0902A0 8008F6A0 C42469DC */  lwc1  $f4, %lo(gTrackSelectX)($at)
 /* 0902A4 8008F6A4 37010003 */  ori   $at, $t8, 3
 /* 0902A8 8008F6A8 38210002 */  xori  $at, $at, 2
 /* 0902AC 8008F6AC 44C1F800 */  ctc1  $at, $31
-/* 0902B0 8008F6B0 3C018012 */  lui   $at, %hi(D_801269E4) # $at, 0x8012
+/* 0902B0 8008F6B0 3C018012 */  lui   $at, %hi(gTrackSelectY) # $at, 0x8012
 /* 0902B4 8008F6B4 460021A4 */  cvt.w.s $f6, $f4
-/* 0902B8 8008F6B8 C42869E4 */  lwc1  $f8, %lo(D_801269E4)($at)
+/* 0902B8 8008F6B8 C42869E4 */  lwc1  $f8, %lo(gTrackSelectY)($at)
 /* 0902BC 8008F6BC 44D8F800 */  ctc1  $t8, $31
 /* 0902C0 8008F6C0 3C0A8012 */  lui   $t2, %hi(D_80126480) # $t2, 0x8012
 /* 0902C4 8008F6C4 46004287 */  neg.s $f10, $f8

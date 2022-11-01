@@ -22,8 +22,8 @@ glabel func_8008FF1C
 /* 090B6C 8008FF6C 14200152 */  bnez  $at, .L800904B8
 /* 090B70 8008FF70 28610017 */   slti  $at, $v1, 0x17
 /* 090B74 8008FF74 10200150 */  beqz  $at, .L800904B8
-/* 090B78 8008FF78 3C0E8012 */   lui   $t6, %hi(D_80126918) # $t6, 0x8012
-/* 090B7C 8008FF7C 85CE6918 */  lh    $t6, %lo(D_80126918)($t6)
+/* 090B78 8008FF78 3C0E8012 */   lui   $t6, %hi(gFFLUnlocked) # $t6, 0x8012
+/* 090B7C 8008FF7C 85CE6918 */  lh    $t6, %lo(gFFLUnlocked)($t6)
 /* 090B80 8008FF80 2401FFFF */  li    $at, -1
 /* 090B84 8008FF84 15C10004 */  bne   $t6, $at, .L8008FF98
 /* 090B88 8008FF88 24180004 */   li    $t8, 4
@@ -33,8 +33,8 @@ glabel func_8008FF1C
 .L8008FF98:
 /* 090B98 8008FF98 AFB80060 */  sw    $t8, 0x60($sp)
 .L8008FF9C:
-/* 090B9C 8008FF9C 3C018012 */  lui   $at, %hi(D_801269DC) # $at, 0x8012
-/* 090BA0 8008FFA0 C42469DC */  lwc1  $f4, %lo(D_801269DC)($at)
+/* 090B9C 8008FF9C 3C018012 */  lui   $at, %hi(gTrackSelectX) # $at, 0x8012
+/* 090BA0 8008FFA0 C42469DC */  lwc1  $f4, %lo(gTrackSelectX)($at)
 /* 090BA4 8008FFA4 3C0143A0 */  li    $at, 0x43A00000 # 320.000000
 /* 090BA8 8008FFA8 44813000 */  mtc1  $at, $f6
 /* 090BAC 8008FFAC 3C098012 */  lui   $t1, %hi(D_80126480) # $t1, 0x8012
@@ -43,8 +43,8 @@ glabel func_8008FF1C
 /* 090BB8 8008FFB8 240CFFFF */  li    $t4, -1
 /* 090BBC 8008FFBC 00095023 */  negu  $t2, $t1
 /* 090BC0 8008FFC0 448A9000 */  mtc1  $t2, $f18
-/* 090BC4 8008FFC4 3C108012 */  lui   $s0, %hi(D_80126930) # $s0, 0x8012
-/* 090BC8 8008FFC8 26106930 */  addiu $s0, %lo(D_80126930) # addiu $s0, $s0, 0x6930
+/* 090BC4 8008FFC4 3C108012 */  lui   $s0, %hi(gTrackSelectRenderDetails) # $s0, 0x8012
+/* 090BC8 8008FFC8 26106930 */  addiu $s0, %lo(gTrackSelectRenderDetails) # addiu $s0, $s0, 0x6930
 /* 090BCC 8008FFCC AFAC007C */  sw    $t4, 0x7c($sp)
 /* 090BD0 8008FFD0 241E0003 */  li    $fp, 3
 /* 090BD4 8008FFD4 24170004 */  li    $s7, 4
@@ -53,9 +53,9 @@ glabel func_8008FF1C
 /* 090BE0 8008FFE0 37210003 */  ori   $at, $t9, 3
 /* 090BE4 8008FFE4 38210002 */  xori  $at, $at, 2
 /* 090BE8 8008FFE8 44C1F800 */  ctc1  $at, $31
-/* 090BEC 8008FFEC 3C018012 */  lui   $at, %hi(D_801269E4) # $at, 0x8012
+/* 090BEC 8008FFEC 3C018012 */  lui   $at, %hi(gTrackSelectY) # $at, 0x8012
 /* 090BF0 8008FFF0 460042A4 */  cvt.w.s $f10, $f8
-/* 090BF4 8008FFF4 C43069E4 */  lwc1  $f16, %lo(D_801269E4)($at)
+/* 090BF4 8008FFF4 C43069E4 */  lwc1  $f16, %lo(gTrackSelectY)($at)
 /* 090BF8 8008FFF8 44D9F800 */  ctc1  $t9, $31
 /* 090BFC 8008FFFC 44085000 */  mfc1  $t0, $f10
 /* 090C00 80090000 46809120 */  cvt.s.w $f4, $f18
@@ -152,9 +152,9 @@ glabel func_8008FF1C
 /* 090D54 80090154 AE080004 */  sw    $t0, 4($s0)
 .L80090158:
 /* 090D58 80090158 44945000 */  mtc1  $s4, $f10
-/* 090D5C 8009015C 3C018012 */  lui   $at, %hi(D_801269DC) # $at, 0x8012
+/* 090D5C 8009015C 3C018012 */  lui   $at, %hi(gTrackSelectX) # $at, 0x8012
 /* 090D60 80090160 468054A0 */  cvt.s.w $f18, $f10
-/* 090D64 80090164 C43069DC */  lwc1  $f16, %lo(D_801269DC)($at)
+/* 090D64 80090164 C43069DC */  lwc1  $f16, %lo(gTrackSelectX)($at)
 /* 090D68 80090168 3C0C8012 */  lui   $t4, %hi(D_80126480) # $t4, 0x8012
 /* 090D6C 8009016C 46109101 */  sub.s $f4, $f18, $f16
 /* 090D70 80090170 240F00FF */  li    $t7, 255
@@ -163,14 +163,14 @@ glabel func_8008FF1C
 /* 090D7C 8009017C 35210003 */  ori   $at, $t1, 3
 /* 090D80 80090180 38210002 */  xori  $at, $at, 2
 /* 090D84 80090184 44C1F800 */  ctc1  $at, $31
-/* 090D88 80090188 3C018012 */  lui   $at, %hi(D_801269E4) # $at, 0x8012
+/* 090D88 80090188 3C018012 */  lui   $at, %hi(gTrackSelectY) # $at, 0x8012
 /* 090D8C 8009018C 460021A4 */  cvt.w.s $f6, $f4
 /* 090D90 80090190 3C198012 */  lui   $t9, %hi(D_801269F8) # $t9, 0x8012
 /* 090D94 80090194 440A3000 */  mfc1  $t2, $f6
 /* 090D98 80090198 44C9F800 */  ctc1  $t1, $31
 /* 090D9C 8009019C A60A0008 */  sh    $t2, 8($s0)
 /* 090DA0 800901A0 8D8C6480 */  lw    $t4, %lo(D_80126480)($t4)
-/* 090DA4 800901A4 C43269E4 */  lwc1  $f18, %lo(D_801269E4)($at)
+/* 090DA4 800901A4 C43269E4 */  lwc1  $f18, %lo(gTrackSelectY)($at)
 /* 090DA8 800901A8 02AC0019 */  multu $s5, $t4
 /* 090DAC 800901AC A20F000D */  sb    $t7, 0xd($s0)
 /* 090DB0 800901B0 00005812 */  mflo  $t3
@@ -333,7 +333,7 @@ glabel func_8008FF1C
 /* 090FF8 800903F8 24180020 */  li    $t8, 32
 /* 090FFC 800903FC AC38692C */  sw    $t8, %lo(D_8012692C)($at)
 /* 091000 80090400 3C018012 */  lui   $at, %hi(D_801269F0) # $at, 0x8012
-/* 091004 80090404 3C108012 */  lui   $s0, %hi(D_80126930) # $s0, 0x8012
+/* 091004 80090404 3C108012 */  lui   $s0, %hi(gTrackSelectRenderDetails) # $s0, 0x8012
 /* 091008 80090408 3C14800E */  lui   $s4, %hi(D_800E05F4) # $s4, 0x800e
 /* 09100C 8009040C 3C138012 */  lui   $s3, %hi(gPlayerSelectVehicle) # $s3, 0x8012
 /* 091010 80090410 3C12800E */  lui   $s2, %hi(D_800E05D4) # $s2, 0x800e
@@ -341,7 +341,7 @@ glabel func_8008FF1C
 /* 091018 80090418 265205D4 */  addiu $s2, %lo(D_800E05D4) # addiu $s2, $s2, 0x5d4
 /* 09101C 8009041C 267369C0 */  addiu $s3, %lo(gPlayerSelectVehicle) # addiu $s3, $s3, 0x69c0
 /* 091020 80090420 269405F4 */  addiu $s4, %lo(D_800E05F4) # addiu $s4, $s4, 0x5f4
-/* 091024 80090424 26106930 */  addiu $s0, %lo(D_80126930) # addiu $s0, $s0, 0x6930
+/* 091024 80090424 26106930 */  addiu $s0, %lo(gTrackSelectRenderDetails) # addiu $s0, $s0, 0x6930
 /* 091028 80090428 AFA0007C */  sw    $zero, 0x7c($sp)
 /* 09102C 8009042C 24110001 */  li    $s1, 1
 .L80090430:

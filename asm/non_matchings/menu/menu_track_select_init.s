@@ -67,16 +67,16 @@ glabel menu_track_select_init
 /* 08F4A0 8008E8A0 448E2000 */  mtc1  $t6, $f4
 /* 08F4A4 8008E8A4 448D8000 */  mtc1  $t5, $f16
 /* 08F4A8 8008E8A8 46083282 */  mul.s $f10, $f6, $f8
-/* 08F4AC 8008E8AC 3C018012 */  lui   $at, %hi(D_801269DC) # $at, 0x8012
+/* 08F4AC 8008E8AC 3C018012 */  lui   $at, %hi(gTrackSelectX) # $at, 0x8012
 /* 08F4B0 8008E8B0 2415FFFF */  li    $s5, -1
 /* 08F4B4 8008E8B4 240F0020 */  li    $t7, 32
 /* 08F4B8 8008E8B8 468021A0 */  cvt.s.w $f6, $f4
-/* 08F4BC 8008E8BC E42A69DC */  swc1  $f10, %lo(D_801269DC)($at)
-/* 08F4C0 8008E8C0 3C018012 */  lui   $at, %hi(D_801269E4) # $at, 0x8012
+/* 08F4BC 8008E8BC E42A69DC */  swc1  $f10, %lo(gTrackSelectX)($at)
+/* 08F4C0 8008E8C0 3C018012 */  lui   $at, %hi(gTrackSelectY) # $at, 0x8012
 /* 08F4C4 8008E8C4 468084A0 */  cvt.s.w $f18, $f16
 /* 08F4C8 8008E8C8 00002025 */  move  $a0, $zero
 /* 08F4CC 8008E8CC 46069202 */  mul.s $f8, $f18, $f6
-/* 08F4D0 8008E8D0 E42869E4 */  swc1  $f8, %lo(D_801269E4)($at)
+/* 08F4D0 8008E8D0 E42869E4 */  swc1  $f8, %lo(gTrackSelectY)($at)
 /* 08F4D4 8008E8D4 3C018012 */  lui   $at, %hi(D_801269F4) # $at, 0x8012
 /* 08F4D8 8008E8D8 AC3569F4 */  sw    $s5, %lo(D_801269F4)($at)
 /* 08F4DC 8008E8DC 3C018012 */  lui   $at, %hi(D_801269F8) # $at, 0x8012

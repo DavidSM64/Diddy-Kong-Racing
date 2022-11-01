@@ -183,21 +183,21 @@ s32 D_801268DC;
 s32 D_801268E0;
 s32 D_801268E4;
 s16 D_801268E8[24]; // Probably a struct?
-s16 D_80126918;
+s16 gFFLUnlocked;
 UNUSED s32 D_8012691C;
 UNUSED s32 D_80126920;
 s32 D_80126924;
 s32 D_80126928;
 s32 D_8012692C;
-unk80126930 D_80126930[9];
+TrackRenderDetails gTrackSelectRenderDetails[9];
 s8 gPlayerSelectVehicle[4]; // Unknown number of entries.
 u8 D_801269C4[4];
 s32 D_801269C8;
 s32 D_801269CC;
 char *gAudioOutputStrings[3];
-f32 D_801269DC;
+f32 gTrackSelectX;
 char *gMusicTestString;
-f32 D_801269E4;
+f32 gTrackSelectY;
 f32 D_801269E8;
 f32 D_801269EC;
 s32 D_801269F0;
@@ -5520,8 +5520,8 @@ void func_8008F00C(s32 arg0) {
     if ((temp >= 0) && (temp < 2)) {
         switch (D_801267D0) {
             case 0:
-                D_801269E8 = D_801269DC;
-                D_801269EC = D_801269E4;
+                D_801269E8 = gTrackSelectX;
+                D_801269EC = gTrackSelectY;
                 break;
             case 1:
                 temp_v0_2 = func_8006B0AC(gTrackIdForPreview);
