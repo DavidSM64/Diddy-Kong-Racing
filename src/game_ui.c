@@ -719,7 +719,7 @@ void func_800A3870(void) {
  * When enabled, displays speed of the player in the bottom right corner, replacing the minimap.
  * Speed is calculated by normalising racer velocity. then scaling the angle of the needle with that number.
 */
-void render_speedometer(Object* obj, UNUSED s32 updateRate) {
+void render_speedometer(Object *obj, UNUSED s32 updateRate) {
     f32 vel;
     Object_64* racer64;
     s32 opacity;
@@ -860,7 +860,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
  * Renders the banana counter on screen.
  * When a banana is collected, render sparkles and animate the banana. for a brief moment.
 */
-void render_racer_bananas(Object_64* obj, s32 updateRate) {
+void render_racer_bananas(Object_64 *obj, s32 updateRate) {
     s32 bananas;
     s16 temp_v1;
     s32 temp_lo;
@@ -940,7 +940,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
  * in the middle of the screen.
  * Uses a 3 step process to play the sounds, display the position, then slide it offscreen.
 */
-void render_race_finish_position(Object_64* obj, s32 updateRate) {
+void render_race_finish_position(Object_64 *obj, s32 updateRate) {
     unk800A497C* temp_a3;
     unk800A497C* temp_s0;
     s8 drawPosition;
@@ -1492,7 +1492,7 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
                     if (D_80126CDC->unkFB == 0 && curRacerObj->bananas == 10) {
                         D_80126CDC->unkFB = curRacerObj->bananas;
                     }
-                    func_800A4154((Object_64 *)curRacerObj, updateRate);
+                    render_racer_bananas((Object_64 *)curRacerObj, updateRate);
                     D_80126CDC->unk36C -= var_a0_5;
                     D_80126CDC->unk370 -= sp144;
                     D_80126CDC->unkEC -= var_a0_5;
