@@ -230,6 +230,11 @@ typedef struct unk800A497C {
     s8 unk1D;
 } unk800A497C;
 
+typedef struct ObjectTransform_800A8474 {
+    ObjectTransform trans;
+    s16 unk18;
+} ObjectTransform_800A8474;
+
 extern unk80126CDC *D_80126CDC;
 extern Gfx *gHUDCurrDisplayList;
 extern Matrix *gHUDCurrMatrix;
@@ -261,27 +266,32 @@ void render_hud_hubworld(Object *obj, s32 updateRate);
 void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s32 updateRate);
 void render_weapon_hud(Object *obj, s32 updateRate);
 void render_race_start(s32 arg0, s32 updateRate);
+void render_racer_bananas(Object_64 *obj, s32 updateRate);
+void render_race_finish_position(Object_64 *obj, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
-void func_800A4F50(Object_64 *arg0, s32 arg1);
-void render_racer_bananas(Object_64 *arg0, s32 arg1);
-void func_800A4C44(Object_64 *arg0, s32 arg1);
-void func_800A3884(Object *arg0, s32 arg1);
-void func_800A47A0(Object_64 *arg0, s32 arg1);
-void func_800A718C(Object_64 *);
-void func_800AA600(Gfx **arg0, u32 *arg1, u32 *arg2, unk80126CDC *arg3);
+void func_800A4F50(Object_64 *obj, s32 updateRate);
+void func_800A4C44(Object_64 *obj, s32 updateRate);
+void func_800A3884(Object *obj, s32 updateRate);
+void func_800A47A0(Object_64 *obj, s32 updateRate);
+void func_800A718C(Object_64 *obj);
+void func_800AA600(Gfx **dList, Matrix **mtx, TriangleList **triList, unk80126CDC *arg3);
 void func_8009ECF0(s32 viewPortCount);
 void func_800A003C(void);
-void func_800A8474(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
+s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateRate);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
 void func_800A1248(s32, Object*, s32);
 void func_800A1C04(s32, Object*, s32);
 void func_800A277C(s32, Object*, s32);
-void render_race_finish_position(Object_64*, s32);
-void func_800A6254(Object_64*, s32);
-void func_800A6E30(Object_64*, s32);
+void func_800A6254(Object_64* obj, s32 updateRate);
+void func_800A6E30(Object_64* obj, s32 updateRate);
 void func_800A7A60(Object*, Gfx**);
 void func_800095E8(s32, f32, f32, f32, s32, s32, f32, s32*);
+void func_800A0BD4(s32);
+void func_800A19A4(Object_Racer*, s32 updateRate);
+void func_800A1E48(s32, s32);
+void func_800A45F0(Object_Racer*);
+void func_800AA3EC(f32, f32, f32, f32, f32);
 
 #endif
