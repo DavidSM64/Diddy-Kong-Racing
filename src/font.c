@@ -68,7 +68,7 @@ s32 gNumberOfFonts;
 FontData *gFonts;
 DialogueBoxBackground *gDialogueBoxBackground;
 unk8012A7EC *D_8012A7EC;
-s32 D_8012A7F0; // Boolean value, seems to be related to X placement of menus on the X Axis?
+s32 gCompactKerning; // Boolean value, seems to be related to X placement of menus on the X Axis?
 s8 sDialogueBoxCloseTimer;
 s32 D_8012A7F8;
 s32 D_8012A7FC;
@@ -139,11 +139,11 @@ void load_fonts(void) {
     }
     load_font(ASSET_FONTS_FUNFONT);
     load_font(ASSET_FONTS_SMALLFONT);
-    D_8012A7F0 = 0;
+    gCompactKerning = 0;
 }
 
-void func_800C4164(s32 arg0) {
-    D_8012A7F0 = arg0;
+void set_kerning(s32 arg0) {
+    gCompactKerning = arg0;
 }
 
 void load_font(s32 fontID) {
@@ -401,7 +401,7 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
                 if (lastTextureIndex)
                     ;
             }
-            if (D_8012A7F0 && var_t0) {
+            if (gCompactKerning && var_t0) {
                 var_t0--;
             }
         }
@@ -451,7 +451,7 @@ s32 func_800C4DA0(char *text, s32 x, s32 font) {
                 }
             }
         }
-        if (D_8012A7F0 != 0 && diffX != thisDiffX) {
+        if (gCompactKerning != 0 && diffX != thisDiffX) {
             diffX--;
         }
     }

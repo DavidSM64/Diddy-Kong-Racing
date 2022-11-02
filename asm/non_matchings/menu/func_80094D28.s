@@ -75,8 +75,8 @@ glabel L80094DD0
 /* 095A1C 80094E1C 00000000 */   nop   
 /* 095A20 80094E20 0006000D */  break 6
 .L80094E24:
-/* 095A24 80094E24 3C0F8012 */  lui   $t7, %hi(D_80126480) # $t7, 0x8012
-/* 095A28 80094E28 8DEF6480 */  lw    $t7, %lo(D_80126480)($t7)
+/* 095A24 80094E24 3C0F8012 */  lui   $t7, %hi(gTrackSelectViewportY) # $t7, 0x8012
+/* 095A28 80094E28 8DEF6480 */  lw    $t7, %lo(gTrackSelectViewportY)($t7)
 /* 095A2C 80094E2C 00002025 */  move  $a0, $zero
 /* 095A30 80094E30 00006012 */  mflo  $t4
 /* 095A34 80094E34 004C6823 */  subu  $t5, $v0, $t4

@@ -24,7 +24,7 @@ glabel func_80099E8C
 /* 09AAD0 80099ED0 02E02025 */   move  $a0, $s7
 /* 09AAD4 80099ED4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 09AAD8 80099ED8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
-/* 09AADC 80099EDC 3C188012 */  lui   $t8, %hi(D_801263D8) # $t8, 0x8012
+/* 09AADC 80099EDC 3C188012 */  lui   $t8, %hi(gOpacityDecayTimer) # $t8, 0x8012
 /* 09AAE0 80099EE0 15C00004 */  bnez  $t6, .L80099EF4
 /* 09AAE4 80099EE4 24040002 */   li    $a0, 2
 /* 09AAE8 80099EE8 240F000C */  li    $t7, 12
@@ -33,7 +33,7 @@ glabel func_80099E8C
 .L80099EF4:
 /* 09AAF4 80099EF4 AFA000D0 */  sw    $zero, 0xd0($sp)
 .L80099EF8:
-/* 09AAF8 80099EF8 8F1863D8 */  lw    $t8, %lo(D_801263D8)($t8)
+/* 09AAF8 80099EF8 8F1863D8 */  lw    $t8, %lo(gOpacityDecayTimer)($t8)
 /* 09AAFC 80099EFC 0C0310BB */  jal   set_text_font
 /* 09AB00 80099F00 AFB800E4 */   sw    $t8, 0xe4($sp)
 /* 09AB04 80099F04 00002025 */  move  $a0, $zero
@@ -542,11 +542,11 @@ glabel func_80099E8C
 .L8009A698:
 /* 09B298 8009A698 3C098012 */  lui   $t1, %hi(gOptionBlinkTimer) # $t1, 0x8012
 /* 09B29C 8009A69C 8D2963BC */  lw    $t1, %lo(gOptionBlinkTimer)($t1)
-/* 09B2A0 8009A6A0 3C028012 */  lui   $v0, %hi(D_801263D8) # $v0, 0x8012
+/* 09B2A0 8009A6A0 3C028012 */  lui   $v0, %hi(gOpacityDecayTimer) # $v0, 0x8012
 /* 09B2A4 8009A6A4 312A0010 */  andi  $t2, $t1, 0x10
 /* 09B2A8 8009A6A8 1140003E */  beqz  $t2, .L8009A7A4
 /* 09B2AC 8009A6AC 3C0B8012 */   lui   $t3, %hi(D_801264D4) # $t3, 0x8012
-/* 09B2B0 8009A6B0 8C4263D8 */  lw    $v0, %lo(D_801263D8)($v0)
+/* 09B2B0 8009A6B0 8C4263D8 */  lw    $v0, %lo(gOpacityDecayTimer)($v0)
 /* 09B2B4 8009A6B4 8D6B64D4 */  lw    $t3, %lo(D_801264D4)($t3)
 /* 09B2B8 8009A6B8 244C0003 */  addiu $t4, $v0, 3
 /* 09B2BC 8009A6BC 018B082A */  slt   $at, $t4, $t3
@@ -576,8 +576,8 @@ glabel func_80099E8C
 /* 09B31C 8009A71C 2406009F */  li    $a2, 159
 /* 09B320 8009A720 0C01E2AE */  jal   render_textured_rectangle
 /* 09B324 8009A724 26470001 */   addiu $a3, $s2, 1
-/* 09B328 8009A728 3C028012 */  lui   $v0, %hi(D_801263D8) # $v0, 0x8012
-/* 09B32C 8009A72C 8C4263D8 */  lw    $v0, %lo(D_801263D8)($v0)
+/* 09B328 8009A728 3C028012 */  lui   $v0, %hi(gOpacityDecayTimer) # $v0, 0x8012
+/* 09B32C 8009A72C 8C4263D8 */  lw    $v0, %lo(gOpacityDecayTimer)($v0)
 /* 09B330 8009A730 00000000 */  nop   
 .L8009A734:
 /* 09B334 8009A734 18400019 */  blez  $v0, .L8009A79C

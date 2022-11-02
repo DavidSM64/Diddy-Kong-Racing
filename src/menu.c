@@ -57,7 +57,7 @@ CharacterSelectData (*gCurrCharacterSelectData)[8]; //Some sort of character lis
 
 s32 D_801263D0; //Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[4];
-s32 D_801263D8;
+s32 gOpacityDecayTimer;
 s8 D_801263DC[4];
 s32 D_801263E0;
 s32 D_801263E4;
@@ -98,7 +98,7 @@ s32 sUnused_80126470; // Set to 0 in the magic codes menu and 0xD000 elsewhere, 
 s32 D_80126474;
 s32 D_80126478;
 s32 D_8012647C;
-s32 D_80126480;
+s32 gTrackSelectViewportY;
 s32 D_80126484;
 s32 D_80126488;
 s32 D_8012648C;
@@ -183,26 +183,26 @@ s32 D_801268DC;
 s32 D_801268E0;
 s32 D_801268E4;
 s16 D_801268E8[24]; // Probably a struct?
-s16 D_80126918;
+s16 gFFLUnlocked;
 UNUSED s32 D_8012691C;
 UNUSED s32 D_80126920;
 s32 D_80126924;
 s32 D_80126928;
 s32 D_8012692C;
-unk80126930 D_80126930[9];
+TrackRenderDetails gTrackSelectRenderDetails[9];
 s8 gPlayerSelectVehicle[4]; // Unknown number of entries.
 u8 D_801269C4[4];
 s32 D_801269C8;
 s32 D_801269CC;
 char *gAudioOutputStrings[3];
-f32 D_801269DC;
+f32 gTrackSelectX;
 char *gMusicTestString;
-f32 D_801269E4;
+f32 gTrackSelectY;
 f32 D_801269E8;
 f32 D_801269EC;
 s32 D_801269F0;
-s32 D_801269F4;
-s32 D_801269F8;
+s32 gSelectedTrackX;
+s32 gSelectedTrackY;
 s32 *D_801269FC;
 s32 D_80126A00;
 unk800861C8 *D_80126A04; //Shares it's allocation with D_80126A0C
@@ -906,8 +906,8 @@ Vertex *D_800E0968 = NULL;
 s32 D_800E096C = 0;
 unk800E0970 *D_800E0970 = NULL;
 s32 D_800E0974 = 0;
-const f32 D_800E7D04[1] = { 0.5f }; // .rodata
-f32 *D_800E0978 = D_800E7D04;       // .data
+const char gQuestionMark[4] = {'?', '\0', '\0', '\0'}; // .rodata
+char *gQMarkPtr = (char*) &gQuestionMark;       // .data
 s32 D_800E097C = 0;
 s32 D_800E0980 = 0;
 s32 gMenuOptionCap = 0;
@@ -2454,7 +2454,7 @@ void menu_title_screen_init(void) {
     D_801268E0 = 0;
     D_801268DC = 0;
     D_800DF9F4 = 0;
-    D_801263D8 = 0;
+    gOpacityDecayTimer = 0;
     gIsInTracksMode = FALSE;
 }
 
@@ -2526,7 +2526,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         gMenuDelay += updateRate;
     }
     if (sTitleScreenDemoIds[D_80126864] == sTitleScreenDemoIds[0]) {
-        D_801263D8 += updateRate;
+        gOpacityDecayTimer += updateRate;
     }
     sp28 = 0;
     if (gTitleDemoTimer > 0) {
@@ -2565,7 +2565,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             D_801268E0 = 0;
             D_801268DC = 0;
             D_800DF9F4 = 0;
-            D_801263D8 = 0;
+            gOpacityDecayTimer = 0;
         }
     }
     if (D_8012686C != 0) {
@@ -2835,7 +2835,7 @@ void menu_audio_options_init(void) {
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
     D_801269FC = NULL;
-    D_801263D8 = -1;
+    gOpacityDecayTimer = -1;
     func_8009C674(gOptionMenuTextures);
     allocate_menu_images(&gOptionMenuTextures[6]);
     func_8008E4B0();
@@ -2910,7 +2910,7 @@ s32 menu_audio_options_loop(s32 arg0) {
         if (((buttonInputs & (A_BUTTON | START_BUTTON)) && (D_801263E0 == gOptionsMenuItemIndex + 1)) || (buttonInputs & B_BUTTON)) {
             gMenuDelay = -1;
             func_800C01D8(&sMenuTransitionFadeIn);
-            if (D_801263D8 >= 0) {
+            if (gOpacityDecayTimer >= 0) {
                 set_music_fade_timer(-0x80);
             }
             sp30 = 3;
@@ -2954,7 +2954,7 @@ s32 menu_audio_options_loop(s32 arg0) {
                 }
                 set_music_volume_slider(gMusicVolumeSliderValue);
                 if (!music_is_playing()) {
-                    if (D_801263D8 >= 0) {
+                    if (gOpacityDecayTimer >= 0) {
                         func_80000B28();
                         play_music((u8)D_800DFABC);
                     } else {
@@ -2977,7 +2977,7 @@ s32 menu_audio_options_loop(s32 arg0) {
                 func_80000B28();
                 set_music_player_voice_limit(0x18);
                 play_music((u8)D_800DFABC);
-                D_801263D8 = D_800DFABC;
+                gOpacityDecayTimer = D_800DFABC;
             }
         }
 
@@ -3011,7 +3011,7 @@ void func_800851FC(void) {
     if (D_801269FC != NULL) {
         func_8000488C(D_801269FC);
     }
-    if (D_801263D8 >= 0) {
+    if (gOpacityDecayTimer >= 0) {
         set_music_player_voice_limit(0x18);
         play_music(SEQUENCE_MAIN_MENU);
         set_music_fade_timer(0x100);
@@ -3030,7 +3030,7 @@ void menu_save_options_init(void) {
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
     D_801263E0 = 1;
-    D_801263D8 = 0;
+    gOpacityDecayTimer = 0;
     D_80126A64 = (u8 *)allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
     D_80126A0C = (unk800861C8 *)allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
     D_80126A04 = &D_80126A0C[80]; //0x500 bytes forward
@@ -3319,7 +3319,7 @@ s32 func_800876CC(s32 buttonsPressed, UNUSED s32 arg1) {
     } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
         play_sound_global(SOUND_SELECT2, NULL);
         D_801263E0 = 7;
-        D_801263D8 = 0;
+        gOpacityDecayTimer = 0;
     }
 
     return 0;
@@ -3634,7 +3634,7 @@ void func_800887E8(void) {
         gMenuDelay = 20;
     }
     D_800DF460 = 0;
-    D_801263D8 = 0;
+    gOpacityDecayTimer = 0;
     func_8009C6D4(63);
     func_8008E4B0();
     if (osTvType == TV_TYPE_PAL) {
@@ -3703,7 +3703,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
                 pagesText = gMenuText[ASSET_MENU_TEXT_PAGES]; //PAGES
                 numberOfPages = 1;
             } else {
-                if (D_800DF460 == (i + D_801263D8)) {
+                if (D_800DF460 == (i + gOpacityDecayTimer)) {
                     //White background for currently selected row
                     set_current_dialogue_background_colour(6, 255, 255, 255, (alpha >> 1) + 128);
                 } else {
@@ -3713,16 +3713,16 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
                 set_current_text_colour(6, 16, 16, 160, 255, 255);
                 noteText = (char *)&D_800E820C; //~
                 pagesText = (char *)&D_800E820C; //~
-                fileNameText = D_80126AA0[D_801263D8 + i];
-                numberOfPages = sCurrentControllerPakAllFileSizes[D_801263D8 + i];
+                fileNameText = D_80126AA0[gOpacityDecayTimer + i];
+                numberOfPages = sCurrentControllerPakAllFileSizes[gOpacityDecayTimer + i];
             }
-            render_dialogue_text(6, 26, 2, noteText, D_801263D8 + i + 1, 4);
+            render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, 4);
             render_dialogue_text(6, 56, 2, fileNameText, 1, 0);
             render_dialogue_text(6, 240, 2, pagesText, numberOfPages, 4);
             render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
             yPos += 16;
         }
-        if (D_801263D8 < (16 - sControllerPakMenuNumberOfRows)) {
+        if (gOpacityDecayTimer < (16 - sControllerPakMenuNumberOfRows)) {
             if ((gOptionBlinkTimer & 8) != 0) {
                 render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF, yPos + 8, 255, 255, 255, 255);
                 func_8007B3D0(&sMenuCurrDisplayList);
@@ -3900,18 +3900,18 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                             playMoveSound = TRUE;
                         }
                     }
-                    if (D_800DF460 >= (D_801263D8 + sControllerPakMenuNumberOfRows)) {
-                        D_801263D8 = (D_800DF460 - sControllerPakMenuNumberOfRows) + 1;
+                    if (D_800DF460 >= (gOpacityDecayTimer + sControllerPakMenuNumberOfRows)) {
+                        gOpacityDecayTimer = (D_800DF460 - sControllerPakMenuNumberOfRows) + 1;
                     }
-                    if (D_800DF460 < D_801263D8) {
-                        D_801263D8 = D_800DF460;
+                    if (D_800DF460 < gOpacityDecayTimer) {
+                        gOpacityDecayTimer = D_800DF460;
                     }
                     temp_v1_2 = 16 - sControllerPakMenuNumberOfRows;
-                    if (temp_v1_2 < D_801263D8) {
-                        D_801263D8 = temp_v1_2;
+                    if (temp_v1_2 < gOpacityDecayTimer) {
+                        gOpacityDecayTimer = temp_v1_2;
                     }
-                    if (D_801263D8 < 0) {
-                        D_801263D8 = 0;
+                    if (gOpacityDecayTimer < 0) {
+                        gOpacityDecayTimer = 0;
                     }
                     break;
                 }
@@ -3955,7 +3955,7 @@ void menu_magic_codes_init(void) {
     D_80126C58[0] = 0;
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
-    D_801263D8 = 0;
+    gOpacityDecayTimer = 0;
     D_801263E0 = 0;
     func_800C01D8(&sMenuTransitionFadeOut);
     set_current_dialogue_box_coords(7, 50, 50, 270, 132);
@@ -4723,7 +4723,7 @@ void menu_game_select_init(void) {
     func_800C01D8(&sMenuTransitionFadeOut);
     func_8006EBA8();
     func_8001B790();
-    D_801263D8 = 1;
+    gOpacityDecayTimer = 1;
     func_8009C6D4(0x43);
     func_8007FFEC(3);
     load_font(ASSET_FONTS_BIGFONT);
@@ -4796,11 +4796,11 @@ s32 menu_game_select_loop(s32 updateRate) {
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
 
-    if (D_801263D8 != 0) {
-        D_801263D8++;
-        if (D_801263D8 >= 3) {
+    if (gOpacityDecayTimer != 0) {
+        gOpacityDecayTimer++;
+        if (gOpacityDecayTimer >= 3) {
             func_800828B8();
-            D_801263D8 = 0;
+            gOpacityDecayTimer = 0;
         }
     }
     if (gMenuDelay != 0) {
@@ -4841,7 +4841,7 @@ s32 menu_game_select_loop(s32 updateRate) {
         return 0;
     } else {
         func_8008C698(updateRate);
-        if ((gMenuDelay == 0) && (D_801263D8 == 0)) {
+        if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
             playerInputs = get_buttons_pressed_from_player(PLAYER_ONE);
             playerYDir = gControllersYAxisDirection[0];
             playerInputs = playerInputs;
@@ -4895,7 +4895,7 @@ void menu_file_select_init(void) {
     allocate_menu_images(D_800E03A4);
     func_8007FFEC(6);
     func_8006EBA8();
-    D_801263D8 = 1;
+    gOpacityDecayTimer = 1;
     gSaveFileIndex = 0;
     gMenuDelay = 0;
     D_801263E0 = 0;
@@ -4972,7 +4972,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, D_80126550[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
-    if (D_801263D8 == 0) {
+    if (gOpacityDecayTimer == 0) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_background_colour(0, 0, 0, 0);
         s5 = 10;
@@ -5342,10 +5342,10 @@ s32 menu_file_select_loop(s32 updateRate) {
 
     settings = get_settings();
     func_8008C168(updateRate);
-    if (D_801263D8) {
-        D_801263D8++;
+    if (gOpacityDecayTimer) {
+        gOpacityDecayTimer++;
         
-        if (D_801263D8 >= 3) {
+        if (gOpacityDecayTimer >= 3) {
             for (i = 0; i < 3; i++) {
                 gSavefileInfo[i].isAdventure2 = 0;
                 if (D_80126530[i]->newGame) {
@@ -5364,7 +5364,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                     decompress_filename_string(D_80126530[i]->filename, gSavefileInfo[i].name, 3);
                 }
             }
-            D_801263D8 = 0;
+            gOpacityDecayTimer = 0;
         }
     }
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3f;
@@ -5378,7 +5378,7 @@ s32 menu_file_select_loop(s32 updateRate) {
     if ((gMenuDelay >= -20) && (gMenuDelay <= 20)) {
         render_file_select_menu(updateRate);
     }
-    if ((gMenuDelay == 0) && (D_801263D8 == 0)) {
+    if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
         if (D_80126484 != FALSE) {
             func_8008D8BC(updateRate);
         } else if (D_80126488 != FALSE) {
@@ -5520,8 +5520,8 @@ void func_8008F00C(s32 arg0) {
     if ((temp >= 0) && (temp < 2)) {
         switch (D_801267D0) {
             case 0:
-                D_801269E8 = D_801269DC;
-                D_801269EC = D_801269E4;
+                D_801269E8 = gTrackSelectX;
+                D_801269EC = gTrackSelectY;
                 break;
             case 1:
                 temp_v0_2 = func_8006B0AC(gTrackIdForPreview);
@@ -5666,7 +5666,7 @@ void func_8008F534(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_8008FA54.s")
+GLOBAL_ASM("asm/non_matchings/menu/renderTrackSelect.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_800904E8.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_80090918.s")
@@ -5707,9 +5707,9 @@ void render_track_select_setup_ui(s32 updateRate) {
     func_8009BD5C();
     func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay < 0) {
-        if (D_801269F4 == 4) {
+        if (gSelectedTrackX == 4) {
             sp84 = 6;
-        } else if (D_801269F4 == 5) {
+        } else if (gSelectedTrackX == 5) {
             sp84 = 5;
         } else {
             sp84 = 4;
@@ -6460,25 +6460,25 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80094A5C.s")
 void func_80094C14(s32 arg0) {
     gOptionBlinkTimer = (gOptionBlinkTimer + arg0) & 0x3F;
     D_80126A94 += arg0;
-    if (D_801263D8 >= 0) {
-        D_801263D8 += arg0;
+    if (gOpacityDecayTimer >= 0) {
+        gOpacityDecayTimer += arg0;
         switch (D_800DF460) {
             case 0:
-                if (normalise_time(240) < D_801263D8) {
+                if (normalise_time(240) < gOpacityDecayTimer) {
                     set_music_fade_timer(-256);
                     D_800DF460 = 1;
                 }
                 break;
             case 1:
-                if (normalise_time(300) < D_801263D8) {
+                if (normalise_time(300) < gOpacityDecayTimer) {
                     set_music_player_voice_limit(24);
                     play_music(SEQUENCE_MAIN_MENU);
                     set_music_fade_timer(256);
                 }
                 break;
         }
-        if (normalise_time(300) < D_801263D8) {
-            D_801263D8 = -1;
+        if (normalise_time(300) < gOpacityDecayTimer) {
+            gOpacityDecayTimer = -1;
         }
     }
 }
@@ -6563,7 +6563,7 @@ void menu_11_init(void) {
 
     D_801263E0 = -1;
     gOptionBlinkTimer = 0;
-    D_801263D8 = 0;
+    gOpacityDecayTimer = 0;
     gMenuDelay = 0;
     gMenuOption = 0;
     gIgnorePlayerInput = 1;
@@ -7147,7 +7147,7 @@ void menu_ghost_data_init(void) {
     func_8008E4B0();
     gOptionBlinkTimer = 0;
     D_801263E0 = 0;
-    D_801263D8 = 0;
+    gOpacityDecayTimer = 0;
     gMenuDelay = 0;
     D_80126498 = 0;
     if (sp70 == 0) {
@@ -7208,14 +7208,14 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                 temp = D_80126498;
                 if (yStick < 0 && D_80126498 < (D_801264D4 - 1)) {
                     D_80126498++;
-                    if (D_80126498 >= D_801263D8 + 3) {
-                        D_801263D8 = D_80126498 - 2;
+                    if (D_80126498 >= gOpacityDecayTimer + 3) {
+                        gOpacityDecayTimer = D_80126498 - 2;
                     }
                 }
                 if (yStick > 0 && D_80126498 > 0) {
                     D_80126498--;
-                    if (D_80126498 < D_801263D8) {
-                        D_801263D8 = D_80126498;
+                    if (D_80126498 < gOpacityDecayTimer) {
+                        gOpacityDecayTimer = D_80126498;
                     }
                 }
                 if (temp != D_80126498) {
@@ -7236,8 +7236,8 @@ s32 menu_ghost_data_loop(s32 updateRate) {
                         if (D_80126498 < 0) {
                             D_80126498 = 0;
                         }
-                        if (D_80126498 < D_801263D8) {
-                            D_801263D8 = D_80126498;
+                        if (D_80126498 < gOpacityDecayTimer) {
+                            gOpacityDecayTimer = D_80126498;
                         }
                         play_sound_global(SOUND_SELECT2, NULL);
                     } else {
@@ -7330,7 +7330,7 @@ void menu_credits_init(void) {
     D_80126BC4 = 0;
     D_80126BCC = 0;
     D_801263E0 = 0;
-    D_801263D8 = 0x28;
+    gOpacityDecayTimer = 0x28;
     D_800DF460 = 0;
     D_80126BD0 = 0;
     D_80126BD8 = 0;

@@ -60,8 +60,8 @@ glabel render_track_select_setup_ui
 /* 091BFC 80090FFC 3C03800E */  lui   $v1, %hi(gMenuImageStack) # $v1, 0x800e
 /* 091C00 80091000 04410029 */  bgez  $v0, .L800910A8
 /* 091C04 80091004 2463F75C */   addiu $v1, %lo(gMenuImageStack) # addiu $v1, $v1, -0x8a4
-/* 091C08 80091008 3C028012 */  lui   $v0, %hi(D_801269F4) # $v0, 0x8012
-/* 091C0C 8009100C 8C4269F4 */  lw    $v0, %lo(D_801269F4)($v0)
+/* 091C08 80091008 3C028012 */  lui   $v0, %hi(gSelectedTrackX) # $v0, 0x8012
+/* 091C0C 8009100C 8C4269F4 */  lw    $v0, %lo(gSelectedTrackX)($v0)
 /* 091C10 80091010 24010004 */  li    $at, 4
 /* 091C14 80091014 14410004 */  bne   $v0, $at, .L80091028
 /* 091C18 80091018 24010005 */   li    $at, 5
