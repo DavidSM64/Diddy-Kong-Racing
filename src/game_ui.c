@@ -144,22 +144,47 @@ s8 D_800E27AC[12] = {
 
 u8 D_800E27B8 = 0;
 
-u8 D_800E27BC[120] = {
-    0xFF, 0xA0, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x80,
-    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0xAF, 0x00, 0x00,
-    0xFF, 0x80, 0xFF, 0x00, 0x00, 0xFF, 0x80, 0xBE,
-    0x80, 0x80, 0x80, 0x00, 0x00, 0xFF, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x40,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x40,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x40,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x40,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ByteColour D_800E27BC[40] = {
+ { 255, 160, 0 }, 
+ { 255, 255, 0 }, 
+ { 0, 128, 255 }, 
+ { 255, 255, 255 }, 
+ { 0, 175, 0 }, 
+ { 0, 255, 128 }, 
+ { 255, 0, 0 }, 
+ { 255, 128, 190 },
+ { 128, 128, 128 }, 
+ { 0, 0, 255 }, 
+ { 0, 0, 0 }, 
+ { 0, 0, 0 },
+ { 0, 0, 0 },
+ { 0, 0, 0 },
+ { 0, 0, 0 },
+ { 32, 0, 0 },
+ { 0, 0, 0 },
+ { 0, 0, 64 },
+ { 0, 0, 0 },
+ { 0, 0, 0 },
+ { 0, 96, 0 },
+ { 0, 0, 0 },
+ { 0, 0, 0 },
+ { 128, 0, 0 },
+ { 0, 0, 0 },
+ { 0, 0, 0 },
+ { 0, 64, 0 },
+ { 0, 0, 0 },
+ { 0, 32, 0 },
+ { 64, 0, 0 },
+ { 0, 0, 0 },
+ { 64, 0, 64 }, 
+ { 0, 0, 0 }, 
+ { 0, 0, 96 }, 
+ { 0, 64, 0 }, 
+ { 0, 0, 0 }, 
+ { 0, 128, 0 }, 
+ { 64, 0, 0 }, 
+ { 0, 0, 0 }, 
+ { 0, 0, 0 },
 };
 
 s32 D_800E2834 = -2;
@@ -194,12 +219,12 @@ s8 D_80126CD3;
 s8 gRaceStartShowHudStep;
 
 s8 D_80126CD5;
-s32 D_80126CD8;
+u8 *D_80126CD8;
 unk80126CDC *D_80126CDC;
 unk80126CDC *D_80126CE0[3];
-s32 D_80126CEC;
-s32 D_80126CF0;
-s32 D_80126CF4;
+unk80126CDC *D_80126CEC;
+s16 *D_80126CF0;
+s32 *D_80126CF4;
 s32 D_80126CF8;
 Gfx *gHUDCurrDisplayList;
 Matrix *gHUDCurrMatrix;
@@ -440,7 +465,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
                             goto block_95;
                         }
 block_93:
-                        func_800A497C(racer, updateRate);
+                        render_race_finish_position(racer, updateRate);
                     } else {
 block_95:
                         func_800A6254(racer, updateRate);
@@ -843,7 +868,78 @@ void render_racer_bananas(Object_64* obj, s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A45F0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A497C.s")
+
+/**
+ * Plays the race finish fanfare and displays what position you finished
+ * in the middle of the screen.
+ * Uses a 3 step process to play the sounds, display the position, then slide it offscreen.
+*/
+void render_race_finish_position(Object_64* obj, s32 updateRate) {
+    unk800A497C* temp_a3;
+    unk800A497C* temp_s0;
+    s8 drawPosition;
+
+    temp_a3 = &D_80126CDC->unk700;
+    temp_s0 = &D_80126CDC->unk700 + 16; // Hacky workaround to the struct being assumed to be 0x720 bytes.
+    //temp_s0 = &D_80126CDC->unk740;
+    drawPosition = FALSE;
+    switch (temp_a3->unk1A) {
+        case 0:
+            set_music_player_voice_limit(24);
+            play_music(SEQUENCE_FIRST_PLACE);
+            play_sound_global(SOUND_WHOOSH1, NULL);
+            play_sound_global(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
+            D_800E2770->unk2 = 127;
+            D_800E2770->unk3 = 0;
+            D_800E2770->unkC = obj->racer.playerIndex;
+            temp_a3->unk1A = 1;
+            break;
+        case 1:
+            temp_a3->unkC += updateRate * 13;
+            if (temp_a3->unkC > -23.0f) {
+                temp_a3->unkC = -23.0f;
+            }
+            temp_s0->unkC -= updateRate * 13;
+            if (temp_s0->unkC < 22.0f) {
+                temp_s0->unkC = 22.0f;
+            }
+            drawPosition = TRUE;
+            if (temp_s0->unkC == 22.0f) {
+                temp_a3->unk1B += updateRate;
+                if (temp_a3->unk1B >= 120) {
+                    temp_a3->unk1B = -120;
+                    temp_a3->unk1C = temp_a3->unk1C + 1;
+                }
+                if (temp_a3->unk1C == 2) {
+                    temp_a3->unk1A = 2;
+                    play_sound_global(SOUND_WHOOSH1, NULL);
+                    if (D_800E2770->unkC == obj->racer.playerIndex) {
+                        D_800E2770->unk3 = -1;
+                    }
+                }
+            }
+            break;
+        case 2:
+            temp_a3->unkC += updateRate * 13;
+            temp_s0->unkC += updateRate * 13;
+            drawPosition = TRUE;
+            if (temp_a3->unkC > 200.0f) {
+                temp_a3->unk1A = 3;
+            }
+            break;
+        case 3:
+            temp_a3->unk1A = 3;
+            break;
+    }
+    if (drawPosition) {
+        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 210);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (unk80126CDC* ) temp_a3);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, temp_s0);
+        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    }
+}
+
+
 UNUSED void func_800A4C34(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {}
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4F50.s")
