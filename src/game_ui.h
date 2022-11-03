@@ -296,10 +296,10 @@ void render_race_start(s32 arg0, s32 updateRate);
 void render_racer_bananas(Object_64 *obj, s32 updateRate);
 void render_race_finish_position(Object_64 *obj, s32 updateRate);
 void render_speedometer(Object *obj, s32 updateRate);
+void render_lap_count(Object_64 *obj, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
-void render_lap_count(Object_64 *obj, s32 updateRate);
 void func_800A4C44(Object_64 *obj, s32 updateRate);
 void func_800A47A0(Object_64 *obj, s32 updateRate);
 void func_800A718C(Object_64 *obj);
