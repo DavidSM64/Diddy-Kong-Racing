@@ -4796,7 +4796,7 @@ s32 menu_game_select_loop(s32 updateRate) {
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
 
-    if (gOpacityDecayTimer != 0) {
+    if (gOpacityDecayTimer) {
         gOpacityDecayTimer++;
         if (gOpacityDecayTimer >= 3) {
             func_800828B8();
@@ -7330,7 +7330,7 @@ void menu_credits_init(void) {
     D_80126BC4 = 0;
     D_80126BCC = 0;
     D_801263E0 = 0;
-    gOpacityDecayTimer = 0x28;
+    gOpacityDecayTimer = 40;
     D_800DF460 = 0;
     D_80126BD0 = 0;
     D_80126BD8 = 0;

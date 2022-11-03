@@ -139,7 +139,7 @@ void load_fonts(void) {
     }
     load_font(ASSET_FONTS_FUNFONT);
     load_font(ASSET_FONTS_SMALLFONT);
-    gCompactKerning = 0;
+    gCompactKerning = FALSE;
 }
 
 void set_kerning(s32 arg0) {
@@ -451,7 +451,7 @@ s32 func_800C4DA0(char *text, s32 x, s32 font) {
                 }
             }
         }
-        if (gCompactKerning != 0 && diffX != thisDiffX) {
+        if (gCompactKerning && diffX != thisDiffX) {
             diffX--;
         }
     }

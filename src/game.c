@@ -1089,7 +1089,7 @@ void ingame_logic_loop(s32 updateRate) {
         func_80010994(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
-                && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == 0) && (gLevelLoadTimer == 0) && (D_800DD398 == 0)) {
+                && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == NULL) && (gLevelLoadTimer == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
@@ -1102,7 +1102,7 @@ void ingame_logic_loop(s32 updateRate) {
     if (D_800DD398 < 0) {
         D_800DD398 = 0;
     }
-    if (gPostRaceViewPort != 0) {
+    if (gPostRaceViewPort) {
         gIsPaused = FALSE;
     }
     gParticlePtrList_flush();
@@ -1119,7 +1119,7 @@ void ingame_logic_loop(s32 updateRate) {
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
             case 1:
-                gPostRaceViewPort = 0;
+                gPostRaceViewPort = NULL;
                 func_8006D8F0(-1);
                 break;
             case 4:
@@ -1322,7 +1322,7 @@ void ingame_logic_loop(s32 updateRate) {
     if (((buttonHeldInputs & L_TRIG) && (sRenderContext == DRAW_GAME)) || (D_801234FC != 0)) {
         gIsPaused = FALSE;
         gLevelLoadTimer = 0;
-        gPostRaceViewPort = 0;
+        gPostRaceViewPort = NULL;
         func_8006CC14();
         func_8006EC48(get_save_file_index());
         if (sp40 != 0) {
@@ -1391,7 +1391,7 @@ void ingame_logic_loop(s32 updateRate) {
         D_801234FC = 0;
     }
     if (D_801234F8 != 0) {
-        gPostRaceViewPort = 0;
+        gPostRaceViewPort = NULL;
         func_8006CC14();
         load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
         func_8006EC48(get_save_file_index());
@@ -1545,7 +1545,7 @@ void func_8006DCF8(s32 updateRate) {
     s32 menuLoopResult, temp, temp2, tempResult;
 
     gIsPaused = FALSE;
-    gPostRaceViewPort = 0;
+    gPostRaceViewPort = NULL;
     if (!gIsLoading && D_801234F0) {
         func_8006DC58(updateRate);
     }
@@ -1566,7 +1566,7 @@ void func_8006DCF8(s32 updateRate) {
         D_80123508 = 0x64;
         sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
-        gPostRaceViewPort = 0;
+        gPostRaceViewPort = NULL;
         load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
         func_8006EC48(get_save_file_index());
         return;
@@ -1574,7 +1574,7 @@ void func_8006DCF8(s32 updateRate) {
     if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
         func_8006CC14();
         gIsPaused = FALSE;
-        gPostRaceViewPort = 0;
+        gPostRaceViewPort = NULL;
         switch (menuLoopResult & 0x7F) {
             case 5:
                 load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
@@ -1940,18 +1940,18 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006EFDC.s")
 
 void func_8006F140(s32 arg0) {
     if (gLevelLoadTimer == 0) {
-        gLevelLoadTimer = 0x28;
+        gLevelLoadTimer = 40;
         D_80123524 = 0;
         D_80123526 = 0;
         if (arg0 == 1) {
             func_800C01D8(&D_800DD41C);
         }
         if (arg0 == 3) {
-            gLevelLoadTimer = 0x11A;
+            gLevelLoadTimer = 282;
             func_800C01D8(&D_800DD424);
         }
         if (arg0 == 4) {
-            gLevelLoadTimer = 0x168;
+            gLevelLoadTimer = 360;
             func_800C01D8(&D_800DD424);
         }
         if (arg0 == 0) {
@@ -1964,7 +1964,7 @@ void func_8006F140(s32 arg0) {
 void func_8006F20C(void) {
     if (gLevelLoadTimer == 0) {
         func_800C01D8(&D_800DD41C);
-        gLevelLoadTimer = 0x28;
+        gLevelLoadTimer = 40;
         D_80123524 = 1;
     }
 }
@@ -1972,7 +1972,7 @@ void func_8006F20C(void) {
 void func_8006F254(void) {
     if (gLevelLoadTimer == 0) {
         func_800C01D8(&D_800DD41C);
-        gLevelLoadTimer = 0x28;
+        gLevelLoadTimer = 40;
         D_80123524 = 2;
     }
 }
@@ -1982,7 +1982,7 @@ void func_8006F29C(void) {
         if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
             gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
             func_800C01D8(&D_800DD41C);
-            gLevelLoadTimer = 0x28;
+            gLevelLoadTimer = 40;
             D_80123525 = 0x2D;
             D_80123524 = 3;
         }
@@ -1993,7 +1993,7 @@ void func_8006F338(s32 arg0) {
     if (gLevelLoadTimer == 0) {
         D_80123525 = arg0;
         func_800C01D8(&D_800DD41C);
-        gLevelLoadTimer = 0x28;
+        gLevelLoadTimer = 40;
         D_80123524 = 4;
     }
 }
