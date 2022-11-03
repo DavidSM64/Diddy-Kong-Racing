@@ -47,9 +47,14 @@ typedef struct unk80126CDC {
     s8 unk5D;
     s8 unk5E;
     s8 unk5F;
-    struct unk80126CDC *unk60; // Not sure if this is correct.
+    struct unk80126CDC *unk60;
     s8 unk64[4];
-    u8 unk68[0x78];
+    u8 unk68[0x30];
+    s16 unk98;
+    s16 unk9A;
+    u8 unk9C[0x3C];
+    s16 unkD8;
+    s8 unkDA[0x6];
     struct unk80126CDC *unkE0;
     u8 unkE4[0x8];
     f32 unkEC;
@@ -93,10 +98,11 @@ typedef struct unk80126CDC {
     f32 unk1EC;
     f32 unk1F0;
     u8 pad1F4[0xC];
-    struct unk80126CDC *unk200; // Not sure if this is correct.
+    struct unk80126CDC *unk200;
     u8 unk204[0x14];
     s16 unk218; 
-    s16 unk21A;
+    s8 unk21A;
+    s8 unk21B;
     u8 unk21C[0x24];
     struct unk80126CDC *unk240;
     u8 unk244[0x8];
@@ -134,7 +140,28 @@ typedef struct unk80126CDC {
     s16 unk398;
     s8 unk39A;
     s8 unk39B;
-    u8 unk39C[0x70];
+    u8 unk39C[0x10];
+    f32 unk3AC;
+    u8 unk3B0[0xC];
+    s8 unk3BC;
+    s8 unk3BD[0xF];
+    f32 unk3CC;
+    u8 unk3D0[0xA];
+    s8 unk3DA;
+    s8 unk3DB;
+    s8 unk3DC;
+    s8 unk3DD;
+    s8 unk3DE;
+    s8 unk3DF;
+    u8 unk3E0[0xC];
+    f32 unk3EC;
+    u8 unk3F0[0xC];
+    s8 unk3FC;
+    u8 unk3FD;
+    u8 unk3FE;
+    u8 unk3FF;
+    struct unk80126CDC *unk400;
+    u8 unk404[0x8];
     f32 unk40C;
     f32 unk410;
     u8 unk414[0xC];
@@ -272,7 +299,7 @@ void render_speedometer(Object *obj, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
-void func_800A4F50(Object_64 *obj, s32 updateRate);
+void render_lap_count(Object_64 *obj, s32 updateRate);
 void func_800A4C44(Object_64 *obj, s32 updateRate);
 void func_800A47A0(Object_64 *obj, s32 updateRate);
 void func_800A718C(Object_64 *obj);
