@@ -500,7 +500,9 @@ typedef struct LevelModel {
 /* 0x1C */ s16 unk1C;
 /* 0x1E */ s16 unk1E;
 /* 0x20 */ s32 unk20; //spriteIndex?
-           u8 pad24[0x14];
+/* 0x24 */ u16 unk24;
+/* 0x26 */ u16 unk26;
+           u8 pad28[0x10];
 /* 0x38 */ u32 minimapColor;
 /* 0x3C */ s16 unk3C;
 /* 0x3E */ s16 unk3E;
@@ -1513,5 +1515,11 @@ typedef struct unk8011D510 {
 typedef struct unk80042178 {
     u8 pad0[0x20];
 } unk80042178;
+
+typedef struct ByteColour {
+    u8 red;
+    u8 green;
+    u8 blue;
+} ByteColour;
 
 #endif

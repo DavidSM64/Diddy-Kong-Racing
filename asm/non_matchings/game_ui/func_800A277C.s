@@ -862,7 +862,7 @@ glabel func_800A277C
 /* 0A3FCC 800A33CC 8FA400A0 */  lw    $a0, 0xa0($sp)
 .L800A33D0:
 /* 0A3FD0 800A33D0 8FA500C8 */  lw    $a1, 0xc8($sp)
-/* 0A3FD4 800A33D4 0C0293D4 */  jal   func_800A4F50
+/* 0A3FD4 800A33D4 0C0293D4 */  jal   render_lap_count
 /* 0A3FD8 800A33D8 00000000 */   nop   
 /* 0A3FDC 800A33DC 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A3FE0 800A33E0 8FA500C8 */  lw    $a1, 0xc8($sp)
@@ -870,7 +870,7 @@ glabel func_800A277C
 /* 0A3FE8 800A33E8 00000000 */   nop   
 /* 0A3FEC 800A33EC 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A3FF0 800A33F0 8FA500C8 */  lw    $a1, 0xc8($sp)
-/* 0A3FF4 800A33F4 0C029055 */  jal   func_800A4154
+/* 0A3FF4 800A33F4 0C029055 */  jal   render_racer_bananas
 /* 0A3FF8 800A33F8 00000000 */   nop   
 /* 0A3FFC 800A33FC 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A4000 800A3400 8FA500C8 */  lw    $a1, 0xc8($sp)
@@ -882,7 +882,7 @@ glabel func_800A277C
 /* 0A4018 800A3418 00000000 */   nop   
 /* 0A401C 800A341C 8FA400C4 */  lw    $a0, 0xc4($sp)
 /* 0A4020 800A3420 8FA500C8 */  lw    $a1, 0xc8($sp)
-/* 0A4024 800A3424 0C028E21 */  jal   func_800A3884
+/* 0A4024 800A3424 0C028E21 */  jal   render_speedometer
 /* 0A4028 800A3428 00000000 */   nop   
 /* 0A402C 800A342C 0C00382C */  jal   func_8000E0B0
 /* 0A4030 800A3430 00000000 */   nop   

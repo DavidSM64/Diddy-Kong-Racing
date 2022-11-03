@@ -114,7 +114,7 @@ glabel func_800A1248
 /* 0A1FD8 800A13D8 AFA70044 */   sw    $a3, 0x44($sp)
 /* 0A1FDC 800A13DC 8FA40044 */  lw    $a0, 0x44($sp)
 /* 0A1FE0 800A13E0 8FA50050 */  lw    $a1, 0x50($sp)
-/* 0A1FE4 800A13E4 0C029055 */  jal   func_800A4154
+/* 0A1FE4 800A13E4 0C029055 */  jal   render_racer_bananas
 /* 0A1FE8 800A13E8 00000000 */   nop   
 /* 0A1FEC 800A13EC 8FA4004C */  lw    $a0, 0x4c($sp)
 /* 0A1FF0 800A13F0 8FA50050 */  lw    $a1, 0x50($sp)

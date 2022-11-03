@@ -149,7 +149,7 @@ glabel func_800A1C04
 /* 0A2A20 800A1E20 8FBF0014 */   lw    $ra, 0x14($sp)
 /* 0A2A24 800A1E24 8FA50048 */  lw    $a1, 0x48($sp)
 .L800A1E28:
-/* 0A2A28 800A1E28 0C029055 */  jal   func_800A4154
+/* 0A2A28 800A1E28 0C029055 */  jal   render_racer_bananas
 /* 0A2A2C 800A1E2C 00E02025 */   move  $a0, $a3
 .L800A1E30:
 /* 0A2A30 800A1E30 0C01A142 */  jal   func_80068508
