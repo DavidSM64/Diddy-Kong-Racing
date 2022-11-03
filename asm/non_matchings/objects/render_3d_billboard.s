@@ -70,9 +70,9 @@ glabel render_3d_billboard
 /* 01298C 80011D8C 3C0140C0 */   li    $at, 0x40C00000 # 6.000000
 /* 012990 80011D90 44818000 */  mtc1  $at, $f16
 /* 012994 80011D94 C4F20008 */  lwc1  $f18, 8($a3)
-/* 012998 80011D98 3C108012 */  lui   $s0, %hi(D_8011AE8C) # $s0, 0x8012
+/* 012998 80011D98 3C108012 */  lui   $s0, %hi(gObjectCurrDisplayList) # $s0, 0x8012
 /* 01299C 80011D9C 46128032 */  c.eq.s $f16, $f18
-/* 0129A0 80011DA0 2610AE8C */  addiu $s0, %lo(D_8011AE8C) # addiu $s0, $s0, -0x5174
+/* 0129A0 80011DA0 2610AE8C */  addiu $s0, %lo(gObjectCurrDisplayList) # addiu $s0, $s0, -0x5174
 /* 0129A4 80011DA4 45000015 */  bc1f  .L80011DFC
 /* 0129A8 80011DA8 3C0EFA00 */   lui   $t6, 0xfa00
 /* 0129AC 80011DAC 8E020000 */  lw    $v0, ($s0)
@@ -97,8 +97,8 @@ glabel render_3d_billboard
 /* 0129F8 80011DF8 AC580004 */   sw    $t8, 4($v0)
 .L80011DFC:
 /* 0129FC 80011DFC 1462000E */  bne   $v1, $v0, .L80011E38
-/* 012A00 80011E00 3C108012 */   lui   $s0, %hi(D_8011AE8C) # $s0, 0x8012
-/* 012A04 80011E04 2610AE8C */  addiu $s0, %lo(D_8011AE8C) # addiu $s0, $s0, -0x5174
+/* 012A00 80011E00 3C108012 */   lui   $s0, %hi(gObjectCurrDisplayList) # $s0, 0x8012
+/* 012A04 80011E04 2610AE8C */  addiu $s0, %lo(gObjectCurrDisplayList) # addiu $s0, $s0, -0x5174
 /* 012A08 80011E08 8E020000 */  lw    $v0, ($s0)
 /* 012A0C 80011E0C 3C0196E6 */  lui   $at, (0x96E6FF00 >> 16) # lui $at, 0x96e6
 /* 012A10 80011E10 3421FF00 */  ori   $at, (0x96E6FF00 & 0xFFFF) # ori $at, $at, 0xff00
@@ -115,10 +115,10 @@ glabel render_3d_billboard
 /* 012A38 80011E38 15000003 */  bnez  $t0, .L80011E48
 /* 012A3C 80011E3C 28A100FF */   slti  $at, $a1, 0xff
 /* 012A40 80011E40 10200012 */  beqz  $at, .L80011E8C
-/* 012A44 80011E44 3C108012 */   lui   $s0, %hi(D_8011AE8C) # $s0, 0x8012
+/* 012A44 80011E44 3C108012 */   lui   $s0, %hi(gObjectCurrDisplayList) # $s0, 0x8012
 .L80011E48:
-/* 012A48 80011E48 3C108012 */  lui   $s0, %hi(D_8011AE8C) # $s0, 0x8012
-/* 012A4C 80011E4C 2610AE8C */  addiu $s0, %lo(D_8011AE8C) # addiu $s0, $s0, -0x5174
+/* 012A48 80011E48 3C108012 */  lui   $s0, %hi(gObjectCurrDisplayList) # $s0, 0x8012
+/* 012A4C 80011E4C 2610AE8C */  addiu $s0, %lo(gObjectCurrDisplayList) # addiu $s0, $s0, -0x5174
 /* 012A50 80011E50 8E020000 */  lw    $v0, ($s0)
 /* 012A54 80011E54 30C300FF */  andi  $v1, $a2, 0xff
 /* 012A58 80011E58 244E0008 */  addiu $t6, $v0, 8
@@ -135,7 +135,7 @@ glabel render_3d_billboard
 /* 012A84 80011E84 10000009 */  b     .L80011EAC
 /* 012A88 80011E88 AC590004 */   sw    $t9, 4($v0)
 .L80011E8C:
-/* 012A8C 80011E8C 2610AE8C */  addiu $s0, %lo(D_8011AE8C) # addiu $s0, $s0, -0x5174
+/* 012A8C 80011E8C 2610AE8C */  addiu $s0, %lo(gObjectCurrDisplayList) # addiu $s0, $s0, -0x5174
 /* 012A90 80011E90 8E020000 */  lw    $v0, ($s0)
 /* 012A94 80011E94 3C0DFA00 */  lui   $t5, 0xfa00
 /* 012A98 80011E98 244F0008 */  addiu $t7, $v0, 8
@@ -208,7 +208,7 @@ glabel render_3d_billboard
 /* 012B90 80011F90 14800009 */  bnez  $a0, .L80011FB8
 /* 012B94 80011F94 00000000 */   nop   
 /* 012B98 80011F98 15620028 */  bne   $t3, $v0, .L8001203C
-/* 012B9C 80011F9C 3C058012 */   lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
+/* 012B9C 80011F9C 3C058012 */   lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
 /* 012BA0 80011FA0 8CF80064 */  lw    $t8, 0x64($a3)
 /* 012BA4 80011FA4 2401000A */  li    $at, 10
 /* 012BA8 80011FA8 930E0018 */  lbu   $t6, 0x18($t8)
@@ -254,10 +254,10 @@ glabel render_3d_billboard
 .L8001203C:
 /* 012C3C 8001203C 8FB90058 */  lw    $t9, 0x58($sp)
 .L80012040:
-/* 012C40 80012040 3C068012 */  lui   $a2, %hi(D_8011AE94) # $a2, 0x8012
-/* 012C44 80012044 24C6AE94 */  addiu $a2, %lo(D_8011AE94) # addiu $a2, $a2, -0x516c
+/* 012C40 80012040 3C068012 */  lui   $a2, %hi(gObjectCurrVertexList) # $a2, 0x8012
+/* 012C44 80012044 24C6AE94 */  addiu $a2, %lo(gObjectCurrVertexList) # addiu $a2, $a2, -0x516c
 /* 012C48 80012048 02002025 */  move  $a0, $s0
-/* 012C4C 8001204C 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 012C4C 8001204C 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 012C50 80012050 AFAA0014 */  sw    $t2, 0x14($sp)
 /* 012C54 80012054 AFA80080 */  sw    $t0, 0x80($sp)
 /* 012C58 80012058 AFA9007C */  sw    $t1, 0x7c($sp)

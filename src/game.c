@@ -95,7 +95,7 @@ s32 sControllerStatus = 0;
 UNUSED s32 D_800DD388 = 0;
 s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
-s16 D_800DD394 = 0;
+s16 gLevelLoadTimer = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
 s8 D_800DD3A0 = FALSE;
@@ -143,11 +143,11 @@ Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 UNUSED s32 D_801211FC;
 Mtx *gHudMatrices[2];
-Mtx *gCurrHudMat;
+Mtx *gGameCurrMatrix;
 VertexList *gHudVertices[2];
-VertexList *gCurrHudVerts;
+VertexList *gGameCurrVertexList;
 TriangleList *gHudTriangles[2];
-TriangleList *gCurrHudTris;
+TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
@@ -165,7 +165,7 @@ s32 D_8012350C;
 Settings *gSettingsPtr;
 s8 gIsLoading;
 s8 gIsPaused;
-s8 D_80123516;
+s8 gPostRaceViewPort;
 s32 gLevelDefaultVehicleID;
 s32 D_8012351C; // Looks to be the current level's vehicle ID.
 s32 sBootDelayTimer;
@@ -1278,9 +1278,9 @@ void main_game_loop(void) {
     }
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
-    gCurrHudMat = gHudMatrices[gSPTaskNum];
-    gCurrHudVerts = gHudVertices[gSPTaskNum];
-    gCurrHudTris = gHudTriangles[gSPTaskNum];
+    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
+    gGameCurrVertexList = gHudVertices[gSPTaskNum];
+    gGameCurrTriList = gHudTriangles[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
     set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
@@ -1288,7 +1288,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, (Mtx *) &gCurrHudMat, TRUE); 
+    render_background(&gCurrDisplayList, (Mtx *) &gGameCurrMatrix, TRUE); 
 
 #ifdef PUPPYPRINT_DEBUG
     first2 = osGetTime();
@@ -1337,12 +1337,12 @@ void main_game_loop(void) {
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
-    render_dialogue_boxes(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+    render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);
     // handle_transitions will perform the logic of transitions and return the transition ID.
     if (handle_transitions(sLogicUpdateRate)) {
-        render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+        render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     }
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
@@ -1486,7 +1486,7 @@ void ingame_logic_loop(s32 updateRate) {
 #endif
         if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
-                && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
+                && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == NULL) && (gLevelLoadTimer == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
@@ -1499,24 +1499,24 @@ void ingame_logic_loop(s32 updateRate) {
     if (D_800DD398 < 0) {
         D_800DD398 = 0;
     }
-    if (D_80123516 != 0) {
+    if (gPostRaceViewPort) {
         gIsPaused = FALSE;
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
-    if (D_80123516) {
-        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate); 
+    if (gPostRaceViewPort) {
+        i = func_80095728(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate); 
         switch (i) {
             case 2:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
             case 1:
-                D_80123516 = 0;
+                gPostRaceViewPort = NULL;
                 func_8006D8F0(-1);
                 break;
             case 4:
@@ -1624,7 +1624,7 @@ void ingame_logic_loop(s32 updateRate) {
 #ifdef PUPPYPRINT_DEBUG
     first = osGetTime();
 #endif
-    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
+    func_800A8474(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.hudTime, osGetTime() - first);
 #endif
@@ -1647,9 +1647,9 @@ void ingame_logic_loop(s32 updateRate) {
             sp3C = TRUE;
         }
     }
-    if (D_800DD394 > 0) {
-        D_800DD394 -= updateRate;
-        if (D_800DD394 <= 0) {
+    if (gLevelLoadTimer > 0) {
+        gLevelLoadTimer -= updateRate;
+        if (gLevelLoadTimer <= 0) {
             buttonHeldInputs = L_TRIG;
             sp3C = TRUE;
             switch (D_80123524) {
@@ -1673,7 +1673,7 @@ void ingame_logic_loop(s32 updateRate) {
                     break;
             }
             D_80123524 = 0;
-            D_800DD394 = 0;
+            gLevelLoadTimer = 0;
         }
     }
     if (sp3C) {
@@ -1701,7 +1701,7 @@ void ingame_logic_loop(s32 updateRate) {
     } else {
         sp3C = func_8006C300();
         if (func_8006C2F0()) {
-            if (D_800DD394 == 0) {
+            if (gLevelLoadTimer == 0) {
                 i = func_800214C4();
                 if ((i != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
                     if (sp3C != 0) {
@@ -1730,8 +1730,8 @@ void ingame_logic_loop(s32 updateRate) {
     }
     if (((buttonHeldInputs & L_TRIG) && (sRenderContext == DRAW_GAME)) || (D_801234FC != 0)) {
         gIsPaused = FALSE;
-        D_800DD394 = 0;
-        D_80123516 = 0;
+        gLevelLoadTimer = 0;
+        gPostRaceViewPort = NULL;
         func_8006CC14();
         func_8006EC48(get_save_file_index());
         if (sp40 != 0) {
@@ -1800,7 +1800,7 @@ void ingame_logic_loop(s32 updateRate) {
         D_801234FC = 0;
     }
     if (D_801234F8 != 0) {
-        D_80123516 = 0;
+        gPostRaceViewPort = NULL;
         func_8006CC14();
         load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
         func_8006EC48(get_save_file_index());
@@ -1816,7 +1816,7 @@ void func_8006D8A4(void) {
 }
 
 void func_8006D8E0(s32 arg0) {
-    D_80123516 = arg0 + 1;
+    gPostRaceViewPort = arg0 + 1;
 }
 
 void func_8006D8F0(UNUSED s32 arg0) {
@@ -1949,7 +1949,7 @@ void func_8006DC58(s32 updateRate) {
 #endif
         gParticlePtrList_flush();
         func_8001BF20();
-        func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+        render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
         func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
@@ -1963,11 +1963,11 @@ void func_8006DCF8(s32 updateRate) {
     s32 menuLoopResult, temp, temp2, tempResult;
 
     gIsPaused = FALSE;
-    D_80123516 = 0;
+    gPostRaceViewPort = NULL;
     if (!gIsLoading && D_801234F0) {
         func_8006DC58(updateRate);
     }
-    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    menuLoopResult = menu_loop(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
     D_801234F0 = TRUE;
     if (menuLoopResult == -2) {
         D_801234F0 = FALSE;
@@ -1984,7 +1984,7 @@ void func_8006DCF8(s32 updateRate) {
         D_80123508 = 0x64;
         sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
-        D_80123516 = 0;
+        gPostRaceViewPort = NULL;
         load_level_2(D_801234F4, D_80123500, D_80123504, gLevelDefaultVehicleID);
         func_8006EC48(get_save_file_index());
         return;
@@ -1992,7 +1992,7 @@ void func_8006DCF8(s32 updateRate) {
     if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
         func_8006CC14();
         gIsPaused = FALSE;
-        D_80123516 = 0;
+        gPostRaceViewPort = NULL;
         switch (menuLoopResult & 0x7F) {
             case 5:
                 load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
@@ -2235,7 +2235,7 @@ s8 is_game_paused(void) {
 }
 
 s8 func_8006EAB0(void) {
-    return D_80123516;
+    return gPostRaceViewPort;
 }
 
 /**
@@ -2357,50 +2357,50 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006EFDC.s")
 #endif
 
 void func_8006F140(s32 arg0) {
-    if (D_800DD394 == 0) {
-        D_800DD394 = 0x28;
+    if (gLevelLoadTimer == 0) {
+        gLevelLoadTimer = 40;
         D_80123524 = 0;
         D_80123526 = 0;
         if (arg0 == 1) {
             func_800C01D8(&D_800DD41C);
         }
         if (arg0 == 3) {
-            D_800DD394 = 0x11A;
+            gLevelLoadTimer = 282;
             func_800C01D8(&D_800DD424);
         }
         if (arg0 == 4) {
-            D_800DD394 = 0x168;
+            gLevelLoadTimer = 360;
             func_800C01D8(&D_800DD424);
         }
         if (arg0 == 0) {
-            D_800DD394 = 2;
+            gLevelLoadTimer = 2;
         }
     }
 }
 
 // Unused?
 void func_8006F20C(void) {
-    if (D_800DD394 == 0) {
+    if (gLevelLoadTimer == 0) {
         func_800C01D8(&D_800DD41C);
-        D_800DD394 = 0x28;
+        gLevelLoadTimer = 40;
         D_80123524 = 1;
     }
 }
 
 void func_8006F254(void) {
-    if (D_800DD394 == 0) {
+    if (gLevelLoadTimer == 0) {
         func_800C01D8(&D_800DD41C);
-        D_800DD394 = 0x28;
+        gLevelLoadTimer = 40;
         D_80123524 = 2;
     }
 }
 
 void func_8006F29C(void) {
-    if (D_800DD394 == 0) {
+    if (gLevelLoadTimer == 0) {
         if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
             gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
             func_800C01D8(&D_800DD41C);
-            D_800DD394 = 0x28;
+            gLevelLoadTimer = 40;
             D_80123525 = 0x2D;
             D_80123524 = 3;
         }
@@ -2408,10 +2408,10 @@ void func_8006F29C(void) {
 }
 
 void func_8006F338(s32 arg0) {
-    if (D_800DD394 == 0) {
+    if (gLevelLoadTimer == 0) {
         D_80123525 = arg0;
         func_800C01D8(&D_800DD41C);
-        D_800DD394 = 0x28;
+        gLevelLoadTimer = 40;
         D_80123524 = 4;
     }
 }

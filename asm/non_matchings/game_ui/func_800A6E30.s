@@ -32,8 +32,8 @@ glabel L800A6E70
 /* 0A7A90 800A6E90 00002825 */  move  $a1, $zero
 /* 0A7A94 800A6E94 0C000741 */  jal   play_sound_global
 /* 0A7A98 800A6E98 A078000C */   sb    $t8, 0xc($v1)
-/* 0A7A9C 800A6E9C 3C038012 */  lui   $v1, %hi(D_80126D0C) # $v1, 0x8012
-/* 0A7AA0 800A6EA0 8C636D0C */  lw    $v1, %lo(D_80126D0C)($v1)
+/* 0A7A9C 800A6E9C 3C038012 */  lui   $v1, %hi(gHUDNumPlayers) # $v1, 0x8012
+/* 0A7AA0 800A6EA0 8C636D0C */  lw    $v1, %lo(gHUDNumPlayers)($v1)
 /* 0A7AA4 800A6EA4 8FA60018 */  lw    $a2, 0x18($sp)
 /* 0A7AA8 800A6EA8 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A7AAC 800A6EAC 10600003 */  beqz  $v1, .L800A6EBC
@@ -102,7 +102,7 @@ glabel L800A6F3C
 /* 0A7B8C 800A6F8C 240A0002 */  li    $t2, 2
 /* 0A7B90 800A6F90 468042A0 */  cvt.s.w $f10, $f8
 /* 0A7B94 800A6F94 240CFF88 */  li    $t4, -120
-/* 0A7B98 800A6F98 3C0E8012 */  lui   $t6, %hi(D_80126D40) # $t6, 0x8012
+/* 0A7B98 800A6F98 3C0E8012 */  lui   $t6, %hi(gHUDVoiceSoundMask) # $t6, 0x8012
 /* 0A7B9C 800A6F9C E44A01CC */  swc1  $f10, 0x1cc($v0)
 /* 0A7BA0 800A6FA0 8D0B0000 */  lw    $t3, ($t0)
 /* 0A7BA4 800A6FA4 3C0F8012 */  lui   $t7, %hi(D_80126D71) # $t7, 0x8012
@@ -110,7 +110,7 @@ glabel L800A6F3C
 /* 0A7BAC 800A6FAC 8D0D0000 */  lw    $t5, ($t0)
 /* 0A7BB0 800A6FB0 00000000 */  nop   
 /* 0A7BB4 800A6FB4 A1AC01DB */  sb    $t4, 0x1db($t5)
-/* 0A7BB8 800A6FB8 8DCE6D40 */  lw    $t6, %lo(D_80126D40)($t6)
+/* 0A7BB8 800A6FB8 8DCE6D40 */  lw    $t6, %lo(gHUDVoiceSoundMask)($t6)
 /* 0A7BBC 800A6FBC 00000000 */  nop   
 /* 0A7BC0 800A6FC0 15C00009 */  bnez  $t6, .L800A6FE8
 /* 0A7BC4 800A6FC4 00000000 */   nop   
@@ -118,17 +118,17 @@ glabel L800A6F3C
 /* 0A7BCC 800A6FCC 00000000 */  nop   
 /* 0A7BD0 800A6FD0 15E00005 */  bnez  $t7, .L800A6FE8
 /* 0A7BD4 800A6FD4 00000000 */   nop   
-/* 0A7BD8 800A6FD8 0C029B6D */  jal   func_800A6DB4
+/* 0A7BD8 800A6FD8 0C029B6D */  jal   play_time_trial_end_message
 /* 0A7BDC 800A6FDC 00C02025 */   move  $a0, $a2
 /* 0A7BE0 800A6FE0 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A7BE4 800A6FE4 25086CDC */  addiu $t0, %lo(D_80126CDC) # addiu $t0, $t0, 0x6cdc
 .L800A6FE8:
 /* 0A7BE8 800A6FE8 8D070000 */  lw    $a3, ($t0)
 /* 0A7BEC 800A6FEC 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
-/* 0A7BF0 800A6FF0 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
-/* 0A7BF4 800A6FF4 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
-/* 0A7BF8 800A6FF8 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
-/* 0A7BFC 800A6FFC 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
+/* 0A7BF0 800A6FF0 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
+/* 0A7BF4 800A6FF4 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
+/* 0A7BF8 800A6FF8 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0A7BFC 800A6FFC 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A7C00 800A7000 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A7C04 800A7004 0C02A980 */  jal   func_800AA600
 /* 0A7C08 800A7008 24E701C0 */   addiu $a3, $a3, 0x1c0
@@ -140,14 +140,14 @@ glabel L800A7014
 /* 0A7C1C 800A701C 0305C821 */  addu  $t9, $t8, $a1
 /* 0A7C20 800A7020 A05901DB */  sb    $t9, 0x1db($v0)
 /* 0A7C24 800A7024 8D020000 */  lw    $v0, ($t0)
-/* 0A7C28 800A7028 3C038012 */  lui   $v1, %hi(D_80126D0C) # $v1, 0x8012
+/* 0A7C28 800A7028 3C038012 */  lui   $v1, %hi(gHUDNumPlayers) # $v1, 0x8012
 /* 0A7C2C 800A702C 804901DB */  lb    $t1, 0x1db($v0)
 /* 0A7C30 800A7030 24040016 */  li    $a0, 22
 /* 0A7C34 800A7034 29210078 */  slti  $at, $t1, 0x78
 /* 0A7C38 800A7038 1420001C */  bnez  $at, .L800A70AC
 /* 0A7C3C 800A703C 00000000 */   nop   
 /* 0A7C40 800A7040 A04A01DA */  sb    $t2, 0x1da($v0)
-/* 0A7C44 800A7044 8C636D0C */  lw    $v1, %lo(D_80126D0C)($v1)
+/* 0A7C44 800A7044 8C636D0C */  lw    $v1, %lo(gHUDNumPlayers)($v1)
 /* 0A7C48 800A7048 24010001 */  li    $at, 1
 /* 0A7C4C 800A704C 10600003 */  beqz  $v1, .L800A705C
 /* 0A7C50 800A7050 240B0038 */   li    $t3, 56
@@ -180,10 +180,10 @@ glabel L800A7014
 /* 0A7CA8 800A70A8 00000000 */  nop   
 .L800A70AC:
 /* 0A7CAC 800A70AC 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
-/* 0A7CB0 800A70B0 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
-/* 0A7CB4 800A70B4 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
-/* 0A7CB8 800A70B8 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
-/* 0A7CBC 800A70BC 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
+/* 0A7CB0 800A70B0 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
+/* 0A7CB4 800A70B4 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
+/* 0A7CB8 800A70B8 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0A7CBC 800A70BC 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A7CC0 800A70C0 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A7CC4 800A70C4 0C02A980 */  jal   func_800AA600
 /* 0A7CC8 800A70C8 244701C0 */   addiu $a3, $v0, 0x1c0
@@ -197,20 +197,20 @@ glabel L800A70D4
 /* 0A7CE4 800A70E4 44999000 */  mtc1  $t9, $f18
 /* 0A7CE8 800A70E8 C45001CC */  lwc1  $f16, 0x1cc($v0)
 /* 0A7CEC 800A70EC 46809120 */  cvt.s.w $f4, $f18
-/* 0A7CF0 800A70F0 3C058012 */  lui   $a1, %hi(D_80126D00) # $a1, 0x8012
+/* 0A7CF0 800A70F0 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
 /* 0A7CF4 800A70F4 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A7CF8 800A70F8 46048181 */  sub.s $f6, $f16, $f4
-/* 0A7CFC 800A70FC 3C068012 */  lui   $a2, %hi(D_80126D04) # $a2, 0x8012
+/* 0A7CFC 800A70FC 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
 /* 0A7D00 800A7100 E44601CC */  swc1  $f6, 0x1cc($v0)
 /* 0A7D04 800A7104 8D020000 */  lw    $v0, ($t0)
 /* 0A7D08 800A7108 240A0004 */  li    $t2, 4
 /* 0A7D0C 800A710C 804901DD */  lb    $t1, 0x1dd($v0)
 /* 0A7D10 800A7110 C44801CC */  lwc1  $f8, 0x1cc($v0)
 /* 0A7D14 800A7114 44895000 */  mtc1  $t1, $f10
-/* 0A7D18 800A7118 24C66D04 */  addiu $a2, %lo(D_80126D04) # addiu $a2, $a2, 0x6d04
+/* 0A7D18 800A7118 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
 /* 0A7D1C 800A711C 468054A0 */  cvt.s.w $f18, $f10
 /* 0A7D20 800A7120 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
-/* 0A7D24 800A7124 24A56D00 */  addiu $a1, %lo(D_80126D00) # addiu $a1, $a1, 0x6d00
+/* 0A7D24 800A7124 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A7D28 800A7128 4612403C */  c.lt.s $f8, $f18
 /* 0A7D2C 800A712C 00000000 */  nop   
 /* 0A7D30 800A7130 45000005 */  bc1f  .L800A7148

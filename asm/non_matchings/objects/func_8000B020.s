@@ -116,9 +116,9 @@ glabel func_8000B020
 /* 00BDE0 8000B1E0 00002825 */   move  $a1, $zero
 /* 00BDE4 8000B1E4 3C01800E */  lui   $at, %hi(D_800DC75C) # $at, 0x800e
 /* 00BDE8 8000B1E8 3C108012 */  lui   $s0, %hi(D_8011B078) # $s0, 0x8012
-/* 00BDEC 8000B1EC 3C118012 */  lui   $s1, %hi(D_8011B0A0) # $s1, 0x8012
+/* 00BDEC 8000B1EC 3C118012 */  lui   $s1, %hi(gSceneCurrDisplayList) # $s1, 0x8012
 /* 00BDF0 8000B1F0 AC22C75C */  sw    $v0, %lo(D_800DC75C)($at)
-/* 00BDF4 8000B1F4 2631B0A0 */  addiu $s1, %lo(D_8011B0A0) # addiu $s1, $s1, -0x4f60
+/* 00BDF4 8000B1F4 2631B0A0 */  addiu $s1, %lo(gSceneCurrDisplayList) # addiu $s1, $s1, -0x4f60
 /* 00BDF8 8000B1F8 2610B078 */  addiu $s0, %lo(D_8011B078) # addiu $s0, $s0, -0x4f88
 .L8000B1FC:
 /* 00BDFC 8000B1FC A2000000 */  sb    $zero, ($s0)

@@ -50,7 +50,7 @@ glabel func_800138A8
 /* 014568 80013968 C7AE0030 */  lwc1  $f14, 0x30($sp)
 /* 01456C 8001396C C7B0002C */  lwc1  $f16, 0x2c($sp)
 /* 014570 80013970 4500000E */  bc1f  .L800139AC
-/* 014574 80013974 3C048012 */   lui   $a0, %hi(D_8011AE8C) # $a0, 0x8012
+/* 014574 80013974 3C048012 */   lui   $a0, %hi(gObjectCurrDisplayList) # $a0, 0x8012
 /* 014578 80013978 860E001A */  lh    $t6, 0x1a($s0)
 /* 01457C 8001397C 00000000 */  nop   
 /* 014580 80013980 448E3000 */  mtc1  $t6, $f6
@@ -69,7 +69,7 @@ glabel func_800138A8
 /* 0145B0 800139B0 C6040010 */  lwc1  $f4, 0x10($s0)
 /* 0145B4 800139B4 C6080014 */  lwc1  $f8, 0x14($s0)
 /* 0145B8 800139B8 46025480 */  add.s $f18, $f10, $f2
-/* 0145BC 800139BC 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
+/* 0145BC 800139BC 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
 /* 0145C0 800139C0 460E2180 */  add.s $f6, $f4, $f14
 /* 0145C4 800139C4 E612000C */  swc1  $f18, 0xc($s0)
 /* 0145C8 800139C8 46104280 */  add.s $f10, $f8, $f16
@@ -77,10 +77,10 @@ glabel func_800138A8
 /* 0145D0 800139D0 E60A0014 */  swc1  $f10, 0x14($s0)
 /* 0145D4 800139D4 8FB80044 */  lw    $t8, 0x44($sp)
 /* 0145D8 800139D8 8FAF003C */  lw    $t7, 0x3c($sp)
-/* 0145DC 800139DC 3C068012 */  lui   $a2, %hi(D_8011AE94) # $a2, 0x8012
-/* 0145E0 800139E0 24C6AE94 */  addiu $a2, %lo(D_8011AE94) # addiu $a2, $a2, -0x516c
-/* 0145E4 800139E4 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
-/* 0145E8 800139E8 2484AE8C */  addiu $a0, %lo(D_8011AE8C) # addiu $a0, $a0, -0x5174
+/* 0145DC 800139DC 3C068012 */  lui   $a2, %hi(gObjectCurrVertexList) # $a2, 0x8012
+/* 0145E0 800139E0 24C6AE94 */  addiu $a2, %lo(gObjectCurrVertexList) # addiu $a2, $a2, -0x516c
+/* 0145E4 800139E4 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
+/* 0145E8 800139E8 2484AE8C */  addiu $a0, %lo(gObjectCurrDisplayList) # addiu $a0, $a0, -0x5174
 /* 0145EC 800139EC 02003825 */  move  $a3, $s0
 /* 0145F0 800139F0 AFB80014 */  sw    $t8, 0x14($sp)
 /* 0145F4 800139F4 0C01A145 */  jal   func_80068514

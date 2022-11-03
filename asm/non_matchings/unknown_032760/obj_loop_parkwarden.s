@@ -1445,7 +1445,7 @@ glabel L8003A5AC
 /* 03B3D8 8003A7D8 46204120 */  cvt.s.d $f4, $f8
 /* 03B3DC 8003A7DC E6240004 */  swc1  $f4, 4($s1)
 .L8003A7E0:
-/* 03B3E0 8003A7E0 0C006E9D */  jal   get_object_struct_array
+/* 03B3E0 8003A7E0 0C006E9D */  jal   get_racer_objects
 /* 03B3E4 8003A7E4 27A40078 */   addiu $a0, $sp, 0x78
 /* 03B3E8 8003A7E8 8C480000 */  lw    $t0, ($v0)
 /* 03B3EC 8003A7EC 00000000 */  nop   

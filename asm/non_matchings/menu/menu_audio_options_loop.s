@@ -117,8 +117,8 @@ glabel menu_audio_options_loop
 /* 085A1C 80084E1C AC38F47C */  sw    $t8, %lo(gMenuDelay)($at)
 /* 085A20 80084E20 0C030076 */  jal   func_800C01D8
 /* 085A24 80084E24 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
-/* 085A28 80084E28 3C198012 */  lui   $t9, %hi(D_801263D8) # $t9, 0x8012
-/* 085A2C 80084E2C 8F3963D8 */  lw    $t9, %lo(D_801263D8)($t9)
+/* 085A28 80084E28 3C198012 */  lui   $t9, %hi(gOpacityDecayTimer) # $t9, 0x8012
+/* 085A2C 80084E2C 8F3963D8 */  lw    $t9, %lo(gOpacityDecayTimer)($t9)
 /* 085A30 80084E30 00000000 */  nop   
 /* 085A34 80084E34 07200004 */  bltz  $t9, .L80084E48
 /* 085A38 80084E38 240A0003 */   li    $t2, 3
@@ -247,8 +247,8 @@ glabel menu_audio_options_loop
 /* 085BE8 80084FE8 0C000572 */  jal   music_is_playing
 /* 085BEC 80084FEC 00000000 */   nop   
 /* 085BF0 80084FF0 14400043 */  bnez  $v0, .L80085100
-/* 085BF4 80084FF4 3C0D8012 */   lui   $t5, %hi(D_801263D8) # $t5, 0x8012
-/* 085BF8 80084FF8 8DAD63D8 */  lw    $t5, %lo(D_801263D8)($t5)
+/* 085BF4 80084FF4 3C0D8012 */   lui   $t5, %hi(gOpacityDecayTimer) # $t5, 0x8012
+/* 085BF8 80084FF8 8DAD63D8 */  lw    $t5, %lo(gOpacityDecayTimer)($t5)
 /* 085BFC 80084FFC 00000000 */  nop   
 /* 085C00 80085000 05A0000A */  bltz  $t5, .L8008502C
 /* 085C04 80085004 00000000 */   nop   
@@ -316,8 +316,8 @@ glabel menu_audio_options_loop
 /* 085CEC 800850EC 0C0002CD */  jal   play_music
 /* 085CF0 800850F0 00000000 */   nop   
 /* 085CF4 800850F4 8E0B0000 */  lw    $t3, ($s0)
-/* 085CF8 800850F8 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
-/* 085CFC 800850FC AC2B63D8 */  sw    $t3, %lo(D_801263D8)($at)
+/* 085CF8 800850F8 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
+/* 085CFC 800850FC AC2B63D8 */  sw    $t3, %lo(gOpacityDecayTimer)($at)
 .L80085100:
 /* 085D00 80085100 3C0D8012 */  lui   $t5, %hi(gOptionsMenuItemIndex) # $t5, 0x8012
 /* 085D04 80085104 85AD6C46 */  lh    $t5, %lo(gOptionsMenuItemIndex)($t5)

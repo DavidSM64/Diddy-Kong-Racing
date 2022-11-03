@@ -240,7 +240,7 @@ s32 get_viewport_count(void) {
     return gNumberOfViewports;
 }
 
-s32 func_80066220(void) {
+s32 get_object_render_stack_pos(void) {
     return gObjectRenderStackPos;
 }
 
@@ -271,7 +271,7 @@ void func_80066230(Gfx **dlist, Mtx **mats) {
     someStruct->trans.x_position = 0.0f;
     someStruct->trans.y_position = 0.0f;
     someStruct->trans.z_position = 0.0f;
-    func_8001D5E0(0.0f, 0.0f, -1.0f);
+    set_and_normalize_D_8011AFE8(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
     someStruct->unk38.word = sp24;
     someStruct->trans.y_rotation = sp2A;

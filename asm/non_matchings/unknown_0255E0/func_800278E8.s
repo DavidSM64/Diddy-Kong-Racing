@@ -4,7 +4,7 @@ glabel func_800278E8
 /* 0284F0 800278F0 AFA40070 */  sw    $a0, 0x70($sp)
 /* 0284F4 800278F4 AFB10018 */  sw    $s1, 0x18($sp)
 /* 0284F8 800278F8 AFB00014 */  sw    $s0, 0x14($sp)
-/* 0284FC 800278FC 0C006E9D */  jal   get_object_struct_array
+/* 0284FC 800278FC 0C006E9D */  jal   get_racer_objects
 /* 028500 80027900 27A40038 */   addiu $a0, $sp, 0x38
 /* 028504 80027904 8FAE0038 */  lw    $t6, 0x38($sp)
 /* 028508 80027908 00001825 */  move  $v1, $zero

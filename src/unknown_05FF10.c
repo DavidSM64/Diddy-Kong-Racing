@@ -62,9 +62,9 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if ((racer->velocity < 0.3f)&& (racer->velocity > -0.3f)) {
         *buttonsPressed = 0;
     }
-    if (racer->raceStatus == STATUS_FINISHED && func_80023568()) {
+    if (racer->raceFinished == TRUE && func_80023568()) {
         func_80021400(130);
-        racer->raceStatus++;
+        racer->raceFinished++;
     }
     if (*startTimer == 100) {
         D_8011D610 = 0;
@@ -154,7 +154,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if ((obj == tempObj->unk4C->unk0) && (tempObj->unk4C->unk14 & 8) && (obj->segment.unk3B == 1)) {
         obj64->racer.attackType = ATTACK_SQUISHED;
     }
-    if ((obj64->racer.raceStatus != STATUS_RACING) && (D_8011D610 == 0)) {
+    if ((obj64->racer.raceFinished != FALSE) && (D_8011D610 == 0)) {
         D_8011D610 = 1;
         func_8005CB68(obj64, &D_8011D610);
     }

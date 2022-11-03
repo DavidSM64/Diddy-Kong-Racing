@@ -459,7 +459,7 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     f32 temp5;
 
     obj3C = obj->segment.unk3C_a.unk3C;
-    objList = get_object_struct_array(&numberOfObjects);
+    objList = get_racer_objects(&numberOfObjects);
     temp0 = sine_s((obj3C->unkB << 8) * -1);
     temp1 = cosine_s((obj3C->unkB << 8) * -1);
     temp2 = obj3C->unk8 * 3;
@@ -766,7 +766,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 speed) {
         obj->segment.trans.unk6 &= 0xBFFF;
     }
     if ((obj->unk4C->unk13 < 100) && !(obj->segment.trans.unk6 & 0x4000)) {
-        racerObjs = get_object_struct_array(&numObjects);
+        racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
             racer = &curRacerObj->unk64->racer;
@@ -831,7 +831,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
     obj->segment.trans.unk6 |= 0x1000;
     get_object_struct(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->unk4C->unk13 < obj->unk78) {
-        racerObjs = get_object_struct_array(&numObjects);
+        racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
             racer = &curRacerObj->unk64->racer;
@@ -848,7 +848,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
                     if (racer->throttleReleased) {
                         racer->boostType |= BOOST_SMALL_FAST;
                     }
-                    if (racer->raceStatus == STATUS_RACING) {
+                    if (racer->raceFinished == FALSE) {
                         func_80072348(racer->playerIndex, 8);
                     }
                 }
@@ -1501,7 +1501,7 @@ void obj_loop_exit(Object *obj, UNUSED s32 speed) {
     if (someBool) {
         if (obj->unk4C->unk13 < obj64->unk10) {
             dist = obj64->unk10;
-            racerObjects = get_object_struct_array(&numberOfRacers);
+            racerObjects = get_racer_objects(&numberOfRacers);
             for (i = 0; i < numberOfRacers; i++) {
                 racerObj = racerObjects[i];
                 racer = &racerObj->unk64->racer;
@@ -1691,7 +1691,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 speed) {
     if (obj->unk4C->unk13 < obj64->unk10) {
         dist = obj64->unk10;
         halfDist = dist * 0.5f;
-        racerObjects = get_object_struct_array(&numberOfRacers);
+        racerObjects = get_racer_objects(&numberOfRacers);
         for (i = 0; i < numberOfRacers; i++) {
             racerObj = racerObjects[i];
             racer = &racerObj->unk64->racer;
@@ -2442,8 +2442,8 @@ void obj_loop_weather(Object *obj, s32 speed) {
     f32 temp_f2;
     s32 i;
     s32 temp[3];
-    sp54 = func_80066220();
-    objects = get_object_struct_array(&numberOfObjects);
+    sp54 = get_object_render_stack_pos();
+    objects = get_racer_objects(&numberOfObjects);
     if (numberOfObjects != 0) {
         lastObj = &objects[numberOfObjects - 1];
         objects--;

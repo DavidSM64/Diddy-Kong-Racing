@@ -138,6 +138,15 @@ enum ObjectBehaviours {
     BHV_UNK_7F
 };
 
+struct RacerShieldGfx {
+    s16 x_position;
+    s16 y_position;
+    s16 z_position;
+    s16 y_offset;
+    f32 scale;
+    f32 turnSpeed;
+};
+
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
     union {
@@ -229,7 +238,7 @@ extern s32 D_800DC720;
 extern s16 D_800DC724;
 extern s16 D_800DC728;
 extern s16 D_800DC72C;
-extern u8 D_800DC730;
+extern u8 gHasGhostToSave;
 extern s32 D_800DC734;
 extern u8 D_800DC738;
 extern s8 D_800DC73C;
@@ -252,7 +261,6 @@ extern s16 D_800DC820[16];
 extern s8 D_800DC840[8];
 
 extern s8 D_800DC848;
-extern s32 D_800DC84C[3];
 extern s32 D_800DC858;
 extern s32 D_800DC85C;
 
@@ -317,13 +325,13 @@ s32 func_8001B3AC(s32 arg0);
 s32 func_8001B640();
 s32 func_8001B650(void);
 s32 func_8001B738(s32 controllerIndex);
-u8 func_8001B780();
+u8 has_ghost_to_save();
 void func_8001B790(void);
 f32 func_8001B834(Object *arg0, s32);
 unknown8011AECC *func_8001BA00(s32 arg0);
 unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1);
 s32 func_8001BA64();
-Object **get_object_struct_array(s32 *cnt);
+Object **get_racer_objects(s32 *cnt);
 s32 *func_8001BA90(s32 *arg0);
 Object **func_8001BAAC(s32 *numberOfObjects);
 Object *get_object_struct(s32 indx);
@@ -370,6 +378,10 @@ s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
+s32 func_8001BB18(s32 arg0);
+void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -378,7 +390,6 @@ void gParticlePtrList_flush(void);
 void decrypt_magic_codes(u8 *arg0, s32 length);
 void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
-void func_8001D5E0(f32 arg0, f32 arg1, f32 arg2);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *spawn_object(void *entry, s32);
@@ -392,5 +403,7 @@ s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpoint
 Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
+s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
+void func_80068FA8(Gfx**, Mtx**, Object*, Object*, f32); /* extern */
 
 #endif

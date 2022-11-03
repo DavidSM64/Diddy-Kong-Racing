@@ -1278,7 +1278,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         gCameraObject = (ObjectCamera *) func_80069CFC();
         tempRacer->unk1E7++;
         gCurrentPlayerIndex = tempRacer->playerIndex;
-        if ((tempRacer->raceStatus == STATUS_FINISHED) || (context == 1)) {
+        if ((tempRacer->raceFinished == TRUE) || (context == 1)) {
             tempRacer->unk1CA = 1;
             tempRacer->playerIndex = PLAYER_COMPUTER;
             tempRacer->unk1C9 = 0;
@@ -1536,7 +1536,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         }
         func_80018CE0(obj, xTemp, yTemp, zTemp, updateRate);
         func_80059208(obj, tempRacer, updateRate);
-        if (tempRacer->raceStatus == 1) {
+        if (tempRacer->raceFinished == TRUE) {
             if (tempRacer->unk1D9 < 60) {
                 tempRacer->unk1D9 += updateRate;
             }
@@ -1900,7 +1900,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
         racer->unk1F3 = 0;
         racer->unk1F2 = 0;
     }
-    if (racer->raceStatus == STATUS_FINISHED) {
+    if (racer->raceFinished == TRUE) {
         racer->unk1F2 = 0;
         racer->unk1F3 = 0;
     }
@@ -2043,7 +2043,7 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
 
     racer->velocity *= 0.97; //@Delta: Reduces 3% of speed per frame, not accounting for game speed.
     racer->lateral_velocity = 0.0f;
-    if (racer->raceStatus == STATUS_RACING) {
+    if (racer->raceFinished == FALSE) {
         func_80072348(racer->playerIndex, 0);
     }
     angleVel = racer->y_rotation_vel;
@@ -2908,7 +2908,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
             }
         }
     }
-    if (racer->boostTimer && !gRaceStartTimer && timer3 && racer->raceStatus == STATUS_RACING) {
+    if (racer->boostTimer && !gRaceStartTimer && timer3 && racer->raceFinished == FALSE) {
          func_80072348(racer->playerIndex, 6);
     }
     if ((gRaceStartTimer < 80) && gCurrentButtonsPressed & A_BUTTON) {
@@ -3024,7 +3024,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
             break;
         }
     }
-    if (racer->raceStatus == STATUS_FINISHED && gCameraObject->mode != CAMERA_FINISH_CHALLENGE) {
+    if (racer->raceFinished == TRUE && gCameraObject->mode != CAMERA_FINISH_CHALLENGE) {
             gCameraObject->mode = CAMERA_FINISH_RACE;
     }
     if (racer->unk108) {
@@ -3106,7 +3106,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
 
 void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
     f32 xPos, yPos, zPos;
-    if ((gCurrentPlayerIndex != -1) && (racer->raceStatus != STATUS_FINISHED)) {
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->raceFinished != TRUE) {
         if (mode != gCameraObject->mode) {
             update_player_camera(obj, racer, arg3);
             xPos = gCameraObject->trans.x_position;
@@ -3396,7 +3396,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
  * Stops the camera in place when set, while still pointing in the direction of the player.
  * Used when entering doors.
  */
-void update_camera_fixed(f32 updateRate, struct Object *obj, struct Object_Racer *racer) {
+void update_camera_fixed(f32 updateRate, Object *obj, Object_Racer *racer) {
     s32 delta;
     f32 xDiff;
     f32 zDiff;
@@ -3708,7 +3708,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     
     var_fv1 = 1000000;
     if (racer->unk201 == 0) {
-        objects = get_object_struct_array(&countOfObjects);
+        objects = get_racer_objects(&countOfObjects);
         playerOneObj = playerTwoObj = NULL;
         for (var_t2 = 0; var_t2 < countOfObjects; var_t2++) {
             tempRacer = &objects[var_t2]->unk64->racer;
@@ -3893,7 +3893,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk16A += var_t2;
     }
     if (racer->shieldTimer > 0) {
-        if (racer->shieldTimer >= 61) {
+        if (racer->shieldTimer > 60) {
             if (racer->shieldSoundMask != 0) {
                 update_spatial_audio_position(racer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else if (racer->unk118 != 0) {

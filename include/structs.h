@@ -300,7 +300,9 @@ typedef struct LevelHeader {
   /* 0x9D */ u8 bgColorRed;
   /* 0x9E */ u8 bgColorGreen;
   /* 0x9F */ u8 bgColorBlue;
-  /* 0xA0 */ s32 unkA0;
+  /* 0xA0 */ s16 unkA0;
+  /* 0xA2 */ s8 unkA2;
+  /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
   /* 0xA8 */ u16 unkA8;
   /* 0xAA */ u16 unkAA;
@@ -424,7 +426,9 @@ typedef struct ObjectModel {
 /* 0x08 */ Triangle *triangles;
 /* 0x0C */ s32 *unkC;
 /* 0x10 */ s32 *unk10;
-           u8 pad0[0x0E];
+           u8 pad0[0x0B];
+/* 0x1F */ s8 unk1F;
+           u8 pad20[2];
 /* 0x22 */ s16 numberOfTextures;
 /* 0x24 */ s16 numberOfVertices;
 /* 0x26 */ s16 numberOfTriangles;
@@ -493,9 +497,12 @@ typedef struct LevelModel {
 /* 0x14 */ BspTreeNode *segmentsBspTree;
 /* 0x18 */ s16 numberOfTextures;
 /* 0x1A */ s16 numberOfSegments;
-           u8 pad1C[4];
+/* 0x1C */ s16 unk1C;
+/* 0x1E */ s16 unk1E;
 /* 0x20 */ s32 unk20; //spriteIndex?
-           u8 pad24[0x14];
+/* 0x24 */ u16 unk24;
+/* 0x26 */ u16 unk26;
+           u8 pad28[0x10];
 /* 0x38 */ u32 minimapColor;
 /* 0x3C */ s16 unk3C;
 /* 0x3E */ s16 unk3E;
@@ -852,7 +859,7 @@ typedef struct Object_Exit {
 /* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
-  /* 0x002 */ u8 unk2;
+  /* 0x002 */ s8 unk2;
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
@@ -1002,7 +1009,7 @@ typedef struct Object_Racer {
   /* 0x1D5 */ u8 unk1D5;
   /* 0x1D6 */ s8 unk1D6;
   /* 0x1D7 */ s8 unk1D7;
-  /* 0x1D8 */ s8 raceStatus;
+  /* 0x1D8 */ s8 raceFinished;
   /* 0x1D9 */ s8 unk1D9;
   /* 0x1DA */ u8 unk1DA;
   /* 0x1DB */ s8 spinout_timer;
@@ -1275,12 +1282,14 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ u8 pad04[12];
+  /* 0x04 */ s32 *unk4[3];
   /* 0x10 */ s16 unk10;
-  /* 0x14 */ u8 pad14[14];
+  /* 0x14 */ u8 pad14[13];
+  /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
+  /* 0x21 */ s8 unk21;
  } Object_68;
-
+ 
 /* Size: 0x20 bytes */
 typedef struct Object_6C {
     u8  pad0[0x4];
@@ -1506,5 +1515,11 @@ typedef struct unk8011D510 {
 typedef struct unk80042178 {
     u8 pad0[0x20];
 } unk80042178;
+
+typedef struct ByteColour {
+    u8 red;
+    u8 green;
+    u8 blue;
+} ByteColour;
 
 #endif

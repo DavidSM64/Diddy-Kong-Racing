@@ -228,9 +228,9 @@ glabel func_8001AE64
 /* 01BDB8 8001B1B8 0C016661 */  jal   func_80059984
 /* 01BDBC 8001B1BC 00402025 */   move  $a0, $v0
 /* 01BDC0 8001B1C0 240F0001 */  li    $t7, 1
-/* 01BDC4 8001B1C4 3C01800E */  lui   $at, %hi(D_800DC730) # $at, 0x800e
+/* 01BDC4 8001B1C4 3C01800E */  lui   $at, %hi(gHasGhostToSave) # $at, 0x800e
 /* 01BDC8 8001B1C8 240B0005 */  li    $t3, 5
-/* 01BDCC 8001B1CC A02FC730 */  sb    $t7, %lo(D_800DC730)($at)
+/* 01BDCC 8001B1CC A02FC730 */  sb    $t7, %lo(gHasGhostToSave)($at)
 .L8001B1D0:
 /* 01BDD0 8001B1D0 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
 /* 01BDD4 8001B1D4 8F390300 */  lw    $t9, %lo(osTvType)($t9)
@@ -272,12 +272,12 @@ glabel func_8001AE64
 /* 01BE58 8001B258 10000008 */  b     .L8001B27C
 /* 01BE5C 8001B25C 8FBF001C */   lw    $ra, 0x1c($sp)
 .L8001B260:
-/* 01BE60 8001B260 0C029B6D */  jal   func_800A6DB4
+/* 01BE60 8001B260 0C029B6D */  jal   play_time_trial_end_message
 /* 01BE64 8001B264 00000000 */   nop   
 /* 01BE68 8001B268 10000004 */  b     .L8001B27C
 /* 01BE6C 8001B26C 8FBF001C */   lw    $ra, 0x1c($sp)
 .L8001B270:
-/* 01BE70 8001B270 0C029B6D */  jal   func_800A6DB4
+/* 01BE70 8001B270 0C029B6D */  jal   play_time_trial_end_message
 /* 01BE74 8001B274 00000000 */   nop   
 .L8001B278:
 /* 01BE78 8001B278 8FBF001C */  lw    $ra, 0x1c($sp)

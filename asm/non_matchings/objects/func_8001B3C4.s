@@ -76,7 +76,7 @@ glabel func_8001B3C4
 /* 01C0DC 8001B4DC A2000000 */   sb    $zero, ($s0)
 .L8001B4E0:
 /* 01C0E0 8001B4E0 8FA40024 */  lw    $a0, 0x24($sp)
-/* 01C0E4 8001B4E4 0C029B6D */  jal   func_800A6DB4
+/* 01C0E4 8001B4E4 0C029B6D */  jal   play_time_trial_end_message
 /* 01C0E8 8001B4E8 00000000 */   nop   
 .L8001B4EC:
 /* 01C0EC 8001B4EC 8FBF001C */  lw    $ra, 0x1c($sp)

@@ -9,13 +9,12 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 ## Dependencies
 
 * `libcapstone-dev`
-* `libssl-dev`
 * `gcc`, Version 8.0 or higher
 * `make`, Version 4.2 or higher
 * `python3`
 * `wget`
 
-`sudo apt install build-essential pkg-config git python3 libssl-dev wget libcapstone-dev`
+`sudo apt install build-essential pkg-config git python3 wget libcapstone-dev`
 
 ### binutils
 
@@ -30,6 +29,13 @@ You are not required to install a binutils package, but it does speed up the ini
     **b.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
 3. Run `make` in the main directory.  
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
+
+### Building on MacOS
+1. `brew install gcc capstone coreutils`
+2. Put GNU-coreutils `bin` on path using by adding `PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"` to your shell rcfile (or update any GNU-util usage in `Makefile` and `tools/Makefile` to use the `g`-prefixed versions).
+3. Download latest `macos` build of `ido-static-recomp` from [here](https://github.com/decompals/ido-static-recomp/releases/), and add `cp` the binaries to `tools/ido-static-recomp/build5.3/out`.
+4. Take a look at [this gist](https://gist.github.com/tonyspumoni/fc1b4c9217c5f2821a9fc4cbf69b51ef) to see what other updates are needed to get the build to pass, and apply them if they are relevant to your environment. You may need to add specific `-I` and `-L` flags to get things like `openssl` and `gcc-12` includes/libs included.
+5. `make` from repository root should work now.
 
 ## Modding
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
@@ -114,13 +120,13 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of October 24th, 2022, this is our current score:
+As of October 28, 2022, this is our current score:
 ```
  =======================================================
          ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 34.02% Complete -------------------
-              # Decompiled functions: 1301
-               # GLOBAL_ASM remaining: 532
+ ------------------- 34.09% Complete -------------------
+              # Decompiled functions: 1306
+               # GLOBAL_ASM remaining: 527
               # NON_MATCHING functions: 12
            # NON_EQUIVALENT WIP functions: 92
  --------------------- Game Status ---------------------

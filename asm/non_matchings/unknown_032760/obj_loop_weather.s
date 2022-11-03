@@ -2,10 +2,10 @@ glabel obj_loop_weather
 /* 041420 80040820 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 041424 80040824 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 041428 80040828 AFA40058 */  sw    $a0, 0x58($sp)
-/* 04142C 8004082C 0C019888 */  jal   func_80066220
+/* 04142C 8004082C 0C019888 */  jal   get_object_render_stack_pos
 /* 041430 80040830 AFA5005C */   sw    $a1, 0x5c($sp)
 /* 041434 80040834 27A40050 */  addiu $a0, $sp, 0x50
-/* 041438 80040838 0C006E9D */  jal   get_object_struct_array
+/* 041438 80040838 0C006E9D */  jal   get_racer_objects
 /* 04143C 8004083C AFA20054 */   sw    $v0, 0x54($sp)
 /* 041440 80040840 8FA50050 */  lw    $a1, 0x50($sp)
 /* 041444 80040844 8FA60054 */  lw    $a2, 0x54($sp)

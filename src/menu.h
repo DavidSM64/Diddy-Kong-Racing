@@ -262,22 +262,23 @@ typedef struct TitleScreenDemos {
     s8 cutsceneId;
 } TitleScreenDemos;
 
-/* Size 0x10 bytes */
-typedef struct unk80126930 {
-  /* 0x00 */ char *levelName;
-  /* 0x04 */ char *unk4;
-  /* 0x08 */ s16 xPos;
-  /* 0x0A */ s16 yPos;
-  /* 0x0C */ u8 pad;
-  /* 0x0D */ u8 colour;
+#define X_TILE_SIZE 320
+
+typedef struct TrackRenderDetails {
+  /* 0x00 */ u8 *hubName;
+  /* 0x04 */ u8 *trackName;
+  /* 0x08 */ s16 xOff;
+  /* 0x0A */ s16 yOff;
+  /* 0x0C */ u8 visible;
+  /* 0x0D */ u8 opacity;
     union {
         struct {
             /* 0x0E */ u8 copyViewPort;
-            /* 0x0F */ u8 imageId;
+            /* 0x0F */ u8 border;
         };
-        /* 0x0E */ u16 unkE;
+        /* 0x0E */ u16 viewPort;
     };
-} unk80126930;
+} TrackRenderDetails;
 
 extern s8  D_800DF450;
 extern f32 D_800DF454;
@@ -318,8 +319,8 @@ extern s32 gSaveFileIndex;
 extern s32 D_800DF4D0;
 extern s32 gTrackIdToLoad;
 extern s8 D_800DF4D8;
-extern s8 D_800DF4DC;
-extern s8 D_800DF4E0;
+extern s8 gNextTajChallengeMenu;
+extern s8 gNeedToCloseDialogueBox;
 extern s8 D_800DF4E4[4];
 extern s32 D_800DF4E8;
 extern s8 gDialogueOptionTangible;
@@ -505,7 +506,7 @@ extern Vertex *D_800E0968;
 extern s32 D_800E096C;
 extern unk800E0970 *D_800E0970;
 extern s32 D_800E0974;
-extern f32* D_800E0978;
+extern char* gQMarkPtr;
 extern s32 D_800E097C;
 extern s32 D_800E0980;
 extern s32 gMenuOptionCap;
@@ -705,23 +706,23 @@ extern s8 gControllersYAxisDirection[4];
 extern TextureHeader *D_80126550[128];
 extern s32 D_801267D0;
 extern u8 D_801269C4[4];
-extern f32 D_801269DC;
-extern f32 D_801269E4;
+extern f32 gTrackSelectX;
+extern f32 gTrackSelectY;
 extern f32 D_801269E8;
 extern f32 D_801269EC;
 extern s8 gPlayerSelectVehicle[4];
-extern s16 D_80126918;
-extern s32 D_801263D8;
-extern s32 D_80126480;
+extern s16 gFFLUnlocked;
+extern s32 gOpacityDecayTimer;
+extern s32 gTrackSelectViewportY;
 //extern s32 D_801268E8[12];
-extern s16 D_80126918;
+extern s16 gFFLUnlocked;
 extern s32 D_80126924;
 extern s32 D_80126928;
 extern s32 D_8012692C;
-extern unk80126930 D_80126930[9];
+extern TrackRenderDetails gTrackSelectRenderDetails[9];
 extern s32 D_801269F0;
-extern s32 D_801269F4;
-extern s32 D_801269F8;
+extern s32 gSelectedTrackX;
+extern s32 gSelectedTrackY;
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -835,7 +836,7 @@ void set_option_text_colour(s32 condition);
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID);
 void handle_menu_joystick_input(void);
 void func_8009D324(void);
-void func_8009D330(s32 arg0);
+void set_next_taj_challenge_menu(s32 arg0);
 void set_menu_id_if_option_equal(s32 IDToCheck, s32 IDToSet);
 s32 taj_menu_loop(void);
 s32 dialogue_race_defeat(void);
@@ -928,9 +929,9 @@ void func_80080580(Gfx **arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
-void func_8008FA54(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
+void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
 //Possible names
-//void func_8008FA54(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
+//void renderTrackSelect(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 s32 func_80095728(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
 
 typedef enum MenuTextures {

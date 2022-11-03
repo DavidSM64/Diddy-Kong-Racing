@@ -6,8 +6,8 @@ glabel func_8009ECF0
 /* 09F900 8009ED00 AFB00018 */  sw    $s0, 0x18($sp)
 /* 09F904 8009ED04 0C019884 */  jal   get_viewport_count
 /* 09F908 8009ED08 AFA40028 */   sw    $a0, 0x28($sp)
-/* 09F90C 8009ED0C 3C038012 */  lui   $v1, %hi(D_80126D0C) # $v1, 0x8012
-/* 09F910 8009ED10 24636D0C */  addiu $v1, %lo(D_80126D0C) # addiu $v1, $v1, 0x6d0c
+/* 09F90C 8009ED0C 3C038012 */  lui   $v1, %hi(gHUDNumPlayers) # $v1, 0x8012
+/* 09F910 8009ED10 24636D0C */  addiu $v1, %lo(gHUDNumPlayers) # addiu $v1, $v1, 0x6d0c
 /* 09F914 8009ED14 AC620000 */  sw    $v0, ($v1)
 /* 09F918 8009ED18 0C01994B */  jal   set_active_viewports_and_object_stack_cap
 /* 09F91C 8009ED1C 00402025 */   move  $a0, $v0
@@ -152,8 +152,8 @@ glabel func_8009ECF0
 /* 09FB30 8009EF30 AC78000C */   sw    $t8, 0xc($v1)
 /* 09FB34 8009EF34 3C018012 */  lui   $at, %hi(D_80126D64) # $at, 0x8012
 /* 09FB38 8009EF38 A0206D64 */  sb    $zero, %lo(D_80126D64)($at)
-/* 09FB3C 8009EF3C 3C018012 */  lui   $at, %hi(D_80126D6C) # $at, 0x8012
-/* 09FB40 8009EF40 AC206D6C */  sw    $zero, %lo(D_80126D6C)($at)
+/* 09FB3C 8009EF3C 3C018012 */  lui   $at, %hi(gWrongWayNagTimer) # $at, 0x8012
+/* 09FB40 8009EF40 AC206D6C */  sw    $zero, %lo(gWrongWayNagTimer)($at)
 /* 09FB44 8009EF44 3C018012 */  lui   $at, %hi(D_80126D48) # $at, 0x8012
 /* 09FB48 8009EF48 A4206D48 */  sh    $zero, %lo(D_80126D48)($at)
 /* 09FB4C 8009EF4C 24020004 */  li    $v0, 4

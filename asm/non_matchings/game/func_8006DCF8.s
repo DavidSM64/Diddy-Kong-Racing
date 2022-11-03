@@ -9,12 +9,12 @@ glabel func_8006DCF8
 /* 06E900 8006DD00 81CE3514 */  lb    $t6, %lo(gIsLoading)($t6)
 /* 06E904 8006DD04 27BDFFD0 */  addiu $sp, $sp, -0x30
 /* 06E908 8006DD08 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
-/* 06E90C 8006DD0C 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012
+/* 06E90C 8006DD0C 3C018012 */  lui   $at, %hi(gPostRaceViewPort) # $at, 0x8012
 /* 06E910 8006DD10 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 06E914 8006DD14 AFB00020 */  sw    $s0, 0x20($sp)
 /* 06E918 8006DD18 AFA40030 */  sw    $a0, 0x30($sp)
 /* 06E91C 8006DD1C 15C00008 */  bnez  $t6, .L8006DD40
-/* 06E920 8006DD20 A0203516 */   sb    $zero, %lo(D_80123516)($at)
+/* 06E920 8006DD20 A0203516 */   sb    $zero, %lo(gPostRaceViewPort)($at)
 /* 06E924 8006DD24 3C0F8012 */  lui   $t7, %hi(D_801234F0) # $t7, 0x8012
 /* 06E928 8006DD28 8DEF34F0 */  lw    $t7, %lo(D_801234F0)($t7)
 /* 06E92C 8006DD2C 00000000 */  nop   
@@ -27,12 +27,12 @@ glabel func_8006DCF8
 .L8006DD44:
 /* 06E944 8006DD44 3C108012 */  lui   $s0, %hi(gCurrDisplayList) # $s0, 0x8012
 /* 06E948 8006DD48 261011F8 */  addiu $s0, %lo(gCurrDisplayList) # addiu $s0, $s0, 0x11f8
-/* 06E94C 8006DD4C 3C058012 */  lui   $a1, %hi(gCurrHudMat) # $a1, 0x8012
-/* 06E950 8006DD50 3C068012 */  lui   $a2, %hi(gCurrHudVerts) # $a2, 0x8012
-/* 06E954 8006DD54 3C078012 */  lui   $a3, %hi(gCurrHudTris) # $a3, 0x8012
-/* 06E958 8006DD58 24E71228 */  addiu $a3, %lo(gCurrHudTris) # addiu $a3, $a3, 0x1228
-/* 06E95C 8006DD5C 24C61218 */  addiu $a2, %lo(gCurrHudVerts) # addiu $a2, $a2, 0x1218
-/* 06E960 8006DD60 24A51208 */  addiu $a1, %lo(gCurrHudMat) # addiu $a1, $a1, 0x1208
+/* 06E94C 8006DD4C 3C058012 */  lui   $a1, %hi(gGameCurrMatrix) # $a1, 0x8012
+/* 06E950 8006DD50 3C068012 */  lui   $a2, %hi(gGameCurrVertexList) # $a2, 0x8012
+/* 06E954 8006DD54 3C078012 */  lui   $a3, %hi(gGameCurrTriList) # $a3, 0x8012
+/* 06E958 8006DD58 24E71228 */  addiu $a3, %lo(gGameCurrTriList) # addiu $a3, $a3, 0x1228
+/* 06E95C 8006DD5C 24C61218 */  addiu $a2, %lo(gGameCurrVertexList) # addiu $a2, $a2, 0x1218
+/* 06E960 8006DD60 24A51208 */  addiu $a1, %lo(gGameCurrMatrix) # addiu $a1, $a1, 0x1208
 /* 06E964 8006DD64 02002025 */  move  $a0, $s0
 /* 06E968 8006DD68 0C020569 */  jal   menu_loop
 /* 06E96C 8006DD6C AFB80010 */   sw    $t8, 0x10($sp)
@@ -91,8 +91,8 @@ glabel func_8006DCF8
 /* 06EA3C 8006DE3C AC2034EC */  sw    $zero, %lo(sRenderContext)($at)
 /* 06EA40 8006DE40 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06EA44 8006DE44 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
-/* 06EA48 8006DE48 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012
-/* 06EA4C 8006DE4C A0203516 */  sb    $zero, %lo(D_80123516)($at)
+/* 06EA48 8006DE48 3C018012 */  lui   $at, %hi(gPostRaceViewPort) # $at, 0x8012
+/* 06EA4C 8006DE4C A0203516 */  sb    $zero, %lo(gPostRaceViewPort)($at)
 /* 06EA50 8006DE50 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
 /* 06EA54 8006DE54 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
 /* 06EA58 8006DE58 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
@@ -119,9 +119,9 @@ glabel func_8006DCF8
 /* 06EAA8 8006DEA8 8FAC002C */  lw    $t4, 0x2c($sp)
 /* 06EAAC 8006DEAC 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
 /* 06EAB0 8006DEB0 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
-/* 06EAB4 8006DEB4 3C018012 */  lui   $at, %hi(D_80123516) # $at, 0x8012
+/* 06EAB4 8006DEB4 3C018012 */  lui   $at, %hi(gPostRaceViewPort) # $at, 0x8012
 /* 06EAB8 8006DEB8 318D007F */  andi  $t5, $t4, 0x7f
-/* 06EABC 8006DEBC A0203516 */  sb    $zero, %lo(D_80123516)($at)
+/* 06EABC 8006DEBC A0203516 */  sb    $zero, %lo(gPostRaceViewPort)($at)
 /* 06EAC0 8006DEC0 25AEFFFF */  addiu $t6, $t5, -1
 /* 06EAC4 8006DEC4 2DC1000E */  sltiu $at, $t6, 0xe
 /* 06EAC8 8006DEC8 10200085 */  beqz  $at, .L8006E0E0
