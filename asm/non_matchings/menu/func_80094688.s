@@ -100,8 +100,8 @@ glabel func_80094688
 /* 0953F0 800947F0 AC206CC0 */  sw    $zero, %lo(D_80126CC0)($at)
 /* 0953F4 800947F4 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 0953F8 800947F8 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
-/* 0953FC 800947FC 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
-/* 095400 80094800 AC2063D8 */  sw    $zero, %lo(D_801263D8)($at)
+/* 0953FC 800947FC 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
+/* 095400 80094800 AC2063D8 */  sw    $zero, %lo(gOpacityDecayTimer)($at)
 /* 095404 80094804 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 095408 80094808 AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 09540C 8009480C 3C01800E */  lui   $at, %hi(D_800DF460) # $at, 0x800e
@@ -160,12 +160,12 @@ glabel func_80094688
 /* 0954D4 800948D4 00025C03 */  sra   $t3, $v0, 0x10
 /* 0954D8 800948D8 ACA20000 */  sw    $v0, ($a1)
 /* 0954DC 800948DC 316CFFFF */  andi  $t4, $t3, 0xffff
-/* 0954E0 800948E0 3C018012 */  lui   $at, %hi(D_80126480) # $at, 0x8012
-/* 0954E4 800948E4 AC2C6480 */  sw    $t4, %lo(D_80126480)($at)
+/* 0954E0 800948E0 3C018012 */  lui   $at, %hi(gTrackSelectViewportY) # $at, 0x8012
+/* 0954E4 800948E4 AC2C6480 */  sw    $t4, %lo(gTrackSelectViewportY)($at)
 /* 0954E8 800948E8 304EFFFF */  andi  $t6, $v0, 0xffff
 /* 0954EC 800948EC ACAE0000 */  sw    $t6, ($a1)
-/* 0954F0 800948F0 3C188012 */  lui   $t8, %hi(D_80126480) # $t8, 0x8012
-/* 0954F4 800948F4 8F186480 */  lw    $t8, %lo(D_80126480)($t8)
+/* 0954F0 800948F0 3C188012 */  lui   $t8, %hi(gTrackSelectViewportY) # $t8, 0x8012
+/* 0954F4 800948F4 8F186480 */  lw    $t8, %lo(gTrackSelectViewportY)($t8)
 /* 0954F8 800948F8 000E7843 */  sra   $t7, $t6, 1
 /* 0954FC 800948FC 3C018012 */  lui   $at, %hi(D_80126474) # $at, 0x8012
 /* 095500 80094900 AC2F6474 */  sw    $t7, %lo(D_80126474)($at)
@@ -245,8 +245,8 @@ glabel func_80094688
 /* 095614 80094A14 00002025 */  move  $a0, $zero
 /* 095618 80094A18 0C019A06 */  jal   func_80066818
 /* 09561C 80094A1C 24050001 */   li    $a1, 1
-/* 095620 80094A20 3C0B8012 */  lui   $t3, %hi(D_80126480) # $t3, 0x8012
-/* 095624 80094A24 8D6B6480 */  lw    $t3, %lo(D_80126480)($t3)
+/* 095620 80094A20 3C0B8012 */  lui   $t3, %hi(gTrackSelectViewportY) # $t3, 0x8012
+/* 095624 80094A24 8D6B6480 */  lw    $t3, %lo(gTrackSelectViewportY)($t3)
 /* 095628 80094A28 3C078012 */  lui   $a3, %hi(D_8012647C) # $a3, 0x8012
 /* 09562C 80094A2C 8CE7647C */  lw    $a3, %lo(D_8012647C)($a3)
 /* 095630 80094A30 00002025 */  move  $a0, $zero

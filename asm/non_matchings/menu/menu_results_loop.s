@@ -15,9 +15,9 @@ glabel menu_results_loop
 /* 097EDC 800972DC 3C068012 */  lui   $a2, %hi(D_801263E0) # $a2, 0x8012
 /* 097EE0 800972E0 24C663E0 */  addiu $a2, %lo(D_801263E0) # addiu $a2, $a2, 0x63e0
 /* 097EE4 800972E4 8CC30000 */  lw    $v1, ($a2)
-/* 097EE8 800972E8 3C078012 */  lui   $a3, %hi(D_801263D8) # $a3, 0x8012
+/* 097EE8 800972E8 3C078012 */  lui   $a3, %hi(gOpacityDecayTimer) # $a3, 0x8012
 /* 097EEC 800972EC 1C600013 */  bgtz  $v1, .L8009733C
-/* 097EF0 800972F0 24E763D8 */   addiu $a3, %lo(D_801263D8) # addiu $a3, $a3, 0x63d8
+/* 097EF0 800972F0 24E763D8 */   addiu $a3, %lo(gOpacityDecayTimer) # addiu $a3, $a3, 0x63d8
 /* 097EF4 800972F4 8CEA0000 */  lw    $t2, ($a3)
 /* 097EF8 800972F8 8FAB0028 */  lw    $t3, 0x28($sp)
 /* 097EFC 800972FC 24080001 */  li    $t0, 1
@@ -41,9 +41,9 @@ glabel menu_results_loop
 /* 097F3C 8009733C 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 097F40 80097340 2529F47C */  addiu $t1, %lo(gMenuDelay) # addiu $t1, $t1, -0xb84
 /* 097F44 80097344 8D230000 */  lw    $v1, ($t1)
-/* 097F48 80097348 3C078012 */  lui   $a3, %hi(D_801263D8) # $a3, 0x8012
+/* 097F48 80097348 3C078012 */  lui   $a3, %hi(gOpacityDecayTimer) # $a3, 0x8012
 /* 097F4C 8009734C 28610014 */  slti  $at, $v1, 0x14
-/* 097F50 80097350 24E763D8 */  addiu $a3, %lo(D_801263D8) # addiu $a3, $a3, 0x63d8
+/* 097F50 80097350 24E763D8 */  addiu $a3, %lo(gOpacityDecayTimer) # addiu $a3, $a3, 0x63d8
 /* 097F54 80097354 10200027 */  beqz  $at, .L800973F4
 /* 097F58 80097358 24080001 */   li    $t0, 1
 /* 097F5C 8009735C 8CCD0000 */  lw    $t5, ($a2)
