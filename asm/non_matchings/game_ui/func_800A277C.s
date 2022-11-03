@@ -931,7 +931,7 @@ glabel func_800A277C
 /* 0A40D0 800A34D0 AFAF005C */  sw    $t7, 0x5c($sp)
 /* 0A40D4 800A34D4 AFAA0058 */  sw    $t2, 0x58($sp)
 .L800A34D8:
-/* 0A40D8 800A34D8 0C031059 */  jal   func_800C4164
+/* 0A40D8 800A34D8 0C031059 */  jal   set_kerning
 /* 0A40DC 800A34DC 24040001 */   li    $a0, 1
 /* 0A40E0 800A34E0 0C0310BB */  jal   set_text_font
 /* 0A40E4 800A34E4 00002025 */   move  $a0, $zero
@@ -1046,7 +1046,7 @@ glabel func_800A277C
 /* 0A4298 800A3698 8FA500C8 */  lw    $a1, 0xc8($sp)
 /* 0A429C 800A369C 0C01FC93 */  jal   func_8007F24C
 /* 0A42A0 800A36A0 00000000 */   nop   
-/* 0A42A4 800A36A4 0C031059 */  jal   func_800C4164
+/* 0A42A4 800A36A4 0C031059 */  jal   set_kerning
 /* 0A42A8 800A36A8 00002025 */   move  $a0, $zero
 .L800A36AC:
 /* 0A42AC 800A36AC 0C01A142 */  jal   func_80068508

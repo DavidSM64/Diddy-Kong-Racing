@@ -162,7 +162,7 @@ typedef struct DialogueBoxBackground {
 #define unk8012A7EC_TOTAL_SIZE (sizeof(unk8012A7EC) * unk8012A7EC_COUNT)
 
 void load_fonts(void);
-void func_800C4164(s32 arg0);
+void set_kerning(s32 arg0);
 void set_text_font(s32 arg0);
 void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha);

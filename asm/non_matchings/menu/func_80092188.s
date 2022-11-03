@@ -157,9 +157,9 @@ glabel func_80092188
 .L800923C0:
 /* 092FC0 800923C0 1020000E */  beqz  $at, .L800923FC
 /* 092FC4 800923C4 00002025 */   move  $a0, $zero
-/* 092FC8 800923C8 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
+/* 092FC8 800923C8 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 092FCC 800923CC 0C023C03 */  jal   func_8008F00C
-/* 092FD0 800923D0 AC2063D8 */   sw    $zero, %lo(D_801263D8)($at)
+/* 092FD0 800923D0 AC2063D8 */   sw    $zero, %lo(gOpacityDecayTimer)($at)
 /* 092FD4 800923D4 3C028012 */  lui   $v0, %hi(D_80126478) # $v0, 0x8012
 /* 092FD8 800923D8 8C426478 */  lw    $v0, %lo(D_80126478)($v0)
 /* 092FDC 800923DC 00002025 */  move  $a0, $zero

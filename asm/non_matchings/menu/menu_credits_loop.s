@@ -43,8 +43,8 @@ glabel menu_credits_loop
 /* 09BFB8 8009B3B8 00002025 */  move  $a0, $zero
 /* 09BFBC 8009B3BC 15E0000C */  bnez  $t7, .L8009B3F0
 /* 09BFC0 8009B3C0 24050028 */   li    $a1, 40
-/* 09BFC4 8009B3C4 3C188012 */  lui   $t8, %hi(D_801263D8) # $t8, 0x8012
-/* 09BFC8 8009B3C8 8F1863D8 */  lw    $t8, %lo(D_801263D8)($t8)
+/* 09BFC4 8009B3C4 3C188012 */  lui   $t8, %hi(gOpacityDecayTimer) # $t8, 0x8012
+/* 09BFC8 8009B3C8 8F1863D8 */  lw    $t8, %lo(gOpacityDecayTimer)($t8)
 /* 09BFCC 8009B3CC 00002025 */  move  $a0, $zero
 /* 09BFD0 8009B3D0 0018C8C0 */  sll   $t9, $t8, 3
 /* 09BFD4 8009B3D4 AFB90010 */  sw    $t9, 0x10($sp)
@@ -55,16 +55,16 @@ glabel menu_credits_loop
 /* 09BFE8 8009B3E8 10000008 */  b     .L8009B40C
 /* 09BFEC 8009B3EC 00000000 */   nop   
 .L8009B3F0:
-/* 09BFF0 8009B3F0 3C098012 */  lui   $t1, %hi(D_801263D8) # $t1, 0x8012
-/* 09BFF4 8009B3F4 8D2963D8 */  lw    $t1, %lo(D_801263D8)($t1)
+/* 09BFF0 8009B3F0 3C098012 */  lui   $t1, %hi(gOpacityDecayTimer) # $t1, 0x8012
+/* 09BFF4 8009B3F4 8D2963D8 */  lw    $t1, %lo(gOpacityDecayTimer)($t1)
 /* 09BFF8 8009B3F8 24060140 */  li    $a2, 320
 /* 09BFFC 8009B3FC 000950C0 */  sll   $t2, $t1, 3
 /* 09C000 8009B400 AFAA0010 */  sw    $t2, 0x10($sp)
 /* 09C004 8009B404 0C026C79 */  jal   render_credits_fade
 /* 09C008 8009B408 2407009C */   li    $a3, 156
 .L8009B40C:
-/* 09C00C 8009B40C 3C068012 */  lui   $a2, %hi(D_801263D8) # $a2, 0x8012
-/* 09C010 8009B410 24C663D8 */  addiu $a2, %lo(D_801263D8) # addiu $a2, $a2, 0x63d8
+/* 09C00C 8009B40C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
+/* 09C010 8009B410 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8
 /* 09C014 8009B414 8CC20000 */  lw    $v0, ($a2)
 /* 09C018 8009B418 3C03800E */  lui   $v1, %hi(D_800DF460) # $v1, 0x800e
 /* 09C01C 8009B41C 18400041 */  blez  $v0, .L8009B524
@@ -134,8 +134,8 @@ glabel menu_credits_loop
 /* 09C110 8009B510 26B51999 */   addiu $s5, $s5, 0x1999
 /* 09C114 8009B514 0C01ECF4 */  jal   func_8007B3D0
 /* 09C118 8009B518 02E02025 */   move  $a0, $s7
-/* 09C11C 8009B51C 3C068012 */  lui   $a2, %hi(D_801263D8) # $a2, 0x8012
-/* 09C120 8009B520 24C663D8 */  addiu $a2, %lo(D_801263D8) # addiu $a2, $a2, 0x63d8
+/* 09C11C 8009B51C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
+/* 09C120 8009B520 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8
 .L8009B524:
 /* 09C124 8009B524 3C0A8012 */  lui   $t2, %hi(D_80126BE0) # $t2, 0x8012
 /* 09C128 8009B528 8D4A6BE0 */  lw    $t2, %lo(D_80126BE0)($t2)
@@ -146,8 +146,8 @@ glabel menu_credits_loop
 /* 09C13C 8009B53C 00000000 */   nop   
 /* 09C140 8009B540 2C4C0001 */  sltiu $t4, $v0, 1
 /* 09C144 8009B544 3C018012 */  lui   $at, %hi(D_80126BE0) # $at, 0x8012
-/* 09C148 8009B548 3C068012 */  lui   $a2, %hi(D_801263D8) # $a2, 0x8012
-/* 09C14C 8009B54C 24C663D8 */  addiu $a2, %lo(D_801263D8) # addiu $a2, $a2, 0x63d8
+/* 09C148 8009B548 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
+/* 09C14C 8009B54C 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8
 /* 09C150 8009B550 AC2C6BE0 */  sw    $t4, %lo(D_80126BE0)($at)
 .L8009B554:
 /* 09C154 8009B554 3C0B8012 */  lui   $t3, %hi(D_80126BD8) # $t3, 0x8012
@@ -486,8 +486,8 @@ glabel menu_credits_loop
 /* 09C610 8009BA10 00000000 */  nop   
 /* 09C614 8009BA14 1300FEE0 */  beqz  $t8, .L8009B598
 /* 09C618 8009BA18 00000000 */   nop   
-/* 09C61C 8009BA1C 3C068012 */  lui   $a2, %hi(D_801263D8) # $a2, 0x8012
-/* 09C620 8009BA20 24C663D8 */  addiu $a2, %lo(D_801263D8) # addiu $a2, $a2, 0x63d8
+/* 09C61C 8009BA1C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
+/* 09C620 8009BA20 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8
 .L8009BA24:
 /* 09C624 8009BA24 3C198012 */  lui   $t9, %hi(gIgnorePlayerInput) # $t9, 0x8012
 /* 09C628 8009BA28 8F3963C4 */  lw    $t9, %lo(gIgnorePlayerInput)($t9)
@@ -504,8 +504,8 @@ glabel menu_credits_loop
 /* 09C650 8009BA50 26100001 */  addiu $s0, $s0, 1
 /* 09C654 8009BA54 1611FFFC */  bne   $s0, $s1, .L8009BA48
 /* 09C658 8009BA58 02429025 */   or    $s2, $s2, $v0
-/* 09C65C 8009BA5C 3C068012 */  lui   $a2, %hi(D_801263D8) # $a2, 0x8012
-/* 09C660 8009BA60 24C663D8 */  addiu $a2, %lo(D_801263D8) # addiu $a2, $a2, 0x63d8
+/* 09C65C 8009BA5C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
+/* 09C660 8009BA60 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8
 .L8009BA64:
 /* 09C664 8009BA64 3C108012 */  lui   $s0, %hi(D_801263E0) # $s0, 0x8012
 /* 09C668 8009BA68 261063E0 */  addiu $s0, %lo(D_801263E0) # addiu $s0, $s0, 0x63e0
@@ -534,9 +534,9 @@ glabel L8009BA98
 /* 09C6C0 8009BAC0 240E0001 */  li    $t6, 1
 /* 09C6C4 8009BAC4 AE0E0000 */  sw    $t6, ($s0)
 /* 09C6C8 8009BAC8 240F0028 */  li    $t7, 40
-/* 09C6CC 8009BACC 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
+/* 09C6CC 8009BACC 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 09C6D0 8009BAD0 1000004C */  b     .L8009BC04
-/* 09C6D4 8009BAD4 AC2F63D8 */   sw    $t7, %lo(D_801263D8)($at)
+/* 09C6D4 8009BAD4 AC2F63D8 */   sw    $t7, %lo(gOpacityDecayTimer)($at)
 glabel L8009BAD8
 /* 09C6D8 8009BAD8 0C031CF8 */  jal   get_thread30_level_id_to_load
 /* 09C6DC 8009BADC 00000000 */   nop   

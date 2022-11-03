@@ -74,8 +74,8 @@ glabel render_file_select_menu
 /* 08DA80 8008CE80 2631000C */   addiu $s1, $s1, 0xc
 /* 08DA84 8008CE84 0C0202F2 */  jal   func_80080BC8
 /* 08DA88 8008CE88 02E02025 */   move  $a0, $s7
-/* 08DA8C 8008CE8C 3C0E8012 */  lui   $t6, %hi(D_801263D8) # $t6, 0x8012
-/* 08DA90 8008CE90 8DCE63D8 */  lw    $t6, %lo(D_801263D8)($t6)
+/* 08DA8C 8008CE8C 3C0E8012 */  lui   $t6, %hi(gOpacityDecayTimer) # $t6, 0x8012
+/* 08DA90 8008CE90 8DCE63D8 */  lw    $t6, %lo(gOpacityDecayTimer)($t6)
 /* 08DA94 8008CE94 00000000 */  nop   
 /* 08DA98 8008CE98 15C00097 */  bnez  $t6, .L8008D0F8
 /* 08DA9C 8008CE9C 00000000 */   nop   

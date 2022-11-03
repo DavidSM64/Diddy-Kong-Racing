@@ -54,7 +54,7 @@ extern s32 sControllerStatus;
 extern s32 D_800DD388;
 extern s8  gSkipGfxTask;
 extern s8  D_800DD390;
-extern s16 D_800DD394;
+extern s16 gLevelLoadTimer;
 extern s8  D_800DD398;
 extern s8  D_800DD39C;
 extern s8  D_800DD3A0;
