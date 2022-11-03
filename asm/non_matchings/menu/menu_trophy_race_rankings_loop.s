@@ -32,7 +32,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099C48 80099048 1041001B */  beq   $v0, $at, .L800990B8
 /* 099C4C 8009904C 24010002 */   li    $at, 2
 /* 099C50 80099050 10410026 */  beq   $v0, $at, .L800990EC
-/* 099C54 80099054 3C038012 */   lui   $v1, %hi(D_801263D8) # $v1, 0x8012
+/* 099C54 80099054 3C038012 */   lui   $v1, %hi(gOpacityDecayTimer) # $v1, 0x8012
 /* 099C58 80099058 24010003 */  li    $at, 3
 /* 099C5C 8009905C 104100B1 */  beq   $v0, $at, .L80099324
 /* 099C60 80099060 00000000 */   nop   
@@ -73,7 +73,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099CE4 800990E4 10000141 */  b     .L800995EC
 /* 099CE8 800990E8 8FBF001C */   lw    $ra, 0x1c($sp)
 .L800990EC:
-/* 099CEC 800990EC 246363D8 */  addiu $v1, %lo(D_801263D8) # addiu $v1, $v1, 0x63d8
+/* 099CEC 800990EC 246363D8 */  addiu $v1, %lo(gOpacityDecayTimer) # addiu $v1, $v1, 0x63d8
 /* 099CF0 800990F0 8C780000 */  lw    $t8, ($v1)
 /* 099CF4 800990F4 3C07800E */  lui   $a3, %hi(D_800E0FE4) # $a3, 0x800e
 /* 099CF8 800990F8 0304C821 */  addu  $t9, $t8, $a0

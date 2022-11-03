@@ -12,8 +12,8 @@ glabel menu_trophy_race_rankings_init
 /* 09964C 80098A4C AC20F47C */  sw    $zero, %lo(gMenuDelay)($at)
 /* 099650 80098A50 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 099654 80098A54 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
-/* 099658 80098A58 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
-/* 09965C 80098A5C AC2063D8 */  sw    $zero, %lo(D_801263D8)($at)
+/* 099658 80098A58 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
+/* 09965C 80098A5C AC2063D8 */  sw    $zero, %lo(gOpacityDecayTimer)($at)
 /* 099660 80098A60 0C026F97 */  jal   reset_controller_sticks
 /* 099664 80098A64 AFA2003C */   sw    $v0, 0x3c($sp)
 /* 099668 80098A68 3C04800E */  lui   $a0, %hi(D_800E1024) # $a0, 0x800e
