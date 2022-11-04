@@ -338,6 +338,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
 
 #ifdef NON_MATCHING
+// render_falling_snow
 void func_800AC5A4(void) {
     s32 sp34;
     Matrix *mtx;
