@@ -95,6 +95,9 @@
     _g->words.w1 = (unsigned int)(address);                        \
 }
 
+#define gSPVertexDKR(pkt, v, n, v0) \
+    gDma1p(pkt, G_VTX, v, (((n) * 8 + (n)) << 1) + 8,((n)-1)<<3|(((u32)(v) & 6))|(v0))
+
 #define TRIN_DISABLE_TEXTURE 0
 #define TRIN_ENABLE_TEXTURE 1
 
@@ -105,6 +108,12 @@
     _g->words.w0 = (_SHIFTL(G_TRIN, 24, 8) | _SHIFTL((n - 1), 20, 4) | \
             _SHIFTL((t), 16, 4) | _SHIFTL((n*16), 0, 16));             \
     _g->words.w1 = (unsigned int)(address);                            \
+}
+
+#define gSPPolygon(dl, ptr, numTris, texEnabled) {                                                                              \
+    Gfx *_g = (Gfx *)(dl);                                                                                                      \
+    _g->words.w0 = _SHIFTL(((numTris - 1) << 4) | (texEnabled), 16, 8) | _SHIFTL(G_TRIN, 24, 8) | _SHIFTL((numTris*16), 0, 16); \
+    _g->words.w1 = (unsigned int)(ptr);                                                                                         \
 }
 
 #define numberOfGfxCommands(gfxCmds) (sizeof(gfxCmds) / sizeof(Gwords))

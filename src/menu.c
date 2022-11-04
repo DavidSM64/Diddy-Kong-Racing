@@ -7793,7 +7793,54 @@ void func_8009CA58(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_8009CD7C.s")
+
+/**
+ * Render the border around the centre viewport in the track selection menu.
+ * Comes in wood, iron and gold colours.
+ */
+void render_track_selection_viewport_border(ObjectModel *objMdl) {
+    s32 pad1[4];
+    s32 sp5C;
+    s32 pad2[4];
+    TextureHeader* tex;
+    Triangle *tris;
+    s32 triOffset;
+    s32 vertOffset;
+    Vertex *verts;
+    s32 numVerts;
+    s32 numTris;
+    s32 var_a3;
+    s32 texEnabled;
+    s32 i;
+
+    sp5C = 9;
+    if (sMenuGuiOpacity != 255) {
+        sp5C = 13;
+    }
+    for (i = 0; i < objMdl->numberOfBatches; i++) {
+        if (!(objMdl->batches[i].flags & 0x100)) {
+            vertOffset = objMdl->batches[i].verticesOffset;
+            triOffset = objMdl->batches[i].facesOffset;
+            numVerts = objMdl->batches[i + 1].verticesOffset - vertOffset;
+            numTris = objMdl->batches[i + 1].facesOffset - triOffset;
+            verts = &objMdl->vertices[vertOffset];
+            tris = &objMdl->triangles[triOffset];
+            if (objMdl->batches[i].textureIndex == -1) {
+                tex = NULL;
+                texEnabled = FALSE;
+                var_a3 = 0;
+            } else {
+                tex = objMdl->textures[objMdl->batches[i].textureIndex].texture;
+                texEnabled = TRUE;
+                var_a3 = objMdl->batches[i].unk7 << 14;
+            }
+            func_8007B4E8(&sMenuCurrDisplayList, tex, sp5C, var_a3);
+            
+            gSPVertexDKR(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
+            gSPPolygon(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, texEnabled);
+        }
+    }
+}
 
 void func_8009CF68(s32 arg0) {
     if (D_800DF4E4[arg0] == 0) {

@@ -1946,7 +1946,51 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A8474.s")
 #endif
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA3EC.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA600.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AAFD0.s")
+
+void func_800AAFD0(ObjectModel* objModel) {
+    s32 pad;
+    TextureHeader* texPtr;
+    s32 triOffset;
+    s32 vertOffset;
+    s32 numBatches;
+    s32 numVerts;
+    s32 numTris;
+    Vertex *verts;
+    Triangle *tris;
+    s32 textureEnabled;
+    s32 i;
+    s32 texIndex;
+    TriangleBatchInfo *batches;
+    s32 flags;
+
+    numBatches = objModel->numberOfBatches;
+    
+    for (i = 0; i < numBatches; i++) {
+        flags = objModel->batches[i].flags;
+        if (!(flags & 0x100)) {
+            vertOffset = objModel->batches[i].verticesOffset;
+            triOffset = objModel->batches[i].facesOffset;
+            numVerts = objModel->batches[i + 1].verticesOffset - vertOffset;
+            numTris = objModel->batches[i + 1].facesOffset - triOffset;
+            verts = &objModel->vertices[vertOffset];
+            tris = &objModel->triangles[triOffset];
+            texIndex = objModel->batches[i].textureIndex; // 0xFF = No Texture
+            textureEnabled = TRIN_ENABLE_TEXTURE;
+            if (texIndex == 0xFF) {
+                texPtr = NULL;
+            } else {
+                texPtr = objModel->textures[texIndex].texture;
+            }
+            func_8007B4C8(&gHUDCurrDisplayList, texPtr, flags & ~2);
+            gSPVertexDKR(gHUDCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
+            if (texPtr == NULL) {
+                textureEnabled = TRIN_DISABLE_TEXTURE;
+            }
+            gSPPolygon(gHUDCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, textureEnabled);
+            numBatches = objModel->numberOfBatches;
+        }
+    } 
+}
 
 void func_800AB194(s32 arg0) {
     D_80126CD1 = 1;

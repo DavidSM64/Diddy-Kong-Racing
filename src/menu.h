@@ -868,6 +868,7 @@ void func_8008C168(s32 updateRate);
 void func_8008C698(s32 updateRate);
 void func_80083098(f32);
 void func_8008F00C(s32);
+void render_track_selection_viewport_border(ObjectModel *objMdl);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
