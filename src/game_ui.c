@@ -14,6 +14,8 @@
 #include "math_util.h"
 #include "objects.h"
 #include "game_text.h"
+#include "object_models.h"
+#include "unknown_0255E0.h"
 
 extern u32 osTvType;
 
@@ -23,7 +25,7 @@ extern u32 osTvType;
 s32 D_800E1E60 = 0;
 
 unk800E1E64 D_800E1E64[59] = {
-    { 0, 0, 1.0f, 53.0f, 16.0f, 0, 127, 0 },
+    { 0, 0, 1.0f, 53.0f, 16.0f, 0, 127, 0 }, 
     { 0, 3, 1.0f, 54.0f, 18.0f, 0, 0, 0 },
     { 0, 1, 0.4f, -120.0f, -68.0f, 0, 0, 0 },
     { 0, 6, 1.0f, 104.0f, 16.0f, 0, 0, 0 },
@@ -1774,7 +1776,7 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
     if (!(D_80126D60->unkBC & 1)) {
         sp113 = TRUE;
         for(var_a1 = 0; var_a1 < sp140; var_a1++) {
-            if (&sp150[var_a1]->unk64->racer != NULL && 
+            if (&sp150[var_a1]->unk64->racer != NULL && // Always true
                 sp150[var_a1]->unk64->racer.playerIndex != PLAYER_COMPUTER && 
                 sp150[var_a1]->unk64->racer.raceFinished == FALSE) {
                 sp113 = FALSE;
@@ -1850,7 +1852,7 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
                     sp118 = sine_s((lvlMdl->unk24 * 0xFFFF) / 360);
                     sp114 = cosine_s((lvlMdl->unk24 * 0xFFFF) / 360);
                     if (func_8000E4D8() && func_8001B288()) {
-                        temp_v0_8 = func_8001B2E0(); 
+                        temp_v0_8 = func_8001B2E0();
                         if (temp_v0_8 != NULL) {
                             func_800AA3EC(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118, sp11C);
                             D_80126CDC->unk1E6 = 14;

@@ -244,7 +244,7 @@ s32 get_object_render_stack_pos(void) {
     return gObjectRenderStackPos;
 }
 
-void func_80066230(Gfx **dlist, Mtx **mats) {
+void func_80066230(Gfx **dlist, Matrix **mats) {
     ObjectSegment *someStruct;
     s16 sp2A;
     s16 sp28;
@@ -608,7 +608,7 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
-void func_80066CDC(Gfx **dlist, Mtx **mats) {
+void func_80066CDC(Gfx **dlist, Matrix **mats) {
     u32 sp58;
     u32 sp54;
     u32 sp4C;
@@ -745,7 +745,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 
 GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
 
-void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats) {
+void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
     s32 temp;
 
     gSPPerspNormalize((*dlist)++, perspNorm);
@@ -795,7 +795,7 @@ void set_ortho_matrix_height(f32 value) {
     gOrthoMatrix[1][1] = value;
 }
 
-void func_80067F2C(Gfx **dlist, Mtx **mats) {
+void func_80067F2C(Gfx **dlist, Matrix **mats) {
     u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
@@ -822,7 +822,7 @@ void func_80067F2C(Gfx **dlist, Mtx **mats) {
     }
 }
 
-void func_8006807C(Gfx **dlist, Mtx **mats) {
+void func_8006807C(Gfx **dlist, Matrix **mats) {
     func_8006FE74(&D_80121060, &D_800DD288);
     func_8006F768(&D_80121060, &D_80120EE0, &D_80120F20);
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
@@ -867,7 +867,7 @@ void func_800682AC(Gfx **dlist) {
     gObjectRenderStackPos = 0;
 }
 
-void func_80068408(Gfx **dlist, Mtx **mats) {
+void func_80068408(Gfx **dlist, Matrix **mats) {
     func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
     func_8006F870(&D_80121060, (Matrix *)*mats);
