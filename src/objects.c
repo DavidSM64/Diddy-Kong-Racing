@@ -135,7 +135,7 @@ s8 D_8011AD26[2];
 f32 D_8011AD28;
 s32 D_8011AD2C;
 f32 D_8011AD30;
-s32 D_8011AD34;
+Object *D_8011AD34;
 s32 D_8011AD38; //D_8011AD38 is ultimately set by func_80074B34, and is almost definitely SIDeviceStatus
 s8 D_8011AD3C;
 s8 D_8011AD3D;
@@ -1440,7 +1440,7 @@ s32 func_8001B288(void) {
     }
 }
 
-s32 func_8001B2E0() {
+Object *func_8001B2E0() {
     return D_8011AD34;
 }
 
@@ -1453,8 +1453,8 @@ s32 func_8001B3AC(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B3C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
-s32 func_8001B640() {
-    return D_800DC718;
+Object *func_8001B640() {
+    return (Object *) D_800DC718;
 }
 
 s32 func_8001B650(void) {

@@ -1538,10 +1538,10 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
     Object **racerGroup;
     ObjectSegment *someObjSeg;
     Object_Racer *curRacerObj;
-    f32 temp_f14;
-    f32 var_f12;
-    f32 var_f16;
-    f32 var_f18;
+    UNUSED f32 temp_f14;
+    UNUSED f32 var_f12;
+    UNUSED f32 var_f16;
+    UNUSED f32 var_f18;
     s32 temp_f16;
     s32 temp_f6;
     s32 temp_s0;
@@ -1557,7 +1557,7 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
     Object *someRacerObj;
     ByteColour *charColour;
     s32 temp;
-    s32 temp2;
+    UNUSED s32 temp2;
     
     func_800A0BD4(updateRate);
     
@@ -1850,7 +1850,7 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
                     sp118 = sine_s((lvlMdl->unk24 * 0xFFFF) / 360);
                     sp114 = cosine_s((lvlMdl->unk24 * 0xFFFF) / 360);
                     if (func_8000E4D8() && func_8001B288()) {
-                        temp_v0_8 = func_8001B2E0();
+                        temp_v0_8 = func_8001B2E0(); 
                         if (temp_v0_8 != NULL) {
                             func_800AA3EC(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118, sp11C);
                             D_80126CDC->unk1E6 = 14;
@@ -1948,7 +1948,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA3EC.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA600.s")
 
 void func_800AAFD0(ObjectModel* objModel) {
-    s32 pad;
+    UNUSED s32 pad;
     TextureHeader* texPtr;
     s32 triOffset;
     s32 vertOffset;
@@ -1960,7 +1960,6 @@ void func_800AAFD0(ObjectModel* objModel) {
     s32 textureEnabled;
     s32 i;
     s32 texIndex;
-    TriangleBatchInfo *batches;
     s32 flags;
 
     numBatches = objModel->numberOfBatches;
@@ -1974,7 +1973,7 @@ void func_800AAFD0(ObjectModel* objModel) {
             numTris = objModel->batches[i + 1].facesOffset - triOffset;
             verts = &objModel->vertices[vertOffset];
             tris = &objModel->triangles[triOffset];
-            texIndex = objModel->batches[i].textureIndex; // 0xFF = No Texture
+            texIndex = objModel->batches[i].textureIndex; // 0xFF = No Texture 
             textureEnabled = TRIN_ENABLE_TEXTURE;
             if (texIndex == 0xFF) {
                 texPtr = NULL;

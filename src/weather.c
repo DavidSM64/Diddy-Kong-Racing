@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "unknown_0255E0.h"
 #include "unknown_008C40.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 
@@ -24,11 +25,11 @@ s32 *D_800E28D4 = 0;
 unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // Not sure about typing for the following.
-s32 D_800E2904 = 0;
+Vertex *D_800E2904 = 0;
 s32 D_800E2908 = 0;
 s32 *D_800E290C = NULL;
 s32 *D_800E2910 = NULL;
-s32 *D_800E2914[2] = { NULL, NULL };
+Vertex *D_800E2914[2] = { NULL, NULL };
 s32 *D_800E291C = NULL; // List of Ids
 s32 D_800E2920 = 0;
 
@@ -321,7 +322,7 @@ void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currH
 
         func_800AC0C8(updateRate, &D_80127BF8); // This is the snow physics that makes it move
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
-            D_800E2904 = (s32) D_800E2914[D_80127C08];
+            D_800E2904 = D_800E2914[D_80127C08];
             func_800AC21C(); // Both of these funcs are needed to render.
             func_800AC5A4();
             D_80127C08 = 1 - D_80127C08;
@@ -335,7 +336,50 @@ void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currH
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
+
+#ifdef NON_MATCHING
+void func_800AC5A4(void) {
+    s32 sp34;
+    Matrix *mtx;
+    Vertex *temp;
+
+    if (D_800E28D8.unk8 != NULL) {
+        D_80127C00 = 4;
+        D_80127C04 = 2;
+        sp34 = 0;
+        if (D_800E2908 >= 4) {
+            mtx = OS_PHYSICAL_TO_K0(func_80069DB0());
+            gSPMatrix(gWeatherDisplayListHead++, mtx, G_MTX_DKR_INDEX_0);
+            gDkrInsertMatrix(gWeatherDisplayListHead++, G_MTX_DKR_INDEX_0, 0);
+            func_8007B4C8(&gWeatherDisplayListHead, D_800E28D8.unk8, 2U);
+            while (D_80127C00 + sp34 < D_800E2908) {
+                temp = &D_800E2904[sp34];
+                gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(temp), D_80127C00, 0);
+                gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), D_80127C04, 1);
+                sp34+=D_80127C00;
+                
+            }
+            temp = &D_800E2904[sp34];
+            gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(temp), (D_800E2908 - sp34), 0);
+            gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - sp34) >> 1), 1);
+        }
+    }
+}
+
+// Unused
+void func_800AC850(void) {
+    D_800E2A84 = 1;
+}
+
+// Unused
+void func_800AC860(void) {
+    if (D_800E2A80 != 0) {
+        D_800E2A84 = 0;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC5A4.s")
+#endif
 
 void func_800AC880(s32 arg0) {
     if (arg0 == D_800E2A80) {
