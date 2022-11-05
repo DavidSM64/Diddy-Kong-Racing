@@ -105,6 +105,6 @@ void func_800AB1F0(void);
 s32 func_800AC0C8(s32, unk80127BF8 *);
 void func_8006F6EC(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
-void func_800AC5A4(void);
+void render_falling_snow(void);
 
 #endif

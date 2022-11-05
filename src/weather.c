@@ -324,7 +324,7 @@ void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currH
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
             D_800E2904 = D_800E2914[D_80127C08];
             func_800AC21C(); // Both of these funcs are needed to render.
-            func_800AC5A4();
+            render_falling_snow();
             D_80127C08 = 1 - D_80127C08;
         }
     }
@@ -337,32 +337,31 @@ void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currH
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
 
-#ifdef NON_MATCHING
-// render_falling_snow
-void func_800AC5A4(void) {
-    s32 sp34;
-    Matrix *mtx;
-    Vertex *temp;
+/**
+ * Load and execute the draw commands for the falling snowflakes, seen with snowy weather enabled.
+ */
+void render_falling_snow(void) {
+    s32 i;
+    u32 mtx;
 
     if (D_800E28D8.unk8 != NULL) {
         D_80127C00 = 4;
         D_80127C04 = 2;
-        sp34 = 0;
         if (D_800E2908 >= 4) {
-            mtx = OS_PHYSICAL_TO_K0(func_80069DB0());
-            gSPMatrix(gWeatherDisplayListHead++, mtx, G_MTX_DKR_INDEX_0);
+            i = 0;
+            mtx = func_80069DB0();
+            gSPMatrix(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
             gDkrInsertMatrix(gWeatherDisplayListHead++, G_MTX_DKR_INDEX_0, 0);
             func_8007B4C8(&gWeatherDisplayListHead, D_800E28D8.unk8, 2U);
-            while (D_80127C00 + sp34 < D_800E2908) {
-                temp = &D_800E2904[sp34];
-                gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(temp), D_80127C00, 0);
+            while (i + D_80127C00 < D_800E2908) {
+                mtx = &D_800E2904[i];
+                gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx), D_80127C00, 0);
                 gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), D_80127C04, 1);
-                sp34+=D_80127C00;
-                
+                i += D_80127C00;
             }
-            temp = &D_800E2904[sp34];
-            gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(temp), (D_800E2908 - sp34), 0);
-            gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - sp34) >> 1), 1);
+            mtx = &D_800E2904[i];
+            gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx), (D_800E2908 - i), 0);
+            gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - i) >> 1), 1);
         }
     }
 }
@@ -378,9 +377,6 @@ void func_800AC860(void) {
         D_800E2A84 = 0;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC5A4.s")
-#endif
 
 void func_800AC880(s32 arg0) {
     if (arg0 == D_800E2A80) {
