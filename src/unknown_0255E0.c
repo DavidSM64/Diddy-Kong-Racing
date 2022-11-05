@@ -61,7 +61,7 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 /************ .bss ************/
 
 Gfx *gSceneCurrDisplayList;
-Mtx *gSceneCurrMatrix;
+Matrix *gSceneCurrMatrix;
 VertexList *gSceneCurrVertexList;
 TriangleList *gSceneCurrTriList;
 
@@ -263,7 +263,7 @@ extern s32 D_A0000200;
 /**
  * The root function for rendering the entire scene
 */
-void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) {
+void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
     s32 delta;

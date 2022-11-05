@@ -307,7 +307,7 @@ void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
-void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object);
+void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object);
 void func_80012F30(Object *arg0);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
@@ -379,8 +379,8 @@ void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 s32 func_8001BB18(s32 arg0);
-void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
-void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
+void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 
 //Non Matching
@@ -404,6 +404,6 @@ Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_80068FA8(Gfx**, Mtx**, Object*, Object*, f32); /* extern */
+void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
 
 #endif

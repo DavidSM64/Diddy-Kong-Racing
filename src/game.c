@@ -139,8 +139,8 @@ s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 UNUSED s32 D_801211FC;
-Mtx *gHudMatrices[2];
-Mtx *gGameCurrMatrix;
+Matrix *gHudMatrices[2];
+Matrix *gGameCurrMatrix;
 VertexList *gHudVertices[2];
 VertexList *gGameCurrVertexList;
 TriangleList *gHudTriangles[2];
@@ -188,10 +188,10 @@ void func_8006A6B0(void) {
   s32 count;
   s32 checksumCount;
   u8 *sp44;
-  s32 temp2;
+  UNUSED s32 temp2;
 
   sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
-  gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+  gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
   i = 0;
   while (i < 16) {
     D_80121180[i++] = 0;
@@ -202,10 +202,10 @@ void func_8006A6B0(void) {
   }
   gNumberOfLevelHeaders--;
   D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
-  gCurrentLevelHeader = sp44;
+  gCurrentLevelHeader = (LevelHeader *) sp44;
   gNumberOfWorlds = -1;
   for (i = 0; i < gNumberOfLevelHeaders; i++) {
-    load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
+    load_asset_to_address(ASSET_LEVEL_HEADERS, (s32) gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
     if (gNumberOfWorlds < gCurrentLevelHeader->world) {
       gNumberOfWorlds = gCurrentLevelHeader->world;
     }
@@ -233,7 +233,7 @@ void func_8006A6B0(void) {
   free_from_memory_pool(gTempAssetTable);
   free_from_memory_pool(sp44);
 
-  gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
+  gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
 
   for (i = 0; gTempAssetTable[i] != (-1); i++){}
   i--;
@@ -243,9 +243,9 @@ void func_8006A6B0(void) {
 
   gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), COLOUR_TAG_YELLOW);
   D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-  load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
+  load_asset_to_address(ASSET_LEVEL_NAMES, (u32) D_800DD310, 0, temp);
   for (count = 0; count < i; count++) {
-    gLevelNames[count] = &D_800DD310[gTempAssetTable[count]];
+    gLevelNames[count] = (u8 *) &D_800DD310[gTempAssetTable[count]];
   }
   free_from_memory_pool(gTempAssetTable);
 
@@ -933,7 +933,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, (Mtx *) &gGameCurrMatrix, TRUE); 
+    render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
@@ -1378,7 +1378,7 @@ void ingame_logic_loop(s32 updateRate) {
                 D_801234F4 = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
-                gLevelDefaultVehicleID = func_8006B0AC(D_801234F4);
+                gLevelDefaultVehicleID = func_8006B0AC(D_801234F4); 
                 if (D_80123508 < 0) {
                     D_80123508 = 0x64;
                 }
@@ -1914,7 +1914,7 @@ void func_8006EFDC(void) {
     D_8012350C = 3;
 
     size1 = (gNumF3dCmdsPerPlayer[3] * sizeof(Gwords));
-    size2 = (gNumHudMatPerPlayer[3] * sizeof(Mtx));
+    size2 = (gNumHudMatPerPlayer[3] * sizeof(Matrix));
     size3 = (gNumHudVertsPerPlayer[3] * sizeof(Vertex));
     size4 = (gNumHudTrisPerPlayer[3] * sizeof(Triangle));
     totalSize = size1 + size2 + size3 + size4;

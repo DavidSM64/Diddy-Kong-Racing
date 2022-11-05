@@ -94,7 +94,7 @@ void handle_rain_sound(s32 updateRate);
 void render_rain_splashes(s32 updateRate);
 void handle_rain_lightning(s32 updateRate);
 void render_rain_overlay(unk800E2C2C*, s32);
-void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+void process_weather(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void render_falling_snow(void);
 void free_weather_memory(void);
 

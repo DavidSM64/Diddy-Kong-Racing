@@ -205,7 +205,7 @@ s16 D_8011AE82;
 s32 D_8011AE84;
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
-Mtx *gObjectCurrMatrix;
+Matrix *gObjectCurrMatrix;
 VertexList *gObjectCurrVertexList;
 s32 D_8011AE98[2];
 s32 D_8011AEA0;
@@ -1083,7 +1083,7 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) {
+void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.unk6 & 0x5000)
         return;
@@ -1174,7 +1174,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
  * Get the racer object data, and fetch set visual shield properties based on that racer.
  * Afterwards, render the graphics with opacity scaling with the fadetimer.
  */
-void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj) {
+void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj) {
     struct Object_Racer* racer;
     Object_68 *gfxData;
     ObjectModel *mdl;
@@ -1246,7 +1246,7 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *o
  * Get the racer object data, and fetch set visual magnet properties based on that racer.
  * Afterwards, render the graphics with opacity set by the properties.
  */
-void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj) {
+void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj) {
     Object_Racer *racer;
     Object_68 *gfxData;
     ObjectModel *mdl;

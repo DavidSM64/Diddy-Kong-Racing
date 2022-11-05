@@ -679,7 +679,7 @@ extern DrawTexture D_800DFC40[2];
 extern DrawTexture D_800DFC50[2];
 extern DrawTexture D_800DFC60[2];
 extern Gfx *sMenuCurrDisplayList;
-extern Mtx *sMenuCurrHudMat;
+extern Matrix *sMenuCurrHudMat;
 extern const char D_800E8208[];
 extern s32 gOptionBlinkTimer;
 extern s32 D_801263E0;
@@ -720,7 +720,7 @@ void func_8007FF88(void);
 void func_80080E6C(void);
 void func_800813C0(void);
 void menu_init(u32 menuId);
-s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+s32 menu_loop(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
@@ -833,7 +833,7 @@ s32 dialogue_race_defeat(void);
 s32 trophy_race_cabinet_menu_loop(void);
 void dialogue_open_stub(void);
 void dialogue_close_stub(void);
-f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Mtx **mat, VertexList **vtx);
+f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Matrix **mat, VertexList **vtx);
 u64 *get_eeprom_settings_pointer(void);
 s32 set_eeprom_settings_value(u64 valueToSet);
 s32 unset_eeprom_settings_value(u64 valueToUnset);
@@ -923,7 +923,7 @@ void func_8008D8BC(s32 updateRate);
 void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
 //Possible names
 //void renderTrackSelect(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
-s32 func_80095728(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
+s32 func_80095728(Gfx **gfx, Matrix **mtx, VertexList **vtx, s32 updateRate);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,
