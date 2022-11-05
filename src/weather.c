@@ -11,6 +11,7 @@
 #include "unknown_0255E0.h"
 #include "unknown_008C40.h"
 #include "textures_sprites.h"
+#include "math_util.h"
 
 /************ .data ************/
 
