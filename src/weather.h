@@ -95,16 +95,14 @@ void render_rain_splashes(s32 updateRate);
 void handle_rain_lightning(s32 updateRate);
 void render_rain_overlay(unk800E2C2C*, s32);
 void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+void render_falling_snow(void);
+void free_weather_memory(void);
 
-f32 cosine_s(s16);
-f32 sine_s(s16);
 s32 func_8007082C(s16);
 s32 func_80070830(s16);
-void free_weather_memory(void);
 void func_800AB1F0(void);
 s32 func_800AC0C8(s32, unk80127BF8 *);
 void func_8006F6EC(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
-void render_falling_snow(void);
 
 #endif
