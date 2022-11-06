@@ -1901,8 +1901,8 @@ void func_800228EC(s32 arg0) {
     D_8011AEF7 = 3;
     object_64 = &get_racer_object(0)->unk64->racer;
     object_64->unk190 = 0;
-    object_64->unk192 = 0;
-    object_64->lapCount = 0;
+    object_64->checkpoint = 0;
+    object_64->lap = 0;
     object_64->unk1BA = 0;
     func_80017E74(arg0);
     func_8006F388(10);

@@ -1467,7 +1467,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk10;
-    obj64->unk14 = entry->unk18;
+    obj64->unk14 = entry->bossFlag;
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = entry->unk10;

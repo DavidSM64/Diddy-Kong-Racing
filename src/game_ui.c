@@ -864,7 +864,7 @@ void render_racer_bananas(Object_64 *obj, s32 updateRate) {
     s16 temp_v1;
     s32 temp_lo;
     u8 var_v1;
-    if(obj->racer.playerIndex == PLAYER_COMPUTER || ((gHUDNumPlayers < 1 || D_800E2794[gHUDNumPlayers][obj->racer.playerIndex] == 2 || D_80126D60->race_type == 0x41 || D_80126D60->race_type == 0x40) && obj->racer.raceFinished == FALSE) && (gHUDNumPlayers < 1 || (obj->racer.lapCount < 1) || obj->racer.lap_times[obj->racer.lapCount] >= 180 || D_80126D60->race_type & 0x40)) {
+    if(obj->racer.playerIndex == PLAYER_COMPUTER || ((gHUDNumPlayers < 1 || D_800E2794[gHUDNumPlayers][obj->racer.playerIndex] == 2 || D_80126D60->race_type == 0x41 || D_80126D60->race_type == 0x40) && obj->racer.raceFinished == FALSE) && (gHUDNumPlayers < 1 || (obj->racer.lap < 1) || obj->racer.lap_times[obj->racer.lap] >= 180 || D_80126D60->race_type & 0x40)) {
         func_800AA600(&gHUDCurrDisplayList, (Matrix *) &gHUDCurrMatrix, (TriangleList *) &gHUDCurrTriList, (unk80126CDC *) &D_80126CDC->unk240);
         bananas = obj->racer.bananas;
         var_v1 = D_80126CDC->unkF8;
@@ -942,7 +942,7 @@ void func_800A45F0(Object_Racer* racer) {
         D_80126CD5 = FALSE;
     }
     for (i = 0; i < 10; i++) {
-        if (i >= racer->lapCount) {
+        if (i >= racer->lap) {
             D_800E2834 = 0x80808080;
         }
         D_80126CD5 = TRUE;
@@ -1038,7 +1038,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
  * In multiplayer, shows a cut down display, if the display setting is set to show laps.
 */
 void render_lap_count(Object_64 *obj, s32 updateRate) {
-    if (obj->racer.raceFinished == FALSE && (gHUDNumPlayers <= 0 || obj->racer.lapCount <= 0 || obj->racer.lap_times[obj->racer.lapCount] >= 180) 
+    if (obj->racer.raceFinished == FALSE && (gHUDNumPlayers <= 0 || obj->racer.lap <= 0 || obj->racer.lap_times[obj->racer.lap] >= 180) 
             && (gHUDNumPlayers <= 0 || D_800E2794[gHUDNumPlayers][obj->racer.playerIndex] == 3)) {
         if (D_80126D60->laps == (0, obj->racer.unk194 + 1) && gHUDNumPlayers < 2) {
             D_80126CDC->unk21A += updateRate;
@@ -1066,8 +1066,8 @@ void render_lap_count(Object_64 *obj, s32 updateRate) {
         func_8007BF1C(TRUE);
     }
     if (is_game_paused() == FALSE) {
-        if (obj->racer.lap_times[obj->racer.lapCount] < 30 && D_80126CDC->unk3DA == 0 && obj->racer.raceFinished == FALSE) {
-            if ((obj->racer.lapCount == 1) && D_80126D60->laps >= 3) {
+        if (obj->racer.lap_times[obj->racer.lap] < 30 && D_80126CDC->unk3DA == 0 && obj->racer.raceFinished == FALSE) {
+            if ((obj->racer.lap == 1) && D_80126D60->laps >= 3) {
                 D_80126CDC->unk3DA = 2;
                 D_80126CDC->unk3DB = 1;
                 D_80126CDC->unk3DD = 0;
@@ -1099,7 +1099,7 @@ void render_lap_count(Object_64 *obj, s32 updateRate) {
                     }
                     break;
                 }
-            } else if (D_80126D60->laps == (0, obj->racer.lapCount + 1) && obj->racer.lapCount != 0) {
+            } else if (D_80126D60->laps == (0, obj->racer.lap + 1) && obj->racer.lap != 0) {
                 D_80126CDC->unk3DA = 3;
                 D_80126CDC->unk3DB = -1;
                 D_80126CDC->unk3DD = 0;
@@ -1146,7 +1146,7 @@ void render_lap_count(Object_64 *obj, s32 updateRate) {
                     } else {
                         D_80126CDC->unk3EC = D_80126CDC->unk3FC;
                     }
-                    if (obj->racer.lap_times[obj->racer.lapCount] >= 60) {
+                    if (obj->racer.lap_times[obj->racer.lap] >= 60) {
                         D_80126CDC->unk3DB = -1;
                         play_sound_global(SOUND_WHOOSH1, NULL);
                     }
@@ -1179,7 +1179,7 @@ void render_lap_count(Object_64 *obj, s32 updateRate) {
                     } else {
                         D_80126CDC->unk3AC = D_80126CDC->unk3BC;
                     }
-                    if (obj->racer.lap_times[obj->racer.lapCount] >= 0x3C) {
+                    if (obj->racer.lap_times[obj->racer.lap] >= 0x3C) {
                         D_80126CDC->unk3DB = 1;
                         play_sound_global(SOUND_WHOOSH1, NULL);
                     }
@@ -1435,11 +1435,11 @@ void render_race_time(Object_64* obj, s32 updateRate) {
     s32 countingDown;
     s32 timerHideCounter;
 
-    if (!(gHUDNumPlayers && D_800E2794[gHUDNumPlayers][obj->racer.playerIndex] != 1) || (gHUDNumPlayers > 0 && obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180)) {
+    if (!(gHUDNumPlayers && D_800E2794[gHUDNumPlayers][obj->racer.playerIndex] != 1) || (gHUDNumPlayers > 0 && obj->racer.lap > 0 && obj->racer.lap_times[obj->racer.lap] < 180)) {
         if (obj->racer.raceFinished == FALSE) {
             timerHideCounter = D_80126CDC->unk15A + 127;
-            if (obj->racer.lapCount > 0 && obj->racer.lap_times[obj->racer.lapCount] < 180 && obj->racer.lapCount < D_80126D60->laps) {
-                stopwatchTimer = obj->racer.lap_times[obj->racer.lapCount - 1];
+            if (obj->racer.lap > 0 && obj->racer.lap_times[obj->racer.lap] < 180 && obj->racer.lap < D_80126D60->laps) {
+                stopwatchTimer = obj->racer.lap_times[obj->racer.lap - 1];
                 countingDown = TRUE;
                 if (timerHideCounter == 0) {
                     timerHideCounter = 180;

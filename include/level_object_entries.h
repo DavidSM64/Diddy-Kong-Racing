@@ -41,11 +41,37 @@ typedef struct LevelObjectEntry_Smoke {
 
 typedef struct LevelObjectEntry_Exit {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 pad8[8];
+    /* 0x08 */ u8 destinationMapId;
+    /* 0x09 */ u8 pad9;
+
+    // Defines the location in overworld the player will spawn at.
+    // Only used if the exit goes to overworld.
+    //   0: Future Fun Land exit (also game start spawn)
+    //   2: Dino Domain exit
+    //   3: Snowflake Mountain exit
+    //   4: Sherbet Island exit
+    //   6: Dragon Forest exit
+    //   7: Wizpig head exit
+    /* 0x0A */ s8 overworldSpawnIndex;
+
+    /* 0x0B */ u8 padB[5];
     /* 0x10 */ u8 unk10;
     /* 0x11 */ u8 unk11;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ s8 unk18;
+    /* 0x12 */ u8 pad12[5];
+    
+    // Defines the location in a hub world the player will spawn at when exiting `destinationMapId`.
+    // Only used if the exit goes to a race.
+    //   0: Hub exit door
+    //   1-4: One of the 4 race doors
+    //   5: Boss door
+    //   6: Minigame door
+    //   7: Wizpig head
+    /* 0x17 */ u8 returnSpawnIndex;
+
+    // -1: Doesn't warp to a boss race
+    // 0: Warps to a boss 1 race
+    // 1: Warps to a boss 2 race
+    /* 0x18 */ s8 bossFlag;
 } LevelObjectEntry_Exit;
 
 typedef struct LevelObjectEntry_Audio {

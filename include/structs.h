@@ -162,43 +162,84 @@ typedef struct Settings4C {
 
 /* Size: 0x118 bytes */
 typedef struct Settings {
+  // Balloon indices:
+  // 0 = Total balloons
+  // 1 = Dino Domain balloons
+  // 2 = Sherbet Island balloons
+  // 3 = Snowflake Mountain balloons
+  // 4 = Dragon Forest balloons
+  // 5 = Future Fun Land balloons
   /* 0x0000 */ s16 *balloonsPtr;
+
+  // Course flag bits:
+  // 0x1                   = Map has been visited.
+  // 0x2                   = Map has been completed.
+  // 0x4                   = Map's silver coin challenge has been completed.
+  // 0x00000000-0xFFFF0000 = Used as bit fields for hub worlds to indicate whether or not a door can open when the player gets near it.
   /* 0x0004 */ s32 *courseFlagsPtr;
+
+  // Key bits:
+  // 0x02 = Dino Domain key
+  // 0x04 = Sherbet Island key
+  // 0x08 = Snowflake Mountain key
+  // 0x10 = Dragon Forest key
   /* 0x0008 */ u16 keys;
+
   /* 0x000A */ u16 unkA;
+
+  // Boss bits:
+  // 0x001 = Wizpig 1
+  // 0x002 = Tricky 1
+  // 0x004 = Bubbler 1
+  // 0x008 = Bluey 1
+  // 0x010 = Smokey 1
+  // 0x020 = Wizpig 2
+  // 0x080 = Tricky 2
+  // 0x100 = Bubbler 2
+  // 0x200 = Bluey 2
+  // 0x400 = Smokey 2
   /* 0x000C */ u16 bosses;
+
+  // Trophy bits:
+  // Bit field 0b00-0b11 = Empty, 3rd, 2nd, and 1st place trophies.
+  // `trophies` consists of 5 of these bit fields, from LSB to MSB, Dino, Sherbet, Snowflake, Dragon, and FFL.
   /* 0x000E */ u16 trophies;
+
+  // Cutscene flags:
+  // 0x1     = Lighthouse rocket cutscene
+  // 0x2     = T.T. help prompt
+  // 0x4     = Adventure 2 flag?
+  // 0x8     = Dino domain boss cutscene
+  // 0x10    = Sherbet island boss cutscene
+  // 0x20    = Snowflake mountain boss cutscene
+  // 0x40    = Dragon forest boss cutscene
+  // 0x80    = Future Fun Land boss cutscene
+  // 0x100   = Dino domain boss cutscene 2
+  // 0x200   = Shertbet island boss cutscene 2
+  // 0x400   = Snowflake mountain boss cutscene 2
+  // 0x800   = Dragon forest boss cutscene 2
+  // 0x2000  = Wizpig face cutscene
+  // 0x4000  = Dino domain key cutscene
+  // 0x8000  = Sherbet Island key cutscene
+  // 0x10000 = Snowflake mountain key cutscene
+  // 0x20000 = Dragon forest key cutscene
   /* 0x0010 */ u32 cutsceneFlags;
-  /* Cutscene flags:
-   * 0x1     = Lighthouse rocket cutscene
-   * 0x2     = T.T. help prompt
-   * 0x4     = Adventure 2 flag?
-   * 0x8     = Dino domain boss cutscene
-   * 0x10    = Sherbet island boss cutscene
-   * 0x20    = Snowflake mountain boss cutscene
-   * 0x40    = Dragon forest boss cutscene
-   * 0x80    = Future Fun Land boss cutscene
-   * 0x100   = Dino domain boss cutscene 2
-   * 0x200   = Shertbet island boss cutscene 2
-   * 0x400   = Snowflake mountain boss cutscene 2
-   * 0x800   = Dragon forest boss cutscene 2
-   * 0x2000  = Wizpig face cutscene
-   * 0x4000  = Dino domain key cutscene
-   * 0x8000  = Sherbet Island key cutscene
-   * 0x10000 = Snowflake mountain key cutscene
-   * 0x20000 = Dragon forest key cutscene
-   */
+  
+  // Taj flags:
+  // 0x1  = Car challenge unlocked
+  // 0x2  = Hover challenge unlocked
+  // 0x4  = Plane challenge unlocked
+  // 0x8  = Car challenge completed
+  // 0x10 = Hover challenge completed
+  // 0x20 = Plane challenge completed
   /* 0x0014 */ u16 tajFlags;
-  /* Taj flags:
-   * 0x1  = Car challenge unlocked
-   * 0x2  = Hover challenge unlocked
-   * 0x4  = Plane challenge unlocked
-   * 0x8  = Car challenge completed
-   * 0x10 = Hover challenge completed
-   * 0x20 = Plane challenge completed
-   */
+  
+  // Not a bitfield, just a  counter from 0-4.
   /* 0x0016 */ u8 ttAmulet;
+  
+  // Not a bitfield, just a  counter from 0-4.
   /* 0x0017 */ u8 wizpigAmulet;
+
   /* 0x0018 */ u16 *flapInitialsPtr[3];
   /* 0x0024 */ u16 *flapTimesPtr[3];
   /* 0x0030 */ u16 *courseInitialsPtr[3];
@@ -966,8 +1007,8 @@ typedef struct Object_Racer {
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 shieldTimer;
   /* 0x190 */ s16 unk190;
-  /* 0x192 */ s8 unk192;
-  /* 0x193 */ s8 lapCount;
+  /* 0x192 */ s8 checkpoint;
+  /* 0x193 */ s8 lap;
   /* 0x194 */ s8 unk194;
   /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;
@@ -1111,7 +1152,7 @@ typedef struct Object_Door {
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u8 unk12;
   /* 0x13 */ u8 unk13;
-  /* 0x14 */ u8 unk14;
+  /* 0x14 */ s8 unk14;
 } Object_Door;
 
 typedef struct Object_Trigger {
