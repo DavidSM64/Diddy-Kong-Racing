@@ -997,7 +997,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
     s32 numberOfObjects;
 
     obj->segment.trans.unk6 |= 0x4000;
-    someObjList = func_8001BAAC(&numberOfObjects);
+    someObjList = get_racer_objects_by_position(&numberOfObjects);
     if (obj->unk78 < numberOfObjects) {
         someObj = someObjList[obj->unk78];
         someObj64 = &someObj->unk64->pos_arrow;

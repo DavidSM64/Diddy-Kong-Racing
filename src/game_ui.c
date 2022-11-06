@@ -304,12 +304,12 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
 
     D_80126D08 = get_object_render_stack_pos();
     if (D_8012718A) {
-        arg3 = func_8001BB18(1 - D_80126D08);
+        arg3 = get_racer_object_by_port(1 - D_80126D08);
     }
     D_80126D60 = get_current_level_header();
     if (arg3 == NULL) {
         if (func_8001E440() == 10) {
-            arg3 = func_8001BB18(0);
+            arg3 = get_racer_object_by_port(0);
         }
     }
     if (arg3 != NULL && !(D_80126D60->unkBC & 2)) {
@@ -1589,7 +1589,7 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
         }
     }
     D_80126D60 = get_current_level_header();
-    sp150 = func_8001BA90(&sp140);
+    sp150 = get_racer_objects_by_port(&sp140);
     gHUDCurrDisplayList = *dList;
     gHUDCurrMatrix = *mtx;
     gHUDCurrTriList = *triList;

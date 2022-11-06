@@ -186,7 +186,7 @@ glabel func_800A8474
 /* 0A92DC 800A86DC 00000000 */   nop   
 /* 0A92E0 800A86E0 3C018012 */  lui   $at, %hi(D_80126D60) # $at, 0x8012
 /* 0A92E4 800A86E4 AC226D60 */  sw    $v0, %lo(D_80126D60)($at)
-/* 0A92E8 800A86E8 0C006EA4 */  jal   func_8001BA90
+/* 0A92E8 800A86E8 0C006EA4 */  jal   get_racer_objects_by_port
 /* 0A92EC 800A86EC 27A40140 */   addiu $a0, $sp, 0x140
 /* 0A92F0 800A86F0 8FAC0160 */  lw    $t4, 0x160($sp)
 /* 0A92F4 800A86F4 AFA20150 */  sw    $v0, 0x150($sp)

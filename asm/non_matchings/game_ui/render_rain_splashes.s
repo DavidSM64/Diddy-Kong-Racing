@@ -21,7 +21,7 @@ glabel render_rain_splashes
 /* 0AE2A4 800AD6A4 29014001 */  slti  $at, $t0, 0x4001
 /* 0AE2A8 800AD6A8 142000C0 */  bnez  $at, .L800AD9AC
 /* 0AE2AC 800AD6AC 00000000 */   nop   
-/* 0AE2B0 800AD6B0 0C006EC6 */  jal   func_8001BB18
+/* 0AE2B0 800AD6B0 0C006EC6 */  jal   get_racer_object_by_port
 /* 0AE2B4 800AD6B4 AFA8007C */   sw    $t0, 0x7c($sp)
 /* 0AE2B8 800AD6B8 3C06800E */  lui   $a2, %hi(D_800E2C84) # $a2, 0x800e
 /* 0AE2BC 800AD6BC 24C62C84 */  addiu $a2, %lo(D_800E2C84) # addiu $a2, $a2, 0x2c84

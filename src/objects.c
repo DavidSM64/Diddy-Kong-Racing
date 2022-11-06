@@ -1530,40 +1530,39 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Object **get_racer_objects(s32 *cnt) {
-    *cnt = gNumRacers;
+Object **get_racer_objects(s32 *numRacers) {
+    *numRacers = gNumRacers;
     return *gRacers;
 }
 
-s32 *func_8001BA90(s32 *arg0) {
-    *arg0 = gNumRacers;
+Object **get_racer_objects_by_port(s32 *numRacers) {
+    *numRacers = gNumRacers;
     return gRacersByPort;
 }
 
-Object **func_8001BAAC(s32 *numberOfObjects) {
-    *numberOfObjects = gNumRacers;
+Object **get_racer_objects_by_position(s32 *numRacers) {
+    *numRacers = gNumRacers;
     return gRacersByPosition;
 }
 
-Object *get_racer_object(s32 indx) {
+Object *get_racer_object(s32 index) {
     if (gNumRacers == 0) {
         return NULL;
     }
-    if (indx < 0 || indx >= gNumRacers) {
+    if (index < 0 || index >= gNumRacers) {
         return NULL;
     }
-    return (*gRacers)[indx];
+    return (*gRacers)[index];
 }
 
-s32 func_8001BB18(s32 arg0) {
-    s32 temp_v0 = gNumRacers;
-    if (temp_v0 == 0) {
-        return 0;
+Object *get_racer_object_by_port(s32 index) {
+    if (gNumRacers == 0) {
+        return NULL;
     }
-    if ((arg0 < 0) || (arg0 >= temp_v0)) {
-        return 0;
+    if (index < 0 || index >= gNumRacers) {
+        return NULL;
     }
-    return gRacersByPort[arg0];
+    return gRacersByPort[index];
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
