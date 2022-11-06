@@ -484,7 +484,7 @@ void func_80027FC4(s32 arg0) {
     sp20.objectID = arg0;
     D_8011B0B8 = spawn_object(&sp20, 2);
     if (D_8011B0B8 != 0) {
-        D_8011B0B8->segment.unk3C_a.unk3C = 0;
+        D_8011B0B8->segment.unk3C_a.level_entry = NULL;
         D_8011B0B8->unk4A = -1;
     }
 }
@@ -1348,20 +1348,6 @@ void func_8003093C(s32 arg0) {
 #ifdef NON_EQUIVALENT
 //unk8011D388 D_8011D388[4];
 
-typedef struct Object_3C_FogChanger {
-    u8 pad0[0x2];
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s8 unk8;
-    u8 unk9;
-    u8 unkA;
-    u8 unkB;
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-} Object_3C_FogChanger;
-
 void obj_loop_fogchanger(Object* obj) {
     s32 temp_v0;
     s32 index;
@@ -1372,13 +1358,13 @@ void obj_loop_fogchanger(Object* obj) {
     s32 temp_a3, temp_t0, temp_t1, temp_a1;
     s32 temp;
     Object **sp40;
-    Object_3C_FogChanger *sp44;
+    LevelObjectEntry_FogChanger *level_entry;
     Object *tempObj;
     unk8011D388 *temp_v0_3;
     ObjectSegment *phi_s3;
 
     sp40 = NULL;
-    sp44 = obj->segment.unk3C_a.unk3C;
+    level_entry = &obj->segment.unk3C_a.level_entry->fogChanger;
     phi_s3 = NULL;
 
     // check_if_showing_cutscene_camera() returns the bool gCutsceneCameraActive. 1 if camera is controlled by cutscene, 0 if controlled by racer.
@@ -1408,15 +1394,15 @@ void obj_loop_fogchanger(Object* obj) {
             x -= obj->segment.trans.x_position;
             z -= obj->segment.trans.z_position;
             if (((x * x) + (z * z)) < obj->unk78f) {
-                phi_a0 = sp44->unkC;
-                phi_v1 = sp44->unkE;
-                temp_a3 = sp44->unk9;
-                temp_t0 = sp44->unkA;
-                temp_t1 = sp44->unkB;
-                temp_a1 = sp44->unk10;
+                phi_a0 = level_entry->unkC;
+                phi_v1 = level_entry->unkE;
+                temp_a3 = level_entry->unk9;
+                temp_t0 = level_entry->unkA;
+                temp_t1 = level_entry->unkB;
+                temp_a1 = level_entry->unk10;
                 if (phi_v1 < phi_a0) {
-                    phi_v1 = sp44->unkC;
-                    phi_a0 = sp44->unkE;
+                    phi_v1 = level_entry->unkC;
+                    phi_a0 = level_entry->unkE;
                 }
                 if (phi_v1 >= 0x400) {
                     phi_v1 = 0x3FF;

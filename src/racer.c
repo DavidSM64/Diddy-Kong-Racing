@@ -1496,7 +1496,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
                         newObject.size = 8;
                         tempRacer->unk15C = spawn_object(&newObject, 1);
                         if (tempRacer->unk15C) {
-                            tempRacer->unk15C->segment.unk3C_a.unk3C = 0;
+                            tempRacer->unk15C->segment.unk3C_a.level_entry = NULL;
                             tempRacer->unk15C->segment.unk38.half.lower = 128;
                         }
                     }
@@ -3623,7 +3623,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     if (racer->transitionTimer > 0) {
         racer->transitionTimer -= updateRate;
         if (racer->transitionTimer <= 0) {
-            func_8006D968((s8* ) racer->unk108->segment.unk3C_a.unk3C);
+            func_8006D968((s8* ) racer->unk108->segment.unk3C_a.level_entry);
             racer->transitionTimer = 0;
         }
     }

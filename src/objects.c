@@ -674,7 +674,7 @@ void func_8000E2B4(void) {
     if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
         player->segment.trans.scale *= 0.714f;
     }
-    player->segment.unk3C_a.unk3C = 0;
+    player->segment.unk3C_a.level_entry = NULL;
     player->segment.trans.y_rotation = D_8011AD4C;
     player->segment.trans.y_position = D_8011AD48;
 }
@@ -702,10 +702,10 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8000E4E8.s")
 s32 func_8000E558(Object *arg0){
     s32 temp_v0;
     s32 new_var, new_var2;
-    if (arg0->segment.unk3C_a.unk3C == 0) {
+    if (arg0->segment.unk3C_a.level_entry == NULL) {
         return TRUE;
     }
-    temp_v0 = arg0->segment.unk3C_a.unk3C;
+    temp_v0 = arg0->segment.unk3C_a.level_entry;
     new_var2 = D_8011AE98[0];
     if ((temp_v0 >= new_var2) && (((D_8011AEA0 * 8) + new_var2) >= temp_v0)) {
         return FALSE;
@@ -1037,7 +1037,7 @@ void func_80011AD0(Object *this) {
             break;
 
         case 3: //L80011BB4
-            tmp_f0 = this->segment.unk3C_a.unk3C->unkD;
+            tmp_f0 = this->segment.unk3C_a.level_entry->unk80011AD0.unkD;
             offset = (this->unk64->obj80011AD0.unkFC * 6);
             offset *= 5;
             offset *= 2;

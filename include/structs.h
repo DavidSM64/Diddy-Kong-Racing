@@ -5,6 +5,7 @@
 
 #include "types.h"
 #include "enums.h"
+#include "level_object_entries.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -553,16 +554,6 @@ typedef struct LevelModel {
 /* 0x46 */ s16 unk46;
 /* 0x48 */ s32 modelSize;
 } LevelModel;
-
-typedef struct Object_3C {
-    u8 pad0[0x2];
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s8 unk8;
-    u8 pad9[0x4];
-    u8 unkD;
-} Object_3C;
 
 typedef enum {
     OBJECT_MODEL_TYPE_3D_MODEL,
@@ -1387,7 +1378,7 @@ typedef struct ObjectSegment {
   /* 0x003B */ s8 unk3B;
 
   union {
-    /* 0x003C */ Object_3C* unk3C;
+    /* 0x003C */ LevelObjectEntry* level_entry;
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
