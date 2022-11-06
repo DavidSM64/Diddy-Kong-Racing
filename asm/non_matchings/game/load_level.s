@@ -307,9 +307,9 @@ glabel load_level
 /* 06C2B4 8006B6B4 0C0032F0 */  jal   func_8000CBC0
 /* 06C2B8 8006B6B8 00000000 */   nop   
 /* 06C2BC 8006B6BC 8FAC0060 */  lw    $t4, 0x60($sp)
-/* 06C2C0 8006B6C0 3C018012 */  lui   $at, %hi(D_80121164) # $at, 0x8012
+/* 06C2C0 8006B6C0 3C018012 */  lui   $at, %hi(gMapId) # $at, 0x8012
 /* 06C2C4 8006B6C4 00001825 */  move  $v1, $zero
-/* 06C2C8 8006B6C8 AC2C1164 */  sw    $t4, %lo(D_80121164)($at)
+/* 06C2C8 8006B6C8 AC2C1164 */  sw    $t4, %lo(gMapId)($at)
 .L8006B6CC:
 /* 06C2CC 8006B6CC 8E390000 */  lw    $t9, ($s1)
 /* 06C2D0 8006B6D0 2401FFFF */  li    $at, -1

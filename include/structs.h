@@ -205,7 +205,7 @@ typedef struct Settings {
   /* 0x003C */ u16 *courseTimesPtr[3];
   /* 0x0048 */ u8 worldId;
   /* 0x0049 */ u8 courseId;
-  /* 0x004A */ u8 gObjectCount;
+  /* 0x004A */ u8 gNumRacers;
   /* 0x004B */ u8 newGame;
   /* 0x004C */ Settings4C *unk4C;
   /* 0x0050 */ u32 filename;

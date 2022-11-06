@@ -256,7 +256,7 @@ extern u16 D_800DC7A8[8];
 
 extern s16 D_800DC7B8[52];
 
-extern s16 D_800DC820[16];
+extern s16 gBossVehicles[16];
 
 extern s8 D_800DC840[8];
 

@@ -9,11 +9,11 @@ glabel func_8001AE64
 /* 01BA80 8001AE80 A0400114 */  sb    $zero, 0x114($v0)
 /* 01BA84 8001AE84 A0400116 */  sb    $zero, 0x116($v0)
 /* 01BA88 8001AE88 A0400115 */  sb    $zero, 0x115($v0)
-/* 01BA8C 8001AE8C 3C0E8012 */  lui   $t6, %hi(D_8011AEE8) # $t6, 0x8012
-/* 01BA90 8001AE90 8DCEAEE8 */  lw    $t6, %lo(D_8011AEE8)($t6)
-/* 01BA94 8001AE94 3C198012 */  lui   $t9, %hi(gObjectCount) # $t9, 0x8012
+/* 01BA8C 8001AE8C 3C0E8012 */  lui   $t6, %hi(gRacersByPosition) # $t6, 0x8012
+/* 01BA90 8001AE90 8DCEAEE8 */  lw    $t6, %lo(gRacersByPosition)($t6)
+/* 01BA94 8001AE94 3C198012 */  lui   $t9, %hi(gNumRacers) # $t9, 0x8012
 /* 01BA98 8001AE98 8DCF0000 */  lw    $t7, ($t6)
-/* 01BA9C 8001AE9C 8F39AEF0 */  lw    $t9, %lo(gObjectCount)($t9)
+/* 01BA9C 8001AE9C 8F39AEF0 */  lw    $t9, %lo(gNumRacers)($t9)
 /* 01BAA0 8001AEA0 8DF80064 */  lw    $t8, 0x64($t7)
 /* 01BAA4 8001AEA4 00404025 */  move  $t0, $v0
 /* 01BAA8 8001AEA8 34108CA1 */  li    $s0, 36001
@@ -23,8 +23,8 @@ glabel func_8001AE64
 /* 01BAB8 8001AEB8 AFB80034 */   sw    $t8, 0x34($sp)
 /* 01BABC 8001AEBC 00006025 */  move  $t4, $zero
 .L8001AEC0:
-/* 01BAC0 8001AEC0 3C0E8012 */  lui   $t6, %hi(D_8011AEE8) # $t6, 0x8012
-/* 01BAC4 8001AEC4 8DCEAEE8 */  lw    $t6, %lo(D_8011AEE8)($t6)
+/* 01BAC0 8001AEC0 3C0E8012 */  lui   $t6, %hi(gRacersByPosition) # $t6, 0x8012
+/* 01BAC4 8001AEC4 8DCEAEE8 */  lw    $t6, %lo(gRacersByPosition)($t6)
 /* 01BAC8 8001AEC8 00000000 */  nop   
 /* 01BACC 8001AECC 01CC7821 */  addu  $t7, $t6, $t4
 /* 01BAD0 8001AED0 8DF80000 */  lw    $t8, ($t7)
@@ -109,8 +109,8 @@ glabel func_8001AE64
 /* 01BC00 8001B000 A1190114 */  sb    $t9, 0x114($t0)
 /* 01BC04 8001B004 AFA70034 */  sw    $a3, 0x34($sp)
 .L8001B008:
-/* 01BC08 8001B008 3C0E8012 */  lui   $t6, %hi(gObjectCount) # $t6, 0x8012
-/* 01BC0C 8001B00C 8DCEAEF0 */  lw    $t6, %lo(gObjectCount)($t6)
+/* 01BC08 8001B008 3C0E8012 */  lui   $t6, %hi(gNumRacers) # $t6, 0x8012
+/* 01BC0C 8001B00C 8DCEAEF0 */  lw    $t6, %lo(gNumRacers)($t6)
 /* 01BC10 8001B010 25AD0001 */  addiu $t5, $t5, 1
 /* 01BC14 8001B014 01AE082A */  slt   $at, $t5, $t6
 /* 01BC18 8001B018 1420FFA9 */  bnez  $at, .L8001AEC0

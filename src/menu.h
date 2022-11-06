@@ -670,7 +670,7 @@ extern char *sInsertControllerPakMenuText[3];
 extern char *sNoControllerPakMenuText[5];
 extern char *sInsertRumblePakMenuText[4];
 extern s32 *D_80126C2C;
-extern Settings *D_80126530[4];
+extern Settings *gSavefileData[4];
 
 extern DrawTexture D_800DFC10[2];
 extern DrawTexture D_800DFC20[2];

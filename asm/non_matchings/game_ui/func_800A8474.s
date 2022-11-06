@@ -1256,8 +1256,8 @@ glabel func_800A8474
 /* 0AA2C0 800A96C0 26526CDC */  addiu $s2, %lo(D_80126CDC) # addiu $s2, $s2, 0x6cdc
 /* 0AA2C4 800A96C4 10400012 */  beqz  $v0, .L800A9710
 /* 0AA2C8 800A96C8 2413FFFF */   li    $s3, -1
-/* 0AA2CC 800A96CC 3C058012 */  lui   $a1, %hi(D_80126D80) # $a1, 0x8012
-/* 0AA2D0 800A96D0 24A56D80 */  addiu $a1, %lo(D_80126D80) # addiu $a1, $a1, 0x6d80
+/* 0AA2CC 800A96CC 3C058012 */  lui   $a1, %hi(gHudSprites) # $a1, 0x8012
+/* 0AA2D0 800A96D0 24A56D80 */  addiu $a1, %lo(gHudSprites) # addiu $a1, $a1, 0x6d80
 /* 0AA2D4 800A96D4 000268C0 */  sll   $t5, $v0, 3
 /* 0AA2D8 800A96D8 00AD7021 */  addu  $t6, $a1, $t5
 /* 0AA2DC 800A96DC ADC00000 */  sw    $zero, ($t6)

@@ -411,9 +411,9 @@ glabel func_800AA600
 /* 0AB7EC 800AABEC 8C422834 */  lw    $v0, %lo(D_800E2834)($v0)
 /* 0AB7F0 800AABF0 2401FFFE */  li    $at, -2
 /* 0AB7F4 800AABF4 3C058012 */  lui   $a1, %hi(D_80127180) # $a1, 0x8012
-/* 0AB7F8 800AABF8 3C0D8012 */  lui   $t5, %hi(D_80126D80) # $t5, 0x8012
+/* 0AB7F8 800AABF8 3C0D8012 */  lui   $t5, %hi(gHudSprites) # $t5, 0x8012
 /* 0AB7FC 800AABFC 24A57180 */  addiu $a1, %lo(D_80127180) # addiu $a1, $a1, 0x7180
-/* 0AB800 800AAC00 25AD6D80 */  addiu $t5, %lo(D_80126D80) # addiu $t5, $t5, 0x6d80
+/* 0AB800 800AAC00 25AD6D80 */  addiu $t5, %lo(gHudSprites) # addiu $t5, $t5, 0x6d80
 /* 0AB804 800AAC04 0000C012 */  mflo  $t8
 /* 0AB808 800AAC08 00781821 */  addu  $v1, $v1, $t8
 /* 0AB80C 800AAC0C 1441001B */  bne   $v0, $at, .L800AAC7C

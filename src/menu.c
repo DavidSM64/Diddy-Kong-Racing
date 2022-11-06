@@ -136,7 +136,7 @@ s32 D_80126520;
 s32 D_80126524;
 s32 D_80126528;
 s32 D_8012652C;
-Settings *D_80126530[4];
+Settings *gSavefileData[4];
 s8 D_80126540;
 s8 D_80126541;
 s32 D_80126544;
@@ -1738,19 +1738,19 @@ void func_80081218(void) {
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     sp20 = ((numLevels * 4) + (numWorlds * 2) + 0x11B) & ~3;
     sp28 = numLevels * 4;
-    D_80126530[0] = allocate_from_main_pool_safe(sp20 * 4, COLOUR_TAG_WHITE);
-    D_80126530[0] = D_80126530[0];
-    D_80126530[0]->courseFlagsPtr = (u8 *)D_80126530[0] + sizeof(Settings);
-    D_80126530[0]->balloonsPtr = (u8 *)D_80126530[0]->courseFlagsPtr + sp28;
-    D_80126530[1] = (u8 *)D_80126530[0] + sp20;
-    D_80126530[1]->courseFlagsPtr = (u8 *)D_80126530[1] + sizeof(Settings);
-    D_80126530[1]->balloonsPtr = (u8 *)D_80126530[1]->courseFlagsPtr + sp28;
-    D_80126530[2] = (u8 *)D_80126530[1] + sp20;
-    D_80126530[2]->courseFlagsPtr = (u8 *)D_80126530[2] + sizeof(Settings);
-    D_80126530[2]->balloonsPtr = (u8 *)D_80126530[2]->courseFlagsPtr + sp28;
-    D_80126530[3] = (u8 *)D_80126530[2] + sp20;
-    D_80126530[3]->courseFlagsPtr = (u8 *)D_80126530[3] + sizeof(Settings);
-    D_80126530[3]->balloonsPtr = (u8 *)D_80126530[3]->courseFlagsPtr + sp28;
+    gSavefileData[0] = allocate_from_main_pool_safe(sp20 * 4, COLOUR_TAG_WHITE);
+    gSavefileData[0] = gSavefileData[0];
+    gSavefileData[0]->courseFlagsPtr = (u8 *)gSavefileData[0] + sizeof(Settings);
+    gSavefileData[0]->balloonsPtr = (u8 *)gSavefileData[0]->courseFlagsPtr + sp28;
+    gSavefileData[1] = (u8 *)gSavefileData[0] + sp20;
+    gSavefileData[1]->courseFlagsPtr = (u8 *)gSavefileData[1] + sizeof(Settings);
+    gSavefileData[1]->balloonsPtr = (u8 *)gSavefileData[1]->courseFlagsPtr + sp28;
+    gSavefileData[2] = (u8 *)gSavefileData[1] + sp20;
+    gSavefileData[2]->courseFlagsPtr = (u8 *)gSavefileData[2] + sizeof(Settings);
+    gSavefileData[2]->balloonsPtr = (u8 *)gSavefileData[2]->courseFlagsPtr + sp28;
+    gSavefileData[3] = (u8 *)gSavefileData[2] + sp20;
+    gSavefileData[3]->courseFlagsPtr = (u8 *)gSavefileData[3] + sizeof(Settings);
+    gSavefileData[3]->balloonsPtr = (u8 *)gSavefileData[3]->courseFlagsPtr + sp28;
     gCheatsAssetData = get_misc_asset(MISC_ASSET_UNK41);
     gNumberOfCheats = (s32)(*gCheatsAssetData);
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
@@ -2271,7 +2271,7 @@ void func_800828B8(void) {
     for (i = 0; i < numLevels; i++) {
         settings->courseFlagsPtr[i] = 0;
         for (numWorlds = 0; numWorlds < 3; numWorlds++) {
-            settings->courseFlagsPtr[i] |= D_80126530[numWorlds]->courseFlagsPtr[i];
+            settings->courseFlagsPtr[i] |= gSavefileData[numWorlds]->courseFlagsPtr[i];
         }
     }
 
@@ -2280,10 +2280,10 @@ void func_800828B8(void) {
     settings->bosses = 0;
     settings->cutsceneFlags = 0;
     for (i = 0; i < 3; i++) {
-        settings->trophies |= D_80126530[i]->trophies;
-        settings->keys |= D_80126530[i]->keys;
-        settings->bosses |= D_80126530[i]->bosses;
-        settings->cutsceneFlags |= D_80126530[i]->cutsceneFlags;
+        settings->trophies |= gSavefileData[i]->trophies;
+        settings->keys |= gSavefileData[i]->keys;
+        settings->bosses |= gSavefileData[i]->bosses;
+        settings->cutsceneFlags |= gSavefileData[i]->cutsceneFlags;
     }
 }
 
@@ -3202,7 +3202,7 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, 
 void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     s32 i;
     for (i = 0; i < 3; i++) {
-        if (D_80126530[i]->newGame != 0) {
+        if (gSavefileData[i]->newGame != 0) {
             arg0[*arg1].unk0 = 1;
             arg0[*arg1].unk1 = 0;
             arg0[*arg1].unk2 = 0;
@@ -5348,7 +5348,7 @@ s32 menu_file_select_loop(s32 updateRate) {
         if (gOpacityDecayTimer >= 3) {
             for (i = 0; i < 3; i++) {
                 gSavefileInfo[i].isAdventure2 = 0;
-                if (D_80126530[i]->newGame) {
+                if (gSavefileData[i]->newGame) {
                     gSavefileInfo[i].isStarted = 0;
                     gSavefileInfo[i].balloonCount = 0;
                     gSavefileInfo[i].name[0] = 'D';
@@ -5356,12 +5356,12 @@ s32 menu_file_select_loop(s32 updateRate) {
                     gSavefileInfo[i].name[2] = 'R';
                     gSavefileInfo[i].name[3] = '\0';
                 } else {
-                    if (D_80126530[i]->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
+                    if (gSavefileData[i]->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
                         gSavefileInfo[i].isAdventure2 = TRUE;
                     }
                     gSavefileInfo[i].isStarted = TRUE;
-                    gSavefileInfo[i].balloonCount = *D_80126530[i]->balloonsPtr;
-                    decompress_filename_string(D_80126530[i]->filename, gSavefileInfo[i].name, 3);
+                    gSavefileInfo[i].balloonCount = *gSavefileData[i]->balloonsPtr;
+                    decompress_filename_string(gSavefileData[i]->filename, gSavefileInfo[i].name, 3);
                 }
             }
             gOpacityDecayTimer = 0;
@@ -7701,7 +7701,7 @@ s32 get_multiplayer_racer_count(void) {
 }
 
 Settings **func_8009C490(void) {
-    return (Settings **)D_80126530;
+    return (Settings **)gSavefileData;
 }
 
 void func_8009C49C(void) {

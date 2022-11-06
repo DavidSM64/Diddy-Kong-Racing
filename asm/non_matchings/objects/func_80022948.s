@@ -166,21 +166,21 @@ glabel func_80022948
 /* 0237CC 80022BCC 27A40058 */  addiu $a0, $sp, 0x58
 /* 0237D0 80022BD0 0C003A95 */  jal   spawn_object
 /* 0237D4 80022BD4 24050001 */   li    $a1, 1
-/* 0237D8 80022BD8 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
-/* 0237DC 80022BDC 8D6BAEE4 */  lw    $t3, %lo(gObjectStructArrayPtr)($t3)
-/* 0237E0 80022BE0 3C0D8012 */  lui   $t5, %hi(D_8011AEE8) # $t5, 0x8012
+/* 0237D8 80022BD8 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
+/* 0237DC 80022BDC 8D6BAEE4 */  lw    $t3, %lo(gRacers)($t3)
+/* 0237E0 80022BE0 3C0D8012 */  lui   $t5, %hi(gRacersByPosition) # $t5, 0x8012
 /* 0237E4 80022BE4 AD620004 */  sw    $v0, 4($t3)
-/* 0237E8 80022BE8 8DADAEE8 */  lw    $t5, %lo(D_8011AEE8)($t5)
-/* 0237EC 80022BEC 3C0C8012 */  lui   $t4, %hi(D_8011AEEC) # $t4, 0x8012
+/* 0237E8 80022BE8 8DADAEE8 */  lw    $t5, %lo(gRacersByPosition)($t5)
+/* 0237EC 80022BEC 3C0C8012 */  lui   $t4, %hi(gRacersByPort) # $t4, 0x8012
 /* 0237F0 80022BF0 ADA20004 */  sw    $v0, 4($t5)
-/* 0237F4 80022BF4 8D8CAEEC */  lw    $t4, %lo(D_8011AEEC)($t4)
+/* 0237F4 80022BF4 8D8CAEEC */  lw    $t4, %lo(gRacersByPort)($t4)
 /* 0237F8 80022BF8 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 0237FC 80022BFC 44810000 */  mtc1  $at, $f0
 /* 023800 80022C00 AD820004 */  sw    $v0, 4($t4)
 /* 023804 80022C04 AC40003C */  sw    $zero, 0x3c($v0)
-/* 023808 80022C08 3C018012 */  lui   $at, %hi(gObjectCount) # $at, 0x8012
+/* 023808 80022C08 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
 /* 02380C 80022C0C 240E0002 */  li    $t6, 2
-/* 023810 80022C10 AC2EAEF0 */  sw    $t6, %lo(gObjectCount)($at)
+/* 023810 80022C10 AC2EAEF0 */  sw    $t6, %lo(gNumRacers)($at)
 /* 023814 80022C14 8C500064 */  lw    $s0, 0x64($v0)
 /* 023818 80022C18 2418000A */  li    $t8, 10
 /* 02381C 80022C1C A21801D6 */  sb    $t8, 0x1d6($s0)

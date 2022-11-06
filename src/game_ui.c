@@ -269,8 +269,7 @@ u8 D_80126D71;
 s32 D_80126D74;
 s32 D_80126D78;
 u16 D_80126D7C;
-DrawTexture D_80126D80;
-s32 D_80126D88[254];
+DrawTexture gHudSprites[128];
 s32 D_80127180;
 s32 D_80127184;
 u8 D_80127188;
@@ -475,8 +474,8 @@ block_95:
                 D_80126CD1 = 0;
                 func_8007BF1C(TRUE);
                 if (D_80127180) {
-                    (&D_80126D80)[D_80127180].texture = NULL;
-                    render_textured_rectangle(&gHUDCurrDisplayList, &D_80126D80, 0, 0, 255, 255, 255, 255);
+                    gHudSprites[D_80127180].texture = NULL;
+                    render_textured_rectangle(&gHUDCurrDisplayList, &gHudSprites, 0, 0, 255, 255, 255, 255);
                 }
                 *dList = gHUDCurrDisplayList;
                 *mtx = gHUDCurrMatrix;
@@ -1765,8 +1764,8 @@ s32 func_800A8474(Gfx **dList, Matrix **mtx, TriangleList **triList, s32 updateR
         }
     }
     if (D_80127180 != 0) {
-        (&D_80126D80)[D_80127180].texture = NULL;
-        render_textured_rectangle(&gHUDCurrDisplayList, &D_80126D80, 0, 0, 255, 255, 255, 255);
+        gHudSprites[D_80127180].texture = NULL;
+        render_textured_rectangle(&gHUDCurrDisplayList, &gHudSprites, 0, 0, 255, 255, 255, 255);
     }
     *dList = gHUDCurrDisplayList;
     *mtx = gHUDCurrMatrix;
