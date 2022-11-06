@@ -348,7 +348,7 @@ glabel func_8005C364
 /* 05D458 8005C858 10000001 */  b     .L8005C860
 /* 05D45C 8005C85C 24052500 */   li    $a1, 9472
 .L8005C860:
-/* 05D460 8005C860 0C006EB2 */  jal   get_object_struct
+/* 05D460 8005C860 0C006EB2 */  jal   get_racer_object
 /* 05D464 8005C864 AFA50038 */   sw    $a1, 0x38($sp)
 /* 05D468 8005C868 AFA20030 */  sw    $v0, 0x30($sp)
 /* 05D46C 8005C86C C626000C */  lwc1  $f6, 0xc($s1)

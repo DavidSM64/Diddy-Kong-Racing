@@ -180,7 +180,7 @@ glabel func_80092188
 /* 093010 80092410 172001F0 */  bnez  $t9, .L80092BD4
 /* 093014 80092414 8FBF001C */   lw    $ra, 0x1c($sp)
 /* 093018 80092418 8C84F4C4 */  lw    $a0, %lo(gTrackIdForPreview)($a0)
-/* 09301C 8009241C 0C01AC3E */  jal   func_8006B0F8
+/* 09301C 8009241C 0C01AC3E */  jal   get_map_available_vehicles
 /* 093020 80092420 00000000 */   nop   
 /* 093024 80092424 3C0C8012 */  lui   $t4, %hi(D_801263E0) # $t4, 0x8012
 /* 093028 80092428 258C63E0 */  addiu $t4, %lo(D_801263E0) # addiu $t4, $t4, 0x63e0

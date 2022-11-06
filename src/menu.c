@@ -5524,7 +5524,7 @@ void func_8008F00C(s32 arg0) {
                 D_801269EC = gTrackSelectY;
                 break;
             case 1:
-                vehicle = func_8006B0AC(gTrackIdForPreview);
+                vehicle = get_map_default_vehicle(gTrackIdForPreview);
                 for (i = 0; i < gNumberOfActivePlayers; i++) {
                     D_801269C4[i] = 0;
                     gPlayerSelectVehicle[i] = vehicle;
@@ -5731,7 +5731,7 @@ void render_track_select_setup_ui(s32 updateRate) {
         if (sMenuGuiOpacity < 0) {
             sMenuGuiOpacity = 0;
         }
-        sp7C = func_8006B0F8(gTrackIdForPreview);
+        sp7C = get_map_available_vehicles(gTrackIdForPreview);
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_colour(192, 192, 255, 0, sMenuGuiOpacity);
         set_text_background_colour(0, 0, 0, 0);
@@ -6018,7 +6018,7 @@ void menu_5_init(void) {
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
     mapId = settings->unk4C->unk2;
-    gPlayerSelectVehicle[PLAYER_ONE] = func_8006B0AC(mapId);
+    gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     result = func_8006B14C(mapId);
     if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & 2)))) {
         temp = D_800E0758[mapId];
@@ -6099,10 +6099,10 @@ s32 menu_5_loop(s32 updateRate) {
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_80092E94(updateRate, sp1C, sp20);
     if (sp1C < 2) {
-        gPlayerSelectVehicle[PLAYER_ONE] = func_8006B0AC(mapId);
+        gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     }
     vehicle = gPlayerSelectVehicle[PLAYER_ONE];
-    sp30 = func_8006B0F8(mapId);
+    sp30 = get_map_available_vehicles(mapId);
     vehicle2 = vehicle;
     func_8008E4EC();
     if (gMenuDelay == 0) {
@@ -6947,10 +6947,10 @@ void menu_trophy_race_round_init(void) {
     }
 
     for (i = 0; i < gNumberOfActivePlayers; i++) {
-        gPlayerSelectVehicle[i] = func_8006B0AC(levelId);
+        gPlayerSelectVehicle[i] = get_map_default_vehicle(levelId);
     }
 
-    set_level_default_vehicle(func_8006B0AC(levelId));
+    set_level_default_vehicle(get_map_default_vehicle(levelId));
     load_level_for_menu(levelId, -1, 1);
 
     gMenuDelay = 0;

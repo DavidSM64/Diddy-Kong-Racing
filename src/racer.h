@@ -266,7 +266,7 @@ void func_80042D20(Object *, Object_Racer *, s32);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
-void func_800576E0(Object *obj, Object_Racer *racer, s32 arg2);
+void drop_bananas(Object *obj, Object_Racer *racer, s32 numBananas);
 void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);

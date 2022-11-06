@@ -9,7 +9,7 @@ glabel obj_loop_treasuresucker
 /* 03DC60 8003D060 AFA5004C */  sw    $a1, 0x4c($sp)
 /* 03DC64 8003D064 00803025 */  move  $a2, $a0
 /* 03DC68 8003D068 8C840078 */  lw    $a0, 0x78($a0)
-/* 03DC6C 8003D06C 0C006EB2 */  jal   get_object_struct
+/* 03DC6C 8003D06C 0C006EB2 */  jal   get_racer_object
 /* 03DC70 8003D070 AFA60048 */   sw    $a2, 0x48($sp)
 /* 03DC74 8003D074 8FA60048 */  lw    $a2, 0x48($sp)
 /* 03DC78 8003D078 10400088 */  beqz  $v0, .L8003D29C

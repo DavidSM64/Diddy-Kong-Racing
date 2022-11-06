@@ -22,7 +22,7 @@ glabel func_80022948
 /* 023598 80022998 AC29AEFC */  sw    $t1, %lo(D_8011AEFC)($at)
 /* 02359C 8002299C A04A0052 */  sb    $t2, 0x52($v0)
 /* 0235A0 800229A0 A44B0054 */  sh    $t3, 0x54($v0)
-/* 0235A4 800229A4 0C006EB2 */  jal   get_object_struct
+/* 0235A4 800229A4 0C006EB2 */  jal   get_racer_object
 /* 0235A8 800229A8 00002025 */   move  $a0, $zero
 /* 0235AC 800229AC 8C500064 */  lw    $s0, 0x64($v0)
 /* 0235B0 800229B0 3C018012 */  lui   $at, %hi(D_8011AEF6) # $at, 0x8012

@@ -387,7 +387,7 @@ void func_80048C7C(Object* obj, Object_Racer* racer) {
         return;
     }
     if (racer->attackType != ATTACK_SQUISHED) {
-        func_800576E0(obj, racer, 2);
+        drop_bananas(obj, racer, 2);
     }
     play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
     switch (racer->attackType) {
@@ -670,7 +670,7 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
         return;
     }
     if (attackType != ATTACK_SQUISHED) {
-        func_800576E0(obj, racer, 2);
+        drop_bananas(obj, racer, 2);
     }
     racer->unk18C = 360;
     if (racer->unk1C9 == 8) {
@@ -1539,7 +1539,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             }
         }
         if (tempRacer->unk188 > 0) {
-            func_800576E0(obj, tempRacer, tempRacer->unk188);
+            drop_bananas(obj, tempRacer, tempRacer->unk188);
         }
         tempRacer->playerIndex = gCurrentPlayerIndex;
         update_player_camera(obj, tempRacer, delta);
@@ -1788,7 +1788,7 @@ void func_800521C4(Object *obj, Object_Racer *racer, UNUSED s32 arg2) {
 
     foundObj = 0;
     if (func_80023568()) {
-        tempObj = get_object_struct(1);
+        tempObj = get_racer_object(1);
         foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
     }
     if (!foundObj) {
@@ -2318,7 +2318,7 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
     } else {
         if ((racer->squish_timer == 0) || racer->attackType != 4) {
             if ((racer->attackType != 2) && (racer->attackType != 4)) {
-                func_800576E0(obj, racer, 2);
+                drop_bananas(obj, racer, 2);
             }
             racer->unk18C = 360;
             if (racer->unk1C9 == 8) {
@@ -2963,7 +2963,7 @@ void func_800575EC(Object *obj, Object_Racer *racer) {
     guMtxXFMF(mf, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
+GLOBAL_ASM("asm/non_matchings/racer/drop_bananas.s")
 
 /**
  * Generate the steer velocity by taking the current steer velocity and getting the difference between the stick tilt.
@@ -3859,7 +3859,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     func_80018CE0(obj, xPos, yPos, zPos, updateRate);
     if (racer->unk188 > 0) {
-        func_800576E0(obj, racer, racer->unk188);
+        drop_bananas(obj, racer, racer->unk188);
     }
     if (racer->unk148 != NULL) {
         racer->unk148 = NULL;

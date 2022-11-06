@@ -568,7 +568,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
     ((Object_54_80034E9C *) obj->unk54)->unk2C = 0.612f;
     ((Object_54_80034E9C *) obj->unk54)->unk28 = 0.0f;
 
-    playerObj = get_object_struct(0);
+    playerObj = get_racer_object(0);
     if (playerObj) {
         xDiff = obj->segment.trans.x_position - playerObj->segment.trans.x_position;
         zDiff = playerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -710,7 +710,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 speed) {
     Object *playerObj;
     Object_4C *obj4C;
 
-    playerObj = get_object_struct(0);
+    playerObj = get_racer_object(0);
     if (playerObj != NULL) {
         obj4C = obj->unk4C;
         if (obj4C->unk13 < 0xC8) {
@@ -829,7 +829,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
 
     obj->segment.trans.unk6 &= 0xBFFF;
     obj->segment.trans.unk6 |= 0x1000;
-    get_object_struct(0); // Unused. I guess the developers forgot to remove this?
+    get_racer_object(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->unk4C->unk13 < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
@@ -875,7 +875,7 @@ void obj_loop_unknown58(Object *obj, s32 speed) {
     }
     set_ghost_position_and_rotation(obj);
     func_800AFC3C(obj, speed);
-    someOtherObj = get_object_struct(0);
+    someOtherObj = get_racer_object(0);
     someOtherObj64 = &someOtherObj->unk64->unkid58;
     obj60 = obj->unk60;
     if (obj60->unk0 == 1) {
@@ -910,7 +910,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 speed) {
     Object_Racer *someObj64;
 
     if (obj->unk7C.word < 0) {
-        someObj = get_object_struct(obj->unk78);
+        someObj = get_racer_object(obj->unk78);
         if (someObj != NULL) {
             obj64 = &obj->unk64->character_flag;
             someObj64 = &someObj->unk64->racer;
@@ -1318,7 +1318,7 @@ void obj_loop_animcar(Object *obj, s32 speed) {
     temp_v0 = obj->unk78;
     someObj = NULL;
     if (temp_v0 != 0) {
-        someObj = get_object_struct(temp_v0 - 1);
+        someObj = get_racer_object(temp_v0 - 1);
     }
     obj->unk7C.word = func_8001F460(obj, speed, obj);
     obj->segment.trans.unk6 |= 0x4000;

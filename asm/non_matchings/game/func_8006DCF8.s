@@ -75,7 +75,7 @@ glabel func_8006DCF8
 /* 06E9FC 8006DDFC 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
 /* 06EA00 8006DE00 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
 /* 06EA04 8006DE04 31C4007F */  andi  $a0, $t6, 0x7f
-/* 06EA08 8006DE08 0C01AC2B */  jal   func_8006B0AC
+/* 06EA08 8006DE08 0C01AC2B */  jal   get_map_default_vehicle
 /* 06EA0C 8006DE0C AD040000 */   sw    $a0, ($t0)
 /* 06EA10 8006DE10 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06EA14 8006DE14 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
@@ -247,7 +247,7 @@ glabel L8006E054
 /* 06EC8C 8006E08C 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
 /* 06EC90 8006E090 AD040000 */  sw    $a0, ($t0)
 /* 06EC94 8006E094 AD2E0000 */  sw    $t6, ($t1)
-/* 06EC98 8006E098 0C01AC2B */  jal   func_8006B0AC
+/* 06EC98 8006E098 0C01AC2B */  jal   get_map_default_vehicle
 /* 06EC9C 8006E09C AD790000 */   sw    $t9, ($t3)
 /* 06ECA0 8006E0A0 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
 /* 06ECA4 8006E0A4 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012

@@ -130,7 +130,7 @@ glabel render_track_select_setup_ui
 /* 091CF8 800910F8 AFC00000 */  sw    $zero, ($fp)
 .L800910FC:
 /* 091CFC 800910FC 8C84F4C4 */  lw    $a0, %lo(gTrackIdForPreview)($a0)
-/* 091D00 80091100 0C01AC3E */  jal   func_8006B0F8
+/* 091D00 80091100 0C01AC3E */  jal   get_map_available_vehicles
 /* 091D04 80091104 00000000 */   nop   
 /* 091D08 80091108 3C04800E */  lui   $a0, %hi(gTrackIdForPreview) # $a0, 0x800e
 /* 091D0C 8009110C 8C84F4C4 */  lw    $a0, %lo(gTrackIdForPreview)($a0)

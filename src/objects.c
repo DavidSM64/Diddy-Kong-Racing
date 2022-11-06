@@ -1543,7 +1543,7 @@ Object **func_8001BAAC(s32 *numberOfObjects) {
     return D_8011AEE8;
 }
 
-Object *get_object_struct(s32 indx) {
+Object *get_racer_object(s32 indx) {
     if (gObjectCount == 0) {
         return NULL;
     }
@@ -1897,7 +1897,7 @@ void func_800228EC(s32 arg0) {
     Object_Racer *object_64;
 
     D_8011AEF7 = 3;
-    object_64 = &get_object_struct(0)->unk64->racer;
+    object_64 = &get_racer_object(0)->unk64->racer;
     object_64->unk190 = 0;
     object_64->unk192 = 0;
     object_64->lapCount = 0;

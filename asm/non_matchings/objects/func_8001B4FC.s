@@ -9,7 +9,7 @@ glabel func_8001B4FC
 /* 01C118 8001B518 0C01BAA4 */  jal   get_settings
 /* 01C11C 8001B51C A020C734 */   sb    $zero, %lo(D_800DC734)($at)
 /* 01C120 8001B520 AFA20020 */  sw    $v0, 0x20($sp)
-/* 01C124 8001B524 0C01AC2B */  jal   func_8006B0AC
+/* 01C124 8001B524 0C01AC2B */  jal   get_map_default_vehicle
 /* 01C128 8001B528 02002025 */   move  $a0, $s0
 /* 01C12C 8001B52C 3C0E8012 */  lui   $t6, %hi(D_8011AE82) # $t6, 0x8012
 /* 01C130 8001B530 85CEAE82 */  lh    $t6, %lo(D_8011AE82)($t6)

@@ -172,7 +172,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             break;
     }
 
-    temp_v0_4 = get_object_struct(0);
+    temp_v0_4 = get_racer_object(0);
     temp_f20 = temp_v0_4->segment.trans.x_position - obj->segment.trans.x_position;
     temp_f14 = temp_v0_4->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14)) < 700.0) {
@@ -380,7 +380,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
 #endif
 
 void func_8005D048(Object *object, Object_Racer *arg1, s32 arg2) {
-    Object *sp1C = get_object_struct(0);
+    Object *sp1C = get_racer_object(0);
     arg1->transparency = 0xFF;
     if (!func_8001139C()) {
         if ((object->segment.unk30 + arg2) < sp1C->segment.unk30) {

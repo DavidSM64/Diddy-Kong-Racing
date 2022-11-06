@@ -84,8 +84,9 @@ void func_80070B04(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size)
 s16 func_8006ABB4(s32 arg0);
 s32 func_8006B018(s8 arg0);
 s32 func_8006B054(s8 arg0);
-Vehicle func_8006B0AC(MapId mapId);
-s32 func_8006B0F8(MapId mapId);
+Vehicle get_map_default_vehicle(MapId mapId);
+// Returns bitfield with (1 << Vehicle) set for every available vehicle.
+s32 get_map_available_vehicles(MapId mapId);
 s8 func_8006B14C(MapId mapId);
 s8 func_8006B190(MapId mapId);
 MapId get_hub_area_id(s32 worldId);

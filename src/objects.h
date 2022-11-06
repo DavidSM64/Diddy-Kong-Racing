@@ -334,7 +334,7 @@ s32 func_8001BA64();
 Object **get_racer_objects(s32 *cnt);
 s32 *func_8001BA90(s32 *arg0);
 Object **func_8001BAAC(s32 *numberOfObjects);
-Object *get_object_struct(s32 indx);
+Object *get_racer_object(s32 indx);
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 u32 func_8001BD94(s32 arg0);
 void func_8001D1AC(void);

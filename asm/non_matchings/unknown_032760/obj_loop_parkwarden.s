@@ -68,7 +68,7 @@ glabel obj_loop_parkwarden
 /* 039FDC 800393DC 00002025 */  move  $a0, $zero
 /* 039FE0 800393E0 E7A0009C */  swc1  $f0, 0x9c($sp)
 /* 039FE4 800393E4 E600001C */  swc1  $f0, 0x1c($s0)
-/* 039FE8 800393E8 0C006EB2 */  jal   get_object_struct
+/* 039FE8 800393E8 0C006EB2 */  jal   get_racer_object
 /* 039FEC 800393EC E6000024 */   swc1  $f0, 0x24($s0)
 /* 039FF0 800393F0 00401825 */  move  $v1, $v0
 /* 039FF4 800393F4 10400019 */  beqz  $v0, .L8003945C
