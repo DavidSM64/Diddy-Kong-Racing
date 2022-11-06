@@ -182,7 +182,7 @@ s32 func_800249E0(s32 arg0) {
 
 #ifdef NON_EQUIVALENT
 void func_8002C0C4(s32 modelId);
-void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u32 arg6) {
+void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;
 
@@ -223,7 +223,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, u32 arg3, u32 arg4, u32 arg5, u
     func_8000C8F8(arg6, 0);
     func_8000C8F8(arg5, 1);
     D_8011D37C = arg2;
-    func_8000CC7C(arg3, arg4, arg2);
+    func_8000CC7C(vehicle, arg4, arg2);
     func_8000B020(72, 64);
     if (arg0 == 0 && arg4 == 0) {
         func_800C01D8(&D_800DC87C);

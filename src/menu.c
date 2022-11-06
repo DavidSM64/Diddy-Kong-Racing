@@ -5506,7 +5506,7 @@ UNUSED s32 func_8008E790(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
 
 void func_8008F00C(s32 arg0) {
-    s32 temp_v0_2;
+    Vehicle vehicle;
     s32 i;
     s32 temp;
 
@@ -5524,10 +5524,10 @@ void func_8008F00C(s32 arg0) {
                 D_801269EC = gTrackSelectY;
                 break;
             case 1:
-                temp_v0_2 = func_8006B0AC(gTrackIdForPreview);
+                vehicle = func_8006B0AC(gTrackIdForPreview);
                 for (i = 0; i < gNumberOfActivePlayers; i++) {
                     D_801269C4[i] = 0;
-                    gPlayerSelectVehicle[i] = temp_v0_2;
+                    gPlayerSelectVehicle[i] = vehicle;
                 }
                 gNumberOfReadyPlayers = 0;
                 D_800E0980 = 1;
