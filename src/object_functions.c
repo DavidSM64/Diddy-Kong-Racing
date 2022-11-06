@@ -1446,7 +1446,7 @@ void obj_loop_teleport(Object *obj, UNUSED s32 speed) {
             func_8006F338(temp->unk8);
             obj->unk78 = 0;
             play_sound_global(SOUND_WHOOSH2, NULL);
-            func_80000FDC(0x12A, 0, 1.0f);
+            func_80000FDC(SOUND_VOICE_TT_FUTURE_FUN_LAND, 0, 1.0f);
         }
     }
 }
@@ -1484,21 +1484,21 @@ void obj_loop_exit(Object *obj, UNUSED s32 speed) {
     f32 dist;
     f32 yDiff;
     Object_Exit *obj64;
-    s32 someBool;
+    s32 enableWarp;
     Object** racerObjects;
     s32 i;
     f32 temp;
 
     obj64 = &obj->unk64->exit;
-    someBool = TRUE;
+    enableWarp = TRUE;
     settings = get_settings();
     if ((obj64->unk14 == 0) && (settings->balloonsPtr[settings->worldId] == 8)) {
-        someBool = FALSE;
+        enableWarp = FALSE;
     }
     if ((obj64->unk14 == 1) && (settings->balloonsPtr[settings->worldId] < 8)) {
-        someBool = FALSE;
+        enableWarp = FALSE;
     }
-    if (someBool) {
+    if (enableWarp) {
         if (obj->unk4C->unk13 < obj64->unk10) {
             dist = obj64->unk10;
             racerObjects = get_racer_objects(&numberOfRacers);
