@@ -123,7 +123,7 @@ extern s32 gShowControllerPakMenu;
 /************ .bss ************/
 
 s32 *gTempAssetTable;
-s32 D_80121164;
+MapId D_80121164;
 LevelHeader *gCurrentLevelHeader;
 u8 **gLevelNames;
 s32 gNumberOfLevelHeaders;
@@ -152,7 +152,7 @@ UNUSED u8 D_80121268[0x2000]; // 0x2000 / 8192 bytes Padding?
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
-s32 D_801234F4;
+MapId D_801234F4;
 s32 D_801234F8;
 s32 D_801234FC;
 s32 D_80123500;
@@ -298,16 +298,16 @@ s32 func_8006B054(s8 arg0) {
     return out;
 }
 
-s32 func_8006B0AC(s32 arg0) {
-    if (arg0 > 0 && arg0 < gNumberOfLevelHeaders) {
-        return D_8012117C[arg0].unk2 & 0xF;
+s32 func_8006B0AC(MapId mapId) {
+    if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
+        return D_8012117C[mapId].unk2 & 0xF;
     }
     return 0;
 }
 
-s32 func_8006B0F8(s32 arg0) {
-    if (arg0 > 0 && arg0 < gNumberOfLevelHeaders) {
-        s32 temp = D_8012117C[arg0].unk2;
+s32 func_8006B0F8(MapId mapId) {
+    if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
+        s32 temp = D_8012117C[mapId].unk2;
         if (temp != 0) {
             return (temp >> 4) & 0xF;
         }
@@ -315,21 +315,21 @@ s32 func_8006B0F8(s32 arg0) {
     return 1;
 }
 
-s8 func_8006B14C(s32 arg0) {
-    if (arg0 >= 0 && arg0 < gNumberOfLevelHeaders) {
-        return D_8012117C[arg0].unk1;
+s8 func_8006B14C(MapId mapId) {
+    if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
+        return D_8012117C[mapId].unk1;
     }
     return -1;
 }
 
-s8 func_8006B190(s32 arg0) {
-    if (arg0 >= 0 && arg0 < gNumberOfLevelHeaders) {
-        return D_8012117C[arg0].unk0;
+s8 func_8006B190(MapId mapId) {
+    if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
+        return D_8012117C[mapId].unk0;
     }
     return 0;
 }
 
-s32 get_hub_area_id(s32 worldId) {
+MapId get_hub_area_id(s32 worldId) {
     s8 *hubAreaIds;
 
     if (worldId < 0 || worldId >= gNumberOfWorlds) {
@@ -352,9 +352,9 @@ s32 func_8006B240(void) {
 // This isn't matching, but there shouldn't be any issues (hopefully).
 #ifdef NON_EQUIVALENT
 
-void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
+void load_level(MapId levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
     s32 maxLevelCount;
-    s32 sp44;
+    MapId sp44;
     s32 noPlayers;
     s32 phi_s0;
     s32 vehicle;
@@ -393,7 +393,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     }
     maxLevelCount--;
     if (levelId >= maxLevelCount) {
-        levelId = 0;
+        levelId = MAP_ID_OVERWORLD;
     }
     offset = gTempAssetTable[levelId];
     size = gTempAssetTable[levelId + 1] - offset;
@@ -611,7 +611,7 @@ void func_8006BD10(f32 arg0) {
     }
 }
 
-s32 func_8006BD88(void) {
+MapId func_8006BD88(void) {
     return D_80121164;
 }
 
@@ -640,7 +640,7 @@ UNUSED u8 get_total_level_header_count(void) {
 /**
  * Returns the name of the level from the passed ID
  */
-u8 *get_level_name(s32 levelId) {
+u8 *get_level_name(MapId levelId) {
     u8 *levelName;
     u8 numberOfNullPointers = 0;
 
@@ -764,7 +764,7 @@ s8 func_8006C19C(void) {
 }
 
 // Push a stack onto D_801211C8
-void func_8006C1AC(s32 levelId, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
+void func_8006C1AC(MapId levelId, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
     D_801211C8[D_800DD328++] = levelId;
     D_801211C8[D_800DD328++] = entranceId;
     D_801211C8[D_800DD328++] = vehicleId;
@@ -1030,7 +1030,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
  * which is the value at D_80123508. Also does some other stuff.
  * Needs a better name!
  */
-void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId) {
+void load_level_2(MapId levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId) {
     func_8006ECFC(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
@@ -1222,7 +1222,7 @@ void ingame_logic_loop(s32 updateRate) {
     render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
-            D_801234F4 = 0x23;
+            D_801234F4 = MAP_ID_FUTURE_FUN_LAND;
             D_801234F8 = 1;
             D_80123504 = 0;
             D_800DD39C = 0;
@@ -1233,8 +1233,8 @@ void ingame_logic_loop(s32 updateRate) {
         D_800DD390 -= updateRate;
         if (D_800DD390 <= 0) {
             D_800DD390 = 0;
-            func_8006C1AC(0, 0, 0, 0);
-            func_8006C1AC(0x2B, 0, -1, 0xA);
+            func_8006C1AC(MAP_ID_OVERWORLD, 0, 0, 0);
+            func_8006C1AC(MAP_ID_WIZPIG_AMULET_CUTSCENE, 0, -1, 0xA);
             sp3C = TRUE;
         }
     }
@@ -1272,8 +1272,8 @@ void ingame_logic_loop(s32 updateRate) {
             func_8006C22C(&D_801234F4, &D_80123504, &i, &D_80123508);
             func_8006F42C();
             if (D_801234F4 < 0) {
-                if (D_801234F4 == -1 || D_801234F4 == -10) {
-                    if (D_801234F4 == -10 && is_in_two_player_adventure()) {
+                if (D_801234F4 == MAP_ID_UNK_NEG1 || D_801234F4 == MAP_ID_UNK_NEG10) {
+                    if (D_801234F4 == MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
                         func_8006F398();
                     }
                     buttonHeldInputs |= L_TRIG;
@@ -1500,7 +1500,7 @@ s32 get_level_default_vehicle(void) {
  * Calls load_level() with the same arguments, but also does some other stuff.
  * Needs a better name!
  */
-void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
+void load_level_3(MapId levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1580,7 +1580,7 @@ void func_8006DCF8(s32 updateRate) {
                 load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
                 break;
             case 14:
-                D_801234F4 = 0;
+                D_801234F4 = MAP_ID_OVERWORLD;
                 D_80123504 = 0;
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
@@ -1660,7 +1660,7 @@ void func_8006DCF8(s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
 #endif
 
-void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
+void load_level_for_menu(MapId levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
@@ -1669,7 +1669,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
             gSPEndDisplayList(gCurrDisplayList++);
         }
     }
-    if (levelId != -1) {
+    if (levelId != MAP_ID_UNK_NEG1) {
         load_level_3(levelId, numberOfPlayers, 0, 2, cutsceneId);
         gIsLoading = FALSE;
         return;
@@ -1830,7 +1830,7 @@ s32 is_reset_pressed(void) {
     return gNMIMesgBuf[0];
 }
 
-s32 func_8006EB14(void) {
+MapId func_8006EB14(void) {
     return D_801234F4;
 }
 

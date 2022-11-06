@@ -1465,10 +1465,10 @@ s32 func_8001B668(s32 arg0) {
     s16 sp2E;
     s16 sp2C;
     s32 temp_v0;
-    s32 sp24;
+    MapId mapId;
 
-    sp24 = func_800599A8();
-    if ((func_8006BD88() != sp24) || (D_800DC728 != D_8011AE82)) {
+    mapId = func_800599A8();
+    if ((func_8006BD88() != mapId) || (D_800DC728 != D_8011AE82)) {
         temp_v0 = func_800599B8(arg0, func_8006BD88(), D_8011AE82, &sp2E, &sp2C);
         if (temp_v0 == 0) {
             D_800DC728 = D_8011AE82;

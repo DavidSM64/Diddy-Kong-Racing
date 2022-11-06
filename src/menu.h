@@ -302,7 +302,7 @@ extern s32 D_800DF4B4;
 extern s32 gIsInTracksMode;
 extern s32 gNumberOfActivePlayers;
 extern s32 gIsInTwoPlayerAdventure;
-extern s32 gTrackIdForPreview;
+extern MapId gTrackIdForPreview;
 extern s32 gTrackSelectRow;
 extern s32 gSaveFileIndex;
 
@@ -766,7 +766,7 @@ void assign_vehicle_icon_textures(void);
 void func_8008E4B0(void);
 void func_8008F534(void);
 void func_80090ED8(s32 updateRate);
-s32 func_80092BE0(s32 arg0);
+s32 func_80092BE0(MapId mapId);
 void menu_5_init(void);
 void func_80093A0C(void);
 void n_alSynRemovePlayer(void);

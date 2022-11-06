@@ -3486,21 +3486,21 @@ void func_80059984(s32 arg0) {
     D_8011D5AC = arg0;
 }
 
-s32 func_800599A8(void) {
+MapId func_800599A8(void) {
     return D_8011D5AC;
 }
 
-s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s16 *arg3, s16 *arg4) {
+s32 func_800599B8(s32 arg0, MapId mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s32 temp_v0;
     s32 temp_t8;
     s16 sp2E;
 
     temp_t8 = (D_8011D59C + 1) & 1;
-    temp_v0 = func_80074B34(arg0, (s16)arg1, arg2, arg3, arg4, &sp2E, gGhostData[temp_t8]);
+    temp_v0 = func_80074B34(arg0, (s16)mapId, arg2, arg3, arg4, &sp2E, gGhostData[temp_t8]);
     if (arg3 != 0) {
         if (temp_v0 == 0) {
             D_8011D5A0[temp_t8] = sp2E;
-            D_8011D5AC = arg1;
+            D_8011D5AC = mapId;
         } else {
             D_8011D5AC = -1;
         }
@@ -3540,8 +3540,8 @@ void free_tt_ghost_data(void) {
     gGhostData[2] = NULL;
 }
 
-s32 func_80059B7C(s32 controllerIndex, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
-    return func_80075000(controllerIndex, (s16)arg1, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
+s32 func_80059B7C(s32 controllerIndex, MapId mapId, s16 arg2, s16 arg3, s16 arg4) {
+    return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80059BF0.s")

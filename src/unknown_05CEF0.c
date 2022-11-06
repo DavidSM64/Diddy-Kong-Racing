@@ -250,9 +250,9 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
     s32 bossId;
     s32 racerUnk1AC;
     s8 *miscAsset67;
-    s32 miscAsset68Byte5;
-    s32 miscAsset68Byte6;
-    s32 miscAsset68Byte7;
+    MapId miscAsset68Byte5;
+    MapId miscAsset68Byte6;
+    MapId miscAsset68Byte7;
     s8 miscAsset67CourseByte;
     s32 var_t1;
     s32 i;
@@ -295,21 +295,21 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             }
             if (settings->worldId == WORLD_CENTRAL_AREA) {
                 if (racerUnk1AC == 1) {
-                    func_8006C1AC(-2, 0, 0, 0);
+                    func_8006C1AC(MAP_ID_UNK_NEG2, 0, 0, 0);
                     func_8006C1AC(miscAsset68Byte5, 0, -1, 0);
                     func_8006C1AC(miscAsset67CourseByte, 0, -1, 1);
                 } else {
-                    func_8006C1AC(-10, 0, 0, 0);
+                    func_8006C1AC(MAP_ID_UNK_NEG10, 0, 0, 0);
                     func_8006C1AC(miscAsset67CourseByte, 0, -1, 2);
                 }
             } else if (racerUnk1AC == 1) {
                 set_eeprom_settings_value(1); //Set Adventure Two Unlocked
-                func_8006C1AC(-2, 0, 0, 0);
+                func_8006C1AC(MAP_ID_UNK_NEG2, 0, 0, 0);
                 func_8006C1AC(miscAsset68Byte7, 0, -1, 0);
                 func_8006C1AC(miscAsset68Byte6, 0, -1, 0);
                 func_8006C1AC(miscAsset67CourseByte, 0, -1, 1);
             } else {
-                func_8006C1AC(-10, 0, 0, 0);
+                func_8006C1AC(MAP_ID_UNK_NEG10, 0, 0, 0);
                 func_8006C1AC(miscAsset67CourseByte, 0, -1, 2);
             }
             if (racerUnk1AC == 1) {
@@ -339,7 +339,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             settings->courseFlagsPtr[settings->courseId] |= 2;
             if (!(settings->bosses & bossId)) {
                 settings->bosses |= bossId;
-                func_8006C1AC(-1, 0, 0, 0);
+                func_8006C1AC(MAP_ID_UNK_NEG1, 0, 0, 0);
                 func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
             } else if (!(settings->bosses & (bossId << 6))) {
                 settings->bosses |= bossId << 6;
@@ -352,7 +352,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     settings->wizpigAmulet = var_t1;
                 }
                 if (var_t1 != 0) {
-                    func_8006C1AC(-1, 0, 0, 0);
+                    func_8006C1AC(MAP_ID_UNK_NEG1, 0, 0, 0);
                     func_8006C1AC(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1, settings->wizpigAmulet - 1);
                     func_8006C1AC(miscAsset67CourseByte, 6, -1, 6);
                 } else {
