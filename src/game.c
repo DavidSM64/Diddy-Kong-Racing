@@ -1371,7 +1371,7 @@ void ingame_logic_loop(s32 updateRate) {
                 load_menu_with_level_background(MENU_UNUSED_8, -1, 0);
             } else {
                 gIsLoading = TRUE;
-                load_menu_with_level_background(MENU_UNKNOWN_5, -1, -1);
+                load_menu_with_level_background(MENU_TRACK_SELECT_ADVENTURE, -1, -1);
             }
         } else if (!(buttonHeldInputs & R_TRIG)) {
             if (!(buttonHeldInputs & Z_TRIG)) {

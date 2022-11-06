@@ -1819,8 +1819,8 @@ void menu_init(u32 menuId) {
         case MENU_TRACK_SELECT:
             menu_track_select_init();
             break;
-        case MENU_UNKNOWN_5:
-            menu_5_init();
+        case MENU_TRACK_SELECT_ADVENTURE:
+            menu_adventure_track_init();
             break;
         case MENU_RESULTS:
             menu_11_init();
@@ -1896,8 +1896,8 @@ s32 menu_loop(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVe
         case MENU_TRACK_SELECT:
             ret = menu_track_select_loop(updateRate);
             break;
-        case MENU_UNKNOWN_5:
-            ret = menu_5_loop(updateRate);
+        case MENU_TRACK_SELECT_ADVENTURE:
+            ret = menu_adventure_track_loop(updateRate);
             break;
         case MENU_RESULTS:
             ret = menu_results_loop(updateRate);
@@ -6007,7 +6007,10 @@ s32 func_80092BE0(s32 arg0) {
     return temp;
 }
 
-void menu_5_init(void) {
+/**
+ * Load and initialise the track setup gui for use when entering a track in adventure mode.
+*/
+void menu_adventure_track_init(void) {
     Settings *settings;
     s32 result;
     s32 s0;
@@ -6060,7 +6063,11 @@ void menu_5_init(void) {
     }
 }
 
-void func_80092E94(s32 arg0, s32 arg1, s32 arg2) {
+/**
+ * Render the setup gui when in a track preview in adventure mode.
+ * This includes the vehicle selection and if time trial is enabled, the best times.
+ */
+void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
     s32 alpha;
     s32 y;
     s32 greenAmount;
@@ -6169,8 +6176,11 @@ void func_80092E94(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-
-s32 menu_5_loop(s32 updateRate) {
+/**
+ * Process the logic for the track setup selection after entering a door in adventure mode.
+ * This also includes drawing all the gui.
+*/
+s32 menu_adventure_track_loop(s32 updateRate) {
     s32 vehicle;
     s32 sp30;
     s32 vehicle2;
@@ -6205,7 +6215,7 @@ s32 menu_5_loop(s32 updateRate) {
         }
     }
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    func_80092E94(updateRate, sp1C, sp20);
+    render_adventure_track_setup(updateRate, sp1C, sp20);
     if (sp1C < 2) {
         gPlayerSelectVehicle[PLAYER_ONE] = func_8006B0AC(sp24);
     }

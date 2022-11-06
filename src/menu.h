@@ -69,7 +69,7 @@ typedef enum MENU_ID {
     MENU_UNUSED_2,
     MENU_CHARACTER_SELECT,
     MENU_UNUSED_4,
-    MENU_UNKNOWN_5,
+    MENU_TRACK_SELECT_ADVENTURE,
     MENU_FILE_SELECT,
     MENU_UNUSED_7,
     MENU_UNUSED_8,
@@ -767,7 +767,7 @@ void func_8008E4B0(void);
 void func_8008F534(void);
 void func_80090ED8(s32 updateRate);
 s32 func_80092BE0(s32 arg0);
-void menu_5_init(void);
+void menu_adventure_track_init(void);
 void func_80093A0C(void);
 void n_alSynRemovePlayer(void);
 void n_alSeqpDelete(void);
@@ -848,7 +848,7 @@ s32 is_drumstick_unlocked(void);
 s32 menu_character_select_loop(s32 updateRate);
 s32 menu_caution_loop(s32 updateRate);
 void func_8008DC7C(UNUSED s32 updateRate);
-s32 menu_5_loop(s32 updateRate);
+s32 menu_adventure_track_loop(s32 updateRate);
 void func_80095624(s32 status);
 s32 menu_boot_loop(s32 arg0);
 void menu_magic_codes_init(void);
@@ -869,7 +869,7 @@ void func_8008C698(s32 updateRate);
 void func_80083098(f32);
 void func_8008F00C(s32);
 void render_track_selection_viewport_border(ObjectModel *objMdl);
-void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
+void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
