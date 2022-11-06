@@ -869,6 +869,7 @@ void func_8008C698(s32 updateRate);
 void func_80083098(f32);
 void func_8008F00C(s32);
 void render_track_selection_viewport_border(ObjectModel *objMdl);
+void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -913,7 +914,6 @@ void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
 void func_8006F564(s8 arg0);
 void func_80099E8C(s32 updateRate);
-void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);

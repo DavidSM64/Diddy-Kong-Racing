@@ -6060,7 +6060,115 @@ void menu_5_init(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80092E94.s")
+void func_80092E94(s32 arg0, s32 arg1, s32 arg2) {
+    s32 alpha;
+    s32 y;
+    s32 greenAmount;
+    s32 i;
+    s32 savedY;
+    s32 yOffset;
+    s32 mask;
+    s32 sp58;
+    char *filename;
+    Settings* settings;
+    char* levelName;
+
+    filename = NULL;
+    settings = get_settings();
+    yOffset = 0;
+    if (osTvType == TV_TYPE_PAL) {
+        yOffset = 12;
+    }
+    sp58 = ((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2;
+    gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
+    func_8009BD5C();
+    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    if (gMenuDelay >= -20) {
+        if (gMenuDelay <= 20) {
+            mask = func_8006B0F8(sp58);
+            levelName = get_level_name(sp58);
+            set_text_font(FONT_LARGE);
+            set_text_background_colour(0, 0, 0, 0);
+            set_text_colour(0, 0, 0, 255, 128);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 46,  levelName, ALIGN_MIDDLE_CENTER);
+            set_text_colour(255, 255, 255, 0, 255);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 43,  levelName, ALIGN_MIDDLE_CENTER);
+            if (!(func_8006B14C(sp58) & 0x40)) {
+                if (arg2 == 0) {
+                    if (is_time_trial_enabled()) {
+                        if (func_80092BE0(sp58) >= 0) {
+                            render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionTTTexture, SCREEN_HEIGHT - 36, yOffset + 122, 255, 255, 255, sMenuGuiOpacity);
+                        }
+                        set_text_font(0);
+                        set_text_colour(255, 64, 64, 96, 255);
+                        draw_text(&sMenuCurrDisplayList, 88, yOffset + 72, gMenuText[ASSET_MENU_TEXT_BESTTIME], ALIGN_MIDDLE_CENTER);
+                        draw_text(&sMenuCurrDisplayList, 88, yOffset + 92, gMenuText[ASSET_MENU_TEXT_BESTLAP], ALIGN_MIDDLE_CENTER);
+                        set_text_colour(255, 128, 255, 96, 255);
+                        decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][sp58], &filename, 3);
+                        draw_text(&sMenuCurrDisplayList, 258, yOffset + 72, (char*) &filename, ALIGN_MIDDLE_CENTER);
+                        decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][sp58], &filename, 3);
+                        draw_text(&sMenuCurrDisplayList, 258, yOffset + 92, (char*) &filename, ALIGN_MIDDLE_CENTER);
+                        show_timestamp(settings->courseTimesPtr[gPlayerSelectVehicle[0]][((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2], 26, 53, 128, 255, 255, 0);
+                        show_timestamp(settings->flapTimesPtr[gPlayerSelectVehicle[0]][((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2], 26, 33, 255, 192, 255, 0);
+                    }
+                    greenAmount = gOptionBlinkTimer * 8;
+                    if (greenAmount > 255) {
+                        greenAmount = 511 - greenAmount;
+                    }
+                    set_current_dialogue_background_colour(7, 255, greenAmount, 0, 255);
+                    set_current_dialogue_box_coords(7, 134, yOffset + 112, 186, yOffset + 137);
+                    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+                    render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionVehicleTitleTexture, 136, yOffset + 114, 255, 255, 255, 255);
+                    
+                    y = yOffset + 139;
+                    savedY = y;
+                        
+                    for (i = 0; i < 3; i++) {
+                        alpha = (arg1 < 2 && func_8006B0AC(sp58) != i) ? 128 : 255;
+                        if ((1 << i) & mask) {
+                            if (i == gPlayerSelectVehicle[0]) {
+                                render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[i*3+1], 104, y, 255, 255, 255, 255);
+                            } else {
+                                render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[i*3+2], 104, y, 255, 255, 255, alpha);
+                            }
+                            y += 24;
+                        }
+                    }
+                    y = savedY;
+                    if (gPlayerSelectVehicle[0] == 2) {
+                        y += 2;
+                    }
+                    render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[0]*3], 149, y, 255, 255, 255, 255);
+                    func_8007B3D0(&sMenuCurrDisplayList);
+                    gMenuImageStack[7].unkC = 21.0f;
+                    gMenuImageStack[7].unk10 = -52.0f;
+                    func_8009CA60(7);
+                    if (D_801263E0 != 0) {
+                        set_text_font(FONT_LARGE);
+                        set_text_background_colour(0, 0, 0, 0);
+                        set_text_colour(255, 255, 255, 0, 255);
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yOffset + 172, (char*) D_800E8240, ALIGN_MIDDLE_CENTER);
+                    }
+                } else {
+                    set_text_font(FONT_LARGE);
+                    set_text_background_colour(0, 0, 0, 0);
+                    set_text_colour(255, 255, 255, 0, 255);
+                    y = yOffset + 0xB0;
+                    if (get_language() == LANGUAGE_FRENCH) {
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[13], ALIGN_MIDDLE_CENTER);
+                        y += 32;
+                    }
+                    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[11], ALIGN_MIDDLE_CENTER);
+                    y += 32;
+                    if (get_language() != LANGUAGE_FRENCH) {
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[13], ALIGN_MIDDLE_CENTER);
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 s32 menu_5_loop(s32 updateRate) {
     s32 vehicle;
