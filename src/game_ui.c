@@ -1516,16 +1516,16 @@ s8 func_800A8458(void) {
 }
 
 #ifdef NON_MATCHING
-void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRate) {
-    UNUSED s32 pad2;
+void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **triList, s32 updateRate) {
+    s32 pad2;
     LevelModel *lvlMdl; // sp158
     s32 sp154;
     Object **objectGroup;
-    UNUSED s32 pad4;
+    s32 pad4;
     Object_Racer *someRacer;
     s32 i;
     s32 objectCount;
-    UNUSED s32 pad6;
+    s32 pad6;
     ObjectTransform_800A8474 objTrans; // sp120
     f32 sp11C;
     f32 sp118;
@@ -1534,17 +1534,17 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
     s32 mapOpacity;
     s32 opacity;
     Object_Racer *pad11;
-    UNUSED s32 pad10;
+    s32 pad10;
     s32 pad12;
-    UNUSED s32 pad5;
+    s32 pad5;
     s32 sp144;
-    UNUSED s32 pad1;
-    UNUSED s32 pad8;
+    s32 pad1;
+    s32 pad8;
     Object_Racer *curRacerObj;
     s32 spE4;
     s32 spE0;
-    UNUSED s32 pad3;
-    UNUSED s32 pad9;
+    s32 pad3;
+    s32 pad9;
     s32 spF4;
     s32 spF0;
     s32 racerCount;
@@ -1555,6 +1555,7 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
     s32 temp_f6;
     s32 temp_s0;
     u16 new_var;
+    u8 new_var2;
     s32 temp_s0_2;
     s32 temp_s0_3;
     s32 temp_s1;
@@ -1600,7 +1601,7 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
     objectGroup = func_8001BA90(&objectCount);
     gHUDCurrDisplayList = *dList;
     gHUDCurrMatrix = *mtx;
-    gHUDCurrTriList = (TriangleList *) *vtxList;
+    gHUDCurrTriList = *triList;
     if (D_80126D60->race_type == RACETYPE_CHALLENGE_EGGS) {
         if (D_80126D37 == 2 && D_800E27A4[gHUDNumPlayers] == 0) {
             func_800A14F0(NULL, updateRate);
@@ -1608,9 +1609,9 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
         } else {
             if (D_80126D37 == 3) {
                 pad11 = NULL;
-                for(i = 0; i < objectCount; i++) {
-                    if (objectGroup[i]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
-                        pad11 = &objectGroup[i]->unk64->racer;
+                for(pad12 = 0; pad12 < objectCount; pad12++) {
+                    if (objectGroup[pad12]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
+                        pad11 = &objectGroup[pad12]->unk64->racer;
                     }
                 }
                 if (pad11 != NULL) {
@@ -1649,9 +1650,9 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
         } else {
             if (D_80126D37 == 3) {
                 curRacerObj = NULL;
-                for(i = 0; i < objectCount; i++) {
-                    if (objectGroup[i]->unk64->racer.playerIndex == PLAYER_COMPUTER) { 
-                        curRacerObj = &objectGroup[i]->unk64->racer;
+                for(pad12 = 0; pad12 < objectCount; pad12++) {
+                    if (objectGroup[pad12]->unk64->racer.playerIndex == PLAYER_COMPUTER) { 
+                        curRacerObj = &objectGroup[pad12]->unk64->racer;
                     }
                 }
                 if (curRacerObj != NULL) {
@@ -1781,7 +1782,8 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
     }
     *dList = gHUDCurrDisplayList;
     *mtx = gHUDCurrMatrix;
-    *vtxList = gHUDCurrTriList;
+    *triList = gHUDCurrTriList;
+    
     if (!(D_80126D60->unkBC & 1)) {
         sp113 = TRUE;
         for(i = 0; i < objectCount; i++) {
@@ -1901,8 +1903,10 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
                                 D_80126CDC->unk1F0 -= 1.0f;
                                 D_80126CDC->unk1E6 = 27;
                                 D_80126CDC->unk1E4 = objectGroup[i]->segment.trans.y_rotation - ((lvlMdl->unk24 * 0xFFFF) / 360);
-                                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                                    if ((&objectGroup[i]->unk64->racer) && (&objectGroup[i]->unk64->racer)); // Fakematch
+                                //D_80126CDC->unk1E4 = objectGroup[i]->segment.trans.y_rotation - (((lvlMdl->unk24 * 0xFFFF) / 360) & 0xFFFF); // fakematch
+                                
+                                new_var2 = get_filtered_cheats();
+                                if (new_var2 & CHEAT_MIRRORED_TRACKS) {
                                     D_80126CDC->unk1E4 = 0xFFFF - D_80126CDC->unk1E4;
                                 }
                                 func_8007BF1C(TRUE);
@@ -1945,13 +1949,12 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **vtxList, s32 updateRa
                     func_8007BF1C(TRUE);
                     *dList = gHUDCurrDisplayList;
                     *mtx = gHUDCurrMatrix;
-                    *vtxList = gHUDCurrTriList;
+                    *triList = gHUDCurrTriList;
                 }
             }
         }
     }
 }
-
 #else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A8474.s")
 #endif
