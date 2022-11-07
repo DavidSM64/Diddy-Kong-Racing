@@ -56,7 +56,6 @@ enum TrackTimers {
     PP_RACER,
     PP_LIGHT,
     PP_ENVMAP,
-    PP_MINIMAP,
     PP_HUD,
     PP_SCENE,
     PP_DMA,
@@ -72,6 +71,8 @@ enum TrackTimers {
     PP_PROFILER,
     PP_TRANSITION,
     PP_CAMERA,
+    PP_MATRIX,
+    PP_BACKGROUND,
 
     PP_THREAD0,
     PP_THREAD30,
@@ -95,7 +96,6 @@ enum TrackTimers {
     {"Racers"}, \
     {"Lighting"}, \
     {"Envmaps"}, \
-    {"Minimap"}, \
     {"HUD\t"}, \
     {"Render"}, \
     {"DMA"}, \
@@ -106,11 +106,13 @@ enum TrackTimers {
     {"Particles"}, \
     {"AI\t"}, \
     {"Weather"}, \
-    {"Waves"}, \
+    {"Water"}, \
     {"Dialogue"}, \
     {"Profiler"}, \
     {"Transition"}, \
     {"Camera"}, \
+    {"Matrix"}, \
+    {"BG\t"}, \
     {"Thread0"}, \
     {"Thread30"}, \
     {"Audio"}, \

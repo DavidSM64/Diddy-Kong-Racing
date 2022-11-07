@@ -1065,7 +1065,7 @@ void render_profiler(void) {
             set_text_background_colour(0, 0, 0, 0);
             set_kerning(FALSE);
             for (i = 0; i < PP_RSP_GFX; i++) {
-                if (gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL] == 0) {
+                if (gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL] < 25) {
                     continue;
                 }
                 puppyprintf(textBytes,  "%s \t%dus (%d%%)", sPuppyPrintStrings[sPrintOrder[i]], gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL], gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL] / 333);
@@ -1312,10 +1312,14 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
     set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
+#ifdef PUPPYPRINT_DEBUG
+    first2 = osGetCount();
+#endif
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Mtx *) &gGameCurrMatrix, TRUE); 
 #ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_BACKGROUND], osGetCount() - first2);
     first2 = osGetCount();
 #endif
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
@@ -1339,6 +1343,7 @@ void main_game_loop(void) {
         case DRAW_INTRO: // Pre-boot screen
 #ifdef PUPPYPRINT_DEBUG
             first2 = osGetCount();
+            first3 = gPuppyTimers.timers[PP_BACKGROUND][perfIteration];
 #endif
             pre_intro_loop();
 #ifdef PUPPYPRINT_DEBUG
@@ -1347,11 +1352,14 @@ void main_game_loop(void) {
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
+            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
+            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
 #endif
             break;
         case DRAW_MENU: // In a menu
 #ifdef PUPPYPRINT_DEBUG
             first2 = osGetCount();
+            first3 = gPuppyTimers.timers[PP_BACKGROUND][perfIteration];
 #endif
             func_8006DCF8(sLogicUpdateRate);
 #ifdef PUPPYPRINT_DEBUG
@@ -1361,6 +1369,8 @@ void main_game_loop(void) {
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
+            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
+            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
 #endif
             break;
         case DRAW_GAME: // In game (Controlling a character)

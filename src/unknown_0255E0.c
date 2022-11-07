@@ -290,7 +290,13 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
         delta = updateRate;
     }
     if (D_8011D384) {
+#ifdef PUPPYPRINT_DEBUG
+        first2 = osGetCount();
+#endif
         func_800B9C18(delta);
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add(gPuppyTimers.timers[PP_WAVES], osGetCount() - first2);
+#endif
     }
     func_8002D8DC(2, 2, updateRate);
     for (i = 0; i < 7; i++) {
@@ -349,11 +355,17 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
         func_8002A31C();
         if (numViewports < 2) {
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+#ifdef PUPPYPRINT_DEBUG
+        first2 = osGetCount();
+#endif
             if (gCurrentLevelHeader2->unk49 == -1) {
                 func_80028050();
             } else {
                 render_skydome();
             }
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add(gPuppyTimers.timers[PP_BACKGROUND], osGetCount() - first2);
+#endif
         } else {
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_800289B8();
@@ -371,8 +383,10 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
 
         func_800AD030(func_80069D20());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_80069D20());
+#ifdef PUPPYPRINT_DEBUG
         first2 = osGetCount();
         first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
+#endif
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_8001BB18(D_8011B0B4), updateRate);
         profiler_add(gPuppyTimers.timers[PP_HUD], osGetCount() - first2);
         profiler_offset(gPuppyTimers.timers[PP_HUD], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
@@ -429,6 +443,8 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WEATHER][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WAVES][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_BACKGROUND][perfIteration]);
 }
 //#else
 //GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
