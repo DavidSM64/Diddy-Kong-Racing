@@ -258,7 +258,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 #endif
 
 // Regalloc
-#ifdef NON_MATCHING
+//#ifdef NON_MATCHING
 extern s32 D_A0000200;
 /**
  * The root function for rendering the entire scene
@@ -271,6 +271,9 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
     s32 posX;
     s32 posY;
     UNUSED s32 pad;
+    u32 first = osGetCount();
+    u32 first2;
+    u32 first3;
 
     gSceneCurrDisplayList = *dList;
     gSceneCurrMatrix = *mtx;
@@ -361,11 +364,18 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
         func_80028CD0(updateRate);
         func_800AB308(-1, -512);
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
+            first2 = osGetCount();
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, delta);
+            profiler_add(gPuppyTimers.timers[PP_WEATHER], osGetCount() - first2);
         }
+
         func_800AD030(func_80069D20());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_80069D20());
+        first2 = osGetCount();
+        first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_8001BB18(D_8011B0B4), updateRate);
+        profiler_add(gPuppyTimers.timers[PP_HUD], osGetCount() - first2);
+        profiler_offset(gPuppyTimers.timers[PP_HUD], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
     }
     if ((numViewports == 3) && 
         (get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS) &&
@@ -414,10 +424,15 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
     *mtx = gSceneCurrMatrix;
     *vtx = gSceneCurrVertexList;
     *tris = gSceneCurrTriList;
+    profiler_add(gPuppyTimers.timers[PP_SCENE], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_HUD][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WEATHER][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
-#endif
+//#else
+//GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
+//#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
 
@@ -547,9 +562,6 @@ void render_level_geometry_and_objects(void) {
     u8 sp58[128];
     s32 s0;
     Object *obj;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetTime();
-#endif
 
     func_80012C30();
 
@@ -690,9 +702,6 @@ skip:
         func_8002581C(segmentIds, numberOfSegments, get_object_render_stack_pos());
     }
     D_8011B0FC = 0;
-#ifdef PUPPYPRINT_DEBUG
-    profiler_update(gPuppyTimers.graphTime, first);
-#endif
 }
 
 #ifdef NON_EQUIVALENT

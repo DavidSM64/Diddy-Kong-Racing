@@ -167,7 +167,7 @@ static void __scMain(void *arg) {
         osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
 
 #ifdef PUPPYPRINT_DEBUG
-        first = osGetTime();
+        first = osGetCount();
 #endif
 
         switch ((int) msg) {
@@ -205,7 +205,7 @@ static void __scMain(void *arg) {
                 break;
         }
 #ifdef PUPPYPRINT_DEBUG
-        profiler_update(gPuppyTimers.thread5Time, first);
+        profiler_add(gPuppyTimers.timers[PP_SCHED], osGetCount() - first);
 #endif
     }
 }

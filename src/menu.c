@@ -1866,9 +1866,6 @@ void menu_init(u32 menuId) {
  */
 s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     s32 ret;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first =  osGetTime();
-#endif
 
     sMenuCurrDisplayList = *currDisplayList;
     sMenuCurrHudMat = *currHudMat;
@@ -1947,9 +1944,6 @@ s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts
     *currHudMat = sMenuCurrHudMat;
     *currHudVerts = sMenuCurrHudVerts;
     *currHudTris = sMenuCurrHudTris;
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.hudTime, osGetTime() - first);
-#endif
     return ret;
 }
 

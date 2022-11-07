@@ -4,6 +4,7 @@
 #include "font.h"
 #include "menu.h"
 #include "textures_sprites.h"
+#include "game.h"
 
 /************ .data ************/
 
@@ -235,10 +236,16 @@ void func_800C4404(Gfx **displayList, char *text, AlignmentFlags alignmentFlags)
  * Builds the background settings, then renders the given text at a given position.
  */
 void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+#endif
     DialogueBoxBackground *temp = &gDialogueBoxBackground[0];
     temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
     temp->ypos = (ypos == POS_CENTRED) ? temp->height >> 1 : ypos;
     func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_TEXT], osGetCount() - first);
+#endif
 }
 
 UNUSED void func_800C44C0(Gfx **displayList, s32 dialogueBoxID, char *text,

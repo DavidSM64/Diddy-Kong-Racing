@@ -49,6 +49,74 @@ enum rspFlags {
     RSP_GFX_RESUME,
 };
 
+enum TrackTimers {
+    PP_LOGIC,
+    PP_COLLISION,
+    PP_OBJECTS,
+    PP_RACER,
+    PP_LIGHT,
+    PP_ENVMAP,
+    PP_MINIMAP,
+    PP_HUD,
+    PP_SCENE,
+    PP_DMA,
+    PP_PAD,
+    PP_TEXT,
+    PP_MENU,
+    PP_TEXTURES,
+    PP_PARTICLES,
+    PP_AI,
+    PP_WEATHER,
+    PP_WAVES,
+    PP_DIALOGUE,
+    PP_PROFILER,
+    PP_TRANSITION,
+    PP_CAMERA,
+
+    PP_THREAD0,
+    PP_THREAD30,
+    PP_AUDIO,
+    PP_SCHED,
+
+    PP_RSP_GFX,
+    PP_RSP_AUD,
+
+    PP_RDP_BUS,
+    PP_RDP_BUF,
+    PP_RDP_TMM,
+
+    PP_TIMES_TOTAL
+};
+
+#define PP_STRINGS \
+    {"Unknown"}, \
+    {"Collision"}, \
+    {"Objects"}, \
+    {"Racers"}, \
+    {"Lighting"}, \
+    {"Envmaps"}, \
+    {"Minimap"}, \
+    {"HUD\t"}, \
+    {"Render"}, \
+    {"DMA"}, \
+    {"Pad\t"}, \
+    {"Text"}, \
+    {"Menu"}, \
+    {"Textures"}, \
+    {"Particles"}, \
+    {"AI\t"}, \
+    {"Weather"}, \
+    {"Waves"}, \
+    {"Dialogue"}, \
+    {"Profiler"}, \
+    {"Transition"}, \
+    {"Camera"}, \
+    {"Thread0"}, \
+    {"Thread30"}, \
+    {"Audio"}, \
+    {"Sched"},
+
+
 #define NUM_PERF_ITERATIONS 32
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
 #define PERF_TOTAL NUM_PERF_ITERATIONS + 1
@@ -60,33 +128,13 @@ struct PuppyPrintTimers {
     u32 rspPauseTime; // Buffer that keeps track of the halt time of the Gfx task.
     u32 rspGfxBufTime; // Buffer that keeps track of the current Gfx task;
     u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task;
-    u32 threadsTime; // The combined processing time from thread 2, 3 and 6.
-    PPTimer collisionTime; // Collision execution time.
-    PPTimer behaviourTime; // Behaviour script execution time.
-    PPTimer racerTime; // Behaviour script execution time.
-    PPTimer lightTime; // Behaviour script execution time.
-    PPTimer hudTime; // Behaviour script execution time.
-    PPTimer objectsTime; // Behaviour script execution time.
-    PPTimer thread2Time; // Fault thread execution time.
-    PPTimer thread3Time; // Task thread execution time.
-    PPTimer thread4Time; // Audio thread execution time.
-    PPTimer thread5Time; // Game thread execution time.
-    PPTimer thread6Time; // Rumble thread execution time.
-    PPTimer graphTime; // Graph Node processing time.
-    PPTimer dmaTime; // thread 5 DMA time.
-    PPTimer dmaAudioTime; // thread 4 DMA time.
-    PPTimer profilerTime; // Profiler rendering time.
-    PPTimer controllerTime; // Controller polling time.
-    PPTimer rspAudioTime; // RSP Audio processing time.
-    PPTimer rspGfxTime; // RSP Graphics processing time.
-    PPTimer rdpBufTime; // RDP buffer processing time.
-    PPTimer rdpBusTime; // RDP pipe busy time.
-    PPTimer rdpTmmTime; // RDP texture memory time.
+    PPTimer timers[PP_TIMES_TOTAL];
 };
 extern struct PuppyPrintTimers gPuppyTimers;
 extern void profiler_update(u32 *time, u32 time2);
 extern void puppyprint_update_rsp(u8 flags);
 extern void profiler_add(u32 *time, u32 offset);
+extern u8 perfIteration;
 #endif
 
 extern s8 *D_800DD310;

@@ -1140,7 +1140,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
     s32 i;
     struct LevelObjectEntryCommon newObject;
 #ifdef PUPPYPRINT_DEBUG
-    u32 first =  osGetTime();
+    u32 first = osGetCount();
 #endif
 
     gNumViewports = get_viewport_count() + 1;
@@ -1656,7 +1656,8 @@ void update_player_racer(Object* obj, s32 updateRate) {
         }
     }
 #ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.racerTime, osGetTime() - first);
+    profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_CAMERA][perfIteration]);
 #endif
 }
 
@@ -3003,6 +3004,9 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
 	f32 temp_f14;
     s32 delta;
 	s32 angle;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+#endif
 
     if (gCurrentButtonsPressed & U_CBUTTONS && func_800A0190()) {
         gCameraObject->zoom++;
@@ -3102,6 +3106,9 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate) {
         gCameraObject->unk3A += 5;
         gCameraObject->unk30 = -gCameraObject->unk30 * 0.75f;
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_CAMERA], osGetCount() - first);
+#endif
 }
 
 void func_800580B4(Object *obj, Object_Racer *racer, s32 mode, f32 arg3) {
@@ -3656,6 +3663,9 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     unknown8011AECC *temp_v0_9;
     Object_Racer *tempRacer;
     f32 temp_fv1_2;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+#endif
 
     gCurrentPlayerIndex = -1;
     renderContext = get_render_context();
@@ -3931,6 +3941,9 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     racer->unk1FE = 0xFF;
     func_8004F77C(racer);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
+#endif
 }
 
 #ifdef NON_EQUIVALENT
