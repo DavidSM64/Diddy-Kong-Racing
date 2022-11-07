@@ -1353,6 +1353,7 @@ void main_game_loop(void) {
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
+            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
 #endif
             break;
@@ -1370,6 +1371,7 @@ void main_game_loop(void) {
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
+            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
 #endif
             break;
