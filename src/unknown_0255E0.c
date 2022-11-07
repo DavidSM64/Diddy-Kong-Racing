@@ -324,18 +324,32 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
         flip = TRUE;
     }
+#ifndef NO_ANTIPIRACY
     if (D_A0000200 != 0xAC290000) {
         flip = TRUE;
     }
+#endif
     func_8007B3D0(&gSceneCurrDisplayList);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
     gSPClearGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
     gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
+#ifdef PUPPYPRINT_DEBUG
+        first2 = osGetCount();
+#endif
     func_800AD40C();
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add(gPuppyTimers.timers[PP_WEATHER], osGetCount() - first2);
+#endif
     func_80030838(numViewports, delta);
+#ifdef PUPPYPRINT_DEBUG
+        first2 = osGetCount();
+#endif
     func_800AF404(delta);
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add(gPuppyTimers.timers[PP_PARTICLES], osGetCount() - first2);
+#endif
     if (gCurrentLevelModel->unk1E > 0) {
         func_80027E24(delta);
     }
@@ -445,6 +459,7 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WAVES][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_BACKGROUND][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
 }
 //#else
 //GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
