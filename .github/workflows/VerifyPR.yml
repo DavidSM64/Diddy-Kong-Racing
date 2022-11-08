@@ -72,4 +72,4 @@ jobs:
         tool_name: update-score
         level: 'info'
         fail_on_error: 'true'
-        reviewdog_flags: '-tee'
+        reviewdog_flags: '-tee -reporter github-pr-review'
