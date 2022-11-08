@@ -55,7 +55,7 @@ jobs:
       run: ./update-score.sh
 
     - name: Suggest updated score
-      uses: reviewdog/action-suggester@v1
+      uses: reviewdog/action-suggester@8f83d27e749053b2029600995c115026a010408e
       with:
         tool_name: 'update-score'
         filter_mode: nofilter
