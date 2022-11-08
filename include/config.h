@@ -7,7 +7,7 @@
 #define SKIP_MENU 3
 
 /// Optional toggles.
-#define DISABLE_AA // Globally disable anti-aliasing, reducing RDP load.
+// #define DISABLE_AA // Globally disable anti-aliasing, reducing RDP load.
 #define PUPPYPRINT_DEBUG // Enable debug features
 #define SKIP_INTRO SKIP_TITLE // Skip the boot screen, making getting ingame faster.
 #define DEFAULT_CHARACTER 7 // If you skip character select, pick a default character.
@@ -18,7 +18,7 @@
 #define FIFO_UCODE // Allow usage of the faster FIFO microcode. Emulators will still use xbus.
 // #define DISABLE_AUDIO // Disable all ingame audio, and prevent the RSP from working on audio tasks.
 #define SKIP_WARNING_SCREEN // Remove the pak warning screen.
-#define FIFO_BUFFER_SIZE 0x2FC0
+#define DISABLE_MULTIPLAYER_CUTBACKS // Disable the measures Rare took to improve performance in multiplayer.
 
 #define NUM_RACERS_1P 8 // Default is 8
 #define NUM_RACERS_2P 6 // Default is 6
@@ -29,6 +29,7 @@
 #define SCREEN_HEIGHT 224
 #define HIGH_RES_SCREEN_WIDTH 640
 #define HIGH_RES_SCREEN_HEIGHT 480
+#define FIFO_BUFFER_SIZE 0x2FC0
 
 
 

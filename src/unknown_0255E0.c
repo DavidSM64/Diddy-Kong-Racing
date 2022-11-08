@@ -271,9 +271,11 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
     s32 posX;
     s32 posY;
     UNUSED s32 pad;
+#ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
     u32 first2;
     u32 first3;
+#endif
 
     gSceneCurrDisplayList = *dList;
     gSceneCurrMatrix = *mtx;
@@ -367,7 +369,9 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
         set_object_stack_pos(D_8011B0B4);
         func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
+#ifndef DISABLE_MULTIPLAYER_CUTBACKS
         if (numViewports < 2) {
+#endif
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
 #ifdef PUPPYPRINT_DEBUG
         first2 = osGetCount();
@@ -380,12 +384,14 @@ void render_scene(Gfx** dList, Mtx** mtx, s16** vtx, s8** tris, s32 updateRate) 
 #ifdef PUPPYPRINT_DEBUG
         profiler_add(gPuppyTimers.timers[PP_BACKGROUND], osGetCount() - first2);
 #endif
+#ifndef DISABLE_MULTIPLAYER_CUTBACKS
         } else {
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_800289B8();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         }
+#endif
         gDPPipeSync(gSceneCurrDisplayList++);
         func_80028CD0(updateRate);
         func_800AB308(-1, -512);

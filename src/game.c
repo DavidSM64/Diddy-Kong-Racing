@@ -846,6 +846,8 @@ s32 sVtxCount = 0;
 s32 prevTime = 0;
 u32 sTimerTemp = 0;
 u8 sProfilerPage = 0;
+u32 sPrevLoadTime = 0;
+u8 sPrevLoadTimer = 0;
 u8 sPrintOrder[PP_RSP_GFX];
 struct PuppyPrintTimers gPuppyTimers;
 char sPuppyPrintStrings[][16] = {
@@ -1034,6 +1036,7 @@ void render_profiler(void) {
             gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
             gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
             gDPFillRectangle(gCurrDisplayList++, TEXT_OFFSET - 2, 8, 112, printY + 2);
+            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 38, gScreenHeight - 30, ((gScreenWidth/2) / 3) + 58, gScreenHeight - 6);
             gDPPipeSync(gCurrDisplayList++);
             set_text_background_colour(0, 0, 0, 0);
             set_kerning(FALSE);
@@ -1053,6 +1056,10 @@ void render_profiler(void) {
                 puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rdpTime / 333);
                 draw_text(&gCurrDisplayList, 112 - 4, 40, textBytes, ALIGN_TOP_RIGHT);
             }
+            puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
+            draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 28, textBytes, ALIGN_TOP_CENTER);
+            puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);
+            draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 18, textBytes, ALIGN_TOP_CENTER);
             break;
         case 1:
             gDPPipeSync(gCurrDisplayList++);
@@ -1074,6 +1081,22 @@ void render_profiler(void) {
             }
             goto drawCore;
             break;
+    }
+    
+    if (sPrevLoadTimer > 0) {
+        gDPPipeSync(gCurrDisplayList++);
+        gDPSetCycleType(gCurrDisplayList++, G_CYC_1CYCLE);
+        gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+        gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
+        gDPFillRectangle(gCurrDisplayList++, (gScreenWidth/2) - 56, gScreenHeight - 42, (gScreenWidth/2) + 56, gScreenHeight - 28);
+        puppyprintf(textBytes, "Level loaded in %2.3fs", sPrevLoadTime / 1000000.0f);
+        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 32, textBytes, ALIGN_MIDDLE_CENTER);
+        if (sPrevLoadTimer - sLogicUpdateRate > 0) {
+            sPrevLoadTimer -= sLogicUpdateRate;
+        } else {
+            sPrevLoadTimer = 0;
+        }
     }
     profiler_add(gPuppyTimers.timers[PP_PROFILER], osGetCount() - first);
     profiler_offset(gPuppyTimers.timers[PP_PROFILER], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
@@ -1143,6 +1166,9 @@ void puppyprint_calculate_average_times(void) {
             }
         }
         gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[PP_LOGIC][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+        if (gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] > OS_CYCLES_TO_USEC(99999)) {
+            gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] = 0;
+        }
         gPuppyTimers.timers[PP_RSP_AUD][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[PP_RSP_AUD][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.timers[PP_RSP_GFX][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[PP_RSP_GFX][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         gPuppyTimers.timers[PP_RDP_BUF][PERF_TOTAL] = (gPuppyTimers.timers[PP_RDP_BUF][PERF_AGGREGATE] * 10) / (625*NUM_PERF_ITERATIONS);
@@ -1486,6 +1512,10 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
  * Needs a better name!
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId) {
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+    u32 first2;
+#endif
     func_8006ECFC(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
@@ -1497,6 +1527,10 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
     osSetTime(0);
     set_free_queue_state(2);
     func_80072298(1);
+#ifdef PUPPYPRINT_DEBUG
+    sPrevLoadTime = OS_CYCLES_TO_USEC(osGetCount() - first);
+    sPrevLoadTimer = 150;
+#endif
 }
 
 // Guessing this is the "unload everything ready for level swap" function.

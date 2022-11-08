@@ -831,12 +831,16 @@ void render_race_start(s32 arg0, s32 updateRate) {
             D_80126CDC->unk19A[D_80126D08] += updateRate;
             if (D_80126CDC->unk19A[D_80126D08] >= 60) {
                 if (gRaceStartShowHudStep == 4) {
+#ifndef DISABLE_MULTIPLAYER_CUTBACKS
                     // Mute background music in 3/4 player.
                     if (get_viewport_count() > 1) {
                         play_music(SEQUENCE_NONE);
                     } else {
                         func_8006BD10(1.0f);
                     }
+#else
+                    func_8006BD10(1.0f);
+#endif
                     play_sound_global(SOUND_WHOOSH1, NULL);
                     gRaceStartShowHudStep++;
                 }
