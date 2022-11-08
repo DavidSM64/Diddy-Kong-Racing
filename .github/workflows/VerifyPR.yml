@@ -52,7 +52,7 @@ jobs:
       run: if [[ $(sha1sum -c --quiet sha1/dkr.us_1.0.sha1) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
 
     - name: Update score
-      run: ./update-score.sh && git add README.md
+      run: ./update-score.sh
 
     - name: Suggest updated score
       uses: reviewdog/action-suggester@v1
@@ -61,7 +61,7 @@ jobs:
         level: 'info'
         fail_on_error: 'true'
         reviewdog_flags: '-tee -reporter github-pr-review'
-        filter_mode: diff_context
+        filter_mode: nofilter
 
     - name: Clean Build
       run: make clean
