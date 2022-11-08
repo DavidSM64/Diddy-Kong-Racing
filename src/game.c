@@ -1020,6 +1020,8 @@ void render_profiler(void) {
         }
     }
 
+    gDPSetScissor(gCurrDisplayList++, G_SC_NON_INTERLACE, 0, 0, gScreenWidth, gScreenHeight);
+
     set_text_font(ASSET_FONTS_SMALLFONT);
     set_text_colour(255, 255, 255, 255, 255);
     if (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
@@ -1724,13 +1726,13 @@ void ingame_logic_loop(s32 updateRate) {
         }
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_borders_for_multiplayer(&gCurrDisplayList);
+    //render_borders_for_multiplayer(&gCurrDisplayList);
     func_800A8474(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
+    //render_second_multiplayer_borders(&gCurrDisplayList);
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_HUD], osGetCount() - first);
     profiler_offset(gPuppyTimers.timers[PP_HUD], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
 #endif
-    render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
             D_801234F4 = 0x23;
