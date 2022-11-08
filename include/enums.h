@@ -14,7 +14,7 @@ typedef AssetLevelHeadersEnum MapId;
 typedef enum SpecialMapId {
     SPECIAL_MAP_ID_UNK_NEG10 = -10,
     SPECIAL_MAP_ID_UNK_NEG2 = -2,
-    SPECIAL_MAP_ID_UNK_NEG1 = -1,
+    SPECIAL_MAP_ID_NO_LEVEL = -1,
 } SpecialMapId;
 
 typedef enum Vehicle {

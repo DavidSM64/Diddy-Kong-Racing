@@ -339,7 +339,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             settings->courseFlagsPtr[settings->courseId] |= 2;
             if (!(settings->bosses & bossId)) {
                 settings->bosses |= bossId;
-                func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG1, 0, VEHICLE_CAR, 0);
+                func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                 func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
             } else if (!(settings->bosses & (bossId << 6))) {
                 settings->bosses |= bossId << 6;
@@ -352,15 +352,15 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     settings->wizpigAmulet = var_t1;
                 }
                 if (var_t1 != 0) {
-                    func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG1, 0, VEHICLE_CAR, 0);
+                    func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                     func_8006C1AC(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1, settings->wizpigAmulet - 1);
                     func_8006C1AC(miscAsset67CourseByte, 6, -1, 6);
                 } else {
-                    func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG1, 0, VEHICLE_CAR, 0);
+                    func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                     func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
                 }
             } else {
-                func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG1, 0, VEHICLE_CAR, 0);
+                func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                 func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
             }
             func_8006F140(4);
