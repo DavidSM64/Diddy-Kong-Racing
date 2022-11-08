@@ -1273,8 +1273,8 @@ void ingame_logic_loop(s32 updateRate) {
             func_8006C22C(&gPlayableMapId, &D_80123504, &i, &D_80123508);
             func_8006F42C();
             if (gPlayableMapId < 0) {
-                if (gPlayableMapId == MAP_ID_UNK_NEG1 || gPlayableMapId == MAP_ID_UNK_NEG10) {
-                    if (gPlayableMapId == MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
+                if (gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG1 || gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG10) {
+                    if (gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
                         func_8006F398();
                     }
                     buttonHeldInputs |= L_TRIG;
@@ -1670,7 +1670,7 @@ void load_level_for_menu(MapId levelId, s32 numberOfPlayers, s32 cutsceneId) {
             gSPEndDisplayList(gCurrDisplayList++);
         }
     }
-    if (levelId != MAP_ID_UNK_NEG1) {
+    if (levelId != SPECIAL_MAP_ID_UNK_NEG1) {
         load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
         gIsLoading = FALSE;
         return;

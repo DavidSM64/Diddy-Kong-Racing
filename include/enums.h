@@ -7,9 +7,6 @@
 /* All the enums defined here can be used in asset files */
 
 typedef enum MapId {
-    MAP_ID_UNK_NEG10 = -10,
-    MAP_ID_UNK_NEG2 = -2,
-    MAP_ID_UNK_NEG1 = -1,
 	/* 0x00 */ MAP_ID_OVERWORLD,
 	/* 0x01 */ MAP_ID_BLUEY1,
 	/* 0x02 */ MAP_ID_DRAGON_FOREST,
@@ -76,6 +73,13 @@ typedef enum MapId {
 	/* 0x3F */ MAP_ID_FINAL_CUTSCENE1,
 	/* 0x40 */ MAP_ID_FINAL_CUTSCENE2,
 } MapId;
+
+// There are a few instances of comparing AssetLevelHeadersEnums with special, negative values.
+typedef enum SpecialMapId {
+    SPECIAL_MAP_ID_UNK_NEG10 = -10,
+    SPECIAL_MAP_ID_UNK_NEG2 = -2,
+    SPECIAL_MAP_ID_UNK_NEG1 = -1,
+} SpecialMapId;
 
 typedef enum Vehicle {
     VEHICLE_CAR,

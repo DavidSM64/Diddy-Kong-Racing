@@ -4816,7 +4816,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             func_80000B28();
             gIsInTracksMode = TRUE;
             func_8006E5BC();
-            load_level_for_menu(MAP_ID_UNK_NEG1, -1, 0);
+            load_level_for_menu(SPECIAL_MAP_ID_UNK_NEG1, -1, 0);
             menu_init(MENU_TRACK_SELECT);
         } else {
             gIsInAdventureTwo = D_800DF460;
