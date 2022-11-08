@@ -69,4 +69,7 @@ jobs:
     - name: Suggest updated score
       uses: reviewdog/action-suggester@v1
       with:
-        tool_name: update-score.sh
+        tool_name: update-score
+        level: 'info'
+        fail_on_error: 'true'
+        reviewdog_flags: '-tee'
