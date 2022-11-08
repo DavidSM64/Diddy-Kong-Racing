@@ -321,7 +321,7 @@ s32 D_800DF4B4              = 0;
 s32 gIsInTracksMode         = 1;
 s32 gNumberOfActivePlayers  = 1;
 s32 gIsInTwoPlayerAdventure = 0;
-MapId gTrackIdForPreview    = MAP_ID_OVERWORLD;
+MapId gTrackIdForPreview    = ASSET_LEVEL_CENTRALAREAHUB;
 s32 gTrackSelectRow         = 0; // 1 = Dino Domain, 2 = Sherbet Island, etc.
 s32 gSaveFileIndex          = 0;
 s32 D_800DF4D0              = 0; // Unused?
@@ -2639,13 +2639,13 @@ s32 menu_title_screen_loop(s32 updateRate) {
             if (is_tt_unlocked()) {
                 sp28 ^= 3;
             }
-            load_level_for_menu(MAP_ID_CHARACTER_SELECT, -1, sp28);
+            load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, sp28);
             func_8008AEB4(0, NULL);
             menu_init(3U);
             return 0;
         }
         D_800DF460 = 0;
-        load_level_for_menu(MAP_ID_MAIN_MENU, -1, 0);
+        load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
         menu_init(MENU_OPTIONS);
         return 0;
     }
@@ -3933,7 +3933,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
 
             func_800895A4();
             menu_init(MENU_LOGOS);
-            load_level_for_menu(MAP_ID_INTRO_CUTSCENE1, -1, 0);
+            load_level_for_menu(ASSET_LEVEL_FRONTEND, -1, 0);
         }
     }
     return 0;
@@ -4560,7 +4560,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             gIsInTracksMode = 1;
             if (phi_t3 >= gNumberOfActivePlayers) {
                 func_80000B18();
-                load_level_for_menu(MAP_ID_MAIN_MENU, -1, 0);
+                load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
                 if (gNumberOfActivePlayers == 1 && !gPlayerHasSeenCautionMenu) {
                     menu_init(MENU_CAUTION);
                 } else {
@@ -4816,7 +4816,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             func_80000B28();
             gIsInTracksMode = TRUE;
             func_8006E5BC();
-            load_level_for_menu(SPECIAL_MAP_ID_UNK_NEG1, -1, 0);
+            load_level_for_menu((MapId)SPECIAL_MAP_ID_UNK_NEG1, -1, 0);
             menu_init(MENU_TRACK_SELECT);
         } else {
             gIsInAdventureTwo = D_800DF460;
@@ -4835,7 +4835,7 @@ s32 menu_game_select_loop(s32 updateRate) {
         if (is_tt_unlocked()) {
             charSelectScene ^= 3;
         }
-        load_level_for_menu(MAP_ID_CHARACTER_SELECT, -1, charSelectScene);
+        load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, charSelectScene);
         func_8008AEB4(0, 0);
         menu_init(MENU_CHARACTER_SELECT);
         return 0;
@@ -5611,12 +5611,12 @@ s32 menu_track_select_loop(s32 updateRate) {
             if (is_tt_unlocked()) {
                 cutsceneId ^= 3;
             }
-            load_level_for_menu(MAP_ID_CHARACTER_SELECT, -1, cutsceneId);
+            load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, cutsceneId);
             func_8008AEB4(0, NULL);
             menu_init(MENU_CHARACTER_SELECT);
             return 0;
         }
-        load_level_for_menu(MAP_ID_MAIN_MENU, -1, 0);
+        load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
         menu_init(MENU_GAME_SELECT);
         return 0;
     }
@@ -6014,7 +6014,7 @@ void menu_5_init(void) {
     s16 temp;
 
     settings = get_settings();
-    gTrackIdForPreview = MAP_ID_OVERWORLD;
+    gTrackIdForPreview = ASSET_LEVEL_CENTRALAREAHUB;
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
     mapId = settings->unk4C->unk2;

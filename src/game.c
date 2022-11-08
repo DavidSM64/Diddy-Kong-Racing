@@ -394,7 +394,7 @@ void load_level(MapId levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     }
     maxLevelCount--;
     if (levelId >= maxLevelCount) {
-        levelId = MAP_ID_OVERWORLD;
+        levelId = ASSET_LEVEL_CENTRALAREAHUB;
     }
     offset = gTempAssetTable[levelId];
     size = gTempAssetTable[levelId + 1] - offset;
@@ -1223,7 +1223,7 @@ void ingame_logic_loop(s32 updateRate) {
     render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
-            gPlayableMapId = MAP_ID_FUTURE_FUN_LAND;
+            gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
             D_801234F8 = 1;
             D_80123504 = 0;
             D_800DD39C = 0;
@@ -1234,8 +1234,8 @@ void ingame_logic_loop(s32 updateRate) {
         D_800DD390 -= updateRate;
         if (D_800DD390 <= 0) {
             D_800DD390 = 0;
-            func_8006C1AC(MAP_ID_OVERWORLD, 0, VEHICLE_CAR, 0);
-            func_8006C1AC(MAP_ID_WIZPIG_AMULET_CUTSCENE, 0, -1, 0xA);
+            func_8006C1AC(ASSET_LEVEL_CENTRALAREAHUB, 0, VEHICLE_CAR, 0);
+            func_8006C1AC(ASSET_LEVEL_WIZPIGAMULETSEQUENCE, 0, -1, 0xA);
             sp3C = TRUE;
         }
     }
@@ -1273,8 +1273,8 @@ void ingame_logic_loop(s32 updateRate) {
             func_8006C22C(&gPlayableMapId, &D_80123504, &i, &D_80123508);
             func_8006F42C();
             if (gPlayableMapId < 0) {
-                if (gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG1 || gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG10) {
-                    if (gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
+                if (gPlayableMapId == (MapId)SPECIAL_MAP_ID_UNK_NEG1 || gPlayableMapId == (MapId)SPECIAL_MAP_ID_UNK_NEG10) {
+                    if (gPlayableMapId == (MapId)SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
                         func_8006F398();
                     }
                     buttonHeldInputs |= L_TRIG;
@@ -1581,7 +1581,7 @@ void func_8006DCF8(s32 updateRate) {
                 load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
                 break;
             case 14:
-                gPlayableMapId = MAP_ID_OVERWORLD;
+                gPlayableMapId = ASSET_LEVEL_CENTRALAREAHUB;
                 D_80123504 = 0;
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
@@ -1670,7 +1670,7 @@ void load_level_for_menu(MapId levelId, s32 numberOfPlayers, s32 cutsceneId) {
             gSPEndDisplayList(gCurrDisplayList++);
         }
     }
-    if (levelId != SPECIAL_MAP_ID_UNK_NEG1) {
+    if (levelId != (MapId)SPECIAL_MAP_ID_UNK_NEG1) {
         load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
         gIsLoading = FALSE;
         return;
