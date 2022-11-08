@@ -446,7 +446,7 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     Object **objList;
     Object_EffectBox *curObj64;
     s32 numberOfObjects;
-    Object_3C_80034B74 *obj3C;
+    LevelObjectEntry_EffectBox *level_entry;
     s32 i;
     f32 xDiff;
     f32 yDiff;
@@ -458,13 +458,13 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
     f32 temp4;
     f32 temp5;
 
-    obj3C = obj->segment.unk3C_a.unk3C;
+    level_entry = &obj->segment.unk3C_a.level_entry->effectBox;
     objList = get_racer_objects(&numberOfObjects);
-    temp0 = sine_s((obj3C->unkB << 8) * -1);
-    temp1 = cosine_s((obj3C->unkB << 8) * -1);
-    temp2 = obj3C->unk8 * 3;
-    temp3 = obj3C->unk9 * 3;
-    temp4 = obj3C->unkA * 3;
+    temp0 = sine_s((level_entry->unkB << 8) * -1);
+    temp1 = cosine_s((level_entry->unkB << 8) * -1);
+    temp2 = level_entry->unk8 * 3;
+    temp3 = level_entry->unk9 * 3;
+    temp4 = level_entry->unkA * 3;
     for (i = 0; i < numberOfObjects; i++)
     {
         xDiff = objList[i]->segment.trans.x_position - obj->segment.trans.x_position;
@@ -476,8 +476,8 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
                 temp5 = (-xDiff * temp1) + (zDiff * temp0);
                 if ((-temp4 < temp5) && (temp5 < temp4)) {
                     curObj64 = &objList[i]->unk64->effect_box;
-                    curObj64->unk1FE = obj3C->unkC;
-                    curObj64->unk1FF = obj3C->unkD;
+                    curObj64->unk1FE = level_entry->unkC;
+                    curObj64->unk1FF = level_entry->unkD;
                     temp5 = temp3 / 2;
                     if ((temp5 < yDiff) && (curObj64->unk1FE == 1)) {
                         temp5 = (1.0 - ((yDiff - temp5) / temp5));
@@ -552,13 +552,13 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
             obj->unk7C.word = 1;
             if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) {
                 sp44.objectID = 128;
-                sp44.x = obj->segment.unk3C_a.unk3C->unk2;
-                sp44.y = obj->segment.unk3C_a.unk3C->unk4;
-                sp44.z = obj->segment.unk3C_a.unk3C->unk6;
+                sp44.x = obj->segment.unk3C_a.level_entry->trophyCabinet.common.x;
+                sp44.y = obj->segment.unk3C_a.level_entry->trophyCabinet.common.y;
+                sp44.z = obj->segment.unk3C_a.level_entry->trophyCabinet.common.z;
                 sp44.size = 8;
                 trophyObj = spawn_object(&sp44, 1);
                 if (trophyObj) {
-                    trophyObj->segment.unk3C_a.unk3C = (void *) 0;
+                    trophyObj->segment.unk3C_a.level_entry = NULL;
                     trophyObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
                 }
             }
@@ -568,7 +568,7 @@ void obj_loop_trophycab(Object *obj, s32 speed) {
     ((Object_54_80034E9C *) obj->unk54)->unk2C = 0.612f;
     ((Object_54_80034E9C *) obj->unk54)->unk28 = 0.0f;
 
-    playerObj = get_object_struct(0);
+    playerObj = get_racer_object(0);
     if (playerObj) {
         xDiff = obj->segment.trans.x_position - playerObj->segment.trans.x_position;
         zDiff = playerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -684,7 +684,7 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 speed) {
             Object_EggCreator *someObj64 = &someObj->unk64->egg_creator;
             someObj64->unk4 = obj;
             obj->unk78 = someObj;
-            someObj->segment.unk3C_a.unk3C = 0;
+            someObj->segment.unk3C_a.level_entry = NULL;
         }
     }
 }
@@ -710,7 +710,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 speed) {
     Object *playerObj;
     Object_4C *obj4C;
 
-    playerObj = get_object_struct(0);
+    playerObj = get_racer_object(0);
     if (playerObj != NULL) {
         obj4C = obj->unk4C;
         if (obj4C->unk13 < 0xC8) {
@@ -829,7 +829,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
 
     obj->segment.trans.unk6 &= 0xBFFF;
     obj->segment.trans.unk6 |= 0x1000;
-    get_object_struct(0); // Unused. I guess the developers forgot to remove this?
+    get_racer_object(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->unk4C->unk13 < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
@@ -875,7 +875,7 @@ void obj_loop_unknown58(Object *obj, s32 speed) {
     }
     set_ghost_position_and_rotation(obj);
     func_800AFC3C(obj, speed);
-    someOtherObj = get_object_struct(0);
+    someOtherObj = get_racer_object(0);
     someOtherObj64 = &someOtherObj->unk64->unkid58;
     obj60 = obj->unk60;
     if (obj60->unk0 == 1) {
@@ -910,7 +910,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 speed) {
     Object_Racer *someObj64;
 
     if (obj->unk7C.word < 0) {
-        someObj = get_object_struct(obj->unk78);
+        someObj = get_racer_object(obj->unk78);
         if (someObj != NULL) {
             obj64 = &obj->unk64->character_flag;
             someObj64 = &someObj->unk64->racer;
@@ -997,7 +997,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
     s32 numberOfObjects;
 
     obj->segment.trans.unk6 |= 0x4000;
-    someObjList = func_8001BAAC(&numberOfObjects);
+    someObjList = get_racer_objects_by_position(&numberOfObjects);
     if (obj->unk78 < numberOfObjects) {
         someObj = someObjList[obj->unk78];
         someObj64 = &someObj->unk64->pos_arrow;
@@ -1318,7 +1318,7 @@ void obj_loop_animcar(Object *obj, s32 speed) {
     temp_v0 = obj->unk78;
     someObj = NULL;
     if (temp_v0 != 0) {
-        someObj = get_object_struct(temp_v0 - 1);
+        someObj = get_racer_object(temp_v0 - 1);
     }
     obj->unk7C.word = func_8001F460(obj, speed, obj);
     obj->segment.trans.unk6 |= 0x4000;
@@ -1441,12 +1441,12 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
 
 void obj_loop_teleport(Object *obj, UNUSED s32 speed) {
     if (obj->unk78 != 0) {
-        Object_3C_80038DC4 *temp = obj->segment.unk3C_a.unk3C;
+        LevelObjectEntry_Teleport *level_entry = &obj->segment.unk3C_a.level_entry->teleport;
         if (obj->unk4C->unk13 < 0x78) {
-            func_8006F338(temp->unk8);
+            func_8006F338(level_entry->unk8);
             obj->unk78 = 0;
             play_sound_global(SOUND_WHOOSH2, NULL);
-            func_80000FDC(0x12A, 0, 1.0f);
+            func_80000FDC(SOUND_VOICE_TT_FUTURE_FUN_LAND, 0, 1.0f);
         }
     }
 }
@@ -1467,7 +1467,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk10;
-    obj64->unk14 = entry->unk18;
+    obj64->unk14 = entry->bossFlag;
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = entry->unk10;
@@ -1484,21 +1484,21 @@ void obj_loop_exit(Object *obj, UNUSED s32 speed) {
     f32 dist;
     f32 yDiff;
     Object_Exit *obj64;
-    s32 someBool;
+    s32 enableWarp;
     Object** racerObjects;
     s32 i;
     f32 temp;
 
     obj64 = &obj->unk64->exit;
-    someBool = TRUE;
+    enableWarp = TRUE;
     settings = get_settings();
     if ((obj64->unk14 == 0) && (settings->balloonsPtr[settings->worldId] == 8)) {
-        someBool = FALSE;
+        enableWarp = FALSE;
     }
     if ((obj64->unk14 == 1) && (settings->balloonsPtr[settings->worldId] < 8)) {
-        someBool = FALSE;
+        enableWarp = FALSE;
     }
-    if (someBool) {
+    if (enableWarp) {
         if (obj->unk4C->unk13 < obj64->unk10) {
             dist = obj64->unk10;
             racerObjects = get_racer_objects(&numberOfRacers);
@@ -1749,7 +1749,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
 }
 
 void obj_loop_goldenballoon(Object *obj, s32 speed) {
-    Object_3C *obj3C;
+    LevelObjectEntry *levelEntry;
     Object_4C *obj4C;
     Object_Racer *racer;
     Object_GoldenBalloon *obj64;
@@ -1772,8 +1772,8 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
     }
     speedf = sp2C;
     settings = get_settings();
-    obj3C = obj->segment.unk3C_a.unk3C;
-    flag = 0x10000 << obj3C->unk8;
+    levelEntry = obj->segment.unk3C_a.level_entry;
+    flag = 0x10000 << levelEntry->goldenBalloon.unk8;
     if (settings->courseFlagsPtr[settings->courseId] & flag) {
         if (obj->unk7C.word > 0) {
             obj->unk74 = 2;
@@ -2046,7 +2046,7 @@ void obj_loop_bananacreator(Object *obj, s32 speed) {
     newBananaObj = spawn_object(&newEntry, 1);
     obj->unk7C.word = 1;
     if (newBananaObj) {
-      newBananaObj->segment.unk3C_a.unk3C = 0;
+      newBananaObj->segment.unk3C_a.level_entry = NULL;
       newBananaObj64 = &newBananaObj->unk64->banana;
       newBananaObj64->spawner = obj;
       func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f, obj->segment.trans.z_position, 44, 34, 0.25f, 0);
@@ -2272,7 +2272,7 @@ void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s
     someObj = spawn_object(&sp24, 1);
     if (someObj != NULL) {
         someObj->segment.trans.scale *= 3.5 * arg5;
-        someObj->segment.unk3C_a.unk3C = NULL;
+        someObj->segment.unk3C_a.level_entry = NULL;
         someObj->segment.x_velocity = 0.0f;
         someObj->segment.y_velocity = 0.0f;
         someObj->segment.z_velocity = 0.0f;
@@ -2413,21 +2413,6 @@ void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
 #ifdef NON_EQUIVALENT
 void func_800ABC5C(s32, s32, s32, s32, s32, s32); /* extern */
 
-typedef struct Object_3C_Weather {
-    u8 pad0[0x2];
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s8 unk8;
-    u8 unk9;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    u8 unk10;
-    u8 unk11;
-    s16 unk12;
-} Object_3C_Weather;
-
 // Has stack & regalloc issues.
 void obj_loop_weather(Object *obj, s32 speed) {
     s32 sp54;
@@ -2436,7 +2421,7 @@ void obj_loop_weather(Object *obj, s32 speed) {
     Object **objects;
     Object **lastObj;
     Object *curObj;
-    Object_3C_Weather *obj3c;
+    LevelObjectEntry_Weather *level_entry;
     f32 temp_f0;
     f32 new_var;
     f32 temp_f2;
@@ -2454,9 +2439,9 @@ void obj_loop_weather(Object *obj, s32 speed) {
         temp_f0 = obj->segment.trans.x_position - curObj->segment.trans.x_position;
         temp_f2 = obj->segment.trans.z_position - curObj->segment.trans.z_position;
         new_var = obj->unk78f;
-        obj3c = obj->segment.unk3C_a.unk3C;
+        level_entry = &obj->segment.unk3C_a.level_entry->weather;
         if (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) <= (new_var * 1.0f)){
-            func_800ABC5C(obj3c->unkA * 256, obj3c->unkC * 256, obj3c->unkE * 256, obj3c->unk10 * 257, obj3c->unk11 * 257, (s32) obj3c->unk12);
+            func_800ABC5C(level_entry->unkA * 256, level_entry->unkC * 256, level_entry->unkE * 256, level_entry->unk10 * 257, level_entry->unk11 * 257, (s32) level_entry->unk12);
         }
     }
 }
@@ -2618,7 +2603,7 @@ void obj_loop_bubbler(Object *obj, s32 speed) {
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
     obj->unk64 = (s32)get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7);
-    obj->segment.unk3C_a.unk3C = NULL;
+    obj->segment.unk3C_a.level_entry = NULL;
 }
 
 void obj_init_unknown94(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown94 *entry, UNUSED s32 arg2) {
@@ -2632,12 +2617,12 @@ void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrig
 
 void obj_loop_rangetrigger(Object *obj, s32 speed) {
     UNUSED s32 temp;
-    Object_3C_80042178 *obj3C;
+    LevelObjectEntry_RangeTrigger *level_entry;
     unk80042178 sp20;
 
-    obj3C = obj->segment.unk3C_a.unk3C;
-    if (func_80016DE8(obj->segment.trans.x_position, 0, obj->segment.trans.z_position, (f32)obj3C->unk8, 1, &sp20) > 0) {
-        obj->unk74 = obj3C->unkA;
+    level_entry = &obj->segment.unk3C_a.level_entry->rangeTrigger;
+    if (func_80016DE8(obj->segment.trans.x_position, 0, obj->segment.trans.z_position, (f32)level_entry->unk8, 1, &sp20) > 0) {
+        obj->unk74 = level_entry->unkA;
     } else {
         obj->unk74 = 0;
     }

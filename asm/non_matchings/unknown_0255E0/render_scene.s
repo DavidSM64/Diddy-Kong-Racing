@@ -346,7 +346,7 @@ glabel render_scene
 /* 025E60 80025260 0C02B288 */  jal   func_800ACA20
 /* 025E64 80025264 00403825 */   move  $a3, $v0
 /* 025E68 80025268 8E040000 */  lw    $a0, ($s0)
-/* 025E6C 8002526C 0C006EC6 */  jal   func_8001BB18
+/* 025E6C 8002526C 0C006EC6 */  jal   get_racer_object_by_port
 /* 025E70 80025270 00000000 */   nop   
 /* 025E74 80025274 8FAD00A0 */  lw    $t5, 0xa0($sp)
 /* 025E78 80025278 3C068012 */  lui   $a2, %hi(gSceneCurrVertexList) # $a2, 0x8012

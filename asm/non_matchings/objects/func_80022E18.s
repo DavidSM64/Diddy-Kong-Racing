@@ -13,11 +13,11 @@ glabel func_80022E18
 /* 023A44 80022E44 24040001 */  li    $a0, 1
 /* 023A48 80022E48 0C02AC6B */  jal   func_800AB1AC
 /* 023A4C 80022E4C A4580054 */   sh    $t8, 0x54($v0)
-/* 023A50 80022E50 3C078012 */  lui   $a3, %hi(gObjectStructArrayPtr) # $a3, 0x8012
-/* 023A54 80022E54 3C068012 */  lui   $a2, %hi(gObjectCount) # $a2, 0x8012
+/* 023A50 80022E50 3C078012 */  lui   $a3, %hi(gRacers) # $a3, 0x8012
+/* 023A54 80022E54 3C068012 */  lui   $a2, %hi(gNumRacers) # $a2, 0x8012
 /* 023A58 80022E58 00002825 */  move  $a1, $zero
-/* 023A5C 80022E5C 24C6AEF0 */  addiu $a2, %lo(gObjectCount) # addiu $a2, $a2, -0x5110
-/* 023A60 80022E60 24E7AEE4 */  addiu $a3, %lo(gObjectStructArrayPtr) # addiu $a3, $a3, -0x511c
+/* 023A5C 80022E5C 24C6AEF0 */  addiu $a2, %lo(gNumRacers) # addiu $a2, $a2, -0x5110
+/* 023A60 80022E60 24E7AEE4 */  addiu $a3, %lo(gRacers) # addiu $a3, $a3, -0x511c
 /* 023A64 80022E64 00001025 */  move  $v0, $zero
 .L80022E68:
 /* 023A68 80022E68 8CF90000 */  lw    $t9, ($a3)
@@ -41,14 +41,14 @@ glabel func_80022E18
 /* 023AB0 80022EB0 8D640004 */  lw    $a0, 4($t3)
 /* 023AB4 80022EB4 0C003FEE */  jal   gParticlePtrList_addObject
 /* 023AB8 80022EB8 00000000 */   nop   
-/* 023ABC 80022EBC 3C078012 */  lui   $a3, %hi(gObjectStructArrayPtr) # $a3, 0x8012
-/* 023AC0 80022EC0 24E7AEE4 */  addiu $a3, %lo(gObjectStructArrayPtr) # addiu $a3, $a3, -0x511c
+/* 023ABC 80022EBC 3C078012 */  lui   $a3, %hi(gRacers) # $a3, 0x8012
+/* 023AC0 80022EC0 24E7AEE4 */  addiu $a3, %lo(gRacers) # addiu $a3, $a3, -0x511c
 /* 023AC4 80022EC4 8CEC0000 */  lw    $t4, ($a3)
-/* 023AC8 80022EC8 3C0E8012 */  lui   $t6, %hi(D_8011AEE8) # $t6, 0x8012
-/* 023ACC 80022ECC 8DCEAEE8 */  lw    $t6, %lo(D_8011AEE8)($t6)
+/* 023AC8 80022EC8 3C0E8012 */  lui   $t6, %hi(gRacersByPosition) # $t6, 0x8012
+/* 023ACC 80022ECC 8DCEAEE8 */  lw    $t6, %lo(gRacersByPosition)($t6)
 /* 023AD0 80022ED0 8D8D0000 */  lw    $t5, ($t4)
-/* 023AD4 80022ED4 3C068012 */  lui   $a2, %hi(gObjectCount) # $a2, 0x8012
-/* 023AD8 80022ED8 24C6AEF0 */  addiu $a2, %lo(gObjectCount) # addiu $a2, $a2, -0x5110
+/* 023AD4 80022ED4 3C068012 */  lui   $a2, %hi(gNumRacers) # $a2, 0x8012
+/* 023AD8 80022ED8 24C6AEF0 */  addiu $a2, %lo(gNumRacers) # addiu $a2, $a2, -0x5110
 /* 023ADC 80022EDC 240F0001 */  li    $t7, 1
 /* 023AE0 80022EE0 ADCD0000 */  sw    $t5, ($t6)
 /* 023AE4 80022EE4 ACCF0000 */  sw    $t7, ($a2)

@@ -149,7 +149,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             }
         }
     }
-    tempObj = get_object_struct(0);
+    tempObj = get_racer_object(0);
     obj64 = tempObj->unk64;
     if ((obj == tempObj->unk4C->unk0) && (tempObj->unk4C->unk14 & 8) && (obj->segment.unk3B == 1)) {
         obj64->racer.attackType = ATTACK_SQUISHED;

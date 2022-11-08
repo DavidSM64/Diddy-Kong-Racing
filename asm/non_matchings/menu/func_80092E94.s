@@ -47,7 +47,7 @@ glabel func_80092E94
 /* 093B44 80092F44 102001A9 */  beqz  $at, .L800935EC
 /* 093B48 80092F48 8FBF0034 */   lw    $ra, 0x34($sp)
 /* 093B4C 80092F4C 8FA40058 */  lw    $a0, 0x58($sp)
-/* 093B50 80092F50 0C01AC3E */  jal   func_8006B0F8
+/* 093B50 80092F50 0C01AC3E */  jal   get_map_available_vehicles
 /* 093B54 80092F54 00000000 */   nop   
 /* 093B58 80092F58 8FA40058 */  lw    $a0, 0x58($sp)
 /* 093B5C 80092F5C 0C01AF77 */  jal   get_level_name
@@ -299,7 +299,7 @@ glabel func_80092E94
 /* 093F24 80093324 29C10002 */  slti  $at, $t6, 2
 /* 093F28 80093328 10200008 */  beqz  $at, .L8009334C
 /* 093F2C 8009332C 240200FF */   li    $v0, 255
-/* 093F30 80093330 0C01AC2B */  jal   func_8006B0AC
+/* 093F30 80093330 0C01AC2B */  jal   get_map_default_vehicle
 /* 093F34 80093334 00000000 */   nop   
 /* 093F38 80093338 10500004 */  beq   $v0, $s0, .L8009334C
 /* 093F3C 8009333C 240200FF */   li    $v0, 255

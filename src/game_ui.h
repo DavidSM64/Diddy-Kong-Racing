@@ -216,12 +216,6 @@ typedef struct unk80126CDC {
     s8 unk704[0x1C];
 } unk80126CDC;
 
-typedef struct {
-    u8 unk0[0x4B];
-    s8 numLaps;
-    s8 unk4C;
-} unk80126D60;
-
 typedef struct unk800E1E64 {
     s32 unk0;
     s32 unk4;

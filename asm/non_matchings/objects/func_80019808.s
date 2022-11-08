@@ -27,8 +27,8 @@ glabel func_80019808
 /* 01A46C 8001986C 11C003D0 */  beqz  $t6, .L8001A7B0
 /* 01A470 80019870 24010042 */   li    $at, 66
 /* 01A474 80019874 14610008 */  bne   $v1, $at, .L80019898
-/* 01A478 80019878 3C0B8012 */   lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
-/* 01A47C 8001987C 256BAEE4 */  addiu $t3, %lo(gObjectStructArrayPtr) # addiu $t3, $t3, -0x511c
+/* 01A478 80019878 3C0B8012 */   lui   $t3, %hi(gRacers) # $t3, 0x8012
+/* 01A47C 8001987C 256BAEE4 */  addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
 /* 01A480 80019880 8D640000 */  lw    $a0, ($t3)
 /* 01A484 80019884 AFBF0064 */  sw    $ra, 0x64($sp)
 /* 01A488 80019888 0C01144A */  jal   func_80045128
@@ -38,11 +38,11 @@ glabel func_80019808
 .L80019898:
 /* 01A498 80019898 3C0F8012 */  lui   $t7, %hi(D_8011ADB4) # $t7, 0x8012
 /* 01A49C 8001989C 8DEFADB4 */  lw    $t7, %lo(D_8011ADB4)($t7)
-/* 01A4A0 800198A0 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
+/* 01A4A0 800198A0 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
 /* 01A4A4 800198A4 15E003C2 */  bnez  $t7, .L8001A7B0
-/* 01A4A8 800198A8 256BAEE4 */   addiu $t3, %lo(gObjectStructArrayPtr) # addiu $t3, $t3, -0x511c
-/* 01A4AC 800198AC 3C128012 */  lui   $s2, %hi(gObjectCount) # $s2, 0x8012
-/* 01A4B0 800198B0 2652AEF0 */  addiu $s2, %lo(gObjectCount) # addiu $s2, $s2, -0x5110
+/* 01A4A8 800198A8 256BAEE4 */   addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
+/* 01A4AC 800198AC 3C128012 */  lui   $s2, %hi(gNumRacers) # $s2, 0x8012
+/* 01A4B0 800198B0 2652AEF0 */  addiu $s2, %lo(gNumRacers) # addiu $s2, $s2, -0x5110
 /* 01A4B4 800198B4 8E470000 */  lw    $a3, ($s2)
 /* 01A4B8 800198B8 00008025 */  move  $s0, $zero
 /* 01A4BC 800198BC 18E00066 */  blez  $a3, .L80019A58
@@ -86,8 +86,8 @@ glabel func_80019808
 /* 01A550 80019950 AFAA0044 */  sw    $t2, 0x44($sp)
 /* 01A554 80019954 0C001AB2 */  jal   func_80006AC8
 /* 01A558 80019958 AFA5004C */   sw    $a1, 0x4c($sp)
-/* 01A55C 8001995C 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
-/* 01A560 80019960 256BAEE4 */  addiu $t3, %lo(gObjectStructArrayPtr) # addiu $t3, $t3, -0x511c
+/* 01A55C 8001995C 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
+/* 01A560 80019960 256BAEE4 */  addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
 /* 01A564 80019964 8FAA0044 */  lw    $t2, 0x44($sp)
 /* 01A568 80019968 8D6E0000 */  lw    $t6, ($t3)
 /* 01A56C 8001996C 8FA5004C */  lw    $a1, 0x4c($sp)
@@ -478,13 +478,13 @@ glabel func_80019808
 /* 01AAD4 80019ED4 10000236 */  b     .L8001A7B0
 /* 01AAD8 80019ED8 AC34ADB4 */   sw    $s4, %lo(D_8011ADB4)($at)
 .L80019EDC:
-/* 01AADC 80019EDC 3C078012 */  lui   $a3, %hi(gObjectCount) # $a3, 0x8012
-/* 01AAE0 80019EE0 3C128012 */  lui   $s2, %hi(gObjectCount) # $s2, 0x8012
-/* 01AAE4 80019EE4 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
-/* 01AAE8 80019EE8 8CE7AEF0 */  lw    $a3, %lo(gObjectCount)($a3)
+/* 01AADC 80019EDC 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
+/* 01AAE0 80019EE0 3C128012 */  lui   $s2, %hi(gNumRacers) # $s2, 0x8012
+/* 01AAE4 80019EE4 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
+/* 01AAE8 80019EE8 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)
 /* 01AAEC 80019EEC 00008025 */  move  $s0, $zero
-/* 01AAF0 80019EF0 256BAEE4 */  addiu $t3, %lo(gObjectStructArrayPtr) # addiu $t3, $t3, -0x511c
-/* 01AAF4 80019EF4 2652AEF0 */  addiu $s2, %lo(gObjectCount) # addiu $s2, $s2, -0x5110
+/* 01AAF0 80019EF0 256BAEE4 */  addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
+/* 01AAF4 80019EF4 2652AEF0 */  addiu $s2, %lo(gNumRacers) # addiu $s2, $s2, -0x5110
 /* 01AAF8 80019EF8 00005025 */  move  $t2, $zero
 /* 01AAFC 80019EFC 240D000A */  li    $t5, 10
 .L80019F00:
@@ -608,11 +608,11 @@ glabel func_80019808
 /* 01ACB0 8001A0B0 AFAA0044 */   sw    $t2, 0x44($sp)
 /* 01ACB4 8001A0B4 8FA80080 */  lw    $t0, 0x80($sp)
 /* 01ACB8 8001A0B8 8FAA0044 */  lw    $t2, 0x44($sp)
-/* 01ACBC 8001A0BC 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
+/* 01ACBC 8001A0BC 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
 /* 01ACC0 8001A0C0 8FBF0064 */  lw    $ra, 0x64($sp)
 /* 01ACC4 8001A0C4 24010004 */  li    $at, 4
 /* 01ACC8 8001A0C8 10410019 */  beq   $v0, $at, .L8001A130
-/* 01ACCC 8001A0CC 256BAEE4 */   addiu $t3, %lo(gObjectStructArrayPtr) # addiu $t3, $t3, -0x511c
+/* 01ACCC 8001A0CC 256BAEE4 */   addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
 /* 01ACD0 8001A0D0 A11401D8 */  sb    $s4, 0x1d8($t0)
 /* 01ACD4 8001A0D4 8E380000 */  lw    $t8, ($s1)
 /* 01ACD8 8001A0D8 00000000 */  nop   
@@ -629,12 +629,12 @@ glabel func_80019808
 /* 01AD04 8001A104 AFA80080 */  sw    $t0, 0x80($sp)
 /* 01AD08 8001A108 0C000741 */  jal   play_sound_global
 /* 01AD0C 8001A10C AFAA0044 */   sw    $t2, 0x44($sp)
-/* 01AD10 8001A110 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
+/* 01AD10 8001A110 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
 /* 01AD14 8001A114 8FA80080 */  lw    $t0, 0x80($sp)
 /* 01AD18 8001A118 8FAA0044 */  lw    $t2, 0x44($sp)
 /* 01AD1C 8001A11C 8FBF0064 */  lw    $ra, 0x64($sp)
 /* 01AD20 8001A120 8E220000 */  lw    $v0, ($s1)
-/* 01AD24 8001A124 256BAEE4 */  addiu $t3, %lo(gObjectStructArrayPtr) # addiu $t3, $t3, -0x511c
+/* 01AD24 8001A124 256BAEE4 */  addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
 .L8001A128:
 /* 01AD28 8001A128 244E0001 */  addiu $t6, $v0, 1
 .L8001A12C:
@@ -667,9 +667,9 @@ glabel func_80019808
 /* 01AD88 8001A188 0143082A */  slt   $at, $t2, $v1
 /* 01AD8C 8001A18C 1420FFB5 */  bnez  $at, .L8001A064
 /* 01AD90 8001A190 00000000 */   nop   
-/* 01AD94 8001A194 3C098012 */  lui   $t1, %hi(D_8011AEE8) # $t1, 0x8012
+/* 01AD94 8001A194 3C098012 */  lui   $t1, %hi(gRacersByPosition) # $t1, 0x8012
 /* 01AD98 8001A198 00008025 */  move  $s0, $zero
-/* 01AD9C 8001A19C 2529AEE8 */  addiu $t1, %lo(D_8011AEE8) # addiu $t1, $t1, -0x5118
+/* 01AD9C 8001A19C 2529AEE8 */  addiu $t1, %lo(gRacersByPosition) # addiu $t1, $t1, -0x5118
 /* 01ADA0 8001A1A0 00005025 */  move  $t2, $zero
 .L8001A1A4:
 /* 01ADA4 8001A1A4 8D380000 */  lw    $t8, ($t1)
@@ -781,8 +781,8 @@ glabel func_80019808
 /* 01AF20 8001A320 8FA50094 */  lw    $a1, 0x94($sp)
 /* 01AF24 8001A324 26100001 */  addiu $s0, $s0, 1
 /* 01AF28 8001A328 2A010004 */  slti  $at, $s0, 4
-/* 01AF2C 8001A32C 3C0B8012 */  lui   $t3, %hi(gObjectStructArrayPtr) # $t3, 0x8012
-/* 01AF30 8001A330 256BAEE4 */  addiu $t3, %lo(gObjectStructArrayPtr) # addiu $t3, $t3, -0x511c
+/* 01AF2C 8001A32C 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
+/* 01AF30 8001A330 256BAEE4 */  addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
 /* 01AF34 8001A334 1420FFF7 */  bnez  $at, .L8001A314
 /* 01AF38 8001A338 00A22825 */   or    $a1, $a1, $v0
 /* 01AF3C 8001A33C 3C198012 */  lui   $t9, %hi(D_8011AEF6) # $t9, 0x8012
@@ -829,23 +829,23 @@ glabel func_80019808
 /* 01AFD8 8001A3D8 8FBF0034 */   lw    $ra, 0x34($sp)
 /* 01AFDC 8001A3DC 0C027B20 */  jal   is_in_two_player_adventure
 /* 01AFE0 8001A3E0 A3A0005B */   sb    $zero, 0x5b($sp)
-/* 01AFE4 8001A3E4 3C098012 */  lui   $t1, %hi(D_8011AEE8) # $t1, 0x8012
+/* 01AFE4 8001A3E4 3C098012 */  lui   $t1, %hi(gRacersByPosition) # $t1, 0x8012
 /* 01AFE8 8001A3E8 10400010 */  beqz  $v0, .L8001A42C
-/* 01AFEC 8001A3EC 2529AEE8 */   addiu $t1, %lo(D_8011AEE8) # addiu $t1, $t1, -0x5118
+/* 01AFEC 8001A3EC 2529AEE8 */   addiu $t1, %lo(gRacersByPosition) # addiu $t1, $t1, -0x5118
 /* 01AFF0 8001A3F0 87AF0088 */  lh    $t7, 0x88($sp)
 /* 01AFF4 8001A3F4 00000000 */  nop   
 /* 01AFF8 8001A3F8 19E0000D */  blez  $t7, .L8001A430
 /* 01AFFC 8001A3FC 87AE0088 */   lh    $t6, 0x88($sp)
 /* 01B000 8001A400 0C02658B */  jal   get_trophy_race_world_id
 /* 01B004 8001A404 00000000 */   nop   
-/* 01B008 8001A408 3C098012 */  lui   $t1, %hi(D_8011AEE8) # $t1, 0x8012
+/* 01B008 8001A408 3C098012 */  lui   $t1, %hi(gRacersByPosition) # $t1, 0x8012
 /* 01B00C 8001A40C 14400007 */  bnez  $v0, .L8001A42C
-/* 01B010 8001A410 2529AEE8 */   addiu $t1, %lo(D_8011AEE8) # addiu $t1, $t1, -0x5118
+/* 01B010 8001A410 2529AEE8 */   addiu $t1, %lo(gRacersByPosition) # addiu $t1, $t1, -0x5118
 /* 01B014 8001A414 0C0069F6 */  jal   func_8001A7D8
 /* 01B018 8001A418 02C02025 */   move  $a0, $s6
-/* 01B01C 8001A41C 3C098012 */  lui   $t1, %hi(D_8011AEE8) # $t1, 0x8012
+/* 01B01C 8001A41C 3C098012 */  lui   $t1, %hi(gRacersByPosition) # $t1, 0x8012
 /* 01B020 8001A420 10400002 */  beqz  $v0, .L8001A42C
-/* 01B024 8001A424 2529AEE8 */   addiu $t1, %lo(D_8011AEE8) # addiu $t1, $t1, -0x5118
+/* 01B024 8001A424 2529AEE8 */   addiu $t1, %lo(gRacersByPosition) # addiu $t1, $t1, -0x5118
 /* 01B028 8001A428 A3B4005B */  sb    $s4, 0x5b($sp)
 .L8001A42C:
 /* 01B02C 8001A42C 87AE0088 */  lh    $t6, 0x88($sp)
@@ -897,10 +897,10 @@ glabel func_80019808
 /* 01B0D0 8001A4D0 0C01A73F */  jal   func_80069CFC
 /* 01B0D4 8001A4D4 00000000 */   nop   
 /* 01B0D8 8001A4D8 8FA80080 */  lw    $t0, 0x80($sp)
-/* 01B0DC 8001A4DC 3C098012 */  lui   $t1, %hi(D_8011AEE8) # $t1, 0x8012
+/* 01B0DC 8001A4DC 3C098012 */  lui   $t1, %hi(gRacersByPosition) # $t1, 0x8012
 /* 01B0E0 8001A4E0 8FAA0044 */  lw    $t2, 0x44($sp)
 /* 01B0E4 8001A4E4 240F0005 */  li    $t7, 5
-/* 01B0E8 8001A4E8 2529AEE8 */  addiu $t1, %lo(D_8011AEE8) # addiu $t1, $t1, -0x5118
+/* 01B0E8 8001A4E8 2529AEE8 */  addiu $t1, %lo(gRacersByPosition) # addiu $t1, $t1, -0x5118
 /* 01B0EC 8001A4EC A44F0036 */  sh    $t7, 0x36($v0)
 .L8001A4F0:
 /* 01B0F0 8001A4F0 A11401D8 */  sb    $s4, 0x1d8($t0)
@@ -971,9 +971,9 @@ glabel func_80019808
 /* 01B1D8 8001A5D8 A2600000 */  sb    $zero, ($s3)
 /* 01B1DC 8001A5DC 0C027B20 */  jal   is_in_two_player_adventure
 /* 01B1E0 8001A5E0 A3A4005A */   sb    $a0, 0x5a($sp)
-/* 01B1E4 8001A5E4 3C098012 */  lui   $t1, %hi(D_8011AEE8) # $t1, 0x8012
+/* 01B1E4 8001A5E4 3C098012 */  lui   $t1, %hi(gRacersByPosition) # $t1, 0x8012
 /* 01B1E8 8001A5E8 10400008 */  beqz  $v0, .L8001A60C
-/* 01B1EC 8001A5EC 2529AEE8 */   addiu $t1, %lo(D_8011AEE8) # addiu $t1, $t1, -0x5118
+/* 01B1EC 8001A5EC 2529AEE8 */   addiu $t1, %lo(gRacersByPosition) # addiu $t1, $t1, -0x5118
 /* 01B1F0 8001A5F0 82D90072 */  lb    $t9, 0x72($s6)
 /* 01B1F4 8001A5F4 82D8005A */  lb    $t8, 0x5a($s6)
 /* 01B1F8 8001A5F8 00000000 */  nop   

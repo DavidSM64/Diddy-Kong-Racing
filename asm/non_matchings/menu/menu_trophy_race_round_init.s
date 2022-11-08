@@ -53,7 +53,7 @@ glabel menu_trophy_race_round_init
 /* 098F28 80098328 3C128012 */   lui   $s2, %hi(gPlayerSelectVehicle) # $s2, 0x8012
 /* 098F2C 8009832C 265269C0 */  addiu $s2, %lo(gPlayerSelectVehicle) # addiu $s2, $s2, 0x69c0
 .L80098330:
-/* 098F30 80098330 0C01AC2B */  jal   func_8006B0AC
+/* 098F30 80098330 0C01AC2B */  jal   get_map_default_vehicle
 /* 098F34 80098334 02002025 */   move  $a0, $s0
 /* 098F38 80098338 8E6A0000 */  lw    $t2, ($s3)
 /* 098F3C 8009833C 26310001 */  addiu $s1, $s1, 1
@@ -62,7 +62,7 @@ glabel menu_trophy_race_round_init
 /* 098F48 80098348 1420FFF9 */  bnez  $at, .L80098330
 /* 098F4C 8009834C A242FFFF */   sb    $v0, -1($s2)
 .L80098350:
-/* 098F50 80098350 0C01AC2B */  jal   func_8006B0AC
+/* 098F50 80098350 0C01AC2B */  jal   get_map_default_vehicle
 /* 098F54 80098354 02002025 */   move  $a0, $s0
 /* 098F58 80098358 0C01B6C5 */  jal   set_level_default_vehicle
 /* 098F5C 8009835C 00402025 */   move  $a0, $v0

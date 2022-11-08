@@ -1,7 +1,7 @@
 glabel func_8001B2F0
 /* 01BEF0 8001B2F0 27BDFFD8 */  addiu $sp, $sp, -0x28
 /* 01BEF4 8001B2F4 AFBF0014 */  sw    $ra, 0x14($sp)
-/* 01BEF8 8001B2F8 0C01AC2B */  jal   func_8006B0AC
+/* 01BEF8 8001B2F8 0C01AC2B */  jal   get_map_default_vehicle
 /* 01BEFC 8001B2FC AFA40028 */   sw    $a0, 0x28($sp)
 /* 01BF00 8001B300 3C058012 */  lui   $a1, %hi(D_8011AE84) # $a1, 0x8012
 /* 01BF04 8001B304 24A5AE84 */  addiu $a1, %lo(D_8011AE84) # addiu $a1, $a1, -0x517c

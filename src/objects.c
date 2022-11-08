@@ -81,7 +81,7 @@ s16 D_800DC7B8[52] = {
 
 // A table of which vehicles to use for boss races.
 // https://www.youtube.com/watch?v=WQJAtns_rMk
-s16 D_800DC820[16] = {
+s16 gBossVehicles[16] = {
     0x0005, 0x0106, 0x0207, 0x0005,
     0x0106, 0x010B, 0x010B, 0x0207,
     0x000C, 0x020D, 0x0101, 0x0101,
@@ -142,7 +142,7 @@ s8 D_8011AD3D;
 s8 D_8011AD3E;
 Object *D_8011AD40;
 s8 D_8011AD44;
-s8 D_8011AD45;
+s8 gOverworldVehicle;
 s16 D_8011AD46;
 s16 D_8011AD48;
 s16 D_8011AD4A;
@@ -223,10 +223,12 @@ s32 D_8011AED4;
 s16 D_8011AED8;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 s32 D_8011AEE0;
-Object *(*gObjectStructArrayPtr)[8];
-Object **D_8011AEE8;
-s32 *D_8011AEEC;
-s32 gObjectCount;
+Object *(*gRacers)[8];
+// Similar to gRacers, but sorts the pointer by the players' current position in the race.
+Object **gRacersByPosition;
+// Similar to gRacers, but sorts the pointer by controller ports 1-4, then CPUs.
+Object **gRacersByPort;
+s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 D_8011AEF5;
 u8 D_8011AEF6;
@@ -337,9 +339,9 @@ void func_8000BF8C(void) {
     D_8011AE74 = (Object **)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011AECC = (unknown8011AECC *)allocate_from_main_pool_safe(0xE10, COLOUR_TAG_BLUE);
     D_8011AEDC = (u32 *)allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    gObjectStructArrayPtr = (Object *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
-    D_8011AEEC = (s32 *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
-    D_8011AEE8 = (Object **)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    gRacers = (Object *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    gRacersByPort = (s32 *)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    gRacersByPosition = (Object **)allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
     D_8011AF04 = (u32 *)allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011ADCC = (s8 *)allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = (unk800179D0 *)allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
@@ -415,7 +417,7 @@ void func_8000C460(void) {
     D_8011AE70 = 0;
     D_8011AED0 = 0;
     D_8011AED4 = 0;
-    gObjectCount = 0;
+    gNumRacers = 0;
     D_8011AE78 = 0;
     D_8011AD20[1] = 0;
     D_8011AD22[0] = 0;
@@ -613,13 +615,13 @@ s8 check_if_silver_coin_race() {
 void func_8000E1EC(Object *object, s32 arg1) {
     D_8011AD40 = object;
     D_8011AD44 = 4;
-    D_8011AD45 = arg1;
+    gOverworldVehicle = arg1;
     D_8011AD46 = object->segment.trans.x_position;
     D_8011AD48 = object->segment.trans.y_position;
     D_8011AD4A = object->segment.trans.z_position;
     D_8011AD4C = object->segment.trans.y_rotation;
     gParticlePtrList_addObject(object);
-    gObjectCount = 0;
+    gNumRacers = 0;
 }
 
 void func_8000E2B4(void) {
@@ -639,12 +641,12 @@ void func_8000E2B4(void) {
     settings = get_settings();
     sp2C.unkE = 0;
     sp2C.common.size = 0x10;
-    if (D_8011AD45 < 5) {
-        object_id = ((s16*) D_800DC7A8)[settings->racers[0].character + D_8011AD45 * 10];
+    if (gOverworldVehicle < 5) {
+        object_id = ((s16*) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
     } else {
-        object_id = D_800DC7B8[D_8011AD45 + 37];
+        object_id = D_800DC7B8[gOverworldVehicle + 37];
     }
-    set_level_default_vehicle(D_8011AD45);
+    set_level_default_vehicle(gOverworldVehicle);
     sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
     sp2C.unkA = 0;
     sp2C.unk8 = 0;
@@ -655,13 +657,13 @@ void func_8000E2B4(void) {
     sp2C.unkC = D_8011AD4C;
     func_800521B8(1);
     player = spawn_object(&sp2C, 0x11);
-    gObjectCount = 1;
-    (*gObjectStructArrayPtr)[0] = player;
-    *D_8011AEEC = player;
-    *D_8011AEE8 = player;
+    gNumRacers = 1;
+    (*gRacers)[0] = player;
+    gRacersByPort[0] = player;
+    *gRacersByPosition = player;
     player_64 = &player->unk64->racer;
-    player_64->unk1D6 = D_8011AD45;
-    player_64->unk1D7 = D_8011AD45;
+    player_64->unk1D6 = gOverworldVehicle;
+    player_64->unk1D7 = gOverworldVehicle;
     player_64->unk2 = 0;
     player_64->characterId = (s8) settings->racers[0].character;
     player_64->playerIndex = 0;
@@ -672,7 +674,7 @@ void func_8000E2B4(void) {
     if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
         player->segment.trans.scale *= 0.714f;
     }
-    player->segment.unk3C_a.unk3C = 0;
+    player->segment.unk3C_a.level_entry = NULL;
     player->segment.trans.y_rotation = D_8011AD4C;
     player->segment.trans.y_position = D_8011AD48;
 }
@@ -700,10 +702,10 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8000E4E8.s")
 s32 func_8000E558(Object *arg0){
     s32 temp_v0;
     s32 new_var, new_var2;
-    if (arg0->segment.unk3C_a.unk3C == 0) {
+    if (arg0->segment.unk3C_a.level_entry == NULL) {
         return TRUE;
     }
-    temp_v0 = arg0->segment.unk3C_a.unk3C;
+    temp_v0 = arg0->segment.unk3C_a.level_entry;
     new_var2 = D_8011AE98[0];
     if ((temp_v0 >= new_var2) && (((D_8011AEA0 * 8) + new_var2) >= temp_v0)) {
         return FALSE;
@@ -1035,7 +1037,7 @@ void func_80011AD0(Object *this) {
             break;
 
         case 3: //L80011BB4
-            tmp_f0 = this->segment.unk3C_a.unk3C->unkD;
+            tmp_f0 = this->segment.unk3C_a.level_entry->unk80011AD0.unkD;
             offset = (this->unk64->obj80011AD0.unkFC * 6);
             offset *= 5;
             offset *= 2;
@@ -1465,10 +1467,10 @@ s32 func_8001B668(s32 arg0) {
     s16 sp2E;
     s16 sp2C;
     s32 temp_v0;
-    s32 sp24;
+    MapId mapId;
 
-    sp24 = func_800599A8();
-    if ((func_8006BD88() != sp24) || (D_800DC728 != D_8011AE82)) {
+    mapId = func_800599A8();
+    if ((func_8006BD88() != mapId) || (D_800DC728 != D_8011AE82)) {
         temp_v0 = func_800599B8(arg0, func_8006BD88(), D_8011AE82, &sp2E, &sp2C);
         if (temp_v0 == 0) {
             D_800DC728 = D_8011AE82;
@@ -1497,10 +1499,10 @@ Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2) {
     s32 temp;
     Object *temp_v1;
     arg1 = (arg0->obj.obj8001B7A8.unk112 - arg1) - 1;
-    if ((arg1 < 0) || (arg1 >= gObjectCount)) {
+    if ((arg1 < 0) || (arg1 >= gNumRacers)) {
         return NULL;
     }
-    temp_v1 = D_8011AEE8[arg1];
+    temp_v1 = gRacersByPosition[arg1];
     if (temp_v1 == NULL) {
         return NULL;
     }
@@ -1528,40 +1530,39 @@ s32 func_8001BA64() {
     return D_8011AED0;
 }
 
-Object **get_racer_objects(s32 *cnt) {
-    *cnt = gObjectCount;
-    return *gObjectStructArrayPtr;
+Object **get_racer_objects(s32 *numRacers) {
+    *numRacers = gNumRacers;
+    return *gRacers;
 }
 
-s32 *func_8001BA90(s32 *arg0) {
-    *arg0 = gObjectCount;
-    return D_8011AEEC;
+Object **get_racer_objects_by_port(s32 *numRacers) {
+    *numRacers = gNumRacers;
+    return gRacersByPort;
 }
 
-Object **func_8001BAAC(s32 *numberOfObjects) {
-    *numberOfObjects = gObjectCount;
-    return D_8011AEE8;
+Object **get_racer_objects_by_position(s32 *numRacers) {
+    *numRacers = gNumRacers;
+    return gRacersByPosition;
 }
 
-Object *get_object_struct(s32 indx) {
-    if (gObjectCount == 0) {
+Object *get_racer_object(s32 index) {
+    if (gNumRacers == 0) {
         return NULL;
     }
-    if (indx < 0 || indx >= gObjectCount) {
+    if (index < 0 || index >= gNumRacers) {
         return NULL;
     }
-    return (*gObjectStructArrayPtr)[indx];
+    return (*gRacers)[index];
 }
 
-s32 func_8001BB18(s32 arg0) {
-    s32 temp_v0 = gObjectCount;
-    if (temp_v0 == 0) {
-        return 0;
+Object *get_racer_object_by_port(s32 index) {
+    if (gNumRacers == 0) {
+        return NULL;
     }
-    if ((arg0 < 0) || (arg0 >= temp_v0)) {
-        return 0;
+    if (index < 0 || index >= gNumRacers) {
+        return NULL;
     }
-    return D_8011AEEC[arg0];
+    return gRacersByPort[index];
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
@@ -1897,10 +1898,10 @@ void func_800228EC(s32 arg0) {
     Object_Racer *object_64;
 
     D_8011AEF7 = 3;
-    object_64 = &get_object_struct(0)->unk64->racer;
+    object_64 = &get_racer_object(0)->unk64->racer;
     object_64->unk190 = 0;
-    object_64->unk192 = 0;
-    object_64->lapCount = 0;
+    object_64->checkpoint = 0;
+    object_64->lap = 0;
     object_64->unk1BA = 0;
     func_80017E74(arg0);
     func_8006F388(10);

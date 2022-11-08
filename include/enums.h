@@ -3,8 +3,19 @@
 
 #include "sound_ids.h"
 #include "sequence_ids.h"
+#include "asset_enums.h"
 
 /* All the enums defined here can be used in asset files */
+
+// Alias for brevity.
+typedef AssetLevelHeadersEnum MapId;
+
+// There are a few instances of comparing MapId with special, negative values.
+typedef enum SpecialMapId {
+    SPECIAL_MAP_ID_UNK_NEG10 = -10,
+    SPECIAL_MAP_ID_UNK_NEG2 = -2,
+    SPECIAL_MAP_ID_NO_LEVEL = -1,
+} SpecialMapId;
 
 typedef enum Vehicle {
     VEHICLE_CAR,
