@@ -31,11 +31,11 @@ You are not required to install a binutils package, but it does speed up the ini
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
 ### Building on MacOS
-1. `brew install gcc capstone coreutils`
-2. Put GNU-coreutils `bin` on path using by adding `PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"` to your shell rcfile (or update any GNU-util usage in `Makefile` and `tools/Makefile` to use the `g`-prefixed versions).
-3. Download latest `macos` build of `ido-static-recomp` from [here](https://github.com/decompals/ido-static-recomp/releases/), and add `cp` the binaries to `tools/ido-static-recomp/build5.3/out`.
-4. Take a look at [this gist](https://gist.github.com/tonyspumoni/fc1b4c9217c5f2821a9fc4cbf69b51ef) to see what other updates are needed to get the build to pass, and apply them if they are relevant to your environment. You may need to add specific `-I` and `-L` flags to get things like `openssl` and `gcc-12` includes/libs included.
-5. `make` from repository root should work now.
+1. `brew install gcc coreutils gnu-sed grep make wget`
+2. Either link the GNU-coreutils, `ggrep`, and `gsed` to get their non-`g`-prefixed versions on the path, or update any GNU-util usage in `Makefile` and `tools/Makefile` to use the `g`-prefixed versions.
+3. Download latest `macos` build of `ido-static-recomp` from [here](https://github.com/decompals/ido-static-recomp/releases/), and `cp` or `ln` the binaries to `tools/ido-static-recomp/build5.3/out`.
+4. Take a look at [this gist](https://gist.github.com/tonyspumoni/fc1b4c9217c5f2821a9fc4cbf69b51ef) to see what other updates are needed to get the build to pass, and apply them if they are relevant to your environment.
+5. `make` (or `gmake`) from repository root should work now.
 
 ## Modding
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
@@ -112,7 +112,7 @@ To make progress in Adventure 2, a function must be properly named (must not sta
 For example:
 ```c
 /**
- * Returns 1 if Drumstick is avaliable to use, or 0 if not.
+ * Returns 1 if Drumstick is available to use, or 0 if not.
  */
 s32 is_drumstick_unlocked(void) {
     return gActiveMagicCodes & 2;
