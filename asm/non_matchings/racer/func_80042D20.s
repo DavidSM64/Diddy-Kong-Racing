@@ -46,7 +46,7 @@ glabel func_80042D20
 /* 043954 80042D54 0C01AF6C */  jal   get_current_level_header
 /* 043958 80042D58 AFA20044 */   sw    $v0, 0x44($sp)
 /* 04395C 80042D5C AFA20050 */  sw    $v0, 0x50($sp)
-/* 043960 80042D60 0C006EAB */  jal   func_8001BAAC
+/* 043960 80042D60 0C006EAB */  jal   get_racer_objects_by_position
 /* 043964 80042D64 27A40068 */   addiu $a0, $sp, 0x68
 /* 043968 80042D68 0C01B063 */  jal   func_8006C18C
 /* 04396C 80042D6C AFA20060 */   sw    $v0, 0x60($sp)

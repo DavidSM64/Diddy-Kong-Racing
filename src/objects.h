@@ -256,7 +256,7 @@ extern u16 D_800DC7A8[8];
 
 extern s16 D_800DC7B8[52];
 
-extern s16 D_800DC820[16];
+extern s16 gBossVehicles[16];
 
 extern s8 D_800DC840[8];
 
@@ -331,10 +331,10 @@ f32 func_8001B834(Object *arg0, s32);
 unknown8011AECC *func_8001BA00(s32 arg0);
 unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1);
 s32 func_8001BA64();
-Object **get_racer_objects(s32 *cnt);
-s32 *func_8001BA90(s32 *arg0);
-Object **func_8001BAAC(s32 *numberOfObjects);
-Object *get_object_struct(s32 indx);
+Object **get_racer_objects(s32 *numRacers);
+Object **get_racer_objects_by_port(s32 *numRacers);
+Object **get_racer_objects_by_position(s32 *numRacers);
+Object *get_racer_object(s32 index);
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 u32 func_8001BD94(s32 arg0);
 void func_8001D1AC(void);
@@ -378,7 +378,7 @@ s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
-s32 func_8001BB18(s32 arg0);
+Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);

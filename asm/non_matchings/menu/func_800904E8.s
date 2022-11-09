@@ -198,7 +198,7 @@ glabel func_800904E8
 /* 0913C4 800907C4 8D6B69CC */  lw    $t3, %lo(D_801269CC)($t3)
 /* 0913C8 800907C8 AC3969F4 */  sw    $t9, %lo(gSelectedTrackX)($at)
 /* 0913CC 800907CC 3C018012 */  lui   $at, %hi(gSelectedTrackY) # $at, 0x8012
-/* 0913D0 800907D0 0C01AC2B */  jal   func_8006B0AC
+/* 0913D0 800907D0 0C01AC2B */  jal   get_map_default_vehicle
 /* 0913D4 800907D4 AC2B69F8 */   sw    $t3, %lo(gSelectedTrackY)($at)
 /* 0913D8 800907D8 0C01B6C5 */  jal   set_level_default_vehicle
 /* 0913DC 800907DC 00402025 */   move  $a0, $v0

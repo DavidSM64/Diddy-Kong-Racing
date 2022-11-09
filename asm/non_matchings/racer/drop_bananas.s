@@ -1,4 +1,4 @@
-glabel func_800576E0
+glabel drop_bananas
 /* 0582E0 800576E0 27BDFF70 */  addiu $sp, $sp, -0x90
 /* 0582E4 800576E4 AFBF005C */  sw    $ra, 0x5c($sp)
 /* 0582E8 800576E8 AFB20048 */  sw    $s2, 0x48($sp)

@@ -39,7 +39,7 @@ glabel func_80010994
 /* 011624 80010A24 00000000 */  nop   
 .L80010A28:
 /* 011628 80010A28 1C400003 */  bgtz  $v0, .L80010A38
-/* 01162C 80010A2C 3C048012 */   lui   $a0, %hi(gObjectCount) # $a0, 0x8012
+/* 01162C 80010A2C 3C048012 */   lui   $a0, %hi(gNumRacers) # $a0, 0x8012
 /* 011630 80010A30 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
 /* 011634 80010A34 AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
 .L80010A38:
@@ -54,13 +54,13 @@ glabel func_80010994
 /* 011658 80010A58 804B0000 */  lb    $t3, ($v0)
 /* 01165C 80010A5C 3C018012 */  lui   $at, %hi(D_8011AD22) # $at, 0x8012
 /* 011660 80010A60 002B0821 */  addu  $at, $at, $t3
-/* 011664 80010A64 2484AEF0 */  addiu $a0, %lo(gObjectCount) # addiu $a0, $a0, -0x5110
+/* 011664 80010A64 2484AEF0 */  addiu $a0, %lo(gNumRacers) # addiu $a0, $a0, -0x5110
 /* 011668 80010A68 A020AD22 */  sb    $zero, %lo(D_8011AD22)($at)
 /* 01166C 80010A6C 8C8C0000 */  lw    $t4, ($a0)
 /* 011670 80010A70 00009825 */  move  $s3, $zero
 /* 011674 80010A74 19800021 */  blez  $t4, .L80010AFC
-/* 011678 80010A78 3C158012 */   lui   $s5, %hi(gObjectStructArrayPtr) # $s5, 0x8012
-/* 01167C 80010A7C 26B5AEE4 */  addiu $s5, %lo(gObjectStructArrayPtr) # addiu $s5, $s5, -0x511c
+/* 011678 80010A78 3C158012 */   lui   $s5, %hi(gRacers) # $s5, 0x8012
+/* 01167C 80010A7C 26B5AEE4 */  addiu $s5, %lo(gRacers) # addiu $s5, $s5, -0x511c
 /* 011680 80010A80 00001825 */  move  $v1, $zero
 .L80010A84:
 /* 011684 80010A84 8EAD0000 */  lw    $t5, ($s5)
@@ -94,9 +94,9 @@ glabel func_80010994
 /* 0116F4 80010AF4 1420FFE3 */  bnez  $at, .L80010A84
 /* 0116F8 80010AF8 00000000 */   nop   
 .L80010AFC:
-/* 0116FC 80010AFC 3C158012 */  lui   $s5, %hi(gObjectStructArrayPtr) # $s5, 0x8012
+/* 0116FC 80010AFC 3C158012 */  lui   $s5, %hi(gRacers) # $s5, 0x8012
 /* 011700 80010B00 0C0050AE */  jal   func_800142B8
-/* 011704 80010B04 26B5AEE4 */   addiu $s5, %lo(gObjectStructArrayPtr) # addiu $s5, $s5, -0x511c
+/* 011704 80010B04 26B5AEE4 */   addiu $s5, %lo(gRacers) # addiu $s5, $s5, -0x511c
 /* 011708 80010B08 0C00556E */  jal   func_800155B8
 /* 01170C 80010B0C 00000000 */   nop   
 /* 011710 80010B10 0C007A27 */  jal   func_8001E89C
@@ -237,8 +237,8 @@ glabel func_80010994
 /* 0118F8 80010CF8 1420FFBB */  bnez  $at, .L80010BE8
 /* 0118FC 80010CFC 00000000 */   nop   
 .L80010D00:
-/* 011900 80010D00 3C0C8012 */  lui   $t4, %hi(gObjectCount) # $t4, 0x8012
-/* 011904 80010D04 8D8CAEF0 */  lw    $t4, %lo(gObjectCount)($t4)
+/* 011900 80010D00 3C0C8012 */  lui   $t4, %hi(gNumRacers) # $t4, 0x8012
+/* 011904 80010D04 8D8CAEF0 */  lw    $t4, %lo(gNumRacers)($t4)
 /* 011908 80010D08 3C168012 */  lui   $s6, %hi(gObjPtrList) # $s6, 0x8012
 /* 01190C 80010D0C 26D6AE58 */  addiu $s6, %lo(gObjPtrList) # addiu $s6, $s6, -0x51a8
 /* 011910 80010D10 1980000E */  blez  $t4, .L80010D4C
@@ -251,8 +251,8 @@ glabel func_80010994
 /* 011928 80010D28 8DC40000 */  lw    $a0, ($t6)
 /* 01192C 80010D2C 0C01378E */  jal   update_player_racer
 /* 011930 80010D30 00000000 */   nop   
-/* 011934 80010D34 3C0F8012 */  lui   $t7, %hi(gObjectCount) # $t7, 0x8012
-/* 011938 80010D38 8DEFAEF0 */  lw    $t7, %lo(gObjectCount)($t7)
+/* 011934 80010D34 3C0F8012 */  lui   $t7, %hi(gNumRacers) # $t7, 0x8012
+/* 011938 80010D38 8DEFAEF0 */  lw    $t7, %lo(gNumRacers)($t7)
 /* 01193C 80010D3C 26310001 */  addiu $s1, $s1, 1
 /* 011940 80010D40 022F082A */  slt   $at, $s1, $t7
 /* 011944 80010D44 1420FFF5 */  bnez  $at, .L80010D1C
@@ -261,13 +261,13 @@ glabel func_80010994
 /* 01194C 80010D4C 0C01AF66 */  jal   get_current_level_race_type
 /* 011950 80010D50 00000000 */   nop   
 /* 011954 80010D54 1440001C */  bnez  $v0, .L80010DC8
-/* 011958 80010D58 3C078012 */   lui   $a3, %hi(gObjectCount) # $a3, 0x8012
-/* 01195C 80010D5C 8CE7AEF0 */  lw    $a3, %lo(gObjectCount)($a3)
+/* 011958 80010D58 3C078012 */   lui   $a3, %hi(gNumRacers) # $a3, 0x8012
+/* 01195C 80010D5C 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)
 /* 011960 80010D60 00008825 */  move  $s1, $zero
 /* 011964 80010D64 18E00018 */  blez  $a3, .L80010DC8
 /* 011968 80010D68 2412FFFF */   li    $s2, -1
-/* 01196C 80010D6C 3C108012 */  lui   $s0, %hi(D_8011AEE8) # $s0, 0x8012
-/* 011970 80010D70 2610AEE8 */  addiu $s0, %lo(D_8011AEE8) # addiu $s0, $s0, -0x5118
+/* 01196C 80010D6C 3C108012 */  lui   $s0, %hi(gRacersByPosition) # $s0, 0x8012
+/* 011970 80010D70 2610AEE8 */  addiu $s0, %lo(gRacersByPosition) # addiu $s0, $s0, -0x5118
 .L80010D74:
 /* 011974 80010D74 8E180000 */  lw    $t8, ($s0)
 /* 011978 80010D78 0011C880 */  sll   $t9, $s1, 2
@@ -282,8 +282,8 @@ glabel func_80010994
 /* 01199C 80010D9C 26310001 */   addiu $s1, $s1, 1
 /* 0119A0 80010DA0 0C010FB3 */  jal   func_80043ECC
 /* 0119A4 80010DA4 02803025 */   move  $a2, $s4
-/* 0119A8 80010DA8 3C078012 */  lui   $a3, %hi(gObjectCount) # $a3, 0x8012
-/* 0119AC 80010DAC 8CE7AEF0 */  lw    $a3, %lo(gObjectCount)($a3)
+/* 0119A8 80010DA8 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
+/* 0119AC 80010DAC 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)
 /* 0119B0 80010DB0 00000000 */  nop   
 /* 0119B4 80010DB4 00E08825 */  move  $s1, $a3
 /* 0119B8 80010DB8 26310001 */  addiu $s1, $s1, 1
@@ -428,8 +428,8 @@ glabel func_80010994
 /* 011BAC 80010FAC 0C007A4F */  jal   func_8001E93C
 /* 011BB0 80010FB0 00000000 */   nop   
 .L80010FB4:
-/* 011BB4 80010FB4 3C078012 */  lui   $a3, %hi(gObjectCount) # $a3, 0x8012
-/* 011BB8 80010FB8 8CE7AEF0 */  lw    $a3, %lo(gObjectCount)($a3)
+/* 011BB4 80010FB4 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
+/* 011BB8 80010FB8 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)
 /* 011BBC 80010FBC 3C098012 */  lui   $t1, %hi(D_8011AD4E) # $t1, 0x8012
 /* 011BC0 80010FC0 10E00010 */  beqz  $a3, .L80011004
 /* 011BC4 80010FC4 00000000 */   nop   
@@ -439,19 +439,19 @@ glabel func_80010994
 /* 011BD4 80010FD4 00000000 */   nop   
 /* 011BD8 80010FD8 0C006602 */  jal   func_80019808
 /* 011BDC 80010FDC 02802025 */   move  $a0, $s4
-/* 011BE0 80010FE0 3C078012 */  lui   $a3, %hi(gObjectCount) # $a3, 0x8012
-/* 011BE4 80010FE4 8CE7AEF0 */  lw    $a3, %lo(gObjectCount)($a3)
+/* 011BE0 80010FE0 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
+/* 011BE4 80010FE4 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)
 /* 011BE8 80010FE8 10000006 */  b     .L80011004
 /* 011BEC 80010FEC 00000000 */   nop   
 .L80010FF0:
 /* 011BF0 80010FF0 0C006A3D */  jal   func_8001A8F4
 /* 011BF4 80010FF4 02802025 */   move  $a0, $s4
-/* 011BF8 80010FF8 3C078012 */  lui   $a3, %hi(gObjectCount) # $a3, 0x8012
-/* 011BFC 80010FFC 8CE7AEF0 */  lw    $a3, %lo(gObjectCount)($a3)
+/* 011BF8 80010FF8 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
+/* 011BFC 80010FFC 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)
 /* 011C00 80011000 00000000 */  nop   
 .L80011004:
-/* 011C04 80011004 3C048012 */  lui   $a0, %hi(D_8011AEEC) # $a0, 0x8012
-/* 011C08 80011008 8C84AEEC */  lw    $a0, %lo(D_8011AEEC)($a0)
+/* 011C04 80011004 3C048012 */  lui   $a0, %hi(gRacersByPort) # $a0, 0x8012
+/* 011C08 80011008 8C84AEEC */  lw    $a0, %lo(gRacersByPort)($a0)
 /* 011C0C 8001100C 00E02825 */  move  $a1, $a3
 /* 011C10 80011010 0C00210E */  jal   func_80008438
 /* 011C14 80011014 02803025 */   move  $a2, $s4

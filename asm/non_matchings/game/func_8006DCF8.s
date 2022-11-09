@@ -72,10 +72,10 @@ glabel func_8006DCF8
 /* 06E9F0 8006DDF0 AC400004 */  sw    $zero, 4($v0)
 /* 06E9F4 8006DDF4 AC4D0000 */  sw    $t5, ($v0)
 /* 06E9F8 8006DDF8 8FAE002C */  lw    $t6, 0x2c($sp)
-/* 06E9FC 8006DDFC 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
-/* 06EA00 8006DE00 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06E9FC 8006DDFC 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
+/* 06EA00 8006DE00 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EA04 8006DE04 31C4007F */  andi  $a0, $t6, 0x7f
-/* 06EA08 8006DE08 0C01AC2B */  jal   func_8006B0AC
+/* 06EA08 8006DE08 0C01AC2B */  jal   get_map_default_vehicle
 /* 06EA0C 8006DE0C AD040000 */   sw    $a0, ($t0)
 /* 06EA10 8006DE10 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06EA14 8006DE14 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
@@ -94,8 +94,8 @@ glabel func_8006DCF8
 /* 06EA48 8006DE48 3C018012 */  lui   $at, %hi(gPostRaceViewPort) # $at, 0x8012
 /* 06EA4C 8006DE4C A0203516 */  sb    $zero, %lo(gPostRaceViewPort)($at)
 /* 06EA50 8006DE50 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
-/* 06EA54 8006DE54 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
-/* 06EA58 8006DE58 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06EA54 8006DE54 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
+/* 06EA58 8006DE58 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EA5C 8006DE5C 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
 /* 06EA60 8006DE60 8C650000 */  lw    $a1, ($v1)
 /* 06EA64 8006DE64 8D040000 */  lw    $a0, ($t0)
@@ -140,12 +140,12 @@ glabel L8006DEE8
 /* 06EAF8 8006DEF8 100000F8 */  b     .L8006E2DC
 /* 06EAFC 8006DEFC 8FBF0024 */   lw    $ra, 0x24($sp)
 glabel L8006DF00
-/* 06EB00 8006DF00 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
+/* 06EB00 8006DF00 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06EB04 8006DF04 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06EB08 8006DF08 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
 /* 06EB0C 8006DF0C 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
 /* 06EB10 8006DF10 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
-/* 06EB14 8006DF14 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06EB14 8006DF14 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EB18 8006DF18 240F0064 */  li    $t7, 100
 /* 06EB1C 8006DF1C AD000000 */  sw    $zero, ($t0)
 /* 06EB20 8006DF20 AD200000 */  sw    $zero, ($t1)
@@ -172,12 +172,12 @@ glabel L8006DF70
 /* 06EB70 8006DF70 3C058012 */  lui   $a1, %hi(D_80121250) # $a1, 0x8012
 /* 06EB74 8006DF74 24A51250 */  addiu $a1, %lo(D_80121250) # addiu $a1, $a1, 0x1250
 /* 06EB78 8006DF78 80B80000 */  lb    $t8, ($a1)
-/* 06EB7C 8006DF7C 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
+/* 06EB7C 8006DF7C 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06EB80 8006DF80 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06EB84 8006DF84 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
 /* 06EB88 8006DF88 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
 /* 06EB8C 8006DF8C 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
-/* 06EB90 8006DF90 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06EB90 8006DF90 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EB94 8006DF94 24190064 */  li    $t9, 100
 /* 06EB98 8006DF98 AD200000 */  sw    $zero, ($t1)
 /* 06EB9C 8006DF9C AD790000 */  sw    $t9, ($t3)
@@ -214,12 +214,12 @@ glabel L8006E00C
 /* 06EC0C 8006E00C 3C018012 */  lui   $at, %hi(sRenderContext) # $at, 0x8012
 /* 06EC10 8006E010 AC2034EC */  sw    $zero, %lo(sRenderContext)($at)
 /* 06EC14 8006E014 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
-/* 06EC18 8006E018 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
+/* 06EC18 8006E018 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06EC1C 8006E01C 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06EC20 8006E020 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06EC24 8006E024 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06EC28 8006E028 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
-/* 06EC2C 8006E02C 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06EC2C 8006E02C 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EC30 8006E030 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
 /* 06EC34 8006E034 8C650000 */  lw    $a1, ($v1)
 /* 06EC38 8006E038 8D040000 */  lw    $a0, ($t0)
@@ -239,21 +239,21 @@ glabel L8006E054
 /* 06EC6C 8006E06C 00AFC021 */  addu  $t8, $a1, $t7
 /* 06EC70 8006E070 80AE000F */  lb    $t6, 0xf($a1)
 /* 06EC74 8006E074 83190008 */  lb    $t9, 8($t8)
-/* 06EC78 8006E078 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
+/* 06EC78 8006E078 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06EC7C 8006E07C 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06EC80 8006E080 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
 /* 06EC84 8006E084 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
 /* 06EC88 8006E088 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
-/* 06EC8C 8006E08C 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06EC8C 8006E08C 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EC90 8006E090 AD040000 */  sw    $a0, ($t0)
 /* 06EC94 8006E094 AD2E0000 */  sw    $t6, ($t1)
-/* 06EC98 8006E098 0C01AC2B */  jal   func_8006B0AC
+/* 06EC98 8006E098 0C01AC2B */  jal   get_map_default_vehicle
 /* 06EC9C 8006E09C AD790000 */   sw    $t9, ($t3)
 /* 06ECA0 8006E0A0 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
-/* 06ECA4 8006E0A4 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
+/* 06ECA4 8006E0A4 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06ECA8 8006E0A8 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06ECAC 8006E0AC 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
-/* 06ECB0 8006E0B0 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06ECB0 8006E0B0 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06ECB4 8006E0B4 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
 /* 06ECB8 8006E0B8 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06ECBC 8006E0BC 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
@@ -299,9 +299,9 @@ glabel L8006E0E0
 /* 06ED4C 8006E14C 3C058012 */  lui   $a1, %hi(D_80121250) # $a1, 0x8012
 /* 06ED50 8006E150 244C0008 */  addiu $t4, $v0, 8
 /* 06ED54 8006E154 AE0C0000 */  sw    $t4, ($s0)
-/* 06ED58 8006E158 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
+/* 06ED58 8006E158 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06ED5C 8006E15C 3C0DB800 */  lui   $t5, 0xb800
-/* 06ED60 8006E160 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06ED60 8006E160 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06ED64 8006E164 24A51250 */  addiu $a1, %lo(D_80121250) # addiu $a1, $a1, 0x1250
 /* 06ED68 8006E168 AC4D0000 */  sw    $t5, ($v0)
 /* 06ED6C 8006E16C AC400004 */  sw    $zero, 4($v0)
@@ -327,11 +327,11 @@ glabel L8006E0E0
 /* 06EDBC 8006E1BC 3C108012 */  lui   $s0, %hi(gSettingsPtr) # $s0, 0x8012
 /* 06EDC0 8006E1C0 26103510 */  addiu $s0, %lo(gSettingsPtr) # addiu $s0, $s0, 0x3510
 /* 06EDC4 8006E1C4 8E0D0000 */  lw    $t5, ($s0)
-/* 06EDC8 8006E1C8 3C088012 */  lui   $t0, %hi(D_801234F4) # $t0, 0x8012
+/* 06EDC8 8006E1C8 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06EDCC 8006E1CC 91AE004A */  lbu   $t6, 0x4a($t5)
 /* 06EDD0 8006E1D0 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
 /* 06EDD4 8006E1D4 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
-/* 06EDD8 8006E1D8 250834F4 */  addiu $t0, %lo(D_801234F4) # addiu $t0, $t0, 0x34f4
+/* 06EDD8 8006E1D8 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EDDC 8006E1DC 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
 /* 06EDE0 8006E1E0 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
 /* 06EDE4 8006E1E4 8D040000 */  lw    $a0, ($t0)

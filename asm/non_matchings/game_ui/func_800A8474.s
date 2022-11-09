@@ -186,7 +186,7 @@ glabel func_800A8474
 /* 0A92DC 800A86DC 00000000 */   nop   
 /* 0A92E0 800A86E0 3C018012 */  lui   $at, %hi(D_80126D60) # $at, 0x8012
 /* 0A92E4 800A86E4 AC226D60 */  sw    $v0, %lo(D_80126D60)($at)
-/* 0A92E8 800A86E8 0C006EA4 */  jal   func_8001BA90
+/* 0A92E8 800A86E8 0C006EA4 */  jal   get_racer_objects_by_port
 /* 0A92EC 800A86EC 27A40140 */   addiu $a0, $sp, 0x140
 /* 0A92F0 800A86F0 8FAC0160 */  lw    $t4, 0x160($sp)
 /* 0A92F4 800A86F4 AFA20150 */  sw    $v0, 0x150($sp)
@@ -1256,8 +1256,8 @@ glabel func_800A8474
 /* 0AA2C0 800A96C0 26526CDC */  addiu $s2, %lo(D_80126CDC) # addiu $s2, $s2, 0x6cdc
 /* 0AA2C4 800A96C4 10400012 */  beqz  $v0, .L800A9710
 /* 0AA2C8 800A96C8 2413FFFF */   li    $s3, -1
-/* 0AA2CC 800A96CC 3C058012 */  lui   $a1, %hi(D_80126D80) # $a1, 0x8012
-/* 0AA2D0 800A96D0 24A56D80 */  addiu $a1, %lo(D_80126D80) # addiu $a1, $a1, 0x6d80
+/* 0AA2CC 800A96CC 3C058012 */  lui   $a1, %hi(gHudSprites) # $a1, 0x8012
+/* 0AA2D0 800A96D0 24A56D80 */  addiu $a1, %lo(gHudSprites) # addiu $a1, $a1, 0x6d80
 /* 0AA2D4 800A96D4 000268C0 */  sll   $t5, $v0, 3
 /* 0AA2D8 800A96D8 00AD7021 */  addu  $t6, $a1, $t5
 /* 0AA2DC 800A96DC ADC00000 */  sw    $zero, ($t6)

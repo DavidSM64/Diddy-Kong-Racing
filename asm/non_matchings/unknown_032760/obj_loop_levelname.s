@@ -5,7 +5,7 @@ glabel obj_loop_levelname
 /* 04369C 80042A9C AFB00020 */  sw    $s0, 0x20($sp)
 /* 0436A0 80042AA0 AFA5005C */  sw    $a1, 0x5c($sp)
 /* 0436A4 80042AA4 AFA60058 */  sw    $a2, 0x58($sp)
-/* 0436A8 80042AA8 0C006EC6 */  jal   func_8001BB18
+/* 0436A8 80042AA8 0C006EC6 */  jal   get_racer_object_by_port
 /* 0436AC 80042AAC 00002025 */   move  $a0, $zero
 /* 0436B0 80042AB0 8FA3005C */  lw    $v1, 0x5c($sp)
 /* 0436B4 80042AB4 8FA60058 */  lw    $a2, 0x58($sp)

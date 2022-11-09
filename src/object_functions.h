@@ -24,16 +24,6 @@ typedef struct unk80034B4C {
     s32 unk78;
 } unk80034B4C;
 
-typedef struct Object_3C_80034B74 {
-    u8 pad0[0x8];
-    u8 unk8;
-    u8 unk9;
-    u8 unkA;
-    u8 unkB;
-    u8 unkC;
-    u8 unkD;
-} Object_3C_80034B74;
-
 typedef struct unk8003564C {
     s8 unk0;
     s8 unk1;
@@ -91,11 +81,6 @@ typedef struct unk80038B74 {
     u8 pad0[8];
     s8 unk8;
 } unk80038B74;
-
-typedef struct Object_3C_80038DC4 {
-    u8 pad0[8];
-    s8 unk8;
-} Object_3C_80038DC4;
 
 typedef struct unk80039160 {
     u8 pad0[0x78];
@@ -185,12 +170,6 @@ typedef struct unk8004210C {
     u8 pad40[0x24];
     s32 unk64;
 } unk8004210C;
-
-typedef struct Object_3C_80042178 {
-    u8 pad0[8];
-    u16 unk8;
-    u16 unkA;
-} Object_3C_80042178;
 
 typedef struct unk80042A1C {
     u8 pad0[0x78];

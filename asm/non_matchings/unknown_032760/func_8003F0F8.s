@@ -15,7 +15,7 @@ glabel func_8003F0F8
 /* 03FD2C 8003F12C E7B40024 */  swc1  $f20, 0x24($sp)
 /* 03FD30 8003F130 AFA60078 */  sw    $a2, 0x78($sp)
 /* 03FD34 8003F134 0000A025 */  move  $s4, $zero
-/* 03FD38 8003F138 0C006EA4 */  jal   func_8001BA90
+/* 03FD38 8003F138 0C006EA4 */  jal   get_racer_objects_by_port
 /* 03FD3C 8003F13C 27A40060 */   addiu $a0, $sp, 0x60
 /* 03FD40 8003F140 8FAE0060 */  lw    $t6, 0x60($sp)
 /* 03FD44 8003F144 00008025 */  move  $s0, $zero

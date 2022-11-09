@@ -5,6 +5,7 @@
 
 #include "types.h"
 #include "enums.h"
+#include "level_object_entries.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -162,50 +163,91 @@ typedef struct Settings4C {
 
 /* Size: 0x118 bytes */
 typedef struct Settings {
+  // Balloon indices:
+  // 0 = Total balloons
+  // 1 = Dino Domain balloons
+  // 2 = Sherbet Island balloons
+  // 3 = Snowflake Mountain balloons
+  // 4 = Dragon Forest balloons
+  // 5 = Future Fun Land balloons
   /* 0x0000 */ s16 *balloonsPtr;
+
+  // Course flag bits:
+  // 0x1                   = Map has been visited.
+  // 0x2                   = Map has been completed.
+  // 0x4                   = Map's silver coin challenge has been completed.
+  // 0x00000000-0xFFFF0000 = Used as bit fields for hub worlds to indicate whether or not a door can open when the player gets near it.
   /* 0x0004 */ s32 *courseFlagsPtr;
+
+  // Key bits:
+  // 0x02 = Dino Domain key
+  // 0x04 = Sherbet Island key
+  // 0x08 = Snowflake Mountain key
+  // 0x10 = Dragon Forest key
   /* 0x0008 */ u16 keys;
+
   /* 0x000A */ u16 unkA;
+
+  // Boss bits:
+  // 0x001 = Wizpig 1
+  // 0x002 = Tricky 1
+  // 0x004 = Bubbler 1
+  // 0x008 = Bluey 1
+  // 0x010 = Smokey 1
+  // 0x020 = Wizpig 2
+  // 0x080 = Tricky 2
+  // 0x100 = Bubbler 2
+  // 0x200 = Bluey 2
+  // 0x400 = Smokey 2
   /* 0x000C */ u16 bosses;
+
+  // Trophy bits:
+  // Bit field 0b00-0b11 = Empty, 3rd, 2nd, and 1st place trophies.
+  // `trophies` consists of 5 of these bit fields, from LSB to MSB, Dino, Sherbet, Snowflake, Dragon, and FFL.
   /* 0x000E */ u16 trophies;
+
+  // Cutscene flags:
+  // 0x1     = Lighthouse rocket cutscene
+  // 0x2     = T.T. help prompt
+  // 0x4     = Adventure 2 flag?
+  // 0x8     = Dino domain boss cutscene
+  // 0x10    = Sherbet island boss cutscene
+  // 0x20    = Snowflake mountain boss cutscene
+  // 0x40    = Dragon forest boss cutscene
+  // 0x80    = Future Fun Land boss cutscene
+  // 0x100   = Dino domain boss cutscene 2
+  // 0x200   = Shertbet island boss cutscene 2
+  // 0x400   = Snowflake mountain boss cutscene 2
+  // 0x800   = Dragon forest boss cutscene 2
+  // 0x2000  = Wizpig face cutscene
+  // 0x4000  = Dino domain key cutscene
+  // 0x8000  = Sherbet Island key cutscene
+  // 0x10000 = Snowflake mountain key cutscene
+  // 0x20000 = Dragon forest key cutscene
   /* 0x0010 */ u32 cutsceneFlags;
-  /* Cutscene flags:
-   * 0x1     = Lighthouse rocket cutscene
-   * 0x2     = T.T. help prompt
-   * 0x4     = Adventure 2 flag?
-   * 0x8     = Dino domain boss cutscene
-   * 0x10    = Sherbet island boss cutscene
-   * 0x20    = Snowflake mountain boss cutscene
-   * 0x40    = Dragon forest boss cutscene
-   * 0x80    = Future Fun Land boss cutscene
-   * 0x100   = Dino domain boss cutscene 2
-   * 0x200   = Shertbet island boss cutscene 2
-   * 0x400   = Snowflake mountain boss cutscene 2
-   * 0x800   = Dragon forest boss cutscene 2
-   * 0x2000  = Wizpig face cutscene
-   * 0x4000  = Dino domain key cutscene
-   * 0x8000  = Sherbet Island key cutscene
-   * 0x10000 = Snowflake mountain key cutscene
-   * 0x20000 = Dragon forest key cutscene
-   */
+  
+  // Taj flags:
+  // 0x1  = Car challenge unlocked
+  // 0x2  = Hover challenge unlocked
+  // 0x4  = Plane challenge unlocked
+  // 0x8  = Car challenge completed
+  // 0x10 = Hover challenge completed
+  // 0x20 = Plane challenge completed
   /* 0x0014 */ u16 tajFlags;
-  /* Taj flags:
-   * 0x1  = Car challenge unlocked
-   * 0x2  = Hover challenge unlocked
-   * 0x4  = Plane challenge unlocked
-   * 0x8  = Car challenge completed
-   * 0x10 = Hover challenge completed
-   * 0x20 = Plane challenge completed
-   */
+  
+  // Not a bitfield, just a  counter from 0-4.
   /* 0x0016 */ u8 ttAmulet;
+  
+  // Not a bitfield, just a  counter from 0-4.
   /* 0x0017 */ u8 wizpigAmulet;
+
   /* 0x0018 */ u16 *flapInitialsPtr[3];
   /* 0x0024 */ u16 *flapTimesPtr[3];
   /* 0x0030 */ u16 *courseInitialsPtr[3];
   /* 0x003C */ u16 *courseTimesPtr[3];
   /* 0x0048 */ u8 worldId;
   /* 0x0049 */ u8 courseId;
-  /* 0x004A */ u8 gObjectCount;
+  /* 0x004A */ u8 gNumRacers;
   /* 0x004B */ u8 newGame;
   /* 0x004C */ Settings4C *unk4C;
   /* 0x0050 */ u32 filename;
@@ -518,16 +560,6 @@ typedef struct LevelModel {
 /* 0x46 */ s16 unk46;
 /* 0x48 */ s32 modelSize;
 } LevelModel;
-
-typedef struct Object_3C {
-    u8 pad0[0x2];
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s8 unk8;
-    u8 pad9[0x4];
-    u8 unkD;
-} Object_3C;
 
 typedef enum {
     OBJECT_MODEL_TYPE_3D_MODEL,
@@ -977,8 +1009,8 @@ typedef struct Object_Racer {
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 shieldTimer;
   /* 0x190 */ s16 unk190;
-  /* 0x192 */ s8 unk192;
-  /* 0x193 */ s8 lapCount;
+  /* 0x192 */ s8 checkpoint;
+  /* 0x193 */ s8 lap;
   /* 0x194 */ s8 unk194;
   /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;
@@ -1122,7 +1154,7 @@ typedef struct Object_Door {
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u8 unk12;
   /* 0x13 */ u8 unk13;
-  /* 0x14 */ u8 unk14;
+  /* 0x14 */ s8 unk14;
 } Object_Door;
 
 typedef struct Object_Trigger {
@@ -1358,7 +1390,7 @@ typedef struct ObjectSegment {
   /* 0x003B */ s8 unk3B;
 
   union {
-    /* 0x003C */ Object_3C* unk3C;
+    /* 0x003C */ LevelObjectEntry* level_entry;
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 

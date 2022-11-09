@@ -75,7 +75,7 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     return newPool;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 //Match found in Dinosaur Planet, and it's *really* close, but not yet there.
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots) {
     MemoryPoolSlot *firstSlot;
