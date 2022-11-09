@@ -6092,7 +6092,7 @@ void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
     func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay >= -20) {
         if (gMenuDelay <= 20) {
-            mask = func_8006B0F8(sp58);
+            mask = get_map_available_vehicles(sp58);
             levelName = get_level_name(sp58);
             set_text_font(FONT_LARGE);
             set_text_background_colour(0, 0, 0, 0);
@@ -6131,7 +6131,7 @@ void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
                     savedY = y;
                         
                     for (i = 0; i < 3; i++) {
-                        alpha = (arg1 < 2 && func_8006B0AC(sp58) != i) ? 128 : 255;
+                        alpha = (arg1 < 2 && get_map_default_vehicle(sp58) != i) ? 128 : 255;
                         if ((1 << i) & mask) {
                             if (i == gPlayerSelectVehicle[0]) {
                                 render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[i*3+1], 104, y, 255, 255, 255, 255);
