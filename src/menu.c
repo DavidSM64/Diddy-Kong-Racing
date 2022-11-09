@@ -154,7 +154,7 @@ s32 D_80126804;
 s32 D_80126808[4];
 s32 D_80126818;
 s32 D_8012681C;
-s32 D_80126820;
+s16 D_80126820;
 s32 D_80126824;
 UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
 s32 D_8012682C;
@@ -182,7 +182,7 @@ f32 D_801268D8;
 s32 D_801268DC;
 s32 D_801268E0;
 s32 D_801268E4;
-s16 D_801268E8[4][6];
+s16 D_801268E8[4][6]; //Track Select values?
 s16 gFFLUnlocked;
 UNUSED s32 D_8012691C;
 UNUSED s32 D_80126920;
@@ -6002,7 +6002,125 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/menu/func_800904E8.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_80090918.s")
+
+void func_80090918(s32 updateRate) {
+    s32 pad[2];
+    s32 var_t1;
+    s32 temp_lo;
+    s32 temp_v1;
+    s32 var_a1;
+    s32 var_t0;
+    s32 var_t2;
+    s32 sp24;
+    s32 var_t3;
+    s32 var_a2;
+
+    sp24 = gMenuDelay;
+    if (gMenuDelay > 0) {
+        if ((D_801269E8 - gTrackSelectX > 4.0f) || (D_801269E8 - gTrackSelectX < -4.0f) || ((D_801269EC - gTrackSelectY > 4.0f)) || (D_801269EC - gTrackSelectY < -4.0f)) {
+            gMenuDelay = 1;
+        } else if (D_800E1E1C) {
+            play_sound_global(SOUND_SELECT2, NULL);
+            D_800E1E1C = 0;
+        }
+        var_t1 = gMenuDelay - 1;
+        if (var_t1 > 20) {
+            var_t1 = 20;
+        }
+        var_t2 = 160;
+        var_t0 = D_80126478;
+        if (var_t1 < 20) {
+            var_t2 += (D_801269E8 - gTrackSelectX);
+            var_t0 -= (D_801269EC - gTrackSelectY);
+        }
+        var_t3 = (((var_t1 + 20) * D_80126478) / 40) + var_t0;
+        var_a2 = var_t0 - (((var_t1 + 20) * D_80126478) / 40);
+        func_80066940(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
+        gMenuImageStack[4].unk8 = (f32) (sMenuImageProperties[4].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
+        gMenuImageStack[6].unk8 = (f32) (sMenuImageProperties[6].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
+        gMenuImageStack[5].unk8 = (f32) (sMenuImageProperties[5].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
+    }
+    func_80066818(0, 0);
+    if (get_thread30_level_id_to_load() == 0) {
+        if (gMenuDelay < 0) {
+            sMenuMusicVolume -= updateRate * 4;
+        }
+        if ((gSelectedTrackX == D_801269C8) && (gSelectedTrackY == D_801269CC)) {
+            gOpacityDecayTimer -= updateRate;
+            if (gOpacityDecayTimer < 0) {
+                gOpacityDecayTimer = 0;
+            }
+        } else {
+            gOpacityDecayTimer = gOpacityDecayTimer + updateRate;
+            if (gOpacityDecayTimer > 32) {
+                gOpacityDecayTimer = 32;
+            }
+        }
+        if (gMenuDelay < -22) {
+            func_80078AAC(NULL);
+            D_800E097C = 0;
+        }
+        if (gMenuDelay > 30) {
+            if ((is_adventure_two_unlocked()) && (D_801269C8 != 5)) {
+                D_801263E0 = -1;
+            } else {
+                D_801263E0 = 0;
+            }
+            func_8008F00C(1);
+        } else if (gMenuDelay < -30) {
+            func_800C0180();
+            func_80066894(0, 0);
+            func_8008F00C(-1);
+        }
+    }
+    if (sp24 == 0) {
+        var_a1 = (gFFLUnlocked == -1) ? 3 : 4;
+        if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+            if (gTrackIdForPreview != -1) {
+                gMenuDelay = 1;
+                gTrackIdToLoad = gTrackIdForPreview;
+                D_800E1E1C = 1;
+            } else {
+                play_sound_global(SOUND_UNK_6A, NULL);
+            }
+        } else if (D_801267E8 & B_BUTTON) {
+            func_800C0180();
+            func_800C01D8(&sMenuTransitionFadeIn);
+            func_800C0170();
+            gMenuDelay = -1;
+        } else {
+            s32 prevValue = D_801269C8;
+            s32 prevValue2 = D_801269CC;
+            if ((D_80126820 < 0) && (D_801269C8 > 0)) {
+                D_801269C8--;
+            }
+            if ((D_80126820 > 0) && (D_801269C8 < 5)) {
+                D_801269C8++;
+            }
+            if ((D_801269CC == 4) && (D_801269C8 == 5)) {
+                D_801269C8 = 4;
+            }
+            if (D_80126820 == 0) {
+                if ((D_80126838 < 0) && (D_801269CC < var_a1)) {
+                    D_801269CC++;
+                }
+                if ((D_80126838 > 0) && (D_801269CC > 0)) {
+                    D_801269CC--;
+                }
+                if ((D_801269C8 == 5) && (D_801269CC == 4)) {
+                    D_801269CC = 3;
+                }
+            }
+            if ((prevValue != D_801269C8) || (D_801269CC != prevValue2)) {
+                play_sound_global(SOUND_MENU_PICK2, NULL);
+                gTrackIdForPreview = D_801268E8[D_801269CC][D_801269C8];
+                gTrackSelectRow = D_801269CC + 1;
+                D_801269E8 = (D_801269C8 * 320);
+                D_801269EC = -(D_801269CC * gTrackSelectViewportY);
+            }
+        }
+    }
+}
 
 void func_80090ED8(UNUSED s32 updateRate) {
     if (D_801263E0 == 1 && D_800E0414 == 0 && D_80126840 == 0) {

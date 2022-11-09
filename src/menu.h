@@ -705,7 +705,6 @@ extern s8 gPlayerSelectVehicle[4];
 extern s16 gFFLUnlocked;
 extern s32 gOpacityDecayTimer;
 extern s32 gTrackSelectViewportY;
-//extern s32 D_801268E8[12];
 extern s16 gFFLUnlocked;
 extern s32 D_80126924;
 extern s32 D_80126928;
