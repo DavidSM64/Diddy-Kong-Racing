@@ -921,6 +921,7 @@ void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
 void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
 s32 func_80095728(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
+s32 func_8008F618(Gfx **dlist, Mtx **mat);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,

@@ -27,6 +27,7 @@
 #include "object_functions.h"
 #include "unknown_003260.h"
 #include "racer.h"
+#include "unknown_078050.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -5502,14 +5503,12 @@ UNUSED s32 func_8008E790(void) {
     return D_800E097C;
 }
 
-#if 0
-// HEAVILY WIP, not even close to matching
-void func_80078AAC(void *);
-s32 func_8008F618(Gfx **dlist, Mtx **arg1);
+#if 1
+// HEAVILY WIP, not even close to matchingqq
 void menu_track_select_init(void) {
     s32 levelCount;
     s32 worldCount;
-    s32 *sp58;
+    s16 *sp58;
     Settings *settings;
     TextureHeader **var_s0;
     s16 *var_s1;
@@ -5521,8 +5520,8 @@ void menu_track_select_init(void) {
     s16 temp_a0_6;
     s16 temp_t6;
     s16 var_a0;
-    s32 *temp_s7;
-    s32 *var_s2;
+    s8 *trackMenuIds;
+    s16 *var_s2;
     s32 temp_a2;
     s32 temp_fp;
     s32 videoWidthAndHeight;
@@ -5539,13 +5538,13 @@ void menu_track_select_init(void) {
     s8 *var_v0_3;
     s8 temp_v0_5;
     s8 temp_v1_2;
-    s8 var_t4;
+    s16 var_t4;
     s8 *temp_t2;
 
     load_font(ASSET_FONTS_BIGFONT);
     settings = get_settings();
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
-    temp_s7 = get_misc_asset(MISC_ASSET_UNK1A);
+    trackMenuIds = get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
     if (D_800DF488 != 0) {
         D_801269C8 = 0;
         D_801269CC = 0;
@@ -5555,15 +5554,15 @@ void menu_track_select_init(void) {
     }
     videoWidthAndHeight = get_video_width_and_height_as_s32();
     D_8012647C = GET_VIDEO_WIDTH(videoWidthAndHeight);
-    D_80126480 = GET_VIDEO_HEIGHT(videoWidthAndHeight);
+    gTrackSelectViewportY = GET_VIDEO_HEIGHT(videoWidthAndHeight);
     D_80126474 = D_8012647C >> 1;
-    D_80126478 = D_80126480 >> 1;
-    D_801269DC = (f32) D_801269C8 * 320.0f;
-    D_801269E4 = (f32) D_801269CC * (f32) -D_80126480;
-    D_801269F4 = -1;
-    D_801269F8 = -1;
+    D_80126478 = gTrackSelectViewportY >> 1;
+    gTrackSelectX = (f32) D_801269C8 * 320.0f;
+    gTrackSelectY = (f32) D_801269CC * (f32) -gTrackSelectViewportY;
+    gSelectedTrackX = -1;
+    gSelectedTrackY = -1;
     D_801263D0 = -1;
-    D_801263D8 = 32;
+    gOpacityDecayTimer = 32;
     gOptionBlinkTimer = 0;
     D_801267D0 = -1;
     func_8008F00C(0);
@@ -5635,7 +5634,7 @@ loop_18:
         if (var_s1_2 == 0) {
             var_at = var_s1_2 < 4;
             if (var_s3 < 4) {
-                var_t4 = *((var_s3 * 6) + var_s1_2 + temp_s7);
+                var_t4 = *((var_s3 * 6) + var_s1_2 + trackMenuIds);
                 goto block_41;
             }
             goto block_22;
@@ -5643,13 +5642,13 @@ loop_18:
         var_at = var_s1_2 < 4;
 block_22:
         if (var_at != 0) {
-            temp_v0_5 = *((var_s3 * 6) + var_s1_2 + temp_s7);
+            temp_v0_5 = *((var_s3 * 6) + var_s1_2 + trackMenuIds);
             if ((temp_v0_5 != (s8) -1) && (settings->courseFlagsPtr[temp_v0_5] & 1)) {
                 *var_s2 = (s16) temp_v0_5;
             }
         } else if (var_s1_2 == 4) {
             temp_a2 = var_s3 * 6;
-            var_v0_3 = temp_a2 + temp_s7;
+            var_v0_3 = temp_a2 + trackMenuIds;
             var_a0_2 = 0;
             var_a1_2 = 0;
             do {
@@ -5667,18 +5666,18 @@ block_22:
                 }
             }
             if (var_a1_2 == 4) {
-                *var_s2 = (s16) *(temp_a2 + var_s1_2 + temp_s7);
+                *var_s2 = (s16) *(temp_a2 + var_s1_2 + trackMenuIds);
             }
         } else if ((var_s1_2 == 5) && (settings->keys & (1 << temp_fp))) {
-            var_t4 = *((var_s3 * 6) + var_s1_2 + temp_s7);
+            var_t4 = *((var_s3 * 6) + var_s1_2 + trackMenuIds);
 block_41:
             *var_s2 = (s16) var_t4;
         }
         if (is_adventure_two_unlocked() != 0) {
-            *var_s2 = (s16) *((var_s3 * 6) + var_s1_2 + temp_s7);
+            *var_s2 = (s16) *((var_s3 * 6) + var_s1_2 + trackMenuIds);
         }
         var_s1_2 += 1;
-        var_s2 += 2;
+        var_s2 += 1;
         if (var_s1_2 != 6) {
             goto loop_18;
         }
@@ -5686,15 +5685,15 @@ block_41:
         var_s3 = temp_fp;
     } while (temp_fp != 5);
     temp_v0_7 = D_801269CC;
-    temp_t6 = *(D_801268E8 + (temp_v0_7 * 0xC) + (D_801269C8 * 2));
+    temp_t6 = D_801268E8[temp_v0_7][D_801269C8];
     gTrackSelectRow = temp_v0_7 + 1;
     gTrackIdForPreview = (s32) temp_t6;
     if (temp_t6 == (s16) -1) {
         D_801263D0 = D_801268E8[0];
         load_level_for_menu(D_801263D0, -1, 1);
         gTrackSelectRow = 1;
-        D_801269F4 = 0;
-        D_801269F8 = 0;
+        gSelectedTrackX = 0;
+        gSelectedTrackY = 0;
     }
     assign_dialogue_box_id(7);
     func_8007FFEC(2);
