@@ -5508,34 +5508,27 @@ UNUSED s32 func_8008E790(void) {
 void menu_track_select_init(void) {
     s32 levelCount;
     s32 worldCount;
-    s16 *sp58;
     Settings *settings;
     TextureHeader **var_s0;
     s16 temp_a0;
     s16 temp_a0_2;
-    s16 temp_t6;
     s16 var_a0;
-    s8 *trackMenuIds;
+    s8 **trackMenuIds;
     s16 *var_s2;
-    s32 temp_fp;
     s32 videoWidthAndHeight;
     s32 temp_v0_6;
-    s32 temp_v0_7;
     s32 var_a0_2;
     s32 var_a1;
     s32 var_a1_2;
-    s32 var_at;
-    s32 var_s1_2;
-    s32 var_s3;
+    s32 idx2;
+    s32 idx;
     s32 var_v0;
-    s8 *var_v0_3;
-    s8 temp_v0_5;
     s16 var_t4;
 
     load_font(ASSET_FONTS_BIGFONT);
     settings = get_settings();
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
-    trackMenuIds = get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
+    trackMenuIds = (s8 **)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
     if (D_800DF488 != 0) {
         D_801269C8 = 0;
         D_801269CC = 0;
@@ -5606,8 +5599,6 @@ void menu_track_select_init(void) {
     func_8009C674(D_800E07C4);
     allocate_menu_images(D_800E07E0);
     func_8008E4B0();
-    sp58 = D_801268E8;
-    var_s3 = 0;
 
     D_800E05D4[0].texture = D_80126550[TEXTURE_UNK_08];
     D_800E05D4[1].texture = D_80126550[TEXTURE_UNK_09];
@@ -5616,67 +5607,47 @@ void menu_track_select_init(void) {
     D_800E05F4[1].texture = D_80126550[TEXTURE_UNK_0C];
     D_800E05F4[2].texture = D_80126550[TEXTURE_UNK_0D];
 
-    do {
-        var_s2 = sp58;
-        var_s1_2 = 0;
-        temp_fp = var_s3 + 1;
-loop_18:
-        *var_s2 = (s16) -1;
-        if (var_s1_2 == 0) {
-            var_at = var_s1_2 < 4;
-            if (var_s3 < 4) {
-                var_t4 = *((var_s3 * 6) + var_s1_2 + trackMenuIds);
-                goto block_41;
-            }
-            goto block_22;
-        }
-        var_at = var_s1_2 < 4;
-block_22:
-        if (var_at != 0) {
-            temp_v0_5 = *((var_s3 * 6) + var_s1_2 + trackMenuIds);
-            if ((temp_v0_5 != (s8) -1) && (settings->courseFlagsPtr[temp_v0_5] & 1)) {
-                *var_s2 = (s16) temp_v0_5;
-            }
-        } else if (var_s1_2 == 4) {
-            var_v0_3 = trackMenuIds[var_s3];
-            var_a1_2 = 0;
-            for (var_a0_2 = 0; var_a0_2 < 4; var_a0_2++) {
-                var_a0_2++;
-                if ((*var_v0_3 != -1) && ((settings->courseFlagsPtr[*var_v0_3] & 6) == 6)) {
-                    var_a1_2++;
-                }
-                var_v0_3++;
-            }
-            if ((var_a1_2 == 4) && (var_s3 != 4)) {
-                temp_v0_6 = 0x82 << var_s3;
-                if (temp_v0_6 != (settings->bosses & temp_v0_6)) {
-                    var_a1_2 = 0;
+    for (idx = 0; idx < 4; idx++) {
+        var_s2 = D_801268E8[idx];
+        for (idx2 = 0; idx2 < 6; idx2++) {
+            *var_s2 = -1;
+            if (idx2 == 0) {
+                if (idx < 4) {
+                    *var_s2 = trackMenuIds[idx][idx2];
                 }
             }
-            if (var_a1_2 == 4) {
-                *var_s2 = (s16) *(var_s3 + var_s1_2 + trackMenuIds);
+            else if (idx2 < 4) {
+                if ((trackMenuIds[idx][idx2] != -1) && (settings->courseFlagsPtr[trackMenuIds[idx][idx2]] & 1)) {
+                    *var_s2 = trackMenuIds[idx][idx2];
+                }
+            } else if (idx2 == 4) {
+                var_a1_2 = 0;
+                // This is almost definitely wrong.
+                for (var_a0_2 = 0; var_a0_2 < 2; var_a0_2++) {
+                    if ((trackMenuIds[idx][var_a0_2] != -1) && ((settings->courseFlagsPtr[trackMenuIds[idx][var_a0_2]] & 6) == 6)) {
+                        var_a1_2++;
+                    }
+                }
+                if ((var_a1_2 == 4) && (idx != 4)) {
+                    temp_v0_6 = 130 << idx;
+                    if (temp_v0_6 != (settings->bosses & temp_v0_6)) {
+                        var_a1_2 = 0;
+                    }
+                }
+                if (var_a1_2 == 4) {
+                    *var_s2 = trackMenuIds[idx][idx2];
+                }
+            } else if ((idx2 == 5) && (settings->keys & (1 << idx))) {
+                *var_s2 = trackMenuIds[idx][idx2];
             }
-        } else if ((var_s1_2 == 5) && (settings->keys & (1 << temp_fp))) {
-            var_t4 = *((var_s3 * 6) + var_s1_2 + trackMenuIds);
-block_41:
-            *var_s2 = (s16) var_t4;
+            if (is_adventure_two_unlocked()) {
+                *var_s2 = trackMenuIds[idx][idx2];
+            }
         }
-        if (is_adventure_two_unlocked() != 0) {
-            *var_s2 = (s16) *((var_s3 * 6) + var_s1_2 + trackMenuIds);
-        }
-        var_s1_2 += 1;
-        var_s2 += 1;
-        if (var_s1_2 != 6) {
-            goto loop_18;
-        }
-        sp58 += 0xC;
-        var_s3 = temp_fp;
-    } while (temp_fp != 5);
-    temp_v0_7 = D_801269CC;
-    temp_t6 = D_801268E8[temp_v0_7][D_801269C8];
-    gTrackSelectRow = temp_v0_7 + 1;
-    gTrackIdForPreview = (s32) temp_t6;
-    if (temp_t6 == (s16) -1) {
+    }
+    gTrackIdForPreview = D_801268E8[D_801269CC][D_801269C8];
+    gTrackSelectRow = D_801269CC + 1;
+    if (gTrackIdForPreview == (s16) -1) {
         D_801263D0 = D_801268E8[0];
         load_level_for_menu(D_801263D0, -1, 1);
         gTrackSelectRow = 1;
@@ -5690,7 +5661,7 @@ block_41:
     sMenuMusicVolume = 0;
     set_music_player_voice_limit(24);
     func_80000C1C();
-    play_music(24);
+    play_music(SEQUENCE_MAIN_MENU);
     set_relative_volume_for_music(sMenuMusicVolume);
     func_80000B18();
     func_8006F564(1); // Set an interrupt?
