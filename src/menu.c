@@ -5511,21 +5511,14 @@ void menu_track_select_init(void) {
     s16 *sp58;
     Settings *settings;
     TextureHeader **var_s0;
-    s16 *var_s1;
     s16 temp_a0;
     s16 temp_a0_2;
-    s16 temp_a0_3;
-    s16 temp_a0_4;
-    s16 temp_a0_5;
-    s16 temp_a0_6;
     s16 temp_t6;
     s16 var_a0;
     s8 *trackMenuIds;
     s16 *var_s2;
-    s32 temp_a2;
     s32 temp_fp;
     s32 videoWidthAndHeight;
-    s32 temp_v0_3;
     s32 temp_v0_6;
     s32 temp_v0_7;
     s32 var_a0_2;
@@ -5537,9 +5530,7 @@ void menu_track_select_init(void) {
     s32 var_v0;
     s8 *var_v0_3;
     s8 temp_v0_5;
-    s8 temp_v1_2;
     s16 var_t4;
-    s8 *temp_t2;
 
     load_font(ASSET_FONTS_BIGFONT);
     settings = get_settings();
@@ -5647,18 +5638,15 @@ block_22:
                 *var_s2 = (s16) temp_v0_5;
             }
         } else if (var_s1_2 == 4) {
-            temp_a2 = var_s3 * 6;
-            var_v0_3 = temp_a2 + trackMenuIds;
-            var_a0_2 = 0;
+            var_v0_3 = trackMenuIds[var_s3];
             var_a1_2 = 0;
-            do {
-                temp_v1_2 = *var_v0_3;
-                var_a0_2 += 1;
-                if ((temp_v1_2 != (s8) -1) && ((settings->courseFlagsPtr[temp_v1_2] & 6) == 6)) {
-                    var_a1_2 += 1;
+            for (var_a0_2 = 0; var_a0_2 < 4; var_a0_2++) {
+                var_a0_2++;
+                if ((*var_v0_3 != -1) && ((settings->courseFlagsPtr[*var_v0_3] & 6) == 6)) {
+                    var_a1_2++;
                 }
-                var_v0_3 += 1;
-            } while (var_a0_2 < 4);
+                var_v0_3++;
+            }
             if ((var_a1_2 == 4) && (var_s3 != 4)) {
                 temp_v0_6 = 0x82 << var_s3;
                 if (temp_v0_6 != (settings->bosses & temp_v0_6)) {
@@ -5666,7 +5654,7 @@ block_22:
                 }
             }
             if (var_a1_2 == 4) {
-                *var_s2 = (s16) *(temp_a2 + var_s1_2 + trackMenuIds);
+                *var_s2 = (s16) *(var_s3 + var_s1_2 + trackMenuIds);
             }
         } else if ((var_s1_2 == 5) && (settings->keys & (1 << temp_fp))) {
             var_t4 = *((var_s3 * 6) + var_s1_2 + trackMenuIds);
