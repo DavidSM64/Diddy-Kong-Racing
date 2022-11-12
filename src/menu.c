@@ -54,7 +54,7 @@ unk801263C0 D_801263C0;
 
 s32 gIgnorePlayerInput;
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
-CharacterSelectData (*gCurrCharacterSelectData)[8]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
+CharacterSelectData (*gCurrCharacterSelectData)[10]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
 s32 D_801263D0; //Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[4];
@@ -584,59 +584,59 @@ s16 D_800DFDCC[2] = { -1, 0 };
 */
 
 // Default character select screen with the initial 8 characters.
-/*Name          Up              Down            Left                            Right Inputs                    Voice ID*/
-u8 gCharacterSelectBytesDefault[] = {
-/*Krunch*/      NONE, NONE,     CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, BUMPER, BANJO, NONE,     0x00, 0x00,
-/*Diddy*/       NONE, NONE,     TIPTUP, NONE,   KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
-/*Bumper*/      NONE, NONE,     PIPSY, NONE,    DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01,
-/*Banjo*/       NONE, NONE,     TIMBER, NONE,   BUMPER, DIDDY, KRUNCH, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x05, 
-/*Conker*/      KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, PIPSY, TIMBER, NONE,    0x00, 0x03,
-/*Tiptup*/      DIDDY, NONE,    NONE, NONE,     CONKER, NONE, NONE, NONE,       PIPSY, TIMBER, NONE, NONE,      0x00, 0x02, 
-/*Pipsy*/       BUMPER, NONE,   NONE, NONE,     TIPTUP, CONKER, NONE, NONE,     TIMBER, NONE, NONE, NONE,       0x00, 0x07,
-/*Timber*/      BANJO, NONE,    NONE, NONE,     PIPSY, TIPTUP, CONKER, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x04,
+/*    Name         Up                  Down                Left                                Right                            Voice ID */
+CharacterSelectData gCharacterSelectBytesDefault[] = {
+    /*Krunch*/ { { NONE, NONE },     { CONKER, NONE },   { NONE, NONE, NONE, NONE },         { DIDDY, BUMPER, BANJO, NONE },     0x0000 },
+    /*Diddy*/  { { NONE, NONE },     { TIPTUP, NONE },   { KRUNCH, NONE, NONE, NONE },       { BUMPER, BANJO, NONE, NONE },      0x0009 },
+    /*Bumper*/ { { NONE, NONE },     { PIPSY, NONE },    { DIDDY, KRUNCH, NONE, NONE },      { BANJO, NONE, NONE, NONE },        0x0001 },
+    /*Banjo*/  { { NONE, NONE },     { TIMBER, NONE },   { BUMPER, DIDDY, KRUNCH, NONE },    { NONE, NONE, NONE, NONE },         0x0005 },
+    /*Conker*/ { { KRUNCH, NONE },   { NONE, NONE },     { NONE, NONE, NONE, NONE },         { TIPTUP, PIPSY, TIMBER, NONE },    0x0003 },
+    /*Tiptup*/ { { DIDDY, NONE },    { NONE, NONE },     { CONKER, NONE, NONE, NONE },       { PIPSY, TIMBER, NONE, NONE },      0x0002 },
+    /*Pipsy*/  { { BUMPER, NONE },   { NONE, NONE },     { TIPTUP, CONKER, NONE, NONE },     { TIMBER, NONE, NONE, NONE },       0x0007 },
+    /*Timber*/ { { BANJO, NONE },    { NONE, NONE },     { PIPSY, TIPTUP, CONKER, NONE },    { NONE, NONE, NONE, NONE },         0x0004 }
 };
 
 // Drumstick is unlocked, but T.T is not.
-/*Name          Up                  Down                Left                                Right                               Voice ID*/
-u8 gCharacterSelectBytesDrumStick[] = {
-/*Krunch*/      NONE, NONE,         CONKER, NONE,       NONE, NONE, NONE, NONE,             DIDDY, DRUMSTICK, BUMPER, BANJO,    0x00, 0x00,
-/*Diddy*/       NONE, NONE,         CONKER, TIPTUP,     KRUNCH, NONE, NONE, NONE,           DRUMSTICK, BUMPER, BANJO, NONE,     0x00, 0x09, 
-/*Bumper*/      NONE, NONE,         PIPSY, TIMBER,      DRUMSTICK, DIDDY, KRUNCH, NONE,     BANJO, NONE, NONE, NONE,            0x00, 0x01,
-/*Banjo*/       NONE, NONE,         TIMBER, NONE,       BUMPER, DRUMSTICK, DIDDY, KRUNCH,   NONE, NONE, NONE, NONE,             0x00, 0x05, 
-/*Conker*/      KRUNCH, DIDDY,      NONE, NONE,         NONE, NONE, NONE, NONE,             TIPTUP, PIPSY, TIMBER, NONE,        0x00, 0x03,
-/*Tiptup*/      DIDDY, DRUMSTICK,   NONE, NONE,         CONKER, NONE, NONE, NONE,           PIPSY, TIMBER, NONE, NONE,          0x00, 0x02, 
-/*Pipsy*/       DRUMSTICK, BUMPER,  NONE, NONE,         TIPTUP, CONKER, NONE, NONE,         TIMBER, NONE, NONE, NONE,           0x00, 0x07,
-/*Timber*/      BUMPER, BANJO,      NONE, NONE,         PIPSY, TIPTUP, CONKER, NONE,        NONE, NONE, NONE, NONE,             0x00, 0x04,
-/*Drumstick*/   NONE, NONE,         TIPTUP, PIPSY,      DIDDY, KRUNCH, NONE, NONE,          BUMPER, BANJO, NONE, NONE,          0x00, 0x06,
+/*    Name            Up                     Down                Left                                  Right                              Voice ID */
+CharacterSelectData gCharacterSelectBytesDrumStick[] = {
+    /*Krunch*/    { { NONE, NONE },        { CONKER, NONE },   { NONE, NONE, NONE, NONE },           { DIDDY, DRUMSTICK, BUMPER, BANJO }, 0x0000 },
+    /*Diddy*/     { { NONE, NONE },        { CONKER, TIPTUP }, { KRUNCH, NONE, NONE, NONE },         { DRUMSTICK, BUMPER, BANJO, NONE },  0x0009 },
+    /*Bumper*/    { { NONE, NONE },        { PIPSY, TIMBER },  { DRUMSTICK, DIDDY, KRUNCH, NONE },   { BANJO, NONE, NONE, NONE },         0x0001 },
+    /*Banjo*/     { { NONE, NONE },        { TIMBER, NONE },   { BUMPER, DRUMSTICK, DIDDY, KRUNCH }, { NONE, NONE, NONE, NONE },          0x0005 },
+    /*Conker*/    { { KRUNCH, DIDDY },     { NONE, NONE },     { NONE, NONE, NONE, NONE },           { TIPTUP, PIPSY, TIMBER, NONE },     0x0003 },
+    /*Tiptup*/    { { DIDDY, DRUMSTICK },  { NONE, NONE },     { CONKER, NONE, NONE, NONE },         { PIPSY, TIMBER, NONE, NONE },       0x0002 },
+    /*Pipsy*/     { { DRUMSTICK, BUMPER }, { NONE, NONE },     { TIPTUP, CONKER, NONE, NONE },       { TIMBER, NONE, NONE, NONE },        0x0007 },
+    /*Timber*/    { { BUMPER, BANJO },     { NONE, NONE },     { PIPSY, TIPTUP, CONKER, NONE },      { NONE, NONE, NONE, NONE },          0x0004 },
+    /*Drumstick*/ { { NONE, NONE },        { TIPTUP, PIPSY },  { DIDDY, KRUNCH, NONE, NONE },        { BUMPER, BANJO, NONE, NONE },       0x0006 }
 };
 
 // Under the unlikely chance you have T.T unlocked, but not Drumstick.
-/*Name      Up              Down            Left                            Right                           Voice ID*/
-u8 gCharacterSelectBytesTT[] = {
-/*Krunch*/  NONE, NONE,     CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, BUMPER, BANJO, NONE,     0x00, 0x00, 
-/*Diddy*/   NONE, NONE,     TIPTUP, TICTOC_8, KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
-/*Bumper*/  NONE, NONE,     TICTOC_8, PIPSY,  DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01, 
-/*Banjo*/   NONE, NONE,     PIPSY, TIMBER,  BUMPER, DIDDY, KRUNCH, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x05, 
-/*Conker*/  KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC_8, PIPSY, TIMBER,  0x00, 0x03, 
-/*Tiptup*/  KRUNCH, DIDDY,  NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC_8, PIPSY, TIMBER, NONE,    0x00, 0x02, 
-/*Pipsy*/   BUMPER, BANJO,  NONE, NONE,     TICTOC_8, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,       0x00, 0x07, 
-/*Timber*/  BANJO, NONE,    NONE, NONE,     PIPSY, TICTOC_8, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,         0x00, 0x04, 
-/*T.T*/     DIDDY, BUMPER,  NONE, NONE,     TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,      0x00, 0x08,
+/*    Name         Up                 Down                  Left                                 Right                              Voice ID */
+CharacterSelectData gCharacterSelectBytesTT[] = {
+    /*Krunch*/ { { NONE, NONE },    { CONKER, NONE },     { NONE, NONE, NONE, NONE },          { DIDDY, BUMPER, BANJO, NONE },      0x0000 },
+    /*Diddy*/  { { NONE, NONE },    { TIPTUP, TICTOC_8 }, { KRUNCH, NONE, NONE, NONE },        { BUMPER, BANJO, NONE, NONE },       0x0009 },
+    /*Bumper*/ { { NONE, NONE },    { TICTOC_8, PIPSY },  { DIDDY, KRUNCH, NONE, NONE },       { BANJO, NONE, NONE, NONE },         0x0001 },
+    /*Banjo*/  { { NONE, NONE },    { PIPSY, TIMBER },    { BUMPER, DIDDY, KRUNCH, NONE },     { NONE, NONE, NONE, NONE },          0x0005 },
+    /*Conker*/ { { KRUNCH, NONE },  { NONE, NONE },       { NONE, NONE, NONE, NONE },          { TIPTUP, TICTOC_8, PIPSY, TIMBER }, 0x0003 },
+    /*Tiptup*/ { { KRUNCH, DIDDY }, { NONE, NONE },       { CONKER, NONE, NONE, NONE },        { TICTOC_8, PIPSY, TIMBER, NONE },   0x0002 },
+    /*Pipsy*/  { { BUMPER, BANJO }, { NONE, NONE },       { TICTOC_8, TIPTUP, CONKER, NONE },  { TIMBER, NONE, NONE, NONE },        0x0007 },
+    /*Timber*/ { { BANJO, NONE },   { NONE, NONE },       { PIPSY, TICTOC_8, TIPTUP, CONKER }, { NONE, NONE, NONE, NONE },          0x0004 },
+    /*T.T*/    { { DIDDY, BUMPER }, { NONE, NONE },       { TIPTUP, CONKER, NONE, NONE },      { PIPSY, TIMBER, NONE, NONE },       0x0008 }
 };
 
 // With everyone unlocked.
-/*Name          Up                  Down            Left                            Right                               Voice ID*/
-u8 gCharacterSelectBytesComplete[] = {
-/*Krunch*/      NONE, NONE,         CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, DRUMSTICK, BUMPER, BANJO,    0x00, 0x00, 
-/*Diddy*/       NONE, NONE,         TIPTUP, NONE,   KRUNCH, NONE, NONE, NONE,       DRUMSTICK, BUMPER, BANJO, NONE,     0x00, 0x09, 
-/*Bumper*/      NONE, NONE,         PIPSY, NONE,    DRUMSTICK, DIDDY, KRUNCH,       NONE, BANJO, NONE, NONE, NONE,      0x00, 0x01, 
-/*Banjo*/       NONE, NONE,         TIMBER, NONE,   BUMPER, DRUMSTICK, DIDDY,       KRUNCH, NONE, NONE, NONE, NONE,     0x00, 0x05, 
-/*Conker*/      KRUNCH, NONE,       NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC_9, PIPSY, TIMBER,      0x00, 0x03, 
-/*Tiptup*/      DIDDY, NONE,        NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC_9, PIPSY, TIMBER, NONE,        0x00, 0x02, 
-/*Pipsy*/       BUMPER, NONE,       NONE, NONE,     TICTOC_9, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,           0x00, 0x07, 
-/*Timber*/      BANJO, NONE,        NONE, NONE,     PIPSY, TICTOC_9, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,             0x00, 0x04, 
-/*Drumstick*/   NONE, NONE,         TICTOC_9, NONE,   DIDDY, KRUNCH, NONE, NONE,      BUMPER, BANJO, NONE, NONE,          0x00, 0x06, 
-/*T.T*/         DRUMSTICK, NONE,    TIPTUP, NONE,   TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,          0x00, 0x08, 
+/*    Name            Up                   Down                Left                                 Right                              Voice ID */
+CharacterSelectData gCharacterSelectBytesComplete[] = {
+    /*Krunch*/    { { NONE, NONE },      { CONKER, NONE },   { NONE, NONE, NONE, NONE },           { DIDDY, DRUMSTICK, BUMPER, BANJO }, 0x0000 }, 
+    /*Diddy*/     { { NONE, NONE },      { TIPTUP, NONE },   { KRUNCH, NONE, NONE, NONE },         { DRUMSTICK, BUMPER, BANJO, NONE },  0x0009 },
+    /*Bumper*/    { { NONE, NONE },      { PIPSY, NONE },    { DRUMSTICK, DIDDY, KRUNCH, NONE },   { BANJO, NONE, NONE, NONE },         0x0001 },
+    /*Banjo*/     { { NONE, NONE },      { TIMBER, NONE },   { BUMPER, DRUMSTICK, DIDDY, KRUNCH }, { NONE, NONE, NONE, NONE },          0x0005 },
+    /*Conker*/    { { KRUNCH, NONE },    { NONE, NONE },     { NONE, NONE, NONE, NONE },           { TIPTUP, TICTOC_9, PIPSY, TIMBER }, 0x0003 },
+    /*Tiptup*/    { { DIDDY, NONE },     { NONE, NONE },     { CONKER, NONE, NONE, NONE },         { TICTOC_9, PIPSY, TIMBER, NONE },   0x0002 },
+    /*Pipsy*/     { { BUMPER, NONE },    { NONE, NONE },     { TICTOC_9, TIPTUP, CONKER, NONE },   { TIMBER, NONE, NONE, NONE },        0x0007 },
+    /*Timber*/    { { BANJO, NONE },     { NONE, NONE },     { PIPSY, TICTOC_9, TIPTUP, CONKER },  { NONE, NONE, NONE, NONE },          0x0004 },
+    /*Drumstick*/ { { NONE, NONE },      { TICTOC_9, NONE }, { DIDDY, KRUNCH, NONE, NONE },        { BUMPER, BANJO, NONE, NONE },       0x0006 },
+    /*T.T*/       { { DRUMSTICK, NONE }, { TIPTUP, NONE },   { TIPTUP, CONKER, NONE, NONE },       { PIPSY, TIMBER, NONE, NONE },       0x0008 }
 // !@bug T.T's down input selects Tiptup. It should be set to NONE.
 };
 
@@ -796,7 +796,7 @@ s16 D_800E06D4[8] = {
 };
 
 ButtonTextElement gTwoPlayerRacerCountMenu = {
-    SCREEN_WIDTH_HALF - 80, 140, 160, 64, 4, 4, 80, 20, 58, 40, 80, 40, 102, 40
+    SCREEN_WIDTH_HALF - 80, 140, 160, 64, 4, 4, { 80, 20, 58, 40, 80, 40, 102, 40 }
 };
 
 ButtonElement D_800E0700 = {
@@ -5503,8 +5503,7 @@ UNUSED s32 func_8008E790(void) {
     return D_800E097C;
 }
 
-#if 1
-// HEAVILY WIP, not even close to matchingqq
+#ifdef NON_EQUIVALENT
 void menu_track_select_init(void) {
     s32 levelCount;
     s32 worldCount;

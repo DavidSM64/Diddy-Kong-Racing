@@ -163,7 +163,7 @@ typedef struct unk800DFA3C {
     u8  unk9;
     u8  unkA;
     u8  unkB;
-    u32* unkC;
+    char *unkC;
 } unk800DFA3C;
 
 typedef struct ButtonElement {
