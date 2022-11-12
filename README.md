@@ -124,16 +124,16 @@ As of November 11, 2022, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 35.85% Complete --------------------------
-                     # Decompiled functions: 1318
-                     # GLOBAL_ASM remaining: 515
+ ------------------------- 35.88% Complete --------------------------
+                     # Decompiled functions: 1319
+                     # GLOBAL_ASM remaining: 514
                      # NON_MATCHING functions: 12
-                  # NON_EQUIVALENT WIP functions: 93
+                  # NON_EQUIVALENT WIP functions: 92
  --------------------------- Game Status ----------------------------
               Balloons: 17/47, Keys: 2/4, Trophies: 1/5
                 T.T. Amulets: 2/4, Wizpig Amulets: 1/4
  --------------------------------------------------------------------
- We are collecting silver coins in Everfrost Peak. (5/8 silver coins)
+ We are collecting silver coins in Everfrost Peak. (6/8 silver coins)
  ====================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
  -------------------------  8.24% Complete --------------------------
