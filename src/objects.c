@@ -1619,23 +1619,23 @@ s32 func_8001C524(f32 xDiff, f32 yDiff, f32 zDiff, s32 someFlag) {
     ObjectSegment* segment;
     LevelObjectEntry_TTDoor* levelObj;
 
-    if (someFlag != 0) {
+    if (someFlag) {
         sp64 = func_8001C418(yDiff);
     }
     dist = D_800E5644;
     result = 0xFF;
     for (numSteps = 0; numSteps != 128; numSteps++) {
         segment = (ObjectSegment*) (*D_8011AF04)[numSteps];
-        if (segment != NULL) {
+        if (segment) {
             levelObj = &((segment->unk3C_a.level_entry)->ttDoor);
             var_a0 = 1;
-            if ((someFlag != 0) && (sp64 != levelObj->unkE)) {
+            if (someFlag && (sp64 != levelObj->unkE)) {
                 var_a0 = 0;
             }
             if ((someFlag == 2) && (levelObj->unk8 != 3)) {
                 var_a0 = 0;
             }
-            if (var_a0 != 0) {
+            if (var_a0) {
                 x = segment->trans.x_position - xDiff;
                 y = segment->trans.y_position - yDiff;
                 z = segment->trans.z_position - zDiff;
