@@ -120,6 +120,7 @@ const char D_800E50D4[] = "Error: Multiple checkpoint no: %d !!\n";
 const char D_800E50FC[] = "ERROR Channel %d\n";
 const char D_800E5110[] = "RO error %d!!\n";
 const char D_800E5120[] = "ARGHHHHHHHHH\n";
+extern f32 D_800E5644;
 
 /*********************************/
 
@@ -1604,7 +1605,51 @@ s32 func_8001C48C(s32 arg0) {
     return -1;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001C524.s")
+s32 func_8001C524(f32 xDiff, f32 yDiff, f32 zDiff, s32 someFlag) {
+    f32 pad[6];
+    s32 sp64;
+    f32 x;
+    f32 len;
+    f32 z;
+    f32 y;
+    f32 dist;
+    s32 var_a0;
+    s32 numSteps;
+    s32 result;
+    ObjectSegment *segment;
+    LevelObjectEntry_TTDoor *levelObj;
+
+    if (someFlag) {
+        sp64 = func_8001C418(yDiff);
+    }
+    dist = D_800E5644;
+    result = 0xFF;
+    for (numSteps = 0; numSteps != 128; numSteps++) {
+        segment = (ObjectSegment*) (*D_8011AF04)[numSteps];
+        if (segment) {
+            levelObj = &((segment->unk3C_a.level_entry)->ttDoor);
+            var_a0 = 1;
+            if (someFlag && (sp64 != levelObj->unkE)) {
+                var_a0 = 0;
+            }
+            if ((someFlag == 2) && (levelObj->unk8 != 3)) {
+                var_a0 = 0;
+            }
+            if (var_a0) {
+                x = segment->trans.x_position - xDiff;
+                y = segment->trans.y_position - yDiff;
+                z = segment->trans.z_position - zDiff;
+                len = sqrtf((x * x) + (y * y) + (z * z));
+                if (len < dist) {
+                    dist = len;
+                    result = numSteps;
+                }
+            }
+        }
+    }
+    return result;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001C6C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
