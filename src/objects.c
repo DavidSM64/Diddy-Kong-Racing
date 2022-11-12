@@ -1616,8 +1616,8 @@ s32 func_8001C524(f32 xDiff, f32 yDiff, f32 zDiff, s32 someFlag) {
     s32 var_a0;
     s32 numSteps;
     s32 result;
-    ObjectSegment* segment;
-    LevelObjectEntry_TTDoor* levelObj;
+    ObjectSegment *segment;
+    LevelObjectEntry_TTDoor *levelObj;
 
     if (someFlag) {
         sp64 = func_8001C418(yDiff);
