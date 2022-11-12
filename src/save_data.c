@@ -151,7 +151,7 @@ void func_80072348(s16 arg0, u8 arg1) {
             D_801241B8[index].unk4 = (&sUnkMiscAsset19[arg1 << 1])[1];
         } else {
             D_801241B8[index].unk0 = arg1;
-            if ((*(&sUnkMiscAsset19[(s32) arg1 << 1])) != 0) {
+            if ((*(&sUnkMiscAsset19[(s32) arg1 << 1]))) {
                 func_80072578(
 		    arg0,
 		    (&sUnkMiscAsset19[(s32) arg1 << 1])[0],
