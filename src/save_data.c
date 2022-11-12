@@ -77,7 +77,7 @@ typedef struct unk_801241B8 {
 } unk_801241B8;
 unk_801241B8 D_801241B8[MAXCONTROLLERS];
 
-s32 *sUnkMiscAsset19; //Misc Asset 19
+s16 *sUnkMiscAsset19; //Misc Asset 19
 /**
  * Values for Misc Asset 19
  * 00 2D 00 12 
@@ -140,36 +140,27 @@ UNUSED s32 func_800722E8(s16 arg0) {
     return sRumblePaksPresent & temp;
 }
 
-#ifdef NON_EQUIVALENT
-//In the right ballpark, but not right yet.
 void func_80072348(s16 arg0, u8 arg1) {
-    s32 arg1AsS32 = arg1;
-    s16 *temp_v0;
-    unk_801241B8 *temp_v1;
-    u16 playerId;
-
-    if (arg1AsS32 < 19 && arg0 >= 0) {
-        if (arg0 < 4) {
-            playerId = (func_80072250(arg0));
-            temp_v1 = &D_801241B8[playerId];
-            if (arg1AsS32 == temp_v1->unk0) {
-                if (temp_v1->unk8 < 0) {
-                    temp_v1->unk8 = -300;
-                }
-                temp_v1->unk4 = sUnkMiscAsset19[arg1AsS32 + 1];
-            } else {
-                temp_v1->unk0 = arg1AsS32;
-                temp_v0 = &sUnkMiscAsset19[arg1AsS32];
-                if (*temp_v0 != 0) {
-                    func_80072578(arg0,  temp_v0[0], temp_v0[1]);
-                }
+    s32 index;
+    if (arg1 < 19 && arg0 >= 0 && arg0 < 4) {
+        index = (func_80072250(arg0)) & 0xFFFF;
+        if (D_801241B8[index].unk0 == arg1) {
+            if (D_801241B8[index].unk8 < 0) {
+                D_801241B8[index].unk8 = -300;
+            }
+            D_801241B8[index].unk4 = (&sUnkMiscAsset19[arg1 << 1])[1];
+        } else {
+            D_801241B8[index].unk0 = arg1;
+            if ((*(&sUnkMiscAsset19[(s32) arg1 << 1])) != 0) {
+                func_80072578(
+		    arg0,
+		    (&sUnkMiscAsset19[(s32) arg1 << 1])[0],
+		    (&sUnkMiscAsset19[(s32) arg1 << 1])[1]
+		);
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072348.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/save_data/func_80072424.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80072578.s")
