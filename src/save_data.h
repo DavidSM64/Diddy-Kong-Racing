@@ -74,6 +74,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
 SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
 char *font_codes_to_string(char *inString, char *outString, s32 stringLength);
 s32 get_file_type(s32 controllerIndex, s32 fileNum);
+void func_80072578(s16 arg0, s16 arg1, s16 arg2);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
 void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
