@@ -53,6 +53,8 @@ enum ViewPortFlags {
     VIEWPORT_HEIGHT_CUSTOM = 0x0040
 };
 
+extern s32 gShouldDoFake240i;
+
 extern s8 gAntiPiracyViewport;
 
 /* Size: 0x34 bytes. */

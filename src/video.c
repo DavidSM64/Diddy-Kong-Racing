@@ -26,6 +26,8 @@ VideoModeResolution gVideoModeResolutions[] = {
 
 UNUSED s32 D_800DE7BC = 0;
 
+s32 gSPTaskNum = 0;
+
 /*******************************/
 
 /************ .bss ************/
@@ -140,13 +142,14 @@ void init_vi_settings(void) {
     s32 viModeTableIndex;
     OSViMode *tvViMode;
 
-    viModeTableIndex = OS_VI_NTSC_LPN1;
+    viModeTableIndex = OS_VI_NTSC_LPF1;
     if (osTvType == TV_TYPE_PAL) {
-        viModeTableIndex = OS_VI_PAL_LPN1;
+        viModeTableIndex = OS_VI_PAL_LPF1;
     } else if (osTvType == TV_TYPE_MPAL) {
-        viModeTableIndex = OS_VI_MPAL_LPN1;
+        viModeTableIndex = OS_VI_MPAL_LPF1;
     }
-
+    osViSetMode(&osViModeTable[OS_VI_NTSC_LPF1]);
+    /*
     switch (gVideoModeIndex & NUM_RESOLUTION_MODES) {
         case VIDEO_MODE_LOWRES_LAN:
             stubbed_printf("320 by 240 Point sampled, Non interlaced.\n");
@@ -222,8 +225,9 @@ void init_vi_settings(void) {
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
             break;
     }
-    osViSetSpecialFeatures(OS_VI_DIVOT_ON);
-    osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
+    */
+    osViSetSpecialFeatures(OS_VI_DIVOT_OFF);
+    osViSetSpecialFeatures(OS_VI_DITHER_FILTER_OFF);
     osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
 }
 

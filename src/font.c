@@ -285,6 +285,8 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
     s32 newTempX;
     s32 newTempY;
     char curChar;
+    s32 interlace = gShouldDoFake240i ? (2 + gSPTaskNum) : 0;
+    
     xAlignmentDiff = -1;
     lastTextureIndex = -1;
     if (text != NULL) {
@@ -296,7 +298,7 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
         if (arg1 != gDialogueBoxBackground) {
             temp_f4 = (((arg1->y2 - arg1->y1) + 1) / ((f32) 2)) * arg4;
             temp_t9 = (arg1->y1 + arg1->y2) >> 1;
-            gDPSetScissor((*dlist)++, 0, arg1->x1, temp_t9 - temp_f4, arg1->x2, temp_t9 + temp_f4);
+            gDPSetScissor((*dlist)++, interlace, arg1->x1, temp_t9 - temp_f4, arg1->x2, temp_t9 + temp_f4);
         }
         if (alignmentFlags & (HORZ_ALIGN_RIGHT | HORZ_ALIGN_CENTER)) {
             xAlignmentDiff = func_800C4DA0(text, xpos, arg1->font);

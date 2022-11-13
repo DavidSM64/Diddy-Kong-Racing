@@ -149,7 +149,7 @@ UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
 UNUSED u8 D_80121268[0x2000]; // 0x2000 / 8192 bytes Padding?
-s32 gSPTaskNum;
+//s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
 // Similar to gMapId, but is 0 if not currently playing a level (e.g. start menu).
@@ -858,7 +858,7 @@ void init_game(void) {
         mode = 28;
     }
 
-    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8) mode, 1);
+    osCreateScheduler(&gMainSched, ((s8*)&D_80121268) + 8192, /*priority*/ 13, (u8) mode, 1);
     D_800DD3A0 = FALSE;
     if (!func_8006EFB8()) {
         D_800DD3A0 = TRUE;
@@ -934,6 +934,16 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
+    
+    if(gShouldDoFake240i) {
+        gDPSetCycleType(gCurrDisplayList++, G_CYC_FILL);
+        gDPSetRenderMode(gCurrDisplayList++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+        gDPSetScissor(gCurrDisplayList++, 2 + (gSPTaskNum ^ 1), 0, 0, 320 - 1, 240 - 1);
+        gDPSetFillColor(gCurrDisplayList++, 0x318D318D);
+        gDPFillRectangle(gCurrDisplayList++, 0, 0, 320 - 1, 240 - 1);
+        gDPSetScissor(gCurrDisplayList++, 2 + gSPTaskNum, 0, 0, 320 - 1, 240 - 1);
+    }
+    
     render_background(&gCurrDisplayList, (Mtx *) &gGameCurrMatrix, TRUE); 
     D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
     if (get_lockup_status()) {
@@ -970,6 +980,7 @@ void main_game_loop(void) {
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
+    gDPSetScissor(gCurrDisplayList++, 2 + gSPTaskNum, 0, 0, 320 - 1, 240 - 1);
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);

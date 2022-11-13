@@ -601,12 +601,14 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
     *y2 = GET_VIDEO_HEIGHT(widthAndHeight);
 }
 
-#ifdef NON_EQUIVALENT
-
+//#ifdef NON_EQUIVALENT
+#if 1
 // Still a work-in-progress but it doesn't seem to cause any problems,
 // which is why it is labeled under NON_EQUIVALENT
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
+
+s32 gShouldDoFake240i = 1;
 
 void func_80066CDC(Gfx **dlist, Mtx **mats) {
     u32 sp58;
@@ -622,6 +624,7 @@ void func_80066CDC(Gfx **dlist, Mtx **mats) {
     u32 phi_t3;
     u32 phi_t5;
     u32 phi_t4;
+    s32 interlace = gShouldDoFake240i ? (2 + gSPTaskNum) : 0;
 
     if (func_8000E184() && !gNumberOfViewports) {
         gObjectRenderStackPos = 1;
@@ -630,7 +633,7 @@ void func_80066CDC(Gfx **dlist, Mtx **mats) {
     temp_t0 = widthAndHeight >> 16;
     temp_a3 = temp_t0 >> 1;
     if (gScreenViewports[gObjectRenderStackPos].flags & VIEWPORT_UNK_01) {
-        gDPSetScissor((*dlist)++, SCISSOR_INTERLACE,
+        gDPSetScissor((*dlist)++, interlace,
             gScreenViewports[gObjectRenderStackPos].scissorX1,
             gScreenViewports[gObjectRenderStackPos].scissorY1,
             gScreenViewports[gObjectRenderStackPos].scissorX2,
@@ -659,7 +662,7 @@ void func_80066CDC(Gfx **dlist, Mtx **mats) {
             if (osTvType == TV_TYPE_PAL) {
                 phi_t3 = sp58 - 0x12;
             }
-            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, width, temp_t0);
+            gDPSetScissor((*dlist)++, interlace, 0, 0, width, temp_t0);
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
@@ -669,19 +672,19 @@ void func_80066CDC(Gfx **dlist, Mtx **mats) {
                 if (osTvType == TV_TYPE_PAL) {
                     phi_t3 = temp_v0_6 - 0xC;
                 }
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, width, (temp_a3 - (temp_t0 >> 7)));
+                gDPSetScissor((*dlist)++, interlace, 0, 0, width, (temp_a3 - (temp_t0 >> 7)));
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (temp_a3 + (temp_t0 >> 7)), width, (temp_t0 - (temp_t0 >> 7)));
+                gDPSetScissor((*dlist)++, interlace, 0, (temp_a3 + (temp_t0 >> 7)), width, (temp_t0 - (temp_t0 >> 7)));
                 phi_t3 = temp_a3 + (temp_t0 >> 2);
             }
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
             if (gObjectRenderStackPos == 0) {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (width >> 8), temp_t0);
+                gDPSetScissor((*dlist)++, interlace, 0, 0, temp_a2 - (width >> 8), temp_t0);
                 phi_a1 = width >> 2;
             } else {
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (width >> 8), 0, width - (width >> 8), temp_t0);
+                gDPSetScissor((*dlist)++, interlace, temp_a2 + (width >> 8), 0, width - (width >> 8), temp_t0);
                 phi_a1 = temp_a2 + (width >> 2);
             }
             sp4C = phi_a1;
@@ -692,21 +695,21 @@ void func_80066CDC(Gfx **dlist, Mtx **mats) {
             sp54 = temp_a2 >> 1;
             switch (gObjectRenderStackPos) {
                 case 0:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, (temp_a2 - (width >> 8)), (temp_a3 - (temp_t0 >> 7)));
+                    gDPSetScissor((*dlist)++, interlace, 0.0f, 0.0f, (temp_a2 - (width >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = 0;
                 case 1:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (temp_a2 + (width >> 8)), 0, ((temp_a2 * 2) - (width >> 8)), (temp_a3 - (temp_t0 >> 7)));
+                    gDPSetScissor((*dlist)++, interlace, (temp_a2 + (width >> 8)), 0, ((temp_a2 * 2) - (width >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
                     phi_t4 = temp_a2;
                     break;
                 case 2:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, temp_a3 + (temp_t0 >> 7), temp_a2 - (width >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
+                    gDPSetScissor((*dlist)++, interlace, 0, temp_a3 + (temp_t0 >> 7), temp_a2 - (width >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = 0;
                     break;
                 case 3:
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, temp_a2 + (width >> 8), temp_a3 + (temp_t0 >> 7), (temp_a2 * 2) - (width >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
+                    gDPSetScissor((*dlist)++, interlace, temp_a2 + (width >> 8), temp_a3 + (temp_t0 >> 7), (temp_a2 * 2) - (width >> 8), (temp_a3 * 2) - (temp_t0 >> 7));
                     phi_t5 = temp_a3;
                     phi_t4 = temp_a2;
                     break;
@@ -743,7 +746,78 @@ void func_80066CDC(Gfx **dlist, Mtx **mats) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
+#if 1
+void func_80067A3C(Gfx** dlist) {
+    s32 size;
+    s32 lrx;
+    s32 lry;
+    s32 ulx;
+    s32 uly;
+    s32 numViewports;
+    s32 interlace = gShouldDoFake240i ? 2 + gSPTaskNum : 0;
+
+    size = get_video_width_and_height_as_s32();
+    numViewports = gNumberOfViewports;
+    if (numViewports != 0) {
+        if (numViewports == 2) {
+            numViewports = 3;
+        }
+        ulx = 0;
+        uly = 0;
+        lry = (size >> 0x10) & 0xFFFF;
+        lrx = size & 0xFFFF;
+        switch (numViewports) {
+            case 1:
+                if (gObjectRenderStackPos == 0) {
+                    lry = (lry >> 1) - (lry >> 7);
+                } else {
+                    uly = (lry >> 1) + (lry >> 7);
+                    lry -= (lry >> 7);
+                }
+                break;
+            case 2:
+                if (gObjectRenderStackPos == 0) {
+                    lrx = (lrx >> 1) - (lrx >> 8);
+                } else {
+                    ulx = (lrx >> 1) + (lrx >> 8);
+                    lrx = lrx - (lrx >> 8);
+                }
+                break;
+            case 3:
+               // if (gObjectRenderStackPos){} // This lowers the score but might be a red herring, since it affects a lot of regalloc.
+                switch(gObjectRenderStackPos) { // gObjectRenderStackPos = Viewport index?
+                    case 0:
+                        lrx = (lrx >> 1) - (lrx >> 8);
+                        lry = (lry >> 1) - (lry >> 7);
+                        break;
+                    case 1:
+                        ulx = (lrx >> 1) + (lrx >> 8);
+                        lrx = lrx - (lrx >> 8);
+                        lry = (lry >> 1) - (lry >> 7);
+                        break;
+                    case 2:
+                        uly = (lry >> 1) + (lry >> 7);
+                        lrx = (lrx >> 1) - (lrx >> 8);
+                        lry -= lry >> 7;
+                        break;
+                    case 3:
+                        ulx = (lrx >> 1) + (lrx >> 8);
+                        uly = (lry >> 1) + (lry >> 7);
+                        lry -= lry >> 7;
+                        lrx = lrx - (lrx >> 8);
+                        break;
+                }
+                break;
+        }
+        gDPSetScissor((*dlist)++, interlace, ulx, uly, lrx, lry);
+        return;
+    }
+    
+    gDPSetScissor((*dlist)++, interlace, 0, 0, size & 0xFFFF, (size >> 0x10) & 0xFFFF);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
+#endif
 
 void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats) {
     s32 temp;
@@ -853,12 +927,13 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
 
 void func_800682AC(Gfx **dlist) {
     u32 widthAndHeight, width, height;
+    s32 interlace = gShouldDoFake240i ? (2 + gSPTaskNum) : 0;
     gObjectRenderStackPos = 4;
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
     if (!(gScreenViewports[gObjectRenderStackPos].flags & VIEWPORT_UNK_01)) {
-        gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
+        gDPSetScissor((*dlist)++, interlace, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
         func_80067A3C(dlist);

@@ -71,6 +71,8 @@ enum VideoModes {
     VIDEO_MODE_HIGHRES_MASK = 4
 };
 
+extern s32 gSPTaskNum;
+
 extern s32 gVideoRefreshRate;
 extern f32 gVideoAspectRatio;
 extern u16 *gVideoCurrFramebuffer;

@@ -417,13 +417,14 @@ void render_background(Gfx **dlist, Mtx *mtx, s32 drawBG) {
     s32 y1;
     s32 x2;
     s32 y2;
+    s32 interlace = gShouldDoFake240i ? (2 + gSPTaskNum) : 0;
 
     widthAndHeight = get_video_width_and_height_as_s32();
     w = GET_VIDEO_WIDTH(widthAndHeight);
     h = GET_VIDEO_HEIGHT(widthAndHeight);
 
     gDPPipeSync((*dlist)++);
-    gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
+    gDPSetScissor((*dlist)++, interlace, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000);
     gDPSetFillColor((*dlist)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));
