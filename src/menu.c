@@ -4384,14 +4384,14 @@ void menu_character_select_init(void) {
     initialise_player_ids();
     if (is_drumstick_unlocked()) {
         if (is_tt_unlocked()) {
-            gCurrCharacterSelectData = &gCharacterSelectBytesComplete;
+            gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesComplete;
         } else {
-            gCurrCharacterSelectData = &gCharacterSelectBytesDrumStick;
+            gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesDrumStick;
         }
     } else if (is_tt_unlocked()) {
-        gCurrCharacterSelectData = &gCharacterSelectBytesTT;
+        gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesTT;
     } else {
-        gCurrCharacterSelectData = &gCharacterSelectBytesDefault;
+        gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesDefault;
     }
     for (i = 0; i < 4; i++) {
         D_801263DC[i] = 0;
@@ -5961,10 +5961,9 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_800904E8.s")
 
 void func_80090918(s32 updateRate) {
-    s32 pad[2];
+    UNUSED s32 pad1[2];
     s32 var_t1;
-    s32 temp_lo;
-    s32 temp_v1;
+    UNUSED s32 pad2[2];
     s32 var_a1;
     s32 var_t0;
     s32 var_t2;
