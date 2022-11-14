@@ -450,12 +450,12 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     *((s32 *)gameData) = GAMD;
     func_800732E8(arg1, gameData + 4);
     ret = func_80073C5C(controllerIndex, 3, &fileExt);
-    if (ret == 0) {
+    if (ret == CONTROLLER_PAK_GOOD) {
         // D_800E7680 = DKRACING-ADV
         ret = write_controller_pak_file(controllerIndex, -1, (char *) D_800E7680, (char *)&fileExt, gameData, fileSize);
     }
     free_from_memory_pool(gameData);
-    if (ret != 0) {
+    if (ret != CONTROLLER_PAK_GOOD) {
         ret |= (controllerIndex << 30);
     }
     return ret;
@@ -510,7 +510,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     u8 *timeData; //Should probably be a struct or maybe an array?
     s32 ret;
     s32 fileSize;
-    UNUSED s32 temp_v0;
+    UNUSED s32 pad;
     char *fileExt;
 
     fileSize = get_time_data_file_size(); // 512 bytes
@@ -838,8 +838,8 @@ void init_controller_paks(void) {
     D_801241E4 = 1;
     D_801241E8 = 0;
     D_800DE48C = 1;
-    sRumblePaksPresent = 0; //sRumblePaksPresent
-    sControllerPaksPresent = 0; //sControllerPaksPresent
+    sRumblePaksPresent = 0;
+    sControllerPaksPresent = 0;
 
     //pakPattern will set the first 4 bits representing each controller
     //and it will be 1 if there's something attached.
