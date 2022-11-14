@@ -743,7 +743,96 @@ void func_80066CDC(Gfx **dlist, Matrix **mats) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
+void func_80067A3C(Gfx **dlist) {
+    s32 size;
+    s32 lrx;
+    s32 lry;
+    s32 ulx;
+    s32 uly;
+    s32 numViewports;
+    s32 temp;
+    s32 temp2;
+    s32 temp3;
+    s32 temp4;
+    s32 width;
+    s32 height;
+
+    size = get_video_width_and_height_as_s32();
+    height = (u16) GET_VIDEO_HEIGHT(size);
+    width = (u16) size;
+    numViewports = gNumberOfViewports;
+
+    if (numViewports != 0) {
+        if (numViewports == 2) {
+            numViewports = 3;
+        }
+        lrx = ulx = 0;
+        lry = uly = 0;
+        lrx += width;\
+        lry += height;
+        temp = lry >> 7;
+        temp2 = lrx >> 8;
+        temp4 = lrx >> 1;
+        temp3 = lry >> 1;
+        switch (numViewports) {
+            case 1:
+                switch (gObjectRenderStackPos) {
+                    case 0:
+                        lry = temp3 - temp;
+                        break;
+                    default:
+                        uly = temp3 + temp;
+                        lry -= temp;
+                        break;
+                }
+                break;
+
+            case 2:
+                switch (gObjectRenderStackPos) {
+                    case 0:
+                        lrx = temp4 - temp2;
+                        break;
+
+                    default:
+                        ulx = temp4 + temp2;
+                        lrx -= temp2;
+                        break;
+                }
+                break;
+
+            case 3:
+                switch (gObjectRenderStackPos) {
+                    case 0:
+                        lrx = temp4 - temp2;\
+                        lry = temp3 - temp;
+                        break;
+
+                    case 1:
+                        ulx = temp4 + temp2;
+                        lrx -= temp2;
+                        lry = temp3 - temp;
+                        break;
+
+                    case 2:
+                        uly = temp3 + temp;
+                        lrx = temp4 - temp2;\
+                        lry -= temp;
+                        break;
+
+                    case 3:
+                        ulx = temp4 + temp2; \
+                        uly = temp3 + temp;
+                        lrx -= temp2; \
+                        lry -= temp;
+                        break;
+                }
+                break;
+        }
+        gDPSetScissor((*dlist)++, 0, ulx, uly, lrx, lry);
+        return;
+    }
+    gDPSetScissor((*dlist)++, 0, 0, 0, width, height);
+}
 
 void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
     s32 temp;

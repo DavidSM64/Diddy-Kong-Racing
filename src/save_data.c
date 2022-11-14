@@ -77,7 +77,7 @@ typedef struct unk_801241B8 {
 } unk_801241B8;
 unk_801241B8 D_801241B8[MAXCONTROLLERS];
 
-s32 *sUnkMiscAsset19; //Misc Asset 19
+s16 *sUnkMiscAsset19; //Misc Asset 19
 /**
  * Values for Misc Asset 19
  * 00 2D 00 12 
@@ -131,48 +131,87 @@ void func_80072298(u8 arg0) {
     func_80072708();
 }
 
-UNUSED s32 func_800722E8(s16 arg0) {
+UNUSED s32 func_800722E8(s16 controllerIndex) {
     s32 temp;
-    if (arg0 < 0 || arg0 >= 4) {
+    if (controllerIndex < 0 || controllerIndex >= 4) {
         return 0;
     }
-    temp = ((1 << func_80072250(arg0)) & 0xFF);
+    temp = ((1 << func_80072250(controllerIndex)) & 0xFF);
     return sRumblePaksPresent & temp;
 }
 
-#ifdef NON_EQUIVALENT
-//In the right ballpark, but not right yet.
-void func_80072348(s16 arg0, u8 arg1) {
-    s32 arg1AsS32 = arg1;
-    s16 *temp_v0;
-    unk_801241B8 *temp_v1;
-    u16 playerId;
+void func_80072348(s16 controllerIndex, u8 arg1) {
+    s32 index;
 
-    if (arg1AsS32 < 19 && arg0 >= 0) {
-        if (arg0 < 4) {
-            playerId = (func_80072250(arg0));
-            temp_v1 = &D_801241B8[playerId];
-            if (arg1AsS32 == temp_v1->unk0) {
-                if (temp_v1->unk8 < 0) {
-                    temp_v1->unk8 = -300;
-                }
-                temp_v1->unk4 = sUnkMiscAsset19[arg1AsS32 + 1];
-            } else {
-                temp_v1->unk0 = arg1AsS32;
-                temp_v0 = &sUnkMiscAsset19[arg1AsS32];
-                if (*temp_v0 != 0) {
-                    func_80072578(arg0,  temp_v0[0], temp_v0[1]);
-                }
+    if (arg1 < 19 && controllerIndex >= 0 && controllerIndex < 4) {
+        index = (func_80072250(controllerIndex)) & 0xFFFF;
+        if (D_801241B8[index].unk0 == arg1) {
+            if (D_801241B8[index].unk8 < 0) {
+                D_801241B8[index].unk8 = -300;
+            }
+            D_801241B8[index].unk4 = sUnkMiscAsset19[(arg1 * 2) + 1];
+        } else {
+            D_801241B8[index].unk0 = arg1;
+            if (sUnkMiscAsset19[arg1 * 2] != 0) {
+                func_80072578(controllerIndex, sUnkMiscAsset19[arg1 * 2], sUnkMiscAsset19[(arg1 * 2) + 1]);
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072348.s")
-#endif
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072424.s")
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072578.s")
+void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2) {
+    s32 index;
+
+    if (arg1 < 19 && controllerIndex >= 0 && controllerIndex < 4) {
+        index = func_80072250(controllerIndex) & 0xFFFF;
+        if (arg1 == D_801241B8[index].unk0) {
+            if (D_801241B8[index].unk8 < 0) {
+                D_801241B8[index].unk8 = -300;
+            }
+            D_801241B8[index].unk4 = sUnkMiscAsset19[(arg1 * 2) + 1];
+        } else {
+            if (arg2 < 0.0f) {
+                arg2 = 0.0f;
+            }
+            if (arg2 > 1.0f) {
+                arg2 = 1.0f;
+            }
+            D_801241B8[index].unk0 = arg1;
+            if (sUnkMiscAsset19[arg1 * 2] != 0) {
+                func_80072578(controllerIndex, (sUnkMiscAsset19[arg1 * 2] * arg2), sUnkMiscAsset19[(arg1 * 2) + 1]);
+            }
+        }
+    }
+}
+
+void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2) {
+    s16 index;
+    u8 new_var;
+
+    if (D_801241E4 != 0 && controllerIndex >= 0 && controllerIndex < 4) {
+        new_var = func_80072250(controllerIndex);
+        index = 0xFFFF;
+        index = index & new_var;
+        new_var = 1 << index;
+        D_801241E6 |= new_var;
+        D_801241E7 &= ~new_var;
+        D_801241B8[index].unk6 = ((arg1 * arg1) * 0.1);
+        D_801241B8[index].unk2 = ((arg1 * arg1) * 0.1);
+        D_801241B8[index].unk4 = arg2;
+    }
+}
+
+UNUSED void func_8007267C(s16 controllerIndex) {
+    s16 index;
+
+    if (controllerIndex >= 0 && controllerIndex < 4) {
+        index = func_80072250(controllerIndex);
+        D_801241E7 |= 1 << index;
+        D_801241B8[index].unk4 = -1;
+        D_801241B8[index].unk0 = -1;
+        D_801241B8[index].unk8 = 0;
+    }
+}
 
 void func_80072708(void) {
     D_800DE48C = 3;
@@ -793,7 +832,7 @@ void init_controller_paks(void) {
     s8 maxControllers;
 
     sControllerMesgQueue = get_si_mesg_queue();
-    sUnkMiscAsset19 = get_misc_asset(19), //Comma is here on purpose
+    sUnkMiscAsset19 = (s16 *)get_misc_asset(ASSET_MISC_19), //Comma is here on purpose
     D_801241E7 = 0xF;
     D_801241E6 = 0xF;
     D_801241E4 = 1;

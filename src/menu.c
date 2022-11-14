@@ -27,6 +27,7 @@
 #include "object_functions.h"
 #include "unknown_003260.h"
 #include "racer.h"
+#include "unknown_078050.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -53,7 +54,7 @@ unk801263C0 D_801263C0;
 
 s32 gIgnorePlayerInput;
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
-CharacterSelectData (*gCurrCharacterSelectData)[8]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
+CharacterSelectData (*gCurrCharacterSelectData)[10]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
 s32 D_801263D0; //Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[4];
@@ -154,7 +155,7 @@ s32 D_80126804;
 s32 D_80126808[4];
 s32 D_80126818;
 s32 D_8012681C;
-s32 D_80126820;
+s16 D_80126820;
 s32 D_80126824;
 UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
 s32 D_8012682C;
@@ -182,7 +183,7 @@ f32 D_801268D8;
 s32 D_801268DC;
 s32 D_801268E0;
 s32 D_801268E4;
-s16 D_801268E8[24]; // Probably a struct?
+s16 D_801268E8[4][6]; //Track Select values?
 s16 gFFLUnlocked;
 UNUSED s32 D_8012691C;
 UNUSED s32 D_80126920;
@@ -583,59 +584,59 @@ s16 D_800DFDCC[2] = { -1, 0 };
 */
 
 // Default character select screen with the initial 8 characters.
-/*Name          Up              Down            Left                            Right Inputs                    Voice ID*/
-u8 gCharacterSelectBytesDefault[] = {
-/*Krunch*/      NONE, NONE,     CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, BUMPER, BANJO, NONE,     0x00, 0x00,
-/*Diddy*/       NONE, NONE,     TIPTUP, NONE,   KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
-/*Bumper*/      NONE, NONE,     PIPSY, NONE,    DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01,
-/*Banjo*/       NONE, NONE,     TIMBER, NONE,   BUMPER, DIDDY, KRUNCH, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x05, 
-/*Conker*/      KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, PIPSY, TIMBER, NONE,    0x00, 0x03,
-/*Tiptup*/      DIDDY, NONE,    NONE, NONE,     CONKER, NONE, NONE, NONE,       PIPSY, TIMBER, NONE, NONE,      0x00, 0x02, 
-/*Pipsy*/       BUMPER, NONE,   NONE, NONE,     TIPTUP, CONKER, NONE, NONE,     TIMBER, NONE, NONE, NONE,       0x00, 0x07,
-/*Timber*/      BANJO, NONE,    NONE, NONE,     PIPSY, TIPTUP, CONKER, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x04,
+/*    Name         Up                  Down                Left                                Right                            Voice ID */
+CharacterSelectData gCharacterSelectBytesDefault[] = {
+    /*Krunch*/ { { NONE, NONE },     { CONKER, NONE },   { NONE, NONE, NONE, NONE },         { DIDDY, BUMPER, BANJO, NONE },     0x0000 },
+    /*Diddy*/  { { NONE, NONE },     { TIPTUP, NONE },   { KRUNCH, NONE, NONE, NONE },       { BUMPER, BANJO, NONE, NONE },      0x0009 },
+    /*Bumper*/ { { NONE, NONE },     { PIPSY, NONE },    { DIDDY, KRUNCH, NONE, NONE },      { BANJO, NONE, NONE, NONE },        0x0001 },
+    /*Banjo*/  { { NONE, NONE },     { TIMBER, NONE },   { BUMPER, DIDDY, KRUNCH, NONE },    { NONE, NONE, NONE, NONE },         0x0005 },
+    /*Conker*/ { { KRUNCH, NONE },   { NONE, NONE },     { NONE, NONE, NONE, NONE },         { TIPTUP, PIPSY, TIMBER, NONE },    0x0003 },
+    /*Tiptup*/ { { DIDDY, NONE },    { NONE, NONE },     { CONKER, NONE, NONE, NONE },       { PIPSY, TIMBER, NONE, NONE },      0x0002 },
+    /*Pipsy*/  { { BUMPER, NONE },   { NONE, NONE },     { TIPTUP, CONKER, NONE, NONE },     { TIMBER, NONE, NONE, NONE },       0x0007 },
+    /*Timber*/ { { BANJO, NONE },    { NONE, NONE },     { PIPSY, TIPTUP, CONKER, NONE },    { NONE, NONE, NONE, NONE },         0x0004 }
 };
 
 // Drumstick is unlocked, but T.T is not.
-/*Name          Up                  Down                Left                                Right                               Voice ID*/
-u8 gCharacterSelectBytesDrumStick[] = {
-/*Krunch*/      NONE, NONE,         CONKER, NONE,       NONE, NONE, NONE, NONE,             DIDDY, DRUMSTICK, BUMPER, BANJO,    0x00, 0x00,
-/*Diddy*/       NONE, NONE,         CONKER, TIPTUP,     KRUNCH, NONE, NONE, NONE,           DRUMSTICK, BUMPER, BANJO, NONE,     0x00, 0x09, 
-/*Bumper*/      NONE, NONE,         PIPSY, TIMBER,      DRUMSTICK, DIDDY, KRUNCH, NONE,     BANJO, NONE, NONE, NONE,            0x00, 0x01,
-/*Banjo*/       NONE, NONE,         TIMBER, NONE,       BUMPER, DRUMSTICK, DIDDY, KRUNCH,   NONE, NONE, NONE, NONE,             0x00, 0x05, 
-/*Conker*/      KRUNCH, DIDDY,      NONE, NONE,         NONE, NONE, NONE, NONE,             TIPTUP, PIPSY, TIMBER, NONE,        0x00, 0x03,
-/*Tiptup*/      DIDDY, DRUMSTICK,   NONE, NONE,         CONKER, NONE, NONE, NONE,           PIPSY, TIMBER, NONE, NONE,          0x00, 0x02, 
-/*Pipsy*/       DRUMSTICK, BUMPER,  NONE, NONE,         TIPTUP, CONKER, NONE, NONE,         TIMBER, NONE, NONE, NONE,           0x00, 0x07,
-/*Timber*/      BUMPER, BANJO,      NONE, NONE,         PIPSY, TIPTUP, CONKER, NONE,        NONE, NONE, NONE, NONE,             0x00, 0x04,
-/*Drumstick*/   NONE, NONE,         TIPTUP, PIPSY,      DIDDY, KRUNCH, NONE, NONE,          BUMPER, BANJO, NONE, NONE,          0x00, 0x06,
+/*    Name            Up                     Down                Left                                  Right                              Voice ID */
+CharacterSelectData gCharacterSelectBytesDrumStick[] = {
+    /*Krunch*/    { { NONE, NONE },        { CONKER, NONE },   { NONE, NONE, NONE, NONE },           { DIDDY, DRUMSTICK, BUMPER, BANJO }, 0x0000 },
+    /*Diddy*/     { { NONE, NONE },        { CONKER, TIPTUP }, { KRUNCH, NONE, NONE, NONE },         { DRUMSTICK, BUMPER, BANJO, NONE },  0x0009 },
+    /*Bumper*/    { { NONE, NONE },        { PIPSY, TIMBER },  { DRUMSTICK, DIDDY, KRUNCH, NONE },   { BANJO, NONE, NONE, NONE },         0x0001 },
+    /*Banjo*/     { { NONE, NONE },        { TIMBER, NONE },   { BUMPER, DRUMSTICK, DIDDY, KRUNCH }, { NONE, NONE, NONE, NONE },          0x0005 },
+    /*Conker*/    { { KRUNCH, DIDDY },     { NONE, NONE },     { NONE, NONE, NONE, NONE },           { TIPTUP, PIPSY, TIMBER, NONE },     0x0003 },
+    /*Tiptup*/    { { DIDDY, DRUMSTICK },  { NONE, NONE },     { CONKER, NONE, NONE, NONE },         { PIPSY, TIMBER, NONE, NONE },       0x0002 },
+    /*Pipsy*/     { { DRUMSTICK, BUMPER }, { NONE, NONE },     { TIPTUP, CONKER, NONE, NONE },       { TIMBER, NONE, NONE, NONE },        0x0007 },
+    /*Timber*/    { { BUMPER, BANJO },     { NONE, NONE },     { PIPSY, TIPTUP, CONKER, NONE },      { NONE, NONE, NONE, NONE },          0x0004 },
+    /*Drumstick*/ { { NONE, NONE },        { TIPTUP, PIPSY },  { DIDDY, KRUNCH, NONE, NONE },        { BUMPER, BANJO, NONE, NONE },       0x0006 }
 };
 
 // Under the unlikely chance you have T.T unlocked, but not Drumstick.
-/*Name      Up              Down            Left                            Right                           Voice ID*/
-u8 gCharacterSelectBytesTT[] = {
-/*Krunch*/  NONE, NONE,     CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, BUMPER, BANJO, NONE,     0x00, 0x00, 
-/*Diddy*/   NONE, NONE,     TIPTUP, TICTOC_8, KRUNCH, NONE, NONE, NONE,       BUMPER, BANJO, NONE, NONE,      0x00, 0x09, 
-/*Bumper*/  NONE, NONE,     TICTOC_8, PIPSY,  DIDDY, KRUNCH, NONE, NONE,      BANJO, NONE, NONE, NONE,        0x00, 0x01, 
-/*Banjo*/   NONE, NONE,     PIPSY, TIMBER,  BUMPER, DIDDY, KRUNCH, NONE,    NONE, NONE, NONE, NONE,         0x00, 0x05, 
-/*Conker*/  KRUNCH, NONE,   NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC_8, PIPSY, TIMBER,  0x00, 0x03, 
-/*Tiptup*/  KRUNCH, DIDDY,  NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC_8, PIPSY, TIMBER, NONE,    0x00, 0x02, 
-/*Pipsy*/   BUMPER, BANJO,  NONE, NONE,     TICTOC_8, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,       0x00, 0x07, 
-/*Timber*/  BANJO, NONE,    NONE, NONE,     PIPSY, TICTOC_8, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,         0x00, 0x04, 
-/*T.T*/     DIDDY, BUMPER,  NONE, NONE,     TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,      0x00, 0x08,
+/*    Name         Up                 Down                  Left                                 Right                              Voice ID */
+CharacterSelectData gCharacterSelectBytesTT[] = {
+    /*Krunch*/ { { NONE, NONE },    { CONKER, NONE },     { NONE, NONE, NONE, NONE },          { DIDDY, BUMPER, BANJO, NONE },      0x0000 },
+    /*Diddy*/  { { NONE, NONE },    { TIPTUP, TICTOC_8 }, { KRUNCH, NONE, NONE, NONE },        { BUMPER, BANJO, NONE, NONE },       0x0009 },
+    /*Bumper*/ { { NONE, NONE },    { TICTOC_8, PIPSY },  { DIDDY, KRUNCH, NONE, NONE },       { BANJO, NONE, NONE, NONE },         0x0001 },
+    /*Banjo*/  { { NONE, NONE },    { PIPSY, TIMBER },    { BUMPER, DIDDY, KRUNCH, NONE },     { NONE, NONE, NONE, NONE },          0x0005 },
+    /*Conker*/ { { KRUNCH, NONE },  { NONE, NONE },       { NONE, NONE, NONE, NONE },          { TIPTUP, TICTOC_8, PIPSY, TIMBER }, 0x0003 },
+    /*Tiptup*/ { { KRUNCH, DIDDY }, { NONE, NONE },       { CONKER, NONE, NONE, NONE },        { TICTOC_8, PIPSY, TIMBER, NONE },   0x0002 },
+    /*Pipsy*/  { { BUMPER, BANJO }, { NONE, NONE },       { TICTOC_8, TIPTUP, CONKER, NONE },  { TIMBER, NONE, NONE, NONE },        0x0007 },
+    /*Timber*/ { { BANJO, NONE },   { NONE, NONE },       { PIPSY, TICTOC_8, TIPTUP, CONKER }, { NONE, NONE, NONE, NONE },          0x0004 },
+    /*T.T*/    { { DIDDY, BUMPER }, { NONE, NONE },       { TIPTUP, CONKER, NONE, NONE },      { PIPSY, TIMBER, NONE, NONE },       0x0008 }
 };
 
 // With everyone unlocked.
-/*Name          Up                  Down            Left                            Right                               Voice ID*/
-u8 gCharacterSelectBytesComplete[] = {
-/*Krunch*/      NONE, NONE,         CONKER, NONE,   NONE, NONE, NONE, NONE,         DIDDY, DRUMSTICK, BUMPER, BANJO,    0x00, 0x00, 
-/*Diddy*/       NONE, NONE,         TIPTUP, NONE,   KRUNCH, NONE, NONE, NONE,       DRUMSTICK, BUMPER, BANJO, NONE,     0x00, 0x09, 
-/*Bumper*/      NONE, NONE,         PIPSY, NONE,    DRUMSTICK, DIDDY, KRUNCH,       NONE, BANJO, NONE, NONE, NONE,      0x00, 0x01, 
-/*Banjo*/       NONE, NONE,         TIMBER, NONE,   BUMPER, DRUMSTICK, DIDDY,       KRUNCH, NONE, NONE, NONE, NONE,     0x00, 0x05, 
-/*Conker*/      KRUNCH, NONE,       NONE, NONE,     NONE, NONE, NONE, NONE,         TIPTUP, TICTOC_9, PIPSY, TIMBER,      0x00, 0x03, 
-/*Tiptup*/      DIDDY, NONE,        NONE, NONE,     CONKER, NONE, NONE, NONE,       TICTOC_9, PIPSY, TIMBER, NONE,        0x00, 0x02, 
-/*Pipsy*/       BUMPER, NONE,       NONE, NONE,     TICTOC_9, TIPTUP, CONKER, NONE,   TIMBER, NONE, NONE, NONE,           0x00, 0x07, 
-/*Timber*/      BANJO, NONE,        NONE, NONE,     PIPSY, TICTOC_9, TIPTUP, CONKER,  NONE, NONE, NONE, NONE,             0x00, 0x04, 
-/*Drumstick*/   NONE, NONE,         TICTOC_9, NONE,   DIDDY, KRUNCH, NONE, NONE,      BUMPER, BANJO, NONE, NONE,          0x00, 0x06, 
-/*T.T*/         DRUMSTICK, NONE,    TIPTUP, NONE,   TIPTUP, CONKER, NONE, NONE,     PIPSY, TIMBER, NONE, NONE,          0x00, 0x08, 
+/*    Name            Up                   Down                Left                                 Right                              Voice ID */
+CharacterSelectData gCharacterSelectBytesComplete[] = {
+    /*Krunch*/    { { NONE, NONE },      { CONKER, NONE },   { NONE, NONE, NONE, NONE },           { DIDDY, DRUMSTICK, BUMPER, BANJO }, 0x0000 }, 
+    /*Diddy*/     { { NONE, NONE },      { TIPTUP, NONE },   { KRUNCH, NONE, NONE, NONE },         { DRUMSTICK, BUMPER, BANJO, NONE },  0x0009 },
+    /*Bumper*/    { { NONE, NONE },      { PIPSY, NONE },    { DRUMSTICK, DIDDY, KRUNCH, NONE },   { BANJO, NONE, NONE, NONE },         0x0001 },
+    /*Banjo*/     { { NONE, NONE },      { TIMBER, NONE },   { BUMPER, DRUMSTICK, DIDDY, KRUNCH }, { NONE, NONE, NONE, NONE },          0x0005 },
+    /*Conker*/    { { KRUNCH, NONE },    { NONE, NONE },     { NONE, NONE, NONE, NONE },           { TIPTUP, TICTOC_9, PIPSY, TIMBER }, 0x0003 },
+    /*Tiptup*/    { { DIDDY, NONE },     { NONE, NONE },     { CONKER, NONE, NONE, NONE },         { TICTOC_9, PIPSY, TIMBER, NONE },   0x0002 },
+    /*Pipsy*/     { { BUMPER, NONE },    { NONE, NONE },     { TICTOC_9, TIPTUP, CONKER, NONE },   { TIMBER, NONE, NONE, NONE },        0x0007 },
+    /*Timber*/    { { BANJO, NONE },     { NONE, NONE },     { PIPSY, TICTOC_9, TIPTUP, CONKER },  { NONE, NONE, NONE, NONE },          0x0004 },
+    /*Drumstick*/ { { NONE, NONE },      { TICTOC_9, NONE }, { DIDDY, KRUNCH, NONE, NONE },        { BUMPER, BANJO, NONE, NONE },       0x0006 },
+    /*T.T*/       { { DRUMSTICK, NONE }, { TIPTUP, NONE },   { TIPTUP, CONKER, NONE, NONE },       { PIPSY, TIMBER, NONE, NONE },       0x0008 }
 // !@bug T.T's down input selects Tiptup. It should be set to NONE.
 };
 
@@ -795,7 +796,7 @@ s16 D_800E06D4[8] = {
 };
 
 ButtonTextElement gTwoPlayerRacerCountMenu = {
-    SCREEN_WIDTH_HALF - 80, 140, 160, 64, 4, 4, 80, 20, 58, 40, 80, 40, 102, 40
+    SCREEN_WIDTH_HALF - 80, 140, 160, 64, 4, 4, { 80, 20, 58, 40, 80, 40, 102, 40 }
 };
 
 ButtonElement D_800E0700 = {
@@ -906,8 +907,7 @@ Vertex *D_800E0968 = NULL;
 s32 D_800E096C = 0;
 unk800E0970 *D_800E0970 = NULL;
 s32 D_800E0974 = 0;
-const char gQuestionMark[1] = {'?'}; // .rodata
-char *gQMarkPtr = (char*) &gQuestionMark;       // .data
+char *gQMarkPtr = "?";
 s32 D_800E097C = 0;
 s32 D_800E0980 = 0;
 s32 gMenuOptionCap = 0;
@@ -4384,14 +4384,14 @@ void menu_character_select_init(void) {
     initialise_player_ids();
     if (is_drumstick_unlocked()) {
         if (is_tt_unlocked()) {
-            gCurrCharacterSelectData = &gCharacterSelectBytesComplete;
+            gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesComplete;
         } else {
-            gCurrCharacterSelectData = &gCharacterSelectBytesDrumStick;
+            gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesDrumStick;
         }
     } else if (is_tt_unlocked()) {
-        gCurrCharacterSelectData = &gCharacterSelectBytesTT;
+        gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesTT;
     } else {
-        gCurrCharacterSelectData = &gCharacterSelectBytesDefault;
+        gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesDefault;
     }
     for (i = 0; i < 4; i++) {
         D_801263DC[i] = 0;
@@ -5503,7 +5503,173 @@ UNUSED s32 func_8008E790(void) {
     return D_800E097C;
 }
 
+#ifdef NON_EQUIVALENT
+void menu_track_select_init(void) {
+    s32 levelCount;
+    s32 worldCount;
+    Settings *settings;
+    TextureHeader **var_s0;
+    s16 temp_a0;
+    s16 temp_a0_2;
+    s16 var_a0;
+    s8 **trackMenuIds;
+    s16 *var_s2;
+    s32 videoWidthAndHeight;
+    s32 temp_v0_6;
+    s32 var_a0_2;
+    s32 var_a1;
+    s32 var_a1_2;
+    s32 idx2;
+    s32 idx;
+    s32 var_v0;
+    s16 var_t4;
+
+    load_font(ASSET_FONTS_BIGFONT);
+    settings = get_settings();
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    trackMenuIds = (s8 **)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
+    if (D_800DF488 != 0) {
+        D_801269C8 = 0;
+        D_801269CC = 0;
+        D_800E0414 = 0;
+        D_800E0418 = 0;
+        D_800DF488 = 0;
+    }
+    videoWidthAndHeight = get_video_width_and_height_as_s32();
+    D_8012647C = GET_VIDEO_WIDTH(videoWidthAndHeight);
+    gTrackSelectViewportY = GET_VIDEO_HEIGHT(videoWidthAndHeight);
+    D_80126474 = D_8012647C >> 1;
+    D_80126478 = gTrackSelectViewportY >> 1;
+    gTrackSelectX = (f32) D_801269C8 * 320.0f;
+    gTrackSelectY = (f32) D_801269CC * (f32) -gTrackSelectViewportY;
+    gSelectedTrackX = -1;
+    gSelectedTrackY = -1;
+    D_801263D0 = -1;
+    gOpacityDecayTimer = 32;
+    gOptionBlinkTimer = 0;
+    D_801267D0 = -1;
+    func_8008F00C(0);
+    func_800C01D8(&sMenuTransitionFadeOut);
+    func_800C0170();
+    set_background_fill_colour(50, 105, 223);
+    for (var_a1 = 0; var_a1 != 5; var_a1++) {
+        temp_a0 = D_800E0710[(var_a1 * 3)];
+        var_s0 = (TextureHeader **) D_800E0730[var_a1];
+        if (temp_a0 != -1) {
+            func_8009C6D4(temp_a0);
+            var_s0[0] = D_80126550[D_800E0710[(var_a1 * 3)]];
+        } else {
+            var_s0[0] = NULL;
+        }
+        temp_a0_2 = D_800E0710[(var_a1 * 3) + 1];
+        if (temp_a0_2 != -1) {
+            func_8009C6D4(temp_a0_2);
+            var_s0[1] = (TextureHeader *) D_80126550[D_800E0710[(var_a1 * 3)]];
+        } else {
+            var_s0[1] = NULL;
+        }
+    }
+    D_800E0970 = (unk800E0970 *) allocate_from_main_pool_safe(2880, COLOUR_TAG_YELLOW);
+    D_800E0974 = (s32) (&D_800E0970[40]); //640 bytes forward
+    D_800E096C = (s32) (&D_800E0970[80]); //1280 bytes forward
+    //D_800E096C = (s32) (&D_800E0968[80]); //800 bytes past D_800E0968
+    var_a0 = -160;
+    var_v0 = 0;
+    for (var_v0 = 0; var_v0 < 80; var_v0++) {
+        D_800E0968[var_v0].x = var_a0;
+        var_a0 = -var_a0;
+        D_800E0968[var_v0].z = -1024;
+        D_800E0968[var_v0].r = 0xFF;
+        D_800E0968[var_v0].g = 0xFF;
+        D_800E0968[var_v0].b = 0xFF;
+    }
+    for (var_v0 = 0; var_v0 < 40; var_v0++) {
+        D_800E0970[var_v0].unk0 = 0x40;
+        D_800E0970[var_v0].unk1 = 0;
+        D_800E0970[var_v0].unk2 = 2;
+        D_800E0970[var_v0].unk3 = 1;
+    }
+    D_80126924 = 0;
+    func_80078AAC(func_8008F618);
+    func_80066940(0, 80, D_80126478 - (D_80126478 >> 1), 240, (D_80126478 >> 1) + D_80126478);
+    func_80066610();
+    func_80066818(0, 0);
+    D_800E097C = 1;
+    func_8009C674(D_800E07C4);
+    allocate_menu_images(D_800E07E0);
+    func_8008E4B0();
+
+    D_800E05D4[0].texture = D_80126550[TEXTURE_UNK_08];
+    D_800E05D4[1].texture = D_80126550[TEXTURE_UNK_09];
+    D_800E05D4[2].texture = D_80126550[TEXTURE_UNK_0A];
+    D_800E05F4[0].texture = D_80126550[TEXTURE_UNK_0B];
+    D_800E05F4[1].texture = D_80126550[TEXTURE_UNK_0C];
+    D_800E05F4[2].texture = D_80126550[TEXTURE_UNK_0D];
+
+    for (idx = 0; idx < 4; idx++) {
+        var_s2 = D_801268E8[idx];
+        for (idx2 = 0; idx2 < 6; idx2++) {
+            *var_s2 = -1;
+            if (idx2 == 0) {
+                if (idx < 4) {
+                    *var_s2 = trackMenuIds[idx][idx2];
+                }
+            }
+            else if (idx2 < 4) {
+                if ((trackMenuIds[idx][idx2] != -1) && (settings->courseFlagsPtr[trackMenuIds[idx][idx2]] & 1)) {
+                    *var_s2 = trackMenuIds[idx][idx2];
+                }
+            } else if (idx2 == 4) {
+                var_a1_2 = 0;
+                // This is almost definitely wrong.
+                for (var_a0_2 = 0; var_a0_2 < 2; var_a0_2++) {
+                    if ((trackMenuIds[idx][var_a0_2] != -1) && ((settings->courseFlagsPtr[trackMenuIds[idx][var_a0_2]] & 6) == 6)) {
+                        var_a1_2++;
+                    }
+                }
+                if ((var_a1_2 == 4) && (idx != 4)) {
+                    temp_v0_6 = 130 << idx;
+                    if (temp_v0_6 != (settings->bosses & temp_v0_6)) {
+                        var_a1_2 = 0;
+                    }
+                }
+                if (var_a1_2 == 4) {
+                    *var_s2 = trackMenuIds[idx][idx2];
+                }
+            } else if ((idx2 == 5) && (settings->keys & (1 << idx))) {
+                *var_s2 = trackMenuIds[idx][idx2];
+            }
+            if (is_adventure_two_unlocked()) {
+                *var_s2 = trackMenuIds[idx][idx2];
+            }
+        }
+    }
+    gTrackIdForPreview = D_801268E8[D_801269CC][D_801269C8];
+    gTrackSelectRow = D_801269CC + 1;
+    if (gTrackIdForPreview == (s16) -1) {
+        D_801263D0 = D_801268E8[0];
+        load_level_for_menu(D_801263D0, -1, 1);
+        gTrackSelectRow = 1;
+        gSelectedTrackX = 0;
+        gSelectedTrackY = 0;
+    }
+    assign_dialogue_box_id(7);
+    func_8007FFEC(2);
+    D_80126840 = 0;
+    D_80126848 = 0;
+    sMenuMusicVolume = 0;
+    set_music_player_voice_limit(24);
+    func_80000C1C();
+    play_music(SEQUENCE_MAIN_MENU);
+    set_relative_volume_for_music(sMenuMusicVolume);
+    func_80000B18();
+    func_8006F564(1); // Set an interrupt?
+    gIsInAdventureTwo = D_800E0418;
+    gMultiplayerSelectedNumberOfRacersCopy = gMultiplayerSelectedNumberOfRacers;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/menu_track_select_init.s")
+#endif
 
 void func_8008F00C(s32 arg0) {
     Vehicle vehicle;
@@ -5667,9 +5833,250 @@ void func_8008F534(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
 GLOBAL_ASM("asm/non_matchings/menu/renderTrackSelect.s")
+
+#ifdef NON_EQUIVALENT
+void func_8008FF1C(s32 updateRate) {
+    s32 yOffset;
+    s32 xOffset;
+    s32 pad;
+    s32 trackSelectY;
+    s32 trackSelectX;
+    s32 trackX;
+    s32 temp_s1;
+    s32 maxTrackY;
+    s8 *trackMenuIds;
+    Settings *settings;
+    s32 temp_t7;
+    TrackRenderDetails *curr;
+    s32 new_var;
+    s32 trackSelected;
+    char *hubName;
+
+    settings = get_settings();
+    trackMenuIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
+    if ((gMenuDelay > -23) && (gMenuDelay < 23)) {
+        maxTrackY = (gFFLUnlocked == -1) ? 3 : 4;
+        trackSelectX = (gTrackSelectX / X_TILE_SIZE);
+        temp_s1 = (gTrackSelectY / -gTrackSelectViewportY);
+        trackSelectY = temp_s1 - 1;
+        new_var = -1;
+        for (yOffset = new_var, curr = gTrackSelectRenderDetails; yOffset < 2; yOffset++) {
+            for (xOffset = new_var; xOffset < 2; xOffset++) {
+                trackX = trackSelectX + xOffset;
+                if ((trackSelectY < 0) || (trackSelectY > maxTrackY) || (trackX < 0) || (trackX >= 6)) {
+                    curr->visible = 0;
+                } else {
+                    curr->visible = 1;
+                    hubName = get_level_name(get_hub_area_id(trackSelectY + 1));
+                    trackSelected = D_801268E8[trackSelectY][trackX];
+                    curr->hubName = hubName;
+                    if (trackSelected != -1) {
+                        curr->trackName = get_level_name(trackMenuIds[(trackSelectY * 6) + trackX]);
+                        if (trackX == 4) {
+                            if (((settings->trophies >> (trackSelectY * 2)) & 3) == 3) {
+                                curr->visible = 2;
+                            }
+                        } else if (settings->courseFlagsPtr[trackMenuIds[(trackSelectY * 6) + trackX]] & 2) {
+                            curr->visible = 2;
+                        }
+                    } else {
+                        curr->trackName = (char *) gQMarkPtr;
+                    }
+                    curr->xOff = ((trackX * X_TILE_SIZE) - gTrackSelectX);
+                    curr->yOff = ((-trackSelectY * gTrackSelectViewportY) - gTrackSelectY);
+                    curr->opacity = 0xFF;
+                    if ((trackX == gSelectedTrackX) && (trackSelectY == gSelectedTrackY)) {
+                        curr->copyViewPort |= 0x80;
+                        if (gOpacityDecayTimer < 32) {
+                            curr->opacity = gOpacityDecayTimer * 8;
+                        }
+                    } else {
+                        curr->copyViewPort &= 0xFF7F;
+                    }
+                    temp_t7 = curr->copyViewPort & 0xFF80;
+                    curr->copyViewPort = temp_t7;
+                    if (gMenuDelay == 0) {
+                        if (trackSelectY > 0) {
+                            curr->copyViewPort = ((temp_t7 | 1) & 0x7F) | (temp_t7 & 0xFF80);
+                        }
+                        if (trackX < 5) {
+                            curr->copyViewPort = ((curr->copyViewPort | 2) & 0x7F) | (curr->copyViewPort & 0xFF80);
+                        }
+                        if (trackSelectY < maxTrackY) {
+                            curr->copyViewPort = ((curr->copyViewPort | 4) & 0x7F) | (curr->copyViewPort & 0xFF80);
+                        }
+                        if (trackX > 0) {
+                            curr->copyViewPort = ((curr->copyViewPort | 8) & 0x7F) | (curr->copyViewPort & 0xFF80);
+                        }
+                        if ((trackX == 4) && (trackSelectY == 4)) {
+                            curr->copyViewPort = (curr->copyViewPort & 0x7D) | (curr->copyViewPort & 0xFF80);
+                        }
+                        if ((trackX == 5) && (trackSelectY == 3)) {
+                            curr->copyViewPort = (curr->copyViewPort & 0x7B) | (curr->copyViewPort & 0xFF80);
+                        }
+                    }
+                    if (trackX == 4) {
+                        curr->border = 6;
+                    } else if (trackX == 5) {
+                        curr->border = 5;
+                    } else {
+                        curr->border = 4;
+                    }
+                }
+                curr++;
+            }
+            trackSelectY++;
+        }
+        func_80066894(0, 1);
+        func_8009BD5C();
+        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        func_8007B3D0(&sMenuCurrDisplayList);
+        gDPPipeSync(sMenuCurrDisplayList++);
+        D_80126928 = 64;
+        D_8012692C = 32;
+        D_801269F0 = 0;
+
+        for (yOffset = 0; yOffset < ARRAY_COUNT(gTrackSelectRenderDetails); yOffset++) {
+            if (gTrackSelectRenderDetails[yOffset].visible != 0) {
+                renderTrackSelect(
+                    gTrackSelectRenderDetails[yOffset].xOff,
+                    gTrackSelectRenderDetails[yOffset].yOff,
+                    gTrackSelectRenderDetails[yOffset].hubName,
+                    gTrackSelectRenderDetails[yOffset].trackName,
+                    gTrackSelectRenderDetails[yOffset].opacity,
+                    gTrackSelectRenderDetails[yOffset].border,
+                    ((u32)gTrackSelectRenderDetails[yOffset].viewPort) >> 0xF,
+                    (gTrackSelectRenderDetails[yOffset].visible == 1) ? D_800E05D4 : D_800E05F4,
+                    gTrackSelectRenderDetails[yOffset].copyViewPort & 0x7F
+                );
+            }
+        }
+        D_80126924 = 1 - D_80126924;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/menu/func_800904E8.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_80090918.s")
+
+void func_80090918(s32 updateRate) {
+    UNUSED s32 pad1[2];
+    s32 var_t1;
+    UNUSED s32 pad2[2];
+    s32 var_a1;
+    s32 var_t0;
+    s32 var_t2;
+    s32 sp24;
+    s32 var_t3;
+    s32 var_a2;
+
+    sp24 = gMenuDelay;
+    if (gMenuDelay > 0) {
+        if ((D_801269E8 - gTrackSelectX > 4.0f) || (D_801269E8 - gTrackSelectX < -4.0f) || ((D_801269EC - gTrackSelectY > 4.0f)) || (D_801269EC - gTrackSelectY < -4.0f)) {
+            gMenuDelay = 1;
+        } else if (D_800E1E1C) {
+            play_sound_global(SOUND_SELECT2, NULL);
+            D_800E1E1C = 0;
+        }
+        var_t1 = gMenuDelay - 1;
+        if (var_t1 > 20) {
+            var_t1 = 20;
+        }
+        var_t2 = 160;
+        var_t0 = D_80126478;
+        if (var_t1 < 20) {
+            var_t2 += (D_801269E8 - gTrackSelectX);
+            var_t0 -= (D_801269EC - gTrackSelectY);
+        }
+        var_t3 = (((var_t1 + 20) * D_80126478) / 40) + var_t0;
+        var_a2 = var_t0 - (((var_t1 + 20) * D_80126478) / 40);
+        func_80066940(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
+        gMenuImageStack[4].unk8 = (f32) (sMenuImageProperties[4].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
+        gMenuImageStack[6].unk8 = (f32) (sMenuImageProperties[6].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
+        gMenuImageStack[5].unk8 = (f32) (sMenuImageProperties[5].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
+    }
+    func_80066818(0, 0);
+    if (get_thread30_level_id_to_load() == 0) {
+        if (gMenuDelay < 0) {
+            sMenuMusicVolume -= updateRate * 4;
+        }
+        if ((gSelectedTrackX == D_801269C8) && (gSelectedTrackY == D_801269CC)) {
+            gOpacityDecayTimer -= updateRate;
+            if (gOpacityDecayTimer < 0) {
+                gOpacityDecayTimer = 0;
+            }
+        } else {
+            gOpacityDecayTimer = gOpacityDecayTimer + updateRate;
+            if (gOpacityDecayTimer > 32) {
+                gOpacityDecayTimer = 32;
+            }
+        }
+        if (gMenuDelay < -22) {
+            func_80078AAC(NULL);
+            D_800E097C = 0;
+        }
+        if (gMenuDelay > 30) {
+            if ((is_adventure_two_unlocked()) && (D_801269C8 != 5)) {
+                D_801263E0 = -1;
+            } else {
+                D_801263E0 = 0;
+            }
+            func_8008F00C(1);
+        } else if (gMenuDelay < -30) {
+            func_800C0180();
+            func_80066894(0, 0);
+            func_8008F00C(-1);
+        }
+    }
+    if (sp24 == 0) {
+        var_a1 = (gFFLUnlocked == -1) ? 3 : 4;
+        if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+            if (gTrackIdForPreview != -1) {
+                gMenuDelay = 1;
+                gTrackIdToLoad = gTrackIdForPreview;
+                D_800E1E1C = 1;
+            } else {
+                play_sound_global(SOUND_UNK_6A, NULL);
+            }
+        } else if (D_801267E8 & B_BUTTON) {
+            func_800C0180();
+            func_800C01D8(&sMenuTransitionFadeIn);
+            func_800C0170();
+            gMenuDelay = -1;
+        } else {
+            s32 prevValue = D_801269C8;
+            s32 prevValue2 = D_801269CC;
+            if ((D_80126820 < 0) && (D_801269C8 > 0)) {
+                D_801269C8--;
+            }
+            if ((D_80126820 > 0) && (D_801269C8 < 5)) {
+                D_801269C8++;
+            }
+            if ((D_801269CC == 4) && (D_801269C8 == 5)) {
+                D_801269C8 = 4;
+            }
+            if (D_80126820 == 0) {
+                if ((D_80126838 < 0) && (D_801269CC < var_a1)) {
+                    D_801269CC++;
+                }
+                if ((D_80126838 > 0) && (D_801269CC > 0)) {
+                    D_801269CC--;
+                }
+                if ((D_801269C8 == 5) && (D_801269CC == 4)) {
+                    D_801269CC = 3;
+                }
+            }
+            if ((prevValue != D_801269C8) || (D_801269CC != prevValue2)) {
+                play_sound_global(SOUND_MENU_PICK2, NULL);
+                gTrackIdForPreview = D_801268E8[D_801269CC][D_801269C8];
+                gTrackSelectRow = D_801269CC + 1;
+                D_801269E8 = (D_801269C8 * 320);
+                D_801269EC = -(D_801269CC * gTrackSelectViewportY);
+            }
+        }
+    }
+}
 
 void func_80090ED8(UNUSED s32 updateRate) {
     if (D_801263E0 == 1 && D_800E0414 == 0 && D_80126840 == 0) {
@@ -7228,16 +7635,16 @@ void menu_ghost_data_init(void) {
     func_8009C674(&D_800E1708);
     allocate_menu_images(&D_800E174C);
     load_font(ASSET_FONTS_BIGFONT);
-    D_800E153C[0].texture = D_80126550[14];
-    D_800E153C[5].texture = D_80126550[15];
-    D_800E1594[0].texture = D_80126550[16];
-    D_800E1594[5].texture = D_80126550[17];
-    D_800E15EC[0].texture = D_80126550[18];
-    D_800E15EC[5].texture = D_80126550[19];
-    D_800E1644[0].texture = D_80126550[20];
-    D_800E1644[5].texture = D_80126550[21];
-    D_800E169C[0].texture = D_80126550[22];
-    D_800E169C[5].texture = D_80126550[23];
+    D_800E153C[0].texture = D_80126550[TEXTURE_BACKGROUND_DINO_DOMAIN_TOP];
+    D_800E153C[5].texture = D_80126550[TEXTURE_BACKGROUND_DINO_DOMAIN_BOTTOM];
+    D_800E1594[0].texture = D_80126550[TEXTURE_BACKGROUND_SHERBERT_ISLAND_TOP];
+    D_800E1594[5].texture = D_80126550[TEXTURE_BACKGROUND_SHERBERT_ISLAND_BOTTOM];
+    D_800E15EC[0].texture = D_80126550[TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_TOP];
+    D_800E15EC[5].texture = D_80126550[TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_BOTTOM];
+    D_800E1644[0].texture = D_80126550[TEXTURE_BACKGROUND_DRAGON_FOREST_TOP];
+    D_800E1644[5].texture = D_80126550[TEXTURE_BACKGROUND_DRAGON_FOREST_BOTTOM];
+    D_800E169C[0].texture = D_80126550[TEXTURE_BACKGROUND_FUTURE_FUN_LAND_TOP];
+    D_800E169C[5].texture = D_80126550[TEXTURE_BACKGROUND_FUTURE_FUN_LAND_BOTTOM];
     for (i = 0; i < 4; i++) {
         D_800E153C[i + 1].texture = D_800E153C[0].texture;
         D_800E153C[i + 6].texture = D_800E153C[5].texture;
