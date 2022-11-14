@@ -159,7 +159,30 @@ void func_80072348(s16 controllerIndex, u8 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072424.s")
+void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2) {
+    s32 index;
+
+    if (arg1 < 19 && controllerIndex >= 0 && controllerIndex < 4) {
+        index = func_80072250(controllerIndex) & 0xFFFF;
+        if (arg1 == D_801241B8[index].unk0) {
+            if (D_801241B8[index].unk8 < 0) {
+                D_801241B8[index].unk8 = -300;
+            }
+            D_801241B8[index].unk4 = sUnkMiscAsset19[(arg1 * 2) + 1];
+        } else {
+            if (arg2 < 0.0f) {
+                arg2 = 0.0f;
+            }
+            if (arg2 > 1.0f) {
+                arg2 = 1.0f;
+            }
+            D_801241B8[index].unk0 = arg1;
+            if (sUnkMiscAsset19[arg1 * 2] != 0) {
+                func_80072578(controllerIndex, (sUnkMiscAsset19[arg1 * 2] * arg2), sUnkMiscAsset19[(arg1 * 2) + 1]);
+            }
+        }
+    }
+}
 
 void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2) {
     s16 index;
