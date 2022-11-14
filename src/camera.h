@@ -92,9 +92,6 @@ typedef struct unk80068BF4 {
 
 extern ScreenViewport gScreenViewports[4];
 
-// Not sure about the typing here
-extern s16 D_800DD138[8];
-
 // RSP Viewports
 extern Vp D_800DD148[20];
 
@@ -111,6 +108,14 @@ extern s16 gButtonMask;
 extern f32 D_80120D58[5];
 extern f32 D_80120D40[6];
 extern f32 D_80120D28[6];
+
+typedef struct unk80068514_arg4 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    Gfx *unk8[1];
+} unk80068514_arg4;
 
 //TODO: Figure out where these functions live: unknown_070110?
     void func_8006F870(Matrix *, Matrix *); //unknown_070110
@@ -176,6 +181,7 @@ void disable_button_mask(void);
 s32 init_controllers(void);
 void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats);
 void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3, unk80068BF4 *arg4, s32 arg5);
+s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 
 // Non Matching
 void func_80067A3C(Gfx **dlist);
