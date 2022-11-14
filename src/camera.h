@@ -175,9 +175,9 @@ s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
 void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats);
+void func_80067A3C(Gfx **dlist);
 
 // Non Matching
-void func_80067A3C(Gfx **dlist);
 void func_80066610(void);
 void func_80065EA0(void);
 s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
