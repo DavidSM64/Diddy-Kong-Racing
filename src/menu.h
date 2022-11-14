@@ -163,7 +163,7 @@ typedef struct unk800DFA3C {
     u8  unk9;
     u8  unkA;
     u8  unkB;
-    u32* unkC;
+    char *unkC;
 } unk800DFA3C;
 
 typedef struct ButtonElement {
@@ -254,6 +254,7 @@ typedef struct TitleScreenDemos {
 
 #define X_TILE_SIZE 320
 
+/* Size 0x10 bytes */
 typedef struct TrackRenderDetails {
   /* 0x00 */ u8 *hubName;
   /* 0x04 */ u8 *trackName;
@@ -704,7 +705,6 @@ extern s8 gPlayerSelectVehicle[4];
 extern s16 gFFLUnlocked;
 extern s32 gOpacityDecayTimer;
 extern s32 gTrackSelectViewportY;
-//extern s32 D_801268E8[12];
 extern s16 gFFLUnlocked;
 extern s32 D_80126924;
 extern s32 D_80126928;
@@ -920,9 +920,9 @@ void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
 void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
-//Possible names
-//void renderTrackSelect(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 s32 func_80095728(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
+s32 func_8008F618(Gfx **dlist, Mtx **mat);
+void func_80093D40(UNUSED s32 updateRate);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,

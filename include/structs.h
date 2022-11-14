@@ -24,51 +24,6 @@ typedef struct Vec3f {
 } Vec3f;
 
 /* Size: 0x20 bytes */
-typedef struct MenuElement {
-  // Element Position
-  /* 0x00 */ s16 left; // Where the element spawns on entry.
-  /* 0x02 */ s16 top;
-  /* 0x04 */ s16 center; // Value of where the element moves to after entry
-  /* 0x06 */ s16 middle;
-  /* 0x08 */ s16 right; // Value of where the element moves to after exit
-  /* 0x0A */ s16 bottom;
-  // Element Color/Transparency
-  /* 0x0C */ u8 filterRed;
-  /* 0x0D */ u8 filterGreen;
-  /* 0x0E */ u8 filterBlue;
-  /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
-  /* 0x10 */ u8 opacity;
-  // Element Properties
-  /* 0x11 */ u8 textFont;
-  /* 0x12 */ u8 textAlignFlags;
-  // Element Type
-  /* 0x13 */ u8 elementType; // Source type? 0 = ascii text, 2 = number, 7 = texture
-  union {
-  /* 0x14 */ void *element;   // Generic pointer
-  /* 0x14 */ char *asciiText; // Pointer to ascii text to be displayed on the screen.
-  /* 0x14 */ u32 *texture;    // Pointer to texture to be displayed on the screen.
-  /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ s32 value;       // Some value for elementType == 5
-  } unk14_a;
-  // Element Background Color/Transparency
-  /* 0x18 */ s16 backgroundRed;
-  /* 0x1A */ s16 backgroundGreen;
-  /* 0x1C */ s16 backgroundBlue;
-  /* 0x1E */ s16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
-} MenuElement;
-
-#define TEX_FORMAT_RGBA32 0
-#define TEX_FORMAT_RGBA16 1
-#define TEX_FORMAT_I8     2
-#define TEX_FORMAT_I4     3
-#define TEX_FORMAT_IA16   4
-#define TEX_FORMAT_IA8    5
-#define TEX_FORMAT_IA4    6
-#define TEX_FORMAT_CI4    7
-#define TEX_FORMAT_CI8    8
-
-/* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
   /* 0x01 */ u8 height;
@@ -113,6 +68,51 @@ typedef struct DrawTexture {
     s16 xOffset; // Offset from the center of the screen.
     s16 yOffset; // Offset from the center of the screen.
 } DrawTexture;
+
+/* Size: 0x20 bytes */
+typedef struct MenuElement {
+  // Element Position
+  /* 0x00 */ s16 left; // Where the element spawns on entry.
+  /* 0x02 */ s16 top;
+  /* 0x04 */ s16 center; // Value of where the element moves to after entry
+  /* 0x06 */ s16 middle;
+  /* 0x08 */ s16 right; // Value of where the element moves to after exit
+  /* 0x0A */ s16 bottom;
+  // Element Color/Transparency
+  /* 0x0C */ u8 filterRed;
+  /* 0x0D */ u8 filterGreen;
+  /* 0x0E */ u8 filterBlue;
+  /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
+  /* 0x10 */ u8 opacity;
+  // Element Properties
+  /* 0x11 */ u8 textFont;
+  /* 0x12 */ u8 textAlignFlags;
+  // Element Type
+  /* 0x13 */ u8 elementType; // Source type? 0 = ascii text, 2 = number, 7 = texture
+  union {
+  /* 0x14 */ void *element;   // Generic pointer
+  /* 0x14 */ char *asciiText; // Pointer to ascii text to be displayed on the screen.
+  /* 0x14 */ TextureHeader *texture;    // Pointer to texture to be displayed on the screen.
+  /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ s32 value;       // Some value for elementType == 5
+  } unk14_a;
+  // Element Background Color/Transparency
+  /* 0x18 */ s16 backgroundRed;
+  /* 0x1A */ s16 backgroundGreen;
+  /* 0x1C */ s16 backgroundBlue;
+  /* 0x1E */ s16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
+} MenuElement;
+
+#define TEX_FORMAT_RGBA32 0
+#define TEX_FORMAT_RGBA16 1
+#define TEX_FORMAT_I8     2
+#define TEX_FORMAT_I4     3
+#define TEX_FORMAT_IA16   4
+#define TEX_FORMAT_IA8    5
+#define TEX_FORMAT_IA4    6
+#define TEX_FORMAT_CI4    7
+#define TEX_FORMAT_CI8    8
 
 /* Size: 0x18 bytes */
 typedef struct Racer {
