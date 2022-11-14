@@ -120,20 +120,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of November 11, 2022, this is our current score:
+As of November 13, 2022, this is our current score:
 ```
- ====================================================================
+====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 36.09% Complete --------------------------
-                     # Decompiled functions: 1322
-                     # GLOBAL_ASM remaining: 512
+ ------------------------- 36.21% Complete --------------------------
+                     # Decompiled functions: 1324
+                     # GLOBAL_ASM remaining: 510
                      # NON_MATCHING functions: 12
                   # NON_EQUIVALENT WIP functions: 94
  --------------------------- Game Status ----------------------------
               Balloons: 17/47, Keys: 2/4, Trophies: 1/5
                 T.T. Amulets: 2/4, Wizpig Amulets: 1/4
  --------------------------------------------------------------------
- We are collecting silver coins in Everfrost Peak. (7/8 silver coins)
+ We are collecting silver coins in Everfrost Peak. (8/8 silver coins)
  ====================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
  -------------------------  8.24% Complete --------------------------
