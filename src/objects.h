@@ -408,6 +408,7 @@ Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
+s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

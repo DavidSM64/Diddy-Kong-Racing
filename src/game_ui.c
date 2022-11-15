@@ -25,7 +25,7 @@ extern u32 osTvType;
 s32 D_800E1E60 = 0;
 
 unk800E1E64 D_800E1E64[59] = {
-    { 0, 0, 1.0f, 53.0f, 16.0f, 0, 127, 0 }, 
+    { 0, 0, 1.0f, 53.0f, 16.0f, 0, 127, 0 },
     { 0, 3, 1.0f, 54.0f, 18.0f, 0, 0, 0 },
     { 0, 1, 0.4f, -120.0f, -68.0f, 0, 0, 0 },
     { 0, 6, 1.0f, 104.0f, 16.0f, 0, 0, 0 },
@@ -416,7 +416,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
                 }
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 func_800A7A60(arg3, &gHUDCurrDisplayList);
-                func_80067F2C(&gHUDCurrDisplayList, (Matrix** ) &gHUDCurrMatrix);
+                func_80067F2C(&gHUDCurrDisplayList, (Matrix **) &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
                 sp2C = func_8001139C(&gHUDCurrDisplayList) >> 1;
                 if (func_8000E4D8()) {
@@ -1698,7 +1698,7 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **triList, s32 updateRa
                     if (D_80126CDC->unkFB == 0 && curRacerObj->bananas == 10) {
                         D_80126CDC->unkFB = curRacerObj->bananas;
                     }
-                    func_800A4154((Object_64 *)curRacerObj, updateRate);
+                    render_racer_bananas((Object_64 *)curRacerObj, updateRate);
                     
                     
                     
@@ -1960,9 +1960,9 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A8474.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA3EC.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA600.s")
 
-void func_800AAFD0(ObjectModel* objModel) {
+void func_800AAFD0(ObjectModel *objModel) {
     UNUSED s32 pad;
-    TextureHeader* texPtr;
+    TextureHeader *texPtr;
     s32 triOffset;
     s32 vertOffset;
     s32 numBatches;

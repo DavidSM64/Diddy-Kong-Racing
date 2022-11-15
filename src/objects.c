@@ -791,7 +791,7 @@ s32 func_8000FAC4(Object *obj, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FBCC.s")
 
-s32 func_8000FC6C(struct_8000FC6C_3* arg0, struct_8000FC6C* arg1) {
+s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1) {
     arg0->unk58 = arg1;
     arg1->unk0 = arg0->unk40->unk8;
     arg1->unkC = 0;

@@ -8327,7 +8327,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
     s32 pad1[4];
     s32 sp5C;
     s32 pad2[4];
-    TextureHeader* tex;
+    TextureHeader *tex;
     Triangle *tris;
     s32 triOffset;
     s32 vertOffset;

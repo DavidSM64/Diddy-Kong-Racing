@@ -1269,7 +1269,7 @@ Matrix *func_80069DB0(void) {
     return &D_80120FE0;
 }
 
-Matrix *func_80069DBC(void) { 
+Matrix *func_80069DBC(void) {
     return &D_80120F60;
 }
 

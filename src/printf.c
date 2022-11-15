@@ -202,14 +202,14 @@ GLOBAL_ASM("asm/non_matchings/printf/set_render_printf_position.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B63F4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")
 
-void func_800B695C(Gfx** arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4) {
+void func_800B695C(Gfx **dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4) {
     if (!((arg1 == arg3) | (arg2 == arg4))) {
         if (arg1 >= 2) {
             arg1 -= 2;
         }
         arg3 += 2;
-        gDPSetCombineMode((*arg0)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-        gDPFillRectangle((*arg0)++, arg1, arg2, arg3, arg4);
+        gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+        gDPFillRectangle((*dList)++, arg1, arg2, arg3, arg4);
     }
 }
 
