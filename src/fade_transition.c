@@ -338,7 +338,7 @@ s32 handle_transitions(s32 updateRate) {
  * The rendering portion of transitions.
  * First establishes an orthogonal matrix, then renders a transition effect onscreen.
  */
-void render_fade_transition(Gfx **dlist, Mtx **mats, VertexList **verts) {
+void render_fade_transition(Gfx **dlist, Matrix **mats, VertexList **verts) {
     if (sTransitionStatus != TRANSITION_NONE) {
         if (osTvType == TV_TYPE_PAL) {
             set_ortho_matrix_height(1.4f);
@@ -404,7 +404,7 @@ void func_800C0780(FadeTransition *transition) {
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0834.s")
 
-void render_fade_fullscreen(Gfx **dlist, UNUSED Mtx **mats, UNUSED VertexList **verts) {
+void render_fade_fullscreen(Gfx **dlist, UNUSED Matrix **mats, UNUSED VertexList **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();
     gSPDisplayList((*dlist)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dlist)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
@@ -416,7 +416,7 @@ void render_fade_fullscreen(Gfx **dlist, UNUSED Mtx **mats, UNUSED VertexList **
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0B00.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1130.s")
 
-void render_fade_barndoor_horizontal(Gfx **dlist, UNUSED Mtx **mats, UNUSED VertexList **verts) {
+void render_fade_barndoor_horizontal(Gfx **dlist, UNUSED Matrix **mats, UNUSED VertexList **verts) {
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
@@ -426,7 +426,7 @@ void render_fade_barndoor_horizontal(Gfx **dlist, UNUSED Mtx **mats, UNUSED Vert
 }
 
 // This is exactly the same as render_fade_barndoor_horizontal; I wonder what gets changed then?
-void render_fade_barndoor_vertical(Gfx **dlist, UNUSED Mtx **mats, UNUSED VertexList **verts) {
+void render_fade_barndoor_vertical(Gfx **dlist, UNUSED Matrix **mats, UNUSED VertexList **verts) {
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
@@ -439,7 +439,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 
 #ifdef NON_EQUIVALENT
-void render_fade_circle(Gfx **dlist, Mtx **mats, VertexList **verts) {
+void render_fade_circle(Gfx **dlist, Matrix **mats, VertexList **verts) {
     u8 *addr, *addr2;
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
@@ -467,7 +467,7 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 
 #ifdef NON_EQUIVALENT
 // This doesn't work properly.
-void render_fade_waves(Gfx **dlist, Mtx **mats, VertexList **verts) {
+void render_fade_waves(Gfx **dlist, Matrix **mats, VertexList **verts) {
     s32 i;
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
@@ -487,7 +487,7 @@ void render_fade_waves(Gfx **dlist, Mtx **mats, VertexList **verts) {
 GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_waves.s")
 #endif
 
-void render_fade_barndoor_diagonal(Gfx **dlist, UNUSED Mtx **mats, UNUSED VertexList **verts) {
+void render_fade_barndoor_diagonal(Gfx **dlist, UNUSED Matrix **mats, UNUSED VertexList **verts) {
     func_8007B3D0(dlist);
     gSPDisplayList((*dlist)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
@@ -528,7 +528,7 @@ void func_800C27A0(s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C27A0.s")
 #endif
 
-void render_fade_disabled(Gfx **dlist, UNUSED Mtx **mats, UNUSED VertexList **verts) {
+void render_fade_disabled(Gfx **dlist, UNUSED Matrix **mats, UNUSED VertexList **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();
     gSPDisplayList((*dlist)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dlist)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);

@@ -44,7 +44,7 @@ s32 gSaveGhostDelayCounter;
 s32 gPreviousMenuID;
 Gfx *sMenuCurrDisplayList;
 char **gTTSaveGhostPakErrorText;
-Mtx *sMenuCurrHudMat;
+Matrix *sMenuCurrHudMat;
 VertexList *sMenuCurrHudVerts;
 TriangleList *sMenuCurrHudTris;
 unk801263C0 D_801263B4;
@@ -1819,8 +1819,8 @@ void menu_init(u32 menuId) {
         case MENU_TRACK_SELECT:
             menu_track_select_init();
             break;
-        case MENU_UNKNOWN_5:
-            menu_5_init();
+        case MENU_TRACK_SELECT_ADVENTURE:
+            menu_adventure_track_init();
             break;
         case MENU_RESULTS:
             menu_11_init();
@@ -1853,7 +1853,7 @@ void menu_init(u32 menuId) {
 /**
  * Runs every frame. Calls the loop function of the current menu id
  */
-s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+s32 menu_loop(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     s32 ret;
 
     sMenuCurrDisplayList = *currDisplayList;
@@ -1896,8 +1896,8 @@ s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts
         case MENU_TRACK_SELECT:
             ret = menu_track_select_loop(updateRate);
             break;
-        case MENU_UNKNOWN_5:
-            ret = menu_5_loop(updateRate);
+        case MENU_TRACK_SELECT_ADVENTURE:
+            ret = menu_adventure_track_loop(updateRate);
             break;
         case MENU_RESULTS:
             ret = menu_results_loop(updateRate);
@@ -6414,7 +6414,10 @@ s32 func_80092BE0(MapId mapId) {
     return temp;
 }
 
-void menu_5_init(void) {
+/**
+ * Load and initialise the track setup gui for use when entering a track in adventure mode.
+*/
+void menu_adventure_track_init(void) {
     Settings *settings;
     s32 result;
     MapId mapId;
@@ -6467,9 +6470,124 @@ void menu_5_init(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80092E94.s")
+/**
+ * Render the setup gui when in a track preview in adventure mode.
+ * This includes the vehicle selection and if time trial is enabled, the best times.
+ */
+void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
+    s32 alpha;
+    s32 y;
+    s32 greenAmount;
+    s32 i;
+    s32 savedY;
+    s32 yOffset;
+    s32 mask;
+    s32 sp58;
+    char *filename;
+    Settings* settings;
+    char* levelName;
 
-s32 menu_5_loop(s32 updateRate) {
+    filename = NULL;
+    settings = get_settings();
+    yOffset = 0;
+    if (osTvType == TV_TYPE_PAL) {
+        yOffset = 12;
+    }
+    sp58 = ((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2;
+    gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
+    func_8009BD5C();
+    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    if (gMenuDelay >= -20) {
+        if (gMenuDelay <= 20) {
+            mask = get_map_available_vehicles(sp58);
+            levelName = get_level_name(sp58);
+            set_text_font(FONT_LARGE);
+            set_text_background_colour(0, 0, 0, 0);
+            set_text_colour(0, 0, 0, 255, 128);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 46,  levelName, ALIGN_MIDDLE_CENTER);
+            set_text_colour(255, 255, 255, 0, 255);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 43,  levelName, ALIGN_MIDDLE_CENTER);
+            if (!(func_8006B14C(sp58) & 0x40)) {
+                if (arg2 == 0) {
+                    if (is_time_trial_enabled()) {
+                        if (func_80092BE0(sp58) >= 0) {
+                            render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionTTTexture, SCREEN_HEIGHT - 36, yOffset + 122, 255, 255, 255, sMenuGuiOpacity);
+                        }
+                        set_text_font(0);
+                        set_text_colour(255, 64, 64, 96, 255);
+                        draw_text(&sMenuCurrDisplayList, 88, yOffset + 72, gMenuText[ASSET_MENU_TEXT_BESTTIME], ALIGN_MIDDLE_CENTER);
+                        draw_text(&sMenuCurrDisplayList, 88, yOffset + 92, gMenuText[ASSET_MENU_TEXT_BESTLAP], ALIGN_MIDDLE_CENTER);
+                        set_text_colour(255, 128, 255, 96, 255);
+                        decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][sp58], &filename, 3);
+                        draw_text(&sMenuCurrDisplayList, 258, yOffset + 72, (char*) &filename, ALIGN_MIDDLE_CENTER);
+                        decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][sp58], &filename, 3);
+                        draw_text(&sMenuCurrDisplayList, 258, yOffset + 92, (char*) &filename, ALIGN_MIDDLE_CENTER);
+                        show_timestamp(settings->courseTimesPtr[gPlayerSelectVehicle[0]][((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2], 26, 53, 128, 255, 255, 0);
+                        show_timestamp(settings->flapTimesPtr[gPlayerSelectVehicle[0]][((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2], 26, 33, 255, 192, 255, 0);
+                    }
+                    greenAmount = gOptionBlinkTimer * 8;
+                    if (greenAmount > 255) {
+                        greenAmount = 511 - greenAmount;
+                    }
+                    set_current_dialogue_background_colour(7, 255, greenAmount, 0, 255);
+                    set_current_dialogue_box_coords(7, 134, yOffset + 112, 186, yOffset + 137);
+                    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+                    render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionVehicleTitleTexture, 136, yOffset + 114, 255, 255, 255, 255);
+                    
+                    y = yOffset + 139;
+                    savedY = y;
+                        
+                    for (i = 0; i < 3; i++) {
+                        alpha = (arg1 < 2 && get_map_default_vehicle(sp58) != i) ? 128 : 255;
+                        if ((1 << i) & mask) {
+                            if (i == gPlayerSelectVehicle[0]) {
+                                render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[i*3+1], 104, y, 255, 255, 255, 255);
+                            } else {
+                                render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[i*3+2], 104, y, 255, 255, 255, alpha);
+                            }
+                            y += 24;
+                        }
+                    }
+                    y = savedY;
+                    if (gPlayerSelectVehicle[0] == 2) {
+                        y += 2;
+                    }
+                    render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[0]*3], 149, y, 255, 255, 255, 255);
+                    func_8007B3D0(&sMenuCurrDisplayList);
+                    gMenuImageStack[7].unkC = 21.0f;
+                    gMenuImageStack[7].unk10 = -52.0f;
+                    func_8009CA60(7);
+                    if (D_801263E0 != 0) {
+                        set_text_font(FONT_LARGE);
+                        set_text_background_colour(0, 0, 0, 0);
+                        set_text_colour(255, 255, 255, 0, 255);
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yOffset + 172, (char*) D_800E8240, ALIGN_MIDDLE_CENTER);
+                    }
+                } else {
+                    set_text_font(FONT_LARGE);
+                    set_text_background_colour(0, 0, 0, 0);
+                    set_text_colour(255, 255, 255, 0, 255);
+                    y = yOffset + 0xB0;
+                    if (get_language() == LANGUAGE_FRENCH) {
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[13], ALIGN_MIDDLE_CENTER);
+                        y += 32;
+                    }
+                    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[11], ALIGN_MIDDLE_CENTER);
+                    y += 32;
+                    if (get_language() != LANGUAGE_FRENCH) {
+                        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[13], ALIGN_MIDDLE_CENTER);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Process the logic for the track setup selection after entering a door in adventure mode.
+ * This also includes drawing all the gui.
+*/
+s32 menu_adventure_track_loop(s32 updateRate) {
     s32 vehicle;
     s32 sp30;
     s32 vehicle2;
@@ -6504,7 +6622,7 @@ s32 menu_5_loop(s32 updateRate) {
         }
     }
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    func_80092E94(updateRate, sp1C, sp20);
+    render_adventure_track_setup(updateRate, sp1C, sp20);
     if (sp1C < 2) {
         gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     }
@@ -8200,7 +8318,54 @@ void func_8009CA58(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_8009CD7C.s")
+
+/**
+ * Render the border around the centre viewport in the track selection menu.
+ * Comes in wood, iron and gold colours.
+ */
+void render_track_selection_viewport_border(ObjectModel *objMdl) {
+    s32 pad1[4];
+    s32 sp5C;
+    s32 pad2[4];
+    TextureHeader *tex;
+    Triangle *tris;
+    s32 triOffset;
+    s32 vertOffset;
+    Vertex *verts;
+    s32 numVerts;
+    s32 numTris;
+    s32 var_a3;
+    s32 texEnabled;
+    s32 i;
+
+    sp5C = 9;
+    if (sMenuGuiOpacity != 255) {
+        sp5C = 13;
+    }
+    for (i = 0; i < objMdl->numberOfBatches; i++) {
+        if (!(objMdl->batches[i].flags & 0x100)) {
+            vertOffset = objMdl->batches[i].verticesOffset;
+            triOffset = objMdl->batches[i].facesOffset;
+            numVerts = objMdl->batches[i + 1].verticesOffset - vertOffset;
+            numTris = objMdl->batches[i + 1].facesOffset - triOffset;
+            verts = &objMdl->vertices[vertOffset];
+            tris = &objMdl->triangles[triOffset];
+            if (objMdl->batches[i].textureIndex == -1) {
+                tex = NULL;
+                texEnabled = FALSE;
+                var_a3 = 0;
+            } else {
+                tex = objMdl->textures[objMdl->batches[i].textureIndex].texture;
+                texEnabled = TRUE;
+                var_a3 = objMdl->batches[i].unk7 << 14;
+            }
+            func_8007B4E8(&sMenuCurrDisplayList, tex, sp5C, var_a3);
+            
+            gSPVertexDKR(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
+            gSPPolygon(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, texEnabled);
+        }
+    }
+}
 
 void func_8009CF68(s32 arg0) {
     if (D_800DF4E4[arg0] == 0) {
@@ -8800,7 +8965,7 @@ void dialogue_close_stub(void) {
  * Renders a textbox with a displaylist.
  * Return value goes completely unused.
  */
-f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Mtx **mat, VertexList **verts) {
+f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Matrix **mat, VertexList **verts) {
     sMenuCurrDisplayList = *dlist;
     sMenuCurrHudMat = *mat;
     sMenuCurrHudVerts = *verts;

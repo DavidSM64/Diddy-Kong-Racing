@@ -463,30 +463,36 @@ typedef struct ObjectModel_44 {
 } ObjectModel_44;
 
 typedef struct ObjectModel {
-/* 0x00 */ TextureInfo *textures;
-/* 0x04 */ Vertex *vertices;
-/* 0x08 */ Triangle *triangles;
-/* 0x0C */ s32 *unkC;
-/* 0x10 */ s32 *unk10;
-           u8 pad0[0x0B];
-/* 0x1F */ s8 unk1F;
-           u8 pad20[2];
-/* 0x22 */ s16 numberOfTextures;
-/* 0x24 */ s16 numberOfVertices;
-/* 0x26 */ s16 numberOfTriangles;
-/* 0x28 */ s16 numberOfBatches;
-           u8 pad2A[4];
-/* 0x2E */ u8 unk2E;
-/* 0x30 */ s16 unk30;
-           u8 pad32[6];
-/* 0x38 */ TriangleBatchInfo *batches;
-/* 0x3C */ u8 pad3C[4];
-/* 0x40 */ s32 *unk40;
-/* 0x44 */ ObjectModel_44 *animations;
-/* 0x48 */ s16 numberOfAnimations;
-/* 0x4A */ u8 pad4A[6];
-/* 0x50 */ s16 unk50;
-} ObjectModel;
+    /* 0x00 */ TextureInfo* textures;
+    /* 0x04 */ Vertex* vertices;
+    /* 0x08 */ Triangle* triangles;
+    /* 0x0C */ s32* unkC;
+    /* 0x10 */ s32* unk10;
+    /* 0x14 */ u8 unk14[0x4];
+    /* 0x18 */ s32 unk18;
+    /* 0x1A */ s8 unk1A;
+    /* 0x1C */ s8 unk1C;
+    /* 0x1E */ s8 unk1E;
+    /* 0x1F */ s8 unk1F;
+    /* 0x20 */ u8 pad20[2];
+    /* 0x22 */ s16 numberOfTextures;
+    /* 0x24 */ s16 numberOfVertices;
+    /* 0x26 */ s16 numberOfTriangles;
+    /* 0x28 */ s16 numberOfBatches;
+    /* 0x2A */ u8 pad2A[4];
+    /* 0x2E */ u8 unk2E;
+    /* 0x2F */ char pad2F[1];
+    /* 0x30 */ s16 unk30;
+    /* 0x32 */ u8 pad32[6];
+    /* 0x38 */ TriangleBatchInfo* batches;
+    /* 0x3C */ u8 pad3C[4];
+    /* 0x40 */ s32* unk40;
+    /* 0x44 */ ObjectModel_44* animations;
+    /* 0x48 */ s16 numberOfAnimations;
+    /* 0x4A */ u8 pad4A[6];
+    /* 0x50 */ s16 unk50;
+    /* 0x52 */ s16 unk52;
+} ObjectModel;      
 
 /* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
@@ -657,7 +663,7 @@ typedef struct Object_50 {
 } Object_50;
 
 typedef struct Object_54 {
-    s32 unk0;
+    f32 unk0;
     u8 unk4;
     u8 unk5;
     u8 unk6;
@@ -672,6 +678,9 @@ typedef struct Object_54 {
     s16 unk12;
     s16 unk14;
     s16 unk16;
+    u8 unk18;
+    u8 unk19;
+    u8 unk1A;
 } Object_54;
 
 typedef struct Object_5C {
@@ -682,6 +691,8 @@ typedef struct Object_5C {
 typedef struct Object_60 {
     s32 unk0;
     void *unk4; // Object* pointer
+    u8 unk8[0x24];
+    s32 *unk2C;
 } Object_60;
 
 struct Object;
@@ -1316,7 +1327,8 @@ typedef struct Object_68 {
   };
   /* 0x04 */ s32 *unk4[3];
   /* 0x10 */ s16 unk10;
-  /* 0x14 */ u8 pad14[13];
+  /* 0x14 */ u8 pad14[12];
+  /* 0x1E */ s8 unk1E;
   /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
   /* 0x21 */ s8 unk21;
@@ -1388,7 +1400,7 @@ typedef struct ObjectSegment {
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  /* 0x0044 */ void *unk44;
+  /* 0x0044 */ s32 *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318

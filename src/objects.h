@@ -223,6 +223,32 @@ typedef struct unk8000FD34 {
     s32 unk5C;
 } unk8000FD34;
 
+typedef struct struct_8000FC6C {
+    f32 unk0;
+    TextureHeader *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} struct_8000FC6C;
+
+typedef struct struct_8000FC6C_2 {
+    s32 unk0;
+    s32 unk4;
+    f32 unk8;
+    s32 unkC;
+    u8 unk10[0x26];
+    s16 unk36;
+    s16 unk38;
+} struct_8000FC6C_2;
+
+typedef struct struct_8000FC6C_3 {
+    u8 unk0[0x40];
+    struct_8000FC6C_2 *unk40;
+    u8 unk44[0x14];
+    void *unk58;
+} struct_8000FC6C_3;
+
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
 
@@ -307,7 +333,7 @@ void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
-void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object);
+void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object);
 void func_80012F30(Object *arg0);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
@@ -320,9 +346,9 @@ void func_8001A8D4(s32 arg0);
 s16 func_8001AE44();
 s32 func_8001AE54();
 s32 func_8001B288(void);
-s32 func_8001B2E0();
+Object *func_8001B2E0(void);
 s32 func_8001B3AC(s32 arg0);
-s32 func_8001B640();
+Object *func_8001B640(void);
 s32 func_8001B650(void);
 s32 func_8001B738(s32 controllerIndex);
 u8 has_ghost_to_save();
@@ -379,9 +405,10 @@ void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 Object *get_racer_object_by_port(s32 index);
-void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
-void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
+void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
+s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -404,6 +431,6 @@ Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_80068FA8(Gfx**, Mtx**, Object*, Object*, f32); /* extern */
+void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
 
 #endif

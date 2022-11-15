@@ -218,7 +218,7 @@ glabel func_800ACA20
 /* 0AD964 800ACD64 8D6F0000 */  lw    $t7, ($t3)
 /* 0AD968 800ACD68 24180104 */  li    $t8, 260
 /* 0AD96C 800ACD6C AFB80014 */  sw    $t8, 0x14($sp)
-/* 0AD970 800ACD70 0C01A145 */  jal   func_80068514
+/* 0AD970 800ACD70 0C01A145 */  jal   render_sprite_billboard
 /* 0AD974 800ACD74 AFAF0010 */   sw    $t7, 0x10($sp)
 /* 0AD978 800ACD78 8E0E0010 */  lw    $t6, 0x10($s0)
 /* 0AD97C 800ACD7C 26100010 */  addiu $s0, $s0, 0x10

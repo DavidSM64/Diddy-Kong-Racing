@@ -115,6 +115,10 @@ typedef struct XYStruct {
 
 extern unk800E2CF0 **gParticlesAssetTable;
 extern s32 gParticlesAssetTableCount;
+extern s32 D_80127CB8;
+extern s32 D_80127CCC;
+extern u16 D_80127CAE;
+extern u16 D_80127CAC;
 
 extern ParticleBehavior **gParticleBehavioursAssetTable;
 extern s32 gParticleBehavioursAssetTableCount;
