@@ -910,10 +910,6 @@ s32 start_reading_controller_data(UNUSED s32 controllerIndex) {
     return 0;
 }
 
-#ifdef NON_MATCHING
-// For some reason it seems likely that D_801241E7 is volatile.
-// Still needs matching though to prove that.
-// volatile u8 D_801241E7;
 void init_controller_paks(void) {
     s32 controllerIndex;
     s32 ret;
@@ -922,20 +918,18 @@ void init_controller_paks(void) {
     s8 maxControllers;
 
     sControllerMesgQueue = get_si_mesg_queue();
-    sUnkMiscAsset19 = (s16 *)get_misc_asset(ASSET_MISC_19), //Comma is here on purpose
-    D_801241E7 = 0xF;
-    D_801241E6 = 0xF;
+    sUnkMiscAsset19 = (s16 *)get_misc_asset(ASSET_MISC_19);
+    D_801241E6 = D_801241E7 = 0xF;
     D_801241E4 = 1;
     D_801241E8 = 0;
     D_800DE48C = 1;
-    sRumblePaksPresent = 0;
-    sControllerPaksPresent = 0;
+    sControllerPaksPresent = sRumblePaksPresent = 0;
 
     //pakPattern will set the first 4 bits representing each controller
     //and it will be 1 if there's something attached.
     osPfsIsPlug(sControllerMesgQueue, &pakPattern);
 
-    for (controllerIndex = 0, controllerBit = 1, maxControllers = MAXCONTROLLERS; controllerIndex != maxControllers; controllerIndex++, controllerBit <<= 1) {
+    for (controllerIndex = 0, controllerBit = 1, maxControllers = MAXCONTROLLERS; (0, controllerIndex) != maxControllers; controllerIndex++, controllerBit <<= 1) {
         D_801241B8[controllerIndex].unk2 = 0;
         D_801241B8[controllerIndex].unk4 = -1;
         D_801241B8[controllerIndex].unk0 = -1;
@@ -952,7 +946,9 @@ void init_controller_paks(void) {
                 sControllerPaksPresent |= controllerBit;
             }
             else if (ret == PFS_ERR_ID_FATAL) {
-                if (osMotorInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex) == 0) {
+                if (controllerIndex) { }
+                ret = osMotorInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
+                if (ret == 0) {
                     //If we found a rumble pak, set the bit that has one
                     sRumblePaksPresent |= controllerBit;
                 }
@@ -962,9 +958,6 @@ void init_controller_paks(void) {
 
     osContStartReadData(sControllerMesgQueue);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/init_controller_paks.s")
-#endif
 
 UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
     s32 ret;
