@@ -111,7 +111,7 @@ glabel func_8006A1C4
 .L8006A354:
 /* 06AF54 8006A354 8FA4005C */  lw    $a0, 0x5c($sp)
 .L8006A358:
-/* 06AF58 8006A358 0C01C9C6 */  jal   func_80072718
+/* 06AF58 8006A358 0C01C9C6 */  jal   rumble_controllers
 /* 06AF5C 8006A35C 00000000 */   nop   
 /* 06AF60 8006A360 3C048012 */  lui   $a0, %hi(sSIMesgQueue) # $a0, 0x8012
 /* 06AF64 8006A364 0C0333F8 */  jal   osContStartReadData

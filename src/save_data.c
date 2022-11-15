@@ -219,7 +219,7 @@ void func_80072708(void) {
 }
 
 //Rumbles controller?
-void func_80072718(s32 arg0) {
+void rumble_controllers(s32 arg0) {
     unk_801241B8 *temp;
     s32 pfsStatus;
     u8 i;
@@ -231,7 +231,7 @@ void func_80072718(s32 arg0) {
         if (D_801241E8 >= 121) {
             D_801241E8 = 0;
             osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
-            for (i = 0, controllerToCheck = 1; i < 4; i++, controllerToCheck <<= 1) {
+            for (i = 0, controllerToCheck = 1; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1) {
                 if ((pfsBitPattern & controllerToCheck) && !(~D_801241E6 & sRumblePaksPresent & controllerToCheck)) {
                     if (osMotorInit(sControllerMesgQueue, &pfs[i], i) != 0) {
                         D_801241E6 &= ~controllerToCheck;;
@@ -248,7 +248,7 @@ void func_80072718(s32 arg0) {
             if (D_800DE48C != 0) {
                 osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
             }
-            for (i = 0, controllerToCheck = 1, temp = D_801241B8; i < 4; i++, controllerToCheck <<= 1, temp++) {
+            for (i = 0, controllerToCheck = 1, temp = D_801241B8; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1, temp++) {
                 if (D_800DE48C != 0) {
                     temp->unk0 = temp->unk6 = temp->unk4 = -1;
                     if (!(pfsBitPattern & controllerToCheck)) {
@@ -259,48 +259,48 @@ void func_80072718(s32 arg0) {
                         }
                     }
                 } else if (D_801241E6 & sRumblePaksPresent & controllerToCheck) {
-                        if (temp->unk4 <= 0) {
+                    if (temp->unk4 <= 0) {
+                        D_801241E6 &= ~controllerToCheck;
+                        temp->unk0 = -1;
+                        temp->unk8 = 0;
+                        osMotorStop(&pfs[i]);
+                    } else {
+                        temp->unk4 -= arg0;
+                        temp->unk8 += arg0;
+                        if (temp->unk8 < 0) {
+                            continue;
+                        } else if (temp->unk8 >= 601) {
                             D_801241E6 &= ~controllerToCheck;
                             temp->unk0 = -1;
-                            temp->unk8 = 0;
+                            temp->unk8 = -300;
                             osMotorStop(&pfs[i]);
                         } else {
-                            temp->unk4 -= arg0;
-                            temp->unk8 += arg0;
-                            if (temp->unk8 < 0) {
-                                continue;
-                            } else if (temp->unk8 >= 601) {
-                                D_801241E6 &= ~controllerToCheck;
-                                temp->unk0 = -1;
-                                temp->unk8 = -300;
-                                osMotorStop(&pfs[i]);
-                            } else {
-                                if (temp->unk2 > 490.0) {
-                                    if (!(D_801241E7 & controllerToCheck)) {
-                                        pfsStatus |= osMotorStart(&pfs[i]);
-                                        D_801241E7 |= controllerToCheck;
-                                    }
-                                } else if (temp->unk2 < 3.6) {
-                                    if (D_801241E7 & controllerToCheck) {
-                                        pfsStatus |= osMotorStop(&pfs[i]);
-                                        D_801241E7 &= ~controllerToCheck;
-                                    }
-                                } else if (temp->unk6 >= 256) {
-                                    if (!(D_801241E7 & controllerToCheck)) {
-                                        pfsStatus |= osMotorStart(&pfs[i]);
-                                        D_801241E7 |= controllerToCheck;
-                                    }
-                                    temp->unk6 -= 256;
-                                } else {
-                                    if (D_801241E7 & controllerToCheck) {
-                                        pfsStatus |= osMotorStop(&pfs[i]);
-                                        D_801241E7 &= ~controllerToCheck;
-                                    }
-                                    temp->unk6 += temp->unk2 + 4;
+                            if (temp->unk2 > 490.0) {
+                                if (!(D_801241E7 & controllerToCheck)) {
+                                    pfsStatus |= osMotorStart(&pfs[i]);
+                                    D_801241E7 |= controllerToCheck;
                                 }
-                                if (1) { } // fakematch
+                            } else if (temp->unk2 < 3.6) {
+                                if (D_801241E7 & controllerToCheck) {
+                                    pfsStatus |= osMotorStop(&pfs[i]);
+                                    D_801241E7 &= ~controllerToCheck;
+                                }
+                            } else if (temp->unk6 >= 256) {
+                                if (!(D_801241E7 & controllerToCheck)) {
+                                    pfsStatus |= osMotorStart(&pfs[i]);
+                                    D_801241E7 |= controllerToCheck;
+                                }
+                                temp->unk6 -= 256;
+                            } else {
+                                if (D_801241E7 & controllerToCheck) {
+                                    pfsStatus |= osMotorStop(&pfs[i]);
+                                    D_801241E7 &= ~controllerToCheck;
+                                }
+                                temp->unk6 += temp->unk2 + 4;
                             }
+                            if (1) { } // fakematch
                         }
+                    }
                 }
             }
             if (pfsStatus != 0) {
