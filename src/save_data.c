@@ -233,9 +233,9 @@ void rumble_controllers(s32 arg0) {
             for (i = 0, controllerToCheck = 1; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1) {
                 if ((pfsBitPattern & controllerToCheck) && !(~D_801241E6 & sRumblePaksPresent & controllerToCheck)) {
                     if (osMotorInit(sControllerMesgQueue, &pfs[i], i) != 0) {
-                        D_801241E6 &= ~controllerToCheck;;
-                        D_801241E7 &= ~controllerToCheck;;
-                        sRumblePaksPresent &= ~controllerToCheck;;
+                        D_801241E6 &= ~controllerToCheck;
+                        D_801241E7 &= ~controllerToCheck;
+                        sRumblePaksPresent &= ~controllerToCheck;
                     } else {
                         sRumblePaksPresent |= controllerToCheck;
                     }
