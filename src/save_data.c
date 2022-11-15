@@ -252,10 +252,8 @@ void rumble_controllers(s32 arg0) {
                     temp->unk0 = temp->unk6 = temp->unk4 = -1;
                     if (!(pfsBitPattern & controllerToCheck)) {
                         continue;
-                    } else {
-                        if (osMotorInit(sControllerMesgQueue, &pfs[i], i) == 0) {
-                            osMotorStop(&pfs[i]);
-                        }
+                    } else if (osMotorInit(sControllerMesgQueue, &pfs[i], i) == 0) {
+                        osMotorStop(&pfs[i]);
                     }
                 } else if (D_801241E6 & sRumblePaksPresent & controllerToCheck) {
                     if (temp->unk4 <= 0) {
