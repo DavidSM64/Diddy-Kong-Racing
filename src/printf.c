@@ -77,7 +77,7 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B34B0.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
 
-UNUSED void func_800B3678(Gfx **arg0, Mtx **arg1, VertexList **arg2) {
+UNUSED void func_800B3678(Gfx **arg0, Matrix **arg1, VertexList **arg2) {
     UNUSED s32 pad;
     UNUSED s32 pad2;
     Object **temp_s0;
@@ -201,5 +201,54 @@ GLOBAL_ASM("asm/non_matchings/printf/set_render_printf_position.s")
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B63F4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B695C.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B69FC.s")
+
+void func_800B695C(Gfx **dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4) {
+    if (!((arg1 == arg3) | (arg2 == arg4))) {
+        if (arg1 >= 2) {
+            arg1 -= 2;
+        }
+        arg3 += 2;
+        gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+        gDPFillRectangle((*dList)++, arg1, arg2, arg3, arg4);
+    }
+}
+
+s32 func_800B69FC(Gfx **dlist, s32 arg1) {
+    s32 temp_a3;
+    s32 temp_a2;
+    u8* temp_v0_22;
+
+    if (arg1 < 64) {
+        if (D_80127CCC != 0) {
+            if (D_80127CB8 != 0) {
+                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture0 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
+            }
+            D_80127CCC = 0;
+        }
+        arg1 -= 33;
+    } else if (arg1 < 96) {
+        if (D_80127CCC != 1) {
+            if (D_80127CB8) {
+                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture1 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 248, 11, 0, 2, 2, 0, 0, 0, 0);
+            }
+            D_80127CCC = 1;
+        }
+        arg1 -= 64;
+    } else if (arg1 < 128) {
+        arg1 -= 96;
+        if (D_80127CCC != 2) {
+            if (D_80127CB8 != 0) {
+                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture2 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
+            }
+            D_80127CCC = 2;
+        }
+    }
+    temp_v0_22 = &D_800E2EF4[(D_80127CCC << 6) + (arg1 * 2)];
+    temp_a2 = temp_v0_22[0];
+    temp_a3 = (temp_v0_22[1] - temp_a2) + 1;
+    if (D_80127CB8) {
+        gDPSetCombineMode((*dlist)++, DKR_CC_UNK12, DKR_CC_UNK12);
+        gSPTextureRectangle((*dlist)++, (D_80127CAC << 2), (D_80127CAE << 2), ((D_80127CAC + temp_a3) << 2), ((D_80127CAE + 10) << 2), 0, (temp_a2 << 5), 0, 1024, 1024);
+    }
+    return temp_a3;
+}

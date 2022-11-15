@@ -182,7 +182,7 @@ glabel func_8009CA60
 /* 09D91C 8009CD1C 8C426550 */  lw    $v0, %lo(D_80126550)($v0)
 /* 09D920 8009CD20 00000000 */  nop   
 /* 09D924 8009CD24 8C440000 */  lw    $a0, ($v0)
-/* 09D928 8009CD28 0C02735F */  jal   func_8009CD7C
+/* 09D928 8009CD28 0C02735F */  jal   render_track_selection_viewport_border
 /* 09D92C 8009CD2C 00000000 */   nop   
 /* 09D930 8009CD30 0C01A690 */  jal   func_80069A40
 /* 09D934 8009CD34 02002025 */   move  $a0, $s0

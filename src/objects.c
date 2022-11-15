@@ -136,7 +136,7 @@ s8 D_8011AD26[2];
 f32 D_8011AD28;
 s32 D_8011AD2C;
 f32 D_8011AD30;
-s32 D_8011AD34;
+Object *D_8011AD34;
 s32 D_8011AD38; //D_8011AD38 is ultimately set by func_80074B34, and is almost definitely SIDeviceStatus
 s8 D_8011AD3C;
 s8 D_8011AD3D;
@@ -188,7 +188,7 @@ Object *D_8011AE08[16];
 s32 (*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8];  // Unknown number of entries.
 s32 D_8011AE50;
-s32 D_8011AE54;
+TextureHeader *D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
 s32 objCount;
 s32 D_8011AE60;
@@ -206,7 +206,7 @@ s16 D_8011AE82;
 s32 D_8011AE84;
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
-Mtx *gObjectCurrMatrix;
+Matrix *gObjectCurrMatrix;
 VertexList *gObjectCurrVertexList;
 s32 D_8011AE98[2];
 s32 D_8011AEA0;
@@ -790,7 +790,23 @@ s32 func_8000FAC4(Object *obj, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FBCC.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000FC6C.s")
+
+s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1) {
+    arg0->unk58 = arg1;
+    arg1->unk0 = arg0->unk40->unk8;
+    arg1->unkC = 0;
+    arg1->unkE = arg0->unk40->unk0 >> 8;
+    arg1->unk4 = NULL;
+    if (arg0->unk40->unk36) {
+        arg1->unk4 = load_texture(arg0->unk40->unk38);
+    }
+    arg1->unk8 = -1;
+    D_8011AE54 = arg1->unk4;
+    if (arg0->unk40->unk36 && arg1->unk4 == NULL) {
+        return 0;
+    }
+    return 20;
+}
 
 s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
     arg0->unk4C = arg1;
@@ -1086,7 +1102,7 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
-void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object) {
+void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.unk6 & 0x5000)
         return;
@@ -1177,7 +1193,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
  * Get the racer object data, and fetch set visual shield properties based on that racer.
  * Afterwards, render the graphics with opacity scaling with the fadetimer.
  */
-void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj) {
+void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj) {
     struct Object_Racer* racer;
     Object_68 *gfxData;
     ObjectModel *mdl;
@@ -1249,7 +1265,7 @@ void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *o
  * Get the racer object data, and fetch set visual magnet properties based on that racer.
  * Afterwards, render the graphics with opacity set by the properties.
  */
-void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj) {
+void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj) {
     Object_Racer *racer;
     Object_68 *gfxData;
     ObjectModel *mdl;
@@ -1443,7 +1459,7 @@ s32 func_8001B288(void) {
     }
 }
 
-s32 func_8001B2E0() {
+Object *func_8001B2E0() {
     return D_8011AD34;
 }
 
@@ -1456,8 +1472,8 @@ s32 func_8001B3AC(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B3C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
-s32 func_8001B640() {
-    return D_800DC718;
+Object *func_8001B640() {
+    return (Object *) D_800DC718;
 }
 
 s32 func_8001B650(void) {

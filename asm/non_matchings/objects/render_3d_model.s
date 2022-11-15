@@ -559,7 +559,7 @@ glabel render_3d_model
 /* 0134DC 800128DC AFAB0030 */  sw    $t3, 0x30($sp)
 /* 0134E0 800128E0 E7A00094 */  swc1  $f0, 0x94($sp)
 /* 0134E4 800128E4 E7A20090 */  swc1  $f2, 0x90($sp)
-/* 0134E8 800128E8 0C01A145 */  jal   func_80068514
+/* 0134E8 800128E8 0C01A145 */  jal   render_sprite_billboard
 /* 0134EC 800128EC E7AC008C */   swc1  $f12, 0x8c($sp)
 /* 0134F0 800128F0 83A8008A */  lb    $t0, 0x8a($sp)
 /* 0134F4 800128F4 8FAA00BC */  lw    $t2, 0xbc($sp)
@@ -692,7 +692,7 @@ glabel render_3d_model
 /* 0136E0 80012AE0 17010005 */  bne   $t8, $at, .L80012AF8
 /* 0136E4 80012AE4 8FAF009C */   lw    $t7, 0x9c($sp)
 /* 0136E8 80012AE8 AFAC0010 */  sw    $t4, 0x10($sp)
-/* 0136EC 80012AEC 0C01A145 */  jal   func_80068514
+/* 0136EC 80012AEC 0C01A145 */  jal   render_sprite_billboard
 /* 0136F0 80012AF0 AFAE0014 */   sw    $t6, 0x14($sp)
 /* 0136F4 80012AF4 8FAF009C */  lw    $t7, 0x9c($sp)
 .L80012AF8:

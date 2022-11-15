@@ -261,7 +261,7 @@ glabel render_3d_billboard
 /* 012C50 80012050 AFAA0014 */  sw    $t2, 0x14($sp)
 /* 012C54 80012054 AFA80080 */  sw    $t0, 0x80($sp)
 /* 012C58 80012058 AFA9007C */  sw    $t1, 0x7c($sp)
-/* 012C5C 8001205C 0C01A145 */  jal   func_80068514
+/* 012C5C 8001205C 0C01A145 */  jal   render_sprite_billboard
 /* 012C60 80012060 AFB90010 */   sw    $t9, 0x10($sp)
 /* 012C64 80012064 8FA80080 */  lw    $t0, 0x80($sp)
 /* 012C68 80012068 8FA9007C */  lw    $t1, 0x7c($sp)

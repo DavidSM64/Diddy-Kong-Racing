@@ -59,7 +59,7 @@ glabel func_800A7A60
 /* 0A8744 800A7B44 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
 /* 0A8748 800A7B48 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A874C 800A7B4C 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
-/* 0A8750 800A7B50 0C01A145 */  jal   func_80068514
+/* 0A8750 800A7B50 0C01A145 */  jal   render_sprite_billboard
 /* 0A8754 800A7B54 AFA20010 */   sw    $v0, 0x10($sp)
 .L800A7B58:
 /* 0A8758 800A7B58 8FBF001C */  lw    $ra, 0x1c($sp)
