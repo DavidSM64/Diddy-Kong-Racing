@@ -218,7 +218,6 @@ void func_80072708(void) {
     D_800DE48C = 3;
 }
 
-//Rumbles controller?
 void rumble_controllers(s32 arg0) {
     unk_801241B8 *temp;
     s32 pfsStatus;
