@@ -223,6 +223,32 @@ typedef struct unk8000FD34 {
     s32 unk5C;
 } unk8000FD34;
 
+typedef struct struct_8000FC6C {
+    f32 unk0;
+    TextureHeader *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} struct_8000FC6C;
+
+typedef struct struct_8000FC6C_2 {
+    s32 unk0;
+    s32 unk4;
+    f32 unk8;
+    s32 unkC;
+    u8 unk10[0x26];
+    s16 unk36;
+    s16 unk38;
+} struct_8000FC6C_2;
+
+typedef struct struct_8000FC6C_3 {
+    u8 unk0[0x40];
+    struct_8000FC6C_2 *unk40;
+    u8 unk44[0x14];
+    void *unk58;
+} struct_8000FC6C_3;
+
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
 
