@@ -230,15 +230,13 @@ void func_80072718(s32 arg0) {
         D_801241E8 += arg0;
         if (D_801241E8 >= 121) {
             D_801241E8 = 0;
-            pfsStatus = osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
+            osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
             for (i = 0, controllerToCheck = 1; i < 4; i++, controllerToCheck <<= 1) {
                 if ((pfsBitPattern & controllerToCheck) && !(~D_801241E6 & sRumblePaksPresent & controllerToCheck)) {
-                    pfsStatus = osMotorInit(sControllerMesgQueue, &pfs[i], i);
-                    if (pfsStatus != 0) {
-                        pfsStatus = ~controllerToCheck;
-                        D_801241E6 &= pfsStatus;
-                        D_801241E7 &= pfsStatus;
-                        sRumblePaksPresent &= pfsStatus;
+                    if (osMotorInit(sControllerMesgQueue, &pfs[i], i) != 0) {
+                        D_801241E6 &= ~controllerToCheck;;
+                        D_801241E7 &= ~controllerToCheck;;
+                        sRumblePaksPresent &= ~controllerToCheck;;
                     } else {
                         sRumblePaksPresent |= controllerToCheck;
                     }
@@ -257,7 +255,7 @@ void func_80072718(s32 arg0) {
                         continue;
                     } else {
                         if (osMotorInit(sControllerMesgQueue, &pfs[i], i) == 0) {
-                                osMotorStop(&pfs[i]);
+                            osMotorStop(&pfs[i]);
                         }
                     }
                 } else if (D_801241E6 & sRumblePaksPresent & controllerToCheck) {
