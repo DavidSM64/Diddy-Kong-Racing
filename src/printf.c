@@ -66,8 +66,8 @@ const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Pri
 extern TextureHeader *gTexture0;
 extern TextureHeader *gTexture1;
 extern TextureHeader *gTexture2;
-extern u8 D_80127CD8[];
-extern u8 *D_801285D8;
+extern u8 gDebugPrintBufferStart[];
+extern u8 *gDebugPrintBufferEnd;
 
 /******************************/
 
@@ -147,7 +147,7 @@ void func_800B5E88(void) {
     gTexture0 = load_texture(0);
     gTexture1 = load_texture(1);
     gTexture2 = load_texture(2);
-    D_801285D8 = &D_80127CD8;
+    gDebugPrintBufferEnd = &gDebugPrintBufferStart;
 }
 
 #ifdef NON_EQUIVALENT
@@ -155,14 +155,14 @@ s32 render_printf(const char *format, ...) {
     s32 written;
     va_list args;
     va_start(args, format);
-    if ((D_801285D8 - &D_80127CD8) >= 0x801) {
+    if ((gDebugPrintBufferEnd - &gDebugPrintBufferStart) >= 0x801) {
         return -1;
     }
     func_800B4A08(1);
-    written = sprintf(D_801285D8, format, args);
+    written = sprintf(gDebugPrintBufferEnd, format, args);
     func_800B4A08(0);
     if (written > 0) {
-        D_801285D8 = &D_801285D8[written] + 1;
+        gDebugPrintBufferEnd = &gDebugPrintBufferEnd[written] + 1;
     }
     return 0;
 }
@@ -185,30 +185,30 @@ void print_debug_strings(Gfx **dlist) {
     gDPSetScissor((*dlist)++, 0, 0, 0, D_80127CD0, D_80127CD2);
     func_800B6E50();
     gSPDisplayList((*dlist)++, dDebugFontSettings);
-    buffer = D_80127CD8;
+    buffer = gDebugPrintBufferStart;
     func_800B6EE0();
     D_80127CCC = -1;
     D_80127CB4 = 0;
     D_80127CB0 = D_80127CAC;
     D_80127CB2 = D_80127CAE;
-    while ((s32)buffer != (s32)D_801285D8) {
+    while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
         D_80127CB8 = 0;
         buffer += func_800B653C(dlist, buffer);
     }
     func_800B695C(dlist, (u16) D_80127CB0, (u16) D_80127CB2, D_80127CAC, D_80127CAE + 10);
-    buffer = D_80127CD8;
+    buffer = gDebugPrintBufferStart;
     func_800B6EE0();
     D_80127CCC = -1;
     D_80127CB4 = 0;
-    while ((s32)buffer != (s32)D_801285D8) {
+    while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
         D_80127CB8 = 1;
         buffer += func_800B653C(dlist, buffer);
     }
-    D_801285D8 = D_80127CD8;
+    gDebugPrintBufferEnd = gDebugPrintBufferStart;
 }
 
 UNUSED void func_800B61E0(void) {
-    D_801285D8 = &D_80127CD8;
+    gDebugPrintBufferEnd = &gDebugPrintBufferStart;
     func_800B6EE0();
 }
 
