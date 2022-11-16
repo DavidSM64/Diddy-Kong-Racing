@@ -19,6 +19,7 @@
 #include "printf.h"
 #include "unknown_0255E0.h"
 #include "math_util.h"
+#include "camera.h"
 
 /************ .data ************/
 
@@ -1073,7 +1074,106 @@ void func_80011AD0(Object *this) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/objects/render_3d_billboard.s")
+void render_3d_billboard(Object* obj) {
+    s32 intensity;
+    s32 flags;
+    s32 alpha;
+    s32 hasPrimCol;
+    s32 hasEnvCol;
+    ObjectTransformExt sp60;
+    Object *var_a0;
+    unk80068514_arg4* sp58;
+
+    intensity = 255;
+    hasPrimCol = FALSE;
+    hasEnvCol = FALSE;
+    flags = obj->segment.trans.unk6 | 0x100 | 0x8;
+    if (obj->unk54 != NULL) {
+        hasPrimCol = TRUE;
+        hasEnvCol = TRUE;
+        intensity = obj->unk54->unk0 * 255.0f;
+    }
+
+    if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
+        if (obj->segment.unk38.half.lower > 255) {
+            obj->segment.unk38.half.lower = obj->unk7C.word & 0xFF;
+        } else {
+            obj->segment.unk38.half.lower = ((obj->segment.unk38.half.lower * (obj->unk7C.word & 0xFF)) >> 8);
+        }
+    }
+    
+    alpha = obj->segment.unk38.half.lower;
+    if (alpha >= 256) {
+        alpha = 255;
+    }
+
+    // If the behavior is a wizpig ghost, then halve it's transparency.
+    if (obj->behaviorId == 119) {
+        alpha >>= 1;
+    }
+    
+    if (alpha < 255) {
+        flags |= 4;
+        hasPrimCol = TRUE;
+    }
+    if ((obj->behaviorId == 5) && (obj->segment.trans.scale == 6.0f)) {
+        gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, (intensity * 3) >> 2, intensity, intensity >> 1, alpha);
+        hasPrimCol = TRUE;
+    } else if (obj->behaviorId == BHV_WIZPIG_GHOSTS) {  // If the behavior is a wizpig ghost
+        gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 150, 230, 255, alpha);
+        hasPrimCol = TRUE;
+    } else if (hasPrimCol || alpha < 255) {
+        gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
+    } else {
+        gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    }
+    if (hasEnvCol) {
+        gDPSetEnvColor(gObjectCurrDisplayList++, obj->unk54->unk4, obj->unk54->unk5, obj->unk54->unk6, obj->unk54->unk7);
+    } else if (obj->behaviorId == BHV_LAVA_SPURT) {
+        hasEnvCol = TRUE;
+        gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 0, 255);
+    } else {
+        gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+    }
+    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk3A];
+    var_a0 = NULL;
+    if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
+        var_a0 = (Object *) obj->trans78;
+        if (obj->unk7C.word > 0) {
+            var_a0 = obj;
+        }
+    }
+    
+    // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
+    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.unk18 != 10)) {
+        sp60.trans.z_rotation = 0;
+        sp60.trans.x_rotation = 0;
+        sp60.trans.y_rotation = 0;
+        sp60.trans.scale = obj->segment.trans.scale;
+        sp60.trans.x_position = 0.0f;
+        sp60.trans.z_position = 0.0f;
+        sp60.trans.y_position = 12.0f;
+        sp60.unk18 = obj->segment.unk18;
+        sp60.unk1A = 32;
+        if (var_a0 == NULL) {
+            var_a0 = (Object *) obj->unk64->weapon.unk0;
+            if (var_a0 == NULL) {
+                var_a0 = obj;
+            }
+        }
+        func_800138A8(var_a0, sp58, &sp60, 0x106);
+    } else {
+        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, (Vertex **) &gObjectCurrVertexList, obj, sp58, flags);
+    }
+    if (hasPrimCol) {
+        gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    }
+    if (hasEnvCol) {
+        gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/objects/render_3d_model.s")
 
 void func_80012C30(void) {

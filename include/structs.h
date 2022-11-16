@@ -738,7 +738,8 @@ typedef struct Object_WeaponBalloon {
 } Object_WeaponBalloon;
 
 typedef struct Object_Weapon {
-  /* 0x00 */ u8 pad0[0x18];
+  /* 0x00 */ void *unk0;
+  /* 0x00 */ u8 pad4[0x14];
   /* 0x18 */ u8 unk18;
 } Object_Weapon;
 

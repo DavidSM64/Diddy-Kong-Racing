@@ -6,6 +6,7 @@
 #include "f3ddkr.h"
 #include "object_functions.h"
 #include "libc/math.h"
+#include "camera.h"
 
 enum ObjectBehaviours {
     BHV_NONE,
@@ -249,6 +250,12 @@ typedef struct struct_8000FC6C_3 {
     void *unk58;
 } struct_8000FC6C_3;
 
+typedef struct ObjectTransformExt {
+    ObjectTransform trans;
+    s16 unk18;
+    s16 unk1A;
+} ObjectTransformExt;
+
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
 
@@ -409,6 +416,7 @@ void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object
 void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
+void render_3d_billboard(Object* obj);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -432,5 +440,6 @@ void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
 void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
+void func_800138A8(Object*, unk80068514_arg4*, s16*, s32);
 
 #endif

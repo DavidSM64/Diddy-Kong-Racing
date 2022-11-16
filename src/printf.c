@@ -66,7 +66,7 @@ const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Pri
 extern TextureHeader *gTexture0;
 extern TextureHeader *gTexture1;
 extern TextureHeader *gTexture2;
-extern u8 D_80127CD8;
+extern u8 D_80127CD8[];
 extern u8 *D_801285D8;
 
 /******************************/
@@ -170,7 +170,38 @@ s32 render_printf(const char *format, ...) {
 GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
+void print_debug_strings(Gfx **dlist) {
+    char *buffer;
+    u32 widthAndHeight;
+
+    init_rdp_and_framebuffer(dlist);
+    widthAndHeight = get_video_width_and_height_as_s32();
+    D_80127CD2 = (widthAndHeight >> 0x10);
+    D_80127CD0 = widthAndHeight & 0xFFFF;
+    gDPSetScissor((*dlist)++, 0, 0, 0, D_80127CD0, D_80127CD2);
+    func_800B6E50();
+    gSPDisplayList((*dlist)++, dDebugFontSettings);
+    buffer = D_80127CD8;
+    func_800B6EE0();
+    D_80127CCC = -1;
+    D_80127CB4 = 0;
+    D_80127CB0 = D_80127CAC;
+    D_80127CB2 = D_80127CAE;
+    while ((s32)buffer != (s32)D_801285D8) {
+        D_80127CB8 = 0;
+        buffer += func_800B653C(dlist, buffer);
+    }
+    func_800B695C(dlist, (u16) D_80127CB0, (u16) D_80127CB2, D_80127CAC, D_80127CAE + 10);
+    buffer = D_80127CD8;
+    func_800B6EE0();
+    D_80127CCC = -1;
+    D_80127CB4 = 0;
+    while ((s32)buffer != (s32)D_801285D8) {
+        D_80127CB8 = 1;
+        buffer += func_800B653C(dlist, buffer);
+    }
+    D_801285D8 = D_80127CD8;
+}
 
 UNUSED void func_800B61E0(void) {
     D_801285D8 = &D_80127CD8;
