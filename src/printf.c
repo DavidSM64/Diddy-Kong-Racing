@@ -170,6 +170,10 @@ s32 render_printf(const char *format, ...) {
 GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 #endif
 
+/**
+ * At the end of a frame, iterate through the debug text buffer and print it on screen.
+ * Soft-clear the buffer afterwards by setting the endpoint to the start point.
+ */
 void print_debug_strings(Gfx **dlist) {
     char *buffer;
     u32 widthAndHeight;
