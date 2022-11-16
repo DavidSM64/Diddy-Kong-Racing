@@ -1074,6 +1074,11 @@ void func_80011AD0(Object *this) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
 #endif
 
+/**
+ * Render an object as a billboard.
+ * A few tweaks are made depending on the behaviour ID of the object.
+ * A few exceptions will not call to render a billboarded sprite.
+ */
 void render_3d_billboard(Object* obj) {
     s32 intensity;
     s32 flags;
@@ -1108,7 +1113,7 @@ void render_3d_billboard(Object* obj) {
     }
 
     // If the behavior is a wizpig ghost, then halve it's transparency.
-    if (obj->behaviorId == 119) {
+    if (obj->behaviorId == BHV_WIZPIG_GHOSTS) {
         alpha >>= 1;
     }
     
