@@ -119,6 +119,12 @@ extern s32 D_80127CB8;
 extern s32 D_80127CCC;
 extern u16 D_80127CAE;
 extern u16 D_80127CAC;
+extern u16 D_80127CD0;
+extern s32 D_80127CBC;
+extern s32 D_80127CC0;
+extern u16 D_80127CD2;
+extern s32 D_80127CC4;
+extern s32 D_80127CC8;
 
 extern ParticleBehavior **gParticleBehavioursAssetTable;
 extern s32 gParticleBehavioursAssetTableCount;
