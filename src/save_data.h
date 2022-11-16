@@ -77,6 +77,7 @@ s32 get_file_type(s32 controllerIndex, s32 fileNum);
 void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2);
 void func_80072348(s16 controllerIndex, u8 arg1);
 void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2);
+void handle_controller_rumble(s32 updateRate);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
 void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
