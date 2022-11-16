@@ -27,8 +27,8 @@ glabel init_controller_paks
 /* 07677C 80075B7C 3C018012 */  lui   $at, %hi(D_801241E4) # $at, 0x8012
 /* 076780 80075B80 24180001 */  li    $t8, 1
 /* 076784 80075B84 A03841E4 */  sb    $t8, %lo(D_801241E4)($at)
-/* 076788 80075B88 3C018012 */  lui   $at, %hi(D_801241E8) # $at, 0x8012
-/* 07678C 80075B8C AC2041E8 */  sw    $zero, %lo(D_801241E8)($at)
+/* 076788 80075B88 3C018012 */  lui   $at, %hi(gRumbleDetectionTimer) # $at, 0x8012
+/* 07678C 80075B8C AC2041E8 */  sw    $zero, %lo(gRumbleDetectionTimer)($at)
 /* 076790 80075B90 3C01800E */  lui   $at, %hi(D_800DE48C) # $at, 0x800e
 /* 076794 80075B94 24190001 */  li    $t9, 1
 /* 076798 80075B98 3C158012 */  lui   $s5, %hi(sRumblePaksPresent) # $s5, 0x8012

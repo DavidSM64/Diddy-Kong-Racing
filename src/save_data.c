@@ -104,7 +104,7 @@ u8 D_801241E4;
 u8 sRumblePaksPresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4. 1 if a rumble pak is present
 u8 D_801241E6;
 u8 D_801241E7;
-s32 D_801241E8;
+s32 gRumbleDetectionTimer;
 s8 *D_801241EC;
 s32 D_801241F0;
 s32 D_801241F4;
@@ -124,7 +124,7 @@ u8 func_80072250(s32 arg0) {
 void func_80072298(u8 arg0) {
     D_801241E4 = arg0;
     if (arg0 != 0) {
-        D_801241E8 = 0x79;
+        gRumbleDetectionTimer = 121;
         D_801241E6 = 0xF;
         return;
     }
@@ -217,8 +217,105 @@ void func_80072708(void) {
     D_800DE48C = 3;
 }
 
-//Rumbles controller?
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072718.s")
+/**
+ * Every four seconds, attempt to detect a rumble pak.
+ * If a rumble pak is detected and exists, handle rumble functionality for that controller.
+*/
+void handle_controller_rumble(s32 updateRate) {
+    unk_801241B8 *temp;
+    s32 pfsStatus;
+    u8 i;
+    u8 controllerToCheck;
+    u8 pfsBitPattern;
+
+    if ((D_801241E6 != 0) || ((D_800DE48C != 0))) {
+        gRumbleDetectionTimer += updateRate;
+        if (gRumbleDetectionTimer > 120) {
+            gRumbleDetectionTimer = 0;
+            pfsStatus = osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
+            for (i = 0, controllerToCheck = 1; i < 4; i++, controllerToCheck <<= 1) {
+                if ((pfsBitPattern & controllerToCheck) && !(~D_801241E6 & sRumblePaksPresent & controllerToCheck)) {
+                    pfsStatus = osMotorInit(sControllerMesgQueue, &pfs[i], i);
+                    if (pfsStatus != 0) {
+                        pfsStatus = ~controllerToCheck;
+                        D_801241E6 &= pfsStatus;
+                        D_801241E7 &= pfsStatus;
+                        sRumblePaksPresent &= pfsStatus;
+                    } else {
+                        sRumblePaksPresent |= controllerToCheck;
+                    }
+                }
+            }
+        }
+        if ((sRumblePaksPresent != 0) || (D_800DE48C != 0)) {
+            pfsStatus = 0;
+            if (D_800DE48C != 0) {
+                osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
+            }
+            for (i = 0, controllerToCheck = 1, temp = D_801241B8; i < 4; i++, controllerToCheck <<= 1, temp++) {
+                if (D_800DE48C != 0) {
+                    temp->unk0 = temp->unk6 = temp->unk4 = -1;
+                    if (!(pfsBitPattern & controllerToCheck)) {
+                        continue;
+                    } else {
+                        if (osMotorInit(sControllerMesgQueue, &pfs[i], i) == 0) {
+                            osMotorStop(&pfs[i]);
+                        }
+                    }
+                } else if (D_801241E6 & sRumblePaksPresent & controllerToCheck) {
+                        if (temp->unk4 <= 0) {
+                            D_801241E6 &= ~controllerToCheck;
+                            temp->unk0 = -1;
+                            temp->unk8 = 0;
+                            osMotorStop(&pfs[i]);
+                        } else {
+                            temp->unk4 -= updateRate;
+                            temp->unk8 += updateRate;
+                            if (temp->unk8 < 0) {
+                                continue;
+                            } else if (temp->unk8 >= 601) {
+                                D_801241E6 &= ~controllerToCheck;
+                                temp->unk0 = -1;
+                                temp->unk8 = -300;
+                                osMotorStop(&pfs[i]);
+                            } else {
+                                if (temp->unk2 > 490.0) {
+                                    if (!(D_801241E7 & controllerToCheck)) {
+                                        pfsStatus |= osMotorStart(&pfs[i]);
+                                        D_801241E7 |= controllerToCheck;
+                                    }
+                                } else if (temp->unk2 < 3.6) {
+                                    if (D_801241E7 & controllerToCheck) {
+                                        pfsStatus |= osMotorStop(&pfs[i]);
+                                        D_801241E7 &= ~controllerToCheck;
+                                    }
+                                } else if (temp->unk6 >= 256) {
+                                    if (!(D_801241E7 & controllerToCheck)) {
+                                        pfsStatus |= osMotorStart(&pfs[i]);
+                                        D_801241E7 |= controllerToCheck;
+                                    }
+                                    temp->unk6 -= 256;
+                                } else {
+                                    if (D_801241E7 & controllerToCheck) {
+                                        pfsStatus |= osMotorStop(&pfs[i]);
+                                        D_801241E7 &= ~controllerToCheck;
+                                    }
+                                    temp->unk6 += temp->unk2 + 4;
+                                }
+                                if (1) { } // fakematch
+                            }
+                        }
+                }
+            }
+            if (pfsStatus != 0) {
+                sRumblePaksPresent = 0;
+            }
+            if (D_800DE48C != 0) {
+                D_800DE48C--;
+            }
+        }
+    }
+}
 
 #ifdef NON_EQUIVALENT
 u16 func_80072C54(s32 arg0) {
@@ -836,7 +933,7 @@ void init_controller_paks(void) {
     D_801241E7 = 0xF;
     D_801241E6 = 0xF;
     D_801241E4 = 1;
-    D_801241E8 = 0;
+    gRumbleDetectionTimer = 0;
     D_800DE48C = 1;
     sRumblePaksPresent = 0; //sRumblePaksPresent
     sControllerPaksPresent = 0; //sControllerPaksPresent
