@@ -417,13 +417,13 @@ void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 void render_3d_billboard(Object* obj);
+void func_80011960(Object* obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void gParticlePtrList_flush(void);
 void decrypt_magic_codes(u8 *arg0, s32 length);
-void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);

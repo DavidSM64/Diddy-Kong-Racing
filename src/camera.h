@@ -182,6 +182,7 @@ s32 init_controllers(void);
 void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats);
 void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3, unk80068BF4 *arg4, s32 arg5);
 s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
+void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
 
 // Non Matching
 void func_80066610(void);

@@ -1023,13 +1023,20 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     return 0;
 }
 
-#ifdef NON_EQUIVALENT
-void func_80011960(Object *arg0, s32 arg2, u32 arg3, Object_64 *arg4,
-                    u32 arg5, u32 arg6, u32 arg7, u32 arg8, f32 arg9) {
+void func_80011960(Object* obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8) {
+    s32 hasTexture = FALSE;
+    func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
+    gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+    if (tex != NULL) {
+        hasTexture = TRUE;
+    }
+    func_8007B4E8(&gObjectCurrDisplayList, (TextureHeader* ) tex, (s32) arg6, (s32) arg7);
+    gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
+    gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
+    func_80069A40(&gObjectCurrDisplayList);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_80011960.s")
-#endif
+
 
 #ifdef NON_EQUIVALENT
 //f32 D_800E5550 = 0.01f;
