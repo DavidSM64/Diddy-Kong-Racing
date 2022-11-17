@@ -15,6 +15,9 @@
 #include "racer.h"
 #include "camera.h"
 #include "waves.h"
+#include "game_ui.h"
+#include "weather.h"
+#include "particles.h"
 
 /************ .data ************/
 
@@ -94,7 +97,7 @@ s32 D_8011B104;
 s32 D_8011B108;
 s32 D_8011B10C;
 s32 D_8011B110;
-s32 D_8011B114;
+u32 D_8011B114;
 s32 D_8011B118;
 s32 D_8011B11C;
 s32 D_8011B120[128];
@@ -133,13 +136,13 @@ s32 *D_8011D310;
 s32 D_8011D314;
 s32 D_8011D318;
 s32 D_8011D31C;
-s32 D_8011D320[4];
+s32 *D_8011D320[4];
 unk8011D330 *D_8011D330;
 s32 D_8011D334;
-s32 D_8011D338[4];
+s32 *D_8011D338[4];
 unk8011D348 *D_8011D348;
 s32 D_8011D34C;
-s32 D_8011D350[4];
+s32 *D_8011D350[4];
 unk8011D360 *D_8011D360;
 s32 D_8011D364;
 s32 D_8011D368;
@@ -259,7 +262,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 
 // Regalloc
 #ifdef NON_MATCHING
-extern s32 D_A0000200;
+extern u32 D_A0000200;
 /**
  * The root function for rendering the entire scene
 */
@@ -1271,14 +1274,14 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < arg1->unkA) {
-                func_8007B4C8(&gSceneCurrDisplayList, D_8011D360[i].unk0, temp);
+                func_8007B4C8(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, temp);
                 // I hope we can clean this part up.
-                temp2 = new_var2 = D_8011D360[i].unk4;
+                temp2 = new_var2 = D_8011D360[i].unk4; // Fakematch
                 temp3 = new_var = D_8011D360[i].unk6;
                 temp_a3 = D_8011D360[i+1].unk4 - new_var2;
                 temp_a0 = D_8011D360[i+1].unk6 - new_var;
-                tri = &D_8011D330[new_var2];
-                vtx = &D_8011D348[temp3];
+                tri = (Triangle *) &D_8011D330[new_var2];
+                vtx = (Vertex *) &D_8011D348[temp3];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
                 gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), temp_a3, 1);
                 i++;
@@ -1317,9 +1320,9 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
             D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0D0];
             D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
             while (i < arg1->unkA) {
-                func_8007B4C8(&gSceneCurrDisplayList, D_8011D360[i].unk0, temp);
-                temp2 = D_8011D360[i].unk4; // These are needed here to match.
-                temp3 = D_8011D360[i].unk6;
+                func_8007B4C8(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, temp);
+                temp2 = D_8011D360[i].unk4; // Fakematch
+                temp3 = D_8011D360[i].unk6; // Fakematch
                 temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;
                 temp_a0 = D_8011D360[i+1].unk6 - D_8011D360[i].unk6;
                 tri = &((Triangle *) D_8011D330)[D_8011D360[i].unk4];
@@ -1562,7 +1565,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 #endif
 
 UNUSED void func_80030FA0(void) {
-    D_8011B0B0 = func_80069D20();
+    D_8011B0B0 = (Object *) func_80069D20();
     func_80031018();
     set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
 }
