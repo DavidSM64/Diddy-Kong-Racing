@@ -105,7 +105,7 @@ u8 D_801241E4;
 u8 sRumblePaksPresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4. 1 if a rumble pak is present
 u8 D_801241E6;
 u8 D_801241E7;
-s32 D_801241E8;
+s32 gRumbleDetectionTimer;
 s8 *D_801241EC;
 s32 D_801241F0;
 s32 D_801241F4;
@@ -125,7 +125,7 @@ u8 func_80072250(s32 arg0) {
 void func_80072298(u8 arg0) {
     D_801241E4 = arg0;
     if (arg0 != 0) {
-        D_801241E8 = 0x79;
+        gRumbleDetectionTimer = 0x79;
         D_801241E6 = 0xF;
         return;
     }
@@ -226,9 +226,9 @@ void rumble_controllers(s32 arg0) {
     u8 pfsBitPattern;
 
     if ((D_801241E6 != 0) || ((D_800DE48C != 0))) {
-        D_801241E8 += arg0;
-        if (D_801241E8 >= 121) {
-            D_801241E8 = 0;
+        gRumbleDetectionTimer += arg0;
+        if (gRumbleDetectionTimer >= 121) {
+            gRumbleDetectionTimer = 0;
             osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
             for (i = 0, controllerToCheck = 1; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1) {
                 if ((pfsBitPattern & controllerToCheck) && !(~D_801241E6 & sRumblePaksPresent & controllerToCheck)) {
@@ -921,7 +921,7 @@ void init_controller_paks(void) {
     sUnkMiscAsset19 = (s16 *)get_misc_asset(ASSET_MISC_19);
     D_801241E6 = D_801241E7 = 0xF;
     D_801241E4 = 1;
-    D_801241E8 = 0;
+    gRumbleDetectionTimer = 0;
     D_800DE48C = 1;
     sControllerPaksPresent = sRumblePaksPresent = 0;
 
