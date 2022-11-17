@@ -77,7 +77,8 @@ s32 get_file_type(s32 controllerIndex, s32 fileNum);
 void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2);
 void func_80072348(s16 controllerIndex, u8 arg1);
 void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2);
-void handle_controller_rumble(s32 updateRate);
+void rumble_controllers(s32 arg0);
+void init_controller_paks(void);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
 void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
@@ -89,7 +90,6 @@ s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCha
 u8 func_80074204(s32 arg0, Settings *arg1); //Non Matching
 void func_8007431C(s32 arg0, Settings *arg1); //Non Matching
 s32 func_80072E28(s32, s32); //Non Matching arg2 seems to be many different types
-void init_controller_paks(void); //Non Matching
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.
