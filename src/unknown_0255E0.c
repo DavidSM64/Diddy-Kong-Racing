@@ -1018,9 +1018,9 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002AC00.s")
 
 // These types are probably wrong because the vars are likely still unidentified structs, but the code matches still.
 UNUSED void func_8002ACA0(s32 *arg0, s32 *arg1, s32 *arg2) {
-    *arg0 = D_8011D378;
-    *arg1 = D_8011D370;
-    *arg2 = D_8011D374;
+    *arg0 = (unsigned) D_8011D378;
+    *arg1 = (unsigned) D_8011D370;
+    *arg2 = (unsigned) D_8011D374;
 }
 
 void func_8002ACC8(s32 arg0) {
