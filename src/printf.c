@@ -11,6 +11,7 @@
 #include "stdio.h"
 #include "objects.h"
 #include "particles.h"
+#include "unknown_078050.h"
 
 /************ .data ************/
 
@@ -147,7 +148,7 @@ void func_800B5E88(void) {
     gTexture0 = load_texture(0);
     gTexture1 = load_texture(1);
     gTexture2 = load_texture(2);
-    gDebugPrintBufferEnd = &gDebugPrintBufferStart;
+    gDebugPrintBufferEnd = gDebugPrintBufferStart;
 }
 
 #ifdef NON_EQUIVALENT
@@ -155,7 +156,7 @@ s32 render_printf(const char *format, ...) {
     s32 written;
     va_list args;
     va_start(args, format);
-    if ((gDebugPrintBufferEnd - &gDebugPrintBufferStart) >= 0x801) {
+    if ((gDebugPrintBufferEnd - gDebugPrintBufferStart) >= 0x801) {
         return -1;
     }
     func_800B4A08(1);
@@ -185,7 +186,7 @@ void print_debug_strings(Gfx **dlist) {
     gDPSetScissor((*dlist)++, 0, 0, 0, D_80127CD0, D_80127CD2);
     func_800B6E50();
     gSPDisplayList((*dlist)++, dDebugFontSettings);
-    buffer = gDebugPrintBufferStart;
+    buffer = (char *) gDebugPrintBufferStart;
     func_800B6EE0();
     D_80127CCC = -1;
     D_80127CB4 = 0;
@@ -193,22 +194,22 @@ void print_debug_strings(Gfx **dlist) {
     D_80127CB2 = D_80127CAE;
     while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
         D_80127CB8 = 0;
-        buffer += func_800B653C(dlist, buffer);
+        buffer += func_800B653C(dlist, (s8 *) buffer);
     }
     func_800B695C(dlist, (u16) D_80127CB0, (u16) D_80127CB2, D_80127CAC, D_80127CAE + 10);
-    buffer = gDebugPrintBufferStart;
+    buffer = (char *) gDebugPrintBufferStart;
     func_800B6EE0();
     D_80127CCC = -1;
     D_80127CB4 = 0;
     while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
         D_80127CB8 = 1;
-        buffer += func_800B653C(dlist, buffer);
+        buffer += func_800B653C(dlist, (s8 *) buffer);
     }
     gDebugPrintBufferEnd = gDebugPrintBufferStart;
 }
 
 UNUSED void func_800B61E0(void) {
-    gDebugPrintBufferEnd = &gDebugPrintBufferStart;
+    gDebugPrintBufferEnd = gDebugPrintBufferStart;
     func_800B6EE0();
 }
 

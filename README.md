@@ -122,28 +122,28 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of November 15, 2022, this is our current score:
 ```
-=================================================================
+ =================================================================
               ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------ 37.19% Complete ------------------------
-                   # Decompiled functions: 1336
-                    # GLOBAL_ASM remaining: 500
+ ------------------------ 37.60% Complete ------------------------
+                   # Decompiled functions: 1342
+                    # GLOBAL_ASM remaining: 494
                    # NON_MATCHING functions: 11
-                # NON_EQUIVALENT WIP functions: 94
+                # NON_EQUIVALENT WIP functions: 93
  -------------------------- Game Status --------------------------
              Balloons: 18/47, Keys: 2/4, Trophies: 1/5
               T.T. Amulets: 2/4, Wizpig Amulets: 1/4
  -----------------------------------------------------------------
- We are collecting silver coins in Walrus Cove. (4/8 silver coins)
+ We are collecting silver coins in Walrus Cove. (7/8 silver coins)
  =================================================================
                ADVENTURE TWO (Cleanup & Documentation)
- ------------------------  8.96% Complete ------------------------
-                    # Documented functions: 241
-                  # Undocumented remaining: 1595
+ ------------------------  9.24% Complete ------------------------
+                    # Documented functions: 244
+                  # Undocumented remaining: 1592
  -------------------------- Game Status --------------------------
-             Balloons: 5/47, Keys: 1/4, Trophies: 0/5
+             Balloons: 6/47, Keys: 1/4, Trophies: 0/5
               T.T. Amulets: 0/4, Wizpig Amulets: 0/4
  -----------------------------------------------------------------
-             We are racing in Fossil Canyon. (Lap 3/3)
+             We are racing in Jungle Falls. (Lap 1/3)
  =================================================================
  ```
 <!-- README_SCORE_END -->
