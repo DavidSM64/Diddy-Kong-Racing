@@ -41,11 +41,37 @@ typedef struct LevelObjectEntry_Smoke {
 
 typedef struct LevelObjectEntry_Exit {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 pad8[8];
+    /* 0x08 */ u8 destinationMapId;
+    /* 0x09 */ u8 pad9;
+
+    // Defines the location in overworld the player will spawn at.
+    // Only used if the exit goes to overworld.
+    //   0: Future Fun Land exit (also game start spawn)
+    //   2: Dino Domain exit
+    //   3: Snowflake Mountain exit
+    //   4: Sherbet Island exit
+    //   6: Dragon Forest exit
+    //   7: Wizpig head exit
+    /* 0x0A */ s8 overworldSpawnIndex;
+
+    /* 0x0B */ u8 padB[5];
     /* 0x10 */ u8 unk10;
     /* 0x11 */ u8 unk11;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ s8 unk18;
+    /* 0x12 */ u8 pad12[5];
+    
+    // Defines the location in a hub world the player will spawn at when exiting `destinationMapId`.
+    // Only used if the exit goes to a race.
+    //   0: Hub exit door
+    //   1-4: One of the 4 race doors
+    //   5: Boss door
+    //   6: Minigame door
+    //   7: Wizpig head
+    /* 0x17 */ u8 returnSpawnIndex;
+
+    // -1: Doesn't warp to a boss race
+    // 0: Warps to a boss 1 race
+    // 1: Warps to a boss 2 race
+    /* 0x18 */ s8 bossFlag;
 } LevelObjectEntry_Exit;
 
 typedef struct LevelObjectEntry_Audio {
@@ -114,6 +140,12 @@ typedef struct LevelObjectEntry_Door {
 typedef struct LevelObjectEntry_FogChanger {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ u8 unkA;
+    /* 0x0B */ u8 unkB;
+    /* 0x0C */ s16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ s16 unk10;
 } LevelObjectEntry_FogChanger;
 
 typedef struct LevelObjectEntry_AiNode {
@@ -204,6 +236,12 @@ typedef struct LevelObjectEntry_Buoy_PirateShip {
 typedef struct LevelObjectEntry_Weather {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ s16 unkC;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ u8 unk10;
+    /* 0x11 */ u8 unk11;
+    /* 0x12 */ s16 unk12;
 } LevelObjectEntry_Weather;
 
 typedef struct LevelObjectEntry_Bridge_WhaleRamp {
@@ -387,6 +425,12 @@ typedef struct LevelObjectEntry_DynamicLightingObject {
 
 typedef struct LevelObjectEntry_EffectBox {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ u8 unkA;
+    /* 0x0B */ u8 unkB;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
 } LevelObjectEntry_EffectBox;
 
 typedef struct LevelObjectEntry_TrophyCab {
@@ -468,6 +512,7 @@ typedef struct LevelObjectEntry_Snowball {
 
 typedef struct LevelObjectEntry_Teleport {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ s8 unk8;
 } LevelObjectEntry_Teleport;
 
 typedef struct LevelObjectEntry_Lighthouse_RocketSignpost {
@@ -483,6 +528,8 @@ typedef struct LevelObjectEntry_Windsail {
 
 typedef struct LevelObjectEntry_RangeTrigger {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u16 unk8;
+    /* 0x0A */ u16 unkA;
 } LevelObjectEntry_RangeTrigger;
 
 typedef struct LevelObjectEntry_Fireball_Octoweapon {
@@ -542,5 +589,103 @@ typedef struct LevelObjectEntry8000E2B4 {
     s16 unkC;
     s16 unkE;
 } LevelObjectEntry8000E2B4;
+
+typedef struct LevelObjectEntry80011AD0 {
+    LevelObjectEntryCommon common;
+    u8 pad8[0x6];
+    u8 unkD;
+} LevelObjectEntry80011AD0;
+
+typedef struct LevelObjectEntry {
+    union {
+        LevelObjectEntry_Racer racer;
+        LevelObjectEntry_Scenery scenery;
+        LevelObjectEntry_Fish fish;
+        LevelObjectEntry_Animator animator;
+        LevelObjectEntry_Weapon weapon;
+        LevelObjectEntry_Smoke smoke;
+        LevelObjectEntry_Exit exit;
+        LevelObjectEntry_Audio audio;
+        LevelObjectEntry_AudioLine audioLine;
+        LevelObjectEntry_CameraControl cameraControl;
+        LevelObjectEntry_SetupPoint setupPoint;
+        LevelObjectEntry_Dino_Whale dino_whale;
+        LevelObjectEntry_Checkpoint checkpoint;
+        LevelObjectEntry_Door door;
+        LevelObjectEntry_FogChanger fogChanger;
+        LevelObjectEntry_AiNode aiNode;
+        LevelObjectEntry_WeaponBalloon weaponBalloon;
+        LevelObjectEntry_AudioSeqLine audioSeqLine;
+        LevelObjectEntry_BombExplosion bombExplosion;
+        LevelObjectEntry_WBalloonPop balloonPop;
+        LevelObjectEntry_Unknown25 unk25;
+        LevelObjectEntry_SkyControl skyControl;
+        LevelObjectEntry_AudioReverb audioReverb;
+        LevelObjectEntry_Torch_Mist torch_mist;
+        LevelObjectEntry_TexScroll texScroll;
+        LevelObjectEntry_ModeChange modeChange;
+        LevelObjectEntry_StopWatchMan tt;
+        LevelObjectEntry_Banana banana;
+        LevelObjectEntry_RgbaLight rgbaLighting;
+        LevelObjectEntry_Buoy_PirateShip buoy_pirateShip;
+        LevelObjectEntry_Weather weather;
+        LevelObjectEntry_Bridge_WhaleRamp bridge_whaleRamp;
+        LevelObjectEntry_RampSwitch rampSwitch;
+        LevelObjectEntry_SeaMonster seaMonster;
+        LevelObjectEntry_Bonus bonus;
+        LevelObjectEntry_LensFlare lensFlare;
+        LevelObjectEntry_LensFlareSwitch lensFlareSwitch;
+        LevelObjectEntry_CollectEgg collectEgg;
+        LevelObjectEntry_EggCreator eggCreator;
+        LevelObjectEntry_CharacterFlag characterFlag;
+        LevelObjectEntry_Animation animation;
+        LevelObjectEntry_InfoPoint infoPoint;
+        LevelObjectEntry_Trigger trigger;
+        LevelObjectEntry_AirZippers_WaterZippers airzipper_waterzipper;
+        LevelObjectEntry_Unknown58 unk58;
+        LevelObjectEntry_WaveGenerator waverGenerator;
+        LevelObjectEntry_Butterfly butterfly;
+        LevelObjectEntry_Parkwarden taj;
+        LevelObjectEntry_WorldKey worldKey;
+        LevelObjectEntry_BananaCreator bananaCreator;
+        LevelObjectEntry_TreasureSucker treasureSucker;
+        LevelObjectEntry_Log log;
+        LevelObjectEntry_LavaSpurt lavaSpurt;
+        LevelObjectEntry_PosArrow posArrow;
+        LevelObjectEntry_HitTester hitTester;
+        LevelObjectEntry_MidiFade midiFade;
+        LevelObjectEntry_DynamicLightingObject dynamicLighting;
+        LevelObjectEntry_EffectBox effectBox;
+        LevelObjectEntry_TrophyCab trophyCabinet;
+        LevelObjectEntry_Bubbler bubbler;
+        LevelObjectEntry_FlyCoin flyCoin;
+        LevelObjectEntry_GoldenBalloon goldenBalloon;
+        LevelObjectEntry_Laserbolt laserbolt;
+        LevelObjectEntry_Lasergun lasergun;
+        LevelObjectEntry_GroundZipper groundZipper;
+        LevelObjectEntry_OverridePos overridePos;
+        LevelObjectEntry_WizpigShip wizpigShip;
+        LevelObjectEntry_SilverCoin silverCoin;
+        LevelObjectEntry_Boost boost;
+        LevelObjectEntry_WardenSmoke tajSmoke;
+        LevelObjectEntry_Unknown94 unk94;
+        LevelObjectEntry_Unknown96 unk96;
+        LevelObjectEntry_Snowball snowball;
+        LevelObjectEntry_Teleport teleport;
+        LevelObjectEntry_Lighthouse_RocketSignpost lighthouse_signpost;
+        LevelObjectEntry_Windsail windsail;
+        LevelObjectEntry_RangeTrigger rangeTrigger;
+        LevelObjectEntry_Fireball_Octoweapon fireball_octoweapon;
+        LevelObjectEntry_Frog frog;
+        LevelObjectEntry_SilverCoinAdv2 silverCoinAdv2;
+        LevelObjectEntry_TTDoor ttDoor;
+        LevelObjectEntry_MidiFadePoint midiFadePoint;
+        LevelObjectEntry_OctoBubble octoBubble;
+        LevelObjectEntry_LevelName levelName;
+        LevelObjectEntry_Midichset midichset;
+        LevelObjectEntry8000E2B4 unk8000E2B4;
+        LevelObjectEntry80011AD0 unk80011AD0;
+    };
+} LevelObjectEntry;
 
 #endif

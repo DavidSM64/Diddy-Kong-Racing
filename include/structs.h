@@ -5,6 +5,7 @@
 
 #include "types.h"
 #include "enums.h"
+#include "level_object_entries.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -21,51 +22,6 @@ typedef struct Vec3f {
     f32 f[3];
   };
 } Vec3f;
-
-/* Size: 0x20 bytes */
-typedef struct MenuElement {
-  // Element Position
-  /* 0x00 */ s16 left; // Where the element spawns on entry.
-  /* 0x02 */ s16 top;
-  /* 0x04 */ s16 center; // Value of where the element moves to after entry
-  /* 0x06 */ s16 middle;
-  /* 0x08 */ s16 right; // Value of where the element moves to after exit
-  /* 0x0A */ s16 bottom;
-  // Element Color/Transparency
-  /* 0x0C */ u8 filterRed;
-  /* 0x0D */ u8 filterGreen;
-  /* 0x0E */ u8 filterBlue;
-  /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
-  /* 0x10 */ u8 opacity;
-  // Element Properties
-  /* 0x11 */ u8 textFont;
-  /* 0x12 */ u8 textAlignFlags;
-  // Element Type
-  /* 0x13 */ u8 elementType; // Source type? 0 = ascii text, 2 = number, 7 = texture
-  union {
-  /* 0x14 */ void *element;   // Generic pointer
-  /* 0x14 */ char *asciiText; // Pointer to ascii text to be displayed on the screen.
-  /* 0x14 */ u32 *texture;    // Pointer to texture to be displayed on the screen.
-  /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
-  /* 0x14 */ s32 value;       // Some value for elementType == 5
-  } unk14_a;
-  // Element Background Color/Transparency
-  /* 0x18 */ s16 backgroundRed;
-  /* 0x1A */ s16 backgroundGreen;
-  /* 0x1C */ s16 backgroundBlue;
-  /* 0x1E */ s16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
-} MenuElement;
-
-#define TEX_FORMAT_RGBA32 0
-#define TEX_FORMAT_RGBA16 1
-#define TEX_FORMAT_I8     2
-#define TEX_FORMAT_I4     3
-#define TEX_FORMAT_IA16   4
-#define TEX_FORMAT_IA8    5
-#define TEX_FORMAT_IA4    6
-#define TEX_FORMAT_CI4    7
-#define TEX_FORMAT_CI8    8
 
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
@@ -112,6 +68,51 @@ typedef struct DrawTexture {
     s16 xOffset; // Offset from the center of the screen.
     s16 yOffset; // Offset from the center of the screen.
 } DrawTexture;
+
+/* Size: 0x20 bytes */
+typedef struct MenuElement {
+  // Element Position
+  /* 0x00 */ s16 left; // Where the element spawns on entry.
+  /* 0x02 */ s16 top;
+  /* 0x04 */ s16 center; // Value of where the element moves to after entry
+  /* 0x06 */ s16 middle;
+  /* 0x08 */ s16 right; // Value of where the element moves to after exit
+  /* 0x0A */ s16 bottom;
+  // Element Color/Transparency
+  /* 0x0C */ u8 filterRed;
+  /* 0x0D */ u8 filterGreen;
+  /* 0x0E */ u8 filterBlue;
+  /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
+  /* 0x10 */ u8 opacity;
+  // Element Properties
+  /* 0x11 */ u8 textFont;
+  /* 0x12 */ u8 textAlignFlags;
+  // Element Type
+  /* 0x13 */ u8 elementType; // Source type? 0 = ascii text, 2 = number, 7 = texture
+  union {
+  /* 0x14 */ void *element;   // Generic pointer
+  /* 0x14 */ char *asciiText; // Pointer to ascii text to be displayed on the screen.
+  /* 0x14 */ TextureHeader *texture;    // Pointer to texture to be displayed on the screen.
+  /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
+  /* 0x14 */ s32 value;       // Some value for elementType == 5
+  } unk14_a;
+  // Element Background Color/Transparency
+  /* 0x18 */ s16 backgroundRed;
+  /* 0x1A */ s16 backgroundGreen;
+  /* 0x1C */ s16 backgroundBlue;
+  /* 0x1E */ s16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
+} MenuElement;
+
+#define TEX_FORMAT_RGBA32 0
+#define TEX_FORMAT_RGBA16 1
+#define TEX_FORMAT_I8     2
+#define TEX_FORMAT_I4     3
+#define TEX_FORMAT_IA16   4
+#define TEX_FORMAT_IA8    5
+#define TEX_FORMAT_IA4    6
+#define TEX_FORMAT_CI4    7
+#define TEX_FORMAT_CI8    8
 
 /* Size: 0x18 bytes */
 typedef struct Racer {
@@ -162,50 +163,91 @@ typedef struct Settings4C {
 
 /* Size: 0x118 bytes */
 typedef struct Settings {
+  // Balloon indices:
+  // 0 = Total balloons
+  // 1 = Dino Domain balloons
+  // 2 = Sherbet Island balloons
+  // 3 = Snowflake Mountain balloons
+  // 4 = Dragon Forest balloons
+  // 5 = Future Fun Land balloons
   /* 0x0000 */ s16 *balloonsPtr;
+
+  // Course flag bits:
+  // 0x1                   = Map has been visited.
+  // 0x2                   = Map has been completed.
+  // 0x4                   = Map's silver coin challenge has been completed.
+  // 0x00000000-0xFFFF0000 = Used as bit fields for hub worlds to indicate whether or not a door can open when the player gets near it.
   /* 0x0004 */ s32 *courseFlagsPtr;
+
+  // Key bits:
+  // 0x02 = Dino Domain key
+  // 0x04 = Sherbet Island key
+  // 0x08 = Snowflake Mountain key
+  // 0x10 = Dragon Forest key
   /* 0x0008 */ u16 keys;
+
   /* 0x000A */ u16 unkA;
+
+  // Boss bits:
+  // 0x001 = Wizpig 1
+  // 0x002 = Tricky 1
+  // 0x004 = Bubbler 1
+  // 0x008 = Bluey 1
+  // 0x010 = Smokey 1
+  // 0x020 = Wizpig 2
+  // 0x080 = Tricky 2
+  // 0x100 = Bubbler 2
+  // 0x200 = Bluey 2
+  // 0x400 = Smokey 2
   /* 0x000C */ u16 bosses;
+
+  // Trophy bits:
+  // Bit field 0b00-0b11 = Empty, 3rd, 2nd, and 1st place trophies.
+  // `trophies` consists of 5 of these bit fields, from LSB to MSB, Dino, Sherbet, Snowflake, Dragon, and FFL.
   /* 0x000E */ u16 trophies;
+
+  // Cutscene flags:
+  // 0x1     = Lighthouse rocket cutscene
+  // 0x2     = T.T. help prompt
+  // 0x4     = Adventure 2 flag?
+  // 0x8     = Dino domain boss cutscene
+  // 0x10    = Sherbet island boss cutscene
+  // 0x20    = Snowflake mountain boss cutscene
+  // 0x40    = Dragon forest boss cutscene
+  // 0x80    = Future Fun Land boss cutscene
+  // 0x100   = Dino domain boss cutscene 2
+  // 0x200   = Shertbet island boss cutscene 2
+  // 0x400   = Snowflake mountain boss cutscene 2
+  // 0x800   = Dragon forest boss cutscene 2
+  // 0x2000  = Wizpig face cutscene
+  // 0x4000  = Dino domain key cutscene
+  // 0x8000  = Sherbet Island key cutscene
+  // 0x10000 = Snowflake mountain key cutscene
+  // 0x20000 = Dragon forest key cutscene
   /* 0x0010 */ u32 cutsceneFlags;
-  /* Cutscene flags:
-   * 0x1     = Lighthouse rocket cutscene
-   * 0x2     = T.T. help prompt
-   * 0x4     = Adventure 2 flag?
-   * 0x8     = Dino domain boss cutscene
-   * 0x10    = Sherbet island boss cutscene
-   * 0x20    = Snowflake mountain boss cutscene
-   * 0x40    = Dragon forest boss cutscene
-   * 0x80    = Future Fun Land boss cutscene
-   * 0x100   = Dino domain boss cutscene 2
-   * 0x200   = Shertbet island boss cutscene 2
-   * 0x400   = Snowflake mountain boss cutscene 2
-   * 0x800   = Dragon forest boss cutscene 2
-   * 0x2000  = Wizpig face cutscene
-   * 0x4000  = Dino domain key cutscene
-   * 0x8000  = Sherbet Island key cutscene
-   * 0x10000 = Snowflake mountain key cutscene
-   * 0x20000 = Dragon forest key cutscene
-   */
+  
+  // Taj flags:
+  // 0x1  = Car challenge unlocked
+  // 0x2  = Hover challenge unlocked
+  // 0x4  = Plane challenge unlocked
+  // 0x8  = Car challenge completed
+  // 0x10 = Hover challenge completed
+  // 0x20 = Plane challenge completed
   /* 0x0014 */ u16 tajFlags;
-  /* Taj flags:
-   * 0x1  = Car challenge unlocked
-   * 0x2  = Hover challenge unlocked
-   * 0x4  = Plane challenge unlocked
-   * 0x8  = Car challenge completed
-   * 0x10 = Hover challenge completed
-   * 0x20 = Plane challenge completed
-   */
+  
+  // Not a bitfield, just a  counter from 0-4.
   /* 0x0016 */ u8 ttAmulet;
+  
+  // Not a bitfield, just a  counter from 0-4.
   /* 0x0017 */ u8 wizpigAmulet;
+
   /* 0x0018 */ u16 *flapInitialsPtr[3];
   /* 0x0024 */ u16 *flapTimesPtr[3];
   /* 0x0030 */ u16 *courseInitialsPtr[3];
   /* 0x003C */ u16 *courseTimesPtr[3];
   /* 0x0048 */ u8 worldId;
   /* 0x0049 */ u8 courseId;
-  /* 0x004A */ u8 gObjectCount;
+  /* 0x004A */ u8 gNumRacers;
   /* 0x004B */ u8 newGame;
   /* 0x004C */ Settings4C *unk4C;
   /* 0x0050 */ u32 filename;
@@ -421,30 +463,36 @@ typedef struct ObjectModel_44 {
 } ObjectModel_44;
 
 typedef struct ObjectModel {
-/* 0x00 */ TextureInfo *textures;
-/* 0x04 */ Vertex *vertices;
-/* 0x08 */ Triangle *triangles;
-/* 0x0C */ s32 *unkC;
-/* 0x10 */ s32 *unk10;
-           u8 pad0[0x0B];
-/* 0x1F */ s8 unk1F;
-           u8 pad20[2];
-/* 0x22 */ s16 numberOfTextures;
-/* 0x24 */ s16 numberOfVertices;
-/* 0x26 */ s16 numberOfTriangles;
-/* 0x28 */ s16 numberOfBatches;
-           u8 pad2A[4];
-/* 0x2E */ u8 unk2E;
-/* 0x30 */ s16 unk30;
-           u8 pad32[6];
-/* 0x38 */ TriangleBatchInfo *batches;
-/* 0x3C */ u8 pad3C[4];
-/* 0x40 */ s32 *unk40;
-/* 0x44 */ ObjectModel_44 *animations;
-/* 0x48 */ s16 numberOfAnimations;
-/* 0x4A */ u8 pad4A[6];
-/* 0x50 */ s16 unk50;
-} ObjectModel;
+    /* 0x00 */ TextureInfo* textures;
+    /* 0x04 */ Vertex* vertices;
+    /* 0x08 */ Triangle* triangles;
+    /* 0x0C */ s32* unkC;
+    /* 0x10 */ s32* unk10;
+    /* 0x14 */ u8 unk14[0x4];
+    /* 0x18 */ s32 unk18;
+    /* 0x1A */ s8 unk1A;
+    /* 0x1C */ s8 unk1C;
+    /* 0x1E */ s8 unk1E;
+    /* 0x1F */ s8 unk1F;
+    /* 0x20 */ u8 pad20[2];
+    /* 0x22 */ s16 numberOfTextures;
+    /* 0x24 */ s16 numberOfVertices;
+    /* 0x26 */ s16 numberOfTriangles;
+    /* 0x28 */ s16 numberOfBatches;
+    /* 0x2A */ u8 pad2A[4];
+    /* 0x2E */ u8 unk2E;
+    /* 0x2F */ char pad2F[1];
+    /* 0x30 */ s16 unk30;
+    /* 0x32 */ u8 pad32[6];
+    /* 0x38 */ TriangleBatchInfo* batches;
+    /* 0x3C */ u8 pad3C[4];
+    /* 0x40 */ s32* unk40;
+    /* 0x44 */ ObjectModel_44* animations;
+    /* 0x48 */ s16 numberOfAnimations;
+    /* 0x4A */ u8 pad4A[6];
+    /* 0x50 */ s16 unk50;
+    /* 0x52 */ s16 unk52;
+} ObjectModel;      
 
 /* Size: 0x44 bytes */
 typedef struct LevelModelSegment {
@@ -458,7 +506,9 @@ typedef struct LevelModelSegment {
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
 /* 0x20 */ s16 numberOfBatches;
-           u8 pad22[0x09];
+           u8 pad22[0x06];
+/* 0x28 */ s16 unk28;
+/* 0x2A */ s8 unk2A;
 /* 0x2B */ s8 unk2B;
            u8 pad2C[4];
 /* 0x30 */ s16 unk30;
@@ -513,16 +563,6 @@ typedef struct LevelModel {
 /* 0x48 */ s32 modelSize;
 } LevelModel;
 
-typedef struct Object_3C {
-    u8 pad0[0x2];
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s8 unk8;
-    u8 pad9[0x4];
-    u8 unkD;
-} Object_3C;
-
 typedef enum {
     OBJECT_MODEL_TYPE_3D_MODEL,
     OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
@@ -555,7 +595,9 @@ typedef struct ObjectHeader {
              u8 pad28[8];
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-             u8 pad34[9];
+  /* 0x32 */ s16 unk34;
+  /* 0x32 */ s16 unk36;
+             u8 pad38[5];
   /* 0x3D */ u8 unk3D;
              u8 pad3E[16];
              s16 unk4E; //Used in func_8002A900?
@@ -625,7 +667,7 @@ typedef struct Object_50 {
 } Object_50;
 
 typedef struct Object_54 {
-    s32 unk0;
+    f32 unk0;
     u8 unk4;
     u8 unk5;
     u8 unk6;
@@ -640,6 +682,9 @@ typedef struct Object_54 {
     s16 unk12;
     s16 unk14;
     s16 unk16;
+    u8 unk18;
+    u8 unk19;
+    u8 unk1A;
 } Object_54;
 
 typedef struct Object_5C {
@@ -650,6 +695,8 @@ typedef struct Object_5C {
 typedef struct Object_60 {
     s32 unk0;
     void *unk4; // Object* pointer
+    u8 unk8[0x24];
+    s32 *unk2C;
 } Object_60;
 
 struct Object;
@@ -695,7 +742,8 @@ typedef struct Object_WeaponBalloon {
 } Object_WeaponBalloon;
 
 typedef struct Object_Weapon {
-  /* 0x00 */ u8 pad0[0x18];
+  /* 0x00 */ void *unk0;
+  /* 0x00 */ u8 pad4[0x14];
   /* 0x18 */ u8 unk18;
 } Object_Weapon;
 
@@ -966,8 +1014,8 @@ typedef struct Object_Racer {
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 shieldTimer;
   /* 0x190 */ s16 unk190;
-  /* 0x192 */ s8 unk192;
-  /* 0x193 */ s8 lapCount;
+  /* 0x192 */ s8 checkpoint;
+  /* 0x193 */ s8 lap;
   /* 0x194 */ s8 unk194;
   /* 0x195 */ s8 unk195;
   /* 0x196 */ s16 unk196;
@@ -1111,7 +1159,7 @@ typedef struct Object_Door {
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u8 unk12;
   /* 0x13 */ u8 unk13;
-  /* 0x14 */ u8 unk14;
+  /* 0x14 */ s8 unk14;
 } Object_Door;
 
 typedef struct Object_Trigger {
@@ -1284,7 +1332,8 @@ typedef struct Object_68 {
   };
   /* 0x04 */ s32 *unk4[3];
   /* 0x10 */ s16 unk10;
-  /* 0x14 */ u8 pad14[13];
+  /* 0x14 */ u8 pad14[12];
+  /* 0x1E */ s8 unk1E;
   /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
   /* 0x21 */ s8 unk21;
@@ -1346,7 +1395,7 @@ typedef struct ObjectSegment {
   /* 0x003B */ s8 unk3B;
 
   union {
-    /* 0x003C */ Object_3C* unk3C;
+    /* 0x003C */ LevelObjectEntry* level_entry;
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
@@ -1356,7 +1405,7 @@ typedef struct ObjectSegment {
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  /* 0x0044 */ void *unk44;
+  /* 0x0044 */ s32 *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318

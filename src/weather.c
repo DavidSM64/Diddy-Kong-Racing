@@ -10,6 +10,8 @@
 #include "camera.h"
 #include "unknown_0255E0.h"
 #include "unknown_008C40.h"
+#include "textures_sprites.h"
+#include "math_util.h"
 
 /************ .data ************/
 
@@ -24,11 +26,11 @@ s32 *D_800E28D4 = 0;
 unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // Not sure about typing for the following.
-s32 D_800E2904 = 0;
+Vertex *D_800E2904 = 0;
 s32 D_800E2908 = 0;
 s32 *D_800E290C = NULL;
 s32 *D_800E2910 = NULL;
-s32 *D_800E2914[2] = { NULL, NULL };
+Vertex *D_800E2914[2] = { NULL, NULL };
 s32 *D_800E291C = NULL; // List of Ids
 s32 D_800E2920 = 0;
 
@@ -152,7 +154,7 @@ s32 D_80127C00;
 s32 D_80127C04;
 s32 D_80127C08;
 Gfx *gWeatherDisplayListHead;
-Mtx *D_80127C10;
+Matrix *D_80127C10;
 VertexList *D_80127C14;
 TriangleList *D_80127C18;
 ObjectSegment *D_80127C1C;
@@ -288,7 +290,7 @@ void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
  */
-void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+void process_weather(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     UNUSED s32 unused;
     gWeatherDisplayListHead = *currDisplayList;
     D_80127C10 = *currHudMat;
@@ -321,9 +323,9 @@ void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currH
 
         func_800AC0C8(updateRate, &D_80127BF8); // This is the snow physics that makes it move
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
-            D_800E2904 = (s32) D_800E2914[D_80127C08];
+            D_800E2904 = D_800E2914[D_80127C08];
             func_800AC21C(); // Both of these funcs are needed to render.
-            func_800AC5A4();
+            render_falling_snow();
             D_80127C08 = 1 - D_80127C08;
         }
     }
@@ -335,7 +337,47 @@ void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currH
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC5A4.s")
+
+/**
+ * Load and execute the draw commands for the falling snowflakes, seen with snowy weather enabled.
+ */
+void render_falling_snow(void) {
+    s32 i;
+    u32 mtx;
+
+    if (D_800E28D8.unk8 != NULL) {
+        D_80127C00 = 4;
+        D_80127C04 = 2;
+        if (D_800E2908 >= 4) {
+            i = 0;
+            mtx = (u32) func_80069DB0();
+            gSPMatrix(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
+            gDkrInsertMatrix(gWeatherDisplayListHead++, G_MTX_DKR_INDEX_0, 0);
+            func_8007B4C8(&gWeatherDisplayListHead, D_800E28D8.unk8, 2U);
+            while (i + D_80127C00 < D_800E2908) {
+                mtx = (u32) &D_800E2904[i];
+                gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx), D_80127C00, 0);
+                gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), D_80127C04, 1);
+                i += D_80127C00;
+            }
+            mtx = (u32) &D_800E2904[i];
+            gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx), (D_800E2908 - i), 0);
+            gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - i) >> 1), 1);
+        }
+    }
+}
+
+// Unused
+void func_800AC850(void) {
+    D_800E2A84 = 1;
+}
+
+// Unused
+void func_800AC860(void) {
+    if (D_800E2A80 != 0) {
+        D_800E2A84 = 0;
+    }
+}
 
 void func_800AC880(s32 arg0) {
     if (arg0 == D_800E2A80) {

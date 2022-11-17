@@ -360,7 +360,7 @@ void func_80045128(struct TempStruct2 *header) {
 
     for (i = 0; i < 4; i++) {
         obj = (Object_Racer *) header->unk0[i]->unk64;
-        D_8011D588[i] = obj->lapCount;
+        D_8011D588[i] = obj->lap;
         if (obj->unk1CF != 0) {
             D_8011D588[i] |= 0x40;
         }
@@ -387,7 +387,7 @@ void func_80048C7C(Object* obj, Object_Racer* racer) {
         return;
     }
     if (racer->attackType != ATTACK_SQUISHED) {
-        func_800576E0(obj, racer, 2);
+        drop_bananas(obj, racer, 2);
     }
     play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
     switch (racer->attackType) {
@@ -670,7 +670,7 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
         return;
     }
     if (attackType != ATTACK_SQUISHED) {
-        func_800576E0(obj, racer, 2);
+        drop_bananas(obj, racer, 2);
     }
     racer->unk18C = 360;
     if (racer->unk1C9 == 8) {
@@ -1458,31 +1458,31 @@ void update_player_racer(Object* obj, s32 updateRate) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;
-        tempVar = func_800185E4(tempRacer->unk192, obj, xTemp, yTemp, zTemp, &tempRacer->checkpoint_distance, &tempRacer->unk1C8);
+        tempVar = func_800185E4(tempRacer->checkpoint, obj, xTemp, yTemp, zTemp, &tempRacer->checkpoint_distance, &tempRacer->unk1C8);
         if (tempVar == -100) {
             func_8005C270(tempRacer);
         }
-        temp_v0_16 = func_8001BA1C(tempRacer->unk192, tempRacer->unk1C8);
+        temp_v0_16 = func_8001BA1C(tempRacer->checkpoint, tempRacer->unk1C8);
         if (tempRacer->playerIndex == PLAYER_COMPUTER && temp_v0_16->unk36[tempRacer->unk1CA] == 5 && tempRacer->unk1E5) {
             tempRacer->unk1C8 = 1;
         }
         if (temp_v0_16->unk36[tempRacer->unk1CA] == 6) {
-            tempRacer->lapCount = header->laps + 1;
+            tempRacer->lap = header->laps + 1;
         }
         if (tempVar == 0) {
             if (tempRacer->playerIndex == PLAYER_COMPUTER && temp_v0_16->unk36[tempRacer->unk1CA] == 2) {
                 tempRacer->unk1C8 = 1;
             }
             temp_v0_17 = func_8001BA64();
-            tempRacer->unk192++;
-            if (tempRacer->unk192 >= temp_v0_17) {
-                tempRacer->unk192 = 0;
+            tempRacer->checkpoint++;
+            if (tempRacer->checkpoint >= temp_v0_17) {
+                tempRacer->checkpoint = 0;
                 if (tempRacer->unk190 > 0) {
-                    if (tempRacer->lapCount < 120) {
-                        tempRacer->lapCount++;
+                    if (tempRacer->lap < 120) {
+                        tempRacer->lap++;
                     }
                 }
-                if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->lapCount + 1 == header->laps
+                if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->lap + 1 == header->laps
                     && !D_8011D580 && get_current_level_race_type() == RACETYPE_DEFAULT) {
                     func_800014BC(1.12f);
                     D_8011D580 = 1;
@@ -1490,7 +1490,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             }
             if (func_8002341C()) {
                 if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
-                    temp_v0_16 = func_8001BA1C(tempRacer->unk192, tempRacer->unk1C8);
+                    temp_v0_16 = func_8001BA1C(tempRacer->checkpoint, tempRacer->unk1C8);
                     if (!tempRacer->unk15C) {
                         newObject.x = 0;
                         newObject.y = 0;
@@ -1499,7 +1499,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
                         newObject.size = 8;
                         tempRacer->unk15C = spawn_object(&newObject, 1);
                         if (tempRacer->unk15C) {
-                            tempRacer->unk15C->segment.unk3C_a.unk3C = 0;
+                            tempRacer->unk15C->segment.unk3C_a.level_entry = NULL;
                             tempRacer->unk15C->segment.unk38.half.lower = 128;
                         }
                     }
@@ -1542,7 +1542,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             }
         }
         if (tempRacer->unk188 > 0) {
-            func_800576E0(obj, tempRacer, tempRacer->unk188);
+            drop_bananas(obj, tempRacer, tempRacer->unk188);
         }
         tempRacer->playerIndex = gCurrentPlayerIndex;
         update_player_camera(obj, tempRacer, delta);
@@ -1651,8 +1651,8 @@ void update_player_racer(Object* obj, s32 updateRate) {
         } else {
             tempRacer->unk212 = 0;
         }
-        if (tempRacer->unk194 < tempRacer->lapCount) {
-            tempRacer->unk194 = tempRacer->lapCount;
+        if (tempRacer->unk194 < tempRacer->lap) {
+            tempRacer->unk194 = tempRacer->lap;
         }
     }
 #ifdef PUPPYPRINT_DEBUG
@@ -1795,7 +1795,7 @@ void func_800521C4(Object *obj, Object_Racer *racer, UNUSED s32 arg2) {
 
     foundObj = 0;
     if (func_80023568()) {
-        tempObj = get_object_struct(1);
+        tempObj = get_racer_object(1);
         foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
     }
     if (!foundObj) {
@@ -2325,7 +2325,7 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
     } else {
         if ((racer->squish_timer == 0) || racer->attackType != 4) {
             if ((racer->attackType != 2) && (racer->attackType != 4)) {
-                func_800576E0(obj, racer, 2);
+                drop_bananas(obj, racer, 2);
             }
             racer->unk18C = 360;
             if (racer->unk1C9 == 8) {
@@ -2970,7 +2970,7 @@ void func_800575EC(Object *obj, Object_Racer *racer) {
     guMtxXFMF(mf, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_800576E0.s")
+GLOBAL_ASM("asm/non_matchings/racer/drop_bananas.s")
 
 /**
  * Generate the steer velocity by taking the current steer velocity and getting the difference between the stick tilt.
@@ -3436,8 +3436,8 @@ void func_80059080(UNUSED Object *obj, Object_Racer *racer, f32 *xVel, f32 *yVel
         if (magnitude < 0.0f) {
             magnitude = 0.0f;
         }
-        if (racer->unk192) {}
-        splinePos = racer->unk192 - 2;
+        if (racer->checkpoint) {}
+        splinePos = racer->checkpoint - 2;
         if (splinePos < 0) {
             splinePos += splineEnd;
         }
@@ -3499,21 +3499,21 @@ void func_80059984(s32 arg0) {
     D_8011D5AC = arg0;
 }
 
-s32 func_800599A8(void) {
+MapId func_800599A8(void) {
     return D_8011D5AC;
 }
 
-s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s16 *arg3, s16 *arg4) {
+s32 func_800599B8(s32 arg0, MapId mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s32 temp_v0;
     s32 temp_t8;
     s16 sp2E;
 
     temp_t8 = (D_8011D59C + 1) & 1;
-    temp_v0 = func_80074B34(arg0, (s16)arg1, arg2, arg3, arg4, &sp2E, gGhostData[temp_t8]);
+    temp_v0 = func_80074B34(arg0, (s16)mapId, arg2, arg3, arg4, &sp2E, gGhostData[temp_t8]);
     if (arg3 != 0) {
         if (temp_v0 == 0) {
             D_8011D5A0[temp_t8] = sp2E;
-            D_8011D5AC = arg1;
+            D_8011D5AC = mapId;
         } else {
             D_8011D5AC = -1;
         }
@@ -3553,8 +3553,8 @@ void free_tt_ghost_data(void) {
     gGhostData[2] = NULL;
 }
 
-s32 func_80059B7C(s32 controllerIndex, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
-    return func_80075000(controllerIndex, (s16)arg1, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
+s32 func_80059B7C(s32 controllerIndex, MapId mapId, s16 arg2, s16 arg3, s16 arg4) {
+    return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80059BF0.s")
@@ -3639,7 +3639,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     if (racer->transitionTimer > 0) {
         racer->transitionTimer -= updateRate;
         if (racer->transitionTimer <= 0) {
-            func_8006D968((s8* ) racer->unk108->segment.unk3C_a.unk3C);
+            func_8006D968((s8* ) racer->unk108->segment.unk3C_a.level_entry);
             racer->transitionTimer = 0;
         }
     }
@@ -3817,12 +3817,12 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         sp80 = racer->checkpoint_distance;
-        countOfObjects = racer->unk192;
-        var_t2 = func_800185E4(racer->unk192, obj, xPos, yPos, zPos, &racer->checkpoint_distance, &racer->unk1C8);
+        countOfObjects = racer->checkpoint;
+        var_t2 = func_800185E4(racer->checkpoint, obj, xPos, yPos, zPos, &racer->checkpoint_distance, &racer->unk1C8);
         if (var_t2 == -100) {
             func_8005C270(racer);
         }
-        temp_v0_9 = func_8001BA1C(racer->unk192, racer->unk1C8);
+        temp_v0_9 = func_8001BA1C(racer->checkpoint, racer->unk1C8);
         if (temp_v0_9->unk36[racer->unk1CA] == 5) {
             racer->unk201 = 30;
             if (racer->unk1E5 != 0) {
@@ -3830,7 +3830,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             }
         }
         if (temp_v0_9->unk36[racer->unk1CA] == 6) {
-            racer->lapCount = levelHeader->laps + 1;
+            racer->lap = levelHeader->laps + 1;
         }
         if (temp_v0_9->unk36[racer->unk1CA] == 4) {
             if (racer->velocity < -4.0f) {
@@ -3842,12 +3842,12 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                 racer->unk1C8 = 1;
             }
             temp_v0_10 = func_8001BA64();
-            racer->unk192++;
-            if (racer->unk192 >= temp_v0_10) {
-                racer->unk192 = 0;
+            racer->checkpoint++;
+            if (racer->checkpoint >= temp_v0_10) {
+                racer->checkpoint = 0;
                 if (racer->unk190 > 0) {
-                    if (racer->lapCount < 120) {
-                        racer->lapCount++;
+                    if (racer->lap < 120) {
+                        racer->lap++;
                     }
                 }
             }
@@ -3878,7 +3878,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     func_80018CE0(obj, xPos, yPos, zPos, updateRate);
     if (racer->unk188 > 0) {
-        func_800576E0(obj, racer, racer->unk188);
+        drop_bananas(obj, racer, racer->unk188);
     }
     if (racer->unk148 != NULL) {
         racer->unk148 = NULL;
@@ -4042,7 +4042,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->velocity += ((-var_f12 - racer->velocity) * 0.25f);
         }
         var_a3 = &spD8;
-        var_a0 = racer->unk192 - 2;
+        var_a0 = racer->checkpoint - 2;
         var_t1 = &spB8;
         if (var_a0 < 0) {
             var_a0 += sp11C;
@@ -4111,13 +4111,13 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         racer->checkpoint_distance = (1 - var_f22);
         if (var_s2 != 0) {
-            racer->unk192 += 1;
-            if (racer->unk192 >= sp11C) {
-                racer->unk192 = 0;
+            racer->checkpoint += 1;
+            if (racer->checkpoint >= sp11C) {
+                racer->checkpoint = 0;
                 if (racer->unk190 > 0) {
-                    temp_v0_3 = racer->lapCount;
+                    temp_v0_3 = racer->lap;
                     if (temp_v0_3 < 0x78) {
-                        racer->lapCount = temp_v0_3 + 1;
+                        racer->lap = temp_v0_3 + 1;
                     }
                 }
             }
@@ -4207,11 +4207,11 @@ void antipiracy_modify_surface_traction_table(void) {
 void func_8005C270(Object_Racer *racer) {
     s32 temp = func_8001BA64();
 
-    racer->unk192--;
-    if (racer->unk192 < 0) {
-        racer->unk192 += temp;
-        if (racer->lapCount > 0) {
-            racer->lapCount--;
+    racer->checkpoint--;
+    if (racer->checkpoint < 0) {
+        racer->checkpoint += temp;
+        if (racer->lap > 0) {
+            racer->lap--;
         }
     }
 

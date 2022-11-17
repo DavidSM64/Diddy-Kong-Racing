@@ -1,6 +1,6 @@
 glabel func_8001A7D8
-/* 01B3D8 8001A7D8 3C0E8012 */  lui   $t6, %hi(D_8011AEE8) # $t6, 0x8012
-/* 01B3DC 8001A7DC 8DCEAEE8 */  lw    $t6, %lo(D_8011AEE8)($t6)
+/* 01B3D8 8001A7D8 3C0E8012 */  lui   $t6, %hi(gRacersByPosition) # $t6, 0x8012
+/* 01B3DC 8001A7DC 8DCEAEE8 */  lw    $t6, %lo(gRacersByPosition)($t6)
 /* 01B3E0 8001A7E0 2401FFFF */  li    $at, -1
 /* 01B3E4 8001A7E4 8DCF0000 */  lw    $t7, ($t6)
 /* 01B3E8 8001A7E8 3C038012 */  lui   $v1, %hi(D_8011ADC4) # $v1, 0x8012

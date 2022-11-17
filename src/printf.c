@@ -11,6 +11,7 @@
 #include "stdio.h"
 #include "objects.h"
 #include "particles.h"
+#include "unknown_078050.h"
 
 /************ .data ************/
 
@@ -66,8 +67,8 @@ const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Pri
 extern TextureHeader *gTexture0;
 extern TextureHeader *gTexture1;
 extern TextureHeader *gTexture2;
-extern u8 D_80127CD8;
-extern u8 *D_801285D8;
+extern u8 gDebugPrintBufferStart[];
+extern u8 *gDebugPrintBufferEnd;
 
 /******************************/
 
@@ -77,7 +78,7 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B34B0.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
 
-UNUSED void func_800B3678(Gfx **arg0, Mtx **arg1, VertexList **arg2) {
+UNUSED void func_800B3678(Gfx **arg0, Matrix **arg1, VertexList **arg2) {
     UNUSED s32 pad;
     UNUSED s32 pad2;
     Object **temp_s0;
@@ -147,7 +148,7 @@ void func_800B5E88(void) {
     gTexture0 = load_texture(0);
     gTexture1 = load_texture(1);
     gTexture2 = load_texture(2);
-    D_801285D8 = &D_80127CD8;
+    gDebugPrintBufferEnd = gDebugPrintBufferStart;
 }
 
 #ifdef NON_EQUIVALENT
@@ -155,14 +156,14 @@ s32 render_printf(const char *format, ...) {
     s32 written;
     va_list args;
     va_start(args, format);
-    if ((D_801285D8 - &D_80127CD8) >= 0x801) {
+    if ((gDebugPrintBufferEnd - gDebugPrintBufferStart) >= 0x801) {
         return -1;
     }
     func_800B4A08(1);
-    written = sprintf(D_801285D8, format, args);
+    written = sprintf(gDebugPrintBufferEnd, format, args);
     func_800B4A08(0);
     if (written > 0) {
-        D_801285D8 = &D_801285D8[written] + 1;
+        gDebugPrintBufferEnd = &gDebugPrintBufferEnd[written] + 1;
     }
     return 0;
 }
@@ -170,10 +171,45 @@ s32 render_printf(const char *format, ...) {
 GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/printf/print_debug_strings.s")
+/**
+ * At the end of a frame, iterate through the debug text buffer and print it on screen.
+ * Soft-clear the buffer afterwards by setting the endpoint to the start point.
+ */
+void print_debug_strings(Gfx **dlist) {
+    char *buffer;
+    u32 widthAndHeight;
+
+    init_rdp_and_framebuffer(dlist);
+    widthAndHeight = get_video_width_and_height_as_s32();
+    D_80127CD2 = (widthAndHeight >> 0x10);
+    D_80127CD0 = widthAndHeight & 0xFFFF;
+    gDPSetScissor((*dlist)++, 0, 0, 0, D_80127CD0, D_80127CD2);
+    func_800B6E50();
+    gSPDisplayList((*dlist)++, dDebugFontSettings);
+    buffer = (char *) gDebugPrintBufferStart;
+    func_800B6EE0();
+    D_80127CCC = -1;
+    D_80127CB4 = 0;
+    D_80127CB0 = D_80127CAC;
+    D_80127CB2 = D_80127CAE;
+    while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
+        D_80127CB8 = 0;
+        buffer += func_800B653C(dlist, (s8 *) buffer);
+    }
+    func_800B695C(dlist, (u16) D_80127CB0, (u16) D_80127CB2, D_80127CAC, D_80127CAE + 10);
+    buffer = (char *) gDebugPrintBufferStart;
+    func_800B6EE0();
+    D_80127CCC = -1;
+    D_80127CB4 = 0;
+    while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
+        D_80127CB8 = 1;
+        buffer += func_800B653C(dlist, (s8 *) buffer);
+    }
+    gDebugPrintBufferEnd = gDebugPrintBufferStart;
+}
 
 UNUSED void func_800B61E0(void) {
-    D_801285D8 = &D_80127CD8;
+    gDebugPrintBufferEnd = gDebugPrintBufferStart;
     func_800B6EE0();
 }
 
@@ -201,5 +237,54 @@ GLOBAL_ASM("asm/non_matchings/printf/set_render_printf_position.s")
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B63F4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B695C.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B69FC.s")
+
+void func_800B695C(Gfx **dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4) {
+    if (!((arg1 == arg3) | (arg2 == arg4))) {
+        if (arg1 >= 2) {
+            arg1 -= 2;
+        }
+        arg3 += 2;
+        gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+        gDPFillRectangle((*dList)++, arg1, arg2, arg3, arg4);
+    }
+}
+
+s32 func_800B69FC(Gfx **dlist, s32 arg1) {
+    s32 temp_a3;
+    s32 temp_a2;
+    u8* temp_v0_22;
+
+    if (arg1 < 64) {
+        if (D_80127CCC != 0) {
+            if (D_80127CB8 != 0) {
+                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture0 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
+            }
+            D_80127CCC = 0;
+        }
+        arg1 -= 33;
+    } else if (arg1 < 96) {
+        if (D_80127CCC != 1) {
+            if (D_80127CB8) {
+                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture1 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 248, 11, 0, 2, 2, 0, 0, 0, 0);
+            }
+            D_80127CCC = 1;
+        }
+        arg1 -= 64;
+    } else if (arg1 < 128) {
+        arg1 -= 96;
+        if (D_80127CCC != 2) {
+            if (D_80127CB8 != 0) {
+                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture2 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
+            }
+            D_80127CCC = 2;
+        }
+    }
+    temp_v0_22 = &D_800E2EF4[(D_80127CCC << 6) + (arg1 * 2)];
+    temp_a2 = temp_v0_22[0];
+    temp_a3 = (temp_v0_22[1] - temp_a2) + 1;
+    if (D_80127CB8) {
+        gDPSetCombineMode((*dlist)++, DKR_CC_UNK12, DKR_CC_UNK12);
+        gSPTextureRectangle((*dlist)++, (D_80127CAC << 2), (D_80127CAE << 2), ((D_80127CAC + temp_a3) << 2), ((D_80127CAE + 10) << 2), 0, (temp_a2 << 5), 0, 1024, 1024);
+    }
+    return temp_a3;
+}

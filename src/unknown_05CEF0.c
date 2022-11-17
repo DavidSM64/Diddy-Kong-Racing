@@ -172,7 +172,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             break;
     }
 
-    temp_v0_4 = get_object_struct(0);
+    temp_v0_4 = get_racer_object(0);
     temp_f20 = temp_v0_4->segment.trans.x_position - obj->segment.trans.x_position;
     temp_f14 = temp_v0_4->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14)) < 700.0f) {
@@ -250,9 +250,9 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
     s32 bossId;
     s32 racerUnk1AC;
     s8 *miscAsset67;
-    s32 miscAsset68Byte5;
-    s32 miscAsset68Byte6;
-    s32 miscAsset68Byte7;
+    MapId miscAsset68Byte5;
+    MapId miscAsset68Byte6;
+    MapId miscAsset68Byte7;
     s8 miscAsset67CourseByte;
     s32 var_t1;
     s32 i;
@@ -295,21 +295,21 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             }
             if (settings->worldId == WORLD_CENTRAL_AREA) {
                 if (racerUnk1AC == 1) {
-                    func_8006C1AC(-2, 0, 0, 0);
+                    func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
                     func_8006C1AC(miscAsset68Byte5, 0, -1, 0);
                     func_8006C1AC(miscAsset67CourseByte, 0, -1, 1);
                 } else {
-                    func_8006C1AC(-10, 0, 0, 0);
+                    func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
                     func_8006C1AC(miscAsset67CourseByte, 0, -1, 2);
                 }
             } else if (racerUnk1AC == 1) {
                 set_eeprom_settings_value(1); //Set Adventure Two Unlocked
-                func_8006C1AC(-2, 0, 0, 0);
+                func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
                 func_8006C1AC(miscAsset68Byte7, 0, -1, 0);
                 func_8006C1AC(miscAsset68Byte6, 0, -1, 0);
                 func_8006C1AC(miscAsset67CourseByte, 0, -1, 1);
             } else {
-                func_8006C1AC(-10, 0, 0, 0);
+                func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
                 func_8006C1AC(miscAsset67CourseByte, 0, -1, 2);
             }
             if (racerUnk1AC == 1) {
@@ -339,7 +339,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             settings->courseFlagsPtr[settings->courseId] |= 2;
             if (!(settings->bosses & bossId)) {
                 settings->bosses |= bossId;
-                func_8006C1AC(-1, 0, 0, 0);
+                func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                 func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
             } else if (!(settings->bosses & (bossId << 6))) {
                 settings->bosses |= bossId << 6;
@@ -352,21 +352,21 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     settings->wizpigAmulet = var_t1;
                 }
                 if (var_t1 != 0) {
-                    func_8006C1AC(-1, 0, 0, 0);
+                    func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                     func_8006C1AC(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1, settings->wizpigAmulet - 1);
                     func_8006C1AC(miscAsset67CourseByte, 6, -1, 6);
                 } else {
-                    func_8006C1AC(-1, 0, 0, 0);
+                    func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                     func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
                 }
             } else {
-                func_8006C1AC(-1, 0, 0, 0);
+                func_8006C1AC((MapId)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
                 func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
             }
             func_8006F140(4);
             func_8000E128();
         } else {
-            func_8006C1AC(-10, 0, 0, 0);
+            func_8006C1AC((MapId)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
             func_8006C1AC(miscAsset67CourseByte, 5, -1, 5);
             func_8006F140(3);
         }
@@ -380,7 +380,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
 #endif
 
 void func_8005D048(Object *object, Object_Racer *arg1, s32 arg2) {
-    Object *sp1C = get_object_struct(0);
+    Object *sp1C = get_racer_object(0);
     arg1->transparency = 0xFF;
     if (!func_8001139C()) {
         if ((object->segment.unk30 + arg2) < sp1C->segment.unk30) {

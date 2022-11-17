@@ -415,7 +415,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
  * over the colour buffer. DrawBG if set to 0 (which never happens) will completely skip
  * over clearing the colour buffer.
 */
-void render_background(Gfx **dlist, Mtx *mtx, s32 drawBG) {
+void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
     s32 widthAndHeight;
     s32 w;
     s32 h;

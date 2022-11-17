@@ -72,7 +72,7 @@ typedef enum MENU_ID {
     MENU_UNUSED_2,
     MENU_CHARACTER_SELECT,
     MENU_UNUSED_4,
-    MENU_UNKNOWN_5,
+    MENU_TRACK_SELECT_ADVENTURE,
     MENU_FILE_SELECT,
     MENU_UNUSED_7,
     MENU_UNUSED_8,
@@ -173,7 +173,7 @@ typedef struct unk800DFA3C {
     u8  unk9;
     u8  unkA;
     u8  unkB;
-    u32* unkC;
+    char *unkC;
 } unk800DFA3C;
 
 typedef struct ButtonElement {
@@ -264,6 +264,7 @@ typedef struct TitleScreenDemos {
 
 #define X_TILE_SIZE 320
 
+/* Size 0x10 bytes */
 typedef struct TrackRenderDetails {
   /* 0x00 */ u8 *hubName;
   /* 0x04 */ u8 *trackName;
@@ -312,7 +313,7 @@ extern s32 D_800DF4B4;
 extern s32 gIsInTracksMode;
 extern s32 gNumberOfActivePlayers;
 extern s32 gIsInTwoPlayerAdventure;
-extern s32 gTrackIdForPreview;
+extern MapId gTrackIdForPreview;
 extern s32 gTrackSelectRow;
 extern s32 gSaveFileIndex;
 
@@ -680,7 +681,7 @@ extern char *sInsertControllerPakMenuText[3];
 extern char *sNoControllerPakMenuText[5];
 extern char *sInsertRumblePakMenuText[4];
 extern s32 *D_80126C2C;
-extern Settings *D_80126530[4];
+extern Settings *gSavefileData[4];
 
 extern DrawTexture D_800DFC10[2];
 extern DrawTexture D_800DFC20[2];
@@ -689,7 +690,7 @@ extern DrawTexture D_800DFC40[2];
 extern DrawTexture D_800DFC50[2];
 extern DrawTexture D_800DFC60[2];
 extern Gfx *sMenuCurrDisplayList;
-extern Mtx *sMenuCurrHudMat;
+extern Matrix *sMenuCurrHudMat;
 extern const char D_800E8208[];
 extern s32 gOptionBlinkTimer;
 extern s32 D_801263E0;
@@ -714,7 +715,6 @@ extern s8 gPlayerSelectVehicle[4];
 extern s16 gFFLUnlocked;
 extern s32 gOpacityDecayTimer;
 extern s32 gTrackSelectViewportY;
-//extern s32 D_801268E8[12];
 extern s16 gFFLUnlocked;
 extern s32 D_80126924;
 extern s32 D_80126928;
@@ -730,7 +730,7 @@ void func_8007FF88(void);
 void func_80080E6C(void);
 void func_800813C0(void);
 void menu_init(u32 menuId);
-s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+s32 menu_loop(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
 void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
@@ -776,8 +776,8 @@ void assign_vehicle_icon_textures(void);
 void func_8008E4B0(void);
 void func_8008F534(void);
 void func_80090ED8(s32 updateRate);
-s32 func_80092BE0(s32 arg0);
-void menu_5_init(void);
+s32 func_80092BE0(MapId mapId);
+void menu_adventure_track_init(void);
 void func_80093A0C(void);
 void n_alSynRemovePlayer(void);
 void n_alSeqpDelete(void);
@@ -843,7 +843,7 @@ s32 dialogue_race_defeat(void);
 s32 trophy_race_cabinet_menu_loop(void);
 void dialogue_open_stub(void);
 void dialogue_close_stub(void);
-f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Mtx **mat, VertexList **vtx);
+f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Matrix **mat, VertexList **vtx);
 u64 *get_eeprom_settings_pointer(void);
 s32 set_eeprom_settings_value(u64 valueToSet);
 s32 unset_eeprom_settings_value(u64 valueToUnset);
@@ -858,7 +858,7 @@ s32 is_drumstick_unlocked(void);
 s32 menu_character_select_loop(s32 updateRate);
 s32 menu_caution_loop(s32 updateRate);
 void func_8008DC7C(UNUSED s32 updateRate);
-s32 menu_5_loop(s32 updateRate);
+s32 menu_adventure_track_loop(s32 updateRate);
 void func_80095624(s32 status);
 s32 menu_boot_loop(s32 arg0);
 void menu_magic_codes_init(void);
@@ -878,6 +878,8 @@ void func_8008C168(s32 updateRate);
 void func_8008C698(s32 updateRate);
 void func_80083098(f32);
 void func_8008F00C(s32);
+void render_track_selection_viewport_border(ObjectModel *objMdl);
+void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -922,7 +924,6 @@ void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
 void func_8006F564(s8 arg0);
 void func_80099E8C(s32 updateRate);
-void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
@@ -933,6 +934,8 @@ void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg
 //Possible names
 //void renderTrackSelect(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 s32 func_80095728(Gfx **gfx, Mtx **mtx, VertexList **vtx, s32 updateRate);
+s32 func_8008F618(Gfx **dlist, Mtx **mat);
+void func_80093D40(UNUSED s32 updateRate);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,

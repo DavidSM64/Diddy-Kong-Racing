@@ -21,7 +21,7 @@ glabel render_rain_splashes
 /* 0AE2A4 800AD6A4 29014001 */  slti  $at, $t0, 0x4001
 /* 0AE2A8 800AD6A8 142000C0 */  bnez  $at, .L800AD9AC
 /* 0AE2AC 800AD6AC 00000000 */   nop   
-/* 0AE2B0 800AD6B0 0C006EC6 */  jal   func_8001BB18
+/* 0AE2B0 800AD6B0 0C006EC6 */  jal   get_racer_object_by_port
 /* 0AE2B4 800AD6B4 AFA8007C */   sw    $t0, 0x7c($sp)
 /* 0AE2B8 800AD6B8 3C06800E */  lui   $a2, %hi(D_800E2C84) # $a2, 0x800e
 /* 0AE2BC 800AD6BC 24C62C84 */  addiu $a2, %lo(D_800E2C84) # addiu $a2, $a2, 0x2c84
@@ -272,7 +272,7 @@ glabel render_rain_splashes
 /* 0AE65C 800ADA5C 24C67C14 */  addiu $a2, %lo(D_80127C14) # addiu $a2, $a2, 0x7c14
 /* 0AE660 800ADA60 24A57C10 */  addiu $a1, %lo(D_80127C10) # addiu $a1, $a1, 0x7c10
 /* 0AE664 800ADA64 02003825 */  move  $a3, $s0
-/* 0AE668 800ADA68 0C01A145 */  jal   func_80068514
+/* 0AE668 800ADA68 0C01A145 */  jal   render_sprite_billboard
 /* 0AE66C 800ADA6C AFAC0010 */   sw    $t4, 0x10($sp)
 .L800ADA70:
 /* 0AE670 800ADA70 3C0E800E */  lui   $t6, %hi(gRainGfx) # $t6, 0x800e

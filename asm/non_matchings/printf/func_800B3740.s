@@ -110,7 +110,7 @@ glabel func_800B3740
 /* 0B44DC 800B38DC AFAA0038 */  sw    $t2, 0x38($sp)
 /* 0B44E0 800B38E0 AFA20034 */  sw    $v0, 0x34($sp)
 /* 0B44E4 800B38E4 AFAB0014 */  sw    $t3, 0x14($sp)
-/* 0B44E8 800B38E8 0C01A145 */  jal   func_80068514
+/* 0B44E8 800B38E8 0C01A145 */  jal   render_sprite_billboard
 /* 0B44EC 800B38EC AFA80010 */   sw    $t0, 0x10($sp)
 /* 0B44F0 800B38F0 8FA20034 */  lw    $v0, 0x34($sp)
 /* 0B44F4 800B38F4 8FAA0038 */  lw    $t2, 0x38($sp)

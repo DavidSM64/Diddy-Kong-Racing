@@ -83,7 +83,7 @@ glabel func_800138A8
 /* 0145E8 800139E8 2484AE8C */  addiu $a0, %lo(gObjectCurrDisplayList) # addiu $a0, $a0, -0x5174
 /* 0145EC 800139EC 02003825 */  move  $a3, $s0
 /* 0145F0 800139F0 AFB80014 */  sw    $t8, 0x14($sp)
-/* 0145F4 800139F4 0C01A145 */  jal   func_80068514
+/* 0145F4 800139F4 0C01A145 */  jal   render_sprite_billboard
 /* 0145F8 800139F8 AFAF0010 */   sw    $t7, 0x10($sp)
 /* 0145FC 800139FC 8FBF0024 */  lw    $ra, 0x24($sp)
 /* 014600 80013A00 8FB00020 */  lw    $s0, 0x20($sp)

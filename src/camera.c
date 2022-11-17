@@ -9,6 +9,7 @@
 #include "video.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "math_util.h"
+#include "weather.h"
 
 extern u32 osTvType;
 
@@ -49,9 +50,8 @@ ScreenViewport gScreenViewports[4] = {
 
 s32 D_800DD134 = 0;
 
-// Not sure about the typing here
-UNUSED s16 D_800DD138[8] = {
-    0, 0, 0, -1, -1, 0, 0, 0
+Vertex D_800DD138 = {
+    0, 0, 0, 255, 255, 255, 255
 };
 
 // RSP Viewports
@@ -244,7 +244,7 @@ s32 get_object_render_stack_pos(void) {
     return gObjectRenderStackPos;
 }
 
-void func_80066230(Gfx **dlist, Mtx **mats) {
+void func_80066230(Gfx **dlist, Matrix **mats) {
     ObjectSegment *someStruct;
     s16 sp2A;
     s16 sp28;
@@ -608,7 +608,7 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
-void func_80066CDC(Gfx **dlist, Mtx **mats) {
+void func_80066CDC(Gfx **dlist, Matrix **mats) {
     u32 sp58;
     u32 sp54;
     u32 sp4C;
@@ -743,9 +743,98 @@ void func_80066CDC(Gfx **dlist, Mtx **mats) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/camera/func_80067A3C.s")
+void func_80067A3C(Gfx **dlist) {
+    s32 size;
+    s32 lrx;
+    s32 lry;
+    s32 ulx;
+    s32 uly;
+    s32 numViewports;
+    s32 temp;
+    s32 temp2;
+    s32 temp3;
+    s32 temp4;
+    s32 width;
+    s32 height;
 
-void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats) {
+    size = get_video_width_and_height_as_s32();
+    height = (u16) GET_VIDEO_HEIGHT(size);
+    width = (u16) size;
+    numViewports = gNumberOfViewports;
+
+    if (numViewports != 0) {
+        if (numViewports == 2) {
+            numViewports = 3;
+        }
+        lrx = ulx = 0;
+        lry = uly = 0;
+        lrx += width;\
+        lry += height;
+        temp = lry >> 7;
+        temp2 = lrx >> 8;
+        temp4 = lrx >> 1;
+        temp3 = lry >> 1;
+        switch (numViewports) {
+            case 1:
+                switch (gObjectRenderStackPos) {
+                    case 0:
+                        lry = temp3 - temp;
+                        break;
+                    default:
+                        uly = temp3 + temp;
+                        lry -= temp;
+                        break;
+                }
+                break;
+
+            case 2:
+                switch (gObjectRenderStackPos) {
+                    case 0:
+                        lrx = temp4 - temp2;
+                        break;
+
+                    default:
+                        ulx = temp4 + temp2;
+                        lrx -= temp2;
+                        break;
+                }
+                break;
+
+            case 3:
+                switch (gObjectRenderStackPos) {
+                    case 0:
+                        lrx = temp4 - temp2;\
+                        lry = temp3 - temp;
+                        break;
+
+                    case 1:
+                        ulx = temp4 + temp2;
+                        lrx -= temp2;
+                        lry = temp3 - temp;
+                        break;
+
+                    case 2:
+                        uly = temp3 + temp;
+                        lrx = temp4 - temp2;\
+                        lry -= temp;
+                        break;
+
+                    case 3:
+                        ulx = temp4 + temp2; \
+                        uly = temp3 + temp;
+                        lrx -= temp2; \
+                        lry -= temp;
+                        break;
+                }
+                break;
+        }
+        gDPSetScissor((*dlist)++, 0, ulx, uly, lrx, lry);
+        return;
+    }
+    gDPSetScissor((*dlist)++, 0, 0, 0, width, height);
+}
+
+void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
     s32 temp;
 
     gSPPerspNormalize((*dlist)++, perspNorm);
@@ -790,12 +879,11 @@ void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats) {
  * Sets the Y value of the Y axis in the matrix to the passed value.
  * This is used to vertically scale ortho geometry to look identical across NTSC and PAL systems.
  */
-
 void set_ortho_matrix_height(f32 value) {
     gOrthoMatrix[1][1] = value;
 }
 
-void func_80067F2C(Gfx **dlist, Mtx **mats) {
+void func_80067F2C(Gfx **dlist, Matrix **mats) {
     u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
@@ -822,7 +910,7 @@ void func_80067F2C(Gfx **dlist, Mtx **mats) {
     }
 }
 
-void func_8006807C(Gfx **dlist, Mtx **mats) {
+void func_8006807C(Gfx **dlist, Matrix **mats) {
     func_8006FE74(&D_80121060, &D_800DD288);
     func_8006F768(&D_80121060, &D_80120EE0, &D_80120F20);
     func_8006FE74(D_80120D70[0], &D_800DD2A0);
@@ -867,7 +955,7 @@ void func_800682AC(Gfx **dlist) {
     gObjectRenderStackPos = 0;
 }
 
-void func_80068408(Gfx **dlist, Mtx **mats) {
+void func_80068408(Gfx **dlist, Matrix **mats) {
     func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
     func_8006F870(&D_80121060, (Matrix *)*mats);
@@ -879,7 +967,117 @@ void func_80068508(s32 arg0) {
     D_80120D0C = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/camera/func_80068514.s")
+/**
+ * Calculates angle from object to camera, then renders the sprite as a billboard, facing the camera.
+ */
+s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags) {
+    f32 sp5C;
+    f32 sp58;
+    Vertex *v;
+    f32 sp50;
+    f32 sp4C;
+    f32 temp_f0;
+    f32 sp44;
+    f32 var_f20;
+    s32 sp3C;
+    s32 sp38;
+    s32 sp34;
+    s32 result;
+    s32 var_s2;
+
+    result = TRUE;
+    if (flags & 1) {
+        sp5C = D_80120D28[D_80120D20] - obj->segment.trans.x_position;
+        sp58 = D_80120D40[D_80120D20] - obj->segment.trans.y_position;
+        var_f20 = D_80120D58[D_80120D20] - obj->segment.trans.z_position;
+        sp4C = cosine_s(obj->segment.trans.y_rotation);
+        temp_f0 = sine_s(obj->segment.trans.y_rotation);
+        sp44 = (sp5C * temp_f0) + (var_f20 * sp4C);
+        var_f20 = (var_f20 * temp_f0) - (sp5C * sp4C);
+        sp38 = arctan2_f(sp44, sqrtf((sp58 * sp58) + (var_f20 * var_f20)));
+        sp3C = -func_80070830(arctan2_f(sp44, var_f20)) >> 8;
+        if (var_f20 < 0.0f) {
+            var_f20 = -var_f20;
+            sp3C = 1 - sp3C;
+            sp38 = -sp38;
+        }
+        sp34 = arctan2_f(sp58, var_f20);
+        if (sp34 > 0x8000) {
+            sp34 -= 0x10000;
+        }
+        sp34 = (sp34 * sp3C) >> 8;
+        var_s2 = (sp38 >> 7) & 0xFF;
+        if (var_s2 > 127) {
+            var_s2 = 255 - var_s2;
+            sp34 += 0x8000;
+            result = FALSE;
+        }
+        var_s2 *= 2;
+        sp5C = D_80120D28[D_80120D20] - obj->segment.trans.x_position;
+        sp58 = D_80120D40[D_80120D20] - obj->segment.trans.y_position;
+        var_f20 = D_80120D58[D_80120D20] - obj->segment.trans.z_position;
+        sp50 = sqrtf((sp5C * sp5C) + (var_f20 * var_f20));
+        D_80120CF0.y_rotation = arctan2_f(sp5C, var_f20);
+        D_80120CF0.x_rotation = -arctan2_f(sp58, sp50);
+        D_80120CF0.z_rotation = sp34;
+        D_80120CF0.scale = obj->segment.trans.scale;
+        D_80120CF0.x_position = obj->segment.trans.x_position;
+        D_80120CF0.y_position = obj->segment.trans.y_position;
+        D_80120CF0.z_position = obj->segment.trans.z_position;
+        func_8006FC30(D_80121060, &D_80120CF0);
+        D_80120D1C++;
+        func_8006F768((Matrix*) D_80121060, (Matrix*)&D_80120D70[D_80120D1C-1][0][0], (Matrix*)&D_80120D70[D_80120D1C][0][0]);
+        func_8006F768(D_80120D70[D_80120D1C], (Matrix*) D_80120F20, (Matrix*) D_80121060);
+        func_8006F870((Matrix*) D_80121060, *mtx);
+        D_80120D88[D_80120D1C] = *mtx;
+        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
+        gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD138), 1, 0);
+    } else {
+        v = *vertexList;
+        v->x = obj->segment.trans.x_position;
+        v->y = obj->segment.trans.y_position;
+        v->z = obj->segment.trans.z_position;
+        v->r = 255;
+        v->g = 255;
+        v->b = 255;
+        v->a = 255;
+        gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(*vertexList), 1, 0);
+        (*vertexList)++;
+        if (gCutsceneCameraActive == 0) {
+            sp34 = gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation + obj->segment.trans.z_rotation;
+        } else {
+            sp34 = gObjectRenderStack[gObjectRenderStackPos + 4].trans.z_rotation + obj->segment.trans.z_rotation;
+        }
+        var_s2 = obj->segment.unk18;
+        D_80120D1C++;
+        func_80070130((f32 (*)[4]) D_80120D70[D_80120D1C], sp34, obj->segment.trans.scale, gVideoAspectRatio);
+        func_8006F870(D_80120D70[D_80120D1C], *mtx);
+        D_80120D88[D_80120D1C] = *mtx;
+        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
+        gDkrEnableBillboard((*dlist)++);
+    }
+    if (D_80120D0C == 0) {
+        var_s2 = ((var_s2 & 0xFF) * arg4->unk0) >> 8;
+    }
+    flags &= ~1;
+    if (flags & 4) {
+        flags |= 1;
+    }
+    func_8007BF34(dlist, arg4->unk6 | (flags & 0xF));
+    if (!(flags & 0x100)) {
+        gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+    }
+    gSPDisplayList((*dlist)++, arg4->unk8[var_s2 + 1]);
+    D_80120D1C--;
+    if (D_80120D1C == 0) {
+        var_s2 = 0;
+    } else {
+        var_s2 = 1;
+    }
+    gDkrInsertMatrix((*dlist)++, 0, var_s2 << 6);
+    gDkrDisableBillboard((*dlist)++);
+    return result;
+}
 
 void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3, unk80068BF4 *arg4, s32 arg5) {
     UNUSED s32 pad;

@@ -6,6 +6,7 @@
 #include "f3ddkr.h"
 #include "object_functions.h"
 #include "libc/math.h"
+#include "camera.h"
 
 enum ObjectBehaviours {
     BHV_NONE,
@@ -223,6 +224,38 @@ typedef struct unk8000FD34 {
     s32 unk5C;
 } unk8000FD34;
 
+typedef struct struct_8000FC6C {
+    f32 unk0;
+    TextureHeader *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} struct_8000FC6C;
+
+typedef struct struct_8000FC6C_2 {
+    s32 unk0;
+    s32 unk4;
+    f32 unk8;
+    s32 unkC;
+    u8 unk10[0x26];
+    s16 unk36;
+    s16 unk38;
+} struct_8000FC6C_2;
+
+typedef struct struct_8000FC6C_3 {
+    u8 unk0[0x40];
+    struct_8000FC6C_2 *unk40;
+    u8 unk44[0x14];
+    void *unk58;
+} struct_8000FC6C_3;
+
+typedef struct ObjectTransformExt {
+    ObjectTransform trans;
+    s16 unk18;
+    s16 unk1A;
+} ObjectTransformExt;
+
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
 
@@ -256,7 +289,7 @@ extern u16 D_800DC7A8[8];
 
 extern s16 D_800DC7B8[52];
 
-extern s16 D_800DC820[16];
+extern s16 gBossVehicles[16];
 
 extern s8 D_800DC840[8];
 
@@ -307,7 +340,7 @@ void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
-void func_80012D5C(Gfx **dlist, Mtx **mats, VertexList **verts, Object *object);
+void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object);
 void func_80012F30(Object *arg0);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
@@ -320,9 +353,9 @@ void func_8001A8D4(s32 arg0);
 s16 func_8001AE44();
 s32 func_8001AE54();
 s32 func_8001B288(void);
-s32 func_8001B2E0();
+Object *func_8001B2E0(void);
 s32 func_8001B3AC(s32 arg0);
-s32 func_8001B640();
+Object *func_8001B640(void);
 s32 func_8001B650(void);
 s32 func_8001B738(s32 controllerIndex);
 u8 has_ghost_to_save();
@@ -331,10 +364,10 @@ f32 func_8001B834(Object *arg0, s32);
 unknown8011AECC *func_8001BA00(s32 arg0);
 unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1);
 s32 func_8001BA64();
-Object **get_racer_objects(s32 *cnt);
-s32 *func_8001BA90(s32 *arg0);
-Object **func_8001BAAC(s32 *numberOfObjects);
-Object *get_object_struct(s32 indx);
+Object **get_racer_objects(s32 *numRacers);
+Object **get_racer_objects_by_port(s32 *numRacers);
+Object **get_racer_objects_by_position(s32 *numRacers);
+Object *get_racer_object(s32 index);
 void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 u32 func_8001BD94(s32 arg0);
 void func_8001D1AC(void);
@@ -378,17 +411,20 @@ s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
-s32 func_8001BB18(s32 arg0);
-void render_racer_shield(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
-void render_racer_magnet(Gfx **dList, Mtx **mtx, VertexList **vtxList, Object *obj);
+Object *get_racer_object_by_port(s32 index);
+void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
+void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
+s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
+void render_3d_billboard(Object *obj);
+void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
+void func_8000B290(void);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void gParticlePtrList_flush(void);
 void decrypt_magic_codes(u8 *arg0, s32 length);
-void func_80011960(Object*, s32, u32, Object_64*, u32, u32, u32, u32, f32);
 void func_80011AD0(Object *this);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
@@ -404,6 +440,7 @@ Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_80068FA8(Gfx**, Mtx**, Object*, Object*, f32); /* extern */
+void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
+void func_800138A8(Object*, unk80068514_arg4*, s16*, s32);
 
 #endif

@@ -68,6 +68,7 @@ s32 D_80124014;
 
 OSPfs pfs[MAXCONTROLLERS];
 
+/* Size: 0xA bytes */
 typedef struct unk_801241B8 {
     /* 0x00 */ s16 unk0;
     /* 0x02 */ s16 unk2;
@@ -77,7 +78,7 @@ typedef struct unk_801241B8 {
 } unk_801241B8;
 unk_801241B8 D_801241B8[MAXCONTROLLERS];
 
-s32 *sUnkMiscAsset19; //Misc Asset 19
+s16 *sUnkMiscAsset19; //Misc Asset 19
 /**
  * Values for Misc Asset 19
  * 00 2D 00 12 
@@ -104,7 +105,7 @@ u8 D_801241E4;
 u8 sRumblePaksPresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4. 1 if a rumble pak is present
 u8 D_801241E6;
 u8 D_801241E7;
-s32 D_801241E8;
+s32 gRumbleDetectionTimer;
 s8 *D_801241EC;
 s32 D_801241F0;
 s32 D_801241F4;
@@ -124,62 +125,190 @@ u8 func_80072250(s32 arg0) {
 void func_80072298(u8 arg0) {
     D_801241E4 = arg0;
     if (arg0 != 0) {
-        D_801241E8 = 0x79;
+        gRumbleDetectionTimer = 0x79;
         D_801241E6 = 0xF;
         return;
     }
     func_80072708();
 }
 
-UNUSED s32 func_800722E8(s16 arg0) {
+UNUSED s32 func_800722E8(s16 controllerIndex) {
     s32 temp;
-    if (arg0 < 0 || arg0 >= 4) {
+    if (controllerIndex < 0 || controllerIndex >= 4) {
         return 0;
     }
-    temp = ((1 << func_80072250(arg0)) & 0xFF);
+    temp = ((1 << func_80072250(controllerIndex)) & 0xFF);
     return sRumblePaksPresent & temp;
 }
 
-#ifdef NON_EQUIVALENT
-//In the right ballpark, but not right yet.
-void func_80072348(s16 arg0, u8 arg1) {
-    s32 arg1AsS32 = arg1;
-    s16 *temp_v0;
-    unk_801241B8 *temp_v1;
-    u16 playerId;
+void func_80072348(s16 controllerIndex, u8 arg1) {
+    s32 index;
 
-    if (arg1AsS32 < 19 && arg0 >= 0) {
-        if (arg0 < 4) {
-            playerId = (func_80072250(arg0));
-            temp_v1 = &D_801241B8[playerId];
-            if (arg1AsS32 == temp_v1->unk0) {
-                if (temp_v1->unk8 < 0) {
-                    temp_v1->unk8 = -300;
-                }
-                temp_v1->unk4 = sUnkMiscAsset19[arg1AsS32 + 1];
-            } else {
-                temp_v1->unk0 = arg1AsS32;
-                temp_v0 = &sUnkMiscAsset19[arg1AsS32];
-                if (*temp_v0 != 0) {
-                    func_80072578(arg0,  temp_v0[0], temp_v0[1]);
-                }
+    if (arg1 < 19 && controllerIndex >= 0 && controllerIndex < 4) {
+        index = (func_80072250(controllerIndex)) & 0xFFFF;
+        if (D_801241B8[index].unk0 == arg1) {
+            if (D_801241B8[index].unk8 < 0) {
+                D_801241B8[index].unk8 = -300;
+            }
+            D_801241B8[index].unk4 = sUnkMiscAsset19[(arg1 * 2) + 1];
+        } else {
+            D_801241B8[index].unk0 = arg1;
+            if (sUnkMiscAsset19[arg1 * 2] != 0) {
+                func_80072578(controllerIndex, sUnkMiscAsset19[arg1 * 2], sUnkMiscAsset19[(arg1 * 2) + 1]);
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072348.s")
-#endif
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072424.s")
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072578.s")
+void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2) {
+    s32 index;
+
+    if (arg1 < 19 && controllerIndex >= 0 && controllerIndex < 4) {
+        index = func_80072250(controllerIndex) & 0xFFFF;
+        if (arg1 == D_801241B8[index].unk0) {
+            if (D_801241B8[index].unk8 < 0) {
+                D_801241B8[index].unk8 = -300;
+            }
+            D_801241B8[index].unk4 = sUnkMiscAsset19[(arg1 * 2) + 1];
+        } else {
+            if (arg2 < 0.0f) {
+                arg2 = 0.0f;
+            }
+            if (arg2 > 1.0f) {
+                arg2 = 1.0f;
+            }
+            D_801241B8[index].unk0 = arg1;
+            if (sUnkMiscAsset19[arg1 * 2] != 0) {
+                func_80072578(controllerIndex, (sUnkMiscAsset19[arg1 * 2] * arg2), sUnkMiscAsset19[(arg1 * 2) + 1]);
+            }
+        }
+    }
+}
+
+void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2) {
+    s16 index;
+    u8 new_var;
+
+    if (D_801241E4 != 0 && controllerIndex >= 0 && controllerIndex < 4) {
+        new_var = func_80072250(controllerIndex);
+        index = 0xFFFF;
+        index = index & new_var;
+        new_var = 1 << index;
+        D_801241E6 |= new_var;
+        D_801241E7 &= ~new_var;
+        D_801241B8[index].unk6 = ((arg1 * arg1) * 0.1);
+        D_801241B8[index].unk2 = ((arg1 * arg1) * 0.1);
+        D_801241B8[index].unk4 = arg2;
+    }
+}
+
+UNUSED void func_8007267C(s16 controllerIndex) {
+    s16 index;
+
+    if (controllerIndex >= 0 && controllerIndex < 4) {
+        index = func_80072250(controllerIndex);
+        D_801241E7 |= 1 << index;
+        D_801241B8[index].unk4 = -1;
+        D_801241B8[index].unk0 = -1;
+        D_801241B8[index].unk8 = 0;
+    }
+}
 
 void func_80072708(void) {
     D_800DE48C = 3;
 }
 
-//Rumbles controller?
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072718.s")
+void rumble_controllers(s32 arg0) {
+    unk_801241B8 *temp;
+    s32 pfsStatus;
+    u8 i;
+    u8 controllerToCheck;
+    u8 pfsBitPattern;
+
+    if ((D_801241E6 != 0) || ((D_800DE48C != 0))) {
+        gRumbleDetectionTimer += arg0;
+        if (gRumbleDetectionTimer >= 121) {
+            gRumbleDetectionTimer = 0;
+            osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
+            for (i = 0, controllerToCheck = 1; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1) {
+                if ((pfsBitPattern & controllerToCheck) && !(~D_801241E6 & sRumblePaksPresent & controllerToCheck)) {
+                    if (osMotorInit(sControllerMesgQueue, &pfs[i], i) != 0) {
+                        D_801241E6 &= ~controllerToCheck;
+                        D_801241E7 &= ~controllerToCheck;
+                        sRumblePaksPresent &= ~controllerToCheck;
+                    } else {
+                        sRumblePaksPresent |= controllerToCheck;
+                    }
+                }
+            }
+        }
+        if ((sRumblePaksPresent != 0) || (D_800DE48C != 0)) {
+            pfsStatus = 0;
+            if (D_800DE48C != 0) {
+                osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
+            }
+            for (i = 0, controllerToCheck = 1, temp = D_801241B8; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1, temp++) {
+                if (D_800DE48C != 0) {
+                    temp->unk0 = temp->unk6 = temp->unk4 = -1;
+                    if (!(pfsBitPattern & controllerToCheck)) {
+                        continue;
+                    } else if (osMotorInit(sControllerMesgQueue, &pfs[i], i) == 0) {
+                        osMotorStop(&pfs[i]);
+                    }
+                } else if (D_801241E6 & sRumblePaksPresent & controllerToCheck) {
+                    if (temp->unk4 <= 0) {
+                        D_801241E6 &= ~controllerToCheck;
+                        temp->unk0 = -1;
+                        temp->unk8 = 0;
+                        osMotorStop(&pfs[i]);
+                    } else {
+                        temp->unk4 -= arg0;
+                        temp->unk8 += arg0;
+                        if (temp->unk8 < 0) {
+                            continue;
+                        } else if (temp->unk8 >= 601) {
+                            D_801241E6 &= ~controllerToCheck;
+                            temp->unk0 = -1;
+                            temp->unk8 = -300;
+                            osMotorStop(&pfs[i]);
+                        } else {
+                            if (temp->unk2 > 490.0) {
+                                if (!(D_801241E7 & controllerToCheck)) {
+                                    pfsStatus |= osMotorStart(&pfs[i]);
+                                    D_801241E7 |= controllerToCheck;
+                                }
+                            } else if (temp->unk2 < 3.6) {
+                                if (D_801241E7 & controllerToCheck) {
+                                    pfsStatus |= osMotorStop(&pfs[i]);
+                                    D_801241E7 &= ~controllerToCheck;
+                                }
+                            } else if (temp->unk6 >= 256) {
+                                if (!(D_801241E7 & controllerToCheck)) {
+                                    pfsStatus |= osMotorStart(&pfs[i]);
+                                    D_801241E7 |= controllerToCheck;
+                                }
+                                temp->unk6 -= 256;
+                            } else {
+                                if (D_801241E7 & controllerToCheck) {
+                                    pfsStatus |= osMotorStop(&pfs[i]);
+                                    D_801241E7 &= ~controllerToCheck;
+                                }
+                                temp->unk6 += temp->unk2 + 4;
+                            }
+                            if (1) { } // fakematch
+                        }
+                    }
+                }
+            }
+            if (pfsStatus != 0) {
+                sRumblePaksPresent = 0;
+            }
+            if (D_800DE48C != 0) {
+                D_800DE48C--;
+            }
+        }
+    }
+}
 
 #ifdef NON_EQUIVALENT
 u16 func_80072C54(s32 arg0) {
@@ -411,12 +540,12 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     *((s32 *)gameData) = GAMD;
     func_800732E8(arg1, gameData + 4);
     ret = func_80073C5C(controllerIndex, 3, &fileExt);
-    if (ret == 0) {
+    if (ret == CONTROLLER_PAK_GOOD) {
         // D_800E7680 = DKRACING-ADV
         ret = write_controller_pak_file(controllerIndex, -1, (char *) D_800E7680, (char *)&fileExt, gameData, fileSize);
     }
     free_from_memory_pool(gameData);
-    if (ret != 0) {
+    if (ret != CONTROLLER_PAK_GOOD) {
         ret |= (controllerIndex << 30);
     }
     return ret;
@@ -471,7 +600,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     u8 *timeData; //Should probably be a struct or maybe an array?
     s32 ret;
     s32 fileSize;
-    UNUSED s32 temp_v0;
+    UNUSED s32 pad;
     char *fileExt;
 
     fileSize = get_time_data_file_size(); // 512 bytes
@@ -781,10 +910,6 @@ s32 start_reading_controller_data(UNUSED s32 controllerIndex) {
     return 0;
 }
 
-#ifdef NON_MATCHING
-// For some reason it seems likely that D_801241E7 is volatile.
-// Still needs matching though to prove that.
-// volatile u8 D_801241E7;
 void init_controller_paks(void) {
     s32 controllerIndex;
     s32 ret;
@@ -793,20 +918,18 @@ void init_controller_paks(void) {
     s8 maxControllers;
 
     sControllerMesgQueue = get_si_mesg_queue();
-    sUnkMiscAsset19 = get_misc_asset(19), //Comma is here on purpose
-    D_801241E7 = 0xF;
-    D_801241E6 = 0xF;
+    sUnkMiscAsset19 = (s16 *)get_misc_asset(ASSET_MISC_19);
+    D_801241E6 = D_801241E7 = 0xF;
     D_801241E4 = 1;
-    D_801241E8 = 0;
+    gRumbleDetectionTimer = 0;
     D_800DE48C = 1;
-    sRumblePaksPresent = 0; //sRumblePaksPresent
-    sControllerPaksPresent = 0; //sControllerPaksPresent
+    sControllerPaksPresent = sRumblePaksPresent = 0;
 
     //pakPattern will set the first 4 bits representing each controller
     //and it will be 1 if there's something attached.
     osPfsIsPlug(sControllerMesgQueue, &pakPattern);
 
-    for (controllerIndex = 0, controllerBit = 1, maxControllers = MAXCONTROLLERS; controllerIndex != maxControllers; controllerIndex++, controllerBit <<= 1) {
+    for (controllerIndex = 0, controllerBit = 1, maxControllers = MAXCONTROLLERS; (0, controllerIndex) != maxControllers; controllerIndex++, controllerBit <<= 1) {
         D_801241B8[controllerIndex].unk2 = 0;
         D_801241B8[controllerIndex].unk4 = -1;
         D_801241B8[controllerIndex].unk0 = -1;
@@ -823,7 +946,9 @@ void init_controller_paks(void) {
                 sControllerPaksPresent |= controllerBit;
             }
             else if (ret == PFS_ERR_ID_FATAL) {
-                if (osMotorInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex) == 0) {
+                if (controllerIndex) { }
+                ret = osMotorInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
+                if (ret == 0) {
                     //If we found a rumble pak, set the bit that has one
                     sRumblePaksPresent |= controllerBit;
                 }
@@ -833,9 +958,6 @@ void init_controller_paks(void) {
 
     osContStartReadData(sControllerMesgQueue);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/init_controller_paks.s")
-#endif
 
 UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
     s32 ret;

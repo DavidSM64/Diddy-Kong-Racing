@@ -31,7 +31,7 @@ glabel func_800738A4
 /* 074514 80073914 02202025 */   move  $a0, $s1
 /* 074518 80073918 1440003B */  bnez  $v0, .L80073A08
 /* 07451C 8007391C 8FAF0048 */   lw    $t7, 0x48($sp)
-/* 074520 80073920 0C01AC3E */  jal   func_8006B0F8
+/* 074520 80073920 0C01AC3E */  jal   get_map_available_vehicles
 /* 074524 80073924 02202025 */   move  $a0, $s1
 /* 074528 80073928 00029C00 */  sll   $s3, $v0, 0x10
 /* 07452C 8007392C 0013CC03 */  sra   $t9, $s3, 0x10
@@ -144,7 +144,7 @@ glabel func_800738A4
 /* 0746B8 80073AB8 02202025 */   move  $a0, $s1
 /* 0746BC 80073ABC 14400033 */  bnez  $v0, .L80073B8C
 /* 0746C0 80073AC0 8FAB0048 */   lw    $t3, 0x48($sp)
-/* 0746C4 80073AC4 0C01AC3E */  jal   func_8006B0F8
+/* 0746C4 80073AC4 0C01AC3E */  jal   get_map_available_vehicles
 /* 0746C8 80073AC8 02202025 */   move  $a0, $s1
 /* 0746CC 80073ACC 00029C00 */  sll   $s3, $v0, 0x10
 /* 0746D0 80073AD0 00136C03 */  sra   $t5, $s3, 0x10
