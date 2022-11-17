@@ -1391,18 +1391,14 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
 
-#ifdef NON_MATCHING
 UNUSED s32 func_8007C860(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= gNumberOfLoadedTextures)) {
         return -1;
     }
-    return gTextureCache[spriteIndex].id;
+    return ((TextureCacheEntry *) ((s32*) gTextureCache + spriteIndex * 2))->id;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
-#endif
 
-s32 func_8007C8A0(s32 spriteIndex) {
+UNUSED s32 func_8007C8A0(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
         return -1;
     }
