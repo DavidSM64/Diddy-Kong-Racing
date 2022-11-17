@@ -506,7 +506,9 @@ typedef struct LevelModelSegment {
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
 /* 0x20 */ s16 numberOfBatches;
-           u8 pad22[0x09];
+           u8 pad22[0x06];
+/* 0x28 */ s16 unk28;
+/* 0x2A */ s8 unk2A;
 /* 0x2B */ s8 unk2B;
            u8 pad2C[4];
 /* 0x30 */ s16 unk30;

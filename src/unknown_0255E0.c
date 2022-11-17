@@ -1014,7 +1014,23 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A5F8.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A900.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002AC00.s")
+
+UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
+    s32 index;
+    s32 index2;
+    u8 temp;
+
+    if (arg0 < gCurrentLevelModel->numberOfSegments && arg1 < gCurrentLevelModel->numberOfSegments) {
+        index = gCurrentLevelModel->segments[arg0].unk28;
+        index2 = arg1 >> 3;
+        temp = 1 << (arg1 & 7);
+        if (arg2 != 0) {
+            (&gCurrentLevelModel->segmentsBitfields[index])[index2] |= temp;
+        } else {
+            (&gCurrentLevelModel->segmentsBitfields[index])[index2] &= ~temp;
+        }
+    }
+}
 
 // These types are probably wrong because the vars are likely still unidentified structs, but the code matches still.
 UNUSED void func_8002ACA0(s32 *arg0, s32 *arg1, s32 *arg2) {
