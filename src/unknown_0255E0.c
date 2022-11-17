@@ -1235,6 +1235,9 @@ void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
     }
 }
 
+/**
+ * Render a flat model that projects itself on the floor.
+ */
 void render_floor_decal(Object* obj, Object_50* arg1) {
     s32 i;
     s32 temp_a0;
