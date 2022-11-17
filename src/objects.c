@@ -1023,7 +1023,7 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     return 0;
 }
 
-void func_80011960(Object* obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8) {
+void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8) {
     s32 hasTexture = FALSE;
     func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1086,7 +1086,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
  * A few tweaks are made depending on the behaviour ID of the object.
  * A few exceptions will not call to render a billboarded sprite.
  */
-void render_3d_billboard(Object* obj) {
+void render_3d_billboard(Object *obj) {
     s32 intensity;
     s32 flags;
     s32 alpha;
