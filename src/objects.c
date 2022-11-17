@@ -797,15 +797,15 @@ s32 func_8000FBCC(Object *arg0, Object_60 *arg1) {
     arg0->unk50 = (Object_50*) arg1;
     arg1->unk4 = NULL;
     objHeader = ((ObjectSegment*) arg0)->header;
-    if (objHeader->unk32 != 0) {
+    if (objHeader->unk32) {
         arg1->unk4 = load_texture((s32) ((Object_Taj*)objHeader)->unk34);
         objHeader = ((ObjectSegment*)arg0)->header;
     }
     ((Object_50*) arg1)->unk0 = (f32) objHeader->unk4;
     ((Object_50*) arg1)->unk8 = -1;
     D_8011AE50 = (s32) ((Object_60*)arg1)->unk4;
-    var_v0 = 0x10;
-    if ((((ObjectSegment*) arg0)->header->unk32 != 0) && (arg1->unk4 == NULL)) {
+    var_v0 = 16;
+    if ((((ObjectSegment*) arg0)->header->unk32) && (arg1->unk4 == NULL)) {
         return 0;
     }
     return var_v0;
