@@ -593,7 +593,9 @@ typedef struct ObjectHeader {
              u8 pad28[8];
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-             u8 pad34[9];
+  /* 0x32 */ s16 unk34;
+  /* 0x32 */ s16 unk36;
+             u8 pad38[5];
   /* 0x3D */ u8 unk3D;
              u8 pad3E[16];
              s16 unk4E; //Used in func_8002A900?
