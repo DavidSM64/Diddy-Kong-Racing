@@ -1238,7 +1238,7 @@ void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
 /**
  * Render a flat model that projects itself on the floor.
  */
-void render_floor_decal(Object* obj, Object_50* arg1) {
+void render_floor_decal(Object *obj, Object_50 *arg1) {
     s32 i;
     s32 temp_a0;
     s32 temp_a3;
@@ -1258,9 +1258,9 @@ void render_floor_decal(Object* obj, Object_50* arg1) {
                 D_8011B0CC += 2;
             }
             i = arg1->unk8;
-            D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0CC];
-            D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0CC];
-            D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0CC];
+            D_8011D360 = (unk8011D360 *) D_8011D350[D_8011B0CC];
+            D_8011D330 = (unk8011D330 *) D_8011D320[D_8011B0CC];
+            D_8011D348 = (unk8011D348 *) D_8011D338[D_8011B0CC];
             someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
             temp = 10;
             if (someAlpha == 0 || obj->segment.unk38.half.lower == 0) {
@@ -1291,7 +1291,7 @@ void render_floor_decal(Object* obj, Object_50* arg1) {
     }
 }
 
-void func_8002D670(Object* obj, Object_50* arg1) {
+void func_8002D670(Object *obj, Object_50 *arg1) {
     s32 i;
     s32 temp_a0;
     s32 temp_a3;
@@ -1322,8 +1322,8 @@ void func_8002D670(Object* obj, Object_50* arg1) {
                 temp3 = D_8011D360[i].unk6;
                 temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;
                 temp_a0 = D_8011D360[i+1].unk6 - D_8011D360[i].unk6;
-                tri = &((Triangle*)D_8011D330)[D_8011D360[i].unk4];
-                vtx = &((Vertex*)D_8011D348)[D_8011D360[i].unk6];
+                tri = &((Triangle *) D_8011D330)[D_8011D360[i].unk4];
+                vtx = &((Vertex *) D_8011D348)[D_8011D360[i].unk6];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
                 gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), temp_a3, 1);
                 i++;
