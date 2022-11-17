@@ -1,6 +1,6 @@
 glabel set_render_printf_position
-/* 0B6F5C 800B635C 3C068013 */  lui   $a2, %hi(D_801285D8) # $a2, 0x8013
-/* 0B6F60 800B6360 24C685D8 */  addiu $a2, %lo(D_801285D8) # addiu $a2, $a2, -0x7a28
+/* 0B6F5C 800B635C 3C068013 */  lui   $a2, %hi(gDebugPrintBufferEnd) # $a2, 0x8013
+/* 0B6F60 800B6360 24C685D8 */  addiu $a2, %lo(gDebugPrintBufferEnd) # addiu $a2, $a2, -0x7a28
 /* 0B6F64 800B6364 8CD90000 */  lw    $t9, ($a2)
 /* 0B6F68 800B6368 AFA40000 */  sw    $a0, ($sp)
 /* 0B6F6C 800B636C AFA50004 */  sw    $a1, 4($sp)

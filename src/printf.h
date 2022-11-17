@@ -8,7 +8,7 @@
 #include <PR/gu.h>
 
 
-#define RENDER_PRINTF_CMD_ARG_BYTE(val) *D_801285D8 = val; D_801285D8++;
+#define RENDER_PRINTF_CMD_ARG_BYTE(val) *gDebugPrintBufferEnd = val; gDebugPrintBufferEnd++;
 #define RENDER_PRINTF_CMD_ARG_SHORT(val) RENDER_PRINTF_CMD_ARG_BYTE(val) RENDER_PRINTF_CMD_ARG_BYTE(val >> 8)
 
 #define RENDER_PRINTF_CMD_END RENDER_PRINTF_CMD_ARG_BYTE(0)
@@ -46,10 +46,11 @@ void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void func_800B695C(Gfx** dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
 s32 func_800B69FC(Gfx **dlist, s32 arg1);
+void print_debug_strings(Gfx **dList);
 
 void set_render_printf_position(u16 xpos, u16 ypos); // Non Matching
-s32 render_printf(const char *format, ...); // Non Matching
-void print_debug_strings(Gfx **dList); // Non Matching
+s32 render_printf(const char *format, ...); // Non Matchingg
 void func_800B3740(Object *, Gfx **, Matrix **, VertexList **, s32); // Non Matching
+s32 func_800B653C(Gfx**, s8*);
 
 #endif

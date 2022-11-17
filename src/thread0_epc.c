@@ -53,15 +53,6 @@ extern OSMesg D_801297C8;
 
 extern s32 D_80129FB0[3];
 
-extern u16 D_80127CAC;
-extern u16 D_80127CAE;
-extern s32 D_80127CBC;
-extern s32 D_80127CC0;
-extern s32 D_80127CC4;
-extern s32 D_80127CC8;
-extern u16 D_80127CD0;
-extern u16 D_80127CD2;
-
 void func_800B6E50(void) {
     if (D_80127CD0 < 0x141) {
         D_80127CBC = 0x10;

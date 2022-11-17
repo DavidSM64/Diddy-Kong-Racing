@@ -37,7 +37,7 @@ typedef struct unk8011D348 {
 
 /* Size: 0x8 bytes */
 typedef struct unk8011D360 {
-    u8 pad0[4];
+    struct unk8011D360 *unk0;
     s16 unk4;
     s16 unk6;
 } unk8011D360;
@@ -113,6 +113,8 @@ s32 func_80029DE0(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex);
 void render_level_geometry_and_objects(void);
+void func_8002D670(Object *obj, Object_50 *arg1);
+void render_floor_decal(Object *obj, Object_50 *arg1);
 
 //Non Matching
 void render_level_segment(s32 segmentId, s32 nonOpaque);
@@ -120,8 +122,6 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb);
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
 void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRate);
 void func_8002C7D4(void);
-void render_floor_decal(Object *, Object_50 *);
-void func_8002D670(Object *, Object *);
 s32 func_8002A900(Object *arg0);
 Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
@@ -139,5 +139,6 @@ void func_8007F24C(s8*, s32);
 void func_800ACA20(Gfx**, Matrix**, s16**, ObjectSegment*);
 void func_800AD030(ObjectSegment*);
 void func_800B9C18(s32);
+void func_800BA8E4(Gfx**, Matrix**, s32);
 
 #endif
