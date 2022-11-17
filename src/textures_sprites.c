@@ -1402,11 +1402,11 @@ UNUSED s32 func_8007C860(s32 spriteIndex) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
 #endif
 
-s32 func_8007C8A0(s32 arg0) {
-    if ((arg0 < 0) || (arg0 >= D_80126358)) {
+s32 func_8007C8A0(s32 spriteIndex) {
+    if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
         return -1;
     }
-    return ((SpriteCacheEntry*) ((s32*) gSpriteCache + arg0 * 2))->id;
+    return ((SpriteCacheEntry*) ((s32*) gSpriteCache + spriteIndex * 2))->id;
 }
 
 #ifdef NON_EQUIVALENT
