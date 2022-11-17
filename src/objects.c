@@ -1658,8 +1658,66 @@ Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2) {
     return temp_v1;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B834.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B974.s")
+f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
+    Object_Racer *temp_racer;
+    f32 var_f2;
+    s32 r1_ccp;
+    s32 temp_lo;
+    s32 var_v1;
+    s32 r1_lcp;
+
+    if (D_8011AED0 <= 0) {
+        return 0.0f;
+    }
+    var_f2 = 0.0f;
+    var_v1 = FALSE;
+    if (racer2->courseCheckpoint < racer1->courseCheckpoint) {
+        temp_racer = racer1;
+        racer1 = racer2;
+        racer2 = temp_racer;
+        var_v1 = TRUE;
+    }
+    r1_lcp = racer1->checkpoint;
+    for (r1_ccp = racer1->courseCheckpoint; r1_ccp < racer2->courseCheckpoint; r1_ccp++) {
+        var_f2 += D_8011AECC[r1_lcp++].unk20;
+        if (r1_lcp == D_8011AED0) {
+            r1_lcp = 0;
+        }
+    }
+    r1_lcp = racer1->checkpoint - 1;
+    if (r1_lcp < 0) {
+        r1_lcp = D_8011AED0 - 1;
+    }
+    var_f2 += (D_8011AECC[r1_lcp].unk20 * racer1->checkpoint_distance);
+    r1_lcp = racer2->checkpoint - 1;
+    if (r1_lcp < 0) {
+        r1_lcp = D_8011AED0 - 1;
+    }
+    var_f2 -= (D_8011AECC[r1_lcp].unk20 * racer2->checkpoint_distance);
+    if (var_v1) {
+        var_f2 = -var_f2;
+    }
+    return var_f2;
+}
+
+UNUSED f32 func_8001B974(Object_Racer* racer) {
+    f32 distLeft;
+    s32 lapChkPts;
+
+    if (D_8011AED0 <= 0) {
+        return 0.0f;
+    }
+    distLeft = 0.0f;
+    for (lapChkPts = racer->checkpoint; lapChkPts < D_8011AED0; lapChkPts++) {
+        distLeft += D_8011AECC[lapChkPts].unk20;
+    }
+    lapChkPts = racer->checkpoint - 1;
+    if (lapChkPts < 0) {
+        lapChkPts = D_8011AED0 - 1;
+    }
+    distLeft += (D_8011AECC[lapChkPts].unk20 * racer->checkpoint_distance);
+    return distLeft;
+}
 
 // Returns a pointer to some struct that is 0x3C bytes long.
 unknown8011AECC *func_8001BA00(s32 arg0) {
