@@ -1314,7 +1314,7 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
     s32 i;
     s32 temp_a0;
     s32 temp_a3;
-    Vertex * vtx;
+    Vertex *vtx;
     Triangle *tri;
     s32 temp;
     s32 temp2;
