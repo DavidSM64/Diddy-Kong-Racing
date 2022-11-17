@@ -1235,7 +1235,58 @@ void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_floor_decal.s")
+void render_floor_decal(Object* obj, Object_50* arg1) {
+    s32 i;
+    s32 temp_a0;
+    s32 temp_a3;
+    Vertex * vtx;
+    Triangle *tri;
+    s32 temp;
+    s32 temp2;
+    s32 temp3;
+    s32 new_var;
+    s32 new_var2;
+    s32 someAlpha;
+    
+    if (obj->segment.header->unk32 != 0) {
+        if (arg1->unk8 != -1 && D_8011B0C4 == 0) {
+            D_8011B0CC = D_8011B0C8;
+            if (obj->segment.header->unk32 == 1) {
+                D_8011B0CC += 2;
+            }
+            i = arg1->unk8;
+            D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0CC];
+            D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0CC];
+            D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0CC];
+            someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
+            temp = 10;
+            if (someAlpha == 0 || obj->segment.unk38.half.lower == 0) {
+                i = arg1->unkA;
+            } else if (someAlpha != 255 || obj->segment.unk38.half.lower != 255) {
+                temp = 14;
+                someAlpha = (obj->segment.unk38.half.lower * someAlpha) >> 8;
+                gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
+            }
+            while (i < arg1->unkA) {
+                func_8007B4C8(&gSceneCurrDisplayList, D_8011D360[i].unk0, temp);
+                // I hope we can clean this part up.
+                temp2 = new_var2 = D_8011D360[i].unk4;
+                temp3 = new_var = D_8011D360[i].unk6;
+                temp_a3 = D_8011D360[i+1].unk4 - new_var2;
+                temp_a0 = D_8011D360[i+1].unk6 - new_var;
+                tri = &D_8011D330[new_var2];
+                vtx = &D_8011D348[temp3];
+                gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
+                gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), temp_a3, 1);
+                i++;
+            }
+            
+            if (temp != 2) {
+                gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            }
+        }
+    }
+}
 
 void func_8002D670(Object* obj, Object_50* arg1) {
     s32 i;
