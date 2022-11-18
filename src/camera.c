@@ -984,6 +984,10 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
     s32 sp34;
     s32 result;
     s32 var_s2;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+    u32 first3 = 0;
+#endif
 
     result = TRUE;
     if (flags & 1) {
@@ -1063,7 +1067,13 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
     if (flags & 4) {
         flags |= 1;
     }
+#ifdef PUPPYPRINT_DEBUG
+    first3 = osGetCount();
+#endif
     func_8007BF34(dlist, arg4->unk6 | (flags & 0xF));
+#ifdef PUPPYPRINT_DEBUG
+    first3 = osGetCount() - first3;
+#endif
     if (!(flags & 0x100)) {
         gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
     }
@@ -1076,6 +1086,10 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
     }
     gDkrInsertMatrix((*dlist)++, 0, var_s2 << 6);
     gDkrDisableBillboard((*dlist)++);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_BILLBOARD], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_BILLBOARD], first3);
+#endif
     return result;
 }
 

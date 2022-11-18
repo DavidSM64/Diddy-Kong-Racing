@@ -1095,6 +1095,10 @@ void render_3d_billboard(Object *obj) {
     ObjectTransformExt sp60;
     Object *var_a0;
     unk80068514_arg4* sp58;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+    u32 first3 = 0;
+#endif
 
     intensity = 255;
     hasPrimCol = FALSE;
@@ -1175,7 +1179,13 @@ void render_3d_billboard(Object *obj) {
         }
         func_800138A8(var_a0, sp58, &sp60, 0x106);
     } else {
+#ifdef PUPPYPRINT_DEBUG
+    first3 = osGetCount();
+#endif
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, (Vertex **) &gObjectCurrVertexList, obj, sp58, flags);
+#ifdef PUPPYPRINT_DEBUG
+    first3 = osGetCount() - first3;
+#endif
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1183,6 +1193,10 @@ void render_3d_billboard(Object *obj) {
     if (hasEnvCol) {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_BILLBOARD], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_BILLBOARD], first3);
+#endif
 }
 
 

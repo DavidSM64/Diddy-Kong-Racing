@@ -73,6 +73,10 @@ enum TrackTimers {
     PP_CAMERA,
     PP_MATRIX,
     PP_BACKGROUND,
+    PP_DECAL,
+    PP_BILLBOARD,
+    PP_LEVEL,
+    PP_OBJGFX,
 
     PP_THREAD0,
     PP_THREAD30,
@@ -113,6 +117,10 @@ enum TrackTimers {
     {"Camera"}, \
     {"Matrix"}, \
     {"BG\t"}, \
+    {"Decals"}, \
+    {"Billboards"}, \
+    {"Level Gfx"}, \
+    {"Obj Gfx"}, \
     {"Thread0"}, \
     {"Thread30"}, \
     {"Audio"}, \

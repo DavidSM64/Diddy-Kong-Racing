@@ -469,6 +469,10 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WAVES][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_BACKGROUND][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_BILLBOARD][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_LEVEL][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_OBJGFX][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_DECAL][perfIteration]);
 }
 //#else
 //GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
@@ -1321,6 +1325,11 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
     s32 new_var;
     s32 new_var2;
     s32 someAlpha;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+    u32 first2 = 0;
+    u32 first3 = 0;
+#endif
     
     if (obj->segment.header->unk32 != 0) {
         if (arg1->unk8 != -1 && D_8011B0C4 == 0) {
@@ -1342,7 +1351,13 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < arg1->unkA) {
+#ifdef PUPPYPRINT_DEBUG
+    first2 = osGetCount();
+#endif
                 func_8007B4C8(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, temp);
+#ifdef PUPPYPRINT_DEBUG
+    first3 += osGetCount() - first2;
+#endif
                 // I hope we can clean this part up.
                 temp2 = new_var2 = D_8011D360[i].unk4; // Fakematch
                 temp3 = new_var = D_8011D360[i].unk6;
@@ -1360,6 +1375,10 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
             }
         }
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_DECAL], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_DECAL], first3);
+#endif
 }
 
 void func_8002D670(Object *obj, Object_50 *arg1) {
@@ -1371,6 +1390,11 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
     s32 temp;
     s32 temp2;
     s32 temp3;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+    u32 first2 = 0;
+    u32 first3 = 0;
+#endif
 
     if (obj->segment.header->unk36 != 0) {
         if ((arg1->unk8 != -1) && (D_8011B0C4 == 0)) {
@@ -1388,7 +1412,13 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
             D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0D0];
             D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
             while (i < arg1->unkA) {
+#ifdef PUPPYPRINT_DEBUG
+    first2 = osGetCount();
+#endif
                 func_8007B4C8(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, temp);
+#ifdef PUPPYPRINT_DEBUG
+    first3 += osGetCount() - first2;
+#endif
                 temp2 = D_8011D360[i].unk4; // Fakematch
                 temp3 = D_8011D360[i].unk6; // Fakematch
                 temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;
@@ -1401,6 +1431,10 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
             }
         }
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_DECAL], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_DECAL], first3);
+#endif
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D8DC.s")
