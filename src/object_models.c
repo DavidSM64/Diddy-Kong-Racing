@@ -111,14 +111,14 @@ void func_8005FF40(ObjectModel **modelPtr) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FF40.s")
 #endif
 
-void free_object_model(ObjectModel* mdl) {
+void free_object_model(ObjectModel *mdl) {
     // free the textures
     s16 numTextures = mdl->numberOfTextures;
     if (numTextures > 0) {
         s32 texturesFreed = 0;
         s32 textureIndex = 0;
         do {
-            TextureHeader* header = mdl->textures[textureIndex].texture;
+            TextureHeader *header = mdl->textures[textureIndex].texture;
             if (header != NULL) {
                 free_texture(header);
                 numTextures = mdl->numberOfTextures;
