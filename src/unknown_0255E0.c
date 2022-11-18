@@ -956,23 +956,21 @@ LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
 
-#ifdef NON_EQUIVALENT
-// Has some minor issues, but should be functionally equivalent.
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
+    u8 unknown[0x28];
     s64 sp48;
     s32 i, j;
     s32 s2;
     f32 temp0, temp1, temp2, temp3;
-
-    j = 0;
-    while (TRUE) {
+    f32 x, y, z;
+    
+    for (j = 0; j < 3; j++) {
         temp0 = D_8011D0F8[j].unk0;
         temp1 = D_8011D0F8[j].unk4;
         temp2 = D_8011D0F8[j].unk8;
         temp3 = D_8011D0F8[j].unkC;
-        i = 0;
-        s2 = FALSE;
-        while (i < 8 && !s2) {
+        
+        for (i = 0, s2 = FALSE; (i < 8) && (!s2); i++) {
             if (i & 1) {
                 sp48 = bb->x1 * temp0;
             } else {
@@ -992,26 +990,23 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
             if (sp48 > 0) {
                 s2 = TRUE;
             }
-            i++;
         }
-        j++;
         if (i == 8 && !s2) {
             return FALSE;
         }
-        if (j == 3) {
-            D_8011D380 = func_80066348((bb->x2 + bb->x1) >> 1, (bb->y2 + bb->y1) >> 1, (bb->z2 + bb->z1) >> 1);
-            if (D_8011D380 < 1000.0) {
-                D_8011B0BC = 1;
-                return TRUE;
-            }
-            D_8011B0BC = 0;
-            return TRUE;
-        }
     }
+    
+    x = (bb->x2 + bb->x1) >> 1;
+    y = (bb->y2 + bb->y1) >> 1;
+    z = (bb->z2 + bb->z1) >> 1;
+    D_8011D380 = func_80066348(x, y, z);
+    if (D_8011D380 < 1000.0) {
+        D_8011B0BC = 1;
+    } else {
+        D_8011B0BC = 0;
+    }
+    return TRUE;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A5F8.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A900.s")
 
