@@ -124,16 +124,16 @@ As of November 18, 2022, this is our current score:
 ```
  =================================================================
               ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------ 37.60% Complete ------------------------
-                   # Decompiled functions: 1342
-                    # GLOBAL_ASM remaining: 494
-                   # NON_MATCHING functions: 11
-                # NON_EQUIVALENT WIP functions: 93
+ ------------------------ 37.71% Complete ------------------------
+                   # Decompiled functions: 1348
+                    # GLOBAL_ASM remaining: 488
+                    # NON_MATCHING functions: 9
+                # NON_EQUIVALENT WIP functions: 92
  -------------------------- Game Status --------------------------
              Balloons: 18/47, Keys: 2/4, Trophies: 1/5
               T.T. Amulets: 2/4, Wizpig Amulets: 1/4
  -----------------------------------------------------------------
- We are collecting silver coins in Walrus Cove. (7/8 silver coins)
+ We are collecting silver coins in Walrus Cove. (8/8 silver coins)
  =================================================================
                ADVENTURE TWO (Cleanup & Documentation)
  ------------------------  9.24% Complete ------------------------
