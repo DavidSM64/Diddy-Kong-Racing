@@ -2158,7 +2158,31 @@ void func_800228EC(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80022948.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80022CFC.s")
+
+void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
+    s32 index;
+    unk80022CFC_1 *obj;
+    Settings *settings = get_settings();
+
+    for (index = 0; index < objCount; index += 1) {
+        obj = ((unk80022CFC_1*) gObjPtrList[index]);
+        if (obj->unk48 == 0x4D) {
+            if (obj->unk3C != NULL) {
+                if (obj->unk3C->unkA > 0) {
+                    if ((settings->tajFlags != 0) && (settings->tajFlags & (1 << (obj->unk3C->unkA + 2)))) {
+                        obj->unkC = x;
+                        obj->unk10 = y + 10.0;
+                        obj->unk14 = z;
+                        obj->unk2E = arg0;
+                        obj->unk78 = 0;
+                        obj->unk39 = 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80022E18.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 
