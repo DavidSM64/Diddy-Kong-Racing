@@ -120,7 +120,7 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of November 16, 2022, this is our current score:
+As of November 18, 2022, this is our current score:
 ```
  =================================================================
               ADVENTURE ONE (ASM -> C Decompilation)
