@@ -124,7 +124,7 @@ glabel func_8002D8DC
 /* 02E6AC 8002DAAC C62C000C */  lwc1  $f12, 0xc($s1)
 /* 02E6B0 8002DAB0 C62E0010 */  lwc1  $f14, 0x10($s1)
 /* 02E6B4 8002DAB4 8E260014 */  lw    $a2, 0x14($s1)
-/* 02E6B8 8002DAB8 0C0198D2 */  jal   func_80066348
+/* 02E6B8 8002DAB8 0C0198D2 */  jal   get_distance_to_active_camera
 /* 02E6BC 8002DABC AFA2006C */   sw    $v0, 0x6c($sp)
 /* 02E6C0 8002DAC0 8FA2006C */  lw    $v0, 0x6c($sp)
 /* 02E6C4 8002DAC4 10000003 */  b     .L8002DAD4

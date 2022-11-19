@@ -116,13 +116,13 @@ void render_level_geometry_and_objects(void);
 void func_8002D670(Object *obj, Object_50 *arg1);
 void render_floor_decal(Object *obj, Object_50 *arg1);
 s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb);
+s32 check_if_in_draw_range(Object *obj);
 
 //Non Matching
 void render_level_segment(s32 segmentId, s32 nonOpaque);
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
 void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRate);
 void func_8002C7D4(void);
-s32 func_8002A900(Object *arg0);
 Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
 void func_8002C954(LevelModelSegment*, LevelModelSegmentBoundingBox*, s32);

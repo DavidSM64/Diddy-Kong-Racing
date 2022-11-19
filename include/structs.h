@@ -600,7 +600,7 @@ typedef struct ObjectHeader {
              u8 pad38[5];
   /* 0x3D */ u8 unk3D;
              u8 pad3E[16];
-             s16 unk4E; //Used in func_8002A900?
+             s16 drawDistance;
              u8 pad50[3];
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;

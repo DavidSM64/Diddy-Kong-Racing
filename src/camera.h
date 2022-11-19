@@ -134,7 +134,7 @@ Matrix *func_80066204(void);
 s32 get_viewport_count(void);
 s32 get_object_render_stack_pos(void);
 void func_80066230(Gfx **dlist, Matrix **arg1);
-f32 func_80066348(f32 xPos, f32 yPos, f32 zPos);
+f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
 void write_to_object_render_stack(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
 void disable_cutscene_camera(void);
