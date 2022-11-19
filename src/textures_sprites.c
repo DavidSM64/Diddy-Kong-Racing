@@ -1391,28 +1391,19 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
 
-#ifdef NON_MATCHING
 UNUSED s32 func_8007C860(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= gNumberOfLoadedTextures)) {
         return -1;
     }
-    return gTextureCache[spriteIndex].id;
+    return ((TextureCacheEntry *) ((s32*) gTextureCache + spriteIndex * 2))->id;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
-#endif
 
-#ifdef NON_MATCHING
 UNUSED s32 func_8007C8A0(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
         return -1;
     }
-    // I need to skip a register here.
-    return gSpriteCache[spriteIndex].id;
+    return ((SpriteCacheEntry*) ((s32*) gSpriteCache + spriteIndex * 2))->id;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C8A0.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
