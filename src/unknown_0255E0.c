@@ -151,7 +151,7 @@ s32 *D_8011D370;
 s32 *D_8011D374;
 s32 D_8011D378;
 s32 D_8011D37C;
-f32 gCurrBBoxDistanceToCamera;
+UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functionally unused.
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
 unk8011D468 D_8011D468;
@@ -857,7 +857,12 @@ void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segment
     }
 }
 
-UNUSED s32 func_80029DE0(Object *obj, s32 segmentIndex) {
+/**
+ * Checks if the active camera is currently inside this segment.
+ * Has a small inner margin where it doesn't consider the camera inside.
+ * Goes unused.
+*/
+UNUSED s32 check_if_inside_segment(Object *obj, s32 segmentIndex) {
     LevelModelSegmentBoundingBox *bb;
     s32 x, y, z;
     if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
@@ -876,6 +881,11 @@ UNUSED s32 func_80029DE0(Object *obj, s32 segmentIndex) {
     return FALSE;
 }
 
+/**
+ * Iterates through every existing segment to see which one the active camera is inside.
+ * Uses mainly a two dimensional axis check here, instead of the function above.
+ * Returns the segment currently inside.
+*/
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     LevelModelSegmentBoundingBox *bb;
     s32 i;
@@ -911,7 +921,14 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     return result;
 }
 
-s32 func_8002A05C(s32 x, s32 z, s32 *arg2) {
+/**
+ * Iterates through every existing segment to see which one the active camera is inside.
+ * Uses mainly a two dimensional axis check here, instead of the function above.
+ * Increments a counter based on if it's got a camera inside.
+ * Because there's a tiny margin, multiple segments can be considered populated,
+ * meaning that sometimes it will 2 instead of 1.
+*/
+s32 get_inside_segment_count(s32 x, s32 z, s32 *arg2) {
     s32 i;
     s32 cnt = 0;
     LevelModelSegmentBoundingBox *bb;
@@ -960,14 +977,14 @@ LevelModelSegment *func_8002A2C8(s32 arg0) {
     if (arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
 
-    return gCurrentLevelModel->segments + arg0;
+    return &gCurrentLevelModel->segments[arg0];
 }
 
 LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0) {
     if (arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
         return NULL;
 
-    return gCurrentLevelModel->segmentsBoundingBoxes + arg0;
+    return &gCurrentLevelModel->segmentsBoundingBoxes[arg0];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
@@ -981,42 +998,41 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
     UNUSED u8 unknown[0x28];
     s64 sp48;
     s32 i, j;
-    s32 s2;
-    f32 temp0, temp1, temp2, temp3;
+    s32 isVisible;
+    f32 dirX, dirY, dirZ, dirW;
     f32 x, y, z;
     
     for (j = 0; j < 3; j++) {
-        temp0 = D_8011D0F8[j].unk0;
-        temp1 = D_8011D0F8[j].unk4;
-        temp2 = D_8011D0F8[j].unk8;
-        temp3 = D_8011D0F8[j].unkC;
+        dirX = D_8011D0F8[j].unk0;
+        dirY = D_8011D0F8[j].unk4;
+        dirZ = D_8011D0F8[j].unk8;
+        dirW = D_8011D0F8[j].unkC;
         
-        for (i = 0, s2 = FALSE; (i < 8) && (!s2); i++) {
+        for (i = 0, isVisible = FALSE; (i < 8) && (!isVisible); i++) {
             if (i & 1) {
-                sp48 = bb->x1 * temp0;
+                sp48 = bb->x1 * dirX;
             } else {
-                sp48 = bb->x2 * temp0;
+                sp48 = bb->x2 * dirX;
             }
             if (i & 2) {
-                sp48 += bb->y1 * temp1;
+                sp48 += bb->y1 * dirY;
             } else {
-                sp48 += bb->y2 * temp1;
+                sp48 += bb->y2 * dirY;
             }
             if (i & 4) {
-                sp48 += bb->z1 * temp2;
+                sp48 += bb->z1 * dirZ;
             } else {
-                sp48 += bb->z2 * temp2;
+                sp48 += bb->z2 * dirZ;
             }
-            sp48 += temp3;
+            sp48 += dirW;
             if (sp48 > 0) {
-                s2 = TRUE;
+                isVisible = TRUE;
             }
         }
-        if (i == 8 && !s2) {
+        if (i == 8 && !isVisible) {
             return FALSE;
         }
     }
-    
     // From here until the "return TRUE" goes completely unused, functionally.
     x = (bb->x2 + bb->x1) >> 1;
     y = (bb->y2 + bb->y1) >> 1;

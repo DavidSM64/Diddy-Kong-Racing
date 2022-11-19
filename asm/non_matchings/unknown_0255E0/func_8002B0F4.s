@@ -37,7 +37,7 @@ glabel func_8002B0F4
 /* 02BD80 8002B180 ACE00000 */  sw    $zero, ($a3)
 /* 02BD84 8002B184 27A600B0 */  addiu $a2, $sp, 0xb0
 /* 02BD88 8002B188 02C02025 */  move  $a0, $s6
-/* 02BD8C 8002B18C 0C00A817 */  jal   func_8002A05C
+/* 02BD8C 8002B18C 0C00A817 */  jal   get_inside_segment_count
 /* 02BD90 8002B190 02802825 */   move  $a1, $s4
 /* 02BD94 8002B194 10400004 */  beqz  $v0, .L8002B1A8
 /* 02BD98 8002B198 AFA20108 */   sw    $v0, 0x108($sp)
