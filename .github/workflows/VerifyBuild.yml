@@ -54,12 +54,11 @@ jobs:
     - name: Update Score
       run: ./update-score.sh
 
-    - name: Commit Score Update
-      uses: test-room-7/action-update-file@v1
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
       with:
-          file-path: README.md
-          commit-msg: Update score
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          add-paths: README.md
+          commit-message: "Update score"
 
     - name: Clean Build
       run: make clean
