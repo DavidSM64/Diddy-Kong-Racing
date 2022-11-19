@@ -51,6 +51,16 @@ jobs:
     - name: Verify Build
       run: if [[ $(sha1sum -c --quiet sha1/dkr.us_1.0.sha1) = "" ]]; then echo "Signature OK"; else echo "Failed"; exit 1; fi
 
+    - name: Update Score
+      run: ./update-score.sh
+
+    - name: Commit Score Update
+      uses: test-room-7/action-update-file@v1
+      with:
+          file-path: README.md
+          commit-msg: Update score
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Clean Build
       run: make clean
 
