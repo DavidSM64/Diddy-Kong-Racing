@@ -72,7 +72,7 @@ Object *D_8011B0B0; // Camera Object?
 
 s32 D_8011B0B4;
 Object *D_8011B0B8;
-s32 D_8011B0BC;
+UNUSED s32 gIsNearCurrBBox; // Set to true if the current visible segment is close to the camera. Never actually used though.
 s32 D_8011B0C0;
 s32 D_8011B0C4;
 s32 D_8011B0C8;
@@ -151,7 +151,7 @@ s32 *D_8011D370;
 s32 *D_8011D374;
 s32 D_8011D378;
 s32 D_8011D37C;
-f32 D_8011D380;
+f32 gCurrBBoxDistanceToCamera;
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
 unk8011D468 D_8011D468;
@@ -282,7 +282,7 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
     D_8011B0DC = 1;
     D_8011B0C4 = 0;
     D_8011B0C0 = 0;
-    D_8011B0BC = 0;
+    gIsNearCurrBBox = 0;
     numViewports = set_active_viewports_and_object_stack_cap(D_8011D37C);
     if (is_game_paused()) {
         delta = 0;
@@ -706,7 +706,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 triangles;
     s32 color;
     //s32 hasTexture;
-    s32 unused;
+    UNUSED s32 unused;
     s32 levelHeaderIndex;
     s32 temp;
     s32 sp78;
@@ -760,8 +760,8 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                 numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
                 numberTriangles =  batchInfo->facesOffset;
                 numberTriangles = (batchInfo + 1)->facesOffset - numberTriangles;
-                vertices = &segment->vertices[batchInfo->verticesOffset];
-                triangles = &segment->triangles[batchInfo->facesOffset];
+                vertices = (s32) &segment->vertices[batchInfo->verticesOffset];
+                triangles = (s32) &segment->triangles[batchInfo->facesOffset];
                 
                 temp = batchInfo->unk7 << 14;
                 
@@ -851,7 +851,7 @@ void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segment
         } else {
             temp = 1;
         }
-        if ((temp & 1) && func_8002A5F8(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex])) {
+        if ((temp & 1) && should_segment_be_visible(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex])) {
             segmentsOrder[(*segmentsOrderIndex)++] = segmentIndex;
         }
     }
@@ -972,7 +972,12 @@ LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
 
-s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
+/**
+ * Takes a normalised (0-1) face direction of the active camera, then adds together a magnitude
+ * to a total figure to determine whether or not a segment should be visible.
+ * There's a large unused portion at the bottom writing to two vars, that are never later read.
+*/
+s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
     UNUSED u8 unknown[0x28];
     s64 sp48;
     s32 i, j;
@@ -1012,14 +1017,15 @@ s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb) {
         }
     }
     
+    // From here until the "return TRUE" goes completely unused, functionally.
     x = (bb->x2 + bb->x1) >> 1;
     y = (bb->y2 + bb->y1) >> 1;
     z = (bb->z2 + bb->z1) >> 1;
-    D_8011D380 = get_distance_to_active_camera(x, y, z);
-    if (D_8011D380 < 1000.0) {
-        D_8011B0BC = 1;
+    gCurrBBoxDistanceToCamera = get_distance_to_active_camera(x, y, z);
+    if (gCurrBBoxDistanceToCamera < 1000.0) {
+        gIsNearCurrBBox = TRUE;
     } else {
-        D_8011B0BC = 0;
+        gIsNearCurrBBox = FALSE;
     }
     return TRUE;
 }
@@ -1062,7 +1068,7 @@ s32 check_if_in_draw_range(Object *obj) {
                 temp2 = viewDistance - fadeDist;
                 if (temp2 > 0) {
                     fadeDist = dist - fadeDist;
-                    alpha = ((f64) (f32) (1.0f - (f64) ((fadeDist) / temp2)) * 255.0);
+                    alpha = ((f64) (f32) (1.0f - (f64) ((fadeDist) / temp2)) * 255.0f);
                 }
                 if (alpha == 0) {
                     alpha = 1;
@@ -1070,18 +1076,18 @@ s32 check_if_in_draw_range(Object *obj) {
             }
         }
         switch (obj->behaviorId) {
-            case BHV_RACER: // Racer
+            case BHV_RACER:
                 obj64 = obj->unk64;
                 obj->segment.unk38.half.lower = ((obj64->racer.transparency + 1) * alpha) >> 8;
                 break;
-            case BHV_UNK_3A: // ???
+            case BHV_UNK_3A:
                 obj64 = obj->unk64;
                 obj->segment.unk38.half.lower = obj64->racer.transparency;
                 break;
             case BHV_ANIMATED_OBJECT: // Cutscene object?
-            case BHV_CAMERA_ANIMATION: // AnimCamera
-            case BHV_CAR_ANIMATION: // AnimCar
-            case BHV_CHARACTER_SELECT: // Character select
+            case BHV_CAMERA_ANIMATION:
+            case BHV_CAR_ANIMATION:
+            case BHV_CHARACTER_SELECT:
             case BHV_VEHICLE_ANIMATION: // Title screen actor
             case BHV_HIT_TESTER: // hittester
             case BHV_HIT_TESTER_2: // animated objects?
@@ -1089,8 +1095,8 @@ s32 check_if_in_draw_range(Object *obj) {
                 obj64 = obj->unk64;
                 obj->segment.unk38.half.lower = obj64->effect_box.pad0[0x42];
                 break;
-            case BHV_PARK_WARDEN: // Parkwarden
-            case BHV_GOLDEN_BALLOON: // GoldenBalloon
+            case BHV_PARK_WARDEN:
+            case BHV_GOLDEN_BALLOON:
             case BHV_PARK_WARDEN_2: // GBParkwarden
                 break;
             default:

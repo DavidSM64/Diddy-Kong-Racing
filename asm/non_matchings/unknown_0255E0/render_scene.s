@@ -31,10 +31,10 @@ glabel render_scene
 /* 0259C8 80024DC8 3C018012 */  lui   $at, %hi(D_8011B0C0) # $at, 0x8012
 /* 0259CC 80024DCC AC20B0C0 */  sw    $zero, %lo(D_8011B0C0)($at)
 /* 0259D0 80024DD0 3C048012 */  lui   $a0, %hi(D_8011D37C) # $a0, 0x8012
-/* 0259D4 80024DD4 3C018012 */  lui   $at, %hi(D_8011B0BC) # $at, 0x8012
+/* 0259D4 80024DD4 3C018012 */  lui   $at, %hi(gIsNearCurrBBox) # $at, 0x8012
 /* 0259D8 80024DD8 8C84D37C */  lw    $a0, %lo(D_8011D37C)($a0)
 /* 0259DC 80024DDC 0C01994B */  jal   set_active_viewports_and_object_stack_cap
-/* 0259E0 80024DE0 AC20B0BC */   sw    $zero, %lo(D_8011B0BC)($at)
+/* 0259E0 80024DE0 AC20B0BC */   sw    $zero, %lo(gIsNearCurrBBox)($at)
 /* 0259E4 80024DE4 0C01BAA8 */  jal   is_game_paused
 /* 0259E8 80024DE8 00409825 */   move  $s3, $v0
 /* 0259EC 80024DEC 10400003 */  beqz  $v0, .L80024DFC

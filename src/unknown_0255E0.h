@@ -115,7 +115,7 @@ void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentInde
 void render_level_geometry_and_objects(void);
 void func_8002D670(Object *obj, Object_50 *arg1);
 void render_floor_decal(Object *obj, Object_50 *arg1);
-s32 func_8002A5F8(LevelModelSegmentBoundingBox *bb);
+s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 
 //Non Matching
