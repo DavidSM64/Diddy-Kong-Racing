@@ -18,6 +18,10 @@
 #include "game_ui.h"
 #include "weather.h"
 #include "particles.h"
+#include "lib/src/libc/rmonPrintf.h"
+
+// Maximum size for a level model is 522.5 KiB
+#define LEVEL_MODEL_MAX_SIZE 0x82A00
 
 /************ .data ************/
 
@@ -1194,102 +1198,94 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002BAB0.s")
 
-#ifdef NON_EQUIVALENT
-
-// Maximum size for a level model is 522.5 KiB
-#define LEVEL_MODEL_MAX_SIZE 0x82A00
-
-#define LOCAL_OFFSET_TO_RAM_ADDRESS(ptr) \
-    ptr = (s32)((u8*)ptr) + (s32)((u8*)gCurrentLevelModel)
-
+#ifdef NON_MATCHING
 // Loads a level track from the index in the models table.
 // Has regalloc issues.
 void func_8002C0C4(s32 modelId) {
-    s32 i, j, k;
-    s32 numLevelModels;
+    UNUSED s32 i;
     s32 temp_s4;
-    s32 offset, size;
-    u8 *compressedRamAddr;
-    LevelModelSegment *segment;
-    TriangleBatchInfo *batch;
-    Vertex *vertex;
-
-    func_8007B374(0xFF00FF);
-    D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, 0xFFFF00FFU);
+    s32 temp;
+    LevelModel *mdl;
+    
+    set_texture_colour_tag(COLOUR_TAG_GREEN);
+    D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
     gCurrentLevelModel = D_8011D30C;
-    D_8011D370 = allocate_from_main_pool_safe(0x7D0, 0xFFFF00FFU);
-    D_8011D374 = allocate_from_main_pool_safe(0x1F4, 0xFFFF00FFU);
+    D_8011D370 = allocate_from_main_pool_safe(0x7D0, COLOUR_TAG_YELLOW);
+    D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
-    D_8011D310 = load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
-    for(numLevelModels = 0; D_8011D310[numLevelModels] != -1; numLevelModels++) {}
-    numLevelModels--;
-    if (modelId >= numLevelModels) {
+    D_8011D310 = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    for (i = 0; D_8011D310[i] != -1; i++);
+    i--;
+    if (modelId >= i) {
         modelId = 0;
     }
-    offset = D_8011D310[modelId];
-    size = D_8011D310[modelId + 1] - offset;
-    compressedRamAddr = (u8*)gCurrentLevelModel + LEVEL_MODEL_MAX_SIZE - size;
-    compressedRamAddr = compressedRamAddr - (u8*)((s32)compressedRamAddr % 16);
-    load_asset_to_address(ASSET_LEVEL_MODELS, compressedRamAddr, offset, size);
-    gzip_inflate((u8*) compressedRamAddr, (u8*) gCurrentLevelModel);
-    free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.
+    
+    temp_s4 = D_8011D310[modelId + 1] - D_8011D310[modelId];
 
+    // temp = compressedRamAddr
+    temp = gCurrentLevelModel;
+    temp +=  LEVEL_MODEL_MAX_SIZE - temp_s4;
+    temp -= temp % 16; // Align to 16-byte boundary.
+    
+    load_asset_to_address(ASSET_LEVEL_MODELS, temp, D_8011D310[modelId], temp_s4);
+    gzip_inflate((u8 *) temp, (u8 *) gCurrentLevelModel);
+    free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.
+    mdl = gCurrentLevelModel;
     LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->textures);
     LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments);
     LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBoundingBoxes);
     LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->unkC);
     LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBitfields);
     LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBspTree);
-    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].vertices);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].triangles);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].batches);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[i].unk14);
+    for (temp = 0; temp < gCurrentLevelModel->numberOfSegments; temp++) {
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[temp].vertices);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[temp].triangles);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[temp].batches);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[temp].unk14);
     }
-    for(i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
-        gCurrentLevelModel->textures[i].texture = load_texture(((s32)gCurrentLevelModel->textures[i].texture) | 0x8000);
+    for (temp = 0; temp < gCurrentLevelModel->numberOfTextures; temp++) {
+        gCurrentLevelModel->textures[temp].texture = load_texture(((s32) gCurrentLevelModel->textures[temp].texture) | 0x8000);
     }
-    temp_s4 = (s32)gCurrentLevelModel + gCurrentLevelModel->modelSize;
-    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
-        gCurrentLevelModel->segments[i].unk10 = temp_s4;
-        temp_s4 = align16((gCurrentLevelModel->segments[i].numberOfTriangles * 2) + temp_s4);
-        gCurrentLevelModel->segments[i].unk18 = temp_s4;
-        temp_s4 = &((u8*)temp_s4)[func_8002CC30(&gCurrentLevelModel->segments[i])];
-        func_8002C954(&gCurrentLevelModel->segments[i], &gCurrentLevelModel->segmentsBoundingBoxes[i], i);
-        gCurrentLevelModel->segments[i].unk30 = 0;
-        gCurrentLevelModel->segments[i].unk34 = temp_s4;
-        func_8002C71C(&gCurrentLevelModel->segments[i]);
-        temp_s4 = align16((gCurrentLevelModel->segments[i].unk32 * 2) + temp_s4);
+    temp_s4 = (s32) gCurrentLevelModel + gCurrentLevelModel->modelSize;
+    for (temp = 0; temp < gCurrentLevelModel->numberOfSegments; temp++) {
+        gCurrentLevelModel->segments[temp].unk10 = (s16 *) temp_s4;
+        temp_s4 = (s32) align16((gCurrentLevelModel->segments[temp].numberOfTriangles * 2) + temp_s4);
+        gCurrentLevelModel->segments[temp].unk18 = (s16 *) temp_s4;
+        temp_s4 = (s32) &((u8 *) temp_s4)[func_8002CC30(&gCurrentLevelModel->segments[temp])];
+        func_8002C954(&gCurrentLevelModel->segments[temp], &gCurrentLevelModel->segmentsBoundingBoxes[temp], temp);
+        gCurrentLevelModel->segments[temp].unk30 = 0;
+        gCurrentLevelModel->segments[temp].unk34 = (s16 *) temp_s4;
+        func_8002C71C(&gCurrentLevelModel->segments[temp]);
+        temp_s4 = (s32) align16((u8 *) (gCurrentLevelModel->segments[temp].unk32 * 2) + temp_s4);
     }
-    temp_s4 -= (s32)gCurrentLevelModel;
+    temp_s4 -= (s32) gCurrentLevelModel;
     if (temp_s4 > LEVEL_MODEL_MAX_SIZE) {
         rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
     }
     set_free_queue_state(0);
     free_from_memory_pool(D_8011D30C);
-    allocate_at_address_in_main_pool(temp_s4, (u8 *) D_8011D30C, 0xFFFF00FFU);
+    allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, COLOUR_TAG_YELLOW);
     set_free_queue_state(2);
     func_800A83B4(gCurrentLevelModel);
 
-    for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
-        for(j = 0; j < gCurrentLevelModel->segments[i].numberOfBatches; j++) {
-            for(k = gCurrentLevelModel->segments[i].batches[j].verticesOffset;
-                k < gCurrentLevelModel->segments[i].batches[j+1].verticesOffset;
-                k++) {
+    for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
+        for (temp_s4 = 0; temp_s4 < gCurrentLevelModel->segments[i].numberOfBatches; temp_s4++) {
+            for (temp = gCurrentLevelModel->segments[i].batches[temp_s4].verticesOffset; 
+                temp < gCurrentLevelModel->segments[i].batches[temp_s4+1].verticesOffset; 
+                temp++) {
                 // Why do this? Why not just set the vertex colors in the model itself?
-                if(gCurrentLevelModel->segments[i].vertices[k].r == 1 && gCurrentLevelModel->segments[i].vertices[k].g == 1) {
-                    gCurrentLevelModel->segments[i].vertices[k].a = gCurrentLevelModel->segments[i].vertices[k].b;
-                    gCurrentLevelModel->segments[i].vertices[k].r = 0x80;
-                    gCurrentLevelModel->segments[i].vertices[k].g = 0x80;
-                    gCurrentLevelModel->segments[i].vertices[k].b = 0x80;
-                    gCurrentLevelModel->segments[i].batches[j].flags |= 0x08000000;
+                if(gCurrentLevelModel->segments[i].vertices[temp].r == 1 && gCurrentLevelModel->segments[i].vertices[temp].g == 1) { 
+                    gCurrentLevelModel->segments[i].vertices[temp].a = gCurrentLevelModel->segments[i].vertices[temp].b;
+                    gCurrentLevelModel->segments[i].vertices[temp].r = 128;
+                    gCurrentLevelModel->segments[i].vertices[temp].g = 128;
+                    gCurrentLevelModel->segments[i].vertices[temp].b = 128;
+                    gCurrentLevelModel->segments[i].batches[temp_s4].flags |= 0x08000000;
                 }
             }
         }
     }
-    func_8007B374(0xFF00FFFF);
+    set_texture_colour_tag(COLOUR_TAG_MAGENTA);
 }
-
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C0C4.s")
 #endif

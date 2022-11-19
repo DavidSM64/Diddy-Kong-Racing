@@ -1053,8 +1053,12 @@ void free_texture(TextureHeader *tex) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/free_texture.s")
 #endif
 
-void func_8007B374(s32 arg0) {
-    gTexColourTag = arg0;
+/**
+ * Set the colour tag that determines which memory pool textures will be loaded into.
+ * By default, this generally stays as COLOUR_TAG_MAGENTA
+*/
+void set_texture_colour_tag(s32 tagID) {
+    gTexColourTag = tagID;
 }
 
 #ifdef NON_EQUIVALENT

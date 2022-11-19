@@ -6,6 +6,9 @@
 #include "f3ddkr.h"
 #include "racer.h"
 
+#define LOCAL_OFFSET_TO_RAM_ADDRESS(ptr) \
+    ptr = ((s32)((u8*)ptr) + (s32)((u8*)mdl))
+
 /* Size: 0x8 bytes */
 typedef struct unknown800DC874 {
     union {
