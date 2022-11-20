@@ -641,7 +641,7 @@ void render_level_geometry_and_objects(void) {
 
     func_80012C30();
 
-    if (get_settings()->courseId == 0x24) { // 0x24 = Opening sequence area
+    if (get_settings()->courseId == ASSET_LEVEL_OPENINGSEQUENCE) {
         D_8011B0FC = 1;
     }
 
@@ -1850,92 +1850,97 @@ void func_8003093C(s32 arg0) {
     gSPFogPosition(gSceneCurrDisplayList++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
 }
 
-#ifdef NON_EQUIVALENT
-//unk8011D388 D_8011D388[4];
-
+/**
+ * Sets the active viewport's fog target when passed through.
+ * Used in courses to make less, or more dense.
+*/
 void obj_loop_fogchanger(Object* obj) {
-    s32 temp_v0;
-    s32 index;
+    s32 temp3;
+    s32 fogNear;
     s32 sp74;
+    s32 playerIndex;
+    s32 index;
+    s32 phi_a0, fogFar;
     s32 i;
-    s32 phi_a0, phi_v1;
-    f32 x, z;
-    s32 temp_a3, temp_t0, temp_t1, temp_a1;
+    s32 fogR;
+    s32 fogG;
+    s32 fogB;
+    f32 x;
+    f32 z;
+    s32 temp_a1;
+    LevelObjectEntry_FogChanger *sp44;
+    Object **racers;
     s32 temp;
-    Object **sp40;
-    LevelObjectEntry_FogChanger *level_entry;
-    Object *tempObj;
+    Object_Racer *racer;
+    Object *racerObj;
     unk8011D388 *temp_v0_3;
     ObjectSegment *phi_s3;
-
-    sp40 = NULL;
-    level_entry = &obj->segment.unk3C_a.level_entry->fogChanger;
+    
+    racers = NULL;
+    sp44 = (LevelObjectEntry_FogChanger *) obj->segment.unk3C_a.level_entry;
     phi_s3 = NULL;
-
-    // check_if_showing_cutscene_camera() returns the bool gCutsceneCameraActive. 1 if camera is controlled by cutscene, 0 if controlled by racer.
+    
     if (check_if_showing_cutscene_camera()) {
         phi_s3 = func_80069D7C();
         sp74 = get_viewport_count() + 1;
     } else {
-        sp40 = get_racer_objects(&sp74);
+        racers = get_racer_objects(&sp74);
     }
-
+    
     for(i = 0; i < sp74; i++) {
-        index = -1;
-        if (sp40 != NULL) {
-            tempObj = sp40[i]; // Might be a player object?
-            temp_v0 = tempObj->unk64->fog_changer.unk0;
-            if ((temp_v0 >= 0) && (temp_v0 < MAXCONTROLLERS) && (obj != D_8011D388[i].unk34)) {
-                index = temp_v0;
-                x = tempObj->segment.trans.x_position;
-                z = tempObj->segment.trans.z_position;
+        index = PLAYER_COMPUTER;
+        if (racers != NULL) {
+            racer = &racers[i]->unk64->racer;
+            playerIndex = racer->playerIndex;
+            if (playerIndex >= PLAYER_ONE && playerIndex <= PLAYER_FOUR && obj != D_8011D388[playerIndex].unk34) {
+                index = playerIndex;
+                x = racers[i]->segment.trans.x_position;
+                z = racers[i]->segment.trans.z_position;
             }
-        } else if ((i < 4) && (obj != D_8011D388[i].unk34)) {
+        } else if (i <= PLAYER_FOUR && obj != D_8011D388[i].unk34) {
             index = i;
             x = phi_s3[i].trans.x_position;
             z = phi_s3[i].trans.z_position;
         }
-        if (index != -1) {
+        if (index != PLAYER_COMPUTER) {
             x -= obj->segment.trans.x_position;
             z -= obj->segment.trans.z_position;
-            if (((x * x) + (z * z)) < obj->unk78f) {
-                phi_a0 = level_entry->unkC;
-                phi_v1 = level_entry->unkE;
-                temp_a3 = level_entry->unk9;
-                temp_t0 = level_entry->unkA;
-                temp_t1 = level_entry->unkB;
-                temp_a1 = level_entry->unk10;
-                if (phi_v1 < phi_a0) {
-                    phi_v1 = level_entry->unkC;
-                    phi_a0 = level_entry->unkE;
+            if (&obj->segment.trans){} // Fakematch
+            if ((x * x) + (z * z) < obj->unk78f) {
+                fogNear = sp44->unkC;
+                fogFar = sp44->unkE;
+                fogR = sp44->unk9;
+                fogG = sp44->unkA;
+                fogB = sp44->unkB;
+                temp_a1 = sp44->unk10;
+                if (fogFar < fogNear) {
+                    temp3 = fogNear;
+                    fogNear = fogFar;
+                    fogFar = temp3;
                 }
-                if (phi_v1 >= 0x400) {
-                    phi_v1 = 0x3FF;
+                if (fogFar > 1023) {
+                    fogFar = 1023;
                 }
-                if (phi_a0 >= phi_v1 - 5) {
-                    phi_a0 = phi_v1 - 5;
+                if (fogNear >= fogFar - 5) {
+                    fogNear = fogFar - 5;
                 }
                 temp_v0_3 = &D_8011D388[index];
-                temp_v0_3->unk28 = temp_a3;
-                temp_v0_3->unk29 = temp_t0;
-                temp_v0_3->unk2A = temp_t1;
-                temp_v0_3->unk2C = phi_a0;
-                temp_v0_3->unk2E = phi_v1;
-                temp_v0_3->unk14 = ((temp_a3 << 16) - temp_v0_3->unk0) / temp_a1;
-                temp_v0_3->unk18 = ((temp_t0 << 16) - temp_v0_3->unk4) / temp_a1;
-                temp_v0_3->unk1C = ((temp_t1 << 16) - temp_v0_3->unk8) / temp_a1;
-                temp_v0_3->unk20 = ((phi_a0 << 16) - temp_v0_3->unkC) / temp_a1;
-                temp_v0_3->unk24 = ((phi_v1 << 16) - temp_v0_3->unk10) / temp_a1;
+                temp_v0_3->unk28 = fogR;
+                temp_v0_3->unk29 = fogG;
+                temp_v0_3->unk2A = fogB;
+                temp_v0_3->unk2C = fogNear;
+                temp_v0_3->unk2E = fogFar;
+                temp_v0_3->unk14 = ((fogR << 16) - temp_v0_3->unk0) / temp_a1;
+                temp_v0_3->unk18 = ((fogG << 16) - temp_v0_3->unk4) / temp_a1;
+                temp_v0_3->unk1C = ((fogB << 16) - temp_v0_3->unk8) / temp_a1;
+                temp_v0_3->unk20 = ((fogNear << 16) - temp_v0_3->unkC) / temp_a1;
+                temp_v0_3->unk24 = ((fogFar << 16) - temp_v0_3->unk10) / temp_a1;
                 temp_v0_3->unk30 = temp_a1;
                 temp_v0_3->unk34 = obj;
             }
         }
     }
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/obj_loop_fogchanger.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
