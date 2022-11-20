@@ -72,6 +72,20 @@ typedef struct {
     /* 0x08 */ s32 z;
 } unk8011D468;
 
+typedef struct Object_58_4 {
+    u8 pad0[0x12];
+    u16 unk12;
+} Object_58_4;
+
+typedef struct Object_58 {
+    f32 unk0;
+    Object_58_4 *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} Object_58;
+
 extern s32 D_800DC870;
 extern unknown800DC874 D_800DC874;
 extern unknown800DC874 D_800DC87C;
@@ -120,6 +134,8 @@ void func_8002D670(Object *obj, Object_50 *arg1);
 void render_floor_decal(Object *obj, Object_50 *arg1);
 s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
+void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);
+
 
 //Non Matching
 void render_level_segment(s32 segmentId, s32 nonOpaque);
@@ -128,7 +144,6 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
 void func_8002C7D4(void);
 Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
-void func_8002C954(LevelModelSegment*, LevelModelSegmentBoundingBox*, s32);
 s32 func_8002CC30(LevelModelSegment*);
 s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
 s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);
@@ -143,5 +158,7 @@ void func_800ACA20(Gfx**, Matrix**, s16**, ObjectSegment*);
 void func_800AD030(ObjectSegment*);
 void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, Matrix**, s32);
+void func_8002DE30(Object*);
+void func_8002E234(Object*, s32);
 
 #endif

@@ -429,6 +429,7 @@ typedef struct Triangle {
             /* 0x03 */ u8 vi2;          // Third vertex index
         };
     /* 0x00 */ u32 vertices; // For convenience?
+               u8 verticesArray[4];
     };
 /* 0x04 */ TexCoords uv0;   // Texture coordinates for the first vertex
 /* 0x08 */ TexCoords uv1;   // Texture coordinates for the second vertex
@@ -500,7 +501,7 @@ typedef struct LevelModelSegment {
 /* 0x04 */ Triangle *triangles;
 /* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
-/* 0x10 */ s32 unk10;
+/* 0x10 */ s16 *unk10;
 /* 0x14 */ u8 *unk14;
 /* 0x18 */ s16 *unk18;
 /* 0x1C */ s16 numberOfVertices;
@@ -599,7 +600,9 @@ typedef struct ObjectHeader {
   /* 0x32 */ s16 unk36;
              u8 pad38[5];
   /* 0x3D */ u8 unk3D;
-             u8 pad3E[16];
+             u8 pad3E[12];
+             s16 unk4A;
+             s16 unk4C;
              s16 drawDistance;
              u8 pad50[3];
   /* 0x53 */ s8 modelType;
