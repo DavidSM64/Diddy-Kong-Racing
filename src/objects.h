@@ -218,10 +218,26 @@ typedef struct unk8000FD20 {
     unk8000FD20_2 *unk4C;
 } unk8000FD20;
 
+/* Unknown Size */
+typedef struct unk_80016BC4_2 {
+    u8 pad0[0x104];
+    s8 unk104;
+} unk_80016BC4_2;
+
+/* Unknown Size */
+typedef struct unk_80016BC4_3 {
+    u8 pad0[0x55];
+    s8 unk55;
+} unk_80016BC4_3;
+
 /* Unknown Size. This might just be unk8000FD20. */
 typedef struct unk8000FD34 {
-    u8 unk00[0x5C];
-    s32 unk5C;
+    u8 pad0[0x40];
+    unk_80016BC4_3 *unk40;
+    u8 pad44[0x18];
+    unk_80016BC4_2 *unk5C;
+    u8 pad60[0x8];
+    s32* unk68;
 } unk8000FD34;
 
 typedef struct struct_8000FC6C {
@@ -255,6 +271,28 @@ typedef struct ObjectTransformExt {
     s16 unk18;
     s16 unk1A;
 } ObjectTransformExt;
+
+typedef struct unk80022CFC_2 {
+    u8 pad[0xA];
+    s8 unkA;
+} unk80022CFC_2;
+
+typedef struct unk80022CFC_1 {
+    u8 pad[0xC];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x16];
+    s16 unk2E;
+    u8 pad30[0x9];
+    s8 unk39;
+    u8 pad3A[0x2];
+    unk80022CFC_2* unk3C;
+    s32 pad40[2];
+    s16 unk48;
+    u16 pad4A[0x16];
+    s32 unk78;
+} unk80022CFC_1;
 
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
@@ -360,7 +398,7 @@ s32 func_8001B650(void);
 s32 func_8001B738(s32 controllerIndex);
 u8 has_ghost_to_save();
 void func_8001B790(void);
-f32 func_8001B834(Object *arg0, s32);
+f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2);
 unknown8011AECC *func_8001BA00(s32 arg0);
 unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1);
 s32 func_8001BA64();
@@ -419,6 +457,7 @@ s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 void render_3d_billboard(Object *obj);
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
 void func_8000B290(void);
+void func_80016BC4(unk8000FD34*);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

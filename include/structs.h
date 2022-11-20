@@ -1030,7 +1030,7 @@ typedef struct Object_Racer {
   /* 0x18A */ s16 unk18A;
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 shieldTimer;
-  /* 0x190 */ s16 unk190;
+  /* 0x190 */ s16 courseCheckpoint;
   /* 0x192 */ s8 checkpoint;
   /* 0x193 */ s8 lap;
   /* 0x194 */ s8 unk194;

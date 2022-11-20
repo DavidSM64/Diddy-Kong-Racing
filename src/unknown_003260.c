@@ -48,18 +48,6 @@ s32 gFunc80019808Checksum = 0x35281;
 s32 gFunc80019808Length = 0xFD0;
 s32 D_800DC698 = 0;       // Currently unknown, might be a different type.
 s32 D_800DC69C = 0;       // Currently unknown, might be a different type.
-s32 D_800DC6A0 = 1;       // Currently unknown, might be a different type.
-s32 D_800DC6A4 = 0;       // Currently unknown, might be a different type.
-s32 D_800DC6A8 = 0;       // Currently unknown, might be a different type.
-s32 D_800DC6AC = 0;       // Currently unknown, might be a different type.
-
-ALEventQueue *D_800DC6B0 = NULL;
-s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
-unk800DC6BC_40 *D_800DC6B8 = NULL;
-unk800DC6BC *gAlSndPlayer = &D_80119BD0;
-
-s32 sfxVolumeSlider = 256;
-s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
 
 /*******************************/
 
@@ -170,7 +158,27 @@ void thread4_audio(UNUSED void *arg) {
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002DF8.s")
+
+void func_80002DF8(s32 arg0) {
+    static s32 D_800DC6A0 = 1;
+    if ((osAiGetLength() >> 2) == 0) {
+        if (D_800DC6A0 == 0) {
+            D_800DC6A0 = 0;
+        }
+    }
+}
+
+s32 D_800DC6A4 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC6A8 = 0;       // Currently unknown, might be a different type.
+s32 D_800DC6AC = 0;       // Currently unknown, might be a different type.
+
+ALEventQueue *D_800DC6B0 = NULL;
+s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
+unk800DC6BC_40 *D_800DC6B8 = NULL;
+unk800DC6BC *gAlSndPlayer = &D_80119BD0;
+
+s32 sfxVolumeSlider = 256;
+s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
 
 /******************************************************************************
  *
