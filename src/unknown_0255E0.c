@@ -19,6 +19,7 @@
 #include "weather.h"
 #include "particles.h"
 #include "lib/src/libc/rmonPrintf.h"
+#include "objects.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
@@ -362,7 +363,7 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
             }
         } else {
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            func_800289B8();
+            draw_gradient_background();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         }
@@ -392,7 +393,7 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
             func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_8002A31C();
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            func_800289B8();
+            draw_gradient_background();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             
@@ -504,22 +505,105 @@ void func_80028044(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 
-#ifdef NON_EQUIVALENT
-void func_800289B8(void) {
-    u8 sp_2f = gCurrentLevelHeader2->unkC1;
-    u8 sp_2e = gCurrentLevelHeader2->unkC2;
-    u8 sp_2d = gCurrentLevelHeader2->unkC3;
-    u8 sp_2c = gCurrentLevelHeader2->unkBE;
-    u8 sp_2b = gCurrentLevelHeader2->unkBF;
-    u8 sp_2a = gCurrentLevelHeader2->unkC0;
-    u32 sp_24 = gSceneCurrVertexList;
+/**
+ * Instead of drawing the skydome with textures, draw a solid coloured background.
+ * Using different colours set in the level header, the vertices are coloured and
+ * it gives the background a gradient effect.
+*/
+void draw_gradient_background(void) {
+    s32 set_zero;
+    s16 y0;
+    s16 y1;
+    u8 headerRed0;
+    u8 headerGreen0;
+    u8 headerBlue0;
+    u8 headerRed1;
+    u8 headerGreen1;
+    u8 headerBlue1;
+    Vertex *verts;
+    Triangle *tris;
+    s32 also_one;
+    s64 set_twenty;
+        
+    verts = (Vertex *) gSceneCurrVertexList;
+    tris = (Triangle *) gSceneCurrTriList;
+    headerRed0 = gCurrentLevelHeader2->unkC1;
+    also_one = 1;
+    headerGreen0 = gCurrentLevelHeader2->unkC2;
+    headerBlue0 = gCurrentLevelHeader2->unkC3;
+    headerRed1 = gCurrentLevelHeader2->unkBE;
+    headerGreen1 = gCurrentLevelHeader2->unkBF;
+    headerBlue1 = gCurrentLevelHeader2->unkC0;
     func_8007B3D0(&gSceneCurrDisplayList);
     func_8007B4C8(&gSceneCurrDisplayList, 0, 8);
-    gSceneCurrDisplayList += 8;
+    gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
+    gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
+    set_twenty = 20;
+    if (osTvType == TV_TYPE_PAL) {
+        y0 = -180;
+        y1 = 180;
+    } else {
+        y0 = -150;
+        y1 = 150;
+    }
+    if (get_viewport_count() == TWO_PLAYERS) {
+        y0 >>= 1;
+        y1 >>= 1;
+    }
+    verts[0].x = -200;
+    verts[0].y = y0;
+    verts[0].z = set_twenty;
+    verts[0].r = headerRed0;
+    verts[0].g = headerGreen0;
+    verts[0].b = headerBlue0;
+    verts[0].a = 255;
+    verts[also_one].x = 200;
+    verts[1].y = y0;
+    verts[1].z = set_twenty;
+    verts[1].r = headerRed0;
+    verts[1].g = headerGreen0;
+    verts[1].b = headerBlue0;
+    verts[1].a = 255;
+    verts[2].x = -200;
+    verts[2].y = y1;
+    verts[2].z = set_twenty;
+    verts[2].r = headerRed1;
+    verts[2].g = headerGreen1;
+    verts[2].b = headerBlue1;
+    verts[2].a = 255;
+    verts[3].x = 200;
+    set_zero = 0;
+    verts[3].y = y1;
+    verts[3].z = set_twenty;
+    verts[3].r = headerRed1;
+    verts[3].g = headerGreen1;
+    verts[3].b = headerBlue1;
+    verts[3].a = 255;
+    tris[0].drawBackface = 0x40;
+    tris[0].vi0 = 2;
+    tris[0].vi1 = 1;
+    tris[0].vi2 = 0;
+    tris[0].uv0.u = 0;
+    tris[0].uv0.v = set_zero;
+    tris[set_zero].uv1.u = set_zero;
+    tris[set_zero].uv1.v = set_zero;
+    tris[set_zero].uv2.u = set_zero;
+    tris[0].uv2.v = 0;
+    tris[1].drawBackface = 0x40;
+    tris[1].vi0 = 3;
+    tris[1].vi1 = 2;
+    tris[1].vi2 = 1;
+    tris[1].uv0.u = 0;
+    tris[1].uv0.v = 0;
+    tris[1].uv1.u = 0;
+    tris[1].uv1.v = 0;
+    tris[1].uv2.u = 0;
+    tris[1].uv2.v = 0;
+    verts += 4;
+    gSceneCurrVertexList = verts;
+    tris += 2;
+    gSceneCurrTriList = tris;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800289B8.s")
-#endif
 
 void render_skydome(void) {
     ObjectSegment *v0_some_struct;
@@ -1553,115 +1637,7 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
     }
 }
 
-void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2) {
-    s32 sp94;
-    s32 sp90;
-    Object *obj;
-    ObjectHeader *objHeader;
-    f32 var_f20;
-    s32 temp_v1_2;
-    s32 numViewports;
-    Object **objects;
-    s32 var_a0;
-    Object_58_4* obj58_4;
-    Object_50 *obj50;
-    Object_58* obj58;
-    s32 temp;
-
-    D_8011B0CC = D_8011B0C8;
-    if (arg0 == 1) {
-        D_8011B0CC += 2;
-    }
-    D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0CC];
-    D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0CC];
-    D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0CC];
-    D_8011D364 = 0;
-    D_8011D368 = 0;
-    D_8011D36C = 0;
-    numViewports = get_viewport_count();
-    objects = func_8000E988(&sp94, &sp90);
-    while (sp94 < sp90) {
-        obj = objects[sp94];
-        objHeader = obj->segment.header;
-        obj58 = obj->unk58;
-        obj50 = obj->unk50;
-        sp94 += 1;
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
-            if (obj50 != NULL && obj50->unk0 > 0.0f && arg0 == objHeader->unk32) {
-                obj50->unk8 = -1;
-            } 
-            if (obj->segment.trans.unk6 & 0x4000) {
-                obj50 = NULL;
-            }
-            if (((obj50 != NULL) && (objHeader->unk32 == 2)) || ((obj58 != NULL) && (objHeader->unk36 == 2))) {
-                var_f20 = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-            } else {
-                var_f20 = 0.0f;
-            }
-            if ((obj50 != NULL) && (obj50->unk0 > 0.0f) && (arg0 == objHeader->unk32)) {
-                D_8011D0D4 = 1.0f;
-                obj50->unk8 = -1;
-                var_a0 = FALSE;
-                if ((objHeader->unk32 == 2) && (numViewports > 0) && (numViewports < 4)) {
-                    if (obj->behaviorId == 1) {
-                        temp = obj->unk64->racer.playerIndex;
-                        if (temp != -1) {
-                            func_8002E234(obj, 0);
-                            var_a0 = TRUE;
-                        }
-                    } else if (obj->behaviorId == 5) {
-                        func_8002E234(obj, 0);
-                        var_a0 = TRUE;
-                    }
-                } else {
-                    temp_v1_2 = objHeader->unk4A;
-                    if (var_f20 < temp_v1_2) {
-                        if ((f32) objHeader->unk4C < var_f20) {
-                            D_8011D0D4 = ((temp_v1_2 - var_f20) / (f32) ( temp_v1_2 - objHeader->unk4C));
-                        }
-                        func_8002E234(obj, 0);
-                        var_a0 = TRUE;
-                    }
-                }
-                if ((!var_a0) && (obj->unk54 != NULL)) {
-                    func_8002DE30(obj);
-                }
-            }
-            if ((obj58 != NULL) && (obj58->unk0 > 0.0f) && (arg1 == objHeader->unk36)) {
-                obj58->unk8 = -1;
-                D_8011D0D4 = 1.0f;
-                obj58_4 = obj58->unk4;
-                if ((obj58_4 != NULL) && (arg2 != 0) && (obj58_4->unk12 != 0x100)) {
-                    obj58->unkC += obj58->unkE;
-                    while (obj58_4->unk12 < obj58->unkC) {
-                        obj58->unkC -= obj58_4->unk12;
-                    } 
-                }
-                
-                if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
-                    if (obj->behaviorId == BHV_RACER) {
-                        temp = obj->unk64->racer.playerIndex;
-                        if (temp != -1) {
-                            func_8002E234(obj, 1);
-                        }
-                    } else if (obj->behaviorId == 5) {
-                        func_8002E234(obj, 1);
-                    }
-                } else {
-                    if (var_f20 < objHeader->unk4A) {
-                        if (objHeader->unk4C < var_f20) {
-                            D_8011D0D4 = ((objHeader->unk4A - var_f20) / (f32) (objHeader->unk4A - objHeader->unk4C));
-                        }
-                        func_8002E234(obj, 1);
-                    }
-                }
-            }
-        }
-    }
-    D_8011D360[D_8011D364].unk4 = D_8011D368;
-    D_8011D360[D_8011D364].unk6 = D_8011D36C;
-}
-
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D8DC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002DE30.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E234.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E904.s")

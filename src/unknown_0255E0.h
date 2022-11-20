@@ -135,6 +135,7 @@ void render_floor_decal(Object *obj, Object_50 *arg1);
 s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);
+void draw_gradient_background(void);
 
 
 //Non Matching
@@ -149,7 +150,6 @@ s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
 s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);
 void func_800278E8(s32);
 void func_80028050(void);
-void func_800289B8(void);
 void func_80028CD0(s32);
 void func_8002A31C(void);
 void func_8002D8DC(s32, s32, s32);

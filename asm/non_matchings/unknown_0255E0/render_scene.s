@@ -294,7 +294,7 @@ glabel render_scene
 .L8002519C:
 /* 025D9C 8002519C 0C01A01F */  jal   func_8006807C
 /* 025DA0 800251A0 02402825 */   move  $a1, $s2
-/* 025DA4 800251A4 0C00A26E */  jal   func_800289B8
+/* 025DA4 800251A4 0C00A26E */  jal   draw_gradient_background
 /* 025DA8 800251A8 00000000 */   nop   
 /* 025DAC 800251AC 02202025 */  move  $a0, $s1
 /* 025DB0 800251B0 0C019F4F */  jal   func_80067D3C
@@ -420,7 +420,7 @@ glabel render_scene
 /* 025F80 80025380 02202025 */  move  $a0, $s1
 /* 025F84 80025384 0C01A01F */  jal   func_8006807C
 /* 025F88 80025388 02402825 */   move  $a1, $s2
-/* 025F8C 8002538C 0C00A26E */  jal   func_800289B8
+/* 025F8C 8002538C 0C00A26E */  jal   draw_gradient_background
 /* 025F90 80025390 00000000 */   nop   
 /* 025F94 80025394 02202025 */  move  $a0, $s1
 /* 025F98 80025398 0C019F4F */  jal   func_80067D3C
