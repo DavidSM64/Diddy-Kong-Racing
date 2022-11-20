@@ -836,7 +836,7 @@ s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
 
 s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
     arg0->unk5C = arg1;
-    func_80016BC4();
+    func_80016BC4(arg0);
     return 0x10C;
 }
 
@@ -1483,7 +1483,32 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800155B8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80016BC4.s")
+
+void func_80016BC4(unk8000FD34 *arg0) {
+    s32 var_s0;
+    s32 var_s1;
+    s32 *temp_v0;
+    s8 var_v1;
+
+    arg0->unk5C->unk104 = 0;
+    func_8001709C();
+    func_8001709C(arg0);
+    var_s1 = 0;
+    var_v1 = arg0->unk40->unk55;
+    var_s0 = 0;
+    if (var_v1 > 0) {
+        do {
+            temp_v0 = *(arg0->unk68 + var_s0);
+            if (temp_v0 != NULL) {
+                func_8006017C(*temp_v0);
+                var_v1 = arg0->unk40->unk55;
+            }
+            var_s1 += 1;
+            var_s0 += 1;
+        } while (var_s1 < var_v1);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001709C.s")
