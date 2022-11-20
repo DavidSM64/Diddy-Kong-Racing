@@ -218,10 +218,26 @@ typedef struct unk8000FD20 {
     unk8000FD20_2 *unk4C;
 } unk8000FD20;
 
+/* Unknown Size */
+typedef struct unk_80016BC4_2 {
+    u8 pad0[0x104];
+    s8 unk104;
+} unk_80016BC4_2;
+
+/* Unknown Size */
+typedef struct unk_80016BC4_3 {
+    u8 pad0[0x55];
+    s8 unk55;
+} unk_80016BC4_3;
+
 /* Unknown Size. This might just be unk8000FD20. */
 typedef struct unk8000FD34 {
-    u8 unk00[0x5C];
-    s32 unk5C;
+    u8 pad0[0x40];
+    unk_80016BC4_3 *unk40;
+    u8 pad44[0x18];
+    unk_80016BC4_2 *unk5C;
+    u8 pad60[0x8];
+    s32* unk68;
 } unk8000FD34;
 
 typedef struct struct_8000FC6C {
@@ -441,6 +457,7 @@ s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 void render_3d_billboard(Object *obj);
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
 void func_8000B290(void);
+void func_80016BC4(unk8000FD34*);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
