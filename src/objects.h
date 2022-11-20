@@ -256,6 +256,28 @@ typedef struct ObjectTransformExt {
     s16 unk1A;
 } ObjectTransformExt;
 
+typedef struct unk80022CFC_2 {
+    u8 pad[0xA];
+    s8 unkA;
+} unk80022CFC_2;
+
+typedef struct unk80022CFC_1 {
+    u8 pad[0xC];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x16];
+    s16 unk2E;
+    u8 pad30[0x9];
+    s8 unk39;
+    u8 pad3A[0x2];
+    unk80022CFC_2* unk3C;
+    s32 pad40[2];
+    s16 unk48;
+    u16 pad4A[0x16];
+    s32 unk78;
+} unk80022CFC_1;
+
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
 
