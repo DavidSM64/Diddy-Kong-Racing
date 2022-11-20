@@ -316,7 +316,7 @@ void func_800AEE14(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     arg0->unk6 = 1;
     arg0->unkC = *arg2;
     tri = *arg2;
-    tri->drawBackface = 0x40;
+    tri->flags = 0x40;
     tri->vi0 = 2;
     tri->vi1 = 1;
     tri->vi2 = 0;
@@ -349,7 +349,7 @@ void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     arg0->unk6 = 2;
     arg0->unkC = *arg2;
     tri = *arg2;
-    tri[0].drawBackface = 0x40;
+    tri[0].flags = 0x40;
     tri[0].vi0 = 3;
     tri[0].uv0.u = 0;
     tri[0].vi1 = 1;
@@ -357,7 +357,7 @@ void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     tri[0].vi2 = 0;
     tri[0].uv2.u = 0;
     tri[0].uv2.v = 0;
-    tri[1].drawBackface = 0x40;
+    tri[1].flags = 0x40;
     tri[1].vi0 = 3;
     tri[1].uv0.u = 0;
     tri[1].vi1 = 2;

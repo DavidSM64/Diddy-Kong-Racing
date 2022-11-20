@@ -423,7 +423,7 @@ typedef struct TexCoords {
 typedef struct Triangle {
     union {
         struct {
-            /* 0x00 */ u8 drawBackface; // 0x40 = Draw backface, 0x00 = Cull backface
+            /* 0x00 */ u8 flags; // 0x40 = Draw backface, 0x00 = Cull backface
             /* 0x01 */ u8 vi0;          // First vertex index
             /* 0x02 */ u8 vi1;          // Second vertex index
             /* 0x03 */ u8 vi2;          // Third vertex index
@@ -689,6 +689,20 @@ typedef struct Object_54 {
     u8 unk19;
     u8 unk1A;
 } Object_54;
+
+typedef struct Object_58_4 {
+    u8 pad0[0x12];
+    u16 unk12;
+} Object_58_4;
+
+typedef struct Object_58 {
+    f32 unk0;
+    Object_58_4 *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} Object_58;
 
 typedef struct Object_5C {
     u8 pad0[0x100];

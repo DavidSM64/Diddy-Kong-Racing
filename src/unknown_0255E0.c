@@ -23,8 +23,6 @@
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
-// Max level size by default is 64000 units across.
-#define LEVEL_BOUNDARY_MAX 32000
 
 /************ .data ************/
 
@@ -122,7 +120,7 @@ s32 D_8011D0C8;
 s16 D_8011D0CC;
 s16 D_8011D0CE;
 s32 D_8011D0D0;
-s32 D_8011D0D4;
+f32 D_8011D0D4;
 s32 D_8011D0D8;
 s32 D_8011D0DC;
 s32 D_8011D0E0;
@@ -579,7 +577,7 @@ void draw_gradient_background(void) {
     verts[3].g = headerGreen1;
     verts[3].b = headerBlue1;
     verts[3].a = 255;
-    tris[0].drawBackface = 0x40;
+    tris[0].flags = 0x40;
     tris[0].vi0 = 2;
     tris[0].vi1 = 1;
     tris[0].vi2 = 0;
@@ -589,7 +587,7 @@ void draw_gradient_background(void) {
     tris[set_zero].uv1.v = set_zero;
     tris[set_zero].uv2.u = set_zero;
     tris[0].uv2.v = 0;
-    tris[1].drawBackface = 0x40;
+    tris[1].flags = 0x40;
     tris[1].vi0 = 3;
     tris[1].vi1 = 2;
     tris[1].vi2 = 1;
@@ -1293,7 +1291,7 @@ void func_8002C0C4(s32 modelId) {
     s32 temp;
     LevelModel *mdl;
     
-    func_8007B374(0xFF00FF);
+    set_texture_colour_tag(0xFF00FF);
     D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, 0xFFFF00FFU);
     gCurrentLevelModel = D_8011D30C;
     D_8011D370 = allocate_from_main_pool_safe(0x7D0, 0xFFFF00FFU);
@@ -1377,7 +1375,7 @@ void func_8002C0C4(s32 modelId) {
             }
         }
     }
-    func_8007B374(-0xFF0001);
+    set_texture_colour_tag(-0xFF0001);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C0C4.s")
@@ -1460,13 +1458,13 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
         endTri = segment->batches[i+1].facesOffset;
         vertsOffset = segment->batches[i].verticesOffset;
         for (j = startTri; j < endTri; j++) {
-            if (segment->triangles[j].drawBackface & 0x80) { // drawBackface needs to be renamed to flags.
+            if (segment->triangles[j].flags & 0x80) {
                 segment->unk10[j] = 0;
             } else {
-                maxX = -LEVEL_BOUNDARY_MAX;
-                maxZ = -LEVEL_BOUNDARY_MAX;
-                minZ = LEVEL_BOUNDARY_MAX;
-                minX = LEVEL_BOUNDARY_MAX;
+                maxX = -32000;
+                maxZ = -32000;
+                minZ = 32000;
+                minX = 32000;
                 
                 for (l = 0; l != 3; l++) {
                     vert = &segment->vertices[segment->triangles[j].verticesArray[l + 1] + vertsOffset];
@@ -1637,7 +1635,115 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002D8DC.s")
+void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2) {
+    s32 sp94;
+    s32 sp90;
+    Object *obj;
+    ObjectHeader *objHeader;
+    f32 var_f20;
+    s32 temp_v1_2;
+    s32 numViewports;
+    Object **objects;
+    s32 var_a0;
+    Object_58_4* obj58_4;
+    Object_50 *obj50;
+    Object_58* obj58;
+    s32 temp;
+
+    D_8011B0CC = D_8011B0C8;
+    if (arg0 == 1) {
+        D_8011B0CC += 2;
+    }
+    D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0CC];
+    D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0CC];
+    D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0CC];
+    D_8011D364 = 0;
+    D_8011D368 = 0;
+    D_8011D36C = 0;
+    numViewports = get_viewport_count();
+    objects = func_8000E988(&sp94, &sp90);
+    while (sp94 < sp90) {
+        obj = objects[sp94];
+        objHeader = obj->segment.header;
+        obj58 = obj->unk58;
+        obj50 = obj->unk50;
+        sp94 += 1;
+        if (!(obj->segment.trans.unk6 & 0x8000)) {
+            if (obj50 != NULL && obj50->unk0 > 0.0f && arg0 == objHeader->unk32) {
+                obj50->unk8 = -1;
+            } 
+            if (obj->segment.trans.unk6 & 0x4000) {
+                obj50 = NULL;
+            }
+            if ((obj50 != NULL && objHeader->unk32 == 2) || (obj58 != NULL && objHeader->unk36 == 2)) {
+                var_f20 = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            } else {
+                var_f20 = 0;
+            }
+            if (obj50 != NULL && obj50->unk0 > 0.0f && arg0 == objHeader->unk32) {
+                D_8011D0D4 = 1.0f;
+                obj50->unk8 = -1;
+                var_a0 = FALSE;
+                if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
+                    if (obj->behaviorId == BHV_RACER) {
+                        temp = obj->unk64->racer.playerIndex;
+                        if (temp != PLAYER_COMPUTER) {
+                            func_8002E234(obj, FALSE);
+                            var_a0 = TRUE;
+                        }
+                    } else if (obj->behaviorId == BHV_WEAPON) {
+                        func_8002E234(obj, FALSE);
+                        var_a0 = TRUE;
+                    }
+                } else {
+                    temp_v1_2 = objHeader->unk4A;
+                    if (var_f20 < temp_v1_2) {
+                        if (objHeader->unk4C < var_f20) {
+                            D_8011D0D4 = (temp_v1_2 - var_f20) / ( temp_v1_2 - objHeader->unk4C);
+                        }
+                        func_8002E234(obj, FALSE);
+                        var_a0 = TRUE;
+                    }
+                }
+                if ((!var_a0) && (obj->unk54 != NULL)) {
+                    func_8002DE30(obj);
+                }
+            }
+            if (obj58 != NULL && obj58->unk0 > 0.0f && arg1 == objHeader->unk36) {
+                obj58->unk8 = -1;
+                D_8011D0D4 = 1.0f;
+                obj58_4 = obj58->unk4;
+                if (obj58_4 != NULL && arg2 != 0 && obj58_4->unk12 != 0x100) {
+                    obj58->unkC += obj58->unkE;
+                    while (obj58_4->unk12 < obj58->unkC) {
+                        obj58->unkC -= obj58_4->unk12;
+                    } 
+                }
+                
+                if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
+                    if (obj->behaviorId == BHV_RACER) {
+                        temp = obj->unk64->racer.playerIndex;
+                        if (temp != -1) {
+                            func_8002E234(obj, TRUE);
+                        }
+                    } else if (obj->behaviorId == BHV_WEAPON) {
+                        func_8002E234(obj, TRUE);
+                    }
+                } else {
+                    if (var_f20 < objHeader->unk4A) {
+                        if (objHeader->unk4C < var_f20) {
+                            D_8011D0D4 = (objHeader->unk4A - var_f20) / (objHeader->unk4A - objHeader->unk4C);
+                        }
+                        func_8002E234(obj, TRUE);
+                    }
+                }
+            }
+        }
+    }
+    D_8011D360[D_8011D364].unk4 = D_8011D368;
+    D_8011D360[D_8011D364].unk6 = D_8011D36C;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002DE30.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E234.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E904.s")

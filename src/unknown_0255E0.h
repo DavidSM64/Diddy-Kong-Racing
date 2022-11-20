@@ -72,20 +72,6 @@ typedef struct {
     /* 0x08 */ s32 z;
 } unk8011D468;
 
-typedef struct Object_58_4 {
-    u8 pad0[0x12];
-    u16 unk12;
-} Object_58_4;
-
-typedef struct Object_58 {
-    f32 unk0;
-    Object_58_4 *unk4;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} Object_58;
-
 extern s32 D_800DC870;
 extern unknown800DC874 D_800DC874;
 extern unknown800DC874 D_800DC87C;
@@ -136,6 +122,7 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);
 void draw_gradient_background(void);
+void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2);
 
 
 //Non Matching
@@ -152,7 +139,6 @@ void func_800278E8(s32);
 void func_80028050(void);
 void func_80028CD0(s32);
 void func_8002A31C(void);
-void func_8002D8DC(s32, s32, s32);
 void func_8007F24C(s8*, s32);
 void func_800ACA20(Gfx**, Matrix**, s16**, ObjectSegment*);
 void func_800AD030(ObjectSegment*);
