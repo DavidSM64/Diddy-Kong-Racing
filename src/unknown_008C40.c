@@ -260,7 +260,7 @@ void func_8000A414(Gfx **arg0, Vertex **arg1, Triangle **arg2, unk800A414_arg3 *
     sp30[3].a = 255;
     sp30 += 4;
     
-    sp2C[0].drawBackface = 0x40; // 0x40 = Draw backface.
+    sp2C[0].flags = 0x40; // 0x40 = Draw backface.
     sp2C[0].vi0 = 2;
     sp2C[0].vi1 = 1;
     sp2C[0].vi2 = 0;
@@ -270,7 +270,7 @@ void func_8000A414(Gfx **arg0, Vertex **arg1, Triangle **arg2, unk800A414_arg3 *
     sp2C[0].uv1.v = 0;
     sp2C[0].uv2.u = 1;
     sp2C[0].uv2.v = 0;
-    sp2C[1].drawBackface = 0x40;
+    sp2C[1].flags = 0x40;
     sp2C[1].vi0 = 3;
     sp2C[1].vi1 = 2;
     sp2C[1].vi2 = 1;

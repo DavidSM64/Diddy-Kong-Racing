@@ -29,12 +29,12 @@ glabel func_80065EA0
 /* 066AF8 80065EF8 00895021 */  addu  $t2, $a0, $t1
 /* 066AFC 80065EFC 008FC021 */  addu  $t8, $a0, $t7
 /* 066B00 80065F00 008B6021 */  addu  $t4, $a0, $t3
-/* 066B04 80065F04 3C118012 */  lui   $s1, %hi(gObjectRenderStackPos) # $s1, 0x8012
+/* 066B04 80065F04 3C118012 */  lui   $s1, %hi(gActiveCameraID) # $s1, 0x8012
 /* 066B08 80065F08 AFBF0034 */  sw    $ra, 0x34($sp)
 /* 066B0C 80065F0C AC4C0004 */  sw    $t4, 4($v0)
 /* 066B10 80065F10 AC580008 */  sw    $t8, 8($v0)
 /* 066B14 80065F14 AC4A000C */  sw    $t2, 0xc($v0)
-/* 066B18 80065F18 26310CE4 */  addiu $s1, %lo(gObjectRenderStackPos) # addiu $s1, $s1, 0xce4
+/* 066B18 80065F18 26310CE4 */  addiu $s1, %lo(gActiveCameraID) # addiu $s1, $s1, 0xce4
 /* 066B1C 80065F1C 00008025 */  move  $s0, $zero
 /* 066B20 80065F20 24120008 */  li    $s2, 8
 /* 066B24 80065F24 240B00B4 */  li    $t3, 180

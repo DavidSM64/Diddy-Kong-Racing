@@ -423,12 +423,13 @@ typedef struct TexCoords {
 typedef struct Triangle {
     union {
         struct {
-            /* 0x00 */ u8 drawBackface; // 0x40 = Draw backface, 0x00 = Cull backface
+            /* 0x00 */ u8 flags; // 0x40 = Draw backface, 0x00 = Cull backface
             /* 0x01 */ u8 vi0;          // First vertex index
             /* 0x02 */ u8 vi1;          // Second vertex index
             /* 0x03 */ u8 vi2;          // Third vertex index
         };
     /* 0x00 */ u32 vertices; // For convenience?
+               u8 verticesArray[4];
     };
 /* 0x04 */ TexCoords uv0;   // Texture coordinates for the first vertex
 /* 0x08 */ TexCoords uv1;   // Texture coordinates for the second vertex
@@ -500,7 +501,7 @@ typedef struct LevelModelSegment {
 /* 0x04 */ Triangle *triangles;
 /* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
-/* 0x10 */ s32 unk10;
+/* 0x10 */ s16 *unk10;
 /* 0x14 */ u8 *unk14;
 /* 0x18 */ s16 *unk18;
 /* 0x1C */ s16 numberOfVertices;
@@ -599,8 +600,10 @@ typedef struct ObjectHeader {
   /* 0x32 */ s16 unk36;
              u8 pad38[5];
   /* 0x3D */ u8 unk3D;
-             u8 pad3E[16];
-             s16 unk4E; //Used in func_8002A900?
+             u8 pad3E[12];
+             s16 unk4A;
+             s16 unk4C;
+             s16 drawDistance;
              u8 pad50[3];
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
@@ -686,6 +689,20 @@ typedef struct Object_54 {
     u8 unk19;
     u8 unk1A;
 } Object_54;
+
+typedef struct Object_58_4 {
+    u8 pad0[0x12];
+    u16 unk12;
+} Object_58_4;
+
+typedef struct Object_58 {
+    f32 unk0;
+    Object_58_4 *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} Object_58;
 
 typedef struct Object_5C {
     u8 pad0[0x100];
