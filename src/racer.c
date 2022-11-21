@@ -568,7 +568,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
 
 // something to do with the boats; this function only fires on boats and it does so when the player's boat is accelerating?
 // it returns the velocity, so maybe so
-f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
+f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
     Matrix mtx;
     f32 velocity;
     s32 angle;
