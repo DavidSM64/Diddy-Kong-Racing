@@ -120,6 +120,7 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
+<<<<<<< HEAD
 As of November 15, 2022, this is our current score:
 ```
 =================================================================
@@ -146,6 +147,34 @@ As of November 15, 2022, this is our current score:
              We are racing in Fossil Canyon. (Lap 3/3)
  =================================================================
  ```
+=======
+As of November 20, 2022, this is our current score:
+```
+ =====================================================================
+                ADVENTURE ONE (ASM -> C Decompilation)
+ -------------------------- 38.35% Complete --------------------------
+                     # Decompiled functions: 1357
+                      # GLOBAL_ASM remaining: 479
+                     # NON_MATCHING functions: 11
+                  # NON_EQUIVALENT WIP functions: 87
+ ---------------------------- Game Status ----------------------------
+               Balloons: 19/47, Keys: 2/4, Trophies: 1/5
+                T.T. Amulets: 2/4, Wizpig Amulets: 1/4
+ ---------------------------------------------------------------------
+ We are collecting silver coins in Snowball Valley. (2/8 silver coins)
+ =====================================================================
+                 ADVENTURE TWO (Cleanup & Documentation)
+ --------------------------  9.70% Complete --------------------------
+                      # Documented functions: 253
+                    # Undocumented remaining: 1583
+ ---------------------------- Game Status ----------------------------
+               Balloons: 6/47, Keys: 1/4, Trophies: 0/5
+                T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ ---------------------------------------------------------------------
+               We are racing in Jungle Falls. (Lap 2/3)
+ =====================================================================
+```
+>>>>>>> master
 <!-- README_SCORE_END -->
 
 ---

@@ -566,9 +566,9 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
 }
 
-// Function itself matches but causes a diff in another func.
-#ifdef NON_MATCHING
-f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
+// something to do with the boats; this function only fires on boats and it does so when the player's boat is accelerating?
+// it returns the velocity, so maybe so
+f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
     Matrix mtx;
     f32 velocity;
     s32 angle;
@@ -581,7 +581,7 @@ f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 upda
         if (velocity < 0.0f) {
             velocity = -velocity;
         }
-        velocity = 1.0 - (velocity * 0.166);
+        velocity = 1.0 - (velocity * (1.0/6.0));
         if (velocity < 0.0f) {
             velocity = 0.0f;
         }
@@ -613,9 +613,6 @@ f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 upda
     obj1->segment.trans.x_rotation += (angle * updateRate) >> 4;
     return velocity;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
@@ -1474,7 +1471,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->checkpoint++;
             if (tempRacer->checkpoint >= temp_v0_17) {
                 tempRacer->checkpoint = 0;
-                if (tempRacer->unk190 > 0) {
+                if (tempRacer->courseCheckpoint > 0) {
                     if (tempRacer->lap < 120) {
                         tempRacer->lap++;
                     }
@@ -1513,8 +1510,8 @@ void update_player_racer(Object* obj, s32 updateRate) {
                     }
                 }
             }
-            if (tempRacer->unk190 < (header->laps + 3) * temp_v0_17) {
-                tempRacer->unk190++;
+            if (tempRacer->courseCheckpoint < (header->laps + 3) * temp_v0_17) {
+                tempRacer->courseCheckpoint++;
             }
             tempRacer->unk1A8 = 10000;
         } else {
@@ -3826,14 +3823,14 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->checkpoint++;
             if (racer->checkpoint >= temp_v0_10) {
                 racer->checkpoint = 0;
-                if (racer->unk190 > 0) {
+                if (racer->courseCheckpoint > 0) {
                     if (racer->lap < 120) {
                         racer->lap++;
                     }
                 }
             }
-            if (racer->unk190 < ((levelHeader->laps + 3) * temp_v0_10)) {
-                racer->unk190++;
+            if (racer->courseCheckpoint < ((levelHeader->laps + 3) * temp_v0_10)) {
+                racer->courseCheckpoint++;
             }
             racer->unk1A8 = 10000;
         } else {
@@ -4092,16 +4089,16 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->checkpoint += 1;
             if (racer->checkpoint >= sp11C) {
                 racer->checkpoint = 0;
-                if (racer->unk190 > 0) {
+                if (racer->courseCheckpoint > 0) {
                     temp_v0_3 = racer->lap;
                     if (temp_v0_3 < 0x78) {
                         racer->lap = temp_v0_3 + 1;
                     }
                 }
             }
-            temp_v0_4 = racer->unk190;
+            temp_v0_4 = racer->courseCheckpoint;
             if (temp_v0_4 < ((levelHeader->laps + 3) * sp11C)) {
-                racer->unk190 = temp_v0_4 + 1;
+                racer->courseCheckpoint = temp_v0_4 + 1;
             }
             racer->unk1A8 = 10000;
         } else {
@@ -4191,7 +4188,7 @@ void func_8005C270(Object_Racer *racer) {
         }
     }
 
-    if (racer->unk190 > -0x7D00) {
-        racer->unk190--;
+    if (racer->courseCheckpoint > -0x7D00) {
+        racer->courseCheckpoint--;
     }
 }

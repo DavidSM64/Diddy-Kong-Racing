@@ -501,44 +501,22 @@ u8 music_is_playing(void) {
     return (alCSPGetState(gMusicPlayer) == AL_PLAYING);
 }
 
-#ifdef NON_EQUIVALENT
-f32 D_800E49E0 = 46875.0f;
-f32 D_800E49E4 = 46875.0f;
-f32 D_800E49E8 = 120000.0f;
-f32 func_800015F8(void) {
-    u32 current_cnt = osGetCount();
-    u32 delta;
-    f32 delta_f;
+f32 audio_get_chr_select_anim_frac(void) {
     f32 tmp;
-    f32 *tmp2 = &D_80115D34;
-
-    if (audioPrevCount < current_cnt) {
-        delta = current_cnt - audioPrevCount;
-        delta_f = (delta < 0)
-                      ? (f32)delta + 4294967296.000000f
-                      : delta;
-        D_80115D34 = delta_f / D_800E49E0 + *tmp2;
+    u32 cnt = osGetCount();
+    if ((u32) audioPrevCount < cnt) {
+        D_80115D34 += (f32) (cnt - audioPrevCount) / 46875.0f;
     } else {
-        delta = audioPrevCount - current_cnt;
-        delta_f = (delta + -1);
-        delta_f = (delta < 0)
-                      ? delta_f + 4294967296.000000f
-                      : delta_f;
-        *tmp2 = delta_f / D_800E49E0 + D_80115D34;
+        D_80115D34 += (f32) ((cnt - audioPrevCount) - 1) / 46875.0f;
     }
     if (D_80115D40 == 0) {
         sMusicTempo = 182;
     }
-    tmp = D_800E49E8 / (f32)sMusicTempo;
-    while (D_80115D34 > tmp) {
-        D_80115D34 -= tmp;
-    }
-    audioPrevCount = current_cnt;
+    for (tmp = 120000.0f / (f32) sMusicTempo; tmp < D_80115D34; D_80115D34 -= tmp)
+        ;
+    audioPrevCount = (s32) cnt;
     return D_80115D34 / tmp;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/audio/func_800015F8.s")
-#endif
 
 void func_80001728(u8 arg0, u8 *arg1, u8 *arg2, u8 *arg3) {
     *arg1 = sMusicPool[arg0].unk1;

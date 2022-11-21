@@ -1087,7 +1087,7 @@ void obj_loop_animator(Object* obj, s32 speed) {
             maxSpeed = texUVSpeed * 2;
             for (i = curFacesOffset; i < nextFacesOffset; i++) {
                 triangle = &levelModelSegment->triangles[i];
-                if (!(triangle->drawBackface & 0x80)) {
+                if (!(triangle->flags & 0x80)) {
                     if (maxSpeed < triangle->uv0.v) {
                         triangle->uv0.v -= texUVSpeed;
                         triangle->uv1.v -= texUVSpeed;
@@ -2482,7 +2482,7 @@ void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2
         obj64->unk108 = 0.0f;
         // This loop is okay
         for(i = 0; i < 8; i++) {
-            obj64->triangles[i].drawBackface = D_800DCAA8[i].drawBackface;
+            obj64->triangles[i].flags = D_800DCAA8[i].flags;
             obj64->triangles[i].vi0 = D_800DCAA8[i].vi0;
             obj64->triangles[i].vi1 = D_800DCAA8[i].vi1;
             obj64->triangles[i].vi2 = D_800DCAA8[i].vi2;

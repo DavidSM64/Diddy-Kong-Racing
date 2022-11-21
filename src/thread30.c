@@ -23,9 +23,7 @@ u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something. 
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
 OSMesg gThread30Message;
-s32 gPadding; //Unused?
-
-s32 D_8012ACC0[1305]; // Unused? Might be another stack.
+UNUSED s32 D_8012ACC0[0x51A]; // Unused? Might be another stack.
 
 // Currently defined in osViMgr.c
 // There are a few stacks defined next to each other. Maybe they are in their own separate file?
@@ -97,7 +95,7 @@ s32 set_level_to_load_in_background(s32 levelId, s32 cutsceneId) {
 /**
  * Waits for a signal from the main thread to load a level asynchronously.
  */
-void thread30(void *arg) {
+void thread30(UNUSED void *arg) {
     OSMesg mesg = 0;
     while (TRUE) {
         // Wait for a signal from the main thread

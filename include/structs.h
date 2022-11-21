@@ -423,12 +423,13 @@ typedef struct TexCoords {
 typedef struct Triangle {
     union {
         struct {
-            /* 0x00 */ u8 drawBackface; // 0x40 = Draw backface, 0x00 = Cull backface
+            /* 0x00 */ u8 flags; // 0x40 = Draw backface, 0x00 = Cull backface
             /* 0x01 */ u8 vi0;          // First vertex index
             /* 0x02 */ u8 vi1;          // Second vertex index
             /* 0x03 */ u8 vi2;          // Third vertex index
         };
     /* 0x00 */ u32 vertices; // For convenience?
+               u8 verticesArray[4];
     };
 /* 0x04 */ TexCoords uv0;   // Texture coordinates for the first vertex
 /* 0x08 */ TexCoords uv1;   // Texture coordinates for the second vertex
@@ -500,13 +501,15 @@ typedef struct LevelModelSegment {
 /* 0x04 */ Triangle *triangles;
 /* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
-/* 0x10 */ s32 unk10;
+/* 0x10 */ s16 *unk10;
 /* 0x14 */ u8 *unk14;
 /* 0x18 */ s16 *unk18;
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
 /* 0x20 */ s16 numberOfBatches;
-           u8 pad22[0x09];
+           u8 pad22[0x06];
+/* 0x28 */ s16 unk28;
+/* 0x2A */ s8 unk2A;
 /* 0x2B */ s8 unk2B;
            u8 pad2C[4];
 /* 0x30 */ s16 unk30;
@@ -593,10 +596,14 @@ typedef struct ObjectHeader {
              u8 pad28[8];
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-             u8 pad34[9];
+  /* 0x32 */ s16 unk34;
+  /* 0x32 */ s16 unk36;
+             u8 pad38[5];
   /* 0x3D */ u8 unk3D;
-             u8 pad3E[16];
-             s16 unk4E; //Used in func_8002A900?
+             u8 pad3E[12];
+             s16 unk4A;
+             s16 unk4C;
+             s16 drawDistance;
              u8 pad50[3];
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
@@ -683,6 +690,20 @@ typedef struct Object_54 {
     u8 unk1A;
 } Object_54;
 
+typedef struct Object_58_4 {
+    u8 pad0[0x12];
+    u16 unk12;
+} Object_58_4;
+
+typedef struct Object_58 {
+    f32 unk0;
+    Object_58_4 *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} Object_58;
+
 typedef struct Object_5C {
     u8 pad0[0x100];
     void *unk100;
@@ -738,7 +759,8 @@ typedef struct Object_WeaponBalloon {
 } Object_WeaponBalloon;
 
 typedef struct Object_Weapon {
-  /* 0x00 */ u8 pad0[0x18];
+  /* 0x00 */ void *unk0;
+  /* 0x00 */ u8 pad4[0x14];
   /* 0x18 */ u8 unk18;
 } Object_Weapon;
 
@@ -1008,7 +1030,7 @@ typedef struct Object_Racer {
   /* 0x18A */ s16 unk18A;
   /* 0x18C */ s16 unk18C;
   /* 0x18E */ s16 shieldTimer;
-  /* 0x190 */ s16 unk190;
+  /* 0x190 */ s16 courseCheckpoint;
   /* 0x192 */ s8 checkpoint;
   /* 0x193 */ s8 lap;
   /* 0x194 */ s8 unk194;
