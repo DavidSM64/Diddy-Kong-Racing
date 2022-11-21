@@ -236,7 +236,7 @@ glabel func_8001AE64
 /* 01BDD4 8001B1D4 8F390300 */  lw    $t9, %lo(osTvType)($t9)
 /* 01BDD8 8001B1D8 00107080 */  sll   $t6, $s0, 2
 /* 01BDDC 8001B1DC 17200010 */  bnez  $t9, .L8001B220
-/* 01BDE0 8001B1E0 3C188012 */   lui   $t8, %hi(D_8011AE80) # $t8, 0x8012
+/* 01BDE0 8001B1E0 3C188012 */   lui   $t8, %hi(gTTGhostTimeToBeat) # $t8, 0x8012
 /* 01BDE4 8001B1E4 01D07023 */  subu  $t6, $t6, $s0
 /* 01BDE8 8001B1E8 000E7040 */  sll   $t6, $t6, 1
 /* 01BDEC 8001B1EC 01CB001A */  div   $zero, $t6, $t3
@@ -255,7 +255,7 @@ glabel func_8001AE64
 /* 01BE18 8001B218 00000000 */  nop   
 /* 01BE1C 8001B21C 00000000 */  nop   
 .L8001B220:
-/* 01BE20 8001B220 8718AE80 */  lh    $t8, %lo(D_8011AE80)($t8)
+/* 01BE20 8001B220 8718AE80 */  lh    $t8, %lo(gTTGhostTimeToBeat)($t8)
 /* 01BE24 8001B224 8FA40034 */  lw    $a0, 0x34($sp)
 /* 01BE28 8001B228 0218082A */  slt   $at, $s0, $t8
 /* 01BE2C 8001B22C 10200010 */  beqz  $at, .L8001B270

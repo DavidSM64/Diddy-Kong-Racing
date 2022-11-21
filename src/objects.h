@@ -249,6 +249,12 @@ typedef struct struct_8000FC6C_3 {
     void *unk58;
 } struct_8000FC6C_3;
 
+typedef struct TTGhostTable {
+    u8 mapId;
+    u8 defaultVehicleId;
+    s32 ghostOffset;
+} TTGhostTable;
+
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
 
@@ -409,6 +415,7 @@ void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object
 void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
+s32 func_8001B2F0(MapId mapId);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

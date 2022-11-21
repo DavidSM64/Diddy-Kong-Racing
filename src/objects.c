@@ -201,9 +201,9 @@ s16 D_8011AE78;
 s16 D_8011AE7A;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
-s16 D_8011AE80; // TT Ghost outTime at least
+s16 gTTGhostTimeToBeat;
 s16 D_8011AE82;
-s32 D_8011AE84;
+s16 gMapDefaultVehicle; // Vehicle enum
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
 Matrix *gObjectCurrMatrix;
@@ -1463,7 +1463,39 @@ Object *func_8001B2E0() {
     return D_8011AD34;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B2F0.s")
+/**
+Pretty sure this determines whether or not you're eligible to race TT ghost in track select
+when TT is on. It looks like it checks some ghost data makes sure you've got a ghost for that level
+with the default vehicle,
+Returns 0 if TT ghost was loaded successfully.
+*/
+s32 func_8001B2F0(MapId mapId) {
+    TTGhostTable *ghostTable;
+    TTGhostTable *prevGhostTable;
+    s32 ret;
+    TTGhostTable *nextGhostTable;
+
+    gMapDefaultVehicle = get_map_default_vehicle(mapId);
+    ghostTable = (TTGhostTable *) load_asset_section_from_rom(ASSET_TTGHOSTS_TABLE);
+
+    nextGhostTable = ghostTable;
+    do {
+        prevGhostTable = nextGhostTable;
+        if ((prevGhostTable->mapId == mapId) && (prevGhostTable->defaultVehicleId == gMapDefaultVehicle)) {
+            break;
+        }
+        nextGhostTable++;
+    } while (prevGhostTable->mapId != 0xFF);
+
+    ret = 1;
+
+    if (prevGhostTable->mapId != 0xFF) {
+        ret = load_tt_ghost(nextGhostTable->ghostOffset, nextGhostTable[1].ghostOffset - nextGhostTable->ghostOffset, &gTTGhostTimeToBeat);
+    }
+
+    free_from_memory_pool(ghostTable);
+    return ret;
+}
 
 s32 func_8001B3AC(s32 arg0) {
     return arg0 == D_800DC718;
