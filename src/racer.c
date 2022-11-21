@@ -566,8 +566,6 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
 }
 
-// Function itself matches but causes a diff in another func.
-#ifdef NON_MATCHING
 f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
     Matrix mtx;
     f32 velocity;
@@ -581,7 +579,7 @@ f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 upda
         if (velocity < 0.0f) {
             velocity = -velocity;
         }
-        velocity = 1.0 - (velocity * 0.166);
+        velocity = 1.0 - (velocity * 0.16666666666666666);
         if (velocity < 0.0f) {
             velocity = 0.0f;
         }
@@ -613,9 +611,6 @@ f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 upda
     obj1->segment.trans.x_rotation += (angle * updateRate) >> 4;
     return velocity;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/racer/func_800494E0.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
