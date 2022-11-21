@@ -7,7 +7,7 @@ glabel D_800E49E8
 .float 120000.0
 
 .text
-glabel func_800015F8
+glabel audio_get_chr_select_anim_frac
 /* 0021F8 800015F8 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0021FC 800015FC AFBF0014 */  sw    $ra, 0x14($sp)
 /* 002200 80001600 0C031E34 */  jal   osGetCount

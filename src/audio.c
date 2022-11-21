@@ -501,7 +501,7 @@ u8 music_is_playing(void) {
     return (alCSPGetState(gMusicPlayer) == AL_PLAYING);
 }
 
-f32 func_800015F8(void) {
+f32 audio_get_chr_select_anim_frac(void) {
     f32 tmp;
     u32 cnt = osGetCount();
     if ((u32) audioPrevCount < cnt) {
