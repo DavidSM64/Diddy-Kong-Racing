@@ -122,29 +122,29 @@ s32 is_drumstick_unlocked(void) {
 <!-- README_SCORE_BEGIN -->
 As of November 20, 2022, this is our current score:
 ```
- =================================================================
-              ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------ 37.75% Complete ------------------------
-                   # Decompiled functions: 1350
-                    # GLOBAL_ASM remaining: 486
-                    # NON_MATCHING functions: 9
-                # NON_EQUIVALENT WIP functions: 92
- -------------------------- Game Status --------------------------
-             Balloons: 18/47, Keys: 2/4, Trophies: 1/5
-              T.T. Amulets: 2/4, Wizpig Amulets: 1/4
- -----------------------------------------------------------------
- We are collecting silver coins in Walrus Cove. (8/8 silver coins)
- =================================================================
-               ADVENTURE TWO (Cleanup & Documentation)
- ------------------------  9.24% Complete ------------------------
-                    # Documented functions: 244
-                  # Undocumented remaining: 1592
- -------------------------- Game Status --------------------------
-             Balloons: 6/47, Keys: 1/4, Trophies: 0/5
-              T.T. Amulets: 0/4, Wizpig Amulets: 0/4
- -----------------------------------------------------------------
-             We are racing in Jungle Falls. (Lap 1/3)
- =================================================================
+ =====================================================================
+                ADVENTURE ONE (ASM -> C Decompilation)
+ -------------------------- 38.35% Complete --------------------------
+                     # Decompiled functions: 1357
+                      # GLOBAL_ASM remaining: 479
+                     # NON_MATCHING functions: 11
+                  # NON_EQUIVALENT WIP functions: 87
+ ---------------------------- Game Status ----------------------------
+               Balloons: 19/47, Keys: 2/4, Trophies: 1/5
+                T.T. Amulets: 2/4, Wizpig Amulets: 1/4
+ ---------------------------------------------------------------------
+ We are collecting silver coins in Snowball Valley. (2/8 silver coins)
+ =====================================================================
+                 ADVENTURE TWO (Cleanup & Documentation)
+ --------------------------  9.70% Complete --------------------------
+                      # Documented functions: 253
+                    # Undocumented remaining: 1583
+ ---------------------------- Game Status ----------------------------
+               Balloons: 6/47, Keys: 1/4, Trophies: 0/5
+                T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ ---------------------------------------------------------------------
+               We are racing in Jungle Falls. (Lap 2/3)
+ =====================================================================
 ```
 <!-- README_SCORE_END -->
 
