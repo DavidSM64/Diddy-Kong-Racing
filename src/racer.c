@@ -575,9 +575,6 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
     s32 v1;
     f32 delta;
 
-    //render_printf("func_800494E0(%08X,%08X,%08X...)\n",obj1, racer, pos);
-    //render_printf("(...%d,%d,%d,%f)\n", arg3, updateRate, arg5, arg6);
-
     delta = updateRate;
     if (arg3 == 14) {
         velocity = racer->velocity;
