@@ -611,7 +611,6 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
     angle = angle > 0x8000 ? angle - 0xffff : angle;
     angle = angle < -0x8000 ? angle + 0xffff : angle;
     obj1->segment.trans.x_rotation += (angle * updateRate) >> 4;
-    //render_printf("func_800494E0 returned %f.\n", velocity);
     return velocity;
 }
 
