@@ -113,36 +113,50 @@ void func_8005FF40(ObjectModel **modelPtr) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FF40.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Regalloc issues.
-void free_object_model(ObjectModel *model) {
-    s32 i;
-    for (i = 0; i < model->numberOfTextures; i++) {
-        if (model->textures[i].texture != NULL) {
-            free_texture(model->textures[i].texture);
+void free_object_model(ObjectModel *mdl) {
+    // free the textures
+    s16 numTextures = mdl->numberOfTextures;
+    if (numTextures > 0) {
+        s32 texturesFreed = 0;
+        s32 textureIndex = 0;
+        do {
+            TextureHeader *header = mdl->textures[textureIndex].texture;
+            if (header != NULL) {
+                free_texture(header);
+                numTextures = mdl->numberOfTextures;
+            }
+            texturesFreed++;
+            textureIndex++;
+        } while (texturesFreed < numTextures);
+    }
+    // ???
+    if (mdl->unkC != NULL) {
+        free_from_memory_pool(mdl->unkC);
+    }
+    // ???
+    if (mdl->unk10 != NULL) {
+        free_from_memory_pool(mdl->unk10);
+    }
+    // ???
+    if (mdl->unk40 != NULL) {
+        free_from_memory_pool(mdl->unk40);
+    }
+    // free the animations
+    if (mdl->animations != NULL) {
+        s32 animsFreed = 0;
+        s32 animIndex = 0;
+        if (mdl->numberOfAnimations != 0) {
+            do {
+                free_from_memory_pool(mdl->animations[animIndex].anim - 1);
+                animsFreed++;
+                animIndex++;
+            } while (animsFreed < mdl->numberOfAnimations);
+            free_from_memory_pool(mdl->animations);
         }
     }
-    if (model->unkC != NULL) {
-        free_from_memory_pool(model->unkC);
-    }
-    if (model->unk10 != NULL) {
-        free_from_memory_pool(model->unk10);
-    }
-    if (model->unk40 != NULL) {
-        free_from_memory_pool(model->unk40);
-    }
-    if (model->animations != NULL) {
-        // Small issue with this loop too.
-        for (i = 0; i < model->numberOfAnimations; i++) {
-            free_from_memory_pool(model->animations[i].anim - 1);
-        }
-        free_from_memory_pool(model->animations);
-    }
-    free_from_memory_pool(model);
+    // free the model itself
+    free_from_memory_pool(mdl);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/object_models/free_object_model.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/object_models/func_8006017C.s")
 GLOBAL_ASM("asm/non_matchings/object_models/func_80060910.s")

@@ -21,10 +21,10 @@ glabel entrypoint
 /* 00101C 8000041C 1520FFFC */  bnez  $t1, .L80000410
 /* 001020 80000420 21080008 */   addi  $t0, $t0, 8
 /* 001024 80000424 3C0A8006 */  lui   $t2, %hi(main) # $t2, 0x8006
-/* 001028 80000428 3C1D8012 */  lui   $sp, %hi(gObjectRenderStack) # $sp, 0x8012
+/* 001028 80000428 3C1D8012 */  lui   $sp, %hi(gActiveCameraStack) # $sp, 0x8012
 /* 00102C 8000042C 254A5D40 */  addiu $t2, %lo(main) # addiu $t2, $t2, 0x5d40
 /* 001030 80000430 01400008 */  jr    $t2
-/* 001034 80000434 27BD0AC0 */   addiu $sp, %lo(gObjectRenderStack) # addiu $sp, $sp, 0xac0
+/* 001034 80000434 27BD0AC0 */   addiu $sp, %lo(gActiveCameraStack) # addiu $sp, $sp, 0xac0
 /* 001038 80000438 00000000 */  nop   
 /* 00103C 8000043C 00000000 */  nop   
 /* 001040 80000440 00000000 */  nop   

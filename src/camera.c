@@ -105,9 +105,9 @@ s16 gButtonMask = 0xFFFF;
 
 /************ .bss ************/
 
-ObjectSegment gObjectRenderStack[8];
+ObjectSegment gActiveCameraStack[8];
 s32 gNumberOfViewports;
-s32 gObjectRenderStackPos;
+s32 gActiveCameraID;
 s32 gOjbectRenderStackCap;
 s32 D_80120CEC;
 ObjectTransform D_80120CF0;
@@ -140,7 +140,7 @@ OSMesg sSIMesgBuf;
 OSMesg gSIMesg;
 OSContStatus status;
 UNUSED s32 D_80121108[2]; //Padding?
-ControllerData sControllerData[8];
+OSContPad sControllerData[8];
 u16 gControllerButtonsPressed[4];
 u16 gControllerButtonsReleased[4];
 u8 sPlayerID[16];
@@ -156,11 +156,11 @@ void func_80065EA0(void) {
         D_80120D70[i] = &D_80120DA0[i];
     };
     for (j = 0; j < 8; j++) {
-        gObjectRenderStackPos = j;
+        gActiveCameraID = j;
         func_800663DC(200, 200, 200, 0, 0, 180);
     };
     gCutsceneCameraActive = FALSE;
-    gObjectRenderStackPos = 0;
+    gActiveCameraID = 0;
     D_80120D1C = 0;
     D_80120D20 = 0;
     gNumberOfViewports = 0;
@@ -184,7 +184,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
 void func_80066060(s32 arg0, s32 arg1) {
     if (arg0 >= 0 && arg0 < 4) {
         D_800DD2F8[arg0] = arg1;
-        gObjectRenderStack[arg0].unk3B = arg1;
+        gActiveCameraStack[arg0].unk3B = arg1;
     }
 }
 
@@ -241,7 +241,7 @@ s32 get_viewport_count(void) {
 }
 
 s32 get_object_render_stack_pos(void) {
-    return gObjectRenderStackPos;
+    return gActiveCameraID;
 }
 
 void func_80066230(Gfx **dlist, Matrix **mats) {
@@ -282,36 +282,39 @@ void func_80066230(Gfx **dlist, Matrix **mats) {
     someStruct->trans.z_position = sp18;
 }
 
-f32 func_80066348(f32 xPos, f32 yPos, f32 zPos) {
+/**
+ * Compare the coordinates passed through to the active camera and return the distance between them.
+*/
+f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos) {
     s32 index;
     f32 dx, dz, dy;
 
-    index = gObjectRenderStackPos;
+    index = gActiveCameraID;
 
     if (gCutsceneCameraActive) {
         index += 4;
     }
 
-    dz = zPos - gObjectRenderStack[index].trans.z_position;
-    dx = xPos - gObjectRenderStack[index].trans.x_position;
-    dy = yPos - gObjectRenderStack[index].trans.y_position;
+    dz = zPos - gActiveCameraStack[index].trans.z_position;
+    dx = xPos - gActiveCameraStack[index].trans.x_position;
+    dy = yPos - gActiveCameraStack[index].trans.y_position;
     return sqrtf((dz * dz) + ((dx * dx) + (dy * dy)));
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation = (s16) (arg3 * 0xB6);
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_position = (f32) xPos;
-    gObjectRenderStack[gObjectRenderStackPos].trans.y_position = (f32) yPos;
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_position = (f32) zPos;
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_rotation = (s16) (arg4 * 0xB6);
-    gObjectRenderStack[gObjectRenderStackPos].unk38.word = (s16) 0;
-    gObjectRenderStack[gObjectRenderStackPos].z_velocity = 0.0f;
-    gObjectRenderStack[gObjectRenderStackPos].unk28 = 0.0f;
-    gObjectRenderStack[gObjectRenderStackPos].unk2C.word = 0.0f;
-    gObjectRenderStack[gObjectRenderStackPos].unk30 = 0.0f;
-    gObjectRenderStack[gObjectRenderStackPos].x_velocity = 160.0f;
-    gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation = (s16) (arg5 * 0xB6);
-    gObjectRenderStack[gObjectRenderStackPos].unk3B = D_800DD2F8[gObjectRenderStackPos];
+    gActiveCameraStack[gActiveCameraID].trans.z_rotation = (s16) (arg3 * 0xB6);
+    gActiveCameraStack[gActiveCameraID].trans.x_position = (f32) xPos;
+    gActiveCameraStack[gActiveCameraID].trans.y_position = (f32) yPos;
+    gActiveCameraStack[gActiveCameraID].trans.z_position = (f32) zPos;
+    gActiveCameraStack[gActiveCameraID].trans.x_rotation = (s16) (arg4 * 0xB6);
+    gActiveCameraStack[gActiveCameraID].unk38.word = (s16) 0;
+    gActiveCameraStack[gActiveCameraID].z_velocity = 0.0f;
+    gActiveCameraStack[gActiveCameraID].unk28 = 0.0f;
+    gActiveCameraStack[gActiveCameraID].unk2C.word = 0.0f;
+    gActiveCameraStack[gActiveCameraID].unk30 = 0.0f;
+    gActiveCameraStack[gActiveCameraID].x_velocity = 160.0f;
+    gActiveCameraStack[gActiveCameraID].trans.y_rotation = (s16) (arg5 * 0xB6);
+    gActiveCameraStack[gActiveCameraID].unk3B = D_800DD2F8[gActiveCameraID];
 }
 
 /**
@@ -321,14 +324,14 @@ void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
 */
 void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6) {
     stackPos += 4;
-    gObjectRenderStack[stackPos].unk38.word = 0;
-    gObjectRenderStack[stackPos].trans.x_position = xPos;
-    gObjectRenderStack[stackPos].trans.y_position = yPos;
-    gObjectRenderStack[stackPos].trans.z_position = zPos;
-    gObjectRenderStack[stackPos].trans.y_rotation = arg4;
-    gObjectRenderStack[stackPos].trans.x_rotation = arg5;
-    gObjectRenderStack[stackPos].trans.z_rotation = arg6;
-    gObjectRenderStack[stackPos].unk34_a.levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
+    gActiveCameraStack[stackPos].unk38.word = 0;
+    gActiveCameraStack[stackPos].trans.x_position = xPos;
+    gActiveCameraStack[stackPos].trans.y_position = yPos;
+    gActiveCameraStack[stackPos].trans.z_position = zPos;
+    gActiveCameraStack[stackPos].trans.y_rotation = arg4;
+    gActiveCameraStack[stackPos].trans.x_rotation = arg5;
+    gActiveCameraStack[stackPos].trans.z_rotation = arg6;
+    gActiveCameraStack[stackPos].unk34_a.levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
     gCutsceneCameraActive = TRUE;
 }
 
@@ -371,8 +374,8 @@ s32 set_active_viewports_and_object_stack_cap(s32 num) {
             gOjbectRenderStackCap = 4;
             break;
     }
-    if (gObjectRenderStackPos >= gOjbectRenderStackCap) {
-        gObjectRenderStackPos = 0;
+    if (gActiveCameraID >= gOjbectRenderStackCap) {
+        gActiveCameraID = 0;
     }
     return gOjbectRenderStackCap;
 }
@@ -383,9 +386,9 @@ s32 set_active_viewports_and_object_stack_cap(s32 num) {
 */
 void set_object_stack_pos(s32 num) {
     if (num >= 0 && num < 4) {
-        gObjectRenderStackPos = num;
+        gActiveCameraID = num;
     } else {
-        gObjectRenderStackPos = 0;
+        gActiveCameraID = 0;
     }
 }
 
@@ -624,17 +627,17 @@ void func_80066CDC(Gfx **dlist, Matrix **mats) {
     u32 phi_t4;
 
     if (func_8000E184() && !gNumberOfViewports) {
-        gObjectRenderStackPos = 1;
+        gActiveCameraID = 1;
     }
     widthAndHeight = get_video_width_and_height_as_s32();
     temp_t0 = widthAndHeight >> 16;
     temp_a3 = temp_t0 >> 1;
-    if (gScreenViewports[gObjectRenderStackPos].flags & VIEWPORT_UNK_01) {
+    if (gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01) {
         gDPSetScissor((*dlist)++, SCISSOR_INTERLACE,
-            gScreenViewports[gObjectRenderStackPos].scissorX1,
-            gScreenViewports[gObjectRenderStackPos].scissorY1,
-            gScreenViewports[gObjectRenderStackPos].scissorX2,
-            gScreenViewports[gObjectRenderStackPos].scissorY2
+            gScreenViewports[gActiveCameraID].scissorX1,
+            gScreenViewports[gActiveCameraID].scissorY1,
+            gScreenViewports[gActiveCameraID].scissorX2,
+            gScreenViewports[gActiveCameraID].scissorY2
         );
         func_80068158(dlist, 0, 0, 0, 0);
         if (mats != 0) {
@@ -663,7 +666,7 @@ void func_80066CDC(Gfx **dlist, Matrix **mats) {
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
-            if (gObjectRenderStackPos == 0) {
+            if (gActiveCameraID == 0) {
                 temp_v0_6 = temp_t0 >> 2;
                 phi_t3 = temp_v0_6;
                 if (osTvType == TV_TYPE_PAL) {
@@ -677,7 +680,7 @@ void func_80066CDC(Gfx **dlist, Matrix **mats) {
             sp4C = temp_a2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
-            if (gObjectRenderStackPos == 0) {
+            if (gActiveCameraID == 0) {
                 gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, temp_a2 - (width >> 8), temp_t0);
                 phi_a1 = width >> 2;
             } else {
@@ -690,7 +693,7 @@ void func_80066CDC(Gfx **dlist, Matrix **mats) {
         case VIEWPORTS_COUNT_4_PLAYERS:
             sp58 = sp58 >> 1;
             sp54 = temp_a2 >> 1;
-            switch (gObjectRenderStackPos) {
+            switch (gActiveCameraID) {
                 case 0:
                     gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0.0f, 0.0f, (temp_a2 - (width >> 8)), (temp_a3 - (temp_t0 >> 7)));
                     phi_t5 = 0;
@@ -719,7 +722,7 @@ void func_80066CDC(Gfx **dlist, Matrix **mats) {
             sp4C = phi_t4 + sp54;
             if (osTvType == TV_TYPE_PAL) {
                 phi_t3 -= 6;
-                if (gObjectRenderStackPos < 2) {
+                if (gActiveCameraID < 2) {
                     phi_t3 -= 0x14;
                 }
             }
@@ -776,7 +779,7 @@ void func_80067A3C(Gfx **dlist) {
         temp3 = lry >> 1;
         switch (numViewports) {
             case 1:
-                switch (gObjectRenderStackPos) {
+                switch (gActiveCameraID) {
                     case 0:
                         lry = temp3 - temp;
                         break;
@@ -788,7 +791,7 @@ void func_80067A3C(Gfx **dlist) {
                 break;
 
             case 2:
-                switch (gObjectRenderStackPos) {
+                switch (gActiveCameraID) {
                     case 0:
                         lrx = temp4 - temp2;
                         break;
@@ -801,7 +804,7 @@ void func_80067A3C(Gfx **dlist) {
                 break;
 
             case 3:
-                switch (gObjectRenderStackPos) {
+                switch (gActiveCameraID) {
                     case 0:
                         lrx = temp4 - temp2;\
                         lry = temp3 - temp;
@@ -839,40 +842,40 @@ void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
 
     gSPPerspNormalize((*dlist)++, perspNorm);
 
-    temp = gObjectRenderStackPos;
+    temp = gActiveCameraID;
     if (gCutsceneCameraActive) {
-        gObjectRenderStackPos += 4;
+        gActiveCameraID += 4;
     }
 
-    D_80120CF0.y_rotation = 0x8000 + gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation;
-    D_80120CF0.x_rotation = gObjectRenderStack[gObjectRenderStackPos].trans.x_rotation + gObjectRenderStack[gObjectRenderStackPos].unk38.word;
-    D_80120CF0.z_rotation = gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation;
+    D_80120CF0.y_rotation = 0x8000 + gActiveCameraStack[gActiveCameraID].trans.y_rotation;
+    D_80120CF0.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.word;
+    D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation;
 
-    D_80120CF0.x_position = -gObjectRenderStack[gObjectRenderStackPos].trans.x_position;
-    D_80120CF0.y_position = -gObjectRenderStack[gObjectRenderStackPos].trans.y_position;
+    D_80120CF0.x_position = -gActiveCameraStack[gActiveCameraID].trans.x_position;
+    D_80120CF0.y_position = -gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        D_80120CF0.y_position -= gObjectRenderStack[gObjectRenderStackPos].unk30;
+        D_80120CF0.y_position -= gActiveCameraStack[gActiveCameraID].unk30;
     }
-    D_80120CF0.z_position = -gObjectRenderStack[gObjectRenderStackPos].trans.z_position;
+    D_80120CF0.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
     func_8006FE74(&D_80120F60, &D_80120CF0);
     func_8006F768(&D_80120F60, &D_80120EE0, &D_80120F20);
 
-    D_80120CF0.y_rotation = -0x8000 - gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation;
-    D_80120CF0.x_rotation = -(gObjectRenderStack[gObjectRenderStackPos].trans.x_rotation + gObjectRenderStack[gObjectRenderStackPos].unk38.word);
-    D_80120CF0.z_rotation = -gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation;
+    D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
+    D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.word);
+    D_80120CF0.z_rotation = -gActiveCameraStack[gActiveCameraID].trans.z_rotation;
     D_80120CF0.scale = 1.0f;
-    D_80120CF0.x_position = gObjectRenderStack[gObjectRenderStackPos].trans.x_position;
-    D_80120CF0.y_position = gObjectRenderStack[gObjectRenderStackPos].trans.y_position;
+    D_80120CF0.x_position = gActiveCameraStack[gActiveCameraID].trans.x_position;
+    D_80120CF0.y_position = gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        D_80120CF0.y_position += gObjectRenderStack[gObjectRenderStackPos].unk30;
+        D_80120CF0.y_position += gActiveCameraStack[gActiveCameraID].unk30;
     }
-    D_80120CF0.z_position = gObjectRenderStack[gObjectRenderStackPos].trans.z_position;
+    D_80120CF0.z_position = gActiveCameraStack[gActiveCameraID].trans.z_position;
 
     func_8006FC30(D_80120FA0, &D_80120CF0);
     func_8006F870(&D_80120FA0, &D_80121020);
 
-    gObjectRenderStackPos = temp;
+    gActiveCameraID = temp;
 }
 
 /**
@@ -893,11 +896,11 @@ void func_80067F2C(Gfx **dlist, Matrix **mats) {
     width = GET_VIDEO_WIDTH(widthAndHeight);
     func_8006F870(&gOrthoMatrix, (Matrix *)*mats);
     D_80120D88[0] = (Matrix *) *mats;
-    D_800DD148[gObjectRenderStackPos + 5].vp.vscale[0] = width * 2;
-    D_800DD148[gObjectRenderStackPos + 5].vp.vscale[1] = width * 2;
-    D_800DD148[gObjectRenderStackPos + 5].vp.vtrans[0] = width * 2;
-    D_800DD148[gObjectRenderStackPos + 5].vp.vtrans[1] = height * 2;
-    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD148[gObjectRenderStackPos + 5]));
+    D_800DD148[gActiveCameraID + 5].vp.vscale[0] = width * 2;
+    D_800DD148[gActiveCameraID + 5].vp.vscale[1] = width * 2;
+    D_800DD148[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
+    D_800DD148[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
+    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD148[gActiveCameraID + 5]));
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -928,31 +931,31 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
         height = -height;
         tempWidth = -width;
     }
-    if (!(gScreenViewports[gObjectRenderStackPos].flags & VIEWPORT_UNK_01)) {
-        D_800DD148[gObjectRenderStackPos].vp.vtrans[0] = posX * 4;
-        D_800DD148[gObjectRenderStackPos].vp.vtrans[1] = posY * 4;
-        D_800DD148[gObjectRenderStackPos].vp.vscale[0] = tempWidth * 4;
-        D_800DD148[gObjectRenderStackPos].vp.vscale[1] = height * 4;
-        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gObjectRenderStackPos]));
+    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01)) {
+        D_800DD148[gActiveCameraID].vp.vtrans[0] = posX * 4;
+        D_800DD148[gActiveCameraID].vp.vtrans[1] = posY * 4;
+        D_800DD148[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
+        D_800DD148[gActiveCameraID].vp.vscale[1] = height * 4;
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gActiveCameraID]));
     } else {
-        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gObjectRenderStackPos + 10 + (D_800DD134 * 5)]));
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gActiveCameraID + 10 + (D_800DD134 * 5)]));
     }
 }
 
 void func_800682AC(Gfx **dlist) {
     u32 widthAndHeight, width, height;
-    gObjectRenderStackPos = 4;
+    gActiveCameraID = 4;
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
-    if (!(gScreenViewports[gObjectRenderStackPos].flags & VIEWPORT_UNK_01)) {
+    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01)) {
         gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
         func_80067A3C(dlist);
         func_80068158(dlist, 0, 0, 0, 0);
     }
-    gObjectRenderStackPos = 0;
+    gActiveCameraID = 0;
 }
 
 void func_80068408(Gfx **dlist, Matrix **mats) {
@@ -1048,9 +1051,9 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
         gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(*vertexList), 1, 0);
         (*vertexList)++;
         if (gCutsceneCameraActive == 0) {
-            sp34 = gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation + obj->segment.trans.z_rotation;
+            sp34 = gActiveCameraStack[gActiveCameraID].trans.z_rotation + obj->segment.trans.z_rotation;
         } else {
-            sp34 = gObjectRenderStack[gObjectRenderStackPos + 4].trans.z_rotation + obj->segment.trans.z_rotation;
+            sp34 = gActiveCameraStack[gActiveCameraID + 4].trans.z_rotation + obj->segment.trans.z_rotation;
         }
         var_s2 = obj->segment.unk18;
         D_80120D1C++;
@@ -1116,7 +1119,7 @@ void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3
         D_80120D1C ++;
         D_80120CF0.y_rotation = -arg3->trans.y_rotation;
         D_80120CF0.x_rotation = -arg3->trans.x_rotation;
-        D_80120CF0.z_rotation = gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation + arg3->trans.z_rotation;
+        D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation + arg3->trans.z_rotation;
         D_80120CF0.x_position = 0.0f;
         D_80120CF0.y_position = 0.0f;
         D_80120CF0.z_position = 0.0f;
@@ -1177,13 +1180,13 @@ void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f
     if (1) { } if (1) { } if (1) { }; // Necessary to match
     gSPMatrix((*arg0)++, OS_PHYSICAL_TO_K0((*arg1)++), G_MTX_DKR_INDEX_1);
     guMtxXFMF(*D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
-    index = gObjectRenderStackPos;
+    index = gActiveCameraID;
     if (gCutsceneCameraActive) {
         index += 4;
     }
-    tempX = gObjectRenderStack[index].trans.x_position - tempX;
-    tempY = gObjectRenderStack[index].trans.y_position - tempY;
-    tempZ = gObjectRenderStack[index].trans.z_position - tempZ;
+    tempX = gActiveCameraStack[index].trans.x_position - tempX;
+    tempY = gActiveCameraStack[index].trans.y_position - tempY;
+    tempZ = gActiveCameraStack[index].trans.z_position - tempZ;
     D_80120CF0.y_rotation = -arg2->y_rotation;
     D_80120CF0.x_rotation = -arg2->x_rotation;
     D_80120CF0.z_rotation = -arg2->z_rotation;
@@ -1229,50 +1232,50 @@ void func_80069A40(Gfx **dlist) {
 }
 
 UNUSED void func_80069ACC(f32 x, f32 y, f32 z) {
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_position += x;
-    gObjectRenderStack[gObjectRenderStackPos].trans.y_position += y;
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_position += z;
-    gObjectRenderStack[gObjectRenderStackPos].unk34_a.levelSegmentIndex =
+    gActiveCameraStack[gActiveCameraID].trans.x_position += x;
+    gActiveCameraStack[gActiveCameraID].trans.y_position += y;
+    gActiveCameraStack[gActiveCameraID].trans.z_position += z;
+    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
         get_level_segment_index_from_position(
-            gObjectRenderStack[gObjectRenderStackPos].trans.x_position,
-            gObjectRenderStack[gObjectRenderStackPos].trans.y_position,
-            gObjectRenderStack[gObjectRenderStackPos].trans.z_position);
+            gActiveCameraStack[gActiveCameraID].trans.x_position,
+            gActiveCameraStack[gActiveCameraID].trans.y_position,
+            gActiveCameraStack[gActiveCameraID].trans.z_position);
 }
 
 UNUSED void func_80069B70(f32 x, UNUSED f32 y, f32 z) {
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_position -= x * sine_s(gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation);
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_position -= x * cosine_s(gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation);
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_position -= z * cosine_s(gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation);
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_position += z * sine_s(gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation);
-    gObjectRenderStack[gObjectRenderStackPos].unk34_a.levelSegmentIndex =
+    gActiveCameraStack[gActiveCameraID].trans.x_position -= x * sine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].trans.z_position -= x * cosine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].trans.x_position -= z * cosine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].trans.z_position += z * sine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
         get_level_segment_index_from_position(
-            gObjectRenderStack[gObjectRenderStackPos].trans.x_position,
-            gObjectRenderStack[gObjectRenderStackPos].trans.y_position,
-            gObjectRenderStack[gObjectRenderStackPos].trans.z_position);
+            gActiveCameraStack[gActiveCameraID].trans.x_position,
+            gActiveCameraStack[gActiveCameraID].trans.y_position,
+            gActiveCameraStack[gActiveCameraID].trans.z_position);
 }
 
 UNUSED void func_80069CB4(s32 xRotation, s32 yRotation, s32 zRotation) {
-    gObjectRenderStack[gObjectRenderStackPos].trans.y_rotation += xRotation;
-    gObjectRenderStack[gObjectRenderStackPos].trans.x_rotation += yRotation;
-    gObjectRenderStack[gObjectRenderStackPos].trans.z_rotation += zRotation;
+    gActiveCameraStack[gActiveCameraID].trans.y_rotation += xRotation;
+    gActiveCameraStack[gActiveCameraID].trans.x_rotation += yRotation;
+    gActiveCameraStack[gActiveCameraID].trans.z_rotation += zRotation;
 }
 
 ObjectSegment *func_80069CFC(void) {
-    return &gObjectRenderStack[gObjectRenderStackPos];
+    return &gActiveCameraStack[gActiveCameraID];
 }
 
 ObjectSegment *func_80069D20(void) {
     if (gCutsceneCameraActive) {
-        return &gObjectRenderStack[gObjectRenderStackPos + 4];
+        return &gActiveCameraStack[gActiveCameraID + 4];
     }
-    return &gObjectRenderStack[gObjectRenderStackPos];
+    return &gActiveCameraStack[gActiveCameraID];
 }
 
 ObjectSegment *func_80069D7C(void) {
     if (gCutsceneCameraActive) {
-        return &gObjectRenderStack[4];
+        return &gActiveCameraStack[4];
     }
-    return &gObjectRenderStack[0];
+    return &gActiveCameraStack[0];
 }
 
 Matrix *func_80069DA4(void) {
@@ -1303,12 +1306,12 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
     s32 i;
 
     for (i = 0; i <= gNumberOfViewports; i++) {
-        temp_f0 = arg0 - gObjectRenderStack[i].trans.x_position;
-        temp_f2 = arg1 - gObjectRenderStack[i].trans.y_position;
-        temp_f14 = arg2 - gObjectRenderStack[i].trans.z_position;
+        temp_f0 = arg0 - gActiveCameraStack[i].trans.x_position;
+        temp_f2 = arg1 - gActiveCameraStack[i].trans.y_position;
+        temp_f14 = arg2 - gActiveCameraStack[i].trans.z_position;
         temp_f0_2 = sqrtf(((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) + (temp_f14 * temp_f14));
         if (temp_f0_2 < arg3) {
-            gObjectRenderStack[i].unk30 = ((arg3 - temp_f0_2) * arg4) / arg3;
+            gActiveCameraStack[i].unk30 = ((arg3 - temp_f0_2) * arg4) / arg3;
         }
     }
 }
@@ -1316,7 +1319,7 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
 void func_80069F28(f32 arg0) {
     s32 i;
     for (i = 0; i <= gNumberOfViewports; i++) {
-        gObjectRenderStack[i].unk30 = arg0;
+        gActiveCameraStack[i].unk30 = arg0;
     }
 }
 
@@ -1439,7 +1442,7 @@ void swap_player_1_and_2_ids(void) {
  * Returns the buttons that are currently pressed down on the controller.
  */
 u16 get_buttons_held_from_player(s32 player) {
-    return sControllerData[sPlayerID[player]].buttonData;
+    return sControllerData[sPlayerID[player]].button;
 }
 
 /**
@@ -1461,14 +1464,14 @@ UNUSED u16 get_buttons_released_from_player(s32 player) {
  * Clamps the X joystick axis of the selected player to 70 and returns it.
  */
 s8 clamp_joystick_x_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].rawStickX);
+    return clamp_joystick(sControllerData[sPlayerID[player]].stick_x);
 }
 
 /**
  * Clamps the Y joystick axis of the selected player to 70 and returns it.
  */
 s8 clamp_joystick_y_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].rawStickY);
+    return clamp_joystick(sControllerData[sPlayerID[player]].stick_y);
 }
 
 /**

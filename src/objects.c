@@ -202,9 +202,9 @@ s16 D_8011AE78;
 s16 D_8011AE7A;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
-s16 D_8011AE80; // TT Ghost outTime at least
+s16 gTTGhostTimeToBeat;
 s16 D_8011AE82;
-s32 D_8011AE84;
+s16 gMapDefaultVehicle; // Vehicle enum
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
 Matrix *gObjectCurrMatrix;
@@ -790,7 +790,26 @@ s32 func_8000FAC4(Object *obj, s32 arg1) {
     return ((obj->segment.header->unk57 << 5) + 3) & ~3;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000FBCC.s")
+s32 func_8000FBCC(Object *arg0, Object_60 *arg1) {
+    s32 var_v0;
+    ObjectHeader *objHeader;
+
+    arg0->unk50 = (Object_50*) arg1;
+    arg1->unk4 = NULL;
+    objHeader = ((ObjectSegment*) arg0)->header;
+    if (objHeader->unk32) {
+        arg1->unk4 = load_texture((s32) ((Object_Taj*)objHeader)->unk34);
+        objHeader = ((ObjectSegment*)arg0)->header;
+    }
+    ((Object_50*) arg1)->unk0 = (f32) objHeader->unk4;
+    ((Object_50*) arg1)->unk8 = -1;
+    D_8011AE50 = (s32) ((Object_60*)arg1)->unk4;
+    var_v0 = 16;
+    if ((((ObjectSegment*) arg0)->header->unk32) && (arg1->unk4 == NULL)) {
+        return 0;
+    }
+    return var_v0;
+}
 
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1) {
     arg0->unk58 = arg1;
@@ -817,7 +836,7 @@ s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
 
 s32 func_8000FD34(unk8000FD34 *arg0, s32 arg1) {
     arg0->unk5C = arg1;
-    func_80016BC4();
+    func_80016BC4(arg0);
     return 0x10C;
 }
 
@@ -1478,7 +1497,32 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800155B8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80016BC4.s")
+
+void func_80016BC4(unk8000FD34 *arg0) {
+    s32 var_s0;
+    s32 var_s1;
+    s32 *temp_v0;
+    s8 var_v1;
+
+    arg0->unk5C->unk104 = 0;
+    func_8001709C();
+    func_8001709C(arg0);
+    var_s1 = 0;
+    var_v1 = arg0->unk40->unk55;
+    var_s0 = 0;
+    if (var_v1 > 0) {
+        do {
+            temp_v0 = *(arg0->unk68 + var_s0);
+            if (temp_v0 != NULL) {
+                func_8006017C(*temp_v0);
+                var_v1 = arg0->unk40->unk55;
+            }
+            var_s1 += 1;
+            var_s0 += 1;
+        } while (var_s1 < var_v1);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001709C.s")
@@ -1589,7 +1633,39 @@ Object *func_8001B2E0() {
     return D_8011AD34;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B2F0.s")
+/**
+Pretty sure this determines whether or not you're eligible to race TT ghost in track select
+when TT is on. It looks like it checks some ghost data makes sure you've got a ghost for that level
+with the default vehicle,
+Returns 0 if TT ghost was loaded successfully.
+*/
+s32 func_8001B2F0(MapId mapId) {
+    TTGhostTable *ghostTable;
+    TTGhostTable *prevGhostTable;
+    s32 ret;
+    TTGhostTable *nextGhostTable;
+
+    gMapDefaultVehicle = get_map_default_vehicle(mapId);
+    ghostTable = (TTGhostTable *) load_asset_section_from_rom(ASSET_TTGHOSTS_TABLE);
+
+    nextGhostTable = ghostTable;
+    do {
+        prevGhostTable = nextGhostTable;
+        if ((prevGhostTable->mapId == mapId) && (prevGhostTable->defaultVehicleId == gMapDefaultVehicle)) {
+            break;
+        }
+        nextGhostTable++;
+    } while (prevGhostTable->mapId != 0xFF);
+
+    ret = 1;
+
+    if (prevGhostTable->mapId != 0xFF) {
+        ret = load_tt_ghost(nextGhostTable->ghostOffset, nextGhostTable[1].ghostOffset - nextGhostTable->ghostOffset, &gTTGhostTimeToBeat);
+    }
+
+    free_from_memory_pool(ghostTable);
+    return ret;
+}
 
 s32 func_8001B3AC(s32 arg0) {
     return arg0 == D_800DC718;
@@ -1653,8 +1729,66 @@ Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2) {
     return temp_v1;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B834.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B974.s")
+f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
+    Object_Racer *temp_racer;
+    f32 var_f2;
+    s32 r1_ccp;
+    s32 temp_lo;
+    s32 var_v1;
+    s32 r1_lcp;
+
+    if (D_8011AED0 <= 0) {
+        return 0.0f;
+    }
+    var_f2 = 0.0f;
+    var_v1 = FALSE;
+    if (racer2->courseCheckpoint < racer1->courseCheckpoint) {
+        temp_racer = racer1;
+        racer1 = racer2;
+        racer2 = temp_racer;
+        var_v1 = TRUE;
+    }
+    r1_lcp = racer1->checkpoint;
+    for (r1_ccp = racer1->courseCheckpoint; r1_ccp < racer2->courseCheckpoint; r1_ccp++) {
+        var_f2 += D_8011AECC[r1_lcp++].unk20;
+        if (r1_lcp == D_8011AED0) {
+            r1_lcp = 0;
+        }
+    }
+    r1_lcp = racer1->checkpoint - 1;
+    if (r1_lcp < 0) {
+        r1_lcp = D_8011AED0 - 1;
+    }
+    var_f2 += (D_8011AECC[r1_lcp].unk20 * racer1->checkpoint_distance);
+    r1_lcp = racer2->checkpoint - 1;
+    if (r1_lcp < 0) {
+        r1_lcp = D_8011AED0 - 1;
+    }
+    var_f2 -= (D_8011AECC[r1_lcp].unk20 * racer2->checkpoint_distance);
+    if (var_v1) {
+        var_f2 = -var_f2;
+    }
+    return var_f2;
+}
+
+UNUSED f32 func_8001B974(Object_Racer* racer) {
+    f32 distLeft;
+    s32 lapChkPts;
+
+    if (D_8011AED0 <= 0) {
+        return 0.0f;
+    }
+    distLeft = 0.0f;
+    for (lapChkPts = racer->checkpoint; lapChkPts < D_8011AED0; lapChkPts++) {
+        distLeft += D_8011AECC[lapChkPts].unk20;
+    }
+    lapChkPts = racer->checkpoint - 1;
+    if (lapChkPts < 0) {
+        lapChkPts = D_8011AED0 - 1;
+    }
+    distLeft += (D_8011AECC[lapChkPts].unk20 * racer->checkpoint_distance);
+    return distLeft;
+}
 
 // Returns a pointer to some struct that is 0x3C bytes long.
 unknown8011AECC *func_8001BA00(s32 arg0) {
@@ -2095,7 +2229,7 @@ void func_800228EC(s32 arg0) {
 
     D_8011AEF7 = 3;
     object_64 = &get_racer_object(0)->unk64->racer;
-    object_64->unk190 = 0;
+    object_64->courseCheckpoint = 0;
     object_64->checkpoint = 0;
     object_64->lap = 0;
     object_64->unk1BA = 0;
@@ -2104,7 +2238,31 @@ void func_800228EC(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80022948.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80022CFC.s")
+
+void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
+    s32 index;
+    unk80022CFC_1 *obj;
+    Settings *settings = get_settings();
+
+    for (index = 0; index < objCount; index += 1) {
+        obj = ((unk80022CFC_1*) gObjPtrList[index]);
+        if (obj->unk48 == 0x4D) {
+            if (obj->unk3C != NULL) {
+                if (obj->unk3C->unkA > 0) {
+                    if ((settings->tajFlags != 0) && (settings->tajFlags & (1 << (obj->unk3C->unkA + 2)))) {
+                        obj->unkC = x;
+                        obj->unk10 = y + 10.0;
+                        obj->unk14 = z;
+                        obj->unk2E = arg0;
+                        obj->unk78 = 0;
+                        obj->unk39 = 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80022E18.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 

@@ -1,8 +1,8 @@
 glabel func_80066CDC
 /* 0678DC 80066CDC 27BDFF98 */  addiu $sp, $sp, -0x68
 /* 0678E0 80066CE0 AFBF0024 */  sw    $ra, 0x24($sp)
-/* 0678E4 80066CE4 3C1F8012 */  lui   $ra, %hi(gObjectRenderStackPos) # $ra, 0x8012
-/* 0678E8 80066CE8 27FF0CE4 */  addiu $ra, %lo(gObjectRenderStackPos) # addiu $ra, $ra, 0xce4
+/* 0678E4 80066CE4 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012
+/* 0678E8 80066CE8 27FF0CE4 */  addiu $ra, %lo(gActiveCameraID) # addiu $ra, $ra, 0xce4
 /* 0678EC 80066CEC 8FE20000 */  lw    $v0, ($ra)
 /* 0678F0 80066CF0 AFB00020 */  sw    $s0, 0x20($sp)
 /* 0678F4 80066CF4 00808025 */  move  $s0, $a0
@@ -11,9 +11,9 @@ glabel func_80066CDC
 /* 067900 80066D00 0C003861 */  jal   func_8000E184
 /* 067904 80066D04 AFA20030 */   sw    $v0, 0x30($sp)
 /* 067908 80066D08 8FA90030 */  lw    $t1, 0x30($sp)
-/* 06790C 80066D0C 3C1F8012 */  lui   $ra, %hi(gObjectRenderStackPos) # $ra, 0x8012
+/* 06790C 80066D0C 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012
 /* 067910 80066D10 10400008 */  beqz  $v0, .L80066D34
-/* 067914 80066D14 27FF0CE4 */   addiu $ra, %lo(gObjectRenderStackPos) # addiu $ra, $ra, 0xce4
+/* 067914 80066D14 27FF0CE4 */   addiu $ra, %lo(gActiveCameraID) # addiu $ra, $ra, 0xce4
 /* 067918 80066D18 3C0E8012 */  lui   $t6, %hi(gNumberOfViewports) # $t6, 0x8012
 /* 06791C 80066D1C 8DCE0CE0 */  lw    $t6, %lo(gNumberOfViewports)($t6)
 /* 067920 80066D20 240F0001 */  li    $t7, 1
@@ -29,9 +29,9 @@ glabel func_80066CDC
 /* 067944 80066D44 012B0019 */  multu $t1, $t3
 /* 067948 80066D48 3C0A800E */  lui   $t2, %hi(gScreenViewports) # $t2, 0x800e
 /* 06794C 80066D4C 254AD064 */  addiu $t2, %lo(gScreenViewports) # addiu $t2, $t2, -0x2f9c
-/* 067950 80066D50 3C1F8012 */  lui   $ra, %hi(gObjectRenderStackPos) # $ra, 0x8012
+/* 067950 80066D50 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012
 /* 067954 80066D54 00024402 */  srl   $t0, $v0, 0x10
-/* 067958 80066D58 27FF0CE4 */  addiu $ra, %lo(gObjectRenderStackPos) # addiu $ra, $ra, 0xce4
+/* 067958 80066D58 27FF0CE4 */  addiu $ra, %lo(gActiveCameraID) # addiu $ra, $ra, 0xce4
 /* 06795C 80066D5C 3C038012 */  lui   $v1, %hi(gNumberOfViewports) # $v1, 0x8012
 /* 067960 80066D60 00083842 */  srl   $a3, $t0, 1
 /* 067964 80066D64 0000C012 */  mflo  $t8
@@ -129,14 +129,14 @@ glabel func_80066CDC
 /* 067AD4 80066ED4 AFA00010 */   sw    $zero, 0x10($sp)
 /* 067AD8 80066ED8 8FA5006C */  lw    $a1, 0x6c($sp)
 /* 067ADC 80066EDC 8FAE002C */  lw    $t6, 0x2c($sp)
-/* 067AE0 80066EE0 3C1F8012 */  lui   $ra, %hi(gObjectRenderStackPos) # $ra, 0x8012
-/* 067AE4 80066EE4 27FF0CE4 */  addiu $ra, %lo(gObjectRenderStackPos) # addiu $ra, $ra, 0xce4
+/* 067AE0 80066EE0 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012
+/* 067AE4 80066EE4 27FF0CE4 */  addiu $ra, %lo(gActiveCameraID) # addiu $ra, $ra, 0xce4
 /* 067AE8 80066EE8 10A00005 */  beqz  $a1, .L80066F00
 /* 067AEC 80066EEC AFEE0000 */   sw    $t6, ($ra)
 /* 067AF0 80066EF0 0C019F4F */  jal   func_80067D3C
 /* 067AF4 80066EF4 02002025 */   move  $a0, $s0
-/* 067AF8 80066EF8 3C1F8012 */  lui   $ra, %hi(gObjectRenderStackPos) # $ra, 0x8012
-/* 067AFC 80066EFC 27FF0CE4 */  addiu $ra, %lo(gObjectRenderStackPos) # addiu $ra, $ra, 0xce4
+/* 067AF8 80066EF8 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012
+/* 067AFC 80066EFC 27FF0CE4 */  addiu $ra, %lo(gActiveCameraID) # addiu $ra, $ra, 0xce4
 .L80066F00:
 /* 067B00 80066F00 8FB80034 */  lw    $t8, 0x34($sp)
 /* 067B04 80066F04 100002C9 */  b     .L80067A2C
@@ -889,13 +889,13 @@ glabel func_80066CDC
 /* 0685F8 800679F8 0C01A056 */  jal   func_80068158
 /* 0685FC 800679FC AFAB0010 */   sw    $t3, 0x10($sp)
 /* 068600 80067A00 8FA5006C */  lw    $a1, 0x6c($sp)
-/* 068604 80067A04 3C1F8012 */  lui   $ra, %hi(gObjectRenderStackPos) # $ra, 0x8012
+/* 068604 80067A04 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012
 /* 068608 80067A08 10A00005 */  beqz  $a1, .L80067A20
-/* 06860C 80067A0C 27FF0CE4 */   addiu $ra, %lo(gObjectRenderStackPos) # addiu $ra, $ra, 0xce4
+/* 06860C 80067A0C 27FF0CE4 */   addiu $ra, %lo(gActiveCameraID) # addiu $ra, $ra, 0xce4
 /* 068610 80067A10 0C019F4F */  jal   func_80067D3C
 /* 068614 80067A14 02002025 */   move  $a0, $s0
-/* 068618 80067A18 3C1F8012 */  lui   $ra, %hi(gObjectRenderStackPos) # $ra, 0x8012
-/* 06861C 80067A1C 27FF0CE4 */  addiu $ra, %lo(gObjectRenderStackPos) # addiu $ra, $ra, 0xce4
+/* 068618 80067A18 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012
+/* 06861C 80067A1C 27FF0CE4 */  addiu $ra, %lo(gActiveCameraID) # addiu $ra, $ra, 0xce4
 .L80067A20:
 /* 068620 80067A20 8FAF0034 */  lw    $t7, 0x34($sp)
 /* 068624 80067A24 00000000 */  nop   

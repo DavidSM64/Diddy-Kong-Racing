@@ -97,7 +97,7 @@ void func_8007AE28(s32 arg0);
 s32 func_8007AE44(void);
 s32 func_8007AE54(void);
 s32 func_8007AE64(void);
-void func_8007B374(s32 arg0);
+void set_texture_colour_tag(s32 tagID);
 void func_8007B3D0(Gfx **dlist);
 void func_8007B43C(void);
 void func_8007B454(void);
