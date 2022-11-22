@@ -140,7 +140,7 @@ OSMesg sSIMesgBuf;
 OSMesg gSIMesg;
 OSContStatus status;
 UNUSED s32 D_80121108[2]; //Padding?
-ControllerData sControllerData[8];
+OSContPad sControllerData[8];
 u16 gControllerButtonsPressed[4];
 u16 gControllerButtonsReleased[4];
 u8 sPlayerID[16];
@@ -1428,7 +1428,7 @@ void swap_player_1_and_2_ids(void) {
  * Returns the buttons that are currently pressed down on the controller.
  */
 u16 get_buttons_held_from_player(s32 player) {
-    return sControllerData[sPlayerID[player]].buttonData;
+    return sControllerData[sPlayerID[player]].button;
 }
 
 /**
@@ -1450,14 +1450,14 @@ UNUSED u16 get_buttons_released_from_player(s32 player) {
  * Clamps the X joystick axis of the selected player to 70 and returns it.
  */
 s8 clamp_joystick_x_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].rawStickX);
+    return clamp_joystick(sControllerData[sPlayerID[player]].stick_x);
 }
 
 /**
  * Clamps the Y joystick axis of the selected player to 70 and returns it.
  */
 s8 clamp_joystick_y_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].rawStickY);
+    return clamp_joystick(sControllerData[sPlayerID[player]].stick_y);
 }
 
 /**

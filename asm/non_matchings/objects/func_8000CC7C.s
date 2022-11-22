@@ -1106,8 +1106,8 @@ glabel L8000D98C
 /* 00E7E0 8000DBE0 0C006D3F */  jal   func_8001B4FC
 /* 00E7E4 8000DBE4 00402025 */   move  $a0, $v0
 /* 00E7E8 8000DBE8 10400029 */  beqz  $v0, .L8000DC90
-/* 00E7EC 8000DBEC 3C188012 */   lui   $t8, %hi(D_8011AE84) # $t8, 0x8012
-/* 00E7F0 8000DBF0 8718AE84 */  lh    $t8, %lo(D_8011AE84)($t8)
+/* 00E7EC 8000DBEC 3C188012 */   lui   $t8, %hi(gMapDefaultVehicle) # $t8, 0x8012
+/* 00E7F0 8000DBF0 8718AE84 */  lh    $t8, %lo(gMapDefaultVehicle)($t8)
 /* 00E7F4 8000DBF4 3C02800E */  lui   $v0, %hi(D_800DC7B8) # $v0, 0x800e
 /* 00E7F8 8000DBF8 00187080 */  sll   $t6, $t8, 2
 /* 00E7FC 8000DBFC 01D87021 */  addu  $t6, $t6, $t8

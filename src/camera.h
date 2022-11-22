@@ -72,15 +72,6 @@ typedef struct ScreenViewport {
     /* 0x30 */ s32 flags;
 } ScreenViewport;
 
-/* Size: 6 bytes */
-typedef struct ControllerData {
-    u16 buttonData; // Buttons
-    s8 rawStickX;
-    s8 rawStickY;
-    s8 unk4;
-    s8 unk6;
-} ControllerData;
-
 typedef struct unk80068BF4 {
     s16 unk0;
     s16 unk2;
