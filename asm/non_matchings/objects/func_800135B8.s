@@ -134,7 +134,7 @@ glabel func_800135B8
 /* 0143A4 800137A4 8FAF0048 */  lw    $t7, 0x48($sp)
 /* 0143A8 800137A8 2406000E */  li    $a2, 14
 /* 0143AC 800137AC 8DE5007C */  lw    $a1, 0x7c($t7)
-/* 0143B0 800137B0 0C01ED3A */  jal   func_8007B4E8
+/* 0143B0 800137B0 0C01ED3A */  jal   load_and_set_texture
 /* 0143B4 800137B4 00003825 */   move  $a3, $zero
 /* 0143B8 800137B8 8FB80048 */  lw    $t8, 0x48($sp)
 /* 0143BC 800137BC 8FAD0078 */  lw    $t5, 0x78($sp)

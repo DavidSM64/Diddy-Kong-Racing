@@ -342,7 +342,7 @@ glabel func_80099E8C
 /* 09AF8C 8009A38C E7A00010 */  swc1  $f0, 0x10($sp)
 /* 09AF90 8009A390 0C01E340 */  jal   render_texture_rectangle_scaled
 /* 09AF94 8009A394 E7A00014 */   swc1  $f0, 0x14($sp)
-/* 09AF98 8009A398 0C01ECF4 */  jal   func_8007B3D0
+/* 09AF98 8009A398 0C01ECF4 */  jal   reset_render_settings
 /* 09AF9C 8009A39C 02E02025 */   move  $a0, $s7
 /* 09AFA0 8009A3A0 8638000C */  lh    $t8, 0xc($s1)
 /* 09AFA4 8009A3A4 3C02800E */  lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
@@ -607,7 +607,7 @@ glabel func_80099E8C
 /* 09B394 8009A794 0C01E2AE */  jal   render_textured_rectangle
 /* 09B398 8009A798 24070034 */   li    $a3, 52
 .L8009A79C:
-/* 09B39C 8009A79C 0C01ECF4 */  jal   func_8007B3D0
+/* 09B39C 8009A79C 0C01ECF4 */  jal   reset_render_settings
 /* 09B3A0 8009A7A0 02E02025 */   move  $a0, $s7
 .L8009A7A4:
 /* 09B3A4 8009A7A4 8FBF005C */  lw    $ra, 0x5c($sp)

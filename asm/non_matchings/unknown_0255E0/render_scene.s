@@ -169,7 +169,7 @@ glabel render_scene
 /* 025BC4 80024FC4 240E0001 */   li    $t6, 1
 /* 025BC8 80024FC8 A3AE0083 */  sb    $t6, 0x83($sp)
 .L80024FCC:
-/* 025BCC 80024FCC 0C01ECF4 */  jal   func_8007B3D0
+/* 025BCC 80024FCC 0C01ECF4 */  jal   reset_render_settings
 /* 025BD0 80024FD0 02202025 */   move  $a0, $s1
 /* 025BD4 80024FD4 8E220000 */  lw    $v0, ($s1)
 /* 025BD8 80024FD8 3C19BC00 */  lui   $t9, (0xBC000002 >> 16) # lui $t9, 0xbc00

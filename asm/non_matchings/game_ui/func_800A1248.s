@@ -110,7 +110,7 @@ glabel func_800A1248
 /* 0A1FC8 800A13C8 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A1FCC 800A13CC 8D070064 */  lw    $a3, 0x64($t0)
 /* 0A1FD0 800A13D0 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
-/* 0A1FD4 800A13D4 0C01ECF4 */  jal   func_8007B3D0
+/* 0A1FD4 800A13D4 0C01ECF4 */  jal   reset_render_settings
 /* 0A1FD8 800A13D8 AFA70044 */   sw    $a3, 0x44($sp)
 /* 0A1FDC 800A13DC 8FA40044 */  lw    $a0, 0x44($sp)
 /* 0A1FE0 800A13E0 8FA50050 */  lw    $a1, 0x50($sp)

@@ -318,7 +318,7 @@ glabel func_8008FF1C
 /* 090FBC 800903BC 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
 /* 090FC0 800903C0 0C019FCB */  jal   func_80067F2C
 /* 090FC4 800903C4 02202025 */   move  $a0, $s1
-/* 090FC8 800903C8 0C01ECF4 */  jal   func_8007B3D0
+/* 090FC8 800903C8 0C01ECF4 */  jal   reset_render_settings
 /* 090FCC 800903CC 02202025 */   move  $a0, $s1
 /* 090FD0 800903D0 8E230000 */  lw    $v1, ($s1)
 /* 090FD4 800903D4 3C0EE700 */  lui   $t6, 0xe700

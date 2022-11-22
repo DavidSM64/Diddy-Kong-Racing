@@ -236,7 +236,7 @@ glabel func_80096978
 /* 0978FC 80096CFC 0C031110 */  jal   draw_text
 /* 097900 80096D00 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 097904 80096D04 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
-/* 097908 80096D08 0C01ECF4 */  jal   func_8007B3D0
+/* 097908 80096D08 0C01ECF4 */  jal   reset_render_settings
 /* 09790C 80096D0C 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 097910 80096D10 0C01A142 */  jal   func_80068508
 /* 097914 80096D14 24040001 */   li    $a0, 1

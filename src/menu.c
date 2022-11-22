@@ -2156,7 +2156,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                     case 1:
                         if (s5) {
                             s5 = FALSE;
-                            func_8007B3D0(&sMenuCurrDisplayList);
+                            reset_render_settings(&sMenuCurrDisplayList);
                         }
                         sMenuGuiOpacity = elem->opacity;
                         show_timestamp(
@@ -2171,7 +2171,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                     case 2:
                         if (s5) {
                             s5 = FALSE;
-                            func_8007B3D0(&sMenuCurrDisplayList);
+                            reset_render_settings(&sMenuCurrDisplayList);
                         }
                         func_80081C04(
                             *elem->unk14_a.number,
@@ -2211,7 +2211,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                     case 5:
                         if (s5) {
                             s5 = FALSE;
-                            func_8007B3D0(&sMenuCurrDisplayList);
+                            reset_render_settings(&sMenuCurrDisplayList);
                         }
                         func_80068508(1);
                         func_8007BF1C(FALSE);
@@ -2262,7 +2262,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
             elem++; // Go onto the next element.
         }
         if (s5) {
-            func_8007B3D0(&sMenuCurrDisplayList);
+            reset_render_settings(&sMenuCurrDisplayList);
         }
         sMenuGuiColourR = 0xFF;
         sMenuGuiColourG = 0xFF;
@@ -3624,7 +3624,7 @@ s32 menu_boot_loop(s32 updateRate) {
 
     if (temp < 300) {
         render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, temp, 255, 255, 255, 255);
-        func_8007B3D0(&sMenuCurrDisplayList);
+        reset_render_settings(&sMenuCurrDisplayList);
         set_text_font(FONT_SMALL);
         if (gExpansionPak) {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, SCREEN_HEIGHT - 40, "Expansion Pak Detected", ALIGN_MIDDLE_CENTER);
@@ -3760,7 +3760,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         if (gOpacityDecayTimer < (16 - sControllerPakMenuNumberOfRows)) {
             if ((gOptionBlinkTimer & 8) != 0) {
                 render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF, yPos + 8, 255, 255, 255, 255);
-                func_8007B3D0(&sMenuCurrDisplayList);
+                reset_render_settings(&sMenuCurrDisplayList);
             }
         } else {
             set_text_font(ASSET_FONTS_FUNFONT);
@@ -4486,7 +4486,7 @@ void draw_character_select_text(UNUSED s32 arg0) {
             }
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
-        func_8007B3D0(&sMenuCurrDisplayList);
+        reset_render_settings(&sMenuCurrDisplayList);
         update_camera_fov(40.0f);
     }
 }
@@ -5965,7 +5965,7 @@ void func_8008FF1C(s32 updateRate) {
         func_80066894(0, 1);
         func_8009BD5C();
         func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        func_8007B3D0(&sMenuCurrDisplayList);
+        reset_render_settings(&sMenuCurrDisplayList);
         gDPPipeSync(sMenuCurrDisplayList++);
         D_80126928 = 64;
         D_8012692C = 32;
@@ -6317,7 +6317,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                     render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[PLAYER_TWO] * 3], 0xB0, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                 }
 
-                func_8007B3D0(&sMenuCurrDisplayList);
+                reset_render_settings(&sMenuCurrDisplayList);
 
                 if (gNumberOfActivePlayers < 3) {
                     // Draw border around vehicle images
@@ -6397,7 +6397,7 @@ void render_track_select_setup_ui(s32 updateRate) {
         if ((gNumberOfActivePlayers == 1) && (D_801263E0 >= 0) && (func_80092BE0(gTrackIdForPreview) >= 0)) {
             // Render small T.T. icon.
             render_textured_rectangle(&sMenuCurrDisplayList, &gRaceSelectionTTTexture, 0xCC, 0x7A, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
-            func_8007B3D0(&sMenuCurrDisplayList);
+            reset_render_settings(&sMenuCurrDisplayList);
         }
         if (D_801269C8 != 5) {
             if (((D_801263E0 == 2) && !sp74) || ((D_801263E0 == 3) && sp74) || (D_801263E0 == 4)) {
@@ -6588,7 +6588,7 @@ void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
                         y += 2;
                     }
                     render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[0]*3], 149, y, 255, 255, 255, 255);
-                    func_8007B3D0(&sMenuCurrDisplayList);
+                    reset_render_settings(&sMenuCurrDisplayList);
                     gMenuImageStack[7].unkC = 21.0f;
                     gMenuImageStack[7].unk10 = -52.0f;
                     func_8009CA60(7);
@@ -7964,7 +7964,7 @@ void render_credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
     gDPPipeSync(sMenuCurrDisplayList++);
     gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
 
-    func_8007B3D0(&sMenuCurrDisplayList);
+    reset_render_settings(&sMenuCurrDisplayList);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
@@ -8394,7 +8394,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
                 texEnabled = TRUE;
                 var_a3 = objMdl->batches[i].unk7 << 14;
             }
-            func_8007B4E8(&sMenuCurrDisplayList, tex, sp5C, var_a3);
+            load_and_set_texture(&sMenuCurrDisplayList, tex, sp5C, var_a3);
             
             gSPVertexDKR(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             gSPPolygon(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, texEnabled);

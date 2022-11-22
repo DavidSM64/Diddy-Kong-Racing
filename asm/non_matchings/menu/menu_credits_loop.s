@@ -132,7 +132,7 @@ glabel menu_credits_loop
 /* 09C108 8009B508 26100004 */  addiu $s0, $s0, 4
 /* 09C10C 8009B50C 1616FFDE */  bne   $s0, $s6, .L8009B488
 /* 09C110 8009B510 26B51999 */   addiu $s5, $s5, 0x1999
-/* 09C114 8009B514 0C01ECF4 */  jal   func_8007B3D0
+/* 09C114 8009B514 0C01ECF4 */  jal   reset_render_settings
 /* 09C118 8009B518 02E02025 */   move  $a0, $s7
 /* 09C11C 8009B51C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
 /* 09C120 8009B520 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8

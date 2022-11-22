@@ -325,7 +325,7 @@ glabel func_800ACA20
 /* 0ADB04 800ACF04 AC400004 */  sw    $zero, 4($v0)
 /* 0ADB08 800ACF08 24430008 */  addiu $v1, $v0, 8
 /* 0ADB0C 800ACF0C AE230000 */  sw    $v1, ($s1)
-/* 0ADB10 800ACF10 0C01ECF4 */  jal   func_8007B3D0
+/* 0ADB10 800ACF10 0C01ECF4 */  jal   reset_render_settings
 /* 0ADB14 800ACF14 02202025 */   move  $a0, $s1
 .L800ACF18:
 /* 0ADB18 800ACF18 8FBF005C */  lw    $ra, 0x5c($sp)

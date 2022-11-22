@@ -339,7 +339,7 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
         flip = TRUE;
     }
 #endif
-    func_8007B3D0(&gSceneCurrDisplayList);
+    reset_render_settings(&gSceneCurrDisplayList);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
     gSPClearGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
     gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
@@ -589,7 +589,7 @@ void draw_gradient_background(void) {
     headerRed1 = gCurrentLevelHeader2->unkBE;
     headerGreen1 = gCurrentLevelHeader2->unkBF;
     headerBlue1 = gCurrentLevelHeader2->unkC0;
-    func_8007B3D0(&gSceneCurrDisplayList);
+    reset_render_settings(&gSceneCurrDisplayList);
     func_8007B4C8(&gSceneCurrDisplayList, 0, 8);
     gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
     gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
@@ -732,7 +732,7 @@ void render_level_geometry_and_objects(void) {
         sp58[1] = TRUE;
     }
 
-    func_8007B3D0(&gSceneCurrDisplayList);
+    reset_render_settings(&gSceneCurrDisplayList);
     func_80015348(sp160, sp16C - 1);
     sp158 = 0x200 << (get_object_render_stack_pos() & 1);
 
@@ -794,7 +794,7 @@ void render_level_geometry_and_objects(void) {
         func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_object_render_stack_pos());
     }
 
-    func_8007B3D0(&gSceneCurrDisplayList);
+    reset_render_settings(&gSceneCurrDisplayList);
     func_8007B4C8(&gSceneCurrDisplayList, 0, 0xA);
     func_80012C3C(&gSceneCurrDisplayList);
 
@@ -937,7 +937,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                     gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
                     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
                 } else {
-                    func_8007B4E8(&gSceneCurrDisplayList, texture, batchFlags, temp);
+                    load_and_set_texture(&gSceneCurrDisplayList, texture, batchFlags, temp);
                     batchFlags = TRIN_ENABLE_TEXTURE;
                     if(texture == NULL) {
                         batchFlags = TRIN_DISABLE_TEXTURE;

@@ -483,7 +483,7 @@ glabel func_800AA600
 /* 0AB908 800AAD08 0C01E2AE */  jal   render_textured_rectangle
 /* 0AB90C 800AAD0C 00003825 */   move  $a3, $zero
 /* 0AB910 800AAD10 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
-/* 0AB914 800AAD14 0C01ECF4 */  jal   func_8007B3D0
+/* 0AB914 800AAD14 0C01ECF4 */  jal   reset_render_settings
 /* 0AB918 800AAD18 24846CFC */   addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0AB91C 800AAD1C 10000079 */  b     .L800AAF04
 /* 0AB920 800AAD20 86080006 */   lh    $t0, 6($s0)
@@ -516,7 +516,7 @@ glabel func_800AA600
 /* 0AB988 800AAD88 0C01E340 */  jal   render_texture_rectangle_scaled
 /* 0AB98C 800AAD8C E7A00010 */   swc1  $f0, 0x10($sp)
 /* 0AB990 800AAD90 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
-/* 0AB994 800AAD94 0C01ECF4 */  jal   func_8007B3D0
+/* 0AB994 800AAD94 0C01ECF4 */  jal   reset_render_settings
 /* 0AB998 800AAD98 24846CFC */   addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0AB99C 800AAD9C 10000059 */  b     .L800AAF04
 /* 0AB9A0 800AADA0 86080006 */   lh    $t0, 6($s0)

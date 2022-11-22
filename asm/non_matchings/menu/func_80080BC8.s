@@ -166,7 +166,7 @@ glabel func_80080BC8
 /* 081A30 80080E30 24100001 */  li    $s0, 1
 /* 081A34 80080E34 0219C023 */  subu  $t8, $s0, $t9
 /* 081A38 80080E38 AD580000 */  sw    $t8, ($t2)
-/* 081A3C 80080E3C 0C01ECF4 */  jal   func_8007B3D0
+/* 081A3C 80080E3C 0C01ECF4 */  jal   reset_render_settings
 /* 081A40 80080E40 00C02025 */   move  $a0, $a2
 /* 081A44 80080E44 8FBF0034 */  lw    $ra, 0x34($sp)
 /* 081A48 80080E48 8FB00018 */  lw    $s0, 0x18($sp)

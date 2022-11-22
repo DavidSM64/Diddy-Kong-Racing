@@ -100,7 +100,7 @@ glabel func_800143A8
 /* 015114 80014514 27A40074 */  addiu $a0, $sp, 0x74
 /* 015118 80014518 02402825 */  move  $a1, $s2
 /* 01511C 8001451C AFAA00AC */  sw    $t2, 0xac($sp)
-/* 015120 80014520 0C01ED3A */  jal   func_8007B4E8
+/* 015120 80014520 0C01ED3A */  jal   load_and_set_texture
 /* 015124 80014524 AFAB0048 */   sw    $t3, 0x48($sp)
 /* 015128 80014528 8FAA00AC */  lw    $t2, 0xac($sp)
 /* 01512C 8001452C 8FAB0048 */  lw    $t3, 0x48($sp)
