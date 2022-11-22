@@ -192,7 +192,7 @@ glabel func_80084854
 /* 085730 80084B30 02002825 */  move  $a1, $s0
 /* 085734 80084B34 0C01E2AE */  jal   render_textured_rectangle
 /* 085738 80084B38 240700A0 */   li    $a3, 160
-/* 08573C 80084B3C 0C01ECF4 */  jal   func_8007B3D0
+/* 08573C 80084B3C 0C01ECF4 */  jal   reset_render_settings
 /* 085740 80084B40 02402025 */   move  $a0, $s2
 /* 085744 80084B44 00002025 */  move  $a0, $zero
 /* 085748 80084B48 00002825 */  move  $a1, $zero

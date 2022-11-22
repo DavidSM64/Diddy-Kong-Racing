@@ -232,7 +232,7 @@ glabel func_80080E90
 /* 081DD4 800811D4 3C19FA00 */  lui   $t9, 0xfa00
 /* 081DD8 800811D8 02002025 */  move  $a0, $s0
 /* 081DDC 800811DC AC790000 */  sw    $t9, ($v1)
-/* 081DE0 800811E0 0C01ECF4 */  jal   func_8007B3D0
+/* 081DE0 800811E0 0C01ECF4 */  jal   reset_render_settings
 /* 081DE4 800811E4 AC6F0004 */   sw    $t7, 4($v1)
 /* 081DE8 800811E8 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 081DEC 800811EC 8FB00018 */  lw    $s0, 0x18($sp)

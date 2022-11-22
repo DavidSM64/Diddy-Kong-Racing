@@ -22,7 +22,7 @@ glabel func_8008F618
 /* 090268 8008F668 02C02025 */  move  $a0, $s6
 /* 09026C 8008F66C 0C019FCB */  jal   func_80067F2C
 /* 090270 8008F670 02002825 */   move  $a1, $s0
-/* 090274 8008F674 0C01ECF4 */  jal   func_8007B3D0
+/* 090274 8008F674 0C01ECF4 */  jal   reset_render_settings
 /* 090278 8008F678 02C02025 */   move  $a0, $s6
 /* 09027C 8008F67C 8EC20000 */  lw    $v0, ($s6)
 /* 090280 8008F680 8FAC0058 */  lw    $t4, 0x58($sp)
@@ -211,7 +211,7 @@ glabel func_8008F618
 /* 090530 8008F930 AFA8004C */  sw    $t0, 0x4c($sp)
 /* 090534 8008F934 AFA90044 */  sw    $t1, 0x44($sp)
 /* 090538 8008F938 AFAC0058 */  sw    $t4, 0x58($sp)
-/* 09053C 8008F93C 0C01ED3A */  jal   func_8007B4E8
+/* 09053C 8008F93C 0C01ED3A */  jal   load_and_set_texture
 /* 090540 8008F940 AFAD007C */   sw    $t5, 0x7c($sp)
 /* 090544 8008F944 8FA8004C */  lw    $t0, 0x4c($sp)
 /* 090548 8008F948 3C0B8000 */  lui   $t3, 0x8000

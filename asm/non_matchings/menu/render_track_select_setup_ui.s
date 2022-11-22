@@ -871,7 +871,7 @@ glabel render_track_select_setup_ui
 /* 0927F4 80091BF4 AFB8001C */   sw    $t8, 0x1c($sp)
 .L80091BF8:
 /* 0927F8 80091BF8 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
-/* 0927FC 80091BFC 0C01ECF4 */  jal   func_8007B3D0
+/* 0927FC 80091BFC 0C01ECF4 */  jal   reset_render_settings
 /* 092800 80091C00 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 092804 80091C04 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
 /* 092808 80091C08 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)
@@ -1178,7 +1178,7 @@ glabel render_track_select_setup_ui
 /* 092C7C 8009207C 0C01E2AE */  jal   render_textured_rectangle
 /* 092C80 80092080 AFAF001C */   sw    $t7, 0x1c($sp)
 /* 092C84 80092084 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
-/* 092C88 80092088 0C01ECF4 */  jal   func_8007B3D0
+/* 092C88 80092088 0C01ECF4 */  jal   reset_render_settings
 /* 092C8C 8009208C 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 .L80092090:
 /* 092C90 80092090 3C0E8012 */  lui   $t6, %hi(D_801269C8) # $t6, 0x8012

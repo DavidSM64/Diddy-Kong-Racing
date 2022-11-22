@@ -43,7 +43,7 @@ glabel func_800A22F4
 /* 0A2F94 800A2394 0C01E015 */  jal   init_rdp_and_framebuffer
 /* 0A2F98 800A2398 24846CFC */   addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A2F9C 800A239C 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
-/* 0A2FA0 800A23A0 0C01ECF4 */  jal   func_8007B3D0
+/* 0A2FA0 800A23A0 0C01ECF4 */  jal   reset_render_settings
 /* 0A2FA4 800A23A4 24846CFC */   addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A2FA8 800A23A8 8FAB0020 */  lw    $t3, 0x20($sp)
 .L800A23AC:

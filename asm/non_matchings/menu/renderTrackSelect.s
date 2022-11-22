@@ -225,7 +225,7 @@ glabel renderTrackSelect
 /* 090990 8008FD90 0C01E340 */  jal   render_texture_rectangle_scaled
 /* 090994 8008FD94 AFA0001C */   sw    $zero, 0x1c($sp)
 .L8008FD98:
-/* 090998 8008FD98 0C01ECF4 */  jal   func_8007B3D0
+/* 090998 8008FD98 0C01ECF4 */  jal   reset_render_settings
 /* 09099C 8008FD9C 02602025 */   move  $a0, $s3
 .L8008FDA0:
 /* 0909A0 8008FDA0 8FAD0080 */  lw    $t5, 0x80($sp)
@@ -317,7 +317,7 @@ glabel renderTrackSelect
 /* 090AE4 8008FEE4 24010004 */  li    $at, 4
 /* 090AE8 8008FEE8 1621FFD3 */  bne   $s1, $at, .L8008FE38
 /* 090AEC 8008FEEC 8FAE00A0 */   lw    $t6, 0xa0($sp)
-/* 090AF0 8008FEF0 0C01ECF4 */  jal   func_8007B3D0
+/* 090AF0 8008FEF0 0C01ECF4 */  jal   reset_render_settings
 /* 090AF4 8008FEF4 02602025 */   move  $a0, $s3
 /* 090AF8 8008FEF8 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 090AFC 8008FEFC 8FB00024 */  lw    $s0, 0x24($sp)

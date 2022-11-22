@@ -1050,7 +1050,7 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
     if (tex != NULL) {
         hasTexture = TRUE;
     }
-    func_8007B4E8(&gObjectCurrDisplayList, (TextureHeader* ) tex, (s32) arg6, (s32) arg7);
+    load_and_set_texture(&gObjectCurrDisplayList, (TextureHeader* ) tex, (s32) arg6, (s32) arg7);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
     func_80069A40(&gObjectCurrDisplayList);
@@ -1446,7 +1446,7 @@ void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object
             D_800DC720 = FALSE;
             gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-            func_8007B3D0(&gObjectCurrDisplayList);
+            reset_render_settings(&gObjectCurrDisplayList);
             *dList = gObjectCurrDisplayList;
             *mtx = gObjectCurrMatrix;
             *vtxList = gObjectCurrVertexList;
