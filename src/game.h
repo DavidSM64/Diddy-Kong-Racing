@@ -77,6 +77,8 @@ enum TrackTimers {
     PP_BILLBOARD,
     PP_LEVEL,
     PP_OBJGFX,
+    PP_VOID,
+    PP_SEGMENTS,
 
     PP_THREAD0,
     PP_THREAD30,
@@ -121,6 +123,8 @@ enum TrackTimers {
     {"Billboards"}, \
     {"Level Gfx"}, \
     {"Obj Gfx"}, \
+    {"Void"}, \
+    {"Segments"}, \
     {"Thread0"}, \
     {"Thread30"}, \
     {"Audio"}, \

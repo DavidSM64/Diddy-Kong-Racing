@@ -473,6 +473,7 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_LEVEL][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_OBJGFX][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_DECAL][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_VOID][perfIteration]);
 }
 //#else
 //GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
@@ -606,6 +607,9 @@ void render_level_geometry_and_objects(void) {
     u8 sp58[128];
     s32 s0;
     Object *obj;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
 
     func_80012C30();
 
@@ -742,9 +746,13 @@ skip:
         }
     }
 
+    first = osGetCount();
     if (D_800DC924 && func_80027568()) {
         func_8002581C(segmentIds, numberOfSegments, get_object_render_stack_pos());
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_VOID], osGetCount() - first);
+#endif
     D_8011B0FC = 0;
 }
 
