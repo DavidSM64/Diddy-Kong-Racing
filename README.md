@@ -120,7 +120,7 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of November 21, 2022, this is our current score:
+As of November 22, 2022, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
@@ -136,9 +136,9 @@ As of November 21, 2022, this is our current score:
  We are collecting silver coins in Snowball Valley. (3/8 silver coins)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
- --------------------------  9.70% Complete --------------------------
-                      # Documented functions: 253
-                    # Undocumented remaining: 1583
+ --------------------------  9.87% Complete --------------------------
+                      # Documented functions: 255
+                    # Undocumented remaining: 1581
  ---------------------------- Game Status ----------------------------
                Balloons: 6/47, Keys: 1/4, Trophies: 0/5
                 T.T. Amulets: 0/4, Wizpig Amulets: 0/4
