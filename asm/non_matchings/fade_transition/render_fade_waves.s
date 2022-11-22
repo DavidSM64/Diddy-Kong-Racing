@@ -4,7 +4,7 @@ glabel render_fade_waves
 /* 0C3000 800C2400 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0C3004 800C2404 AFA40020 */  sw    $a0, 0x20($sp)
 /* 0C3008 800C2408 AFA50024 */  sw    $a1, 0x24($sp)
-/* 0C300C 800C240C 0C01ECF4 */  jal   func_8007B3D0
+/* 0C300C 800C240C 0C01ECF4 */  jal   reset_render_settings
 /* 0C3010 800C2410 AFA60028 */   sw    $a2, 0x28($sp)
 /* 0C3014 800C2414 3C03800E */  lui   $v1, %hi(sTransitionTaskNum) # $v1, 0x800e
 /* 0C3018 800C2418 8FAE0020 */  lw    $t6, 0x20($sp)
@@ -81,7 +81,7 @@ glabel render_fade_waves
 /* 0C3124 800C2524 151FFFD7 */  bne   $t0, $ra, .L800C2484
 /* 0C3128 800C2528 00000000 */   nop   
 /* 0C312C 800C252C 8FA40020 */  lw    $a0, 0x20($sp)
-/* 0C3130 800C2530 0C01ECF4 */  jal   func_8007B3D0
+/* 0C3130 800C2530 0C01ECF4 */  jal   reset_render_settings
 /* 0C3134 800C2534 AC820000 */   sw    $v0, ($a0)
 /* 0C3138 800C2538 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 0C313C 800C253C 8FB00018 */  lw    $s0, 0x18($sp)

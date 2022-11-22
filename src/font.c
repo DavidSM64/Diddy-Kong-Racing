@@ -412,7 +412,7 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
         if (arg1 != gDialogueBoxBackground) {
             func_80067A3C(dlist);
         }
-        func_8007B3D0(dlist);
+        reset_render_settings(dlist);
         gDPPipeSync((*dlist)++);
     }
 }

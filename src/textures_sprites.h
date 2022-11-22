@@ -9,6 +9,38 @@
 #include "memory.h"
 #include "libultra_internal.h"
 
+enum RenderFlags {
+    RENDER_NONE,
+    RENDER_ANTI_ALIASING = (1 << 0),
+    RENDER_Z_COMPARE =     (1 << 1),
+    RENDER_SEMI_TRANSPARENT = (1 << 2),
+    RENDER_FOG_ACTIVE = (1 << 3),
+    RENDER_UNK_0000010 = (1 << 4),
+    RENDER_COLOUR_INDEX = (1 << 5),
+    RENDER_UNK_0000040 = (1 << 6),
+    RENDER_UNK_0000080 = (1 << 7),
+    RENDER_Z_UPDATE = (1 << 8),
+    RENDER_UNK_0000200 = (1 << 9),
+    RENDER_UNK_0000400 = (1 << 10),
+    RENDER_DECAL = (1 << 11),
+    RENDER_UNK_0001000 = (1 << 12),
+    RENDER_UNK_0002000 = (1 << 13),
+    RENDER_UNK_0004000 = (1 << 14),
+    RENDER_UNK_0008000 = (1 << 15),
+    RENDER_UNK_0010000 = (1 << 16),
+    RENDER_UNK_0020000 = (1 << 17),
+    RENDER_UNK_0040000 = (1 << 18),
+    RENDER_UNK_0080000 = (1 << 19),
+    RENDER_UNK_0100000 = (1 << 20),
+    RENDER_UNK_0200000 = (1 << 21),
+    RENDER_UNK_0400000 = (1 << 22),
+    RENDER_UNK_0800000 = (1 << 23),
+    RENDER_UNK_1000000 = (1 << 24),
+    RENDER_UNK_2000000 = (1 << 25),
+    RENDER_UNK_4000000 = (1 << 26),
+    RENDER_UNK_8000000 = (1 << 27),
+};
+
 extern u32 gTexColourTag;
 extern s32 D_800DE7C4;
 
@@ -17,9 +49,9 @@ extern Gfx *gSceneCurrDisplayList;
 extern s32 D_8011B0FC;
 extern u32 D_8011D384;
 extern LevelHeader *gCurrentLevelHeader2;
-extern s32 D_80126374;
+extern s32 gCurrentRenderFlags;
 extern TextureHeader *D_8012637C;
-extern s16 D_80126382;
+extern s16 gForceFlags;
 extern Gfx dTextureRectangleModes[];
 extern Gfx D_800DE848[2][2];
 extern Gfx D_800DE868[8][2];
@@ -92,19 +124,19 @@ typedef struct TempTexHeader {
 /* 0x25 */ u8 pad25[3]; // padding
 } TempTexHeader;
 
-void func_8007AE0C(s32 arg0);
-void func_8007AE28(s32 arg0);
+void func_8007AE0C(s32 flags);
+void func_8007AE28(s32 flags);
 s32 func_8007AE44(void);
 s32 func_8007AE54(void);
 s32 func_8007AE64(void);
 void set_texture_colour_tag(s32 tagID);
-void func_8007B3D0(Gfx **dlist);
+void reset_render_settings(Gfx **dlist);
 void func_8007B43C(void);
 void func_8007B454(void);
 void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags);
 void func_8007BF1C(s32 arg0);
 s32 func_8007EF64(s16 arg0);
-void func_8007B4E8(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3);
+void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3);
 
 // There might be a file boundary here.
 void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 arg3);

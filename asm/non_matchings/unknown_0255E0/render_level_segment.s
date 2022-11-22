@@ -252,7 +252,7 @@ glabel render_level_segment
 /* 02A600 80029A00 02A02825 */  move  $a1, $s5
 /* 02A604 80029A04 02203025 */  move  $a2, $s1
 /* 02A608 80029A08 AFA900A8 */  sw    $t1, 0xa8($sp)
-/* 02A60C 80029A0C 0C01ED3A */  jal   func_8007B4E8
+/* 02A60C 80029A0C 0C01ED3A */  jal   load_and_set_texture
 /* 02A610 80029A10 AFAA0040 */   sw    $t2, 0x40($sp)
 /* 02A614 80029A14 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 02A618 80029A18 8FAA0040 */  lw    $t2, 0x40($sp)

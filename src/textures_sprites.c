@@ -883,23 +883,23 @@ s32 D_80126368;
 
 TempTexHeader *gTempTextureHeader;
 s32 D_80126370;
-s32 D_80126374;
+s32 gCurrentRenderFlags;
 s32 D_80126378; // Set in Game UI
 TextureHeader *D_8012637C;
 s16 D_80126380;
-s16 D_80126382;
+s16 gForceFlags;
 s16 D_80126384;
 
 /******************************/
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007AC70.s")
 
-void func_8007AE0C(s32 arg0) {
-    D_80126378 |= arg0;
+void func_8007AE0C(s32 flags) {
+    D_80126378 |= flags;
 }
 
-void func_8007AE28(s32 arg0) {
-    D_80126378 &= ~arg0;
+void func_8007AE28(s32 flags) {
+    D_80126378 &= ~flags;
 }
 
 /* Unused? */
@@ -1077,26 +1077,29 @@ TextureHeader *func_8007B380(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
 #endif
 
-// Set after every draw call with ortho tris. Looks to reset some software side render flags.
-void func_8007B3D0(Gfx **dlist) {
+/**
+ * Resets all render settings to the default state.
+ * The next draw call will be forced to apply all settings instead of skipping unecessary steps.
+*/
+void reset_render_settings(Gfx **dlist) {
     D_8012637C = NULL;
-    D_80126374 = 0;
+    gCurrentRenderFlags = RENDER_NONE;
     D_80126380 = 0;
-    D_80126382 = 1;
-    D_80126378 = 0;
-    D_80126384 = 0;
+    gForceFlags = TRUE;
+    D_80126378 = RENDER_NONE;
+    D_80126384 = FALSE;
     gDPPipeSync((*dlist)++);
     gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER);
 }
 
 void func_8007B43C(void) {
-    D_80126384 = 1;
-    D_80126382 = 1;
+    D_80126384 = TRUE;
+    gForceFlags = TRUE;
 }
 
 void func_8007B454(void) {
-    D_80126384 = 0;
-    D_80126382 = 1;
+    D_80126384 = FALSE;
+    gForceFlags = TRUE;
 }
 
 typedef struct Struct_Unk_8007B46C {
@@ -1119,22 +1122,25 @@ Struct_Unk_8007B46C *func_8007B46C(Struct_Unk_8007B46C *arg0, s32 arg1) {
 }
 
 void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags) {
-    func_8007B4E8(dlist, arg1, flags, 0);
+    load_and_set_texture(dlist, arg1, flags, 0);
 }
 
-
-
-void func_8007B4E8(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3) {
-    s32 temp_D_80126382;
+/**
+ * Load a texture from memory into texture memory.
+ * Also set render mode, combine mode and othermodes based on flags.
+ * Also tracks which modes are active, to prevent setting them again if they're already active.
+*/
+void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3) {
+    s32 forceFlags;
     s32 doPipeSync;
     s32 dlIndex;
 
-    temp_D_80126382 = D_80126382;
+    forceFlags = gForceFlags;
     doPipeSync = TRUE;
 
     if (texhead != NULL) {
-        if ((arg3 != 0) && (arg3 < (texhead->numOfTextures << 8))) {
-            texhead = (s8*)texhead + ((arg3 >> 16) * texhead->textureSize);
+        if ((arg3) && (arg3 < (texhead->numOfTextures << 8))) {
+            texhead = (s8 *) texhead + ((arg3 >> 16) * texhead->textureSize);
         }
 
         flags |= texhead->flags;
@@ -1144,107 +1150,107 @@ void func_8007B4E8(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3) {
             doPipeSync = FALSE;
         }
         if (D_80126380 == 0) {
-            temp_D_80126382 = 1;
+            forceFlags = TRUE;
             D_80126380 = 1;
         }
     } else if (D_80126380 != 0) {
-        temp_D_80126382 = 1;
+        forceFlags = TRUE;
         D_80126380 = 0;
     }
 
-    flags = (D_80126384)  ? (flags & 0x827) : (flags & 0x0800093F);
+    flags = (D_80126384) ? (flags & (RENDER_DECAL | RENDER_COLOUR_INDEX | RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT)) : (flags & (RENDER_UNK_8000000 | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_UNK_0000010 | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING));
     flags &= ~D_80126378;
-    flags = (flags & 0x8000000) ? flags & ~8 : flags & ~0x100;
+    flags = (flags & RENDER_UNK_8000000) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
 
-    if ((flags != D_80126374) || (temp_D_80126382)) {
+    if ((flags != gCurrentRenderFlags) || (forceFlags)) {
         if (doPipeSync) {
             gDPPipeSync((*dlist)++);
         }
 
-        if (((flags & 0x08000000) != (D_80126374 & 0x08000000)) || ((D_80126382))) {
-            if ((flags & 0x08000000) || (D_80126384)) {
+        if (((flags & RENDER_UNK_8000000) != (gCurrentRenderFlags & RENDER_UNK_8000000)) || ((gForceFlags))) {
+            if ((flags & RENDER_UNK_8000000) || (D_80126384)) {
                 gSPClearGeometryMode((*dlist)++, G_FOG);
             } else {
                 gSPSetGeometryMode((*dlist)++, G_FOG);
             }
         }
 
-        if (((flags & 2) != (D_80126374 & 2)) || (D_80126382)) {
-            if (flags & 2) {
+        if (((flags & RENDER_Z_COMPARE) != (gCurrentRenderFlags & RENDER_Z_COMPARE)) || (gForceFlags)) {
+            if (flags & RENDER_Z_COMPARE) {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
             } else {
                 gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
             }
         }
 
-        D_80126382 = 0;
-        D_80126374 = flags;
+        gForceFlags = FALSE;
+        gCurrentRenderFlags = flags;
         if (!D_80126380) {
-            if (flags & 0x08000000) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEEE8[flags & 3]), numberOfGfxCommands(D_800DEEE8[0]));
+            if (flags & RENDER_UNK_8000000) {
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEEE8[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]), numberOfGfxCommands(D_800DEEE8[0]));
                 return;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEF28[flags & 0xF]), numberOfGfxCommands(D_800DEF28[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEF28[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)]), numberOfGfxCommands(D_800DEF28[0]));
             return;
         }
 
         if (D_80126384) {
-            if ((flags & 0x800) && (flags & 2)) {
+            if ((flags & RENDER_DECAL) && (flags & RENDER_Z_COMPARE)) {
                 dlIndex = 0;
-                if (flags & 1) {
-                    dlIndex |= 1;
+                if (flags & RENDER_ANTI_ALIASING) {
+                    dlIndex |= 1; // Anti Aliasing
                 }
-                if (flags & 4) {
-                    dlIndex |= 2;
+                if (flags & RENDER_SEMI_TRANSPARENT) {
+                    dlIndex |= 2; // Z Compare
                 }
-                if (flags & 0x20) {
-                    dlIndex |= 4;
+                if (flags & RENDER_COLOUR_INDEX) {
+                    dlIndex |= 4; // Colour Index
                 }
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF028[dlIndex]), numberOfGfxCommands(D_800DF028[0]));
                 return;
             }
-            if (flags & 0x20) {
-                flags = (flags ^ 0x20) | 8;
+            if (flags & RENDER_COLOUR_INDEX) {
+                flags = (flags ^ RENDER_COLOUR_INDEX) | RENDER_FOG_ACTIVE;
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF0A8[flags]), numberOfGfxCommands(D_800DF0A8[0]));
             return;
         }
 
-        if ((flags & 0x800) && (flags & 2)) {
+        if ((flags & RENDER_DECAL) && (flags & RENDER_Z_COMPARE)) {
             dlIndex = 0;
-            if (flags & 1) {
-                dlIndex |= 1;
+            if (flags & RENDER_ANTI_ALIASING) {
+                dlIndex |= 1; // Anti Aliasing
             }
-            if (flags & 4) {
-                dlIndex |= 2;
+            if (flags & RENDER_SEMI_TRANSPARENT) {
+                dlIndex |= 2; // Z Compare
             }
-            if (flags & 8) {
-                dlIndex |= 4;
+            if (flags & RENDER_FOG_ACTIVE) {
+                dlIndex |= 4; // Fog
             }
-            if (flags & 0x20) {
-                dlIndex |= 8;
+            if (flags & RENDER_COLOUR_INDEX) {
+                dlIndex |= 8; // Colour Index
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEDE8[dlIndex]), numberOfGfxCommands(D_800DEDE8[0]));
             return;
         }
 
-        if (flags & 0x10) {
-            dlIndex = flags & 7;
-            if (flags & 8) {
-                dlIndex |= 8;
+        if (flags & RENDER_UNK_0000010) {
+            dlIndex = flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT);
+            if (flags & RENDER_FOG_ACTIVE) {
+                dlIndex |= 8; // Fog
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DECE8[dlIndex]), numberOfGfxCommands(D_800DECE8[0]));
             return;
         }
 
-        flags &= ~0x800;
-        if (flags & 0x08000000) {
-            dlIndex = flags & 3;
-            if (flags & 0x100) {
-                dlIndex |= 4;
+        flags &= ~RENDER_DECAL;
+        if (flags & RENDER_UNK_8000000) {
+            dlIndex = flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
+            if (flags & RENDER_Z_UPDATE) {
+                dlIndex |= 4; // Z write
             } else {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
-                D_80126374 |= 2;
+                gCurrentRenderFlags |= RENDER_Z_COMPARE;
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE7C8[dlIndex]), numberOfGfxCommands(D_800DE7C8[0]));
             return;
@@ -1281,23 +1287,20 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *texture_list, u32 flags, s32 text
     flags &= 0x1F;
     gSPSetGeometryMode((*dlist)++, G_FOG);
 
-
-
-
     if (flags & G_TEXTURE_ENABLE) {
         gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
     } else {
         gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
     }
-    D_80126382 = 1;
-    D_80126374 = 0;
+    gForceFlags = TRUE;
+    gCurrentRenderFlags = RENDER_NONE;
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF1A8[flags]), numberOfGfxCommands(D_800DF1A8[0]));
 }
 
 
 void func_8007BF1C(s32 arg0) {
     D_800DE7C4 = arg0;
-    D_80126382 = 1;
+    gForceFlags = TRUE;
 }
 
 #ifdef NON_EQUIVALENT
@@ -1307,25 +1310,25 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
     s32 temp_t8;
     s32 temp_v0_3;
 
-    if ((arg1 != D_80126374) || (D_80126382 != 0)) {
+    if ((arg1 != gCurrentRenderFlags) || (gForceFlags != 0)) {
         gDPPipeSync((*dlist)++);
-        if (((D_80126374 * 16) < 0) || (D_80126382 != 0)) {
+        if (((gCurrentRenderFlags * 16) < 0) || (gForceFlags != 0)) {
             gSPSetGeometryMode((*dlist)++, G_FOG);
         }
         temp_a1 = arg1 & 0xF7FFFFFF & ~D_80126378;
         temp_v0_3 = temp_a1 & 2;
-        if (((D_80126374 & 2) != temp_v0_3) || (D_80126382 != 0)) {
+        if (((gCurrentRenderFlags & 2) != temp_v0_3) || (gForceFlags != 0)) {
             if (temp_v0_3 != 0) {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
             } else {
                 gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
             }
         }
-        D_80126382 = 0;
-        D_80126374 = temp_a1;
+        gForceFlags = 0;
+        gCurrentRenderFlags = temp_a1;
         temp_t8 = temp_a1 & ~0x800;
         if (D_800DE7C4 == 0) {
-            if ((D_80126374 & 0x200) != 0) {
+            if ((gCurrentRenderFlags & 0x200) != 0) {
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE848[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(D_800DE848[0]));
             } else {
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE868[(temp_t8 - 16) * 16]), numberOfGfxCommands(D_800DE868[0]));
