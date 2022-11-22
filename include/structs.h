@@ -6,6 +6,7 @@
 #include "types.h"
 #include "enums.h"
 #include "level_object_entries.h"
+#include "config.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using

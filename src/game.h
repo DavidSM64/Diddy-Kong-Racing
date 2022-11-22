@@ -131,6 +131,7 @@ enum TrackTimers {
     {"Sched"},
 
 
+
 #define NUM_PERF_ITERATIONS 32
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
 #define PERF_TOTAL NUM_PERF_ITERATIONS + 1
@@ -150,6 +151,7 @@ extern void puppyprint_update_rsp(u8 flags);
 extern void profiler_add(u32 *time, u32 offset);
 extern u8 perfIteration;
 #endif
+extern s32 gAntiAliasing;
 
 extern s8 *D_800DD310;
 extern s8  D_800DD314;

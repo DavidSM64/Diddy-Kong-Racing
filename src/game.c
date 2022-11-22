@@ -837,6 +837,7 @@ void thread3_main(UNUSED void *unused) {
     }
 }
 
+s32 gAntiAliasing = TRUE;
 #ifdef PUPPYPRINT_DEBUG
 u8 perfIteration = 0;
 f32 gFPS = 0;
@@ -1068,7 +1069,7 @@ void render_profiler(void) {
             gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
             gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
             gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 96);
-            gDPFillRectangle(gCurrDisplayList++, SCREEN_WIDTH - 144, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            gDPFillRectangle(gCurrDisplayList++, gScreenWidth - 144, 0, gScreenWidth, SCREEN_HEIGHT);
             gDPPipeSync(gCurrDisplayList++);
             set_text_background_colour(0, 0, 0, 0);
             set_kerning(FALSE);
@@ -1077,7 +1078,7 @@ void render_profiler(void) {
                     continue;
                 }
                 puppyprintf(textBytes,  "%s \t%dus (%d%%)", sPuppyPrintStrings[sPrintOrder[i]], gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL], gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL] / 333);
-                draw_text(&gCurrDisplayList, SCREEN_WIDTH - 136, y, textBytes, ALIGN_TOP_LEFT);
+                draw_text(&gCurrDisplayList, gScreenWidth - 136, y, textBytes, ALIGN_TOP_LEFT);
                 y += 10;
                 if (y > gScreenHeight - 16) {
                     break;
@@ -1274,7 +1275,7 @@ void main_game_loop(void) {
     profiler_reset_values();
 #endif
 
-    /*if (get_buttons_pressed_from_player(0) & R_JPAD) {
+    if (get_buttons_pressed_from_player(0) & R_JPAD) {
         if (gScreenWidth == 304) {
             gScreenWidth = 360;
             change_vi(&gGlobalVI, 360, 224);
@@ -1285,7 +1286,7 @@ void main_game_loop(void) {
             gScreenWidth = 304;
             change_vi(&gGlobalVI, 304, 224);
         }
-    }*/
+    }
 
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -1299,8 +1300,8 @@ void main_game_loop(void) {
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
 #else
     #ifdef PUPPYPRINT_DEBUG
-        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD && gProfilerOn) {
-            suCodeSwitch ^= 1;
+        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
+            gAntiAliasing ^= 1;
         }
         if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
     #endif

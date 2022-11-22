@@ -160,6 +160,8 @@ void change_vi(OSViMode *mode, int width, int height) {
         mode->fldRegs[0].vStart = (277-height) << 16 | (271+height);
         mode->fldRegs[1].vStart = (277-height) << 16 | (271+height);
     }
+    gVideoAspectRatio = (f32) width / (f32) height;
+    func_80065EA0();
 }
 
 /**
