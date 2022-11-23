@@ -1275,7 +1275,7 @@ void main_game_loop(void) {
     profiler_reset_values();
 #endif
 
-    if (get_buttons_pressed_from_player(0) & R_JPAD) {
+    /*if (get_buttons_pressed_from_player(0) & R_JPAD) {
         if (gScreenWidth == 304) {
             gScreenWidth = 360;
             change_vi(&gGlobalVI, 360, 224);
@@ -1286,7 +1286,7 @@ void main_game_loop(void) {
             gScreenWidth = 304;
             change_vi(&gGlobalVI, 304, 224);
         }
-    }
+    }*/
 
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
