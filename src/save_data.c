@@ -311,8 +311,9 @@ void rumble_controllers(s32 arg0) {
 }
 
 #ifdef NON_MATCHING
-u32 func_80072C54(s32 arg0) {
-    u32 var_v1;
+// https://decomp.me/scratch/8zGzQ
+s32 func_80072C54(s32 arg0) {
+    s32 ret;
     u32 var_v0;
     u32 i;
     s32 temp_arg0 = arg0;
@@ -321,23 +322,21 @@ u32 func_80072C54(s32 arg0) {
         return 0;
     }
 
-    var_v1 = 0;
-    var_v0 = 1 << (arg0 + 31);
+    ret = 0;
+    var_v0 = 1 << (arg0 - 1);
 
-    for (i = arg0; i > 0; i--) {\
-        if (D_801241F4 == 0) {\
-            D_801241F0 = *D_801241EC++;\
-            D_801241F4 = 128;\
-        }\
-        if (D_801241F0 & D_801241F4) {\
-            var_v1 |= var_v0;\
-        }\
-        if (temp_arg0) { }\
-        var_v0 /= 2;
-        D_801241F4 /= 2;
+    for (i = arg0; i > 0; i--, var_v0 >>= 1, D_801241F4 >>= 1) {
+        if (D_801241F4 == 0) {
+            D_801241F0 = *D_801241EC++;
+            D_801241F4 = 128;
+        }
+        if (D_801241F0 & D_801241F4) {
+            ret |= var_v0;
+        }
+        if (temp_arg0) { }
     }
 
-    return var_v1;
+    return ret;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/save_data/func_80072C54.s")
