@@ -138,9 +138,9 @@ s32 D_8011D2B8[20];
 s32 D_8011D308;
 LevelModel *D_8011D30C;
 s32 *D_8011D310;
-s32 D_8011D314;
-s32 D_8011D318;
-s32 D_8011D31C;
+f32 D_8011D314;
+f32 D_8011D318;
+f32 D_8011D31C;
 s32 *D_8011D320[4];
 unk8011D330 *D_8011D330;
 s32 D_8011D334;
@@ -621,7 +621,44 @@ void render_skydome(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028CD0.s")
+void func_80028CD0(s32 updateRate) {
+    s32 i;
+    s32 numRacers;
+    s32 cameraIndex;
+    Object **racers;
+    s32 segment;
+    Object_Racer *racer;
+
+    D_8011B0B0 = func_80069D20();
+    cameraIndex = get_object_render_stack_pos();
+    func_80031018();
+    set_and_normalize_D_8011AFE8(D_8011D468.x / 65536.0f, D_8011D468.y / 65536.0f, D_8011D468.z / 65536.0f);
+    segment = D_8011B0B0->segment.unk34_a.half.levelSegmentIndex;
+    if (segment >= 0 && segment < gCurrentLevelModel->numberOfSegments) {
+        D_8011B0D4 = gCurrentLevelModel->segments[segment].unk28;
+    } else {
+        D_8011B0D4 = -1;
+    }
+    D_8011D314 = D_8011B0B0->segment.trans.x_position;
+    D_8011D318 = D_8011B0B0->segment.trans.y_position;
+    D_8011D31C = D_8011B0B0->segment.trans.z_position;
+    if (D_8011D384) {
+        func_800B8B8C();
+        racers = get_racer_objects(&numRacers);
+        if (D_8011B0B0->segment.unk34_a.half.unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
+            i = -1; 
+            do {
+                i++;
+                racer = &racers[i]->unk64->racer;
+            } while(i < numRacers - 1 && cameraIndex != racer->playerIndex);
+            func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position, racers[i]->segment.trans.z_position, get_object_render_stack_pos(), updateRate);
+        } else {
+            func_800B8C04(D_8011B0B0->segment.trans.x_position, D_8011B0B0->segment.trans.y_position, D_8011B0B0->segment.trans.z_position, get_object_render_stack_pos(), updateRate);
+        }
+    }
+    get_current_level_header()->unk3 = 1;
+    render_level_geometry_and_objects();
+}
 
 void func_80028FA0(s32 arg0) {
     D_8011B0FC = arg0;
