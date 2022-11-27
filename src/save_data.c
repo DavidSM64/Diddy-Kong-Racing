@@ -310,13 +310,9 @@ void rumble_controllers(s32 arg0) {
     }
 }
 
-#ifdef NON_MATCHING
-// https://decomp.me/scratch/8zGzQ
 s32 func_80072C54(s32 arg0) {
     s32 ret;
     u32 var_v0;
-    u32 i;
-    s32 temp_arg0 = arg0; // Fake Match
 
     if (arg0 <= 0) {
         return 0;
@@ -325,8 +321,8 @@ s32 func_80072C54(s32 arg0) {
     ret = 0;
     var_v0 = 1 << (arg0 - 1);
 
-    // Loop backwards through arg0 times
-    for (i = arg0; i > 0; i--, var_v0 >>= 1, D_801241F4 >>= 1) {
+    // Loop backwards through arg0
+    while (arg0 != 0) {
         // After shifting D_801241F4 right 8 times
         if (D_801241F4 == 0) {
             D_801241F0 = *D_801241EC++;
@@ -335,41 +331,35 @@ s32 func_80072C54(s32 arg0) {
         if (D_801241F0 & D_801241F4) {
             ret |= var_v0;
         }
-        if (temp_arg0) { } // Fake Match
+        var_v0 >>= 1;
+        D_801241F4 >>= 1;
+        arg0--;
     }
 
     return ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072C54.s")
-#endif
 
-#ifdef NON_EQUIVALENT
 void func_80072E28(s32 arg0, s32 arg1) {
     u32 var_v0;
-    u32 new_var;
-    u32 i;
-    s32 temp_arg0 = arg0; // Fake Match
 
     if (arg0 > 0) {
         var_v0 = 1 << (arg0 - 1);
-        for (i = arg0; i > 0; i--, var_v0 >>= 1, D_801241F4 >>= 1) {\
-            if (D_801241F4 == 0) {\
-                *D_801241EC++ = (new_var = D_801241F0);\
-                D_801241F0 = 0;\
-                D_801241F4 = 128;\
-            }\
+        while (arg0 != 0 ) {
+            if (D_801241F4 == 0) {
+                *D_801241EC++ = D_801241F0;
+                D_801241F0 = 0;
+                D_801241F4 = 128;
+            }
             if (arg1 & var_v0) {
                 D_801241F0 |= D_801241F4;
             }
-            if (temp_arg0) { } // Fake Match
+            var_v0 >>= 1;
+            D_801241F4 >>= 1;
+            arg0--;
         }
         *D_801241EC = D_801241F0;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072E28.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/save_data/func_8007306C.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
