@@ -89,7 +89,7 @@ void func_8007306C(Settings *arg0, s32 arg1); //Non matching
 s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCharacterID, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *arg6); //Non matching
 u8 func_80074204(s32 arg0, Settings *arg1); //Non Matching
 void func_8007431C(s32 arg0, Settings *arg1); //Non Matching
-s32 func_80072E28(s32, s32); //Non Matching arg2 seems to be many different types
+void func_80072E28(s32, s32); //Non Matching arg2 seems to be many different types
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.
