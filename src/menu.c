@@ -7024,8 +7024,8 @@ void func_80094688(s32 arg0, s32 arg1) {
     gMenuSubOption = 0;
     D_80126C1C = NULL;
     D_80126A98 = 0;
-    if (header->race_type & 0x40) {
-        gIgnorePlayerInput = normalise_time(0xF0);
+    if (header->race_type & RACETYPE_CHALLENGE) {
+        gIgnorePlayerInput = normalise_time(240); // 4 seconds
     }
     if (D_80126C28) {
         D_801263E0 = 8;
