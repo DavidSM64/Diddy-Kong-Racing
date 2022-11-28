@@ -606,13 +606,62 @@ s32 func_80074204(s32 saveFileNum, Settings *settings) {
     free_from_memory_pool(saveData);
     ret = settings->newGame;
     if (settings->newGame) {
-        func_8007431C(saveFileNum, settings);
+        erase_save_file(saveFileNum, settings);
         ret = settings->newGame;
     }
     return ret;
 }
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_8007431C.s")
+void erase_save_file(s32 saveFileNum, Settings *settings) {
+    s32 startingAddress;
+    u8 *saveData;
+    u64 *alloc;
+    s32 blockSize;
+    s32 levelCount;
+    s32 worldCount;
+    s32 address;
+    s32 i;
+
+    if (osEepromProbe(get_si_mesg_queue()) != 0) {
+        get_number_of_levels_and_worlds(&levelCount, &worldCount);
+        for (i = 0; i < levelCount; i++) {
+            settings->courseFlagsPtr[i] = 0;
+        }
+        for (i = 0; i < worldCount; i++) {
+            settings->balloonsPtr[i] = 0;
+        }
+        settings->trophies = 0;
+        settings->bosses = 0;
+        settings->tajFlags = 0;
+        settings->cutsceneFlags = 0;
+        settings->newGame = TRUE;
+        switch(saveFileNum) {
+            case 0:
+                startingAddress = 0;
+                break;
+            case 1:
+                startingAddress = 5;
+                break;
+            case 2:
+                startingAddress = 10;
+                break;
+            default:
+                startingAddress = 10;
+                break;
+        }
+        blockSize = 5;
+        alloc = allocate_from_main_pool_safe(blockSize * sizeof(u64), COLOUR_TAG_WHITE);
+        saveData = (u8 *)alloc;
+        // Blank out the data before writing it.
+        for (i = 0; i < blockSize * (s32)sizeof(u64); i++) { saveData[i] = 0xFF; } // Must be one line
+        if (!is_reset_pressed()) {
+            for (i = 0, address = startingAddress; i < blockSize; i++, address++) {
+                osEepromWrite(get_si_mesg_queue(), address, (u8 *)&alloc[i]);
+            }
+        }
+        free_from_memory_pool(alloc);
+    }
+}
 
 /**
  * Writes Eeprom in 5 block chunks of data starting at either 0x0, 0x5, or 0xA
