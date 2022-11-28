@@ -86,7 +86,7 @@ s32 func_80074204(s32 saveFileNum, Settings *settings);
 void erase_save_file(s32 saveFileNum, Settings *settings);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
-void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
+//void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
 void func_80073588(Settings *arg0, u64 *eepromData, s32 arg2); //Non matching
 s32 func_80073C5C(s32 controllerIndex, s32 arg1, char **arg2); //Non matching
 //Using some context, and best guesses, these could be the names of the variables
