@@ -81,12 +81,12 @@ void rumble_controllers(s32 arg0);
 void init_controller_paks(void);
 void func_80072E28(s32 arg0, s32 arg1);
 s32 func_80072C54(s32 arg0);
+void func_8007306C(Settings *settings, u8 *pakData);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
 void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
 void func_80073588(Settings *arg0, u64 *eepromData, s32 arg2); //Non matching
 s32 func_80073C5C(s32 controllerIndex, s32 arg1, char **arg2); //Non matching
-void func_8007306C(Settings *arg0, s32 arg1); //Non matching
 //Using some context, and best guesses, these could be the names of the variables
 s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCharacterID, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *arg6); //Non matching
 u8 func_80074204(s32 arg0, Settings *arg1); //Non Matching

@@ -361,7 +361,58 @@ void func_80072E28(s32 arg0, s32 arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_8007306C.s")
+void func_8007306C(Settings *settings, u8 *pakData) {
+    s32 i;
+    s32 levelCount;
+    s32 worldCount;
+    s32 temp_v0;
+    s32 var_s1;
+    s16 var_a0;
+    u8 temp_v1;
+
+    func_8006E994(settings);
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    D_801241EC = pakData;
+    D_801241F0 = D_801241F4 = 0;
+    var_a0 = func_80072C54(0x10) - 5;
+    for (i = 2; i < 40; i++) { var_a0 -= pakData[i]; } // Must be one line
+    if (var_a0 == 0) {
+        for (i = 0, var_s1 = 0; i < levelCount; i++) {
+            temp_v0 = func_8006B14C(i);
+            if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
+                temp_v1 = func_80072C54(2);
+                if (temp_v1 > 0) {
+                    settings->courseFlagsPtr[i] |= 1;
+                }
+                if (temp_v1 >= 2) {
+                    settings->courseFlagsPtr[i] |= 2;
+                }
+                if (temp_v1 >= 3) {
+                    settings->courseFlagsPtr[i] |= 4;
+                }
+                var_s1 += 2;
+            }
+        }
+        func_80072C54(0x44 - var_s1);
+        settings->tajFlags = func_80072C54(6);
+        settings->trophies = func_80072C54(0xA);
+        settings->bosses = func_80072C54(0xC);
+        for (i = 0; i < worldCount; i++) {
+            settings->balloonsPtr[i] = func_80072C54(7);
+        }
+        settings->ttAmulet = func_80072C54(3);
+        settings->wizpigAmulet = func_80072C54(3);
+        for (i = 0; i < worldCount; i++) {
+            settings->courseFlagsPtr[get_hub_area_id(i)] |= func_80072C54(16) << 16;
+        }
+        settings->keys = func_80072C54(8);
+        settings->cutsceneFlags = func_80072C54(0x20);
+        settings->filename = func_80072C54(0x10);
+        func_80072C54(8);
+        settings->newGame = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
 
 //arg1 is eepromData, from read_eeprom_data
@@ -408,7 +459,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
 
             if (ret == CONTROLLER_PAK_GOOD) {
                 if (*alloc == GAMD) {
-                    func_8007306C(settings, (s32) (alloc + 1));
+                    func_8007306C(settings, (u8 *) (alloc + 1));
                     if (settings->newGame != 0) {
                         ret = CONTROLLER_PAK_CHANGED;
                     }
