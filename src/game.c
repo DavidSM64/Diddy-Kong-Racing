@@ -1782,7 +1782,7 @@ void func_8006E994(Settings *settings) {
     s32 sp1C;
 
     get_number_of_levels_and_worlds(&sp1C, &sp20);
-    settings->newGame = 1;
+    settings->newGame = TRUE;
 
     for (i = 0; i < sp20; i++) {
         settings->balloonsPtr[i] = 0;

@@ -361,7 +361,7 @@ void func_80072E28(s32 arg0, s32 arg1) {
     }
 }
 
-void func_8007306C(Settings *settings, u8 *pakData) {
+void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     s32 i;
     s32 levelCount;
     s32 worldCount;
@@ -372,10 +372,10 @@ void func_8007306C(Settings *settings, u8 *pakData) {
 
     func_8006E994(settings);
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
-    D_801241EC = pakData;
+    D_801241EC = saveData;
     D_801241F0 = D_801241F4 = 0;
     var_a0 = func_80072C54(0x10) - 5;
-    for (i = 2; i < 40; i++) { var_a0 -= pakData[i]; } // Must be one line
+    for (i = 2; i < 40; i++) { var_a0 -= saveData[i]; } // Must be one line
     if (var_a0 == 0) {
         for (i = 0, var_s1 = 0; i < levelCount; i++) {
             temp_v0 = func_8006B14C(i);
@@ -409,7 +409,7 @@ void func_8007306C(Settings *settings, u8 *pakData) {
         settings->cutsceneFlags = func_80072C54(0x20);
         settings->filename = func_80072C54(0x10);
         func_80072C54(8);
-        settings->newGame = 0;
+        settings->newGame = FALSE;
     }
 }
 
@@ -459,8 +459,8 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
 
             if (ret == CONTROLLER_PAK_GOOD) {
                 if (*alloc == GAMD) {
-                    func_8007306C(settings, (u8 *) (alloc + 1));
-                    if (settings->newGame != 0) {
+                    populate_settings_from_save_data(settings, (u8 *) (alloc + 1));
+                    if (settings->newGame) {
                         ret = CONTROLLER_PAK_CHANGED;
                     }
                 }
@@ -571,7 +571,47 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     return ret;
 }
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_80074204.s")
+// Returns TRUE / FALSE for whether a given save file is a new game. Also populates the settings object.
+s32 func_80074204(s32 saveFileNum, Settings *settings) {
+    s32 startingAddress;
+    u64 *saveData;
+    s32 address;
+    s32 blocks;
+    s32 block;
+    s32 ret;
+
+    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        return -1;
+    }
+    switch(saveFileNum) {
+        case 0:
+            startingAddress = 0;
+            break;
+        case 1:
+            startingAddress = 5;
+            break;
+        case 2:
+            startingAddress = 10;
+            break;
+        default:
+            startingAddress = 10;
+            break;
+    }
+    blocks = 5;
+    saveData = allocate_from_main_pool_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
+    for (block = 0, address = startingAddress; block < blocks; block++, address++) {
+        osEepromRead(get_si_mesg_queue(), address, (u8 *)&saveData[block]);
+    }
+    populate_settings_from_save_data(settings, (u8 *) saveData);
+    free_from_memory_pool(saveData);
+    ret = settings->newGame;
+    if (settings->newGame) {
+        func_8007431C(saveFileNum, settings);
+        ret = settings->newGame;
+    }
+    return ret;
+}
+
 GLOBAL_ASM("asm/non_matchings/save_data/func_8007431C.s")
 
 /**
