@@ -124,16 +124,16 @@ As of November 29, 2022, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------------------- 38.60% Complete --------------------------
-                     # Decompiled functions: 1361
-                      # GLOBAL_ASM remaining: 475
+ -------------------------- 38.87% Complete --------------------------
+                     # Decompiled functions: 1366
+                      # GLOBAL_ASM remaining: 470
                      # NON_MATCHING functions: 10
                   # NON_EQUIVALENT WIP functions: 86
  ---------------------------- Game Status ----------------------------
                Balloons: 19/47, Keys: 2/4, Trophies: 1/5
                 T.T. Amulets: 2/4, Wizpig Amulets: 1/4
  ---------------------------------------------------------------------
- We are collecting silver coins in Snowball Valley. (4/8 silver coins)
+ We are collecting silver coins in Snowball Valley. (5/8 silver coins)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
  --------------------------  9.87% Complete --------------------------
