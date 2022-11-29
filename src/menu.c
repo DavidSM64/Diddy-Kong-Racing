@@ -3202,7 +3202,7 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, 
 void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     s32 i;
     for (i = 0; i < 3; i++) {
-        if (gSavefileData[i]->newGame != 0) {
+        if (gSavefileData[i]->newGame) {
             arg0[*arg1].unk0 = 1;
             arg0[*arg1].unk1 = 0;
             arg0[*arg1].unk2 = 0;
