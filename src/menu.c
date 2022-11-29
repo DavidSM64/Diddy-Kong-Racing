@@ -96,9 +96,9 @@ s8 gControllersYAxisDirection[4]; // Y axis (-1 = down, 1 = up) for controller
 s8 gControllersXAxis[4];
 s8 gControllersYAxis[4];
 s32 sUnused_80126470; // Set to 0 in the magic codes menu and 0xD000 elsewhere, otherwise unused.
-s32 D_80126474;
-s32 D_80126478;
-s32 D_8012647C;
+s32 gTrackSelectViewPortHalfX;
+s32 gTrackSelectViewPortHalfY;
+s32 gTrackSelectViewPortX;
 s32 gTrackSelectViewportY;
 s32 D_80126484;
 s32 D_80126488;
@@ -253,7 +253,7 @@ s32 D_80126BE0;
 s32 D_80126BE4;
 s32 D_80126BE8;
 f32 D_80126BEC;
-s32 D_80126BF0[8];
+char *D_80126BF0[8];
 s32 D_80126C10;
 s32 D_80126C14;
 s32 D_80126C18;
@@ -273,10 +273,7 @@ s16 gOptionsMenuItemIndex;
 s32 D_80126C48;
 s16 D_80126C4C;
 f32 D_80126C50;
-s8 D_80126C54;
-s8 D_80126C55;
-s8 D_80126C56;
-s8 D_80126C57;
+unk80126C54 D_80126C54;
 u8 D_80126C58[20];
 s32 *D_80126C6C;
 s32 D_80126C70;
@@ -803,6 +800,7 @@ ButtonElement D_800E0700 = {
     80, 152, 160, 40, 4, 4, 80, 14
 };
 
+// Often access like D_800E0710[i * 3 + 1]. Maybe it's s16[4][3]?
 s16 D_800E0710[16] = {
     0x0E, 0x0F, 0x00, 0x10,
     0x11, 0x20, 0x12, 0x13,
@@ -5536,10 +5534,10 @@ void menu_track_select_init(void) {
         D_800DF488 = 0;
     }
     videoWidthAndHeight = get_video_width_and_height_as_s32();
-    D_8012647C = GET_VIDEO_WIDTH(videoWidthAndHeight);
+    gTrackSelectViewPortX = GET_VIDEO_WIDTH(videoWidthAndHeight);
     gTrackSelectViewportY = GET_VIDEO_HEIGHT(videoWidthAndHeight);
-    D_80126474 = D_8012647C >> 1;
-    D_80126478 = gTrackSelectViewportY >> 1;
+    gTrackSelectViewPortHalfX = gTrackSelectViewPortX >> 1;
+    gTrackSelectViewPortHalfY = gTrackSelectViewportY >> 1;
     gTrackSelectX = (f32) D_801269C8 * 320.0f;
     gTrackSelectY = (f32) D_801269CC * (f32) -gTrackSelectViewportY;
     gSelectedTrackX = -1;
@@ -5591,7 +5589,7 @@ void menu_track_select_init(void) {
     }
     D_80126924 = 0;
     func_80078AAC(func_8008F618);
-    func_80066940(0, 80, D_80126478 - (D_80126478 >> 1), 240, (D_80126478 >> 1) + D_80126478);
+    func_80066940(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     func_80066610();
     func_80066818(0, 0);
     D_800E097C = 1;
@@ -5984,13 +5982,13 @@ void func_80090918(s32 updateRate) {
             var_t1 = 20;
         }
         var_t2 = 160;
-        var_t0 = D_80126478;
+        var_t0 = gTrackSelectViewPortHalfY;
         if (var_t1 < 20) {
             var_t2 += (D_801269E8 - gTrackSelectX);
             var_t0 -= (D_801269EC - gTrackSelectY);
         }
-        var_t3 = (((var_t1 + 20) * D_80126478) / 40) + var_t0;
-        var_a2 = var_t0 - (((var_t1 + 20) * D_80126478) / 40);
+        var_t3 = (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40) + var_t0;
+        var_a2 = var_t0 - (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40);
         func_80066940(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
         gMenuImageStack[4].unk8 = (f32) (sMenuImageProperties[4].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
         gMenuImageStack[6].unk8 = (f32) (sMenuImageProperties[6].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
@@ -6485,7 +6483,7 @@ void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
     s32 sp58;
     char *filename;
     Settings* settings;
-    char* levelName;
+    char *levelName;
 
     filename = NULL;
     settings = get_settings();
@@ -6980,7 +6978,7 @@ void assign_racer_portrait_textures(void) {
 }
 
 void func_80094688(s32 arg0, s32 arg1) {
-    s16 *var_v1;
+    UNUSED s32 pad;
     LevelHeader *header;
 
     func_80072298(0U);
@@ -6992,23 +6990,23 @@ void func_80094688(s32 arg0, s32 arg1) {
     D_80126A90 = 0;
     if (gNumberOfActivePlayers == 1 && gTrophyRaceWorldId == 0) {
         if (is_in_tracks_mode() == 1) {
-            D_80126BF0[0] = gMenuText[23];
-            D_80126BF0[1] = gMenuText[24];
-            D_80126BF0[2] = gMenuText[26];
+            D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
+            D_80126BF0[1] = gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
+            D_80126BF0[2] = gMenuText[ASSET_MENU_TEXT_SELECTCHARACTER];
             D_80126C14 = 3;
             D_80126A90 = 1;
         } else {
             if (arg0 == 0) {
-                D_80126BF0[0] = gMenuText[23];
+                D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
                 D_80126C14 = 1;
             } else {
                 D_80126C14 = 0;
             }
-            D_80126BF0[D_80126C14] = gMenuText[25];
-            D_80126C14 = D_80126C14 + 1;
+            D_80126BF0[D_80126C14] = gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY];
+            D_80126C14++;
         }
-        D_80126BF0[D_80126C14] = gMenuText[28];
-        D_80126C14 = D_80126C14 + 1;
+        D_80126BF0[D_80126C14] = gMenuText[ASSET_MENU_TEXT_QUIT];
+        D_80126C14++;
         D_801263E0 = 0;
     } else {
         D_801263E0 = 7;
@@ -7020,7 +7018,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     D_800DF460 = 0;
     gMenuOption = 0;
     gIgnorePlayerInput = 1;
-    *((s32*)(&D_80126C54)) = -1;
+    D_80126C54.unks32 = -1;
     gMenuSubOption = 0;
     D_80126C1C = NULL;
     D_80126A98 = 0;
@@ -7029,40 +7027,39 @@ void func_80094688(s32 arg0, s32 arg1) {
     }
     if (D_80126C28) {
         D_801263E0 = 8;
-        gMenuDelay = 0x64;
+        gMenuDelay = 100;
     }
     if (get_render_context()) {
         D_801263E0 = 7;
     }
     reset_controller_sticks();
     func_8006D8E0(arg0);
-    D_8012647C = get_video_width_and_height_as_s32();
-    gTrackSelectViewportY = (D_8012647C >> 0x10) & 0xFFFF;
-    D_8012647C = D_8012647C & 0xFFFF;
-    D_80126474 = D_8012647C >> 1;
-    D_80126478 = gTrackSelectViewportY >> 1;
+    gTrackSelectViewPortX = get_video_width_and_height_as_s32();
+    gTrackSelectViewportY = GET_VIDEO_HEIGHT(gTrackSelectViewPortX) & 0xFFFF;
+    gTrackSelectViewPortX = GET_VIDEO_WIDTH(gTrackSelectViewPortX);
+    gTrackSelectViewPortHalfX = gTrackSelectViewPortX >> 1;
+    gTrackSelectViewPortHalfY = gTrackSelectViewportY >> 1;
     if ((gNumberOfActivePlayers == 1) && (gTrophyRaceWorldId == 0)) {
-        *((s32*)(&D_80126C54)) = 0;
+        D_80126C54.unks32 = 0;
         arg1 = (s8) header->world - 1;
-        var_v1 = &D_800E0710[3*arg1];
-        if (var_v1[0] != -1) {
-            func_8009C6D4((s32) var_v1[0]);
-            D_80126BB8 = (s32) D_80126550[var_v1[0]];
+        if (D_800E0710[arg1 * 3] != -1) {
+            func_8009C6D4(D_800E0710[arg1 * 3]);
+            D_80126BB8 = D_80126550[D_800E0710[arg1 * 3]];
         } else {
             D_80126BB8 = 0;
         }
-        if (var_v1[1] != -1) {
-            func_8009C6D4((s32) var_v1[1]);
-            D_80126BBC = (s32) D_80126550[var_v1[1]];
+        if (D_800E0710[arg1 * 3 + 1] != -1) {
+            func_8009C6D4(D_800E0710[arg1 * 3 + 1]);
+            D_80126BBC = D_80126550[D_800E0710[arg1 * 3 + 1]];
         } else {
             D_80126BBC = 0;
         }
-        D_80126BC0 = (s32) var_v1[2];
+        D_80126BC0 = D_800E0710[arg1 * 3 + 2];
         if (get_render_context() == 0) {
-            func_80078170((u32) D_80126BB8, (u32) D_80126BBC, (u32) D_80126BC0);
+            func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
         func_80066818(0, 1);
-        func_80066940(0, 0, 0, D_8012647C, gTrackSelectViewportY);
+        func_80066940(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
     }
     func_80000968(2);
 }
@@ -7160,9 +7157,9 @@ void menu_11_init(void) {
     s8 temp_a2;
 
     settings = get_settings();
-    D_80126BF0[0] = (s32)gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
-    D_80126BF0[1] = (s32)gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
-    D_80126BF0[2] = (s32)gMenuText[ASSET_MENU_TEXT_QUIT];
+    D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
+    D_80126BF0[1] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
+    D_80126BF0[2] = gMenuText[ASSET_MENU_TEXT_QUIT];
     D_80126C14 = 3;
 
     for (i = 0; i < gNumberOfActivePlayers; i++) {
@@ -8411,9 +8408,9 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
  * Comes in wood, iron and gold colours.
  */
 void render_track_selection_viewport_border(ObjectModel *objMdl) {
-    s32 pad1[4];
+    UNUSED s32 pad1[4];
     s32 sp5C;
-    s32 pad2[4];
+    UNUSED s32 pad2[4];
     TextureHeader *tex;
     Triangle *tris;
     s32 triOffset;

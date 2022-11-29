@@ -137,6 +137,18 @@ typedef struct unk801263C0 {
     };
 } unk801263C0;
 
+typedef struct unk80126C54 {
+    union {
+        struct {
+            u8 unk0;
+            u8 unk1;
+            u8 unk2;
+            u8 unk3;
+        };
+        s32 unks32;
+    };
+} unk80126C54;
+
 /* Size: 0x30 bytes */
 typedef struct unk800DF83C {
     char *unk0; // Pointer to ascii text.
