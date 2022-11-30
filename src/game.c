@@ -1002,7 +1002,7 @@ void main_game_loop(void) {
         if (osTvType == TV_TYPE_PAL) {
             framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
-        dmacopy2(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
+        dmacopy_doubleword(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor

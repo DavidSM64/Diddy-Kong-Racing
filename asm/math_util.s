@@ -47,7 +47,7 @@
 .include "asm/math_util/calc_dyn_lighting_for_level_segment.s" # UNUSED
 .include "asm/math_util/area_triangle_2d.s" # Floating Point Math with sqrt
 .include "asm/math_util/set_breakpoint.s" # UNUSED - 
-.include "asm/math_util/dmacopy2.s" # Uses mips3 instructions to copy data from s64 values arg0 to arg1 in a loop
+.include "asm/math_util/dmacopy_doubleword.s" # Uses mips3 instructions to copy data from s64 values arg0 to arg1 in a loop
 
 .section .data
 

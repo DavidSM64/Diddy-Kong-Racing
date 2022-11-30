@@ -1,4 +1,4 @@
-glabel dmacopy2
+glabel dmacopy_doubleword
 .L80070B04:
 /* 071704 80070B04 DC880000 */  ld    $t0, ($a0)
 /* 071708 80070B08 DC890008 */  ld    $t1, 8($a0)

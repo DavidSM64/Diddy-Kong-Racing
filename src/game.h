@@ -79,7 +79,7 @@ extern s32 gVideoLastDepthBuffer;
 
 void f32_matrix_to_s16_matrix(Matrix *, Matrix *); //math_util
 void f32_matrix_from_position(Matrix *, f32, f32, f32); //From math_util
-void dmacopy2(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);
+void dmacopy_doubleword(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);
 
 s16 func_8006ABB4(s32 arg0);
 s32 func_8006B018(s8 arg0);
