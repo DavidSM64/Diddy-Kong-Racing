@@ -490,15 +490,15 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
 //arg2 seems to be a flag for either lap times or course initials?
 #ifdef NON_MATCHING
 void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
-    s32 worldCount;
-    s32 levelCount;
     s16 availableVehicles;
+    s32 levelCount;
+    s32 worldCount;
     s32 i;
     s16 var_s0;
-    UNUSED s32 pad;
 
     func_8006E770(settings, arg2);
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
+
     if (arg2 & 1) {
         D_801241EC = saveData;
         D_801241F0 = 0;
@@ -506,7 +506,8 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         for (i = 2, var_s0 = 5; i < 192; i++) {
             var_s0 += saveData[i];
         }
-        if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
+        var_s0 -= func_80072C54(0x10);
+        if (var_s0 == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
@@ -537,7 +538,8 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         for (i = 2, var_s0 = 5; i < 192; i++) {
             var_s0 += saveData[i];
         }
-        if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
+        var_s0 -= func_80072C54(0x10);
+        if (var_s0 == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
