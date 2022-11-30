@@ -6,7 +6,7 @@ glabel allocate_at_address_in_main_pool
 /* 071B08 80070F08 00A08825 */  move  $s1, $a1
 /* 071B0C 80070F0C 00809025 */  move  $s2, $a0
 /* 071B10 80070F10 AFB00020 */  sw    $s0, 0x20($sp)
-/* 071B14 80070F14 0C01BD44 */  jal   func_8006F510
+/* 071B14 80070F14 0C01BD44 */  jal   clear_status_register_flags
 /* 071B18 80070F18 AFA60050 */   sw    $a2, 0x50($sp)
 /* 071B1C 80070F1C AFA20038 */  sw    $v0, 0x38($sp)
 /* 071B20 80070F20 3C028012 */  lui   $v0, %hi(gMemoryPools) # $v0, 0x8012
@@ -17,7 +17,7 @@ glabel allocate_at_address_in_main_pool
 /* 071B34 80070F34 15F80006 */  bne   $t7, $t8, .L80070F50
 /* 071B38 80070F38 3259000F */   andi  $t9, $s2, 0xf
 /* 071B3C 80070F3C 8FA40038 */  lw    $a0, 0x38($sp)
-/* 071B40 80070F40 0C01BD4F */  jal   func_8006F53C
+/* 071B40 80070F40 0C01BD4F */  jal   set_status_register_flags
 /* 071B44 80070F44 00000000 */   nop   
 /* 071B48 80070F48 10000053 */  b     .L80071098
 /* 071B4C 80070F4C 00001025 */   move  $v0, $zero
@@ -62,7 +62,7 @@ glabel allocate_at_address_in_main_pool
 /* 071BDC 80070FDC 0C01C5E3 */  jal   allocate_memory_pool_slot
 /* 071BE0 80070FE0 AFB80014 */   sw    $t8, 0x14($sp)
 /* 071BE4 80070FE4 8FA40038 */  lw    $a0, 0x38($sp)
-/* 071BE8 80070FE8 0C01BD4F */  jal   func_8006F53C
+/* 071BE8 80070FE8 0C01BD4F */  jal   set_status_register_flags
 /* 071BEC 80070FEC 00000000 */   nop   
 /* 071BF0 80070FF0 8FA30034 */  lw    $v1, 0x34($sp)
 /* 071BF4 80070FF4 00000000 */  nop   
@@ -89,7 +89,7 @@ glabel allocate_at_address_in_main_pool
 /* 071C44 80071044 0C01C5E3 */  jal   allocate_memory_pool_slot
 /* 071C48 80071048 AFAB0014 */   sw    $t3, 0x14($sp)
 /* 071C4C 8007104C 8FA40038 */  lw    $a0, 0x38($sp)
-/* 071C50 80071050 0C01BD4F */  jal   func_8006F53C
+/* 071C50 80071050 0C01BD4F */  jal   set_status_register_flags
 /* 071C54 80071054 00000000 */   nop   
 /* 071C58 80071058 24080014 */  li    $t0, 20
 /* 071C5C 8007105C 02080019 */  multu $s0, $t0
@@ -105,7 +105,7 @@ glabel allocate_at_address_in_main_pool
 /* 071C80 80071080 1606FFBB */  bne   $s0, $a2, .L80070F70
 /* 071C84 80071084 00000000 */   nop   
 /* 071C88 80071088 8FA40038 */  lw    $a0, 0x38($sp)
-/* 071C8C 8007108C 0C01BD4F */  jal   func_8006F53C
+/* 071C8C 8007108C 0C01BD4F */  jal   set_status_register_flags
 /* 071C90 80071090 00000000 */   nop   
 /* 071C94 80071094 00001025 */  move  $v0, $zero
 .L80071098:

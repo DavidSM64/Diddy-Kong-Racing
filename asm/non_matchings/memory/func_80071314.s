@@ -9,7 +9,7 @@ glabel func_80071314
 /* 071F30 80071330 AFB30024 */  sw    $s3, 0x24($sp)
 /* 071F34 80071334 AFB20020 */  sw    $s2, 0x20($sp)
 /* 071F38 80071338 AFB1001C */  sw    $s1, 0x1c($sp)
-/* 071F3C 8007133C 0C01BD44 */  jal   func_8006F510
+/* 071F3C 8007133C 0C01BD44 */  jal   clear_status_register_flags
 /* 071F40 80071340 AFB00018 */   sw    $s0, 0x18($sp)
 /* 071F44 80071344 3C128012 */  lui   $s2, %hi(gNumberOfMemoryPools) # $s2, 0x8012
 /* 071F48 80071348 8E5235C0 */  lw    $s2, %lo(gNumberOfMemoryPools)($s2)
@@ -52,7 +52,7 @@ glabel func_80071314
 /* 071FD0 800713D0 8630000C */   lh    $s0, 0xc($s1)
 .L800713D4:
 /* 071FD4 800713D4 8FA40040 */  lw    $a0, 0x40($sp)
-/* 071FD8 800713D8 0C01BD4F */  jal   func_8006F53C
+/* 071FD8 800713D8 0C01BD4F */  jal   set_status_register_flags
 /* 071FDC 800713DC 00000000 */   nop   
 /* 071FE0 800713E0 1000000C */  b     .L80071414
 /* 071FE4 800713E4 8FBF003C */   lw    $ra, 0x3c($sp)
@@ -67,7 +67,7 @@ glabel func_80071314
 /* 072000 80071400 26B5FFF0 */   addiu $s5, $s5, -0x10
 .L80071404:
 /* 072004 80071404 8FA40040 */  lw    $a0, 0x40($sp)
-/* 072008 80071408 0C01BD4F */  jal   func_8006F53C
+/* 072008 80071408 0C01BD4F */  jal   set_status_register_flags
 /* 07200C 8007140C 00000000 */   nop   
 /* 072010 80071410 8FBF003C */  lw    $ra, 0x3c($sp)
 .L80071414:

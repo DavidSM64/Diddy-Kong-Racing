@@ -34,7 +34,7 @@ glabel func_8003E694
 /* 03F300 8003E700 E7A0004C */  swc1  $f0, 0x4c($sp)
 /* 03F304 8003E704 E7A00050 */  swc1  $f0, 0x50($sp)
 /* 03F308 8003E708 E7AA0044 */  swc1  $f10, 0x44($sp)
-/* 03F30C 8003E70C 0C01BF0C */  jal   func_8006FC30
+/* 03F30C 8003E70C 0C01BF0C */  jal   object_transform_to_matrix
 /* 03F310 8003E710 A7B9003E */   sh    $t9, 0x3e($sp)
 /* 03F314 8003E714 44800000 */  mtc1  $zero, $f0
 /* 03F318 8003E718 8E270010 */  lw    $a3, 0x10($s1)
@@ -340,7 +340,7 @@ glabel func_8003E694
 /* 03F784 8003EB84 E6320008 */   swc1  $f18, 8($s1)
 .L8003EB88:
 /* 03F788 8003EB88 00046700 */  sll   $t4, $a0, 0x1c
-/* 03F78C 8003EB8C 0C01C1F1 */  jal   cosine_s
+/* 03F78C 8003EB8C 0C01C1F1 */  jal   sins_f
 /* 03F790 8003EB90 000C2403 */   sra   $a0, $t4, 0x10
 /* 03F794 8003EB94 3C013E80 */  li    $at, 0x3E800000 # 0.250000
 /* 03F798 8003EB98 44812000 */  mtc1  $at, $f4

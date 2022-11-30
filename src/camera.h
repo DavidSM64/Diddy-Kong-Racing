@@ -108,11 +108,11 @@ typedef struct unk80068514_arg4 {
     Gfx *unk8[1];
 } unk80068514_arg4;
 
-//TODO: Figure out where these functions live: unknown_070110?
-    void func_8006F870(Matrix *, Matrix *); //unknown_070110
-    void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
-    void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching unknown_070110?
-    void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
+//TODO: Figure out where these functions live: math_util?
+    void f32_matrix_to_s16_matrix(Matrix *, Matrix *); //math_util
+    void f32_matrix_from_position(Matrix *, f32, f32, f32); //From math_util
+    void object_transform_to_matrix_2(Matrix *, ObjectTransform *); // Non Matching math_util?
+    void f32_matrix_mult(Matrix *, Matrix *, Matrix *); // Non Matching math_util?
 
 void func_80066060(s32 arg0, s32 arg1);
 void set_viewport_tv_type(s8 arg0);

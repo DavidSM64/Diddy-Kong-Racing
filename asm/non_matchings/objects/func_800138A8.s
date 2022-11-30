@@ -6,7 +6,7 @@ glabel func_800138A8
 /* 0144B8 800138B8 00C08025 */  move  $s0, $a2
 /* 0144BC 800138BC AFA70044 */  sw    $a3, 0x44($sp)
 /* 0144C0 800138C0 24C5000C */  addiu $a1, $a2, 0xc
-/* 0144C4 800138C4 0C01C0C8 */  jal   func_80070320
+/* 0144C4 800138C4 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0144C8 800138C8 AFA40038 */   sw    $a0, 0x38($sp)
 /* 0144CC 800138CC 8FA40038 */  lw    $a0, 0x38($sp)
 /* 0144D0 800138D0 C604000C */  lwc1  $f4, 0xc($s0)

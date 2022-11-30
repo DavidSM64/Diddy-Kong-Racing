@@ -47,7 +47,7 @@ glabel drop_bananas
 /* 058390 80057790 A7A80072 */  sh    $t0, 0x72($sp)
 /* 058394 80057794 A7A90074 */  sh    $t1, 0x74($sp)
 /* 058398 80057798 27A50070 */  addiu $a1, $sp, 0x70
-/* 05839C 8005779C 0C01C079 */  jal   func_800701E4
+/* 05839C 8005779C 0C01C079 */  jal   s16_vec3_apply_object_rotation
 /* 0583A0 800577A0 A7B9007C */   sh    $t9, 0x7c($sp)
 /* 0583A4 800577A4 444BF800 */  cfc1  $t3, $31
 /* 0583A8 800577A8 C644000C */  lwc1  $f4, 0xc($s2)

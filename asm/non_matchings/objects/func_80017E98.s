@@ -235,7 +235,7 @@ glabel func_80017E98
 /* 018DFC 800181FC E7B40088 */  swc1  $f20, 0x88($sp)
 /* 018E00 80018200 E7B4008C */  swc1  $f20, 0x8c($sp)
 /* 018E04 80018204 E7B40090 */  swc1  $f20, 0x90($sp)
-/* 018E08 80018208 0C01BF0C */  jal   func_8006FC30
+/* 018E08 80018208 0C01BF0C */  jal   object_transform_to_matrix
 /* 018E0C 8001820C A7AF0080 */   sh    $t7, 0x80($sp)
 /* 018E10 80018210 4405A000 */  mfc1  $a1, $f20
 /* 018E14 80018214 4406A000 */  mfc1  $a2, $f20

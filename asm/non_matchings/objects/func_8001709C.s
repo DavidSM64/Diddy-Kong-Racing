@@ -34,7 +34,7 @@ glabel func_8001709C
 /* 017D1C 8001711C 46009107 */  neg.s $f4, $f18
 /* 017D20 80017120 E7A4008C */  swc1  $f4, 0x8c($sp)
 /* 017D24 80017124 AFA4006C */  sw    $a0, 0x6c($sp)
-/* 017D28 80017128 0C01BF9D */  jal   func_8006FE74
+/* 017D28 80017128 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 017D2C 8001712C 27A50078 */   addiu $a1, $sp, 0x78
 /* 017D30 80017130 8FA70090 */  lw    $a3, 0x90($sp)
 /* 017D34 80017134 3C013FF0 */  li    $at, 0x3FF00000 # 1.875000
@@ -65,7 +65,7 @@ glabel func_8001709C
 /* 017D94 80017194 E7A20054 */  swc1  $f2, 0x54($sp)
 /* 017D98 80017198 E7B00068 */  swc1  $f16, 0x68($sp)
 /* 017D9C 8001719C AFA70090 */  sw    $a3, 0x90($sp)
-/* 017DA0 800171A0 0C01BDDA */  jal   func_8006F768
+/* 017DA0 800171A0 0C01BDDA */  jal   f32_matrix_mult
 /* 017DA4 800171A4 E7A20070 */   swc1  $f2, 0x70($sp)
 /* 017DA8 800171A8 C7A20070 */  lwc1  $f2, 0x70($sp)
 /* 017DAC 800171AC 3C013FF0 */  li    $at, 0x3FF00000 # 1.875000
@@ -100,7 +100,7 @@ glabel func_8001709C
 /* 017E20 80017220 00000000 */  nop   
 /* 017E24 80017224 252B0002 */  addiu $t3, $t1, 2
 /* 017E28 80017228 000B6180 */  sll   $t4, $t3, 6
-/* 017E2C 8001722C 0C01BF0C */  jal   func_8006FC30
+/* 017E2C 8001722C 0C01BF0C */  jal   object_transform_to_matrix
 /* 017E30 80017230 020C2021 */   addu  $a0, $s0, $t4
 /* 017E34 80017234 AE000100 */  sw    $zero, 0x100($s0)
 /* 017E38 80017238 8FBF001C */  lw    $ra, 0x1c($sp)

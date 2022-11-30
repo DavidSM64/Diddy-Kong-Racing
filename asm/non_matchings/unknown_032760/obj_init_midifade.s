@@ -44,7 +44,7 @@ glabel obj_init_midifade
 /* 042734 80041B34 E7B400EC */  swc1  $f20, 0xec($sp)
 /* 042738 80041B38 E7B400F0 */  swc1  $f20, 0xf0($sp)
 /* 04273C 80041B3C E7B400F4 */  swc1  $f20, 0xf4($sp)
-/* 042740 80041B40 0C01BF0C */  jal   func_8006FC30
+/* 042740 80041B40 0C01BF0C */  jal   object_transform_to_matrix
 /* 042744 80041B44 A7AD00E4 */   sh    $t5, 0xe4($sp)
 /* 042748 80041B48 4405A000 */  mfc1  $a1, $f20
 /* 04274C 80041B4C 4406A000 */  mfc1  $a2, $f20
@@ -184,11 +184,11 @@ glabel obj_init_midifade
 /* 042940 80041D40 E7AE0080 */  swc1  $f14, 0x80($sp)
 /* 042944 80041D44 E7AC006C */  swc1  $f12, 0x6c($sp)
 /* 042948 80041D48 E7A20070 */  swc1  $f2, 0x70($sp)
-/* 04294C 80041D4C 0C01C1FE */  jal   sine_s
+/* 04294C 80041D4C 0C01C1FE */  jal   coss_f
 /* 042950 80041D50 AFA800FC */   sw    $t0, 0xfc($sp)
 /* 042954 80041D54 E7A00068 */  swc1  $f0, 0x68($sp)
 /* 042958 80041D58 86040000 */  lh    $a0, ($s0)
-/* 04295C 80041D5C 0C01C1F1 */  jal   cosine_s
+/* 04295C 80041D5C 0C01C1F1 */  jal   sins_f
 /* 042960 80041D60 00000000 */   nop   
 /* 042964 80041D64 C7AE0080 */  lwc1  $f14, 0x80($sp)
 /* 042968 80041D68 C7AA0068 */  lwc1  $f10, 0x68($sp)

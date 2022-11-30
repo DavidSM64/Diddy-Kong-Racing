@@ -75,13 +75,13 @@ glabel func_800C1EE8
 /* 0C2BEC 800C1FEC 000F2400 */  sll   $a0, $t7, 0x10
 /* 0C2BF0 800C1FF0 0004C403 */  sra   $t8, $a0, 0x10
 /* 0C2BF4 800C1FF4 03002025 */  move  $a0, $t8
-/* 0C2BF8 800C1FF8 0C01C1F1 */  jal   cosine_s
+/* 0C2BF8 800C1FF8 0C01C1F1 */  jal   sins_f
 /* 0C2BFC 800C1FFC 01E0A025 */   move  $s4, $t7
 /* 0C2C00 800C2000 C6E40000 */  lwc1  $f4, ($s7)
 /* 0C2C04 800C2004 00142400 */  sll   $a0, $s4, 0x10
 /* 0C2C08 800C2008 0004CC03 */  sra   $t9, $a0, 0x10
 /* 0C2C0C 800C200C 46040502 */  mul.s $f20, $f0, $f4
-/* 0C2C10 800C2010 0C01C1FE */  jal   sine_s
+/* 0C2C10 800C2010 0C01C1FE */  jal   coss_f
 /* 0C2C14 800C2014 03202025 */   move  $a0, $t9
 /* 0C2C18 800C2018 C7D20000 */  lwc1  $f18, ($fp)
 /* 0C2C1C 800C201C 00124040 */  sll   $t0, $s2, 1

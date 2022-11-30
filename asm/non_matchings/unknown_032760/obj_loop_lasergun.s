@@ -140,7 +140,7 @@ glabel obj_loop_lasergun
 /* 0353C0 800347C0 A7A000A8 */  sh    $zero, 0xa8($sp)
 /* 0353C4 800347C4 AFA200C0 */  sw    $v0, 0xc0($sp)
 /* 0353C8 800347C8 27A500A4 */  addiu $a1, $sp, 0xa4
-/* 0353CC 800347CC 0C01BF0C */  jal   func_8006FC30
+/* 0353CC 800347CC 0C01BF0C */  jal   object_transform_to_matrix
 /* 0353D0 800347D0 A7B800A6 */   sh    $t8, 0xa6($sp)
 /* 0353D4 800347D4 8239000E */  lb    $t9, 0xe($s1)
 /* 0353D8 800347D8 3C0141F0 */  li    $at, 0x41F00000 # 30.000000
