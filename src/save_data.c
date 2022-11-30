@@ -339,6 +339,8 @@ s32 func_80072C54(s32 arg0) {
     return ret;
 }
 
+// arg0 is the number of times to loop
+// arg1 is the bit being looked for.
 void func_80072E28(s32 arg0, s32 arg1) {
     u32 var_v0;
 
@@ -348,7 +350,7 @@ void func_80072E28(s32 arg0, s32 arg1) {
             if (D_801241F4 == 0) {
                 *D_801241EC++ = D_801241F0;
                 D_801241F0 = 0;
-                D_801241F4 = 128;
+                D_801241F4 = 128; //Reset the byte counter, so we can shift 8 times befor coming back here.
             }
             if (arg1 & var_v0) {
                 D_801241F0 |= D_801241F4;
@@ -486,7 +488,93 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
 
 //arg1 is eepromData, from read_eeprom_data
 //arg2 seems to be a flag for either lap times or course initials?
+#ifdef NON_EQUIVALENT
+void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
+    s32 levelCount;
+    s32 worldCount;
+    s16 availableVehicles;
+    s32 temp_t1;
+    s16 var_s0;
+    s32 i;
+    u8 *var_v0;
+
+    func_8006E770(settings, arg2);
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    if (arg2 & 1) {
+        D_801241EC = saveData;
+        D_801241F0 = 0;
+        D_801241F4 = 0;
+        i = 2;
+        var_s0 = 5;
+        var_v0 = saveData + 2;
+        do {
+            i++;
+            temp_t1 = (var_s0 + var_v0[i]) << 16;
+            var_s0 = temp_t1 >> 16;
+        } while (i < 192);
+        if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
+            for (i = 0; i < levelCount; i++) {
+                if (func_8006B14C(i) == 0) {
+                    availableVehicles = get_map_available_vehicles(i);
+                    // Car Available
+                    if (availableVehicles & 1) {
+                        settings->flapTimesPtr[0][i] = func_80072C54(0x10);
+                        settings->flapInitialsPtr[0][i] = func_80072C54(0x10);
+                    }
+                    // Hovercraft Available
+                    if (availableVehicles & 2) {
+                        settings->flapTimesPtr[1][i] = func_80072C54(0x10);
+                        settings->flapInitialsPtr[1][i] = func_80072C54(0x10);
+                    }
+                    // Plane Available
+                    if (availableVehicles & 4) {
+                        settings->flapTimesPtr[2][i] = func_80072C54(0x10);
+                        settings->flapInitialsPtr[2][i] = func_80072C54(0x10);
+                    }
+                }
+            }
+        }
+    }
+    if (arg2 & 2) {
+        saveData += 192;
+        D_801241EC = saveData;
+        D_801241F0 = 0;
+        D_801241F4 = 0;
+        i = 2;
+        var_s0 = 5;
+        var_v0 = saveData + 2;
+        do {
+            i++;
+            temp_t1 = (var_s0 + var_v0[i]) << 16;
+            var_s0 = temp_t1 >> 16;
+        } while (i < 192);
+        if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
+            for (i = 0; i < levelCount; i++) {
+                if (func_8006B14C(i) == 0) {
+                    availableVehicles = get_map_available_vehicles(i);
+                    // Car Available
+                    if (availableVehicles & 1) {
+                        settings->courseTimesPtr[0][i] = func_80072C54(0x10);
+                        settings->courseInitialsPtr[0][i] = func_80072C54(0x10);
+                    }
+                    // Hovercraft Available
+                    if (availableVehicles & 2) {
+                        settings->courseTimesPtr[1][i] = func_80072C54(0x10);
+                        settings->courseInitialsPtr[1][i] = func_80072C54(0x10);
+                    }
+                    // Plane Available
+                    if (availableVehicles & 4) {
+                        settings->courseTimesPtr[2][i] = func_80072C54(0x10);
+                        settings->courseInitialsPtr[2][i] = func_80072C54(0x10);
+                    }
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_80073588.s")
+#endif
 
 GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
 
