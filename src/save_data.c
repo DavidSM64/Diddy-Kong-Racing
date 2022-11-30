@@ -493,7 +493,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
     s32 levelCount;
     s32 worldCount;
     s16 availableVehicles;
-    s32 temp_t1;
+    s16 temp_t1;
     s16 var_s0;
     s32 i;
     u8 *var_v0;
@@ -509,8 +509,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         var_v0 = saveData + 2;
         do {
             i++;
-            temp_t1 = (var_s0 + var_v0[i]) << 16;
-            var_s0 = temp_t1 >> 16;
+            var_s0 += var_v0[i];
         } while (i < 192);
         if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
             for (i = 0; i < levelCount; i++) {
@@ -545,8 +544,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         var_v0 = saveData + 2;
         do {
             i++;
-            temp_t1 = (var_s0 + var_v0[i]) << 16;
-            var_s0 = temp_t1 >> 16;
+            var_s0 += var_v0[i];
         } while (i < 192);
         if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
             for (i = 0; i < levelCount; i++) {
