@@ -124,7 +124,7 @@ glabel func_8004CC20
 /* 04D9B8 8004CDB8 E4A00010 */  swc1  $f0, 0x10($a1)
 /* 04D9BC 8004CDBC E4A00014 */  swc1  $f0, 0x14($a1)
 /* 04D9C0 8004CDC0 A4B90004 */  sh    $t9, 4($a1)
-/* 04D9C4 8004CDC4 0C01BF0C */  jal   func_8006FC30
+/* 04D9C4 8004CDC4 0C01BF0C */  jal   object_transform_to_matrix
 /* 04D9C8 8004CDC8 E4AA0008 */   swc1  $f10, 8($a1)
 /* 04D9CC 8004CDCC 44800000 */  mtc1  $zero, $f0
 /* 04D9D0 8004CDD0 260B0044 */  addiu $t3, $s0, 0x44
@@ -595,7 +595,7 @@ glabel func_8004CC20
 /* 04E0B8 8004D4B8 E4AE000C */  swc1  $f14, 0xc($a1)
 /* 04E0BC 8004D4BC E4AE0010 */  swc1  $f14, 0x10($a1)
 /* 04E0C0 8004D4C0 E4AE0014 */  swc1  $f14, 0x14($a1)
-/* 04E0C4 8004D4C4 0C01BF9D */  jal   func_8006FE74
+/* 04E0C4 8004D4C4 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 04E0C8 8004D4C8 E4A80008 */   swc1  $f8, 8($a1)
 /* 04E0CC 8004D4CC 8E25001C */  lw    $a1, 0x1c($s1)
 /* 04E0D0 8004D4D0 8E260020 */  lw    $a2, 0x20($s1)

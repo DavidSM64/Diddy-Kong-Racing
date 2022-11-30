@@ -88,7 +88,7 @@ extern s32 D_800DC928;
 
 extern s8 D_800DC92C[24];
 
-void func_8006FC30(Matrix, ObjectTransform *); // asm func
+void object_transform_to_matrix(Matrix, ObjectTransform *); // asm func
 
 s32 func_800249E0(s32 arg0);
 void func_800257D0(void);

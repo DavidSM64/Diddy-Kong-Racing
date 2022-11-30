@@ -183,7 +183,7 @@ glabel func_800C15D4
 /* 0C2498 800C1898 00182400 */  sll   $a0, $t8, 0x10
 /* 0C249C 800C189C 0004CC03 */  sra   $t9, $a0, 0x10
 /* 0C24A0 800C18A0 03202025 */  move  $a0, $t9
-/* 0C24A4 800C18A4 0C01C1F1 */  jal   cosine_s
+/* 0C24A4 800C18A4 0C01C1F1 */  jal   sins_f
 /* 0C24A8 800C18A8 03009825 */   move  $s3, $t8
 /* 0C24AC 800C18AC 46140102 */  mul.s $f4, $f0, $f20
 /* 0C24B0 800C18B0 00132400 */  sll   $a0, $s3, 0x10
@@ -199,7 +199,7 @@ glabel func_800C15D4
 /* 0C24D8 800C18D8 44113000 */  mfc1  $s1, $f6
 /* 0C24DC 800C18DC 44CDF800 */  ctc1  $t5, $31
 /* 0C24E0 800C18E0 00116400 */  sll   $t4, $s1, 0x10
-/* 0C24E4 800C18E4 0C01C1FE */  jal   sine_s
+/* 0C24E4 800C18E4 0C01C1FE */  jal   coss_f
 /* 0C24E8 800C18E8 000C8C03 */   sra   $s1, $t4, 0x10
 /* 0C24EC 800C18EC 3C014334 */  li    $at, 0x43340000 # 180.000000
 /* 0C24F0 800C18F0 44814000 */  mtc1  $at, $f8

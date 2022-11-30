@@ -62,7 +62,7 @@ glabel calc_dynamic_lighting_for_object_1
 /* 01E4FC 8001D8FC A7A0009E */  sh    $zero, 0x9e($sp)
 /* 01E500 8001D900 000FC023 */  negu  $t8, $t7
 /* 01E504 8001D904 A7B80098 */  sh    $t8, 0x98($sp)
-/* 01E508 8001D908 0C01C0F6 */  jal   func_800703D8
+/* 01E508 8001D908 0C01C0F6 */  jal   f32_vec3_apply_object_rotation2
 /* 01E50C 8001D90C 27A40094 */   addiu $a0, $sp, 0x94
 /* 01E510 8001D910 8E390040 */  lw    $t9, 0x40($s1)
 /* 01E514 8001D914 87A9009E */  lh    $t1, 0x9e($sp)
@@ -76,7 +76,7 @@ glabel calc_dynamic_lighting_for_object_1
 /* 01E534 8001D934 A7A9009E */   sh    $t1, 0x9e($sp)
 /* 01E538 8001D938 00402025 */  move  $a0, $v0
 /* 01E53C 8001D93C 02002825 */  move  $a1, $s0
-/* 01E540 8001D940 0C01BDBB */  jal   func_8006F6EC
+/* 01E540 8001D940 0C01BDBB */  jal   f32_matrix_dot
 /* 01E544 8001D944 02003025 */   move  $a2, $s0
 /* 01E548 8001D948 87A9009E */  lh    $t1, 0x9e($sp)
 /* 01E54C 8001D94C 00000000 */  nop   
@@ -140,14 +140,14 @@ glabel calc_dynamic_lighting_for_object_1
 /* 01E630 8001DA30 A7A9009E */   sh    $t1, 0x9e($sp)
 /* 01E634 8001DA34 00402025 */  move  $a0, $v0
 /* 01E638 8001DA38 02002825 */  move  $a1, $s0
-/* 01E63C 8001DA3C 0C01BDBB */  jal   func_8006F6EC
+/* 01E63C 8001DA3C 0C01BDBB */  jal   f32_matrix_dot
 /* 01E640 8001DA40 02003025 */   move  $a2, $s0
 /* 01E644 8001DA44 87A9009E */  lh    $t1, 0x9e($sp)
 /* 01E648 8001DA48 00000000 */  nop   
 .L8001DA4C:
 /* 01E64C 8001DA4C 27A40094 */  addiu $a0, $sp, 0x94
 /* 01E650 8001DA50 02002825 */  move  $a1, $s0
-/* 01E654 8001DA54 0C01C0F6 */  jal   func_800703D8
+/* 01E654 8001DA54 0C01C0F6 */  jal   f32_vec3_apply_object_rotation2
 /* 01E658 8001DA58 A7A9009E */   sh    $t1, 0x9e($sp)
 /* 01E65C 8001DA5C 444EF800 */  cfc1  $t6, $31
 /* 01E660 8001DA60 3C01437F */  li    $at, 0x437F0000 # 255.000000

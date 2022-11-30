@@ -9,45 +9,45 @@
 .set noreorder # dont insert nops after branches
 .set gp=64     # 64-bit instructions are used
 
-.include "asm/unknown_070110/func_8006F510.s" # If D_800DD430 != 0 THEN Set an interrupt?
-.include "asm/unknown_070110/func_8006F53C.s" # If D_800DD430 != 0 THEN __osRestoreInt - void func_8006F53C(u32);
-.include "asm/unknown_070110/func_8006F564.s" # Set D_800DD430
-.include "asm/unknown_070110/func_8006F570.s" # UNUSED - Get D_800DD430
-.include "asm/unknown_070110/func_8006F57C.s" # UNUSED
-.include "asm/unknown_070110/func_8006F5E0.s"
+.include "asm/unknown_070110/clear_status_register_flags.s" # If D_800DD430 != 0 THEN Set an interrupt?
+.include "asm/unknown_070110/set_status_register_flags.s" # If D_800DD430 != 0 THEN __osRestoreInt - void set_status_register_flags(u32);
+.include "asm/unknown_070110/set_D_800DD430.s" # Set D_800DD430
+.include "asm/unknown_070110/get_D_800DD430.s" # UNUSED - Get D_800DD430
+.include "asm/unknown_070110/s32_matrix_to_s16_matrix.s" # UNUSED
+.include "asm/unknown_070110/f32_matrix_to_s32_matrix.s"
 .include "asm/unknown_070110/guMtxXFMF.s"     # It's possible the funcs from this point and above are unidentified libultra
-.include "asm/unknown_070110/func_8006F6EC.s" # Floating Point Matrix Math
-.include "asm/unknown_070110/func_8006F768.s" # Floating Point Matrix Math
-.include "asm/unknown_070110/func_8006F870.s" # Floating Point Matrix Math
+.include "asm/unknown_070110/f32_matrix_dot.s" # Floating Point Matrix Math
+.include "asm/unknown_070110/f32_matrix_mult.s" # Floating Point Matrix Math
+.include "asm/unknown_070110/f32_matrix_to_s16_matrix.s" # Floating Point Matrix Math
 .include "asm/unknown_070110/rng.s"
-.include "asm/unknown_070110/func_8006F9B8.s" # 16 bit Matrix Math?
-.include "asm/unknown_070110/func_8006FA40.s" # 16 bit a0 struct/array to 32 bit a1? UNUSED?
-.include "asm/unknown_070110/func_8006FA78.s" # UNUSED
-.include "asm/unknown_070110/func_8006FB60.s" # 
-.include "asm/unknown_070110/func_8006FC30.s" # Floating Point Matrix and ObjectTransform *
-.include "asm/unknown_070110/func_8006FE04.s"
-.include "asm/unknown_070110/func_8006FE30.s"
-.include "asm/unknown_070110/func_8006FE74.s"
-.include "asm/unknown_070110/func_80070130.s"
-.include "asm/unknown_070110/func_800701E4.s"
-.include "asm/unknown_070110/func_80070320.s"
-.include "asm/unknown_070110/func_800703D8.s"
-.include "asm/unknown_070110/func_80070490.s"
-.include "asm/unknown_070110/func_800704F0.s"
-.include "asm/unknown_070110/func_800705F8.s" # Floating Point Matrix Values
-.include "asm/unknown_070110/func_80070638.s"
-.include "asm/unknown_070110/func_8007066C.s"
+.include "asm/unknown_070110/s16_matrix_rotate.s" # 16 bit Matrix Math?
+.include "asm/unknown_070110/s16_matrix_to_s32_matrix.s" # 16 bit a0 struct/array to 32 bit a1? UNUSED?
+.include "asm/unknown_070110/s16_vec3_mult_by_s32_matrix_full.s" # UNUSED
+.include "asm/unknown_070110/s16_vec3_mult_by_s32_matrix.s" # 
+.include "asm/unknown_070110/object_transform_to_matrix.s" # Floating Point Matrix and ObjectTransform *
+.include "asm/unknown_070110/f32_matrix_scale.s"
+.include "asm/unknown_070110/f32_matrix_y_scale.s"
+.include "asm/unknown_070110/object_transform_to_matrix_2.s"
+.include "asm/unknown_070110/f32_matrix_from_rotation_and_scale.s"
+.include "asm/unknown_070110/s16_vec3_apply_object_rotation.s"
+.include "asm/unknown_070110/f32_vec3_apply_object_rotation.s"
+.include "asm/unknown_070110/f32_vec3_apply_object_rotation2.s"
+.include "asm/unknown_070110/f32_vec3_apply_object_rotation3.s"
+.include "asm/unknown_070110/point_triangle_2d_xz_intersection.s"
+.include "asm/unknown_070110/f32_matrix_from_position.s" # Floating Point Matrix Values
+.include "asm/unknown_070110/f32_matrix_from_scale.s"
+.include "asm/unknown_070110/atan2s.s"
 .include "asm/unknown_070110/arctan2_f.s"
-.include "asm/unknown_070110/func_80070780.s" # UNUSED 
-.include "asm/unknown_070110/func_800707AC.s" # UNUSED Run a sqrtf on a 32 bit int?
-.include "asm/unknown_070110/cosine_s.s"
-.include "asm/unknown_070110/sine_s.s"
-.include "asm/unknown_070110/func_8007082C.s" # Weird case of one function with two entrance points. Sinewave related? Includes: func_80070830
-.include "asm/unknown_070110/func_80070890.s" # Similar to above, and has UNUSED func_8007088C
-.include "asm/unknown_070110/func_800708D0.s" # UNUSED
-.include "asm/unknown_070110/func_80070A2C.s" # Floating Point Math with sqrt
+.include "asm/unknown_070110/s32_matrix_cell_sqrt.s" # UNUSED 
+.include "asm/unknown_070110/bad_int_sqrt.s" # UNUSED Run a sqrtf on a 32 bit int?
+.include "asm/unknown_070110/sins_f.s"
+.include "asm/unknown_070110/coss_f.s"
+.include "asm/unknown_070110/coss.s" # Weird case of one function with two entrance points. Sinewave related? Includes: sins
+.include "asm/unknown_070110/sins_2.s" # Similar to above, and has UNUSED coss_2
+.include "asm/unknown_070110/calc_dyn_lighting_for_level_segment.s" # UNUSED
+.include "asm/unknown_070110/area_triangle_2d.s" # Floating Point Math with sqrt
 .include "asm/unknown_070110/set_breakpoint.s" # UNUSED - 
-.include "asm/unknown_070110/func_80070B04.s" # Uses mips3 instructions to copy data from s64 values arg0 to arg1 in a loop
+.include "asm/unknown_070110/dmacopy2.s" # Uses mips3 instructions to copy data from s64 values arg0 to arg1 in a loop
 
 .section .data
 

@@ -47,7 +47,7 @@ glabel obj_loop_wizpigship
 /* 038A24 80037E24 114000A4 */  beqz  $t2, .L800380B8
 /* 038A28 80037E28 27A400CC */   addiu $a0, $sp, 0xcc
 /* 038A2C 80037E2C AE0B007C */  sw    $t3, 0x7c($s0)
-/* 038A30 80037E30 0C01BF0C */  jal   func_8006FC30
+/* 038A30 80037E30 0C01BF0C */  jal   object_transform_to_matrix
 /* 038A34 80037E34 02002825 */   move  $a1, $s0
 /* 038A38 80037E38 4480A000 */  mtc1  $zero, $f20
 /* 038A3C 80037E3C 3C013F80 */  li    $at, 0x3F800000 # 1.000000
@@ -63,7 +63,7 @@ glabel obj_loop_wizpigship
 /* 038A64 80037E64 A7A00070 */  sh    $zero, 0x70($sp)
 /* 038A68 80037E68 02802025 */  move  $a0, $s4
 /* 038A6C 80037E6C 27A5006C */  addiu $a1, $sp, 0x6c
-/* 038A70 80037E70 0C01BF0C */  jal   func_8006FC30
+/* 038A70 80037E70 0C01BF0C */  jal   object_transform_to_matrix
 /* 038A74 80037E74 A7AD006E */   sh    $t5, 0x6e($sp)
 /* 038A78 80037E78 8E020060 */  lw    $v0, 0x60($s0)
 /* 038A7C 80037E7C 00008825 */  move  $s1, $zero

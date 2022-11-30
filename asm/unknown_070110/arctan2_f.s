@@ -9,5 +9,5 @@ glabel arctan2_f
 /* 07136C 8007076C 460073A4 */  cvt.w.s $f14, $f14
 /* 071370 80070770 44046000 */  mfc1  $a0, $f12
 /* 071374 80070774 44057000 */  mfc1  $a1, $f14
-/* 071378 80070778 0801C19B */  j     func_8007066C # Does not do a jr in this func, but lets the jumped to function do it.
+/* 071378 80070778 0801C19B */  j     atan2s # Does not do a jr in this func, but lets the jumped to function do it.
 /* 07137C 8007077C 00000000 */   nop   

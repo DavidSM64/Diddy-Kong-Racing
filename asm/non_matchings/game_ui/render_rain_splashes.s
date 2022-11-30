@@ -73,7 +73,7 @@ glabel render_rain_splashes
 /* 0AE368 800AD768 00102400 */  sll   $a0, $s0, 0x10
 /* 0AE36C 800AD76C 00045403 */  sra   $t2, $a0, 0x10
 /* 0AE370 800AD770 E7A6005C */  swc1  $f6, 0x5c($sp)
-/* 0AE374 800AD774 0C01C1F1 */  jal   cosine_s
+/* 0AE374 800AD774 0C01C1F1 */  jal   sins_f
 /* 0AE378 800AD778 01402025 */   move  $a0, $t2
 /* 0AE37C 800AD77C C7A8005C */  lwc1  $f8, 0x5c($sp)
 /* 0AE380 800AD780 8FAB0050 */  lw    $t3, 0x50($sp)
@@ -83,7 +83,7 @@ glabel render_rain_splashes
 /* 0AE390 800AD790 00046403 */  sra   $t4, $a0, 0x10
 /* 0AE394 800AD794 46105480 */  add.s $f18, $f10, $f16
 /* 0AE398 800AD798 01802025 */  move  $a0, $t4
-/* 0AE39C 800AD79C 0C01C1FE */  jal   sine_s
+/* 0AE39C 800AD79C 0C01C1FE */  jal   coss_f
 /* 0AE3A0 800AD7A0 E7B20058 */   swc1  $f18, 0x58($sp)
 /* 0AE3A4 800AD7A4 C7A4005C */  lwc1  $f4, 0x5c($sp)
 /* 0AE3A8 800AD7A8 8FA20050 */  lw    $v0, 0x50($sp)

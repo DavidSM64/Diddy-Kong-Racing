@@ -22,13 +22,13 @@
 }
 
 s16 arctan2_f(f32 y, f32 x);
-f32 sine_s(s16 angle);
-f32 cosine_s(s16 angle);
+f32 coss_f(s16 angle);
+f32 sins_f(s16 angle);
 void func_80031130(s32, f32*, f32*, s32);
 s32 func_80031600(f32*, f32*, f32*, s8* surface, s32, s32*);
-void func_80070130(Matrix, s32, f32, f32);
-void func_80070638(Matrix, f32, f32, f32);
-void func_8006FE04(Matrix*, f32);
-void func_8006FE30(Matrix*, f32);
+void f32_matrix_from_rotation_and_scale(Matrix, s32, f32, f32);
+void f32_matrix_from_scale(Matrix, f32, f32, f32);
+void f32_matrix_scale(Matrix*, f32);
+void f32_matrix_y_scale(Matrix*, f32);
 
 #endif // MATH_UTIL_H
