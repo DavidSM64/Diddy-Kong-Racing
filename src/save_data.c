@@ -488,15 +488,14 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
 
 //arg1 is eepromData, from read_eeprom_data
 //arg2 seems to be a flag for either lap times or course initials?
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
-    s32 levelCount;
     s32 worldCount;
+    s32 levelCount;
     s16 availableVehicles;
-    s16 temp_t1;
-    s16 var_s0;
     s32 i;
-    u8 *var_v0;
+    s16 var_s0;
+    UNUSED s32 pad;
 
     func_8006E770(settings, arg2);
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
@@ -504,13 +503,9 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         D_801241EC = saveData;
         D_801241F0 = 0;
         D_801241F4 = 0;
-        i = 2;
-        var_s0 = 5;
-        var_v0 = saveData + 2;
-        do {
-            i++;
-            var_s0 += var_v0[i];
-        } while (i < 192);
+        for (i = 2, var_s0 = 5; i < 192; i++) {
+            var_s0 += saveData[i];
+        }
         if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
@@ -539,13 +534,9 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         D_801241EC = saveData;
         D_801241F0 = 0;
         D_801241F4 = 0;
-        i = 2;
-        var_s0 = 5;
-        var_v0 = saveData + 2;
-        do {
-            i++;
-            var_s0 += var_v0[i];
-        } while (i < 192);
+        for (i = 2, var_s0 = 5; i < 192; i++) {
+            var_s0 += saveData[i];
+        }
         if ((s16) (var_s0 - func_80072C54(0x10)) == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
