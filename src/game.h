@@ -77,8 +77,8 @@ extern u16 *gVideoCurrFramebuffer;
 extern s32 gVideoLastFramebuffer;
 extern s32 gVideoLastDepthBuffer;
 
-void f32_matrix_to_s16_matrix(Matrix *, Matrix *); //unknown_070110
-void f32_matrix_from_position(Matrix *, f32, f32, f32); //From unknown_070110
+void f32_matrix_to_s16_matrix(Matrix *, Matrix *); //math_util
+void f32_matrix_from_position(Matrix *, f32, f32, f32); //From math_util
 void dmacopy2(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);
 
 s16 func_8006ABB4(s32 arg0);
