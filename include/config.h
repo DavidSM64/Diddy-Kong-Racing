@@ -6,6 +6,8 @@
 #define SKIP_CHARACTER 2
 #define SKIP_MENU 3
 
+#define NON_MATCHING
+
 /// Optional toggles.
 #define PUPPYPRINT_DEBUG // Enable debug features
 #define SKIP_INTRO SKIP_TITLE // Skip the boot screen, making getting ingame faster.
