@@ -388,7 +388,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
                 func_8007BF1C(FALSE);
                 if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == 0 && racer->racer.playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
-                        D_80126D28 = cosine_s(D_80126D2C) * D_80126D30 * 8.0f;
+                        D_80126D28 = sins_f(D_80126D2C) * D_80126D30 * 8.0f;
                         D_80126D2C += updateRate << 0xB;
                         if (D_80126D2C >= 0x8000) {
                             D_80126D2C -= 0x8000;
@@ -1383,7 +1383,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
                 if (D_80126CDC->unk5C > 120) {
                     D_80126CDC->unk5C = 120;
                 } else if (gHUDNumPlayers == ONE_PLAYER) {
-                    D_80126CDC->unk48 += 0.18 * cosine_s(((f32) D_80126CDC->unk5C * 682.6583 * 4.0));
+                    D_80126CDC->unk48 += 0.18 * sins_f(((f32) D_80126CDC->unk5C * 682.6583 * 4.0));
                 }
             }
             if (gHUDNumPlayers > ONE_PLAYER) {
@@ -1863,8 +1863,8 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **triList, s32 updateRa
                     }
                     func_80068BF4(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrTriList, (ObjectSegment* ) &objTrans.trans, (unk80068BF4* ) sp154, 0);
                     sp11C = (lvlMdl->unk3E - lvlMdl->unk3C) / (f32) (lvlMdl->unk46 - lvlMdl->unk44);
-                    sp118 = sine_s((lvlMdl->unk24 * 0xFFFF) / 360);
-                    sp114 = cosine_s((lvlMdl->unk24 * 0xFFFF) / 360);
+                    sp118 = coss_f((lvlMdl->unk24 * 0xFFFF) / 360);
+                    sp114 = sins_f((lvlMdl->unk24 * 0xFFFF) / 360);
                     if (func_8000E4D8() && func_8001B288()) {
                         temp_v0_8 = func_8001B2E0();
                         if (temp_v0_8 != NULL) {

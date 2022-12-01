@@ -107,12 +107,6 @@ typedef struct unk80068514_arg4 {
     Gfx *unk8[1];
 } unk80068514_arg4;
 
-//TODO: Figure out where these functions live: unknown_070110?
-    void func_8006F870(Matrix *, Matrix *); //unknown_070110
-    void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
-    void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching unknown_070110?
-    void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
-
 void func_80066060(s32 arg0, s32 arg1);
 void set_viewport_tv_type(s8 arg0);
 void func_800660C0(void);

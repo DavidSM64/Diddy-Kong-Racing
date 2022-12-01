@@ -1491,7 +1491,7 @@ void main_game_loop(void) {
         if (osTvType == TV_TYPE_PAL) {
             framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
-        func_80070B04(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
+        dmacopy_doubleword(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
@@ -2308,7 +2308,7 @@ void func_8006E994(Settings *settings) {
     s32 sp1C;
 
     get_number_of_levels_and_worlds(&sp1C, &sp20);
-    settings->newGame = 1;
+    settings->newGame = TRUE;
 
     for (i = 0; i < sp20; i++) {
         settings->balloonsPtr[i] = 0;

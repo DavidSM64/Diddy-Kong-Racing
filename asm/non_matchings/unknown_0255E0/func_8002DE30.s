@@ -209,7 +209,7 @@ glabel func_8002DE30
 /* 02ED44 8002E144 01303021 */  addu  $a2, $t1, $s0
 /* 02ED48 8002E148 00007812 */  mflo  $t7
 /* 02ED4C 8002E14C 01F0C021 */  addu  $t8, $t7, $s0
-/* 02ED50 8002E150 0C01C13C */  jal   func_800704F0
+/* 02ED50 8002E150 0C01C13C */  jal   point_triangle_2d_xz_intersection
 /* 02ED54 8002E154 AFB80010 */   sw    $t8, 0x10($sp)
 /* 02ED58 8002E158 8FAA005C */  lw    $t2, 0x5c($sp)
 /* 02ED5C 8002E15C 8FAB0088 */  lw    $t3, 0x88($sp)

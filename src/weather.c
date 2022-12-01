@@ -252,9 +252,9 @@ void func_800ABB34(void) {
     phi_s1 = 0;
 
     for(i = 0; i < D_800E28D8.unk4; i++) {
-        D_800E28D8.unk0[i].unk0 = func_8007082C(phi_s1 & 0xFFFF) << 3;
+        D_800E28D8.unk0[i].unk0 = coss(phi_s1 & 0xFFFF) << 3;
         D_800E28D8.unk0[i].unk4 = 0xFFFC0000;
-        D_800E28D8.unk0[i].unk8 = func_80070830(phi_s1 & 0xFFFF) << 1;
+        D_800E28D8.unk0[i].unk8 = sins(phi_s1 & 0xFFFF) << 1;
         phi_s1 += temp_v0;
     }
 
@@ -561,8 +561,8 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     f32 sineOffset;
 
     length = 1152.0f - (f32) (gLightningFrequency >> 6);
-    cosOffset = cosine_s(D_80127C1C->trans.y_rotation) * length;
-    sineOffset = sine_s(D_80127C1C->trans.y_rotation) * length;
+    cosOffset = sins_f(D_80127C1C->trans.y_rotation) * length;
+    sineOffset = coss_f(D_80127C1C->trans.y_rotation) * length;
     xPos = D_80127C1C->trans.x_position + (sineOffset - cosOffset);
     yPos = D_80127C1C->trans.y_position;
     zPos = D_80127C1C->trans.z_position + (-sineOffset - cosOffset);

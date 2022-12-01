@@ -71,7 +71,7 @@ glabel func_800135B8
 /* 0142B0 800136B0 92390072 */  lbu   $t9, 0x72($s1)
 /* 0142B4 800136B4 00000000 */  nop   
 /* 0142B8 800136B8 00196700 */  sll   $t4, $t9, 0x1c
-/* 0142BC 800136BC 0C01C1FE */  jal   sine_s
+/* 0142BC 800136BC 0C01C1FE */  jal   coss_f
 /* 0142C0 800136C0 000C2403 */   sra   $a0, $t4, 0x10
 /* 0142C4 800136C4 8FA30050 */  lw    $v1, 0x50($sp)
 /* 0142C8 800136C8 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012

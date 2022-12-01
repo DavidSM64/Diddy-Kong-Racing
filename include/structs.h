@@ -512,7 +512,7 @@ typedef struct LevelModelSegment {
 /* 0x28 */ s16 unk28;
 /* 0x2A */ s8 unk2A;
 /* 0x2B */ s8 unk2B;
-           u8 pad2C[4];
+/* 0x2C */ Vertex *unk2C;
 /* 0x30 */ s16 unk30;
 /* 0x32 */ s16 unk32;
            s16 *unk34;

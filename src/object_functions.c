@@ -460,8 +460,8 @@ void obj_loop_effectbox(Object *obj, s32 speed) {
 
     level_entry = &obj->segment.unk3C_a.level_entry->effectBox;
     objList = get_racer_objects(&numberOfObjects);
-    temp0 = sine_s((level_entry->unkB << 8) * -1);
-    temp1 = cosine_s((level_entry->unkB << 8) * -1);
+    temp0 = coss_f((level_entry->unkB << 8) * -1);
+    temp1 = sins_f((level_entry->unkB << 8) * -1);
     temp2 = level_entry->unk8 * 3;
     temp3 = level_entry->unk9 * 3;
     temp4 = level_entry->unkA * 3;
@@ -1462,9 +1462,9 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->unk11 << 6 << 4;
-    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
+    obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
+    obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk10;
     obj64->unk14 = entry->bossFlag;
@@ -1637,9 +1637,9 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
+    obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
+    obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
@@ -1662,9 +1662,9 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
+    obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
+    obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
@@ -1927,9 +1927,9 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     phi_f0 /= 128;
     obj->segment.trans.scale = phi_f0;
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
-    obj64->unk0 = cosine_s(obj->segment.trans.y_rotation);
+    obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
     obj64->unk4 = 0.0f;
-    obj64->unk8 = sine_s(obj->segment.trans.y_rotation);
+    obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->scale;
     obj64->unk14 = entry->unkD;

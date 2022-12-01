@@ -106,9 +106,9 @@ u8 sRumblePaksPresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to C
 u8 D_801241E6;
 u8 D_801241E7;
 s32 gRumbleDetectionTimer;
-s8 *D_801241EC;
-s32 D_801241F0;
-s32 D_801241F4;
+u8 *D_801241EC;
+u32 D_801241F0;
+u32 D_801241F4;
 
 /*******************************/
 
@@ -310,158 +310,179 @@ void rumble_controllers(s32 arg0) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-u16 func_80072C54(s32 arg0) {
-    // v0 v1 a1 a2 a3 t0 t1 t2 t3 t4 t5 t6 t7 t8
-    u32 v0;
-    u32 v1;
-    s32 a1;
-    u32 a2;
-    u8 *a3;
-    s32 t0;
-    u32 *t1;
-    u32 *t2;
-    u8 **t3;
-    u32 t4;
-    u32 t5;
-    u32 t6;
-    u32 t7;
-    u32 t8;
-    u32 t9;
+s32 func_80072C54(s32 arg0) {
+    s32 ret;
+    u32 var_v0;
 
-    v1 = 0;
     if (arg0 <= 0) {
-        return v1;
+        return 0;
     }
-    // L80072C64
-    v0 = 1 << (arg0 + 0x1F);
-    if (arg0 != 0) {
-        a1 = -(arg0 & 3);
-        t0 = a1 + arg0;
-        if (a1 != 0) {
-            // L80072CA0
-            do {
-                a2 = D_801241F4;
-                a1 = arg0 - 1;
-                t6 = v0 >> 1;
-                if (a2 == 0) {
-                    a3 = D_801241EC;
-                    a2 = 0x80;
-                    t8 = *a3;
-                    D_801241EC = a3 + 1;
-                    D_801241F4 = 0x80;
-                    D_801241F0 = t8;
+
+    ret = 0;
+    var_v0 = 1 << (arg0 - 1);
+
+    // Loop backwards through arg0
+    while (arg0 != 0) {
+        // After shifting D_801241F4 right 8 times
+        if (D_801241F4 == 0) {
+            D_801241F0 = *D_801241EC++;
+            D_801241F4 = 128; //1000 0000 in binary.
+        }
+        if (D_801241F0 & D_801241F4) {
+            ret |= var_v0;
+        }
+        var_v0 >>= 1;
+        D_801241F4 >>= 1;
+        arg0--;
+    }
+
+    return ret;
+}
+
+void func_80072E28(s32 arg0, s32 arg1) {
+    u32 var_v0;
+
+    if (arg0 > 0) {
+        var_v0 = 1 << (arg0 - 1);
+        while (arg0 != 0 ) {
+            if (D_801241F4 == 0) {
+                *D_801241EC++ = D_801241F0;
+                D_801241F0 = 0;
+                D_801241F4 = 128;
+            }
+            if (arg1 & var_v0) {
+                D_801241F0 |= D_801241F4;
+            }
+            var_v0 >>= 1;
+            D_801241F4 >>= 1;
+            arg0--;
+        }
+        *D_801241EC = D_801241F0;
+    }
+}
+
+void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
+    s32 i;
+    s32 levelCount;
+    s32 worldCount;
+    s32 temp_v0;
+    s32 var_s1;
+    s16 var_a0;
+    u8 temp_v1;
+
+    func_8006E994(settings);
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    D_801241EC = saveData;
+    D_801241F0 = D_801241F4 = 0;
+    var_a0 = func_80072C54(0x10) - 5;
+    for (i = 2; i < 40; i++) { var_a0 -= saveData[i]; } // Must be one line
+    if (var_a0 == 0) {
+        for (i = 0, var_s1 = 0; i < levelCount; i++) {
+            temp_v0 = func_8006B14C(i);
+            if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
+                temp_v1 = func_80072C54(2);
+                if (temp_v1 > 0) {
+                    // Set Map Visited
+                    settings->courseFlagsPtr[i] |= 1;
                 }
-                // L80072CCC
-                arg0 = a1;
-                if (D_801241F0 & a2 != 0) {
-                    v1 |= v0;
+                if (temp_v1 >= 2) {
+                    // Set Map Completed
+                    settings->courseFlagsPtr[i] |= 2;
                 }
-                // L80072CE4
-                v0 = t6;
-                D_801241F4 = a2 >> 1;
-            } while (t0 != a1);
-            if (a1 == 0) {
-                return v1;  // should jump to end
+                if (temp_v1 >= 3) {
+                    // Set Map Silver Coin Challenge Completed
+                    settings->courseFlagsPtr[i] |= 4;
+                }
+                var_s1 += 2;
             }
         }
-        // L80072CF4
-        t1 = &D_801241F4;
-        t2 = &D_801241F0;
-        t3 = &D_801241EC;
-        t4 = 128;
-        // L80072D10
-        do {
-            a2 = *t1;
-            t6 = v0 >> 1;
-            arg0 -= 4;
-            if (a2 == 0) {
-                a3 = *t3;
-                a2 = t4;
-                t9 = *a3;
-                *t3 = a3 + 1;
-                *t1 = t4;
-                *t2 = t9;
-            }
-            // L80072D3C
-            a1 = *t2;
-            t8 = a2 << 1;
-            t7 = a1 & a2;
-            a2 = t8;
-            if (t7 != 0) {
-                v1 |= v0;
-            }
-            // L80072D54
-            v0 = t6;
-            *t1 = t8;
-            if (t8 == 0) {
-                a3 = *t3;
-                a2 = t4;
-                a1 = *a3;
-                *t3 = a3 + 1;
-                *t1 = t4;
-                *t2 = a1;
-            }
-            // L80072D7C
-            t7 = a1 & a2;
-            t6 = v0 >> 1;
-            if (t7 != 0) {
-                v1 |= v0;
-            }
-            // L80072D8C
-            t8 = a2 >> 1;
-            *t1 = t8;
-            a2 = t8;
-            v0 = t6;
-            if (t8 == 0) {
-                a3 = *t3;
-                a2 = t4;
-                a1 = *a3;
-                *t3 = a3 + 1;
-                *t1 = t4;
-                *t2 = a1;
-            }
-            // L80072DBC
-            t7 = a1 & a2;
-            t6 = v0 >> 1;
-            if (t7 != 0) {
-                v1 |= v0;
-            }
-            // L80072DCC
-            t8 = a2 >> 1;
-            *t1 = t8;
-            a2 = t8;
-            v0 = t6;
-            if (t8 == 0) {
-                a3 = *t3;
-                a2 = t4;
-                a1 = *a3;
-                *t3 = a3 + 1;
-                *t1 = t4;
-                *t2 = a1;
-            }
-            // L80072DFC
-            t7 = a1 & a2;
-            t6 = v0 >> 1;
-            if (t7 != 0) {
-                v1 |= v0;
-            }
-            // L80072E0C
-            t8 = a2 >> 1;
-            *t1 = t8;
-            v0 = t6;
-        } while (arg0 != 0);
+        func_80072C54(0x44 - var_s1);
+        settings->tajFlags = func_80072C54(6);
+        settings->trophies = func_80072C54(0xA);
+        settings->bosses = func_80072C54(0xC);
+        for (i = 0; i < worldCount; i++) {
+            settings->balloonsPtr[i] = func_80072C54(7);
+        }
+        settings->ttAmulet = func_80072C54(3);
+        settings->wizpigAmulet = func_80072C54(3);
+        for (i = 0; i < worldCount; i++) {
+            settings->courseFlagsPtr[get_hub_area_id(i)] |= func_80072C54(16) << 16;
+        }
+        settings->keys = func_80072C54(8);
+        settings->cutsceneFlags = func_80072C54(0x20);
+        settings->filename = func_80072C54(0x10);
+        func_80072C54(8);
+        settings->newGame = FALSE;
     }
-    // L80072E1C
-    return v1;
+}
+
+#ifdef NON_EQUIVALENT
+void func_800732E8(Settings *settings, u8 *saveData) {
+    s32 levelCount;
+    s32 worldCount;
+    s16 var_v0;
+    u8 courseStatus;
+    s32 var_s0;
+    s32 i;
+    s8 temp_v0;
+    s32 blocks;
+
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128; // 1000 0000 in binary.
+    func_80072E28(0x10, 0);
+    for (i = 0, var_s0 = 0; i < levelCount; i++) {
+        temp_v0 = func_8006B14C(i);
+         if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
+            courseStatus = 0;
+            // Map visited
+            if (settings->courseFlagsPtr[i] & 1) {
+                courseStatus = 1;
+            }
+            // Map completed
+            if (settings->courseFlagsPtr[i] & 2) {
+                courseStatus++;
+            }
+            // Map Silver coin challenge completed
+            if (settings->courseFlagsPtr[i] & 4) {
+                courseStatus++;
+            }
+            func_80072E28(2, courseStatus);
+            var_s0 += 2;
+        }
+    }
+    func_80072E28(0x44 - var_s0, 0);
+    func_80072E28(6, settings->tajFlags);
+    func_80072E28(0xA, settings->trophies);
+    func_80072E28(0xC, settings->bosses);
+    for (i = 0; i < worldCount; i++) {
+        func_80072E28(7, settings->balloonsPtr[i * 2]);
+    }
+    func_80072E28(3, settings->ttAmulet);
+    func_80072E28(3, settings->wizpigAmulet);
+    for (i = 0; i < worldCount; i++) {
+        func_80072E28(0x10, (settings->courseFlagsPtr[get_hub_area_id(i)] >> 16) & 0xFFFF);
+    }
+    func_80072E28(8, settings->keys);
+    func_80072E28(0x20, settings->cutsceneFlags);
+    func_80072E28(0x10, settings->filename);
+    func_80072E28(8, 0);
+    blocks = 5;
+    var_v0 = saveData[2] + blocks + saveData[2] + 1;
+    // 40 is the number of bytes in a save file
+    // This will be +4 so as to skip the first 4 bytes, which will just be GAMD, the save file header.
+    for (i = 4; i < blocks * (s32)sizeof(u64); i++) {
+        var_v0 += saveData[i] + saveData[i + 1] + saveData[i + 2] + saveData[i + 3];
+    }
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128; // 1000 0000 in binary.
+    func_80072E28(0x10, var_v0);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072C54.s")
-#endif
-
-GLOBAL_ASM("asm/non_matchings/save_data/func_80072E28.s")
-GLOBAL_ASM("asm/non_matchings/save_data/func_8007306C.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
+#endif
 
 //arg1 is eepromData, from read_eeprom_data
 //arg2 seems to be a flag for either lap times or course initials?
@@ -507,8 +528,8 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
 
             if (ret == CONTROLLER_PAK_GOOD) {
                 if (*alloc == GAMD) {
-                    func_8007306C(settings, (s32) (alloc + 1));
-                    if (settings->newGame != 0) {
+                    populate_settings_from_save_data(settings, (u8 *) (alloc + 1));
+                    if (settings->newGame) {
                         ret = CONTROLLER_PAK_CHANGED;
                     }
                 }
@@ -619,8 +640,97 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     return ret;
 }
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_80074204.s")
-GLOBAL_ASM("asm/non_matchings/save_data/func_8007431C.s")
+// Returns TRUE / FALSE for whether a given save file is a new game. Also populates the settings object.
+s32 func_80074204(s32 saveFileNum, Settings *settings) {
+    s32 startingAddress;
+    u64 *saveData;
+    s32 address;
+    s32 blocks;
+    s32 block;
+    s32 ret;
+
+    if (osEepromProbe(get_si_mesg_queue()) == 0) {
+        return -1;
+    }
+    switch(saveFileNum) {
+        case 0:
+            startingAddress = 0;
+            break;
+        case 1:
+            startingAddress = 5;
+            break;
+        case 2:
+            startingAddress = 10;
+            break;
+        default:
+            startingAddress = 10;
+            break;
+    }
+    blocks = 5;
+    saveData = allocate_from_main_pool_safe(blocks * sizeof(u64), COLOUR_TAG_WHITE);
+    for (block = 0, address = startingAddress; block < blocks; block++, address++) {
+        osEepromRead(get_si_mesg_queue(), address, (u8 *)&saveData[block]);
+    }
+    populate_settings_from_save_data(settings, (u8 *) saveData);
+    free_from_memory_pool(saveData);
+    ret = settings->newGame;
+    if (settings->newGame) {
+        erase_save_file(saveFileNum, settings);
+        ret = settings->newGame;
+    }
+    return ret;
+}
+
+void erase_save_file(s32 saveFileNum, Settings *settings) {
+    s32 startingAddress;
+    u8 *saveData;
+    u64 *alloc;
+    s32 blockSize;
+    s32 levelCount;
+    s32 worldCount;
+    s32 address;
+    s32 i;
+
+    if (osEepromProbe(get_si_mesg_queue()) != 0) {
+        get_number_of_levels_and_worlds(&levelCount, &worldCount);
+        for (i = 0; i < levelCount; i++) {
+            settings->courseFlagsPtr[i] = 0;
+        }
+        for (i = 0; i < worldCount; i++) {
+            settings->balloonsPtr[i] = 0;
+        }
+        settings->trophies = 0;
+        settings->bosses = 0;
+        settings->tajFlags = 0;
+        settings->cutsceneFlags = 0;
+        settings->newGame = TRUE;
+        switch(saveFileNum) {
+            case 0:
+                startingAddress = 0;
+                break;
+            case 1:
+                startingAddress = 5;
+                break;
+            case 2:
+                startingAddress = 10;
+                break;
+            default:
+                startingAddress = 10;
+                break;
+        }
+        blockSize = 5;
+        alloc = allocate_from_main_pool_safe(blockSize * sizeof(u64), COLOUR_TAG_WHITE);
+        saveData = (u8 *)alloc;
+        // Blank out the data before writing it.
+        for (i = 0; i < blockSize * (s32)sizeof(u64); i++) { saveData[i] = 0xFF; } // Must be one line
+        if (!is_reset_pressed()) {
+            for (i = 0, address = startingAddress; i < blockSize; i++, address++) {
+                osEepromWrite(get_si_mesg_queue(), address, (u8 *)&alloc[i]);
+            }
+        }
+        free_from_memory_pool(alloc);
+    }
+}
 
 /**
  * Writes Eeprom in 5 block chunks of data starting at either 0x0, 0x5, or 0xA

@@ -89,7 +89,7 @@ glabel func_8006A1C4
 /* 06AF04 8006A304 00122283 */   sra   $a0, $s2, 0xa
 /* 06AF08 8006A308 30990003 */  andi  $t9, $a0, 3
 /* 06AF0C 8006A30C 8FA5004C */  lw    $a1, 0x4c($sp)
-/* 06AF10 8006A310 0C01D0C7 */  jal   func_8007431C
+/* 06AF10 8006A310 0C01D0C7 */  jal   erase_save_file
 /* 06AF14 8006A314 03202025 */   move  $a0, $t9
 .L8006A318:
 /* 06AF18 8006A318 324C0100 */  andi  $t4, $s2, 0x100

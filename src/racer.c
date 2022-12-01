@@ -524,19 +524,19 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->unk1C = phi_f14;
         gCameraObject->unk20 = phi_f18;
     }
-    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125f;
-    gCameraObject->unk20 += (phi_f18 - gCameraObject->unk20) * 0.125f;
-    sp34 = cosine_s(gCameraObject->trans.x_rotation - sp24);
-    phi_f18 = sine_s(gCameraObject->trans.x_rotation - sp24);
+    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125;
+    gCameraObject->unk20 += (phi_f18 - gCameraObject->unk20) * 0.125;
+    sp34 = sins_f(gCameraObject->trans.x_rotation - sp24);
+    phi_f18 = coss_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = (gCameraObject->unk1C * sp34) + (gCameraObject->unk20 * phi_f18);
-    xVel = cosine_s(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
-    zVel = sine_s(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
-    yVel = (1.0f - (D_8011D586 / 10240.0f));
+    xVel = sins_f(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
+    zVel = coss_f(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
+    yVel = (1.0 - (D_8011D586 / 10240.0f));
     xVel -= racer->ox1 * 10.0f * yVel;
     zVel -= racer->oz1 * 10.0f * yVel;
     yVel = racer->lateral_velocity * 2;
-    racer->unkC8 -= (racer->unkC8 - yVel) * 0.25f;
-    yVel = cosine_s(racer->unk196 + 0x4000) * racer->unkC8;
+    racer->unkC8 -= (racer->unkC8 - yVel) * 0.25;
+    yVel = sins_f(racer->unk196 + 0x4000) * racer->unkC8;
     gCameraObject->trans.x_position = obj->segment.trans.x_position + xVel + yVel;
     yVel = gCameraObject->trans.y_position - (obj->segment.trans.y_position + phi_f18);
     if (yVel > 0.0f) {
@@ -557,7 +557,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->trans.y_position = obj->segment.trans.y_position + phi_f18;
     }
 
-    sine_s(racer->unk196 + 0x4000); // Unused function call that wasn't fully optimised out.
+    coss_f(racer->unk196 + 0x4000); // Unused function call that wasn't fully optimised out.
     gCameraObject->trans.z_position = obj->segment.trans.z_position + zVel;
     gCameraObject->trans.y_rotation = racer->unk196;
     segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
@@ -597,7 +597,7 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
     D_8011D510.y_position = 0.0f;
     D_8011D510.z_position = 0.0f;
     D_8011D510.scale = 1.0f;
-    func_8006FE74(&mtx, &D_8011D510);
+    object_transform_to_matrix_2(&mtx, &D_8011D510);
     guMtxXFMF(mtx, pos[0], pos[1], pos[2], &pos[0], &pos[1], &pos[2]);
     angle = -((s16) (u16)arctan2_f(pos[0], pos[1])) * velocity;
     angle = (u16) (angle - (arg5 << 6)) - (u16) racer->x_rotation_vel;
@@ -846,9 +846,9 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     baseFloat2 = (gCameraObject->unk1C * baseFloat3) - (gCameraObject->unk20 * xOffset);
     baseFloat1 = ((gCameraObject->unk1C) * (gCameraObject->unk1C));
     baseFloat1 += (gCameraObject->unk20 * baseFloat3);
-    xOffset = cosine_s(0x8000 - racer->unk196) * baseFloat2;
-    zOffset = sine_s(0x8000 - racer->unk196) * baseFloat2;
-    yVel = cosine_s(racer->unk196 + 0x4000) * 3.0f;
+    xOffset = sins_f(0x8000 - racer->unk196) * baseFloat2;
+    zOffset = coss_f(0x8000 - racer->unk196) * baseFloat2;
+    yVel = sins_f(racer->unk196 + 0x4000) * 3.0f;
     yVel = yVel * racer->lateral_velocity;
     gCameraObject->trans.x_position = (obj->segment.trans.x_position + xOffset) + yVel;
     temp_f16 = obj->segment.trans.y_position;
@@ -873,7 +873,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         yVel = yOffset;
     }
     gCameraObject->trans.y_position -= yVel;
-    gCameraObject->trans.z_position = zOffset + obj->segment.trans.z_position + (-sine_s(racer->unk196 + 0x4000) * 3.0f * racer->lateral_velocity);
+    gCameraObject->trans.z_position = zOffset + obj->segment.trans.z_position + (-coss_f(racer->unk196 + 0x4000) * 3.0f * racer->lateral_velocity);
     gCameraObject->trans.y_rotation = racer->unk196;
     if (racer->unk1E0 || D_8011D586) {
         angle = -(u16) gCameraObject->trans.z_rotation;
@@ -950,12 +950,12 @@ void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
     D_8011D510.y_position = 0.0f;
     D_8011D510.z_position = 0.0f;
     D_8011D510.scale = 1.0f;
-    func_8006FC30(mtx, &D_8011D510);
+    object_transform_to_matrix(mtx, &D_8011D510);
     guMtxXFMF(mtx, 0.0f, 0.0f, gCameraObject->unk1C, &xVel, &yVel, &zVel);
     gCameraObject->trans.x_position = obj->segment.trans.x_position + xVel;
     gCameraObject->trans.y_position = obj->segment.trans.y_position + yVel;
     gCameraObject->trans.z_position = obj->segment.trans.z_position + zVel;
-    guMtxXFMF(mtx, 0.0f, cosine_s(0x800) * gCameraObject->unk1C, 0.0f, &xVel, &yVel, &zVel);
+    guMtxXFMF(mtx, 0.0f, sins_f(0x800) * gCameraObject->unk1C, 0.0f, &xVel, &yVel, &zVel);
     gCameraObject->trans.x_position += xVel;
     gCameraObject->trans.y_position += yVel;
     gCameraObject->trans.z_position += zVel;
@@ -1250,8 +1250,8 @@ void update_player_racer(Object* obj, s32 updateRate) {
             }
         }
         if (tempRacer->unk1FE == 2) {
-            tempRacer->unk84 += ((cosine_s((tempRacer->unk1FF << 8)) * 4.0f) - tempRacer->unk84) * 0.0625 * delta;
-            tempRacer->unk88 += ((sine_s((tempRacer->unk1FF << 8)) * 4.0f) - tempRacer->unk88) * 0.0625 * delta;
+            tempRacer->unk84 += ((sins_f((tempRacer->unk1FF << 8)) * 4.0f) - tempRacer->unk84) * 0.0625 * delta;
+            tempRacer->unk88 += ((coss_f((tempRacer->unk1FF << 8)) * 4.0f) - tempRacer->unk88) * 0.0625 * delta;
         } else {
             tempRacer->unk84 -= tempRacer->unk84 * 0.0625 * delta;
             tempRacer->unk88 -= tempRacer->unk88 * 0.0625 * delta;
@@ -2263,7 +2263,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     D_8011D510.y_position = 0;
     D_8011D510.z_position = 0;
     D_8011D510.scale = 1;
-    func_8006FE74(&mf, &D_8011D510);
+    object_transform_to_matrix_2(&mf, &D_8011D510);
 
     guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
@@ -2455,7 +2455,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         D_8011D510.y_position = 0.0f;
         D_8011D510.z_position = 0.0f;
         D_8011D510.scale = 1.0f;
-        func_8006FE74(&mtx, &D_8011D510);
+        object_transform_to_matrix_2(&mtx, &D_8011D510);
         guMtxXFMF(mtx, racer->lateral_velocity, 0.0f, racer->velocity, &obj->segment.x_velocity, &tempVel, &obj->segment.z_velocity);
     }
     if (racer->unk175) {
@@ -2497,7 +2497,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     D_8011D510.y_position = 0.0f;
     D_8011D510.z_position = 0.0f;
     D_8011D510.scale = 1.0f;
-    func_8006FE74(&mtx, &D_8011D510);
+    object_transform_to_matrix_2(&mtx, &D_8011D510);
     guMtxXFMF(mtx, xVel, 0.0f, zVel, &hVel, &tempVel, &yVel);
     if (racer->unk1D2) {
         racer->unk1D2 -= updateRate;
@@ -2746,8 +2746,8 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     obj->segment.trans.z_position = racer->unkD8.z;
     if (racer->unk1E2) {
         func_8002ACD4(&xTemp, &yTemp, &zTemp);
-        angleX = cosine_s(-obj->segment.trans.y_rotation);
-        angleZ = sine_s(-obj->segment.trans.y_rotation);
+        angleX = sins_f(-obj->segment.trans.y_rotation);
+        angleZ = coss_f(-obj->segment.trans.y_rotation);
         distance = (xTemp * angleZ) + (zTemp * angleX);
         zTemp = (xTemp * angleX) - (zTemp * angleZ);
         temp_v1_2 = -(s16)(u16)arctan2_f(distance, yTemp);
@@ -2961,7 +2961,7 @@ void func_800575EC(Object *obj, Object_Racer *racer) {
     D_8011D510.y_position = 0.0f;
     D_8011D510.z_position = 0.0f;
     D_8011D510.scale = 1.0f;
-    func_8006FC30(mf, &D_8011D510);
+    object_transform_to_matrix(mf, &D_8011D510);
     guMtxXFMF(mf, 0.0f, 0.0f, 1.0f, &racer->ox1, &racer->oy1, &racer->oz1);
     guMtxXFMF(mf, 0.0f, 1.0f, 0.0f, &racer->ox2, &racer->oy2, &racer->oz2);
     guMtxXFMF(mf, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
@@ -3257,13 +3257,13 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     }
     gCameraObject->unk1C += (baseDistance - gCameraObject->unk1C) * 0.125f;
     gCameraObject->unk20 += (yVel - gCameraObject->unk20) * 0.125f;
-    cosOffset = cosine_s(gCameraObject->trans.x_rotation - baseAngle);
-    sineOffset = sine_s(gCameraObject->trans.x_rotation - baseAngle);
+    cosOffset = sins_f(gCameraObject->trans.x_rotation - baseAngle);
+    sineOffset = coss_f(gCameraObject->trans.x_rotation - baseAngle);
     lateralOffset = gCameraObject->unk1C;
     lateralOffset = (lateralOffset * sineOffset) - (gCameraObject->unk20 * cosOffset);
     yVel = (gCameraObject->unk1C * cosOffset) + (gCameraObject->unk20 * sineOffset);
-    sineOffset = cosine_s(-racer->unk196 + 0x8000) * lateralOffset;
-    cosOffset = sine_s(-racer->unk196 + 0x8000) * lateralOffset;
+    sineOffset = sins_f(-racer->unk196 + 0x8000) * lateralOffset;
+    cosOffset = coss_f(-racer->unk196 + 0x8000) * lateralOffset;
     baseDistance = 0.0f;
     if (gCurrentRacerInput & A_BUTTON) {
         baseDistance = racer->lateral_velocity * 1.2f;
@@ -3291,7 +3291,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     xOffset = obj->segment.trans.x_position - (racer->ox1 * racer->camera_zoom);
     yOffset = obj->segment.trans.y_position - (racer->oy1 * racer->camera_zoom);
     zOffset = obj->segment.trans.z_position - (racer->oz1 * racer->camera_zoom);
-    tempVel = cosine_s(racer->unk196 + 0x4000) * racer->unkC8;
+    tempVel = sins_f(racer->unk196 + 0x4000) * racer->unkC8;
     baseDistance = xOffset + tempVel;
     gCameraObject->trans.x_position = sineOffset + baseDistance;
     yOffset += yVel;
@@ -3303,7 +3303,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     if (temp_f16 > 0.0f || gRaceStartTimer) {
         gCameraObject->trans.y_position = yOffset;
     }
-    gCameraObject->trans.z_position = zOffset + (-sine_s(racer->unk196 + 0x4000) * racer->unkC8) + cosOffset;
+    gCameraObject->trans.z_position = zOffset + (-coss_f(racer->unk196 + 0x4000) * racer->unkC8) + cosOffset;
     gCameraObject->trans.y_rotation = racer->unk196;
     newAngle = gCameraObject->trans.z_rotation;
     if ((racer->drift_direction && racer->brake > 0.0f)|| D_8011D586) {
@@ -3318,7 +3318,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     if (gCameraObject->trans.z_rotation < -0x2000) {
         gCameraObject->trans.z_rotation = -0x2000;
     }
-    gCameraObject->trans.y_position -= racer->unkC8 * cosine_s(gCameraObject->trans.z_rotation);
+    gCameraObject->trans.y_position -= racer->unkC8 * sins_f(gCameraObject->trans.z_rotation);
     lateralOffset = (yOffset = gCameraObject->trans.x_position);
     segmentIndex = get_level_segment_index_from_position(lateralOffset, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
     if (segmentIndex != -1) {
@@ -3346,8 +3346,8 @@ void update_camera_finish_challenge(UNUSED f32 updateRate, Object *obj, Object_R
     gCameraObject->trans.x_rotation = 0x400;
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->unk1C = 150.0f;
-    xOffset = cosine_s(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
-    zOffset = sine_s(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
+    xOffset = sins_f(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
+    zOffset = coss_f(0x8000 - gCameraObject->trans.y_rotation) * gCameraObject->unk1C;
     gCameraObject->trans.x_position = obj->segment.trans.x_position + xOffset;
     temp_f12 = (gCameraObject->trans.y_position - (obj->segment.trans.y_position + 45.0f)) * 0.25f;
     if (temp_f12 < -2.0f) {
@@ -3390,8 +3390,8 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     yDiff = gCameraObject->trans.y_position - obj->segment.trans.y_position;
     zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
     distance = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
-    gCameraObject->trans.y_rotation = (s16) (0x8000 - func_8007066C((s32) xDiff, (s32) zDiff));
-    gCameraObject->trans.x_rotation = func_8007066C((s32) yDiff, (s32) distance);
+    gCameraObject->trans.y_rotation = (s16) (0x8000 - atan2s((s32) xDiff, (s32) zDiff));
+    gCameraObject->trans.x_rotation = atan2s((s32) yDiff, (s32) distance);
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
 }
@@ -3407,7 +3407,7 @@ void update_camera_fixed(f32 updateRate, Object *obj, Object_Racer *racer) {
     delta = (s32) updateRate;
     xDiff = gCameraObject->trans.x_position - obj->segment.trans.x_position;
     zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
-    gCameraObject->trans.y_rotation += ((((-func_8007066C((s32) xDiff, (s32) zDiff)) -
+    gCameraObject->trans.y_rotation += ((((-atan2s((s32) xDiff, (s32) zDiff)) -
                                     gCameraObject->trans.y_rotation) + 0x8000) * delta) >> 4;
     gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * delta)) >> 4);
     gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position,
@@ -3764,8 +3764,8 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             gCurrentStickY = 60;
         }
         if (racer->unk1FE == 2) {
-            racer->unk84 += ((((cosine_s(racer->unk1FF << 8) * 4) - racer->unk84) * 0.0625 * updateRateF));
-            racer->unk88 += ((((sine_s  (racer->unk1FF << 8) * 4) - racer->unk88) * 0.0625 * updateRateF));
+            racer->unk84 += ((((sins_f(racer->unk1FF << 8) * 4) - racer->unk84) * 0.0625 * updateRateF));
+            racer->unk88 += ((((coss_f  (racer->unk1FF << 8) * 4) - racer->unk88) * 0.0625 * updateRateF));
         } else {
             racer->unk84 -= racer->unk84 * 0.0625 * updateRateF;
             racer->unk88 -= racer->unk88 * 0.0625 * updateRateF;

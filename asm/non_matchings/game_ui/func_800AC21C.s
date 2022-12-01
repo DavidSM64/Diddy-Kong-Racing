@@ -107,7 +107,7 @@ glabel func_800AC21C
 /* 0ACFBC 800AC3BC 00000000 */  nop   
 /* 0ACFC0 800AC3C0 46805420 */  cvt.s.w $f16, $f10
 /* 0ACFC4 800AC3C4 46148482 */  mul.s $f18, $f16, $f20
-/* 0ACFC8 800AC3C8 0C01BDBB */  jal   func_8006F6EC
+/* 0ACFC8 800AC3C8 0C01BDBB */  jal   f32_matrix_dot
 /* 0ACFCC 800AC3CC E7B2006C */   swc1  $f18, 0x6c($sp)
 /* 0ACFD0 800AC3D0 444AF800 */  cfc1  $t2, $31
 /* 0ACFD4 800AC3D4 C7A4006C */  lwc1  $f4, 0x6c($sp)

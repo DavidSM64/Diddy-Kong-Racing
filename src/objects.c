@@ -1281,9 +1281,9 @@ void func_80012E28(Object *this) {
         sp_1c = 0.0f;
         if (sp_20->unk1D7 < 5) {
 
-            sp_1c = sine_s(sp_20->z_rotation_offset);
+            sp_1c = coss_f(sp_20->z_rotation_offset);
             tmp_f2 = sp_1c;
-            tmp_f0 = sine_s(sp_20->x_rotation_offset - sp_20->unk166) * tmp_f2;
+            tmp_f0 = coss_f(sp_20->x_rotation_offset - sp_20->unk166) * tmp_f2;
 
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
@@ -1368,8 +1368,8 @@ void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object
         D_800DC75C->segment.trans.x_position = shield->x_position;
         D_800DC75C->segment.trans.y_position = shield->y_position;
         D_800DC75C->segment.trans.z_position = shield->z_position;
-        D_800DC75C->segment.trans.y_position += shield->y_offset * cosine_s(D_8011B010[var_a2] * 0x200);
-        shear = (sine_s(D_8011B010[var_a2] * 0x400) * 0.05f) + 0.95f;
+        D_800DC75C->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[var_a2] * 0x200);
+        shear = (coss_f(D_8011B010[var_a2] * 0x400) * 0.05f) + 0.95f;
         D_800DC75C->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
         D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
@@ -1442,7 +1442,7 @@ void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object
             D_800DC764->segment.trans.y_position = magnet[1];
             D_800DC764->segment.trans.z_position = magnet[2];
             magnet += 3;
-            shear = (sine_s((D_8011B078[(var_t0 * 4) + 1] * 0x400)) * 0.02f) + 0.98f;
+            shear = (coss_f((D_8011B078[(var_t0 * 4) + 1] * 0x400)) * 0.02f) + 0.98f;
             D_800DC764->segment.trans.scale = magnet[0] * shear;
             magnet += 1;
             shear = magnet[0] * shear;

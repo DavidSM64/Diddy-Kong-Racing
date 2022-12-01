@@ -32,10 +32,10 @@ glabel calc_env_mapping_for_object
 /* 01E9CC 8001DDCC E7A00090 */  swc1  $f0, 0x90($sp)
 /* 01E9D0 8001DDD0 E7A00094 */  swc1  $f0, 0x94($sp)
 /* 01E9D4 8001DDD4 AFAA0074 */  sw    $t2, 0x74($sp)
-/* 01E9D8 8001DDD8 0C01BF0C */  jal   func_8006FC30
+/* 01E9D8 8001DDD8 0C01BF0C */  jal   object_transform_to_matrix
 /* 01E9DC 8001DDDC E7A40088 */   swc1  $f4, 0x88($sp)
 /* 01E9E0 8001DDE0 02202025 */  move  $a0, $s1
-/* 01E9E4 8001DDE4 0C01BD78 */  jal   func_8006F5E0
+/* 01E9E4 8001DDE4 0C01BD78 */  jal   f32_matrix_to_s32_matrix
 /* 01E9E8 8001DDE8 27A500D8 */   addiu $a1, $sp, 0xd8
 /* 01E9EC 8001DDEC A7A00062 */  sh    $zero, 0x62($sp)
 /* 01E9F0 8001DDF0 87C20028 */  lh    $v0, 0x28($fp)
@@ -138,13 +138,13 @@ glabel calc_env_mapping_for_object
 /* 01EB50 8001DF50 000EA403 */  sra   $s4, $t6, 0x10
 /* 01EB54 8001DF54 24A5AFEE */  addiu $a1, %lo(D_8011AFEE) # addiu $a1, $a1, -0x5012
 /* 01EB58 8001DF58 27A400D8 */  addiu $a0, $sp, 0xd8
-/* 01EB5C 8001DF5C 0C01BED8 */  jal   func_8006FB60
+/* 01EB5C 8001DF5C 0C01BED8 */  jal   s16_vec3_mult_by_s32_matrix
 /* 01EB60 8001DF60 A62D000A */   sh    $t5, 0xa($s1)
 /* 01EB64 8001DF64 8FB90070 */  lw    $t9, 0x70($sp)
 /* 01EB68 8001DF68 02202025 */  move  $a0, $s1
 /* 01EB6C 8001DF6C 17200003 */  bnez  $t9, .L8001DF7C
 /* 01EB70 8001DF70 3C058012 */   lui   $a1, %hi(D_8011AFEE) # $a1, 0x8012
-/* 01EB74 8001DF74 0C01BE6E */  jal   func_8006F9B8
+/* 01EB74 8001DF74 0C01BE6E */  jal   s16_matrix_rotate
 /* 01EB78 8001DF78 24A5AFEE */   addiu $a1, %lo(D_8011AFEE) # addiu $a1, $a1, -0x5012
 .L8001DF7C:
 /* 01EB7C 8001DF7C 86220006 */  lh    $v0, 6($s1)

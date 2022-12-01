@@ -44,7 +44,7 @@ glabel func_800ACA20
 /* 0AD6C8 800ACAC8 E7AA00E0 */   swc1  $f10, 0xe0($sp)
 /* 0AD6CC 800ACACC 27A500D8 */  addiu $a1, $sp, 0xd8
 /* 0AD6D0 800ACAD0 00A03025 */  move  $a2, $a1
-/* 0AD6D4 800ACAD4 0C01BDBB */  jal   func_8006F6EC
+/* 0AD6D4 800ACAD4 0C01BDBB */  jal   f32_matrix_dot
 /* 0AD6D8 800ACAD8 00402025 */   move  $a0, $v0
 /* 0AD6DC 800ACADC 3C1E8012 */  lui   $fp, %hi(D_80127C30) # $fp, 0x8012
 /* 0AD6E0 800ACAE0 27DE7C30 */  addiu $fp, %lo(D_80127C30) # addiu $fp, $fp, 0x7c30

@@ -70,13 +70,13 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     s32 size;
     MemoryPoolSlot *slots;
     UNUSED s32 unused_2;
-    s32 *temp = func_8006F510();
+    s32 *temp = clear_status_register_flags();
     MemoryPoolSlot *newPool;
 
     size = poolDataSize + (numSlots * sizeof(MemoryPoolSlot));
     slots = (MemoryPoolSlot *)allocate_from_main_pool_safe(size, COLOUR_TAG_WHITE);
     newPool = new_memory_pool(slots, size, numSlots);
-    func_8006F53C(temp);
+    set_status_register_flags(temp);
     return newPool;
 }
 
@@ -158,10 +158,10 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 col
     s32 phi_s0;
     s32 *sp28;
 
-    sp28 = func_8006F510();
+    sp28 = clear_status_register_flags();
     pool = &gMemoryPools[memoryPoolIndex];
     if (pool->curNumSlots + 1 == pool->maxNumSlots) {
-        func_8006F53C(sp28);
+        set_status_register_flags(sp28);
     } else {
         if (size & 0xF) {
             size = _ALIGN16(size); // The size of the pool should be 16-byte aligned
@@ -179,10 +179,10 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 col
         }
         if (phi_s0 != -1) {
             allocate_memory_pool_slot(memoryPoolIndex, phi_s0, size, TRUE, FALSE, colorTag);
-            func_8006F53C(sp28);
+            set_status_register_flags(sp28);
             return pool->slots[phi_s0].data;
         }
-        func_8006F53C(sp28);
+        set_status_register_flags(sp28);
     }
     return (MemoryPoolSlot *)NULL;
 }
@@ -207,9 +207,9 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     MemoryPoolSlot *curSlot;
     MemoryPoolSlot *slots;
 
-    sp38 = func_8006F510();
+    sp38 = clear_status_register_flags();
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {
-        func_8006F53C(sp38);
+        set_status_register_flags(sp38);
     } else {
         s0 = 0;
         if (size & 0xF) {
@@ -222,19 +222,19 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
                 if ((address >= (u8 *)curSlot->data) && (((u8 *)curSlot->data + curSlot->size) >= (address + size))) {
                     if (address == (u8 *)curSlot->data) {
                         allocate_memory_pool_slot(0, s0, size, 1, 0, colorTag);
-                        func_8006F53C(sp38);
+                        set_status_register_flags(sp38);
                         return curSlot->data;
                     } else {
                         s0 = allocate_memory_pool_slot(0, s0, address - (u8 *)curSlot->data, 0, 1, colorTag);
                         allocate_memory_pool_slot(0, s0, size, 1, 0, colorTag);
-                        func_8006F53C(sp38);
+                        set_status_register_flags(sp38);
                         return slots[s0].data;
                     }
                 }
             }
             s0 = curSlot->nextIndex;
         }
-        func_8006F53C(sp38);
+        set_status_register_flags(sp38);
     }
     return NULL;
 }
@@ -247,14 +247,14 @@ GLOBAL_ASM("asm/non_matchings/memory/allocate_at_address_in_main_pool.s")
  * The free queue will get flushed if the state is set to 0.
  */
 void set_free_queue_state(s32 state) {
-    s32 *sp2C = func_8006F510();
+    s32 *sp2C = clear_status_register_flags();
     gFreeQueueState = state;
     if (state == 0) { // flush free queue if state is 0.
         while (gFreeQueueCount > 0) {
             free_slot_containing_address(gFreeQueue[--gFreeQueueCount].dataAddress);
         }
     }
-    func_8006F53C(sp2C);
+    set_status_register_flags(sp2C);
 }
 
 /**
@@ -262,13 +262,13 @@ void set_free_queue_state(s32 state) {
  * state is set to 0, otherwise the data will just be marked for deletion.  
  */
 void free_from_memory_pool(void *data) {
-    s32 *sp1C = func_8006F510();
+    s32 *sp1C = clear_status_register_flags();
     if (gFreeQueueState == 0) {
         free_slot_containing_address(data);
     } else {
         func_80071440(data);
     }
-    func_8006F53C(sp1C);
+    set_status_register_flags(sp1C);
 }
 
 /**
@@ -278,7 +278,7 @@ void clear_free_queue(void) {
     s32 i;
     s32 *sp28;
 
-    sp28 = func_8006F510();
+    sp28 = clear_status_register_flags();
 
     for (i = 0; i < gFreeQueueCount;) {
         gFreeQueue[i].unk4--;
@@ -292,7 +292,7 @@ void clear_free_queue(void) {
         }
     }
 
-    func_8006F53C(sp28);
+    set_status_register_flags(sp28);
 }
 
 #ifdef NON_EQUIVALENT
@@ -327,7 +327,7 @@ UNUSED void func_80071314(void) {
     s32 poolIndex;
     s32 slotIndex;
 
-    sp40 = func_8006F510();
+    sp40 = clear_status_register_flags();
 
     for (poolIndex = gNumberOfMemoryPools; poolIndex != -1; poolIndex--) {
         pool = &gMemoryPools[poolIndex];
@@ -339,12 +339,12 @@ UNUSED void func_80071314(void) {
             if (slot->flags == 4 && pool->curNumSlots == 1) {
                 free_memory_pool_slot(poolIndex, slotIndex);
             } else {
-                func_8006F53C(sp40);
+                set_status_register_flags(sp40);
                 return;
             }
         }
     }
-    func_8006F53C(sp40);
+    set_status_register_flags(sp40);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/memory/func_80071314.s")
@@ -362,7 +362,7 @@ s32 func_80071478(u8 *address) {
     MemoryPool *pool;
     s32 *sp18;
 
-    sp18 = func_8006F510();
+    sp18 = clear_status_register_flags();
     pool = &gMemoryPools[get_memory_pool_index_containing_address(address)];
     slotIndex = 0;
     while (slotIndex != -1) {
@@ -370,13 +370,13 @@ s32 func_80071478(u8 *address) {
         if (address == (u8 *)slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
                 slot->flags |= 2;
-                func_8006F53C(sp18);
+                set_status_register_flags(sp18);
                 return 1;
             }
         }
         slotIndex = slot->nextIndex;
     }
-    func_8006F53C(sp18);
+    set_status_register_flags(sp18);
     return 0;
 }
 
@@ -386,7 +386,7 @@ s32 func_80071538(u8 *address) {
     MemoryPool *pool;
     s32 *sp18;
 
-    sp18 = func_8006F510();
+    sp18 = clear_status_register_flags();
     pool = &gMemoryPools[get_memory_pool_index_containing_address(address)];
     slotIndex = 0;
     while (slotIndex != -1) {
@@ -394,13 +394,13 @@ s32 func_80071538(u8 *address) {
         if (address == (u8 *)slot->data) {
             if (slot->flags & 2) {
                 slot->flags ^= 2;
-                func_8006F53C(sp18);
+                set_status_register_flags(sp18);
                 return 1;
             }
         }
         slotIndex = slot->nextIndex;
     }
-    func_8006F53C(sp18);
+    set_status_register_flags(sp18);
     return 0;
 }
 

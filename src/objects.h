@@ -344,7 +344,7 @@ extern s32 D_800DC85C;
 extern u8 D_800DC860;
 extern u16 D_800DC864;
 
-f32 sine_s(s16); //?
+f32 coss_f(s16); //?
 
 Object *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);

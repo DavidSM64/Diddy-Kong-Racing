@@ -129,12 +129,12 @@ glabel func_800B03C0
 /* 0B1194 800B0594 A7AA002A */  sh    $t2, 0x2a($sp)
 .L800B0598:
 /* 0B1198 800B0598 27A40028 */  addiu $a0, $sp, 0x28
-/* 0B119C 800B059C 0C01C124 */  jal   func_80070490
+/* 0B119C 800B059C 0C01C124 */  jal   f32_vec3_apply_object_rotation3
 /* 0B11A0 800B05A0 27A50030 */   addiu $a1, $sp, 0x30
 /* 0B11A4 800B05A4 10000004 */  b     .L800B05B8
 /* 0B11A8 800B05A8 C60A004C */   lwc1  $f10, 0x4c($s0)
 .L800B05AC:
-/* 0B11AC 800B05AC 0C01C0C8 */  jal   func_80070320
+/* 0B11AC 800B05AC 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0B11B0 800B05B0 27A50030 */   addiu $a1, $sp, 0x30
 /* 0B11B4 800B05B4 C60A004C */  lwc1  $f10, 0x4c($s0)
 .L800B05B8:
@@ -157,7 +157,7 @@ glabel func_800B03C0
 /* 0B11F4 800B05F4 10410006 */  beq   $v0, $at, .L800B0610
 /* 0B11F8 800B05F8 00000000 */   nop   
 /* 0B11FC 800B05FC 8FA40044 */  lw    $a0, 0x44($sp)
-/* 0B1200 800B0600 0C01C0C8 */  jal   func_80070320
+/* 0B1200 800B0600 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0B1204 800B0604 2605004C */   addiu $a1, $s0, 0x4c
 /* 0B1208 800B0608 92020039 */  lbu   $v0, 0x39($s0)
 /* 0B120C 800B060C 00000000 */  nop   
@@ -171,7 +171,7 @@ glabel func_800B03C0
 /* 0B1228 800B0628 14410004 */  bne   $v0, $at, .L800B063C
 /* 0B122C 800B062C E6080014 */   swc1  $f8, 0x14($s0)
 /* 0B1230 800B0630 8FA40044 */  lw    $a0, 0x44($sp)
-/* 0B1234 800B0634 0C01C0C8 */  jal   func_80070320
+/* 0B1234 800B0634 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0B1238 800B0638 2605000C */   addiu $a1, $s0, 0xc
 .L800B063C:
 /* 0B123C 800B063C 8FAB0044 */  lw    $t3, 0x44($sp)

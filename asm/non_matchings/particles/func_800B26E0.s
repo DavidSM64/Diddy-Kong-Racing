@@ -92,7 +92,7 @@ glabel func_800B26E0
 /* 0B3414 800B2814 8FA40034 */  lw    $a0, 0x34($sp)
 /* 0B3418 800B2818 AFA30038 */  sw    $v1, 0x38($sp)
 /* 0B341C 800B281C AFA60050 */  sw    $a2, 0x50($sp)
-/* 0B3420 800B2820 0C01C0C8 */  jal   func_80070320
+/* 0B3420 800B2820 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0B3424 800B2824 AFA70030 */   sw    $a3, 0x30($sp)
 /* 0B3428 800B2828 8FA30038 */  lw    $v1, 0x38($sp)
 /* 0B342C 800B282C 8FA60050 */  lw    $a2, 0x50($sp)

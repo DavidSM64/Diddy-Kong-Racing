@@ -72,8 +72,8 @@ typedef struct unk800B7D10 {
 
 //Functions below don't have files or matches yet
 unk800B7D10 *get_stack_pointer(void); // Non Matching with own file?
-s32 *func_8006F510(void); // Non Matching unknown_070110
-void func_8006F53C(s32*); // Non Matching unknown_070110
+s32 *clear_status_register_flags(void); // Non Matching math_util
+void set_status_register_flags(s32*); // Non Matching math_util
 
 void init_main_memory_pool(void);
 MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots);

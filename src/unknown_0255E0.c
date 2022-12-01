@@ -2093,7 +2093,7 @@ void func_80031018(void) {
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
 
-    func_8006FC30(mf, &trans);
+    object_transform_to_matrix(mf, &trans);
     guMtxXFMF(mf, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
