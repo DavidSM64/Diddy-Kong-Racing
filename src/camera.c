@@ -1233,7 +1233,7 @@ UNUSED void func_80069B70(f32 x, UNUSED f32 y, f32 z) {
     gActiveCameraStack[gActiveCameraID].trans.z_position -= x * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
     gActiveCameraStack[gActiveCameraID].trans.x_position -= z * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
     gActiveCameraStack[gActiveCameraID].trans.z_position += z * coss_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
+    gActiveCameraStack[gActiveCameraID].unk34_a.half.levelSegmentIndex =
         get_level_segment_index_from_position(
             gActiveCameraStack[gActiveCameraID].trans.x_position,
             gActiveCameraStack[gActiveCameraID].trans.y_position,
