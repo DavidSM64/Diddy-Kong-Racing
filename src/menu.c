@@ -260,7 +260,7 @@ s32 D_80126C18;
 char **D_80126C1C;
 s32 D_80126C20;
 s32 D_80126C24;
-s32 D_80126C28;
+s8 D_80126C28;
 s32 *D_80126C2C;
 u16 (*gCheatsAssetData)[30]; // Cheat table.
 s32 D_80126C34;
@@ -3202,7 +3202,7 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, 
 void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     s32 i;
     for (i = 0; i < 3; i++) {
-        if (gSavefileData[i]->newGame != 0) {
+        if (gSavefileData[i]->newGame) {
             arg0[*arg1].unk0 = 1;
             arg0[*arg1].unk1 = 0;
             arg0[*arg1].unk2 = 0;
@@ -5663,7 +5663,7 @@ void menu_track_select_init(void) {
     play_music(SEQUENCE_MAIN_MENU);
     set_relative_volume_for_music(sMenuMusicVolume);
     func_80000B18();
-    func_8006F564(1); // Set an interrupt?
+    set_D_800DD430(1); // Set an interrupt?
     gIsInAdventureTwo = D_800E0418;
     gMultiplayerSelectedNumberOfRacersCopy = gMultiplayerSelectedNumberOfRacers;
 }
@@ -5828,7 +5828,7 @@ void func_8008F534(void) {
     func_80000B28();
     func_80000C2C();
     func_80001844();
-    func_8006F564(0);
+    set_D_800DD430(0);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
@@ -6979,7 +6979,94 @@ void assign_racer_portrait_textures(void) {
     D_800E0AE0[0].texture = D_80126550[TEXTURE_ICON_PORTRAIT_TIMBER];
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80094688.s")
+void func_80094688(s32 arg0, s32 arg1) {
+    s16 *var_v1;
+    LevelHeader *header;
+
+    func_80072298(0U);
+    header = get_current_level_header();
+    D_80126C28 = arg0;
+    if (is_in_two_player_adventure()) {
+        func_800249E0(0);
+    }
+    D_80126A90 = 0;
+    if (gNumberOfActivePlayers == 1 && gTrophyRaceWorldId == 0) {
+        if (is_in_tracks_mode() == 1) {
+            D_80126BF0[0] = gMenuText[23];
+            D_80126BF0[1] = gMenuText[24];
+            D_80126BF0[2] = gMenuText[26];
+            D_80126C14 = 3;
+            D_80126A90 = 1;
+        } else {
+            if (arg0 == 0) {
+                D_80126BF0[0] = gMenuText[23];
+                D_80126C14 = 1;
+            } else {
+                D_80126C14 = 0;
+            }
+            D_80126BF0[D_80126C14] = gMenuText[25];
+            D_80126C14 = D_80126C14 + 1;
+        }
+        D_80126BF0[D_80126C14] = gMenuText[28];
+        D_80126C14 = D_80126C14 + 1;
+        D_801263E0 = 0;
+    } else {
+        D_801263E0 = 7;
+    }
+    D_80126CC0 = 0;
+    gOptionBlinkTimer = 0;
+    gOpacityDecayTimer = 0;
+    gMenuDelay = 0;
+    D_800DF460 = 0;
+    gMenuOption = 0;
+    gIgnorePlayerInput = 1;
+    *((s32*)(&D_80126C54)) = -1;
+    gMenuSubOption = 0;
+    D_80126C1C = NULL;
+    D_80126A98 = 0;
+    if (header->race_type & RACETYPE_CHALLENGE) {
+        gIgnorePlayerInput = normalise_time(240); // 4 seconds
+    }
+    if (D_80126C28) {
+        D_801263E0 = 8;
+        gMenuDelay = 0x64;
+    }
+    if (get_render_context()) {
+        D_801263E0 = 7;
+    }
+    reset_controller_sticks();
+    func_8006D8E0(arg0);
+    D_8012647C = get_video_width_and_height_as_s32();
+    gTrackSelectViewportY = (D_8012647C >> 0x10) & 0xFFFF;
+    D_8012647C = D_8012647C & 0xFFFF;
+    D_80126474 = D_8012647C >> 1;
+    D_80126478 = gTrackSelectViewportY >> 1;
+    if ((gNumberOfActivePlayers == 1) && (gTrophyRaceWorldId == 0)) {
+        *((s32*)(&D_80126C54)) = 0;
+        arg1 = (s8) header->world - 1;
+        var_v1 = &D_800E0710[3*arg1];
+        if (var_v1[0] != -1) {
+            func_8009C6D4((s32) var_v1[0]);
+            D_80126BB8 = (s32) D_80126550[var_v1[0]];
+        } else {
+            D_80126BB8 = 0;
+        }
+        if (var_v1[1] != -1) {
+            func_8009C6D4((s32) var_v1[1]);
+            D_80126BBC = (s32) D_80126550[var_v1[1]];
+        } else {
+            D_80126BBC = 0;
+        }
+        D_80126BC0 = (s32) var_v1[2];
+        if (get_render_context() == 0) {
+            func_80078170((u32) D_80126BB8, (u32) D_80126BBC, (u32) D_80126BC0);
+        }
+        func_80066818(0, 1);
+        func_80066940(0, 0, 0, D_8012647C, gTrackSelectViewportY);
+    }
+    func_80000968(2);
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_80094A5C.s")
 
 void func_80094C14(s32 arg0) {
@@ -7908,7 +7995,7 @@ void menu_credits_init(void) {
     }
     func_80000B18();
     func_800C0170();
-    func_8006F564(1);
+    set_D_800DD430(1);
 }
 
 /**
@@ -7941,7 +8028,7 @@ void func_8009BCF0(void) {
     set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
     func_8009C4A8(D_800E17D8);
     unload_font(ASSET_FONTS_BIGFONT);
-    func_8006F564(0);
+    set_D_800DD430(0);
 }
 
 void func_8009BD5C(void) {

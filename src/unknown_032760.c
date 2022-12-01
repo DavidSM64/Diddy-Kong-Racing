@@ -349,11 +349,11 @@ f32 func_80033A14(unk800DC950 *arg0) {
             out *= temp;
             break;
         case 3:
-            temp = sine_s(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
+            temp = coss_f(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
             out *= temp;
             break;
         case 4:
-            temp = sine_s(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
+            temp = coss_f(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
             temp *= temp;
             out *= temp;
             break;

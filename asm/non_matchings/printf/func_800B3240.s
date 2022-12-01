@@ -35,7 +35,7 @@ glabel func_800B3240
 /* 0B3EBC 800B32BC E48A0010 */  swc1  $f10, 0x10($a0)
 /* 0B3EC0 800B32C0 E4800014 */  swc1  $f0, 0x14($a0)
 /* 0B3EC4 800B32C4 AFA40018 */  sw    $a0, 0x18($sp)
-/* 0B3EC8 800B32C8 0C01C0C8 */  jal   func_80070320
+/* 0B3EC8 800B32C8 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0B3ECC 800B32CC 2485000C */   addiu $a1, $a0, 0xc
 /* 0B3ED0 800B32D0 8FA40018 */  lw    $a0, 0x18($sp)
 /* 0B3ED4 800B32D4 00000000 */  nop   

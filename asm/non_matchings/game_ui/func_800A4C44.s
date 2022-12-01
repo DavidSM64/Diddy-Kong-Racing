@@ -92,7 +92,7 @@ glabel func_800A4C44
 /* 0A5994 800A4D94 44044000 */  mfc1  $a0, $f8
 /* 0A5998 800A4D98 44C9F800 */  ctc1  $t1, $31
 /* 0A599C 800A4D9C 00045400 */  sll   $t2, $a0, 0x10
-/* 0A59A0 800A4DA0 0C01C1F1 */  jal   cosine_s
+/* 0A59A0 800A4DA0 0C01C1F1 */  jal   sins_f
 /* 0A59A4 800A4DA4 000A2403 */   sra   $a0, $t2, 0x10
 /* 0A59A8 800A4DA8 3C088012 */  lui   $t0, %hi(D_80126CDC) # $t0, 0x8012
 /* 0A59AC 800A4DAC 25086CDC */  addiu $t0, %lo(D_80126CDC) # addiu $t0, $t0, 0x6cdc
