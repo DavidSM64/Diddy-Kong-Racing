@@ -1,28 +1,3 @@
-/*
-https://decomp.me/scratch/s8fPG
-//-O2 -mips2
-extern s32 D_800DD434;
-extern s32 D_800DD438;
-
-void set_rng_seed(s32 arg0) {
-    D_800DD434 = arg0;
-}
-
-void save_rng_seed(s32 arg0) {
-    arg0 = D_800DD434;
-    D_800DD438 = arg0;
-}
-
-void load_rng_seed(s32 arg0) {
-    arg0 = D_800DD438;
-    D_800DD434 = arg0;
-}
-
-s32 get_rng_seed(void) {
-    return D_800DD434;
-}
-*/
-
 glabel set_rng_seed
 /* 07050C 8006F90C 3C01800E */  lui   $at, %hi(D_800DD434)
 /* 070510 8006F910 03E00008 */  jr    $ra
@@ -47,13 +22,6 @@ glabel get_rng_seed
 /* 070544 8006F944 03E00008 */  jr    $ra
 /* 070548 8006F948 8C42D434 */   lw    $v0, %lo(D_800DD434)($v0)
 
-/*
- * get_random_number_from_range(start, end) = Gets a random number within a range. 
- * Start is inclusive, end is exclusive; also changes the RNG seed.
- * 
- *  get_random_number_from_range(0, 5) will return a number from 0 to 4.
- *  get_random_number_from_range(20, 30) will return a number from 20 to 29.
-*/
 glabel get_random_number_from_range
 /* 07054C 8006F94C 3C08800E */  lui   $t0, %hi(D_800DD434) # $t0, 0x800e
 /* 070550 8006F950 8D08D434 */  lw    $t0, %lo(D_800DD434)($t0)
