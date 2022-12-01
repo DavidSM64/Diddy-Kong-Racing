@@ -308,6 +308,8 @@ $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
 $(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips1
 $(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips1
 
+####################### MATH UTIL #########################
+
 $(BUILD_DIR)/src/math_util.o: MIPSISET := -mips2
 
 ######################## Targets #############################
