@@ -1,53 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8006F510 */
 
-.section .text
-
 .include "macros.inc"
-
-.set noat      # allow manual use of $at
-.set noreorder # dont insert nops after branches
-.set gp=64     # 64-bit instructions are used
-
-.include "asm/math_util/clear_status_register_flags.s" # If D_800DD430 != 0 THEN Set an interrupt?
-.include "asm/math_util/set_status_register_flags.s" # If D_800DD430 != 0 THEN __osRestoreInt - void set_status_register_flags(u32);
-.include "asm/math_util/set_D_800DD430.s" # Set D_800DD430
-.include "asm/math_util/get_D_800DD430.s" # UNUSED - Get D_800DD430
-.include "asm/math_util/s32_matrix_to_s16_matrix.s" # UNUSED
-.include "asm/math_util/f32_matrix_to_s32_matrix.s"
-.include "asm/math_util/guMtxXFMF.s"     # It's possible the funcs from this point and above are unidentified libultra
-.include "asm/math_util/f32_matrix_dot.s" # Floating Point Matrix Math
-.include "asm/math_util/f32_matrix_mult.s" # Floating Point Matrix Math
-.include "asm/math_util/f32_matrix_to_s16_matrix.s" # Floating Point Matrix Math
-.include "asm/math_util/rng.s"
-.include "asm/math_util/s16_matrix_rotate.s" # 16 bit Matrix Math?
-.include "asm/math_util/s16_matrix_to_s32_matrix.s" # 16 bit a0 struct/array to 32 bit a1? UNUSED?
-.include "asm/math_util/s16_vec3_mult_by_s32_matrix_full.s" # UNUSED
-.include "asm/math_util/s16_vec3_mult_by_s32_matrix.s" # 
-.include "asm/math_util/object_transform_to_matrix.s" # Floating Point Matrix and ObjectTransform *
-.include "asm/math_util/f32_matrix_scale.s"
-.include "asm/math_util/f32_matrix_y_scale.s"
-.include "asm/math_util/object_transform_to_matrix_2.s"
-.include "asm/math_util/f32_matrix_from_rotation_and_scale.s"
-.include "asm/math_util/s16_vec3_apply_object_rotation.s"
-.include "asm/math_util/f32_vec3_apply_object_rotation.s"
-.include "asm/math_util/f32_vec3_apply_object_rotation2.s"
-.include "asm/math_util/f32_vec3_apply_object_rotation3.s"
-.include "asm/math_util/point_triangle_2d_xz_intersection.s"
-.include "asm/math_util/f32_matrix_from_position.s" # Floating Point Matrix Values
-.include "asm/math_util/f32_matrix_from_scale.s"
-.include "asm/math_util/atan2s.s"
-.include "asm/math_util/arctan2_f.s"
-.include "asm/math_util/s32_matrix_cell_sqrt.s" # UNUSED 
-.include "asm/math_util/bad_int_sqrt.s" # UNUSED Run a sqrtf on a 32 bit int?
-.include "asm/math_util/sins_f.s"
-.include "asm/math_util/coss_f.s"
-.include "asm/math_util/coss.s" # Weird case of one function with two entrance points. Sinewave related? Includes: sins
-.include "asm/math_util/sins_2.s" # Similar to above, and has UNUSED coss_2
-.include "asm/math_util/calc_dyn_lighting_for_level_segment.s" # UNUSED
-.include "asm/math_util/area_triangle_2d.s" # Floating Point Math with sqrt
-.include "asm/math_util/set_breakpoint.s" # UNUSED - 
-.include "asm/math_util/dmacopy_doubleword.s" # Uses mips3 instructions to copy data from s64 values arg0 to arg1 in a loop
 
 .section .data
 
