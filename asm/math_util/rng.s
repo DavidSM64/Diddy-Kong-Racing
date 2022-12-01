@@ -1,31 +1,7 @@
-glabel set_rng_seed
-/* 07050C 8006F90C 3C01800E */  lui   $at, %hi(D_800DD434)
-/* 070510 8006F910 03E00008 */  jr    $ra
-/* 070514 8006F914 AC24D434 */   sw    $a0, %lo(D_800DD434)($at)
-
-glabel save_rng_seed
-/* 070518 8006F918 3C04800E */  lui   $a0, %hi(D_800DD434)
-/* 07051C 8006F91C 8C84D434 */  lw    $a0, %lo(D_800DD434)($a0)
-/* 070520 8006F920 3C01800E */  lui   $at, %hi(D_800DD438)
-/* 070524 8006F924 03E00008 */  jr    $ra
-/* 070528 8006F928 AC24D438 */   sw    $a0, %lo(D_800DD438)($at)
-
-glabel load_rng_seed
-/* 07052C 8006F92C 3C04800E */  lui   $a0, %hi(D_800DD438)
-/* 070530 8006F930 8C84D438 */  lw    $a0, %lo(D_800DD438)($a0)
-/* 070534 8006F934 3C01800E */  lui   $at, %hi(D_800DD434)
-/* 070538 8006F938 03E00008 */  jr    $ra
-/* 07053C 8006F93C AC24D434 */   sw    $a0, %lo(D_800DD434)($at)
-
-glabel get_rng_seed
-/* 070540 8006F940 3C02800E */  lui   $v0, %hi(D_800DD434)
-/* 070544 8006F944 03E00008 */  jr    $ra
-/* 070548 8006F948 8C42D434 */   lw    $v0, %lo(D_800DD434)($v0)
-
 glabel get_random_number_from_range
-/* 07054C 8006F94C 3C08800E */  lui   $t0, %hi(D_800DD434) # $t0, 0x800e
-/* 070550 8006F950 8D08D434 */  lw    $t0, %lo(D_800DD434)($t0)
-/* 070554 8006F954 3C01800E */  lui   $at, %hi(D_800DD434) # $at, 0x800e
+/* 07054C 8006F94C 3C08800E */  lui   $t0, %hi(gCurrentRNGSeed) # $t0, 0x800e
+/* 070550 8006F950 8D08D434 */  lw    $t0, %lo(gCurrentRNGSeed)($t0)
+/* 070554 8006F954 3C01800E */  lui   $at, %hi(gCurrentRNGSeed) # $at, 0x800e
 /* 070558 8006F958 00A42822 */  sub   $a1, $a1, $a0
 /* 07055C 8006F95C 00084FFC */  dsll32 $t1, $t0, 0x1f
 /* 070560 8006F960 000857F8 */  dsll  $t2, $t0, 0x1f
@@ -38,7 +14,7 @@ glabel get_random_number_from_range
 /* 07057C 8006F97C 00095D3A */  dsrl  $t3, $t1, 0x14
 /* 070580 8006F980 316B0FFF */  andi  $t3, $t3, 0xfff
 /* 070584 8006F984 01694026 */  xor   $t0, $t3, $t1
-/* 070588 8006F988 AC28D434 */  sw    $t0, %lo(D_800DD434)($at)
+/* 070588 8006F988 AC28D434 */  sw    $t0, %lo(gCurrentRNGSeed)($at)
 /* 07058C 8006F98C 20A50001 */  addi  $a1, $a1, 1
 /* 070590 8006F990 01044023 */  subu  $t0, $t0, $a0
 /* 070594 8006F994 0105001B */  divu  $zero, $t0, $a1
