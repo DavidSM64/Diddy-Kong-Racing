@@ -197,8 +197,6 @@ extern f32 D_8011D544;
 extern struct TempStruct8 **D_8011D5B0;
 
 s32 get_random_number_from_range(s32, s32); //?
-void object_transform_to_matrix(Matrix, ObjectTransform *); // asm func
-void object_transform_to_matrix_2(Matrix *, ObjectTransform *); // Non Matching ?
 
 s32 func_80044450(s32 cap);
 void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer);

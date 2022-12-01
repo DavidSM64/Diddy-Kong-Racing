@@ -26,11 +26,41 @@ GLOBAL_ASM("asm/math_util/clear_status_register_flags.s")
 GLOBAL_ASM("asm/math_util/set_status_register_flags.s")
 GLOBAL_ASM("asm/math_util/set_D_800DD430.s")
 GLOBAL_ASM("asm/math_util/get_D_800DD430.s")
+
+#ifdef NON_EQUIVALENT // Untested
+UNUSED void s32_matrix_to_s16_matrix(s32 **input, s16 **output) {
+    s32 i;
+    for(i = 0; i < 4; i++){
+        output[i][2] = input[i][0];
+        output[i][3] = input[i+4][0];
+        output[i][6] = input[i][1];
+        output[i][7] = input[i+4][1];
+        output[i][0] = input[i][0] >> 16;
+        output[i][1] = input[i+4][0] >> 16;
+        output[i][4] = input[i][1] >> 16;
+        output[i][5] = input[i+4][1] >> 16;
+    }
+}
+#else
 GLOBAL_ASM("asm/math_util/s32_matrix_to_s16_matrix.s")
+#endif
+
+#ifdef NON_EQUIVALENT
+void f32_matrix_to_s32_matrix(Matrix *input, Matrix *output) {
+    s32 i;
+    for(i = 0; i < 4; i++) {
+        (*output)[i][0] = (s32) ((*input)[i][0] * 65536.0f);
+        (*output)[i][1] = (s32) ((*input)[i][1] * 65536.0f);
+        (*output)[i][2] = (s32) ((*input)[i][2] * 65536.0f);
+        (*output)[i][3] = (s32) ((*input)[i][3] * 65536.0f);
+    }
+}
+#else
 GLOBAL_ASM("asm/math_util/f32_matrix_to_s32_matrix.s")
+#endif
 
 #ifdef NON_MATCHING
-void guMtxXFMF(float mf[4][4], float x, float y, float z, float *ox, float *oy, float *oz) {
+void guMtxXFMF(Matrix mf, float x, float y, float z, float *ox, float *oy, float *oz) {
         *ox = mf[0][0]*x + mf[1][0]*y + mf[2][0]*z + mf[3][0];
         *oy = mf[0][1]*x + mf[1][1]*y + mf[2][1]*z + mf[3][1];
         *oz = mf[0][2]*x + mf[1][2]*y + mf[2][2]*z + mf[3][2];
@@ -39,22 +69,159 @@ void guMtxXFMF(float mf[4][4], float x, float y, float z, float *ox, float *oy, 
 GLOBAL_ASM("asm/math_util/guMtxXFMF.s")
 #endif
 
+#ifdef NON_EQUIVALENT
+void f32_matrix_dot(Matrix *mat1, Matrix *mat2, Matrix *output) {
+    (*output)[0][0] = ((*mat2)[0][0] * (*mat1)[0][0]) + ((*mat2)[0][1] * (*mat1)[1][0]) + ((*mat2)[0][2] * (*mat1)[2][0]);
+    (*output)[0][1] = ((*mat2)[0][0] * (*mat1)[0][1]) + ((*mat2)[0][1] * (*mat1)[1][1]) + ((*mat2)[0][2] * (*mat1)[2][1]);
+    (*output)[0][2] = ((*mat2)[0][0] * (*mat1)[0][2]) + ((*mat2)[0][1] * (*mat1)[1][2]) + ((*mat2)[0][2] * (*mat1)[2][2]);
+}
+#else
 GLOBAL_ASM("asm/math_util/f32_matrix_dot.s")
-GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
-GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
-GLOBAL_ASM("asm/math_util/rng.s")
-GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")
-GLOBAL_ASM("asm/math_util/s16_matrix_to_s32_matrix.s")
-GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix_full.s")
-GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
-GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
-GLOBAL_ASM("asm/math_util/f32_matrix_scale.s")
+#endif
 
 #ifdef NON_EQUIVALENT
-void f32_matrix_y_scale(f32 (*arg0)[4][4], f32 arg1) {
-    arg0[0][3][0] += arg0[0][1][0] * arg1;
-    arg0[0][3][1] += arg0[0][1][1] * arg1;
-    arg0[0][3][2] += arg0[0][1][2] * arg1;
+void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output) {
+    s32 i;
+    for(i = 0; i < 4; i++) {
+        (*output)[i][0] = (f32) (((*mat1)[i][1] * (*mat2)[1][0]) + ((*mat1)[i][3] * (*mat2)[2][0]) + (((*mat1)[i][0] * (*mat2)[0][0]) + ((*mat1)[i][3] * (*mat2)[3][0])));
+        (*output)[i][1] = (f32) (((*mat1)[i][1] * (*mat2)[1][1]) + ((*mat1)[i][3] * (*mat2)[2][1]) + (((*mat1)[i][0] * (*mat2)[0][1]) + ((*mat1)[i][3] * (*mat2)[3][1])));
+        (*output)[i][2] = (f32) (((*mat1)[i][1] * (*mat2)[1][2]) + ((*mat1)[i][3] * (*mat2)[2][2]) + (((*mat1)[i][0] * (*mat2)[0][2]) + ((*mat1)[i][3] * (*mat2)[3][2])));
+        (*output)[i][3] = (f32) (((*mat1)[i][1] * (*mat2)[1][3]) + ((*mat1)[i][3] * (*mat2)[2][3]) + (((*mat1)[i][0] * (*mat2)[0][3]) + ((*mat1)[i][3] * (*mat2)[3][3])));
+    }
+}
+#else
+GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
+#endif
+
+#ifdef NON_EQUIVALENT
+void f32_matrix_to_s16_matrix(Matrix *input, s16 **output) {
+    s32 temp_f10;
+    s32 temp_f4;
+    s32 temp_f6;
+    s32 temp_f8;
+    s32 i;
+    
+    for(i = 0; i < 4; i++){
+        temp_f4  = (*input)[i][0] * 65536.0f;
+        temp_f6  = (*input)[i][1] * 65536.0f;
+        temp_f8  = (*input)[i][2] * 65536.0f;
+        temp_f10 = (*input)[i][3] * 65536.0f;
+        output[i+4][0] = temp_f4;
+        output[i+4][1] = temp_f6;
+        output[i+4][2] = temp_f8;
+        output[i+4][3] = temp_f10;
+        output[i][0] = (temp_f4 >> 16);
+        output[i][1] = (temp_f6 >> 16);
+        output[i][2] = (temp_f8 >> 16);
+        output[i][3] = (temp_f10 >> 16);
+    }
+}
+#else
+GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
+#endif
+
+GLOBAL_ASM("asm/math_util/rng.s")
+
+#ifdef NON_EQUIVALENT
+void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]) {
+    s32 temp_t6;
+
+    temp_t6 = (s32) ((*arg0[0][0] * arg1[0][0]) + (*arg0[0][1] * arg1[0][1]) + (*arg0[0][2] * *arg0[0][2])) >> 12;
+    *arg0[1][0] = (s16) (((s32) (temp_t6 * arg1[0][0]) >> 13) - *arg0[0][0]);
+    *arg0[1][1] = (s16) (((s32) (temp_t6 * arg1[0][1]) >> 13) - *arg0[0][1]);
+    *arg0[1][2] = (s16) (((s32) (temp_t6 * arg1[0][2]) >> 13) - *arg0[0][0]); // Did they mean to do `- arg0->unk4` here?
+}
+#else
+GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")
+#endif
+
+#ifdef NON_EQUIVALENT // Untested
+UNUSED void s16_matrix_to_s32_matrix(s16 **arg0, s32 **arg1) {
+    s32 i, j;
+    for(i = 0; i < 4; i++) {
+        for(j = 0; j < 4; j++) {
+            arg1[i][j] = (arg0[i][j] << 16) | arg0[i+4][j];
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/math_util/s16_matrix_to_s32_matrix.s")
+#endif
+
+#ifdef NON_EQUIVALENT // Untested
+UNUSED void s16_vec3_mult_by_s32_matrix_full(s32 **input, s16 *output) {
+    output[0] = ((output[0] * input[0][0]) + (output[1] * input[1][0]) + (output[2] * input[2][0]) + input[3][0]) >> 16;
+    output[1] = ((output[0] * input[0][1]) + (output[1] * input[1][1]) + (output[2] * input[2][1]) + input[3][1]) >> 16;
+    output[2] = ((output[0] * input[0][2]) + (output[1] * input[1][2]) + (output[2] * input[2][2]) + input[3][2]) >> 16;
+}
+#else
+GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix_full.s")
+#endif
+
+#ifdef NON_EQUIVALENT
+void s16_vec3_mult_by_s32_matrix(s32 **input, s16 *output) {
+    output[0] = ((output[0] * input[0][0]) + (output[1] * input[1][0]) + (output[2] * input[2][0])) >> 16;
+    output[1] = ((output[0] * input[0][1]) + (output[1] * input[1][1]) + (output[2] * input[2][1])) >> 16;
+    output[2] = ((output[0] * input[0][2]) + (output[1] * input[1][2]) + (output[2] * input[2][2])) >> 16;
+}
+#else
+GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
+#endif
+
+#ifdef NON_EQUIVALENT
+void object_transform_to_matrix(Matrix arg0, ObjectTransform *trans) {
+    f32 yRotSine;
+    f32 yRotCosine;
+    f32 xRotSine;
+    f32 xRotCosine;
+    f32 zRotSine;
+    f32 zRotCosine;
+    f32 scale;
+
+    yRotSine = sins(trans->y_rotation) * 0.000015f;
+    yRotCosine = coss(trans->y_rotation) * 0.000015f;
+    xRotSine = sins(trans->x_rotation) * 0.000015f;
+    xRotCosine = coss(trans->x_rotation) * 0.000015f;
+    zRotSine = sins(trans->z_rotation) * 0.000015f;
+    zRotCosine = coss(trans->z_rotation) * 0.000015f;
+    scale = trans->scale * 0.000015f;
+    
+    arg0[0][0] = ((xRotSine * yRotSine * zRotSine) + (scale * yRotCosine)) * scale;
+    arg0[0][1] = (zRotSine * xRotCosine * scale);
+    arg0[0][2] = (((xRotSine * yRotCosine * zRotSine) - (scale * yRotSine)) * scale);
+    arg0[0][3] = 0;
+    arg0[1][0] = (((xRotSine * yRotSine * scale) - (zRotSine * yRotCosine)) * scale);
+    arg0[1][1] = (scale * xRotCosine * scale);
+    arg0[1][2] = (((xRotSine * yRotCosine * scale) + (zRotSine * yRotSine)) * scale);
+    arg0[1][3] = 0;
+    arg0[2][0] = (xRotCosine * yRotSine * scale);
+    arg0[2][1] = -(xRotSine * scale);
+    arg0[2][2] = (xRotCosine * yRotCosine * scale);
+    arg0[2][3] = 0;
+    arg0[3][0] = trans->x_position;
+    arg0[3][1] = trans->y_position;
+    arg0[3][2] = 1.0f;
+    arg0[3][3] = trans->z_position;
+}
+#else
+GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
+#endif
+
+#ifdef NON_MATCHING
+void f32_matrix_scale(Matrix *input, f32 scale) {
+    input[0][1][0] *= scale;
+    input[0][1][1] *= scale;
+    input[0][1][2] *= scale;
+}
+#else
+GLOBAL_ASM("asm/math_util/f32_matrix_scale.s")
+#endif
+
+#ifdef NON_MATCHING
+void f32_matrix_y_scale(Matrix *input, f32 scale) {
+    input[0][3][0] += input[0][1][0] * scale;
+    input[0][3][1] += input[0][1][1] * scale;
+    input[0][3][2] += input[0][1][2] * scale;
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_y_scale.s")
@@ -243,7 +410,6 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation2.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-// Handwritten function!
 void f32_vec3_apply_object_rotation3(ObjectTransform *trans, f32 *vec3_f32) {
     f32 xRotSine;
     f32 xRotCosine;
@@ -334,6 +500,7 @@ void f32_matrix_from_position(Matrix mtx, f32 x, f32 y, f32 z) {
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_from_position.s")
 #endif
+
 GLOBAL_ASM("asm/math_util/f32_matrix_from_scale.s")
 
 #ifdef NON_EQUIVALENT
@@ -377,22 +544,29 @@ GLOBAL_ASM("asm/math_util/atan2s.s")
 #endif
 GLOBAL_ASM("asm/math_util/arctan2_f.s")
 
-#ifdef NON_MATCHING
-s32 s32_matrix_cell_sqrt(s32 arg0) {
+#ifdef NON_EQUIVALENT // Untested
+UNUSED s32 s32_matrix_cell_sqrt(s32 arg0) {
     return (s32) (sqrtf((f32) arg0 / 65536.0f) * 65536.0f);
 }
 #else
 GLOBAL_ASM("asm/math_util/s32_matrix_cell_sqrt.s")
 #endif
 
+#ifdef NON_EQUIVALENT // Untested
+UNUSED s32 bad_int_sqrt(s32 arg0) {
+    return (s32) (sqrtf((f32) arg0 / 65536.0f) * 65536.0f);
+}
+#else
 GLOBAL_ASM("asm/math_util/bad_int_sqrt.s")
+#endif
+
 GLOBAL_ASM("asm/math_util/sins_f.s")
 GLOBAL_ASM("asm/math_util/coss_f.s")
 GLOBAL_ASM("asm/math_util/coss.s")
 GLOBAL_ASM("asm/math_util/sins_2.s")
 
-#ifdef NON_MATCHING
-s32 func_800708D0(LevelModelSegment *segment, s32 *vec3_ints) {
+#ifdef NON_EQUIVALENT // Untested
+UNUSED s32 calc_dyn_lighting_for_level_segment(LevelModelSegment *segment, s32 *vec3_ints) {
     s32 dotProduct;
     s32 numVertsInBatch;
     s32 vertCount;
@@ -437,6 +611,28 @@ s32 func_800708D0(LevelModelSegment *segment, s32 *vec3_ints) {
 #else
 GLOBAL_ASM("asm/math_util/calc_dyn_lighting_for_level_segment.s")
 #endif
+
+#ifdef NON_MATCHING
+f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2) {
+    f32 dx0 = x1 - x0; 
+    f32 dz0 = z1 - z0;
+    f32 dx1 = x2 - x1;
+    f32 dz1 = z2 - z1;
+    f32 dx2 = x0 - x2;
+    f32 dz2 = z0 - z2;
+    f32 d0 = sqrtf((dx0 * dx0) + (dz0 * dz0)); // Distance between points 0 & 1
+    f32 d1 = sqrtf((dx1 * dx1) + (dz1 * dz1)); // Distance between points 1 & 2
+    f32 d2 = sqrtf((dx2 * dx2) + (dz2 * dz2)); // Distance between points 2 & 0
+    f32 m = 0.5f * (d0 + d1 + d2); // Half the sum of the distances?
+    f32 result = m * (m - d0) * (m - d1) * (m - d2);
+    if (result < 0.0f) {
+        result = 0.0f;
+    }
+    return sqrtf(result);
+}
+#else
 GLOBAL_ASM("asm/math_util/area_triangle_2d.s")
+#endif
+
 GLOBAL_ASM("asm/math_util/set_breakpoint.s")
 GLOBAL_ASM("asm/math_util/dmacopy_doubleword.s")
