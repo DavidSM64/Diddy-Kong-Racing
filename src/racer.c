@@ -2768,7 +2768,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
  * Handles the input and activation of any weapons the player is carrying.
  * Also handles the egg object from Fire Mountain, which takes precedent, even if the player is holding a weapon.
  */
-void handle_racer_items(Object* obj, Object_Racer* racer, s32 updateRate) {
+void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate) {
     LevelObjectEntryCommon newObject;
     s32 weaponID;
     Object* spawnedObj;
@@ -3264,7 +3264,67 @@ void func_800575EC(Object *obj, Object_Racer *racer) {
     guMtxXFMF(mf, 1.0f, 0.0f, 0.0f, &racer->ox3, &racer->oy3, &racer->oz3);
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/drop_bananas.s")
+/**
+ * Racers struck by most weapons will drop up to 2 bananas on the ground.
+ * During challenge mode, no bananas are spawned, though the number still drops.
+*/
+void drop_bananas(Object* obj, Object_Racer* racer, s32 number) {
+    LevelObjectEntryCommon newObject;
+    Object_Banana *temp;
+    s32 i;
+    s16 angle[3];
+    s16 pos[3];
+    Object* bananaObj;
+    f32 variance;
+
+    if (!(get_filtered_cheats() & 0x80)) {
+        racer->unk188 = 0;
+        if (racer->bananas < number) {
+            number = racer->bananas;
+        }
+        if (number > 0 && number < 3) {
+            angle[0] = racer->x_rotation_vel;
+            angle[1] = obj->segment.trans.x_rotation;
+            angle[2] = racer->unk1A0;
+            pos[0] = 0;
+            pos[1] = 8;
+            pos[2] = 0xC;
+            s16_vec3_apply_object_rotation((ObjectTransform* ) angle, pos);
+            newObject.x = pos[0] + (s32) obj->segment.trans.x_position;
+            newObject.y = pos[1] + (s32) obj->segment.trans.y_position;
+            newObject.z = pos[2] + (s32) obj->segment.trans.z_position;
+            newObject.size = 8;
+            newObject.objectID = BHV_OVERRIDE_POS;
+            i = number;
+            do {
+                if (get_current_level_race_type() != RACETYPE_CHALLENGE) {
+                    bananaObj = spawn_object(&newObject, 1);
+                    if (bananaObj != NULL) {
+                        bananaObj->segment.unk3C_a.level_entry = NULL;
+                        temp = (Object_Banana *)bananaObj->unk64;
+                        temp->unk9 = racer->unk1D6;
+                        bananaObj->segment.x_velocity = racer->ox1 * 2;
+                        bananaObj->segment.y_velocity = (0.0f - racer->oy1) + 5.0;
+                        bananaObj->segment.z_velocity = racer->oz1 * 2;
+                        if (i == 2) {
+                            variance = -0.5f;
+                            if (number == 1) {
+                                variance = 0.5f;
+                            }
+                            bananaObj->segment.x_velocity -= (racer->ox3 - racer->ox1) * variance;
+                            bananaObj->segment.y_velocity -= racer->oy3 * variance;
+                            bananaObj->segment.z_velocity -= (racer->oz3 - racer->oz1) * variance;
+                        }
+                        bananaObj->unk78 = 1;
+                    }
+                }
+                number--;
+                racer->bananas--;
+            } while(number > 0);
+        }
+    }
+}
+
 
 /**
  * Generate the steer velocity by taking the current steer velocity and getting the difference between the stick tilt.

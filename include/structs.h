@@ -1248,6 +1248,8 @@ typedef struct Object_PosArrow {
 typedef struct Object_Banana {
   /* 0x0 */ u8 pad0[4];
   /* 0x4 */ struct Object *spawner;
+  /* 0x8 */ s8 unk8;
+  /* 0x9 */ s8 unk9;
 } Object_Banana;
 
 typedef struct Object_FogChanger {
