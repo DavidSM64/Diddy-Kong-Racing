@@ -1409,10 +1409,10 @@ typedef struct ObjectSegment {
 
   union {
     /* 0x0034 */ f32 unk34;
-      struct {
+                 struct {
         /* 0x0034 */ s16 levelSegmentIndex;
         /* 0x0036 */ s16 unk36;
-      } half;
+                 };
   } unk34_a;
 
   union {
