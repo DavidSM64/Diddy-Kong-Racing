@@ -331,7 +331,7 @@ void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s1
     gActiveCameraStack[stackPos].trans.y_rotation = arg4;
     gActiveCameraStack[stackPos].trans.x_rotation = arg5;
     gActiveCameraStack[stackPos].trans.z_rotation = arg6;
-    gActiveCameraStack[stackPos].unk34_a.half.levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
+    gActiveCameraStack[stackPos].unk34_a.levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
     gCutsceneCameraActive = TRUE;
 }
 
@@ -1221,7 +1221,7 @@ UNUSED void func_80069ACC(f32 x, f32 y, f32 z) {
     gActiveCameraStack[gActiveCameraID].trans.x_position += x;
     gActiveCameraStack[gActiveCameraID].trans.y_position += y;
     gActiveCameraStack[gActiveCameraID].trans.z_position += z;
-    gActiveCameraStack[gActiveCameraID].unk34_a.half.levelSegmentIndex =
+    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
         get_level_segment_index_from_position(
             gActiveCameraStack[gActiveCameraID].trans.x_position,
             gActiveCameraStack[gActiveCameraID].trans.y_position,
@@ -1233,7 +1233,7 @@ UNUSED void func_80069B70(f32 x, UNUSED f32 y, f32 z) {
     gActiveCameraStack[gActiveCameraID].trans.z_position -= x * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
     gActiveCameraStack[gActiveCameraID].trans.x_position -= z * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
     gActiveCameraStack[gActiveCameraID].trans.z_position += z * coss_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].unk34_a.half.levelSegmentIndex =
+    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
         get_level_segment_index_from_position(
             gActiveCameraStack[gActiveCameraID].trans.x_position,
             gActiveCameraStack[gActiveCameraID].trans.y_position,
