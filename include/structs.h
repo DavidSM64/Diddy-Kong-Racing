@@ -469,10 +469,11 @@ typedef struct ObjectModel {
     /* 0x08 */ Triangle* triangles;
     /* 0x0C */ s32* unkC;
     /* 0x10 */ s32* unk10;
-    /* 0x14 */ u8 unk14[0x4];
-    /* 0x18 */ s32 unk18;
-    /* 0x1A */ s8 unk1A;
+    /* 0x14 */ s16* unk14;
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
     /* 0x1C */ s8 unk1C;
+    /* 0x1D */ s8 unk1D;
     /* 0x1E */ s8 unk1E;
     /* 0x1F */ s8 unk1F;
     /* 0x20 */ u8 pad20[2];
@@ -759,9 +760,14 @@ typedef struct Object_WeaponBalloon {
 } Object_WeaponBalloon;
 
 typedef struct Object_Weapon {
-  /* 0x00 */ void *unk0;
-  /* 0x00 */ u8 pad4[0x14];
-  /* 0x18 */ u8 unk18;
+  /* 0x00 */ struct Object *target;
+  /* 0x04 */ struct Object *owner;
+  /* 0x08 */ s32 unk8;
+  /* 0x0C */ s32 unkC;
+  /* 0x10 */ f32 forwardVel;
+  /* 0x14 */ s32 unk14;
+  /* 0x18 */ u8 weaponID;
+  /* 0x19 */ u8 checkpoint;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -788,6 +794,11 @@ typedef struct Object_EggCreator {
   /* 0x0 */ u8 pad0[4];
   /* 0x4 */ struct Object *unk4;
 } Object_EggCreator;
+
+typedef struct Object_Egg {
+    u8 pad[0xB];
+  /* 0x0 */ u8 unkB;
+} Object_Egg;
 
 typedef struct Object_UnkId58 {
   /* 0x000 */ u8 pad0[0x1D6];
@@ -1131,7 +1142,7 @@ typedef struct Object_Racer {
   /* 0x215 */ s8 unk215;
   /* 0x216 */ u8 unk216;
   /* 0x217 */ u8 unk217;
-  /* 0x218 */ s32 unk218;
+  /* 0x218 */ void *unk218;
   /* 0x21C */ s32 unk21C;
   /* 0x220 */ s32 unk220;
 } Object_Racer;
@@ -1307,6 +1318,7 @@ typedef struct Object_64 {
         Object_Butterfly butterfly;
         Object_EffectBox effect_box;
         Object_EggCreator egg_creator;
+        Object_Egg egg;
         Object_UnkId58 unkid58;
         Object_CharacterFlag character_flag;
         Object_Snowball snowball;
@@ -1425,7 +1437,7 @@ typedef struct ObjectSegment {
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  /* 0x0044 */ s32 *unk44;
+  /* 0x0044 */ Vertex *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318

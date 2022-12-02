@@ -261,7 +261,7 @@ glabel func_8004F7F4
 /* 050768 8004FB68 02002025 */   move  $a0, $s0
 /* 05076C 8004FB6C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 050770 8004FB70 02202025 */  move  $a0, $s1
-/* 050774 8004FB74 0C0157B0 */  jal   func_80055EC0
+/* 050774 8004FB74 0C0157B0 */  jal   handle_racer_items
 /* 050778 8004FB78 02002825 */   move  $a1, $s0
 /* 05077C 8004FB7C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 050780 8004FB80 02202025 */  move  $a0, $s1

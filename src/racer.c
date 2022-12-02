@@ -2386,7 +2386,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     handle_base_steering(racer, 0, updateRateF);
     handle_car_velocity_control(racer);
     func_800575EC(obj, racer);
-    func_80055EC0(obj, racer, updateRate);
+    handle_racer_items(obj, racer, updateRate);
     racer_attack_handler(obj, racer, updateRate);
     if (racer->spinout_timer) {
         racer_spinout_car(obj, racer, updateRate, updateRateF); // Sbinalla
@@ -2764,7 +2764,311 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/racer/func_80055EC0.s")
+/**
+ * Handles the input and activation of any weapons the player is carrying.
+ * Also handles the egg object from Fire Mountain, which takes precedent, even if the player is holding a weapon.
+ */
+void handle_racer_items(Object* obj, Object_Racer* racer, s32 updateRate) {
+    LevelObjectEntryCommon newObject;
+    s32 weaponID;
+    Object* spawnedObj;
+    s32 objID;
+    Object* heldObj;
+    Object* intendedTarget;
+    Object_64* magnetTarget;
+    f32 sp64;
+    ObjectModel* temp_a1;
+    Object_64* objData;
+    f32 velocity;
+    f32 distance;
+    f32 var_f2;
+    f32 var_f12;
+    s32 pad;
+    s8 *miscAsset;
+    Vertex *heldObjData;
+    s32 playerIndex;
+    u16 soundID = 0;
+
+    if (racer->held_obj != NULL) {
+        heldObj = racer->held_obj;
+        if (gCurrentButtonsPressed & Z_TRIG || racer->raceFinished || racer->attackType) {
+            var_f2 = 0;
+            var_f12 = 0;
+            if (obj->unk68[obj->segment.unk3A] != NULL) {
+                temp_a1 = obj->unk68[obj->segment.unk3A]->objModel;
+                if (obj->segment.header->unk58 > -1 && obj->segment.header->unk58 < temp_a1->unk18) {
+                    if (obj->unk44 != NULL) {
+                        heldObjData = obj->unk44;
+                        heldObjData += temp_a1->unk14[obj->segment.header->unk58];
+                        var_f2 = heldObjData->y;
+                        var_f2 *= obj->segment.trans.scale;
+                        var_f12 = heldObjData->z;
+                        var_f12 *= obj->segment.trans.scale;
+                    }
+                }
+            }
+            heldObj->segment.trans.x_position = obj->segment.trans.x_position + (racer->ox1 * var_f12) + (racer->ox2 * var_f2);
+            heldObj->segment.trans.y_position = obj->segment.trans.y_position + (racer->oy1 * var_f12) + (racer->oy2 * var_f2);
+            heldObj->segment.trans.z_position = obj->segment.trans.z_position + (racer->oz1 * var_f12) + (racer->oz2 * var_f2);
+            heldObj->segment.unk2C.half.lower = obj->segment.unk2C.half.lower;
+            heldObj->segment.x_velocity = obj->segment.x_velocity * 0.7;
+            heldObj->segment.y_velocity = obj->segment.y_velocity - 2.0;
+            heldObj->segment.z_velocity = obj->segment.z_velocity * 0.7;
+            heldObjData = (Object_64 *) &heldObj->unk64->egg;
+            ((Object_64 *)heldObjData)->egg.unkB = 2;
+            racer->held_obj = NULL;
+            racer->unk211 = 1;
+        }
+    } else {
+        if (gCurrentButtonsPressed & Z_TRIG) {
+            racer->unk211 = 0;
+        }
+        if (racer->unk211) {
+            gCurrentButtonsReleased = 0;
+            gCurrentButtonsPressed &= ~Z_TRIG;
+        }
+        if (racer->unk175 == 0) {
+            racer->unk140 = NULL;
+        }
+        if (racer->balloon_type == -1) {
+            racer->balloon_quantity = 0;
+        }
+        if (racer->balloon_quantity <= 0) {
+            if (gCurrentButtonsPressed & Z_TRIG) {
+                play_char_horn_sound(obj, racer);
+            }
+        } else {
+            miscAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK0C);
+            weaponID = miscAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
+            if (miscAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)] == WEAPON_NONE) {
+                racer->balloon_quantity = 0;
+                return;
+            }
+            magnetTarget = NULL;
+            if (gCurrentButtonsPressed & Z_TRIG) {
+                func_800A74EC(318, racer->playerIndex);
+            }
+            if (racer->unk195) {
+                if (racer->unk175 == 0) {
+                    racer->unk195 = 0;
+                } else {
+                    return;
+                }
+            }
+            if ((gCurrentRacerInput & Z_TRIG) || gCurrentButtonsReleased & Z_TRIG) {
+                switch (weaponID) {
+                    case WEAPON_ROCKET_HOMING:
+                        intendedTarget = func_8005698C(obj, racer, &sp64); \
+                        racer->unk175 = 0;
+                        racer->unk140 = intendedTarget;
+                        break;
+                    case WEAPON_MAGNET_LEVEL_1:
+                    case WEAPON_MAGNET_LEVEL_3:
+                    case WEAPON_MAGNET_LEVEL_2:
+                        intendedTarget = func_8005698C(obj, racer, &sp64);
+                        racer->unk175 = 0;
+                        if (weaponID == WEAPON_MAGNET_LEVEL_1) {
+                            distance = 1000.0f;
+                        } else {
+                            distance = 1500.0f;
+                        }
+                        if (sp64 < distance) {
+                            if (weaponID == WEAPON_MAGNET_LEVEL_3 && intendedTarget != NULL) {
+                                magnetTarget = intendedTarget->unk64;
+                            }
+                            racer->unk140 = intendedTarget;
+                        } else {
+                            racer->unk140 = NULL;
+                            intendedTarget = NULL;
+                        }
+                        break;
+                    }
+                }
+                objID = 29;
+                if (gCurrentButtonsReleased & Z_TRIG) {
+                    velocity = 30.0f;
+                    switch (weaponID) {
+                    case WEAPON_ROCKET_HOMING:
+                        sp64 = -10.0f;
+                        objID = 229;
+                        break;
+                    case WEAPON_ROCKET:
+                        sp64 = -10.0f;
+                        break;
+                    case WEAPON_TRIPMINE:
+                    case WEAPON_UNK_11:
+                        sp64 = 10.0f;
+                        velocity = -2.0f;
+                        objID = 14;
+                        break;
+                    case WEAPON_OIL_SLICK:
+                        if (racer->unk1D6 != 2) {
+                            objID = 130;
+                        } else {
+                            objID = 235;
+                        }
+                        sp64 = 10.0f;
+                        velocity = -2.0f;
+                        break;
+                    case WEAOON_BUBBLE_TRAP:
+                        sp64 = 10.0f;
+                        velocity = -2.0f;
+                        objID = 46;
+                        intendedTarget = NULL;
+                        break;
+                    case WEAPON_NITRO_LEVEL_1:
+                    case WEAPON_NITRO_LEVEL_2:
+                    case WEAPON_NITRO_LEVEL_3:
+                        switch(weaponID) {
+                            case WEAPON_NITRO_LEVEL_3:
+                                 // IDO demands this to be on 1 line.
+                                racer->boostTimer = normalise_time(75); \
+                                racer->boostType = BOOST_LARGE;
+                                break;
+                            case WEAPON_NITRO_LEVEL_2:
+                                 // Ditto
+                                racer->boostTimer = normalise_time(55); \
+                                racer->boostType = BOOST_MEDIUM;
+                                break;
+                            default:
+                                 // :(
+                                racer->boostTimer = normalise_time(35); \
+                                racer->boostType = BOOST_SMALL;
+                                break;
+                        }
+                        if (racer->throttleReleased) {
+                            racer->boostType |= 4;
+                        }
+                        if (weaponID == WEAPON_NITRO_LEVEL_3) {
+                            racer_play_sound(obj, SOUND_NITRO_LEVEL3_CHARGE);
+                            func_800570A4(obj, 0x233, 0x1E);
+                        } else {
+                            racer_play_sound(obj, SOUND_NITRO_BOOST);
+                        }
+                        racer->balloon_quantity -= 1;
+                        if (weaponID == WEAPON_NITRO_LEVEL_1) {
+                            if (racer->raceFinished == FALSE) {
+                                func_80072348(racer->playerIndex, 6);
+                            }
+                        } else if (racer->raceFinished == FALSE) {
+                            func_80072348(racer->playerIndex, 8);
+                        }
+                        return;
+                    case WEAPON_MAGNET_LEVEL_1:
+                    case WEAPON_MAGNET_LEVEL_2:
+                        racer->balloon_quantity -= 1;
+                        if (racer->playerIndex != PLAYER_COMPUTER) {
+                            if (intendedTarget != NULL) {
+                                racer->unk175 = 0x5A;
+                                racer->unk184 = (weaponID - 5) >> 1;
+                            }
+                            if (racer->raceFinished == FALSE) {
+                                func_80072348(racer->playerIndex, 15);
+                            }
+                        }
+                        return;
+                    case WEAPON_MAGNET_LEVEL_3:
+                        racer->balloon_quantity -= 1;
+                        racer->unk140 = NULL;
+                        if (racer->playerIndex != PLAYER_COMPUTER) {
+                            if (magnetTarget != NULL) {
+                                magnetTarget->racer.unk195 = 1;
+                                magnetTarget->racer.unk175 = 120;
+                                magnetTarget->racer.unk140 = obj;
+                                magnetTarget->racer.unk184 = 2;
+                            }
+                            if (racer->raceFinished == FALSE) {
+                                func_80072348(racer->playerIndex, 15);
+                            }
+                        }
+                        return;
+                    case WEAPON_SHIELD_LEVEL_1:
+                        racer->shieldType = SHIELD_LEVEL1;
+                        racer->shieldTimer = 300;
+                        racer->balloon_quantity -= 1;
+                        return;
+                    case WEAPON_SHIELD_LEVEL_2:
+                        racer->shieldType = SHIELD_LEVEL2;
+                        racer->balloon_quantity -= 1;
+                        racer->shieldTimer = 600;
+                        return;
+                    case WEAPON_SHIELD_LEVEL_3:
+                        racer->shieldType = SHIELD_LEVEL3;
+                        racer->shieldTimer = 900;
+                        racer->balloon_quantity -= 1;
+                        return;
+                    default:
+                        sp64 = 0;
+                        break;
+                    }
+                    play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 129);
+                    newObject.x = obj->segment.trans.x_position + (racer->ox1 * sp64);
+                    newObject.y = obj->segment.trans.y_position + (racer->oy1 * sp64) + (10.0f * racer->oy2);
+                    newObject.z = obj->segment.trans.z_position + (racer->oz1 * sp64);
+                    newObject.size = 8;
+                    newObject.objectID = objID;
+                    spawnedObj = spawn_object(&newObject, 1);
+                    if (spawnedObj != NULL) {
+                        spawnedObj->segment.unk3C_a.level_entry = NULL;
+                        spawnedObj->segment.x_velocity = obj->segment.x_velocity - (racer->ox1 * velocity);
+                        spawnedObj->segment.y_velocity = obj->segment.y_velocity - (racer->oy1 * velocity);
+                        spawnedObj->segment.z_velocity = obj->segment.z_velocity - (racer->oz1 * velocity);
+                        spawnedObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
+                        spawnedObj->segment.trans.x_rotation = obj->segment.trans.x_rotation;
+                        if (racer->unk1D6 == 1 && racer->unk1E5) {
+                            if (spawnedObj->segment.trans.x_rotation > -0x400 && spawnedObj->segment.trans.x_rotation < 0x400) {
+                                spawnedObj->segment.trans.x_rotation = 0;
+                            }
+                        }
+                        objData = spawnedObj->unk64;
+                        objData->weapon.owner = obj;
+                        objData->weapon.target = intendedTarget;
+                        objData->weapon.checkpoint = racer->checkpoint;
+                        objData->weapon.forwardVel = (racer->velocity - velocity);
+                        objData->weapon.weaponID = weaponID;
+                        switch (objData->weapon.weaponID) {
+                        case WEAPON_ROCKET_HOMING:
+                            soundID = SOUND_NYOOM2;
+                            break;
+                        case WEAPON_ROCKET:
+                            soundID = SOUND_NYOOM3;
+                            break;
+                        case WEAPON_TRIPMINE:
+                            soundID = SOUND_PLOP;
+                            break;
+                            case WEAPON_OIL_SLICK:
+                            if (racer->unk1D6 != 2) {
+                                spawnedObj->unk50->unk0 = 0;
+                            }
+                            soundID = SOUND_SPLOINK2;
+                            break;
+                        case WEAOON_BUBBLE_TRAP:
+                            soundID = SOUND_PLOP;
+                            break;
+                        case WEAPON_UNK_11:
+                            spawnedObj->segment.unk18 = 0;
+                            break;
+                        }
+                        if (soundID != SOUND_UNK00) {
+                            if (racer->playerIndex == PLAYER_COMPUTER) {
+                                func_80009558(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                            } else {
+                                if (racer->unk218) {
+                                    func_8000488C(racer->unk218);
+                                }
+                                play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32** ) &racer->unk218);
+                            }
+                        }
+                    }
+                    if (racer->balloon_quantity > 0) {
+                        racer->balloon_quantity = racer->balloon_quantity - 1;
+                    } else {
+                        racer->balloon_quantity = 0;
+                }
+            }
+        }
+    }
+}
 
 void play_char_horn_sound(Object *obj, Object_Racer *racer) {
     if (get_filtered_cheats() & CHEAT_HORN_CHEAT) {
@@ -4135,7 +4439,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             obj->segment.z_velocity = var_f28 / updateRateF;
         }
         func_80042D20(obj, racer, updateRate);
-        func_80055EC0(obj, racer, updateRate);
+        handle_racer_items(obj, racer, updateRate);
         racer->unk1E5 = 0;
         obj->unk4C->x_position = obj->segment.trans.x_position;
         obj->unk4C->y_position = obj->segment.trans.y_position;

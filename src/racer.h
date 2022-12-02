@@ -72,6 +72,26 @@ typedef enum ShieldType {
     SHIELD_LEVEL3
 } ShieldType;
 
+typedef enum WeaponType {
+    WEAPON_NONE = -1,
+    WEAPON_ROCKET_HOMING,
+    WEAPON_ROCKET,
+    WEAPON_TRIPMINE,
+    WEAPON_OIL_SLICK,
+    WEAPON_NITRO_LEVEL_1,
+    WEAPON_MAGNET_LEVEL_1,
+    WEAPON_MAGNET_LEVEL_3,
+    WEAPON_MAGNET_LEVEL_2,
+    WEAPON_NITRO_LEVEL_2,
+    WEAPON_UNK_09,
+    WEAOON_BUBBLE_TRAP,
+    WEAPON_UNK_11,
+    WEAPON_SHIELD_LEVEL_1,
+    WEAPON_SHIELD_LEVEL_2,
+    WEAPON_SHIELD_LEVEL_3,
+    WEAPON_NITRO_LEVEL_3
+} WeaponType;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -265,7 +285,7 @@ void func_80042D20(Object *, Object_Racer *, s32);
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
 void drop_bananas(Object *obj, Object_Racer *racer, s32 numBananas);
-void func_80055EC0(Object *obj, Object_Racer *racer, s32);
+void handle_racer_items(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
@@ -280,7 +300,7 @@ void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
-Object* func_8005698C(Object_Racer* racer, Object* obj, f32* arg2);
+Object* func_8005698C(Object* racer, Object_Racer* obj, f32* dist);
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
 
 #endif

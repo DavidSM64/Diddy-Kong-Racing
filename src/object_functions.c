@@ -2227,7 +2227,7 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
 
 void obj_loop_weapon(Object *obj, s32 speed) {
     Object_Weapon *obj64 = &obj->unk64->weapon;
-    switch (obj64->unk18) {
+    switch (obj64->weaponID) {
         case 0:
         case 1:
             func_8003E694(obj, speed);
