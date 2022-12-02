@@ -3277,7 +3277,7 @@ void drop_bananas(Object* obj, Object_Racer* racer, s32 number) {
     Object* bananaObj;
     f32 variance;
 
-    if (!(get_filtered_cheats() & 0x80)) {
+    if (!(get_filtered_cheats() & CHEAT_START_WITH_10_BANANAS)) {
         racer->unk188 = 0;
         if (racer->bananas < number) {
             number = racer->bananas;
