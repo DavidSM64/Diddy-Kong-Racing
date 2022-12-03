@@ -42,7 +42,8 @@ typedef enum BoostType {
     BOOST_MEDIUM,
     BOOST_LARGE,
     BOOST_UNK3,
-    BOOST_SMALL_FAST,
+    EMPOWER_BOOST,
+    BOOST_SMALL_FAST = 4,
     BOOST_MEDIUM_FAST,
     BOOST_LARGE_FAST
 } BoostType;
@@ -282,10 +283,10 @@ f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 upda
 void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 void func_80042D20(Object *, Object_Racer *, s32);
 void handle_racer_items(Object* obj, Object_Racer* racer, s32 updateRate);
+void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
-void drop_bananas(Object *obj, Object_Racer *racer, s32 numBananas);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);

@@ -1027,9 +1027,9 @@ typedef struct Object_Racer {
   /* 0x172 */ s8 balloon_type;
   /* 0x173 */ s8 balloon_quantity;
   /* 0x174 */ s8 balloon_level;
-  /* 0x175 */ s8 unk175;
+  /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ u8 *unk178;
+  /* 0x178 */ void *unk178;
   /* 0x17C */ s32 shieldSoundMask;
   /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
   /* 0x184 */ s8 unk184;

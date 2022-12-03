@@ -1337,7 +1337,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         } else {
             tempRacer->unk18A = 0;
         }
-        if (tempRacer->unk175) {
+        if (tempRacer->magnetTimer) {
             func_80056E2C(obj, tempRacer, updateRate);
         }
         // Zero out input before the race has begun.
@@ -1432,7 +1432,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             func_8005F310(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
             break;
         }
-        if (tempRacer->unk175 == 0) {
+        if (tempRacer->magnetTimer == 0) {
             if (tempRacer->unk178) {
                 func_8000488C(tempRacer->unk178);
                 tempRacer->unk178 = 0;
@@ -2451,7 +2451,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         object_transform_to_matrix_2(&mtx, &D_8011D510);
         guMtxXFMF(mtx, racer->lateral_velocity, 0.0f, racer->velocity, &obj->segment.x_velocity, &tempVel, &obj->segment.z_velocity);
     }
-    if (racer->unk175) {
+    if (racer->magnetTimer) {
         obj->segment.x_velocity = D_8011D578;
         obj->segment.z_velocity = D_8011D57C;
     }
@@ -2827,7 +2827,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
             gCurrentButtonsReleased = 0;
             gCurrentButtonsPressed &= ~Z_TRIG;
         }
-        if (racer->unk175 == 0) {
+        if (racer->magnetTimer == 0) {
             racer->unk140 = NULL;
         }
         if (racer->balloon_type == -1) {
@@ -2849,7 +2849,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                 func_800A74EC(318, racer->playerIndex);
             }
             if (racer->unk195) {
-                if (racer->unk175 == 0) {
+                if (racer->magnetTimer == 0) {
                     racer->unk195 = 0;
                 } else {
                     return;
@@ -2859,14 +2859,14 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                 switch (weaponID) {
                     case WEAPON_ROCKET_HOMING:
                         intendedTarget = func_8005698C(obj, racer, &sp64); \
-                        racer->unk175 = 0;
+                        racer->magnetTimer = 0;
                         racer->unk140 = intendedTarget;
                         break;
                     case WEAPON_MAGNET_LEVEL_1:
                     case WEAPON_MAGNET_LEVEL_3:
                     case WEAPON_MAGNET_LEVEL_2:
                         intendedTarget = func_8005698C(obj, racer, &sp64);
-                        racer->unk175 = 0;
+                        racer->magnetTimer = 0;
                         if (weaponID == WEAPON_MAGNET_LEVEL_1) {
                             distance = 1000.0f;
                         } else {
@@ -2937,7 +2937,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                                 break;
                         }
                         if (racer->throttleReleased) {
-                            racer->boostType |= 4;
+                            racer->boostType |= EMPOWER_BOOST;
                         }
                         if (weaponID == WEAPON_NITRO_LEVEL_3) {
                             racer_play_sound(obj, SOUND_NITRO_LEVEL3_CHARGE);
@@ -2959,7 +2959,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                         racer->balloon_quantity -= 1;
                         if (racer->playerIndex != PLAYER_COMPUTER) {
                             if (intendedTarget != NULL) {
-                                racer->unk175 = 0x5A;
+                                racer->magnetTimer = 0x5A;
                                 racer->unk184 = (weaponID - 5) >> 1;
                             }
                             if (racer->raceFinished == FALSE) {
@@ -2973,7 +2973,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                         if (racer->playerIndex != PLAYER_COMPUTER) {
                             if (magnetTarget != NULL) {
                                 magnetTarget->racer.unk195 = 1;
-                                magnetTarget->racer.unk175 = 120;
+                                magnetTarget->racer.magnetTimer = 120;
                                 magnetTarget->racer.unk140 = obj;
                                 magnetTarget->racer.unk184 = 2;
                             }
@@ -3288,7 +3288,7 @@ void drop_bananas(Object* obj, Object_Racer* racer, s32 number) {
             angle[2] = racer->unk1A0;
             pos[0] = 0;
             pos[1] = 8;
-            pos[2] = 0xC;
+            pos[2] = 12;
             s16_vec3_apply_object_rotation((ObjectTransform* ) angle, pos);
             newObject.x = pos[0] + (s32) obj->segment.trans.x_position;
             newObject.y = pos[1] + (s32) obj->segment.trans.y_position;
@@ -4121,7 +4121,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if ((obj->segment.y_velocity < 4.0) && ((racer->unk1E2 >= 3) || (racer->buoyancy != 0.0))) {
             racer->unk1F1 = 0;
         }
-        if (racer->unk175 != 0) {
+        if (racer->magnetTimer != 0) {
             func_80056E2C(obj, racer, updateRate);
         }
         if (racer->unk1D6 != 1) {
@@ -4212,7 +4212,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
     }
-    if (racer->unk175 == 0) {
+    if (racer->magnetTimer == 0) {
         if (racer->unk178 != NULL) {
             func_8000488C(racer->unk178);
             racer->unk178 = NULL;
