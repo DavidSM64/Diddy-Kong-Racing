@@ -310,6 +310,7 @@ void rumble_controllers(s32 arg0) {
     }
 }
 
+// arg0 is the number of bits we care about.
 s32 func_80072C54(s32 arg0) {
     s32 ret;
     u32 var_v0;
@@ -339,7 +340,7 @@ s32 func_80072C54(s32 arg0) {
     return ret;
 }
 
-// arg0 is the number of times to loop
+// arg0 is the number of bits we care about
 // arg1 is the bit being looked for.
 void func_80072E28(s32 arg0, s32 arg1) {
     u32 var_v0;
@@ -350,7 +351,7 @@ void func_80072E28(s32 arg0, s32 arg1) {
             if (D_801241F4 == 0) {
                 *D_801241EC++ = D_801241F0;
                 D_801241F0 = 0;
-                D_801241F4 = 128; //Reset the byte counter, so we can shift 8 times befor coming back here.
+                D_801241F4 = 128; //Reset the byte counter, so we can shift 8 times before coming back here.
             }
             if (arg1 & var_v0) {
                 D_801241F0 |= D_801241F4;
@@ -1036,7 +1037,75 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
+
+#if 1
+static s8 D_800E77DC = 0;                           /* const */
+
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, u8 *arg4) {
+    s32 fileNumber;
+    s32 fileSize;
+    s32 ret;
+    s32 i;
+    u8 *var_a0;
+    u8 *fileData;
+    u8 *var_a1;
+    GhostHeader *var_s1;
+    u8 temp_v0_2;
+    u8 *var_a2;
+    u8 *var_v1;
+
+    ret = get_si_device_status(controllerIndex);
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    }
+    i = 0;
+    var_a0 = arg1;
+    var_a1 = arg3;
+    var_a2 = arg2;
+    var_v1 = arg4;
+    do {
+        *var_a0 = 0xFF;
+        var_v1[0] = 0;
+        temp_v0_2 = var_v1[1];
+        i += 1;
+        *var_a1 = temp_v0_2;
+        var_a0 += 1;
+        var_v1 += 2;
+        var_a1 += 1;
+        var_a2 += 1;
+        var_a2[-1] = temp_v0_2;
+    } while (i < 6);
+    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", &D_800E77DC, &fileNumber);
+    if (ret == CONTROLLER_PAK_GOOD) {
+        ret = get_file_size(controllerIndex, fileNumber, &fileSize);
+        if (ret == CONTROLLER_PAK_GOOD) {
+            fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
+            ret = read_data_from_controller_pak(controllerIndex, fileNumber, fileData, fileSize);
+            if (ret == CONTROLLER_PAK_GOOD) {
+                for (i = 0, var_s1 = fileData + 4; i < 6; i++) {
+                    if (var_s1[i].unk0.levelID != 0xFF) {
+                        if (calculate_ghost_header_checksum((GhostHeader *) &fileData[var_s1[i].unk2]) != fileData[var_s1[i].unk2]) {
+                            ret = CONTROLLER_PAK_BAD_DATA;
+                            break;
+                        } else {
+                            arg1[i] = var_s1[i].unk0.levelID;
+                            arg2[i] = var_s1[i].unk0.vehicleID;
+                            arg3[i] = fileData[var_s1[i].characterID] + 2;
+                            arg4[i * 2] = fileData[var_s1[i].characterID] + 4;
+                        }
+                    }
+                }
+            }
+            free_from_memory_pool(fileData);
+        }
+    }
+    start_reading_controller_data(controllerIndex);
+    return ret;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_800756D4.s")
+#endif
 
 SIDeviceStatus get_si_device_status(s32 controllerIndex) {
     OSMesg unusedMsg;

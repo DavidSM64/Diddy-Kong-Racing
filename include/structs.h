@@ -1536,17 +1536,24 @@ typedef struct Object {
 } Object;
 
 // Unused
-typedef struct GhostHeaderChecksum {
-  u8  levelID;
-    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
-} GhostHeaderChecksum;
+typedef struct GhostHeaderUnk0 {
+  u8 levelID;
+  u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+} GhostHeaderUnk0;
 
 /* Size: 8 bytes */
 typedef struct GhostHeader {
-    //GhostHeaderChecksum checksum;
-    s16 checksum;
-    u8  characterID; // 9 = T.T.
-    u8  unk3; // Might just be padding?
+    union {
+      GhostHeaderUnk0 unk0;
+      s16 checksum;
+    };
+    union {
+      struct {
+        u8 characterID; // 9 = T.T.
+        u8 unk3;
+      };
+      s16 unk2;
+    };
     s16 time; // In frames, where 60 frames = 1 second.
     s16 nodeCount;
 } GhostHeader;
