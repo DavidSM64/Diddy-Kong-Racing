@@ -514,7 +514,7 @@ void obj_loop_trophycab(Object* obj, s32 updateRate) {
     s32 dialogueID;
     f32 diffZ;
     s32 pad2;
-    s32 sp28;
+    s32 worldBalloons;
     s32 bossFlags;
 
     settings = get_settings();
@@ -546,21 +546,21 @@ void obj_loop_trophycab(Object* obj, s32 updateRate) {
         dist = sqrtf((diffX * diffX) + (diffZ * diffZ)); // unused
         bossFlags = settings->bosses;
         bossFlags |= 0x800;
-        sp28 = (settings->balloonsPtr[settings->worldId] >= 8);
-        if (sp28) {
-            sp28 = ((1 << (settings->worldId + 6)) & bossFlags) != 0;
+        worldBalloons = (settings->balloonsPtr[settings->worldId] >= 8);
+        if (worldBalloons) {
+            worldBalloons = ((1 << (settings->worldId + 6)) & bossFlags) != 0;
         }
-        if (obj->unk78 == NULL && func_800C3400() == 0) {
+        if (obj->unk78 == NULL && func_800C3400() == FALSE) {
             if (obj->unk5C->unk100 != NULL) {
                 if (gfxData->unk4 == 0) {
-                    if (sp28) {
+                    if (worldBalloons) {
                         obj->unk78 = 1;
                         play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, NULL);
                         func_800A3870();
                     } else {
                         func_800C31EC(4);
-                        gfxData->unk4 = 0xB4;
-                        gfxData->unk0 = 0x8C;
+                        gfxData->unk4 = 120;
+                        gfxData->unk0 = 140;
                         set_sndfx_player_voice_limit(16);
                         set_music_fade_timer(-8);
                         play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
@@ -578,7 +578,7 @@ void obj_loop_trophycab(Object* obj, s32 updateRate) {
             }
         }
         if (obj->unk5C->unk100 != NULL || func_800C3400()) {
-            gfxData->unk4 = 0xB4;
+            gfxData->unk4 = 180;
         }
         if (gfxData->unk4 > 0) {
             gfxData->unk4 -= updateRate;
@@ -602,7 +602,7 @@ void obj_loop_trophycab(Object* obj, s32 updateRate) {
             func_8005A3B0();
         }
         obj->unk5C->unk100 = NULL;
-        if (sp28) {
+        if (worldBalloons) {
             obj->unk54->unk28 = 0.552f;
         }
     }
