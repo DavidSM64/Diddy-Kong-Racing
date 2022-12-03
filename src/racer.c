@@ -2959,7 +2959,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                         racer->balloon_quantity -= 1;
                         if (racer->playerIndex != PLAYER_COMPUTER) {
                             if (intendedTarget != NULL) {
-                                racer->magnetTimer = 0x5A;
+                                racer->magnetTimer = 90;
                                 racer->unk184 = (weaponID - 5) >> 1;
                             }
                             if (racer->raceFinished == FALSE) {

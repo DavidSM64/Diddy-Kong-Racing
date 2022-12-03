@@ -689,6 +689,10 @@ typedef struct Object_54 {
     u8 unk18;
     u8 unk19;
     u8 unk1A;
+    u8 unk1B;
+    u8 pad1C[12];
+    f32 unk28;
+    f32 unk2C;
 } Object_54;
 
 typedef struct Object_58_4 {
@@ -714,7 +718,7 @@ typedef struct Object_60 {
     s32 unk0;
     void *unk4; // Object* pointer
     u8 unk8[0x24];
-    s32 *unk2C;
+    s8 *unk2C;
 } Object_60;
 
 struct Object;

@@ -498,164 +498,115 @@ void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4; // Not sure about the values here.
 }
 
-#ifdef NON_EQUIVALENT
-
-void play_sound_global(u16, s32 *);
-void play_sound_global(u16, s32 *);
-u32 func_80001C08(void);
-void play_sound_global(u16, s32 *);
-Object *spawn_object(void *, s32);
-void func_8005A3B0(void);
-void func_8006F254(void);
-void func_8009CF68(s32 arg0);
-s32 func_8009CFEC(u32 arg0);
-void func_800A3870(void);
-void func_800AB1AC(s32 arg0);
-void func_800AB1D4(u8 arg0);
-void func_800C31EC(s32);
-s32 func_800C3400(void);
-LevelHeader *get_current_level_header(void);
-Settings *get_settings(void);
-void set_music_fade_timer(s32 time);
-void set_sndfx_player_voice_limit(u8 voiceLimit);
-
-typedef struct Object_54_80034E9C {
-    u8 pad0[0x28];
-    f32 unk28;
-    f32 unk2C;
-} Object_54_80034E9C;
-
-// Has regalloc & stack issues.
-
-void obj_loop_trophycab(Object *obj, s32 speed) {
-    s32 sp34;
-    s32 isTrophyRaceAvaliable;
-    s32 raceType;
-    LevelObjectEntryCommon sp44;
-    Settings *settings;
-    LevelHeader *curLevelHeader;
-    Object_TrophyCabinet *obj64;
-    Object *trophyObj;
-    Object *playerObj;
-    f32 xDiff;
-    f32 zDiff;
-    s32 new_var2;
+/**
+ * Trophy Cabinet loop behaviour.
+ * Displays the dialogue when ran into.
+ * Has unused behaviour that presumably would've handled activating the dialogue from here.
+*/
+void obj_loop_trophycab(Object* obj, s32 updateRate) {
+    Settings* settings;
+    Object_TrophyCabinet *gfxData;
+    f32 dist;
+    LevelObjectEntryCommon newObject;
+    LevelHeader* header;
+    Object* tempObj;
+    f32 diffX;
+    s32 dialogueID;
+    f32 diffZ;
+    s32 pad2;
+    s32 sp28;
+    s32 bossFlags;
 
     settings = get_settings();
-    curLevelHeader = get_current_level_header();
-    obj64 = &obj->unk64->trophy_cabinet;
-
-    // Show trophy inside the cabinet
+    header = get_current_level_header();
+    gfxData = (Object_TrophyCabinet *)obj->unk64;
     if (obj->unk7C.word == 0) {
-        raceType = curLevelHeader->race_type;
-        if ((raceType != 7) && (raceType != 6)) { // Make sure the current level is not a cutscene.
+        if (header->race_type != RACETYPE_CUTSCENE_2 && header->race_type != RACETYPE_CUTSCENE_1) {
             obj->unk7C.word = 1;
             if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) {
-                sp44.objectID = 128;
-                sp44.x = obj->segment.unk3C_a.level_entry->trophyCabinet.common.x;
-                sp44.y = obj->segment.unk3C_a.level_entry->trophyCabinet.common.y;
-                sp44.z = obj->segment.unk3C_a.level_entry->trophyCabinet.common.z;
-                sp44.size = 8;
-                trophyObj = spawn_object(&sp44, 1);
-                if (trophyObj) {
-                    trophyObj->segment.unk3C_a.level_entry = NULL;
-                    trophyObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
+                newObject.objectID = 0x80;
+                newObject.x = obj->segment.unk3C_a.level_entry->animation.common.x;
+                newObject.y = obj->segment.unk3C_a.level_entry->animation.common.y;
+                newObject.z = obj->segment.unk3C_a.level_entry->animation.common.z;
+                newObject.size = 8;
+                tempObj = spawn_object(&newObject, 1);
+                if (tempObj != NULL) {
+                    tempObj->segment.unk3C_a.level_entry = NULL;
+                    tempObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
                 }
             }
         }
     }
-
-    ((Object_54_80034E9C *) obj->unk54)->unk2C = 0.612f;
-    ((Object_54_80034E9C *) obj->unk54)->unk28 = 0.0f;
-
-    playerObj = get_racer_object(0);
-    if (playerObj) {
-        xDiff = obj->segment.trans.x_position - playerObj->segment.trans.x_position;
-        zDiff = playerObj->segment.trans.z_position - obj->segment.trans.z_position;
-        sqrtf((xDiff * xDiff) + (zDiff * zDiff)); // Distance on X & Z axes. Not used?
-
-        new_var2 = settings->bosses;
-
-        /**
-          * Future Fun Land doesn't have a boss rematch, so this OR is needed so that
-          * trophy race becomes avaliable after all the balloons have been collected.
-          */
-        new_var2 |= 0x800;
-
-        // Check if all the balloons have been collected.
-        isTrophyRaceAvaliable = (settings->balloonsPtr[settings->worldId] < 8) ^ 1;
-        if (isTrophyRaceAvaliable) {
-            // Check if the boss rematch has been beaten.
-            isTrophyRaceAvaliable = ((1 << (settings->worldId + 6)) & new_var2) != 0;
+    obj->unk54->unk2C = 0.612f;
+    obj->unk54->unk28 = 0.0f;
+    tempObj = get_racer_object(PLAYER_ONE);
+    if (tempObj != NULL) {
+        diffX = obj->segment.trans.x_position - tempObj->segment.trans.x_position;
+        diffZ = obj->segment.trans.z_position - tempObj->segment.trans.z_position;
+        dist = sqrtf((diffX * diffX) + (diffZ * diffZ)); // unused
+        bossFlags = settings->bosses;
+        bossFlags |= 0x800;
+        sp28 = (settings->balloonsPtr[settings->worldId] >= 8);
+        if (sp28) {
+            sp28 = ((1 << (settings->worldId + 6)) & bossFlags) != 0;
         }
-
-        // Hit detection between cabinet & player?
-        if ((((obj->unk78 == 0) && (!func_800C3400())) && obj->unk5C->unk100) && (obj64->unk4 == 0)) {
-            // A hit has been detected at this point.
-            if (isTrophyRaceAvaliable) {
-                obj->unk78 = 1;
-                play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, NULL);
-                func_800A3870();
-            }
-            else
-            {
-                func_800C31EC(4);
-                obj64->unk4 = 180;
-                obj64->unk0 = 140;
-                set_sndfx_player_voice_limit(16);
-                set_music_fade_timer(-8);
-                play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
+        if (obj->unk78 == NULL && func_800C3400() == 0) {
+            if (obj->unk5C->unk100 != NULL) {
+                if (gfxData->unk4 == 0) {
+                    if (sp28) {
+                        obj->unk78 = 1;
+                        play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, NULL);
+                        func_800A3870();
+                    } else {
+                        func_800C31EC(4);
+                        gfxData->unk4 = 0xB4;
+                        gfxData->unk0 = 0x8C;
+                        set_sndfx_player_voice_limit(16);
+                        set_music_fade_timer(-8);
+                        play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
+                    }
+                }
             }
         }
-        if ((obj64->unk0 != 0) && (func_80001C08() == 0)) {
-            if (speed < obj64->unk0) {
-                obj64->unk0 -= speed;
-            }
-            else
-            {
-                obj64->unk0 = 0;
+        if (gfxData->unk0 && func_80001C08() == 0) {
+            if (updateRate < gfxData->unk0) {
+                gfxData->unk0 -= updateRate;
+            } else {
+                gfxData->unk0 = 0;
                 set_music_fade_timer(8);
                 set_sndfx_player_voice_limit(6);
             }
         }
-        if (obj->unk5C->unk100 || func_800C3400()) {
-            obj64->unk4 = 180;
+        if (obj->unk5C->unk100 != NULL || func_800C3400()) {
+            gfxData->unk4 = 0xB4;
         }
-        if (obj64->unk4 > 0) {
-            obj64->unk4 -= speed;
-        }
-        else
-        {
-            obj64->unk4 = 0;
+        if (gfxData->unk4 > 0) {
+            gfxData->unk4 -= updateRate;
+        } else {
+            gfxData->unk4 = 0;
         }
         if (obj->unk78 == 1) {
             func_800AB1AC(3);
-            func_800AB1D4(0);
-            sp34 = func_8009CFEC(4);
-            if (sp34 != 0) {
-                obj->unk78 = 0;
+            func_800AB1D4(0U);
+            dialogueID = func_8009CFEC(4);
+            if (dialogueID) {
+                obj->unk78 = NULL;
                 func_8009CF68(4);
-                if (sp34 == 1) {
+                if (dialogueID == 1) {
                     func_8006F254();
                     obj->unk78 = 2;
-                }
-                else
-                {
+                } else {
                     func_800AB1D4(1);
                 }
             }
             func_8005A3B0();
         }
         obj->unk5C->unk100 = NULL;
-        if (isTrophyRaceAvaliable) {
-            // Changes lighting/color of the cabinet?
-            ((Object_54_80034E9C *) obj->unk54)->unk28 = 0.552f;
+        if (sp28) {
+            obj->unk54->unk28 = 0.552f;
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trophycab.s")
-#endif
 
 void obj_init_collectegg(Object *obj, UNUSED LevelObjectEntry_CollectEgg *entry) {
     obj->unk4C->unk14 = 2;
@@ -1212,10 +1163,80 @@ void obj_init_overridepos(UNUSED Object *obj, UNUSED LevelObjectEntry_OverridePo
 UNUSED void func_80037D60(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
+/**
+ * Wizpig ship initilisation.
+ * Does nothing.
+*/
 void obj_init_wizpigship(UNUSED Object *obj, UNUSED LevelObjectEntry_WizpigShip *entry) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_wizpigship.s")
+/**
+ * Wizpig ship loop behaviour.
+ * Periodically shoots laserbeams in front of it.
+*/
+void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate) {
+    s32 i;
+    s32 index;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    Object *newObj;
+    ObjectModel *wizShipModel;
+    Matrix shipMtx;
+    Matrix laserMtx;
+    LevelObjectEntryCommon newObject;
+    ObjectTransform trans;
+
+    func_8001F460(wizShipObj, updateRate, wizShipObj);
+    if ((*wizShipObj->unk68) != NULL) {
+        wizShipModel = (*wizShipObj->unk68)->objModel;
+        if (wizShipObj->unk7C.word > 0) {
+            wizShipObj->unk7C.word -= updateRate;
+        } else {
+            wizShipObj->unk7C.word = 0;
+        }
+        if ((wizShipObj->unk60 != NULL) && (wizShipObj->unk7C.word == 0)) {
+            if (wizShipObj->unk74 & 1) {
+                wizShipObj->unk7C.word = 0x14;
+                object_transform_to_matrix(shipMtx, &wizShipObj->segment.trans);
+                trans.x_position = 0.0f;
+                trans.y_position = 0.0f;
+                trans.z_position = 0.0f;
+                trans.scale = 1.0f;
+                trans.y_rotation = wizShipObj->segment.trans.y_rotation;
+                trans.x_rotation = wizShipObj->segment.trans.x_rotation;
+                trans.z_rotation = 0;
+                object_transform_to_matrix(laserMtx, &trans);
+                
+                for (i = 0; i < wizShipObj->unk60->unk0; i++) {
+                    index = wizShipObj->unk60->unk2C[i];
+                    if ((index >= 0) && (index < wizShipModel->unk18)) {
+                        if (wizShipObj->unk44 != NULL) {
+                            posX = wizShipObj->unk44[wizShipModel->unk14[index]].x;
+                            posY = wizShipObj->unk44[wizShipModel->unk14[index]].y;
+                            posZ = wizShipObj->unk44[wizShipModel->unk14[index]].z;
+                            guMtxXFMF(&shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
+                            newObject.x = posX;
+                            newObject.y = posY;
+                            newObject.z = posZ;
+                            newObject.size = 8;
+                            newObject.objectID = 0xC6;
+                            newObj = spawn_object(&newObject, 1);
+                            if (newObj != NULL) {
+                                newObj->segment.unk3C_a.level_entry = NULL;
+                                newObj->segment.trans.y_rotation = wizShipObj->segment.trans.y_rotation + 0x8000;
+                                newObj->segment.trans.x_rotation = -wizShipObj->segment.trans.x_rotation;
+                                newObj->unk78 = 0x3C; 
+                                guMtxXFMF(&laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity, &newObj->segment.y_velocity, &newObj->segment.z_velocity);
+                                func_80009558(SOUND_LASER_GUN, wizShipObj->segment.trans.x_position, wizShipObj->segment.trans.y_position, wizShipObj->segment.trans.z_position, 4, NULL);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void obj_loop_vehicleanim(Object *obj, s32 speed) {
     Object_60_800380F8 *obj60;
