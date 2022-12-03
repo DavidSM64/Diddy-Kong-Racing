@@ -1041,41 +1041,27 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
 #if 1
 static s8 D_800E77DC = 0;                           /* const */
 
-SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, u8 *arg4) {
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4) {
     s32 fileNumber;
     s32 fileSize;
     s32 ret;
     s32 i;
-    u8 *var_a0;
     u8 *fileData;
-    u8 *var_a1;
     GhostHeader *var_s1;
     u8 temp_v0_2;
-    u8 *var_a2;
-    u8 *var_v1;
 
     ret = get_si_device_status(controllerIndex);
     if (ret != CONTROLLER_PAK_GOOD) {
         start_reading_controller_data(controllerIndex);
         return ret;
     }
-    i = 0;
-    var_a0 = arg1;
-    var_a1 = arg3;
-    var_a2 = arg2;
-    var_v1 = arg4;
-    do {
-        *var_a0 = 0xFF;
-        var_v1[0] = 0;
-        temp_v0_2 = var_v1[1];
-        i += 1;
-        *var_a1 = temp_v0_2;
-        var_a0 += 1;
-        var_v1 += 2;
-        var_a1 += 1;
-        var_a2 += 1;
-        var_a2[-1] = temp_v0_2;
-    } while (i < 6);
+    for (i = 0; i < 6; i++) {
+        arg1[i] = 0xFF;
+        arg4[i] = 0;
+        temp_v0_2 = arg4[i];
+        arg2[i] = temp_v0_2;
+        arg3[i] = temp_v0_2;
+    }
     ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", &D_800E77DC, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
@@ -1091,8 +1077,8 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
                         } else {
                             arg1[i] = var_s1[i].unk0.levelID;
                             arg2[i] = var_s1[i].unk0.vehicleID;
-                            arg3[i] = fileData[var_s1[i].characterID] + 2;
-                            arg4[i * 2] = fileData[var_s1[i].characterID] + 4;
+                            arg3[i] = fileData[var_s1[i].unk2];
+                            arg4[i] = fileData[var_s1[i].unk2];
                         }
                     }
                 }
