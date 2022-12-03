@@ -312,6 +312,23 @@ $(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips1
 
 $(BUILD_DIR)/src/math_util.o: MIPSISET := -mips2
 
+$(BUILD_DIR)/src/video.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/video.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/borders.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/borders.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/set_rsp_segment.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/set_rsp_segment.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/screen_asset.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/screen_asset.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/thread30.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/thread30.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/asset_loading.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/asset_loading.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/main.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/main.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/font.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/font.o: OPT_FLAGS := -O3
+
 ######################## Targets #############################
 
 default: all
