@@ -1039,7 +1039,28 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
 
 #if 1
-static s8 D_800E77DC = 0;                           /* const */
+// Unused
+typedef struct GhostHeaderAltUnk0 {
+  u8 levelID;
+  u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+} GhostHeaderAltUnk0;
+
+/* Size: 4 bytes */
+typedef struct GhostHeaderAlt {
+    union {
+      GhostHeaderAltUnk0 unk0;
+      s16 checksum;
+    };
+    union {
+      struct {
+        u8 characterID; // 9 = T.T.
+        u8 unk3;
+      };
+      s16 unk2;
+    };
+} GhostHeaderAlt;
+
+static char D_800E77DC = '\0'; 
 
 SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4) {
     s32 fileNumber;
@@ -1047,7 +1068,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
     s32 ret;
     s32 i;
     u8 *fileData;
-    GhostHeader *var_s1;
+    GhostHeaderAlt *var_s1;
     u8 temp_v0_2;
 
     ret = get_si_device_status(controllerIndex);
@@ -1067,9 +1088,9 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (ret == CONTROLLER_PAK_GOOD) {
             fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
-            ret = read_data_from_controller_pak(controllerIndex, fileNumber, fileData, fileSize);
+            ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)fileData, fileSize);
             if (ret == CONTROLLER_PAK_GOOD) {
-                for (i = 0, var_s1 = fileData + 4; i < 6; i++) {
+                for (i = 0, var_s1 = (GhostHeaderAlt *)(&fileData[4]); i < 6; i++) {
                     if (var_s1[i].unk0.levelID != 0xFF) {
                         if (calculate_ghost_header_checksum((GhostHeader *) &fileData[var_s1[i].unk2]) != fileData[var_s1[i].unk2]) {
                             ret = CONTROLLER_PAK_BAD_DATA;
