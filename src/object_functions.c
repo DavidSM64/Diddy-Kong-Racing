@@ -1926,7 +1926,93 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_ttdoor.s")
+/**
+ * T.T Door loop behaviour.
+ * Checks if the player has complete the T.T amulet and has all 47 balloons.
+ * If so, it will open, otherwise it opens dialogue telling the player to get them.
+*/
+void obj_loop_ttdoor(Object* obj, s32 updateRate) {
+    Settings* settings;
+    Object_TTDoor *ttDoor;
+    Object *racerObj;
+    Object_Racer *racer;
+    s16 angle;
+    s32 openDoor;
+    s32 var_at;
+
+    ttDoor = (Object_TTDoor *) obj->unk64;
+    settings = get_settings();
+    if (ttDoor->unkF == 0) {
+        obj->segment.unk3A = D_800DCA94[settings->ttAmulet];
+    } else {
+        obj->segment.unk3A = D_800DCA9C[settings->ttAmulet];
+    }
+    if (obj->unk4C->unk13 < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
+        racerObj = obj->unk4C->unk0;
+        if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
+            racer = (Object_Racer *) racerObj->unk64;
+            if (racer->playerIndex != PLAYER_COMPUTER && racerObj == obj->unk5C->unk100) {
+                if (ttDoor->unk13 != -1 && func_800C3400() == 0 && ttDoor->unkC == 0) {
+                    set_music_fade_timer(-8);
+                    ttDoor->unk8 = 0x8C;
+                    set_sndfx_player_voice_limit(16);
+                    play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
+                    func_800C31EC(ttDoor->unk13 & 0xFF);
+                }
+                ttDoor->unkC = 300;
+            }
+            if (func_800C3400() != 0) {
+                ttDoor->unkC = 300;
+            }
+        }
+    }
+    if (ttDoor->unk8 && func_80001C08() == 0) {
+        if (updateRate < ttDoor->unk8) {
+            ttDoor->unk8 -= updateRate;
+        } else {
+            ttDoor->unk8 = 0.0f;
+            set_music_fade_timer(8);
+            set_sndfx_player_voice_limit(6);
+        }
+    }
+    if (ttDoor->unkC > 0) {
+        ttDoor->unkC -= updateRate;
+    } else {
+        ttDoor->unkC = 0;
+    }
+    openDoor = TRUE;
+    if (settings->ttAmulet >= 4 && obj->unk4C->unk13 < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
+        angle = obj->segment.trans.y_rotation - obj->unk7C.word;
+    } else {
+        angle = obj->segment.trans.y_rotation - obj->unk78;
+    }
+    angle = angle >> 3;
+    if (angle > 0x200) {
+        angle = 0x200;
+    }
+    if (angle < -0x200) {
+        angle = -0x200; 
+    }
+    obj->segment.trans.y_rotation -= angle;
+    if (angle == 0) {
+        openDoor = FALSE;
+    }
+    if (openDoor) {
+        if (ttDoor->unk4 == 0) {
+            func_80009558(SOUND_UNK_222, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->unk4);
+        }
+    } else {
+        if (ttDoor->unk4) {
+            func_800096F8(ttDoor->unk4);
+            ttDoor->unk4 = 0;
+        }
+    }
+    obj->unk4C->unk13 = 0xFF;
+    obj->unk4C->unk0 = NULL;
+    obj->unk4C->unk14 &= 0xFFF7;
+    obj->unk5C->unk100 = NULL;
+}
+
 
 void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     f32 phi_f0;

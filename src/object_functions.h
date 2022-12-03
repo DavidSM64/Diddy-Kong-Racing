@@ -336,6 +336,9 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry);
 void obj_loop_pigrocketeer(Object *obj, s32 speed);
 void obj_init_levelname(Object *obj, LevelObjectEntry_LevelName *entry);
 void obj_loop_wizghosts(Object *obj, s32 speed);
+void obj_loop_ttdoor(Object* obj, s32 updateRate);
+void obj_loop_trophycab(Object* obj, s32 updateRate);
+void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);

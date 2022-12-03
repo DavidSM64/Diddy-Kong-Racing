@@ -848,13 +848,14 @@ typedef struct Object_InfoPoint {
 
 typedef struct Object_TTDoor {
   /* 0x00 */ f32 unk0;
-  /* 0x04 */ u8 pad4[4];
+  /* 0x04 */ void *unk4;
   /* 0x08 */ s32 unk8;
-  /* 0x0C */ u8 padC[3];
-  /* 0x0F */ s8 unkF;
+  /* 0x0C */ s16 unkC;
+  /* 0x0C */ s8 unkE;
+  /* 0x0F */ u8 unkF;
   /* 0x10 */ u8 pad10[2];
   /* 0x12 */ u8 unk12;
-  /* 0x13 */ u8 unk13;
+  /* 0x13 */ s8 unk13;
 } Object_TTDoor;
 
 typedef struct Object_WorldKey {
