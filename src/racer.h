@@ -171,7 +171,7 @@ extern f32 D_800DCBE8[19];
 // Unused? Not sure if this is actually an array or just some random data.
 extern s32 D_800DCC34[19];
 
-extern s32 D_800DCC80[13];
+extern s32 D_800DCC80[];
 
 extern s16 D_800DCCB4[12];
 
@@ -189,9 +189,6 @@ extern s8 D_800DCD90[15];
 extern s8 D_800DCDA0[8];
 
 extern s8 D_800DCDA8[8];
-
-// Unused?
-extern s16 D_800DCDB0[16];
 
 extern s32 gObjLoopGoldenBalloonChecksum;
 
@@ -300,7 +297,7 @@ void func_8004CC20(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
 void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
+void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate);
 Object* func_8005698C(Object* racer, Object_Racer* obj, f32* dist);
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
 

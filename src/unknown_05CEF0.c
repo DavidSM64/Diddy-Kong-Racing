@@ -32,8 +32,8 @@ u16 D_800DCDE0[16] = {
     SOUND_VOICE_CONKER_YEHAHA,
     SOUND_VOICE_TIMBER_WOW,
     SOUND_WHOOSH2,
-    SOUND_UNK00,
-    SOUND_UNK00
+    SOUND_NONE,
+    SOUND_NONE
 };
 
 /*******************************/

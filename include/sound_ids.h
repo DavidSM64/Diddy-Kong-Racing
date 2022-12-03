@@ -12,7 +12,7 @@
 
 // Anything I've labelled as UNK, without a comment, is something I didn't get an audible sound from.
 enum SoundID {
-/* 0x0000 */ SOUND_UNK00,
+/* 0x0000 */ SOUND_NONE,
 /* 0x0001 */ SOUND_CAR_SLIDE,
 /* 0x0002 */ SOUND_CAR_SLIDE2, // Not sure what this is for. I thought it was for the brakes originally, but there's clearly a brake
 /* 0x0003 */ SOUND_INTRO_PLANE,

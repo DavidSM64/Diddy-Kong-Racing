@@ -358,6 +358,7 @@ void func_8001EFA4(Object*, Object_Animation*);
 void func_8001F23C(Object *obj, LevelObjectEntry_Animation *entry);
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
+void func_80036040(Object*, Object_64*);;
 
 void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
 

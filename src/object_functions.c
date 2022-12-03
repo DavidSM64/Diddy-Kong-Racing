@@ -615,7 +615,101 @@ void obj_init_collectegg(Object *obj, UNUSED LevelObjectEntry_CollectEgg *entry)
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_collectegg.s")
+void obj_loop_collectegg(Object* arg0, s32 arg1) {
+    Object_CollectEgg *egg;
+    Object *racerObj;
+    Object_Racer *racer;
+    f32 sp40[3];
+    f32 sp3C;
+    f32 speed; // sp38
+    s32 sp34;
+    s8 sp33;
+
+    egg = (Object_CollectEgg *)arg0->unk64;
+    speed = arg1;
+    if (osTvType == 0) {
+        speed *= 1.2;
+    }
+    switch (egg->unkB) {
+    case 0:
+        func_80036040(arg0, (Object_64*)egg);
+        break;
+    case 2:
+        arg0->segment.trans.unk6 &= 0xBFFF;
+        sp40[0] = arg0->segment.trans.x_position + (arg0->segment.x_velocity * speed);
+        sp40[1] = arg0->segment.trans.y_position + (arg0->segment.y_velocity * speed);
+        sp40[2] = arg0->segment.trans.z_position + (arg0->segment.z_velocity * speed);
+        sp3C = 9.0f;
+        func_80031130(1, &arg0->segment.trans.x_position, sp40, -1);
+        sp34 = 0;
+        sp33 = 0;
+        func_80031600(&arg0->segment.trans.x_position, sp40, &sp3C, &sp33, 1, &sp34);
+        arg0->segment.x_velocity = (sp40[0] - arg0->segment.trans.x_position) / speed;
+        arg0->segment.y_velocity = (sp40[1] - arg0->segment.trans.y_position) / speed;
+        arg0->segment.z_velocity = (sp40[2] - arg0->segment.trans.z_position) / speed;
+        arg0->segment.trans.x_position = sp40[0];
+        arg0->segment.trans.y_position = sp40[1];
+        arg0->segment.trans.z_position = sp40[2];
+        arg0->segment.y_velocity -= 0.5;
+        arg0->segment.x_velocity *= 0.98;
+        arg0->segment.z_velocity *= 0.98;
+        arg0->segment.y_velocity *= 0.95;
+        if ((arg0->segment.trans.y_position < -2000.0f) || ((sp34 != 0) && ((sp33 < 5) || (sp33 >= 10)))) {
+            if (egg->unk4 != NULL) {
+                egg->unk4->unk78 = 0;
+            }
+            gParticlePtrList_addObject(arg0);
+        }
+        if (sp34 != 0 && sp33 == 5) {
+            egg->unkB = 0;
+            arg0->segment.x_velocity = 0.0f;
+            arg0->segment.z_velocity = 0.0f;
+        }
+        if ((sp34 != 0) && (sp33 >= 6) && (sp33 < 10)) {
+            egg->unkA = sp33 - 6;
+            egg->unkB = 3;
+            racerObj = get_racer_object(egg->unkA);
+            if (racerObj != NULL) {
+                racer = (Object_Racer*)racerObj->unk64;
+                racer->unk1CF += 1;
+            }
+            egg->unk8 = 0x258;
+            arg0->segment.x_velocity = 0.0f;
+            arg0->segment.z_velocity = 0.0f;
+        }
+        break;
+    case 3:
+        egg->unk8 -= arg1;
+        racerObj = get_racer_object(egg->unkA);
+        if (racerObj != NULL) {
+            racer = (Object_Racer*)racerObj->unk64;
+        }
+        if (egg->unk8 <= 0) {
+            if (racerObj != NULL) {
+                racer->lap += 1;
+            }
+            egg->unkB = 4;
+            egg->unk4->unk78 = 0;
+        }
+        if (egg->unk8 < 0x21C) {
+            func_80036040(arg0, (Object_64*)egg);
+        }
+        if ((racerObj != NULL) && (egg->unkB != 3)) {
+            racer->unk1CF -= 1;
+        }
+        break;
+    case 4:
+        racerObj = get_racer_object(egg->unkA);
+        if (racerObj != NULL) {
+            racer = (Object_Racer*)racerObj->unk64;
+            if (racer->lap >= 3) {
+                racer->raceFinished = TRUE;
+            }
+        }
+        arg0->segment.unk18 = 0x80;
+        break;
+    }
+}
 
 void obj_init_eggcreator(UNUSED Object *obj, UNUSED LevelObjectEntry_EggCreator *entry) {
 }
@@ -1954,7 +2048,7 @@ void obj_loop_ttdoor(Object* obj, s32 updateRate) {
             if (racer->playerIndex != PLAYER_COMPUTER && racerObj == obj->unk5C->unk100) {
                 if (ttDoor->unk13 != -1 && func_800C3400() == 0 && ttDoor->unkC == 0) {
                     set_music_fade_timer(-8);
-                    ttDoor->unk8 = 0x8C;
+                    ttDoor->unk8 = 140;
                     set_sndfx_player_voice_limit(16);
                     play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
                     func_800C31EC(ttDoor->unk13 & 0xFF);

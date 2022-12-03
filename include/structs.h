@@ -799,10 +799,13 @@ typedef struct Object_EggCreator {
   /* 0x4 */ struct Object *unk4;
 } Object_EggCreator;
 
-typedef struct Object_Egg {
-    u8 pad[0xB];
-  /* 0x0 */ u8 unkB;
-} Object_Egg;
+typedef struct Object_CollectEgg {
+  /* 0x0 */ u8 pad0[4];
+  /* 0x4 */ struct Object *unk4;
+  /* 0x8 */ s16 unk8;
+  /* 0xA */ s8 unkA;
+  /* 0xB */ s8 unkB;
+} Object_CollectEgg;
 
 typedef struct Object_UnkId58 {
   /* 0x000 */ u8 pad0[0x1D6];
@@ -1012,7 +1015,7 @@ typedef struct Object_Racer {
   /* 0x134 */ s32 unk134;
   /* 0x138 */ s32 unk138;
   /* 0x13C */ s32 unk13C;
-  /* 0x140 */ struct Object *unk140;
+  /* 0x140 */ struct Object *magnetTargetObj;
   /* 0x144 */ struct Object *held_obj;
   /* 0x148 */ struct Object *unk148;
   /* 0x14C */ struct Object *unk14C;
@@ -1034,7 +1037,7 @@ typedef struct Object_Racer {
   /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ void *unk178;
+  /* 0x178 */ void *magnetSoundMask;
   /* 0x17C */ s32 shieldSoundMask;
   /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
   /* 0x184 */ s8 unk184;
@@ -1325,7 +1328,7 @@ typedef struct Object_64 {
         Object_Butterfly butterfly;
         Object_EffectBox effect_box;
         Object_EggCreator egg_creator;
-        Object_Egg egg;
+        Object_CollectEgg egg;
         Object_UnkId58 unkid58;
         Object_CharacterFlag character_flag;
         Object_Snowball snowball;

@@ -77,8 +77,10 @@ s32 D_800DCC34[19] = {
 };
 
 s32 D_800DCC80[13] = {
-    0, 26, 27, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
+    SOUND_NONE, SOUND_UNK_1A, SOUND_UNK_1B, SOUND_NONE, 
+    SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE,
+    SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE, 
+    SOUND_NONE
 };
 
 // Unused?
@@ -120,13 +122,32 @@ s8 D_800DCDA8[8] = {
     1, 1, 1, 2, 3, 2, 3, 2,
 };
 
-// Unused?
+s8 D_800DCDB0[16][2] = {
+    0x02,0xFE, 
+    0x03, 0xFE, 
+    0x02, 0xFC, 
+    0x02, 0xFB,
+    0x02, 0xFB, 
+    0x02, 0xFE, 
+    0x02, 0xFD, 
+    0x02, 0xFE,
+    0x03, 0xFD, 
+    0x05, 0xFC, 
+    0x04, 0xFE, 
+    0x02, 0xFE,
+    0x02, 0xFA, 
+    0x02, 0xFE, 
+    0x08, 0xF8, 
+    0x03, 0xFD,
+};
+
+/*
 s16 D_800DCDB0[16] = {
     0x02FE, 0x03FE, 0x02FC, 0x02FB,
     0x02FB, 0x02FE, 0x02FD, 0x02FE,
     0x03FD, 0x05FC, 0x04FE, 0x02FE,
     0x02FA, 0x02FE, 0x08F8, 0x03FD,
-};
+};*/
 
 // Checksum count for obj_loop_goldenballoon
 s32 gObjLoopGoldenBalloonChecksum = 0xA597;
@@ -1065,8 +1086,8 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk1E7 = tempRacer->playerIndex * 5;
     tempRacer->checkpoint_distance = 1.0f;
     tempRacer->unk1FD = 0;
-    tempRacer->unk178 = 0;
-    tempRacer->shieldSoundMask = 0;
+    tempRacer->magnetSoundMask = NULL;
+    tempRacer->shieldSoundMask = NULL;
     tempRacer->unk180 = 0;
     tempRacer->unk218 = 0;
     tempRacer->unk220 = 0;
@@ -1338,7 +1359,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->unk18A = 0;
         }
         if (tempRacer->magnetTimer) {
-            func_80056E2C(obj, tempRacer, updateRate);
+            racer_activate_magnet(obj, tempRacer, updateRate);
         }
         // Zero out input before the race has begun.
         if (gRaceStartTimer && (header->race_type == RACETYPE_DEFAULT ||
@@ -1433,9 +1454,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
             break;
         }
         if (tempRacer->magnetTimer == 0) {
-            if (tempRacer->unk178) {
-                func_8000488C(tempRacer->unk178);
-                tempRacer->unk178 = 0;
+            if (tempRacer->magnetSoundMask) {
+                func_8000488C(tempRacer->magnetSoundMask);
+                tempRacer->magnetSoundMask = 0;
             }
         }
         temp_v0_17 = header->playerIndex;
@@ -2828,7 +2849,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
             gCurrentButtonsPressed &= ~Z_TRIG;
         }
         if (racer->magnetTimer == 0) {
-            racer->unk140 = NULL;
+            racer->magnetTargetObj = NULL;
         }
         if (racer->balloon_type == -1) {
             racer->balloon_quantity = 0;
@@ -2860,7 +2881,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                     case WEAPON_ROCKET_HOMING:
                         intendedTarget = func_8005698C(obj, racer, &sp64); \
                         racer->magnetTimer = 0;
-                        racer->unk140 = intendedTarget;
+                        racer->magnetTargetObj = intendedTarget;
                         break;
                     case WEAPON_MAGNET_LEVEL_1:
                     case WEAPON_MAGNET_LEVEL_3:
@@ -2876,9 +2897,9 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                             if (weaponID == WEAPON_MAGNET_LEVEL_3 && intendedTarget != NULL) {
                                 magnetTarget = intendedTarget->unk64;
                             }
-                            racer->unk140 = intendedTarget;
+                            racer->magnetTargetObj = intendedTarget;
                         } else {
-                            racer->unk140 = NULL;
+                            racer->magnetTargetObj = NULL;
                             intendedTarget = NULL;
                         }
                         break;
@@ -2969,12 +2990,12 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                         return;
                     case WEAPON_MAGNET_LEVEL_3:
                         racer->balloon_quantity -= 1;
-                        racer->unk140 = NULL;
+                        racer->magnetTargetObj = NULL;
                         if (racer->playerIndex != PLAYER_COMPUTER) {
                             if (magnetTarget != NULL) {
                                 magnetTarget->racer.unk195 = 1;
                                 magnetTarget->racer.magnetTimer = 120;
-                                magnetTarget->racer.unk140 = obj;
+                                magnetTarget->racer.magnetTargetObj = obj;
                                 magnetTarget->racer.unk184 = 2;
                             }
                             if (racer->raceFinished == FALSE) {
@@ -3049,7 +3070,7 @@ void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate)
                             spawnedObj->segment.unk18 = 0;
                             break;
                         }
-                        if (soundID != SOUND_UNK00) {
+                        if (soundID != SOUND_NONE) {
                             if (racer->playerIndex == PLAYER_COMPUTER) {
                                 func_80009558(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                             } else {
@@ -3081,7 +3102,61 @@ void play_char_horn_sound(Object *obj, Object_Racer *racer) {
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8005698C.s")
-GLOBAL_ASM("asm/non_matchings/racer/func_80056E2C.s")
+
+/**
+ * When active, takes the magnet target, calculates the distance then sets the player's velocity
+ * and movement direction towards the target until they either get close, or the timer runs out.
+ * Shields will also cancel out the magnet.
+*/
+void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
+    f32 diffX;
+    f32 diffZ;
+    f32 vel;
+    Object_64 *magnetTarget;
+
+    racer->magnetTimer -= updateRate;
+    if (racer->magnetTimer < 0) {
+        racer->magnetTimer = 0;
+        return;
+    }
+    if (racer->magnetTargetObj == NULL) {
+        racer->magnetTimer = 0;
+        return;
+    }
+    diffX = racer->magnetTargetObj->segment.trans.x_position - obj->segment.trans.x_position;
+    diffZ = racer->magnetTargetObj->segment.trans.z_position - obj->segment.trans.z_position;
+    vel = sqrtf((diffX * diffX) + (diffZ * diffZ));
+    if (vel > 150.0f && vel < 2000.0f) {
+        if (racer->playerIndex != PLAYER_COMPUTER) {
+            racer->boostTimer = 3;
+        }
+        racer->boostType = BOOST_NONE;
+        if (racer->throttleReleased) {
+            racer->boostType |= 4;
+        }
+        if (racer->magnetSoundMask == NULL && racer->raceFinished == FALSE) {
+            play_sound_global(SOUND_MAGNET_HUM, (void *) &racer->magnetSoundMask);
+        }
+    } else {
+        racer->magnetTimer = 0;
+        return;
+    }
+    diffX /= vel;
+    diffZ /= vel;
+    magnetTarget = racer->magnetTargetObj->unk64;
+    vel = -magnetTarget->racer.velocity;
+    if (vel < 8.0 && racer->unk195 == 0) {
+        vel = 8.0f;
+    }
+    if (vel > 20.0) {
+        vel = 20.0f;
+    }
+    D_8011D578 = (vel + 5.0f) * (diffX);
+    D_8011D57C = (vel + 5.0f) * (diffZ);
+    if (magnetTarget->racer.shieldTimer != 0 && racer->unk195 == 0) {
+        racer->magnetTimer = 0;
+    }
+}
 
 /**
  * Play a spatial sound, emitting from the position of the racer object.
@@ -4122,7 +4197,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->unk1F1 = 0;
         }
         if (racer->magnetTimer != 0) {
-            func_80056E2C(obj, racer, updateRate);
+            racer_activate_magnet(obj, racer, updateRate);
         }
         if (racer->unk1D6 != 1) {
             racer->unk1E5 = 0;
@@ -4213,9 +4288,9 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
     }
     if (racer->magnetTimer == 0) {
-        if (racer->unk178 != NULL) {
-            func_8000488C(racer->unk178);
-            racer->unk178 = NULL;
+        if (racer->magnetSoundMask != NULL) {
+            func_8000488C(racer->magnetSoundMask);
+            racer->magnetSoundMask = NULL;
         }
     }
     func_80018CE0(obj, xPos, yPos, zPos, updateRate);
@@ -4246,13 +4321,13 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     if (racer->shieldTimer > 0) {
         if (racer->shieldTimer > 60) {
-            if (racer->shieldSoundMask != 0) {
+            if (racer->shieldSoundMask) {
                 update_spatial_audio_position(racer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else if (racer->unk118 != 0) {
                 func_80009558(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &racer->shieldSoundMask);
             }
         } else {
-            if (racer->shieldSoundMask != 0) {
+            if (racer->shieldSoundMask) {
                 func_800096F8(racer->shieldSoundMask);
                 racer->shieldSoundMask = 0;
             }
