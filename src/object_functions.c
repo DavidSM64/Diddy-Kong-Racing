@@ -1998,13 +1998,13 @@ void obj_loop_ttdoor(Object* obj, s32 updateRate) {
         openDoor = FALSE;
     }
     if (openDoor) {
-        if (ttDoor->unk4 == 0) {
-            func_80009558(SOUND_UNK_222, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->unk4);
+        if (ttDoor->soundMask == NULL) {
+            func_80009558(SOUND_UNK_222, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
         }
     } else {
-        if (ttDoor->unk4) {
-            func_800096F8(ttDoor->unk4);
-            ttDoor->unk4 = 0;
+        if (ttDoor->soundMask) {
+            func_800096F8(ttDoor->soundMask);
+            ttDoor->soundMask = NULL;
         }
     }
     obj->unk4C->unk13 = 0xFF;

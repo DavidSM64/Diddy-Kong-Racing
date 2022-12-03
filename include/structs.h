@@ -848,7 +848,7 @@ typedef struct Object_InfoPoint {
 
 typedef struct Object_TTDoor {
   /* 0x00 */ f32 unk0;
-  /* 0x04 */ void *unk4;
+  /* 0x04 */ void *soundMask;
   /* 0x08 */ s32 unk8;
   /* 0x0C */ s16 unkC;
   /* 0x0C */ s8 unkE;
