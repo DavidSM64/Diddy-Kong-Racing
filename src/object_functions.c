@@ -559,7 +559,7 @@ void obj_loop_trophycab(Object* obj, s32 updateRate) {
                         func_800A3870();
                     } else {
                         func_800C31EC(4);
-                        gfxData->unk4 = 120;
+                        gfxData->unk4 = 180;
                         gfxData->unk0 = 140;
                         set_sndfx_player_voice_limit(16);
                         set_music_fade_timer(-8);
