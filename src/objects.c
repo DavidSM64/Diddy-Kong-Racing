@@ -644,7 +644,7 @@ void func_8000E2B4(void) {
     sp2C.unkE = 0;
     sp2C.common.size = 0x10;
     if (gOverworldVehicle < 5) {
-        object_id = ((s16*) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
+        object_id = ((s16 *) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
     } else {
         object_id = D_800DC7B8[gOverworldVehicle + 37];
     }
@@ -1176,7 +1176,7 @@ void render_3d_billboard(Object *obj) {
     }
     
     // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
-    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != 10)) {
+    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAOON_BUBBLE_TRAP)) {
         sp60.trans.z_rotation = 0;
         sp60.trans.x_rotation = 0;
         sp60.trans.y_rotation = 0;
