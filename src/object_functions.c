@@ -2247,7 +2247,31 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_treasuresucker.s")
 void obj_init_flycoin(UNUSED Object *obj, UNUSED LevelObjectEntry_FlyCoin *entry) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_flycoin.s")
+// Smokey's castle banana pickups.
+void obj_loop_flycoin(Object *obj, s32 updateRate) {
+    f32 updateRateF;
+    Object_Racer *racerObj;
+
+    updateRateF = updateRate;
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    obj->segment.y_velocity -= 0.5 * updateRateF;
+    func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
+    obj->unk78 -= updateRate;
+    if (obj->unk78 <= 0) {
+        racerObj = (Object_Racer *) obj->unk7C.word;
+        racerObj->lap++;
+        if (racerObj->lap >= 10) {
+            racerObj->raceFinished = TRUE;
+        }
+        gParticlePtrList_addObject(obj);
+        if (racerObj->playerIndex != PLAYER_COMPUTER) {
+            play_sound_global(SOUND_SELECT, NULL);
+        }
+    }
+    obj->segment.unk18 += updateRate * 8;
+}
 
 void obj_init_bananacreator(Object *obj, UNUSED LevelObjectEntry_BananaCreator *entry) {
     obj->segment.unk18 = 100;
@@ -2514,33 +2538,28 @@ void func_8003F0DC(void) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F0F8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F2E8.s")
 
-#ifdef NON_EQUIVALENT
-// Regalloc issues
-void func_8003FC44(f32 arg0, f32 arg1, f32 arg2, s32 arg3, s32 arg4, f32 arg5, s32 arg6) {
-    Object *someObj;
-    unk8003FC44 sp24;
+void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 arg6) {
+    LevelObjectEntry8003FC44 spawnObj;
+    Object *newObj;
 
-    sp24.unk4 = (s32)arg1 + 0x24;
-    sp24.unk1 = 0xA;
-    sp24.unk2 = arg0;
-    sp24.unk0 = arg3;
-    sp24.unk7 = arg6;
-    sp24.unk6 = arg2;
-    someObj = spawn_object(&sp24, 1);
-    if (someObj != NULL) {
-        someObj->segment.trans.scale *= 3.5 * arg5;
-        someObj->segment.unk3C_a.level_entry = NULL;
-        someObj->segment.x_velocity = 0.0f;
-        someObj->segment.y_velocity = 0.0f;
-        someObj->segment.z_velocity = 0.0f;
+    spawnObj.common.x = x;
+    spawnObj.common.y = (s16) y + 36;
+    spawnObj.common.z = z;
+    spawnObj.common.size = 10;
+    spawnObj.common.objectID = objectID;
+    spawnObj.unk9 = arg6;
+    newObj = spawn_object(&spawnObj, 1);
+    if (newObj != NULL) {
+        newObj->segment.unk3C_a.level_entry = NULL;
+        newObj->segment.x_velocity = 0.0f;
+        newObj->segment.y_velocity = 0.0f;
+        newObj->segment.z_velocity = 0.0f;
+        newObj->segment.trans.scale = newObj->segment.trans.scale * 3.5 * scale;
     }
     if (arg4 != 0) {
-        func_80009558(arg4, arg0, arg1, arg2, 4, 0);
+        func_80009558(arg4, x, y, z, 4, NULL);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003FC44.s")
-#endif
 
 void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     Object_Audio *obj64;
