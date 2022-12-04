@@ -2610,46 +2610,44 @@ void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
     obj->unk78f = temp;
 }
 
-
-#ifdef NON_EQUIVALENT
-void func_800ABC5C(s32, s32, s32, s32, s32, s32); /* extern */
-
-// Has stack & regalloc issues.
+/**
+ * Weather updater loop behaviour.
+ * When passed through by the player, it will update the current weather settings.
+ * Can be used to stop, start or change the intensity of the current weather.
+*/
 void obj_loop_weather(Object *obj, s32 speed) {
-    s32 sp54;
-    s32 numberOfObjects;
-    Object_Racer *curObj64;
-    Object **objects;
-    Object **lastObj;
-    Object *curObj;
-    LevelObjectEntry_Weather *level_entry;
-    f32 temp_f0;
-    f32 new_var;
-    f32 temp_f2;
-    s32 i;
-    s32 temp[3];
-    sp54 = get_object_render_stack_pos();
-    objects = get_racer_objects(&numberOfObjects);
-    if (numberOfObjects != 0) {
-        lastObj = &objects[numberOfObjects - 1];
-        objects--;
-        do {
-            curObj = objects[1];
-            curObj64 = &curObj->unk64->racer;
-        } while (((++objects) < lastObj) && (sp54 != curObj64->playerIndex));
-        temp_f0 = obj->segment.trans.x_position - curObj->segment.trans.x_position;
-        temp_f2 = obj->segment.trans.z_position - curObj->segment.trans.z_position;
-        new_var = obj->unk78f;
-        level_entry = &obj->segment.unk3C_a.level_entry->weather;
-        if (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) <= (new_var * 1.0f)){
-            func_800ABC5C(level_entry->unkA * 256, level_entry->unkC * 256, level_entry->unkE * 256, level_entry->unk10 * 257, level_entry->unk11 * 257, (s32) level_entry->unk12);
-        }
+  s32 sp54;
+  s32 numberOfObjects;
+  Object_Racer *curObj64;
+  Object **objects;
+  Object *curObj;
+  LevelObjectEntry_Weather *entry;
+  f32 diffX;
+  f32 diffZ;
+  s32 cur;
+  s32 last;
+  f32 dist;
+    
+  sp54 = get_object_render_stack_pos();
+  objects = get_racer_objects(&numberOfObjects);
+  cur = -1;
+  if (numberOfObjects != 0) {
+    last = numberOfObjects - 1;
+    do {
+      curObj = objects[cur + 1];
+      curObj64 = (Object_Racer *) curObj->unk64;
+    } while (((++cur) < last) && (sp54 != curObj64->playerIndex));
+    
+    diffX = obj->segment.trans.x_position - curObj->segment.trans.x_position;
+    diffZ = obj->segment.trans.z_position - curObj->segment.trans.z_position;
+    dist = obj->unk78f;
+    entry = (LevelObjectEntry_Weather *)obj->segment.unk3C_a.level_entry;
+    if (((diffX * diffX) + (diffZ * diffZ)) <= dist){
+      if (((!obj->segment.unk3C_a.level_entry) && (!obj->segment.unk3C_a.level_entry)) && (!obj->segment.unk3C_a.level_entry)){}  // Fakematch
+      func_800ABC5C(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
     }
+  }
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weather.s")
-#endif
 
 void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
     func_800AC8A8(obj);

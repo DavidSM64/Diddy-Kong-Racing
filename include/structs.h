@@ -716,7 +716,7 @@ typedef struct Object_5C {
 
 typedef struct Object_60 {
     s32 unk0;
-    void *unk4; // Object* pointer
+    s32 *unk4; // Object* pointer
     u8 unk8[0x24];
     s8 *unk2C;
 } Object_60;
