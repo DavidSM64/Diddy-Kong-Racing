@@ -778,24 +778,48 @@ void func_800022BC(u8 arg0, ALSeqPlayer *arg1) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq) {
-    if (alCSPGetState(seqp) == AL_STOPPED && *arg2) {
-        /*load_asset_to_address(ASSET_AUDIO, ptr,
-            (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - get_rom_offset_of_asset(ASSET_AUDIO,0),
-            *((u32*)(((*arg2) << 3) + D_80115D0C)));*/
-        alCSeqNew(seq, ptr);
-        alCSPSetSeq(seqp, seq);
-        alCSPPlay(seqp);
-        if (seqp == gMusicPlayer) {
-            set_relative_volume_for_music(*((u8 *)((*arg2) * 3 + sMusicPool->unk0)));
+void func_8000232C(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3) {
+    s32 var_s0;
+    u8 temp_a0;
+    u8 temp_a0_2;
+
+    if ((alCSPGetState((ALCSPlayer* ) arg0) == 0) && (*arg2 != 0)) {
+        load_asset_to_address(0x27U, arg1, ALSeqFile_80115CF8->seqArray[*arg2].offset - get_rom_offset_of_asset(0x27U, 0U), (s32) D_80115D0C[*arg2]);
+        alCSeqNew(arg3, arg1);
+        alCSPSetSeq((ALCSPlayer* ) arg0, arg3);
+        alCSPPlay((ALCSPlayer* ) arg0);
+        if (arg0 == gMusicPlayer) {
+            set_relative_volume_for_music(sMusicPool[*arg2].unk0);
+            temp_a0 = sMusicPool[*arg2].unk1;
+            if (temp_a0 != 0) {
+                musicSetTempo((s32) temp_a0);
+            } else {
+                sMusicTempo = -1;
+            }
+            func_80002608(sMusicPool[*arg2].unk2);
+            D_80115D04 = *arg2;
+            var_s0 = 0;
+            if (D_80115F7C != -1) {
+                do {
+                    if ((1 << var_s0) & D_80115F7C) {
+                        func_80001170(var_s0);
+                    } else {
+                        func_80001114(var_s0);
+                    }
+                    var_s0 += 1;
+                } while (var_s0 != 0x10);
+            }
         } else {
+            sfxSetRelativeVolume(sMusicPool[*arg2].unk0);
+            temp_a0_2 = sMusicPool[*arg2].unk1;
+            if (temp_a0_2 != 0) {
+                sfxSetTempo(temp_a0_2);
+            }
+            D_80115D05 = *arg2;
         }
+        *arg2 = 0;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
-#endif
 
 void func_80002570(ALSeqPlayer *seqp) {
     if (gMusicPlayer == seqp && D_80115D40 != 0) {
