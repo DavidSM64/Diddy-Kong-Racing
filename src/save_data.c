@@ -1038,8 +1038,6 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
 
-#if 1
-// Unused
 typedef struct GhostHeaderAltUnk0 {
   u8 levelID;
   u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
@@ -1060,15 +1058,13 @@ typedef struct GhostHeaderAlt {
     };
 } GhostHeaderAlt;
 
-static char D_800E77DC = '\0'; 
-
 SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4) {
-    s32 fileNumber;
-    s32 fileSize;
-    s32 ret;
     s32 i;
     u8 *fileData;
+    s32 ret; // sp64
     GhostHeaderAlt *var_s1;
+    s32 fileNumber;
+    s32 fileSize;
     u8 temp_v0_2;
 
     ret = get_si_device_status(controllerIndex);
@@ -1080,10 +1076,10 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
         arg1[i] = 0xFF;
         arg4[i] = 0;
         temp_v0_2 = arg4[i];
-        arg2[i] = temp_v0_2;
         arg3[i] = temp_v0_2;
+        arg2[i] = temp_v0_2;
     }
-    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", &D_800E77DC, &fileNumber);
+    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (ret == CONTROLLER_PAK_GOOD) {
@@ -1092,14 +1088,14 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
             if (ret == CONTROLLER_PAK_GOOD) {
                 for (i = 0, var_s1 = (GhostHeaderAlt *)(&fileData[4]); i < 6; i++) {
                     if (var_s1[i].unk0.levelID != 0xFF) {
-                        if (calculate_ghost_header_checksum((GhostHeader *) &fileData[var_s1[i].unk2]) != fileData[var_s1[i].unk2]) {
+                        if (calculate_ghost_header_checksum((GhostHeader *) &fileData[var_s1[i].unk2]) != ((GhostHeaderAlt*)&fileData[var_s1[i].unk2])->checksum) {
                             ret = CONTROLLER_PAK_BAD_DATA;
                             break;
                         } else {
                             arg1[i] = var_s1[i].unk0.levelID;
                             arg2[i] = var_s1[i].unk0.vehicleID;
-                            arg3[i] = fileData[var_s1[i].unk2];
-                            arg4[i] = fileData[var_s1[i].unk2];
+                            arg3[i] = fileData[var_s1[i].unk2+2];
+                            arg4[i] = ((GhostHeaderAlt*)&fileData[var_s1[i].unk2] + 1)->checksum;
                         }
                     }
                 }
@@ -1110,9 +1106,6 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
     start_reading_controller_data(controllerIndex);
     return ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_800756D4.s")
-#endif
 
 SIDeviceStatus get_si_device_status(s32 controllerIndex) {
     OSMesg unusedMsg;

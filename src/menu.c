@@ -113,17 +113,16 @@ SavefileInfo gSavefileInfo[4];
 s32 D_801264D0;
 s32 D_801264D4;
 s8 gDialogueSubmenu;
-s32 D_801264DC;
+u8 *D_801264DC; //gGhostLevelIDs?
 s8 D_801264E0;
 s8 D_801264E1;
 
 s8 sCurrentMenuID;
-s32 D_801264E4;
+u8 *D_801264E4; //gGhostSomethings?
 s32 D_801264E8;
-s32 D_801264EC;
+u8 *D_801264EC; //gGhostVehicleIds?
 s32 D_801264F0[2];
-s32 D_801264F8[2];
-s32 D_80126500;
+s16 *D_801264F8[3]; //gGhostChecksums?
 s8 sDialogueOptionMax;
 s32 D_80126508;
 s16 D_8012650C;
@@ -7710,10 +7709,10 @@ GLOBAL_ASM("asm/non_matchings/menu/func_800998E0.s")
 // Should be functionally equivalent
 void menu_ghost_data_init(void) {
     s32 i;
-    s32 sp70;
+    SIDeviceStatus pakStatus;
 
-    sp70 = func_800756D4(D_801264D0, &D_801264DC, &D_801264EC, &D_801264E4, &D_801264F8);
-    if (sp70 == 0) {
+    pakStatus = func_800756D4(D_801264D0, &D_801264DC, &D_801264EC, &D_801264E4, &D_801264F8);
+    if (pakStatus == CONTROLLER_PAK_GOOD) {
         func_8009963C();
     }
     func_8009C674(&D_800E1708);
@@ -7759,7 +7758,7 @@ void menu_ghost_data_init(void) {
     gOpacityDecayTimer = 0;
     gMenuDelay = 0;
     D_80126498 = 0;
-    if (sp70 == 0) {
+    if (pakStatus == CONTROLLER_PAK_GOOD) {
         func_800C01D8(&sMenuTransitionFadeOut);
         return;
     }
