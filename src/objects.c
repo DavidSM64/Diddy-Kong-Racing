@@ -1615,7 +1615,7 @@ s32 func_8001B288(void) {
     }
 }
 
-Object *func_8001B2E0() {
+Object *func_8001B2E0(void) {
     return D_8011AD34;
 }
 
@@ -1660,7 +1660,7 @@ s32 func_8001B3AC(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B3C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
-Object *func_8001B640() {
+Object *func_8001B640(void) {
     return (Object *) D_800DC718;
 }
 
