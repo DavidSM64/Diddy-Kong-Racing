@@ -22,5 +22,6 @@ void func_800BBE08(void); // Non Matching
 void func_800BBF78(s32 arg0); // Non Matching
 f32 func_800BB2F4(s32, f32, f32, f32*);
 void func_800B8C04(s32, s32, s32, s32, s32);
+void func_800BF524(Object *);
 
 #endif

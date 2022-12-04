@@ -614,15 +614,15 @@ s8 check_if_silver_coin_race() {
     return gIsSilverCoinRace;
 }
 
-void func_8000E1EC(Object *object, s32 arg1) {
-    D_8011AD40 = object;
+void func_8000E1EC(Object *obj, s32 vehicleID) {
+    D_8011AD40 = obj;
     D_8011AD44 = 4;
-    gOverworldVehicle = arg1;
-    D_8011AD46 = object->segment.trans.x_position;
-    D_8011AD48 = object->segment.trans.y_position;
-    D_8011AD4A = object->segment.trans.z_position;
-    D_8011AD4C = object->segment.trans.y_rotation;
-    gParticlePtrList_addObject(object);
+    gOverworldVehicle = vehicleID;
+    D_8011AD46 = obj->segment.trans.x_position;
+    D_8011AD48 = obj->segment.trans.y_position;
+    D_8011AD4A = obj->segment.trans.z_position;
+    D_8011AD4C = obj->segment.trans.y_rotation;
+    gParticlePtrList_addObject(obj);
     gNumRacers = 0;
 }
 
@@ -1856,11 +1856,11 @@ s16 func_8001C418(f32 yPos) {
     return out;
 }
 
-s32 func_8001C48C(s32 arg0) {
+s32 func_8001C48C(Object *obj) {
     s32 i;
     for(i = 0; i < 128; i++) {
         if ((*D_8011AF04)[i] == 0) {
-            (*D_8011AF04)[i] = arg0;
+            (*D_8011AF04)[i] = obj;
             return i;
         }
     }

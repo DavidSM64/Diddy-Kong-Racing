@@ -821,7 +821,7 @@ typedef struct Object_CharacterFlag {
   /* 0x14 */ s32 unk14;
   /* 0x18 */ s32 unk18;
   /* 0x1C */ s32 unk1C;
-  /* 0x20 */ s16 *unk20;
+  /* 0x20 */ u16 *unk20;
   /* 0x24 */ u8  *unk24;
 } Object_CharacterFlag;
 
@@ -851,7 +851,7 @@ typedef struct Object_InfoPoint {
 
 typedef struct Object_TTDoor {
   /* 0x00 */ f32 unk0;
-  /* 0x04 */ void *soundMask;
+  /* 0x04 */ s32 *soundMask;
   /* 0x08 */ s32 unk8;
   /* 0x0C */ s16 unkC;
   /* 0x0C */ s8 unkE;

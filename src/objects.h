@@ -363,7 +363,7 @@ void func_8000E194(void);
 void func_8000E1B8(void);
 s8 find_non_car_racers(void);
 s8 check_if_silver_coin_race();
-void func_8000E1EC(Object *object, s32 arg1);
+void func_8000E1EC(Object *obj, s32 vehicleID);
 void set_time_trial_enabled(s32 arg0);
 u8 is_time_trial_enabled();
 u8 func_8000E4D8(void);
@@ -465,6 +465,7 @@ void render_3d_billboard(Object *obj);
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
 void func_8000B290(void);
 void func_80016BC4(unk8000FD34*);
+s32 func_8001C48C(Object *obj);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

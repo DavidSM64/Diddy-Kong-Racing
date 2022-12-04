@@ -25,6 +25,7 @@
 #include "unknown_003260.h"
 #include "objects.h"
 #include "math_util.h"
+#include "game_text.h"
 
 /************ .data ************/
 
@@ -159,7 +160,7 @@ void obj_loop_scenery(Object *obj, s32 speed) {
 	s32 temp_v0;
 
     if (obj->unk4C != NULL) {
-        obj78 = &obj->unk78;
+        obj78 = (Object78_80033DD0 *) &obj->unk78;
         if (obj->unk7C.half.upper > 0) {
             obj78->unk4 -= speed;
         }
@@ -264,16 +265,16 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             obj->segment.trans.x_rotation -= speed << 9;
         }
         func_80011570(obj, obj->segment.x_velocity * sp7C, obj->segment.y_velocity * sp7C, obj->segment.z_velocity * sp7C);
-        if (obj->unk4A == 298 && func_8002AD08(obj->segment.trans.y_position, &sp4C, 0)) {
+        if (obj->unk4A == 298 && func_8002AD08(obj->segment.trans.y_position, sp4C, 0)) {
 			obj->segment.trans.y_position = sp4C[0];
         }
     }
     obj->segment.unk18 += speed * 10;
-    obj64 = obj->unk64;
+    obj64 = (Object80033F60_64 *) obj->unk64;
     obj4C = obj->unk4C;
     obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
     if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->segment.header->behaviorId == 1)) {
-        obj4C_obj64 = obj4C_obj->unk64;
+        obj4C_obj64 = (Object80033F60_4C_64 *) obj4C_obj->unk64;
         if (obj4C_obj64->unk0 != -1) {
             if (obj->behaviorId == 108) {
                 obj4C_obj64->unk187 = 1;
@@ -283,8 +284,8 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
             } else if (obj->unk7C.word > 0) {
                 obj4C_obj64->unk204 = 60;
                 obj->unk7C.word = -60;
-                obj->unk78 = obj4C_obj;
-                play_sound_global(SOUND_BUBBLE_RISE, &obj64->unk1C);
+                obj->unk78 = (s32) obj4C_obj;
+                play_sound_global(SOUND_BUBBLE_RISE, obj64->unk1C);
             }
         }
     }
@@ -442,7 +443,7 @@ void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *e
 #ifdef NON_MATCHING
 // Has regalloc issues
 
-void obj_loop_effectbox(Object *obj, s32 speed) {
+void obj_loop_effectbox(Object *obj, UNUSED s32 speed) {
     Object **objList;
     Object_EffectBox *curObj64;
     s32 numberOfObjects;
@@ -513,7 +514,7 @@ void obj_loop_trophycab(Object* obj, s32 updateRate) {
     f32 diffX;
     s32 dialogueID;
     f32 diffZ;
-    s32 pad2;
+    UNUSED s32 pad2;
     s32 worldBalloons;
     s32 bossFlags;
 
@@ -728,7 +729,7 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 speed) {
         if (someObj != NULL) {
             Object_EggCreator *someObj64 = &someObj->unk64->egg_creator;
             someObj64->unk4 = obj;
-            obj->unk78 = someObj;
+            obj->unk78 = (s32) someObj;
             someObj->segment.unk3C_a.level_entry = NULL;
         }
     }
@@ -902,9 +903,9 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
     }
 }
 
-void obj_init_unknown58(Object *obj, LevelObjectEntry_Unknown58 *entry) {
+void obj_init_unknown58(Object *obj, UNUSED LevelObjectEntry_Unknown58 *entry) {
     obj->unk78 = 0;
-    obj->unk7C.word = obj->segment.header;
+    obj->unk7C.word = (s32) obj->segment.header;
 }
 
 void obj_loop_unknown58(Object *obj, s32 speed) {
@@ -964,7 +965,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 speed) {
                 obj->unk7C.word = 0;
             }
             obj64->unk20 = D_800DC980;
-            obj64->unk24 = obj->unk68[obj->unk7C.word];
+            obj64->unk24 = (u8 *) obj->unk68[obj->unk7C.word];
             temp_t4 = (obj64->unk24[0] - 1) << 0x15;
             temp_t5 = (obj64->unk24[1] - 1) << 5;
             obj64->unk0 = 0x40000103;
@@ -1171,7 +1172,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_animator.s")
 
 void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2) {
     Object_Animation* obj64;
-    Object* sp24;
     s8 tempOrderIndex;
     f32 scalef;
 
@@ -1225,7 +1225,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     if (obj->unk64 != 0) {
         func_8001EFA4(obj, obj64);
         if (entry->order != 0 || obj64->unk4A != entry->objectIdToSpawn) {
-            gParticlePtrList_addObject(obj64);
+            gParticlePtrList_addObject((Object *) obj64);
             obj->unk64 = NULL;
         }
     }
@@ -1243,7 +1243,7 @@ void obj_loop_dooropener(Object *obj, s32 speed) {
     s32 phi_a0;
     unk80037D08_arg0_64 *sp18;
 
-    sp18 = obj->unk64;
+    sp18 = (unk80037D08_arg0_64 *) obj->unk64;
     phi_a0 = 1 - func_8001F460(obj, speed, obj);
     if (sp18->unk2A > 0) {
         phi_a0 = 0;
@@ -1309,7 +1309,7 @@ void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate) {
                             posX = wizShipObj->unk44[wizShipModel->unk14[index]].x;
                             posY = wizShipObj->unk44[wizShipModel->unk14[index]].y;
                             posZ = wizShipObj->unk44[wizShipModel->unk14[index]].z;
-                            guMtxXFMF(&shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
+                            guMtxXFMF(shipMtx, posX, posY, posZ, &posX, &posY, &posZ);
                             newObject.x = posX;
                             newObject.y = posY;
                             newObject.z = posZ;
@@ -1321,7 +1321,7 @@ void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate) {
                                 newObj->segment.trans.y_rotation = wizShipObj->segment.trans.y_rotation + 0x8000;
                                 newObj->segment.trans.x_rotation = -wizShipObj->segment.trans.x_rotation;
                                 newObj->unk78 = 0x3C; 
-                                guMtxXFMF(&laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity, &newObj->segment.y_velocity, &newObj->segment.z_velocity);
+                                guMtxXFMF(laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity, &newObj->segment.y_velocity, &newObj->segment.z_velocity);
                                 func_80009558(SOUND_LASER_GUN, wizShipObj->segment.trans.x_position, wizShipObj->segment.trans.y_position, wizShipObj->segment.trans.z_position, 4, NULL);
                             }
                         }
@@ -1337,7 +1337,7 @@ void obj_loop_vehicleanim(Object *obj, s32 speed) {
     Object *someObj;
 
     func_8001F460(obj, speed, obj);
-    obj60 = obj->unk60;
+    obj60 = (Object_60_800380F8 *) obj->unk60;
     if (obj60 != NULL) {
         if (obj60->unk0 > 0) {
             someObj = obj60->unk0 == 3 ? obj60->unkC : obj60->unk4;
@@ -1647,7 +1647,6 @@ void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 speed) {
 }
 
 void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
-    s32 temp;
     obj->unk78 = entry->unk8;
     obj->unk7C.word = entry->unk9;
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4; // Not sure about the values here.
@@ -1919,7 +1918,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                             settings->balloonsPtr[0]++;
                         }
                         settings->courseFlagsPtr[settings->courseId] |= flag;
-                        if (&obj->segment){ }
+                        if (&obj->segment){ } // Fakematch
                         play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->unk7C.word = 16;
                         obj->unk74 = 2;
@@ -1991,7 +1990,6 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_door.s")
 
 void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
-    f32 temp_f0;
     Object_TTDoor *obj64;
     f32 phi_f0;
 
@@ -2032,7 +2030,6 @@ void obj_loop_ttdoor(Object* obj, s32 updateRate) {
     Object_Racer *racer;
     s16 angle;
     s32 openDoor;
-    s32 var_at;
 
     ttDoor = (Object_TTDoor *) obj->unk64;
     settings = get_settings();
@@ -2097,7 +2094,7 @@ void obj_loop_ttdoor(Object* obj, s32 updateRate) {
         }
     } else {
         if (ttDoor->soundMask) {
-            func_800096F8(ttDoor->soundMask);
+            func_800096F8((s32) ttDoor->soundMask);
             ttDoor->soundMask = NULL;
         }
     }
@@ -2615,7 +2612,7 @@ void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
  * When passed through by the player, it will update the current weather settings.
  * Can be used to stop, start or change the intensity of the current weather.
 */
-void obj_loop_weather(Object *obj, s32 speed) {
+void obj_loop_weather(Object *obj, UNUSED s32 speed) {
   s32 currViewport;
   s32 numberOfObjects;
   Object_Racer *curObj64;
@@ -2660,7 +2657,7 @@ void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *ent
 }
 
 void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *entry, UNUSED s32 arg2) {
-    func_800BF524(obj); //waves.c
+    func_800BF524(obj);
 }
 
 #ifdef NON_EQUIVALENT
@@ -2778,14 +2775,14 @@ void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) 
 }
 
 void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
-    unk80042014_arg0_64 *temp = obj->unk64;
+    unk80042014_arg0_64 *temp = (unk80042014_arg0_64 *) obj->unk64;
     temp->unk0 = entry->unk8;
     temp->unk2 = entry->unkA;
     temp->unk3 = entry->unkB;
 }
 
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134(obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
+    func_800AF134((unk800B2260 *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
     obj->unk78 = entry->unkA;
 }
 
@@ -2801,7 +2798,7 @@ void obj_loop_bubbler(Object *obj, s32 speed) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (s32)get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7);
+    obj->unk64 = (s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7);
     obj->segment.unk3C_a.level_entry = NULL;
 }
 
