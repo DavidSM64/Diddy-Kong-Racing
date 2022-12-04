@@ -2616,7 +2616,7 @@ void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
  * Can be used to stop, start or change the intensity of the current weather.
 */
 void obj_loop_weather(Object *obj, s32 speed) {
-  s32 sp54;
+  s32 currViewport;
   s32 numberOfObjects;
   Object_Racer *curObj64;
   Object **objects;
@@ -2628,7 +2628,7 @@ void obj_loop_weather(Object *obj, s32 speed) {
   s32 last;
   f32 dist;
     
-  sp54 = get_object_render_stack_pos();
+  currViewport = get_current_viewport();
   objects = get_racer_objects(&numberOfObjects);
   cur = -1;
   if (numberOfObjects != 0) {
@@ -2636,7 +2636,7 @@ void obj_loop_weather(Object *obj, s32 speed) {
     do {
       curObj = objects[cur + 1];
       curObj64 = (Object_Racer *) curObj->unk64;
-    } while (((++cur) < last) && (sp54 != curObj64->playerIndex));
+    } while (++cur < last && currViewport != curObj64->playerIndex);
     
     diffX = obj->segment.trans.x_position - curObj->segment.trans.x_position;
     diffZ = obj->segment.trans.z_position - curObj->segment.trans.z_position;

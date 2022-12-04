@@ -7,7 +7,7 @@ glabel func_800A7A60
 /* 0A8674 800A7A74 00000000 */  nop   
 /* 0A8678 800A7A78 11C00038 */  beqz  $t6, .L800A7B5C
 /* 0A867C 800A7A7C 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 0A8680 800A7A80 0C019888 */  jal   get_object_render_stack_pos
+/* 0A8680 800A7A80 0C019888 */  jal   get_current_viewport
 /* 0A8684 800A7A84 AFA30024 */   sw    $v1, 0x24($sp)
 /* 0A8688 800A7A88 8FA30024 */  lw    $v1, 0x24($sp)
 /* 0A868C 800A7A8C 3C078012 */  lui   $a3, %hi(D_80126CDC) # $a3, 0x8012

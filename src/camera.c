@@ -240,7 +240,11 @@ s32 get_viewport_count(void) {
     return gNumberOfViewports;
 }
 
-s32 get_object_render_stack_pos(void) {
+/**
+ * Return the index of the active view.
+ * 0-3 is players 1-4, and 4-7 is the same, but with 4 added on for cutscenes.
+*/
+s32 get_current_viewport(void) {
     return gActiveCameraID;
 }
 
