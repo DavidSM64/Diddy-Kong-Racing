@@ -124,11 +124,11 @@ As of December 4, 2022, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 40.00% Complete --------------------------
-                     # Decompiled functions: 1383
-                     # GLOBAL_ASM remaining: 496
-                     # NON_MATCHING functions: 16
-                 # NON_EQUIVALENT WIP functions: 103
+ ------------------------- 39.99% Complete --------------------------
+                     # Decompiled functions: 1379
+                     # GLOBAL_ASM remaining: 457
+                     # NON_MATCHING functions: 10
+                  # NON_EQUIVALENT WIP functions: 83
  --------------------------- Game Status ----------------------------
               Balloons: 20/47, Keys: 2/4, Trophies: 1/5
                 T.T. Amulets: 2/4, Wizpig Amulets: 1/4
@@ -138,7 +138,7 @@ As of December 4, 2022, this is our current score:
                 ADVENTURE TWO (Cleanup & Documentation)
  ------------------------- 10.65% Complete --------------------------
                      # Documented functions: 264
-                    # Undocumented remaining: 1615
+                    # Undocumented remaining: 1572
  --------------------------- Game Status ----------------------------
                Balloons: 7/47, Keys: 1/4, Trophies: 0/5
                 T.T. Amulets: 0/4, Wizpig Amulets: 0/4
