@@ -504,7 +504,7 @@ void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
  * Displays the dialogue when ran into.
  * Has unused behaviour that presumably would've handled activating the dialogue from here.
 */
-void obj_loop_trophycab(Object* obj, s32 updateRate) {
+void obj_loop_trophycab(Object *obj, s32 updateRate) {
     Settings* settings;
     Object_TrophyCabinet *gfxData;
     f32 dist;
@@ -616,74 +616,74 @@ void obj_init_collectegg(Object *obj, UNUSED LevelObjectEntry_CollectEgg *entry)
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_collectegg(Object* arg0, s32 arg1) {
+void obj_loop_collectegg(Object *obj, s32 updateRate) {
     Object_CollectEgg *egg;
     Object *racerObj;
     Object_Racer *racer;
     f32 sp40[3];
     f32 sp3C;
-    f32 speed; // sp38
+    f32 speed;
     s32 sp34;
     s8 sp33;
 
-    egg = (Object_CollectEgg *)arg0->unk64;
-    speed = arg1;
-    if (osTvType == 0) {
+    egg = (Object_CollectEgg *) obj->unk64;
+    speed = updateRate;
+    if (osTvType == TV_TYPE_PAL) {
         speed *= 1.2;
     }
     switch (egg->unkB) {
     case 0:
-        func_80036040(arg0, (Object_64*)egg);
+        func_80036040(obj, (Object_64 *) egg);
         break;
     case 2:
-        arg0->segment.trans.unk6 &= 0xBFFF;
-        sp40[0] = arg0->segment.trans.x_position + (arg0->segment.x_velocity * speed);
-        sp40[1] = arg0->segment.trans.y_position + (arg0->segment.y_velocity * speed);
-        sp40[2] = arg0->segment.trans.z_position + (arg0->segment.z_velocity * speed);
+        obj->segment.trans.unk6 &= 0xBFFF;
+        sp40[0] = obj->segment.trans.x_position + (obj->segment.x_velocity * speed);
+        sp40[1] = obj->segment.trans.y_position + (obj->segment.y_velocity * speed);
+        sp40[2] = obj->segment.trans.z_position + (obj->segment.z_velocity * speed);
         sp3C = 9.0f;
-        func_80031130(1, &arg0->segment.trans.x_position, sp40, -1);
+        func_80031130(1, &obj->segment.trans.x_position, sp40, -1);
         sp34 = 0;
         sp33 = 0;
-        func_80031600(&arg0->segment.trans.x_position, sp40, &sp3C, &sp33, 1, &sp34);
-        arg0->segment.x_velocity = (sp40[0] - arg0->segment.trans.x_position) / speed;
-        arg0->segment.y_velocity = (sp40[1] - arg0->segment.trans.y_position) / speed;
-        arg0->segment.z_velocity = (sp40[2] - arg0->segment.trans.z_position) / speed;
-        arg0->segment.trans.x_position = sp40[0];
-        arg0->segment.trans.y_position = sp40[1];
-        arg0->segment.trans.z_position = sp40[2];
-        arg0->segment.y_velocity -= 0.5;
-        arg0->segment.x_velocity *= 0.98;
-        arg0->segment.z_velocity *= 0.98;
-        arg0->segment.y_velocity *= 0.95;
-        if ((arg0->segment.trans.y_position < -2000.0f) || ((sp34 != 0) && ((sp33 < 5) || (sp33 >= 10)))) {
+        func_80031600(&obj->segment.trans.x_position, sp40, &sp3C, &sp33, 1, &sp34);
+        obj->segment.x_velocity = (sp40[0] - obj->segment.trans.x_position) / speed;
+        obj->segment.y_velocity = (sp40[1] - obj->segment.trans.y_position) / speed;
+        obj->segment.z_velocity = (sp40[2] - obj->segment.trans.z_position) / speed;
+        obj->segment.trans.x_position = sp40[0];
+        obj->segment.trans.y_position = sp40[1];
+        obj->segment.trans.z_position = sp40[2];
+        obj->segment.y_velocity -= 0.5;
+        obj->segment.x_velocity *= 0.98;
+        obj->segment.z_velocity *= 0.98;
+        obj->segment.y_velocity *= 0.95;
+        if (obj->segment.trans.y_position < -2000.0f || (sp34 != 0 && (sp33 < 5 || sp33 >= 10))) {
             if (egg->unk4 != NULL) {
                 egg->unk4->unk78 = 0;
             }
-            gParticlePtrList_addObject(arg0);
+            gParticlePtrList_addObject(obj);
         }
         if (sp34 != 0 && sp33 == 5) {
             egg->unkB = 0;
-            arg0->segment.x_velocity = 0.0f;
-            arg0->segment.z_velocity = 0.0f;
+            obj->segment.x_velocity = 0.0f;
+            obj->segment.z_velocity = 0.0f;
         }
-        if ((sp34 != 0) && (sp33 >= 6) && (sp33 < 10)) {
+        if (sp34 != 0 && sp33 >= 6 && sp33 < 10) {
             egg->unkA = sp33 - 6;
             egg->unkB = 3;
             racerObj = get_racer_object(egg->unkA);
             if (racerObj != NULL) {
-                racer = (Object_Racer*)racerObj->unk64;
+                racer = (Object_Racer *) racerObj->unk64;
                 racer->unk1CF += 1;
             }
-            egg->unk8 = 0x258;
-            arg0->segment.x_velocity = 0.0f;
-            arg0->segment.z_velocity = 0.0f;
+            egg->unk8 = 600;
+            obj->segment.x_velocity = 0.0f;
+            obj->segment.z_velocity = 0.0f;
         }
         break;
     case 3:
-        egg->unk8 -= arg1;
+        egg->unk8 -= updateRate;
         racerObj = get_racer_object(egg->unkA);
         if (racerObj != NULL) {
-            racer = (Object_Racer*)racerObj->unk64;
+            racer = (Object_Racer *) racerObj->unk64;
         }
         if (egg->unk8 <= 0) {
             if (racerObj != NULL) {
@@ -692,22 +692,22 @@ void obj_loop_collectegg(Object* arg0, s32 arg1) {
             egg->unkB = 4;
             egg->unk4->unk78 = 0;
         }
-        if (egg->unk8 < 0x21C) {
-            func_80036040(arg0, (Object_64*)egg);
+        if (egg->unk8 < 540) {
+            func_80036040(obj, (Object_64 *) egg);
         }
-        if ((racerObj != NULL) && (egg->unkB != 3)) {
+        if (racerObj != NULL && egg->unkB != 3) {
             racer->unk1CF -= 1;
         }
         break;
     case 4:
         racerObj = get_racer_object(egg->unkA);
         if (racerObj != NULL) {
-            racer = (Object_Racer*)racerObj->unk64;
+            racer = (Object_Racer *) racerObj->unk64;
             if (racer->lap >= 3) {
                 racer->raceFinished = TRUE;
             }
         }
-        arg0->segment.unk18 = 0x80;
+        obj->segment.unk18 = 0x80;
         break;
     }
 }
@@ -1268,7 +1268,7 @@ void obj_init_wizpigship(UNUSED Object *obj, UNUSED LevelObjectEntry_WizpigShip 
  * Wizpig ship loop behaviour.
  * Periodically shoots laserbeams in front of it.
 */
-void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate) {
+void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     s32 i;
     s32 index;
     f32 posX;
@@ -2050,8 +2050,8 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
  * Checks if the player has complete the T.T amulet and has all 47 balloons.
  * If so, it will open, otherwise it opens dialogue telling the player to get them.
 */
-void obj_loop_ttdoor(Object* obj, s32 updateRate) {
-    Settings* settings;
+void obj_loop_ttdoor(Object *obj, s32 updateRate) {
+    Settings *settings;
     Object_TTDoor *ttDoor;
     Object *racerObj;
     Object_Racer *racer;
@@ -2117,7 +2117,7 @@ void obj_loop_ttdoor(Object* obj, s32 updateRate) {
     }
     if (openDoor) {
         if (ttDoor->soundMask == NULL) {
-            func_80009558(SOUND_UNK_222, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
+            func_80009558(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
         }
     } else {
         if (ttDoor->soundMask) {

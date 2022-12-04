@@ -141,14 +141,6 @@ s8 D_800DCDB0[16][2] = {
     0x03, 0xFD,
 };
 
-/*
-s16 D_800DCDB0[16] = {
-    0x02FE, 0x03FE, 0x02FC, 0x02FB,
-    0x02FB, 0x02FE, 0x02FD, 0x02FE,
-    0x03FD, 0x05FC, 0x04FE, 0x02FE,
-    0x02FA, 0x02FE, 0x08F8, 0x03FD,
-};*/
-
 // Checksum count for obj_loop_goldenballoon
 s32 gObjLoopGoldenBalloonChecksum = 0xA597;
 
@@ -2789,17 +2781,17 @@ void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
  * Handles the input and activation of any weapons the player is carrying.
  * Also handles the egg object from Fire Mountain, which takes precedent, even if the player is holding a weapon.
  */
-void handle_racer_items(Object* obj, Object_Racer* racer, UNUSED s32 updateRate) {
+void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     LevelObjectEntryCommon newObject;
     s32 weaponID;
-    Object* spawnedObj;
+    Object *spawnedObj;
     s32 objID;
-    Object* heldObj;
-    Object* intendedTarget;
-    Object_64* magnetTarget;
+    Object *heldObj;
+    Object *intendedTarget;
+    Object_64 *magnetTarget;
     f32 sp64;
-    ObjectModel* temp_a1;
-    Object_64* objData;
+    ObjectModel *temp_a1;
+    Object_64 *objData;
     f32 velocity;
     f32 distance;
     f32 var_f2;
@@ -3343,7 +3335,7 @@ void func_800575EC(Object *obj, Object_Racer *racer) {
  * Racers struck by most weapons will drop up to 2 bananas on the ground.
  * During challenge mode, no bananas are spawned, though the number still drops.
 */
-void drop_bananas(Object* obj, Object_Racer* racer, s32 number) {
+void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
     LevelObjectEntryCommon newObject;
     Object_Banana *temp;
     s32 i;

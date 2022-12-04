@@ -278,8 +278,8 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
 void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
 void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
-void func_80042D20(Object *, Object_Racer *, s32);
-void handle_racer_items(Object* obj, Object_Racer* racer, s32 updateRate);
+void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate);
+void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);
 void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 
 //Non Matching
