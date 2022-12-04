@@ -339,6 +339,7 @@ void obj_loop_wizghosts(Object *obj, s32 speed);
 void obj_loop_ttdoor(Object* obj, s32 updateRate);
 void obj_loop_trophycab(Object* obj, s32 updateRate);
 void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate);
+void obj_loop_silvercoin(Object *obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);

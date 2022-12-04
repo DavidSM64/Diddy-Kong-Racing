@@ -2306,7 +2306,39 @@ void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry)
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_silvercoin.s")
+void obj_loop_silvercoin(Object *obj, s32 updateRate) {
+    Object_4C* silverCoin4C;
+    Object_Racer* racer;
+    Object *racerObj;
+    s32 temp;
+
+    temp = func_8006C19C();
+    if ((temp && obj->unk78 != 3) || (!temp && obj->unk78 == 0)) {
+        silverCoin4C = obj->unk4C;
+        if (silverCoin4C->unk13 < 80) {
+            racerObj = (Object *) silverCoin4C->unk0;
+            if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
+                racer = (Object_Racer *) racerObj->unk64;
+                if (racer->playerIndex != -1) {
+                    if (racer->raceFinished == FALSE && !(obj->unk78 & (1 << racer->playerIndex))) {
+                        obj->unk78 |= (1 << racer->playerIndex);
+                        obj->unk7C.word = 0x10;
+                        obj->segment.trans.unk6 |= 0x200 << racer->playerIndex;
+                        play_sequence(racer->unk202 + 0x2B);
+                        racer->unk202++;
+                    }
+                }
+            }
+        }
+        obj->segment.unk18 += 8 * updateRate;
+    }
+    if (obj->unk7C.word > 0) {
+        obj->unk7C.word -= updateRate;
+        obj->unk74 = 1;
+        func_800AFC3C(obj, updateRate);
+    }
+}
+
 
 void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry) {
     Settings *settings;
