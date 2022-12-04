@@ -686,15 +686,12 @@ void func_80001F14(u16 soundID, u32 *arg1) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_80001FB8(u16 soundId, void *sndState, u8 arg2) {
-    if (sndState != NULL) {
-        func_800049F8(sndState, 8, (s32) (sSoundEffectsPool[soundId].unk2 * (arg2 / 127.0f)) << 8);
+void func_80001FB8(u16 soundID, void *soundState, u8 volume) {
+    s32 new_var = ((s32) (sSoundEffectsPool[soundID].unk2 * (volume / 127.0f))) * 256;
+    if (soundState) {
+        func_800049F8(soundState, 8, new_var);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/audio/func_80001FB8.s")
-#endif
 
 UNUSED void func_8000208C(void *sndState, u8 arg1) {
     if (sndState != NULL) {
