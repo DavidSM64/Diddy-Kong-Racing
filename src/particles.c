@@ -495,7 +495,7 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
         } else {
             arg0->unk7 = 0xFF;
         }
-        arg0->unkB.unkC_400.unkC = (s32 *)allocate_from_main_pool_safe(arg0->unk7 * 4, 0x80808080);
+        arg0->unkB.unkC_400.unkC = (s32 *)allocate_from_main_pool_safe(arg0->unk7 * 4, COLOUR_TAG_SEMITRANS_GREY);
         arg0->unkB.unkC_400.unk10 = temp_v1->unk14;
         arg0->unkB.unkC_400.unk12 = temp_v1->unk16;
         arg0->unkB.unkC_400.unk14 = temp_v1->unk22;
