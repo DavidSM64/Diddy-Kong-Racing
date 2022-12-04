@@ -1542,7 +1542,34 @@ void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) 
     obj->unk74 = 1;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bombexplosion.s")
+void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
+    s32 temp_t8;
+
+    obj->unk78 += updateRate;
+    temp_t8 = (obj->unk7C.word >> 8) & 0xFF;
+    if (obj->unk78 > 10 && temp_t8 != 0) {
+        obj->unk7C.word ^= (temp_t8 << 8);
+        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 0, 1.0f, temp_t8 - 1);
+    }
+    if (obj->unk78 < 20) {
+        obj->segment.trans.scale = ((obj->unk78 / 20.0f) * 10.0f) + 0.5f;
+        obj->unk7C.word |= 0xFF;
+    } else if (obj->unk78 < 0x28) {
+        obj->segment.trans.scale = (((obj->unk78 - 20) / 20.0f) * 5.0f) + 10.5f;
+        obj->unk7C.word = 0x1EF - (obj->unk78 * 0xC);
+    } else {
+        gParticlePtrList_addObject(obj);
+    }
+    
+    if (obj->unk74 != 0) {
+        if (get_number_of_active_players() < THREE_PLAYERS) {
+            func_800AFC3C(obj, 2);
+            obj->unk74 = 0;
+        }
+    }
+}
+
+
 
 void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
     obj->unk4C->unk14 = 2;
