@@ -614,15 +614,15 @@ s8 check_if_silver_coin_race() {
     return gIsSilverCoinRace;
 }
 
-void func_8000E1EC(Object *object, s32 arg1) {
-    D_8011AD40 = object;
+void func_8000E1EC(Object *obj, s32 vehicleID) {
+    D_8011AD40 = obj;
     D_8011AD44 = 4;
-    gOverworldVehicle = arg1;
-    D_8011AD46 = object->segment.trans.x_position;
-    D_8011AD48 = object->segment.trans.y_position;
-    D_8011AD4A = object->segment.trans.z_position;
-    D_8011AD4C = object->segment.trans.y_rotation;
-    gParticlePtrList_addObject(object);
+    gOverworldVehicle = vehicleID;
+    D_8011AD46 = obj->segment.trans.x_position;
+    D_8011AD48 = obj->segment.trans.y_position;
+    D_8011AD4A = obj->segment.trans.z_position;
+    D_8011AD4C = obj->segment.trans.y_rotation;
+    gParticlePtrList_addObject(obj);
     gNumRacers = 0;
 }
 
@@ -644,7 +644,7 @@ void func_8000E2B4(void) {
     sp2C.unkE = 0;
     sp2C.common.size = 0x10;
     if (gOverworldVehicle < 5) {
-        object_id = ((s16*) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
+        object_id = ((s16 *) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
     } else {
         object_id = D_800DC7B8[gOverworldVehicle + 37];
     }
@@ -1176,7 +1176,7 @@ void render_3d_billboard(Object *obj) {
     }
     
     // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
-    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.unk18 != 10)) {
+    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAOON_BUBBLE_TRAP)) {
         sp60.trans.z_rotation = 0;
         sp60.trans.x_rotation = 0;
         sp60.trans.y_rotation = 0;
@@ -1187,7 +1187,7 @@ void render_3d_billboard(Object *obj) {
         sp60.unk18 = obj->segment.unk18;
         sp60.unk1A = 32;
         if (var_a0 == NULL) {
-            var_a0 = (Object *) obj->unk64->weapon.unk0;
+            var_a0 = (Object *) obj->unk64->weapon.target;
             if (var_a0 == NULL) {
                 var_a0 = obj;
             }
@@ -1856,11 +1856,11 @@ s16 func_8001C418(f32 yPos) {
     return out;
 }
 
-s32 func_8001C48C(s32 arg0) {
+s32 func_8001C48C(Object *obj) {
     s32 i;
     for(i = 0; i < 128; i++) {
         if ((*D_8011AF04)[i] == 0) {
-            (*D_8011AF04)[i] = arg0;
+            (*D_8011AF04)[i] = obj;
             return i;
         }
     }

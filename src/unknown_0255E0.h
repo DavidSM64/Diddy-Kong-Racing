@@ -124,6 +124,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
 void draw_gradient_background(void);
 void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2);
 void obj_loop_fogchanger(Object* obj);
+void func_80028CD0(s32 updateRate);
 
 
 //Non Matching

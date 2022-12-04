@@ -632,7 +632,7 @@ void func_80028CD0(s32 updateRate) {
     Object_Racer *racer;
 
     D_8011B0B0 = func_80069D20();
-    sp3C = get_object_render_stack_pos();
+    sp3C = get_current_viewport();
     func_80031018();
     set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
     temp_v0 = D_8011B0B0->segment.unk34_a.levelSegmentIndex;
@@ -653,9 +653,9 @@ void func_80028CD0(s32 updateRate) {
                 i++;
                 racer = &racers[i]->unk64->racer;
             } while((i < (numRacers - 1)) && (sp3C != (racer->playerIndex)));
-            func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position, racers[i]->segment.trans.z_position, get_object_render_stack_pos(), updateRate);
+            func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position, racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
-            func_800B8C04((s32) D_8011B0B0->segment.trans.x_position, (s32) D_8011B0B0->segment.trans.y_position, (s32) D_8011B0B0->segment.trans.z_position, get_object_render_stack_pos(), updateRate);
+            func_800B8C04((s32) D_8011B0B0->segment.trans.x_position, (s32) D_8011B0B0->segment.trans.y_position, (s32) D_8011B0B0->segment.trans.z_position, get_current_viewport(), updateRate);
         }
     }
     get_current_level_header()->unk3 = 1;
@@ -714,7 +714,7 @@ void render_level_geometry_and_objects(void) {
 
     reset_render_settings(&gSceneCurrDisplayList);
     func_80015348(sp160, sp16C - 1);
-    sp158 = 0x200 << (get_object_render_stack_pos() & 1);
+    sp158 = 0x200 << (get_current_viewport() & 1);
 
     for (i = sp160; i < sp16C; i++) {
         obj = get_object(i);
@@ -771,7 +771,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     if (D_8011D384 != 0) {
-        func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_object_render_stack_pos());
+        func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_current_viewport());
     }
 
     reset_render_settings(&gSceneCurrDisplayList);
@@ -815,7 +815,7 @@ skip:
     }
 
     if (D_800DC924 && func_80027568()) {
-        func_8002581C(segmentIds, numberOfSegments, get_object_render_stack_pos());
+        func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }
     D_8011B0FC = 0;
 }

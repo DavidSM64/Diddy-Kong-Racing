@@ -38,7 +38,7 @@ void func_800096F8(s32);
 //void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3);
 
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ);
-void func_80009558(u16, f32 x, f32 y, f32 z, s32, s32 *); // Non Matching
+void func_80009558(u16, f32 x, f32 y, f32 z, s32, void *); // Non Matching
 void func_80009968(f32, f32, f32, u8, u8, s32); // Non Matching
 void update_spatial_audio_position(s32, f32, f32, f32); //Not accurate, the real one is above but it breaks update_player_racer
 void func_8000A2E8(s32); // Non Matching

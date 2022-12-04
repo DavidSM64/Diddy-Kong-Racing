@@ -42,7 +42,8 @@ typedef enum BoostType {
     BOOST_MEDIUM,
     BOOST_LARGE,
     BOOST_UNK3,
-    BOOST_SMALL_FAST,
+    EMPOWER_BOOST,
+    BOOST_SMALL_FAST = 4,
     BOOST_MEDIUM_FAST,
     BOOST_LARGE_FAST
 } BoostType;
@@ -71,6 +72,26 @@ typedef enum ShieldType {
     SHIELD_LEVEL2,
     SHIELD_LEVEL3
 } ShieldType;
+
+typedef enum WeaponType {
+    WEAPON_NONE = -1,
+    WEAPON_ROCKET_HOMING,
+    WEAPON_ROCKET,
+    WEAPON_TRIPMINE,
+    WEAPON_OIL_SLICK,
+    WEAPON_NITRO_LEVEL_1,
+    WEAPON_MAGNET_LEVEL_1,
+    WEAPON_MAGNET_LEVEL_3,
+    WEAPON_MAGNET_LEVEL_2,
+    WEAPON_NITRO_LEVEL_2,
+    WEAPON_UNK_09,
+    WEAOON_BUBBLE_TRAP,
+    WEAPON_UNK_11,
+    WEAPON_SHIELD_LEVEL_1,
+    WEAPON_SHIELD_LEVEL_2,
+    WEAPON_SHIELD_LEVEL_3,
+    WEAPON_NITRO_LEVEL_3
+} WeaponType;
 
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
@@ -150,7 +171,7 @@ extern f32 D_800DCBE8[19];
 // Unused? Not sure if this is actually an array or just some random data.
 extern s32 D_800DCC34[19];
 
-extern s32 D_800DCC80[13];
+extern s32 D_800DCC80[];
 
 extern s16 D_800DCCB4[12];
 
@@ -168,9 +189,6 @@ extern s8 D_800DCD90[15];
 extern s8 D_800DCDA0[8];
 
 extern s8 D_800DCDA8[8];
-
-// Unused?
-extern s16 D_800DCDB0[16];
 
 extern s32 gObjLoopGoldenBalloonChecksum;
 
@@ -260,12 +278,12 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
 void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
 void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
-void func_80042D20(Object *, Object_Racer *, s32);
+void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate);
+void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);
+void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
-void drop_bananas(Object *obj, Object_Racer *racer, s32 numBananas);
-void func_80055EC0(Object *obj, Object_Racer *racer, s32);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
@@ -279,8 +297,8 @@ void func_8004CC20(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
 void func_8004447C(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_800452A0(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80056E2C(Object *obj, Object_Racer *racer, s32 updateRate);
-Object* func_8005698C(Object_Racer* racer, Object* obj, f32* arg2);
+void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate);
+Object* func_8005698C(Object* racer, Object_Racer* obj, f32* dist);
 void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF);
 
 #endif

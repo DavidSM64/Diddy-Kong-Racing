@@ -596,6 +596,12 @@ typedef struct LevelObjectEntry80011AD0 {
     u8 unkD;
 } LevelObjectEntry80011AD0;
 
+typedef struct LevelObjectEntry8003FC44 {
+    LevelObjectEntryCommon common;
+    s8 unk9;
+    s8 unkA;
+} LevelObjectEntry8003FC44;
+
 typedef struct LevelObjectEntry {
     union {
         LevelObjectEntry_Racer racer;

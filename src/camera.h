@@ -117,7 +117,7 @@ void update_camera_fov(f32 camFieldOfView);
 UNUSED void calculate_camera_perspective(void);
 Matrix *func_80066204(void);
 s32 get_viewport_count(void);
-s32 get_object_render_stack_pos(void);
+s32 get_current_viewport(void);
 void func_80066230(Gfx **dlist, Matrix **arg1);
 f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
