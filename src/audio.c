@@ -89,8 +89,8 @@ ALCSeq D_80115E80;
 u8 D_80115F78;
 u8 D_80115F79;
 s32 D_80115F7C;
-s32 D_80115F80;
-u32 gGlobalSoundMask;
+s32 *gGlobalSoundMask;
+u32 gSpatialSoundMask;
 u32 D_80115F88;
 
 /******************************/
@@ -653,7 +653,43 @@ u16 func_80001CB8(u16 arg0) {
     return sSoundEffectsPool[arg0].unk6;
 }
 
-GLOBAL_ASM("asm/non_matchings/audio/play_sound_global.s")
+/**
+ * Add the requested sound to the queue and update the mask to show that this sound is playing at that source.
+ * If no soundmask is provided, then instead use the global mask.
+*/
+void play_sound_global(u16 soundID, s32 *soundMask) {
+    f32 volumeF;
+    s32 soundBite;
+
+    if (D_80115D20 < soundID) {
+        if (soundMask != NULL) {
+            *soundMask = NULL;
+        }
+    } else {
+        soundBite = sSoundEffectsPool[soundID].unk0;
+        if (soundBite == NULL) {
+            if (soundMask != NULL) {
+                *soundMask = NULL;
+            }
+        } else {
+            volumeF = sSoundEffectsPool[soundID].unk4 / 100.0f;
+            if (soundMask != NULL) {
+                func_80004668(ALBankFile_80115D14->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, soundMask);
+                if (*soundMask != NULL) {
+                    func_800049F8(*soundMask, 8, sSoundEffectsPool[soundID].unk2 * 256);
+                    func_800049F8(*soundMask, 16, *((u32*) &volumeF));
+                }
+            } else {
+                soundMask = (s32 *) &gGlobalSoundMask;
+                func_80004668(ALBankFile_80115D14->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, &gGlobalSoundMask);
+                if (*soundMask != NULL) {
+                    func_800049F8(*soundMask, 8, sSoundEffectsPool[soundID].unk2 * 256);
+                    func_800049F8(*soundMask, 16, *((u32*) &volumeF));
+                }
+            }
+        }
+    }
+}
 
 /**
  * Creates a spatial audio reference, then plays a sound.
@@ -662,7 +698,7 @@ GLOBAL_ASM("asm/non_matchings/audio/play_sound_global.s")
  */
 void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
     if (soundMask == NULL) {
-        soundMask = &gGlobalSoundMask;
+        soundMask = &gSpatialSoundMask;
     }
 
     play_sound_global(soundID, soundMask);
