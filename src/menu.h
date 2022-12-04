@@ -145,7 +145,7 @@ typedef struct unk80126C54 {
             u8 unk2;
             u8 unk3;
         };
-        s32 unks32;
+        s32 unk0_s32;
     };
 } unk80126C54;
 

@@ -6977,7 +6977,7 @@ void assign_racer_portrait_textures(void) {
 }
 
 void func_80094688(s32 arg0, s32 arg1) {
-    UNUSED s32 pad;
+    s16 *var_v1;
     LevelHeader *header;
 
     func_80072298(0U);
@@ -7017,7 +7017,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     D_800DF460 = 0;
     gMenuOption = 0;
     gIgnorePlayerInput = 1;
-    D_80126C54.unks32 = -1;
+    D_80126C54.unk0_s32 = -1;
     gMenuSubOption = 0;
     D_80126C1C = NULL;
     D_80126A98 = 0;
@@ -7039,21 +7039,22 @@ void func_80094688(s32 arg0, s32 arg1) {
     gTrackSelectViewPortHalfX = gTrackSelectViewPortX >> 1;
     gTrackSelectViewPortHalfY = gTrackSelectViewportY >> 1;
     if ((gNumberOfActivePlayers == 1) && (gTrophyRaceWorldId == 0)) {
-        D_80126C54.unks32 = 0;
+        D_80126C54.unk0_s32 = 0;
         arg1 = (s8) header->world - 1;
-        if (D_800E0710[arg1 * 3] != -1) {
-            func_8009C6D4(D_800E0710[arg1 * 3]);
-            D_80126BB8 = D_80126550[D_800E0710[arg1 * 3]];
+        var_v1 = &D_800E0710[arg1 * 3];
+        if (var_v1[0] != -1) {
+            func_8009C6D4(var_v1[0]);
+            D_80126BB8 = D_80126550[var_v1[0]];
         } else {
             D_80126BB8 = 0;
         }
-        if (D_800E0710[arg1 * 3 + 1] != -1) {
-            func_8009C6D4(D_800E0710[arg1 * 3 + 1]);
-            D_80126BBC = D_80126550[D_800E0710[arg1 * 3 + 1]];
+        if (var_v1[1] != -1) {
+            func_8009C6D4(var_v1[1]);
+            D_80126BBC = D_80126550[var_v1[1]];
         } else {
             D_80126BBC = 0;
         }
-        D_80126BC0 = D_800E0710[arg1 * 3 + 2];
+        D_80126BC0 = var_v1[2];
         if (get_render_context() == 0) {
             func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
