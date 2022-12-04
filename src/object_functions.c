@@ -2104,7 +2104,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     } else {
         angle = obj->segment.trans.y_rotation - obj->unk78;
     }
-    angle = angle >> 3;
+    angle >>= 3;
     if (angle > 0x200) {
         angle = 0x200;
     }
