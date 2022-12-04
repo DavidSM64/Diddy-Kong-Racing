@@ -174,7 +174,7 @@ void func_80065EA0(void) {
         gAntiPiracyViewport = TRUE;
     }
     guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    func_8006F870(D_80120EE0, D_80120FE0);
+    f32_matrix_to_s16_matrix(D_80120EE0, D_80120FE0);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 #else
@@ -220,7 +220,7 @@ void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
         guPerspectiveF(D_80120EE0, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-        func_8006F870(&D_80120EE0, &D_80120FE0);
+        f32_matrix_to_s16_matrix(&D_80120EE0, &D_80120FE0);
     }
 }
 
@@ -229,7 +229,7 @@ void update_camera_fov(f32 camFieldOfView) {
  */
 UNUSED void calculate_camera_perspective(void) {
     guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    func_8006F870(&D_80120EE0, &D_80120FE0);
+    f32_matrix_to_s16_matrix(&D_80120EE0, &D_80120FE0);
 }
 
 UNUSED Matrix *func_80066204(void) {
@@ -240,7 +240,11 @@ s32 get_viewport_count(void) {
     return gNumberOfViewports;
 }
 
-s32 get_object_render_stack_pos(void) {
+/**
+ * Return the index of the active view.
+ * 0-3 is players 1-4, and 4-7 is the same, but with 4 added on for cutscenes.
+*/
+s32 get_current_viewport(void) {
     return gActiveCameraID;
 }
 
@@ -858,8 +862,8 @@ void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
     }
     D_80120CF0.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
-    func_8006FE74(&D_80120F60, &D_80120CF0);
-    func_8006F768(&D_80120F60, &D_80120EE0, &D_80120F20);
+    object_transform_to_matrix_2(&D_80120F60, &D_80120CF0);
+    f32_matrix_mult(&D_80120F60, &D_80120EE0, &D_80120F20);
 
     D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
     D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.word);
@@ -872,8 +876,8 @@ void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
     }
     D_80120CF0.z_position = gActiveCameraStack[gActiveCameraID].trans.z_position;
 
-    func_8006FC30(D_80120FA0, &D_80120CF0);
-    func_8006F870(&D_80120FA0, &D_80121020);
+    object_transform_to_matrix(D_80120FA0, &D_80120CF0);
+    f32_matrix_to_s16_matrix(&D_80120FA0, &D_80121020);
 
     gActiveCameraID = temp;
 }
@@ -894,7 +898,7 @@ void func_80067F2C(Gfx **dlist, Matrix **mats) {
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
-    func_8006F870(&gOrthoMatrix, (Matrix *)*mats);
+    f32_matrix_to_s16_matrix(&gOrthoMatrix, (Matrix *)*mats);
     D_80120D88[0] = (Matrix *) *mats;
     D_800DD148[gActiveCameraID + 5].vp.vscale[0] = width * 2;
     D_800DD148[gActiveCameraID + 5].vp.vscale[1] = width * 2;
@@ -914,11 +918,11 @@ void func_80067F2C(Gfx **dlist, Matrix **mats) {
 }
 
 void func_8006807C(Gfx **dlist, Matrix **mats) {
-    func_8006FE74(&D_80121060, &D_800DD288);
-    func_8006F768(&D_80121060, &D_80120EE0, &D_80120F20);
-    func_8006FE74(D_80120D70[0], &D_800DD2A0);
-    func_8006F768(D_80120D70[0], &D_80120F20, &D_80121060);
-    func_8006F870(&D_80121060, (Matrix *)*mats);
+    object_transform_to_matrix_2(&D_80121060, &D_800DD288);
+    f32_matrix_mult(&D_80121060, &D_80120EE0, &D_80120F20);
+    object_transform_to_matrix_2(D_80120D70[0], &D_800DD2A0);
+    f32_matrix_mult(D_80120D70[0], &D_80120F20, &D_80121060);
+    f32_matrix_to_s16_matrix(&D_80121060, (Matrix *)*mats);
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -959,9 +963,9 @@ void func_800682AC(Gfx **dlist) {
 }
 
 void func_80068408(Gfx **dlist, Matrix **mats) {
-    func_800705F8(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
-    func_8006F768(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
-    func_8006F870(&D_80121060, (Matrix *)*mats);
+    f32_matrix_from_position(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
+    f32_matrix_mult(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
+    f32_matrix_to_s16_matrix(&D_80121060, (Matrix *)*mats);
     D_80120D88[D_80120D1C] = (Matrix *) *mats;
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), D_80120D08 << 6);
 }
@@ -993,12 +997,12 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
         sp5C = D_80120D28[D_80120D20] - obj->segment.trans.x_position;
         sp58 = D_80120D40[D_80120D20] - obj->segment.trans.y_position;
         var_f20 = D_80120D58[D_80120D20] - obj->segment.trans.z_position;
-        sp4C = cosine_s(obj->segment.trans.y_rotation);
-        temp_f0 = sine_s(obj->segment.trans.y_rotation);
+        sp4C = sins_f(obj->segment.trans.y_rotation);
+        temp_f0 = coss_f(obj->segment.trans.y_rotation);
         sp44 = (sp5C * temp_f0) + (var_f20 * sp4C);
         var_f20 = (var_f20 * temp_f0) - (sp5C * sp4C);
         sp38 = arctan2_f(sp44, sqrtf((sp58 * sp58) + (var_f20 * var_f20)));
-        sp3C = -func_80070830(arctan2_f(sp44, var_f20)) >> 8;
+        sp3C = -sins(arctan2_f(sp44, var_f20)) >> 8;
         if (var_f20 < 0.0f) {
             var_f20 = -var_f20;
             sp3C = 1 - sp3C;
@@ -1027,11 +1031,11 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
         D_80120CF0.x_position = obj->segment.trans.x_position;
         D_80120CF0.y_position = obj->segment.trans.y_position;
         D_80120CF0.z_position = obj->segment.trans.z_position;
-        func_8006FC30(D_80121060, &D_80120CF0);
+        object_transform_to_matrix(D_80121060, &D_80120CF0);
         D_80120D1C++;
-        func_8006F768((Matrix*) D_80121060, (Matrix*)&D_80120D70[D_80120D1C-1][0][0], (Matrix*)&D_80120D70[D_80120D1C][0][0]);
-        func_8006F768(D_80120D70[D_80120D1C], (Matrix*) D_80120F20, (Matrix*) D_80121060);
-        func_8006F870((Matrix*) D_80121060, *mtx);
+        f32_matrix_mult((Matrix*) D_80121060, (Matrix*)&D_80120D70[D_80120D1C-1][0][0], (Matrix*)&D_80120D70[D_80120D1C][0][0]);
+        f32_matrix_mult(D_80120D70[D_80120D1C], (Matrix*) D_80120F20, (Matrix*) D_80121060);
+        f32_matrix_to_s16_matrix((Matrix*) D_80121060, *mtx);
         D_80120D88[D_80120D1C] = *mtx;
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
         gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD138), 1, 0);
@@ -1053,8 +1057,8 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
         }
         var_s2 = obj->segment.unk18;
         D_80120D1C++;
-        func_80070130((f32 (*)[4]) D_80120D70[D_80120D1C], sp34, obj->segment.trans.scale, gVideoAspectRatio);
-        func_8006F870(D_80120D70[D_80120D1C], *mtx);
+        f32_matrix_from_rotation_and_scale((f32 (*)[4]) D_80120D70[D_80120D1C], sp34, obj->segment.trans.scale, gVideoAspectRatio);
+        f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *mtx);
         D_80120D88[D_80120D1C] = *mtx;
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
         gDkrEnableBillboard((*dlist)++);
@@ -1111,16 +1115,16 @@ void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3
         D_80120CF0.z_position = 0.0f;
         if (gAdjustViewportHeight) {
             scale = arg3->trans.scale;
-            func_80070638(sp50, scale, scale, 1.0f);
-            func_80070130(sp90, 0, 1.0f, gVideoAspectRatio);
-            func_8006F768(&sp90, &sp50, &D_80121060);
+            f32_matrix_from_scale(sp50, scale, scale, 1.0f);
+            f32_matrix_from_rotation_and_scale(sp90, 0, 1.0f, gVideoAspectRatio);
+            f32_matrix_mult(&sp90, &sp50, &D_80121060);
         } else {
             scale = arg3->trans.scale;
-            func_80070638(D_80121060, scale, scale, 1.0f);
+            f32_matrix_from_scale(D_80121060, scale, scale, 1.0f);
         }
-        func_8006FE74(&sp90, &D_80120CF0);
-        func_8006F768(&D_80121060, &sp90, D_80120D70[D_80120D1C]);
-        func_8006F870(D_80120D70[D_80120D1C], *arg1);
+        object_transform_to_matrix_2(&sp90, &D_80120CF0);
+        f32_matrix_mult(&D_80121060, &sp90, D_80120D70[D_80120D1C]);
+        f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *arg1);
         D_80120D88[D_80120D1C] = *arg1;
         gSPMatrix((*arg0)++, OS_PHYSICAL_TO_K0((*arg1)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*arg0)++);
@@ -1151,16 +1155,16 @@ void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f
     s32 index;
     f32 scaleFactor;
 
-    func_8006FC30(D_80121060, arg2);
+    object_transform_to_matrix(D_80121060, arg2);
     if (arg4 != 0.0f) {
-        func_8006FE30(&D_80121060, arg4);
+        f32_matrix_y_scale(&D_80121060, arg4);
     }
     if (arg3 != 1.0f) {
-        func_8006FE04(&D_80121060, arg3);
+        f32_matrix_scale(&D_80121060, arg3);
     }
-    func_8006F768(&D_80121060, D_80120D70[D_80120D1C], D_80120D70[D_80120D1C + 1]);
-    func_8006F768(D_80120D70[D_80120D1C + 1], &D_80120F20, &D_801210A0);
-    func_8006F870(&D_801210A0, *arg1);
+    f32_matrix_mult(&D_80121060, D_80120D70[D_80120D1C], D_80120D70[D_80120D1C + 1]);
+    f32_matrix_mult(D_80120D70[D_80120D1C + 1], &D_80120F20, &D_801210A0);
+    f32_matrix_to_s16_matrix(&D_801210A0, *arg1);
     D_80120D1C++;
     D_80120D88[0, D_80120D1C] = *arg1; // Should be [D_80120D1C], but only matches with [0, D_80120D1C]
     if (1) { } if (1) { } if (1) { }; // Necessary to match
@@ -1180,7 +1184,7 @@ void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f
     D_80120CF0.y_position = 0.0f;
     D_80120CF0.z_position = 0.0f;
     D_80120CF0.scale = 1.0f;
-    func_8006FE74(&D_80121060, &D_80120CF0);
+    object_transform_to_matrix_2(&D_80121060, &D_80120CF0);
     guMtxXFMF(D_80121060, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
     scaleFactor = 1.0f / arg2->scale;
     tempX *= scaleFactor;
@@ -1229,10 +1233,10 @@ UNUSED void func_80069ACC(f32 x, f32 y, f32 z) {
 }
 
 UNUSED void func_80069B70(f32 x, UNUSED f32 y, f32 z) {
-    gActiveCameraStack[gActiveCameraID].trans.x_position -= x * sine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].trans.z_position -= x * cosine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].trans.x_position -= z * cosine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].trans.z_position += z * sine_s(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].trans.x_position -= x * coss_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].trans.z_position -= x * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].trans.x_position -= z * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
+    gActiveCameraStack[gActiveCameraID].trans.z_position += z * coss_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
     gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
         get_level_segment_index_from_position(
             gActiveCameraStack[gActiveCameraID].trans.x_position,

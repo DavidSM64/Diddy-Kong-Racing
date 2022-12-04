@@ -108,12 +108,6 @@ typedef struct unk80068514_arg4 {
     Gfx *unk8[1];
 } unk80068514_arg4;
 
-//TODO: Figure out where these functions live: unknown_070110?
-    void func_8006F870(Matrix *, Matrix *); //unknown_070110
-    void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
-    void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching unknown_070110?
-    void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
-
 void func_80066060(s32 arg0, s32 arg1);
 void set_viewport_tv_type(s8 arg0);
 void func_800660C0(void);
@@ -123,7 +117,7 @@ void update_camera_fov(f32 camFieldOfView);
 UNUSED void calculate_camera_perspective(void);
 Matrix *func_80066204(void);
 s32 get_viewport_count(void);
-s32 get_object_render_stack_pos(void);
+s32 get_current_viewport(void);
 void func_80066230(Gfx **dlist, Matrix **arg1);
 f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);

@@ -51,7 +51,7 @@ glabel func_800B3358
 /* 0B4018 800B3418 46002187 */  neg.s $f6, $f4
 /* 0B401C 800B341C E7A6003C */  swc1  $f6, 0x3c($sp)
 /* 0B4020 800B3420 02002025 */  move  $a0, $s0
-/* 0B4024 800B3424 0C01C0C8 */  jal   func_80070320
+/* 0B4024 800B3424 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0B4028 800B3428 02602825 */   move  $a1, $s3
 /* 0B402C 800B342C C608001C */  lwc1  $f8, 0x1c($s0)
 /* 0B4030 800B3430 C7AA0038 */  lwc1  $f10, 0x38($sp)

@@ -82,7 +82,7 @@ typedef struct unk800DC964 {
 
 extern unk800DC950 **D_800DC950;
 
-f32 sine_s(s16); //?
+f32 coss_f(s16); //?
 
 void func_80031B60(void);
 void func_80032210(unk800DC950 *arg0);
@@ -95,6 +95,7 @@ void func_80032BAC(unk800DC950 *arg0);
 s32 func_80032C6C(void);
 f32 func_80033A14(unk800DC950 *arg0);
 f32 func_80033C08(unk800DC950 *arg0);
+Object_64 *func_80031CAC(Object *, LevelObjectEntry_RgbaLight *entry);
 
 //Non Matching
 void func_80031BB8(s32 count);

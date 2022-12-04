@@ -261,7 +261,7 @@ glabel func_8004F7F4
 /* 050768 8004FB68 02002025 */   move  $a0, $s0
 /* 05076C 8004FB6C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 050770 8004FB70 02202025 */  move  $a0, $s1
-/* 050774 8004FB74 0C0157B0 */  jal   func_80055EC0
+/* 050774 8004FB74 0C0157B0 */  jal   handle_racer_items
 /* 050778 8004FB78 02002825 */   move  $a1, $s0
 /* 05077C 8004FB7C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 050780 8004FB80 02202025 */  move  $a0, $s1
@@ -569,7 +569,7 @@ glabel func_8004F7F4
 /* 050BE0 8004FFE0 E4A0000C */  swc1  $f0, 0xc($a1)
 /* 050BE4 8004FFE4 E4A00010 */  swc1  $f0, 0x10($a1)
 /* 050BE8 8004FFE8 E4A00014 */  swc1  $f0, 0x14($a1)
-/* 050BEC 8004FFEC 0C01BF9D */  jal   func_8006FE74
+/* 050BEC 8004FFEC 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 050BF0 8004FFF0 E4A40008 */   swc1  $f4, 8($a1)
 /* 050BF4 8004FFF4 8E050030 */  lw    $a1, 0x30($s0)
 /* 050BF8 8004FFF8 8E07002C */  lw    $a3, 0x2c($s0)
@@ -795,7 +795,7 @@ glabel func_8004F7F4
 /* 050F2C 8005032C A4A80004 */  sh    $t0, 4($a1)
 /* 050F30 80050330 E4A00010 */  swc1  $f0, 0x10($a1)
 /* 050F34 80050334 E4A00014 */  swc1  $f0, 0x14($a1)
-/* 050F38 80050338 0C01BF9D */  jal   func_8006FE74
+/* 050F38 80050338 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 050F3C 8005033C E4A60008 */   swc1  $f6, 8($a1)
 /* 050F40 80050340 8FA500B8 */  lw    $a1, 0xb8($sp)
 /* 050F44 80050344 8FA700B4 */  lw    $a3, 0xb4($sp)

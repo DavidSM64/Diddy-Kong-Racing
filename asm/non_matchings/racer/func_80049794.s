@@ -378,7 +378,7 @@ glabel func_80049794
 /* 04A840 80049C40 A20C01E8 */  sb    $t4, 0x1e8($s0)
 /* 04A844 80049C44 8FA600F8 */  lw    $a2, 0xf8($sp)
 /* 04A848 80049C48 A3AA00A2 */  sb    $t2, 0xa2($sp)
-/* 04A84C 80049C4C 0C0157B0 */  jal   func_80055EC0
+/* 04A84C 80049C4C 0C0157B0 */  jal   handle_racer_items
 /* 04A850 80049C50 02202025 */   move  $a0, $s1
 /* 04A854 80049C54 02202025 */  move  $a0, $s1
 /* 04A858 80049C58 0C014D71 */  jal   func_800535C4
@@ -562,7 +562,7 @@ glabel func_80049794
 /* 04AAF4 80049EF4 E4AC0014 */  swc1  $f12, 0x14($a1)
 /* 04AAF8 80049EF8 27A40060 */  addiu $a0, $sp, 0x60
 /* 04AAFC 80049EFC A4AF0002 */  sh    $t7, 2($a1)
-/* 04AB00 80049F00 0C01BF0C */  jal   func_8006FC30
+/* 04AB00 80049F00 0C01BF0C */  jal   object_transform_to_matrix
 /* 04AB04 80049F04 E4A40008 */   swc1  $f4, 8($a1)
 /* 04AB08 80049F08 44800000 */  mtc1  $zero, $f0
 /* 04AB0C 80049F0C 26180038 */  addiu $t8, $s0, 0x38
@@ -2199,7 +2199,7 @@ glabel func_80049794
 /* 04C2C8 8004B6C8 860401A4 */  lh    $a0, 0x1a4($s0)
 /* 04C2CC 8004B6CC 46244482 */  mul.d $f18, $f8, $f4
 /* 04C2D0 8004B6D0 46209320 */  cvt.s.d $f12, $f18
-/* 04C2D4 8004B6D4 0C01C1FE */  jal   sine_s
+/* 04C2D4 8004B6D4 0C01C1FE */  jal   coss_f
 /* 04C2D8 8004B6D8 E7AC00EC */   swc1  $f12, 0xec($sp)
 /* 04C2DC 8004B6DC 821901E0 */  lb    $t9, 0x1e0($s0)
 /* 04C2E0 8004B6E0 C7AC00EC */  lwc1  $f12, 0xec($sp)
@@ -2237,7 +2237,7 @@ glabel func_80049794
 /* 04C358 8004B758 46044481 */  sub.s $f18, $f8, $f4
 /* 04C35C 8004B75C E6320024 */  swc1  $f18, 0x24($s1)
 /* 04C360 8004B760 860401A4 */  lh    $a0, 0x1a4($s0)
-/* 04C364 8004B764 0C01C1F1 */  jal   cosine_s
+/* 04C364 8004B764 0C01C1F1 */  jal   sins_f
 /* 04C368 8004B768 E7AC00EC */   swc1  $f12, 0xec($sp)
 /* 04C36C 8004B76C 820F01E0 */  lb    $t7, 0x1e0($s0)
 /* 04C370 8004B770 C7AC00EC */  lwc1  $f12, 0xec($sp)
@@ -2601,7 +2601,7 @@ glabel func_80049794
 /* 04C8A8 8004BCA8 E4A0000C */  swc1  $f0, 0xc($a1)
 /* 04C8AC 8004BCAC E4A00010 */  swc1  $f0, 0x10($a1)
 /* 04C8B0 8004BCB0 E4A00014 */  swc1  $f0, 0x14($a1)
-/* 04C8B4 8004BCB4 0C01BF9D */  jal   func_8006FE74
+/* 04C8B4 8004BCB4 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 04C8B8 8004BCB8 E4AA0008 */   swc1  $f10, 8($a1)
 /* 04C8BC 8004BCBC 8E25001C */  lw    $a1, 0x1c($s1)
 /* 04C8C0 8004BCC0 8E260020 */  lw    $a2, 0x20($s1)

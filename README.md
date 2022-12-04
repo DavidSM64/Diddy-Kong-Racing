@@ -120,31 +120,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of November 29, 2022, this is our current score:
+As of December 4, 2022, this is our current score:
 ```
- =====================================================================
+ ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------------------- 38.87% Complete --------------------------
-                     # Decompiled functions: 1366
-                      # GLOBAL_ASM remaining: 470
-                     # NON_MATCHING functions: 10
-                  # NON_EQUIVALENT WIP functions: 86
- ---------------------------- Game Status ----------------------------
-               Balloons: 19/47, Keys: 2/4, Trophies: 1/5
+ ------------------------- 40.00% Complete --------------------------
+                     # Decompiled functions: 1383
+                     # GLOBAL_ASM remaining: 496
+                     # NON_MATCHING functions: 16
+                 # NON_EQUIVALENT WIP functions: 103
+ --------------------------- Game Status ----------------------------
+              Balloons: 20/47, Keys: 2/4, Trophies: 1/5
                 T.T. Amulets: 2/4, Wizpig Amulets: 1/4
- ---------------------------------------------------------------------
- We are collecting silver coins in Snowball Valley. (5/8 silver coins)
- =====================================================================
-                 ADVENTURE TWO (Cleanup & Documentation)
- --------------------------  9.87% Complete --------------------------
-                      # Documented functions: 255
-                    # Undocumented remaining: 1581
- ---------------------------- Game Status ----------------------------
-               Balloons: 6/47, Keys: 1/4, Trophies: 0/5
+ --------------------------------------------------------------------
+ We are collecting silver coins in Frosty Village. (3/8 silver coins)
+ ====================================================================
+                ADVENTURE TWO (Cleanup & Documentation)
+ ------------------------- 10.65% Complete --------------------------
+                     # Documented functions: 264
+                    # Undocumented remaining: 1615
+ --------------------------- Game Status ----------------------------
+               Balloons: 7/47, Keys: 1/4, Trophies: 0/5
                 T.T. Amulets: 0/4, Wizpig Amulets: 0/4
- ---------------------------------------------------------------------
-               We are racing in Jungle Falls. (Lap 2/3)
- =====================================================================
+ --------------------------------------------------------------------
+             We are racing in Hot Top Volcano. (Lap 1/3)
+ ====================================================================
 ```
 <!-- README_SCORE_END -->
 

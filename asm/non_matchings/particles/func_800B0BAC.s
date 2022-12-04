@@ -179,7 +179,7 @@ glabel func_800B0BAC
 /* 0B1A40 800B0E40 AFA90024 */  sw    $t1, 0x24($sp)
 /* 0B1A44 800B0E44 AFA80034 */  sw    $t0, 0x34($sp)
 /* 0B1A48 800B0E48 AFA70030 */  sw    $a3, 0x30($sp)
-/* 0B1A4C 800B0E4C 0C01C0C8 */  jal   func_80070320
+/* 0B1A4C 800B0E4C 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 0B1A50 800B0E50 AFA6003C */   sw    $a2, 0x3c($sp)
 /* 0B1A54 800B0E54 8FA6003C */  lw    $a2, 0x3c($sp)
 /* 0B1A58 800B0E58 C604000C */  lwc1  $f4, 0xc($s0)

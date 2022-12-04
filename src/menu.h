@@ -924,7 +924,7 @@ void func_8009C6D4(s32 arg0);
 void func_8008B358(void);
 void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
-void func_8006F564(s8 arg0);
+void set_D_800DD430(s8 arg0);
 void func_80099E8C(s32 updateRate);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);

@@ -5660,7 +5660,7 @@ void menu_track_select_init(void) {
     play_music(SEQUENCE_MAIN_MENU);
     set_relative_volume_for_music(sMenuMusicVolume);
     func_80000B18();
-    func_8006F564(1); // Set an interrupt?
+    set_D_800DD430(1); // Set an interrupt?
     gIsInAdventureTwo = D_800E0418;
     gMultiplayerSelectedNumberOfRacersCopy = gMultiplayerSelectedNumberOfRacers;
 }
@@ -5825,7 +5825,7 @@ void func_8008F534(void) {
     func_80000B28();
     func_80000C2C();
     func_80001844();
-    func_8006F564(0);
+    set_D_800DD430(0);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
@@ -7991,7 +7991,7 @@ void menu_credits_init(void) {
     }
     func_80000B18();
     func_800C0170();
-    func_8006F564(1);
+    set_D_800DD430(1);
 }
 
 /**
@@ -8024,7 +8024,7 @@ void func_8009BCF0(void) {
     set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
     func_8009C4A8(D_800E17D8);
     unload_font(ASSET_FONTS_BIGFONT);
-    func_8006F564(0);
+    set_D_800DD430(0);
 }
 
 void func_8009BD5C(void) {

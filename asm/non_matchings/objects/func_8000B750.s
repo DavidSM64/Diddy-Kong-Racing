@@ -85,7 +85,7 @@ glabel func_8000B750
 /* 00C468 8000B868 00192403 */  sra   $a0, $t9, 0x10
 /* 00C46C 8000B86C AFAB004C */  sw    $t3, 0x4c($sp)
 /* 00C470 8000B870 AFAA0038 */  sw    $t2, 0x38($sp)
-/* 00C474 8000B874 0C01C1FE */  jal   sine_s
+/* 00C474 8000B874 0C01C1FE */  jal   coss_f
 /* 00C478 8000B878 AFA20044 */   sw    $v0, 0x44($sp)
 /* 00C47C 8000B87C 8FA20044 */  lw    $v0, 0x44($sp)
 /* 00C480 8000B880 8FAB004C */  lw    $t3, 0x4c($sp)
@@ -212,7 +212,7 @@ glabel func_8000B750
 /* 00C658 8000BA58 E7A40078 */  swc1  $f4, 0x78($sp)
 /* 00C65C 8000BA5C C4480008 */  lwc1  $f8, 8($v0)
 /* 00C660 8000BA60 AFAA0038 */  sw    $t2, 0x38($sp)
-/* 00C664 8000BA64 0C01C0C8 */  jal   func_80070320
+/* 00C664 8000BA64 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 00C668 8000BA68 E7A8007C */   swc1  $f8, 0x7c($sp)
 /* 00C66C 8000BA6C 0C004558 */  jal   func_80011560
 /* 00C670 8000BA70 00000000 */   nop   

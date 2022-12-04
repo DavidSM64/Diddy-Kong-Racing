@@ -625,7 +625,7 @@ glabel func_8005B818
 /* 05CD08 8005C108 02202825 */   move  $a1, $s1
 /* 05CD0C 8005C10C 8FA60130 */  lw    $a2, 0x130($sp)
 /* 05CD10 8005C110 02602025 */  move  $a0, $s3
-/* 05CD14 8005C114 0C0157B0 */  jal   func_80055EC0
+/* 05CD14 8005C114 0C0157B0 */  jal   handle_racer_items
 /* 05CD18 8005C118 02202825 */   move  $a1, $s1
 /* 05CD1C 8005C11C A22001E5 */  sb    $zero, 0x1e5($s1)
 /* 05CD20 8005C120 C664000C */  lwc1  $f4, 0xc($s3)

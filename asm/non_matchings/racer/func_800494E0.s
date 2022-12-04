@@ -77,7 +77,7 @@ glabel func_800494E0
 /* 04A1EC 800495EC E4A00014 */  swc1  $f0, 0x14($a1)
 /* 04A1F0 800495F0 E7A20044 */  swc1  $f2, 0x44($sp)
 /* 04A1F4 800495F4 27A40048 */  addiu $a0, $sp, 0x48
-/* 04A1F8 800495F8 0C01BF9D */  jal   func_8006FE74
+/* 04A1F8 800495F8 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 04A1FC 800495FC E4AA0008 */   swc1  $f10, 8($a1)
 /* 04A200 80049600 8E050000 */  lw    $a1, ($s0)
 /* 04A204 80049604 8E060004 */  lw    $a2, 4($s0)
