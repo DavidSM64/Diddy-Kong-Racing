@@ -150,6 +150,9 @@ extern void profiler_update(u32 *time, u32 time2);
 extern void puppyprint_update_rsp(u8 flags);
 extern void profiler_add(u32 *time, u32 offset);
 extern u8 perfIteration;
+extern u32 sPrevLoadTime;
+extern u8 sPrevLoadTimer;
+extern u8 gProfilerOn;
 #endif
 extern s32 gAntiAliasing;
 

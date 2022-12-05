@@ -404,9 +404,13 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
         func_80028CD0(updateRate);
         func_800AB308(-1, -512);
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
+#ifdef PUPPYPRINT_DEBUG
             first2 = osGetCount();
+#endif
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, delta);
+#ifdef PUPPYPRINT_DEBUG
             profiler_add(gPuppyTimers.timers[PP_WEATHER], osGetCount() - first2);
+#endif
         }
 
         func_800AD030(func_80069D20());
@@ -416,8 +420,10 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
         first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
 #endif
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_racer_object_by_port(D_8011B0B4), updateRate);
+#ifdef PUPPYPRINT_DEBUG
         profiler_add(gPuppyTimers.timers[PP_HUD], osGetCount() - first2);
         profiler_offset(gPuppyTimers.timers[PP_HUD], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
+#endif
     }
     if ((numViewports == 3) && 
         (get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS) &&
@@ -466,6 +472,7 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
     *mtx = gSceneCurrMatrix;
     *vtx = gSceneCurrVertexList;
     *tris = gSceneCurrTriList;
+#ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_SCENE], osGetCount() - first);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_HUD][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WEATHER][perfIteration]);
@@ -479,6 +486,7 @@ void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRat
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_OBJGFX][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_DECAL][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_VOID][perfIteration]);
+#endif
 }
 //#else
 //GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
@@ -874,7 +882,9 @@ skip:
         }
     }
 
+#ifdef PUPPYPRINT_DEBUG
     first = osGetCount();
+#endif
     if (D_800DC924 && func_80027568()) {
         func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }

@@ -168,3 +168,354 @@ void thread3_verify_stack(void) {
         rmonPrintf("WARNING: Stack overflow/underflow!!!\n");
     }
 }
+
+
+#ifdef PUPPYPRINT_DEBUG
+extern Gfx *gCurrDisplayList;
+extern s32 gSPTaskNum;
+extern s32 gCurrNumF3dCmdsPerPlayer;
+extern s32 sLogicUpdateRate;
+
+u8 perfIteration = 0;
+f32 gFPS = 0;
+u8 gProfilerOn = 0;
+u8 gWidescreen = 0;
+s32 sTriCount = 0;
+s32 sVtxCount = 0;
+s32 prevTime = 0;
+u32 sTimerTemp = 0;
+u8 sProfilerPage = 0;
+u32 sPrevLoadTime = 0;
+u8 sPrevLoadTimer = 0;
+u8 sPrintOrder[PP_RSP_GFX];
+struct PuppyPrintTimers gPuppyTimers;
+char sPuppyPrintStrings[][16] = {
+    PP_STRINGS
+};
+
+#define FRAMETIME_COUNT 10
+
+OSTime frameTimes[FRAMETIME_COUNT];
+u8 curFrameTimeIndex = 0;
+
+// Call once per frame
+void calculate_and_update_fps(void) {
+    OSTime newTime = osGetTime();
+    OSTime oldTime = frameTimes[curFrameTimeIndex];
+    frameTimes[curFrameTimeIndex] = newTime;
+
+    curFrameTimeIndex++;
+    if (curFrameTimeIndex >= FRAMETIME_COUNT) {
+        curFrameTimeIndex = 0;
+    }
+    gFPS = (FRAMETIME_COUNT * 1000000.0f) / (s32)OS_CYCLES_TO_USEC(newTime - oldTime);
+}
+
+void rdp_profiler_update(u32 *time, u32 time2) {
+    time[PERF_AGGREGATE] -= time[perfIteration];
+    time[perfIteration] = time2;
+    time[PERF_AGGREGATE] += time[perfIteration];
+}
+
+void profiler_update(u32 *time, u32 time2) {
+    s32 tmm = (osGetCount() - time2);
+    if (tmm > OS_USEC_TO_CYCLES(99999)) {
+        tmm =  OS_USEC_TO_CYCLES(99999);
+    }
+    time[PERF_AGGREGATE] -= time[perfIteration];
+    time[perfIteration] = tmm;
+    time[PERF_AGGREGATE] += time[perfIteration];
+}
+
+void profiler_offset(u32 *time, u32 offset) {
+    time[PERF_AGGREGATE] -= offset;
+    time[perfIteration] -= offset;
+}
+
+void profiler_add(u32 *time, u32 offset) {
+    if (offset > OS_USEC_TO_CYCLES(99999)) {
+        offset =  OS_USEC_TO_CYCLES(99999);
+    }
+    time[PERF_AGGREGATE] += offset;
+    time[perfIteration] += offset;
+}
+
+void profiler_reset_values(void) {
+    s32 i;
+    for (i = 0; i < PP_RDP_BUS; i++) {
+        gPuppyTimers.timers[i][PERF_AGGREGATE] -= gPuppyTimers.timers[i][perfIteration];
+        gPuppyTimers.timers[i][perfIteration] = 0;
+    }
+}
+
+
+static char *proutSprintf(char *dst, const char *src, size_t count)
+{
+    return (char *)memcpy((u8 *)dst, (u8 *)src, count) + count;
+}
+
+int puppyprintf(char *dst, const char *fmt, ...)
+{
+    s32 ans;
+    va_list ap;
+    va_start(ap, fmt);
+    ans = _Printf(proutSprintf, dst, fmt, ap);
+    if (ans >= 0)
+    {
+        dst[ans] = 0;
+    }
+    return ans; 
+}
+
+    #define TEXT_OFFSET 10
+void render_profiler(void) {
+    char textBytes[32];
+    s32 printY;
+    s32 totalGfx;
+    s32 i;
+    s32 y = 8;
+
+    if (get_buttons_pressed_from_player(PLAYER_ONE) & R_JPAD) {
+        sProfilerPage++;
+        if (sProfilerPage == 2) {
+            sProfilerPage = 0;
+        }
+    }
+    if (get_buttons_pressed_from_player(PLAYER_ONE) & L_JPAD) {
+        sProfilerPage--;
+        if (sProfilerPage == 255) {
+            sProfilerPage = 1;
+        }
+    }
+
+    gDPSetScissor(gCurrDisplayList++, G_SC_NON_INTERLACE, 0, 0, gScreenWidth, gScreenHeight);
+
+    set_text_font(ASSET_FONTS_SMALLFONT);
+    set_text_colour(255, 255, 255, 255, 255);
+    if (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
+        printY = 50;
+    } else {
+        printY = 30;
+    }
+    switch (sProfilerPage) {
+        case 0:
+            drawCore:
+            gDPPipeSync(gCurrDisplayList++);
+            gDPSetCycleType(gCurrDisplayList++, G_CYC_1CYCLE);
+            gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+            gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+            gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
+            gDPFillRectangle(gCurrDisplayList++, TEXT_OFFSET - 2, 8, 112, printY + 2);
+            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 38, gScreenHeight - 30, ((gScreenWidth/2) / 3) + 58, gScreenHeight - 6);
+            gDPPipeSync(gCurrDisplayList++);
+            set_text_background_colour(0, 0, 0, 0);
+            set_kerning(FALSE);
+            puppyprintf(textBytes,  "FPS: %2.2f", gFPS);
+            draw_text(&gCurrDisplayList, TEXT_OFFSET, 10, textBytes, ALIGN_TOP_LEFT);
+            puppyprintf(textBytes,  "CPU: %dus", gPuppyTimers.cpuTime);
+            draw_text(&gCurrDisplayList, TEXT_OFFSET, 20, textBytes, ALIGN_TOP_LEFT);
+            puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.cpuTime / 333);
+            draw_text(&gCurrDisplayList, 112 - 4, 20, textBytes, ALIGN_TOP_RIGHT);
+            if (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
+                puppyprintf(textBytes,  "RSP: %dus", gPuppyTimers.rspTime);
+                draw_text(&gCurrDisplayList, TEXT_OFFSET, 30, textBytes, ALIGN_TOP_LEFT);
+                puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rspTime / 333);
+                draw_text(&gCurrDisplayList, 112 - 4, 30, textBytes, ALIGN_TOP_RIGHT);
+                puppyprintf(textBytes,  "RDP: %dus", gPuppyTimers.rdpTime);
+                draw_text(&gCurrDisplayList, TEXT_OFFSET, 40, textBytes, ALIGN_TOP_LEFT);
+                puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rdpTime / 333);
+                draw_text(&gCurrDisplayList, 112 - 4, 40, textBytes, ALIGN_TOP_RIGHT);
+            }
+            puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
+            draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 28, textBytes, ALIGN_TOP_CENTER);
+            puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);
+            draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 18, textBytes, ALIGN_TOP_CENTER);
+            break;
+        case 1:
+            gDPPipeSync(gCurrDisplayList++);
+            gDPSetCycleType(gCurrDisplayList++, G_CYC_1CYCLE);
+            gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+            gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+            gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 96);
+            gDPFillRectangle(gCurrDisplayList++, gScreenWidth - 144, 0, gScreenWidth, SCREEN_HEIGHT);
+            gDPPipeSync(gCurrDisplayList++);
+            set_text_background_colour(0, 0, 0, 0);
+            set_kerning(FALSE);
+            for (i = 0; i < PP_RSP_GFX; i++) {
+                if (gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL] == 0) {
+                    continue;
+                }
+                puppyprintf(textBytes,  "%s \t%dus (%d%%)", sPuppyPrintStrings[sPrintOrder[i]], gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL], gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL] / 333);
+                draw_text(&gCurrDisplayList, gScreenWidth - 136, y, textBytes, ALIGN_TOP_LEFT);
+                y += 10;
+                if (y > gScreenHeight - 16) {
+                    break;
+                }
+            }
+            goto drawCore;
+            break;
+    }
+    
+    if (sPrevLoadTimer > 0) {
+        gDPPipeSync(gCurrDisplayList++);
+        gDPSetCycleType(gCurrDisplayList++, G_CYC_1CYCLE);
+        gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+        gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
+        gDPFillRectangle(gCurrDisplayList++, (gScreenWidth/2) - 56, gScreenHeight - 42, (gScreenWidth/2) + 56, gScreenHeight - 28);
+        puppyprintf(textBytes, "Level loaded in %2.3fs", sPrevLoadTime / 1000000.0f);
+        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 32, textBytes, ALIGN_MIDDLE_CENTER);
+        if (sPrevLoadTimer - sLogicUpdateRate > 0) {
+            sPrevLoadTimer -= sLogicUpdateRate;
+        } else {
+            sPrevLoadTimer = 0;
+        }
+    }
+    /*if (sProfilerPage == 0) {
+#ifdef FIFO_UCODE
+        if (!suCodeSwitch) {
+            draw_text(&gCurrDisplayList, TEXT_OFFSET, printY, "GFX: FIFO", ALIGN_TOP_LEFT);
+        } else {
+ #endif
+            draw_text(&gCurrDisplayList, TEXT_OFFSET, printY, "GFX: XBUS", ALIGN_TOP_LEFT);
+ #ifdef FIFO_UCODE
+        }
+ #endif
+        puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
+        draw_text(&gCurrDisplayList, (gScreenWidth/2) / 2, gScreenHeight - 4, textBytes, ALIGN_BOTTOM_CENTER);
+        puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);
+        draw_text(&gCurrDisplayList, (gScreenWidth/2) + ((gScreenWidth/2) / 2), gScreenHeight - 4, textBytes, ALIGN_BOTTOM_CENTER);
+        printY = 40;
+    }*/
+}
+
+
+void swapu(u8* xp, u8* yp)
+{
+    u8 temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void calculate_print_order(void) {
+    u32 i, j, min_idx;
+    for (i = 0; i < PP_RSP_GFX; i++) {
+        sPrintOrder[i] = i;
+    }
+
+    // One by one move boundary of unsorted subarray
+    for (i = 0; i < PP_RSP_AUD; i++) {
+
+        if (gPuppyTimers.timers[sPrintOrder[i]][PERF_TOTAL] == 0)
+            continue;
+        // Find the minimum element in unsorted array
+        min_idx = i;
+        for (j = i + 1; j < PP_RSP_AUD; j++)
+            if (gPuppyTimers.timers[sPrintOrder[j]][PERF_TOTAL] > gPuppyTimers.timers[sPrintOrder[min_idx]][PERF_TOTAL])
+                min_idx = j;
+
+        // Swap the found minimum element
+        // with the first element
+        swapu(&sPrintOrder[min_idx], &sPrintOrder[i]);
+    }
+}
+
+/// Add whichever times you wish to create aggregates of.
+void puppyprint_calculate_average_times(void) {
+    u32 first = osGetCount();
+    rdp_profiler_update(gPuppyTimers.timers[PP_RDP_BUF], IO_READ(DPC_BUFBUSY_REG));
+    rdp_profiler_update(gPuppyTimers.timers[PP_RDP_BUS], IO_READ(DPC_TMEM_REG));
+    rdp_profiler_update(gPuppyTimers.timers[PP_RDP_TMM], IO_READ(DPC_PIPEBUSY_REG));
+    IO_WRITE(DPC_STATUS_REG, DPC_CLR_CLOCK_CTR | DPC_CLR_CMD_CTR | DPC_CLR_PIPE_CTR | DPC_CLR_TMEM_CTR);
+    if ((sTimerTemp % 4) == 0) {
+        s32 i;
+        gPuppyTimers.cpuTime = 0;
+        for (i = 1; i < PP_RDP_BUS; i++) {
+            gPuppyTimers.timers[i][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[i][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+            if (i < PP_RSP_AUD - 1) {
+                gPuppyTimers.cpuTime += gPuppyTimers.timers[i][PERF_TOTAL];
+            }
+        }
+        gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[PP_LOGIC][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+        if (gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] > OS_CYCLES_TO_USEC(99999)) {
+            gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] = 0;
+        }
+        gPuppyTimers.timers[PP_RSP_AUD][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[PP_RSP_AUD][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+        gPuppyTimers.timers[PP_RSP_GFX][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[PP_RSP_GFX][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+        gPuppyTimers.timers[PP_RDP_BUF][PERF_TOTAL] = (gPuppyTimers.timers[PP_RDP_BUF][PERF_AGGREGATE] * 10) / (625*NUM_PERF_ITERATIONS);
+        gPuppyTimers.timers[PP_RDP_BUS][PERF_TOTAL] = (gPuppyTimers.timers[PP_RDP_BUS][PERF_AGGREGATE] * 10) / (625*NUM_PERF_ITERATIONS);
+        gPuppyTimers.timers[PP_RDP_TMM][PERF_TOTAL] = (gPuppyTimers.timers[PP_RDP_TMM][PERF_AGGREGATE] * 10) / (625*NUM_PERF_ITERATIONS);
+        gPuppyTimers.rspTime = gPuppyTimers.timers[PP_RSP_AUD][PERF_TOTAL] + gPuppyTimers.timers[PP_RSP_GFX][PERF_TOTAL];
+        gPuppyTimers.rdpTime = MAX(gPuppyTimers.timers[PP_RDP_BUF][PERF_TOTAL], gPuppyTimers.timers[PP_RDP_BUS][PERF_TOTAL]);
+        gPuppyTimers.rdpTime = MAX(gPuppyTimers.timers[PP_RDP_TMM][PERF_TOTAL], gPuppyTimers.rdpTime);
+        gPuppyTimers.cpuTime += gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL];
+        calculate_print_order();
+    }
+    profiler_add(gPuppyTimers.timers[PP_PROFILER], osGetCount() - first);
+}
+
+void puppyprint_update_rsp(u8 flags) {
+    switch (flags)
+    {
+    case RSP_GFX_START:
+        gPuppyTimers.rspGfxBufTime = (u32)osGetCount();
+        gPuppyTimers.rspPauseTime = 0;
+        break;
+    case RSP_AUDIO_START:
+        gPuppyTimers.rspAudioBufTime = (u32)osGetCount();
+        break;
+    case RSP_GFX_PAUSED:
+        gPuppyTimers.rspPauseTime = (u32)osGetCount();
+        break;
+    case RSP_GFX_RESUME:
+        gPuppyTimers.rspPauseTime = (u32)osGetCount() - gPuppyTimers.rspPauseTime;
+        break;
+    case RSP_GFX_FINISHED:
+        gPuppyTimers.timers[PP_RSP_GFX][PERF_AGGREGATE] -= gPuppyTimers.timers[PP_RSP_GFX][perfIteration];
+        gPuppyTimers.timers[PP_RSP_GFX][perfIteration] = (u32)(osGetCount() - gPuppyTimers.rspGfxBufTime) + gPuppyTimers.rspPauseTime;
+        if (gPuppyTimers.timers[PP_RSP_GFX][perfIteration] > OS_USEC_TO_CYCLES(99999)) {
+            gPuppyTimers.timers[PP_RSP_GFX][perfIteration] = OS_USEC_TO_CYCLES(99999);
+        }
+        gPuppyTimers.timers[PP_RSP_GFX][PERF_AGGREGATE] += gPuppyTimers.timers[PP_RSP_GFX][perfIteration];
+        break;
+    case RSP_AUDIO_FINISHED:
+        gPuppyTimers.timers[PP_RSP_AUD][PERF_AGGREGATE] -= gPuppyTimers.timers[PP_RSP_AUD][perfIteration];
+        gPuppyTimers.timers[PP_RSP_AUD][perfIteration] = (u32)osGetCount() - gPuppyTimers.rspAudioBufTime;
+        if (gPuppyTimers.timers[PP_RSP_AUD][perfIteration] > OS_USEC_TO_CYCLES(99999)) {
+            gPuppyTimers.timers[PP_RSP_AUD][perfIteration] = OS_USEC_TO_CYCLES(99999);
+        }
+        gPuppyTimers.timers[PP_RSP_AUD][PERF_AGGREGATE] += gPuppyTimers.timers[PP_RSP_AUD][perfIteration];
+        break;
+    }
+}
+
+s32 count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
+    s32 triCount = 0;
+    while(dlist < dlistEnd) {
+        switch(dlist[0]) {
+            case G_TRIN: // TRIN
+                triCount += (dlist[1] >> 4) + 1;
+                break;
+            case G_VTX:
+                sVtxCount += (dlist[1] >> 4) + 1;
+                break;
+            case G_ENDDL: // ENDDL
+                return triCount;
+        }
+        dlist += 8;
+    }
+    return triCount;
+}
+
+void count_triangles(u8 *dlist, u8 *dlistEnd) {
+    u32 first = osGetCount();
+    sTimerTemp++;
+    if ((sTimerTemp % 16) == 0) {
+        s32 first = osGetCount();
+        sVtxCount = 0;
+        sTriCount = count_triangles_in_dlist(dlist, dlistEnd);
+        sTimerTemp = (s32) OS_CYCLES_TO_USEC(osGetCount() - first);
+    }
+    profiler_add(gPuppyTimers.timers[PP_PROFILER], osGetCount() - first);
+}
+#endif
