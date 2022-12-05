@@ -64,8 +64,8 @@ s16 D_800E3144[26] = {
 s32 *D_800E3178 = NULL;
 s32 D_800E317C = 0;
 s32 D_800E3180 = 0;
-s32 *D_800E3184 = NULL;
-s32 *D_800E3188 = NULL;
+unk800E3184 *D_800E3184 = NULL;
+s32 D_800E3188 = NULL;
 s32 D_800E318C = 0;
 unk800E3190 *D_800E3190 = NULL;
 s32 *D_800E3194 = NULL;
@@ -244,7 +244,40 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEEB4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEFC4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BF3E4.s")
+
+void func_800BF3E4(s32 arg0) {
+    s32 i;
+    s32 k;
+    s32 j;
+    s32 m;
+    unk800E3184* temp_a1;
+
+    if (D_800E3190 != NULL) {
+        
+        for (i = 0, m = 0; i < D_800E3188 && m == 0; i++) {
+            if (arg0 == D_800E3194[i]) {
+                m = -1;
+            }
+        }
+        if (m != 0) {
+            i--;
+            for (j = 0; j < D_800E318C; j++) {
+                for (k = 0, temp_a1 = &D_800E3184[j]; k < 8 && temp_a1->unk0[k] != 0xFF; k++) {
+                    if (i == temp_a1->unk0[k]) {
+                        while (k < 7) {
+                            temp_a1->unk0[k] = temp_a1->unk0[k + 1];
+                            k++;
+                        }
+                        temp_a1->unk0[k] = 0xFF;
+                        k++;
+                    }
+                }
+            }
+            D_800E3194[j] = 0;
+            D_800E3188 -= 1;
+        }
+    }
+}
 
 void func_800BF524(Object *obj) {
     LevelObjectEntry800BF524 *temp_v0;

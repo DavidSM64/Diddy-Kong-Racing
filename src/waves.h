@@ -18,11 +18,64 @@ typedef struct unk800E3190 {
     u8 pad20[0x20];
 } unk800E3190;
 
+typedef struct unk800E3184 {
+    u8 unk0[4];
+    s32 unk4;
+} unk800E3184;
+
+typedef struct unk800B8134 {
+    u8 pad0[0x56];
+    u8 unk56;
+    u8 unk57;
+    u8 unk58;
+    u8 unk59;
+    s16 unk5A;
+    u8 unk5C;
+    u8 unk5D;
+    s16 unk5E;
+    s16 unk60;
+    s16 unk62;
+    s16 unk64;
+    s16 unk66;
+    s16 unk68;
+    u8 unk6A;
+    u8 unk6B;
+    s8 unk6C;
+    s8 unk6D;
+    s16 unk6E;
+    u8 unk70;
+    u8 unk71;
+} unk800B8134;
+
+typedef struct unk80129FC8 {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s32 unk14;
+    f32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    s32 unk28;
+    s32 unk2C;
+    s32 unk30;
+    s32 unk34;
+    s32 unk38;
+    s32 unk3C;
+    f32 unk40;
+    f32 unk44;
+    f32 unk48;
+    s32 unk4C;
+} unk80129FC8;
+
 void func_800B7D20(void);
 void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(s32 arg0);
 void func_800BFE98(s32 arg0);
+void func_800B8134(unk800B8134 *arg0);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 f32 func_800BEEB4(Object_64 *); // Non Matching
