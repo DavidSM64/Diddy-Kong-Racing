@@ -328,6 +328,8 @@ $(BUILD_DIR)/src/main.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/main.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/font.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/font.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/audio.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/audio.o: OPT_FLAGS := -O3
 
 ######################## Targets #############################
 
