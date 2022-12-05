@@ -6,6 +6,8 @@
 #include "memory.h"
 #include "asset_enums.h"
 #include "unknown_0255E0.h"
+#include "asset_loading.h"
+#include "textures_sprites.h"
 #include "racer.h"
 
 /************ .data ************/
@@ -46,19 +48,19 @@ void func_8005F850(void) {
     s32 i;
     s32 checksum;
 
-    D_8011D624 = allocate_from_main_pool_safe(0x230, COLOUR_TAG_GREEN);
+    D_8011D624 = (unk8011D624 *) allocate_from_main_pool_safe(0x230, COLOUR_TAG_GREEN);
     D_8011D628 = allocate_from_main_pool_safe(0x190, COLOUR_TAG_GREEN);
     D_8011D62C = 0;
     D_8011D634 = 0;
-    D_8011D620 = load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
+    D_8011D620 = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
     D_8011D630 = 0;
     while (D_8011D620[D_8011D630] != -1) {
         D_8011D630++;
     }
     D_8011D630--;
-    D_8011D638 = load_asset_section_from_rom(ASSET_ANIMATION_IDS);
-    D_8011D63C = load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
-    D_8011D644 = allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
+    D_8011D638 = (s16 *) load_asset_section_from_rom(ASSET_ANIMATION_IDS);
+    D_8011D63C = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
+    D_8011D644 = (s32) allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
     D_8011D640 = 0;
 
     // Anti-tamper check.
@@ -170,4 +172,38 @@ void func_800619F4(s32 arg0) {
 // Returns 0 if successful, or 1 if an error occured.
 GLOBAL_ASM("asm/non_matchings/object_models/func_80061A00.s")
 
-GLOBAL_ASM("asm/non_matchings/object_models/func_80061C0C.s")
+void func_80061C0C(Object *obj) {
+    ObjectModel *mdl;
+    Object_68 *temp_a1;
+    s32 var_v1;
+
+    if (obj->segment.unk3A < 0) {
+        obj->segment.unk3A = 0;
+    }
+    var_v1 = obj->segment.header->numberOfModelIds - 1;
+    if (var_v1 < obj->segment.unk3A) {
+        obj->segment.unk3A = var_v1;
+    }
+    temp_a1 = obj->unk68[obj->segment.unk3A];
+    mdl = temp_a1->objModel;
+    if (temp_a1->objModel->animations != NULL) {
+        if (obj->segment.unk3B < 0) {
+            obj->segment.unk3B = 0;
+        }
+        if (obj->segment.unk3B >= mdl->numberOfAnimations) {
+            obj->segment.unk3B = mdl->numberOfAnimations - 1;
+        }
+        if (mdl->numberOfAnimations > 0) {
+            var_v1 = mdl->animations[obj->segment.unk3B].unk4 - 2;
+        } else {
+            var_v1 = 0;
+        }
+        if (obj->segment.unk18 >> 4 < 0) {
+            obj->segment.unk18 = var_v1;
+        }
+        if (var_v1 < obj->segment.unk18 >> 4) {
+            obj->segment.unk18 = 0;
+            temp_a1->unk10 = -1;
+        }
+    }
+}

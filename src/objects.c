@@ -20,6 +20,7 @@
 #include "unknown_0255E0.h"
 #include "math_util.h"
 #include "camera.h"
+#include "waves.h"
 
 /************ .data ************/
 
@@ -1615,7 +1616,7 @@ s32 func_8001B288(void) {
     }
 }
 
-Object *func_8001B2E0() {
+Object *func_8001B2E0(void) {
     return D_8011AD34;
 }
 
@@ -1660,7 +1661,7 @@ s32 func_8001B3AC(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B3C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
-Object *func_8001B640() {
+Object *func_8001B640(void) {
     return (Object *) D_800DC718;
 }
 
@@ -2162,18 +2163,20 @@ f32 catmull_rom_interpolation(f32 *arg0, s32 arg1, f32 arg2) {
     return ret;
 }
 
-// Exact same code as above, but it returns something in arg3
-f32 func_8002263C(f32 *arg0, s32 arg1, f32 arg2, f32 *arg3) {
+/**
+ * Interpolates x along a spline and returns the resultant progress along the spline.
+*/
+f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
     f32 ret;
     f32 temp3, temp2, temp;
     
-    temp =  (-0.5 * arg0[arg1])    + ( 1.5 * arg0[arg1 + 1]) + (-1.5 * arg0[arg1 + 2]) + ( 0.5 * arg0[arg1 + 3]);
-    temp2 = ( 1.0 * arg0[arg1])    + (-2.5 * arg0[arg1 + 1]) + ( 2.0 * arg0[arg1 + 2]) + (-0.5 * arg0[arg1 + 3]);
-    temp3 = (arg0[arg1 + 2] * 0.5) + ( 0.0 * arg0[arg1 + 1]) + (-0.5 * arg0[arg1])     + ( 0.0 * arg0[arg1 + 3]);
+    temp =  (-0.5 * data[index])    + ( 1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + ( 0.5 * data[index + 3]);
+    temp2 = ( 1.0 * data[index])    + (-2.5 * data[index + 1]) + ( 2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    temp3 = (data[index + 2] * 0.5) + ( 0.0 * data[index + 1]) + (-0.5 * data[index])     + ( 0.0 * data[index + 3]);
     
-    ret = (1.0 * arg0[arg1 + 1]);
-    *arg3 = (((temp * 3 * arg2) + (2 * temp2)) * arg2) + temp3;
-    ret = (((((temp * arg2) + temp2) * arg2) + temp3) * arg2) + ret;
+    ret = (1.0 * data[index + 1]);
+    *derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
+    ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
     
     return ret;
 }

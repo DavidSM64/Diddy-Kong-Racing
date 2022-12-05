@@ -602,6 +602,24 @@ typedef struct LevelObjectEntry8003FC44 {
     s8 unkA;
 } LevelObjectEntry8003FC44;
 
+typedef struct LevelObjectEntry800BF524 {
+    LevelObjectEntryCommon common;
+    u8 unk8;
+    u8 unk9;
+    u16 unkA;
+    u16 unkC;
+    u16 unkE;
+    u8 unk10;
+    u8 unk11;
+} LevelObjectEntry800BF524;
+
+typedef struct LevelObjectEntry_WavePower {
+    LevelObjectEntryCommon common;
+    u16 radius;
+    u16 unkA;
+    u16 unkC;
+} LevelObjectEntry_WavePower;
+
 typedef struct LevelObjectEntry {
     union {
         LevelObjectEntry_Racer racer;
@@ -691,6 +709,9 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry_Midichset midichset;
         LevelObjectEntry8000E2B4 unk8000E2B4;
         LevelObjectEntry80011AD0 unk80011AD0;
+        LevelObjectEntry8003FC44 unk8003FC44;
+        LevelObjectEntry800BF524 unk800BF524;
+        LevelObjectEntry_WavePower wavePower;
     };
 } LevelObjectEntry;
 
