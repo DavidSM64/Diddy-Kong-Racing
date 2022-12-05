@@ -814,7 +814,7 @@ void func_800022BC(u8 arg0, ALSeqPlayer *arg1) {
     }
 }
 
-void func_8000232C(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3) {
+void func_8000232C(ALSeqPlayer *arg0, void *arg1, u8 *arg2, ALCSeq *arg3) {
     s32 var_s0;
     u8 temp_a0;
     u8 temp_a0_2;
