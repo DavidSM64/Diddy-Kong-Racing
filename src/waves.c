@@ -314,7 +314,7 @@ void func_800BF3E4(s32 arg0) {
     s32 k;
     s32 j;
     s32 m;
-    unk800E3184* temp_a1;
+    unk800E3184 *temp_a1;
 
     if (D_800E3190 != NULL) {
         
