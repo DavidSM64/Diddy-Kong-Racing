@@ -173,7 +173,7 @@ void func_800619F4(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_80061A00.s")
 
 void func_80061C0C(Object *obj) {
-    ObjectModel* mdl;
+    ObjectModel *mdl;
     Object_68* temp_a1;
     s32 var_v1;
 
