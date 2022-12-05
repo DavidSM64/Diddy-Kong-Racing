@@ -94,8 +94,8 @@ s32 D_8012A01C;
 s32 D_8012A020[2];
 s32 D_8012A028[20];
 s32 D_8012A078;
-s32 D_8012A07C;
-s32 D_8012A080;
+TriangleBatchInfo *D_8012A07C;
+TextureHeader *D_8012A080;
 s32 D_8012A084;
 s32 D_8012A088;
 s32 D_8012A08C;
@@ -258,7 +258,47 @@ void func_800BBDDC(s32 arg0) {
     func_800BBF78(arg0);
 }
 
-GLOBAL_ASM("asm/non_matchings/waves/func_800BBE08.s")
+void func_800BBE08(LevelModel* arg0, unk800BBE08_arg1 *arg1) {
+    s16 numSegments;
+    s32 j;
+    TriangleBatchInfo *curBatch;
+    s32 i;
+    s32 temp_t6;
+    LevelModelSegmentBoundingBox* bb;
+    LevelModelSegment *segment;
+
+    numSegments = arg0->numberOfSegments;
+    curBatch = 0;
+    
+    for (i = 0; (curBatch == 0) && (i < numSegments); i++) {
+        segment = &arg0->segments[i];
+        for (j = 0; (curBatch == 0) && (j < segment->numberOfBatches); j++) {
+            if ((segment->batches[j].flags & 0x01002100) == 0x01002000) {
+                curBatch = &segment->batches[j];
+            }
+        }
+    }
+    
+    if (curBatch == 0) {
+        i = 0;
+    } else {
+        i--;
+    }
+    bb = &arg0->segmentsBoundingBoxes[i];
+    D_8012A0A8 = bb->x2 - bb->x1;
+    D_8012A0AC = bb->z2 - bb->z1;
+    D_8012A0B0 = bb->x1;
+    D_8012A0B4 = bb->z1;
+    D_8012A07C = curBatch;
+    D_8012A080 = arg0->textures[curBatch->textureIndex].texture;
+    temp_t6 = (curBatch->flags & 0x70000000) >> 0x1C;
+    if (temp_t6 > 0) {
+        D_800E3180 = arg1->unk70[temp_t6];
+    } else {
+        D_800E3180 = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/waves/func_800BBF78.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BC6C8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")

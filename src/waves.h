@@ -70,16 +70,21 @@ typedef struct unk80129FC8 {
     s32 unk4C;
 } unk80129FC8;
 
+typedef struct unk800BBE08_arg1 {
+    u8 pad[0x70];
+    s32 unk70[1]; // Unknown length.
+} unk800BBE08_arg1;
+
 void func_800B7D20(void);
 void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(s32 arg0);
 void func_800BFE98(s32 arg0);
 void func_800B8134(unk800B8134 *arg0);
+void func_800BBE08();
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 f32 func_800BEEB4(Object_64 *); // Non Matching
-void func_800BBE08(void); // Non Matching
 void func_800BBF78(s32 arg0); // Non Matching
 f32 func_800BB2F4(s32, f32, f32, f32*);
 void func_800B8C04(s32, s32, s32, s32, s32);
