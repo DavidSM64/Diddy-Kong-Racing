@@ -260,7 +260,7 @@ void func_800BBDDC(s32 arg0) {
     func_800BBF78(arg0);
 }
 
-void func_800BBE08(LevelModel* arg0, unk800BBE08_arg1 *arg1) {
+void func_800BBE08(LevelModel *arg0, unk800BBE08_arg1 *arg1) {
     s16 numSegments;
     s32 j;
     TriangleBatchInfo *curBatch;
@@ -362,7 +362,29 @@ void func_800BF524(Object *obj) {
 
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF634.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF9F8.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BFC54.s")
+
+void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
+    if (arg0 != NULL) {
+        arg0->unk10 = (arg0->unk10 + arg1);
+        if (arg0->unk10 < 1.0) {
+            arg0->unk10 = 1.0f;
+        }
+        arg0->unk0 = (arg0->unkC - arg0->unk10);
+        arg0->unk4 = (arg0->unkC + arg0->unk10);
+        arg0->unk28 += arg2;
+        if (osTvType == 0) {
+            arg0->unk1C = arg0->unk28 * 20971.52;
+        } else {
+            arg0->unk1C = arg0->unk28 * 17476.27;
+        }
+        arg0->unk2C = (arg0->unk2C + arg3);
+        if (arg0->unk2C < 1.0) {
+            arg0->unk2C = 1.0f;
+        }
+        arg0->unk20 = (65536.0f / arg0->unk2C);
+        arg0->unk24 = (arg0->unk24 + arg4);
+    }
+}
 
 void func_800BFE98(s32 arg0) {
     s32 i;
