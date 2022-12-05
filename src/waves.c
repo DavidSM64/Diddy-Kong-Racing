@@ -67,7 +67,7 @@ s32 D_800E3180 = 0;
 s32 *D_800E3184 = NULL;
 s32 *D_800E3188 = NULL;
 s32 D_800E318C = 0;
-s32 *D_800E3190 = NULL;
+unk800E3190 *D_800E3190 = NULL;
 s32 *D_800E3194 = NULL;
 s32 D_800E3198 = 0;
 s32 D_800E319C = 0;
@@ -266,5 +266,16 @@ void func_800BF524(Object *obj) {
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF634.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF9F8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BFC54.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BFE98.s")
+
+void func_800BFE98(s32 arg0) {
+    s32 i;
+
+    for(i = 0; i < 32; i++) {
+        if (D_800E3194[i] != 0) {
+            D_800E3190[i].unk1A += ((0, D_800E3190[i].unk1C * arg0)) >> 4;
+        }
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/waves/obj_loop_wavepower.s")
