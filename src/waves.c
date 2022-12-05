@@ -266,7 +266,7 @@ void func_800BBE08(LevelModel *arg0, unk800BBE08_arg1 *arg1) {
     TriangleBatchInfo *curBatch;
     s32 i;
     s32 temp_t6;
-    LevelModelSegmentBoundingBox* bb;
+    LevelModelSegmentBoundingBox *bb;
     LevelModelSegment *segment;
 
     numSegments = arg0->numberOfSegments;
