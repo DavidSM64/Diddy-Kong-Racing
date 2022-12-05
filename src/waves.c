@@ -245,7 +245,24 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEEB4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEFC4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF3E4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BF524.s")
+
+void func_800BF524(Object *obj) {
+    LevelObjectEntry800BF524 *temp_v0;
+    s32 var_v1;
+
+    temp_v0 = (LevelObjectEntry800BF524 *) obj->segment.unk3C_a.level_entry;
+    var_v1 = 0;
+    if (temp_v0->unk10 != 0) {
+        var_v1 = 1;
+    }
+    if (temp_v0->unk11 != 0) {
+        var_v1 |= 2;
+    }
+    func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32)temp_v0->unkA, temp_v0->unk9 << 8,  
+        (f32)temp_v0->unk8 * 0.0625, (f32)temp_v0->unkE, (f32)temp_v0->unkC * 0.0625, var_v1);
+}
+
+
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF634.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF9F8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BFC54.s")
