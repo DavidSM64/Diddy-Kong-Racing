@@ -88,16 +88,7 @@ const char D_800E9260[] = "\nError :: can not add another wave swell, reached li
 
 s32 D_80129FC0;
 s32 D_80129FC4;
-s32 D_80129FC8;
-s32 D_80129FCC;
-s32 D_80129FD0[4];
-s32 D_80129FE0[2];
-s32 D_80129FE8;
-s32 D_80129FF0[6];
-s32 D_8012A008;
-s32 D_8012A00C;
-s32 D_8012A010;
-s32 D_8012A014;
+unk80129FC8 D_80129FC8[1];
 s32 D_8012A018;
 s32 D_8012A01C;
 s32 D_8012A020[2];
@@ -190,7 +181,38 @@ void func_800B7D20(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800B8134.s")
+
+void func_800B8134(unk800B8134 *arg0) {
+    if (D_8012A078 != 2) {
+        D_80129FC8->unk0 = arg0->unk56;
+    } else {
+        D_80129FC8->unk0 = 4;
+    }
+    D_80129FC8->unk4 = arg0->unk57;
+    D_80129FC8->unk8 = arg0->unk58;
+    D_80129FC8->unkC = arg0->unk5A * 0.00390625f;
+    D_80129FC8->unk10 = arg0->unk59 << 8;
+    D_80129FC8->unk14 = arg0->unk5C;
+    D_80129FC8->unk18 = arg0->unk5E * 0.00390625f;
+    D_80129FC8->unk1C = arg0->unk5D << 8;
+    D_80129FC8->unk20 = arg0->unk60 & ~1;
+    if (D_8012A078 != 2) {
+        D_80129FC8->unk24 = arg0->unk6E;
+    } else {
+        D_80129FC8->unk24 = 3;
+    }
+    D_80129FC8->unk28 = arg0->unk71;
+    D_80129FC8->unk2C = arg0->unk68 & 0xFFFF;
+    D_80129FC8->unk30 = arg0->unk6A;
+    D_80129FC8->unk34 = arg0->unk6B;
+    D_80129FC8->unk38 = arg0->unk6C;
+    D_80129FC8->unk3C = arg0->unk6D;
+    D_80129FC8->unk40 = arg0->unk62 * 0.00390625f;
+    D_80129FC8->unk44 = arg0->unk64 * 0.00390625f;
+    D_80129FC8->unk48 = arg0->unk66 * 0.00390625f;
+    D_80129FC8->unk4C = arg0->unk70;
+}
+
 GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
 
 void func_800B8B8C(void) {
