@@ -613,6 +613,13 @@ typedef struct LevelObjectEntry800BF524 {
     u8 unk11;
 } LevelObjectEntry800BF524;
 
+typedef struct LevelObjectEntry_WavePower {
+    LevelObjectEntryCommon common;
+    u16 radius;
+    u16 unkA;
+    u16 unkC;
+} LevelObjectEntry_WavePower;
+
 typedef struct LevelObjectEntry {
     union {
         LevelObjectEntry_Racer racer;
@@ -704,6 +711,7 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry80011AD0 unk80011AD0;
         LevelObjectEntry8003FC44 unk8003FC44;
         LevelObjectEntry800BF524 unk800BF524;
+        LevelObjectEntry_WavePower wavePower;
     };
 } LevelObjectEntry;
 

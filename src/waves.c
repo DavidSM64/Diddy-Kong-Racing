@@ -7,6 +7,7 @@
 #include "libultra_internal.h"
 #include "memory.h"
 #include "textures_sprites.h"
+#include "objects.h"
 
 /************ .data ************/
 
@@ -69,7 +70,7 @@ s32 D_800E3188 = NULL;
 s32 D_800E318C = 0;
 unk800E3190 *D_800E3190 = NULL;
 s32 *D_800E3194 = NULL;
-s32 D_800E3198 = 0;
+Object *D_800E3198 = 0;
 s32 D_800E319C = 0;
 
 /*******************************/
@@ -127,9 +128,10 @@ s32 D_8012A5F4;
 s32 D_8012A5F8;
 s32 D_8012A5FC;
 s32 D_8012A600[72];
-s32 D_8012A720;
-s32 D_8012A724;
-s32 D_8012A728[2];
+f32 D_8012A720;
+f32 D_8012A724;
+s32 D_8012A728;
+s32 D_8012A72C;
 
 /*****************************/
 
@@ -372,5 +374,42 @@ void func_800BFE98(s32 arg0) {
     }
 }
 
+void obj_loop_wavepower(Object *obj) {
+    LevelObjectEntry_WavePower *entry;
+    s32 numRacers;
+    Object *racerObj;
+    Object_Racer *racer;
+    Object **racers;
+    s32 i;
+    f32 diffY;
+    f32 diffZ;
+    f32 diffX;
+    f32 distance;
 
-GLOBAL_ASM("asm/non_matchings/waves/obj_loop_wavepower.s")
+    if (obj != D_800E3198) {
+        racers = get_racer_objects(&numRacers);
+        if (numRacers > 0) {
+            racerObj = NULL;
+            for (i = 0; i < numRacers && racerObj == NULL; i++) {
+                racer = (Object_Racer *) racers[i]->unk64;
+                if (racer->playerIndex == 0) {
+                    racerObj = racers[i];
+                }
+            }
+            if (racerObj != NULL) {
+                entry = (LevelObjectEntry_WavePower *) obj->segment.unk3C_a.level_entry;
+                distance = entry->radius;
+                distance *= distance;
+                diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                if (((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < distance) {
+                    D_8012A720 = ((f32) entry->unkA * (1.0f / 256.0f));
+                    D_8012A724 = ((D_8012A720 -  D_80129FC8->unk40) / (f32) entry->unkC);
+                    D_8012A728 = (s32) entry->unkC;
+                    D_800E3198 = obj;
+                }
+            }
+        }
+    }
+}
