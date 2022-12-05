@@ -1264,17 +1264,45 @@ typedef struct Object_FogChanger {
   /* 0x0 */ s16 unk0;
 } Object_FogChanger;
 
+// typedef struct Object_Taj {
+//   /* 0x00 */ f32 unk0;
+//   /* 0x04 */ u8 pad4[0x9];
+//   /* 0x0D */ u8 unkD;
+//   /* 0x0E */ u8 padE[0x1A];
+//   /* 0x28 */ s16 unk28;
+//   /* 0x2A */ u8 pad2A[0x2];
+//   /* 0x2C */ s32 unk2C;
+//   /* 0x30 */ u8 pad30[0x4];
+//   /* 0x34 */ s16 unk34;
+//   /* 0x36 */ s8 unk36;
+// } Object_Taj;
+
+
 typedef struct Object_Taj {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ u8 pad4[0x9];
-  /* 0x0D */ u8 unkD;
-  /* 0x0E */ u8 padE[0x1A];
-  /* 0x28 */ s16 unk28;
-  /* 0x2A */ u8 pad2A[0x2];
-  /* 0x2C */ s32 unk2C;
-  /* 0x30 */ u8 pad30[0x4];
-  /* 0x34 */ s16 unk34;
-  /* 0x36 */ s8 unk36;
+    f32 unk0;
+    f32 unk4;
+    s32 unk8;
+    s8 unkC;
+    u8 unkD;
+    u8 unkE;
+    s8 unkF;
+    u8 unk10;
+    u8 unk11;
+    u8 unk12;
+    u8 unk13;
+    f32 unk14;
+    f32 unk18;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    u8 pad24[0x4];
+    s16 unk28;
+    u8 pad2A[0x2];
+    s32 unk2C;
+   s32 unk30;
+    s16 unk34;
+    s8 unk36;
 } Object_Taj;
 
 typedef struct Object_TT {
