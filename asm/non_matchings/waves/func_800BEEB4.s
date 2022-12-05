@@ -57,8 +57,8 @@ glabel func_800BEEB4
 /* 0BFB74 800BEF74 46003221 */  cvt.d.s $f8, $f6
 /* 0BFB78 800BEF78 462A4402 */  mul.d $f16, $f8, $f10
 /* 0BFB7C 800BEF7C 46809120 */  cvt.s.w $f4, $f18
-/* 0BFB80 800BEF80 3C018013 */  lui   $at, %hi(D_8012A008) # $at, 0x8013
-/* 0BFB84 800BEF84 C42AA008 */  lwc1  $f10, %lo(D_8012A008)($at)
+/* 0BFB80 800BEF80 3C018013 */  lui   $at, %hi(D_80129FC8 + 64) # $at, 0x8013
+/* 0BFB84 800BEF84 C42AA008 */  lwc1  $f10, %lo(D_80129FC8 + 64)($at)
 /* 0BFB88 800BEF88 94E4000C */  lhu   $a0, 0xc($a3)
 /* 0BFB8C 800BEF8C 460021A1 */  cvt.d.s $f6, $f4
 /* 0BFB90 800BEF90 46268200 */  add.d $f8, $f16, $f6

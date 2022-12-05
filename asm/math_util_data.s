@@ -8,10 +8,10 @@
 glabel D_800DD430
 .word 0x00000000
 
-glabel D_800DD434
+glabel gCurrentRNGSeed
 .word 0x5141564D # Some magic number related to RNG?
 
-glabel D_800DD438
+glabel gPrevRNGSeed
 .word 0x5141564D
 
 glabel gSineTable

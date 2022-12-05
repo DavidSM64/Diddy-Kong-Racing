@@ -378,7 +378,7 @@ glabel func_80049794
 /* 04A840 80049C40 A20C01E8 */  sb    $t4, 0x1e8($s0)
 /* 04A844 80049C44 8FA600F8 */  lw    $a2, 0xf8($sp)
 /* 04A848 80049C48 A3AA00A2 */  sb    $t2, 0xa2($sp)
-/* 04A84C 80049C4C 0C0157B0 */  jal   func_80055EC0
+/* 04A84C 80049C4C 0C0157B0 */  jal   handle_racer_items
 /* 04A850 80049C50 02202025 */   move  $a0, $s1
 /* 04A854 80049C54 02202025 */  move  $a0, $s1
 /* 04A858 80049C58 0C014D71 */  jal   func_800535C4

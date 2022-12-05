@@ -97,6 +97,7 @@ void render_rain_overlay(unk800E2C2C*, s32);
 void process_weather(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void render_falling_snow(void);
 void free_weather_memory(void);
+void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 
 s32 coss(s16);
 s32 sins(s16);
@@ -104,5 +105,6 @@ void func_800AB1F0(void);
 s32 func_800AC0C8(s32, unk80127BF8 *);
 void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
+void func_800AC8A8(Object *);
 
 #endif

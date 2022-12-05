@@ -470,10 +470,11 @@ typedef struct ObjectModel {
     /* 0x08 */ Triangle* triangles;
     /* 0x0C */ s32* unkC;
     /* 0x10 */ s32* unk10;
-    /* 0x14 */ u8 unk14[0x4];
-    /* 0x18 */ s32 unk18;
-    /* 0x1A */ s8 unk1A;
+    /* 0x14 */ s16 *unk14;
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
     /* 0x1C */ s8 unk1C;
+    /* 0x1D */ s8 unk1D;
     /* 0x1E */ s8 unk1E;
     /* 0x1F */ s8 unk1F;
     /* 0x20 */ u8 pad20[2];
@@ -689,6 +690,10 @@ typedef struct Object_54 {
     u8 unk18;
     u8 unk19;
     u8 unk1A;
+    u8 unk1B;
+    u8 pad1C[12];
+    f32 unk28;
+    f32 unk2C;
 } Object_54;
 
 typedef struct Object_58_4 {
@@ -712,9 +717,9 @@ typedef struct Object_5C {
 
 typedef struct Object_60 {
     s32 unk0;
-    void *unk4; // Object* pointer
+    s32 *unk4; // Object* pointer
     u8 unk8[0x24];
-    s32 *unk2C;
+    s8 *unk2C;
 } Object_60;
 
 struct Object;
@@ -760,9 +765,14 @@ typedef struct Object_WeaponBalloon {
 } Object_WeaponBalloon;
 
 typedef struct Object_Weapon {
-  /* 0x00 */ void *unk0;
-  /* 0x00 */ u8 pad4[0x14];
-  /* 0x18 */ u8 unk18;
+  /* 0x00 */ struct Object *target;
+  /* 0x04 */ struct Object *owner;
+  /* 0x08 */ s32 unk8;
+  /* 0x0C */ s32 unkC;
+  /* 0x10 */ f32 forwardVel;
+  /* 0x14 */ s32 unk14;
+  /* 0x18 */ u8 weaponID;
+  /* 0x19 */ u8 checkpoint;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -790,6 +800,14 @@ typedef struct Object_EggCreator {
   /* 0x4 */ struct Object *unk4;
 } Object_EggCreator;
 
+typedef struct Object_CollectEgg {
+  /* 0x0 */ u8 pad0[4];
+  /* 0x4 */ struct Object *unk4;
+  /* 0x8 */ s16 unk8;
+  /* 0xA */ s8 unkA;
+  /* 0xB */ s8 unkB;
+} Object_CollectEgg;
+
 typedef struct Object_UnkId58 {
   /* 0x000 */ u8 pad0[0x1D6];
   /* 0x1D6 */ s8 unk1D6;
@@ -804,7 +822,7 @@ typedef struct Object_CharacterFlag {
   /* 0x14 */ s32 unk14;
   /* 0x18 */ s32 unk18;
   /* 0x1C */ s32 unk1C;
-  /* 0x20 */ s16 *unk20;
+  /* 0x20 */ u16 *unk20;
   /* 0x24 */ u8  *unk24;
 } Object_CharacterFlag;
 
@@ -834,13 +852,14 @@ typedef struct Object_InfoPoint {
 
 typedef struct Object_TTDoor {
   /* 0x00 */ f32 unk0;
-  /* 0x04 */ u8 pad4[4];
+  /* 0x04 */ s32 *soundMask;
   /* 0x08 */ s32 unk8;
-  /* 0x0C */ u8 padC[3];
-  /* 0x0F */ s8 unkF;
+  /* 0x0C */ s16 unkC;
+  /* 0x0C */ s8 unkE;
+  /* 0x0F */ u8 unkF;
   /* 0x10 */ u8 pad10[2];
   /* 0x12 */ u8 unk12;
-  /* 0x13 */ u8 unk13;
+  /* 0x13 */ s8 unk13;
 } Object_TTDoor;
 
 typedef struct Object_WorldKey {
@@ -997,7 +1016,7 @@ typedef struct Object_Racer {
   /* 0x134 */ s32 unk134;
   /* 0x138 */ s32 unk138;
   /* 0x13C */ s32 unk13C;
-  /* 0x140 */ struct Object *unk140;
+  /* 0x140 */ struct Object *magnetTargetObj;
   /* 0x144 */ struct Object *held_obj;
   /* 0x148 */ struct Object *unk148;
   /* 0x14C */ struct Object *unk14C;
@@ -1017,9 +1036,9 @@ typedef struct Object_Racer {
   /* 0x172 */ s8 balloon_type;
   /* 0x173 */ s8 balloon_quantity;
   /* 0x174 */ s8 balloon_level;
-  /* 0x175 */ s8 unk175;
+  /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ u8 *unk178;
+  /* 0x178 */ void *magnetSoundMask;
   /* 0x17C */ s32 shieldSoundMask;
   /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
   /* 0x184 */ s8 unk184;
@@ -1132,7 +1151,7 @@ typedef struct Object_Racer {
   /* 0x215 */ s8 unk215;
   /* 0x216 */ u8 unk216;
   /* 0x217 */ u8 unk217;
-  /* 0x218 */ s32 unk218;
+  /* 0x218 */ void *unk218;
   /* 0x21C */ s32 unk21C;
   /* 0x220 */ s32 unk220;
 } Object_Racer;
@@ -1238,6 +1257,8 @@ typedef struct Object_PosArrow {
 typedef struct Object_Banana {
   /* 0x0 */ u8 pad0[4];
   /* 0x4 */ struct Object *spawner;
+  /* 0x8 */ s8 unk8;
+  /* 0x9 */ s8 unk9;
 } Object_Banana;
 
 typedef struct Object_FogChanger {
@@ -1308,6 +1329,7 @@ typedef struct Object_64 {
         Object_Butterfly butterfly;
         Object_EffectBox effect_box;
         Object_EggCreator egg_creator;
+        Object_CollectEgg egg;
         Object_UnkId58 unkid58;
         Object_CharacterFlag character_flag;
         Object_Snowball snowball;
@@ -1398,7 +1420,10 @@ typedef struct ObjectSegment {
 
   union {
     /* 0x0034 */ f32 unk34;
-    /* 0x0034 */ s16 levelSegmentIndex;
+                 struct {
+        /* 0x0034 */ s16 levelSegmentIndex;
+        /* 0x0036 */ s16 unk36;
+                 };
   } unk34_a;
 
   union {
@@ -1423,7 +1448,7 @@ typedef struct ObjectSegment {
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  /* 0x0044 */ s32 *unk44;
+  /* 0x0044 */ Vertex *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ Object_4C *unk4C; //player + 0x318

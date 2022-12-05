@@ -90,8 +90,8 @@ ALCSeq D_80115E80;
 u8 D_80115F78;
 u8 D_80115F79;
 s32 D_80115F7C;
-s32 D_80115F80;
-u32 gGlobalSoundMask;
+s32 *gGlobalSoundMask;
+u32 gSpatialSoundMask;
 u32 D_80115F88;
 
 /******************************/
@@ -658,7 +658,43 @@ u16 func_80001CB8(u16 arg0) {
     return sSoundEffectsPool[arg0].unk6;
 }
 
-GLOBAL_ASM("asm/non_matchings/audio/play_sound_global.s")
+/**
+ * Add the requested sound to the queue and update the mask to show that this sound is playing at that source.
+ * If no soundmask is provided, then instead use the global mask.
+*/
+void play_sound_global(u16 soundID, s32 *soundMask) {
+    f32 volumeF;
+    s32 soundBite;
+
+    if (D_80115D20 < soundID) {
+        if (soundMask != NULL) {
+            *soundMask = NULL;
+        }
+    } else {
+        soundBite = sSoundEffectsPool[soundID].unk0;
+        if (soundBite == NULL) {
+            if (soundMask != NULL) {
+                *soundMask = NULL;
+            }
+        } else {
+            volumeF = sSoundEffectsPool[soundID].unk4 / 100.0f;
+            if (soundMask != NULL) {
+                func_80004668(ALBankFile_80115D14->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, soundMask);
+                if (*soundMask != NULL) {
+                    func_800049F8(*soundMask, 8, sSoundEffectsPool[soundID].unk2 * 256);
+                    func_800049F8(*soundMask, 16, *((u32*) &volumeF));
+                }
+            } else {
+                soundMask = (s32 *) &gGlobalSoundMask;
+                func_80004668(ALBankFile_80115D14->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, &gGlobalSoundMask);
+                if (*soundMask != NULL) {
+                    func_800049F8(*soundMask, 8, sSoundEffectsPool[soundID].unk2 * 256);
+                    func_800049F8(*soundMask, 16, *((u32*) &volumeF));
+                }
+            }
+        }
+    }
+}
 
 /**
  * Creates a spatial audio reference, then plays a sound.
@@ -667,7 +703,7 @@ GLOBAL_ASM("asm/non_matchings/audio/play_sound_global.s")
  */
 void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
     if (soundMask == NULL) {
-        soundMask = &gGlobalSoundMask;
+        soundMask = &gSpatialSoundMask;
     }
 
     play_sound_global(soundID, soundMask);
@@ -691,15 +727,12 @@ void func_80001F14(u16 soundID, u32 *arg1) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_80001FB8(u16 soundId, void *sndState, u8 arg2) {
-    if (sndState != NULL) {
-        func_800049F8(sndState, 8, (s32) (sSoundEffectsPool[soundId].unk2 * (arg2 / 127.0f)) << 8);
+void func_80001FB8(u16 soundID, void *soundState, u8 volume) {
+    s32 new_var = ((s32) (sSoundEffectsPool[soundID].unk2 * (volume / 127.0f))) * 256;
+    if (soundState) {
+        func_800049F8(soundState, 8, new_var);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/audio/func_80001FB8.s")
-#endif
 
 UNUSED void func_8000208C(void *sndState, u8 arg1) {
     if (sndState != NULL) {
@@ -786,24 +819,48 @@ void func_800022BC(u8 arg0, ALSeqPlayer *arg1) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq) {
-    if (alCSPGetState(seqp) == AL_STOPPED && *arg2) {
-        /*load_asset_to_address(ASSET_AUDIO, ptr,
-            (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - get_rom_offset_of_asset(ASSET_AUDIO,0),
-            *((u32*)(((*arg2) << 3) + D_80115D0C)));*/
-        alCSeqNew(seq, ptr);
-        alCSPSetSeq(seqp, seq);
-        alCSPPlay(seqp);
-        if (seqp == gMusicPlayer) {
-            set_relative_volume_for_music(*((u8 *)((*arg2) * 3 + sMusicPool->unk0)));
+void func_8000232C(ALSeqPlayer *arg0, void *arg1, u8 *arg2, ALCSeq *arg3) {
+    s32 var_s0;
+    u8 temp_a0;
+    u8 temp_a0_2;
+
+    if ((alCSPGetState((ALCSPlayer* ) arg0) == 0) && (*arg2 != 0)) {
+        load_asset_to_address(0x27U, arg1, ALSeqFile_80115CF8->seqArray[*arg2].offset - get_rom_offset_of_asset(0x27U, 0U), (s32) D_80115D0C[*arg2]);
+        alCSeqNew(arg3, arg1);
+        alCSPSetSeq((ALCSPlayer* ) arg0, arg3);
+        alCSPPlay((ALCSPlayer* ) arg0);
+        if (arg0 == gMusicPlayer) {
+            set_relative_volume_for_music(sMusicPool[*arg2].unk0);
+            temp_a0 = sMusicPool[*arg2].unk1;
+            if (temp_a0 != 0) {
+                musicSetTempo((s32) temp_a0);
+            } else {
+                sMusicTempo = -1;
+            }
+            func_80002608(sMusicPool[*arg2].unk2);
+            D_80115D04 = *arg2;
+            var_s0 = 0;
+            if (D_80115F7C != -1) {
+                do {
+                    if ((1 << var_s0) & D_80115F7C) {
+                        func_80001170(var_s0);
+                    } else {
+                        func_80001114(var_s0);
+                    }
+                    var_s0 += 1;
+                } while (var_s0 != 0x10);
+            }
         } else {
+            sfxSetRelativeVolume(sMusicPool[*arg2].unk0);
+            temp_a0_2 = sMusicPool[*arg2].unk1;
+            if (temp_a0_2 != 0) {
+                sfxSetTempo(temp_a0_2);
+            }
+            D_80115D05 = *arg2;
         }
+        *arg2 = 0;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
-#endif
 
 void func_80002570(ALSeqPlayer *seqp) {
     if (gMusicPlayer == seqp && D_80115D40 != 0) {

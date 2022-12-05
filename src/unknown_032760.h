@@ -95,6 +95,7 @@ void func_80032BAC(unk800DC950 *arg0);
 s32 func_80032C6C(void);
 f32 func_80033A14(unk800DC950 *arg0);
 f32 func_80033C08(unk800DC950 *arg0);
+Object_64 *func_80031CAC(Object *, LevelObjectEntry_RgbaLight *entry);
 
 //Non Matching
 void func_80031BB8(s32 count);

@@ -344,8 +344,6 @@ extern s32 D_800DC85C;
 extern u8 D_800DC860;
 extern u16 D_800DC864;
 
-f32 coss_f(s16); //?
-
 Object *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);
 void func_8000C460(void);
@@ -363,7 +361,7 @@ void func_8000E194(void);
 void func_8000E1B8(void);
 s8 find_non_car_racers(void);
 s8 check_if_silver_coin_race();
-void func_8000E1EC(Object *object, s32 arg1);
+void func_8000E1EC(Object *obj, s32 vehicleID);
 void set_time_trial_enabled(s32 arg0);
 u8 is_time_trial_enabled();
 u8 func_8000E4D8(void);
@@ -449,7 +447,7 @@ s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
-f32 func_8002263C(f32 *, s32, f32, f32 *);
+f32 cubic_spline_interpolation(f32 *, s32, f32, f32 *);
 s32 func_80031F88(Object*, s32);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
@@ -465,6 +463,7 @@ void render_3d_billboard(Object *obj);
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
 void func_8000B290(void);
 void func_80016BC4(unk8000FD34*);
+s32 func_8001C48C(Object *obj);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

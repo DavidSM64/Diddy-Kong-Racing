@@ -9,8 +9,8 @@
 #include "structs.h"
 
 extern s32 D_800DD430;
-extern s32 D_800DD434;
-extern s32 D_800DD438;
+extern s32 gCurrentRNGSeed;
+extern s32 gPrevRNGSeed;
 extern s16 gSineTable[];
 extern s16 gArcTanTable[];
 
@@ -119,6 +119,24 @@ void f32_matrix_to_s16_matrix(Matrix *input, s16 **output) {
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
 #endif
+
+void set_rng_seed(s32 num) {
+    gCurrentRNGSeed = num;
+}
+
+void save_rng_seed(s32 num) {
+    num = gCurrentRNGSeed;
+    gPrevRNGSeed = num;
+}
+
+void load_rng_seed(s32 num) {
+    num = gPrevRNGSeed;
+    gCurrentRNGSeed = num;
+}
+
+s32 get_rng_seed(void) {
+    return gCurrentRNGSeed;
+}
 
 GLOBAL_ASM("asm/math_util/rng.s")
 

@@ -336,6 +336,13 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry);
 void obj_loop_pigrocketeer(Object *obj, s32 speed);
 void obj_init_levelname(Object *obj, LevelObjectEntry_LevelName *entry);
 void obj_loop_wizghosts(Object *obj, s32 speed);
+void obj_loop_ttdoor(Object *obj, s32 updateRate);
+void obj_loop_trophycab(Object *obj, s32 updateRate);
+void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate);
+void obj_loop_silvercoin(Object *obj, s32 updateRate);
+void obj_loop_bombexplosion(Object *obj, s32 updateRate);
+void obj_loop_flycoin(Object *obj, s32 updateRate);
+void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 arg6);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
@@ -355,7 +362,8 @@ void func_8001EFA4(Object*, Object_Animation*);
 void func_8001F23C(Object *obj, LevelObjectEntry_Animation *entry);
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
-
-void func_8003FC44(f32, f32, f32, s32, s32, f32, s32);
+void func_80036040(Object*, Object_64*);
+void func_8003E694(Object *, s32 updateRate);
+void func_8003F2E8(Object *, s32 updateRate);
 
 #endif

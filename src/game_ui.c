@@ -304,7 +304,7 @@ void render_hud(Gfx **dList, Matrix **mtx, TriangleList **tris, Object *arg3, s3
     s32 sp2C;
     Object_64* racer;
 
-    D_80126D08 = get_object_render_stack_pos();
+    D_80126D08 = get_current_viewport();
     if (D_8012718A) {
         arg3 = get_racer_object_by_port(1 - D_80126D08);
     }

@@ -410,19 +410,19 @@ glabel func_80045C48
 /* 046E44 80046244 4406A000 */  mfc1  $a2, $f20
 /* 046E48 80046248 27A400B0 */  addiu $a0, $sp, 0xb0
 /* 046E4C 8004624C 00002825 */  move  $a1, $zero
-/* 046E50 80046250 0C00898F */  jal   func_8002263C
+/* 046E50 80046250 0C00898F */  jal   cubic_spline_interpolation
 /* 046E54 80046254 27A7005C */   addiu $a3, $sp, 0x5c
 /* 046E58 80046258 4406A000 */  mfc1  $a2, $f20
 /* 046E5C 8004625C E7A0008C */  swc1  $f0, 0x8c($sp)
 /* 046E60 80046260 27A400A0 */  addiu $a0, $sp, 0xa0
 /* 046E64 80046264 00002825 */  move  $a1, $zero
-/* 046E68 80046268 0C00898F */  jal   func_8002263C
+/* 046E68 80046268 0C00898F */  jal   cubic_spline_interpolation
 /* 046E6C 8004626C 27A70058 */   addiu $a3, $sp, 0x58
 /* 046E70 80046270 4406A000 */  mfc1  $a2, $f20
 /* 046E74 80046274 E7A00088 */  swc1  $f0, 0x88($sp)
 /* 046E78 80046278 27A40090 */  addiu $a0, $sp, 0x90
 /* 046E7C 8004627C 00002825 */  move  $a1, $zero
-/* 046E80 80046280 0C00898F */  jal   func_8002263C
+/* 046E80 80046280 0C00898F */  jal   cubic_spline_interpolation
 /* 046E84 80046284 27A70054 */   addiu $a3, $sp, 0x54
 /* 046E88 80046288 C7A2005C */  lwc1  $f2, 0x5c($sp)
 /* 046E8C 8004628C C7B00058 */  lwc1  $f16, 0x58($sp)
