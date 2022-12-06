@@ -1729,11 +1729,12 @@ void func_80039320(s16 voiceClip) {
     D_8011D4E2 = voiceClip;
 }
 
-#if 0
+#ifdef NON_EQUIVALENT
 s32 func_80004B40(s8, s8/*, s8, s32, s8*/);             /* extern */
 s32 func_800090C0(f32, f32, s16);                   /* extern */
 void func_80061C0C(Object*);                         /* extern */
 void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+Object *func_8002342C(f32 x, f32 z);
 void obj_loop_parkwarden(Object *obj, s32 arg1) {
     f32 arg1_f32;
     f32 spA8;
@@ -1751,8 +1752,6 @@ void obj_loop_parkwarden(Object *obj, s32 arg1) {
     s32 sp3C;
     Object *racerObj;
     Object *temp_v0_12;
-    Object *temp_v0_14;
-    Object *temp_v0_21;
     Object **racerObjs;
     ObjectSegment *temp_v0_22;
     Object_64 *racer64;
@@ -1762,32 +1761,13 @@ void obj_loop_parkwarden(Object *obj, s32 arg1) {
     f32 zPosDiff;
     f32 var_f2;
     s16 temp_a1_3;
-    s16 temp_a1_4;
-    s32 temp_a0;
     s32 temp_t0;
-    s32 temp_t2;
-    s32 temp_t2_2;
-    s32 temp_t3;
-    s32 temp_t4;
     s32 temp_t5;
     s32 var_a2_2;
-    s32 var_a2_3;
-    s32 var_a2_4;
-    s32 var_a2_5;
-    s32 var_t6;
     s32 arctan;
     s8 temp_v0_24;
     u32 buttonsPressed;
-    u8 temp_v0_10;
-    u8 temp_v0_11;
     u8 temp_v0_13;
-    u8 temp_v0_15;
-    u8 temp_v0_16;
-    u8 temp_v0_17;
-    u8 temp_v0_18;
-    s32 temp_v0_7;
-    u8 temp_v0_8;
-    u8 temp_v0_9;
 
     sp6B = 0;
     arg1_f32 = arg1;
@@ -1898,13 +1878,13 @@ void obj_loop_parkwarden(Object *obj, s32 arg1) {
         }
         if (sp9C > 10.0) {
             arctan = (arctan2_f(spA8 / sp9C, spA0 / sp9C) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-            if (arctan >= 0x8001) {
+            if (arctan > 0x8000) {
                 arctan -= 0xFFFF;
             }
             if (arctan < -0x8000) {
                 arctan += 0xFFFF;
             }
-            if ((arctan > 0) && (arctan < 16)) {
+            if (arctan > 0 && arctan < 16) {
                 arctan = 16;
             }
             obj->segment.trans.y_rotation += (arctan >> 4);
@@ -1932,18 +1912,11 @@ void obj_loop_parkwarden(Object *obj, s32 arg1) {
         if (arctan < -0x8000) {
             arctan += 0xFFFF;
         }
-        if (arctan > 0) {
-            var_t6 = arctan >> 3;
-            if (arctan < 0x10) {
-                arctan = 0x10;
-                goto block_77;
-            }
-        } else {
-block_77:
-            var_t6 = arctan >> 3;
+        if (arctan > 0 && arctan < 16) {
+            arctan = 16;
         }
-        obj->segment.trans.y_rotation += var_t6;
-        if ((arctan < 0x400) && (arctan > -0x400) && (sp9C < 2.0)) {
+        obj->segment.trans.y_rotation += arctan >> 3;
+        if (arctan < 0x400 && arctan > -0x400 && sp9C < 2.0) {
             obj->unk78 = 3;
             taj->unk4 = 0;
             play_taj_voice_clip(D_8011D4E2, 1);
@@ -1978,16 +1951,12 @@ block_77:
         func_8005A3C0();
         break;
     case 3:                                         /* switch 2 */
-        obj->segment.unk3B = (s8) (ObjectTransform* )4;
+        obj->segment.unk3B = 4;
         taj->unk4 += arg1_f32 * 1.0;        
         func_8005A3C0();
-        if ((sp7C == 3) || (sp7C == 4)) {
-            if (sp7C == 4) {
-                obj->unk78 = 8;
-            } else {
-                obj->unk78 = 7;
-            }
-            taj->unk4 = 0.1;
+        if (sp7C == 3 || sp7C == 4) {
+            obj->unk78 = (sp7C == 4) ? 8 : 7;
+            taj->unk4 = 0.1f;
             obj->segment.unk3B = 2;
             taj->unk1C = 0;
             play_taj_voice_clip(SOUND_VOICE_TAJ_BYE, 1);
@@ -2055,15 +2024,13 @@ block_77:
             if (taj->unk4 != 0.0f) {
                 taj->unk4 += 8.0;
             }
-            if (var_a2_2 >= 5) {
+            if (var_a2_2 > 4) {
                 var_a2_2 = 4;
             }
-            temp_v0_8 = racer64->racer.transparency;
-            temp_t0 = var_a2_2 << 5;
-            if ((s32) temp_v0_8 < (0xFF - temp_t0)) {
-                racer64->racer.transparency = temp_v0_8 + temp_t0;
+            temp_t0 = var_a2_2 * 32;
+            if (racer64->racer.transparency < (255 - temp_t0)) {
+                racer64->racer.transparency += temp_t0;
             } else {
-                racer64->racer.transparency = 0xFF;
                 if (taj->unk4 == 0.0) {
                     if (D_8011D4E0 & 0x80) {
                         sp6B = 1;
@@ -2095,7 +2062,7 @@ block_77:
                 );
             }
             obj->unk78 = 0x14;
-            play_sound_global(0x110U, NULL);
+            play_sound_global(SOUND_WHOOSH4, NULL);
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
         }
         break;
@@ -2107,13 +2074,12 @@ block_77:
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
-        var_a2_3 = arg1 * 8;
+        temp_t0 = arg1 * 8;
         if (taj->unk4 < 20.0f) {
-            var_a2_3 = 0;
+            temp_t0 = 0;
         }
-        temp_v0_9 = obj->segment.unk38.half.lower;
-        if (var_a2_3 < (s32) temp_v0_9) {
-            obj->segment.unk38.half.lower = temp_v0_9 - var_a2_3;
+        if (obj->segment.unk38.half.lower > temp_t0) {
+            obj->segment.unk38.half.lower -= temp_t0;
         } else {
             sp6B = 1;
             play_sound_global(SOUND_WHOOSH4, NULL);
@@ -2131,10 +2097,9 @@ block_77:
         if (taj->unk4 < 0.0f) {
             taj->unk4 = 0.0f;
         }
-        temp_v0_10 = obj->segment.unk38.half.lower;
-        temp_t2 = arg1 * 4;
-        if ((s32) temp_v0_10 < (0xFF - temp_t2)) {
-            obj->segment.unk38.half.lower = temp_v0_10 + temp_t2;
+        temp_t0 = arg1 * 4;
+        if (obj->segment.unk38.half.lower < (255 - temp_t0)) {
+            obj->segment.unk38.half.lower += temp_t0;
         } else {
             obj->segment.unk38.half.lower = 0xFF;
             obj->unk78 = 1;
@@ -2148,16 +2113,15 @@ block_77:
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
-        var_a2_4 = arg1 * 8;
+        temp_t0 = arg1 * 8;
         if (taj->unk4 < 20.0f) {
-            var_a2_4 = 0;
+            temp_t0 = 0;
         }
-        temp_v0_11 = obj->segment.unk38.half.lower;
-        if (var_a2_4 < (s32) temp_v0_11) {
-            obj->segment.unk38.half.lower = temp_v0_11 - var_a2_4;
+        if (obj->segment.unk38.half.lower > temp_t0) {
+            obj->segment.unk38.half.lower -= temp_t0;
         } else {
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
-            func_80030DE0(0, (s32) taj->unk11, (s32) taj->unk12, (s32) taj->unk13, (s32) taj->unk20, (s32) taj->unk22, 0xB4);
+            func_80030DE0(0, taj->unk11, taj->unk12, taj->unk13, taj->unk20, taj->unk22, 0xB4);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
@@ -2180,35 +2144,34 @@ block_77:
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
-        var_a2_5 = arg1 * 8;
+        temp_t0 = arg1 * 8;
         if (taj->unk4 < 20.0f) {
-            var_a2_5 = 0;
+            temp_t0 = 0;
         }
         temp_v0_13 = obj->segment.unk38.half.lower;
-        if (var_a2_5 < (s32) temp_v0_13) {
-            obj->segment.unk38.half.lower = temp_v0_13 - var_a2_5;
+        if (obj->segment.unk38.half.lower > temp_t0) {
+            obj->segment.unk38.half.lower -= temp_t0;
         } else {
             obj->segment.unk38.half.lower = 0;
             obj->unk78 = 0x15;
-            temp_v0_14 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
-            if (temp_v0_14 != NULL) {
-                obj->segment.trans.x_position = temp_v0_14->segment.trans.x_position;
-                obj->segment.trans.z_position = temp_v0_14->segment.trans.z_position;
-                obj->segment.unk2C.half.lower = temp_v0_14->segment.unk2C.half.lower;
+            temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
+            if (temp_v0_12 != NULL) {
+                obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
+                obj->segment.trans.z_position = temp_v0_12->segment.trans.z_position;
+                obj->segment.unk2C.half.lower = temp_v0_12->segment.unk2C.half.lower;
                 obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
             }
         }
         break;
     case 20:                                        /* switch 2 */
         obj->segment.unk3B = 3;
-        taj->unk4 = (f32) ((f64) taj->unk4 - (2.0 * (f64) arg1_f32));
+        taj->unk4 -= arg1_f32 * 2.0;
         if (taj->unk4 < 0.0f) {
             taj->unk4 = 0.0f;
         }
-        temp_v0_15 = obj->segment.unk38.half.lower;
-        temp_t2_2 = arg1 * 4;
-        if ((s32) temp_v0_15 < (0xFF - temp_t2_2)) {
-            obj->segment.unk38.half.lower = temp_v0_15 + temp_t2_2;
+        temp_t0 = arg1 * 4;
+        if (obj->segment.unk38.half.lower < (0xFF - temp_t0)) {
+            obj->segment.unk38.half.lower += temp_t0;
         } else {
             obj->segment.unk38.half.lower = 0xFF;
             obj->unk78 = NULL;
@@ -2224,15 +2187,11 @@ block_77:
         obj->segment.unk3B = 0;
         taj->unk14 = 0.0f;
         if (taj->unkD == 0xFF) {
-            temp_v0_16 = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
-            temp_a0 = temp_v0_16 & 0xFF;
-            taj->unkD = temp_v0_16;
-            if (temp_a0 != 0xFF) {
-                temp_v0_17 = func_8001CC48(temp_a0, -1, 0);
-                taj->unkE = temp_v0_17;
-                temp_v0_18 = func_8001CC48(temp_v0_17, (s32) taj->unkD, 0);
-                taj->unkF = temp_v0_18;
-                taj->unk10 = func_8001CC48(temp_v0_18 & 0xFF, (s32) taj->unkE, 0);
+            taj->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
+            if (taj->unkD != 0xFF) {
+                taj->unkE = func_8001CC48(taj->unkD, -1, 0);
+                taj->unkF = func_8001CC48(taj->unkE, taj->unkD, 0);
+                taj->unk10 = func_8001CC48(taj->unkF, taj->unkE, 0);
                 taj->unkC = taj->unkD;
             }
         } else {
@@ -2287,7 +2246,7 @@ block_77:
                 func_80001170(0xA);
                 func_80001170(0xB);
                 func_80001170(0xF);
-                func_80001268(3, 0x7F - sp54); // should be sp48_arg1_f32, but that doesn't work.
+                func_80001268(3, 0x7F - sp3C);
             } else {
                 func_80001114(0xA);
                 func_80001114(0xB);
@@ -2297,10 +2256,10 @@ block_77:
         switch (taj->unk36) {                        /* switch 4; irregular */
         case 0:                                     /* switch 4 */
             temp_t5 = arg1 << 7;
-            if (temp_t5 < (s32) taj->unk34) {
+            if (taj->unk34 > temp_t5) {
                 taj->unk34 -= temp_t5;
-                func_80001170(0xEU);
-                func_80001268(0xEU, ((s32) taj->unk34 >> 8) & 0xFF);
+                func_80001170(14);
+                func_80001268(14, taj->unk34 >> 8);
                 taj->unk30 = 0;
             } else {
                 taj->unk34 = 0;
