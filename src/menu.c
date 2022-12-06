@@ -1485,11 +1485,7 @@ FadeTransition D_800E1DE8 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 120, -1);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
-//Probably a FadeTransition, but that won't be certain
-//FadeTransition D_800E1E08 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 52, -1);
-s16 D_800E1E08[4] = {
-    0, 0, 0x34, -1
-};
+FadeTransition D_800E1E08 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 52, -1);
 
 char *D_800E1E10 = " (ADV.";
 
@@ -2531,7 +2527,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         if ((gTitleDemoTimer < 60) && ((gTitleDemoTimer + updateRate) >= 60)) {
             set_music_fade_timer(-0x300);
             sp28 = 0;
-            func_800C01D8((FadeTransition* ) D_800E1E08);
+            func_800C01D8(&D_800E1E08);
         }
         if (gTitleDemoTimer <= 0) {
             sp28 = 1;

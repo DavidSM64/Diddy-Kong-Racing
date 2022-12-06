@@ -144,10 +144,7 @@ s8 D_800DCDB0[16][2] = {
 // Checksum count for obj_loop_goldenballoon
 s32 gObjLoopGoldenBalloonChecksum = 0xA597;
 
-s16 D_800DCDD4[4] = {
-    0, 0, 0x32, -1
-    // There might be one or two extra zeroes here.
-};
+FadeTransition D_800DCDD4 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 50, -1);
 
 /*******************************/
 
@@ -4043,7 +4040,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     }
     if ((racer->transitionTimer < -1 && gCurrentStickX < 10 && gCurrentStickX > -10) || racer->transitionTimer == -1) {
         if (check_if_showing_cutscene_camera() == 0) {
-            func_800C01D8((FadeTransition* ) D_800DCDD4);
+            func_800C01D8(&D_800DCDD4);
         }
         racer->transitionTimer = 60 - updateRate;
     }

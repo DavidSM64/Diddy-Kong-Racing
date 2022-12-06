@@ -653,10 +653,6 @@ extern s16 D_800E1DC8[16];
 
 extern char gRareCopyrightString[24];
 
-//Probably a FadeTransition
-//extern FadeTransition D_800E1E08;
-extern s16 D_800E1E08[4];
-
 extern char *D_800E1E10;
 
 extern s32 D_800E1E14;

@@ -200,8 +200,6 @@ typedef struct unk80041A90_MidiFade {
 } unk80041A90_MidiFade;
 
 // Unsure about the signed/unsigned with these arrays.
-extern u16 D_800DC970[4];
-extern u16 D_800DC978[4];
 extern u16 D_800DC980[20];
 extern u16 D_800DC9A8[20];
 extern u16 D_800DC9D0[64];
