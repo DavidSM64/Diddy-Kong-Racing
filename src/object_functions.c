@@ -28,6 +28,7 @@
 #include "fade_transition.h"
 #include "unknown_005740.h"
 #include "object_models.h"
+#include "lib/src/libc/rmonPrintf.h"
 
 /************ .data ************/
 
@@ -506,7 +507,7 @@ void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
 void obj_loop_trophycab(Object *obj, s32 updateRate) {
     Settings* settings;
     Object_TrophyCabinet *gfxData;
-    f32 dist;
+    UNUSED f32 dist;
     LevelObjectEntryCommon newObject;
     LevelHeader* header;
     Object* tempObj;
@@ -1738,21 +1739,21 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     f32 zPosDiff;
     f32 distance;
     f32 sp98_yPos;
-    s32 sp3C;
-    Object *racerObj;
     struct TempStruct8 **sp94;
+    Object *racerObj;
+    s32 sp3C;
     Object *temp_v0_12;
     s32 var_a2;
     Object **racerObjs;
     s32 var_a2_2;
-    ObjectSegment *temp_v0_22;
+    s32 numRacers;
     Object_Taj *taj;
     Object_64 *racer64;
     f32 var_f2;
     s8 sp6B;
     LevelHeader *levelHeader;
     s32 arctan;
-    s32 numRacers;
+    ObjectSegment *temp_v0_22;
     u32 buttonsPressed;
     f32 updateRateF2;
     
@@ -1822,7 +1823,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         arctan -= (racerObj->segment.trans.y_rotation & 0xFFFF);
         if((arctan > 0x8000)) {
             // Probably had a debug statement here.
-            if(var_a2 && !var_a2 && !var_a2){} // Fake
+            if ((obj->unk78) && (!obj->unk78) && (!obj->unk78)){} // Fake
         }
         if (var_a2) {
             obj->unk78 = 1;
@@ -1835,23 +1836,26 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         func_80030DE0(0, 0xFF, 0, 0x78, 0x3C0, 0x44C, 0xF0);
         taj->unk4 = 0.0f;
     }
-    switch (obj->unk78) {                            /* switch 3; irregular */
-        case 0:                                         /* switch 3 */
-        case 21:                                        /* switch 3 */
-        case 20:                                        /* switch 3 */
-        case 30:                                        /* switch 3 */
-            break;
-        default:                                        /* switch 3 */ 
+    
+    if (!(obj->unk78 == 0 || obj->unk78 == 30 || obj->unk78 == 20 || obj->unk78 == 21)) {
+        
             func_8005A3B0();
             func_800AB194(3);
+    }
+
+    switch (obj->unk78) {                            /* switch 3; irregular */
+        case 3:                                         /* switch 3 */
+        case 4:                                        /* switch 3 */
+        case 5:                                        /* switch 3 */
+        case 6:                                        /* switch 3 */
+            var_a2_2 = func_8009CFEC(0);
+            break;
+        default:                                        /* switch 3 */ 
+            func_8009CF68(0);
+            var_a2_2 = 0;
             break;
     }
-    if ((obj->unk78 == 3) || (obj->unk78 == 4) || (obj->unk78 == 5) || (obj->unk78 == 6)) {
-        var_a2_2 = func_8009CFEC(0);
-    } else {
-        func_8009CF68(0);
-        var_a2_2 = 0;
-    }
+    
     switch (obj->unk78) {                            /* switch 1 */
         case 1:                                         /* switch 1 */
         case 2:                                         /* switch 1 */
@@ -1967,7 +1971,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         if (var_a2_2 & 0x80) {
             D_8011D4E0 = var_a2_2 & 0x7F;
-            if (racer64->racer.unk1D6 != D_8011D4E0) {
+            if (D_8011D4E0 != racer64->racer.unk1D6) {
                 obj->unk78 = 5;
                 taj->unk4 = 0;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
@@ -1978,7 +1982,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         if (var_a2_2 & 0x40) {
             D_8011D4E0 = var_a2_2 & 0xF;
-            if (racer64->racer.unk1D6 != D_8011D4E0) {
+            if (D_8011D4E0 != racer64->racer.unk1D6) {
                 D_8011D4E0 |= 0x80;
                 obj->unk78 = 5;
                 taj->unk4 = 0.0f;
@@ -2019,17 +2023,18 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     case 5:                                         /* switch 2 */
         func_8005A3C0();
         if (racerObj != NULL) {
-            var_a2 = updateRate;
             if (taj->unk4 != 0.0f) {
                 taj->unk4 += 8.0;
             }
+            var_a2 = updateRate;
             if (var_a2 > 4) {
                 var_a2 = 4;
             }
-            if (racer64->racer.transparency < (255 - (var_a2 * 32))) {
-                racer64->racer.transparency += var_a2 * 32;
+            var_a2 <<= 5;
+            if (racer64->racer.transparency < (255 - (var_a2))) {
+                racer64->racer.transparency += var_a2;
             } else {
-                racer64->racer.transparency = var_a2 * 32;
+                racer64->racer.transparency = 255;
                 if (taj->unk4 == 0.0) {
                     if (D_8011D4E0 & 0x80) {
                         func_800C01D8(&D_800DC978);
@@ -2048,7 +2053,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     case 6:                                         /* switch 2 */
     case 7:                                         /* switch 2 */
         if (taj->unk4 != 0.0) {
-            taj->unk4 += updateRateF * 0.5;
+            taj->unk4 = taj->unk4 + (0.5 * updateRateF);
         }
         if (taj->unk4 == 0) {
             sp6B = 1;
@@ -2073,6 +2078,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
+        
         var_a2 = updateRate * 8;
         if (taj->unk4 < 20.0f) {
             var_a2 = 0;
@@ -2215,11 +2221,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 }
                 obj->segment.trans.y_rotation += ((var_a2 * updateRate) >> 4);
                 xPosDiff = sins_f(obj->segment.trans.y_rotation + 0x8000);
+                zPosDiff = coss_f(obj->segment.trans.y_rotation + 0x8000);
                 func_80011570(
                     obj, 
                     (updateRateF2 * xPosDiff) * 1.1, 
                     0.0f, 
-                    (updateRateF2 * coss_f(obj->segment.trans.y_rotation + 0x8000)) * 1.1
+                    (updateRateF2 * zPosDiff) * 1.1
                 );
                 taj->unk4 += updateRate * 2.2;
             }
@@ -2234,7 +2241,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 distance = 1000.0f - distance;
                 sp3C = (127.0f * distance) / 1000.0f;
                 temp_v0_22 = func_80069D7C();
-                func_800090C0(obj->segment.trans.x_position - temp_v0_22->trans.x_position, obj->segment.trans.z_position - temp_v0_22->trans.z_position, temp_v0_22->trans.y_rotation);
+                xPosDiff = obj->segment.trans.x_position - temp_v0_22->trans.x_position;
+                zPosDiff = obj->segment.trans.z_position - temp_v0_22->trans.z_position;
+                func_800090C0(xPosDiff, zPosDiff, temp_v0_22->trans.y_rotation);
                 func_80001268(0xA, sp3C);
                 func_80001268(0xB, sp3C);
                 func_80001268(0xF, sp3C);
@@ -2561,7 +2570,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                     obj64->unkC = obj64->unkD;
                 }
             } else {
-                func_8001C6C4(obj64, obj, sp2C, speedf, 0);
+                func_8001C6C4((Object_64 *)obj64, obj, sp2C, speedf, 0);
             }
         }
     }
@@ -3470,7 +3479,7 @@ void obj_loop_bubbler(Object *obj, s32 speed) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7);
+    obj->unk64 = (Object_64 *)((s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7));
     obj->segment.unk3C_a.level_entry = NULL;
 }
 

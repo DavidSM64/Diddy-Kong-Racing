@@ -35,6 +35,7 @@ extern unk8011A6D8 D_8011A6D8[];
 extern s32 *D_80119C44;
 void func_80008168(void);
 void func_800096F8(s32);
+void func_80008140(void);
 //void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3);
 
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ);
