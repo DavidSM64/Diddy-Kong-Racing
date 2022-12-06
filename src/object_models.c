@@ -76,11 +76,7 @@ void func_8005F850(void) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FCD0.s")
 
-#ifdef NON_EQUIVALENT
-void free_object_model(ObjectModel *model);
-void free_from_memory_pool(void*);
-
-// Causes crashes after playing a little, and I don't know why.
+#ifdef NON_MATCHING
 void func_8005FF40(ObjectModel **modelPtr) {
     s32 i;
     s32 modelIndex;
@@ -90,7 +86,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
         model = *modelPtr;
         model->unk30--;
         if (model->unk30 > 0) {
-            free_from_memory_pool(model);
+            free_from_memory_pool(modelPtr);
             return;
         }
         modelIndex = -1;
