@@ -344,8 +344,6 @@ extern s32 D_800DC85C;
 extern u8 D_800DC860;
 extern u16 D_800DC864;
 
-f32 coss_f(s16); //?
-
 Object *func_8000BF44(s32 arg0);
 void func_8000BF8C(void);
 void func_8000C460(void);
@@ -449,7 +447,7 @@ s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
-f32 func_8002263C(f32 *, s32, f32, f32 *);
+f32 cubic_spline_interpolation(f32 *, s32, f32, f32 *);
 s32 func_80031F88(Object*, s32);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);

@@ -12,9 +12,9 @@ glabel func_800BBF78
 /* 0BCBA0 800BBFA0 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0BCBA4 800BBFA4 8C8E0004 */  lw    $t6, 4($a0)
 /* 0BCBA8 800BBFA8 3C0F8013 */  lui   $t7, %hi(D_80129FC8) # $t7, 0x8013
-/* 0BCBAC 800BBFAC 3C188013 */  lui   $t8, %hi(D_80129FF0) # $t8, 0x8013
+/* 0BCBAC 800BBFAC 3C188013 */  lui   $t8, %hi(D_80129FC8 + 40) # $t8, 0x8013
 /* 0BCBB0 800BBFB0 8DEF9FC8 */  lw    $t7, %lo(D_80129FC8)($t7)
-/* 0BCBB4 800BBFB4 8F189FF0 */  lw    $t8, %lo(D_80129FF0)($t8)
+/* 0BCBB4 800BBFB4 8F189FF0 */  lw    $t8, %lo(D_80129FC8 + 40)($t8)
 /* 0BCBB8 800BBFB8 AFAE0040 */  sw    $t6, 0x40($sp)
 /* 0BCBBC 800BBFBC 8C940008 */  lw    $s4, 8($a0)
 /* 0BCBC0 800BBFC0 00809825 */  move  $s3, $a0
@@ -442,8 +442,8 @@ glabel func_800BBF78
 /* 0BD1CC 800BC5CC 13000024 */  beqz  $t8, .L800BC660
 /* 0BD1D0 800BC5D0 00000000 */   nop   
 /* 0BD1D4 800BC5D4 00CF0019 */  multu $a2, $t7
-/* 0BD1D8 800BC5D8 3C038013 */  lui   $v1, %hi(D_80129FCC) # $v1, 0x8013
-/* 0BD1DC 800BC5DC 8C639FCC */  lw    $v1, %lo(D_80129FCC)($v1)
+/* 0BD1D8 800BC5D8 3C038013 */  lui   $v1, %hi(D_80129FC8 + 4) # $v1, 0x8013
+/* 0BD1DC 800BC5DC 8C639FCC */  lw    $v1, %lo(D_80129FC8 + 4)($v1)
 /* 0BD1E0 800BC5E0 3C188013 */  lui   $t8, %hi(D_8012A0E8) # $t8, 0x8013
 /* 0BD1E4 800BC5E4 2718A0E8 */  addiu $t8, %lo(D_8012A0E8) # addiu $t8, $t8, -0x5f18
 /* 0BD1E8 800BC5E8 00117080 */  sll   $t6, $s1, 2
@@ -459,9 +459,9 @@ glabel func_800BBF78
 .L800BC60C:
 /* 0BD20C 800BC60C A4820012 */  sh    $v0, 0x12($a0)
 /* 0BD210 800BC610 8FB90044 */  lw    $t9, 0x44($sp)
-/* 0BD214 800BC614 3C038013 */  lui   $v1, %hi(D_80129FCC) # $v1, 0x8013
+/* 0BD214 800BC614 3C038013 */  lui   $v1, %hi(D_80129FC8 + 4) # $v1, 0x8013
 /* 0BD218 800BC618 01B90019 */  multu $t5, $t9
-/* 0BD21C 800BC61C 8C639FCC */  lw    $v1, %lo(D_80129FCC)($v1)
+/* 0BD21C 800BC61C 8C639FCC */  lw    $v1, %lo(D_80129FC8 + 4)($v1)
 /* 0BD220 800BC620 00001012 */  mflo  $v0
 /* 0BD224 800BC624 0043082A */  slt   $at, $v0, $v1
 /* 0BD228 800BC628 14200005 */  bnez  $at, .L800BC640

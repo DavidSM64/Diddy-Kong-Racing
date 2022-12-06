@@ -444,12 +444,12 @@ void func_800049D8(void) {
     func_800048D8(3);
 }
 
-void func_800049F8(void *sndState, s16 type, u32 arg2) {
+void func_800049F8(s32 soundMask, s16 type, u32 volume) {
     ALSndpEvent sndEvt;
     sndEvt.snd_event.type = type;
-    sndEvt.snd_event.state = sndState;
-    sndEvt.snd_event.unk04 = arg2;
-    if (sndState) {
+    sndEvt.snd_event.state = soundMask;
+    sndEvt.snd_event.unk04 = volume;
+    if (soundMask) {
         alEvtqPostEvent(&(gAlSndPlayer->evtq), &sndEvt, 0);
     }
 }

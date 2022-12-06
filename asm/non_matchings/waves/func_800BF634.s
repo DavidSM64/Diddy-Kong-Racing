@@ -48,10 +48,10 @@ glabel func_800BF634
 /* 0C02B4 800BF6B4 24843188 */  addiu $a0, %lo(D_800E3188) # addiu $a0, $a0, 0x3188
 /* 0C02B8 800BF6B8 ADA70000 */  sw    $a3, ($t5)
 /* 0C02BC 800BF6BC 8C8E0000 */  lw    $t6, ($a0)
-/* 0C02C0 800BF6C0 3C188013 */  lui   $t8, %hi(D_80129FF0) # $t8, 0x8013
+/* 0C02C0 800BF6C0 3C188013 */  lui   $t8, %hi(D_80129FC8 + 40) # $t8, 0x8013
 /* 0C02C4 800BF6C4 25CF0001 */  addiu $t7, $t6, 1
 /* 0C02C8 800BF6C8 AC8F0000 */  sw    $t7, ($a0)
-/* 0C02CC 800BF6CC 8F189FF0 */  lw    $t8, %lo(D_80129FF0)($t8)
+/* 0C02CC 800BF6CC 8F189FF0 */  lw    $t8, %lo(D_80129FC8 + 40)($t8)
 /* 0C02D0 800BF6D0 3C018013 */  lui   $at, %hi(D_8012A0B8) # $at, 0x8013
 /* 0C02D4 800BF6D4 C420A0B8 */  lwc1  $f0, %lo(D_8012A0B8)($at)
 /* 0C02D8 800BF6D8 13000006 */  beqz  $t8, .L800BF6F4

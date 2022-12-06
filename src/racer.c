@@ -4483,9 +4483,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                 var_s2 = 1;
                 var_f22--;
             }
-            temp_f26 = func_8002263C(&sp100, var_s2, var_f22, &sp9C);
-            temp_f24 = func_8002263C(&spEC, var_s2, var_f22, &sp98);
-            temp_f28 = func_8002263C(&spD8, var_s2, var_f22, &sp94);
+            temp_f26 = cubic_spline_interpolation(&sp100, var_s2, var_f22, &sp9C);
+            temp_f24 = cubic_spline_interpolation(&spEC, var_s2, var_f22, &sp98);
+            temp_f28 = cubic_spline_interpolation(&spD8, var_s2, var_f22, &sp94);
             temp_f26 -= racer->unk68;
             temp_f24 -= racer->unk6C;
             temp_f28 -= racer->unk70;

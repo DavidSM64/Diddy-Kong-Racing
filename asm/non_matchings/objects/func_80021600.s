@@ -563,17 +563,17 @@ glabel func_80021600
 /* 022A6C 80021E6C 8FA600EC */  lw    $a2, 0xec($sp)
 /* 022A70 80021E70 02002025 */  move  $a0, $s0
 /* 022A74 80021E74 00002825 */  move  $a1, $zero
-/* 022A78 80021E78 0C00898F */  jal   func_8002263C
+/* 022A78 80021E78 0C00898F */  jal   cubic_spline_interpolation
 /* 022A7C 80021E7C 27A700F8 */   addiu $a3, $sp, 0xf8
 /* 022A80 80021E80 8FA600EC */  lw    $a2, 0xec($sp)
 /* 022A84 80021E84 02202025 */  move  $a0, $s1
 /* 022A88 80021E88 00002825 */  move  $a1, $zero
-/* 022A8C 80021E8C 0C00898F */  jal   func_8002263C
+/* 022A8C 80021E8C 0C00898F */  jal   cubic_spline_interpolation
 /* 022A90 80021E90 27A700F4 */   addiu $a3, $sp, 0xf4
 /* 022A94 80021E94 8FA600EC */  lw    $a2, 0xec($sp)
 /* 022A98 80021E98 02402025 */  move  $a0, $s2
 /* 022A9C 80021E9C 00002825 */  move  $a1, $zero
-/* 022AA0 80021EA0 0C00898F */  jal   func_8002263C
+/* 022AA0 80021EA0 0C00898F */  jal   cubic_spline_interpolation
 /* 022AA4 80021EA4 27A700F0 */   addiu $a3, $sp, 0xf0
 /* 022AA8 80021EA8 1000000E */  b     .L80021EE4
 /* 022AAC 80021EAC C7B400F8 */   lwc1  $f20, 0xf8($sp)

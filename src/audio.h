@@ -26,11 +26,14 @@ extern u8 D_800DC65C;
 
 /* Size: 0x0A bytes */
 typedef struct unk80115D18 {
-    u8 pad0[2];
-    u8 unk2;
-    u8 pad3[3];
-    u16 unk6;
-    u8 pad8[2];
+ u16 unk0;
+ u8 unk2;
+ u8 unk3;
+ u8 unk4;
+ u8 unk5;
+ u16 unk6;
+ u8 unk8;
+ u8 unk9;
 } unk80115D18;
 
 /* Size: 0x03 bytes */
@@ -132,9 +135,10 @@ void func_80002608(u8 arg0);
 u8 func_80002630(void);
 void alSeqFileNew(ALSeqFile *file, u8 *base);
 void func_80063A90(ALSeqPlayer *seqp, u8 chan);
+void func_80001FB8(u16 soundID, void *soundState, u8 volume);
+void func_8000232C(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3);
 
 void play_sound_global(u16 soundID, s32* soundMask); //Non matching.
-void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq); //Non Matching
 f32 audio_get_chr_select_anim_frac(void);
 void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
 void func_8000974C(s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, s32 *);
