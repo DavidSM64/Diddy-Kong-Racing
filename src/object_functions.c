@@ -1731,11 +1731,10 @@ void func_80039320(s16 voiceClip) {
     D_8011D4E2 = voiceClip;
 }
 
-#ifdef NON_EQUIVALENT
 void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     f32 updateRateF;
     f32 xPosDiff;
-    f32 yPosDiff;
+    f32 updateRateF2;
     f32 zPosDiff;
     f32 distance;
     f32 sp98_yPos;
@@ -1749,13 +1748,13 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     s32 numRacers;
     Object_Taj *taj;
     Object_64 *racer64;
-    f32 var_f2;
+    u32 buttonsPressed;
     s8 sp6B;
     LevelHeader *levelHeader;
-    s32 arctan;
     ObjectSegment *temp_v0_22;
-    u32 buttonsPressed;
-    f32 updateRateF2;
+    f32 var_f2;
+    s32 arctan;
+    s32 temp;
     
     sp6B = 0;
     sp98_yPos = obj->segment.trans.y_position;
@@ -1832,7 +1831,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             sp6B = 1;
         }
         
-        func_80030750(0, &taj->unk20, (s16 *) &taj->unk22, (s8 *) &taj->unk11, (s8 *) &taj->unk12, (s8 *) &taj->unk13);
+        func_80030750(0, &taj->unk20, &taj->unk22, &taj->unk11, &taj->unk12, &taj->unk13);
         func_80030DE0(0, 0xFF, 0, 0x78, 0x3C0, 0x44C, 0xF0);
         taj->unk4 = 0.0f;
     }
@@ -2234,22 +2233,23 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         racerObjs = get_racer_objects(&numRacers);
         if (racerObjs[PLAYER_ONE] != NULL) {
             xPosDiff = racerObjs[PLAYER_ONE]->segment.trans.x_position - obj->segment.trans.x_position;
-            yPosDiff = racerObjs[PLAYER_ONE]->segment.trans.y_position - obj->segment.trans.y_position;
+            distance = racerObjs[PLAYER_ONE]->segment.trans.y_position - obj->segment.trans.y_position;
             zPosDiff = racerObjs[PLAYER_ONE]->segment.trans.z_position - obj->segment.trans.z_position;
-            distance = sqrtf((xPosDiff * xPosDiff) + (yPosDiff * yPosDiff) + (zPosDiff * zPosDiff));
-            if (distance < 1000.0f) {
-                distance = 1000.0f - distance;
-                sp3C = (127.0f * distance) / 1000.0f;
+            var_f2 = sqrtf((xPosDiff * xPosDiff) + (distance * distance) + (zPosDiff * zPosDiff));
+            if (var_f2 < 1000.0f) {
+                var_f2 = 1000.0f - var_f2;
+                sp3C = (127.0f * var_f2) / 1000.0f;
                 temp_v0_22 = func_80069D7C();
                 xPosDiff = obj->segment.trans.x_position - temp_v0_22->trans.x_position;
                 zPosDiff = obj->segment.trans.z_position - temp_v0_22->trans.z_position;
-                func_800090C0(xPosDiff, zPosDiff, temp_v0_22->trans.y_rotation);
+                arctan = func_800090C0(xPosDiff, zPosDiff, temp_v0_22->trans.y_rotation);
+                temp = arctan;
                 func_80001268(0xA, sp3C);
                 func_80001268(0xB, sp3C);
                 func_80001268(0xF, sp3C);
-                musicSetChlPan(0xA, sp3C);
-                musicSetChlPan(0xB, sp3C);
-                musicSetChlPan(0xF, sp3C);
+                musicSetChlPan(0xA, temp);
+                musicSetChlPan(0xB, temp);
+                musicSetChlPan(0xF, temp);
                 func_80001170(0xA);
                 func_80001170(0xB);
                 func_80001170(0xF);
@@ -2309,14 +2309,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     }
     obj->segment.trans.y_position = sp98_yPos;
-    sp3C = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &sp94);
-    if(sp3C != 0) {
-        sp3C--;
-        while(sp3C >= 0) {
-            if ((sp94[sp3C]->unk10 != 11) && (sp94[sp3C]->unk10 != 14) && (sp94[sp3C]->unk8 > 0.0)) {
-                obj->segment.trans.y_position = sp94[sp3C]->unk0;
+    var_a2 = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &sp94);
+    if(var_a2 != 0) {
+        var_a2--;
+        while(var_a2 >= 0) {
+            if ((sp94[var_a2]->unk10 != 11) && (sp94[var_a2]->unk10 != 14) && (sp94[var_a2]->unk8 > 0.0)) {
+                obj->segment.trans.y_position = sp94[var_a2]->unk0;
             }
-            sp3C--;
+            var_a2--;
         }
     }
     obj->segment.trans.x_rotation = 0;
@@ -2331,9 +2331,6 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     func_80061C0C(obj);
     func_800AFC3C(obj, updateRate);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_parkwarden.s")
-#endif
 
 /**
  * If Taj is currently talking, clear the audio associated with gTajSoundMask,
