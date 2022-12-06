@@ -46,5 +46,6 @@ void func_8000A2E8(s32); // Non Matching
 void func_800098A4(s32, s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80008174(void); // Non Matching
 void func_80008040(void); // Non Matching
+s32 func_800090C0(f32, f32, s16); // Non Matching
 
 #endif

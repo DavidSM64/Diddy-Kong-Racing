@@ -1837,7 +1837,7 @@ void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030664.s")
 #endif
 
-void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, s8 *arg3, s8 *arg4, s8 *arg5) {
+void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, u8 *arg3, u8 *arg4, u8 *arg5) {
     *arg1 = D_8011D388[arg0].unkC >> 0x10;
     *arg2 = D_8011D388[arg0].unk10 >> 0x10;
     *arg3 = D_8011D388[arg0].unk0 >> 0x10;

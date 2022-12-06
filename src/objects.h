@@ -489,5 +489,6 @@ void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
 void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
 void func_800138A8(Object*, unk80068514_arg4*, s16*, s32);
+Object *func_8002342C(f32 x, f32 z);
 
 #endif

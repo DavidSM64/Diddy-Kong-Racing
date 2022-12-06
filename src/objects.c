@@ -798,7 +798,7 @@ s32 func_8000FBCC(Object *arg0, Object_60 *arg1) {
     arg1->unk4 = NULL;
     objHeader = ((ObjectSegment*) arg0)->header;
     if (objHeader->unk32) {
-        arg1->unk4 = load_texture((s32) ((Object_Taj*)objHeader)->unk34);
+        arg1->unk4 = load_texture((s32) ((ObjectHeader*)objHeader)->unk34);
         objHeader = ((ObjectSegment*)arg0)->header;
     }
     ((Object_50*) arg1)->unk0 = (f32) objHeader->unk4;
