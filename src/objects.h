@@ -464,6 +464,7 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
 void func_8000B290(void);
 void func_80016BC4(unk8000FD34*);
 s32 func_8001C48C(Object *obj);
+void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
