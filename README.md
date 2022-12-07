@@ -120,25 +120,25 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 4, 2022, this is our current score:
+As of December 5, 2022, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 40.01% Complete --------------------------
-                     # Decompiled functions: 1380
-                     # GLOBAL_ASM remaining: 456
+ ------------------------- 40.46% Complete --------------------------
+                     # Decompiled functions: 1390
+                     # GLOBAL_ASM remaining: 446
                      # NON_MATCHING functions: 10
-                  # NON_EQUIVALENT WIP functions: 82
+                  # NON_EQUIVALENT WIP functions: 81
  --------------------------- Game Status ----------------------------
               Balloons: 20/47, Keys: 2/4, Trophies: 1/5
                 T.T. Amulets: 2/4, Wizpig Amulets: 1/4
  --------------------------------------------------------------------
- We are collecting silver coins in Frosty Village. (3/8 silver coins)
+ We are collecting silver coins in Frosty Village. (6/8 silver coins)
  ====================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 10.65% Complete --------------------------
-                     # Documented functions: 264
-                    # Undocumented remaining: 1572
+ ------------------------- 10.74% Complete --------------------------
+                     # Documented functions: 266
+                    # Undocumented remaining: 1570
  --------------------------- Game Status ----------------------------
                Balloons: 7/47, Keys: 1/4, Trophies: 0/5
                 T.T. Amulets: 0/4, Wizpig Amulets: 0/4
