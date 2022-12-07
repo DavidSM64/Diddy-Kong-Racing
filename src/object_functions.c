@@ -1261,8 +1261,8 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
 
     obj->segment.trans.unk6 |= 0x4000;
     someObjList = get_racer_objects_by_position(&numberOfObjects);
-    if (obj->action < numberOfObjects) {
-        someObj = someObjList[obj->action];
+    if (obj->unk78 < numberOfObjects) {
+        someObj = someObjList[obj->unk78];
         someObj64 = &someObj->unk64->pos_arrow;
         if (someObj64->unk0 == -1) {
             obj->segment.trans.unk6 &= ~0x4000;
