@@ -604,7 +604,7 @@ UNUSED void func_800C510C(s32 dialogueBoxID, char *text, s32 arg2, s32 arg3) {
  * Binds the text to the box, then returns it.
  */
 void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 arg4, s32 flags) {
-    s32 temp_v0_2;
+    s32 width;
     UNUSED s32 var_a0;
     char buffer[256];
     unk8012A7EC *ret;
@@ -634,19 +634,19 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
         }
         if (bg->font != FONT_UNK_FF) {
             fontData = &gFonts[bg->font];
-            if (flags & (4 | 1)) {
+            if (flags & (HORZ_ALIGN_CENTER | HORZ_ALIGN_RIGHT)) {
                 parse_string_with_number(text, buffer, arg4);
-                temp_v0_2 = get_text_width(buffer, posX, bg->font);
-                if (flags & 1) {
-                    posX = (posX - temp_v0_2) + 1;
+                width = get_text_width(buffer, posX, bg->font);
+                if (flags & HORZ_ALIGN_RIGHT) {
+                    posX = (posX - width) + 1;
                 } else {
-                    posX = posX - (temp_v0_2 >> 1);
+                    posX = posX - (width >> 1);
                 }
             }
-            if (flags & 2) {
+            if (flags & VERT_ALIGN_BOTTOM) {
                 posY = (posY - fontData->unk22) + 1;
             }
-            if (flags & 8) {
+            if (flags & VERT_ALIGN_MIDDLE) {
                 posY -= fontData->unk22 >> 1;
             }
         }
