@@ -166,7 +166,6 @@ void set_kerning(s32 arg0);
 void set_text_font(s32 arg0);
 void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha);
-void func_800C4404(Gfx** displayList, char *text, AlignmentFlags alignmentFlags);
 void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
 void func_800C44C0(Gfx** displayList, s32 dialogueBoxID, char *text, AlignmentFlags alignmentFlags);
 void func_800C4510(Gfx** displayList, s32 dialogueBoxID, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
@@ -175,9 +174,7 @@ void set_dialogue_font(s32 dialogueBoxID, s32 font);
 void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha);
 void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_current_text_background_colour(s32 dialogueBoxID, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800C5094(s32 dialogueBoxID, s32 arg1, s32 arg2);
 void func_800C50D8(s32 dialogueBoxID);
-void func_800C510C(s32 dialogueBoxID, char *text, s32 arg2, s32 arg3);
 void move_dialogue_box_to_front(s32 arg0, DialogueBox *arg1);
 void assign_dialogue_box_id(s32 arg0);
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4);
@@ -195,8 +192,8 @@ void s32_to_string(char **outString, s32 number);
 
 void load_font(s32 fontID); //Non Matching
 void unload_font(s32 arg0); //Non Matching
-void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4); //Non Matching
-s32 func_800C4DA0(char *text, s32 x, s32 font); //Non Matching
+void render_text_string(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4); //Non Matching
+s32 get_text_width(char *text, s32 x, s32 font); //Non Matching
 void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 arg4, s32 arg5); //Non Matching
 
 #endif

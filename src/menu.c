@@ -6142,8 +6142,8 @@ void render_track_select_setup_ui(s32 updateRate) {
         }
         set_current_dialogue_background_colour(7, 255, sp84, 0, sMenuGuiOpacity);
         if ((D_801263E0 == -1) || ((D_801263E0 == 2) && (D_801269C8 == 4) && is_adventure_two_unlocked())) {
-            s4 = func_800C4DA0(gMenuText[ASSET_MENU_TEXT_ADVENTURE2], 0, 0);   // "ADVENTURE"
-            temp = func_800C4DA0(gMenuText[ASSET_MENU_TEXT_ADVENTURETWO2], 0, 0); // "ADVENTURE TWO"
+            s4 = get_text_width(gMenuText[ASSET_MENU_TEXT_ADVENTURE2], 0, 0);   // "ADVENTURE"
+            temp = get_text_width(gMenuText[ASSET_MENU_TEXT_ADVENTURETWO2], 0, 0); // "ADVENTURE TWO"
             if (s4 < temp) {
                 s4 = temp;
             }
@@ -6294,7 +6294,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                 }
 
                 if (sp74) {
-                    s32 temp_v0_12 = func_800C4DA0(gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], 0, 0); // "NUMBER OF RACERS"
+                    s32 temp_v0_12 = get_text_width(gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], 0, 0); // "NUMBER OF RACERS"
                     if ((gTwoPlayerRacerCountMenu.width - 0xC) < temp_v0_12) {
                         s4 = temp_v0_12 + 0xC;
                     } else {
@@ -6764,7 +6764,7 @@ void func_80093D40(UNUSED s32 updateRate) {
     s32 alpha;
 
     for (i = 0, xPos = SCREEN_WIDTH_HALF; i < gMenuOptionCap; i++) {
-        x = func_800C4DA0(gMenuOptionText[i], 0, 0) + 8;
+        x = get_text_width(gMenuOptionText[i], 0, 0) + 8;
         if (xPos < x) {
             xPos = x;
         }

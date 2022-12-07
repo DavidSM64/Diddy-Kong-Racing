@@ -194,14 +194,14 @@ glabel render_track_select_setup_ui
 /* 091DEC 800911EC 8F39F4A0 */  lw    $t9, %lo(gMenuText)($t9)
 /* 091DF0 800911F0 00002825 */  move  $a1, $zero
 /* 091DF4 800911F4 8F240248 */  lw    $a0, 0x248($t9)
-/* 091DF8 800911F8 0C031368 */  jal   func_800C4DA0
+/* 091DF8 800911F8 0C031368 */  jal   get_text_width
 /* 091DFC 800911FC 00003025 */   move  $a2, $zero
 /* 091E00 80091200 3C08800E */  lui   $t0, %hi(gMenuText) # $t0, 0x800e
 /* 091E04 80091204 8D08F4A0 */  lw    $t0, %lo(gMenuText)($t0)
 /* 091E08 80091208 0040A025 */  move  $s4, $v0
 /* 091E0C 8009120C 8D04024C */  lw    $a0, 0x24c($t0)
 /* 091E10 80091210 00002825 */  move  $a1, $zero
-/* 091E14 80091214 0C031368 */  jal   func_800C4DA0
+/* 091E14 80091214 0C031368 */  jal   get_text_width
 /* 091E18 80091218 00003025 */   move  $a2, $zero
 /* 091E1C 8009121C 0282082A */  slt   $at, $s4, $v0
 /* 091E20 80091220 10200002 */  beqz  $at, .L8009122C
@@ -921,7 +921,7 @@ glabel render_track_select_setup_ui
 /* 0928AC 80091CAC 8DADF4A0 */  lw    $t5, %lo(gMenuText)($t5)
 /* 0928B0 80091CB0 00002825 */  move  $a1, $zero
 /* 0928B4 80091CB4 8DA40220 */  lw    $a0, 0x220($t5)
-/* 0928B8 80091CB8 0C031368 */  jal   func_800C4DA0
+/* 0928B8 80091CB8 0C031368 */  jal   get_text_width
 /* 0928BC 80091CBC 00003025 */   move  $a2, $zero
 /* 0928C0 80091CC0 3C12800E */  lui   $s2, %hi(gTwoPlayerRacerCountMenu) # $s2, 0x800e
 /* 0928C4 80091CC4 265206E4 */  addiu $s2, %lo(gTwoPlayerRacerCountMenu) # addiu $s2, $s2, 0x6e4

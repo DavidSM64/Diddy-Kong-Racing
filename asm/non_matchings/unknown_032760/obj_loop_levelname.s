@@ -61,7 +61,7 @@ glabel obj_loop_levelname
 /* 043774 80042B74 AFA2002C */  sw    $v0, 0x2c($sp)
 /* 043778 80042B78 00402025 */  move  $a0, $v0
 /* 04377C 80042B7C 00002825 */  move  $a1, $zero
-/* 043780 80042B80 0C031368 */  jal   func_800C4DA0
+/* 043780 80042B80 0C031368 */  jal   get_text_width
 /* 043784 80042B84 00003025 */   move  $a2, $zero
 /* 043788 80042B88 24430018 */  addiu $v1, $v0, 0x18
 /* 04378C 80042B8C 00035843 */  sra   $t3, $v1, 1
