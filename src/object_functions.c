@@ -1236,8 +1236,8 @@ void obj_init_lavaspurt(Object *obj, LevelObjectEntry_LavaSpurt *entry) {
 }
 
 void obj_loop_lavaspurt(Object *obj, s32 speed) {
-    if (obj->action > 0) {
-        obj->action -= speed;
+    if (obj->unk78 > 0) {
+        obj->unk78 -= speed;
         obj->segment.trans.unk6 |= 0x4000;
     } else {
         obj->segment.trans.unk6 &= ~0x4000;
