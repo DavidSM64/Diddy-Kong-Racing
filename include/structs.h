@@ -1265,16 +1265,30 @@ typedef struct Object_FogChanger {
 } Object_FogChanger;
 
 typedef struct Object_Taj {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ u8 pad4[0x9];
-  /* 0x0D */ u8 unkD;
-  /* 0x0E */ u8 padE[0x1A];
-  /* 0x28 */ s16 unk28;
-  /* 0x2A */ u8 pad2A[0x2];
-  /* 0x2C */ s32 unk2C;
-  /* 0x30 */ u8 pad30[0x4];
-  /* 0x34 */ s16 unk34;
-  /* 0x36 */ s8 unk36;
+   /* 0x00 */ f32 unk0;
+   /* 0x04 */ f32 unk4;
+   /* 0x08 */ s32 unk8;
+   /* 0x0C */ s8 unkC;
+   /* 0x0D */ u8 unkD;
+   /* 0x0E */ u8 unkE;
+   /* 0x0F */ u8 unkF;
+   /* 0x10 */ u8 unk10;
+   /* 0x11 */ u8 unk11;
+   /* 0x12 */ u8 unk12;
+   /* 0x13 */ u8 unk13;
+   /* 0x14 */ f32 unk14;
+   /* 0x18 */ f32 unk18;
+   /* 0x1C */ s16 unk1C;
+   /* 0x1E */ s16 unk1E;
+   /* 0x20 */ s16 unk20;
+   /* 0x22 */ s16 unk22;
+   /* 0x24 */ u8 pad24[0x4];
+   /* 0x28 */ s16 unk28;
+   /* 0x2A */ u8 pad2A[0x2];
+   /* 0x2C */ s32 unk2C;
+   /* 0x30 */ s32 unk30;
+   /* 0x34 */ u16 unk34;
+   /* 0x36 */ s8 unk36;
 } Object_Taj;
 
 typedef struct Object_TT {
@@ -1561,17 +1575,24 @@ typedef struct Object {
 } Object;
 
 // Unused
-typedef struct GhostHeaderChecksum {
-  u8  levelID;
-    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
-} GhostHeaderChecksum;
+typedef struct GhostHeaderUnk0 {
+  u8 levelID;
+  u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+} GhostHeaderUnk0;
 
 /* Size: 8 bytes */
 typedef struct GhostHeader {
-    //GhostHeaderChecksum checksum;
-    s16 checksum;
-    u8  characterID; // 9 = T.T.
-    u8  unk3; // Might just be padding?
+    union {
+      GhostHeaderUnk0 unk0;
+      s16 checksum;
+    };
+    union {
+      struct {
+        u8 characterID; // 9 = T.T.
+        u8 unk3;
+      };
+      s16 unk2;
+    };
     s16 time; // In frames, where 60 frames = 1 second.
     s16 nodeCount;
 } GhostHeader;

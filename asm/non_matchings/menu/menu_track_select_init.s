@@ -37,8 +37,8 @@ glabel menu_track_select_init
 .L8008E82C:
 /* 08F42C 8008E82C 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 08F430 8008E830 00000000 */   nop   
-/* 08F434 8008E834 3C068012 */  lui   $a2, %hi(D_8012647C) # $a2, 0x8012
-/* 08F438 8008E838 24C6647C */  addiu $a2, %lo(D_8012647C) # addiu $a2, $a2, 0x647c
+/* 08F434 8008E834 3C068012 */  lui   $a2, %hi(gTrackSelectViewPortX) # $a2, 0x8012
+/* 08F438 8008E838 24C6647C */  addiu $a2, %lo(gTrackSelectViewPortX) # addiu $a2, $a2, 0x647c
 /* 08F43C 8008E83C 3C078012 */  lui   $a3, %hi(gTrackSelectViewportY) # $a3, 0x8012
 /* 08F440 8008E840 00027C03 */  sra   $t7, $v0, 0x10
 /* 08F444 8008E844 3059FFFF */  andi  $t9, $v0, 0xffff
@@ -48,11 +48,11 @@ glabel menu_track_select_init
 /* 08F454 8008E854 ACF80000 */  sw    $t8, ($a3)
 /* 08F458 8008E858 ACD90000 */  sw    $t9, ($a2)
 /* 08F45C 8008E85C 00195043 */  sra   $t2, $t9, 1
-/* 08F460 8008E860 3C018012 */  lui   $at, %hi(D_80126474) # $at, 0x8012
-/* 08F464 8008E864 AC2A6474 */  sw    $t2, %lo(D_80126474)($at)
+/* 08F460 8008E860 3C018012 */  lui   $at, %hi(gTrackSelectViewPortHalfX) # $at, 0x8012
+/* 08F464 8008E864 AC2A6474 */  sw    $t2, %lo(gTrackSelectViewPortHalfX)($at)
 /* 08F468 8008E868 8CE50000 */  lw    $a1, ($a3)
-/* 08F46C 8008E86C 3C1E8012 */  lui   $fp, %hi(D_80126478) # $fp, 0x8012
-/* 08F470 8008E870 27DE6478 */  addiu $fp, %lo(D_80126478) # addiu $fp, $fp, 0x6478
+/* 08F46C 8008E86C 3C1E8012 */  lui   $fp, %hi(gTrackSelectViewPortHalfY) # $fp, 0x8012
+/* 08F470 8008E870 27DE6478 */  addiu $fp, %lo(gTrackSelectViewPortHalfY) # addiu $fp, $fp, 0x6478
 /* 08F474 8008E874 00055843 */  sra   $t3, $a1, 1
 /* 08F478 8008E878 AFCB0000 */  sw    $t3, ($fp)
 /* 08F47C 8008E87C 3C0C8012 */  lui   $t4, %hi(D_801269C8) # $t4, 0x8012

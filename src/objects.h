@@ -464,6 +464,7 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
 void func_8000B290(void);
 void func_80016BC4(unk8000FD34*);
 s32 func_8001C48C(Object *obj);
+void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -487,5 +488,6 @@ void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
 void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
 void func_800138A8(Object*, unk80068514_arg4*, s16*, s32);
+Object *func_8002342C(f32 x, f32 z);
 
 #endif

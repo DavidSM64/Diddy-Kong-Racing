@@ -53,10 +53,10 @@ glabel func_80094D28
 glabel L80094DD0
 /* 0959D0 80094DD0 3C108012 */  lui   $s0, %hi(D_80126A94) # $s0, 0x8012
 /* 0959D4 80094DD4 8E106A94 */  lw    $s0, %lo(D_80126A94)($s0)
-/* 0959D8 80094DD8 3C118012 */  lui   $s1, %hi(D_80126478) # $s1, 0x8012
+/* 0959D8 80094DD8 3C118012 */  lui   $s1, %hi(gTrackSelectViewPortHalfY) # $s1, 0x8012
 /* 0959DC 80094DDC 2A01003D */  slti  $at, $s0, 0x3d
 /* 0959E0 80094DE0 14200002 */  bnez  $at, .L80094DEC
-/* 0959E4 80094DE4 26316478 */   addiu $s1, %lo(D_80126478) # addiu $s1, $s1, 0x6478
+/* 0959E4 80094DE4 26316478 */   addiu $s1, %lo(gTrackSelectViewPortHalfY) # addiu $s1, $s1, 0x6478
 /* 0959E8 80094DE8 2410003C */  li    $s0, 60
 .L80094DEC:
 /* 0959EC 80094DEC 8E220000 */  lw    $v0, ($s1)

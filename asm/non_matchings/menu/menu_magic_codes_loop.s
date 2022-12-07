@@ -286,11 +286,11 @@ glabel menu_magic_codes_loop
 .L8008A0E8:
 /* 08ACE8 8008A0E8 01997021 */  addu  $t6, $t4, $t9
 /* 08ACEC 8008A0EC 95CF0000 */  lhu   $t7, ($t6)
-/* 08ACF0 8008A0F0 3C058012 */  lui   $a1, %hi(D_80126C57) # $a1, 0x8012
+/* 08ACF0 8008A0F0 3C058012 */  lui   $a1, %hi(D_80126C54 + 3) # $a1, 0x8012
 /* 08ACF4 8008A0F4 01E91021 */  addu  $v0, $t7, $t1
 /* 08ACF8 8008A0F8 24070001 */  li    $a3, 1
 /* 08ACFC 8008A0FC 2444FFFF */  addiu $a0, $v0, -1
-/* 08AD00 8008A100 24A56C57 */  addiu $a1, %lo(D_80126C57) # addiu $a1, $a1, 0x6c57
+/* 08AD00 8008A100 24A56C57 */  addiu $a1, %lo(D_80126C54 + 3) # addiu $a1, $a1, 0x6c57
 .L8008A104:
 /* 08AD04 8008A104 90820001 */  lbu   $v0, 1($a0)
 /* 08AD08 8008A108 90A30001 */  lbu   $v1, 1($a1)
