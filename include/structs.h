@@ -1480,7 +1480,7 @@ typedef struct Object {
 
   union {
   /* 0x0078 */ ObjectTransform *trans78;
-  /* 0x0078 */ s32 unk78;
+  /* 0x0078 */ s32 action;
   /* 0x0078 */ f32 unk78f;
   };
 
