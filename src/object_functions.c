@@ -1731,6 +1731,11 @@ void func_80039320(s16 voiceClip) {
     D_8011D4E2 = voiceClip;
 }
 
+/**
+ * Hub world Taj loop behaviour.
+ * Handles all the behaviour for the Taj NPC found in the overworld.
+ * This uses a state machine to handle whether to wander around, approach the player, change their vehicle and teleport away.
+*/
 void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     f32 updateRateF;
     f32 xPosDiff;
@@ -1822,7 +1827,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         arctan -= (racerObj->segment.trans.y_rotation & 0xFFFF);
         if((arctan > 0x8000)) {
             // Probably had a debug statement here.
-            if ((obj->unk78) && (!obj->unk78) && (!obj->unk78)){} // Fake
+            if ((obj->unk78) && (!obj->unk78) && (!obj->unk78)){} // Fakematch
         }
         if (var_a2) {
             obj->unk78 = 1;
@@ -1835,16 +1840,16 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         taj->unk4 = 0.0f;
     }
 
-    if (!(obj->unk78 == 0 || obj->unk78 == 30 || obj->unk78 == 20 || obj->unk78 == 21)) {
+    if (!(obj->unk78 == TAJ_MODE_ROAM || obj->unk78 == TAJ_MODE_RACE || obj->unk78 == TAJ_MODE_TELEPORT_AWAY_BEGIN || obj->unk78 == TAJ_MODE_TELEPORT_AWAY_END)) {
             func_8005A3B0();
             func_800AB194(3);
     }
 
     switch (obj->unk78) {
-        case 3:
-        case 4:
-        case 5:
-        case 6:
+        case TAJ_MODE_GREET_PLAYER:
+        case TAJ_MODE_DIALOGUE:
+        case TAJ_MODE_TRANSFORM_BEGIN:
+        case TAJ_MODE_TRANSFORM_END:
             var_a2_2 = func_8009CFEC(0);
             break;
         default:
@@ -1854,25 +1859,25 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
 
     switch (obj->unk78) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 7:
-        case 10:
-        case 11:
-        case 15:
-        case 20:
-        case 21:
+        case TAJ_MODE_APPROACH_PLAYER:
+        case TAJ_MODE_TURN_TOWARDS_PLAYER:
+        case TAJ_MODE_GREET_PLAYER:
+        case TAJ_MODE_DIALOGUE:
+        case TAJ_MODE_END_DIALOGUE:
+        case TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN:
+        case TAJ_MODE_TELEPORT_TO_PLAYER_END:
+        case TAJ_MODE_SET_CHALLENGE:
+        case TAJ_MODE_TELEPORT_AWAY_BEGIN:
+        case TAJ_MODE_TELEPORT_AWAY_END:
             func_8006F388(1);
             break;
     }
 
-    if (obj->unk78 != 0 && var_a2_2 != 0 && obj->unk78 < 4) {
-        obj->unk78 = 4;
+    if (obj->unk78 != TAJ_MODE_ROAM && var_a2_2 != 0 && obj->unk78 < 4) {
+        obj->unk78 = TAJ_MODE_DIALOGUE;
     }
-    switch (obj->unk78 - 1) {
-    case 0:
+    switch (obj->unk78) {
+    case TAJ_MODE_APPROACH_PLAYER:
         obj->segment.unk3B = 0;
         taj->unkD = 0xFF;
         if (distance < 100.0) {
@@ -1899,11 +1904,11 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.z_velocity = coss_f(obj->segment.trans.y_rotation) * taj->unk14;
             taj->unk4 -= taj->unk14 * 2 * updateRateF;
         } else {
-            obj->unk78 = 2;
+            obj->unk78 = TAJ_MODE_TURN_TOWARDS_PLAYER;
         }
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
-    case 1:
+    case TAJ_MODE_TURN_TOWARDS_PLAYER:
         func_8005A3C0();
         obj->segment.unk3B = 0;
         taj->unk4 += updateRateF * 2.0;
@@ -1919,7 +1924,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         obj->segment.trans.y_rotation += arctan >> 3;
         if (arctan < 0x400 && arctan > -0x400 && distance < 2.0) {
-            obj->unk78 = 3;
+            obj->unk78 = TAJ_MODE_GREET_PLAYER;
             taj->unk4 = 0;
             play_taj_voice_clip(D_8011D4E2, 1);
             D_8011D4E2 = SOUND_VOICE_TAJ_HELLO;
@@ -1929,14 +1934,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.z_velocity = zPosDiff * 0.125;
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
-    case 2:
+    case TAJ_MODE_GREET_PLAYER:
         obj->segment.unk3B = 1;
         taj->unk14 = 0.0f;
         taj->unk4 += updateRateF * 1.0;
         if (taj->unk4 > 77.0) {
             taj->unk4 = 77.0;
             taj->unk18 = -1.0f;
-            obj->unk78 = 4;
+            obj->unk78 = TAJ_MODE_DIALOGUE;
         }
         arctan = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (arctan > 0x8000) {
@@ -1951,12 +1956,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.trans.y_rotation = obj->segment.trans.y_rotation + (arctan >> 4);
         func_8005A3C0();
         break;
-    case 3:
+    case TAJ_MODE_DIALOGUE:
         obj->segment.unk3B = 4;
         taj->unk4 += updateRateF * 1.0;
         func_8005A3C0();
         if (var_a2_2 == 3 || var_a2_2 == 4) {
-            obj->unk78 = (var_a2_2 == 4) ? 8 : 7;
+            obj->unk78 = (var_a2_2 == 4) ? TAJ_MODE_UNK08 : TAJ_MODE_END_DIALOGUE;
             taj->unk4 = 0.1f;
             obj->segment.unk3B = 2;
             taj->unk1C = 0;
@@ -1970,7 +1975,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (var_a2_2 & 0x80) {
             D_8011D4E0 = var_a2_2 & 0x7F;
             if (D_8011D4E0 != racer64->racer.unk1D6) {
-                obj->unk78 = 5;
+                obj->unk78 = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
                 play_taj_voice_clip((racer64->racer.unk1D6 + 0x235), 1);
@@ -1982,12 +1987,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             D_8011D4E0 = var_a2_2 & 0xF;
             if (D_8011D4E0 != racer64->racer.unk1D6) {
                 D_8011D4E0 |= 0x80;
-                obj->unk78 = 5;
+                obj->unk78 = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0.0f;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
                 play_taj_voice_clip((racer64->racer.unk1D6 + 0x235), 1);
             } else {
-                obj->unk78 = 0xF;
+                obj->unk78 = TAJ_MODE_SET_CHALLENGE;
                 func_800C01D8(&D_800DC978);
                 sp6B = 1;
                 play_taj_voice_clip(SOUND_WHOOSH4, 1);
@@ -1995,7 +2000,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
         }
         break;
-    case 4:
+    case TAJ_MODE_TRANSFORM_BEGIN:
         obj->segment.unk3B = 5;
         func_8005A3C0();
         taj->unk4 += updateRateF * 2.0;
@@ -2012,13 +2017,13 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             } else {
                 racer64->racer.transparency = 0;
                 func_8000E1EC(racerObj, D_8011D4E0 & 0xF);
-                obj->unk78 = 6;
+                obj->unk78 = TAJ_MODE_TRANSFORM_END;
                 play_sound_global(SOUND_CYMBAL, NULL);
                 func_800C01D8(&D_800DC970);
             }
         }
         break;
-    case 5:
+    case TAJ_MODE_TRANSFORM_END:
         func_8005A3C0();
         if (racerObj != NULL) {
             if (taj->unk4 != 0.0f) {
@@ -2037,25 +2042,25 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                     if (D_8011D4E0 & 0x80) {
                         func_800C01D8(&D_800DC978);
                         sp6B = 1;
-                        obj->unk78 = 0xF;
+                        obj->unk78 = TAJ_MODE_SET_CHALLENGE;
                         play_sound_global(SOUND_WHOOSH4, NULL);
                         taj->unk4 = 0.0f;
                     } else {
-                        obj->unk78 = 4;
+                        obj->unk78 = TAJ_MODE_DIALOGUE;
                         set_menu_id_if_option_equal(0x62, 2);
                     }
                 }
             }
         }
         break;
-    case 6:
-    case 7:
+    case TAJ_MODE_END_DIALOGUE:
+    case TAJ_MODE_UNK08:
         if (taj->unk4 != 0.0) {
             taj->unk4 = taj->unk4 + (0.5 * updateRateF);
         }
         if (taj->unk4 == 0) {
             sp6B = 1;
-            if (obj->unk78 == 8) {
+            if (obj->unk78 == TAJ_MODE_UNK08) {
                 func_80022CFC(
                     obj->segment.unk2C.half.lower,
                     obj->segment.trans.x_position - (racer64->racer.ox1 * 50.0f),
@@ -2063,12 +2068,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                     obj->segment.trans.z_position - (racer64->racer.oz1 * 50.0f)
                 );
             }
-            obj->unk78 = 0x14;
+            obj->unk78 = TAJ_MODE_TELEPORT_AWAY_BEGIN;
             play_sound_global(SOUND_WHOOSH4, NULL);
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
         }
         break;
-    case 9:
+    case TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN:
         obj->segment.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
@@ -2087,14 +2092,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             play_sound_global(SOUND_WHOOSH4, NULL);
             sp6B = 1;
             obj->segment.unk38.half.lower = 0;
-            obj->unk78 = 0xB;
+            obj->unk78 = TAJ_MODE_TELEPORT_TO_PLAYER_END;
             obj->segment.trans.x_position = racerObj->segment.trans.x_position - (racer64->racer.ox1 * 150.0f);
             obj->segment.trans.z_position = racerObj->segment.trans.z_position - (racer64->racer.oz1 * 150.0f);
             obj->segment.unk2C.half.lower = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
         }
         break;
-    case 10:
+    case TAJ_MODE_TELEPORT_TO_PLAYER_END:
         obj->segment.unk3B = 3;
         taj->unk4 -= updateRateF * 2.0;
         if (taj->unk4 < 0.0f) {
@@ -2105,10 +2110,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.unk38.half.lower += var_a2;
         } else {
             obj->segment.unk38.half.lower = 0xFF;
-            obj->unk78 = 1;
+            obj->unk78 = TAJ_MODE_APPROACH_PLAYER;
         }
         break;
-    case 14:
+    case TAJ_MODE_SET_CHALLENGE:
         obj->segment.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
@@ -2136,10 +2141,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 obj->segment.unk2C.half.lower = temp_v0_12->segment.unk2C.half.lower;
                 obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
             }
-            obj->unk78 = 0x1E;
+            obj->unk78 = TAJ_MODE_RACE;
         }
         break;
-    case 19:
+    case TAJ_MODE_TELEPORT_AWAY_BEGIN:
         obj->segment.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
@@ -2155,7 +2160,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.unk38.half.lower -= var_a2;
         } else {
             obj->segment.unk38.half.lower = 0;
-            obj->unk78 = 0x15;
+            obj->unk78 = TAJ_MODE_TELEPORT_AWAY_END;
             temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
@@ -2165,7 +2170,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
         }
         break;
-    case 20:
+    case TAJ_MODE_TELEPORT_AWAY_END:
         obj->segment.unk3B = 3;
         taj->unk4 -= updateRateF * 2.0;
         if (taj->unk4 < 0.0f) {
@@ -2176,10 +2181,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.unk38.half.lower += var_a2;
         } else {
             obj->segment.unk38.half.lower = 0xFF;
-            obj->unk78 = NULL;
+            obj->unk78 = TAJ_MODE_ROAM;
         }
         break;
-    case 29:
+    case TAJ_MODE_RACE:
         obj->unk4C->unk14 = 0;
         obj->segment.unk3B = 6;
         obj->segment.unk38.half.lower = 0xFF;
@@ -2319,7 +2324,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
     obj->segment.trans.x_rotation = 0;
     obj->segment.trans.z_rotation = 0;
-    if (obj->unk78 != NULL) {
+    if (obj->unk78 != TAJ_MODE_ROAM) {
         D_8011D4D0 = obj->segment.trans.y_position;
     }
     if (sp6B != 0) {
