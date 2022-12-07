@@ -2041,7 +2041,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         if (current_obj != NULL
         && (current_obj->segment.trans.unk6 & 0x8000) == 0
         && current_obj->behaviorId == 39
-        && current_obj->unk78 == arg0) {
+        && current_obj->action == arg0) {
             *arg1 = current_obj->segment.trans.x_position;
             *arg2 = current_obj->segment.trans.y_position;
             *arg3 = current_obj->segment.trans.z_position;

@@ -11,6 +11,32 @@
 #define TIME_JIFFIES_PER_SECOND 60
 #define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
 
+enum TajBehaviours {
+    TAJ_MODE_ROAM,
+    TAJ_MODE_APPROACH_PLAYER,
+    TAJ_MODE_TURN_TOWARDS_PLAYER,
+    TAJ_MODE_GREET_PLAYER,
+    TAJ_MODE_DIALOGUE,
+    TAJ_MODE_TRANSFORM_BEGIN,
+    TAJ_MODE_TRANSFORM_END,
+    TAJ_MODE_END_DIALOGUE,
+    TAJ_MODE_END_DIALOGUE_UNUSED,
+    TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN = 10,
+    TAJ_MODE_TELEPORT_TO_PLAYER_END,
+    TAJ_MODE_SET_CHALLENGE = 15,
+    TAJ_MODE_TELEPORT_AWAY_BEGIN = 20,
+    TAJ_MODE_TELEPORT_AWAY_END,
+    TAJ_MODE_RACE = 30
+};
+
+enum TTBehaviours {
+    TT_MODE_ROAM,
+    TT_MODE_APPROACH_PLAYER,
+    TT_MODE_TURN_TOWARDS_PLAYER,
+    TT_MODE_DIALOGUE,
+    TT_MODE_DIALOGUE_END
+};
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;
@@ -341,6 +367,8 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate);
 void obj_loop_bombexplosion(Object *obj, s32 updateRate);
 void obj_loop_flycoin(Object *obj, s32 updateRate);
 void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 arg6);
+void obj_loop_stopwatchman(Object *obj, s32 updateRate);
+void obj_loop_parkwarden(Object *obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);

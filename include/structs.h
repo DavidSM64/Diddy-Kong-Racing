@@ -1264,7 +1264,7 @@ typedef struct Object_FogChanger {
   /* 0x0 */ s16 unk0;
 } Object_FogChanger;
 
-typedef struct Object_Taj {
+typedef struct Object_NPC {
    /* 0x00 */ f32 unk0;
    /* 0x04 */ f32 unk4;
    /* 0x08 */ s32 unk8;
@@ -1282,14 +1282,14 @@ typedef struct Object_Taj {
    /* 0x1E */ s16 unk1E;
    /* 0x20 */ s16 unk20;
    /* 0x22 */ s16 unk22;
-   /* 0x24 */ u8 pad24[0x4];
+   /* 0x24 */ s32 unk24;
    /* 0x28 */ s16 unk28;
-   /* 0x2A */ u8 pad2A[0x2];
+   /* 0x2A */ s16 unk2A;
    /* 0x2C */ s32 unk2C;
    /* 0x30 */ s32 unk30;
    /* 0x34 */ u16 unk34;
    /* 0x36 */ s8 unk36;
-} Object_Taj;
+} Object_NPC;
 
 typedef struct Object_TT {
   /* 0x0 */ f32 unk0;
@@ -1369,7 +1369,7 @@ typedef struct Object_64 {
         Object_PosArrow pos_arrow;
         Object_Banana banana;
         Object_FogChanger fog_changer;
-        Object_Taj taj;
+        Object_NPC npc;
         Object_TT tt;
         Object_Bridge_WhaleRamp bridge_whale_ramp;
         Object_80011AD0 obj80011AD0;
@@ -1479,8 +1479,9 @@ typedef struct Object {
   /* 0x0074 */ u32 unk74;
 
   union {
-  /* 0x0078 */ ObjectTransform *trans78;
   /* 0x0078 */ s32 unk78;
+  /* 0x0078 */ ObjectTransform *trans78;
+  /* 0x0078 */ s32 action;
   /* 0x0078 */ f32 unk78f;
   };
 
