@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "structs.h"
+#include "libultra_internal.h"
 
 /* Size: 0xA0 bytes */
 typedef struct ParticleBehavior {
@@ -128,6 +129,7 @@ extern s32 D_80127CC8;
 extern s32 D_80127CB4;
 extern s16 D_80127CB0;
 extern s16 D_80127CB2;
+extern OSThread D_801295E0;
 
 extern ParticleBehavior **gParticleBehavioursAssetTable;
 extern s32 gParticleBehavioursAssetTableCount;
