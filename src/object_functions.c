@@ -3256,7 +3256,151 @@ void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_banana.s")
+/**
+ * Banana loop behaviour.
+ * When dropped by a player, will have initial velocity to give some spread.
+ * When touched by a player, will increase their banana count.
+*/
+void obj_loop_banana(Object* obj, s32 updateRate) {
+    Object *racerObj; // sp6C
+    Object_Racer *racer; // sp68
+    f32 tempPos[3]; // 5C, 60, 64
+    f32 sp58;
+    f32 updateRateF; // sp54
+    f32 velX;
+    f32 velZ;
+    s32 sp48;
+    s32 sp44;
+    s8 sp43;
+    Object_Banana *banana; // sp3C
+    Object_78_Banana *obj78;
+    s32 racerPrevUnk180; // sp34
+
+    updateRateF = updateRate;
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    banana = (Object_Banana *) obj->unk64;
+    obj->segment.unk18 += updateRate * 8;
+    obj78 = (Object_78_Banana *) &obj->unk78;
+    if (obj->unk78 == -1) {
+        obj->segment.trans.unk6 |= 0x4000; 
+        obj78->unk6 -= updateRate;
+        obj->unk74 = 1;
+        func_800AFC3C(obj, updateRate);
+        if (obj78->unk6 <= 0) {
+            gParticlePtrList_addObject(obj);
+        }
+    } else {
+        if (banana->unk8 > 0) {
+            banana->unk8 -= updateRate;
+        } else {
+            banana->unk8 = 0;
+            banana->unk0 = 0;
+        }
+        if (obj78->unk0 == 1) {
+            tempPos[0] = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+            tempPos[1] = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+            tempPos[2] = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
+            sp58 = 8.0f;
+            func_80031130(1, &obj->segment.trans.x_position, tempPos, -1);
+            sp48 = 0;
+            func_80031600(&obj->segment.trans.x_position, tempPos, &sp58, &sp43, 1, &sp48);
+            obj->segment.x_velocity = (tempPos[0] - obj->segment.trans.x_position) / updateRateF;
+            obj->segment.y_velocity = (tempPos[1] - obj->segment.trans.y_position) / updateRateF;
+            obj->segment.z_velocity = (tempPos[2] - obj->segment.trans.z_position) / updateRateF;
+            obj->segment.trans.x_position = tempPos[0];
+            obj->segment.trans.y_position = tempPos[1];
+            obj->segment.trans.z_position = tempPos[2];
+            if (banana->unk9 != 2) {
+                obj->segment.y_velocity -= 1.0;
+                obj->segment.x_velocity *= 0.95;
+                obj->segment.z_velocity *= 0.95;
+            } else {
+                obj->segment.x_velocity = 0.0f;
+                obj->segment.y_velocity = 0.0f;
+                obj->segment.z_velocity = 0.0f;
+            }
+            velX = obj->segment.x_velocity;
+            if (velX < 0.0) {
+                velX = -velX;
+            }
+            velZ = obj->segment.z_velocity;
+            if (velZ < 0.0) {
+                velZ = -velZ;
+            }
+            if (sp48 > 0 && velX < 0.5 && velZ < 0.5) {
+                obj78->unk0 = 0;
+            }
+            sp58 = -10000.0f;
+            if (func_8002B9BC(obj, &sp58, NULL, 1) != 0 && obj->segment.trans.y_position < sp58) {
+                obj78->unk0 = 0;
+                obj->segment.trans.y_position = sp58;
+            }
+        }
+        sp44 = 70;
+        if (banana->unk9 != 2) {
+            sp44 = 55;
+        }
+        
+        if (obj78->unk4 > 0) {
+            obj78->unk4 -= updateRate;
+        } else {
+            obj78->unk4 = 0;
+        }
+        if (obj->unk4C->unk13 < 0x78) {
+            if (get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
+                racerObj = obj->unk4C->unk0;
+                if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
+                    racer = (Object_Racer *) racerObj->unk64;
+                    if (racer->playerIndex == PLAYER_COMPUTER) {
+                        sp44 += 30;
+                    }
+                }
+            }
+        }
+        if (obj->unk4C->unk13 < sp44 && obj78->unk4 == 0) {
+            racerObj = obj->unk4C->unk0;
+            if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) { 
+                racer = (Object_Racer *) racerObj->unk64;
+                if ((get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) || racer->bananas < 2) {
+                    racerPrevUnk180 = racer->unk180;
+                    func_80009558(
+                        SOUND_SELECT, 
+                        racerObj->segment.trans.x_position, 
+                        racerObj->segment.trans.y_position, 
+                        racerObj->segment.trans.z_position, 
+                        4, 
+                        &racer->unk180
+                    );
+                    if (racerPrevUnk180 != 0) {
+                        func_800096F8(racerPrevUnk180);
+                    }
+                    if ((racer->playerIndex != PLAYER_COMPUTER) && racer->bananas == 9) {
+                        play_sound_spatial(
+                            racer->characterId + SOUND_UNK_7B, 
+                            racerObj->segment.trans.x_position, 
+                            racerObj->segment.trans.y_position, 
+                            racerObj->segment.trans.z_position, 
+                            NULL
+                        );
+                    }
+                    racer->bananas++;
+                    if (banana->spawner != NULL) {
+                        banana->spawner->unk7C.word = 1;
+                    }
+                    if (get_number_of_active_players() > TWO_PLAYERS) {
+                        gParticlePtrList_addObject(obj);
+                    } else {
+                        obj78->unk0 = -1;
+                        obj->unk74 = 1;
+                        func_800AFC3C(obj, updateRate);
+                    }
+                }
+            }
+        }
+    }
+}
 
 void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv2 *entry) {
     obj->unk4C->unk14 = 2;

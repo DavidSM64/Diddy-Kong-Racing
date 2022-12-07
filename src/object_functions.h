@@ -225,6 +225,12 @@ typedef struct unk80041A90_MidiFade {
     f32 unk14;
 } unk80041A90_MidiFade;
 
+typedef struct Object_78_Banana {
+    s32 unk0;
+    s16 unk4;
+    s16 unk6;
+} Object_78_Banana;
+
 // Unsure about the signed/unsigned with these arrays.
 extern u16 D_800DC980[20];
 extern u16 D_800DC9A8[20];
