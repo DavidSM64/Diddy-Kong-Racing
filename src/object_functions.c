@@ -994,7 +994,224 @@ void obj_init_stopwatchman(Object *obj, UNUSED LevelObjectEntry_StopWatchMan *en
     gTTSoundMask = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_stopwatchman.s")
+/**
+ * Hub world T.T loop behaviour.
+ * Handles all the behaviour for the T.T NPC found in the overworld.
+ * This uses a state machine to handle whether to wander around, approach the player and engage dialogue.
+*/
+void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
+    f32 updateRateF;
+    f32 diffX;
+    f32 diffZ;
+    f32 distance;
+    f32 tempPosY;
+    Object_NPC *tt;
+    Object *racerObj;
+    UNUSED s32 temp_sp60;
+    s32 angleDiff;
+    s32 index;
+    UNUSED s32 test;
+    Object_Racer *racer;
+    LevelHeader *header;
+    struct TempStruct8 **sp48;
+
+    tempPosY = obj->segment.trans.y_position;
+    updateRateF = updateRate;
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    tt = (Object_NPC *) obj->unk64;
+    if (obj->segment.unk18 == 0) {
+        if (tt->unk4 > 1.0) {
+            tt->unk4 = 0.0f;
+        }
+    }
+    header = get_current_level_header();
+    distance = 0.0f;
+    obj->segment.x_velocity = 0.0f;
+    obj->segment.z_velocity = 0.0f;
+    racerObj = get_racer_object(PLAYER_ONE);
+    if (racerObj != NULL) {
+        racer = (Object_Racer*)racerObj->unk64;
+        diffX = ((racerObj->segment.trans.x_position - (racer->ox1 * 50.0f)) - (racer->ox3 * 5.0f)) - obj->segment.trans.x_position;
+        diffZ = ((racerObj->segment.trans.z_position - (racer->oz1 * 50.0f)) - (racer->oz3 * 5.0f)) - obj->segment.trans.z_position;
+        distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
+        angleDiff = arctan2_f(racerObj->segment.trans.x_position - obj->segment.trans.x_position, racerObj->segment.trans.z_position - obj->segment.trans.z_position) - (racerObj->segment.trans.y_rotation & 0xFFFF);
+        if (angleDiff > 0x8000) {
+            angleDiff = -0xFFFF;
+        }
+        if (angleDiff < -0x8000) {
+            angleDiff = 0xFFFF;
+        }
+        if (racer->unk108 != NULL) {
+            obj->unk78 = TT_MODE_ROAM;
+            obj->unk7C.word = 1;
+        }
+    }
+    index = get_buttons_pressed_from_player(PLAYER_ONE);
+    if (obj->unk78 == TT_MODE_ROAM && distance < 300.0 && obj->unk7C.word == 0) {
+        if (angleDiff > -0x2000 && angleDiff < 0x2000) {
+            if ((obj->unk4C->unk14 & 8 && racerObj == obj->unk4C->unk0) || index & Z_TRIG) {
+                if (index & Z_TRIG) {
+                    play_char_horn_sound(racerObj, racer);
+                }
+                obj->unk78 = TT_MODE_APPROACH_PLAYER;
+                func_80030750(0, &tt->unk20, &tt->unk22, &tt->unk11, &tt->unk12, &tt->unk13);
+                func_80030DE0(0, 0x80, 0x80, 0xFF, 0x384, 0x3E6, 0xF0);
+                func_800012E8();
+                play_music(SEQUENCE_TTS_THEME);
+                if (racerObj != NULL) {
+                    func_80006AC8(racerObj);
+                    racer->unk118 = 0;
+                }
+            }
+        }
+    }
+    if (obj->unk78 != TT_MODE_ROAM) {
+        func_8005A3B0();
+        func_800AB194(3);
+    }
+    if (obj->unk78 >= TT_MODE_TURN_TOWARDS_PLAYER) {
+        index = func_8009CFEC(2U);
+    } else {
+        func_8009CF68(2);
+        index = 0;
+    }
+    switch (obj->unk78) {
+    case TT_MODE_APPROACH_PLAYER:
+        obj->segment.unk3B = 0;
+        tt->unkD = 255;
+        if (distance < 100.0) {
+            func_8005A3C0();
+        }
+        if (distance > 10.0) {
+            angleDiff = (arctan2_f(diffX / distance, diffZ / distance) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+            if (angleDiff > 0x8000) {
+                angleDiff -= 0xFFFF;
+            }
+            if (angleDiff < -0x8000) {
+                angleDiff += 0xFFFF;
+            }
+            if (angleDiff > 0) {
+                if (angleDiff < 0x10) {
+                    angleDiff = 0x10;
+                }
+            }
+            obj->segment.trans.y_rotation += angleDiff >> 4;
+            distance = -2.0f;
+            if (angleDiff > 0x800 || angleDiff < -0x800) {
+                distance = -0.5f;
+            }
+            tt->unk14 += (distance - tt->unk14) * 0.125;
+            obj->segment.x_velocity = sins_f(obj->segment.trans.y_rotation) * tt->unk14;
+            obj->segment.z_velocity = coss_f(obj->segment.trans.y_rotation) * tt->unk14;
+            tt->unk4 -= (tt->unk14 * 2 * updateRateF);
+        } else {
+            obj->unk78 = TT_MODE_TURN_TOWARDS_PLAYER;
+        }
+        func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
+        func_8006F388(1);
+        break;
+    case TT_MODE_TURN_TOWARDS_PLAYER:
+        func_8005A3C0();
+        obj->segment.unk3B = 0;
+        tt->unk4 += 3.0 * updateRateF;
+        angleDiff = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        if (angleDiff > 0x8000) {
+            angleDiff -= 0xFFFF;
+        }
+        if (angleDiff < -0x8000) {
+            angleDiff += 0xFFFF;
+        }
+        if (angleDiff > 0) {
+            if (angleDiff < 0x10) {
+                angleDiff = 0x10;
+            }
+        }
+        obj->segment.trans.y_rotation += (angleDiff >> 4);
+        obj->segment.x_velocity = diffX * 0.05;
+        obj->segment.z_velocity = diffZ * 0.05;
+        if (angleDiff < 0x500) {
+            if (angleDiff >= -0x4FF) {
+                obj->unk78 = TT_MODE_DIALOGUE;
+                play_tt_voice_clip(SOUND_VOICE_TT_INTRO, 1); // Hi there, I'm T.T!
+            }
+        }
+        func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
+        break;
+    case TT_MODE_DIALOGUE:
+        obj->segment.x_velocity = diffX * 0.05;
+        obj->segment.z_velocity = diffZ * 0.05;
+        obj->segment.unk3B = 1;
+        tt->unk4 += 1.0 * updateRateF;
+        func_8005A3C0();
+        if (index == 3) {
+            obj->unk78 = TT_MODE_DIALOGUE_END;
+            if (is_time_trial_enabled()) {
+                play_tt_voice_clip(SOUND_VOICE_TT_SEE_YOU, 1);
+            } else {
+                play_tt_voice_clip(SOUND_VOICE_TT_OK, 1);
+            }
+            func_80030DE0(0, tt->unk11, tt->unk12, tt->unk13, tt->unk20, tt->unk22, 0xB4);
+            play_music(header->music);
+            func_80001074(header->instruments);
+            racer->unk118 = func_80004B40(racer->characterId, racer->unk1D6);
+        }
+        obj->unk7C.word = 0xB4;
+        func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
+        break;
+    case TT_MODE_DIALOGUE_END:
+        tt->unk4 += 1.0 * updateRateF;
+        func_8005A3C0();
+        if (obj->unk7C.word < 140) {
+            obj->unk7C.word += 60;
+            obj->unk78 = TT_MODE_ROAM;
+            obj->segment.unk3B = 0;
+        }
+        break;
+    default:
+        obj->segment.unk3B = 0;
+        tt->unk14 = 0.0f;
+        if (tt->unkD == 0xFF) {
+            tt->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
+            if (tt->unkD != 0xFF) {
+                tt->unkE = func_8001CC48(tt->unkD, -1, 0);
+                tt->unkF = func_8001CC48(tt->unkE, tt->unkD, 0);
+                tt->unk10 = func_8001CC48(tt->unkF, tt->unkE, 0);
+                tt->unkC = tt->unkD;
+            }
+        } else {
+            diffZ =  func_8001C6C4((Object_64 *) tt, obj, updateRateF, 1.0f, 0);
+            tt->unk4 += diffZ * 1.5;
+        }
+        break;
+    }
+    obj->segment.trans.y_position = tempPosY;
+    index = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &sp48);
+     if(index != 0) {
+        index--;
+        while(index >= 0) {
+            if ((sp48[index]->unk10 != 11) && (sp48[index]->unk10 != 14) && (sp48[index]->unk8 > 0.0)) {
+                obj->segment.trans.y_position = sp48[index]->unk0;
+            }
+            index--;
+        }
+    }
+    obj->segment.trans.x_rotation = 0;
+    obj->segment.trans.z_rotation = 0;
+    if (obj->unk78 != TT_MODE_ROAM) {
+        D_8011D4D0 = obj->segment.trans.y_position;
+    }
+    obj->segment.unk18 = 1.0 * tt->unk4;
+    func_80061C0C(obj);
+    if (0) { } // Fakematch
+    if (obj->unk7C.word > 0) {
+        obj->unk7C.word -= updateRate;
+    } else {
+        obj->unk7C.word = 0;
+    }
+}
+
 
 /**
  * If TT is currently talking, clear the audio associated with gTTSoundMask,
@@ -1710,12 +1927,12 @@ void obj_loop_dino_whale(Object *obj, s32 speed) {
 }
 
 void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry) {
-    Object_Taj *temp;
+    Object_NPC *temp;
     obj->unk4C->unk14 = (u16)1;
     obj->unk4C->unk11 = (u8)0;
     obj->unk4C->unk10 = (u8)0x1E;
     obj->unk4C->unk12 = (u8)0;
-    temp = &obj->unk64->taj;
+    temp = &obj->unk64->npc;
     temp->unkD = 0xFF;
     temp->unk0 = 0.0f;
     temp->unk28 = 0;
@@ -1751,7 +1968,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     Object **racerObjs;
     s32 var_a2_2;
     s32 numRacers;
-    Object_Taj *taj;
+    Object_NPC *taj;
     Object_64 *racer64;
     u32 buttonsPressed;
     s8 sp6B;
@@ -1769,7 +1986,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if (osTvType == TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    taj = (Object_Taj *) obj->unk64;
+    taj = (Object_NPC *) obj->unk64;
     levelHeader = get_current_level_header();
     obj->unk74 = 0;
     if (obj->segment.unk18 == 0 && taj->unk4 > 1.0) {

@@ -29,6 +29,14 @@ enum TajBehaviours {
     TAJ_MODE_RACE = 30
 };
 
+enum TTBehaviours {
+    TT_MODE_ROAM,
+    TT_MODE_APPROACH_PLAYER,
+    TT_MODE_TURN_TOWARDS_PLAYER,
+    TT_MODE_DIALOGUE,
+    TT_MODE_DIALOGUE_END
+};
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;
