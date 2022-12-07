@@ -729,7 +729,7 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 speed) {
         if (someObj != NULL) {
             Object_EggCreator *someObj64 = &someObj->unk64->egg_creator;
             someObj64->unk4 = obj;
-            obj->action = (s32) someObj;
+            obj->unk78 = (s32) someObj;
             someObj->segment.unk3C_a.level_entry = NULL;
         }
     }
