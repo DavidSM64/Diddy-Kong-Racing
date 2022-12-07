@@ -1268,7 +1268,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
             obj->segment.trans.unk6 &= ~0x4000;
             someObj64->unk150 = obj;
         }
-        obj->segment.unk18 = obj->action * 127;
+        obj->segment.unk18 = obj->unk78 * 127;
     }
 }
 
