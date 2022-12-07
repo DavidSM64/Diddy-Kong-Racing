@@ -1961,7 +1961,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         taj->unk4 += updateRateF * 1.0;
         func_8005A3C0();
         if (var_a2_2 == 3 || var_a2_2 == 4) {
-            obj->unk78 = (var_a2_2 == 4) ? TAJ_MODE_UNK08 : TAJ_MODE_END_DIALOGUE;
+            obj->unk78 = (var_a2_2 == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
             taj->unk4 = 0.1f;
             obj->segment.unk3B = 2;
             taj->unk1C = 0;
@@ -2054,13 +2054,13 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         break;
     case TAJ_MODE_END_DIALOGUE:
-    case TAJ_MODE_UNK08:
+    case TAJ_MODE_END_DIALOGUE_UNUSED:
         if (taj->unk4 != 0.0) {
             taj->unk4 = taj->unk4 + (0.5 * updateRateF);
         }
         if (taj->unk4 == 0) {
             sp6B = 1;
-            if (obj->unk78 == TAJ_MODE_UNK08) {
+            if (obj->unk78 == TAJ_MODE_END_DIALOGUE_UNUSED) {
                 func_80022CFC(
                     obj->segment.unk2C.half.lower,
                     obj->segment.trans.x_position - (racer64->racer.ox1 * 50.0f),
