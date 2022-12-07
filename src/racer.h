@@ -192,8 +192,6 @@ extern s8 D_800DCDA8[8];
 
 extern s32 gObjLoopGoldenBalloonChecksum;
 
-extern s16 D_800DCDD4[4];
-
 extern ObjectTransform D_8011D510;
 
 extern s32 gCurrentStickX;

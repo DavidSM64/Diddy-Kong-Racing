@@ -200,8 +200,6 @@ typedef struct unk80041A90_MidiFade {
 } unk80041A90_MidiFade;
 
 // Unsure about the signed/unsigned with these arrays.
-extern u16 D_800DC970[4];
-extern u16 D_800DC978[4];
 extern u16 D_800DC980[20];
 extern u16 D_800DC9A8[20];
 extern u16 D_800DC9D0[64];
@@ -283,7 +281,7 @@ void obj_loop_setuppoint(Object *obj, s32 speed);
 void obj_init_dino_whale(Object *obj, LevelObjectEntry_Dino_Whale *entry);
 void obj_loop_dino_whale(Object *obj, s32 speed);
 void obj_init_parkwarden(Object *obj, LevelObjectEntry_Parkwarden *entry);
-void func_80039320(s16 arg0);
+void func_80039320(s16 voiceClip);
 void play_taj_voice_clip(u16 soundID, s32 interrupt);
 void obj_loop_gbparkwarden(Object *obj, s32 speed);
 f32 func_8003ACAC(void);
@@ -353,7 +351,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed);
 
 s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
 s32 func_8001CC48(s32, s32, s32);
-void func_8001C6C4(Object_GoldenBalloon *obj64, Object *obj, f32, f32, s32);
+f32 func_8001C6C4(Object_64 *, Object *, f32, f32, s32);
 void func_8000CBF0(Object*, s32);
 
 

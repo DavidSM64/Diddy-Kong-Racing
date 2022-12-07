@@ -310,6 +310,7 @@ void rumble_controllers(s32 arg0) {
     }
 }
 
+// arg0 is the number of bits we care about.
 s32 func_80072C54(s32 arg0) {
     s32 ret;
     u32 var_v0;
@@ -339,6 +340,8 @@ s32 func_80072C54(s32 arg0) {
     return ret;
 }
 
+// arg0 is the number of bits we care about
+// arg1 is the bit being looked for.
 void func_80072E28(s32 arg0, s32 arg1) {
     u32 var_v0;
 
@@ -348,7 +351,7 @@ void func_80072E28(s32 arg0, s32 arg1) {
             if (D_801241F4 == 0) {
                 *D_801241EC++ = D_801241F0;
                 D_801241F0 = 0;
-                D_801241F4 = 128;
+                D_801241F4 = 128; //Reset the byte counter, so we can shift 8 times before coming back here.
             }
             if (arg1 & var_v0) {
                 D_801241F0 |= D_801241F4;
@@ -486,7 +489,84 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
 
 //arg1 is eepromData, from read_eeprom_data
 //arg2 seems to be a flag for either lap times or course initials?
+#ifdef NON_MATCHING
+void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
+    s16 availableVehicles;
+    s32 levelCount;
+    s32 worldCount;
+    s32 i;
+    s16 var_s0;
+
+    func_8006E770(settings, arg2);
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+
+    if (arg2 & 1) {
+        D_801241EC = saveData;
+        D_801241F0 = 0;
+        D_801241F4 = 0;
+        for (i = 2, var_s0 = 5; i < 192; i++) {
+            var_s0 += saveData[i];
+        }
+        var_s0 -= func_80072C54(0x10);
+        if (var_s0 == 0) {
+            for (i = 0; i < levelCount; i++) {
+                if (func_8006B14C(i) == 0) {
+                    availableVehicles = get_map_available_vehicles(i);
+                    // Car Available
+                    if (availableVehicles & 1) {
+                        settings->flapTimesPtr[0][i] = func_80072C54(0x10);
+                        settings->flapInitialsPtr[0][i] = func_80072C54(0x10);
+                    }
+                    // Hovercraft Available
+                    if (availableVehicles & 2) {
+                        settings->flapTimesPtr[1][i] = func_80072C54(0x10);
+                        settings->flapInitialsPtr[1][i] = func_80072C54(0x10);
+                    }
+                    // Plane Available
+                    if (availableVehicles & 4) {
+                        settings->flapTimesPtr[2][i] = func_80072C54(0x10);
+                        settings->flapInitialsPtr[2][i] = func_80072C54(0x10);
+                    }
+                }
+            }
+        }
+    }
+    if (arg2 & 2) {
+        saveData += 192;
+        D_801241EC = saveData;
+        D_801241F0 = 0;
+        D_801241F4 = 0;
+        for (i = 2, var_s0 = 5; i < 192; i++) {
+            var_s0 += saveData[i];
+        }
+        var_s0 -= func_80072C54(0x10);
+        if (var_s0 == 0) {
+            for (i = 0; i < levelCount; i++) {
+                if (func_8006B14C(i) == 0) {
+                    availableVehicles = get_map_available_vehicles(i);
+                    // Car Available
+                    if (availableVehicles & 1) {
+                        settings->courseTimesPtr[0][i] = func_80072C54(0x10);
+                        settings->courseInitialsPtr[0][i] = func_80072C54(0x10);
+                    }
+                    // Hovercraft Available
+                    if (availableVehicles & 2) {
+                        settings->courseTimesPtr[1][i] = func_80072C54(0x10);
+                        settings->courseInitialsPtr[1][i] = func_80072C54(0x10);
+                    }
+                    // Plane Available
+                    if (availableVehicles & 4) {
+                        settings->courseTimesPtr[2][i] = func_80072C54(0x10);
+                        settings->courseInitialsPtr[2][i] = func_80072C54(0x10);
+                    }
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_80073588.s")
+#endif
 
 GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
 
@@ -957,7 +1037,75 @@ GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
-GLOBAL_ASM("asm/non_matchings/save_data/func_800756D4.s")
+
+typedef struct GhostHeaderAltUnk0 {
+  u8 levelID;
+  u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+} GhostHeaderAltUnk0;
+
+/* Size: 4 bytes */
+typedef struct GhostHeaderAlt {
+    union {
+      GhostHeaderAltUnk0 unk0;
+      s16 checksum;
+    };
+    union {
+      struct {
+        u8 characterID; // 9 = T.T.
+        u8 unk3;
+      };
+      s16 unk2;
+    };
+} GhostHeaderAlt;
+
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4) {
+    s32 i;
+    u8 *fileData;
+    s32 ret; // sp64
+    GhostHeaderAlt *var_s1;
+    s32 fileNumber;
+    s32 fileSize;
+    u8 temp_v0_2;
+
+    ret = get_si_device_status(controllerIndex);
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    }
+    for (i = 0; i < 6; i++) {
+        arg1[i] = 0xFF;
+        arg4[i] = 0;
+        temp_v0_2 = arg4[i];
+        arg3[i] = temp_v0_2;
+        arg2[i] = temp_v0_2;
+    }
+    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
+    if (ret == CONTROLLER_PAK_GOOD) {
+        ret = get_file_size(controllerIndex, fileNumber, &fileSize);
+        if (ret == CONTROLLER_PAK_GOOD) {
+            fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
+            ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)fileData, fileSize);
+            if (ret == CONTROLLER_PAK_GOOD) {
+                for (i = 0, var_s1 = (GhostHeaderAlt *)(&fileData[4]); i < 6; i++) {
+                    if (var_s1[i].unk0.levelID != 0xFF) {
+                        if (calculate_ghost_header_checksum((GhostHeader *) &fileData[var_s1[i].unk2]) != ((GhostHeaderAlt*)&fileData[var_s1[i].unk2])->checksum) {
+                            ret = CONTROLLER_PAK_BAD_DATA;
+                            break;
+                        } else {
+                            arg1[i] = var_s1[i].unk0.levelID;
+                            arg2[i] = var_s1[i].unk0.vehicleID;
+                            arg3[i] = fileData[var_s1[i].unk2+2];
+                            arg4[i] = ((GhostHeaderAlt*)&fileData[var_s1[i].unk2] + 1)->checksum;
+                        }
+                    }
+                }
+            }
+            free_from_memory_pool(fileData);
+        }
+    }
+    start_reading_controller_data(controllerIndex);
+    return ret;
+}
 
 SIDeviceStatus get_si_device_status(s32 controllerIndex) {
     OSMesg unusedMsg;
