@@ -1231,7 +1231,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_fish.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fish.s")
 
 void obj_init_lavaspurt(Object *obj, LevelObjectEntry_LavaSpurt *entry) {
-    obj->action = entry->unk9 * 2;
+    obj->unk78 = entry->unk9 * 2;
     obj->unk7C.word = entry->unk8;
 }
 
