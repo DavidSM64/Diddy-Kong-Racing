@@ -1244,7 +1244,7 @@ void obj_loop_lavaspurt(Object *obj, s32 speed) {
         obj->segment.unk18 += speed * 4;
         if (obj->segment.unk18 >= 256) {
             obj->segment.unk18 = 0;
-            obj->action = get_random_number_from_range(0, 30) + obj->unk7C.word;
+            obj->unk78 = get_random_number_from_range(0, 30) + obj->unk7C.word;
         }
     }
 }
