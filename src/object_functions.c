@@ -2028,7 +2028,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
     }
     obj->unk4C->unk14 = 1;
-    if ((func_80052188() || (var_a2)) && ((obj->action == NULL || obj->action == 31))) {
+    if ((func_80052188() || (var_a2)) && ((obj->action == 0 || obj->action == 31))) {
         func_800012E8();
         set_music_player_voice_limit(24);
         play_music(SEQUENCE_ENTRANCED);
