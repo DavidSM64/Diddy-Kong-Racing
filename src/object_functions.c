@@ -3002,7 +3002,126 @@ void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *e
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_bridge_whaleramp.s")
+/**
+ * Moving bridge loop behaviour.
+ * In Whale Bay and Boulder Canyon, there exist two bridge objects you can use.
+ * This function makes the whale oscillate and move upwards when a player gets near.
+ * For the boulder canyon bridge, it raises and plays a bell sound while it's set to be raised.
+*/
+void obj_loop_bridge_whaleramp(Object* obj, s32 updateRate) {
+    Object* racerObj;
+    UNUSED ObjectTransform* temp_v0_4;
+    f32 temp_f2;
+    Object_Bridge_WhaleRamp *whaleRamp;
+    LevelObjectEntry_Bridge_WhaleRamp *entry;
+    f32 updateRateF;
+    s32 var_v0;
+    f32 sp50;
+    f32 sp4C;
+    f32 sp48;
+    f32 sp44;
+    f32 sp40;
+    f32 sp3C;
+    Object_Racer *racer;
+    
+    whaleRamp = (Object_Bridge_WhaleRamp *) obj->unk64;
+    entry = (LevelObjectEntry_Bridge_WhaleRamp *) obj->segment.unk3C_a.level_entry;
+    updateRateF = updateRate;
+    
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    
+    if (entry->unkB != 3) {
+        if (obj->unk78 != 0) {
+            temp_f2 = (2.0 * (f32) entry->unkE);
+            if (temp_f2 > 0.0f) {
+                if (obj->segment.trans.y_position < (whaleRamp->unk0 + temp_f2)) {
+                    obj->segment.trans.y_position += (updateRateF * 2);
+                }
+            } else {
+                if ((whaleRamp->unk0 + temp_f2) < obj->segment.trans.y_position) {
+                    obj->segment.trans.y_position -= (updateRateF * 2);
+                }
+            }
+        } else if (entry->unkC > 0) {
+            if (whaleRamp->unk0 < obj->segment.trans.y_position) {
+                obj->segment.trans.y_position -= (updateRateF * 2);
+            }
+        } else {
+            if (obj->segment.trans.y_position < whaleRamp->unk0) {
+                obj->segment.trans.y_position += (updateRateF * 2);
+            }
+        }
+    } else if (obj->unk78 != 0) {
+        if (obj->segment.trans.x_rotation >= -0x12FF) {
+            obj->segment.trans.x_rotation -= (updateRate * 0x2D);
+        }
+        if (whaleRamp->unk4 == 0) {
+            whaleRamp = whaleRamp;
+            func_8001E36C(entry->unkA, &sp50, &sp4C, &sp48);
+            func_80009558(SOUND_DRAWBRIDGE_BELL, sp50, sp4C, sp48, 1, &whaleRamp->unk4);
+        }
+    } else {
+        if (obj->segment.trans.x_rotation < 0) {
+            obj->segment.trans.x_rotation = obj->segment.trans.x_rotation + (updateRate * 0x28);
+            if (whaleRamp->unk4 == 0) {
+                whaleRamp = whaleRamp;
+                func_8001E36C(entry->unkA, &sp44, &sp40, &sp3C);
+                func_80009558(SOUND_DRAWBRIDGE_BELL, sp44, sp40, sp3C, 1, &whaleRamp->unk4);
+            }
+        } else {
+            obj->segment.trans.x_rotation = 0;
+            if (whaleRamp->unk4 != 0) {
+                func_800096F8(whaleRamp->unk4);
+            }
+        }
+    }
+    
+    switch (entry->unkB) {
+    case 0:
+        obj->unk78 = 0;
+        if (obj->unk4C->unk13 < entry->unkC) {
+            obj->unk78 = 1;
+        }
+        break;
+    case 2:
+        obj->unk78 = 1;
+        racerObj = get_racer_object(0);
+        if (racerObj != NULL) {
+            racer = (Object_Racer *) racerObj->unk64;
+            switch(racer->unk1D6) {
+                default:
+                    var_v0 = 1;
+                    break;
+                case 1:
+                    var_v0 = 2;
+                    break;
+                case 2:
+                    var_v0 = 4;
+                    break;
+            }
+            if (entry->unkF & var_v0) {
+                obj->unk78 = NULL;
+            }
+        }
+        break;
+    default:
+        if (func_8001E2EC(entry->unkA) != 0) {
+            obj->unk78 = (entry->unkD * 2);
+        }
+        if (obj->unk78 > 0) {
+            obj->unk78 -= updateRate;
+        } else {
+            obj->unk78 = 0;
+        }
+        break;
+    }
+    
+    obj->unk4C->unk13 = 255;
+    obj->unk4C->unk0 = NULL;
+    obj->unk4C->unk14 &= 0xFFF7;
+}
 
 void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->unk4C->unk14 = 2;

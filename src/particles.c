@@ -7,6 +7,7 @@
 #include "asset_enums.h"
 #include "memory.h"
 #include "textures_sprites.h"
+#include "thread0_epc.h"
 
 /************ .rodata ************/
 
@@ -175,7 +176,7 @@ u16 D_80127CD2;
 s32 D_80127CD4;
 s8 gDebugPrintBufferStart[2300];
 s32 gDebugPrintBufferEnd[1026];
-s32 D_801295E0[108];
+OSThread D_801295E0;
 s32 D_80129790[6]; // Osmesg stuff
 s32 D_801297A8[8];
 s32 D_801297C8[8];
