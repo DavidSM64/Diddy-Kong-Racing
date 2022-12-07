@@ -1755,7 +1755,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     f32 var_f2;
     s32 arctan;
     s32 temp;
-    
+
     sp6B = 0;
     sp98_yPos = obj->segment.trans.y_position;
 
@@ -1783,8 +1783,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
     var_a2 = FALSE;
     if (
-        (obj->unk78 == NULL) && 
-        (distance < 300.0) && 
+        (obj->unk78 == NULL) &&
+        (distance < 300.0) &&
         (
             ((obj->unk4C->unk14 & 8) && (racerObj == obj->unk4C->unk0)) ||
             (buttonsPressed & Z_TRIG)
@@ -1816,7 +1816,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         func_80008140();
         arctan = arctan2_f(
-            racerObj->segment.trans.x_position - obj->segment.trans.x_position, 
+            racerObj->segment.trans.x_position - obj->segment.trans.x_position,
             racerObj->segment.trans.z_position - obj->segment.trans.z_position
         );
         arctan -= (racerObj->segment.trans.y_rotation & 0xFFFF);
@@ -1830,50 +1830,49 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->unk78 = 10;
             sp6B = 1;
         }
-        
         func_80030750(0, &taj->unk20, &taj->unk22, &taj->unk11, &taj->unk12, &taj->unk13);
         func_80030DE0(0, 0xFF, 0, 0x78, 0x3C0, 0x44C, 0xF0);
         taj->unk4 = 0.0f;
     }
-    
+
     if (!(obj->unk78 == 0 || obj->unk78 == 30 || obj->unk78 == 20 || obj->unk78 == 21)) {
-        
             func_8005A3B0();
             func_800AB194(3);
     }
 
-    switch (obj->unk78) {                            /* switch 3; irregular */
-        case 3:                                         /* switch 3 */
-        case 4:                                        /* switch 3 */
-        case 5:                                        /* switch 3 */
-        case 6:                                        /* switch 3 */
+    switch (obj->unk78) {
+        case 3:
+        case 4:
+        case 5:
+        case 6:
             var_a2_2 = func_8009CFEC(0);
             break;
-        default:                                        /* switch 3 */ 
+        default:
             func_8009CF68(0);
             var_a2_2 = 0;
             break;
     }
-    
-    switch (obj->unk78) {                            /* switch 1 */
-        case 1:                                         /* switch 1 */
-        case 2:                                         /* switch 1 */
-        case 3:                                         /* switch 1 */
-        case 4:                                         /* switch 1 */
-        case 7:                                         /* switch 1 */
-        case 10:                                        /* switch 1 */
-        case 11:                                        /* switch 1 */
-        case 15:                                        /* switch 1 */
-        case 20:                                        /* switch 1 */
-        case 21:                                        /* switch 1 */
+
+    switch (obj->unk78) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 7:
+        case 10:
+        case 11:
+        case 15:
+        case 20:
+        case 21:
             func_8006F388(1);
             break;
     }
+
     if (obj->unk78 != 0 && var_a2_2 != 0 && obj->unk78 < 4) {
         obj->unk78 = 4;
     }
-    switch (obj->unk78 - 1) {                           /* switch 2 */
-    case 0:                                         /* switch 2 */
+    switch (obj->unk78 - 1) {
+    case 0:
         obj->segment.unk3B = 0;
         taj->unkD = 0xFF;
         if (distance < 100.0) {
@@ -1904,7 +1903,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
-    case 1:                                         /* switch 2 */
+    case 1:
         func_8005A3C0();
         obj->segment.unk3B = 0;
         taj->unk4 += updateRateF * 2.0;
@@ -1930,9 +1929,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.z_velocity = zPosDiff * 0.125;
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
-    case 2:                                         /* switch 2 */
+    case 2:
         obj->segment.unk3B = 1;
-        taj->unk14 = 0.0f;   
+        taj->unk14 = 0.0f;
         taj->unk4 += updateRateF * 1.0;
         if (taj->unk4 > 77.0) {
             taj->unk4 = 77.0;
@@ -1952,9 +1951,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.trans.y_rotation = obj->segment.trans.y_rotation + (arctan >> 4);
         func_8005A3C0();
         break;
-    case 3:                                         /* switch 2 */
+    case 3:
         obj->segment.unk3B = 4;
-        taj->unk4 += updateRateF * 1.0;        
+        taj->unk4 += updateRateF * 1.0;
         func_8005A3C0();
         if (var_a2_2 == 3 || var_a2_2 == 4) {
             obj->unk78 = (var_a2_2 == 4) ? 8 : 7;
@@ -1996,7 +1995,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
         }
         break;
-    case 4:                                         /* switch 2 */
+    case 4:
         obj->segment.unk3B = 5;
         func_8005A3C0();
         taj->unk4 += updateRateF * 2.0;
@@ -2009,7 +2008,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (taj->unk4 > 60.0) {
             taj->unk4 = 60.0f;
             if (racer64->racer.transparency > (updateRate * 16)) {
-                racer64->racer.transparency -= (updateRate * 16) ;
+                racer64->racer.transparency -= (updateRate * 16);
             } else {
                 racer64->racer.transparency = 0;
                 func_8000E1EC(racerObj, D_8011D4E0 & 0xF);
@@ -2019,7 +2018,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
         }
         break;
-    case 5:                                         /* switch 2 */
+    case 5:
         func_8005A3C0();
         if (racerObj != NULL) {
             if (taj->unk4 != 0.0f) {
@@ -2049,8 +2048,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
         }
         break;
-    case 6:                                         /* switch 2 */
-    case 7:                                         /* switch 2 */
+    case 6:
+    case 7:
         if (taj->unk4 != 0.0) {
             taj->unk4 = taj->unk4 + (0.5 * updateRateF);
         }
@@ -2058,9 +2057,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             sp6B = 1;
             if (obj->unk78 == 8) {
                 func_80022CFC(
-                    obj->segment.unk2C.half.lower, 
-                    obj->segment.trans.x_position - (racer64->racer.ox1 * 50.0f), 
-                    obj->segment.trans.y_position, 
+                    obj->segment.unk2C.half.lower,
+                    obj->segment.trans.x_position - (racer64->racer.ox1 * 50.0f),
+                    obj->segment.trans.y_position,
                     obj->segment.trans.z_position - (racer64->racer.oz1 * 50.0f)
                 );
             }
@@ -2069,7 +2068,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
         }
         break;
-    case 9:                                         /* switch 2 */
+    case 9:
         obj->segment.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
@@ -2077,7 +2076,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
-        
+
         var_a2 = updateRate * 8;
         if (taj->unk4 < 20.0f) {
             var_a2 = 0;
@@ -2095,7 +2094,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
         }
         break;
-    case 10:                                        /* switch 2 */
+    case 10:
         obj->segment.unk3B = 3;
         taj->unk4 -= updateRateF * 2.0;
         if (taj->unk4 < 0.0f) {
@@ -2109,7 +2108,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->unk78 = 1;
         }
         break;
-    case 14:                                        /* switch 2 */
+    case 14:
         obj->segment.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
@@ -2129,7 +2128,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
-            func_800228EC((s32) racer64->racer.unk1D6);
+            func_800228EC(racer64->racer.unk1D6);
             temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
@@ -2138,10 +2137,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
             }
             obj->unk78 = 0x1E;
-            
         }
         break;
-    case 19:                                        /* switch 2 */
+    case 19:
         obj->segment.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
@@ -2167,7 +2165,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
         }
         break;
-    case 20:                                        /* switch 2 */
+    case 20:
         obj->segment.unk3B = 3;
         taj->unk4 -= updateRateF * 2.0;
         if (taj->unk4 < 0.0f) {
@@ -2181,13 +2179,13 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->unk78 = NULL;
         }
         break;
-    case 29:                                        /* switch 2 */
+    case 29:
         obj->unk4C->unk14 = 0;
         obj->segment.unk3B = 6;
         obj->segment.unk38.half.lower = 0xFF;
         taj->unk4 += updateRateF * 1.0;
         break;
-    default:                                        /* switch 2 */
+    default:
         obj->segment.unk3B = 0;
         taj->unk14 = 0.0f;
         if (taj->unkD == 0xFF) {
@@ -2222,9 +2220,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 xPosDiff = sins_f(obj->segment.trans.y_rotation + 0x8000);
                 zPosDiff = coss_f(obj->segment.trans.y_rotation + 0x8000);
                 func_80011570(
-                    obj, 
-                    (updateRateF2 * xPosDiff) * 1.1, 
-                    0.0f, 
+                    obj,
+                    (updateRateF2 * xPosDiff) * 1.1,
+                    0.0f,
                     (updateRateF2 * zPosDiff) * 1.1
                 );
                 taj->unk4 += updateRate * 2.2;
@@ -2260,8 +2258,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 func_80001114(0xF);
             }
         }
-        switch (taj->unk36) {                        /* switch 4; irregular */
-        case 0:                                     /* switch 4 */
+        switch (taj->unk36) {
+        case 0:
             if (taj->unk34 > updateRate << 7) {
                 taj->unk34 -= updateRate << 7;
                 func_80001170(14);
@@ -2286,7 +2284,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 taj->unk30 = 0;
             }
             break;
-        case 1:                                     /* switch 4 */
+        case 1:
             if ((musicGetChanMask() & ~0x4000) == 0xB) {
                 taj->unk34 += (updateRate * 128);
                 if (taj->unk34 > 0x7F00) {
@@ -2567,7 +2565,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                     obj64->unkC = obj64->unkD;
                 }
             } else {
-                func_8001C6C4((Object_64 *)obj64, obj, sp2C, speedf, 0);
+                func_8001C6C4((Object_64 *) obj64, obj, sp2C, speedf, 0);
             }
         }
     }
@@ -3476,7 +3474,7 @@ void obj_loop_bubbler(Object *obj, s32 speed) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (Object_64 *)((s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7));
+    obj->unk64 = (Object_64 *) ((s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7));
     obj->segment.unk3C_a.level_entry = NULL;
 }
 
