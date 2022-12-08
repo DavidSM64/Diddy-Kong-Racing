@@ -4321,7 +4321,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
     s32 x2;
     s32 y2;
     UNUSED s32 pad[5];
-    char* levelName;
+    char *levelName;
     Object* racerObj;
     f32 diffX;
     f32 diffZ;
