@@ -3377,7 +3377,7 @@ void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
  * When dropped by a player, will have initial velocity to give some spread.
  * When touched by a player, will increase their banana count.
 */
-void obj_loop_banana(Object* obj, s32 updateRate) {
+void obj_loop_banana(Object *obj, s32 updateRate) {
     Object *racerObj; // sp6C
     Object_Racer *racer; // sp68
     f32 tempPos[3]; // 5C, 60, 64
