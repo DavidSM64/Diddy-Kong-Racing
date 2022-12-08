@@ -2985,7 +2985,61 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
 }
 
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_trigger.s")
+void obj_loop_trigger(Object* obj, s32 updateRate) {
+    s32 i;
+    s32 curRaceType;
+    s32 numRacers;
+    LevelObjectEntry_Trigger *triggerEntry;
+    Object* racerObj;
+    Object** racers;
+    Object_Trigger *trigger;
+    Object_Racer *racer;
+    Settings* settings;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    f32 radiusF;
+    s32 flags;
+    f32 distance;
+    s32 courseFlags;
+
+    triggerEntry = (LevelObjectEntry_Trigger *) obj->segment.unk3C_a.level_entry;
+    trigger = (Object_Trigger *) obj->unk64;
+    settings = get_settings();
+    courseFlags = settings->courseFlagsPtr[settings->courseId];
+    curRaceType = get_current_level_race_type();
+    if (triggerEntry->unk9 >= 0) {
+        flags = 0x10000 << triggerEntry->unk9;
+        if (obj->unk4C->unk13 < trigger->unk10) {
+            if (((u8) curRaceType != RACETYPE_HUBWORLD) || !(courseFlags & flags)) {
+                radiusF = trigger->unk10;
+                racers = get_racer_objects(&numRacers);
+                for (i = 0; i < numRacers; i++) {
+                    racerObj = racers[i];
+                    racer = (Object_Racer*)racerObj->unk64;
+                    if ((!(trigger->unk14 & 1) && racer->playerIndex == PLAYER_COMPUTER) || (!(trigger->unk14 & 2) && racer->playerIndex != PLAYER_COMPUTER)) {
+                        diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                        diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                        diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                        distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                        if (distance < radiusF) {
+                            distance = (trigger->unk0 * racerObj->segment.trans.x_position) + (trigger->unk8 * racerObj->segment.trans.z_position) + trigger->unkC;
+                            if (distance < 0.0f) {
+                                settings->courseFlagsPtr[settings->courseId] |= flags;
+                                if (triggerEntry->unkB != 0xFF) {
+                                    func_800C31EC(triggerEntry->unkB);
+                                }
+                                if (triggerEntry->unkC != 0xFF) {
+                                    func_80021400(triggerEntry->unkC + 0x80);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry) {
     Object_Bridge_WhaleRamp *temp = &obj->unk64->bridge_whale_ramp;

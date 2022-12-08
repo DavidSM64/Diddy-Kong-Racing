@@ -1207,7 +1207,7 @@ typedef struct Object_Trigger {
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 unkC;
   /* 0x10 */ s32 unk10;
-  /* 0x14 */ s8 unk14;
+  /* 0x14 */ u8 unk14;
 } Object_Trigger;
 
 typedef struct Object_Audio {
