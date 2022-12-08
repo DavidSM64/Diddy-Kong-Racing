@@ -916,13 +916,13 @@ typedef struct Object_Frog {
   /* 0x16 */ s16 unk16;
   /* 0x18 */ s8 unk18;
   /* 0x19 */ s8 unk19;
-    s16 unk1A;
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
+  /* 0x1A */ s16 unk1A;
+  /* 0x1C */ f32 unk1C;
+  /* 0x20 */ f32 unk20;
+  /* 0x24 */ f32 unk24;
+  /* 0x28 */ f32 unk28;
+  /* 0x2C */ f32 unk2C;
+  /* 0x30 */ f32 unk30;
 } Object_Frog;
 
 typedef struct Object_Wizpig2 {

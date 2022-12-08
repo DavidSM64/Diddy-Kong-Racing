@@ -392,6 +392,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry);
 void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry);
 void obj_loop_trigger(Object* obj, s32 updateRate);
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry);
+void obj_loop_treasuresucker(Object* obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
@@ -405,7 +406,6 @@ void obj_loop_lasergun(Object* obj, s32 updateRate);
 void obj_loop_laserbolt(Object* obj, s32 updateRate);
 void obj_loop_posarrow(Object* obj, s32 updateRate);
 void obj_loop_effectbox(Object* obj, s32 updateRate);
-void obj_loop_treasuresucker(Object* obj, s32 updateRate);
 void obj_loop_bananacreator(Object* obj, s32 updateRate);
 void obj_loop_butterfly(Object* obj, s32 updateRate);
 void obj_loop_airzippers_waterzippers(Object* obj, s32 updateRate);
@@ -420,7 +420,7 @@ void obj_loop_exit(Object* obj, s32 updateRate);
 void obj_loop_fish(Object* obj, s32 updateRate);
 void obj_loop_scenery(Object* obj, s32 updateRate);
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
-void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry);
+void obj_init_butterfly();
 void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry);
 void obj_init_animation();
 void obj_init_lensflareswitch();

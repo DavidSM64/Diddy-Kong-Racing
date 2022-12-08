@@ -2985,7 +2985,7 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
 }
 
 
-void obj_loop_trigger(Object* obj, s32 updateRate) {
+void obj_loop_trigger(Object* obj, UNUSED s32 updateRate) {
     s32 i;
     s32 curRaceType;
     s32 numRacers;
@@ -3235,7 +3235,69 @@ void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry
     obj->action = (entry->unk8 - 1) & 3;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_treasuresucker.s")
+/**
+ * Smokey's castle treasure box loop function.
+ * When the player approaches carrying bananas, it spawns visual objects to enter it, then takes them from the player.
+*/
+void obj_loop_treasuresucker(Object* obj, s32 updateRate) {
+    Object* racerObj;
+    f32 scale;
+    Object_Racer *racer;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    Object* newObj;
+    LevelObjectEntryCommon spawnObj;
+    s32 doSpawnObj;
+
+    racerObj = get_racer_object(obj->unk78);
+    if (racerObj != NULL) {
+        racer = (Object_Racer *) racerObj->unk64;
+        doSpawnObj = FALSE;
+        if (racer->bananas != 0 && obj->unk7C.word == 0) {
+            diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
+            diffY = obj->segment.trans.y_position - racerObj->segment.trans.y_position;
+            diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
+            diffX = (diffX * diffX) + (diffY * diffY) + (diffZ * diffZ); // Required to match.
+            if (diffX < 225 * 225) {
+                obj->unk7C.word = 8;
+                doSpawnObj = TRUE;
+            }
+        }
+        if (obj->unk7C.word > 0) {
+            obj->unk7C.word -= updateRate;
+            if (obj->unk7C.word <= 0) {
+                if (racer->bananas > 0) {
+                    racer->bananas--;
+                    if (racer->bananas != 0) {
+                        doSpawnObj = TRUE;
+                    }
+                    obj->unk7C.word = 8;
+                } else {
+                    obj->unk7C.word = 0;
+                }
+            }
+        }
+        if (doSpawnObj) {
+            spawnObj.x = racerObj->segment.trans.x_position;
+            spawnObj.y = (s16) racerObj->segment.trans.y_position + 10;
+            spawnObj.z = racerObj->segment.trans.z_position;
+            spawnObj.size = 8;
+            spawnObj.objectID = BHV_SNOWBALL_2;
+            newObj = spawn_object(&spawnObj, 1);
+            if (newObj != NULL) {
+                newObj->segment.unk3C_a.level_entry = NULL;
+                newObj->segment.y_velocity = 10.0f;
+                scale = (newObj->segment.y_velocity * 2) / 0.5;
+                newObj->segment.x_velocity = (obj->segment.trans.x_position - racerObj->segment.trans.x_position) / scale;
+                newObj->segment.z_velocity = (obj->segment.trans.z_position - racerObj->segment.trans.z_position) / scale;
+                newObj->unk7C.word = (s32) racer;
+                newObj->unk78 = scale;
+            }
+        }
+    }
+}
+
 
 void obj_init_flycoin(UNUSED Object *obj, UNUSED LevelObjectEntry_FlyCoin *entry) {
 }

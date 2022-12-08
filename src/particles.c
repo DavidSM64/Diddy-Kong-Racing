@@ -261,34 +261,41 @@ void func_800AE490(void) {
         gParticleBehavioursAssetTable = NULL;
     }
 }
-#ifdef NON_EQUIVALENT
+
 void init_particle_assets(void) {
+    s32 *new_var2;
     s32 i;
-
+    u32 new_var;
+    s32 temp;
     func_800AE490();
-    gParticlesAssetTable = load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
+    gParticlesAssetTable = (s32) load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
+    gParticlesAssetTableCount = -1; 
+    while (((s32) gParticlesAssetTable[gParticlesAssetTableCount + 1]) != -1){
+        gParticlesAssetTableCount++;
+    }
 
-    for (gParticlesAssetTableCount = -1; (s32)gParticlesAssetTable[gParticlesAssetTableCount + 1] != -1; gParticlesAssetTableCount++) {
-    }
-    gParticlesAssets = load_asset_section_from_rom(ASSET_PARTICLES);
+    gParticlesAssets = (s32 *) load_asset_section_from_rom(ASSET_PARTICLES);
     for (i = 0; i < gParticlesAssetTableCount; i++) {
-        gParticlesAssetTable[i] = (u8 *)gParticlesAssets + (s32)gParticlesAssetTable[i];
+    gParticlesAssetTable[i] = (unk800E2CF0 *) (((u8 *) gParticlesAssets) + ((s32) gParticlesAssetTable[i]));
     }
-    gParticleBehavioursAssetTable = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
-    for (gParticleBehavioursAssetTableCount = -1; (s32)gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1] != -1; gParticleBehavioursAssetTableCount++) {
-    }
-    gParticleBehavioursAssets = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
+
+  gParticleBehavioursAssetTable = (s32) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
+  gParticleBehavioursAssetTableCount = -1; 
+  while (((s32) gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1]) != (-1)) {
+      gParticleBehavioursAssetTableCount++;
+  }
+
+    gParticleBehavioursAssets = (s32) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
     for (i = 0; i < gParticleBehavioursAssetTableCount; i++) {
-        gParticleBehavioursAssetTable[i] = (u8 *)gParticleBehavioursAssets + (s32)gParticleBehavioursAssetTable[i];
-        if ((s32)gParticleBehavioursAssetTable[i]->unk9C != -1) {
-            gParticleBehavioursAssetTable[i]->unk9C = get_misc_asset(gParticleBehavioursAssetTable[i]->unk9C);
+        new_var = -1;
+        gParticleBehavioursAssetTable[i] = (ParticleBehavior *) (((u8 *) gParticleBehavioursAssets) + ((s32) gParticleBehavioursAssetTable[i]));
+        if (((s32) gParticleBehavioursAssetTable[i]->unk9C) != new_var)
+        {
+            new_var2 = gParticleBehavioursAssetTable[i]->unk9C;
+            gParticleBehavioursAssetTable[i]->unk9C = get_misc_asset(new_var2);
         }
     }
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/particles/init_particle_assets.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800AE728.s")
 
