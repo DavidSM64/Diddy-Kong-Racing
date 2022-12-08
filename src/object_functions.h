@@ -381,18 +381,18 @@ void obj_loop_flycoin(Object *obj, s32 updateRate);
 void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 arg6);
 void obj_loop_stopwatchman(Object *obj, s32 updateRate);
 void obj_loop_parkwarden(Object *obj, s32 updateRate);
-void obj_loop_bridge_whaleramp(Object* obj, s32 updateRate);
-void obj_loop_frog(Object* obj, s32 updateRate);
-void obj_loop_levelname(Object* obj, s32 updateRate);
-void obj_loop_banana(Object* obj, s32 updateRate);
-void obj_loop_collectegg(Object* obj, s32 updateRate);
-void obj_loop_weather(Object* obj, s32 updateRate);
+void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate);
+void obj_loop_frog(Object *obj, s32 updateRate);
+void obj_loop_levelname(Object *obj, s32 updateRate);
+void obj_loop_banana(Object *obj, s32 updateRate);
+void obj_loop_collectegg(Object *obj, s32 updateRate);
+void obj_loop_weather(Object *obj, s32 updateRate);
 void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry);
 void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry);
 void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry);
-void obj_loop_trigger(Object* obj, s32 updateRate);
+void obj_loop_trigger(Object *obj, s32 updateRate);
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry);
-void obj_loop_treasuresucker(Object* obj, s32 updateRate);
+void obj_loop_treasuresucker(Object *obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
