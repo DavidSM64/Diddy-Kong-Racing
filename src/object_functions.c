@@ -2994,7 +2994,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     Object **racers;
     Object_Trigger *trigger;
     Object_Racer *racer;
-    Settings* settings;
+    Settings *settings;
     f32 diffX;
     f32 diffY;
     f32 diffZ;
