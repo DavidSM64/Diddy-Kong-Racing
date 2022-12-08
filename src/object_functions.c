@@ -3378,19 +3378,19 @@ void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
  * When touched by a player, will increase their banana count.
 */
 void obj_loop_banana(Object *obj, s32 updateRate) {
-    Object *racerObj; // sp6C
-    Object_Racer *racer; // sp68
-    f32 tempPos[3]; // 5C, 60, 64
+    Object *racerObj;
+    Object_Racer *racer;
+    f32 tempPos[3];
     f32 sp58;
-    f32 updateRateF; // sp54
+    f32 updateRateF;
     f32 velX;
     f32 velZ;
     s32 sp48;
     s32 sp44;
     s8 sp43;
-    Object_Banana *banana; // sp3C
+    Object_Banana *banana;
     Object_78_Banana *obj78;
-    s32 racerPrevUnk180; // sp34
+    s32 racerPrevUnk180;
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
@@ -3506,6 +3506,13 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     }
 }
 
+
+/**
+ * Race silver coin init behaviour.
+ * Checks if in the correct modes, then sets the flag to active, otherwise inactive.
+ * If the flag is inactive, destroy the object.
+ * Rareware duplicated this function just to check for adventure 2...
+*/
 void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv2 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
@@ -3514,36 +3521,47 @@ void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv
     obj->unk7C.word = 16;
     if (!is_in_tracks_mode()) {
         if (check_if_silver_coin_race() && is_in_adventure_two()) {
-            obj->action = 0;
+            obj->action = SILVER_COIN_ACTIVE;
         } else {
-            obj->action = 3;
+            obj->action = SILVER_COIN_INACTIVE;
         }
     }
-    if (obj->action == 3) {
+    if (obj->action == SILVER_COIN_INACTIVE) {
         obj->segment.trans.unk6 |= 0x600;
         gParticlePtrList_addObject(obj);
     }
 }
 
+/**
+ * Race silver coin init behaviour.
+ * Checks if in the correct modes, then sets the flag to active, otherwise inactive.
+ * If the flag is inactive, destroy the object.
+*/
 void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
-    obj->action = 3;
+    obj->action = SILVER_COIN_INACTIVE;
     obj->unk7C.word = 0;
     if (!is_in_tracks_mode()) {
         if (check_if_silver_coin_race() && !is_in_adventure_two()) {
-            obj->action = 0;
+            obj->action = SILVER_COIN_ACTIVE;
         } else {
-            obj->action = 3;
+            obj->action = SILVER_COIN_INACTIVE;
         }
     }
-    if (obj->action == 3) {
+    if (obj->action == SILVER_COIN_INACTIVE) {
         obj->segment.trans.unk6 |= 0x600;
         gParticlePtrList_addObject(obj);
     }
 }
 
+/**
+ * Race silver coin loop behaviour.
+ * Can only be collected by players. Sets a flag equal to the player number when collected.
+ * Under normal gameplay, that's 1 and 2, since the silver coin challenge can be done with at most two players.
+ * When collected, the coins are hidden for that player, rather than being removed outright.
+*/
 void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     Object_4C* silverCoin4C;
     Object_Racer* racer;
@@ -3551,18 +3569,18 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     s32 temp;
 
     temp = func_8006C19C();
-    if ((temp && obj->action != 3) || (!temp && obj->action == 0)) {
+    if ((temp && obj->action != SILVER_COIN_INACTIVE) || (!temp && obj->action == SILVER_COIN_ACTIVE)) {
         silverCoin4C = obj->unk4C;
         if (silverCoin4C->unk13 < 80) {
             racerObj = (Object *) silverCoin4C->unk0;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) racerObj->unk64;
-                if (racer->playerIndex != -1) {
-                    if (racer->raceFinished == FALSE && !(obj->action & (1 << racer->playerIndex))) {
-                        obj->action |= (1 << racer->playerIndex);
+                if (racer->playerIndex != PLAYER_COMPUTER) {
+                    if (racer->raceFinished == FALSE && !(obj->action & (SILVER_COIN_COLLECTED << racer->playerIndex))) {
+                        obj->action |= SILVER_COIN_COLLECTED << racer->playerIndex;
                         obj->unk7C.word = 0x10;
                         obj->segment.trans.unk6 |= 0x200 << racer->playerIndex;
-                        play_sequence(racer->unk202 + 0x2B);
+                        play_sequence(SEQUENCE_SILVER_COIN_1 + racer->unk202);
                         racer->unk202++;
                     }
                 }

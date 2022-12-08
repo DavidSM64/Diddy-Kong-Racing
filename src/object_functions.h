@@ -37,6 +37,13 @@ enum TTBehaviours {
     TT_MODE_DIALOGUE_END
 };
 
+enum SilvereCoinBehaviours {
+    SILVER_COIN_ACTIVE,
+    SILVER_COIN_COLLECTED,
+    SILVER_COIN_COLLECTED_PLAYER_2,
+    SILVER_COIN_INACTIVE
+};
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;
