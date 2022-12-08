@@ -2990,8 +2990,8 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     s32 curRaceType;
     s32 numRacers;
     LevelObjectEntry_Trigger *triggerEntry;
-    Object* racerObj;
-    Object** racers;
+    Object *racerObj;
+    Object **racers;
     Object_Trigger *trigger;
     Object_Racer *racer;
     Settings* settings;
