@@ -3365,24 +3365,12 @@ void obj_loop_banana(Object* obj, s32 updateRate) {
                 racer = (Object_Racer *) racerObj->unk64;
                 if ((get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) || racer->bananas < 2) {
                     racerPrevUnk180 = racer->unk180;
-                    func_80009558(
-                        SOUND_SELECT, 
-                        racerObj->segment.trans.x_position, 
-                        racerObj->segment.trans.y_position, 
-                        racerObj->segment.trans.z_position, 
-                        4, 
-                        &racer->unk180
-                    );
+                    func_80009558( SOUND_SELECT,  racerObj->segment.trans.x_position,  racerObj->segment.trans.y_position,  racerObj->segment.trans.z_position, 4, &racer->unk180);
                     if (racerPrevUnk180 != 0) {
                         func_800096F8(racerPrevUnk180);
                     }
                     if ((racer->playerIndex != PLAYER_COMPUTER) && racer->bananas == 9) {
-                        play_sound_spatial(
-                            racer->characterId + SOUND_UNK_7B, 
-                            racerObj->segment.trans.x_position, 
-                            racerObj->segment.trans.y_position, 
-                            racerObj->segment.trans.z_position, 
-                            NULL
+                        play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL
                         );
                     }
                     racer->bananas++;
