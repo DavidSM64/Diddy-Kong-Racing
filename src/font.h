@@ -44,28 +44,28 @@ typedef struct unk800C54E8 {
 
 /* Size: 8 bytes */
 typedef struct FontCharData {
-    u8 unk0; // Texture Pointer Index?
-    u8 unk1; // Upper Left Corner? Maybe only used when FontData->unk20 is 0 for some reason.
-    u8 unk2; // Font Char Width?
-    u8 unk3; // Font Char Height?
-    u8 unk4; // Upper left coordinate for the texture derived from X?
-    u8 unk5; // Upper left coordinate for the texture derived from Y?
-    u8 unk6; // Related to the lower right X Coordinate.
-    u8 unk7; // Related to the lower right Y Coordinate.
+    u8 textureID; // Texture Pointer Index?
+    u8 ulx; // Upper Left Corner? Maybe only used when FontData->unk20 is 0 for some reason.
+    u8 width; // Font Char Width?
+    u8 height; // Font Char Height?
+    u8 s; // Upper left coordinate for the texture derived from X?
+    u8 t; // Upper left coordinate for the texture derived from Y?
+    u8 lrx; // Related to the lower right X Coordinate.
+    u8 lry; // Related to the lower right Y Coordinate.
 } FontCharData;
 
 /* Size: 0x400 bytes */
 typedef struct FontData {
-/* 0x000 */ s32 unk0;
-/* 0x004 */ char name[0x1C];
-/* 0x020 */ u16 unk20; // x1?
-/* 0x022 */ u16 unk22; // y1?
-/* 0x024 */ u16 unk24; // x2?
-/* 0x026 */ u16 unk26; // y2?
-/* 0x028 */ u8 unk28[24];
-/* 0x040 */ s16 unk40[32];
+/* 0x000 */ s32 unk0; // Unused
+/* 0x004 */ char name[28];
+/* 0x020 */ u16 x;
+/* 0x022 */ u16 y;
+/* 0x024 */ u16 charWidth;
+/* 0x026 */ u16 charHeight;
+/* 0x028 */ u8 loadedFonts[24];
+/* 0x040 */ s16 textureID[32];
 /* 0x080 */ TextureHeader *texturePointers[32];
-/* 0x100 */ FontCharData unk100[96];
+/* 0x100 */ FontCharData letter[96];
 } FontData;
 
 /* Size: 0x20 bytes */
@@ -93,16 +93,16 @@ typedef struct DialogueBox {
 
 
 /* Size: 0x20 bytes */
-typedef struct unk8012A7EC {
+typedef struct DialogueTextElement {
 /* 0x00 */ u8 unk0;
-/* 0x01 */ u8 unk1;
+/* 0x01 */ u8 number;
 /* 0x02 */ u8 unk2;
 /* 0x03 */ u8 unk3;
 /* 0x04 */ char *text; // Pointer to the text array
 /* 0x08 */ s16 posX;
 /* 0x0A */ s16 posY;
-/* 0x0C */ s16 unkC;
-/* 0x0E */ s16 unkE;
+/* 0x0C */ s16 offsetX;
+/* 0x0E */ s16 offsetY;
 /* 0x10 */ u8 textColourR;
 /* 0x11 */ u8 textColourG;
 /* 0x12 */ u8 textColourB;
@@ -115,7 +115,7 @@ typedef struct unk8012A7EC {
 /* 0x19 */ u8 font;
 /* 0x1A */ u16 flags;
 /* 0x1C */ DialogueBox *nextBox;
-} unk8012A7EC;
+} DialogueTextElement;
 
 /* Size: 0x28 bytes */
 // Dialogue Box background
@@ -150,13 +150,13 @@ typedef struct DialogueBoxBackground {
 } DialogueBoxBackground;
 
 #define DIALOGUEBOXBACKGROUND_COUNT 8
-#define unk8012A7EC_COUNT 64
+#define DIALOGUETEXTELEMENT_COUNT 64
 #define DIALOGUEBOXBACKGROUND_TOTAL_SIZE (sizeof(DialogueBoxBackground) * DIALOGUEBOXBACKGROUND_COUNT)
-#define unk8012A7EC_TOTAL_SIZE (sizeof(unk8012A7EC) * unk8012A7EC_COUNT)
+#define DialogueTextElement_TOTAL_SIZE (sizeof(DialogueTextElement) * DIALOGUETEXTELEMENT_COUNT)
 
 void load_fonts(void);
-void set_kerning(s32 arg0);
-void set_text_font(s32 arg0);
+void set_kerning(s32 setting);
+void set_text_font(s32 fontID);
 void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha);
 void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
@@ -166,10 +166,9 @@ void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, 
 void set_dialogue_font(s32 dialogueBoxID, s32 font);
 void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha);
 void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
-void set_current_text_background_colour(s32 dialogueBoxID, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void move_dialogue_box_to_front(s32 arg0, DialogueBox *arg1);
-void assign_dialogue_box_id(s32 arg0);
-void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4);
+void set_current_text_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha);
+void move_dialogue_box_to_front(s32 dialogueBoxID, DialogueBox *box);
+void assign_dialogue_box_id(s32 dialogueBoxID);
 void open_dialogue_box(s32 dialogueBoxID);
 void close_dialogue_box(s32 dialogueBoxID);
 UNUSED void set_dialogue_box_unused_flag(s32 dialogueBoxID);
@@ -181,11 +180,10 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry);
 void render_dialogue_box(Gfx **dlist, Matrix **mat, VertexList **verts, s32 dialogueBoxID);
 void parse_string_with_number(char *input, char *output, s32 number);
 void s32_to_string(char **outString, s32 number);
-
-void load_font(s32 fontID); //Non Matching
-void unload_font(s32 arg0); //Non Matching
-void render_text_string(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4); //Non Matching
-s32 get_text_width(char *text, s32 x, s32 font); //Non Matching
-void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 arg4, s32 arg5); //Non Matching
+void load_font(s32 fontID);
+void unload_font(s32 fontID);
+void render_text_string(Gfx **dlist, DialogueBoxBackground *box, char *text, AlignmentFlags alignmentFlags, f32 scisScale);
+s32 get_text_width(char *text, s32 x, s32 font);
+void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 number, s32 flags);
 
 #endif

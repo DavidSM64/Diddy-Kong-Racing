@@ -68,7 +68,7 @@ OSDevMgr __osPiDevMgr = {
 s32 gNumberOfFonts;
 FontData *gFonts;
 DialogueBoxBackground *gDialogueBoxBackground;
-unk8012A7EC *D_8012A7EC;
+DialogueTextElement *gDialogueText;
 s32 gCompactKerning; // Boolean value, seems to be related to X placement of menus on the X Axis?
 s8 sDialogueBoxCloseTimer;
 UNUSED s32 D_8012A7F8;
@@ -90,12 +90,12 @@ void load_fonts(void) {
     gFonts = (FontData *) (fontAssetData + 1);
 
     for (i = 0; i < gNumberOfFonts; i++) {
-        gFonts[i].unk28[0] = 0;
+        gFonts[i].loadedFonts[0] = 0;
     }
 
     gDialogueBoxBackground = (DialogueBoxBackground *) allocate_from_main_pool_safe(
-        DIALOGUEBOXBACKGROUND_TOTAL_SIZE + unk8012A7EC_TOTAL_SIZE, COLOUR_TAG_YELLOW);
-    D_8012A7EC = (unk8012A7EC *) &gDialogueBoxBackground[DIALOGUEBOXBACKGROUND_COUNT];
+        DIALOGUEBOXBACKGROUND_TOTAL_SIZE + DialogueTextElement_TOTAL_SIZE, COLOUR_TAG_YELLOW);
+    gDialogueText = (DialogueTextElement *) &gDialogueBoxBackground[DIALOGUEBOXBACKGROUND_COUNT];
 
     for (i = 0; i < DIALOGUEBOXBACKGROUND_COUNT; i++) {
         gDialogueBoxBackground[i].xpos = 0;
@@ -125,18 +125,18 @@ void load_fonts(void) {
         gDialogueBoxBackground[i].textOffsetY = 0;
         gDialogueBoxBackground[i].textBox = 0;
     }
-    for (i = 0; i < unk8012A7EC_COUNT; i++) {
-        D_8012A7EC[i].unk1 = 255;
-        D_8012A7EC[i].text = NULL;
-        D_8012A7EC[i].textColourR = 255;
-        D_8012A7EC[i].textColourG = 255;
-        D_8012A7EC[i].textColourB = 255;
-        D_8012A7EC[i].textColourA = 0;
-        D_8012A7EC[i].textBGColourR = 255;
-        D_8012A7EC[i].textBGColourG = 255;
-        D_8012A7EC[i].textBGColourB = 255;
-        D_8012A7EC[i].textBGColourA = 0;
-        D_8012A7EC[i].nextBox = NULL;
+    for (i = 0; i < DIALOGUETEXTELEMENT_COUNT; i++) {
+        gDialogueText[i].number = 255;
+        gDialogueText[i].text = NULL;
+        gDialogueText[i].textColourR = 255;
+        gDialogueText[i].textColourG = 255;
+        gDialogueText[i].textColourB = 255;
+        gDialogueText[i].textColourA = 0;
+        gDialogueText[i].textBGColourR = 255;
+        gDialogueText[i].textBGColourG = 255;
+        gDialogueText[i].textBGColourB = 255;
+        gDialogueText[i].textBGColourA = 0;
+        gDialogueText[i].nextBox = NULL;
     }
     load_font(ASSET_FONTS_FUNFONT);
     load_font(ASSET_FONTS_SMALLFONT);
@@ -158,11 +158,11 @@ void set_kerning(s32 setting) {
 void load_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
-        fontData->unk28[0]++;
-        if (fontData->unk28[0] == 1) {
+        fontData->loadedFonts[0]++;
+        if (fontData->loadedFonts[0] == 1) {
             s32 i = 0;
-            while (i < 32 && fontData->unk40[i] != -1) {
-                fontData->texturePointers[i] = load_texture(fontData->unk40[i]);
+            while (i < 32 && fontData->textureID[i] != -1) {
+                fontData->texturePointers[i] = load_texture(fontData->textureID[i]);
                 i++;
             }
         }
@@ -176,11 +176,11 @@ void load_font(s32 fontID) {
 void unload_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
-        if (fontData->unk28[0] > 0) {
-            fontData->unk28[0]--;
-            if (fontData->unk28[0] == 0) {
+        if (fontData->loadedFonts[0] > 0) {
+            fontData->loadedFonts[0]--;
+            if (fontData->loadedFonts[0] == 0) {
                 s32 i = 0;
-                while (i < 32 && fontData->unk40[i] != -1) {
+                while (i < 32 && fontData->textureID[i] != -1) {
                     free_texture(fontData->texturePointers[i]);
                     fontData->texturePointers[i] = NULL;
                     i++;
@@ -209,9 +209,9 @@ UNUSED TextureHeader *get_loaded_font(s32 font, u8 index) {
 
     if (font < gNumberOfFonts) {
         fontData = &gFonts[font];
-        if (fontData->unk28[0] != 0) {
+        if (fontData->loadedFonts[0] != 0) {
             index -= 32;
-            pointerIndex = fontData->unk100[index].unk0;
+            pointerIndex = fontData->letter[index].textureID;
             if (pointerIndex != 0xFF) {
                 return fontData->texturePointers[pointerIndex];
             }
@@ -332,10 +332,10 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
             }
         }
         if (alignmentFlags & VERT_ALIGN_BOTTOM) {
-            ypos = (ypos - fontData->unk22) + 1;
+            ypos = (ypos - fontData->y) + 1;
         }
         if (alignmentFlags & VERT_ALIGN_MIDDLE) {
-            ypos -= fontData->unk22 >> 1;
+            ypos -= fontData->y >> 1;
         }
         if (box->textBGColourA != 0) {
             gDPSetEnvColor((*dList)++, box->textBGColourR, box->textBGColourG, box->textBGColourB, box->textBGColourA);
@@ -343,7 +343,7 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
                 xAlignmentDiff = get_text_width(text, xpos, box->font);
             }
             newTempX = xpos + xAlignmentDiff - 1;
-            newTempY = ypos + fontData->unk22 - 1;
+            newTempY = ypos + fontData->y - 1;
             gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[1]), 2);
             gDPFillRectangle((*dList)++, xpos + box->x1, ypos + box->y1, newTempX + box->x1, newTempY + box->y1);
             gDPPipeSync((*dList)++);
@@ -362,28 +362,28 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
             if (curChar <= 0x20 || curChar >= 0x80) {
                 switch (curChar) {
                     case ' ': // Space
-                        xpos += fontData->unk24;
+                        xpos += fontData->charWidth;
                         break;
                     case '\n': // Line Feed
                         xpos = box->textOffsetX;
-                        ypos += fontData->unk22;
+                        ypos += fontData->y;
                         break;
                     case '\t': // Tab
-                        xpos += fontData->unk26 - ((xpos - box->textOffsetX) % fontData->unk26);
+                        xpos += fontData->charHeight - ((xpos - box->textOffsetX) % fontData->charHeight);
                         break;
                     case '\v': // VT - Vertical Tab
-                        ypos += fontData->unk22;
+                        ypos += fontData->y;
                         break;
                     case '\r': // Carriage Return
                         xpos = box->textOffsetX;
                         break;
                     default:
-                        xpos += fontData->unk24;
+                        xpos += fontData->charWidth;
                         break;
                 }
             } else {
                 curChar -= 0x20; // Convert lower case to upper case ASCII
-                textureIndex = fontData->unk100[curChar].unk0;
+                textureIndex = fontData->letter[curChar].textureID;
                 if (textureIndex != 0xFF) {
                     newData = TRUE;
                     if (lastTextureIndex != textureIndex) {
@@ -391,14 +391,14 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
                         texture = fontData->texturePointers[textureIndex];
                         gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(texture->cmd), texture->numberOfCommands);
                     }
-                    textureWidth = fontData->unk100[curChar].unk2;
-                    textureHeight = fontData->unk100[curChar].unk3;
-                    textureS = fontData->unk100[curChar].unk4;
-                    textureT = fontData->unk100[curChar].unk5;
-                    xAlignmentDiff = fontData->unk100[curChar].unk6;
-                    yAlignmentDiff = fontData->unk100[curChar].unk7;
+                    textureWidth = fontData->letter[curChar].width;
+                    textureHeight = fontData->letter[curChar].height;
+                    textureS = fontData->letter[curChar].s;
+                    textureT = fontData->letter[curChar].t;
+                    xAlignmentDiff = fontData->letter[curChar].lrx;
+                    yAlignmentDiff = fontData->letter[curChar].lry;
                     charSpace =
-                        (fontData->unk20 == 0) ? (fontData->unk100[curChar].unk1) : (fontData->unk20);
+                        (fontData->x == 0) ? (fontData->letter[curChar].ulx) : (fontData->x);
                     newData = TRUE;
                 }
             }
@@ -457,20 +457,20 @@ s32 get_text_width(char *text, s32 x, s32 font) {
     for (index = 0; text[index] != '\0'; index++) {
         thisDiffX = diffX;
         ch = text[index];
-        if ((ch < 0x21) || (ch >= 0x80)) {
+        if (ch <= 0x20 || ch >= 0x80) {
             if (ch == '\t') { // Tab character
-                diffX += fontData->unk26 - (diffX % fontData->unk26);
+                diffX += fontData->charHeight - (diffX % fontData->charHeight);
             } else {
-                diffX += fontData->unk24;
+                diffX += fontData->charWidth;
             }
         } else {
             ch -= 0x20; // Convert lower case to upper case ASCII
 
-            if (fontData->unk100[ch].unk0 != 0xFF) {
-                if (fontData->unk20 == 0) {
-                    diffX += fontData->unk100[ch].unk1;
+            if (fontData->letter[ch].textureID != 0xFF) {
+                if (fontData->x == 0) {
+                    diffX += fontData->letter[ch].ulx;
                 } else {
-                    diffX += fontData->unk20;
+                    diffX += fontData->x;
                 }
             }
         }
@@ -608,7 +608,7 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
     s32 width;
     UNUSED s32 var_a0;
     char buffer[256];
-    unk8012A7EC *ret;
+    DialogueTextElement *ret;
     DialogueBox *textBox;
     s32 i;
     DialogueBoxBackground *bg;
@@ -620,8 +620,8 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
     }
 
     for (i = 0, ret = NULL; i < 64 && ret == NULL; i++) {
-        if (D_8012A7EC[i].unk1 == 0xFF) {
-            ret = &D_8012A7EC[i];
+        if (gDialogueText[i].number == 255) {
+            ret = &gDialogueText[i];
         }
     }
 
@@ -645,10 +645,10 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
                 }
             }
             if (flags & VERT_ALIGN_BOTTOM) {
-                posY = (posY - fontData->unk22) + 1;
+                posY = (posY - fontData->y) + 1;
             }
             if (flags & VERT_ALIGN_MIDDLE) {
-                posY -= fontData->unk22 >> 1;
+                posY -= fontData->y >> 1;
             }
         }
         if (bg->textBox == NULL) {
@@ -664,12 +664,12 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
             *textBoxPtr = (DialogueBox *) ret;
             ret->nextBox = textBox;
         }
-        ret->unk1 = number;
+        ret->number = number;
         ret->text = text;
         ret->posX = posX;
         ret->posY = posY;
-        ret->unkC = 0;
-        ret->unkE = 0;
+        ret->offsetX = 0;
+        ret->offsetY = 0;
         ret->textColourR = bg->textColourR;
         ret->textColourG = bg->textColourG;
         ret->textColourB = bg->textColourB;
@@ -726,30 +726,34 @@ void assign_dialogue_box_id(s32 dialogueBoxID) {
     }
 }
 
-UNUSED void func_800C54E8(s32 dialogueBoxID, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
+/**
+ * Unused function that set the offset of the text in the current dialogue box based on alignment flags.
+ * Goes unused, as does the whole text offset system.
+ */
+UNUSED void align_text_in_box(s32 dialogueBoxID, DialogueTextElement *box, s32 x, s32 y, s32 flags) {
     FontData *fontData;
     DialogueBoxBackground *dialogueBox;
 
     dialogueBox = &gDialogueBoxBackground[dialogueBoxID];
 
-    if (arg1 != NULL) {
-        if (arg1->unk19 != 0xFF) {
-            fontData = &gFonts[arg1->unk19];
-            if (arg4 != 4) {
-                switch (arg4) {
-                    case 1:
-                        arg3 *= fontData->unk22;
+    if (box != NULL) {
+        if (box->font != FONT_UNK_FF) {
+            fontData = &gFonts[box->font];
+            if (flags != ALIGN_TOP_CENTER) {
+                switch (flags) {
+                    case ALIGN_TOP_RIGHT:
+                        y *= fontData->y;
                         break;
-                    case 2:
-                        arg3 *= (dialogueBox->height / fontData->unk22) * fontData->unk22;
+                    case ALIGN_BOTTOM_LEFT:
+                        y *= (dialogueBox->height / fontData->y) * fontData->y;
                         break;
                 }
-                arg1->unkC += arg2;
-                arg1->unkE += arg3;
+                box->offsetX += x;
+                box->offsetY += y;
                 return;
             }
-            arg1->unkC = 0;
-            arg1->unkE = 0;
+            box->offsetX = 0;
+            box->offsetY = 0;
             return;
         }
     }
@@ -925,7 +929,7 @@ void render_dialogue_box(Gfx **dlist, Matrix **mat, VertexList **verts, s32 dial
         gDPPipeSync((*dlist)++);
     }
     if (mat != NULL && verts != NULL) {
-        if (!sDialogueBoxIsOpen) {
+        if (sDialogueBoxIsOpen == FALSE) {
             dialogue_open_stub();
             sDialogueBoxIsOpen = TRUE;
         }
