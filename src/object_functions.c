@@ -4314,7 +4314,7 @@ void obj_init_levelname(Object *obj, LevelObjectEntry_LevelName *entry) {
  * Overworld level name behaviour.
  * Placed at a level entrance, when a player gets near, display the level name on screen.
 */
-void obj_loop_levelname(Object* obj, s32 updateRate) {
+void obj_loop_levelname(Object *obj, s32 updateRate) {
     s32 textWidth;
     s32 x1;
     s32 y1;
