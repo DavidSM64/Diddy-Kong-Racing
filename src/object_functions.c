@@ -3239,8 +3239,8 @@ void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry
  * Smokey's castle treasure box loop function.
  * When the player approaches carrying bananas, it spawns visual objects to enter it, then takes them from the player.
 */
-void obj_loop_treasuresucker(Object* obj, s32 updateRate) {
-    Object* racerObj;
+void obj_loop_treasuresucker(Object *obj, s32 updateRate) {
+    Object *racerObj;
     f32 scale;
     Object_Racer *racer;
     f32 diffX;
