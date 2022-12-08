@@ -4125,7 +4125,7 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry) {
  * Hops, skips, jumps around. Can be flattened by players.
  * If a Drumstick frog exists after beating all 4 trophy races, he can be squashed and will be unlocked as a playable character.
 */
-void obj_loop_frog(Object* obj, s32 updateRate) {
+void obj_loop_frog(Object *obj, s32 updateRate) {
     UNUSED s32 pad0;
     s32 i;
     s32 sp104;
