@@ -149,5 +149,6 @@ void func_800BA8E4(Gfx**, Matrix**, s32);
 void func_8002DE30(Object*);
 void func_8002E234(Object*, s32);
 void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+s32 func_8002BAB0(s16, f32, f32, f32*);
 
 #endif

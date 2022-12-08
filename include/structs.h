@@ -913,12 +913,15 @@ typedef struct Object_Frog {
   /* 0x10 */ f32 unk10;
   /* 0x14 */ u8 unk14;
   /* 0x15 */ u8 unk15;
-  /* 0x16 */ u8 pad16[3];
-  /* 0x19 */ u8 unk19;
-  /* 0x1A */ u8 pad1A[6];
+  /* 0x16 */ s16 unk16;
+  /* 0x18 */ s8 unk18;
+  /* 0x19 */ s8 unk19;
+  /* 0x1A */ s16 unk1A;
+  /* 0x1C */ f32 unk1C;
   /* 0x20 */ f32 unk20;
   /* 0x24 */ f32 unk24;
-  /* 0x28 */ u8 pad28[8];
+  /* 0x28 */ f32 unk28;
+  /* 0x2C */ f32 unk2C;
   /* 0x30 */ f32 unk30;
 } Object_Frog;
 
@@ -1204,7 +1207,7 @@ typedef struct Object_Trigger {
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 unkC;
   /* 0x10 */ s32 unk10;
-  /* 0x14 */ s8 unk14;
+  /* 0x14 */ u8 unk14;
 } Object_Trigger;
 
 typedef struct Object_Audio {
@@ -1254,7 +1257,7 @@ typedef struct Object_PosArrow {
 } Object_PosArrow;
 
 typedef struct Object_Banana {
-  /* 0x0 */ u8 pad0[4];
+  /* 0x0 */ s32 unk0;
   /* 0x4 */ struct Object *spawner;
   /* 0x8 */ s8 unk8;
   /* 0x9 */ s8 unk9;
@@ -1634,5 +1637,12 @@ typedef struct ByteColour {
     u8 green;
     u8 blue;
 } ByteColour;
+
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} ColourRGBA;
 
 #endif

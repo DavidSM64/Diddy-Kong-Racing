@@ -383,7 +383,7 @@ void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
 void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object);
-void func_80012F30(Object *arg0);
+void func_80012F30(Object *obj);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
 void func_800142B8(void);
@@ -448,7 +448,7 @@ void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
 f32 cubic_spline_interpolation(f32 *, s32, f32, f32 *);
-s32 func_80031F88(Object*, s32);
+s32 func_80031F88(Object*, ObjectHeader24 *);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
@@ -465,12 +465,14 @@ void func_8000B290(void);
 void func_80016BC4(unk8000FD34*);
 s32 func_8001C48C(Object *obj);
 void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
+Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
+s32 func_8000FD34(unk8000FD34 *arg0, unk_80016BC4_2 *arg1);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void gParticlePtrList_flush(void);
-void decrypt_magic_codes(u8 *arg0, s32 length);
+void decrypt_magic_codes(s32 *arg0, s32 length);
 void func_80011AD0(Object *this);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
@@ -482,12 +484,16 @@ void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
-Object *func_8001B7A8(Object *arg0, s32 arg1, f32 *arg2);
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
 void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
-void func_800138A8(Object*, unk80068514_arg4*, s16*, s32);
+void func_800138A8(Object*, unk80068514_arg4*, ObjectTransformExt *, s32);
 Object *func_8002342C(f32 x, f32 z);
+void func_8006017C(s32);
+void func_8001709C();
+void func_80012F94(Object *);
+void render_3d_model(Object *);
+void func_800101AC(Object *, s32);
 
 #endif
