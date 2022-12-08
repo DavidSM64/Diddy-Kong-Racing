@@ -7,6 +7,7 @@
 #include "asset_enums.h"
 #include "memory.h"
 #include "textures_sprites.h"
+#include "thread0_epc.h"
 
 /************ .rodata ************/
 
@@ -175,7 +176,7 @@ u16 D_80127CD2;
 s32 D_80127CD4;
 s8 gDebugPrintBufferStart[2300];
 s32 gDebugPrintBufferEnd[1026];
-s32 D_801295E0[108];
+OSThread D_801295E0;
 s32 D_80129790[6]; // Osmesg stuff
 s32 D_801297A8[8];
 s32 D_801297C8[8];
@@ -260,34 +261,41 @@ void func_800AE490(void) {
         gParticleBehavioursAssetTable = NULL;
     }
 }
-#ifdef NON_EQUIVALENT
+
 void init_particle_assets(void) {
+    s32 *new_var2;
     s32 i;
-
+    u32 new_var;
+    s32 temp;
     func_800AE490();
-    gParticlesAssetTable = load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
+    gParticlesAssetTable = (s32) load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
+    gParticlesAssetTableCount = -1; 
+    while (((s32) gParticlesAssetTable[gParticlesAssetTableCount + 1]) != -1){
+        gParticlesAssetTableCount++;
+    }
 
-    for (gParticlesAssetTableCount = -1; (s32)gParticlesAssetTable[gParticlesAssetTableCount + 1] != -1; gParticlesAssetTableCount++) {
-    }
-    gParticlesAssets = load_asset_section_from_rom(ASSET_PARTICLES);
+    gParticlesAssets = (s32 *) load_asset_section_from_rom(ASSET_PARTICLES);
     for (i = 0; i < gParticlesAssetTableCount; i++) {
-        gParticlesAssetTable[i] = (u8 *)gParticlesAssets + (s32)gParticlesAssetTable[i];
+    gParticlesAssetTable[i] = (unk800E2CF0 *) (((u8 *) gParticlesAssets) + ((s32) gParticlesAssetTable[i]));
     }
-    gParticleBehavioursAssetTable = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
-    for (gParticleBehavioursAssetTableCount = -1; (s32)gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1] != -1; gParticleBehavioursAssetTableCount++) {
-    }
-    gParticleBehavioursAssets = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
+
+  gParticleBehavioursAssetTable = (s32) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
+  gParticleBehavioursAssetTableCount = -1; 
+  while (((s32) gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1]) != (-1)) {
+      gParticleBehavioursAssetTableCount++;
+  }
+
+    gParticleBehavioursAssets = (s32) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
     for (i = 0; i < gParticleBehavioursAssetTableCount; i++) {
-        gParticleBehavioursAssetTable[i] = (u8 *)gParticleBehavioursAssets + (s32)gParticleBehavioursAssetTable[i];
-        if ((s32)gParticleBehavioursAssetTable[i]->unk9C != -1) {
-            gParticleBehavioursAssetTable[i]->unk9C = get_misc_asset(gParticleBehavioursAssetTable[i]->unk9C);
+        new_var = -1;
+        gParticleBehavioursAssetTable[i] = (ParticleBehavior *) (((u8 *) gParticleBehavioursAssets) + ((s32) gParticleBehavioursAssetTable[i]));
+        if (((s32) gParticleBehavioursAssetTable[i]->unk9C) != new_var)
+        {
+            new_var2 = gParticleBehavioursAssetTable[i]->unk9C;
+            gParticleBehavioursAssetTable[i]->unk9C = get_misc_asset(new_var2);
         }
     }
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/particles/init_particle_assets.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800AE728.s")
 
@@ -495,7 +503,7 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
         } else {
             arg0->unk7 = 0xFF;
         }
-        arg0->unkB.unkC_400.unkC = (s32 *)allocate_from_main_pool_safe(arg0->unk7 * 4, 0x80808080);
+        arg0->unkB.unkC_400.unkC = (s32 *)allocate_from_main_pool_safe(arg0->unk7 * 4, COLOUR_TAG_SEMITRANS_GREY);
         arg0->unkB.unkC_400.unk10 = temp_v1->unk14;
         arg0->unkB.unkC_400.unk12 = temp_v1->unk16;
         arg0->unkB.unkC_400.unk14 = temp_v1->unk22;

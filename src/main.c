@@ -9,11 +9,11 @@
 /************ .bss ************/
 
 u64 *gThread1StackPointer; // stack pointer for thread 1
-u64 gThread3Stack[1024];
+u64 gThread3Stack[0x400];
 u64 *gThread3StackPointer; // stack pointer for thread 3
 OSThread gThread1; // OSThread for thread 1
 OSThread gThread3; // OSThread for thread 3
-u64 D_8011FAC0[512]; //Thread1 stack?
+UNUSED u64 gUnusedThreadStack[0x200]; //Thread1 stack?
 u8 gPlatformSet = FALSE;
 u8 gPlatform;
 
@@ -99,6 +99,13 @@ void find_expansion_pak(void) {
     }
 }
 
+/******************************/
+
+/**
+ * Where it all begins.
+ * Once the boot procedure is finished in IPL3, this function is run.
+ * It kicks things off by initialising thread1, which serves as the top level
+*/
 void main(void) {
     osInitialize();
     osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1StackPointer, OS_PRIORITY_IDLE);
@@ -106,7 +113,6 @@ void main(void) {
 }
 
 extern OSSched gMainSched;
-
 
 #ifdef EXPANSION_PAK
 void draw_memory_error_screen(void) {
@@ -141,6 +147,11 @@ void draw_memory_error_screen(void) {
 }
 #endif
 
+/**
+ * Initialise the crash handler thread, then initialise the main game thread.
+ * Reset the start and endpoint of the game thread stack, then set thread priority to zero, effectively
+ * stopping this thread, as it's no longer needed.
+*/
 void thread1_main(UNUSED void *unused) {
     //thread0_create();
     crash_screen_init();
@@ -161,10 +172,14 @@ void thread1_main(UNUSED void *unused) {
     while (1) {}
 }
 
+/**
+ * Increments the start and endpoint of the stack.
+ * They should have an equal value, so if they don't, that triggers a printout saying a stack wraparound has occured.
+*/
 void thread3_verify_stack(void) {
-    gThread3Stack[1024]++;
+    gThread3Stack[0x400]++;
     gThread3Stack[0]++;
-    if ((gThread3Stack[1024] != gThread3Stack[0])) {
+    if ((gThread3Stack[0x400] != gThread3Stack[0])) {
         rmonPrintf("WARNING: Stack overflow/underflow!!!\n");
     }
 }

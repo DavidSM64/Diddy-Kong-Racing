@@ -11,6 +11,32 @@
 #define TIME_JIFFIES_PER_SECOND 60
 #define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
 
+enum TajBehaviours {
+    TAJ_MODE_ROAM,
+    TAJ_MODE_APPROACH_PLAYER,
+    TAJ_MODE_TURN_TOWARDS_PLAYER,
+    TAJ_MODE_GREET_PLAYER,
+    TAJ_MODE_DIALOGUE,
+    TAJ_MODE_TRANSFORM_BEGIN,
+    TAJ_MODE_TRANSFORM_END,
+    TAJ_MODE_END_DIALOGUE,
+    TAJ_MODE_END_DIALOGUE_UNUSED,
+    TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN = 10,
+    TAJ_MODE_TELEPORT_TO_PLAYER_END,
+    TAJ_MODE_SET_CHALLENGE = 15,
+    TAJ_MODE_TELEPORT_AWAY_BEGIN = 20,
+    TAJ_MODE_TELEPORT_AWAY_END,
+    TAJ_MODE_RACE = 30
+};
+
+enum TTBehaviours {
+    TT_MODE_ROAM,
+    TT_MODE_APPROACH_PLAYER,
+    TT_MODE_TURN_TOWARDS_PLAYER,
+    TT_MODE_DIALOGUE,
+    TT_MODE_DIALOGUE_END
+};
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;
@@ -199,9 +225,19 @@ typedef struct unk80041A90_MidiFade {
     f32 unk14;
 } unk80041A90_MidiFade;
 
+typedef struct Object_78_Banana {
+    s32 unk0;
+    s16 unk4;
+    s16 unk6;
+} Object_78_Banana;
+
+typedef struct Object_LevelName_78 {
+    f32 radius;
+    s16 unk4;
+    s16 unk6;
+} Object_LevelName_78;
+
 // Unsure about the signed/unsigned with these arrays.
-extern u16 D_800DC970[4];
-extern u16 D_800DC978[4];
 extern u16 D_800DC980[20];
 extern u16 D_800DC9A8[20];
 extern u16 D_800DC9D0[64];
@@ -283,7 +319,7 @@ void obj_loop_setuppoint(Object *obj, s32 speed);
 void obj_init_dino_whale(Object *obj, LevelObjectEntry_Dino_Whale *entry);
 void obj_loop_dino_whale(Object *obj, s32 speed);
 void obj_init_parkwarden(Object *obj, LevelObjectEntry_Parkwarden *entry);
-void func_80039320(s16 arg0);
+void func_80039320(s16 voiceClip);
 void play_taj_voice_clip(u16 soundID, s32 interrupt);
 void obj_loop_gbparkwarden(Object *obj, s32 speed);
 f32 func_8003ACAC(void);
@@ -343,6 +379,20 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate);
 void obj_loop_bombexplosion(Object *obj, s32 updateRate);
 void obj_loop_flycoin(Object *obj, s32 updateRate);
 void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 arg6);
+void obj_loop_stopwatchman(Object *obj, s32 updateRate);
+void obj_loop_parkwarden(Object *obj, s32 updateRate);
+void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate);
+void obj_loop_frog(Object *obj, s32 updateRate);
+void obj_loop_levelname(Object *obj, s32 updateRate);
+void obj_loop_banana(Object *obj, s32 updateRate);
+void obj_loop_collectegg(Object *obj, s32 updateRate);
+void obj_loop_weather(Object *obj, s32 updateRate);
+void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry);
+void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry);
+void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry);
+void obj_loop_trigger(Object *obj, s32 updateRate);
+void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry);
+void obj_loop_treasuresucker(Object *obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
@@ -350,10 +400,42 @@ void obj_loop_animator(Object *obj, s32 speed);
 void obj_loop_vehicleanim(Object *obj, s32 speed);
 void obj_loop_snowball(Object *obj, s32 speed);
 void obj_loop_goldenballoon(Object *obj, s32 speed);
+void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate);
+void obj_loop_groundzipper(Object *obj, s32 updateRate);
+void obj_loop_lasergun(Object *obj, s32 updateRate);
+void obj_loop_laserbolt(Object *obj, s32 updateRate);
+void obj_loop_posarrow(Object *obj, s32 updateRate);
+void obj_loop_effectbox(Object *obj, s32 updateRate);
+void obj_loop_bananacreator(Object *obj, s32 updateRate);
+void obj_loop_butterfly(Object *obj, s32 updateRate);
+void obj_loop_airzippers_waterzippers(Object *obj, s32 updateRate);
+void obj_loop_char_select(Object *obj, s32 updateRate);
+void obj_loop_log(Object *obj, s32 updateRate);
+void obj_loop_texscroll(Object *obj, s32 updateRate);
+void obj_loop_weaponballoon(Object *obj, s32 updateRate);
+void obj_loop_door(Object *obj, s32 updateRate);
+void obj_loop_bonus(Object *obj, s32 updateRate);
+void obj_loop_modechange(Object *obj, s32 updateRate);
+void obj_loop_exit(Object *obj, s32 updateRate);
+void obj_loop_fish(Object *obj, s32 updateRate);
+void obj_loop_scenery(Object *obj, s32 updateRate);
+void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
+void obj_init_butterfly();
+void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry);
+void obj_init_animation();
+void obj_init_lensflareswitch();
+void obj_init_lensflare(Object *obj, LevelObjectEntry_LensFlare *entry);
+void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry);
+void obj_init_door(Object *obj, LevelObjectEntry_Door *entry);
+void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry);
+void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry);
+void obj_init_fish(Object *obj, LevelObjectEntry_Fish *entry);
+void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry);
+void calc_env_mapping_for_object(ObjectModel *, s16, s16, s16);
 
 s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
 s32 func_8001CC48(s32, s32, s32);
-void func_8001C6C4(Object_GoldenBalloon *obj64, Object *obj, f32, f32, s32);
+f32 func_8001C6C4(Object_64 *, Object *, f32, f32, s32);
 void func_8000CBF0(Object*, s32);
 
 

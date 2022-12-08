@@ -1,1 +1,1 @@
-python3 tools/python/diff.py -smwo3 --line-numbers "$@"
+python3 tools/python/diff.py -smwo3 --line-numbers --max-lines 2048 "$@"

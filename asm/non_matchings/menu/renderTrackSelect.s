@@ -7,9 +7,9 @@ glabel D_800E84D8
 .text
 glabel renderTrackSelect
 /* 090654 8008FA54 27BDFF80 */  addiu $sp, $sp, -0x80
-/* 090658 8008FA58 3C0E8012 */  lui   $t6, %hi(D_80126478) # $t6, 0x8012
+/* 090658 8008FA58 3C0E8012 */  lui   $t6, %hi(gTrackSelectViewPortHalfY) # $t6, 0x8012
 /* 09065C 8008FA5C 3C188000 */  lui   $t8, %hi(osTvType) # $t8, 0x8000
-/* 090660 8008FA60 8DCE6478 */  lw    $t6, %lo(D_80126478)($t6)
+/* 090660 8008FA60 8DCE6478 */  lw    $t6, %lo(gTrackSelectViewPortHalfY)($t6)
 /* 090664 8008FA64 8F180300 */  lw    $t8, %lo(osTvType)($t8)
 /* 090668 8008FA68 AFB50038 */  sw    $s5, 0x38($sp)
 /* 09066C 8008FA6C AFB40034 */  sw    $s4, 0x34($sp)

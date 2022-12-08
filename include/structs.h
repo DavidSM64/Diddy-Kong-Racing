@@ -914,12 +914,15 @@ typedef struct Object_Frog {
   /* 0x10 */ f32 unk10;
   /* 0x14 */ u8 unk14;
   /* 0x15 */ u8 unk15;
-  /* 0x16 */ u8 pad16[3];
-  /* 0x19 */ u8 unk19;
-  /* 0x1A */ u8 pad1A[6];
+  /* 0x16 */ s16 unk16;
+  /* 0x18 */ s8 unk18;
+  /* 0x19 */ s8 unk19;
+  /* 0x1A */ s16 unk1A;
+  /* 0x1C */ f32 unk1C;
   /* 0x20 */ f32 unk20;
   /* 0x24 */ f32 unk24;
-  /* 0x28 */ u8 pad28[8];
+  /* 0x28 */ f32 unk28;
+  /* 0x2C */ f32 unk2C;
   /* 0x30 */ f32 unk30;
 } Object_Frog;
 
@@ -1205,7 +1208,7 @@ typedef struct Object_Trigger {
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 unkC;
   /* 0x10 */ s32 unk10;
-  /* 0x14 */ s8 unk14;
+  /* 0x14 */ u8 unk14;
 } Object_Trigger;
 
 typedef struct Object_Audio {
@@ -1255,7 +1258,7 @@ typedef struct Object_PosArrow {
 } Object_PosArrow;
 
 typedef struct Object_Banana {
-  /* 0x0 */ u8 pad0[4];
+  /* 0x0 */ s32 unk0;
   /* 0x4 */ struct Object *spawner;
   /* 0x8 */ s8 unk8;
   /* 0x9 */ s8 unk9;
@@ -1265,18 +1268,32 @@ typedef struct Object_FogChanger {
   /* 0x0 */ s16 unk0;
 } Object_FogChanger;
 
-typedef struct Object_Taj {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ u8 pad4[0x9];
-  /* 0x0D */ u8 unkD;
-  /* 0x0E */ u8 padE[0x1A];
-  /* 0x28 */ s16 unk28;
-  /* 0x2A */ u8 pad2A[0x2];
-  /* 0x2C */ s32 unk2C;
-  /* 0x30 */ u8 pad30[0x4];
-  /* 0x34 */ s16 unk34;
-  /* 0x36 */ s8 unk36;
-} Object_Taj;
+typedef struct Object_NPC {
+   /* 0x00 */ f32 unk0;
+   /* 0x04 */ f32 unk4;
+   /* 0x08 */ s32 unk8;
+   /* 0x0C */ s8 unkC;
+   /* 0x0D */ u8 unkD;
+   /* 0x0E */ u8 unkE;
+   /* 0x0F */ u8 unkF;
+   /* 0x10 */ u8 unk10;
+   /* 0x11 */ u8 unk11;
+   /* 0x12 */ u8 unk12;
+   /* 0x13 */ u8 unk13;
+   /* 0x14 */ f32 unk14;
+   /* 0x18 */ f32 unk18;
+   /* 0x1C */ s16 unk1C;
+   /* 0x1E */ s16 unk1E;
+   /* 0x20 */ s16 unk20;
+   /* 0x22 */ s16 unk22;
+   /* 0x24 */ s32 unk24;
+   /* 0x28 */ s16 unk28;
+   /* 0x2A */ s16 unk2A;
+   /* 0x2C */ s32 unk2C;
+   /* 0x30 */ s32 unk30;
+   /* 0x34 */ u16 unk34;
+   /* 0x36 */ s8 unk36;
+} Object_NPC;
 
 typedef struct Object_TT {
   /* 0x0 */ f32 unk0;
@@ -1356,7 +1373,7 @@ typedef struct Object_64 {
         Object_PosArrow pos_arrow;
         Object_Banana banana;
         Object_FogChanger fog_changer;
-        Object_Taj taj;
+        Object_NPC npc;
         Object_TT tt;
         Object_Bridge_WhaleRamp bridge_whale_ramp;
         Object_80011AD0 obj80011AD0;
@@ -1466,8 +1483,9 @@ typedef struct Object {
   /* 0x0074 */ u32 unk74;
 
   union {
-  /* 0x0078 */ ObjectTransform *trans78;
   /* 0x0078 */ s32 unk78;
+  /* 0x0078 */ ObjectTransform *trans78;
+  /* 0x0078 */ s32 action;
   /* 0x0078 */ f32 unk78f;
   };
 
@@ -1562,17 +1580,24 @@ typedef struct Object {
 } Object;
 
 // Unused
-typedef struct GhostHeaderChecksum {
-  u8  levelID;
-    u8  vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
-} GhostHeaderChecksum;
+typedef struct GhostHeaderUnk0 {
+  u8 levelID;
+  u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
+} GhostHeaderUnk0;
 
 /* Size: 8 bytes */
 typedef struct GhostHeader {
-    //GhostHeaderChecksum checksum;
-    s16 checksum;
-    u8  characterID; // 9 = T.T.
-    u8  unk3; // Might just be padding?
+    union {
+      GhostHeaderUnk0 unk0;
+      s16 checksum;
+    };
+    union {
+      struct {
+        u8 characterID; // 9 = T.T.
+        u8 unk3;
+      };
+      s16 unk2;
+    };
     s16 time; // In frames, where 60 frames = 1 second.
     s16 nodeCount;
 } GhostHeader;
@@ -1613,5 +1638,12 @@ typedef struct ByteColour {
     u8 green;
     u8 blue;
 } ByteColour;
+
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} ColourRGBA;
 
 #endif

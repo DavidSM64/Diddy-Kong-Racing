@@ -56,9 +56,9 @@ glabel func_8008F618
 /* 0902F0 8008F6F0 00EE001A */  div   $zero, $a3, $t6
 /* 0902F4 8008F6F4 440D3000 */  mfc1  $t5, $f6
 /* 0902F8 8008F6F8 3C09800E */  lui   $t1, %hi(D_800E0840) # $t1, 0x800e
-/* 0902FC 8008F6FC 3C1F8012 */  lui   $ra, %hi(D_80126478) # $ra, 0x8012
+/* 0902FC 8008F6FC 3C1F8012 */  lui   $ra, %hi(gTrackSelectViewPortHalfY) # $ra, 0x8012
 /* 090300 8008F700 44D9F800 */  ctc1  $t9, $31
-/* 090304 8008F704 27FF6478 */  addiu $ra, %lo(D_80126478) # addiu $ra, $ra, 0x6478
+/* 090304 8008F704 27FF6478 */  addiu $ra, %lo(gTrackSelectViewPortHalfY) # addiu $ra, $ra, 0x6478
 /* 090308 8008F708 25290840 */  addiu $t1, %lo(D_800E0840) # addiu $t1, $t1, 0x840
 /* 09030C 8008F70C 00401825 */  move  $v1, $v0
 /* 090310 8008F710 15000002 */  bnez  $t0, .L8008F71C
@@ -245,8 +245,8 @@ glabel func_8008F618
 /* 0905B8 8008F9B8 AC4F0000 */  sw    $t7, ($v0)
 /* 0905BC 8008F9BC 92070000 */  lbu   $a3, ($s0)
 /* 0905C0 8008F9C0 3C0A8012 */  lui   $t2, %hi(gTrackSelectViewportY) # $t2, 0x8012
-/* 0905C4 8008F9C4 3C1F8012 */  lui   $ra, %hi(D_80126478) # $ra, 0x8012
-/* 0905C8 8008F9C8 27FF6478 */  addiu $ra, %lo(D_80126478) # addiu $ra, $ra, 0x6478
+/* 0905C4 8008F9C4 3C1F8012 */  lui   $ra, %hi(gTrackSelectViewPortHalfY) # $ra, 0x8012
+/* 0905C8 8008F9C8 27FF6478 */  addiu $ra, %lo(gTrackSelectViewPortHalfY) # addiu $ra, $ra, 0x6478
 /* 0905CC 8008F9CC 12E70005 */  beq   $s7, $a3, .L8008F9E4
 /* 0905D0 8008F9D0 254A6480 */   addiu $t2, %lo(gTrackSelectViewportY) # addiu $t2, $t2, 0x6480
 /* 0905D4 8008F9D4 8D590000 */  lw    $t9, ($t2)

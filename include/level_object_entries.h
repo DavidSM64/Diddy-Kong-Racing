@@ -248,6 +248,12 @@ typedef struct LevelObjectEntry_Bridge_WhaleRamp {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
+    /* 0x0A */ u8 unkA;
+    /* 0x0B */ u8 unkB;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+    /* 0x0E */ s8 unkE;
+    /* 0x0F */ u8 unkF;
 } LevelObjectEntry_Bridge_WhaleRamp;
 
 typedef struct LevelObjectEntry_RampSwitch {

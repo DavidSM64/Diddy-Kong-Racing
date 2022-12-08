@@ -106,7 +106,7 @@ s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2);
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3);
 void func_8002C71C(LevelModelSegment *segment);
 LevelModel *get_current_level_model(void);
-void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, s8 *arg3, s8 *arg4, s8 *arg5);
+void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, u8 *arg3, u8 *arg4, u8 *arg5);
 void func_800307BC(s32 arg0);
 void func_80030838(s32 arg0, s32 arg1);
 void func_8003093C(s32 arg0);
@@ -148,5 +148,7 @@ void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, Matrix**, s32);
 void func_8002DE30(Object*);
 void func_8002E234(Object*, s32);
+void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
+s32 func_8002BAB0(s16, f32, f32, f32*);
 
 #endif

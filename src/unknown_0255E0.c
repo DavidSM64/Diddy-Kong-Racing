@@ -1405,11 +1405,11 @@ void func_8002C0C4(s32 modelId) {
     s32 temp;
     LevelModel *mdl;
     
-    set_texture_colour_tag(0xFF00FF);
-    D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, 0xFFFF00FFU);
+    set_texture_colour_tag(COLOUR_TAG_GREEN);
+    D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
     gCurrentLevelModel = D_8011D30C;
-    D_8011D370 = allocate_from_main_pool_safe(0x7D0, 0xFFFF00FFU);
-    D_8011D374 = allocate_from_main_pool_safe(0x1F4, 0xFFFF00FFU);
+    D_8011D370 = allocate_from_main_pool_safe(0x7D0, COLOUR_TAG_YELLOW);
+    D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
     D_8011D310 = (s32*)load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
     
@@ -1469,7 +1469,7 @@ void func_8002C0C4(s32 modelId) {
     }
     set_free_queue_state(0);
     free_from_memory_pool(D_8011D30C);
-    allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, 0xFFFF00FFU);
+    allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, COLOUR_TAG_YELLOW);
     set_free_queue_state(2);
     func_800A83B4(gCurrentLevelModel);
 
@@ -1489,7 +1489,7 @@ void func_8002C0C4(s32 modelId) {
             }
         }
     }
-    set_texture_colour_tag(-0xFF0001);
+    set_texture_colour_tag(COLOUR_TAG_MAGENTA);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C0C4.s")
@@ -1941,7 +1941,7 @@ void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030664.s")
 #endif
 
-void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, s8 *arg3, s8 *arg4, s8 *arg5) {
+void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, u8 *arg3, u8 *arg4, u8 *arg5) {
     *arg1 = D_8011D388[arg0].unkC >> 0x10;
     *arg2 = D_8011D388[arg0].unk10 >> 0x10;
     *arg3 = D_8011D388[arg0].unk0 >> 0x10;

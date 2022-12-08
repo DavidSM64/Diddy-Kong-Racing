@@ -82,14 +82,14 @@ glabel func_80092188
 /* 092EA4 800922A4 24490019 */   addiu $t1, $v0, 0x19
 /* 092EA8 800922A8 29210015 */  slti  $at, $t1, 0x15
 /* 092EAC 800922AC 14200002 */  bnez  $at, .L800922B8
-/* 092EB0 800922B0 3C028012 */   lui   $v0, %hi(D_80126478) # $v0, 0x8012
+/* 092EB0 800922B0 3C028012 */   lui   $v0, %hi(gTrackSelectViewPortHalfY) # $v0, 0x8012
 /* 092EB4 800922B4 24090014 */  li    $t1, 20
 .L800922B8:
 /* 092EB8 800922B8 05210002 */  bgez  $t1, .L800922C4
 /* 092EBC 800922BC 00000000 */   nop   
 /* 092EC0 800922C0 00004825 */  move  $t1, $zero
 .L800922C4:
-/* 092EC4 800922C4 8C426478 */  lw    $v0, %lo(D_80126478)($v0)
+/* 092EC4 800922C4 8C426478 */  lw    $v0, %lo(gTrackSelectViewPortHalfY)($v0)
 /* 092EC8 800922C8 252F0014 */  addiu $t7, $t1, 0x14
 /* 092ECC 800922CC 01E20019 */  multu $t7, $v0
 /* 092ED0 800922D0 24010028 */  li    $at, 40
@@ -160,8 +160,8 @@ glabel func_80092188
 /* 092FC8 800923C8 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 092FCC 800923CC 0C023C03 */  jal   func_8008F00C
 /* 092FD0 800923D0 AC2063D8 */   sw    $zero, %lo(gOpacityDecayTimer)($at)
-/* 092FD4 800923D4 3C028012 */  lui   $v0, %hi(D_80126478) # $v0, 0x8012
-/* 092FD8 800923D8 8C426478 */  lw    $v0, %lo(D_80126478)($v0)
+/* 092FD4 800923D4 3C028012 */  lui   $v0, %hi(gTrackSelectViewPortHalfY) # $v0, 0x8012
+/* 092FD8 800923D8 8C426478 */  lw    $v0, %lo(gTrackSelectViewPortHalfY)($v0)
 /* 092FDC 800923DC 00002025 */  move  $a0, $zero
 /* 092FE0 800923E0 00021843 */  sra   $v1, $v0, 1
 /* 092FE4 800923E4 00627021 */  addu  $t6, $v1, $v0

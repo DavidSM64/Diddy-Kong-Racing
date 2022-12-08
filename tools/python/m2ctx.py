@@ -388,7 +388,7 @@ def write_output_functions(funcs):
 
 # Writes all the preprocessor directives to the output file
 def write_output_directives(directives):
-    directives['singleline'].append('#define NULL (void*)0\n') # Hack, since cleanup() will remove the original NULL definition.
+    directives['singleline'].append('#define NULL 0\n') # Hack, since cleanup() will remove the original NULL definition.
     return [ '\n'.join(directives['singleline']) + '\n', '\n'.join(directives['all']) + '\n' ]
 
 # Writes a variable to the output file

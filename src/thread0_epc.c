@@ -11,6 +11,7 @@
 #include "controller.h"
 #include "game.h"
 #include "stacks.h"
+#include "particles.h"
 #include "stdarg.h"
 
 /************ .rodata ************/
@@ -46,7 +47,6 @@ s32 D_801299B0[64];
 
 /******************************/
 
-extern OSThread D_801295E0;
 extern OSMesgQueue D_80129790;
 extern OSMesg D_801297A8;
 extern OSMesgQueue D_801297E8;

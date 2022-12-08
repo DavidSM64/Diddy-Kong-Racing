@@ -147,6 +147,18 @@ typedef struct unk801263C0 {
     };
 } unk801263C0;
 
+typedef struct unk80126C54 {
+    union {
+        struct {
+            u8 unk0;
+            u8 unk1;
+            u8 unk2;
+            u8 unk3;
+        };
+        s32 unk0_s32;
+    };
+} unk80126C54;
+
 /* Size: 0x30 bytes */
 typedef struct unk800DF83C {
     char *unk0; // Pointer to ascii text.
@@ -650,10 +662,6 @@ extern s32 D_800E1DC4;
 extern s16 D_800E1DC8[16];
 
 extern char gRareCopyrightString[24];
-
-//Probably a FadeTransition
-//extern FadeTransition D_800E1E08;
-extern s16 D_800E1E08[4];
 
 extern char *D_800E1E10;
 

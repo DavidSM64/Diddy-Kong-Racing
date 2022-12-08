@@ -84,10 +84,11 @@ s32 func_80072C54(s32 arg0);
 void populate_settings_from_save_data(Settings *settings, u8 *saveData);
 s32 func_80074204(s32 saveFileNum, Settings *settings);
 void erase_save_file(s32 saveFileNum, Settings *settings);
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4);
 
 s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
 //void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
-void func_80073588(Settings *arg0, u64 *eepromData, s32 arg2); //Non matching
+//void func_80073588(Settings *arg0, u64 *eepromData, s32 arg2); //Non matching
 s32 func_80073C5C(s32 controllerIndex, s32 arg1, char **arg2); //Non matching
 //Using some context, and best guesses, these could be the names of the variables
 s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCharacterID, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *arg6); //Non matching
@@ -97,7 +98,5 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 s32 func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);
 s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *arg6);
 s32 func_800753D8(s32 controllerIndex, s32 arg1);
-//Pretty bad signature, but at can confidently state arg0 is controllerIndex.
-s32 func_800756D4(s32 controllerIndex, s8 *arg1, void *arg2, u8 *arg3, void *arg4);
 
 #endif

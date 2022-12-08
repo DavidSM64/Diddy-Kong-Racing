@@ -644,7 +644,7 @@ UNUSED u8 get_total_level_header_count(void) {
 /**
  * Returns the name of the level from the passed ID
  */
-u8 *get_level_name(MapId levelId) {
+char *get_level_name(MapId levelId) {
     u8 *levelName;
     u8 numberOfNullPointers = 0;
 

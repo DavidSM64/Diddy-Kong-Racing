@@ -98,6 +98,7 @@ void func_800B8134(unk800B8134 *arg0);
 void func_800BBE08();
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
+void func_800BF3E4(s32 arg0);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 f32 func_800BEEB4(Object_64 *); // Non Matching
