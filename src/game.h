@@ -95,7 +95,7 @@ MapId func_8006BD88(void);
 u8 get_current_level_race_type(void);
 LevelHeader *get_current_level_header(void);
 u8 get_total_level_header_count(void);
-u8 *get_level_name(MapId levelId);
+char *get_level_name(MapId levelId);
 void func_8006BEFC(void);
 void func_8006BFC8(s8 *arg0);
 void func_8006C164(void);

@@ -231,6 +231,12 @@ typedef struct Object_78_Banana {
     s16 unk6;
 } Object_78_Banana;
 
+typedef struct Object_LevelName_78 {
+    f32 radius;
+    s16 unk4;
+    s16 unk6;
+} Object_LevelName_78;
+
 // Unsure about the signed/unsigned with these arrays.
 extern u16 D_800DC980[20];
 extern u16 D_800DC9A8[20];
@@ -376,6 +382,7 @@ void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 a
 void obj_loop_stopwatchman(Object *obj, s32 updateRate);
 void obj_loop_parkwarden(Object *obj, s32 updateRate);
 void obj_loop_bridge_whaleramp(Object* obj, s32 updateRate);
+void obj_loop_frog(Object* obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
