@@ -1638,4 +1638,11 @@ typedef struct ByteColour {
     u8 blue;
 } ByteColour;
 
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} ColourRGBA;
+
 #endif

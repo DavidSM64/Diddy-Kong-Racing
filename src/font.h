@@ -117,13 +117,6 @@ typedef struct unk8012A7EC {
 /* 0x1C */ DialogueBox *nextBox;
 } unk8012A7EC;
 
-typedef struct {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} ColourRGBA;
-
 /* Size: 0x28 bytes */
 // Dialogue Box background
 typedef struct DialogueBoxBackground {
