@@ -2610,7 +2610,63 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_modechange.s")
+void obj_loop_modechange(Object *obj, s32 updateRate) {
+    Object *racerObj;
+    Object **racerObjects;
+    s32 numRacers;
+    Object_Racer *racer;
+    Object_ModeChange *modeChange;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    s32 radius_3;
+    s32 i;
+    f32 radiusF;
+    f32 dist;
+    
+    modeChange = (Object_ModeChange*)obj->unk64;
+    if (obj->unk4C->unk13 < modeChange->unk10) {
+        radiusF = modeChange->unk10;
+        racerObjects = get_racer_objects(&numRacers);
+        for (i = 0; i < numRacers; i++) {
+            racerObj = racerObjects[i];
+            racer = (Object_Racer *) racerObj->unk64;
+            if (racer->unk1D6 != modeChange->unk14) {
+                diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                dist = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                if (dist < radiusF) {
+                    dist = ((modeChange->unk0 * racerObj->segment.trans.x_position) + (modeChange->unk8 * racerObj->segment.trans.z_position) + modeChange->unkC);
+                    if (dist < 0.0f) {
+                        racer->unk1E0 = 0;
+                        if (modeChange->unk14 == 0) {
+                            racer->unk1D6 = racer->unk1D7;
+                        } else {
+                            racer->unk1D6 = modeChange->unk14;
+                        }
+                        if (modeChange->unk14 == 4) {
+                            if (racer->raceFinished == FALSE) {
+                                func_80072348(racer->playerIndex, 8);
+                            }
+                            radius_3 = func_8001C524(racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 0);
+                            if (radius_3 != 0xFF) {
+                                racer->unk158 = func_8001D214(radius_3);
+                            } else {
+                                racer->unk158 = NULL;
+                            }
+                            racer->unk15C = NULL;
+                            racer->unk19A = 0;
+                        }
+                        racer->unk198 = obj->segment.trans.y_rotation;
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
 
 void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     f32 phi_f0;

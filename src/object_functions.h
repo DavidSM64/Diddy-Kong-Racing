@@ -401,6 +401,8 @@ void obj_loop_trigger(Object *obj, s32 updateRate);
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry);
 void obj_loop_treasuresucker(Object *obj, s32 updateRate);
 void obj_loop_log(Object *obj, s32 updateRate);
+void obj_loop_modechange(Object *obj, s32 updateRate);
+void obj_loop_bonus(Object *obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
@@ -421,8 +423,6 @@ void obj_loop_char_select(Object *obj, s32 updateRate);
 void obj_loop_texscroll(Object *obj, s32 updateRate);
 void obj_loop_weaponballoon(Object *obj, s32 updateRate);
 void obj_loop_door(Object *obj, s32 updateRate);
-void obj_loop_bonus(Object *obj, s32 updateRate);
-void obj_loop_modechange(Object *obj, s32 updateRate);
 void obj_loop_exit(Object *obj, s32 updateRate);
 void obj_loop_fish(Object *obj, s32 updateRate);
 void obj_loop_scenery(Object *obj, s32 updateRate);
