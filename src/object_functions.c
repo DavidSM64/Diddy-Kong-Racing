@@ -3246,7 +3246,7 @@ void obj_loop_treasuresucker(Object *obj, s32 updateRate) {
     f32 diffX;
     f32 diffY;
     f32 diffZ;
-    Object* newObj;
+    Object *newObj;
     LevelObjectEntryCommon spawnObj;
     s32 doSpawnObj;
 
