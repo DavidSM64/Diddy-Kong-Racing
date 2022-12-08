@@ -2985,7 +2985,7 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
 }
 
 
-void obj_loop_trigger(Object* obj, UNUSED s32 updateRate) {
+void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     s32 i;
     s32 curRaceType;
     s32 numRacers;
