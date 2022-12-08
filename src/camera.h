@@ -169,6 +169,7 @@ void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3
 s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
 void func_80067A3C(Gfx **dlist);
+void func_80069A40(Gfx **dlist);
 
 // Non Matching
 void func_80066610(void);
