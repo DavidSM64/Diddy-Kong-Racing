@@ -27,7 +27,7 @@ typedef enum TextFonts {
 
 enum DialogueFlags {
     DIALOGUE_BOX_UNUSED_01 = 0x0001,
-    DIALOGUE_BOX_UNK_01 = 0x4000,
+    DIALOGUE_BOX_VERTS = 0x4000,
     DIALOGUE_BOX_CLOSED =    0x7FFF,
     DIALOGUE_BOX_OPEN =      0x8000,
     DIALOGUE_BOX_UNK_02 =    0xBFFF,
@@ -151,8 +151,8 @@ typedef struct DialogueBoxBackground {
     u8 opacity;
     u8 font;
     u16 flags;
-    s16 unk20; // Functionally Unused
-    s16 unk22; // Functionally Unused
+    s16 textOffsetX; // Functionally Unused
+    s16 textOffsetY; // Functionally Unused
     DialogueBox *textBox;
 } DialogueBoxBackground;
 
@@ -167,22 +167,21 @@ void set_text_font(s32 arg0);
 void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha);
 void draw_text(Gfx** displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
-void func_800C44C0(Gfx** displayList, s32 dialogueBoxID, char *text, AlignmentFlags alignmentFlags);
-void func_800C4510(Gfx** displayList, s32 dialogueBoxID, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
+void draw_dialogue_text_unused(Gfx** displayList, s32 dialogueBoxID, char *text, AlignmentFlags alignmentFlags);
+void draw_dialogue_text_pos_unused(Gfx** displayList, s32 dialogueBoxID, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags);
 void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, s32 y2);
 void set_dialogue_font(s32 dialogueBoxID, s32 font);
 void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha);
 void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_current_text_background_colour(s32 dialogueBoxID, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_800C50D8(s32 dialogueBoxID);
 void move_dialogue_box_to_front(s32 arg0, DialogueBox *arg1);
 void assign_dialogue_box_id(s32 arg0);
 void func_800C54E8(s32 arg0, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4);
 void open_dialogue_box(s32 dialogueBoxID);
 void close_dialogue_box(s32 dialogueBoxID);
-UNUSED void func_800C564C(s32 dialogueBoxID);
-UNUSED void func_800C5678(s32 dialogueBoxID);
-UNUSED void func_800C56A4(s32 dialogueBoxID);
+UNUSED void set_dialogue_box_unused_flag(s32 dialogueBoxID);
+UNUSED void dialogue_box_clear_flags(s32 dialogueBoxID);
+UNUSED void enable_dialogue_box_vertices(s32 dialogueBoxID);
 void func_800C56D0(s32 dialogueBoxID);
 void render_dialogue_boxes(Gfx **dlist, Matrix **mat, VertexList **verts);
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry);

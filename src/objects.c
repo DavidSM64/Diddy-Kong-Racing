@@ -1261,7 +1261,7 @@ void func_80012E28(Object *this) {
     f32 tmp_f0;
     f32 temp;
 
-    if (this->behaviorId == 1) {
+    if (this->behaviorId == BHV_RACER) {
 
         sp_20 = &this->unk64->racer;
         this->segment.trans.y_rotation += sp_20->y_rotation_offset;
@@ -1285,13 +1285,13 @@ void func_80012E28(Object *this) {
     }
 }
 
-void func_80012F30(Object *arg0) {
-    if (arg0->behaviorId == 1) {
-        Object_Racer *object_64 = &arg0->unk64->racer;
-        arg0->segment.trans.y_rotation -= object_64->y_rotation_offset;
-        arg0->segment.trans.x_rotation -= object_64->x_rotation_offset;
-        arg0->segment.trans.z_rotation -= object_64->z_rotation_offset;
-        arg0->segment.trans.y_position -= D_8011ADD0;
+void func_80012F30(Object *obj) {
+    if (obj->behaviorId == BHV_RACER) {
+        Object_Racer *racer = &obj->unk64->racer;
+        obj->segment.trans.y_rotation -= racer->y_rotation_offset;
+        obj->segment.trans.x_rotation -= racer->x_rotation_offset;
+        obj->segment.trans.z_rotation -= racer->z_rotation_offset;
+        obj->segment.trans.y_position -= D_8011ADD0;
     }
 }
 
@@ -1313,7 +1313,7 @@ void render_object(Object *this) {
 }
 
 void func_80013548(Object *obj) {
-    if ((obj->segment.trans.unk6 & 0x8000) == 0 && obj->segment.header->behaviorId == 1) {
+    if (!(obj->segment.trans.unk6 & 0x8000) && obj->segment.header->behaviorId == BHV_RACER) {
         obj->segment.trans.x_position -= obj->unk64->racer.carBobX;
         obj->segment.trans.y_position -= obj->unk64->racer.carBobY;
         obj->segment.trans.z_position -= obj->unk64->racer.carBobZ;
@@ -2042,8 +2042,8 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         current_obj = gObjPtrList[i];
 
         if (current_obj != NULL
-        && (current_obj->segment.trans.unk6 & 0x8000) == 0
-        && current_obj->behaviorId == 39
+        && !(current_obj->segment.trans.unk6 & 0x8000)
+        && current_obj->behaviorId == BHV_RAMP_SWITCH
         && current_obj->action == arg0) {
             *arg1 = current_obj->segment.trans.x_position;
             *arg2 = current_obj->segment.trans.y_position;

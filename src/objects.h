@@ -383,7 +383,7 @@ void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
 void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object);
-void func_80012F30(Object *arg0);
+void func_80012F30(Object *obj);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
 void func_800142B8(void);
