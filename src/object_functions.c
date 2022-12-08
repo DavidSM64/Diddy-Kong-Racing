@@ -3062,9 +3062,9 @@ void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *e
  * This function makes the whale oscillate and move upwards when a player gets near.
  * For the boulder canyon bridge, it raises and plays a bell sound while it's set to be raised.
 */
-void obj_loop_bridge_whaleramp(Object* obj, s32 updateRate) {
-    Object* racerObj;
-    UNUSED ObjectTransform* temp_v0_4;
+void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
+    Object *racerObj;
+    UNUSED ObjectTransform *temp_v0_4;
     f32 temp_f2;
     Object_Bridge_WhaleRamp *whaleRamp;
     LevelObjectEntry_Bridge_WhaleRamp *entry;
