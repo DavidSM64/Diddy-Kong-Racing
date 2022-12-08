@@ -120,15 +120,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 7, 2022, this is our current score:
+As of December 8, 2022, this is our current score:
 ```
  ===========================================
    ADVENTURE ONE (ASM -> C Decompilation)
- ------------- 41.54% Complete -------------
-        # Decompiled functions: 1393
-         # GLOBAL_ASM remaining: 443
+ ------------- 42.28% Complete -------------
+        # Decompiled functions: 1400
+         # GLOBAL_ASM remaining: 436
         # NON_MATCHING functions: 12
-     # NON_EQUIVALENT WIP functions: 80
+     # NON_EQUIVALENT WIP functions: 79
  --------------- Game Status ---------------
   Balloons: 21/47, Keys: 2/4, Trophies: 1/5
    T.T. Amulets: 2/4, Wizpig Amulets: 1/4
@@ -136,14 +136,14 @@ As of December 7, 2022, this is our current score:
  We are racing in the rematch against Bluey.
  ===========================================
     ADVENTURE TWO (Cleanup & Documentation)
- ------------- 11.75% Complete -------------
-         # Documented functions: 268
-       # Undocumented remaining: 1568
+ ------------- 13.03% Complete -------------
+         # Documented functions: 298
+       # Undocumented remaining: 1538
  --------------- Game Status ---------------
-  Balloons: 7/47, Keys: 1/4, Trophies: 0/5
+  Balloons: 8/47, Keys: 1/4, Trophies: 0/5
    T.T. Amulets: 0/4, Wizpig Amulets: 0/4
  -------------------------------------------
- We are racing in Hot Top Volcano. (Lap 3/3)
+ We are racing the dinosaur boss Trickytops
  ===========================================
 ```
 <!-- README_SCORE_END -->
