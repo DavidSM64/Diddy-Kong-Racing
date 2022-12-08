@@ -1128,15 +1128,16 @@ void render_3d_billboard(Object *obj) {
     }
 
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
-        if (obj->segment.unk38.half.lower > 255) { //!@bug - never true
+        //!@bug Never true, because the type is u8.
+        if (obj->segment.unk38.half.lower > 255) {
             obj->segment.unk38.half.lower = obj->unk7C.word & 0xFF;
         } else {
-            obj->segment.unk38.half.lower = ((obj->segment.unk38.half.lower * (obj->unk7C.word & 0xFF)) >> 8);
+            obj->segment.unk38.half.lower = (obj->segment.unk38.half.lower * (obj->unk7C.word & 0xFF)) >> 8;
         }
     }
     
     alpha = obj->segment.unk38.half.lower;
-    if (alpha >= 256) {
+    if (alpha > 255) {
         alpha = 255;
     }
 
@@ -1146,7 +1147,7 @@ void render_3d_billboard(Object *obj) {
     }
     
     if (alpha < 255) {
-        flags |= 4;
+        flags |= RENDER_SEMI_TRANSPARENT;
         hasPrimCol = TRUE;
     }
     if ((obj->behaviorId == 5) && (obj->segment.trans.scale == 6.0f)) {

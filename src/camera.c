@@ -993,7 +993,7 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
     s32 var_s2;
 
     result = TRUE;
-    if (flags & 1) {
+    if (flags & RENDER_ANTI_ALIASING) {
         sp5C = D_80120D28[D_80120D20] - obj->segment.trans.x_position;
         sp58 = D_80120D40[D_80120D20] - obj->segment.trans.y_position;
         var_f20 = D_80120D58[D_80120D20] - obj->segment.trans.z_position;
@@ -1066,12 +1066,12 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
     if (D_80120D0C == 0) {
         var_s2 = ((var_s2 & 0xFF) * arg4->unk0) >> 8;
     }
-    flags &= ~1;
-    if (flags & 4) {
-        flags |= 1;
+    flags &= ~RENDER_ANTI_ALIASING;
+    if (flags & RENDER_SEMI_TRANSPARENT) {
+        flags |= RENDER_ANTI_ALIASING;
     }
-    func_8007BF34(dlist, arg4->unk6 | (flags & 0xF));
-    if (!(flags & 0x100)) {
+    func_8007BF34(dlist, arg4->unk6 | (flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)));
+    if (!(flags & RENDER_Z_UPDATE)) {
         gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
     }
     gSPDisplayList((*dlist)++, arg4->unk8[var_s2 + 1]);
