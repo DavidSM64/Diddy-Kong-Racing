@@ -1333,6 +1333,10 @@ typedef struct Object_80021400_64 {
   /* 0x064 */ struct Object_64_80021400 *obj64;
 } Object_80021400_64;
 
+typedef struct Object_Log {
+    s32 unk0;
+} Object_Log;
+
 typedef struct Object_64 {
     union {
         Object_LaserGun laser_gun;
@@ -1378,6 +1382,7 @@ typedef struct Object_64 {
         Object_80011AD0 obj80011AD0;
         Object_8001B7A8 obj8001B7A8;
         Object_80021400_64 obj80021400_64;
+        Object_Log log;
     };
 } Object_64;
 

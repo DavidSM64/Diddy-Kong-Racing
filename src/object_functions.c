@@ -3882,7 +3882,72 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_log.s")
+void obj_loop_log(Object* obj, s32 updateRate) {
+    Object *racerObj;
+    Object_Log *log;
+    f32 cosine;
+    f32 sine;
+    Object_5C* temp_v0;
+    s32 temp_t3;
+    s32 var_v1;
+    Object_Racer *racer;
+    f32 temp;
+    f32 temp2;
+
+    log = (Object_Log*)obj->unk64;
+    if (log != NULL) {
+        obj->segment.trans.y_position = func_800BEEB4((Object_64*)log);
+    } else {
+        obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.unk3C_a.level_entry)->y;
+    }
+    temp_v0 = obj->unk5C;
+    if (temp_v0->unk100 != NULL) {
+        obj->unk7C.word++;
+        racerObj = (Object *) temp_v0->unk100;
+        if (racerObj->behaviorId == BHV_RACER) {
+            racer = (Object_Racer *)racerObj->unk64;
+            if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
+                func_80072348(racer->playerIndex, 0x12);
+            }
+        }
+        sine = sins_f(-obj->segment.trans.y_rotation);
+        cosine = coss_f(-obj->segment.trans.y_rotation);
+        
+        // This looks a bit messy, but is required to match.
+        temp2 = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
+        temp = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
+        temp2 = (temp2 * cosine) + (temp * sine);
+        temp = (racerObj->segment.x_velocity * sine) - (racerObj->segment.z_velocity * cosine);
+        temp2 *= temp;
+        obj->unk78 -= (s32) (temp2 / 4);
+        
+        if (obj->unk78 > 0x200) {
+            obj->unk78 = 0x200;
+        }
+        if (obj->unk78 < -0x200) {
+            obj->unk78 = -0x200;
+        }
+    } else {
+        if (obj->unk7C.word > 0) {
+            obj->unk7C.word--;
+        }
+    }
+    obj->segment.trans.y_position -= (f64) (f32) obj->unk7C.word;
+    if (obj->unk78 > 0) {
+        obj->unk78 -= updateRate;
+        if (obj->unk78 < 0) {
+            obj->unk78 = 0;
+        }
+    }
+    if (obj->unk78 < 0) {
+        obj->unk78 += updateRate;
+        if (obj->unk78 > 0) {
+            obj->unk78 = 0;
+        }
+    }
+    obj->segment.trans.y_rotation += obj->unk78 * updateRate;
+    obj->unk5C->unk100 = NULL;
+}
 
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
     f32 temp = entry->unk8;
