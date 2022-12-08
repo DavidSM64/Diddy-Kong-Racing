@@ -3888,8 +3888,6 @@ void obj_loop_log(Object* obj, s32 updateRate) {
     f32 cosine;
     f32 sine;
     Object_5C* temp_v0;
-    s32 temp_t3;
-    s32 var_v1;
     Object_Racer *racer;
     f32 temp;
     f32 temp2;
