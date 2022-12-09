@@ -6029,7 +6029,7 @@ void func_80090918(s32 updateRate) {
     if (sp24 == 0) {
         var_a1 = (gFFLUnlocked == -1) ? 3 : 4;
         if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
-            if (gTrackIdForPreview != (MapId)-1) {
+            if (gTrackIdForPreview != (MapId) -1) {
                 gMenuDelay = 1;
                 gTrackIdToLoad = gTrackIdForPreview;
                 D_800E1E1C = 1;
