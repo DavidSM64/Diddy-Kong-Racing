@@ -75,8 +75,8 @@ UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
     }
     assetIndex++;
     out = (u8 *) (assetIndex + gAssetsLookupTable);
-    start = ((s32*)out)[0];
-    size = ((s32*)out)[1] - start;
+    start = ((s32 *) out)[0];
+    size = ((s32 *) out)[1] - start;
     gzipHeaderRamPos = (u8 *) allocate_from_main_pool_safe(8, COLOUR_TAG_WHITE);
     dmacopy((u32) (start + __ASSETS_LUT_END), (u32) gzipHeaderRamPos, 8);
     totalSpace = byteswap32(gzipHeaderRamPos) + extraMemory;

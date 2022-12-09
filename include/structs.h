@@ -724,10 +724,12 @@ typedef struct Object_60 {
 struct Object;
 
 typedef struct Object_LaserGun {
-  /* 0x00 */ u8 pad0[0xC];
-  /* 0x0C */ s16 unkC;
-  /* 0x0E */ u8 unkE;
-  /* 0x0F */ s8 unkF;
+  /* 0x00 */ s32 unk0;
+  /* 0x00 */ s32 unk4;
+  /* 0x00 */ s32 unk7;
+  /* 0x0C */ s16 fireTimer;
+  /* 0x0E */ s8 targeting;
+  /* 0x0F */ s8 fireRate;
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
 } Object_LaserGun;
@@ -1343,20 +1345,8 @@ typedef struct Object_Fireball_Octoweapon {
     s32 unk1C;
 } Object_Fireball_Octoweapon;
 
-typedef struct Object_Lasergun {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s16 unkC;
-    s8 unkE;
-    s8 unkF;
-    u8 unk10;
-    u8 unk11;
-} Object_Lasergun;
-
 typedef struct Object_64 {
     union {
-        Object_LaserGun laser_gun;
         Object_Laser laser;
         Object_TrophyCabinet trophy_cabinet;
         Object_Animator animator;
@@ -1401,7 +1391,7 @@ typedef struct Object_64 {
         Object_80021400_64 obj80021400_64;
         Object_Log log;
         Object_Fireball_Octoweapon fireball_octoweapon;
-        Object_Lasergun lasergun;
+        Object_LaserGun lasergun;
     };
 } Object_64;
 
