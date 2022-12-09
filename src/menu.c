@@ -7551,7 +7551,7 @@ void menu_trophy_race_round_init(void) {
     }
 
     levelId = levelIds[((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound];
-    while (levelId == (MapId)-1) {
+    while (levelId == (MapId) -1) {
         levelId = (levelId + 1) & 3;
     }
 
