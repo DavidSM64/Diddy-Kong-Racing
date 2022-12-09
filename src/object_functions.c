@@ -193,6 +193,11 @@ void obj_init_fireball_octoweapon(Object *obj, UNUSED LevelObjectEntry_Fireball_
     obj->unk4C->unk11 = 0;
 }
 
+/**
+ * Bubbler boss obstacle loop behaviour.
+ * Representing the landmines and bubbletraps that Bubbler throws during the race.
+ * When ran into by a player, they will suffer like they usually would when running into a landmine or a bubble trap.
+ */
 void obj_loop_fireball_octoweapon(Object* obj, s32 updateRate) {
     Object *someObj;
     f32 var_f2;
