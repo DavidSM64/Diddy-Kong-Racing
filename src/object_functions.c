@@ -198,7 +198,7 @@ void obj_init_fireball_octoweapon(Object *obj, UNUSED LevelObjectEntry_Fireball_
  * Representing the landmines and bubbletraps that Bubbler throws during the race.
  * When ran into by a player, they will suffer like they usually would when running into a landmine or a bubble trap.
  */
-void obj_loop_fireball_octoweapon(Object* obj, s32 updateRate) {
+void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     Object *someObj;
     f32 var_f2;
     f32 updateRateF;
@@ -342,9 +342,9 @@ void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
  * A static mounted gun that shoots laserbeams at wherever it's facing.
  * The fire rate is adjustable per object and can be set to target racers.
 */
-void obj_loop_lasergun(Object* obj, s32 updateRate) {
+void obj_loop_lasergun(Object *obj, s32 updateRate) {
     Object_LaserGun *lasergun;
-    Object* laserBoltObj;
+    Object *laserBoltObj;
     f32 distance;
     ObjectTransform trans;
     Matrix mtx;
@@ -4002,19 +4002,19 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
 }
 
-void obj_loop_log(Object* obj, s32 updateRate) {
+void obj_loop_log(Object *obj, s32 updateRate) {
     Object *racerObj;
     Object_Log *log;
     f32 cosine;
     f32 sine;
-    Object_5C* temp_v0;
+    Object_5C *temp_v0;
     Object_Racer *racer;
     f32 temp;
     f32 temp2;
 
-    log = (Object_Log*)obj->unk64;
+    log = (Object_Log *) obj->unk64;
     if (log != NULL) {
-        obj->segment.trans.y_position = func_800BEEB4((Object_64*)log);
+        obj->segment.trans.y_position = func_800BEEB4((Object_64 *) log);
     } else {
         obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.unk3C_a.level_entry)->y;
     }
@@ -4023,7 +4023,7 @@ void obj_loop_log(Object* obj, s32 updateRate) {
         obj->unk7C.word++;
         racerObj = (Object *) temp_v0->unk100;
         if (racerObj->behaviorId == BHV_RACER) {
-            racer = (Object_Racer *)racerObj->unk64;
+            racer = (Object_Racer *) racerObj->unk64;
             if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
                 func_80072348(racer->playerIndex, 0x12);
             }

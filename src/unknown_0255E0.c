@@ -1894,7 +1894,7 @@ void func_8003093C(s32 arg0) {
  * Sets the active viewport's fog target when passed through.
  * Used in courses to make less, or more dense.
 */
-void obj_loop_fogchanger(Object* obj) {
+void obj_loop_fogchanger(Object *obj) {
     s32 temp3;
     s32 fogNear;
     s32 views;
