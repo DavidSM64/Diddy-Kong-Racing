@@ -6,8 +6,8 @@
 #include "f3ddkr.h"
 #include "racer.h"
 
-#define LOCAL_OFFSET_TO_RAM_ADDRESS(ptr) \
-    ptr = ((s32)((u8*)ptr) + (s32)((u8*)mdl))
+#define LOCAL_OFFSET_TO_RAM_ADDRESS(type, ptr) \
+    ptr = (type)((s32)((u8*)ptr) + (s32)((u8*)mdl))
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC874 {
@@ -136,7 +136,7 @@ Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportInde
 s32 func_80027568(void);
 s32 func_8002CC30(LevelModelSegment*);
 s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
-s8 func_8002AD08(f32 yPos, f32* waterHeight, s32*);
+s8 func_8002AD08(f32 yPos, f32* waterHeight, f32*);
 void func_800278E8(s32);
 void func_80028050(void);
 void func_80028CD0(s32);

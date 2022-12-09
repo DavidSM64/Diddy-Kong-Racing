@@ -240,7 +240,7 @@ u8 D_8011AEF7;
 s32 D_8011AEF8;
 s32 D_8011AEFC;
 s32 D_8011AF00;
-u32 (*D_8011AF04)[64]; // Not sure about the number of elements
+Object *(*D_8011AF04)[64]; // Not sure about the number of elements
 s32 D_8011AF08[2];
 s32 D_8011AF10[2];
 f32 D_8011AF18[4];
@@ -1864,7 +1864,7 @@ s32 func_8001C48C(Object *obj) {
     s32 i;
     for(i = 0; i < 128; i++) {
         if ((*D_8011AF04)[i] == 0) {
-            (*D_8011AF04)[i] = (u32) obj;
+            (*D_8011AF04)[i] = obj;
             return i;
         }
     }
@@ -1931,12 +1931,12 @@ void func_8001D1BC(s32 arg0) {
     }
 }
 
-u32 func_8001D1E4(s32 *arg0) {
+Object *func_8001D1E4(s32 *arg0) {
     *arg0 = D_8011AF08[1];
     return D_8011AF04[0][D_8011AF08[1]];
 }
 
-u32 func_8001D214(s32 arg0) {
+Object *func_8001D214(s32 arg0) {
     if (arg0 >= 0 && arg0 < 0x80) {
         return D_8011AF04[0][arg0];
     }

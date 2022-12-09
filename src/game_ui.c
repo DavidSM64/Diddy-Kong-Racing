@@ -1957,6 +1957,7 @@ void func_800A8474(Gfx **dList, Matrix **mtx, VertexList **triList, s32 updateRa
 #else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A8474.s")
 #endif
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA3EC.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA600.s")
 

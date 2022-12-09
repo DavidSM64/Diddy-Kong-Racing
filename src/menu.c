@@ -2852,6 +2852,8 @@ void menu_audio_options_init(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80084854.s")
 
+extern void func_8000488C(s32 *soundMask); // Temporary until the proper signature is found.
+
 #ifdef NON_EQUIVALENT
 
 // Almost matching, should be functionally equivalent
@@ -3000,9 +3002,6 @@ s32 menu_audio_options_loop(s32 arg0) {
 #else
 GLOBAL_ASM("asm/non_matchings/menu/menu_audio_options_loop.s")
 #endif
-
-
-extern void func_8000488C(s32 *soundMask); // Temporary until the proper signature is found.
 
 void func_800851FC(void) {
     if (D_801269FC != NULL) {
