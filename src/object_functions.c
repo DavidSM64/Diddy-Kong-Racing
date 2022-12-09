@@ -2875,7 +2875,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                             settings->balloonsPtr[0]++;
                         }
                         settings->courseFlagsPtr[settings->courseId] |= flag;
-                        if (&obj->segment){ } // Fakematch
+                        if (1) {} // Fakematch
                         play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->unk7C.word = 16;
                         obj->unk74 = 2;
