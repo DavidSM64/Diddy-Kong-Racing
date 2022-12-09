@@ -8333,7 +8333,7 @@ void func_8009C508(s32 arg0) {
                 set_free_queue_state(2);
             } else {
                 if ((*gAssetsMenuElementIds)[arg0] & 0x8000) {
-                    free_sprite((Sprite*)(u32)D_80126550[arg0]);
+                    free_sprite((Sprite *) (u32) D_80126550[arg0]);
                 } else {
                     if ((*gAssetsMenuElementIds)[arg0] & 0x4000) {
                         gParticlePtrList_addObject((Object*)(u32)D_80126550[arg0]);
