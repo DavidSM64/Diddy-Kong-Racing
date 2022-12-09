@@ -193,123 +193,125 @@ void obj_init_fireball_octoweapon(Object *obj, UNUSED LevelObjectEntry_Fireball_
     obj->unk4C->unk11 = 0;
 }
 
-#ifdef NON_MATCHING
-void obj_loop_fireball_octoweapon(Object* obj, s32 arg1) {
-    Object *someObj; // 84
+void obj_loop_fireball_octoweapon(Object* obj, s32 updateRate) {
+    Object *someObj;
     f32 var_f2;
     f32 updateRateF;
-    Object *racerObj;
-    Object_Fireball_Octoweapon *sp74;
+    UNUSED s32 pad;
+    Object_Fireball_Octoweapon *weapon;
     Object_Racer *racer;
-    UNUSED s32 pad[7];
+    UNUSED s32 pad2[6];
+    Object_4C *obj4C;
     s32 temp;
     f32 sp4C;
 
-    someObj = (Object*)obj->unk78;
-    updateRateF = (f32) arg1;
-    if (osTvType == 0) {
+    someObj = (Object *) obj->unk78;
+    updateRateF = updateRate;
+    if (osTvType == TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    if ((obj->behaviorId == 0x74) && ((s32) obj->unk7C.word < 0)) {
+    if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2 && obj->unk7C.word < 0) {
         obj->segment.trans.x_position = 0.0f;
         obj->segment.trans.y_position = 0.0f;
         obj->segment.trans.z_position = 0.0f;
         func_80011560();
         func_80011570(obj, someObj->segment.trans.x_position, someObj->segment.trans.y_position, someObj->segment.trans.z_position);
     } else {
-        var_f2 = (f32) ((f64) (someObj->segment.trans.x_position - obj->segment.trans.x_position) * 0.1);
+        var_f2 = (someObj->segment.trans.x_position - obj->segment.trans.x_position) * 0.1;
         if (var_f2 > 10.0) {
             var_f2 = 10.0f;
         }
         if (var_f2 < -10.0) {
             var_f2 = -10.0f;
         }
-        obj->segment.x_velocity += (f64) (var_f2 - obj->segment.x_velocity) * 0.125 * updateRateF;
-        var_f2 = (f32) ((f64) (someObj->segment.trans.y_position - obj->segment.trans.y_position) * 0.1);
+        obj->segment.x_velocity += (var_f2 - obj->segment.x_velocity) * 0.125 * updateRateF;
+        var_f2 = (someObj->segment.trans.y_position - obj->segment.trans.y_position) * 0.1;
         if (var_f2 > 10.0) {
             var_f2 = 10.0f;
         }
         if (var_f2 < -10.0) {
             var_f2 = -10.0f;
         }
-        obj->segment.y_velocity += (f64) (var_f2 - obj->segment.y_velocity) * 0.125 * updateRateF;
-        var_f2 = (f32) ((f64) (someObj->segment.trans.z_position - obj->segment.trans.z_position) * 0.1);
+        obj->segment.y_velocity += (var_f2 - obj->segment.y_velocity) * 0.125 * updateRateF;
+        var_f2 = (someObj->segment.trans.z_position - obj->segment.trans.z_position) * 0.1;
         if (var_f2 > 10.0) {
             var_f2 = 10.0f;
         }
         if (var_f2 < -10.0) {
             var_f2 = -10.0f;
         }
-        obj->segment.z_velocity += (f64) (var_f2 - obj->segment.z_velocity) * 0.125 * updateRateF;
+        obj->segment.z_velocity += (var_f2 - obj->segment.z_velocity) * 0.125 * updateRateF;
         if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5) {
             obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
-            obj->segment.trans.x_rotation -= arg1 << 9;
+            obj->segment.trans.x_rotation -= updateRate * 0x200;
         }
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
-        if (obj->unk4A == 0x12A) {
-            if (func_8002AD08(obj->segment.trans.y_position, &sp4C, NULL) != 0) {
+        if (obj->unk4A == 298) {
+            if (func_8002AD08(obj->segment.trans.y_position, &sp4C, NULL)) {
                 obj->segment.trans.y_position = sp4C;
             }
         }
     }
-    obj->segment.unk18 += arg1 * 10;
-    sp74 = (Object_Fireball_Octoweapon*)obj->unk64;
-    racerObj = obj->unk4C->unk0;
-    if ((racerObj != NULL) && ((s32) obj->unk4C->unk13 < 0x3C) && (racerObj->segment.header->behaviorId == 1)) {
-        racer = (Object_Racer*)racerObj->unk64;
-        if (racer->playerIndex != -1) {
-            if (obj->behaviorId == 0x6C) {
-                racer->attackType = 1;
-                obj->unk7C.word = 0x14;
-                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0x2C, 0x11, 1.0f, (s32) 1);
-                gParticlePtrList_addObject(obj);
-            } else if ((s32) obj->unk7C.word > 0) {
-                racer->unk204 = 0x3C;
-                obj->unk7C.word = -0x3C;
-                obj->unk78 = (s32) racerObj;
-                play_sound_global(0x24AU, &sp74->unk1C);
+    obj->segment.unk18 += updateRate * 10;
+    weapon = (Object_Fireball_Octoweapon *) obj->unk64;
+    obj4C = obj->unk4C;
+    if ((obj4C->unk0)) { 
+        if ((obj4C->unk13 < 60)) {
+            someObj = obj4C->unk0;
+            if((someObj->segment.header->behaviorId == BHV_RACER)) {
+                racer = (Object_Racer *) someObj->unk64;
+                if (racer->playerIndex != PLAYER_COMPUTER) {
+                    if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
+                        racer->attackType = ATTACK_EXPLOSION;
+                        obj->unk7C.word = 20;
+                        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
+                        gParticlePtrList_addObject(obj);
+                    } else if (obj->unk7C.word > 0) {
+                        racer->unk204 = 60;
+                        obj->unk7C.word = -60;
+                        obj->unk78 = (s32) someObj;
+                        play_sound_global(SOUND_BUBBLE_RISE, &weapon->unk1C);
+                    }
+                }
             }
         }
     }
-    if (obj->behaviorId == 0x6C) {
+    if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
         obj->unk74 = 1;
-        func_800AFC3C(obj, arg1);
-        obj->unk7C.word -= arg1;
+        func_800AFC3C(obj, updateRate);
+        obj->unk7C.word -= updateRate;
         if (obj->unk7C.word < 0) {
-            if (obj->unk4A == 0x12A) {
+            if (obj->unk4A == 298) {
                 gParticlePtrList_addObject(obj);
-                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0x2C, 0x11, 1.0f, 1);
+                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
             }
-            obj->segment.trans.scale = (f32) ((f64) obj->segment.trans.scale * 0.9);
-            if ((f64) obj->segment.trans.scale < 0.5) {
+            obj->segment.trans.scale *= 0.9;
+            if (obj->segment.trans.scale < 0.5) {
                 gParticlePtrList_addObject(obj);
             }
         }
     } else {
         if (obj->unk7C.word < 0) {
-            obj->unk7C.word += arg1;
+            obj->unk7C.word += updateRate;
             if (obj->unk7C.word >= 0) {
                 obj->unk7C.word = 0;
             }
         } else {
-            obj->unk7C.word -= arg1;
+            obj->unk7C.word -= updateRate;
             if (obj->unk7C.word <= 0) {
                 obj->unk7C.word = 0;
             }
         }
         if (obj->unk7C.word == 0) {
-            temp = sp74->unk1C;
+            temp = weapon->unk1C;
             if (temp != 0) {
                 func_8000488C(temp);
             }
-            func_80009558(0x155U, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            func_80009558(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             gParticlePtrList_addObject(obj);
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fireball_octoweapon.s")
-#endif
 
 void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
     Object_LaserGun *obj64;
