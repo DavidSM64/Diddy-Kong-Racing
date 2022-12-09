@@ -6515,7 +6515,7 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
                         draw_text(&sMenuCurrDisplayList, 88, yOffset + 72, gMenuText[ASSET_MENU_TEXT_BESTTIME], ALIGN_MIDDLE_CENTER);
                         draw_text(&sMenuCurrDisplayList, 88, yOffset + 92, gMenuText[ASSET_MENU_TEXT_BESTLAP], ALIGN_MIDDLE_CENTER);
                         set_text_colour(255, 128, 255, 96, 255);
-                        decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][sp58], (char*)&filename, 3);
+                        decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][sp58], (char *) &filename, 3);
                         draw_text(&sMenuCurrDisplayList, 258, yOffset + 72, (char*) &filename, ALIGN_MIDDLE_CENTER);
                         decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][sp58], (char *) &filename, 3);
                         draw_text(&sMenuCurrDisplayList, 258, yOffset + 92, (char*) &filename, ALIGN_MIDDLE_CENTER);
