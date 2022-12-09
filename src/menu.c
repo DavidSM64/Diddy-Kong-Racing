@@ -3006,7 +3006,7 @@ extern void func_8000488C(s32 *soundMask); // Temporary until the proper signatu
 
 void func_800851FC(void) {
     if (D_801269FC != NULL) {
-        func_8000488C((s32*)D_801269FC);
+        func_8000488C((s32 *) D_801269FC);
     }
     if (gOpacityDecayTimer >= 0) {
         set_music_player_voice_limit(0x18);
