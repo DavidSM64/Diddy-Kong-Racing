@@ -404,6 +404,7 @@ void obj_loop_log(Object *obj, s32 updateRate);
 void obj_loop_modechange(Object *obj, s32 updateRate);
 void obj_loop_bonus(Object *obj, s32 updateRate);
 void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate);
+void obj_loop_lasergun(Object *obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
@@ -412,7 +413,6 @@ void obj_loop_vehicleanim(Object *obj, s32 speed);
 void obj_loop_snowball(Object *obj, s32 speed);
 void obj_loop_goldenballoon(Object *obj, s32 speed);
 void obj_loop_groundzipper(Object *obj, s32 updateRate);
-void obj_loop_lasergun(Object *obj, s32 updateRate);
 void obj_loop_laserbolt(Object *obj, s32 updateRate);
 void obj_loop_posarrow(Object *obj, s32 updateRate);
 void obj_loop_effectbox(Object *obj, s32 updateRate);

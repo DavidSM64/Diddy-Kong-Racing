@@ -332,7 +332,72 @@ void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
     obj->segment.trans.x_rotation = entry->unk9 << 4 << 4; // just needs to be 2 left shifts that add up to 8.
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_lasergun.s")
+void obj_loop_lasergun(Object* obj, s32 updateRate) {
+    Object_Lasergun *lasergun;
+    Object* laserBoltObj;
+    f32 distance;
+    ObjectTransform trans;
+    Matrix mtx;
+    Object *racerObj;
+    f32 diffX;
+    f32 diffZ;
+    f32 diffY;
+    Object_4C *obj4C;
+    LevelObjectEntryCommon spawnObj;
+
+    lasergun = (Object_Lasergun *) obj->unk64;
+    if (lasergun->unkC > 0) {
+        lasergun->unkC -= updateRate;
+    } else {
+        obj4C = obj->unk4C;
+        if (lasergun->unk11 >= obj4C->unk13) {
+            if (lasergun->unkE != 0) {
+                racerObj = obj4C->unk0;
+                if (racerObj != NULL && racerObj->behaviorId == BHV_RACER) {
+                    diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
+                    diffY = obj->segment.trans.y_position - racerObj->segment.trans.y_position;
+                    diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
+                    distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                    if (distance > 10.0f) {
+                        diffX /= distance;
+                        diffY /= distance;
+                        diffZ /= distance;
+                        obj->segment.trans.y_rotation = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
+                        obj->segment.trans.x_rotation = arctan2_f(diffY, 1.0f) & 0xFFFF;
+                    }
+                }
+            }
+            lasergun->unkC = lasergun->unkF;
+            spawnObj.x = obj->segment.trans.x_position;
+            spawnObj.y = obj->segment.trans.y_position;
+            spawnObj.z = obj->segment.trans.z_position;
+            spawnObj.size = 8;
+            spawnObj.objectID = 0xC6;
+            func_80009558(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            laserBoltObj = spawn_object(&spawnObj, 1);
+            if (laserBoltObj != NULL) {
+                laserBoltObj->segment.unk3C_a.level_entry = NULL;
+                laserBoltObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
+                laserBoltObj->segment.trans.x_rotation = obj->segment.trans.x_rotation;
+                laserBoltObj->unk78 = lasergun->unk10;
+                laserBoltObj->unk7C.word = (s32) lasergun;
+                trans.x_position = 0.0f;
+                trans.y_position = 0.0f;
+                trans.z_position = 0.0f;
+                trans.scale = 1.0f;
+                trans.y_rotation = obj->segment.trans.y_rotation;
+                trans.x_rotation = obj->segment.trans.x_rotation;
+                trans.z_rotation = 0;
+                object_transform_to_matrix(mtx, &trans);
+                diffX = 30.0f; // Need to use diffX to match.
+                if (lasergun->unkE == 0) {
+                    diffX = 45.0f;
+                }
+                guMtxXFMF(mtx, 0.0f, 0.0f, diffX, &laserBoltObj->segment.x_velocity, &laserBoltObj->segment.y_velocity, &laserBoltObj->segment.z_velocity);
+            }
+        }
+    }
+}
 
 void obj_init_laserbolt(Object *obj, UNUSED LevelObjectEntry_Laserbolt *entry) {
     obj->unk4C->unk14 = 2;

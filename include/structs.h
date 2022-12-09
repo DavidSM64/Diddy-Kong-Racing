@@ -1343,6 +1343,17 @@ typedef struct Object_Fireball_Octoweapon {
     s32 unk1C;
 } Object_Fireball_Octoweapon;
 
+typedef struct Object_Lasergun {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s16 unkC;
+    s8 unkE;
+    s8 unkF;
+    u8 unk10;
+    u8 unk11;
+} Object_Lasergun;
+
 typedef struct Object_64 {
     union {
         Object_LaserGun laser_gun;
@@ -1390,6 +1401,7 @@ typedef struct Object_64 {
         Object_80021400_64 obj80021400_64;
         Object_Log log;
         Object_Fireball_Octoweapon fireball_octoweapon;
+        Object_Lasergun lasergun;
     };
 } Object_64;
 
