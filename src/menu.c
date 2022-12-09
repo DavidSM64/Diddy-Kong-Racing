@@ -4446,7 +4446,7 @@ void draw_character_select_text(UNUSED s32 arg0) {
             if (osTvType == TV_TYPE_PAL) {
                 yPos = 234;
             }
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char*)D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
         reset_render_settings(&sMenuCurrDisplayList);
         update_camera_fov(40.0f);
