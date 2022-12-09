@@ -587,38 +587,27 @@ SIDeviceStatus func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt) 
     u32 fileSizes[16];
     SIDeviceStatus ret;
     s32 var_s1;
-    s32 var_s3;
+    s32 fileNum;
     s32 var_s4;
     char fileExtChar;
 
     var_s1 = 0;
+    var_s4 = ' ';
     ret = get_controller_pak_file_list(controllerIndex, 16, &fileNames, &fileExtensions, &fileSizes, &fileTypes);
     if (ret == CONTROLLER_PAK_GOOD) {
-        var_s3 = 0;
-        var_s4 = ' ';
-        do {
-            if (fileNames[var_s3] != NULL) {
+        for (fileNum = 0; fileNum < 16; fileNum++) {
+            if (fileNames[fileNum] != NULL) {
                 if (fileType == 3) {
-                    //DKRACING-ADV
-                    if (func_800CE050((u8 *) fileNames[var_s3], D_800E7630, strlen(D_800E7640)) != 0) {
-
-                    } else {
-                        goto block_7;
-                    }
-                } else {
-                    //DKRACING-TIMES
-                    if (func_800CE050((u8 *) fileNames[var_s3], D_800E7650, strlen(D_800E7660)) == 0) {
-                        block_7:
-                        if (fileExtensions[var_s3][0] > var_s4) {
-                            var_s4 = fileExtensions[var_s3][0];
+                    if ((func_800CE050((u8 *) fileNames[fileNum], D_800E7630, strlen(D_800E7640)) == 0) //DKRACING-ADV
+                     || (func_800CE050((u8 *) fileNames[fileNum], D_800E7650, strlen(D_800E7660)) == 0)) { //DKRACING-TIMES
+                        if (var_s4 < fileExtensions[fileNum][0]) {
+                            var_s4 = fileExtensions[fileNum][0];
                         }
-                        var_s1 |= 1 << (fileExtensions[var_s3][0] & 0xFF);
+                        var_s1 |= 1 << ((fileExtensions[fileNum][0] & 0xFF) & 0x1F);
                     }
                 }
             }
-            var_s3++;
-        //} while (fileName != &controllerIndex);
-        } while (var_s3 != controllerIndex);
+        }
         if (var_s4 == ' ') {
             fileExtChar = 'A';
         } else if (var_s4 == 'Z') {
