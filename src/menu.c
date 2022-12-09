@@ -28,6 +28,7 @@
 #include "unknown_003260.h"
 #include "racer.h"
 #include "unknown_078050.h"
+#include "unknown_0255E0.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -238,8 +239,8 @@ u8  sCurrentControllerPakAllFileTypes[16]; //File type of all files on controlle
 u32 sCurrentControllerPakAllFileSizes[16]; //File size of all files on controller pak
 u32 sCurrentControllerPakFreeSpace; //Space available in current controller pak
 s32 sControllerPakMenuNumberOfRows; //8 if PAL, 7 if not
-s32 D_80126BB8;
-s32 D_80126BBC;
+TextureHeader *D_80126BB8;
+TextureHeader *D_80126BBC;
 s32 D_80126BC0;
 s32 D_80126BC4;
 PakError sControllerPakError; // 0 = no error, 1 = fatal error, 2 = no free space, 3 = bad data
@@ -2610,7 +2611,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gTitleScreenCurrentOption--;
         }
         if (temp0 != gTitleScreenCurrentOption) {
-            play_sound_global(SOUND_MENU_PICK2, 0 * contrIndex); // TODO: The `* contrIndex` here is a fake match.
+            play_sound_global(SOUND_MENU_PICK2, (s32*)(0 * contrIndex)); // TODO: The `* contrIndex` here is a fake match.
         }
         if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
             for(contrIndex = 3; contrIndex > 0 && !(D_801267D8[contrIndex] & (A_BUTTON | START_BUTTON)); contrIndex--){}
@@ -3000,9 +3001,12 @@ s32 menu_audio_options_loop(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_audio_options_loop.s")
 #endif
 
+
+extern void func_8000488C(s32 *soundMask); // Temporary until the proper signature is found.
+
 void func_800851FC(void) {
     if (D_801269FC != NULL) {
-        func_8000488C(D_801269FC);
+        func_8000488C((s32*)D_801269FC);
     }
     if (gOpacityDecayTimer >= 0) {
         set_music_player_voice_limit(0x18);
@@ -4442,7 +4446,7 @@ void draw_character_select_text(UNUSED s32 arg0) {
             if (osTvType == TV_TYPE_PAL) {
                 yPos = 234;
             }
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char*)D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
         reset_render_settings(&sMenuCurrDisplayList);
         update_camera_fov(40.0f);
@@ -6025,7 +6029,7 @@ void func_80090918(s32 updateRate) {
     if (sp24 == 0) {
         var_a1 = (gFFLUnlocked == -1) ? 3 : 4;
         if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
-            if (gTrackIdForPreview != -1) {
+            if (gTrackIdForPreview != (MapId)-1) {
                 gMenuDelay = 1;
                 gTrackIdToLoad = gTrackIdForPreview;
                 D_800E1E1C = 1;
@@ -6387,7 +6391,7 @@ s32 func_80092BE0(MapId mapId) {
     temp = -1;
     if (trackIdArray[0] != -1) {
         while (temp < 0) {
-            if (mapId == trackIdArray[index]) {
+            if (mapId == (MapId)trackIdArray[index]) {
                 temp = index;
             }
             index++;
@@ -6467,7 +6471,7 @@ void menu_adventure_track_init(void) {
  * Render the setup gui when in a track preview in adventure mode.
  * This includes the vehicle selection and if time trial is enabled, the best times.
  */
-void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
+void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
     s32 alpha;
     s32 y;
     s32 greenAmount;
@@ -6511,9 +6515,9 @@ void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
                         draw_text(&sMenuCurrDisplayList, 88, yOffset + 72, gMenuText[ASSET_MENU_TEXT_BESTTIME], ALIGN_MIDDLE_CENTER);
                         draw_text(&sMenuCurrDisplayList, 88, yOffset + 92, gMenuText[ASSET_MENU_TEXT_BESTLAP], ALIGN_MIDDLE_CENTER);
                         set_text_colour(255, 128, 255, 96, 255);
-                        decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][sp58], &filename, 3);
+                        decompress_filename_string(settings->courseInitialsPtr[gPlayerSelectVehicle[0]][sp58], (char*)&filename, 3);
                         draw_text(&sMenuCurrDisplayList, 258, yOffset + 72, (char*) &filename, ALIGN_MIDDLE_CENTER);
-                        decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][sp58], &filename, 3);
+                        decompress_filename_string(settings->flapInitialsPtr[gPlayerSelectVehicle[0]][sp58], (char*)&filename, 3);
                         draw_text(&sMenuCurrDisplayList, 258, yOffset + 92, (char*) &filename, ALIGN_MIDDLE_CENTER);
                         show_timestamp(settings->courseTimesPtr[gPlayerSelectVehicle[0]][((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2], 26, 53, 128, 255, 255, 0);
                         show_timestamp(settings->flapTimesPtr[gPlayerSelectVehicle[0]][((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2], 26, 33, 255, 192, 255, 0);
@@ -6531,7 +6535,7 @@ void render_adventure_track_setup(s32 arg0, s32 arg1, s32 arg2) {
                     savedY = y;
                         
                     for (i = 0; i < 3; i++) {
-                        alpha = (arg1 < 2 && get_map_default_vehicle(sp58) != i) ? 128 : 255;
+                        alpha = (arg1 < 2 && get_map_default_vehicle(sp58) != (Vehicle)i) ? 128 : 255;
                         if ((1 << i) & mask) {
                             if (i == gPlayerSelectVehicle[0]) {
                                 render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[i*3+1], 104, y, 255, 255, 255, 255);
@@ -7547,7 +7551,7 @@ void menu_trophy_race_round_init(void) {
     }
 
     levelId = levelIds[((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound];
-    while (levelId == -1) {
+    while (levelId == (MapId)-1) {
         levelId = (levelId + 1) & 3;
     }
 
@@ -7575,8 +7579,8 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_round_init.s")
  */
 void draw_trophy_race_text(UNUSED s32 updateRate) {
     s32 yPos;
-    u8 *worldName;
-    u8 *levelName;
+    char *worldName;
+    char *levelName;
     s8 *levelIds;
 
     levelIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
@@ -8329,12 +8333,12 @@ void func_8009C508(s32 arg0) {
                 set_free_queue_state(2);
             } else {
                 if ((*gAssetsMenuElementIds)[arg0] & 0x8000) {
-                    free_sprite((u32)D_80126550[arg0]);
+                    free_sprite((Sprite*)(u32)D_80126550[arg0]);
                 } else {
                     if ((*gAssetsMenuElementIds)[arg0] & 0x4000) {
-                        gParticlePtrList_addObject((u32)D_80126550[arg0]);
+                        gParticlePtrList_addObject((Object*)(u32)D_80126550[arg0]);
                     } else {
-                        func_8005FF40((u32)D_80126550[arg0]);
+                        func_8005FF40((ObjectModel**)(u32)D_80126550[arg0]);
                     }
                 }
             }
@@ -8430,7 +8434,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
             numTris = objMdl->batches[i + 1].facesOffset - triOffset;
             verts = &objMdl->vertices[vertOffset];
             tris = &objMdl->triangles[triOffset];
-            if (objMdl->batches[i].textureIndex == -1) {
+            if (objMdl->batches[i].textureIndex == -1) { // !@bug Never true, since textureIndex is unsigned. This should've been either `== (u8)-1` or `== 0xFF`.
                 tex = NULL;
                 texEnabled = FALSE;
                 var_a3 = 0;
