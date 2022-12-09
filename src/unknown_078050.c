@@ -22,8 +22,8 @@ u8 sBackgroundPrimColourB = 0;
 s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0, 1) << 16);
 
 u32 D_800DE4C0 = 0x40;
-u32 D_800DE4C4 = 0;
-u32 D_800DE4C8 = 0;
+TextureHeader *D_800DE4C4 = 0;
+TextureHeader *D_800DE4C8 = 0;
 s32 D_800DE4CC = 0;
 
 unk800DE4D0 D_800DE4D0 = { NULL };
@@ -494,7 +494,7 @@ void setup_gfx_mesg_queues(OSSched *sc) {
     osCreateMesgQueue(&gGfxTaskMesgQueue, gGfxTaskMesgBuf, 8);
 }
 
-void func_80078170(u32 arg0, u32 arg1, u32 arg2) {
+void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
     D_800DE4C4 = arg0;
     D_800DE4C8 = arg1;
     D_800DE4C0 = arg2 << 2;
