@@ -6391,7 +6391,7 @@ s32 func_80092BE0(MapId mapId) {
     temp = -1;
     if (trackIdArray[0] != -1) {
         while (temp < 0) {
-            if (mapId == (MapId)trackIdArray[index]) {
+            if (mapId == (MapId) trackIdArray[index]) {
                 temp = index;
             }
             index++;
