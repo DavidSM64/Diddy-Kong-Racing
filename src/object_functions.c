@@ -193,106 +193,98 @@ void obj_init_fireball_octoweapon(Object *obj, UNUSED LevelObjectEntry_Fireball_
     obj->unk4C->unk11 = 0;
 }
 
-#ifdef NON_MATCHING
-// Has a minor regalloc issue with obj4C_obj.
+/**
+ * Bubbler boss obstacle loop behaviour.
+ * Representing the landmines and bubbletraps that Bubbler throws during the race.
+ * When ran into by a player, they will suffer like they usually would when running into a landmine or a bubble trap.
+ */
+void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
+    Object *someObj;
+    f32 var_f2;
+    f32 updateRateF;
+    UNUSED s32 pad;
+    Object_Fireball_Octoweapon *weapon;
+    Object_Racer *racer;
+    UNUSED s32 pad2[6];
+    Object_4C *obj4C;
+    s32 temp;
+    f32 sp4C;
 
-typedef struct Object80033F60_64 {
-	u8 pad0[0x1C];
-	s32 *unk1C;
-	u8 pad20[0x8];
-	s32 unk28;
-} Object80033F60_64;
-
-typedef struct Object80033F60_4C_64 {
-	s16 unk0;
-	u8 pad2[0x185];
-	s8 unk187;
-	u8 pad188[0x7C];
-	s16 unk204;
-} Object80033F60_4C_64;
-
-void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
-	ObjectTransform *trans78;
-	Object_4C *obj4C;
-	f32 sp7C;
-	Object80033F60_4C_64 *obj4C_obj64;
-	Object80033F60_64 *obj64;
-	Object *obj4C_obj;
-	f32 phi_f2;
-    s32 *temp;
-	f32 sp4C[7];
-
-    trans78 = obj->trans78;
-
-    sp7C = speed;
+    someObj = (Object *) obj->unk78;
+    updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        sp7C *= 1.2;
+        updateRateF *= 1.2;
     }
-
-    if ((obj->behaviorId == 116) && (obj->unk7C.word < 0)) {
+    if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2 && obj->unk7C.word < 0) {
         obj->segment.trans.x_position = 0.0f;
         obj->segment.trans.y_position = 0.0f;
         obj->segment.trans.z_position = 0.0f;
         func_80011560();
-        func_80011570(obj, trans78->x_position, trans78->y_position, trans78->z_position);
+        func_80011570(obj, someObj->segment.trans.x_position, someObj->segment.trans.y_position, someObj->segment.trans.z_position);
     } else {
-        phi_f2 = (trans78->x_position - obj->segment.trans.x_position) * 0.1;
-        if (phi_f2 > 10.0) {
-            phi_f2 = 10.0f;
+        var_f2 = (someObj->segment.trans.x_position - obj->segment.trans.x_position) * 0.1;
+        if (var_f2 > 10.0) {
+            var_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
-            phi_f2 = -10.0f;
+        if (var_f2 < -10.0) {
+            var_f2 = -10.0f;
         }
-        obj->segment.x_velocity += (phi_f2 - obj->segment.x_velocity) * 0.125 * sp7C;
-        phi_f2 = (trans78->y_position - obj->segment.trans.y_position) * 0.1;
-        if (phi_f2 > 10.0) {
-            phi_f2 = 10.0f;
+        obj->segment.x_velocity += (var_f2 - obj->segment.x_velocity) * 0.125 * updateRateF;
+        var_f2 = (someObj->segment.trans.y_position - obj->segment.trans.y_position) * 0.1;
+        if (var_f2 > 10.0) {
+            var_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
-            phi_f2 = -10.0f;
+        if (var_f2 < -10.0) {
+            var_f2 = -10.0f;
         }
-        obj->segment.y_velocity += (phi_f2 - obj->segment.y_velocity) * 0.125 * sp7C;
-        phi_f2 = (trans78->z_position - obj->segment.trans.z_position) * 0.1;
-        if (phi_f2 > 10.0) {
-            phi_f2 = 10.0f;
+        obj->segment.y_velocity += (var_f2 - obj->segment.y_velocity) * 0.125 * updateRateF;
+        var_f2 = (someObj->segment.trans.z_position - obj->segment.trans.z_position) * 0.1;
+        if (var_f2 > 10.0) {
+            var_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
-            phi_f2 = -10.0f;
+        if (var_f2 < -10.0) {
+            var_f2 = -10.0f;
         }
-        obj->segment.z_velocity += (phi_f2 - obj->segment.z_velocity) * 0.125 * sp7C;
+        obj->segment.z_velocity += (var_f2 - obj->segment.z_velocity) * 0.125 * updateRateF;
         if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5) {
             obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
-            obj->segment.trans.x_rotation -= speed << 9;
+            obj->segment.trans.x_rotation -= updateRate * 0x200;
         }
-        func_80011570(obj, obj->segment.x_velocity * sp7C, obj->segment.y_velocity * sp7C, obj->segment.z_velocity * sp7C);
-        if (obj->unk4A == 298 && func_8002AD08(obj->segment.trans.y_position, sp4C, 0)) {
-			obj->segment.trans.y_position = sp4C[0];
-        }
-    }
-    obj->segment.unk18 += speed * 10;
-    obj64 = (Object80033F60_64 *) obj->unk64;
-    obj4C = obj->unk4C;
-    obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
-    if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->segment.header->behaviorId == 1)) {
-        obj4C_obj64 = (Object80033F60_4C_64 *) obj4C_obj->unk64;
-        if (obj4C_obj64->unk0 != -1) {
-            if (obj->behaviorId == 108) {
-                obj4C_obj64->unk187 = 1;
-                obj->unk7C.word = 20;
-                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
-                gParticlePtrList_addObject(obj);
-            } else if (obj->unk7C.word > 0) {
-                obj4C_obj64->unk204 = 60;
-                obj->unk7C.word = -60;
-                obj->action = (s32) obj4C_obj;
-                play_sound_global(SOUND_BUBBLE_RISE, obj64->unk1C);
+        func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
+        if (obj->unk4A == 298) {
+            if (func_8002AD08(obj->segment.trans.y_position, &sp4C, NULL)) {
+                obj->segment.trans.y_position = sp4C;
             }
         }
     }
-    if (obj->behaviorId == 108) {
+    obj->segment.unk18 += updateRate * 10;
+    weapon = (Object_Fireball_Octoweapon *) obj->unk64;
+    obj4C = obj->unk4C;
+    if ((obj4C->unk0)) { 
+        if ((obj4C->unk13 < 60)) {
+            someObj = obj4C->unk0;
+            if((someObj->segment.header->behaviorId == BHV_RACER)) {
+                racer = (Object_Racer *) someObj->unk64;
+                if (racer->playerIndex != PLAYER_COMPUTER) {
+                    if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
+                        racer->attackType = ATTACK_EXPLOSION;
+                        obj->unk7C.word = 20;
+                        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
+                        gParticlePtrList_addObject(obj);
+                    } else if (obj->unk7C.word > 0) {
+                        racer->unk204 = 60;
+                        obj->unk7C.word = -60;
+                        obj->unk78 = (s32) someObj;
+                        play_sound_global(SOUND_BUBBLE_RISE, &weapon->unk1C);
+                    }
+                }
+            }
+        }
+    }
+    if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
         obj->unk74 = 1;
-        func_800AFC3C(obj, speed);
-        obj->unk7C.word -= speed;
+        func_800AFC3C(obj, updateRate);
+        obj->unk7C.word -= updateRate;
         if (obj->unk7C.word < 0) {
             if (obj->unk4A == 298) {
                 gParticlePtrList_addObject(obj);
@@ -305,45 +297,117 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
         }
     } else {
         if (obj->unk7C.word < 0) {
-            obj->unk7C.word += speed;
+            obj->unk7C.word += updateRate;
             if (obj->unk7C.word >= 0) {
                 obj->unk7C.word = 0;
             }
         } else {
-            obj->unk7C.word -= speed;
+            obj->unk7C.word -= updateRate;
             if (obj->unk7C.word <= 0) {
                 obj->unk7C.word = 0;
             }
         }
         if (obj->unk7C.word == 0) {
-            temp = obj64->unk1C;
+            temp = weapon->unk1C;
             if (temp != 0) {
                 func_8000488C(temp);
             }
-            func_80009558(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, 0);
+            func_80009558(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             gParticlePtrList_addObject(obj);
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fireball_octoweapon.s")
-#endif
 
+/**
+ * Laser gun init function.
+ * Sets the face direction and active behaviour modes based on entry data.
+ * This includes a targeting system and rate of fire.
+*/
 void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
-    Object_LaserGun *obj64;
-    obj->unk4C->unk14 = 0x22;
+    Object_LaserGun *laserGun;
+    obj->unk4C->unk14 = 34;
     obj->unk4C->unk11 = 0;
-    obj64 = &obj->unk64->laser_gun;
-    obj64->unkE = entry->unkA;
-    obj64->unkF = entry->unkB;
-    obj64->unk10 = entry->unkC;
-    obj64->unk11 = entry->unkD;
-    obj64->unkC = obj64->unkF;
-    obj->segment.trans.y_rotation = entry->unk8 << 4 << 4; // Not sure about the shift amounts here, but it
-    obj->segment.trans.x_rotation = entry->unk9 << 4 << 4; // just needs to be 2 left shifts that add up to 8.
+    laserGun = &obj->unk64->lasergun;
+    laserGun->targeting = entry->targeting;
+    laserGun->fireRate = entry->fireRate;
+    laserGun->unk10 = entry->unkC;
+    laserGun->unk11 = entry->unkD;
+    laserGun->fireTimer = laserGun->fireRate;
+    obj->segment.trans.y_rotation = entry->angleX << 4 << 4; // Not sure about the shift amounts here, but it
+    obj->segment.trans.x_rotation = entry->angleY << 4 << 4; // just needs to be 2 left shifts that add up to 8.
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_lasergun.s")
+/**
+ * Laser gun loop behaviour.
+ * A static mounted gun that shoots laserbeams at wherever it's facing.
+ * The fire rate is adjustable per object and can be set to target racers.
+*/
+void obj_loop_lasergun(Object *obj, s32 updateRate) {
+    Object_LaserGun *lasergun;
+    Object *laserBoltObj;
+    f32 distance;
+    ObjectTransform trans;
+    Matrix mtx;
+    Object *racerObj;
+    f32 diffX;
+    f32 diffZ;
+    f32 diffY;
+    Object_4C *obj4C;
+    LevelObjectEntryCommon spawnObj;
+
+    lasergun = (Object_LaserGun *) obj->unk64;
+    if (lasergun->fireTimer > 0) {
+        lasergun->fireTimer -= updateRate;
+    } else {
+        obj4C = obj->unk4C;
+        if (lasergun->unk11 >= obj4C->unk13) {
+            if (lasergun->targeting) {
+                racerObj = obj4C->unk0;
+                if (racerObj != NULL && racerObj->behaviorId == BHV_RACER) {
+                    diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
+                    diffY = obj->segment.trans.y_position - racerObj->segment.trans.y_position;
+                    diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
+                    distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                    if (distance > 10.0f) {
+                        diffX /= distance;
+                        diffY /= distance;
+                        diffZ /= distance;
+                        obj->segment.trans.y_rotation = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
+                        obj->segment.trans.x_rotation = arctan2_f(diffY, 1.0f) & 0xFFFF;
+                    }
+                }
+            }
+            lasergun->fireTimer = lasergun->fireRate;
+            spawnObj.x = obj->segment.trans.x_position;
+            spawnObj.y = obj->segment.trans.y_position;
+            spawnObj.z = obj->segment.trans.z_position;
+            spawnObj.size = 8;
+            spawnObj.objectID = 0xC6;
+            func_80009558(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            laserBoltObj = spawn_object(&spawnObj, 1);
+            if (laserBoltObj != NULL) {
+                laserBoltObj->segment.unk3C_a.level_entry = NULL;
+                laserBoltObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
+                laserBoltObj->segment.trans.x_rotation = obj->segment.trans.x_rotation;
+                laserBoltObj->unk78 = lasergun->unk10;
+                laserBoltObj->unk7C.word = (s32) lasergun;
+                trans.x_position = 0.0f;
+                trans.y_position = 0.0f;
+                trans.z_position = 0.0f;
+                trans.scale = 1.0f;
+                trans.y_rotation = obj->segment.trans.y_rotation;
+                trans.x_rotation = obj->segment.trans.x_rotation;
+                trans.z_rotation = 0;
+                object_transform_to_matrix(mtx, &trans);
+                diffX = 30.0f; // Need to use diffX to match.
+                if (lasergun->targeting == FALSE) {
+                    diffX = 45.0f;
+                }
+                guMtxXFMF(mtx, 0.0f, 0.0f, diffX, &laserBoltObj->segment.x_velocity, &laserBoltObj->segment.y_velocity, &laserBoltObj->segment.z_velocity);
+            }
+        }
+    }
+}
 
 void obj_init_laserbolt(Object *obj, UNUSED LevelObjectEntry_Laserbolt *entry) {
     obj->unk4C->unk14 = 2;
@@ -2610,7 +2674,63 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_modechange.s")
+void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
+    Object *racerObj;
+    Object **racerObjects;
+    s32 numRacers;
+    Object_Racer *racer;
+    Object_ModeChange *modeChange;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    s32 radius_3;
+    s32 i;
+    f32 radiusF;
+    f32 dist;
+    
+    modeChange = (Object_ModeChange *) obj->unk64;
+    if (obj->unk4C->unk13 < modeChange->unk10) {
+        radiusF = modeChange->unk10;
+        racerObjects = get_racer_objects(&numRacers);
+        for (i = 0; i < numRacers; i++) {
+            racerObj = racerObjects[i];
+            racer = (Object_Racer *) racerObj->unk64;
+            if (racer->unk1D6 != modeChange->unk14) {
+                diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                dist = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                if (dist < radiusF) {
+                    dist = ((modeChange->unk0 * racerObj->segment.trans.x_position) + (modeChange->unk8 * racerObj->segment.trans.z_position) + modeChange->unkC);
+                    if (dist < 0.0f) {
+                        racer->unk1E0 = 0;
+                        if (modeChange->unk14 == 0) {
+                            racer->unk1D6 = racer->unk1D7;
+                        } else {
+                            racer->unk1D6 = modeChange->unk14;
+                        }
+                        if (modeChange->unk14 == 4) {
+                            if (racer->raceFinished == FALSE) {
+                                func_80072348(racer->playerIndex, 8);
+                            }
+                            radius_3 = func_8001C524(racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 0);
+                            if (radius_3 != 0xFF) {
+                                racer->unk158 = func_8001D214(radius_3);
+                            } else {
+                                racer->unk158 = NULL;
+                            }
+                            racer->unk15C = NULL;
+                            racer->unk19A = 0;
+                        }
+                        racer->unk198 = obj->segment.trans.y_rotation;
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
 
 void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     f32 phi_f0;
@@ -2765,7 +2885,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                             settings->balloonsPtr[0]++;
                         }
                         settings->courseFlagsPtr[settings->courseId] |= flag;
-                        if (&obj->segment){ } // Fakematch
+                        if (1) {} // Fakematch
                         play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->unk7C.word = 16;
                         obj->unk74 = 2;
@@ -3378,19 +3498,19 @@ void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
  * When touched by a player, will increase their banana count.
 */
 void obj_loop_banana(Object *obj, s32 updateRate) {
-    Object *racerObj; // sp6C
-    Object_Racer *racer; // sp68
-    f32 tempPos[3]; // 5C, 60, 64
+    Object *racerObj;
+    Object_Racer *racer;
+    f32 tempPos[3];
     f32 sp58;
-    f32 updateRateF; // sp54
+    f32 updateRateF;
     f32 velX;
     f32 velZ;
     s32 sp48;
     s32 sp44;
     s8 sp43;
-    Object_Banana *banana; // sp3C
+    Object_Banana *banana;
     Object_78_Banana *obj78;
-    s32 racerPrevUnk180; // sp34
+    s32 racerPrevUnk180;
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
@@ -3506,6 +3626,13 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     }
 }
 
+
+/**
+ * Race silver coin init behaviour.
+ * Checks if in the correct modes, then sets the flag to active, otherwise inactive.
+ * If the flag is inactive, destroy the object.
+ * Rareware duplicated this function just to check for adventure 2...
+*/
 void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv2 *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
@@ -3514,36 +3641,47 @@ void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv
     obj->unk7C.word = 16;
     if (!is_in_tracks_mode()) {
         if (check_if_silver_coin_race() && is_in_adventure_two()) {
-            obj->action = 0;
+            obj->action = SILVER_COIN_ACTIVE;
         } else {
-            obj->action = 3;
+            obj->action = SILVER_COIN_INACTIVE;
         }
     }
-    if (obj->action == 3) {
+    if (obj->action == SILVER_COIN_INACTIVE) {
         obj->segment.trans.unk6 |= 0x600;
         gParticlePtrList_addObject(obj);
     }
 }
 
+/**
+ * Race silver coin init behaviour.
+ * Checks if in the correct modes, then sets the flag to active, otherwise inactive.
+ * If the flag is inactive, destroy the object.
+*/
 void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry) {
     obj->unk4C->unk14 = 2;
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x1E;
-    obj->action = 3;
+    obj->action = SILVER_COIN_INACTIVE;
     obj->unk7C.word = 0;
     if (!is_in_tracks_mode()) {
         if (check_if_silver_coin_race() && !is_in_adventure_two()) {
-            obj->action = 0;
+            obj->action = SILVER_COIN_ACTIVE;
         } else {
-            obj->action = 3;
+            obj->action = SILVER_COIN_INACTIVE;
         }
     }
-    if (obj->action == 3) {
+    if (obj->action == SILVER_COIN_INACTIVE) {
         obj->segment.trans.unk6 |= 0x600;
         gParticlePtrList_addObject(obj);
     }
 }
 
+/**
+ * Race silver coin loop behaviour.
+ * Can only be collected by players. Sets a flag equal to the player number when collected.
+ * Under normal gameplay, that's 1 and 2, since the silver coin challenge can be done with at most two players.
+ * When collected, the coins are hidden for that player, rather than being removed outright.
+*/
 void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     Object_4C* silverCoin4C;
     Object_Racer* racer;
@@ -3551,18 +3689,18 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     s32 temp;
 
     temp = func_8006C19C();
-    if ((temp && obj->action != 3) || (!temp && obj->action == 0)) {
+    if ((temp && obj->action != SILVER_COIN_INACTIVE) || (!temp && obj->action == SILVER_COIN_ACTIVE)) {
         silverCoin4C = obj->unk4C;
         if (silverCoin4C->unk13 < 80) {
             racerObj = (Object *) silverCoin4C->unk0;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) racerObj->unk64;
-                if (racer->playerIndex != -1) {
-                    if (racer->raceFinished == FALSE && !(obj->action & (1 << racer->playerIndex))) {
-                        obj->action |= (1 << racer->playerIndex);
+                if (racer->playerIndex != PLAYER_COMPUTER) {
+                    if (racer->raceFinished == FALSE && !(obj->action & (SILVER_COIN_COLLECTED << racer->playerIndex))) {
+                        obj->action |= SILVER_COIN_COLLECTED << racer->playerIndex;
                         obj->unk7C.word = 0x10;
                         obj->segment.trans.unk6 |= 0x200 << racer->playerIndex;
-                        play_sequence(racer->unk202 + 0x2B);
+                        play_sequence(SEQUENCE_SILVER_COIN_1 + racer->unk202);
                         racer->unk202++;
                     }
                 }
@@ -3864,7 +4002,70 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_log.s")
+void obj_loop_log(Object *obj, s32 updateRate) {
+    Object *racerObj;
+    Object_Log *log;
+    f32 cosine;
+    f32 sine;
+    Object_5C *temp_v0;
+    Object_Racer *racer;
+    f32 temp;
+    f32 temp2;
+
+    log = (Object_Log *) obj->unk64;
+    if (log != NULL) {
+        obj->segment.trans.y_position = func_800BEEB4((Object_64 *) log);
+    } else {
+        obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.unk3C_a.level_entry)->y;
+    }
+    temp_v0 = obj->unk5C;
+    if (temp_v0->unk100 != NULL) {
+        obj->unk7C.word++;
+        racerObj = (Object *) temp_v0->unk100;
+        if (racerObj->behaviorId == BHV_RACER) {
+            racer = (Object_Racer *) racerObj->unk64;
+            if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
+                func_80072348(racer->playerIndex, 0x12);
+            }
+        }
+        sine = sins_f(-obj->segment.trans.y_rotation);
+        cosine = coss_f(-obj->segment.trans.y_rotation);
+        
+        // This looks a bit messy, but is required to match.
+        temp2 = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
+        temp = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
+        temp2 = (temp2 * cosine) + (temp * sine);
+        temp = (racerObj->segment.x_velocity * sine) - (racerObj->segment.z_velocity * cosine);
+        temp2 *= temp;
+        obj->unk78 -= (s32) (temp2 / 4);
+        
+        if (obj->unk78 > 0x200) {
+            obj->unk78 = 0x200;
+        }
+        if (obj->unk78 < -0x200) {
+            obj->unk78 = -0x200;
+        }
+    } else {
+        if (obj->unk7C.word > 0) {
+            obj->unk7C.word--;
+        }
+    }
+    obj->segment.trans.y_position -= (f64) (f32) obj->unk7C.word;
+    if (obj->unk78 > 0) {
+        obj->unk78 -= updateRate;
+        if (obj->unk78 < 0) {
+            obj->unk78 = 0;
+        }
+    }
+    if (obj->unk78 < 0) {
+        obj->unk78 += updateRate;
+        if (obj->unk78 > 0) {
+            obj->unk78 = 0;
+        }
+    }
+    obj->segment.trans.y_rotation += obj->unk78 * updateRate;
+    obj->unk5C->unk100 = NULL;
+}
 
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
     f32 temp = entry->unk8;

@@ -285,7 +285,7 @@ void set_ghost_position_and_rotation(Object *obj);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
-s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, s32*, s8* surface);
+s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, f32*, s8* surface);
 void func_80059BF0(Object* obj, s32 updateRate);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
