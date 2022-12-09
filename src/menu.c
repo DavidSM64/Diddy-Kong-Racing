@@ -6535,7 +6535,7 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
                     savedY = y;
                         
                     for (i = 0; i < 3; i++) {
-                        alpha = (arg1 < 2 && get_map_default_vehicle(sp58) != (Vehicle)i) ? 128 : 255;
+                        alpha = (arg1 < 2 && get_map_default_vehicle(sp58) != (Vehicle) i) ? 128 : 255;
                         if ((1 << i) & mask) {
                             if (i == gPlayerSelectVehicle[0]) {
                                 render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[i*3+1], 104, y, 255, 255, 255, 255);
