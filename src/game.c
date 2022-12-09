@@ -864,7 +864,7 @@ void init_game(void) {
         D_800DD3A0 = TRUE;
     }
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
-    func_80076BA0();
+    init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
