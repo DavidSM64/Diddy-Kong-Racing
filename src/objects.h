@@ -414,8 +414,8 @@ void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 u32 func_8001BD94(s32 arg0);
 void func_8001D1AC(void);
 void func_8001D1BC(s32 arg0);
-u32 func_8001D1E4(s32 *arg0);
-u32 func_8001D214(s32 arg0);
+Object *func_8001D1E4(s32 *arg0);
+Object *func_8001D214(s32 arg0);
 void func_8001D23C(s32 arg0, s32 arg1, s32 arg2);
 void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4);
 void func_8001D4B4(s32*, f32, f32, s16, s16, s16);
@@ -495,5 +495,6 @@ void func_8001709C();
 void func_80012F94(Object *);
 void render_3d_model(Object *);
 void func_800101AC(Object *, s32);
+Object *func_8001BDD4(Object *obj, s32 *cameraID);
 
 #endif

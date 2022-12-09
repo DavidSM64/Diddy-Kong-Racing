@@ -201,7 +201,7 @@ void obj_loop_fireball_octoweapon(Object* obj, s32 arg1) {
     Object *racerObj;
     Object_Fireball_Octoweapon *sp74;
     Object_Racer *racer;
-    s32 pad[7];
+    UNUSED s32 pad[7];
     s32 temp;
     f32 sp4C;
 
@@ -2592,7 +2592,7 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_modechange(Object *obj, s32 updateRate) {
+void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     Object *racerObj;
     Object **racerObjects;
     s32 numRacers;
@@ -2606,7 +2606,7 @@ void obj_loop_modechange(Object *obj, s32 updateRate) {
     f32 radiusF;
     f32 dist;
     
-    modeChange = (Object_ModeChange*)obj->unk64;
+    modeChange = (Object_ModeChange *) obj->unk64;
     if (obj->unk4C->unk13 < modeChange->unk10) {
         radiusF = modeChange->unk10;
         racerObjects = get_racer_objects(&numRacers);

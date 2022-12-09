@@ -20,6 +20,5 @@ void func_80061C0C(Object* obj);
 
 void free_object_model(ObjectModel *model); //Non Matching
 void func_8005FF40(ObjectModel **modelPtr); //Non Matching
-void func_80061C0C(Object*); //Non Matching
 
 #endif
